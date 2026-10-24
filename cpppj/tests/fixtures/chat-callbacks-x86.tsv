@@ -1,0 +1,30 @@
+operation	current	file	valid	mutation	text	event	trace	finalCurrent	finalFile	result	instructions
+clear	0	0	0	none		33554580		0	0	0	6
+clear	0	0	0	currentZero		33554580		0	0	0	6
+clear	0	0	0	currentNext		33554580		0	0	0	6
+clear	0	0	0	textNext		33554580		0	0	0	6
+clear	0	0	0	textNextCurrentZero		33554580		0	0	0	6
+clear	1	0	0	none		33554580	replace:1;bottom:1	1	0	0	17
+clear	1	0	0	currentZero		33554580	replace:1;bottom:1	0	0	0	17
+clear	1	0	0	currentNext		33554580	replace:1;bottom:1	2	0	0	17
+clear	1	0	0	textNext		33554580	replace:1;bottom:2	1	0	0	17
+clear	1	0	0	textNextCurrentZero		33554580	replace:1;bottom:2	0	0	0	17
+log	0	0	0	none	410a	33554580		0	0	0	5
+log	0	0	0	fileZero	410a	33554580		0	0	0	5
+log	0	0	0	fileNext	410a	33554580		0	0	0	5
+log	0	0	1	none	410a	33554580		0	0	0	5
+log	0	0	1	fileZero	410a	33554580		0	0	0	5
+log	0	0	1	fileNext	410a	33554580		0	0	0	5
+log	0	1	0	none	410a	33554580	valid:1	0	1	0	9
+log	0	1	0	fileZero	410a	33554580	valid:1	0	0	0	9
+log	0	1	0	fileNext	410a	33554580	valid:1	0	2	0	9
+log	0	1	1	none	410a	33554580	valid:1;write:1:410a	0	1	0	34
+log	0	1	1	fileZero	410a	33554580	valid:1;write:0:410a	0	0	0	34
+log	0	1	1	fileNext	410a	33554580	valid:1;write:2:410a	0	2	0	34
+log	0	1	1	none		33554580	valid:1;write:1:	0	1	0	26
+log	0	1	1	none	58007461696c	33554580	valid:1;write:1:58	0	1	0	30
+log	0	1	1	none	6173636969	33554580	valid:1;write:1:6173636969	0	1	0	46
+quit	0	0	0	none		0	queue:0:0:0	0	0	0	10
+quit	0	0	0	none		33554580	queue:33554580:0:0	0	0	0	10
+quit	0	0	0	none		2166572391	queue:2166572391:0:0	0	0	0	10
+quit	0	0	0	none		4294967295	queue:4294967295:0:0	0	0	0	10

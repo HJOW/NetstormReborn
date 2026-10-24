@@ -38,7 +38,7 @@ struct ChatWindowHooks {
     std::function<void(std::uint32_t)> push,destructBase; // 같은 현재 가상+18/공통464420 수명이다.
     std::function<void(std::string_view,std::uint32_t,std::uint32_t)> registerCommand; //43f660의 이름/callback/flag1 등록이다.
     std::function<void(std::uint32_t,std::uint32_t)> bufferAppendCallback; // 실제 공유 StyleTextBuffer+34에42f590 callback을 설치한다.
-    std::function<std::int32_t(std::uint32_t)> frameCount; // 현재 TYPE+114의 물리 프레임 수다.
+    std::function<std::int32_t(std::uint32_t)> frameCount; // 현재 TYPE+114의 프레임 코드/클러스터 수이며 SHP의 추가 레이어 수와 구별한다.
     std::function<std::int16_t(std::uint32_t,std::uint32_t)> frameHeight; //419850의 실제 프레임 헤더+1a다.
     std::function<void(std::uint32_t,std::int32_t)> requestScroll,relativeScroll; //4ba360/4ba380의 실제 요청이다.
     std::function<void(std::uint32_t)> requestBottom; //4ba3b0의 실제 맨 아래 요청이다.

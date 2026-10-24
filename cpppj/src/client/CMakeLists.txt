@@ -234,3 +234,6 @@ target_sources(netstorm PRIVATE ClientPlayerRecords.h ClientPlayerRecords.cpp)
 
 # 실제 편집 메모리와 공통 UI 조립 계층을 함께 빌드한다.
 target_sources(netstorm PRIVATE TextEntryStorage.cpp TextEntryStorage.h RawTextEntryContext.h RawTextEntryControls.cpp RawTextEntryControls.h)
+
+# 실제 Client 수명의 Chat 전역과 공통 UI 전체 공장을 빌드한다.
+target_sources(netstorm PRIVATE ClientChatWindowGlobals.h RawChatWindowContext.h RawMenuChat.inc)

@@ -75,7 +75,7 @@ void ChatWindow::Completions() const {
     for (std::uint32_t color=0;color<256;++color) { state_.colors.push_back("~[C."+std::to_string(color)+']');state_.backgrounds.push_back("~[B."+std::to_string(color)+']'); } // 두 실제256개 문자열 목록이다.
     if (state_.completionReady) return;
     for (std::int32_t type=0;type<std::bit_cast<std::int32_t>(Global(0x541348));++type) { // 원문은 TYPE 수를 각 반복에 다시 읽는다.
-        const auto count=Need(hooks_.frameCount)(std::uint32_t(type)); // 이 TYPE의 물리 프레임 수는 안쪽 반복 전에 한 번 읽는다.
+        const auto count=Need(hooks_.frameCount)(std::uint32_t(type)); // 이 TYPE의 프레임 코드 수는 안쪽 반복 전에 한 번 읽는다. SHP 추가 레이어 수와 구별한다.
         for (std::int32_t frame=0;frame<count;++frame) { const auto height=Need(hooks_.frameHeight)(std::uint32_t(type),std::uint32_t(frame));if (height>7 && height<17) state_.icons.push_back("~[I"+std::to_string(type)+'.'+std::to_string(frame)+']'); } // 높이8..16만 아이콘 후보로 저장한다.
     }
 }

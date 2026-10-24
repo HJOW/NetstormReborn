@@ -1,0 +1,1126 @@
+{
+  "unit": 401,
+  "goalComplete": false,
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "productSha256": "48eb8e14d27865428fecff426568dc286dd850a81bf8de54cdc03ab9b55a6594",
+  "testBinarySha256": "13f53384e429e8b318efba7809e6e2d4c44d070dbcef98ef4445c7aa6317814e",
+  "sourceHashes": {
+    "cpppj/src/client/CMakeLists.txt": "e8cd28f0bab20cfa1146535ac8f88fe49d72d43da97efc7a1b953f2c251f32f4",
+    "cpppj/src/client/ChatWindow.cpp": "cb1cdc545d78eeeb58ca278275dd1100fa1e7ee946ea71a65ee3b3a11640c705",
+    "cpppj/src/client/ChatWindow.h": "045c2286bc0e5094eecbb129cde710530613d8e7b9e8e3bd81b2ca157760d353",
+    "cpppj/src/client/ClientChatWindowGlobals.h": "824caa63b679dff591d4bd46662f469e2b2ced9f8910f175b582384bfca20dc9",
+    "cpppj/src/client/ClientMain.cpp": "11e27c81075b9c99fbfa03058047e7b01dca4981cc6324fc199097695d3c3449",
+    "cpppj/src/client/ClientMain.h": "3b0d336d45d10560e8f740e6e7173b3edd5f8dcaf33a3debac8aef4d12bffd42",
+    "cpppj/src/client/RawButtonControls.cpp": "38ccbf0c0ed7a2005c4d257c1bc8cfe3c88e5ac98d9d83a586a5dc4218578337",
+    "cpppj/src/client/RawChatWindowContext.h": "67c08fb51048e9bb7304d9a557a51bd6ff0303360bad9a8ce22e0379e60eaf8b",
+    "cpppj/src/client/RawMenuChat.inc": "b70745f7dea3aed25c329752163219d82f96ac575f7d9de5d87a9de5270ed2a0",
+    "cpppj/src/client/RawMenuControls.cpp": "642773c814746f5fbd8f811598d0cf3f04fa5f578ff5ea589283545ab398e43f",
+    "cpppj/src/client/RawMenuControls.h": "30cd40e2f9bd80dd3d951736912dba66928a7eeb0bdec8e5f190dd1db761a9e6",
+    "cpppj/tests/CMakeLists.txt": "3409dc374e1c470f55e88e2c0e9f973ae96e98ff48b89560f4a83db978ef36ac",
+    "cpppj/tests/ChatWindowClientTests.cpp": "76c6fdbd769c60f09df6c79d55fb1216a2a0f40529641af84e0e71d0e3fee9d8",
+    "cpppj/tests/fixtures/chat-callbacks-x86.tsv": "fe2e8eadd7f118cabbcdf6984cc74fa53021af9df565353d7c87614eb97ee34a"
+  },
+  "referenceHashes": {
+    "cpppj/src/client/ChatWindow.cpp": "cb1cdc545d78eeeb58ca278275dd1100fa1e7ee946ea71a65ee3b3a11640c705",
+    "cpppj/src/client/ChatWindow.h": "045c2286bc0e5094eecbb129cde710530613d8e7b9e8e3bd81b2ca157760d353",
+    "cpppj/src/client/HudChatGeometry.cpp": "97f31225f5724d28f91c2c3c640509825f85826914f4c4725f1d28fed362af7f",
+    "cpppj/src/client/HudChatGeometry.h": "35498649e7f244539123878661d076d412abed0611b59bb77b76255ed6957668",
+    "cpppj/src/client/TextEntryGump.cpp": "7c11109dcb73e569b60ae579100f45ea0dcb98c566576411681ec0e4590d29bc",
+    "cpppj/src/client/TextEntryBuffer.cpp": "5ee16d78d8396a2e112660d70a1ad26c2903d5cb830421248bf51855a9655725",
+    "cpppj/src/client/RawTextEntryControls.cpp": "0e1044a618216b99c9b977bab6d8a10520203e0ecc2e404cff3dddfd8048c3c8",
+    "cpppj/src/client/TextEntryStorage.cpp": "5b0ac7e5a63a1b6b98b3eca8898d00117890ee522e237035a45f00353f067e7c",
+    "cpppj/src/client/GumpLifetime.cpp": "c0b7bacd2f1ed87a2b5e9c0854d2f89200574f1408d7ac738cec891a185ca57a",
+    "cpppj/src/client/StyleTextBuffer.cpp": "2aa0f6983c460aa3d5a960085a8b1ed86f153cb0916246329878f6d1b77f8ea2",
+    "cpppj/src/client/TextGump.cpp": "8f501caa7ba39352386060e81c79835eb75e070e6231d22e879b3c17142c5804",
+    "cpppj/src/client/ScrollingTextGumpWidgets.cpp": "5d74fae82e62133e95bb3d7ee0ba9333d2b206fdebc80944181320d7e5e71395",
+    "cpppj/src/client/ScrollingTextGumpMarkup.cpp": "3088e4533c4a1aebffb040701c4cd6ec7a34cbfa7379a7782e97572d6840cddc",
+    "cpppj/src/client/ScrollGumpWidgets.cpp": "378d5b65e02f8e5e1693fca50b2a3582e07e53b0f3e2df4ffe36c3fb618f435b",
+    "cpppj/src/client/MenuGump.cpp": "9738a69d18151ca3b4d10d91e99622addcf0a89af12f66cc082ff5bb432631a4",
+    "cpppj/src/client/MenuGumpControls.cpp": "ca1017cf31843d3de16929ef71a0f1fff9d177b3d33154d820674d366af5dc16",
+    "cpppj/src/client/ClientDotCommandGlobals.cpp": "9b8b59dd63cbce5d0f6ccf2da3468f3b42079d9a03a6a67f57a699d8b14475b6",
+    "cpppj/src/client/RawDotCommandRegister.cpp": "dc49df78ad5e40a4157a9adcab9acd032ed5235ea67d7075f91f6d65792cf8e6"
+  },
+  "preservedNativeHashes": {
+    "cpppj/tests/fixtures/chat-window-x86.tsv": "e7faa97fbd0bf4c4d8b9d5a48bb6c64e3930ed3a0365948f850ecf65623ee5e5",
+    "cpppj/tests/fixtures/chat-window-base-x86.tsv": "10733b34b909bbb32d0eac76e9fcb5b176dfbb105c81f71be542caa9f2434463",
+    "cpppj/tests/fixtures/hud-chat-geometry-x86.tsv": "9c3cb7eba22c800405b726861d102c4fa0deb4b911b5dbe4a77238984f22504a",
+    "cpppj/tests/fixtures/text-entry-gump-x86.tsv": "658245fb178eae9f9b03365caabd65f8f189fe04867babbcda0c102fca003474",
+    "cpppj/tests/fixtures/text-entry-buffer-x86.tsv": "aa792a6af93d503c2236c378936bd74f6ae2d300b28974e48c4f40d55a7f4109"
+  },
+  "newNativeHashes": {
+    "cpppj/chat-callbacks-native-20261024.json": "052dbbe8df4a958ef0d7f3df894d47052f5593b9b1340606f54a1bd4e3bac07e",
+    "tools/decomp_chat_callbacks.py": "5bdd9e663bbfa4b953a43075d67192a08f5f75f3e498ee1e00f96f3a3c5ce30a",
+    "cpppj/tests/fixtures/chat-callbacks-x86.tsv": "fe2e8eadd7f118cabbcdf6984cc74fa53021af9df565353d7c87614eb97ee34a"
+  },
+  "rawHashes": {
+    "extracted/cpp-chat-window-401-edit.py": "440f9f71580b48d85d54c6db791970f2f8f7f871b8fbb457375f3e718b1f1cfd",
+    "extracted/cpp-chat-window-401-build1.log": "fb1f8e6f9d5434dfe9563a55b4b3bb660349ec9eb2682aaf43245f71a1a8728f",
+    "extracted/cpp-chat-window-401-edit2.py": "64f96bf7acd6ceafc907099a3867bb338c2bc05f268ac6447c95bda114871f80",
+    "extracted/cpp-chat-window-401-build2.log": "94e9d2e7d708040aaf096124b91b304894c65500c9baab16c4467f864e489af9",
+    "extracted/cpp-chat-window-401-test-field.py": "68348b8a35373e77c8d456f5cc2d7e8d5cc8ea50946eead46c4d0c633ca16b3f",
+    "extracted/cpp-chat-window-401-checks.py": "1f5955911bdd03c5313b801c322c38617b8841706ec02a35e9d06f224b11bb0a",
+    "extracted/cpp-chat-window-401-focused1-before.json": "61f0c6b4b884345f8a086b87972e1267d5171965b72b82a5b42ba98282ffae53",
+    "extracted/cpp-chat-window-401-focused1-1.log": "860811e0b2f0957fe0c8e78bddc1126c72f9350c88770ae67c036aa4f776a72d",
+    "extracted/cpp-chat-window-401-focused1-progress1.json": "1f0c13080983a0b0f1537b76fdaf873686b74707157474ca3d7e57fc2f26e1a6",
+    "extracted/cpp-chat-window-401-focused1-2.log": "a0d53046cbe6a594adf4372303573999f3c6180b8868f22bc2dc011350fed0ef",
+    "extracted/cpp-chat-window-401-focused1-chat.bmp": "375eecff124ac10d350aad7c0ec98365b94f4b810cbea47b9d5e8436bdebe17a",
+    "extracted/cpp-chat-window-401-focused1-progress2.json": "a77c6e896e73ee3a836323f91ba23f7b9e05a4fb92266aeeba7329dc46fbd2d9",
+    "extracted/cpp-chat-window-401-focused1-3.log": "5075e076baeae15ccd1747c2c8ca3c8c4b90595549f2e2df8725079e1494c286",
+    "extracted/cpp-chat-window-401-focused1-progress3.json": "68fb502df738349ac67f4044c859d01762565c6dc0afec52677fab265cca5d8a",
+    "extracted/cpp-chat-window-401-focused1-4.log": "efcc36a0a5066bc84c1e108c84a6faed984ff7f0aa75887756f9e543b589f5a5",
+    "extracted/cpp-chat-window-401-focused1-progress4.json": "d8f9aa2c6bd19402841a53378207bb6fc731ac977096b27c222205d4809027f1",
+    "extracted/cpp-chat-window-401-focused1-5.log": "caef703d6711ac5c20db7270599791613d588e7ba295cfec30b7ad341a0a13e3",
+    "extracted/cpp-chat-window-401-focused1-progress5.json": "cb38485acf53be88da2753de9bd39cbee4825ef487117a2712e3949518779bfe",
+    "extracted/cpp-chat-window-401-focused1-6.log": "b5b64a6315c7bc6542e3bedf631a3682e858664e0ecb92f6088ee7b56dcc7d12",
+    "extracted/cpp-chat-window-401-focused1-console.bmp": "0bc55ac0c4ea878611a1277535a8b05ab54191bbe2533124add8a3d9b96b5474",
+    "extracted/cpp-chat-window-401-focused1-progress6.json": "cfd9dcf6ec62376bdcfbb590bbc23bed80b16f1f8aedeb224cfb4f7897c5dcf3",
+    "extracted/cpp-chat-window-401-focused1-7.log": "29c7ea49404747fbbdd472fce171133de89323a9ea3685396b327b2b47f3772a",
+    "extracted/cpp-chat-window-401-focused1-progress7.json": "1d36b295ed9eb53344dc3925bbad36fe37d954ab9fa8b15d947bec88cb322502",
+    "extracted/cpp-chat-window-401-focused1-8.log": "426a3d77cc906c9a8caf6fe5c6c0c0e191465767a352e340c63ff7a8804e8c6a",
+    "extracted/cpp-chat-window-401-focused1-progress8.json": "35b42ccb18a725b12fe21719dcb330cba7a9dec5f5c5b2c36e742be582669c80",
+    "extracted/cpp-chat-window-401-focused1-9.log": "f2105a03659dcd35ec440a769b319de162ebe6cb5c638b2caafff44a871839d2",
+    "extracted/cpp-chat-window-401-focused1-progress9.json": "6a56818f1115f7028fa57e32db59bacfdd8858c33d4b703325a39a582076edf9",
+    "extracted/cpp-chat-window-401-focused1-10.log": "eba35a6f6f19d9634b8f45e9e85b80911b6c26a7c83fa3f6124ee2a09d7a91a5",
+    "extracted/cpp-chat-window-401-focused1-progress10.json": "1cf2243e0bdbb55ca5d1063ee9542224647ac0163bbdbe8d254a3b5e9a33967e",
+    "extracted/cpp-chat-window-401-focused1-11.log": "5ca5531774b5f13fc82081a254cff97b0cd8481d48e9e41e2ed8aa3bdb8503e5",
+    "extracted/cpp-chat-window-401-focused1-progress11.json": "651b532b644dbe954100c389d76ad96a137c9b4892f4a3f1beaa34158c256eed",
+    "extracted/cpp-chat-window-401-focused1-12.log": "4e0cde1d19c18e8335926b907de08279c605765a208e161f4ed7ff8843838387",
+    "extracted/cpp-chat-window-401-focused1-progress12.json": "96b14c8184d1d44fdbf16d92bad80dc83be239f54cc1685aa7717fd4cf5adfb6",
+    "extracted/cpp-chat-window-401-focused1-13.log": "688dd03368db1e8e3668a88d62baabfaf41891dc28e61379dfeb1a07ec4e18c0",
+    "extracted/cpp-chat-window-401-focused1-progress13.json": "37c63928aef49e92ea00810c1f151e268a4349a471d06229f98c15174e827389",
+    "extracted/cpp-chat-window-401-focused1.json": "9b02ffd5feae8293bc7341f85f99f77ced9c180a92d8e5d623cb935419706c42",
+    "extracted/cpp-chat-window-401-edit3.py": "a2ffc0d9a694d56340e2b2c4d5ec8814e93250be5315d63b400fdd65d9f2773a",
+    "extracted/cpp-chat-window-401-build3.log": "afa69dbf323cc2679b7db276cb1b851d1da251e32472f8d9d20eb2d6f0131646",
+    "extracted/cpp-chat-window-401-test-observation.py": "1fedaede1d0f542d62fdea9325b90595755485aea17f311e09391197c0fffa6c",
+    "extracted/cpp-chat-window-401-build4.log": "c7845cf3a60a45bf8c8a951a06fc64309f6834edc83dd24768f907e6d3b8ff4f",
+    "extracted/cpp-chat-window-401-native-replay.py": "bc71543d71268691a562d58c0c4dc024f83518e653e4071525cfca470d862bca",
+    "extracted/cpp-chat-window-401-focused2-before.json": "236def1d29315df7a8017b694d63f6ffd4fb067e2ce1c123989a35564301f2c5",
+    "extracted/cpp-chat-window-401-focused2-1.log": "860811e0b2f0957fe0c8e78bddc1126c72f9350c88770ae67c036aa4f776a72d",
+    "extracted/cpp-chat-window-401-focused2-progress1.json": "78e5842a64e2522274194f10ef1662db119be333b3de5eb5293cbf63097f4586",
+    "extracted/cpp-chat-window-401-focused2-2.log": "94c820f35fed8c69e76bd8da1e976f11521c2e6aeac93cbfcac694cf6f9d1405",
+    "extracted/cpp-chat-window-401-focused2-chat.bmp": "375eecff124ac10d350aad7c0ec98365b94f4b810cbea47b9d5e8436bdebe17a",
+    "extracted/cpp-chat-window-401-focused2-progress2.json": "a2f57451afc0df8ce7f6ca3bdf1e55ca62800f02c80a68ab958fc8543ec5a0d2",
+    "extracted/cpp-chat-window-401-focused2-3.log": "5075e076baeae15ccd1747c2c8ca3c8c4b90595549f2e2df8725079e1494c286",
+    "extracted/cpp-chat-window-401-focused2-progress3.json": "712f7a6201e074e8268d98f548e8ffc02158431a0cc29d951a59aaad809d2b22",
+    "extracted/cpp-chat-window-401-focused2-4.log": "efcc36a0a5066bc84c1e108c84a6faed984ff7f0aa75887756f9e543b589f5a5",
+    "extracted/cpp-chat-window-401-focused2-progress4.json": "298cf9389edd20f1e5866d9a814ef5e86486c1bd8c99bd313aa59489971bd0dc",
+    "extracted/cpp-chat-window-401-focused2-5.log": "caef703d6711ac5c20db7270599791613d588e7ba295cfec30b7ad341a0a13e3",
+    "extracted/cpp-chat-window-401-focused2-progress5.json": "bdaba3bd59398ab391c8e8add061ff6faa9959f7abc8e14ee5c3c1a763cce71c",
+    "extracted/cpp-chat-window-401-focused2-6.log": "b5b64a6315c7bc6542e3bedf631a3682e858664e0ecb92f6088ee7b56dcc7d12",
+    "extracted/cpp-chat-window-401-focused2-console.bmp": "0bc55ac0c4ea878611a1277535a8b05ab54191bbe2533124add8a3d9b96b5474",
+    "extracted/cpp-chat-window-401-focused2-progress6.json": "8c51a3a1af3666014d42929c31f4db514b1c3e8f593fe1823aed89000d0492e4",
+    "extracted/cpp-chat-window-401-focused2-7.log": "29c7ea49404747fbbdd472fce171133de89323a9ea3685396b327b2b47f3772a",
+    "extracted/cpp-chat-window-401-focused2-progress7.json": "727a0838618f312568046eeef17e20242dde9c7570e7fa9849b7a260d9b4ddab",
+    "extracted/cpp-chat-window-401-focused2-8.log": "426a3d77cc906c9a8caf6fe5c6c0c0e191465767a352e340c63ff7a8804e8c6a",
+    "extracted/cpp-chat-window-401-focused2-progress8.json": "91df24e46256eb65e6d3301b8406af7e9d68f30f669e9bfe6c7356d5eb89e0a2",
+    "extracted/cpp-chat-window-401-focused2-9.log": "f2105a03659dcd35ec440a769b319de162ebe6cb5c638b2caafff44a871839d2",
+    "extracted/cpp-chat-window-401-focused2-progress9.json": "871c2d1841c95d18bb50f682afea55cb50ad0afd5119d185ad3f43ded1c4ccd5",
+    "extracted/cpp-chat-window-401-focused2-10.log": "eba35a6f6f19d9634b8f45e9e85b80911b6c26a7c83fa3f6124ee2a09d7a91a5",
+    "extracted/cpp-chat-window-401-focused2-progress10.json": "3fb38415703aeb818c673f46152f2a90b365d968611b314f545b1d21bfdd1fd4",
+    "extracted/cpp-chat-window-401-focused2-11.log": "5ca5531774b5f13fc82081a254cff97b0cd8481d48e9e41e2ed8aa3bdb8503e5",
+    "extracted/cpp-chat-window-401-focused2-progress11.json": "429aa1e4cb0f3d7a8e2a96855a023a8b630c6141e937996ce1ee94d94c12566b",
+    "extracted/cpp-chat-window-401-focused2-12.log": "4e0cde1d19c18e8335926b907de08279c605765a208e161f4ed7ff8843838387",
+    "extracted/cpp-chat-window-401-focused2-progress12.json": "28c4a6d5e74e1ca405e55efb82e4d958e9e5faaba0aafb2e4f4bb442aa5d8d0c",
+    "extracted/cpp-chat-window-401-focused2-13.log": "688dd03368db1e8e3668a88d62baabfaf41891dc28e61379dfeb1a07ec4e18c0",
+    "extracted/cpp-chat-window-401-focused2-progress13.json": "d54dd25c5b3348af07c67958bbe2db9d578445639177c6e89696ba2b10b0c398",
+    "extracted/cpp-chat-window-401-focused2.json": "0ae795ee09136c8bff9638bacb5f1724823a90a024651e303af61767b2477791",
+    "extracted/cpp-chat-window-401-native-replay1.json": "f1c373ebc54a2fe85eae8934447114d731e2e3bd0aeddbab6583d035cc98a815",
+    "extracted/cpp-chat-window-401-ctest1.log": "96ae7145fbd40d541c7f884c381cb7701218000dac274a1ceecdd2be6d280e33",
+    "extracted/cpp-chat-window-401-source-newline.json": "a9ea93aa0fe342f3f7e28d0cf84d82b15c9b3d429bc540012005ef9e3b78f3fb",
+    "extracted/cpp-chat-window-401-ctest1-tests.log": "6a8df24244f658739cccbe63f1eef6fad517c1342d3e0e75a7a1352f03905bf8",
+    "extracted/cpp-chat-window-401-ctest1.json": "039dfa6d2b0538eebcd3a9b319ea9d92a34f07e53fc4e966847e9e03569d87b7",
+    "extracted/cpp-chat-window-401-build5.log": "6b9d00b03fe1f05dc783b5f633dc3b52709240b8774114bea012504dd4a138b3",
+    "extracted/cpp-chat-window-401-final.py": "f106f4eabd0e7f0db1c88bff07bc980ccb54da86edf85b153a0d92c28248ab78",
+    "extracted/cpp-chat-window-401-validation.py": "251bf046c0da3c11a3961815682161c081bf4ee053d9cf11d5d64b34a6122ff1",
+    "extracted/cpp-chat-window-401-focused3-before.json": "3194402fe0705edf80d54d00de6093e6ad7dd192573e6c9b2d3061b54aeb50c4",
+    "extracted/cpp-chat-window-401-focused3-1.log": "860811e0b2f0957fe0c8e78bddc1126c72f9350c88770ae67c036aa4f776a72d",
+    "extracted/cpp-chat-window-401-focused3-progress1.json": "6af5b5d8787c8f4b0990769db17d9a36f768e01a06d647cb28afded46fd0387f",
+    "extracted/cpp-chat-window-401-focused3-2.log": "94c820f35fed8c69e76bd8da1e976f11521c2e6aeac93cbfcac694cf6f9d1405",
+    "extracted/cpp-chat-window-401-focused3-chat.bmp": "375eecff124ac10d350aad7c0ec98365b94f4b810cbea47b9d5e8436bdebe17a",
+    "extracted/cpp-chat-window-401-focused3-progress2.json": "5be7b4aa4c960aa00ca9f8cbcbe4753e896fa4425cffa524dcc9ac2f1ef6d377",
+    "extracted/cpp-chat-window-401-focused3-3.log": "5075e076baeae15ccd1747c2c8ca3c8c4b90595549f2e2df8725079e1494c286",
+    "extracted/cpp-chat-window-401-focused3-progress3.json": "b8f99d9f5ce2e6be7d5435525b6a21aa86aff6e95873dac6fce1e70ad6dbd81e",
+    "extracted/cpp-chat-window-401-focused3-4.log": "efcc36a0a5066bc84c1e108c84a6faed984ff7f0aa75887756f9e543b589f5a5",
+    "extracted/cpp-chat-window-401-focused3-progress4.json": "024cffeca5baf2d3ce1b672597481157e833ecd71342b8f0e94619afdb2db306",
+    "extracted/cpp-chat-window-401-focused3-5.log": "caef703d6711ac5c20db7270599791613d588e7ba295cfec30b7ad341a0a13e3",
+    "extracted/cpp-chat-window-401-focused3-progress5.json": "bd017f59786dd3dc63a9ec56ad0db52e738699d45fe876d436ab44a866dd7eea",
+    "extracted/cpp-chat-window-401-focused3-6.log": "b5b64a6315c7bc6542e3bedf631a3682e858664e0ecb92f6088ee7b56dcc7d12",
+    "extracted/cpp-chat-window-401-focused3-console.bmp": "0bc55ac0c4ea878611a1277535a8b05ab54191bbe2533124add8a3d9b96b5474",
+    "extracted/cpp-chat-window-401-focused3-progress6.json": "60d462e5ab3db0f279e72b2e4c7139e078a96497c48055eb47a31373e3bd3185",
+    "extracted/cpp-chat-window-401-focused3-7.log": "29c7ea49404747fbbdd472fce171133de89323a9ea3685396b327b2b47f3772a",
+    "extracted/cpp-chat-window-401-focused3-progress7.json": "a3fcd9f05c3663b925564711206f29dce5ee87c9cb5c2ffd8566e08a07127aa3",
+    "extracted/cpp-chat-window-401-focused3-8.log": "426a3d77cc906c9a8caf6fe5c6c0c0e191465767a352e340c63ff7a8804e8c6a",
+    "extracted/cpp-chat-window-401-focused3-progress8.json": "3452138b032a92b51406ddf33b4a2df2a669cca08de4795885ab7ed74db91026",
+    "extracted/cpp-chat-window-401-focused3-9.log": "f2105a03659dcd35ec440a769b319de162ebe6cb5c638b2caafff44a871839d2",
+    "extracted/cpp-chat-window-401-focused3-progress9.json": "898b6d9d500fbd541db8fccf4a7acb897cc345dfde296e32f7b3a4bc4e1c490e",
+    "extracted/cpp-chat-window-401-focused3-10.log": "eba35a6f6f19d9634b8f45e9e85b80911b6c26a7c83fa3f6124ee2a09d7a91a5",
+    "extracted/cpp-chat-window-401-focused3-progress10.json": "7e79afa3e75159b101308df777d7bc1c7d8121760da61d115f34f8818d8628db",
+    "extracted/cpp-chat-window-401-focused3-11.log": "5ca5531774b5f13fc82081a254cff97b0cd8481d48e9e41e2ed8aa3bdb8503e5",
+    "extracted/cpp-chat-window-401-focused3-progress11.json": "38b347ab67d38389197b1b1c067172cb87364a7b8ad41c5429cdc134440428a7",
+    "extracted/cpp-chat-window-401-focused3-12.log": "4e0cde1d19c18e8335926b907de08279c605765a208e161f4ed7ff8843838387",
+    "extracted/cpp-chat-window-401-focused3-progress12.json": "5101a1630ea3ee4cbac7f05a58b2cd182e6a101e4c80073e2887c74d389a1aa1",
+    "extracted/cpp-chat-window-401-focused3-13.log": "688dd03368db1e8e3668a88d62baabfaf41891dc28e61379dfeb1a07ec4e18c0",
+    "extracted/cpp-chat-window-401-focused3-progress13.json": "bf956ca5bcadc74d62008c57cd10110638230df7666c9753cf87474f4636b85d",
+    "extracted/cpp-chat-window-401-focused3.json": "c6044046859938dbbfb00a1d198093ba024d69bf176c5637d710ee90174d1368",
+    "extracted/cpp-chat-window-401-ctest2.log": "250f8940fae3d5cdb0da9a74eecfbe37e4ff480459340df0e5478ec3880e9faa",
+    "extracted/cpp-chat-window-401-audit.py": "36be633f50b27a1af145e711f8a4227ba9eae805d462ef405e9b14cccbd02862",
+    "extracted/cpp-chat-window-401-static.json": "fe5ba12e00325580237774180c91a9a09c593aa6d2033d9a4c6ed8a9c44ff79b",
+    "extracted/cpp-chat-window-401-preflight.json": "edd194fdd0a85b9f92ccfb59c5632771c97248b8b946f6862e143b1f0db60761",
+    "extracted/cpp-chat-window-401-ctest2-tests.log": "e4ec14216acff50a4d0be96ee9b6357e00e08b27bfa8241cb45f22fba0ca6737",
+    "extracted/cpp-chat-window-401-ctest2.json": "d1812a77a2453277544dacdfc5f0c5438355fdf87d4f6c22b59ec0e8f5036d72",
+    "extracted/cpp-chat-window-401-terminal.json": "cf656ab0e43a5f295640d4bdfc607b175ac89fe64cb00cdb0aa7c2f60accb64b"
+  },
+  "builds": [
+    {
+      "index": 1,
+      "session": 45966,
+      "returnCode": 1,
+      "scope": "const scalar 경계에서 비const Release 호출 C2662",
+      "path": "extracted/cpp-chat-window-401-build1.log",
+      "sha256": "fb1f8e6f9d5434dfe9563a55b4b3bb660349ec9eb2682aaf43245f71a1a8728f",
+      "errors": [
+        "error C2662"
+      ],
+      "warnings": []
+    },
+    {
+      "index": 2,
+      "session": 72539,
+      "returnCode": 0,
+      "scope": "전체 실제 공장/통합6검사",
+      "path": "extracted/cpp-chat-window-401-build2.log",
+      "sha256": "94e9d2e7d708040aaf096124b91b304894c65500c9baab16c4467f864e489af9",
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "index": 3,
+      "session": 89849,
+      "returnCode": 0,
+      "scope": "원문 callback29행·현재 파일 재조회/사건 예약·통합7검사",
+      "path": "extracted/cpp-chat-window-401-build3.log",
+      "sha256": "afa69dbf323cc2679b7db276cb1b851d1da251e32472f8d9d20eb2d6f0131646",
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "index": 4,
+      "session": 53656,
+      "returnCode": 0,
+      "scope": "실제 LowerBody dirty 효과로 clear 대상을 관측; TYPE 프레임 코드 설명 보강",
+      "path": "extracted/cpp-chat-window-401-build4.log",
+      "sha256": "c7845cf3a60a45bf8c8a951a06fc64309f6834edc83dd24768f907e6d3b8ff4f",
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "index": 5,
+      "session": 34359,
+      "returnCode": 0,
+      "scope": "ClientMain 기존 CRLF 복구와 프레임 코드 설명 주석 보강 뒤 최종 산출물",
+      "path": "extracted/cpp-chat-window-401-build5.log",
+      "sha256": "6b9d00b03fe1f05dc783b5f633dc3b52709240b8774114bea012504dd4a138b3",
+      "errors": [],
+      "warnings": []
+    }
+  ],
+  "focused": {
+    "productSha256": "48eb8e14d27865428fecff426568dc286dd850a81bf8de54cdc03ab9b55a6594",
+    "testBinarySha256": "13f53384e429e8b318efba7809e6e2d4c44d070dbcef98ef4445c7aa6317814e",
+    "runs": [
+      {
+        "returnCode": 0,
+        "seconds": 0.9928615000098944,
+        "log": "extracted/cpp-chat-window-401-focused3-1.log",
+        "filter": "ChatWindow_",
+        "counts": [
+          [
+            "1",
+            "0"
+          ]
+        ],
+        "names": [
+          "ChatWindow_IndependentNativeCreationInputHelperAndLifetime"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 1.3565207000356168,
+        "log": "extracted/cpp-chat-window-401-focused3-2.log",
+        "filter": "ChatWindowClient_",
+        "counts": [
+          [
+            "7",
+            "0"
+          ]
+        ],
+        "names": [
+          "ChatWindowClient_FullFactoryActualChildrenClientLogAndCommands",
+          "ChatWindowClient_ConcurrentRootsSharedLogAndNativeCurrentRetirement",
+          "ChatWindowClient_ActualLogCallbackClearTailAndQuitBoundary",
+          "ChatWindowClient_ActualHelperMenusPreserveStablePayloadsBeyondInputRing",
+          "ChatWindowClient_RealGeometryInputAndStyledPixels",
+          "ChatWindowClient_PartialCreationAndSelectedUnboundDevicesAreExplicit",
+          "ChatWindowClient_IndependentNativeCallbackMutationsAndCurrentReads"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.3682272000005469,
+        "log": "extracted/cpp-chat-window-401-focused3-3.log",
+        "filter": "HudChatGeometry_",
+        "counts": [
+          [
+            "1",
+            "0"
+          ]
+        ],
+        "names": [
+          "HudChatGeometry_Native3960SizesAndCallbacks"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.9215803999686614,
+        "log": "extracted/cpp-chat-window-401-focused3-4.log",
+        "filter": "TextEntryGump_",
+        "counts": [
+          [
+            "1",
+            "0"
+          ]
+        ],
+        "names": [
+          "TextEntryGump_IndependentNativeConstructorAttachInputDrawLifetime"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.47954730002675205,
+        "log": "extracted/cpp-chat-window-401-focused3-5.log",
+        "filter": "TextEntryBuffer_",
+        "counts": [
+          [
+            "1",
+            "0"
+          ]
+        ],
+        "names": [
+          "TextEntryBuffer_IndependentNativeAllOperations"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.5098239000653848,
+        "log": "extracted/cpp-chat-window-401-focused3-6.log",
+        "filter": "TextEntryClient_",
+        "counts": [
+          [
+            "5",
+            "0"
+          ]
+        ],
+        "names": [
+          "TextEntryClient_RealStorageAddressesGrowthAndIndependentLifetimes",
+          "TextEntryClient_ActualConsoleTreeInputClipboardAndCompletion",
+          "TextEntryClient_RealGlyphSelectionCaretClipAndIdle",
+          "TextEntryClient_ConcurrentConsolesRetirementAndPartialCreationCleanup",
+          "TextEntryClient_BorrowedGlobalLogUsesSameStateAndActualFontFragments"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 1.8700020000105724,
+        "log": "extracted/cpp-chat-window-401-focused3-7.log",
+        "filter": "RawMenuControls_",
+        "counts": [
+          [
+            "12",
+            "0"
+          ]
+        ],
+        "names": [
+          "RawMenuControls_HelpActualTreePixelsAndOutsideInput",
+          "RawMenuControls_OwnedHelpStringsDriveRealMenuAndRelease",
+          "RawMenuControls_HelpActualHistoryButtonsAndReopen",
+          "RawMenuControls_HelpActualTypeInfoAndImage",
+          "RawMenuControls_FloatingSpActualPixelsAndLifetime",
+          "RawMenuControls_CommonTreeInputAndDisabledItem",
+          "RawMenuControls_HorizontalPointAndDeferredReplace",
+          "RawMenuControls_FancySubmenuPixelsAndCleanup",
+          "RawMenuControls_ObjectMenuCommandsAndCurrentConfig",
+          "RawMenuControls_CarrierAndObjectMenuChain",
+          "RawMenuControls_MissionLoadingUsesSharedTreeAndCancel",
+          "RawMenuControls_MinimapBeforeSessionAndAcrossWorldBindings"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.5338474999880418,
+        "log": "extracted/cpp-chat-window-401-focused3-8.log",
+        "filter": "GumpLifetime_",
+        "counts": [
+          [
+            "9",
+            "0"
+          ]
+        ],
+        "names": [
+          "GumpLifetime_PatchNative",
+          "GumpLifetime_CdNative",
+          "GumpLifetime_AdditionalNative",
+          "GumpLifetime_CreateTreeKillCleanupAndReuse",
+          "GumpLifetime_TreeReplacementDefersDestruction",
+          "GumpLifetime_BaseDoesNotUnregisterOrRemoveDialogs",
+          "GumpLifetime_CdIdleCapacity",
+          "GumpLifetime_ContractsAndCycles",
+          "GumpLifetime_CallbackExceptionKeepsWrittenState"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.6394636000040919,
+        "log": "extracted/cpp-chat-window-401-focused3-9.log",
+        "filter": "NsInfoClient_",
+        "counts": [
+          [
+            "4",
+            "0"
+          ]
+        ],
+        "names": [
+          "NsInfoClient_FullRealChildrenBuffersAndHiddenPixelsBeforeSession",
+          "NsInfoClient_TwoRootsThenRealRetirementAndPageCleanup",
+          "NsInfoClient_PartialTranslationAndSelectedMetamapAreNotFakeSuccess",
+          "NsInfoClient_CurrentServerConfigAndNativeNameBufferRules"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.5320607000030577,
+        "log": "extracted/cpp-chat-window-401-focused3-10.log",
+        "filter": "ProductionInitialContext_",
+        "counts": [
+          [
+            "4",
+            "0"
+          ]
+        ],
+        "names": [
+          "ProductionInitialContext_ConstructsAllNativeChildrenWithoutSession",
+          "ProductionInitialContext_RepeatedConstructionAndGlobalPageRetirement",
+          "ProductionInitialContext_MissingTranslationKeepsAndRetiresPartialEffects",
+          "ProductionInitialContext_GameplayGlobalsKeepRealAliasesAndRejectDuplicate"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 1.5294250999577343,
+        "log": "extracted/cpp-chat-window-401-focused3-11.log",
+        "filter": "HudDock_",
+        "counts": [
+          [
+            "1",
+            "0"
+          ]
+        ],
+        "names": [
+          "HudDock_IndependentNativeBodiesAndNestedViewport"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.6022726999362931,
+        "log": "extracted/cpp-chat-window-401-focused3-12.log",
+        "filter": "HudDividerInput_",
+        "counts": [
+          [
+            "1",
+            "0"
+          ]
+        ],
+        "names": [
+          "HudDividerInput_Native13398StateAndCallbacks"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.646484199911356,
+        "log": "extracted/cpp-chat-window-401-focused3-13.log",
+        "filter": "UberRoot_",
+        "counts": [
+          [
+            "6",
+            "0"
+          ]
+        ],
+        "names": [
+          "UberRoot_Native160",
+          "UberRoot_RealTreeAndLifetimeTransfer",
+          "UberRoot_DockReadsLiveThisFields",
+          "UberRoot_MissingFactoryKeepsPriorEffects",
+          "UberRoot_MissingOldRootFailsAfterConstructionEffects",
+          "UberRoot_EmptyLeafNeedsNoGameHook"
+        ]
+      }
+    ],
+    "sameBinaries": true,
+    "originalsUnchanged": true
+  },
+  "full": {
+    "returnCode": 0,
+    "seconds": 328.57170039997436,
+    "log": "extracted/cpp-chat-window-401-ctest2.log",
+    "productSha256": "48eb8e14d27865428fecff426568dc286dd850a81bf8de54cdc03ab9b55a6594",
+    "testBinarySha256": "13f53384e429e8b318efba7809e6e2d4c44d070dbcef98ef4445c7aa6317814e",
+    "counts": [
+      [
+        "2726",
+        "0"
+      ]
+    ],
+    "sameBinaries": true,
+    "originalsUnchanged": true
+  },
+  "firstFocused": {
+    "productSha256": "b70e1b2ab874d79a15c5951754f74431707120e366f52441d07ac051213a85d5",
+    "testBinarySha256": "00e18e84668df89fe779f2540b4c99530f3dec0c9469879502c1806efd658a1b",
+    "runs": [
+      {
+        "returnCode": 0,
+        "seconds": 0.9526671000057831,
+        "log": "extracted/cpp-chat-window-401-focused1-1.log",
+        "filter": "ChatWindow_",
+        "counts": [
+          [
+            "1",
+            "0"
+          ]
+        ],
+        "names": [
+          "ChatWindow_IndependentNativeCreationInputHelperAndLifetime"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.6802283000433818,
+        "log": "extracted/cpp-chat-window-401-focused1-2.log",
+        "filter": "ChatWindowClient_",
+        "counts": [
+          [
+            "6",
+            "0"
+          ]
+        ],
+        "names": [
+          "ChatWindowClient_FullFactoryActualChildrenClientLogAndCommands",
+          "ChatWindowClient_ConcurrentRootsSharedLogAndNativeCurrentRetirement",
+          "ChatWindowClient_ActualLogCallbackClearTailAndQuitBoundary",
+          "ChatWindowClient_ActualHelperMenusPreserveStablePayloadsBeyondInputRing",
+          "ChatWindowClient_RealGeometryInputAndStyledPixels",
+          "ChatWindowClient_PartialCreationAndSelectedUnboundDevicesAreExplicit"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.36213230004068464,
+        "log": "extracted/cpp-chat-window-401-focused1-3.log",
+        "filter": "HudChatGeometry_",
+        "counts": [
+          [
+            "1",
+            "0"
+          ]
+        ],
+        "names": [
+          "HudChatGeometry_Native3960SizesAndCallbacks"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 1.0018317999783903,
+        "log": "extracted/cpp-chat-window-401-focused1-4.log",
+        "filter": "TextEntryGump_",
+        "counts": [
+          [
+            "1",
+            "0"
+          ]
+        ],
+        "names": [
+          "TextEntryGump_IndependentNativeConstructorAttachInputDrawLifetime"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.4024983000708744,
+        "log": "extracted/cpp-chat-window-401-focused1-5.log",
+        "filter": "TextEntryBuffer_",
+        "counts": [
+          [
+            "1",
+            "0"
+          ]
+        ],
+        "names": [
+          "TextEntryBuffer_IndependentNativeAllOperations"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.5635527999838814,
+        "log": "extracted/cpp-chat-window-401-focused1-6.log",
+        "filter": "TextEntryClient_",
+        "counts": [
+          [
+            "5",
+            "0"
+          ]
+        ],
+        "names": [
+          "TextEntryClient_RealStorageAddressesGrowthAndIndependentLifetimes",
+          "TextEntryClient_ActualConsoleTreeInputClipboardAndCompletion",
+          "TextEntryClient_RealGlyphSelectionCaretClipAndIdle",
+          "TextEntryClient_ConcurrentConsolesRetirementAndPartialCreationCleanup",
+          "TextEntryClient_BorrowedGlobalLogUsesSameStateAndActualFontFragments"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 2.012199699995108,
+        "log": "extracted/cpp-chat-window-401-focused1-7.log",
+        "filter": "RawMenuControls_",
+        "counts": [
+          [
+            "12",
+            "0"
+          ]
+        ],
+        "names": [
+          "RawMenuControls_HelpActualTreePixelsAndOutsideInput",
+          "RawMenuControls_OwnedHelpStringsDriveRealMenuAndRelease",
+          "RawMenuControls_HelpActualHistoryButtonsAndReopen",
+          "RawMenuControls_HelpActualTypeInfoAndImage",
+          "RawMenuControls_FloatingSpActualPixelsAndLifetime",
+          "RawMenuControls_CommonTreeInputAndDisabledItem",
+          "RawMenuControls_HorizontalPointAndDeferredReplace",
+          "RawMenuControls_FancySubmenuPixelsAndCleanup",
+          "RawMenuControls_ObjectMenuCommandsAndCurrentConfig",
+          "RawMenuControls_CarrierAndObjectMenuChain",
+          "RawMenuControls_MissionLoadingUsesSharedTreeAndCancel",
+          "RawMenuControls_MinimapBeforeSessionAndAcrossWorldBindings"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.5656005999771878,
+        "log": "extracted/cpp-chat-window-401-focused1-8.log",
+        "filter": "GumpLifetime_",
+        "counts": [
+          [
+            "9",
+            "0"
+          ]
+        ],
+        "names": [
+          "GumpLifetime_PatchNative",
+          "GumpLifetime_CdNative",
+          "GumpLifetime_AdditionalNative",
+          "GumpLifetime_CreateTreeKillCleanupAndReuse",
+          "GumpLifetime_TreeReplacementDefersDestruction",
+          "GumpLifetime_BaseDoesNotUnregisterOrRemoveDialogs",
+          "GumpLifetime_CdIdleCapacity",
+          "GumpLifetime_ContractsAndCycles",
+          "GumpLifetime_CallbackExceptionKeepsWrittenState"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.5326894000172615,
+        "log": "extracted/cpp-chat-window-401-focused1-9.log",
+        "filter": "NsInfoClient_",
+        "counts": [
+          [
+            "4",
+            "0"
+          ]
+        ],
+        "names": [
+          "NsInfoClient_FullRealChildrenBuffersAndHiddenPixelsBeforeSession",
+          "NsInfoClient_TwoRootsThenRealRetirementAndPageCleanup",
+          "NsInfoClient_PartialTranslationAndSelectedMetamapAreNotFakeSuccess",
+          "NsInfoClient_CurrentServerConfigAndNativeNameBufferRules"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.6103298000525683,
+        "log": "extracted/cpp-chat-window-401-focused1-10.log",
+        "filter": "ProductionInitialContext_",
+        "counts": [
+          [
+            "4",
+            "0"
+          ]
+        ],
+        "names": [
+          "ProductionInitialContext_ConstructsAllNativeChildrenWithoutSession",
+          "ProductionInitialContext_RepeatedConstructionAndGlobalPageRetirement",
+          "ProductionInitialContext_MissingTranslationKeepsAndRetiresPartialEffects",
+          "ProductionInitialContext_GameplayGlobalsKeepRealAliasesAndRejectDuplicate"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 1.5268092999467626,
+        "log": "extracted/cpp-chat-window-401-focused1-11.log",
+        "filter": "HudDock_",
+        "counts": [
+          [
+            "1",
+            "0"
+          ]
+        ],
+        "names": [
+          "HudDock_IndependentNativeBodiesAndNestedViewport"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.8443070000503212,
+        "log": "extracted/cpp-chat-window-401-focused1-12.log",
+        "filter": "HudDividerInput_",
+        "counts": [
+          [
+            "1",
+            "0"
+          ]
+        ],
+        "names": [
+          "HudDividerInput_Native13398StateAndCallbacks"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.5964831999735907,
+        "log": "extracted/cpp-chat-window-401-focused1-13.log",
+        "filter": "UberRoot_",
+        "counts": [
+          [
+            "6",
+            "0"
+          ]
+        ],
+        "names": [
+          "UberRoot_Native160",
+          "UberRoot_RealTreeAndLifetimeTransfer",
+          "UberRoot_DockReadsLiveThisFields",
+          "UberRoot_MissingFactoryKeepsPriorEffects",
+          "UberRoot_MissingOldRootFailsAfterConstructionEffects",
+          "UberRoot_EmptyLeafNeedsNoGameHook"
+        ]
+      }
+    ],
+    "sameBinaries": true,
+    "originalsUnchanged": true
+  },
+  "secondFocused": {
+    "productSha256": "b86ebf88ec5c29b4bd8e2086d0ff23db4bd2b8df39bcfef978f88678679c663b",
+    "testBinarySha256": "fed03970f30626e9160e4aa9591978ad37c7b9289792d8ad43df99d0d030ebfe",
+    "runs": [
+      {
+        "returnCode": 0,
+        "seconds": 0.9625030000461265,
+        "log": "extracted/cpp-chat-window-401-focused2-1.log",
+        "filter": "ChatWindow_",
+        "counts": [
+          [
+            "1",
+            "0"
+          ]
+        ],
+        "names": [
+          "ChatWindow_IndependentNativeCreationInputHelperAndLifetime"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 1.2668676000321284,
+        "log": "extracted/cpp-chat-window-401-focused2-2.log",
+        "filter": "ChatWindowClient_",
+        "counts": [
+          [
+            "7",
+            "0"
+          ]
+        ],
+        "names": [
+          "ChatWindowClient_FullFactoryActualChildrenClientLogAndCommands",
+          "ChatWindowClient_ConcurrentRootsSharedLogAndNativeCurrentRetirement",
+          "ChatWindowClient_ActualLogCallbackClearTailAndQuitBoundary",
+          "ChatWindowClient_ActualHelperMenusPreserveStablePayloadsBeyondInputRing",
+          "ChatWindowClient_RealGeometryInputAndStyledPixels",
+          "ChatWindowClient_PartialCreationAndSelectedUnboundDevicesAreExplicit",
+          "ChatWindowClient_IndependentNativeCallbackMutationsAndCurrentReads"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.42108170001301914,
+        "log": "extracted/cpp-chat-window-401-focused2-3.log",
+        "filter": "HudChatGeometry_",
+        "counts": [
+          [
+            "1",
+            "0"
+          ]
+        ],
+        "names": [
+          "HudChatGeometry_Native3960SizesAndCallbacks"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.8902861999813467,
+        "log": "extracted/cpp-chat-window-401-focused2-4.log",
+        "filter": "TextEntryGump_",
+        "counts": [
+          [
+            "1",
+            "0"
+          ]
+        ],
+        "names": [
+          "TextEntryGump_IndependentNativeConstructorAttachInputDrawLifetime"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.5061456999974325,
+        "log": "extracted/cpp-chat-window-401-focused2-5.log",
+        "filter": "TextEntryBuffer_",
+        "counts": [
+          [
+            "1",
+            "0"
+          ]
+        ],
+        "names": [
+          "TextEntryBuffer_IndependentNativeAllOperations"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.5795206999173388,
+        "log": "extracted/cpp-chat-window-401-focused2-6.log",
+        "filter": "TextEntryClient_",
+        "counts": [
+          [
+            "5",
+            "0"
+          ]
+        ],
+        "names": [
+          "TextEntryClient_RealStorageAddressesGrowthAndIndependentLifetimes",
+          "TextEntryClient_ActualConsoleTreeInputClipboardAndCompletion",
+          "TextEntryClient_RealGlyphSelectionCaretClipAndIdle",
+          "TextEntryClient_ConcurrentConsolesRetirementAndPartialCreationCleanup",
+          "TextEntryClient_BorrowedGlobalLogUsesSameStateAndActualFontFragments"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 1.95996979996562,
+        "log": "extracted/cpp-chat-window-401-focused2-7.log",
+        "filter": "RawMenuControls_",
+        "counts": [
+          [
+            "12",
+            "0"
+          ]
+        ],
+        "names": [
+          "RawMenuControls_HelpActualTreePixelsAndOutsideInput",
+          "RawMenuControls_OwnedHelpStringsDriveRealMenuAndRelease",
+          "RawMenuControls_HelpActualHistoryButtonsAndReopen",
+          "RawMenuControls_HelpActualTypeInfoAndImage",
+          "RawMenuControls_FloatingSpActualPixelsAndLifetime",
+          "RawMenuControls_CommonTreeInputAndDisabledItem",
+          "RawMenuControls_HorizontalPointAndDeferredReplace",
+          "RawMenuControls_FancySubmenuPixelsAndCleanup",
+          "RawMenuControls_ObjectMenuCommandsAndCurrentConfig",
+          "RawMenuControls_CarrierAndObjectMenuChain",
+          "RawMenuControls_MissionLoadingUsesSharedTreeAndCancel",
+          "RawMenuControls_MinimapBeforeSessionAndAcrossWorldBindings"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.666238300036639,
+        "log": "extracted/cpp-chat-window-401-focused2-8.log",
+        "filter": "GumpLifetime_",
+        "counts": [
+          [
+            "9",
+            "0"
+          ]
+        ],
+        "names": [
+          "GumpLifetime_PatchNative",
+          "GumpLifetime_CdNative",
+          "GumpLifetime_AdditionalNative",
+          "GumpLifetime_CreateTreeKillCleanupAndReuse",
+          "GumpLifetime_TreeReplacementDefersDestruction",
+          "GumpLifetime_BaseDoesNotUnregisterOrRemoveDialogs",
+          "GumpLifetime_CdIdleCapacity",
+          "GumpLifetime_ContractsAndCycles",
+          "GumpLifetime_CallbackExceptionKeepsWrittenState"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.631887000054121,
+        "log": "extracted/cpp-chat-window-401-focused2-9.log",
+        "filter": "NsInfoClient_",
+        "counts": [
+          [
+            "4",
+            "0"
+          ]
+        ],
+        "names": [
+          "NsInfoClient_FullRealChildrenBuffersAndHiddenPixelsBeforeSession",
+          "NsInfoClient_TwoRootsThenRealRetirementAndPageCleanup",
+          "NsInfoClient_PartialTranslationAndSelectedMetamapAreNotFakeSuccess",
+          "NsInfoClient_CurrentServerConfigAndNativeNameBufferRules"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.5637913000537083,
+        "log": "extracted/cpp-chat-window-401-focused2-10.log",
+        "filter": "ProductionInitialContext_",
+        "counts": [
+          [
+            "4",
+            "0"
+          ]
+        ],
+        "names": [
+          "ProductionInitialContext_ConstructsAllNativeChildrenWithoutSession",
+          "ProductionInitialContext_RepeatedConstructionAndGlobalPageRetirement",
+          "ProductionInitialContext_MissingTranslationKeepsAndRetiresPartialEffects",
+          "ProductionInitialContext_GameplayGlobalsKeepRealAliasesAndRejectDuplicate"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 1.5693231000332162,
+        "log": "extracted/cpp-chat-window-401-focused2-11.log",
+        "filter": "HudDock_",
+        "counts": [
+          [
+            "1",
+            "0"
+          ]
+        ],
+        "names": [
+          "HudDock_IndependentNativeBodiesAndNestedViewport"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.6016550000058487,
+        "log": "extracted/cpp-chat-window-401-focused2-12.log",
+        "filter": "HudDividerInput_",
+        "counts": [
+          [
+            "1",
+            "0"
+          ]
+        ],
+        "names": [
+          "HudDividerInput_Native13398StateAndCallbacks"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.5484570999396965,
+        "log": "extracted/cpp-chat-window-401-focused2-13.log",
+        "filter": "UberRoot_",
+        "counts": [
+          [
+            "6",
+            "0"
+          ]
+        ],
+        "names": [
+          "UberRoot_Native160",
+          "UberRoot_RealTreeAndLifetimeTransfer",
+          "UberRoot_DockReadsLiveThisFields",
+          "UberRoot_MissingFactoryKeepsPriorEffects",
+          "UberRoot_MissingOldRootFailsAfterConstructionEffects",
+          "UberRoot_EmptyLeafNeedsNoGameHook"
+        ]
+      }
+    ],
+    "sameBinaries": true,
+    "originalsUnchanged": true
+  },
+  "firstFull": {
+    "returnCode": 0,
+    "seconds": 330.1306536999764,
+    "log": "extracted/cpp-chat-window-401-ctest1.log",
+    "productSha256": "b86ebf88ec5c29b4bd8e2086d0ff23db4bd2b8df39bcfef978f88678679c663b",
+    "testBinarySha256": "fed03970f30626e9160e4aa9591978ad37c7b9289792d8ad43df99d0d030ebfe",
+    "counts": [
+      [
+        "2726",
+        "0"
+      ]
+    ],
+    "sameBinaries": true,
+    "originalsUnchanged": true
+  },
+  "nativeReplay": {
+    "host": "HJOW-Athlon",
+    "lastFullDecompileHost": "HJOW-Athlon",
+    "lastFullDecompileDate": "2026-10-23",
+    "sourceSha256": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "originalSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "before": {
+      "cpppj/tests/fixtures/chat-window-x86.tsv": "e7faa97fbd0bf4c4d8b9d5a48bb6c64e3930ed3a0365948f850ecf65623ee5e5",
+      "cpppj/tests/fixtures/text-entry-gump-x86.tsv": "658245fb178eae9f9b03365caabd65f8f189fe04867babbcda0c102fca003474",
+      "cpppj/tests/fixtures/text-entry-buffer-x86.tsv": "aa792a6af93d503c2236c378936bd74f6ae2d300b28974e48c4f40d55a7f4109",
+      "cpppj/tests/fixtures/hud-chat-geometry-x86.tsv": "9c3cb7eba22c800405b726861d102c4fa0deb4b911b5dbe4a77238984f22504a"
+    },
+    "gameExecuted": false,
+    "guiExecuted": false,
+    "fixtureWritten": false,
+    "runs": [
+      {
+        "family": "decomp_chat_window",
+        "rows": 180,
+        "allSame": true
+      },
+      {
+        "family": "decomp_text_entry_gump",
+        "rows": 2292,
+        "allSame": true
+      },
+      {
+        "family": "decomp_text_entry_buffer",
+        "rows": 570,
+        "allSame": true
+      },
+      {
+        "family": "decomp_hud_chat_geometry",
+        "rows": 3960,
+        "allSame": true
+      }
+    ],
+    "success": true,
+    "seconds": 54.34025050001219,
+    "after": {
+      "cpppj/tests/fixtures/chat-window-x86.tsv": "e7faa97fbd0bf4c4d8b9d5a48bb6c64e3930ed3a0365948f850ecf65623ee5e5",
+      "cpppj/tests/fixtures/text-entry-gump-x86.tsv": "658245fb178eae9f9b03365caabd65f8f189fe04867babbcda0c102fca003474",
+      "cpppj/tests/fixtures/text-entry-buffer-x86.tsv": "aa792a6af93d503c2236c378936bd74f6ae2d300b28974e48c4f40d55a7f4109",
+      "cpppj/tests/fixtures/hud-chat-geometry-x86.tsv": "9c3cb7eba22c800405b726861d102c4fa0deb4b911b5dbe4a77238984f22504a"
+    },
+    "fixturesUnchanged": true
+  },
+  "callbackNative": {
+    "host": "HJOW-Athlon",
+    "lastFullDecompileHost": "HJOW-Athlon",
+    "lastFullDecompileDate": "2026-10-23",
+    "peSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "sourceSha256": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "rows": 29,
+    "instructions": 416,
+    "fixtureSha256": "fe2e8eadd7f118cabbcdf6984cc74fa53021af9df565353d7c87614eb97ee34a",
+    "toolSha256": "5bdd9e663bbfa4b953a43075d67192a08f5f75f3e498ee1e00f96f3a3c5ce30a",
+    "gameExecuted": false,
+    "limits": [
+      "세 callback의 원문 분기/두 번째 현재 포인터 읽기/strlen/RET를 실제 실행",
+      "하위 ReplaceText/RequestBottom/파일 valid·write/사건 예약은 명시 입력/인자 관측 장치",
+      "파일/텍스트 하위 본문과 게임/GUI/전송 완주의 증거가 아님",
+      "log void EAX는 제품 반환값이 아니므로0정규화"
+    ],
+    "instructionCountIncludesDeviceHooks": true
+  },
+  "terminal": {
+    "builds": [
+      {
+        "index": 1,
+        "session": 45966,
+        "returnCode": 1,
+        "scope": "const scalar 경계에서 비const Release 호출 C2662"
+      },
+      {
+        "index": 2,
+        "session": 72539,
+        "returnCode": 0,
+        "scope": "전체 실제 공장/통합6검사"
+      },
+      {
+        "index": 3,
+        "session": 89849,
+        "returnCode": 0,
+        "scope": "원문 callback29행·현재 파일 재조회/사건 예약·통합7검사"
+      },
+      {
+        "index": 4,
+        "session": 53656,
+        "returnCode": 0,
+        "scope": "실제 LowerBody dirty 효과로 clear 대상을 관측; TYPE 프레임 코드 설명 보강"
+      },
+      {
+        "index": 5,
+        "session": 34359,
+        "returnCode": 0,
+        "scope": "ClientMain 기존 CRLF 복구와 프레임 코드 설명 주석 보강 뒤 최종 산출물"
+      }
+    ],
+    "firstFocused": "focused1",
+    "firstFocusedSession": 47159,
+    "firstFocusedReturnCode": 0,
+    "secondFocused": "focused2",
+    "secondFocusedSession": 46739,
+    "secondFocusedReturnCode": 0,
+    "firstFull": "ctest1",
+    "firstFullSession": 59929,
+    "firstFullReturnCode": 0,
+    "focused": "focused3",
+    "full": "ctest2",
+    "finalValidationSession": 31808,
+    "finalValidationReturnCode": 0,
+    "nativeReplaySession": 10957,
+    "nativeReplayReturnCode": 0,
+    "newCallbackNativeRows": 29,
+    "newCallbackNativeVerifyReturnCode": 0,
+    "qaViewed": true,
+    "qaPath": "extracted/cpp-chat-window-401-focused3-chat.bmp",
+    "originalGameExecuted": false,
+    "guiExecuted": false,
+    "goalComplete": false
+  },
+  "originals1394Unchanged": true,
+  "originalGameExecuted": false,
+  "guiExecuted": false,
+  "externalAgentsChange": {
+    "sha256": "7f853771930147c26e67d444ced94114992510a3fa072f5ed6bd63da7ba88bd9",
+    "stagedByThisUnit": false
+  },
+  "limits": [
+    "전체 Chat factory/네 자식/공유 로그/메뉴/기하/일반 입력은 실제 조립; 기존 게임 화면의 full Uber 도킹은 후속",
+    "Client 공유 로그의 저장소는 Client 수명이며 실제 StyleText 생성/반납은 현재 단일 공통 UI 대여 경계; 전체 Native CRT/startup/State 순서와 동일하다는 뜻 아님",
+    "Win32 clipboard/recipient/Tab42e540/Chatmanager42da00 전송·identity·파일 실제 장치는 선택 경계이며 미연결을 명시 거부",
+    "clear/quit/append 원문29행은 실제 상위 본문이며 ReplaceText/RequestBottom/파일/예약 하위는 명시 장치; 실제 하위 본문은 C++ 자산 조립과 기존 Native에서 별도 검증",
+    "Native416명령 위치 수는 장치 진입/STOP 훅도 포함하며 순수 CPU 명령 수와 구별",
+    "원문 current 무조건0/미완료 끝 줄 보존/전체DWORD 현재 사건/검사 뒤 현재 파일 재조회를 유지",
+    "일반 다중 생성/명시 Close의 회복이며 전체 EH/메타맵/서버 목록/HTML full 공장/새 Uber/State/Core/Pool 순서 완료는 아님",
+    "모든 Early/캠페인/Demo 사용자 완주·Edit/언어별 시나리오 전체·완전 동일성 및393 Wide SaveOptions 원인은 미완료"
+  ]
+}

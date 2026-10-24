@@ -2089,6 +2089,10 @@ target_sources(netstorm_tests PRIVATE HudNsInfoTests.cpp HudNsInfoCreateTests.cp
 target_sources(netstorm_tests PRIVATE ChatWindowTests.cpp HudChatGeometryTests.cpp TextEntryGumpTests.cpp TextEntryBufferTests.cpp)
 # 실제 물리/공통 등록표/글꼴·픽셀/교체 수명의 결합을 별도로 검사한다.
 target_sources(netstorm_tests PRIVATE TextEntryClientTests.cpp)
+# 실제 Client 전역과 전체 Chat 공장/공유 로그/메뉴/픽셀/동시 수명을 검사한다.
+target_sources(netstorm_tests PRIVATE ChatWindowClientTests.cpp)
+set_source_files_properties(ChatWindowClientTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_CHAT_CALLBACKS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/chat-callbacks-x86.tsv\"")
 set_source_files_properties(ChatWindowTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_CHAT_WINDOW_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/chat-window-x86.tsv\"")
 set_source_files_properties(HudChatGeometryTests.cpp PROPERTIES COMPILE_DEFINITIONS

@@ -1,0 +1,19 @@
+{
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "peSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+  "sourceSha256": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+  "rows": 29,
+  "instructions": 416,
+  "fixtureSha256": "fe2e8eadd7f118cabbcdf6984cc74fa53021af9df565353d7c87614eb97ee34a",
+  "toolSha256": "5bdd9e663bbfa4b953a43075d67192a08f5f75f3e498ee1e00f96f3a3c5ce30a",
+  "gameExecuted": false,
+  "limits": [
+    "세 callback의 원문 분기/두 번째 현재 포인터 읽기/strlen/RET를 실제 실행",
+    "하위 ReplaceText/RequestBottom/파일 valid·write/사건 예약은 명시 입력/인자 관측 장치",
+    "파일/텍스트 하위 본문과 게임/GUI/전송 완주의 증거가 아님",
+    "log void EAX는 제품 반환값이 아니므로0정규화"
+  ],
+  "instructionCountIncludesDeviceHooks": true
+}

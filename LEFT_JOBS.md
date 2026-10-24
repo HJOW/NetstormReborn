@@ -1,5 +1,13 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-24 단위401 완료: 실제 ChatWindow 공장과 Client 공유 로그
+
+- [x] AGENTS/공통/닷넷 인계·**8661b66b / 20261024-23 CP**를 확인했다. 현재/마지막 전체 정밀 디컴파일은 **HJOW-Athlon / 2026-10-23**이다. 이전400은 실제 진척/커밋이었다. 새 전체 디컴파일/원본 직접 실행/GUI0이며 AGENTS의 외부 변경 두 행은 보존하고 stage/커밋에서 제외한다.
+- [x] ClientChatWindowGlobals의 실제 current/등록/완성 목록/공유128줄 로그/파일 토큰과 기존 DotCommand 인접 표를 같은 공통 UI에 연결했다. 실제 Chat 공장은 네 자식/24노드/세 Slider·Console80문자/초기 숨김·자기 스크롤 버퍼 반납→공유 owns0·실제 공통 입력/기하/스타일/픽셀/수명을 조립한다. 다중 생성과 원문 무조건current0·페이지 간 로그 유지·미부착/부분 생성 정리를 검사했다. helper의500개 넘는 실제 문자열 인자는 Client 수명의 안정된 토큰으로 빌리며80칸 임시 입력 고리로 덮지 않는다. 실제 Client 저장소는 장기 소유하되 StyleText 생성/반납은 단일 UI 대여 경계이므로 Native CRT/startup/State 순서 완료는 아니다.
+- [x] 새 독립 PE callback **29행**(clear/quit/append)의 원문 분기/strlen/두 번째 현재 포인터/RET와 장치 돌연변이를 검증했다. 실제 C++ 조립에서도 같은29행을 대조해 유효성 검사 후 현재 파일 재조회·현재 전체DWORD 사건/0/0 예약·기존 root의 현재 text 재조회·완료 줄만 clear를 보존했다. 명령 위치416에는 장치/STOP 훅도 포함된다. 보존 Native7002행도 전부 같고 변경0이다. 신규29행을 제외한 기존 자료를 갱신하지 않았다.
+- [x] build1(45966)은 const scalar Release C2662로 종료1이며 수정했다. 이후 빌드들은 종료0·관측 경고오류0이다. 최초 집중52/0, 최종 집중 **53/0**(실제 Chat7 포함), 최종 전체 CTest **2726/0·328.57초**다. 최초 전체도2726/0이며 표현 정리 뒤 최종 산출물 확인을 원시에 남겼다. 최종 Chat BMP를 직접 확인했다. 최종 제품 **48eb8e14d27865428fecff426568dc286dd850a81bf8de54cdc03ab9b55a6594**, 검사 **13f53384e429e8b318efba7809e6e2d4c44d070dbcef98ef4445c7aa6317814e**가 집중/전체에서 같고 originals1394동일·보호/기존 Native 추적 변경0이다. [완료 문서](docs/exe/cpp-chat-window-client-20261024.md)/[제품 보고서](cpppj/chat-window-client-runtime-20261024.json)에 SHA/경과/한계를 기록했다. 원시는 `extracted/cpp-chat-window-401-*`이며 선택19파일 감사 후 **20261024-24 CP**로 로컬 커밋한다. push하지 않는다.
+- [ ] 다음은 **HTML 전체 공장과 실제 full Uber 도킹/교체·State/Core/Pool 순서**다. Production/Minimap의 기존/새 제공자 동시 소유가 먼저 필요하며 기존 UI를 먼저 닫아 원문 순서를 바꾸지 않는다. 실제 게임 화면에는 아직 Chat 공장을 설치하지 않았다. Win32 clipboard·recipient/42e540 Tab·42da00 전송/identity·파일 실제 장치와 전체 EH/메타맵/서버 목록도 남는다. 모든 Early/캠페인/Demo 사용자 완주·Edit/언어별 시나리오 전체·완전 동일성 및393 Wide SaveOptions 원인은 미완료이며 /goal은 활성 상태다.
+
 ## 2026-10-24 단위400 완료: 실제 Console 편집 UI와 공유 버퍼 기반
 
 - [x] AGENTS/공통/닷넷 인계·시작 **97dcd28f / 20261024-22 CP**를 확인했다. 현재/마지막 전체 정밀 디컴파일은 **HJOW-Athlon / 2026-10-23**이다. 새 전체 디컴파일/원본 직접 실행/GUI0이다. 작업 중 확인한 AGENTS의 namespace 주석 규칙 외부 변경 두 행은 보존하고 stage/커밋에서 제외한다.
