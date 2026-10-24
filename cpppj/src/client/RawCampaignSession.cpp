@@ -2,6 +2,7 @@
 #include "client/RawCampaignSession.h"
 #include "client/ClientRandomGlobals.h"
 #include "client/ClientSubscriberGlobals.h"
+#include "client/ClientPlayerRecords.h"
 #include "client/ClientColorSortInput.h"
 #include "client/ClientLocalStateGlobals.h"
 #include "client/CampaignTemplateStorage.h"
@@ -226,7 +227,6 @@ template<std::size_t Count> bool HasRegularTable(const std::array<std::uint32_t,
 // 현재 원본 초기 다리/받침/미션 전역이다.
 BridgeConnectState CampaignLinks() { BridgeConnectState result;result.bridgeType=82;result.islandType=94;result.stalagType=95;result.connectorType=155;result.noIslandType=157;result.battle=true;result.mission=true;return result; }
 constexpr std::size_t kCampaignFactoryCapacity=500; // PATCH004fc990의push1f4→0044fb20이확보하는실제0055a4d0목록의DWORD수다.
-constexpr std::size_t kPlayerFactoryCapacity=30; // 실제4910a0이9개 Player 각각 new78/용량1e로 초기화하는 공장 목록이다.
 constexpr std::uint32_t kAiSearchTypeBase=0x6b000000U; //같은실제188TYPE의opaque32포인터기준이다.원본가상주소가아니며500stride대응만보존한다.
 // 실제83개 VT에서+10/+14/+18이4af780/44b4b0/44b9e0인14개만 일반 Damageable 수명으로 연결한다.
 constexpr std::array<std::uint32_t,14> kPlainDamageableTables{0x501ea0,0x509148,0x509930,0x5099e8,0x509aa0,0x50a820,0x50a8e8,0x50b6e8,0x50b7c0,0x50b888,0x50b9b8,0x50bad0,0x50e668,0x50e738};
@@ -310,6 +310,8 @@ struct RawCampaignSession::Impl {
     std::array<CarrierInputType,188> inputAudio{}; //현재 TYPE+78/+80의 음향 핸들이다.
     CarrierDropPointState inputDropState; //같은 지도 한계/실패점을 기존 위치 계산기에 공급한다.
     RawCampaignSessionServices services; // 실제 클라이언트의 선택 서비스이며 검사 관찰 기본값을 사용하지 않는다.
+    std::shared_ptr<ClientPlayerRecords> playerRecords{services.playerRecords ? services.playerRecords : std::make_shared<ClientPlayerRecords>()}; // 실제 Client 저장소 또는 독립 검사의 같은 실제 소유자다.
+    std::unique_ptr<ClientPlayerRecords::Use> playerUse{playerRecords->Acquire()}; // world와 모든 고정span 소비자보다 먼저 만들고 모두 소멸한 뒤 반납한다.
     std::shared_ptr<CampaignTemplateStorage> templateStorage; // 같은 Client manager 표를 빌리며 독립 Session만 자체 저장소를 소유한다.
     std::span<std::uint8_t> headers; // 같은 저장소의 실제9×20BYTE이며 파생 모듈에 사본을 만들지 않는다.
 
@@ -338,8 +340,8 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawSquidLevel> level; // 실제 base 가상80/84의 Factory 저장 상태를 처리한다.
     ChunkMap chunks; // 실제 Builder/성장/객체 선택의 지도다.
     std::array<std::uint8_t,RawIslandRuntime::kBytes> islandBytes{}; // 실제3204BYTE 섬 목록이다.
-    std::vector<std::uint8_t> players=std::vector<std::uint8_t>(9*0xb4); // 부모/Owner/신전이 공유하는 실제9 기록이다.
-    std::array<std::uint32_t,81> alliances{}; // 원본 방향별9×9 DWORD 표다. 실제 초기화 모듈이 현재 칸을 직접 쓴다.
+    std::span<std::uint8_t> players; // 대여 중 재할당하지 않는 같은 실제9기록이며 별도 vector 사본이 아니다.
+    std::array<std::uint32_t,81>& alliances{playerRecords->Alliances()}; // 원본 방향별9×9 DWORD를 실제 소유자에서 빌린다.
     std::array<std::uint8_t,87> localBattleOptions{}; // 독립 Session 검사/직접 설치의 자체 저장소다.
     std::array<std::uint8_t,87>& battleOptions; // 실제 Client는 Init이 이미 쓴 같은 전역 배열을 참조한다.
     std::span<std::uint8_t> hiddenPlayers{battleOptions.data()+0x3e,9}; // 같은 현재 Chat 숨김 BYTE9이며 동맹이나 active의 사본이 아니다.
@@ -733,6 +735,14 @@ struct RawCampaignSession::Impl {
         restrictions(services.missionRestrictions ? *services.missionRestrictions : localRestrictions),
         start{core.processState,priestState.movement.dude,priestState.movement.teleport,priestState.movement.manaBolt,priestState.movement.priest,geyserType,snap,retrying},process{core.processState} {
         if (services.deferExistingEditorFile && services.installMode!=CampaignInstallMode::ExistingEditor) throw std::invalid_argument("파일지연은명시ExistingEditor전용입니다");
+        // 아직 고정span 소비자가 없고 known은 최초0이다. 실제 원문 초기화와 기존 동맹 자식을 먼저 실행한다.
+        playerUse->Initialize([this](std::uint32_t owner,std::uint32_t mask) {
+            RawPlayerParticipation initial(core.pool.Edition(),playerRecords->Records(),alliances,hiddenPlayers,participationState,{}); // 현재 새 할당과 같은 방향별 표를 읽는다.
+            initial.BindCurrentInputs({[this] { return playerState.battleOwner; },[this] { return playerState.playerKnown; },
+                [this] { return core.ownerMode.battle; },[this] { return core.ownerMode.challenge; },[] { return false; }});
+            initial.SetAlliance(owner,mask);
+        });
+        players=playerRecords->Records(); // 이후 모든 기존 소비자는 이 대여의 실제 물리만 빌린다.
         sp.BindTrackingOffset(priestState.regen.patch.sequence);sp.Initialize();
         level=std::make_unique<RawSquidLevel>(core.pool,core.types,SessionMissing<void,SquidLevelAssertion>());
         finishState.chaffMode=true;objectState.mission=true;objectState.chaffMode=true;
@@ -765,11 +775,9 @@ struct RawCampaignSession::Impl {
         core.bookkeeping.factories.entries.resize(kCampaignFactoryCapacity); // 첫저장객체Pop전에예약하여원본Append의capacity0생략을방지한다.
         core.bookkeeping.providers.entries.resize(kEnergyProviderCapacity); // 원본4fcb60의256칸을 첫 실제 공급자 Pop 전에 확보한다.
         InitializeDudePopulation(dudePopulation); //실제4fc9b0→44fb20의30칸을 첫 저장 객체/피해 후 생성 전에 확보한다.
-        // 원본 Player의 첫 지역 sentinel은9기록에 직접 쓴다. 별도 playerRegions 배열을 사용하지 않는다.
+        // 원문 전체 초기화가 만든 실제 Player 배열과 같은 공장 목록을 연결한다.
         for (std::uint32_t owner=0;owner<9;++owner) {
-            core.bookkeeping.ownerFactories[owner].entries.resize(kPlayerFactoryCapacity); // 첫 공장 Pop 이전에 확보하여 owner별 Append가 용량0 때문에 생략되지 않게 한다.
-            Put(players,owner*0xb4+0x78,127);Put(players,owner*0xb4+0x54,1U<<owner);
-            alliances[owner*9+owner]=1;
+            playerUse->BindFactory(core.bookkeeping.ownerFactories[owner],owner); // +0/+4/+8을 매번 읽으며 SID 목록 사본을 만들지 않는다.
             gunTargetState.allyMasks[owner]=1U<<owner;gunState.allies[owner][owner]=true;
         }
         // 방향별 동맹/flag는 실제 현재 Player와 같은81DWORD를 각 총 판정 위치에서 읽는다.

@@ -1,6 +1,8 @@
 // Squid 소유자 지정(vtable +0x74)을 저장된 실제 PE 제한 x86 관찰과 비교한다.
 #include "TestSupport.h"
 #include "o/SquidOwner.h"
+#include "client/ClientPlayerRecords.h"
+#include "o/RawPlayerParticipation.h"
 #include <algorithm>
 #include <cstdio>
 #include <fstream>
@@ -86,8 +88,23 @@ struct Scene {
     }
 };
 // 판본 이름으로 고른 행을 모두 재생한다.
-void ReplayEdition(const std::string& name, std::size_t minimum) {
+void ReplayEdition(const std::string& name, std::size_t minimum,bool bound=false) {
     Scene scene(name == "originals" ? OriginalEdition::Patch1078 : OriginalEdition::Cd1072);
+    netstorm::client::ClientPlayerRecords records([](auto bytes) { std::fill(bytes.begin(),bytes.end(),std::uint8_t{0x79}); }); // 선택한 새 경로만 실제 할당 소유자를 쓴다.
+    std::unique_ptr<netstorm::client::ClientPlayerRecords::Use> use; // Scene 목록 소비가 끝날 때까지 고정 Player뷰를 대여한다.
+    std::array<std::span<std::uint32_t>,kOwners> backing{}; // Native의6칸 전체를 비교하는 초기 실제 factory 물리다.
+    const auto put=[&](std::uint32_t owner,std::uint32_t offset,std::uint32_t value) { // fixture의 원시 Player 헤더 입력4BYTE다.
+        auto raw=records.Records();for (std::uint32_t byte=0;byte<4;++byte) raw[owner*180+offset+byte]=static_cast<std::uint8_t>(value>>(byte*8)); // 현재 같은 Player만 쓴다.
+    };
+    if (bound) {
+        use=records.Acquire();use->Initialize([&](auto owner,auto mask) {
+            PlayerParticipationState state;std::array<std::uint8_t,9> hidden{}; // 실제 초기화 전역 known0과 숨김 BSS 입력이다.
+            RawPlayerParticipation initial(OriginalEdition::Patch1078,records.Records(),records.Alliances(),hidden,state,{});initial.SetAlliance(owner,mask);
+        });
+        for (std::uint32_t owner=0;owner<kOwners;++owner) { // 새 제품과 동일한 현재 raw 헤더 연결을 만든다.
+            use->BindFactory(scene.bookkeeping.ownerFactories[owner],owner);backing[owner]=scene.bookkeeping.ownerFactories[owner].Storage();
+        }
+    }
     std::size_t rows = 0;
     // 한 줄이 한 입력이다.
     for (const auto& row : Fixture()) {
@@ -112,13 +129,15 @@ void ReplayEdition(const std::string& name, std::size_t minimum) {
             const auto entries = Split(parts.at(2), ',');
             const std::uint32_t capacity = Number(parts.at(0));
             auto& list = scene.bookkeeping.ownerFactories[owner];
-            list.entries.clear();
+            if (!bound) list.entries.clear();
             // 앞쪽 용량만큼이 실제 목록 배열이다.
             for (std::uint32_t i = 0; i < kListSlots; ++i) {
                 const auto value = Number(entries.at(i));
-                if (i < capacity) list.entries.push_back(value); else stale[owner].push_back(value);
+                if (bound) backing[owner][i]=value;
+                else if (i < capacity) list.entries.push_back(value); else stale[owner].push_back(value);
             }
-            list.count = Number(parts.at(1));
+            if (bound) { put(owner,4,capacity);put(owner,8,Number(parts.at(1))); }
+            else list.count = Number(parts.at(1));
         }
         scene.For(Number(row[5])).Set(kTarget, Number(row[9]));
         // 결과: 소유자 바이트, 소유자마다 "개수:저장 칸 전체", 슬롯 Adler-32.
@@ -126,9 +145,10 @@ void ReplayEdition(const std::string& name, std::size_t minimum) {
         for (std::uint32_t owner = 0; owner < kOwners; ++owner) {
             const auto& list = scene.bookkeeping.ownerFactories[owner];
             if (owner) actual += '|';
-            actual += std::to_string(list.count) + ':';
-            std::vector<std::uint32_t> all(list.entries);
-            all.insert(all.end(), stale[owner].begin(), stale[owner].end());
+            actual += std::to_string(list.Count()) + ':';
+            std::vector<std::uint32_t> all; // Native의 비활성 꼬리까지 같은 실제6칸을 비교한다.
+            if (bound) all.assign(backing[owner].begin(),backing[owner].begin()+kListSlots);
+            else { all=list.entries;all.insert(all.end(), stale[owner].begin(), stale[owner].end()); }
             // 저장 칸 전체를 쉼표로 잇는다.
             for (std::size_t i = 0; i < all.size(); ++i) { if (i) actual += ','; actual += std::to_string(all[i]); }
         }
@@ -149,6 +169,8 @@ void ReplayEdition(const std::string& name, std::size_t minimum) {
 
 // 패치 10.78의 실제 기계어 관찰을 재생한다.
 TEST_CASE(owner_patch_x86_fixture) { ReplayEdition("originals", 1000); }
+// 같은 최초 PE fixture를 실제 Client Player+0/+4/+8과 같은 factory 할당으로 다시 재생한다.
+TEST_CASE(owner_patch_x86_bound_player_records_fixture) { ReplayEdition("originals",1000,true); }
 // CD 10.72 배포본의 관찰.
 TEST_CASE(owner_cd_x86_fixture) { ReplayEdition("originalCD", 1000); }
 // 추가 10.37 실행 파일은 CD와 같은 코드 배치지만 별도 PE의 출력을 재생한다.

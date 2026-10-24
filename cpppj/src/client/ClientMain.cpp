@@ -14,6 +14,7 @@
 #include "client/ClientColorSortInput.h"
 #include "client/ClientLocalStateGlobals.h"
 #include "client/ClientCoreDataGlobals.h"
+#include "client/ClientPlayerRecords.h"
 #include "client/ClientChatManagerGlobals.h"
 #include "client/ClientDotCommandGlobals.h"
 #include "client/UberGump.h"
@@ -175,6 +176,7 @@ Client::Client(ClientOptions options)
       colorSortInput_(std::make_shared<ClientColorSortInput>()),
       localStateGlobals_(std::make_shared<ClientLocalStateGlobals>()),
       coreDataGlobals_(std::make_shared<ClientCoreDataGlobals>()),
+      playerRecords_(std::make_shared<ClientPlayerRecords>()),
       chatManagerGlobals_(std::make_shared<ClientChatManagerGlobals>()),
       dotCommandGlobals_(std::make_shared<ClientDotCommandGlobals>()),
       chat_(std::make_unique<ChatState>(*this,options_.edition)) {
@@ -893,6 +895,8 @@ const std::shared_ptr<ClientRandomGlobals>& Client::RandomGlobals() const { retu
 const std::shared_ptr<ClientLocalStateGlobals>& Client::LocalStateGlobals() const { return localStateGlobals_; }
 //같은 Client의 현재 Core/캐시 소유자를 조회하며 외부 Player 수명을 변경하지 않는다.
 const std::shared_ptr<ClientCoreDataGlobals>& Client::CoreDataGlobals() const { return coreDataGlobals_; }
+// 실제 Player/factory의 단일 할당 소유자를 세션에 빌린다. 조회는 초기화를 실행하지 않는다.
+const std::shared_ptr<ClientPlayerRecords>& Client::PlayerRecords() const { return playerRecords_; }
 //현재 manager와 실제 할당의 한 소유자를 반환하며 공통 초기화 시점을 앞당기지 않는다.
 const std::shared_ptr<ClientChatManagerGlobals>& Client::ChatManagerGlobals() const { return chatManagerGlobals_; }
 //초기 say와 이후 등록을 보존한 같은 표를 반환하며 Session 해제 때 다시 초기화하지 않는다.

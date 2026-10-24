@@ -2076,5 +2076,7 @@ set_source_files_properties(ChatStateClearTests.cpp PROPERTIES COMPILE_DEFINITIO
     "NETSTORM_CHAT_STATE_CLEAR_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/chat-state-clear-x86.tsv\"")
 # 원문202행의 전체 물리/순서와 실제 Core 선택 해제 후 재할당 수명을 대조한다.
 target_sources(netstorm_tests PRIVATE PlayerInitializationTests.cpp)
+# 실제 Client Player/factory 소유자와 raw 헤더/재대여/초기화 실패를 검사한다.
+target_sources(netstorm_tests PRIVATE ClientPlayerRecordsTests.cpp)
 set_source_files_properties(PlayerInitializationTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_PLAYER_INITIALIZATION_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/player-initialization-x86.tsv\"")

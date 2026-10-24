@@ -8,6 +8,7 @@
 #include "o/RawBridgeDraw.h"
 #include "client/RawMenuControls.h"
 #include "client/ClientMain.h"
+#include "client/ClientPlayerRecords.h"
 #include "client/RawCampaignMissionStartBindings.h"
 #include "client/UserInput.h"
 // 생산 세션과 GameWorld의 표시/선택/명령이 같은 실제 raw 월드를 사용하는지 검사한다.
@@ -1652,8 +1653,31 @@ TEST_CASE(CampaignSession_ConstructionBuilderUsesActualMovementAndTime) {
 TEST_CASE(CampaignSession_PlayerFactoryCapacityMatchesNativeInitialization) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",external.Services());auto core=session.Core();std::ifstream file(NETSTORM_PLAYER_FACTORY_INIT_FIXTURE);CHECK(file.good());std::string line;std::size_t count=0;
     // 실제 원문이 할당한 capacity와 count0을9개 모두 확인한다.
-    while (std::getline(file,line)) { if (line.empty() || line[0]=='#') continue;const auto row=netstorm::test::rawscene::Split(line,'\t');const auto owner=netstorm::test::rawscene::Number(row[0]);CHECK(core.bookkeeping.ownerFactories[owner].entries.size()==netstorm::test::rawscene::Number(row[2]));CHECK(core.bookkeeping.ownerFactories[owner].count==netstorm::test::rawscene::Number(row[3]));++count; }
+    while (std::getline(file,line)) { if (line.empty() || line[0]=='#') continue;const auto row=netstorm::test::rawscene::Split(line,'\t');const auto owner=netstorm::test::rawscene::Number(row[0]);CHECK(core.bookkeeping.ownerFactories[owner].Capacity()==netstorm::test::rawscene::Number(row[2]));CHECK(core.bookkeeping.ownerFactories[owner].Count()==netstorm::test::rawscene::Number(row[3]));++count; }
     CHECK(count==9);
+}
+
+// 실제 Client의 한 할당 owner를 연속 두 Session이 빌리고 기존 소비자 소멸 전 재할당을 막는다.
+TEST_CASE(CampaignSession_ActualClientPlayerOwnerAcrossSessions) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;
+    ClientOptions options;options.gameDirectory=std::filesystem::path(__FILE__).parent_path().parent_path().parent_path()/"originals"; // 창을 만들지 않고 같은 보호 파일의 Client를 구성한다.
+    Client client(options);const auto records=client.PlayerRecords(); // 실제 제품 생성자가 소유한 같은 저장소다.
+    const auto make=[&] { // 반복 세션마다 다른 Player 사본 없이 같은 실제 할당 owner를 전달한다.
+        auto services=external.Services();services.playerRecords=records;
+        auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());
+        return std::make_unique<RawCampaignSession>(assets.game,assets.files,std::move(fort),"thewarbegins",std::move(services));
+    };
+    auto first=make();const auto previous=records->Base();CHECK(previous!=0 && first->PlayerRecords().data()==records->Records().data());first->Load();
+    auto core=first->Core();std::uint32_t registered{}; // 실제 저장 객체 Pop이 raw 개수와 같은 목록을 갱신했는지 확인한다.
+    for (std::uint32_t owner=0;owner<9;++owner) { // 첫 월드의 각 소유자 목록과 실제 Player 헤더를 비교한다.
+        const auto& list=core.bookkeeping.ownerFactories[owner];CHECK(list.entries.empty() && list.Capacity()==30);
+        CHECK(list.Count()==Get(records->Records(),owner*180+8));registered+=list.Count();
+    }
+    CHECK(registered>0);bool rejected{};try { static_cast<void>(make()); }catch (const std::logic_error&) { rejected=true; }CHECK(rejected && records->Base()==previous);
+    records->FortCount()=7;records->LastLoginPlayer()=8;first.reset(); // 모든 실제 Session 고정span 소비자를 먼저 소멸시킨다.
+    auto second=make();CHECK(records->Base()!=previous && second->PlayerRecords().data()==records->Records().data());CHECK(records->FortCount()==0 && records->LastLoginPlayer()==0);
+    auto next=second->Core();for (std::uint32_t owner=0;owner<9;++owner) CHECK(next.bookkeeping.ownerFactories[owner].Count()==0 && Get(records->Records(),owner*180+8)==0); // 새 초기화는 이전 활성SID를 남기지 않는다.
+    second->Load();CHECK(second->PlayerRecords().data()==records->Records().data());
 }
 
 // 실제 서버 abstract/134 도착이30과17을 만들고 같은 시각으로 HP/완료/공간/표시 종료를 실행한다.

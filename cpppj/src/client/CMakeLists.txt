@@ -222,3 +222,5 @@ target_sources(netstorm PRIVATE ClientColorSortInput.h ClientColorSortInput.cpp
 target_sources(netstorm PRIVATE FortSelection.h FortSelection.cpp)
 # Client와 모든 Session이 같은 Subscriber 주소 및 할당 입력 장치를 빌린다.
 target_sources(netstorm PRIVATE ClientSubscriberGlobals.h CurrentAllocationBytes.h)
+# 실제 Player/factory 할당과 세션 고정뷰의 수명 관문을 단일 Client에 둔다.
+target_sources(netstorm PRIVATE ClientPlayerRecords.h ClientPlayerRecords.cpp)

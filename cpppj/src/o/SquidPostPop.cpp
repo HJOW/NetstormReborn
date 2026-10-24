@@ -47,15 +47,39 @@ std::uint32_t Vtable(std::span<const std::uint8_t> bytes) {
 }
 // 원본은 가득 찬 목록에서 추가를 생략하며 기존 항목/메모리는 보존한다.
 void Append(SquidPostPopList& list,Sid sid) {
-    if (list.count<list.entries.size()) list.entries[list.count++]=sid.value;
+    list.Append(sid.value);
 }
 // DWORD 집계를 signed 해석으로 다시 읽는다. 부호 있는 덧셈 넘침은 만들지 않는다.
 std::int32_t Wrapped(std::int64_t value) { return std::bit_cast<std::int32_t>(static_cast<std::uint32_t>(value)); }
 }
 // 원본 배열의 count 밖 stale 메모리는 유지하며 조회에서는 노출하지 않는다.
 std::span<const std::uint32_t> SquidPostPopList::Items() const {
-    if (count>entries.size()) throw std::logic_error("postPop 목록 count 범위 오류");
-    return std::span(entries).first(count);
+    const auto used=Count();if (used>Capacity()) throw std::logic_error("postPop 목록 count 범위 오류");
+    return Storage().first(used);
+}
+// 기존 독립 자료가 있으면 별도 숨은 사본을 남기지 않고 연결을 거부한다.
+void SquidPostPopList::BindCurrent(CurrentBinding binding) {
+    if (current.storage || !entries.empty() || count || !binding.storage || !binding.capacity || !binding.readCount || !binding.writeCount)
+        throw std::logic_error("postPop 현재 목록 연결의 소유/장치 오류");
+    current=std::move(binding);
+}
+std::uint32_t SquidPostPopList::Count() const { return current.readCount ? current.readCount() : count; } // 실제 개수 또는 기존 독립 개수다.
+std::size_t SquidPostPopList::Capacity() const { return current.capacity ? current.capacity() : entries.size(); } // 실제 용량 또는 독립 vector 크기다.
+std::span<std::uint32_t> SquidPostPopList::Storage() { return current.storage ? current.storage() : std::span(entries); } // 현재 물리만 빌린다.
+std::span<const std::uint32_t> SquidPostPopList::Storage() const { return current.storage ? current.storage() : std::span<const std::uint32_t>(entries); } // 복사하지 않는다.
+void SquidPostPopList::SetCount(std::uint32_t value) { if (current.writeCount) current.writeCount(value);else count=value; } // 같은 현재 DWORD만 바꾼다.
+// 가득 찬 목록에서는 배열 포인터를 해석하지 않는다. 실제 원문도 store 뒤 개수를 증가시킨다.
+void SquidPostPopList::Append(std::uint32_t value) {
+    const auto used=Count();if (used>=Capacity()) return;
+    Storage()[used]=value;SetCount(used+1);
+}
+// 현재 활성 항목만 방문하여 모든 중복을 빼고 상대 순서와 stale 꼬리를 보존한다.
+void SquidPostPopList::RemoveAll(std::uint32_t value) {
+    static_cast<void>(Items());std::uint32_t removed{}; // 압축 중 제거한 개수다.
+    for (std::uint32_t index=0;index<Count();++index) { // 원문의 현재 count/배열을 같은 목록에서 읽는다.
+        const auto entry=Storage()[index];if (entry==value) ++removed;else Storage()[index-removed]=entry;
+    }
+    SetCount(Count()-removed);
 }
 // 슬롯 byte type가 가리키는 타입 표를 검증한다.
 SquidPostPop::SquidPostPop(SidPool& pool,std::span<const RiftTypeRecord> types,SquidPostPopState& state,RawGraph* graph,

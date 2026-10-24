@@ -23,14 +23,7 @@ float Coordinate(std::span<const std::uint8_t> raw,std::size_t offset) {
 }
 // 원본 Array::remove는 모든 중복을 순서대로 압축하고 inactive 꼬리 메모리는 지우지 않는다.
 void Remove(SquidPostPopList& list,Sid sid) {
-    static_cast<void>(list.Items());std::uint32_t removed=0;
-    // 생존 항목은 최초 상대 순서를 유지한다. 현재 count 밖 값은 읽지도 쓰지도 않는다.
-    for (std::uint32_t i=0;i<list.count;++i) {
-        const auto value=list.entries[i];
-        if (value==sid.value) ++removed;
-        else list.entries[i-removed]=value;
-    }
-    list.count-=removed;
+    list.RemoveAll(sid.value);
 }
 }
 // 판본별 타입 수/풀 연결을 확인하고 타입을 복사해 장부 처리 동안의 입력을 고정한다.

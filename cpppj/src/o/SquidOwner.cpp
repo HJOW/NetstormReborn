@@ -15,19 +15,11 @@ constexpr std::uint32_t kFactoryMask = 0x4200;
 constexpr std::uint32_t kChallengePlayers = 0x28;
 // 00490050 ↔ CD 004071f0: 가득 찬 목록에는 넣지 않고 기존 항목과 남은 메모리를 그대로 둔다.
 void Append(SquidPostPopList& list, Sid sid) {
-    if (list.count < list.entries.size()) list.entries[list.count++] = sid.value;
+    list.Append(sid.value);
 }
 // 004900a0→0040ea00 ↔ CD 00407250: 같은 번호를 모두 빼고 나머지를 앞으로 당긴다. 개수 밖의 값은 건드리지 않는다.
 void Remove(SquidPostPopList& list, Sid sid) {
-    static_cast<void>(list.Items());
-    std::uint32_t removed = 0;
-    // 남는 항목의 상대 순서를 유지한다.
-    for (std::uint32_t i = 0; i < list.count; ++i) {
-        const auto value = list.entries[i];
-        if (value == sid.value) ++removed;
-        else list.entries[i - removed] = value;
-    }
-    list.count -= removed;
+    list.RemoveAll(sid.value);
 }
 }
 SquidOwner::SquidOwner(SidPool& pool, std::span<const RiftTypeRecord> types, SquidPostPopState& bookkeeping, const SquidOwnerMode& mode)

@@ -25,6 +25,20 @@ struct SquidPostPopList {
     std::vector<std::uint32_t> entries; // 원본 미리 확보한 DWORD 배열. entries.size()가 capacity다.
     // count: 현재 항목 또는 실행 횟수.
     std::uint32_t count{};
+    // 실제 Player 배열은 현재 +0/+4/+8에서 읽는다. 독립 목록만 위 vector/count를 소유한다.
+    struct CurrentBinding {
+        std::function<std::span<std::uint32_t>()> storage; // 현재 포인터와 용량이 가리키는 실제 DWORD 물리다.
+        std::function<std::uint32_t()> capacity,readCount; // 현재 Player+4/+8의 두 DWORD를 각각 읽는다.
+        std::function<void(std::uint32_t)> writeCount; // 같은 Player+8만 직접 쓴다.
+    } current; // 미연결 목록의 기존 vector/count 동작을 유지한다.
+    void BindCurrent(CurrentBinding binding); // 빈 독립 목록에 같은 실제 저장소의 조회/쓰기를 연결한다.
+    std::uint32_t Count() const; // 연결된 경우 현재 Player+8을 매번 읽는다.
+    std::size_t Capacity() const; // 연결된 경우 현재 Player+4를 매번 읽는다.
+    std::span<std::uint32_t> Storage(); // 현재 배열 전체를 빌리며 재할당 전 주소를 보관하지 않는다.
+    std::span<const std::uint32_t> Storage() const; // 같은 현재 배열의 읽기뷰다.
+    void SetCount(std::uint32_t value); // 실제 개수만 쓰며 꼬리 값은 지우지 않는다.
+    void Append(std::uint32_t value); // 용량이 남을 때 원문처럼 배열 store 뒤 count를 증가시킨다.
+    void RemoveAll(std::uint32_t value); // 중복 전체를 안정 압축하고 비활성 꼬리는 보존한다.
     // 활성 항목만 읽으며 손상된 count는 거부한다.
     std::span<const std::uint32_t> Items() const;
 };

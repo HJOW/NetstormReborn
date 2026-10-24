@@ -21,7 +21,9 @@ struct RawCampaignSession::Impl::Login {
     std::array<float,4> ranges{14,22,30,38}; //원본5425f4의 실제4float다. 기본3번도 읽고 최대 비교는 원래2번30을 사용한다.
     float range{22}; //원본52f488이며제곱은Session의같은EnergySupplyState에 쓴다.
     bool simul{},saved{},adjust{};std::uint8_t overrideFlags{},title{},battleByte{}; //현재단독미션의설정/저장/제목과BYTE 상태다.
-    std::uint32_t pendingStamp{},activeStamp{},zoneWord{},begin{},fortCount{},lastPlayer{},predictable{},beginSeed{},battleSeed{},burst{},clockStamp{},baseClock{},central{},archipelago{},optionValue{},outpost{},coreActive{}; //원본로그인전역의 실제현재저장소다.
+    std::uint32_t pendingStamp{},activeStamp{},zoneWord{},begin{},predictable{},beginSeed{},battleSeed{},burst{},clockStamp{},baseClock{},central{},archipelago{},optionValue{},outpost{},coreActive{}; //원본로그인전역의 실제현재저장소다.
+    std::uint32_t& fortCount{s.playerRecords->FortCount()}; // 원문 Player 초기화와 같은005951f8이다.
+    std::uint32_t& lastPlayer{s.playerRecords->LastLoginPlayer()}; // 같은005951fc를 로그인도 직접 쓴다.
     std::uint32_t zonePending{},ticks{},source{},randomSeed{},metaRefresh{},metaRebuild{},scriptBreak{},requestPhase{},uiMode{},inputMode{}; //원본상태/입력/타이머가 공유하는DWORD다.
     double captureEnd{},connectEnd{},wall{};std::int32_t timeout{}; //서로 다른 원본 벽시각 타이머다.
     double localActivityEnd{}; //실제 소유자가 없는 독립 검사의 기존00544d58 초기 입력이다.
