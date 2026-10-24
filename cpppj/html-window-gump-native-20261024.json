@@ -1,0 +1,20 @@
+{
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "peSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+  "sourceSha256": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+  "rows": 250,
+  "cases": 125,
+  "instructions": 128566,
+  "precisionDifferences": [],
+  "fixtureSha256": "2acaf260f0f47cce99b5d0cabfc341aaa14b2921281e32ba9c63c92797061f36",
+  "toolSha256": "2e83cb6d757c213dacf422dbf9e12d9b16866679a2c3d369db68b6ccea644a80",
+  "gameExecuted": false,
+  "limits": [
+    "실제6본문/24현재DWORD/20행/8192BYTE/RET와 장치 변경·중단",
+    "기본 장식/할당/자식/가상 부착/큐/링크/시각/수명 하위는 명시 장치",
+    "전체 geometry4c7d40/HTML factory/메타/Idle/EH unwind 증거 아님",
+    "명령 위치 수에는 장치/STOP 포함; 미완료/void EAX0·constructor this1 정규화"
+  ]
+}

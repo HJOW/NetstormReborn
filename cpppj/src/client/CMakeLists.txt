@@ -240,3 +240,6 @@ target_sources(netstorm PRIVATE ClientChatWindowGlobals.h RawChatWindowContext.h
 
 # 원본 Uber의 BackgroundGif 자식을 실제 공통 UI에 연결한다.
 target_sources(netstorm PRIVATE BackgroundGifGump.h BackgroundGifGump.cpp RawBackgroundGifControls.h RawBackgroundGifControls.cpp)
+
+# 같은 Client 전역과 HTML 부모의 실제 생성/본문/제어 수명을 공통 UI에 조립한다.
+target_sources(netstorm PRIVATE HtmlWindowGump.cpp HtmlWindowGump.h ClientHtmlWindowGlobals.h RawHtmlWindowContext.h RawMenuHtml.inc)

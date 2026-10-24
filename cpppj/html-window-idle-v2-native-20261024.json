@@ -1,0 +1,16 @@
+{
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "rows": 88,
+  "instructions": 2216,
+  "precisionDifferences": [],
+  "fixtureSha256": "b0309464c7c8643467a819d5c28aa413a1e2d15b57ceed1e8b48af95d855f333",
+  "toolSha256": "e6fdc732cb2ae0682beb49563cd6be9e65d73fd46e062dc72f6a8663107586dd",
+  "gameExecuted": false,
+  "limits": [
+    "515e7c+30에서4c8350을 확인하고 실제 비교/현재 기한·명령/분기/RET 실행",
+    "clock/queue/Kill 하위만 명시 장치; 전체 Idle 프레임 등록/HTML meta/EH 증거 아님",
+    "명령 위치에는 장치/STOP 포함; void/중단 EAX0 정규화"
+  ]
+}

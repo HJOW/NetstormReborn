@@ -2116,3 +2116,8 @@ set_source_files_properties(BackgroundGifGumpTests.cpp PROPERTIES COMPILE_DEFINI
     "NETSTORM_BACKGROUND_GIF_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/background-gif-gump-x86.tsv\"")
 set_source_files_properties(BackgroundGifClientTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_BACKGROUND_GIF_ASSETS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/background-gif-assets-x86.tsv\";NETSTORM_BACKGROUND_GIF_VARIANTS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/background-gif-variants-x86.tsv\"")
+
+# HTML 부모의 독립 원문250행과 실제 Client/제어/본문/공통 수명을 등록한다.
+target_sources(netstorm_tests PRIVATE HtmlWindowGumpTests.cpp HtmlWindowClientTests.cpp)
+set_source_files_properties(HtmlWindowGumpTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_HTML_WINDOW_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/html-window-gump-x86.tsv\";NETSTORM_HTML_WINDOW_IDLE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/html-window-idle-v2-x86.tsv\";NETSTORM_HTML_WINDOW_ROWS=338")

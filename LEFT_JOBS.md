@@ -1,5 +1,13 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-24 단위403 완료: 실제 HTML 부모 본문과 제어 수명
+
+- [x] AGENTS/공통/닷넷 인계와 **b817a28a / 20261024-25 CP**를 확인했다. 현재/마지막 전체 정밀 디컴파일은 **HJOW-Athlon / 2026-10-23**이며 새 전체 디컴파일/원본 게임 직접 실행/게임 GUI0이다. AGENTS/원본/CD/기존 Native 추적 변경0이다.
+- [x] 실제 HTML4cf120/new0x21e8의 같은 장식 기본 주소/8192BYTE/20제어행과 실제 돌 버튼·각 배경/ScrollingText·Slider·StyleText/공통 입력·수명을 조립했다. Client 장기 count/serial/최근 종료 시각을 공유하며 다중/미부착/페이지 반납을 확인했다. 소멸의 count감소→OnExit raw큐(필드 보존)→현재auxserial/Kill→시각→기본 순서와 현재 재조회/20행 한도/본문 LF·교체를 유지했다. Native 지역 LF버퍼 밖 입력은 명시 거부한다.
+- [x] 정밀 텍스트에 독립 진입이 없는 Idle4c8350을 vtable515e7c+30/PE로 확인해0기한/clock 뒤 현재 기한·명령/NaN·음수/raw0 명령·큐→Kill을 복원했다. 상위250+Idle v2 88, 합계 **338행**을 최초 작성·읽기 재생했고 C++ 본체도 일치했다. 두 x87 정밀도 차이0·130782명령 위치에는 장치/STOP 포함이다. 첫 Idle v1은 불변 출력 일부의 실제 설치/재조회 누락으로 제외해 ignored raw에 보관했다. v1/v2 출력이 같아도 v1을 제품 검증으로 세지 않는다.
+- [x] 빌드1/2의 팔레트 인자·검사 포인터 형식 오류/경고를 수정했고3~6은 종료0·관측 경고오류0이다. 최초 Client 접근 위반은 검사에서 공통 버튼 배경을 메뉴 전용 Node로 읽은 빈 포인터였으며 실제 자식 관계로 고치고 검사 callback 수명을 정리했다. 최종 실제 결합6/집중 **105/0**, 전체 CTest **2740/0·311.01초**다. 최종 제품 **6419ae40ad3c1ea27779ea22aeaadecde4480ce65051df7a3ef413d135faa76e**, 검사 **33ca6b7e26e8c7e68eb75d023e4f29d63b2c137df20a8b6897e93ab37b57a2c0**가 집중/전체에서 같고 originals1394동일이다. [완료 문서](docs/exe/cpp-html-window-client-20261024.md)/[제품 보고서](cpppj/html-window-client-runtime-20261024.json)와 `extracted/cpp-html-window-403-*`에 SHA/경과/한계를 남겼다. 선택23파일 감사 후 **20261024-26 CP**로 로컬 커밋하며 push하지 않는다.
+- [ ] 다음은 **전체 Fit/Attach4c7d40·메타4c83b0·factory4cf270과 정상 Idle 등록/실제 링크**다. 미연결 전체 Fit은 명시 거부하고 기존 LoadingFields/0xc4 부분 미션 안내·게임 화면은 아직 교체하지 않았다. full Uber 새 부모/자식 먼저 생성→기존 반납, Production/Minimap 동시 제공자, State/Core/Pool/Win32 연결과 모든 Early/캠페인/Demo 사용자 완주·Edit/언어별 시나리오 전체·완전 동일성 및393 Wide SaveOptions 원인은 미완료이며 /goal은 활성 상태다.
+
 ## 2026-10-24 단위402 완료: 실제 BackgroundGif 창과 공통 UI
 
 - [x] AGENTS/공통/닷넷 인계·86458a88/단위401을 확인했다. 현재/마지막 전체 정밀 디컴파일은 **HJOW-Athlon / 2026-10-23**이다. 새 전체 디컴파일/원본 게임 직접 실행/GUI0이다. 작업 중 네임스페이스 주석 규칙의 별도 사용자 커밋eeec368d를 확인했으며 AGENTS의 같은 바이트를 보존하고 이번 stage에서 제외한다.

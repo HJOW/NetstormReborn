@@ -18,6 +18,7 @@
 #include "client/ClientGameplayGlobals.h"
 #include "client/ClientNsInfoGlobals.h"
 #include "client/ClientChatWindowGlobals.h"
+#include "client/ClientHtmlWindowGlobals.h"
 #include "client/ClientChatManagerGlobals.h"
 #include "client/ClientDotCommandGlobals.h"
 #include "client/RawSurfaceWorld.h"
@@ -182,6 +183,7 @@ Client::Client(ClientOptions options)
       coreDataGlobals_(std::make_shared<ClientCoreDataGlobals>()),
       playerRecords_(std::make_shared<ClientPlayerRecords>()),
       gameplayGlobals_(std::make_shared<ClientGameplayGlobals>(subscriberGlobals_)),
+      htmlWindowGlobals_(std::make_shared<ClientHtmlWindowGlobals>()),
       chatWindowGlobals_(std::make_shared<ClientChatWindowGlobals>()),
       nsInfoGlobals_(std::make_shared<ClientNsInfoGlobals>()),
       chatManagerGlobals_(std::make_shared<ClientChatManagerGlobals>()),
@@ -913,6 +915,7 @@ const std::shared_ptr<ClientPlayerRecords>& Client::PlayerRecords() const { retu
 // 현재 전역의 주소를 빌리며 조회 자체는 게임/초기화를 수행하지 않는다.
 const std::shared_ptr<ClientGameplayGlobals>& Client::GameplayGlobals() const { return gameplayGlobals_; }
 // 실제 현재 NSInfo/서버 이름 소유자를 조회하며 목록을 다시 읽거나 초기화하지 않는다.
+const std::shared_ptr<ClientHtmlWindowGlobals>& Client::HtmlWindowGlobals() const { return htmlWindowGlobals_; } // 같은 실제 장기 HTML 상태를 조회한다.
 const std::shared_ptr<ClientChatWindowGlobals>& Client::ChatWindowGlobals() const { return chatWindowGlobals_; } // 같은 장기 소유자를 조회한다.
 const std::shared_ptr<ClientNsInfoGlobals>& Client::NsInfoGlobals() const { return nsInfoGlobals_; }
 //현재 manager와 실제 할당의 한 소유자를 반환하며 공통 초기화 시점을 앞당기지 않는다.
