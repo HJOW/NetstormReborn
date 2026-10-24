@@ -10,13 +10,13 @@ std::string EncodeFileHex(std::string_view value) { return Hex({reinterpret_cast
 std::string BaseName(std::string_view path) { const auto at=path.find_last_of("/\\:");auto name=std::string(path.substr(at==path.npos ? 0 : at+1));name.resize(name.find('.')==name.npos ? name.size() : name.find('.'));return name; } // 명시 FileSpec 입력의 같은 기본 이름이다.
 std::vector<std::uint8_t> FileBytes(std::string_view value) { return {value.begin(),value.end()}; } // 실제 Config 적재에 원본 평문 바이트를 공급한다.
 struct FileMenuScene { // 실제 Config·장기 파일 목록과 문자열 고리를 같은 주소에 보유한다.
-    std::vector<std::string> paths;std::uint32_t profile{},queries{};std::string trace; // 원문 관측의 입력·실제 동적 조회 횟수와 선택 효과 순서다.
+    std::vector<std::string> paths;std::uint32_t profile{},queries{},throwAt{};std::string trace; // 원문 관측의 입력·실제 동적 조회/예외 위치와 선택 효과 순서다.
     netstorm::o::ConfigInterface config;ScriptStringRing strings;std::unique_ptr<netstorm::o::Config> existing; // 실제 장기 등록부와 고리다.
     std::unique_ptr<TellFileMenus> menus; // 기존 객체/Config보다 먼저 반납한다.
     void Event(std::string value) { if (!trace.empty()) trace+=';';trace+=value; } // 실제 호출한 파일/메뉴 효과를 기록한다.
     std::string Title(std::string_view name) const { if (profile==1 && netstorm::o::AsciiLower(name)=="a") return {};if (profile==1 && netstorm::o::AsciiLower(name)=="b") return "--divider";return "Title "+std::string(name); } // 기대 정렬과 무관한 원문 파일 내용의 명시 입력이다.
     FileMenuScene():config([this](auto path)->std::optional<std::vector<std::uint8_t>> { // 파일 적재 시 실제 최초 메타/등록을 읽는다.
-        if (netstorm::o::AsciiLower(path)=="probe") { ++queries;Event("Q,"+EncodeFileHex(config.SubstituteLocal("{cur.file}"))+','+std::to_string(queries));return FileBytes("value="+std::to_string(queries)+"\n"); } // 실제 @미션 조회마다 새 반환값을 공급해 두 번 치환을 구별한다.
+        if (netstorm::o::AsciiLower(path)=="probe") { ++queries;const auto current=EncodeFileHex(config.SubstituteLocal("{cur.file}"));Event("Q,"+current+','+std::to_string(queries));if (queries==throwAt) { Event("E,"+current+','+std::to_string(queries));throw std::runtime_error("검사에서 선택한 실제 VFS 조회 예외"); }return FileBytes("value="+std::to_string(queries)+"\n"); } // 실제 @미션 조회마다 새 반환/명시 예외를 공급한다.
         const auto name=BaseName(path);const auto* object=config.Registry().FindByName(name);if (!object) throw std::logic_error("파일 적재 전에 실제 Config 등록 누락");const auto index=object->GetRaw("index");CHECK(object->GetRaw("path")==path && object->GetRaw("fileName")==name && index);Event("L,"+EncodeFileHex(name)+','+EncodeFileHex(path)+','+index.value_or(""));return FileBytes("title=\""+Title(name)+"\"\n");
     }) { config.Configuration().Assign("ready=1\nmissionSpec={local.1}\n");menus=std::make_unique<TellFileMenus>(config,[this](auto pattern) { CHECK(pattern=="input");return paths; }); } // 실제 파일 목록은 원문 장치와 같은 순서로만 공급한다.
     std::string Run(const std::vector<std::string>& files,std::uint32_t titleProfile,bool hasExisting,std::string_view argument,bool fallback) {
@@ -45,6 +45,20 @@ TEST_CASE(TellInlineList_Native288) { // 실제 % 전체 정상 본체의 두 �
         CHECK(row.size()==6);std::vector<std::string> paths;if (!row[1].empty()) for (const auto& path:Split(row[1],',')) paths.push_back(DecodeFileHex(path)); // 같은 FileSpec 장치 입력을 순서대로 복원한다.
         FileMenuScene scene;CHECK(scene.RunInline(paths,Number(row[2]),Number(row[3])!=0,DecodeFileHex(row[4]))==row[5]);
     }
+}
+
+TEST_CASE(TellInlineErrors_Native672) { // 실제 Catch/공유 꼬리의 부분 출력/ERROR/현재 cur 반납과 다음 행을 대조한다.
+    const auto rows=LoadFixture(NETSTORM_TELL_INLINE_ERRORS_FIXTURE).rows;CHECK(rows.size()==672);
+    for (const auto& row:rows) { // 각 관측마다 새 실제 Config/Reader에서 같은 n번째 예외를 발생시킨다.
+        CHECK(row.size()==6);std::vector<std::string> paths;if (!row[1].empty()) for (const auto& path:Split(row[1],',')) paths.push_back(DecodeFileHex(path)); // 명시 원문 파일 순서를 보존한다.
+        FileMenuScene scene;scene.throwAt=Number(row[4]);CHECK(scene.RunInline(paths,Number(row[2]),Number(row[3])!=0,"{@probe.value}")==row[5] && scene.config.Registry().FindByName("probe")==nullptr);
+    }
+}
+
+TEST_CASE(TellInlineErrors_OriginalTryScopeAndPhysicalRejectRemainDistinct) { // 제목 앞 오류와 원본 오버런 거부를 행별 ERROR 복구로 덮지 않는다.
+    netstorm::o::ConfigInterface config([](auto path)->std::optional<std::vector<std::uint8_t>> { if (netstorm::o::AsciiLower(path)=="probe") throw std::runtime_error("제목 치환의 실제 조회 예외");return FileBytes("title={@probe.value}\n"); });config.Configuration().Assign("ready=1\nmissionSpec={local.1}\n");TellFileMenus menus(config,[](auto) { return std::vector<std::string>{"d/a.english"}; });bool titleFailed{};
+    try { menus.Inline("input","Tell","0"); }catch (const std::runtime_error&) { titleFailed=true; }CHECK(titleFailed && config.Registry().FindByName("a")!=nullptr && config.Registry().FindByName("cur")==nullptr && config.Registry().FindByName("probe")==nullptr);
+    FileMenuScene scene;scene.paths={"d/a.english"};bool physicalFailed{};try { scene.menus->Inline("input","Tell",std::string(1024,'X')); }catch (const std::length_error&) { physicalFailed=true; }CHECK(physicalFailed && scene.config.Registry().FindByName("cur")==nullptr && scene.config.Registry().FindByName("a")!=nullptr);
 }
 
 TEST_CASE(TellInlineList_EightyPrefixesSharedLifetimeAndOverflowBoundary) { // %의80개 배열을 @/#40개 제한과 구별하고 실제 Config를 공유한다.

@@ -111,3 +111,12 @@ TEST_CASE(HtmlWindowMetadataClient_InlineFilesActualQueriesAndPhysicalPartialCop
     CHECK(scene.menus->ProcessHtmlMetadata(root,buffer)==1 && queries==2 && scene.strings.Index()==1 && scene.Root(root).menuColumns==1 && std::string(buffer.data())==prefix+"TAIL" && buffer[source.size()+1]=='!' && config.Registry().FindByName("cur")==nullptr && config.Registry().FindByName("c")!=nullptr);
     scene.menus->CloseHtmlWindows();CHECK(scene.Count()==before && scene.menus->MenuInstances()==0); // 실제 비부착 메뉴 스택도 같은 HTML 수명에서 반납한다.
 }
+
+// 실제 % 인자 조회 실패를 ERROR 링크로 복구하고 메타 부모/임시 Config를 정상 반납한다.
+TEST_CASE(HtmlWindowMetadataClient_InlineFilesActualRowFailureAndCleanup) {
+    for (const std::uint32_t failAt:{1U,2U}) { // 첫 조회와 부분 링크를 이미 쓴 두 번째 조회의 실패를 구별한다.
+        std::uint32_t queries{};netstorm::o::ConfigInterface config([&](auto path)->std::optional<std::vector<std::uint8_t>> { std::string text="title=Cee\n";if (netstorm::o::AsciiLower(path)=="probe") { ++queries;if (queries==failAt) throw std::runtime_error("실제 메타 행의 선택된 VFS 예외");text="value="+std::to_string(queries)+"\n"; }return std::vector<std::uint8_t>(text.begin(),text.end()); });config.Configuration().Assign("ready=1\nmissionSpec={local.1}\n");MetadataScene scene;
+        auto files=std::make_shared<TellFileMenus>(config,[](auto) { return std::vector<std::string>{"d/c.english"}; });auto context=scene.Context();context.metadata.fileMenus=files;const auto before=scene.Count(),root=scene.Create(std::move(context));const std::string prefix="HEAD "+std::string(256,'P')+' ';CHECK(scene.Process(root,prefix+"$Menu=%input,Config,{@probe.value} \nTAIL")==1 && queries==failAt && scene.strings.Index()==1 && config.Registry().FindByName("cur")==nullptr && config.Registry().FindByName("probe")==nullptr);
+        scene.menus->CloseHtmlWindows();CHECK(scene.Count()==before && scene.menus->MenuInstances()==0 && config.Registry().FindByName("c")!=nullptr);
+    }
+}

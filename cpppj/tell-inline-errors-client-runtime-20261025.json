@@ -1,0 +1,65 @@
+{
+  "unit": 411,
+  "goalComplete": false,
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "originalGameExecuted": false,
+  "cloneGameExecuted": false,
+  "guiExecuted": false,
+  "productSha256": "20b7b21f4e177182565c9280f6ff4e1fce66e101fddab57b1883161c9f388485",
+  "testBinarySha256": "a680866388561bf4aed7bd4300cfb62d3e70fbde9527c7b305421661e0f19cfa",
+  "sourceHashes": {
+    "cpppj/src/client/TellFileMenus.cpp": "ffbdad185d3945e2c495bb41e6677888b06e32ba6343e4d71dc0443891bc53fd",
+    "cpppj/src/client/TellFileMenus.h": "82f2fa2942ca1850f0c43573352c0364e79083ec986c301b4caf64cd044b4edc",
+    "cpppj/tests/CMakeLists.txt": "eec77a28de66b143a426ba2f1130b34e9cb69082f0ddbeeaa3ff8f8786817d3b",
+    "cpppj/tests/TellFileMenusTests.cpp": "ecc9ac80acc8b6f3e067acb80bfaa0813dca36c27b955d13ff47d858ae2c4ce4",
+    "cpppj/tests/HtmlWindowMetadataClientTests.cpp": "f0e0028b832c83d9771ea58ee99b810236e6476edd5599d4bb73eaee78cf764a",
+    "tools/decomp_tell_inline_errors.py": "d11a3e1d48d6a341cc36db9c1a2a62fb637d481c9937622e3e2316cf5aad4aa0",
+    "cpppj/tests/fixtures/tell-inline-errors-x86.tsv": "ba7617e4aa8bee3bc04e1d22ac951da3291600a7bd08f058a2e5339b72d41f61",
+    "docs/exe/cpp-tell-inline-errors-client-20261025.md": "81caf04a9be7dafe14c487409fbcf147f51ded7517c68a966f706c69888f754b"
+  },
+  "referenceHashes": {
+    "AGENTS.md": "7f853771930147c26e67d444ced94114992510a3fa072f5ed6bd63da7ba88bd9",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "cpppj/src/o/Config.cpp": "5e61071bbd0577d4878b388927b28308133547e0776b271dab656eb9e73b5715",
+    "cpppj/src/o/ConfigInterface.cpp": "62852c460b740586da52b1ee727de96206198ba0a5e7ff4a18f6acf5086b308c",
+    "cpppj/src/client/RawMenuHtml.inc": "a719baf217f13e85f8c9a8fd69bc86ed0777db2082fe6122c7cef953e1fdbc4a",
+    "tools/decomp_tell_inline_list.py": "2b58673ccd1e8bc03b28e5416508a50ee151dfd9a54bd874caa0012c5d87d40b",
+    "cpppj/tests/fixtures/tell-inline-list-x86.tsv": "5c868c7e99e7223eb35cf60ed5ee4a580591ff4b598d7efb8e73d72b0d85c85a",
+    "tools/decomp_tell_file_menus.py": "2babbcd24127ff8ed602612193a4d6ad6c2430f97e6b7cbdd300f6072a93a118",
+    "cpppj/tests/fixtures/tell-file-menus-x86.tsv": "dbdceb9b4e8745baf0c5da501c75b2718e0bfaf7fa98539f7dd1356ee782bc06"
+  },
+  "rawHashes": {
+    "extracted/cpp-tell-errors-411-audit.py": "84cbf21d4ebe8621f19fd6f7859e6f42aedc798c8eca2ee94d983dd9709f46a4",
+    "extracted/cpp-tell-errors-411-baseline.json": "56b75c7c1e0194b8d3c9a41ef58124bac06f66e714da6fd6babbd4f8fc198901",
+    "extracted/cpp-tell-errors-411-build1.log": "e9e42a9a0daf45db351388307b17c487d6ba9d0cc9b621c40876500865e3bf60",
+    "extracted/cpp-tell-errors-411-client1.log": "a99c9f6c5fed35051a314eb4842d465b81d2274149bd2de0c43345eac935be4c",
+    "extracted/cpp-tell-errors-411-ctest1-tests.log": "1a3be4954b90af7692ead5053e071b474f9dd23b814d91214feb08f08d5b8a88",
+    "extracted/cpp-tell-errors-411-ctest1.log": "89cc3d60b97f8ea624672e6c1a65de96ef9e93aff0e442a293caea8c1720b601",
+    "extracted/cpp-tell-errors-411-native.json": "86e6db75bbded5680f13e6eaaa28e803d97a9c4fee20f59703bf0d004086e1cf",
+    "extracted/cpp-tell-errors-411-tell1.log": "e2c76f5a0afb9d211591a16daf428b38c3bed71dfa1640c1fcf3f92e8b1ee743"
+  },
+  "protectedAudit": {
+    "compared": 1821,
+    "originals": 1394,
+    "originalCD": 425,
+    "changed": []
+  },
+  "checks": {
+    "nativeRows": 672,
+    "caughtTransfers": 384,
+    "normalRowsReplayed": 672,
+    "precisionDifferences": 0,
+    "nativeReplayReadOnly": true,
+    "focusedPassed": 32,
+    "fullPassed": 2784,
+    "fullFailedChecks": 0
+  },
+  "limits": [
+    "실제 Catch/현재 행 복구·공유 꼬리를 실행하지만 Config 예외 발생과 EH 진입/ESP 복구/continuation 전달은 명시 장치다. 실제 Windows EH 런타임 전체 검증이 아니다.",
+    "Catch 자체의 추가 할당 실패/임의 비동기 예외는 관측하지 않았으며 원본 지역 오버런 입력은 호스트의 명시 거부를 유지한다.",
+    "기존 Tell 전체 부모/구형 % 표시·기술/Input/전송·배경/Checked·Guide/full Uber와 전체 미션 완주/Edit/완전 동일성은 미완료다."
+  ]
+}

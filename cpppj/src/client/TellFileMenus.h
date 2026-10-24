@@ -14,7 +14,7 @@ public:
     TellFileMenus(const TellFileMenus&)=delete;TellFileMenus& operator=(const TellFileMenus&)=delete; // 등록된 고정 Config 주소를 복제하지 않는다.
     void Append(std::string_view pattern,std::uint32_t command,std::string_view argument,bool emptyTitleUsesName,
         ScriptStringRing& strings,const std::function<void(const TellFileMenuItem&)>& emit); // @는 빈 제목을 이름으로 대체하고 #는 빈 제목을 보존한다. 각 행의 cur.file은 emit이 반환할 때까지 유지한다.
-    std::string Inline(std::string_view pattern,std::string_view command,std::string_view argument); // 원문4cdd40의 % 목록은80개 prefix를 수집하고 인자를 두 번 치환하여 좁은 HTML 링크를 반환한다.
+    std::string Inline(std::string_view pattern,std::string_view command,std::string_view argument); // %의80개 prefix/두 번 치환·행별 ERROR 복구를 유지한다. 물리 범위 거부와 수집/제목 오류는 호출자에게 전달한다.
 private:
     std::vector<o::Config*> Collect(std::string_view pattern,std::size_t capacity); // 고유 prefix 수집/등록·원문 정렬을 공유하되 @/#40개와 %80개 지역 배열을 구별한다.
     o::ConfigInterface& config_; // 현재 실제 등록부/치환/파일 읽기를 빌린다.

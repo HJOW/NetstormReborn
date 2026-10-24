@@ -6,10 +6,14 @@
 
 namespace netstorm::client { //4ce1b0과4ce580의 공통 수명과 제목 폴백 차이를 유지한다.
 namespace { // 원문 좁은 바이트와 실제 Config의 UTF-8 경계만 변환한다.
+class PhysicalLimitError final:public std::length_error { // 원본 버퍼 밖 입력의 명시 거부를 실제 행 처리 장치의 C++ 예외와 구별한다.
+public:
+    explicit PhysicalLimitError(const char* message):std::length_error(message) {} // 기존 length_error 계약을 유지하며 ERROR 링크로 성공 대체하지 않는다.
+};
 std::string_view CString(std::string_view value) { return value.substr(0,value.find('\0')); } // 첫NUL 뒤의 입력은 사용하지 않는다.
 std::string Decode(std::string_view value) { return o::DecodeOriginalText({reinterpret_cast<const std::uint8_t*>(value.data()),value.size()}); } // Config로 들어갈 때만 원문 바이트를 변환한다.
 std::string Narrow(std::string_view value) { const auto bytes=o::EncodeOriginalText(value);return {bytes.begin(),bytes.end()}; } // 실제 메뉴/고리에는 원문 글꼴 바이트를 쓴다.
-void Limit(std::string_view value,std::size_t capacity) { if (Narrow(value).size()>=capacity) throw std::length_error("Tell 파일 목록의 원본 지역 NUL 범위 초과"); } // 원문의 물리 오버런 입력만 거부한다.
+void Limit(std::string_view value,std::size_t capacity) { if (Narrow(value).size()>=capacity) throw PhysicalLimitError("Tell 파일 목록의 원본 지역 NUL 범위 초과"); } // 원문의 물리 오버런 입력만 거부한다.
 std::string FileName(std::string_view path) { //59c40(1)의 첫 점부터 제거와59b20(1)의 마지막 경로 구분자를 보존한다.
     const auto separator=path.find_last_of("\\/:");auto name=std::string(path.substr(separator==path.npos ? 0 : separator+1));const auto dot=name.find('.');if (dot!=name.npos) name.resize(dot);return name;
 }
@@ -26,7 +30,7 @@ std::vector<o::Config*> TellFileMenus::Collect(std::string_view pattern,std::siz
             auto created=std::make_unique<o::Config>(config_.Registry(),name);object=created.get();owned_.push_back(std::move(created)); // 적재 중 실패해도 이미 등록한 원문 객체의 수명을 보존한다.
             object->Append("path="+path);object->Append("fileName="+name);object->Append("index="+std::to_string(index));if (config_.Reader()) if (const auto bytes=config_.Reader()(path)) object->LoadBytes(*bytes);
         }
-        if (std::find(objects.begin(),objects.end(),object)==objects.end()) { if (objects.size()>=capacity) throw std::length_error("Tell 파일 목록의 원본 prefix 배열 범위 초과");objects.push_back(object);++index; }
+        if (std::find(objects.begin(),objects.end(),object)==objects.end()) { if (objects.size()>=capacity) throw PhysicalLimitError("Tell 파일 목록의 원본 prefix 배열 범위 초과");objects.push_back(object);++index; }
     }
     for (std::size_t first=0;first<objects.size();++first) for (std::size_t next=first;next<objects.size();++next) { // 원문 두 겹 비교/교환 순서를 유지하며 표시 제목으로 정렬하지 않는다.
         if (o::AsciiLower(Narrow(objects[first]->Prefix()))>o::AsciiLower(Narrow(objects[next]->Prefix()))) std::swap(objects[first],objects[next]);
@@ -46,8 +50,11 @@ std::string TellFileMenus::Inline(std::string_view pattern,std::string_view comm
     const auto objects=Collect(pattern,80);std::string result; // 원문 String은 빈 본문으로 시작하며 구분선에는 링크를 추가하지 않는다.
     for (const auto* object:objects) { // 각 항목의 두 치환과 링크 조각 추가가 끝날 때까지 같은 cur.file을 유지한다.
         const auto name=ObjectName(*object);o::Config current(config_.Registry(),"cur");current.Append("file="+name);const auto label=Title(config_,name,true);if (label.starts_with("--")) continue;
-        const auto source=Decode(CString(argument));const auto first=config_.SubstituteLocal(source);Limit(first,1024); // 원문 첫 조회의 반환값은 버리지만 파일/환경 조회 효과는 실행한다.
-        result+="\n<a herf=\"cmd:";result+=CString(command);result+=',';const auto second=config_.SubstituteLocal(source);Limit(second,1024);result+=Narrow(second);result+="\">";result+=Narrow(label);result+="</a>"; // 원문 herf 철자·LF 위치와 인용/명령 대소문자를 수정하거나 escape하지 않는다.
+        try { // 원문의 EH 상태6은 제목 처리 뒤 첫 인자 치환부터 현재 링크 작성 끝까지다.
+            const auto source=Decode(CString(argument));const auto first=config_.SubstituteLocal(source);Limit(first,1024); // 원문 첫 조회의 반환값은 버리지만 파일/환경 조회 효과는 실행한다.
+            result+="\n<a herf=\"cmd:";result+=CString(command);result+=',';const auto second=config_.SubstituteLocal(source);Limit(second,1024);result+=Narrow(second);result+="\">";result+=Narrow(label);result+="</a>"; // 원문 herf 철자·LF 위치와 인용/명령 대소문자를 수정하거나 escape하지 않는다.
+        } catch (const PhysicalLimitError&) { throw; } // 원문 지역 오버런에 해당하는 무효 입력은 기존 명시 거부를 유지한다.
+        catch (...) { result+="\n<a herf=\"cmd:";result+=CString(command);result+=",\">~rERROR ";result+=Narrow(label);result+="</a>"; } //4ce0ef는 이미 쓴 부분 문자열을 되돌리지 않고 오류 링크를 덧붙이며 다음 행으로 진행한다.
     }
     return result;
 }
