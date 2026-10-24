@@ -19,6 +19,7 @@
 #include "client/RawChatWindowContext.h"
 #include "client/RawBackgroundGifControls.h"
 #include "client/RawHtmlWindowContext.h"
+#include "client/HtmlWindowFit.h"
 #include "client/ClientDotCommandGlobals.h"
 #include "client/TextEntryStorage.h"
 #include <cstdio>
@@ -51,7 +52,7 @@ struct RawMenuControls::Impl {
     std::unique_ptr<ChatWindow> chatWindow;std::unique_ptr<HudChatGeometry> chatGeometry; // 같은 원문 공장/입력/일반 부착 본체다.
     std::unique_ptr<RawBackgroundGifControls> gifWindows; // 같은 실제 기본 노드/소유 GIF/픽셀 조립이다.
     std::optional<RawHtmlWindowContext> htmlContext;std::map<std::uint32_t,std::unique_ptr<HtmlWindowGumpNode>> htmlRoots; // 같은 Client와 실제8192BYTE/20행 저장소다.
-    std::set<std::uint32_t> htmlOwned,htmlConstructed;std::unique_ptr<HtmlWindowGump> htmlWindow; // 직접 할당/완전 생성 여부와 같은 원문 본체다.
+    std::set<std::uint32_t> htmlOwned,htmlConstructed;std::unique_ptr<HtmlWindowGump> htmlWindow;std::unique_ptr<HtmlWindowFit> htmlFit; // 직접 할당/완전 생성 여부와 같은 원문 수명/전체 배치 본체다.
     RawMenuTree common; // Client 돌 버튼과 같은 공통 상태/처리기다.
     const GameAssets& assets; // 보호 TYPE/SHP를 읽는 같은 자산 저장소다.
     FontStore& fonts; // Client 글꼴 캐시를 공유한다.
@@ -318,7 +319,7 @@ struct RawMenuControls::Impl {
     }
     // 각 실제 가상 Attach를 현재 분류로 호출한다.
     void Attach(std::uint32_t token,float x,float y,std::uint32_t parent,std::uint32_t mode) const {
-        if (htmlRoots.contains(token)) { if (!htmlContext->fitAttach) throw std::logic_error("HTML 전체 Fit/Attach 미복원");htmlContext->fitAttach(token,x,y,parent,mode); }else if (chatRoots.contains(token)) chatWindow->Attach(token,x,y,parent,mode);else if (textEntries && textEntries->Node(token)) textEntries->Attach(token,x,y,parent,mode);else if (nsRoots.contains(token)) nsGeometry->Attach(token,x,y,parent,mode);else if (nsPlayers.contains(token)) nsCreate->AttachPlayer(token,x,y,parent,mode);else if (nsBattles.contains(token)) nsCreate->AttachBattle(token,x,y,parent,mode);else if (helpWindows.contains(token)) helpWindow->Attach(token,x,y,parent,mode);else if (helpBodies.contains(token)) helpBody->Attach(token,x,y,parent,mode);else if (helpButtons.contains(token)) common.stones.Attach(token,x,y,parent,mode);
+        if (htmlRoots.contains(token)) { if (!htmlContext->read) throw std::logic_error("HTML 실제 현재 뷰/화면 전역 미연결");htmlFit->Attach(token,x,y,parent,mode); }else if (chatRoots.contains(token)) chatWindow->Attach(token,x,y,parent,mode);else if (textEntries && textEntries->Node(token)) textEntries->Attach(token,x,y,parent,mode);else if (nsRoots.contains(token)) nsGeometry->Attach(token,x,y,parent,mode);else if (nsPlayers.contains(token)) nsCreate->AttachPlayer(token,x,y,parent,mode);else if (nsBattles.contains(token)) nsCreate->AttachBattle(token,x,y,parent,mode);else if (helpWindows.contains(token)) helpWindow->Attach(token,x,y,parent,mode);else if (helpBodies.contains(token)) helpBody->Attach(token,x,y,parent,mode);else if (helpButtons.contains(token)) common.stones.Attach(token,x,y,parent,mode);
         else if (helpImages.contains(token)) helpImage->Attach(token,x,y,parent,mode);else if (menus.contains(token)) widgets->Attach(token,x,y,parent,mode);else if (titles.contains(token)) titleWidgets->Attach(token,x,y,parent,mode);
         else if (sliders.contains(token)) slider->Attach(token,x,y,parent,mode);else if (arrows.contains(token)) common.stones.Attach(token,x,y,parent,mode);else common.tree.Attach(token,x,y,parent,mode);
     }

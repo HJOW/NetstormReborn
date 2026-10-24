@@ -1,0 +1,776 @@
+{
+  "unit": 404,
+  "goalComplete": false,
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "productSha256": "db8e0fe62cb6347480532193cb3e85a7819b5f342cf22609b1c41c7d6540f4d7",
+  "testBinarySha256": "901eb6775b8b18ea997abe9c911a961fffb2edbc74175bed6a22037e404f8bea",
+  "sourceHashes": {
+    "cpppj/src/client/CMakeLists.txt": "67a1352af2f81436b0cd2e12e4e2a3d704d1527849f61d17879848cedf034b96",
+    "cpppj/src/client/HtmlWindowFit.cpp": "482e1859163f26ad60d98a23d0035c920692993405107b37c0f17fc34f0bfa91",
+    "cpppj/src/client/HtmlWindowFit.h": "2d6634822c37a2084e50c0a40ee0ae85ad1e3a33f384c9c1d954e789c0f57878",
+    "cpppj/src/client/RawHtmlWindowContext.h": "636adc297ea75057ad0282d2ca57c4ceb2f722a221a30b80b7ff373da2bbf70e",
+    "cpppj/src/client/RawMenuControls.cpp": "97dce3ad4edb19eb70f37559c500ffc2f2eff7753a438fae452cbf46be0ab8af",
+    "cpppj/src/client/RawMenuHtml.inc": "4fc2dd678a2a327f33e2269c25883a29c504e6e6a071bf1a06cf8ff899d1b464",
+    "cpppj/tests/CMakeLists.txt": "e5f6cabf0713b13d8932e054364c498b4af4a7b5a6c59649e98492b6e9616234",
+    "cpppj/tests/HtmlWindowFitClientTests.cpp": "c6c8adaa5166002aa8ec4b15e4ca6d029aa63662eaf04b8252b2b7de2ba038f1",
+    "cpppj/tests/HtmlWindowFitTests.cpp": "f931989d9d2d2bd02dc7e95208311e473c992d3122250fad63cd11815734206c"
+  },
+  "referenceHashes": {
+    "cpppj/src/client/HtmlWindowGump.cpp": "87faf6f44913300a74da04687850cdc0629c6fb5868ff08db639f7a01cb3a40c",
+    "cpppj/src/client/HtmlWindowGump.h": "ee855b28c4bad4c3876ef5a6ed50640cff2f44c04a9e7f0b8e3d7174a51a8e36",
+    "cpppj/src/client/RawButtonControls.cpp": "46592fa15659ac4652364c792cd2371bb95226f8041de0c202e3fa329f679adb",
+    "cpppj/src/client/GumpDecoration.cpp": "06007666adf3a03a216c91e09415a8489a389620b92125c21b8de13b0d50559e",
+    "cpppj/src/client/GumpTree.cpp": "b623d624f056ef2117dea2393334e1d8b30666b2d8243e49dc53e5e56b633c56",
+    "cpppj/src/client/GumpCollection.cpp": "d913b1ad8a6c786bfbae8820e0db09a7ec900b2674c8c49ba92541b475ea259b",
+    "cpppj/src/client/GumpDraw.cpp": "b2fe442a6d02602ba0e9d72fcd1d302d7f40d925a40ed14b570196a95f12eb36",
+    "cpppj/src/client/TextGump.cpp": "8f501caa7ba39352386060e81c79835eb75e070e6231d22e879b3c17142c5804",
+    "cpppj/src/client/ScrollingTextGumpWidgets.cpp": "5d74fae82e62133e95bb3d7ee0ba9333d2b206fdebc80944181320d7e5e71395",
+    "cpppj/src/client/MenuGump.cpp": "9738a69d18151ca3b4d10d91e99622addcf0a89af12f66cc082ff5bb432631a4",
+    "cpppj/src/client/MenuGumpWidgets.cpp": "33acda5b10a39d19cab04f867d42b2c6dde48530ad62ea651750eba6446d003f",
+    "cpppj/src/client/MenuGumpControls.cpp": "ca1017cf31843d3de16929ef71a0f1fff9d177b3d33154d820674d366af5dc16",
+    "cpppj/src/client/StoneButtonGump.cpp": "a6737cdc2d87a37276d7eb93e82a345e31517cc66aa943dc83ee2d4fdb176c4f",
+    "cpppj/src/client/StyleTextBuffer.cpp": "2aa0f6983c460aa3d5a960085a8b1ed86f153cb0916246329878f6d1b77f8ea2"
+  },
+  "preservedNativeHashes": {
+    "cpppj/tests/fixtures/html-window-gump-x86.tsv": "2acaf260f0f47cce99b5d0cabfc341aaa14b2921281e32ba9c63c92797061f36",
+    "cpppj/tests/fixtures/html-window-idle-v2-x86.tsv": "b0309464c7c8643467a819d5c28aa413a1e2d15b57ceed1e8b48af95d855f333",
+    "cpppj/tests/fixtures/dialog-exit-command-x86.tsv": "b09428751d30aff304cfd0c7be8467563147bdf8729b75b0a9840c8d330961ed",
+    "cpppj/tests/fixtures/dialog-command-lifetime-x86.tsv": "ee27d2eca659dae70d66fd3f30636485c0eae485356d937a9d8bc24f35a13482",
+    "cpppj/tests/fixtures/mission-loading-message-x86.tsv": "9770007e448fa9710c3e7fe3eee8c26503cd21bddcfee3231b91db0ebc47a0c5",
+    "cpppj/tests/fixtures/tell-map-menus-x86.tsv": "bd14f558b98aed4554c20f3210eee6e784184430d68d7f7b85f29849e0821351"
+  },
+  "newNativeHashes": {
+    "tools/decomp_html_window_fit.py": "a3e71cc02fedae028eecfd008253f6c0e0c04623d7f469845fea68401bab5429",
+    "cpppj/tests/fixtures/html-window-fit-x86.tsv": "adaeea8c65dbb3cd5f8a5ac80545b0de86a5bdc27c0f25a2f0c74832ae8a5855",
+    "cpppj/html-window-fit-native-20261024.json": "efcd494408765e5645c14a3b715a9da2a723d6c561d7bb0c72c85022787ca8c0"
+  },
+  "rawHashes": {
+    "extracted/cpp-html-fit-404-native-disassembly.txt": "049b9a6ea725f0d8fc789f5f4b49733c5e2c81a55069fc47f244dc6aa412a9d4",
+    "extracted/cpp-html-fit-404-native1.log": "7ec8cd943b0212ebead7fa3f7310109df763d506ab7f758a15917b22d1f6206d",
+    "extracted/cpp-html-fit-404-build1.log": "245051e7b3f122e423a0fceaaa74957761d876eb782f79203b1cc14b35e01934",
+    "extracted/cpp-html-fit-404-edit.py": "7b866fd566a174d86858c2eb8e997d9b29eb9ad19f884ad89a3bc1afa19aa755",
+    "extracted/cpp-html-fit-404-build2.log": "b249f93a8e74ea97dad9040e9d37ae89962e13782d2429682d7f292689cc342b",
+    "extracted/cpp-html-fit-404-checks.py": "92a6f1d7e8cec5f54c649d199ce114526fb07e5dc25a1f3af9860a3048d24bf9",
+    "extracted/cpp-html-fit-404-focused1-before.json": "9fc00f8a1b501780699e90af826debb951ea6d56a1719a37cddb4fd558a4d4e7",
+    "extracted/cpp-html-fit-404-focused1-1.log": "88e737f48b6e30207604fe1fe88404cd591ebde5a6123e2f25265dcb41756f88",
+    "extracted/cpp-html-fit-404-focused1-progress1.json": "ca22f1733aee7de20bc53b4009610a09512def42bbb2e039082d8d621376b09f",
+    "extracted/cpp-html-fit-404-focused1-2.log": "7e6ca64d7c7b4877dcf377bc8e965ba83630b39f3c9a842b4a94c76ca00ddf1a",
+    "extracted/cpp-html-fit-404-focused1-html.bmp": "55f5e96afc60cb0045befe778635b4c31908d167c0ca6e1e80fa6c408c29a8d2",
+    "extracted/cpp-html-fit-404-focused1-progress2.json": "7917ad22c5c1771801969f647a4c013a411ebd362f62e6949572cf0224824425",
+    "extracted/cpp-html-fit-404-focused1-3.log": "deef60ef6f3d4f3acd9fa18bb2348fd16c9e4826d48353b6f48644605df1f763",
+    "extracted/cpp-html-fit-404-focused1-progress3.json": "393fe95384a83f54af2cacdebf2c6233ddf853ed4f3f69b7af3ea6040ec701f0",
+    "extracted/cpp-html-fit-404-focused1-4.log": "7fb4e2f5928de1c1ebf8f3a73067f91fe3b158112ae07a86f53bff491c5d2aa3",
+    "extracted/cpp-html-fit-404-focused1-progress4.json": "05f8efaaba03bfb12208a19d6c39670306a62bef919b3c530a76fcdfc83f5446",
+    "extracted/cpp-html-fit-404-focused1-5.log": "11d12f462e5aed980837913e88096b2fafdfcb52df1e96709672f6ced9710f5b",
+    "extracted/cpp-html-fit-404-focused1-progress5.json": "34adf3209bfa2dd0d19c9c89ad2119b33c9c757a4032be34f5bed97b40f2de7c",
+    "extracted/cpp-html-fit-404-focused1-6.log": "f7bec18a26182d27784d6228cf3d3fd01394db19f807787ab43eb3816d1e134b",
+    "extracted/cpp-html-fit-404-focused1-progress6.json": "7a6bc36daa3d5b4f089db779fd67239003a30a0e1cf0cfe7879a03f13c1328fa",
+    "extracted/cpp-html-fit-404-focused1-7.log": "0195a4cf1dab9824a5f5e0b1060c41c56de1f5e41dfa4707fc241dcd44b8e732",
+    "extracted/cpp-html-fit-404-focused1-progress7.json": "1d74821f194ffce193a6dbdb13ac14a6f872733b7339dae4adb2843dba0ba581",
+    "extracted/cpp-html-fit-404-focused1-8.log": "d4b27a55819edc216b236c551f2dbcd380c3f77ece8e74deee7bf087474d6ecf",
+    "extracted/cpp-html-fit-404-focused1-progress8.json": "079213d73861c9f70ed0a746bf3114fc51a12e1b0be2f7f4e797d8be4c107238",
+    "extracted/cpp-html-fit-404-focused1-9.log": "ffcd5f5378884950148365b9e33256822bb75acb7cfe427cb2e1f1596b4de253",
+    "extracted/cpp-html-fit-404-focused1-progress9.json": "dc62af5e1f1a0971f52ec6eea2784eed7383848ef0f7bed7342e0cfd5ec23c7a",
+    "extracted/cpp-html-fit-404-focused1-10.log": "5060e0b1d316f392ab2e2018e25ee3ea3de0518e635fe7ab008e76005db28fbf",
+    "extracted/cpp-html-fit-404-focused1-progress10.json": "ed967605a61f26bf729c909695524a0c5aa9a065dc374265f1fd6983542576f5",
+    "extracted/cpp-html-fit-404-focused1-11.log": "b32541e3cbdb179194a20bcbf9959a8abba9a883923269d35e6e6804c33c72d0",
+    "extracted/cpp-html-fit-404-focused1-progress11.json": "bdae50b579eba9696083ab08b7e5272024d2ccc1a27312a0a93e14e2c1a68d9c",
+    "extracted/cpp-html-fit-404-focused1-12.log": "460aa02995ab9da1f17df7519af5ac7be128dbe4622c764206e1abcb67e6a0df",
+    "extracted/cpp-html-fit-404-focused1-progress12.json": "a54403b3d91fc36382d26edf36863054c9521bb4f7effb201fbcbde284d55595",
+    "extracted/cpp-html-fit-404-focused1-13.log": "e37b58d2986c40bc35c4fd89bc056b07db189aad1a418b02a0c81e9eada30f6e",
+    "extracted/cpp-html-fit-404-focused1-progress13.json": "9a8f5fbbd567d76e4eb15579c91967e527353aab91ebe5261b7cc426d89560e9",
+    "extracted/cpp-html-fit-404-focused1-14.log": "73443f6b064e5c8690f21fa4988aba8aef71cea8cbf148041cb335979da66bf5",
+    "extracted/cpp-html-fit-404-focused1-gif.bmp": "cc69eb5a03ae6d3efbb25dbe601519b675a562f5e42486e97669065fb9371dc8",
+    "extracted/cpp-html-fit-404-focused1-progress14.json": "e45b0f719c3d5395a6f567c647bec12596ca5dd62b04bc81b2990aa8d7bb80ce",
+    "extracted/cpp-html-fit-404-focused1-15.log": "860811e0b2f0957fe0c8e78bddc1126c72f9350c88770ae67c036aa4f776a72d",
+    "extracted/cpp-html-fit-404-focused1-progress15.json": "ac15842b3cf261a76a80f5b711f47e402ff723dd5c33d147abb06d2a95c54c51",
+    "extracted/cpp-html-fit-404-focused1-16.log": "94c820f35fed8c69e76bd8da1e976f11521c2e6aeac93cbfcac694cf6f9d1405",
+    "extracted/cpp-html-fit-404-focused1-chat.bmp": "375eecff124ac10d350aad7c0ec98365b94f4b810cbea47b9d5e8436bdebe17a",
+    "extracted/cpp-html-fit-404-focused1-progress16.json": "5026c5719102b411b0ceb390408f35dabf3f8475079548d8d57d0ad7ab610c79",
+    "extracted/cpp-html-fit-404-focused1-17.log": "5075e076baeae15ccd1747c2c8ca3c8c4b90595549f2e2df8725079e1494c286",
+    "extracted/cpp-html-fit-404-focused1-progress17.json": "5c6e6c5ec105198b36cd381102c2ecec5679d4aa1b375774683af39a1f927141",
+    "extracted/cpp-html-fit-404-focused1-18.log": "efcc36a0a5066bc84c1e108c84a6faed984ff7f0aa75887756f9e543b589f5a5",
+    "extracted/cpp-html-fit-404-focused1-progress18.json": "5df572dac6bf1648abcdad934149411904629ae5b5abd3c1e019030953bc2c2f",
+    "extracted/cpp-html-fit-404-focused1-19.log": "caef703d6711ac5c20db7270599791613d588e7ba295cfec30b7ad341a0a13e3",
+    "extracted/cpp-html-fit-404-focused1-progress19.json": "3ee06d30b3138b96c111905700018ed77391f0d00e055de2beaefacf0e612305",
+    "extracted/cpp-html-fit-404-focused1-20.log": "b5b64a6315c7bc6542e3bedf631a3682e858664e0ecb92f6088ee7b56dcc7d12",
+    "extracted/cpp-html-fit-404-focused1-console.bmp": "0bc55ac0c4ea878611a1277535a8b05ab54191bbe2533124add8a3d9b96b5474",
+    "extracted/cpp-html-fit-404-focused1-progress20.json": "badaf1c91f21b1e29eed3e20e4afe7a19025f9618660b4b2949cfb67bd1372ca",
+    "extracted/cpp-html-fit-404-focused1-21.log": "29c7ea49404747fbbdd472fce171133de89323a9ea3685396b327b2b47f3772a",
+    "extracted/cpp-html-fit-404-focused1-progress21.json": "a4b084a3f6429a3a30e31ce349d2f05a8ff9b62229223a57e4474ee215d506fc",
+    "extracted/cpp-html-fit-404-focused1-22.log": "426a3d77cc906c9a8caf6fe5c6c0c0e191465767a352e340c63ff7a8804e8c6a",
+    "extracted/cpp-html-fit-404-focused1-progress22.json": "2c61bbee0a8fa8754ad1db70af5e455d018ce49e49bc5ae85f405b12fdb0ca57",
+    "extracted/cpp-html-fit-404-focused1-23.log": "f2105a03659dcd35ec440a769b319de162ebe6cb5c638b2caafff44a871839d2",
+    "extracted/cpp-html-fit-404-focused1-progress23.json": "a5ed8c5eeb4ad7a84f0c199e799d980a5bf2c5ed6258aa0bb27889ab03b55078",
+    "extracted/cpp-html-fit-404-focused1-24.log": "eba35a6f6f19d9634b8f45e9e85b80911b6c26a7c83fa3f6124ee2a09d7a91a5",
+    "extracted/cpp-html-fit-404-focused1-progress24.json": "9124b1de2f8e6ce36bc70aa000bc6b735a36a7073866f8c46019641d7b6d51d7",
+    "extracted/cpp-html-fit-404-focused1-25.log": "5ca5531774b5f13fc82081a254cff97b0cd8481d48e9e41e2ed8aa3bdb8503e5",
+    "extracted/cpp-html-fit-404-focused1-progress25.json": "5e2cc57709a3a10f129884ae2357779f90fef1754b64d45788adf0366a3fc668",
+    "extracted/cpp-html-fit-404-focused1-26.log": "4e0cde1d19c18e8335926b907de08279c605765a208e161f4ed7ff8843838387",
+    "extracted/cpp-html-fit-404-focused1-progress26.json": "29bd9084b45c68a8a97cbddd6db19afbaeb8d28e4b77c05ac9bce7d76d4afa60",
+    "extracted/cpp-html-fit-404-focused1-27.log": "688dd03368db1e8e3668a88d62baabfaf41891dc28e61379dfeb1a07ec4e18c0",
+    "extracted/cpp-html-fit-404-focused1-progress27.json": "23e2030f01ced58f6afbabf059d4372ada32bff0f80a55e32aadfa5fe32e12ef",
+    "extracted/cpp-html-fit-404-focused1.json": "b5766dc120d731c770c6f711e6dc94492562e02d0684396faa05927a8b6c3b6d",
+    "extracted/cpp-html-fit-404-native-verify.py": "01d558b4b016c67b1c14aa1f598f9c64f8af14883b407245757bc02ccb064773",
+    "extracted/cpp-html-fit-404-verify-fit1.log": "1fa68c2efe8de108c79900bdd60497cf895f0e5f48406d642776636e2cccc543",
+    "extracted/cpp-html-fit-404-verify-idle1.log": "f4b5e5bebf22ed0243174f2d8663879864b980e28143edbfb5656a41b6bb8b67",
+    "extracted/cpp-html-fit-404-verify-gump1.log": "cff42f470a5045c99fd6a35d58731baf368075809a211b0dfcb5b843662972b8",
+    "extracted/cpp-html-fit-404-ctest1.log": "a9d36bf6d00d5b8c59d38f4fbc5f5dfe292d4e6f28468000b1dd6d5f55cdaf6d",
+    "extracted/cpp-html-fit-404-native-replay1.json": "9c8f1c07eab3cf5bac8a4db5d94d0698e3d74413c8353ed33bd3541786b19c35",
+    "extracted/cpp-html-fit-404-final.py": "32637264baa69293ad3729a2b6d6460de9dd9ef3cfac9310727a7243ffbeba5b",
+    "extracted/cpp-html-fit-404-ctest1-tests.log": "cf737db6ac0f6b72888e11e069e66e23e70337d56a94449226bd51a7ecbf7f61",
+    "extracted/cpp-html-fit-404-ctest1.json": "682b578a3ea1799dd234a854bffb04b08513819f22de913f870d173ddf5f998c",
+    "extracted/cpp-html-fit-404-audit.py": "acdff72e90a75ee7c3c273990956cc6b10ff5accdabe6b016857416a913d7f32",
+    "extracted/cpp-html-fit-404-receipt.py": "a64e94b44cda91c0b68b80fd6581e77e5acee817855c368662295628c907a7d7",
+    "extracted/cpp-html-fit-404-terminal.json": "0a3030afed98166eafa70480ce93f51e721e56e09e8fa73c755e4af832b6a76f"
+  },
+  "builds": [
+    {
+      "index": 1,
+      "session": 91775,
+      "returnCode": 0,
+      "path": "extracted/cpp-html-fit-404-build1.log",
+      "sha256": "245051e7b3f122e423a0fceaaa74957761d876eb782f79203b1cc14b35e01934",
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "index": 2,
+      "session": 64524,
+      "returnCode": 0,
+      "path": "extracted/cpp-html-fit-404-build2.log",
+      "sha256": "b249f93a8e74ea97dad9040e9d37ae89962e13782d2429682d7f292689cc342b",
+      "errors": [],
+      "warnings": []
+    }
+  ],
+  "focused": {
+    "productSha256": "db8e0fe62cb6347480532193cb3e85a7819b5f342cf22609b1c41c7d6540f4d7",
+    "testBinarySha256": "901eb6775b8b18ea997abe9c911a961fffb2edbc74175bed6a22037e404f8bea",
+    "runs": [
+      {
+        "returnCode": 0,
+        "seconds": 0.8798991999356076,
+        "log": "extracted/cpp-html-fit-404-focused1-1.log",
+        "filter": "HtmlWindowFit_",
+        "counts": [
+          [
+            "1",
+            "0"
+          ]
+        ],
+        "names": [
+          "HtmlWindowFit_IndependentNativeAllGeometryAndCurrentEffects"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.5743073999183252,
+        "log": "extracted/cpp-html-fit-404-focused1-2.log",
+        "filter": "HtmlWindowFitClient_",
+        "counts": [
+          [
+            "6",
+            "0"
+          ]
+        ],
+        "names": [
+          "HtmlWindowFitClient_ActualShortBodyUniformButtonsCenterAndDepth",
+          "HtmlWindowFitClient_ActualLongBodyScreenLimitAndScrolling",
+          "HtmlWindowFitClient_ActualTwoMenuColumnsAndStackRetirement",
+          "HtmlWindowFitClient_ActualAttachedBodyReplacementAndCurrentView",
+          "HtmlWindowFitClient_ActualAuxiliaryReferenceSelectsCurrentCenter",
+          "HtmlWindowFitClient_ActualPixelsClipsAndPadding"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.3151277999859303,
+        "log": "extracted/cpp-html-fit-404-focused1-3.log",
+        "filter": "HtmlWindowGump_",
+        "counts": [
+          [
+            "1",
+            "0"
+          ]
+        ],
+        "names": [
+          "HtmlWindowGump_IndependentNativeLifecycleControlsBodyAndInput"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.5277925000991672,
+        "log": "extracted/cpp-html-fit-404-focused1-4.log",
+        "filter": "HtmlWindowClient_",
+        "counts": [
+          [
+            "6",
+            "0"
+          ]
+        ],
+        "names": [
+          "HtmlWindowClient_ActualConstructorConcurrentRootsAndClientGlobals",
+          "HtmlWindowClient_ActualTwentyStoneControlsAndDeferredClear",
+          "HtmlWindowClient_ActualScrollingBodyStyleAndReplacementLifetime",
+          "HtmlWindowClient_ActualInputQueueAndNativeOnExitOrder",
+          "HtmlWindowClient_CurrentAuxiliarySerialAndExplicitFitBoundary",
+          "HtmlWindowClient_ActualIdleCurrentDeadlineAndRawZeroCommand"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.2857854999601841,
+        "log": "extracted/cpp-html-fit-404-focused1-5.log",
+        "filter": "DialogConditionFlow_",
+        "counts": [
+          [
+            "12",
+            "0"
+          ]
+        ],
+        "names": [
+          "DialogConditionFlow_WholeSubstitutionBeforeCondition",
+          "DialogConditionFlow_CurrentEffectsAndInlineStyle",
+          "DialogConditionFlow_ReusesHiddenStateOnSecondPass",
+          "DialogConditionFlow_MetadataPriorityAndBodyBoundary",
+          "DialogConditionFlow_NoContentAndExplicitBoundaries",
+          "DialogConditionFlow_QuotedCommandKeepsNativeCursorRule",
+          "DialogConditionFlow_OnExitRawCaptureKeepsLegacyContract",
+          "DialogConditionFlow_OnExitHiddenLastAndHtmlQueueOrder",
+          "DialogConditionFlow_OnExitQuotesSpacesAndSigns",
+          "DialogConditionFlow_SetSizeExitIsContentAndResolvesBeforeSecondPass",
+          "DialogConditionFlow_OnExitCapturePhysicalBounds",
+          "DialogConditionFlow_OnExitRawTailLfStaysOwned"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.3075611999956891,
+        "log": "extracted/cpp-html-fit-404-focused1-6.log",
+        "filter": "DialogExitCommand_",
+        "counts": [
+          [
+            "3",
+            "0"
+          ]
+        ],
+        "names": [
+          "DialogExitCommand_Native204",
+          "DialogExitCommand_CurrentRingQueueAndSingleDisposal",
+          "DialogExitCommand_MissingAndPhysicalBoundaries"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.38587270001880825,
+        "log": "extracted/cpp-html-fit-404-focused1-7.log",
+        "filter": "DialogBodyLayout_",
+        "counts": [
+          [
+            "7",
+            "0"
+          ]
+        ],
+        "names": [
+          "DialogBodyLayout_ActualInlineFontsColorsAndBaseline",
+          "DialogBodyLayout_ActualBufferWrapAndIndependentClip",
+          "DialogBodyLayout_ActualHeadingAndHardLineHeights",
+          "DialogBodyLayout_EffectsOnceAndFailedReplacementKeepsContent",
+          "DialogBodyLayout_ActualFontRasterUsesContentClip",
+          "DialogBodyLayout_EarlyMissionActualPicturesAndHeaders",
+          "DialogBodyLayout_ActualPictureBufferCloneAndRasterClip"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.3048042000737041,
+        "log": "extracted/cpp-html-fit-404-focused1-8.log",
+        "filter": "DialogCommandLifetime_",
+        "counts": [
+          [
+            "3",
+            "0"
+          ]
+        ],
+        "names": [
+          "DialogCommandLifetime_Native252",
+          "DialogCommandLifetime_CurrentQueueDeferredExit",
+          "DialogCommandLifetime_CallbackMutationKeepsSource"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.3376273000612855,
+        "log": "extracted/cpp-html-fit-404-focused1-9.log",
+        "filter": "DialogRuntimeAction_",
+        "counts": [
+          [
+            "3",
+            "0"
+          ]
+        ],
+        "names": [
+          "DialogRuntimeAction_PriorityAndSingleExitResolve",
+          "DialogRuntimeAction_RawArgumentKeepsQuotedAndSignedBytes",
+          "DialogRuntimeAction_FiresFrozenFieldsWithoutNewLookup"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.33787789999041706,
+        "log": "extracted/cpp-html-fit-404-focused1-10.log",
+        "filter": "MissionLoadingMessage_",
+        "counts": [
+          [
+            "3",
+            "0"
+          ]
+        ],
+        "names": [
+          "MissionLoadingMessage_Native1540",
+          "MissionLoadingMessage_StartingMissionDialogMetadata",
+          "MissionLoadingMessage_ConditionalCallbacksAndBounds"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.3870821000309661,
+        "log": "extracted/cpp-html-fit-404-focused1-11.log",
+        "filter": "TellParameters_",
+        "counts": [
+          [
+            "3",
+            "0"
+          ]
+        ],
+        "names": [
+          "TellParameters_Native1070",
+          "TellParameters_ActualConfigLifetimeAndSequentialSubstitution",
+          "TellParameters_MissingEffectsAndPhysicalLimit"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.3408936000196263,
+        "log": "extracted/cpp-html-fit-404-focused1-12.log",
+        "filter": "TellMapMenus_",
+        "counts": [
+          [
+            "4",
+            "0"
+          ]
+        ],
+        "names": [
+          "TellMapMenus_IndependentNativeRegion",
+          "TellMapMenus_EmptyUnknownAndMissingDevices",
+          "TellMapMenus_ExceptionPreservesPartialEffects",
+          "TellMapMenus_RuntimeMetadataOrderAndColumns"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.387748199980706,
+        "log": "extracted/cpp-html-fit-404-focused1-13.log",
+        "filter": "BackgroundGifGump_",
+        "counts": [
+          [
+            "1",
+            "0"
+          ]
+        ],
+        "names": [
+          "BackgroundGifGump_IndependentNativeAllBodiesAndCurrentEffects"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 1.0206918000476435,
+        "log": "extracted/cpp-html-fit-404-focused1-14.log",
+        "filter": "BackgroundGifClient_",
+        "counts": [
+          [
+            "6",
+            "0"
+          ]
+        ],
+        "names": [
+          "BackgroundGifClient_ActualDefaultPathFactoryAndConcurrentStorage",
+          "BackgroundGifClient_AllProtectedAssetsIndependentNativePixels",
+          "BackgroundGifClient_IndependentNativeDescriptorAndInterlaceVariants",
+          "BackgroundGifClient_ActualCommonPixelsBaseDimensionsAndClip",
+          "BackgroundGifClient_CommonInputPreservesRawQueueTripletAndRetirement",
+          "BackgroundGifClient_MissingFilePartialDecodeAndPageLifetime"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.35481119994074106,
+        "log": "extracted/cpp-html-fit-404-focused1-15.log",
+        "filter": "ChatWindow_",
+        "counts": [
+          [
+            "1",
+            "0"
+          ]
+        ],
+        "names": [
+          "ChatWindow_IndependentNativeCreationInputHelperAndLifetime"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 1.2534003000473604,
+        "log": "extracted/cpp-html-fit-404-focused1-16.log",
+        "filter": "ChatWindowClient_",
+        "counts": [
+          [
+            "7",
+            "0"
+          ]
+        ],
+        "names": [
+          "ChatWindowClient_FullFactoryActualChildrenClientLogAndCommands",
+          "ChatWindowClient_ConcurrentRootsSharedLogAndNativeCurrentRetirement",
+          "ChatWindowClient_ActualLogCallbackClearTailAndQuitBoundary",
+          "ChatWindowClient_ActualHelperMenusPreserveStablePayloadsBeyondInputRing",
+          "ChatWindowClient_RealGeometryInputAndStyledPixels",
+          "ChatWindowClient_PartialCreationAndSelectedUnboundDevicesAreExplicit",
+          "ChatWindowClient_IndependentNativeCallbackMutationsAndCurrentReads"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.4054442999185994,
+        "log": "extracted/cpp-html-fit-404-focused1-17.log",
+        "filter": "HudChatGeometry_",
+        "counts": [
+          [
+            "1",
+            "0"
+          ]
+        ],
+        "names": [
+          "HudChatGeometry_Native3960SizesAndCallbacks"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.9396401999983937,
+        "log": "extracted/cpp-html-fit-404-focused1-18.log",
+        "filter": "TextEntryGump_",
+        "counts": [
+          [
+            "1",
+            "0"
+          ]
+        ],
+        "names": [
+          "TextEntryGump_IndependentNativeConstructorAttachInputDrawLifetime"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.47957620001398027,
+        "log": "extracted/cpp-html-fit-404-focused1-19.log",
+        "filter": "TextEntryBuffer_",
+        "counts": [
+          [
+            "1",
+            "0"
+          ]
+        ],
+        "names": [
+          "TextEntryBuffer_IndependentNativeAllOperations"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.5249630000907928,
+        "log": "extracted/cpp-html-fit-404-focused1-20.log",
+        "filter": "TextEntryClient_",
+        "counts": [
+          [
+            "5",
+            "0"
+          ]
+        ],
+        "names": [
+          "TextEntryClient_RealStorageAddressesGrowthAndIndependentLifetimes",
+          "TextEntryClient_ActualConsoleTreeInputClipboardAndCompletion",
+          "TextEntryClient_RealGlyphSelectionCaretClipAndIdle",
+          "TextEntryClient_ConcurrentConsolesRetirementAndPartialCreationCleanup",
+          "TextEntryClient_BorrowedGlobalLogUsesSameStateAndActualFontFragments"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 1.911059399950318,
+        "log": "extracted/cpp-html-fit-404-focused1-21.log",
+        "filter": "RawMenuControls_",
+        "counts": [
+          [
+            "12",
+            "0"
+          ]
+        ],
+        "names": [
+          "RawMenuControls_HelpActualTreePixelsAndOutsideInput",
+          "RawMenuControls_OwnedHelpStringsDriveRealMenuAndRelease",
+          "RawMenuControls_HelpActualHistoryButtonsAndReopen",
+          "RawMenuControls_HelpActualTypeInfoAndImage",
+          "RawMenuControls_FloatingSpActualPixelsAndLifetime",
+          "RawMenuControls_CommonTreeInputAndDisabledItem",
+          "RawMenuControls_HorizontalPointAndDeferredReplace",
+          "RawMenuControls_FancySubmenuPixelsAndCleanup",
+          "RawMenuControls_ObjectMenuCommandsAndCurrentConfig",
+          "RawMenuControls_CarrierAndObjectMenuChain",
+          "RawMenuControls_MissionLoadingUsesSharedTreeAndCancel",
+          "RawMenuControls_MinimapBeforeSessionAndAcrossWorldBindings"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.46656939992681146,
+        "log": "extracted/cpp-html-fit-404-focused1-22.log",
+        "filter": "GumpLifetime_",
+        "counts": [
+          [
+            "9",
+            "0"
+          ]
+        ],
+        "names": [
+          "GumpLifetime_PatchNative",
+          "GumpLifetime_CdNative",
+          "GumpLifetime_AdditionalNative",
+          "GumpLifetime_CreateTreeKillCleanupAndReuse",
+          "GumpLifetime_TreeReplacementDefersDestruction",
+          "GumpLifetime_BaseDoesNotUnregisterOrRemoveDialogs",
+          "GumpLifetime_CdIdleCapacity",
+          "GumpLifetime_ContractsAndCycles",
+          "GumpLifetime_CallbackExceptionKeepsWrittenState"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.6406472999369726,
+        "log": "extracted/cpp-html-fit-404-focused1-23.log",
+        "filter": "NsInfoClient_",
+        "counts": [
+          [
+            "4",
+            "0"
+          ]
+        ],
+        "names": [
+          "NsInfoClient_FullRealChildrenBuffersAndHiddenPixelsBeforeSession",
+          "NsInfoClient_TwoRootsThenRealRetirementAndPageCleanup",
+          "NsInfoClient_PartialTranslationAndSelectedMetamapAreNotFakeSuccess",
+          "NsInfoClient_CurrentServerConfigAndNativeNameBufferRules"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.5556696000276133,
+        "log": "extracted/cpp-html-fit-404-focused1-24.log",
+        "filter": "ProductionInitialContext_",
+        "counts": [
+          [
+            "4",
+            "0"
+          ]
+        ],
+        "names": [
+          "ProductionInitialContext_ConstructsAllNativeChildrenWithoutSession",
+          "ProductionInitialContext_RepeatedConstructionAndGlobalPageRetirement",
+          "ProductionInitialContext_MissingTranslationKeepsAndRetiresPartialEffects",
+          "ProductionInitialContext_GameplayGlobalsKeepRealAliasesAndRejectDuplicate"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 1.488520700018853,
+        "log": "extracted/cpp-html-fit-404-focused1-25.log",
+        "filter": "HudDock_",
+        "counts": [
+          [
+            "1",
+            "0"
+          ]
+        ],
+        "names": [
+          "HudDock_IndependentNativeBodiesAndNestedViewport"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.6331401999341324,
+        "log": "extracted/cpp-html-fit-404-focused1-26.log",
+        "filter": "HudDividerInput_",
+        "counts": [
+          [
+            "1",
+            "0"
+          ]
+        ],
+        "names": [
+          "HudDividerInput_Native13398StateAndCallbacks"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.5777204000623897,
+        "log": "extracted/cpp-html-fit-404-focused1-27.log",
+        "filter": "UberRoot_",
+        "counts": [
+          [
+            "6",
+            "0"
+          ]
+        ],
+        "names": [
+          "UberRoot_Native160",
+          "UberRoot_RealTreeAndLifetimeTransfer",
+          "UberRoot_DockReadsLiveThisFields",
+          "UberRoot_MissingFactoryKeepsPriorEffects",
+          "UberRoot_MissingOldRootFailsAfterConstructionEffects",
+          "UberRoot_EmptyLeafNeedsNoGameHook"
+        ]
+      }
+    ],
+    "sameBinaries": true,
+    "originalsUnchanged": true
+  },
+  "full": {
+    "returnCode": 0,
+    "seconds": 305.47759989998303,
+    "log": "extracted/cpp-html-fit-404-ctest1.log",
+    "productSha256": "db8e0fe62cb6347480532193cb3e85a7819b5f342cf22609b1c41c7d6540f4d7",
+    "testBinarySha256": "901eb6775b8b18ea997abe9c911a961fffb2edbc74175bed6a22037e404f8bea",
+    "counts": [
+      [
+        "2747",
+        "0"
+      ]
+    ],
+    "sameBinaries": true,
+    "originalsUnchanged": true
+  },
+  "nativeReplay": {
+    "success": true,
+    "newRows": 160,
+    "preservedRows": 338,
+    "fixturesUnchanged": true,
+    "originalsUnchanged": true,
+    "fixtureHashes": {
+      "cpppj\\tests\\fixtures\\html-window-fit-x86.tsv": "adaeea8c65dbb3cd5f8a5ac80545b0de86a5bdc27c0f25a2f0c74832ae8a5855",
+      "cpppj\\tests\\fixtures\\html-window-gump-x86.tsv": "2acaf260f0f47cce99b5d0cabfc341aaa14b2921281e32ba9c63c92797061f36",
+      "cpppj\\tests\\fixtures\\html-window-idle-v2-x86.tsv": "b0309464c7c8643467a819d5c28aa413a1e2d15b57ceed1e8b48af95d855f333"
+    },
+    "runs": [
+      {
+        "returnCode": 0,
+        "seconds": 4.619739699992351,
+        "log": "extracted/cpp-html-fit-404-verify-fit1.log",
+        "scope": "fit"
+      },
+      {
+        "returnCode": 0,
+        "seconds": 4.911860199994408,
+        "log": "extracted/cpp-html-fit-404-verify-gump1.log",
+        "scope": "gump"
+      },
+      {
+        "returnCode": 0,
+        "seconds": 12.901967599987984,
+        "log": "extracted/cpp-html-fit-404-verify-idle1.log",
+        "scope": "idle"
+      }
+    ],
+    "gameExecuted": false
+  },
+  "nativeFit": {
+    "host": "HJOW-Athlon",
+    "lastFullDecompileHost": "HJOW-Athlon",
+    "lastFullDecompileDate": "2026-10-23",
+    "peSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "sourceSha256": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "rows": 160,
+    "cases": 80,
+    "instructions": 90344,
+    "precisionDifferences": [],
+    "fixtureSha256": "adaeea8c65dbb3cd5f8a5ac80545b0de86a5bdc27c0f25a2f0c74832ae8a5855",
+    "toolSha256": "a3e71cc02fedae028eecfd008253f6c0e0c04623d7f469845fea68401bab5429",
+    "gameExecuted": false,
+    "limits": [
+      "실제4c7d40 전체/x87비교·중간FST32·실제_ftol·RET 실행",
+      "26객체/현재6필드/20child/9전역/메뉴스택은 실제 독립 메모리 관측",
+      "측정값/가상Push·Attach/현재메뉴pop/기본Attach/깊이는 명시 장치이며 전체폰트/픽셀/트리/EH 증거 아님",
+      "장치 변경/중단을 정상 완료와 구별; 명령 위치에는 장치/STOP 포함"
+    ]
+  },
+  "terminal": {
+    "unit": 404,
+    "builds": [
+      {
+        "index": 1,
+        "session": 91775,
+        "returnCode": 0
+      },
+      {
+        "index": 2,
+        "session": 64524,
+        "returnCode": 0
+      }
+    ],
+    "focused": {
+      "tag": "focused1",
+      "session": 44383,
+      "returnCode": 0,
+      "tests": 112,
+      "failedChecks": 0
+    },
+    "full": {
+      "tag": "ctest1",
+      "session": 32111,
+      "returnCode": 0,
+      "tests": 2747,
+      "failedChecks": 0
+    },
+    "nativeFit": {
+      "returnCode": 0,
+      "rows": 160
+    },
+    "nativeReplay": {
+      "session": 95363,
+      "returnCode": 0,
+      "newRows": 160,
+      "preservedRows": 338
+    },
+    "qaViewed": true,
+    "qaPath": "extracted/cpp-html-fit-404-focused1-html.bmp",
+    "originalGameExecuted": false,
+    "gameUiLaunched": false,
+    "wholeHtmlFactoryVerified": false,
+    "goalComplete": false
+  },
+  "originals1394Unchanged": true,
+  "originalGameExecuted": false,
+  "gameUiLaunched": false,
+  "agentsUnchanged": {
+    "sha256": "7f853771930147c26e67d444ced94114992510a3fa072f5ed6bd63da7ba88bd9",
+    "stagedByThisUnit": false
+  },
+  "limits": [
+    "실제 전체 HTML Fit/Attach4c7d40와 원문_ftol/RET를 복원; 메타4c83b0/factory4cf270 전체 복원과 구별",
+    "Native160행은26객체/현재6필드/20child/9전역/메뉴스택과 상위 계산·분기·FST32 관측; 하위 측정/Push/메뉴pop/Attach/깊이는 명시 장치",
+    "실제 결합6검사에서 보호 글꼴/StyleText·돌 버튼·배경/controlled 메뉴/공통 트리/픽셀을 사용하며 하위 기대 배치·픽셀을 원문에 공급하지 않음",
+    "90344명령 위치에는 장치/STOP 포함; 선택 중단은 일반 Native EH unwind 증거 아님",
+    "현재 뷰/화면 전역은 실제 Client read 경계가 필요하며 미연결을 PE의0/기본 배치로 채우지 않음",
+    "게임 전체 메뉴/모달/정상Idle 등록/실제링크/기존 LoadingFields 교체/full Uber·State/Core/Pool/Win32 연결은 후속",
+    "모든 Early/캠페인/Demo 사용자 완주·Edit/언어별 시나리오 전체·완전 동일성 및393 Wide SaveOptions 원인은 미완료"
+  ]
+}

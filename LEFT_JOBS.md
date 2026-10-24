@@ -1,5 +1,13 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-24 단위404 완료: HTML 전체 Fit/Attach와 실제 배치
+
+- [x] AGENTS/공통/닷넷 인계와 **b402a15d / 20261024-26 CP**를 확인했다. 현재/마지막 전체 정밀 디컴파일은 **HJOW-Athlon / 2026-10-23**이며 새 전체 디컴파일/원본 게임 직접 실행/게임 GUI0이다. AGENTS/보호/CD/기존 Native 추적 변경0이다.
+- [x] 실제4c7d40/ret16의 공통 버튼 폭/15간격·자연 본문·20픽셀 확대/높이 정체·뷰/화면 제한·메뉴 열·현재 자식/개수 재조회·중앙 부착/depth-80을 복원했다. caller x/y는 현재 중앙으로 덮고 parent/mode는 유지하며 FST32/실제_ftol의 변환 위치를 구별했다. 실제 Stone/ScrollingText·Slider/controlled 메뉴pop/공통 Push·Attach·깊이/클립·픽셀에 연결했다. 현재 뷰/화면 read 제공자가 없으면 명시 거부한다.
+- [x] 새 Native **160행**(80입력×두 x87정밀도)/90344명령 위치와 C++ 본체가 모두 같고 정밀도 차이0이다.26객체/6현재필드/20child/9전역/메뉴 스택은 실제 메모리를 관측하며 하위 측정/트리/메뉴 장치와 구별한다. 새160+보존338 **498행**의 읽기 재생도 모두 같고 변경0이다. 실제 결합6검사에서 짧은 안내·긴 본문의 화면 제한/스크롤·두 메뉴 열·부착된 본문 교체/현재 뷰·보조 serial 중앙 선택·클립/행 padding과 실제 BMP를 확인했다.
+- [x] 빌드1/2 종료0·관측 경고오류0이다. 최종 집중 **112/0**, 전체 CTest **2747/0·305.48초**이며 같은 최종 제품 **db8e0fe62cb6347480532193cb3e85a7819b5f342cf22609b1c41c7d6540f4d7**, 검사 **901eb6775b8b18ea997abe9c911a961fffb2edbc74175bed6a22037e404f8bea**와 originals1394동일을 확인했다. [완료 문서](docs/exe/cpp-html-window-fit-client-20261024.md)/[제품 보고서](cpppj/html-window-fit-client-runtime-20261024.json)와 `extracted/cpp-html-fit-404-*`에 SHA/경과/한계를 기록했다. 선택15파일 감사 후 **20261024-27 CP**로 로컬 커밋하며 push하지 않는다.
+- [ ] 다음은 **메타4c83b0·factory4cf270·정상 Idle 등록/실제 링크와 기존 LoadingFields/0xc4 부분 안내 교체**다. full Uber에는 새 전체 HTML 부모를 아직 설치하지 않았다. Production/Minimap 동시 제공자·새 부모/자식 먼저 생성→이전 반납·State/Core/Pool/Win32와 모든 Early/캠페인/Demo 사용자 완주·Edit/언어별 시나리오 전체·완전 동일성 및393 Wide SaveOptions 원인은 미완료이며 /goal은 활성 상태다.
+
 ## 2026-10-24 단위403 완료: 실제 HTML 부모 본문과 제어 수명
 
 - [x] AGENTS/공통/닷넷 인계와 **b817a28a / 20261024-25 CP**를 확인했다. 현재/마지막 전체 정밀 디컴파일은 **HJOW-Athlon / 2026-10-23**이며 새 전체 디컴파일/원본 게임 직접 실행/게임 GUI0이다. AGENTS/원본/CD/기존 Native 추적 변경0이다.

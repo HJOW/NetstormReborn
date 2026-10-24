@@ -2121,3 +2121,9 @@ set_source_files_properties(BackgroundGifClientTests.cpp PROPERTIES COMPILE_DEFI
 target_sources(netstorm_tests PRIVATE HtmlWindowGumpTests.cpp HtmlWindowClientTests.cpp)
 set_source_files_properties(HtmlWindowGumpTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_HTML_WINDOW_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/html-window-gump-x86.tsv\";NETSTORM_HTML_WINDOW_IDLE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/html-window-idle-v2-x86.tsv\";NETSTORM_HTML_WINDOW_ROWS=338")
+
+# 원문 전체 Fit/_ftol160행의 실제 객체/메뉴/장치 순서를 대조한다.
+target_sources(netstorm_tests PRIVATE HtmlWindowFitTests.cpp)
+target_sources(netstorm_tests PRIVATE HtmlWindowFitClientTests.cpp) # 실제 글꼴/메뉴/픽셀·교체 결합을 확인한다.
+set_source_files_properties(HtmlWindowFitTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_HTML_WINDOW_FIT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/html-window-fit-x86.tsv\"")

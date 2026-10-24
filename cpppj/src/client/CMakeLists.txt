@@ -243,3 +243,6 @@ target_sources(netstorm PRIVATE BackgroundGifGump.h BackgroundGifGump.cpp RawBac
 
 # 같은 Client 전역과 HTML 부모의 실제 생성/본문/제어 수명을 공통 UI에 조립한다.
 target_sources(netstorm PRIVATE HtmlWindowGump.cpp HtmlWindowGump.h ClientHtmlWindowGlobals.h RawHtmlWindowContext.h RawMenuHtml.inc)
+
+# 실제 HTML 전체 Fit의 폭/높이·메뉴·버튼·가상 부착을 원문 순서로 계산한다.
+target_sources(netstorm PRIVATE HtmlWindowFit.cpp HtmlWindowFit.h)

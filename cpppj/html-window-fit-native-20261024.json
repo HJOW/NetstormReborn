@@ -1,0 +1,20 @@
+{
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "peSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+  "sourceSha256": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+  "rows": 160,
+  "cases": 80,
+  "instructions": 90344,
+  "precisionDifferences": [],
+  "fixtureSha256": "adaeea8c65dbb3cd5f8a5ac80545b0de86a5bdc27c0f25a2f0c74832ae8a5855",
+  "toolSha256": "a3e71cc02fedae028eecfd008253f6c0e0c04623d7f469845fea68401bab5429",
+  "gameExecuted": false,
+  "limits": [
+    "실제4c7d40 전체/x87비교·중간FST32·실제_ftol·RET 실행",
+    "26객체/현재6필드/20child/9전역/메뉴스택은 실제 독립 메모리 관측",
+    "측정값/가상Push·Attach/현재메뉴pop/기본Attach/깊이는 명시 장치이며 전체폰트/픽셀/트리/EH 증거 아님",
+    "장치 변경/중단을 정상 완료와 구별; 명령 위치에는 장치/STOP 포함"
+  ]
+}
