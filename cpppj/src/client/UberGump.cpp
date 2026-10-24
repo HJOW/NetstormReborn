@@ -1294,6 +1294,8 @@ std::string UberGump::Report() const {
     if (world_) {
         const auto core=world_->Session().Core(); // 관찰 전용이며 같은 실제 Kernel 주소와 개수만 읽는다.
         out<<"shared_kernel\t"<<(&core.kernel==&client_.GetKernel())<<'\t'<<core.kernel.Size()<<'\t'<<client_.GetKernel().Size()<<'\n';
+        const auto& storage=client_.SurfaceStorage(); // 같은 실제 물리의 정체성과 대여 횟수를 읽기만 한다.
+        out<<"shared_surface_storage\t"<<(&core.pool==&storage->pool)<<'\t'<<(&core.hash==&storage->hash)<<'\t'<<(core.types.data()==storage->types.data())<<'\t'<<(core.spots.data()==storage->spots.data())<<'\t'<<storage->Generation()<<'\t'<<storage->Borrowed()<<'\n';
         out<<world_->Report();
     }
     // 화면/월드와 같은 프레임에 위치 효과음이 실제로 읽는 여섯 값을 기록한다. 소리 없는 실행에는 항목을 만들지 않는다.

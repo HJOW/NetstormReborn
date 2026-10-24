@@ -9,6 +9,8 @@
 #include "client/ScriptCommand.h"
 #include "client/HtmlConditionEffect.h"
 #include "client/ImageGump.h"
+#include "client/RawMinimapControls.h"
+#include "client/RawSurfaceWorld.h"
 #include <filesystem>
 #include <sstream>
 
@@ -314,4 +316,23 @@ TEST_CASE(RawMenuControls_MissionLoadingUsesSharedTreeAndCancel) {
     const auto next=client.menus->ShowMissionLoading("Starting Mission...","Cancel",{85,0,1024,768});CHECK(next!=serial);
     client.menus->CloseMissionLoading();client.buttons.CleanupGumps();CHECK(!client.menus->Point("Cancel"));
     CHECK(client.menus->Report().find("raw_mission_loading\t")==std::string::npos);
+}
+
+// Session 없이 생성한 실제 미니맵이 같은 물리의 월드 교체와 Pop 통지를 안전하게 따라간다.
+TEST_CASE(RawMenuControls_MinimapBeforeSessionAndAcrossWorldBindings) {
+    MenuClient client;auto storage=MakeRawSurfaceStorage(client.assets);RawMinimapHooks hooks; // 실제 물리는 Session보다 먼저 존재한다.
+    hooks.view=[] { return MinimapGeometryView{{},{85,0,640,400},16,11}; };hooks.center=[](float,float) {};hooks.move=[](float,float) {};hooks.inputMode=[] { return 2U; };hooks.poll=[&] { return client.poll; };
+    auto& mini=client.buttons.EnableMinimap(storage,std::move(hooks));mini.SetPalette(client.Palette());mini.Resize(480);mini.Refresh();CHECK(!storage->Borrowed() && mini.Point("minimap:40,35"));
+    const auto bitmap=[&] { const auto text=mini.Report();return text.substr(text.rfind('\t')+1); };const auto empty=bitmap(); // 같은 실제128×128 bitmap 전체의 읽기 전용 해시다.
+    const auto links=[] { BridgeConnectState value;value.bridgeType=82;value.islandType=94;value.stalagType=95;value.connectorType=155;value.noIslandType=157;value.battle=true;return value; }; // 현재 실제 표면 종류다.
+    const auto make=[&](const std::shared_ptr<RawSurfaceStorage>& data) { return std::make_unique<RawSurfaceWorld>(OriginalEdition::Patch1078,data->types,data->frames,data->shapes,links(),97,nullptr,data); }; // 기존 전체 월드 모듈을 같은 물리에 설치한다.
+    auto world=make(storage);mini.BindWorld(world->Core());const auto sid=world->Create(157);world->Core().owner.Set(sid,1);world->Pop(sid,128,128,0);mini.Refresh();CHECK(bitmap()!=empty); // 원문 일반 모드가 실제로 그리는 noIsland 지면157이다.
+    bool duplicate{};try { mini.BindWorld(world->Core()); } catch (const std::invalid_argument&) { duplicate=true; }CHECK(duplicate); // 이미 붙은 현재 통지를 덮어쓰지 않는다.
+    mini.UnbindWorld();world.reset();CHECK(!storage->Borrowed());mini.Refresh(); // 더 이상 존재하지 않는 Pop/Unpop을 다시 읽지 않는다.
+    auto other=MakeRawSurfaceStorage(client.assets);auto foreign=make(other);bool rejected{};try { mini.BindWorld(foreign->Core()); } catch (const std::invalid_argument&) { rejected=true; }CHECK(rejected); // 같은 자산이라도 다른 물리면 거부한다.
+    world=make(storage);mini.BindWorld(world->Core());mini.Refresh();CHECK(storage->Generation()==2 && bitmap()==empty);
+    std::array<std::uint32_t,256> logical{}; // 실제 공통 픽셀 출력에 파일 RGB를 제공한다.
+    for (std::size_t i=0;i<logical.size();++i) { const auto color=client.assets.Palette().Color(static_cast<std::uint8_t>(i));logical[i]=color.red|(std::uint32_t(color.green)<<8)|(std::uint32_t(color.blue)<<16); } // 기존 명암표와 동일한 RGB 포맷이다.
+    std::vector<std::uint8_t> pixels(640*480,0x5a);client.menus->Draw(pixels,640,480,client.Palette(),BuildGumpShadeMaps(logical));CHECK(std::any_of(pixels.begin()+405*640,pixels.end(),[](auto byte) { return byte!=0x5a; }));
+    client.buttons.DisableMinimap();CHECK(!client.buttons.Minimap());world.reset();CHECK(!storage->Borrowed());
 }

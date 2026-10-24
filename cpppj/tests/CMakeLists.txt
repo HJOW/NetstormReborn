@@ -532,6 +532,7 @@ add_executable(netstorm_tests
     MenuTests.cpp
     WorldTests.cpp
     RawSurfaceWorldTests.cpp
+    RawSurfaceStorageTests.cpp
     RawPriestWorldBindingsTests.cpp
     SpRotateTests.cpp
     SpStoreNoticeTests.cpp

@@ -6,6 +6,7 @@
 #include "o/RawMinimapRaster.h"
 
 namespace netstorm::client {
+class RawSurfaceStorage;struct RawWorldCore; // 장기 물리와 짧은 실제 Pop/Unpop 바인딩을 구별한다.
 // 입력과 카메라는 현재 GameWorld가 소유하며 검사 전용 상태를 공급하지 않는다.
 struct RawMinimapHooks {
     std::function<MinimapGeometryView()> view; // 현재 같은 카메라와 실제 지도 viewport다.
@@ -18,6 +19,9 @@ class RawMinimapControls {
 public:
     // 공통 트리/메뉴/Session은 이 처리기보다 오래 살아야 한다. 창이나 게임은 생성하지 않는다.
     RawMinimapControls(RawMenuTree tree,RawMenuControls& menus,RawCampaignSession& session,o::MetadisplayDirtyState& state,RawMinimapHooks hooks);
+    RawMinimapControls(RawMenuTree tree,RawMenuControls& menus,std::shared_ptr<RawSurfaceStorage> storage,o::MetadisplayDirtyState& state,RawMinimapHooks hooks); // Session 이전에도 같은 실제 물리로 전체 미니맵을 구성한다.
+    void BindWorld(RawWorldCore core); // 같은 물리의 현재 Pop/Unpop 통지만 연결한다. 중복 연결은 거부한다.
+    void UnbindWorld(); // 현재 월드 모듈 반납 전에 통지를 끊고 실제 물리/미니맵은 유지한다.
     // 현재 Pop/Unpop 통지와 외부 Draw를 끊고 같은 수명 처리기로 반납한다.
     ~RawMinimapControls();
     void Open(); //004815b0/4801b0의 실제 생성이며 기본 도킹 배치는 Resize가 맡는다.

@@ -17,6 +17,7 @@
 #include "client/ClientPlayerRecords.h"
 #include "client/ClientChatManagerGlobals.h"
 #include "client/ClientDotCommandGlobals.h"
+#include "client/RawSurfaceWorld.h"
 #include "client/UberGump.h"
 #include "o/OriginalText.h"
 #include "o/RawFortBadgesGlobals.h"
@@ -349,6 +350,7 @@ int Client::Run() {
     InvalidateRect(window,nullptr,FALSE);UpdateWindow(window);GdiFlush();DwmFlush(); // 유효한 WM_PAINT 갱신을 실행한 뒤 Windows 합성 화면의 다음 표시까지 완료하여 빠른 메뉴 교체가 로딩을 덮지 않게 한다.
     // "init types"(FUN_0049ebb0): 타입·그림·타입 표.
     assets_ = std::make_unique<GameAssets>(files_, options_.edition, palettePath);
+    surfaceStorage_=MakeRawSurfaceStorage(*assets_); // init squid/hash/spot의 실제 장기 물리를 메뉴보다 먼저 확보한다.
     if (!PumpMessages()) return 0;
     // [원본] 송수신기, squid 목록(120000), 좌표 해시, spot 배열, 영상, Guide, 그래프,
     //        전체 명령 표, 인트로 감지, 연락처, 지도 모드, HTTP 서버 — 옮기지 않았다.
@@ -909,6 +911,8 @@ const o::BaseFileSystem& Client::Files() const { return files_; }
 const GameAssets& Client::Assets() const { return *assets_; }
 // 프로세스 커널.
 o::Kernel& Client::GetKernel() { return kernel_; }
+// 자산 초기화 이전에 가짜 빈 월드로 성공하지 않는다.
+const std::shared_ptr<RawSurfaceStorage>& Client::SurfaceStorage() const { if (!surfaceStorage_) throw std::logic_error("Client 실제 월드 물리 초기화 전 조회");return surfaceStorage_; }
 // 원본 변경 영역 기반의 Renderer.
 Renderer& Client::GetRenderer() { return *renderer_; }
 // 원본 글꼴 슬롯.

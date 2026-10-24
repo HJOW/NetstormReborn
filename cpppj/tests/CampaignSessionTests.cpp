@@ -4750,3 +4750,35 @@ TEST_CASE(CampaignSession_FortObjectSaveCurrentChunk) {
     }
     CHECK(assets.files.Read("d/thewarbegins.fort")==original);
 }
+
+// 두 실제 Session을 연속 적재해 같은 Client 물리와 첫 정리 뒤의 새 대여를 검증한다.
+TEST_CASE(CampaignSharedStorage_TwoActualSessionsUseSamePhysicalArrays) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);auto storage=MakeRawSurfaceStorage(assets.game);Client client(SessionLinksOptions());SessionServicesFixture external; // 자산/물리는 두 Session보다 오래 유지한다.
+    const auto* bytes=storage->pool.Bytes().data();const auto* types=storage->types.data();const auto* spots=storage->spots.data();std::size_t objects{}; // 실제 물리 주소와 적재 개수다.
+    for (std::uint64_t generation=1;generation<=2;++generation) { // 실제 모듈/Player/Kernel 반납 뒤 다음 Session을 설치한다.
+        auto services=SharedKernelServices(client,external);services.surfaceStorage=storage;auto session=SharedKernelSession(std::move(services));session->Load();const auto core=session->Core();
+        CHECK(storage->Borrowed() && storage->Generation()==generation && session->World().Storage()==storage);CHECK(&core.pool==&storage->pool && &core.hash==&storage->hash && &core.kernel==&client.GetKernel());
+        CHECK(core.pool.Bytes().data()==bytes && core.types.data()==types && core.spots.data()==spots && core.pool.FreeCount()<core.pool.Capacity()-5);
+        const auto count=session->World().Objects().size();CHECK(count>0);if (generation==1) objects=count;else CHECK(count==objects); // 검사 setter 없이 같은 보호 Fort를 다시 적재했다.
+        session.reset();CHECK(!storage->Borrowed() && client.GetKernel().Size()==0);
+    }
+}
+
+// 부분 생성 실패는 대여를 반납하며 월드와 무관한 기존 전역 Kernel 프로세스를 지우지 않는다.
+TEST_CASE(CampaignSharedStorage_PartialConstructorReleasesPhysicalLease) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);auto storage=MakeRawSurfaceStorage(assets.game);Client client(SessionLinksOptions());SessionServicesFixture external;bool deleted{}; // 실패 전부터 살아 있는 외부 프로세스다.
+    const auto pid=client.GetKernel().Add(std::make_unique<SharedKernelProbe>(std::function<void()>{},[&] { deleted=true; }));
+    const auto before=std::vector<std::uint8_t>(storage->pool.Bytes().begin(),storage->pool.Bytes().end());auto services=SharedKernelServices(client,external);services.surfaceStorage=storage;services.deferExistingEditorFile=true;bool rejected{}; // 기존의 명시 잘못된 Editor 설치 입력이다.
+    try { SharedKernelSession(std::move(services)); } catch (const std::invalid_argument&) { rejected=true; }
+    CHECK(rejected && !storage->Borrowed() && storage->Generation()==1 && !deleted && client.GetKernel().Get(pid));CHECK(std::equal(before.begin(),before.end(),storage->pool.Bytes().begin()));
+    services=SharedKernelServices(client,external);services.surfaceStorage=storage;auto session=SharedKernelSession(std::move(services));CHECK(storage->Borrowed() && storage->Generation()==2 && !deleted);
+    session.reset();CHECK(!storage->Borrowed() && deleted && client.GetKernel().Size()==0);
+}
+
+// 다른 archive의 물리는 실제 Pool 대여/초기화 전에 거부한다.
+TEST_CASE(CampaignSharedStorage_ForeignAssetsFailBeforePhysicalMutation) {
+    auto storage=MakeRawSurfaceStorage(netstorm::test::dudespawn::Assets(OriginalEdition::Cd1072).game);Client client(SessionLinksOptions());SessionServicesFixture external;auto services=SharedKernelServices(client,external);services.surfaceStorage=storage;bool rejected{}; // 다른 판본의 실제 자산 정체성이다.
+    const auto before=std::vector<std::uint8_t>(storage->pool.Bytes().begin(),storage->pool.Bytes().end());try { SharedKernelSession(std::move(services)); } catch (const std::invalid_argument&) { rejected=true; }
+    CHECK(rejected && !storage->Borrowed() && storage->Generation()==0 && std::equal(before.begin(),before.end(),storage->pool.Bytes().begin()));
+    auto valid=SharedKernelSession(SharedKernelServices(client,external));CHECK(valid->Core().pool.Edition()==OriginalEdition::Patch1078); // 실패한 Player 대여도 실제 다음 생성 전에 반납됐다.
+}

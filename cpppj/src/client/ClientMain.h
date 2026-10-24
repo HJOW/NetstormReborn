@@ -39,6 +39,7 @@ class ClientCoreDataGlobals; //현재Core/active/캐시와 빌린 Player 슬롯�
 class ClientPlayerRecords; // Player/factory 전체 할당과 로그인 카운터를 Session보다 오래 소유한다.
 class ClientChatManagerGlobals; //현재 Chatmanager와 실제 미초기화 할당들을 Client 수명에 소유한다.
 class ClientDotCommandGlobals; //최초 say와 같은 인접 명령 표를 Session보다 오래 보유한다.
+class RawSurfaceStorage; // 실제 Pool/Hash/TYPE/spot을 모든 Session과 초기 HUD보다 오래 보유한다.
 struct ClientAudioOptions;
 
 // 설정 키 "maxFPS" 의 코드 기본값. 화면 루프를 초당 몇 번까지 돌릴지 정한다.
@@ -149,6 +150,7 @@ public:
     const o::BaseFileSystem& Files() const;
     const GameAssets& Assets() const;
     o::Kernel& GetKernel();
+    const std::shared_ptr<RawSurfaceStorage>& SurfaceStorage() const; // 자산 초기화 뒤 모든 Session과 초기 HUD가 같은 물리를 빌린다.
     // 복원한 그리기·글꼴·커서 기반. 초기화 뒤에만 쓴다.
     Renderer& GetRenderer();
     std::string_view TestBridgePatterns() const { return options_.testBridgePatterns; } // 테스트 전용 지정 순서다. 비어 있으면 원본 동작이며 원본 분석 결과가 아니다.
@@ -246,6 +248,7 @@ private:
     std::unique_ptr<Screen> screen_;
     // assets_: 타입·셰이프·팔레트 자산 또는 해당 자산의 처리 경계.
     std::unique_ptr<GameAssets> assets_;
+    std::shared_ptr<RawSurfaceStorage> surfaceStorage_; // 자산 뒤·UI/Session 앞에 확보해 모든 물리 참조보다 오래 유지한다.
     // renderer_: 수집한 그림·텍스트를 화면에 그리는 렌더러.
     std::unique_ptr<Renderer> renderer_;
     // fonts_: 이름·크기로 찾아 재사용하는 글꼴 저장소.

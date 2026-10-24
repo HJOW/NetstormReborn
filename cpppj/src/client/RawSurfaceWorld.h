@@ -20,6 +20,35 @@
 #include <vector>
 
 namespace netstorm::client {
+class GameAssets; // 실제 Client가 먼저 읽은 자산의 정체성을 물리 저장소와 공유한다.
+// Session보다 오래 사는 실제 Pool/공간/자산 배열이다. Runtime 모듈의 수명과 구별한다.
+class RawSurfaceStorage {
+public:
+    // 대여 중에는 두 번째 월드가 같은 풀을 초기화하지 못하게 한다.
+    class Use {
+    public:
+        ~Use(); // 월드의 모든 모듈을 반납한 뒤 대여만 해제한다. Kernel을 정리하지 않는다.
+        Use(const Use&)=delete;Use& operator=(const Use&)=delete; // 동일 대여를 복사해 조기 해제하지 않는다.
+    private:
+        friend class RawSurfaceStorage;
+        explicit Use(RawSurfaceStorage& storage); // 이미 검증한 단일 소유자의 반납 경계다.
+        RawSurfaceStorage& storage_; // 실제 물리 소유자는 대여보다 오래 살아야 한다.
+    };
+    RawSurfaceStorage(o::OriginalEdition edition,std::span<const o::RiftTypeRecord> inputTypes,std::span<const o::RiftTypeFrames> inputFrames,std::span<const o::SquidDisplayShape> inputShapes,const GameAssets* source=nullptr); // 배열은 최초 한 번만 확보한다.
+    std::unique_ptr<Use> Acquire(); // 다음 월드에는 기존 풀 Reset(0)/해시/spot 초기화를 사용하며 배열 주소와 TYPE 수정은 보존한다.
+    bool Borrowed() const; // 현재 실제 월드가 물리를 빌렸는지 읽는다.
+    std::uint64_t Generation() const; // 성공한 월드 대여 횟수이며 원본 게임 값으로 쓰지 않는다.
+    const GameAssets* Source() const; // Client 자산 정체성이다. 독립 raw 검사에서는 nullptr이다.
+    std::vector<o::RiftTypeRecord> types; // 같은 수정 가능한 전역 TYPE이며 Session마다 원본 파일로 덮어쓰지 않는다.
+    std::vector<o::RiftTypeFrames> frames;std::vector<o::SquidDisplayShape> shapes; // 자산보다 짧고 모든 Session보다 긴 프레임/셰이프 배열이다.
+    std::vector<std::vector<o::FrameCode>> codes; // Graph의 동일 프레임 코드 배열이다.
+    o::SidPool pool;o::SquidHash hash;std::vector<std::uint8_t> spots; // Reset(0)은 기존 SID 바이트/공간 배열의 주소를 유지한다.
+    o::SquidOwnerMode ownerMode; // 미니맵과 현재 월드가 같은 실제 세 모드 값을 읽는다.
+private:
+    const GameAssets* source_;bool borrowed_{};std::uint64_t generation_{}; // 최초 자산 정체성·단일 대여·호스트 관측 번호다.
+};
+// 실제 보관 중인 자산에서 프레임/SHP를 한 번 구성한다. 게임이나 창은 실행하지 않는다.
+std::shared_ptr<RawSurfaceStorage> MakeRawSurfaceStorage(const GameAssets& assets);
 // 저장/지형 어댑터에서 넘기는 초기 위치다. 등록 뒤 현재 값은 raw 슬롯만 읽는다.
 struct SurfaceSeed { /* type: 타입 표에서 객체 종류를 찾는 번호. */ /* owner: 객체나 지역을 소유한 플레이어 번호. */ std::uint32_t type{},owner{};/* frame: 타입에서 사용할 그림 프레임 번호. */ std::int32_t frame{};/* x: X 좌표. */ /* y: Y 좌표. */ float x{},y{}; };
 // 표면 객체의 현재 SID와 직렬화할 배치 정보이다.
@@ -116,7 +145,7 @@ public:
     // 프레임/타입/SHP를 소유하여 GUI 참조와 raw 조회가 같은 판본을 사용하게 한다.
     RawSurfaceWorld(o::OriginalEdition edition,std::span<const o::RiftTypeRecord> types,
         std::span<const o::RiftTypeFrames> frames,std::span<const o::SquidDisplayShape> shapes,
-        o::BridgeConnectState links,std::uint32_t terrainType,o::Kernel* processKernel=nullptr);
+        o::BridgeConnectState links,std::uint32_t terrainType,o::Kernel* processKernel=nullptr,std::shared_ptr<RawSurfaceStorage> storage={});
     // 실제 Client는 같은 전역 Kernel을 빌리고 독립 월드만 자체 Kernel을 소유한다. 빌린 Kernel은 월드보다 오래 살아야 한다.
     // 빌린 경우 호출자는 모듈 반납 전에 DrainProcesses를 마쳐야 한다. 자체 Kernel은 이 월드의 다른 멤버보다 먼저 반납한다.
     ~RawSurfaceWorld();
@@ -126,6 +155,7 @@ public:
     void Load(std::span<const SurfaceSeed> seeds);
     // 같은 풀에 실제 미션 모듈을 구성할 때 사용한다. 반환 참조의 수명은 이 월드와 같다.
     RawWorldCore Core();
+    const std::shared_ptr<RawSurfaceStorage>& Storage() const; // 미니맵도 Session이 아닌 동일 물리 소유자를 직접 빌린다.
     //원본옵션의TYPE+c4 쓰기가같은월드의188TYPE를직접사용하게한다. 새사본을만들지않는다.
     std::span<o::RiftTypeRecord> MutableTypes();
     // 최초객체/Runtime등록전에원본모드의실제소유권·연결색·다리붕괴소비자를함께설정한다.

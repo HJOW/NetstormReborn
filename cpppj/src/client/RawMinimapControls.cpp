@@ -10,22 +10,26 @@ namespace netstorm::client {
 namespace {
 // 생산0번과 독립적으로 반납하는 공통 메뉴 외부 출력 슬롯이다.
 constexpr std::uint32_t kDrawSlot=1,kMinimapVtable=0x0050d51c;
+// 현재 전체 생성자에 필요한 실제 물리만 요구하며 빈 대체 월드를 만들지 않는다.
+std::shared_ptr<RawSurfaceStorage> RequireStorage(std::shared_ptr<RawSurfaceStorage> storage) {
+    if (!storage || storage->pool.Edition()!=o::OriginalEdition::Patch1078) throw std::invalid_argument("미니맵의 실제10.78 물리 저장소 필요");return storage;
+}
 }
 // 파생 기본 노드와 bitmap/큐/원본 처리기는 움직이지 않는 한 주소에서 서로 참조한다.
 struct RawMinimapControls::Impl {
-    RawMenuTree common;RawMenuControls& menus;RawCampaignSession& session;RawMinimapHooks hooks; // 실제 공통 처리기와 현재 월드의 장치다.
-    RawWorldCore core;GumpCreateNode node;std::uint32_t token{}; // 같은Pool/Hash 및 실제 등록된 기본 주소다.
+    RawMenuTree common;RawMenuControls& menus;RawMinimapHooks hooks; // 실제 공통 처리기와 현재 카메라 장치다.
+    std::shared_ptr<RawSurfaceStorage> storage;o::SquidPop* pop{};o::SquidUnpop* unpop{}; // 물리는 소유하고 현재 월드의 통지만 짧게 빌린다.
+    GumpCreateNode node;std::uint32_t token{}; // 실제 공통 등록된 기본 주소다.
     MinimapGeometryState geometry;o::MetadisplayDirtyState& state;o::MinimapRasterState colors; // 원본 crop/bitmap/큐/색 전역이다.
     o::RawMinimapRaster raster;o::RawMetadisplayDirty dirty; // 실제 같은Pool의 기존 공간 통지와 셀 그림이다.
     bool modified{}; // 현재Refresh가 실제 redraw/셀 쓰기를 수행했는지다.
     // 연결 훅은 실제 호출 시점에 현재 카메라·모드·프레임을 조회한다.
-    Impl(RawMenuTree tree,RawMenuControls& menu,RawCampaignSession& game,o::MetadisplayDirtyState& shared,RawMinimapHooks supplied)
-        :common(std::move(tree)),menus(menu),session(game),hooks(std::move(supplied)),core(game.Core()),state(shared),raster(core.pool,core.hash,core.types,colors),
-        dirty(core.pool,state,{[this] { SyncSize();if (RebuildMinimap(geometry,hooks.view())) { common.changed();modified=true; } },
-            [this](auto x,auto y) { colors.challenge=core.ownerMode.challenge;colors.frame=state.frames;raster.DrawCell(state.bitmap,x,y);modified=true; }}) {
+    Impl(RawMenuTree tree,RawMenuControls& menu,std::shared_ptr<RawSurfaceStorage> data,o::MetadisplayDirtyState& shared,RawMinimapHooks supplied)
+        :common(std::move(tree)),menus(menu),hooks(std::move(supplied)),storage(RequireStorage(std::move(data))),state(shared),raster(storage->pool,storage->hash,storage->types,colors),
+        dirty(storage->pool,state,{[this] { SyncSize();if (RebuildMinimap(geometry,hooks.view())) { common.changed();modified=true; } },
+            [this](auto x,auto y) { colors.challenge=storage->ownerMode.challenge;colors.frame=state.frames;raster.DrawCell(state.bitmap,x,y);modified=true; }}) {
         if (!hooks.view || !hooks.center || !hooks.move || !hooks.inputMode || !hooks.poll) throw std::invalid_argument("실제 미니맵 장치 연결 누락");
         menus.SetExternalGumps(kDrawSlot,{{},[this](auto value) { return value && value==token; },[this](auto,auto& target,auto&,auto&) { Draw(target); }});
-        core.pop.SetMetadisplayDirty(&dirty);core.unpop.SetMetadisplayDirty(&dirty);
     }
     // 노드의 실제 현재 크기를 기하 몸체에 전달하며 별도 UI 크기를 누적하지 않는다.
     void SyncSize() { geometry.width=node.baseWidth;geometry.height=node.baseHeight; }
@@ -42,9 +46,19 @@ struct RawMinimapControls::Impl {
 };
 // 생성 전에 같은Session 참조와 실제 장치 경계를 확인한다.
 RawMinimapControls::RawMinimapControls(RawMenuTree tree,RawMenuControls& menus,RawCampaignSession& session,o::MetadisplayDirtyState& state,RawMinimapHooks hooks)
-    :impl_(std::make_unique<Impl>(std::move(tree),menus,session,state,std::move(hooks))) {}
+    :RawMinimapControls(std::move(tree),menus,session.World().Storage(),state,std::move(hooks)) { BindWorld(session.Core()); }
+// 초기 HUD도 같은 실제 물리를 사용하며 Session 참조나 Core 사본을 보관하지 않는다.
+RawMinimapControls::RawMinimapControls(RawMenuTree tree,RawMenuControls& menus,std::shared_ptr<RawSurfaceStorage> storage,o::MetadisplayDirtyState& state,RawMinimapHooks hooks)
+    :impl_(std::make_unique<Impl>(std::move(tree),menus,std::move(storage),state,std::move(hooks))) {}
+// 실제 같은 Pool/공간 자료를 확인한 뒤에만 현재 모듈의 통지를 설치한다.
+void RawMinimapControls::BindWorld(RawWorldCore core) {
+    auto& s=*impl_;if (s.pop || s.unpop || &core.pool!=&s.storage->pool || &core.hash!=&s.storage->hash || &core.unpop.Pool()!=&s.storage->pool || &core.ownerMode!=&s.storage->ownerMode || core.types.data()!=s.storage->types.data() || core.spots.data()!=s.storage->spots.data()) throw std::invalid_argument("미니맵의 현재 월드 물리/대여 불일치");
+    s.pop=&core.pop;s.unpop=&core.unpop;s.pop->SetMetadisplayDirty(&s.dirty);s.unpop->SetMetadisplayDirty(&s.dirty);s.state.fullRefresh=1;
+}
+// 통지의 대여를 먼저 끊으며 실제 물리 배열과 bitmap은 유지한다.
+void RawMinimapControls::UnbindWorld() { auto& s=*impl_;if (s.pop) s.pop->SetMetadisplayDirty(nullptr);if (s.unpop) s.unpop->SetMetadisplayDirty(nullptr);s.pop=nullptr;s.unpop=nullptr; }
 // 외부 Draw와 Pop 통지의 참조를 같은Session 반납 전에 끊는다.
-RawMinimapControls::~RawMinimapControls() { Close();impl_->core.pop.SetMetadisplayDirty(nullptr);impl_->core.unpop.SetMetadisplayDirty(nullptr);impl_->menus.SetExternalGumps(kDrawSlot,{}); }
+RawMinimapControls::~RawMinimapControls() { Close();UnbindWorld();impl_->menus.SetExternalGumps(kDrawSlot,{}); }
 // 제목/Help 문자열은 기존 공통 메뉴의 안정된 정적 토큰을 사용한다.
 void RawMinimapControls::Open() {
     auto& s=*impl_;if (s.token) throw std::logic_error("현재 미니맵 중복 생성");s.token=s.common.token();s.common.factory.Construct(s.token,0,128,128,0x301);s.node.vtable=kMinimapVtable;s.node.command=29;s.node.textPointer=0x61000004;s.node.alternateTextPointer=0x61000005;s.geometry={};

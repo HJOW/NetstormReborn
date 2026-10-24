@@ -285,12 +285,16 @@ void RawButtonControls::DisableProduction() { if (impl_->production) { impl_->pr
 
 // 같은 등록표/수명/입력/원본 셀 그림을 현재Session과 공유한다.
 RawMinimapControls& RawButtonControls::EnableMinimap(RawCampaignSession& session,RawMinimapHooks hooks) {
+    auto& minimap=EnableMinimap(session.World().Storage(),std::move(hooks));minimap.BindWorld(session.Core());return minimap;
+}
+// 초기 전체 HUD의 생성도 같은 토큰/공통 수명/실제 물리를 사용한다.
+RawMinimapControls& RawButtonControls::EnableMinimap(std::shared_ptr<RawSurfaceStorage> storage,RawMinimapHooks hooks) {
     auto& s=*impl_;if (s.minimap || !s.menus) throw std::logic_error("미니맵 공통 트리/수명 오류");
     RawMenuTree tree{s.create,s.life,*s.factory,*s.collection,*s.tree,*s.lifetime,*s.events,*s.input,*s.stone,
         [&s](auto token) { const auto it=s.backgrounds.find(token);return it==s.backgrounds.end() ? nullptr : it->second.get(); },
         [&s] { return ++s.nextToken; },[&s](auto token) { return s.Node(token); },
         [&s](auto token,float x,float y,auto parent,auto mode) { s.Attach(token,x,y,parent,mode); },[&s] { s.changed=true; }};
-    s.minimap=std::make_unique<RawMinimapControls>(std::move(tree),*s.menus,session,s.minimapState,std::move(hooks));s.minimap->Open();return *s.minimap;
+    s.minimap=std::make_unique<RawMinimapControls>(std::move(tree),*s.menus,std::move(storage),s.minimapState,std::move(hooks));s.minimap->Open();return *s.minimap;
 }
 // 같은 실제 미니맵의 안정된 처리기만 빌린다.
 RawMinimapControls* RawButtonControls::Minimap() const { return impl_->minimap.get(); }

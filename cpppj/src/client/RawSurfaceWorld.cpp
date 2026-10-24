@@ -19,10 +19,7 @@
 
 namespace netstorm::client {
 namespace {
-// 지원하는 표면 월드는 원본 signed SID 한계 안에서 ProcessForm까지 수용한다.
-constexpr std::uint32_t kCapacity=32768;
-// 해시/spot 지도의 한 변과 free/dead/void/contained 상태 마스크다.
-constexpr std::size_t kCells=256*256;
+// free/dead/void/contained 상태를 동시에 거르는 기존 마스크다.
 constexpr std::uint8_t kInactive=15;
 // 정렬되지 않은 원본 필드를 little endian으로 읽는다.
 std::uint32_t Read(std::span<const std::uint8_t> bytes,std::size_t offset,std::size_t width=4) {
@@ -36,21 +33,29 @@ void Write(std::span<std::uint8_t> bytes,std::size_t offset,std::uint32_t value,
     // 필드 밖의 바이트는 보존한다.
     for (std::size_t i=0;i<width;++i) bytes[offset+i]=static_cast<std::uint8_t>(value>>(8*i));
 }
+// 잘못된 판본/크기/타입 요청은 기존 실제 물리를 초기화하기 전에 거부한다.
+std::shared_ptr<RawSurfaceStorage> SelectStorage(std::shared_ptr<RawSurfaceStorage> storage,o::OriginalEdition edition,std::span<const o::RiftTypeRecord> types,std::span<const o::RiftTypeFrames> frames,std::span<const o::SquidDisplayShape> shapes,const o::BridgeConnectState& links,std::uint32_t terrain) {
+    if (types.size()!=frames.size() || types.size()!=shapes.size()) throw std::invalid_argument("월드 대여 전 자산 배열 크기 불일치");
+    if (terrain>=types.size() || links.bridgeType>=types.size() || links.noIslandType>=types.size()) throw std::out_of_range("월드 대여 전 타입 번호 오류");
+    if (storage && (storage->pool.Edition()!=edition || storage->types.size()!=types.size() || storage->frames.size()!=frames.size() || storage->shapes.size()!=shapes.size())) throw std::invalid_argument("월드 대여 전 실제 물리/판본 불일치");
+    return storage ? std::move(storage) : std::make_shared<RawSurfaceStorage>(edition,types,frames,shapes);
+}
 }
 // RawSurfaceWorld의 공유 저장소와 처리기 연결을 소유하는 구현 객체다.
 struct RawSurfaceWorld::Impl final:o::SquidDisplaySink {
+    std::shared_ptr<RawSurfaceStorage> storage;std::unique_ptr<RawSurfaceStorage::Use> storageUse; // 모든 모듈/참조를 반납한 뒤 물리 대여를 풀어 준다.
     // edition: 판본별 필드 배치와 동작을 선택하는 원본 버전.
-    o::OriginalEdition edition;/* types: 타입 번호로 속성·플래그를 조회하는 타입 표. */ std::vector<o::RiftTypeRecord> types;/* frames: 타입별 프레임 자료. */ std::vector<o::RiftTypeFrames> frames;
+    o::OriginalEdition edition;/* types: 같은 실제 물리의 수정 가능한 TYPE다. */ std::vector<o::RiftTypeRecord>& types;/* frames: 같은 장기 프레임 표다. */ std::vector<o::RiftTypeFrames>& frames;
     // shapes: 프레임의 크기·그림 데이터를 조회하는 셰이프 자료.
-    std::vector<o::SquidDisplayShape> shapes;/* codes: 코드. */ std::vector<std::vector<o::FrameCode>> codes;
+    std::vector<o::SquidDisplayShape>& shapes;/* codes: 같은 실제 프레임 코드다. */ std::vector<std::vector<o::FrameCode>>& codes;
     // pool: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀.
-    o::SidPool pool;/* hash: 좌표별 객체 후보를 찾는 공간 해시. */ o::SquidHash hash;/* spots: 칸별 점유·통행 비트를 읽는 spot 지도. */ std::vector<std::uint8_t> spots=std::vector<std::uint8_t>(kCells);
+    o::SidPool& pool;/* hash: 같은 실제 공간 해시다. */ o::SquidHash& hash;/* spots: 같은 실제 공간 배열이다. */ std::vector<std::uint8_t>& spots;
     // links: 연결 함수들이 읽는 원본 전역이다. 패치 주소 / CD 주소를 주석에 둔다 (o::BridgeConnectState).
     o::BridgeConnectState links;/* terrainType: isle 지면 자산을 타입 표에서 찾는 번호. */ std::uint32_t terrainType;/* bookkeeping: 객체 종류·소유자별 등록 목록과 개수를 관리하는 장부. */ o::SquidPostPopState bookkeeping;
     // deletion: 삭제.
     o::SquidDeletionState deletion;/* mode: 원본 실행 상태 전역. 기본값은 싱글 플레이(로컬이 서버) 전투 화면이다 (o::BridgeDecayMode). */ o::BridgeDecayMode mode;/* eventState: 처리기가 읽는 원본 전역이다. 패치 주소 / CD 주소를 괄호에 둔다 (o::BridgeEventState). */ o::BridgeEventState eventState;
     // loadState: 로딩 상태.
-    o::IslandPostPopState loadState{1,false};/* ownerMode: 판본·서버·로딩 상태에 따른 소유권 처리 정책. */ o::SquidOwnerMode ownerMode;
+    o::IslandPostPopState loadState{1,false};/* ownerMode: 미니맵과 같은 실제 모드 전역이다. */ o::SquidOwnerMode& ownerMode;
     // buildingState: 원본 타입 전역과 현재 debug 전역이다. 섬 확인은 영역 번호나 소유자를 조회하지 않는다 (o::BuildingSpaceState).
     o::BuildingSpaceState buildingState;
     // processState: 프로세스 실행·부착·이벤트 분배에 사용하는 상태.
@@ -88,16 +93,14 @@ struct RawSurfaceWorld::Impl final:o::SquidDisplaySink {
     o::Kernel& kernel; // 모든 Form/경로/Regular가 같은 실제 Client Kernel 또는 독립 소유자를 직접 빌린다.
     // 순환하는 콜백은 실제 호출 전에 모든 모듈을 구성한다. 생성 중에는 Pop하지 않는다.
     Impl(o::OriginalEdition selected,std::span<const o::RiftTypeRecord> inputTypes,std::span<const o::RiftTypeFrames> inputFrames,
-        std::span<const o::SquidDisplayShape> inputShapes,o::BridgeConnectState state,std::uint32_t terrain,o::Kernel* processKernel)
-        :edition(selected),types(inputTypes.begin(),inputTypes.end()),frames(inputFrames.begin(),inputFrames.end()),
-         shapes(inputShapes.begin(),inputShapes.end()),codes(types.size()),pool(edition,kCapacity,true),links(state),terrainType(terrain),
+        std::span<const o::SquidDisplayShape> inputShapes,o::BridgeConnectState state,std::uint32_t terrain,o::Kernel* processKernel,std::shared_ptr<RawSurfaceStorage> supplied)
+        :storage(SelectStorage(std::move(supplied),selected,inputTypes,inputFrames,inputShapes,state,terrain)),storageUse(storage->Acquire()),
+         edition(selected),types(storage->types),frames(storage->frames),shapes(storage->shapes),codes(storage->codes),pool(storage->pool),hash(storage->hash),spots(storage->spots),links(state),terrainType(terrain),ownerMode(storage->ownerMode),
          localKernel(processKernel ? nullptr : std::make_unique<o::Kernel>()),kernel(processKernel ? *processKernel : *localKernel) {
-        if (frames.size()!=types.size() || shapes.size()!=types.size()) throw std::invalid_argument("raw 표면 월드 자산 표 크기 오류");
-        // Graph와 이웃 탐색기는 같은 원본 코드 배열을 사용한다.
-        for (std::size_t i=0;i<frames.size();++i) codes[i].assign(frames[i].Codes().begin(),frames[i].Codes().end());
+        if (pool.Edition()!=selected || frames.size()!=inputFrames.size() || shapes.size()!=inputShapes.size() || types.size()!=inputTypes.size()) throw std::invalid_argument("raw 표면 월드 실제 물리/판본 불일치");
         if (terrainType>=types.size() || links.bridgeType>=types.size() || links.noIslandType>=types.size())
             throw std::out_of_range("raw 표면 월드 타입 번호 오류");
-        bookkeeping.localOwner=1;ownerMode.battle=true;eventState.bridgeType=links.bridgeType;
+        bookkeeping.localOwner=1;ownerMode={false,true,false};eventState.bridgeType=links.bridgeType;
         graph=std::make_unique<o::RawGraph>(pool,hash,spots,types,codes);
         graph->ResetTable(); // 원본 월드 초기화004b2df0의00462b20처럼 첫 객체 이전에 Graph0을 예약한다.
         display=std::make_unique<o::SquidDisplay>(edition,types,shapes,*this,o::SquidDisplayView{0,0,65536,{0,0,640,480}});
@@ -185,8 +188,8 @@ struct RawSurfaceWorld::Impl final:o::SquidDisplaySink {
 };
 // 공개 객체는 내부 참조/콜백이 이동하지 않게 단일 구현 객체를 소유한다.
 RawSurfaceWorld::RawSurfaceWorld(o::OriginalEdition edition,std::span<const o::RiftTypeRecord> types,
-    std::span<const o::RiftTypeFrames> frames,std::span<const o::SquidDisplayShape> shapes,o::BridgeConnectState links,std::uint32_t terrainType,o::Kernel* processKernel)
-    :impl_(std::make_unique<Impl>(edition,types,frames,shapes,links,terrainType,processKernel)) {}
+    std::span<const o::RiftTypeFrames> frames,std::span<const o::SquidDisplayShape> shapes,o::BridgeConnectState links,std::uint32_t terrainType,o::Kernel* processKernel,std::shared_ptr<RawSurfaceStorage> storage)
+    :impl_(std::make_unique<Impl>(edition,types,frames,shapes,links,terrainType,processKernel,std::move(storage))) {}
 // 프로세스가 빌린 raw 데이터보다 먼저 반납되며 외부 Client Kernel 자체는 파괴하지 않는다.
 RawSurfaceWorld::~RawSurfaceWorld()=default;
 // 이 뷰는 내부 모듈의 현재 참조만 돌려주며 새 배열/풀을 만들지 않는다.
@@ -195,6 +198,8 @@ RawWorldCore RawSurfaceWorld::Core() {
         *s.factory,*s.owner,*s.frame,*s.pop,*s.unpop,*s.postPop,*s.display,*s.building,*s.graph,*s.neighbors,
         *s.baseDestroy,*s.virtualDestroy,*s.lifecycle,*s.events,*s.formDispatch,*s.dependencies,*s.host,s.processState,s.kernel,s.links};
 }
+// 월드 모듈과 별개로 유지되는 실제 물리 소유자다.
+const std::shared_ptr<RawSurfaceStorage>& RawSurfaceWorld::Storage() const { return impl_->storage; }
 // Session의globals만바꾸고private BridgeDecayMode.editor를남기지않는다.
 void RawSurfaceWorld::ConfigureInstallModes(bool fort,bool battle,bool challenge,bool editor) {
     auto& s=*impl_;if (s.runtimeBound || s.loading || s.loaded || s.pool.FreeCount()!=s.pool.Capacity()-5) throw std::logic_error("실제설치모드는첫객체/Runtime등록전에필요");

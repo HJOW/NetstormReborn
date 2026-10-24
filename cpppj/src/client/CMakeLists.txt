@@ -134,6 +134,7 @@ target_sources(netstorm PRIVATE
     UberRootGump.cpp UberRootGump.h
     GameWorld.cpp GameWorld.h
     RawSurfaceWorld.cpp RawSurfaceWorld.h
+    RawSurfaceStorage.cpp
     RawTerrainWorldBinding.cpp RawTerrainWorldBinding.h
     RawNormalTerrainWorldBinding.cpp RawNormalTerrainWorldBinding.h
     RawFortWorldLoadBinding.cpp RawFortWorldLoadBinding.h

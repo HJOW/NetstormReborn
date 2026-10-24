@@ -1,0 +1,1075 @@
+{
+  "unit": 397,
+  "date": "2026-10-24",
+  "host": "HJOW-Athlon",
+  "baseCommit": "b0e6bb2b",
+  "lastFullDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23"
+  },
+  "actualClientSurfaceStorageConnected": true,
+  "actualUberRootConnected": false,
+  "overallGoalComplete": false,
+  "gameExecuted": true,
+  "newGameRuns": 1,
+  "nativeToolExecuted": false,
+  "componentTestsPassed": true,
+  "scope": "실제 Client→Services→Session→RawSurfaceWorld의 Pool/Hash/spot/TYPE/프레임·셰이프 물리와 소유자 모드 수명 연결, Session 없는 미니맵 전체 생성/현재 Pop·Unpop 대여다.",
+  "firstFailure": {
+    "productSha256": "d61c46ca9cb8800c75c0c4e9e9c3f3c72273908cbf6881563f97dd03fa065a7b",
+    "testBinarySha256": "5a2bd8bc0d2ccd78e6d7641084f0f6e4c6bc5574f5adc308ce80db3539b49a88",
+    "runs": [
+      {
+        "returnCode": 0,
+        "seconds": 1.0950239999219775,
+        "log": "extracted/cpp-surface-storage-397-focused1-1.log",
+        "filter": "RawSurfaceStorage_",
+        "counts": [
+          [
+            "4",
+            "0"
+          ]
+        ],
+        "names": [
+          "RawSurfaceStorage_ActualBothEditionsAndSamePhysicalArrays",
+          "RawSurfaceStorage_NextWorldResetsPoolAndSpaceWithoutReplacingArrays",
+          "RawSurfaceStorage_DuplicateAndInvalidWorldKeepCurrentPhysicalBytes",
+          "RawSurfaceStorage_LeaseRetainsDataUntilModulesAreGone"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.8349360000574961,
+        "log": "extracted/cpp-surface-storage-397-focused1-2.log",
+        "filter": "CampaignSharedStorage_",
+        "counts": [
+          [
+            "3",
+            "0"
+          ]
+        ],
+        "names": [
+          "CampaignSharedStorage_TwoActualSessionsUseSamePhysicalArrays",
+          "CampaignSharedStorage_PartialConstructorReleasesPhysicalLease",
+          "CampaignSharedStorage_ForeignAssetsFailBeforePhysicalMutation"
+        ]
+      },
+      {
+        "returnCode": 1,
+        "seconds": 0.46134230005554855,
+        "log": "extracted/cpp-surface-storage-397-focused1-3.log",
+        "filter": "RawMenuControls_MinimapBeforeSession",
+        "counts": [
+          [
+            "1",
+            "1"
+          ]
+        ],
+        "names": []
+      }
+    ],
+    "sameBinaries": true,
+    "originalsUnchanged": true
+  },
+  "focused": {
+    "productSha256": "d61c46ca9cb8800c75c0c4e9e9c3f3c72273908cbf6881563f97dd03fa065a7b",
+    "testBinarySha256": "5cf5c8d91d292e2cc3fffa9504fcc58f9182c78b9d515f50490571a45bff7473",
+    "runs": [
+      {
+        "returnCode": 0,
+        "seconds": 1.0902212999062613,
+        "log": "extracted/cpp-surface-storage-397-focused2-1.log",
+        "filter": "RawSurfaceStorage_",
+        "counts": [
+          [
+            "4",
+            "0"
+          ]
+        ],
+        "names": [
+          "RawSurfaceStorage_ActualBothEditionsAndSamePhysicalArrays",
+          "RawSurfaceStorage_NextWorldResetsPoolAndSpaceWithoutReplacingArrays",
+          "RawSurfaceStorage_DuplicateAndInvalidWorldKeepCurrentPhysicalBytes",
+          "RawSurfaceStorage_LeaseRetainsDataUntilModulesAreGone"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.7812004999723285,
+        "log": "extracted/cpp-surface-storage-397-focused2-2.log",
+        "filter": "CampaignSharedStorage_",
+        "counts": [
+          [
+            "3",
+            "0"
+          ]
+        ],
+        "names": [
+          "CampaignSharedStorage_TwoActualSessionsUseSamePhysicalArrays",
+          "CampaignSharedStorage_PartialConstructorReleasesPhysicalLease",
+          "CampaignSharedStorage_ForeignAssetsFailBeforePhysicalMutation"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.6300651000346988,
+        "log": "extracted/cpp-surface-storage-397-focused2-3.log",
+        "filter": "RawMenuControls_MinimapBeforeSession",
+        "counts": [
+          [
+            "1",
+            "0"
+          ]
+        ],
+        "names": [
+          "RawMenuControls_MinimapBeforeSessionAndAcrossWorldBindings"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.7515842999564484,
+        "log": "extracted/cpp-surface-storage-397-focused2-4.log",
+        "filter": "CampaignSharedKernel_",
+        "counts": [
+          [
+            "4",
+            "0"
+          ]
+        ],
+        "names": [
+          "CampaignSharedKernel_ActualFormsAndSingleClientFrame",
+          "CampaignSharedKernel_GameWorldSurvivesExplicitGlobalClear",
+          "CampaignSharedKernel_FinalDrainPrecedesPlayerAndServiceRelease",
+          "CampaignSharedKernel_PartialConstructorPreservesExistingProcess"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.7132659000344574,
+        "log": "extracted/cpp-surface-storage-397-focused2-5.log",
+        "filter": "CampaignProductionLifetime_",
+        "counts": [
+          [
+            "4",
+            "0"
+          ]
+        ],
+        "names": [
+          "CampaignProductionLifetime_GlobalCleanupRetiresRootAndBudget",
+          "CampaignProductionLifetime_IndependentBudgetCleanupRetiresText",
+          "CampaignProductionLifetime_QueuedKillThenCloseDrainsOnce",
+          "CampaignProductionLifetime_DuplicateOpenAndProviderRecreation"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.582112800097093,
+        "log": "extracted/cpp-surface-storage-397-focused2-6.log",
+        "filter": "CampaignProduction_ModalPages",
+        "counts": [
+          [
+            "1",
+            "0"
+          ]
+        ],
+        "names": [
+          "CampaignProduction_ModalPagesPreservePanelBudgetAndResize"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.4098963999422267,
+        "log": "extracted/cpp-surface-storage-397-focused2-7.log",
+        "filter": "RawSurfaceWorld_",
+        "counts": [
+          [
+            "7",
+            "0"
+          ]
+        ],
+        "names": [
+          "RawSurfaceWorld_PausedRegularResumesWithClientGameClock",
+          "RawSurfaceWorld_HardBridgeAndPendingMissionTeardown",
+          "RawSurfaceWorld_DisplaySuppressionAndDeviceReplacement",
+          "RawSurfaceWorld_InvalidLoadRejectedBeforeAllocation",
+          "RawSurfaceWorld_RuntimeSharesStorageAndCurrentDispatch",
+          "RawSurfaceWorld_RuntimeRejectsIncompleteOrLateBinding",
+          "RawSurfaceWorld_CampaignFinishPreservesParentGraph"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.32058319996576756,
+        "log": "extracted/cpp-surface-storage-397-focused2-8.log",
+        "filter": "MinimapGeometry_",
+        "counts": [
+          [
+            "1",
+            "0"
+          ]
+        ],
+        "names": [
+          "MinimapGeometry_IndependentNativePureOperations"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.6124886000761762,
+        "log": "extracted/cpp-surface-storage-397-focused2-9.log",
+        "filter": "MinimapBlit_",
+        "counts": [
+          [
+            "2",
+            "0"
+          ]
+        ],
+        "names": [
+          "MinimapBlit_IndependentNativeFullSurfaceAndGuardReads",
+          "MinimapBlit_ClippedGuardAndMissingDevice"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 3.0259468998992816,
+        "log": "extracted/cpp-surface-storage-397-focused2-10.log",
+        "filter": "MinimapRaster_",
+        "counts": [
+          [
+            "1",
+            "0"
+          ]
+        ],
+        "names": [
+          "MinimapRaster_Native4722WholeBitmap"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.6690943000139669,
+        "log": "extracted/cpp-surface-storage-397-focused2-11.log",
+        "filter": "metadisplayDirty_",
+        "counts": [
+          [
+            "4",
+            "0"
+          ]
+        ],
+        "names": [
+          "metadisplayDirty_native_x86_replay",
+          "metadisplayDirty_same_pool_and_live_coordinates",
+          "metadisplayDirty_inactive_allocation_and_required_effects",
+          "metadisplayDirty_actual_pop_unpop_and_overlap_order"
+        ]
+      }
+    ],
+    "sameBinaries": true,
+    "originalsUnchanged": true
+  },
+  "actualGui": {
+    "returnCode": 0,
+    "seconds": 195.7816302999854,
+    "log": "extracted/cpp-surface-storage-397-gui1.log",
+    "productSha256": "d61c46ca9cb8800c75c0c4e9e9c3f3c72273908cbf6881563f97dd03fa065a7b",
+    "testBinarySha256": "5cf5c8d91d292e2cc3fffa9504fcc58f9182c78b9d515f50490571a45bff7473",
+    "sameBinaries": true,
+    "originalsUnchanged": true,
+    "storageRows": [
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "2",
+        "1"
+      ]
+    ],
+    "samePhysicalInAllObservations": true,
+    "generations": [
+      1,
+      2
+    ],
+    "observation": {
+      "returnCode": 0,
+      "originalsUnchanged": true,
+      "stages": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H",
+        "I"
+      ],
+      "startSp": 10000,
+      "finalSp": 3075,
+      "templeCount": 1,
+      "workshopCount": 1,
+      "maxArchers": 4,
+      "finalArchers": 3,
+      "salvagePackets": 1,
+      "refund": 75,
+      "doneBefore": 1,
+      "doneAfter": 1,
+      "nextMission": "tutorial3",
+      "nextSp": 2000,
+      "initialProgressInjected": false,
+      "noStateInjection": true,
+      "nextGuideSequence": 4,
+      "inspectionContract": "native-guide-0-6",
+      "lastGameTime": 81.623,
+      "naturalTutorialTwoComplete": true,
+      "goalComplete": false,
+      "scope": "실제 A~I/사제 신전·워크샾/지식·생산/발사기4개/신전 선택/정상 회수·완료값 관측/다음 Tutorial3 진입이다. 영구 진행 저장·Early3 진행·전체 동일성은 별도다.",
+      "binarySha256": "d61c46ca9cb8800c75c0c4e9e9c3f3c72273908cbf6881563f97dd03fa065a7b",
+      "productTimers": 1,
+      "testStateInjection": false
+    }
+  },
+  "full": {
+    "returnCode": 0,
+    "seconds": 322.4624798001023,
+    "log": "extracted/cpp-surface-storage-397-ctest1.log",
+    "productSha256": "d61c46ca9cb8800c75c0c4e9e9c3f3c72273908cbf6881563f97dd03fa065a7b",
+    "testBinarySha256": "5cf5c8d91d292e2cc3fffa9504fcc58f9182c78b9d515f50490571a45bff7473",
+    "counts": [
+      [
+        "2695",
+        "0"
+      ]
+    ],
+    "sameBinaries": true,
+    "originalsUnchanged": true
+  },
+  "sourceSha256": {
+    "cpppj/src/client/CMakeLists.txt": "fe26ce52977e52a90bcdde1d121ec3ce32b2894b4b15f097211a1fec4c6271e2",
+    "cpppj/src/client/CampaignClientServices.cpp": "1dd4c5957e3338bfa9ae1ac70071e136bba020a1c6c6c757b9d63039f5a63c98",
+    "cpppj/src/client/ClientMain.cpp": "d5d93b45800d85d408c27d7d0a78d84d97e309a79590f31d2989978f430dddb1",
+    "cpppj/src/client/ClientMain.h": "497e5b220a7d5988cc454eef4207c7abf4480dd8af858bb4d819a9f6b0822bf0",
+    "cpppj/src/client/RawButtonControls.cpp": "dd02acac3254ee66ddf53fa3d95584ba33634c184a6bfac08c1df03e1ba8b79b",
+    "cpppj/src/client/RawButtonControls.h": "34ac4c327f42885f863dfae782f9ca83ed2967b1fcfa19e8fd66798b526553d4",
+    "cpppj/src/client/RawCampaignSession.cpp": "45ee7d11c587dac0cdddc8b63ac483ac409484324f3b808f05e1a3a7b8ecdfeb",
+    "cpppj/src/client/RawCampaignSession.h": "5e9d8be5364230eeea710e19de26c2836b35d7f38e91a3355f218282471a4e52",
+    "cpppj/src/client/RawMinimapControls.cpp": "36cf7b9651dfc40d9074e103c037cf6691d5374797956eb4edc998d05e1127b8",
+    "cpppj/src/client/RawMinimapControls.h": "036943680413af16d156612d17825f8e848c46d08f6b45a3c150ad454f7a233e",
+    "cpppj/src/client/RawSurfaceWorld.cpp": "c2ee284e3fd34506cbeee65d8001aea163d7d34a894e35c1ee3a2888633e0233",
+    "cpppj/src/client/RawSurfaceWorld.h": "c12c269c1854ec63578395f0988b7278b5a4cba9be83581ade77c3b11930b55c",
+    "cpppj/src/client/RawSurfaceStorage.cpp": "793c6473c93b9010238afa1981006f97d8f8d8ce5b6da07a01b4847d4c208b1e",
+    "cpppj/src/client/UberGump.cpp": "dff8cdc8f8c6dc95b1c3986b893316854aea6bda6bf19f804206ab973d274e53",
+    "cpppj/tests/CMakeLists.txt": "4c5a203f8b27dad12d2b678c50620223c893bf3d05f9b1de90a40b90280c475e",
+    "cpppj/tests/CampaignSessionTests.cpp": "b843b2bb19d7f9f1bb8c755a6324750246cda7972167bd04ef838a4c1a740c12",
+    "cpppj/tests/RawMenuControlsTests.cpp": "4eb776233fe777f9a78fbd65d927fc786d4ce1b3e9a6dd6ad03ffc9ce6030e4c",
+    "cpppj/tests/RawSurfaceStorageTests.cpp": "2757d09fd5a558f43e6c49d8cef9b5f70916f297f1e864aace6f70991e2c3f5e"
+  },
+  "preservedNativeFixtureSha256": {
+    "cpppj/tests/fixtures/minimap-geometry-x86.tsv": "632b1e411d801a7e5a72c455d340e74a071c54e2511fa7486fd0f687ee47a078",
+    "cpppj/tests/fixtures/minimap-blit-x86.tsv": "7b6eec53b0d69a138b41d7d438bc04495b5b4b1e7ee438d96194fed2930497b3",
+    "cpppj/tests/fixtures/minimap-cell-x86.tsv": "9a40c0edda37812fec1db3e7e65eb9de2da5ea319f16f93d7cc2e99edd0271b4",
+    "cpppj/tests/fixtures/metadisplaydirty-x86.tsv": "7d35f10062f11a39a1609f1b7ea0b605eb3233f5570deda1e7ef99675b2408a0"
+  },
+  "preservedRuntimeToolSha256": {
+    "tools/cpp_tutorial_two_smoke.py": "f4a9b679bda15bd377fce7bd6ee23a5108444549c2dce389b1c384a39d96577d",
+    "tools/cpp_bridge_ritual_runtime.py": "4864b34f702ec5f225c58d37628c0fbe4bf5eff96b8768354f42b391a9532d3d",
+    "tools/cpp_renderer_smoke.py": "b9ccadf8c5e6df696c3a6481043cf180c99a9a68f4365941a0fe679ecc57cf3a",
+    "tools/cpp_smoke_files.py": "6b6e943e308efb110bd960a5242c715b013a32a5a8ce0d9e43980f19f0ebb321",
+    "tools/cpp_world_smoke.py": "6e50f87caf0b1b817c9116ef972ec6e75b44d33455edc88fe128a8d0f791fe72",
+    "tools/cpp_tutorial_harvest_smoke.py": "06ea48c9203ef25d8018cd07b03f1dba9c8a9d9300823435fd41a5423139a713",
+    "tools/cpp_campaign_entry_smoke.py": "59b39e067a2e51cc7f6358d8adc198e4cbd5682bc6109e9b1e0407fa7f3550aa"
+  },
+  "validationScriptSha256": {
+    "extracted/cpp-surface-storage-397-checks.py": "719ea417cdf566ce0459407868fbda0e2078670d05aca66f70296190fa31c026",
+    "extracted/cpp-surface-storage-397-checks-before-focused2.py": "56806e8fde8767ad6479733864ca220ba93585310ac85845c5768f773e23274d",
+    "extracted/cpp-surface-storage-397-final.py": "ae9f412968d67db09803070a6edbfab9fbc4936216e3184bebf70df1f41903a0"
+  },
+  "evidenceSha256": {
+    "extracted/cpp-surface-storage-397-build1.log": "48299c10d7a0c4fff87b80042231308aa43940b56de39a217ede8413b93436e7",
+    "extracted/cpp-surface-storage-397-build2.log": "77dce8c0b057969d3d4ca5ffe5bbf483dd695aa06ddb7b7c11e459f1b30199b4",
+    "extracted/cpp-surface-storage-397-build3.log": "fbc535d1890909f77f7354e2463221e0729b1da1ae9fe79ca312ccaa5e6d036b",
+    "extracted/cpp-surface-storage-397-ctest-wrapper1.log": "c7940871a8ef1f27c83da1e7b665db302f7d5b48cb92b19fff907d60d490796d",
+    "extracted/cpp-surface-storage-397-ctest1-tests.log": "5d71c40db1433fbece0db951ee5ecb0a8a774031461aa2405c9eaca8a2c4cbe2",
+    "extracted/cpp-surface-storage-397-ctest1.json": "61921e1eae47da95542027d1738709f081e83612e93bc2d3b4abd09682efb271",
+    "extracted/cpp-surface-storage-397-ctest1.log": "e5815fc210f044bf29c608608dcd00c71e88bad337c7d90f9efa36465a944c7b",
+    "extracted/cpp-surface-storage-397-early2/execution.json": "3e00eec34f977e7424fe57d13a2073557db2f68b478cf090a40353189a93f861",
+    "extracted/cpp-surface-storage-397-early2/goal.bmp": "ba2119ed7f0aa204885ef68be22053aff25ad5f0fed96708d08b45e691850f78",
+    "extracted/cpp-surface-storage-397-early2/nextBriefing.bmp": "159c2656ce0726767b299262018206cd3ff57560cfe1576511194ac916b9ad6e",
+    "extracted/cpp-surface-storage-397-early2/originals-after.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-surface-storage-397-early2/originals-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-surface-storage-397-early2/prepared.json": "5f0cdd4a1d6ae79bc4703aba217057a70a3645cc3243aa5a86cbccc428920b5b",
+    "extracted/cpp-surface-storage-397-early2/results.json": "1517c2575403bbe28373ffd263261a2b58389446d6cd7dbb471b6a9bd3d2d7aa",
+    "extracted/cpp-surface-storage-397-early2/running.json": "eb3a202e4a4fb3d4818d2576ec51c3ea7872681da574ab65db874de8b38d7750",
+    "extracted/cpp-surface-storage-397-early2/states.tsv": "65feb7c014db89c211fa5e6ef888ce97c696220a94053e266f081c3d757c92f9",
+    "extracted/cpp-surface-storage-397-early2/stderr.log": "7bda425048640ffbe4f58f699a5c42b3cd433844b83d886ded35b1cce28766c9",
+    "extracted/cpp-surface-storage-397-early2/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-surface-storage-397-early2/steps.tsv": "08026aa73755bd1f3f520d0db94e0cd2cb64744ccea3ca54fe9bc1a18bb4f3b6",
+    "extracted/cpp-surface-storage-397-focused-wrapper1.log": "41102a79e6ba7e2c061a17c58280613819b1f90b9e966dc9d83d8351932da283",
+    "extracted/cpp-surface-storage-397-focused-wrapper2.log": "7863b771bad46cc2c2859b6c95490b128089dd0f6bd466e16a3d4dfd91224a72",
+    "extracted/cpp-surface-storage-397-focused1-1.log": "ddc34d317443e6d84fa20933a17a1465f13e6e25ac95d6262c1118ec4f149cf7",
+    "extracted/cpp-surface-storage-397-focused1-2.log": "ea33e8799bde69b3b1be580574c63ddc1b7265fbd48d69e7fca5b6883233efe0",
+    "extracted/cpp-surface-storage-397-focused1-3.log": "41dea0fbcc098df1b42a5a02bc945ffd265989281f29cdca5330dff9c2ba7361",
+    "extracted/cpp-surface-storage-397-focused1-before.json": "9ba6c9928b0560b9ce52026975f55842bf556fc1df82125955b7863ff578307a",
+    "extracted/cpp-surface-storage-397-focused1-progress1.json": "74d16acdb6d0d2341e602e97f7ae3d91103007785903e31bd5cdf4287105be4d",
+    "extracted/cpp-surface-storage-397-focused1-progress2.json": "3136d646d61abcb1544cfd958f4d0e5909634663222f10a99f82973218648597",
+    "extracted/cpp-surface-storage-397-focused1-progress3.json": "7791dacb8ba133dd1ece73ca038c43f750e5b9ef736e9dcdfa2282a34bdde07f",
+    "extracted/cpp-surface-storage-397-focused1.json": "ec611b4566df8d832a07b4e2b46e411bb67f6760d20d631db7ad42ce932a6478",
+    "extracted/cpp-surface-storage-397-focused2-1.log": "ddc34d317443e6d84fa20933a17a1465f13e6e25ac95d6262c1118ec4f149cf7",
+    "extracted/cpp-surface-storage-397-focused2-10.log": "340f5b3a2258c52a113838af52de5b96dacca2feb11ecd953d8c0c616c4a22e8",
+    "extracted/cpp-surface-storage-397-focused2-11.log": "8ee13dbaecf835dce929f7bf6d0c29533bb21c392d208682ca8916743d72f691",
+    "extracted/cpp-surface-storage-397-focused2-2.log": "ea33e8799bde69b3b1be580574c63ddc1b7265fbd48d69e7fca5b6883233efe0",
+    "extracted/cpp-surface-storage-397-focused2-3.log": "4e2f86078bff805ac7eafa344d1ffad67b746cfdc5bad7e33f26d4b3eefc8061",
+    "extracted/cpp-surface-storage-397-focused2-4.log": "6d05afca73baab099c985eb1bfec69a8c1449a63d346ec75be1e3fb88c3143df",
+    "extracted/cpp-surface-storage-397-focused2-5.log": "bcdc64dba65c54099e8e526e3ce03c4b3d9651a01e0eadc90b60f80688ab0cda",
+    "extracted/cpp-surface-storage-397-focused2-6.log": "65c29b65651daea9299127314155b65f75b37bee950ee511f5b3678ff2ef220a",
+    "extracted/cpp-surface-storage-397-focused2-7.log": "7f50abce8e01778f80ed6307873d585fd13227d45328e0540b1912af2ca1a56e",
+    "extracted/cpp-surface-storage-397-focused2-8.log": "b835c6e27f4c2a24449deeb0adfeecc4603f6eaad1e14b1aa9ecb07fe0ed6f60",
+    "extracted/cpp-surface-storage-397-focused2-9.log": "24961a8db251859de1aaac88a10551877a6a6b32cf2b993433a72e8ee6d129c0",
+    "extracted/cpp-surface-storage-397-focused2-before.json": "e6126973e5dad2d08015da5809ef7e3133638c5eeee57d22d7e7e7669f5cec27",
+    "extracted/cpp-surface-storage-397-focused2-progress1.json": "36ba04ace63c4bc473ca7e5d43420160e97fde736df2c9404c9e2b347c38b918",
+    "extracted/cpp-surface-storage-397-focused2-progress10.json": "361b23d49c2e5d0947e0c8246fd22106c5636fec9358fa40e702593ee189d6c2",
+    "extracted/cpp-surface-storage-397-focused2-progress11.json": "9498dca26bd758b1e4f0f29efe6a7581b40a99465bb67e4357c4b9a0e50fb390",
+    "extracted/cpp-surface-storage-397-focused2-progress2.json": "723edce6d7aca79bd565b21a4c786c9c7d22b916fc8bb2e4a1b3b9a64f33dc2c",
+    "extracted/cpp-surface-storage-397-focused2-progress3.json": "35575b7955b58df88d7d83b745339d5945835a4836a9fd9c2f52dfeb4950bba3",
+    "extracted/cpp-surface-storage-397-focused2-progress4.json": "2fa0b19db2585183d079abc86f87e76198f157b66b36c7c36a4f38ad99c9b75f",
+    "extracted/cpp-surface-storage-397-focused2-progress5.json": "8b9aaad74a9fcacd00638f29850fd6919a37ec2022ad8ef6277f320756ac8106",
+    "extracted/cpp-surface-storage-397-focused2-progress6.json": "b6197046d752561a51d3a09237eebe54c2235ec1bf603200e1304faad0dc9fb3",
+    "extracted/cpp-surface-storage-397-focused2-progress7.json": "2df4dd694d1bdf83366e2a94d45f5b2e94a68e8eabc48b045dd47beccdc689db",
+    "extracted/cpp-surface-storage-397-focused2-progress8.json": "cc958c12b5970c42549daea8d1fbe6b121e36fe7e5520b558425a40bbfc34434",
+    "extracted/cpp-surface-storage-397-focused2-progress9.json": "8994cf19b2396b5fccd9cea783716889f533b071c2cd6a929f7a401cfae6ff9f",
+    "extracted/cpp-surface-storage-397-focused2.json": "f8770d064dda09041c5bfd13abc0a4aa2b19a6f17086d69cf1251a2d119c912d",
+    "extracted/cpp-surface-storage-397-gui-wrapper1.log": "44cff77791461678b14730aa6b1d393080fe933892456f5c45bde1a4ec9229d2",
+    "extracted/cpp-surface-storage-397-gui1-before.json": "e6126973e5dad2d08015da5809ef7e3133638c5eeee57d22d7e7e7669f5cec27",
+    "extracted/cpp-surface-storage-397-gui1.json": "3be0be92a5bfa883c3f9fc0fc65fcd2925a3d13bd2be84b5bee215c3a66a34db",
+    "extracted/cpp-surface-storage-397-gui1.log": "a1636c62ccab115831786d9528d344dc5e0219dd13863225145710b1f53fc707"
+  },
+  "originals": {
+    "count": 1394,
+    "allBytesUnchanged": true
+  },
+  "protectedTrackedChanges": false,
+  "limitations": [
+    "물리 Pool은 기존32768슬롯 모델을 유지한다. 전체 원문 초기화/최대 용량 복원을 주장하지 않는다.",
+    "다음 대여의 Reset(0)/Hash/spot 초기화는 기존 새 월드 설치 의미를 같은 물리에 연결한 호스트 단계다. NativeState의 새 Uber→Core 선택→Pool Reset 등 전체 순서는 아직 실제 Client 미연결이다.",
+    "실제 현재 Core의 TYPE를 공유하지만 일부 기존 모듈의 사본/캐시와 SessionAssets의 초기 검증 입력까지 모두 제거한 작업은 아니다.",
+    "Runtime/Form/Graph/장부 등 나머지 월드 모듈은 Session 수명이며 생산 패널의 Session 의존과 전체 HTML/NSInfo/Chat 공장 접합도 남았다.",
+    "부분 생성 실패 검사는 deferExistingEditorFile의 잘못된 캠페인 지정이 첫 객체 생성 전에 실패하는 경로다. 모든 중간/후반 생성 실패를 증명하지 않는다.",
+    "CD10.72는 실제 자료로 물리 배열 대여만 검사했다. CD 게임 실행/복원 완료의 증거가 아니다.",
+    "GUI는 Early2 자연 완주와 Tutorial3 첫 안내/새 지형 출력까지다. 기존 완료1→1을 보존했고 영구0→1 저장·Early3 진행·전체 미션/Editor 동일성을 증명하지 않는다.",
+    "393의 원본 경로 Wide 옵션 문제는 원인을 수정하거나 재현한 작업이 아니며 미해결로 유지한다."
+  ]
+}

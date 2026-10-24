@@ -227,6 +227,10 @@ SoundList& RequireSounds(const RawCampaignSessionServices& services) { if (!serv
 template<std::size_t Count> bool HasRegularTable(const std::array<std::uint32_t,Count>& tables,std::uint32_t table) { return std::find(tables.begin(),tables.end(),table)!=tables.end(); } // 새 타입 이름 추정 없이 현재VT 기록값을 대조한다.
 // 현재 원본 초기 다리/받침/미션 전역이다.
 BridgeConnectState CampaignLinks() { BridgeConnectState result;result.bridgeType=82;result.islandType=94;result.stalagType=95;result.connectorType=155;result.noIslandType=157;result.battle=true;result.mission=true;return result; }
+// 같은 Client의 archive 정체성을 확인한 뒤에만 물리 대여/초기화를 허용한다.
+std::shared_ptr<RawSurfaceStorage> SessionSurfaceStorage(const RawCampaignSessionServices& services,const GameAssets& assets) {
+    if (services.surfaceStorage && services.surfaceStorage->Source()!=&assets) throw std::invalid_argument("Session의 실제 Client 월드 자산 불일치");return services.surfaceStorage;
+}
 constexpr std::size_t kCampaignFactoryCapacity=500; // PATCH004fc990의push1f4→0044fb20이확보하는실제0055a4d0목록의DWORD수다.
 constexpr std::uint32_t kAiSearchTypeBase=0x6b000000U; //같은실제188TYPE의opaque32포인터기준이다.원본가상주소가아니며500stride대응만보존한다.
 // 실제83개 VT에서+10/+14/+18이4af780/44b4b0/44b9e0인14개만 일반 Damageable 수명으로 연결한다.
@@ -725,7 +729,7 @@ struct RawCampaignSession::Impl {
     Impl(const GameAssets& game,const BaseFileSystem& files,FortTemplate fort,std::string mission,RawCampaignSessionServices input):
         playerRecords(input.playerRecords ? input.playerRecords : std::make_shared<ClientPlayerRecords>()),playerUse(playerRecords->Acquire()),
         services(std::move(input)),templateStorage(services.templateStorage ? services.templateStorage : std::make_shared<CampaignTemplateStorage>()),headers(templateStorage->Headers()),assets(game,files),metadata(assets.game),
-        world(OriginalEdition::Patch1078,assets.types,assets.frames,metadata.shapes,CampaignLinks(),terrainType,services.processKernel),core(world.Core()),
+        world(OriginalEdition::Patch1078,assets.types,assets.frames,metadata.shapes,CampaignLinks(),terrainType,services.processKernel,SessionSurfaceStorage(services,game)),core(world.Core()),
         sp(random,[this] { return seed.Reseed(); }),hp(core.pool,core.types,core.bookkeeping,rewardState,&sp,SquidRewardHooks{{},services.refreshSp}),
         battleOptions(services.missionOptions ? *services.missionOptions : localBattleOptions),
         aiMemory(0x20000000,[this](std::span<std::uint8_t> bytes) {

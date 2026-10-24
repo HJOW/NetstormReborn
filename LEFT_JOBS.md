@@ -1,5 +1,15 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-24 단위397 완료: Client의 실제 물리와 Session 없는 미니맵
+
+- [x] AGENTS/공통/닷넷 인계·깨끗한 시작 **b0e6bb2b / 20261024-19 CP**를 다시 확인했다. 이전396은 실제 코드/검사/커밋 진척이다. 현재/마지막 전체 정밀 디컴파일은 **HJOW-Athlon / 2026-10-23**이며 새 디컴파일/Native도구0이다.
+- [x] 실제 Client 자산 뒤 `RawSurfaceStorage`를 확보하고 Services→Session→RawSurfaceWorld의 Pool/Hash/spot/현재TYPE/프레임·셰이프/소유자 모드를 같은 물리에 연결했다. 단일 대여는 모듈보다 먼저 확보하고 모듈 뒤 반납한다. 다른 실제 archive와 잘못된 판본/크기/타입·중복 대여를 거부한다. 다음 대여는 같은 Pool Reset(0)/Hash/spot을 사용하며 주소와 TYPE 변경/Pool 삭제기록을 보존한다. 기존32768슬롯 모델/일부 모듈 캐시는 이번 범위에서 유지한다.
+- [x] 미니맵 Impl의 Session/Core 보관을 없애고 장기 물리와 명시 Pop/Unpop 대여로 구별했다. 초기 HUD의 Session 없는 실제 전체 생성/등록/출력 경계를 추가했고 기존 실제 Client 미니맵도 이 경로를 사용한다. 같은 물리만 Bind하며 중복/다른 물리를 거부하고 Unbind 뒤 모듈을 반납한다.
+- [x] build1/2/3(74909/75169/41855)은 모두 종료0·관측 경고오류0이다. 첫 집중은 물리4/Session3 통과 뒤 미니맵1check 실패였다. TYPE94의 일반 모드 표시 가정을 실제 원문 대상157로 교정한 검사 입력 수정이며 제품SHA는 그대로다. 최초 실패/이전 도구를 보존했고 최종 집중 **신규8+기존24=32검사/실패0**이다. 두 판본 실제 배열/연속 두 Session/부분 생성·외부Kernel/물리 불일치/미니맵 통지·bitmap·픽셀을 확인했다.
+- [x] 실제 GUI1(35342) 종료0·**195.78초**·A~I/신전·워크샾/발사기4→3/회수1·환불75/SP10000→3075/자연완료→Tutorial3 안내·실제SP2000이 통과했다. 상태 주입0/기존완료1→1이다. 새 읽기전용 물리행 **78개 모두 네 정체성1/대여활성**이고 대여1→2를 확인했다. 두 BMP를 직접 확인했으며 다음 예산은 원문 단계 갱신 중인 표시와 실제SP를 구별한다. 전체 픽셀/영구0→1저장/이후Early3 증거로 확대하지 않는다.
+- [x] 전체 CTest1(69147) **2695검사/실패0·종료0·322.46초**·집중/GUI/전체 같은 바이너리·원본1394동일·보호/Native추적변경0이다. 최종 제품 **d61c46ca9cb8800c75c0c4e9e9c3f3c72273908cbf6881563f97dd03fa065a7b**, 검사 **5cf5c8d91d292e2cc3fffa9504fcc58f9182c78b9d515f50490571a45bff7473**다. [완료 문서](docs/exe/cpp-surface-storage-20261024.md)와 [제품 보고서](cpppj/surface-storage-runtime-20261024.json)에 소스18/Native4/도구7/원시 SHA를 기록한다. UTF-8/링크/stage 감사 뒤 **20261024-20 CP**로 로컬 커밋한다. 원시는 `extracted/cpp-surface-storage-397-*`다.
+- [ ] **새 Uber는 여전히 Client 미연결이다.** 다음은 생산 패널의 Session/현재 전역 의존과 실제 전체 NSInfo/Chat/HTML 공장을 같은 공통 저장소에 연결하는 작업이다.397의 새 대여 전 초기화는 현재 호스트 설치 경계이며 전체 NativeState의 새Uber→Core선택→PoolReset 순서로 세지 않는다. Runtime/Form/Graph/장부/Player/SP/나머지owner, Edit/시나리오/모든 사용자 완주·동일성,393 Wide 옵션 원인도 남았으며 목표는 활성 상태다.
+
 ## 2026-10-24 단위396 완료: 공통 정리 뒤 생산 패널의 실제 저장소 반납
 
 - [x] 시작 **da5f7b88 / 20261024-18 CP**·깨끗한 작업본이다. 현재/마지막 전체 정밀 디컴파일은 **HJOW-Athlon / 2026-10-23**이다. 새 디컴파일·Native·GUI·게임 실행0이며 보호 파일을 수정하지 않았다.
@@ -19,7 +29,8 @@
 - [x] 전체 CTest1 **2683검사/실패0·종료0·299.02초**·제품/검사전후같음·원본1394동일·보호추적변경0이다. 최종 제품은 **48ee8913a25557dc3068839d3a80df6a119a52a9318fac5fe245392f558fea73**, 검사는 **9e38f088ddf38ee5c3f5438f109d53c2ff5e60c608d66e38e249e06757ee1df9**다. build7 20835/CTest38634는 종료0이다. [완료 문서](docs/exe/cpp-uber-root-20261024.md)와 [제품 보고서](cpppj/uber-root-runtime-20261024.json)에 소스9/Native/28증거SHA와 최초실패를 구별한다. UTF-8/링크/stage 감사를 마쳐 **20261024-18 CP**로 로컬 커밋한다. 원시는 `extracted/cpp-uber-root-395-*`다.
 - [ ] **실제 Client 연결은 미완료다.** 소스 호출자를 확인하면 새 부모의 live호출0이며 RawButtonControls는 기존 기본루트를 유지한다. 새 GUI/게임실행0이다. 이 단위의 Native/공통수명 증거를 실제 전체HUD/Editor 완성이나394의새플레이로 확대하지 않는다. 네 실제 전체 공장/HTML을 현재 공통 저장소에 연결해야 하며 Session 이전 생성/월드교체 수명도 보존해야 한다.
 - [x] **396에서 수명 결함을 재현·수정했다.** 395 당시 RawProductionControls::Release는 inline root/budget token을 반납 후에도 유지하고 Node/Text는 해당 죽은 토큰을 계속 돌려줄 수 있었다. 반면 RawMinimap::Release는 token0/displayPresentfalse다. 396은 실제 공통Kill/Cleanup→providerClose/새 처리기로 반납/이전토큰거부/등록개수유지를 검증했다. Node/Text의0토큰 거부는 이미 있으므로 추측한0토큰 버그를 새로 만들거나 고쳤다고 주장하지 않는다.
-- [ ] RawProduction/Minimap의Session 참조와 Pool·world 모듈 수명도 실제Client 공통owner로 옮겨야 초기/State전환 전체생성이 가능하다. 미니맵은 core(game.Core()) 이후 session필드 사용이 없는지도 다시 확인해 분리할 수 있다.
+- [x] **397에서 미니맵의 Session/Core 보관을 제거하고 실제 Client의 공통 Pool/Hash/TYPE/spot 물리에 연결했다.** Session 이전 전체 미니맵과 실제 통지 대여/반납도 검사했다.
+- [ ] RawProduction의 Session/현재 전역 의존, 나머지 Runtime/장부/Player/SP와 전체 NativeState 정리 순서는 남았다.397의 실제 물리 연결과 나머지 모듈/부모 순서의 미완료를 구별한다.
 - [ ] 전체 State 부모/Core·cache·active/Pool/Player/SP/나머지목록owner, 논리HTML 공통Gump, Edit 최종HUD/도구/커스텀맵·언어시나리오/저장·재로드와 모든 Early/캠페인/Demo 사용자자연완주·완전동일성은 남았다.393 원본경로 Wide SaveOptions 오류도 이번 재생0/미해결이다. 목표는 활성 상태다.
 
 ## 2026-10-24 단위394 완료: Warning/Pause의 실제 공통 Gump 접합
