@@ -1,0 +1,103 @@
+{
+  "unit": 409,
+  "goalComplete": false,
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "originalGameExecuted": false,
+  "cloneGameExecuted": true,
+  "guiExecuted": true,
+  "gui": {
+    "cloneRuns": 1,
+    "frames": 22,
+    "returnCode": 0,
+    "naturalMenuClicks": true,
+    "missionStateInjected": false,
+    "pages": [
+      "main",
+      "UCampaign",
+      "entry_a.Page",
+      "main"
+    ],
+    "screenshotsVisuallyInspected": true
+  },
+  "productSha256": "758e2fed0616d87657a85fdb3243b3d5e360e80778828d342114e981fe120d7d",
+  "testBinarySha256": "7b767caaec2f5142c6f7a1344d862c0678a9243c19a8ae062c2c0d63f0ece0c8",
+  "sourceHashes": {
+    "cpppj/src/client/TellFileMenus.cpp": "3915c991fa3cc2d361b4ac1e3d97f14f31cb52478974e734d85258b7f4a53c5b",
+    "cpppj/src/client/TellFileMenus.h": "50534f682052341e1aec6200d9604da30127d2dbce68d0fafa446519f875652e",
+    "cpppj/src/client/RawHtmlWindowContext.h": "73db220cd5c7aee40aa5ff6077b22f011e74d00ef15b1036de2ad1b1cc2e8ca1",
+    "cpppj/src/client/RawMenuHtml.inc": "8eccec7ddbae22ce1a80ab8a20a5965cb6ac1dd7d921c36c39f2317857c4fc8c",
+    "cpppj/src/client/RawMenuControls.cpp": "17c5b8cfb1419c3792af0046c76e51c7c86998e0fe142f502fc67333b0c6b433",
+    "cpppj/src/client/UberGump.cpp": "97db59ad8435b0466d3563da7ada8cc46bbd871e1513d9238e10ff93edec850d",
+    "cpppj/src/client/UberGump.h": "c4374c512ce3ec52d453ff2c6b1f3b5af7c3ca7c7b9d944f866ef53c1ae4eea2",
+    "cpppj/src/client/CMakeLists.txt": "d6394b3ed7a537344691060d909e9596a6f62217e8d30a92b0de294cc14a0600",
+    "cpppj/tests/TellFileMenusTests.cpp": "7515a06227bdeeef0af37ed5801853b1a381b160c30bd4b82016b8a61f64ee12",
+    "cpppj/tests/HtmlWindowMetadataClientTests.cpp": "84db57c025c0fc4a52b8eb5cf188626acee8252836d5185e191ed27a2288fdef",
+    "cpppj/tests/CMakeLists.txt": "6efbcf279d522a0f551813330b29137a453ef07c12b2fda853872b3c90f00bd9",
+    "tools/decomp_tell_file_menus.py": "2babbcd24127ff8ed602612193a4d6ad6c2430f97e6b7cbdd300f6072a93a118",
+    "cpppj/tests/fixtures/tell-file-menus-x86.tsv": "dbdceb9b4e8745baf0c5da501c75b2718e0bfaf7fa98539f7dd1356ee782bc06",
+    "docs/exe/cpp-tell-file-menus-client-20261025.md": "2e96c6627ceea3d48fdb14b241c3cc045b03074a9932bf5d721cb0e7ccaf6fa7"
+  },
+  "referenceHashes": {
+    "AGENTS.md": "7f853771930147c26e67d444ced94114992510a3fa072f5ed6bd63da7ba88bd9",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "cpppj/src/o/Config.cpp": "5e61071bbd0577d4878b388927b28308133547e0776b271dab656eb9e73b5715",
+    "cpppj/src/o/ConfigInterface.cpp": "62852c460b740586da52b1ee727de96206198ba0a5e7ff4a18f6acf5086b308c",
+    "cpppj/src/o/BaseFile.cpp": "4666fd85e4d4b1f80fc6d1be8468f3116a4718dffa104d96da0a867f96e2e108",
+    "cpppj/src/client/TellSection.cpp": "4099a0faa36ed194f292e7d4e439df921b4ea747b9abfddb75560844db1c9fa4",
+    "cpppj/tests/fixtures/tell-section-x86.tsv": "2a75006a18d404d8a30464ff0b3406423439f2e64c1bc4aa3aa7ccb70e85b32e",
+    "cpppj/tests/fixtures/tell-parameters-x86.tsv": "20bd8ba4b7800e7e9474d1324276ef70cb40882e56bc67fce3502df05de3d9b5"
+  },
+  "rawHashes": {
+    "extracted/cpp-tell-files-409-audit.py": "2d37805463550c703dd787fdb51ac523a7514ae496354c9858c89fd8a101b13d",
+    "extracted/cpp-tell-files-409-baseline.json": "56b75c7c1e0194b8d3c9a41ef58124bac06f66e714da6fd6babbd4f8fc198901",
+    "extracted/cpp-tell-files-409-build1.log": "60e869b4d399aeb6e032ace34fcf6115462ec19418dab0a671425a1d77e2184b",
+    "extracted/cpp-tell-files-409-build2.log": "be8fd99b6697e0e1fd3ffa2a221a2e22e0fdb618d4b60cef4613cc3635251461",
+    "extracted/cpp-tell-files-409-client1.log": "f9068881dfce914b26c6b833d5a8680082745b0b7476aa9b6b45e6f84af58372",
+    "extracted/cpp-tell-files-409-client2.log": "f9068881dfce914b26c6b833d5a8680082745b0b7476aa9b6b45e6f84af58372",
+    "extracted/cpp-tell-files-409-ctest1-tests.log": "a765d3e3b6d2f54a30227ef883931e0c1a874e44bf52647a3c4b9fa4ac46679e",
+    "extracted/cpp-tell-files-409-ctest1.log": "675f6743daa5a957802b00a735c1760042feb307e39b8b33e9df8a5904e666b7",
+    "extracted/cpp-tell-files-409-ctest2-tests.log": "e7ced9c69e159525727f03b61d686f249c17051bb3da0b62a16c2e9ed78a3e85",
+    "extracted/cpp-tell-files-409-ctest2.log": "9c8c39c8d7f3aec7575f1c86083096d817e4e79dacf152d6e675866fae2195e6",
+    "extracted/cpp-tell-files-409-gui.py": "adc1700359c13489673b2a09acf694778f49e24070d2fe4d1bebf18653275422",
+    "extracted/cpp-tell-files-409-gui1/child.bmp": "3af099de8d9fc9de324395256d46872bb16890f2d21bd3e505b4cb4c9d703b1b",
+    "extracted/cpp-tell-files-409-gui1/child.png": "6e7888a6502ec9aaaf5df0339c4c783080c6e750f2fbf86815164781bdcc4873",
+    "extracted/cpp-tell-files-409-gui1/list.bmp": "142d325f2a792aa4648521a79d6824c8d30dd2d0b7edf6fa25a453483dbbd196",
+    "extracted/cpp-tell-files-409-gui1/list.png": "b77fd3ce1f796d731951fef43484dc21ad57dbc9ad461eb1ee81098ffdb01071",
+    "extracted/cpp-tell-files-409-gui1/result.json": "d9580eecb434fa802a2834888139fdb3ea4c3e95f2a62d49c23e7df81693a3e4",
+    "extracted/cpp-tell-files-409-gui1/running.json": "b968b5d6d6ab3582c814a434b0a443814a6ef341733a321c55a6f23bea7aa8cb",
+    "extracted/cpp-tell-files-409-gui1/scripts/entry_a.english": "cc38abe63aa28a7aa624a1593c04654ba5561fdccb660d59356ba6848f9aeab8",
+    "extracted/cpp-tell-files-409-gui1/scripts/entry_b.english": "e8f89a4c0f51a59189313d3cdac9f2caa9379e25235022d878426579ed1eb182",
+    "extracted/cpp-tell-files-409-gui1/scripts/tell.english": "3f4007b38eea58eebaef398e3c2a93d91b93a2efe2e88aeb3dc079a2a55720b7",
+    "extracted/cpp-tell-files-409-gui1/settings-backup/fullscreenStateFile.dat": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-tell-files-409-gui1/settings-backup/options.cfg": "7c986d379a533456fb34d19f7937d1a028812c4560389d43cb663f1bd10cd7d4",
+    "extracted/cpp-tell-files-409-gui1/states.tsv": "733695192859df2323694b1fe6591cf93dc8527f2e7a97529a5f24df89699dd8",
+    "extracted/cpp-tell-files-409-gui1/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-tell-files-409-gui1/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-tell-files-409-gui1/steps.tsv": "ae447469c620d5e3851fe912c82858a5d53f57c192971964ea292c22be37b15d",
+    "extracted/cpp-tell-files-409-native.json": "78296e595159528fb646b83252519e5168079a59b6ff7c47a317189326bf6cca",
+    "extracted/cpp-tell-files-409-tell1.log": "e563d62e92c4e0475f6a4548c1c0df7b359d926ac46f06da9658e8e4e1a475a6",
+    "extracted/cpp-tell-files-409-tell2.log": "e563d62e92c4e0475f6a4548c1c0df7b359d926ac46f06da9658e8e4e1a475a6"
+  },
+  "protectedAudit": {
+    "compared": 1821,
+    "originals": 1394,
+    "originalCD": 425,
+    "changed": []
+  },
+  "checks": {
+    "nativeRows": 384,
+    "precisionDifferences": 0,
+    "nativeReplayReadOnly": true,
+    "focusedPassed": 26,
+    "fullPassed": 2778,
+    "fullFailedChecks": 0
+  },
+  "limits": [
+    "실제 @/# 원문의 정상 본체와 명시 하위 장치에 대한 관측이다. 실제 Config/공통 메뉴 결합은 별도 검사다.",
+    "기존 Tell 부모 표시 어댑터·%/기술/Input/전송·배경/Checked·Guide/full Uber와 전체 미션 완주/Edit/완전 동일성은 미완료다.",
+    "현재 MatchDisk의 실제 OS 순서 스냅샷을 사용하며 열거 중 파일 변경까지의 동등성은 미검증이다."
+  ]
+}

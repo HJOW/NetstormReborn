@@ -2142,3 +2142,6 @@ set_source_files_properties(HtmlWindowMetadataTests.cpp PROPERTIES COMPILE_DEFIN
 target_sources(netstorm_tests PRIVATE TellSectionTests.cpp) # 현재 Tell 이름과 등록 객체·미션·새 tell 섹션 조회를 검증한다.
 set_source_files_properties(TellSectionTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_TELL_SECTION_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/tell-section-x86.tsv\"")
+target_sources(netstorm_tests PRIVATE TellFileMenusTests.cpp) # 실제 @/# 원문과 같은 Config 수명·고리/행을 확인한다.
+set_source_files_properties(TellFileMenusTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_TELL_FILE_MENUS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/tell-file-menus-x86.tsv\"")

@@ -6,6 +6,7 @@
 #include "client/RawHtmlWindowContext.h"
 #include "client/MenuGumpWidgets.h"
 #include "client/TellMapMenus.h"
+#include "client/TellFileMenus.h"
 #include <algorithm>
 #include <bit>
 #include <sstream>
@@ -89,4 +90,15 @@ TEST_CASE(HtmlWindowMetadataClient_ActualSharedRingKeyNoControlAndStaleTokens) {
 TEST_CASE(HtmlWindowMetadataClient_InlineLowerBoundaryPreservesPhysicalPartialCopy) {
     MetadataScene scene;auto context=scene.Context();std::uint32_t calls{};context.metadata.inlineList=[&](auto key,auto command,auto argument) { ++calls;CHECK(key=="list" && command=="Config" && argument=="7");return std::string("XY"); };const auto before=scene.Count(),root=scene.Create(std::move(context));std::array<char,8192> buffer;buffer.fill('!');const std::string source="HEAD $Menu=%list,Config,7 \nTAIL";std::copy(source.begin(),source.end(),buffer.begin());buffer[source.size()]=0;
     CHECK(scene.menus->ProcessHtmlMetadata(root,buffer)==1 && calls==1 && std::string(buffer.data())=="HEAD TAIL" && buffer[source.size()+1]=='!' && scene.Root(root).menuColumns==1);scene.menus->CloseHtmlWindows();CHECK(scene.Count()==before && scene.menus->MenuInstances()==0);
+}
+
+// 실제 @/# 본체가 같은 부모의 controlled 메뉴/구분선/80칸 고리에 직접 작성된다.
+TEST_CASE(HtmlWindowMetadataClient_FileMenusActualConfigRowsAndSharedRing) {
+    for (const bool fallback:{false,true}) { // 두 문법이 같은 메뉴 수명과 서로 다른 빈 제목 라벨을 사용한다.
+        netstorm::o::ConfigInterface config([](auto path)->std::optional<std::vector<std::uint8_t>> { const std::string source=path=="d/a.english" ? "title=\"\"\n" : path=="d/b.english" ? "title=--divider\n" : "title=Cee\n";return std::vector<std::uint8_t>(source.begin(),source.end()); });
+        config.Configuration().Assign("ready=1\n");MetadataScene scene;const auto before=scene.Count();auto files=std::make_shared<TellFileMenus>(config,[](auto pattern) { CHECK(pattern=="input");return std::vector<std::string>{"d/c.english","d/b.english","d/a.english"}; });auto context=scene.Context();context.metadata.fileMenus=files;const auto root=scene.Create(std::move(context));
+        CHECK(scene.Process(root,fallback ? "$Menu=@input,Config,{cur.file} \n" : "$Menu=#input,Config,{cur.file} \n")==1 && scene.strings.Index()==3 && config.Registry().FindByName("cur")==nullptr);scene.BodyAndAttach(root);const auto children=scene.MenuChildren(root);CHECK(children.size()==1);
+        if (children.size()==1) { const auto* menu=static_cast<MenuGumpNode*>(scene.menus->Node(children[0]));CHECK(menu->itemCount==3 && menu->items[0].command==kScriptConfig && scene.strings.Resolve(menu->items[0].parameter)=="a" && (menu->items[1].flags&0x10) && menu->items[2].command==kScriptConfig && scene.strings.Resolve(menu->items[2].parameter)=="c" && scene.menus->Point("Cee")); }
+        scene.menus->CloseHtmlWindows();CHECK(scene.Count()==before && scene.menus->MenuInstances()==0 && config.Registry().FindByName("a")!=nullptr); // 부모를 닫아도 적재 Config는 장기 목록의 같은 실제 수명이다.
+    }
 }

@@ -30,6 +30,7 @@ class CampaignObjectMenuClient; // 같은 실제 원본 객체 메뉴와 현재 
 struct MissionFortLoadRequest; // Init부터 실제 Session 설치까지 같은 요청과 Zone 이미지를 소유한다.
 class CampaignTemplateStorage; // 원본 명시 Init/State 정리까지 같은9개 manager의 수명을 소유한다.
 struct RawHtmlWindowContext; // 실제 전체 HTML에 현재 게임 소유자의 장치를 빌린다.
+class TellFileMenus; // 실제 파일 목록의 등록 Config를 부모/미션보다 오래 유지한다.
 // 메뉴·브리핑·미션 페이지와 해당 UI 동작을 관리하는 처리기이다.
 class UberGump {
 public:
@@ -143,6 +144,7 @@ private:
     ScriptStringRing scriptStrings_; // 입력 큐에 예약한 문자열의 원본80칸 수명이며 페이지가 바뀌어도 보존한다.
     SoloMapFileSpec mapFileSpec_; // 페이지 교체 뒤에도 같은9BYTE FileSpec 키를 보존한다.
     std::unique_ptr<SoloMapCatalog> mapCatalog_; // 현재 파일 캐시/dirty/이름을 Client 수명에 소유한다.
+    std::shared_ptr<TellFileMenus> fileMenus_; // 기존 Tell과 실제 전체 HTML 메타가 같은 @/# Config를 공유한다.
     std::string mapUserName_,pendingFortName_; // 원본 초기 빈 사용자 이름과 별도 pending 이름이다. current Fort 이름과 합치지 않는다.
     std::unique_ptr<DialogBodyLayout> dialogBody_; // 현재페이지의실제StyleText입력/표시복제를소유하며Compose때효과를재실행하지않는다.
     HtmlTextParserGlobals htmlGlobals_; // 원본의페이지간공유P억제전역이다.

@@ -14,6 +14,7 @@
 #include "client/GameMenuActions.h"
 #include "client/TellParameters.h"
 #include "client/TellSection.h"
+#include "client/TellFileMenus.h"
 #include "client/ClientAudio.h"
 #include "client/ClientMain.h"
 #include "client/ClientSubscriberGlobals.h"
@@ -259,6 +260,7 @@ UberGump::UberGump(Client& client) : client_(client),initLoginSubscriber_(client
     warnings_=&rawButtons_->EnableWarnings([this] { return client_.WallSeconds(); },[this] {
         client_.WorldAudio().Sounds().PlayByName("newWarnMessage.wav",0,0,0,0,0);
     },std::move(pauseContext));
+    fileMenus_=std::make_shared<TellFileMenus>(client_.Configuration(),[this](auto pattern) { return client_.Files().MatchDisk(pattern); }); // 실제 원문 OS 열거 순서와 장기 Config 수명을 같은 Client에 연결한다.
     dialogBody_=std::make_unique<DialogBodyLayout>(client_.Fonts(),client_.GetScreen().Colors(),client_.Assets(),client_.Assets().Edition());
     o::MissionGuideHooks guideHooks; // 같은 실제 현재 미션/전환 큐/창과 복원한 Guide 반복 몸체다.
     guideHooks.current=[this]() -> o::MissionStartState* { return missionRuntime_ && missionRuntime_->guided ? &missionRuntime_->state : nullptr; };
@@ -333,12 +335,12 @@ o::Config& UberGump::Script(std::string_view name) {
     const auto [it, inserted] = scripts_.emplace(key, std::move(script)); (void)inserted;
     return *it->second;
 }
-// @/% 목록은 원본 파일 이름으로 정렬하고 '--' 제목은 선택할 수 없는 구분선으로 둔다.
+// 미이행 % 표시 목록만 기존 어댑터로 확장한다. @/#는 메타 시점에 실제 본체가 작성한 라벨을 다시 해석하지 않는다.
 void UberGump::ExpandMenus(DialogPage& page) {
     std::vector<DialogItem> items;
     // 일반 항목은 유지하고 파일 목록 항목만 확장한다.
     for (auto item : page.items) {
-        if (item.menu && !item.label.empty() && (item.label[0] == '@' || item.label[0] == '%')) {
+        if (item.menu && !item.checkedDirective && !item.label.empty() && item.label[0] == '%') {
             // 빈 사용자 목록은 빈 메뉴다. 원본에 없는 캠페인을 만들지 않는다.
             for (const auto& path : client_.Files().Match(item.label.substr(1))) {
                 const auto name = std::filesystem::path(path).stem().string(); auto& script = Script(name);
@@ -355,7 +357,7 @@ void UberGump::ExpandMenus(DialogPage& page) {
 RawHtmlWindowContext UberGump::LoadingHtmlContext(ScreenRect mapView) { // 미션 안내의 실제 전체 HTML 경계를 같은 장기 소유자에 연결한다.
     htmlMapView_=mapView;RawHtmlWindowContext context;context.globals=client_.HtmlWindowGlobals();context.wallSeconds=[this] { return client_.WallSeconds(); };
     context.queue=[this](auto command,auto first,auto second) { client_.Input().Push(command,std::bit_cast<std::int32_t>(first),std::bit_cast<std::int32_t>(second)); };context.link=[this](auto token) { rawButtons_->Menus()->ActivateHtmlWindowLink(token); };
-    context.metadata.commands={DialogScriptCode,[](auto name) { std::clog<<"HTML 메타 명령 미연결: "<<name<<'\n'; }};context.metadata.strings=&scriptStrings_;context.metadata.maps=mapCatalog_.get();context.metadata.fileSpec=&mapFileSpec_;
+    context.metadata.commands={DialogScriptCode,[](auto name) { std::clog<<"HTML 메타 명령 미연결: "<<name<<'\n'; }};context.metadata.strings=&scriptStrings_;context.metadata.maps=mapCatalog_.get();context.metadata.fileSpec=&mapFileSpec_;context.metadata.fileMenus=fileMenus_;
     context.metadata.currentMap=[this]() -> std::string_view { htmlCurrentFortName_=mission_ ? mission_->FortName() : std::string{};return htmlCurrentFortName_; };context.metadata.fallbackMap=[this]() -> std::string_view { return pendingFortName_; };
     context.factory.globals=&htmlGlobals_;context.factory.html.command=[this](auto&,auto text) { QueueScriptCommand(text,client_.Input(),scriptStrings_,{DialogScriptCode,[](auto name) { std::clog<<"HTML 스크립트 명령 미연결: "<<name<<'\n'; }}); };
     BindHtmlConditionConfig(context.factory.html,client_.Configuration(),client_.Assets().Edition());BindHtmlPictureText(context.factory.html);
@@ -382,6 +384,12 @@ DialogMetadataHooks UberGump::MapMetadata() {
         if (item.checkedDirective) {
             if (!page.menuColumns) { begin(kTellMenuFlags);++page.menuColumns; }
         } else if (AppendTellMapMenus(item.label,page.menuColumns,hooks)) return;
+        else if (!item.label.empty() && (item.label.front()=='@' || item.label.front()=='#')) { // 실제 메타 처리 시점의 현재 cur.file/Config와 같은 고리를 사용한다.
+            fileMenus_->Append(FontBytes(item.label.substr(1)),item.action.commandCode,FontBytes(item.action.argument),item.label.front()=='@',scriptStrings_,[&](const auto& row) {
+                const auto decode=[](std::string_view bytes) { return o::DecodeOriginalText({reinterpret_cast<const std::uint8_t*>(bytes.data()),bytes.size()}); }; // 기존 표시 어댑터만 UTF-8 라벨을 사용한다.
+                auto entry=item;entry.label=decode(row.label);entry.action.parameter=row.parameter;entry.action.argument=row.separator ? std::string{} : decode(scriptStrings_.Resolve(row.parameter));entry.enabled=!row.separator && Supported(entry.action.command);entry.menuColumn=page.menuColumns-1;page.items.push_back(std::move(entry));
+            });return;
+        }
         item.menuColumn=page.menuColumns-1;page.items.push_back(std::move(item));
     };return metadata;
 }

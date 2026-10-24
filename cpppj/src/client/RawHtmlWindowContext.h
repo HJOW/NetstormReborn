@@ -6,6 +6,7 @@
 #include "client/HtmlTextParser.h"
 #include <memory>
 namespace netstorm::client { // HTML 부모의 실제 외부 경계 계약이다.
+class TellFileMenus; // 페이지보다 오래 등록된 실제 파일 Config 목록을 공유한다.
 struct RawHtmlFactoryServices { // 같은 현재 Config·HTML 전역/효과를 전체 생성에 빌린다.
     HtmlTextParserGlobals* globals{};HtmlTextParserHooks html; // Tell/Help도 같은 단락 억제 전역을 공유한다. 링크는 실제 부모 저장소에 연결한다.
     std::function<std::string(std::string_view,std::uint32_t)> substitute;std::function<std::string()> fallback; // 현재441660/OkButton의 원시 치환·조회다.
@@ -16,6 +17,7 @@ struct RawHtmlMetadataServices { // 같은 Client의 원시 명령/문자열 고
     std::function<std::string_view()> currentMap,fallbackMap; // 각 행 작성 시 현재 좁은 이름을 재조회한다.
     std::function<void(std::uint32_t)> tech;std::function<void(std::uint32_t,std::int32_t)> themeTech; // 실제 기술 목록의 선택된 하위 생성기다.
     std::function<void(std::string_view,std::uint32_t,std::string_view)> namedList,fileList; // @/# 목록의 원시 키/명령/인자 경계다.
+    std::shared_ptr<TellFileMenus> fileMenus; // 설치된 실제 @/# 본체이며 명시 하위 콜백을 공급하지 않았을 때만 사용한다.
     std::function<std::string(std::string_view,std::string_view,std::string_view)> inlineList; // % 목록이 반환하는 실제 좁은 문자열이다.
     std::function<void(std::int32_t,std::string_view,std::string_view)> input;std::function<void(std::string_view,std::string_view,std::string_view)> send; // 입력 창과 Zsend 패킷 장치이며 누락을 빈 성공으로 바꾸지 않는다.
 };

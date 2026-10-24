@@ -1,5 +1,6 @@
 // 원본 메뉴 계층의 실제 처리기를 단일 Client 등록표·트리·입력·표면에 조립한다.
 #include "client/RawMenuControls.h"
+#include "client/TellFileMenus.h"
 #include "client/DrawSort.h"
 #include "client/GumpFormBinding.h"
 #include "client/FloatingSpGump.h"
