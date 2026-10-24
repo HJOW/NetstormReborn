@@ -2085,6 +2085,18 @@ target_sources(netstorm_tests PRIVATE PlayerInitializationTests.cpp)
 target_sources(netstorm_tests PRIVATE ClientPlayerRecordsTests.cpp)
 # 이전 중단 자료의 Native310/170행과 실제 전체 자식·공통 수명/그리기를 등록한다.
 target_sources(netstorm_tests PRIVATE HudNsInfoTests.cpp HudNsInfoCreateTests.cpp NsInfoClientTests.cpp)
+# 준비 자료의 실제 Chat/Console/편집 버퍼/부착 Native 관측을 공통 검사에 등록한다.
+target_sources(netstorm_tests PRIVATE ChatWindowTests.cpp HudChatGeometryTests.cpp TextEntryGumpTests.cpp TextEntryBufferTests.cpp)
+# 실제 물리/공통 등록표/글꼴·픽셀/교체 수명의 결합을 별도로 검사한다.
+target_sources(netstorm_tests PRIVATE TextEntryClientTests.cpp)
+set_source_files_properties(ChatWindowTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_CHAT_WINDOW_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/chat-window-x86.tsv\"")
+set_source_files_properties(HudChatGeometryTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_HUD_CHAT_GEOMETRY_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/hud-chat-geometry-x86.tsv\"")
+set_source_files_properties(TextEntryGumpTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_TEXT_ENTRY_GUMP_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/text-entry-gump-x86.tsv\"")
+set_source_files_properties(TextEntryBufferTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_TEXT_ENTRY_BUFFER_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/text-entry-buffer-x86.tsv\"")
 set_source_files_properties(HudNsInfoTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_HUD_NSINFO_ATTACH_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/hud-nsinfo-attach-x86.tsv\"")
 set_source_files_properties(HudNsInfoCreateTests.cpp PROPERTIES COMPILE_DEFINITIONS

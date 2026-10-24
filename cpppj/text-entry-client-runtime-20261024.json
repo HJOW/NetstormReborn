@@ -1,0 +1,600 @@
+{
+  "unit": 400,
+  "goalComplete": false,
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "productSha256": "226ee33c0aab924a5b69aa1675aed1819bc8c649a22cb288394cdfcd84ef87cb",
+  "testBinarySha256": "33c8f433ac434abf68f513716d17f41baf98e68e4342b3c8159971f70c7ab617",
+  "sourceSha256": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+  "originalSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+  "sourceHashes": {
+    "cpppj/src/client/CMakeLists.txt": "9238aaeb002b5aea9bab8524c8804e1bbce29fe474be326a48f646ae857ead45",
+    "cpppj/src/client/RawButtonControls.cpp": "0c5077db064c0edd0625068b471187422283aecbbd602684550e16ae1644ecba",
+    "cpppj/src/client/RawMenuControls.cpp": "596a58930b94007814b3707de3901705c896d28817214cc22817cd2d21d111ea",
+    "cpppj/src/client/RawMenuControls.h": "50b6fbdc14e39a53b384e078244573e5dedf2fbb879dd6a91674515d7c762cf7",
+    "cpppj/src/client/RawTextEntryContext.h": "db1276543fd2bd507d0801b5008e382c96439138b92da1bd4ec3e3b0bbad129d",
+    "cpppj/src/client/RawTextEntryControls.cpp": "0e1044a618216b99c9b977bab6d8a10520203e0ecc2e404cff3dddfd8048c3c8",
+    "cpppj/src/client/RawTextEntryControls.h": "885bdf3396344690509539992063db884026e416e433a6593e20e83d3a20caa0",
+    "cpppj/src/client/ScrollingTextGumpWidgets.cpp": "5d74fae82e62133e95bb3d7ee0ba9333d2b206fdebc80944181320d7e5e71395",
+    "cpppj/src/client/ScrollingTextGumpWidgets.h": "c19ee6e3eb2f0d9dcf0cec02dfb451e9655f5687b0f6e85406d960191fa94e51",
+    "cpppj/src/client/TextEntryStorage.cpp": "5b0ac7e5a63a1b6b98b3eca8898d00117890ee522e237035a45f00353f067e7c",
+    "cpppj/src/client/TextEntryStorage.h": "0ad0de8c9702cfa97a5a4757feb65ecb2706a3fce763645130af893e2949db58",
+    "cpppj/tests/CMakeLists.txt": "42ad2cb8373e432b6e3c001c9b8fdd6aaf5a74086b7a0988bcef6063e2588903",
+    "cpppj/tests/TextEntryClientTests.cpp": "fd5b830fb7b60d209953441756116e0fcdd95504ed65aaa566eeb01bea1e6c10"
+  },
+  "referenceHashes": {
+    "cpppj/src/client/ChatWindow.cpp": "cb3551cdd872b771ca74473f075ba7f2cf8d5f7c0eedae5ff3b8e94c525c4cbd",
+    "cpppj/src/client/ChatWindow.h": "f4e93a45656ac015a9dfc8eac42bfc67edf465795bd917d2cee7df6f7a5af864",
+    "cpppj/src/client/HudChatGeometry.cpp": "97f31225f5724d28f91c2c3c640509825f85826914f4c4725f1d28fed362af7f",
+    "cpppj/src/client/HudChatGeometry.h": "35498649e7f244539123878661d076d412abed0611b59bb77b76255ed6957668",
+    "cpppj/src/client/TextEntryGump.cpp": "7c11109dcb73e569b60ae579100f45ea0dcb98c566576411681ec0e4590d29bc",
+    "cpppj/src/client/TextEntryGump.h": "72664b104fa3f8ae577d54d04b4f1a97ec681bdde577be39eac1a30fc0893796",
+    "cpppj/src/client/TextEntryBuffer.cpp": "5ee16d78d8396a2e112660d70a1ad26c2903d5cb830421248bf51855a9655725",
+    "cpppj/src/client/TextEntryBuffer.h": "6ef878ca104eae2a67bf0723f7dbfe7478ee16e549c5a40b70a9a0687a32530d",
+    "cpppj/src/client/GumpLifetime.cpp": "c0b7bacd2f1ed87a2b5e9c0854d2f89200574f1408d7ac738cec891a185ca57a",
+    "cpppj/src/client/GumpDraw.cpp": "b2fe442a6d02602ba0e9d72fcd1d302d7f40d925a40ed14b570196a95f12eb36",
+    "cpppj/src/client/GumpTextDraw.cpp": "2f845d2c3bbfa4df1552aef646cd9eb66378976e8f9f690ebd54a58d6411ebcf",
+    "cpppj/src/client/StyleTextBuffer.cpp": "2aa0f6983c460aa3d5a960085a8b1ed86f153cb0916246329878f6d1b77f8ea2",
+    "cpppj/src/client/ScrollGumpWidgets.cpp": "378d5b65e02f8e5e1693fca50b2a3582e07e53b0f3e2df4ffe36c3fb618f435b"
+  },
+  "preservedNativeHashes": {
+    "cpppj/tests/fixtures/chat-window-x86.tsv": "e7faa97fbd0bf4c4d8b9d5a48bb6c64e3930ed3a0365948f850ecf65623ee5e5",
+    "cpppj/tests/fixtures/chat-window-base-x86.tsv": "10733b34b909bbb32d0eac76e9fcb5b176dfbb105c81f71be542caa9f2434463",
+    "cpppj/tests/fixtures/hud-chat-geometry-x86.tsv": "9c3cb7eba22c800405b726861d102c4fa0deb4b911b5dbe4a77238984f22504a",
+    "cpppj/tests/fixtures/text-entry-gump-x86.tsv": "658245fb178eae9f9b03365caabd65f8f189fe04867babbcda0c102fca003474",
+    "cpppj/tests/fixtures/text-entry-buffer-x86.tsv": "aa792a6af93d503c2236c378936bd74f6ae2d300b28974e48c4f40d55a7f4109"
+  },
+  "rawHashes": {
+    "extracted/cpp-chat-window-400-build1.log": "6c82e191872e1a68082fcbd8e8890b0dbcc279c4da480d8fe13f9e4da1c40179",
+    "extracted/cpp-chat-window-400-edit2.py": "07ca803d2e3610da9d5cda498a18648458122a7acadc7b00714a9a552fa6df7d",
+    "extracted/cpp-chat-window-400-edit3.py": "0ec3afbc50132e86686f068aaeeede10bf84bd9467006419d91d5dcd33903a70",
+    "extracted/cpp-chat-window-400-build2.log": "ae23902b775c8a039ea4b2fcddf835e879442bac41cfc2535003e162db21f874",
+    "extracted/cpp-chat-window-400-native-replay.py": "8210b9f695bb10ad35565a20fe516f351123981eb2eb9e6f508253a920de1104",
+    "extracted/cpp-chat-window-400-native-replay1.log": "b52b98b5ea4d4488f589b2c955332102af6a65772ced6ed29a7f987261e9ab67",
+    "extracted/cpp-chat-window-400-native-replay1.json": "9246bb1b0579ef28e373c7b11aa241130574ce2e78cce5b14753b7c8a7d1c096",
+    "extracted/cpp-chat-window-400-checks.py": "34898cdcd92165fdfe92b623acfc676a03d1297785542397a40248dce0fe2c6b",
+    "extracted/cpp-chat-window-400-notes.md": "31b608512d4cf58e476f17a8fce7e7dc15b0d9aea38362e9fc8add842dae4146",
+    "extracted/cpp-chat-window-400-static-log.json": "a3cea3e99f7dadfee78edadfeb083601b9f93212b861b0dff84ad45312222072",
+    "extracted/cpp-chat-window-400-final.py": "ac51a9dc7c123f91f1eacd08c23b92ede2245c560f71973cacf337c545ac0822",
+    "extracted/cpp-chat-window-400-build3.log": "737fb0bcb12ac065028b35a5ee0ac46fc2463982e60f893beaf0d48707065a24",
+    "extracted/cpp-chat-window-400-focused1-driver.log": "14073b909fee792b4a8031ffdbd2985ba4f410d5e624f9f703c5e0c1624b0a4c",
+    "extracted/cpp-chat-window-400-focused1-before.json": "664289d975ffc88ec2a3c543fbe68ebfdfd0de8a523d2bf5f38747ac8c4836e6",
+    "extracted/cpp-chat-window-400-focused1-1.log": "860811e0b2f0957fe0c8e78bddc1126c72f9350c88770ae67c036aa4f776a72d",
+    "extracted/cpp-chat-window-400-focused1-progress1.json": "bbdcdd75ddbee9819865e98ef536367d3ed2e449d5a8d4ab32d5b07dabdddd9d",
+    "extracted/cpp-chat-window-400-focused1-2.log": "5075e076baeae15ccd1747c2c8ca3c8c4b90595549f2e2df8725079e1494c286",
+    "extracted/cpp-chat-window-400-focused1-progress2.json": "d8de42f24bfe9d213711a720216f160aa1eb9a25b47e1535f75a17ebf4935915",
+    "extracted/cpp-chat-window-400-focused1-3.log": "efcc36a0a5066bc84c1e108c84a6faed984ff7f0aa75887756f9e543b589f5a5",
+    "extracted/cpp-chat-window-400-focused1-progress3.json": "ed2d2ec6458ae4a5dc09f2514aec43cee42be832edbd612466417392a48b8e9c",
+    "extracted/cpp-chat-window-400-focused1-4.log": "caef703d6711ac5c20db7270599791613d588e7ba295cfec30b7ad341a0a13e3",
+    "extracted/cpp-chat-window-400-focused1-progress4.json": "46236beb8dff82aa1c70702626a3608dbd63039734d3b0ff7e0f0d088ac815e5",
+    "extracted/cpp-chat-window-400-focused1-5.log": "3f934afbe04effcafb3ac5c4bbfa1c1b86e59c52ec0b7d5e6fb15414ecad46ee",
+    "extracted/cpp-chat-window-400-focused1-console.bmp": "0bc55ac0c4ea878611a1277535a8b05ab54191bbe2533124add8a3d9b96b5474",
+    "extracted/cpp-chat-window-400-focused1-progress5.json": "5a25bf6b9cf6d2d819bd2d8e1825b7fc2ad9fea7257e16c709f5af6936b3a22f",
+    "extracted/cpp-chat-window-400-focused1.json": "39a2da65503f7874374fd93d3fd624e916b636dd6fbb035321f7b9813a2df702",
+    "extracted/cpp-chat-window-400-edit4.py": "981248a2a9711e69398f0886b8e22b9de718fbb3382745464a6cedfae830d344",
+    "extracted/cpp-chat-window-400-build4.log": "737fb0bcb12ac065028b35a5ee0ac46fc2463982e60f893beaf0d48707065a24",
+    "extracted/cpp-chat-window-400-focused2-before.json": "68a0d69a114a8f81189e8ffe5529086a11d4e98aec9ccc3dd96a0c3ab79cba44",
+    "extracted/cpp-chat-window-400-focused2-1.log": "860811e0b2f0957fe0c8e78bddc1126c72f9350c88770ae67c036aa4f776a72d",
+    "extracted/cpp-chat-window-400-focused2-progress1.json": "c00a2223f03246ad1b00a9e10115a250daadc08f5739de84cca85eaf3ab9595c",
+    "extracted/cpp-chat-window-400-focused2-2.log": "5075e076baeae15ccd1747c2c8ca3c8c4b90595549f2e2df8725079e1494c286",
+    "extracted/cpp-chat-window-400-focused2-progress2.json": "8133950fe47886cb861e7299c2c97935d876dd1f6226796c6055beb96292b2c9",
+    "extracted/cpp-chat-window-400-focused2-3.log": "efcc36a0a5066bc84c1e108c84a6faed984ff7f0aa75887756f9e543b589f5a5",
+    "extracted/cpp-chat-window-400-focused2-progress3.json": "508a3a1490a3d34e1a3cd6ab1586e4a17eb3800cdf6d170b9e4a8bc64a24fe44",
+    "extracted/cpp-chat-window-400-focused2-4.log": "caef703d6711ac5c20db7270599791613d588e7ba295cfec30b7ad341a0a13e3",
+    "extracted/cpp-chat-window-400-focused2-progress4.json": "47c97ec41eb9ef7319fc4a8fd764652054f1e7c38487d09e411d417a1c6bd6e3",
+    "extracted/cpp-chat-window-400-focused2-5.log": "b5b64a6315c7bc6542e3bedf631a3682e858664e0ecb92f6088ee7b56dcc7d12",
+    "extracted/cpp-chat-window-400-focused2-console.bmp": "0bc55ac0c4ea878611a1277535a8b05ab54191bbe2533124add8a3d9b96b5474",
+    "extracted/cpp-chat-window-400-focused2-progress5.json": "804541bb58776b8ba0829f3e0d56b11fee5719c96293a32c5556e8b09cff81f4",
+    "extracted/cpp-chat-window-400-focused2-6.log": "29c7ea49404747fbbdd472fce171133de89323a9ea3685396b327b2b47f3772a",
+    "extracted/cpp-chat-window-400-focused2-progress6.json": "52e49e8d30bd12759342b0cd65a91248f093cc5856a4f8c1a42360026069708a",
+    "extracted/cpp-chat-window-400-focused2-7.log": "426a3d77cc906c9a8caf6fe5c6c0c0e191465767a352e340c63ff7a8804e8c6a",
+    "extracted/cpp-chat-window-400-focused2-progress7.json": "c8f4263943c1288269efdd9d12de286a697e439e4131e4b3a7c1881aa452944b",
+    "extracted/cpp-chat-window-400-focused2-8.log": "f2105a03659dcd35ec440a769b319de162ebe6cb5c638b2caafff44a871839d2",
+    "extracted/cpp-chat-window-400-focused2-progress8.json": "db617b85884d0d7442f08ec29be13727dfc20454ecaaccbc3b6be5645cebf00a",
+    "extracted/cpp-chat-window-400-focused2-9.log": "eba35a6f6f19d9634b8f45e9e85b80911b6c26a7c83fa3f6124ee2a09d7a91a5",
+    "extracted/cpp-chat-window-400-focused2-progress9.json": "0672e0ab437281ad477d17c0d0b166129931f8ada8ba162440f356480f22ee21",
+    "extracted/cpp-chat-window-400-focused2-10.log": "5ca5531774b5f13fc82081a254cff97b0cd8481d48e9e41e2ed8aa3bdb8503e5",
+    "extracted/cpp-chat-window-400-focused2-progress10.json": "9f524bc4a5a6e4610f0622fdedd2fa8a04afdc1d41ef3ac4a36af5cb7d881a12",
+    "extracted/cpp-chat-window-400-focused2-11.log": "4e0cde1d19c18e8335926b907de08279c605765a208e161f4ed7ff8843838387",
+    "extracted/cpp-chat-window-400-focused2-progress11.json": "e0e29c0c63e12c16cf11bfd44136e151865770485e1cae2c06374cae91bc9d94",
+    "extracted/cpp-chat-window-400-focused2-12.log": "688dd03368db1e8e3668a88d62baabfaf41891dc28e61379dfeb1a07ec4e18c0",
+    "extracted/cpp-chat-window-400-focused2-progress12.json": "fd49a0f5cd7c60099c685776aa5db77c09fc3a79f4490cc9341707b14ff37560",
+    "extracted/cpp-chat-window-400-focused2.json": "b6551fc6de2ece923641993ebf0ab6194d07617f2b2bfd14941e6dede5e76a91",
+    "extracted/cpp-chat-window-400-ctest1.log": "ca6c02ae88bfe75870ca58ac7e7ce7154f7703083bb0393b0fc1c8bb6c5959fe",
+    "extracted/cpp-chat-window-400-audit.py": "f98a2e6cb77e06a9bb2744d18b0d95c53a87da95642bce141d11469dc9ee392e",
+    "extracted/cpp-chat-window-400-ctest1-tests.log": "395d823ccecc691652581e097e1016bfca411d05495742753e69faceb8e47cac",
+    "extracted/cpp-chat-window-400-ctest1.json": "808de2cf6bdba4c9de826bb8473abb4114d2d35368c95bf3bc2a30f35cb19e55",
+    "extracted/cpp-chat-window-400-build5.log": "0286f6f85ebd818c33fd24426fe39a4c3385ca40cca0504879788104b917be9d",
+    "extracted/cpp-chat-window-400-terminal.json": "b11ec739f124275ed04c6f07382d401db8c6140e0723ccf66916565dfb10f94c"
+  },
+  "builds": [
+    {
+      "index": 1,
+      "session": 37377,
+      "returnCode": 0,
+      "scope": "준비 Chat/편집 모듈 등록",
+      "path": "extracted/cpp-chat-window-400-build1.log",
+      "sha256": "6c82e191872e1a68082fcbd8e8890b0dbcc279c4da480d8fe13f9e4da1c40179",
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "index": 2,
+      "session": 82715,
+      "returnCode": 0,
+      "scope": "실제 공통 편집 조립; 검사 프로젝트 재생성 전에 평가된 빌드라 신규 통합은 build3에서 확인",
+      "path": "extracted/cpp-chat-window-400-build2.log",
+      "sha256": "ae23902b775c8a039ea4b2fcddf835e879442bac41cfc2535003e162db21f874",
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "index": 3,
+      "session": 41858,
+      "returnCode": 0,
+      "scope": "신규 실제 통합5검사 포함",
+      "path": "extracted/cpp-chat-window-400-build3.log",
+      "sha256": "737fb0bcb12ac065028b35a5ee0ac46fc2463982e60f893beaf0d48707065a24",
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "index": 4,
+      "session": 24566,
+      "returnCode": 0,
+      "scope": "원문 SetExcluded LF 계약에 맞춘 검사 기대 교정; 제품 본체 변경 없음",
+      "path": "extracted/cpp-chat-window-400-build4.log",
+      "sha256": "737fb0bcb12ac065028b35a5ee0ac46fc2463982e60f893beaf0d48707065a24",
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "index": 5,
+      "session": 19236,
+      "returnCode": 0,
+      "scope": "CMake 기존 LF 정리 뒤 재생성/빌드; 최종 검사와 같은 바이너리 확인",
+      "path": "extracted/cpp-chat-window-400-build5.log",
+      "sha256": "0286f6f85ebd818c33fd24426fe39a4c3385ca40cca0504879788104b917be9d",
+      "errors": [],
+      "warnings": []
+    }
+  ],
+  "focused": {
+    "productSha256": "226ee33c0aab924a5b69aa1675aed1819bc8c649a22cb288394cdfcd84ef87cb",
+    "testBinarySha256": "33c8f433ac434abf68f513716d17f41baf98e68e4342b3c8159971f70c7ab617",
+    "runs": [
+      {
+        "returnCode": 0,
+        "seconds": 0.89571229997091,
+        "log": "extracted/cpp-chat-window-400-focused2-1.log",
+        "filter": "ChatWindow_",
+        "counts": [
+          [
+            "1",
+            "0"
+          ]
+        ],
+        "names": [
+          "ChatWindow_IndependentNativeCreationInputHelperAndLifetime"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.4014655000064522,
+        "log": "extracted/cpp-chat-window-400-focused2-2.log",
+        "filter": "HudChatGeometry_",
+        "counts": [
+          [
+            "1",
+            "0"
+          ]
+        ],
+        "names": [
+          "HudChatGeometry_Native3960SizesAndCallbacks"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 1.0113327000290155,
+        "log": "extracted/cpp-chat-window-400-focused2-3.log",
+        "filter": "TextEntryGump_",
+        "counts": [
+          [
+            "1",
+            "0"
+          ]
+        ],
+        "names": [
+          "TextEntryGump_IndependentNativeConstructorAttachInputDrawLifetime"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.4171397000318393,
+        "log": "extracted/cpp-chat-window-400-focused2-4.log",
+        "filter": "TextEntryBuffer_",
+        "counts": [
+          [
+            "1",
+            "0"
+          ]
+        ],
+        "names": [
+          "TextEntryBuffer_IndependentNativeAllOperations"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.5048743999795988,
+        "log": "extracted/cpp-chat-window-400-focused2-5.log",
+        "filter": "TextEntryClient_",
+        "counts": [
+          [
+            "5",
+            "0"
+          ]
+        ],
+        "names": [
+          "TextEntryClient_RealStorageAddressesGrowthAndIndependentLifetimes",
+          "TextEntryClient_ActualConsoleTreeInputClipboardAndCompletion",
+          "TextEntryClient_RealGlyphSelectionCaretClipAndIdle",
+          "TextEntryClient_ConcurrentConsolesRetirementAndPartialCreationCleanup",
+          "TextEntryClient_BorrowedGlobalLogUsesSameStateAndActualFontFragments"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 1.8974958999315277,
+        "log": "extracted/cpp-chat-window-400-focused2-6.log",
+        "filter": "RawMenuControls_",
+        "counts": [
+          [
+            "12",
+            "0"
+          ]
+        ],
+        "names": [
+          "RawMenuControls_HelpActualTreePixelsAndOutsideInput",
+          "RawMenuControls_OwnedHelpStringsDriveRealMenuAndRelease",
+          "RawMenuControls_HelpActualHistoryButtonsAndReopen",
+          "RawMenuControls_HelpActualTypeInfoAndImage",
+          "RawMenuControls_FloatingSpActualPixelsAndLifetime",
+          "RawMenuControls_CommonTreeInputAndDisabledItem",
+          "RawMenuControls_HorizontalPointAndDeferredReplace",
+          "RawMenuControls_FancySubmenuPixelsAndCleanup",
+          "RawMenuControls_ObjectMenuCommandsAndCurrentConfig",
+          "RawMenuControls_CarrierAndObjectMenuChain",
+          "RawMenuControls_MissionLoadingUsesSharedTreeAndCancel",
+          "RawMenuControls_MinimapBeforeSessionAndAcrossWorldBindings"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.6491853999905288,
+        "log": "extracted/cpp-chat-window-400-focused2-7.log",
+        "filter": "GumpLifetime_",
+        "counts": [
+          [
+            "9",
+            "0"
+          ]
+        ],
+        "names": [
+          "GumpLifetime_PatchNative",
+          "GumpLifetime_CdNative",
+          "GumpLifetime_AdditionalNative",
+          "GumpLifetime_CreateTreeKillCleanupAndReuse",
+          "GumpLifetime_TreeReplacementDefersDestruction",
+          "GumpLifetime_BaseDoesNotUnregisterOrRemoveDialogs",
+          "GumpLifetime_CdIdleCapacity",
+          "GumpLifetime_ContractsAndCycles",
+          "GumpLifetime_CallbackExceptionKeepsWrittenState"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.564321200014092,
+        "log": "extracted/cpp-chat-window-400-focused2-8.log",
+        "filter": "NsInfoClient_",
+        "counts": [
+          [
+            "4",
+            "0"
+          ]
+        ],
+        "names": [
+          "NsInfoClient_FullRealChildrenBuffersAndHiddenPixelsBeforeSession",
+          "NsInfoClient_TwoRootsThenRealRetirementAndPageCleanup",
+          "NsInfoClient_PartialTranslationAndSelectedMetamapAreNotFakeSuccess",
+          "NsInfoClient_CurrentServerConfigAndNativeNameBufferRules"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.5226259999908507,
+        "log": "extracted/cpp-chat-window-400-focused2-9.log",
+        "filter": "ProductionInitialContext_",
+        "counts": [
+          [
+            "4",
+            "0"
+          ]
+        ],
+        "names": [
+          "ProductionInitialContext_ConstructsAllNativeChildrenWithoutSession",
+          "ProductionInitialContext_RepeatedConstructionAndGlobalPageRetirement",
+          "ProductionInitialContext_MissingTranslationKeepsAndRetiresPartialEffects",
+          "ProductionInitialContext_GameplayGlobalsKeepRealAliasesAndRejectDuplicate"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 1.5012361000990495,
+        "log": "extracted/cpp-chat-window-400-focused2-10.log",
+        "filter": "HudDock_",
+        "counts": [
+          [
+            "1",
+            "0"
+          ]
+        ],
+        "names": [
+          "HudDock_IndependentNativeBodiesAndNestedViewport"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.6785186999477446,
+        "log": "extracted/cpp-chat-window-400-focused2-11.log",
+        "filter": "HudDividerInput_",
+        "counts": [
+          [
+            "1",
+            "0"
+          ]
+        ],
+        "names": [
+          "HudDividerInput_Native13398StateAndCallbacks"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.571908300044015,
+        "log": "extracted/cpp-chat-window-400-focused2-12.log",
+        "filter": "UberRoot_",
+        "counts": [
+          [
+            "6",
+            "0"
+          ]
+        ],
+        "names": [
+          "UberRoot_Native160",
+          "UberRoot_RealTreeAndLifetimeTransfer",
+          "UberRoot_DockReadsLiveThisFields",
+          "UberRoot_MissingFactoryKeepsPriorEffects",
+          "UberRoot_MissingOldRootFailsAfterConstructionEffects",
+          "UberRoot_EmptyLeafNeedsNoGameHook"
+        ]
+      }
+    ],
+    "sameBinaries": true,
+    "originalsUnchanged": true
+  },
+  "firstFocused": {
+    "productSha256": "226ee33c0aab924a5b69aa1675aed1819bc8c649a22cb288394cdfcd84ef87cb",
+    "testBinarySha256": "bf6f4fd0fd47cd14b8c4b2a7299194add50904b40fa18da1a67092c22ab6082a",
+    "runs": [
+      {
+        "returnCode": 0,
+        "seconds": 0.9527774000307545,
+        "log": "extracted/cpp-chat-window-400-focused1-1.log",
+        "filter": "ChatWindow_",
+        "counts": [
+          [
+            "1",
+            "0"
+          ]
+        ],
+        "names": [
+          "ChatWindow_IndependentNativeCreationInputHelperAndLifetime"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.39267559989821166,
+        "log": "extracted/cpp-chat-window-400-focused1-2.log",
+        "filter": "HudChatGeometry_",
+        "counts": [
+          [
+            "1",
+            "0"
+          ]
+        ],
+        "names": [
+          "HudChatGeometry_Native3960SizesAndCallbacks"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.9891330000245944,
+        "log": "extracted/cpp-chat-window-400-focused1-3.log",
+        "filter": "TextEntryGump_",
+        "counts": [
+          [
+            "1",
+            "0"
+          ]
+        ],
+        "names": [
+          "TextEntryGump_IndependentNativeConstructorAttachInputDrawLifetime"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.4455256999935955,
+        "log": "extracted/cpp-chat-window-400-focused1-4.log",
+        "filter": "TextEntryBuffer_",
+        "counts": [
+          [
+            "1",
+            "0"
+          ]
+        ],
+        "names": [
+          "TextEntryBuffer_IndependentNativeAllOperations"
+        ]
+      },
+      {
+        "returnCode": 1,
+        "seconds": 0.49362840002868325,
+        "log": "extracted/cpp-chat-window-400-focused1-5.log",
+        "filter": "TextEntryClient_",
+        "counts": [
+          [
+            "5",
+            "1"
+          ]
+        ],
+        "names": [
+          "TextEntryClient_RealStorageAddressesGrowthAndIndependentLifetimes",
+          "TextEntryClient_RealGlyphSelectionCaretClipAndIdle",
+          "TextEntryClient_ConcurrentConsolesRetirementAndPartialCreationCleanup",
+          "TextEntryClient_BorrowedGlobalLogUsesSameStateAndActualFontFragments"
+        ]
+      }
+    ],
+    "sameBinaries": true,
+    "originalsUnchanged": true
+  },
+  "full": {
+    "returnCode": 0,
+    "seconds": 310.68164880003314,
+    "log": "extracted/cpp-chat-window-400-ctest1.log",
+    "productSha256": "226ee33c0aab924a5b69aa1675aed1819bc8c649a22cb288394cdfcd84ef87cb",
+    "testBinarySha256": "33c8f433ac434abf68f513716d17f41baf98e68e4342b3c8159971f70c7ab617",
+    "counts": [
+      [
+        "2719",
+        "0"
+      ]
+    ],
+    "sameBinaries": true,
+    "originalsUnchanged": true
+  },
+  "nativeReplay": {
+    "host": "HJOW-Athlon",
+    "lastFullDecompileHost": "HJOW-Athlon",
+    "lastFullDecompileDate": "2026-10-23",
+    "sourceSha256": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "originalSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "before": {
+      "cpppj/tests/fixtures/chat-window-x86.tsv": "e7faa97fbd0bf4c4d8b9d5a48bb6c64e3930ed3a0365948f850ecf65623ee5e5",
+      "cpppj/tests/fixtures/text-entry-gump-x86.tsv": "658245fb178eae9f9b03365caabd65f8f189fe04867babbcda0c102fca003474",
+      "cpppj/tests/fixtures/text-entry-buffer-x86.tsv": "aa792a6af93d503c2236c378936bd74f6ae2d300b28974e48c4f40d55a7f4109",
+      "cpppj/tests/fixtures/hud-chat-geometry-x86.tsv": "9c3cb7eba22c800405b726861d102c4fa0deb4b911b5dbe4a77238984f22504a"
+    },
+    "gameExecuted": false,
+    "guiExecuted": false,
+    "fixtureWritten": false,
+    "runs": [
+      {
+        "family": "decomp_chat_window",
+        "rows": 180,
+        "allSame": true
+      },
+      {
+        "family": "decomp_text_entry_gump",
+        "rows": 2292,
+        "allSame": true
+      },
+      {
+        "family": "decomp_text_entry_buffer",
+        "rows": 570,
+        "allSame": true
+      },
+      {
+        "family": "decomp_hud_chat_geometry",
+        "rows": 3960,
+        "allSame": true
+      }
+    ],
+    "success": true,
+    "seconds": 56.89962240005843,
+    "after": {
+      "cpppj/tests/fixtures/chat-window-x86.tsv": "e7faa97fbd0bf4c4d8b9d5a48bb6c64e3930ed3a0365948f850ecf65623ee5e5",
+      "cpppj/tests/fixtures/text-entry-gump-x86.tsv": "658245fb178eae9f9b03365caabd65f8f189fe04867babbcda0c102fca003474",
+      "cpppj/tests/fixtures/text-entry-buffer-x86.tsv": "aa792a6af93d503c2236c378936bd74f6ae2d300b28974e48c4f40d55a7f4109",
+      "cpppj/tests/fixtures/hud-chat-geometry-x86.tsv": "9c3cb7eba22c800405b726861d102c4fa0deb4b911b5dbe4a77238984f22504a"
+    },
+    "fixturesUnchanged": true
+  },
+  "terminal": {
+    "builds": [
+      {
+        "index": 1,
+        "session": 37377,
+        "returnCode": 0,
+        "scope": "준비 Chat/편집 모듈 등록"
+      },
+      {
+        "index": 2,
+        "session": 82715,
+        "returnCode": 0,
+        "scope": "실제 공통 편집 조립; 검사 프로젝트 재생성 전에 평가된 빌드라 신규 통합은 build3에서 확인"
+      },
+      {
+        "index": 3,
+        "session": 41858,
+        "returnCode": 0,
+        "scope": "신규 실제 통합5검사 포함"
+      },
+      {
+        "index": 4,
+        "session": 24566,
+        "returnCode": 0,
+        "scope": "원문 SetExcluded LF 계약에 맞춘 검사 기대 교정; 제품 본체 변경 없음"
+      },
+      {
+        "index": 5,
+        "session": 19236,
+        "returnCode": 0,
+        "scope": "CMake 기존 LF 정리 뒤 재생성/빌드; 최종 검사와 같은 바이너리 확인"
+      }
+    ],
+    "nativeReplaySession": 89281,
+    "nativeReplayReturnCode": 0,
+    "firstFocused": "focused1",
+    "firstFocusedReturnCode": 1,
+    "firstFocusedFailure": "Native4 통과 뒤 실제 통합5 중 잘못된 붙여넣기 LF 기대1check; 원문451b80 검토 후 검사만 교정",
+    "focused": "focused2",
+    "focusedSession": 10518,
+    "focusedReturnCode": 0,
+    "full": "ctest1",
+    "fullSession": 95959,
+    "fullReturnCode": 0,
+    "qaViewed": true,
+    "qaPath": "extracted/cpp-chat-window-400-focused2-console.bmp",
+    "originalGameExecuted": false,
+    "guiExecuted": false,
+    "goalComplete": false
+  },
+  "originals1394Unchanged": true,
+  "originalGameExecuted": false,
+  "guiExecuted": false,
+  "externalAgentsChange": {
+    "sha256": "7f853771930147c26e67d444ced94114992510a3fa072f5ed6bd63da7ba88bd9",
+    "stagedByThisUnit": false,
+    "description": "네임스페이스 주석 규칙 외부 변경 두 행을 보존"
+  },
+  "limits": [
+    "실제 Client 화면의 ChatWindow 설치·전체 네 자식/전역128줄 로그·callback/명령/수신자/Tab 목록 접합은 다음 단위",
+    "실제 raw Console13노드의 공통 생성/부착/입력/Draw/동시 수명과 편집 저장소는 이번 실제 통합 범위",
+    "clipboard/recipient/complete/submit은 선택 경계이며 실제 Win32 clipboard/Chatmanager 전송 완료를 뜻하지 않음",
+    "원문 정확한 용량 끝 NUL 쓰기/잘못된 주소는 호스트 범위 오류로 명시 거부; OOM 전체 EH 미완료",
+    "제외문자열은 원문 SetExcluded 교체/해제에서 반납하며 원문 소멸자가 반납하지 않는 경우는 저장소 수명까지 유지",
+    "새 full Uber의 create-before-old-kill을 위해 Production/Minimap 다중 제공자 접합 필요",
+    "모든 Early/캠페인/Demo 사용자 완주·Edit/언어별 시나리오 전체·완전 동일성 및393 Wide SaveOptions 원인은 미완료"
+  ]
+}

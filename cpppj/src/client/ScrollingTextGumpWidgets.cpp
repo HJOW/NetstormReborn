@@ -33,6 +33,13 @@ std::uint32_t StyleTextBufferStore::Construct(std::uint32_t token,std::int32_t m
     record->handler=std::make_unique<StyleTextBuffer>(record->state,fragments_,style_,maxLines,hooks_);
     records_.emplace(token,std::move(record));return token;
 }
+// 외부 전역 로그의 실제 상태에 생성하고 같은 조각/글꼴/출력 문맥에 등록한다.
+std::uint32_t StyleTextBufferStore::ConstructBorrowed(std::uint32_t token,StyleTextBufferState& state,std::int32_t maxLines) {
+    if (!token || records_.contains(token)) throw std::invalid_argument("StyleTextBuffer 새 외부 토큰 필요");
+    for (const auto& [key,record]:records_) if (&record->state==&state) throw std::invalid_argument("StyleTextBuffer 외부 상태 중복 생성"); // 동일 물리의 이중 생성을 거부한다.
+    auto record=std::make_unique<Record>(state);record->handler=std::make_unique<StyleTextBuffer>(state,fragments_,style_,maxLines,hooks_);
+    records_.emplace(token,std::move(record));return token;
+}
 // unique_ptr 레코드는 표 삽입으로 주소가 이동하지 않으며 소멸 전까지 같은 상태를 공급한다.
 StyleTextBufferStore::Record& StyleTextBufferStore::Entry(std::uint32_t token) const {
     const auto found=records_.find(token);if (!token || found==records_.end()) throw std::runtime_error("StyleTextBuffer 등록 토큰 없음");

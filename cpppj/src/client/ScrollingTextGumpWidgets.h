@@ -13,13 +13,21 @@ public:
         std::function<void(std::uint32_t)> release);
     // 원본 버퍼 생성자를 실제 새 상태에 호출한다. token은 외부 new(0x38)가 성공한 별도 식별자다.
     std::uint32_t Construct(std::uint32_t token,std::int32_t maxLines);
+    // Client 전역 로그 자체에 생성한다. 외부 상태는 Destroy까지 살아 있어야 하며 주소를 복사하지 않는다.
+    std::uint32_t ConstructBorrowed(std::uint32_t token,StyleTextBufferState& state,std::int32_t maxLines);
     // 기존 TextGump의 표시/입력에 같은 상태와 실제 버퍼 처리기를 공급한다. 없는 토큰은 거부한다.
     TextGumpBufferBinding Binding(std::uint32_t token) const;
     // 완료/표시 조각 소멸→호스트 free→기록 반납 순서다. 원본의 미완료 끝 칸 누락도 유지한다.
     void Destroy(std::uint32_t token);
 private:
     // handler는 같은 record.state를 참조하므로 레코드 주소를 이동하거나 상태 복사본을 만들지 않는다.
-    struct Record { /* state: +0 max/+4 완료 줄 수/+8 전체 칸/+c 센티널/+24 표시 줄 수/+28 미사용/+2c 변경/+30 줄바꿈 금지다 (StyleTextBufferState). */ StyleTextBufferState state;/* handler: 외부 이벤트·프로세스 동작을 실제 코드에 전달하는 처리기. */ std::unique_ptr<StyleTextBuffer> handler; };
+    struct Record {
+        std::unique_ptr<StyleTextBufferState> owned; // 일반 버퍼의 실제 상태만 소유하며 전역 로그는 빌린다.
+        StyleTextBufferState& state; // handler가 쓰는 실제 원문 필드의 고정 주소다.
+        std::unique_ptr<StyleTextBuffer> handler; // 같은 상태/조각을 사용하는 원문 처리기다.
+        Record():owned(std::make_unique<StyleTextBufferState>()),state(*owned) {} // 일반 버퍼 상태를 생성한다.
+        explicit Record(StyleTextBufferState& borrowed):state(borrowed) {} // 외부 상태 자체를 빌린다.
+    };
     // 안정된 현재 레코드를 실제 도달 시 읽는다. release 콜백은 현재 버퍼를 재귀 반납하면 안 된다.
     Record& Entry(std::uint32_t token) const;
     // fragments_: 0은 null이며 map의 주소는 삽입 후에도 안정된다. nextToken=0은 자동 토큰 발급 소진 상태다 (StyleTextState).

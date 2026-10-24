@@ -138,6 +138,8 @@ target_sources(netstorm PRIVATE
     ClientGameplayGlobals.cpp ClientGameplayGlobals.h ProductionControlContext.h
     ClientNsInfoGlobals.cpp ClientNsInfoGlobals.h RawNsInfoContext.h
     HudNsInfo.cpp HudNsInfo.h HudNsInfoCreate.cpp HudNsInfoCreate.h
+    ChatWindow.cpp ChatWindow.h HudChatGeometry.cpp HudChatGeometry.h
+    TextEntryGump.cpp TextEntryGump.h TextEntryBuffer.cpp TextEntryBuffer.h
     RawTerrainWorldBinding.cpp RawTerrainWorldBinding.h
     RawNormalTerrainWorldBinding.cpp RawNormalTerrainWorldBinding.h
     RawFortWorldLoadBinding.cpp RawFortWorldLoadBinding.h
@@ -229,3 +231,6 @@ target_sources(netstorm PRIVATE FortSelection.h FortSelection.cpp)
 target_sources(netstorm PRIVATE ClientSubscriberGlobals.h CurrentAllocationBytes.h)
 # 실제 Player/factory 할당과 세션 고정뷰의 수명 관문을 단일 Client에 둔다.
 target_sources(netstorm PRIVATE ClientPlayerRecords.h ClientPlayerRecords.cpp)
+
+# 실제 편집 메모리와 공통 UI 조립 계층을 함께 빌드한다.
+target_sources(netstorm PRIVATE TextEntryStorage.cpp TextEntryStorage.h RawTextEntryContext.h RawTextEntryControls.cpp RawTextEntryControls.h)

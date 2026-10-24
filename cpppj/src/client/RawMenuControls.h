@@ -14,6 +14,7 @@
 namespace netstorm::client {
 class RawCampaignSession; // 현재 지식 창도 같은 세션의 실제 기술/제외/생산 상태를 빌린다.
 struct RawNsInfoContext; // 전체 NSInfo 생성의 실제 Client 전역과 문자열 수명이다.
+struct RawTextEntryContext;class RawTextEntryControls; // 같은 실제 편집 버퍼/Console 조립 계층이다.
 // 같은 수집/정렬/클립 안에서 생산 패널의 원본 파생 Draw를 호출한다.
 struct RawMenuExternalGumps {
     std::function<TextGumpNode*(std::uint32_t)> text; // 같은 TextGump/StyleText가 읽는 외부 텍스트 노드다.
@@ -86,6 +87,9 @@ public:
     std::uint32_t CreateNsInfo(RawNsInfoContext context); // 실제 전체 숨김 NSInfo와 필수 Player8/Battle/문자/버튼을 생성한다.
     std::uint32_t NsInfoRoot() const; // 같은 현재 전역 토큰의 실제 생존 여부만 조회한다.
     void CloseNsInfo(); // 미부착/부분 생성도 같은 공통 자식 우선 수명으로 정리한다.
+    RawTextEntryControls& EnableTextEntry(RawTextEntryContext context); // 실제 편집 노드의 생성/입력/Draw를 같은 공통 장치에 연결한다.
+    RawTextEntryControls* TextEntryControls() const; // 설치된 실제 처리기만 조회한다.
+    void CloseTextEntries(); // 화면 교체에서 미부착/부분 생성도 같은 공통 수명으로 반납한다.
     ButtonGumpNode* BaseButton(std::uint32_t token) const; // 실제 특수 Button 파생도 공통 입력 처리기에 빌린다.
     QuickHelpPopupState& PopupState() const; // 지식 카드 표식과 전용 Help Back이 공유할 같은 실제 저장소다.
     void EnableHelp(RawHelpHooks hooks); // 현재 Client 경계를 같은 공통 트리에 한 번 연결한다.

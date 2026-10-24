@@ -1,5 +1,12 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-24 단위400 완료: 실제 Console 편집 UI와 공유 버퍼 기반
+
+- [x] AGENTS/공통/닷넷 인계·시작 **97dcd28f / 20261024-22 CP**를 확인했다. 현재/마지막 전체 정밀 디컴파일은 **HJOW-Athlon / 2026-10-23**이다. 새 전체 디컴파일/원본 직접 실행/GUI0이다. 작업 중 확인한 AGENTS의 namespace 주석 규칙 외부 변경 두 행은 보존하고 stage/커밋에서 제외한다.
+- [x] 미등록 ChatWindow/HudChatGeometry/TextEntryGump/TextEntryBuffer와 Native4검사를 제품/검사 빌드에 등록했다. TextEntryStorage의 실제 미초기화 문자/줄표 메모리·base+offset·재할당/반납, RawTextEntryControls의 실제 Console13노드/두 Slider·같은 기본 주소/공통 입력·글꼴·픽셀·선택/커서·벽시계/공통 수명을 연결했다. 다중 Console과 미부착/기본 생성 전 저장소의 정리도 연결했다. 공유 StyleTextBuffer는 외부 상태 자체를 빌릴 수 있으며 같은 물리의 중복 생성은 거부한다. 전역548758의128줄은 PE static ctor/dtor로 확인했다. 실제 ClientChatWindowGlobals/화면 설치·full Chat factory는 다음 접합이다.
+- [x] 최종 집중 **46/0**(신규 Native4+실제 통합5 포함), 읽기 전용 Native 재생 **7002행 전부 동일/fixture 변경0**, 전체 CTest **2719/0·310.68초**다. 실제 Console BMP를 직접 확인했다. 최종 제품 **226ee33c0aab924a5b69aa1675aed1819bc8c649a22cb288394cdfcd84ef87cb**, 검사 **33c8f433ac434abf68f513716d17f41baf98e68e4342b3c8159971f70c7ab617**가 집중/전체에서 같고 originals1394동일·보호/Native 추적 변경0이다. 빌드/최초 실패/수정 관측과 한계는 [완료 문서](docs/exe/cpp-text-entry-client-20261024.md)/[제품 보고서](cpppj/text-entry-client-runtime-20261024.json)에 기록했다. 원시는 `extracted/cpp-chat-window-400-*`이며 인계/선택 파일 감사 후 **20261024-23 CP**로 로컬 커밋한다. push하지 않는다.
+- [ ] 다음은 **ChatWindow 실제4자식/Client 수명의128줄 로그·append callback/.clear/.quit 등록·helper/명령/수신자/Tab 목록**, 실제 Win32 clipboard와 Chatmanager 선택 경계다. 현재 raw Console의 자산 기반 조립/픽셀 검사를 실제 Client 화면 연결 완료로 확대하지 않는다. 원문 exact-capacity 할당 밖 NUL은 호스트 오류로 거부하며 OOM 전체 EH는 미완료다. 원문 소멸자의 제외 문자열 미반납도 보고서에 구별했다. HTML 전체 공장/새 Uber·State/Core/Pool 순서·Production/Minimap 다중 제공자, 메타맵/서버 목록 전체, 모든 Early/캠페인/Demo 사용자 완주·Edit/언어별 시나리오 전체·완전 동일성 및393 Wide SaveOptions 원인은 남는다. /goal은 활성 상태다.
+
 ## 2026-10-24 단위399 완료: 실제 NSInfo 전체 생성과 공통 UI
 
 - [x] AGENTS/공통/닷넷 인계·깨끗한 시작 **53a1ebf9 / 20261024-21 CP**를 확인했다. 현재/마지막 전체 정밀 디컴파일은 **HJOW-Athlon / 2026-10-23**이다. 이전398은 실제 진척/커밋이었다. 새 전체 디컴파일/원본 게임 직접 실행은0이다.
