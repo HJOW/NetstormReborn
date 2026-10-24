@@ -59,6 +59,7 @@
 #include "o/RawSunFlyerFrame.h"
 #include "o/RawWindAviaryProcess.h"
 #include <type_traits>
+#include <sstream>
 using namespace netstorm::client;
 //BYTE변환의임시DWORD를원본공유owner로빌리는오류를거부한다.
 static_assert(!std::is_constructible_v<netstorm::o::RawBattleBroadcast,netstorm::o::OriginalEdition,std::span<const std::uint8_t>,netstorm::o::BattlePacketPeers&,std::uint8_t&,const bool&>);
@@ -3616,6 +3617,92 @@ TEST_CASE(CampaignProduction_ModalPagesPreservePanelBudgetAndResize) {
     for (int page=0;page<4;++page) { controls.SetControls(dialog,dialogLabels,1024,768,buttonAssets,true);wall+=.025;controls.Poll({InputCode::kRelease,500,350});CHECK(controls.Production()==identity && summary()==before); }
     controls.SetControls(game,gameLabels,1024,600,buttonAssets,true);panel.Resize(600);CHECK(controls.Production()==identity && summary().ends_with("\t80\t520\t10000"));const auto resized=summary();panel.Resize(600);CHECK(summary()==resized);
     controls.SetControls(game,gameLabels,1024,600,buttonAssets);CHECK(controls.Production()==nullptr);active=nullptr;CHECK(session.Core().bookkeeping.depth==0 && session.Core().destroy.PreDepth()==0 && session.Core().destroy.PostDepth()==0); // 기존 전체 반납 경로도 유지한다.
+}
+
+// 실제 Session/메뉴/공통 수명으로 패널의 외부 정리와 처리기 재생성을 검사한다.
+struct ProductionLifetimeScene {
+    const netstorm::test::dudespawn::DudeAssets& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078); // 보호 파일을 읽기만 하는 같은 자산이다.
+    SessionServicesFixture external;double wall{100};FontStore fonts{assets.files,"Arial"}; // Session과 글꼴보다 UI를 먼저 반납한다.
+    std::unique_ptr<RawCampaignSession> session;std::unique_ptr<RawButtonControls> controls;RawMenuControls* menus{}; // 실제 제품 처리기의 유일 소유자다.
+    std::uint32_t baseCount{}; // 패널 설치 전 공통 등록 개수다.
+    // 보호 Tutorial2 로그인/영어 Start를 실행하며 SP나 내용물을 검사 setter로 만들지 않는다.
+    ProductionLifetimeScene() {
+        auto services=external.Services();UseWorldTestLogin(services);
+        services.sound.wallSeconds=[this] { return wall; };
+        services.production.allocationBytes=[](std::span<std::uint8_t> bytes) { CHECK(bytes.size()==kProductionDeckBytes);std::fill(bytes.begin(),bytes.end(),std::uint8_t{0xa7}); };
+        services.production.effects.configInt=[](std::string_view key) { CHECK(key=="getTeleportTechFree");return 0; };
+        services.production.effects.modeAssertion=[] { throw std::logic_error("생산 수명 검사의 예상 밖 생산 모드 진단"); };
+        services.playerContent.gump=[this](auto id) { return controls ? controls->RegisteredGump(id) : 0U; };
+        services.playerContent.handle=[this](auto token,auto event,auto first,auto second) { CHECK(controls);return controls->HandleGump(token,event,first,second); };
+        ConfigInterface config([this](std::string_view path) { return assets.files.TryRead(path); });
+        config.Configuration().Assign("DataDir=\"d\"\ncurrentLanguage=\"english\"\nmissionSpec=\"{DataDir}\\{local.1}.{currentLanguage}\"\nfortSpec=\"{DataDir}\\{local.1}.fort\"\n[END]\n");
+        MissionScript script(config,"Tutorial2");CHECK(script.Loaded());auto fort=FortTemplate::Parse(assets.files.Read(script.FortPath()),assets.game.TypeTable());
+        session=std::make_unique<RawCampaignSession>(assets.game,assets.files,std::move(fort),script.FortName(),std::move(services));session->LoadLocalConnection();CHECK(session->LocalConnectionPhase()==14);
+        MissionFrameGateState gate;MissionStartState startState;CampaignMissionStartEffects effects; // 실제 Start의 명시 외부 장치다.
+        effects.settingsBytes=[](std::uint32_t,std::span<std::uint8_t>) { throw std::logic_error("보호 Tutorial2 수명 검사에서 AI 생성 도달"); };effects.gameSeconds=[] { return 0.0; };
+        effects.refreshSp=[] {};effects.refreshCommandGump=[] {};effects.resetCamera=[] {};effects.randomGeysers=[] { throw std::logic_error("보호 Tutorial2 수명 검사에서 세계 간헐천 생성"); };
+        RawCampaignMissionStartBindings start(*session,script,gate,startState,session->MissionStartSettings(),session->MissionAiSettings(),std::move(effects));start.Start();CHECK(session->Sp(1)==10000 && session->PlayerKnown()==1);
+        controls=std::make_unique<RawButtonControls>(OriginalEdition::Patch1078,RawButtonHooks{[this] { return wall; },{},{},[this](auto form,auto flags) { session->GumpForms().Destroy({static_cast<std::uint16_t>(form)},flags); }});
+        RawMenuHooks hooks;hooks.command=[](auto,auto,auto) {};hooks.readInt=[](auto,std::int32_t&) {};hooks.sound=[](auto) {};hooks.poll=[](auto) { return InputEvent{InputCode::kRelease,500,350}; };hooks.cursor=[](auto) {};
+        hooks.objectForms=[this]() -> GumpFormHost& { return session->GumpForms(); };hooks.gameSeconds=[] { return 0.0; };menus=&controls->EnableMenus(assets.game,fonts,std::move(hooks));
+        const auto& texture=assets.game.Find("fortGump");const auto metrics=assets.game.Shapes().SquidMetrics(texture.block,0); // 같은 실제 버튼 자산이다.
+        const std::array<GumpControl,1> buttons{{{0,{84,4,160,26},false,true,false}}};const std::array<std::string,1> labels{{"Game"}}; // 패널 밖의 생존 UI다.
+        controls->SetControls(buttons,labels,1024,768,{static_cast<std::uint32_t>(texture.block+70),0,metrics.width,metrics.height,{}});baseCount=Count();OpenProduction();
+    }
+    // Session의 Form과 서비스가 살아 있는 동안 UI 참조를 먼저 끊는다.
+    ~ProductionLifetimeScene() { controls.reset(); }
+    // 공개 설치 경계를 통해 새 처리기를 만들며 이전 객체를 새 공장 성공으로 재사용하지 않는다.
+    RawProductionControls& OpenProduction() {
+        return controls->EnableProduction(*session,assets.game,{[this] { return wall; },[](std::string_view) {},[](std::string_view) { throw std::logic_error("생산 수명 검사의 예상 밖 Tell"); },[](std::string_view key,std::int32_t fallback) { return key=="useProductTimers" ? 0 : fallback; }});
+    }
+    // 공통 보고서의 실제 등록 개수이며 생산 처리기 사본을 세지 않는다.
+    std::uint32_t Count() const { std::istringstream input(controls->Report());std::string label;std::uint32_t buttons{},count{};input>>label>>buttons>>count;CHECK(label=="RawButtons");return count; }
+    // 활성 등록표에서 같은 실제 파생 가상표를 가진 토큰 하나를 찾는다.
+    std::uint32_t Token(std::uint32_t vtable) const {
+        for (std::uint32_t id=1;id<1000;++id) { // 공통 수명과 동일한 실제999칸을 읽는다.
+            const auto token=controls->RegisteredGump(id);const auto* node=controls->Production()->Node(token);if (node && node->vtable==vtable) return token;
+        }return 0;
+    }
+    // 파생 소멸자가 끝난 뒤 공통 TextGump가 죽은 예산 주소를 거부하는지 확인한다.
+    bool TextRetired(std::uint32_t token) const { try { menus->TextBackend().Fit(token);return false; } catch (const std::runtime_error&) { return true; } }
+};
+
+TEST_CASE(CampaignProductionLifetime_GlobalCleanupRetiresRootAndBudget) {
+    ProductionLifetimeScene scene;auto& panel=*scene.controls->Production();const auto root=scene.Token(0x5069c0),budget=scene.Token(0x506948); // 실제 공통 등록표의 두 inline 저장소다.
+    CHECK(root && budget && root!=budget && scene.Count()>scene.baseCount);scene.controls->KillGump(root);scene.controls->CleanupGumps();
+    CHECK(scene.Count()==scene.baseCount && !panel.Node(root) && !panel.Node(budget));CHECK(scene.TextRetired(budget));
+    if (panel.Node(root) || panel.Node(budget)) return; // 최초 실패에서는 죽은 객체를 재삭제해 이후 검사의 공통 등록표를 손상시키지 않는다.
+    panel.Close();panel.Close();CHECK(scene.Count()==scene.baseCount);scene.controls->DisableProduction();CHECK(!scene.controls->Production() && scene.Count()==scene.baseCount);
+    auto& next=scene.OpenProduction();CHECK(scene.Token(0x5069c0)!=root && scene.Token(0x506948)!=budget);CHECK(!next.Node(root) && !next.Node(budget));
+    scene.controls->DisableProduction();CHECK(scene.Count()==scene.baseCount && scene.session->Sp(1)==10000);
+}
+
+TEST_CASE(CampaignProductionLifetime_IndependentBudgetCleanupRetiresText) {
+    ProductionLifetimeScene scene;auto& panel=*scene.controls->Production();const auto root=scene.Token(0x5069c0),budget=scene.Token(0x506948); // 예산만 별도로 반납하는 외부 수명 입력이다.
+    CHECK(root && budget);const auto before=scene.Count();scene.controls->KillGump(budget);scene.controls->CleanupGumps();
+    CHECK(scene.Count()==before-1 && panel.Node(root) && !panel.Node(budget));CHECK(scene.TextRetired(budget));
+    panel.Close();CHECK(scene.Count()==scene.baseCount && !panel.Node(root) && !panel.Node(budget));scene.controls->DisableProduction();CHECK(scene.Count()==scene.baseCount);
+}
+
+TEST_CASE(CampaignProductionLifetime_QueuedKillThenCloseDrainsOnce) {
+    ProductionLifetimeScene scene;auto& panel=*scene.controls->Production();const auto root=scene.Token(0x5069c0),budget=scene.Token(0x506948);const auto count=scene.Count(); // Cleanup 전에는 원래 주소/등록이 남아 있어야 한다.
+    scene.controls->KillGump(root);CHECK(panel.Node(root) && panel.Node(budget) && scene.Count()==count);CHECK(panel.Node(root)->flags&0x10000);
+    panel.Close();CHECK(scene.Count()==scene.baseCount && !panel.Node(root) && !panel.Node(budget) && scene.TextRetired(budget));
+    scene.controls->CleanupGumps();CHECK(scene.Count()==scene.baseCount);panel.Close();CHECK(scene.Count()==scene.baseCount);scene.controls->DisableProduction();CHECK(scene.Count()==scene.baseCount);
+}
+
+TEST_CASE(CampaignProductionLifetime_DuplicateOpenAndProviderRecreation) {
+    ProductionLifetimeScene scene;const auto before=scene.controls->Report();bool rejected{}; // 중복 생성은 설정/등록/기존 자식보다 앞에서 거부해야 한다.
+    try { scene.controls->Production()->Open(); } catch (const std::logic_error&) { rejected=true; }
+    CHECK(rejected && scene.controls->Report()==before);std::vector<std::uint32_t> retired; // 다른 처리기에 이전 주소의 토큰을 넘겨도 조회되지 않아야 한다.
+    for (int generation=0;generation<3;++generation) { // 실제 같은 Session과 공통 트리에서 세 처리기를 순서대로 교체한다.
+        const auto root=scene.Token(0x5069c0),budget=scene.Token(0x506948);CHECK(root && budget);retired.push_back(root);retired.push_back(budget);
+        scene.controls->DisableProduction();CHECK(!scene.controls->Production() && scene.Count()==scene.baseCount);
+        auto& next=scene.OpenProduction();CHECK(scene.Count()>scene.baseCount);
+        for (const auto token:retired) CHECK(!next.Node(token)); // 소멸한 inline 주소를 현재 처리기의 기본 주소로 되살리지 않는다.
+        CHECK(scene.session->Sp(1)==10000 && scene.session->PlayerKnown()==1);
+    }
+    scene.controls->DisableProduction();scene.controls->CleanupGumps();CHECK(scene.Count()==scene.baseCount);
 }
 
 // 실제 Early2 로그인/영어 Start와 같은 판정기가 현재 옵션/공급 범위/제작 장부를 공유한다.

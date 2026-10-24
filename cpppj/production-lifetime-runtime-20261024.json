@@ -1,0 +1,210 @@
+{
+  "unit": 396,
+  "date": "2026-10-24",
+  "host": "HJOW-Athlon",
+  "baseCommit": "da5f7b88",
+  "lastFullDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23"
+  },
+  "gameExecuted": false,
+  "guiExecuted": false,
+  "nativeExecuted": false,
+  "overallGoalComplete": false,
+  "liveUberConnected": false,
+  "actualClientProductionLifetimeFixed": true,
+  "problem": "공통 scalar 해제 뒤 inline 루트/예산 토큰이 남아 Node/Text 조회가 계속 성공했다. Close도 남은 루트 토큰을 재삭제하는 경로였다.",
+  "change": "Release에서 해당 토큰을 무효화하고 Open은 기존 inline 주소를 중복 생성하기 전에 거부한다. Kill 단계의 주소와 기존 공통 소멸 순서는 유지한다.",
+  "before": {
+    "productSha256": "48ee8913a25557dc3068839d3a80df6a119a52a9318fac5fe245392f558fea73",
+    "testBinarySha256": "bf939e30ee5bd2c036af309affbc7108e7a631b594c08ad1513a7bf47a4c7b79",
+    "runs": [
+      {
+        "returnCode": 1,
+        "seconds": 1.193496499909088,
+        "log": "extracted/cpp-production-lifetime-396-before1-1.log",
+        "counts": [
+          [
+            "2",
+            "5"
+          ]
+        ],
+        "names": [],
+        "filter": "CampaignProductionLifetime_"
+      }
+    ],
+    "sameBinaries": true,
+    "originalsUnchanged": true
+  },
+  "focused": {
+    "productSha256": "5be16784a7dfb4329dfa80fda808c4c2012f5c56ecf8123f9b672ba2fd89605a",
+    "testBinarySha256": "ac9238ed041ebe856ac17b1cac1039208ce422498395c765f824315c5b0acf32",
+    "runs": [
+      {
+        "returnCode": 0,
+        "seconds": 1.3614263000199571,
+        "log": "extracted/cpp-production-lifetime-396-focused1-1.log",
+        "counts": [
+          [
+            "4",
+            "0"
+          ]
+        ],
+        "names": [
+          "CampaignProductionLifetime_GlobalCleanupRetiresRootAndBudget",
+          "CampaignProductionLifetime_IndependentBudgetCleanupRetiresText",
+          "CampaignProductionLifetime_QueuedKillThenCloseDrainsOnce",
+          "CampaignProductionLifetime_DuplicateOpenAndProviderRecreation"
+        ],
+        "filter": "CampaignProductionLifetime_"
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.6057347999885678,
+        "log": "extracted/cpp-production-lifetime-396-focused1-2.log",
+        "counts": [
+          [
+            "1",
+            "0"
+          ]
+        ],
+        "names": [
+          "CampaignProduction_ModalPagesPreservePanelBudgetAndResize"
+        ],
+        "filter": "CampaignProduction_ModalPages"
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.5940440999111161,
+        "log": "extracted/cpp-production-lifetime-396-focused1-3.log",
+        "counts": [
+          [
+            "9",
+            "0"
+          ]
+        ],
+        "names": [
+          "GumpLifetime_PatchNative",
+          "GumpLifetime_CdNative",
+          "GumpLifetime_AdditionalNative",
+          "GumpLifetime_CreateTreeKillCleanupAndReuse",
+          "GumpLifetime_TreeReplacementDefersDestruction",
+          "GumpLifetime_BaseDoesNotUnregisterOrRemoveDialogs",
+          "GumpLifetime_CdIdleCapacity",
+          "GumpLifetime_ContractsAndCycles",
+          "GumpLifetime_CallbackExceptionKeepsWrittenState"
+        ],
+        "filter": "GumpLifetime_"
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.7643650999525562,
+        "log": "extracted/cpp-production-lifetime-396-focused1-4.log",
+        "counts": [
+          [
+            "8",
+            "0"
+          ]
+        ],
+        "names": [
+          "GumpTree_PatchNative",
+          "GumpTree_CdNative",
+          "GumpTree_AdditionalNative",
+          "GumpTree_CreatedAttachPushCollectionDraw",
+          "GumpTree_RealVirtualChildReflow",
+          "GumpTree_DepthChangesReachCollection",
+          "GumpTree_ContractsAndCycles",
+          "GumpTree_CallbackExceptionKeepsWrittenState"
+        ],
+        "filter": "GumpTree_"
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.49142899992875755,
+        "log": "extracted/cpp-production-lifetime-396-focused1-5.log",
+        "counts": [
+          [
+            "8",
+            "0"
+          ]
+        ],
+        "names": [
+          "GumpCreate_PatchNative",
+          "GumpCreate_CdNative",
+          "GumpCreate_AdditionalNative",
+          "GumpCreate_RootFailurePreservesOtherState",
+          "GumpCreate_CurrentGlobalsAfterAllocation",
+          "GumpCreate_FirstHoleUnregisteredAndFullTable",
+          "GumpCreate_CollectionDrawSameStorage",
+          "GumpCreate_ContractsAndCountLimit"
+        ],
+        "filter": "GumpCreate_"
+      }
+    ],
+    "sameBinaries": true,
+    "originalsUnchanged": true
+  },
+  "full": {
+    "returnCode": 0,
+    "seconds": 333.11829619994387,
+    "log": "extracted/cpp-production-lifetime-396-ctest1.log",
+    "counts": [
+      [
+        "2687",
+        "0"
+      ]
+    ],
+    "names": [],
+    "productSha256": "5be16784a7dfb4329dfa80fda808c4c2012f5c56ecf8123f9b672ba2fd89605a",
+    "testBinarySha256": "ac9238ed041ebe856ac17b1cac1039208ce422498395c765f824315c5b0acf32",
+    "sameBinaries": true,
+    "originalsUnchanged": true
+  },
+  "sourceSha256": {
+    "cpppj/src/client/RawProductionControls.cpp": "c3ec7bfb7f0eeaaddde3017a21e9c23e9215a61bb5779c3342d7722048cc9772",
+    "cpppj/src/client/RawProductionControls.h": "7139ff681dc39bf17261904110bf712723c114016c33ed81d8d8707eca2d9837",
+    "cpppj/tests/CampaignSessionTests.cpp": "3dfbc1055d186f387c5e61fe23238fbc99c19e13bf46c1aec88b2a0db2a256fd"
+  },
+  "evidenceSha256": {
+    "extracted/cpp-production-lifetime-396-before-wrapper1.log": "08b3135cfd3e4a4cab8280f164da709d57090fcf6eac3f04054a52b725f4c406",
+    "extracted/cpp-production-lifetime-396-before1-1.log": "4adeae88ecd30882014b32068c106dc30259d50384ef3b726c9cdd014e9385c3",
+    "extracted/cpp-production-lifetime-396-before1-before.json": "0d72a2c33f7aae5402eb74920590245d74af958d6836f7bf7c6bd865ac429ddd",
+    "extracted/cpp-production-lifetime-396-before1-progress1.json": "46411529c9ce0b2c8d805d46e5491a1baa40087981b7fe4438f557473fa09438",
+    "extracted/cpp-production-lifetime-396-before1.json": "e889c7e64f292571b9fd509edbf7649404bf1a9f123c85e782e9a1fba31a8e17",
+    "extracted/cpp-production-lifetime-396-build1.log": "68daf5268753a6f0253917d033a76282e07803e3b45f8c1951a34f7cbc6a3d34",
+    "extracted/cpp-production-lifetime-396-build2.log": "1ea86ea19501d943de492f40d69fbaf215fceeaf2df248d99850283b89789ba1",
+    "extracted/cpp-production-lifetime-396-build3.log": "68daf5268753a6f0253917d033a76282e07803e3b45f8c1951a34f7cbc6a3d34",
+    "extracted/cpp-production-lifetime-396-ctest-wrapper1.log": "3cc564621e97568948719d4ad9d157f6f53cfa245682bf01bbd3c27d10e8884d",
+    "extracted/cpp-production-lifetime-396-ctest1-tests.log": "ac0f8cdaee2a11b816be5edea3c7082332ab0c80761f569fa91240cb895f98f8",
+    "extracted/cpp-production-lifetime-396-ctest1.json": "e1511f434d9bc0267145a94f15b50068ae627fb06ac987e315bc3d1b2720fbf9",
+    "extracted/cpp-production-lifetime-396-ctest1.log": "3c6ad41627a7fb2388daef80b05e56a2d0da08668b14c3fb9c65721df31ffa34",
+    "extracted/cpp-production-lifetime-396-focused-wrapper1.log": "7feb803dac0ce5b68bf9191954bf38de91d5c467781a231b9e3cde34e77036fe",
+    "extracted/cpp-production-lifetime-396-focused1-1.log": "bcdc64dba65c54099e8e526e3ce03c4b3d9651a01e0eadc90b60f80688ab0cda",
+    "extracted/cpp-production-lifetime-396-focused1-2.log": "65c29b65651daea9299127314155b65f75b37bee950ee511f5b3678ff2ef220a",
+    "extracted/cpp-production-lifetime-396-focused1-3.log": "426a3d77cc906c9a8caf6fe5c6c0c0e191465767a352e340c63ff7a8804e8c6a",
+    "extracted/cpp-production-lifetime-396-focused1-4.log": "37662ace27eaf63e1be50f42fc617583edb59705d89880df8993c63dafa37a5e",
+    "extracted/cpp-production-lifetime-396-focused1-5.log": "aa6cc37ac629d28383eff622a0609a6cca329004851f29ceecefbe7af2a52077",
+    "extracted/cpp-production-lifetime-396-focused1-before.json": "6652c7a09e0ea25bdaa0f9462738a7e5567d74b7a0edf7af272da4f4d0d6a418",
+    "extracted/cpp-production-lifetime-396-focused1-progress1.json": "4e1d3d5efc9ab4e4960ee7a959617e135cad8346a44a16fd8942e5ae8c77593e",
+    "extracted/cpp-production-lifetime-396-focused1-progress2.json": "403e2ddf1a3731cc392f8db208ad56221def9e2586bd11bb93d0f068f50b572b",
+    "extracted/cpp-production-lifetime-396-focused1-progress3.json": "2b1d7e82cf51842b388b30d33ddbc2d2ddceee13c4c4e160607890a1060fed93",
+    "extracted/cpp-production-lifetime-396-focused1-progress4.json": "6a237e9499b8d3fa8ffc7fa54f9dfe3403da233daf9bb3798ebf0142d267a17b",
+    "extracted/cpp-production-lifetime-396-focused1-progress5.json": "8feebb17e0c43428efc5e03c978d40e2361a00da2e6d7ef070ee020b6c5d7678",
+    "extracted/cpp-production-lifetime-396-focused1.json": "08e8fbebc8d73731c49316b2eb54bea1790ab52d25d511d58ae7eddea7eaeb28"
+  },
+  "validationScriptSha256": {
+    "extracted/cpp-production-lifetime-396-checks.py": "78b53c9700ad6663dc05bf61b3645b5970dce764dc39e48b2f8d7c2a63333a0e",
+    "extracted/cpp-production-lifetime-396-final.py": "703efc41c2ee28597932398a08ecf37b8d2fd8068c90584e1e22bd804ae8b690"
+  },
+  "originals": {
+    "count": 1394,
+    "allBytesUnchanged": true
+  },
+  "protectedTrackedChanges": false,
+  "limitations": [
+    "실제 Tutorial2 로그인/영어 Start와 RawButtonControls/메뉴/TextGump를 실행한 콘솔 검사다. 새 GUI/수동 플레이 결과가 아니다.",
+    "395의 Uber 부모는 여전히 실제 Client 미연결이다. 실제 네 하위 공장/HTML과 공통 월드 저장소 수명 연결은 남았다.",
+    "Session 교체 이후에도 패널을 유지하는 새 소유권 모델이나 모든 미션 완주/Editor 동일성을 검증하지 않았다.",
+    "KillExceptType/NativeState 전체 부모를 실행한 검사가 아니라 같은 공통 Kill/Cleanup/파생 소멸자/Release를 사용한 실제 UI 수명 검사다."
+  ]
+}

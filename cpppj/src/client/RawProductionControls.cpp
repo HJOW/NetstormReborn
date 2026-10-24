@@ -123,6 +123,7 @@ struct RawProductionControls::Impl {
     }
     // 원본43e640의 생성 순서와 실제 두 격자/예산/배경 자식이다.
     void Open() {
+        if (rootToken) throw std::logic_error("현재 생산 패널 중복 생성"); // 같은 inline 주소를 다른 등록 토큰의 새 객체로 덮어쓰지 않는다.
         Prepare();rootToken=common.token();common.factory.Construct(rootToken,0,0,0,1);root.vtable=0x5069c0;root.command=44;root.flags|=0xe00;root.baseWidth=root.width=40;root.baseHeight=root.height=static_cast<float>(common.create.screenHeight);common.lifetime.SetIdle(rootToken,true);
         budgetToken=common.token();menus.TextBackend().Construct(budgetToken,0,0,0,0);budget.vtable=0x506948;common.lifetime.SetIdle(budgetToken,true);budget.alignFlags|=4;common.tree.Attach(budgetToken,0,0,rootToken,0);BudgetText();
         top=Background(40,root.baseHeight,4);auto& a=*backgrounds.at(top);a.alignFlags|=1;a.baseHeight=a.height=23;common.tree.Attach(top,0,0,rootToken,0);
@@ -226,7 +227,10 @@ std::uint32_t RawProductionControls::Handle(std::uint32_t token,std::uint32_t ev
 void RawProductionControls::Idle(std::uint32_t token) { impl_->Idle(token); } // 같은 현재 idle 표다.
 void RawProductionControls::ParentGone(std::uint32_t token,std::uint32_t parent) { if (impl_->grids.contains(token)) impl_->grid->ParentGone(token,parent);else impl_->common.lifetime.Kill(token); } // 가상+4를 구별한다.
 void RawProductionControls::DeleteScalar(std::uint32_t token,std::uint32_t flags) { if (impl_->hints.contains(token)) impl_->hint->DeleteScalar(token,flags);else if (impl_->Text(token)) impl_->menus.TextBackend().DeleteScalar(token,flags);else impl_->common.lifetime.DeleteScalar(token,flags); } // 같은 자식 우선 소멸이다.
-void RawProductionControls::Release(std::uint32_t token) { auto& s=*impl_;s.grids.erase(token);s.items.erase(token);s.images.erase(token);s.texts.erase(token);s.backgrounds.erase(token);s.hints.erase(token); } // 실제 release만 저장소를 반납한다.
+void RawProductionControls::Release(std::uint32_t token) {
+    auto& s=*impl_;if (token==s.rootToken) s.rootToken=0;if (token==s.budgetToken) s.budgetToken=0; // inline 주소도 scalar 해제 뒤에는 원래 토큰으로 조회할 수 없다.
+    s.grids.erase(token);s.items.erase(token);s.images.erase(token);s.texts.erase(token);s.backgrounds.erase(token);s.hints.erase(token);
+} // 공통 Release에서만 토큰과 동적 저장소를 반납하며 Kill 단계에는 주소를 유지한다.
 // 파일 팔레트 변경만 색표를 다시 만들며 일시 번개에는 재계산하지 않는다.
 void RawProductionControls::SetPalette(std::span<const ScreenColor> palette,std::span<const std::uint32_t> colorSortLogical) {
     if (palette.size()!=256) throw std::invalid_argument("생산 팔레트256색 필요");std::array<std::uint32_t,256> logical{};

@@ -1,5 +1,14 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-24 단위396 완료: 공통 정리 뒤 생산 패널의 실제 저장소 반납
+
+- [x] 시작 **da5f7b88 / 20261024-18 CP**·깨끗한 작업본이다. 현재/마지막 전체 정밀 디컴파일은 **HJOW-Athlon / 2026-10-23**이다. 새 디컴파일·Native·GUI·게임 실행0이며 보호 파일을 수정하지 않았다.
+- [x] 실제 Tutorial2 로그인/영어 Start·10000SP·Session/RawButtonControls/메뉴/TextGump로 루트 전체/예산 단독 Kill/Cleanup을 실행했다. 최초2검사에서 **5개 검증 실패·검사 종료1**로 죽은 inline 주소의 계속된 반환을 재현했다. wrapper 종료0은 기록 완료이며 검사 통과가 아니다. 최초 자료를 보존했다.
+- [x] RawProductionControls::Release에서 반납된 루트/예산의 토큰도 무효화했다. Kill 단계 주소와 기존 파생·공통 소멸 순서는 유지한다. 활성 Open 중복은 설정/등록/주소 덮어쓰기 전에 거부한다. 기존 Node/Text의0토큰 거부는 원래 있었으며 새 수정으로 주장하지 않는다.
+- [x] 신규4검사는 외부 정리→반복Close→새 처리기/예산단독정리/정리대기Close/중복Open무효과/처리기3회교체/이전토큰거부/등록개수·SP·Player 유지를 확인했다. 실제 KillExceptType/전체 NativeState 부모나 Session 교체 뒤 지속 소유권의 증거는 아니다. build1~3 종료0·관측 경고오류0이며 build2 뒤 실행 전 정적 검토로 화면 dirty 반환값과 삭제 큐 판정을 구분했다.
+- [x] 최종 집중 **30검사/실패0**, 전체 CTest **2687검사/실패0·종료0·333.12초**다. 제품/검사 SHA 전후 동일·원본1,394개 파일 바이트 동일·보호추적변경0이다. 제품 **5be16784a7dfb4329dfa80fda808c4c2012f5c56ecf8123f9b672ba2fd89605a**, 검사 **ac9238ed041ebe856ac17b1cac1039208ce422498395c765f824315c5b0acf32**다. [완료 문서](docs/exe/cpp-production-lifetime-20261024.md)와 [제품 보고서](cpppj/production-lifetime-runtime-20261024.json)에 최초 실패/소스3/원시 증거 SHA를 기록했다. UTF-8/링크/stage 감사 뒤 **20261024-19 CP**로 로컬 커밋한다. 원시는 `extracted/cpp-production-lifetime-396-*`다.
+- [ ] **395의 새 Uber는 여전히 Client 미연결이다.** 다음은 실제 월드/Pool/Session 수명과 미니맵·생산·전체 NSInfo·Chat·HTML 공장을 같은 공통 저장소에 연결하는 작업이다. 이번 수정은 실제 수명 결함의 해결이며 전체 HUD/Editor/모든 미션 완주·동일성 완성이 아니다. State/Core/cache/active/Player/SP/나머지 owner와 원본 경로 Wide 옵션 오류도 미해결이며 목표는 활성 상태다.
+
 ## 2026-10-24 단위395 완료: Uber 전체 생성/교체 부모와 this 도킹뷰
 
 - [x] 시작 **805b2717 / 20261024-17 CP**·깨끗한 작업본·AGENTS/공통/닷넷 인계를 재확인했다. 현재/마지막 전체 정밀 디컴파일은 **HJOW-Athlon / 2026-10-23**이다. 이번 디컴파일/보호 파일 변경0이다.394는 실제 진척이었으며 아래 결과는 이번 새 컴포넌트 검증과 구별한다.
@@ -9,7 +18,8 @@
 - [x] `DockView`/`HudDockNodeView`는 실제 Uber 필드를 직접 읽으며 등록0의 이전루트/별도8포인터 사본으로 바꾸지 않는다. 기존 HudDock 사용자는 기존 상태 getter로 연결했다. **4437f0은 실제C3 빈RET**이므로 필수 게임하위 요구를 제거하고 선택 관측만 제공한다. Native map은 과거 관측라벨이며 MapMode라는 지도/모드 계산이 아니다. 실제PE 종류는 **Uber54/divider55**이고 fixture의11은 명시 입력이다. 두VT의scalar4d4c40도 확인했다.10.72는 기존SourceMap4c77c0↔4cd000만 기록하며 구현/관측은1078전용이다.
 - [x] 전체 CTest1 **2683검사/실패0·종료0·299.02초**·제품/검사전후같음·원본1394동일·보호추적변경0이다. 최종 제품은 **48ee8913a25557dc3068839d3a80df6a119a52a9318fac5fe245392f558fea73**, 검사는 **9e38f088ddf38ee5c3f5438f109d53c2ff5e60c608d66e38e249e06757ee1df9**다. build7 20835/CTest38634는 종료0이다. [완료 문서](docs/exe/cpp-uber-root-20261024.md)와 [제품 보고서](cpppj/uber-root-runtime-20261024.json)에 소스9/Native/28증거SHA와 최초실패를 구별한다. UTF-8/링크/stage 감사를 마쳐 **20261024-18 CP**로 로컬 커밋한다. 원시는 `extracted/cpp-uber-root-395-*`다.
 - [ ] **실제 Client 연결은 미완료다.** 소스 호출자를 확인하면 새 부모의 live호출0이며 RawButtonControls는 기존 기본루트를 유지한다. 새 GUI/게임실행0이다. 이 단위의 Native/공통수명 증거를 실제 전체HUD/Editor 완성이나394의새플레이로 확대하지 않는다. 네 실제 전체 공장/HTML을 현재 공통 저장소에 연결해야 하며 Session 이전 생성/월드교체 수명도 보존해야 한다.
-- [ ] 다음 실제 선행 확인: RawProductionControls::Release는 inline root/budget token을 반납 후에도 유지하고 Node/Text는 해당 죽은 토큰을 계속 돌려줄 수 있다. 반면 RawMinimap::Release는 token0/displayPresentfalse다. 글로벌Kill/Cleanup→providerClose/교체 시 중복반납을 실제 검사로 재현/수정해야 한다. Node/Text의0토큰 거부는 이미 있으므로 추측한0토큰 버그를 새로 만들거나 고쳤다고 주장하지 않는다. RawProduction/Minimap의Session 참조와 Pool·world 모듈 수명도 실제Client 공통owner로 옮겨야 초기/State전환 전체생성이 가능하다. 미니맵은 core(game.Core()) 이후 session필드 사용이 없는지도 다시 확인해 분리할 수 있다.
+- [x] **396에서 수명 결함을 재현·수정했다.** 395 당시 RawProductionControls::Release는 inline root/budget token을 반납 후에도 유지하고 Node/Text는 해당 죽은 토큰을 계속 돌려줄 수 있었다. 반면 RawMinimap::Release는 token0/displayPresentfalse다. 396은 실제 공통Kill/Cleanup→providerClose/새 처리기로 반납/이전토큰거부/등록개수유지를 검증했다. Node/Text의0토큰 거부는 이미 있으므로 추측한0토큰 버그를 새로 만들거나 고쳤다고 주장하지 않는다.
+- [ ] RawProduction/Minimap의Session 참조와 Pool·world 모듈 수명도 실제Client 공통owner로 옮겨야 초기/State전환 전체생성이 가능하다. 미니맵은 core(game.Core()) 이후 session필드 사용이 없는지도 다시 확인해 분리할 수 있다.
 - [ ] 전체 State 부모/Core·cache·active/Pool/Player/SP/나머지목록owner, 논리HTML 공통Gump, Edit 최종HUD/도구/커스텀맵·언어시나리오/저장·재로드와 모든 Early/캠페인/Demo 사용자자연완주·완전동일성은 남았다.393 원본경로 Wide SaveOptions 오류도 이번 재생0/미해결이다. 목표는 활성 상태다.
 
 ## 2026-10-24 단위394 완료: Warning/Pause의 실제 공통 Gump 접합

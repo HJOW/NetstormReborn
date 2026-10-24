@@ -26,7 +26,7 @@ public:
     void Idle(std::uint32_t token); // 원본 예산 및 현재 부모 재연결이다.
     void ParentGone(std::uint32_t token,std::uint32_t parent); // 격자 가상+4를 구별한다.
     void DeleteScalar(std::uint32_t token,std::uint32_t flags); // 실제 텍스트/기본 수명이다.
-    void Release(std::uint32_t token); // 공통 scalar가 반납한 저장소만 지운다.
+    void Release(std::uint32_t token); // 공통 scalar가 반납한 동적 저장소와 inline 루트/예산의 토큰을 무효화한다.
     void SetPalette(std::span<const ScreenColor> palette,std::span<const std::uint32_t> colorSortLogical={}); //실제Client는같은고정초기RGB를별도전달하며기존독립검사는명시fallback이다. // 실제 파일 팔레트에서 원본 표를 생성한다.
     std::optional<ScreenPoint> Point(std::uint32_t type) const; // 같은 실제 이미지의 불투명 클릭점이다.
     std::string Report() const; // 실제 SID/경계/그림을 자동 입력에 공급한다.
