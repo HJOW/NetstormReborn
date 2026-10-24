@@ -1,0 +1,75 @@
+{
+  "unit": 413,
+  "goalComplete": false,
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "originalGameExecuted": false,
+  "cloneGameExecuted": false,
+  "guiExecuted": false,
+  "productSha256": "7019c9b89666408fb9ec64d43e24837be37638d1704e98ea1f0957aaff2af55f",
+  "testBinarySha256": "14fd53be428698677a18caecd8e192024808f7c5f6b740ee27140d97b5ca7e5c",
+  "sourceHashes": {
+    "cpppj/src/client/ClientGameplayGlobals.cpp": "8a3c0749611b1728c7fc51dcd15133393692038166572618e3a4bd8ae5d4a497",
+    "cpppj/src/client/ClientGameplayGlobals.h": "b24e858c93e5933aa3e0960a744043e7657f932c1d710c4f0ba9ab1c738b6367",
+    "cpppj/src/client/ClientMain.cpp": "8a6f7b9f7b26b31205c2392f238a584464a517aa2681a2034b49cd4af34edd89",
+    "cpppj/src/client/ClientMain.h": "0f7a9d3426b136ae3131267f1ec614497a416903eaa09fddcfae916f61daabd8",
+    "cpppj/src/client/RawCampaignSession.cpp": "5fe5347412b5349aebc8c7482ee064f1877153511b173839029ba0a7a2ad8d29",
+    "cpppj/src/client/UberGump.cpp": "5f665e680d44019a016a7c846f260efa8c983bea0f104bf82eb5dbd9cf2cceb8",
+    "cpppj/tests/CMakeLists.txt": "c56eb8b35c64ee5480674bd8933df9ee63ca748330b0ce12ed91197b4710dc1d",
+    "cpppj/tests/ClientScriptMenuOptionsTests.cpp": "ac3dcb1394bf92aebf54a84fc5ba7baf38fccf743b8eedbab91a9ac7530afa70",
+    "cpppj/tests/CampaignSessionTests.cpp": "d3ed2dd4c76b7423162a9fef3abc0eedf6ecd26f41e43ad1c2034a5c257f997e",
+    "cpppj/tests/HtmlWindowMetadataClientTests.cpp": "e578d28e7db4e870ec40fd3ddecbd4b6acc71bf8bd8548a238bc993997640912",
+    "tools/decomp_html_checked_options.py": "edf6dc241d6496c6e70192e900e1a230d0e85a5b0ce7f6c8714be0eee43754cb",
+    "cpppj/tests/fixtures/html-checked-options-x86.tsv": "4c707a5958cd5695810f51e3f3393a96fdfaa37761e011b369fea87ca5bf613d",
+    "docs/exe/cpp-html-checked-client-20261025.md": "a93ec7a65b4775f0f3aabb19157560d4e3cd805a6c97c3092cb9b3c8a0f060c3"
+  },
+  "referenceHashes": {
+    "AGENTS.md": "7f853771930147c26e67d444ced94114992510a3fa072f5ed6bd63da7ba88bd9",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "cpppj/src/o/ConfigInterface.cpp": "62852c460b740586da52b1ee727de96206198ba0a5e7ff4a18f6acf5086b308c",
+    "cpppj/src/o/RawEnergySupply.cpp": "c5597f73998872c29ecb266356405d084ad36b24c6248a3cfc1a1bc43d55f495",
+    "cpppj/src/o/RawPlayerWorld.h": "c8dcef4b3f28fdfc6e5cdf7a8b0a4003bc14aa8ca9cded22c17ab1e5c49c9de9",
+    "cpppj/src/client/MenuGumpControls.cpp": "ca1017cf31843d3de16929ef71a0f1fff9d177b3d33154d820674d366af5dc16",
+    "cpppj/src/client/HtmlWindowMetadata.cpp": "4b58577ebab26498104e8f187fa1b294f811bb08097bf7ccb15ebff079b7a5b6",
+    "cpppj/tests/fixtures/html-window-metadata-x86.tsv": "22aebb9dca3c67272a8867d53370051346258fb47880c240e51904764c1e62c5"
+  },
+  "rawHashes": {
+    "extracted/cpp-html-checked-413-audit.py": "d3ad56b23a60788ac898297a25bed8de2346dab29a3c8d83d582ec3357dc2303",
+    "extracted/cpp-html-checked-413-baseline.json": "56b75c7c1e0194b8d3c9a41ef58124bac06f66e714da6fd6babbd4f8fc198901",
+    "extracted/cpp-html-checked-413-build1.log": "05736e51e45c0aacbbaae06e9f0eaa5b20653c7c7e3cf0eea8d04ee1c338af92",
+    "extracted/cpp-html-checked-413-build2.log": "f578624fcf561f71a319c8e85a5d304511631953c08266a7139498160942c21d",
+    "extracted/cpp-html-checked-413-ctest1-tests.log": "9b766d5071cbd5a4aa1cad4eac83a3db0c91b75b9eab57abf347e5c6e3e2339a",
+    "extracted/cpp-html-checked-413-ctest1.log": "418d77364b0c8aa15c76f96d757cdf1cf54a4be7b6bb768a12b0039db09c0237",
+    "extracted/cpp-html-checked-413-fort1.log": "789b02da8f913776a6f9a5beb41e04351c753066bcc7e9c53d3f7c54ff54a8eb",
+    "extracted/cpp-html-checked-413-fort2.log": "789b02da8f913776a6f9a5beb41e04351c753066bcc7e9c53d3f7c54ff54a8eb",
+    "extracted/cpp-html-checked-413-meta1.log": "a483803ee6634b3bcd4cdd915c3c31ae92a40e99f8d4e322522d00d13fcd3922",
+    "extracted/cpp-html-checked-413-meta2.log": "6809736c702317f1a1a8ee78f7d7c00e00599b5961802d437ca8dcd7095c106f",
+    "extracted/cpp-html-checked-413-native-first.json": "7718dc4748c8e46dd408580b4ee0e2ce7e19cea07293f60d3255c6806727374e",
+    "extracted/cpp-html-checked-413-native.json": "138371165821dee29e6b671877834e0864df1bd2e7f65b11475c113f8e231ec0",
+    "extracted/cpp-html-checked-413-options1.log": "d35f5c1abc73b1b4fbb780feaf8d25c5e377b6ea49ff650c5e0f65a4740c24dd",
+    "extracted/cpp-html-checked-413-options2.log": "d35f5c1abc73b1b4fbb780feaf8d25c5e377b6ea49ff650c5e0f65a4740c24dd",
+    "extracted/cpp-html-checked-413-replay.json": "138371165821dee29e6b671877834e0864df1bd2e7f65b11475c113f8e231ec0",
+    "extracted/cpp-html-checked-413-shared1.log": "56005f1465123e7a5a4b455f923345bbd5dd3e109ab7c78bce27419f4c419db3",
+    "extracted/cpp-html-checked-413-shared2.log": "56005f1465123e7a5a4b455f923345bbd5dd3e109ab7c78bce27419f4c419db3"
+  },
+  "protectedAudit": {
+    "compared": 1821,
+    "changed": []
+  },
+  "checks": {
+    "nativeSliceRows": 144,
+    "nativeInstructions": 1410,
+    "nativeReadOnlyReplay": true,
+    "focusedPassed": 20,
+    "fullPassed": 2790,
+    "fullFailedChecks": 0
+  },
+  "limits": [
+    "435220 전체 설정 함수가 아니라4353ea..43541a 슬라이스다. ReadInt의 현재 DWORD/누락 처리는 명시 장치다.",
+    "x87을 사용하지 않는 정수 경로이며 두 정밀도 비교를 별도로 수행하지 않았다.",
+    "Client의 기존55a480 표현은 bool이다. 임의 비영 DWORD의 전체 비트 표현 복원은 주장하지 않는다.",
+    "다른 공급 상태의 기존 Session 초기화는 유지한다. NativeState 전체 순서와 기존 Tell 전체 부모/Guide/full Uber·전체 사용자 완주는 미완료다."
+  ]
+}

@@ -140,6 +140,7 @@ public:
     o::ConfigInterface& Configuration();
     // 원본0054db30의 Client 수명 DWORD를 빌린다. 저장할 때 설정을 다시 조회하지 않는다.
     const std::uint32_t& ReadOnlyForts() const;
+    std::uint32_t ScriptMenuGlobal(std::uint32_t address) const; // HTML Checked가 같은5cab30/55a480의 현재 허용 조건을 읽는다. 다른 주소는 거부한다.
     // 미션 교체와 무관한 같은 실제 장부의 공유 수명을 Session에 전달한다.
     const std::shared_ptr<o::RawFortBadgesGlobals>& FortBadges() const;
     const std::shared_ptr<FortTypeConversionStorage>& FortTypeConversion() const; // 로더들이 같은 current DWORD와 실제255BYTE 할당을 빌린다.
@@ -201,6 +202,7 @@ private:
     void InterpretOptions();
     // 원본00435860의 현재 ReadInt만 재해석한다. 설정 변경 callback과 초기 해석이 공유한다.
     void InterpretFortFileOptions();
+    void InterpretScriptMenuOptions(); // 원본4353ea의 개발 모드0/현재 userCheat ReadInt·허용값 검사를 같은 장기 전역에 적용한다.
     // 원본 FUN_00436260: 로딩 화면(검은 바탕, 가운데 그림, 오른쪽 아래의 두 줄 글).
     void PaintLoading(NativeHandle dc);
     // 원본 FUN_00436450: 프레임 제한 뒤 그리고 창으로 내보낸다.

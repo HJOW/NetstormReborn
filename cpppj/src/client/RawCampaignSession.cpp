@@ -337,7 +337,7 @@ struct RawCampaignSession::Impl {
     CursorDropState& cursorDrop{gameplayGlobals->cursor}; // 초기 HUD와 같은 실제 취득/배치/취소/마우스 전역이다.
     CursorManaGlobals cursorManaGlobals; // 현재 마나 종류/반경과 월드 좌표 제한 전역이다.
     std::unique_ptr<RawCursorMana> cursorMana; // Kernel을 먼저 비운 뒤 해제하는 실제 마나 프레임/수명 몸체다.
-    EnergySupplyState energyState; // 마나 반경과 별개인 실제 제곱 반경 및 공급 전역이다.
+    EnergySupplyState& energyState{gameplayGlobals->energy}; // 같은 Client의 공급 전역을 빌려 메뉴/설정과5cab30의 실제 주소를 공유한다.
     SquidPostPopList energySources{std::vector<std::uint32_t>(kEnergySourceCapacity),0}; // 4fcb80의 실제30칸 lastSource다.
     std::unique_ptr<RawEnergySupply> energySupply; // 현재 장부 공급원/동맹/타입을 직접 읽는 실제 배치 에너지다.
     std::vector<ConstructionBuilderType> builderTypes=std::vector<ConstructionBuilderType>(188); // 같은 실제 TYPE의 속도/theme/A..P 첫 프레임이다.

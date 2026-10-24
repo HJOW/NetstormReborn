@@ -186,6 +186,7 @@ add_executable(netstorm_tests
     EditorWorldFinishTests.cpp
     CampaignFortSnapshotTests.cpp
     ClientFortFileOptionsTests.cpp
+    ClientScriptMenuOptionsTests.cpp
     FortSnapshotParentTests.cpp
     FortMoneySaveTests.cpp
     FortMissionSaveTests.cpp

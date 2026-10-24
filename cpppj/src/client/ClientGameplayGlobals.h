@@ -3,6 +3,7 @@
 #include "client/RawCursorDrop.h"
 #include "o/RawCampaignWorldLoad.h"
 #include "o/RawContainedFinder.h"
+#include "o/RawEnergySupply.h"
 #include <memory>
 
 namespace netstorm::client {
@@ -32,6 +33,8 @@ public:
     CursorDropState cursor{.lockDepth=1}; //5325c8 초기 잠금1과 실제 현재 조각/마우스/플래그다.
     o::ContainedFinderState finder; // 실제 현재 권한/TYPE6/진단을 모든 생산 소비자가 공유한다.
     o::CampaignWorldGlobals world; // 실제 두 Subscriber와 editor/missionPost를 같은 주소에서 보관한다.
+    o::EnergySupplyState energy; // 공급 모듈과 메뉴가 같은5cab30을 빌린다. userCheat은 Runtime 교체로 지우지 않는다.
+    std::uint32_t specialAuxiliary{}; // 원문55a484이며 설정 해석에서55a480과 함께0으로 쓴다. 별도 기능 해석은 후속이다.
 private:
     RawCampaignSession* current_{};bool borrowed_{}; // 게임 값의 대체가 아닌 현재 C++ Runtime 대여다.
 };

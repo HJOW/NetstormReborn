@@ -4786,10 +4786,12 @@ TEST_CASE(CampaignSharedStorage_ForeignAssetsFailBeforePhysicalMutation) {
 // 실제 두 Session과 Client가 커서/검색/Player/editor의 같은 주소를 공유하며 Runtime만 교체한다.
 TEST_CASE(CampaignSharedGameplay_TwoActualSessionsPublishAndRetireSameGlobals) {
     Client client(SessionLinksOptions());SessionServicesFixture external;auto globals=client.GameplayGlobals();auto storage=MakeRawSurfaceStorage(netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078).game);const auto* cursor=&globals->cursor;const auto* finder=&globals->finder; // 창 없는 실제 자산 물리와 같은 Client 전역 고정 주소다.
+    const auto* energy=&globals->energy;globals->energy.userCheat=0x845fed;globals->player.special=true; // 설정 전역은 실제 Runtime 생성 전에 같은 Client에 존재한다.
     for (int generation=0;generation<2;++generation) { // 실제 첫 반납 뒤 새 Session을 설치한다.
         auto services=SharedKernelServices(client,external);services.gameplayGlobals=globals;services.subscriberGlobals=client.SubscriberGlobals();services.surfaceStorage=storage;
         auto session=SharedKernelSession(std::move(services));CHECK(globals->Borrowed() && &globals->RequireSession()==session.get());session->Load();const auto context=session->ProductionContext();
         CHECK(context.gameplay==globals && context.players==client.PlayerRecords() && context.storage==storage);CHECK(&session->CursorDropSettings()==cursor && &session->ProductionFinder()==finder);
+        CHECK(&session->EnergySettings()==energy && client.ScriptMenuGlobal(0x5cab30)==0x845fed && client.ScriptMenuGlobal(0x55a480)==1);session->EnergySettings().userCheat=17;CHECK(globals->energy.userCheat==17 && client.ScriptMenuGlobal(0x5cab30)==17);globals->energy.userCheat=0x845fed; // 메뉴/공급/Client가 값 복사 없이 같은 실제 주소를 쓴다.
         CHECK(session->PlayerKnown()==globals->player.playerKnown && session->LocalOwner()==globals->player.battleOwner && session->TemplateOwner()==globals->player.templateOwner && session->Editor()==globals->world.editor);
         session.reset();CHECK(!globals->Borrowed() && globals->player.playerKnown==0 && globals->cursor.lockDepth==1 && client.GetKernel().Size()==0);bool missing{};
         try { globals->RequireSession(); } catch (const std::logic_error&) { missing=true; }CHECK(missing); // 폐기한 Runtime을 다시 공개하지 않는다.

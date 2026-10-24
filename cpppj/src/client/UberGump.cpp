@@ -366,6 +366,7 @@ RawHtmlWindowContext UberGump::LoadingHtmlContext(ScreenRect mapView) { // 미�
     context.read=[this](auto address)->std::uint32_t { switch (address) {
         case 0x531860:case 0x5c78f0:return static_cast<std::uint32_t>(client_.GetScreen().Width());case 0x531864:case 0x5c78f4:return static_cast<std::uint32_t>(client_.GetScreen().Height());
         case 0x5ca9b4:return static_cast<std::uint32_t>(htmlMapView_.right-htmlMapView_.left);case 0x5ca9cc:return std::bit_cast<std::uint32_t>(htmlMapView_.left);case 0x5ca9d0:return std::bit_cast<std::uint32_t>(htmlMapView_.top);case 0x5ca9d4:return std::bit_cast<std::uint32_t>(htmlMapView_.right);case 0x5ca9d8:return std::bit_cast<std::uint32_t>(htmlMapView_.bottom);case 0x563e38:return rawButtons_->RootToken();
+        case 0x5cab30:case 0x55a480:return client_.ScriptMenuGlobal(address); // Checked의 실제 Client/공급/Player 전역이다.
         default:throw std::logic_error("전체 HTML 현재 Client 전역 미연결: "+std::to_string(address));
     } };return context;
 }
@@ -383,6 +384,7 @@ DialogMetadataHooks UberGump::MapMetadata() {
             });
         if (item.checkedDirective) {
             if (!page.menuColumns) { begin(kTellMenuFlags);++page.menuColumns; }
+            item.enabled=item.enabled || client_.ScriptMenuGlobal(0x5cab30)!=0 || client_.ScriptMenuGlobal(0x55a480)!=0; // 구형 표시 어댑터도 같은 원문 단락 평가 순서로 활성 조건을 읽는다.
         } else if (AppendTellMapMenus(item.label,page.menuColumns,hooks)) return;
         else if (!item.label.empty() && (item.label.front()=='@' || item.label.front()=='#')) { // 실제 메타 처리 시점의 현재 cur.file/Config와 같은 고리를 사용한다.
             fileMenus_->Append(FontBytes(item.label.substr(1)),item.action.commandCode,FontBytes(item.action.argument),item.label.front()=='@',scriptStrings_,[&](const auto& row) {

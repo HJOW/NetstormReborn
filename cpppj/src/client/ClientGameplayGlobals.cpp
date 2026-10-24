@@ -11,7 +11,9 @@ ClientGameplayGlobals::ClientGameplayGlobals(std::shared_ptr<ClientSubscriberGlo
 // Session 모듈보다 먼저 대여하여 아직 살아 있는 전역을 초기화하지 않는다.
 ClientGameplayGlobals::Use::Use(ClientGameplayGlobals& globals):globals_(globals) {
     if (globals_.borrowed_) throw std::logic_error("현재 게임 전역 중복 대여");
-    globals_.borrowed_=true;globals_.player={};globals_.cursor=CursorDropState{.lockDepth=1};globals_.finder={};globals_.world.editor=0;globals_.world.missionPost=true;
+    const auto special=globals_.player.special;const auto userCheat=globals_.energy.userCheat; // 설정 해석이 소유하는 두 전역은 다음 Runtime에도 같은 값을 유지한다.
+    globals_.borrowed_=true;globals_.player={};globals_.player.special=special;globals_.cursor=CursorDropState{.lockDepth=1};globals_.finder={};globals_.world.editor=0;globals_.world.missionPost=true;
+    globals_.energy={};globals_.energy.userCheat=userCheat; // 나머지 공급 상태는 기존 Session 초기화 의미를 유지한다. NativeState 전체 초기화 이행과 구별한다.
 }
 // Player/커서의 기존 C++ 소멸 의미를 장기 전역의 명시 무효화로 바꾸며 두 Subscriber는 유지한다.
 ClientGameplayGlobals::Use::~Use() { globals_.current_=nullptr;globals_.player.playerKnown=0;globals_.cursor=CursorDropState{.lockDepth=1};globals_.world.editor=0;globals_.borrowed_=false; }

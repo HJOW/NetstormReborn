@@ -1,5 +1,17 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-25 단위413 완료: Checked의 실제 Client 전역·설정/공급 수명 연결
+
+- [x] 단위412 **fd89d7f1 / 20261025-06 CP** 뒤 이어서 진행한다. 현재/마지막 전체 정밀 디컴파일은 **HJOW-Athlon / 2026-10-23**이다. 새 전체 디컴파일/원본 직접 실행/새 GUI0이며 보호 기준은 `extracted/cpp-html-checked-413-baseline.json`이다.
+- [x] 실제4353ea..43541a 설정 슬라이스 **144행·1410명령**을 관측/읽기 재생했다. ReadInt의 현재값/누락은 명시 장치이며 전체435220 설정 함수나 두 x87 정밀도 실행으로 주장하지 않는다. 원문EBX0은43523b에서 확인했다.
+- [x] 설정 변경/최초 해석의 개발 모드·인접DWORD0 및 유일한 userCheat 허용값0x845fed 검사를 실제 장기 전역에 연결했다. 공급 상태를 Client 소유로 옮겨 실제 Session이 참조하며, Runtime 취득에서 userCheat/특수 모드를 보존한다. 다른 공급 상태의 기존 Session 초기화 의미는 유지하며 NativeState 전체 순서 이행과 구별한다.
+- [x] 기존 Tell 표시와 전체 HTML Checked가5cab30/55a480을 같은 Client에서 현재값으로 읽고 원문 단락 평가 순서를 유지한다. 기존55a480 표현은 bool이며 임의 비영DWORD 전체 비트 표현을 복원했다고 주장하지 않는다.
+- [x] 첫 빌드 종료0, 실제 Config/144행2검사·두 Session2검사·기존 옵션5검사는 통과했다. 새 메타1검사의 기대 비트를 checked4에서 원문 disabled0x200으로 바로잡았다. 기존 메뉴 본체/제품 로직은 수정하지 않았고 첫 실패 원시는 보존했다.
+- [x] 최종 빌드2 종료0, 같은 최종 바이너리에서 설정2+메타11+실제 Session2+기존 옵션5=**20/0**이다. 원문144행과 실제0x200 비활성/현재 전역 단락 평가·두 Runtime의 동일 주소/값 보존을 확인했다.
+- [x] 전체 CTest **2790/0·327.48초**, 보호 **1821개 동일**이다. 두 빌드 관측 경고오류0이며 제품 **7019c9b89666408fb9ec64d43e24837be37638d1704e98ea1f0957aaff2af55f**, 검사 **14fd53be428698677a18caecd8e192024808f7c5f6b740ee27140d97b5ca7e5c**다. [완료 문서](docs/exe/cpp-html-checked-client-20261025.md)/[제품 보고서](cpppj/html-checked-client-runtime-20261025.json)에 원시/소스 SHA·한계를 남겼다. **20261025-07 CP**로 로컬 커밋하고 push하지 않는다. /goal은 활성/미완료다.
+- [ ] 기존 Tell 전체 부모/구형 % 표시·Guide의 실제 HTML 개수·full Uber 배경 생성/교체, Production/Minimap·State/Core/Pool/Win32와 전체 사용자 완주/Edit/언어별 시나리오·완전 동일성 및393 Wide SaveOptions는 계속 미완료다.
+- [ ] **다음 실제 Tell 이행 조사:** 원문cf730은cf270에 width/height0과 caller mode를 그대로 넘긴다. Guide 초기화의 Tell mode1은 첫 파서만 실행하는 창 생략이며 현재 TryTell은 이 mode를 전달하지 않는다. 전체 공장 연결과 함께 수정한다. `RawButtonControls::SetControls`의 비보존 Clear는 실제 HTML도 닫으므로 새 부모/메뉴 보존, 실제 Raw 입력·본문/배경 Draw, Close 뒤 phase/정지 반납과 Guide 모달/인스턴스 수를 함께 다뤄야 한다. 자동 검사 Point는 현재 Loading 부모의 돌 버튼만 읽으므로 일반 HTML 부모의 실제 버튼 좌표 조회도 필요하다. 메인 Edit는 아직 NotImplemented 연결이며 실제 Editor 진입도 후속이다.
+
 ## 2026-10-25 단위412 완료: HTML 배경 전역의 장기 수명 연결
 
 - [x] 단위411 **fda0fca4 / 20261025-05 CP** 뒤 이어서 진행한다. 현재/마지막 전체 정밀 디컴파일은 **HJOW-Athlon / 2026-10-23**이다. 새 전체 디컴파일/원본 직접 실행/새 GUI0이며 보호 기준은 `extracted/cpp-html-background-412-baseline.json`이다.

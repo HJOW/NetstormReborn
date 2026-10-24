@@ -1,6 +1,7 @@
 // 실제 보호 자산/Client/80칸 고리/메뉴/idle/원시 큐로 메타 본체의 연결을 검사한다.
 #include "DudeSpawnSupport.h"
 #include "client/ClientMain.h"
+#include "client/ClientGameplayGlobals.h"
 #include "client/RawButtonControls.h"
 #include "client/RawMenuControls.h"
 #include "client/RawHtmlWindowContext.h"
@@ -55,6 +56,16 @@ TEST_CASE(HtmlWindowMetadataClient_ActualMenuCheckedFieldsFitAndCleanup) {
     MetadataScene scene;const auto before=scene.Count(),root=scene.Create();CHECK(scene.Process(root,"$Checked=Remember,Warning,8,1,0 \n$Menu=First,Config,7 \n")==1 && scene.Root(root).menuColumns==1);scene.BodyAndAttach(root);CHECK(scene.Root(root).menuColumns==0 && scene.menus->MenuInstances()==1);
     const auto children=scene.MenuChildren(root);CHECK(children.size()==1);if (children.size()!=1) return;const auto* menu=static_cast<MenuGumpNode*>(scene.menus->Node(children[0]));CHECK(menu->itemCount==2 && menu->items[0].command==kScriptConfig && menu->items[0].parameter==7 && menu->items[1].command==kScriptWarning && menu->items[1].parameter==8 && (menu->items[1].flags&0x204)==0x204);
     scene.menus->CloseHtmlWindows();CHECK(scene.Count()==before && scene.menus->MenuInstances()==0);scene.menus->OpenAttached([](const auto&,const auto&,const auto& menu) { CHECK(menu.Current()==0);return 0U; },false);
+}
+
+// 같은 실제 Client/설정 전역을 재조회해 비활성/치트/개발 모드와 명시 활성의 단락 평가를 확인한다.
+TEST_CASE(HtmlWindowMetadataClient_ActualClientCheckedGlobalsAndShortCircuit) {
+    MetadataScene scene;auto context=scene.Context();const auto other=context.read;std::vector<std::uint32_t> reads;context.read=[&](auto address) { if (address==0x5cab30 || address==0x55a480) { reads.push_back(address);return scene.client.ScriptMenuGlobal(address); }return other(address); };const auto before=scene.Count();
+    for (unsigned kind=0;kind<4;++kind) { // 같은 설치된 콜백이 각 새 부모에서 현재 전역을 읽는다.
+        auto globals=scene.client.GameplayGlobals();globals->energy.userCheat=kind==1 ? 0x845fed : 0U;globals->player.special=kind==2;reads.clear();const auto root=scene.Create(context);CHECK(scene.Process(root,kind==3 ? "$Checked=Current,Warning,8,0,1 \n" : "$Checked=Current,Warning,8,0,0 \n")==1);scene.BodyAndAttach(root);const auto children=scene.MenuChildren(root);CHECK(children.size()==1);
+        if (children.size()==1) { const auto* menu=static_cast<MenuGumpNode*>(scene.menus->Node(children[0]));CHECK(menu->itemCount==1 && bool(menu->items[0].flags&0x200)==(kind==0)); } // 원문 disabled는0x200이며 checked의4와 구별한다.
+        const std::vector<std::uint32_t> expected=kind==3 ? std::vector<std::uint32_t>{} : kind==1 ? std::vector<std::uint32_t>{0x5cab30} : std::vector<std::uint32_t>{0x5cab30,0x55a480};CHECK(reads==expected);scene.menus->CloseHtmlWindows();CHECK(scene.Count()==before);
+    }
 }
 
 // 원문 Timeout이 실제 idle 표에 등록되고 현재 시간에 raw 예약→Kill→OnExit가 실행된다.

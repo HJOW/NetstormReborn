@@ -192,8 +192,8 @@ Client::Client(ClientOptions options)
     files_.RegisterArchive(options_.gameDirectory / "netstorm.tarc");
     configuration_.Registry().environment = Environment;
     if (g_client) throw std::logic_error("Only one client may exist");
-    // 원본00558dd0의 Set 직후 동기 시점에 같은 DWORD를 갱신한다. 현재는 이 옵션만 연결한다.
-    configuration_.onChanged = [this] { InterpretFortFileOptions(); };
+    // 원본00558dd0의 Set 직후 동기 시점에 현재 복원된 설정 전역을 갱신한다.
+    configuration_.onChanged = [this] { InterpretFortFileOptions();InterpretScriptMenuOptions(); }; // 같은 설정 변경의 즉시 해석에서 저장/메뉴 전역을 갱신한다.
     g_client = this;
 }
 // 월드/소리 프로세스→음악·음향→화면→GDI/창 순서로 참조 대상보다 사용자를 먼저 정리한다.
@@ -498,7 +498,19 @@ void Client::InterpretFortFileOptions() {
     configuration_.ReadInt("curServer",nsInfoGlobals_->serverSelection); // 같은54db4c의 현재값에서 읽어 누락 시 보존한다.
 }
 
-// 원본 00435220에서 지금 쓰는 설정만 읽는다. 나머지 키(소리·네트워크·치트·구름 등)는 해당 모듈을 옮길 때 더한다.
+// 원본4353ea..43541a의 세 전역 쓰기다. 누락 ReadInt는 현재값을 보존한 뒤 허용값 검사를 거친다.
+void Client::InterpretScriptMenuOptions() {
+    constexpr std::uint32_t magic=0x845fed; // 원본이 유일하게 허용하는 userCheat DWORD다.
+    gameplayGlobals_->player.special=false;gameplayGlobals_->specialAuxiliary=0;
+    auto value=std::bit_cast<std::int32_t>(gameplayGlobals_->energy.userCheat);configuration_.ReadInt("userCheat",value);
+    gameplayGlobals_->energy.userCheat=std::bit_cast<std::uint32_t>(value)==magic ? magic : 0U;
+}
+// 가짜 UI 복사본 없이 현재 장기 소유자를 매번 읽는다. 특수 모드는 기존 Player의 bool 표현을 사용한다.
+std::uint32_t Client::ScriptMenuGlobal(std::uint32_t address) const {
+    switch (address) { case 0x5cab30:return gameplayGlobals_->energy.userCheat;case 0x55a480:return gameplayGlobals_->player.special ? 1U : 0U;default:throw std::out_of_range("HTML 메뉴 현재 전역 주소 미연결"); }
+}
+
+// 원본 00435220에서 지금 쓰는 설정만 읽는다. 나머지 키(소리·네트워크·구름 등)는 해당 모듈을 옮길 때 더한다.
 void Client::InterpretOptions() {
     std::string language;
     configuration_.ReadString("currentLanguage", language);
@@ -530,6 +542,7 @@ void Client::InterpretOptions() {
     maxFps_ = kDefaultMaxFps;
     configuration_.ReadInt("maxFPS", maxFps_);
     frameInterval_ = FrameIntervalSeconds(maxFps_);
+    InterpretScriptMenuOptions(); // 현재 복원된 설정 순회에서 프레임 옵션 뒤의 원문 치트 관문을 연결한다.
 }
 
 // 원본 00436260.
