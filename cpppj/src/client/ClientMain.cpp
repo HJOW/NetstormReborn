@@ -16,6 +16,7 @@
 #include "client/ClientCoreDataGlobals.h"
 #include "client/ClientPlayerRecords.h"
 #include "client/ClientGameplayGlobals.h"
+#include "client/ClientNsInfoGlobals.h"
 #include "client/ClientChatManagerGlobals.h"
 #include "client/ClientDotCommandGlobals.h"
 #include "client/RawSurfaceWorld.h"
@@ -180,6 +181,7 @@ Client::Client(ClientOptions options)
       coreDataGlobals_(std::make_shared<ClientCoreDataGlobals>()),
       playerRecords_(std::make_shared<ClientPlayerRecords>()),
       gameplayGlobals_(std::make_shared<ClientGameplayGlobals>(subscriberGlobals_)),
+      nsInfoGlobals_(std::make_shared<ClientNsInfoGlobals>()),
       chatManagerGlobals_(std::make_shared<ClientChatManagerGlobals>()),
       dotCommandGlobals_(std::make_shared<ClientDotCommandGlobals>()),
       chat_(std::make_unique<ChatState>(*this,options_.edition)) {
@@ -353,6 +355,8 @@ int Client::Run() {
     // "init types"(FUN_0049ebb0): 타입·그림·타입 표.
     assets_ = std::make_unique<GameAssets>(files_, options_.edition, palettePath);
     surfaceStorage_=MakeRawSurfaceStorage(*assets_); // init squid/hash/spot의 실제 장기 물리를 메뉴보다 먼저 확보한다.
+    const auto serverPath=configuration_.SubstituteLocal("{DataDir}/!rootservers.dat");const auto serverFile=files_.TryRead(serverPath); // 현재 보호 시작 목록을 읽으며 네트워크 갱신/저장 부모와 구별한다.
+    if (serverFile) nsInfoGlobals_->LoadServerNames(*serverFile);else if (const auto original=files_.TryRead(configuration_.SubstituteLocal("{DataDir}/rootservers.dat"))) nsInfoGlobals_->LoadServerNames(*original);
     if (!PumpMessages()) return 0;
     // [원본] 송수신기, squid 목록(120000), 좌표 해시, spot 배열, 영상, Guide, 그래프,
     //        전체 명령 표, 인트로 감지, 연락처, 지도 모드, HTTP 서버 — 옮기지 않았다.
@@ -487,6 +491,7 @@ void Client::InterpretFortFileOptions() {
     auto value = std::bit_cast<std::int32_t>(readOnlyForts_); // 원본 ReadInt가 받는 동일 DWORD의 signed 작업값이다.
     configuration_.ReadInt("readOnlyForts", value);
     readOnlyForts_ = std::bit_cast<std::uint32_t>(value);
+    configuration_.ReadInt("curServer",nsInfoGlobals_->serverSelection); // 같은54db4c의 현재값에서 읽어 누락 시 보존한다.
 }
 
 // 원본 00435220에서 지금 쓰는 설정만 읽는다. 나머지 키(소리·네트워크·치트·구름 등)는 해당 모듈을 옮길 때 더한다.
@@ -905,6 +910,8 @@ const std::shared_ptr<ClientCoreDataGlobals>& Client::CoreDataGlobals() const { 
 const std::shared_ptr<ClientPlayerRecords>& Client::PlayerRecords() const { return playerRecords_; }
 // 현재 전역의 주소를 빌리며 조회 자체는 게임/초기화를 수행하지 않는다.
 const std::shared_ptr<ClientGameplayGlobals>& Client::GameplayGlobals() const { return gameplayGlobals_; }
+// 실제 현재 NSInfo/서버 이름 소유자를 조회하며 목록을 다시 읽거나 초기화하지 않는다.
+const std::shared_ptr<ClientNsInfoGlobals>& Client::NsInfoGlobals() const { return nsInfoGlobals_; }
 //현재 manager와 실제 할당의 한 소유자를 반환하며 공통 초기화 시점을 앞당기지 않는다.
 const std::shared_ptr<ClientChatManagerGlobals>& Client::ChatManagerGlobals() const { return chatManagerGlobals_; }
 //초기 say와 이후 등록을 보존한 같은 표를 반환하며 Session 해제 때 다시 초기화하지 않는다.

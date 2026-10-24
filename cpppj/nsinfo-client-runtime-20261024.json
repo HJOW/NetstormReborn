@@ -1,0 +1,3094 @@
+{
+  "unit": 399,
+  "date": "2026-10-24",
+  "host": "HJOW-Athlon",
+  "beginCommit": "53a1ebf9",
+  "goalComplete": false,
+  "lastFullDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23",
+    "sourceSha256": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646"
+  },
+  "productSha256": "43c6be89acd6efb844bb6182ee86f17c740efb837df7139e4d1739eb24a0b80a",
+  "testBinarySha256": "f6ec0d12a7b5cae47fb74e50ced9e59676cddffcd812886d4dd208aea1c0d030",
+  "scope": "실제 전체 NSInfo 생성/일반 부착/공통 텍스트와 수명",
+  "builds": [
+    {
+      "index": 1,
+      "session": 82459,
+      "returnCode": 1,
+      "errors": [
+        "error LNK2019",
+        "error LNK2019",
+        "error LNK2019",
+        "error LNK2019",
+        "error LNK2019",
+        "error LNK2019",
+        "fatal error LNK1120",
+        "error LNK2019",
+        "error LNK2019",
+        "error LNK2019",
+        "error LNK2019",
+        "error LNK2019",
+        "error LNK2019",
+        "fatal error LNK1120"
+      ],
+      "warnings": [],
+      "path": "extracted/cpp-nsinfo-399-build1.log",
+      "sha256": "b8d600e8447959f408439390996d8d2470299a69680d4210cfdeb731ec3b7a75"
+    },
+    {
+      "index": 2,
+      "session": 32665,
+      "returnCode": 1,
+      "errors": [
+        "error C3861",
+        "error C2027",
+        "error C2039",
+        "error C2027",
+        "error C2039",
+        "error C2027",
+        "error C2039"
+      ],
+      "warnings": [],
+      "path": "extracted/cpp-nsinfo-399-build2.log",
+      "sha256": "98180b2873925a31f1adc875e48e760e68eacb96374b912b4f6a358e00099226"
+    },
+    {
+      "index": 3,
+      "session": 33379,
+      "returnCode": 0,
+      "errors": [],
+      "warnings": [],
+      "path": "extracted/cpp-nsinfo-399-build3.log",
+      "sha256": "f06ecd83f8ce8abf0db230607781ea35e90d4d4c592d43647ba0f51814a2b2ab"
+    },
+    {
+      "index": 4,
+      "session": 50101,
+      "returnCode": 0,
+      "errors": [],
+      "warnings": [],
+      "path": "extracted/cpp-nsinfo-399-build4.log",
+      "sha256": "5b8d938828e72164a7a9e7f0cdd48240e0b54f3569f8278feaa2e5bcdf32ca61"
+    },
+    {
+      "index": 5,
+      "session": 29838,
+      "returnCode": 0,
+      "errors": [],
+      "warnings": [],
+      "path": "extracted/cpp-nsinfo-399-build5.log",
+      "sha256": "e470a75267cd19304ec8f00164569a0f3e4c01fb07990b254fd2cb3c65508057"
+    }
+  ],
+  "firstFocused": {
+    "productSha256": "5b9f5c956dcd53843227a58822def8bfe51669b2a5ec72a031dc0ec9ec9c111c",
+    "testBinarySha256": "11153e4e6f0e19fae20b21475f25dd8293bc4055ef06bebcb85d314fcff38286",
+    "runs": [
+      {
+        "returnCode": 0,
+        "seconds": 0.9718697000062093,
+        "log": "extracted/cpp-nsinfo-399-focused1-1.log",
+        "filter": "HudNsInfo_",
+        "counts": [
+          [
+            "2",
+            "0"
+          ]
+        ],
+        "names": [
+          "HudNsInfo_IndependentNativeNormalAttachment",
+          "HudNsInfo_MetamapNeedsActualContinuation"
+        ]
+      },
+      {
+        "returnCode": 0,
+        "seconds": 0.4395583999576047,
+        "log": "extracted/cpp-nsinfo-399-focused1-2.log",
+        "filter": "HudNsInfoCreate_",
+        "counts": [
+          [
+            "2",
+            "0"
+          ]
+        ],
+        "names": [
+          "HudNsInfoCreate_Native170ParentsChildrenAndPartialEffects",
+          "HudNsInfoCreate_RequiredActualMetamapContinuation"
+        ]
+      },
+      {
+        "returnCode": 1,
+        "seconds": 0.471751100034453,
+        "log": "extracted/cpp-nsinfo-399-focused1-3.log",
+        "filter": "NsInfoClient_",
+        "counts": [
+          [
+            "4",
+            "3"
+          ]
+        ],
+        "names": [
+          "NsInfoClient_FullRealChildrenBuffersAndHiddenPixelsBeforeSession",
+          "NsInfoClient_TwoRootsThenRealRetirementAndPageCleanup",
+          "NsInfoClient_CurrentServerConfigAndNativeNameBufferRules"
+        ]
+      }
+    ],
+    "sameBinaries": true,
+    "originalsUnchanged": true
+  },
+  "focused": {
+    "newTests": 8,
+    "totalTests": 79,
+    "names": [
+      "HudNsInfo_IndependentNativeNormalAttachment",
+      "HudNsInfo_MetamapNeedsActualContinuation",
+      "HudNsInfoCreate_Native170ParentsChildrenAndPartialEffects",
+      "HudNsInfoCreate_RequiredActualMetamapContinuation",
+      "NsInfoClient_FullRealChildrenBuffersAndHiddenPixelsBeforeSession",
+      "NsInfoClient_TwoRootsThenRealRetirementAndPageCleanup",
+      "NsInfoClient_PartialTranslationAndSelectedMetamapAreNotFakeSuccess",
+      "NsInfoClient_CurrentServerConfigAndNativeNameBufferRules",
+      "ClientFortFileOptions_LiveDwordAndSynchronousSet",
+      "ClientFortFileOptions_ActualQueuedScriptConfig",
+      "ClientFortFileOptions_StartupAndMissingReloadPreserveCurrent",
+      "ClientFortFileOptions_ExclusiveClientAndFreshLifetime",
+      "ClientFortFileOptions_SameBadgesSurviveConfigAndNewClientStartsZero",
+      "ProductionInitialContext_ConstructsAllNativeChildrenWithoutSession",
+      "ProductionInitialContext_RepeatedConstructionAndGlobalPageRetirement",
+      "ProductionInitialContext_MissingTranslationKeepsAndRetiresPartialEffects",
+      "ProductionInitialContext_GameplayGlobalsKeepRealAliasesAndRejectDuplicate",
+      "CampaignSharedGameplay_TwoActualSessionsPublishAndRetireSameGlobals",
+      "CampaignSharedGameplay_ForeignAndPartialConstructionRetireLease",
+      "CampaignProductionLifetime_GlobalCleanupRetiresRootAndBudget",
+      "CampaignProductionLifetime_IndependentBudgetCleanupRetiresText",
+      "CampaignProductionLifetime_QueuedKillThenCloseDrainsOnce",
+      "CampaignProductionLifetime_DuplicateOpenAndProviderRecreation",
+      "CampaignProduction_ModalPagesPreservePanelBudgetAndResize",
+      "CampaignSharedKernel_ActualFormsAndSingleClientFrame",
+      "CampaignSharedKernel_GameWorldSurvivesExplicitGlobalClear",
+      "CampaignSharedKernel_FinalDrainPrecedesPlayerAndServiceRelease",
+      "CampaignSharedKernel_PartialConstructorPreservesExistingProcess",
+      "CampaignSharedStorage_TwoActualSessionsUseSamePhysicalArrays",
+      "CampaignSharedStorage_PartialConstructorReleasesPhysicalLease",
+      "CampaignSharedStorage_ForeignAssetsFailBeforePhysicalMutation",
+      "HudDock_IndependentNativeBodiesAndNestedViewport",
+      "HudDividerInput_Native13398StateAndCallbacks",
+      "UberRoot_Native160",
+      "UberRoot_RealTreeAndLifetimeTransfer",
+      "UberRoot_DockReadsLiveThisFields",
+      "UberRoot_MissingFactoryKeepsPriorEffects",
+      "UberRoot_MissingOldRootFailsAfterConstructionEffects",
+      "UberRoot_EmptyLeafNeedsNoGameHook",
+      "InventoryGump_Native170",
+      "InventoryGump_SharedTreeRebuildAndLifetime",
+      "InventoryItemGump_Native132",
+      "InventoryItemGump_ActualAssetsTreePixelsAndClick",
+      "ProductionMaintenance_TestBridgeSequence",
+      "ProductionMaintenance_TestBridgeOverrideAfterOriginalRules",
+      "ProductionMaintenance_NativeAllInputs",
+      "ProductionMaintenance_TransientNeighborNativeBoundary",
+      "ProductionSync_Native98",
+      "ProductionHintGump_Native126",
+      "ProductionShortcuts_Native4280ReachableCases",
+      "ProductionShortcuts_ReleasePauseAndLazyDevices",
+      "RawMenuControls_HelpActualTreePixelsAndOutsideInput",
+      "RawMenuControls_OwnedHelpStringsDriveRealMenuAndRelease",
+      "RawMenuControls_HelpActualHistoryButtonsAndReopen",
+      "RawMenuControls_HelpActualTypeInfoAndImage",
+      "RawMenuControls_FloatingSpActualPixelsAndLifetime",
+      "RawMenuControls_CommonTreeInputAndDisabledItem",
+      "RawMenuControls_HorizontalPointAndDeferredReplace",
+      "RawMenuControls_FancySubmenuPixelsAndCleanup",
+      "RawMenuControls_ObjectMenuCommandsAndCurrentConfig",
+      "RawMenuControls_CarrierAndObjectMenuChain",
+      "RawMenuControls_MissionLoadingUsesSharedTreeAndCancel",
+      "RawMenuControls_MinimapBeforeSessionAndAcrossWorldBindings",
+      "GumpLifetime_PatchNative",
+      "GumpLifetime_CdNative",
+      "GumpLifetime_AdditionalNative",
+      "GumpLifetime_CreateTreeKillCleanupAndReuse",
+      "GumpLifetime_TreeReplacementDefersDestruction",
+      "GumpLifetime_BaseDoesNotUnregisterOrRemoveDialogs",
+      "GumpLifetime_CdIdleCapacity",
+      "GumpLifetime_ContractsAndCycles",
+      "GumpLifetime_CallbackExceptionKeepsWrittenState",
+      "RawSurfaceWorld_PausedRegularResumesWithClientGameClock",
+      "RawSurfaceWorld_HardBridgeAndPendingMissionTeardown",
+      "RawSurfaceWorld_DisplaySuppressionAndDeviceReplacement",
+      "RawSurfaceWorld_InvalidLoadRejectedBeforeAllocation",
+      "RawSurfaceWorld_RuntimeSharesStorageAndCurrentDispatch",
+      "RawSurfaceWorld_RuntimeRejectsIncompleteOrLateBinding",
+      "RawSurfaceWorld_CampaignFinishPreservesParentGraph"
+    ]
+  },
+  "nativeReplay": {
+    "host": "HJOW-Athlon",
+    "lastFullDecompileHost": "HJOW-Athlon",
+    "lastFullDecompileDate": "2026-10-23",
+    "sourceSha256": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "originalSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "before": {
+      "cpppj/tests/fixtures/hud-nsinfo-create-x86.tsv": "f55acf0d793978c0856cb73df51a54edb0dd7cafbfb82333ec5d444b66da7762",
+      "cpppj/tests/fixtures/hud-nsinfo-attach-x86.tsv": "98b1ca16e573ad185f295c8fc6503f6f18f40102076c8ef155455aec5b174fbd"
+    },
+    "gameExecuted": false,
+    "guiExecuted": false,
+    "fixtureWritten": false,
+    "runs": [
+      {
+        "family": "create",
+        "rows": 170,
+        "allSame": true
+      },
+      {
+        "family": "attach",
+        "rows": 310,
+        "allSame": true
+      }
+    ],
+    "success": true,
+    "seconds": 3.271828999975696,
+    "after": {
+      "cpppj/tests/fixtures/hud-nsinfo-create-x86.tsv": "f55acf0d793978c0856cb73df51a54edb0dd7cafbfb82333ec5d444b66da7762",
+      "cpppj/tests/fixtures/hud-nsinfo-attach-x86.tsv": "98b1ca16e573ad185f295c8fc6503f6f18f40102076c8ef155455aec5b174fbd"
+    },
+    "fixturesUnchanged": true
+  },
+  "gui": {
+    "returnCode": 0,
+    "seconds": 195.12538329989184,
+    "log": "extracted/cpp-nsinfo-399-gui1.log",
+    "productSha256": "43c6be89acd6efb844bb6182ee86f17c740efb837df7139e4d1739eb24a0b80a",
+    "testBinarySha256": "f6ec0d12a7b5cae47fb74e50ced9e59676cddffcd812886d4dd208aea1c0d030",
+    "sameBinaries": true,
+    "originalsUnchanged": true,
+    "nsInfoRows": [
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "14"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "748",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ]
+    ],
+    "nsInfoActiveRows": [
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "14"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "50",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ],
+      [
+        "748",
+        "1",
+        "8",
+        "1",
+        "8",
+        "9",
+        "12"
+      ]
+    ],
+    "nsInfoCurrentTokens": [
+      "50",
+      "748"
+    ],
+    "allNsInfoChildrenPresent": true,
+    "storageRows": [
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "2",
+        "1"
+      ]
+    ],
+    "gameplayRows": [
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ]
+    ],
+    "generations": [
+      1,
+      2
+    ],
+    "samePhysicalInAllObservations": true,
+    "sameGlobalsInAllObservations": true,
+    "observation": {
+      "returnCode": 0,
+      "originalsUnchanged": true,
+      "stages": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H",
+        "I"
+      ],
+      "startSp": 10000,
+      "finalSp": 3075,
+      "templeCount": 1,
+      "workshopCount": 1,
+      "maxArchers": 4,
+      "finalArchers": 3,
+      "salvagePackets": 1,
+      "refund": 75,
+      "doneBefore": 1,
+      "doneAfter": 1,
+      "nextMission": "tutorial3",
+      "nextSp": 2000,
+      "initialProgressInjected": false,
+      "noStateInjection": true,
+      "nextGuideSequence": 4,
+      "inspectionContract": "native-guide-0-6",
+      "lastGameTime": 81.618,
+      "naturalTutorialTwoComplete": true,
+      "goalComplete": false,
+      "scope": "실제 A~I/사제 신전·워크샾/지식·생산/발사기4개/신전 선택/정상 회수·완료값 관측/다음 Tutorial3 진입이다. 영구 진행 저장·Early3 진행·전체 동일성은 별도다.",
+      "binarySha256": "43c6be89acd6efb844bb6182ee86f17c740efb837df7139e4d1739eb24a0b80a",
+      "productTimers": 1,
+      "testStateInjection": false
+    }
+  },
+  "full": {
+    "returnCode": 0,
+    "seconds": 324.7820959999226,
+    "log": "extracted/cpp-nsinfo-399-ctest1.log",
+    "productSha256": "43c6be89acd6efb844bb6182ee86f17c740efb837df7139e4d1739eb24a0b80a",
+    "testBinarySha256": "f6ec0d12a7b5cae47fb74e50ced9e59676cddffcd812886d4dd208aea1c0d030",
+    "counts": [
+      [
+        "2710",
+        "0"
+      ]
+    ],
+    "sameBinaries": true,
+    "originalsUnchanged": true
+  },
+  "sourceHashes": {
+    "cpppj/src/client/CMakeLists.txt": "1779b5f9928b59ef0ca6c223cb142470d107224023305c31ac99ccb05d87d5dd",
+    "cpppj/src/client/ClientMain.cpp": "8164edf7642188cd69791599b2e6ea934885787f195bdf8212f2d58175c17688",
+    "cpppj/src/client/ClientMain.h": "67dbb71cb80e5d66370703fe90bff1e08e62bc1fadbc556f736131c53c7e68f3",
+    "cpppj/src/client/ClientNsInfoGlobals.cpp": "a969f0146c279773e0fc196919d25d48e56a2d742f350a92c67845e6e4660401",
+    "cpppj/src/client/ClientNsInfoGlobals.h": "3db549e0d2c30dee20899c7ecaaf6cb9f7c89b9694dd921bc67a5361806b979f",
+    "cpppj/src/client/HudNsInfo.cpp": "6865168e6aefdc253ec1daddfd3ea985a33a75212835825c7bf6a5854a8554d4",
+    "cpppj/src/client/HudNsInfo.h": "ce3eda4c358d65ab011796cc4f4d1c5b28ea29dc95236e9fdecf5206fdc59913",
+    "cpppj/src/client/RawButtonControls.cpp": "c79006468a42295fd84392016e117d40f023185ba63c7cc8eb8a409ee5233e6a",
+    "cpppj/src/client/RawButtonControls.h": "974020be91e9ffb18cc993fdab05b8a1fa4d439a64fe602469610b307f72d23e",
+    "cpppj/src/client/RawMenuControls.cpp": "4f6090ef7a5b369c116b08c13d09388229913d075e0cddbff386ccabcf0763eb",
+    "cpppj/src/client/RawMenuControls.h": "bc2dd5c958c99301cce4c23c4ee46d5cc05013cbabea097d357fa7f81a2bfa22",
+    "cpppj/src/client/RawNsInfoContext.h": "a46c4affcbacd4b4ffe1488d0279601cd671341b0398309b09e638668c8046b4",
+    "cpppj/src/client/UberGump.cpp": "6e45db4a48c96d85390d4b5e117ab42374a75feb1b849a525ca1349b5fd723d4",
+    "cpppj/tests/CMakeLists.txt": "03d5a54a51c21cfecf22a7d39c977605da973fa0c7396256ff8ded5be133a538",
+    "cpppj/tests/NsInfoClientTests.cpp": "887a2d345d44a44aafa7e7e222f9619e05a657014a4eb82ac61599b4fb11501c"
+  },
+  "referenceHashes": {
+    "cpppj/src/client/HudNsInfoCreate.cpp": "9eabdfd731acc6a8bc8101f17cd5ef529c44c1b508e5b39318b2e36dd0f15801",
+    "cpppj/src/client/HudNsInfoCreate.h": "64da3a3123b38e81d599545144bb5c2dae28cebced24cd31b04b708d2e5d11f0",
+    "cpppj/src/client/ButtonGump.cpp": "916ba8f0c9fc95642ea7897ff87e8d6c1bc1299ac3e507e3aef64af95a189665",
+    "cpppj/src/client/StoneButtonGump.cpp": "a6737cdc2d87a37276d7eb93e82a345e31517cc66aa943dc83ee2d4fdb176c4f",
+    "cpppj/src/client/TextGump.cpp": "8f501caa7ba39352386060e81c79835eb75e070e6231d22e879b3c17142c5804",
+    "cpppj/src/client/ScrollingTextGumpWidgets.cpp": "6ef03644d61c31ca94c11f163b6774f2f5f608727209ff57adf6c9cc4c73c849",
+    "cpppj/src/client/ScrollingTextGumpMarkup.cpp": "3088e4533c4a1aebffb040701c4cd6ec7a34cbfa7379a7782e97572d6840cddc",
+    "cpppj/src/client/StyleTextBuffer.cpp": "2aa0f6983c460aa3d5a960085a8b1ed86f153cb0916246329878f6d1b77f8ea2",
+    "cpppj/src/client/ScrollGumpWidgets.cpp": "378d5b65e02f8e5e1693fca50b2a3582e07e53b0f3e2df4ffe36c3fb618f435b",
+    "cpppj/src/client/ClientGameplayGlobals.cpp": "74b2ce20ae3c8bbe7375e1efb236ad749b7dc4b88e488ef8a61e38b3223304f9",
+    "cpppj/src/client/RawSurfaceStorage.cpp": "aab3aeeaa102a1baa9c6cc8144ec58690b52219e8f1fffae7d0674313f5b292c"
+  },
+  "preservedNativeHashes": {
+    "cpppj/tests/fixtures/hud-nsinfo-create-x86.tsv": "f55acf0d793978c0856cb73df51a54edb0dd7cafbfb82333ec5d444b66da7762",
+    "cpppj/tests/fixtures/hud-nsinfo-attach-x86.tsv": "98b1ca16e573ad185f295c8fc6503f6f18f40102076c8ef155455aec5b174fbd",
+    "cpppj/tests/fixtures/hud-dock-geometry-x86.tsv": "a8bd529f1df42321d035882dcdc59efb1016b43b2ad08ea108a0fe879250830e",
+    "cpppj/tests/fixtures/hud-divider-input-x86.tsv": "d6551d404c129e9e389519ffc4cb11061f1c4769929a5f4dd0fc65f1100d6183",
+    "cpppj/tests/fixtures/uber-root-x86.tsv": "eb1720f168c6d48b45a5c6526c82019657f14c197c4b5f62c9d50b394e27b717",
+    "cpppj/tests/fixtures/inventory-grid-x86.tsv": "e58dd7725294925c2e9ff69c39521591ddedbabc8c21e2b8ee3034643c71aa0c",
+    "cpppj/tests/fixtures/inventory-item-x86.tsv": "2e0dd1216399d96cdb76e68f8d8ef1aa017b398376e3ec23a7d195518aaac749",
+    "cpppj/tests/fixtures/production-idle-x86.tsv": "d8b5ac6f180d70225b16a726a6b36d75069545206aa1b579882ff013bcc3ec91",
+    "cpppj/tests/fixtures/production-sync-x86.tsv": "5dd7df714a0e7b7c2c47974539504e6f4df179f32fd937b335172be0a780b164",
+    "cpppj/tests/fixtures/production-hint-x86.tsv": "de2e73e104769163f2af876dd8bb41d16c1b0e15d0a33518e624b430d216d629",
+    "cpppj/tests/fixtures/production-shortcuts-x86.tsv": "e97fbf01c4e571fa09dcda69c1041fd0d9d7a30cf05ed7c07ea73ad0b6ed43aa"
+  },
+  "rawHashes": {
+    "extracted/cpp-nsinfo-399-audit.py": "3ec34ca03c34e84136dfd13d5c69f1d7d97fa1fd687504e9f39d5e42e2a58c65",
+    "extracted/cpp-nsinfo-399-build1.log": "b8d600e8447959f408439390996d8d2470299a69680d4210cfdeb731ec3b7a75",
+    "extracted/cpp-nsinfo-399-build2.log": "98180b2873925a31f1adc875e48e760e68eacb96374b912b4f6a358e00099226",
+    "extracted/cpp-nsinfo-399-build3.log": "f06ecd83f8ce8abf0db230607781ea35e90d4d4c592d43647ba0f51814a2b2ab",
+    "extracted/cpp-nsinfo-399-build4.log": "5b8d938828e72164a7a9e7f0cdd48240e0b54f3569f8278feaa2e5bcdf32ca61",
+    "extracted/cpp-nsinfo-399-build5.log": "e470a75267cd19304ec8f00164569a0f3e4c01fb07990b254fd2cb3c65508057",
+    "extracted/cpp-nsinfo-399-checks.py": "2842b68a6f070bca5bd7f43866adcaf2e1710afdf78197bcf75ff1c0c5d4df88",
+    "extracted/cpp-nsinfo-399-ctest1-tests.log": "c4a6be998ada27f654b8879586d8554561fa943d4afe142f2daf8c134710bad6",
+    "extracted/cpp-nsinfo-399-ctest1.json": "151d1f546443f4dfd1d3ab7aaf71fc4a55484f265d85891aacc3a94c7dfdbc4d",
+    "extracted/cpp-nsinfo-399-ctest1.log": "e263c5207019c9fae2f17994cefa5d6711e3c096f2766a2e1025f47273426d7c",
+    "extracted/cpp-nsinfo-399-early2/A.bmp": "9140211baa0ec6a0aea1ad19448a184d97979de25063b5220f9633bbf3b8ae9b",
+    "extracted/cpp-nsinfo-399-early2/cycle0.bmp": "5fcefa1008cad839ed4c8e0e7b1048913428bb7d05fa2c684ae5bc2872643366",
+    "extracted/cpp-nsinfo-399-early2/cycle1.bmp": "6603108a89457fb4bd38b6b1e95bfe5cb37e144ee3a139b4a3a500629c57390b",
+    "extracted/cpp-nsinfo-399-early2/cycle10.bmp": "2a58458c8c24f36e8b6ee5e9b8c0886ca8cd3cf9f7a83ab5dd43f56a09e018ae",
+    "extracted/cpp-nsinfo-399-early2/cycle11.bmp": "e15994e2c19031d05a336bf46877967f29f960b8a3ad9ee6b5bf7af77cc1d52f",
+    "extracted/cpp-nsinfo-399-early2/cycle12.bmp": "8aecd8a37df85c044e5993b1b450cf88be4b25c2769ddd51a4ef714f46b894da",
+    "extracted/cpp-nsinfo-399-early2/cycle13.bmp": "e13eba42cfebcd0ca81fb818b2d596ac39f7d9e0bbc14db86c0ea2d5fddc532b",
+    "extracted/cpp-nsinfo-399-early2/cycle14.bmp": "77e24835166ed090fab73db6563be4163020645091f268f8eb2f0ef310f7d9cd",
+    "extracted/cpp-nsinfo-399-early2/cycle15.bmp": "657f7b286b88b31b482400d5d84da005d05aaf3d1786a6431bc08bada6de7564",
+    "extracted/cpp-nsinfo-399-early2/cycle16.bmp": "a24375e826ad6d20cca6ef620c72c5044d65b699b663221c2a192152e43882b6",
+    "extracted/cpp-nsinfo-399-early2/cycle17.bmp": "36017fcfde58cc0e7066382a77cde3434169fdf4b057c62f5996d18c7bb43e11",
+    "extracted/cpp-nsinfo-399-early2/cycle18.bmp": "38cb49a13e2be6a87f11e492fcb2ffcfa0669c907742564445996751b1a5fe46",
+    "extracted/cpp-nsinfo-399-early2/cycle19.bmp": "6145f2540b5e2ff451365e18dd62beb9e7b5cbdaeef7451dbb74be4f54550eb9",
+    "extracted/cpp-nsinfo-399-early2/cycle2.bmp": "a3b0b9d76ddedbd4960ba8981b705b92d2b0c7a1e7fffebf5c907d9a7e5789f3",
+    "extracted/cpp-nsinfo-399-early2/cycle20.bmp": "6145f2540b5e2ff451365e18dd62beb9e7b5cbdaeef7451dbb74be4f54550eb9",
+    "extracted/cpp-nsinfo-399-early2/cycle21.bmp": "6145f2540b5e2ff451365e18dd62beb9e7b5cbdaeef7451dbb74be4f54550eb9",
+    "extracted/cpp-nsinfo-399-early2/cycle22.bmp": "6145f2540b5e2ff451365e18dd62beb9e7b5cbdaeef7451dbb74be4f54550eb9",
+    "extracted/cpp-nsinfo-399-early2/cycle23.bmp": "6145f2540b5e2ff451365e18dd62beb9e7b5cbdaeef7451dbb74be4f54550eb9",
+    "extracted/cpp-nsinfo-399-early2/cycle24.bmp": "6145f2540b5e2ff451365e18dd62beb9e7b5cbdaeef7451dbb74be4f54550eb9",
+    "extracted/cpp-nsinfo-399-early2/cycle25.bmp": "6145f2540b5e2ff451365e18dd62beb9e7b5cbdaeef7451dbb74be4f54550eb9",
+    "extracted/cpp-nsinfo-399-early2/cycle26.bmp": "6145f2540b5e2ff451365e18dd62beb9e7b5cbdaeef7451dbb74be4f54550eb9",
+    "extracted/cpp-nsinfo-399-early2/cycle27.bmp": "6145f2540b5e2ff451365e18dd62beb9e7b5cbdaeef7451dbb74be4f54550eb9",
+    "extracted/cpp-nsinfo-399-early2/cycle28.bmp": "6145f2540b5e2ff451365e18dd62beb9e7b5cbdaeef7451dbb74be4f54550eb9",
+    "extracted/cpp-nsinfo-399-early2/cycle29.bmp": "6145f2540b5e2ff451365e18dd62beb9e7b5cbdaeef7451dbb74be4f54550eb9",
+    "extracted/cpp-nsinfo-399-early2/cycle3.bmp": "f71a98ae74f1947a3d5c1c46b2be6e6cc77f5e6b942fe777831b81a3d238d38f",
+    "extracted/cpp-nsinfo-399-early2/cycle30.bmp": "6145f2540b5e2ff451365e18dd62beb9e7b5cbdaeef7451dbb74be4f54550eb9",
+    "extracted/cpp-nsinfo-399-early2/cycle31.bmp": "6145f2540b5e2ff451365e18dd62beb9e7b5cbdaeef7451dbb74be4f54550eb9",
+    "extracted/cpp-nsinfo-399-early2/cycle32.bmp": "6145f2540b5e2ff451365e18dd62beb9e7b5cbdaeef7451dbb74be4f54550eb9",
+    "extracted/cpp-nsinfo-399-early2/cycle33.bmp": "6145f2540b5e2ff451365e18dd62beb9e7b5cbdaeef7451dbb74be4f54550eb9",
+    "extracted/cpp-nsinfo-399-early2/cycle34.bmp": "6145f2540b5e2ff451365e18dd62beb9e7b5cbdaeef7451dbb74be4f54550eb9",
+    "extracted/cpp-nsinfo-399-early2/cycle35.bmp": "6145f2540b5e2ff451365e18dd62beb9e7b5cbdaeef7451dbb74be4f54550eb9",
+    "extracted/cpp-nsinfo-399-early2/cycle4.bmp": "e7b3ad60f14709e3ae1a0ecacbd617fe926485212d612f9e7817a1f97e575d6e",
+    "extracted/cpp-nsinfo-399-early2/cycle5.bmp": "c9849e6478df83ef2661ceb7ea0cb62db51f90a09f59d4f8e5b2ca364275a194",
+    "extracted/cpp-nsinfo-399-early2/cycle6.bmp": "e15e2809bab5a086557c58c57c954be2993cc51d75b8fb4980278960b523bc69",
+    "extracted/cpp-nsinfo-399-early2/cycle7.bmp": "b56ed83fd9d006e8a0f07e4a75a2e4e0f6e8c0440a4a919aa50635753e66afc0",
+    "extracted/cpp-nsinfo-399-early2/cycle8.bmp": "0ccbfb1e9c468988b25a21bc5a9e8925b419fc9c4683f0969d9721c757e7b3db",
+    "extracted/cpp-nsinfo-399-early2/cycle9.bmp": "ca2c59e3e2174dad3cdce932a8b7347cef5f658ca78cc883733409f3a38c8afb",
+    "extracted/cpp-nsinfo-399-early2/execution.json": "06618d783c4d68d1082cb04033ad2531627caa37a800b8234696da18a80a6f96",
+    "extracted/cpp-nsinfo-399-early2/goal.bmp": "6145f2540b5e2ff451365e18dd62beb9e7b5cbdaeef7451dbb74be4f54550eb9",
+    "extracted/cpp-nsinfo-399-early2/nextBriefing.bmp": "b80a30ad4ea587475150b8ba21d3241c0b2db32a79864c68918b58ff3e3428d9",
+    "extracted/cpp-nsinfo-399-early2/originals-after.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-nsinfo-399-early2/originals-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-nsinfo-399-early2/prepared.json": "741398aa4f051997234af37e987f11fa170f1b7778d169acabc900e3e4703a41",
+    "extracted/cpp-nsinfo-399-early2/results.json": "5b35dcb4be61375be7639f6c77f9d0aaab9fad91af99d4ccd39932d68f5df04b",
+    "extracted/cpp-nsinfo-399-early2/running.json": "6c3537a8dd2d834305482f5dd5fbbcbb9af7b0673014150cb66d0a53b25e9e46",
+    "extracted/cpp-nsinfo-399-early2/settings-backup/fullscreenStateFile.dat": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-nsinfo-399-early2/settings-backup/options.cfg": "7c986d379a533456fb34d19f7937d1a028812c4560389d43cb663f1bd10cd7d4",
+    "extracted/cpp-nsinfo-399-early2/states.tsv": "aa9d89106c6ee0da08487644146395a04a3af17f8076276c6193437c332fcbe6",
+    "extracted/cpp-nsinfo-399-early2/stderr.log": "7bda425048640ffbe4f58f699a5c42b3cd433844b83d886ded35b1cce28766c9",
+    "extracted/cpp-nsinfo-399-early2/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-nsinfo-399-early2/steps.tsv": "d23f2e2be2c514c4f8b955cdb2be0d7ad1ff1e4395068d79929fb15bf34eec62",
+    "extracted/cpp-nsinfo-399-edit.py": "a644d0121c5cfca54ea2b0a89a3fc443050d76ed82a855e46d54b1d1a10bde08",
+    "extracted/cpp-nsinfo-399-final.py": "6979f969c2793ae4d479b6e3323f03a3d91ff5ecc67e9f8766a1770cc660fa0e",
+    "extracted/cpp-nsinfo-399-focused1-1.log": "639d24605f511d3ae802aca1f5afc14f276a6430bef72e1b617e69a6efda0106",
+    "extracted/cpp-nsinfo-399-focused1-2.log": "2c3d83b6f8910f129153f71cf505382e1ae36291f9f6c1125a5182510f851069",
+    "extracted/cpp-nsinfo-399-focused1-3.log": "b3eecfe51a0d0aa4baa36ed6340caee7df241dd005d50a339042a6a7ac3b1319",
+    "extracted/cpp-nsinfo-399-focused1-before.json": "4296c9667766ef75e242cea3949f0ef206d899650f00aa91d6776bb08319ed30",
+    "extracted/cpp-nsinfo-399-focused1-progress1.json": "38d0d0d39148eeb39c5668affa8a15f497c973fea74e6e741d06ed10d09ad1e7",
+    "extracted/cpp-nsinfo-399-focused1-progress2.json": "5f22e4c82fc51ff4eebcdf5e372a87f9ca5b868ccb779bd53f05738e82209ecd",
+    "extracted/cpp-nsinfo-399-focused1-progress3.json": "08b111219cd45ca1d02e2a391ace645e9804c5641b5ca19e7892559096ec2bd4",
+    "extracted/cpp-nsinfo-399-focused1.json": "60f41c68be8e12a4cd6faca1cbf786c702b445c72fac30993bdd4cc0846e46df",
+    "extracted/cpp-nsinfo-399-focused2-1.log": "639d24605f511d3ae802aca1f5afc14f276a6430bef72e1b617e69a6efda0106",
+    "extracted/cpp-nsinfo-399-focused2-10.log": "ea33e8799bde69b3b1be580574c63ddc1b7265fbd48d69e7fca5b6883233efe0",
+    "extracted/cpp-nsinfo-399-focused2-11.log": "5ca5531774b5f13fc82081a254cff97b0cd8481d48e9e41e2ed8aa3bdb8503e5",
+    "extracted/cpp-nsinfo-399-focused2-12.log": "4e0cde1d19c18e8335926b907de08279c605765a208e161f4ed7ff8843838387",
+    "extracted/cpp-nsinfo-399-focused2-13.log": "688dd03368db1e8e3668a88d62baabfaf41891dc28e61379dfeb1a07ec4e18c0",
+    "extracted/cpp-nsinfo-399-focused2-14.log": "340a095ba963a92d01b2ffbcac21ffc8678ccf1049e478adde3552c1774c30b0",
+    "extracted/cpp-nsinfo-399-focused2-15.log": "49ba46747352c4692f18e6986f84a2811d088c04535bf46e0ccb0abf0e3a85d4",
+    "extracted/cpp-nsinfo-399-focused2-16.log": "97aecab8938bb8b354bba70e3b343a3c8d55c63c670a593812da048dcc750443",
+    "extracted/cpp-nsinfo-399-focused2-17.log": "294cb6af5d2bc614ef47bec63143a0ff972448fa7dbbf151f5d8ffa7ae719e13",
+    "extracted/cpp-nsinfo-399-focused2-18.log": "1665837da7b1fefabfc0e61b36ab3e46aacda3409374a3ec4923f27c44be3941",
+    "extracted/cpp-nsinfo-399-focused2-19.log": "3b98130fa6ffd277b4729a5abcc9886e4cdbe60d148d853bc475a69ebc30a979",
+    "extracted/cpp-nsinfo-399-focused2-2.log": "2c3d83b6f8910f129153f71cf505382e1ae36291f9f6c1125a5182510f851069",
+    "extracted/cpp-nsinfo-399-focused2-20.log": "29c7ea49404747fbbdd472fce171133de89323a9ea3685396b327b2b47f3772a",
+    "extracted/cpp-nsinfo-399-focused2-21.log": "426a3d77cc906c9a8caf6fe5c6c0c0e191465767a352e340c63ff7a8804e8c6a",
+    "extracted/cpp-nsinfo-399-focused2-22.log": "7f50abce8e01778f80ed6307873d585fd13227d45328e0540b1912af2ca1a56e",
+    "extracted/cpp-nsinfo-399-focused2-3.log": "f2105a03659dcd35ec440a769b319de162ebe6cb5c638b2caafff44a871839d2",
+    "extracted/cpp-nsinfo-399-focused2-4.log": "7ca9a8662dd7433b77a2914dffdcf4bd351a1a06be3e6a9474a6f6066c7fe39f",
+    "extracted/cpp-nsinfo-399-focused2-5.log": "eba35a6f6f19d9634b8f45e9e85b80911b6c26a7c83fa3f6124ee2a09d7a91a5",
+    "extracted/cpp-nsinfo-399-focused2-6.log": "1105e68d7473761ee98e18778e807261fde39e0f8bba29a7cfabfb0ecf93628f",
+    "extracted/cpp-nsinfo-399-focused2-7.log": "bcdc64dba65c54099e8e526e3ce03c4b3d9651a01e0eadc90b60f80688ab0cda",
+    "extracted/cpp-nsinfo-399-focused2-8.log": "65c29b65651daea9299127314155b65f75b37bee950ee511f5b3678ff2ef220a",
+    "extracted/cpp-nsinfo-399-focused2-9.log": "6d05afca73baab099c985eb1bfec69a8c1449a63d346ec75be1e3fb88c3143df",
+    "extracted/cpp-nsinfo-399-focused2-before.json": "a7b0f9a1101decd7c2411c0fb932bc464dd643615a5e3555301a8588e098df4d",
+    "extracted/cpp-nsinfo-399-focused2-progress1.json": "79cbcebf55bd5e45ee4d079eca91d5f4ef722ca10713e0142c6ea50911581186",
+    "extracted/cpp-nsinfo-399-focused2-progress10.json": "d244ef98699db64e46618c1c511dafbeca42d338607e45970a4bcef02aee7091",
+    "extracted/cpp-nsinfo-399-focused2-progress11.json": "033afca71db12c1a95aaa232d1f203436c8b0ab8e92fb34d3d751ecdbbcd87aa",
+    "extracted/cpp-nsinfo-399-focused2-progress12.json": "cd2d28cfd2e584f7ee30205c0693f9c8a685bb1df9794bc3c8a971cec1920b20",
+    "extracted/cpp-nsinfo-399-focused2-progress13.json": "7c549bd081c532c765a8992dabd85e261c5e13dbe83ebcfd48b18ba2346cb3ba",
+    "extracted/cpp-nsinfo-399-focused2-progress14.json": "6cf574b2102a4e99b386b186a014a660694bd5403813d94c167417d76f271eb1",
+    "extracted/cpp-nsinfo-399-focused2-progress15.json": "781f76af3c44477f01e4ee8d7c78fbacb9ec582948c50150999b18c09220fb89",
+    "extracted/cpp-nsinfo-399-focused2-progress16.json": "5fac55b908443b34cda5f5f4cb7ac30311abdd42f492ea2853ba1bb3d5148c88",
+    "extracted/cpp-nsinfo-399-focused2-progress17.json": "c5624232414b3134f329a016e1fff41ea4c7dc7755bee38532b60dccd96daba5",
+    "extracted/cpp-nsinfo-399-focused2-progress18.json": "e3bfb35b1b65d6de66b6e515f0c75c2b3f4ac13edb3f569fea9902988973e826",
+    "extracted/cpp-nsinfo-399-focused2-progress19.json": "a663fee244b3a9296336af88e0105e54b135db00a71c9522b7c1c1c3c45c3be8",
+    "extracted/cpp-nsinfo-399-focused2-progress2.json": "492a56db1932afadb84a673c9ea1c8fedab9576c11b681dd8021e86f043d4540",
+    "extracted/cpp-nsinfo-399-focused2-progress20.json": "da3c20e20b33dd440db2919bc07c6a20510d065cd96191c3f0b967d75df603bf",
+    "extracted/cpp-nsinfo-399-focused2-progress21.json": "9edd7704b48fe93807ee9455b1f08f357a7afaf45e13cb19d9a61f5a8e83249e",
+    "extracted/cpp-nsinfo-399-focused2-progress22.json": "030c5b51ee167e9f4b954ef32ac08b2a651cbbaf7cf304c4746660c6e3b49470",
+    "extracted/cpp-nsinfo-399-focused2-progress3.json": "c08528fe0c7b41c93991805a31f2f676885cf701aceda528208f667ed0576b98",
+    "extracted/cpp-nsinfo-399-focused2-progress4.json": "dd95f3a5fc2a44b02a933da7bd668ed9b22ff6e76f153cafd0b05755711451f9",
+    "extracted/cpp-nsinfo-399-focused2-progress5.json": "747acdb09460e1e6489fed8d6e21207bec3f0b3c3bd0fc8a594ce5c8b95a5bbe",
+    "extracted/cpp-nsinfo-399-focused2-progress6.json": "bedf4658e2d6382ac127d948269819be919fe065392918f08d68f79ca9c1237b",
+    "extracted/cpp-nsinfo-399-focused2-progress7.json": "ebb1bd693786665f9a344cd81b4455b43013c1db4bf91df6e4916b1358e39001",
+    "extracted/cpp-nsinfo-399-focused2-progress8.json": "52341b5aa2adc20996992bd250812af8eaf94202fa5bb0667c358fe96ad26619",
+    "extracted/cpp-nsinfo-399-focused2-progress9.json": "8b6a4f3a22fc3d5d0723ada5a3bb975df3065ca1b44bbfc35f4cdced812a7d91",
+    "extracted/cpp-nsinfo-399-focused2.json": "a69f6f53eb3f1fa731c6e4cfed925c66435b6a94f5e95954967e23d88001a2fc",
+    "extracted/cpp-nsinfo-399-gui1-before.json": "a7b0f9a1101decd7c2411c0fb932bc464dd643615a5e3555301a8588e098df4d",
+    "extracted/cpp-nsinfo-399-gui1.json": "8748e184c5ec6aa1546af7868d3049ca9a5767dc20f969545066a4401a1a3a99",
+    "extracted/cpp-nsinfo-399-gui1.log": "e51c1e43c0fc11b2b88af9d0fdbf4011a541875eb1d9722967138dac622c753c",
+    "extracted/cpp-nsinfo-399-native-replay.py": "a649f7d99d44788ff2ccfc89deb327574a6cd1f3fc9e075a19b4aec5b35d95fc",
+    "extracted/cpp-nsinfo-399-native-replay1.json": "15a66dc1a4aebea7c6f65bf9194bbbd5b08a5ac65d3240871cefff29795e22e9"
+  },
+  "originals1394Unchanged": true,
+  "protectedTrackedChanges": [],
+  "originalGameRuns": 0,
+  "newFullDecompilation": 0,
+  "limitations": [
+    "실제 Client는 기존 월드 UI 설치에서 NSInfo를 생성한다. Session 이전 전체 생성은 별도 실제 통합 검사로 확인했으며 새 Uber 전체 교체의 접합 완료는 아니다.",
+    "전용 메타맵 배치/입력/특수 버튼 Draw와 전체 부모·하위 생성 EH는 미완료다. 선택 경계의 거부와 이번 일반 모드 생성/부착을 구별한다.",
+    "시작 서버 목록은 현재 보호 파일의 짧은 행을 읽는다. 전체 원문 목록 정렬/갱신/저장/없을 때 기본 목록 저장·재로드 및 긴 line-reader는 미복원이다. 보호 파일은 쓰지 않는다.",
+    "상위 Native480행은 공통 Gump/Scrolling/문자/버튼 등의 외부 장치를 지정한 관측이다. 실제130 Gump 조합 검증과 모든 하위 본문의 독립 Native 검증 완료를 혼동하지 않는다.",
+    "모든 Early/캠페인/Demo 사용자 완주, Edit/언어별 시나리오 전체 및 모든 픽셀/음향 동일성은 미완료다.",
+    "393의 Wide SaveOptions errno22/doserrno1224 원인은 이번에 재현/수정하지 않았다."
+  ]
+}

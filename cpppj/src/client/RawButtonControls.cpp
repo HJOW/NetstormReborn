@@ -6,6 +6,7 @@
 #include "client/WarningMessages.h"
 #include "client/StoneButtonGump.h"
 #include "client/GumpFormBinding.h"
+#include "client/RawNsInfoContext.h"
 #include <algorithm>
 #include <bit>
 #include <map>
@@ -88,15 +89,15 @@ struct RawButtonControls::Impl {
         input=std::make_unique<GumpInput>(create,life,inputState,*collection,*events,std::move(inputHooks));
         GumpFrameHooks frameHooks;frameHooks.node=[this](auto token) { return Node(token); };
         frameHooks.redraw=[this](auto,bool) { changed=true; };
-        frameHooks.idle=[this](auto token) { if (warnings && warnings->Node(token)) warnings->Idle(token);else if (stones.contains(token) || (menus && menus->Button(token))) buttons->Idle(token);else if (minimap && minimap->Node(token)) minimap->Idle(token);else if (production && production->Node(token)) production->Idle(token);else if (menus && menus->Node(token)) menus->Idle(token); };
+        frameHooks.idle=[this](auto token) { if (warnings && warnings->Node(token)) warnings->Idle(token);else if (stones.contains(token) || (menus && menus->BaseButton(token))) buttons->Idle(token);else if (minimap && minimap->Node(token)) minimap->Idle(token);else if (production && production->Node(token)) production->Idle(token);else if (menus && menus->Node(token)) menus->Idle(token); };
         frameHooks.broadcast=[this](auto token,auto event,auto first,auto second) {
-            if (stones.contains(token) || (menus && menus->Button(token))) buttons->Broadcast(token,event,first,second);
+            if (stones.contains(token) || (menus && menus->BaseButton(token))) buttons->Broadcast(token,event,first,second);
             else if (production && production->Node(token)) production->Broadcast(token,event,first,second);
             else if (menus && menus->Node(token)) menus->Broadcast(token,event,first,second);
         };
         frame=std::make_unique<GumpFrame>(create,life,std::move(frameHooks));
         ButtonGumpHooks buttonHooks;
-        buttonHooks.node=[this](auto token)->ButtonGumpNode* { const auto found=stones.find(token);return found==stones.end() ? (menus ? menus->Button(token) : nullptr) : found->second.get(); };
+        buttonHooks.node=[this](auto token)->ButtonGumpNode* { const auto found=stones.find(token);return found==stones.end() ? (menus ? menus->BaseButton(token) : nullptr) : found->second.get(); };
         buttonHooks.baseNode=[this](auto token) { return Node(token); };
         buttonHooks.backgroundFlags=[this](auto token)->std::uint32_t* { const auto found=backgrounds.find(token);auto* background=found==backgrounds.end() ? (menus ? menus->Background(token) : nullptr) : found->second.get();return background ? &background->backgroundFlags : nullptr; };
         buttonHooks.now=[this] { return hooks.now ? hooks.now() : 0.0; };
@@ -141,7 +142,7 @@ struct RawButtonControls::Impl {
     }
     // 루트 부모 click의 serial을 화면 명령 번호로 변환한다. right/repeat는 미지원 상위 명령으로 보존한다.
     std::uint32_t Handle(std::uint32_t token,std::uint32_t event,std::uint32_t first,std::uint32_t second) {
-        if (stones.contains(token) || (menus && menus->Button(token))) return buttons->Handle(token,event,first,second);
+        if (stones.contains(token) || (menus && menus->BaseButton(token))) return buttons->Handle(token,event,first,second);
         if (minimap && minimap->Node(token)) return minimap->Handle(token,event,first,second);
         if (production && production->Node(token)) return production->Handle(token,event,first,second);
         if (menus && menus->Node(token)) return menus->Handle(token,event,first,second);
@@ -160,7 +161,7 @@ struct RawButtonControls::Impl {
             // Kill이 root.child를 바꾸므로 현재 머리를 매번 읽는다.
             while (Node(root)->child) lifetime->Kill(Node(root)->child);
         }
-        lifetime->Cleanup();if (!preserveWorldUi) { minimap.reset();if (production) production->Close();production.reset(); }controls.clear();activated.reset();
+        lifetime->Cleanup();if (!preserveWorldUi) { minimap.reset();if (production) production->Close();production.reset();if (menus) menus->CloseNsInfo(); }controls.clear();activated.reset();
     }
 };
 // 구현 주소는 생성 이후 이동하지 않아 순환 훅이 안정된 처리기를 조회한다.
@@ -260,6 +261,12 @@ RawMenuControls& RawButtonControls::EnableMenus(const GameAssets& assets,FontSto
 }
 // 별도 메뉴 트리 사본을 만들지 않고 같은 현재 확장 계층을 반환한다.
 RawMenuControls* RawButtonControls::Menus() const { return impl_->menus.get(); }
+// 같은 현재 배경 전역과 실제 기본 버튼을 전체 NSInfo 생성자에 연결한다.
+std::uint32_t RawButtonControls::ConstructNsInfo(RawNsInfoContext context) {
+    auto& s=*impl_;if (!s.menus) throw std::logic_error("NSInfo 공통 메뉴/문자 계층 미연결");const auto supplied=context.read;
+    context.read=[&s,supplied](auto address) { if (address==0x5ca920U) return s.productionGlobals.backgroundType;if (address==0x5ca924U) return s.productionGlobals.backgroundFrame;if (address==0x5ca928U) return s.productionGlobals.panelFrame;if (!supplied) throw std::logic_error("NSInfo 실제 TYPE/색 전역 미연결");return supplied(address); };
+    context.constructButton=[&s](auto token,auto width,auto height,auto flags) { s.buttons->ConstructBase(token,width,height,flags); };return s.menus->CreateNsInfo(std::move(context));
+}
 // 같은 공통 참조를 빌려 실제 Warning/Pause를 가상 분배와 원본 정렬 Draw에 연결한다.
 WarningMessages& RawButtonControls::EnableWarnings(std::function<double()> now,std::function<void()> sound,MessageGumpHooks pauseContext) {
     auto& s=*impl_;if (s.warnings || !s.menus) throw std::logic_error("Warning 공통 트리/메뉴 수명 오류");

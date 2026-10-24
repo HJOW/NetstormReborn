@@ -14,6 +14,10 @@ struct HudNsInfoGlobals {
     const std::uint32_t& metamap; //00594fc8의 현재 모드이며 Session의challenge에 연결된다.
     const std::uint32_t& playerKnown; //00595344의 현재 로그인/플레이어 인식 상태다.
 };
+// 기존 DWORD와 실제 현재 bool 물리 모두 소비 시점에 직접 읽는 뷰다. 미러 전역을 만들지 않는다.
+struct HudNsInfoModeView {
+    std::function<std::uint32_t()> metamap,playerKnown; //594fc8/595344의 실제 현재 저장소 조회다.
+};
 // 실제 공통 트리와 현재 파생 노드의 수명을 공급한다.
 struct HudNsInfoHooks {
     std::function<HudNsInfoNode*(std::uint32_t)> node; // 고정this의 실제 파생 저장소다.
@@ -28,6 +32,7 @@ class HudNsInfo {
 public:
     // 참조 전역/노드/훅의 수명은 이 처리기 및 재진입보다 길어야 한다.
     HudNsInfo(HudNsInfoGlobals globals,HudNsInfoHooks hooks);
+    HudNsInfo(HudNsInfoModeView globals,HudNsInfoHooks hooks); // 실제 Client 모드/known의 수명과 조회 시점을 보존한다.
     // 기본Attach→현재배경Push→너비/높이·배율쓰기→배경Attach→현재mode관문 순서다.
     void Attach(std::uint32_t token,float x,float y,std::uint32_t parent,std::uint32_t mode) const;
 private:
@@ -35,7 +40,7 @@ private:
     HudNsInfoNode& Node(std::uint32_t token) const;
     // 각 현재배경 조회에서 유효한 같은 기본 노드를 요구한다.
     GumpCreateNode& Base(std::uint32_t token) const;
-    HudNsInfoGlobals globals_; // 복제하지 않은 두 현재전역 참조다.
+    HudNsInfoModeView globals_; // 복제하지 않은 두 현재 전역의 직접 조회다.
     HudNsInfoHooks hooks_; // 같은 실제 트리와 미복원메타맵을 구별하는 경계다.
 };
 }

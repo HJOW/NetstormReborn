@@ -44,6 +44,7 @@
 #include "client/HtmlConditionEffect.h"
 #include "o/OriginalText.h"
 #include "o/Template.h"
+#include "client/RawNsInfoContext.h"
 #include <algorithm>
 #include <sstream>
 #include <stdexcept>
@@ -299,6 +300,7 @@ void UberGump::ClearWorld() {
     gameMenuState_.reset(); // 같은Session의검산참조를월드보다먼저반납한다.
     if (rawButtons_) rawButtons_->DisableMinimap(); // 같은Session/공통Gump보다먼저공간통지와미니맵을반납한다.
     if (rawButtons_) rawButtons_->DisableProduction(); // 실제 Session보다 먼저 UI Form을 반납한다.
+    if (rawButtons_ && rawButtons_->Menus()) rawButtons_->Menus()->CloseNsInfo(); // 현재 모드/문자/공통 부모가 살아 있을 때 NSInfo 전체 자식을 먼저 반납한다.
     client_.ClearThunderFlashes();
     if (world_) client_.GetRenderer().SetExtraCollection({}); // 월드 반납 전에 빌린 실제 커서 수집/Draw callback을 해제한다.
     client_.GetRenderer().SetOverlayProcedure({}); // 실제 메뉴 픽셀 소비자가 반납한 월드를 다시 읽지 않도록 먼저 제거한다.
@@ -1224,6 +1226,13 @@ void UberGump::Compose() {
                 [this] { return world_->MinimapView(); },[this](auto x,auto y) { world_->CenterCamera(x,y); },
                 [this](auto x,auto y) { world_->MoveFromMinimap(x,y); },[this] { return world_->InputMode(); },[this] { return client_.Poll(0xffff); }});
             rawButtons_->Minimap()->Resize(height);rawButtons_->Minimap()->SetPalette(client_.GetScreen().Colors());
+            if (!rawButtons_->Menus()->NsInfoRoot()) {
+                RawNsInfoContext context;context.globals=client_.NsInfoGlobals();context.gameplay=client_.GameplayGlobals();context.storage=client_.SurfaceStorage(); // 같은 실제 Client의 고정 소유자다.
+                context.read=[this](auto address) { if (address==0x5411c8U) return static_cast<std::uint32_t>(o::kFirstAssetTypeNumber+client_.Assets().Find("fortGump").block);if (address==0x5bec3cU) return static_cast<std::uint32_t>(client_.GetScreen().Colors().basic[7]);throw std::out_of_range("NSInfo 현재 원본 전역 미연결"); };
+                context.translate=[this](auto value) { return FontBytes(client_.Translate(value)); };context.storeText=[this](auto value) { const auto token=scriptStrings_.Store(value);if (token>0x0fffffffU) throw std::overflow_error("NSInfo 공유 문자열 고리 별칭 소진");return 0x70000000U|token; };context.text=[this](auto token) { return scriptStrings_.Resolve(token&0x0fffffffU); };
+                const auto token=rawButtons_->ConstructNsInfo(std::move(context));auto& node=*rawButtons_->Menus()->Node(token);node.baseWidth=static_cast<float>(width);node.width=static_cast<float>(static_cast<double>(width)*node.scale);node.baseHeight=static_cast<float>(height);node.height=static_cast<float>(static_cast<double>(height)*node.scale);node.flags|=0x20000U; // 기존 월드 UI 설치 경계에서 원문 Uber의 크기/플래그/부착만 적용한다. 전체 Uber 교체는 후속이다.
+                rawButtons_->Menus()->Attach(token,0,0,rawButtons_->RootToken(),0);
+            }
         }
         if (!popup_.empty()) {
             auto& menus=*rawButtons_->Menus();menus.SetPalette(client_.GetScreen().Colors());

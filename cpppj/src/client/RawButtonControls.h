@@ -13,6 +13,7 @@ namespace netstorm::client {
 class RawCampaignSession; // 생산 패널과 같은 현재 실제 월드다.
 struct RawProductionHooks; // 현재 생산 UI 장치 효과다.
 struct ProductionControlContext; // 초기 HUD의 실제 물리/현재 전역/Player/옵션이다.
+struct RawNsInfoContext; // NSInfo의 실제 장기 전역/문자열을 빌린다.
 class RawMinimapControls; // 같은 월드의 실제 Sky Overview 처리기다.
 class RawSurfaceStorage; // Session보다 오래 보관하는 실제 Pool/Hash/TYPE 물리다.
 struct RawMinimapHooks; // 현재 카메라/입력 장치다.
@@ -94,6 +95,7 @@ public:
     RawMenuControls& EnableMenus(const GameAssets& assets,FontStore& fonts,RawMenuHooks hooks);
     // 연결된 실제 메뉴를 빌린다. 연결 전에는 nullptr다.
     RawMenuControls* Menus() const;
+    std::uint32_t ConstructNsInfo(RawNsInfoContext context); // 같은 공통 Button/배경 전역으로 전체 NSInfo 생성만 한다.
     // 실제 공통 Gump/StyleText를 빌리는 안내 처리기를 한 번 설치한다. 별도 루트/등록표를 만들지 않는다.
     WarningMessages& EnableWarnings(std::function<double()> now,std::function<void()> sound,MessageGumpHooks pauseContext);
     WarningMessages* Warnings() const; // 같은 공통 가상 분배가 소유하는 현재 안내 처리기다.

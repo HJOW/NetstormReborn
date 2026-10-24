@@ -41,6 +41,7 @@ class ClientChatManagerGlobals; //현재 Chatmanager와 실제 미초기화 할�
 class ClientDotCommandGlobals; //최초 say와 같은 인접 명령 표를 Session보다 오래 보유한다.
 class RawSurfaceStorage; // 실제 Pool/Hash/TYPE/spot을 모든 Session과 초기 HUD보다 오래 보유한다.
 class ClientGameplayGlobals; // 실제 현재 Player/커서/미션 전역과 짧은 Runtime 연결을 소유한다.
+struct ClientNsInfoGlobals; // 실제 NSInfo/zone/선택 서버와 이름 버퍼의 장기 소유자다.
 struct ClientAudioOptions;
 
 // 설정 키 "maxFPS" 의 코드 기본값. 화면 루프를 초당 몇 번까지 돌릴지 정한다.
@@ -147,6 +148,7 @@ public:
     const std::shared_ptr<ClientCoreDataGlobals>& CoreDataGlobals() const; //같은 현재 Core 슬롯/캐시를 빌리며 Player 자동 선택이나 해제를 실행하지 않는다.
     const std::shared_ptr<ClientPlayerRecords>& PlayerRecords() const; // 실제 세션이 같은 할당 소유자와 대여 관문을 빌린다.
     const std::shared_ptr<ClientGameplayGlobals>& GameplayGlobals() const; // 초기 HUD와 Session에 같은 현재 전역을 전달한다.
+    const std::shared_ptr<ClientNsInfoGlobals>& NsInfoGlobals() const; // 현재 NSInfo와 서버 이름을 같은 고정 주소에서 빌린다.
     const std::shared_ptr<ClientChatManagerGlobals>& ChatManagerGlobals() const; //실제 manager 소유자를 빌리며 조회로 공통 startup을 실행하지 않는다.
     const std::shared_ptr<ClientDotCommandGlobals>& DotCommandGlobals() const; //최초 say를 보존하는 같은 장기 등록 표를 빌린다.
     const o::BaseFileSystem& Files() const;
@@ -227,6 +229,7 @@ private:
     std::shared_ptr<ClientCoreDataGlobals> coreDataGlobals_; //menu/Session보다 먼저 선언해 소비자 반납 뒤에도 현재/캐시가 살아 있게 한다.
     std::shared_ptr<ClientPlayerRecords> playerRecords_; // 모든 Session 고정뷰가 소멸한 뒤에 실제 Player/factory를 반납한다.
     std::shared_ptr<ClientGameplayGlobals> gameplayGlobals_; // Subscriber 뒤·UI/Session 앞에 구성한 실제 현재 전역이다.
+    std::shared_ptr<ClientNsInfoGlobals> nsInfoGlobals_; // 모든 실제 NSInfo 자식/문자 소비자보다 오래 유지한다.
     std::shared_ptr<ClientChatManagerGlobals> chatManagerGlobals_; //같은 Client의 현재 manager/할당을 보유하며 Session마다 재구성하지 않는다.
     std::shared_ptr<ClientDotCommandGlobals> dotCommandGlobals_; //menu/Session보다 먼저 구성한 실제 인접 표이며 현재 count를 별도로 복제하지 않는다.
     struct ChatState; // 실제 전역 Chat 기록과 현재 subscriber 처리기를 구현 파일의 고정 주소에 소유한다.

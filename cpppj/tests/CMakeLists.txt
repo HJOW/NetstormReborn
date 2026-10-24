@@ -2083,6 +2083,12 @@ set_source_files_properties(ChatStateClearTests.cpp PROPERTIES COMPILE_DEFINITIO
 target_sources(netstorm_tests PRIVATE PlayerInitializationTests.cpp)
 # 실제 Client Player/factory 소유자와 raw 헤더/재대여/초기화 실패를 검사한다.
 target_sources(netstorm_tests PRIVATE ClientPlayerRecordsTests.cpp)
+# 이전 중단 자료의 Native310/170행과 실제 전체 자식·공통 수명/그리기를 등록한다.
+target_sources(netstorm_tests PRIVATE HudNsInfoTests.cpp HudNsInfoCreateTests.cpp NsInfoClientTests.cpp)
+set_source_files_properties(HudNsInfoTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_HUD_NSINFO_ATTACH_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/hud-nsinfo-attach-x86.tsv\"")
+set_source_files_properties(HudNsInfoCreateTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_HUD_NSINFO_CREATE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/hud-nsinfo-create-x86.tsv\"")
 # Session 없는 실제 생산 생성/공통 수명과 현재 전역 대여를 검사한다.
 target_sources(netstorm_tests PRIVATE ProductionInitialContextTests.cpp)
 set_source_files_properties(PlayerInitializationTests.cpp PROPERTIES COMPILE_DEFINITIONS
