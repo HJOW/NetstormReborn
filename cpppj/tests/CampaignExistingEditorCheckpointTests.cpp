@@ -10,6 +10,8 @@
 #include "client/ClientChatManagerGlobals.h"
 #include "client/ClientCoreDataGlobals.h"
 #include "client/ClientStaticStrings.h"
+#include "client/ClientPlayerRuntime.h"
+#include "client/ClientPlayerRecords.h"
 #include "client/FortCurrentNameDevices.h"
 #include "client/FortSelection.h"
 #include "client/EditorFortFileDevices.h"
@@ -205,4 +207,20 @@ TEST_CASE(CampaignExistingEditorCheckpoint_ActualCustomTest01PlayerUiAndFile) {
     services.surfaceStorage=surface;services.gameplayGlobals=client.GameplayGlobals();services.subscriberGlobals=client.SubscriberGlobals();services.playerRecords=client.PlayerRecords();services.editorPlayerUi=MakeEditorPlayerClientHooks(client);services.fortTechnologyUi=[&] { ++devices.chatCalls;RefreshClientChatRankPrefix(client,assets.game,*surface); };
     RawCampaignSession session(assets.game,assets.files,FortTemplate::Parse(input,assets.game.TypeTable()),"deferred.fort",std::move(services));session.InstallExistingEditorCheckpoint(effects,client.ReadOnlyForts(),work);
     CHECK(session.ExistingEditorCheckpointReady() && session.CurrentHandle()=="Player" && session.CurrentSubscriber()!=0 && devices.chatCalls==1 && session.IslandCount()>0);const auto saved=ReadFileBytes(path);const auto result=FortTemplate::Parse(saved,assets.game.TypeTable());CHECK(!result.Section("State").empty() && !(result.Section("State")[0]&1U));CHECK(CheckpointRejects<std::logic_error>([&] { session.SnapshotFort(1); })); // 실제 커스텀 checkpoint가 끝나도 최종 loaded는 이 부모 밖이다.
+}
+
+// 실제 앞선 Native 초기화의 같은 Player를 대여하고 Session 반납 뒤에도 Core0 선택 전까지 이전 데이터가 살아 있음을 확인한다.
+TEST_CASE(CampaignExistingEditorCheckpoint_AdoptsNativePlayersAndPreservesCoreUntilNextCleanup) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);const auto input=CheckpointInput(assets.files);ClientOptions options;options.gameDirectory=assets.root;Client client(std::move(options));InitializeClientPlayerRecords(client);InitializeClientChatManager(client);client.StaticStrings()->Initialize(10240);const auto core=client.CoreDataGlobals();const std::uint32_t metamap=0;
+    EditorFiles work(CheckpointRoot(assets.root.parent_path(),"adopt-core-lifetime"),{assets.root,assets.root.parent_path()/"originalCD"});work.Prepare("Checkpoint385",input);
+    for (std::uint32_t pass=0;pass<2;++pass) { // 앞선 Core0/실제 재할당은 Native 호출 위치에서만 수행한다.
+        if (pass) { core->Select(client.GameplayGlobals()->player,metamap,0,1);CHECK(core->Cached()[4]==71 && core->Active()==0);InitializeClientPlayerRecords(client); }
+        const auto base=client.PlayerRecords()->Base();
+        { CheckpointDevices devices;auto storage=std::make_shared<CampaignTemplateStorage>();auto effects=devices.Effects(client,work);auto services=devices.Make(client,storage,ReadFileBytes(work.ResolvePath("d/Checkpoint385.fort")));const auto surface=MakeRawSurfaceStorage(assets.game);
+          services.surfaceStorage=surface;services.gameplayGlobals=client.GameplayGlobals();services.subscriberGlobals=client.SubscriberGlobals();services.playerRecords=client.PlayerRecords();services.coreDataGlobals=core;services.adoptInitializedPlayers=true;services.editorPlayerUi=MakeEditorPlayerClientHooks(client);services.fortTechnologyUi=[&] { RefreshClientChatRankPrefix(client,assets.game,*surface); };
+          RawCampaignSession session(assets.game,assets.files,FortTemplate::Parse(input,assets.game.TypeTable()),"deferred.fort",std::move(services));CHECK(client.PlayerRecords()->Base()==base && session.PlayerCoreGlobals()==core && core->Current().data()==session.PlayerRecords().data()+180+0x6c);session.InstallExistingEditorCheckpoint(effects,client.ReadOnlyForts(),work);CHECK(session.ExistingEditorCheckpointReady());core->Current()[4]=71;core->Active()=7;
+        }
+        CHECK(client.PlayerRecords()->Base()==base && !core->Current().empty() && core->Current()[4]==71 && core->Active()==7); // 소멸자가 임의 Core 선택 해제/캐시 복사를 하지 않는다.
+    }
+    core->Select(client.GameplayGlobals()->player,metamap,0,1);CHECK(core->Cached()[4]==71 && core->Active()==0); // 다음 Native 정리의 명시 선택만 현재 슬롯을 반납한다.
 }

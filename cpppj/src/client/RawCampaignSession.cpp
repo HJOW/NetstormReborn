@@ -107,6 +107,7 @@
 #include "o/RawProcessRemoval.h"
 #include "o/RawSquidLevel.h"
 #include "o/RawPlayerCoreData.h"
+#include "client/ClientCoreDataGlobals.h"
 #include "o/RawPlayerCoreRefresh.h"
 #include "o/RawSquidSelection.h"
 #include "o/RawCarrierRegular.h"
@@ -312,6 +313,7 @@ bool RawCampaignObjectMenus::ResolveIdentity(PlayerIdentityRecord& record) const
 // 실제 월드/상태와 모든 callback 대상을 같은 고정 주소에 소유한다.
 struct RawCampaignSession::Impl {
     std::shared_ptr<ClientGameplayGlobals> gameplayGlobals;std::unique_ptr<ClientGameplayGlobals::Use> gameplayUse; // 모든 모듈/Player 대여 뒤에 반납하는 현재 전역과 Runtime 대여다.
+    std::shared_ptr<ClientCoreDataGlobals> coreDataGlobals; // 실제 현재 슬롯/active/cache이며 독립 Session도 하나의 실제 소유자를 쓴다.
     std::shared_ptr<ClientPlayerRecords> playerRecords; // 모든 소비자보다 먼저 구성하고 마지막에 반납하는 실제 Client Player owner다.
     std::unique_ptr<ClientPlayerRecords::Use> playerUse; // Login과 서비스 callback까지 모두 소멸한 뒤 다음 Player 재할당을 허용한다.
     RawCampaignSessionServices services; // Login/장기 callback보다 먼저 만들고 나중에 반납하는 실제 클라이언트 장치다.
@@ -735,6 +737,7 @@ struct RawCampaignSession::Impl {
     // 보호 자료를 읽기 전용으로 사용하며 모든 필수 후처리를 첫 생성 전에 등록한다.
     Impl(const GameAssets& game,const BaseFileSystem& files,FortTemplate fort,std::string mission,RawCampaignSessionServices input):
         gameplayGlobals(SessionGameplayGlobals(input)),gameplayUse(gameplayGlobals->Acquire()),
+        coreDataGlobals(input.coreDataGlobals ? input.coreDataGlobals : std::make_shared<ClientCoreDataGlobals>()),
         playerRecords(input.playerRecords ? input.playerRecords : std::make_shared<ClientPlayerRecords>()),playerUse(playerRecords->Acquire()),
         services(std::move(input)),templateStorage(services.templateStorage ? services.templateStorage : std::make_shared<CampaignTemplateStorage>()),headers(templateStorage->Headers()),assets(game,files),metadata(assets.game),
         world(OriginalEdition::Patch1078,assets.types,assets.frames,metadata.shapes,CampaignLinks(),terrainType,services.processKernel,SessionSurfaceStorage(services,game)),core(world.Core()),
@@ -749,14 +752,17 @@ struct RawCampaignSession::Impl {
         restrictions(services.missionRestrictions ? *services.missionRestrictions : localRestrictions),
         start{core.processState,priestState.movement.dude,priestState.movement.teleport,priestState.movement.manaBolt,priestState.movement.priest,geyserType,snap,retrying},process{core.processState} {
         if (services.deferExistingEditorFile && services.installMode!=CampaignInstallMode::ExistingEditor) throw std::invalid_argument("파일지연은명시ExistingEditor전용입니다");
-        // 아직 고정span 소비자가 없고 known은 최초0이다. 실제 원문 초기화와 기존 동맹 자식을 먼저 실행한다.
-        playerUse->Initialize([this](std::uint32_t owner,std::uint32_t mask) {
+        if (services.coreDataGlobals && playerRecords->BoundCoreData()!=coreDataGlobals) throw std::invalid_argument("현재 Core와 Player base의 실제 소유자 불일치");
+        if (services.coreDataGlobals && !services.adoptInitializedPlayers) { playerState.playerKnown=0;const std::uint32_t metamap=core.ownerMode.challenge;coreDataGlobals->Select(playerState,metamap,0,1); } // 기존 미션 어댑터의 재할당 앞에서 실제 원문 known0/Core0·캐시 보존을 실행한다. 전체 State 정리 완료로 세지 않는다.
+        if (services.adoptInitializedPlayers) playerUse->AdoptCurrent();
+        else playerUse->Initialize([this](std::uint32_t owner,std::uint32_t mask) {
             RawPlayerParticipation initial(core.pool.Edition(),playerRecords->Records(),alliances,hiddenPlayers,participationState,{}); // 현재 새 할당과 같은 방향별 표를 읽는다.
             initial.BindCurrentInputs({[this] { return playerState.battleOwner; },[this] { return playerState.playerKnown; },
                 [this] { return core.ownerMode.battle; },[this] { return core.ownerMode.challenge; },[] { return false; }});
             initial.SetAlliance(owner,mask);
         });
         players=playerRecords->Records(); // 이후 모든 기존 소비자는 이 대여의 실제 물리만 빌린다.
+        if (!services.coreDataGlobals) coreDataGlobals->Players()=players; // 독립 Session만 같은 현재 Player뷰를 소유자에 직접 제공한다.
         sp.BindTrackingOffset(priestState.regen.patch.sequence);sp.Initialize();
         level=std::make_unique<RawSquidLevel>(core.pool,core.types,SessionMissing<void,SquidLevelAssertion>());
         finishState.chaffMode=true;objectState.mission=true;objectState.chaffMode=true;
@@ -772,6 +778,7 @@ struct RawCampaignSession::Impl {
             rewardState.fixedSpA=true;rewardState.fixedSpB=true;rewardState.halfHealthMode=false;rewardState.aiMirrorDisabled=false;
             priestState.regen.modeBlocked=true;
         }
+        if (services.coreDataGlobals) { const std::uint32_t metamap=core.ownerMode.challenge;coreDataGlobals->Select(playerState,metamap,1,1); } // 실제 모드 설정 뒤 현재 metamap을 다시 읽고 다음 Core1을 선택한다. 앞선 Native 초기화 대여에서도 prefix 선택 위치를 사용한다.
         //BYTE호환값을DWORD const참조로넘기면임시값수명오류가나므로실제Player DWORD를빌린다.
         broadcast=std::make_unique<RawBattleBroadcast>(core.pool.Edition(),players,services.battlePeers,playerState.battleOwner,assetState.boss);
         // 별도 관찰/장치 송신이 없으면 실제 분배기를 사용한다. NULL 연결은 원본 조건에서 자연스럽게 생략한다.
@@ -3181,16 +3188,13 @@ void RawCampaignSession::InstallExistingEditorCheckpoint(const CampaignExistingE
         s.editorCheckpointReady=true;s.editorCheckpointRunning=false; //004b743b정상복귀만표시하며후반HUD/State/최종loaded를앞당기지않는다.
     }catch (...) { s.editorCheckpointRunning=false;throw; } //동기진입guard만반납한다.manager/State/Config/파일/객체/난수는rollback하지않는다.
 }
-// 현재 Login이 실제 선택한 Core만 갱신한다.Editor의 임의 owner선택/Client장기alias를 만들지 않는다.
+// 같은 장기 슬롯의 현재 Core만 갱신하며 Login이 없는 Editor도 별도 사본을 만들지 않는다.
 void RawCampaignSession::RefreshCurrentPlayerCore() {
     auto& s=*impl_;PlayerCoreRefreshHooks hooks; // 모든 하위 callback은 동기 부모가 끝나기 전 반납된다.
     constexpr std::uint32_t poolBase=0x12000000U; // 같은 실제 Pool의50BYTE 상대주소를 나타내는opaque32기준이며 host포인터/두번째풀은아니다.
     hooks.core=[&s] { //0048f0d0의 현재 포인터/진단을 기존 몸체로 실행하며 Core 사본은 만들지 않는다.
-        if (!s.login) throw std::logic_error("현재Core갱신의실제Login선택Core소유자미연결");
-        const auto players=std::span<std::uint8_t>(s.players); // 이 getter에서 실제 Read가 쓰지 않는 현재 Player뷰다.
         const std::uint32_t metamap=s.core.ownerMode.challenge ? 1U : 0U; // getter의원문1회읽기입력일뿐bool전역의alias/쓰기동기화가아니다.
-        return ReadPlayerCoreData({s.playerState.templateOwner,s.playerState.battleOwner,s.playerState.playerKnown,s.login->coreActive,
-            metamap,s.login->currentCore,s.login->cachedCore,players},{SessionMissing<void,std::uint32_t>()});
+        return s.coreDataGlobals->Read(s.playerState,metamap,{SessionMissing<void,std::uint32_t>()});
     };
     hooks.technologyParent=[&s] { return s.player->CurrentTechnology(); };
     struct Cursor { // Begin마다 실제 Finder/현재후보를 따로 소유해 재진입 순서를 유지한다.
@@ -3311,6 +3315,7 @@ const RawCampaignParticles& RawCampaignSession::Particles() const { return *impl
 void RawCampaignSession::CheckMissionOutcome() { impl_->outcome->Check(); }
 // 실제 worldLoad의 loginSubscriber 복사 대상과 같은 장기 전역을 매번 읽는다.
 const std::uint32_t& RawCampaignSession::CurrentSubscriber() const { return impl_->globals.mySubscriber; }
+const std::shared_ptr<ClientCoreDataGlobals>& RawCampaignSession::PlayerCoreGlobals() const { return impl_->coreDataGlobals; } // 같은 현재 슬롯/active/cache 소유자를 관측한다.
 // 현재 사용자 이름을 새 설정 조회나 Player 표시 이름으로 대체하지 않는다.
 std::string_view RawCampaignSession::CurrentHandle() const {
     const auto& bytes=impl_->handle;const auto end=std::find(bytes.begin(),bytes.end(),std::uint8_t{});

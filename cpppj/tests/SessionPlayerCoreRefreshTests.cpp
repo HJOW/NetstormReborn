@@ -1,6 +1,9 @@
 // 실제 LocalLogin Core alias와 같은 TYPE/다이스를 사용한 현재 Core 갱신을 검사한다.
 #include "DudeSpawnSupport.h"
 #include "client/RawCampaignSession.h"
+#include "client/ClientCoreDataGlobals.h"
+#include "client/ClientGameplayGlobals.h"
+#include "client/ClientPlayerRecords.h"
 #include <algorithm>
 #include <array>
 #include <stdexcept>
@@ -68,13 +71,19 @@ TEST_CASE(SessionPlayerCoreRefresh_CurrentLoginAliasAndActualDaisCount) {
     CoreRefreshPut(raw,36,3);session.RefreshCurrentPlayerCore();CHECK(CoreRefreshRead(current,6)==0x11U && current[5]==2); // 현재다이스count가내려가도기존Core+5하한은줄이지않는다.
 }
 
-// 직접Load/Editor처럼 Login현재선택이없는 경로는 임의 owner1 Core를 만들지 않는다.
-TEST_CASE(SessionPlayerCoreRefresh_RequiresSelectedLoginCoreBeforeFirstStore) {
+// 같은 실제 Core 선택이 없으면 첫 store 전에 멈추며 Login 없는 경로도 명시 선택 뒤에는 같은 부모를 사용한다.
+TEST_CASE(SessionPlayerCoreRefresh_RequiresActualSelectionAndSupportsSharedCoreWithoutLogin) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);CoreRefreshSessionDevices devices; // 실제 장치 수명을 보존한다.
-    auto fort=FortTemplate::Parse(assets.files.Read("d/bc8fury76.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"bc8fury76",devices.Make(false));session.Load();
+    auto gameplay=std::make_shared<ClientGameplayGlobals>();auto selected=std::make_shared<ClientCoreDataGlobals>();auto players=std::make_shared<ClientPlayerRecords>();players->BindCoreData(selected);auto services=devices.Make(false);
+    services.gameplayGlobals=gameplay;services.coreDataGlobals=selected;services.playerRecords=players; // 실제 Login 객체 없이 같은 장기 슬롯과 Native Player 초기화/선택 장치를 빌린다.
+    auto fort=FortTemplate::Parse(assets.files.Read("d/bc8fury76.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"bc8fury76",std::move(services));session.Load();
+    const auto owner=session.LocalOwner(),templateOwner=session.TemplateOwner();const std::uint32_t metamap=0;selected->Select(gameplay->player,metamap,0,1);CHECK(selected->Current().empty()); // 실제 선택 해제 뒤에만 첫 store의 물리 거부를 검사한다.
     const auto before=std::vector<std::uint8_t>(session.PlayerRecords().begin(),session.PlayerRecords().end());bool rejected{}; // Core+6을쓰기전선택필수실패여야한다.
-    try { session.RefreshCurrentPlayerCore(); }catch (const std::logic_error& error) { rejected=std::string(error.what()).find("Login선택Core")!=std::string::npos; }
+    try { session.RefreshCurrentPlayerCore(); }catch (const std::out_of_range& error) { rejected=std::string(error.what()).find("현재Core갱신의실제store물리범위")!=std::string::npos; }
     CHECK(rejected && std::equal(before.begin(),before.end(),session.PlayerRecords().begin()));
+    selected->Select(gameplay->player,metamap,owner,templateOwner);session.ClearTechnology(owner);session.AddTechnology(owner,"windBattery;sunAviary");auto current=selected->Current();current[5]=0;CoreRefreshPut(current,6,0xffffffffU);
+    const auto dais=session.World().Create(165,2);auto raw=session.Core().pool.AllocatedBytes(dais);raw[34]=static_cast<std::uint8_t>(owner);CoreRefreshPut(raw,36,120);session.RefreshCurrentPlayerCore();
+    CHECK(session.PlayerCoreGlobals()==selected && current.data()==session.PlayerRecords().data()+owner*180+0x6c && CoreRefreshRead(current,6)==0x11U && current[5]==2 && session.LocalConnectionPhase()==0); // 실제 기술/다이스 결과와 현재 슬롯을 검사하며 Login 유무를 성공 관문으로 삼지 않는다.
 }
 
 // 미복원가상80은기술bit완료뒤선택위치에서중단하고앞선직접효과를되돌리지않는다.

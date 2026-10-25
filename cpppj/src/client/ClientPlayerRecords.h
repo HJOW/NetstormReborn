@@ -6,6 +6,7 @@
 #include <memory>
 
 namespace netstorm::client {
+class ClientCoreDataGlobals; // 같은 현재 Core/Player 뷰 슬롯의 장기 소유자다.
 // opaque32 주소는 실제 보관 블록의 식별자이며 호스트 포인터를 DWORD로 절삭하지 않는다.
 class ClientPlayerRecords {
 public:
@@ -22,6 +23,7 @@ public:
         Use(const Use&)=delete; // 단일 대여를 복제하지 않는다.
         Use& operator=(const Use&)=delete; // 대여의 중복 반납을 막는다.
         void Initialize(std::function<void(std::uint32_t,std::uint32_t)> alliance); // 같은 대여의 첫 호출만 원문236BYTE를 실행한다.
+        void AdoptCurrent(); // 앞선 실제 Native 부모가 초기화한 기록만 대여한다. 할당/동맹/필드 초기화를 다시 실행하지 않는다.
         void BindFactory(o::SquidPostPopList& list,std::uint32_t owner); // 실제 Player+0/+4/+8에 목록을 연결한다.
     private:
         friend class ClientPlayerRecords;
@@ -30,6 +32,10 @@ public:
         bool attempted_{},initialized_{}; // 실패한 부모를 같은 고정뷰 대여 중 재진입하지 않는다.
     };
     std::unique_ptr<Use> Acquire(); // 현재 대여가 없어야 하며 조회 자체는 할당/초기화를 하지 않는다.
+    void Initialize(std::function<void(std::uint32_t,std::uint32_t)> alliance); // 고정뷰 소비자가 없을 때 원문 공통 시작/State 부모의 실제 초기화를 실행한다.
+    void BindCoreData(std::shared_ptr<ClientCoreDataGlobals> core); // 같은 Player base 변경을 실제 Core의 빌린 Player 슬롯에 연결한다. 현재 선택을 임의로 바꾸지 않는다.
+    std::shared_ptr<ClientCoreDataGlobals> BoundCoreData() const; // 같은 실제 장기 소유자 정체성을 순수 조회한다.
+    bool Initialized() const; // 전체 실제 초기화가 정상 복귀했는지 관측한다. 부분 실패는 초기화 완료로 대여하지 않는다.
     std::span<std::uint8_t> Records(); // 현재 base가 가리키는 실제1620BYTE다. 재할당을 넘어 보관하려면 Use가 필요하다.
     std::span<const std::uint8_t> Records() const; // 같은 실제 Player 물리의 읽기뷰다.
     std::uint32_t Base() const; // 원시0059534c의 현재 opaque32 주소다.
@@ -47,10 +53,13 @@ private:
     std::uint32_t Read(std::uint32_t owner,std::uint32_t offset); // 현재 Player 행의 little endian DWORD다.
     void Write(std::uint32_t owner,std::uint32_t offset,std::uint32_t value); // 같은 현재 행에4BYTE만 쓴다.
     std::span<std::uint32_t> Factory(std::uint32_t owner); // 현재 Player의 포인터/용량으로 같은 실제 factory 배열을 해석한다.
+    void InitializeBody(std::function<void(std::uint32_t,std::uint32_t)> alliance); // 공통/대여 경로가 같은 실제 Native 부모와 메모리 장치를 공유한다.
+    void WriteBase(std::uint32_t base); // 원문 현재 주소를 쓰고 같은 실제 할당의 host span 슬롯도 즉시 갱신한다.
     std::map<std::uint32_t,Block> blocks_; // 실제 생존 할당만 유지하며 해제된 주소로의 조회는 실패한다.
     std::uint32_t next_{0x30000000},base_{},fortCount_{},lastLoginPlayer_{}; // 겹치지 않는 발급 주소와 원문의 실제 세 DWORD다.
     std::array<std::uint32_t,81> alliances_{}; // 최초 BSS0이며 원문 자식이 각 행을 직접 갱신한다.
     AllocationBytes allocationBytes_; // 명시 검사는 고정 입력, 실제 Client는 현재 CRT의 할당 BYTE를 공급한다.
     bool inUse_{}; // 기존 고정span 소비자가 살아 있는 동안 재할당을 막는 호스트 수명 관문이다.
+    bool initialized_{};std::weak_ptr<ClientCoreDataGlobals> core_; // 실제 초기화 정상 복귀와 외부 장기 Core 슬롯의 약한 연결이다.
 };
 }

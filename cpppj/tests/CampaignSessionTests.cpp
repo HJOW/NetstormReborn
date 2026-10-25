@@ -10,6 +10,9 @@
 #include "client/ClientMain.h"
 #include "client/ClientPlayerRecords.h"
 #include "client/ClientCoreDataGlobals.h"
+#include "client/ClientPlayerRuntime.h"
+#include "client/ClientGameplayGlobals.h"
+#include "client/ClientSubscriberGlobals.h"
 #include "client/RawCampaignMissionStartBindings.h"
 #include "client/UserInput.h"
 // 생산 세션과 GameWorld의 표시/선택/명령이 같은 실제 raw 월드를 사용하는지 검사한다.
@@ -2540,6 +2543,14 @@ TEST_CASE(CampaignSession_TemplateSurvivesUntilExplicitInitClear) {
         stateAddress=storage->State(1).bytes.data();CHECK(stateAddress==storage->Template(1).Section("State").data() && (storage->Template(1).Section("State")[0]&2U));
     }
     CHECK(storage->OwnedImages()==1 && stateAddress==storage->Template(1).Section("State").data());storage->ClearAll();CHECK(!storage->OwnedImages() && Get(storage->Headers(),20)==0);
+}
+
+// 실제 로컬 Zone/로그인 패킷이 Client와 같은 현재 Core 슬롯을 다시 선택하는지 확인한다.
+TEST_CASE(CampaignSession_ActualLoginUsesClientCurrentCoreSlot) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);ClientOptions options;options.gameDirectory=assets.root;Client client(std::move(options));InitializeClientPlayerRecords(client);client.SubscriberGlobals()->MySubscriber()=client.SubscriberGlobals()->LoginSubscriber(); // 실제 Init이 복사하는 두 현재 Subscriber 슬롯의 명시 입력이다.
+    SessionServicesFixture external;auto services=external.Services();UseWorldTestLogin(services);services.gameplayGlobals=client.GameplayGlobals();services.subscriberGlobals=client.SubscriberGlobals();services.playerRecords=client.PlayerRecords();services.coreDataGlobals=client.CoreDataGlobals();services.missionSubscriber=client.CurrentSubscriber();
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",std::move(services));CHECK(session.PlayerCoreGlobals()==client.CoreDataGlobals());client.CoreDataGlobals()->Current()={}; // 이전 로컬 사본을 쓰면 아래 실제 패킷으로 이 슬롯이 복원되지 않는다.
+    session.LoadLocalConnection();CHECK(session.LocalConnectionPhase()==14 && client.CoreDataGlobals()->Current().data()==session.PlayerRecords().data()+180+0x6c && client.CoreDataGlobals()->Players().data()==session.PlayerRecords().data());CHECK(client.CoreDataGlobals()->Active()==0);
 }
 
 // Init에서 소유한 Zone의 subscriber7을 실제 로그인에 사용하고 설치 뒤 같은 이미지의 수명을 반납한다.

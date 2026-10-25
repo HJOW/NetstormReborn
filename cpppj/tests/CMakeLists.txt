@@ -2147,6 +2147,7 @@ target_sources(netstorm_tests PRIVATE TellFileMenusTests.cpp) # 실제 @/# 원�
 target_sources(netstorm_tests PRIVATE FortCurrentNameDevicesTests.cpp) # 실제 Client 이름/목록 dirty·manager·Notify/저장·보호 파일 장치를 함께 확인한다.
 target_sources(netstorm_tests PRIVATE ClientChatRuntimeTests.cpp) # 실제 Chat 시작/명령표/현재 설정/Core와 보호·현재 icon 개수를 함께 대조한다.
 target_sources(netstorm_tests PRIVATE StaticStringsTests.cpp) # 원본204관측과 실제 Client 고리/번역/서식 수명을 확인한다.
+target_sources(netstorm_tests PRIVATE ClientPlayerRuntimeTests.cpp) # 실제 공통 Player/장기 Core/재할당 선행과 초기화 기록 대여 수명을 확인한다.
 set_source_files_properties(StaticStringsTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_STATIC_STRINGS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/static-string-runtime-x86.tsv\"")
 set_source_files_properties(TellFileMenusTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_TELL_FILE_MENUS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/tell-file-menus-x86.tsv\";NETSTORM_TELL_INLINE_LIST_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/tell-inline-list-x86.tsv\";NETSTORM_TELL_INLINE_ERRORS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/tell-inline-errors-x86.tsv\"")

@@ -58,6 +58,7 @@ class FortTypeConversionStorage; // 같은 Client의 현재 conversion DWORD와 
 class ClientRandomGlobals; // 실제 Client의 CRT 상태와 Subscriber ID 최초시드 DWORD를 함께 빌린다.
 class ClientSubscriberGlobals; // 실제 Client의 my/login 두 Subscriber DWORD만 빌린다.
 class ClientPlayerRecords; // 실제 Player/factory와 로그인 카운터를 Client 수명에 보관한다.
+class ClientCoreDataGlobals; // 현재 Core/active/cache를 같은 Client 수명에서 빌린다.
 class ClientGameplayGlobals;struct ProductionControlContext; // 실제 초기 HUD와 같은 현재 전역/물리를 공유한다.
 class ClientColorSortInput; // 같은 Client 최초 고정RGB 소유자이며 raw primary 전체 복원과 구별한다.
 class ClientLocalStateGlobals; // 실제 Client의 State 다섯 블록과 활동 기한의 장기 소유자다.
@@ -206,6 +207,8 @@ struct RawCampaignSessionServices {
     std::shared_ptr<ClientRandomGlobals> randomGlobals; // 생략된 독립 검사만 기존Session CRT0을 사용하고 실제Client는 같은장기소유자를 전달한다.
     std::shared_ptr<ClientSubscriberGlobals> subscriberGlobals; // 생략된 독립 검사만 기존 0/0 및 Begin 값 복사를 유지한다.
     std::shared_ptr<ClientPlayerRecords> playerRecords; // 미연결 독립 Session만 자체 실제 할당 소유자를 만든다.
+    std::shared_ptr<ClientCoreDataGlobals> coreDataGlobals; // 실제 Client는 Login/Chat과 같은 현재 Core 슬롯·캐시·active를 사용한다.
+    bool adoptInitializedPlayers{}; // 앞선 Native 부모의 실제 초기화 완료 기록을 대여하며 Session 생성자에서 다시 재할당하지 않는다.
     std::shared_ptr<ClientGameplayGlobals> gameplayGlobals; // 실제 Client의 Player/커서/검색/미션 전역이며 독립 Session만 자체 소유한다.
     o::Kernel* processKernel{}; // 실제 Client의 한 전역 Kernel을 빌린다. 소유자는 모든 Session/월드 소비자보다 오래 살아야 한다.
     std::shared_ptr<RawSurfaceStorage> surfaceStorage; // 실제 Client의 한 Pool/Hash/TYPE/spot을 빌리며 독립 Session만 자체 물리를 만든다.
@@ -279,6 +282,7 @@ public:
     std::unique_ptr<o::RawTutorialLater> MakeTutorialLater(o::RawMissionFrameGate& gate,o::MissionStartState& state,o::TutorialLaterHooks hooks);
     // 원본 로그인/월드 로더가 공유하는 현재 globals.mySubscriber를 읽기만 한다. 별도 캐시를 만들지 않는다.
     const std::uint32_t& CurrentSubscriber() const; // 같은 Client 또는 독립 Session의 실제 My DWORD 참조다.
+    const std::shared_ptr<ClientCoreDataGlobals>& PlayerCoreGlobals() const; // 같은 현재 Core 소유자를 조회하며 선택/캐시 복사를 하지 않는다.
     std::string_view CurrentHandle() const; // 실제 월드 로더가 갱신한 같은64BYTE 사용자 이름을 NUL까지 빌린다.
     // 같은 실제 PlayerWorld의00540c70을 읽는다. 자산/UI 어댑터의 로컬 번호 사본을 사용하지 않는다.
     std::uint32_t LocalOwner() const;

@@ -1,6 +1,7 @@
 // 원문 부모의 물리 장치만 제공하며 동맹/Chat 계산은 기존 실제 자식에 맡긴다.
 #include "client/ClientPlayerRecords.h"
 #include "client/CurrentAllocationBytes.h"
+#include "client/ClientCoreDataGlobals.h"
 #include <limits>
 #include <stdexcept>
 #include <utility>
@@ -16,14 +17,39 @@ std::unique_ptr<ClientPlayerRecords::Use> ClientPlayerRecords::Acquire() { retur
 // 원문이 선택하는 순서에 따라 실제 할당/해제와 현재 base store를 수행한다.
 void ClientPlayerRecords::Use::Initialize(std::function<void(std::uint32_t,std::uint32_t)> alliance) {
     if (attempted_) throw std::logic_error("살아 있는 Player 고정뷰 대여에서 초기화를 반복할 수 없음");attempted_=true;
+    records_.InitializeBody(std::move(alliance));initialized_=true;
+}
+// Native 초기화를 이미 마친 같은 주소를 빌리며 이전 생성자의 반납/재할당을 반복하지 않는다.
+void ClientPlayerRecords::Use::AdoptCurrent() {
+    if (attempted_ || !records_.initialized_ || !records_.base_) throw std::logic_error("초기화 완료된 현재 Player 대여 계약");attempted_=true;initialized_=true;
+}
+// 원문 공통 시작이나 State 부모는 현재 모듈이 같은 고정뷰를 쓰고 있지 않아야 한다.
+void ClientPlayerRecords::Initialize(std::function<void(std::uint32_t,std::uint32_t)> alliance) {
+    if (inUse_) throw std::logic_error("현재 Player 고정뷰 사용 중 Native 재할당");InitializeBody(std::move(alliance));
+}
+// 실제 현재 Core가 이전 Player를 빌린 상태에서는 원문 앞선 Core0 선택을 요구한다.
+void ClientPlayerRecords::InitializeBody(std::function<void(std::uint32_t,std::uint32_t)> alliance) {
+    if (const auto core=core_.lock();core && core->Current().data() && base_) {
+        const auto selected=reinterpret_cast<std::uintptr_t>(core->Current().data()),start=reinterpret_cast<std::uintptr_t>(Records().data());
+        if (selected>=start && selected-start<o::kInitializedPlayerBytes) throw std::logic_error("이전 Player 해제 전 실제 Core0 선택 필요"); // 현재 캐시의 사본을 만들거나 포인터를 조용히 지우지 않는다.
+    }
+    initialized_=false;
     o::PlayerInitializationHooks hooks; // 복원된 부모가 직접 사용하는 실제 메모리 장치다.
-    hooks.memory=[this](auto address,auto bytes) { return records_.Memory(address,bytes); };
-    hooks.freeFactory=[this](auto token) { records_.Free(token,false); };hooks.freePlayers=[this](auto token) { records_.Free(token,true); };
-    hooks.mallocPlayers=[this](auto bytes) { return records_.Allocate(bytes,true); };hooks.newFactory=[this](auto bytes) { return records_.Allocate(bytes,false); };
+    hooks.memory=[this](auto address,auto bytes) { return Memory(address,bytes); };
+    hooks.freeFactory=[this](auto token) { Free(token,false); };hooks.freePlayers=[this](auto token) { Free(token,true); };
+    hooks.mallocPlayers=[this](auto bytes) { return Allocate(bytes,true); };hooks.newFactory=[this](auto bytes) { return Allocate(bytes,false); };
     hooks.alliance=std::move(alliance);
-    o::InitializePlayerRecords({records_.fortCount_,records_.lastLoginPlayer_,[this] { return records_.base_; },[this](auto base) { records_.base_=base; }},hooks);
+    o::InitializePlayerRecords({fortCount_,lastLoginPlayer_,[this] { return base_; },[this](auto base) { WriteBase(base); }},hooks);
     initialized_=true;
 }
+// 실제 주소의 host 표현만 갱신한다. 새로운 Core 선택/복사/known 쓰기는 하지 않는다.
+void ClientPlayerRecords::WriteBase(std::uint32_t base) { base_=base;if (const auto core=core_.lock()) core->Players()=Records(); }
+// 소유자는 같은 Core 슬롯에 한 번 연결하고 초기 base0도 같은 빈 물리뷰로 공개한다.
+void ClientPlayerRecords::BindCoreData(std::shared_ptr<ClientCoreDataGlobals> core) {
+    if (!core || inUse_ || (core_.lock() && core_.lock()!=core)) throw std::invalid_argument("Player와 실제 Core 소유자 연결 계약");core_=core;core->Players()=Records();
+}
+std::shared_ptr<ClientCoreDataGlobals> ClientPlayerRecords::BoundCoreData() const { return core_.lock(); } // 현재 연결된 같은 소유자를 조회한다.
+bool ClientPlayerRecords::Initialized() const { return initialized_; } // Native 정상 복귀 상태만 읽는다.
 // 현재 owner 번호만 캡처한다. Player 주소/포인터/용량/개수는 호출마다 실제 기록에서 읽는다.
 void ClientPlayerRecords::Use::BindFactory(o::SquidPostPopList& list,std::uint32_t owner) {
     if (!initialized_ || owner>=o::kInitializedPlayerCount) throw std::logic_error("초기화되지 않은 Player factory 연결");

@@ -18,6 +18,7 @@ target_sources(netstorm PRIVATE client/RawUberRootControls.cpp client/RawUberRoo
 target_sources(netstorm PRIVATE client/ClientFortGlobals.cpp client/ClientFortGlobals.h)
 target_sources(netstorm PRIVATE client/ClientChatRuntime.cpp client/ClientChatRuntime.h) # 같은 실제 시작/명령표/설정/Core/아이콘 자산을 Chat 본체에 연결한다.
 target_sources(netstorm PRIVATE o/RawStaticStrings.cpp o/RawStaticStrings.h client/ClientStaticStrings.cpp client/ClientStaticStrings.h) # 원문 임시 고리와 실제 Client 물리/정수 CRT 장치다.
+target_sources(netstorm PRIVATE client/ClientPlayerRuntime.cpp client/ClientPlayerRuntime.h) # 원문 공통 Player 초기화와 실제 방향별 동맹 장치다.
 target_sources(netstorm PRIVATE client/FortCurrentNameDevices.cpp client/FortCurrentNameDevices.h)
 # 원본 단일 객체/청크 저장을 같은 현재 TYPE·가상 분배와 Finder에 연결한다.
 target_sources(netstorm PRIVATE o/RawFortObjectSave.cpp o/RawFortObjectSave.h)

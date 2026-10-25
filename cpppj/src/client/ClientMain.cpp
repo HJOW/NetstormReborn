@@ -16,6 +16,7 @@
 #include "client/ClientFortGlobals.h"
 #include "client/ClientCoreDataGlobals.h"
 #include "client/ClientPlayerRecords.h"
+#include "client/ClientPlayerRuntime.h"
 #include "client/ClientGameplayGlobals.h"
 #include "client/ClientNsInfoGlobals.h"
 #include "client/ClientChatWindowGlobals.h"
@@ -195,6 +196,7 @@ Client::Client(ClientOptions options)
       dotCommandGlobals_(std::make_shared<ClientDotCommandGlobals>()),
       chat_(std::make_unique<ChatState>(*this,options_.edition)) {
     files_.RegisterArchive(options_.gameDirectory / "netstorm.tarc");
+    playerRecords_->BindCoreData(coreDataGlobals_); // 같은 Native Player base가 바뀌면 실제 Core의 빌린 현재 Player 슬롯도 즉시 갱신한다.
     configuration_.Registry().environment = Environment;
     if (g_client) throw std::logic_error("Only one client may exist");
     // 원본00558dd0의 Set 직후 동기 시점에 현재 복원된 설정 전역을 갱신한다.
@@ -290,8 +292,9 @@ int Client::Run() {
     screen_->Init();
     const auto palettePath = configuration_.PathSpec("GamePalSpec", configuration_.PathSpec("fortPal"));
     screen_->LoadPalette(GamePalette(files_.Read(palettePath)),options_.edition);
-    // [원본] 설치 검사(GameInstalledTest), 전체 시계·zacket·프로토콜 검사·플레이어 초기화 — 옮기지 않았다.
+    // [원본] 설치 검사(GameInstalledTest)·zacket·프로토콜 검사는 아직 연결하지 않았다.
     clock_ = o::GameClock(timeGetTime()); // "init full time"(FUN_00461090)의 시작 시각.
+    if (options_.edition==o::OriginalEdition::Patch1078) InitializeClientPlayerRecords(*this); //0043952c의 실제 초기화이며 그 다음00439537 ColorSort 입력보다 앞선다.
     //00439537의초기ColorSort입력위치다.이캡처만으로미연결43b430검색/색띠전체를성공시킨것은아니다.
     colorSortInput_->CaptureWithPrimary(screen_->LogicalPalette());
     screen_->BindColorSortInput([owner=colorSortInput_] { return owner->Logical(); });

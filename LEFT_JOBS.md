@@ -1,5 +1,18 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-25 단위422 완료: 실제 Player 재할당과 장기 CoreData 수명
+
+- [x] 이전421은 **a49c451e / 20261025-15 CP**로 실제 임시 고리/EditorPlayers·기존/TEST01 checkpoint 및 저장본 재설치·전체2827검사를 마친 진척이다. AGENTS/양 인계를 재독했으며 현재/마지막 전체 정밀 디컴파일은 **HJOW-Athlon / 2026-10-23**으로 같다. 보호1821파일 기준은 `extracted/cpp-player-core-lifetime-422-baseline.json`이다.
+- [x] 실제 공통 시작0043952c의 Player 초기화와 초기화 완료 기록의 명시 대여를 연결했다. 현재 Core가 이전 Player를 빌린 상태의 재할당은 거부하며 호출자가 실제 known0/Core0·캐시 보존을 먼저 해야 한다. 실제 base 변경이 같은 Core의 Player뷰를 갱신한다. 소멸자에서 임의로 선택 해제하지 않는다.
+- [x] 기존 미션 어댑터의 실제 재할당 앞 Core0/모드 설정 뒤 Core1과 Login current/cache/active의 같은 장기 소유자 참조를 연결했다. 독립 Session은 자체 같은 실제 소유자를 쓴다. 전체004b2df0의 다른 전송/AI/Kernel/Gump/Pool/UI 정리나 State1 prefix 완료로 확대하지 않는다.
+- [x] 빌드1/2 종료0·최종 컴파일 경고/오류0, 최종 집중 **25/0(고유25)**이다. 최초 보고 행의 이름 가림 C4456을 교정하고 원시를 보존했다. 제품 **58452dec…**/검사 **a0f6c079…**,15소스/두 실행 파일을 고정했다. 실제 Core0→재할당/대여·Editor 두 Session 수명·실제 로컬 로그인 슬롯 공유 검사가 통과했다.
+- [x] 실제 메뉴/안내/F4·목록/Back가 통과했고 메뉴의 초기 Player1620/Core0→미션의 같은 Player/Core10/offset288/동일 Session 소유자를 확인했다.
+- [x] 같은 제품의 일반31/Demo3 초기 진입·Edit 선택/취소가 통과했다. 초기 플레이·마지막 캠페인/데모의 실제 이미지를 확인했고 각 종료 묶음의 설정은 복원됐다. Edit 목록 검사를 최종 Editor 설치 완료로 확대하지 않는다.
+- [x] 자연 Early2가 **196.23초·종료0**으로 A~I/생산·회수·환불75/SP3075→같은 프레임 Tutorial3 Guide4까지 통과했다. 다음 실제 Player 재할당과 Core10/offset288/동일 Session 연결 및 안내 이미지를 확인했다. 상태 주입0·제품타이머1·기존 완료값 보존이며 새 진행0→1/디스크 저장 검사는 아니다. GUI 전체 종료 뒤 보호1821파일 변경0이다.
+- [x] 최초 전체 CTest는 **2833/실패check1·338.17초·종료8**이었다. 기존 CoreRefresh 검사의 과거 `Login선택Core` 문자열 의존을 확인했고 최초 전체 로그/LastTest를 보존했다. 실제 Core0의 첫 store 거부/Player 불변과 Core1의 Login 없는 실제 기술·다이스/동일 슬롯을 함께 검증하도록 검사만 교정했다. 빌드3 종료0·경고/오류0·게임제품 SHA 불변, 검사 **2168304e…**이며 최종 집중 **28/0(고유28)**이다.16소스/두 실행 파일을 source3에 고정했다.
+- [x] 전체 CTest2가 **2833/0·329.98초·종료0**으로 통과했다. 최종 보호1821파일·원본/CD 파일명 목록과 고정16소스/두 실행 파일이 기준과 같다. 실제 checkpoint 수명 검사5회의 저장본도 원시 보존했다. [작업 문서](docs/exe/cpp-player-core-lifetime-20261025.md)/[단위422 보고서](cpppj/player-core-lifetime-runtime-20261025.json)에 최초 경고/실패·최종28집중/전체·34초기 진입/자연 전환·동일 제품/소유권/원본 보존 근거를 남겼다. **20261025-16 CP**로 로컬 커밋한다. 새 원본 실행/Native oracle/전체 재디컴파일0이며 마지막 전체 정밀 디컴파일은 계속 HJOW-Athlon/2026-10-23이다.
+- [ ] 다음은 전체 Native State1 정리004b2df0의 나머지 전송/AI/Kernel/Gump/Pool/UI 장치와 prefix, checkpoint 뒤 HUD/팔레트/State 확정/다음Poll4/loaded 및 실제 편집/저장 UI 연결이다. 이전420/421의 Login 장기 슬롯 접합과 Player 재할당 전 Core0/캐시 보존은 이번422의 실제 공유 경로로 완료했지만 기존 미션 어댑터가 전체 Native State 정리를 대신하지 않는다. Core 메타데이터 장부/로드·다른42e050 호출자와 전체 사용자 완주/승패/완전 동일성도 남으며 `/goal`은 활성 상태다.
+
 ## 2026-10-25 단위421 완료: 실제 Editor 플레이어 번역과 원문 임시 문자열 수명
 
 - [x] 이전420은 **01db03a2 / 20261025-14 CP**로 실제 Chat 시작/랭크 장치·전체2821검사·34개 초기 진입과 자연 Early2를 마친 진척이다. AGENTS/양 인계를 재독했으며 현재/마지막 전체 정밀 디컴파일 PC는 **HJOW-Athlon / 2026-10-23**으로 같다. 보호1821파일 기준은 `extracted/cpp-editor-player-ui-421-baseline.json`이다.
