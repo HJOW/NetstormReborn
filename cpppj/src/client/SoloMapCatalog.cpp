@@ -56,12 +56,12 @@ struct SoloMapCatalog::Impl {
     o::ConfigInterface& config; // fortSpec과 mayEditMissions의 현재 설정이다.
     SoloMapFileSpec defaultFileSpec; // 별도 Client 전역을 공급하지 않은 기존 호출도 실제 catalog보다 짧지 않은 기본 버퍼를 빌린다.
     SoloMapCatalogEffects effects; // 언어/사용자/미정 입력의 실제 장치다.
-    o::SoloMapListState cache; // 원본 50개 이름/flags/dirty의 단일 저장소다.
+    o::SoloMapListState localCache; o::SoloMapListState& cache; // 실제 Client가 제공한 같은 목록/dirty를 빌리고 독립 호출만 자체 저장소를 쓴다.
     std::unique_ptr<MapProbe> metadata; // 마지막 construct/load가 선택한 실제 임시 Template이다.
     o::RawSoloMapList list; // 파일 분류를 대신 계산하지 않는 원본 목록 몸체다.
     // 콜백이 빌리는 주소가 고정된 뒤 원본 목록을 구성한다.
     Impl(const o::BaseFileSystem& source,o::ConfigInterface& settings,SoloMapCatalogEffects devices)
-        :files(source),config(settings),effects(std::move(devices)),list(cache,Hooks()) {
+        :files(source),config(settings),effects(std::move(devices)),cache(effects.listState ? *effects.listState : localCache),list(cache,Hooks()) {
         if (!effects.serializationGlobals) effects.serializationGlobals=std::make_shared<o::FortSerializationGlobals>(); // 같은catalog의분류/메타가공유하는한개DWORD이며Storage생성시마다복제하지않는다.
         if (!effects.fileSpecKey) effects.fileSpecKey=[this] { return defaultFileSpec.Current(); }; // 현재 기본 키도 파일 읽기 직전에 조회한다.
     }

@@ -1,5 +1,17 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-25 단위419 완료: 현재 Fort 이름과 실제 작업 파일 장치
+
+- [x] 이전418은 **9ce63eec / 20261025-12 CP**로 전체 HUD 실제 연결·2806검사·두 Early 자연 회귀를 마친 진척이다. AGENTS/양 인계를 재독했고 현재/마지막 전체 정밀 디컴파일 PC는 **HJOW-Athlon / 2026-10-23**이다. 보호1821파일의 새 기준은 `extracted/cpp-fort-name-419-baseline.json`이다.
+- [x] 이미 복원된 RawFortCurrentName을 재사용해 Client의 실제 current/pending256BYTE·FileSpec·dirty 수명, 동일 Template manager 파일명 물리/Notify 및 보호 작업본 삭제 장치에 연결했다. 기존 파일 이름 변경의 두 snapshot/자체 Notify/부분 효과를 보존한다.
+- [x] ClientFortGlobals/공유 목록 dirty·Template manager 물리 이름/장치·단일 보호 삭제·Session Native 이름 바인더와 실제 MissionFortRequest.selectFort를 연결했다. Native PE의 최초 dirty1로 교정했다. 최초 빌드 string_view 보고 변환 실패·검사 경로 대소문자/설치 전 getter/Subscriber owner 실패를 보존했고 빌드6 종료0·최종 집중36/0이다. 제품 **ad1bda98…**/검사 **e9ff3afe…**,22소스/두 실행 파일을 고정했다.
+- [x] 실제 현재 Fort는 Tutorial1 ID와 다른 원문 loadFort **BridgeTheGap**이다. 최초 도구의 잘못된 이름 동일 기대를 교정했고 메인 MORE/OK/F4/B.·목록/Back·Edit TEST01 체크/TEST02 선택 예약·취소가 같은 제품에서 통과했다. [작업 문서](docs/exe/cpp-fort-name-client-20261025.md)에 범위와 실패를 기록한다.
+- [x] 같은 최종 제품의 실제 Early1 북서 A~G/SP600→Tutorial2는326.94초, Early2 A~I/발사기 생산·회수/SP3075→Tutorial3는198.55초로 모두 종료0이다. 현재 이름 `BridgeTheGap`→`SecretWorkshop`→`CaptureThePriest`와 실제 다음 안내/현재 HUD를 확인했다. 초기 완료값1을 보존한 자연 실행이며 새 진행0→1/디스크 저장의 증거는 아니다.
+- [ ] Native State1 정리/prefix와 최종 Editor 설치/loaded·실제 도구/저장 왕복은 이 선행 연결 뒤에도 남는 전체 목표다. 다음 상태를 임의로 소비하거나 캠페인 Load 후 Editor 표식만 켜는 대체 경로는 만들지 않는다. 작업 단위 검증·문서·로컬 커밋 뒤 목표를 이어 간다.
+- [x] 다음 구현 인계 교정:418의 다음 항목에 쓴 “HUD mode4”는 next State4와 혼동한 표현이다. 실제004b743b/tail/NotifyHudMode는 현재 HUD 명령에1/0/숨은 자식 포함1을 전달하고 그 뒤 next4를 예약한다. 기존 실제 몸체를 그대로 재사용한다.
+- [x] 일반31(Early6/훈련9/캠페인16)과 실제 Demo 메뉴3의 초기 플레이 진입이 모두 같은 제품에서 통과했고 원본/설정이 복원됐다. 공용 진입 도구가 실제 Native HTML 버튼을 인식하고 현재 이름/HUD를 기록하도록 갱신했다. 사용자 전체 완주/승패·완전 동일성 완료와 다르다.
+- [x] 모든 GUI 종료 뒤 전체 CTest **2814/0·323.55초**가 통과했다. 고정22소스/두 실행 파일은 검사 뒤 동일하며 보호 **1821파일·원본/CD 파일명 목록**도 기준과 같다. [단위419 보고서](cpppj/fort-name-client-runtime-20261025.json)에 최초 실패·최종 집중36/0·실제 입력/제품/보호 감사 근거를 보존한다. 이 문서 갱신 뒤 **20261025-13 CP**로 로컬 커밋한다. 전체 `/goal`은 계속 활성 상태다.
+
 ## 2026-10-25 단위418 완료: 실제 전체 HUD 루트·도킹·지도 영역 연결
 
 - [x] 이전417은 **c48b163b / 20261025-11 CP**로 수명 접합·전체2803검사·실제 Early 회귀와 커밋을 남긴 진척이다. AGENTS/양 인계를 재독했고 현재/마지막 전체 정밀 디컴파일은 **HJOW-Athlon / 2026-10-23**이다. 보호1821파일의 새 기준은 `extracted/cpp-uber-tree-418-baseline.json`이다.

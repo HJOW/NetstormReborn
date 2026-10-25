@@ -13,6 +13,7 @@
 #include "client/ClientSubscriberGlobals.h"
 #include "client/ClientColorSortInput.h"
 #include "client/ClientLocalStateGlobals.h"
+#include "client/ClientFortGlobals.h"
 #include "client/ClientCoreDataGlobals.h"
 #include "client/ClientPlayerRecords.h"
 #include "client/ClientGameplayGlobals.h"
@@ -180,6 +181,7 @@ Client::Client(ClientOptions options)
       randomGlobals_(std::make_shared<ClientRandomGlobals>()),
       colorSortInput_(std::make_shared<ClientColorSortInput>()),
       localStateGlobals_(std::make_shared<ClientLocalStateGlobals>()),
+      fortGlobals_(std::make_shared<ClientFortGlobals>()),
       coreDataGlobals_(std::make_shared<ClientCoreDataGlobals>()),
       playerRecords_(std::make_shared<ClientPlayerRecords>()),
       gameplayGlobals_(std::make_shared<ClientGameplayGlobals>(subscriberGlobals_)),
@@ -921,6 +923,7 @@ const std::shared_ptr<ClientSubscriberGlobals>& Client::SubscriberGlobals() cons
 const std::shared_ptr<ClientRandomGlobals>& Client::RandomGlobals() const { return randomGlobals_; }
 // 큰 메뉴/로컬 로그인 분배기가 같은 실제144BYTE 다섯 블록과 기한을 빌린다.
 const std::shared_ptr<ClientLocalStateGlobals>& Client::LocalStateGlobals() const { return localStateGlobals_; }
+const std::shared_ptr<ClientFortGlobals>& Client::FortGlobals() const { return fortGlobals_; } // 같은 실제 이름/목록의 주소를 유지한다.
 //같은 Client의 현재 Core/캐시 소유자를 조회하며 외부 Player 수명을 변경하지 않는다.
 const std::shared_ptr<ClientCoreDataGlobals>& Client::CoreDataGlobals() const { return coreDataGlobals_; }
 // 실제 Player/factory의 단일 할당 소유자를 세션에 빌린다. 조회는 초기화를 실행하지 않는다.

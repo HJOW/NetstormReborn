@@ -87,6 +87,7 @@ private:
     // 대기 중인 명령을 실행한다. 지원하지 않는 명령은 실제 동작으로 가장하지 않는다.
     void Execute(const DialogAction& action);
     bool FortSelectionEvent(const InputEvent& event); // 실제 AskEditFort/ReadFort를 같은 pending 이름·목록·숫자 nextState에 분배한다.
+    void SelectCurrentFortName(std::string_view name); // 원문 MissionFortRequest.selectFort 위치에서 전체 현재 이름 부모를 실제 Client/Template에 연결한다.
     void InstallHud(); // 현재 실제 월드와 같은 공통 전체 Uber/자식 공장·도킹을 연결한다.
     // 기존 미션을 원본 Begin 순서로 종료/해제하고 새 빈 미션을 준비한다.
     void BeginMission(std::string name,std::uint32_t demo=0,std::uint32_t mode=0);
@@ -140,11 +141,11 @@ private:
     std::unique_ptr<RawButtonControls> rawButtons_; // 돌 버튼은 실제 공유 트리/수명/캡처를 사용한다. input_은 메뉴 행/판정 보고용이다.
     WarningMessages* warnings_{}; // rawButtons가 소유하는 같은 실제 Gump/StyleText의10초 안내를 빌린다.
     ScriptStringRing scriptStrings_; // 입력 큐에 예약한 문자열의 원본80칸 수명이며 페이지가 바뀌어도 보존한다.
-    SoloMapFileSpec mapFileSpec_; // 페이지 교체 뒤에도 같은9BYTE FileSpec 키를 보존한다.
+    SoloMapFileSpec& mapFileSpec_; // 같은 Client의9BYTE FileSpec 키를 페이지/Session 교체 뒤에도 직접 빌린다.
     std::unique_ptr<SoloMapCatalog> mapCatalog_; // 현재 파일 캐시/dirty/이름을 Client 수명에 소유한다.
     std::shared_ptr<TellFileMenus> fileMenus_; // 기존 Tell과 실제 전체 HTML 메타가 같은 @/# Config를 공유한다.
-    std::string mapUserName_,pendingFortName_; // 원본 초기 빈 사용자 이름과 별도 pending 이름이다. current Fort 이름과 합치지 않는다.
-    std::uint32_t fortSelectionMode_{}; // 원문005cae84의 최초BSS0이며 AskEditFort의2와 진행State1을 구별한다.
+    std::string mapUserName_; // 원본 초기 빈 사용자 이름이며 두 Fort 이름 버퍼와 다르다.
+    std::uint32_t& fortSelectionMode_; // 같은 Client005cae84이며 Ask의2와 진행State1을 구별한다.
     HtmlTextParserGlobals htmlGlobals_; // 원본의페이지간공유P억제전역이다.
     ScreenRect htmlMapView_{};std::string htmlCurrentFortName_; // 각 조회에서 현재 뷰와 반환 문자열의 수명을 보존한다.
     std::uint32_t buttonTextureType_{},buttonTextureFrame_{}; // 실제 버튼 배경 생성자에 전달할 fortGump/A01 타입·프레임 번호다.
@@ -172,7 +173,7 @@ private:
     std::unique_ptr<o::RawMissionGuide> guide_; // 현재 미션 해제 중에도 반복 호출 스택이 살아 있도록 UberGump 수명에 둔다.
     std::uint32_t hideBuildings_{}; // 원본0059a8ac의현재표시모드이며메뉴체크와실제Draw가공유한다.
     std::uint32_t worldRedraw_{}; // 원본0059a8b0의 메뉴 명령 갱신 요청이며 실제 Renderer 무효화에 전달한다.
-    std::uint32_t menuConfigRevision_{}; // 원본00542678의 설정 명령 증가를 같은 Client 수명에 보관한다.
+    std::uint32_t& menuConfigRevision_; // 이름 변경/설정/목록이 같은00542678 dirty를 직접 사용한다.
     std::uint32_t& commandGump_; // 실제00548740의 같은 Client Chat 현재 포인터이며 전체 공장이 이 슬롯을 갱신한다.
     std::unique_ptr<GameWorld> world_; // 호스트 월드를 Kernel 밖에서 소유하여 전역 Clear 중 중복 소멸/중첩 프레임을 막는다.
     // userInput_: 플레이 입력을 선택·카메라·명령 동작으로 전달하는 처리기 (std::unique_ptr<UserInput>).

@@ -8,6 +8,7 @@
 #include "o/RawFortImage.h"
 #include "o/RawMemStream.h"
 #include "o/FortSerializationGlobals.h"
+#include "o/RawFortCurrentName.h"
 #include <map>
 #include <memory>
 namespace netstorm::client {
@@ -72,6 +73,7 @@ public:
     o::FortMetaStream& Technology(std::uint32_t slot); // 같은 실제 Technology 버퍼/present/pos/end를 빌린다.
     o::FortMetaStream& SelectTechnology(std::uint32_t slot); // 004beee0의 쓰기 허용 선택(1)으로 현재 Technology를 선택한다.
     const std::string& Name(std::uint32_t slot); // 같은 manager의 현재 파일 이름이다.
+    o::FortCurrentNameHooks BindCurrentName(o::FortCurrentNameHooks hooks); // 원문 이름 부모에 같은 헤더/manager+c256BYTE만 연결한다. Notify/저장/삭제 등은 실제 호출자가 공급한다.
     std::array<std::uint32_t,2> FileHeader(std::uint32_t slot); // 같은 manager+10c/+110의 서명/FE 판정DWORD다. 읽기/저장 전에는0/ffffffff다.
     void SaveFile(std::uint32_t slot,const o::DataManagerFileSaveState& state,o::FortImageHooks image,const TemplateFileWriteHooks& file); //같은 manager의 실제 서명/검색/current와 저장 부모를 통해 현재 섹션을 파일에 쓴다.
     std::span<std::uint8_t> GrowState(std::uint32_t slot,std::uint32_t size); // 원문을 보존한 채 같은 Fort의 실제 State 섹션에 새 버퍼를 만든다.

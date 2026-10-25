@@ -55,7 +55,7 @@ struct CampaignTemplateStorage::Image {
     o::FortMetaStream badges,technology; // 같은 원시 섹션 버퍼와 각각의 현재 pos/end/present다.
     std::uint32_t loadCursors{}; // 공개한 Money/Badges/Technology cursor의 유효 비트1/2/4다. 미공개 노드의 초기 상태는 보존한다.
     std::uint32_t stateHandle{},territoryHandle{},moneyHandle{},badgesHandle{},technologyHandle{}; // 현재 typed cursor를 소유한 실제 노드이며 Rename/재생성 뒤 이름으로 다시 공개한다.
-    std::string name; // 같은 현재 파일 이름이다.
+    std::string name; // 실제 manager+c의 현재 이름을 기존 const string API에 빌려주는 읽기 투영이다. 변경의 원본은 manager 물리다.
     std::vector<std::uint8_t> retiredState; // 확장 중 Get의 원문 복사가 끝날 때까지만 이전 할당을 보유한다.
     std::array<std::uint8_t,276> manager{}; // 원본 Template manager의 vptr/head/current·파일명256·서명/FE 판정DWORD를 같은 저장소에 둔다.
     std::map<std::uint32_t,std::unique_ptr<Stream>> streams; // 노드 반납 때 실제 객체 할당을 해제한다.
@@ -471,7 +471,17 @@ o::FortMetaStream& CampaignTemplateStorage::Technology(std::uint32_t slot) { aut
 // 원본 기술 로더가 빈 섹션의 부모/UI 처리 여부를 직접 결정하게 한다.
 o::FortMetaStream& CampaignTemplateStorage::SelectTechnology(std::uint32_t slot) { auto& image=Current(slot);image.SelectLoadSection("Technology",1);return image.technology; }
 // 원문 선택 때 쓴 같은 파일 이름을 반환한다.
-const std::string& CampaignTemplateStorage::Name(std::uint32_t slot) { return Current(slot).name; }
+const std::string& CampaignTemplateStorage::Name(std::uint32_t slot) {
+    auto& image=Current(slot);const auto bytes=std::span(image.manager).subspan(12,256);const auto end=std::find(bytes.begin(),bytes.end(),std::uint8_t{}); // 원문 manager+c 파일명과 같은 물리를 읽는다.
+    if (end==bytes.end()) throw std::out_of_range("Template 현재 manager 파일명의 NUL 범위");const std::string_view current(reinterpret_cast<const char*>(bytes.data()),static_cast<std::size_t>(end-bytes.begin()));
+    if (image.name!=current) image.name=current;return image.name;
+}
+// manager를 교체하거나 현재 섹션/stream을 재생성하지 않고 같은 실제 물리만 제공한다.
+o::FortCurrentNameHooks CampaignTemplateStorage::BindCurrentName(o::FortCurrentNameHooks hooks) {
+    hooks.header=[this](auto slot) { return Header(slot); };
+    hooks.managerName=[this](auto token)->std::span<std::uint8_t> { const auto found=images_.find(token);if (found==images_.end()) throw std::out_of_range("Fort 이름 변경의 현재 manager 없음");return std::span(found->second->manager).subspan(12,256); };
+    return hooks;
+}
 // 빌린 헤더도 원래 소유자의 같은 manager 꼬리DWORD를 읽는다.
 std::array<std::uint32_t,2> CampaignTemplateStorage::FileHeader(std::uint32_t slot) { const auto& manager=Current(slot).manager;return {Read(std::span(manager).subspan(0x10c)),Read(std::span(manager).subspan(0x110))}; }
 // 빌린 헤더도 원래 소유자의 같은 현재 manager와 원시 섹션을 저장한다.

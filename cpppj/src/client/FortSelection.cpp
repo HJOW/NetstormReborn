@@ -25,6 +25,15 @@ std::uint32_t TimeInteger(double value) {
 void SetPendingFortName(std::string& destination,std::string_view source,const std::function<void()>& assertion) {
     source=source.substr(0,source.find('\0'));if (source.find('.')!=source.npos) Need(assertion)();destination=source;
 }
+// 현재 NUL/점 검사 뒤 같은 주소에서 전방 BYTE 복사를 수행한다. 목적/원본 겹침도 별도 문자열로 바꾸지 않는다.
+void SetPendingFortName(std::span<std::uint8_t> destination,std::span<const std::uint8_t> source,const std::function<void()>& assertion) {
+    std::size_t end{};for (;;++end) { // 원문 strchr은 첫 점 또는 NUL까지만 읽는다.
+        if (end>=source.size()) throw std::out_of_range("Fort pending 이름 검사 NUL 범위");if (!source[end]) break;if (source[end]=='.') { Need(assertion)();break; }
+    }
+    for (std::size_t index=0;;++index) { // 진단이 바꾼 현재 source에서 한BYTE씩 읽고 같은 목적 버퍼에 쓴다.
+        if (index>=source.size() || index>=destination.size()) throw std::out_of_range("Fort pending 이름 복사 물리 범위");const auto byte=source[index];destination[index]=byte;if (!byte) return;
+    }
+}
 // 큐의 선착순 관문 없이 원본 nextState DWORD만 덮어쓴다.
 void RequestFortRead(std::uint32_t& nextState) { nextState=6; }
 // 파일 읽기/각 State 조회/통지 사이에 templateOwner가 바뀔 수 있으므로 슬롯을 미리 고정하지 않는다.

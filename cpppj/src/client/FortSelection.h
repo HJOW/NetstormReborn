@@ -35,6 +35,7 @@ struct FortSelectionHooks {
 };
 // 00460bb0. 첫 NUL 앞의 점을 진단하고, 진단이 복귀하면 원본처럼 그대로 복사한다.
 void SetPendingFortName(std::string& destination,std::string_view source,const std::function<void()>& assertion={});
+void SetPendingFortName(std::span<std::uint8_t> destination,std::span<const std::uint8_t> source,const std::function<void()>& assertion={}); // 실제256BYTE 목적 버퍼와 NUL 포함 원본 주소를 유지하며 진단 뒤 현재 source를 다시 읽는다.
 // 004b3550. 다른 필드와 기존 요청을 검사하지 않고 같은 next DWORD만6으로 바꾼다.
 void RequestFortRead(std::uint32_t& nextState);
 // 004b3560. 먼저 next1을 쓴 뒤 선택된 전투 Fort 보존 효과를 원본 순서로 수행한다.

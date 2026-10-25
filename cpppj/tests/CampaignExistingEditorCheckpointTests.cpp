@@ -4,6 +4,10 @@
 #include "client/CampaignTemplateStorage.h"
 #include "client/ClientMain.h"
 #include "client/ClientRandomGlobals.h"
+#include "client/ClientFortGlobals.h"
+#include "client/ClientGameplayGlobals.h"
+#include "client/FortCurrentNameDevices.h"
+#include "client/FortSelection.h"
 #include "client/EditorFortFileDevices.h"
 #include "client/FortTypeConversionStorage.h"
 #include "o/RawFortBadgesGlobals.h"
@@ -142,4 +146,20 @@ TEST_CASE(CampaignExistingEditorCheckpoint_CoreWriteManagerDiagnosticBeforeGate)
 TEST_CASE(CampaignExistingEditorCheckpoint_CoreWriteMetamapDiagnosticBeforeGate) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);const auto input=CheckpointInput(assets.files);ClientOptions options;options.gameDirectory=assets.root;Client client(std::move(options));auto storage=std::make_shared<CampaignTemplateStorage>();storage->InstallFile(1,FortTemplate::Parse(input,assets.game.TypeTable()),input,"kept.fort");CheckpointDevices devices;RawCampaignSession session(assets.game,assets.files,FortTemplate::Parse(input,assets.game.TypeTable()),"deferred.fort",devices.Make(client,storage,input));session.Core().ownerMode.challenge=true;bool selected{};
     try { session.WriteExistingEditorCoreData(1); }catch (const std::logic_error& error) { selected=std::string_view(error.what()).ends_with(":1120"); }CHECK(selected && storage->OwnedImages()==1 && !session.ExistingEditorCheckpointReady());CHECK(CheckpointRejects<std::logic_error>([&] { session.SnapshotFort(1); }));
+}
+
+// 현재/pending가 다른 실제 Client 이름 부모를 먼저 거쳐 같은 작업 파일/Subscriber/World 경계까지 설치한다.
+TEST_CASE(CampaignExistingEditorCheckpoint_ActualCurrentNameSelectsWorkingFile) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);const auto input=CheckpointInput(assets.files);ClientOptions options;options.gameDirectory=assets.root;Client client(std::move(options));auto storage=std::make_shared<CampaignTemplateStorage>();
+    EditorFiles work(CheckpointRoot(assets.root.parent_path(),"actual-name"),{assets.root,assets.root.parent_path()/"originalCD"});const std::string selected="Checkpoint419";const auto actual=work.Prepare(selected,input);CheckpointDevices devices;auto effects=devices.Effects(client,work);auto& names=*client.FortGlobals();
+    SetPendingFortName(names.PendingBytes(),{reinterpret_cast<const std::uint8_t*>(selected.c_str()),selected.size()+1});
+    auto services=devices.Make(client,storage,input);services.gameplayGlobals=client.GameplayGlobals();services.subscriberGlobals=client.SubscriberGlobals();services.playerRecords=client.PlayerRecords();RawCampaignSession session(assets.game,assets.files,FortTemplate::Parse(input,assets.game.TypeTable()),"deferred.fort",std::move(services)); // 설치 전 메뉴를 열지 않고 같은 Client의 실제 현재 전역/Subscriber/Player를 함께 빌린다.
+    auto hooks=session.BindFortCurrentName({});hooks.assertion=[&](auto line) { devices.assertions.push_back(line); };hooks.refreshTitle=[&] { ++devices.titles; };
+    CHECK(CheckpointRejects<std::logic_error>([&] { hooks.snapshot(); }) && CheckpointRejects<std::logic_error>([&] { hooks.notify(session.TemplateOwner()); })); // 실제 외곽 전에는 공개 저장/Notify를 우회하지 않는다.
+    FortCurrentNameDevices current(names,*storage,client.Configuration(),{[&] { return session.TemplateOwner(); },[&] { return session.Core().ownerMode.fort ? 1U : 0U; },[&] { return client.GameplayGlobals()->world.editor; },[&] { return session.Core().bridgeState.mission ? 1U : 0U; },names.Catalog().dirty},std::move(hooks),&work);
+    effects.fort.currentName=[&] { return names.Current(); };effects.fort.pendingName=[&] { return names.Pending(); };effects.fort.setName=[&](auto name) { const std::string source(name);current.Set({reinterpret_cast<const std::uint8_t*>(source.c_str()),source.size()+1}); };
+    EditorFortPathEffects paths;paths.currentName=[&] { return names.Current(); };paths.selectFileSpec=[&] { names.SelectFileSpec(); };paths.fileSpecKey=[&] { return names.SelectedFileSpec(); };paths.assertion=[&](auto line) { devices.assertions.push_back(line); };
+    devices.fileDevices=std::make_unique<EditorFortFileDevices>(work,client.Files(),client.Configuration(),std::move(paths));effects.load=devices.fileDevices->BindLoad(std::move(effects.load));
+    bool stopped{};try { session.InstallExistingEditorCheckpoint(effects,client.ReadOnlyForts(),work); }catch (const CheckpointStop& error) { stopped=std::string_view(error.what())=="actual-chat-owner-required"; }
+    CHECK(stopped && names.Current()==selected && names.Pending()==selected && names.Catalog().dirty==2 && client.Configuration().Configuration().Get("lastEditFort")==selected);CHECK(ReadFileBytes(storage->Name(session.TemplateOwner()))==ReadFileBytes(actual) && session.CurrentSubscriber()==7 && devices.titles==3 && devices.assertions.empty());CHECK(!session.ExistingEditorCheckpointReady() && CheckpointRejects<std::logic_error>([&] { session.SnapshotFort(1); }));
 }

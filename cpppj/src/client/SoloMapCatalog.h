@@ -24,6 +24,7 @@ struct SoloMapCatalogEffects {
     std::function<std::string(std::string_view)> translate; // 손상 행 형식의 현재 좁은 번역이다.
     std::function<std::string_view()> fileSpecKey; // 각 PathSpec 직전의 현재 키다. 생략하면 catalog 수명의 기본 fortSpec 버퍼를 사용한다.
     std::shared_ptr<o::FortSerializationGlobals> serializationGlobals; // 분류/메타두임시Storage도같은Client의005c89c0을쓴다. 생략하면catalog수명에한개를만든다.
+    o::SoloMapListState* listState{}; // 실제 Client는 같은 목록/dirty를 제공하며 이 catalog보다 오래 살아야 한다. 독립 호출은 자체 저장소를 쓴다.
 };
 // 파일마다 분류와 목록 메타 조회를 다른 임시 Template에서 수행한다.
 class SoloMapCatalog {

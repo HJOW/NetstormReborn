@@ -8,6 +8,8 @@
 #include <utility>
 #ifdef _WIN32
 #include <io.h>
+#else
+#include <unistd.h>
 #endif
 
 namespace netstorm::client {
@@ -83,5 +85,14 @@ void EditorFiles::Write(std::string_view fileName,std::span<const std::uint8_t> 
 // 저장 부모가 결정한 이름과 이미지 원문을 같은 실제 장치에 인계한다.
 TemplateFileWriteHooks EditorFiles::Writer() const {
     return {[this](auto name,auto mode) { MakeWritable(name,mode); },[this](auto name,auto bytes) { Write(name,bytes); }};
+}
+// 실제 삭제 직전에 같은 canonical 경로를 다시 검사하며 원본/CD/작업루트 밖 요청은 수행하지 않는다.
+void EditorFiles::Delete(std::string_view fileName) const {
+    const auto path=Checked(std::filesystem::path(fileName)); // 디렉터리 제거와 재귀 삭제는 원문 DeleteFileA 경계에 포함되지 않는다.
+#ifdef _WIN32
+    static_cast<void>(_unlink(path.string().c_str()));
+#else
+    static_cast<void>(unlink(path.string().c_str()));
+#endif
 }
 }

@@ -406,6 +406,7 @@ public:
     void SnapshotFortObjects(std::uint32_t slot); // 현재 월드의 Terr00~19와 조건부 Chaff를 실제 Temp/rename·청크 writer로 저장한다. 전체 snapshot/Notify는 별도다.
     void SnapshotFort(std::uint32_t slot); // 설치된 명시 Fort 모드에서 원본 전체 부모와 마지막 Notify를 실행하며 모드를 자동 변경하지 않는다.
     void BindFortFileSave(const std::uint32_t& readOnlyForts,const EditorFiles& files); // 두 참조는 Session보다 오래 살아야 하며 현재 manager 이름은 이미 준비한 작업본 경로여야 한다.
+    o::FortCurrentNameHooks BindFortCurrentName(o::FortCurrentNameHooks hooks); // 같은 실제 Template/State/Notify와 현재 Fort snapshot을 연결한다. Battle snapshot 선택은 미복원 위치에서 거부한다.
     o::FortObjectLoadState& FortObjectSettings(); // 로드/저장 양쪽의 같은 현재 판본과 범위를 빌린다.
     void WriteFortObjectChunk(TemplateWriteStream stream,std::int32_t chunkX,std::int32_t chunkY); // 같은 저장소의 명시 stream에 한 청크만 저장한다. 전체 지역 부모는 별도다.
     // 생산/튜토리얼/건설 표시가 함께 읽는 금지DWORD 표와 실제 세 카운터를 직접 조작한다.

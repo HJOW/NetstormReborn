@@ -32,6 +32,8 @@
 #include "client/TellMapMenus.h"
 #include "client/FortSelection.h"
 #include "client/ClientLocalStateGlobals.h"
+#include "client/ClientFortGlobals.h"
+#include "client/FortCurrentNameDevices.h"
 #include "client/ClientGameplayGlobals.h"
 #include "client/RawKnowledgeMenu.h"
 #include "o/RawMissionGuide.h"
@@ -152,12 +154,13 @@ struct UberGump::MissionRuntime {
 
 #include "client/UberHud.inc" // 같은 실제 소유자에 전체 HUD 루트/지도 전역과 네 자식 공장을 연결한다.
 // 원본 GIF는 색 표의 RGB를 쓰지 않고 파일의 번호를 화면 팔레트에 바로 쓴다(00419ec0→004dae60).
-UberGump::UberGump(Client& client) : client_(client),initLoginSubscriber_(client.SubscriberGlobals()->MySubscriber()),initialSubscriber_(client.SubscriberGlobals()->LoginSubscriber()),commandGump_(client.ChatWindowGlobals()->window.current) {
+UberGump::UberGump(Client& client) : client_(client),initLoginSubscriber_(client.SubscriberGlobals()->MySubscriber()),initialSubscriber_(client.SubscriberGlobals()->LoginSubscriber()),mapFileSpec_(client.FortGlobals()->FileSpec()),fortSelectionMode_(client.FortGlobals()->SelectionMode()),menuConfigRevision_(client.FortGlobals()->Catalog().dirty),commandGump_(client.ChatWindowGlobals()->window.current) {
     serializationGlobals_=std::make_shared<o::FortSerializationGlobals>(); // 원본BSS와같은한DWORD를모든manager/객체소비자보다오래소유한다.
     templateStorage_=std::make_shared<CampaignTemplateStorage>(serializationGlobals_); // 시작 초기화와 미션별 명시 정리를 별개 수명으로 유지한다.
     auto& config = client_.Configuration();
     SoloMapCatalogEffects mapEffects; // 현재 실제 장치만 제공하며 목록 분류/행 처리는 기존 몸체를 사용한다.
     mapEffects.serializationGlobals=serializationGlobals_; // 목록의두임시MapProbe도실제manager생성자의같은전역0쓰기를공유한다.
+    mapEffects.listState=&client_.FortGlobals()->Catalog(); // 이름 변경/설정 증가와 Raw 목록 정리가 같은 dirty DWORD를 쓴다.
     mapEffects.typeCount=[this] { return static_cast<std::int32_t>(client_.Assets().TypeTable().Types().size()); };
     mapEffects.allocationBytes=[](auto) { throw std::logic_error("맵 목록의 빈 State 생성에 필요한 현재 미정 할당 바이트 미연결"); }; // 정상 보호 파일은 이 경계를 선택하지 않는다. 미정 바이트를 임의0으로 만들지 않는다.
     mapEffects.userName=[this] { return world_ ? std::string(world_->Session().CurrentHandle()) : mapUserName_; };
@@ -319,7 +322,7 @@ RawHtmlWindowContext UberGump::LoadingHtmlContext(ScreenRect mapView) { // 미�
     htmlMapView_=mapView;RawHtmlWindowContext context;context.globals=client_.HtmlWindowGlobals();context.wallSeconds=[this] { return client_.WallSeconds(); };
     context.queue=[this](auto command,auto first,auto second) { client_.Input().Push(command,std::bit_cast<std::int32_t>(first),std::bit_cast<std::int32_t>(second)); };context.link=[this](auto token) { rawButtons_->Menus()->ActivateHtmlWindowLink(token); };
     context.metadata.commands={DialogScriptCode,[](auto name) { std::clog<<"HTML 메타 명령 미연결: "<<name<<'\n'; }};context.metadata.strings=&scriptStrings_;context.metadata.maps=mapCatalog_.get();context.metadata.fileSpec=&mapFileSpec_;context.metadata.fileMenus=fileMenus_;
-    context.metadata.currentMap=[this]() -> std::string_view { htmlCurrentFortName_=mission_ ? mission_->FortName() : std::string{};return htmlCurrentFortName_; };context.metadata.fallbackMap=[this]() -> std::string_view { return pendingFortName_; };
+    context.metadata.currentMap=[this]() -> std::string_view { htmlCurrentFortName_=mission_ ? missionRuntime_ && missionRuntime_->guided ? std::string(client_.FortGlobals()->Current()) : mission_->FortName() : std::string{};return htmlCurrentFortName_; };context.metadata.fallbackMap=[this]() -> std::string_view { return client_.FortGlobals()->Pending(); };
     context.factory.globals=&htmlGlobals_;context.factory.html.command=[this](auto&,auto text) { QueueScriptCommand(text,client_.Input(),scriptStrings_,{DialogScriptCode,[](auto name) { std::clog<<"HTML 스크립트 명령 미연결: "<<name<<'\n'; }}); };
     BindHtmlConditionConfig(context.factory.html,client_.Configuration(),client_.Assets().Edition());BindHtmlPictureText(context.factory.html);
     BindHtmlBackground(context.factory.html,htmlGlobals_); // 미션 안내의 전체 HTML도 같은 현재 배경을 쓴다.
@@ -340,6 +343,16 @@ void UberGump::ActivatePageAction(DialogAction action) {
     if (QueueFortSelectionAction(action.command,action.argument,client_.Input(),scriptStrings_)) return; // 메인Edit의원문명령은버튼콜백에서같은일반입력고리에직접예약한다.
     state_.Post(std::move(action));
 }
+// Mission Init의 원문 이름 선택 위치에서 실제 두 버퍼/고정Template/Config/dirty를 사용한다.
+void UberGump::SelectCurrentFortName(std::string_view name) {
+    auto& names=*client_.FortGlobals();auto& gameplay=*client_.GameplayGlobals();o::FortCurrentNameHooks hooks; // 현재 게임 하위가 필요할 때만 같은 실제 Session에 연결한다.
+    hooks.assertion=[](auto line) { std::clog<<"Fort 현재 이름 진단 "<<line<<'\n'; };hooks.refreshTitle=[this] { RefreshWindowTitle(); };
+    if (world_) hooks=world_->Session().BindFortCurrentName(std::move(hooks)); // 전체 Battle snapshot이나 미설치 저장은 해당 원문 선택 위치에서 거부한다.
+    o::FortCurrentNameGlobals globals{[&gameplay] { return gameplay.player.templateOwner; },[this] { return client_.SurfaceStorage()->ownerMode.fort ? 1U : 0U; },
+        [&gameplay] { return gameplay.world.editor; },[this] { return mission_ ? 1U : 0U; },names.Catalog().dirty}; // 현재 owner/모드는 원문 각 callback 위치에서 재조회한다.
+    FortCurrentNameDevices devices(names,*templateStorage_,client_.Configuration(),std::move(globals),std::move(hooks));
+    const std::string source(name.substr(0,name.find('\0')));devices.Set({reinterpret_cast<const std::uint8_t*>(source.c_str()),source.size()+1}); // 현재 요청의 안정된 NUL 입력을 동기 부모가 끝날 때까지 유지한다.
+}
 // 현재Guide/Gump가 소비하지 않은 원문 사건만 받고 숫자State 예약을 선착순UI큐와 분리한다.
 bool UberGump::FortSelectionEvent(const InputEvent& event) {
     const auto command=event.code&0x03ffffffU;
@@ -348,7 +361,7 @@ bool UberGump::FortSelectionEvent(const InputEvent& event) {
     const std::uint32_t battle=world_ ? world_->Session().BattleActive() : 0U; // 원문의 첫 Battle 관문에서만 읽으므로 이후 callback의 사본 상태로 재사용하지 않는다.
     FortSelectionHooks hooks;hooks.resolveString=[this](auto token) { return scriptStrings_.Resolve(token); };
     hooks.lastEditPath=[this] { return client_.Configuration().PathSpec("lastEditFort"); };
-    hooks.pending=[this](auto name) { SetPendingFortName(pendingFortName_,name,[] { std::clog<<"Fort pending 이름의 점 진단\n"; }); };
+    hooks.pending=[this](auto name) { const std::string source(name);SetPendingFortName(client_.FortGlobals()->PendingBytes(),{reinterpret_cast<const std::uint8_t*>(source.c_str()),source.size()+1},[] { std::clog<<"Fort pending 이름의 점 진단\n"; }); };
     hooks.refresh=[this](auto mode) { static_cast<void>(mapCatalog_->Refresh(static_cast<std::int32_t>(mode))); };
     hooks.tell=[this](auto name) { Tell(std::string(name)); };hooks.gameSeconds=[this] { return client_.Time().game; };
     // Battle/phase14의 파일 보존 하위는 아직 현재 Fort 파일 장치가 필요하며 빈 성공으로 채우지 않는다.
@@ -398,7 +411,7 @@ void UberGump::MainMenu() {
 // 현재 미션의 원본 제목 설정을 적용한다. 데모 모드는 같은 미션 객체의 직접 기록을 읽는다.
 void UberGump::RefreshWindowTitle() {
     WindowTitleState state; // 현재 메뉴는 요새 없음이며 데모 여부는 같은 실제 미션 필드다.
-    if (mission_) { state.fortName=mission_->FortName();state.mission=true; }
+    if (mission_) { state.fortName=missionRuntime_ && missionRuntime_->guided ? std::string(client_.FortGlobals()->Current()) : mission_->FortName();state.mission=true; } // 원문 Init이 연결된 미션은 같은 실제 현재 Fort를 읽는다. 다른 기존 로더의 이름 계약은 유지한다.
     if (missionRuntime_) state.demo=missionRuntime_->gate.demo!=0;
     netstorm::client::RefreshWindowTitle(state,{
         [this](std::string_view key,std::optional<std::string_view> argument) { return client_.Configuration().PathSpec(key,argument); },
@@ -447,7 +460,7 @@ void UberGump::InitializeMission() {
     hooks.requestFort=[this](auto name) {
         if (state_.Pending() || missionFortRequest_) throw std::logic_error("Init 요새 로드 요청 전 다른 전환/이미지가 남아 있음");
         auto request=std::make_shared<MissionFortLoadRequest>();MissionFortRequestHooks effects; // 원본 부모가 쓴 요청과 실제 복제 이미지를 같은 수명으로 소유한다.
-        effects.selectFort=[request](auto value) { request->fort=o::DecodeOriginalText({reinterpret_cast<const std::uint8_t*>(value.data()),value.size()}); };
+        effects.selectFort=[this,request](auto value) { SelectCurrentFortName(value);const auto current=client_.FortGlobals()->Current();request->fort=o::DecodeOriginalText({reinterpret_cast<const std::uint8_t*>(current.data()),current.size()}); }; // 원문00460980 전체 복귀 뒤 실제 현재 이름을 State 설치 요청에 보유한다.
         effects.duplicate=[request](auto& packet) { return CaptureMissionFortZone(*request,packet); };
         const std::array<std::uint8_t,9> address{'z','l','o','c','a','l',',','*',0};std::int32_t configuredPort=6799;client_.Configuration().ReadInt("gameServerPort",configuredPort);const auto port=static_cast<std::uint32_t>(configuredPort); // 원본00513870의9BYTE와 현재005318e8의 Client 설정 경계다.
         WriteMissionFortRequest(name,{request->next,request->sequence,address,port},effects);missionFortRequest_=std::move(request);state_.Post({"LoadMissionFort",missionFortRequest_->fort});
@@ -1169,7 +1182,8 @@ std::string UberGump::Report() const {
     out << "paused\t" << client_.Paused() << "\nsound\t" << client_.Configuration().GetInt("sound") << "\n";
     out<<"map_menu\t"<<rawButtons_->Menus()->HtmlMenuColumns()<<'\t'<<mapCatalog_->Cached().count<<'\t'<<mapCatalog_->Cached().dirty<<'\t'<<mapFileSpec_.Current()<<'\n'; // 실제 부착된 열과 캐시 상태만 관찰한다. 선택/로딩 성공을 합성하지 않는다.
     out<<"html_window_state\t"<<client_.HtmlWindowGlobals()->window.instances<<'\t'<<rawButtons_->DialogCount()<<'\t'<<rawButtons_->Menus()->HtmlWindowsOpen()<<'\n'; // Kill 뒤 인스턴스와 즉시 모달 반납을 구별하는 현재값이다.
-    const auto& local=client_.LocalStateGlobals()->Blocks();out<<"fort_selection\t"<<fortSelectionMode_<<'\t'<<local[1][0]<<'\t'<<local[3][0]<<'\t'<<local[4][0]<<'\t'<<Field(pendingFortName_)<<'\n'; // 원문mode/확정phase/현재요청/next/pending을 설치완료와 구별해 읽는다.
+    const auto& local=client_.LocalStateGlobals()->Blocks();out<<"fort_selection\t"<<fortSelectionMode_<<'\t'<<local[1][0]<<'\t'<<local[3][0]<<'\t'<<local[4][0]<<'\t'<<Field(std::string(client_.FortGlobals()->Pending()))<<'\n'; // 원문mode/확정phase/현재요청/next/pending을 설치완료와 구별해 읽는다.
+    out<<"fort_names\t"<<Field(std::string(client_.FortGlobals()->Current()))<<'\t'<<Field(std::string(client_.FortGlobals()->Pending()))<<'\t'<<menuConfigRevision_<<'\t'<<client_.FortGlobals()->SelectedFileSpec()<<'\n'; // 같은 실제 두 버퍼/공유 dirty/선택 키를 읽기만 한다.
     out<<"fort_catalog\t"<<mapCatalog_->Cached().count<<'\t'<<mapCatalog_->Cached().dirty<<'\t'<<client_.Configuration().GetInt("mayEditMissions")<<'\t'<<mapFileSpec_.Current()<<'\n'; // 실제50칸캐시와현재원문설정/키를읽고목록을다시열거하지않는다.
     out<<"current_dialog\t"<<rawButtons_->CurrentDialog()<<'\n'; // Guide4c8e90과 같은 실제565dd4다.
     out << "thunder_processes\t" << client_.ThunderFlashCount() << '\n';

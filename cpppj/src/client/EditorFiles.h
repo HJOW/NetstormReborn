@@ -20,6 +20,7 @@ public:
     bool ReadOnly(std::string_view fileName,const std::function<void(std::uint32_t)>& assertion={}) const; //현재CRT_stat의_S_IWRITE비트만읽는다.Config readOnlyForts와별개이며stat실패는진단뒤명시중단한다.
     void MakeWritable(std::string_view fileName,std::uint32_t mode) const; //실제 쓰기 경로를 확인한 뒤 원본 chmod(0x180) 요청을 수행한다.
     void Write(std::string_view fileName,std::span<const std::uint8_t> bytes) const; //검사한 작업본에만 원본 w+b 형식으로 쓴다. 부모 폴더를 임의 생성하지 않는다.
+    void Delete(std::string_view fileName) const; // 원문0041aef0의 직접 파일 삭제를 작업 namespace에서만 수행한다. 같은 DeleteFileA를 쓰는 CRT unlink의 실패 반환은 원문처럼 사용하지 않는다.
     TemplateFileWriteHooks Writer() const; //이 객체보다 짧게 살아야 하는 실제 저장 부모의 장치를 반환한다.
 private:
     std::filesystem::path Checked(const std::filesystem::path& path) const; //현재 실제 경로가 작업 루트 안/모든 원본 루트 밖인지 확인한다.

@@ -3721,6 +3721,16 @@ void RawCampaignSession::SnapshotFortBody(std::uint32_t slot) {
     globals.battle=[&s] { return s.core.ownerMode.battle ? 1U : 0U; };
     SnapshotFortTemplate(static_cast<std::int32_t>(slot),globals,hooks);
 }
+// 이름 부모가 요구하는 저장과 통지는 같은 현재 슬롯/모드와 기존 전체 Fort 본체를 사용한다.
+o::FortCurrentNameHooks RawCampaignSession::BindFortCurrentName(o::FortCurrentNameHooks hooks) {
+    auto& s=*impl_;hooks=s.templateStorage->BindCurrentName(std::move(hooks));
+    hooks.snapshot=[this] {
+        if (!impl_->loaded && !impl_->editorCheckpointRunning) throw std::logic_error("현재 이름 snapshot의 실제 설치 외곽 수명 위반"); // 설치 전 공개 저장 계약은 한정 checkpoint 밖에서 유지한다.
+        if (impl_->core.ownerMode.battle) throw std::logic_error("현재 Fort 이름의 전체 Battle snapshot 미연결"); // 원문 두 독립 if의 첫 선택은 건너뛰지 않는다.
+        if (impl_->core.ownerMode.fort) SnapshotFortBody(impl_->playerState.templateOwner);
+    };
+    hooks.notify=[&s](auto slot) { if (!s.loaded && !s.editorCheckpointRunning) throw std::logic_error("현재 이름 Notify의 실제 설치 외곽 수명 위반");s.templateState->Changed(slot); };hooks.state=[&s](auto slot)->std::span<const std::uint8_t> { return s.templateState->Get(slot); };return hooks;
+}
 // ReadOnly/숨김 관문은 이미지 생성 뒤 실제 저장 부모가 읽는다. 연결할 때 값을 복제하거나 저장을 앞당기지 않는다.
 void RawCampaignSession::BindFortFileSave(const std::uint32_t& readOnlyForts,const EditorFiles& files) {
     auto* const current=impl_.get(); // Impl은 Session 수명 동안 고정되며 참조한 두 Client 장치는 Session보다 오래 살아야 한다.

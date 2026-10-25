@@ -36,7 +36,7 @@ def run(directory, mission, demo_label=None):
     for frame in range(12, frames-2, 8):  # Guide의 일곱 프레임 재개 관문을 지난 다음 상태를 관측한다.
         if not demo_label:
             for label in BUTTONS:  # 현재 표시된 정확한 라벨만 선택하고 없는 버튼 입력은 만들지 않는다.
-                condition = r'phase\t[13]\n&&control\t'+re.escape(label)+r'\t'  # 실제 Tell 큐로 연 Dialog와 초기 Briefing의 표시된 버튼을 모두 허용한다.
+                condition = r'phase\t[13]\n&&(?:control\t'+re.escape(label)+r'\t|raw_html_button[^\n]*\t'+re.escape(label)+r'\n)'  # 실제 Tell 큐로 연 Dialog와 초기 Briefing의 표시된 버튼을 모두 허용한다.
                 steps.append((frame, 'when', condition+';;click;;'+label))
         steps.append((frame, 'report', str(frame)))
     steps.extend(((frames-1, 'report', 'final'), (frames-1, 'snapshot', str(directory / 'final.bmp'))))
@@ -55,7 +55,7 @@ def run(directory, mission, demo_label=None):
     save(directory / 'result.json', record)
     observed = states(directory / 'states.tsv') if (directory / 'states.tsv').exists() else {}
     final = observed.get('final', {})  # 실제 종료 직전 장면이며 중간 Mission 단계만으로 성공 처리하지 않는다.
-    record['final'] = {key: final.get(key) for key in ('phase', 'page', 'paused', 'mission', 'mission_start', 'mission_gate', 'raw_session', 'raw_sp', 'raw_technology', 'raw_brains')}  # 같은 최종 관측의 판정 필드만 복사한다.
+    record['final'] = {key: final.get(key) for key in ('phase', 'page', 'paused', 'mission', 'mission_start', 'mission_gate', 'raw_session', 'raw_sp', 'raw_technology', 'raw_brains', 'fort_names', 'raw_uber', 'raw_hud_owners')}  # 같은 최종 관측의 판정 필드만 복사한다.
     record['checks'] = dict(normalExit=result['returnCode'] == 0 and not result['timedOut'],
                             playing=final.get('phase') == ['4'] and final.get('paused') == ['0'],
                             correctMission=bool(final.get('mission')) and final['mission'][0].casefold() == mission.casefold(),
