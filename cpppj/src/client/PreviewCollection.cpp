@@ -9,6 +9,9 @@
 
 namespace netstorm::client {
 namespace {
+// 독립fixture입력과실제전역DWORD는원래값을유지한채소비직전에만연결한다.
+std::uint32_t PreviewSidNumber(o::Sid sid) { return sid.value; }
+std::uint32_t PreviewSidNumber(std::uint32_t sid) { return sid; }
 // 원본 배치 칸의 +0.9999 단정도 비트와 SP 강조 기준, 타입 깊이 우선 비트다.
 constexpr float kSpotBias=std::bit_cast<float>(0x3f7ff972U),kSpThreshold=7000.0f;
 constexpr std::uint32_t kSurface=4,kIsland=0x400000;
@@ -66,7 +69,7 @@ std::int32_t PreviewCollection::Collect(o::RenderWorldRect view,std::span<o::Ren
         for (std::int32_t i=0;i<c.pieceCount;++i) {
             if (limit<1) return count;
             if (static_cast<std::size_t>(i)>=c.pieces.size()) throw std::out_of_range("Preview collection list");
-            const auto sid=c.pieces[static_cast<std::size_t>(i)];if (!sid.value) throw std::out_of_range("Preview collection zero SID");
+            const auto sid=CursorPreviewSid(PreviewSidNumber(c.pieces[static_cast<std::size_t>(i)]));if (!sid.value) throw std::out_of_range("Preview collection zero SID");
             const auto raw=pool_.Slot(sid);
             if (static_cast<std::size_t>(count)>=output.size()) throw std::length_error("Preview collection output");
             const float positionX=std::bit_cast<float>(ReadPreview(raw,14)),positionY=std::bit_cast<float>(ReadPreview(raw,18));
@@ -92,7 +95,7 @@ std::int32_t PreviewCollection::Collect(o::RenderWorldRect view,std::span<o::Ren
             if (static_cast<std::size_t>(count)+2>output.size()) throw std::length_error("Preview collection pair capacity");
             if (pool_.Edition()==o::OriginalEdition::Patch1078) PatchFeedback(c.localPlayer);
             first.kind=4;first.tail=0;
-            const auto current=c.pieces.at(static_cast<std::size_t>(i));
+            const auto current=CursorPreviewSid(PreviewSidNumber(c.pieces.at(static_cast<std::size_t>(i))));
             if (!current.value || current.value>=pool_.Capacity()) throw std::out_of_range("Preview collection current SID");
             auto& second=output[static_cast<std::size_t>(count)+1];second={positionX,positionY,tokenBase_+current.value*pool_.Layout().stride,
                 std::bit_cast<std::int16_t>(static_cast<std::uint16_t>(depth-1U)),4,2};
@@ -106,7 +109,7 @@ std::int32_t PreviewCollection::Collect(o::RenderWorldRect view,std::span<o::Ren
     struct Input {
         const std::uint32_t &lockDepth,&type,&parentGump,&specialTypeA,&specialTypeB,&legal; // 현재 잠금·타입·표시 판정이다.
         const std::int32_t& pieceCount; // 각 반복에서 현재 개수를 다시 읽는다.
-        const std::array<o::Sid,30>& pieces; // SP 경계 재진입 뒤 바뀐 SID도 다시 읽는다.
+        const std::array<std::uint32_t,30>& pieces; // SP 경계 재진입 뒤 바뀐 SID도 다시 읽는다.
         const float &x,&y; // 특수 받침의 배치 칸 좌표다.
         const std::uint32_t& localPlayer; // 실제 SP 읽기와 색 표의 로컬 소유자다.
     };

@@ -10,7 +10,7 @@ class GameAssets; // 실제 자산 저장소의 선언이며 헤더에서 게임
 struct CursorLifecycleState {
     std::uint32_t abstractType{}; // 0055a280의 TYPE 포인터를 현재 표의 번호로 보관한다.
     std::uint32_t directionArgument{},currentGump{}; // 0055a2a0·0055a278이며 direction/커서 프로세스와 구별한다.
-    std::array<o::Sid,30> previews{}; // 0055a1d8의 실제 임시 월드 객체 목록이다.
+    std::array<std::uint32_t,30> previews{}; //0055a1d8의실제120BYTE/30DWORD이며SID16배열로축소하지않는다.
     std::int32_t previewCount{}; // 0055a1b8이며 정리 도중에도 현재 값을 다시 읽는다.
     std::uint32_t warningFont{},costFont{},costType{92},teleportBlocked{}; // 원본 글꼴 두 전역·비용 그림 타입·금액 진단이다.
     std::array<std::uint32_t,8> warningContext{2,0,0,0,0,0,1,1},costContext{2,3,0,0,0,0,1,1}; // 측정 문맥의 +8만 현재 글꼴로 바뀐다.
@@ -20,6 +20,8 @@ struct CursorLifecycleState {
     std::uint32_t costImage{}; // 실제 SHP 블록의 호스트 식별값이며 원본 포인터로 역참조하지 않는다.
     std::string costText; // 0055a1bc의 절삭된 비용 문자열이다.
 };
+static_assert(sizeof(CursorLifecycleState::previews)==120); //원문배열의DWORD폭/30칸을컴파일시점에고정한다.
+o::Sid CursorPreviewSid(std::uint32_t number); //원문DWORD를잃지않고SID16호스트경계직전에범위를검사하며유효풀범위는각소비자가검사한다.
 // 프레임3의 원본 추가 헤더다. 그림 식별값과 signed WORD 치수를 실제 자산 연결기가 공급한다.
 struct CursorCostImage {
     std::uint32_t token{}; // 같은 SHP 저장소의 블록 식별값이다.

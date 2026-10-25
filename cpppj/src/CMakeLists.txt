@@ -204,3 +204,5 @@ target_sources(netstorm PRIVATE client/RawCameraView.cpp client/RawCameraView.h 
 
 # 같은 실제 Kernel/현재 프레임을 pin하고 현재 World 처리기만 대여하는 장기 Host다.
 target_sources(netstorm PRIVATE client/RawProcessHostStorage.cpp client/RawProcessHostStorage.h)
+#443은커서data-only owner와Session없는실제Cancel/Prepare연결만추가한다.
+target_sources(netstorm PRIVATE client/ClientCursorGlobals.h client/ClientCursorStateCleanup.h client/ClientCursorStateCleanup.cpp)

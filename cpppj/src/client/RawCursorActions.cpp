@@ -34,8 +34,8 @@ void RawCursorActions::Rotate(std::int32_t step) const {
     if (!drop_.lockDepth) { Need(hooks_.createPreviews)();Need(hooks_.selectCursor)(drop_.legalGump ? 3U : 2U); }
     if (lifecycle_.abstractType>=types_.size()) throw std::out_of_range("커서 회전 현재 TYPE 범위");
     if (types_[lifecycle_.abstractType].group==1 || drop_.type==specialType_) {
-        Need(hooks_.removeRange)(lifecycle_.previews[0],rangeProcessType_);
-        drop_.cursorGump=Need(hooks_.createRange)(lifecycle_.previews[0],0);
+        Need(hooks_.removeRange)(CursorPreviewSid(lifecycle_.previews[0]),rangeProcessType_);
+        drop_.cursorGump=Need(hooks_.createRange)(CursorPreviewSid(lifecycle_.previews[0]),0);
     }
 }
 }

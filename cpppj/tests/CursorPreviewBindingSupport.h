@@ -3,6 +3,7 @@
 #include "client/PreviewDraw.h"
 #include "client/RawCursorPlacement.h"
 #include "o/RawBridgeConnect.h"
+#include <algorithm>
 
 namespace netstorm::test::previewbinding {
 // 실제 배치 검사 격자와 커서 상태를 테스트 수명 동안 소유한다.
@@ -16,7 +17,7 @@ struct Scene {
     void Collection(const client::PreviewCollectionState& c) {
         drop.lockDepth=c.lockDepth;drop.localPlayer=c.localPlayer;drop.x=c.x;drop.y=c.y;drop.legal=!c.legal;
         lifecycle.abstractType=c.type;lifecycle.currentGump=c.parentGump;lifecycle.previewCount=c.pieceCount;
-        std::copy(c.pieces.begin(),c.pieces.end(),lifecycle.previews.begin());
+        std::transform(c.pieces.begin(),c.pieces.end(),lifecycle.previews.begin(),[](o::Sid sid) { return std::uint32_t(sid.value); }); // 동일fixture값만DWORD저장소에공급한다.
         placement.placementAllowed=c.legal;surfaces.islandType=c.specialTypeA;surfaces.stalagType=c.specialTypeB;
     }
     // 표시기의 고정 입력을 해당 원본 주소의 실제 저장소에 공급한다.

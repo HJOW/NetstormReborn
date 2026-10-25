@@ -16,7 +16,7 @@ struct CursorPreviewHooks {
     std::function<bool(o::Sid)> hasHitPoints; // 공통4adc60의 현재 HP 유무다.
     std::function<void(o::Sid,std::int32_t)> setHitPoints; // 공통 비가상4adca0(sid,0)다.
     std::function<const o::RiftTypeFrames&(std::uint32_t)> frames; // 49a840의 현재 bridge TYPE 프레임 표다.
-    std::function<std::int32_t(o::Sid,std::span<o::Sid>)> connect; // 4213b0(sid,현재목록꼬리,&count)다.
+    std::function<std::int32_t(o::Sid,std::span<std::uint32_t>)> connect; // 4213b0(sid,현재목록꼬리,&count)다.
 };
 // 수명/내려놓기/배치와 같은 실제 풀·전역에 미리보기를 만든다. 공간 Pop은 호출하지 않는다.
 class RawCursorPreviews {
@@ -35,12 +35,12 @@ private:
     void Append(o::Sid sid) const;
     // 현재 슬롯의 float 위치와 x*16+0.5/y*11+0.5 절삭 WORD 화면 캐시를 쓴다.
     void Position(o::Sid sid,float x,float y) const;
-    // 유효 목록 인덱스의 SID를 읽는다. 실제 raw 접근은 필요한 시점에만 한다.
-    o::Sid At(std::int32_t index) const;
+    // 유효 목록 인덱스의 원래 DWORD를 읽고 실제 SID 변환은 소비할 때만 한다.
+    std::uint32_t At(std::int32_t index) const;
     o::SidPool& pool_; // 모든 미리보기/연결 객체를 같은 raw 저장소에서 읽고 쓴다.
     std::span<const o::RiftTypeRecord> types_; // 메뉴/생성/위치 판정과 같은 현재 TYPE 표다.
     CursorDropState& drop_; // 원래 Form/타입/인자/소유자/위치의 공유 전역이다.
-    CursorLifecycleState& lifecycle_; // 실제30SID/현재 개수/abstract TYPE의 공유 전역이다.
+    CursorLifecycleState& lifecycle_; // 실제30DWORD/현재 개수/abstract TYPE의 공유 전역이다.
     const o::BridgeConnectState& surfaces_; // 같은 bridge/island/stalag 타입 전역이다.
     CursorPreviewHooks hooks_; // 복원 계산을 대신하지 않는 실제 순회/가상 효과다.
 };

@@ -3,6 +3,10 @@
 #include "o/RiftType.h"
 #include <functional>
 #include <span>
+#include <array>
+#include <memory>
+#include <optional>
+#include <utility>
 
 namespace netstorm::o {
 // 원본의 진단 후 계속 진행하는 두 assertion 경계다.
@@ -32,10 +36,24 @@ struct PlayerParticipationHooks {
 };
 // 9×0xb4 Player와 원본9×9 DWORD 표를 참조한다. 배열 사본/대칭 동맹/추정 active 입력을 만들지 않는다.
 class RawPlayerParticipation {
+    struct RetirementLifetime {}; // Native 전역이 아닌 이 실제 모듈의 C++ 수명 정체성만 나타낸다.
 public:
+    class BrainResetPass { // 실제00413ae0의 정상 복귀를 같은 owner의 반납에만 사용하는 이동 전용 증빙이다.
+    public:
+        BrainResetPass(BrainResetPass&&) noexcept=default;BrainResetPass& operator=(BrainResetPass&&) noexcept=default; // 정상 복귀 증빙만 이동한다.
+        BrainResetPass(const BrainResetPass&)=delete;BrainResetPass& operator=(const BrainResetPass&)=delete; // 외부 완료 상태를 복제하지 않는다.
+        std::uint32_t Owner() const { return owner_; } // 원문 resetAi가 정상 복귀한1..8 번호만 순수 조회한다.
+    private:
+        friend class RawPlayerParticipation;
+        BrainResetPass(const RawPlayerParticipation* source,std::weak_ptr<const RetirementLifetime> lifetime,std::uint32_t owner) noexcept:source_(source),lifetime_(std::move(lifetime)),owner_(owner) {} // 실제 부모 호출 뒤에만 발급한다.
+        const RawPlayerParticipation* source_;std::weak_ptr<const RetirementLifetime> lifetime_;std::uint32_t owner_; // 포인터는 비교만 하며 소멸 뒤 같은 주소 재사용도 lifetime으로 거부한다.
+    };
+
     // 이 첫 구현은 PATCH전용이다. 실제 저장소/모드/효과 대상은 객체보다 오래 살아야 한다.
     RawPlayerParticipation(OriginalEdition edition,std::span<std::uint8_t> players,std::span<std::uint32_t> allies,
         std::span<const std::uint8_t> hidden,PlayerParticipationState& state,PlayerParticipationHooks hooks);
+    RawPlayerParticipation(const RawPlayerParticipation&)=delete;RawPlayerParticipation& operator=(const RawPlayerParticipation&)=delete; // 살아 있는 모듈의 반납 증빙을 복제하지 않는다.
+    RawPlayerParticipation(RawPlayerParticipation&&)=delete;RawPlayerParticipation& operator=(RawPlayerParticipation&&)=delete; // 발급한 증빙과 callback이 식별하는 실제 모듈 주소를 고정한다.
     // 다섯 현재 조회를 모두 공급한다. 독립 원본 대조의 기존 값형 state는 미연결일 때만 사용한다.
     void BindCurrentInputs(PlayerParticipationReads reads);
     // 004a6dc0: 유효 owner1..8의 bit1 부재에서만 flags=(flags&~100)|3 뒤 연결을 수락한다.
@@ -52,6 +70,10 @@ public:
     void AttachBrain(std::uint32_t owner,std::uint32_t brain) const;
     // 00413ae0/00413b20: 실제 파괴→반납→+b0=0이다. 원본대로 flags20은 지우지 않는다.
     void RemoveBrain(std::uint32_t owner) const;
+    BrainResetPass RemoveBrainForState(std::uint32_t owner) const; // 실제 RemoveBrain 정상 복귀 뒤에만 owner1..8 증빙을 발급한다.
+    void ReturnBrainForState(BrainResetPass&& pass); // 같은 실제 모듈/현재brain0/호출복귀 증빙만 소비하며 후속 설치를 닫는다.
+    bool BrainReturnedForState(std::uint32_t owner) const; // 보관한 실제 증빙만 조회하며 현재brain이 바뀌었으면 명시 수명 오류다.
+
     void RemoveAllBrains() const;
     // 다른 실제 AI 소비자가 같은 현재 토큰을 조회한다. 이 클래스는 brain 메모리를 소유하지 않는다.
     std::uint32_t Brain(std::uint32_t owner) const;
@@ -68,6 +90,9 @@ private:
     bool Battle() const;
     bool Metamap() const;
     bool LocalTransport() const;
+    std::shared_ptr<const RetirementLifetime> retirementLifetime_{std::make_shared<RetirementLifetime>()}; // 증빙보다 실제 모듈이 먼저 소멸한 경우를 식별한다.
+    std::array<std::optional<BrainResetPass>,9> returnedBrains_; // owner0은 사용하지 않으며 실제 소비한 정상 복귀 증빙만 보관한다.
+    mutable std::size_t activeBrainCalls_{}; // 실제 파괴/반납 callback이 끝나기 전 증빙 재진입을 막는 C++ 호출 대여 수다.
     std::span<std::uint8_t> players_; // 같은 실제9 Player 기록이다.
     std::span<std::uint32_t> allies_; // 한쪽 방향만 바뀔 수 있는 원본81 DWORD다.
     std::span<const std::uint8_t> hidden_; // 0052f81e의 현재9개 숨김 표시다.

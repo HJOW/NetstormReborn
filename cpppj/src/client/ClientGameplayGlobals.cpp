@@ -13,14 +13,14 @@ ClientGameplayGlobals::Use::Use(ClientGameplayGlobals& globals,bool prepared):gl
     if (globals_.borrowed_) throw std::logic_error("현재 게임 전역 중복 대여");
     if (prepared_) { globals_.borrowed_=true;return; } // Native prefix가 쓴 같은 owner/모드/커서/에너지를 재작성하지 않는다.
     const auto special=globals_.player.special;const auto userCheat=globals_.energy.userCheat; // 설정 해석이 소유하는 두 전역은 다음 Runtime에도 같은 값을 유지한다.
-    globals_.borrowed_=true;globals_.player={};globals_.player.special=special;globals_.cursor=CursorDropState{.lockDepth=1};globals_.finder={};globals_.world.editor=0;globals_.world.missionPost=true;
+    globals_.borrowed_=true;globals_.player={};globals_.player.special=special;globals_.cursor=CursorDropState{.lockDepth=1};globals_.cursorGlobals_.ResetForGeneralWorld();globals_.finder={};globals_.world.editor=0;globals_.world.missionPost=true;
     globals_.Server()=true;globals_.Boss()=true; // 기존 일반 Session의 fresh 권한true/true만 유지한다. Native cleanup/prefix의 쓰기로 세지 않는다.
     globals_.fullDeck_=0; // 기존 일반 fresh 입력만 준비하며 authority/선택 reset도 함께 보존한다.
     globals_.energy={};globals_.energy.userCheat=userCheat; // 나머지 공급 상태는 기존 Session 초기화 의미를 유지한다. NativeState 전체 초기화 이행과 구별한다.
     globals_.selection.ResetForGeneralWorld(); // 기존 일반 GameWorld의 fresh 입력 호환이다. prepared와 반납에서는 이 전역을 암묵 초기화하지 않는다.
 }
 // Player/커서의 기존 C++ 소멸 의미를 장기 전역의 명시 무효화로 바꾸며 두 Subscriber는 유지한다.
-ClientGameplayGlobals::Use::~Use() { globals_.current_=nullptr;if (!prepared_) { globals_.player.playerKnown=0;globals_.cursor=CursorDropState{.lockDepth=1};globals_.world.editor=0; }globals_.borrowed_=false; }
+ClientGameplayGlobals::Use::~Use() { globals_.current_=nullptr;if (!prepared_) { globals_.player.playerKnown=0;globals_.cursor=CursorDropState{.lockDepth=1};globals_.cursorGlobals_.ResetForGeneralWorld();globals_.world.editor=0; }globals_.borrowed_=false; }
 // 완성 전의 부분 생성 객체를 실제 게임 효과 대상으로 노출하지 않는다.
 void ClientGameplayGlobals::Use::Publish(RawCampaignSession& session) { if (globals_.current_) throw std::logic_error("현재 게임 Runtime 중복 연결");globals_.current_=&session; }
 // 현재 실제 객체의 공개 메서드가 부분 반납된 Impl을 다시 읽지 않도록 한다.

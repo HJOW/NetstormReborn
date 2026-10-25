@@ -65,7 +65,7 @@ struct PreviewScene {
         for (const auto sid:{50,51,100,101,102,103,104}) Raw(static_cast<std::uint16_t>(sid));
         pool.AllocatedBytes(Sid{50})[30]=static_cast<std::uint8_t>(values[Quality]);pool.AllocatedBytes(Sid{51})[30]=3;
         // 첫 SID가 생성 여부를 정한다. 현재 개수는 별도로 유지한다.
-        for (std::size_t index=0;index<5;++index) life.previews[index]=Sid{static_cast<std::uint16_t>(values[Existing] ? 100+index : 0)};
+        for (std::size_t index=0;index<5;++index) life.previews[index]=static_cast<std::uint16_t>(values[Existing] ? 100+index : 0);
         life.previewCount=values[Existing] ? 5 : static_cast<std::int32_t>(values[Prefix]);life.abstractType=drop.type=100;drop.argument=7;drop.direction=3;drop.preview=Sid{50};drop.localPlayer=1;
         drop.x=std::bit_cast<float>(values[X]);drop.y=std::bit_cast<float>(values[Y]);drop.costFlags=values[Chain] ? 0x40U : 0U;drop.screenX=-3;drop.screenY=47;
         life.warningWidth=35;life.warningHeight=17;drop.cursorWidth=49;life.costHeight=23;placementState.screenOrigin={-17,31};surfaces.bridgeType=99;surfaces.islandType=91;surfaces.stalagType=92;
@@ -78,7 +78,7 @@ struct PreviewScene {
         if (input[Mutation]==1) { life.abstractType=drop.type=101;drop.argument=99;drop.localPlayer=2;drop.x=-3.25f;drop.y=4.75f; }
         if (input[Mutation]==4) {
             // 실제로 재사용 가능한 목록을 Query 경계의 독립 입력으로 공급한다.
-            for (std::size_t index=0;index<5;++index) life.previews[index]=Sid{static_cast<std::uint16_t>(100+index)};
+            for (std::size_t index=0;index<5;++index) life.previews[index]=static_cast<std::uint16_t>(100+index);
             life.previewCount=5;
         }
     }
@@ -102,13 +102,13 @@ struct PreviewScene {
         hooks.hasHitPoints=[this](Sid sid) { Event("H",{sid.value});return input[Hp]!=0; };
         hooks.setHitPoints=[this](Sid sid,std::int32_t value) { Event("Z",{sid.value,static_cast<std::uint32_t>(value)});Put(pool.AllocatedBytes(sid),26,static_cast<std::uint32_t>(value)); };
         hooks.frames=[this](std::uint32_t type)->const RiftTypeFrames& { Event("F",{type});return frames; };
-        hooks.connect=[this](Sid sid,std::span<Sid> output) {
+        hooks.connect=[this](Sid sid,std::span<std::uint32_t> output) {
             const auto raw=pool.Slot(sid);const float x=std::bit_cast<float>(Get(raw,14,4)),y=std::bit_cast<float>(Get(raw,18,4));
             Event("B",{sid.value,Get(raw,14,4),Get(raw,18,4),Get(raw,22,2),Get(raw,24,2),Get(raw,36,4),static_cast<std::uint32_t>(life.previewCount)});
             // 4213b0의 실제 몸체는 별도 관찰 범위다. 여기서는 입력 위치와 SID만 공급한다.
             for (std::uint32_t index=0;index<input[Connectors];++index) {
                 const auto target=nextConnector++;Raw(target,90);auto data=pool.AllocatedBytes(Sid{target});
-                Put(data,14,std::bit_cast<std::uint32_t>(x+static_cast<float>(static_cast<int>(index%2)*2-1)));Put(data,18,std::bit_cast<std::uint32_t>(y+static_cast<float>(static_cast<int>(index%3)-1)));output[index]=Sid{target};
+                Put(data,14,std::bit_cast<std::uint32_t>(x+static_cast<float>(static_cast<int>(index%2)*2-1)));Put(data,18,std::bit_cast<std::uint32_t>(y+static_cast<float>(static_cast<int>(index%3)-1)));output[index]=target;
             }
             return static_cast<std::int32_t>(input[Connectors]);
         };
@@ -132,7 +132,7 @@ struct PreviewScene {
         for (const auto value:placementState.bounds) values.push_back(static_cast<std::uint32_t>(value));
         values.insert(values.end(),{static_cast<std::uint32_t>(placementState.hotspotX),static_cast<std::uint32_t>(placementState.hotspotY),static_cast<std::uint32_t>(placementState.imageWidth),static_cast<std::uint32_t>(placementState.imageHeight)});
         // 미사용 칸도 포함한30SID를 그대로 비교한다.
-        for (const auto sid:life.previews) values.push_back(sid.value);
+        for (const auto sid:life.previews) values.push_back(sid);
         values.insert(values.end(),{life.abstractType,types[100].flags2,drop.preview.value});std::string result;
         // signed 값도 원문 DWORD 표현으로 보존한다.
         for (const auto value:values) result+=(result.empty() ? "" : ",")+std::to_string(value);return result;

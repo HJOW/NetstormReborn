@@ -3,6 +3,9 @@
 #include "o/RawPlayerParticipation.h"
 #include <algorithm>
 #include <array>
+#include <optional>
+#include <type_traits>
+#include "o/RawAiCreate.h"
 using namespace netstorm::o;
 using namespace netstorm::test::rawscene;
 namespace {
@@ -100,4 +103,39 @@ TEST_CASE(PlayerParticipation_BrainLifetimeAndDirectionalRows) {
     scene.hooks.destructBrain=[&](std::uint32_t token) { CHECK(token==7002 && runtime.Brain(1)==7002); };scene.hooks.freeBrain=[&](std::uint32_t token) { CHECK(token==7002 && runtime.Brain(1)==7002); };
     auto actual=scene.Runtime();actual.RemoveBrain(1);CHECK(actual.Brain(1)==0 && (scene.players[180+80]&0x20));
     actual.SetAlliance(1,1U<<2);CHECK(scene.allies[1*9+2]==1 && scene.allies[2*9+1]==7);actual.SetAlliance(2,0);CHECK(scene.allies[1*9+2]==1 && scene.allies[2*9+1]==0);
+}
+
+// 실제 owner1..8 자식만 정리하며 정상 복귀 증빙을 소비한 뒤 같은 owner의 설치/반복 효과를 닫는다.
+TEST_CASE(PlayerParticipation_StateResetProofCompletesActualParentsAndClosesOwners) {
+    static_assert(std::is_nothrow_move_constructible_v<RawPlayerParticipation::BrainResetPass> && !std::is_copy_constructible_v<RawPlayerParticipation::BrainResetPass>); // 실제 소비 뒤 증빙 보관이 할당/복사 경계가 되지 않는다.
+    ParticipationScene scene(Split("1,1,0,0,0,0,0,1,0,0,0,0,7002",','));auto runtime=scene.Runtime();ParticipationPut(scene.players,0xb0,9000);
+    for (std::uint32_t owner=1;owner<9;++owner) { // 원문 cleanup의8회 resetAi 위치를 그대로 선택한다.
+        ParticipationPut(scene.players,owner*180+0xb0,7000+owner);ParticipationPut(scene.players,owner*180+0x50,0x12340020U);auto pass=runtime.RemoveBrainForState(owner);CHECK(pass.Owner()==owner && !runtime.BrainReturnedForState(owner) && runtime.Brain(owner)==0);runtime.ReturnBrainForState(std::move(pass));CHECK(runtime.BrainReturnedForState(owner));CHECK(Throws([&] { runtime.AttachBrain(owner,8000+owner); }) && Throws([&] { runtime.RemoveBrain(owner); }));
+        CHECK((scene.players[owner*180+0x50]&0x20)!=0);
+    }
+    CHECK(runtime.Brain(0)==9000 && !runtime.BrainReturnedForState(0));CHECK(scene.trace=="K,7001;F,7001;K,7002;F,7002;K,7003;F,7003;K,7004;F,7004;K,7005;F,7005;K,7006;F,7006;K,7007;F,7007;K,7008;F,7008");CHECK(Throws([&] { runtime.RemoveBrainForState(0); }) && Throws([&] { runtime.RemoveBrainForState(9); }));
+}
+
+// 실제 free 실패에서는 정상 복귀 증빙이 없고 파괴 선행효과와 아직0이 아닌 현재 brain을 그대로 남긴다.
+TEST_CASE(PlayerParticipation_StateResetFailureDoesNotPublishProofOrHidePrefix) {
+    ParticipationScene scene(Split("1,1,0,0,7002,0,0,1,0,0,0,0,7002",','));bool failed{};scene.hooks.freeBrain=[&](auto token) { scene.Add("F,"+std::to_string(token));throw std::runtime_error("명시 free 실패"); };auto runtime=scene.Runtime();auto other=runtime.RemoveBrainForState(2);
+    try { static_cast<void>(runtime.RemoveBrainForState(1)); }catch (const std::runtime_error&) { failed=true; }CHECK(failed && scene.trace=="K,7002;F,7002" && runtime.Brain(1)==7002 && !runtime.BrainReturnedForState(1));runtime.ReturnBrainForState(std::move(other));CHECK(runtime.BrainReturnedForState(2)); // 예외 복귀 뒤 호출 대여만 종료되며 다른 정상 증빙은 소비할 수 있다.
+}
+
+// 다른 모듈/이동한 pass/소멸 뒤 같은 주소의 새 모듈은 이전 정상 복귀를 재사용할 수 없다.
+TEST_CASE(PlayerParticipation_StateResetForeignMovedAndExpiredProofsAreRejected) {
+    ParticipationScene scene(Split("1,1,0,0,0,0,0,1,0,0,0,0,7002",','));auto first=scene.Runtime();auto second=scene.Runtime();auto pass=first.RemoveBrainForState(1);CHECK(Throws([&] { second.ReturnBrainForState(std::move(pass)); }));first.ReturnBrainForState(std::move(pass));CHECK(first.BrainReturnedForState(1) && !second.BrainReturnedForState(1));CHECK(Throws([&] { first.ReturnBrainForState(std::move(pass)); }));
+    std::optional<RawPlayerParticipation::BrainResetPass> old;std::optional<RawPlayerParticipation> reused;reused.emplace(OriginalEdition::Patch1078,scene.players,scene.allies,scene.hidden,scene.state,scene.hooks);const auto* address=&*reused;old.emplace(reused->RemoveBrainForState(3));reused.reset();reused.emplace(OriginalEdition::Patch1078,scene.players,scene.allies,scene.hidden,scene.state,scene.hooks);CHECK(&*reused==address && Throws([&] { reused->ReturnBrainForState(std::move(*old)); }) && !reused->BrainReturnedForState(3));
+}
+
+// 가상 파괴 callback이 아직 실행 중이면 이전 owner의 정상 pass도 소비할 수 없다.
+TEST_CASE(PlayerParticipation_StateResetActualEffectMustReturnBeforeConsumption) {
+    ParticipationScene scene(Split("1,1,0,0,7002,0,0,1,0,0,0,0,7002",','));RawPlayerParticipation* current{};std::optional<RawPlayerParticipation::BrainResetPass> previous;bool rejected{};
+    scene.hooks.destructBrain=[&](auto token) { CHECK(token==7002 && current->Brain(1)==7002);try { current->ReturnBrainForState(std::move(*previous)); }catch (const std::logic_error& error) { rejected=std::string_view(error.what()).find("진행 중")!=std::string_view::npos; } };auto runtime=scene.Runtime();current=&runtime;previous.emplace(runtime.RemoveBrainForState(2));auto pass=runtime.RemoveBrainForState(1);CHECK(rejected && !runtime.BrainReturnedForState(1) && !runtime.BrainReturnedForState(2));runtime.ReturnBrainForState(std::move(pass));runtime.ReturnBrainForState(std::move(*previous));CHECK(runtime.BrainReturnedForState(1) && runtime.BrainReturnedForState(2));
+}
+
+// 실제 생성 wrapper도 색/신전/할당보다 먼저 닫힌 owner를 거부하고 raw 외부 변조를 숨기지 않는다.
+TEST_CASE(PlayerParticipation_StateResetRetiredOwnerRejectsCreateAndRawIdentityChange) {
+    ParticipationScene scene(Split("1,1,0,0,0,0,0,1,0,0,0,0,7002",','));auto runtime=scene.Runtime();auto pass=runtime.RemoveBrainForState(1);runtime.ReturnBrainForState(std::move(pass));std::size_t colors{},allocations{};AiCreateHooks hooks;hooks.changeColor=[&](auto,auto) { ++colors; };hooks.construct=[&](auto,auto,auto) { ++allocations;return 1U; };RawAiCreate create(OriginalEdition::Patch1078,runtime,std::move(hooks));std::array<std::uint8_t,RawMissionAiSettings::kSize> settings{};ParticipationPut(settings,0x250,3);CHECK(Throws([&] { create.Create(1,settings); }) && colors==0 && allocations==0);
+    ParticipationPut(scene.players,180+0xb0,0x12345678);CHECK(Throws([&] { runtime.BrainReturnedForState(1); }));ParticipationPut(scene.players,180+0xb0,0);CHECK(runtime.BrainReturnedForState(1)); // raw 기록을 우회 변경한 경우는 허용된 새 설치가 아닌 명시 수명 위반이다.
 }

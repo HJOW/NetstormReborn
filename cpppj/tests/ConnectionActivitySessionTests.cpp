@@ -1,3 +1,4 @@
+#include "client/CampaignCursorClientEffects.h"
 // 실제 Client 장기 표와 Session의 일반64h 수신/타이머/현재 모드 소비를 창 없이 검사한다.
 #include "DudeSpawnSupport.h"
 #include "client/ClientMain.h"
@@ -164,7 +165,7 @@ TEST_CASE(ConnectionActivitySession_ForeignAuthorityFailsBeforeAnyBorrowOrMutati
 
 // 실제 Client의 snapshot/논리Renderer/목표는 일반 Session 생성·반납·재대여에서 초기화하지 않는다.
 TEST_CASE(CameraView_ActualClientSessionAliasesFractionAndCurrentCursorReads) {
-    ActivitySessionDevices devices;auto& camera=devices.client.GameplayGlobals()->Camera();std::uint32_t redraw{},revision{};camera.InitializeNativeRenderer(1024,768,256,redraw,revision);SetCameraViewWorld(camera.RendererView(),1.25F,2.5F);camera.CopyRendererSnapshot();camera.RequestPixels(71,83);const auto before=std::bit_cast<CameraViewWords>(camera.Snapshot());const auto requested=camera.Target().pixels;
+    ActivitySessionDevices devices;auto& camera=devices.client.GameplayGlobals()->Camera();std::uint32_t redraw{},revision{};camera.InitializeNativeRenderer(1024,768,256,redraw,revision);SetCameraViewWorld(camera.RendererView(),1.25F,2.5F);camera.CopyRendererSnapshot();camera.RequestPixels(71,83);const auto before=std::bit_cast<CameraViewWords>(camera.Snapshot());const auto requested=camera.Target().pixels;Renderer nativeRenderer(1024,768);
     for (std::uint32_t index=0;index<2;++index) { // 같은Client owner를실제Load한두Runtime이차례로빌린다.
         std::uint32_t invalidated{},resets{};CameraHomeState home;home.width=1024;home.height=768;std::unique_ptr<RawCampaignSession> session;auto services=devices.Services(false);
         services.install.resetCamera=[&] { CHECK(session);++resets;session->ResetCamera(home,[&](std::int32_t x,std::int32_t y) { camera.RequestPixels(x,y);camera.ApplyPixelsToRendererAndSnapshot(x,y); }); }; // Load의실제Reset/Home본문과카메라setter를연결하며원점효과를빈함수로버리지않는다.
@@ -175,6 +176,9 @@ TEST_CASE(CameraView_ActualClientSessionAliasesFractionAndCurrentCursorReads) {
         CHECK(std::bit_cast<CameraViewWords>(camera.Snapshot())==before && camera.Target().pixels[0]==71 && cursor.Placement().ScreenOriginX()==20 && cursor.Placement().ScreenOriginY()==27);auto& drop=session->CursorDropSettings();drop.lockDepth=1;cursor.Placement().hotspotX=cursor.Placement().hotspotY=cursor.Placement().imageWidth=cursor.Placement().imageHeight=0;cursor.Update(0,0);CHECK(drop.x==1.25F && drop.y==2.5F);
         SurfaceDisplayHooks display;display.invalidate=[&](SquidDisplayRect rect,std::uint32_t flags) { CHECK(rect.left==0 && rect.top==0 && rect.right==640 && rect.bottom==480 && flags==0);++invalidated; };session->SetParticleView({20,27,0,0,640,480},display,false);CHECK(invalidated==1); // 장치연결전pending전체갱신을실제현재장치에한번전달한다.
         SetCameraViewWorld(camera.Snapshot(),1.5F,2.75F);session->SetParticleView({24,30,0,0,640,480},display,false);CHECK(invalidated==2);cursor.Update(0,0);CHECK(drop.x==1.5F && drop.y==2.75F && cursor.Placement().ScreenOriginX()==24 && cursor.Placement().ScreenOriginY()==30);SetCameraViewWorld(camera.Snapshot(),1.25F,2.5F);
+        auto& data=devices.client.GameplayGlobals()->CursorGlobals();CHECK(&cursor.Lifecycle()==&data.Lifecycle() && &cursor.Placement()==&data.Placement() && &cursor.SnapToGrid()==&data.SnapToGrid());data.SnapToGrid()=1;cursor.Update(0,0);CHECK(drop.x==1 && drop.y==2);data.SnapToGrid()=0; // 같은현재DWORD의변경을실제RawCursorPosition이소비한다.
+        CampaignCursorEffects effects;effects.placement.invalidate=MakeClientCursorPrepareHooks(devices.client,[&]() -> Renderer& { return nativeRenderer; }).invalidate;cursor.SetEffects(std::move(effects));const auto local=drop.localPlayer,battle=drop.battle,blocked=drop.blocked;drop.localPlayer=57;drop.battle=59;drop.blocked=61;
+        CHECK(session->HasCursorRuntimeForState());session->CancelCursorForState();CHECK(drop.localPlayer==57 && drop.battle==59 && drop.blocked==61 && drop.lockDepth==1 && data.Lifecycle().previewCount==0);drop.localPlayer=local;drop.battle=battle;drop.blocked=blocked; // NativeCancel에는외곽game.prepare의Player/모드동기화가들어가지않는다.
     }
     CHECK(std::bit_cast<CameraViewWords>(camera.Snapshot())==before && camera.Target().pixels[1]==83 && !devices.client.GameplayGlobals()->Borrowed());
 }

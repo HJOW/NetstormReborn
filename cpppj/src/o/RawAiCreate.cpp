@@ -20,6 +20,7 @@ RawAiCreate::RawAiCreate(OriginalEdition edition,RawPlayerParticipation& players
 // 기존 brain/NoTemple은 생성자 경계를 필요로 하지 않는다. 정상 생성만 실제0xb08 소유자를 요청한다.
 std::uint32_t RawAiCreate::Create(std::uint32_t owner,std::span<const std::uint8_t> settings) const {
     if (settings.size()!=RawMissionAiSettings::kSize) throw std::invalid_argument("AiCreate실제600바이트설정누락");
+    if (players_.BrainReturnedForState(owner)) throw std::logic_error("Native 반납된 AI owner의 새 생성 금지"); // 색/신전/실제 본체 할당보다 먼저 닫힌 C++ 소비자 수명을 확인한다.
     const auto color=Field(settings,0x250);if (color!=0) Need(hooks_.changeColor,"AiCreate실제색변경누락")(owner,color);
     const auto old=players_.Brain(owner);if (old!=0) return old;
     if (Field(settings,0x244)!=0) { const auto region=Need(hooks_.firstRegion,"AiCreate실제첫지역조회누락")(owner);const auto temple=Need(hooks_.islandTemple,"AiCreate실제지역신전조회누락")(region);if (temple!=0) Need(hooks_.destroyTemple,"AiCreate실제신전삭제누락")(temple,0x400000);return 0; }

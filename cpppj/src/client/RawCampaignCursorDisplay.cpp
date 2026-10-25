@@ -73,7 +73,7 @@ struct RawCampaignCursorDisplay::Impl {
     // Native 목록을 가져온 뒤 삭제/잠금이 변한 캐시 항목을 실제 슬롯으로 다시 실행하지 않는다.
     void Draw(o::RenderCollectionEntry entry,std::span<std::uint8_t> pixels,int pitch,int height,ScreenRect clip) {
         if (source.drop.lockDepth) return;if (!paletteReady) throw std::logic_error("실제 커서 파일 팔레트 미설치");const o::Sid sid{static_cast<std::uint16_t>(entry.token/source.pool.Layout().stride)};
-        if (std::find(source.lifecycle.previews.begin(),source.lifecycle.previews.end(),sid)==source.lifecycle.previews.end()) return;
+        if (std::find(source.lifecycle.previews.begin(),source.lifecycle.previews.end(),sid.value)==source.lifecycle.previews.end()) return;
         PreviewPixelTarget target(pixels,pitch,height,clip,MakeCursorPreviewAssetShapes(assets,settings.priceType,source.lifecycle),[this](PreviewColorRequest request) { return Color(request); },[&](PreviewTextRequest request) { Text(request,pixels,pitch,height,clip); });
         PreviewDraw draw(core.pool,core.types,feedback,settings,target.Hooks());draw.BindCursor(source);draw.Draw(entry);
     }

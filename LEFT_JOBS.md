@@ -8,7 +8,7 @@
 - **마지막 전체 정밀 디컴파일: HJOW-Athlon (192.168.0.94) / 2026-10-23.** 결과는 `extracted/refined/`(Git 제외)에 있다. 현재 PC가 이와 다르면 AGENTS.md 규칙에 따라 재디컴파일한 뒤 작업한다. 절차는 `tools\ghidra\refine_all.ps1`이며, 힌트 생성 단계가 콘솔 인코딩(cp949) 오류로 멈추면 `PYTHONUTF8=1`, `PYTHONIOENCODING=utf-8`을 설정하고 다시 실행한다.
 - 2026-10-26의 문서 정리는 HJOW-X3D에서 인수인계 문서만 고친 것이다. 디컴파일 결과·제품 코드·검사 코드는 바꾸지 않았으므로 위 디컴파일 기록은 그대로 유효하다. 사용자는 HJOW-Athlon에서 작업을 재개할 예정이다.
 - **실제 게임 실행 확인:** HJOW-Athlon, VM-W11-Codex, vm-debian-codex는 AGENTS.md의 예외 시스템이다. 그 밖의 PC에서는 게임이나 별도 창을 띄우기 전에 목적을 설명하고 사용자 확인을 받는다.
-- **목표 상태:** 2026-10-25 사용자 요청으로 일시정지했다. 재개 지시가 있으면 아래 3절의 1번부터 진행한다.
+- **목표 상태:** 2026-10-26 사용자 지시로 HJOW-Athlon에서 재개했다. 443·444 준비본 병합·통합 검증을 완료했으며, 아래 3절 1번 마지막의 잔여 경계부터 이어 간다.
 - **원시 증거 위치:** 빌드·검사·GUI 원시 로그와 통합 드라이버는 `extracted/`(Git 제외)에 있으며, 작업한 PC(주로 HJOW-Athlon)에만 있다. 커밋되는 결과 보고서는 `cpppj/*.json`, 작업 문서는 `docs/exe/cpp-*.md`다.
 - 원격 저장소에 push하지 않는다. 커밋 메시지는 `YYYYMMDD-NN CP 요약` 형식이며, NN은 `git log`로 그날의 마지막 번호를 확인해 정한다.
 
@@ -38,8 +38,8 @@
 
 ### 2.1 마지막 통합 검증 기준
 
-- 제품: 묶음439~442 Source6(95소스, SHA `4c507211…`), 게임 실행 파일 SHA `712fd7ae…`, 커밋 `e210c755 / 20261026-01 CP`.
-- build6 종료 0·경고/오류 0, 집중 검사 370개·실패 0, 전체 CTest **3,007개·실패 0**, 메뉴 GUI 2실행, 자연 Early2 → Tutorial3 진입 통과. 근거는 [실행 보고서](cpppj/camera-process-runtime-20261025.json)와 [작업 문서](docs/exe/cpp-camera-process-storages-20261025.md)다.
+- 제품: 443·444 준비본 통합 Source4(2,027소스 동결), 게임 실행 파일 SHA `423d0911…`. 시작 HEAD는 `9f5768a4`이고 통합 도중의 `1eddb0e8 / 20261026-07 CM`은 국·영 README만 변경했다.
+- build4 종료0·경고/오류0, 집중 검사422고유/430관측·실패0(신규20개 전부), 전체 CTest **3,027개·실패0**, 메뉴 GUI2실행, 자연 Early2 → Tutorial3 진입 통과. 근거는 [실행 보고서](cpppj/cursor-retirement-runtime-20261026.json)와 [작업 문서](docs/exe/cpp-cursor-retirement-runtime-20261026.md)다. 이전3,007개 실제 검사 이름도 모두 보존됐다. 최초 빌드 두 실패와 집중의 신규 fixture3실패는 원시 로그에 보존했고 제품 관문·기존 기대값을 완화하지 않았다.
 - 34경로(일반 31 + 데모 3) 초기 진입과 자연 Early1·Early2 완주를 함께 통과한 마지막 기록은 단위423 제품(`a1bfa97d / 20261025-17 CP`)이다. 그 뒤의 제품에서는 34경로와 Early1을 다시 돌리지 않았다.
 - 보호 파일 기준은 1,821개다. 게임 실행 전후 `originals/` 전체 해시가 같아야 하고, 허용 설정 파일(options.cfg, fullscreenStateFile.dat)은 복원한다.
 
@@ -71,7 +71,7 @@
 - **공통 전략 AI:** 적·아군·데모 로컬 AI를 같은 원본 전략으로 복원하고 `RawCampaignSession::RunFrame`(현재 시각 → 정지하지 않은 AI → Kernel)에 연결했다(단위320~322, [문서](docs/exe/cpp-ai-automatic-session-20261022.md)). 정상 행동 간격에서 확장·채취·생산·공격이 원본과 같은지는 자연 플레이로 대조하지 않았다.
 - **주문·의식:** Devastation의 시전 → 서버 → 효과와 사제 포획·운반·제단·다이스·룬·희생·SP·미션 완료를 연결했다. 집중 13검사는 통과했지만 일부 입력은 명시한 시전원·포로·시계 값이었다([문서](docs/exe/cpp-ritual-runtime-focused-20261021.md)). 은신·마비(단위349)와 윈드 소환 세 주문(단위350)도 복원했다. 실제 UI에서 취득 → 시전 → 포획 → 희생으로 이어지는 자연 플레이는 검증하지 않았다.
 - **유닛·건물:** 워크샾 25종(썬 6·레인 7·윈드 6·썬더 6)의 생성·이동·공격·표시·소유자 색을 복원했다(단위335~345, [목록](docs/exe/cpp-unit-restoration-20261022.md)). 캠페인 2·3장에서 추가로 쓰이는 TYPE의 전체 수명은 점검하지 않았다.
-- **내부 상태 수명(단위425~442):** Client와 Session이 공유하는 원본 장기 전역(카메라 64BYTE, 상태 보조, 게임 보조 17필드, 프로세스 Host, Graph, TotalMade, 섬·청크·사제, 선택·권한·FullDeck, 연결 활동 표 등)을 실제 소유자로 옮겼다. 계획은 [월드 장기 소유 계획](docs/exe/cpp-state-world-owner-plan-20261025.md)에 있다. Native State1 전체 cleanup/prefix와 반납 coordinator는 남았다.
+- **내부 상태 수명(단위425~444):** Client와 Session이 공유하는 원본 장기 전역(카메라64BYTE, 상태 보조, 게임 보조17필드, 프로세스Host, Graph, TotalMade, 섬·청크·사제, 선택·권한·FullDeck, 연결 활동 표, 커서30DWORD·Lifecycle/Placement/snap)을 실제 소유자로 옮겼다. 실제 AI reset·Player 링크 정상 복귀의 이동 증빙과 중복 정리 방지도 통합했다. 계획은 [월드 장기 소유 계획](docs/exe/cpp-state-world-owner-plan-20261025.md)에 있다. Native State1 전체 cleanup/prefix와 반납 coordinator는 남았다.
 - **배포:** [cpppj/package-cpppj.ps1](cpppj/package-cpppj.ps1)을 만들었다(단위359). 자동 빌드 분기(`-NoBuild` 없이 실행)는 아직 실제로 돌려 보지 않았다.
 
 ### 2.4 알려진 미해결 이슈
@@ -80,17 +80,18 @@
 - **options.cfg 저장·복구 실패:** 1280×720 GUI 검사의 음량 변경 구간에서 SaveOptions의 fopen이 errno 22 / doserrno 1224로 실패하거나(단위393), 검사 도구의 설정 열기·복구에서 OSError22가 간헐적으로 난다(단위369·386). 격리한 데이터 복사본 경로에서는 통과했다. 원본 폴더가 있는 H 볼륨은 exFAT다. 원인은 확정하지 않았다.
 - **오래된 스모크 6개:** `cpp_menu_smoke`, `cpp_rawbuttons_smoke`, `cpp_thunder_smoke`, `cpp_weather_smoke`, `cpp_audio_smoke`, `check_dialog_controls.check_mission`은 제거된 임시 Game 버튼을 전제로 한다. 다시 쓸 때 ESC → 실제 메뉴 입력으로 바꾼다.
 - **PlayerNoMake 경고 표:** `0054d4e8`(255 DWORD)의 실제 제품 소유자를 확인하지 않았다(단위389).
-- **README:** 국·영 README의 cpppj 상태는 2026-10-22 기준(15개 미션)이므로 현재 범위(캠페인 전체)로 갱신해야 한다.
+- **README 갱신 완료:** 별도 문서 커밋 `1eddb0e8 / 20261026-07 CM`에서 국·영 README를 현재 범위와 세 프로젝트의 플레이/동일성 구분에 맞게 갱신했다.
 
 ## 3. 앞으로 할 작업 (권장 순서)
 
 ### 1. 443·444 준비본 병합과 검증 (재개 시 첫 작업)
 
-- [ ] 보관 위치와 재현 방법은 [준비본 보관 안내](docs/exe/prepared/README.md)를 본다. 두 준비본 모두 main에 적용하지 않았고 C++ 빌드·검사도 하지 않았다.
+- **2026-10-26 완료:** 시작 HEAD `9f5768a4`에 443·444를 hunk/삼방향 병합했다. 443 입력28→결과32, 444 결과10의 보관 SHA 재현을 확인했다. CMake 두 곳과 편집 checkpoint 검사 끝의 추가 충돌은 기존 441·442와 새 항목을 함께 보존했다. Source4(2,027파일) Release 빌드 종료0·경고/오류0, 집중422고유/430관측·실패0, 신규20개 전부 실행, 같은 최종 게임`423d0911…`의 메뉴 GUI2실행·자연Early2→Tutorial3·전체CTest3,027개 통과를 확인했다. 최초 빌드 두 차례와 최초 집중의 신규 Session fixture3실패는 지우지 않았으며 입력형/include/외부 fixture만 교정했다. [작업 문서](docs/exe/cpp-cursor-retirement-runtime-20261026.md), [실행 JSON](cpppj/cursor-retirement-runtime-20261026.json), 원시`extracted/cpp-cursor-retirement-443444-*`를 본다.
+- [x] 보관 위치와 재현 방법은 [준비본 보관 안내](docs/exe/prepared/README.md)를 본다. 두 준비본을 재현·검토하고 현재 main에 병합해 빌드·집중 검사를 통과했다. 아래 준비본 설명은 보관 당시 기준이다.
   - **443 커서 장기 상태**([README](docs/exe/prepared/cursor-owner-443-20261025/README.md)): 입력 28 → 결과 32, 실제 patch 30파일, 신규 8검사. 미리보기 30 DWORD, Lifecycle/Placement/snap 데이터와 실제 Cancel 연결을 준비했다. patch SHA `6aa4a0ab…`, manifest SHA `53ec6d6d…`. 기준은 `815fbd67` + 439·440 준비본 + 439 Load setup 교정본의 명시 혼합이며, 442와 현재 Source6 95파일은 반영되지 않았다.
-  - **444 AI·Player 링크 반납**([README](docs/exe/prepared/state-runtime-retirement-444-20261025/README.md)): 제품 7·검사 3파일, 신규 12검사 초안. 실제 자식 정상 복귀의 이동 전용 증빙을 준비했다. Session.h/.cpp 기준은 442 준비본이고 나머지 8파일은 `815fbd67`이다. patch SHA `7536a350…`, manifest SHA `529b43bf…`. **독립 검토를 아직 하지 않았으므로 병합 전에 먼저 검토한다.**
-- [ ] 보관 base를 현재 main에 그대로 덮어쓰지 않는다. 새 작업 디렉터리에서 base를 복원해 patch로 준비 결과를 재현하고(443은 `python replay.py <새 출력 경로>`), 현재 코드와 hunk 단위로 병합한다. CRLF base와 LF patch가 섞이면 본문을 바꾸지 않고 파일별 EOL을 manifest의 준비 SHA와 같게 맞춘다. 병합한 소스의 SHA를 새로 동결한다.
-- [ ] 빌드 → 신규 20검사를 포함한 집중 검사 → 같은 최종 제품으로 통합 batch(전체 CTest, 메뉴 GUI, 자연 Early2)를 실행한다. 통합 드라이버는 `extracted/cpp-camera-process-439442-{build,focused,batch,gui,finalize}.py`를 바탕으로 한다.
+  - **444 AI·Player 링크 반납**([README](docs/exe/prepared/state-runtime-retirement-444-20261025/README.md)): 제품 7·검사 3파일, 신규 12검사. 실제 자식 정상 복귀의 이동 전용 증빙이다. Session.h/.cpp 기준은 442 준비본이고 나머지 8파일은 `815fbd67`이다. patch SHA `7536a350…`, manifest SHA `529b43bf…`. **2026-10-26 root가 원문 순서·실패 prefix·호출 대여·이동 증빙·고정뷰 반납 경계를 검토했다.**
+- [x] 보관 base를 덮어쓰지 않고 별도 디렉터리 재현 뒤 현재 코드와 hunk 단위로 병합했다. 보관 SHA에 맞는 EOL과 실제 현재 코드의 기존 줄바꿈을 구별해 보존하고 Source1~4를 각각 동결했다.
+- [x] 빌드 → 신규20개 포함 집중 → 동일 제품의 통합batch(전체CTest3,027개, 메뉴GUI, 자연Early2)를 완료했다. 이번 드라이버는 `extracted/cpp-cursor-retirement-443444-{build,focused,batch,gui,finalize}.py`이고 최종 원시는`batch1/`이다.
 - [ ] 같은 영역의 후속도 이어서 처리한다: 437의 사제 4leaf/Prepare 값형 권한 사본, 436의 남은 기존 SID16 변환, 438의 전체 Deck 명령 부모/nullable+ac와 Native cleanup 접합, 443의 단일 Drop.preview SID16 경계.
 
 ### 2. Edit 메뉴 완성
@@ -144,7 +145,7 @@
 - [ ] **Credits:** 메인 메뉴 Credits 버튼은 창 하나를 띄운다. 원본 tell `[Credits]` 창(배경 nsstart)의 제목, 두 항목("Netstorm 10.72 Patch Credits" → `CreditsNew`, "Netstorm Original Credits" → `Creditsold`), Cancel 버튼의 표시·동작을 원본과 대조한다. 과거 원본 자동 분석(2026-09-30)에서 Original Credits는 14쪽이 20초씩 자동으로 넘어간 뒤 메인 메뉴로 돌아왔으므로, 하위 항목도 함께 확인한다.
 - [ ] **Quit:** 클릭하면 게임이 즉시 종료되므로 화면 대조는 어렵다. 디컴파일한 원본의 종료 경로(종료 전 처리)를 정적으로 비교하고, 클론에서는 정상 종료(종료 코드 0, 프로세스·창이 남지 않음)와 재실행 시 오류가 없는지만 확인한다.
 - [ ] 최신 소스 PC에서 `cpppj/package-cpppj.ps1`을 `-NoBuild` 없이 실행해 빌드 → 묶기가 이어지는지, `BUILD_INFO.txt`의 실행 파일 시각·SHA가 새 산출물인지 확인한다.
-- [ ] 국·영 README의 cpppj 진행 상태를 현재 범위로 갱신한다.
+- [x] 국·영 README의 cpppj 진행 상태 갱신: `1eddb0e8 / 20261026-07 CM`에서 완료됐다.
 
 ### 이번 목표 밖 (AGENTS.md의 후순위 단계)
 

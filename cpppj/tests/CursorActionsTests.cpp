@@ -30,21 +30,21 @@ struct ActionScene {
     // 이전 관측 결과를 다음 독립 입력에 넘기지 않는다.
     void Prepare(std::vector<std::uint32_t> values) {
         input=std::move(values);drop={};life={};trace.clear();types[100].group=std::bit_cast<std::int32_t>(input[Group]);types[101].group=1;
-        drop.lockDepth=input[Depth];drop.direction=input[Direction];drop.legalGump=input[Gump];drop.type=input[Selected];drop.cursorGump=2;life.abstractType=100;life.previews[0]=Sid{100};special=input[Special];
+        drop.lockDepth=input[Depth];drop.direction=input[Direction];drop.legalGump=input[Gump];drop.type=input[Selected];drop.cursorGump=2;life.abstractType=100;life.previews[0]=100;special=input[Special];
     }
     // 재진입 변경만 같은 실제 저장소에 적용하고 부모 계산은 C++에 맡긴다.
     CursorActionHooks Hooks() {
         CursorActionHooks hooks;
         hooks.activate=[this](std::uint32_t force) { Event("A",{force});if (input[Activate]==1) drop.lockDepth=3;if (input[Activate]==2) drop.direction=0xfffffff9U;if (input[Activate]==3) { life.abstractType=101;drop.type=special; } };
-        hooks.createPreviews=[this] { Event("B");if (input[Create]==1) drop.legalGump=9;if (input[Create]==2) drop.lockDepth=5;if (input[Create]==3) { life.previews[0]=Sid{101};types[100].group=1; } };
+        hooks.createPreviews=[this] { Event("B");if (input[Create]==1) drop.legalGump=9;if (input[Create]==2) drop.lockDepth=5;if (input[Create]==3) { life.previews[0]=101;types[100].group=1; } };
         hooks.selectCursor=[this](std::uint32_t cursor) { Event("K",{cursor});if (input[Select]) life.abstractType=101; };
         hooks.sound=[this](std::string_view text) { CHECK(text=="rotatepiece.wav");Event("S:rotatepiece.wav",{0,0,0,0,0});if (input[Sound]==1) drop.lockDepth=1;if (input[Sound]==2) life.abstractType=101; };
-        hooks.removeRange=[this](Sid parent,std::uint32_t type) { Event("D",{parent.value,type,0,1});if (input[Remove]==1) life.previews[0]=Sid{102};if (input[Remove]==2) { life.abstractType=100;types[100].group=2; } };
+        hooks.removeRange=[this](Sid parent,std::uint32_t type) { Event("D",{parent.value,type,0,1});if (input[Remove]==1) life.previews[0]=102;if (input[Remove]==2) { life.abstractType=100;types[100].group=2; } };
         hooks.createRange=[this](Sid parent,std::uint32_t form) { Event("G",{parent.value,form});return input[Range] ? 1U : 0U; };return hooks;
     }
     // 관측된 전역과 같은 순서로 현재 DWORD를 읽는다.
     std::vector<std::uint32_t> Values() const {
-        return {drop.lockDepth,drop.direction,drop.legalGump,drop.type,life.previews[0].value,drop.cursorGump,life.abstractType,std::bit_cast<std::uint32_t>(types[100].group),std::bit_cast<std::uint32_t>(types[101].group)};
+        return {drop.lockDepth,drop.direction,drop.legalGump,drop.type,life.previews[0],drop.cursorGump,life.abstractType,std::bit_cast<std::uint32_t>(types[100].group),std::bit_cast<std::uint32_t>(types[101].group)};
     }
 };
 }

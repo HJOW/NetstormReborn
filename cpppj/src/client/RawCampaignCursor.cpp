@@ -23,11 +23,13 @@ struct RawCampaignCursor::Impl {
     RawWorldCore core; // 같은 풀/TYPE/지도/장부의 참조다.
     CampaignCursorGame game; // 실제 세션의 게임 계산과 현재 전역 갱신이다.
     CampaignCursorEffects effects; // 교체 가능한 현재 UI/장치/송신 경계다.
-    CursorLifecycleState lifecycleState; // 현재 임시30SID와 글자 측정 상태다.
-    CursorPlacementState placementState; // 현재 위치 허용/표시 범위다.
+    std::unique_ptr<ClientCursorGlobals> ownedCursorState; // 명시독립직접호출만소유하는fallback이다.
+    ClientCursorGlobals& cursorState; // 실제Client의장기dataowner이거나위독립소유자다.
+    CursorLifecycleState& lifecycleState; // 현재 임시30DWORD와 글자 측정 상태다.
+    CursorPlacementState& placementState; // 현재 위치 허용/표시 범위다.
     CursorReturnPieceState returnState; // 현재 선택 타입/유지/소멸 옵션이다.
     o::ConstructionLocalState localState; // 실제 로컬 소유자/Canon 패턴이다.
-    std::uint32_t snapToGrid{}; // 실제 위치 갱신이 읽는 snapToGrid DWORD다.
+    std::uint32_t& snapToGrid; // 실제 위치 갱신이 읽는 snapToGrid DWORD다.
     std::unique_ptr<RawCampaignCursorDisplay> display; // 같은 현재 목록/격자/SP의 실제 수집/표시기다.
     std::unique_ptr<RawCursorPlacement> placement; // 실제 Query/Prepare 몸체다.
     std::unique_ptr<RawCursorPreviews> previews; // 실제 생성/재사용/연결 미리보기다.
@@ -40,7 +42,7 @@ struct RawCampaignCursor::Impl {
     std::unique_ptr<RawCursorDrop> drop; // 실제 상위 비용/잠금/정리 순서다.
 
     // 다른 풀을 섞지 않고 실제 하위들을 먼저 만든 뒤 수명 몸체로 순환 연결한다.
-    Impl(CampaignCursorData source,CampaignCursorGame operations):data(source),core(data.world.Core()),game(std::move(operations)) {
+    Impl(CampaignCursorData source,CampaignCursorGame operations):data(source),core(data.world.Core()),game(std::move(operations)),ownedCursorState(data.currentState ? nullptr : std::make_unique<ClientCursorGlobals>()),cursorState(data.currentState ? *data.currentState : *ownedCursorState),lifecycleState(cursorState.Lifecycle()),placementState(cursorState.Placement()),snapToGrid(cursorState.SnapToGrid()) {
         if (&data.forms.Pool()!=&core.pool || &data.contained.Pool()!=&core.pool || &data.reward.Pool()!=&core.pool ||
             &data.construction.Pool()!=&core.pool || !game.prepare || !game.moveBuilder || !game.playDrop)
             throw std::invalid_argument("실제 캠페인 커서 단일 월드/게임 연결 오류");
@@ -142,6 +144,8 @@ void RawCampaignCursor::SetView(SoundView view) { if (!impl_->placementState.sha
 // 실제 취득의 Cancel/Query/생성/측정/위치 꼬리를 그대로 실행한다.
 void RawCampaignCursor::Take(o::Sid form,std::uint32_t flags) { impl_->Prepare();impl_->lifecycle->Take(form,flags); }
 // 잠긴 상태의 꼬리 정리도 원본 몸체가 결정한다.
+void RawCampaignCursor::CancelForState() { impl_->lifecycle->Cancel(); }
+// 일반입력의기존호스트준비와NativeCancel leaf를구별한다.
 void RawCampaignCursor::Cancel() { impl_->Prepare();impl_->lifecycle->Cancel(); }
 // 같은 현재 카메라 비트를 읽는 실제 위치 몸체를 호출한다.
 void RawCampaignCursor::Update(std::int32_t x,std::int32_t y) { impl_->Prepare();impl_->position->Update(x,y); }

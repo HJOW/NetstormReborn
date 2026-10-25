@@ -111,7 +111,7 @@ void RawCursorPlacement::Prepare() const {
         Need(hooks_.invalidate)({x,y,Add(Add(lifecycle_.warningWidth,2),x),Add(Add(lifecycle_.warningHeight,2),y)},0);
     }
     if (drop_.costFlags&0x40) {
-        const auto raw=pool_.Slot(lifecycle_.previews[0]);
+        const auto raw=pool_.Slot(CursorPreviewSid(lifecycle_.previews[0]));
         const auto cellX=std::bit_cast<std::int16_t>(static_cast<std::uint16_t>(raw[22]|static_cast<std::uint16_t>(raw[23])<<8));
         const auto cellY=std::bit_cast<std::int16_t>(static_cast<std::uint16_t>(raw[24]|static_cast<std::uint16_t>(raw[25])<<8));
         const auto foot=std::bit_cast<std::int32_t>(static_cast<std::uint32_t>(Type().footX)<<4);

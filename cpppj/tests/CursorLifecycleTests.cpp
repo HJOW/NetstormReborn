@@ -50,7 +50,7 @@ struct CursorScene {
         types[100].flags2=values[TypeFlags];types[100].cost=std::bit_cast<float>(values[CostBits]);drop.type=state.abstractType=100;
         drop.lockDepth=values[Lock];drop.inputFlags=values[OldWord];drop.costFlags=values[Flags];drop.preview=Sid{static_cast<std::uint16_t>(values[Operation]==1 ? values[Preview] : 0)};
         drop.cursorGump=values[Operation]==1 ? 1U : 0U;state.previewCount=values[Operation]==2 ? std::bit_cast<std::int32_t>(values[Preview]) : 2;
-        state.previews[0]=Sid{100};state.previews[1]=Sid{101};state.warningFont=17;state.costFont=19;
+        state.previews[0]=100;state.previews[1]=101;state.warningFont=17;state.costFont=19;
     }
     // 원본 실행기와 같은 외부 입력/효과만 공급한다. 수명 분기는 C++ 몸체가 계산한다.
     CursorLifecycleHooks Hooks() {
@@ -64,7 +64,7 @@ struct CursorScene {
         hooks.destroy=[this](Sid sid,std::uint32_t flags) { Event("K",{sid.value,flags}); };hooks.removeProcess=[this](std::uint32_t process,std::uint32_t flags) { Event("R",{process,flags}); };
         hooks.sound=[this](std::string_view name) { Event(std::string("S:")+std::string(name),{0,0,0,0,0}); };hooks.addLocalSp=[this](float delta) { Event("A",{std::bit_cast<std::uint32_t>(delta)}); };
         hooks.defaultArgument=[](std::uint32_t type) { CHECK(type==100);return 11U; };
-        hooks.createPreviews=[this] { Event("B");state.previews[0]=Sid{100};state.previews[1]=Sid{101};state.previewCount=2;drop.legalGump=input[LegalGump] ? 44U : 0U; };
+        hooks.createPreviews=[this] { Event("B");state.previews[0]=100;state.previews[1]=101;state.previewCount=2;drop.legalGump=input[LegalGump] ? 44U : 0U; };
         hooks.createMana=[this](Sid first,std::uint32_t flags) { Event("M",{first.value,flags});state.currentGump=input[ManaGump] ? 45U : 0U;return input[Mana] ? 1U : 0U; };
         hooks.createRange=[this](Sid first,std::uint32_t flags) { Event("G",{first.value,flags});return 2U; };
         hooks.processEvent=[this](std::uint32_t process,std::uint32_t event,std::uint32_t first,std::uint32_t second) { Event("E",{process,event,first,second}); };
@@ -92,7 +92,7 @@ struct CursorScene {
         for (const auto value:state.warningHeights) values.push_back(static_cast<std::uint32_t>(value));
         for (const auto value:state.warningContext) values.push_back(value);
         for (const auto value:state.costContext) values.push_back(value);
-        for (const auto sid:state.previews) values.push_back(sid.value);
+        for (const auto sid:state.previews) values.push_back(sid);
         values.push_back(state.abstractType);values.push_back(state.costImage);std::string result;
         // 원문의 DWORD 순서를 유지한다.
         for (const auto value:values) result+=(result.empty() ? "" : ",")+std::to_string(value);return result;

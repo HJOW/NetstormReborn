@@ -25,6 +25,8 @@ const TypeAsset& Asset(const GameAssets& assets,std::uint32_t type) {
     return assets.Types()[type-o::kFirstAssetTypeNumber];
 }
 }
+// 큰DWORD를하위WORD로접어다른유효객체로만들지않는다.
+o::Sid CursorPreviewSid(std::uint32_t number) { if (number>65535U) throw std::out_of_range("커서원문DWORD의호스트SID범위");return o::Sid{static_cast<std::uint16_t>(number)}; }
 // 다른 판본의 raw 필드에10.78의 오프셋을 적용하지 않는다.
 RawCursorLifecycle::RawCursorLifecycle(o::SidPool& pool,std::span<const o::RiftTypeRecord> types,CursorDropState& drop,
     CursorLifecycleState& state,CursorLifecycleHooks hooks):pool_(pool),types_(types),drop_(drop),state_(state),hooks_(std::move(hooks)) {
@@ -45,7 +47,7 @@ void RawCursorLifecycle::Activate(std::uint32_t force) const {
         // 가상 삭제 후 다음 반복에서도 현재 signed 개수와 다음 칸을 읽는다.
         for (std::int32_t index=0;index<state_.previewCount;++index) {
             if (index>=static_cast<std::int32_t>(state_.previews.size())) throw std::out_of_range("커서 임시 목록 원본30칸 범위 오류");
-            const auto sid=state_.previews[static_cast<std::size_t>(index)];Raw(sid);Need(hooks_.destroy)(sid,0);
+            const auto sid=CursorPreviewSid(state_.previews[static_cast<std::size_t>(index)]);Raw(sid);Need(hooks_.destroy)(sid,0);
         }
         state_.previewCount=0;state_.previews.fill({});
     }
@@ -89,11 +91,11 @@ void RawCursorLifecycle::Take(o::Sid preview,std::uint32_t flags) const {
     drop_.lockDepth=0;Need(hooks_.createPreviews)();Need(hooks_.selectCursor)(drop_.legalGump ? 3 : 2);
     drop_.legalGump=0;state_.currentGump=0;
     if (Type().flags2&0xa00) {
-        drop_.cursorGump=Need(hooks_.createMana)(state_.previews[0],0);
+        drop_.cursorGump=Need(hooks_.createMana)(CursorPreviewSid(state_.previews[0]),0);
         if (state_.currentGump && drop_.cursorGump) Need(hooks_.processEvent)(drop_.cursorGump,1,1,0);
     }
     const auto typeNumber=Need(hooks_.typeNumber)(state_.abstractType);
-    if (Need(hooks_.hasRange)(typeNumber)) drop_.cursorGump=Need(hooks_.createRange)(state_.previews[0],0);
+    if (Need(hooks_.hasRange)(typeNumber)) drop_.cursorGump=Need(hooks_.createRange)(CursorPreviewSid(state_.previews[0]),0);
     Need(hooks_.queryCursor)();state_.warningContext[2]=state_.warningFont;state_.warningWidth=state_.warningHeight=0;
     // 각 문구의 현재 측정 결과를 개별 저장하고 signed 최대값을 갱신한다.
     for (std::size_t index=0;index<kWarnings.size();++index) {

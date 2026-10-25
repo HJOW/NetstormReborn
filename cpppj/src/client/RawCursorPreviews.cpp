@@ -36,12 +36,12 @@ const o::RiftTypeRecord& RawCursorPreviews::Type() const {
     if (lifecycle_.abstractType>=types_.size()) throw std::out_of_range("커서 미리보기 abstract TYPE 범위");return types_[lifecycle_.abstractType];
 }
 // 원본의 signed 목록 인덱스를 호스트 배열 범위에서만 허용한다.
-o::Sid RawCursorPreviews::At(std::int32_t index) const {
+std::uint32_t RawCursorPreviews::At(std::int32_t index) const {
     if (index<0 || static_cast<std::size_t>(index)>=lifecycle_.previews.size()) throw std::out_of_range("커서 미리보기 목록 인덱스");return lifecycle_.previews[static_cast<std::size_t>(index)];
 }
 // 원본은 호출 뒤 개수를 읽어 append한다. 별도 생성 번호 목록을 만들지 않는다.
 void RawCursorPreviews::Append(o::Sid sid) const {
-    At(lifecycle_.previewCount);lifecycle_.previews[static_cast<std::size_t>(lifecycle_.previewCount)]=sid;++lifecycle_.previewCount;
+    At(lifecycle_.previewCount);lifecycle_.previews[static_cast<std::size_t>(lifecycle_.previewCount)]=sid.value;++lifecycle_.previewCount;
 }
 // 화면 캐시는 지도 칸의 정수 좌표와 다르다. 음수도 원래 +0.5 뒤0쪽 절삭을 유지한다.
 void RawCursorPreviews::Position(o::Sid sid,float x,float y) const {
@@ -50,10 +50,10 @@ void RawCursorPreviews::Position(o::Sid sid,float x,float y) const {
 }
 // 실물 Pop 없이 raw 위치/프레임과 임시 SID만 갱신한다.
 void RawCursorPreviews::Create() const {
-    Need(hooks_.queryCursor)();const bool create=!lifecycle_.previews[0].value;std::int32_t ordinal{};
+    Need(hooks_.queryCursor)();const bool create=!lifecycle_.previews[0];std::int32_t ordinal{};
     Need(hooks_.walk)({drop_.type,std::bit_cast<std::int32_t>(drop_.argument),std::bit_cast<std::int32_t>(drop_.direction),drop_.x,drop_.y,false},
         [this,create,&ordinal](CursorCanonCell cell) {
-            auto sid=At(ordinal++);
+            const auto number=At(ordinal++);auto sid=create ? o::Sid{} : CursorPreviewSid(number);
             if (create) { sid=Need(hooks_.create)(drop_.type,2);Append(sid); }
             auto raw=pool_.AllocatedBytes(sid);raw[40]|=8;Put(raw,36,std::bit_cast<std::uint32_t>(cell.frame));
             Need(hooks_.setWord)(sid,drop_.argument);Need(hooks_.setOwner)(sid,drop_.localPlayer);
@@ -73,7 +73,7 @@ void RawCursorPreviews::Create() const {
                 const auto count=Need(hooks_.connect)(sid,std::span(lifecycle_.previews).subspan(static_cast<std::size_t>(lifecycle_.previewCount)));
                 // 연결 객체는 임시 정수 맞춤으로 생긴 차이만큼 되돌린다. 목록 개수는 매회 현재 값을 읽는다.
                 for (std::int32_t index=0;index<count;++index) {
-                    const auto connector=At(lifecycle_.previewCount+index);const auto data=pool_.Slot(connector);
+                    const auto connector=CursorPreviewSid(At(lifecycle_.previewCount+index));const auto data=pool_.Slot(connector);
                     const float px=std::bit_cast<float>(Read(data,14))-deltaX,py=std::bit_cast<float>(Read(data,18))-deltaY;Position(connector,px,py);
                 }
                 Position(sid,oldX,oldY);
@@ -85,7 +85,7 @@ void RawCursorPreviews::Create() const {
     if (Type().flags1&0x400) {
         // 원본은 실제 Canon 칸 수로 재사용 슬롯을 고른다. 연결 객체 수를 인덱스에 더하지 않는다.
         for (std::uint32_t part=0;part<2;++part) {
-            auto sid=At(ordinal++);
+            const auto number=At(ordinal++);auto sid=create ? o::Sid{} : CursorPreviewSid(number);
             if (create) { sid=Need(hooks_.create)(part ? surfaces_.stalagType : surfaces_.islandType,2);Append(sid); }
             auto raw=pool_.AllocatedBytes(sid);raw[40]|=8;Put(raw,36,8);Position(sid,drop_.x,drop_.y);
         }
@@ -116,10 +116,10 @@ void BindCursorPreviewWorld(CursorPreviewHooks& hooks,o::SidPool& pool,o::SquidF
     hooks.hasHitPoints=[&reward](o::Sid sid) { return reward.HasHitPoints(sid); };
     hooks.setHitPoints=[&pool](o::Sid sid,std::int32_t value) { o::SetRawSquidHitPoints(pool,sid,value); };
     hooks.frames=[frames](std::uint32_t type)->const o::RiftTypeFrames& { if (type>=frames.size()) throw std::out_of_range("커서 실제 bridge 프레임 표 범위");return frames[type].frames; };
-    hooks.connect=[&connect](o::Sid sid,std::span<o::Sid> output) {
+    hooks.connect=[&connect](o::Sid sid,std::span<std::uint32_t> output) {
         std::int32_t count{};
         connect.ConnectPreview(sid,[output,&count](o::Sid born) {
-            if (static_cast<std::size_t>(count)>=output.size()) throw std::out_of_range("커서 실제 연결 객체 꼬리 넘침");output[static_cast<std::size_t>(count++)]=born;
+            if (static_cast<std::size_t>(count)>=output.size()) throw std::out_of_range("커서 실제 연결 객체 꼬리 넘침");output[static_cast<std::size_t>(count++)]=born.value;
         });
         return count;
     };

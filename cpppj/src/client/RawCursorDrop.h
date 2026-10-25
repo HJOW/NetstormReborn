@@ -18,15 +18,15 @@ struct CursorDropState {
     // x: X 좌표.
     // y: Y 좌표.
     float x{},y{};
-    // legalGump: 배치가능 Gump.
-    // cursorGump: 커서 Gump.
+    // legalGump:0055a27c의현재허용Gump토큰이다.
+    // cursorGump:0055a274의마나/사정거리process토큰이다.0055a278의현재Gump와합치지않는다.
     // recording: 녹화.
     // recorder: 기록기.
     // battle: 전투.
     // blocked: 공간·소유권 조건으로 진행이 차단됐는지.
     // localPlayer: 로컬 플레이어.
     std::uint32_t legalGump{},cursorGump{},recording{},recorder{},battle{},blocked{},localPlayer{};
-    std::int32_t screenX{},screenY{},cursorWidth{}; // SP 표시 위치: screenX - footX*16/2 - cursorWidth/2.
+    std::int32_t screenX{},screenY{},cursorWidth{}; //0055a2f8/fc의hotspot보정커서화면점과가격폭이다.원시mouse005cae94/98과Camera0059a91c/920과다르다.
 };
 // 미복원 커서 판정·Form/Gump·공간 이동·기록·화면 효과만 명시 경계로 둔다. 모든 경계가 필요하다.
 struct CursorDropHooks {

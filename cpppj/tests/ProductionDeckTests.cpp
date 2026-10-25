@@ -6,6 +6,8 @@
 #include "o/ContentFormHost.h"
 #include "client/RawCampaignProductionBindings.h"
 #include <memory>
+#include <optional>
+#include <type_traits>
 
 using namespace netstorm::o;
 using namespace netstorm::test::rawscene;
@@ -173,4 +175,35 @@ TEST_CASE(ProductionDeck_SharedFullDeckReadsAfterModeDiagnostic) {
     effects.configInt=[&](auto) { ++queries;return 0; };effects.modeAssertion=[&] { ++diagnostics;globals.FullDeck()=0x80000000U; };netstorm::client::RawCampaignProductionBindings production(scene.core,*scene.player,scene.carrier,*scene.create,*scene.deck,allowed,scene.carrierState,{mission,globals.FullDeck(),freeTechnology,templeProduct},effects);const auto before=Hex(scene.deck->Bytes(kDeckToken));
     CHECK(production.RefreshCurrent()==kDeckToken && diagnostics==1 && queries==0 && globals.FullDeck()==0x80000000U && Hex(scene.deck->Bytes(kDeckToken))==before);
     scene.core.ownerMode.battle=true;globals.FullDeck()=0xffffffffU;production.RefreshCurrent();CHECK(queries==0 && Hex(scene.deck->Bytes(kDeckToken))==before && globals.FullDeck()==0xffffffffU);globals.FullDeck()=0;production.RefreshCurrent();CHECK(queries==1 && Get(scene.deck->Bytes(kDeckToken),0x14c)==0 && globals.FullDeck()==0);
+}
+
+// 실제9Player의현재getter와자기Deck free가끝난증빙만소비해oldPlayer의재조회책임을반납한다.
+TEST_CASE(ProductionDeck_StateLinksProofUsesActualParentAndClosesConsumers) {
+    static_assert(std::is_nothrow_move_constructible_v<RawProductionDeck::PlayerLinksPass> && !std::is_copy_constructible_v<RawProductionDeck::PlayerLinksPass>); // 실제 반납 뒤 optional 보관은 증빙의 noexcept 이동만 사용한다.
+    ProductionScene scene(Split("Get,1,0,0,4,167,0,1,1",','));std::array<std::uint32_t,9> tokens{};
+    for (std::uint32_t owner=0;owner<9;++owner) { tokens[owner]=scene.deck->Get(owner);Put(scene.records,owner*180+0x9c,owner+31);Put(scene.records,owner*180+8,owner+1); } // 원문이 방문하는9행의실제Deck만할당한다.
+    const auto before=scene.records;std::size_t reads{};auto pass=scene.deck->CleanupPlayerLinksForState([&] { ++reads;return std::span<std::uint8_t>(scene.records); });CHECK(reads==36 && !scene.deck->PlayerLinksReturnedForState());
+    for (std::size_t index=0;index<scene.records.size();++index) { const auto field=index%180;const bool zero=(field>=8 && field<12)||(field>=0x68 && field<0x6c)||(field>=0x9c && field<0xa0);CHECK(scene.records[index]==(zero ? 0 : before[index])); } // 세DWORD밖전체BYTE는실제부모의보존계약이다.
+    scene.deck->ReturnPlayerLinksForState(std::move(pass));CHECK(scene.deck->PlayerLinksReturnedForState());const auto allocations=scene.trace.size();CHECK(Throws([&] { scene.deck->Get(1); }) && Throws([&] { scene.deck->Release(0); }) && Throws([&] { scene.deck->Bytes(tokens[1]); }) && scene.trace.size()==allocations);scene.deck.reset(); // 실제증빙소비뒤소멸자는oldPlayer를재조회하지않는다.
+}
+
+// 선택된잘못된Deck free의앞선필드쓰기만남으며정상복귀pass나반납완료를만들지않는다.
+TEST_CASE(ProductionDeck_StateLinksFailurePreservesNativePrefixAndNeedsActualRecovery) {
+    ProductionScene scene(Split("Get,1,0,0,4,167,0,1,1",','));std::array<std::uint32_t,9> tokens{};
+    for (std::uint32_t owner=0;owner<9;++owner) { tokens[owner]=scene.deck->Get(owner);Put(scene.records,owner*180+0x9c,owner+31);Put(scene.records,owner*180+8,owner+1); } // 실제현재포인터만각행에설치한다.
+    Put(scene.records,3*180+0x68,0xdeadcaf0U);CHECK(Throws([&] { scene.deck->CleanupPlayerLinksForState([&] { return std::span<std::uint8_t>(scene.records); }); }) && !scene.deck->PlayerLinksReturnedForState());
+    for (std::uint32_t owner=0;owner<9;++owner) { CHECK(Get(scene.records,owner*180+0x9c)==(owner<=3 ? 0U : owner+31));CHECK(Get(scene.records,owner*180+8)==(owner<=3 ? 0U : owner+1));if (owner<3) CHECK(Get(scene.records,owner*180+0x68)==0); } // 실패행뒤원문미방문필드를지우지않는다.
+    CHECK(Get(scene.records,3*180+0x68)==0xdeadcaf0U);Put(scene.records,3*180+0x68,tokens[3]);auto pass=scene.deck->CleanupPlayerLinksForState([&] { return std::span<std::uint8_t>(scene.records); });Put(scene.records,8*180+8,7);CHECK(Throws([&] { scene.deck->ReturnPlayerLinksForState(std::move(pass)); }) && !scene.deck->PlayerLinksReturnedForState());Put(scene.records,8*180+8,0);scene.deck->ReturnPlayerLinksForState(std::move(pass));CHECK(scene.deck->PlayerLinksReturnedForState());
+}
+
+// 다른모듈과소멸뒤같은주소의새Deck은이전정상복귀증빙을소비할수없다.
+TEST_CASE(ProductionDeck_StateLinksForeignMovedAndExpiredProofsAreRejected) {
+    ProductionScene first(Split("Get,1,0,0,4,167,0,1,1",',')),second(Split("Get,1,0,0,4,167,0,1,1",','));auto pass=first.deck->CleanupPlayerLinksForState([&] { return std::span<std::uint8_t>(first.records); });CHECK(Throws([&] { second.deck->ReturnPlayerLinksForState(std::move(pass)); }));first.deck->ReturnPlayerLinksForState(std::move(pass));CHECK(first.deck->PlayerLinksReturnedForState() && !second.deck->PlayerLinksReturnedForState() && Throws([&] { first.deck->ReturnPlayerLinksForState(std::move(pass)); }));
+    std::optional<RawProductionDeck> reused;reused.emplace(*second.player,[](auto bytes) { std::fill(bytes.begin(),bytes.end(),std::uint8_t{0x71}); });const auto* address=&*reused;auto old=reused->CleanupPlayerLinksForState([&] { return std::span<std::uint8_t>(second.records); });reused.reset();reused.emplace(*second.player,[](auto bytes) { std::fill(bytes.begin(),bytes.end(),std::uint8_t{0x71}); });CHECK(&*reused==address && Throws([&] { reused->ReturnPlayerLinksForState(std::move(old)); }) && !reused->PlayerLinksReturnedForState());
+}
+
+// 실제부모의현재getter가재진입해도전체정리호출이복귀하기전에는이전pass를소비하지못한다.
+TEST_CASE(ProductionDeck_StateLinksActualParentMustReturnBeforeConsumption) {
+    ProductionScene scene(Split("Get,1,0,0,4,167,0,1,1",','));auto previous=scene.deck->CleanupPlayerLinksForState([&] { return std::span<std::uint8_t>(scene.records); });std::size_t reads{};bool rejected{};
+    auto current=scene.deck->CleanupPlayerLinksForState([&] { if (!reads++) try { scene.deck->ReturnPlayerLinksForState(std::move(previous)); }catch (const std::logic_error& error) { rejected=std::string_view(error.what()).find("진행 중")!=std::string_view::npos; }return std::span<std::uint8_t>(scene.records); });CHECK(reads==27 && rejected && !scene.deck->PlayerLinksReturnedForState());scene.deck->ReturnPlayerLinksForState(std::move(current));CHECK(scene.deck->PlayerLinksReturnedForState());
 }

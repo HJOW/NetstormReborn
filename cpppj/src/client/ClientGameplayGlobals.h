@@ -1,6 +1,7 @@
 #include "client/ClientCameraGlobals.h"
 // Client 수명의 현재 Player/커서/검색/미션 전역과 짧은 실제 Runtime 대여를 구별한다.
 #pragma once
+#include "client/ClientCursorGlobals.h"
 #include "client/RawCursorDrop.h"
 #include "client/ClientUserSelectionGlobals.h"
 #include "o/RawAuthorityState.h"
@@ -51,6 +52,8 @@ public:
     const bool& Boss() const { return authority_->boss; } // 권한의 현재 논리값을 복제하지 않고 조회한다.
     ClientCameraGlobals& Camera() { return camera_; } // 같은0059a900 snapshot과 논리 Renderer의 장기 소유자를 빌린다.
     const ClientCameraGlobals& Camera() const { return camera_; } // Session 재대여가 카메라를 재생성하지 않는다.
+    ClientCursorGlobals& CursorGlobals() { return cursorGlobals_; } // 같은현재커서데이터를첫메뉴/Session이직접빌린다.
+    const ClientCursorGlobals& CursorGlobals() const { return cursorGlobals_; } // 실행기소멸뒤에도dataowner주소는유지한다.
     o::PlayerWorldState player; //595344/540c70/540cac 등 실제 현재 Player 조회 전역이다.
     CursorDropState cursor{.lockDepth=1}; //5325c8 초기 잠금1과 실제 현재 조각/마우스/플래그다.
     ClientUserSelectionGlobals selection; // 실제 선택/강조9DWORD와 현재 다중 배열이며 Runtime/장치 callback을 보관하지 않는다.
@@ -61,6 +64,7 @@ public:
 private:
     std::uint32_t fullDeck_{}; // 최초 PE BSS0이며 준비 대여/반납은 Native 부모가 쓴 현재 값을 보존한다.
     ClientCameraGlobals camera_; // 전역snapshot과논리Renderer/목표를분리하고명시Native초기화외에는현재값을보존한다.
+    ClientCursorGlobals cursorGlobals_; // callback/타이머없이Lifecycle/Placement/snap만장기소유한다.
     std::uint32_t mapRevision_{}; // 최초 BSS0이며 Session 대여/반납으로 초기화하지 않는 실제005949d4다.
     RawCampaignSession* current_{};bool borrowed_{}; // 게임 값의 대체가 아닌 현재 C++ Runtime 대여다.
 };

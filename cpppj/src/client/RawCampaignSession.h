@@ -334,6 +334,11 @@ public:
     RawProcessHostStorage::ClearPass ClearProcessesForState(); // 실제 같은 Kernel의 단일 Clear 정상 반환만 증빙한다.
     void ReturnProcessBindingsForState(RawProcessHostStorage::ClearPass&& pass); // Regular 잔류의 장기 Host를 유지하며 현재 처리기 대여를 실제 반납한다.
     void ReleasePlayerLinks(); //0048fcd0의 실제9기록 링크/개수/덱만 정리한다. 실패는 전파하며 Kernel/Core/Player 할당은 유지한다.
+    o::RawProductionDeck::PlayerLinksPass ClearPlayerLinksForState(); // 같은 실제0048fcd0 정상 복귀 뒤에만 이동 전용 증빙을 발급한다.
+    void ReturnPlayerLinksForState(o::RawProductionDeck::PlayerLinksPass&& pass); // 같은 실제 Deck의 증빙만 소비하며 전체 Session/PlayerUse는 유지한다.
+    o::RawPlayerParticipation::BrainResetPass ResetAiForState(std::uint32_t owner); // 원문 owner1..8 resetAi 정상 복귀만 증명한다.
+    void ReturnAiForState(o::RawPlayerParticipation::BrainResetPass&& pass); // 같은 실제 AI 모듈의 owner별 증빙만 소비한다.
+
     // 실제 방향별동맹 초기화가 쓰고 승패가 읽는 같은81DWORD를 빌린다.
     std::span<std::uint32_t> Alliances();
     // 로그인/Stage3의 후속 부모가 같은 현재 Player9/동맹/brain 수명을 직접 사용한다.
@@ -476,6 +481,8 @@ public:
     // 실제 Client 커서가 같은 취득/내려놓기/프로세스 토큰을 공유하는 단일 상태다.
     CursorDropState& CursorDropSettings();
     // 설치 뒤 실제 수명/위치/미리보기/내려놓기/로컬 예측을 소유한 단일 커서를 빌린다.
+    bool HasCursorRuntimeForState() const; // loaded성공과구별하여실제C++커서실행기존재만조회한다.
+    void CancelCursorForState(); // 실제실행기가있을때외곽game.prepare없이00446e70만실행하며미설치는거부한다.
     RawCampaignCursor& Cursor();
     // 현재 맵 경계·마나 반경/대체점과 타입 전역을 같은 프로세스 몸체에 공급한다.
     CursorManaGlobals& CursorManaSettings();

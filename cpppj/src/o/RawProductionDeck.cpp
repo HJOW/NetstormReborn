@@ -1,6 +1,7 @@
 // Deck의현재Player포인터와5BYTE항목·signed power를원본필드폭/순서대로보존한다.
 #include "o/RawProductionDeck.h"
 #include "o/RawDeckDraw.h"
+#include "o/RawPlayerLinksCleanup.h"
 #include <algorithm>
 #include <bit>
 #include <limits>
@@ -11,6 +12,11 @@ namespace netstorm::o {
 namespace {
 // 원본Deck의활성개수/가중합/남은수/seed/openDWORD필드다.
 constexpr std::size_t kCount=0x14c,kChance=0x150,kRemaining=0x154,kSeed=0x158,kOpen=0x15c;
+struct LinkCall { // 실제 Player 링크 부모의 전체 동기 효과 동안 현재 모듈 반납을 막는다.
+    std::size_t& calls; // 같은 실제 Deck의 C++ 호출 수다.
+    explicit LinkCall(std::size_t& value):calls(value) { ++calls; } // 첫 실제 field 접근 전에 대여를 시작한다.
+    ~LinkCall() { --calls; } // 실패의 부분 쓰기를 되돌리지 않고 호출 대여만 반납한다.
+};
 // 비정렬little endian DWORD/WORD를필요한폭만읽는다.
 std::uint32_t Read(std::span<const std::uint8_t> raw,std::size_t offset,std::size_t width=4) {
     std::uint32_t value=0;
@@ -32,25 +38,48 @@ RawProductionDeck::RawProductionDeck(RawPlayerWorld& player,Fill fill,std::funct
 }
 // 다른모듈이교체한Player포인터를지우지않고자신의실제소유블록만해제한다.
 RawProductionDeck::~RawProductionDeck() {
+    if (returnedLinks_) return; // 실제 부모의 전체 반납 증빙을 소비한 경우만 oldPlayer를 다시 읽지 않는다.
     // 동일9기록의현재포인터와자신이소유한토큰을확인한다.
     for (std::uint32_t owner=0;owner<9;++owner) { auto records=player_.Records();const auto offset=PointerOffset(owner);if (blocks_.contains(Read(records,offset))) Put(records,offset,0); }
 }
 // 원본은Player0도사용할수있지만물리9기록밖주소는호스트계약에서거부한다.
 std::size_t RawProductionDeck::PointerOffset(std::uint32_t owner) const {
+    RequireLiveLinks();
     if (owner>=9 || player_.Records().size()!=9*0xb4) throw std::out_of_range("실제Deck의Player범위오류");
     return static_cast<std::size_t>(owner)*0xb4+0x68;
 }
 // opaque토큰을호스트포인터로해석하지않고이저장소의실제블록만반환한다.
 std::span<std::uint8_t> RawProductionDeck::Bytes(std::uint32_t token) const {
+    RequireLiveLinks();
     const auto found=blocks_.find(token);if (found==blocks_.end()) throw std::out_of_range("현재PlayerDeck의실제할당블록누락");return found->second;
 }
 // 0048fcd0의 선택된 free 인자를 동일한 할당 소유자에 연결한다. Player+68의 후속0쓰기는 부모가 수행한다.
 void RawProductionDeck::Release(std::uint32_t token) const {
+    RequireLiveLinks();
     if (!token) return;
     const auto found=blocks_.find(token); // 다른 월드/이미 반납한 비영 토큰을 성공으로 처리하지 않는다.
     if (found==blocks_.end()) throw std::out_of_range("현재PlayerDeck의실제반납블록누락");
     blocks_.erase(found);
 }
+// 같은 실제 현재 Player getter와 자기 Deck 메모리만 기존 원문 부모에 공급한다.
+RawProductionDeck::PlayerLinksPass RawProductionDeck::CleanupPlayerLinksForState(std::function<std::span<std::uint8_t>()> currentPlayers) {
+    RequireLiveLinks();LinkCall call(activeLinkCalls_);CleanupPlayerLinks({std::move(currentPlayers),[this](auto token) { Release(token); }});return PlayerLinksPass(this,retirementLifetime_);
+}
+// 실제 부모가 끝나고 같은 현재 물리가0인 경우만 old Player 뷰의 재조회 책임을 반납한다.
+void RawProductionDeck::ReturnPlayerLinksForState(PlayerLinksPass&& pass) {
+    if (pass.source_!=this || pass.lifetime_.lock()!=retirementLifetime_) throw std::invalid_argument("같은 실제 Deck의 Player 링크 정상 복귀 증빙 필요");
+    RequireLiveLinks();if (activeLinkCalls_) throw std::logic_error("진행 중 Player 링크 효과의 증빙 소비 금지");
+    if (!blocks_.empty()) throw std::logic_error("현재 실제 Deck 소유 블록 반납 미완료");
+    const auto records=player_.Records();if (records.size()!=9*180) throw std::logic_error("현재 Player 링크 반납의 실제9기록 누락");
+    for (std::size_t owner=0;owner<9;++owner) { // 실제 부모가 정리한 세 DWORD만 확인하며 다른 상태는 바꾸지 않는다.
+        if (Read(records,owner*180+0x9c) || Read(records,owner*180+8) || Read(records,owner*180+0x68)) throw std::logic_error("현재 Player 링크 세 DWORD 반납 미완료");
+    }
+    returnedLinks_.emplace(std::move(pass)); // 실제 소비 뒤 추가 allocation 없이 같은 이동 전용 증빙을 보관한다.
+}
+// 보관한 실제 증빙의 존재만 조회하며 old Player 뷰는 읽지 않는다.
+bool RawProductionDeck::PlayerLinksReturnedForState() const { return bool(returnedLinks_); }
+// 닫힌 소비자는 원문 새 게임의 Deck owner로 재활용하지 않고 새 Session 모듈로 교체해야 한다.
+void RawProductionDeck::RequireLiveLinks() const { if (returnedLinks_) throw std::logic_error("Native 반납된 Player 링크의 Deck 소비 금지"); }
 // 새할당의미초기화영역은fill입력을보존하고원본다섯DWORD만쓴다.
 std::uint32_t RawProductionDeck::Get(std::uint32_t owner) const {
     const auto offset=PointerOffset(owner);const auto current=Read(player_.Records(),offset);if (current) { static_cast<void>(Bytes(current));return current; }

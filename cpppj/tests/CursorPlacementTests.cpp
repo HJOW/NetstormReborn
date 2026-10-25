@@ -56,7 +56,7 @@ struct PlacementScene {
         lifecycle.currentGump=values[OldGump] ? 1U : 0U;drop.legalGump=2;state.bounds={3,7,43,51};state.hotspotX=44;state.hotspotY=45;state.imageWidth=91;state.imageHeight=93;
         drop.type=lifecycle.abstractType=100;drop.argument=7;drop.direction=3;drop.preview=Sid{50};drop.costFlags=values[CursorFlags];state.placementFlags=values[PlacementFlags];drop.cursorGump=values[Mana] ? 1U : 0U;
         drop.x=std::bit_cast<float>(values[X]);drop.y=std::bit_cast<float>(values[Y]);drop.localPlayer=0x123401;drop.screenX=-3;drop.screenY=47;
-        state.labelSpacing=std::bit_cast<std::int32_t>(values[Spacing]);state.obstruction=values[Obstruction];state.acceptEvent=0x123456;state.screenOrigin={-17,31};state.description="old";lifecycle.previews[0]=Sid{100};
+        state.labelSpacing=std::bit_cast<std::int32_t>(values[Spacing]);state.obstruction=values[Obstruction];state.acceptEvent=0x123456;state.screenOrigin={-17,31};state.description="old";lifecycle.previews[0]=100;
         types[100].footX=std::bit_cast<std::int32_t>(values[FootX]);types[100].footY=std::bit_cast<std::int32_t>(values[FootY]);types[100].flags1=values[Flags1];types[100].flags2=values[Flags2];
         types[101].footX=7;types[101].footY=9;types[101].flags1=values[Flags1];types[101].flags2=4;
         const std::array<std::array<std::uint32_t,4>,3> sizes{{{35,17,49,23},{0xfffffffd,0xfffffff9,0xfffffff5,0xfffffff3},{0x7fffffff,0x80000001,0x7ffffffd,0x80000003}}};

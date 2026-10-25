@@ -1,6 +1,7 @@
 #include "client/RawCameraView.h"
 // 같은 캠페인 월드의 실제 커서 수명/위치/미리보기/내려놓기/로컬 예측을 소유한다.
 #pragma once
+#include "client/ClientCursorGlobals.h"
 #include "client/RawCampaignConstructionBindings.h"
 #include "client/RawCursorPosition.h"
 #include "client/RawCursorReturnPiece.h"
@@ -42,6 +43,7 @@ struct CampaignCursorData {
     const std::uint32_t& rangeProcessType; // 사정거리와 같은 현재51 프로세스 타입이다.
     const std::array<std::uint32_t,2>& camera; // 현재497490 카메라 float비트를 매 이동마다 읽는다.
     const RawCameraViewState* cameraView{}; // 실제 Session은 같은 snapshot을 빌리며 기존 순수 호출자는 명시 fallback을 유지한다.
+    ClientCursorGlobals* currentState{}; // 실제Session은Clientdataowner를직접빌리고독립직접fixture만지역fallback을사용한다.
 };
 // 원본 각각의 몸체를 같은 상태에 조립하며 미연결 UI를 빈 성공으로 처리하지 않는다.
 class RawCampaignCursor {
@@ -57,6 +59,7 @@ public:
     void SetPalette(std::span<const ScreenColor> palette,std::span<const std::uint32_t> colorSortLogical={}); //실제Client는같은고정초기RGB를별도전달하며기존독립검사는명시fallback이다. // 실제 파일 팔레트와 Native Take의 두 현재 색을 연결한다.
     void SetView(SoundView view); // 현재 화면 픽셀 원점을 Query/Prepare/Draw가 공유하게 한다.
     void Take(o::Sid form,std::uint32_t flags); // 실제00447000의 전체 DWORD flags를 전달한다.
+    void CancelForState(); //00446e70만실행하며외곽game.prepare를Native효과로추가하지않는다.
     void Cancel(); // 잠긴 상태에서도 실제 꼬리 정리/프로세스 반납을 실행한다.
     void Update(std::int32_t x,std::int32_t y); // 실제00446b50으로 현재 마우스/카메라를 반영한다.
     void GumpsChanged(); // 호스트 UI 트리 교체 뒤 정지한 마우스의 현재 Gump/표시 경계만 다시 조회한다.

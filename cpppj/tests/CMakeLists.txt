@@ -2172,3 +2172,5 @@ target_sources(netstorm_tests PRIVATE CameraViewTests.cpp)
 
 # Native 단일 Clear 잔류와 실제 Client/Session 교체의 Host·시각 수명을 검사한다.
 target_sources(netstorm_tests PRIVATE ProcessHostStorageTests.cpp ProcessHostSessionTests.cpp)
+#443의장기커서상태/DWORD폭/실제Cancel꼬리검사다.
+target_sources(netstorm_tests PRIVATE ClientCursorGlobalsTests.cpp)

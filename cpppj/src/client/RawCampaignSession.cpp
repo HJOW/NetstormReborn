@@ -2792,7 +2792,7 @@ struct RawCampaignSession::Impl {
             static_cast<void>(lookup.Find(parent,type,0,true));
         };
         game.moveBuilder=[this](std::uint32_t owner,Sid target,std::uint32_t low,std::uint32_t high) { static_cast<void>(buildingMover->Move(owner,target,low,high)); };
-        cursor=std::make_unique<RawCampaignCursor>(CampaignCursorData{world,assets.game,gameplayPlacement.geometry,metadata.frames,*contentForms,*contained,hp,random,*construction,cursorDrop,gameplayPlacement.preview.blocked,sp,playerState.playerKnown,gunTargetState.windArcherType,cursorRangeGlobals.processType,contentCamera,&gameplayGlobals->Camera().Snapshot()},std::move(game));
+        cursor=std::make_unique<RawCampaignCursor>(CampaignCursorData{world,assets.game,gameplayPlacement.geometry,metadata.frames,*contentForms,*contained,hp,random,*construction,cursorDrop,gameplayPlacement.preview.blocked,sp,playerState.playerKnown,gunTargetState.windArcherType,cursorRangeGlobals.processType,contentCamera,&gameplayGlobals->Camera().Snapshot(),&gameplayGlobals->CursorGlobals()},std::move(game));
         if (services.colorSortInput || services.screenPalette) {
             // 실제 Client의 일부 색 장치가 빠진 경우 COL을 대신 써서 성공하지 않는다.
             if (!services.colorSortInput || !services.screenPalette) throw std::logic_error("캠페인 커서의 같은 ColorSort/현재 화면 색 서비스 미연결");
@@ -3126,6 +3126,7 @@ struct RawCampaignSession::Impl {
     #include "client/RawCampaignRitual.inc"
     // State 부모가 지정하는 같은 현재 Player와 같은 실제 Deck owner를 기존 원문 자식에 빌린다.
     void ReleasePlayerLinks() {
+        if (productionDeck && productionDeck->PlayerLinksReturnedForState()) throw std::logic_error("Native 반납된 Session Player 링크의 반복 정리 금지");
         CleanupPlayerLinks({[this] { return playerRecords->Records(); },[this](std::uint32_t token) {
             if (!productionDeck) throw std::logic_error("실제 Session Player링크의 Deck 소유자 미연결");productionDeck->Release(token);
         }});
@@ -3142,12 +3143,12 @@ struct RawCampaignSession::Impl {
         ReleaseEditorCommandReceivers();
         // 다른 AI의 손상/외부 예외가 나더라도 나머지 실제 brain과 Kernel 정리를 계속하고 오류를 남긴다.
         for (std::uint32_t owner=1;owner<9;++owner) if (participation) {
-            try { participation->RemoveBrain(owner); }
+            try { if (!participation->BrainReturnedForState(owner)) participation->RemoveBrain(owner); } // 실제 같은 모듈이 소비한 정상 reset 증빙만 반복효과를 생략한다.
             catch (const std::exception& error) { std::fprintf(stderr,"실제 Session AI 정리 실패 owner%u: %s\n",owner,error.what()); }
             catch (...) { std::fprintf(stderr,"실제 Session AI 정리 실패 owner%u: 알 수 없는 예외\n",owner); }
         }
         // 원문0048fcd0은 Kernel보다 앞선다. 실패한 명시 State 호출과 달리 C++ 최종 소멸은 진단 뒤 나머지 소유권을 반납한다.
-        try { ReleasePlayerLinks(); }
+        try { if (!productionDeck || !productionDeck->PlayerLinksReturnedForState()) ReleasePlayerLinks(); } // 실제 같은 Deck의 정상 링크 반납 증빙만 재호출을 생략한다.
         catch (const std::exception& error) { std::fprintf(stderr,"실제 Session Player링크 정리 실패: %s\n",error.what()); }
         catch (...) { std::fprintf(stderr,"실제 Session Player링크 정리 실패: 알 수 없는 예외\n"); }
         try { world.DrainCurrentProcessBindingsForShutdown(); } // 자기 현재 처리기가 만든 객체만 모듈보다 먼저 반납하고 이전 Native 잔류는 장기 Storage에 남긴다.
@@ -3527,6 +3528,15 @@ std::span<std::uint8_t> RawCampaignSession::PlayerRecords() { return impl_->play
 RawProcessHostStorage::ClearPass RawCampaignSession::ClearProcessesForState() { return impl_->world.ClearProcessesForState(); }
 void RawCampaignSession::ReturnProcessBindingsForState(RawProcessHostStorage::ClearPass&& pass) { impl_->world.ReturnProcessBindingsForState(std::move(pass)); } // 일반 소멸 fallback과 실제 소비된 반납을 구분한다.
 void RawCampaignSession::ReleasePlayerLinks() { impl_->ReleasePlayerLinks(); }
+// 실제 Native 부모의 선택 위치에서만 기존 AI/링크 자식을 실행하고 정상 복귀 증빙을 이동한다.
+RawProductionDeck::PlayerLinksPass RawCampaignSession::ClearPlayerLinksForState() {
+    if (!impl_->productionDeck) throw std::logic_error("State Player 링크의 실제 Deck 모듈 누락");return impl_->productionDeck->CleanupPlayerLinksForState([this] { return impl_->playerRecords->Records(); });
+}
+void RawCampaignSession::ReturnPlayerLinksForState(RawProductionDeck::PlayerLinksPass&& pass) { impl_->productionDeck->ReturnPlayerLinksForState(std::move(pass)); } // 전체 World/PlayerUse의 반납으로 확대하지 않는다.
+RawPlayerParticipation::BrainResetPass RawCampaignSession::ResetAiForState(std::uint32_t owner) {
+    if (!impl_->participation) throw std::logic_error("State resetAi의 실제 참여 모듈 누락");return impl_->participation->RemoveBrainForState(owner);
+}
+void RawCampaignSession::ReturnAiForState(RawPlayerParticipation::BrainResetPass&& pass) { impl_->participation->ReturnBrainForState(std::move(pass)); } // 실제 resetAi 정상 복귀 증빙만 같은 모듈에 반납한다.
 // 방향별 DWORD를 그대로 공유하여 한쪽 변경을 대칭화하거나 bool로 줄이지 않는다.
 std::span<std::uint32_t> RawCampaignSession::Alliances() { return impl_->alliances; }
 // 같은 현재 Player 참여/동맹/실제 AI 소유자 수명을 후속 로그인 부모에 빌린다.
@@ -4104,6 +4114,9 @@ CursorDropState& RawCampaignSession::CursorDropSettings() { return impl_->cursor
 // 현재 풀/동맹/타입/물리 헤더를 공유하는 실제 사격 판정기를 조회 전용으로 빌린다.
 const RawGunTarget& RawCampaignSession::GunTargeting() const { if (!impl_->gunTarget) throw std::logic_error("실제 Gun 표적 판정 설치 전 조회");return *impl_->gunTarget; }
 // 실제 설치 이후 같은 커서를 빌리며 새 몸체나 상태를 만들지 않는다.
+bool RawCampaignSession::HasCursorRuntimeForState() const { return bool(impl_->cursor); } // 첫메뉴/설치중/활성Runtime의경계를명시한다.
+void RawCampaignSession::CancelCursorForState() { if (!impl_->cursor) throw std::logic_error("NativeCancel의실제커서실행기미설치");impl_->cursor->CancelForState(); }
+// 일반사용자입력은기존loaded/UI설치관문을그대로유지한다.
 RawCampaignCursor& RawCampaignSession::Cursor() { if ((!impl_->loaded && !impl_->editorUiInstalling) || !impl_->cursor) throw std::logic_error("설치 전 실제 커서 요청");return *impl_->cursor; } // 같은 설치 scope의 실제 팔레트/UI 조회만 허용하고 범위 밖 입력은 계속 닫는다.
 // 이후 커서/맵 명령도 프레임이 읽는 같은 전역을 갱신한다.
 CursorManaGlobals& RawCampaignSession::CursorManaSettings() { return impl_->cursorManaGlobals; }

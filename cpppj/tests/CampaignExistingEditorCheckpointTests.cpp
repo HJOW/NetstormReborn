@@ -598,3 +598,19 @@ TEST_CASE(GameAux_PreparedCtorLateFailureReleasesLeaseWithoutReset) {
     CHECK(rejected && owner && surface && gameplay && !surface->Borrowed() && !gameplay->Borrowed() && surface->Generation()==1 && CheckpointGameAuxValues(*owner)==before);
     { auto use=surface->AcquirePrepared();CHECK(surface->Generation()==2 && CheckpointGameAuxValues(*owner)==before); }CHECK(!surface->Borrowed() && CheckpointGameAuxValues(*owner)==before);
 }
+
+// prepared실제Session은같은장기커서의30DWORD/측정/배치/snap을만들거나반납하면서초기화하지않는다.
+TEST_CASE(CampaignExistingEditorCheckpoint_CursorDataPreparedBorrowAndReleasePreserveCurrentValues) {
+    std::shared_ptr<ClientGameplayGlobals> owner;const std::uint32_t* address{};
+    WithEditorInstallSession([&](RawCampaignSession& session,Client& client,const auto&,EditorFiles&) {
+        auto& data=owner->CursorGlobals();CHECK(owner==client.GameplayGlobals() && !session.HasCursorRuntimeForState() && data.Lifecycle().previews.data()==address && data.Lifecycle().previews[29]==0x87654321U && data.Lifecycle().previewCount==-7 && data.Lifecycle().currentGump==0x12345678U && data.Placement().description=="prepared-cursor" && data.SnapToGrid()==0x80000000U);
+    },true,nullptr,{},[&](Client& client,RawCampaignSessionServices&) { owner=client.GameplayGlobals();auto& data=owner->CursorGlobals();address=data.Lifecycle().previews.data();data.Lifecycle().previews[29]=0x87654321U;data.Lifecycle().previewCount=-7;data.Lifecycle().currentGump=0x12345678U;data.Placement().description="prepared-cursor";data.SnapToGrid()=0x80000000U; });
+    CHECK(owner && !owner->Borrowed() && owner->CursorGlobals().Lifecycle().previews.data()==address && owner->CursorGlobals().Lifecycle().previews[29]==0x87654321U && owner->CursorGlobals().Lifecycle().previewCount==-7 && owner->CursorGlobals().Placement().description=="prepared-cursor" && owner->CursorGlobals().SnapToGrid()==0x80000000U);
+}
+
+// World대여뒤SoundList검증이실패해도prepared커서의현재비트/문구/주소는이전값으로되돌리지않는다.
+TEST_CASE(CampaignExistingEditorCheckpoint_CursorDataPreparedFailureKeepsOwner) {
+    std::shared_ptr<ClientGameplayGlobals> owner;bool rejected{};
+    try { WithEditorInstallSession([&](auto&,auto&,const auto&,auto&) { throw std::logic_error("커서prepared실패검사의body도달오류"); },true,nullptr,{},[&](Client& client,RawCampaignSessionServices& services) { owner=client.GameplayGlobals();auto& data=owner->CursorGlobals();data.Lifecycle().previews[29]=0xffffffffU;data.Lifecycle().previewCount=-3;data.Placement().description="partial-cursor";data.SnapToGrid()=0x87654321U;services.soundNames=nullptr; }); }catch (const std::invalid_argument& error) { rejected=std::string(error.what()).find("SoundList")!=std::string::npos; }
+    CHECK(rejected && owner && !owner->Borrowed() && owner->CursorGlobals().Lifecycle().previews[29]==0xffffffffU && owner->CursorGlobals().Lifecycle().previewCount==-3 && owner->CursorGlobals().Placement().description=="partial-cursor" && owner->CursorGlobals().SnapToGrid()==0x87654321U);
+}
