@@ -119,6 +119,7 @@ struct RawSurfaceWorld::Impl final:o::SquidDisplaySink {
         building=std::make_unique<o::RawBuildingSpace>(pool,hash,types,buildingState);
         pop->SetBuildingSpace(building.get());unpop->SetBuildingSpace(building.get());
         factory=std::make_unique<o::SquidFactory>(pool,types,false,unpop.get());
+        factory->BindWeakenedMana(storage->GameAux()->PriestQuarterHp()); // State 직접 쓰기와 첫 객체 생성이 같은 현재005ca8f0을 읽는다.
         frame=std::make_unique<o::SquidFrame>(pool,types,o::MakeSquidFrameHooks(pool,types,*display,*unpop,*pop));
         owner=std::make_unique<o::SquidOwner>(pool,types,bookkeeping,ownerMode);
         neighbors=std::make_unique<o::RawSquidNeighbors>(pool,hash,spots,types,frames);

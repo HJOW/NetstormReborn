@@ -71,7 +71,7 @@ std::int32_t SquidReward::TypeHitPoints(std::uint32_t type) const {
     // 패치판 디버그 assert는 HP 비트가 없는 타입(dais 제외)의 조회를 보고한다. 보고 UI는 복원하지 않으므로 거부한다.
     if (patch && state_.debugAsserts && !(record.flags1&kHasHp) && type!=state_.types.dais)
         throw std::logic_error("보상 타입 HP assert 위반");
-    return state_.priestQuarterHp && type==state_.types.priest ? record.maxHitPoints/4 : record.maxHitPoints;
+    return state_.PriestQuarterHp() && type==state_.types.priest ? record.maxHitPoints/4 : record.maxHitPoints;
 }
 bool SquidReward::HasHitPoints(Sid sid) const {
     const auto raw=Raw(sid);const auto& type=types_[raw[kType]];

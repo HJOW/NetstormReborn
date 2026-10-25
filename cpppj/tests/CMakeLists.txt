@@ -2073,6 +2073,8 @@ set_source_files_properties(TypeTechBitTests.cpp PROPERTIES COMPILE_DEFINITIONS
 # 같은 Core/Subscriber/색상 소유자의 실제 접합과 보존된 원문 관측을 함께 검사한다.
 target_sources(netstorm_tests PRIVATE SessionPlayerCoreRefreshTests.cpp ClientLocalStateGlobalsTests.cpp SubscriberGlobalsTests.cpp
     ClientSubscriberGlobalsTests.cpp ColorSortPrimaryTests.cpp ClientColorSortPrimaryTests.cpp)
+# 원본 State 부모가 같은 실제 Client 전역을 읽고 쓰는 주소·폭·재조회 경계를 검사한다.
+target_sources(netstorm_tests PRIVATE ClientStateWorldGlobalsTests.cpp)
 set_source_files_properties(SubscriberGlobalsTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_SUBSCRIBER_LIFETIME_EDGES_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/subscriber-lifetime-edges-v2-x86.tsv\"")
 set_source_files_properties(ColorSortPrimaryTests.cpp PROPERTIES COMPILE_DEFINITIONS

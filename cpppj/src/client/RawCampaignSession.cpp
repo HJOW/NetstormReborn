@@ -778,6 +778,7 @@ struct RawCampaignSession::Impl {
         restrictions(services.missionRestrictions ? *services.missionRestrictions : localRestrictions),
         start{core.processState,priestState.movement.dude,priestState.movement.teleport,priestState.movement.manaBolt,priestState.movement.priest,geyserType,snap,retrying},process{core.processState} {
         rewardState.sharedPercent=&gameplayGlobals->GameAux()->RefundPercent();rewardState.sharedGeyserPool=&gameplayGlobals->GameAux()->ResourcePool(); // 실제 Reward/LocalGeyser의 같은 물리다.
+        rewardState.sharedPriestQuarterHp=&gameplayGlobals->GameAux()->PriestQuarterHp(); // State 직접 쓰기와 기존 HP setter/최대HP가 같은 현재 전역을 쓴다.
         missionStart.sharedAllowAnyCapture=&gameplayGlobals->GameAux()->AllowAnyCapture();missionStart.sharedOrdinaryGeysers=&gameplayGlobals->GameAux()->OrdinaryGeysers(); // Start 출력과 pickup을 같은 DWORD에 연결한다.
         motionState.carrier.sharedAllowAlliedPickup=&gameplayGlobals->GameAux()->AllowAnyCapture();motionState.carrier.sharedGeyserType=&geyserType;carrierState.sharedGeyserType=&geyserType;constructionState.geyser.sharedGeyserType=&geyserType; // 실제 생성/로딩/도착을 같은 TYPE에 연결한다.
         carrierState.sharedBoss=&gameplayGlobals->Authority()->boss;contentFinder.sharedBoss=&gameplayGlobals->Authority()->boss; // 공통 캐리어와 생산·Damageable 검색도 사제 네 소비자와 같은 실제 권한을 빌린다.
@@ -1122,6 +1123,7 @@ struct RawCampaignSession::Impl {
             if (!services.sound.playOnceAt) throw std::logic_error("캠페인 빔 실제 파일명 음향 미연결");services.sound.playOnceAt(x,y,soundNames.Lookup(name),0,0);
         },std::move(shrapnel));
         particles->BindCameraView(gameplayGlobals->Camera().Snapshot()); // 생성 직후부터 같은 전역 현재값을 사용한다.
+        particles->BindWeakenedMana(gameplayGlobals->GameAux()->PriestQuarterHp()); // 연소점 선택도 Frame 준비 사본을 기다리지 않는다.
         auto combatEffects=services.archer;
         // 반더는 빔 생성 뒤 초기 source/target snapshot으로 피해/회피를 처리한다.
         combatEffects.beam.create=[this](Sid source,Sid target) { static_cast<void>(particles->AddBeam(source,target,std::string{"shortZap.wav"})); };
@@ -3400,7 +3402,7 @@ void RawCampaignSession::StartConstruction(Sid parent,float duration) {
     impl_->PrepareBuilding(impl_->core.processState.Now());impl_->building->Start(parent,duration);
 }
 // 현재 같은 시각을 공격/소리/AI에 공급하되 Kernel은 호출자의 원문 위치에서 한 번만 실행한다.
-void RawCampaignSession::PrepareFrame(FrameTime time,bool paused) { impl_->flyerPaused=paused;if (impl_->core.processState.sharedNow) time.game=impl_->core.processState.Now();else impl_->core.processState.now=time.game;impl_->PrepareBuilding(time.game);impl_->assetBindings->PrepareFrame(time.game);impl_->combat->PrepareFrame(time);impl_->particles->PrepareFrame(time.game,static_cast<std::uint32_t>(time.number),impl_->rewardState.priestQuarterHp);impl_->soundState.frame=static_cast<std::uint32_t>(time.number);if (!paused) { if (!impl_->aiRuntime) throw std::logic_error("실제 Session 자동 AI 프레임 설치 전 호출");impl_->aiRuntime->Frame(); }impl_->world.PrepareFrame(time); }
+void RawCampaignSession::PrepareFrame(FrameTime time,bool paused) { impl_->flyerPaused=paused;if (impl_->core.processState.sharedNow) time.game=impl_->core.processState.Now();else impl_->core.processState.now=time.game;impl_->PrepareBuilding(time.game);impl_->assetBindings->PrepareFrame(time.game);impl_->combat->PrepareFrame(time);impl_->particles->PrepareFrame(time.game,static_cast<std::uint32_t>(time.number));impl_->soundState.frame=static_cast<std::uint32_t>(time.number);if (!paused) { if (!impl_->aiRuntime) throw std::logic_error("실제 Session 자동 AI 프레임 설치 전 호출");impl_->aiRuntime->Frame(); }impl_->world.PrepareFrame(time); }
 // 독립 검사/호출자는 기존 준비와 단일 Kernel 실행을 함께 요청한다. 실제 GUI는 두 단계를 분리한다.
 void RawCampaignSession::RunFrame(FrameTime time,bool paused) { PrepareFrame(time,paused);if (!paused) impl_->core.kernel.RunFrame(); }
 // 해상도/카메라 변경과 동일 위치 효과음의 view를 process11에도 전달한다.

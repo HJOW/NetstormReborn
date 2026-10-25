@@ -206,3 +206,5 @@ target_sources(netstorm PRIVATE client/RawCameraView.cpp client/RawCameraView.h 
 target_sources(netstorm PRIVATE client/RawProcessHostStorage.cpp client/RawProcessHostStorage.h)
 #443은커서data-only owner와Session없는실제Cancel/Prepare연결만추가한다.
 target_sources(netstorm PRIVATE client/ClientCursorGlobals.h client/ClientCursorStateCleanup.h client/ClientCursorStateCleanup.cpp)
+# Native State 직접 전역의 실제 Client/TYPE/Player/UI 주소 연결이다.
+target_sources(netstorm PRIVATE client/ClientStateWorldGlobals.h client/ClientStateWorldGlobals.cpp)

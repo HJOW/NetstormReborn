@@ -16,14 +16,16 @@ std::string SourceParticleBytes(const BurningVisualFields& fields) {
     return bytes.empty() ? "-" : Hex(bytes);
 }
 // 실제source/Append만 소비하며 생성/부착/첫팔레트 호출은 명시 거부한다.
-void ReplaySources(std::string_view edition) {
+void ReplaySources(std::string_view edition,bool shared=false) { // shared일 때만 실제 장기 설정을 모사하는 주소를 연결한다.
     const auto original=edition=="originals" ? OriginalEdition::Patch1078 : OriginalEdition::Cd1072;const bool patch=original==OriginalEdition::Patch1078;SidPool pool(original,kCapacity,true);std::vector<RiftTypeRecord> types(patch ? 188 : 171);GameRandom random;BurningSourcesState sourceState;
+    bool currentWeakened{};if (shared) sourceState.sharedWeakenedMana=&currentWeakened; // 행마다 바꾸는 실제 값이며 fallback은 반대로 둔다.
     // 현재피해50까지 실제 client SID로 입력번호를 확보한다.
     for (std::uint16_t id=5;id<=50;++id) CHECK(pool.Allocate(2)==Sid{id});
     RenderRegistryHooks registryHooks;registryHooks.reserve=[](std::uint32_t)->bool { throw std::logic_error("source선택의미허용표시확보"); };registryHooks.releaseArray=[] { throw std::logic_error("source선택의미허용표시반납"); };registryHooks.attach=[](RenderProcessFields&,std::uint32_t,Sid,std::uint32_t) { throw std::logic_error("source선택의미허용부착"); };RawRenderRegistry registry(pool,std::move(registryHooks));BurningVisualState state;BurningVisualHooks hooks;hooks.reserve=[](std::uint32_t)->bool { throw std::logic_error("source선택의미허용추가확보"); };RawBurningVisual visual(pool,registry,state,std::move(hooks));RawBurningSources sources(pool,types,visual,random,sourceState);std::size_t count=0;int failures=0;
     // 현재 raw HP/타입·캡처·기존입자만 입력에서 만들며 목표 행을 계산하지 않는다.
     for (const auto& row:SourceRows()) {
         if (row[0]!=edition) continue;CHECK(row.size()==19);const auto kind=Number(row[5]);const auto type=kind==2 ? 158U : kind==1 ? 70U : 89U;types[type].flags1=16;types[type].flags2=kind==1 ? 0x400U : 0U;types[type].maxHitPoints=static_cast<std::int32_t>(Number(row[4]));auto raw=pool.AllocatedBytes(Sid{50});std::fill(raw.begin(),raw.end(),std::uint8_t{});raw[10]=static_cast<std::uint8_t>(type);Put(raw,26,Number(row[3]),patch ? 4U : 2U);random.SetState(Number(row[8]));sourceState.weakenedMana=Number(row[11])!=0;
+        currentWeakened=sourceState.weakenedMana;if (shared) sourceState.weakenedMana=!currentWeakened; // 별도 값형 설정으로 성공하는 오연결을 막는다.
         BurningVisualFields fields;fields.victim=Sid{static_cast<std::uint16_t>(Number(row[12]))};fields.capacity=Number(row[9]);fields.particles.resize(fields.capacity);fields.image.width=static_cast<std::int32_t>(Number(row[1]));fields.image.height=static_cast<std::int32_t>(Number(row[2]));fields.image.pixels.assign(static_cast<std::size_t>(fields.image.width)*fields.image.height,Number(row[7]) ? std::uint8_t{255} : std::uint8_t{});fields.rows.resize(static_cast<std::size_t>(fields.image.width+fields.image.height)/5);fields.selected=static_cast<std::int32_t>(Number(row[6]));const auto pattern=Number(row[10]);fields.total=pattern==2 ? fields.capacity : pattern==1 ? std::min(3U,fields.capacity) : 0U;
         const std::array<std::array<float,2>,3> points=fields.image.width>=8 && fields.image.height>=8 ? std::array<std::array<float,2>,3>{{{2,3},{7,3},{0,0}}} : std::array<std::array<float,2>,3>{};
         // 기존 source 좌표와 rowTaken 표식은 같은 명시 입력이다.
@@ -43,3 +45,7 @@ void ReplaySources(std::string_view edition) {
 TEST_CASE(BurningSources_PatchNativeSelectionAndRemoval) { ReplaySources("originals"); }
 // CD10.72의 signed HP WORD와 별도HasHP/위크마나/Append body를 대조한다.
 TEST_CASE(BurningSources_CdNativeSelectionAndRemoval) { ReplaySources("originalCD"); }
+// 기존 독립 Native 행 전체를 반대 fallback과 공유 현재값으로 다시 대조한다.
+TEST_CASE(BurningSources_PatchSharedWeakenedNativeSelection) { ReplaySources("originals",true); }
+// CD의 signed WORD HP 경로도 같은 장기 설정을 읽는다.
+TEST_CASE(BurningSources_CdSharedWeakenedNativeSelection) { ReplaySources("originalCD",true); }

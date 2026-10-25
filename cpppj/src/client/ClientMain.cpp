@@ -340,30 +340,7 @@ int Client::Run() {
     configuration_.SetInt("global.ddParallax", (mode & ScreenMode::kParallax) != 0);
     configuration_.SetInt("global.ddSoftwareMouse", (mode & ScreenMode::kSoftwareMouse) != 0);
     configuration_.SetInt("global.ddFourPage", 0);
-    // "init sound"(FUN_004aa600 → FUN_004a9520("thunderCrack.wav") → FUN_004aadd0): 소리 장치·음악 스레드.
-    // 장치가 없거나 열리지 않으면 소리 없이 계속 실행한다. noAudio도 실제 이름표/재생 계층은 유지한다.
-    if (!options_.noAudio) {
-        SceneMusicHooks scene;
-        // 원본 0043dad0의 전체 재표시 경계를 현재 UI 어댑터의 합성/Renderer 변경 영역에 연결한다.
-        scene.refresh=[this]() { if (menu_) menu_->Refresh();else if (renderer_) renderer_->InvalidateAll(); };
-        // 원본 00441470(key,1)은 값이 정확히 1일 때만 참이다. 음악/소리 옵션과는 별개다.
-        scene.ascendancyPalette=[this]() { return configuration_.GetInt(kAscendancyPaletteOption)==1; };
-        // 파일 이름에는 이미 .col이 포함돼 있으므로 GamePalSpec의 .COL을 추가하지 않는다.
-        scene.loadPalette=[this](std::string_view name) { LoadScenePalette(name); };
-        // 원본 00469c80은 천둥 효과음을 내기 전에 번개 프로세스를 생성한다. 소리 옵션과 별개로 진행한다.
-        scene.thunderFlash=[this]() { StartThunderFlash(); };
-        audio_ = std::make_unique<ClientAudio>(options_.gameDirectory, options_.edition, kLanguages[static_cast<std::size_t>(languageNumber_)],
-            [this]() { return clock_.WallSeconds(timeGetTime()); }, timeGetTime(),std::move(scene));
-        audio_->SetSceneTints(screen_->Colors().weather);
-        audio_->SetView({0,0,0,0,screenWidth_,screenHeight_});
-        audio_->Initialize(reinterpret_cast<std::uintptr_t>(window_), ReadAudioOptions());
-        if (options_.audioMute) audio_->PushMute();
-    } else {
-        // 생성자/이름표 초기화는 OS 장치와 음악 스레드를 열지 않는다. 실제 Play가 미초기화 상태에서 0을 반환한다.
-        disabledAudio_=std::make_unique<ClientAudio>(options_.gameDirectory,options_.edition,kLanguages[static_cast<std::size_t>(languageNumber_)],
-            [this] { return clock_.WallSeconds(timeGetTime()); },timeGetTime());
-        disabledAudio_->Names().Initialize();disabledAudio_->SetView({0,0,0,0,screenWidth_,screenHeight_});
-    }
+    InitializeNativeAudio(); // 원본 init sound의 기존 위치에서 같은 본체를 실행한다.
     // "init kernel"(FUN_00471930): Kernel은 멤버로 이미 만들어져 있다.
     // "init renderer": 화면 장치와 같은 크기의 변경 표·프레임 캐시를 만든다.
     renderer_ = std::make_unique<Renderer>(screenWidth_, screenHeight_,options_.edition);
@@ -448,6 +425,36 @@ int Client::Run() {
 
 // 소리·음악 묶음이다. noAudio이거나 초기화 전이면 널이다.
 ClientAudio* Client::Audio() { return audio_.get(); }
+
+// 원본 init sound 단계의 같은 Client 음향을 한 번만 만든다. noAudio는 창·장치 없이 같은 장기 owner를 준비한다.
+void Client::InitializeNativeAudio() {
+    if (audio_ || disabledAudio_) throw std::logic_error("실제 Client 음향의 중복 초기화");
+    if (!options_.noAudio && (!screen_ || !window_)) throw std::logic_error("실제 음향 초기화 전 화면·창 필요");
+    // "init sound"(FUN_004aa600 → FUN_004a9520("thunderCrack.wav") → FUN_004aadd0): 소리 장치·음악 스레드.
+    // 장치가 없거나 열리지 않으면 소리 없이 계속 실행한다. noAudio도 실제 이름표/재생 계층은 유지한다.
+    if (!options_.noAudio) {
+        SceneMusicHooks scene;
+        // 원본 0043dad0의 전체 재표시 경계를 현재 UI 어댑터의 합성/Renderer 변경 영역에 연결한다.
+        scene.refresh=[this]() { if (menu_) menu_->Refresh();else if (renderer_) renderer_->InvalidateAll(); };
+        // 원본 00441470(key,1)은 값이 정확히 1일 때만 참이다. 음악/소리 옵션과는 별개다.
+        scene.ascendancyPalette=[this]() { return configuration_.GetInt(kAscendancyPaletteOption)==1; };
+        // 파일 이름에는 이미 .col이 포함돼 있으므로 GamePalSpec의 .COL을 추가하지 않는다.
+        scene.loadPalette=[this](std::string_view name) { LoadScenePalette(name); };
+        // 원본 00469c80은 천둥 효과음을 내기 전에 번개 프로세스를 생성한다. 소리 옵션과 별개로 진행한다.
+        scene.thunderFlash=[this]() { StartThunderFlash(); };
+        audio_ = std::make_unique<ClientAudio>(options_.gameDirectory, options_.edition, kLanguages[static_cast<std::size_t>(languageNumber_)],
+            [this]() { return clock_.WallSeconds(timeGetTime()); }, timeGetTime(),std::move(scene));
+        audio_->SetSceneTints(screen_->Colors().weather);
+        audio_->SetView({0,0,0,0,screenWidth_,screenHeight_});
+        audio_->Initialize(reinterpret_cast<std::uintptr_t>(window_), ReadAudioOptions());
+        if (options_.audioMute) audio_->PushMute();
+    } else {
+        // 생성자/이름표 초기화는 OS 장치와 음악 스레드를 열지 않는다. 실제 Play가 미초기화 상태에서 0을 반환한다.
+        disabledAudio_=std::make_unique<ClientAudio>(options_.gameDirectory,options_.edition,kLanguages[static_cast<std::size_t>(languageNumber_)],
+            [this] { return clock_.WallSeconds(timeGetTime()); },timeGetTime());
+        disabledAudio_->Names().Initialize();disabledAudio_->SetView({0,0,0,0,screenWidth_,screenHeight_});
+    }
+}
 
 // 월드가 사용하는 같은 이름표와 실제 SoundPlayer는 소리 옵션/장치 유무와 분리해 유지한다.
 ClientAudio& Client::WorldAudio() {

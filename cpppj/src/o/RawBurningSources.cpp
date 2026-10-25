@@ -51,7 +51,7 @@ void RawBurningSources::Select(BurningVisualFields& fields) const {
     if (type>=types_.size()) throw std::out_of_range("Burning sources 현재 타입 범위 오류");
     const auto& record=types_[type];const bool hasHp=(record.flags2&0x400000U) ? (raw[patch ? 40U : 35U]&1)!=0 : (record.flags1&TypeFlag1::kHasHitPoints)!=0;
     if (!hasHp) { if (patch) throw std::logic_error("Burning sources hasHitPoints 원본 assert");return; }
-    const auto maximum=state_.weakenedMana && type==state_.manaType ? record.maxHitPoints/4 : record.maxHitPoints;
+    const auto maximum=state_.WeakenedMana() && type==state_.manaType ? record.maxHitPoints/4 : record.maxHitPoints;
     const auto divisor=maximum-maximum/2;
     if (divisor<=0) throw std::invalid_argument("Burning sources 최대HP 나눗셈 범위 오류");
     const auto numerator=static_cast<std::int64_t>(SourceHitPoints(raw,patch))*5;

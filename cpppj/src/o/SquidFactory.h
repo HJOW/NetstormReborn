@@ -19,6 +19,9 @@ public:
     Sid CreateGumpForm(std::uint32_t flags=2);
     // 생성 효과 어댑터가 같은 실제 SID 풀을 연결하는지 확인한다.
     const SidPool& Pool() const;
+    void BindWeakenedMana(const bool& current); // 실제005ca8f0 주소만 빌린다. 다른 주소 재연결은 거부하며 대상은 이 공장보다 오래 살아야 한다.
+    void BindWeakenedMana(bool&&)=delete; // 임시 bool의 주소를 보관해 수명이 끝나는 연결은 컴파일 시 거부한다.
+    void BindWeakenedMana(const bool&&)=delete; // const 임시 bool도 같은 장기 참조 계약을 적용한다.
     // 이미 확보된 슬롯에 생성자 쓰기만 적용한다. type/상태/풀 목록은 덮지 않는다.
     Sid Construct(std::uint32_t type,Sid sid);
     // 004af610 ↔ CD 004ab440의 지원 자산 수신 경로다. free list/freeCount는 변경하지 않는다.
@@ -48,6 +51,7 @@ private:
     std::vector<RiftTypeRecord> types_;
     // weakenedMana_: 약화된 마나 여부.
     bool weakenedMana_{};
+    const bool* sharedWeakenedMana_{}; // 생성자 HP 쓰기가 읽는 현재 장기 전역이며 기존 값형 검사는 미연결이다.
     // unpop_: 객체의 공간 등록을 해제하는 Unpop 처리기.
     SquidUnpop* unpop_{};
 };

@@ -1,4 +1,4 @@
-// 게임 보조17전역의 실제 폭만 소유하며 Runtime/목록/Host를 포함하지 않는다.
+// 게임 보조 전역의 실제 폭만 소유하며 Runtime/목록/Host를 포함하지 않는다.
 #pragma once
 #include <bit>
 #include <cstdint>
@@ -44,13 +44,16 @@ public:
     const std::uint32_t& GeyserType() const { return geyserType_; } // 옵션/생성/목록의 같은 현재 TYPE다.
     std::uint32_t& SubscriberMarker() { return subscriberMarker_; } //005467bc: Subscriber의 별도 표시 DWORD다.
     const std::uint32_t& SubscriberMarker() const { return subscriberMarker_; } // 다른 Subscriber ID와 합치지 않는다.
+    bool& PriestQuarterHp() { return priestQuarterHp_; } //005ca8f0의 같은 현재 0/1을 생성·HP·연소와 State 정리가 공유한다.
+    const bool& PriestQuarterHp() const { return priestQuarterHp_; } // Session을 교체하거나 Frame을 기다리지 않고 현재값을 읽는다.
     void ResetForGeneralWorld() { // 기존 지역 Runtime의 fresh 입력만 호환하며 Native cleanup 전체가 아니다.
-        ordinaryGeysers_=0;totalCost_=0;resourcePool_=0;refundPercent_=25;allowAnyCapture_=0;archipelago_=0;lostX_=0.0F;lostY_=0.0F;geyserType_=122;
+        ordinaryGeysers_=0;totalCost_=0;resourcePool_=0;refundPercent_=25;allowAnyCapture_=0;archipelago_=0;lostX_=0.0F;lostY_=0.0F;geyserType_=122;priestQuarterHp_=false;
     }
     void ResetLostPositionForCleanup() { // Native 두 store만 Y→X로 실행하며 일반 fresh의+0과 구별한다.
         lostY_=std::bit_cast<float>(0xc61c4000U);lostX_=std::bit_cast<float>(0xc61c4000U);
     }
 private:
+    bool priestQuarterHp_{}; // 원문 최초 BSS0이며 일반 fresh의 기존0만 호환한다. prepared와 반납은 현재값을 보존한다.
     std::uint32_t ordinaryGeysers_{},geyserFrameFlag_{},savedGeyserCount_{}; // 실제 세 BSS DWORD다.
     double geyserDeadline_{},cleanupDeadline_{},secondaryGeyserDeadline_{},scheduledDrawDeadline_{}; // 실제 서로 다른 네 BSS double이다.
     std::int32_t totalCost_{},resourcePool_{}; // 같은 signed 비용/자원 DWORD다.

@@ -36,6 +36,8 @@ struct SquidRewardState {
     const std::uint32_t& Percent() const { return sharedPercent ? *sharedPercent : percent; } // 값형 fixture는 기존 값을 사용한다.
     std::int32_t& GeyserPool() { return sharedGeyserPool ? *sharedGeyserPool : geyserPool; } // 삭제 효과 뒤에도 같은 현재 자원을 읽는다.
     const std::int32_t& GeyserPool() const { return sharedGeyserPool ? *sharedGeyserPool : geyserPool; } // 다른 타입의 ref로 변환하지 않는다.
+    const bool* sharedPriestQuarterHp{}; // 실제005ca8f0을 빌리며 독립 fixture만 기존 bool을 쓴다.
+    bool PriestQuarterHp() const { return sharedPriestQuarterHp ? *sharedPriestQuarterHp : priestQuarterHp; } // 원문 최대HP 조회 시점의 현재 약화 값을 읽는다.
 };
 // 객체 보상 외부 동작과 저장소 조회를 연결하는 콜백 묶음이다.
 struct SquidRewardHooks {

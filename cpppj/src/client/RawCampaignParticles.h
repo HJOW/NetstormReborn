@@ -47,6 +47,9 @@ public:
     void PrepareFrame(double now,std::uint32_t frameNumber=0,bool weakenedMana=false); // 원본 현재DWORD frame과 약화 마나도 같은 월드에서 공급한다.
     // 현재 실제 카메라/표시 영역과 장치 재생성에도 유효한 dirty 경계를 갱신한다.
     void BindCameraView(const RawCameraViewState& view); // 참조한 Client snapshot은 모든 입자보다 오래 살아야 한다.
+    void BindWeakenedMana(const bool& current); // 같은 Client005ca8f0을 연소점 선택에 빌리며 다른 주소 재연결은 거부한다.
+    void BindWeakenedMana(bool&&)=delete; // 연소점 선택보다 먼저 소멸하는 임시 bool을 빌리지 않는다.
+    void BindWeakenedMana(const bool&&)=delete; // const 임시값도 동일한 장기 수명 계약으로 거부한다.
     void SetView(SoundView view,SurfaceDisplayHooks display);
     // 같은 원본 수집/깊이 키로 SHP와 함께 정렬할 직접 그리기 항목을 만든다.
     std::vector<RenderSprite> Sprites(ScreenRect clip);

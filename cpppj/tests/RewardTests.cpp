@@ -261,3 +261,9 @@ TEST_CASE(GameAux_RewardUsesCurrentPercentAndResourceAfterSpEffect) {
     auto first=reward.Refund(Sid{5},1,false);CHECK(first.applied && first.cost==100 && first.refund==25 && owner.ResourcePool()==1075 && effects==1 && state.geyserPool==-777 && state.percent==99);
     owner.RefundPercent()=50;auto second=reward.Refund(Sid{5},1,false);CHECK(second.cost==100 && second.refund==50 && owner.ResourcePool()==1050 && effects==2 && state.geyserPool==-777 && state.percent==99);
 }
+
+// 최대HP 조회가 실제005ca8f0의 현재값을 읽고 독립 fallback은 보존한다.
+TEST_CASE(GameAux_RewardPriestMaximumUsesCurrentQuarterHp) {
+    RawGameAuxState owner;SidPool pool(OriginalEdition::Patch1078,kCapacity,true);std::vector<RiftTypeRecord> types(188);types[158].maxHitPoints=200;types[89].maxHitPoints=120;SquidPostPopState book;GameRandom random;ScrambledSpStore store(random,[] { return 1U; });SquidRewardState state;state.priestQuarterHp=true;state.sharedPriestQuarterHp=&owner.PriestQuarterHp();SquidReward reward(pool,types,book,state,&store);
+    CHECK(reward.TypeHitPoints(158)==200 && reward.TypeHitPoints(89)==120);owner.PriestQuarterHp()=true;CHECK(reward.TypeHitPoints(158)==50 && reward.TypeHitPoints(89)==120);owner.PriestQuarterHp()=false;CHECK(reward.TypeHitPoints(158)==200 && state.priestQuarterHp);
+}

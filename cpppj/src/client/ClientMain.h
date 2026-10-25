@@ -175,6 +175,7 @@ public:
     const std::shared_ptr<o::Kernel>& ProcessKernelOwner() const; // 같은 실제 전역 Kernel 소유권만 전달한다.
     const std::shared_ptr<o::FrameTime>& FrameClockOwner() const; // 같은 Time().game 주소가 외부 Storage보다 먼저 사라지지 않게 한다.
     const std::shared_ptr<RawSurfaceStorage>& SurfaceStorage() const; // 자산 초기화 뒤 모든 Session과 초기 HUD가 같은 물리를 빌린다.
+    const std::shared_ptr<RawSurfaceStorage>& SurfaceStorageIfInitialized() const { return surfaceStorage_; } // 초기 정리 연결은 미초기화 NULL도 순수 조회한다. 기존 SurfaceStorage의 필수 초기화 검사는 유지한다.
     // 복원한 그리기·글꼴·커서 기반. 초기화 뒤에만 쓴다.
     void InitializeNativeRendererView(); // 실제 Native Renderer 초기화 위치에서만64BYTE 이미지/목표/갱신을 구성한다.
     Renderer& GetRenderer();
@@ -191,6 +192,8 @@ public:
     // 캠페인의 유일한 이름표/재생 계층이다. noAudio에서는 장치·스레드 없는 비활성 묶음을 빌린다.
     // init sound 이전에는 예외다. Audio()의 noAudio/null 계약은 그대로 유지한다.
     ClientAudio& WorldAudio();
+    // 원본 init sound 위치에서 실제 음향을 한 번 만든다. noAudio 검사는 창·장치 없이 같은 비활성 owner를 준비한다.
+    void InitializeNativeAudio();
     // 원본 Interpret Options(00435220)의 소리 부분: 설정을 다시 읽어 장치·음량·현재 곡을 맞춘다. 옵션 메뉴에서 소리 설정을 바꾼 뒤 부른다.
     void ApplyAudioOptions();
     // 월드에 붙은 번개 프로세스를 화면/월드 해제 전에 제거한다. 부모 Squid 수명을 대신하는 현재 어댑터의 경계다.

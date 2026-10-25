@@ -258,6 +258,10 @@ o::BurningVisualProcess* RawCampaignParticles::AddBurning(o::Sid victim,std::uin
 
 namespace netstorm::client { // 실제 전역 owner와 기존 값형 하위 frame입력의 경계를 드러낸다.
 void RawCampaignParticles::BindCameraView(const RawCameraViewState& view) { cameraView_=&view;view_.cameraX=0;view_.cameraY=0;RefreshCamera(); }
+// 현재 연소 처리기가 같은 장기 옵션을 읽고 Frame 인자 사본으로 대여를 교체하지 않게 한다.
+void RawCampaignParticles::BindWeakenedMana(const bool& current) {
+    if (burningSources_.sharedWeakenedMana && burningSources_.sharedWeakenedMana!=&current) throw std::invalid_argument("연소 HP의 약화 전역 중복 다른 주소 연결");burningSources_.sharedWeakenedMana=&current;
+}
 SoundView RawCampaignParticles::CurrentView() const { auto view=view_;if (cameraView_) { view.cameraX=cameraView_->pixels[0];view.cameraY=cameraView_->pixels[1]; }return view; }
 void RawCampaignParticles::RefreshCamera() { const auto view=CurrentView();frame_.cameraX=cameraView_ ? std::bit_cast<float>(cameraView_->pixelFloatBits[0]) : static_cast<float>(view.cameraX);frame_.cameraY=cameraView_ ? std::bit_cast<float>(cameraView_->pixelFloatBits[1]) : static_cast<float>(view.cameraY);constructionFrame_.cameraX=burningFrame_.cameraX=frame_.cameraX;constructionFrame_.cameraY=burningFrame_.cameraY=frame_.cameraY; }
 }

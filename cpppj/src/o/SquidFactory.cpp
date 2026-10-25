@@ -129,6 +129,10 @@ Sid SquidFactory::Create(std::uint32_t type,std::uint32_t flags) {
 }
 // 할당/생성 연결에서 월드 혼합을 거부하기 위한 참조다.
 const SidPool& SquidFactory::Pool() const { return pool_; }
+// 현재 생성 HP가 사용하는 같은 원문 전역만 빌리고 다른 owner로 바꾸지 않는다.
+void SquidFactory::BindWeakenedMana(const bool& current) {
+    if (sharedWeakenedMana_ && sharedWeakenedMana_!=&current) throw std::invalid_argument("생성 HP의 약화 전역 중복 다른 주소 연결");sharedWeakenedMana_=&current;
+}
 Sid SquidFactory::CreateContained(std::uint32_t flags) {
     return SquidForms(pool_).Create(kContainedType,flags);
 }
@@ -176,7 +180,7 @@ void SquidFactory::PostCreate(Sid sid) {
     bytes[patch ? 34 : 32]=0;
     const bool needsHp=(type.flags2&kDaisFlag) ? (bytes[patch ? 40 : 35]&1)!=0 : (type.flags1&TypeFlag1::kHasHitPoints)!=0;
     if (needsHp) {
-        const auto hp=weakenedMana_ && bytes[kType]==kManaType ? type.maxHitPoints/4 : type.maxHitPoints;
+        const auto hp=(sharedWeakenedMana_ ? *sharedWeakenedMana_ : weakenedMana_) && bytes[kType]==kManaType ? type.maxHitPoints/4 : type.maxHitPoints;
         Put(bytes,kHp,static_cast<std::uint32_t>(hp),patch ? 4 : 2);
     }
 }
