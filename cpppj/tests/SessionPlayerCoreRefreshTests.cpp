@@ -4,6 +4,7 @@
 #include "client/ClientCoreDataGlobals.h"
 #include "client/ClientGameplayGlobals.h"
 #include "client/ClientPlayerRecords.h"
+#include "o/RawFortTerritorySave.h"
 #include <algorithm>
 #include <array>
 #include <stdexcept>
@@ -95,4 +96,27 @@ TEST_CASE(SessionPlayerCoreRefresh_UnknownSelectedVirtualKeepsTechnologyPrefix) 
     try { session.RefreshCurrentPlayerCore(); }catch (const std::logic_error& error) { rejected=std::string(error.what()).find("가상80몸체")!=std::string::npos; }
     CoreRefreshPut(raw,0,0x507950U); // 같은실제생성VT로복구한뒤Session을소멸한다.원문중단효과를rollback한것으로합산하지않는다.
     CHECK(rejected && CoreRefreshRead(current,6)==0x11U && current[5]==0);
+}
+
+// 실제 지도 로더가 Client의 섬/청크에 쓰고 같은 Session의 count와 Territory snapshot이 현재 공유 물리를 읽는다.
+TEST_CASE(SessionIslandChunkStorage_ActualLoadAndSnapshotUseSameCurrentRecords) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);CoreRefreshSessionDevices devices;auto surface=MakeRawSurfaceStorage(assets.game);auto templates=std::make_shared<CampaignTemplateStorage>(); // 실제 파일은 읽기만 하고 Session/Template stream은 독립 소유한다.
+    auto services=devices.Make(false);services.surfaceStorage=surface;services.templateStorage=templates;const auto* islands=surface->islands.records.data();const auto* chunks=surface->chunks.Entries().data(); // 전체 교체 대신 같은 고정 물리인지 관측한다.
+    auto fort=FortTemplate::Parse(assets.files.Read("d/bc8fury76.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"bc8fury76",std::move(services));session.Load();
+    const auto count=session.IslandCount();CHECK(count>0 && count<=100 && CoreRefreshRead(surface->islands.records,0)==count && session.World().Storage()==surface);
+    CoreRefreshPut(surface->islands.records,0,count-1);CHECK(session.IslandCount()==count-1);CoreRefreshPut(surface->islands.records,0,count); // 현재 consumer가 constructor 때의 사본을 읽는지 구별한 뒤 실제 지도 count로 되돌린다.
+    const auto slot=session.TemplateOwner();const auto original=templates->Template(slot).Section("Territory");std::int32_t selectedRegion=-1;ChunkEntry* selectedChunk{}; // 실제 현재 지도와 활성 원문 Territory에서만 저장 대상 하나를 찾는다.
+    for (std::int32_t region=0;region<20 && !selectedChunk;++region) { // 일반 snapshot은 기존record의 bit1이 있는 현재 지역만 덮어쓴다.
+        if (original.size()<120 || !(original[static_cast<std::size_t>(region)*6+1]&1U)) continue;
+        const auto island=FindFortTerritoryIsland(surface->islands.records,session.Core().ownerMode.fort,static_cast<std::int32_t>(slot),region);if (island==127) continue; // 실제 owner/존재 관문을 그대로 사용한다.
+        for (int y=0;y<surface->chunks.YLength() && !selectedChunk;++y) { // 실제 writer와 같은 y 바깥/x 안쪽 조회 순서다.
+            for (int x=0;x<surface->chunks.XLength();++x) { // 첫 실제 일치 record만 현재 입력으로 바꾼다.
+                auto& entry=surface->chunks.At(x,y);if (entry.island==island) { selectedRegion=region;selectedChunk=&entry;break; }
+            }
+        }
+    }
+    CHECK(selectedChunk && selectedRegion>=0);if (!selectedChunk) throw std::logic_error("공유 섬/청크 검사의 실제 저장 대상 없음");
+    selectedChunk->record[4]=0x4d;selectedChunk->record[5]=0x72;session.SnapshotFortTerritory(slot);const auto saved=templates->Template(slot).Section("Territory"); // 전체 파일 저장이나 임의 좌표 생성 없이 같은 실제 snapshot reader를 실행한다.
+    CHECK(saved.size()==120 && saved[static_cast<std::size_t>(selectedRegion)*6+4]==0x4d && saved[static_cast<std::size_t>(selectedRegion)*6+5]==0x72);
+    CHECK(surface->islands.records.data()==islands && surface->chunks.Entries().data()==chunks); // loaded 이후 reader도 최초 배열/지도 물리를 유지한다.
 }

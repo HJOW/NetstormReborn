@@ -15,6 +15,25 @@ constexpr std::int32_t kUnassignedFirstRegion=127;
 std::int32_t SignedByte(std::uint32_t value) { return static_cast<std::int32_t>(std::bit_cast<std::int8_t>(static_cast<std::uint8_t>(value))); }
 // CD isValid의초기검사는float변환이 아닌원본DWORD의signed양수검사다.
 bool PositiveBits(float value) { return std::bit_cast<std::int32_t>(value)>0; }
+// 실제 필드의 낮은 BYTE부터 쓰며 정렬·구조체 padding을 가정하지 않는다.
+void WriteIslandField(std::span<std::uint8_t> records,std::size_t offset,std::uint32_t value,std::size_t width=4) {
+    for (std::size_t byte=0;byte<width;++byte) records[offset+byte]=static_cast<std::uint8_t>(value>>(byte*8)); // 해당 원문 필드의 폭만 쓴다.
+}
+// Delete와 전체 Reset은 같은 한 기록 몸체를 사용하며 물리 밖 입력은 쓰기 전에 거부한다.
+void ResetIslandRecord(std::span<std::uint8_t> records,std::int32_t island) {
+    if (records.size()!=RawIslandStorage::kBytes || island<0 || island>=100) throw std::out_of_range("Island Reset 실제3204BYTE/기록 범위 오류");
+    const auto record=4+static_cast<std::size_t>(island)*kStride; // count 다음의 현재32BYTE 기록 시작이다.
+    WriteIslandField(records,record,0);WriteIslandField(records,record+4,0);WriteIslandField(records,record+8,0);
+    WriteIslandField(records,record+12,255,1);WriteIslandField(records,record+13,0,1);
+    WriteIslandField(records,record+20,kUnsetBounds);WriteIslandField(records,record+16,kUnsetBounds);
+    WriteIslandField(records,record+28,kUnsetBounds);WriteIslandField(records,record+24,kUnsetBounds);
+}
+}
+// Session 없는 cleanup도 같은 물리의100행 지정 필드와 마지막 count를 직접 초기화한다.
+void ResetRawIslandRecords(std::span<std::uint8_t> records) {
+    if (records.size()!=RawIslandStorage::kBytes) throw std::invalid_argument("Island Reset 실제3204BYTE 범위 오류");
+    for (std::int32_t island=0;island<100;++island) ResetIslandRecord(records,island); // 실제100행을 모두 쓰며 padding2BYTE는 유지한다.
+    WriteIslandField(records,0,0);
 }
 // 실제3204바이트저장소와필수하위효과·기존모드/Player/목록을확인한다.
 RawIslandRuntime::RawIslandRuntime(const SidPool& pool,const SquidHash& hash,std::span<std::uint8_t> records,
@@ -42,15 +61,11 @@ std::size_t RawIslandRuntime::Record(std::int32_t island) {
 }
 // 원본은DWORD3개/BYTE2개/float4개만초기화한다.
 void RawIslandRuntime::ResetRecord(std::int32_t island) {
-    const auto record=Record(island);Write(record,0);Write(record+4,0);Write(record+8,0);Write(record+12,255,1);Write(record+13,0,1);
-    // 원본float4개는모두같은비트이며padding2BYTE는쓰지않는다.
-    for (std::size_t index=0;index<4;++index) Write(record+16+index*4,kUnsetBounds);
+    ResetIslandRecord(records_,island);
 }
 // count와100개기록의실제Reset이며배치축약IslandList를새로만들지않는다.
 void RawIslandRuntime::Reset() {
-    // 원본은100개를항상끝까지초기화한다.
-    for (std::int32_t island=0;island<100;++island) ResetRecord(island);
-    Write(0,0);
+    ResetRawIslandRecords(records_);
 }
 // 실제unsignedDWORD count를진단/일반소비자에전달한다.
 std::uint32_t RawIslandRuntime::Count() const { return Read(0); }

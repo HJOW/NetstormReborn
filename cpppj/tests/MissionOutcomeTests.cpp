@@ -167,3 +167,14 @@ TEST_CASE(MissionOutcome_RejectsMissingHooksAndForeignReward) {
     std::vector<RiftTypeRecord> types(171);SquidPostPopState bookkeeping;SquidRewardState rewardState;SquidReward reward(other,types,bookkeeping,rewardState,nullptr);
     rejected=false;try { MakeMissionOutcomeHooks(pool,reward,{}); } catch (const std::invalid_argument&) { rejected=true; }CHECK(rejected);
 }
+
+// 실제 dead/captured 조회가 공유표의2/1/0 변경을 즉시 읽으며 데이터 reset도 같은 주소에 적용된다.
+TEST_CASE(PriestOwnerState_OutcomeReadsCurrentSharedTableAfterDataReset) {
+    SidPool pool(OriginalEdition::Patch1078,kOutcomeCapacity);PriestPostPopState priests;MissionOutcomeState state;std::array<std::uint32_t,kPlayerCount+1> shared{};shared.fill(31);priests.ownerState.fill(2);priests.sharedOwnerState=&shared;
+    priests.priests.entries={50,60,77};priests.priests.count=1;state.players[1].flags=0x22;MissionOutcomeHooks hooks;
+    hooks.maxHitPoints=[](Sid)->int { throw std::logic_error("사제 owner 상태 조회에서HP선택"); };hooks.regionOwner=[](float,float)->std::uint32_t { throw std::logic_error("사제 owner 상태 조회에서지역선택"); };
+    hooks.section=[](std::string_view)->bool { throw std::logic_error("사제 owner 상태 조회에서Tell선택"); };hooks.closeTransientGumps=hooks.onSection=[] { throw std::logic_error("사제 owner 상태 조회에서UI선택"); };
+    RawMissionOutcome outcome(pool,priests,state,std::move(hooks));const auto entries=priests.priests.entries;const auto fallback=priests.ownerState;
+    shared[1]=2;CHECK(outcome.PriestDead(1) && !outcome.PriestCaptured(1));shared[1]=1;CHECK(!outcome.PriestDead(1) && outcome.PriestCaptured(1));ResetPriestOwnerState(priests.OwnerState(),1);
+    CHECK(!outcome.PriestDead(1) && !outcome.PriestCaptured(1) && shared[1]==0 && shared[0]==31);CHECK(priests.ownerState==fallback && priests.priests.entries==entries && priests.priests.count==1);
+}

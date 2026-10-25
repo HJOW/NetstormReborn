@@ -37,12 +37,12 @@ bool RawMissionOutcome::ValidPlayer(std::uint32_t player) const {
 }
 // 활성 플래그/ownerState를 매 조회마다 읽는다. captured 상태1도 생존으로 본다.
 bool RawMissionOutcome::PriestDead(std::uint32_t player) const {
-    return !ValidPlayer(player) || !(PlayerFlags(player)&kActive) || priests_.ownerState[player]==2;
+    return !ValidPlayer(player) || !(PlayerFlags(player)&kActive) || priests_.OwnerState()[player]==2;
 }
 // 범위 밖 참이라는 원본 특수 결과와 inactive 거짓을 구분한다.
 bool RawMissionOutcome::PriestCaptured(std::uint32_t player) const {
     if (!ValidPlayer(player)) return true;
-    return (PlayerFlags(player)&kActive) && priests_.ownerState[player]==1;
+    return (PlayerFlags(player)&kActive) && priests_.OwnerState()[player]==1;
 }
 // bool 조건 외의 원본 DWORD 잠금값은 비제로 전체를 처리 완료로 본다. false 조건은 잠금을 지우지 않는다.
 bool RawMissionOutcome::Event(std::uint32_t& latch,bool condition,std::string_view name) const {

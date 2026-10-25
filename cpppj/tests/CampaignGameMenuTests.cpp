@@ -53,5 +53,5 @@ TEST_CASE(CampaignGameMenus_CurrentWorldReaders) {
     const auto amount=session.Sp(1);session.SetSp(1,1234.5F);CHECK(hooks.money(1)==1234.5F);session.SetSp(1,amount);
     CHECK(hooks.templeCost()==session.Core().types[123].cost); // 같은불변원본TYPE의123비용을사용하고생산품133과혼동하지않는다.
     const auto logged=hooks.loggedIn();Put(records,8*180+0x2c,808);Put(records,8*180+0x50,3);CHECK(hooks.loggedIn()==logged+1);Put(records,8*180+0x2c,0);CHECK(hooks.loggedIn()==logged);
-    hooks.refreshPriest(1);CHECK(session.Priests().Priests().ownerState[1]==0); // 같은원본사제목록의갱신결과를직접읽는다.
+    hooks.refreshPriest(1);CHECK(session.Priests().Priests().OwnerState()[1]==0); // 같은원본사제목록의갱신결과를직접읽는다.
 }

@@ -1,0 +1,788 @@
+{
+  "unit": "434-435",
+  "goalComplete": false,
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "created": "2026-10-25T20:39:05.632018",
+  "sourceAttempt": 1,
+  "focusedAttempt": 1,
+  "sources": {
+    "cpppj/src/client/RawCampaignSession.cpp": "e75a253f7d93258618e7567c81d4fb20c9cff8f871f3f1b6e042bf50ee5c20b5",
+    "cpppj/src/client/RawSurfaceStorage.cpp": "66ec50d654fe00b2b1353f4b0d2a5822f53cbf5d4dce171a7c2b91948c872300",
+    "cpppj/src/client/RawSurfaceWorld.h": "42d4723d64d20d5b8c2d52145f418d22ba8b175be8f4547b24d32b82132fd8a8",
+    "cpppj/src/o/ChunkMap.cpp": "ce1463c7bfdafd9cae59702878523e975b6c06b7989e45a3d039c9da185df2ac",
+    "cpppj/src/o/ChunkMap.h": "05aa97313d20875e250607f8a8e9c36adcc4b194ba60bbbd3aaf2c8c7086d3c2",
+    "cpppj/src/o/RawIslandRuntime.cpp": "8658f626cd5524e8a9ca4f1bec628db17d6501209ba4250b835dcf2871b6c619",
+    "cpppj/src/o/RawIslandRuntime.h": "d65a8114a8a84b5fa69341be627491a38a7ef748c26f9d0923630d9116bd2027",
+    "cpppj/src/o/RawMissionOutcome.cpp": "14668380cfc9f52a52ed484a92f01eb793f4210891634dfd74fe772ad98eb2da",
+    "cpppj/src/o/RawPriestParticipation.cpp": "38f646554602016f503018a8410646edd2aae156bd81b307e8af6e6d10c587f0",
+    "cpppj/src/o/RawPriestPostPop.cpp": "d150b633710b35b11f5571b98e6dc0d9ffb34d3633d819dbdbf0d691026b0cb6",
+    "cpppj/src/o/RawPriestPostPop.h": "7930a03e813ec540a01e322b8efcb8a54e23042aad1e6efa669260c626bccc3a",
+    "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp": "5b950ab7c443c5e054fe53bb6f0b694989c4570cdcb9b55c09f64b4a94357051",
+    "cpppj/tests/CampaignGameMenuTests.cpp": "c246ccf1607f9a6ab275342c75e864fcd057a2ab6ed1deda6ed2a91521cdff68",
+    "cpppj/tests/CampaignSessionTests.cpp": "20dd2f4e532ec24601a25f76f202f28634dbc29cad7d36bee6bf3f74e9dca2ec",
+    "cpppj/tests/IslandRuntimeTests.cpp": "6f1d6934b7109b16b401dfc45b32dbbbafaf7b59c98b501b36ed34b869c60463",
+    "cpppj/tests/MissionOutcomeTests.cpp": "46da3a06d8f7a3816db0ec8f7719e8b8f9248f233a9754f1967174d0d24622a7",
+    "cpppj/tests/PriestParticipationTests.cpp": "22cfcaa2709acabee4bf8d39400f4d4b0070d79295470c46cbd59d66f2b25b0c",
+    "cpppj/tests/PriestPostPopTests.cpp": "44433c4da8b677ecfe9542bb100f8fc04310e9f5c383623ea445be9d4353df16",
+    "cpppj/tests/RawSurfaceStorageTests.cpp": "10471cc9009b72ec031b83f8087815ef10f51c675226501810821d7658f52dce",
+    "cpppj/tests/SessionPlayerCoreRefreshTests.cpp": "b2de3f3898a1cb6d64ccdaaeb3a890bec888d1e3f007783f9ea9ac8ef84552cd",
+    "cpppj/tests/TerritoryTests.cpp": "fd16caeb44b4c62da71c26101c5c87450b610594448a20344da535012611a90e"
+  },
+  "artifacts": {
+    "cpppj/build/bin/Release/NetstormCpp.exe": "9c0d1211f460639e88b9199c42ce6fba3bfd090b2cdebca27cf21c1f8251deaa",
+    "cpppj/build/bin/Release/netstorm_tests.exe": "b5ac5e60ab49e951df7ae3d59592d1370c28a3f79dbb34854201270aa31db2f2",
+    "cpppj/build/bin/Release/netstorm_cloud_probe.exe": "8c45bdbe3704ee56d6338264c22364fffa4b3b5b8dca52aa4dd4bcf766b8f580",
+    "cpppj/build/bin/Release/netstorm_cloud_render_probe.exe": "7bf67fefd00d613caf1f08c2c74c03e3382a08a8ac8b57a9faea8175f7f2b3c8"
+  },
+  "focused": [
+    {
+      "filter": "IslandRuntime_",
+      "exitCode": 0,
+      "tests": 8,
+      "failures": 0,
+      "seconds": 1.2179,
+      "log": "extracted/cpp-world-reset-storages-434435-focused1/IslandRuntime_.log",
+      "sha256": "60dc730f093c3d451a15b89a2144cc1cd92b2ef0d44724171d81a3cd9c96f876",
+      "caseNames": [
+        "IslandRuntime_ReplaysPatch",
+        "IslandRuntime_ReplaysCd",
+        "IslandRuntime_PatchSharedPlayerRecords",
+        "IslandRuntime_CdSharedPlayerRecords",
+        "IslandRuntime_DataOnlyResetMatchesExistingNativeBothEditions",
+        "IslandRuntime_DataOnlyStorageAliasesRuntimeAndRejectsWrongWidth",
+        "IslandRuntime_RejectsMissingEffectsAndPhysicalOverflow",
+        "IslandRuntime_ActualClientOwnersKeepWorldIncrementAndMapStoreSeparate"
+      ]
+    },
+    {
+      "filter": "ChunkMap_",
+      "exitCode": 0,
+      "tests": 3,
+      "failures": 0,
+      "seconds": 0.2775,
+      "log": "extracted/cpp-world-reset-storages-434435-focused1/ChunkMap_.log",
+      "sha256": "2b6ea898bf17019866f5effdc8745b9b1daee365a2e589c0d11f97aac76f7d13",
+      "caseNames": [
+        "ChunkMap_DefaultsAndClamping_MatchOriginal",
+        "ChunkMap_ResetKeepsModeAndInactivePhysicalEntries",
+        "ChunkMap_ResetCanBeReusedByCleanupAndEditorPrefix"
+      ]
+    },
+    {
+      "filter": "RawSurfaceStorage_",
+      "exitCode": 0,
+      "tests": 17,
+      "failures": 0,
+      "seconds": 0.4935,
+      "log": "extracted/cpp-world-reset-storages-434435-focused1/RawSurfaceStorage_.log",
+      "sha256": "f44ec736f53a82b08270f47124fca50c7cd208c19528e683d42ab96b4428b876",
+      "caseNames": [
+        "RawSurfaceStorage_ActualBothEditionsAndSamePhysicalArrays",
+        "RawSurfaceStorage_NextWorldResetsPoolAndSpaceWithoutReplacingArrays",
+        "RawSurfaceStorage_DuplicateAndInvalidWorldKeepCurrentPhysicalBytes",
+        "RawSurfaceStorage_LeaseRetainsDataUntilModulesAreGone",
+        "RawSurfaceStorage_PreparedWorldPreservesActualMemoryAndModes",
+        "RawSurfaceStorage_GraphPhysicalArraysOutliveWorldAndPreparedLease",
+        "RawSurfaceStorage_GraphPreparedConstructionFailureKeepsCurrentBytes",
+        "RawSurfaceStorage_GraphGeneralAcquireRetainsFreshCompatibility",
+        "RawSurfaceStorage_TotalMadeLifetimeAndPreparedControlIsolation",
+        "RawSurfaceStorage_TotalMadePreparedConstructionFailureKeepsAllTables",
+        "RawSurfaceStorage_TotalMadeGeneralFreshIsSeparateFromNativeReset255",
+        "RawSurfaceStorage_TotalMadeSharingLeavesPlayerFactoryBindingsWorldLocal",
+        "RawSurfaceStorage_IslandAndChunkPreparedLeaseKeepsPhysicalBytes",
+        "RawSurfaceStorage_IslandAndChunkPreparedFailureDoesNotReset",
+        "RawSurfaceStorage_IslandAndChunkGeneralAcquireRetainsFreshCompatibility",
+        "RawSurfaceStorage_PriestOwnerStateHasLongLifetimeAndSeparateFreshPolicy",
+        "RawSurfaceStorage_PriestOwnerStateSurvivesPreparedConstructionFailure"
+      ]
+    },
+    {
+      "filter": "SessionIslandChunkStorage_",
+      "exitCode": 0,
+      "tests": 1,
+      "failures": 0,
+      "seconds": 0.5523,
+      "log": "extracted/cpp-world-reset-storages-434435-focused1/SessionIslandChunkStorage_.log",
+      "sha256": "23af3503ce1fa176157195e5160ee3cbc5394d66300cde62ba687528f60f78fc",
+      "caseNames": [
+        "SessionIslandChunkStorage_ActualLoadAndSnapshotUseSameCurrentRecords"
+      ]
+    },
+    {
+      "filter": "PriestOwnerState_",
+      "exitCode": 0,
+      "tests": 4,
+      "failures": 0,
+      "seconds": 0.3321,
+      "log": "extracted/cpp-world-reset-storages-434435-focused1/PriestOwnerState_.log",
+      "sha256": "db3ea905c06f4c7e0c4b73125d6b76f0b16d6d19676ef270069dfe810c243913",
+      "caseNames": [
+        "PriestOwnerState_ParticipationWritesSharedTableWithoutChangingList",
+        "PriestOwnerState_OutcomeReadsCurrentSharedTableAfterDataReset",
+        "PriestOwnerState_DataOnlyResetKeepsListSlotZeroAndInvalidDiagnostics",
+        "PriestOwnerState_PostPopWritesCurrentSharedTableAfterEffects"
+      ]
+    },
+    {
+      "filter": "priest_postpop_",
+      "exitCode": 0,
+      "tests": 6,
+      "failures": 0,
+      "seconds": 0.406,
+      "log": "extracted/cpp-world-reset-storages-434435-focused1/priest_postpop_.log",
+      "sha256": "18ef4b323511f619f13edb35044ca769c37c8c619ad3d653498b88f872aa5ed1",
+      "caseNames": [
+        "priest_postpop_patch_prefix_x86",
+        "priest_postpop_cd_prefix_x86",
+        "priest_postpop_1037_prefix_x86",
+        "priest_postpop_prefix_rejects_invalid_bindings_before_effects",
+        "priest_postpop_allocation_failure_skips_hp_lookup_and_creation",
+        "priest_postpop_prefix_binds_real_process_host_and_owner"
+      ]
+    },
+    {
+      "filter": "PriestParticipation_",
+      "exitCode": 0,
+      "tests": 3,
+      "failures": 0,
+      "seconds": 2.0444,
+      "log": "extracted/cpp-world-reset-storages-434435-focused1/PriestParticipation_.log",
+      "sha256": "e3e389fe29fcaa0e53cbf1bf540598cfc60b1aeb5889aa13f76e09815ea51e31",
+      "caseNames": [
+        "PriestParticipation_ReplaysCompleteNativeBodies",
+        "PriestParticipation_PreservesLazyReadsAndDwordOwners",
+        "PriestParticipation_RejectsDifferentPoolAndBrokenContainedChain"
+      ]
+    },
+    {
+      "filter": "MissionOutcome_",
+      "exitCode": 0,
+      "tests": 4,
+      "failures": 0,
+      "seconds": 0.9077,
+      "log": "extracted/cpp-world-reset-storages-434435-focused1/MissionOutcome_.log",
+      "sha256": "74bcbd96a513306e1a02dab3429deba64108b22bd27003a359777d9daf67beb3",
+      "caseNames": [
+        "MissionOutcome_IndependentPeFixture",
+        "MissionOutcome_CurrentInputsNativeCallbacks",
+        "MissionOutcome_ReentrantEventCommitsAfterCallbacks",
+        "MissionOutcome_RejectsMissingHooksAndForeignReward"
+      ]
+    },
+    {
+      "filter": "CampaignSession_PriestOwnerStatesUseActualSurfaceStorageAndDataReset",
+      "exitCode": 0,
+      "tests": 1,
+      "failures": 0,
+      "seconds": 0.466,
+      "log": "extracted/cpp-world-reset-storages-434435-focused1/CampaignSession_PriestOwnerStatesUseActualSurfaceStorageAndDataReset.log",
+      "sha256": "42ae65bb57341a7560b2ad614a85b7519bbfc2c116279ee46bd6e81ab641d295",
+      "caseNames": [
+        "CampaignSession_PriestOwnerStatesUseActualSurfaceStorageAndDataReset"
+      ]
+    },
+    {
+      "filter": "CampaignExistingEditorCheckpoint",
+      "exitCode": 0,
+      "tests": 26,
+      "failures": 0,
+      "seconds": 2.6856,
+      "log": "extracted/cpp-world-reset-storages-434435-focused1/CampaignExistingEditorCheckpoint.log",
+      "sha256": "c7b18162384e3bddbcaf8d694578faeee1904f39d9de2e4722db213f54927a9d",
+      "caseNames": [
+        "CampaignExistingEditorCheckpoint_DeferPreservesExistingOwnerAndDefaultStages",
+        "CampaignExistingEditorCheckpoint_DeferRejectsCampaignMode",
+        "CampaignExistingEditorCheckpoint_NormalReadFalseKeepsInvalidBranch",
+        "CampaignExistingEditorCheckpoint_FirstNotifyUsesActualWriterBeforeSubscriber",
+        "CampaignExistingEditorCheckpoint_FileTailThenActualWorldChatBoundary",
+        "CampaignExistingEditorCheckpoint_CoreWriteNaturalGateKeepsActualStorage",
+        "CampaignExistingEditorCheckpoint_CoreWriteManagerDiagnosticBeforeGate",
+        "CampaignExistingEditorCheckpoint_CoreWriteMetamapDiagnosticBeforeGate",
+        "CampaignExistingEditorCheckpoint_ActualCurrentNameSelectsWorkingFile",
+        "CampaignExistingEditorCheckpoint_ActualChatRuntimeAdvancesWorldAndSnapshot",
+        "CampaignExistingEditorCheckpoint_ActualPlayerUiCompletesAndReloads",
+        "CampaignExistingEditorCheckpoint_ActualCustomTest01PlayerUiAndFile",
+        "CampaignExistingEditorCheckpoint_AdoptsNativePlayersAndPreservesCoreUntilNextCleanup",
+        "CampaignExistingEditorCheckpoint_UiScopeCommitsOnlyAfterActualStateReturn",
+        "CampaignExistingEditorCheckpoint_UiTailFailureKeepsPublicAccessClosed",
+        "CampaignExistingEditorCheckpoint_UiTailCannotCommitEarlyReturnOrImmediate",
+        "CampaignExistingEditorCheckpoint_PreparedCtorPreservesSameClientState",
+        "CampaignExistingEditorCheckpoint_PreparedCtorKeepsSharedIslandAndChunkData",
+        "CampaignExistingEditorCheckpoint_PreparedCtorRejectsIncompleteOwnersBeforeBorrow",
+        "CampaignExistingEditorCheckpoint_ActualProductionFormsInsideInstallScope",
+        "CampaignExistingEditorCheckpoint_EditorWireQueuesNegativeSenderConstructionMoveAndSalvage",
+        "CampaignExistingEditorCheckpoint_EditorWireReadsCurrentChargeGateWithoutSenderNormalization",
+        "CampaignExistingEditorCheckpoint_EditorWireRejectsOwnedRegistrationBeforePublishing",
+        "CampaignExistingEditorCheckpoint_EditorWireRejectsForeignPlayersAndLoginBeforeBorrow",
+        "CampaignExistingEditorCheckpoint_ActivityWireUsesClientNineAndRetiresOnlyReceive",
+        "CampaignExistingEditorCheckpoint_ActivityCollisionPreservesAllPriorRegistrations"
+      ]
+    },
+    {
+      "filter": "CampaignGameMenus_",
+      "exitCode": 0,
+      "tests": 2,
+      "failures": 0,
+      "seconds": 0.5158,
+      "log": "extracted/cpp-world-reset-storages-434435-focused1/CampaignGameMenus_.log",
+      "sha256": "58f70c9ea9c0f1503a6bc658fc6114abb3a62300620a6816a940534b8c30b176",
+      "caseNames": [
+        "CampaignGameMenus_SharedSpAndTracking",
+        "CampaignGameMenus_CurrentWorldReaders"
+      ]
+    },
+    {
+      "filter": "SessionPlayerCoreRefresh_",
+      "exitCode": 0,
+      "tests": 3,
+      "failures": 0,
+      "seconds": 0.5735,
+      "log": "extracted/cpp-world-reset-storages-434435-focused1/SessionPlayerCoreRefresh_.log",
+      "sha256": "f623d14370471c14adc41cbf96b22cf23a9edfdb0c1b5596d70a7b83e310ac76",
+      "caseNames": [
+        "SessionPlayerCoreRefresh_CurrentLoginAliasAndActualDaisCount",
+        "SessionPlayerCoreRefresh_RequiresActualSelectionAndSupportsSharedCoreWithoutLogin",
+        "SessionPlayerCoreRefresh_UnknownSelectedVirtualKeepsTechnologyPrefix"
+      ]
+    },
+    {
+      "filter": "FortTerritory",
+      "exitCode": 0,
+      "tests": 7,
+      "failures": 0,
+      "seconds": 0.8006,
+      "log": "extracted/cpp-world-reset-storages-434435-focused1/FortTerritory.log",
+      "sha256": "34eacd285c9839a08a5e41825bc5ba483907c2e2f099caebe03c55993618932e",
+      "caseNames": [
+        "FortTerritoryRecover_IndependentNative974",
+        "FortTerritoryRecover_SelectedAndPhysicalBoundaries",
+        "FortTerritorySave_IndependentNativeParent",
+        "FortTerritorySave_IndependentNativeQueries",
+        "FortTerritorySave_IndependentNativeSeed",
+        "FortTerritorySave_CurrentMapAndStreamLifetime",
+        "CampaignSession_FortTerritorySaveCurrentWorld"
+      ]
+    },
+    {
+      "filter": "NormalTerrainWorldBinding_",
+      "exitCode": 0,
+      "tests": 3,
+      "failures": 0,
+      "seconds": 0.2841,
+      "log": "extracted/cpp-world-reset-storages-434435-focused1/NormalTerrainWorldBinding_.log",
+      "sha256": "f35363be73d3ccc7b10661bd84a960444d57bf9eba38badbe7123c2a11b10034",
+      "caseNames": [
+        "NormalTerrainWorldBinding_ActualNormalGenerationAndFarmRetype",
+        "NormalTerrainWorldBinding_ActualFarmCreateOwnerHpAndGameRandom",
+        "NormalTerrainWorldBinding_RejectsMissingEffectsAndUnrestoredBranches"
+      ]
+    },
+    {
+      "filter": "TutorialOne_",
+      "exitCode": 0,
+      "tests": 5,
+      "failures": 0,
+      "seconds": 0.548,
+      "log": "extracted/cpp-world-reset-storages-434435-focused1/TutorialOne_.log",
+      "sha256": "95a2adef8ad9c743b5d1fe1f6c91784cd7e904eb0e6bfdedc54beda24cef8b5a",
+      "caseNames": [
+        "TutorialOne_TotalMadeNative104",
+        "TutorialOne_TotalMadeSharedResetAndDirectHelperReplayNative104",
+        "TutorialOne_StageNative266",
+        "TutorialOne_SharedStateAndMutableList",
+        "CampaignTutorialOne_ActualSessionFrameAndInputPauseOwnership"
+      ]
+    },
+    {
+      "filter": "CampaignLifetime_",
+      "exitCode": 0,
+      "tests": 4,
+      "failures": 0,
+      "seconds": 0.3452,
+      "log": "extracted/cpp-world-reset-storages-434435-focused1/CampaignLifetime_.log",
+      "sha256": "5f07a16a1104c2f07864d90283e4e140f62c0a30ba3cdc47726d4be762b50c37",
+      "caseNames": [
+        "CampaignLifetime_TotalMadePopAndDestroyUseSharedPhysicalTables",
+        "CampaignLifetime_PlayerNoticeIndependentPeFixture",
+        "CampaignLifetime_EmptyBaseAndContentUseSameDeletion",
+        "CampaignLifetime_RejectsMissingOrLateDeletionBinding"
+      ]
+    },
+    {
+      "filter": "ConnectionActivity",
+      "exitCode": 0,
+      "tests": 13,
+      "failures": 0,
+      "seconds": 0.6521,
+      "log": "extracted/cpp-world-reset-storages-434435-focused1/ConnectionActivity.log",
+      "sha256": "ccc330b404bbb7a0d1418e8f47dd49d3d206c51733f80867ebf63b27add4185c",
+      "caseNames": [
+        "ConnectionActivity_WallFrameStoresAndCurrentServerFollowNativeOrder",
+        "ConnectionActivity_ClientEraseAndFrameZeroAreNotNormalized",
+        "ConnectionActivity_Signed64WallConversionKeepsLowDword",
+        "ConnectionActivity_IndependentTablesAndExplicitGapSurviveAcrossBodies",
+        "ConnectionActivity_InvalidSenderRejectsBeforeWallOrStores",
+        "ConnectionActivity_RegistrationUsesExistingDispatcherAndPreservesLength",
+        "ConnectionActivitySession_ActualClientOwnerSurvivesUnselectedSessions",
+        "ConnectionActivitySession_ZoneAndQueuedWireUseActualClientTables",
+        "ConnectionActivitySession_CurrentServerAndFinalUiEffectsStayAliased",
+        "ConnectionActivitySession_MissingSelectedHooksFailAtNativeBoundary",
+        "ConnectionActivitySession_TimerRemoteStatusUsesSameModuleWithoutPacket",
+        "ConnectionActivityTransport_ClientObjectPresenceIsSeparateFromFlags",
+        "ConnectionActivityTransport_FailedConnectKeepsPartialEffectsAndUnpublishedPresence"
+      ]
+    },
+    {
+      "filter": "RawSurfaceWorld_",
+      "exitCode": 0,
+      "tests": 7,
+      "failures": 0,
+      "seconds": 0.325,
+      "log": "extracted/cpp-world-reset-storages-434435-focused1/RawSurfaceWorld_.log",
+      "sha256": "7f50abce8e01778f80ed6307873d585fd13227d45328e0540b1912af2ca1a56e",
+      "caseNames": [
+        "RawSurfaceWorld_PausedRegularResumesWithClientGameClock",
+        "RawSurfaceWorld_HardBridgeAndPendingMissionTeardown",
+        "RawSurfaceWorld_DisplaySuppressionAndDeviceReplacement",
+        "RawSurfaceWorld_InvalidLoadRejectedBeforeAllocation",
+        "RawSurfaceWorld_RuntimeSharesStorageAndCurrentDispatch",
+        "RawSurfaceWorld_RuntimeRejectsIncompleteOrLateBinding",
+        "RawSurfaceWorld_CampaignFinishPreservesParentGraph"
+      ]
+    },
+    {
+      "filter": "CampaignSession_LocalLogin",
+      "exitCode": 0,
+      "tests": 4,
+      "failures": 0,
+      "seconds": 3.9778,
+      "log": "extracted/cpp-world-reset-storages-434435-focused1/CampaignSession_LocalLogin.log",
+      "sha256": "daa8ed2e8fce24d14ce9143b7f90447cdcd212372f7664274f084b41933ecb40",
+      "caseNames": [
+        "CampaignSession_LocalLoginActualHandshakeAndWorldLoad",
+        "CampaignSession_LocalLoginMissionStartAiAlliances",
+        "CampaignSession_LocalLoginWorkshopHasActualPlacement",
+        "CampaignSession_LocalLoginGeneratorExtendsCannonFirstHit"
+      ]
+    }
+  ],
+  "originalGameExecuted": false,
+  "fullCTestExecuted": true,
+  "productGuiExecuted": true,
+  "completed": true,
+  "passed": true,
+  "focusedObservations": 121,
+  "focusedUnique": 121,
+  "focusedCaseNames": [
+    "CampaignExistingEditorCheckpoint_ActivityCollisionPreservesAllPriorRegistrations",
+    "CampaignExistingEditorCheckpoint_ActivityWireUsesClientNineAndRetiresOnlyReceive",
+    "CampaignExistingEditorCheckpoint_ActualChatRuntimeAdvancesWorldAndSnapshot",
+    "CampaignExistingEditorCheckpoint_ActualCurrentNameSelectsWorkingFile",
+    "CampaignExistingEditorCheckpoint_ActualCustomTest01PlayerUiAndFile",
+    "CampaignExistingEditorCheckpoint_ActualPlayerUiCompletesAndReloads",
+    "CampaignExistingEditorCheckpoint_ActualProductionFormsInsideInstallScope",
+    "CampaignExistingEditorCheckpoint_AdoptsNativePlayersAndPreservesCoreUntilNextCleanup",
+    "CampaignExistingEditorCheckpoint_CoreWriteManagerDiagnosticBeforeGate",
+    "CampaignExistingEditorCheckpoint_CoreWriteMetamapDiagnosticBeforeGate",
+    "CampaignExistingEditorCheckpoint_CoreWriteNaturalGateKeepsActualStorage",
+    "CampaignExistingEditorCheckpoint_DeferPreservesExistingOwnerAndDefaultStages",
+    "CampaignExistingEditorCheckpoint_DeferRejectsCampaignMode",
+    "CampaignExistingEditorCheckpoint_EditorWireQueuesNegativeSenderConstructionMoveAndSalvage",
+    "CampaignExistingEditorCheckpoint_EditorWireReadsCurrentChargeGateWithoutSenderNormalization",
+    "CampaignExistingEditorCheckpoint_EditorWireRejectsForeignPlayersAndLoginBeforeBorrow",
+    "CampaignExistingEditorCheckpoint_EditorWireRejectsOwnedRegistrationBeforePublishing",
+    "CampaignExistingEditorCheckpoint_FileTailThenActualWorldChatBoundary",
+    "CampaignExistingEditorCheckpoint_FirstNotifyUsesActualWriterBeforeSubscriber",
+    "CampaignExistingEditorCheckpoint_NormalReadFalseKeepsInvalidBranch",
+    "CampaignExistingEditorCheckpoint_PreparedCtorKeepsSharedIslandAndChunkData",
+    "CampaignExistingEditorCheckpoint_PreparedCtorPreservesSameClientState",
+    "CampaignExistingEditorCheckpoint_PreparedCtorRejectsIncompleteOwnersBeforeBorrow",
+    "CampaignExistingEditorCheckpoint_UiScopeCommitsOnlyAfterActualStateReturn",
+    "CampaignExistingEditorCheckpoint_UiTailCannotCommitEarlyReturnOrImmediate",
+    "CampaignExistingEditorCheckpoint_UiTailFailureKeepsPublicAccessClosed",
+    "CampaignGameMenus_CurrentWorldReaders",
+    "CampaignGameMenus_SharedSpAndTracking",
+    "CampaignLifetime_EmptyBaseAndContentUseSameDeletion",
+    "CampaignLifetime_PlayerNoticeIndependentPeFixture",
+    "CampaignLifetime_RejectsMissingOrLateDeletionBinding",
+    "CampaignLifetime_TotalMadePopAndDestroyUseSharedPhysicalTables",
+    "CampaignSession_FortTerritorySaveCurrentWorld",
+    "CampaignSession_LocalLoginActualHandshakeAndWorldLoad",
+    "CampaignSession_LocalLoginGeneratorExtendsCannonFirstHit",
+    "CampaignSession_LocalLoginMissionStartAiAlliances",
+    "CampaignSession_LocalLoginWorkshopHasActualPlacement",
+    "CampaignSession_PriestOwnerStatesUseActualSurfaceStorageAndDataReset",
+    "CampaignTutorialOne_ActualSessionFrameAndInputPauseOwnership",
+    "ChunkMap_DefaultsAndClamping_MatchOriginal",
+    "ChunkMap_ResetCanBeReusedByCleanupAndEditorPrefix",
+    "ChunkMap_ResetKeepsModeAndInactivePhysicalEntries",
+    "ConnectionActivitySession_ActualClientOwnerSurvivesUnselectedSessions",
+    "ConnectionActivitySession_CurrentServerAndFinalUiEffectsStayAliased",
+    "ConnectionActivitySession_MissingSelectedHooksFailAtNativeBoundary",
+    "ConnectionActivitySession_TimerRemoteStatusUsesSameModuleWithoutPacket",
+    "ConnectionActivitySession_ZoneAndQueuedWireUseActualClientTables",
+    "ConnectionActivityTransport_ClientObjectPresenceIsSeparateFromFlags",
+    "ConnectionActivityTransport_FailedConnectKeepsPartialEffectsAndUnpublishedPresence",
+    "ConnectionActivity_ClientEraseAndFrameZeroAreNotNormalized",
+    "ConnectionActivity_IndependentTablesAndExplicitGapSurviveAcrossBodies",
+    "ConnectionActivity_InvalidSenderRejectsBeforeWallOrStores",
+    "ConnectionActivity_RegistrationUsesExistingDispatcherAndPreservesLength",
+    "ConnectionActivity_Signed64WallConversionKeepsLowDword",
+    "ConnectionActivity_WallFrameStoresAndCurrentServerFollowNativeOrder",
+    "FortTerritoryRecover_IndependentNative974",
+    "FortTerritoryRecover_SelectedAndPhysicalBoundaries",
+    "FortTerritorySave_CurrentMapAndStreamLifetime",
+    "FortTerritorySave_IndependentNativeParent",
+    "FortTerritorySave_IndependentNativeQueries",
+    "FortTerritorySave_IndependentNativeSeed",
+    "IslandRuntime_ActualClientOwnersKeepWorldIncrementAndMapStoreSeparate",
+    "IslandRuntime_CdSharedPlayerRecords",
+    "IslandRuntime_DataOnlyResetMatchesExistingNativeBothEditions",
+    "IslandRuntime_DataOnlyStorageAliasesRuntimeAndRejectsWrongWidth",
+    "IslandRuntime_PatchSharedPlayerRecords",
+    "IslandRuntime_RejectsMissingEffectsAndPhysicalOverflow",
+    "IslandRuntime_ReplaysCd",
+    "IslandRuntime_ReplaysPatch",
+    "MissionOutcome_CurrentInputsNativeCallbacks",
+    "MissionOutcome_IndependentPeFixture",
+    "MissionOutcome_ReentrantEventCommitsAfterCallbacks",
+    "MissionOutcome_RejectsMissingHooksAndForeignReward",
+    "NormalTerrainWorldBinding_ActualFarmCreateOwnerHpAndGameRandom",
+    "NormalTerrainWorldBinding_ActualNormalGenerationAndFarmRetype",
+    "NormalTerrainWorldBinding_RejectsMissingEffectsAndUnrestoredBranches",
+    "PriestOwnerState_DataOnlyResetKeepsListSlotZeroAndInvalidDiagnostics",
+    "PriestOwnerState_OutcomeReadsCurrentSharedTableAfterDataReset",
+    "PriestOwnerState_ParticipationWritesSharedTableWithoutChangingList",
+    "PriestOwnerState_PostPopWritesCurrentSharedTableAfterEffects",
+    "PriestParticipation_PreservesLazyReadsAndDwordOwners",
+    "PriestParticipation_RejectsDifferentPoolAndBrokenContainedChain",
+    "PriestParticipation_ReplaysCompleteNativeBodies",
+    "RawSurfaceStorage_ActualBothEditionsAndSamePhysicalArrays",
+    "RawSurfaceStorage_DuplicateAndInvalidWorldKeepCurrentPhysicalBytes",
+    "RawSurfaceStorage_GraphGeneralAcquireRetainsFreshCompatibility",
+    "RawSurfaceStorage_GraphPhysicalArraysOutliveWorldAndPreparedLease",
+    "RawSurfaceStorage_GraphPreparedConstructionFailureKeepsCurrentBytes",
+    "RawSurfaceStorage_IslandAndChunkGeneralAcquireRetainsFreshCompatibility",
+    "RawSurfaceStorage_IslandAndChunkPreparedFailureDoesNotReset",
+    "RawSurfaceStorage_IslandAndChunkPreparedLeaseKeepsPhysicalBytes",
+    "RawSurfaceStorage_LeaseRetainsDataUntilModulesAreGone",
+    "RawSurfaceStorage_NextWorldResetsPoolAndSpaceWithoutReplacingArrays",
+    "RawSurfaceStorage_PreparedWorldPreservesActualMemoryAndModes",
+    "RawSurfaceStorage_PriestOwnerStateHasLongLifetimeAndSeparateFreshPolicy",
+    "RawSurfaceStorage_PriestOwnerStateSurvivesPreparedConstructionFailure",
+    "RawSurfaceStorage_TotalMadeGeneralFreshIsSeparateFromNativeReset255",
+    "RawSurfaceStorage_TotalMadeLifetimeAndPreparedControlIsolation",
+    "RawSurfaceStorage_TotalMadePreparedConstructionFailureKeepsAllTables",
+    "RawSurfaceStorage_TotalMadeSharingLeavesPlayerFactoryBindingsWorldLocal",
+    "RawSurfaceWorld_CampaignFinishPreservesParentGraph",
+    "RawSurfaceWorld_DisplaySuppressionAndDeviceReplacement",
+    "RawSurfaceWorld_HardBridgeAndPendingMissionTeardown",
+    "RawSurfaceWorld_InvalidLoadRejectedBeforeAllocation",
+    "RawSurfaceWorld_PausedRegularResumesWithClientGameClock",
+    "RawSurfaceWorld_RuntimeRejectsIncompleteOrLateBinding",
+    "RawSurfaceWorld_RuntimeSharesStorageAndCurrentDispatch",
+    "SessionIslandChunkStorage_ActualLoadAndSnapshotUseSameCurrentRecords",
+    "SessionPlayerCoreRefresh_CurrentLoginAliasAndActualDaisCount",
+    "SessionPlayerCoreRefresh_RequiresActualSelectionAndSupportsSharedCoreWithoutLogin",
+    "SessionPlayerCoreRefresh_UnknownSelectedVirtualKeepsTechnologyPrefix",
+    "TutorialOne_SharedStateAndMutableList",
+    "TutorialOne_StageNative266",
+    "TutorialOne_TotalMadeNative104",
+    "TutorialOne_TotalMadeSharedResetAndDirectHelperReplayNative104",
+    "priest_postpop_1037_prefix_x86",
+    "priest_postpop_allocation_failure_skips_hp_lookup_and_creation",
+    "priest_postpop_cd_prefix_x86",
+    "priest_postpop_patch_prefix_x86",
+    "priest_postpop_prefix_binds_real_process_host_and_owner",
+    "priest_postpop_prefix_rejects_invalid_bindings_before_effects"
+  ],
+  "protectedFiles": {
+    "checked": 1821,
+    "unchanged": true
+  },
+  "units": [
+    434,
+    435
+  ],
+  "state": "focused-and-integration-verified",
+  "startingHead": "b4630287b7b21988987e1f52900813ceb2af2ade",
+  "build": {
+    "attempt": 1,
+    "sourceAttempt": 1,
+    "finished": "2026-10-25T20:38:42.860569",
+    "exitCode": 0,
+    "seconds": 1940.89,
+    "command": [
+      "cmake",
+      "--build",
+      "cpppj/build",
+      "--config",
+      "Release",
+      "--parallel",
+      "4",
+      "--",
+      "/p:UseMultiToolTask=true",
+      "/p:MultiProcMaxCount=4",
+      "/p:EnforceProcessCountAcrossBuilds=true"
+    ],
+    "log": "extracted/cpp-world-reset-storages-434435-build1.log",
+    "sha256": "21bc528e355bc78649d36bdfcc5d7beb720fa427ea46be7ee7405d1846f2118e",
+    "compilerWarnings": 0,
+    "compilerErrors": 0
+  },
+  "newTests": [
+    "CampaignExistingEditorCheckpoint_PreparedCtorKeepsSharedIslandAndChunkData",
+    "CampaignSession_PriestOwnerStatesUseActualSurfaceStorageAndDataReset",
+    "ChunkMap_ResetCanBeReusedByCleanupAndEditorPrefix",
+    "ChunkMap_ResetKeepsModeAndInactivePhysicalEntries",
+    "IslandRuntime_DataOnlyResetMatchesExistingNativeBothEditions",
+    "IslandRuntime_DataOnlyStorageAliasesRuntimeAndRejectsWrongWidth",
+    "PriestOwnerState_DataOnlyResetKeepsListSlotZeroAndInvalidDiagnostics",
+    "PriestOwnerState_OutcomeReadsCurrentSharedTableAfterDataReset",
+    "PriestOwnerState_ParticipationWritesSharedTableWithoutChangingList",
+    "PriestOwnerState_PostPopWritesCurrentSharedTableAfterEffects",
+    "RawSurfaceStorage_IslandAndChunkGeneralAcquireRetainsFreshCompatibility",
+    "RawSurfaceStorage_IslandAndChunkPreparedFailureDoesNotReset",
+    "RawSurfaceStorage_IslandAndChunkPreparedLeaseKeepsPhysicalBytes",
+    "RawSurfaceStorage_PriestOwnerStateHasLongLifetimeAndSeparateFreshPolicy",
+    "RawSurfaceStorage_PriestOwnerStateSurvivesPreparedConstructionFailure",
+    "SessionIslandChunkStorage_ActualLoadAndSnapshotUseSameCurrentRecords"
+  ],
+  "newTestCount": 16,
+  "evidence": [
+    {
+      "path": "extracted/cpp-world-reset-storages-434435-source1/hashes.json",
+      "sha256": "c423dca8e20415b36ccffa7c1242a07b72abd34600f402e52483023c17f65ac8"
+    },
+    {
+      "path": "extracted/cpp-world-reset-storages-434435-integration/manifest.json",
+      "sha256": "393f652f564ed7c0464bbbfbb3f7651c5dd84205bfc9c51a6831a0eb130cfe2a"
+    },
+    {
+      "path": "extracted/cpp-world-reset-storages-434435-integration/merged-434435.patch",
+      "sha256": "a26d87646dc2dce3ad3e758eb90bc31dc39c43af5b9c569e3c2415730d9070f3"
+    },
+    {
+      "path": "extracted/cpp-island-chunk-storage-434-prepared/manifest.json",
+      "sha256": "358c7181d8bcca893f6ed70d4a525005e4287ecdc44bcc15d382174c4ebfdba5"
+    },
+    {
+      "path": "extracted/cpp-priest-owner-storage-435-prepared/manifest.json",
+      "sha256": "e4b7d3e44bd09b9b4b16543bc5ff4aa97c5d57268b0411844953f0e91ec3e684"
+    }
+  ],
+  "previousIntegrated": {
+    "head": "60a5c7de",
+    "productSha256": "18b672612ef444352bea750b941eb310c954c12c4b5c2eec40458983ed95dc82",
+    "ctestTests": 2894,
+    "ctestFailures": 0,
+    "menusGui": true,
+    "naturalEarly2": true,
+    "nextTutorial3": true
+  },
+  "scope": {
+    "sameActualIslandChunkPriestStorage": true,
+    "ordinaryAcquireFreshCompatibility": true,
+    "preparedAcquireAndRetirementPreserve": true,
+    "wholeNativeStateCleanupConnected": false,
+    "islandRuntimeAndPriestListsRemainSessionLocal": true,
+    "sourceAndArtifactsUnchanged": true
+  },
+  "naturalEarly2Executed": true,
+  "integrationVerifiedAt": "2026-10-25T20:54:09.418329",
+  "integration": {
+    "path": "extracted/cpp-world-reset-storages-434435-batch1/execution.json",
+    "sha256": "493e9704e28a94ef65145d48abe1d7987d6fa16ab67afe3931db2b7e86d79d5b",
+    "completed": true,
+    "passed": true,
+    "productSha256": "9c0d1211f460639e88b9199c42ce6fba3bfd090b2cdebca27cf21c1f8251deaa",
+    "fullTests": 2931,
+    "failedChecks": 0,
+    "lastTestSha256": "28565081cf05f09ba2834071d4b8d8b8e8afb8febf29b4e8239269de870f235d",
+    "protectedFiles": 1821,
+    "originalsUnchanged": true,
+    "sourceReports": [
+      {
+        "originalPath": "cpppj/state-client-globals-runtime-20261025.json",
+        "snapshot": "extracted/cpp-world-reset-storages-434435-batch1/source-reports/state-client-globals-runtime-20261025.json",
+        "sha256": "1f61490a019fddff05c1f6d963cf74e35a2368e3db72521ab9faa1b68cd67e62"
+      },
+      {
+        "originalPath": "cpppj/map-revision-runtime-20261025.json",
+        "snapshot": "extracted/cpp-world-reset-storages-434435-batch1/source-reports/map-revision-runtime-20261025.json",
+        "sha256": "0e73ed9ebc18d3f1ee046dca3fb682ee78843c2733a1b0c31f30bdff27e5965a"
+      },
+      {
+        "originalPath": "cpppj/graph-storage-runtime-20261025.json",
+        "snapshot": "extracted/cpp-world-reset-storages-434435-batch1/source-reports/graph-storage-runtime-20261025.json",
+        "sha256": "32a6949565d654c4451cc6325a0d59836a89f0c8060ee31eefbb7a0d71267dd0"
+      },
+      {
+        "originalPath": "cpppj/connection-activity-runtime-20261025.json",
+        "snapshot": "extracted/cpp-world-reset-storages-434435-batch1/source-reports/connection-activity-runtime-20261025.json",
+        "sha256": "dd15747e2c3357d43c021e3fe4c11ef298b33b9051e4126d89e41a963a82aa74"
+      },
+      {
+        "originalPath": "cpppj/totalmade-storage-runtime-20261025.json",
+        "snapshot": "extracted/cpp-world-reset-storages-434435-batch1/source-reports/totalmade-storage-runtime-20261025.json",
+        "sha256": "bfa1c0e4d5741aabcd50a39b7856048630acdf74b80f5b9ea01e79ada3f13656"
+      },
+      {
+        "originalPath": "cpppj/game-button-removal-runtime-20261025.json",
+        "snapshot": "extracted/cpp-world-reset-storages-434435-batch1/source-reports/game-button-removal-runtime-20261025.json",
+        "sha256": "677c05ae4be7fa9d15b3b9dc8259be844673f3a7b7b89b9fe38cd26c0c565838"
+      },
+      {
+        "originalPath": "cpppj/world-reset-storages-runtime-20261025.json",
+        "snapshot": "extracted/cpp-world-reset-storages-434435-batch1/source-reports/world-reset-storages-runtime-20261025.json",
+        "sha256": "c343830ff0e5d34d5c9c1ca4b5d3fe204023dd3931f5f16c5eed51658a378931"
+      },
+      {
+        "originalPath": "extracted/cpp-world-reset-storages-434435-baseline.json",
+        "snapshot": "extracted/cpp-world-reset-storages-434435-batch1/source-reports/cpp-world-reset-storages-434435-baseline.json",
+        "sha256": "680d7c9c5a958ed0c688ce172ba36bba59195d115f84de7ac9a74c3d23ac0449"
+      }
+    ],
+    "runs": [
+      {
+        "label": "gui-home",
+        "passed": true,
+        "beforeAudit": {
+          "path": "extracted/cpp-world-reset-storages-434435-batch1/gui-home-audit-before.json",
+          "sha256": "1f04d9b1907fbd1c257de0cb8ae82999ac85def705bbeecaedc219797c8e026d",
+          "checked": 1928
+        },
+        "exitCode": 0,
+        "seconds": 7.112098200013861,
+        "settingsRestored": true,
+        "originalsUnchanged": true,
+        "afterAudit": {
+          "path": "extracted/cpp-world-reset-storages-434435-batch1/gui-home-audit-after.json",
+          "sha256": "1e4953937b80fca1b22d412a9b501b894d4f30ebbc7d3ea4a7f27da19a87fcf3",
+          "checked": 1928
+        },
+        "evidence": {
+          "path": "extracted/cpp-world-reset-storages-434435-batch1-gui-home/result.json",
+          "sha256": "7625dcb21e0c556213dcb5b2fb9f28ca882cc50cf8e7f5165f4f5b56feb3ab2c"
+        }
+      },
+      {
+        "label": "gui-menus",
+        "passed": true,
+        "beforeAudit": {
+          "path": "extracted/cpp-world-reset-storages-434435-batch1/gui-menus-audit-before.json",
+          "sha256": "c4ed0ffd154c2cf37561d7c73b4ded267b914befabebd94b77d4ffd381789c8a",
+          "checked": 1928
+        },
+        "exitCode": 0,
+        "seconds": 3.478752499911934,
+        "settingsRestored": true,
+        "originalsUnchanged": true,
+        "afterAudit": {
+          "path": "extracted/cpp-world-reset-storages-434435-batch1/gui-menus-audit-after.json",
+          "sha256": "8024356a514d984250ce98514c2b60f7f01d67051bf01d796603f3b11ea7d8f2",
+          "checked": 1928
+        },
+        "evidence": {
+          "path": "extracted/cpp-world-reset-storages-434435-batch1-gui-menus/result.json",
+          "sha256": "2d630eac0787a7c31f4178203fbc957bcfc6b922bcd86b89c54efc4c4c55fffb"
+        }
+      },
+      {
+        "label": "early2",
+        "passed": true,
+        "beforeAudit": {
+          "path": "extracted/cpp-world-reset-storages-434435-batch1/early2-audit-before.json",
+          "sha256": "d5ebf73645092e35f44340f91544ced4c05e341eb1f35bea285c74bd86a421bf",
+          "checked": 1928
+        },
+        "exitCode": 0,
+        "seconds": 192.46954940003343,
+        "settingsRestored": true,
+        "originalsUnchanged": true,
+        "afterAudit": {
+          "path": "extracted/cpp-world-reset-storages-434435-batch1/early2-audit-after.json",
+          "sha256": "f5b0a27c9b116f42ce05caa83ff5623c2e857807a023515752f7c7d662e5810f",
+          "checked": 1928
+        },
+        "evidence": {
+          "execution.json": {
+            "path": "extracted/cpp-world-reset-storages-434435-batch1-early2/execution.json",
+            "sha256": "baa84e514aee452bd520fb3a457aa15f9913f6eb0abf41d5c844a5c596484b0e"
+          },
+          "results.json": {
+            "path": "extracted/cpp-world-reset-storages-434435-batch1-early2/results.json",
+            "sha256": "cd50dfa1d920a8f8d4ab0b467ac953074fa41a4e0ccc0f3cd232d2280fb811e7"
+          },
+          "prepared.json": {
+            "path": "extracted/cpp-world-reset-storages-434435-batch1-early2/prepared.json",
+            "sha256": "84f47693e493e369a8cf00495e58ec1e9505482c7df810859388d8929e609635"
+          },
+          "steps.tsv": {
+            "path": "extracted/cpp-world-reset-storages-434435-batch1-early2/steps.tsv",
+            "sha256": "16e8fe0092f3c98bc4d3ae6aa7a9126ac22e9614c1c50b7cd05a2c347c3d642a"
+          }
+        }
+      },
+      {
+        "label": "ctest",
+        "passed": true,
+        "beforeAudit": {
+          "path": "extracted/cpp-world-reset-storages-434435-batch1/ctest-audit-before.json",
+          "sha256": "724f2e9e9b4f9600e9b387236e2bb0392dae3e4d206f4b2f4879b002e5f78871",
+          "checked": 1928
+        },
+        "exitCode": 0,
+        "seconds": 352.52243399992585,
+        "settingsRestored": true,
+        "originalsUnchanged": true,
+        "lastTest": {
+          "path": "extracted/cpp-world-reset-storages-434435-batch1/LastTest.log",
+          "sha256": "28565081cf05f09ba2834071d4b8d8b8e8afb8febf29b4e8239269de870f235d",
+          "previousSha256": "46ce27642686b3d4bd6ab965da177d16be6c88c7405d9ccd50ac43b722cbaf26",
+          "fresh": true
+        },
+        "afterAudit": {
+          "path": "extracted/cpp-world-reset-storages-434435-batch1/ctest-audit-after.json",
+          "sha256": "0bb5369fb349e6c0b55cc1b8f8e54941106ad40fc3d47f25ca4e899dc2554af9",
+          "checked": 1928
+        }
+      }
+    ]
+  },
+  "naturalEarly2": {
+    "path": "extracted/cpp-world-reset-storages-434435-batch1-early2/results.json",
+    "sha256": "cd50dfa1d920a8f8d4ab0b467ac953074fa41a4e0ccc0f3cd232d2280fb811e7",
+    "startSp": 10000,
+    "finalSp": 3075,
+    "refund": 75,
+    "nextMission": "tutorial3",
+    "nextSp": 2000,
+    "doneBefore": 1,
+    "doneAfter": 1,
+    "productTimers": 1,
+    "testStateInjection": false,
+    "initialProgressInjected": false,
+    "sameFrameNextBriefingVerified": true,
+    "goalComplete": false
+  },
+  "visualInspection": [
+    {
+      "path": "extracted/cpp-world-reset-storages-434435-batch1-gui-home/home.bmp",
+      "sha256": "1e677a1a785e2027239d00510e3c7c6dfa83b5d2710b4da79fe84fa89533423e",
+      "inspected": true
+    },
+    {
+      "path": "extracted/cpp-world-reset-storages-434435-batch1-gui-menus/early.bmp",
+      "sha256": "3901369f51647844a1df20100cd16b83203ab11e12b2a3b1ec53b008cabbf77c",
+      "inspected": true
+    },
+    {
+      "path": "extracted/cpp-world-reset-storages-434435-batch1-early2/nextBriefing.bmp",
+      "sha256": "20b73f9ef883bfeccdd78baef2a4acbb4b1d90ae333a0dcd5e1fe9892b97d02f",
+      "inspected": true
+    }
+  ]
+}

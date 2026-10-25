@@ -1,5 +1,16 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-25 묶음434·435 완료: 섬·청크·사제의 같은 장기 물리와 부분 초기화
+
+- [x] 이전 턴은 **b4630287 / 20261025-29 CP**의 Game버튼 제거·14집중/두해상도GUI 검증으로 실제 진척을 마쳤다. 이번 목표 계속 요청에 따라 AGENTS/공통·닷넷 인계를 다시 읽었으며 트리는 깨끗했다. 현재호스트/IP는 **HJOW-Athlon/192.168.0.94**, 마지막 전체 정밀PC/날짜는 **HJOW-Athlon/2026-10-23**으로 같다. 보호1821기준도 다시 확인했다.
+- [x] 별도 병합21파일의 현재main/준비SHA를 재확인하고 `merged-434435.patch`로 hunk를 적용했다. 기존 HEAD 줄바꿈을 유지한 **Source1의21소스**를 `extracted/cpp-world-reset-storages-434435-source1/hashes.json`에 동결했다. Game버튼 제거와432 활동수신·433 집계표를 유지한다. 새 보호 기준은 `extracted/cpp-world-reset-storages-434435-baseline.json`이다.
+- [x] 같은 RawSurfaceStorage가 Island3204BYTE/ChunkMap의mode·폭·높이·고정256셀/Priest owner9DWORD를 소유하고 실제 Session은 같은 배열/객체를 참조한다. Island Runtime/효과와 사제SID목록/count는 지역이다. Native 부분reset과 일반fresh호환 초기화를 구분하고 prepared 획득·반납·후반실패는 현재값을 보존한다. 실제Load/Snapshot/AI/승패/PlayerMenu 등 소비자도 같은 getter/참조를 쓴다.
+- [x] 독립 읽기검토에서 명확한 병합 결함을 발견하지 못했다. 기존279검사 이름/숫자기대와 신규16검사,432/433실소비자가 보존됐다. 이는 정적검토이며 실행 통과가 아니다. [작업 문서](docs/exe/cpp-world-reset-storages-20261025.md)에 정확한 초기화/보존 범위를 기록했다.
+- [x] **Source1 첫 MTT 빌드 종료0·컴파일 경고/오류0**, 같은 제품의 **집중121개·실패0**이다. 신규16개 실행을 검사 이름으로 확인했고 기존섬/청크/사제/저장·승패·실제Session/Editor 및432/433회귀도 통과했다. 보호1821/21소스/4실행 파일 SHA가 같다. 게임SHA는 **9c0d1211…**이며 [집중 보고서](cpppj/world-reset-storages-runtime-20261025.json)를 통합 입력으로 고정했다.
+- [x] **같은 제품의 통합batch1 종료0·전체2,931개/실패0**이다. 메뉴GUI 두실행과자연Early2가통과했고실제세캡처를육안확인했다. 실제타이머1/상태주입false/기존진행값보존으로환불75·SP3075·다음Tutorial3초기SP2000·같은프레임안내를확인했다. Host Game버튼도부재다. 7개 runtime보고서의최신source통합·최종4exe·driver/helper/PLAN·전체원본불변/두설정복원·원시사본감사가같다. 마지막전체통합을 **이번434·435 Source1 / 9c0d1211… / 2,931검사·메뉴·자연Early2→Tutorial3**로갱신한다.
+- [x] [최종 보고서](cpppj/world-reset-storages-runtime-20261025.json)와 [작업 문서](docs/exe/cpp-world-reset-storages-20261025.md)에 실제로그·소스/제품/보호해시·지원한계를기록했다. 인계후 **20261025-30 CP**로 로컬커밋한다. Native State1 부모·실제Edit편집/저장·전체미션완주·진행저장/재실행·완전동일성은계속미완료이며목표는활성이다.
+- [ ] 다음436선택13파일/신규9검사(`extracted/cpp-selection-owner-436-prepared/`),437권한39patch파일/신규12검사(`.../cpp-authority-owner-437-prepared/`),438FullDeck19파일/신규11검사(`.../cpp-full-deck-owner-438-prepared/`)가 ignored 준비본에 동결됐다. 모두 미적용·미빌드·미실행이며 겹치는 hunk를 병합한다. 436새World검사의 Storage 생성은437의 같은 Authority를 전달하도록 추가 병합해야 한다. 커서Cancel에 필요한 실제16DWORD 카메라/투영·Native 보조 전역 owner는 별도로 읽기 조사 중이다. 목표는 활성이고 원본실행/새디컴파일/push는 하지 않았다.
+
 ## 2026-10-25 사용자 추가 요청 완료: 플레이 화면의 임시 Game 버튼 제거
 
 - [x] 사용자가 원본에 없는 왼쪽 위 Game 버튼의 원인 확인과 숨김/제거를 요청했다. 초기 호스트 UI의 `00c04b75`에서 추가되고 `3447c500`에서 생산 패널 옆x84,y4로 옮겨 남은 잔재였다. 실제 원본 ESC 가로 메뉴는 `5adcf532`에서 별도로 연결됐으며 10/23 작업 문서에도 임시 버튼 제거가 미완료로 기록돼 있었다.

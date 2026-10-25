@@ -158,6 +158,29 @@ TEST_CASE(IslandRuntime_ReplaysCd) { ReplayIslandRuntime("originalCD"); }
 TEST_CASE(IslandRuntime_PatchSharedPlayerRecords) { ReplayIslandRuntime("originals",true); }
 // CD의 첫 지역 위치와 주변 바이트를 같은 기존 원본1009입력으로 검증한다.
 TEST_CASE(IslandRuntime_CdSharedPlayerRecords) { ReplayIslandRuntime("originalCD",true); }
+// 기존 양판본 Native Reset6행의 전체3204BYTE를 Session 없는 같은 공통 helper와 비교한다.
+TEST_CASE(IslandRuntime_DataOnlyResetMatchesExistingNativeBothEditions) {
+    std::size_t count{}; // 실제 기존 fixture에서 대조한 Reset 행 수다.
+    for (const auto& row:RuntimeRows()) { // 새 기대값이나 fixture 행을 생성하지 않는다.
+        if (row[1]!="Reset") continue;
+        IslandRuntimeScene scene(row[0]=="originals" ? OriginalEdition::Patch1078 : OriginalEdition::Cd1072);scene.Prepare(row);
+        const auto revision=scene.revision,changed=scene.changed;const auto entries=scene.residences.entries; // reset과 무관한 현재 전역/목록의 입력이다.
+        ResetRawIslandRecords(scene.records);
+        CHECK(Hex(scene.records)==row[4] && scene.revision==revision && scene.changed==changed && scene.residences.entries==entries && scene.events.empty());++count;
+    }
+    CHECK(count==6);
+}
+// 별도3204BYTE 장기 배열을 실제 실행기가 계속 읽고 쓰며 잘못된 helper 폭은 첫 쓰기 전에 거부한다.
+TEST_CASE(IslandRuntime_DataOnlyStorageAliasesRuntimeAndRejectsWrongWidth) {
+    RawIslandStorage storage;storage.records.fill(0xa5);IslandRuntimeScene scene(OriginalEdition::Patch1078); // padding의 비영 입력도 실제 장기 배열에 둔다.
+    RawIslandRuntime runtime(scene.pool,scene.hash,storage.records,scene.modes,scene.residences,scene.revision,scene.changed,scene.Hooks());
+    ResetRawIslandRecords(storage.records);CHECK(runtime.Count()==0 && storage.records[18]==0xa5 && storage.records[19]==0xa5);
+    CHECK(runtime.Add(3,7)==0 && Get(storage.records,0)==1 && Get(storage.records,12)==3 && storage.records[16]==7 && storage.records[17]==3);
+    Put(storage.records,4,0x12345678);CHECK(runtime.Temple(0)==0x12345678);runtime.Reset();CHECK(Get(storage.records,0)==0 && Get(storage.records,4)==0 && storage.records[18]==0xa5 && storage.records[19]==0xa5);
+    const auto before=storage.records;bool rejected{}; // 범위가 하나 모자란 입력에서 부분 초기화가 없어야 한다.
+    try { ResetRawIslandRecords(std::span(storage.records).first(RawIslandStorage::kBytes-1)); }catch (const std::invalid_argument&) { rejected=true; }
+    CHECK(rejected && storage.records==before);
+}
 // 물리100기록경계/필수효과를원본의정상반환으로꾸미지않고명시적으로거부한다.
 TEST_CASE(IslandRuntime_RejectsMissingEffectsAndPhysicalOverflow) {
     IslandRuntimeScene scene(OriginalEdition::Patch1078);scene.Prepare(RuntimeRows().front());Put(scene.records,0,100);

@@ -125,6 +125,29 @@ TEST_CASE(ChunkMap_DefaultsAndClamping_MatchOriginal) {
     CHECK(Throws([] { ChunkMap(0, 16); }));
 }
 
+// Reset은 현재2×3 셀만3DWORD0/첫BYTE7f로 바꾸며256칸 물리의 나머지와 비정규 mode를 보존한다.
+TEST_CASE(ChunkMap_ResetKeepsModeAndInactivePhysicalEntries) {
+    ChunkMap map(2,3);map.Mode()=0x89abcdefU;const auto* entries=map.Entries().data(); // 현재 폭/높이와 고정256칸 물리 주소는 별개다.
+    CHECK(static_cast<const void*>(&map.Mode())==static_cast<const void*>(&map) && reinterpret_cast<std::uintptr_t>(entries)-reinterpret_cast<std::uintptr_t>(&map)==12); // mode+0과 첫12BYTE 셀+0c도 실제 물리에서 확인한다.
+    for (std::size_t index=0;index<map.Entries().size();++index) { // 모든 물리에 비영 흔적을 두어 활성 범위 밖의 덮어쓰기를 검출한다.
+        auto& entry=map.Entries()[index];entry.island=11;entry.side='P';entry.record.fill(0xa5);entry.ordinal=static_cast<std::int32_t>(index+9);
+    }
+    const auto before=std::vector<ChunkEntry>(map.Entries().begin(),map.Entries().end());map.Reset();
+    CHECK(map.Mode()==0x89abcdefU && map.XLength()==2 && map.YLength()==3 && map.Entries().data()==entries && &map.At(1,2)==entries+18);
+    for (std::size_t index=0;index<map.Entries().size();++index) { // x×16+y의 활성 범위와 물리 나머지를 각각 비교한다.
+        const auto& entry=map.Entries()[index];const bool active=index/16<2 && index%16<3; // 행 우선 x+y×16로 바꾼 구현도 검출한다.
+        if (active) CHECK((entry.island==0x7f && entry.side==0 && entry.record==std::array<std::uint8_t,6>{} && entry.ordinal==0));
+        else CHECK(entry.island==before[index].island && entry.side==before[index].side && entry.record==before[index].record && entry.ordinal==before[index].ordinal);
+    }
+    const ChunkMap& current=map;CHECK(&current.Mode()==&map.Mode() && current.Entries().data()==entries); // const 조회도 같은 현재 물리다.
+}
+
+// cleanup과 State1 prefix의 두 Reset은 각각 현재 mode를 복원하고 부모의 별도 mode1 쓰기를 유지한다.
+TEST_CASE(ChunkMap_ResetCanBeReusedByCleanupAndEditorPrefix) {
+    ChunkMap map;map.Mode()=0;map.At(7,8).island=3;map.At(7,8).record={1,2,3,4,5,6};map.Reset();CHECK(map.Mode()==0 && !map.HasIsland(7,8));
+    map.Mode()=1;map.At(7,8).ordinal=99;map.Reset();map.Mode()=1;CHECK((map.Mode()==1 && map.At(7,8).ordinal==0 && map.At(7,8).record==std::array<std::uint8_t,6>{}));
+}
+
 // 섬 목록: 번호는 등록 순서, 소유자와 영역 번호가 모두 맞아야 일치한다.
 TEST_CASE(IslandList_AddAndMatch) {
     IslandList islands;

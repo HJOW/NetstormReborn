@@ -206,3 +206,25 @@ TEST_CASE(priest_postpop_prefix_binds_real_process_host_and_owner) {
         host.Kill(*regen,0x10);CHECK(kernel.Size()==0 && pool.FreeCount()==beforeFree && !store.Initialized());
     }
 }
+
+// Native00492240의 데이터 전용 정리는 지정한1..8 DWORD만 쓰고 사제 목록/count와0번을 보존한다.
+TEST_CASE(PriestOwnerState_DataOnlyResetKeepsListSlotZeroAndInvalidDiagnostics) {
+    PriestPostPopState state;state.priests.entries={50,50,60,99};state.priests.count=3;state.ownerState.fill(0x77777777U);std::array<std::uint32_t,kPlayerCount+1> shared{};state.sharedOwnerState=&shared;
+    for (std::size_t index=0;index<shared.size();++index) shared[index]=static_cast<std::uint32_t>(0x1000+index); // 예약0번과 실제1..8번을 독립 입력으로 구별한다.
+    const auto fallback=state.ownerState;const auto entries=state.priests.entries;auto expected=shared;const PriestPostPopState& current=state;
+    CHECK(&state.OwnerState()==&shared && &current.OwnerState()==&shared);ResetPriestOwnerState(state.OwnerState(),1);expected[1]=0;ResetPriestOwnerState(state.OwnerState(),8);expected[8]=0;
+    CHECK(shared==expected && state.ownerState==fallback && state.priests.entries==entries && state.priests.count==3 && shared[0]==0x1000U);
+    std::vector<std::uint32_t> diagnosed; // 범위 밖 진단이 배열 쓰기와 다른 실제 효과임을 관측한다.
+    for (const auto player:{0U,9U,0xffffffffU}) { ResetPriestOwnerState(state.OwnerState(),player,[&](auto invalid) { diagnosed.push_back(invalid); });CHECK(shared==expected); } // 원문은 진단이 복귀해도 무효 칸을 쓰지 않는다.
+    CHECK((diagnosed==std::vector<std::uint32_t>{0,9,0xffffffffU}));CHECK(Throws([&] { ResetPriestOwnerState(state.OwnerState(),0); }));CHECK(shared==expected && state.ownerState==fallback && state.priests.entries==entries && state.priests.count==3);
+}
+
+// 실제 PostPop의 예약 효과 뒤 같은 공유표를 선택하고 독립 fallback을 사후 동기화하지 않는다.
+TEST_CASE(PriestOwnerState_PostPopWritesCurrentSharedTableAfterEffects) {
+    PrefixScene scene(OriginalEdition::Patch1078);auto row=Fixture().front();row[3]="1";row[5]="0";row[6]="1";row[7]="43905";row[10]="1";row[12]="4";row[13]="0";scene.Prepare(row);
+    std::array<std::uint32_t,kPlayerCount+1> first{},second{};first.fill(31);second.fill(41);scene.state.sharedOwnerState=&first;const auto fallback=scene.state.ownerState;auto hooks=scene.Hooks();
+    hooks.findRegular=[&](Sid sid,std::uint32_t event) { CHECK(sid==kSource && event==kPriestRegenEvent && scene.state.priests.count==1);scene.state.sharedOwnerState=&second;return true; };
+    RawPriestPostPop body(scene.pool,*scene.hp,scene.state,std::move(hooks));body.Prefix(kSource,1);
+    CHECK(std::all_of(first.begin(),first.end(),[](auto value) { return value==31; }) && second[1]==0 && second[0]==41 && scene.state.ownerState==fallback);
+    CHECK(scene.state.priests.count==1 && scene.state.priests.entries[0]==kSource.value && &scene.state.OwnerState()==&second);
+}

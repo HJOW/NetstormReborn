@@ -3,6 +3,7 @@
 // 범위: 영역 배치에 필요한 부분. 섬 목록의 나머지 필드와 전투용 배치는 옮기지 않았다.
 #include "o/ChunkMap.h"
 #include <algorithm>
+#include <cstddef>
 #include <stdexcept>
 
 namespace netstorm::o {
@@ -29,6 +30,26 @@ const std::vector<IslandInfo>& IslandList::Islands() const { return islands_; }
 ChunkMap::ChunkMap(int xLength, int yLength) : xLength_(xLength), yLength_(yLength) {
     if (xLength < 1 || yLength < 1 || xLength > kChunkMapSide || yLength > kChunkMapSide) throw std::invalid_argument("Chunk map size");
 }
+// 세 DWORD를0으로 쓴 뒤 첫 BYTE만7f로 복원하며 현재 지도 밖의 물리는 그대로 둔다.
+void ChunkMap::Reset() {
+    static_assert(sizeof(ChunkEntry)==12); // 호스트 셀도 원문과 같은12BYTE 범위여야 한다.
+    static_assert(offsetof(ChunkMap,mode_)==0 && offsetof(ChunkMap,xLength_)==4 && offsetof(ChunkMap,yLength_)==8 && offsetof(ChunkMap,entries_)==12); // 실제 mode/폭/높이/고정 표의 원문 위치다.
+    const auto mode=mode_;mode_=1; // reset 중의 현재 mode와 복귀 후의 입력 mode를 구별한다.
+    for (int y=0;y<yLength_;++y) { // 원문은 y 바깥/x 안쪽 순서로 현재 활성 크기만 훑는다.
+        for (int x=0;x<xLength_;++x) { // 실제 저장 순서는 x×16+y이며 행 우선 물리로 바꾸지 않는다.
+            auto& entry=At(x,y);entry.island=0;entry.side=0;entry.record.fill(0);entry.ordinal=0;entry.island=kNoIsland;
+        }
+    }
+    mode_=mode;
+}
+// 같은 객체의 원문 첫DWORD를 cleanup/prefix와 현재 consumer가 직접 공유한다.
+std::uint32_t& ChunkMap::Mode() { return mode_; }
+// 읽기 전용 caller도 현재 모드를 직접 조회한다.
+const std::uint32_t& ChunkMap::Mode() const { return mode_; }
+// 고정256칸은 현재 폭/높이와 별개이므로 부분 Reset 보존 영역도 그대로 노출한다.
+std::span<ChunkEntry,kChunkMapSide*kChunkMapSide> ChunkMap::Entries() { return entries_; }
+// const 조회는 동일 물리를 복사하거나 좌표 순서를 바꾸지 않는다.
+std::span<const ChunkEntry,kChunkMapSide*kChunkMapSide> ChunkMap::Entries() const { return entries_; }
 // 원본 배열은 x × 16 + y 순서다.
 ChunkEntry& ChunkMap::At(int x, int y) {
     x = std::clamp(x, 0, xLength_ - 1);

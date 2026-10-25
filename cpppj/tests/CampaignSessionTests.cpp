@@ -330,15 +330,29 @@ TEST_CASE(CampaignSession_PriestParticipationUsesCurrentSharedState) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;
     auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",external.Services());
     auto& shared=session.Priests().Priests();CHECK(&session.PriestParticipation().Pool()==&session.Core().pool && &session.PriestParticipation().Priests()==&shared);
-    CHECK(session.FindPriestParticipation(1)==0);shared.ownerState[0]=80;shared.ownerState[8]=88;session.Load();const auto core=session.Core();
-    CHECK(RawPriestLookup(core.pool,shared).Find(8)==0 && shared.ownerState[0]==80 && shared.ownerState[8]==88); // Load에서없는소유자를자동2로고치지않는다.
+    CHECK(session.FindPriestParticipation(1)==0);shared.OwnerState()[0]=80;shared.OwnerState()[8]=88;session.Load();const auto core=session.Core();
+    CHECK(RawPriestLookup(core.pool,shared).Find(8)==0 && shared.OwnerState()[0]==80 && shared.OwnerState()[8]==88); // Load에서없는소유자를자동2로고치지않는다.
     const auto live=RawPriestLookup(core.pool,shared).Find(1);CHECK(live!=0 && core.pool.Slot(Sid{static_cast<std::uint16_t>(live)})[10]==158);
-    shared.ownerState.fill(77);const auto previous=shared.ownerState;CHECK(session.FindPriestParticipation(1)==live && shared.ownerState==previous);
-    session.RunFrame(FrameTime{0,0,0,0},true);CHECK(shared.ownerState==previous); // 프레임도로그인타이머를대신하지않는다.
-    session.RefreshPriestParticipation(1);CHECK(shared.ownerState[1]==0);session.RefreshPriestParticipation(8);CHECK(shared.ownerState[8]==2);
-    const auto beforeInvalid=shared.ownerState;session.RefreshPriestParticipation(0);session.RefreshPriestParticipation(9);session.RefreshPriestParticipation(0xffffffff);
-    CHECK(shared.ownerState==beforeInvalid && shared.ownerState[0]==77);
+    shared.OwnerState().fill(77);const auto previous=shared.OwnerState();CHECK(session.FindPriestParticipation(1)==live && shared.OwnerState()==previous);
+    session.RunFrame(FrameTime{0,0,0,0},true);CHECK(shared.OwnerState()==previous); // 프레임도로그인타이머를대신하지않는다.
+    session.RefreshPriestParticipation(1);CHECK(shared.OwnerState()[1]==0);session.RefreshPriestParticipation(8);CHECK(shared.OwnerState()[8]==2);
+    const auto beforeInvalid=shared.OwnerState();session.RefreshPriestParticipation(0);session.RefreshPriestParticipation(9);session.RefreshPriestParticipation(0xffffffff);
+    CHECK(shared.OwnerState()==beforeInvalid && shared.OwnerState()[0]==77);
     CHECK(core.bookkeeping.depth==0 && core.destroy.PreDepth()==0 && core.destroy.PostDepth()==0);
+}
+
+// 실제 Session의 PostPop/참여/outcome은 Client 수명의 같은9DWORD를 쓰고 데이터 reset은 SID목록/count를 건드리지 않는다.
+TEST_CASE(CampaignSession_PriestOwnerStatesUseActualSurfaceStorageAndDataReset) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);auto storage=MakeRawSurfaceStorage(assets.game);SessionServicesFixture external;auto services=external.Services();services.surfaceStorage=storage;std::array<std::uint32_t,kPlayerCount+1> retiring{};
+    const auto* address=storage->priestOwnerState.data();{
+        RawCampaignSession session(assets.game,assets.files,FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable()),"thewarbegins",std::move(services));auto& shared=session.Priests().Priests();CHECK(&shared.OwnerState()==&storage->priestOwnerState && shared.OwnerState().data()==address);
+        shared.OwnerState().fill(77);shared.OwnerState()[0]=0xabcdef01U;session.Load();CHECK(shared.OwnerState()[1]==0 && shared.OwnerState()[0]==0xabcdef01U && shared.OwnerState()[8]==77);
+        auto records=session.PlayerRecords();Put(records,0xb4+0x50,Get(records,0xb4+0x50)|2U); // 살아 있는 사제와 별개인 Player 참여flag를 명시 입력한다. Login 성공을 실행한 것으로 합산하지 않는다.
+        const auto entries=shared.priests.entries;const auto count=shared.priests.count;const auto priest=session.FindPriestParticipation(1);CHECK(priest && !session.MissionPriestDead(1));storage->priestOwnerState[1]=2;CHECK(session.MissionPriestDead(1));
+        ResetPriestOwnerState(storage->priestOwnerState,1);CHECK(!session.MissionPriestDead(1) && session.FindPriestParticipation(1)==priest && shared.priests.entries==entries && shared.priests.count==count);
+        session.RefreshPriestParticipation(8);CHECK(storage->priestOwnerState[8]==2);ResetPriestOwnerState(storage->priestOwnerState,8);CHECK(storage->priestOwnerState[8]==0 && shared.priests.entries==entries && shared.priests.count==count);retiring=storage->priestOwnerState;
+    }
+    CHECK(!storage->Borrowed() && storage->priestOwnerState.data()==address && storage->priestOwnerState==retiring);ResetPriestOwnerState(storage->priestOwnerState,2);retiring[2]=0;CHECK(storage->priestOwnerState==retiring); // Session이 없어도 같은 주소의 지정DWORD 정리를 실행한다.
 }
 // 보호188TYPE/실제Factory로만든Carrier/Content/Altar/Dais의현재raw와실제해시를읽는다.
 TEST_CASE(CampaignSession_PriestParticipationFindsRealCapturedFallbacks) {
@@ -352,7 +366,7 @@ TEST_CASE(CampaignSession_PriestParticipationFindsRealCapturedFallbacks) {
     for (const auto form:{first,second}) { auto raw=core.pool.AllocatedBytes(form);Put(raw,16,carrier.value,2);Put(raw,18,158,2);Put(raw,20,0x20,2);raw[11]=8; }
     Put(firstRaw,12,1,2);Put(secondRaw,12,136,2);CHECK(session.Priests().Carrier().FindContained(carrier,0x20,158,0)==first);
     CHECK(session.FindPriestParticipation(8)==0); // 첫일치종속의원소유자가다르면같은Carrier의두번째종속을고르지않는다.
-    Put(firstRaw,12,136,2);CHECK(session.FindPriestParticipation(8)==carrier.value);session.RefreshPriestParticipation(8);CHECK(session.Priests().Priests().ownerState[8]==1);
+    Put(firstRaw,12,136,2);CHECK(session.FindPriestParticipation(8)==carrier.value);session.RefreshPriestParticipation(8);CHECK(session.Priests().Priests().OwnerState()[8]==1);
     const auto firstAltar=session.World().Create(164,2),firstDais=session.World().Create(165,2),lastAltar=session.World().Create(164,2),lastDais=session.World().Create(165,2);
     // 실제typed탐색에필요한현재좌표/버킷등록만입력한다.결과SID나포획bool을주입하지않는다.
     for (const auto pair:{std::array<Sid,2>{firstAltar,firstDais},std::array<Sid,2>{lastAltar,lastDais}}) {
@@ -363,9 +377,9 @@ TEST_CASE(CampaignSession_PriestParticipationFindsRealCapturedFallbacks) {
     }
     CHECK(core.types[165].footX==7 && core.types[165].footY==7); // 보호dais.type의실제발자국은7×7이며독립합성fixture의3×3과구분한다.
     CHECK(session.FindPriestParticipation(8)==carrier.value);
-    Put(firstRaw,12,1,2);CHECK(session.FindPriestParticipation(8)==lastAltar.value);session.RefreshPriestParticipation(8);CHECK(session.Priests().Priests().ownerState[8]==1);
+    Put(firstRaw,12,1,2);CHECK(session.FindPriestParticipation(8)==lastAltar.value);session.RefreshPriestParticipation(8);CHECK(session.Priests().Priests().OwnerState()[8]==1);
     core.pool.AllocatedBytes(lastDais)[11]|=2;CHECK(session.FindPriestParticipation(8)==firstAltar.value);
-    Put(core.pool.AllocatedBytes(firstAltar),12,264,2);CHECK(session.FindPriestParticipation(8)==0);session.RefreshPriestParticipation(8);CHECK(session.Priests().Priests().ownerState[8]==2);
+    Put(core.pool.AllocatedBytes(firstAltar),12,264,2);CHECK(session.FindPriestParticipation(8)==0);session.RefreshPriestParticipation(8);CHECK(session.Priests().Priests().OwnerState()[8]==2);
     CHECK(core.bookkeeping.depth==0 && core.destroy.PreDepth()==0 && core.destroy.PostDepth()==0);
 }
 // 실제Session의첫객체전바인딩이같은서버확정/예측삭제/패킷/공간으로들어가야한다.
@@ -773,7 +787,7 @@ TEST_CASE(CampaignSession_MissionOutcomeSharesCurrentWorld) {
         sections.emplace_back(key);
         if (key!="ai1TempleHalfDead") return false;
         auto records=active->PlayerRecords();Put(records,0xb4+0x7c,0);records[2*0xb4+0x50]=0;
-        active->Priests().Priests().ownerState[1]=1;demo=1;return true;
+        active->Priests().Priests().OwnerState()[1]=1;demo=1;return true;
     };
     services.missionOutcome.closeTransient=[&] { ++close; };services.missionOutcome.onSection=[&] { ++notified; };
     RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",std::move(services));active=&session;session.Load();
@@ -3523,9 +3537,9 @@ void ActualBuiltDaisDelivery(bool finish) {
         const auto now=finishBegan+double(step)*.025;session.PumpLocalConnection();session.RunFrame({now,100+now,.025,20000+step},false);const bool live=!ConstructionLive(core,166).empty();if (live && !wasLive) ++born;if (!live && wasLive) ++retired;wasLive=live;
     }
     CHECK(born==5 && retired==5 && menus==0);CHECK((core.pool.Slot(target)[11]&3U)!=0 && (core.pool.Slot(altars[0])[11]&3U)!=0 && (core.pool.Slot(delivered)[11]&3U)!=0);CHECK(session.Sp(1)==beforeFinish+5000 && spRefreshes>=refreshBefore+1);CHECK(ritualTells==std::vector<std::string>{"SacrificeForStormpower"}); //전체AI의다른SP표시갱신도같은장치를사용하므로총호출을한번으로제한하지않는다.
-    CHECK(session.Priests().Priests().ownerState[1]==0); // 원래 적 사제가 살아 있는 명시 포획 입력이므로 승리를 주장하지 않는다.
+    CHECK(session.Priests().Priests().OwnerState()[1]==0); // 원래 적 사제가 살아 있는 명시 포획 입력이므로 승리를 주장하지 않는다.
     for (std::uint32_t owner=1;owner<=8;++owner) { // Finish의8명갱신이같은현재조회/저장소를소비했는지확인한다.
-        const auto found=session.FindPriestParticipation(owner);const auto expected=!found ? 2U : core.pool.Slot(Sid{static_cast<std::uint16_t>(found)})[10]==158 ? 0U : 1U;CHECK(session.Priests().Priests().ownerState[owner]==expected);
+        const auto found=session.FindPriestParticipation(owner);const auto expected=!found ? 2U : core.pool.Slot(Sid{static_cast<std::uint16_t>(found)})[10]==158 ? 0U : 1U;CHECK(session.Priests().Priests().OwnerState()[owner]==expected);
     }
     CHECK(!core.destroy.PreDepth() && !core.destroy.PostDepth() && !core.bookkeeping.depth);std::cout<<"실제 캠페인 희생 완료: 룬5/메뉴0/다이스·제단·포획 삭제/SP"<<beforeFinish<<"→"<<session.Sp(1)<<"/전체 표시"<<spRefreshes-refreshBefore<<"/Tell1/참여8명 갱신\n";
 }

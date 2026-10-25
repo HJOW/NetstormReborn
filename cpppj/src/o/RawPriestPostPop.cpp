@@ -4,6 +4,13 @@
 #include <utility>
 
 namespace netstorm::o {
+// 원문00492240은 범위 밖을 진단한 뒤 쓰기를 생략하며9DWORD 중 지정한1..8 한칸만 바꾼다.
+void ResetPriestOwnerState(std::array<std::uint32_t,kPlayerCount+1>& states,std::uint32_t player,const std::function<void(std::uint32_t)>& assertion) {
+    if (player<1 || player>kPlayerCount) {
+        if (!assertion) throw std::logic_error("사제 owner 상태 초기화 진단 미연결");assertion(player);return;
+    }
+    states[player]=0;
+}
 // 후반 조합의 풀 혼합 검사를 위해 읽기 전용 참조를 반환한다.
 const SidPool& RawPriestPostPop::Pool() const { return pool_; }
 namespace {
@@ -58,7 +65,7 @@ void RawPriestPostPop::Prefix(Sid sid,std::uint32_t flags) const {
     // 예약 훅 이후 다시 읽는다. 원본도 현재 소유자를 이 지점에서 조회한다.
     const auto current=pool_.Slot(sid);
     const auto owner=current[patch ? 34 : 32];
-    if ((current[kOriginalOwner]&0x7f)==owner && owner>0 && owner<=kPlayerCount) state_.ownerState[owner]=0;
+    if ((current[kOriginalOwner]&0x7f)==owner && owner>0 && owner<=kPlayerCount) ResetPriestOwnerState(state_.OwnerState(),owner); // 같은 유효owner0쓰기 본문을 데이터 전용 정리와 공유한다.
 }
 // ProcessForm·Kernel을 가진 실제 호스트와 합성한다. reserve는 원본 할당 실패를 주입할 경계다.
 PriestPostPopHooks MakePriestPostPopProcessHooks(SquidProcessHost& host) {

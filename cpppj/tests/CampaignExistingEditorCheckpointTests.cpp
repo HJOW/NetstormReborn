@@ -34,6 +34,7 @@
 #include <bit>
 #include <chrono>
 #include <cstdio>
+#include <functional>
 #include <set>
 #include <stdexcept>
 #ifdef _WIN32
@@ -251,7 +252,7 @@ struct EditorInstallWireScene {
     }
 };
 // 실제 Chat·Player·번역·작업 파일을 갖춘 같은 Client Session을 검사 동기 범위 동안 소유한다.
-template<class Body> void WithEditorInstallSession(Body body,bool prepared=false,EditorInstallWireScene* wireScene=nullptr) {
+template<class Body> void WithEditorInstallSession(Body body,bool prepared=false,EditorInstallWireScene* wireScene=nullptr,const std::function<void(RawSurfaceStorage&)>& prepareStorage={}) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);const auto input=CheckpointInput(assets.files);ClientOptions options;options.gameDirectory=assets.root;Client client(std::move(options));client.StaticStrings()->Initialize(10240);if (prepared) { client.SpGlobals()->Store().Initialize();InitializeClientPlayerRecords(client); }InitializeClientChatManager(client);
     EditorFiles work(CheckpointRoot(assets.root.parent_path(),"ui-state-commit"),{assets.root,assets.root.parent_path()/"originalCD"});work.Prepare("Checkpoint385",input);CheckpointDevices devices;auto effects=devices.Effects(client,work);auto storage=std::make_shared<CampaignTemplateStorage>();auto services=devices.Make(client,storage,input);const auto surface=MakeRawSurfaceStorage(assets.game);
     services.surfaceStorage=surface;services.gameplayGlobals=client.GameplayGlobals();services.subscriberGlobals=client.SubscriberGlobals();services.playerRecords=client.PlayerRecords();services.localStateGlobals=client.LocalStateGlobals();services.editorPlayerUi=MakeEditorPlayerClientHooks(client);services.fortTechnologyUi=[&] { RefreshClientChatRankPrefix(client,assets.game,*surface); };
@@ -265,6 +266,7 @@ template<class Body> void WithEditorInstallSession(Body body,bool prepared=false
         wireScene->activity=client.ConnectionActivityGlobals();services.connectionActivityGlobals=wireScene->activity;services.connectionFrameNumber=[wireScene] { return wireScene->activityFrame; };services.removeConnectionStatus=[wireScene](auto kind,auto player) { wireScene->activityRemoved.push_back({kind,player}); }; // 실제64h 수신은 같은 Session 모드 관문 뒤의 외부 UI 장치만 호출한다.
         services.construction.configInt=[&client](auto name,std::int32_t fallback) { client.Configuration().ReadInt(name,fallback);return fallback; };services.construction.wallSeconds=[] { return 100.0; };services.construction.refresh=[&devices] { ++devices.production; }; // 실제 Client 설정과 원문 배치 뒤 외부 UI 통지를 공급하며 게임 판정을 대신하지 않는다.
     }
+    if (prepareStorage) prepareStorage(*surface); // 실제 Session 생성 전 같은 물리에 명시 입력만 넣고 prepared 생성자의 암묵 Reset을 검출한다.
     const std::array<std::uint32_t,13> messages{0x5b,0x40,0x4f,0x50,0x60,0x61,0x5c,0x5f,0x7d,0x6d,0x3e,0x54,0x58};std::array<PacketRegistration,13> registrations{}; // 반납 전 현재 등록 정책을 독립적으로 고정한다.
     PacketRegistration activityRegistration; //64h는 기존13종 목록 밖에서 수신 반납과 정책 보존을 별도로 관측한다.
     { RawCampaignSession session(assets.game,assets.files,FortTemplate::Parse(input,assets.game.TypeTable()),"deferred.fort",std::move(services));body(session,client,effects,work);
@@ -351,6 +353,18 @@ TEST_CASE(CampaignExistingEditorCheckpoint_PreparedCtorPreservesSameClientState)
         const auto& gameplay=*client.GameplayGlobals();CHECK(gameplay.cursor.screenX==37 && gameplay.cursor.lockDepth==3 && gameplay.energy.userCheat);CHECK(session.Core().ownerMode.fort && !session.Core().ownerMode.battle && !session.Core().bridgeState.mission && session.Core().spots[123]==19);CHECK(session.PlayerRecords().data()==client.PlayerRecords()->Records().data() && client.CoreDataGlobals()->Current().data()==session.PlayerRecords().data()+180+0x6c);
         EditorInstallStateContext scene(client);session.InstallExistingEditorCheckpoint(checkpoint,client.ReadOnlyForts(),work);bool scope{};InputQueue input;std::uint32_t calls{};const auto tail=EditorInstallTail(session,calls);session.WithExistingEditorInstallUi(scene.owner,input,tail,[&] { static_cast<void>(session.Cursor());session.SynchronizeProductionContents();scope=true; });CHECK(scope && calls==5 && session.ExistingEditorCheckpointReady());CHECK(CheckpointRejects<std::logic_error>([&] { session.CommitExistingEditorInstall(scene.owner); }));CHECK(CheckpointRejects<std::logic_error>([&] { session.SnapshotFort(1); })); // 실제 State 공통 확정 없는 준비 대여 자체는 공개 완료가 아니다.
     },true);
+}
+
+// prepared Session 생성은 앞서 준비한 같은 섬/청크 물리를 소비하며 지역 새0/Reset으로 교체하지 않는다.
+TEST_CASE(CampaignExistingEditorCheckpoint_PreparedCtorKeepsSharedIslandAndChunkData) {
+    WithEditorInstallSession([](RawCampaignSession& session,Client&,const auto&,EditorFiles&) {
+        const auto& surface=*session.World().Storage();CHECK(session.IslandCount()==7 && surface.islands.records[18]==0xa5 && surface.islands.records[19]==0xa5);
+        CHECK(surface.chunks.Mode()==0x89abcdefU && surface.chunks.At(2,3).island==6 && surface.chunks.At(2,3).ordinal==71 && surface.chunks.At(2,3).record[5]==6);
+        CHECK(!session.ExistingEditorCheckpointReady()); // 데이터 보존 검사는 checkpoint/전체 Native prefix 완료를 대신하지 않는다.
+    },true,nullptr,[](RawSurfaceStorage& surface) {
+        surface.islands.records.fill(0xa5);surface.islands.records[0]=7;surface.islands.records[1]=surface.islands.records[2]=surface.islands.records[3]=0;
+        surface.chunks.Mode()=0x89abcdefU;surface.chunks.At(2,3)={6,'P',{1,2,3,4,5,6},71}; // 실제 Native 준비 완료가 아닌 생성자 보존성 검출용 입력이다.
+    });
 }
 
 // prepared 표식만으로 누락된 실제 Client 소유자를 만들거나 전역을 초기화하지 않는다.

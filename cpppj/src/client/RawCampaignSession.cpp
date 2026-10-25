@@ -367,8 +367,8 @@ struct RawCampaignSession::Impl {
     SquidRewardState rewardState; // 실제 HP getter의 장기 전역이다.
     SquidReward hp; // 같은 Pool/TYPE/장부로 최대HP와 실제HP를 읽는다.
     std::unique_ptr<RawSquidLevel> level; // 실제 base 가상80/84의 Factory 저장 상태를 처리한다.
-    ChunkMap chunks; // 실제 Builder/성장/객체 선택의 지도다.
-    std::array<std::uint8_t,RawIslandRuntime::kBytes> islandBytes{}; // 실제3204BYTE 섬 목록이다.
+    ChunkMap& chunks{world.Storage()->chunks}; // 실제 Builder/성장/영역소유/저장이 Client 저장소의 같은 mode/지도 물리를 빌린다.
+    std::array<std::uint8_t,RawIslandRuntime::kBytes>& islandBytes{world.Storage()->islands.records}; // 같은3204BYTE count/100기록이며 Session 지역 사본을 만들지 않는다.
     std::span<std::uint8_t> players; // 대여 중 재할당하지 않는 같은 실제9기록이며 별도 vector 사본이 아니다.
     std::array<std::uint32_t,81>& alliances{playerRecords->Alliances()}; // 원본 방향별9×9 DWORD를 실제 소유자에서 빌린다.
     std::array<std::uint8_t,87> localBattleOptions{}; // 독립 Session 검사/직접 설치의 자체 저장소다.
@@ -836,6 +836,7 @@ struct RawCampaignSession::Impl {
             const auto size=formWriter->WriteData(form,formBuffer); // 원본 반환 크기13/18이며 헤더의 선언 길이와 별개다.
             services.formPacket(std::span<const std::uint8_t>(formBuffer).first(size));
         };
+        priestState.priests.sharedOwnerState=&world.Storage()->priestOwnerState; // 첫 PostPop/Participation/outcome/AI/메뉴 앞에 같은 장기9DWORD만 연결한다. 목록/count는 Session 지역이다.
         priestState.priests.priests.entries.resize(100);assetState.residences.entries.resize(100);
         assetState.temples.entries.resize(100);assetState.outposts.entries.resize(100);assetState.geysers.entries.resize(100);
         core.bookkeeping.factories.entries.resize(kCampaignFactoryCapacity); // 첫저장객체Pop전에예약하여원본Append의capacity0생략을방지한다.
@@ -858,7 +859,7 @@ struct RawCampaignSession::Impl {
         };
         islands=std::make_unique<RawIslandRuntime>(core.pool,core.hash,islandBytes,finishState,assetState.residences,worldRedraw,revision,
             IslandRuntimeHooks{[this](Sid sid,std::uint32_t owner) { ownership->SetOwner(sid,owner); },SessionMissing<void,IslandRuntimeAssertion>()});
-        islands->Reset();
+        // 일반 Acquire의 fresh 호환 준비 또는 실제 앞 cleanup/prefix가 같은 섬 물리를 준비한다. prepared 생성자는 다시 Reset하지 않는다.
         auto priestEffects=services.priest;
         priestEffects.pop=[this](Sid sid,float x,float y,std::uint32_t flags) { world.Pop(sid,x,y,flags); };
         priestEffects.unpop=[this](Sid sid,std::uint32_t flags) { world.Unpop(sid,flags); };
@@ -2308,7 +2309,7 @@ struct RawCampaignSession::Impl {
         aiRuntime=std::make_unique<RawAiRuntime>(aiMemory,players,AiRuntimeGlobals{[this] { return core.ownerMode.battle; },aiTiming,aiDrySpotLog},std::move(frameHooks));
     }
     // 생산선택/포획행동이같은492280의현재참여/포획상태를공유한다.
-    bool AiEnemyAvailable(std::uint32_t owner) const { if (owner<1 || owner>8) { if (!services.ai.assertion) throw std::logic_error("AI 적 사제 참여 진단 미연결");services.ai.assertion("playerId > INVALID_PLAYER_ID && playerId < MAX_PLAYERS");return false; }return (players[owner*180+0x50]&0x22)!=0 && priests->Priests().ownerState[owner]==0; }
+    bool AiEnemyAvailable(std::uint32_t owner) const { if (owner<1 || owner>8) { if (!services.ai.assertion) throw std::logic_error("AI 적 사제 참여 진단 미연결");services.ai.assertion("playerId > INVALID_PLAYER_ID && playerId < MAX_PLAYERS");return false; }return (players[owner*180+0x50]&0x22)!=0 && priests->Priests().OwnerState()[owner]==0; }
     // 원본492340의진단/범위밖true와같은현재포획ownerState를경제·건설이공유한다.
     bool AiPriestCaptured(std::uint32_t owner) const { if (owner<1 || owner>8) { if (!services.ai.assertion) throw std::logic_error("AI 사제 포획 진단 미연결");services.ai.assertion("playerId > INVALID_PLAYER_ID && playerId < MAX_PLAYERS"); }return outcome->PriestCaptured(owner); }
     // 원본4922e0의진단뒤같은Player활성/ownerState2를조회한다.
@@ -3994,7 +3995,7 @@ std::unique_ptr<RawCampaignObjectMenus> RawCampaignSession::MakeObjectMenus(Camp
     auto player=inputs.player; // 실제 Chat/허용/통신/서식은 caller의 동일 Client 경계다.
     player.mission=[current] { return current->globals.missionPost; };player.fort=[current] { return current->core.bridgeState.mission; }; // Player 메뉴의 fort 경계는00594fa0이며 inFortMode00594fb8과 다르다.
     player.money=[current](std::uint32_t owner) { return std::bit_cast<float>(current->sp.Get(owner)); };
-    chain->player=std::make_unique<RawPlayerMenu>(*chain->identity,current->alliances,current->hiddenPlayers,current->priestState.priests.ownerState,inputs.playerState,std::move(player));
+    chain->player=std::make_unique<RawPlayerMenu>(*chain->identity,current->alliances,current->hiddenPlayers,current->priestState.priests.OwnerState(),inputs.playerState,std::move(player));
     auto object=inputs.object; // GUI/설정/문자열 토큰은 유지하며 게임 계산만 현재 실제 몸체로 교체한다.
     object.hasHitPoints=[current](Sid sid) { return current->hp.HasHitPoints(sid); };
     const auto derivedCount=object.count; // 원본83VT 중 두 파생 가상80만 외부 실제 분배기를 요구한다.

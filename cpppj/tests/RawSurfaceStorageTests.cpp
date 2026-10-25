@@ -159,3 +159,52 @@ TEST_CASE(RawSurfaceStorage_TotalMadeSharingLeavesPlayerFactoryBindingsWorldLoca
         CHECK(core.bookkeeping.GlobalCounts().data()==storage->totalMade.globalCounts.data() && core.bookkeeping.GlobalCounts()[84]==(pass ? 77U : 0U));core.bookkeeping.GlobalCounts()[84]=77;world.reset();CHECK(!storage->Borrowed() && storage->totalMade.globalCounts[84]==77);
     }
 }
+
+// 실제 World 교체와 prepared 대여는 같은3204BYTE/256×12BYTE·mode를 소유하며 대여중의 일반 fresh를 거부한다.
+TEST_CASE(RawSurfaceStorage_IslandAndChunkPreparedLeaseKeepsPhysicalBytes) {
+    auto storage=MakeRawSurfaceStorage(netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078).game);auto world=StorageWorld(storage);
+    const auto* islands=storage->islands.records.data();const auto* chunks=storage->chunks.Entries().data();const auto* mode=&storage->chunks.Mode(); // 세 실제 물리 주소를 전후 비교한다.
+    storage->islands.records.fill(0xa5);storage->chunks.Mode()=0x89abcdefU;storage->chunks.At(3,4)={7,'P',{1,2,3,4,5,6},71};const auto before=storage->islands.records;const auto entry=storage->chunks.At(3,4); // Native 완료를 가장하지 않는 보존 입력이다.
+    world.reset();CHECK(!storage->Borrowed() && storage->islands.records==before && storage->chunks.Mode()==0x89abcdefU);
+    world=std::make_unique<RawSurfaceWorld>(storage->pool.Edition(),storage->types,storage->frames,storage->shapes,StorageLinks(),97,nullptr,storage,true);
+    CHECK(world->Storage()->islands.records.data()==islands && world->Storage()->chunks.Entries().data()==chunks && &world->Storage()->chunks.Mode()==mode);
+    CHECK(storage->islands.records==before && storage->chunks.Mode()==0x89abcdefU && storage->chunks.At(3,4).record==entry.record && storage->chunks.At(3,4).ordinal==71);
+    CHECK(StorageRejected([&] { storage->Acquire(); }) && StorageRejected([&] { storage->AcquirePrepared(); }) && storage->islands.records==before && storage->chunks.At(3,4).record==entry.record);
+    world.reset();CHECK(!storage->Borrowed() && storage->islands.records==before && storage->chunks.Mode()==0x89abcdefU);
+}
+
+// prepared 대여 뒤 실제 Graph188종류 계약이 실패해도 앞서 준비한 섬/청크 물리는 그대로 남는다.
+TEST_CASE(RawSurfaceStorage_IslandAndChunkPreparedFailureDoesNotReset) {
+    std::vector<RiftTypeRecord> types(187);std::vector<RiftTypeFrames> frames(187,RiftTypeFrames({}));std::vector<SquidDisplayShape> shapes(187); // 기존 Graph 실패와 같은 실제 미충족 입력이다.
+    auto storage=std::make_shared<RawSurfaceStorage>(OriginalEdition::Patch1078,types,frames,shapes);storage->islands.records.fill(0x71);storage->chunks.Mode()=0x12345678;storage->chunks.At(2,3)={9,'F',{6,5,4,3,2,1},37};const auto before=storage->islands.records;
+    CHECK(StorageRejected([&] { RawSurfaceWorld world(OriginalEdition::Patch1078,storage->types,storage->frames,storage->shapes,StorageLinks(),97,nullptr,storage,true); }));
+    CHECK(!storage->Borrowed() && storage->Generation()==1 && storage->islands.records==before && storage->chunks.Mode()==0x12345678 && storage->chunks.At(2,3).ordinal==37 && storage->chunks.At(2,3).record[0]==6);
+}
+
+// 원문 partial reset의 padding 보존과 기존 일반 Session의 전체 fresh 입력을 같은 주소에서 구별한다.
+TEST_CASE(RawSurfaceStorage_IslandAndChunkGeneralAcquireRetainsFreshCompatibility) {
+    auto storage=MakeRawSurfaceStorage(netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078).game);const auto* islands=storage->islands.records.data();const auto* chunks=storage->chunks.Entries().data();
+    { auto use=storage->Acquire(); }storage->islands.records.fill(0xa5);storage->chunks.Mode()=0x89abcdefU;storage->chunks.At(3,4).record.fill(0x71);
+    ResetRawIslandRecords(storage->islands.records);storage->chunks.Reset();CHECK(storage->islands.records[18]==0xa5 && storage->islands.records[19]==0xa5 && storage->chunks.Mode()==0x89abcdefU);
+    const auto before=storage->islands.records;{ auto use=storage->AcquirePrepared();CHECK(storage->islands.records==before && storage->chunks.Mode()==0x89abcdefU); }
+    { auto use=storage->Acquire();CHECK((storage->islands.records.data()==islands && storage->chunks.Entries().data()==chunks && storage->islands.records[18]==0 && storage->islands.records[19]==0 && storage->chunks.Mode()==1 && storage->chunks.At(3,4).record==std::array<std::uint8_t,6>{})); }
+}
+
+// 같은9DWORD는 World 반납·다음prepared 대여에서 유지되고 일반 Acquire만 종전 지역fresh0 의미를 유지한다.
+TEST_CASE(RawSurfaceStorage_PriestOwnerStateHasLongLifetimeAndSeparateFreshPolicy) {
+    auto storage=MakeRawSurfaceStorage(netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078).game);const auto* address=storage->priestOwnerState.data();CHECK((storage->priestOwnerState==std::array<std::uint32_t,kPlayerCount+1>{}));
+    auto first=StorageWorld(storage);for (std::size_t index=0;index<storage->priestOwnerState.size();++index) storage->priestOwnerState[index]=static_cast<std::uint32_t>(0x1000+index); // 실제9칸의 현재 값을 첫 World 수명에 쓴다.
+    auto expected=storage->priestOwnerState;first.reset();CHECK(!storage->Borrowed() && storage->priestOwnerState==expected);
+    auto next=std::make_unique<RawSurfaceWorld>(storage->pool.Edition(),storage->types,storage->frames,storage->shapes,StorageLinks(),97,nullptr,storage,true);CHECK(storage->priestOwnerState.data()==address && storage->priestOwnerState==expected);
+    ResetPriestOwnerState(storage->priestOwnerState,8);expected[8]=0;CHECK(storage->priestOwnerState==expected && storage->priestOwnerState[0]==0x1000U);
+    CHECK(StorageRejected([&] { storage->Acquire(); }) && StorageRejected([&] { storage->AcquirePrepared(); }) && storage->priestOwnerState==expected);next.reset();CHECK(storage->priestOwnerState==expected);
+    auto ordinary=StorageWorld(storage);CHECK(storage->priestOwnerState.data()==address && (storage->priestOwnerState==std::array<std::uint32_t,kPlayerCount+1>{})); // 일반 fresh0은 Native 지정1..8 reset이 아니므로0번도 종전처럼0이다.
+}
+
+// prepared 실행기 생성 실패/선행 타입 거부는 이미 있던9DWORD를 바꾸거나 별도 표로 교체하지 않는다.
+TEST_CASE(RawSurfaceStorage_PriestOwnerStateSurvivesPreparedConstructionFailure) {
+    std::vector<RiftTypeRecord> types(187);std::vector<RiftTypeFrames> frames(187,RiftTypeFrames({}));std::vector<SquidDisplayShape> shapes(187);auto storage=std::make_shared<RawSurfaceStorage>(OriginalEdition::Patch1078,types,frames,shapes);
+    storage->priestOwnerState.fill(0x76543210U);const auto expected=storage->priestOwnerState;const auto* address=storage->priestOwnerState.data();
+    CHECK(StorageRejected([&] { RawSurfaceWorld invalid(OriginalEdition::Patch1078,storage->types,storage->frames,storage->shapes,StorageLinks(),999,nullptr,storage,true); }));CHECK(storage->Generation()==0 && !storage->Borrowed() && storage->priestOwnerState==expected);
+    CHECK(StorageRejected([&] { RawSurfaceWorld partial(OriginalEdition::Patch1078,storage->types,storage->frames,storage->shapes,StorageLinks(),97,nullptr,storage,true); }));CHECK(storage->Generation()==1 && !storage->Borrowed() && storage->priestOwnerState==expected && storage->priestOwnerState.data()==address);
+}

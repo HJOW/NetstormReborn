@@ -79,7 +79,8 @@ std::uint32_t RawPriestParticipation::Find(std::uint32_t player) const {
 // 유효하지 않은 소유자도 원본 조회 순서를 유지한 뒤 쓰기만 생략한다.
 void RawPriestParticipation::Refresh(std::uint32_t player) const {
     const auto sid=Find(player);const auto value=!sid ? 2U : pool_.Slot(Sid{static_cast<std::uint16_t>(sid)})[kType]==state_.priestType ? 0U : 1U;
-    if (player>0 && player<priests_.ownerState.size()) priests_.ownerState[player]=value;
+    auto& states=priests_.OwnerState(); // 실제 Find의 종속/typed 조회 뒤 같은 장기 표를 선택한다.
+    if (player>0 && player<states.size()) states[player]=value;
 }
 // 같은 월드의 소비자 연결 검사에 사용한다.
 const SidPool& RawPriestParticipation::Pool() const { return pool_; }

@@ -100,3 +100,12 @@ TEST_CASE(PriestParticipation_RejectsDifferentPoolAndBrokenContainedChain) {
     auto parent=Input(scene.pool,Sid{5});std::fill(parent.begin(),parent.end(),std::uint8_t{});parent[10]=82;Put(parent,6,10,2);scene.types[82].flags2=0x10000;auto contained=Input(scene.pool,Sid{10});std::fill(contained.begin(),contained.end(),std::uint8_t{});contained[10]=6;Put(contained,4,10,2);Put(contained,18,157,2);Put(contained,20,0x20,2);
     CHECK(Throws([&] { scene.participation.Find(1); }));
 }
+
+// 실제 참여 Find/Refresh는 같은 공유9DWORD만 쓰고 사제 목록/count와 독립 fallback을 보존한다.
+TEST_CASE(PriestOwnerState_ParticipationWritesSharedTableWithoutChangingList) {
+    ParticipationScene scene;std::array<std::uint32_t,kPlayerCount+1> shared{};shared.fill(31);scene.priests.ownerState.fill(77);scene.priests.sharedOwnerState=&shared;
+    scene.priests.priests.entries={50,60,77};scene.priests.priests.count=1;auto live=Input(scene.pool,Sid{50});std::fill(live.begin(),live.end(),std::uint8_t{});live[10]=158;live[34]=1;
+    const auto entries=scene.priests.priests.entries;const auto fallback=scene.priests.ownerState;scene.participation.Refresh(1);CHECK(shared[1]==0 && shared[0]==31 && scene.priests.ownerState==fallback);
+    live[10]=82;scene.participation.Refresh(1);CHECK(shared[1]==1 && scene.priests.ownerState==fallback); // 원문 live 목록은 타입을 필터링하지 않으며 Refresh가 현재 타입으로1을 쓴다.
+    ResetPriestOwnerState(scene.priests.OwnerState(),1);CHECK(shared[1]==0 && scene.priests.priests.entries==entries && scene.priests.priests.count==1 && scene.priests.ownerState==fallback);
+}

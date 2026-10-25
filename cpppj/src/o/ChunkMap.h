@@ -3,6 +3,7 @@
 #pragma once
 #include <array>
 #include <cstdint>
+#include <span>
 #include <vector>
 
 namespace netstorm::o {
@@ -50,6 +51,11 @@ class ChunkMap {
 public:
     // 가로·세로 청크 수(원본 +4, +8). 미션 맵은 16 × 16이다.
     ChunkMap(int xLength = kChunkMapSide, int yLength = kChunkMapSide);
+    void Reset(); // 00432360: 현재 mode를 보관하고1로 둔 뒤 현재 폭/높이의 지정12BYTE 셀만 지우고 mode를 복원한다.
+    std::uint32_t& Mode(); // cleanup/prefix는 같은 원문 첫DWORD에 Reset과 별도로1을 쓴다.
+    const std::uint32_t& Mode() const; // 실제 현재 mode를 사본 없이 읽는다.
+    std::span<ChunkEntry,kChunkMapSide*kChunkMapSide> Entries(); // 현재 폭/높이 밖을 포함한 실제 고정256×12BYTE 물리다.
+    std::span<const ChunkEntry,kChunkMapSide*kChunkMapSide> Entries() const; // 읽기 전용 consumer도 같은 고정 물리를 빌린다.
     // 원본 FUN_00432180: 범위를 벗어난 좌표는 원본처럼 가장자리로 당긴다(원본은 그 전에 assert 한다).
     ChunkEntry& At(int x, int y);
     const ChunkEntry& At(int x, int y) const;
@@ -60,6 +66,7 @@ public:
     int XLength() const;
     int YLength() const;
 private:
+    std::uint32_t mode_{1}; // 원문 생성자004323c0이 지정하는 첫DWORD이며 bool로 정규화하지 않는다.
     // xLength_: X 길이.
     // yLength_: Y 길이.
     int xLength_{}, yLength_{};

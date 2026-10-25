@@ -10,8 +10,14 @@ inline constexpr std::uint32_t kPriestRegenEvent=0x25a;
 // 사제 후처리 Pop 처리 중 조회·갱신하는 상태 묶음이다.
 struct PriestPostPopState {
     SquidPostPopList priests; // 005954c4 / CD 00549188: 중복 없이 등록하는 사제 목록이다.
-    std::array<std::uint32_t,kPlayerCount+1> ownerState{}; // 00595428 / CD 005119a0. 칸 0은 건드리지 않는다.
+    std::array<std::uint32_t,kPlayerCount+1> ownerState{}; // 00595428 / CD 005119a0의 독립 raw 검사 호환 저장소다.
+    std::array<std::uint32_t,kPlayerCount+1>* sharedOwnerState{}; // 실제 Session은 첫 소비자 구성 전에 장기9DWORD를 고정 연결하며 목록/count는 이관하지 않는다.
+    std::array<std::uint32_t,kPlayerCount+1>& OwnerState() { return sharedOwnerState ? *sharedOwnerState : ownerState; } // 실제 writer가 그 시점의 동일 공유 표에 직접 쓴다.
+    const std::array<std::uint32_t,kPlayerCount+1>& OwnerState() const { return sharedOwnerState ? *sharedOwnerState : ownerState; } // outcome/AI/메뉴가 같은 현재9DWORD를 사본 없이 읽는다.
 };
+// PATCH00492240의 진단→유효owner1..8 한DWORD0쓰기다. Pool/목록/Session 없이 같은 실제 표에 사용할 수 있다.
+void ResetPriestOwnerState(std::array<std::uint32_t,kPlayerCount+1>& states,std::uint32_t player,
+    const std::function<void(std::uint32_t)>& assertion={});
 // 사제 후처리 Pop 외부 동작과 저장소 조회를 연결하는 콜백 묶음이다.
 struct PriestPostPopHooks {
     std::function<bool(Sid,std::uint32_t)> findRegular; // 실제 종속 체인에서 이미 예약된 회복을 찾는다.

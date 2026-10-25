@@ -2,8 +2,17 @@
 #pragma once
 #include "o/RawFortFinishOwner.h"
 #include "o/RawPathSearch.h"
+#include <array>
+#include <span>
 
 namespace netstorm::o {
+// 실행기와 callback 없이 같은 countDWORD·100개32BYTE 기록만 장기 보관한다.
+struct RawIslandStorage {
+    static constexpr std::size_t kBytes=4+100*32; // 원문00568b60의 실제3204BYTE 범위다.
+    std::array<std::uint8_t,kBytes> records{}; // 최초 호스트0 입력이며 Native 최초 할당 내용을 주장하지 않는다.
+};
+// 0046edf0의 지정 필드와 마지막 count만 쓴다. Pool/Player/모드/효과나 padding은 바꾸지 않는다.
+void ResetRawIslandRecords(std::span<std::uint8_t> records);
 // 실제 섬 목록이 보고하는 진단이며 callback 뒤 원본처럼 조건부 작업을 이어간다.
 enum class IslandRuntimeAssertion {
     // MissingIsland: 존재/범위 검사에 실패한 섬의 getter/setter를 요청했다.
@@ -21,8 +30,8 @@ struct IslandRuntimeHooks {
 // 패치0046edf0..0046f320와 CD004bd3f0..004bda70의 mutable IslandList 몸체다.
 class RawIslandRuntime {
 public:
-    // countDWORD+100개32바이트 기록의 실제 바이트 수다. records는 CoreData가 소유한다.
-    static constexpr std::size_t kBytes=4+100*32;
+    // countDWORD+100개32바이트 기록의 실제 바이트 수다. 실행기는 주어진 같은 물리만 빌린다.
+    static constexpr std::size_t kBytes=RawIslandStorage::kBytes;
     // 기존 Fort모드/Player 첫 지역과 revision/변경DWORD·실제residences/hash/pool을 공유한다.
     RawIslandRuntime(const SidPool& pool,const SquidHash& hash,std::span<std::uint8_t> records,
         FortFinishOwnerState& modes,SquidPostPopList& residences,std::uint32_t& worldRedraw,std::uint32_t& mapRevision,
@@ -79,7 +88,7 @@ private:
     const SidPool& pool_;
     // hash_: 기존RawPathSurfaceAt이 읽는 현재hash0 WORD 지도다.
     const SquidHash& hash_;
-    // records_: CoreData가 소유한 실제count/100개 mutable32바이트기록이다.
+    // records_: Client 표면 저장소 또는 명시 독립 caller가 소유한 실제count/100개 mutable32바이트기록이다.
     std::span<std::uint8_t> records_;
     // modes_: 기존 FortFinishOwner의fort/special/chaff/Player첫지역/거주 구역타입을 공유한다.
     FortFinishOwnerState& modes_;
