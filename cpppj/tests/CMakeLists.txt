@@ -2178,3 +2178,5 @@ target_sources(netstorm_tests PRIVATE ProcessHostStorageTests.cpp ProcessHostSes
 target_sources(netstorm_tests PRIVATE ClientCursorGlobalsTests.cpp)
 # 원문 PE에서 먼저 고정한 마커·Zone과 실제 Client 정리 저장소를 대조한다.
 target_sources(netstorm_tests PRIVATE StateStorageCleanupTests.cpp)
+# 원본 실제 Pool 부모·하위 Reset·삭제80DWORD와 장기 실패점을 대조한다.
+target_sources(netstorm_tests PRIVATE SquidPoolResetTests.cpp)

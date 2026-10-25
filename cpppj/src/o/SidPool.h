@@ -31,6 +31,8 @@ public:
     // 004abb10 ↔ CD 004aaad0: capacity>0이면 풀 크기를 다시 확보하고, 0/음수면 기존 풀을 초기화한다.
     // 삭제 기록은 유지한다. 호출자는 기존 프로세스/UI를 먼저 정리해야 하며 양수 재확보 뒤 빌린 span은 무효다.
     void Reset(std::int32_t capacity=0);
+    // 004952d0/CD004cff20: 같은 두20항목 기록을 other→client 순서로 지운다. 하위 Reset 자체는 기존처럼 기록을 보존한다.
+    void ClearDeletionHistory();
     // 004af1d0 ↔ CD 004aae40. bit 1=예측, bit 2=클라이언트이며 예측이 우선한다.
     Sid Allocate(std::uint32_t flags=0);
     // 004abf60 ↔ CD 004ab250. void 객체만 반납하며 raw 슬롯을 지운 뒤 이전 타입 번호를 남긴다.

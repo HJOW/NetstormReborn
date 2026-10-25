@@ -4,6 +4,7 @@
 #include "client/RawProcessHostStorage.h"
 #include "o/RawAuthorityState.h"
 #include "o/RawGameAuxState.h"
+#include "o/RawBoardTarget.h"
 #include "o/RawGraph.h"
 #include "o/RawIslandRuntime.h"
 #include "o/ChunkMap.h"
@@ -62,6 +63,7 @@ public:
     std::vector<o::RiftTypeFrames> frames;std::vector<o::SquidDisplayShape> shapes; // 자산보다 짧고 모든 Session보다 긴 프레임/셰이프 배열이다.
     std::vector<std::vector<o::FrameCode>> codes; // Graph의 동일 프레임 코드 배열이다.
     o::SidPool pool;o::SquidHash hash;std::vector<std::uint8_t> spots; // Reset(0)은 기존 SID 바이트/공간 배열의 주소를 유지한다.
+    o::BoardTargetState boardTargetState; //545370/545374 실패점을 Pool과 같은 장기 수명에 두고 Board/AI가 직접 빌린다.
     o::RawGraphStorage graph; // 기록255행과 flood4096DWORD만 장기 보유한다. 실행기/TYPE snapshot/복구 정책은 World 지역이다.
     o::RawTotalMadeStorage totalMade; // 현재 로컬/누적 로컬/전역256DWORD만 장기 보유하며 ownerFactories/로딩 정책은 World 지역이다.
     o::RawIslandStorage islands;o::ChunkMap chunks; // 같은3204BYTE 섬과 mode/크기/256×12BYTE 청크를 Session 전후에도 유지한다. 실행기/효과는 포함하지 않는다.

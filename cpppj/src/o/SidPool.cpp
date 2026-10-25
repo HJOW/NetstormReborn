@@ -46,6 +46,11 @@ void SidPool::Reset(std::int32_t capacity) {
     freeCount_=capacity_-kFirst;
     predictableCursor_=1;
 }
+// 각 SID/type DWORD만 순서대로 지우며 Pool 바이트·목록·권한을 다시 초기화하지 않는다.
+void SidPool::ClearDeletionHistory() {
+    for (auto& record:deletions_[1]) { record.sid=0;record.type=0; } //원문 첫40DWORD인 other 기록의 실제20쌍이다.
+    for (auto& record:deletions_[0]) { record.sid=0;record.type=0; } //다음40DWORD인 client 기록의 실제20쌍이다.
+}
 // 실제 next 필드를 사용한다. 마지막 일반 free 슬롯은 원본처럼 꼬리로 남긴다.
 Sid SidPool::Allocate(std::uint32_t flags) {
     std::uint32_t sid{};

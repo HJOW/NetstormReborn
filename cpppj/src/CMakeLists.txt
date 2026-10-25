@@ -210,3 +210,5 @@ target_sources(netstorm PRIVATE client/ClientCursorGlobals.h client/ClientCursor
 target_sources(netstorm PRIVATE client/ClientStateWorldGlobals.h client/ClientStateWorldGlobals.cpp)
 # Native ClockSync·MetaZone·Zone6BYTE 정리의 실제 장기 owner 연결이다.
 target_sources(netstorm PRIVATE client/ClientStateStorageCleanup.h client/ClientStateStorageCleanup.cpp o/RawStateZoneReset.h o/RawStateZoneReset.cpp)
+# 하위 SID Reset을 재사용하는 실제 월드 Pool 부모와 기록·실패점 꼬리다.
+target_sources(netstorm PRIVATE o/RawSquidPoolReset.h o/RawSquidPoolReset.cpp)

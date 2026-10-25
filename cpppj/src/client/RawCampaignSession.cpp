@@ -610,7 +610,7 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawIceTower> iceTower; //완성형 파괴/성장형 주기와 최종147 재생성이다.
     CarrierTransferState carrierTransferState; // 미등록187 분기의 공유 주기/재시도/마지막 기증자와 현재 헤더다.
     std::unique_ptr<RawCarrierTransfer> carrierTransfer; // 실제 내용물 재부착/491/송신/이동 삭제와 연결한다.
-    BoardTargetState boardTargetState; // 실제 월드 초기화 후의 실패점 두 float다.
+    BoardTargetState& boardTargetState{world.Storage()->boardTargetState}; //실제 Pool 정리가 쓴 같은 장기 실패점을 Board와 AI 다이스 접근점이 직접 읽는다.
     std::unique_ptr<RawBoardTarget> boardTarget; // 건설 Graph 순회와 다른 일반 접근점/변 중간점이다.
     std::unique_ptr<RawCarrierTarget> carrierTarget; // 같은 실제 Player AI/발자국/Path 시작과 귀환 선택을 공유한다.
     CarrierChoiceState carrierChoiceState; // 실제 후보의 경로 비교/현재 타입/임시 거리 전역이다.

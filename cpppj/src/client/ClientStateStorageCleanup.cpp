@@ -6,11 +6,19 @@
 #include "client/RawCampaignSession.h"
 #include "client/RawSurfaceWorld.h"
 #include "o/RawStateZoneReset.h"
+#include "o/RawSquidPoolReset.h"
 #include <stdexcept>
 
 namespace netstorm::client { //장기 Client 물리의 주소와 실제 효과 실행기의 수명을 구별한다.
 void ResetClientClockSynchronization(ClientLocalStateGlobals& globals) { o::ResetClockSynchronization(globals.ClockSynchronization()); }
 void ResetClientStateZone(ClientLocalStateGlobals& globals) { o::ResetStateZone(globals.Zone()); }
+//현재 실제 World 대여가 끝난 저장소만 받아 Native Pool 위치에서 부모 전체를 실행한다.
+void ResetClientSquidPool(Client& client,RawSurfaceStorage& storage,int capacity) {
+    const auto& current=client.SurfaceStorageIfInitialized();
+    if (storage.pool.Edition()!=o::OriginalEdition::Patch1078 || storage.Authority()!=client.GameplayGlobals()->Authority() || storage.GameAux()!=client.GameplayGlobals()->GameAux() || (current && current.get()!=&storage)) throw std::invalid_argument("State Pool 정리의 실제 Client/표면 owner 불일치");
+    if (storage.Borrowed()) throw std::logic_error("State Pool 정리 전 실제 World 대여 반납 필요");
+    o::ResetSquidWorldPool(storage.pool,storage.boardTargetState.invalid,capacity);
+}
 void ClearClientMetaZoneRecords(Client& client,RawSurfaceStorage& storage) {
     const auto& current=client.SurfaceStorageIfInitialized(); //미초기화 조회가 새 물리나 Session을 만들지 않는다.
     if (storage.pool.Edition()!=o::OriginalEdition::Patch1078 || storage.Authority()!=client.GameplayGlobals()->Authority() || storage.GameAux()!=client.GameplayGlobals()->GameAux() || (current && current.get()!=&storage))

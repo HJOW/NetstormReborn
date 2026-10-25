@@ -1,0 +1,25 @@
+{
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "observations": 12,
+  "perEdition": 6,
+  "nativeWrapperCalls": 12,
+  "nativeSelectedLowerPoolResets": 12,
+  "nativeHistoryClears": 12,
+  "nativeStoresPerCall": 82,
+  "originalGameExecuted": false,
+  "osCalls": 0,
+  "lowerPoolBodySubstituted": false,
+  "scope": "두 PE의 부모·기존 메모리 Pool Reset·두40DWORD·Y/X 전부 실제 CPU다. 양수 malloc 분기/할당 실패/전체 State1·Edit 진입은 별도다.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "tools/decomp_squid_pool_reset.py": "0a8d1d525932873419d2990d0454fd60a96fda14c7aba557bb95c1d25d61726d",
+    "tools/decomp_sid_oracle.py": "7bfd7b95b26724b1793d407a4ad6654972b2aaa3bf04e4c206cc357670b68dff",
+    "tools/decomp_oracle.py": "227b9a8b703cfd81d05ac4a7c72a42eaecf9c804fc028680466a19a591f2335d",
+    "cpppj/tests/fixtures/squid-pool-reset-x86.tsv": "52bd917cbbb73babe44211570461446bb1c7dc0eaebd197e6378d861ac679d25",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "extracted/refined/originalCD/NETSTORM.c": "9306f621576571c85280f9e25f024e3ec8b7b68c5c8ec6731c1f109dc3f25ebb"
+  }
+}
