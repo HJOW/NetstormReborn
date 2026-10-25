@@ -2041,3 +2041,6 @@ tools/decomp_chat_state_clear.py -text
 cpppj/player-initialization-native-20261024.json -text
 cpppj/tests/fixtures/player-initialization-x86.tsv -text
 tools/decomp_player_initialization.py -text
+# 구름 표시 원문의 빈 마지막 trace 칸과 최초 JSON 줄끝을 그대로 보존한다.
+cpppj/tests/fixtures/kencloud-render-x86.tsv text eol=lf whitespace=-blank-at-eol
+cpppj/kencloud-render-native.json text eol=lf

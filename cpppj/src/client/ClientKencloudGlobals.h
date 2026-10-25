@@ -2,6 +2,7 @@
 #pragma once
 #include "o/RawKencloud.h"
 #include "o/RawFortPaletteTransition.h"
+#include "o/RawKencloudRender.h"
 #include <array>
 #include <map>
 #include <vector>
@@ -9,6 +10,7 @@
 namespace netstorm::o { class BaseFileSystem;class ConfigInterface; } // 실제 VFS/설정 본체를 동기 장치에서 빌린다.
 namespace netstorm::client { // 구름 계산은 기존 원문 본체를 사용하고 메모리/파일/설정만 연결한다.
 class Renderer; // 존재 토큰과 같은 실제 객체의 수명을 연결하며 소유하지 않는다.
+class Screen; // 실제 현재 clip/잠금/DIB 장치를 표시 부모가 동기로 빌린다.
 class ClientKencloudGlobals {
 public:
     enum class Option:std::size_t { Cloudiness,Speed,Fury,Spacer,Recenter,SeedCount,LowColor,HighColor }; // 원문의 현재 여덟 DWORD를 순서대로 식별한다.
@@ -29,6 +31,11 @@ public:
     std::size_t Allocations() const; // 현재 실제 생존 블록 수만 관측한다.
     void Build(const o::BaseFileSystem& files,o::ConfigInterface& config,o::GameRandom& random); // 같은 실제 난수와 파일 부모로 전체 원문 생성을 실행한다.
     void Step(); // 같은 현재 캐시/행/dirty에 원문 행 이동을 실행한다.
+    o::KencloudRenderGlobals RenderGlobals(); // 같은 packed2054DWORD와 현재 speed를 표시/정리 부모에 빌린다.
+    void Update(const o::BaseFileSystem& files,o::ConfigInterface& config,o::GameRandom& random); //00470c50의 생성 후 속도 재조회와 캡처 반복을 실제 생성/step에 합성한다.
+    void MarkDirty();void CleanDirty(); // 같은 실제 이전/현재 행과 all/partial을 원문 순서로 갱신한다.
+    std::uint32_t RowDirty(std::uint32_t first,std::uint32_t second); // signed 나머지의 음수 인접 alias도 같은 물리에서 읽는다.
+    void Draw(Screen& screen,const std::array<std::uint32_t,6>& area,const o::BaseFileSystem& files,o::ConfigInterface& config,o::GameRandom& random,bool alternate=false); // 같은 실제 cache/clip/잠금/DIB 픽셀에 두 표시 부모를 실행한다.
     void Transition(const std::span<const std::uint8_t>& name,const o::BaseFileSystem& files,o::ConfigInterface& config,o::GameRandom& random,o::FortPaletteTransitionHooks devices); // 실제 Screen/추가표 장치를 받아 전체 기존 부모를 조립한다.
     void BindRenderer(Renderer* renderer); // 실제 생성/반납 위치에서 현재 객체와 opaque32 토큰을 연결한다.
     const std::uint32_t& RendererToken() const;std::uint32_t& WorldRedraw(); // 실제 현재 renderer 존재/0059a8b0을 같은 소비자에 빌린다.

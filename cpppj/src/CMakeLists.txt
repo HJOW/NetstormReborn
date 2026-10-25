@@ -21,6 +21,7 @@ target_sources(netstorm PRIVATE o/RawStaticStrings.cpp o/RawStaticStrings.h clie
 target_sources(netstorm PRIVATE client/ClientPlayerRuntime.cpp client/ClientPlayerRuntime.h) # 원문 공통 Player 초기화와 실제 방향별 동맹 장치다.
 target_sources(netstorm PRIVATE client/ClientSpGlobals.cpp client/ClientSpGlobals.h) # 실제 공통 SP/추적 DWORD와 같은 게임·CRT 난수의 장기 수명이다.
 target_sources(netstorm PRIVATE client/ClientKencloudGlobals.cpp client/ClientKencloudGlobals.h) # 실제 구름 메모리/파일/옵션과 전체 팔레트 장치를 조립한다.
+target_sources(netstorm PRIVATE o/RawKencloudRender.cpp o/RawKencloudRender.h) # 원문 구름 표시/갱신/dirty의 같은 packed 전역과 장치 경계다.
 target_sources(netstorm PRIVATE client/FortCurrentNameDevices.cpp client/FortCurrentNameDevices.h)
 # 원본 단일 객체/청크 저장을 같은 현재 TYPE·가상 분배와 Finder에 연결한다.
 target_sources(netstorm PRIVATE o/RawFortObjectSave.cpp o/RawFortObjectSave.h)

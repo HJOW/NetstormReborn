@@ -1,0 +1,40 @@
+{
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon",
+  "lastDecompileDate": "2026-10-23",
+  "entries": {
+    "update": 4656208,
+    "mark": 4656256,
+    "clean": 4656288,
+    "query": 4656352,
+    "draw": 4657616,
+    "alternate": 4658192
+  },
+  "uniqueInputs": 472,
+  "observations": 944,
+  "precisionDifferences": 0,
+  "instructions": 901776,
+  "completions": {
+    "return": 910,
+    "build": 6,
+    "clip1": 4,
+    "lock": 4,
+    "blit1": 4,
+    "blit2": 4,
+    "unlock": 4,
+    "clip2": 4,
+    "step1": 2,
+    "step2": 2
+  },
+  "gameExecuted": false,
+  "guiExecuted": false,
+  "scope": "실제 여섯 부모의 분기/감김/반복/dirty/clip 복구. 생성/step/clip/잠금/복사는 명시 장치이며 실제 픽셀/전체994b0/자연 Frame 증거와 구별한다.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_priestmenu.py": "8d1474792e7511fa777e7bd7bd369f2a2a0f9f5c35643e420d65a3fa4744bac9",
+    "tools/decomp_kencloud_render.py": "cd54ace48252f27f04d5e3e93edb41880e0cec6bacc37ef40ecda30d30d4bc6a",
+    "cpppj/tests/fixtures/kencloud-render-x86.tsv": "a8ae41506b62852b053ee3588d230bec17c011e677db925429ced447a16394f0"
+  }
+}

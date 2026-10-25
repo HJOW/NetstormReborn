@@ -2150,9 +2150,14 @@ target_sources(netstorm_tests PRIVATE StaticStringsTests.cpp) # 원본204관측�
 target_sources(netstorm_tests PRIVATE ClientPlayerRuntimeTests.cpp) # 실제 공통 Player/장기 Core/재할당 선행과 초기화 기록 대여 수명을 확인한다.
 target_sources(netstorm_tests PRIVATE ClientSpGlobalsTests.cpp) # 실제 SP48관측과 공통 시작/Session 반납 뒤의 같은 SP/난수/추적 수명이다.
 target_sources(netstorm_tests PRIVATE ClientKencloudGlobalsTests.cpp) # 실제 구름 물리/VFS/옵션·부분 효과와 전체 부모 접합을 확인한다.
+target_sources(netstorm_tests PRIVATE KencloudRenderTests.cpp) # 제품 전 고정 Native944행과 자연 생략/인접 alias/부분 효과다.
+set_source_files_properties(KencloudRenderTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_KENCLOUD_RENDER_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/kencloud-render-x86.tsv\"")
 add_executable(netstorm_cloud_probe KencloudClientProbe.cpp) # 실제 GUI 장치 실행은 명시 CLI로만 하며 일반 CTest에 자동 실행하지 않는다.
 netstorm_apply_compiler_options(netstorm_cloud_probe)
 target_link_libraries(netstorm_cloud_probe PRIVATE netstorm)
+add_executable(netstorm_cloud_render_probe KencloudRenderClientProbe.cpp) # 실제 Screen 픽셀 장치는 명시 실행하며 일반 CTest에서 창을 열지 않는다.
+netstorm_apply_compiler_options(netstorm_cloud_render_probe)
+target_link_libraries(netstorm_cloud_render_probe PRIVATE netstorm)
 set_source_files_properties(ClientSpGlobalsTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_SP_INITIALIZATION_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/sp-initialization-x86.tsv\"")
 set_source_files_properties(StaticStringsTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_STATIC_STRINGS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/static-string-runtime-x86.tsv\"")
 set_source_files_properties(TellFileMenusTests.cpp PROPERTIES COMPILE_DEFINITIONS

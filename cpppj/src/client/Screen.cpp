@@ -346,6 +346,25 @@ void Screen::Unlock() {
 }
 // 원본은 right·bottom에서 1을 뺀 값을 VFX pane에 넣는다.
 void Screen::SetClip(int left, int top, int right, int bottom) { clip_ = {left, top, right, bottom}; }
+// 구름 표시 부모가 실제 네 clip 값을 캡처한 뒤 같은 장치에 복구한다.
+ScreenRect Screen::Clip() const { return clip_; }
+// 004a0c10의 DIB 경로는 sourceLTRB를 대상 크기로 바꾼 뒤 화면/현재 clip으로 자르고4BYTE/나머지를 앞으로 복사한다.
+void Screen::BlitBuffer(int x,int y,std::span<const std::uint8_t> source,int sourcePitch,ScreenRect sourceRect) {
+    const auto add=[](int first,int second) { return std::bit_cast<std::int32_t>(std::uint32_t(first)+std::uint32_t(second)); }; // 같은 DWORD 감김 좌표다.
+    const auto subtract=[](int first,int second) { return std::bit_cast<std::int32_t>(std::uint32_t(first)-std::uint32_t(second)); }; // signed overflow를 C++ 미정의 동작으로 만들지 않는다.
+    const auto clip=ClipScreenRect(clip_,{0,0,width_,height_});const auto target=ClipScreenRect({x,y,add(x,subtract(sourceRect.right,sourceRect.left)),add(y,subtract(sourceRect.bottom,sourceRect.top))},clip);
+    if (!buffer_) throw std::logic_error("구름 buffer 복사의 실제 잠금 누락");const auto width=subtract(target.right,target.left),height=subtract(target.bottom,target.top);const auto pitch=Pitch();
+    if (width<0 || height<0 || sourcePitch<0) throw std::out_of_range("구름 buffer 복사의 현재 물리 폭");
+    const auto first=std::int64_t(add(sourceRect.top,subtract(target.top,y)))*sourcePitch+add(sourceRect.left,subtract(target.left,x)); // 자르기 뒤 원문 source 시작 위치다.
+    for (int row=0;row<height;++row) { // 행마다 현재 원시 source와 같은 실제 잠긴 DIB를 사용한다.
+        const auto sourceRow=first+std::int64_t(row)*sourcePitch,destinationRow=std::int64_t(target.top+row)*pitch+target.left;
+        for (int column=0;column<width;) { // Native의 DWORD 앞으로 복사와 마지막0~3BYTE를 같은 순서로 실행한다.
+            const auto bytes=width-column>=4 ? 4 : 1;const auto from=sourceRow+column,to=destinationRow+column;
+            if (from<0 || std::uint64_t(from)+bytes>source.size() || to<0 || std::uint64_t(to)+bytes>std::uint64_t(pitch)*height_) throw std::out_of_range("구름 buffer 복사의 실제 물리 범위");
+            std::array<std::uint8_t,4> word{};std::copy_n(source.data()+from,bytes,word.data());std::copy_n(word.data(),bytes,buffer_+to);column+=bytes; // 겹친 입력도 먼저 해당 DWORD를 읽은 뒤 쓴다.
+        }
+    }
+}
 // 원본 004a2060의 "모드가 정해진 뒤" 경로: 줄마다 같은 색 바이트로 채운다.
 void Screen::FillRect(ScreenRect rect, std::uint8_t color) {
     rect = ClipScreenRect(rect, clip_);

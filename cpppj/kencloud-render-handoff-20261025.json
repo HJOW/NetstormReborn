@@ -1,0 +1,116 @@
+{
+  "unit": 425,
+  "goalComplete": false,
+  "pauseRequested": true,
+  "state": "build-complete-product-checks-not-run",
+  "created": "2026-10-25T14:54:38.921219",
+  "host": "HJOW-Athlon",
+  "startingHead": "345b56915ca6fb70ea3f592eb1671f16c20daf60",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "build": {
+    "attempts": 1,
+    "exitCode": 0,
+    "diagnostics": 0,
+    "log": "extracted/cpp-kencloud-render-425-build1.log",
+    "logSha256": "a7d13ff0e88c56b6b49e555acae523a9628d3f4cb7fc79be0f2ff33f5054fc58"
+  },
+  "native": {
+    "host": "HJOW-Athlon",
+    "lastDecompileHost": "HJOW-Athlon",
+    "lastDecompileDate": "2026-10-23",
+    "entries": {
+      "update": 4656208,
+      "mark": 4656256,
+      "clean": 4656288,
+      "query": 4656352,
+      "draw": 4657616,
+      "alternate": 4658192
+    },
+    "uniqueInputs": 472,
+    "observations": 944,
+    "precisionDifferences": 0,
+    "instructions": 901776,
+    "completions": {
+      "return": 910,
+      "build": 6,
+      "clip1": 4,
+      "lock": 4,
+      "blit1": 4,
+      "blit2": 4,
+      "unlock": 4,
+      "clip2": 4,
+      "step1": 2,
+      "step2": 2
+    },
+    "gameExecuted": false,
+    "guiExecuted": false,
+    "scope": "실제 여섯 부모의 분기/감김/반복/dirty/clip 복구. 생성/step/clip/잠금/복사는 명시 장치이며 실제 픽셀/전체994b0/자연 Frame 증거와 구별한다.",
+    "sha256": {
+      "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+      "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+      "tools/decomp_priestmenu.py": "8d1474792e7511fa777e7bd7bd369f2a2a0f9f5c35643e420d65a3fa4744bac9",
+      "tools/decomp_kencloud_render.py": "cd54ace48252f27f04d5e3e93edb41880e0cec6bacc37ef40ecda30d30d4bc6a",
+      "cpppj/tests/fixtures/kencloud-render-x86.tsv": "a8ae41506b62852b053ee3588d230bec17c011e677db925429ced447a16394f0"
+    }
+  },
+  "compiledSources": 11,
+  "frozenHashes": {
+    "cpppj/src/CMakeLists.txt": "b39a2ce74bfd79405498d771337a22ebbe9c39ffde9b4ed80ec5585528492d3f",
+    "cpppj/src/o/RawKencloudRender.cpp": "e7500d21d7976dfbe7bcda8fe4a0a089a55ff8ca573b54a2304dedf6d70f040a",
+    "cpppj/src/o/RawKencloudRender.h": "6a9d851022c33f7a84a89c2f3d857bb5a4c5994ce1f2824a2189078f74c0c877",
+    "cpppj/src/client/ClientKencloudGlobals.cpp": "92366409d0357140edf4758af3eb9c59cd8567ed23e0ca6c3ed1b5002c72d084",
+    "cpppj/src/client/ClientKencloudGlobals.h": "f19064d725219484869eb0eaab9a51ac2b7968d0ec23d568931e8a567cb63871",
+    "cpppj/src/client/Screen.cpp": "43adaf8649c66282faeead2f4917d8c4cf07bbae72d3523ec8ab072bccf5a274",
+    "cpppj/src/client/Screen.h": "0960b9d3575315530eca612c025a0013213b9e50ac1fcca0ac47f56d42b3a35b",
+    "cpppj/tests/CMakeLists.txt": "27f712b8cae5e170c6a1e63355d7d652f29f5b156535a4a16957feec89e6f510",
+    "cpppj/tests/KencloudRenderTests.cpp": "8d27bc0ff5f8a694ed2f86026a462e640080efe24dbc26003a2ffb75789f356c",
+    "cpppj/tests/ClientKencloudGlobalsTests.cpp": "d8822425feeddefaca046f63670ae95d6ef8f2af3927b207d962f5a085042c00",
+    "cpppj/tests/KencloudRenderClientProbe.cpp": "fd31f16575dfe7dffc2a061b94af7293c2159c7426057f30e5090c6293185a2a",
+    "cpppj/build/bin/Release/NetstormCpp.exe": "1cb876ca053f8a39eb9042fb716b73ba84e0e5289a72857babba90acb57ed31f",
+    "cpppj/build/bin/Release/netstorm_tests.exe": "c0b87e30d8b0f55eb1fe321ff89de66cbbf7d082784c7330c3168737ae48c53a",
+    "cpppj/build/bin/Release/netstorm_cloud_probe.exe": "8728f69e9d7e61ee441740f6b840e416b084a20f71ca6a655cfec2d035bdfa69",
+    "cpppj/build/bin/Release/netstorm_cloud_render_probe.exe": "183941fe61fcb44953dd06a82c1080135c1a0c0fec3e734ced5b59cd51aef021"
+  },
+  "productFocusedTestsExecuted": false,
+  "productGuiExecuted": false,
+  "fullCTestExecuted": false,
+  "expectedTestCount": 2846,
+  "observedTestCount": null,
+  "protectedFiles": {
+    "count": 1821,
+    "unchanged": true
+  },
+  "lastIntegrated": {
+    "commit": "345b5691",
+    "report": "cpppj/kencloud-client-runtime-20261025.json",
+    "reportSha256": "f29ab71ae6e9bc921a79aad1fb78bbaf26d89f0bc471ab971863796fe7f02a38",
+    "productSha256": "e36f495c0125936184b98967d67a3df7e82f8c66c81769fd3a1fd4c4bae35435",
+    "testBinarySha256": "4f977376bdddfba3611fd5de66310fe32596b489f2019657b36dc80db652ba9e",
+    "ctest": {
+      "tests": 2843,
+      "failed": 0,
+      "seconds": 334.43
+    }
+  },
+  "pending": [
+    "KencloudRender focused 2 tests with frozen Native944",
+    "ClientKencloudGlobals focused 7 tests",
+    "Actual Screen full/partial pixels and clip/cache/RNG device probe",
+    "Full Renderer994b0 overrideHead/dirty regions/parallax integration",
+    "Batch full CTest and long GUI at feature milestone or 3-5 units"
+  ],
+  "obsoletePreparedAudit": "extracted/cpp-kencloud-render-425-audit.py",
+  "obsoleteAuditDisabled": true,
+  "batchPolicy": "Focused validation per unit; full CTest and long play after feature milestone or 3-5 units; short relevant scene checks for input/timer/save changes",
+  "handoffHashes": {
+    ".gitattributes": "fef5d009fb6db5fff49d3603f44a9f93bceafc7becf86da3f7d23f8c93b9a1de",
+    "LEFT_JOBS.md": "3654daffccbfe8bdd24f1958499c7812abc0a83ac15376960910039fc561f40a",
+    "docs/exe/cpp-kencloud-render-20261025.md": "108843fafe60d4a7e5e1abc2a4c0789b62ff54db26cc481ff95b594dcd92abd0",
+    "tools/cpp_kencloud_render_probe.py": "1b4fe2912449e9fecb25da192ca84a6d08913c49ec90be90cf16a3167492743c",
+    "tools/decomp_kencloud_render.py": "cd54ace48252f27f04d5e3e93edb41880e0cec6bacc37ef40ecda30d30d4bc6a",
+    "cpppj/kencloud-render-native.json": "f787e92b120a3d1572793fa2ffa588027474d5622d699fa082c7f04c754c1c9d",
+    "cpppj/tests/fixtures/kencloud-render-x86.tsv": "a8ae41506b62852b053ee3588d230bec17c011e677db925429ced447a16394f0"
+  }
+}

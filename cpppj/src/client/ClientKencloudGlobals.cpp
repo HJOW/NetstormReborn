@@ -2,6 +2,7 @@
 #include "client/ClientKencloudGlobals.h"
 #include "client/CurrentAllocationBytes.h"
 #include "client/GifImage.h"
+#include "client/Screen.h"
 #include "o/BaseFile.h"
 #include "o/ConfigInterface.h"
 #include <algorithm>
@@ -56,6 +57,18 @@ std::uint32_t ClientKencloudGlobals::LoadFile(const o::BaseFileSystem& files,o::
 o::KencloudHooks ClientKencloudGlobals::Devices(const o::BaseFileSystem& files,o::ConfigInterface& config) { o::KencloudHooks hooks;hooks.loadFile=[&] { return LoadFile(files,config); };hooks.allocate=[this](auto bytes) { return Allocate(bytes); };hooks.memory=[this](auto address) { return Memory(address); };return hooks; } // 같은 동기 호출보다 오래 빌리지 않는다.
 void ClientKencloudGlobals::Build(const o::BaseFileSystem& files,o::ConfigInterface& config,o::GameRandom& random) { o::BuildKencloud(Globals(),random,Devices(files,config)); } // 실제 같은 GameRandom을 직접 소비한다.
 void ClientKencloudGlobals::Step() { o::KencloudHooks hooks;hooks.memory=[this](auto address) { return Memory(address); };o::StepKencloud(Globals(),hooks); } // 행 이동은 별도 난수를 만들지 않는다.
+o::KencloudRenderGlobals ClientKencloudGlobals::RenderGlobals() { return {state_,options_[1]}; } // 기존 생성/팔레트와 정확히 같은 물리를 빌린다.
+void ClientKencloudGlobals::Update(const o::BaseFileSystem& files,o::ConfigInterface& config,o::GameRandom& random) { o::KencloudRenderHooks hooks;hooks.build=[&] { Build(files,config,random); };hooks.step=[this] { Step(); };o::UpdateKencloud(RenderGlobals(),hooks); } // 원문 부모의 실제 선택에만 파일/난수를 소비한다.
+void ClientKencloudGlobals::MarkDirty() { o::MarkKencloudDirty(state_); } // 기존 palette/Renderer가 빌린 같은 flags다.
+void ClientKencloudGlobals::CleanDirty() { o::CleanKencloudDirty(state_); } // 실제 표시된 행만 지우며 다른 현재 dirty는 유지한다.
+std::uint32_t ClientKencloudGlobals::RowDirty(std::uint32_t first,std::uint32_t second) { return o::KencloudRowDirty(state_,first,second); } // 물리를 복제하거나 정규화하지 않는다.
+void ClientKencloudGlobals::Draw(Screen& screen,const std::array<std::uint32_t,6>& area,const o::BaseFileSystem& files,o::ConfigInterface& config,o::GameRandom& random,bool alternate) {
+    o::KencloudRenderHooks hooks;hooks.build=[&] { Build(files,config,random); };hooks.clip=[&] { const auto clip=screen.Clip();return std::array<std::uint32_t,4>{std::uint32_t(clip.left),std::uint32_t(clip.top),std::uint32_t(clip.right),std::uint32_t(clip.bottom)}; }; // 실제 현재 Screen의 같은 네 값이다.
+    hooks.setClip=[&](const auto& clip) { screen.SetClip(std::bit_cast<std::int32_t>(clip[0]),std::bit_cast<std::int32_t>(clip[1]),std::bit_cast<std::int32_t>(clip[2]),std::bit_cast<std::int32_t>(clip[3])); };
+    hooks.lock=[&](bool special) { if (special) throw std::logic_error("구름 parallax DirectDraw 004a15d0 장치 미복원");screen.Lock(); };hooks.unlock=[&](bool special) { if (special) throw std::logic_error("구름 parallax DirectDraw 004a1650 장치 미복원");screen.Unlock(); }; // 두 장치를 같은 GDI 잠금으로 속이지 않는다.
+    hooks.blit=[&](const auto& args) { const auto signedValue=[](auto value) { return std::bit_cast<std::int32_t>(value); };screen.BlitBuffer(signedValue(args[0]),signedValue(args[1]),Memory(args[2]),signedValue(args[3]),{signedValue(args[4]),signedValue(args[5]),signedValue(args[6]),signedValue(args[7])}); }; // 현재 cache의 같은 생존 BYTE를 복사본 없이 읽는다.
+    o::DrawKencloud(RenderGlobals(),area,hooks,alternate); // clip/잠금/dirty의 부분 효과와 정상 복구는 원문 부모가 소유한다.
+}
 void ClientKencloudGlobals::Transition(const std::span<const std::uint8_t>& name,const o::BaseFileSystem& files,o::ConfigInterface& config,o::GameRandom& random,o::FortPaletteTransitionHooks devices) {
     devices.compare=[](auto first,auto second) { Text(first);Text(second);return _stricmp(reinterpret_cast<const char*>(first.data()),reinterpret_cast<const char*>(second.data())); }; // 실제 CRT의 대소문자 무시 비교와 같은 현재 C문자열을 사용한다.
     devices.release=[this](auto token) { Release(token); };devices.buildCloud=[&] { Build(files,config,random); };devices.stepCloud=[this] { Step(); };

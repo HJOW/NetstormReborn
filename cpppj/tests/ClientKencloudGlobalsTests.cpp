@@ -58,3 +58,10 @@ TEST_CASE(ClientKencloudGlobals_ActualTransitionUsesSameGlobalsAndDeviceOrder) {
     o::FortPaletteTransitionHooks effects;effects.log=[&](auto level,auto) { CHECK(level==29);trace+='L'; };effects.loadPalette=[&](auto,auto clear) { CHECK(clear==1);++loads;trace+='P'; };effects.buildMaps=[&] { ++maps;trace+='M';cloud->BindRenderer(nullptr); };cloud->Transition(input,client.Files(),client.Configuration(),client.RandomGlobals()->Game(),effects);CHECK(trace=="LPM" && loads==1 && maps==1 && cloud->Globals().cache && cloud->Globals().phase==2 && cloud->WorldRedraw()==0);
     const auto token=cloud->Globals().cache,rng=client.RandomGlobals()->Game().State();name[0]='g';trace.clear();cloud->Transition(input,client.Files(),client.Configuration(),client.RandomGlobals()->Game(),effects);CHECK(trace=="L" && loads==1 && maps==1 && cloud->Globals().cache==token && client.RandomGlobals()->Game().State()==rng); // 같은 이름은 실제 cache/Screen/maps/dirty를 건드리지 않는다.
 }
+
+// 실제 갱신 부모가 같은 파일/난수를 한 번만 생성하고 현재 행/이전 행을 같은 물리에서 정리한다.
+TEST_CASE(ClientKencloudGlobals_ActualUpdateAndDirtyUseSameMemory) {
+    Client client(CloudOptions());CloudConfig(client);auto cloud=client.KencloudGlobals();auto& random=client.RandomGlobals()->Game();random.SetState(0x89abcdefU);cloud->Update(client.Files(),client.Configuration(),random);const auto globals=cloud->Globals();const auto token=globals.cache,rng=random.State();CHECK(token && globals.phase==2 && rng==4201191824U);
+    cloud->Update(client.Files(),client.Configuration(),random);CHECK(globals.phase==4 && globals.cache==token && random.State()==rng && cloud->Allocations()==1);cloud->MarkDirty();CHECK(globals.allDirty==1 && globals.partialDirty==0 && cloud->RowDirty(0xffffffffU,0)==1);
+    cloud->State()[8]=1;globals.dirtyRows[8]=1;globals.dirtyRows[13]=1;cloud->CleanDirty();CHECK(cloud->State()[8]==0 && globals.dirtyRows[8]==0 && globals.dirtyRows[13]==1 && globals.allDirty==0 && globals.partialDirty==0); // 이전에 표시하지 않은13행은 보존한다.
+}

@@ -142,6 +142,8 @@ public:
     void Unlock();
     // 원본 FUN_004a1580: 그리기 자르기 영역. right·bottom은 포함하지 않는다.
     void SetClip(int left, int top, int right, int bottom);
+    ScreenRect Clip() const; //005c7a44..50의 현재 exclusive clip을 바꾸지 않고 읽는다.
+    void BlitBuffer(int x,int y,std::span<const std::uint8_t> source,int sourcePitch,ScreenRect sourceRect); //004a1fe0→004a0c10의 잠근 DIB에 원시 인덱스 사각형을 복사한다.
     // 원본 FUN_004a2060: 잠근 그리기 표면의 사각형을 한 색으로 채운다(현재 자르기 영역으로 자른다).
     void FillRect(ScreenRect rect, std::uint8_t color);
     // 원본 FUN_004a4790: 잠그고 채우고 푼다. 화면 모드가 정해지기 전에는 아무것도 하지 않는다.
