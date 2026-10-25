@@ -9,6 +9,8 @@ struct ContainedFinderState {
     bool boss{true}; // 00540bc4 / CD 00540a2c: 현재 권한 전역이다.
     std::uint32_t containedType{6}; // 00541088 / CD 0051c978: 후보 BYTE와 비교하는 DWORD 타입이다.
     bool checkingDead{}; // 005e4794: 패치판 dead 부모 조회 assert를 활성화한다.
+    const bool* sharedBoss{}; // Carrier·Damageable·내용물 검색이 같은 실제 Client boss를 읽는 주소다.
+    bool Boss() const { return sharedBoss ? *sharedBoss : boss; } // 외부 효과 뒤 또는 dead 진단의 원문 관문에서 현재값을 조회한다.
 };
 // contained finder의 현재/다음 SID와 기본 true 필터를 보존한다.
 class RawContainedFinder {

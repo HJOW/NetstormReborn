@@ -16,7 +16,11 @@ struct PriestFallFrames {
     std::int32_t landed{}; // 타입 +0x140의 지면 도착 프레임이다.
 };
 // 낙하 요청이 권한 효과 직전에 다시 읽는 전역이다.
-struct PriestFallState { /* authority: 서버 권한이 있는 추락 처리 경로를 실행할지. */ bool authority{true}; }; // 00540bc4 / CD 00540a2c.
+struct PriestFallState {
+    bool authority{true}; // 00540bc4 / CD 00540a2c의 독립 fixture 입력이다.
+    const bool* sharedAuthority{}; // 실제 Client의 같은 boss 주소이며 낙하 실행기보다 오래 살아야 한다.
+    bool Authority() const { return sharedAuthority ? *sharedAuthority : authority; } // 보호막·프로세스 생성 효과 뒤 현재 권한을 다시 읽는다.
+};
 // 미복원 공간/소리 효과와 실제 프로세스/보호막을 연결하는 호출 경계다.
 struct PriestFallHooks {
     // ensureShield: 사제에게 필요한 보호막을 확보하는 콜백.

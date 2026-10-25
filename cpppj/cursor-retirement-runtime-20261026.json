@@ -3586,7 +3586,7 @@
       "path": "extracted/cpp-cursor-retirement-443444-focused1/results.json",
       "passed": false,
       "failedChecks": 3,
-      "scope": "?? Session fixture? ?? ?? ??"
+      "scope": "신규 Session fixture의 외부 입력 누락"
     }
   ],
   "sourceCorrections": {
@@ -3594,15 +3594,15 @@
       "file": "cpppj/tests/CameraViewTests.cpp",
       "before": "lifecycle.previews[0]=Sid{50};",
       "after": "lifecycle.previews[0]=50;",
-      "reason": "SID ??? ??? ?? ?? ??50? DWORD ???? ??. ??? ?? ?? ??? ??."
+      "reason": "SID 구조체 대입을 원본과 같은 번호50의 DWORD 대입으로 교정했다. 숫자와 기존 검사 조건은 보존했다."
     },
     "secondCorrection": {
       "file": "cpppj/tests/ClientCursorGlobalsTests.cpp",
-      "reason": "?? ???? ???? MakeRawSurfaceStorage ??? ?? include ??? ??. ?? ????????? ??."
+      "reason": "신규 검사가 사용하는 MakeRawSurfaceStorage 선언의 직접 include 누락을 추가했다. 검사 조건·입력·기대값은 보존했다."
     },
     "focusedCorrection": {
       "file": "cpppj/tests/CampaignSessionTests.cpp",
-      "reason": "?? Session ?? ? ?? ?? Chat ???Deck ?? ?? ????? Subscriber owner ?? ??? ??. ????? ????? ??? ?? ? ?? ?? ??."
+      "reason": "신규 Session 검사 세 개의 외부 Chat 통지·Deck 할당 초기 입력·동일 Subscriber owner 공급 누락만 교정했다. 제품·기존 검사·신규 입력과 조건·기대 숫자는 보존했다."
     }
   },
   "evidence": [
@@ -3644,9 +3644,9 @@
     }
   ],
   "scope": {
-    "cursor": "?? Client owner? 30 DWORD ???Lifecycle?Placement?snap? ?? Cancel leaf",
-    "retirement": "?? AI reset?Player ?? ?? ??? ?? ?? ??? ?? ?? ??",
-    "remaining": "?? State1 cleanup/prefix??? coordinator?Edit? ?? ?? ?? ??"
+    "cursor": "같은 Client owner의 30 DWORD 목록·Lifecycle·Placement·snap과 실제 Cancel leaf",
+    "retirement": "실제 AI reset·Player 링크 정상 복귀의 이동 전용 증빙과 중복 정리 방지",
+    "remaining": "전체 State1 cleanup/prefix·제품 coordinator·Edit와 전체 미션 자연 완주"
   },
   "preparedUnits": [
     443,
@@ -3846,21 +3846,21 @@
       "path": "extracted/cpp-cursor-retirement-443444-batch1-gui-home/home.png",
       "sha256": "e1064ee910d45758e10b06c68f9b3cbbec82afca616dc4608c125a8d74125ccb",
       "inspected": true,
-      "observation": "Bridges ??, ?? ?????, ?? ? ?? ???OK? ????. ??? ?? Game ??? ??? ???.",
+      "observation": "Bridges 안내, 좌측 덱·미니맵, 읽을 수 있는 본문과 OK를 확인했다. 평상시 임시 Game 버튼은 보이지 않는다.",
       "pixelEqualityWithOriginalVerified": false
     },
     {
       "path": "extracted/cpp-cursor-retirement-443444-batch1-gui-menus/campaign.png",
       "sha256": "48e966186d428cda6ce61afeb9c9a52d9ab860aae08b386526f5926ffd0d73e1",
       "inspected": true,
-      "observation": "Early Missions?Priest Training?? ??? ????? ?? Back ??? ????.",
+      "observation": "Early Missions·Priest Training·세 캠페인 장·사용자 맵과 Back 항목을 확인했다.",
       "pixelEqualityWithOriginalVerified": false
     },
     {
       "path": "extracted/cpp-cursor-retirement-443444-batch1-early2/nextBriefing.bmp",
       "sha256": "5d86c9f524db7acb1fb8cb5b57b1e10a5c7fef08e8d184fae96536da3bbd50be",
       "inspected": true,
-      "observation": "Capture The Priest! ???? MORE, ?? ?????? ????. ?? SP1700? ?? ???2000 ?? ? ??? ??? ????.",
+      "observation": "Capture The Priest! 브리핑과 MORE, 좌측 덱·미니맵을 확인했다. 표시 SP1700은 진입 초기값2000 관측 후 생산이 진행된 화면이다.",
       "pixelEqualityWithOriginalVerified": false
     }
   ],
@@ -3869,7 +3869,7 @@
     "strictNumericIdentityCases": 297,
     "extendedExistingCase": "CameraView_ActualClientSessionAliasesFractionAndCurrentCursorReads",
     "fixtureFilesChanged": 0,
-    "scope": "??? ??? ?? ??? ???? ?? ????? snap?Cancel ??? ????. ?? ??? ?? ?? ???? ???? ???."
+    "scope": "카메라 사례는 기존 조건을 보존하고 장기 상태·현재 snap·Cancel 단언을 추가했다. 원시 감사는 전체 숫자 동일성을 주장하지 않는다."
   },
   "concurrentDocumentationCommit": {
     "commit": "1eddb0e821d38e5b34aea81f481a8de134e54133",
@@ -3879,5 +3879,9 @@
     ],
     "cppProductChanged": false
   },
-  "nextWork": "437 ?? hitpoints/fall/carrier/contained ? Prepare? ?? ??? ?? ?? boss ??? ??? ? 436 SID16?438 ?? Deck ???Native cleanup coordinator? Edit? ?? ??."
+  "nextWork": "437 사제 hitpoints/fall/carrier/contained 및 Prepare의 권한 사본을 실제 공유 boss 조회에 연결한 뒤 436 SID16·438 전체 Deck 부모·Native cleanup coordinator와 Edit를 이어 간다.",
+  "metadataTextCorrection": {
+    "date": "2026-10-26",
+    "reason": "PowerShell 기본 파이프 인코딩으로 물음표가 된 설명을 UTF-8 한국어로 복원했다. 실행 결과·이전 소스 SHA·제품 SHA·원시 로그·증거 SHA는 변경하지 않았다."
+  }
 }

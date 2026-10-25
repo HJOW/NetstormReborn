@@ -7,6 +7,7 @@
 #include "o/RawPriestPlacement.h"
 #include "o/RawPriestPostPopTail.h"
 #include "o/RawPriestRegen.h"
+#include "o/RawAuthorityState.h"
 #include <memory>
 
 namespace netstorm::client {
@@ -125,8 +126,10 @@ public:
     void ValidateReady() const;
     // 로딩 깊이를 읽는 세 몸체를 동일 값으로 갱신한다. ownerMode는 core의 공유 모드를 읽는다.
     void SetLoadingDepth(std::uint32_t depth);
-    // 회복/낙하/Carrier/종속의 실제 권한 전역을 같은 값으로 갱신한다.
+    // 독립 fixture의 값형 권한을 함께 갱신한다. 실제 권한 주소를 바인딩한 뒤에는 사용할 수 없다.
     void SetAuthority(bool authority);
+    // 같은 Client boss를 회복/낙하/Carrier/종속에 빌린다. authority는 이 실행기·상태보다 오래 살아야 한다.
+    void BindAuthority(const o::RawAuthorityState& authority);
     // 로컬 소유자에 대한 원본 owner 표식과 보호막 안내 조건을 함께 갱신한다.
     void SetLocalPlayer(std::uint32_t player);
     // 사제는 원래 소유자 규칙, 다른 자산은 공통 실제 소유자 지정으로 분배한다.

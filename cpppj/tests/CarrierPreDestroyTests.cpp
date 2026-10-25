@@ -114,3 +114,18 @@ TEST_CASE(carrier_predestroy_guards_and_priest_binding) {
         bound.validateCarrier(kSource,3);bound.carrierPre(kSource,3);CHECK(scene.events=="D:50:3:0");
     }
 }
+
+// Damageable 실제 효과 뒤 boss를 다시 읽고 같은 내용물 검색기의 dead 진단도 동일 주소를 사용한다.
+TEST_CASE(CarrierPreDestroy_SharedBossRequeriesAfterDamageAndInContainedFinder) {
+    for (const auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) { // 원본의 판본별 dead 진단 차이를 유지한다.
+        CarrierScene scene(edition);
+        for (auto raw:scene.slots) { std::fill(raw.begin(),raw.end(),std::uint8_t{});raw[10]=158; } // 실제 할당된 부모와 종속의 입력 바이트만 준비한다.
+        Put(scene.slots[0],6,60,2);scene.slots[1][10]=6;Put(scene.slots[1],20,1,2);bool boss=true,nextBoss=false;scene.state.sharedBoss=&boss;scene.state.boss=true;scene.state.checkingDead=true;std::size_t damages{},dependents{};
+        CarrierPreDestroyHooks hooks{[&](Sid,std::uint32_t) { ++scene.validations; },[&](Sid,std::uint32_t) { ++damages;boss=nextBoss; },[&] { ++dependents; }};
+        RawCarrierPreDestroy carrier(scene.pool,scene.state,std::move(hooks));carrier.PreDestroy(kSource,0);CHECK(damages==1 && dependents==0 && !boss);nextBoss=true;carrier.PreDestroy(kSource,0);CHECK(damages==2 && dependents==1 && boss);
+        scene.slots[0][11]|=2;boss=false;
+        if (edition==OriginalEdition::Patch1078) CHECK(Throws([&] { carrier.FindContained(kSource,1,0,0); })); // CD에는 이 진단 관문이 없다.
+        else CHECK(carrier.FindContained(kSource,1,0,0)==Sid{60});
+        boss=true;CHECK(carrier.FindContained(kSource,1,0,0)==Sid{60});
+    }
+}

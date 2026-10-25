@@ -208,10 +208,23 @@ void RawPriestWorldBindings::SetLoadingDepth(std::uint32_t depth) {
     impl_->state.owner.loadingDepth=depth;impl_->state.shield.loadingDepth=depth;impl_->state.carrier.loadingDepth=depth;
     impl_->state.regen.neutralBlocked=depth!=0;
 }
-// 권한 전역을 복사하는 경계는 월드 모드 변경 때 한 번 호출한다.
+// 독립 fixture의 기존 값형 경계만 유지하며 실제 주소 대여를 값 복사로 덮지 않는다.
 void RawPriestWorldBindings::SetAuthority(bool authority) {
+    if (impl_->state.hitPoints.sharedAuthority || impl_->state.fall.sharedAuthority || impl_->state.carrier.sharedBoss || impl_->state.contained.sharedBoss)
+        throw std::logic_error("공유 권한을 대여한 사제 실행기의 값형 권한 변경 금지");
     impl_->state.hitPoints.authority=authority;impl_->state.fall.authority=authority;
     impl_->state.carrier.boss=authority;impl_->state.contained.boss=authority;
+}
+// 첫 객체 로딩 전에 같은 장기 boss 주소만 연결하고 현재값이나 다른 권한 owner는 쓰지 않는다.
+void RawPriestWorldBindings::BindAuthority(const o::RawAuthorityState& authority) {
+    const auto* value=&authority.boss;
+    if ((impl_->state.hitPoints.sharedAuthority && impl_->state.hitPoints.sharedAuthority!=value) ||
+        (impl_->state.fall.sharedAuthority && impl_->state.fall.sharedAuthority!=value) ||
+        (impl_->state.carrier.sharedBoss && impl_->state.carrier.sharedBoss!=value) ||
+        (impl_->state.contained.sharedBoss && impl_->state.contained.sharedBoss!=value))
+        throw std::invalid_argument("사제 네 소비자의 동일 공유 권한 주소 필요");
+    impl_->state.hitPoints.sharedAuthority=value;impl_->state.fall.sharedAuthority=value;
+    impl_->state.carrier.sharedBoss=value;impl_->state.contained.sharedBoss=value;
 }
 // 원본 현재 로컬 플레이어 범위만 허용한다. 로딩 소유자 0 문제와 구별한다.
 void RawPriestWorldBindings::SetLocalPlayer(std::uint32_t player) {

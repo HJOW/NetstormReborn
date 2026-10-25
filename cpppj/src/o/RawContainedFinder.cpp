@@ -19,7 +19,7 @@ RawContainedFinder::RawContainedFinder(const SidPool& pool,const ContainedFinder
 Sid RawContainedFinder::Begin(Sid parent,bool allowDead) {
     if (parent.value>=pool_.Capacity()) throw std::out_of_range("contained finder 부모 SID 오류");
     const auto raw=pool_.Slot(parent);
-    if (pool_.Edition()==OriginalEdition::Patch1078 && state_.checkingDead && (raw[kState]&kDead) && !state_.boss && !allowDead)
+    if (pool_.Edition()==OriginalEdition::Patch1078 && state_.checkingDead && (raw[kState]&kDead) && !state_.Boss() && !allowDead)
         throw std::logic_error("권한 없는 dead 부모 종속 조회 assert 경로");
     next_=Link(raw,kHead);visited_.clear();return Next();
 }

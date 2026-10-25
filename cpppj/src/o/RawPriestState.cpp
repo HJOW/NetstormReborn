@@ -77,8 +77,8 @@ void RawPriestState::SetHitPoints(Sid sid,std::int32_t value,const PriestHitPoin
     const bool wasLow=oldHp<half,transition=(stored<half)!=wasLow;
     const auto owner=raw[patch ? 34 : 32];
     // 실제로 참조하는 소유자 칸과 필요한 가상 효과만 쓰기 전에 검사한다.
-    if (transition && mode.authority && wasLow && owner>kPlayerCount) throw std::out_of_range("사제 HP 회복 소유자 오류");
-    const bool space=transition && mode.authority && (!wasLow || mode.recoveryAllowed[owner]);
+    if (transition && mode.Authority() && wasLow && owner>kPlayerCount) throw std::out_of_range("사제 HP 회복 소유자 오류");
+    const bool space=transition && mode.Authority() && (!wasLow || mode.recoveryAllowed[owner]);
     if (space && (!hooks.unpop || !hooks.repop)) throw std::invalid_argument("사제 HP 변경 공간 효과 누락");
     // 원본 setter 폭 밖의 stale 바이트는 그대로 보존한다.
     const auto write=[&](std::int32_t hp) {
@@ -88,7 +88,7 @@ void RawPriestState::SetHitPoints(Sid sid,std::int32_t value,const PriestHitPoin
     };
     write(value);
     if (!transition) return;
-    if (!mode.authority) { write(half-(wasLow ? 1 : 0));return; }
+    if (!mode.Authority()) { write(half-(wasLow ? 1 : 0));return; }
     if (wasLow && !mode.recoveryAllowed[owner]) { write(oldHp);return; }
     hooks.unpop(sid,0);
     // 가상 효과 이후 HP/좌표를 다시 읽는다. 원본도 새 HP가 저HP일 때만 현재 위치를 거의 올림한다.

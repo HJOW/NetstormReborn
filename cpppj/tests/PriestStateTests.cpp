@@ -129,3 +129,14 @@ TEST_CASE(priest_state_setter_rejects_invalid_bindings_before_hp_write) {
     raw[34]=1;Put(raw,0,kVtable);const auto invalidVtable=Hex(raw);
     CHECK(Throws([&] { scene.state->SetHitPoints(kSource,30,scene.mode,{}); }));CHECK(Hex(raw)==invalidVtable);
 }
+
+// 복사된 HP 모드도 원본 boss 주소를 다시 읽고 권한 없는 절반 HP 전환과 실제 공간 전환을 구분한다.
+TEST_CASE(PriestState_SharedAuthoritySurvivesModeCopyAndChangesWithoutPrepare) {
+    for (const auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) { // 두 판본의 기존 HP 저장 폭을 유지한다.
+        StateScene scene(edition);std::vector<std::string> row(18,"0");row[2]="200";row[5]="200";row[7]="4";row[8]=std::to_string(std::bit_cast<std::uint32_t>(30.0F));row[9]=std::to_string(std::bit_cast<std::uint32_t>(31.0F));row[11]="1";row[12]="1";row[13]="1";row[14]="-";scene.Prepare(row);
+        bool authority=false;scene.mode.sharedAuthority=&authority;const auto copied=scene.mode;std::size_t unpops{},repops{};
+        PriestHitPointHooks hooks{[&](Sid sid,std::uint32_t flags) { ++unpops;scene.Record('U',sid,flags); },[&](Sid sid,std::uint32_t flags) { ++repops;scene.Record('P',sid,flags); }};
+        scene.state->SetHitPoints(kSource,1,copied,hooks);CHECK(scene.state->CurrentHitPoints(kSource)==100 && unpops==0 && repops==0);
+        authority=true;scene.mode.authority=false;scene.state->SetHitPoints(kSource,1,copied,hooks);CHECK(scene.state->CurrentHitPoints(kSource)==1 && unpops==1 && repops==1 && copied.sharedAuthority==&authority);
+    }
+}

@@ -67,7 +67,7 @@ void RawDamageablePreDestroy::PreDestroy(Sid sid,std::uint32_t flags) const {
                 if (Read(pool_.Slot(current),kKind,2)==state_.priestType) hooks_.sound({DamageableSound::PriestFree,0,0});
             }
         }
-        if (finderState_.boss && !(flags&kNoRelease)) hooks_.releaseContained(sid);
+        if (finderState_.Boss() && !(flags&kNoRelease)) hooks_.releaseContained(sid);
     }
     hooks_.base(sid,flags);
 }

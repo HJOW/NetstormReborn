@@ -780,6 +780,7 @@ struct RawCampaignSession::Impl {
         rewardState.sharedPercent=&gameplayGlobals->GameAux()->RefundPercent();rewardState.sharedGeyserPool=&gameplayGlobals->GameAux()->ResourcePool(); // 실제 Reward/LocalGeyser의 같은 물리다.
         missionStart.sharedAllowAnyCapture=&gameplayGlobals->GameAux()->AllowAnyCapture();missionStart.sharedOrdinaryGeysers=&gameplayGlobals->GameAux()->OrdinaryGeysers(); // Start 출력과 pickup을 같은 DWORD에 연결한다.
         motionState.carrier.sharedAllowAlliedPickup=&gameplayGlobals->GameAux()->AllowAnyCapture();motionState.carrier.sharedGeyserType=&geyserType;carrierState.sharedGeyserType=&geyserType;constructionState.geyser.sharedGeyserType=&geyserType; // 실제 생성/로딩/도착을 같은 TYPE에 연결한다.
+        carrierState.sharedBoss=&gameplayGlobals->Authority()->boss;contentFinder.sharedBoss=&gameplayGlobals->Authority()->boss; // 공통 캐리어와 생산·Damageable 검색도 사제 네 소비자와 같은 실제 권한을 빌린다.
         farm.sharedArchipelago=&gameplayGlobals->GameAux()->Archipelago();devastationEffectState.sharedSpentCounter=&gameplayGlobals->GameAux()->ResourcePool(); // Login과 별개의 bb0 및 같은595088을 빌린다.
         if (services.deferExistingEditorFile && services.installMode!=CampaignInstallMode::ExistingEditor) throw std::invalid_argument("파일지연은명시ExistingEditor전용입니다");
         objectState.sharedFullDeck=&fullDeck;constructionState.confirm.sharedFullDeck=&fullDeck;anchorState.sharedFullDeck=&fullDeck; // 하위 모듈 생성 전에 같은 장기 DWORD를 빌리며 Prepare 때 사본을 쓰지 않는다.
@@ -902,7 +903,7 @@ struct RawCampaignSession::Impl {
         FillMissing(priestEffects.regen.measurement);
         priestEffects.regen.damageable=[this](Sid sid) { hits->Burning().Refresh(sid); };
         priests=std::make_unique<RawPriestWorldBindings>(RawPriestWorldCore{core.pool,core.hash,core.types,core.frames,core.spots,core.hash.Entries(0),hp,random,core.factory,core.owner,core.ownerMode,core.postPop,core.frame},priestState,std::move(priestEffects));
-        priests->BindProcesses(core.processes);priests->SetAuthority(core.processState.Boss());priests->SetLocalPlayer(1);
+        priests->BindProcesses(core.processes);priests->BindAuthority(*gameplayGlobals->Authority());priests->SetLocalPlayer(1); // 네 소비자가 매 조회 때 같은 Client boss를 읽고 Prepare의 복사를 기다리지 않는다.
         // 첫객체전에같은실제Carrier/목록과현재타입참조만연결하며ownerState는여기서갱신하지않는다.
         priestParticipation=std::make_unique<RawPriestParticipation>(core.pool,core.hash,core.types,priests->Priests(),priests->Carrier(),
             PriestParticipationState{priestState.movement.priest,runeState.altarType,runeState.daisType});

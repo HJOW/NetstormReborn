@@ -344,3 +344,13 @@ TEST_CASE(RawPriestWorldBindings_DamageEffectMetadataPreservesNumericProperty) {
         CHECK(Throws([&] { RiftTypeTable checked(edition,sources); }));
     }
 }
+
+// 실제 네 소비자가 같은 boss 주소를 빌리고 다른 owner나 값형 setter로 대여를 교체하지 못한다.
+TEST_CASE(RawPriestWorldBindings_SharedAuthorityAliasesAllLeavesAndRejectsForeignOwner) {
+    for (const auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) { // 독립 월드의 두 판본도 같은 명시 바인딩을 사용한다.
+        RawAuthorityState authority,foreign;authority.server=false;PriestWorld world(edition);world.bindings->BindAuthority(authority);world.bindings->BindAuthority(authority);
+        CHECK(world.state.hitPoints.sharedAuthority==&authority.boss && world.state.fall.sharedAuthority==&authority.boss && world.state.carrier.sharedBoss==&authority.boss && world.state.contained.sharedBoss==&authority.boss);
+        CHECK(Throws([&] { world.bindings->BindAuthority(foreign); }) && Throws([&] { world.bindings->SetAuthority(false); }) && authority.boss && !authority.server);
+        const auto sid=world.Add();authority.boss=false;world.bindings->SetHitPoints(sid,1);CHECK(world.bindings->PriestState().CurrentHitPoints(sid)==100);authority.boss=true;world.bindings->SetHitPoints(sid,1);CHECK(world.bindings->PriestState().CurrentHitPoints(sid)==1);
+    }
+}

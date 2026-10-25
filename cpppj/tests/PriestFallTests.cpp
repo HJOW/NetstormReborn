@@ -201,3 +201,15 @@ TEST_CASE(PriestFall_ComposesRegenDispatcherAndRejectsInvalidBindings) {
     SidPool other(OriginalEdition::Patch1078,kCapacity,false);
     CHECK(Throws([&] { MakePriestFallHandler(other,fall); }));
 }
+
+// 실제 프로세스 예약 효과가 boss를 바꾸면 낙하의 후속 Unpop/Repop 관문이 변경 후 값을 읽는다.
+TEST_CASE(PriestFall_SharedAuthorityRequeriesAfterActualProcessEffect) {
+    for (const auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) { // 판본별 raw 사제와 원본 외부 효과를 함께 사용한다.
+        FallScene scene(edition);std::vector<std::string> row(16,"0");row[1]="Begin";row[2]="1";row[3]="1";row[5]="200";row[6]="4";row[7]="74";row[10]=std::to_string(std::bit_cast<std::uint32_t>(30.0F));row[11]=std::to_string(std::bit_cast<std::uint32_t>(31.0F));scene.Prepare(row);
+        bool authority=true;scene.mode.sharedAuthority=&authority;auto hooks=scene.Hooks();const auto originalAdd=hooks.addSharedRegular;const auto originalUnpop=hooks.unpop;const auto originalRepop=hooks.repop;std::size_t added{},unpops{},repops{};
+        hooks.addSharedRegular=[&,originalAdd](Sid sid,std::uint32_t event,float payload) { originalAdd(sid,event,payload);++added;authority=false; }; // 원문 자식 호출 뒤 전역 변경만 명시 공급한다.
+        hooks.unpop=[&,originalUnpop](Sid sid,std::uint32_t flags) { ++unpops;originalUnpop(sid,flags); };hooks.repop=[&,originalRepop](Sid sid,std::uint32_t flags) { ++repops;originalRepop(sid,flags); };
+        RawPriestState priest(scene.pool,*scene.hp,scene.types,scene.spots);RawPriestFall fall(scene.pool,priest,scene.frames,scene.choices,scene.surfaces,scene.mode,std::move(hooks));fall.Begin(kSource);CHECK(added==1 && !authority && unpops==0 && repops==0);
+        scene.allocated=false;scene.mode.authority=false;authority=true;fall.Begin(kSource);CHECK(added==1 && authority && unpops==1 && repops==1);
+    }
+}

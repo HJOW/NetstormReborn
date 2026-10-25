@@ -10,6 +10,8 @@ struct CarrierPostPopState {
     std::uint32_t geyserType{122}; // 00541240 / CD 0051cb2c: 로딩 중 지면 소유자 갱신에서 제외한다.
     const std::uint32_t* sharedGeyserType{}; // 실제 게임 TYPE를 빌린다.
     std::uint32_t GeyserType() const { return sharedGeyserType ? *sharedGeyserType : geyserType; } // 로딩 중 비교 위치에서 현재 TYPE를 읽는다.
+    const bool* sharedBoss{}; // 실제 Client boss를 빌리며 독립 Native fixture는 기존 값형 boss를 유지한다.
+    bool Boss() const { return sharedBoss ? *sharedBoss : boss; } // 최초 flag 관문 뒤 같은 현재 권한을 조회한다.
 };
 // 캐리어 후처리 Pop 외부 동작과 저장소 조회를 연결하는 콜백 묶음이다.
 struct CarrierPostPopHooks {

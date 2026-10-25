@@ -37,7 +37,7 @@ void RawCarrierPostPop::Validate(Sid sid,std::uint32_t flags) const {
 // 원본의 carrier 확인은 extra 차단과 무관하며 최초 flag가 있을 때는 호출하지 않는다.
 void RawCarrierPostPop::PostPop(Sid sid,std::uint32_t flags) const {
     Validate(sid,flags);
-    if (!(flags&1) && !state_.boss) hooks_.carrierCheck(sid);
+    if (!(flags&1) && !state_.Boss()) hooks_.carrierCheck(sid);
     RunDamageable(sid,flags);
 }
 // Damageable의 직접 호출은 carrier 가상 확인을 거치지 않는다.

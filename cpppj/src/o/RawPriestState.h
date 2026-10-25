@@ -7,6 +7,8 @@ namespace netstorm::o {
 struct PriestHitPointMode {
     bool authority{true}; // 00540bc4 / CD 00540a2c: HP 경계 전환을 실제 공간에 반영하는 권한이다.
     std::array<bool,kPlayerCount+1> recoveryAllowed{}; // Player +0x7c / CD +0x74의 0 아님. 절반 HP로 회복하는 전환의 허용 조건이다.
+    const bool* sharedAuthority{}; // 실제 Client의 boss를 빌린다. 독립 Native fixture만 위 값형 입력을 사용한다.
+    bool Authority() const { return sharedAuthority ? *sharedAuthority : authority; } // HP·중립 회복의 원문 조회 위치에서 현재 권한을 읽는다.
 };
 // 사제 체력 좌표 외부 동작과 저장소 조회를 연결하는 콜백 묶음이다.
 struct PriestHitPointHooks {

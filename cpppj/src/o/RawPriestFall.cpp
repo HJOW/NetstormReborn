@@ -33,7 +33,7 @@ RawPriestFall::RawPriestFall(SidPool& pool,const RawPriestState& priest,std::spa
 void RawPriestFall::Begin(Sid sid) const {
     (void)pool_.Slot(sid);hooks_.ensureShield(sid);
     if (hooks_.reserveRegular()) hooks_.addSharedRegular(sid,kPriestFallEvent,kInitialPayload);
-    if (state_.authority) { hooks_.unpop(sid,0);hooks_.repop(sid,0x800); }
+    if (state_.Authority()) { hooks_.unpop(sid,0);hooks_.repop(sid,0x800); }
     const auto raw=pool_.Slot(sid);
     hooks_.sound(sid,std::bit_cast<float>(Read(raw,kX)),std::bit_cast<float>(Read(raw,kY)));
 }

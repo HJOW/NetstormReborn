@@ -194,3 +194,12 @@ TEST_CASE(carrier_postpop_composes_priest_prefix_process_and_real_common_body) {
         host.Kill(*regen,0x10);CHECK(kernel.Size()==0);
     }
 }
+
+// 캐리어의 비최초 검사만 현재 boss를 읽으며 값형 사본과 첫 Pop flag는 실제 전역을 덮지 않는다.
+TEST_CASE(CarrierPostPop_SharedBossChangesBetweenCallsAndKeepsFirstFlag) {
+    for (const auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) { // 두 판본의 같은 현재 권한 관문을 검사한다.
+        CarrierScene scene(edition);auto raw=scene.pool.AllocatedBytes(kSource);std::fill(raw.begin(),raw.end(),std::uint8_t{});raw[10]=158;bool boss=false;scene.state.sharedBoss=&boss;scene.state.boss=true;std::size_t checks{},bases{};
+        CarrierPostPopHooks hooks{[&](Sid sid) { CHECK(sid==kSource);++checks; },[](float,float,std::uint8_t) { throw std::logic_error("로딩0에서 지면 claim 미도달"); },[&](Sid,std::uint32_t) { ++scene.validations; },[&](Sid,std::uint32_t) { ++bases; }};
+        RawCarrierPostPop post(scene.pool,scene.types,scene.state,std::move(hooks));post.PostPop(kSource,0);CHECK(checks==1 && bases==1);boss=true;post.PostPop(kSource,0);CHECK(checks==1 && bases==2);boss=false;post.PostPop(kSource,1);CHECK(checks==1 && bases==3 && scene.validations==3);
+    }
+}

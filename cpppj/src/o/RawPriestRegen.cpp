@@ -71,7 +71,7 @@ float RawPriestRegen::Handle(Sid sid,std::uint32_t event,std::uint32_t count,flo
     if (patch) hooks_.patchAudit();
     // HP setter/외부 효과가 바꾼 현재 소유자·HP·전역을 이 시점에 다시 읽는다.
     const auto owner=pool_.Slot(sid)[patch ? 34 : 32];
-    if (mode_.authority && !state_.neutralBlocked && owner==0 && !state_.modeBlocked &&
+    if (mode_.Authority() && !state_.neutralBlocked && owner==0 && !state_.modeBlocked &&
         priest_.CurrentHitPoints(sid)>=hp_.MaxHitPoints(sid)/2) {
         const auto shape=hooks_.shape(pool_.Slot(sid)[10]);
         if (!hooks_.occupied(sid,shape)) hooks_.neutralAction(sid);

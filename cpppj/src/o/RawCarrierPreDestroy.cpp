@@ -31,7 +31,7 @@ void RawCarrierPreDestroy::Validate(Sid sid,std::uint32_t flags) const {
 // Damageable에 전달한 flags는 종속 조회 인자에 영향을 주지 않는다.
 void RawCarrierPreDestroy::PreDestroy(Sid sid,std::uint32_t flags) const {
     Validate(sid,flags);hooks_.damageablePre(sid,flags);
-    if (state_.boss && FindContained(sid,1,0,0).value) hooks_.dependentFound();
+    if (state_.Boss() && FindContained(sid,1,0,0).value) hooks_.dependentFound();
 }
 // 실제 contained finder는 전체 종속 중 전역 타입과 같은 BYTE만 기본 true 필터에 넘긴다.
 Sid RawCarrierPreDestroy::FindContained(Sid parent,std::uint32_t mask,std::uint32_t kind,std::uint32_t index,bool allowDead) const {
