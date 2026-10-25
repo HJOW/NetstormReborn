@@ -1,0 +1,84 @@
+{
+  "purpose": "Git 장기 보관에 필요한 최소 입력base10와patch·metadata5의 재현 묶음. cpppj 출력10사본은 base+patch로 복원 가능하여 필수 목록에서 제외.",
+  "payloadFileCount": 15,
+  "payloadBytes": 1453247,
+  "files": [
+    {
+      "path": "main-before/cpppj/src/o/RawPlayerParticipation.h",
+      "bytes": 6101,
+      "sha256": "22d0031dd843733a9452f9ee497d79e7028a40915524bf11ca4ff59b549b1cb4"
+    },
+    {
+      "path": "main-before/cpppj/src/o/RawPlayerParticipation.cpp",
+      "bytes": 9588,
+      "sha256": "682b1cf72b1889d2bf44540446d5cba40c24679e9e99055b154155224185dec7"
+    },
+    {
+      "path": "main-before/cpppj/src/o/RawProductionDeck.h",
+      "bytes": 5304,
+      "sha256": "b6d5d7a581d3a7349dbc7649795d81b43d0bbb4ce73ac654b4e364f0450251b1"
+    },
+    {
+      "path": "main-before/cpppj/src/o/RawProductionDeck.cpp",
+      "bytes": 9055,
+      "sha256": "7bf63e1c40db223d0cfc4ddd6967e59eda1a5a88a57b756d240796bb8934b075"
+    },
+    {
+      "path": "main-before/cpppj/src/o/RawAiCreate.cpp",
+      "bytes": 2542,
+      "sha256": "ca5adaadc7437ff4dc72b896116e1b4a7b112fed606826abee0724fa52002ee1"
+    },
+    {
+      "path": "main-before/cpppj/src/client/RawCampaignSession.h",
+      "bytes": 58878,
+      "sha256": "bb525ca110f0674187b6f816e1110d750584d9f0293987fb9e098ee85447639d"
+    },
+    {
+      "path": "main-before/cpppj/src/client/RawCampaignSession.cpp",
+      "bytes": 517015,
+      "sha256": "e192b3a5e67851c39bf94555c465e7e6b459f15c0548939a375a3514143ee988"
+    },
+    {
+      "path": "main-before/cpppj/tests/PlayerParticipationTests.cpp",
+      "bytes": 9909,
+      "sha256": "bc12a931238ba42474504a56c6217253173f37c43021fb31f203814f20f22e3b"
+    },
+    {
+      "path": "main-before/cpppj/tests/ProductionDeckTests.cpp",
+      "bytes": 20992,
+      "sha256": "16df00c50d31254580ee0b152196966e769e05e1c7472ace3f159c446c92bc7a"
+    },
+    {
+      "path": "main-before/cpppj/tests/CampaignSessionTests.cpp",
+      "bytes": 722801,
+      "sha256": "4dfbcb90ea1ff1bd9c09dbb1d927adfa51dd0db692dbf27744a3eb5dae8e06fc"
+    },
+    {
+      "path": "prepared.patch",
+      "bytes": 45779,
+      "sha256": "7536a350704de32033ccbf9921136d2458d5fda052f937349a79d0f41ae43898"
+    },
+    {
+      "path": "manifest-original.json",
+      "bytes": 2436,
+      "sha256": "d4c830bb1a16ba6b5b7644b427255d7652b6405db5d9d21155609cf4db36a5e7"
+    },
+    {
+      "path": "manifest.json",
+      "bytes": 24465,
+      "sha256": "529b43bf2f0f34a6b7870f0d74c3a453148268a44996fc2ba2e316548ea09186"
+    },
+    {
+      "path": "README.md",
+      "bytes": 9567,
+      "sha256": "368e89d9856e8e7ba97e4f145253f6fbdef242eec86c45e3037e28fa2f30022a"
+    },
+    {
+      "path": "native-runtime-evidence.json",
+      "bytes": 8815,
+      "sha256": "83161cd18d130492bdba2c17d08952b095e8e0591046a96399ca5e5e3a85bbde"
+    }
+  ],
+  "selfNote": "이 archive-files.json도 함께 보관한다. 위 payload15파일 합에는 자기 자신의 바이트는 포함하지 않는다.",
+  "restoreNote": "비어 있는 별도 검토 staging에 main-before/cpppj를 cpppj로 복원한 뒤 prepared.patch를 적용한다. Session base는442동결값이며 다른439~442수정과는 이후hunk병합해야 한다. main/원본에 자동 적용하지 않는다."
+}

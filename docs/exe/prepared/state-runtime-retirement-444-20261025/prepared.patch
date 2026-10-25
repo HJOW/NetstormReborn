@@ -1,0 +1,437 @@
+diff --git a/cpppj/src/o/RawPlayerParticipation.h b/cpppj/src/o/RawPlayerParticipation.h
+--- a/cpppj/src/o/RawPlayerParticipation.h
++++ b/cpppj/src/o/RawPlayerParticipation.h
+@@ -3,6 +3,10 @@
+ #include "o/RiftType.h"
+ #include <functional>
+ #include <span>
++#include <array>
++#include <memory>
++#include <optional>
++#include <utility>
+ 
+ namespace netstorm::o {
+ // 원본의 진단 후 계속 진행하는 두 assertion 경계다.
+@@ -32,10 +36,24 @@
+ };
+ // 9×0xb4 Player와 원본9×9 DWORD 표를 참조한다. 배열 사본/대칭 동맹/추정 active 입력을 만들지 않는다.
+ class RawPlayerParticipation {
++    struct RetirementLifetime {}; // Native 전역이 아닌 이 실제 모듈의 C++ 수명 정체성만 나타낸다.
+ public:
++    class BrainResetPass { // 실제00413ae0의 정상 복귀를 같은 owner의 반납에만 사용하는 이동 전용 증빙이다.
++    public:
++        BrainResetPass(BrainResetPass&&) noexcept=default;BrainResetPass& operator=(BrainResetPass&&) noexcept=default; // 정상 복귀 증빙만 이동한다.
++        BrainResetPass(const BrainResetPass&)=delete;BrainResetPass& operator=(const BrainResetPass&)=delete; // 외부 완료 상태를 복제하지 않는다.
++        std::uint32_t Owner() const { return owner_; } // 원문 resetAi가 정상 복귀한1..8 번호만 순수 조회한다.
++    private:
++        friend class RawPlayerParticipation;
++        BrainResetPass(const RawPlayerParticipation* source,std::weak_ptr<const RetirementLifetime> lifetime,std::uint32_t owner) noexcept:source_(source),lifetime_(std::move(lifetime)),owner_(owner) {} // 실제 부모 호출 뒤에만 발급한다.
++        const RawPlayerParticipation* source_;std::weak_ptr<const RetirementLifetime> lifetime_;std::uint32_t owner_; // 포인터는 비교만 하며 소멸 뒤 같은 주소 재사용도 lifetime으로 거부한다.
++    };
++
+     // 이 첫 구현은 PATCH전용이다. 실제 저장소/모드/효과 대상은 객체보다 오래 살아야 한다.
+     RawPlayerParticipation(OriginalEdition edition,std::span<std::uint8_t> players,std::span<std::uint32_t> allies,
+         std::span<const std::uint8_t> hidden,PlayerParticipationState& state,PlayerParticipationHooks hooks);
++    RawPlayerParticipation(const RawPlayerParticipation&)=delete;RawPlayerParticipation& operator=(const RawPlayerParticipation&)=delete; // 살아 있는 모듈의 반납 증빙을 복제하지 않는다.
++    RawPlayerParticipation(RawPlayerParticipation&&)=delete;RawPlayerParticipation& operator=(RawPlayerParticipation&&)=delete; // 발급한 증빙과 callback이 식별하는 실제 모듈 주소를 고정한다.
+     // 다섯 현재 조회를 모두 공급한다. 독립 원본 대조의 기존 값형 state는 미연결일 때만 사용한다.
+     void BindCurrentInputs(PlayerParticipationReads reads);
+     // 004a6dc0: 유효 owner1..8의 bit1 부재에서만 flags=(flags&~100)|3 뒤 연결을 수락한다.
+@@ -52,6 +70,10 @@
+     void AttachBrain(std::uint32_t owner,std::uint32_t brain) const;
+     // 00413ae0/00413b20: 실제 파괴→반납→+b0=0이다. 원본대로 flags20은 지우지 않는다.
+     void RemoveBrain(std::uint32_t owner) const;
++    BrainResetPass RemoveBrainForState(std::uint32_t owner) const; // 실제 RemoveBrain 정상 복귀 뒤에만 owner1..8 증빙을 발급한다.
++    void ReturnBrainForState(BrainResetPass&& pass); // 같은 실제 모듈/현재brain0/호출복귀 증빙만 소비하며 후속 설치를 닫는다.
++    bool BrainReturnedForState(std::uint32_t owner) const; // 보관한 실제 증빙만 조회하며 현재brain이 바뀌었으면 명시 수명 오류다.
++
+     void RemoveAllBrains() const;
+     // 다른 실제 AI 소비자가 같은 현재 토큰을 조회한다. 이 클래스는 brain 메모리를 소유하지 않는다.
+     std::uint32_t Brain(std::uint32_t owner) const;
+@@ -68,6 +90,9 @@
+     bool Battle() const;
+     bool Metamap() const;
+     bool LocalTransport() const;
++    std::shared_ptr<const RetirementLifetime> retirementLifetime_{std::make_shared<RetirementLifetime>()}; // 증빙보다 실제 모듈이 먼저 소멸한 경우를 식별한다.
++    std::array<std::optional<BrainResetPass>,9> returnedBrains_; // owner0은 사용하지 않으며 실제 소비한 정상 복귀 증빙만 보관한다.
++    mutable std::size_t activeBrainCalls_{}; // 실제 파괴/반납 callback이 끝나기 전 증빙 재진입을 막는 C++ 호출 대여 수다.
+     std::span<std::uint8_t> players_; // 같은 실제9 Player 기록이다.
+     std::span<std::uint32_t> allies_; // 한쪽 방향만 바뀔 수 있는 원본81 DWORD다.
+     std::span<const std::uint8_t> hidden_; // 0052f81e의 현재9개 숨김 표시다.
+diff --git a/cpppj/src/o/RawPlayerParticipation.cpp b/cpppj/src/o/RawPlayerParticipation.cpp
+--- a/cpppj/src/o/RawPlayerParticipation.cpp
++++ b/cpppj/src/o/RawPlayerParticipation.cpp
+@@ -7,6 +7,11 @@
+ namespace {
+ // PATCH 원본 Player 폭/개수와 통신·동맹·brain 필드 위치다.
+ constexpr std::size_t kStride=0xb4,kCount=9,kFlags=0x50,kAllies=0x54,kBrain=0xb0,kSubscriber=0x2c;
++struct BrainCall { // 실제 brain 파괴/반납 효과가 정상 또는 예외 복귀하기 전 현재 모듈을 반납하지 못하게 한다.
++    std::size_t& calls; // 같은 실제 모듈의 C++ 호출 수다.
++    explicit BrainCall(std::size_t& value):calls(value) { ++calls; } // 선택한 비영 brain의 실제 효과 직전에 시작한다.
++    ~BrainCall() { --calls; } // 앞선 부분 효과를 되돌리지 않고 호출 수명만 끝낸다.
++};
+ // 실제 도달한 효과만 필수로 요구한다. 부재를 성공이나 가짜 장치로 바꾸지 않는다.
+ template<class Function> const Function& Require(const Function& function) {
+     if (!function) throw std::logic_error("Player 참여 초기화의 실제 외부효과 미연결");return function;
+@@ -104,6 +109,7 @@
+ }
+ // 실제 AI 생성은 상위의00417e50/00416860이며 이 필드 setter가 대신 생성하지 않는다.
+ void RawPlayerParticipation::AttachBrain(std::uint32_t owner,std::uint32_t brain) const {
++    if (BrainReturnedForState(owner)) throw std::logic_error("Native 반납된 AI owner의 새 brain 설치 금지"); // 실제 할당/필드쓰기로 수명 증빙을 무효화하지 않는다.
+     if (Read(owner,kBrain)) Require(hooks_.assertion)(PlayerParticipationAssertion::BrainAlreadyAssigned);
+     Put(owner,kBrain,brain);Put(owner,kFlags,Read(owner,kFlags)|0x20);
+     if (std::bit_cast<std::int32_t>(Read(owner,kSubscriber))<1) {
+@@ -117,7 +123,26 @@
+ std::uint32_t RawPlayerParticipation::Brain(std::uint32_t owner) const { return Read(owner,kBrain); }
+ // 파괴/반납 callback 시점에는 원본처럼 이전 포인터를 Player에서 계속 읽을 수 있다.
+ void RawPlayerParticipation::RemoveBrain(std::uint32_t owner) const {
+-    const auto brain=Brain(owner);if (!brain) return;Require(hooks_.destructBrain)(brain);Require(hooks_.freeBrain)(brain);Put(owner,kBrain,0);
++    if (BrainReturnedForState(owner)) throw std::logic_error("Native 반납된 AI owner의 반복 reset 금지");
++    const auto brain=Brain(owner);if (!brain) return;BrainCall call(activeBrainCalls_);Require(hooks_.destructBrain)(brain);Require(hooks_.freeBrain)(brain);Put(owner,kBrain,0);
++}
++// 원문 cleanup의 owner1..8 위치에서 같은 실제 부모를 끝낸 뒤에만 이동 전용 증빙을 만든다.
++RawPlayerParticipation::BrainResetPass RawPlayerParticipation::RemoveBrainForState(std::uint32_t owner) const {
++    if (owner<1 || owner>=kCount) throw std::out_of_range("State AI 반납의 실제 owner1..8 범위");
++    RemoveBrain(owner);return BrainResetPass(this,retirementLifetime_,owner);
++}
++// 정상 복귀와 현재 모듈의 같은 대여만 소비한다. 실패한 앞선 효과나 다른 owner 상태는 복구하지 않는다.
++void RawPlayerParticipation::ReturnBrainForState(BrainResetPass&& pass) {
++    const auto owner=pass.owner_;
++    if (pass.source_!=this || pass.lifetime_.lock()!=retirementLifetime_ || owner<1 || owner>=kCount) throw std::invalid_argument("같은 실제 AI 모듈의 정상 reset 증빙 필요");
++    if (activeBrainCalls_) throw std::logic_error("진행 중 AI 파괴/반납 효과의 증빙 소비 금지");
++    if (returnedBrains_[owner] || Brain(owner)) throw std::logic_error("현재 brain0인 미반납 AI owner 증빙 필요");
++    returnedBrains_[owner].emplace(std::move(pass)); // weak 증빙의 noexcept 이동만 하며 실제 소비 뒤 추가 할당하지 않는다.
++}
++// 실제 증빙이 없는 일반 경로는 종전대로 동작하며 raw 필드 외부변조도 새 brain을 숨기지 않는다.
++bool RawPlayerParticipation::BrainReturnedForState(std::uint32_t owner) const {
++    Player(owner);if (!returnedBrains_[owner]) return false;
++    if (Brain(owner)) throw std::logic_error("반납된 AI owner의 현재 brain 정체성 변경");return true;
+ }
+ // 0번 중립 AI는 이 원본 전체삭제 루프의 대상이 아니다.
+ void RawPlayerParticipation::RemoveAllBrains() const {
+diff --git a/cpppj/src/o/RawProductionDeck.h b/cpppj/src/o/RawProductionDeck.h
+--- a/cpppj/src/o/RawProductionDeck.h
++++ b/cpppj/src/o/RawProductionDeck.h
+@@ -4,6 +4,9 @@
+ #include "o/RawCarrierPreDestroy.h"
+ #include "o/RawContainedCreate.h"
+ #include <map>
++#include <memory>
++#include <optional>
++#include <utility>
+ 
+ namespace netstorm::o {
+ // 원본Deck객체의전체물리크기와고정된66개의5BYTE항목이다.
+@@ -12,7 +15,18 @@
+ enum class ProductionDeckAssertion { DuplicateType,Capacity,TypeTruncated,ChanceTruncated,PowerTruncated,RemainingTruncated };
+ // Player+68의32비트토큰에대응하는유일한Deck수명저장소다.다른Player사본은만들지않는다.
+ class RawProductionDeck {
++    struct RetirementLifetime {}; // 같은 실제 Deck 모듈의 C++ 수명을 구별하며 Native 게임 필드가 아니다.
+ public:
++    class PlayerLinksPass { // 같은 실제0048fcd0 전체 정상 복귀를 증명하며 외부 생성/복사를 허용하지 않는다.
++    public:
++        PlayerLinksPass(PlayerLinksPass&&) noexcept=default;PlayerLinksPass& operator=(PlayerLinksPass&&) noexcept=default; // 현재 모듈 반납 증빙만 이동한다.
++        PlayerLinksPass(const PlayerLinksPass&)=delete;PlayerLinksPass& operator=(const PlayerLinksPass&)=delete; // 임의 완료 상태를 만들지 않는다.
++    private:
++        friend class RawProductionDeck;
++        PlayerLinksPass(const RawProductionDeck* source,std::weak_ptr<const RetirementLifetime> lifetime) noexcept:source_(source),lifetime_(std::move(lifetime)) {} // 실제 CleanupPlayerLinks 정상 복귀 뒤에만 발급한다.
++        const RawProductionDeck* source_;std::weak_ptr<const RetirementLifetime> lifetime_; // 소멸 뒤 포인터는 비교만 하며 주소 재사용은 lifetime으로 구별한다.
++    };
++
+     // 할당직후의원본미초기화바이트를공급한다.0채움관찰기본값을묵시적으로넣지않는다.
+     using Fill=std::function<void(std::span<std::uint8_t>)>;
+     // PATCH Player9와현재templateOwner는player자체에서읽는다.할당기/진단대상은더오래살아야한다.
+@@ -37,6 +51,10 @@
+     // CRT free 경계: 같은 소유자의 한 블록만 반납한다. Player 필드/다른 블록/다음 토큰은 바꾸지 않는다.
+     // 0은 원문 free(NULL)처럼 무효과이며, 미등록 비영/중복 토큰은 명시 계약 오류다. 빌린 Bytes 뷰는 즉시 무효다.
+     void Release(std::uint32_t token) const;
++    PlayerLinksPass CleanupPlayerLinksForState(std::function<std::span<std::uint8_t>()> currentPlayers); // 실제 부모와 이 Deck의 실제 Release만 사용한 정상 복귀 증빙이다.
++    void ReturnPlayerLinksForState(PlayerLinksPass&& pass); // 같은 모듈/전체 링크0/실제 블록 반납/호출복귀 증빙을 소비한다.
++    bool PlayerLinksReturnedForState() const; // 실제 보관 증빙만 조회하며 외부 성공 setter는 제공하지 않는다.
++
+     const SidPool& Pool() const; // 같은실제월드조립을확인한다.
+     RawPlayerWorld& Player() const; // 같은현재9Player/두owner를후속부모가재사용한다.
+ private:
+@@ -46,6 +64,10 @@
+     void Assert(ProductionDeckAssertion where) const;
+     // 실제접근할항목개수의물리한계를검사한다.signed음수는원본처럼빈순회다.
+     std::int32_t Count(std::span<const std::uint8_t> raw) const;
++    void RequireLiveLinks() const; // 반납한 Player 뷰로 새 Deck을 만들거나 메모리를 조회/반납하지 못하게 한다.
++    std::shared_ptr<const RetirementLifetime> retirementLifetime_{std::make_shared<RetirementLifetime>()}; // 실제 모듈이 사라진 뒤 이전 pass의 재사용을 거부한다.
++    std::optional<PlayerLinksPass> returnedLinks_; // 실제 정상 자식에서 이동한 증빙일 때만 oldPlayer 소멸 재조회를 생략한다.
++    std::size_t activeLinkCalls_{}; // 실제 부모의 free/후속store가 복귀하기 전 반납 증빙을 소비하지 않는다.
+     RawPlayerWorld& player_; // 원본Player기록과templateOwner의장기저장소다.
+     Fill fill_; // 실제할당직후바이트공급경계이며할당성공판정을대신하지않는다.
+     std::function<void(ProductionDeckAssertion)> assertion_; // 원본assert를분기성공으로바꾸지않는진단이다.
+diff --git a/cpppj/src/o/RawProductionDeck.cpp b/cpppj/src/o/RawProductionDeck.cpp
+--- a/cpppj/src/o/RawProductionDeck.cpp
++++ b/cpppj/src/o/RawProductionDeck.cpp
+@@ -1,6 +1,7 @@
+ // Deck의현재Player포인터와5BYTE항목·signed power를원본필드폭/순서대로보존한다.
+ #include "o/RawProductionDeck.h"
+ #include "o/RawDeckDraw.h"
++#include "o/RawPlayerLinksCleanup.h"
+ #include <algorithm>
+ #include <bit>
+ #include <limits>
+@@ -11,6 +12,11 @@
+ namespace {
+ // 원본Deck의활성개수/가중합/남은수/seed/openDWORD필드다.
+ constexpr std::size_t kCount=0x14c,kChance=0x150,kRemaining=0x154,kSeed=0x158,kOpen=0x15c;
++struct LinkCall { // 실제 Player 링크 부모의 전체 동기 효과 동안 현재 모듈 반납을 막는다.
++    std::size_t& calls; // 같은 실제 Deck의 C++ 호출 수다.
++    explicit LinkCall(std::size_t& value):calls(value) { ++calls; } // 첫 실제 field 접근 전에 대여를 시작한다.
++    ~LinkCall() { --calls; } // 실패의 부분 쓰기를 되돌리지 않고 호출 대여만 반납한다.
++};
+ // 비정렬little endian DWORD/WORD를필요한폭만읽는다.
+ std::uint32_t Read(std::span<const std::uint8_t> raw,std::size_t offset,std::size_t width=4) {
+     std::uint32_t value=0;
+@@ -32,25 +38,48 @@
+ }
+ // 다른모듈이교체한Player포인터를지우지않고자신의실제소유블록만해제한다.
+ RawProductionDeck::~RawProductionDeck() {
++    if (returnedLinks_) return; // 실제 부모의 전체 반납 증빙을 소비한 경우만 oldPlayer를 다시 읽지 않는다.
+     // 동일9기록의현재포인터와자신이소유한토큰을확인한다.
+     for (std::uint32_t owner=0;owner<9;++owner) { auto records=player_.Records();const auto offset=PointerOffset(owner);if (blocks_.contains(Read(records,offset))) Put(records,offset,0); }
+ }
+ // 원본은Player0도사용할수있지만물리9기록밖주소는호스트계약에서거부한다.
+ std::size_t RawProductionDeck::PointerOffset(std::uint32_t owner) const {
++    RequireLiveLinks();
+     if (owner>=9 || player_.Records().size()!=9*0xb4) throw std::out_of_range("실제Deck의Player범위오류");
+     return static_cast<std::size_t>(owner)*0xb4+0x68;
+ }
+ // opaque토큰을호스트포인터로해석하지않고이저장소의실제블록만반환한다.
+ std::span<std::uint8_t> RawProductionDeck::Bytes(std::uint32_t token) const {
++    RequireLiveLinks();
+     const auto found=blocks_.find(token);if (found==blocks_.end()) throw std::out_of_range("현재PlayerDeck의실제할당블록누락");return found->second;
+ }
+ // 0048fcd0의 선택된 free 인자를 동일한 할당 소유자에 연결한다. Player+68의 후속0쓰기는 부모가 수행한다.
+ void RawProductionDeck::Release(std::uint32_t token) const {
++    RequireLiveLinks();
+     if (!token) return;
+     const auto found=blocks_.find(token); // 다른 월드/이미 반납한 비영 토큰을 성공으로 처리하지 않는다.
+     if (found==blocks_.end()) throw std::out_of_range("현재PlayerDeck의실제반납블록누락");
+     blocks_.erase(found);
+ }
++// 같은 실제 현재 Player getter와 자기 Deck 메모리만 기존 원문 부모에 공급한다.
++RawProductionDeck::PlayerLinksPass RawProductionDeck::CleanupPlayerLinksForState(std::function<std::span<std::uint8_t>()> currentPlayers) {
++    RequireLiveLinks();LinkCall call(activeLinkCalls_);CleanupPlayerLinks({std::move(currentPlayers),[this](auto token) { Release(token); }});return PlayerLinksPass(this,retirementLifetime_);
++}
++// 실제 부모가 끝나고 같은 현재 물리가0인 경우만 old Player 뷰의 재조회 책임을 반납한다.
++void RawProductionDeck::ReturnPlayerLinksForState(PlayerLinksPass&& pass) {
++    if (pass.source_!=this || pass.lifetime_.lock()!=retirementLifetime_) throw std::invalid_argument("같은 실제 Deck의 Player 링크 정상 복귀 증빙 필요");
++    RequireLiveLinks();if (activeLinkCalls_) throw std::logic_error("진행 중 Player 링크 효과의 증빙 소비 금지");
++    if (!blocks_.empty()) throw std::logic_error("현재 실제 Deck 소유 블록 반납 미완료");
++    const auto records=player_.Records();if (records.size()!=9*180) throw std::logic_error("현재 Player 링크 반납의 실제9기록 누락");
++    for (std::size_t owner=0;owner<9;++owner) { // 실제 부모가 정리한 세 DWORD만 확인하며 다른 상태는 바꾸지 않는다.
++        if (Read(records,owner*180+0x9c) || Read(records,owner*180+8) || Read(records,owner*180+0x68)) throw std::logic_error("현재 Player 링크 세 DWORD 반납 미완료");
++    }
++    returnedLinks_.emplace(std::move(pass)); // 실제 소비 뒤 추가 allocation 없이 같은 이동 전용 증빙을 보관한다.
++}
++// 보관한 실제 증빙의 존재만 조회하며 old Player 뷰는 읽지 않는다.
++bool RawProductionDeck::PlayerLinksReturnedForState() const { return bool(returnedLinks_); }
++// 닫힌 소비자는 원문 새 게임의 Deck owner로 재활용하지 않고 새 Session 모듈로 교체해야 한다.
++void RawProductionDeck::RequireLiveLinks() const { if (returnedLinks_) throw std::logic_error("Native 반납된 Player 링크의 Deck 소비 금지"); }
+ // 새할당의미초기화영역은fill입력을보존하고원본다섯DWORD만쓴다.
+ std::uint32_t RawProductionDeck::Get(std::uint32_t owner) const {
+     const auto offset=PointerOffset(owner);const auto current=Read(player_.Records(),offset);if (current) { static_cast<void>(Bytes(current));return current; }
+diff --git a/cpppj/src/o/RawAiCreate.cpp b/cpppj/src/o/RawAiCreate.cpp
+--- a/cpppj/src/o/RawAiCreate.cpp
++++ b/cpppj/src/o/RawAiCreate.cpp
+@@ -20,6 +20,7 @@
+ // 기존 brain/NoTemple은 생성자 경계를 필요로 하지 않는다. 정상 생성만 실제0xb08 소유자를 요청한다.
+ std::uint32_t RawAiCreate::Create(std::uint32_t owner,std::span<const std::uint8_t> settings) const {
+     if (settings.size()!=RawMissionAiSettings::kSize) throw std::invalid_argument("AiCreate실제600바이트설정누락");
++    if (players_.BrainReturnedForState(owner)) throw std::logic_error("Native 반납된 AI owner의 새 생성 금지"); // 색/신전/실제 본체 할당보다 먼저 닫힌 C++ 소비자 수명을 확인한다.
+     const auto color=Field(settings,0x250);if (color!=0) Need(hooks_.changeColor,"AiCreate실제색변경누락")(owner,color);
+     const auto old=players_.Brain(owner);if (old!=0) return old;
+     if (Field(settings,0x244)!=0) { const auto region=Need(hooks_.firstRegion,"AiCreate실제첫지역조회누락")(owner);const auto temple=Need(hooks_.islandTemple,"AiCreate실제지역신전조회누락")(region);if (temple!=0) Need(hooks_.destroyTemple,"AiCreate실제신전삭제누락")(temple,0x400000);return 0; }
+diff --git a/cpppj/src/client/RawCampaignSession.h b/cpppj/src/client/RawCampaignSession.h
+--- a/cpppj/src/client/RawCampaignSession.h
++++ b/cpppj/src/client/RawCampaignSession.h
+@@ -331,6 +331,11 @@
+     RawProcessHostStorage::ClearPass ClearProcessesForState(); // 실제 같은 Kernel의 단일 Clear 정상 반환만 증빙한다.
+     void ReturnProcessBindingsForState(RawProcessHostStorage::ClearPass&& pass); // Regular 잔류의 장기 Host를 유지하며 현재 처리기 대여를 실제 반납한다.
+     void ReleasePlayerLinks(); //0048fcd0의 실제9기록 링크/개수/덱만 정리한다. 실패는 전파하며 Kernel/Core/Player 할당은 유지한다.
++    o::RawProductionDeck::PlayerLinksPass ClearPlayerLinksForState(); // 같은 실제0048fcd0 정상 복귀 뒤에만 이동 전용 증빙을 발급한다.
++    void ReturnPlayerLinksForState(o::RawProductionDeck::PlayerLinksPass&& pass); // 같은 실제 Deck의 증빙만 소비하며 전체 Session/PlayerUse는 유지한다.
++    o::RawPlayerParticipation::BrainResetPass ResetAiForState(std::uint32_t owner); // 원문 owner1..8 resetAi 정상 복귀만 증명한다.
++    void ReturnAiForState(o::RawPlayerParticipation::BrainResetPass&& pass); // 같은 실제 AI 모듈의 owner별 증빙만 소비한다.
++
+     // 실제 방향별동맹 초기화가 쓰고 승패가 읽는 같은81DWORD를 빌린다.
+     std::span<std::uint32_t> Alliances();
+     // 로그인/Stage3의 후속 부모가 같은 현재 Player9/동맹/brain 수명을 직접 사용한다.
+diff --git a/cpppj/src/client/RawCampaignSession.cpp b/cpppj/src/client/RawCampaignSession.cpp
+--- a/cpppj/src/client/RawCampaignSession.cpp
++++ b/cpppj/src/client/RawCampaignSession.cpp
+@@ -3120,6 +3120,7 @@
+     #include "client/RawCampaignRitual.inc"
+     // State 부모가 지정하는 같은 현재 Player와 같은 실제 Deck owner를 기존 원문 자식에 빌린다.
+     void ReleasePlayerLinks() {
++        if (productionDeck && productionDeck->PlayerLinksReturnedForState()) throw std::logic_error("Native 반납된 Session Player 링크의 반복 정리 금지");
+         CleanupPlayerLinks({[this] { return playerRecords->Records(); },[this](std::uint32_t token) {
+             if (!productionDeck) throw std::logic_error("실제 Session Player링크의 Deck 소유자 미연결");productionDeck->Release(token);
+         }});
+@@ -3136,12 +3137,12 @@
+         ReleaseEditorCommandReceivers();
+         // 다른 AI의 손상/외부 예외가 나더라도 나머지 실제 brain과 Kernel 정리를 계속하고 오류를 남긴다.
+         for (std::uint32_t owner=1;owner<9;++owner) if (participation) {
+-            try { participation->RemoveBrain(owner); }
++            try { if (!participation->BrainReturnedForState(owner)) participation->RemoveBrain(owner); } // 실제 같은 모듈이 소비한 정상 reset 증빙만 반복효과를 생략한다.
+             catch (const std::exception& error) { std::fprintf(stderr,"실제 Session AI 정리 실패 owner%u: %s\n",owner,error.what()); }
+             catch (...) { std::fprintf(stderr,"실제 Session AI 정리 실패 owner%u: 알 수 없는 예외\n",owner); }
+         }
+         // 원문0048fcd0은 Kernel보다 앞선다. 실패한 명시 State 호출과 달리 C++ 최종 소멸은 진단 뒤 나머지 소유권을 반납한다.
+-        try { ReleasePlayerLinks(); }
++        try { if (!productionDeck || !productionDeck->PlayerLinksReturnedForState()) ReleasePlayerLinks(); } // 실제 같은 Deck의 정상 링크 반납 증빙만 재호출을 생략한다.
+         catch (const std::exception& error) { std::fprintf(stderr,"실제 Session Player링크 정리 실패: %s\n",error.what()); }
+         catch (...) { std::fprintf(stderr,"실제 Session Player링크 정리 실패: 알 수 없는 예외\n"); }
+         try { world.DrainCurrentProcessBindingsForShutdown(); } // 자기 현재 처리기가 만든 객체만 모듈보다 먼저 반납하고 이전 Native 잔류는 장기 Storage에 남긴다.
+@@ -3517,6 +3518,15 @@
+ RawProcessHostStorage::ClearPass RawCampaignSession::ClearProcessesForState() { return impl_->world.ClearProcessesForState(); }
+ void RawCampaignSession::ReturnProcessBindingsForState(RawProcessHostStorage::ClearPass&& pass) { impl_->world.ReturnProcessBindingsForState(std::move(pass)); } // 일반 소멸 fallback과 실제 소비된 반납을 구분한다.
+ void RawCampaignSession::ReleasePlayerLinks() { impl_->ReleasePlayerLinks(); }
++// 실제 Native 부모의 선택 위치에서만 기존 AI/링크 자식을 실행하고 정상 복귀 증빙을 이동한다.
++RawProductionDeck::PlayerLinksPass RawCampaignSession::ClearPlayerLinksForState() {
++    if (!impl_->productionDeck) throw std::logic_error("State Player 링크의 실제 Deck 모듈 누락");return impl_->productionDeck->CleanupPlayerLinksForState([this] { return impl_->playerRecords->Records(); });
++}
++void RawCampaignSession::ReturnPlayerLinksForState(RawProductionDeck::PlayerLinksPass&& pass) { impl_->productionDeck->ReturnPlayerLinksForState(std::move(pass)); } // 전체 World/PlayerUse의 반납으로 확대하지 않는다.
++RawPlayerParticipation::BrainResetPass RawCampaignSession::ResetAiForState(std::uint32_t owner) {
++    if (!impl_->participation) throw std::logic_error("State resetAi의 실제 참여 모듈 누락");return impl_->participation->RemoveBrainForState(owner);
++}
++void RawCampaignSession::ReturnAiForState(RawPlayerParticipation::BrainResetPass&& pass) { impl_->participation->ReturnBrainForState(std::move(pass)); } // 실제 resetAi 정상 복귀 증빙만 같은 모듈에 반납한다.
+ // 방향별 DWORD를 그대로 공유하여 한쪽 변경을 대칭화하거나 bool로 줄이지 않는다.
+ std::span<std::uint32_t> RawCampaignSession::Alliances() { return impl_->alliances; }
+ // 같은 현재 Player 참여/동맹/실제 AI 소유자 수명을 후속 로그인 부모에 빌린다.
+diff --git a/cpppj/tests/PlayerParticipationTests.cpp b/cpppj/tests/PlayerParticipationTests.cpp
+--- a/cpppj/tests/PlayerParticipationTests.cpp
++++ b/cpppj/tests/PlayerParticipationTests.cpp
+@@ -3,6 +3,9 @@
+ #include "o/RawPlayerParticipation.h"
+ #include <algorithm>
+ #include <array>
++#include <optional>
++#include <type_traits>
++#include "o/RawAiCreate.h"
+ using namespace netstorm::o;
+ using namespace netstorm::test::rawscene;
+ namespace {
+@@ -101,3 +104,38 @@
+     auto actual=scene.Runtime();actual.RemoveBrain(1);CHECK(actual.Brain(1)==0 && (scene.players[180+80]&0x20));
+     actual.SetAlliance(1,1U<<2);CHECK(scene.allies[1*9+2]==1 && scene.allies[2*9+1]==7);actual.SetAlliance(2,0);CHECK(scene.allies[1*9+2]==1 && scene.allies[2*9+1]==0);
+ }
++
++// 실제 owner1..8 자식만 정리하며 정상 복귀 증빙을 소비한 뒤 같은 owner의 설치/반복 효과를 닫는다.
++TEST_CASE(PlayerParticipation_StateResetProofCompletesActualParentsAndClosesOwners) {
++    static_assert(std::is_nothrow_move_constructible_v<RawPlayerParticipation::BrainResetPass> && !std::is_copy_constructible_v<RawPlayerParticipation::BrainResetPass>); // 실제 소비 뒤 증빙 보관이 할당/복사 경계가 되지 않는다.
++    ParticipationScene scene(Split("1,1,0,0,0,0,0,1,0,0,0,0,7002",','));auto runtime=scene.Runtime();ParticipationPut(scene.players,0xb0,9000);
++    for (std::uint32_t owner=1;owner<9;++owner) { // 원문 cleanup의8회 resetAi 위치를 그대로 선택한다.
++        ParticipationPut(scene.players,owner*180+0xb0,7000+owner);ParticipationPut(scene.players,owner*180+0x50,0x12340020U);auto pass=runtime.RemoveBrainForState(owner);CHECK(pass.Owner()==owner && !runtime.BrainReturnedForState(owner) && runtime.Brain(owner)==0);runtime.ReturnBrainForState(std::move(pass));CHECK(runtime.BrainReturnedForState(owner));CHECK(Throws([&] { runtime.AttachBrain(owner,8000+owner); }) && Throws([&] { runtime.RemoveBrain(owner); }));
++        CHECK((scene.players[owner*180+0x50]&0x20)!=0);
++    }
++    CHECK(runtime.Brain(0)==9000 && !runtime.BrainReturnedForState(0));CHECK(scene.trace=="K,7001;F,7001;K,7002;F,7002;K,7003;F,7003;K,7004;F,7004;K,7005;F,7005;K,7006;F,7006;K,7007;F,7007;K,7008;F,7008");CHECK(Throws([&] { runtime.RemoveBrainForState(0); }) && Throws([&] { runtime.RemoveBrainForState(9); }));
++}
++
++// 실제 free 실패에서는 정상 복귀 증빙이 없고 파괴 선행효과와 아직0이 아닌 현재 brain을 그대로 남긴다.
++TEST_CASE(PlayerParticipation_StateResetFailureDoesNotPublishProofOrHidePrefix) {
++    ParticipationScene scene(Split("1,1,0,0,7002,0,0,1,0,0,0,0,7002",','));bool failed{};scene.hooks.freeBrain=[&](auto token) { scene.Add("F,"+std::to_string(token));throw std::runtime_error("명시 free 실패"); };auto runtime=scene.Runtime();auto other=runtime.RemoveBrainForState(2);
++    try { static_cast<void>(runtime.RemoveBrainForState(1)); }catch (const std::runtime_error&) { failed=true; }CHECK(failed && scene.trace=="K,7002;F,7002" && runtime.Brain(1)==7002 && !runtime.BrainReturnedForState(1));runtime.ReturnBrainForState(std::move(other));CHECK(runtime.BrainReturnedForState(2)); // 예외 복귀 뒤 호출 대여만 종료되며 다른 정상 증빙은 소비할 수 있다.
++}
++
++// 다른 모듈/이동한 pass/소멸 뒤 같은 주소의 새 모듈은 이전 정상 복귀를 재사용할 수 없다.
++TEST_CASE(PlayerParticipation_StateResetForeignMovedAndExpiredProofsAreRejected) {
++    ParticipationScene scene(Split("1,1,0,0,0,0,0,1,0,0,0,0,7002",','));auto first=scene.Runtime();auto second=scene.Runtime();auto pass=first.RemoveBrainForState(1);CHECK(Throws([&] { second.ReturnBrainForState(std::move(pass)); }));first.ReturnBrainForState(std::move(pass));CHECK(first.BrainReturnedForState(1) && !second.BrainReturnedForState(1));CHECK(Throws([&] { first.ReturnBrainForState(std::move(pass)); }));
++    std::optional<RawPlayerParticipation::BrainResetPass> old;std::optional<RawPlayerParticipation> reused;reused.emplace(OriginalEdition::Patch1078,scene.players,scene.allies,scene.hidden,scene.state,scene.hooks);const auto* address=&*reused;old.emplace(reused->RemoveBrainForState(3));reused.reset();reused.emplace(OriginalEdition::Patch1078,scene.players,scene.allies,scene.hidden,scene.state,scene.hooks);CHECK(&*reused==address && Throws([&] { reused->ReturnBrainForState(std::move(*old)); }) && !reused->BrainReturnedForState(3));
++}
++
++// 가상 파괴 callback이 아직 실행 중이면 이전 owner의 정상 pass도 소비할 수 없다.
++TEST_CASE(PlayerParticipation_StateResetActualEffectMustReturnBeforeConsumption) {
++    ParticipationScene scene(Split("1,1,0,0,7002,0,0,1,0,0,0,0,7002",','));RawPlayerParticipation* current{};std::optional<RawPlayerParticipation::BrainResetPass> previous;bool rejected{};
++    scene.hooks.destructBrain=[&](auto token) { CHECK(token==7002 && current->Brain(1)==7002);try { current->ReturnBrainForState(std::move(*previous)); }catch (const std::logic_error& error) { rejected=std::string_view(error.what()).find("진행 중")!=std::string_view::npos; } };auto runtime=scene.Runtime();current=&runtime;previous.emplace(runtime.RemoveBrainForState(2));auto pass=runtime.RemoveBrainForState(1);CHECK(rejected && !runtime.BrainReturnedForState(1) && !runtime.BrainReturnedForState(2));runtime.ReturnBrainForState(std::move(pass));runtime.ReturnBrainForState(std::move(*previous));CHECK(runtime.BrainReturnedForState(1) && runtime.BrainReturnedForState(2));
++}
++
++// 실제 생성 wrapper도 색/신전/할당보다 먼저 닫힌 owner를 거부하고 raw 외부 변조를 숨기지 않는다.
++TEST_CASE(PlayerParticipation_StateResetRetiredOwnerRejectsCreateAndRawIdentityChange) {
++    ParticipationScene scene(Split("1,1,0,0,0,0,0,1,0,0,0,0,7002",','));auto runtime=scene.Runtime();auto pass=runtime.RemoveBrainForState(1);runtime.ReturnBrainForState(std::move(pass));std::size_t colors{},allocations{};AiCreateHooks hooks;hooks.changeColor=[&](auto,auto) { ++colors; };hooks.construct=[&](auto,auto,auto) { ++allocations;return 1U; };RawAiCreate create(OriginalEdition::Patch1078,runtime,std::move(hooks));std::array<std::uint8_t,RawMissionAiSettings::kSize> settings{};ParticipationPut(settings,0x250,3);CHECK(Throws([&] { create.Create(1,settings); }) && colors==0 && allocations==0);
++    ParticipationPut(scene.players,180+0xb0,0x12345678);CHECK(Throws([&] { runtime.BrainReturnedForState(1); }));ParticipationPut(scene.players,180+0xb0,0);CHECK(runtime.BrainReturnedForState(1)); // raw 기록을 우회 변경한 경우는 허용된 새 설치가 아닌 명시 수명 위반이다.
++}
+diff --git a/cpppj/tests/ProductionDeckTests.cpp b/cpppj/tests/ProductionDeckTests.cpp
+--- a/cpppj/tests/ProductionDeckTests.cpp
++++ b/cpppj/tests/ProductionDeckTests.cpp
+@@ -6,6 +6,8 @@
+ #include "o/ContentFormHost.h"
+ #include "client/RawCampaignProductionBindings.h"
+ #include <memory>
++#include <optional>
++#include <type_traits>
+ 
+ using namespace netstorm::o;
+ using namespace netstorm::test::rawscene;
+@@ -174,3 +176,34 @@
+     CHECK(production.RefreshCurrent()==kDeckToken && diagnostics==1 && queries==0 && globals.FullDeck()==0x80000000U && Hex(scene.deck->Bytes(kDeckToken))==before);
+     scene.core.ownerMode.battle=true;globals.FullDeck()=0xffffffffU;production.RefreshCurrent();CHECK(queries==0 && Hex(scene.deck->Bytes(kDeckToken))==before && globals.FullDeck()==0xffffffffU);globals.FullDeck()=0;production.RefreshCurrent();CHECK(queries==1 && Get(scene.deck->Bytes(kDeckToken),0x14c)==0 && globals.FullDeck()==0);
+ }
++
++// 실제9Player의현재getter와자기Deck free가끝난증빙만소비해oldPlayer의재조회책임을반납한다.
++TEST_CASE(ProductionDeck_StateLinksProofUsesActualParentAndClosesConsumers) {
++    static_assert(std::is_nothrow_move_constructible_v<RawProductionDeck::PlayerLinksPass> && !std::is_copy_constructible_v<RawProductionDeck::PlayerLinksPass>); // 실제 반납 뒤 optional 보관은 증빙의 noexcept 이동만 사용한다.
++    ProductionScene scene(Split("Get,1,0,0,4,167,0,1,1",','));std::array<std::uint32_t,9> tokens{};
++    for (std::uint32_t owner=0;owner<9;++owner) { tokens[owner]=scene.deck->Get(owner);Put(scene.records,owner*180+0x9c,owner+31);Put(scene.records,owner*180+8,owner+1); } // 원문이 방문하는9행의실제Deck만할당한다.
++    const auto before=scene.records;std::size_t reads{};auto pass=scene.deck->CleanupPlayerLinksForState([&] { ++reads;return std::span<std::uint8_t>(scene.records); });CHECK(reads==36 && !scene.deck->PlayerLinksReturnedForState());
++    for (std::size_t index=0;index<scene.records.size();++index) { const auto field=index%180;const bool zero=(field>=8 && field<12)||(field>=0x68 && field<0x6c)||(field>=0x9c && field<0xa0);CHECK(scene.records[index]==(zero ? 0 : before[index])); } // 세DWORD밖전체BYTE는실제부모의보존계약이다.
++    scene.deck->ReturnPlayerLinksForState(std::move(pass));CHECK(scene.deck->PlayerLinksReturnedForState());const auto allocations=scene.trace.size();CHECK(Throws([&] { scene.deck->Get(1); }) && Throws([&] { scene.deck->Release(0); }) && Throws([&] { scene.deck->Bytes(tokens[1]); }) && scene.trace.size()==allocations);scene.deck.reset(); // 실제증빙소비뒤소멸자는oldPlayer를재조회하지않는다.
++}
++
++// 선택된잘못된Deck free의앞선필드쓰기만남으며정상복귀pass나반납완료를만들지않는다.
++TEST_CASE(ProductionDeck_StateLinksFailurePreservesNativePrefixAndNeedsActualRecovery) {
++    ProductionScene scene(Split("Get,1,0,0,4,167,0,1,1",','));std::array<std::uint32_t,9> tokens{};
++    for (std::uint32_t owner=0;owner<9;++owner) { tokens[owner]=scene.deck->Get(owner);Put(scene.records,owner*180+0x9c,owner+31);Put(scene.records,owner*180+8,owner+1); } // 실제현재포인터만각행에설치한다.
++    Put(scene.records,3*180+0x68,0xdeadcaf0U);CHECK(Throws([&] { scene.deck->CleanupPlayerLinksForState([&] { return std::span<std::uint8_t>(scene.records); }); }) && !scene.deck->PlayerLinksReturnedForState());
++    for (std::uint32_t owner=0;owner<9;++owner) { CHECK(Get(scene.records,owner*180+0x9c)==(owner<=3 ? 0U : owner+31));CHECK(Get(scene.records,owner*180+8)==(owner<=3 ? 0U : owner+1));if (owner<3) CHECK(Get(scene.records,owner*180+0x68)==0); } // 실패행뒤원문미방문필드를지우지않는다.
++    CHECK(Get(scene.records,3*180+0x68)==0xdeadcaf0U);Put(scene.records,3*180+0x68,tokens[3]);auto pass=scene.deck->CleanupPlayerLinksForState([&] { return std::span<std::uint8_t>(scene.records); });Put(scene.records,8*180+8,7);CHECK(Throws([&] { scene.deck->ReturnPlayerLinksForState(std::move(pass)); }) && !scene.deck->PlayerLinksReturnedForState());Put(scene.records,8*180+8,0);scene.deck->ReturnPlayerLinksForState(std::move(pass));CHECK(scene.deck->PlayerLinksReturnedForState());
++}
++
++// 다른모듈과소멸뒤같은주소의새Deck은이전정상복귀증빙을소비할수없다.
++TEST_CASE(ProductionDeck_StateLinksForeignMovedAndExpiredProofsAreRejected) {
++    ProductionScene first(Split("Get,1,0,0,4,167,0,1,1",',')),second(Split("Get,1,0,0,4,167,0,1,1",','));auto pass=first.deck->CleanupPlayerLinksForState([&] { return std::span<std::uint8_t>(first.records); });CHECK(Throws([&] { second.deck->ReturnPlayerLinksForState(std::move(pass)); }));first.deck->ReturnPlayerLinksForState(std::move(pass));CHECK(first.deck->PlayerLinksReturnedForState() && !second.deck->PlayerLinksReturnedForState() && Throws([&] { first.deck->ReturnPlayerLinksForState(std::move(pass)); }));
++    std::optional<RawProductionDeck> reused;reused.emplace(*second.player,[](auto bytes) { std::fill(bytes.begin(),bytes.end(),std::uint8_t{0x71}); });const auto* address=&*reused;auto old=reused->CleanupPlayerLinksForState([&] { return std::span<std::uint8_t>(second.records); });reused.reset();reused.emplace(*second.player,[](auto bytes) { std::fill(bytes.begin(),bytes.end(),std::uint8_t{0x71}); });CHECK(&*reused==address && Throws([&] { reused->ReturnPlayerLinksForState(std::move(old)); }) && !reused->PlayerLinksReturnedForState());
++}
++
++// 실제부모의현재getter가재진입해도전체정리호출이복귀하기전에는이전pass를소비하지못한다.
++TEST_CASE(ProductionDeck_StateLinksActualParentMustReturnBeforeConsumption) {
++    ProductionScene scene(Split("Get,1,0,0,4,167,0,1,1",','));auto previous=scene.deck->CleanupPlayerLinksForState([&] { return std::span<std::uint8_t>(scene.records); });std::size_t reads{};bool rejected{};
++    auto current=scene.deck->CleanupPlayerLinksForState([&] { if (!reads++) try { scene.deck->ReturnPlayerLinksForState(std::move(previous)); }catch (const std::logic_error& error) { rejected=std::string_view(error.what()).find("진행 중")!=std::string_view::npos; }return std::span<std::uint8_t>(scene.records); });CHECK(reads==27 && rejected && !scene.deck->PlayerLinksReturnedForState());scene.deck->ReturnPlayerLinksForState(std::move(current));CHECK(scene.deck->PlayerLinksReturnedForState());
++}
+diff --git a/cpppj/tests/CampaignSessionTests.cpp b/cpppj/tests/CampaignSessionTests.cpp
+--- a/cpppj/tests/CampaignSessionTests.cpp
++++ b/cpppj/tests/CampaignSessionTests.cpp
+@@ -4832,3 +4832,29 @@
+     try { SharedKernelSession(std::move(services)); } catch (const std::invalid_argument&) { rejected=true; }CHECK(rejected && !globals->Borrowed() && !deleted && client.GetKernel().Get(pid));
+     services=SharedKernelServices(client,external);services.gameplayGlobals=globals;services.subscriberGlobals=client.SubscriberGlobals();auto session=SharedKernelSession(std::move(services));CHECK(&globals->RequireSession()==session.get());session.reset();CHECK(!globals->Borrowed() && deleted);
+ }
++
++// 실제AI본체18할당과9Deck을원문자식으로반납하고Session소멸자는소비한증빙의효과를반복하지않는다.
++TEST_CASE(CampaignSession_StateRuntimeRetirement_ActualChildrenAndDestructorKeepOrdering) {
++    Client client(SessionLinksOptions());SessionServicesFixture external;auto services=SharedKernelServices(client,external);services.ai.allocationBytes=[](auto bytes) { std::fill(bytes.begin(),bytes.end(),std::uint8_t{0x71}); };auto session=SharedKernelSession(std::move(services));session->Load();const auto ai=session->CreateAi(2,SessionAiSettings("Retire AI","sunCannon"));CHECK(ai && session->AiMemory().Contains(ai));const auto freed=session->AiMemory().Frees().size();
++    for (std::uint32_t owner=1;owner<9;++owner) { auto pass=session->ResetAiForState(owner);session->ReturnAiForState(std::move(pass));CHECK(session->Participation().BrainReturnedForState(owner)); } // 실제cleanup의owner1..8자식만정상복귀증빙으로연결한다.
++    CHECK(!session->AiMemory().Contains(ai) && session->AiMemory().Frees().size()==freed+18 && (session->PlayerRecords()[2*180+0x50]&0x20));const auto* memory=&session->AiMemory();const auto finalFrees=memory->Frees().size();const auto profile=SessionAiSettings("Closed AI","sunCannon");CHECK(Throws([&] { session->CreateAi(2,profile); }));
++    for (std::uint32_t owner=0;owner<9;++owner) static_cast<void>(session->Production().Deck().Get(owner)); // 같은실제Deckowner의9포인터만선택한다.
++    auto links=session->ClearPlayerLinksForState();session->ReturnPlayerLinksForState(std::move(links));CHECK(session->Production().Deck().PlayerLinksReturnedForState() && Throws([&] { session->ReleasePlayerLinks(); }));const auto base=client.PlayerRecords()->Base();std::size_t observed{};auto core=session->Core();
++    core.kernel.Add(std::make_unique<SessionLinksProbe>([&,memory,finalFrees,base] { ++observed;CHECK(memory->Frees().size()==finalFrees && client.PlayerRecords()->Base()==base);for (std::uint32_t owner=0;owner<9;++owner) { CHECK(Get(client.PlayerRecords()->Records(),owner*180+8)==0 && Get(client.PlayerRecords()->Records(),owner*180+0x68)==0 && Get(client.PlayerRecords()->Records(),owner*180+0x9c)==0); } })); // 실제Kernel소멸시점에도AI/Player뷰는아직살아있다.
++    session.reset();CHECK(observed==1 && client.GetKernel().Size()==0 && client.PlayerRecords()->Base()==base);
++}
++
++// 다른실제Session으로증빙을넘겨도대상상태는유지되며부분Links실패에는정상증빙이없다.
++TEST_CASE(CampaignSession_StateRuntimeRetirement_ForeignProofAndPartialLinkFailureStayOpen) {
++    SessionServicesFixture leftDevices,rightDevices;auto left=SharedKernelSession(leftDevices.Services()),right=SharedKernelSession(rightDevices.Services());auto ai=left->ResetAiForState(1);CHECK(Throws([&] { right->ReturnAiForState(std::move(ai)); }));left->ReturnAiForState(std::move(ai));CHECK(left->Participation().BrainReturnedForState(1) && !right->Participation().BrainReturnedForState(1));std::array<std::uint32_t,9> tokens{};
++    for (std::uint32_t owner=0;owner<9;++owner) { tokens[owner]=left->Production().Deck().Get(owner);SessionLinksPut(left->PlayerRecords(),owner*180+8,owner+1);SessionLinksPut(left->PlayerRecords(),owner*180+0x9c,owner+31); } // 현재Source만Native부분실패입력을받는다.
++    SessionLinksPut(left->PlayerRecords(),3*180+0x68,0xdeadcaf0U);CHECK(Throws([&] { left->ClearPlayerLinksForState(); }) && !left->Production().Deck().PlayerLinksReturnedForState());CHECK(Get(left->PlayerRecords(),2*180+0x68)==0 && Get(left->PlayerRecords(),3*180+0x68)==0xdeadcaf0U && Get(left->PlayerRecords(),4*180+8)==5);SessionLinksPut(left->PlayerRecords(),3*180+0x68,tokens[3]);auto links=left->ClearPlayerLinksForState();CHECK(Throws([&] { right->ReturnPlayerLinksForState(std::move(links)); }) && !right->Production().Deck().PlayerLinksReturnedForState());left->ReturnPlayerLinksForState(std::move(links));CHECK(left->Production().Deck().PlayerLinksReturnedForState());
++}
++
++// 개별자식증빙과Core0정상복귀만으로아직살아있는전체Player고정뷰대여를조기반납하지않는다.
++TEST_CASE(CampaignSession_StateRuntimeRetirement_CoreZeroStillNeedsAllFixedViewsReturned) {
++    Client client(SessionLinksOptions());SessionServicesFixture external;auto services=SharedKernelServices(client,external);services.gameplayGlobals=client.GameplayGlobals();services.coreDataGlobals=client.CoreDataGlobals();auto session=SharedKernelSession(std::move(services));const auto records=client.PlayerRecords();const auto base=records->Base();auto storage=session->World().Storage();
++    for (std::uint32_t owner=1;owner<9;++owner) { auto ai=session->ResetAiForState(owner);session->ReturnAiForState(std::move(ai)); } // 모든AI자식의반납증빙만소비하고전체Session은유지한다.
++    auto links=session->ClearPlayerLinksForState();session->ReturnPlayerLinksForState(std::move(links));auto core=client.CoreDataGlobals();core->Select(client.GameplayGlobals()->player,0,1,1);CHECK(!core->Current().empty());core->Select(client.GameplayGlobals()->player,0,0,1);CHECK(core->Current().empty() && core->Active()==0);bool blocked{},called{};try { records->Initialize([&](auto,auto) { called=true;throw std::logic_error("미선택 동맹 초기화"); }); }catch (const std::logic_error& error) { blocked=std::string_view(error.what()).find("고정뷰")!=std::string_view::npos; }CHECK(Throws([&] { static_cast<void>(records->Acquire()); }) && blocked && !called && records->Base()==base);
++    session.reset();storage->pool.Reset(0);InitializeClientPlayerRecords(client);CHECK(records->Base()!=base && records->Initialized() && core->Players().data()==records->Records().data()); // 실제고정뷰소멸뒤에만Pool/Player재구성단계를계속할수있다.
++}

@@ -1,0 +1,277 @@
+{
+  "호스트": "HJOW-Athlon",
+  "마지막전체정밀": "2026-10-23",
+  "방법": "기존 정밀C와 보호PE를 읽고 Capstone으로만 정적 역어셈블했다. Native/게임/CPP/GUI 실행 없음.",
+  "보호PE_경로": "originals/Netstorm.exe",
+  "보호PE_SHA256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+  "정밀C_원시SHA256": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+  "실제자식": [
+    {
+      "주소": "00413ae0",
+      "정밀C_SHA256": "4d52f17a09c683c5226a0fd71a4fa716929284a9e31c33c065ba5c5ad8b2547d",
+      "정밀C": "// ==== FUN_00413ae0 @ 00413ae0\n// [신뢰도 A] · 호출자 1 · 포인터 0 · CD판 FUN_004012b0@004012b0 (callseq/medium 0.489)\n// 호출 규약 __cdecl (근거 ret-0: 호출 지점 1곳 중 1곳 ECX 설정, ECX 먼저 읽음 0, ret 0)\n\nvoid __cdecl FUN_00413ae0(int param_1)\n\n{\n  void *_Memory;\n  \n  _Memory = *(void **)(param_1 * 0xb4 + 0xb0 + DAT_0059534c);\n  if (_Memory != (void *)0x0) {\n    FUN_00410100(_Memory);\n    _free(_Memory);\n    *(undefined4 *)(param_1 * 0xb4 + 0xb0 + DAT_0059534c) = 0;\n  }\n  return;\n}\n\n\n",
+      "기계어": [
+        {
+          "주소": "00413ae0",
+          "바이트": "a14c535900",
+          "명령": "mov eax, dword ptr [0x59534c]"
+        },
+        {
+          "주소": "00413ae5",
+          "바이트": "56",
+          "명령": "push esi"
+        },
+        {
+          "주소": "00413ae6",
+          "바이트": "8b742408",
+          "명령": "mov esi, dword ptr [esp + 8]"
+        },
+        {
+          "주소": "00413aea",
+          "바이트": "69f6b4000000",
+          "명령": "imul esi, esi, 0xb4"
+        },
+        {
+          "주소": "00413af0",
+          "바이트": "57",
+          "명령": "push edi"
+        },
+        {
+          "주소": "00413af1",
+          "바이트": "8bbc06b0000000",
+          "명령": "mov edi, dword ptr [esi + eax + 0xb0]"
+        },
+        {
+          "주소": "00413af8",
+          "바이트": "85ff",
+          "명령": "test edi, edi"
+        },
+        {
+          "주소": "00413afa",
+          "바이트": "7421",
+          "명령": "je 0x413b1d"
+        },
+        {
+          "주소": "00413afc",
+          "바이트": "8bcf",
+          "명령": "mov ecx, edi"
+        },
+        {
+          "주소": "00413afe",
+          "바이트": "e8fdc5ffff",
+          "명령": "call 0x410100"
+        },
+        {
+          "주소": "00413b03",
+          "바이트": "57",
+          "명령": "push edi"
+        },
+        {
+          "주소": "00413b04",
+          "바이트": "e84b080d00",
+          "명령": "call 0x4e4354"
+        },
+        {
+          "주소": "00413b09",
+          "바이트": "8b0d4c535900",
+          "명령": "mov ecx, dword ptr [0x59534c]"
+        },
+        {
+          "주소": "00413b0f",
+          "바이트": "83c404",
+          "명령": "add esp, 4"
+        },
+        {
+          "주소": "00413b12",
+          "바이트": "c7840eb000000000000000",
+          "명령": "mov dword ptr [esi + ecx + 0xb0], 0"
+        },
+        {
+          "주소": "00413b1d",
+          "바이트": "5f",
+          "명령": "pop edi"
+        },
+        {
+          "주소": "00413b1e",
+          "바이트": "5e",
+          "명령": "pop esi"
+        },
+        {
+          "주소": "00413b1f",
+          "바이트": "c3",
+          "명령": "ret "
+        }
+      ]
+    },
+    {
+      "주소": "0048fcd0",
+      "정밀C_SHA256": "1d17a2a9e6c835398014cbc1a0e719da304c6fa3b38851c15e3c65efce6d92aa",
+      "정밀C": "// ==== FUN_0048fcd0 @ 0048fcd0\n// [신뢰도 A] · 호출자 1 · 포인터 0 · CD판 FUN_0046dfb0@0046dfb0 (callers/medium 0.402)\n// 호출 규약 __cdecl (근거 ret-0: 호출 지점 1곳 중 1곳 ECX 설정, ECX 먼저 읽음 0, ret 0)\n\nvoid __cdecl FUN_0048fcd0(void)\n\n{\n  void *_Memory;\n  int iVar1;\n  \n  iVar1 = 0;\n  do {\n    *(undefined4 *)(iVar1 + 0x9c + DAT_0059534c) = 0;\n    *(undefined4 *)(iVar1 + 8 + DAT_0059534c) = 0;\n    _Memory = *(void **)(iVar1 + 0x68 + DAT_0059534c);\n    if (_Memory != (void *)0x0) {\n      _free(_Memory);\n      *(undefined4 *)(iVar1 + 0x68 + DAT_0059534c) = 0;\n    }\n    iVar1 = iVar1 + 0xb4;\n  } while (iVar1 < 0x654);\n  return;\n}\n\n\n",
+      "기계어": [
+        {
+          "주소": "0048fcd0",
+          "바이트": "56",
+          "명령": "push esi"
+        },
+        {
+          "주소": "0048fcd1",
+          "바이트": "57",
+          "명령": "push edi"
+        },
+        {
+          "주소": "0048fcd2",
+          "바이트": "33ff",
+          "명령": "xor edi, edi"
+        },
+        {
+          "주소": "0048fcd4",
+          "바이트": "33f6",
+          "명령": "xor esi, esi"
+        },
+        {
+          "주소": "0048fcd6",
+          "바이트": "eb08",
+          "명령": "jmp 0x48fce0"
+        },
+        {
+          "주소": "0048fcd8",
+          "바이트": "8da42400000000",
+          "명령": "lea esp, [esp]"
+        },
+        {
+          "주소": "0048fcdf",
+          "바이트": "90",
+          "명령": "nop "
+        },
+        {
+          "주소": "0048fce0",
+          "바이트": "a14c535900",
+          "명령": "mov eax, dword ptr [0x59534c]"
+        },
+        {
+          "주소": "0048fce5",
+          "바이트": "89bc069c000000",
+          "명령": "mov dword ptr [esi + eax + 0x9c], edi"
+        },
+        {
+          "주소": "0048fcec",
+          "바이트": "8b0d4c535900",
+          "명령": "mov ecx, dword ptr [0x59534c]"
+        },
+        {
+          "주소": "0048fcf2",
+          "바이트": "897c0e08",
+          "명령": "mov dword ptr [esi + ecx + 8], edi"
+        },
+        {
+          "주소": "0048fcf6",
+          "바이트": "8b154c535900",
+          "명령": "mov edx, dword ptr [0x59534c]"
+        },
+        {
+          "주소": "0048fcfc",
+          "바이트": "8b441668",
+          "명령": "mov eax, dword ptr [esi + edx + 0x68]"
+        },
+        {
+          "주소": "0048fd00",
+          "바이트": "3bc7",
+          "명령": "cmp eax, edi"
+        },
+        {
+          "주소": "0048fd02",
+          "바이트": "7412",
+          "명령": "je 0x48fd16"
+        },
+        {
+          "주소": "0048fd04",
+          "바이트": "50",
+          "명령": "push eax"
+        },
+        {
+          "주소": "0048fd05",
+          "바이트": "e84a460500",
+          "명령": "call 0x4e4354"
+        },
+        {
+          "주소": "0048fd0a",
+          "바이트": "a14c535900",
+          "명령": "mov eax, dword ptr [0x59534c]"
+        },
+        {
+          "주소": "0048fd0f",
+          "바이트": "83c404",
+          "명령": "add esp, 4"
+        },
+        {
+          "주소": "0048fd12",
+          "바이트": "897c0668",
+          "명령": "mov dword ptr [esi + eax + 0x68], edi"
+        },
+        {
+          "주소": "0048fd16",
+          "바이트": "81c6b4000000",
+          "명령": "add esi, 0xb4"
+        },
+        {
+          "주소": "0048fd1c",
+          "바이트": "81fe54060000",
+          "명령": "cmp esi, 0x654"
+        },
+        {
+          "주소": "0048fd22",
+          "바이트": "7cbc",
+          "명령": "jl 0x48fce0"
+        },
+        {
+          "주소": "0048fd24",
+          "바이트": "5f",
+          "명령": "pop edi"
+        },
+        {
+          "주소": "0048fd25",
+          "바이트": "5e",
+          "명령": "pop esi"
+        },
+        {
+          "주소": "0048fd26",
+          "바이트": "c3",
+          "명령": "ret "
+        }
+      ]
+    }
+  ],
+  "cleanup실제call": [
+    {
+      "주소": "004b2fd3",
+      "바이트": "e8080bf6ff",
+      "명령": "call 0x413ae0"
+    },
+    {
+      "주소": "004b30ff",
+      "바이트": "e8cccbfdff",
+      "명령": "call 0x48fcd0"
+    },
+    {
+      "주소": "004b312d",
+      "바이트": "e87ec2fdff",
+      "명령": "call 0x48f3b0"
+    },
+    {
+      "주소": "004b313f",
+      "바이트": "e82cc0ffff",
+      "명령": "call 0x4af170"
+    },
+    {
+      "주소": "004b31ad",
+      "바이트": "e8eedefdff",
+      "명령": "call 0x4910a0"
+    },
+    {
+      "주소": "004b3257",
+      "바이트": "e854c1fdff",
+      "명령": "call 0x48f3b0"
+    }
+  ],
+  "경계": "개별 AI/Links 증빙만 준비. Core0 정상복귀 뒤 PoolReset 전 old고정뷰 반납을 권고하며 InitializePlayers 진입 전이 하드한계다. 전체 World/Session/Gameplay/UI coordinator는 미접합이다."
+}

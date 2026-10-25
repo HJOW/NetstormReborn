@@ -1,0 +1,81 @@
+{
+  "unit": 444,
+  "created": "2026-10-25T23:02:21.954237",
+  "source": "Git archive base + archived patch + manifest exact SHA EOL normalization only",
+  "mainModified": false,
+  "cppBuildOrTestsExecuted": false,
+  "passed": true,
+  "previousRawOnlyAttempt": "archive-verification-attempt1.json",
+  "files": [
+    {
+      "path": "cpppj/src/o/RawPlayerParticipation.h",
+      "expected": "853360ca2a8091765972c983a499771905e03f3fdacb08a0c3ff2349963ed26d",
+      "actual": "853360ca2a8091765972c983a499771905e03f3fdacb08a0c3ff2349963ed26d",
+      "eolNormalization": "LF",
+      "matches": true
+    },
+    {
+      "path": "cpppj/src/o/RawPlayerParticipation.cpp",
+      "expected": "3ce3fb1625f1b048019101f86d706a2a4e92ee4cd29abb860176a552e5874c8f",
+      "actual": "3ce3fb1625f1b048019101f86d706a2a4e92ee4cd29abb860176a552e5874c8f",
+      "eolNormalization": "LF",
+      "matches": true
+    },
+    {
+      "path": "cpppj/src/o/RawProductionDeck.h",
+      "expected": "716a6d6cc71951c6511e301ec9b1fa562388697bcc5038ff8d021510b1155359",
+      "actual": "716a6d6cc71951c6511e301ec9b1fa562388697bcc5038ff8d021510b1155359",
+      "eolNormalization": "LF",
+      "matches": true
+    },
+    {
+      "path": "cpppj/src/o/RawProductionDeck.cpp",
+      "expected": "4c3da4cc774ef817edde5d7d46cbc1f29ab26d3003007070102f263de1f41cae",
+      "actual": "4c3da4cc774ef817edde5d7d46cbc1f29ab26d3003007070102f263de1f41cae",
+      "eolNormalization": "LF",
+      "matches": true
+    },
+    {
+      "path": "cpppj/src/o/RawAiCreate.cpp",
+      "expected": "22f5697854aad6f4a5558026b85a10f768ca615159c133eca25888b266003762",
+      "actual": "22f5697854aad6f4a5558026b85a10f768ca615159c133eca25888b266003762",
+      "eolNormalization": "LF",
+      "matches": true
+    },
+    {
+      "path": "cpppj/src/client/RawCampaignSession.h",
+      "expected": "11f36671db951e3e9cf251bf0e1d855ca809b664b41d44083c69acef0ed9921d",
+      "actual": "11f36671db951e3e9cf251bf0e1d855ca809b664b41d44083c69acef0ed9921d",
+      "eolNormalization": "raw",
+      "matches": true
+    },
+    {
+      "path": "cpppj/src/client/RawCampaignSession.cpp",
+      "expected": "d99e1469c63406e72dc0cd45793b8c1695930e49a1a1323d4131d279cf614335",
+      "actual": "d99e1469c63406e72dc0cd45793b8c1695930e49a1a1323d4131d279cf614335",
+      "eolNormalization": "raw",
+      "matches": true
+    },
+    {
+      "path": "cpppj/tests/PlayerParticipationTests.cpp",
+      "expected": "0982b2470bdaf902a58b983d202a3ac032d648349b4654222938f3442baf0d2c",
+      "actual": "0982b2470bdaf902a58b983d202a3ac032d648349b4654222938f3442baf0d2c",
+      "eolNormalization": "LF",
+      "matches": true
+    },
+    {
+      "path": "cpppj/tests/ProductionDeckTests.cpp",
+      "expected": "54049909301f1a493c570ca864e63873591c71cf9c564c82ac89f9074fc0a19e",
+      "actual": "54049909301f1a493c570ca864e63873591c71cf9c564c82ac89f9074fc0a19e",
+      "eolNormalization": "raw",
+      "matches": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "expected": "4397b4d6259fa6ee5c719c16c00666ef4f0dc62525ca5d0633f105df543a99a4",
+      "actual": "4397b4d6259fa6ee5c719c16c00666ef4f0dc62525ca5d0633f105df543a99a4",
+      "eolNormalization": "raw",
+      "matches": true
+    }
+  ]
+}

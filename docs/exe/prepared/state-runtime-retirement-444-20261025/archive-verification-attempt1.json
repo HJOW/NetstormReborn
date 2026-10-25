@@ -1,0 +1,70 @@
+{
+  "unit": 444,
+  "created": "2026-10-25T23:01:18.687296",
+  "source": "Git archive base + archived patch only",
+  "mainModified": false,
+  "cppBuildOrTestsExecuted": false,
+  "passed": false,
+  "files": [
+    {
+      "path": "cpppj/src/o/RawPlayerParticipation.h",
+      "expected": "853360ca2a8091765972c983a499771905e03f3fdacb08a0c3ff2349963ed26d",
+      "actual": "533a6b17e052022bf8c8b76cf97a555a4b62fc59a71ce32c6d0dfd99e2ee57e0",
+      "matches": false
+    },
+    {
+      "path": "cpppj/src/o/RawPlayerParticipation.cpp",
+      "expected": "3ce3fb1625f1b048019101f86d706a2a4e92ee4cd29abb860176a552e5874c8f",
+      "actual": "66dc33bc772486d9bf04da91f3965c59b3ffffa4960e504b47b37950a796bb5d",
+      "matches": false
+    },
+    {
+      "path": "cpppj/src/o/RawProductionDeck.h",
+      "expected": "716a6d6cc71951c6511e301ec9b1fa562388697bcc5038ff8d021510b1155359",
+      "actual": "0c7c8d1f8d26c96048f09ca4bbe55705fb6b7a5c866d2b4d019e2f7faff592a4",
+      "matches": false
+    },
+    {
+      "path": "cpppj/src/o/RawProductionDeck.cpp",
+      "expected": "4c3da4cc774ef817edde5d7d46cbc1f29ab26d3003007070102f263de1f41cae",
+      "actual": "e5934b6e067726ceb3fb8b6f6c28b89b396d9c0cc6ae5002d0cf72a21262da2a",
+      "matches": false
+    },
+    {
+      "path": "cpppj/src/o/RawAiCreate.cpp",
+      "expected": "22f5697854aad6f4a5558026b85a10f768ca615159c133eca25888b266003762",
+      "actual": "930785e37cab54e079aac332f62d4b4e72f6afc87764e24147622751968546e6",
+      "matches": false
+    },
+    {
+      "path": "cpppj/src/client/RawCampaignSession.h",
+      "expected": "11f36671db951e3e9cf251bf0e1d855ca809b664b41d44083c69acef0ed9921d",
+      "actual": "11f36671db951e3e9cf251bf0e1d855ca809b664b41d44083c69acef0ed9921d",
+      "matches": true
+    },
+    {
+      "path": "cpppj/src/client/RawCampaignSession.cpp",
+      "expected": "d99e1469c63406e72dc0cd45793b8c1695930e49a1a1323d4131d279cf614335",
+      "actual": "d99e1469c63406e72dc0cd45793b8c1695930e49a1a1323d4131d279cf614335",
+      "matches": true
+    },
+    {
+      "path": "cpppj/tests/PlayerParticipationTests.cpp",
+      "expected": "0982b2470bdaf902a58b983d202a3ac032d648349b4654222938f3442baf0d2c",
+      "actual": "549b967896832f8ded8521c5a426e006a652fc7c26f40492a0e33173177d8015",
+      "matches": false
+    },
+    {
+      "path": "cpppj/tests/ProductionDeckTests.cpp",
+      "expected": "54049909301f1a493c570ca864e63873591c71cf9c564c82ac89f9074fc0a19e",
+      "actual": "54049909301f1a493c570ca864e63873591c71cf9c564c82ac89f9074fc0a19e",
+      "matches": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "expected": "4397b4d6259fa6ee5c719c16c00666ef4f0dc62525ca5d0633f105df543a99a4",
+      "actual": "4397b4d6259fa6ee5c719c16c00666ef4f0dc62525ca5d0633f105df543a99a4",
+      "matches": true
+    }
+  ]
+}

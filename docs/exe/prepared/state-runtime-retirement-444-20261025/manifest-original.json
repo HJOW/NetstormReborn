@@ -1,0 +1,64 @@
+{
+  "files": [
+    {
+      "path": "cpppj/src/o/RawPlayerParticipation.h",
+      "source": "cpppj/src/o/RawPlayerParticipation.h",
+      "sha256": "22d0031dd843733a9452f9ee497d79e7028a40915524bf11ca4ff59b549b1cb4",
+      "bytes": 6101
+    },
+    {
+      "path": "cpppj/src/o/RawPlayerParticipation.cpp",
+      "source": "cpppj/src/o/RawPlayerParticipation.cpp",
+      "sha256": "682b1cf72b1889d2bf44540446d5cba40c24679e9e99055b154155224185dec7",
+      "bytes": 9588
+    },
+    {
+      "path": "cpppj/src/o/RawProductionDeck.h",
+      "source": "cpppj/src/o/RawProductionDeck.h",
+      "sha256": "b6d5d7a581d3a7349dbc7649795d81b43d0bbb4ce73ac654b4e364f0450251b1",
+      "bytes": 5304
+    },
+    {
+      "path": "cpppj/src/o/RawProductionDeck.cpp",
+      "source": "cpppj/src/o/RawProductionDeck.cpp",
+      "sha256": "7bf63e1c40db223d0cfc4ddd6967e59eda1a5a88a57b756d240796bb8934b075",
+      "bytes": 9055
+    },
+    {
+      "path": "cpppj/src/o/RawAiCreate.cpp",
+      "source": "cpppj/src/o/RawAiCreate.cpp",
+      "sha256": "ca5adaadc7437ff4dc72b896116e1b4a7b112fed606826abee0724fa52002ee1",
+      "bytes": 2542
+    },
+    {
+      "path": "cpppj/src/client/RawCampaignSession.h",
+      "source": "extracted/cpp-process-host-owner-442-prepared/cpppj/src/client/RawCampaignSession.h",
+      "sha256": "bb525ca110f0674187b6f816e1110d750584d9f0293987fb9e098ee85447639d",
+      "bytes": 58878
+    },
+    {
+      "path": "cpppj/src/client/RawCampaignSession.cpp",
+      "source": "extracted/cpp-process-host-owner-442-prepared/cpppj/src/client/RawCampaignSession.cpp",
+      "sha256": "e192b3a5e67851c39bf94555c465e7e6b459f15c0548939a375a3514143ee988",
+      "bytes": 517015
+    },
+    {
+      "path": "cpppj/tests/PlayerParticipationTests.cpp",
+      "source": "cpppj/tests/PlayerParticipationTests.cpp",
+      "sha256": "bc12a931238ba42474504a56c6217253173f37c43021fb31f203814f20f22e3b",
+      "bytes": 9909
+    },
+    {
+      "path": "cpppj/tests/ProductionDeckTests.cpp",
+      "source": "cpppj/tests/ProductionDeckTests.cpp",
+      "sha256": "16df00c50d31254580ee0b152196966e769e05e1c7472ace3f159c446c92bc7a",
+      "bytes": 20992
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "source": "cpppj/tests/CampaignSessionTests.cpp",
+      "sha256": "4dfbcb90ea1ff1bd9c09dbb1d927adfa51dd0db692dbf27744a3eb5dae8e06fc",
+      "bytes": 722801
+    }
+  ]
+}
