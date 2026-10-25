@@ -16,7 +16,7 @@ struct GameWorld::Input {
         selection=world.campaign_->MakeUserSelection(globals.SelectionState(),std::move(selectHooks));
     }
     //원본4971e0의 같은 현재 카메라/역투영을 사용한다.
-    o::RawPathPoint Project(ScreenPoint point) const { const auto p=RawCursorPosition::ScreenToWorld(point.x,point.y,RawCursorPosition::CameraFromPixels(world.scrollX_,world.scrollY_));return {p[0],p[1]}; }
+    o::RawPathPoint Project(ScreenPoint point) const { const auto p=RawCursorPosition::ScreenToWorld(point.x,point.y,world.CameraGlobals().Snapshot().worldBits);return {p[0],p[1]}; }
 };
 //실제Client와 동일 입력을 검사하는 호출자가 구체적인 장치를 공급한다.
 void GameWorld::BindUserInput(UserSelectionHooks selection,UserHighlightHooks highlight,CarrierInputHooks carrier) {

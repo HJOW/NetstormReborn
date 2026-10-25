@@ -155,7 +155,7 @@ SquidRewardResult SquidReward::Plan(Sid sid,std::uint32_t recipient,bool salvage
     if (cost==0) return {};
     std::int32_t refund=salvage ? SalvageRefund(sid,raw[kType],Count(sid))
                                 : Wrap(static_cast<std::int64_t>(static_cast<std::int32_t>(
-                                      static_cast<std::uint32_t>(state_.percent)*static_cast<std::uint32_t>(cost)))/100);
+                                      static_cast<std::uint32_t>(state_.Percent())*static_cast<std::uint32_t>(cost)))/100);
     if (recipient==0) refund=0;
     return {true,cost,refund};
 }
@@ -202,7 +202,7 @@ SquidRewardResult SquidReward::Refund(Sid sid,std::uint32_t recipient,bool salva
     // CD판의 다른 소유자는 SP 저장소가 없고 정수 지급액이 AI 지갑으로만 간다.
     else if (patch) AddSp(recipient,static_cast<float>(plan.refund));
     else AddWallet(recipient,plan.refund);
-    state_.geyserPool=Wrap(static_cast<std::int64_t>(state_.geyserPool)+Wrap(static_cast<std::int64_t>(plan.cost)-plan.refund));
+    state_.GeyserPool()=Wrap(static_cast<std::int64_t>(state_.GeyserPool())+Wrap(static_cast<std::int64_t>(plan.cost)-plan.refund));
     return plan;
 }
 }

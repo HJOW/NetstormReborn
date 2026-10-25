@@ -2165,3 +2165,10 @@ set_source_files_properties(TellFileMenusTests.cpp PROPERTIES COMPILE_DEFINITION
     "NETSTORM_TELL_FILE_MENUS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/tell-file-menus-x86.tsv\";NETSTORM_TELL_INLINE_LIST_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/tell-inline-list-x86.tsv\";NETSTORM_TELL_INLINE_ERRORS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/tell-inline-errors-x86.tsv\"")
 # 실제 활동 수신/Client·Session 접합과 Client9 존재 수명을 서로 다른 검사에서 확인한다.
 target_sources(netstorm_tests PRIVATE ConnectionActivityTests.cpp ConnectionActivitySessionTests.cpp ConnectionActivityTransportTests.cpp)
+
+# 새 기대값은 보호 PE/x86 에뮬레이터의 독립 관측16행이다.
+set_source_files_properties(CameraViewTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_CAMERA_VIEW_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/camera-view-x86.tsv\"")
+target_sources(netstorm_tests PRIVATE CameraViewTests.cpp)
+
+# Native 단일 Clear 잔류와 실제 Client/Session 교체의 Host·시각 수명을 검사한다.
+target_sources(netstorm_tests PRIVATE ProcessHostStorageTests.cpp ProcessHostSessionTests.cpp)

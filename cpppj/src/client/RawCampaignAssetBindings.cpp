@@ -70,7 +70,7 @@ struct RawCampaignAssetBindings::Impl {
         auto assertion=effects.levelAssertion;RejectMissing(assertion,"캠페인 Factory 실제 Level 진단 미연결");
         level=std::make_unique<o::RawSquidLevel>(core.pool,core.types,std::move(assertion));
         regular=std::make_unique<o::RawAssetRegular>(core.pool,core.hash,core.types,core.frames,globals.elements,core.frame,advance,random,assets,globals.regular,RegularHooks());
-        Prepare(core.processState.now);
+        Prepare(core.processState.Now());
     }
     // 기존 Factory body의 예약/공간/프레임만 같은 Core에 연결한다. 큰 진단/지역 효과는 제공한 경계를 쓴다.
     o::FactoryPostPopHooks FactoryHooks() {
@@ -145,10 +145,10 @@ struct RawCampaignAssetBindings::Impl {
     o::AssetPostPopHooks PostHooks() {
         auto hooks=effects.postPop;
         hooks.addRegular=[this](o::Sid sid,std::uint32_t event,float payload) { if (!core.processes.AddRegular(sid,event,payload)) throw std::logic_error("캠페인 자산 실제 Regular 부모 부착 실패"); };
-        hooks.createGunProcess=[this](o::Sid sid) { Prepare(core.processState.now);if (!o::CreateGunProcess(core.processes,*gun,sid,kGunProcess)) throw std::logic_error("캠페인 자산 실제 Gun 부모 부착 실패"); };
+        hooks.createGunProcess=[this](o::Sid sid) { Prepare(core.processState.Now());if (!o::CreateGunProcess(core.processes,*gun,sid,kGunProcess)) throw std::logic_error("캠페인 자산 실제 Gun 부모 부착 실패"); };
         hooks.removeAnimation=[this](o::Sid sid) { if (!effects.queueCommand) throw std::logic_error("캠페인 발사기 실제 입력명령 큐 미연결");effects.queueCommand(globals.archerNoticeCommand,sid.value,0); };
         hooks.surface=[this](float x,float y) { return o::RawPathSurfaceAt(core.hash,{x,y}); };
-        hooks.setOwner=[this](o::Sid sid,std::uint32_t owner) { Prepare(core.processState.now);SetOwner(sid,owner); };
+        hooks.setOwner=[this](o::Sid sid,std::uint32_t owner) { Prepare(core.processState.Now());SetOwner(sid,owner); };
         hooks.notifySurface=[this](o::Sid sid) { core.building.NotifySurface(sid); };
         hooks.geyserRegistration=[this](o::Sid sid,std::uint32_t state) { geyser.Register(sid.value,state); };
         hooks.atPosition=[this](float x,float y) { return AtPosition(x,y); };

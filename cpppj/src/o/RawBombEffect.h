@@ -1,5 +1,6 @@
 // 원본420bf0의 0x5f 주문 효과 수신과 대상/지연 처리 순서를 복원한다.
 #pragma once
+#include <bit>
 #include "o/SidPool.h"
 #include <array>
 #include <functional>
@@ -17,6 +18,9 @@ struct BombEffectType {
 struct BombEffectState {
     std::uint32_t boss{},firstType{117},secondType{118}; // 540bc4 권한과54122c/30의 지연 효과 종류다.
     std::uint32_t processType{57},spentCounter{}; // 541154의 예약 프로세스 종류와595088의 누적 카운터다. SP 잔액과 구별한다.
+    std::int32_t* sharedSpentCounter{}; // Reward/Login과 같은 자원 DWORD다.
+    std::uint32_t SpentCounter() const { return sharedSpentCounter ? std::bit_cast<std::uint32_t>(*sharedSpentCounter) : spentCounter; } // 원문 효과 뒤 현재 bits를 읽는다.
+    void StoreSpentCounter(std::uint32_t value) { if (sharedSpentCounter) *sharedSpentCounter=std::bit_cast<std::int32_t>(value);else spentCounter=value; } // DWORD의 가산 wrap을 보존한다.
 };
 // 큰 하위 몸체는 현재 월드의 실제 구현으로 연결한다.
 struct BombEffectHooks {

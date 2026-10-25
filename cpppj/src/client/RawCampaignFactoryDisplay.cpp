@@ -88,7 +88,7 @@ struct RawCampaignFactoryDisplay::Impl {
     // 원본 현재 슬롯과 실제 dirty clip을 읽고 일반 Draw의 모든 픽셀을 같은 표면에 쓴다.
     void Draw(o::RenderCollectionEntry entry,std::span<std::uint8_t> pixels,int pitch,int height,ScreenRect clip) {
         const auto sid=collection.Object(entry.token);if (!Handles(sid)) return;if (!ready) throw std::logic_error("Factory 파일 팔레트 미설치");
-        state.now=core.processState.now;state.ownerPalettes.assign(core.bridgeState.ownerColors.begin(),core.bridgeState.ownerColors.end());
+        state.now=core.processState.Now();state.ownerPalettes.assign(core.bridgeState.ownerColors.begin(),core.bridgeState.ownerColors.end());
         SpritePixelTarget target(pixels,pitch,height,clip,MakeSpriteAssetShapes(assets,state),[this](auto mode,auto type,auto owner) { return Color(mode,type,owner); });
         SpriteDrawHooks rules;rules.virtualFrame=[this](o::Sid object) {
             if (Bomb(object)) return -1; // 원본 공통 주문의+a0는 빈 본체다.

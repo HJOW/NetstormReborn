@@ -1,3 +1,4 @@
+#include "client/ClientCameraGlobals.h"
 // 실제 캠페인 초기화/전투/이동의 상태와 모듈 수명을 클라이언트 세션 하나에 보관한다.
 #pragma once
 #include "client/GameAssets.h"
@@ -280,7 +281,9 @@ public:
     void RunFrame(o::FrameTime time,bool paused);
     void PrepareFrame(o::FrameTime time,bool paused); // 실제 GUI가 단일 전역 Kernel 앞에서 시각/AI/표시 입력만 준비한다.
     // 같은 실제 카메라와 현재 장치의 dirty 경계를 process11에 공급한다.
-    void SetParticleView(SoundView view,SurfaceDisplayHooks display);
+    ClientCameraGlobals& CameraGlobals(); // Client와 같은 현재64BYTE/목표 소유자다.
+    const ClientCameraGlobals& CameraGlobals() const; // const Session도 현재 snapshot을 복사하지 않는다.
+    void SetParticleView(SoundView view,SurfaceDisplayHooks display,bool updateCamera=true); // 실제 World는 viewport만 전달하고 기존 독립 호출자는 픽셀 입력을 명시 적용한다.
     // 실제 원본 표시 목록의 현재 직접 그리기를 다른 월드 SHP와 함께 정렬한다.
     std::vector<RenderSprite> ParticleSprites(ScreenRect clip) const;
     // 후속 검증이 같은 Host/Kernel의 등록을 읽는 현재 표시 관리자다.
@@ -328,6 +331,8 @@ public:
     GameMenusHooks BindGameMenus(GameMenusHooks hooks); //현재Session의모드/Player/사제/SP/로그인/신전비용으로게임조회만연결한다.
     // 실제 로그인/AI 초기화가 사용하는 동일9 Player 원문을 빌린다. 프레임별 사본을 만들지 않는다.
     std::span<std::uint8_t> PlayerRecords();
+    RawProcessHostStorage::ClearPass ClearProcessesForState(); // 실제 같은 Kernel의 단일 Clear 정상 반환만 증빙한다.
+    void ReturnProcessBindingsForState(RawProcessHostStorage::ClearPass&& pass); // Regular 잔류의 장기 Host를 유지하며 현재 처리기 대여를 실제 반납한다.
     void ReleasePlayerLinks(); //0048fcd0의 실제9기록 링크/개수/덱만 정리한다. 실패는 전파하며 Kernel/Core/Player 할당은 유지한다.
     // 실제 방향별동맹 초기화가 쓰고 승패가 읽는 같은81DWORD를 빌린다.
     std::span<std::uint32_t> Alliances();

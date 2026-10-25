@@ -1711,7 +1711,7 @@ bool SessionDeckReleased(const RawProductionDeck& deck,std::uint32_t token) {
     try { static_cast<void>(deck.Bytes(token));return false; }catch (const std::out_of_range&) { return true; }
 }
 // 실제 Kernel 가상 소멸 시점의 관측만 실행한다. 원문 정리 효과를 대신 계산하지 않는다.
-class SessionLinksProbe final:public BaseProcess {
+class SessionLinksProbe final:public SquidProcess {
 public:
     explicit SessionLinksProbe(std::function<void()> inspect):inspect_(std::move(inspect)) {} // 실제 삭제 시의 읽기 장치다.
     ~SessionLinksProbe() override { inspect_(); } // 슬롯이 아직 살아 있는 Native Kernel 소멸 위치에서 관측한다.
@@ -1774,12 +1774,13 @@ TEST_CASE(CampaignSession_PlayerLinks_ExplicitCleanupKeepsKernelCoreAndFactorySt
 TEST_CASE(CampaignSession_PlayerLinks_DestructorRunsBeforeKernelAndNextPlayerAllocation) {
     std::size_t deletes{};ProcessId probe{};SessionLinksScene scene;const auto base=scene.records->Base();const auto before=std::vector<std::uint8_t>(scene.records->Records().begin(),scene.records->Records().end());
     const auto& deck=scene.session->Production().Deck();auto core=scene.session->Core();
-    probe=core.kernel.Add(std::make_unique<SessionLinksProbe>([&,core,before,base] {
+    const auto parent=core.pool.Allocate(2);auto parentBytes=core.pool.AllocatedBytes(parent);parentBytes[10]=82;parentBytes[11]=0; // 같은 현재 Host에 관측기만 부착하는 명시 부모 입력이다.
+    auto* attached=core.processes.Attach(std::make_unique<SessionLinksProbe>([&,core,before,base] {
         ++deletes;CHECK(core.kernel.Get(probe)!=nullptr && scene.records->Base()==base && scene.allocations==9);CheckSessionLinksBytes(before,scene.records->Records());
         for (std::uint32_t owner=0;owner<9;++owner) { // 아직 실제 Player/factory는 살아 있고 동적 Deck만 먼저 없어야 한다.
             CHECK(SessionDeckReleased(deck,scene.tokens[owner]));CHECK(core.bookkeeping.ownerFactories[owner].Items().empty() && core.bookkeeping.ownerFactories[owner].Capacity()==30);
         }
-    }));
+    }),10,parent,0x50);CHECK(attached);if (!attached) return;probe=core.kernel.Find(*attached);CHECK(probe!=0); // 실제 현재 binding의 소멸을 같은 Kernel PID로 관측한다.
     scene.session.reset();CHECK(deletes==1 && scene.records->Base()==base);CheckSessionLinksBytes(before,scene.records->Records());
     scene.session=scene.Make();CHECK(scene.records->Base()!=base && scene.allocations==9); // 이전 소비자 소멸 뒤 실제 초기화 부모가 이전 Player/factory를 반납한다.
 }
@@ -2194,7 +2195,7 @@ TEST_CASE(CampaignSession_CursorReturnsFactoryPieceWithActualTimer) {
 // 실제 커서 수집의 깊이/tail과 현재8비트 SHP/윤곽/파일 색표·카메라를 같은 표시기에서 검사한다.
 TEST_CASE(CampaignSession_CursorDisplayUsesActualShapesCameraAndDirtyCollection) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());ReadyCursorFactoryInput(fort);GameWorld world(assets.game,assets.files,std::move(fort),MissionPlayers{},"thewarbegins",external.Services(),{1024,768});auto& session=world.Session();auto core=session.Core();SessionCursorUi ui;auto& cursor=session.Cursor();auto& display=cursor.Display();cursor.SetEffects(ui.Effects());cursor.SnapToGrid()=1;session.SetSp(1,5000);CursorEnergyInput(session);cursor.Take(ReadyCursorFactoryForm(session),0x41);const auto point=CursorPlacementPoint(session,ui);
-    const int cameraX=point.x*16-512,cameraY=point.y*11-384;session.SetParticleView({cameraX,cameraY,0,0,1024,768},{});ui.Point(session,point,cameraX,cameraY);CHECK(cursor.Placement().screenOrigin.x==cameraX && cursor.Placement().screenOrigin.y==cameraY);FontStore fonts(assets.files,"Arial");std::vector<std::string> translated;display.SetText(fonts,[&](std::string_view key) { translated.emplace_back(key);return std::string(key); });
+    const int cameraX=point.x*16-512,cameraY=point.y*11-384;session.SetParticleView({cameraX,cameraY,0,0,1024,768},{});ui.Point(session,point,cameraX,cameraY);CHECK(cursor.Placement().ScreenOriginX()==cameraX && cursor.Placement().ScreenOriginY()==cameraY);FontStore fonts(assets.files,"Arial");std::vector<std::string> translated;display.SetText(fonts,[&](std::string_view key) { translated.emplace_back(key);return std::string(key); });
     const ScreenRect clip{0,0,1024,768};auto sprites=display.Sprites(clip,0);CHECK(sprites.size()==2);if (sprites.size()!=2) return;CHECK(sprites[0].order.depth==core.types[75].zOrder && sprites[1].order.depth==core.types[75].zOrder-1);CHECK(sprites[0].order.x==static_cast<float>(point.x));CHECK(display.Sprites(clip,4).empty());
     const auto raw=core.pool.Slot(cursor.Lifecycle().previews[0]);const auto frame=Get(raw,36);const auto& type=core.types[75];const auto& asset=assets.game.Types()[75-kFirstAssetTypeNumber];const auto& picture=assets.game.Shapes().Blocks()[asset.block].frames[frame];const auto image=assets.game.Shapes().Decode(asset.block,frame);const auto x=static_cast<std::int16_t>(Get(raw,22,2))-cameraX,y=static_cast<std::int16_t>(Get(raw,24,2))-cameraY;const auto left=x-type.footX*16,top=y-type.footY*11;
     std::vector<std::uint8_t> actual(1024*768,199);IndexedImage expected{1024,768,actual,std::vector<std::uint8_t>(actual.size(),255)};const auto color=display.Settings().goodColor;
@@ -2670,7 +2671,7 @@ TEST_CASE(CampaignSession_LocalLoginMissionStartAiAlliances) {
         RawCampaignMissionStartBindings start(session,script,gate,state,session.MissionStartSettings(),session.MissionAiSettings(),std::move(effects));start.Start();
         CHECK(gate.started==1 && state.sequence==1 && gate.demo==demo && gate.startSeconds==123.5 && gate.demoEndSeconds==483.5 && commands==1 && cameras==1 && settings>=3);
         CHECK(session.Participation().Brain(2)!=0 && session.Participation().Brain(3)!=0 && session.Participation().Brain(4)!=0 && (session.Participation().Brain(1)!=0)==(demo!=0));
-        CHECK(session.Sp(1)==1200 && session.MissionStartSettings().ordinaryGeysers==1 && session.FindTechnology(1,133).value!=0);CHECK(receivedAlliances==0); // 실제 송신은 아직 flush하지 않은 상태다.
+        CHECK(session.Sp(1)==1200 && session.MissionStartSettings().OrdinaryGeysers()==1 && session.FindTechnology(1,133).value!=0);CHECK(receivedAlliances==0); // 실제 송신은 아직 flush하지 않은 상태다.
         const auto before=session.LocalConnectionPackets().size();session.PumpLocalConnection();CHECK(session.LocalConnectionPhase()==14 && receivedAlliances>0 && session.LocalConnectionPackets().size()>before && chat>0);
         CHECK(session.Alliances()[2*9+2]==1 && session.Alliances()[3*9+3]==1 && session.Alliances()[4*9+4]==1 && session.Core().bookkeeping.depth==0);
     }
@@ -4810,7 +4811,7 @@ TEST_CASE(CampaignSharedStorage_ForeignAssetsFailBeforePhysicalMutation) {
 
 // 실제 두 Session과 Client가 커서/검색/Player/editor의 같은 주소를 공유하며 Runtime만 교체한다.
 TEST_CASE(CampaignSharedGameplay_TwoActualSessionsPublishAndRetireSameGlobals) {
-    Client client(SessionLinksOptions());SessionServicesFixture external;auto globals=client.GameplayGlobals();auto storage=MakeRawSurfaceStorage(netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078).game,globals->Authority());const auto* cursor=&globals->cursor;const auto* finder=&globals->finder; // 창 없는 실제 자산 물리와 같은 Client 전역 고정 주소다.
+    Client client(SessionLinksOptions());SessionServicesFixture external;auto globals=client.GameplayGlobals();auto storage=MakeRawSurfaceStorage(netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078).game,globals->Authority(),globals->GameAux());const auto* cursor=&globals->cursor;const auto* finder=&globals->finder; // 창 없는 실제 자산 물리와 같은 권한/게임 보조/Client 전역 고정 주소다.
     const auto* energy=&globals->energy;globals->energy.userCheat=0x845fed;globals->player.special=true; // 설정 전역은 실제 Runtime 생성 전에 같은 Client에 존재한다.
     for (int generation=0;generation<2;++generation) { // 실제 첫 반납 뒤 새 Session을 설치한다.
         auto services=SharedKernelServices(client,external);services.gameplayGlobals=globals;services.subscriberGlobals=client.SubscriberGlobals();services.surfaceStorage=storage;

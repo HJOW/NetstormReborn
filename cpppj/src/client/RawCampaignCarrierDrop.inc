@@ -20,7 +20,7 @@ void ConnectCarrierDrop() {
     hooks.immobile=[this](Sid sid) { return priests->PriestState().GroundImmobile(sid); };hooks.cost=[this](std::uint32_t type) { return hp.TypeCostUnits(type); };
     hooks.afford=[this](float cost) { const auto money=std::bit_cast<float>(sp.Get(playerState.battleOwner));return globals.editor || cost<=money; }; // 원본425e90은 편집모드가아니면현재잔액과비교한다.
     hooks.subtract=[this](std::uint32_t owner,float amount) { hp.AddSp(owner,amount); };
-    hooks.project=[this](std::array<float,2> point) { const auto screen=SoundToScreen(cursorView,point[0],point[1]);return std::array<std::int32_t,2>{screen.x,screen.y}; };
+    hooks.project=[this](std::array<float,2> point) { return ProjectCameraView(gameplayGlobals->Camera().Snapshot(),point[0],point[1]); }; // 실제497220은 같은 현재 snapshot 픽셀 원점을 호출 때 읽는다.
     hooks.popup=[this](std::int32_t cost,std::array<std::int32_t,2> point,std::uint32_t reference) { if (!services.carrierDropPopup) throw std::logic_error("Cast/Drop 실제비용Gump미연결");services.carrierDropPopup(cost,point[0],point[1],reference); };
     hooks.regular=[this](Sid parent,float delay) { static_cast<void>(core.processes.AddSharedRegular(parent,0x493,delay)); };
     // ProcessFinder는반환전에next를보존하고현재type51만요청쪽에서통지한다.

@@ -96,7 +96,7 @@ void RawDudeNotice::Notice(Sid sid) const {
     const auto raw=Slot(sid);const auto task=ReadDude(raw,12,2);if ((raw[11]&2) || task==kNoticeTask || task==kFallTask) return;
     if (!hooks_.taskRegular) throw std::logic_error("Dude notice 현재Regular조회 미연결");auto* regular=hooks_.taskRegular(sid);
     if (!regular) { if (!hooks_.addTaskRegular) throw std::logic_error("Dude notice 실제Regular생성 미연결");regular=hooks_.addTaskRegular(sid);if (!regular) throw std::logic_error("Dude notice 실제Regular생성 실패"); }
-    regular->ResetTask(kNoticeTask,state_.clock.now);auto bytes=pool_.AllocatedBytes(sid);bytes[12]=static_cast<std::uint8_t>(kNoticeTask);bytes[13]=static_cast<std::uint8_t>(kNoticeTask>>8);
+    regular->ResetTask(kNoticeTask,state_.clock.Now());auto bytes=pool_.AllocatedBytes(sid);bytes[12]=static_cast<std::uint8_t>(kNoticeTask);bytes[13]=static_cast<std::uint8_t>(kNoticeTask>>8);
     if (pool_.Slot(sid)[10]==state_.bridgeType) { if (!hooks_.notifySurface) throw std::logic_error("Dude task 실제표면통지 미연결");hooks_.notifySurface(sid); }
     if (!Process(sid,state_.burningProcessType).value) { if (!hooks_.createBurning) throw std::logic_error("Dude notice 실제Burning14 생성 미복원");hooks_.createBurning(sid); }
     const auto destination=NearestResidence(sid);if (!destination.value) return;

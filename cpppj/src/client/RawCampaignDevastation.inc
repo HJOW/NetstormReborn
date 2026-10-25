@@ -12,7 +12,7 @@ BombEffectTimerHooks MakeBombTimerHooks() {
 void ReceiveBombTimer(std::span<const std::uint8_t> packet) {
     const std::uint32_t boss=assetState.Boss();BombTimerReceiveHooks hooks;
     hooks.assertion=[](std::uint32_t line) { throw std::logic_error("원본 상태 타이머 수신 진단 "+std::to_string(line)); };
-    hooks.create=[this](std::uint32_t type,std::uint32_t x,std::uint32_t y) { if (type!=57 || x || y || pendingBombTimer) throw std::logic_error("상태 타이머 수신 factory 계약 오류");pendingBombTimer=std::make_unique<BombEffectTimerProcess>(core.pool,core.types,core.processState.now,0,std::span<const std::uint32_t>{},0,MakeBombTimerHooks());return 1U; };
+    hooks.create=[this](std::uint32_t type,std::uint32_t x,std::uint32_t y) { if (type!=57 || x || y || pendingBombTimer) throw std::logic_error("상태 타이머 수신 factory 계약 오류");pendingBombTimer=std::make_unique<BombEffectTimerProcess>(core.pool,core.types,core.processState.Now(),0,std::span<const std::uint32_t>{},0,MakeBombTimerHooks());return 1U; };
     hooks.read=[this](std::uint32_t token,std::span<const std::uint8_t> bytes) { if (token!=1 || !pendingBombTimer) throw std::logic_error("상태 타이머 수신 객체 누락");pendingBombTimer->ReadPacket(bytes); };
     hooks.attach=[this](std::uint32_t token,std::uint32_t type,Sid parent,Sid form,std::uint32_t flags) { if (token!=1 || !pendingBombTimer) throw std::logic_error("상태 타이머 수신 부착 객체 누락");static_cast<void>(core.processes.Attach(std::move(pendingBombTimer),type,parent,flags,form)); };
     ReceiveBombTimerPacket(core.pool,boss,bombTimerType,packet,hooks);
@@ -48,7 +48,7 @@ void ConnectDevastation() {
     windSpellState.counts=windSpellCounts;WindSpellHooks summons;summons.exists=[this](Sid parent,std::uint32_t type) { return FindAttachedProcess(core.pool,parent,type).value!=0; };
     summons.allocate=[]()->std::optional<WindAviaryProcessFields> { auto* storage=std::malloc(80);if (!storage) return std::nullopt;WindAviaryProcessFields fields;std::memcpy(fields.bytes.data(),storage,80);std::free(storage);return fields; };
     summons.attach=[this](WindAviaryProcessFields fields,Sid parent,std::uint32_t type,std::uint32_t flags) { static_cast<void>(core.processes.Attach(std::make_unique<WindAviaryProcess>(*windAviary,std::move(fields)),type,parent,flags)); };
-    windSpell=std::make_unique<RawWindSpell>(core.pool,core.processState.Server(),core.processState.now,windSpellState,std::move(summons));
+    windSpell=std::make_unique<RawWindSpell>(core.pool,core.processState.Server(),core.processState.Now(),windSpellState,std::move(summons));
     BombTargetHooks targets;
     // 실제502370의b4는41e3c0이며 다른 표의 반경으로 대체하지 않는다.
     targets.radius=[this](Sid parent,std::uint32_t table) { if (!ConnectedBombTable(table)) throw std::logic_error("주문 반경 표 오류");return devastationTargets->DefaultRadius(parent); };
@@ -63,7 +63,7 @@ void ConnectDevastation() {
     activation.allocate=[this](std::uint32_t bytes) { if (bytes!=40 || pendingDevastationRegular) throw std::logic_error("Devastation 주기 확보 순서 오류");try { pendingDevastationRegular=std::make_unique<RegularProcess>(0,0.1F);return true; }catch (const std::bad_alloc&) { return false; } };
     activation.construct=[this](std::uint32_t event,Sid parent,float payload) {
         if (!pendingDevastationRegular || event || payload!=0.1F) throw std::logic_error("Devastation SharedRegular 확보 누락");
-        auto* process=static_cast<RegularProcess*>(core.processes.Attach(std::move(pendingDevastationRegular),61,parent,0x50));if (process) process->ResetTask(event,core.processState.now);
+        auto* process=static_cast<RegularProcess*>(core.processes.Attach(std::move(pendingDevastationRegular),61,parent,0x50));if (process) process->ResetTask(event,core.processState.Now());
     };
     devastationActivation=std::make_unique<RawBombActivation>(core.pool,core.types,playerState.battleOwner,std::move(activation));
     BombRegularHooks regular;
@@ -89,7 +89,7 @@ void ConnectDevastation() {
     };
     effect.allocate=[this](std::uint32_t bytes) { try { if (!devastationEffectMemory) devastationEffectMemory=std::make_unique<std::uint8_t[]>(bytes);else { if (bytes!=40 || pendingBombTimerStorage || pendingBombTimer) throw std::logic_error("상태 타이머 확보 순서 오류");pendingBombTimerStorage.reset(::operator new(sizeof(BombEffectTimerProcess))); }return true; }catch (const std::bad_alloc&) { return false; } };
     effect.apply=[this](Sid parent,std::uint32_t table,Sid target) { if (!ConnectedBombTable(table)) throw std::logic_error("주문 효과 표 오류");PrepareDevastation();if (table==0x502370U) devastationBlast->Apply(parent,target);else if (table!=0x5025d8U) bombStatus->Apply(parent,target); };
-    effect.construct=[this](std::int32_t delay,std::uint32_t,std::span<const std::uint32_t> members,std::uint32_t flags) { if (!pendingBombTimerStorage || pendingBombTimer) throw std::logic_error("상태 타이머 생성 메모리 누락");auto* process=::new (pendingBombTimerStorage.get()) BombEffectTimerProcess(core.pool,core.types,core.processState.now,delay,members,flags,MakeBombTimerHooks());static_cast<void>(pendingBombTimerStorage.release());pendingBombTimer.reset(process);return 1U; };
+    effect.construct=[this](std::int32_t delay,std::uint32_t,std::span<const std::uint32_t> members,std::uint32_t flags) { if (!pendingBombTimerStorage || pendingBombTimer) throw std::logic_error("상태 타이머 생성 메모리 누락");auto* process=::new (pendingBombTimerStorage.get()) BombEffectTimerProcess(core.pool,core.types,core.processState.Now(),delay,members,flags,MakeBombTimerHooks());static_cast<void>(pendingBombTimerStorage.release());pendingBombTimer.reset(process);return 1U; };
     effect.argument=[this](std::uint32_t x,std::uint32_t y) { if (x || y) throw std::logic_error("상태 타이머 예약 인자 오류");return std::uint32_t(BombTimerParent(core.pool,core.types,assetState.residences.Items()).value); };
     effect.attach=[this](std::uint32_t token,std::uint32_t type,std::uint32_t parent,std::uint32_t form,std::uint32_t flags) { if (token!=1 || !pendingBombTimer || parent>65535 || form>65535) throw std::logic_error("상태 타이머 예약 객체/인자 오류");static_cast<void>(core.processes.Attach(std::move(pendingBombTimer),type,Sid{static_cast<std::uint16_t>(parent)},flags,Sid{static_cast<std::uint16_t>(form)})); };
     effect.sound=[this](std::array<std::uint32_t,6> values) { if (!services.sound.play) throw std::logic_error("Devastation 실제 효과음 미연결");services.sound.play(values[0],values[1],values[2],values[3],values[4],values[5]); };

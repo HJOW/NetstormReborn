@@ -20,7 +20,7 @@ void RawDudeTask::Set(Sid sid,std::uint32_t event,float delay) const {
     if (!patch && (raw[11]&kFreeOrDead)) return;
     // 새 C++의 쓰기 계약은 예약 머리/free SID를 원본의 미정의 쓰기 전에 거부한다.
     static_cast<void>(pool_.AllocatedBytes(sid));
-    if (!std::isfinite(delay) || !std::isfinite(state_.clock.now)) throw std::invalid_argument("Dude task 유한 시각 입력 오류");
+    if (!std::isfinite(delay) || !std::isfinite(state_.clock.Now())) throw std::invalid_argument("Dude task 유한 시각 입력 오류");
     const auto previous=static_cast<std::uint16_t>(raw[12]|(raw[13]<<8));
     if (previous==kFallTask && event!=kFallTask) {
         if (patch) throw std::logic_error("Dude task FALL 교체 원본 assert");
@@ -33,7 +33,7 @@ void RawDudeTask::Set(Sid sid,std::uint32_t event,float delay) const {
         regular=hooks_.addTaskRegular(sid,event);
         if (!regular) throw std::logic_error("Dude task 실제 Regular 생성 실패");
     }
-    regular->ResetTask(event,state_.clock.now+static_cast<double>(delay));
+    regular->ResetTask(event,state_.clock.Now()+static_cast<double>(delay));
     auto bytes=pool_.AllocatedBytes(sid);
     bytes[12]=static_cast<std::uint8_t>(event);bytes[13]=static_cast<std::uint8_t>(event>>8);
     if (pool_.Slot(sid)[10]==state_.bridgeType) {

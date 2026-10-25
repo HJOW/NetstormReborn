@@ -304,7 +304,7 @@ void RawProductionControls::SetPalette(std::span<const ScreenColor> palette,std:
 // 자동 입력도 실제 항목/내용물 SID/화면 경계를 읽는다.
 std::string RawProductionControls::Report() const {
     const auto& s=*impl_;std::ostringstream out;out.precision(17);out<<"raw_production_gump\t"<<s.rootToken<<'\t'<<s.root.id<<'\t'<<s.root.width<<'\t'<<s.root.height<<'\t'<<s.budget.amount<<'\n';
-    out<<"raw_production_maintenance\t"<<s.productionGlobals.stockEnabled<<'\t'<<s.productionGlobals.sequence<<'\t'<<s.productionPanel.bridgeUntil<<'\t'<<s.productionPanel.oldMoney<<'\t'<<s.productionPanel.temple<<'\t'<<s.productionPanel.slots<<'\t'<<(s.hooks.gameSeconds ? s.hooks.gameSeconds() : s.Session().Core().processState.now)<<'\n';
+    out<<"raw_production_maintenance\t"<<s.productionGlobals.stockEnabled<<'\t'<<s.productionGlobals.sequence<<'\t'<<s.productionPanel.bridgeUntil<<'\t'<<s.productionPanel.oldMoney<<'\t'<<s.productionPanel.temple<<'\t'<<s.productionPanel.slots<<'\t'<<(s.hooks.gameSeconds ? s.hooks.gameSeconds() : s.Session().Core().processState.Now())<<'\n';
     o::RawContainedFinder finder(s.context.storage->pool,s.context.gameplay->finder);
     // 테스트 전용 임시 조작이며 원본 분석 결과가 아니다. 비활성 기본 실행에는 조작 행을 만들지 않는다.
     if (!s.productionGlobals.testBridgePatterns.empty()) {

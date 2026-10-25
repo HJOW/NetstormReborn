@@ -1,5 +1,25 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-25 사용자 요청 일시정지 인계: 묶음439~442 완료,443/444 준비본 보관
+
+- [x] 사용자가 현재 본작업·서브 AI 작업을 마친 뒤 문서 반영과 로컬 커밋을 수행하고 목표를 일시정지하도록 요청했다. 새 단위를 시작하지 않았다. 이번 본작업의 검증과 서브 준비본 동결·재현 확인을 마쳤으며, 커밋 후 마지막에 목표 상태 도구를paused로 전환한다. 전체 목표 완료 선언은 아니다.
+- [x] 시작 기준은 **815fbd67 / 20261025-31 CP**, 이전 제품a49f474f…의 집중340/전체2,963·실패0였다. AGENTS/공통·닷넷 인계를 다시 읽었고 현재/마지막 정밀 PC는 **HJOW-Athlon / 2026-10-23**이다. 원본/새디컴파일/원격push는 실행하지 않았다.
+- [x] 439카메라·440상태보조·441게임보조17필드·442프로세스Host 수명을 `extracted/cpp-camera-process-439442-integration/`에서 병합했다. 초기93파일(기존82+신규11), 원시6충돌/6파일을 보존했다. patch SHA **97d83caa…**, manifest SHA **a345d74f…**다. 기존2963이름/숫자와 신규44개(16+14+14), 같은Camera/GameAux/Authority/Kernel·공통helper 각1회·CMake 등록을 정적으로 감사했다. 적용 전 실제Load를 빠뜨린Camera 검사1곳은 기존9조건/좌표 기대를 유지하고 setup3조건을 추가해 별도 교정했다.
+- [x] 실제 카메라64BYTE의 논리view/snapshot/목표를 구분하고 현재분수·픽셀을 Session/커서/배치에서 공유한다. 상태9DWORD+별도double과 GameAux17필드도 현재owner를 직접 소비한다. ProcessState/Host/실제Client Kernel·FrameTime을 장기화하고 현재Runtime 호출lease와 단일NativeClear 증빙을 분리했다. 이전Regular 잔류는 새Session의 생성/후반실패/일반종료로 임의삭제하지 않는다. raw 외부Kernel legacy 경로는 기존 정책을 유지한다.
+- [x] 초기Source1의93입력/결과·증거·보호1821을 확인해main에 적용하고 HEAD파일별EOL을 유지했다. Root의 첫README검사는 같은이름의루트README를 잘못읽던 검증기 오류였으며 패키지 불일치는 아니었다. 적용 단계의 동일파일 재쓰기OSError22는93본문 일치 확인 뒤 남은5EOL의 원자적 교체로 복구했다. 원시시도 기록을 보존했다.
+- [x] 실제빌드1은 삭제된cursorView의 기존CarrierDrop inc소비자1곳을 발견해 종료1/경고0·오류1이었다. 같은현재snapshot의497220 투영으로 교정해Source2는94파일이 됐다. 빌드2/3은 신규검사의 완전한커서선언·명시SID·가변TYPE API·BYTE입력 구성을 교정했다. 모든빌드/교정patch를 보존했고 build4는종료0·경고/오류0이었다. Nativefixture를 제품에 맞춰 바꾸지 않았다.
+- [x] 집중1의368개 중18실패check를 조사했다. 신규HostSession3개의 같은Subscriber, StateAux의 같은GameAux 공급이 빠져 있었다. 기존커서/미션Start 검사는 미사용fallback을 실제현재getter로 이행했다. Kernel 소멸 관측기는 실제현재Host binding에 부착해 기존Player/9Deck/9factory/Capacity30/다음재할당 검사를 모두 유지했다. prepared TotalCost는 이제실제0059508c 장기전역이므로 이전지역0기대를 기존입력91 보존으로 명시 이행하고 실제주소동일성도 추가했다. 전체KernelDrain을 재도입하거나 검사조건을 삭제하지 않았다.
+- [x] Source5의집중368개는모두통과했으나첫전체CTest3007개에서기존두Session검사1개가GameAux소유자불일치로실패했다. 같은GameAux를공급하는검사구성만한곳교정했고제품/기대값은바꾸지않았다. 실패batch1·원시보고서·로그를보존하고해당검사2개를집중범위에추가했다.
+- [x] 최종 **Source6의95소스**는 `extracted/cpp-camera-process-439442-source6/hashes.json`에 동결했다. SHA는 **4c50721108ec16b6eb7281aa886c4c9cede72e19325037c28059a76b99820b01**다. **build6 종료0·컴파일 경고/오류0(55.293초), 집중3의370고유·실패0**이다. 신규44개 모두 실행했으며 보호1821/95소스/4실행파일 SHA가 같다. 최종게임 SHA는 **712fd7aead4838bccfaf22bfa6c334e8d316d57bd3156c4f27e0372e01f47616**이다.
+- [x] 같은Source6 제품의 통합batch2도 종료0·전체CTest **3007개/실패0**이다. 메뉴GUI2실행·자연Early2→Tutorial3와 실제3캡처를 확인했다. 실제타이머1/상태주입false/초기진행주입false·기존done1→1로 환불75·SP3075·다음초기SP2000·같은프레임 안내를 관측했다. 캡처SP1700은 설치뒤실제생산이 진행된 시점이다. 평상시Host Game버튼은없고 첫플레이캡처에는Bridges안내가열려있다. 원본전체/두설정복원·9보고서원시사본/driver/helper/PLAN·소스/제품/보호SHA를 감사했다.
+- [x] [최종실행보고서](cpppj/camera-process-runtime-20261025.json)와 [작업문서](docs/exe/cpp-camera-process-storages-20261025.md)에 최초실패·교정·최종제품·지원한계를 기록했다. 전체로그의 확인된기존진단만 메모리에서 분리해 실제검사명과현재/이전HEAD등록을 비교했고, 기존2963개제거0·추가44개가 정확히같았다. 마지막전체통합기준은 **이번439~442 Source6 / 게임712fd7ae… / 3007검사·메뉴·자연Early2**다.
+- [x] root의 Regular/SharedRegular 소멸자PE정적확인은 `extracted/cpp-regular-destructor-static-20261025.json`에 남겼다. scalar468230→thunk4ab2c0→base41bd00의vtable/두poison필드쓰기와조건부free만확인했으며 Pool/Form/Runtime callback은없다. 최초opcode기대의즉시store가정은실제EAX형으로정정하고이전assert도보존했다. 다른파생과전체Native부모로확대하지 않는다.
+- [x] 서브 AI는모두현재범위를끝내고종료했다. 443은 [Git 보관본](docs/exe/prepared/cursor-owner-443-20261025/README.md)에필수48파일/2,172,701BYTE와Root재현검증JSON을보관했다. 입력28→결과32/실제patch30·새8검사정의다. patch SHA **6aa4a0ab…**, manifest SHA **53ec6d6d…**다. 기준은815+439440준비본+439Load교정의명시혼합이며442/현재Source5를암묵채택하지않았다. 보관본replay의Git3명령종료0·결과32정규화SHA일치를확인했다. main미적용·C++미빌드/검사·Native미실행이다.
+- [x] 444는 [Git 보관본](docs/exe/prepared/state-runtime-retirement-444-20261025/README.md)에필수16파일/1,456,521BYTE와Root검증기록을보관했다. 제품7/검사3·새12검사초안, patch SHA **7536a350…**, manifest SHA **529b43bf…**다. 실제AI/링크자식정상복귀의이동전용증빙을준비했다. Session.h/.cpp기준은442준비본이며나머지8입력은815다. base+patch와기록SHA의EOL선택으로10파일원시SHA를재현했다. 정규화전6불일치기록도보존했다. main미적용·C++미빌드/검사·독립추가검토미착수다.
+- [ ] 재개할때는AGENTS/이최신인계를먼저읽고,현재/마지막정밀PC를확인한다. [준비본보관안내](docs/exe/prepared/README.md)의443/444를현재코드와hunk병합·독립검토후새소스로빌드/검증한다. 보관base를현재main에그대로덮어쓰지않는다. 현재빌드·검사·GUI프로세스는모두정상종료했으며 대기중handle은없다.
+- [ ] NativeState1 전체cleanup/prefix·AI/Links/UI/Player고정뷰·GameplayUse 반납coordinator·다른파생프로세스수명·카메라전체Frame/zoom부모는미완료다. 실제Edit 편집/저장·전체Early/캠페인/데모 자연완주·진행저장/재실행·완전동일성도미완료다. 443/444는현재제품통과수에포함하지 않는다. 목표를완료로표시하지않고사용자요청에따라일시정지한다.
+
+
 ## 2026-10-25 묶음436~438 완료: 선택·권한·FullDeck의 실제 입력 전역
 
 - [x] 이전434·435는 **da6c61ae / 20261025-30 CP**로 집중121/전체2,931·실패0·메뉴GUI/자연Early2→Tutorial3 통합을 마쳤다. 시작 트리는 깨끗했고 현재/마지막 정밀 PC는 **HJOW-Athlon / 2026-10-23**이다. 목표는 계속 활성이다.

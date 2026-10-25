@@ -8,6 +8,8 @@ struct CarrierPostPopState {
     bool boss{true}; // 00540bc4 / CD 00540a2c: 권한이 없을 때만 비최초 carrier 확인을 부른다.
     std::uint32_t loadingDepth{}; // 005c89b8 / CD 005178d4: 요새 로딩의 중첩 횟수다.
     std::uint32_t geyserType{122}; // 00541240 / CD 0051cb2c: 로딩 중 지면 소유자 갱신에서 제외한다.
+    const std::uint32_t* sharedGeyserType{}; // 실제 게임 TYPE를 빌린다.
+    std::uint32_t GeyserType() const { return sharedGeyserType ? *sharedGeyserType : geyserType; } // 로딩 중 비교 위치에서 현재 TYPE를 읽는다.
 };
 // 캐리어 후처리 Pop 외부 동작과 저장소 조회를 연결하는 콜백 묶음이다.
 struct CarrierPostPopHooks {

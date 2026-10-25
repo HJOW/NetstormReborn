@@ -14,6 +14,7 @@
 #include <bit>
 #include <cmath>
 #include <sstream>
+#include <optional>
 #include <stdexcept>
 #include <utility>
 
@@ -34,13 +35,14 @@ void Write(std::span<std::uint8_t> bytes,std::size_t offset,std::uint32_t value,
     for (std::size_t i=0;i<width;++i) bytes[offset+i]=static_cast<std::uint8_t>(value>>(8*i));
 }
 // 잘못된 판본/크기/타입 요청은 기존 실제 물리를 초기화하기 전에 거부한다.
-std::shared_ptr<RawSurfaceStorage> SelectStorage(std::shared_ptr<RawSurfaceStorage> storage,o::OriginalEdition edition,std::span<const o::RiftTypeRecord> types,std::span<const o::RiftTypeFrames> frames,std::span<const o::SquidDisplayShape> shapes,const o::BridgeConnectState& links,std::uint32_t terrain,bool prepared,std::shared_ptr<o::RawAuthorityState> authority) {
+std::shared_ptr<RawSurfaceStorage> SelectStorage(std::shared_ptr<RawSurfaceStorage> storage,o::OriginalEdition edition,std::span<const o::RiftTypeRecord> types,std::span<const o::RiftTypeFrames> frames,std::span<const o::SquidDisplayShape> shapes,const o::BridgeConnectState& links,std::uint32_t terrain,bool prepared,std::shared_ptr<o::RawAuthorityState> authority,std::shared_ptr<o::RawGameAuxState> gameAux) {
     if (prepared && (!storage || edition!=o::OriginalEdition::Patch1078)) throw std::invalid_argument("준비된 표면 대여의 실제 PATCH 저장소 누락");
     if (types.size()!=frames.size() || types.size()!=shapes.size()) throw std::invalid_argument("월드 대여 전 자산 배열 크기 불일치");
     if (terrain>=types.size() || links.bridgeType>=types.size() || links.noIslandType>=types.size()) throw std::out_of_range("월드 대여 전 타입 번호 오류");
     if (storage && (storage->pool.Edition()!=edition || storage->types.size()!=types.size() || storage->frames.size()!=frames.size() || storage->shapes.size()!=shapes.size())) throw std::invalid_argument("월드 대여 전 실제 물리/판본 불일치");
     if (storage && authority && storage->Authority()!=authority) throw std::invalid_argument("월드 대여 전 실제 권한 소유자 불일치"); // 불일치는 일반 fresh 쓰기나 대여보다 먼저 거부한다.
-    return storage ? std::move(storage) : std::make_shared<RawSurfaceStorage>(edition,types,frames,shapes,nullptr,std::move(authority));
+    if (storage && gameAux && storage->GameAux()!=gameAux) throw std::invalid_argument("월드 대여 전 실제 게임 보조 소유자 불일치"); // fresh/대여 전에 다른 owner를 거부한다.
+    return storage ? std::move(storage) : std::make_shared<RawSurfaceStorage>(edition,types,frames,shapes,nullptr,std::move(authority),std::move(gameAux));
 }
 }
 // RawSurfaceWorld의 공유 저장소와 처리기 연결을 소유하는 구현 객체다.
@@ -53,15 +55,15 @@ struct RawSurfaceWorld::Impl final:o::SquidDisplaySink {
     // pool: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀.
     o::SidPool& pool;/* hash: 같은 실제 공간 해시다. */ o::SquidHash& hash;/* spots: 같은 실제 공간 배열이다. */ std::vector<std::uint8_t>& spots;
     // links: 연결 함수들이 읽는 원본 전역이다. 패치 주소 / CD 주소를 주석에 둔다 (o::BridgeConnectState).
-    o::BridgeConnectState& links;/* terrainType: isle 지면 자산을 타입 표에서 찾는 번호. */ std::uint32_t terrainType;/* bookkeeping: 목록/제어 상태는 새 World가 소유하고 세 집계 표만 같은 장기 물리에서 빌린다. */ o::SquidPostPopState bookkeeping{.sharedTotalMade=&storage->totalMade};
+    o::BridgeConnectState& links;/* terrainType: isle 지면 자산을 타입 표에서 찾는 번호. */ std::uint32_t terrainType;/* bookkeeping: 목록/제어 상태는 새 World가 소유하고 세 집계 표만 같은 장기 물리에서 빌린다. */ o::SquidPostPopState bookkeeping{.sharedTotalMade=&storage->totalMade,.sharedTotalCost=&storage->GameAux()->TotalCost()};
     // deletion: 삭제.
-    o::SquidDeletionState deletion;/* mode: 원본 실행 상태 전역. 기본값은 싱글 플레이(로컬이 서버) 전투 화면이다 (o::BridgeDecayMode). */ o::BridgeDecayMode mode;/* eventState: 처리기가 읽는 원본 전역이다. 패치 주소 / CD 주소를 괄호에 둔다 (o::BridgeEventState). */ o::BridgeEventState eventState;
+    o::SquidDeletionState deletion{.sharedLostX=&storage->GameAux()->LostX(),.sharedLostY=&storage->GameAux()->LostY()};/* mode: 원본 실행 상태 전역. 기본값은 싱글 플레이(로컬이 서버) 전투 화면이다 (o::BridgeDecayMode). */ o::BridgeDecayMode mode;/* eventState: 처리기가 읽는 원본 전역이다. 패치 주소 / CD 주소를 괄호에 둔다 (o::BridgeEventState). */ o::BridgeEventState eventState;
     // loadState: 로딩 상태.
     o::IslandPostPopState loadState{1,false};/* ownerMode: 미니맵과 같은 실제 모드 전역이다. */ o::SquidOwnerMode& ownerMode;
     // buildingState: 원본 타입 전역과 현재 debug 전역이다. 섬 확인은 영역 번호나 소유자를 조회하지 않는다 (o::BuildingSpaceState).
     o::BuildingSpaceState buildingState;
     // processState: 프로세스 실행·부착·이벤트 분배에 사용하는 상태.
-    o::SquidProcessState processState{.sharedAuthority=storage->Authority().get()};/* time: 프레임의 게임 시각과 벽 시각 및 시간 차 (o::FrameTime). */ o::FrameTime time{};/* changed: 상태 변경으로 후속 갱신이 필요한지. */ /* loaded: 현재 자료의 로딩이 완료됐는지. */ /* loading: 현재 로딩 작업 중인지. */ /* runtimeBound: 실행 연결된 여부. */ bool changed{true},loaded{},loading{},runtimeBound{};
+    o::SquidProcessState& processState{storage->Processes().State()};/* time: 프레임의 게임 시각과 벽 시각 및 시간 차 (o::FrameTime). */ o::FrameTime time{};/* changed: 상태 변경으로 후속 갱신이 필요한지. */ /* loaded: 현재 자료의 로딩이 완료됐는지. */ /* loading: 현재 로딩 작업 중인지. */ /* runtimeBound: 실행 연결된 여부. */ bool changed{true},loaded{},loading{},runtimeBound{};
     RawWorldRuntimeHooks runtime; // 외부 미션 모듈의 참조는 첫 객체 생성 전에만 설치한다.
     std::function<o::Sid()> deletionSelected; // 실제 후설치 뒤 매 삭제/공통pre에서 현재 UI선택을 읽는다.
     bool deletionBound{}; // 같은공통state의실제보상/효과후설치는첫객체생성전한번만허용한다.
@@ -86,19 +88,22 @@ struct RawSurfaceWorld::Impl final:o::SquidDisplaySink {
     // lifecycle: 수명.
     std::unique_ptr<o::RawSurfaceLifecycle> lifecycle;/* events: 발생한 이벤트 또는 이벤트 처리기. */ std::unique_ptr<o::RawBridgeEvents> events;
     // host: Form이나 프로세스의 등록·통지·수명을 연결하는 호스트.
-    std::unique_ptr<o::SquidProcessHost> host;
+    std::unique_ptr<o::SquidProcessHost> legacyHost; // raw Kernel*만 빌린 기존 독립 fixture의 좁은 수명이다.
+    o::SquidProcessHost* host{}; // 실제 경로는 Storage 장기 Host를 직접 가리킨다.
+    std::unique_ptr<RawProcessHostStorage::Use> processUse; // 현재 World의 실제 가상 처리기 대여다.
+    std::optional<RawProcessHostStorage::Returned> returnedProcesses; // 단일 Native Clear 뒤 실제 소비한 대여의 반납 증빙이다.
     // formDispatch: 타입별 서로 다른 fallback 사슬을 같은 분배기로 모아 혼합 종속 체인의 중첩 삭제를 지원한다 (std::unique_ptr<o::SquidFormDispatch>).
     std::unique_ptr<o::SquidFormDispatch> formDispatch;
     // dependencies: 같은 삭제 분배기에 영구 등록하는 실제 감시 Form 쌍 소유자다.
     std::unique_ptr<o::DependFormHost> dependencies;
-    std::unique_ptr<o::Kernel> localKernel; // 독립 월드만 소유하며 모듈/host보다 먼저 소멸한다. 실제 Client에는 두 번째 Kernel을 만들지 않는다.
+    bool sharedProcessHost; // 명시 pin 장치 또는 Storage 독립 Kernel만 잔류 대여를 지원한다.
     o::Kernel& kernel; // 모든 Form/경로/Regular가 같은 실제 Client Kernel 또는 독립 소유자를 직접 빌린다.
     // 순환하는 콜백은 실제 호출 전에 모든 모듈을 구성한다. 생성 중에는 Pop하지 않는다.
     Impl(o::OriginalEdition selected,std::span<const o::RiftTypeRecord> inputTypes,std::span<const o::RiftTypeFrames> inputFrames,
-        std::span<const o::SquidDisplayShape> inputShapes,o::BridgeConnectState state,std::uint32_t terrain,o::Kernel* processKernel,std::shared_ptr<RawSurfaceStorage> supplied,bool prepared,bool* sharedSavedGame,std::shared_ptr<o::RawAuthorityState> authority)
-        :storage(SelectStorage(std::move(supplied),selected,inputTypes,inputFrames,inputShapes,state,terrain,prepared,std::move(authority))),storageUse(prepared ? storage->AcquirePrepared() : storage->Acquire()),
+        std::span<const o::SquidDisplayShape> inputShapes,o::BridgeConnectState state,std::uint32_t terrain,o::Kernel* processKernel,std::shared_ptr<RawSurfaceStorage> supplied,bool prepared,bool* sharedSavedGame,std::shared_ptr<o::RawAuthorityState> authority,std::shared_ptr<o::RawGameAuxState> gameAux)
+        :storage(SelectStorage(std::move(supplied),selected,inputTypes,inputFrames,inputShapes,state,terrain,prepared,std::move(authority),std::move(gameAux))),storageUse(prepared ? storage->AcquirePrepared() : storage->Acquire()),
          edition(selected),types(storage->types),frames(storage->frames),shapes(storage->shapes),codes(storage->codes),pool(storage->pool),hash(storage->hash),spots(storage->spots),links(storage->links),terrainType(terrain),loadState{1,false,sharedSavedGame},ownerMode(storage->ownerMode),
-         localKernel(processKernel ? nullptr : std::make_unique<o::Kernel>()),kernel(processKernel ? *processKernel : *localKernel) {
+         sharedProcessHost(!processKernel || storage->Processes().UsesKernel(processKernel)),kernel(sharedProcessHost ? storage->Processes().Kernel() : *processKernel) {
         if (!prepared) links=state; // 명시 Native prefix의 현재 종류/모드는 보존하고 기존 독립 설치만 새 상태를 쓴다.
         if (pool.Edition()!=selected || frames.size()!=inputFrames.size() || shapes.size()!=inputShapes.size() || types.size()!=inputTypes.size()) throw std::invalid_argument("raw 표면 월드 실제 물리/판본 불일치");
         if (terrainType>=types.size() || links.bridgeType>=types.size() || links.noIslandType>=types.size())
@@ -152,7 +157,10 @@ struct RawSurfaceWorld::Impl final:o::SquidDisplaySink {
         // 표면 월드의 실제 자산 재정의/프로세스 삭제도 공유 Form 분배기를 사용한다.
         formDispatch=std::make_unique<o::SquidFormDispatch>(pool,*baseDestroy,lifecycle->Hooks(),
             [this](o::Sid sid,std::uint32_t flags,const o::SquidDestroyHooks& hooks) { return virtualDestroy->Destroy(sid,flags,hooks); });
-        host=std::make_unique<o::SquidProcessHost>(pool,types,kernel,*baseDestroy,processState,o::MakeBridgeRegularHandler(pool,*events),formDispatch->Hooks());
+        if (sharedProcessHost) {
+            auto binding=std::make_shared<o::ProcessHostRuntimeBindings>();binding->destroy=baseDestroy.get();binding->regular=o::MakeBridgeRegularHandler(pool,*events);binding->asset=formDispatch->Hooks(); // 실제 현재 World의 가상 부모만 짧게 빌린다.
+            processUse=storage->Processes().Bind(std::move(binding));host=&storage->Processes().Host();
+        } else { legacyHost=std::make_unique<o::SquidProcessHost>(pool,types,kernel,*baseDestroy,processState,o::MakeBridgeRegularHandler(pool,*events),formDispatch->Hooks());host=legacyHost.get(); } // raw 외부 Kernel의 기존 fixture 경로는 같은 호출자 수명을 요구한다.
         formDispatch->Bind(*host);
         dependencies=std::make_unique<o::DependFormHost>(pool,*baseDestroy,
             [this](o::Sid watcher,o::Sid watched,o::Sid form) {
@@ -190,10 +198,10 @@ struct RawSurfaceWorld::Impl final:o::SquidDisplaySink {
 };
 // 공개 객체는 내부 참조/콜백이 이동하지 않게 단일 구현 객체를 소유한다.
 RawSurfaceWorld::RawSurfaceWorld(o::OriginalEdition edition,std::span<const o::RiftTypeRecord> types,
-    std::span<const o::RiftTypeFrames> frames,std::span<const o::SquidDisplayShape> shapes,o::BridgeConnectState links,std::uint32_t terrainType,o::Kernel* processKernel,std::shared_ptr<RawSurfaceStorage> storage,bool adoptPrepared,bool* sharedSavedGame,std::shared_ptr<o::RawAuthorityState> authority)
-    :impl_(std::make_unique<Impl>(edition,types,frames,shapes,links,terrainType,processKernel,std::move(storage),adoptPrepared,sharedSavedGame,std::move(authority))) {}
+    std::span<const o::RiftTypeFrames> frames,std::span<const o::SquidDisplayShape> shapes,o::BridgeConnectState links,std::uint32_t terrainType,o::Kernel* processKernel,std::shared_ptr<RawSurfaceStorage> storage,bool adoptPrepared,bool* sharedSavedGame,std::shared_ptr<o::RawAuthorityState> authority,std::shared_ptr<o::RawGameAuxState> gameAux)
+    :impl_(std::make_unique<Impl>(edition,types,frames,shapes,links,terrainType,processKernel,std::move(storage),adoptPrepared,sharedSavedGame,std::move(authority),std::move(gameAux))) {}
 // 프로세스가 빌린 raw 데이터보다 먼저 반납되며 외부 Client Kernel 자체는 파괴하지 않는다.
-RawSurfaceWorld::~RawSurfaceWorld()=default;
+RawSurfaceWorld::~RawSurfaceWorld() { if (impl_->processUse) impl_->processUse->DrainOwnedForShutdown(); } // 현재 대여의 생성 실패/일반 종료만 반납하며 이전 Native 잔류의 최종 소유자는 Storage다.
 // 이 뷰는 내부 모듈의 현재 참조만 돌려주며 새 배열/풀을 만들지 않는다.
 RawWorldCore RawSurfaceWorld::Core() {
     auto& s=*impl_;return {s.pool,s.hash,s.spots,s.types,s.frames,s.shapes,s.bookkeeping,s.ownerMode,
@@ -272,6 +280,20 @@ void RawSurfaceWorld::Repop(o::Sid sid,std::uint32_t flags) {
 void RawSurfaceWorld::ClearProcesses() { impl_->kernel.Clear(); }
 // 최종 소멸자는 지난 슬롯의 후속 등록도 같은 모듈이 살아 있을 때 반납해야 한다.
 void RawSurfaceWorld::DrainProcesses() { do { impl_->kernel.Clear(); } while (impl_->kernel.Size()); }
+// 완성된 새 Session의 후반 실패도 이전 Native 잔류를 제거하지 않고 자기 현재 처리기만 반납한다.
+void RawSurfaceWorld::DrainCurrentProcessBindingsForShutdown() {
+    if (impl_->processUse) impl_->processUse->DrainOwnedForShutdown();
+    else if (!impl_->returnedProcesses) DrainProcesses(); // 장기 대여가 없는 종전 raw 외부 Kernel 경로의 최종 소멸 계약이다.
+}
+// 명시 World 대여에서 실제 Native 단일 Clear가 끝난 경우만 증빙을 전달한다.
+RawProcessHostStorage::ClearPass RawSurfaceWorld::ClearProcessesForState() {
+    if (!impl_->processUse) throw std::logic_error("장기 ProcessHost 현재 대여 없는 State Clear");return impl_->processUse->ClearForState();
+}
+void RawSurfaceWorld::ReturnProcessBindingsForState(RawProcessHostStorage::ClearPass&& pass) {
+    if (!impl_->processUse || impl_->returnedProcesses) throw std::logic_error("ProcessHost State 반납의 단일 실제 대여 필요");
+    impl_->returnedProcesses.emplace(impl_->processUse->ReturnForState(std::move(pass)));impl_->processUse.reset();
+} // 현재 대여를 소비한 뒤에만 증빙을 보관하며 Kernel/잔류를 강제 정리하지 않는다.
+bool RawSurfaceWorld::ProcessBindingsReturned() const { return bool(impl_->returnedProcesses); } // 실제 반납 객체의 존재만 진단한다.
 // 중첩 로딩의 표면/사제/자산 후처리가 같은 값을 읽게 한다.
 void RawSurfaceWorld::SetLoadingDepth(std::uint32_t depth) {
     impl_->loadState.loadingDepth=depth;if (impl_->runtimeBound) impl_->runtime.loadingDepth(depth);
@@ -305,8 +327,10 @@ void RawSurfaceWorld::Load(std::span<const SurfaceSeed> seeds) {
 }
 // GUI의 준비 단계는 시각만 쓰며 Kernel을 중첩 실행하지 않는다.
 void RawSurfaceWorld::PrepareFrame(o::FrameTime time) {
+    if (impl_->processState.sharedNow) time.game=impl_->processState.Now(); // 실제 현재 시각으로 독립 스냅샷의 게임 값만 교정한다.
     if (!std::isfinite(time.game) || time.game<impl_->time.game) throw std::invalid_argument("raw 월드의 역행/비유한 게임 시각");
-    impl_->time=time;impl_->processState.now=time.game;
+    if (!impl_->processState.sharedNow) impl_->processState.now=time.game; // bound Client 시각은 스냅샷으로 역쓰기하지 않는다.
+    impl_->time=time;
 }
 // 독립 호출자는 같은 준비 뒤 Kernel을 한 번 실행하며 기존 정지 계약을 유지한다.
 void RawSurfaceWorld::RunFrame(o::FrameTime time,bool paused) { PrepareFrame(time);if (!paused) impl_->kernel.RunFrame(); }
@@ -339,7 +363,7 @@ std::string RawSurfaceWorld::Report() const {
     std::ostringstream out;out.precision(12);std::uint32_t surfaces=0,graphs=0;
     // 예약 0번 다음의 실제 연결 성분을 센다.
     for (std::size_t i=1;i<o::Graph::kCount;++i) if (impl_->graph->Records()[i].inUse) { ++graphs;surfaces+=static_cast<std::uint16_t>(impl_->graph->Records()[i].surfaces); }
-    out<<"raw_world\t"<<impl_->time.game<<'\t'<<impl_->time.number<<'\t'<<impl_->kernel.Size()<<'\t'<<surfaces<<'\t'<<graphs<<'\t'<<impl_->bookkeeping.totalCost<<'\t'<<impl_->bookkeeping.depth<<'\t'<<impl_->baseDestroy->PreDepth()<<'\t'<<impl_->baseDestroy->PostDepth()<<'\t'<<impl_->effectRequests<<'\t'<<impl_->deletionRequests<<'\n';
+    out<<"raw_world\t"<<impl_->time.game<<'\t'<<impl_->time.number<<'\t'<<impl_->kernel.Size()<<'\t'<<surfaces<<'\t'<<graphs<<'\t'<<impl_->bookkeeping.TotalCost()<<'\t'<<impl_->bookkeeping.depth<<'\t'<<impl_->baseDestroy->PreDepth()<<'\t'<<impl_->baseDestroy->PostDepth()<<'\t'<<impl_->effectRequests<<'\t'<<impl_->deletionRequests<<'\n';
     // 렌더링과 같은 raw 조회 결과를 번호별로 제공한다.
     for (const auto& snapshot:Objects()) {
         const auto& seed=snapshot.object;out<<"raw_object\t"<<snapshot.sid.value<<'\t'<<seed.type<<'\t'<<seed.owner<<'\t'<<seed.frame<<'\t'<<seed.x<<'\t'<<seed.y<<'\n';

@@ -33,6 +33,26 @@ public:
     const double& ConnectEnd() const { return connectEnd_; } // 시계 getter나 프레임 시각으로 대체하지 않는다.
     double& LoginEnd() { return loginEnd_; } // 005c85f0의 로그인/Dais/충돌 효과가 같은 double을 빌린다.
     const double& LoginEnd() const { return loginEnd_; } // 효과 억제 관문도 현재 double의 실제 주소를 사용한다.
+    std::uint32_t& ScriptBreak() { return scriptBreak_; } // 00542544의 DWORD이며 Login 완료0과 Abort1을 같은 주소에 쓴다.
+    const std::uint32_t& ScriptBreak() const { return scriptBreak_; } // 최초 PE값1과 현재 임의 DWORD 비트를 그대로 읽는다.
+    std::uint32_t& AbortPending() { return abortPending_; } // 005c85e0은004b6350이1을 쓰고004b8cb0이 검사하는 별도 DWORD다.
+    const std::uint32_t& AbortPending() const { return abortPending_; } // requestPhase005c85ac와 합치지 않는 현재 값이다.
+    std::uint32_t& StateAuxCC() { return stateAuxCC_; } // 005c85cc의 정확한4BYTE만 소유하며 인접005c85d0과 구별한다.
+    const std::uint32_t& StateAuxCC() const { return stateAuxCC_; } // 확인된 Native 직접 writer는004b2df0의0 store다.
+    std::uint32_t& MetadataMode() { return metadataMode_; } // 005c85c8은004b6dd0의1 store와0047d8c0/0047e630의 읽기를 보존한다.
+    const std::uint32_t& MetadataMode() const { return metadataMode_; } // 이름은 편의 표기이며 미복원 부모의 전체 역할을 확정하지 않는다.
+    std::uint32_t& ConnectionNotified() { return connectionNotified_; } // 005c85b4는004b6dd0의 별도0검사/1쓰기 DWORD다.
+    const std::uint32_t& ConnectionNotified() const { return connectionNotified_; } // 명칭과 무관하게 Native State의 현재 비트 폭을 유지한다.
+    std::uint32_t& CachedPeerIndex() { return cachedPeerIndex_; } // 00542534의 State 선택 인덱스 캐시이며004b2cc0도ffffffff로 무효화한다.
+    const std::uint32_t& CachedPeerIndex() const { return cachedPeerIndex_; } // 다른 세 캐시와 별도로 현재 값을 읽는다.
+    std::uint32_t& CachedPeerValue() { return cachedPeerValue_; } // 00542538은004b6dd0에서 선택 레코드 DWORD와 비교하는 캐시다.
+    const std::uint32_t& CachedPeerValue() const { return cachedPeerValue_; } // 00542528/2c의 저장 복원 슬롯과 구별한다.
+    std::uint32_t& CachedPeerFieldA4() { return cachedPeerFieldA4_; } // 0054253c는004b6dd0에서 선택 대상+a4 DWORD와 비교한다.
+    const std::uint32_t& CachedPeerFieldA4() const { return cachedPeerFieldA4_; } // 원문 캐시의 모든32비트를 보존한다.
+    std::uint32_t& CachedPeerFieldA8() { return cachedPeerFieldA8_; } // 00542540은004b6dd0에서 선택 대상+a8 DWORD와 비교한다.
+    const std::uint32_t& CachedPeerFieldA8() const { return cachedPeerFieldA8_; } // 인접 캐시를 참조하는 주소 산술을 만들지 않는다.
+    double& ReconnectSaveEnd() { return reconnectSaveEnd_; } // 005c8610의8BYTE이며004b6730이 별도로 검사하는 벽시각 기한이다.
+    const double& ReconnectSaveEnd() const { return reconnectSaveEnd_; } // LoginEnd005c85f0와 ActivityEnd00544d58을 대신하지 않는다.
     std::uint32_t& HudModeCommand() { return hudModeCommand_; } // 005427ec의 현재 명령을 호출 직전에 읽고 변경도 보존한다.
     std::uint32_t& AddIslandCommand() { return addIslandCommand_; } // 00542780의 현재 명령을 빈섬 예약 직전에 읽는다.
 private:
@@ -41,6 +61,16 @@ private:
     std::uint32_t zonePending_{},sourceType_{},begin_{},centralCreated_{}; // 순서가 다른 Native 주소들의 명시 소유자이며 주소 산술 배열로 쓰지 않는다.
     bool savedGame_{}; // 기존 실제 소비자의 정상0/1 표현을 유지하며 임의 Native DWORD 모델은 후속이다.
     double captureEnd_{},connectEnd_{},loginEnd_{}; // 각 Native 주소의 최초 BSS0과 서로 다른 수명을 유지한다.
+    std::uint32_t scriptBreak_{1}; // 보호 PE00542544의 최초 DWORD는1이며 Session 생성으로0을 덮어쓰지 않는다.
+    std::uint32_t abortPending_{}; // 005c85e0의 최초 BSS0이다. 미복원 Abort 부모의 요청 상태와 같은 수명이다.
+    std::uint32_t stateAuxCC_{}; // 005c85cc의 최초 BSS0이며 알려지지 않은 역할을 다른 필드와 합치지 않는다.
+    std::uint32_t metadataMode_{}; // 005c85c8의 최초 BSS0이며 Native 부모 접합 전에도 현재 DWORD를 유지한다.
+    std::uint32_t connectionNotified_{}; // 005c85b4의 최초 BSS0이며 requestPhase와 별도로 보존한다.
+    std::uint32_t cachedPeerIndex_{0xffffffffU}; // 보호 PE00542534의 최초 캐시 무효값이다.
+    std::uint32_t cachedPeerValue_{0xffffffffU}; // 보호 PE00542538의 최초 DWORD를 독립적으로 보존한다.
+    std::uint32_t cachedPeerFieldA4_{0xffffffffU}; // 보호 PE0054253c의 최초 무효값이다.
+    std::uint32_t cachedPeerFieldA8_{0xffffffffU}; // 보호 PE00542540의 최초 무효값이다.
+    double reconnectSaveEnd_{}; // 005c8610의 최초 BSS +0이며 cleanup의wall+10 store는 후속 실제 adapter가 맡는다.
     std::uint32_t hudModeCommand_{0x0200003dU}; //보호PE005427ec의 실제 명령 초기값이다.
     std::uint32_t addIslandCommand_{0x02000022U}; //보호PE00542780의 실제 Add Island 명령 초기값이다.
 };

@@ -1,7 +1,9 @@
 // 본섬 표면·noIsland·다리와 파생 받침을 실제 raw 풀/Graph/Kernel로 소유하는 새 월드 연결부다.
 #pragma once
 #include "o/GameClock.h"
+#include "client/RawProcessHostStorage.h"
 #include "o/RawAuthorityState.h"
+#include "o/RawGameAuxState.h"
 #include "o/RawGraph.h"
 #include "o/RawIslandRuntime.h"
 #include "o/ChunkMap.h"
@@ -30,6 +32,7 @@ class GameAssets; // 실제 Client가 먼저 읽은 자산의 정체성을 물�
 class RawSurfaceStorage {
 private:
     std::shared_ptr<o::RawAuthorityState> authority_; // Pool의 현재 서버 포인터와 World 실행기보다 먼저 만들고 마지막에 반납한다.
+    std::shared_ptr<o::RawGameAuxState> gameAux_; // 실제 장부/게임 TYPE 참조보다 먼저 구성한다.
 public:
     // 대여 중에는 두 번째 월드가 같은 풀을 초기화하지 못하게 한다.
     class Use {
@@ -41,7 +44,9 @@ public:
         explicit Use(RawSurfaceStorage& storage); // 이미 검증한 단일 소유자의 반납 경계다.
         RawSurfaceStorage& storage_; // 실제 물리 소유자는 대여보다 오래 살아야 한다.
     };
-    RawSurfaceStorage(o::OriginalEdition edition,std::span<const o::RiftTypeRecord> inputTypes,std::span<const o::RiftTypeFrames> inputFrames,std::span<const o::SquidDisplayShape> inputShapes,const GameAssets* source=nullptr,std::shared_ptr<o::RawAuthorityState> authority={}); // 배열은 최초 한 번만 확보한다.
+    ~RawSurfaceStorage(); // 최종 ProcessHost/Kernel을 실제 Pool/TYPE보다 먼저 반납한다.
+    RawProcessHostStorage& Processes(); // 같은 Storage의 장기 Host/상태와 현재 World 대여를 제공한다.
+    RawSurfaceStorage(o::OriginalEdition edition,std::span<const o::RiftTypeRecord> inputTypes,std::span<const o::RiftTypeFrames> inputFrames,std::span<const o::SquidDisplayShape> inputShapes,const GameAssets* source=nullptr,std::shared_ptr<o::RawAuthorityState> authority={},std::shared_ptr<o::RawGameAuxState> gameAux={}); // 배열은 최초 한 번만 확보한다.
     RawSurfaceStorage(const RawSurfaceStorage&)=delete;RawSurfaceStorage& operator=(const RawSurfaceStorage&)=delete; // 현재 모든 실행기가 빌리는 실제 물리를 복제하지 않는다.
     RawSurfaceStorage(RawSurfaceStorage&&)=delete;RawSurfaceStorage& operator=(RawSurfaceStorage&&)=delete; // Graph/Pool/공간 참조가 남은 객체의 주소를 이동하지 않는다.
     std::unique_ptr<Use> Acquire(); // 기존 Pool/해시/spot 및 fresh Graph/집계3표의 일반 설치 의미를 같은 물리에서 유지하며 TYPE 수정은 보존한다.
@@ -49,6 +54,9 @@ public:
     bool Borrowed() const; // 현재 실제 월드가 물리를 빌렸는지 읽는다.
     std::uint64_t Generation() const; // 성공한 월드 대여 횟수이며 원본 게임 값으로 쓰지 않는다.
     const std::shared_ptr<o::RawAuthorityState>& Authority() const { return authority_; } // Client 전역/Session과 같은 실제 서버·권한 주소의 정체성이다.
+    const std::shared_ptr<o::RawGameAuxState>& GameAux() const { return gameAux_; } // 같은 Gameplay/Host가 pin하는 실제 게임 보조 owner다.
+    std::uint32_t& GeyserType() { return gameAux_->GeyserType(); } // 모든 실제 타입 소비자의 현재 DWORD다.
+    const std::uint32_t& GeyserType() const { return gameAux_->GeyserType(); } // 대여/반납으로 타입 주소를 교체하지 않는다.
     const GameAssets* Source() const; // Client 자산 정체성이다. 독립 raw 검사에서는 nullptr이다.
     std::vector<o::RiftTypeRecord> types; // 같은 수정 가능한 전역 TYPE이며 Session마다 원본 파일로 덮어쓰지 않는다.
     std::vector<o::RiftTypeFrames> frames;std::vector<o::SquidDisplayShape> shapes; // 자산보다 짧고 모든 Session보다 긴 프레임/셰이프 배열이다.
@@ -61,10 +69,11 @@ public:
     o::SquidOwnerMode ownerMode; // 미니맵과 현재 월드가 같은 실제 세 모드 값을 읽는다.
     o::BridgeConnectState links; // 생산 UI와 현재 월드가 같은 실제 표면 종류 전역을 읽는다.
 private:
+    std::unique_ptr<RawProcessHostStorage> processes_; // 실제 Pool/TYPE 뒤에 선언하여 그 참조보다 먼저 최종 반납한다.
     const GameAssets* source_;bool borrowed_{};std::uint64_t generation_{}; // 최초 자산 정체성·단일 대여·호스트 관측 번호다.
 };
 // 실제 보관 중인 자산에서 프레임/SHP를 한 번 구성한다. 게임이나 창은 실행하지 않는다.
-std::shared_ptr<RawSurfaceStorage> MakeRawSurfaceStorage(const GameAssets& assets,std::shared_ptr<o::RawAuthorityState> authority={});
+std::shared_ptr<RawSurfaceStorage> MakeRawSurfaceStorage(const GameAssets& assets,std::shared_ptr<o::RawAuthorityState> authority={},std::shared_ptr<o::RawGameAuxState> gameAux={});
 // 저장/지형 어댑터에서 넘기는 초기 위치다. 등록 뒤 현재 값은 raw 슬롯만 읽는다.
 struct SurfaceSeed { /* type: 타입 표에서 객체 종류를 찾는 번호. */ /* owner: 객체나 지역을 소유한 플레이어 번호. */ std::uint32_t type{},owner{};/* frame: 타입에서 사용할 그림 프레임 번호. */ std::int32_t frame{};/* x: X 좌표. */ /* y: Y 좌표. */ float x{},y{}; };
 // 표면 객체의 현재 SID와 직렬화할 배치 정보이다.
@@ -161,9 +170,9 @@ public:
     // 프레임/타입/SHP를 소유하여 GUI 참조와 raw 조회가 같은 판본을 사용하게 한다.
     RawSurfaceWorld(o::OriginalEdition edition,std::span<const o::RiftTypeRecord> types,
         std::span<const o::RiftTypeFrames> frames,std::span<const o::SquidDisplayShape> shapes,
-        o::BridgeConnectState links,std::uint32_t terrainType,o::Kernel* processKernel=nullptr,std::shared_ptr<RawSurfaceStorage> storage={},bool adoptPrepared=false,bool* sharedSavedGame=nullptr,std::shared_ptr<o::RawAuthorityState> authority={}); // 준비 대여는 실제 물리를 사용하며 저장 게임 관문은 첫 객체 전부터 Client의 같은 bool을 빌린다.
+        o::BridgeConnectState links,std::uint32_t terrainType,o::Kernel* processKernel=nullptr,std::shared_ptr<RawSurfaceStorage> storage={},bool adoptPrepared=false,bool* sharedSavedGame=nullptr,std::shared_ptr<o::RawAuthorityState> authority={},std::shared_ptr<o::RawGameAuxState> gameAux={}); // 준비 대여는 실제 물리를 사용하며 저장 게임 관문은 첫 객체 전부터 Client의 같은 bool을 빌린다.
     // 실제 Client는 같은 전역 Kernel을 빌리고 독립 월드만 자체 Kernel을 소유한다. 빌린 Kernel은 월드보다 오래 살아야 한다.
-    // 빌린 경우 호출자는 모듈 반납 전에 DrainProcesses를 마쳐야 한다. 자체 Kernel은 이 월드의 다른 멤버보다 먼저 반납한다.
+    // 빌린 경우 호출자는 모듈 반납 전에 현재 대여의 최종 정리를 마쳐야 한다. 전체 Kernel 소멸은 장기 Storage가 소유한다.
     ~RawSurfaceWorld();
     RawSurfaceWorld(const RawSurfaceWorld&)=delete;
     RawSurfaceWorld& operator=(const RawSurfaceWorld&)=delete;
@@ -198,7 +207,11 @@ public:
     void Repop(o::Sid sid,std::uint32_t flags);
     // 외부 연결 모듈을 해제하기 전에 예약 객체를 먼저 정리한다. 월드 자료는 유지한다.
     void ClearProcesses();
-    void DrainProcesses(); // C++ 최종 소멸 전용으로 소멸자가 지난 슬롯에 만든 프로세스까지 반납한다. 원문 Clear 한 번과 구별한다.
+    RawProcessHostStorage::ClearPass ClearProcessesForState(); // 실제 단일 Clear 정상 복귀의 증빙을 발급한다.
+    void ReturnProcessBindingsForState(RawProcessHostStorage::ClearPass&& pass); // 같은 증빙으로 현재 처리기 대여만 끝내며 Regular 잔류는 유지한다.
+    bool ProcessBindingsReturned() const; // 실제 소비된 Returned 증빙의 존재를 조회하며 공개 성공 setter는 제공하지 않는다.
+    void DrainProcesses(); // 명시 전체 Kernel의 최종 소멸 전용이며 원문 Clear 한 번과 구별한다.
+    void DrainCurrentProcessBindingsForShutdown(); // 현재 대여의 일반 종료만 반납하며 이전 Native 잔류와 다른 Storage는 건드리지 않는다.
     // 파생 로더의 중첩 깊이를 표면과 비표면 몸체에 동일하게 전달한다.
     void SetLoadingDepth(std::uint32_t depth);
     // 원본 고정 게임 시각을 모든 Regular에 공급한다. 정지 중에는 커널을 실행하지 않는다.

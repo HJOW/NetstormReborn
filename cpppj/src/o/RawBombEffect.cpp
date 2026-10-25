@@ -55,7 +55,7 @@ void RawBombEffect::Receive(std::span<const std::uint8_t> packet) const {
     const Sid carrier{static_cast<std::uint16_t>(Read(parent,12,2))};
     if (!(Read(carrier,11,1)&7U)) {
         Need(hooks_.stopCast)(carrier);
-        state_.spentCounter+=CostLow(Type(Read(parent,10,1)).cost);
+        state_.StoreSpentCounter(state_.SpentCounter()+CostLow(Type(Read(parent,10,1)).cost));
     }
     const auto capacity=Bytes(packet,6,4);
     if (std::bit_cast<std::int32_t>(capacity)<0 || capacity>(packet.size()-10)/2) throw std::invalid_argument("Bomb 효과 최초 대상 목록 범위");

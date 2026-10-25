@@ -1,3 +1,4 @@
+#include "client/ClientGameplayGlobals.h"
 // 커서의 외부 경계를 실제 장치/원본 트리 처리기에 연결하며 성공 값을 합성하지 않는다.
 #include "client/CampaignCursorClientEffects.h"
 #include "client/RawMenuControls.h"
@@ -17,6 +18,12 @@ std::string CursorBytes(Client& client,std::string_view key) {
 }
 }
 // PickTopLevel과 재귀 Dispatch의 반환 토큰을 직접 가상 처리기의 DWORD 반환과 구별한다.
+CursorPlacementHooks MakeClientCursorPrepareHooks(Client& client,std::function<Renderer&()> renderer) {
+    if (!renderer) renderer=[&client]() -> Renderer& { return client.GetRenderer(); };
+    CursorPlacementHooks hooks;hooks.project=[&client](float x,float y) { const auto point=ProjectCameraView(client.GameplayGlobals()->Camera().Snapshot(),x,y);return ScreenPoint{point[0],point[1]}; };
+    hooks.invalidate=[renderer=std::move(renderer)](ScreenRect rect,std::uint32_t flags) { renderer().Invalidate(rect,flags); };return hooks;
+}
+// 실제 Gump 수신은 Native 카메라와 별도로 현재 트리를 빌린다.
 void BindCampaignCursorGumps(CampaignCursorEffects& effects,RawButtonControls& controls) {
     effects.placement.gumpAt=[&controls](std::int32_t x,std::int32_t y) { return controls.PickGump({x,y}); };
     effects.placement.accept=[&controls](std::uint32_t token,std::uint32_t event,std::uint32_t first,std::uint32_t second,std::uint32_t hidden) {
@@ -44,7 +51,7 @@ CampaignCursorEffects MakeCampaignCursorClientEffects(Client& client,RawButtonCo
         return std::array{width,height};
     };
     effects.lifecycle.mouse=[&client] { const auto mouse=client.Poll(InputCode::kLeftButton);return ScreenPoint{mouse.x,mouse.y}; };
-    effects.placement.invalidate=[&client](ScreenRect rect,std::uint32_t flags) { client.GetRenderer().Invalidate(rect,flags); };
+    effects.placement.invalidate=MakeClientCursorPrepareHooks(client).invalidate;
     return effects;
 }
 }

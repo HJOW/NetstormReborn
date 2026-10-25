@@ -110,7 +110,7 @@ struct RawCampaignConstructionBindings::Impl {
         geyserHooks.create=[this](std::uint32_t type,std::uint32_t flags) { return world.Create(type,flags); };
         geyserHooks.pop=[this](o::Sid sid,float x,float y,std::uint32_t flags) { world.Pop(sid,x,y,flags); };
         geysers=std::make_unique<o::RawLocalGeyser>(core.pool,core.hash,core.spots,core.types,core.frames,players,recent,state.geyser,std::move(geyserHooks));
-        geysers->BindResourcePool(reward.geyserPool);
+        geysers->BindResourcePool(reward.GeyserPool());
     }
     // 실제 현재 전역의 불일치/일반 건설 분기를 생성 전에 거부한다. 지원 범위를 임의 성공으로 넓히지 않는다.
     void ValidateState() const {

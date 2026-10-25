@@ -15,6 +15,9 @@ struct CarrierArrivalState {
     std::uint32_t priestType{158},nuggetType{154},daisType{165},geyserType{122},outpostType{126},isleStalagType{84}; // 원래 mutable 타입 getter들이다.
     std::array<std::uint32_t,81> alliances{}; // [carrierOwner*9+candidateOwner]와 반대 방향을 임의 통합하지 않는다.
     std::array<bool,9> controlledOwners{}; // 독립 원문 재생의 입력이다. 실제 Session은 아래 currentControlled로 현재 Player를 읽는다.
+    const std::int32_t* sharedAllowAlliedPickup{};const std::uint32_t* sharedGeyserType{}; // 실제 capture DWORD와 TYPE를 읽는다.
+    bool AllowAlliedPickup() const { return sharedAllowAlliedPickup ? *sharedAllowAlliedPickup!=0 : allowAlliedPickup; } // bool로 alias하지 않고 현재 비0을 판정한다.
+    std::uint32_t GeyserType() const { return sharedGeyserType ? *sharedGeyserType : geyserType; } // 선행 효과 뒤 현재 TYPE를 다시 읽는다.
 };
 // 각 큰 운반/포획/경제/프로토콜/회피 몸체는 호출되면 필수 실제 효과를 공급해야 한다.
 struct CarrierArrivalHooks {

@@ -107,13 +107,13 @@ void RawCursorRange::Construct(CursorRangeFields& fields,o::Sid parent,o::Sid fo
     for (std::size_t index=0;index<100;++index) Put(fields,20+4*index,0);
     Put(fields,0x1ec,(definition.flags2&0x100) ? 1U : 0U);
     if (!U(fields,12)) CreateRays(fields,parent);else if (U(fields,12)==1) CreateCircle(fields);
-    PutF(fields,0x1b4,0);Need(attach)(fields,parent,form,0x10);Put(fields,0x1b8,0);PutD(fields,0x1d0,clock_.now);PutD(fields,0x1d8,clock_.now);PutD(fields,0x1e0,0);Put(fields,0x1e8,0);
+    PutF(fields,0x1b4,0);Need(attach)(fields,parent,form,0x10);Put(fields,0x1b8,0);PutD(fields,0x1d0,clock_.Now());PutD(fields,0x1d8,clock_.Now());PutD(fields,0x1e0,0);Put(fields,0x1e8,0);
 }
 // 종료 시 preview extra8은 다른 현재 토큰도 지우므로 소멸자의 동일성 검사로 대체하지 않는다.
 void RawCursorRange::Stop(CursorRangeFields& fields,const std::function<void()>& kill) const { if (Raw(Parent(fields))[40]&8) cursor_.cursorGump=0;Need(kill)(); }
 // 실제 직선 간격·이동 위상·프레임을 현재 자료로 계산한다.
 bool RawCursorRange::Rays(CursorRangeFields& fields,const std::function<void()>& kill) const {
-    const auto step=static_cast<float>(static_cast<double>(F(fields,0x1b0))/I(fields,0x1a8));const auto grown=(clock_.now-D(fields,0x1d8))*F(fields,0x1c0);const auto visible=static_cast<float>(grown);const auto phase=static_cast<float>(std::fmod(grown,static_cast<double>(step)));
+    const auto step=static_cast<float>(static_cast<double>(F(fields,0x1b0))/I(fields,0x1a8));const auto grown=(clock_.Now()-D(fields,0x1d8))*F(fields,0x1c0);const auto visible=static_cast<float>(grown);const auto phase=static_cast<float>(std::fmod(grown,static_cast<double>(step)));
     if (U(fields,0x1b8)) { Stop(fields,kill);return false; }
     const auto parent=Parent(fields);const auto type=Raw(parent)[10];if (type>=types_.size()) throw std::out_of_range("사정거리 직선 TYPE 범위 오류");const auto& definition=types_[type];const auto parentRaw=Raw(Parent(fields));const auto x=RawFloat(parentRaw,14),y=RawFloat(parentRaw,18);static_cast<void>(Need(hooks_.footprint)(Parent(fields)));
     constexpr std::array<std::array<int,2>,4> directions{{{0,-1},{1,0},{0,1},{-1,0}}}; // 실제0052f83c/0052f85c의 짝수 방향이다.
@@ -144,7 +144,7 @@ bool RawCursorRange::Circle(CursorRangeFields& fields,float delta,const std::fun
         // 반복마다 현재 개수와 raw dead/void를 읽는다.
         for (std::int32_t index=0;index<I(fields,0x1a4);++index) {
             const auto sid=Marker(fields,index);const auto raw=Raw(sid);if (raw[11]&2) { Need(hooks_.diagnostic)(29,"Dead circle range!");continue; }if (!(raw[11]&4)) Need(hooks_.world.detach)(sid,0);
-            const auto phase=F(fields,0x1b4)==F(fields,0x1b0) ? (clock_.now-TimeInteger(clock_.now))*3.1415927410125732 : 0.0;
+            const auto phase=F(fields,0x1b4)==F(fields,0x1b0) ? (clock_.Now()-TimeInteger(clock_.Now()))*3.1415927410125732 : 0.0;
             auto angle=static_cast<float>((static_cast<double>(6.283180236816406f)/I(fields,0x1a4))*index+phase);const auto degrees=Normalize(static_cast<float>((static_cast<double>(1.5707900524139404f)-angle)*57.29583));
             double factor=1;double theta=angle;
             if (F(fields,0x1c4)>=0 && F(fields,0x1c4)<360 && !Contains(degrees,F(fields,0x1c4),F(fields,0x1c8))) {
@@ -158,12 +158,12 @@ bool RawCursorRange::Circle(CursorRangeFields& fields,float delta,const std::fun
 }
 // 내부 frame은 현재 값을 다시 읽으므로 바깥 몸체는 시간 차와 종료 시각을 계산한다.
 void RawCursorRange::Frame(CursorRangeFields& fields,const std::function<void()>& kill) const {
-    static_cast<void>(Raw(Parent(fields)));const auto delta=static_cast<float>(clock_.now-D(fields,0x1d0));if (D(fields,0x1e0)!=0 && D(fields,0x1e0)<clock_.now) Put(fields,0x1b8,1);
-    const auto mode=U(fields,12);if ((!mode && !Rays(fields,kill)) || (mode==1 && !Circle(fields,delta,kill))) return;PutD(fields,0x1d0,clock_.now);
+    static_cast<void>(Raw(Parent(fields)));const auto delta=static_cast<float>(clock_.Now()-D(fields,0x1d0));if (D(fields,0x1e0)!=0 && D(fields,0x1e0)<clock_.Now()) Put(fields,0x1b8,1);
+    const auto mode=U(fields,12);if ((!mode && !Rays(fields,kill)) || (mode==1 && !Circle(fields,delta,kill))) return;PutD(fields,0x1d0,clock_.Now());
 }
 // event1은100칸 고정으로 SID0을 건너뛴다. 마나의 현재 개수 반복과 구별한다.
 void RawCursorRange::Notify(CursorRangeFields& fields,std::uint32_t event,std::uint32_t info,std::uint32_t) const {
-    if (event==3) { Put(fields,0x1b8,1);return; }if (event!=1) { PutD(fields,0x1e0,clock_.now+3.0);return; }Put(fields,0x1e8,info);
+    if (event==3) { Put(fields,0x1b8,1);return; }if (event!=1) { PutD(fields,0x1e0,clock_.Now()+3.0);return; }Put(fields,0x1e8,info);
     // 실제 가상 효과 뒤 다음 칸과 현재 숨김 값을 읽는다.
     for (std::int32_t index=0;index<100;++index) { const auto sid=Marker(fields,index);if (!sid.value) continue;const auto raw=Raw(sid);if (!U(fields,0x1e8)) { if (raw[11]&4) Need(hooks_.world.unpop)(sid,0); }else if (!(raw[11]&4)) Need(hooks_.world.detach)(sid,0); }
 }

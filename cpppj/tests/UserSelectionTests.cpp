@@ -186,7 +186,7 @@ TEST_CASE(UserSelectionGlobals_NativeDwordBitsAndDistinctRawMouse) {
 
 // 첫 메뉴는 Session 없이 실제 raw Clear를 실행하고 같은 mode0이면 mouseType와 나머지 전역을 보존한다.
 TEST_CASE(UserSelectionGlobals_FirstMenuClearKeepsMouseTypeAndNegativeCountTail) {
-    ClientGameplayGlobals gameplay;const auto surface=MakeRawSurfaceStorage(netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078).game,gameplay.Authority());auto& owner=gameplay.selection;
+    ClientGameplayGlobals gameplay;const auto surface=MakeRawSurfaceStorage(netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078).game,gameplay.Authority(),gameplay.GameAux());auto& owner=gameplay.selection;
     CHECK(owner.enabled==1 && owner.mode==0 && owner.selected==0 && owner.multipleCount==0 && !gameplay.Borrowed());
     owner.enabled=0x80000000U;owner.selected=0xfedcba98U;owner.mouseType=0x89abcdefU;owner.multipleCount=-7;owner.multiple={0x10037U,0xffffffffU};owner.mouse={-2,73};owner.remembered={0x7fc00001U,0x80000000U};
     const auto multiple=owner.multiple;ClearClientUserSelection(gameplay,*surface); // mode0이므로 하드웨어 커서 함수도 필요 없다.
@@ -196,7 +196,7 @@ TEST_CASE(UserSelectionGlobals_FirstMenuClearKeepsMouseTypeAndNegativeCountTail)
 
 // enabled0은 count/선택/강조까지 보존하며 배열 getter·게임·커서 효과를 호출하지 않는다.
 TEST_CASE(UserSelectionGlobals_DisabledClearPreservesAllCurrentDwords) {
-    ClientGameplayGlobals gameplay;const auto surface=MakeRawSurfaceStorage(netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078).game,gameplay.Authority());auto& owner=gameplay.selection;
+    ClientGameplayGlobals gameplay;const auto surface=MakeRawSurfaceStorage(netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078).game,gameplay.Authority(),gameplay.GameAux());auto& owner=gameplay.selection;
     owner.enabled=0;owner.mode=5;owner.selected=0x12345678U;owner.mouseType=71;owner.multipleCount=-3;owner.mouse={-33,65};owner.remembered={1,2};owner.multiple={55,56};const auto before=SelectionOwnerDwords(owner);const auto multiple=owner.multiple;
     ClearClientUserSelection(gameplay,*surface,[](auto) { throw std::logic_error("비활성 선택의 커서 효과 도달"); });CHECK(SelectionOwnerDwords(owner)==before && owner.multiple==multiple);
 }
@@ -234,7 +234,7 @@ TEST_CASE(UserSelectionGlobals_LateArrayFailureKeepsWrittenPrefix) {
 
 // prepared 대여/중복 거부/반납과 raw 꼬리 실패는 같은 owner의 현재 값을 암묵 reset하거나 rollback하지 않는다.
 TEST_CASE(UserSelectionGlobals_PreparedLifetimeAndLateHighlightFailureKeepCurrentOwner) {
-    ClientGameplayGlobals gameplay;const auto surface=MakeRawSurfaceStorage(netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078).game,gameplay.Authority());auto& owner=gameplay.selection;
+    ClientGameplayGlobals gameplay;const auto surface=MakeRawSurfaceStorage(netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078).game,gameplay.Authority(),gameplay.GameAux());auto& owner=gameplay.selection;
     owner.selected=0xfedcba98U;owner.mode=4;owner.mouseType=71;owner.multipleCount=-1;owner.multiple={0x12345678};owner.mouse={-33,65};owner.remembered={17,19};const auto before=SelectionOwnerDwords(owner);
     { auto use=gameplay.AcquirePrepared();CHECK(SelectionOwnerDwords(owner)==before && gameplay.Borrowed());CHECK(Throws([&] { gameplay.Acquire(); }) && Throws([&] { gameplay.AcquirePrepared(); }) && SelectionOwnerDwords(owner)==before);
       bool rejected{};try { ClearClientUserSelection(gameplay,*surface,[](auto cursor) { CHECK(cursor==1);throw std::runtime_error("실제 커서 장치 후반 실패 입력"); }); }catch (const std::runtime_error&) { rejected=true; }

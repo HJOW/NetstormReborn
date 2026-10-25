@@ -1,3 +1,4 @@
+#include "client/RawCameraView.h"
 // 같은 캠페인 월드의 실제 커서 수명/위치/미리보기/내려놓기/로컬 예측을 소유한다.
 #pragma once
 #include "client/RawCampaignConstructionBindings.h"
@@ -40,6 +41,7 @@ struct CampaignCursorData {
     const std::uint32_t& windType; // 사정거리와 같은 현재 특별 Wind 타입이다.
     const std::uint32_t& rangeProcessType; // 사정거리와 같은 현재51 프로세스 타입이다.
     const std::array<std::uint32_t,2>& camera; // 현재497490 카메라 float비트를 매 이동마다 읽는다.
+    const RawCameraViewState* cameraView{}; // 실제 Session은 같은 snapshot을 빌리며 기존 순수 호출자는 명시 fallback을 유지한다.
 };
 // 원본 각각의 몸체를 같은 상태에 조립하며 미연결 UI를 빈 성공으로 처리하지 않는다.
 class RawCampaignCursor {

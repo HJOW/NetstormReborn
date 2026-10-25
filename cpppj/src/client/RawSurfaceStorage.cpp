@@ -1,6 +1,7 @@
 // Client의 실제 배열을 Session보다 오래 보관하고 같은 물리를 두 월드에 중복 설치하지 않는다.
 #include "client/RawSurfaceWorld.h"
 #include "client/GameAssets.h"
+#include "o/RawGameAuxState.h"
 #include "client/SquidRenderer.h"
 #include <algorithm>
 #include <stdexcept>
@@ -12,16 +13,22 @@ constexpr std::uint32_t kCapacity=32768; // 기존 실제 월드의 SID 풀 크�
 constexpr std::size_t kCells=65536; // 원본256×256 spot 배열의 실제 바이트 수다.
 }
 // 참조 배열을 원본 자산에서 최초 한 번만 복사해 이후 주소를 고정한다.
-RawSurfaceStorage::RawSurfaceStorage(o::OriginalEdition edition,std::span<const o::RiftTypeRecord> inputTypes,std::span<const o::RiftTypeFrames> inputFrames,std::span<const o::SquidDisplayShape> inputShapes,const GameAssets* source,std::shared_ptr<o::RawAuthorityState> authority)
-    :authority_(authority ? std::move(authority) : std::make_shared<o::RawAuthorityState>()),types(inputTypes.begin(),inputTypes.end()),frames(inputFrames.begin(),inputFrames.end()),shapes(inputShapes.begin(),inputShapes.end()),codes(types.size()),pool(edition,kCapacity,true,&authority_->server),spots(kCells),source_(source) {
+RawSurfaceStorage::RawSurfaceStorage(o::OriginalEdition edition,std::span<const o::RiftTypeRecord> inputTypes,std::span<const o::RiftTypeFrames> inputFrames,std::span<const o::SquidDisplayShape> inputShapes,const GameAssets* source,std::shared_ptr<o::RawAuthorityState> authority,std::shared_ptr<o::RawGameAuxState> gameAux)
+    :authority_(authority ? std::move(authority) : std::make_shared<o::RawAuthorityState>()),gameAux_(gameAux ? std::move(gameAux) : std::make_shared<o::RawGameAuxState>()),types(inputTypes.begin(),inputTypes.end()),frames(inputFrames.begin(),inputFrames.end()),shapes(inputShapes.begin(),inputShapes.end()),codes(types.size()),pool(edition,kCapacity,true,&authority_->server),spots(kCells),source_(source) {
     if (frames.size()!=types.size() || shapes.size()!=types.size()) throw std::invalid_argument("실제 월드 저장소의 자산 배열 크기 불일치");
     links.bridgeType=82;links.islandType=94;links.stalagType=95;links.connectorType=155;links.noIslandType=157; // 기존10.78 표면/초기 생산 경계의 실제 종류다. 월드 설치는 자기 판본의 실제 값을 직접 쓴다.
     for (std::size_t type=0;type<frames.size();++type) codes[type].assign(frames[type].Codes().begin(),frames[type].Codes().end()); // 같은 타입의 실제 프레임 코드만 최초 보관한다.
 }
+// 장기 process owner는 실제 Pool/TYPE가 살아 있는 동안 최종 소유권을 반납한다.
+RawSurfaceStorage::~RawSurfaceStorage()=default;
+RawProcessHostStorage& RawSurfaceStorage::Processes() {
+    if (!processes_) processes_=std::make_unique<RawProcessHostStorage>(pool,types,authority_,std::shared_ptr<std::uint32_t>(GameAux(),&GameAux()->GeyserType()));return *processes_;
+} // 한 번 만든 상태/Host 주소는 다음 World에서도 유지한다.
 // 동시 설치를 거부한 뒤에만 이전 물리를 초기화한다. TYPE/삭제 기록과 배열 주소는 유지한다.
 std::unique_ptr<RawSurfaceStorage::Use> RawSurfaceStorage::Acquire() {
     if (borrowed_) throw std::logic_error("실제 월드 저장소 중복 대여");
     auto use=std::unique_ptr<Use>(new Use(*this));
+    gameAux_->ResetForGeneralWorld(); // 대여 거부 관문 뒤 기존 지역 Runtime의 fresh 입력만 호환한다.
     authority_->server=true;authority_->boss=true; // 일반 설치의 기존 fresh 상태다. prepared 대여/반납에는 이 쓰기가 없다.
     if (generation_) { pool.Reset(0);hash.Reset();std::fill(spots.begin(),spots.end(),std::uint8_t{}); }
     priestOwnerState.fill(0); // 기존 일반 Session 지역9DWORD의 fresh0 호환만 유지한다. Native00492240의 지정1..8쓰기와 다른 부모다.
@@ -46,9 +53,9 @@ std::uint64_t RawSurfaceStorage::Generation() const { return generation_; }
 // 다른 자산의 뷰를 같은 실제 Client 저장소로 잘못 연결하지 않도록 한다.
 const GameAssets* RawSurfaceStorage::Source() const { return source_; }
 // 실제 TYPE70부터 파일 프레임을 같은 배열에 놓고 기존 SquidRenderer의 SHP 뷰를 사용한다.
-std::shared_ptr<RawSurfaceStorage> MakeRawSurfaceStorage(const GameAssets& assets,std::shared_ptr<o::RawAuthorityState> authority) {
+std::shared_ptr<RawSurfaceStorage> MakeRawSurfaceStorage(const GameAssets& assets,std::shared_ptr<o::RawAuthorityState> authority,std::shared_ptr<o::RawGameAuxState> gameAux) {
     const auto& table=assets.TypeTable().Types();std::vector<o::RiftTypeFrames> frames(table.size(),o::RiftTypeFrames({})); // 누락된 내장 타입은 기존과 같은 빈 프레임 표다.
     for (const auto& type:assets.Types()) frames.at(o::kFirstAssetTypeNumber+type.block)=type.definition.FrameTable(); // 실제 archive 블록의 프레임 표를 보관한다.
-    return std::make_shared<RawSurfaceStorage>(assets.Edition(),table,frames,SquidRenderer::Shapes(assets,assets.Edition()),&assets,std::move(authority));
+    return std::make_shared<RawSurfaceStorage>(assets.Edition(),table,frames,SquidRenderer::Shapes(assets,assets.Edition()),&assets,std::move(authority),std::move(gameAux));
 }
 }

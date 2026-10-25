@@ -49,7 +49,7 @@ struct RawCampaignCursorDisplay::Impl {
         // 전용 등록도 원본 존재 표를 유지하며 SetPalette에서 실제 HSL 표를 채운다.
         for (const auto type:kSpecial) settings.ownerMaps.at(type)=true;
         PreviewCollectionHooks hooks;hooks.gumpDepth=[this](std::uint32_t parent) { if (!depth) throw std::logic_error("실제 커서 부모 Gump 깊이 미연결");return depth(parent); };
-        hooks=MakePreviewSpHooks(sp,std::move(hooks));hooks.now=[this] { return std::bit_cast<std::uint32_t>(static_cast<float>(time.now)); };hooks.querySp=[this] { return playerKnown; };
+        hooks=MakePreviewSpHooks(sp,std::move(hooks));hooks.now=[this] { return std::bit_cast<std::uint32_t>(static_cast<float>(time.Now())); };hooks.querySp=[this] { return playerKnown; };
         hooks.scrambledOffset=[this] { return sp.OffsetCurrent(); };hooks.copiedOffset=[this] { return std::bit_cast<std::uint32_t>(sp.TrackingOffsetCurrent()); };
         hooks.firstPool=[this] { return sp.FirstPoolCurrent()!=nullptr; };hooks.firstIndex=[this] { return sp.Permutation()[0]; };
         collection=std::make_unique<PreviewCollection>(core.pool,core.types,core.spots,feedback,std::move(hooks));collection->BindCursor(source);

@@ -185,7 +185,7 @@ TEST_CASE(NormalTerrainWorldBinding_ActualFarmCreateOwnerHpAndGameRandom) {
         CHECK(scene.random.State()==expected.State() && local.State()==77 && scene.crt==previousCrt);
         CHECK(Get(raw,edition==OriginalEdition::Patch1078 ? 36 : 34,edition==OriginalEdition::Patch1078 ? 4 : 1)==expectedFrame);
         CHECK(raw[edition==OriginalEdition::Patch1078 ? 34 : 32]==2 && Get(raw,26,edition==OriginalEdition::Patch1078 ? 4 : 2)==73);
-        CHECK(core.bookkeeping.GlobalCounts()[kNormalFarm]==1 && core.bookkeeping.totalCost==0 && core.bookkeeping.depth==0);
+        CHECK(core.bookkeeping.GlobalCounts()[kNormalFarm]==1 && core.bookkeeping.TotalCost()==0 && core.bookkeeping.depth==0);
         CHECK(scene.diagnostics==0 && &scene.pipeline->Pool()==&core.pool);scene.world->FinishLoad();
     }
 }

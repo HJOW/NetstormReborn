@@ -47,7 +47,7 @@ void RawCarrierPostPop::DamageablePostPop(Sid sid,std::uint32_t flags) const {
 // 첫 flag의 genus & 0x130000 조회는 원본에서도 반환값을 쓰지 않는 순수 읽기다.
 void RawCarrierPostPop::RunDamageable(Sid sid,std::uint32_t flags) const {
     const auto raw=pool_.Slot(sid);const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
-    if (state_.loadingDepth && raw[kType]!=state_.geyserType && !(raw[patch ? 40 : 35]&kAbstractBuried)
+    if (state_.loadingDepth && raw[kType]!=state_.GeyserType() && !(raw[patch ? 40 : 35]&kAbstractBuried)
         && (types_.at(raw[kType]).flags1&kClaimGround))
         hooks_.claimGround(Float(raw,kX),Float(raw,kY),raw[patch ? 34 : 32]);
     hooks_.base(sid,flags);

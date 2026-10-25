@@ -31,6 +31,11 @@ struct SquidRewardState {
     bool debugAsserts{};                 // 패치 0049fce0의 디버그 assert 전역(DAT_005e4794). 켜지면 위반 입력을 거부한다.
     std::array<std::int32_t,kPlayerCount+1> aiWallet{}; // 독립 값형/CD 재생의 지갑이다. 실제 PATCH Session은 BindPatchWallet로 같은 brain+2d8에 연결한다.
     float cdLocalSp{};                   // CD판 로컬 SP 전역(005120d4). 패치판은 ScrambledSpStore를 쓴다.
+    std::uint32_t* sharedPercent{};std::int32_t* sharedGeyserPool{}; // 실제25비율과 같은 signed 자원 DWORD를 빌린다.
+    std::uint32_t& Percent() { return sharedPercent ? *sharedPercent : percent; } // 현재 비율을 원문 위치에서 읽는다.
+    const std::uint32_t& Percent() const { return sharedPercent ? *sharedPercent : percent; } // 값형 fixture는 기존 값을 사용한다.
+    std::int32_t& GeyserPool() { return sharedGeyserPool ? *sharedGeyserPool : geyserPool; } // 삭제 효과 뒤에도 같은 현재 자원을 읽는다.
+    const std::int32_t& GeyserPool() const { return sharedGeyserPool ? *sharedGeyserPool : geyserPool; } // 다른 타입의 ref로 변환하지 않는다.
 };
 // 객체 보상 외부 동작과 저장소 조회를 연결하는 콜백 묶음이다.
 struct SquidRewardHooks {

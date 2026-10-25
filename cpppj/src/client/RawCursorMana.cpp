@@ -94,12 +94,12 @@ void RawCursorMana::Construct(CursorManaFields& fields,o::Sid parent,o::Sid form
         for (std::size_t index=0;index<7;++index) Put(fields,0x9c+4*index,0);
     }
     PutF(fields,0x8c,globals_.radiusLimit);PutF(fields,0x90,0);Need(attach)(fields,parent,form,0x10);
-    Put(fields,0x94,0);PutD(fields,0xc0,clock_.now);PutD(fields,0xc8,clock_.now);PutD(fields,0xd0,0);Put(fields,0xd8,0);
+    Put(fields,0x94,0);PutD(fields,0xc0,clock_.Now());PutD(fields,0xc8,clock_.Now());PutD(fields,0xd0,0);Put(fields,0xd8,0);
 }
 // float 저장 위치를 제외한 연산은 원본 기본53비트 정밀도의 double로 수행한다.
 void RawCursorMana::Frame(CursorManaFields& fields,const std::function<void()>& kill) const {
-    const auto parent=Parent(fields);const auto raw=Raw(parent);const auto parentX=RawFloat(raw,14),parentY=RawFloat(raw,18);const auto delta=static_cast<float>(clock_.now-D(fields,0xc0));
-    if (D(fields,0xd0)!=0 && D(fields,0xd0)<clock_.now) Put(fields,0x94,1);
+    const auto parent=Parent(fields);const auto raw=Raw(parent);const auto parentX=RawFloat(raw,14),parentY=RawFloat(raw,18);const auto delta=static_cast<float>(clock_.Now()-D(fields,0xc0));
+    if (D(fields,0xd0)!=0 && D(fields,0xd0)<clock_.Now()) Put(fields,0x94,1);
     if (U(fields,0x98)) {
         auto index=0;const auto phase=[&](std::int32_t item) { if (item<0 || item>=7) throw std::out_of_range("커서 마나 사각 위상 범위 오류");return F(fields,0x9c+4*item); };
         // 앞 절반은 현재 위상을 증가시키고 뒤 절반은 원본의 대칭 순서로 복사한다.
@@ -130,17 +130,17 @@ void RawCursorMana::Frame(CursorManaFields& fields,const std::function<void()>& 
             // 가상 해제/중심/이동이 다음 현재 시각·개수·부모를 바꿀 수 있어 반복마다 다시 읽는다.
             for (std::int32_t index=0;index<I(fields,0x84);++index) {
                 const auto sid=Marker(fields,index);if (Raw(sid)[11]&3) { Need(kill)();return; }Need(hooks_.detach)(sid,0);
-                const auto integer=TimeInteger(clock_.now);const auto angle=(static_cast<double>(6.28000020980835f)/I(fields,0x84))*index+((clock_.now-integer)*static_cast<double>(3.140000104904175f))*0.5;
+                const auto integer=TimeInteger(clock_.Now());const auto angle=(static_cast<double>(6.28000020980835f)/I(fields,0x84))*index+((clock_.Now()-integer)*static_cast<double>(3.140000104904175f))*0.5;
                 const auto x=static_cast<float>(Trig(angle,true)*F(fields,0x90)),y=static_cast<float>(Trig(angle,false)*F(fields,0x90));const auto center=Need(hooks_.center)(Parent(fields));
                 const auto point=Clamp({center[0]+x,center[1]+y});Need(hooks_.position)(sid,point[0],point[1],0);
             }
         }
     }
-    PutD(fields,0xc0,clock_.now);
+    PutD(fields,0xc0,clock_.Now());
 }
 // event1의 숨김 값은 DWORD 전체를 유지하고 각 객체의 현재 void 여부를 읽는다.
 void RawCursorMana::Notify(CursorManaFields& fields,std::uint32_t event,std::uint32_t info,std::uint32_t) const {
-    if (event==3) { Put(fields,0x94,1);return; }if (event!=1) { PutD(fields,0xd0,clock_.now+3.0);return; }Put(fields,0xd8,info);
+    if (event==3) { Put(fields,0x94,1);return; }if (event!=1) { PutD(fields,0xd0,clock_.Now()+3.0);return; }Put(fields,0xd8,info);
     // 효과가 개수/숨김/목록을 바꾸면 다음 조건에서 그 변경을 읽는다.
     for (std::int32_t index=0;index<I(fields,0x84);++index) { const auto sid=Marker(fields,index);const auto raw=Raw(sid);if (!U(fields,0xd8)) { if (raw[11]&4) Need(hooks_.unpop)(sid,0); }else if (!(raw[11]&4)) Need(hooks_.detach)(sid,0); }
 }

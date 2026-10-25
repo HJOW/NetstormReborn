@@ -10,6 +10,7 @@
 # 게임 본체. 실행 파일과 테스트가 함께 쓰도록 정적 라이브러리로 묶는다.
 # 소스 목록은 각 폴더의 CMakeLists.txt 가 target_sources 로 더한다.
 add_library(netstorm STATIC)
+target_sources(netstorm PRIVATE o/RawGameAuxState.h) # 같은 실제 게임17보조 전역 owner다.
 target_sources(netstorm PRIVATE o/RawAuthorityState.h) # 같은 Client의 실제 서버/권한 두 논리값만 장기 소유한다.
 # 생산 문자 단축키의 원본 큐 예약을 클라이언트 입력과 같은 명령으로 연결한다.
 target_sources(netstorm PRIVATE client/ProductionShortcuts.cpp client/ProductionShortcuts.h)
@@ -197,3 +198,9 @@ endif()
 target_sources(netstorm PRIVATE o/RawWindAviaryState.cpp o/RawWindAviaryState.h)
 # 데빌메이커 생산 단계와 실제 Kernel 어댑터다.
 target_sources(netstorm PRIVATE o/RawWindAviaryProcess.cpp o/RawWindAviaryProcess.h)
+
+# 실제64BYTE 카메라와 Client 장기 snapshot/논리Renderer/목표를 구별한다.
+target_sources(netstorm PRIVATE client/RawCameraView.cpp client/RawCameraView.h client/ClientCameraGlobals.cpp client/ClientCameraGlobals.h)
+
+# 같은 실제 Kernel/현재 프레임을 pin하고 현재 World 처리기만 대여하는 장기 Host다.
+target_sources(netstorm PRIVATE client/RawProcessHostStorage.cpp client/RawProcessHostStorage.h)

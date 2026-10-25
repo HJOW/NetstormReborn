@@ -13,6 +13,8 @@ struct LocalGeyserState {
     std::int32_t firstPlayerQuantity{3},lastPlayerQuantity{4}; // 00540bd4/d8의 현재1~4/5~8 생성 요청 수다.
     std::int32_t resourcePool{}; // 00595088의 현재 전장 간헐천 자원 pool이다.
     std::uint32_t emptyGeyserType{84},geyserType{122},noIslandType{157},isleType{97}; // 현재 삭제/생성/건설확정/프레임문자수집 타입 전역이다.
+    const std::uint32_t* sharedGeyserType{}; // 현재 생성/비용 TYPE이며 값형 입력은 보존한다.
+    std::uint32_t GeyserType() const { return sharedGeyserType ? *sharedGeyserType : geyserType; } // 생성/Pop 효과 뒤에도 현재 TYPE를 읽는다.
 };
 // 원본 생성/공간/설정의 필수 하위다. 생성 성공을 임시 좌표나 빈 콜백으로 대신하지 않는다.
 struct LocalGeyserHooks {

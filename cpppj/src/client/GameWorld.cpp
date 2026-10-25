@@ -72,12 +72,12 @@ GameWorld::GameWorld(const GameAssets& assets,const o::FortTemplate& fort,o::Mis
 }
 // 실제 캠페인에서는 이전 관찰기반 객체/지형 어댑터를 생성하지 않고 같은 raw 세션을 설치한다.
 GameWorld::GameWorld(const GameAssets& assets,const o::BaseFileSystem& files,o::FortTemplate fort,o::MissionPlayers players,
-    std::string mission,RawCampaignSessionServices services,ScreenPoint viewport,bool deferConnection):gameplayGlobals_(services.gameplayGlobals ? services.gameplayGlobals : std::make_shared<ClientGameplayGlobals>(services.subscriberGlobals,services.surfaceStorage ? services.surfaceStorage->Authority() : nullptr)),assets_(assets),players_(std::move(players)) {
+    std::string mission,RawCampaignSessionServices services,ScreenPoint viewport,bool deferConnection):gameplayGlobals_(services.gameplayGlobals ? services.gameplayGlobals : std::make_shared<ClientGameplayGlobals>(services.subscriberGlobals,services.surfaceStorage ? services.surfaceStorage->Authority() : nullptr,services.surfaceStorage ? services.surfaceStorage->GameAux() : nullptr)),assets_(assets),players_(std::move(players)) {
     if (viewport.x<=0 || viewport.y<=0) throw std::invalid_argument("실제 캠페인 설치 전 화면 크기 누락");
     width_=viewport.x;height_=viewport.y;
     // 현재 보호 팔레트 번호만 UI 색 조회용으로 보관한다.
     for (std::size_t i=0;i<palette_.size();++i) palette_[i]=assets_.Palette().Color(static_cast<std::uint8_t>(i));
-    // 실제 카메라는 이 월드가 소유한다. 로더의 같은 호출 위치에서 실행하며 외부 관찰 콜백을 사용하지 않는다.
+    // 현재 카메라는 Client owner를 직접 빌리며 로더의 같은 호출 위치에서 목표/두setter를 적용한다.
     services.install.resetCamera=[this] { ResetCampaignCamera(); };
     // 선택도 같은 GameWorld가 소유한다. 설치 중에는0이며 삭제의 실제 ClearSelection에서 같은 표시를 갱신한다.
     services.deletion.selected=[this] { return o::Sid{static_cast<std::uint16_t>(selected_)}; };
@@ -107,17 +107,17 @@ GameWorld::~GameWorld() { factoryDisplay_.reset();campaign_.reset(); }
 // 초기 카메라의 원본 좌표를 clamp나 신전 우선 선택 없이 현재 raw 표시와 음향 원점에 전달한다.
 void GameWorld::ResetCampaignCamera() {
     cameraHome_.width=width_;cameraHome_.height=height_;
-    campaign_->ResetCamera(cameraHome_,[this](std::int32_t x,std::int32_t y) { scrollX_=x;scrollY_=y;changed_=true;SurfaceView(); });
+    campaign_->ResetCamera(cameraHome_,[this](std::int32_t x,std::int32_t y) { ApplyCameraPixels(x,y);SurfaceView(); });
 }
-// 실제 카메라 비트는 같은 scroll 원점에서 원본497490의 단정도 저장으로 계산한다.
-MinimapGeometryView GameWorld::MinimapView() const { return {RawCursorPosition::CameraFromPixels(scrollX_,scrollY_),MapView(),16,11}; }
+// 실제 첫두 world float비트는 픽셀에서 재계산하지 않고 같은 현재 snapshot에서 읽는다.
+MinimapGeometryView GameWorld::MinimapView() const { return {CameraGlobals().Snapshot().worldBits,MapView(),campaign_ ? CameraGlobals().Snapshot().cellPixels[0] : 16,campaign_ ? CameraGlobals().Snapshot().cellPixels[1] : 11}; }
 // 현재 mapRect의 같은 장기 소유자를 연결한 뒤 표시/음향에 즉시 공급한다.
 void GameWorld::BindMapView(std::function<ScreenRect()> current) { if (!current) throw std::invalid_argument("월드의 실제 지도 영역 조회 필요");mapView_=std::move(current);SurfaceView();changed_=true; }
 ScreenRect GameWorld::MapView() const { return mapView_ ? mapView_() : ScreenRect{0,std::min(kMenuHeight,height_),width_,height_}; } // 원문 dock 미설치의 독립 검사 계약을 보존한다.
 // 홈 선택과 미니맵 클릭은 동일한497f20을 사용하며 임의 월드 가장자리clamp를 추가하지 않는다.
 void GameWorld::CenterCamera(float x,float y) {
     if (!campaign_) throw std::logic_error("실제 미니맵 카메라의 Session 없음");cameraHome_.width=width_;cameraHome_.height=height_;const auto core=campaign_->Core(); // 현재 공유 풀/TYPE다.
-    CameraHome(core.pool,core.types,cameraHome_,[this](auto px,auto py) { scrollX_=px;scrollY_=py;changed_=true;SurfaceView(); }).CenterPoint(x,y);
+    CameraHome(core.pool,core.types,cameraHome_,[this](auto px,auto py) { ApplyCameraPixels(px,py);SurfaceView(); }).CenterPoint(x,y);
 }
 // 원본 미니맵은 일반화면의4971e0/41d770 변환을 다시 거치지 않는다.
 void GameWorld::MoveFromMinimap(float x,float y) { if (!input_) throw std::logic_error("실제 미니맵 선택 장치 없음");input_->carrier->Commit(selected_,{x,y});input_->highlight->Highlight(0);changed_=true; }
@@ -349,26 +349,26 @@ void GameWorld::AdvanceObjects(double seconds) {
 // 원본 가변 생산/상태 패널의 영역 계산은 아직 복원하지 않았으며, 위치 계산 함수 자체는 SoundPlayer의 원본 규칙을 쓴다.
 void GameWorld::SurfaceView() {
     const auto view=MapView();const o::SquidDisplayRect clip{view.left,view.top,view.right,view.bottom}; // 실제 도킹 결과를 표면/입자/위치 음향이 함께 읽는다.
-    Surfaces().SetDisplay({scrollX_,scrollY_,65536,clip},surfaceDisplay);
-    if (campaign_) campaign_->SetParticleView({scrollX_,scrollY_,clip.left,clip.top,clip.right,clip.bottom},surfaceDisplay);
-    if (soundViewChanged) soundViewChanged({scrollX_,scrollY_,clip.left,clip.top,clip.right,clip.bottom});
+    Surfaces().SetDisplay({CameraX(),CameraY(),65536,clip},surfaceDisplay);
+    if (campaign_) campaign_->SetParticleView({CameraX(),CameraY(),clip.left,clip.top,clip.right,clip.bottom},surfaceDisplay,false);
+    if (soundViewChanged) soundViewChanged({CameraX(),CameraY(),clip.left,clip.top,clip.right,clip.bottom});
 }
 // 카메라 크기만 바뀌어도 다시 표시하고 위치 효과음의 화면 기준을 갱신한다. 같은 크기로 불러도 새 수신자를 갱신한다.
 void GameWorld::Resize(int width,int height) {
     const bool first=width_==0; if (width_==width && height_==height) { SurfaceView();return; }
-    width_=width; height_=height; if (first) Home(false); else Scroll(0,0); changed_=true;
+    width_=width; height_=height; CameraGlobals().UpdateTargetLimits(width,height,256.0F,256.0F);if (first) Home(false); else Scroll(0,0); changed_=true;
 }
 // 월드 테두리 밖으로 카메라가 나가지 않게 제한하고, 같은 입력 단계의 위치 효과음에 새 원점을 전달한다.
 void GameWorld::Scroll(int dx,int dy) {
-    const int x=std::clamp(scrollX_+dx,0,std::max(0,o::kWorldCells*kCellPixelsX-width_));
-    const int y=std::clamp(scrollY_+dy,0,std::max(0,o::kWorldCells*kCellPixelsY-height_));
-    if (x!=scrollX_ || y!=scrollY_) { scrollX_=x; scrollY_=y; changed_=true; }
+    const int x=std::clamp(CameraX()+dx,0,std::max(0,o::kWorldCells*kCellPixelsX-width_));
+    const int y=std::clamp(CameraY()+dy,0,std::max(0,o::kWorldCells*kCellPixelsY-height_));
+    if (x!=CameraX() || y!=CameraY()) { ApplyCameraPixels(x,y); }
     SurfaceView();
 }
 // 실제 캠페인은 현재 Player의 두 Home SID 또는 실제 사제 참여 조회를 사용한다.
 void GameWorld::Home(bool priest) {
     if (campaign_) {
-        cameraHome_.width=width_;cameraHome_.height=height_;const auto apply=[this](std::int32_t x,std::int32_t y) { scrollX_=x;scrollY_=y;changed_=true;SurfaceView(); }; // 같은 원점/표시/위치 음향을 한 변경 지점에 갱신한다.
+        cameraHome_.width=width_;cameraHome_.height=height_;const auto apply=[this](std::int32_t x,std::int32_t y) { ApplyCameraPixels(x,y);SurfaceView(); }; // 같은 원점/표시/위치 음향을 한 변경 지점에 갱신한다.
         if (priest) campaign_->ViewYourPriest(campaign_->LocalOwner(),cameraHome_,apply);else campaign_->ViewHome(cameraHome_,apply);return;
     }
     const o::Squid* target=nullptr;
@@ -378,27 +378,27 @@ void GameWorld::Home(bool priest) {
         if ((priest && Has(type,"priest")) || (!priest && Has(type,"vortex"))) { target=&object; break; }
         if (!target && Has(type,"priest")) target=&object;
     }
-    if (target) { const auto size=assets_.Types()[static_cast<std::size_t>(target->type-o::kFirstAssetTypeNumber)].definition.Footprint(); scrollX_=static_cast<int>((target->x-(size[0]-1)*0.5)*16)-width_/2; scrollY_=static_cast<int>((target->y-(size[1]-1)*0.5)*11)-height_/2; Scroll(0,0); changed_=true; }
+    if (target) { const auto size=assets_.Types()[static_cast<std::size_t>(target->type-o::kFirstAssetTypeNumber)].definition.Footprint(); ApplyCameraPixels(static_cast<int>((target->x-(size[0]-1)*0.5)*16)-width_/2,static_cast<int>((target->y-(size[1]-1)*0.5)*11)-height_/2); Scroll(0,0); changed_=true; }
 }
 // 메뉴가 이미 선택한 DWORD SID도 같은 raw Session에서 현재 TYPE/좌표/내용물을 다시 읽는다.
 void GameWorld::CenterOnObject(std::uint32_t sid) {
     if (campaign_) {
         cameraHome_.width=width_;cameraHome_.height=height_;
-        campaign_->CenterCameraOn(sid,cameraHome_,[this](std::int32_t x,std::int32_t y) { scrollX_=x;scrollY_=y;changed_=true;SurfaceView(); });return;
+        campaign_->CenterCameraOn(sid,cameraHome_,[this](std::int32_t x,std::int32_t y) { ApplyCameraPixels(x,y);SurfaceView(); });return;
     }
     const auto* target=Object(sid);if (!target) return;const auto size=assets_.Types()[static_cast<std::size_t>(target->type-o::kFirstAssetTypeNumber)].definition.Footprint(); // 이전 값형 월드의 기존 가운데/테두리 동작을 유지한다.
-    scrollX_=static_cast<int>((target->x-(size[0]-1)*0.5)*16)-width_/2;scrollY_=static_cast<int>((target->y-(size[1]-1)*0.5)*11)-height_/2;Scroll(0,0);changed_=true;
+    ApplyCameraPixels(static_cast<int>((target->x-(size[0]-1)*0.5)*16)-width_/2,static_cast<int>((target->y-(size[1]-1)*0.5)*11)-height_/2);Scroll(0,0);changed_=true;
 }
 // Players 명령의 명시 소유자는 같은 현재 Session의 참여 조회로 전달한다.
 void GameWorld::ViewPriest(std::uint32_t owner) {
     if (!campaign_) { Home(true);return; }
     cameraHome_.width=width_;cameraHome_.height=height_;
-    campaign_->ViewYourPriest(owner,cameraHome_,[this](std::int32_t x,std::int32_t y) { scrollX_=x;scrollY_=y;changed_=true;SurfaceView(); });
+    campaign_->ViewYourPriest(owner,cameraHome_,[this](std::int32_t x,std::int32_t y) { ApplyCameraPixels(x,y);SurfaceView(); });
 }
 // 월드 기준점은 원본 SHP 사각형의 원점과 동일하다.
-ScreenPoint GameWorld::ToScreen(double x,double y) const { return {static_cast<int>(std::lround(x*16))-scrollX_,static_cast<int>(std::lround(y*11))-scrollY_}; }
+ScreenPoint GameWorld::ToScreen(double x,double y) const { if (campaign_) { const auto point=ProjectCameraView(CameraGlobals().Snapshot(),static_cast<float>(x),static_cast<float>(y));return {point[0],point[1]}; }return {static_cast<int>(std::lround(x*16))-CameraX(),static_cast<int>(std::lround(y*11))-CameraY()}; }
 // 이동 목표는 가장 가까운 칸이다. 월드 밖은 경로 탐색에서 거부한다.
-o::CellPoint GameWorld::ToCell(ScreenPoint p) const { return {static_cast<int>(std::lround((p.x+scrollX_)/16.0)),static_cast<int>(std::lround((p.y+scrollY_)/11.0))}; }
+o::CellPoint GameWorld::ToCell(ScreenPoint p) const { if (campaign_) { const auto point=RawCursorPosition::TruncatePoint(RawCursorPosition::ScreenToWorld(p.x,p.y,CameraGlobals().Snapshot().worldBits));return {static_cast<int>(point[0]),static_cast<int>(point[1])}; }return {static_cast<int>(std::lround((p.x+CameraX())/16.0)),static_cast<int>(std::lround((p.y+CameraY())/11.0))}; }
 // 보행은 A~H 각 방향의 8개 프레임을 현재 시간으로 선택한다.
 std::size_t GameWorld::Frame(const o::Squid& object) const {
     if (object.heading<0) return object.initialFrame;
@@ -550,7 +550,7 @@ std::vector<RenderSprite> GameWorld::Sprites() const {
         add(type,object.frame,object.x,object.y,object.owner,kObjectDepth,false);
     }
     // Factory 본체/그림자는 원본 수집 깊이와 y보정을 유지하고 공통 장면 정렬에 넣는다.
-    if (factoryDisplay_) for (auto& sprite:factoryDisplay_->Sprites(clip,scrollX_,scrollY_,campaign_->LocalOwner(),hideBuildings_())) result.push_back(std::move(sprite));
+    if (factoryDisplay_) for (auto& sprite:factoryDisplay_->Sprites(clip,CameraX(),CameraY(),campaign_->LocalOwner(),hideBuildings_())) result.push_back(std::move(sprite));
     // 실제 입자도 같은 Renderer 정렬에 넣으며 화면의 뒤에 별도 overlay로 덮지 않는다.
     if (campaign_) for (auto& sprite:campaign_->ParticleSprites(clip)) result.push_back(std::move(sprite));
     return result;
@@ -645,7 +645,7 @@ std::optional<ScreenPoint> GameWorld::Point(std::string_view label) const {
         for (int x=std::max(1,targetX-radius);x<=std::min(255,targetX+radius);++x) {
             // 실제 커서/원본 배치 규칙을 통과한 현재 방향만 측정하며 결과를 만들지 않는다.
             for (int y=std::max(1,targetY-radius);y<=std::min(255,targetY+radius);++y) {
-                const ScreenPoint mouse{x*16-scrollX_-placement.hotspotX+placement.imageWidth/2,y*11-scrollY_-placement.hotspotY+placement.imageHeight/2}; // 실제 기준점의 역산이다.
+                const ScreenPoint mouse{x*16-CameraX()-placement.hotspotX+placement.imageWidth/2,y*11-CameraY()-placement.hotspotY+placement.imageHeight/2}; // 실제 기준점의 역산이다.
                 if (mouse.x<80 || mouse.x>=width_ || mouse.y<28 || mouse.y>=height_) continue;
                 campaign_->Cursor().Update(mouse.x,mouse.y);if (!drop.legal) continue;
                 o::CanonDecoder decoder(frames,patterns[drop.argument],std::bit_cast<std::int32_t>(drop.direction),drop.x,drop.y); // 현재 조각을 원본 반복자로 펼친다.
@@ -680,7 +680,7 @@ std::optional<ScreenPoint> GameWorld::Point(std::string_view label) const {
         for (int x=std::max(1,targetX-radius);x<=std::min(255,targetX+radius);++x) { // 현재 보드 안의 후보만 질의한다.
             for (int y=std::max(1,targetY-radius);y<=std::min(255,targetY+radius);++y) { // 미리보기 전체가 실제 허용되는지 검사한다.
                 const double distance=(x-targetX)*(x-targetX)+(y-targetY)*(y-targetY);if (distance>=distanceLimit) continue;
-                const ScreenPoint mouse{x*16-scrollX_-placement.hotspotX+placement.imageWidth/2,y*11-scrollY_-placement.hotspotY+placement.imageHeight/2};
+                const ScreenPoint mouse{x*16-CameraX()-placement.hotspotX+placement.imageWidth/2,y*11-CameraY()-placement.hotspotY+placement.imageHeight/2};
                 if (mouse.x<80 || mouse.x>=width_ || mouse.y<28 || mouse.y>=height_) continue; // 고정 사이드바/상단 메뉴와 화면 밖은 클릭하지 않는다.
                 campaign_->Cursor().Update(mouse.x,mouse.y);const auto& drop=campaign_->CursorDropSettings();
                 if (firing && x==targetX && y==targetY) requested={drop.x,drop.y,static_cast<float>(drop.legal),static_cast<float>(placement.descriptionAllowed),static_cast<float>(placement.placementAllowed),static_cast<float>(placement.sourceAllowed),static_cast<float>(drop.localPlayer)};
@@ -695,7 +695,7 @@ std::optional<ScreenPoint> GameWorld::Point(std::string_view label) const {
         }
         if (nearest) campaign_->Cursor().Update(nearest->x,nearest->y);
         else if (firing) {
-            std::fprintf(stderr,"자동 사격 자리 없음: legal%zu fire%zu 요청(%g,%g) legal%g desc%g place%g source%g owner%g snap%u camera%d,%d\n",legalCount,firingCount,requested[0],requested[1],requested[2],requested[3],requested[4],requested[5],requested[6],campaign_->Cursor().SnapToGrid(),scrollX_,scrollY_); // 자동 입력 실패의 실제 판정을 기록하며 성공으로 대체하지 않는다.
+            std::fprintf(stderr,"자동 사격 자리 없음: legal%zu fire%zu 요청(%g,%g) legal%g desc%g place%g source%g owner%g snap%u camera%d,%d\n",legalCount,firingCount,requested[0],requested[1],requested[2],requested[3],requested[4],requested[5],requested[6],campaign_->Cursor().SnapToGrid(),CameraX(),CameraY()); // 자동 입력 실패의 실제 판정을 기록하며 성공으로 대체하지 않는다.
             const auto raw=core.pool.Slot(target);const auto footprint=campaign_->GunTargeting().Footprint(target); // 같은 실제 표적 상태와 확장 전 발자국이다.
             std::fprintf(stderr,"자동 사격 표적: sid%u type%u state%u owner%u extra%u foot(%g,%g,%g,%g)\n",target.value,raw[10],raw[11],raw[34],raw[40],footprint.left,footprint.top,footprint.right,footprint.bottom);
             constexpr std::size_t kDiagnosticLimit=64; // 실패 로그만 제한하며 탐색 후보/성공 조건은 제한하지 않는다.
@@ -717,7 +717,7 @@ std::optional<ScreenPoint> GameWorld::Point(std::string_view label) const {
     // 자동 입력의 건설 목표는 현재 미리보기 치수/기준점으로 마우스 위치만 역산한다. 배치 판정/생성은 실제 클릭 경로를 사용한다.
     if (label.starts_with("placement:")) {
         if (!campaign_) return {};const auto comma=label.find(',');if (comma==std::string_view::npos) return {};const auto x=std::stoi(std::string(label.substr(10,comma-10))),y=std::stoi(std::string(label.substr(comma+1)));if (x<0 || x>=256 || y<0 || y>=256) return {};
-        const auto& p=campaign_->Cursor().Placement();if (p.imageWidth<=0 || p.imageHeight<=0) return {};return ScreenPoint{x*16-scrollX_-p.hotspotX+p.imageWidth/2,y*11-scrollY_-p.hotspotY+p.imageHeight/2};
+        const auto& p=campaign_->Cursor().Placement();if (p.imageWidth<=0 || p.imageHeight<=0) return {};return ScreenPoint{x*16-CameraX()-p.hotspotX+p.imageWidth/2,y*11-CameraY()-p.hotspotY+p.imageHeight/2};
     }
     if (label.starts_with("cell:")) { const auto comma=label.find(','); if (comma==std::string_view::npos) return {}; const int x=std::stoi(std::string(label.substr(5,comma-5))),y=std::stoi(std::string(label.substr(comma+1))); return ToScreen(x-.5,y-.5); } //원본4971e0의+16/+11 역투영에서 논리 칸(x,y)의 내부를 클릭한다. 경계점은 다음 칸이다.
     if (!label.starts_with("world:")) return {}; const auto wanted=o::AsciiLower(label.substr(6));
@@ -749,7 +749,7 @@ void GameWorld::CheckMissionOutcome() {
 // 스모크 관찰용이며 실제 게임 화면에는 구현 세부 정보를 표시하지 않는다.
 std::string GameWorld::Report(bool mask) const {
     std::ostringstream out; out.precision(12);
-    out<<"world\t"<<objects_.size()<<'\t'<<tiles_.size()<<"\nselected\t"<<selected_<<"\ncamera\t"<<scrollX_<<'\t'<<scrollY_<<"\n";
+    out<<"world\t"<<objects_.size()<<'\t'<<tiles_.size()<<"\nselected\t"<<selected_<<"\ncamera\t"<<CameraX()<<'\t'<<CameraY()<<"\n";
     if (campaign_) {
         out<<"raw_input\t"<<selected_<<'\t'<<highlightMode_<<'\t'<<campaign_->LocalConnectionPhase()<<'\t'<<campaign_->LocalConnectionPackets().size()<<"\nraw_packets";
         // 실제 소비된 종류만 진단하며 별도 명령 성공 플래그를 만들지 않는다.
@@ -799,4 +799,10 @@ std::string GameWorld::Report(bool mask) const {
     out<<(campaign_ ? campaign_->World() : *surfaces_).Report();
     return out.str();
 }
+}
+
+namespace netstorm::client { // 실제Session과 기존 값형World의 카메라 수명을 구별한다.
+ClientCameraGlobals& GameWorld::CameraGlobals() { return gameplayGlobals_->Camera(); }
+const ClientCameraGlobals& GameWorld::CameraGlobals() const { return gameplayGlobals_->Camera(); }
+void GameWorld::ApplyCameraPixels(std::int32_t x,std::int32_t y) { auto& camera=CameraGlobals();camera.RequestPixels(x,y);camera.ApplyPixelsToRendererAndSnapshot(x,y);changed_=true; }
 }

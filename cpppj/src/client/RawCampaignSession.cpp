@@ -248,7 +248,8 @@ std::shared_ptr<ClientGameplayGlobals> SessionGameplayGlobals(const RawCampaignS
     if (services.adoptPreparedWorld && (services.installMode!=CampaignInstallMode::ExistingEditor || !services.deferExistingEditorFile || !services.adoptInitializedPlayers || !services.gameplayGlobals || !services.surfaceStorage || !services.localStateGlobals || !services.playerRecords || !services.coreDataGlobals || !services.randomGlobals || !services.spGlobals || !services.processKernel || services.localLogin)) throw std::invalid_argument("준비된 Editor의 같은 전역/표면/State/Player/Core/SP/Kernel 대여 계약"); // 대여 이전에 필수 실제 소유자를 확인하고 캠페인 로그인으로 Editor 전송을 대신하지 않는다.
     if (services.gameplayGlobals && services.gameplayGlobals->Subscribers()!=services.subscriberGlobals) throw std::invalid_argument("Session의 실제 현재 전역/Subscriber 소유자 불일치");
     if (services.gameplayGlobals && services.surfaceStorage && services.gameplayGlobals->Authority()!=services.surfaceStorage->Authority()) throw std::invalid_argument("Session의 실제 현재 전역/표면 권한 소유자 불일치"); // 대여/fresh 쓰기 이전에 정체성을 검증한다.
-    return services.gameplayGlobals ? services.gameplayGlobals : std::make_shared<ClientGameplayGlobals>(services.subscriberGlobals,services.surfaceStorage ? services.surfaceStorage->Authority() : nullptr);
+    if (services.gameplayGlobals && services.surfaceStorage && services.gameplayGlobals->GameAux()!=services.surfaceStorage->GameAux()) throw std::invalid_argument("Session의 실제 게임 보조 owner 불일치"); // 초기화/대여 전에 다른 owner를 거부한다.
+    return services.gameplayGlobals ? services.gameplayGlobals : std::make_shared<ClientGameplayGlobals>(services.subscriberGlobals,services.surfaceStorage ? services.surfaceStorage->Authority() : nullptr,services.surfaceStorage ? services.surfaceStorage->GameAux() : nullptr);
 }
 constexpr std::size_t kCampaignFactoryCapacity=500; // PATCH004fc990의push1f4→0044fb20이확보하는실제0055a4d0목록의DWORD수다.
 constexpr std::array<std::uint32_t,13> kEditorGameplayMessages{0x5b,0x40,0x4f,0x50,0x60,0x61,0x5c,0x5f,0x7d,0x6d,0x3e,0x54,0x58}; // 기존 Carrier→Construction→Factory 등록 순서의 실제13종이며 로그인/응답을 추가하지 않는다.
@@ -351,7 +352,7 @@ struct RawCampaignSession::Impl {
     RawSurfaceWorld world; // 모든 생성/Pop/Graph가 사용하는 단일 raw 월드다.
     RawWorldCore core; // 같은 Pool/장부/해시의 참조만 유지한다.
     std::unique_ptr<RawCampaignCursor> cursor; // 같은 실제 Form/마나/위치/로컬 예측 몸체를 설치 뒤 소유한다.
-    SoundView cursorView{}; // 마우스 위치의 실제 투영에도 현재 단일 카메라/화면 원점을 사용한다.
+    SoundView cursorViewport{}; // 카메라 두값은 사용하지 않는 현재 화면clip 전달자료다.
     CursorDropState& cursorDrop{gameplayGlobals->cursor}; // 초기 HUD와 같은 실제 취득/배치/취소/마우스 전역이다.
     CursorManaGlobals cursorManaGlobals; // 현재 마나 종류/반경과 월드 좌표 제한 전역이다.
     std::unique_ptr<RawCursorMana> cursorMana; // Kernel을 먼저 비운 뒤 해제하는 실제 마나 프레임/수명 몸체다.
@@ -626,8 +627,8 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<GumpFormHost> gumpForms; // 같은Pool의실제Form3와현재UI등록ID/부모삭제알림수명이다.
     std::unique_ptr<RawContentParentNotice> contentNotice; // 부모의 실제 현재 VT로 기본/파생 +24를 분배한다.
     bool& contentSavedGame{localStateGlobals->SavedGame()}; // 내용물 통지/돈 관문도 Login/State와 같은005c85d4의 현재0/1을 직접 읽는다.
-    std::array<std::int32_t,2> contentScreenOrigin{}; // 같은 GameWorld의 현재59a91c/920이며 SetParticleView에서 함께 공급한다.
-    std::array<std::uint32_t,2> contentCamera{}; // 같은 scroll pixel을497490으로 변환한59a900/904 float 비트다.
+    std::array<std::int32_t,2>& contentScreenOrigin{gameplayGlobals->Camera().Snapshot().pixels}; // 같은 Client snapshot의 현재59a91c/920을 직접 빌린다.
+    const std::array<std::uint32_t,2>& contentCamera{gameplayGlobals->Camera().Snapshot().worldBits}; // 분수 좌표를 잃는 픽셀 역산 없이 같은59a900/904 float비트를 직접 빌린다.
     std::uint32_t contentBombBlocked{}; // 005453e8의 초기0이며 폭탄 시각 효과 억제 전역이다.
     std::unique_ptr<RawCarrierContentNotice> carrierContentNotice; // 실제 Walker/Carrier/사제의 가상+24 전체 몸체다.
 
@@ -721,7 +722,7 @@ struct RawCampaignSession::Impl {
     PlayerPlacementAnchorState anchorState; // 현재 같은 Graph의 배치/도착 조회 전역이다.
     std::unique_ptr<RawPlayerPlacementAnchor> anchor; // 같은 hash0/장부를 직접 읽는 getter다.
     RawCampaignMotionState motionState; // 실제 Halt/Arrival/cleanup/BFS의 현재 상태다.
-    std::uint32_t geyserType{122}; // 실제 현재 간헐천 자산 전역이다.
+    std::uint32_t& geyserType{gameplayGlobals->GeyserType()}; // 실제 현재 간헐천 자산 전역이다.
     bool snap{true},retrying{}; // 원본 사제 목적지 스냅/재시도 guard다.
     RawPathStartState start; // 같은 현재 시계/이동 타입을 참조한다.
     RawPathProcessState process; // 같은 Host의 경로 프로세스 전역이다.
@@ -764,7 +765,7 @@ struct RawCampaignSession::Impl {
         coreDataGlobals(input.coreDataGlobals ? input.coreDataGlobals : std::make_shared<ClientCoreDataGlobals>()),
         playerRecords(input.playerRecords ? input.playerRecords : std::make_shared<ClientPlayerRecords>()),playerUse(playerRecords->Acquire()),
         services(std::move(input)),templateStorage(services.templateStorage ? services.templateStorage : std::make_shared<CampaignTemplateStorage>()),headers(templateStorage->Headers()),assets(game,files),metadata(assets.game),
-        world(OriginalEdition::Patch1078,assets.types,assets.frames,metadata.shapes,CampaignLinks(),terrainType,services.processKernel,SessionSurfaceStorage(services,game),services.adoptPreparedWorld,&localStateGlobals->SavedGame(),gameplayGlobals->Authority()),core(world.Core()),
+        world(OriginalEdition::Patch1078,assets.types,assets.frames,metadata.shapes,CampaignLinks(),terrainType,services.processKernel,SessionSurfaceStorage(services,game),services.adoptPreparedWorld,&localStateGlobals->SavedGame(),gameplayGlobals->Authority(),gameplayGlobals->GameAux()),core(world.Core()),
         localSp(services.spGlobals ? nullptr : std::make_unique<ScrambledSpStore>(random,[this] { return seed.Reseed(); })),
         sp(services.spGlobals ? services.spGlobals->Store() : *localSp),hp(core.pool,core.types,core.bookkeeping,rewardState,&sp,SquidRewardHooks{{},services.refreshSp}),
         battleOptions(services.missionOptions ? *services.missionOptions : localBattleOptions),
@@ -776,6 +777,10 @@ struct RawCampaignSession::Impl {
         soundNames(RequireSounds(services)),archerTypes(core.types.size()),missileTypes(core.types.size()),projectileTypes(core.types.size()),
         restrictions(services.missionRestrictions ? *services.missionRestrictions : localRestrictions),
         start{core.processState,priestState.movement.dude,priestState.movement.teleport,priestState.movement.manaBolt,priestState.movement.priest,geyserType,snap,retrying},process{core.processState} {
+        rewardState.sharedPercent=&gameplayGlobals->GameAux()->RefundPercent();rewardState.sharedGeyserPool=&gameplayGlobals->GameAux()->ResourcePool(); // 실제 Reward/LocalGeyser의 같은 물리다.
+        missionStart.sharedAllowAnyCapture=&gameplayGlobals->GameAux()->AllowAnyCapture();missionStart.sharedOrdinaryGeysers=&gameplayGlobals->GameAux()->OrdinaryGeysers(); // Start 출력과 pickup을 같은 DWORD에 연결한다.
+        motionState.carrier.sharedAllowAlliedPickup=&gameplayGlobals->GameAux()->AllowAnyCapture();motionState.carrier.sharedGeyserType=&geyserType;carrierState.sharedGeyserType=&geyserType;constructionState.geyser.sharedGeyserType=&geyserType; // 실제 생성/로딩/도착을 같은 TYPE에 연결한다.
+        farm.sharedArchipelago=&gameplayGlobals->GameAux()->Archipelago();devastationEffectState.sharedSpentCounter=&gameplayGlobals->GameAux()->ResourcePool(); // Login과 별개의 bb0 및 같은595088을 빌린다.
         if (services.deferExistingEditorFile && services.installMode!=CampaignInstallMode::ExistingEditor) throw std::invalid_argument("파일지연은명시ExistingEditor전용입니다");
         objectState.sharedFullDeck=&fullDeck;constructionState.confirm.sharedFullDeck=&fullDeck;anchorState.sharedFullDeck=&fullDeck; // 하위 모듈 생성 전에 같은 장기 DWORD를 빌리며 Prepare 때 사본을 쓰지 않는다.
         ConnectionActivityHooks activity; // ctor에서는 실제 장치를 실행하지 않고 선택된 Receive 위치에서만 필수 경계를 요구한다.
@@ -935,7 +940,7 @@ struct RawCampaignSession::Impl {
         balloon.allocateRegular=[this] { if (pendingCloudRegular) throw std::logic_error("클라우드 플로터 Regular 중복 예약");pendingCloudRegular.reset(::operator new(sizeof(RegularProcess),std::nothrow));return pendingCloudRegular!=nullptr; };
         balloon.constructRegular=[this](Sid parent,std::uint32_t event,float delay) {
             if (!pendingCloudRegular) throw std::logic_error("클라우드 플로터 Regular 실제 예약 누락");auto* storage=pendingCloudRegular.release();auto* process=new(storage) RegularProcess(event,delay);
-            auto* attached=static_cast<RegularProcess*>(core.processes.Attach(std::unique_ptr<RegularProcess>(process),46,parent,0x50));if (attached) attached->ResetTask(event,core.processState.now);
+            auto* attached=static_cast<RegularProcess*>(core.processes.Attach(std::unique_ptr<RegularProcess>(process),46,parent,0x50));if (attached) attached->ResetTask(event,core.processState.Now());
         }; // 실제496e80은 부착 후 현재 시각을 쓴다.
         balloonBody=std::make_unique<RawBalloonBody>(core.pool,core.types,core.spots,assetState.Boss(),*carrier,priests->Carrier(),std::move(balloon));core.postPop.SetBalloonPostPop(balloonBody.get());
         // 빈/내장 타입을 포함해 실제 TYPE+98의 판본 초기값과 파싱값을 같은 번호의 모든 소비자에게 전달한다.
@@ -1111,11 +1116,12 @@ struct RawCampaignSession::Impl {
         particles=std::make_unique<RawCampaignParticles>(core,random,assets.game.Palette(),[this](float x,float y,std::string_view name) {
             if (!services.sound.playOnceAt) throw std::logic_error("캠페인 빔 실제 파일명 음향 미연결");services.sound.playOnceAt(x,y,soundNames.Lookup(name),0,0);
         },std::move(shrapnel));
+        particles->BindCameraView(gameplayGlobals->Camera().Snapshot()); // 생성 직후부터 같은 전역 현재값을 사용한다.
         auto combatEffects=services.archer;
         // 반더는 빔 생성 뒤 초기 source/target snapshot으로 피해/회피를 처리한다.
         combatEffects.beam.create=[this](Sid source,Sid target) { static_cast<void>(particles->AddBeam(source,target,std::string{"shortZap.wav"})); };
-        combatEffects.beam.refresh=[this](Sid source) { gunHit->SetTime(source,core.processState.now); };
-        combatEffects.beam.hit=[this](Sid source,Sid target) { gunHit->Hit(source,target,core.processState.now); };
+        combatEffects.beam.refresh=[this](Sid source) { gunHit->SetTime(source,core.processState.Now()); };
+        combatEffects.beam.hit=[this](Sid source,Sid target) { gunHit->Hit(source,target,core.processState.Now()); };
         // 실제 SID의 현재 좌표와 같은 이름표/위치 재생 함수를 사용한다. 설치 전 world_ UI 포인터를 캡처하지 않는다.
         if (!combatEffects.animation.common.sound) combatEffects.animation.common.sound=[this](Sid sid,std::string_view name) {
             const auto raw=core.pool.Slot(sid); // 비정렬 원본 float 좌표를 읽는 현재 부모 슬롯이다.
@@ -1173,7 +1179,7 @@ struct RawCampaignSession::Impl {
         };
         // Damageable의 실제6700 재시도는 같은30/17/47·시계·HP·수명을 사용하는 기존 건설 시작으로 전달한다.
         assetEffects.regular.startConstruction=[this](Sid parent,float duration) {
-            if (!building) throw std::logic_error("실제 건설 시작의 세션 처리기 미설치");PrepareBuilding(core.processState.now);building->Start(parent,duration);
+            if (!building) throw std::logic_error("실제 건설 시작의 세션 처리기 미설치");PrepareBuilding(core.processState.Now());building->Start(parent,duration);
         };
         assetEffects.regular.beginFactoryUpgrade=[this](Sid parent,float duration) { if (!factoryUpgrade) throw std::logic_error("Factory 실제 업그레이드 그림 미설치");factoryUpgrade->Begin(parent,duration); };
         assetEffects.regular.finishFactoryUpgrade=[this](Sid parent) { if (!factoryUpgrade) throw std::logic_error("Factory 실제 업그레이드 완료 미설치");return factoryUpgrade->Finish(parent); };
@@ -1393,7 +1399,7 @@ struct RawCampaignSession::Impl {
         hooks.addRegular=[this](Sid sid,std::uint32_t event,float payload) {
             if (!pendingFlareRegular) throw std::logic_error("플레어 Regular 실제 예약 누락");auto* storage=pendingFlareRegular.release();RegularProcess* process{};
             try { process=new(storage) RegularProcess(event,payload); }catch (...) { ::operator delete(storage);throw; }
-            auto* attached=dynamic_cast<RegularProcess*>(core.processes.Attach(std::unique_ptr<RegularProcess>(process),46,sid,0x50));if (!attached) throw std::logic_error("플레어 Regular 실제 부착 실패");attached->SetNextTime(core.processState.now);
+            auto* attached=dynamic_cast<RegularProcess*>(core.processes.Attach(std::unique_ptr<RegularProcess>(process),46,sid,0x50));if (!attached) throw std::logic_error("플레어 Regular 실제 부착 실패");attached->SetNextTime(core.processState.Now());
         };
         hooks.frame=[this](Sid sid,std::int32_t frame,std::uint32_t flags) { core.frame.Set(sid,frame,flags); };
         hooks.update=[this](Sid sid) { core.display.Update(core.pool.Slot(sid)); };
@@ -1450,7 +1456,7 @@ struct RawCampaignSession::Impl {
         lifetimeHooks.unpop=[this](Sid sid,std::uint32_t flags) { world.Unpop(sid,flags); };lifetimeHooks.repop=[this](Sid sid,std::uint32_t flags) { world.Repop(sid,flags); };
         lifetimeHooks.rebuild=[this](Sid sid) { fenceRebuild->Rebuild(sid); };
         lifetimeHooks.reserveRegular=[this] { try { fencePendingRegular=std::make_unique<RegularProcess>(2,0.10000000149011612f);return true; }catch (const std::bad_alloc&) { return false; } };
-        lifetimeHooks.addRegular=[this](Sid sid,std::uint32_t event,float) { if (!fencePendingRegular) throw std::logic_error("펜스 실제 예약 객체 누락");auto* process=dynamic_cast<RegularProcess*>(core.processes.Attach(std::move(fencePendingRegular),46,sid,0x50));if (!process) throw std::logic_error("펜스 Regular 부모 부착 실패");process->ResetTask(event,core.processState.now); };
+        lifetimeHooks.addRegular=[this](Sid sid,std::uint32_t event,float) { if (!fencePendingRegular) throw std::logic_error("펜스 실제 예약 객체 누락");auto* process=dynamic_cast<RegularProcess*>(core.processes.Attach(std::move(fencePendingRegular),46,sid,0x50));if (!process) throw std::logic_error("펜스 Regular 부모 부착 실패");process->ResetTask(event,core.processState.Now()); };
         lifetimeHooks.damageable=[this](Sid sid,std::uint32_t flags) { damageablePre->PreDestroy(sid,flags); };fenceLifetime=std::make_unique<RawFenceLifetime>(core.pool,std::move(lifetimeHooks));
     }
     // 가상 주소를 호출하지 않고 검증한 일반 Damageable의 실제 표만 선택한다.
@@ -1556,7 +1562,7 @@ struct RawCampaignSession::Impl {
             const Sid form{static_cast<std::uint16_t>(Read(fields.bytes,60))};auto* process=dynamic_cast<WindAviaryProcess*>(core.processes.FromForm(form));
             if (!process || &process->Fields()!=&fields) throw std::logic_error("데빌메이커종료Host/raw 불일치");core.processes.Kill(*process,0);
         };
-        windAviary=std::make_unique<RawWindAviaryProcess>(core.pool,WindAviaryGlobals{core.ownerMode.fort,gunTargetState.friendlyFire,core.processState.Server(),assetState.Boss(),globals.editor,gunState.checking,core.processState.now,windAviaryType,windFlyerType,windAviaryAsset},std::move(hooks));
+        windAviary=std::make_unique<RawWindAviaryProcess>(core.pool,WindAviaryGlobals{core.ownerMode.fort,gunTargetState.friendlyFire,core.processState.Server(),assetState.Boss(),globals.editor,gunState.checking,core.processState.Now(),windAviaryType,windFlyerType,windAviaryAsset},std::move(hooks));
     }
     void ConnectSunAviary() {
         SunAviaryProcessHooks hooks;hooks.findProcess=[this](Sid parent,std::uint32_t type) { return FindAttachedProcess(core.pool,parent,type); };
@@ -1586,7 +1592,7 @@ struct RawCampaignSession::Impl {
             return current ? &current->Fields() : nullptr;
         };
         hooks.unpop=[this](Sid sid,std::uint32_t flags) { world.Unpop(sid,flags); };hooks.repop=[this](Sid sid,std::uint32_t flags) { world.Repop(sid,flags); }; // 홈 통지의 직접 프레임 쓰기 앞뒤 공간 효과다.
-        sunAviary=std::make_unique<RawSunAviaryProcess>(core.pool,SunAviaryProcessGlobals{core.processState.Server(),globals.editor,gunState.checking,core.processState.now,sunAviaryType,sunFlyerType},std::move(hooks));
+        sunAviary=std::make_unique<RawSunAviaryProcess>(core.pool,SunAviaryProcessGlobals{core.processState.Server(),globals.editor,gunState.checking,core.processState.Now(),sunAviaryType,sunFlyerType},std::move(hooks));
     }
     // 같은 현재 원문/Host의 생성·프레임·QA·패킷을 연결한다. 미복원 BaseFlyer 하위는 선택 시 거부한다.
     void ConnectRainAviary() {
@@ -1609,7 +1615,7 @@ struct RawCampaignSession::Impl {
         };
         hooks.create=[this](std::uint32_t type,std::uint32_t flags) { return world.Create(type,flags); };hooks.setOwner=[this](Sid sid,std::uint32_t owner) { ownership->SetOwner(sid,owner); };
         hooks.pop=[this](Sid sid,float x,float y,std::uint32_t flags) { world.Pop(sid,x,y,flags); };hooks.bindFlyer=[this](Sid sid,Sid home) { flyer->Bind(sid,home); };
-        rainAviary=std::make_unique<RawRainAviaryProcess>(core.pool,RainAviaryProcessGlobals{core.ownerMode.fort,gunTargetState.friendlyFire,core.processState.Server(),globals.editor,gunState.checking,core.processState.now,rainAviaryType,rainFlyerType},std::move(hooks));
+        rainAviary=std::make_unique<RawRainAviaryProcess>(core.pool,RainAviaryProcessGlobals{core.ownerMode.fort,gunTargetState.friendlyFire,core.processState.Server(),globals.editor,gunState.checking,core.processState.Now(),rainAviaryType,rainFlyerType},std::move(hooks));
     }
     // 실제 원본149/50e668의 전용 공격을 같은 finder/피해/빔/시계에 연결한다.
     void ConnectArcSpire() {
@@ -1633,7 +1639,7 @@ struct RawCampaignSession::Impl {
         hooks.reserveRegular=[this] { try { pendingIceRegular=std::make_unique<RegularProcess>(0,0.0F);return true; }catch (const std::bad_alloc&) { return false; } };
         hooks.regular=[this](Sid sid,std::uint32_t event,float period) {
             if (!pendingIceRegular) throw std::logic_error("성장형 아이스 Regular 예약 누락");auto* reserved=pendingIceRegular.get();std::destroy_at(reserved);std::construct_at(reserved,event,period);
-            auto* task=static_cast<RegularProcess*>(core.processes.Attach(std::move(pendingIceRegular),46,sid,0x50));if (!task) throw std::logic_error("성장형 아이스 Regular 부착 실패");task->ResetTask(event,core.processState.now);
+            auto* task=static_cast<RegularProcess*>(core.processes.Attach(std::move(pendingIceRegular),46,sid,0x50));if (!task) throw std::logic_error("성장형 아이스 Regular 부착 실패");task->ResetTask(event,core.processState.Now());
         };
         hooks.basePop=[this](Sid sid,std::uint32_t flags) { core.postPop.PostPopBase(sid,flags); };
         hooks.grid=[this](float x,float y) {
@@ -1650,7 +1656,7 @@ struct RawCampaignSession::Impl {
         hooks.owner=[this](Sid sid,std::uint8_t owner) { core.owner.Set(sid,owner); };
         hooks.pop=[this](Sid sid,float x,float y,std::uint32_t flags) { world.Pop(sid,x,y,flags); };
         hooks.destroy=[this](Sid sid,std::uint32_t flags) { world.Destroy(sid,flags); };
-        hooks.dropIsland=[this](float x,float y,std::uint32_t flags,std::uint32_t owner) { PrepareBuilding(core.processState.now);buildingEffects->DropIsland(x,y,flags,owner); };
+        hooks.dropIsland=[this](float x,float y,std::uint32_t flags,std::uint32_t owner) { PrepareBuilding(core.processState.Now());buildingEffects->DropIsland(x,y,flags,owner); };
         hooks.damageablePost=[this](Sid sid,std::uint32_t flags) { PrepareDamageablePost();damageablePost->PostDestroy(sid,flags); };
         hooks.basePost=[this](Sid sid,std::uint32_t flags) { world.CommonDeletion().PostDestroy(sid,flags); };
         hooks.setFrame=[this](Sid sid,std::int32_t frame,std::uint32_t flags) { core.frame.Set(sid,frame,flags); };
@@ -1668,7 +1674,7 @@ struct RawCampaignSession::Impl {
         hooks.reserveRegular=[this] { try { pendingAcidRegular=std::make_unique<RegularProcess>(0,0.0F);return true; }catch (const std::bad_alloc&) { return false; } };
         hooks.regular=[this](Sid sid,std::uint32_t event,float delay) {
             if (!pendingAcidRegular) throw std::logic_error("애시드 Regular 예약 누락");auto* reserved=pendingAcidRegular.get();std::destroy_at(reserved);std::construct_at(reserved,event,delay);
-            auto* task=static_cast<RegularProcess*>(core.processes.Attach(std::move(pendingAcidRegular),46,sid,0x50));if (!task) throw std::logic_error("애시드 Regular 부착 실패");task->ResetTask(event,core.processState.now);
+            auto* task=static_cast<RegularProcess*>(core.processes.Attach(std::move(pendingAcidRegular),46,sid,0x50));if (!task) throw std::logic_error("애시드 Regular 부착 실패");task->ResetTask(event,core.processState.Now());
         };
         hooks.damage=hits->DamageHooks({}).damage;
         hooks.broadcast=[this](std::span<std::uint8_t> packet) { broadcast->Send(packet); };
@@ -1694,7 +1700,7 @@ struct RawCampaignSession::Impl {
         hooks.parentDying=[this](FlyerProcessFields& fields) { if (Read(fields.bytes,0)==0x509f24U) sunFlyerFrame->ParentDying(fields);else flyerFrame->ParentDying(fields); };
         hooks.pieces=[this](Sid parent) { static_cast<void>(particles->AddShrapnel(parent,ShrapnelKind::Explosion)); };
         hooks.destroy=[this](Sid parent,std::uint32_t flags) { static_cast<void>(world.Destroy(parent,flags)); };
-        flyer=std::make_unique<RawFlyerProcess>(core.pool,core.types,FlyerProcessGlobals{core.processState.Server(),core.processState.now,flyerProcessType},std::move(hooks));
+        flyer=std::make_unique<RawFlyerProcess>(core.pool,core.types,FlyerProcessGlobals{core.processState.Server(),core.processState.Now(),flyerProcessType},std::move(hooks));
         ConnectFlyerFrame(); // 최초 Pop/Kernel보다 먼저 현재 같은 Frame 소비자를 설치한다.
         FlyerPostPopHooks post;post.allocateRainProcess=[this] {
             auto* allocation=std::malloc(0x70);if (!allocation) return false;FlyerProcessFields fields;std::memcpy(fields.bytes.data(),allocation,0x70);std::free(allocation);
@@ -1723,7 +1729,7 @@ struct RawCampaignSession::Impl {
             static_cast<void>(core.processes.Attach(std::unique_ptr<SoundProcess>(process),soundState.processType,parent,0x10));
         };
         post.create=[this](std::uint32_t type,std::uint32_t flags) { return world.Create(type,flags); };post.pop=[this](Sid sid,float x,float y,std::uint32_t flags) { world.Pop(sid,x,y,flags); };
-        post.unpop=[this](Sid sid,std::uint32_t flags) { world.Unpop(sid,flags); };post.initializeUnit=[this](Sid sid) { gunHit->SetTime(sid,core.processState.now); };
+        post.unpop=[this](Sid sid,std::uint32_t flags) { world.Unpop(sid,flags); };post.initializeUnit=[this](Sid sid) { gunHit->SetTime(sid,core.processState.Now()); };
         post.shadowOffset=[this](Sid sid) { const auto table=Read(core.pool.Slot(sid),0);if (table==0x50a050U) return std::array<float,2>{0,0};if (table==0x50a1e8U) return std::array<float,2>{-0.6f,3.5f};if (table!=0x50a388U) throw std::logic_error("다른 비행체 그림자 offset 미복원");return std::array<float,2>{0.5f,0.5f}; }; // Wind45ec30/Sun45ef10/Rain45faa0의실제상수다.
         post.damageable=[this](Sid sid,std::uint32_t flags) { carrier->DamageablePostPop(sid,flags); };
         post.hasRegular=[this](Sid sid,std::uint32_t event) { return core.processes.FindEvent(sid,event)!=nullptr; };
@@ -1753,7 +1759,7 @@ struct RawCampaignSession::Impl {
         hooks.sunNotify=[this](FlyerProcessFields& fields,std::uint32_t message,std::uint32_t first,std::uint32_t second) { sunFlyerFrame->Notify(fields,message,first,second); };
         hooks.offset=[this](Sid sid,bool home) { const auto table=Read(core.pool.Slot(sid),0);if (table==0x50a050U) return std::array<float,2>{0,0};if (table==0x50a1e8) return std::array<float,2>{2,home ? -2.5f : -4.0f};if (table!=0x50a388) throw std::logic_error("다른 플라이어 이동 offset 미복원");return std::array<float,2>{1,0}; }; // Wind45ec30/Sun45eed0/45eef0/Rain45fa80의실제값이다.
         hooks.scatter=[this](Sid target,Sid flyer) { return flyerTarget->Scatter(target,flyer); };
-        hooks.refreshTime=[this](Sid sid) { gunHit->SetTime(sid,core.processState.now); };hooks.hit=[this](Sid sid,Sid target) { gunHit->Hit(sid,target,core.processState.now); };
+        hooks.refreshTime=[this](Sid sid) { gunHit->SetTime(sid,core.processState.Now()); };hooks.hit=[this](Sid sid,Sid target) { gunHit->Hit(sid,target,core.processState.Now()); };
         hooks.removeSound=[this](Sid sid,std::uint32_t type) {
             const auto form=FindAttachedProcess(core.pool,sid,type);if (form.value && (core.processState.Server() || (form.value>4 && form.value<core.pool.Layout().serverFirst))) static_cast<void>(world.Destroy(form,0)); // 원본004b1a90(0,1)은 첫 일치 하나를 실제 삭제한다.
         };
@@ -1796,8 +1802,8 @@ struct RawCampaignSession::Impl {
         sun.baseParentDying=[this](FlyerProcessFields& fields) { flyerFrame->ParentDying(fields); };
         std::vector<SunFlyerFrameType> bombs(core.types.size()); // +170은A개수,+134는B첫번호,+174는B개수의 원본 값 그대로다.
         for (std::size_t type=0;type<bombs.size();++type) bombs[type]={core.frames[type].Run('A').count,core.frames[type].Run('B').first,core.frames[type].Run('B').count,missileTypes[type].firingSound}; // end를first+count로 교체하지 않는다.
-        flyerFrame=std::make_unique<RawFlyerFrame>(core.pool,core.types,details,std::span(soundState.typeFrames).first(core.types.size()),FlyerFrameGlobals{core.processState.Server(),assetState.Boss(),gunState.checking,core.processState.now,soundState.frame,sunFlyerType,windFlyerType,rainFlyerType,sunAviaryType,soundState.processType},std::move(hooks));
-        sunFlyerFrame=std::make_unique<RawSunFlyerFrame>(core.pool,core.shapes,bombs,SunFlyerFrameGlobals{assetState.Boss(),flyerPaused,core.processState.now,sunBombType},std::move(sun));
+        flyerFrame=std::make_unique<RawFlyerFrame>(core.pool,core.types,details,std::span(soundState.typeFrames).first(core.types.size()),FlyerFrameGlobals{core.processState.Server(),assetState.Boss(),gunState.checking,core.processState.Now(),soundState.frame,sunFlyerType,windFlyerType,rainFlyerType,sunAviaryType,soundState.processType},std::move(hooks));
+        sunFlyerFrame=std::make_unique<RawSunFlyerFrame>(core.pool,core.shapes,bombs,SunFlyerFrameGlobals{assetState.Boss(),flyerPaused,core.processState.Now(),sunBombType},std::move(sun));
         WindFlyerHooks wind; // 같은실제프레임표와효과를전용처리기에연결한다.
         wind.runCount=[this](Sid sid) { const auto raw=core.pool.Slot(sid);const auto frame=std::bit_cast<std::int32_t>(Read(raw,36));const auto& table=core.frames[raw[10]];if (frame<0 || static_cast<std::size_t>(frame)>=table.Codes().size()) throw std::out_of_range("더스트 데빌글자프레임범위");return table.Run(table.Codes()[static_cast<std::size_t>(frame)].side).count; };
         wind.assertion=SessionMissing<void,std::uint32_t>();wind.damageable=[this](Sid sid,std::uint32_t event,std::uint32_t count,float value) { return assetBindings->Regular().DamageableHandle(sid,event,count,value); };
@@ -1809,7 +1815,7 @@ struct RawCampaignSession::Impl {
         wind.weaken=[this](Sid sid) { PrepareDamageablePost();damageablePost->Weaken(sid); };
         windActiveSounds.resize(core.types.size());
         for (const auto& asset:assets.game.Types()) { const auto name=asset.definition.String("activeSound");windActiveSounds[70+asset.block]=name && !name->empty() ? soundNames.Lookup(*name) : 0U; } // 원본TYPE+6c 토큰을같은이름표에서읽는다.
-        windFlyer=std::make_unique<RawWindFlyer>(core.pool,core.hash,core.types,std::span(soundState.typeFrames).first(core.types.size()),windActiveSounds,core.processState.now,assetState.Boss(),soundState.frame,std::move(wind));
+        windFlyer=std::make_unique<RawWindFlyer>(core.pool,core.hash,core.types,std::span(soundState.typeFrames).first(core.types.size()),windActiveSounds,core.processState.Now(),assetState.Boss(),soundState.frame,std::move(wind));
         ConnectFlyerTarget(); // 첫 Kernel 프레임 이전에 같은 표적 선택 본체를 설치한다.
     }
     // 원본의 일반 finder/의존 watcher/현재 Host 부모/표적 문맥을 동일 월드에 연결한다.
@@ -1826,7 +1832,7 @@ struct RawCampaignSession::Impl {
         hooks.command=[this](Sid parent,std::uint32_t command) { BroadcastFlyerCommand(parent,command); };
         std::vector<float> ranges(core.types.size()); // 파싱한 같은188TYPE의 실제 사거리다.
         for (std::size_t type=0;type<ranges.size();++type) ranges[type]=gunTypes[type].range; // 별도 추정 사거리를 만들지 않는다.
-        flyerTarget=std::make_unique<RawFlyerTarget>(core.pool,core.types,ranges,FlyerTargetGlobals{core.processState.Server(),gunState.checking,core.processState.now,sunFlyerType,flyerProcessEnd,flyerDependType},std::move(hooks));
+        flyerTarget=std::make_unique<RawFlyerTarget>(core.pool,core.types,ranges,FlyerTargetGlobals{core.processState.Server(),gunState.checking,core.processState.Now(),sunFlyerType,flyerProcessEnd,flyerDependType},std::move(hooks));
     }
     // 로컬 표적/복귀 상태는 호출자가 이미 썼다. 원본4e2e30처럼 현재 원격 연결에만 packet86을 방송한다.
     void BroadcastFlyerCommand(Sid parent,std::uint32_t command) const {
@@ -1855,7 +1861,7 @@ struct RawCampaignSession::Impl {
         };
         steal.commonHalt=[this](Sid sid) { if (!motion) throw std::logic_error("이동 설치 전 크랩 정지");return motion->CommonHalt(sid); };
         steal.allocateRegular=[this] { try { pendingCarrierTask=std::make_unique<RegularProcess>(0,0.0F);return true; }catch (const std::bad_alloc&) { return false; } };
-        steal.regular=[this](Sid sid,std::uint32_t event,float delay) { if (!pendingCarrierTask || delay!=1.0F) throw std::logic_error("크랩 Regular 예약 누락");auto* reserved=pendingCarrierTask.get();std::destroy_at(reserved);std::construct_at(reserved,event,delay);auto* task=static_cast<RegularProcess*>(core.processes.Attach(std::move(pendingCarrierTask),46,sid,0x50));task->ResetTask(event,core.processState.now); };
+        steal.regular=[this](Sid sid,std::uint32_t event,float delay) { if (!pendingCarrierTask || delay!=1.0F) throw std::logic_error("크랩 Regular 예약 누락");auto* reserved=pendingCarrierTask.get();std::destroy_at(reserved);std::construct_at(reserved,event,delay);auto* task=static_cast<RegularProcess*>(core.processes.Attach(std::move(pendingCarrierTask),46,sid,0x50));task->ResetTask(event,core.processState.Now()); };
         steal.check=[this](Sid sid) { static_cast<void>(priests->CarrierCheck().Check(sid)); };
         steal.damageablePostPop=[this](Sid sid,std::uint32_t flags) { carrier->DamageablePostPop(sid,flags); };
         carrierSteal=std::make_unique<RawCarrierSteal>(core.pool,core.hash,core.types,assetState.Boss(),globals.editor,playerState.battleOwner,alliances,motionState.halt.carrierType,motionState.carrier.priestType,stealHeader,stealHaltCounter,std::move(steal));
@@ -1883,7 +1889,7 @@ struct RawCampaignSession::Impl {
         nugget.construct=[this](Sid sid,std::uint32_t event,float payload) {
             if (!pendingNuggetRegular) throw std::logic_error("너겟 Regular 생성 전 확보 메모리 없음");
             auto* reserved=pendingNuggetRegular.get();std::destroy_at(reserved);std::construct_at(reserved,event,payload); // 확보한 객체를 같은 주소에서 실제 인자로 생성하며 두 번째 할당을 하지 않는다.
-            auto* attached=static_cast<RegularProcess*>(core.processes.Attach(std::move(pendingNuggetRegular),46,sid,0x50));if (attached) attached->ResetTask(event,core.processState.now);
+            auto* attached=static_cast<RegularProcess*>(core.processes.Attach(std::move(pendingNuggetRegular),46,sid,0x50));if (attached) attached->ResetTask(event,core.processState.Now());
         };
         nugget.damageable=[this](Sid sid,std::uint32_t flags) { carrier->DamageablePostPop(sid,flags); };
         NuggetRegularHooks nuggetEvents;nuggetEvents.allocate=nugget.allocate;nuggetEvents.construct=nugget.construct; // 같은확보메모리/Host를PostPop과왕복끝점에서공유한다.
@@ -1913,7 +1919,7 @@ struct RawCampaignSession::Impl {
         };
         preview.destroy=[this](Sid sid,std::uint32_t flags) { static_cast<void>(world.Destroy(sid,flags)); };
         preview.assertion=SessionMissing<void>();
-        contentPreviewProcess=std::make_unique<RawContentPreviewProcess>(core.pool,core.processState.now,soundState.processType,std::move(preview));
+        contentPreviewProcess=std::make_unique<RawContentPreviewProcess>(core.pool,core.processState.Now(),soundState.processType,std::move(preview));
         CarrierRegularHooks hooks;
         hooks.find=[this](Sid parent,std::uint32_t mask,std::uint32_t kind,std::uint32_t index) { return priests->Carrier().FindContained(parent,mask,kind,index); };
         hooks.create=[this](std::uint32_t type,std::uint32_t flags) { return world.Create(type,flags); };
@@ -1951,7 +1957,7 @@ struct RawCampaignSession::Impl {
             return static_cast<RegularProcess*>(core.processes.Attach(std::move(pendingCarrierTask),shared ? 61U : 46U,sid,0x50));
         };
         task.assertion=[] { throw std::logic_error("원본 Carrier.cpp407 낙하 task 교체 진단"); };
-        carrierTask=std::make_unique<RawCarrierTask>(core.pool,core.processState.now,std::move(task));
+        carrierTask=std::make_unique<RawCarrierTask>(core.pool,core.processState.Now(),std::move(task));
         CarrierFallStartHooks begin;begin.hasRegular=[this](Sid sid,std::uint32_t event) { return core.processes.FindEvent(sid,event)!=nullptr; };
         begin.movementType=[this](std::uint32_t type) { return priests->MovementProcessType(type); };
         begin.removeMovement=[this](Sid sid,std::uint32_t type) { RawContainedLookup lookup(core.pool,[this](Sid target,std::uint32_t flags) { static_cast<void>(world.Destroy(target,flags)); });static_cast<void>(lookup.Find(sid,type,0,true)); };
@@ -2083,7 +2089,7 @@ struct RawCampaignSession::Impl {
         flyerPre=std::make_unique<RawFlyerPreDestroy>(core.pool,FlyerPreDestroyHooks{[this](Sid sid,std::uint32_t flags) { world.Destroy(sid,flags); },[this](Sid sid,std::uint32_t flags) { damageablePre->PreDestroy(sid,flags); }});
         auto post=services.damageablePost;
         if (!post.dropDude) post.dropDude=[this](Sid source,std::int32_t index,bool randomPoint) { dudeDrop->Drop(source,index,randomPoint); };
-        if (!post.dropIsland) post.dropIsland=[this](float x,float y,std::uint32_t flags,std::uint32_t owner) { if (!buildingEffects) throw std::logic_error("파괴 후 실제 받침 정리 설치 전 호출");PrepareBuilding(core.processState.now);buildingEffects->DropIsland(x,y,flags,owner); };
+        if (!post.dropIsland) post.dropIsland=[this](float x,float y,std::uint32_t flags,std::uint32_t owner) { if (!buildingEffects) throw std::logic_error("파괴 후 실제 받침 정리 설치 전 호출");PrepareBuilding(core.processState.Now());buildingEffects->DropIsland(x,y,flags,owner); };
         post.regular=[this](Sid sid,std::uint32_t event,float payload,std::uint32_t count) { auto* process=core.processes.AddRegular(sid,event,payload);if (!process) throw std::bad_alloc();process->SetInitialCount(count); };
         post.hasBridgeFall=[this](Sid sid) { return HasScheduledBridgeFall(core.processes,sid); };post.notifySurface=[this](Sid sid) { core.building.NotifySurface(sid); };
         post.displayUpdate=[this](Sid sid) { core.display.Update(core.pool.Slot(sid)); };post.destroy=[this](Sid sid,std::uint32_t flags) { world.Destroy(sid,flags); };
@@ -2102,7 +2108,7 @@ struct RawCampaignSession::Impl {
         geyser.registerAi=[this](Sid sid,std::uint32_t state) { RawGeyserAiRegistration current(core.pool.Edition(),players);current.BindPatch([this](auto token,auto number,auto operation) { aiWorld->Geyser(token,number,operation); });current.Register(sid.value,state); }; // 삭제 통지도 최초 Pop과 같은 실제 AI 분류 목록을 사용한다.
         geyser.damageablePre=[this](Sid sid,std::uint32_t flags) { damageablePre->PreDestroy(sid,flags); };
         geyser.damageablePost=[this](Sid sid,std::uint32_t flags) { PrepareDamageablePost();damageablePost->PostDestroy(sid,flags); };
-        geyser.dropIsland=[this](float x,float y,std::uint32_t flags,std::uint32_t owner) { PrepareBuilding(core.processState.now);buildingEffects->DropIsland(x,y,flags,owner); };
+        geyser.dropIsland=[this](float x,float y,std::uint32_t flags,std::uint32_t owner) { PrepareBuilding(core.processState.Now());buildingEffects->DropIsland(x,y,flags,owner); };
         geyserLifetime=std::make_unique<RawGeyserLifetime>(core.pool,assetState.geysers,globals.editor,std::move(geyser));
     }
     // 각 명시 요청에서 현재 실제 소유자/서버/권한/요새/타입만 공급한다. Player/자원/지도는 복사하지 않는다.
@@ -2138,8 +2144,8 @@ struct RawCampaignSession::Impl {
         RawCampaignConstructionGameplay gameplay; // 첫 객체 설치 뒤 선택될 현재 원본 하위만 지연 연결한다.
         gameplay.setOwner=[this](Sid sid,std::uint32_t owner) { priests->SetOwner(sid,owner); }; // 같은 Pool의 사제 가상+74와 나머지 공통 소유자를 분배한다.
         gameplay.request.mayPlace=[this](const CanonPlacementQuery& query) { return MayPlaceGameplay(query); };
-        gameplay.request.displace=[this](float x,float y,std::uint32_t type,std::uint32_t owner) { if (!buildingEffects) throw std::logic_error("요청의 실제 건설 효과 미설치");PrepareBuilding(core.processState.now);return buildingEffects->Displace(x,y,type,owner); };
-        gameplay.request.cancel=[this](float x,float y,std::uint32_t flags,std::uint32_t owner) { if (!buildingEffects) throw std::logic_error("요청 실패의 실제 섬 정리 미설치");PrepareBuilding(core.processState.now);buildingEffects->DropIsland(x,y,flags,owner); };
+        gameplay.request.displace=[this](float x,float y,std::uint32_t type,std::uint32_t owner) { if (!buildingEffects) throw std::logic_error("요청의 실제 건설 효과 미설치");PrepareBuilding(core.processState.Now());return buildingEffects->Displace(x,y,type,owner); };
+        gameplay.request.cancel=[this](float x,float y,std::uint32_t flags,std::uint32_t owner) { if (!buildingEffects) throw std::logic_error("요청 실패의 실제 섬 정리 미설치");PrepareBuilding(core.processState.Now());buildingEffects->DropIsland(x,y,flags,owner); };
         gameplay.confirm.findBuilder=[this](std::uint32_t owner,std::uint32_t type,float x,float y) {
             if (!anchor) throw std::logic_error("일반 확정의 실제 기준점 미설치");const auto value=anchor->Locate(owner,type,x,y);
             if (value>=core.pool.Capacity()) throw std::out_of_range("일반 확정 기준점 SID 범위 오류");return Sid{static_cast<std::uint16_t>(value)};
@@ -2154,7 +2160,7 @@ struct RawCampaignSession::Impl {
             RawBoardApproach approach([this](float px,float py) { return anchor->GraphAt(px,py); });return approach.Find(rect,x,y,flags);
         };
         gameplay.notice.tryMove=[this](Sid priest,float x,float y,Sid target) { if (!motion) throw std::logic_error("일반 통지의 실제54 미설치");return motion->Paths().StartPriest({priest,{x,y},0,target.value,0,0,0})!=nullptr; };
-        gameplay.notice.start=[this](Sid parent,std::uint32_t bits) { if (!building) throw std::logic_error("일반 통지의 실제30 미설치");PrepareBuilding(core.processState.now);building->Start(parent,std::bit_cast<float>(bits)); };
+        gameplay.notice.start=[this](Sid parent,std::uint32_t bits) { if (!building) throw std::logic_error("일반 통지의 실제30 미설치");PrepareBuilding(core.processState.Now());building->Start(parent,std::bit_cast<float>(bits)); };
         construction=std::make_unique<RawCampaignConstructionBindings>(world,hp,sp,rewardState,metadata.frames,chunks,players,*broadcast,constructionState,
             PlayerGeyserBoundsState{core.ownerMode.battle,objectState.mission,core.ownerMode.challenge,geyserMapSize,piece,playerDirections},
             recentGeysers,assetState.geysers,std::move(effects),std::move(gameplay));
@@ -2219,7 +2225,7 @@ struct RawCampaignSession::Impl {
             else text=(value.kind==AiObjectLogKind::MadeGeyserIneligible ? "Made Geyser " : "Cannot make Geyser ")+std::to_string(value.object)+" Ineligible.\n";
             services.player.log(29,"AI"+std::to_string(std::bit_cast<std::int32_t>(Read(raw,0x260)))+": "+text+"\n");
         }; // 기존 피해 로그와 같은 원본 종류29/현재 Player 장치를 사용한다.
-        aiObjects=std::make_unique<RawAiObjectNotice>(aiMemory,core.pool,core.types,players,core.processState.now,researchOutpost,[this] { return core.ownerMode.challenge; },std::move(objects));
+        aiObjects=std::make_unique<RawAiObjectNotice>(aiMemory,core.pool,core.types,players,core.processState.Now(),researchOutpost,[this] { return core.ownerMode.challenge; },std::move(objects));
         core.postPop.BindPatchAiNotice([this](auto owner,auto sid,auto added) { aiObjects->Notice(owner,sid,added); });world.CommonDeletion().BindPatchAiNotice([this](auto owner,auto sid,auto added) { aiObjects->Notice(owner,sid,added); }); // 두 원본 통지 지점이 같은 현재 본체에 도달한다.
         AiWorldRegistrationHooks registration;
         registration.center=[this](Sid sid) { return gunTarget->Center(sid); }; //004112b0/004152b0은 같은 신전 발 중심을 사용한다.
@@ -2236,35 +2242,35 @@ struct RawCampaignSession::Impl {
         preparation.storedSp=[this](auto owner) { return std::bit_cast<float>(sp.Get(owner)); };preparation.addLocalSp=[this](float delta) { hp.AddSp(playerState.battleOwner,delta); }; // 같은 지갑 가산·SP 난수/표시 순서를 우회하지 않는다.
         preparation.demo=[this] { return services.missionOutcome.demo(); };preparation.knowledgeOpen=[this] { return cursorDrop.lockDepth==0; }; //00445330의 실제 공유 잠금 DWORD를 읽는다.
         preparation.blockingGumpOpen=[this] { if (!services.ai.blockingGumpOpen) throw std::logic_error("AI 현재 차단 Gump 조회 미연결");return services.ai.blockingGumpOpen(); };preparation.initialScan=[this](auto token) { aiWorld->FullScan(token); };
-        aiPreparation=std::make_unique<RawAiPreparation>(aiMemory,core.pool,players,alliances,AiPreparationGlobals{playerState.battleOwner,playerState.playerKnown,noRegion,[this] { return static_cast<std::uint32_t>(core.bookkeeping.invalidGraph); },core.processState.now},std::move(preparation));
+        aiPreparation=std::make_unique<RawAiPreparation>(aiMemory,core.pool,players,alliances,AiPreparationGlobals{playerState.battleOwner,playerState.playerKnown,noRegion,[this] { return static_cast<std::uint32_t>(core.bookkeeping.invalidGraph); },core.processState.Now()},std::move(preparation));
         AiStrategySetupHooks setup;
         setup.regionBounds=[this](auto region) { const auto bounds=chunks.Bounds(region);return std::array<float,4>{static_cast<float>(bounds.left*16),static_cast<float>(bounds.top*16),static_cast<float>(bounds.right*16),static_cast<float>(bounds.bottom*16)}; }; //같은 원본의 청크→칸 변환을 자기 지역에도 적용한다.
         setup.temple=[this](auto region) { return islands->Temple(region); };setup.destroy=[this](Sid sid,std::uint32_t flags) { world.Destroy(sid,flags); };
         setup.assertion=[this](std::string_view text) { if (!services.ai.assertion) throw std::logic_error("AI 전략 준비 원본 진단 미연결");services.ai.assertion(text); };
         setup.demo=[this] { return services.missionOutcome.demo()!=0; }; //기한 전 로컬 보충만 원본 데모 판정을 읽는다.
         aiStrategySetup=std::make_unique<RawAiStrategySetup>(aiMemory,*player,*aiPreparation,priests->Carrier(),*contained,contentFinder,core.types,random,alliances,
-            AiStrategySetupGlobals{playerState.battleOwner,noRegion,templeProduct,contentState.bridgeType,cursorManaGlobals.mapLimit,core.processState.now},std::move(setup));
+            AiStrategySetupGlobals{playerState.battleOwner,noRegion,templeProduct,contentState.bridgeType,cursorManaGlobals.mapLimit,core.processState.Now()},std::move(setup));
         AiEconomyHooks economy;economy.demo=[this] { return services.missionOutcome.demo()!=0; };economy.captured=[this](auto owner) { return AiPriestCaptured(owner); }; //건설선택과같은현재사제포획판정을공유한다.
-        aiEconomy=std::make_unique<RawAiEconomy>(aiMemory,sp,core.processState.now,std::move(economy));
+        aiEconomy=std::make_unique<RawAiEconomy>(aiMemory,sp,core.processState.Now(),std::move(economy));
         AiDeploymentHooks deployment;deployment.product=[this](auto token,auto type) { return aiStrategySetup->FindProduct(token,type); };deployment.technology=[this](auto owner) { const auto parent=player->Technology(std::bit_cast<std::int32_t>(owner));if (parent>65535 || parent>=core.pool.Capacity()) throw std::out_of_range("AI 배치 현재 기술부모 SID 범위");return Sid{static_cast<std::uint16_t>(parent)}; };
         deployment.destroy=[this](Sid sid,std::uint32_t flags) { world.Destroy(sid,flags); };deployment.reserveRegular=[this] { try { aiPendingRegular=std::make_unique<RegularProcess>(0U,0.0F);return true; }catch (const std::bad_alloc&) { return false; } };
-        deployment.addRegular=[this](Sid parent,float duration) { if (!aiPendingRegular) throw std::logic_error("AI 배치 실제 Regular 예약 누락");auto* memory=aiPendingRegular.release();std::destroy_at(memory);std::construct_at(memory,0U,duration);auto* attached=static_cast<RegularProcess*>(core.processes.Attach(std::unique_ptr<RegularProcess>(memory),46,parent,0x50));if (!attached) throw std::logic_error("AI 배치 실제 Regular 부착 실패");attached->ResetTask(0U,core.processState.now); };
+        deployment.addRegular=[this](Sid parent,float duration) { if (!aiPendingRegular) throw std::logic_error("AI 배치 실제 Regular 예약 누락");auto* memory=aiPendingRegular.release();std::destroy_at(memory);std::construct_at(memory,0U,duration);auto* attached=static_cast<RegularProcess*>(core.processes.Attach(std::unique_ptr<RegularProcess>(memory),46,parent,0x50));if (!attached) throw std::logic_error("AI 배치 실제 Regular 부착 실패");attached->ResetTask(0U,core.processState.Now()); };
         deployment.request=[this](const ConstructionConfirmRequest& request) { PrepareConstruction();static_cast<void>(construction->Request(request)); };deployment.localPlace=[this](ConstructionLocalRequest request) { if (!cursor) throw std::logic_error("AI 배치 실제 로컬4433b0 미설치");cursor->PlaceLocal(request); };
         deployment.demo=[this] { return services.missionOutcome.demo()!=0; };deployment.assertion=[this](std::string_view text) { if (!services.ai.assertion) throw std::logic_error("AI 배치 원본 진단 미연결");services.ai.assertion(text); };
-        aiDeployment=std::make_unique<RawAiDeployment>(aiMemory,core.pool,core.types,*contained,AiDeploymentGlobals{assetState.Boss(),constructionState.notice.moveLocalBuilder,core.processState.now},std::move(deployment));
+        aiDeployment=std::make_unique<RawAiDeployment>(aiMemory,core.pool,core.types,*contained,AiDeploymentGlobals{assetState.Boss(),constructionState.notice.moveLocalBuilder,core.processState.Now()},std::move(deployment));
         AiCollectorsHooks collectors;collectors.product=[this](auto token,auto type) { return aiStrategySetup->FindProduct(token,type); };collectors.canAfford=[this](auto token,auto type) { return aiDeployment->CanAfford(token,type); };collectors.maxHitPoints=[this](Sid sid) { return hp.MaxHitPoints(sid); };
         collectors.enemyAvailable=[this](auto owner) { return AiEnemyAvailable(owner); };
         collectors.mayPlace=[this](const CanonPlacementQuery& query) { PrepareConstruction();return MayPlaceGameplay(query); };collectors.deploy=[this](auto token,auto type,float x,float y,auto argument,auto direction) { aiDeployment->Place(token,type,x,y,argument,direction); };
         collectors.log=[this](auto token,auto type,auto x,auto y) { if (!services.player.log) throw std::logic_error("AI 수집자 Lay 로그 미연결");if (type>=core.types.size()) throw std::out_of_range("AI 수집자 Lay TYPE 범위");services.player.log(aiLayLog,"AI"+std::to_string(std::bit_cast<std::int32_t>(Read(aiMemory.Bytes(token),0x260)))+": Lay "+core.types[type].name+" at ("+std::to_string(x)+","+std::to_string(y)+")\n"); };
         collectors.dropSound=[this] { if (!services.sound.play) throw std::logic_error("AI 수집자 로컬 드롭 음향 미연결");static_cast<void>(services.sound.play(soundNames.Lookup("droppiece.wav"),0,0,0,0,0)); };
-        aiCollectors=std::make_unique<RawAiCollectors>(aiMemory,core.pool,core.types,random,AiCollectorsGlobals{core.processState.now,playerState.battleOwner,[this] { return static_cast<std::uint32_t>(core.bookkeeping.invalidGraph); }},std::move(collectors));
+        aiCollectors=std::make_unique<RawAiCollectors>(aiMemory,core.pool,core.types,random,AiCollectorsGlobals{core.processState.Now(),playerState.battleOwner,[this] { return static_cast<std::uint32_t>(core.bookkeeping.invalidGraph); }},std::move(collectors));
         aiBridgeCandidates=std::make_unique<RawAiBridgeCandidates>(aiMemory,core.pool,core.types,core.frames,core.hash.Entries(0),core.spots,AiBridgeCandidateTypes{contentState.bridgeType,fenceNodeType,gunState.windArcherType});
         aiBridgeSearch=std::make_unique<RawAiBridgeSearch>(aiMemory,core.frames,core.spots,contentState.bridgeType,random);
         AiFactoryProductionHooks factories;factories.technology=[this](auto owner) { const auto value=player->Technology(std::bit_cast<std::int32_t>(owner));if (value>65535 || value>=core.pool.Capacity()) throw std::out_of_range("AI 시설 생산 현재 기술부모 SID 범위");return Sid{static_cast<std::uint16_t>(value)}; };factories.product=[this](auto token,auto type) { return aiStrategySetup->FindProduct(token,type); };factories.addProduct=[this](auto token,Sid factory,auto type) { aiStrategySetup->AddProduct(token,factory,type); };
         factories.level=[this](Sid factory) { const auto table=Read(core.pool.Slot(factory),0);if (table!=0x509148U && table!=0x509210U) throw std::logic_error("AI 시설 가상level80 미지원 실제 표");return level->Get(factory); };
         // 같은58h요청/수신/실제Regular그림·완료가 연결된 원본 업그레이드 경로를 선택한다.
         factories.upgrade=[this](Sid parent) { factoryUpgradeCommand->Request(parent); };factories.demo=[this] { return services.missionOutcome.demo()!=0; };factories.log=[this](auto token,AiFactoryAction action,auto type) { if (!services.player.log) throw std::logic_error("AI 시설 생산 현재 로그 미연결");std::string message="Upgrade factory!\n";if (action==AiFactoryAction::AddedProduct) { if (type>=core.types.size()) throw std::out_of_range("AI 시설 생산 로그 TYPE 범위");message="Added "+core.types[type].name+" to factory.\n"; }services.player.log(aiFactoryLog,"AI"+std::to_string(std::bit_cast<std::int32_t>(Read(aiMemory.Bytes(token),0x260)))+": "+message+"\n"); };
-        aiFactoryProduction=std::make_unique<RawAiFactoryProduction>(aiMemory,core.pool,core.types,contentFinder,AiFactoryProductionGlobals{core.processState.now,[this] { return static_cast<std::uint32_t>(core.bookkeeping.invalidGraph); }},std::move(factories));
+        aiFactoryProduction=std::make_unique<RawAiFactoryProduction>(aiMemory,core.pool,core.types,contentFinder,AiFactoryProductionGlobals{core.processState.Now(),[this] { return static_cast<std::uint32_t>(core.bookkeeping.invalidGraph); }},std::move(factories));
         AiDrySpotHooks dry;dry.energy=[this](std::string& text,float x,float y,auto type,auto owner) { return energySupply->Evaluate(text,x,y,type,owner); };dry.log=[this](auto token,bool fake) { if (!services.player.log) throw std::logic_error("AI DrySpot 실제 로그 미연결");services.player.log(aiDrySpotLog,"AI"+std::to_string(std::bit_cast<std::int32_t>(Read(aiMemory.Bytes(token),0x260)))+": "+(fake ? "Killed Fake Dry Spot\n" : "Killed Dry Spot\n")+"\n"); };
         aiDrySpots=std::make_unique<RawAiDrySpots>(aiMemory,core.pool,std::move(dry));
         AiBuildChoiceHooks choice;choice.captured=[this](auto owner) { return AiPriestCaptured(owner); };choice.dead=[this](auto owner) { return AiPriestDead(owner); };choice.canAfford=[this](auto token,auto type) { return aiDeployment->CanAfford(token,type); };choice.wallet=[this](auto owner) { return aiWallet->Balance(owner); };choice.storedSp=[this](auto owner) { return std::bit_cast<float>(sp.Get(owner)); };choice.assertion=[this](std::string_view text,std::uint32_t line) { if (!services.ai.assertion) throw std::logic_error("AI 건설 선택 원본 진단 미연결 "+std::to_string(line));services.ai.assertion(text); };
@@ -2272,7 +2278,7 @@ struct RawCampaignSession::Impl {
     }
     // caller가 공급한 원본 임시XY만 빌려 같은 살아 있는 본체의 다리 진행을 조립한다.
     RawAiBridgePath AiBridgePath(RawPathPoint* endpointScratch) {
-        const AiBridgePathGlobals current{core.processState.now,cursorManaGlobals.mapLimit,contentState.bridgeType,aiBridgeLog,aiBridgeStartType,aiBridgeEndType,aiBridgeTargetType}; //각 효과의 현재 전역 저장소를 그대로 참조한다.
+        const AiBridgePathGlobals current{core.processState.Now(),cursorManaGlobals.mapLimit,contentState.bridgeType,aiBridgeLog,aiBridgeStartType,aiBridgeEndType,aiBridgeTargetType}; //각 효과의 현재 전역 저장소를 그대로 참조한다.
         AiBridgePathHooks hooks;
         hooks.initialize=[this,current](auto token,auto source,auto target) { RawAiBridgePath initializer(aiMemory,core.pool,contentFinder,current,{});static_cast<void>(initializer.Initialize(token,source,target)); };
         hooks.prepare=[this](auto token) { return aiBridgeCandidates->Prepare(token); };
@@ -2291,7 +2297,7 @@ struct RawCampaignSession::Impl {
     }
     // 모든실제행동설치뒤같은현재월드/시각/Player본문에자동AI를연결한다.
     void ConnectAiRuntime() {
-        aiBridgePlanning=std::make_unique<RawAiBridgePlanning>(*aiBridgeCandidates,random,core.processState.now,[this](Sid sid) { return anchor->GraphFor(sid.value); });
+        aiBridgePlanning=std::make_unique<RawAiBridgePlanning>(*aiBridgeCandidates,random,core.processState.Now(),[this](Sid sid) { return anchor->GraphFor(sid.value); });
         AiBridgeStrategyHooks bridges;
         bridges.technology=[this](auto owner) { const auto parent=player->Technology(std::bit_cast<std::int32_t>(owner));if (parent>65535 || parent>=core.pool.Capacity()) throw std::out_of_range("AI 네전략 현재 기술부모 SID 범위");return Sid{static_cast<std::uint16_t>(parent)}; };
         bridges.refresh=[this](auto token,Sid parent) { aiStrategySetup->RefreshBridges(token,parent); };bridges.graph=[this](Sid sid) { return anchor->GraphFor(sid.value); };bridges.center=[this](Sid sid) { const auto point=core.neighbors.Center(sid);return RawPathPoint{point[0],point[1]}; };
@@ -2302,7 +2308,7 @@ struct RawCampaignSession::Impl {
             if (!Read(aiMemory.Bytes(token),0xb00)) return;if (!services.player.log) throw std::logic_error("AI 네전략 현재 로그 미연결");std::string text;
             if (event==AiBridgeStrategyLog::Requeued) text="Put given-up-on geyser "+std::to_string(sid)+" back into the yetToConnect list.\n";else if (event==AiBridgeStrategyLog::Abandoned) text="Gave up on geyser "+std::to_string(sid)+".\n";else text="Trying geyser "+std::to_string(sid)+".\n";services.player.log(kind,"AI"+std::to_string(std::bit_cast<std::int32_t>(Read(aiMemory.Bytes(token),0x260)))+": "+text+"\n");
         };
-        aiBridgeStrategies=std::make_unique<RawAiBridgeStrategies>(aiMemory,core.pool,core.types,random,AiBridgeStrategyGlobals{core.processState.now,cursorManaGlobals.mapLimit,[this] { return static_cast<std::uint32_t>(core.bookkeeping.invalidGraph); },[this] { return gunState.checking!=0; },[this] { return aiBridgeDisabled; },aiGeyserLog},std::move(bridges));
+        aiBridgeStrategies=std::make_unique<RawAiBridgeStrategies>(aiMemory,core.pool,core.types,random,AiBridgeStrategyGlobals{core.processState.Now(),cursorManaGlobals.mapLimit,[this] { return static_cast<std::uint32_t>(core.bookkeeping.invalidGraph); },[this] { return gunState.checking!=0; },[this] { return aiBridgeDisabled; },aiGeyserLog},std::move(bridges));
         AiRuntimeHooks frameHooks;frameHooks.initialize=[this](auto token) { aiStrategySetup->Initialize(token); };frameHooks.prepare=[this](auto token) { aiPreparation->Update(token); };frameHooks.selectGoal=[this](auto token) { aiStrategySetup->SelectGoal(token); };frameHooks.collectors=[this](auto token) { aiCollectors->Ensure(token); };frameHooks.factories=[this](auto token) { aiFactoryProduction->Manage(token); };frameHooks.dryScan=[this](auto token) { return aiDrySpots->Scan(token); };
         frameHooks.dryNotice=[this](auto token,auto kind,bool fake) { if (!Read(aiMemory.Bytes(token),0xb00)) return;if (!services.player.log) throw std::logic_error("AI 전체프레임 부족좌표 로그 미연결");services.player.log(kind,"AI"+std::to_string(std::bit_cast<std::int32_t>(Read(aiMemory.Bytes(token),0x260)))+": "+(fake ? "Killed Fake Dry Spot\n" : "Killed Dry Spot\n")+"\n"); };
         frameHooks.priest=[this](auto token,auto number) { if (number>65535 || number>=core.pool.Capacity()) throw std::out_of_range("AI 전체프레임 현재 사제 SID 범위");aiPriestActions->Act(token,Sid{static_cast<std::uint16_t>(number)}); };frameHooks.drops=[this](auto token) { aiDropActions->Run(token); };frameHooks.bridges=[this](auto token) { aiBridgeStrategies->Update(token); };frameHooks.carriers=[this](auto token) { aiCarrierActions->Act(token); };frameHooks.economy=[this](auto token) { aiEconomy->Reconcile(token); };
@@ -2334,7 +2340,7 @@ struct RawCampaignSession::Impl {
         carriers.point=[this](auto token,Sid actor,RawPathPoint point) { aiMovement->ToPoint(token,actor,point,0); };carriers.home=[this](auto token,Sid actor) { aiMovement->Home(token,actor); };carriers.enemyAvailable=[this](auto owner) { return AiEnemyAvailable(owner); };carriers.vulnerable=[this](Sid sid) { return aiCollectors->Vulnerable(sid); };carriers.flyingGetter=[this](auto token) { return aiResourceChoice->HasFlyingCaptureCarrier(token); };carriers.graph=[this](Sid sid) { return anchor->GraphFor(sid.value); };
         carriers.crystals=[this](Sid actor) { return CountContained(core.pool,priestState.contained,actor,0x20,motionState.carrier.nuggetType); };carriers.firstCrystal=[this](Sid actor) { return priests->Carrier().FindContained(actor,0x20,motionState.carrier.nuggetType,0); };carriers.dropRequest=[this](Sid actor) { PrepareCarrierDrop();carrierDrop->Request(actor,Sid{}); };carriers.destroy=[this](Sid crystal) { world.Destroy(crystal,0); };carriers.target=[this](auto token,Sid actor,Sid target) { aiMovement->ToTarget(token,actor,target,0); };
         carriers.remember=[this](auto token,Sid actor) { aiResourceChoice->RememberCaptureCarrier(token,actor); };carriers.collect=[this](auto token,Sid actor) { aiResourceChoice->CollectOrHome(token,actor); };carriers.targets=[this](Sid actor) { return AiCarrierTargets(actor); };carriers.reclassify=[this](auto token) { aiResourceChoice->ReclassifyDisconnected(token); };carriers.stop=[this](Sid actor) { aiMovement->Stop(actor); };carriers.assertion=[this](std::string_view text,std::uint32_t line) { if (!services.ai.assertion) throw std::logic_error("AI 운반 행동 원본 진단 미연결 "+std::to_string(line));services.ai.assertion(text); };
-        aiCarrierActions=std::make_unique<RawAiCarrierActions>(aiMemory,core.pool,core.types,AiCarrierActionGlobals{core.processState.now,assetState.Boss(),gunState.checking,[this] { return static_cast<std::uint32_t>(core.bookkeeping.invalidGraph); }},std::move(carriers));
+        aiCarrierActions=std::make_unique<RawAiCarrierActions>(aiMemory,core.pool,core.types,AiCarrierActionGlobals{core.processState.Now(),assetState.Boss(),gunState.checking,[this] { return static_cast<std::uint32_t>(core.bookkeeping.invalidGraph); }},std::move(carriers));
         AiBuildSearchHooks search;search.wall=services.construction.wallSeconds;search.mayPlace=[this](const CanonPlacementQuery& query) { PrepareConstruction();return MayPlaceGameplay(query); };aiBuildSearch=std::make_unique<RawAiBuildSearch>(aiMemory,core.types,core.spots,kAiSearchTypeBase,std::move(search));
         GunGroundTargetGlobals ground{aiGroundExcludedType,flyerDependType,gunState.checking,core.ownerMode.challenge,assetState.Boss(),[this](std::string_view text,auto line) { if (!services.ai.assertion) throw std::logic_error("AI 지상 검색 원본 진단 미연결 "+std::to_string(line));services.ai.assertion(text); }};
         aiGroundTarget=std::make_unique<RawGunGroundTarget>(core.pool,core.hash,core.types,gunTypes,*gunTarget,gunTargetState,std::move(ground));
@@ -2350,7 +2356,7 @@ struct RawCampaignSession::Impl {
         AiDropSelectionHooks selection;selection.technology=[this](auto owner) { const auto value=player->Technology(std::bit_cast<std::int32_t>(owner));if (value>65535 || value>=core.pool.Capacity()) throw std::out_of_range("AI 배치 선택 현재 기술부모 SID 범위");return Sid{static_cast<std::uint16_t>(value)}; };selection.count=[this](Sid parent) { return CountContained(core.pool,contentFinder,parent,8,0); };selection.blocker=[this](Sid parent) { return FindContainedGenus(core.pool,contentFinder,core.types,parent,8,0x4000000,0); };
         selection.nth=[this](Sid parent,auto index) { const auto found=priests->Carrier().FindContained(parent,8,0,index);if (!found.value) return 0U;const auto raw=core.pool.Slot(found);return static_cast<std::uint32_t>(raw[18])|(static_cast<std::uint32_t>(raw[19])<<8); };selection.mayPlace=[this](const CanonPlacementQuery& query) { PrepareConstruction();return MayPlaceGameplay(query); };selection.remove=[this](auto token,auto index) { aiDropScan->Remove(token,index); };
         selection.log=[this](auto token,AiDropSelectionLog action,auto type,auto direction) { if (!services.player.log) throw std::logic_error("AI 배치 TYPE 선택 로그 미연결");const auto kind=action==AiDropSelectionLog::Hated ? 29U : aiDropLog;std::string text;if (action==AiDropSelectionLog::Hated) text="I hated the last one...";else if (action==AiDropSelectionLog::Retried) text="That worked. Lets try it again!";else text="Scanning "+core.types[type].name+" at rotation "+std::to_string(direction)+".\n";services.player.log(kind,"AI"+std::to_string(std::bit_cast<std::int32_t>(Read(aiMemory.Bytes(token),0x260)))+": "+text+"\n"); };
-        aiDropSelection=std::make_unique<RawAiDropSelection>(aiMemory,core.pool,core.types,std::span<const std::uint32_t>(constructionState.confirm.patternTypes).subspan(4),random,core.processState.now,std::move(selection));
+        aiDropSelection=std::make_unique<RawAiDropSelection>(aiMemory,core.pool,core.types,std::span<const std::uint32_t>(constructionState.confirm.patternTypes).subspan(4),random,core.processState.Now(),std::move(selection));
         AiDryGeometryHooks geometry;geometry.surface=[this](auto x,auto y) { return core.hash.Cell(0,x,y); };geometry.create=[this](auto type,auto flags) { return world.Create(type,flags); };geometry.word=[this](Sid sid,auto word) { auto raw=core.pool.AllocatedBytes(sid);raw[12]=static_cast<std::uint8_t>(word);raw[13]=static_cast<std::uint8_t>(word>>8);if (raw[10]==core.bridgeState.bridgeType) core.building.NotifySurface(sid); };
         geometry.pop=[this](Sid sid,RawPathPoint point,auto flags) { world.Pop(sid,point.x,point.y,flags); };geometry.destroy=[this](Sid sid,auto flags) { world.Destroy(sid,flags); };aiDryGeometry=std::make_unique<RawAiDryGeometry>(core.pool,AiDryGeometryGlobals{aiDropScanBounds,aiDrySpotLog,aiDryMarkerType},std::move(geometry));
         AiFakeDryHooks fake;fake.score=[this](auto token,RawPathPoint point,auto& index) { return aiDropEvaluation->DryDistance(token,point,index); };fake.center=[this](Sid sid) { const auto center=core.neighbors.Center(sid);return RawPathPoint{center[0],center[1]}; };fake.candidate=[this](RawPathPoint source,RawPathPoint target) { return aiDryGeometry->Candidate(source,target); };fake.add=[this](auto token,RawPathPoint point,auto type) { return aiDrySpots->Add(token,point.x,point.y,type); };fake.remove=[this](auto token,auto index) { aiDrySpots->Remove(token,index); };fake.seed=[this](auto token) { aiDrySpots->Seed(token,random); };fake.mark=[this](RawPathPoint point) { aiDryGeometry->Mark(point); };
@@ -2370,11 +2376,11 @@ struct RawCampaignSession::Impl {
             }
             services.player.log(aiDropLog,"AI"+std::to_string(std::bit_cast<std::int32_t>(Read(aiMemory.Bytes(token),0x260)))+": "+text+"\n");
         };
-        aiDropActions=std::make_unique<RawAiDropActions>(aiMemory,core.pool,core.types,random,AiDropActionGlobals{core.processState.now,cursorManaGlobals.mapLimit,gunState.checking},std::move(drops));
+        aiDropActions=std::make_unique<RawAiDropActions>(aiMemory,core.pool,core.types,random,AiDropActionGlobals{core.processState.Now(),cursorManaGlobals.mapLimit,gunState.checking},std::move(drops));
         AiPriestActionHooks priest;priest.scan=[this](auto token,auto budgeted) { aiBuildSearch->Scan(token,budgeted); };priest.vulnerable=[this](Sid actor) { return aiCollectors->Vulnerable(actor); };priest.busy=[this](Sid actor) { return core.processes.FindEvent(actor,0x493)!=nullptr; };priest.path=[this](Sid actor) { return aiMovement->MovementForm(actor); };priest.maxHitPoints=[this](Sid actor) { return hp.MaxHitPoints(actor); };priest.ritual=[this](Sid actor) { return AiPriestInRitual(core.pool,core.frames,actor); };
         priest.altarEnemy=[this](auto enemy,Sid dais) { return AiAltarContainsEnemy(core.pool,dais,enemy,runeState.altarType,[this](float x,float y,auto type) { return world.Find(x,y,type); }); };priest.target=[this](auto token,Sid actor,Sid target,auto sacrifice) { aiMovement->ToTarget(token,actor,target,sacrifice); };priest.distance=[this](RawPathPoint point,Sid dais) { return AiDistanceToFootprint(point,core.neighbors.Footprint(dais)); };priest.select=[this](auto token) { return aiBuildChoice->Select(token); };priest.home=[this](auto token,Sid actor) { aiMovement->Home(token,actor); };priest.collect=[this](auto token,Sid actor) { aiResourceChoice->CollectOrHome(token,actor); };
         priest.deploy=[this](auto token,auto type,RawPathPoint point) { aiCollectors->DeployWithNotice(token,type,point.x,point.y,0,0); };priest.begin=[this](auto token,const AiPriestSearchRequest& request) { aiBuildSearch->Initialize(token,request.type,request.bounds,request.avoid,request.owner); };priest.point=[this](auto token,Sid actor,RawPathPoint point) { aiMovement->ToPoint(token,actor,point,0); };priest.enemyLowFunds=[this](auto token) { return aiBuildChoice->EnemyLowFunds(token); };priest.salvage=[this](Sid target) { salvageCommand->Request(target.value); };
-        aiPriestActions=std::make_unique<RawAiPriestActions>(aiMemory,core.pool,AiPriestActionGlobals{core.processState.now,cursorManaGlobals.mapLimit,runeState.daisType},std::move(priest));
+        aiPriestActions=std::make_unique<RawAiPriestActions>(aiMemory,core.pool,AiPriestActionGlobals{core.processState.Now(),cursorManaGlobals.mapLimit,runeState.daisType},std::move(priest));
         ConnectAiRuntime();
     }
     // 사용자이동/대상접근/AI가같은489080종류별실제BFS/Host시작을공유한다.
@@ -2501,11 +2507,11 @@ struct RawCampaignSession::Impl {
         research.refresh=[this](std::uint32_t owner) { static_cast<void>(production->Refresh(owner)); };
         research.assertion=[](std::string_view message) { std::fprintf(stderr,"Factory 연구 원본 진단: %.*s\n",static_cast<int>(message.size()),message.data()); };
         research.upgradeReceive=[this](std::span<const std::uint8_t> packet) { if (!factoryUpgradeCommand) throw std::logic_error("Factory 업그레이드 실제 수신 미설치");factoryUpgradeCommand->Receive(packet); };
-        factoryResearch=std::make_unique<RawFactoryResearch>(core.pool,core.types,FactoryResearchState{objectState.loadingDepth,core.bookkeeping.productionDirty,assetState.Boss(),core.processState.now,researchOutpost},std::move(research));
+        factoryResearch=std::make_unique<RawFactoryResearch>(core.pool,core.types,FactoryResearchState{objectState.loadingDepth,core.bookkeeping.productionDirty,assetState.Boss(),core.processState.Now(),researchOutpost},std::move(research));
         FactoryUpgradeCommandHooks upgrade;upgrade.cost=[this](auto type) { return hp.TypeCostUnits(type); };upgrade.addSp=[this](auto owner,float delta) { hp.AddSp(owner,delta); };
-        upgrade.reserveShared=[this] { try { factoryUpgradePending=std::make_unique<RegularProcess>(0U,0.0F);return true; }catch (const std::bad_alloc&) { return false; } };upgrade.addShared=[this](Sid parent,auto event,float delay) { if (!factoryUpgradePending) throw std::logic_error("Factory 업그레이드 실제 SharedRegular 예약 누락");auto* memory=factoryUpgradePending.release();std::destroy_at(memory);std::construct_at(memory,event,delay);auto* attached=static_cast<RegularProcess*>(core.processes.Attach(std::unique_ptr<RegularProcess>(memory),61,parent,0x50));if (!attached) throw std::logic_error("Factory 업그레이드 실제 SharedRegular 부착 실패");attached->ResetTask(event,core.processState.now); };
+        upgrade.reserveShared=[this] { try { factoryUpgradePending=std::make_unique<RegularProcess>(0U,0.0F);return true; }catch (const std::bad_alloc&) { return false; } };upgrade.addShared=[this](Sid parent,auto event,float delay) { if (!factoryUpgradePending) throw std::logic_error("Factory 업그레이드 실제 SharedRegular 예약 누락");auto* memory=factoryUpgradePending.release();std::destroy_at(memory);std::construct_at(memory,event,delay);auto* attached=static_cast<RegularProcess*>(core.processes.Attach(std::unique_ptr<RegularProcess>(memory),61,parent,0x50));if (!attached) throw std::logic_error("Factory 업그레이드 실제 SharedRegular 부착 실패");attached->ResetTask(event,core.processState.Now()); };
         upgrade.send=[this](auto target,std::span<const std::uint8_t> packet) { if (!services.carrierRequest) throw std::logic_error("Factory 업그레이드 실제 요청 송신 미연결");services.carrierRequest(static_cast<std::int32_t>(target),packet); };upgrade.broadcast=[this](std::span<const std::uint8_t> packet) { broadcast->Send(packet); };upgrade.log=[this](auto kind,std::string_view text) { if (!services.player.log) throw std::logic_error("Factory 업그레이드 실제 로그 미연결");services.player.log(kind,text); };upgrade.assertion=[](std::string_view text) { std::fprintf(stderr,"Factory 업그레이드 원본 진단: %.*s\n",static_cast<int>(text.size()),text.data()); };
-        factoryUpgradeCommand=std::make_unique<RawFactoryUpgradeCommand>(core.pool,core.types,FactoryUpgradeCommandState{assetState.Boss(),gunState.checking,core.processState.now},std::move(upgrade));
+        factoryUpgradeCommand=std::make_unique<RawFactoryUpgradeCommand>(core.pool,core.types,FactoryUpgradeCommandState{assetState.Boss(),gunState.checking,core.processState.Now()},std::move(upgrade));
         ConnectFactoryUpgrade();
         ConnectFactoryInput();
     }
@@ -2520,7 +2526,7 @@ struct RawCampaignSession::Impl {
     void ConnectFactoryUpgrade() {
         FactoryUpgradeHooks hooks;hooks.level=[this](Sid parent) { const auto table=Read(core.pool.Slot(parent),0);if (table!=0x509148U && table!=0x509210U) throw std::logic_error("업그레이드 현재Factory level 가상표 미복원");return level->Get(parent); };hooks.setLevel=[this](Sid parent,std::uint32_t value) { assetBindings->SetState(parent,value); };hooks.maxHp=[this](Sid parent) { return hp.MaxHitPoints(parent); };hooks.adjustFrame=[this](Sid parent) { assetBindings->AdjustFactoryFrame(parent); };hooks.display=[this](Sid parent) { core.display.Update(core.pool.Slot(parent)); };
         hooks.soundAt=[this](float x,float y,std::string_view name) { if (!services.sound.playOnceAt) throw std::logic_error("업그레이드 실제 위치 소리 미연결");services.sound.playOnceAt(x,y,soundNames.Lookup(name),0,0); };hooks.sound=[this](std::string_view name) { if (!services.sound.play) throw std::logic_error("업그레이드 실제 로컬 소리 미연결");services.sound.play(soundNames.Lookup(name),0,0,0,1,0); };hooks.flare=[this](Sid parent,std::int32_t count,std::uint32_t event) { flare->Spawn(parent,count,event); };
-        hooks.create=[this](auto type,auto flags) { return world.Create(type,flags); };hooks.owner=[this](Sid parent,auto owner) { core.owner.Set(parent,owner); };hooks.pop=[this](Sid parent,float x,float y,auto flags) { world.Pop(parent,x,y,flags); };hooks.construction=[this](Sid parent,float duration) { PrepareBuilding(core.processState.now);building->Start(parent,duration); };hooks.depend=[this](Sid watched,Sid watcher) { static_cast<void>(core.dependencies.Create(watched,watcher)); };hooks.watcher=[this](Sid form) { return core.dependencies.Watcher(form); };hooks.destroy=[this](Sid parent,auto flags) { world.Destroy(parent,flags); };
+        hooks.create=[this](auto type,auto flags) { return world.Create(type,flags); };hooks.owner=[this](Sid parent,auto owner) { core.owner.Set(parent,owner); };hooks.pop=[this](Sid parent,float x,float y,auto flags) { world.Pop(parent,x,y,flags); };hooks.construction=[this](Sid parent,float duration) { PrepareBuilding(core.processState.Now());building->Start(parent,duration); };hooks.depend=[this](Sid watched,Sid watcher) { static_cast<void>(core.dependencies.Create(watched,watcher)); };hooks.watcher=[this](Sid form) { return core.dependencies.Watcher(form); };hooks.destroy=[this](Sid parent,auto flags) { world.Destroy(parent,flags); };
         hooks.aiPresent=[this](Sid parent) { const auto owner=core.pool.Slot(parent)[34];if (!owner) return false;if (owner>=9) throw std::out_of_range("업그레이드현재AI Player 범위");return Read(players,owner*0xb4U+0xb0U)!=0; };hooks.notifyAi=[this](auto owner,Sid parent) { if (core.ownerMode.challenge || std::bit_cast<std::int32_t>(owner)<=0) return;if (owner>=9) throw std::out_of_range("업그레이드완료AI Player 범위");const auto token=Read(players,owner*0xb4U+0xb0U);if (token) aiFactoryProduction->Upgraded(token,parent); };
         hooks.log=[this](auto kind,std::string_view text) { if (!services.player.log) throw std::logic_error("업그레이드진행 실제로그 미연결");services.player.log(kind,text); };hooks.assertion=[](std::uint32_t line) { std::fprintf(stderr,"Factory 업그레이드 원본 진단 줄:%x\n",line); };
         factoryUpgrade=std::make_unique<RawFactoryUpgrade>(core.pool,core.processes,FactoryUpgradeState{researchOutpost,flyerDependType,playerState.battleOwner,gunState.checking,core.ownerMode.challenge,assetState.Boss()},std::move(hooks));
@@ -2724,9 +2730,9 @@ struct RawCampaignSession::Impl {
     hooks.reserveTimer=[current] { try { current->builderPendingRegular=std::make_unique<RegularProcess>(0,0.05f);return true; }catch (const std::bad_alloc&) { return false; } };
     hooks.addTimer=[current](Sid sid,std::uint32_t event,float payload) {
         if (!current->builderPendingRegular || payload!=0.05f) throw std::logic_error("건설 운반의 실제 예약 객체/payload 오류");
-        auto* process=dynamic_cast<RegularProcess*>(current->core.processes.Attach(std::move(current->builderPendingRegular),46,sid,0x50));if (!process) throw std::logic_error("건설 운반의 실제 Regular 부착 실패");process->ResetTask(event,current->core.processState.now);
+        auto* process=dynamic_cast<RegularProcess*>(current->core.processes.Attach(std::move(current->builderPendingRegular),46,sid,0x50));if (!process) throw std::logic_error("건설 운반의 실제 Regular 부착 실패");process->ResetTask(event,current->core.processState.Now());
     };
-    ConstructionBuilderReads reads;reads.builderType=[current] { return current->start.teleportType; };reads.carrierType=[current] { return current->start.manaBoltType; };reads.bridgeType=[current] { return current->core.bridgeState.bridgeType; };reads.approachMask=[current] { return current->builderApproachMask; };reads.timerPayload=[] { return 0.05f; };reads.now=[current] { return current->core.processState.now; };
+    ConstructionBuilderReads reads;reads.builderType=[current] { return current->start.teleportType; };reads.carrierType=[current] { return current->start.manaBoltType; };reads.bridgeType=[current] { return current->core.bridgeState.bridgeType; };reads.approachMask=[current] { return current->builderApproachMask; };reads.timerPayload=[] { return 0.05f; };reads.now=[current] { return current->core.processState.Now(); };
     return std::make_unique<RawConstructionBuilder>(current->core.pool,current->core.types,current->builderTypes,state,std::move(hooks),current->energySupply.get(),std::move(reads));
 
     }
@@ -2780,13 +2786,13 @@ struct RawCampaignSession::Impl {
         game.placement.region=[this](Sid sid) { const auto graph=anchor->GraphFor(sid.value);return graph==254 ? 0 : static_cast<std::int32_t>(graph+1); }; // 원본 GraphRecord 포인터의 NULL/같음만 보존하는 토큰이다.
         game.placement.mayPlace=[this](const CanonPlacementQuery& query) { const auto result=MayPlaceGameplay(query);cursor->Placement().obstruction=gameplayPlacement.placement.blockedRelation;return result ? 1U : 0U; };
         game.placement.processEvent=game.lifecycle.processEvent;
-        game.placement.project=[this](float x,float y) { const auto point=SoundToScreen(cursorView,x,y);return ScreenPoint{point.x,point.y}; };
+        game.placement.project=[this](float x,float y) { const auto point=ProjectCameraView(gameplayGlobals->Camera().Snapshot(),x,y);return ScreenPoint{point[0],point[1]}; };
         game.removeRange=[this](Sid parent,std::uint32_t type) {
             RawContainedLookup lookup(core.pool,[this](Sid target,std::uint32_t flags) { if (!world.Destroy(target,flags)) throw std::logic_error("회전 사정거리 실제 가상 삭제 거부"); });
             static_cast<void>(lookup.Find(parent,type,0,true));
         };
         game.moveBuilder=[this](std::uint32_t owner,Sid target,std::uint32_t low,std::uint32_t high) { static_cast<void>(buildingMover->Move(owner,target,low,high)); };
-        cursor=std::make_unique<RawCampaignCursor>(CampaignCursorData{world,assets.game,gameplayPlacement.geometry,metadata.frames,*contentForms,*contained,hp,random,*construction,cursorDrop,gameplayPlacement.preview.blocked,sp,playerState.playerKnown,gunTargetState.windArcherType,cursorRangeGlobals.processType,contentCamera},std::move(game));
+        cursor=std::make_unique<RawCampaignCursor>(CampaignCursorData{world,assets.game,gameplayPlacement.geometry,metadata.frames,*contentForms,*contained,hp,random,*construction,cursorDrop,gameplayPlacement.preview.blocked,sp,playerState.playerKnown,gunTargetState.windArcherType,cursorRangeGlobals.processType,contentCamera,&gameplayGlobals->Camera().Snapshot()},std::move(game));
         if (services.colorSortInput || services.screenPalette) {
             // 실제 Client의 일부 색 장치가 빠진 경우 COL을 대신 써서 성공하지 않는다.
             if (!services.colorSortInput || !services.screenPalette) throw std::logic_error("캠페인 커서의 같은 ColorSort/현재 화면 색 서비스 미연결");
@@ -2800,7 +2806,7 @@ struct RawCampaignSession::Impl {
             for (std::size_t index=0;index<palette.size();++index) { const auto color=assets.game.Palette().Color(static_cast<std::uint8_t>(index));palette[index]={color.blue,color.green,color.red,assets.game.Palette().Reserved(static_cast<std::uint8_t>(index)).value_or(0)}; }
             palette[0]={0,0,0,0};palette[255]={255,255,255,0};cursor->SetPalette(palette);
         }
-        cursor->SetView(cursorView);
+        cursor->SetView(cursorViewport);
     }
     // 같은 Session 전역을 건설 시작/프레임 직전에 갱신한다. 별도 건설 시계를 만들지 않는다.
     void PrepareBuilding(double now) {
@@ -2926,7 +2932,7 @@ struct RawCampaignSession::Impl {
     void ConnectMotion() {
         if (motion) throw std::logic_error("실제 세션 경로 중복 연결");
         ConstructionArrivalHooks buildHooks;
-        buildHooks.start=[this](Sid sid,float duration) { PrepareBuilding(core.processState.now);building->Start(sid,duration); };
+        buildHooks.start=[this](Sid sid,float duration) { PrepareBuilding(core.processState.Now());building->Start(sid,duration); };
         buildHooks.removeContained=[this](Sid sid,std::uint32_t type) { RawContainedLookup lookup(core.pool,[this](Sid target,std::uint32_t flags) { world.Destroy(target,flags); });static_cast<void>(lookup.Find(sid,type,0,true)); };
         buildHooks.destroy=[this](Sid sid,std::uint32_t flags) { world.Destroy(sid,flags); };
         buildArrival=std::make_unique<RawConstructionArrival>(core.pool,core.hash,core.types,buildArrivalState,std::move(buildHooks));
@@ -2934,13 +2940,13 @@ struct RawCampaignSession::Impl {
         manaHooks.sound=[this](float x,float y,std::string_view name) { services.sound.playOnceAt(x,y,soundNames.Lookup(name),0,0); };
         manaHooks.removeProcesses=[this](Sid sid,std::uint32_t type) { RemoveAttachedProcesses(core.processes,sid,type); };
         manaHooks.reserveRegular=[this] { try { manaPendingRegular=std::make_unique<RegularProcess>(1,manaArrivalState.delay);return true; }catch (const std::bad_alloc&) { return false; } };
-        manaHooks.addRegular=[this](Sid sid,std::uint32_t event,float delay) { if (!manaPendingRegular || delay!=manaArrivalState.delay) throw std::logic_error("마나 볼트 Regular 예약 누락");auto* regular=static_cast<RegularProcess*>(core.processes.Attach(std::move(manaPendingRegular),manaArrivalState.regularType,sid,0x50));regular->ResetTask(event,core.processState.now); };
+        manaHooks.addRegular=[this](Sid sid,std::uint32_t event,float delay) { if (!manaPendingRegular || delay!=manaArrivalState.delay) throw std::logic_error("마나 볼트 Regular 예약 누락");auto* regular=static_cast<RegularProcess*>(core.processes.Attach(std::move(manaPendingRegular),manaArrivalState.regularType,sid,0x50));regular->ResetTask(event,core.processState.Now()); };
         manaHooks.destroy=[this](Sid sid,std::uint32_t flags) { world.Destroy(sid,flags); };
         manaArrival=std::make_unique<RawManaBoltArrival>(core.pool,core.hash,core.types,manaArrivalState,std::move(manaHooks));
         ManaBoltRegularHooks regularHooks;
         regularHooks.setFrame=[this](Sid sid,std::int32_t frame,std::uint32_t flags) { core.frame.Set(sid,frame,flags); };
         regularHooks.sound=[this](float x,float y,std::string_view name) { services.sound.playOnceAt(x,y,soundNames.Lookup(name),0,0); };
-        regularHooks.project=[this](float x,float y) { const auto point=SoundToScreen({contentScreenOrigin[0],contentScreenOrigin[1]},x,y);return std::array<std::int32_t,2>{point.x,point.y}; };
+        regularHooks.project=[this](float x,float y) { return ProjectCameraView(gameplayGlobals->Camera().Snapshot(),x,y); };
         regularHooks.inverse=[this](std::int32_t x,std::int32_t y) { return RawCursorPosition::ScreenToWorld(x,y,contentCamera); };
         regularHooks.unpop=[this](Sid sid,std::uint32_t flags) { world.Unpop(sid,flags); };
         regularHooks.pop=[this](Sid sid,float x,float y,std::uint32_t flags) { world.Pop(sid,x,y,flags); };
@@ -2953,8 +2959,8 @@ struct RawCampaignSession::Impl {
         effects.path.balloonFlame=[this](float x,float y) { if (!services.sound.playOnceAt) throw std::logic_error("벌룬 화염 위치 음향 미연결");services.sound.playOnceAt(x,y,soundNames.Lookup("balloonFlame.wav"),0,0); };
         effects.path.bulfRandom=[this](std::int32_t low,std::int32_t high) { if (high<=low) throw std::invalid_argument("Bulf 공용 난수 범위 오류");return static_cast<std::int32_t>(random.Next(static_cast<std::uint32_t>(high-low)))+low; };
         effects.path.bulfSound=[this](float x,float y,std::string_view name) { if (!services.sound.playOnceAt) throw std::logic_error("Bulf 발소리 장치 미연결");services.sound.playOnceAt(x,y,soundNames.Lookup(name),0,0); };
-        effects.path.startBlocked=[this](RawPathPoint point,std::uint32_t type,std::uint32_t owner) { PrepareBuilding(core.processState.now);static_cast<void>(buildingEffects->Displace(point.x,point.y,type,owner)); };
-        effects.path.arrivalBlocked=[this](Sid,RawPathPoint point,std::uint32_t type,std::uint32_t owner) { PrepareBuilding(core.processState.now);static_cast<void>(buildingEffects->Displace(point.x,point.y,type,owner)); };
+        effects.path.startBlocked=[this](RawPathPoint point,std::uint32_t type,std::uint32_t owner) { PrepareBuilding(core.processState.Now());static_cast<void>(buildingEffects->Displace(point.x,point.y,type,owner)); };
+        effects.path.arrivalBlocked=[this](Sid,RawPathPoint point,std::uint32_t type,std::uint32_t owner) { PrepareBuilding(core.processState.Now());static_cast<void>(buildingEffects->Displace(point.x,point.y,type,owner)); };
         effects.path.constructionArrival=[this](Sid sid,std::uint32_t,std::uint32_t) { const auto type=core.pool.Slot(sid)[10];if (type==134) return buildArrival->Arrive(sid);if (type==105) return manaArrival->Arrive(sid);throw std::logic_error("실제 건설 도착 타입 오류"); };
         if (!effects.cleanup.reserveShared) effects.cleanup.reserveShared=[] { return true; };
         effects.cleanup.ritual=[this](Sid dais,Sid priest,std::uint32_t mode) { if (!templeRitual) throw std::logic_error("의식 설치 전 Path 정리");PrepareRitual();templeRitual->Ritual(dais,priest,mode); };
@@ -2995,7 +3001,7 @@ struct RawCampaignSession::Impl {
         choice.graphFor=[this](Sid sid) { return anchor->GraphFor(sid.value); };
         choice.assertion=[](std::uint32_t line) { throw std::logic_error("원본 Carrier.cpp 후보 선택 진단 "+std::to_string(line)); };
         const auto movement=choice.movement; // 같은 현재 TYPE 속성 getter를 회피 후보 평가에도 사용한다.
-        carrierChoice=std::make_unique<RawCarrierChoice>(core.pool,core.types,players,assetState.outposts,assetState.geysers,core.processState.now,gunState.checking,*boardTarget,carrierChoiceState,std::move(choice));
+        carrierChoice=std::make_unique<RawCarrierChoice>(core.pool,core.types,players,assetState.outposts,assetState.geysers,core.processState.Now(),gunState.checking,*boardTarget,carrierChoiceState,std::move(choice));
         effects.carrier.chooseReturn=[this](Sid sid) { return carrierChoice->ChooseReturn(sid); };
         effects.carrier.chooseGeyser=[this](Sid sid) { return carrierChoice->ChooseGeyser(sid); };
         effects.carrier.currentControlled=[this](std::uint32_t owner) { return participation->Brain(owner)!=0; };
@@ -3017,7 +3023,7 @@ struct RawCampaignSession::Impl {
         escape.search=[this](RawPathRuntime& temporary,Sid parent,RawPathPoint source,RawPathPoint destination,std::uint32_t flags) { if (!motion) throw std::logic_error("현재 이동 설치 전 회피 탐색");static_cast<void>(motion->Paths().SearchCandidate(temporary,parent,source,destination,flags)); };
         escape.movement=movement;escape.valid=[this](RawPathPoint point) { return carrierFalling->ValidPoint(point.x,point.y); };
         escape.assertion=[](std::uint32_t line) { throw std::logic_error("원본 Carrier.cpp 회피 깊이 진단 "+std::to_string(line)); };
-        carrierEscape=std::make_unique<RawCarrierEscape>(core.pool,core.hash,core.types,core.spots,core.processState.now,gunState.checking,carrierChoiceState.cardinalTypes,carrierEscapeState,std::move(escape));
+        carrierEscape=std::make_unique<RawCarrierEscape>(core.pool,core.hash,core.types,core.spots,core.processState.Now(),gunState.checking,carrierChoiceState.cardinalTypes,carrierEscapeState,std::move(escape));
         services.motion.carrier.escape=[this](Sid sid,float distance,std::uint32_t event) { return carrierEscape->Run(sid,distance,event); };
         effects.carrier.escape=services.motion.carrier.escape;
         PathRetargetHooks retarget;
@@ -3144,7 +3150,7 @@ struct RawCampaignSession::Impl {
         try { ReleasePlayerLinks(); }
         catch (const std::exception& error) { std::fprintf(stderr,"실제 Session Player링크 정리 실패: %s\n",error.what()); }
         catch (...) { std::fprintf(stderr,"실제 Session Player링크 정리 실패: 알 수 없는 예외\n"); }
-        try { world.DrainProcesses(); } // 호스트 최종 소멸이므로 지난 슬롯의 후속 등록까지 소비자보다 먼저 반납한다.
+        try { world.DrainCurrentProcessBindingsForShutdown(); } // 자기 현재 처리기가 만든 객체만 모듈보다 먼저 반납하고 이전 Native 잔류는 장기 Storage에 남긴다.
         catch (const std::exception& error) { std::fprintf(stderr,"실제 Session Kernel 정리 실패: %s\n",error.what()); }
         catch (...) { std::fprintf(stderr,"실제 Session Kernel 정리 실패: 알 수 없는 예외\n"); }
         core.postPop.BindPatchAiNotice({});world.CommonDeletion().BindPatchAiNotice({}); // AI 본체/통지 처리기를 해제하기 전에 외부 공통 몸체의 참조를 분리한다.
@@ -3386,16 +3392,20 @@ void RawCampaignSession::ReloadTheamAt(std::uint32_t x,std::uint32_t y,std::uint
 // 같은 원본 건설 시작을 후속 배치/룬 부모와 공유한다.
 void RawCampaignSession::StartConstruction(Sid parent,float duration) {
     if (!impl_->loaded || !impl_->building) throw std::logic_error("미설치 Session의 실제 건설 시작");
-    impl_->PrepareBuilding(impl_->core.processState.now);impl_->building->Start(parent,duration);
+    impl_->PrepareBuilding(impl_->core.processState.Now());impl_->building->Start(parent,duration);
 }
 // 현재 같은 시각을 공격/소리/AI에 공급하되 Kernel은 호출자의 원문 위치에서 한 번만 실행한다.
-void RawCampaignSession::PrepareFrame(FrameTime time,bool paused) { impl_->flyerPaused=paused;impl_->core.processState.now=time.game;impl_->PrepareBuilding(time.game);impl_->assetBindings->PrepareFrame(time.game);impl_->combat->PrepareFrame(time);impl_->particles->PrepareFrame(time.game,static_cast<std::uint32_t>(time.number),impl_->rewardState.priestQuarterHp);impl_->soundState.frame=static_cast<std::uint32_t>(time.number);if (!paused) { if (!impl_->aiRuntime) throw std::logic_error("실제 Session 자동 AI 프레임 설치 전 호출");impl_->aiRuntime->Frame(); }impl_->world.PrepareFrame(time); }
+void RawCampaignSession::PrepareFrame(FrameTime time,bool paused) { impl_->flyerPaused=paused;if (impl_->core.processState.sharedNow) time.game=impl_->core.processState.Now();else impl_->core.processState.now=time.game;impl_->PrepareBuilding(time.game);impl_->assetBindings->PrepareFrame(time.game);impl_->combat->PrepareFrame(time);impl_->particles->PrepareFrame(time.game,static_cast<std::uint32_t>(time.number),impl_->rewardState.priestQuarterHp);impl_->soundState.frame=static_cast<std::uint32_t>(time.number);if (!paused) { if (!impl_->aiRuntime) throw std::logic_error("실제 Session 자동 AI 프레임 설치 전 호출");impl_->aiRuntime->Frame(); }impl_->world.PrepareFrame(time); }
 // 독립 검사/호출자는 기존 준비와 단일 Kernel 실행을 함께 요청한다. 실제 GUI는 두 단계를 분리한다.
 void RawCampaignSession::RunFrame(FrameTime time,bool paused) { PrepareFrame(time,paused);if (!paused) impl_->core.kernel.RunFrame(); }
 // 해상도/카메라 변경과 동일 위치 효과음의 view를 process11에도 전달한다.
-void RawCampaignSession::SetParticleView(SoundView view,SurfaceDisplayHooks display) {
-    impl_->contentScreenOrigin={view.cameraX,view.cameraY};
-    impl_->cursorView=view;if (impl_->cursor) impl_->cursor->SetView(view);impl_->contentCamera=RawCursorPosition::CameraFromPixels(view.cameraX,view.cameraY);
+ClientCameraGlobals& RawCampaignSession::CameraGlobals() { return impl_->gameplayGlobals->Camera(); }
+// 같은 Client owner를 현재값으로 관측한다.
+const ClientCameraGlobals& RawCampaignSession::CameraGlobals() const { return impl_->gameplayGlobals->Camera(); }
+// 호환 입력은 명시 픽셀 적용이며 실제 World의 viewport 통지는 world float를 역산하지 않는다.
+void RawCampaignSession::SetParticleView(SoundView view,SurfaceDisplayHooks display,bool updateCamera) {
+    if (updateCamera) { CameraGlobals().RequestPixels(view.cameraX,view.cameraY);CameraGlobals().ApplyPixelsToRendererAndSnapshot(view.cameraX,view.cameraY); }
+    impl_->cursorViewport={0,0,view.left,view.top,view.right,view.bottom};if (impl_->cursor) impl_->cursor->SetView(view);
     impl_->particles->SetView(view,std::move(display));
 }
 // 현재 단일 raw 표시 목록에서 SHP와 같은 정렬 항목을 만든다.
@@ -3442,7 +3452,7 @@ std::unique_ptr<RawProductionMaintenance> RawCampaignSession::MakeProductionMain
     reads.temple=[current] { return Read(current->players,current->playerState.templateOwner*0xb4U+0x7c); };reads.editor=[this] { return Editor(); };
     reads.generatorTimer=[current] { return current->login ? current->login->settingValues[0] : 1U; };reads.stockRate=[current] { return current->battleOptions.at(2); };
     reads.artificial=[current](Sid parent) { const auto owner=current->core.pool.Slot(parent)[34];if (owner>=9) throw std::out_of_range("생산 유지 현재 AI 소유자 범위");return owner && Read(current->players,owner*0xb4U+0xb0)!=0; };
-    ProductionMaintenanceHooks hooks;hooks.wallSeconds=std::move(wall);hooks.gameSeconds=[current] { return current->core.processState.now; };hooks.money=[this] { return PlayerKnown() ? Sp(LocalOwner()) : 0.0F; };
+    ProductionMaintenanceHooks hooks;hooks.wallSeconds=std::move(wall);hooks.gameSeconds=[current] { return current->core.processState.Now(); };hooks.money=[this] { return PlayerKnown() ? Sp(LocalOwner()) : 0.0F; };
     hooks.touchDeck=[current] { static_cast<void>(current->productionDeck->Get(current->playerState.templateOwner)); };
     hooks.pattern=[current] { return static_cast<std::uint32_t>(SelectBridgePattern(static_cast<std::int32_t>(current->random.Next(10000)))); };
     hooks.create=[current](Sid parent,std::uint32_t type,std::uint32_t argument,std::uint32_t flags,std::uint32_t attach,std::uint32_t quality) { static_cast<void>(current->contained->Create(parent,type,argument,flags,attach,quality)); };
@@ -3513,6 +3523,9 @@ GameMenusHooks RawCampaignSession::BindGameMenus(GameMenusHooks hooks) {
 // 원본 로그인/AI 초기화와 승패 판정은 같은9 Player 바이트를 공유한다.
 std::span<std::uint8_t> RawCampaignSession::PlayerRecords() { return impl_->players; }
 // 명시 State 호출은 선택된 free 실패를 전파하며 앞선 Player 쓰기와 나머지 월드 수명을 보존한다.
+// 실제 Native Clear 단계와 그 증빙의 현재 대여 반납만 노출하며 전체 AI/UI cleanup을 대신하지 않는다.
+RawProcessHostStorage::ClearPass RawCampaignSession::ClearProcessesForState() { return impl_->world.ClearProcessesForState(); }
+void RawCampaignSession::ReturnProcessBindingsForState(RawProcessHostStorage::ClearPass&& pass) { impl_->world.ReturnProcessBindingsForState(std::move(pass)); } // 일반 소멸 fallback과 실제 소비된 반납을 구분한다.
 void RawCampaignSession::ReleasePlayerLinks() { impl_->ReleasePlayerLinks(); }
 // 방향별 DWORD를 그대로 공유하여 한쪽 변경을 대칭화하거나 bool로 줄이지 않는다.
 std::span<std::uint32_t> RawCampaignSession::Alliances() { return impl_->alliances; }
@@ -4055,7 +4068,7 @@ std::unique_ptr<RawObjectMenuOpen> RawCampaignSession::MakeObjectMenuOpen(Object
     hooks.altar=[current](Sid sid) {
         const auto raw=current->core.pool.Slot(sid);return current->world.Find(std::bit_cast<float>(Read(raw,14)),std::bit_cast<float>(Read(raw,18)),current->runeState.altarType);
     };
-    hooks.project=[current](float x,float y) { const auto point=SoundToScreen(current->cursorView,x,y);return std::array<std::int32_t,2>{point.x,point.y}; };
+    hooks.project=[current](float x,float y) { return ProjectCameraView(current->gameplayGlobals->Camera().Snapshot(),x,y); };
     hooks.content=[current](Sid sid) { return current->priests->Carrier().FindContained(sid,1,0,0); };
     hooks.range=[current](std::uint32_t type) { if (type>=current->gunTypes.size()) throw std::out_of_range("객체 메뉴 현재 사정거리TYPE 범위 오류");return current->gunTypes[type].range; };
     return std::make_unique<RawObjectMenuOpen>(current->core.pool,current->core.types,std::move(hooks));

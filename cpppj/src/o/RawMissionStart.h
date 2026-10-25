@@ -16,6 +16,11 @@ struct MissionStartGlobals {
     std::uint32_t localOwner{1},playerKnown{},editor{}; // 00540c70/00595344/005c85a4다.
     std::int32_t denySalvage{},denyAscend{},allowAnyCapture{}; // 00595078/0059507c/005453e4의 atol DWORD다.
     std::uint32_t ordinaryGeysers{}; // 005950ac은 moreGeysers의 논리 부정이다.
+    std::int32_t* sharedAllowAnyCapture{};std::uint32_t* sharedOrdinaryGeysers{}; // Start의 실제 출력을 장기 owner에 쓴다.
+    std::int32_t& AllowAnyCapture() { return sharedAllowAnyCapture ? *sharedAllowAnyCapture : allowAnyCapture; } // atol의 전체 DWORD를 보존한다.
+    const std::int32_t& AllowAnyCapture() const { return sharedAllowAnyCapture ? *sharedAllowAnyCapture : allowAnyCapture; } // 현재 출력 DWORD를 const로도 읽는다.
+    std::uint32_t& OrdinaryGeysers() { return sharedOrdinaryGeysers ? *sharedOrdinaryGeysers : ordinaryGeysers; } // moreGeysers의 논리 부정을 저장한다.
+    const std::uint32_t& OrdinaryGeysers() const { return sharedOrdinaryGeysers ? *sharedOrdinaryGeysers : ordinaryGeysers; } // 현재 부정 값을 별도 사본으로 만들지 않는다.
 };
 // 실제 Session이 소유한 현재 전역을 원본 읽기 위치에서 조회한다. 미연결 fixture만 기존 Globals 값을 사용한다.
 struct MissionStartReads {

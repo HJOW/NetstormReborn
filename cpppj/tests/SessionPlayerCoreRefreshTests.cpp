@@ -1,6 +1,9 @@
+#include "client/GameWorld.h"
+#include <bit>
 // 실제 LocalLogin Core alias와 같은 TYPE/다이스를 사용한 현재 Core 갱신을 검사한다.
 #include "DudeSpawnSupport.h"
 #include "client/RawCampaignSession.h"
+#include "client/RawCampaignCursor.h" // 실제 커서의 Placement 멤버를 조회하는 검사에 완전한 선언을 제공한다.
 #include "client/ClientCoreDataGlobals.h"
 #include "client/ClientGameplayGlobals.h"
 #include "client/ClientPlayerRecords.h"
@@ -15,6 +18,7 @@
 
 namespace {
 using namespace netstorm::o;
+using CameraViewWords=std::array<std::uint32_t,16>; // padding 없는 실제16DWORD 복사의 검사 관측형이다.
 using namespace netstorm::client;
 // 기존 ThemeSessionServices/LocalLogin 검사의 외부 소리·번역·설정만 공급한다.
 struct CoreRefreshSessionDevices {
@@ -125,7 +129,7 @@ TEST_CASE(SessionIslandChunkStorage_ActualLoadAndSnapshotUseSameCurrentRecords) 
 
 // 실제 GameWorld/Session/입력이 같은9DWORD를 읽고 실제 객체의+7c 선택 비트도 공통 adapter에서 지운다.
 TEST_CASE(GameWorldSelectionGlobals_ActualWorldInputAndCleanupShareCurrentOwner) {
-    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);CoreRefreshSessionDevices devices;auto gameplay=std::make_shared<ClientGameplayGlobals>();auto surface=MakeRawSurfaceStorage(assets.game,gameplay->Authority());auto services=devices.Make(false);services.gameplayGlobals=gameplay;services.surfaceStorage=surface;
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);CoreRefreshSessionDevices devices;auto gameplay=std::make_shared<ClientGameplayGlobals>();auto surface=MakeRawSurfaceStorage(assets.game,gameplay->Authority(),gameplay->GameAux());auto services=devices.Make(false);services.gameplayGlobals=gameplay;services.surfaceStorage=surface;
     auto fort=FortTemplate::Parse(assets.files.Read("d/bc8fury76.fort"),assets.game.TypeTable());std::uint32_t cursorCalls{}; // 실제 장치 선택만 외부에서 관찰한다.
     {
         GameWorld world(assets.game,assets.files,std::move(fort),{},"bc8fury76",std::move(services),{640,480});CHECK(&world.SelectionGlobals()==&gameplay->selection);
@@ -142,4 +146,14 @@ TEST_CASE(GameWorldSelectionGlobals_ActualWorldInputAndCleanupShareCurrentOwner)
     CoreRefreshSessionDevices independentDevices;auto independent=independentDevices.Make(false);independent.surfaceStorage=surface; // Gameplay를 생략한 독립 호출자는 기존 Storage의 같은 Authority만 채택한다.
     auto nextFort=FortTemplate::Parse(assets.files.Read("d/bc8fury76.fort"),assets.game.TypeTable());
     { GameWorld next(assets.game,assets.files,std::move(nextFort),{},"bc8fury76",std::move(independent),{640,480});CHECK(&next.SelectionGlobals()!=&gameplay->selection && next.Selected()==0 && &next.Session().Core().processState.Server()==&surface->Authority()->server); } // 새 선택 owner와 공유 권한 owner를 구별한다.
+}
+
+// 실제 raw GameWorld의 투영/미니맵/viewport가 Client의 현재 분수 카메라를 픽셀에서 재구성하지 않는다.
+TEST_CASE(CameraView_ActualWorldProjectionAndResizePreserveFraction) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);CoreRefreshSessionDevices devices;auto gameplay=std::make_shared<ClientGameplayGlobals>();auto services=devices.Make(false);services.gameplayGlobals=gameplay;auto& camera=gameplay->Camera();std::uint32_t redraw{},revision{};camera.InitializeNativeRenderer(640,480,256,redraw,revision);
+    {
+        auto fort=FortTemplate::Parse(assets.files.Read("d/bc8fury76.fort"),assets.game.TypeTable());GameWorld world(assets.game,assets.files,std::move(fort),{},"bc8fury76",std::move(services),{640,480});CHECK(&world.Session().CameraGlobals()==&camera);SetCameraViewWorld(camera.RendererView(),1.25F,2.5F);camera.CopyRendererSnapshot();const auto before=std::bit_cast<CameraViewWords>(camera.Snapshot());const auto screen=world.ToScreen(-0.1,1.5);CHECK(screen.x==-21 && screen.y==-10);const auto cell=world.ToCell({0,0});CHECK(cell.x==2 && cell.y==3);CHECK(world.MinimapView().camera[0]==0x3fa00000U && world.MinimapView().camera[1]==0x40200000U);
+        world.Resize(640,480);world.Resize(800,600);CHECK(std::bit_cast<CameraViewWords>(camera.Snapshot())==before && camera.Target().limits[0]==3296 && camera.Target().limits[1]==2216);SetCameraViewWorld(camera.Snapshot(),2.25F,3.5F);const auto current=world.ToScreen(1.0,1.0);CHECK(current.x==-20 && current.y==-27 && world.MinimapView().camera[0]==0x40100000U);CHECK(world.Session().Cursor().Placement().ScreenOriginX()==36);
+    }
+    CHECK(!gameplay->Borrowed() && camera.Snapshot().worldBits[0]==0x40100000U && camera.Snapshot().worldBits[1]==0x40600000U);
 }

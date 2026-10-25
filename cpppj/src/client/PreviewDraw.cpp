@@ -153,7 +153,7 @@ void PreviewDraw::Draw(const o::RenderCollectionEntry& entry) const {
     const auto& d=source.drop;const auto& l=source.lifecycle;const auto& p=source.placement;const auto& s=state_;
     draw(CollectionInput{l.currentGump,p.placementAllowed,d.localPlayer},DrawInput{
         d.type,source.surfaces.bridgeType,source.surfaces.connectorType,s.overlayTrigger,s.overlayType,s.labelType,s.priceType,
-        p.screenOrigin.x,p.screenOrigin.y,p.labelSpacing,p.bounds[0],p.bounds[1],p.bounds[2],p.bounds[3],
+        p.ScreenOriginX(),p.ScreenOriginY(),p.labelSpacing,p.bounds[0],p.bounds[1],p.bounds[2],p.bounds[3],
         d.cursorWidth,l.costTextWidth,l.costHotspotX,l.costHotspotY,s.gridOption,s.showLetters,d.costFlags,
         p.sourceAllowed,p.placementFlags,p.descriptionAllowed,p.spaceAllowed,s.goodColor,s.badColor,
         source.grid,s.labelFrames,p.description,l.warningWidths,l.warningHeights,s.ownerMaps});

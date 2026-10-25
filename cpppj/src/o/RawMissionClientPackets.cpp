@@ -74,7 +74,7 @@ void RawMissionClientPackets::LoginBegin(std::span<const std::uint8_t> packet) c
         if (!state_.currentCoreData.empty()) { if (state_.currentCoreData.size()<10) throw std::out_of_range("LoginBegin 이전CoreData 범위");std::copy_n(state_.currentCoreData.begin(),10,state_.cachedCoreData.begin()); }
         state_.currentCoreData={};state_.coreDataActive=0;
     } else { state_.player.playerKnown=1;state_.currentCoreData=state_.metamap ? state_.cachedCoreData : players_.subspan(owner*kStride+0x6c,10); }
-    state_.beginSeed=Get(packet,22);std::copy_n(packet.begin()+8,6,state_.zoneAddress.begin());state_.battleSeed=Get(packet,30);
+    state_.beginSeed=Get(packet,22);std::copy_n(packet.begin()+8,6,state_.zoneAddress.begin());state_.StoreBattleSeed(Get(packet,30));
 }
 //004b4900의 현재 옵션 복사와 모든 파생 효과를 순서대로 실행한다.
 void RawMissionClientPackets::Options(std::uint32_t sender,std::span<const std::uint8_t> packet) const {

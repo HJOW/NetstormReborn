@@ -1,3 +1,4 @@
+#include "client/RawCameraView.h"
 // 소리 이름 표의 찾기/추가와 재생 계층을 원본의 순회·쓰기·장치 호출 순서대로 복원한다. 장치 호출은 SoundDeviceHooks로 나간다.
 #include "client/Sound.h"
 #include <algorithm>
@@ -174,14 +175,6 @@ constexpr int kPatchVolumeLine=0x3d0,kPatchPanLine=0x3d5,kCdVolumeLine=0x3cb,kCd
 // 원본: 004c6b38·004c6b55의 0x28·0x1e, 00497225의 16.0f·0049723c의 11.0f·0.5.
 // 이력: 2026-10-10 추가.
 constexpr std::uint32_t kMarginX=40,kMarginY=30;
-constexpr double kCellWidth=16.0,kCellHeight=11.0,kHalfPixel=0.5;
-// 원본 CRT _ftol처럼 64비트로 0쪽 절삭한 뒤 하위 32비트를 돌려준다. NaN이거나 64비트 범위를 넘으면 0이다.
-// 원본: 004e49c0 / CD 004f161c.
-// 이력: 2026-10-10 추가.
-std::uint32_t TruncateLow(double value) {
-    if (!(value>-9223372036854775808.0 && value<9223372036854775808.0)) return 0;
-    return static_cast<std::uint32_t>(static_cast<std::uint64_t>(static_cast<std::int64_t>(value)));
-}
 // (high − low)를 32비트로 뺀 뒤 0쪽으로 절삭해 반으로 나눈다(원본의 cdq; sub; sar 1).
 // 이력: 2026-10-10 추가.
 std::int32_t Half(std::int32_t low,std::int32_t high) {
@@ -201,9 +194,7 @@ std::int32_t Limit(std::int32_t value) { return value>kSoundMaximum ? kSoundMaxi
 
 // 곱과 덧셈은 x87에서 하고 절삭은 CRT가 한다. 카메라 원점은 32비트로 뺀다.
 SoundPoint SoundToScreen(const SoundView& view,float x,float y) {
-    const auto px=TruncateLow(static_cast<double>(x)*kCellWidth+kHalfPixel)-static_cast<std::uint32_t>(view.cameraX);
-    const auto py=TruncateLow(static_cast<double>(y)*kCellHeight+kHalfPixel)-static_cast<std::uint32_t>(view.cameraY);
-    return {static_cast<std::int32_t>(px),static_cast<std::int32_t>(py)};
+    const auto point=ProjectCameraCoordinates(view.cameraX,view.cameraY,x,y);return {point[0],point[1]};
 }
 
 // 여유를 더한 경계는 32비트로 계산하고 비교는 부호 있는 비교다.

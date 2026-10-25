@@ -1,3 +1,4 @@
+#include "o/RawGameAuxState.h"
 // 실제 Carrier 도착의 내용물/현재경로/깊이/다이스/끝 회피 검색을 두 PE에 대조한다.
 #include "CarrierArrivalSupport.h"
 
@@ -22,4 +23,16 @@ TEST_CASE(CarrierChoice_ArrivalUsesCurrentOwnerAi) {
         CHECK(scene.arrival->Arrival(Sid{50},0,0)==Number(row[2]));CHECK(scene.Effects()==row[3]);CHECK(Hex(scene.pool.Slot(Sid{50}))==row[4]);++checked;
     }
     CHECK(checked==406 && queries>0);
+}
+
+
+// 같은 capture DWORD의0/음수 비0를 실제 건강한 동맹 사제 pickup 경로가 즉시 읽는다.
+TEST_CASE(GameAux_CaptureDwordControlsActualAlliedPickup) {
+    bool checked{};
+    for (const auto& row:LoadFixture(NETSTORM_CARRIERARRIVAL_FIXTURE).rows) { // 기존 Native의 정상사제장면을 실제 하위 입력으로 쓰며 결과를 강제하지 않는다.
+        if (row[0]!="originals") continue;RawGameAuxState owner;ArrivalScene scene(OriginalEdition::Patch1078,row[1]);if (scene.Value("scene")!=1) continue;scene.state.sharedAllowAlliedPickup=&owner.AllowAnyCapture();scene.state.allowAlliedPickup=true;
+        scene.types[158].flags2=0;scene.types[150].flags2=0x200000;auto actor=scene.pool.AllocatedBytes(Sid{50});actor[34]=2;auto candidate=scene.pool.AllocatedBytes(Sid{60});candidate[34]=1;Put(candidate,26,200);scene.types[150].maxHitPoints=200;std::fill(scene.spots.begin(),scene.spots.end(),std::uint8_t{6});scene.state.alliances[2*9+1]=1;CHECK(!scene.priest->GroundImmobile(Sid{60}));
+        owner.AllowAnyCapture()=0;CHECK(scene.arrival->PickupCandidate(Sid{50},20.0F,21.0F).first==Sid{});owner.AllowAnyCapture()=-7;CHECK(scene.arrival->PickupCandidate(Sid{50},20.0F,21.0F).first==Sid{60});CHECK(owner.AllowAnyCapture()==-7 && scene.state.allowAlliedPickup);checked=true;break;
+    }
+    CHECK(checked);
 }

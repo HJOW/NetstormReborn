@@ -16,7 +16,7 @@ void AddRitualRegular(Sid sid,std::uint32_t event,float payload,std::uint32_t ty
     auto* reserved=pendingRitualRegular.get(); // 같은 확보의 주소를 유지하며 두 번째 할당을 하지 않는다.
     std::destroy_at(reserved);std::construct_at(reserved,event,payload);
     auto* attached=static_cast<RegularProcess*>(core.processes.Attach(std::move(pendingRitualRegular),type,sid,0x50)); // 서버/로컬61·46 Form 정책을 그대로 사용한다.
-    if (attached) attached->SetNextTime(core.processState.now);
+    if (attached) attached->SetNextTime(core.processState.Now());
 }
 // 실제452fe0의 세 인자를 단일 클라이언트 입력 큐로 보낸다. 기존 stopVoice hook명은 API 호환을 위해 유지한다.
 void RitualCommand(std::uint32_t command,std::uint32_t first,std::uint32_t second) {
@@ -83,7 +83,7 @@ void ConnectRitual() {
     templeRitual=std::make_unique<RawTempleRitual>(core.pool,core.hash,core.types,core.frames,core.shapes,core.spots,core.neighbors,hp,*ritualActions,ritualState,std::move(temple));
     RunePostPopHooks rune; // 같은 실제30 건설과 로컬304 예약을 사용한다.
     rune.reserveRegular=[this] { return ReserveRitualRegular(); };rune.addRegular=[this](Sid sid,std::uint32_t event,float payload) { AddRitualRegular(sid,event,payload,46); };
-    rune.startConstruction=[this](Sid sid,float duration) { PrepareBuilding(core.processState.now);building->Start(sid,duration); };
+    rune.startConstruction=[this](Sid sid,float duration) { PrepareBuilding(core.processState.Now());building->Start(sid,duration); };
     runePostPop=std::make_unique<RawRunePostPop>(core.pool,core.hash,core.types,runeState,core.postPop,std::move(rune));core.postPop.SetRunePostPop(runePostPop.get());
     daisState=std::make_unique<DaisRegularState>(DaisRegularState{ritualState,runeState,core.processState,rewardState,playerState.battleOwner});
     daisState->BindPlayerRecords(core.pool.Edition(),players);daisState->voiceCue=0x020000df; // PE00542a70의 실제 희생 종료 명령이다.

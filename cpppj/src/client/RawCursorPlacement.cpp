@@ -115,7 +115,7 @@ void RawCursorPlacement::Prepare() const {
         const auto cellX=std::bit_cast<std::int16_t>(static_cast<std::uint16_t>(raw[22]|static_cast<std::uint16_t>(raw[23])<<8));
         const auto cellY=std::bit_cast<std::int16_t>(static_cast<std::uint16_t>(raw[24]|static_cast<std::uint16_t>(raw[25])<<8));
         const auto foot=std::bit_cast<std::int32_t>(static_cast<std::uint32_t>(Type().footX)<<4);
-        const auto x=Sub(Sub(Sub(cellX,foot/2),drop_.cursorWidth/2),state_.screenOrigin.x),y=Sub(cellY,state_.screenOrigin.y);
+        const auto x=Sub(Sub(Sub(cellX,foot/2),drop_.cursorWidth/2),state_.ScreenOriginX()),y=Sub(cellY,state_.ScreenOriginY());
         Need(hooks_.invalidate)({x,y,Add(Add(drop_.cursorWidth,2),x),Add(Add(lifecycle_.costHeight,2),y)},0);
     }
 }

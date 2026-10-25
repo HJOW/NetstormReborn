@@ -26,6 +26,11 @@ struct SquidDeletionState {
     std::uint32_t regionMask{0x50444200}; // 두 PE의 초기 postDestroy 대상 전역. 실제 분기는 이 값에 8을 OR한다.
     bool rebuildGraph{}; // 원본 삭제 분할 정책 전역. GraphRecovery의 소진 복구와 구별한다.
     std::uint8_t specialSurfaceType{157},specialSurfaceReplacementType{162},largeSurfaceType{162}; // 특수 H 치환·9 감소 타입 전역.
+    float* sharedLostX{};float* sharedLostY{}; // Native와 같은 float 폭의 손실 위치를 직접 빌린다.
+    float& LostX() { return sharedLostX ? *sharedLostX : lostX; } // 음향 효과 뒤 현재 저장소를 읽고 쓴다.
+    const float& LostX() const { return sharedLostX ? *sharedLostX : lostX; } // const 관측도 같은 실제 X를 읽는다.
+    float& LostY() { return sharedLostY ? *sharedLostY : lostY; } // X와 Y를 별개의 실제 주소에 보존한다.
+    const float& LostY() const { return sharedLostY ? *sharedLostY : lostY; } // const 관측도 같은 실제 Y를 읽는다.
 };
 // 객체 삭제 외부 동작과 저장소 조회를 연결하는 콜백 묶음이다.
 struct SquidDeletionHooks {

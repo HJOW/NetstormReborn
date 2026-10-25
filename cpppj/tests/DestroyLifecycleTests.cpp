@@ -1,3 +1,4 @@
+#include "o/RawGameAuxState.h"
 // 실제 공통 pre/postDestroy의 선택·목록·통계·비용을 저장된 독립 기계어 결과와 비교한다.
 #include "TestSupport.h"
 #include "o/SquidDestroyLifecycle.h"
@@ -268,4 +269,13 @@ TEST_CASE(DestroyLifecycle_RejectsWrongPoolAndFormOrContained) {
     CHECK(Throws([&] { SquidDestroyLifecycle invalid(other,scene.types,scene.bookkeeping,scene.state,scene.destroy,{}); }));
     auto raw=scene.pool.AllocatedBytes({5});raw[10]=20;CHECK(Throws([&] { scene.lifecycle->PreDestroy({5},scene.flags); }));
     raw[10]=74;raw[11]|=8;CHECK(Throws([&] { scene.lifecycle->PostDestroy({5},0); }));CHECK(scene.destroy.PreDepth()==0 && scene.destroy.PostDepth()==0);
+}
+
+
+// 실제unitLost효과뒤현재raw좌표와장기비용을읽으며지역사본은쓰지않는다.
+TEST_CASE(GameAux_DeletionReadsCurrentLossAndCostAfterSoundEffect) {
+    RawGameAuxState owner;auto args=Basic();args[8]="0";Scene scene(OriginalEdition::Patch1078,args);owner.TotalCost()=1000;owner.ResetLostPositionForCleanup();scene.bookkeeping.sharedTotalCost=&owner.TotalCost();scene.state.sharedLostX=&owner.LostX();scene.state.sharedLostY=&owner.LostY();std::uint32_t sounds{};
+    SquidDeletionHooks hooks;hooks.emit=[&](const SquidDeletionEvent& event) { if (event.effect!=SquidDeletionEffect::UnitLostSound) return;++sounds;owner.TotalCost()=2000;owner.LostX()=-1;owner.LostY()=-2;auto raw=scene.pool.AllocatedBytes(Sid{5});Put(raw,14,std::bit_cast<std::uint32_t>(22.25F));Put(raw,18,std::bit_cast<std::uint32_t>(23.75F)); }; // 음향장치의선언된효과만주입하며삭제판정을대신하지않는다.
+    SquidDestroyLifecycle lifecycle(scene.pool,scene.types,scene.bookkeeping,scene.state,scene.destroy,hooks);lifecycle.PreDestroy(Sid{5},0);lifecycle.PostDestroy(Sid{5},0);
+    CHECK(sounds==1 && owner.LostX()==22.25F && owner.LostY()==23.75F && owner.TotalCost()==1400);CHECK(scene.bookkeeping.totalCost==1000 && scene.state.lostX==90.25F && scene.state.lostY==-91.5F);
 }

@@ -12,7 +12,7 @@ struct DaisPlayerSlots {
 };
 // 로딩/게임초기시각/원래플레이어 저장소를 실제 공통모듈과 공유한다.
 struct DaisLifecycleState {
-    double& gameTime; // 기존 API명이며 실제patch005c85f0/CD00564db8 로그인 종료 벽시각이다. Process clock.now가 아니다.
+    double& gameTime; // 기존 API명이며 실제patch005c85f0/CD00564db8 로그인 종료 벽시각이다. Process clock.Now()가 아니다.
     CarrierPostPopState& loading; // 같은 DamageablePostPop의 loadingDepth 전역이다.
     std::array<DaisPlayerSlots,kPlayerCount+1> players{}; // owner0..8의현재Player 필드를저장한다.
 };

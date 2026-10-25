@@ -3,9 +3,11 @@
 #include "client/RawCampaignCursor.h"
 
 namespace netstorm::client {
+class Renderer; // 현재 장치 provider는 화면 재생성 뒤에도 다시 조회한다.
 class Client; // 장치·글꼴·설정의 장기 소유자다.
 class RawButtonControls; // 현재 표시와 입력이 공유하는 단일 Gump 트리다.
 // 현재 트리 선택·재귀 수신·게임 부모 SID·직접 수신을 연결한다. 게임 계산과 전송은 유지한다.
+CursorPlacementHooks MakeClientCursorPrepareHooks(Client& client,std::function<Renderer&()> renderer={}); // Session 없는 첫 메뉴도 같은 실제Project/dirty를 호출한다.
 void BindCampaignCursorGumps(CampaignCursorEffects& effects,RawButtonControls& controls);
 // 클라이언트와 트리는 반환한 모든 콜백보다 오래 살아야 한다. 미복원 효과는 기존 입력을 보존한다.
 CampaignCursorEffects MakeCampaignCursorClientEffects(Client& client,RawButtonControls& controls,

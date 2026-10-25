@@ -1,5 +1,6 @@
 // 같은 캠페인 Host/시계와 실제 색 할당·dirty/Renderer·VFX 선 출력을 연결한다.
 #pragma once
+#include "client/RawCameraView.h"
 #include "client/ParticlePaletteMemory.h"
 #include "client/RawSurfaceWorld.h"
 #include "client/Renderer.h"
@@ -45,6 +46,7 @@ public:
     // 같은 전체 Kernel 실행 직전 현재 게임 시각을 공급한다.
     void PrepareFrame(double now,std::uint32_t frameNumber=0,bool weakenedMana=false); // 원본 현재DWORD frame과 약화 마나도 같은 월드에서 공급한다.
     // 현재 실제 카메라/표시 영역과 장치 재생성에도 유효한 dirty 경계를 갱신한다.
+    void BindCameraView(const RawCameraViewState& view); // 참조한 Client snapshot은 모든 입자보다 오래 살아야 한다.
     void SetView(SoundView view,SurfaceDisplayHooks display);
     // 같은 원본 수집/깊이 키로 SHP와 함께 정렬할 직접 그리기 항목을 만든다.
     std::vector<RenderSprite> Sprites(ScreenRect clip);
@@ -83,7 +85,11 @@ private:
     ParticlePaletteMemory memory_; // 원본 요청 크기의 실제 할당과 OS 메모리 읽기 경계다.
     o::LightningLifetimeState lightningLifetime_; // Fiery와 다른0055a758 공유 색 상태다.
     ParticlePaletteMemory lightningMemory_; // 실제11색44바이트 할당이며 빔 Draw는 인접 DWORD를 읽지 않는다.
-    SoundView view_{0,0,0,0,1024,768}; // 실제00497220과 같은 정수 카메라 원점이다.
+    SoundView view_{0,0,0,0,1024,768}; // 독립 호출의 명시 fallback/현재viewport이며 bound 카메라의 소유자가 아니다.
+    const RawCameraViewState* cameraView_{}; // 실제 Session은 같은 Client snapshot을 빌린다.
+    std::array<std::int32_t,2> notifiedPixels_{}; // dirty 판정용 직전 통지 이력이며 현재 카메라의 대체 저장소로 읽지 않는다.
+    SoundView CurrentView() const; // 호출마다 현재 정수 픽셀과 같은 viewport를 조립한다.
+    void RefreshCamera(); // 기존 값형 하위 frame 입력을 선택된 실제 진입 직전에 현재64BYTE에서 공급한다.
     SurfaceDisplayHooks display_; // 현재 클라이언트 Renderer의 dirty 소비자다.
     DirtyRegions pending_{1024,768}; // 장치 연결 전 요청도 원본100항목/전체 갱신 규칙으로 보존한다.
     std::optional<Target> target_; // 현재 Draw 동안만 존재하는 출력 대상이다.

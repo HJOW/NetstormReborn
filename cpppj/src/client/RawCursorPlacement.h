@@ -15,7 +15,11 @@ struct CursorPlacementState {
     std::array<std::int32_t,4> bounds{}; // 55a2b0..bc: 기준점 x/y와 전체 폭/높이다. 좌상/우하 좌표가 아니다.
     std::int32_t hotspotX{},hotspotY{},imageWidth{},imageHeight{}; // 55a2c0..cc의 첫 그림 signed WORD다.
     ScreenPoint screenOrigin{}; // 59a91c/920: 금액 출력에서 빼는 현재 화면 원점이다.
-    std::string description; // 55a308의 현재 NUL 종료 설명 문구다.
+    std::string description; //55a308의 현재 NUL 종료 설명 문구이며 기존 aggregate 순서를 유지한다.
+    const std::array<std::int32_t,2>* sharedScreenOrigin{}; // 실제59a91c/920이며 Session 없는 준비도 같은 현재 snapshot을 빌릴 수 있다.
+    std::int32_t ScreenOriginX() const { return sharedScreenOrigin ? (*sharedScreenOrigin)[0] : screenOrigin.x; } // 비용/그림 소비 시 현재X를 읽는다.
+    std::int32_t ScreenOriginY() const { return sharedScreenOrigin ? (*sharedScreenOrigin)[1] : screenOrigin.y; } // 비용/그림 소비 시 현재Y를 읽는다.
+
 };
 // 원본 CanonDecoder의 한 유효 칸이다. 실제 반복자는 아래 연결기가 공급한다.
 struct CursorCanonCell {

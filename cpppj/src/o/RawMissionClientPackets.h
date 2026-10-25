@@ -1,5 +1,6 @@
 // 로그인 서버가 보낸 실제8종 패킷의 현재 Player/State/SP/Template 수신 처리를 복원한다.
 #pragma once
+#include <bit>
 #include "o/RawPacketDispatch.h"
 #include "o/RawPlayerParticipation.h"
 #include "o/RawPlayerWorld.h"
@@ -40,6 +41,8 @@ struct MissionClientPacketState {
     std::span<std::uint8_t> battleOptions; // 0052f7e0의87바이트다.
     std::span<const std::uint8_t> currentHandle; // 00540ca8의 현재 NUL 종료 좁은 이름이다.
     std::span<const std::uint8_t> hidden; // 0052f81e의 현재9BYTE이며battleOptions+0x3e와동일해야한다.
+    std::int32_t* sharedBattleSeed{}; // LoginBegin 출력도 같은 자원 DWORD에 직접 쓴다.
+    void StoreBattleSeed(std::uint32_t value) const { if (sharedBattleSeed) *sharedBattleSeed=std::bit_cast<std::int32_t>(value);else battleSeed=value; } // unsigned 입력을 명시 비트 변환해 저장한다.
 };
 // 실제 큰 외부 몸체는 도달 위치에서 필수다. 빈 수신 성공을 허용하지 않는다.
 struct MissionClientPacketHooks {

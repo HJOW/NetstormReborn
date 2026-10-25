@@ -60,9 +60,9 @@ std::pair<Sid,bool> RawCarrierArrival::PickupCandidate(Sid sid,float x,float y) 
         if (genus&kPriest) {
             const bool immobile=priest_.GroundImmobile(candidate);accept=immobile;
             if (patch) {
-                accept=Owner(sid)!=Owner(candidate) && !(Genus(sid)&kPriest) && (immobile || (state_.allowAlliedPickup && Allied(Owner(sid),Owner(candidate))));
+                accept=Owner(sid)!=Owner(candidate) && !(Genus(sid)&kPriest) && (immobile || (state_.AllowAlliedPickup() && Allied(Owner(sid),Owner(candidate))));
             } else if (Owner(candidate)==Owner(sid) || ((Genus(sid)&kPriest) && !hooks_.cdPriestPickupPriest())) accept=false;
-            else if (state_.allowAlliedPickup && Allied(Owner(sid),Owner(candidate))) accept=true;
+            else if (state_.AllowAlliedPickup() && Allied(Owner(sid),Owner(candidate))) accept=true;
         }
         if (accept) return {candidate,(genus&0x2000)!=0};
     }
@@ -70,7 +70,7 @@ std::pair<Sid,bool> RawCarrierArrival::PickupCandidate(Sid sid,float x,float y) 
 }
 // 현재 지면/상태/타입 다음 fly 부류가 아니면 실제 Graph를 비교한다.
 bool RawCarrierArrival::ValidGeyser(Sid sid,Sid target) const {
-    if ((Extra(target)&9) || (pool_.Slot(target)[11]&2) || pool_.Slot(target)[10]!=state_.geyserType) return false;
+    if ((Extra(target)&9) || (pool_.Slot(target)[11]&2) || pool_.Slot(target)[10]!=state_.GeyserType()) return false;
     return (Genus(sid)&0x20000) || anchor_.GraphFor(sid.value)==anchor_.GraphFor(target.value);
 }
 // 패치의 현재 canProcessStormpower assert와 CD의 없는 assert를 구분한다.

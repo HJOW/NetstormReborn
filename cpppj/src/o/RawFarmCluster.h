@@ -9,6 +9,8 @@ namespace netstorm::o {
 struct FarmClusterState {
     bool archipelago{}; // 원본군도모드이며지역0에서만군집범위/수량/반경을바꾼다.
     std::int32_t archipelagoSpan{1}; // 패치00542654/CD00537188의현재섬확장단위다.
+    const std::uint32_t* sharedArchipelago{}; // Login.bb4와 다른 bb0을 직접 빌린다.
+    bool Archipelago() const { return sharedArchipelago ? *sharedArchipelago!=0 : archipelago; } // bool의 물리 폭으로 대체하지 않는다.
 };
 // CD의지역record조회에서보고하고원본처럼계속진행하는두진단이다.
 enum class FarmClusterAssertion {

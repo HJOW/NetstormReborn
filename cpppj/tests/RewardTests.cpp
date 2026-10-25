@@ -1,3 +1,4 @@
+#include "o/RawGameAuxState.h"
 // 삭제/해체 보상(SP)과 SP 저장소·난수를 저장된 독립 기계어 결과와 비교한다.
 #include "TestSupport.h"
 #include "o/SquidDestroyLifecycle.h"
@@ -250,4 +251,13 @@ TEST_CASE(reward_lifecycle_rejects_mismatched_or_bad_recipient) {
     const auto before=scene.bookkeeping.totalCost;
     CHECK(Throws([&] { scene.lifecycle.PreDestroy({5},9U<<16); }));
     CHECK(scene.bookkeeping.totalCost==before);CHECK(scene.rewardState.geyserPool==0);
+}
+
+
+// 실제 SP 갱신 효과가 자원을 바꾼 뒤 Refund는 같은owner의 현재595088을 다시 읽는다.
+TEST_CASE(GameAux_RewardUsesCurrentPercentAndResourceAfterSpEffect) {
+    RawGameAuxState owner;SidPool pool(OriginalEdition::Patch1078,kCapacity,true);CHECK(pool.Allocate(2)==Sid{5});auto raw=pool.AllocatedBytes(Sid{5});std::fill(raw.begin(),raw.end(),std::uint8_t{});raw[10]=74;std::vector<RiftTypeRecord> types(188);types[74].cost=100.0F;SquidPostPopState book;GameRandom random;ScrambledSpStore store(random,[] { return 1U; });store.Set(1,std::bit_cast<std::uint32_t>(1000.0F));
+    SquidRewardState state;state.percent=99;state.geyserPool=-777;state.sharedPercent=&owner.RefundPercent();state.sharedGeyserPool=&owner.ResourcePool();owner.ResourcePool()=10;std::uint32_t effects{};SquidReward reward(pool,types,book,state,&store,{{},[&] { ++effects;owner.ResourcePool()=1000; }});
+    auto first=reward.Refund(Sid{5},1,false);CHECK(first.applied && first.cost==100 && first.refund==25 && owner.ResourcePool()==1075 && effects==1 && state.geyserPool==-777 && state.percent==99);
+    owner.RefundPercent()=50;auto second=reward.Refund(Sid{5},1,false);CHECK(second.cost==100 && second.refund==50 && owner.ResourcePool()==1050 && effects==2 && state.geyserPool==-777 && state.percent==99);
 }

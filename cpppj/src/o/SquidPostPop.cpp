@@ -222,7 +222,7 @@ std::int32_t SquidPostPop::TotalCost(std::size_t type) const {
             throw std::out_of_range("postPop 패치 비용 표 범위 오류");
         value=Wrapped(static_cast<std::int64_t>(encoded)-bias);
     }
-    value+=state_.totalCost;
+    value+=state_.TotalCost();
     // 정상 비용 누적의 signed DWORD 경계 통과는 원본 ftol 반환의 low DWORD로 보존한다.
     if (value<-4294967296.0 || value>4294967295.0) throw std::out_of_range("postPop 비용 누적 범위 오류");
     return Wrapped(static_cast<std::int64_t>(value));
@@ -368,7 +368,7 @@ void SquidPostPop::PostPopBase(Sid sid,std::uint32_t flags) {
     if (state_.graphsEnabled && (type.flags1&TypeFlag1::kSurface) && (flags&1) && (flags&kNoGraph))
         pool_.AllocatedBytes(sid)[patch ? 30 : 28]=state_.invalidGraph;
     if ((flags&1) && !(bytes[patch ? 40 : 35]&kAbstractBuried)) {
-        state_.totalCost=TotalCost(number);
+        state_.TotalCost()=TotalCost(number);
         if (type.flags1&kProvider) {
             const auto items=state_.providers.Items();
             if (std::find(items.begin(),items.end(),sid.value)==items.end()) Append(state_.providers,sid);

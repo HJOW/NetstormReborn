@@ -1,3 +1,4 @@
+#include "o/RawGameAuxState.h"
 // 실제 PATCH의 후보/생성/Player부모 출력과 같은 raw 입력의 전체 결과/효과 순서를 대조한다.
 #include "ConstructionSupport.h"
 #include "o/RawLocalGeyser.h"
@@ -77,7 +78,7 @@ struct GeyserEnvironment {
 }
 
 // 같은원본221행을기존독립상태/실제공유자원두backend에서결과/전체저장소/효과순서까지대조한다.
-void CheckLocalGeyserFixture(bool shared) {
+void CheckLocalGeyserFixture(bool shared,bool gameOwner=false) {
     std::ifstream input(NETSTORM_LOCALGEYSER_FIXTURE);if (!input) throw std::runtime_error("로컬간헐천 fixture 없음");
     std::string line;std::uint32_t count=0;
     // 사례마다 실제 원본과 같은 독립 raw 저장소를 구성한다.
@@ -109,7 +110,8 @@ void CheckLocalGeyserFixture(bool shared) {
         state.firstPlayerQuantity=static_cast<std::int32_t>(std::stoll(row[12]));state.lastPlayerQuantity=static_cast<std::int32_t>(std::stoll(row[13]));
         GeyserPlayers(players,Number(row[9]));if (Number(row[14])==2) { Put(players,0xb4+0x50,2,1);Put(players,0xb4+0x78,1); }
         GeyserEnvironment environment{state,recent,players,types};environment.predictable=Number(row[10]);environment.time=std::bit_cast<double>(std::stoull(row[11]));environment.mutation=Number(row[14]);
-        std::int32_t sharedPool=state.resourcePool; // 실제전역의명시초기입력이며Bind시의복사/예산snapshot이아니다.
+        RawGameAuxState owner;owner.ResourcePool()=state.resourcePool;std::int32_t localSharedPool=state.resourcePool;std::int32_t& sharedPool=gameOwner ? owner.ResourcePool() : localSharedPool; // 실제 owner와 기존 값형 backend를 구별한다.
+        if (gameOwner) { state.sharedGeyserType=&owner.GeyserType();state.geyserType=70; } // 실제전역의명시초기입력이며Bind시의복사/예산snapshot이아니다.
         if (shared) { state.resourcePool=-777;environment.sharedPool=&sharedPool; }
         RawLocalGeyser body(pool,hash,spots,types,frames,players,recent,state,environment.Hooks());CHECK(&body.Pool()==&pool);CHECK(&body.Recent()==&recent);
         if (shared) { body.BindResourcePool(sharedPool);CHECK(&body.ResourcePool()==&sharedPool); }
@@ -140,3 +142,7 @@ TEST_CASE(LocalGeyser_RejectsMissingCreation) {
     SquidPostPopList recent;recent.entries.resize(5);LocalGeyserState state;GeyserEnvironment environment{state,recent,players,types};auto hooks=environment.Hooks();hooks.create={};bool rejected=false;
     try { const RawLocalGeyser body(pool,hash,spots,types,frames,players,recent,state,std::move(hooks)); } catch (const std::invalid_argument&) { rejected=true; }CHECK(rejected);
 }
+
+
+// 기존221행의삭제/생성/Pop효과뒤현재자원/현재TYPE재조회를같은장기물리에서대조한다.
+TEST_CASE(GameAux_LocalGeyserOwnerReplaysNative221WithOppositeTypeFallback) { CheckLocalGeyserFixture(true,true); }

@@ -112,7 +112,7 @@ void RawLocalGeyser::Populate(std::int32_t quantity,GameRandom& random,FortRando
         const float x=static_cast<float>(static_cast<double>(point.x)-kRadius),y=static_cast<float>(static_cast<double>(point.y)-kRadius); // 원본confirm의별도단정도저장좌표다.
         if (!(Spot(Truncate(static_cast<double>(point.x)+kSpotBias),Truncate(static_cast<double>(point.y)+kSpotBias))&2U))
             hooks_.confirm({state_.noIslandType,x,y,0,0,0,0,0,0,0});
-        const auto created=hooks_.create(state_.geyserType,0); // 실제factory실패를존재하는간헐천으로계산하지않는다.
+        const auto created=hooks_.create(state_.GeyserType(),0); // 실제factory실패를존재하는간헐천으로계산하지않는다.
         if (!created.value) throw std::logic_error("로컬 간헐천 실제 factory 생성 실패");
         hooks_.pop(created,point.x,point.y,0);
         if (std::bit_cast<std::int32_t>(recent_.count)<static_cast<std::int32_t>(kRecentLimit)) {
@@ -120,8 +120,8 @@ void RawLocalGeyser::Populate(std::int32_t quantity,GameRandom& random,FortRando
             recent_.entries[recent_.count]=created.value;++recent_.count;
         }
         const float pool=static_cast<float>(ResourcePool()); // 원본은삭제/Pop뒤같은00595088을다시읽어TYPE조회전에float로한번저장한다.
-        if (state_.geyserType>=types_.size()) throw std::out_of_range("로컬 간헐천 현재 cost타입 범위");
-        ResourcePool()=std::max(0,Truncate(static_cast<double>(pool)-types_[state_.geyserType].cost));
+        if (state_.GeyserType()>=types_.size()) throw std::out_of_range("로컬 간헐천 현재 cost타입 범위");
+        ResourcePool()=std::max(0,Truncate(static_cast<double>(pool)-types_[state_.GeyserType()].cost));
     }
 }
 // 원본은부모진입에서boss/fort로earlyreturn하지않으며각Populate가현재값을검사한다.

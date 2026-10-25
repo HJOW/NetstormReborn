@@ -71,6 +71,9 @@ struct SquidPostPopState {
     const std::array<std::uint32_t,256>& LocalSecondaryCounts() const noexcept { return sharedTotalMade ? sharedTotalMade->localSecondaryCounts : localSecondaryCounts; } // getter의 genus 합산도 같은 현재 누적 표를 읽는다.
     std::array<std::uint32_t,256>& GlobalCounts() noexcept { return sharedTotalMade ? sharedTotalMade->globalCounts : globalCounts; } // 같은 전역 현재 수를 Pop/삭제/조회에 전달한다.
     const std::array<std::uint32_t,256>& GlobalCounts() const noexcept { return sharedTotalMade ? sharedTotalMade->globalCounts : globalCounts; } // 수명 보존 검사는 이 실제 물리의 값을 별도로 복사한다.
+    std::int32_t* sharedTotalCost{}; //0059508c의 실제 장기 signed 비용을 빌린다.
+    std::int32_t& TotalCost() { return sharedTotalCost ? *sharedTotalCost : totalCost; } // Pop/삭제가 같은 물리를 읽는다.
+    const std::int32_t& TotalCost() const { return sharedTotalCost ? *sharedTotalCost : totalCost; } // 독립 fixture의 값은 보존한다.
 };
 // Pop 이후 타입별 등록 목록과 표면 연결 상태를 갱신하는 처리기이다.
 class SquidPostPop {

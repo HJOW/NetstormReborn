@@ -68,7 +68,7 @@ std::int32_t SquidDestroyLifecycle::RemainingCost(Sid sid) const {
             throw std::out_of_range("삭제 훅 패치 비용 표 범위 오류");
         decoded=std::bit_cast<std::int32_t>(static_cast<std::uint32_t>(static_cast<std::int64_t>(encoded)-bias));
     }
-    const double result=static_cast<double>(bookkeeping_.totalCost)-decoded;
+    const double result=static_cast<double>(bookkeeping_.TotalCost())-decoded;
     if (result<-4294967296.0 || result>4294967295.0) throw std::out_of_range("삭제 훅 비용 누적 범위 오류");
     return std::bit_cast<std::int32_t>(static_cast<std::uint32_t>(static_cast<std::int64_t>(result)));
 }
@@ -152,7 +152,7 @@ void SquidDestroyLifecycle::PreDestroy(Sid sid,std::uint32_t flags) {
             if (LostNotice(sid,flags)) {
                 if (pool_.Edition()==OriginalEdition::Cd1072 || Object(sid)[kType]!=state_.silentType)
                     hooks_.emit({SquidDeletionEffect::UnitLostSound,sid,0});
-                const auto raw=Object(sid);state_.lostX=Coordinate(raw,kX);state_.lostY=Coordinate(raw,kY);
+                const auto raw=Object(sid);state_.LostX()=Coordinate(raw,kX);state_.LostY()=Coordinate(raw,kY);
             }
             if (Type(sid).flags1&kProvider) { Remove(bookkeeping_.providers,sid);++bookkeeping_.productionDirty; }
             if (aiNotice_) aiNotice_(Owner(sid),sid,false); // 현재 owner의 실제 AI 통지는 공급 목록 뒤·전체 작업장 목록 앞이다.
@@ -164,7 +164,7 @@ void SquidDestroyLifecycle::PreDestroy(Sid sid,std::uint32_t flags) {
 // 주변 표면을 원본 순서로 다시 Add하고 ordinary 비용을 마지막에 차감한다.
 void SquidDestroyLifecycle::PostDestroy(Sid sid,std::uint32_t flags) {
     ValidatePost(sid,flags);if (NeedsPostGraph(sid,flags)) graph_->PostDestroy(sid);
-    if (Ordinary(sid)) bookkeeping_.totalCost=RemainingCost(sid);
+    if (Ordinary(sid)) bookkeeping_.TotalCost()=RemainingCost(sid);
     destroy_.CompletePostDestroy();
 }
 // 원본 파생 가상 메서드는 forward로, 공통 Pre/Post는 위 구현으로 연결한다.

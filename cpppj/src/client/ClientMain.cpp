@@ -368,6 +368,7 @@ int Client::Run() {
     // "init renderer": 화면 장치와 같은 크기의 변경 표·프레임 캐시를 만든다.
     renderer_ = std::make_unique<Renderer>(screenWidth_, screenHeight_,options_.edition);
     kencloudGlobals_->BindRenderer(renderer_.get()); // Native renderer 존재 관문은 실제 현재 장치와 같은 수명을 사용한다.
+    InitializeNativeRendererView();
     cursor_ = std::make_unique<Cursor>(resources_, window_);
     if ((mode & ScreenMode::kSoftwareMouse) != 0) cursor_->BuildSoftware(screen_->Palette());
     screen_->ShowCursor(true);
@@ -376,7 +377,8 @@ int Client::Run() {
     InvalidateRect(window,nullptr,FALSE);UpdateWindow(window);GdiFlush();DwmFlush(); // 유효한 WM_PAINT 갱신을 실행한 뒤 Windows 합성 화면의 다음 표시까지 완료하여 빠른 메뉴 교체가 로딩을 덮지 않게 한다.
     // "init types"(FUN_0049ebb0): 타입·그림·타입 표.
     assets_ = std::make_unique<GameAssets>(files_, options_.edition, palettePath);
-    surfaceStorage_=MakeRawSurfaceStorage(*assets_,gameplayGlobals_->Authority()); // init squid/hash/spot의 실제 장기 물리를 메뉴보다 먼저 확보한다.
+    surfaceStorage_=MakeRawSurfaceStorage(*assets_,gameplayGlobals_->Authority(),gameplayGlobals_->GameAux()); // init squid/hash/spot의 실제 장기 물리를 메뉴보다 먼저 확보한다.
+    surfaceStorage_->Processes().BindDevices(kernel_,time_); // 첫 메뉴/World보다 먼저 실제 같은 Kernel/현재 프레임을 장기 Host에 연결한다.
     const auto serverPath=configuration_.SubstituteLocal("{DataDir}/!rootservers.dat");const auto serverFile=files_.TryRead(serverPath); // 현재 보호 시작 목록을 읽으며 네트워크 갱신/저장 부모와 구별한다.
     if (serverFile) nsInfoGlobals_->LoadServerNames(*serverFile);else if (const auto original=files_.TryRead(configuration_.SubstituteLocal("{DataDir}/rootservers.dat"))) nsInfoGlobals_->LoadServerNames(*original);
     if (!PumpMessages()) return 0;
@@ -398,7 +400,7 @@ int Client::Run() {
         const int level = current < 1 ? 0 : current < 3 ? 1 : current == THREAD_PRIORITY_TIME_CRITICAL ? 2 : 0;
         if (level != wanted) SetThreadPriority(GetCurrentThread(), kThreadPriorities[static_cast<std::size_t>(wanted)]);
         // 1. 시각 고정(FUN_00460e90).
-        time_ = clock_.Capture(timeGetTime());
+        *time_ = clock_.Capture(timeGetTime());
         if (menu_) menu_->Tick();
         // 3. 재생 중인 효과음 수를 다시 센다(FUN_004a8e60). 4~6. [원본] 네트워크 폴링·내보내기 — 옮기지 않았다. 2는 위 UI 전환 부분이다.
         if (audio_) audio_->CountPlaying();
@@ -428,7 +430,7 @@ int Client::Run() {
             if (menu_) menu_->CleanupGumps(); //439b13→4662b0: 이 단계가 예약한 입력은 다음 Input에서만 소비한다.
             if (menu_) menu_->IdleGumps(); //439b18→464170: 정리 뒤·Kernel 앞의 같은 표 한 번이다.
             if (menu_) menu_->PrepareKernelFrame(); // 같은 실제 시각/연결/AI 입력을 준비하며 Kernel은 호출하지 않는다.
-            kernel_.RunFrame();
+            kernel_->RunFrame();
             if (menu_) menu_->FinishKernelFrame(); // 모든 원문 프로세스가 같은 슬롯 순회를 끝낸 뒤 표시를 수집한다.
         } else if (menu_) menu_->IdleGumps(); //439b69: 영상 갱신 잠금 중에도 Idle만 계속 실행한다.
         if (menu_) menu_->Frame(); // 합성/그리기 경계는 양쪽 가지 모두 유지하며 State Tick과 합치지 않는다.
@@ -597,6 +599,9 @@ void Client::PaintLoading(NativeHandle dcHandle) {
 }
 
 // 원본 00436450. 메뉴/검사 장면이 준비된 뒤 Renderer의 변경 영역만 그려 내보낸다.
+void Client::InitializeNativeRendererView() { gameplayGlobals_->Camera().InitializeNativeRenderer(screenWidth_,screenHeight_,256,kencloudGlobals_->WorldRedraw(),gameplayGlobals_->MapRevision()); }
+
+// 현재 장치 화면과 논리 Native Renderer의 수명을 혼동하지 않는다.
 void Client::Frame() {
     // [원본] 창이 비활성이고 전체화면이면 그리지 않는다(FUN_004977e0) — 전체화면을 옮기면 더한다.
     if (!clock_.IsPaused()) {
@@ -605,6 +610,7 @@ void Client::Frame() {
     }
     lastDraw_ = clock_.WallSeconds(timeGetTime());
     PresentScene();
+    gameplayGlobals_->Camera().CopyRendererSnapshot(); //00436532: 프레임 말미 현재 논리 Renderer의16DWORD를 복사한다.
     ++frames_;
     if (options_.frameLimit != 0 && frames_ == options_.frameLimit) {
         if (!options_.screenshot.empty()) SaveScreenshot();
@@ -713,13 +719,13 @@ void Client::RefreshPaletteConsumers() {
 void Client::StartThunderFlash() {
     if (!menu_ || !menu_->HasWorld()) return;
     auto process=std::make_unique<ThunderProcess>(*this,[this](o::ProcessId id) { std::erase(thunderProcesses_,id); });
-    auto* pointer=process.get();const auto id=kernel_.Add(std::move(process));pointer->Registered(id);
+    auto* pointer=process.get();const auto id=kernel_->Add(std::move(process));pointer->Registered(id);
     thunderProcesses_.push_back(id);
 }
 // 종료 중 콜백이 번호를 지우므로 뒤 번호를 하나씩 읽어 제거한다. Screen이 사라지기 전에 호출한다.
 void Client::ClearThunderFlashes() {
     // 등록된 프로세스를 즉시 파괴하여 전체화면 복구와 목록 정리가 끝나도록 한다.
-    while (!thunderProcesses_.empty()) kernel_.Remove(thunderProcesses_.back());
+    while (!thunderProcesses_.empty()) kernel_->Remove(thunderProcesses_.back());
 }
 // 개별 효과의 종료/취소 콜백으로 유지되는 현재 등록 수다.
 std::size_t Client::ThunderFlashCount() const { return thunderProcesses_.size(); }
@@ -976,7 +982,9 @@ const o::BaseFileSystem& Client::Files() const { return files_; }
 // 타입·그림. Run이 "init types"에서 만든 뒤에만 쓴다.
 const GameAssets& Client::Assets() const { return *assets_; }
 // 프로세스 커널.
-o::Kernel& Client::GetKernel() { return kernel_; }
+o::Kernel& Client::GetKernel() { return *kernel_; }
+const std::shared_ptr<o::Kernel>& Client::ProcessKernelOwner() const { return kernel_; } // 실제 전역 Kernel 객체를 공유한다.
+const std::shared_ptr<o::FrameTime>& Client::FrameClockOwner() const { return time_; } // 같은 현재 프레임의 수명을 공유한다.
 // 자산 초기화 이전에 가짜 빈 월드로 성공하지 않는다.
 const std::shared_ptr<RawSurfaceStorage>& Client::SurfaceStorage() const { if (!surfaceStorage_) throw std::logic_error("Client 실제 월드 물리 초기화 전 조회");return surfaceStorage_; }
 // 원본 변경 영역 기반의 Renderer.
@@ -992,7 +1000,7 @@ std::pair<std::uint64_t, std::uint64_t> Client::RenderCounts() const {
 // 준비된 장면을 로딩 화면 대신 표시하고 남아 있는 창 영역도 검증한다.
 void Client::ShowScene() { sceneVisible_ = true; renderer_->InvalidateAll(); InvalidateRect(static_cast<HWND>(window_), nullptr, FALSE); }
 // 이번 프레임의 시각.
-const o::FrameTime& Client::Time() const { return time_; }
+const o::FrameTime& Client::Time() const { return *time_; }
 // 정지와 무관한 실제 원본 벽 시계를 조회한다. 부착/idle의 여러 읽기도 각각 OS 눈금을 사용한다.
 double Client::WallSeconds() const { return clock_.WallSeconds(timeGetTime()); }
 // 창이 활성인가.

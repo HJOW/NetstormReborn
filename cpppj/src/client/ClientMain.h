@@ -172,8 +172,11 @@ public:
     const o::BaseFileSystem& Files() const;
     const GameAssets& Assets() const;
     o::Kernel& GetKernel();
+    const std::shared_ptr<o::Kernel>& ProcessKernelOwner() const; // 같은 실제 전역 Kernel 소유권만 전달한다.
+    const std::shared_ptr<o::FrameTime>& FrameClockOwner() const; // 같은 Time().game 주소가 외부 Storage보다 먼저 사라지지 않게 한다.
     const std::shared_ptr<RawSurfaceStorage>& SurfaceStorage() const; // 자산 초기화 뒤 모든 Session과 초기 HUD가 같은 물리를 빌린다.
     // 복원한 그리기·글꼴·커서 기반. 초기화 뒤에만 쓴다.
+    void InitializeNativeRendererView(); // 실제 Native Renderer 초기화 위치에서만64BYTE 이미지/목표/갱신을 구성한다.
     Renderer& GetRenderer();
     std::string_view TestBridgePatterns() const { return options_.testBridgePatterns; } // 테스트 전용 지정 순서다. 비어 있으면 원본 동작이며 원본 분석 결과가 아니다.
     FontStore& Fonts();
@@ -300,9 +303,9 @@ private:
     bool uiPaused_{}; // 메뉴/브리핑의 단일 정지 소유 표식이다. 원본 미션 scriptPaused와 별도로 유지한다.
     std::int32_t movieUpdatePauseDepth_{}; // 원본0054dc58의 BSS0 정상 경계다. Moviegump483680/4837f0의435dc0 소유 연결은 미복원이며 GameClock 깊이로 합성하지 않는다.
     // time_: 프레임의 게임 시각과 벽 시각 및 시간 차 (o::FrameTime).
-    o::FrameTime time_{};
+    std::shared_ptr<o::FrameTime> time_{std::make_shared<o::FrameTime>()}; // 같은 실제 프레임 객체를 장기 Host도 pin하며 별도 시각 사본을 만들지 않는다.
     // kernel_: 프로세스 등록과 프레임 실행을 담당하는 커널.
-    o::Kernel kernel_;
+    std::shared_ptr<o::Kernel> kernel_{std::make_shared<o::Kernel>()}; // Client와 장기 Host가 동일 Kernel의 수명을 공유한다.
     std::vector<o::ProcessId> thunderProcesses_; // 커널이 소유한 번개 번호. 파괴 콜백에서 제거하므로 재사용된 슬롯을 지우지 않는다.
     // screenWidth_: 게임 화면의 픽셀 너비.
     int screenWidth_{kDefaultScreenWidth};   // DAT_00531860

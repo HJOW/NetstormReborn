@@ -1,3 +1,4 @@
+#include "o/RawGameAuxState.h"
 // 원본군집의모든배치entry/return과같은raw풀의실제단일Place/해시변경을전수대조한다.
 #include "RawSceneSupport.h"
 #include "o/RawFarmCluster.h"
@@ -128,11 +129,11 @@ struct FarmScene {
     }
 };
 // 모든군집입력의배치시도/trace/primitive효과/raw/두난수/assert를비교한다.
-void ReplayFarm(const char* edition) {
-    FarmScene scene(std::string_view(edition)=="originals" ? OriginalEdition::Patch1078 : OriginalEdition::Cd1072);std::size_t count=0;
+void ReplayFarm(const char* edition,bool gameOwner=false) {
+    RawGameAuxState owner;FarmScene scene(std::string_view(edition)=="originals" ? OriginalEdition::Patch1078 : OriginalEdition::Cd1072);std::size_t count=0;
     // 실제PE에서관찰한모든고유입력을순회한다.
     for (const auto& row:FarmRows()) {
-        if (row[0]!=edition) continue;CHECK(row.size()==9);scene.Prepare(row);scene.cluster->Place({80.25f,80.75f,96.625f,96.125f},std::bit_cast<std::int32_t>(scene.input[1]),scene.input[0]);std::string events;
+        if (row[0]!=edition) continue;CHECK(row.size()==9);scene.Prepare(row);if (gameOwner) { owner.Archipelago()=scene.input[3];scene.state.sharedArchipelago=&owner.Archipelago();scene.state.archipelago=scene.input[3]==0; }scene.cluster->Place({80.25f,80.75f,96.625f,96.125f},std::bit_cast<std::int32_t>(scene.input[1]),scene.input[0]);std::string events;
         // 기록한실제경계효과를원본순서로결합한다.
         for (const auto& event:scene.events) { if (!events.empty()) events+=';';events+=event; }
         const auto effectBytes=std::span(reinterpret_cast<const std::uint8_t*>(events.data()),events.size());
@@ -152,3 +153,7 @@ TEST_CASE(FarmCluster_RejectsMissingEffectsAndOtherWorld) {
     FarmScene scene(OriginalEdition::Patch1078);CHECK(Throws([&] { RawFarmCluster invalid(scene.pool,scene.chunks,scene.islands,scene.placementState,scene.state,{}); }));
     SidPool other(OriginalEdition::Patch1078,32768,false);CHECK(Throws([&] { RawFarmCluster invalid(other,scene.chunks,scene.islands,scene.placementState,scene.state,{[](GameRandom&,const FortRandomPlaceRequest&) { return 0U; },[](FarmClusterAssertion) {}}); }));
 }
+
+
+// 실제FarmCluster는Login.bb4와별개인현재bb0DWORD를읽고반대bool사본을무시한다.
+TEST_CASE(GameAux_FarmClusterUsesSharedArchipelagoNative104) { ReplayFarm("originals",true); }

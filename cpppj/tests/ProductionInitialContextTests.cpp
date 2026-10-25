@@ -25,7 +25,7 @@ ClientOptions ProductionInitialOptions() { ClientOptions options;options.gameDir
 struct InitialProductionScene {
     const netstorm::test::dudespawn::DudeAssets& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078); // 보호 자산을 읽기만 한다.
     Client client{ProductionInitialOptions()};FontStore fonts{assets.files,"Arial"}; // 모든 물리/글꼴 소비자보다 오래 유지한다.
-    std::shared_ptr<RawSurfaceStorage> storage=MakeRawSurfaceStorage(assets.game,client.GameplayGlobals()->Authority());std::array<std::uint8_t,87> options{}; // 실제 초기 물리와 명시 옵션 BYTE 입력이다.
+    std::shared_ptr<RawSurfaceStorage> storage=MakeRawSurfaceStorage(assets.game,client.GameplayGlobals()->Authority(),client.GameplayGlobals()->GameAux());std::array<std::uint8_t,87> options{}; // 실제 초기 물리와 명시 옵션 BYTE 입력이다.
     double wall{123.25},game{};std::uint32_t configReads{},timeReads{};std::vector<std::string> translations; // 실제 선택된 외부 읽기만 관측한다.
     RawButtonControls buttons{OriginalEdition::Patch1078,{[this] { return wall; }}};RawMenuControls* menus{}; // 같은 공통 등록/트리/수명이다.
     // 초기 화면과 실제 메뉴/폰트를 연결한다. Session/Player 초기화는 수행하지 않는다.

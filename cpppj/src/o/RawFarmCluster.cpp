@@ -40,7 +40,7 @@ std::uint32_t RawFarmCluster::RegionSeed(std::int32_t region) const {
 // 원본요청값은snapshot이고실제edgeFarm타입은각중심/주변호출에서현재값을읽는다.
 void RawFarmCluster::Place(FortRandomRectangle area,std::int32_t region,std::uint32_t quantity) const {
     GameRandom random(RegionSeed(region));std::uint32_t remaining=quantity*kQuantityFactor,force=0;std::int32_t radius=1;
-    if (state_.archipelago && region==0) {
+    if (state_.Archipelago() && region==0) {
         const auto span=std::bit_cast<std::uint32_t>(state_.archipelagoSpan),extension=span*16U;
         const auto start=std::bit_cast<std::int32_t>(extension-16U),end=std::bit_cast<std::int32_t>(extension);
         area.left=static_cast<float>(static_cast<double>(area.left)-start);area.top=static_cast<float>(static_cast<double>(area.top)-start);

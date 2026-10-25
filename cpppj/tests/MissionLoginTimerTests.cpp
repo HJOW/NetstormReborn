@@ -1,6 +1,7 @@
 // 독립 보호 PE의 로그인 타이머/집계/Begin/Abort와 전체 상태·외부 경계 순서를 대조한다.
 #include "RawSceneSupport.h"
 #include "o/RawMissionLoginTimer.h"
+#include "client/ClientLocalStateGlobals.h"
 #include <array>
 
 using namespace netstorm::o;
@@ -144,4 +145,28 @@ TEST_CASE(MissionLoginTimer_RejectsGeneralInitializationAndInvalidStorage) {
     CHECK(Throws([&] { timer.Run(false); }));CHECK(scene.begin==1 && scene.end==0.0);
     CHECK(scene.trace.find("B,016e080000000080,")!=std::string::npos && scene.trace.find("P,1,")==std::string::npos);
     auto reads=scene.Reads();reads.server={};CHECK(Throws([&] { RawMissionLoginTimer missing(OriginalEdition::Patch1078,scene.State(),counts,reads,scene.Hooks()); }));
+}
+
+// Abort의1쓰기 뒤 실제 하위 효과가 같은 Client 값을 바꾸면 뒤꼬리도 현재 값을 보존한다.
+TEST_CASE(MissionLoginTimer_ClientScriptBreakAbortUsesCurrentReferenceAndKeepsOtherDeadlines) {
+    netstorm::client::ClientLocalStateGlobals owner;LoginTimerScene scene("1,30,0,1,1,1,0,0,0,1,0,0,0,1|0000000000002440|0000000000002440");MissionLoginPlayerCounts counts(OriginalEdition::Patch1078,scene.players); // 기존 실제 Player 집계와 별도 Client 수명을 사용한다.
+    owner.Begin()=17;owner.LoginEnd()=23.5;owner.ScriptBreak()=0xffffffffU;owner.StateAuxCC()=0xaabbccddU;owner.MetadataMode()=0x80000000U;owner.ConnectEnd()=37.25;owner.ActivityEnd()=41.5;owner.ReconnectSaveEnd()=std::bit_cast<double>(std::uint64_t{0x7ff800005555aaaaULL});
+    const auto reconnectBits=std::bit_cast<std::uint64_t>(owner.ReconnectSaveEnd());std::uint32_t steps{};auto hooks=scene.Hooks(); // 외부 효과의 실제 전후 쓰기 순서만 관측한다.
+    hooks.abortBattle=[&] { CHECK(owner.ScriptBreak()==1 && owner.Begin()==0 && owner.LoginEnd()==0.0 && scene.phase==4 && steps++==0);owner.ScriptBreak()=0xffffffffU;owner.Begin()=29;scene.phase=7; };
+    hooks.closeProgress=[&] { CHECK(owner.ScriptBreak()==0xffffffffU && owner.Begin()==29 && scene.phase==7 && steps++==1);owner.ScriptBreak()=0x80000000U; };
+    const MissionLoginTimerState state{owner.LoginEnd(),scene.timeout,owner.Begin(),owner.ScriptBreak(),scene.phase,scene.clock};RawMissionLoginTimer timer(OriginalEdition::Patch1078,state,counts,scene.Reads(),hooks);timer.Abort();
+    CHECK(steps==2 && owner.ScriptBreak()==0x80000000U && owner.Begin()==29 && scene.phase==7 && owner.LoginEnd()==0.0);CHECK(owner.StateAuxCC()==0xaabbccddU && owner.MetadataMode()==0x80000000U && owner.ConnectEnd()==37.25 && owner.ActivityEnd()==41.5 && std::bit_cast<std::uint64_t>(owner.ReconnectSaveEnd())==reconnectBits);
+    hooks.abortBattle={};hooks.closeProgress=[&] { ++steps;throw std::logic_error("선택되지 않아야 할 Abort 꼬리"); };RawMissionLoginTimer missing(OriginalEdition::Patch1078,state,counts,scene.Reads(),hooks);owner.ScriptBreak()=0;owner.Begin()=53;owner.LoginEnd()=67.75;
+    CHECK(Throws([&] { missing.Abort(); }));CHECK(owner.ScriptBreak()==1 && owner.Begin()==0 && owner.LoginEnd()==0.0 && scene.phase==4 && steps==2 && owner.StateAuxCC()==0xaabbccddU && std::bit_cast<std::uint64_t>(owner.ReconnectSaveEnd())==reconnectBits); // 미연결 하위를 숨기지 않고 앞선 실제 부분 효과만 남긴다.
+}
+
+// 완료0 store는 사제/로그 효과 뒤에 발생하며 뒤 효과의 현재 값 변경을 다시0으로 덮지 않는다.
+TEST_CASE(MissionLoginTimer_ClientScriptBreakCompletionUsesCurrentReferenceAfterEffects) {
+    netstorm::client::ClientLocalStateGlobals owner;LoginTimerScene scene("1,30,0,1,1,1,0,0,0,1,0,0,0,1|0000000000002540|0000000000002440");MissionLoginPlayerCounts counts(OriginalEdition::Patch1078,scene.players); // 미ready/미만료의 기존 missionPost 자연 완료 분기를 선택한다.
+    owner.ScriptBreak()=0xffffffffU;owner.LoginEnd()=10.5;owner.Begin()=0;owner.ReconnectSaveEnd()=47.125;owner.ActivityEnd()=-0.0;std::uint32_t priests{},steps{};auto hooks=scene.Hooks(); // 8610/544d58은 LoginEnd005c85f0와 별개의 장기 입력이다.
+    hooks.priestRefresh=[&](std::uint32_t player) { CHECK(player==++priests && owner.ScriptBreak()==(player==1 ? 0xffffffffU : 0x80000000U));owner.ScriptBreak()=0x80000000U; };
+    hooks.saveReconnect=[&] { CHECK(priests==8 && owner.ScriptBreak()==0 && owner.Begin()==0 && owner.LoginEnd()==10.5 && steps++==0);owner.ScriptBreak()=0xffffffffU; };
+    hooks.closeProgress=[&] { CHECK(owner.ScriptBreak()==0xffffffffU && owner.LoginEnd()==0.0 && steps++==1);owner.ScriptBreak()=0x80000000U; };
+    RawMissionLoginTimer timer(OriginalEdition::Patch1078,{owner.LoginEnd(),scene.timeout,owner.Begin(),owner.ScriptBreak(),scene.phase,scene.clock},counts,scene.Reads(),hooks);timer.Run(false);
+    CHECK(priests==8 && steps==2 && owner.ScriptBreak()==0x80000000U && owner.LoginEnd()==0.0 && owner.ReconnectSaveEnd()==47.125 && std::bit_cast<std::uint64_t>(owner.ActivityEnd())==0x8000000000000000ULL);CHECK(scene.trace.find("B,")==std::string::npos && scene.trace.find("U,")==std::string::npos); // 미선택 Begin/진행 UI를 가짜 호출로 채우지 않는다.
 }

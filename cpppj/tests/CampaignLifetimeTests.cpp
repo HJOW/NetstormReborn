@@ -61,7 +61,7 @@ TEST_CASE(CampaignLifetime_TotalMadePopAndDestroyUseSharedPhysicalTables) {
     const auto second=world.Create(84);core.owner.Set(second,1);world.Pop(second,25,25,0);
     CHECK(totals.Local(84)==0xffffffffU && totals.Global(84)==0xffffffffU && totals.Built(84)==0);
     tables.localCounts[84]=0;tables.globalCounts[84]=0;CHECK(world.Destroy(second,destroyFlags)); // 실제 소비자에 주는 현재0 입력이며 감소 뒤 DWORD 감김을 관측한다.
-    CHECK(totals.Local(84)==0xffffffffU && totals.Global(84)==0xffffffffU && totals.Built(84)==0 && core.bookkeeping.totalCost==0 && core.bookkeeping.depth==0);
+    CHECK(totals.Local(84)==0xffffffffU && totals.Global(84)==0xffffffffU && totals.Built(84)==0 && core.bookkeeping.TotalCost()==0 && core.bookkeeping.depth==0);
     CHECK(tables.localCounts.back()==31 && tables.localSecondaryCounts.back()==37 && tables.globalCounts.back()==41 && core.bookkeeping.localCounts[84]==0 && core.bookkeeping.localSecondaryCounts[84]==0 && core.bookkeeping.globalCounts[84]==0); // 연결되지 않은 fallback으로 값을 복사해 검사를 맞추지 않는다.
 }
 
@@ -115,7 +115,7 @@ TEST_CASE(CampaignLifetime_EmptyBaseAndContentUseSameDeletion) {
     core.forms.SetAssets(lifetime.DestroyHooks(effects),lifetime.Destroy());
     const auto empty=world.Create(84);world.Pop(empty,24,24,0);selected=empty;const auto oldPool=rewardState.geyserPool;CHECK(core.bookkeeping.GlobalCounts()[84]==1);
     CHECK(world.Destroy(empty,0x400000));CHECK(selected.value==0 && clear==1 && sounds==0 && forwarded==1);CHECK(rewardState.geyserPool==oldPool+20);
-    CHECK(core.bookkeeping.GlobalCounts()[84]==0 && core.bookkeeping.totalCost==0 && (core.pool.Slot(empty)[11]&1U));CHECK(core.destroy.PreDepth()==0 && core.destroy.PostDepth()==0);
+    CHECK(core.bookkeeping.GlobalCounts()[84]==0 && core.bookkeeping.TotalCost()==0 && (core.pool.Slot(empty)[11]&1U));CHECK(core.destroy.PreDepth()==0 && core.destroy.PostDepth()==0);
     const auto parent=world.Create(152);ContainedCreateState createState;ContainedCreateHooks createHooks;createHooks.notifySurface=[&](Sid sid) { core.building.NotifySurface(sid); };
     RawContainedCreate create(core.pool,createState,forms.BindCreate(core.factory,std::move(createHooks)));const auto content=create.Create(parent,71,0,4,0x10,0);
     CHECK(Get(core.pool.Slot(parent),6,2)==content.value);CHECK(core.pool.Slot(content)[10]==6);CHECK(world.Destroy(content,0));CHECK(Get(core.pool.Slot(parent),6,2)==0);

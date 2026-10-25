@@ -1,3 +1,4 @@
+#include "client/ClientCameraGlobals.h"
 // 현재 복원한 저장 미션·지면·Squid 필드를 클라이언트에 연결하는 새 월드 어댑터.
 // 원본 Mission/CoreData/타입별 생성자 전체의 복원과는 구분한다.
 #pragma once
@@ -184,9 +185,12 @@ private:
     mutable std::map<std::pair<std::size_t,int>,ColorMap> remaps_;
     // width_: 가로 크기.
     // height_: 세로 크기.
-    // scrollX_: 카메라 스크롤의 X 원점.
-    // scrollY_: 카메라 스크롤의 Y 원점.
-    int width_{},height_{},scrollX_{},scrollY_{};
+    int width_{},height_{}; // 호스트 viewport 크기는 Native 카메라 값과 별도다.
+    ClientCameraGlobals& CameraGlobals(); // 실제 Session이 있으면 Client의 같은 장기 owner를 반환한다.
+    const ClientCameraGlobals& CameraGlobals() const; // 투영 시 현재 snapshot을 다시 읽는다.
+    std::int32_t CameraX() const { return CameraGlobals().Snapshot().pixels[0]; } // 현재 signed 픽셀X다.
+    std::int32_t CameraY() const { return CameraGlobals().Snapshot().pixels[1]; } // 현재 signed 픽셀Y다.
+    void ApplyCameraPixels(std::int32_t x,std::int32_t y); // 목표→두 실제setter만 적용하며 현재표시 통지는 상위 호출자가 원래 위치에서 수행한다.
     // selected_: 현재 선택한 객체·컨트롤의 번호 또는 토큰.
     std::uint32_t& selected_{gameplayGlobals_->selection.selected}; // SquidId도uint32이며 Sid16bit로 alias하거나 잘라 저장하지 않는다.
     std::uint32_t& highlightMode_{gameplayGlobals_->selection.mode};std::uint32_t& mouseType_{gameplayGlobals_->selection.mouseType}; //5cae90/5caea4의 같은 현재 DWORD다.

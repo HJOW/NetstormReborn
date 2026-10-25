@@ -51,13 +51,13 @@ o::FieryTailSystemHooks RawCampaignParticles::FieryHooks() {
         const auto raw=core_.pool.Slot(sid);std::uint32_t x=0,y=0;
         // 현재 부모 raw 좌표를 읽으며 최초 발사 위치를 캐시하지 않는다.
         for (std::size_t index=0;index<4;++index) { x|=std::uint32_t(raw[14+index])<<(8*index);y|=std::uint32_t(raw[18+index])<<(8*index); }
-        const auto point=SoundToScreen(view_,std::bit_cast<float>(x),std::bit_cast<float>(y));return std::array<std::int32_t,2>{point.x,point.y};
+        const auto point=SoundToScreen(CurrentView(),std::bit_cast<float>(x),std::bit_cast<float>(y));return std::array<std::int32_t,2>{point.x,point.y};
     };
     hooks.release=[](o::FieryTailRelease) {}; // 실제 입자 저장소/객체는 원본 수명 몸체와 Kernel이 반납한다.
     return hooks;
 }
 // 지원하지 않는 효과를 빈 성공으로 통과시키지 않는다.
-void RawCampaignParticles::Add(std::uint32_t type,o::Sid parent) {
+void RawCampaignParticles::Add(std::uint32_t type,o::Sid parent) { RefreshCamera();
     if (type!=11) throw std::logic_error("캠페인 비행 표시 효과 미복원 TYPE"+std::to_string(type));
     static_cast<void>(fiery_.Add(parent));
 }
@@ -87,7 +87,7 @@ o::LightningSystemHooks RawCampaignParticles::LightningHooks() {
     return hooks;
 }
 // 죽은 표적의 raw 주소 의미와 확보 실패0을 구별하고 실제 생성 성공을 반환한다.
-o::LightningCreateResult RawCampaignParticles::AddBeam(o::Sid parent,o::Sid target,std::optional<std::string> sound) {
+o::LightningCreateResult RawCampaignParticles::AddBeam(o::Sid parent,o::Sid target,std::optional<std::string> sound) { RefreshCamera();
     return o::CreateLightning(core_.pool,parent,target,std::move(sound),[this](o::Sid source,o::Sid victim,std::optional<std::string> name) {
         if (name && !sound_) throw std::logic_error("빔 실제 파일명 음향 소비자 미연결");
         try { return lightning_.Add(source,victim,std::move(name)); }
@@ -95,8 +95,8 @@ o::LightningCreateResult RawCampaignParticles::AddBeam(o::Sid parent,o::Sid targ
     });
 }
 // 현재viewport와공유색/표시목록을사용하며대체표적SID를만들지않는다.
-o::LightningVisualProcess* RawCampaignParticles::AddScreenBolt(o::Sid parent,std::array<std::int32_t,2> from,std::array<std::int32_t,2> to,float life) {
-    return o::CreateLightningAtScreen(parent,from,to,life,view_.cameraX,view_.cameraY,[this](o::Sid source,std::array<std::int32_t,2> first,std::array<std::int32_t,2> last,float duration,std::string name) {
+o::LightningVisualProcess* RawCampaignParticles::AddScreenBolt(o::Sid parent,std::array<std::int32_t,2> from,std::array<std::int32_t,2> to,float life) { RefreshCamera();
+    return o::CreateLightningAtScreen(parent,from,to,life,CurrentView().cameraX,CurrentView().cameraY,[this](o::Sid source,std::array<std::int32_t,2> first,std::array<std::int32_t,2> last,float duration,std::string name) {
         if (!sound_) throw std::logic_error("화면빔 실제파일명 음향미연결");try { return lightning_.AddAtScreen(source,first,last,duration,std::move(name)); }catch (const std::bad_alloc&) { return static_cast<o::LightningVisualProcess*>(nullptr); }
     });
 }
@@ -135,16 +135,18 @@ o::DissolveVisualProcess* RawCampaignParticles::AddDissolve(o::Sid source,o::Sid
     try { return dissolve_->Add(source,first,second,xOriented); }catch (const std::bad_alloc&) { return nullptr; }
 }
 // 원본 게임 시각을 별도 고정 틱이나 벽시각으로 대체하지 않는다.
-void RawCampaignParticles::PrepareFrame(double now,std::uint32_t frameNumber,bool weakenedMana) {
+void RawCampaignParticles::PrepareFrame(double now,std::uint32_t frameNumber,bool weakenedMana) { RefreshCamera();
     if (!std::isfinite(now)) throw std::invalid_argument("캠페인 입자 게임 시각 오류");frame_.now=now;constructionFrame_.now=now;
     burningFrame_.now=now;burningFrameNumber_=frameNumber;burningSources_.weakenedMana=weakenedMana;
     if (constructionMemory_.Count()) constructionColors_.entries=constructionMemory_.Snapshot();
 }
 // 카메라가 바뀌면 표시 영역을 함께 다시 그린다. 같은 view 호출도 대기 dirty를 장치에 전달한다.
 void RawCampaignParticles::SetView(SoundView view,SurfaceDisplayHooks display) {
-    const bool changed=view.cameraX!=view_.cameraX || view.cameraY!=view_.cameraY || view.left!=view_.left || view.top!=view_.top || view.right!=view_.right || view.bottom!=view_.bottom;
-    view_=view;frame_.cameraX=static_cast<float>(view.cameraX);frame_.cameraY=static_cast<float>(view.cameraY);constructionFrame_.cameraX=frame_.cameraX;constructionFrame_.cameraY=frame_.cameraY;display_=std::move(display);
-    burningFrame_.cameraX=frame_.cameraX;burningFrame_.cameraY=frame_.cameraY;burningFrame_.viewport={view.left,view.top,view.right,view.bottom};
+    const auto pixels=cameraView_ ? cameraView_->pixels : std::array<std::int32_t,2>{view.cameraX,view.cameraY}; // 현재 소유자와 직전 통지 이력을 구별한다.
+    const bool changed=pixels!=notifiedPixels_ || view.left!=view_.left || view.top!=view_.top || view.right!=view_.right || view.bottom!=view_.bottom;
+    notifiedPixels_=pixels;
+    view_=view;if (cameraView_) { view_.cameraX=0;view_.cameraY=0; }RefreshCamera();display_=std::move(display);
+    burningFrame_.viewport={view.left,view.top,view.right,view.bottom};
     if (changed) { pending_=DirtyRegions(view.right,view.bottom);pending_.InvalidateAll(); }FlushDirty();
 }
 // 원본 현재/이전 영역 요청을 실제 renderer 또는 제한된 대기 표로 보낸다.
@@ -163,11 +165,11 @@ void RawCampaignParticles::FlushDirty() {
     pending_.Clear();
 }
 // 하나의 원본 수집 결과를 다른 SHP와 같은 전체 정렬에 넣는다. 실제 출력은 dirty 표면이 생긴 뒤 수행한다.
-std::vector<RenderSprite> RawCampaignParticles::Sprites(ScreenRect clip) {
+std::vector<RenderSprite> RawCampaignParticles::Sprites(ScreenRect clip) { RefreshCamera();
     std::vector<o::RenderCollectionEntry> entries(rendering_.Slots().size());
     if (entries.size()>static_cast<std::size_t>(std::numeric_limits<std::int32_t>::max())) throw std::length_error("입자 표시 목록 크기 오류");
-    const o::RenderWorldRect view{static_cast<float>((static_cast<double>(clip.left)+view_.cameraX)/16),static_cast<float>((static_cast<double>(clip.top)+view_.cameraY)/11),
-        static_cast<float>((static_cast<double>(clip.right)+view_.cameraX)/16),static_cast<float>((static_cast<double>(clip.bottom)+view_.cameraY)/11)};
+    const o::RenderWorldRect view{static_cast<float>((static_cast<double>(clip.left)+CurrentView().cameraX)/16),static_cast<float>((static_cast<double>(clip.top)+CurrentView().cameraY)/11),
+        static_cast<float>((static_cast<double>(clip.right)+CurrentView().cameraX)/16),static_cast<float>((static_cast<double>(clip.bottom)+CurrentView().cameraY)/11)};
     const auto count=rendering_.Collect(view,entries,static_cast<std::int32_t>(entries.size()));std::vector<RenderSprite> result;
     // 공통 kind3의 실제 부모 x/y+0.001·signed 깊이를 보존하고 여기서 종류별 정렬을 하지 않는다.
     for (std::int32_t index=0;index<count;++index) {
@@ -180,7 +182,7 @@ std::vector<RenderSprite> RawCampaignParticles::Sprites(ScreenRect clip) {
     return result;
 }
 // C++ 범위 밖 읽기를 하지 않고 실제 allocator snapshot을 원본 색 조회 span에 공급한다.
-void RawCampaignParticles::Draw(std::uint32_t token,std::span<std::uint8_t> pixels,int pitch,int height,ScreenRect clip) {
+void RawCampaignParticles::Draw(std::uint32_t token,std::span<std::uint8_t> pixels,int pitch,int height,ScreenRect clip) { RefreshCamera();
     if (!rendering_.Lookup(token)) return;if (target_) throw std::logic_error("입자 표면 중첩 그리기 오류");
     target_=Target{pixels,pitch,height,clip};
     try { if (memory_.Count()) colors_.readable=memory_.Snapshot();if (burningMemory_.Count()) burningColors_.readable=burningMemory_.Snapshot();rendering_.DrawToken(token); }
@@ -225,7 +227,7 @@ void RawCampaignParticles::ConnectConstruction(std::function<o::ConstructionVisu
     construction_=std::make_unique<o::ConstructionVisualSystem>(rendering_,constructionFrame_,constructionColors_,random_,std::move(visual),std::move(frame),[](o::ConstructionRelease) {});
 }
 // 공통 등록 배열에 실제17 프로세스를 추가한다. 미연결을 빈 효과로 바꾸지 않는다.
-o::ConstructionVisualProcess* RawCampaignParticles::AddConstruction(o::Sid parent,bool instant) {
+o::ConstructionVisualProcess* RawCampaignParticles::AddConstruction(o::Sid parent,bool instant) { RefreshCamera();
     if (!construction_) throw std::logic_error("실제 건설 표시 미연결");return construction_->Add(parent,instant);
 }
 // 첫 색 표도 원본 gradient/병합 몸체로 만들고 실제 같은 단일 표시 목록을 사용한다.
@@ -246,10 +248,16 @@ void RawCampaignParticles::ConnectBurning(std::function<o::ConstructionVisualIma
     hooks.clip=[this] { if (!target_) throw std::logic_error("Burning 실제 VFX clip 미연결");const auto& clip=target_->clip;return o::SquidDisplayRect{clip.left,clip.top,clip.right,clip.bottom}; };
     hooks.pixel=[this](std::int32_t x,std::int32_t y,std::uint8_t color) { if (!target_ || x<0 || x>=target_->pitch || y<0 || y>=target_->height) throw std::out_of_range("Burning 실제 표면/좌표 오류");target_->pixels[static_cast<std::size_t>(y)*target_->pitch+x]=color; };
     hooks.release=[](o::BurningRelease) {}; // 실제 버퍼와 객체는 원본 몸체/Kernel이 반납한다.
-    burningFrame_.pixelScaleX=renderState_.scaleX;burningFrame_.pixelScaleY=renderState_.scaleY;burningFrame_.cameraX=static_cast<float>(view_.cameraX);burningFrame_.cameraY=static_cast<float>(view_.cameraY);burningFrame_.viewport={view_.left,view_.top,view_.right,view_.bottom};
+    burningFrame_.pixelScaleX=renderState_.scaleX;burningFrame_.pixelScaleY=renderState_.scaleY;RefreshCamera();burningFrame_.viewport={view_.left,view_.top,view_.right,view_.bottom};
     burning_=std::make_unique<o::BurningVisualSystem>(rendering_,random_,core_.types,burningVisual_,burningSources_,burningFrame_,burningColors_,burningFrameNumber_,std::move(hooks));
 }
 // wrapper의new90 실패만 자연0이며 실제 미연결/계산 오류를 숨기지 않는다.
-o::BurningVisualProcess* RawCampaignParticles::AddBurning(o::Sid victim,std::uint32_t mode) { if (!burning_) throw std::logic_error("실제 Burning14 캡처/수명 미연결");try { return burning_->Add(victim,mode); }catch (const std::bad_alloc&) { return nullptr; } }
+o::BurningVisualProcess* RawCampaignParticles::AddBurning(o::Sid victim,std::uint32_t mode) { RefreshCamera(); if (!burning_) throw std::logic_error("실제 Burning14 캡처/수명 미연결");try { return burning_->Add(victim,mode); }catch (const std::bad_alloc&) { return nullptr; } }
 
+}
+
+namespace netstorm::client { // 실제 전역 owner와 기존 값형 하위 frame입력의 경계를 드러낸다.
+void RawCampaignParticles::BindCameraView(const RawCameraViewState& view) { cameraView_=&view;view_.cameraX=0;view_.cameraY=0;RefreshCamera(); }
+SoundView RawCampaignParticles::CurrentView() const { auto view=view_;if (cameraView_) { view.cameraX=cameraView_->pixels[0];view.cameraY=cameraView_->pixels[1]; }return view; }
+void RawCampaignParticles::RefreshCamera() { const auto view=CurrentView();frame_.cameraX=cameraView_ ? std::bit_cast<float>(cameraView_->pixelFloatBits[0]) : static_cast<float>(view.cameraX);frame_.cameraY=cameraView_ ? std::bit_cast<float>(cameraView_->pixelFloatBits[1]) : static_cast<float>(view.cameraY);constructionFrame_.cameraX=burningFrame_.cameraX=frame_.cameraX;constructionFrame_.cameraY=burningFrame_.cameraY=frame_.cameraY; }
 }

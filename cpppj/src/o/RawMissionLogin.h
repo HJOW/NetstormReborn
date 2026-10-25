@@ -1,5 +1,6 @@
 // PATCH 새 미션 로그인004a7800의 실제 Player/Template/패킷/Ready 순서를 복원한다.
 #pragma once
+#include <bit>
 #include "o/RawPlayerParticipation.h"
 #include "o/RawPlayerWorld.h"
 #include "o/RawPacketDispatch.h"
@@ -32,6 +33,8 @@ struct MissionLoginGlobals {
     std::span<std::uint8_t> cachedCoreData; // metamap 선택의005953f0 원문10바이트다.
     std::span<const std::uint8_t> zoneAddress; // 005c86c0의 실제6바이트다.
     std::span<const std::uint8_t> battleOptions; // 0052f7e0의 현재87바이트다.
+    const std::int32_t* sharedBattleSeed{}; // signed 자원과 같은 DWORD를 빌리며 송신은 unsigned bits로 읽는다.
+    std::uint32_t BattleSeed() const { return sharedBattleSeed ? std::bit_cast<std::uint32_t>(*sharedBattleSeed) : battleSeed; } // 다른 타입의 ref를 만들지 않는다.
 };
 // 큰 외부 몸체는 선택된 실제 위치에서 필수다. 패킷을 버리는 성공 처리기를 공급하지 않는다.
 struct MissionLoginHooks {

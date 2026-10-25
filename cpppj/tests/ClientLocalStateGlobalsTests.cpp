@@ -2,6 +2,7 @@
 #include "DudeSpawnSupport.h"
 #include "client/RawCampaignSession.h"
 #include "client/ClientLocalStateGlobals.h"
+#include "client/ClientMain.h"
 #include "client/ClientGameplayGlobals.h"
 #include "client/MissionFortRequest.h"
 #include "o/SquidForms.h"
@@ -12,6 +13,8 @@
 #include <memory>
 #include <stdexcept>
 #include <string>
+#include <type_traits>
+#include <utility>
 #include <vector>
 
 namespace {
@@ -134,4 +137,72 @@ TEST_CASE(ClientMapRevision_ActualFortReceiverSharesCurrentOwnerAndWraps) {
     gameplay->MapRevision()=0xffffffffU;const auto received=session.LocalConnectionPackets().size();session.SendLocalPacket(1,packet);CHECK(gameplay->MapRevision()==0xffffffffU && session.LocalConnectionPackets().size()==received);session.PumpLocalConnection();
     CHECK(&gameplay->MapRevision()==address && gameplay->MapRevision()==0 && session.LocalConnectionPackets().size()==received+1 && session.LocalConnectionPackets().back()==0x2a);
     session.SendLocalPacket(1,packet);CHECK(gameplay->MapRevision()==0);session.PumpLocalConnection();CHECK(gameplay->MapRevision()==1 && session.LocalConnectionPackets().size()==received+2 && session.LocalConnectionPhase()==14);
+}
+
+// 보조 State 입력/관측 helper는 기존 검사 장면과 함께 번역 단위 내부에서만 사용한다.
+namespace {
+// State 보조9DWORD와 별도 재접속 기한의 현재 원시 비트를 독립적으로 관측한다.
+std::array<std::uint64_t,10> LocalStateAuxValues(const ClientLocalStateGlobals& owner) {
+    return {owner.ScriptBreak(),owner.AbortPending(),owner.StateAuxCC(),owner.MetadataMode(),owner.ConnectionNotified(),owner.CachedPeerIndex(),owner.CachedPeerValue(),owner.CachedPeerFieldA4(),owner.CachedPeerFieldA8(),std::bit_cast<std::uint64_t>(owner.ReconnectSaveEnd())};
+}
+// 가짜 Native 실행 대신 서로 구별되는 DWORD와 NaN payload를 대여 경계의 명시 입력으로 넣는다.
+void LocalStateAuxInputs(ClientLocalStateGlobals& owner) {
+    owner.ScriptBreak()=0x80000000U;owner.AbortPending()=0xffffffffU;owner.StateAuxCC()=0x12345678U;owner.MetadataMode()=0xfedcba98U;owner.ConnectionNotified()=0x80000001U;
+    owner.CachedPeerIndex()=71;owner.CachedPeerValue()=0;owner.CachedPeerFieldA4()=0xffffffffU;owner.CachedPeerFieldA8()=0x87654321U;owner.ReconnectSaveEnd()=std::bit_cast<double>(std::uint64_t{0x7ff8000012345678ULL});
+}
+}
+
+// PE의 초기1/ffffffff/BSS +0, 정확한4/8BYTE 참조와 두 실제 Client의 별도 수명을 검사한다.
+TEST_CASE(ClientLocalStateGlobals_StateAuxInitialBitsAndTwoActualClientsAreIndependent) {
+    static_assert(std::is_same_v<decltype(std::declval<ClientLocalStateGlobals&>().ScriptBreak()),std::uint32_t&>); // DWORD를 bool이나 복사값으로 바꾸지 않는다.
+    static_assert(std::is_same_v<decltype(std::declval<ClientLocalStateGlobals&>().StateAuxCC()),std::uint32_t&>); // 005c85cc는 인접 DWORD를 포함한 double이 아니다.
+    static_assert(std::is_same_v<decltype(std::declval<ClientLocalStateGlobals&>().ReconnectSaveEnd()),double&>); // 재접속 기한은 정확히 double 참조다.
+    static_assert(std::is_same_v<decltype(std::declval<const ClientLocalStateGlobals&>().StateAuxCC()),const std::uint32_t&>); // const 진단도 같은4BYTE를 빌린다.
+    static_assert(sizeof(std::uint32_t)==4 && sizeof(double)==8); // Native 접근 폭과 C++ 저장소 폭을 명시한다.
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);std::shared_ptr<ClientLocalStateGlobals> firstOwner;const std::array<std::uint64_t,10> initial{1,0,0,0,0,0xffffffffU,0xffffffffU,0xffffffffU,0xffffffffU,0}; // 보호 PE의 명시 초기 이미지와 첫 Client 밖에서도 유지할 실제 owner다.
+    { ClientOptions options;options.gameDirectory=assets.root;options.noAudio=true;Client first(std::move(options));firstOwner=first.LocalStateGlobals();CHECK(LocalStateAuxValues(*firstOwner)==initial);LocalStateAuxInputs(*firstOwner); } // 실제 Client의 전역 singleton 계약을 지키며 owner의 공유 수명은 유지한다.
+    const auto firstValues=LocalStateAuxValues(*firstOwner); // 첫 Client를 반납해도 현재 원시 비트는 남는다.
+    { ClientOptions options;options.gameDirectory=assets.root;options.noAudio=true;Client second(std::move(options));const auto secondOwner=second.LocalStateGlobals();CHECK(firstOwner!=secondOwner && LocalStateAuxValues(*secondOwner)==initial);secondOwner->StateAuxCC()=0x80000000U;secondOwner->MetadataMode()=7;secondOwner->ReconnectSaveEnd()=-0.0;
+      CHECK(LocalStateAuxValues(*firstOwner)==firstValues && std::bit_cast<std::uint64_t>(secondOwner->ReconnectSaveEnd())==0x8000000000000000ULL && firstOwner->StateAuxCC()==0x12345678U); }
+    CHECK(LocalStateAuxValues(*firstOwner)==firstValues);const auto& constant=*firstOwner;CHECK(&constant.ScriptBreak()==&firstOwner->ScriptBreak() && &constant.StateAuxCC()==&firstOwner->StateAuxCC() && &constant.ReconnectSaveEnd()==&firstOwner->ReconnectSaveEnd()); // 현재 주소 관측을 실제 수명/소비자 검사와 함께 둔다.
+}
+
+// 일반 Session과 Login 모듈의 생성/반납은 새 Client 최초값을 반복 설치하지 않는다.
+TEST_CASE(ClientLocalStateGlobals_StateAuxOrdinarySessionAndLoginLifetimesPreserveCurrentBits) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);ClientOptions options;options.gameDirectory=assets.root;options.noAudio=true;Client client(std::move(options));LocalStateSessionDevices devices;const auto owner=client.LocalStateGlobals();LocalStateAuxInputs(*owner);
+    owner->LoginEnd()=std::bit_cast<double>(std::uint64_t{0x8000000000000000ULL});owner->ActivityEnd()=17.25;owner->CaptureEnd()=23.5;owner->ConnectEnd()=31.75;const auto deadlines=LocalStateValues(*owner); // 서로 다른 Native 기한을 다른 비트로 구별한다.
+    for (const bool login:{false,true}) { // 실제 Login 객체를 조립하는 경우도 같은 장기 DWORD를 보존한다.
+        const auto before=LocalStateAuxValues(*owner);const auto* address=&owner->ScriptBreak();
+        { auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",devices.Make(owner,login));CHECK(LocalStateAuxValues(*owner)==before && LocalStateValues(*owner)==deadlines && session.LocalConnectionPhase()==0);owner->StateAuxCC()^=0xffffffffU;owner->ScriptBreak()=0xffffffffU; }
+        auto after=before;after[0]=0xffffffffU;after[2]^=0xffffffffU;CHECK(&owner->ScriptBreak()==address && LocalStateAuxValues(*owner)==after && LocalStateValues(*owner)==deadlines); // 반납은 현재 효과를 초기 입력으로 되돌리지 않는다.
+    }
+}
+
+// 실제0x27→0x28→Ready→Timer 완료의0 store가 Client의 현재 DWORD에 도달하는지 본다.
+TEST_CASE(ClientLocalStateGlobals_ActualLoginTimerClearsCurrentScriptBreakOnly) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);
+    for (const std::uint32_t initial:{0U,0x80000000U,0xffffffffU}) { // 0/상위비트/모든비트 입력을 bool로 좁히지 않고 같은 실제 로그인에 넣는다.
+        ClientOptions options;options.gameDirectory=assets.root;options.noAudio=true;Client client(std::move(options));LocalStateSessionDevices devices;const auto owner=client.LocalStateGlobals();LocalStateAuxInputs(*owner);owner->ScriptBreak()=initial;const auto before=LocalStateAuxValues(*owner);bool observed{};
+        devices.observe=[&](auto sender,auto packet) { if (packet[1]==0x28 && !observed) { observed=true;CHECK(sender==9 && owner->ScriptBreak()==initial);owner->ScriptBreak()=0x80000000U; } }; // 현재 참조는 Login 생성 뒤 외부 효과에서 바뀌는 값도 같은 주소에 반영한다.
+        { auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",devices.Make(owner,true));CHECK(LocalStateAuxValues(*owner)==before);session.LoadLocalConnection();CHECK(observed && session.LocalConnectionPhase()==14 && owner->ScriptBreak()==0); }
+        auto expected=before;expected[0]=0;CHECK(LocalStateAuxValues(*owner)==expected); // 8610과8개의 다른 DWORD에는 실제 완료 writer의 효과가 없다.
+    }
+}
+
+// 실제SendBegin/ClientBegin과LocalGeyser가같은595088 물리를signed/unsigned로소비한다.
+TEST_CASE(GameAux_ActualLoginAndQueuedBeginShareSignedResourcePool) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);LocalStateSessionDevices devices;auto state=std::make_shared<ClientLocalStateGlobals>();auto gameplay=std::make_shared<ClientGameplayGlobals>();const auto owner=gameplay->GameAux();std::uint32_t begins{};
+    const auto read=[](std::span<const std::uint8_t> packet) { std::uint32_t value{};for (std::size_t byte=0;byte<4;++byte) value|=std::uint32_t(packet[30+byte])<<(byte*8);return value; }; // 실제34BYTE의현재마지막DWORD만읽는다.
+    devices.observe=[&](auto sender,auto packet) { if (packet[1]!=0x29) return;CHECK(sender==9 && packet.size()==34);if (!begins) CHECK(read(packet)==0x89abcdefU);++begins;owner->StoreResourcePoolBits(0x12345678U); }; // 수신전효과가바꾼owner를실제ClientBegin writer가다시쓴다.
+    auto services=devices.Make(state,true);services.gameplayGlobals=gameplay;auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",std::move(services));owner->StoreResourcePoolBits(0x89abcdefU);session.LoadLocalConnection();CHECK(session.LocalConnectionPhase()==14 && begins==1 && owner->ResourcePoolBits()==0x89abcdefU);
+    auto& pool=session.Construction().LocalGeysers().ResourcePool();CHECK(&pool==&owner->ResourcePool() && &session.World().Storage()->GeyserType()==&gameplay->GeyserType());pool=12345;
+    std::array<std::uint8_t,34> packet{1,0x29,34,0,1};const std::uint32_t value=0xfedcba98U;for (std::size_t byte=0;byte<4;++byte) packet[30+byte]=static_cast<std::uint8_t>(value>>(byte*8)); // 원문헤더/폭과독립현재입력만구성한다.
+    const auto recorded=session.LocalConnectionPackets().size();session.SendLocalPacket(1,packet);CHECK(pool==12345 && begins==1 && session.LocalConnectionPackets().size()==recorded);session.PumpLocalConnection();CHECK(begins==2 && owner->ResourcePoolBits()==value && std::bit_cast<std::uint32_t>(pool)==value);
+}
+// 같은Authority라도다른게임보조owner는Gameplay/Storage대여및fresh초기화전에거부한다.
+TEST_CASE(GameAux_SessionIdentityFailureLeavesBothOwnersUnchanged) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);LocalStateSessionDevices devices;auto state=std::make_shared<ClientLocalStateGlobals>();auto gameplay=std::make_shared<ClientGameplayGlobals>();auto foreign=std::make_shared<RawGameAuxState>();auto surface=MakeRawSurfaceStorage(assets.game,gameplay->Authority(),foreign);gameplay->GameAux()->ResourcePool()=73;foreign->ResourcePool()=79;gameplay->cursor.screenX=83;
+    auto services=devices.Make(state,false);services.gameplayGlobals=gameplay;services.surfaceStorage=surface;bool rejected{};
+    try { auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",std::move(services)); }catch (const std::invalid_argument& error) { rejected=std::string(error.what()).find("게임 보조")!=std::string::npos; }
+    CHECK(rejected && !gameplay->Borrowed() && !surface->Borrowed() && surface->Generation()==0 && gameplay->GameAux()->ResourcePool()==73 && foreign->ResourcePool()==79 && gameplay->cursor.screenX==83);
 }

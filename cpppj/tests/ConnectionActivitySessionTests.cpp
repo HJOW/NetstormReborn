@@ -6,7 +6,9 @@
 #include "client/ClientGameplayGlobals.h"
 #include "client/ClientSubscriberGlobals.h"
 #include "client/RawCampaignSession.h"
+#include "client/RawCampaignCursor.h" // 실제 로딩 뒤 커서의 Placement와 Update를 호출하는 완전한 선언이다.
 #include <algorithm>
+#include <bit>
 #include <array>
 #include <functional>
 #include <memory>
@@ -20,6 +22,7 @@
 namespace { // 실제 자산과 장기 owner를 빌리며 외부 시계/UI 효과만 관측한다.
 using namespace netstorm::client;
 using namespace netstorm::o;
+using CameraViewWords=std::array<std::uint32_t,16>; // padding 없는 실제16DWORD 복사의 검사 관측형이다.
 
 // Client::Run/장치 초기화를 호출하지 않고 보호 파일만 읽는 Client 옵션이다.
 ClientOptions ActivitySessionOptions() {
@@ -157,4 +160,29 @@ TEST_CASE(ConnectionActivitySession_ForeignAuthorityFailsBeforeAnyBorrowOrMutati
     ActivitySessionDevices devices;const auto globals=devices.client.GameplayGlobals();globals->Server()=globals->Boss()=false;auto services=devices.Services(false);auto foreign=MakeRawSurfaceStorage(devices.assets.game);services.surfaceStorage=foreign;
     const auto before=std::vector<std::uint8_t>(foreign->pool.Bytes().begin(),foreign->pool.Bytes().end());bool rejected{};try { devices.Create(std::move(services)); }catch (const std::invalid_argument&) { rejected=true; }
     CHECK(rejected && !globals->Borrowed() && !foreign->Borrowed() && foreign->Generation()==0 && !globals->Server() && !globals->Boss() && foreign->Authority()->server && foreign->Authority()->boss);CHECK(std::equal(before.begin(),before.end(),foreign->pool.Bytes().begin()));
+}
+
+// 실제 Client의 snapshot/논리Renderer/목표는 일반 Session 생성·반납·재대여에서 초기화하지 않는다.
+TEST_CASE(CameraView_ActualClientSessionAliasesFractionAndCurrentCursorReads) {
+    ActivitySessionDevices devices;auto& camera=devices.client.GameplayGlobals()->Camera();std::uint32_t redraw{},revision{};camera.InitializeNativeRenderer(1024,768,256,redraw,revision);SetCameraViewWorld(camera.RendererView(),1.25F,2.5F);camera.CopyRendererSnapshot();camera.RequestPixels(71,83);const auto before=std::bit_cast<CameraViewWords>(camera.Snapshot());const auto requested=camera.Target().pixels;
+    for (std::uint32_t index=0;index<2;++index) { // 같은Client owner를실제Load한두Runtime이차례로빌린다.
+        std::uint32_t invalidated{},resets{};CameraHomeState home;home.width=1024;home.height=768;std::unique_ptr<RawCampaignSession> session;auto services=devices.Services(false);
+        services.install.resetCamera=[&] { CHECK(session);++resets;session->ResetCamera(home,[&](std::int32_t x,std::int32_t y) { camera.RequestPixels(x,y);camera.ApplyPixelsToRendererAndSnapshot(x,y); }); }; // Load의실제Reset/Home본문과카메라setter를연결하며원점효과를빈함수로버리지않는다.
+        session=devices.Create(std::move(services));CHECK(&session->CameraGlobals()==&camera && &session->CameraGlobals().Snapshot().worldBits==&camera.Snapshot().worldBits);CHECK(resets==0 && std::bit_cast<CameraViewWords>(camera.Snapshot())==before && camera.Target().pixels==requested); // 아직커서를요청하지않고생성보존만확인한다.
+        session->Load();CHECK(resets==1); // 실제Player/World/Graph/Reset/커서설치꼬리가정상복귀한뒤에만공개Cursor를사용한다.
+        SetCameraViewWorld(camera.RendererView(),std::bit_cast<float>(before[0]),std::bit_cast<float>(before[1]));camera.CopyRendererSnapshot();camera.RequestPixels(requested[0],requested[1]); // Load의실제초기시야선택후기존과같은분수입력을새검사입력으로명시설정한다.
+        auto& cursor=session->Cursor();CHECK(cursor.Placement().sharedScreenOrigin==&camera.Snapshot().pixels);cursor.SetView({999,888,0,0,640,480});session->SetParticleView({999,888,0,0,640,480},{},false);
+        CHECK(std::bit_cast<CameraViewWords>(camera.Snapshot())==before && camera.Target().pixels[0]==71 && cursor.Placement().ScreenOriginX()==20 && cursor.Placement().ScreenOriginY()==27);auto& drop=session->CursorDropSettings();drop.lockDepth=1;cursor.Placement().hotspotX=cursor.Placement().hotspotY=cursor.Placement().imageWidth=cursor.Placement().imageHeight=0;cursor.Update(0,0);CHECK(drop.x==1.25F && drop.y==2.5F);
+        SurfaceDisplayHooks display;display.invalidate=[&](SquidDisplayRect rect,std::uint32_t flags) { CHECK(rect.left==0 && rect.top==0 && rect.right==640 && rect.bottom==480 && flags==0);++invalidated; };session->SetParticleView({20,27,0,0,640,480},display,false);CHECK(invalidated==1); // 장치연결전pending전체갱신을실제현재장치에한번전달한다.
+        SetCameraViewWorld(camera.Snapshot(),1.5F,2.75F);session->SetParticleView({24,30,0,0,640,480},display,false);CHECK(invalidated==2);cursor.Update(0,0);CHECK(drop.x==1.5F && drop.y==2.75F && cursor.Placement().ScreenOriginX()==24 && cursor.Placement().ScreenOriginY()==30);SetCameraViewWorld(camera.Snapshot(),1.25F,2.5F);
+    }
+    CHECK(std::bit_cast<CameraViewWords>(camera.Snapshot())==before && camera.Target().pixels[1]==83 && !devices.client.GameplayGlobals()->Borrowed());
+}
+
+// 선택된 생성 실패도 이미 존재하는 카메라/분수/목표를 초기값이나 이전 호스트 사본으로 덮지 않는다.
+TEST_CASE(CameraView_ActualClientFailedSessionKeepsCurrentOwner) {
+    ActivitySessionDevices devices;auto& camera=devices.client.GameplayGlobals()->Camera();std::uint32_t redraw{},revision{};camera.InitializeNativeRenderer(1024,768,256,redraw,revision);SetCameraViewWorld(camera.RendererView(),3.125F,4.875F);camera.CopyRendererSnapshot();camera.RequestPixels(71,83);const auto before=std::bit_cast<CameraViewWords>(camera.Snapshot());auto services=devices.Services(false);services.soundNames=nullptr; // World 구성 뒤 RequireSounds에서 실제 필수 장치 누락을 선택한다.
+   bool rejected{};
+    try { static_cast<void>(devices.Create(std::move(services))); }catch (const std::invalid_argument& error) { rejected=std::string(error.what()).find("SoundList")!=std::string::npos; }
+    CHECK(rejected && !devices.client.GameplayGlobals()->Borrowed() && std::bit_cast<CameraViewWords>(camera.Snapshot())==before && camera.Target().pixels[0]==71);auto session=devices.Create(devices.Services(false));CHECK(&session->CameraGlobals()==&camera && session->CameraGlobals().Snapshot().worldBits[0]==0x40480000U);
 }

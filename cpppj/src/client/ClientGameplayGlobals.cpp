@@ -6,8 +6,8 @@
 
 namespace netstorm::client {
 // prvalue 직접 구성으로 CampaignWorldGlobals의 값 복사/이동을 거치지 않고 실제 두 DWORD에 연결한다.
-ClientGameplayGlobals::ClientGameplayGlobals(std::shared_ptr<ClientSubscriberGlobals> subscribers,std::shared_ptr<o::RawAuthorityState> authority)
-    :authority_(authority ? std::move(authority) : std::make_shared<o::RawAuthorityState>()),subscribers_(std::move(subscribers)),world(subscribers_ ? o::CampaignWorldGlobals::BorrowSubscribers(subscribers_->MySubscriber(),subscribers_->LoginSubscriber()) : o::CampaignWorldGlobals{}) {}
+ClientGameplayGlobals::ClientGameplayGlobals(std::shared_ptr<ClientSubscriberGlobals> subscribers,std::shared_ptr<o::RawAuthorityState> authority,std::shared_ptr<o::RawGameAuxState> gameAux)
+    :authority_(authority ? std::move(authority) : std::make_shared<o::RawAuthorityState>()),gameAux_(gameAux ? std::move(gameAux) : std::make_shared<o::RawGameAuxState>()),subscribers_(std::move(subscribers)),world(subscribers_ ? o::CampaignWorldGlobals::BorrowSubscribers(subscribers_->MySubscriber(),subscribers_->LoginSubscriber()) : o::CampaignWorldGlobals{}) {}
 // Session 모듈보다 먼저 대여하여 아직 살아 있는 전역을 초기화하지 않는다.
 ClientGameplayGlobals::Use::Use(ClientGameplayGlobals& globals,bool prepared):globals_(globals),prepared_(prepared) {
     if (globals_.borrowed_) throw std::logic_error("현재 게임 전역 중복 대여");

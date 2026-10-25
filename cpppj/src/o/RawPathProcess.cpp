@@ -81,7 +81,7 @@ void RawPathProcess::Prepare(float speedOverride,float speed,float turningSpeed)
     if (speed==0 || turningSpeed==0) throw std::invalid_argument("경로 타입 속도0");
     // 패치0048a200만 nonzero override를 사용하며 CD0047e710은 항상 현재 타입 속도를 사용한다.
     const auto effective=pool_.Edition()==OriginalEdition::Patch1078 && speedOverride!=0 ? speedOverride : speed;
-    runtime_.Prepare(state_.clock.now,state_.clock.now,effective,turningSpeed,runtime_.Direction(0));
+    runtime_.Prepare(state_.clock.Now(),state_.clock.Now(),effective,turningSpeed,runtime_.Direction(0));
 }
 // 클라이언트 범위는 현재 풀 판본의 실제 serverFirst다.
 bool RawPathProcess::MayMutate() const { return state_.clock.boss || (Form().value>4 && Form().value<pool_.Layout().serverFirst); }
@@ -130,10 +130,10 @@ void RawPathProcess::RunFrame() {
     if (!Host()) throw std::logic_error("미부착 경로 RunFrame");
     if (walker_) {
         const auto parent=Parent();const auto watch=alive_; // 같은 실제 경로 수명만 관찰한다.
-        RunWalkerFrame(pool_,parent,runtime_,state_.clock.now,frames_,state_.windWalkerType,state_.rainWalkerType,state_.windWalkerCounter,
+        RunWalkerFrame(pool_,parent,runtime_,state_.clock.Now(),frames_,state_.windWalkerType,state_.rainWalkerType,state_.windWalkerCounter,
             {[this,parent] { return (types_[pool_.Slot(parent)[10]].flags2&0x10000U) && Host()->FindEvent(parent,0x5105); },
              [this] { return Halt(); },
-             [this,parent] { return runtime_.Step(state_.clock.now,Position(parent),state_.observation,[this,parent] { const auto point=Position(parent);hooks_.stepSound(parent,point.x,point.y,hooks_.soundId(parent)); },hooks_.observationStamp ? hooks_.observationStamp() : 0); },
+             [this,parent] { return runtime_.Step(state_.clock.Now(),Position(parent),state_.observation,[this,parent] { const auto point=Position(parent);hooks_.stepSound(parent,point.x,point.y,hooks_.soundId(parent)); },hooks_.observationStamp ? hooks_.observationStamp() : 0); },
              [this](RawPathPoint point) { return GroundStop(point); },[this] { Arrive(); },hooks_.unpop,hooks_.pop},watch);
         return;
     }
@@ -142,23 +142,23 @@ void RawPathProcess::RunFrame() {
         RunBulfFrame(pool_,parent,runtime_,frames_,shapes_,
             {[this,parent] { return (types_[pool_.Slot(parent)[10]].flags2&0x10000U) && Host()->FindEvent(parent,0x5105); },
              [this] { return Halt(); },
-             [this,parent] { return runtime_.Step(state_.clock.now,Position(parent),state_.observation,[this,parent] { const auto point=Position(parent);hooks_.stepSound(parent,point.x,point.y,hooks_.soundId(parent)); },hooks_.observationStamp ? hooks_.observationStamp() : 0); },
+             [this,parent] { return runtime_.Step(state_.clock.Now(),Position(parent),state_.observation,[this,parent] { const auto point=Position(parent);hooks_.stepSound(parent,point.x,point.y,hooks_.soundId(parent)); },hooks_.observationStamp ? hooks_.observationStamp() : 0); },
              [this] { Arrive(); },hooks_.unpop,hooks_.pop,hooks_.bulfRandom,hooks_.bulfSound},watch);
         return;
     }
     if (balloon_) {
         const auto parent=Parent();const auto watch=alive_; //가상 효과가 자신을 지운 뒤에는 watch만 읽는다.
-        RunBalloonFrame(pool_,parent,runtime_,state_.clock.now,state_.balloonType,
-            {[this] { return Halt(); },[this,parent] { return runtime_.Step(state_.clock.now,Position(parent),state_.observation,[this,parent] { const auto point=Position(parent);hooks_.stepSound(parent,point.x,point.y,hooks_.soundId(parent)); }); },
+        RunBalloonFrame(pool_,parent,runtime_,state_.clock.Now(),state_.balloonType,
+            {[this] { return Halt(); },[this,parent] { return runtime_.Step(state_.clock.Now(),Position(parent),state_.observation,[this,parent] { const auto point=Position(parent);hooks_.stepSound(parent,point.x,point.y,hooks_.soundId(parent)); }); },
              [this] { Arrive(); },hooks_.unpop,hooks_.pop,[this](float x,float y) { if (!hooks_.balloonFlame) throw std::logic_error("벌룬 화염 음향 미연결");hooks_.balloonFlame(x,y); }},watch);
         return;
     }
     const auto parent=Parent();const auto type=pool_.Slot(parent)[10];
     if ((priest_ || worm_ || dude_) && (types_[type].flags2&0x10000)!=0 && Host()->FindEvent(parent,0x5105)) return;
     if (runtime_.Finished() || Halt()) return;
-    if (flying_) { if (runtime_.NextFrame()>state_.clock.now) return;runtime_.SetNextFrame(state_.clock.now+0.019999999552965164); } // 48af90의 예약 경계이며 Halt는 예약 전에도 실행한다.
+    if (flying_) { if (runtime_.NextFrame()>state_.clock.Now()) return;runtime_.SetNextFrame(state_.clock.Now()+0.019999999552965164); } // 48af90의 예약 경계이며 Halt는 예약 전에도 실행한다.
     const auto watch=alive_;
-    const auto sample=runtime_.Step(state_.clock.now,Position(parent),state_.observation,[this,parent] {
+    const auto sample=runtime_.Step(state_.clock.Now(),Position(parent),state_.observation,[this,parent] {
         const auto position=Position(parent);hooks_.stepSound(parent,position.x,position.y,hooks_.soundId(parent));
     },hooks_.observationStamp ? hooks_.observationStamp() : 0);
     if (!*watch) return;
@@ -191,7 +191,7 @@ void RawPathProcess::RunFrame() {
 void RawPathProcess::Arrive() {
     const auto watch=alive_;const auto parent=Parent();
     if (priest_ || worm_ || dude_) { RawPathAnimation animation(pool_,frames_,{hooks_.unpop,hooks_.repop});animation.Stop(parent); }
-    const auto sample=runtime_.Step(state_.clock.now,Position(parent),state_.observation,[this,parent] {
+    const auto sample=runtime_.Step(state_.clock.Now(),Position(parent),state_.observation,[this,parent] {
         const auto position=Position(parent);hooks_.stepSound(parent,position.x,position.y,hooks_.soundId(parent));
     },hooks_.observationStamp ? hooks_.observationStamp() : 0);
     hooks_.unpop(parent,0);hooks_.pop(parent,sample.position,0);if (!*watch || !Robust()) return;

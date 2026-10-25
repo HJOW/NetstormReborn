@@ -1,3 +1,4 @@
+#include "o/RawGameAuxState.h"
 // 실제 자산과 기존 월드 모듈로 장기 물리의 대여·주소·초기화 범위를 검사한다.
 #include "DudeSpawnSupport.h"
 #include "client/RawSurfaceWorld.h"
@@ -119,11 +120,12 @@ TEST_CASE(RawSurfaceStorage_TotalMadeLifetimeAndPreparedControlIsolation) {
     for (std::size_t index=0;index<256;++index) { // 마지막 물리 칸까지 모두 비영 현재값을 보존 입력으로 준다.
         storage->totalMade.localCounts[index]=static_cast<std::uint32_t>(index+11);storage->totalMade.localSecondaryCounts[index]=static_cast<std::uint32_t>(index+101);storage->totalMade.globalCounts[index]=static_cast<std::uint32_t>(index+1001);
     }
-    const auto current=storage->totalMade;auto firstCore=first->Core();firstCore.bookkeeping.graphsEnabled=true;firstCore.bookkeeping.suppressed=true;firstCore.bookkeeping.depth=7;firstCore.bookkeeping.totalCost=91;firstCore.bookkeeping.providers={{3,4},1};firstCore.bookkeeping.ownerFactories[1]={{5,6},1}; // Runtime 지역 상태는 다음 World의 초기 입력이 아니다.
+    const auto current=storage->totalMade;auto firstCore=first->Core();firstCore.bookkeeping.graphsEnabled=true;firstCore.bookkeeping.suppressed=true;firstCore.bookkeeping.depth=7;firstCore.bookkeeping.TotalCost()=91;firstCore.bookkeeping.providers={{3,4},1};firstCore.bookkeeping.ownerFactories[1]={{5,6},1}; // 제어/목록은 지역이며 TotalCost만 실제0059508c의 장기 DWORD다.
     CHECK(firstCore.bookkeeping.LocalCounts().data()==local && firstCore.bookkeeping.LocalSecondaryCounts().data()==secondary && firstCore.bookkeeping.GlobalCounts().data()==global);first.reset();CHECK(!storage->Borrowed() && SameStorageTotalMade(storage->totalMade,current));
     auto second=std::make_unique<RawSurfaceWorld>(storage->pool.Edition(),storage->types,storage->frames,storage->shapes,StorageLinks(),97,nullptr,storage,true);const auto secondCore=second->Core();
     CHECK(secondCore.bookkeeping.LocalCounts().data()==local && secondCore.bookkeeping.LocalSecondaryCounts().data()==secondary && secondCore.bookkeeping.GlobalCounts().data()==global && SameStorageTotalMade(storage->totalMade,current));
-    CHECK(!secondCore.bookkeeping.graphsEnabled && !secondCore.bookkeeping.suppressed && secondCore.bookkeeping.depth==0 && secondCore.bookkeeping.totalCost==0 && secondCore.bookkeeping.localOwner==1 && secondCore.bookkeeping.providers.entries.empty());
+    CHECK(!secondCore.bookkeeping.graphsEnabled && !secondCore.bookkeeping.suppressed && secondCore.bookkeeping.depth==0 && secondCore.bookkeeping.TotalCost()==91 && secondCore.bookkeeping.localOwner==1 && secondCore.bookkeeping.providers.entries.empty());
+    CHECK(&secondCore.bookkeeping.TotalCost()==&storage->GameAux()->TotalCost() && storage->GameAux()->TotalCost()==91); // prepared는 Native 부모가 직접 쓸 때까지 같은 비용 비트를 보존한다.
     for (const auto& list:secondCore.bookkeeping.ownerFactories) CHECK(!list.current.storage && list.entries.empty() && list.count==0); // Player callback은 이전 장부에서 이월하지 않는다.
     CHECK(StorageRejected([&] { storage->Acquire(); }) && StorageRejected([&] { storage->AcquirePrepared(); }) && SameStorageTotalMade(storage->totalMade,current));
     std::weak_ptr<RawSurfaceStorage> lifetime=storage;storage.reset();CHECK(!lifetime.expired() && secondCore.bookkeeping.GlobalCounts().back()==1256);second.reset();CHECK(lifetime.expired()); // 마지막 실행기/Use가 끝난 뒤만 실제 물리가 소멸한다.
@@ -212,7 +214,7 @@ TEST_CASE(RawSurfaceStorage_PriestOwnerStateSurvivesPreparedConstructionFailure)
 
 // 같은 실제 Gameplay/Storage/Process/Pool 주소가 prepared 대여와 World 소멸 뒤에도 살아 있다.
 TEST_CASE(RawSurfaceStorage_AuthorityOwnerSharesCurrentValuesAndOutlivesWorld) {
-    auto globals=std::make_shared<ClientGameplayGlobals>();auto owner=globals->Authority();auto storage=MakeRawSurfaceStorage(netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078).game,owner);auto first=StorageWorld(storage);
+    auto globals=std::make_shared<ClientGameplayGlobals>();auto owner=globals->Authority();auto storage=MakeRawSurfaceStorage(netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078).game,owner,globals->GameAux());auto first=StorageWorld(storage);
     auto core=first->Core();CHECK(owner->server && owner->boss && storage->Authority()==owner && &core.processState.Server()==&globals->Server() && &core.processState.Boss()==&globals->Boss());
     globals->Server()=false;globals->Boss()=false;core.processState.server=core.processState.boss=true;CHECK(!core.processState.Server() && !core.processState.Boss() && !core.pool.IsServer()); // 반대 fallback을 owner에 복사하지 않는다.
     first.reset();CHECK(!storage->Borrowed() && !globals->Server() && !globals->Boss());auto lease=globals->AcquirePrepared();CHECK(!globals->Server() && !globals->Boss());
@@ -223,14 +225,14 @@ TEST_CASE(RawSurfaceStorage_AuthorityOwnerSharesCurrentValuesAndOutlivesWorld) {
 
 // 일반 설치만 종전 fresh true/true로 시작하고 prepared/실패/중복은 현재 권한을 보존한다.
 TEST_CASE(RawSurfaceStorage_AuthorityFreshPreparedAndIdentityFailureAreDistinct) {
-    auto globals=std::make_shared<ClientGameplayGlobals>();auto storage=MakeRawSurfaceStorage(netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078).game,globals->Authority());globals->Server()=false;globals->Boss()=false;
+    auto globals=std::make_shared<ClientGameplayGlobals>();auto storage=MakeRawSurfaceStorage(netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078).game,globals->Authority(),globals->GameAux());globals->Server()=false;globals->Boss()=false;
     auto other=std::make_shared<RawAuthorityState>();CHECK(StorageRejected([&] { RawSurfaceWorld wrong(OriginalEdition::Patch1078,storage->types,storage->frames,storage->shapes,storage->links,97,nullptr,storage,false,nullptr,other); }));
     CHECK(!storage->Borrowed() && storage->Generation()==0 && !globals->Server() && !globals->Boss());auto first=StorageWorld(storage);CHECK(globals->Server() && globals->Boss());globals->Server()=false;globals->Boss()=true;
     CHECK(StorageRejected([&] { StorageWorld(storage); }));CHECK(!globals->Server() && globals->Boss());first.reset();auto prepared=storage->AcquirePrepared();CHECK(!globals->Server() && globals->Boss());prepared.reset();CHECK(!globals->Server() && globals->Boss());
     auto ordinary=storage->Acquire();CHECK(globals->Server() && globals->Boss());ordinary.reset();globals->Server()=globals->Boss()=false;auto preparedGlobals=globals->AcquirePrepared();preparedGlobals.reset();CHECK(!globals->Server() && !globals->Boss());
     auto freshGlobals=globals->Acquire();CHECK(globals->Server() && globals->Boss());globals->Server()=false;freshGlobals.reset();CHECK(!globals->Server() && globals->Boss()); // 반납은 권한 초기화가 아니다.
-    std::vector<RiftTypeRecord> types(187);std::vector<RiftTypeFrames> frames(187,RiftTypeFrames({}));std::vector<SquidDisplayShape> shapes(187);auto failing=std::make_shared<RawSurfaceStorage>(OriginalEdition::Patch1078,types,frames,shapes,nullptr,globals->Authority());globals->Boss()=false;
-    CHECK(StorageRejected([&] { RawSurfaceWorld invalid(OriginalEdition::Patch1078,types,frames,shapes,StorageLinks(),97,nullptr,failing,true,nullptr,globals->Authority()); }));CHECK(!failing->Borrowed() && !globals->Server() && !globals->Boss()); // prepared 실행기 생성 실패는 앞선 실제 두 bool을 복구/초기화하지 않는다.
+    std::vector<RiftTypeRecord> types(187);std::vector<RiftTypeFrames> frames(187,RiftTypeFrames({}));std::vector<SquidDisplayShape> shapes(187);auto failing=std::make_shared<RawSurfaceStorage>(OriginalEdition::Patch1078,types,frames,shapes,nullptr,globals->Authority(),globals->GameAux());globals->Boss()=false;
+    CHECK(StorageRejected([&] { RawSurfaceWorld invalid(OriginalEdition::Patch1078,types,frames,shapes,StorageLinks(),97,nullptr,failing,true,nullptr,globals->Authority(),globals->GameAux()); }));CHECK(!failing->Borrowed() && !globals->Server() && !globals->Boss()); // prepared 실행기 생성 실패는 앞선 실제 두 bool을 복구/초기화하지 않는다.
 }
 
 // 두 PE의 Allocate/Release 관문은 생성 때 bool 사본이 아니라 각 호출의 같은 현재 서버값을 읽는다.
@@ -245,4 +247,40 @@ TEST_CASE(RawSurfaceStorage_AuthorityCurrentPoolGatesAndIndependentOwners) {
         first->pool.Release(client);CHECK(first->pool.FreeCount()==free+1 && first->pool.Tail(true)==client);CHECK(!authority.boss && second->Authority()->server && second->Authority()->boss);
         SidPool standalone(edition,32768,false);CHECK(!standalone.IsServer() && StorageRejected([&] { standalone.Allocate(0); })); // 미연결 순수 fallback은 종전 동작을 유지한다.
     }
+}
+
+
+namespace { // 서로 떨어진17주소를 packed image나 같은 자료형 배열로 가장하지 않는다.
+// 각 실제 폭의 비트만 모아 생성/반납 전후 전체 필드를 대조한다.
+std::array<std::uint64_t,17> GameAuxValues(const RawGameAuxState& owner) {
+    return {owner.OrdinaryGeysers(),owner.GeyserFrameFlag(),owner.SavedGeyserCount(),std::bit_cast<std::uint64_t>(owner.GeyserDeadline()),std::bit_cast<std::uint64_t>(owner.CleanupDeadline()),std::bit_cast<std::uint64_t>(owner.SecondaryGeyserDeadline()),std::bit_cast<std::uint64_t>(owner.ScheduledDrawDeadline()),std::bit_cast<std::uint32_t>(owner.TotalCost()),owner.ResourcePoolBits(),owner.RefundPercent(),std::bit_cast<std::uint32_t>(owner.AllowAnyCapture()),owner.Archipelago(),std::bit_cast<std::uint32_t>(owner.LostX()),std::bit_cast<std::uint32_t>(owner.LostY()),std::bit_cast<std::uint32_t>(owner.DefaultSp()),owner.GeyserType(),owner.SubscriberMarker()};
+}
+// 17개 모두 구별되는 현재 입력이며 실제 World/Session 계산의 결과를 합성하지 않는다.
+void SetGameAuxValues(RawGameAuxState& owner) {
+    owner.OrdinaryGeysers()=17;owner.GeyserFrameFlag()=19;owner.SavedGeyserCount()=23;owner.GeyserDeadline()=-0.0;owner.CleanupDeadline()=29.25;owner.SecondaryGeyserDeadline()=31.5;owner.ScheduledDrawDeadline()=37.75;owner.TotalCost()=-41;owner.StoreResourcePoolBits(0xfedcba98U);owner.RefundPercent()=43;owner.AllowAnyCapture()=-47;owner.Archipelago()=0x12345678U;owner.LostX()=std::bit_cast<float>(0xc61c4000U);owner.LostY()=-0.0F;owner.DefaultSp()=-53;owner.GeyserType()=123;owner.SubscriberMarker()=59;
+}
+}
+// 보호PE의 실제 세 명시 초기값과 나머지BSS+0 및 서로 다른 Client 주소를 확인한다.
+TEST_CASE(GameAux_PeDefaultsAndIndependentTypedOwner) {
+    ClientGameplayGlobals first,second;const auto owner=first.GameAux();const auto values=GameAuxValues(*owner);
+    for (std::size_t index=0;index<values.size();++index) { // uint32/int32/float/double을 같은ref로 alias하지 않고 관측한 비트를 비교한다.
+        const auto expected=index==9 ? 25U : index==14 ? 2000U : index==15 ? 122U : 0U;CHECK(values[index]==expected);
+    }
+    CHECK(first.GameAux()!=second.GameAux() && &first.GeyserType()==&owner->GeyserType());SetGameAuxValues(*owner);CHECK(second.GameAux()->ResourcePool()==0 && second.GeyserType()==122 && second.GameAux()->DefaultSp()==2000);
+    owner->ResetLostPositionForCleanup();CHECK(std::bit_cast<std::uint32_t>(owner->LostY())==0xc61c4000U && std::bit_cast<std::uint32_t>(owner->LostX())==0xc61c4000U); // cleanup의Y→X -10000은 최초/fresh+0과 별개다.
+}
+// 실제 World의 준비 대여와 반납은17필드를 보존하고 일반fresh만 종전 지역 입력을 준비한다.
+TEST_CASE(GameAux_PreparedWorldAliasesCostAndLossAndGeneralFreshIsExplicit) {
+    auto gameplay=std::make_shared<ClientGameplayGlobals>();const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);auto storage=MakeRawSurfaceStorage(assets.game,gameplay->Authority(),gameplay->GameAux());auto owner=gameplay->GameAux();SetGameAuxValues(*owner);const auto before=GameAuxValues(*owner);
+    { RawSurfaceWorld world(OriginalEdition::Patch1078,storage->types,storage->frames,storage->shapes,StorageLinks(),97,nullptr,storage,true,nullptr,gameplay->Authority(),owner);auto core=world.Core();
+      CHECK(storage->GameAux()==owner && &storage->GeyserType()==&gameplay->GeyserType() && &core.bookkeeping.TotalCost()==&owner->TotalCost());CHECK(GameAuxValues(*owner)==before && &world.DeletionState().LostX()==&owner->LostX() && &world.DeletionState().LostY()==&owner->LostY());
+      CHECK(StorageRejected([&] { storage->Acquire(); }));CHECK(GameAuxValues(*owner)==before); }
+    CHECK(!storage->Borrowed() && GameAuxValues(*owner)==before);
+    { auto use=storage->Acquire();CHECK(owner->ResourcePool()==0 && owner->TotalCost()==0 && owner->RefundPercent()==25 && owner->OrdinaryGeysers()==0 && owner->AllowAnyCapture()==0 && owner->Archipelago()==0 && owner->GeyserType()==122);CHECK(std::bit_cast<std::uint32_t>(owner->LostX())==0 && std::bit_cast<std::uint32_t>(owner->LostY())==0);
+      CHECK(owner->GeyserFrameFlag()==19 && owner->SavedGeyserCount()==23 && std::bit_cast<std::uint64_t>(owner->GeyserDeadline())==0x8000000000000000ULL && owner->CleanupDeadline()==29.25 && owner->SecondaryGeyserDeadline()==31.5 && owner->ScheduledDrawDeadline()==37.75 && owner->DefaultSp()==-53 && owner->SubscriberMarker()==59); }
+}
+// 두 서비스의 다른 게임owner는 대여/기존값초기화 전에 거부하며 같은 권한만으로 통과하지 않는다.
+TEST_CASE(GameAux_WorldIdentityFailurePrecedesBorrowAndReset) {
+    ClientGameplayGlobals gameplay;const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);auto storage=MakeRawSurfaceStorage(assets.game,gameplay.Authority(),gameplay.GameAux());SetGameAuxValues(*gameplay.GameAux());const auto before=GameAuxValues(*gameplay.GameAux());auto foreign=std::make_shared<RawGameAuxState>();
+    CHECK(StorageRejected([&] { RawSurfaceWorld world(OriginalEdition::Patch1078,storage->types,storage->frames,storage->shapes,StorageLinks(),97,nullptr,storage,false,nullptr,gameplay.Authority(),foreign); }));CHECK(!storage->Borrowed() && storage->Generation()==0 && GameAuxValues(*gameplay.GameAux())==before && foreign->ResourcePool()==0);
 }

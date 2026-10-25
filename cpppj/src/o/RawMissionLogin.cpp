@@ -56,7 +56,7 @@ void RawMissionLogin::SendReply(std::int32_t owner,std::uint8_t accepted) const 
 //004a6990의34바이트 전부는 생성자 초기화와 실제 현재 필드로 정해진다.
 void RawMissionLogin::SendBegin(std::uint32_t owner) const {
     auto bytes=Packet(0x29,34);Write(bytes,4,owner);std::copy(globals_.zoneAddress.begin(),globals_.zoneAddress.end(),bytes.begin()+8);
-    Write(bytes,22,globals_.beginSeed);Write(bytes,30,globals_.battleSeed);Need(hooks_.send)(static_cast<std::int32_t>(owner),bytes);
+    Write(bytes,22,globals_.beginSeed);Write(bytes,30,globals_.BattleSeed());Need(hooks_.send)(static_cast<std::int32_t>(owner),bytes);
     if (globals_.debugBurst) throw std::logic_error("미션 로그인 디버그63000바이트3회 분기 미복원");
 }
 // 원본은 owner0 슬롯을ff로 남기며 현재1..8 float SP를 각각 절삭한다.

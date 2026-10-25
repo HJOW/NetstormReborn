@@ -1,3 +1,4 @@
+#include "o/RawGameAuxState.h"
 // 독립 원본1676입력의 수신 효과/전체10슬롯/패킷/누적값/현재 전역을 대조한다.
 #include "RawSceneSupport.h"
 #include "o/RawBombEffect.h"
@@ -135,4 +136,12 @@ TEST_CASE(BombEffect_PacketBoundsAndLazyCleanup) {
     RawBombEffect missing(scene.pool,scene.types,scene.state,hooks);CHECK(Throws([&] { missing.Receive(scene.packet); }));CHECK(releases==1);
     hooks.apply=[&](Sid,std::uint32_t,Sid) { Put(scene.packet,6,7); }; // 효과가 버퍼 밖 대상까지 늘려도 읽기 전에 거부한다.
     RawBombEffect growing(scene.pool,scene.types,scene.state,hooks);CHECK(Throws([&] { growing.Receive(scene.packet); }));CHECK(releases==2);
+}
+
+
+// cast종료 효과 뒤 현재 unsigned bits/TYPE를 다시 읽고 후속 확보실패도 선행 누적을 보존한다.
+TEST_CASE(GameAux_BombEffectRequeriesSignedResourceAsUnsignedAfterCast) {
+    RawGameAuxState owner;EffectScene scene;scene.Prepare("0,0,51,117,0,0,0,0,1065353216,77,1");scene.state.sharedSpentCounter=&owner.ResourcePool();scene.types[118].cost=7.75F;scene.state.spentCounter=77;owner.ResourcePool()=123;
+    BombEffectHooks hooks;hooks.stopCast=[&](Sid carrier) { CHECK(carrier==Sid{51});owner.StoreResourcePoolBits(0xffffffffU);scene.Raw(Sid{50})[10]=118; };hooks.allocate=[](std::uint32_t) { return false; };RawBombEffect effect(scene.pool,scene.types,scene.state,hooks);bool failed{};
+    try { effect.Receive(scene.packet); }catch (const std::bad_alloc&) { failed=true; }CHECK(failed && owner.ResourcePoolBits()==6 && scene.state.spentCounter==77); // signed-1의동일DWORD+7이unsigned6으로감기며owner1/성공으로정규화하지않는다.
 }

@@ -18,7 +18,7 @@ std::unique_ptr<RawCarrierInput> RawCampaignSession::MakeCarrierInput(CarrierInp
     hooks.graph=[s](Sid sid) { return s->anchor->GraphFor(sid.value); };
     hooks.connected=[s](RawPathPoint a,RawPathPoint b) { const auto first=s->anchor->GraphAt(a.x,a.y);return first==s->anchor->GraphAt(b.x,b.y); };
     hooks.surface=[s](RawPathPoint p) { const auto cell=RawCursorPosition::TruncatePoint({p.x,p.y});const auto x=static_cast<std::int32_t>(cell[0]),y=static_cast<std::int32_t>(cell[1]);if (x<0 || x>=256 || y<0 || y>=256) throw std::out_of_range("운반체 입력 spot 물리 범위");return std::uint32_t(s->core.spots[static_cast<std::size_t>(y)*256+static_cast<std::size_t>(x)]); };
-    hooks.geyser=[s](RawPathPoint p) { return s->world.Find(p.x,p.y,s->motionState.carrier.geyserType); };
+    hooks.geyser=[s](RawPathPoint p) { return s->world.Find(p.x,p.y,s->motionState.carrier.GeyserType()); };
     hooks.validGeyser=[s](Sid sid,Sid target) { return s->motion->CarrierArrival().ValidGeyser(sid,target); };
     hooks.returnPlace=[s](RawPathPoint p) { return s->motion->Cleanup().ReturnPlaceAt(p.x,p.y,0); };
     hooks.daisAt=[s](RawPathPoint p) { return s->damageablePost->GenusAt(p.x,p.y,0x400000); };
