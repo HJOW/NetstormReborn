@@ -2163,3 +2163,5 @@ set_source_files_properties(ClientSpGlobalsTests.cpp PROPERTIES COMPILE_DEFINITI
 set_source_files_properties(StaticStringsTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_STATIC_STRINGS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/static-string-runtime-x86.tsv\"")
 set_source_files_properties(TellFileMenusTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_TELL_FILE_MENUS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/tell-file-menus-x86.tsv\";NETSTORM_TELL_INLINE_LIST_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/tell-inline-list-x86.tsv\";NETSTORM_TELL_INLINE_ERRORS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/tell-inline-errors-x86.tsv\"")
+# 실제 활동 수신/Client·Session 접합과 Client9 존재 수명을 서로 다른 검사에서 확인한다.
+target_sources(netstorm_tests PRIVATE ConnectionActivityTests.cpp ConnectionActivitySessionTests.cpp ConnectionActivityTransportTests.cpp)

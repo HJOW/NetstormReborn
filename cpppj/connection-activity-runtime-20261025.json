@@ -1,0 +1,386 @@
+{
+  "unit": 432,
+  "goalComplete": false,
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "created": "2026-10-25T19:25:47.909150",
+  "sourceAttempt": 3,
+  "focusedAttempt": 1,
+  "sources": {
+    "cpppj/src/CMakeLists.txt": "bfc1d95693bfc0a66065d001d2d1c9b5ffe20469b47f012465405a38826c9092",
+    "cpppj/src/client/CampaignClientServices.cpp": "f9cdc8ae07127878d0bb51f60b7154884d5c42b470eaf3ddfe223096fd230298",
+    "cpppj/src/client/ClientConnectionActivityGlobals.h": "93a77244e65a88424e837b0cbfe5251f94c6c39a22ce7b5bc87d96884812575a",
+    "cpppj/src/client/ClientMain.cpp": "dd71fc7bbd0cc600651172384f3bbdeff06ad90b24f3bb760e6f04e27db7fa63",
+    "cpppj/src/client/ClientMain.h": "d0290f1c8ed946da47aa356b4c4460e0ae509fc763daee6f68bfed4951227f93",
+    "cpppj/src/client/RawCampaignSession.cpp": "2c3e8a82dd92052fb22efeb4fd0192706f9d62290a6913080fc404e9a455644b",
+    "cpppj/src/client/RawCampaignSession.h": "f6350db20d6522d0333874f5df678efda7df00863af7b3a779a8ea4e2ab95973",
+    "cpppj/src/client/RawCampaignSessionLogin.inc": "69780af721c1006786ea1e159f643a6976cf4376289fba63596bf1638330c9d1",
+    "cpppj/src/o/RawConnectionActivity.cpp": "f610e77e65b22198d3d65b5d9b0198e12da04e47abb615ec50b1168d4958f579",
+    "cpppj/src/o/RawConnectionActivity.h": "d920f48647ea502ed534860919ca228b2ce87b95b9df2638d10e4a04b37d2b1c",
+    "cpppj/src/zacket/LocalMissionTransport.cpp": "dbd4d2ae36ea67e1854d45a47751e91866973acbaddc8a3fec16dbf362b0bcf8",
+    "cpppj/src/zacket/LocalMissionTransport.h": "0757e3496a27853f2d56fcd60289ef86f86f29ec63ab29c711b3ddc2fad68db3",
+    "cpppj/tests/CMakeLists.txt": "0dca45a0e69c77b0bff176e318fec29998b566ec636d4e8922836273d61ddf8f",
+    "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp": "7fd150e42aa476df1b08b783b2804b97dc0747be79b88b0b86149f6d1e3d3e6a",
+    "cpppj/tests/ConnectionActivitySessionTests.cpp": "151b8f1fa6002556acc2f50bacc2a8f675457e9ac856f8cdd2eaeb89dcc04f49",
+    "cpppj/tests/ConnectionActivityTests.cpp": "0ee2f4db514725449b56979f6f3bf7167c4e51880fff6a72bd7722b7ff423830",
+    "cpppj/tests/ConnectionActivityTransportTests.cpp": "48dee17e7b4cdfd82d93f53592efec0ebffb761015da3f2c81ec80035d63e837"
+  },
+  "artifacts": {
+    "cpppj/build/bin/Release/NetstormCpp.exe": "4d67bffab1bad698a5b1d48684d0cc04fe638be536db6783325a7abc7236af20",
+    "cpppj/build/bin/Release/netstorm_tests.exe": "99bdfe435158120aa2eb26fefa79812508cdef8415889d0e7f94b42af7f1af91",
+    "cpppj/build/bin/Release/netstorm_cloud_probe.exe": "56d7cf77a677da106bd12362d2c756b1990425ea6275f1144b6e783a1c717366",
+    "cpppj/build/bin/Release/netstorm_cloud_render_probe.exe": "414ba3126ec358ad18d4ec2f5944de770c7e4317809ed94a404fb9832975fd47"
+  },
+  "focused": [
+    {
+      "filter": "ConnectionActivity",
+      "exitCode": 0,
+      "tests": 13,
+      "failures": 0,
+      "seconds": 1.3693,
+      "log": "extracted/cpp-connection-activity-432-focused1/ConnectionActivity.log",
+      "sha256": "ccc330b404bbb7a0d1418e8f47dd49d3d206c51733f80867ebf63b27add4185c",
+      "caseNames": [
+        "ConnectionActivity_WallFrameStoresAndCurrentServerFollowNativeOrder",
+        "ConnectionActivity_ClientEraseAndFrameZeroAreNotNormalized",
+        "ConnectionActivity_Signed64WallConversionKeepsLowDword",
+        "ConnectionActivity_IndependentTablesAndExplicitGapSurviveAcrossBodies",
+        "ConnectionActivity_InvalidSenderRejectsBeforeWallOrStores",
+        "ConnectionActivity_RegistrationUsesExistingDispatcherAndPreservesLength",
+        "ConnectionActivitySession_ActualClientOwnerSurvivesUnselectedSessions",
+        "ConnectionActivitySession_ZoneAndQueuedWireUseActualClientTables",
+        "ConnectionActivitySession_CurrentServerAndFinalUiEffectsStayAliased",
+        "ConnectionActivitySession_MissingSelectedHooksFailAtNativeBoundary",
+        "ConnectionActivitySession_TimerRemoteStatusUsesSameModuleWithoutPacket",
+        "ConnectionActivityTransport_ClientObjectPresenceIsSeparateFromFlags",
+        "ConnectionActivityTransport_FailedConnectKeepsPartialEffectsAndUnpublishedPresence"
+      ]
+    },
+    {
+      "filter": "LocalMissionTransport_",
+      "exitCode": 0,
+      "tests": 4,
+      "failures": 0,
+      "seconds": 0.321,
+      "log": "extracted/cpp-connection-activity-432-focused1/LocalMissionTransport_.log",
+      "sha256": "7dc638e76e21f620f0c23757047fc7c6387dce376d1419d417174e2aacf9fd2d",
+      "caseNames": [
+        "LocalMissionTransport_Native66",
+        "LocalMissionTransport_ZonePendingLoginAndReply",
+        "LocalMissionTransport_SelectedBoundariesAndDepth",
+        "LocalMissionTransport_ServerOpenAndClientConnectAreSeparate"
+      ]
+    },
+    {
+      "filter": "EditorLocalTransport_",
+      "exitCode": 0,
+      "tests": 10,
+      "failures": 0,
+      "seconds": 0.3326,
+      "log": "extracted/cpp-connection-activity-432-focused1/EditorLocalTransport_.log",
+      "sha256": "9328c73ff2d0b93a4b3a26cca738b56e85907a0ea9d7d91fd3dcd2aee997301c",
+      "caseNames": [
+        "EditorLocalTransport_ListenerClientAndNegativePendingWithoutLogin",
+        "EditorLocalTransport_QueuedRequestReplyAndPendingPollOrder",
+        "EditorLocalTransport_CloseDuringReceiveAndReentrantPoll",
+        "EditorLocalTransport_VersionTerminationUsesExistingDispatcher",
+        "EditorLocalTransport_HandlerFailurePreservesPartialQueue",
+        "EditorLocalTransport_SelectedContractsAndOwnedBytes",
+        "EditorLocalTransport_PeerCloseDispatchesTerminationOnce",
+        "EditorLocalTransport_InvalidClientPacketStopsCurrentEndpointPoll",
+        "EditorLocalTransport_ClientVersionSentinelDefersRetirement",
+        "EditorLocalTransport_TerminationPreservesCurrentReceiveProtocolForBothEnds"
+      ]
+    },
+    {
+      "filter": "MissionLoginTimer_",
+      "exitCode": 0,
+      "tests": 5,
+      "failures": 0,
+      "seconds": 0.4051,
+      "log": "extracted/cpp-connection-activity-432-focused1/MissionLoginTimer_.log",
+      "sha256": "c8471f2dfec3b8f52fdea36f61902f6cb6f61be36e9e30e1292f9e9ab8b21437",
+      "caseNames": [
+        "MissionLoginTimer_Native1984",
+        "MissionLoginTimer_UnreadyMissionPostFinishesWithoutBegin",
+        "MissionLoginTimer_InactiveReadsNothing",
+        "MissionLoginTimer_MissingSelectedConsumersStopInOrder",
+        "MissionLoginTimer_RejectsGeneralInitializationAndInvalidStorage"
+      ]
+    },
+    {
+      "filter": "MissionClientPackets_",
+      "exitCode": 0,
+      "tests": 2,
+      "failures": 0,
+      "seconds": 0.3804,
+      "log": "extracted/cpp-connection-activity-432-focused1/MissionClientPackets_.log",
+      "sha256": "b9fca5c56df4bdeb7cebfa4c7974233247655abd6256a7ce013b5d7ced1630c3",
+      "caseNames": [
+        "MissionClientPackets_Native157",
+        "MissionClientPackets_RequiredEffectsAndRegistration"
+      ]
+    },
+    {
+      "filter": "CampaignExistingEditorCheckpoint",
+      "exitCode": 0,
+      "tests": 25,
+      "failures": 0,
+      "seconds": 2.9036,
+      "log": "extracted/cpp-connection-activity-432-focused1/CampaignExistingEditorCheckpoint.log",
+      "sha256": "a451b26c42b4a5b950be157ede4340b5545bef8381cc74d67ad01722566a8ec0",
+      "caseNames": [
+        "CampaignExistingEditorCheckpoint_DeferPreservesExistingOwnerAndDefaultStages",
+        "CampaignExistingEditorCheckpoint_DeferRejectsCampaignMode",
+        "CampaignExistingEditorCheckpoint_NormalReadFalseKeepsInvalidBranch",
+        "CampaignExistingEditorCheckpoint_FirstNotifyUsesActualWriterBeforeSubscriber",
+        "CampaignExistingEditorCheckpoint_FileTailThenActualWorldChatBoundary",
+        "CampaignExistingEditorCheckpoint_CoreWriteNaturalGateKeepsActualStorage",
+        "CampaignExistingEditorCheckpoint_CoreWriteManagerDiagnosticBeforeGate",
+        "CampaignExistingEditorCheckpoint_CoreWriteMetamapDiagnosticBeforeGate",
+        "CampaignExistingEditorCheckpoint_ActualCurrentNameSelectsWorkingFile",
+        "CampaignExistingEditorCheckpoint_ActualChatRuntimeAdvancesWorldAndSnapshot",
+        "CampaignExistingEditorCheckpoint_ActualPlayerUiCompletesAndReloads",
+        "CampaignExistingEditorCheckpoint_ActualCustomTest01PlayerUiAndFile",
+        "CampaignExistingEditorCheckpoint_AdoptsNativePlayersAndPreservesCoreUntilNextCleanup",
+        "CampaignExistingEditorCheckpoint_UiScopeCommitsOnlyAfterActualStateReturn",
+        "CampaignExistingEditorCheckpoint_UiTailFailureKeepsPublicAccessClosed",
+        "CampaignExistingEditorCheckpoint_UiTailCannotCommitEarlyReturnOrImmediate",
+        "CampaignExistingEditorCheckpoint_PreparedCtorPreservesSameClientState",
+        "CampaignExistingEditorCheckpoint_PreparedCtorRejectsIncompleteOwnersBeforeBorrow",
+        "CampaignExistingEditorCheckpoint_ActualProductionFormsInsideInstallScope",
+        "CampaignExistingEditorCheckpoint_EditorWireQueuesNegativeSenderConstructionMoveAndSalvage",
+        "CampaignExistingEditorCheckpoint_EditorWireReadsCurrentChargeGateWithoutSenderNormalization",
+        "CampaignExistingEditorCheckpoint_EditorWireRejectsOwnedRegistrationBeforePublishing",
+        "CampaignExistingEditorCheckpoint_EditorWireRejectsForeignPlayersAndLoginBeforeBorrow",
+        "CampaignExistingEditorCheckpoint_ActivityWireUsesClientNineAndRetiresOnlyReceive",
+        "CampaignExistingEditorCheckpoint_ActivityCollisionPreservesAllPriorRegistrations"
+      ]
+    },
+    {
+      "filter": "ClientLocalStateGlobals",
+      "exitCode": 0,
+      "tests": 4,
+      "failures": 0,
+      "seconds": 0.5892,
+      "log": "extracted/cpp-connection-activity-432-focused1/ClientLocalStateGlobals.log",
+      "sha256": "e1055efd7869120cbb1adee8d781fab51c079581747cf2d875c98084077944d4",
+      "caseNames": [
+        "ClientLocalStateGlobals_TwoSessionLifetimesPreserveCurrentOwner",
+        "ClientLocalStateGlobals_ActualLoginAndReplyUseCurrentOwner",
+        "ClientLocalStateGlobals_SavedGameControlsActualCarrierContentNotice",
+        "ClientLocalStateGlobals_FortRequestWritesActualNextAndPending"
+      ]
+    },
+    {
+      "filter": "ClientMapRevision",
+      "exitCode": 0,
+      "tests": 1,
+      "failures": 0,
+      "seconds": 0.5206,
+      "log": "extracted/cpp-connection-activity-432-focused1/ClientMapRevision.log",
+      "sha256": "a92e0a9e6a47aacea6227bd376ea5a12081bb6cb07ed8cf11fdd7e5e24b0a7ca",
+      "caseNames": [
+        "ClientMapRevision_ActualFortReceiverSharesCurrentOwnerAndWraps"
+      ]
+    },
+    {
+      "filter": "CampaignSession_LocalLogin",
+      "exitCode": 0,
+      "tests": 4,
+      "failures": 0,
+      "seconds": 4.3512,
+      "log": "extracted/cpp-connection-activity-432-focused1/CampaignSession_LocalLogin.log",
+      "sha256": "daa8ed2e8fce24d14ce9143b7f90447cdcd212372f7664274f084b41933ecb40",
+      "caseNames": [
+        "CampaignSession_LocalLoginActualHandshakeAndWorldLoad",
+        "CampaignSession_LocalLoginMissionStartAiAlliances",
+        "CampaignSession_LocalLoginWorkshopHasActualPlacement",
+        "CampaignSession_LocalLoginGeneratorExtendsCannonFirstHit"
+      ]
+    }
+  ],
+  "originalGameExecuted": false,
+  "fullCTestExecuted": false,
+  "productGuiExecuted": false,
+  "completed": true,
+  "passed": true,
+  "focusedObservations": 68,
+  "focusedUnique": 68,
+  "focusedCaseNames": [
+    "CampaignExistingEditorCheckpoint_ActivityCollisionPreservesAllPriorRegistrations",
+    "CampaignExistingEditorCheckpoint_ActivityWireUsesClientNineAndRetiresOnlyReceive",
+    "CampaignExistingEditorCheckpoint_ActualChatRuntimeAdvancesWorldAndSnapshot",
+    "CampaignExistingEditorCheckpoint_ActualCurrentNameSelectsWorkingFile",
+    "CampaignExistingEditorCheckpoint_ActualCustomTest01PlayerUiAndFile",
+    "CampaignExistingEditorCheckpoint_ActualPlayerUiCompletesAndReloads",
+    "CampaignExistingEditorCheckpoint_ActualProductionFormsInsideInstallScope",
+    "CampaignExistingEditorCheckpoint_AdoptsNativePlayersAndPreservesCoreUntilNextCleanup",
+    "CampaignExistingEditorCheckpoint_CoreWriteManagerDiagnosticBeforeGate",
+    "CampaignExistingEditorCheckpoint_CoreWriteMetamapDiagnosticBeforeGate",
+    "CampaignExistingEditorCheckpoint_CoreWriteNaturalGateKeepsActualStorage",
+    "CampaignExistingEditorCheckpoint_DeferPreservesExistingOwnerAndDefaultStages",
+    "CampaignExistingEditorCheckpoint_DeferRejectsCampaignMode",
+    "CampaignExistingEditorCheckpoint_EditorWireQueuesNegativeSenderConstructionMoveAndSalvage",
+    "CampaignExistingEditorCheckpoint_EditorWireReadsCurrentChargeGateWithoutSenderNormalization",
+    "CampaignExistingEditorCheckpoint_EditorWireRejectsForeignPlayersAndLoginBeforeBorrow",
+    "CampaignExistingEditorCheckpoint_EditorWireRejectsOwnedRegistrationBeforePublishing",
+    "CampaignExistingEditorCheckpoint_FileTailThenActualWorldChatBoundary",
+    "CampaignExistingEditorCheckpoint_FirstNotifyUsesActualWriterBeforeSubscriber",
+    "CampaignExistingEditorCheckpoint_NormalReadFalseKeepsInvalidBranch",
+    "CampaignExistingEditorCheckpoint_PreparedCtorPreservesSameClientState",
+    "CampaignExistingEditorCheckpoint_PreparedCtorRejectsIncompleteOwnersBeforeBorrow",
+    "CampaignExistingEditorCheckpoint_UiScopeCommitsOnlyAfterActualStateReturn",
+    "CampaignExistingEditorCheckpoint_UiTailCannotCommitEarlyReturnOrImmediate",
+    "CampaignExistingEditorCheckpoint_UiTailFailureKeepsPublicAccessClosed",
+    "CampaignSession_LocalLoginActualHandshakeAndWorldLoad",
+    "CampaignSession_LocalLoginGeneratorExtendsCannonFirstHit",
+    "CampaignSession_LocalLoginMissionStartAiAlliances",
+    "CampaignSession_LocalLoginWorkshopHasActualPlacement",
+    "ClientLocalStateGlobals_ActualLoginAndReplyUseCurrentOwner",
+    "ClientLocalStateGlobals_FortRequestWritesActualNextAndPending",
+    "ClientLocalStateGlobals_SavedGameControlsActualCarrierContentNotice",
+    "ClientLocalStateGlobals_TwoSessionLifetimesPreserveCurrentOwner",
+    "ClientMapRevision_ActualFortReceiverSharesCurrentOwnerAndWraps",
+    "ConnectionActivitySession_ActualClientOwnerSurvivesUnselectedSessions",
+    "ConnectionActivitySession_CurrentServerAndFinalUiEffectsStayAliased",
+    "ConnectionActivitySession_MissingSelectedHooksFailAtNativeBoundary",
+    "ConnectionActivitySession_TimerRemoteStatusUsesSameModuleWithoutPacket",
+    "ConnectionActivitySession_ZoneAndQueuedWireUseActualClientTables",
+    "ConnectionActivityTransport_ClientObjectPresenceIsSeparateFromFlags",
+    "ConnectionActivityTransport_FailedConnectKeepsPartialEffectsAndUnpublishedPresence",
+    "ConnectionActivity_ClientEraseAndFrameZeroAreNotNormalized",
+    "ConnectionActivity_IndependentTablesAndExplicitGapSurviveAcrossBodies",
+    "ConnectionActivity_InvalidSenderRejectsBeforeWallOrStores",
+    "ConnectionActivity_RegistrationUsesExistingDispatcherAndPreservesLength",
+    "ConnectionActivity_Signed64WallConversionKeepsLowDword",
+    "ConnectionActivity_WallFrameStoresAndCurrentServerFollowNativeOrder",
+    "EditorLocalTransport_ClientVersionSentinelDefersRetirement",
+    "EditorLocalTransport_CloseDuringReceiveAndReentrantPoll",
+    "EditorLocalTransport_HandlerFailurePreservesPartialQueue",
+    "EditorLocalTransport_InvalidClientPacketStopsCurrentEndpointPoll",
+    "EditorLocalTransport_ListenerClientAndNegativePendingWithoutLogin",
+    "EditorLocalTransport_PeerCloseDispatchesTerminationOnce",
+    "EditorLocalTransport_QueuedRequestReplyAndPendingPollOrder",
+    "EditorLocalTransport_SelectedContractsAndOwnedBytes",
+    "EditorLocalTransport_TerminationPreservesCurrentReceiveProtocolForBothEnds",
+    "EditorLocalTransport_VersionTerminationUsesExistingDispatcher",
+    "LocalMissionTransport_Native66",
+    "LocalMissionTransport_SelectedBoundariesAndDepth",
+    "LocalMissionTransport_ServerOpenAndClientConnectAreSeparate",
+    "LocalMissionTransport_ZonePendingLoginAndReply",
+    "MissionClientPackets_Native157",
+    "MissionClientPackets_RequiredEffectsAndRegistration",
+    "MissionLoginTimer_InactiveReadsNothing",
+    "MissionLoginTimer_MissingSelectedConsumersStopInOrder",
+    "MissionLoginTimer_Native1984",
+    "MissionLoginTimer_RejectsGeneralInitializationAndInvalidStorage",
+    "MissionLoginTimer_UnreadyMissionPostFinishesWithoutBegin"
+  ],
+  "protectedFiles": {
+    "checked": 1821,
+    "unchanged": true
+  },
+  "state": "focused-verified-batch-pending",
+  "startingHead": "60a5c7de82a06b6f5ab9187c63dd2761b1a3e1a7",
+  "build": {
+    "attempt": 1,
+    "sourceAttempt": 3,
+    "finished": "2026-10-25T19:25:27.545900",
+    "exitCode": 0,
+    "seconds": 378.297,
+    "command": [
+      "cmake",
+      "--build",
+      "cpppj/build",
+      "--config",
+      "Release",
+      "--parallel",
+      "4",
+      "--",
+      "/p:UseMultiToolTask=true",
+      "/p:MultiProcMaxCount=4",
+      "/p:EnforceProcessCountAcrossBuilds=true"
+    ],
+    "log": "extracted/cpp-connection-activity-432-build1.log",
+    "sha256": "db99d1a71e5cce132bba9535461617ee85995cfaf231f59f20c763aff6a78487",
+    "compilerWarnings": 0,
+    "compilerErrors": 0
+  },
+  "newTests": [
+    "CampaignExistingEditorCheckpoint_ActivityCollisionPreservesAllPriorRegistrations",
+    "CampaignExistingEditorCheckpoint_ActivityWireUsesClientNineAndRetiresOnlyReceive",
+    "ConnectionActivitySession_ActualClientOwnerSurvivesUnselectedSessions",
+    "ConnectionActivitySession_CurrentServerAndFinalUiEffectsStayAliased",
+    "ConnectionActivitySession_MissingSelectedHooksFailAtNativeBoundary",
+    "ConnectionActivitySession_TimerRemoteStatusUsesSameModuleWithoutPacket",
+    "ConnectionActivitySession_ZoneAndQueuedWireUseActualClientTables",
+    "ConnectionActivityTransport_ClientObjectPresenceIsSeparateFromFlags",
+    "ConnectionActivityTransport_FailedConnectKeepsPartialEffectsAndUnpublishedPresence",
+    "ConnectionActivity_ClientEraseAndFrameZeroAreNotNormalized",
+    "ConnectionActivity_IndependentTablesAndExplicitGapSurviveAcrossBodies",
+    "ConnectionActivity_InvalidSenderRejectsBeforeWallOrStores",
+    "ConnectionActivity_RegistrationUsesExistingDispatcherAndPreservesLength",
+    "ConnectionActivity_Signed64WallConversionKeepsLowDword",
+    "ConnectionActivity_WallFrameStoresAndCurrentServerFollowNativeOrder"
+  ],
+  "newTestCount": 15,
+  "sourceAttempts": [
+    {
+      "attempt": 1,
+      "path": "extracted/cpp-connection-activity-432-source1/hashes.json",
+      "sha256": "bd31e510c54fa73fdfb12a0747d1f687a42fc668638d9a38205f55d684c12ec6",
+      "built": false
+    },
+    {
+      "attempt": 2,
+      "path": "extracted/cpp-connection-activity-432-source2/hashes.json",
+      "sha256": "6ae38100b6ffdadb5c1828cf7852754980ed608421f8c90b68d101e2dbf2452d",
+      "built": false
+    },
+    {
+      "attempt": 3,
+      "path": "extracted/cpp-connection-activity-432-source3/hashes.json",
+      "sha256": "26e01aef67ea28c115a1ecb2ed5d45d6713cfbfa473da05fcbb74eef0f508f43",
+      "built": true
+    }
+  ],
+  "preparation": [
+    {
+      "path": "extracted/cpp-connection-activity-432-prepared/manifest.json",
+      "sha256": "25b3ac1fc21e39e922c6afce3d22f18e81df4c1d36dd96181ccf15c4bc0b373c"
+    },
+    {
+      "path": "extracted/cpp-connection-activity-432-integration/manifest.json",
+      "sha256": "9e0b21189830e97e7ae8473e341522b3a6dae50f49082148443e457873ffa955"
+    },
+    {
+      "path": "extracted/cpp-connection-activity-432-tests-prepared/manifest.json",
+      "sha256": "b1b9a9f15d45cf48728dc4846671a7866b761d4a152be99c00e45172a7e90519"
+    }
+  ],
+  "previousIntegrated": {
+    "head": "60a5c7de",
+    "productSha256": "18b672612ef444352bea750b941eb310c954c12c4b5c2eec40458983ed95dc82",
+    "ctestTests": 2894,
+    "ctestFailures": 0,
+    "menusGui": true,
+    "naturalEarly2": true,
+    "nextTutorial3": true
+  },
+  "scope": {
+    "nativeEdition": "PATCH1078",
+    "guiWarningMessageDeletion": "source-review-only",
+    "normalSenderRange": [
+      0,
+      21
+    ],
+    "outOfRangeSender": "host-contract-rejection-before-first-effect",
+    "nativeCleanupFrameClearConnected": false,
+    "wholeState1Connected": false,
+    "wholeLoginTimeoutAndPeriodicStatusConnected": false,
+    "actualEndpointDeletionConnected": false,
+    "sourceAndArtifactsUnchanged": true
+  }
+}

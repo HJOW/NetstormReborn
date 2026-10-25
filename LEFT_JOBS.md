@@ -1,5 +1,14 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-25 단위432 완료: 실제 연결 활동 수신과 두22DWORD 장기 표 접합
+
+- [x] 이전431은 **60a5c7de / 20261025-26 CP**로 집중94/전체2,894·실패0/메뉴·자연 Early2→Tutorial3 통합과 인계를 마쳤다. 현재/마지막 전체 정밀 PC는 **HJOW-Athlon / 2026-10-23**이다. 시작 트리는 깨끗했고 같은 보호1821파일을 `extracted/cpp-connection-activity-432-baseline.json`에 고정했다.
+- [x] 신규4/실제 접합8/검사·CMake5 준비본의 원본·준비·의존·참조 SHA를 모두 확인해 적용했다. Git의 줄바꿈 처리 때문에 최초 원시 SHA 비교에서 멈췄고, 의미상 본문이 같음을 확인한 뒤 기존 HEAD의 파일별 줄바꿈을 유지해 **Source3의17소스**로 동결했다. Source1/2는 빌드하지 않았으며 원시 manifest를 남겼다. 저장소 설정은 변경하지 않았다.
+- [x] 실제 Client가 frame22DWORD/Zone 간극2DWORD/wall22DWORD를 별개로 장기 소유하고 Session은 같은 표를 빌린다. Login Zone 출력·일반0x64·Timer의 직접 Receive9·Editor 최종 등록이 같은 현재 값과 처리기를 쓴다. 현재 wall→ftol→frame 캡처→wall store→현재 server→frame store→실제 상태 삭제 순서와 missionPost의 자연 UI 관문을 유지한다. Editor는 기존13종과64h 충돌을 먼저 확인하고 소멸 때 receive만 반납한다.
+- [x] **Source3의 첫 MTT 증분 빌드 종료0·컴파일 경고/오류0**, 같은 제품의 **집중68개·실패0**이다. 신규15검사(순수6/Session5/Transport2/Editor2)의 실제 실행을 이름으로 확인했고 기존 전송·Timer·로그인·Client owner·Editor도 통과했다. 보호1821/17소스/4실행 파일 SHA가 같다. 게임 SHA는 **4d67bffa…**다. [작업 문서](docs/exe/cpp-connection-activity-owner-20261025.md)와 [실행 보고서](cpppj/connection-activity-runtime-20261025.json)에 실제 로그·해시·지원 한계를 기록했다. 인계 후 **20261025-27 CP**로 로컬 커밋한다. 이번에는 전체 CTest·긴 GUI를 반복하지 않았으며 마지막 통합 제품은 **60a5c7de / 2,894검사·메뉴·자연 Early2→Tutorial3**다.
+- [ ] Native 전체 cleanup의frame22 clear·주기64 송신/timeout/UI 전체 부모·실제 endpoint 삭제·서버/boss 전체 owner는 후속이다. 정상 sender0..21 밖의 주소 덮기는 첫 효과 전 명시 지원 밖 거부이며 Native 동작 복원으로 세지 않는다. 실제 Edit State1 부모/사용자 편집·저장와 전체미션 완주·진행 저장/재실행·완전 동일성도 계속 미완료·활성 상태다. 원본 실행/새 디컴파일/push는 하지 않았다.
+- [ ] 다음433: `extracted/cpp-totalmade-storage-433-prepared/`의 제품8/검사7 사본과 신규6검사·SHA·patch가 동결됐다. 원본15SHA 확인 후 좁은 세 표/getter/data-only Reset255를 적용·집중 검증한다. 434는 `extracted/cpp-island-chunk-storage-434-prepared/`의12사본/신규9검사,435는 `extracted/cpp-priest-owner-storage-435-prepared/`에서 준비 중이다. 실제 Session callback/Factory 목록/사제 SID 목록을 통째로 장기화하지 않는다. 겹치는 소스는 각 원본 SHA와 hunk로 후속 병합한다. 기존 Git HEAD에 CRLF 파일이 있어 의미 없는 전체 줄바꿈 diff를 피하려면 해당 작업의 확인/스테이징은 `git -c core.autocrlf=false`와 필요시 `-c core.whitespace=cr-at-eol`을 사용한다. 저장소/전역 설정은 바꾸지 않았다.
+
 ## 2026-10-25 단위431 완료: Graph 장기 물리 분리와 미션 교체 기한 정리
 
 - [x] 이전430은 **bae8b702 / 20261025-25 CP**로 Native 두 갱신 주소의 교정·집중83개/보호1821/24소스·4실행 파일 검증을 마쳤다. 현재/마지막 전체 정밀 PC는 계속 **HJOW-Athlon / 2026-10-23**이다. 시작 트리는 깨끗했고 `extracted/cpp-graph-storage-431-baseline.json`에 같은 보호 기준을 고정했다.

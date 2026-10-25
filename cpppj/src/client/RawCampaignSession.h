@@ -58,6 +58,7 @@ class FortTypeConversionStorage; // 같은 Client의 현재 conversion DWORD와 
 class ClientRandomGlobals; // 실제 Client의 CRT 상태와 Subscriber ID 최초시드 DWORD를 함께 빌린다.
 class ClientSpGlobals; // 공통 시작에서 초기화한 같은 SP/추적 offset을 모든 실제 Session이 직접 빌린다.
 class ClientSubscriberGlobals; // 실제 Client의 my/login 두 Subscriber DWORD만 빌린다.
+class ClientConnectionActivityGlobals; // Session보다 오래 사는 두 활동 표와 실제 Zone 간극 owner다.
 class ClientPlayerRecords; // 실제 Player/factory와 로그인 카운터를 Client 수명에 보관한다.
 class ClientCoreDataGlobals; // 현재 Core/active/cache를 같은 Client 수명에서 빌린다.
 class ClientGameplayGlobals;struct ProductionControlContext; // 실제 초기 HUD와 같은 현재 전역/물리를 공유한다.
@@ -221,6 +222,9 @@ struct RawCampaignSessionServices {
     o::Kernel* processKernel{}; // 실제 Client의 한 전역 Kernel을 빌린다. 소유자는 모든 Session/월드 소비자보다 오래 살아야 한다.
     std::shared_ptr<RawSurfaceStorage> surfaceStorage; // 실제 Client의 한 Pool/Hash/TYPE/spot을 빌리며 독립 Session만 자체 물리를 만든다.
     std::shared_ptr<ClientLocalStateGlobals> localStateGlobals; // 생략된 독립 로그인 검사만 기존 local 블록/기한을 사용한다.
+    std::shared_ptr<ClientConnectionActivityGlobals> connectionActivityGlobals; // 실제 Client와 Login/Editor 수신이 같은 두22DWORD 및 Zone DWORD를 직접 공유한다.
+    std::function<std::uint32_t()> connectionFrameNumber; // 실제 Client::Time().number의 현재 하위32비트를 Receive의 원문 시점에 읽는다.
+    std::function<void(std::uint32_t,std::uint32_t)> removeConnectionStatus; // missionPost 관문 뒤004d3090(kind,player,0,0,빈문자열)의 실제 WarningMessages 삭제를 호출한다.
 };
 // 초기 객체 생성부터 Kernel 해제까지 동일 주소에서 실제 모듈과 상태를 소유한다.
 class RawCampaignSession {

@@ -7,6 +7,8 @@
 #include "o/RawPlayerLinksCleanup.h"
 #include "client/ClientColorSortInput.h"
 #include "client/ClientLocalStateGlobals.h"
+#include "client/ClientConnectionActivityGlobals.h"
+#include "o/RawConnectionActivity.h"
 #include "client/ClientKencloudGlobals.h"
 #include "client/ExistingEditorAfterCheckpoint.h"
 #include "client/EditorLocalTransport.h"
@@ -328,6 +330,8 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<ClientPlayerRecords::Use> playerUse; // Login과 서비스 callback까지 모두 소멸한 뒤 다음 Player 재할당을 허용한다.
     RawCampaignSessionServices services; // Login/장기 callback보다 먼저 만들고 나중에 반납하는 실제 클라이언트 장치다.
     std::shared_ptr<ClientLocalStateGlobals> localStateGlobals{services.localStateGlobals ? services.localStateGlobals : std::make_shared<ClientLocalStateGlobals>()}; // 실제 Client는 같은 owner를 빌리고 독립 Session만 기존 BSS0 입력을 한 번 소유한다.
+    std::shared_ptr<ClientConnectionActivityGlobals> connectionActivityGlobals{services.connectionActivityGlobals ? services.connectionActivityGlobals : std::make_shared<ClientConnectionActivityGlobals>()}; // 실제 Client의 표를 빌리며 독립 Session만 최초0 owner를 한 번 구성한다.
+    std::unique_ptr<RawConnectionActivity> connectionActivity; // 같은 실제 Receive를 Login/Editor/타이머가 빌리며 그 소비자보다 나중에 반납한다.
     struct SelectionLink { RawUserSelection* selection{}; }; // 살아 있는 실제 선택 객체의 주소이며 약한 토큰으로만 빌린다.
     std::weak_ptr<SelectionLink> activeSelection; // UI 몸체가 먼저 파괴돼도 낙하가 해제된 주소를 호출하지 않는다.
     struct Login; //같은실제원본로그인과현재전송의고정주소 소유자다.
@@ -429,6 +433,7 @@ struct RawCampaignSession::Impl {
     ClientLocalStateGlobals* editorUiStateOwner{}; // 서비스를 통해 같은 Client가 소유하는 다섯 State 블록의 정체성을 보관한다.
     LocalMissionStateBlock editorUiRequest{},editorUiPreviousPhase{}; // UI 진입의 전체144BYTE 요청/이전 phase를 공통 확정 뒤 검증한다. 원문 상태를 대신 쓰지 않는다.
     bool editorRegisteringCommands{};RawPacketDispatch* editorRegisteredDispatch{}; // 최종 commit의 한정 등록 범위와 현재 Session을 빌리는13종 수신기의 반납 대상을 구별한다.
+    RawPacketDispatch* editorActivityRegisteredDispatch{}; // 기존13종과 별개인 실제64h 수신의 충돌·실패 반납·Session 소멸 경계다.
     std::optional<FortTemplate> deferredEditorFort; //명시지연입력의같은파일보조metadata다.rawsection은File.load의실제reader가소유한다.
 
     MissionOutcomeState outcomeState; // 미션 종료까지 유지하는43개 사건 잠금이며 입력 배열은 현재 원문 연결로 대체한다.
@@ -770,6 +775,15 @@ struct RawCampaignSession::Impl {
         restrictions(services.missionRestrictions ? *services.missionRestrictions : localRestrictions),
         start{core.processState,priestState.movement.dude,priestState.movement.teleport,priestState.movement.manaBolt,priestState.movement.priest,geyserType,snap,retrying},process{core.processState} {
         if (services.deferExistingEditorFile && services.installMode!=CampaignInstallMode::ExistingEditor) throw std::invalid_argument("파일지연은명시ExistingEditor전용입니다");
+        ConnectionActivityHooks activity; // ctor에서는 실제 장치를 실행하지 않고 선택된 Receive 위치에서만 필수 경계를 요구한다.
+        activity.wallSeconds=[this] { if (!services.sound.wallSeconds) throw std::logic_error("실제 연결 활동 벽시각 미연결");return services.sound.wallSeconds(); };
+        activity.frameNumber=[this] { if (!services.connectionFrameNumber) throw std::logic_error("실제 연결 활동 프레임 조회 미연결");return services.connectionFrameNumber(); };
+        activity.server=[this] { return core.processState.server; }; // Wall/Frame 효과가 바꾼 현재 server를 실제 store 직전에 다시 읽는다.
+        activity.eraseStatus=[this](std::uint32_t kind,std::uint32_t player) {
+            if (globals.missionPost && kind!=11 && kind!=16) return; //004d3090은 이 관문에서 UI 표 초기화/삭제조차 하지 않고 자연 반환한다.
+            if (!services.removeConnectionStatus) throw std::logic_error("실제 연결 상태 WarningMessages 삭제 미연결");services.removeConnectionStatus(kind,player);
+        };
+        connectionActivity=std::make_unique<RawConnectionActivity>(connectionActivityGlobals->Tables(),std::move(activity));
         if (services.spGlobals && (!services.randomGlobals || services.spGlobals->RandomGlobals()!=services.randomGlobals || !sp.Initialized())) throw std::logic_error("실제 공통 SP 초기화/같은 Client 난수 소유자 계약"); // 현재 SP의 lazy 초기화나 다른 난수로 잘못된 시작 순서를 숨기지 않는다.
         if (services.coreDataGlobals && playerRecords->BoundCoreData()!=coreDataGlobals) throw std::invalid_argument("현재 Core와 Player base의 실제 소유자 불일치");
         if (services.coreDataGlobals && !services.adoptInitializedPlayers) { playerState.playerKnown=0;const std::uint32_t metamap=core.ownerMode.challenge;coreDataGlobals->Select(playerState,metamap,0,1); } // 기존 미션 어댑터의 재할당 앞에서 실제 원문 known0/Core0·캐시 보존을 실행한다. 전체 State 정리 완료로 세지 않는다.
@@ -3108,6 +3122,7 @@ struct RawCampaignSession::Impl {
     }
     // 외부 콜백이 참조하는 모듈을 해제하기 전에 현재 Kernel을 비운다.
     void ReleaseEditorCommandReceivers() {
+        if (editorActivityRegisteredDispatch) { editorActivityRegisteredDispatch->Register(0x64,{});editorActivityRegisteredDispatch=nullptr; } //64h receive만 지우고 실제 observer/version/정책/길이는 유지한다.
         if (!editorRegisteredDispatch) return;
         for (const auto type:kEditorGameplayMessages) editorRegisteredDispatch->Register(type,{}); // 같은 Session을 빌리는 receive만 해제하고 실제 observer/프로토콜/정책/길이 표는 보존한다.
         editorRegisteredDispatch=nullptr;editorRegisteringCommands=false;
@@ -3251,10 +3266,11 @@ void RawCampaignSession::CommitExistingEditorInstall(ClientLocalStateGlobals& ow
     if (s.services.installMode!=CampaignInstallMode::ExistingEditor || !s.services.localStateGlobals || s.services.localStateGlobals.get()!=&owner || s.editorUiStateOwner!=&owner || s.loaded || !s.editorCheckpointReady || !s.editorWorldReady || !s.editorUiPrepared || s.editorCheckpointRunning || s.editorUiInstalling || !s.editorUiTailReady || !s.cursor || !s.gameplayPipeline || !s.buildingMover) throw std::logic_error("기존 Editor 최종 공개의 같은 checkpoint/UI/tail 수명 계약");
     if ((s.editorUiRequest[0]!=1 && s.editorUiRequest[0]!=2) || state.current[0] || state.immediate[0] || state.next[0]!=4 || state.phase!=s.editorUiRequest || state.old!=s.editorUiPreviousPhase || !std::equal(state.current.begin()+1,state.current.end(),s.editorUiRequest.begin()+1)) throw std::logic_error("기존 Editor 실제 State 공통 확정/다음 Poll4 미완료");
     if (s.services.editorTransport) {
-        auto& dispatch=s.services.editorTransport->Dispatch();if (s.login || s.editorRegisteredDispatch) throw std::logic_error("Editor 실제 전송의 중복 Login/수신 등록");
+        auto& dispatch=s.services.editorTransport->Dispatch();if (s.login || s.editorRegisteredDispatch || s.editorActivityRegisteredDispatch) throw std::logic_error("Editor 실제 전송의 중복 Login/수신 등록");
         for (const auto type:kEditorGameplayMessages) if (dispatch.Registration(type).receive) throw std::logic_error("Editor 현재 수신 등록표의 다른 소유자 존재"); // 전체13종을 먼저 확인하여 기존 처리기를 부분 덮어쓰지 않는다.
-        s.editorRegisteredDispatch=&dispatch;s.editorRegisteringCommands=true;
-        try { RegisterCarrierCommands(dispatch);RegisterConstructionCommands(dispatch);RegisterFactoryResearchCommands(dispatch);s.editorRegisteringCommands=false; }
+        if (dispatch.Registration(0x64).receive) throw std::logic_error("Editor 실제64h 수신 등록표의 다른 소유자 존재"); // 기존13종 검사와 별개로 모든 receive 충돌을 쓰기 전에 거부한다.
+        s.editorRegisteredDispatch=&dispatch;s.editorActivityRegisteredDispatch=&dispatch;s.editorRegisteringCommands=true;
+        try { RegisterCarrierCommands(dispatch);RegisterConstructionCommands(dispatch);RegisterFactoryResearchCommands(dispatch);RegisterConnectionActivity(dispatch,*s.connectionActivity);s.editorRegisteringCommands=false; }
         catch (...) { s.ReleaseEditorCommandReceivers();throw; } // 부분 등록 예외도 살아 있는 Session 포인터를 외부 표에 남기지 않는다.
     }
     s.loaded=true; // checkpoint나 UI scope가 아닌 실제 정상 State ret 확인 뒤 이 한 곳에서만 Editor 입력/공개 저장을 연다.

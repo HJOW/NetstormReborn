@@ -20,7 +20,8 @@ struct RawCampaignSession::Impl::Login {
     std::array<float,4> ranges{14,22,30,38}; //원본5425f4의 실제4float다. 기본3번도 읽고 최대 비교는 원래2번30을 사용한다.
     float range{22}; //원본52f488이며제곱은Session의같은EnergySupplyState에 쓴다.
     bool simul{},adjust{};bool& saved{s.localStateGlobals->SavedGame()};std::uint8_t overrideFlags{},title{},battleByte{}; // 저장0/1은 실제 State owner이며 나머지는 기존 로그인 입력이다.
-    std::uint32_t pendingStamp{},activeStamp{},zoneWord{},predictable{},beginSeed{},battleSeed{},burst{},clockStamp{},baseClock{},archipelago{},optionValue{},outpost{}; // 아직 별도로 소유하는 원본 로그인 전역이다.
+    std::uint32_t& activeStamp{s.connectionActivityGlobals->ActiveStamp()};std::uint32_t& zoneWord{s.connectionActivityGlobals->ActiveZoneWord()}; // 두 활동 표 사이005c8540/544의 실제 현재 Zone 출력을 직접 빌린다.
+    std::uint32_t pendingStamp{},predictable{},beginSeed{},battleSeed{},burst{},clockStamp{},baseClock{},archipelago{},optionValue{},outpost{}; // 아직 별도로 소유하는 원본 로그인 전역이다.
     std::uint32_t& begin{s.localStateGlobals->Begin()};std::uint32_t& central{s.localStateGlobals->CentralCreated()}; // 실제 Login/Ready/metadata도 Client 수명의 같은 DWORD를 읽고 쓴다.
     std::uint32_t& coreActive{s.coreDataGlobals->Active()}; // Chat/현재 Core getter/패킷이 같은00595348을 직접 사용한다.
     std::uint32_t& fortCount{s.playerRecords->FortCount()}; // 원문 Player 초기화와 같은005951f8이다.
@@ -101,9 +102,12 @@ struct RawCampaignSession::Impl::Login {
         receive.addChat=s.services.ai.participation.addChat;receive.playerUiBusy=effects.playerUiBusy;receive.playerNotice=effects.playerNotice;receive.send=send;receive.sendReady=[this](std::uint32_t target) { server->SendReady(target); };
         client=std::make_unique<RawMissionClientPackets>(s.players,*s.participation,s.sp,MissionClientPacketState{s.core.processState.server,s.assetState.boss,s.globals.missionPost,saved,s.core.ownerMode.challenge,s.assetState.inBattle,s.globals.editor,outpost,s.playerState,beginSeed,battleSeed,s.revision,optionValue,begin,clockStamp,baseClock,blocks[1][0],blocks[3][0],blocks[3][14],blocks[4][0],source,coreActive,captureEnd,s.loginEnd,currentCore,cachedCore,Zone(),s.battleOptions,s.handle,s.hiddenPlayers},std::move(receive));
         MissionLoginTimerHooks timing;timing.configInt=[this](std::string_view key) { return Need(effects.configInt)(key,30); };timing.wallSeconds=effects.wallSeconds;timing.clock=effects.clock;timing.broadcast=[this](std::span<const std::uint8_t> bytes) { if (effects.observePacket) Need(effects.log)("Timer broadcast local"+std::to_string(s.assetState.localOwner)+"\n");s.broadcast->Send(bytes); };timing.priestRefresh=[this](std::uint32_t player) { s.priestParticipation->Refresh(player); };
+        timing.connection=[this](std::int32_t peer) { return peer==9 && transport->HasClientConnection(); }; //004e2b10은 flags2/IsOpen이 아닌 현재 Client9 객체 존재를 조회한다.
+        timing.remoteStatus=[this](std::int32_t peer,std::uint32_t,std::uint32_t) { s.connectionActivity->Receive(peer); }; //004b6180의 wire 수신과 같은 몸체이며 미사용 두 Native 인자를 합성하지 않는다.
         timing.saveReconnect=[this] { if (!s.globals.missionPost) throw std::logic_error("일반전투 재접속 저장 미연결"); };timing.closeProgress=effects.refresh;timing.log=[this](MissionLoginTimerLog,std::string_view text) { Need(effects.log)(text); };
         timer=std::make_unique<RawMissionLoginTimer>(OriginalEdition::Patch1078,MissionLoginTimerState{s.loginEnd,timeout,begin,scriptBreak,requestPhase,baseClock},counts,MissionLoginTimerReads{[this] { return saved; },[this] { return s.core.processState.server; },[this] { return s.objectState.mission; },[this] { return s.globals.missionPost; },[this] { return s.assetState.boss; },[this] { return s.gunState.checking; }},std::move(timing));
         RegisterMissionLogin(transport->Dispatch(),*server);RegisterMissionClientPackets(transport->Dispatch(),*client);RegisterMissionMetadata(transport->Dispatch(),*metadata);RegisterMissionSettingsPacket(transport->Dispatch(),*settings);
+        RegisterConnectionActivity(transport->Dispatch(),*s.connectionActivity); // 실제64h/version1/정책0/빈 observer를 같은 일반 수신 분배기에 등록한다.
         // 원본3d 등록의 observer는0040b380의 빈 반환이고 version1/mismatch0이다.
         transport->Dispatch().Observe(0x3d,[](std::uint32_t) {});transport->Dispatch().Version(0x3d,1,0);
         transport->Dispatch().Register(0x3d,[this](std::uint32_t,PacketConnection&,std::span<const std::uint8_t> bytes) {

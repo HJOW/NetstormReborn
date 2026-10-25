@@ -1,0 +1,134 @@
+// 실제 Client 장기 표와 Session의 일반64h 수신/타이머/현재 모드 소비를 창 없이 검사한다.
+#include "DudeSpawnSupport.h"
+#include "client/ClientMain.h"
+#include "client/ClientConnectionActivityGlobals.h"
+#include "client/ClientLocalStateGlobals.h"
+#include "client/ClientGameplayGlobals.h"
+#include "client/ClientSubscriberGlobals.h"
+#include "client/RawCampaignSession.h"
+#include <algorithm>
+#include <array>
+#include <functional>
+#include <memory>
+#include <stdexcept>
+#include <string>
+#include <string_view>
+#include <type_traits>
+#include <utility>
+#include <vector>
+
+namespace { // 실제 자산과 장기 owner를 빌리며 외부 시계/UI 효과만 관측한다.
+using namespace netstorm::client;
+using namespace netstorm::o;
+
+// Client::Run/장치 초기화를 호출하지 않고 보호 파일만 읽는 Client 옵션이다.
+ClientOptions ActivitySessionOptions() {
+    ClientOptions options;options.gameDirectory=std::filesystem::path(__FILE__).parent_path().parent_path().parent_path()/"originals";options.noAudio=true;return options;
+}
+
+// 일반 Login과 같은 Session을 구성한다. Player/Reply/상태/수신 결과를 가짜 성공으로 쓰지 않는다.
+struct ActivitySessionDevices {
+    const netstorm::test::dudespawn::DudeAssets& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078); // 실제 보호 자산을 읽기만 한다.
+    Client client{ActivitySessionOptions()}; // 실제 두 활동 표의 owner이며 모든 Session보다 오래 산다.
+    SoundList names{OriginalEdition::Patch1078};std::array<std::uint8_t,4> you{'Y','o','u',0}; // Session보다 오래 사는 음향 이름/번역 입력이다.
+    double wall{100.75};std::uint32_t frame{7},frameReads{};bool receiving{}; // 현재 외부 시계/프레임과64h 본문 관측 범위다.
+    std::vector<std::string> trace;std::vector<std::array<std::uint32_t,2>> removed; // 실제 record/Wall/Frame/UI 순서와 삭제 인자만 관측한다.
+    std::function<void()> onWall,onFrame;std::function<void(std::uint32_t,std::uint32_t)> onRemove; // 현재 getter/마지막 UI 효과의 명시 부수효과다.
+
+    ActivitySessionDevices() { client.SubscriberGlobals()->MySubscriber()=client.SubscriberGlobals()->LoginSubscriber(); } // Tutorial Init 앞의 실제 현재/login ID 복사 입력이며 로그인 flags/응답을 합성하지 않는다.
+
+    // 실제 Client의 같은 장기 owner를 공급하고 선택된 외부 장치만 명시한다.
+    RawCampaignSessionServices Services(bool login=true) {
+        names.Initialize();RawCampaignSessionServices result;result.connectionActivityGlobals=client.ConnectionActivityGlobals();result.localStateGlobals=client.LocalStateGlobals();result.gameplayGlobals=client.GameplayGlobals();result.subscriberGlobals=client.SubscriberGlobals();
+        result.soundNames=&names;result.unixSeconds=[] { return 946684800; };result.production.allocationBytes=[](auto bytes) { std::fill(bytes.begin(),bytes.end(),std::uint8_t{0x71}); };
+        result.sound.wallSeconds=[this] { if (receiving) { trace.emplace_back("wall");if (onWall) onWall(); }return wall; };
+        result.sound.play=[](SoundHandle sound,std::uint32_t,std::uint32_t,std::uint32_t,std::uint32_t,std::uint32_t) { return sound; };
+        result.sound.playLoopAt=[](float,float,SoundHandle current,SoundHandle sound) { return current ? current : sound; };result.sound.playOnceAt=[](float,float,SoundHandle sound,std::uint32_t,std::uint32_t) { return sound; };
+        result.sound.stop=[](SoundHandle) {};result.sound.isPlaying=[](SoundHandle) { return 0U; };
+        result.install.translateYou=[this] { return std::span<const std::uint8_t>(you); };result.install.setConfig=[](std::string_view,std::span<const std::uint8_t>) {};result.install.refreshWindowTitle=[] {};result.install.resetCamera=[] {};
+        result.ownership.refreshProduction=[] {};result.ownership.themeMode=[] { return 0U; };result.assets.postPop.playImpactSound=[](std::uint32_t) {};result.assets.queueCommand=[](std::uint32_t,std::int32_t,std::int32_t) {};
+        result.priest.shield.noticeSound=[](const PriestShieldNotice&) {};result.priest.shield.translate=[](std::string_view key) { return std::string(key); };result.priest.shield.tell=[](std::string_view) {};
+        result.playerContent.gump=[](std::uint32_t) { return 0U; };result.playerContent.handle=[](std::uint32_t,std::uint32_t,std::uint32_t,std::uint32_t) { throw std::logic_error("활동 Session 검사의 미선택 UI"); };
+        result.deletion.selected=[] { return Sid{}; };result.deletion.emit=[](const SquidDestroyEvent&) { throw std::logic_error("활동 Session 검사의 미선택 삭제"); };result.player.log=[](std::uint32_t,std::string_view) {};result.missionOutcome.demo=[] { return 0U; };
+        result.connectionFrameNumber=[this] { ++frameReads;if (receiving) trace.emplace_back("frame");if (onFrame) onFrame();return frame; };
+        result.removeConnectionStatus=[this](auto kind,auto player) { trace.emplace_back("remove");removed.push_back({kind,player});if (onRemove) onRemove(kind,player);receiving=false; };
+        if (login) {
+            CampaignLoginServices effects; // 실제 handshake의 장치 경계이며 서버/클라이언트 패킷 몸체는 Session이 실행한다.
+            effects.configInt=[](std::string_view,std::int32_t fallback) { return fallback; };effects.wallSeconds=result.sound.wallSeconds;effects.clock=[] { return 100750U; };
+            effects.refresh=[] {};effects.playerUiBusy=[] { return false; };effects.playerNotice=[](std::uint32_t,std::uint32_t,std::uint32_t) {};
+            effects.log=[](std::string_view) {};effects.observePacket=[this](auto,bool,std::uint32_t,auto packet) { if (packet[1]==0x64) { trace.emplace_back("record");receiving=true; } };
+            result.localLogin=std::move(effects);result.ai.participation.clearChat=[](std::uint32_t) {};result.ai.participation.addChat=[](std::uint32_t,std::string_view,std::uint32_t) {};
+        }
+        return result;
+    }
+    // 로드 전 Session을 실제 보호 Fort에 구성하고 호출자가 LoadLocalConnection 선택 시점을 정한다.
+    std::unique_ptr<RawCampaignSession> Create(RawCampaignSessionServices services) {
+        return std::make_unique<RawCampaignSession>(assets.game,assets.files,FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable()),"thewarbegins",std::move(services));
+    }
+};
+
+// PE0052ee4e의64h/version1/length5이며 마지막 BYTE는 본문이 읽지 않는 독립 입력이다.
+std::array<std::uint8_t,5> ActivitySessionPacket(std::uint8_t version=1) { return {version,0x64,5,0,0xa5}; }
+// 일반 수신의 기록에서 실제64h 개수만 관측하며 수신기를 직접 호출하지 않는다.
+std::size_t ActivityWireCount(const RawCampaignSession& session) {
+    const auto packets=session.LocalConnectionPackets();return static_cast<std::size_t>(std::count(packets.begin(),packets.end(),std::uint8_t{0x64}));
+}
+}
+
+// 같은 실제 Client의 표/간극 주소는 미선택 Session의 생성/소멸/재대여에서 바뀌지 않는다.
+TEST_CASE(ConnectionActivitySession_ActualClientOwnerSurvivesUnselectedSessions) {
+    static_assert(std::is_same_v<decltype(std::declval<const Client&>().ConnectionActivityGlobals()),const std::shared_ptr<ClientConnectionActivityGlobals>&>); // provider가 같은 실제 장기 소유 슬롯을 빌리는 계약이다.
+    ActivitySessionDevices devices;const auto owner=devices.client.ConnectionActivityGlobals();CHECK(owner->ActiveStamp()==0 && owner->ActiveZoneWord()==0);
+    for (std::size_t index=0;index<kConnectionActivityEntries;++index) { // Client 최초 BSS0을 확인한 뒤 두 표의 모든 칸을 구별한다.
+        CHECK(owner->Frames()[index]==0 && owner->WallSeconds()[index]==0);owner->Frames()[index]=static_cast<std::uint32_t>(0x1000+index);owner->WallSeconds()[index]=static_cast<std::uint32_t>(0x2000+index);
+    }
+    owner->ActiveStamp()=37;owner->ActiveZoneWord()=41;const auto frames=owner->Frames(),wall=owner->WallSeconds();const auto* address=owner->Frames().data();
+    for (int pass=0;pass<2;++pass) { // 실제 Session 두 수명에 같은 Client owner를 빌리되64h/Timer를 선택하지 않는다.
+        auto services=devices.Services(false);services.connectionFrameNumber={};services.removeConnectionStatus={};{ const auto session=devices.Create(std::move(services));CHECK(session->LocalConnectionPhase()==0); }
+        CHECK(devices.client.ConnectionActivityGlobals()==owner && owner->Frames().data()==address && owner->Frames()==frames && owner->WallSeconds()==wall && owner->ActiveStamp()==37 && owner->ActiveZoneWord()==41);
+    }
+    CHECK(!devices.frameReads && devices.trace.empty() && devices.removed.empty());
+}
+
+// 실제 Zone은 간극만 쓰고 일반64h는 송신 뒤 같은 큐/record/현재 표를 소비한다.
+TEST_CASE(ConnectionActivitySession_ZoneAndQueuedWireUseActualClientTables) {
+    ActivitySessionDevices devices;const auto owner=devices.client.ConnectionActivityGlobals();owner->Frames().fill(0x11111111U);owner->WallSeconds().fill(0x22222222U);owner->ActiveStamp()=37;owner->ActiveZoneWord()=41;
+    auto session=devices.Create(devices.Services());session->LoadLocalConnection();CHECK(session->LocalConnectionPhase()==14 && owner->ActiveStamp()==0 && owner->ActiveZoneWord()==0 && !devices.frameReads);
+    CHECK(std::all_of(owner->Frames().begin(),owner->Frames().end(),[](auto value) { return value==0x11111111U; }) && std::all_of(owner->WallSeconds().begin(),owner->WallSeconds().end(),[](auto value) { return value==0x22222222U; }));
+    const auto before=ActivityWireCount(*session);const auto packet=ActivitySessionPacket();session->SendLocalPacket(1,packet);CHECK(ActivityWireCount(*session)==before && owner->Frames()[9]==0x11111111U && owner->WallSeconds()[9]==0x22222222U);
+    session->PumpLocalConnection();devices.receiving=false;CHECK(ActivityWireCount(*session)==before+1 && devices.frameReads==1 && owner->Frames()[9]==7 && owner->WallSeconds()[9]==100 && devices.removed.empty());CHECK((devices.trace==std::vector<std::string>{"record","wall","frame"})); // 실제 missionPost1은 같은004d3090 관문에서 UI 삭제를 생략한다.
+    devices.trace.clear();devices.client.GameplayGlobals()->world.missionPost=false;devices.frame=0;devices.wall=125.75;session->SendLocalPacket(1,ActivitySessionPacket(0x7f));session->PumpLocalConnection();
+    CHECK((devices.removed==std::vector<std::array<std::uint32_t,2>>{{2,9}}));CHECK((devices.trace==std::vector<std::string>{"record","wall","frame","remove"}));CHECK(owner->Frames()[9]==0 && owner->WallSeconds()[9]==125 && devices.frameReads==2 && ActivityWireCount(*session)==before+2); // 정책0은 높은 버전도 일반 dispatcher에서 그대로 수신하고 frame0을 정규화하지 않는다.
+    CHECK(owner->Frames()[8]==0x11111111U && owner->Frames()[10]==0x11111111U && owner->WallSeconds()[8]==0x22222222U && owner->WallSeconds()[10]==0x22222222U);
+}
+
+// Frame 효과 뒤 현재 server를 조회하고 최종 삭제 효과가 바꾼 실제 표를 반환 뒤 보존한다.
+TEST_CASE(ConnectionActivitySession_CurrentServerAndFinalUiEffectsStayAliased) {
+    ActivitySessionDevices devices;auto session=devices.Create(devices.Services());session->LoadLocalConnection();auto core=session->Core();const auto owner=devices.client.ConnectionActivityGlobals();devices.client.GameplayGlobals()->world.missionPost=false;
+    owner->Frames()[9]=17;owner->WallSeconds()[9]=19;devices.wall=200.75;devices.frame=0xfedcba98U;
+    devices.onFrame=[&] { CHECK(owner->Frames()[9]==17 && owner->WallSeconds()[9]==19);core.processState.server=false; };
+    devices.onRemove=[&](auto kind,auto player) { CHECK(kind==1 && player==0 && owner->Frames()[9]==0xfedcba98U && owner->WallSeconds()[9]==200);owner->Frames()[9]=0xabcdef01U;owner->WallSeconds()[9]=0x12345678U; };
+    session->SendLocalPacket(1,ActivitySessionPacket());session->PumpLocalConnection();CHECK((devices.removed==std::vector<std::array<std::uint32_t,2>>{{1,0}}));CHECK(owner->Frames()[9]==0xabcdef01U && owner->WallSeconds()[9]==0x12345678U && !core.processState.server);
+    CHECK((devices.trace==std::vector<std::string>{"record","wall","frame","remove"}));
+}
+
+// 누락 Frame/UI는 ctor에서 앞당겨 요구하지 않고 실제 수신 선택 위치의 부분 효과를 보존한다.
+TEST_CASE(ConnectionActivitySession_MissingSelectedHooksFailAtNativeBoundary) {
+    for (const bool missingFrame:{true,false}) { // Frame은 두 store 전, UI는 두 store 뒤의 서로 다른 실패다.
+        ActivitySessionDevices devices;auto services=devices.Services();if (missingFrame) services.connectionFrameNumber={};else services.removeConnectionStatus={};auto session=devices.Create(std::move(services));session->LoadLocalConnection();devices.client.GameplayGlobals()->world.missionPost=false;
+        const auto owner=devices.client.ConnectionActivityGlobals();owner->Frames()[9]=17;owner->WallSeconds()[9]=19;const auto before=ActivityWireCount(*session);session->SendLocalPacket(1,ActivitySessionPacket());std::string failure;
+        try { session->PumpLocalConnection(); }catch (const std::logic_error& error) { failure=error.what(); }devices.receiving=false;
+        CHECK(failure==(missingFrame ? "실제 연결 활동 프레임 조회 미연결" : "실제 연결 상태 WarningMessages 삭제 미연결"));
+        CHECK(ActivityWireCount(*session)==before+1 && devices.removed.empty());
+        if (missingFrame) { CHECK(owner->Frames()[9]==17 && owner->WallSeconds()[9]==19 && !devices.frameReads);CHECK((devices.trace==std::vector<std::string>{"record","wall"})); }
+        else { CHECK(owner->Frames()[9]==7 && owner->WallSeconds()[9]==100 && devices.frameReads==1);CHECK((devices.trace==std::vector<std::string>{"record","wall","frame"})); }
+    }
+}
+
+// 비서버 Timer는 Client9 객체가 존재할 때 같은 Receive를 부르며 가짜64h 송수신을 만들지 않는다.
+TEST_CASE(ConnectionActivitySession_TimerRemoteStatusUsesSameModuleWithoutPacket) {
+    ActivitySessionDevices devices;auto session=devices.Create(devices.Services());session->LoadLocalConnection();const auto owner=devices.client.ConnectionActivityGlobals();auto core=session->Core();core.processState.server=false;
+    CHECK(devices.client.GameplayGlobals()->world.missionPost);devices.wall=130.75;devices.frame=0x12345678U;devices.client.LocalStateGlobals()->LoginEnd()=160.75;const auto before=std::vector<std::uint8_t>(session->LocalConnectionPackets().begin(),session->LocalConnectionPackets().end());
+    session->PumpLocalConnection();CHECK(owner->Frames()[9]==0x12345678U && owner->WallSeconds()[9]==130 && devices.frameReads==1 && devices.removed.empty());CHECK(devices.client.LocalStateGlobals()->LoginEnd()==0.0 && session->LocalConnectionPhase()==14);
+    CHECK(std::equal(before.begin(),before.end(),session->LocalConnectionPackets().begin(),session->LocalConnectionPackets().end()) && ActivityWireCount(*session)==0 && devices.trace.empty()); // 같은 표 갱신은 타이머의 직접 Native 호출이며 packet record를 합성하지 않는다.
+}

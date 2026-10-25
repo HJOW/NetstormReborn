@@ -119,6 +119,9 @@ RawCampaignSessionServices MakeCampaignClientServices(Client& client,RawButtonCo
     services.screenPalette=[&client] { return client.GetScreen().Palette(); }; // Screen 재생성 뒤에도 그때의 현재 팔레트를 조회한다.
     services.randomGlobals=client.RandomGlobals(); // Session교체/Subscriber/파편/Seed/지형이같은Client의실제CRT를사용한다.
     services.localStateGlobals=client.LocalStateGlobals(); // 메뉴/Editor에서 사용한 같은 State와00544d58 기한을 로그인도 직접 빌린다.
+    services.connectionActivityGlobals=client.ConnectionActivityGlobals(); // Login/Editor가 같은 실제22프레임/22벽시각과 Zone 간극을 빌린다.
+    services.connectionFrameNumber=[&client] { return static_cast<std::uint32_t>(client.Time().number); }; // 프레임을 생성 시 캡처하지 않고 실제Receive의 원문 시점에 하위DWORD를 읽는다.
+    services.removeConnectionStatus=[remove=ui.removeMessage](std::uint32_t kind,std::uint32_t player) { remove(static_cast<std::int32_t>(kind),static_cast<std::int32_t>(player),0); }; // 아래 섬 warningEvent의 move 전에 실제 WarningMessages.Remove 장치를 소유 복사한다.
     services.fortTechnologyUi=[&client] { RefreshClientChatRankPrefix(client,client.Assets(),*client.SurfaceStorage()); }; // 같은 실제 Chat/Core/아이콘을 기존 Fort Technology 부모의0042f540 위치에서 갱신한다.
     services.editorPlayerUi=MakeEditorPlayerClientHooks(client); // 실제 기존 Editor 설치가 요구할 번역/공유 고리 장치다.
     services.templateStateBytes=CurrentAllocationBytes; // 원본이 쓰지 않는 State 바이트를 임의0 대신 현재 호스트 할당 입력에서 받는다.

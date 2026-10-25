@@ -82,6 +82,7 @@ public:
     o::BattlePacketSend Peer(std::uint32_t owner);
     // 실제 endpoint의 존재/현재 재배치 번호와 송수신 바이트 수를 검증한다.
     bool IsOpen() const;
+    bool HasClientConnection() const; //004e2b10(9)의 실제 객체 존재이며 서버 열림/연결flags2와 별개다.
     std::uint32_t Owner() const;
     std::size_t QueuedFrames() const;
 private:
@@ -95,6 +96,7 @@ private:
     o::RawPacketDispatch dispatch_; //로그인/건설/응답이 공유하는 실제 등록표다.
     o::PacketConnection client_,server_; //포인터 없는 표식이 아닌 실제 서로 다른 연결 저장소다.
     bool open_{},pending_{},serverBuffered_{}; //실제 두 끝의 열림/서버 pending/서버 buffered 모드다.
+    bool clientPresent_{}; // 서버만 열면 부재이며 실제 Client9 접속 생성 완료 뒤 존재한다. flags 변경으로 객체 수명을 지우지 않는다.
     std::uint32_t owner_{},port_{}; //pending 재배치 뒤의 현재owner와 실제 열린 로컬 포트다.
     std::vector<std::uint8_t> clientOutput_,serverOutput_; //원본 buffered 전송의 아직 flush하지 않은 바이트다.
     std::deque<std::vector<std::uint8_t>> toServer_,toClient_; //다른 끝이 실제로 받을 완성된 프레임의 소유 큐다.

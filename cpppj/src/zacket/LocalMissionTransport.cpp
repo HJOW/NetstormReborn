@@ -108,12 +108,12 @@ void LocalMissionTransport::Open(std::uint32_t port,bool connectImmediately) {
     port_=port;client_={};server_={};client_.sender=9;server_.sender=std::bit_cast<std::uint32_t>(std::int32_t{-1});
     if (connectImmediately) { client_.received=hooks_.now();client_.heartbeat=hooks_.now(); }
     server_.received=hooks_.now();server_.heartbeat=hooks_.now();
-    client_.flags=connectImmediately ? 0x26U : 0U;server_.flags=0x24;open_=true;pending_=true;serverBuffered_=false;owner_=0;
+    client_.flags=connectImmediately ? 0x26U : 0U;server_.flags=0x24;open_=true;pending_=true;serverBuffered_=false;owner_=0;clientPresent_=connectImmediately;
 }
 // 서버열기는성공한접속과별개다.같은클라이언트기록의실제접속시각/flags만지정한다.
 void LocalMissionTransport::Connect() {
     if (!open_ || client_.flags || !pending_ || owner_) throw std::logic_error("로컬 클라이언트 새접속/현재서버 계약 오류");
-    client_.received=hooks_.now();client_.heartbeat=hooks_.now();client_.flags=0x26;
+    client_.received=hooks_.now();client_.heartbeat=hooks_.now();client_.flags=0x26;clientPresent_=true;
 }
 // 같은 실제 pending 객체의 sender/등록 위치만 바꾼다. 새 연결이나 연결 성공 flag를 합성하지 않는다.
 void LocalMissionTransport::AssignConnection(std::int32_t pending,std::int32_t owner) {
@@ -192,6 +192,8 @@ o::PacketConnection& LocalMissionTransport::Server() { return server_; }
 o::BattlePacketSend LocalMissionTransport::Peer(std::uint32_t owner) { return [this,owner](std::span<const std::uint8_t> packet) { Send(static_cast<std::int32_t>(owner),packet); }; }
 // 실제 두 끝의 열린 수명만 보고하며 flags2나 Ready를 대신하지 않는다.
 bool LocalMissionTransport::IsOpen() const { return open_; }
+// 실제 Client9 생성 완료만 조회하므로 flags2/종료flag/서버 열림을 객체 존재로 오해하지 않는다.
+bool LocalMissionTransport::HasClientConnection() const { return clientPresent_; }
 // 현재 pending이 실제 owner로 옮겨졌는지 반환한다.
 std::uint32_t LocalMissionTransport::Owner() const { return owner_; }
 // 상대가 실제로 받을 수 있게 flush된 프레임 수다.

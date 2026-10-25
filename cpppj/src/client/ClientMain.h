@@ -37,6 +37,7 @@ class ClientSpGlobals; // 공통 시작의 SP/추적 offset을 사제와 Session
 class ClientKencloudGlobals; // 같은 구름/팔레트 전역과 현재 메모리를 모든 메뉴/장치 교체에서 유지한다.
 class ClientSubscriberGlobals; // 같은 Client의 실제 my/login 두 DWORD만 장기 소유한다.
 class ClientLocalStateGlobals; // 실제 메뉴/Editor/로그인이 같은 State 블록과 벽시각 기한을 빌린다.
+class ClientConnectionActivityGlobals; // 실제 두22DWORD 활동 표와 Zone 간극을 Client 수명으로 소유한다.
 class ClientFortGlobals; // 현재/pending 이름·FileSpec·목록 dirty와 선택 모드의 실제 Client 소유자다.
 class ClientCoreDataGlobals; //현재Core/active/캐시와 빌린 Player 슬롯을 Client 수명에 소유한다.
 class ClientPlayerRecords; // Player/factory 전체 할당과 로그인 카운터를 Session보다 오래 소유한다.
@@ -157,6 +158,7 @@ public:
     const std::shared_ptr<ClientKencloudGlobals>& KencloudGlobals() const; // 같은 실제 구름/팔레트/현재 Renderer 전역을 순수 조회한다.
     void ChangeFortPalette(const std::span<const std::uint8_t>& name); //004b6100의 전체 부모를 같은 구름/Screen clear1/추가9표/dirty에 실행한다.
     const std::shared_ptr<ClientLocalStateGlobals>& LocalStateGlobals() const; // 실제 State144BYTE와 활동기한의 Client 수명을 Session에 전달한다.
+    const std::shared_ptr<ClientConnectionActivityGlobals>& ConnectionActivityGlobals() const; // 같은 실제 활동 표/Zone DWORD의 고정 주소를 Session에 빌린다.
     const std::shared_ptr<ClientFortGlobals>& FortGlobals() const; // 같은 이름/키/목록 물리를 메뉴/Native 이름 부모에 빌린다.
     const std::shared_ptr<ClientCoreDataGlobals>& CoreDataGlobals() const; //같은 현재 Core 슬롯/캐시를 빌리며 Player 자동 선택이나 해제를 실행하지 않는다.
     const std::shared_ptr<ClientPlayerRecords>& PlayerRecords() const; // 실제 세션이 같은 할당 소유자와 대여 관문을 빌린다.
@@ -245,6 +247,7 @@ private:
     std::shared_ptr<ClientKencloudGlobals> kencloudGlobals_; // 구름 현재 주소/이름/옵션과 Native redraw를 같은 Client 수명에 보관한다.
     std::shared_ptr<ClientColorSortInput> colorSortInput_; //메뉴/월드/두Screen생성경로보다오래유지하는같은초기RGB다.
     std::shared_ptr<ClientLocalStateGlobals> localStateGlobals_; // Session 소멸/Editor 메뉴 재진입에서 State/기한을 초기화하지 않는 한 소유자다.
+    std::shared_ptr<ClientConnectionActivityGlobals> connectionActivityGlobals_; // 메뉴/Session보다 먼저 구성하고 소비자 반납 뒤까지 두 표와 Zone 값을 보존한다.
     std::shared_ptr<ClientFortGlobals> fortGlobals_; // 모든 메뉴/Session보다 오래 사는 같은 두 이름/목록/dirty 소유자다.
     std::shared_ptr<ClientCoreDataGlobals> coreDataGlobals_; //menu/Session보다 먼저 선언해 소비자 반납 뒤에도 현재/캐시가 살아 있게 한다.
     std::shared_ptr<ClientPlayerRecords> playerRecords_; // 모든 Session 고정뷰가 소멸한 뒤에 실제 Player/factory를 반납한다.
