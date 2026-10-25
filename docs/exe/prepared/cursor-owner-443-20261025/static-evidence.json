@@ -1,0 +1,184 @@
+{
+  "status": "static-only; no PE/Native/CPP execution",
+  "lastDecompile": "HJOW-Athlon/2026-10-23",
+  "host": "HJOW-Athlon",
+  "command": "python extracted/cpp-cursor-owner-443-prepared/collect_static_evidence.py",
+  "peSHA256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+  "decompiledSHA256": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+  "functionMetadataSHA256": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+  "capstoneVersion": "5.0.7",
+  "pefileVersion": "2024.8.26",
+  "entries": [
+    {
+      "entry": "004458e0",
+      "bytes": 436,
+      "codeSHA256": "5ab897781c2acb900659095e3936263ba300e1b7c2ced317730c66a5ddee4595",
+      "metadataLine": "4458e0\tFUN_004458e0\t436\t4458e0-445a93\t0\t0\t__cdecl\t5\t0\t0\t445ac4,446026,446db3,447417,44743f\t\t\t497220,497580\t1\t\t0\tDEFAULT\tundefined __cdecl FUN_004458e0()",
+      "decompiledFile": "evidence/004458e0-decompiled.txt",
+      "decompiledSHA256": "09bda64580a4205c184f7d36f593f6aaa99213683c491ef7dd0d81441e62edf1",
+      "instructionsFile": "evidence/004458e0-instructions.json",
+      "instructionsSHA256": "6aa65e869b7f0d9a91513851015e88881ce876acd99076736da6b8d638aba21d"
+    },
+    {
+      "entry": "00445aa0",
+      "bytes": 137,
+      "codeSHA256": "1f03e99459f284494be1d96320aafdf5d379757726c1db26703d9f362330bf93",
+      "metadataLine": "445aa0\tFUN_00445aa0\t137\t445aa0-445b28\t0\t0\t__cdecl\t9\t0\t0\t446a1b,446a7b,446bf4,446d2b,446ea0,446fa6,447645,447732,44777b\t\t\t4458e0\t1\t\t0\tDEFAULT\tundefined __cdecl FUN_00445aa0()",
+      "decompiledFile": "evidence/00445aa0-decompiled.txt",
+      "decompiledSHA256": "590ca7b74a83f52f769d38534b820a074d9a0d1d5ce104c9e56064cab4a3bceb",
+      "instructionsFile": "evidence/00445aa0-instructions.json",
+      "instructionsSHA256": "bcb7e6a716f64f1b876d2d5d5b133e6f53fedb71a07fd72bf48b2aa42ba65927"
+    },
+    {
+      "entry": "00445b30",
+      "bytes": 1286,
+      "codeSHA256": "75af3975c6d226346515428201295100d7c057f3ec83a5bd834293e460297d59",
+      "metadataLine": "445b30\tFUN_00445b30\t1286\t445b30-446035\t0\t0\t__cdecl\t5\t0\t0\t446a48,446adc,446c18,446d43,4470e1\t\t\t4213b0,425860,425c20,43fa60,445440,4458e0,49a840,49aa30,4ac220,4adc60,4adca0,4af530,4e0620,4e49c0\t1\t\t0\tDEFAULT\tundefined __cdecl FUN_00445b30()",
+      "decompiledFile": "evidence/00445b30-decompiled.txt",
+      "decompiledSHA256": "a592c841fe4d1964928741e6d4fdb3d4f430239c0c9d2a7dd5e877f8775f55e7",
+      "instructionsFile": "evidence/00445b30-instructions.json",
+      "instructionsSHA256": "c246a625c0b7a4d90a8ea79bbb28059cd7e2f8ec07172440416584379d920797"
+    },
+    {
+      "entry": "00446e70",
+      "bytes": 386,
+      "codeSHA256": "2fada18d6af9751ea3d3c2b083ac0cb525fc15d6b55f0e697f485cd702469153",
+      "metadataLine": "446e70\tFUN_00446e70\t386\t446e70-446ff1\t0\t0\t__cdecl\t15\t0\t0\t43d974,43e070,447002,44739f,4473d1,4474d5,46667b,46668c,492b81,493231,4938d6,4b2eb3,4d82b0,4d957d,4dc8b0\t\t\t40eec0,41bf10,445aa0,4a4410,4a9cb0,4d5bb0,4e0620\t1\t\t0\tDEFAULT\tundefined __cdecl FUN_00446e70()",
+      "decompiledFile": "evidence/00446e70-decompiled.txt",
+      "decompiledSHA256": "60eb54b52324b29ac25b095892a7c79f684cf9146faf0f78409784775409047e",
+      "instructionsFile": "evidence/00446e70-instructions.json",
+      "instructionsSHA256": "ee476956f86348cf5a1f4cc87201f0cf30a41fff143e284fc14fb6e1006bc6aa"
+    }
+  ],
+  "addresses": {
+    "previewCount": {
+      "address": "0055a1b8",
+      "width": 4,
+      "section": ".data",
+      "sectionRelative": 205240,
+      "rawSize": 118784,
+      "virtualSize": 779444,
+      "virtualZeroTail": true,
+      "initialImageHex": "00000000"
+    },
+    "previews": {
+      "address": "0055a1d8",
+      "width": 120,
+      "section": ".data",
+      "sectionRelative": 205272,
+      "rawSize": 118784,
+      "virtualSize": 779444,
+      "virtualZeroTail": true,
+      "initialImageHex": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "process": {
+      "address": "0055a274",
+      "width": 4,
+      "section": ".data",
+      "sectionRelative": 205428,
+      "rawSize": 118784,
+      "virtualSize": 779444,
+      "virtualZeroTail": true,
+      "initialImageHex": "00000000"
+    },
+    "currentGump": {
+      "address": "0055a278",
+      "width": 4,
+      "section": ".data",
+      "sectionRelative": 205432,
+      "rawSize": 118784,
+      "virtualSize": 779444,
+      "virtualZeroTail": true,
+      "initialImageHex": "00000000"
+    },
+    "legalGump": {
+      "address": "0055a27c",
+      "width": 4,
+      "section": ".data",
+      "sectionRelative": 205436,
+      "rawSize": 118784,
+      "virtualSize": 779444,
+      "virtualZeroTail": true,
+      "initialImageHex": "00000000"
+    },
+    "preview": {
+      "address": "0055a2a8",
+      "width": 4,
+      "section": ".data",
+      "sectionRelative": 205480,
+      "rawSize": 118784,
+      "virtualSize": 779444,
+      "virtualZeroTail": true,
+      "initialImageHex": "00000000"
+    },
+    "snapToGrid": {
+      "address": "0055a2d8",
+      "width": 4,
+      "section": ".data",
+      "sectionRelative": 205528,
+      "rawSize": 118784,
+      "virtualSize": 779444,
+      "virtualZeroTail": true,
+      "initialImageHex": "00000000"
+    },
+    "adjustedScreenX": {
+      "address": "0055a2f8",
+      "width": 4,
+      "section": ".data",
+      "sectionRelative": 205560,
+      "rawSize": 118784,
+      "virtualSize": 779444,
+      "virtualZeroTail": true,
+      "initialImageHex": "00000000"
+    },
+    "adjustedScreenY": {
+      "address": "0055a2fc",
+      "width": 4,
+      "section": ".data",
+      "sectionRelative": 205564,
+      "rawSize": 118784,
+      "virtualSize": 779444,
+      "virtualZeroTail": true,
+      "initialImageHex": "00000000"
+    },
+    "lockDepth": {
+      "address": "005325c8",
+      "width": 4,
+      "section": ".data",
+      "sectionRelative": 42440,
+      "rawSize": 118784,
+      "virtualSize": 779444,
+      "virtualZeroTail": false,
+      "initialImageHex": "01000000"
+    },
+    "rawMouseX": {
+      "address": "005cae94",
+      "width": 4,
+      "section": ".data",
+      "sectionRelative": 667284,
+      "rawSize": 118784,
+      "virtualSize": 779444,
+      "virtualZeroTail": true,
+      "initialImageHex": "00000000"
+    },
+    "rawMouseY": {
+      "address": "005cae98",
+      "width": 4,
+      "section": ".data",
+      "sectionRelative": 667288,
+      "rawSize": 118784,
+      "virtualSize": 779444,
+      "virtualZeroTail": true,
+      "initialImageHex": "00000000"
+    }
+  },
+  "claims": {
+    "table": "0055a1d8..0055a24f:30 DWORD/120BYTE, scaled index4, both cleanup loops zero30DWORD",
+    "currentCount": "00445aa0 cmp signed current0055a1b8 after each destroy callback; loop does not capture initial count",
+    "cancel": "00446e70 always invokes00445aa0(force1), then current0055a274 removal(flags0),zero30DWORD,preview0/lock1/count0; no currentGump/legalGump reset",
+    "firstMenu": "lock1/preview0 skips selected-object branch only; Activate→Prepare→497220/497580 still reached",
+    "sidHostBoundary": "raw DWORD retained; out-of-SID16 values rejected only at actual host SID consumption, not while overwriting inactive DWORD",
+    "execution": "existing fixtures are comparison inputs only; no new independent Native execution nor C++ verification performed"
+  },
+  "harnessSHA256": "f22fc97565439d4d7237e184923a3b59e5ec7100fac48acc5b5087c89c8b8509"
+}

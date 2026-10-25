@@ -1,0 +1,805 @@
+diff --git a/cpppj/src/client/ClientCursorGlobals.h b/cpppj/src/client/ClientCursorGlobals.h
+new file mode 100644
+--- /dev/null
++++ b/cpppj/src/client/ClientCursorGlobals.h
+@@ -0,0 +1,22 @@
++// Client수명의커서수명/배치/격자데이터만소유하고실행기/Session콜백은보관하지않는다.
++#pragma once
++#include "client/RawCursorPlacement.h"
++
++namespace netstorm::client { // Native전역주소의수명과짧은RawCampaignCursor실행기를분리한다.
++class ClientCursorGlobals {
++public:
++    ClientCursorGlobals()=default; // 같은기존PE초기값/DMI를최초한번구성한다.
++    ClientCursorGlobals(const ClientCursorGlobals&)=delete;ClientCursorGlobals& operator=(const ClientCursorGlobals&)=delete; // 살아있는전역주소는복제하지않는다.
++    CursorLifecycleState& Lifecycle() { return lifecycle_; } // 실제30DWORD/count/측정/현재Gump를직접빌린다.
++    const CursorLifecycleState& Lifecycle() const { return lifecycle_; } // 현재값을복사한표시사본을만들지않는다.
++    CursorPlacementState& Placement() { return placement_; } // 실제위치판정/경고/그림/설명을직접빌린다.
++    const CursorPlacementState& Placement() const { return placement_; } // 비용사각형도같은현재값을읽는다.
++    std::uint32_t& SnapToGrid() { return snapToGrid_; } //0055a2d8의전체DWORD다.
++    const std::uint32_t& SnapToGrid() const { return snapToGrid_; } // 위치입력에서호출때마다다시읽는다.
++    void ResetForGeneralWorld() { const auto* pixels=placement_.sharedScreenOrigin;lifecycle_=CursorLifecycleState{};placement_=CursorPlacementState{};placement_.sharedScreenOrigin=pixels;snapToGrid_=0; } // 기존일반Runtime의fresh/반납호환이며NativeCancel의효과를대신하지않는다.
++private:
++    CursorLifecycleState lifecycle_; // Native임시목록과측정값이며pendingTimer/실행함수가없다.
++    CursorPlacementState placement_; // 같은장기snapshot픽셀포인터만빌릴수있고Session포인터는없다.
++    std::uint32_t snapToGrid_{}; // 최초NativeBSS0이며prepared대여에서는현재비트를유지한다.
++};
++}
+diff --git a/cpppj/src/client/ClientCursorStateCleanup.cpp b/cpppj/src/client/ClientCursorStateCleanup.cpp
+new file mode 100644
+--- /dev/null
++++ b/cpppj/src/client/ClientCursorStateCleanup.cpp
+@@ -0,0 +1,18 @@
++// 외곽게임준비를호출하지않고실제Cancel/Prepare두본문만같은데이터에조립한다.
++#include "client/ClientCursorStateCleanup.h"
++#include "client/ClientMain.h"
++#include "client/ClientGameplayGlobals.h"
++#include "client/CampaignCursorClientEffects.h"
++#include "client/RawSurfaceWorld.h"
++#include <utility>
++
++namespace netstorm::client { // 실제게임모듈의선택효과는호출자가살아있는동안에만제공한다.
++void CancelCursorForState(o::SidPool& pool,std::span<const o::RiftTypeRecord> types,CursorDropState& drop,ClientCursorGlobals& state,CursorLifecycleHooks effects,CursorPlacementHooks placement,std::span<const std::uint16_t> surfaceMap) {
++    RawCursorPlacement prepare(pool,types,surfaceMap,drop,state.Lifecycle(),state.Placement(),std::move(placement));effects.prepareCursor=[&prepare] { prepare.Prepare(); }; //NativeActivate가요청하는위치에서만현재Project/dirty를실행한다.
++    RawCursorLifecycle lifecycle(pool,types,drop,state.Lifecycle(),std::move(effects));lifecycle.Cancel();
++}
++void CancelClientCursorForState(Client& client,RawSurfaceStorage& surface,CursorLifecycleHooks selectedEffects,std::function<Renderer&()> renderer) {
++    auto& gameplay=*client.GameplayGlobals();auto& state=gameplay.CursorGlobals();state.Placement().sharedScreenOrigin=&gameplay.Camera().Snapshot().pixels; //Camera의같은현재픽셀만빌리고UI/Session을장기보관하지않는다.
++    CancelCursorForState(surface.pool,surface.types,gameplay.cursor,state,std::move(selectedEffects),MakeClientCursorPrepareHooks(client,std::move(renderer)),surface.hash.Entries(0));
++}
++}
+diff --git a/cpppj/src/client/ClientCursorStateCleanup.h b/cpppj/src/client/ClientCursorStateCleanup.h
+new file mode 100644
+--- /dev/null
++++ b/cpppj/src/client/ClientCursorStateCleanup.h
+@@ -0,0 +1,9 @@
++// Session없는첫메뉴도같은커서데이터에서원문Cancel과실제Prepare를실행한다.
++#pragma once
++#include "client/ClientCursorGlobals.h"
++
++namespace netstorm::client { // 상위State전체순서와독립된실제Cursor.cpp leaf연결이다.
++class Client;class Renderer;class RawSurfaceStorage; // 실제장치는호출때조회하고이함수보다오래살아야한다.
++void CancelCursorForState(o::SidPool& pool,std::span<const o::RiftTypeRecord> types,CursorDropState& drop,ClientCursorGlobals& state,CursorLifecycleHooks effects,CursorPlacementHooks placement,std::span<const std::uint16_t> surfaceMap={}); //game.prepare없이00446e70→00445aa0→004458e0을같은전역에서실행한다.
++void CancelClientCursorForState(Client& client,RawSurfaceStorage& surface,CursorLifecycleHooks selectedEffects={},std::function<Renderer&()> renderer={}); // 첫메뉴의잠금/빈목록도Project/dirty를생략하지않고선택된다른효과의누락은그자리에서거부한다.
++}
+diff --git a/cpppj/src/client/ClientGameplayGlobals.cpp b/cpppj/src/client/ClientGameplayGlobals.cpp
+--- a/cpppj/src/client/ClientGameplayGlobals.cpp
++++ b/cpppj/src/client/ClientGameplayGlobals.cpp
+@@ -13,14 +13,14 @@
+     if (globals_.borrowed_) throw std::logic_error("현재 게임 전역 중복 대여");
+     if (prepared_) { globals_.borrowed_=true;return; } // Native prefix가 쓴 같은 owner/모드/커서/에너지를 재작성하지 않는다.
+     const auto special=globals_.player.special;const auto userCheat=globals_.energy.userCheat; // 설정 해석이 소유하는 두 전역은 다음 Runtime에도 같은 값을 유지한다.
+-    globals_.borrowed_=true;globals_.player={};globals_.player.special=special;globals_.cursor=CursorDropState{.lockDepth=1};globals_.finder={};globals_.world.editor=0;globals_.world.missionPost=true;
++    globals_.borrowed_=true;globals_.player={};globals_.player.special=special;globals_.cursor=CursorDropState{.lockDepth=1};globals_.cursorGlobals_.ResetForGeneralWorld();globals_.finder={};globals_.world.editor=0;globals_.world.missionPost=true;
+     globals_.Server()=true;globals_.Boss()=true; // 기존 일반 Session의 fresh 권한true/true만 유지한다. Native cleanup/prefix의 쓰기로 세지 않는다.
+     globals_.fullDeck_=0; // 기존 일반 fresh 입력만 준비하며 authority/선택 reset도 함께 보존한다.
+     globals_.energy={};globals_.energy.userCheat=userCheat; // 나머지 공급 상태는 기존 Session 초기화 의미를 유지한다. NativeState 전체 초기화 이행과 구별한다.
+     globals_.selection.ResetForGeneralWorld(); // 기존 일반 GameWorld의 fresh 입력 호환이다. prepared와 반납에서는 이 전역을 암묵 초기화하지 않는다.
+ }
+ // Player/커서의 기존 C++ 소멸 의미를 장기 전역의 명시 무효화로 바꾸며 두 Subscriber는 유지한다.
+-ClientGameplayGlobals::Use::~Use() { globals_.current_=nullptr;if (!prepared_) { globals_.player.playerKnown=0;globals_.cursor=CursorDropState{.lockDepth=1};globals_.world.editor=0; }globals_.borrowed_=false; }
++ClientGameplayGlobals::Use::~Use() { globals_.current_=nullptr;if (!prepared_) { globals_.player.playerKnown=0;globals_.cursor=CursorDropState{.lockDepth=1};globals_.cursorGlobals_.ResetForGeneralWorld();globals_.world.editor=0; }globals_.borrowed_=false; }
+ // 완성 전의 부분 생성 객체를 실제 게임 효과 대상으로 노출하지 않는다.
+ void ClientGameplayGlobals::Use::Publish(RawCampaignSession& session) { if (globals_.current_) throw std::logic_error("현재 게임 Runtime 중복 연결");globals_.current_=&session; }
+ // 현재 실제 객체의 공개 메서드가 부분 반납된 Impl을 다시 읽지 않도록 한다.
+diff --git a/cpppj/src/client/ClientGameplayGlobals.h b/cpppj/src/client/ClientGameplayGlobals.h
+--- a/cpppj/src/client/ClientGameplayGlobals.h
++++ b/cpppj/src/client/ClientGameplayGlobals.h
+@@ -1,6 +1,7 @@
+ #include "client/ClientCameraGlobals.h"
+ // Client 수명의 현재 Player/커서/검색/미션 전역과 짧은 실제 Runtime 대여를 구별한다.
+ #pragma once
++#include "client/ClientCursorGlobals.h"
+ #include "client/RawCursorDrop.h"
+ #include "client/ClientUserSelectionGlobals.h"
+ #include "o/RawAuthorityState.h"
+@@ -46,6 +47,8 @@
+     const bool& Boss() const { return authority_->boss; } // 권한의 현재 논리값을 복제하지 않고 조회한다.
+     ClientCameraGlobals& Camera() { return camera_; } // 같은0059a900 snapshot과 논리 Renderer의 장기 소유자를 빌린다.
+     const ClientCameraGlobals& Camera() const { return camera_; } // Session 재대여가 카메라를 재생성하지 않는다.
++    ClientCursorGlobals& CursorGlobals() { return cursorGlobals_; } // 같은현재커서데이터를첫메뉴/Session이직접빌린다.
++    const ClientCursorGlobals& CursorGlobals() const { return cursorGlobals_; } // 실행기소멸뒤에도dataowner주소는유지한다.
+     o::PlayerWorldState player; //595344/540c70/540cac 등 실제 현재 Player 조회 전역이다.
+     CursorDropState cursor{.lockDepth=1}; //5325c8 초기 잠금1과 실제 현재 조각/마우스/플래그다.
+     ClientUserSelectionGlobals selection; // 실제 선택/강조9DWORD와 현재 다중 배열이며 Runtime/장치 callback을 보관하지 않는다.
+@@ -56,6 +59,7 @@
+ private:
+     std::uint32_t fullDeck_{}; // 최초 PE BSS0이며 준비 대여/반납은 Native 부모가 쓴 현재 값을 보존한다.
+     ClientCameraGlobals camera_; // 전역snapshot과논리Renderer/목표를분리하고명시Native초기화외에는현재값을보존한다.
++    ClientCursorGlobals cursorGlobals_; // callback/타이머없이Lifecycle/Placement/snap만장기소유한다.
+     std::uint32_t mapRevision_{}; // 최초 BSS0이며 Session 대여/반납으로 초기화하지 않는 실제005949d4다.
+     RawCampaignSession* current_{};bool borrowed_{}; // 게임 값의 대체가 아닌 현재 C++ Runtime 대여다.
+ };
+diff --git a/cpppj/src/client/PreviewCollection.cpp b/cpppj/src/client/PreviewCollection.cpp
+--- a/cpppj/src/client/PreviewCollection.cpp
++++ b/cpppj/src/client/PreviewCollection.cpp
+@@ -9,6 +9,9 @@
+ 
+ namespace netstorm::client {
+ namespace {
++// 독립fixture입력과실제전역DWORD는원래값을유지한채소비직전에만연결한다.
++std::uint32_t PreviewSidNumber(o::Sid sid) { return sid.value; }
++std::uint32_t PreviewSidNumber(std::uint32_t sid) { return sid; }
+ // 원본 배치 칸의 +0.9999 단정도 비트와 SP 강조 기준, 타입 깊이 우선 비트다.
+ constexpr float kSpotBias=std::bit_cast<float>(0x3f7ff972U),kSpThreshold=7000.0f;
+ constexpr std::uint32_t kSurface=4,kIsland=0x400000;
+@@ -66,7 +69,7 @@
+         for (std::int32_t i=0;i<c.pieceCount;++i) {
+             if (limit<1) return count;
+             if (static_cast<std::size_t>(i)>=c.pieces.size()) throw std::out_of_range("Preview collection list");
+-            const auto sid=c.pieces[static_cast<std::size_t>(i)];if (!sid.value) throw std::out_of_range("Preview collection zero SID");
++            const auto sid=CursorPreviewSid(PreviewSidNumber(c.pieces[static_cast<std::size_t>(i)]));if (!sid.value) throw std::out_of_range("Preview collection zero SID");
+             const auto raw=pool_.Slot(sid);
+             if (static_cast<std::size_t>(count)>=output.size()) throw std::length_error("Preview collection output");
+             const float positionX=std::bit_cast<float>(ReadPreview(raw,14)),positionY=std::bit_cast<float>(ReadPreview(raw,18));
+@@ -92,7 +95,7 @@
+             if (static_cast<std::size_t>(count)+2>output.size()) throw std::length_error("Preview collection pair capacity");
+             if (pool_.Edition()==o::OriginalEdition::Patch1078) PatchFeedback(c.localPlayer);
+             first.kind=4;first.tail=0;
+-            const auto current=c.pieces.at(static_cast<std::size_t>(i));
++            const auto current=CursorPreviewSid(PreviewSidNumber(c.pieces.at(static_cast<std::size_t>(i))));
+             if (!current.value || current.value>=pool_.Capacity()) throw std::out_of_range("Preview collection current SID");
+             auto& second=output[static_cast<std::size_t>(count)+1];second={positionX,positionY,tokenBase_+current.value*pool_.Layout().stride,
+                 std::bit_cast<std::int16_t>(static_cast<std::uint16_t>(depth-1U)),4,2};
+@@ -106,7 +109,7 @@
+     struct Input {
+         const std::uint32_t &lockDepth,&type,&parentGump,&specialTypeA,&specialTypeB,&legal; // 현재 잠금·타입·표시 판정이다.
+         const std::int32_t& pieceCount; // 각 반복에서 현재 개수를 다시 읽는다.
+-        const std::array<o::Sid,30>& pieces; // SP 경계 재진입 뒤 바뀐 SID도 다시 읽는다.
++        const std::array<std::uint32_t,30>& pieces; // SP 경계 재진입 뒤 바뀐 SID도 다시 읽는다.
+         const float &x,&y; // 특수 받침의 배치 칸 좌표다.
+         const std::uint32_t& localPlayer; // 실제 SP 읽기와 색 표의 로컬 소유자다.
+     };
+diff --git a/cpppj/src/client/RawCampaignCursor.cpp b/cpppj/src/client/RawCampaignCursor.cpp
+--- a/cpppj/src/client/RawCampaignCursor.cpp
++++ b/cpppj/src/client/RawCampaignCursor.cpp
+@@ -23,11 +23,13 @@
+     RawWorldCore core; // 같은 풀/TYPE/지도/장부의 참조다.
+     CampaignCursorGame game; // 실제 세션의 게임 계산과 현재 전역 갱신이다.
+     CampaignCursorEffects effects; // 교체 가능한 현재 UI/장치/송신 경계다.
+-    CursorLifecycleState lifecycleState; // 현재 임시30SID와 글자 측정 상태다.
+-    CursorPlacementState placementState; // 현재 위치 허용/표시 범위다.
++    std::unique_ptr<ClientCursorGlobals> ownedCursorState; // 명시독립직접호출만소유하는fallback이다.
++    ClientCursorGlobals& cursorState; // 실제Client의장기dataowner이거나위독립소유자다.
++    CursorLifecycleState& lifecycleState; // 현재 임시30DWORD와 글자 측정 상태다.
++    CursorPlacementState& placementState; // 현재 위치 허용/표시 범위다.
+     CursorReturnPieceState returnState; // 현재 선택 타입/유지/소멸 옵션이다.
+     o::ConstructionLocalState localState; // 실제 로컬 소유자/Canon 패턴이다.
+-    std::uint32_t snapToGrid{}; // 실제 위치 갱신이 읽는 snapToGrid DWORD다.
++    std::uint32_t& snapToGrid; // 실제 위치 갱신이 읽는 snapToGrid DWORD다.
+     std::unique_ptr<RawCampaignCursorDisplay> display; // 같은 현재 목록/격자/SP의 실제 수집/표시기다.
+     std::unique_ptr<RawCursorPlacement> placement; // 실제 Query/Prepare 몸체다.
+     std::unique_ptr<RawCursorPreviews> previews; // 실제 생성/재사용/연결 미리보기다.
+@@ -40,7 +42,7 @@
+     std::unique_ptr<RawCursorDrop> drop; // 실제 상위 비용/잠금/정리 순서다.
+ 
+     // 다른 풀을 섞지 않고 실제 하위들을 먼저 만든 뒤 수명 몸체로 순환 연결한다.
+-    Impl(CampaignCursorData source,CampaignCursorGame operations):data(source),core(data.world.Core()),game(std::move(operations)) {
++    Impl(CampaignCursorData source,CampaignCursorGame operations):data(source),core(data.world.Core()),game(std::move(operations)),ownedCursorState(data.currentState ? nullptr : std::make_unique<ClientCursorGlobals>()),cursorState(data.currentState ? *data.currentState : *ownedCursorState),lifecycleState(cursorState.Lifecycle()),placementState(cursorState.Placement()),snapToGrid(cursorState.SnapToGrid()) {
+         if (&data.forms.Pool()!=&core.pool || &data.contained.Pool()!=&core.pool || &data.reward.Pool()!=&core.pool ||
+             &data.construction.Pool()!=&core.pool || !game.prepare || !game.moveBuilder || !game.playDrop)
+             throw std::invalid_argument("실제 캠페인 커서 단일 월드/게임 연결 오류");
+@@ -142,6 +144,8 @@
+ // 실제 취득의 Cancel/Query/생성/측정/위치 꼬리를 그대로 실행한다.
+ void RawCampaignCursor::Take(o::Sid form,std::uint32_t flags) { impl_->Prepare();impl_->lifecycle->Take(form,flags); }
+ // 잠긴 상태의 꼬리 정리도 원본 몸체가 결정한다.
++void RawCampaignCursor::CancelForState() { impl_->lifecycle->Cancel(); }
++// 일반입력의기존호스트준비와NativeCancel leaf를구별한다.
+ void RawCampaignCursor::Cancel() { impl_->Prepare();impl_->lifecycle->Cancel(); }
+ // 같은 현재 카메라 비트를 읽는 실제 위치 몸체를 호출한다.
+ void RawCampaignCursor::Update(std::int32_t x,std::int32_t y) { impl_->Prepare();impl_->position->Update(x,y); }
+diff --git a/cpppj/src/client/RawCampaignCursor.h b/cpppj/src/client/RawCampaignCursor.h
+--- a/cpppj/src/client/RawCampaignCursor.h
++++ b/cpppj/src/client/RawCampaignCursor.h
+@@ -1,6 +1,7 @@
+ #include "client/RawCameraView.h"
+ // 같은 캠페인 월드의 실제 커서 수명/위치/미리보기/내려놓기/로컬 예측을 소유한다.
+ #pragma once
++#include "client/ClientCursorGlobals.h"
+ #include "client/RawCampaignConstructionBindings.h"
+ #include "client/RawCursorPosition.h"
+ #include "client/RawCursorReturnPiece.h"
+@@ -42,6 +43,7 @@
+     const std::uint32_t& rangeProcessType; // 사정거리와 같은 현재51 프로세스 타입이다.
+     const std::array<std::uint32_t,2>& camera; // 현재497490 카메라 float비트를 매 이동마다 읽는다.
+     const RawCameraViewState* cameraView{}; // 실제 Session은 같은 snapshot을 빌리며 기존 순수 호출자는 명시 fallback을 유지한다.
++    ClientCursorGlobals* currentState{}; // 실제Session은Clientdataowner를직접빌리고독립직접fixture만지역fallback을사용한다.
+ };
+ // 원본 각각의 몸체를 같은 상태에 조립하며 미연결 UI를 빈 성공으로 처리하지 않는다.
+ class RawCampaignCursor {
+@@ -57,6 +59,7 @@
+     void SetPalette(std::span<const ScreenColor> palette,std::span<const std::uint32_t> colorSortLogical={}); //실제Client는같은고정초기RGB를별도전달하며기존독립검사는명시fallback이다. // 실제 파일 팔레트와 Native Take의 두 현재 색을 연결한다.
+     void SetView(SoundView view); // 현재 화면 픽셀 원점을 Query/Prepare/Draw가 공유하게 한다.
+     void Take(o::Sid form,std::uint32_t flags); // 실제00447000의 전체 DWORD flags를 전달한다.
++    void CancelForState(); //00446e70만실행하며외곽game.prepare를Native효과로추가하지않는다.
+     void Cancel(); // 잠긴 상태에서도 실제 꼬리 정리/프로세스 반납을 실행한다.
+     void Update(std::int32_t x,std::int32_t y); // 실제00446b50으로 현재 마우스/카메라를 반영한다.
+     void GumpsChanged(); // 호스트 UI 트리 교체 뒤 정지한 마우스의 현재 Gump/표시 경계만 다시 조회한다.
+diff --git a/cpppj/src/client/RawCampaignCursorDisplay.cpp b/cpppj/src/client/RawCampaignCursorDisplay.cpp
+--- a/cpppj/src/client/RawCampaignCursorDisplay.cpp
++++ b/cpppj/src/client/RawCampaignCursorDisplay.cpp
+@@ -73,7 +73,7 @@
+     // Native 목록을 가져온 뒤 삭제/잠금이 변한 캐시 항목을 실제 슬롯으로 다시 실행하지 않는다.
+     void Draw(o::RenderCollectionEntry entry,std::span<std::uint8_t> pixels,int pitch,int height,ScreenRect clip) {
+         if (source.drop.lockDepth) return;if (!paletteReady) throw std::logic_error("실제 커서 파일 팔레트 미설치");const o::Sid sid{static_cast<std::uint16_t>(entry.token/source.pool.Layout().stride)};
+-        if (std::find(source.lifecycle.previews.begin(),source.lifecycle.previews.end(),sid)==source.lifecycle.previews.end()) return;
++        if (std::find(source.lifecycle.previews.begin(),source.lifecycle.previews.end(),sid.value)==source.lifecycle.previews.end()) return;
+         PreviewPixelTarget target(pixels,pitch,height,clip,MakeCursorPreviewAssetShapes(assets,settings.priceType,source.lifecycle),[this](PreviewColorRequest request) { return Color(request); },[&](PreviewTextRequest request) { Text(request,pixels,pitch,height,clip); });
+         PreviewDraw draw(core.pool,core.types,feedback,settings,target.Hooks());draw.BindCursor(source);draw.Draw(entry);
+     }
+diff --git a/cpppj/src/client/RawCampaignSession.cpp b/cpppj/src/client/RawCampaignSession.cpp
+--- a/cpppj/src/client/RawCampaignSession.cpp
++++ b/cpppj/src/client/RawCampaignSession.cpp
+@@ -2787,7 +2787,7 @@
+             static_cast<void>(lookup.Find(parent,type,0,true));
+         };
+         game.moveBuilder=[this](std::uint32_t owner,Sid target,std::uint32_t low,std::uint32_t high) { static_cast<void>(buildingMover->Move(owner,target,low,high)); };
+-        cursor=std::make_unique<RawCampaignCursor>(CampaignCursorData{world,assets.game,gameplayPlacement.geometry,metadata.frames,*contentForms,*contained,hp,random,*construction,cursorDrop,gameplayPlacement.preview.blocked,sp,playerState.playerKnown,gunTargetState.windArcherType,cursorRangeGlobals.processType,contentCamera,&gameplayGlobals->Camera().Snapshot()},std::move(game));
++        cursor=std::make_unique<RawCampaignCursor>(CampaignCursorData{world,assets.game,gameplayPlacement.geometry,metadata.frames,*contentForms,*contained,hp,random,*construction,cursorDrop,gameplayPlacement.preview.blocked,sp,playerState.playerKnown,gunTargetState.windArcherType,cursorRangeGlobals.processType,contentCamera,&gameplayGlobals->Camera().Snapshot(),&gameplayGlobals->CursorGlobals()},std::move(game));
+         if (services.colorSortInput || services.screenPalette) {
+             // 실제 Client의 일부 색 장치가 빠진 경우 COL을 대신 써서 성공하지 않는다.
+             if (!services.colorSortInput || !services.screenPalette) throw std::logic_error("캠페인 커서의 같은 ColorSort/현재 화면 색 서비스 미연결");
+@@ -4096,6 +4096,9 @@
+ // 현재 풀/동맹/타입/물리 헤더를 공유하는 실제 사격 판정기를 조회 전용으로 빌린다.
+ const RawGunTarget& RawCampaignSession::GunTargeting() const { if (!impl_->gunTarget) throw std::logic_error("실제 Gun 표적 판정 설치 전 조회");return *impl_->gunTarget; }
+ // 실제 설치 이후 같은 커서를 빌리며 새 몸체나 상태를 만들지 않는다.
++bool RawCampaignSession::HasCursorRuntimeForState() const { return bool(impl_->cursor); } // 첫메뉴/설치중/활성Runtime의경계를명시한다.
++void RawCampaignSession::CancelCursorForState() { if (!impl_->cursor) throw std::logic_error("NativeCancel의실제커서실행기미설치");impl_->cursor->CancelForState(); }
++// 일반사용자입력은기존loaded/UI설치관문을그대로유지한다.
+ RawCampaignCursor& RawCampaignSession::Cursor() { if ((!impl_->loaded && !impl_->editorUiInstalling) || !impl_->cursor) throw std::logic_error("설치 전 실제 커서 요청");return *impl_->cursor; } // 같은 설치 scope의 실제 팔레트/UI 조회만 허용하고 범위 밖 입력은 계속 닫는다.
+ // 이후 커서/맵 명령도 프레임이 읽는 같은 전역을 갱신한다.
+ CursorManaGlobals& RawCampaignSession::CursorManaSettings() { return impl_->cursorManaGlobals; }
+diff --git a/cpppj/src/client/RawCampaignSession.h b/cpppj/src/client/RawCampaignSession.h
+--- a/cpppj/src/client/RawCampaignSession.h
++++ b/cpppj/src/client/RawCampaignSession.h
+@@ -474,6 +474,8 @@
+     // 실제 Client 커서가 같은 취득/내려놓기/프로세스 토큰을 공유하는 단일 상태다.
+     CursorDropState& CursorDropSettings();
+     // 설치 뒤 실제 수명/위치/미리보기/내려놓기/로컬 예측을 소유한 단일 커서를 빌린다.
++    bool HasCursorRuntimeForState() const; // loaded성공과구별하여실제C++커서실행기존재만조회한다.
++    void CancelCursorForState(); // 실제실행기가있을때외곽game.prepare없이00446e70만실행하며미설치는거부한다.
+     RawCampaignCursor& Cursor();
+     // 현재 맵 경계·마나 반경/대체점과 타입 전역을 같은 프로세스 몸체에 공급한다.
+     CursorManaGlobals& CursorManaSettings();
+diff --git a/cpppj/src/client/RawCursorActions.cpp b/cpppj/src/client/RawCursorActions.cpp
+--- a/cpppj/src/client/RawCursorActions.cpp
++++ b/cpppj/src/client/RawCursorActions.cpp
+@@ -34,8 +34,8 @@
+     if (!drop_.lockDepth) { Need(hooks_.createPreviews)();Need(hooks_.selectCursor)(drop_.legalGump ? 3U : 2U); }
+     if (lifecycle_.abstractType>=types_.size()) throw std::out_of_range("커서 회전 현재 TYPE 범위");
+     if (types_[lifecycle_.abstractType].group==1 || drop_.type==specialType_) {
+-        Need(hooks_.removeRange)(lifecycle_.previews[0],rangeProcessType_);
+-        drop_.cursorGump=Need(hooks_.createRange)(lifecycle_.previews[0],0);
++        Need(hooks_.removeRange)(CursorPreviewSid(lifecycle_.previews[0]),rangeProcessType_);
++        drop_.cursorGump=Need(hooks_.createRange)(CursorPreviewSid(lifecycle_.previews[0]),0);
+     }
+ }
+ }
+diff --git a/cpppj/src/client/RawCursorDrop.h b/cpppj/src/client/RawCursorDrop.h
+--- a/cpppj/src/client/RawCursorDrop.h
++++ b/cpppj/src/client/RawCursorDrop.h
+@@ -18,15 +18,15 @@
+     // x: X 좌표.
+     // y: Y 좌표.
+     float x{},y{};
+-    // legalGump: 배치가능 Gump.
+-    // cursorGump: 커서 Gump.
++    // legalGump:0055a27c의현재허용Gump토큰이다.
++    // cursorGump:0055a274의마나/사정거리process토큰이다.0055a278의현재Gump와합치지않는다.
+     // recording: 녹화.
+     // recorder: 기록기.
+     // battle: 전투.
+     // blocked: 공간·소유권 조건으로 진행이 차단됐는지.
+     // localPlayer: 로컬 플레이어.
+     std::uint32_t legalGump{},cursorGump{},recording{},recorder{},battle{},blocked{},localPlayer{};
+-    std::int32_t screenX{},screenY{},cursorWidth{}; // SP 표시 위치: screenX - footX*16/2 - cursorWidth/2.
++    std::int32_t screenX{},screenY{},cursorWidth{}; //0055a2f8/fc의hotspot보정커서화면점과가격폭이다.원시mouse005cae94/98과Camera0059a91c/920과다르다.
+ };
+ // 미복원 커서 판정·Form/Gump·공간 이동·기록·화면 효과만 명시 경계로 둔다. 모든 경계가 필요하다.
+ struct CursorDropHooks {
+diff --git a/cpppj/src/client/RawCursorLifecycle.cpp b/cpppj/src/client/RawCursorLifecycle.cpp
+--- a/cpppj/src/client/RawCursorLifecycle.cpp
++++ b/cpppj/src/client/RawCursorLifecycle.cpp
+@@ -25,6 +25,8 @@
+     return assets.Types()[type-o::kFirstAssetTypeNumber];
+ }
+ }
++// 큰DWORD를하위WORD로접어다른유효객체로만들지않는다.
++o::Sid CursorPreviewSid(std::uint32_t number) { if (number>65535U) throw std::out_of_range("커서원문DWORD의호스트SID범위");return o::Sid{static_cast<std::uint16_t>(number)}; }
+ // 다른 판본의 raw 필드에10.78의 오프셋을 적용하지 않는다.
+ RawCursorLifecycle::RawCursorLifecycle(o::SidPool& pool,std::span<const o::RiftTypeRecord> types,CursorDropState& drop,
+     CursorLifecycleState& state,CursorLifecycleHooks hooks):pool_(pool),types_(types),drop_(drop),state_(state),hooks_(std::move(hooks)) {
+@@ -45,7 +47,7 @@
+         // 가상 삭제 후 다음 반복에서도 현재 signed 개수와 다음 칸을 읽는다.
+         for (std::int32_t index=0;index<state_.previewCount;++index) {
+             if (index>=static_cast<std::int32_t>(state_.previews.size())) throw std::out_of_range("커서 임시 목록 원본30칸 범위 오류");
+-            const auto sid=state_.previews[static_cast<std::size_t>(index)];Raw(sid);Need(hooks_.destroy)(sid,0);
++            const auto sid=CursorPreviewSid(state_.previews[static_cast<std::size_t>(index)]);Raw(sid);Need(hooks_.destroy)(sid,0);
+         }
+         state_.previewCount=0;state_.previews.fill({});
+     }
+@@ -89,11 +91,11 @@
+     drop_.lockDepth=0;Need(hooks_.createPreviews)();Need(hooks_.selectCursor)(drop_.legalGump ? 3 : 2);
+     drop_.legalGump=0;state_.currentGump=0;
+     if (Type().flags2&0xa00) {
+-        drop_.cursorGump=Need(hooks_.createMana)(state_.previews[0],0);
++        drop_.cursorGump=Need(hooks_.createMana)(CursorPreviewSid(state_.previews[0]),0);
+         if (state_.currentGump && drop_.cursorGump) Need(hooks_.processEvent)(drop_.cursorGump,1,1,0);
+     }
+     const auto typeNumber=Need(hooks_.typeNumber)(state_.abstractType);
+-    if (Need(hooks_.hasRange)(typeNumber)) drop_.cursorGump=Need(hooks_.createRange)(state_.previews[0],0);
++    if (Need(hooks_.hasRange)(typeNumber)) drop_.cursorGump=Need(hooks_.createRange)(CursorPreviewSid(state_.previews[0]),0);
+     Need(hooks_.queryCursor)();state_.warningContext[2]=state_.warningFont;state_.warningWidth=state_.warningHeight=0;
+     // 각 문구의 현재 측정 결과를 개별 저장하고 signed 최대값을 갱신한다.
+     for (std::size_t index=0;index<kWarnings.size();++index) {
+diff --git a/cpppj/src/client/RawCursorLifecycle.h b/cpppj/src/client/RawCursorLifecycle.h
+--- a/cpppj/src/client/RawCursorLifecycle.h
++++ b/cpppj/src/client/RawCursorLifecycle.h
+@@ -10,7 +10,7 @@
+ struct CursorLifecycleState {
+     std::uint32_t abstractType{}; // 0055a280의 TYPE 포인터를 현재 표의 번호로 보관한다.
+     std::uint32_t directionArgument{},currentGump{}; // 0055a2a0·0055a278이며 direction/커서 프로세스와 구별한다.
+-    std::array<o::Sid,30> previews{}; // 0055a1d8의 실제 임시 월드 객체 목록이다.
++    std::array<std::uint32_t,30> previews{}; //0055a1d8의실제120BYTE/30DWORD이며SID16배열로축소하지않는다.
+     std::int32_t previewCount{}; // 0055a1b8이며 정리 도중에도 현재 값을 다시 읽는다.
+     std::uint32_t warningFont{},costFont{},costType{92},teleportBlocked{}; // 원본 글꼴 두 전역·비용 그림 타입·금액 진단이다.
+     std::array<std::uint32_t,8> warningContext{2,0,0,0,0,0,1,1},costContext{2,3,0,0,0,0,1,1}; // 측정 문맥의 +8만 현재 글꼴로 바뀐다.
+@@ -20,6 +20,8 @@
+     std::uint32_t costImage{}; // 실제 SHP 블록의 호스트 식별값이며 원본 포인터로 역참조하지 않는다.
+     std::string costText; // 0055a1bc의 절삭된 비용 문자열이다.
+ };
++static_assert(sizeof(CursorLifecycleState::previews)==120); //원문배열의DWORD폭/30칸을컴파일시점에고정한다.
++o::Sid CursorPreviewSid(std::uint32_t number); //원문DWORD를잃지않고SID16호스트경계직전에범위를검사하며유효풀범위는각소비자가검사한다.
+ // 프레임3의 원본 추가 헤더다. 그림 식별값과 signed WORD 치수를 실제 자산 연결기가 공급한다.
+ struct CursorCostImage {
+     std::uint32_t token{}; // 같은 SHP 저장소의 블록 식별값이다.
+diff --git a/cpppj/src/client/RawCursorPlacement.cpp b/cpppj/src/client/RawCursorPlacement.cpp
+--- a/cpppj/src/client/RawCursorPlacement.cpp
++++ b/cpppj/src/client/RawCursorPlacement.cpp
+@@ -111,7 +111,7 @@
+         Need(hooks_.invalidate)({x,y,Add(Add(lifecycle_.warningWidth,2),x),Add(Add(lifecycle_.warningHeight,2),y)},0);
+     }
+     if (drop_.costFlags&0x40) {
+-        const auto raw=pool_.Slot(lifecycle_.previews[0]);
++        const auto raw=pool_.Slot(CursorPreviewSid(lifecycle_.previews[0]));
+         const auto cellX=std::bit_cast<std::int16_t>(static_cast<std::uint16_t>(raw[22]|static_cast<std::uint16_t>(raw[23])<<8));
+         const auto cellY=std::bit_cast<std::int16_t>(static_cast<std::uint16_t>(raw[24]|static_cast<std::uint16_t>(raw[25])<<8));
+         const auto foot=std::bit_cast<std::int32_t>(static_cast<std::uint32_t>(Type().footX)<<4);
+diff --git a/cpppj/src/client/RawCursorPreviews.cpp b/cpppj/src/client/RawCursorPreviews.cpp
+--- a/cpppj/src/client/RawCursorPreviews.cpp
++++ b/cpppj/src/client/RawCursorPreviews.cpp
+@@ -36,12 +36,12 @@
+     if (lifecycle_.abstractType>=types_.size()) throw std::out_of_range("커서 미리보기 abstract TYPE 범위");return types_[lifecycle_.abstractType];
+ }
+ // 원본의 signed 목록 인덱스를 호스트 배열 범위에서만 허용한다.
+-o::Sid RawCursorPreviews::At(std::int32_t index) const {
++std::uint32_t RawCursorPreviews::At(std::int32_t index) const {
+     if (index<0 || static_cast<std::size_t>(index)>=lifecycle_.previews.size()) throw std::out_of_range("커서 미리보기 목록 인덱스");return lifecycle_.previews[static_cast<std::size_t>(index)];
+ }
+ // 원본은 호출 뒤 개수를 읽어 append한다. 별도 생성 번호 목록을 만들지 않는다.
+ void RawCursorPreviews::Append(o::Sid sid) const {
+-    At(lifecycle_.previewCount);lifecycle_.previews[static_cast<std::size_t>(lifecycle_.previewCount)]=sid;++lifecycle_.previewCount;
++    At(lifecycle_.previewCount);lifecycle_.previews[static_cast<std::size_t>(lifecycle_.previewCount)]=sid.value;++lifecycle_.previewCount;
+ }
+ // 화면 캐시는 지도 칸의 정수 좌표와 다르다. 음수도 원래 +0.5 뒤0쪽 절삭을 유지한다.
+ void RawCursorPreviews::Position(o::Sid sid,float x,float y) const {
+@@ -50,10 +50,10 @@
+ }
+ // 실물 Pop 없이 raw 위치/프레임과 임시 SID만 갱신한다.
+ void RawCursorPreviews::Create() const {
+-    Need(hooks_.queryCursor)();const bool create=!lifecycle_.previews[0].value;std::int32_t ordinal{};
++    Need(hooks_.queryCursor)();const bool create=!lifecycle_.previews[0];std::int32_t ordinal{};
+     Need(hooks_.walk)({drop_.type,std::bit_cast<std::int32_t>(drop_.argument),std::bit_cast<std::int32_t>(drop_.direction),drop_.x,drop_.y,false},
+         [this,create,&ordinal](CursorCanonCell cell) {
+-            auto sid=At(ordinal++);
++            const auto number=At(ordinal++);auto sid=create ? o::Sid{} : CursorPreviewSid(number);
+             if (create) { sid=Need(hooks_.create)(drop_.type,2);Append(sid); }
+             auto raw=pool_.AllocatedBytes(sid);raw[40]|=8;Put(raw,36,std::bit_cast<std::uint32_t>(cell.frame));
+             Need(hooks_.setWord)(sid,drop_.argument);Need(hooks_.setOwner)(sid,drop_.localPlayer);
+@@ -73,7 +73,7 @@
+                 const auto count=Need(hooks_.connect)(sid,std::span(lifecycle_.previews).subspan(static_cast<std::size_t>(lifecycle_.previewCount)));
+                 // 연결 객체는 임시 정수 맞춤으로 생긴 차이만큼 되돌린다. 목록 개수는 매회 현재 값을 읽는다.
+                 for (std::int32_t index=0;index<count;++index) {
+-                    const auto connector=At(lifecycle_.previewCount+index);const auto data=pool_.Slot(connector);
++                    const auto connector=CursorPreviewSid(At(lifecycle_.previewCount+index));const auto data=pool_.Slot(connector);
+                     const float px=std::bit_cast<float>(Read(data,14))-deltaX,py=std::bit_cast<float>(Read(data,18))-deltaY;Position(connector,px,py);
+                 }
+                 Position(sid,oldX,oldY);
+@@ -85,7 +85,7 @@
+     if (Type().flags1&0x400) {
+         // 원본은 실제 Canon 칸 수로 재사용 슬롯을 고른다. 연결 객체 수를 인덱스에 더하지 않는다.
+         for (std::uint32_t part=0;part<2;++part) {
+-            auto sid=At(ordinal++);
++            const auto number=At(ordinal++);auto sid=create ? o::Sid{} : CursorPreviewSid(number);
+             if (create) { sid=Need(hooks_.create)(part ? surfaces_.stalagType : surfaces_.islandType,2);Append(sid); }
+             auto raw=pool_.AllocatedBytes(sid);raw[40]|=8;Put(raw,36,8);Position(sid,drop_.x,drop_.y);
+         }
+@@ -116,10 +116,10 @@
+     hooks.hasHitPoints=[&reward](o::Sid sid) { return reward.HasHitPoints(sid); };
+     hooks.setHitPoints=[&pool](o::Sid sid,std::int32_t value) { o::SetRawSquidHitPoints(pool,sid,value); };
+     hooks.frames=[frames](std::uint32_t type)->const o::RiftTypeFrames& { if (type>=frames.size()) throw std::out_of_range("커서 실제 bridge 프레임 표 범위");return frames[type].frames; };
+-    hooks.connect=[&connect](o::Sid sid,std::span<o::Sid> output) {
++    hooks.connect=[&connect](o::Sid sid,std::span<std::uint32_t> output) {
+         std::int32_t count{};
+         connect.ConnectPreview(sid,[output,&count](o::Sid born) {
+-            if (static_cast<std::size_t>(count)>=output.size()) throw std::out_of_range("커서 실제 연결 객체 꼬리 넘침");output[static_cast<std::size_t>(count++)]=born;
++            if (static_cast<std::size_t>(count)>=output.size()) throw std::out_of_range("커서 실제 연결 객체 꼬리 넘침");output[static_cast<std::size_t>(count++)]=born.value;
+         });
+         return count;
+     };
+diff --git a/cpppj/src/client/RawCursorPreviews.h b/cpppj/src/client/RawCursorPreviews.h
+--- a/cpppj/src/client/RawCursorPreviews.h
++++ b/cpppj/src/client/RawCursorPreviews.h
+@@ -16,7 +16,7 @@
+     std::function<bool(o::Sid)> hasHitPoints; // 공통4adc60의 현재 HP 유무다.
+     std::function<void(o::Sid,std::int32_t)> setHitPoints; // 공통 비가상4adca0(sid,0)다.
+     std::function<const o::RiftTypeFrames&(std::uint32_t)> frames; // 49a840의 현재 bridge TYPE 프레임 표다.
+-    std::function<std::int32_t(o::Sid,std::span<o::Sid>)> connect; // 4213b0(sid,현재목록꼬리,&count)다.
++    std::function<std::int32_t(o::Sid,std::span<std::uint32_t>)> connect; // 4213b0(sid,현재목록꼬리,&count)다.
+ };
+ // 수명/내려놓기/배치와 같은 실제 풀·전역에 미리보기를 만든다. 공간 Pop은 호출하지 않는다.
+ class RawCursorPreviews {
+@@ -35,12 +35,12 @@
+     void Append(o::Sid sid) const;
+     // 현재 슬롯의 float 위치와 x*16+0.5/y*11+0.5 절삭 WORD 화면 캐시를 쓴다.
+     void Position(o::Sid sid,float x,float y) const;
+-    // 유효 목록 인덱스의 SID를 읽는다. 실제 raw 접근은 필요한 시점에만 한다.
+-    o::Sid At(std::int32_t index) const;
++    // 유효 목록 인덱스의 원래 DWORD를 읽고 실제 SID 변환은 소비할 때만 한다.
++    std::uint32_t At(std::int32_t index) const;
+     o::SidPool& pool_; // 모든 미리보기/연결 객체를 같은 raw 저장소에서 읽고 쓴다.
+     std::span<const o::RiftTypeRecord> types_; // 메뉴/생성/위치 판정과 같은 현재 TYPE 표다.
+     CursorDropState& drop_; // 원래 Form/타입/인자/소유자/위치의 공유 전역이다.
+-    CursorLifecycleState& lifecycle_; // 실제30SID/현재 개수/abstract TYPE의 공유 전역이다.
++    CursorLifecycleState& lifecycle_; // 실제30DWORD/현재 개수/abstract TYPE의 공유 전역이다.
+     const o::BridgeConnectState& surfaces_; // 같은 bridge/island/stalag 타입 전역이다.
+     CursorPreviewHooks hooks_; // 복원 계산을 대신하지 않는 실제 순회/가상 효과다.
+ };
+diff --git a/cpppj/src/CMakeLists.txt b/cpppj/src/CMakeLists.txt
+--- a/cpppj/src/CMakeLists.txt
++++ b/cpppj/src/CMakeLists.txt
+@@ -200,3 +200,6 @@
+ 
+ # 실제64BYTE 카메라와 Client 장기 snapshot/논리Renderer/목표를 구별한다.
+ target_sources(netstorm PRIVATE client/RawCameraView.cpp client/RawCameraView.h client/ClientCameraGlobals.cpp client/ClientCameraGlobals.h)
++
++#443은커서data-only owner와Session없는실제Cancel/Prepare연결만추가한다.
++target_sources(netstorm PRIVATE client/ClientCursorGlobals.h client/ClientCursorStateCleanup.h client/ClientCursorStateCleanup.cpp)
+diff --git a/cpppj/tests/CampaignExistingEditorCheckpointTests.cpp b/cpppj/tests/CampaignExistingEditorCheckpointTests.cpp
+--- a/cpppj/tests/CampaignExistingEditorCheckpointTests.cpp
++++ b/cpppj/tests/CampaignExistingEditorCheckpointTests.cpp
+@@ -571,3 +571,19 @@
+     { auto recovered=make();RawCampaignSession session(assets.game,assets.files,FortTemplate::Parse(input,assets.game.TypeTable()),"deferred.fort",std::move(recovered));CHECK(surface->Generation()==2 && surface->Borrowed() && gameplay.Borrowed() && snapshot()==before && !session.ExistingEditorCheckpointReady());owner->StateAuxCC()=0xffffffffU;owner->ScriptBreak()=0; } // 정상 생성/현재 외부 쓰기/반납을 같은 owner로 이어서 검증한다.
+     auto expected=before;expected[0]=0;expected[2]=0xffffffffU;CHECK(!surface->Borrowed() && !gameplay.Borrowed() && snapshot()==expected && &owner->ScriptBreak()==scriptAddress && &owner->ReconnectSaveEnd()==reconnectAddress);
+ }
++
++// prepared실제Session은같은장기커서의30DWORD/측정/배치/snap을만들거나반납하면서초기화하지않는다.
++TEST_CASE(CampaignExistingEditorCheckpoint_CursorDataPreparedBorrowAndReleasePreserveCurrentValues) {
++    std::shared_ptr<ClientGameplayGlobals> owner;const std::uint32_t* address{};
++    WithEditorInstallSession([&](RawCampaignSession& session,Client& client,const auto&,EditorFiles&) {
++        auto& data=owner->CursorGlobals();CHECK(owner==client.GameplayGlobals() && !session.HasCursorRuntimeForState() && data.Lifecycle().previews.data()==address && data.Lifecycle().previews[29]==0x87654321U && data.Lifecycle().previewCount==-7 && data.Lifecycle().currentGump==0x12345678U && data.Placement().description=="prepared-cursor" && data.SnapToGrid()==0x80000000U);
++    },true,nullptr,{},[&](Client& client,RawCampaignSessionServices&) { owner=client.GameplayGlobals();auto& data=owner->CursorGlobals();address=data.Lifecycle().previews.data();data.Lifecycle().previews[29]=0x87654321U;data.Lifecycle().previewCount=-7;data.Lifecycle().currentGump=0x12345678U;data.Placement().description="prepared-cursor";data.SnapToGrid()=0x80000000U; });
++    CHECK(owner && !owner->Borrowed() && owner->CursorGlobals().Lifecycle().previews.data()==address && owner->CursorGlobals().Lifecycle().previews[29]==0x87654321U && owner->CursorGlobals().Lifecycle().previewCount==-7 && owner->CursorGlobals().Placement().description=="prepared-cursor" && owner->CursorGlobals().SnapToGrid()==0x80000000U);
++}
++
++// World대여뒤SoundList검증이실패해도prepared커서의현재비트/문구/주소는이전값으로되돌리지않는다.
++TEST_CASE(CampaignExistingEditorCheckpoint_CursorDataPreparedFailureKeepsOwner) {
++    std::shared_ptr<ClientGameplayGlobals> owner;bool rejected{};
++    try { WithEditorInstallSession([&](auto&,auto&,const auto&,auto&) { throw std::logic_error("커서prepared실패검사의body도달오류"); },true,nullptr,{},[&](Client& client,RawCampaignSessionServices& services) { owner=client.GameplayGlobals();auto& data=owner->CursorGlobals();data.Lifecycle().previews[29]=0xffffffffU;data.Lifecycle().previewCount=-3;data.Placement().description="partial-cursor";data.SnapToGrid()=0x87654321U;services.soundNames=nullptr; }); }catch (const std::invalid_argument& error) { rejected=std::string(error.what()).find("SoundList")!=std::string::npos; }
++    CHECK(rejected && owner && !owner->Borrowed() && owner->CursorGlobals().Lifecycle().previews[29]==0xffffffffU && owner->CursorGlobals().Lifecycle().previewCount==-3 && owner->CursorGlobals().Placement().description=="partial-cursor" && owner->CursorGlobals().SnapToGrid()==0x87654321U);
++}
+diff --git a/cpppj/tests/CampaignObjectMenuTests.cpp b/cpppj/tests/CampaignObjectMenuTests.cpp
+--- a/cpppj/tests/CampaignObjectMenuTests.cpp
++++ b/cpppj/tests/CampaignObjectMenuTests.cpp
+@@ -154,7 +154,7 @@
+     session.SetSp(1,0);CHECK(!chain->SelectBuild((*row)[1]>>16,Sid{static_cast<std::uint16_t>((*row)[1])}));CHECK(ui.tells==std::vector<std::string>({"BuildNoBucks"}));CHECK(!session.CursorDropSettings().preview.value);
+     session.SetSp(1,100000);session.Cursor().SetEffects(ui.CursorEffects());const auto before=session.Sp(1);CHECK(chain->SelectBuild((*row)[1]>>16,Sid{static_cast<std::uint16_t>((*row)[1])}));
+     const auto form=session.CursorDropSettings().preview;CHECK(form.value && session.Core().pool.Slot(form)[10]==6);CHECK(Get(session.Core().pool.Slot(form),18,2)==target);CHECK(session.CursorDropSettings().costFlags==0x160 && session.Sp(1)==before);
+-    const auto preview=session.Cursor().Lifecycle().previews[0];CHECK(session.Core().pool.Slot(preview)[10]==target && (session.Core().pool.Slot(preview)[40]&8));
++    const auto preview=CursorPreviewSid(session.Cursor().Lifecycle().previews[0]);CHECK(session.Core().pool.Slot(preview)[10]==target && (session.Core().pool.Slot(preview)[40]&8));
+     auto records=session.PlayerRecords();Put(records,180+0x94,preview.value);Put(records,180+0x98,123);Put(records,180+0x8c,priest.value);Put(records,180+0x90,456); // 실제 등록 쌍 하나만 일치시키고 다른 쌍은 표식으로 보존한다.
+     session.Cursor().Cancel();ui.menus->Close();chain.reset();CHECK(!ui.menus->HasMenus());
+     CHECK(Get(records,180+0x94)==0 && Get(records,180+0x98)==0 && Get(records,180+0x8c)==priest.value && Get(records,180+0x90)==456);
+diff --git a/cpppj/tests/CampaignSessionTests.cpp b/cpppj/tests/CampaignSessionTests.cpp
+--- a/cpppj/tests/CampaignSessionTests.cpp
++++ b/cpppj/tests/CampaignSessionTests.cpp
+@@ -2154,11 +2154,11 @@
+ // 실제 메뉴 취득→현재 카메라 위치/Canon/SHP/에너지/전체 MayPlace→취소/중첩 삭제를 검사한다.
+ TEST_CASE(CampaignSession_CursorMenuUsesActualStateAndCancel) {
+     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());GameWorld world(assets.game,assets.files,std::move(fort),MissionPlayers{},"thewarbegins",external.Services(),{1024,768});auto& session=world.Session();auto core=session.Core();SessionCursorUi ui;auto& cursor=session.Cursor();cursor.SetEffects(ui.Effects());cursor.SnapToGrid()=1;SessionPriestMenuUi menuUi;auto menu=CursorMenu(session,menuUi);const Sid priest{static_cast<std::uint16_t>(session.FindPriestParticipation(1))};session.AddTechnology(1,core.types[75].assetName);session.SetSp(1,5000);
+-    CHECK(menu->SelectBuild(75,priest));auto& drop=session.CursorDropSettings();const auto form=drop.preview;CHECK(form.value && core.pool.Slot(form)[10]==6 && Get(core.pool.Slot(form),18,2)==75);CHECK(drop.lockDepth==0 && drop.costFlags==0x160 && drop.localPlayer==1);CHECK(cursor.Lifecycle().previewCount>0 && cursor.Lifecycle().previews[0].value);CHECK(cursor.Lifecycle().costImage!=0 && cursor.Lifecycle().costText==std::to_string(static_cast<int>(core.types[75].cost)));
++    CHECK(menu->SelectBuild(75,priest));auto& drop=session.CursorDropSettings();const auto form=drop.preview;CHECK(form.value && core.pool.Slot(form)[10]==6 && Get(core.pool.Slot(form),18,2)==75);CHECK(drop.lockDepth==0 && drop.costFlags==0x160 && drop.localPlayer==1);CHECK(cursor.Lifecycle().previewCount>0 && cursor.Lifecycle().previews[0]);CHECK(cursor.Lifecycle().costImage!=0 && cursor.Lifecycle().costText==std::to_string(static_cast<int>(core.types[75].cost)));
+     const auto previews=cursor.Lifecycle().previews;const auto point=CommandPlacementPoint(session,1);session.SetParticleView({137,91,0,0,1024,768},{});ui.Point(session,point,137,91);CHECK(drop.x==point.x && drop.y==point.y && drop.legal);CHECK(cursor.Placement().sourceAllowed && cursor.Placement().placementAllowed && cursor.Placement().descriptionAllowed);CHECK(session.Sp(1)==5000 && ui.sent.empty());
+     cursor.Cancel();CHECK((core.pool.Slot(form)[11]&3)!=0);CHECK(!drop.preview.value && drop.lockDepth==1 && !drop.cursorGump);CHECK(cursor.Lifecycle().previewCount==0);CHECK(session.Sp(1)==5000);
+     // 실제 생성된 임시 객체 전부가 같은 가상 삭제 사슬을 통해 반납되었는지 확인한다.
+-    for (const auto sid:previews) if (sid.value) CHECK((core.pool.Slot(sid)[11]&3)!=0);
++    for (const auto number:previews) if (number) CHECK((core.pool.Slot(CursorPreviewSid(number))[11]&3)!=0);
+     CHECK(ui.dirty>0 && ui.highlights>0 && ui.cursors.back()==1 && ui.sent.empty());
+ }
+ // 현재 잡힌 Form의 외부 삭제가 값형0 사본 대신 실제 커서를 찾아 잠긴 꼬리 정리까지 수행한다.
+@@ -2166,7 +2166,7 @@
+     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());GameWorld world(assets.game,assets.files,std::move(fort),MissionPlayers{},"thewarbegins",external.Services(),{1024,768});auto& session=world.Session();auto core=session.Core();SessionCursorUi ui;auto& cursor=session.Cursor();cursor.SetEffects(ui.Effects());SessionPriestMenuUi menuUi;auto menu=CursorMenu(session,menuUi);session.AddTechnology(1,core.types[75].assetName);session.SetSp(1,5000);const Sid priest{static_cast<std::uint16_t>(session.FindPriestParticipation(1))};CHECK(menu->SelectBuild(75,priest));auto& drop=session.CursorDropSettings();const auto form=drop.preview;const auto previews=cursor.Lifecycle().previews;drop.lockDepth=3;const auto dirty=ui.dirty;
+     CHECK(session.World().Destroy(form));CHECK((core.pool.Slot(form)[11]&3)!=0);CHECK(!drop.preview.value && drop.lockDepth==1 && !drop.cursorGump && cursor.Lifecycle().previewCount==0);CHECK(ui.dirty>dirty && session.Sp(1)==5000);
+     // 잠금이 있어도 실제 Activate1이 미리보기를 모두 지워야 한다.
+-    for (const auto sid:previews) if (sid.value) CHECK((core.pool.Slot(sid)[11]&3)!=0);
++    for (const auto number:previews) if (number) CHECK((core.pool.Slot(CursorPreviewSid(number))[11]&3)!=0);
+     cursor.Cancel();CHECK(drop.lockDepth==1 && ui.sent.empty());
+ }
+ // 실제 생산 칸 Form 취득/내려놓기/로컬 예측/비용→25바이트→서버 전체 요청/교체→같은 Builder 완료를 검사한다.
+@@ -2196,7 +2196,7 @@
+     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());ReadyCursorFactoryInput(fort);GameWorld world(assets.game,assets.files,std::move(fort),MissionPlayers{},"thewarbegins",external.Services(),{1024,768});auto& session=world.Session();auto core=session.Core();SessionCursorUi ui;auto& cursor=session.Cursor();auto& display=cursor.Display();cursor.SetEffects(ui.Effects());cursor.SnapToGrid()=1;session.SetSp(1,5000);CursorEnergyInput(session);cursor.Take(ReadyCursorFactoryForm(session),0x41);const auto point=CursorPlacementPoint(session,ui);
+     const int cameraX=point.x*16-512,cameraY=point.y*11-384;session.SetParticleView({cameraX,cameraY,0,0,1024,768},{});ui.Point(session,point,cameraX,cameraY);CHECK(cursor.Placement().screenOrigin.x==cameraX && cursor.Placement().screenOrigin.y==cameraY);FontStore fonts(assets.files,"Arial");std::vector<std::string> translated;display.SetText(fonts,[&](std::string_view key) { translated.emplace_back(key);return std::string(key); });
+     const ScreenRect clip{0,0,1024,768};auto sprites=display.Sprites(clip,0);CHECK(sprites.size()==2);if (sprites.size()!=2) return;CHECK(sprites[0].order.depth==core.types[75].zOrder && sprites[1].order.depth==core.types[75].zOrder-1);CHECK(sprites[0].order.x==static_cast<float>(point.x));CHECK(display.Sprites(clip,4).empty());
+-    const auto raw=core.pool.Slot(cursor.Lifecycle().previews[0]);const auto frame=Get(raw,36);const auto& type=core.types[75];const auto& asset=assets.game.Types()[75-kFirstAssetTypeNumber];const auto& picture=assets.game.Shapes().Blocks()[asset.block].frames[frame];const auto image=assets.game.Shapes().Decode(asset.block,frame);const auto x=static_cast<std::int16_t>(Get(raw,22,2))-cameraX,y=static_cast<std::int16_t>(Get(raw,24,2))-cameraY;const auto left=x-type.footX*16,top=y-type.footY*11;
++    const auto raw=core.pool.Slot(CursorPreviewSid(cursor.Lifecycle().previews[0]));const auto frame=Get(raw,36);const auto& type=core.types[75];const auto& asset=assets.game.Types()[75-kFirstAssetTypeNumber];const auto& picture=assets.game.Shapes().Blocks()[asset.block].frames[frame];const auto image=assets.game.Shapes().Decode(asset.block,frame);const auto x=static_cast<std::int16_t>(Get(raw,22,2))-cameraX,y=static_cast<std::int16_t>(Get(raw,24,2))-cameraY;const auto left=x-type.footX*16,top=y-type.footY*11;
+     std::vector<std::uint8_t> actual(1024*768,199);IndexedImage expected{1024,768,actual,std::vector<std::uint8_t>(actual.size(),255)};const auto color=display.Settings().goodColor;
+     const std::array<GumpLine,4> outline{{{{left,top},{x-1,top},color},{{left,y-1},{x-1,y-1},color},{{left,top},{left,y-1},color},{{x-1,top},{x-1,y-1},color}}};DrawGumpLines(expected,outline);DrawIndexedImage(expected.indices,1024,768,image,x-type.hotspotX+picture.rect.left,y-type.hotspotY+picture.rect.top,clip);sprites.front().procedure->draw(actual,1024,768,clip);CHECK(actual==expected.indices);CHECK(std::count_if(actual.begin(),actual.end(),[](std::uint8_t value) { return value!=199; })>100);
+     session.SetSp(1,8001);session.RunFrame({12.5,0,0,1},true);display.Feedback().countdown=20;Renderer renderer(1024,768);std::size_t calls{};renderer.SetExtraCollection([&](ScreenRect cut,std::uint32_t flags) { ++calls;return display.Sprites(cut,flags); });renderer.SetScene({});renderer.Draw(actual,1024);renderer.Present([](ScreenRect) {});CHECK(calls==1 && display.Feedback().countdown==19 && display.Feedback().highlight==std::bit_cast<std::uint32_t>(12.5f));const auto countdown=display.Feedback().countdown;const auto snapshot=renderer.SceneImage();CHECK(display.Feedback().countdown==countdown);
+@@ -2229,9 +2229,9 @@
+     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());GameWorld world(assets.game,assets.files,std::move(fort),MissionPlayers{},"thewarbegins",external.Services(),{1024,768});auto& session=world.Session();auto core=session.Core();SessionCursorUi ui;auto& cursor=session.Cursor();cursor.SetEffects(ui.Effects());cursor.SnapToGrid()=1;session.SetParticleView({0,0,0,0,1024,768},{});ui.mouse={1616,1221};cursor.Update(ui.mouse.x,ui.mouse.y);const auto priest=Sid{static_cast<std::uint16_t>(session.FindPriestParticipation(1))};
+     // 각 실제 원본 TYPE를 가진 Form은 명시 입력이며 메뉴 제공 행/생산 완료를 대신하지 않는다.
+     for (const std::uint32_t type:{128U,140U}) {
+-        const auto form=cursor.Contents().Create(priest,type,0,0x20,0x10,0);cursor.Take(form,0x160);auto& drop=session.CursorDropSettings();const auto token=drop.cursorGump;auto* old=dynamic_cast<CursorRangeProcess*>(core.kernel.Get(token));CHECK(old && token);if (!old) continue;const auto oldForm=old->Form();const auto parent=old->Parent();CHECK(parent==cursor.Lifecycle().previews[0]);const auto baseline=core.kernel.Size();const auto rotations=core.processState.typeRotation;cursor.Rotate(2);CHECK(drop.direction==2 && drop.lockDepth==0);
+-        auto* current=dynamic_cast<CursorRangeProcess*>(core.kernel.Get(drop.cursorGump));CHECK(current && current->Parent()==cursor.Lifecycle().previews[0]);CHECK(core.kernel.Size()==baseline);
+-        if (core.types[type].group==1 || type==session.CursorRangeSettings().targeting.windArcherType) { CHECK(core.processState.typeRotation==rotations+1);CHECK(current && FindAttachedProcess(core.pool,cursor.Lifecycle().previews[0],51)==current->Form()); }
++        const auto form=cursor.Contents().Create(priest,type,0,0x20,0x10,0);cursor.Take(form,0x160);auto& drop=session.CursorDropSettings();const auto token=drop.cursorGump;auto* old=dynamic_cast<CursorRangeProcess*>(core.kernel.Get(token));CHECK(old && token);if (!old) continue;const auto oldForm=old->Form();const auto parent=old->Parent();CHECK(parent==CursorPreviewSid(cursor.Lifecycle().previews[0]));const auto baseline=core.kernel.Size();const auto rotations=core.processState.typeRotation;cursor.Rotate(2);CHECK(drop.direction==2 && drop.lockDepth==0);
++        auto* current=dynamic_cast<CursorRangeProcess*>(core.kernel.Get(drop.cursorGump));CHECK(current && current->Parent()==CursorPreviewSid(cursor.Lifecycle().previews[0]));CHECK(core.kernel.Size()==baseline);
++        if (core.types[type].group==1 || type==session.CursorRangeSettings().targeting.windArcherType) { CHECK(core.processState.typeRotation==rotations+1);CHECK(current && FindAttachedProcess(core.pool,CursorPreviewSid(cursor.Lifecycle().previews[0]),51)==current->Form()); }
+         else CHECK(drop.cursorGump==token && current && current->Form()==oldForm && core.processState.typeRotation==rotations);
+         cursor.Cancel();CHECK(!session.CursorDropSettings().preview.value && !session.CursorDropSettings().cursorGump);
+     }
+@@ -2882,7 +2882,7 @@
+                     const auto leavesCannonSpace=[&] { //사용자가계획한136,120의캐논발자국을비워두도록다리후보만선택한다.
+                         const auto& previews=session.Cursor().Lifecycle();const auto& cannon=core.types[128];
+                         for (std::int32_t index=0;index<previews.previewCount;++index) { // 실제 커서가 표시한 다리 셀만 읽고 공간/방향/원본 배치 결과를 바꾸지 않는다.
+-                            const auto raw=core.pool.Slot(previews.previews[static_cast<std::size_t>(index)]);if (raw[10]!=82) continue;
++                            const auto raw=core.pool.Slot(CursorPreviewSid(previews.previews[static_cast<std::size_t>(index)]));if (raw[10]!=82) continue;
+                             const auto x=std::bit_cast<float>(Get(raw,14)),y=std::bit_cast<float>(Get(raw,18));if (x>=136-cannon.footX+1 && x<=136 && y>=120-cannon.footY+1 && y<=120) return false;
+                         }
+                         return true;
+diff --git a/cpppj/tests/ClientCursorGlobalsTests.cpp b/cpppj/tests/ClientCursorGlobalsTests.cpp
+new file mode 100644
+--- /dev/null
++++ b/cpppj/tests/ClientCursorGlobalsTests.cpp
+@@ -0,0 +1,67 @@
++// Native커서데이터의장기수명/DWORD목록/실제첫메뉴Cancel꼬리를창없이검사한다.
++#include "RawSceneSupport.h"
++#include "DudeSpawnSupport.h"
++#include "client/ClientCursorGlobals.h"
++#include "client/ClientCursorStateCleanup.h"
++#include "client/ClientGameplayGlobals.h"
++#include "client/ClientMain.h"
++#include "client/RawCursorPreviews.h"
++#include <algorithm>
++#include <type_traits>
++
++using namespace netstorm::client;
++using namespace netstorm::test::rawscene;
++namespace { // 실제장치없이Native전역과선택된외부효과만관측한다.
++// Client::Run을시작하지않는보호파일읽기옵션이다.
++ClientOptions CursorOwnerOptions() { ClientOptions options;options.gameDirectory=std::filesystem::path(__FILE__).parent_path().parent_path().parent_path()/"originals";options.noAudio=true;return options; }
++// 현재원래사각형을네좌표로그대로대조한다.
++bool CursorRect(ScreenRect rect,int l,int t,int r,int b) { return rect.left==l && rect.top==t && rect.right==r && rect.bottom==b; }
++}
++
++//30칸의높은WORD도같은장기dataowner에보관하며prepared대여/반납은변경하지않는다.
++TEST_CASE(ClientCursorGlobals_DwordWidthAndPreparedOwnerIdentity) {
++    static_assert(sizeof(CursorLifecycleState::previews)==30*4);static_assert(std::is_same_v<decltype(CursorLifecycleState::previews),std::array<std::uint32_t,30>>);ClientGameplayGlobals first,second;auto& state=first.CursorGlobals();auto* address=state.Lifecycle().previews.data();
++    state.Lifecycle().previews[0]=0x12345678U;state.Lifecycle().previews[29]=0xffffffffU;state.Lifecycle().previewCount=-7;state.Lifecycle().currentGump=0x76543210U;state.Placement().description="same-native-state";state.SnapToGrid()=0x80000000U;first.cursor.cursorGump=0x13579bdfU;first.cursor.legalGump=0x2468ace0U;
++    { auto use=first.AcquirePrepared();CHECK(first.Borrowed() && state.Lifecycle().previews.data()==address && state.Lifecycle().previews[0]==0x12345678U && state.Lifecycle().previews[29]==0xffffffffU && state.Lifecycle().previewCount==-7 && state.SnapToGrid()==0x80000000U); }
++    CHECK(!first.Borrowed() && state.Lifecycle().previews.data()==address && state.Placement().description=="same-native-state" && first.cursor.cursorGump==0x13579bdfU && first.cursor.legalGump==0x2468ace0U && state.Lifecycle().currentGump==0x76543210U);CHECK(second.CursorGlobals().Lifecycle().previews[0]==0 && second.CursorGlobals().SnapToGrid()==0);
++}
++
++// 기존일반Runtime의fresh/반납호환은같은주소에서수행하며NativeCancel효과와구별한다.
++TEST_CASE(ClientCursorGlobals_GeneralFreshKeepsAddressesAndCameraBinding) {
++    ClientGameplayGlobals globals;auto& state=globals.CursorGlobals();const auto* pixels=&globals.Camera().Snapshot().pixels;state.Placement().sharedScreenOrigin=pixels;auto* values=state.Lifecycle().previews.data();state.Lifecycle().previews[29]=0xffffffffU;state.Lifecycle().previewCount=13;state.Placement().description="old";state.SnapToGrid()=17;
++    { auto use=globals.Acquire();CHECK(state.Lifecycle().previews.data()==values && state.Lifecycle().previews[29]==0 && state.Lifecycle().previewCount==0 && state.SnapToGrid()==0 && state.Placement().description.empty() && state.Placement().sharedScreenOrigin==pixels);state.Lifecycle().previewCount=7;state.SnapToGrid()=19; }
++    CHECK(state.Lifecycle().previews.data()==values && state.Lifecycle().previewCount==0 && state.SnapToGrid()==0 && state.Placement().sharedScreenOrigin==pixels);
++}
++
++// 잠금1/원본preview0에서도Prepare뒤현재count를읽고삭제효과뒤에도현재count/다음DWORD를읽는다.
++TEST_CASE(ClientCursorGlobals_NativeCancelRequeriesCountAndProcessThenClearsAllDwords) {
++    Scene scene(OriginalEdition::Patch1078);CursorDropState drop;drop.lockDepth=1;drop.cursorGump=77;ClientCursorGlobals state;state.Lifecycle().currentGump=17;drop.legalGump=19;state.Lifecycle().previews[29]=0x87654321U;std::vector<std::uint32_t> order;CursorLifecycleHooks hooks;
++    hooks.prepareCursor=[&] { order.push_back(1);state.Lifecycle().previewCount=1;state.Lifecycle().previews[0]=100; };
++    hooks.destroy=[&](Sid sid,std::uint32_t flags) { CHECK(flags==0);order.push_back(sid.value);if (sid.value==100) { state.Lifecycle().previewCount=2;state.Lifecycle().previews[1]=101;drop.cursorGump=99; }else state.Lifecycle().previewCount=1; };
++    hooks.removeProcess=[&](std::uint32_t process,std::uint32_t flags) { CHECK(process==99 && flags==0);order.push_back(process); };RawCursorLifecycle lifecycle(scene.pool,scene.types,drop,state.Lifecycle(),hooks);lifecycle.Cancel();
++    const std::vector<std::uint32_t> expected{1,100,101,99};CHECK(order==expected && drop.lockDepth==1 && drop.preview.value==0 && drop.cursorGump==0 && drop.legalGump==19 && state.Lifecycle().currentGump==17 && state.Lifecycle().previewCount==0);CHECK(std::all_of(state.Lifecycle().previews.begin(),state.Lifecycle().previews.end(),[](auto value) { return value==0; }));
++}
++
++// 호스트SID16경계밖값을다른유효번호로접지않고부분효과/원래DWORD를보존해거부한다.
++TEST_CASE(ClientCursorGlobals_HighWordDoesNotAliasValidPreview) {
++    Scene scene(OriginalEdition::Patch1078);CursorDropState drop;ClientCursorGlobals state;state.Lifecycle().previews[0]=0x10064U;state.Lifecycle().previewCount=1;std::uint32_t prepared{},destroyed{};CursorLifecycleHooks hooks;hooks.prepareCursor=[&] { ++prepared; };hooks.destroy=[&](Sid,std::uint32_t) { ++destroyed; };
++    RawCursorLifecycle lifecycle(scene.pool,scene.types,drop,state.Lifecycle(),hooks);CHECK(Throws([&] { lifecycle.Activate(1); }));CHECK(prepared==1 && destroyed==0 && state.Lifecycle().previewCount==1 && state.Lifecycle().previews[0]==0x10064U);
++}
++
++// Session없는실제Client도현재snapshot→실제Renderer dirty두요청→목록/잠금꼬리를전부실행한다.
++TEST_CASE(ClientCursorGlobals_FirstMenuCancelUsesActualProjectAndCurrentRenderer) {
++    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);Client client(CursorOwnerOptions());const auto globals=client.GameplayGlobals();auto surface=MakeRawSurfaceStorage(assets.game,globals->Authority());auto& state=globals->CursorGlobals();auto& camera=globals->Camera();std::uint32_t redraw{},revision{};camera.InitializeNativeRenderer(1024,768,256,redraw,revision);SetCameraViewWorld(camera.Snapshot(),5,5);globals->cursor.x=10;globals->cursor.y=10;globals->cursor.screenX=777;globals->cursor.screenY=888;globals->cursor.legalGump=0x12345678U;state.Lifecycle().currentGump=0x76543210U;state.Lifecycle().previews[29]=0xffffffffU;state.Placement().hotspotX=12;state.Placement().hotspotY=-7;globals->selection.mouse={-33,65};
++    Renderer first(128,128),second(128,128);Renderer* current=&first;std::uint32_t deliveries{};std::vector<std::uint8_t> pixels(128*128);first.Draw(pixels,128);first.Present([](ScreenRect) {});second.Draw(pixels,128);second.Present([](ScreenRect) {});auto provider=[&]() -> Renderer& { ++deliveries;return *current; };
++    CancelClientCursorForState(client,*surface,{},provider);CHECK(deliveries==2 && globals->cursor.lockDepth==1 && globals->cursor.preview.value==0 && globals->cursor.cursorGump==0 && state.Lifecycle().previewCount==0 && state.Placement().sharedScreenOrigin==&camera.Snapshot().pixels);auto dirty=first.Draw(pixels,128);CHECK(dirty.size()==1 && CursorRect(dirty[0],78,53,86,69));first.Present([](ScreenRect) {});CHECK(second.Draw(pixels,128).empty());
++    current=&second;SetCameraViewWorld(camera.Snapshot(),6,6);CancelClientCursorForState(client,*surface,{},provider);CHECK(deliveries==4 && first.Draw(pixels,128).empty());dirty=second.Draw(pixels,128);CHECK(dirty.size()==1 && CursorRect(dirty[0],62,42,70,58));CHECK(globals->cursor.screenX==777 && globals->cursor.screenY==888 && globals->selection.mouse.x==-33 && globals->selection.mouse.y==65 && state.Lifecycle().currentGump==0x76543210U && globals->cursor.legalGump==0x12345678U && state.Placement().hotspotX==12 && state.Placement().hotspotY==-7);CHECK(std::all_of(state.Lifecycle().previews.begin(),state.Lifecycle().previews.end(),[](auto value) { return value==0; }));
++}
++
++// 새 미리보기로 덮어쓸 DWORD는 SID16으로 먼저 접거나 진단하지 않는다.
++TEST_CASE(ClientCursorGlobals_CreateOverwritesInactiveDwordsAtActualAppend) {
++    Scene scene(OriginalEdition::Patch1078);CursorDropState drop;ClientCursorGlobals state;BridgeConnectState surfaces; // 같은 풀과 실제 데이터만 제공한다.
++    state.Lifecycle().previews[1]=0xffffffffU;state.Lifecycle().previews[29]=0x87654321U;std::uint16_t born=100;std::uint32_t prepared{};CursorPreviewHooks hooks; // 이전 비활성 값과 실제 생성 번호를 구별한다.
++    hooks.queryCursor=[] {};hooks.prepareCursor=[&] { ++prepared; };hooks.walk=[](CanonTypeQuery,const std::function<bool(CursorCanonCell)>& visit) { visit({0,0,0});visit({0,1,0}); }; // 명시된 두 Canon 칸만 공급한다.
++    hooks.create=[&](std::uint32_t type,std::uint32_t flags) { CHECK(type==0 && flags==2);return Sid{born++}; };hooks.setWord=[](Sid,std::uint32_t) {};hooks.setOwner=[](Sid,std::uint32_t) {};hooks.hasHitPoints=[](Sid) { return false; }; // 가상 효과의 독립 입력이며 생성 산술을 대신하지 않는다.
++    RawCursorPreviews previews(scene.pool,scene.types,drop,state.Lifecycle(),surfaces,hooks);previews.Create();
++    CHECK(prepared==1 && born==102 && state.Lifecycle().previewCount==2 && state.Lifecycle().previews[0]==100 && state.Lifecycle().previews[1]==101 && state.Lifecycle().previews[29]==0x87654321U);
++}
+diff --git a/cpppj/tests/CMakeLists.txt b/cpppj/tests/CMakeLists.txt
+--- a/cpppj/tests/CMakeLists.txt
++++ b/cpppj/tests/CMakeLists.txt
+@@ -2169,3 +2169,6 @@
+ # 새 기대값은 보호 PE/x86 에뮬레이터의 독립 관측16행이다.
+ set_source_files_properties(CameraViewTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_CAMERA_VIEW_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/camera-view-x86.tsv\"")
+ target_sources(netstorm_tests PRIVATE CameraViewTests.cpp)
++
++#443의장기커서상태/DWORD폭/실제Cancel꼬리검사다.
++target_sources(netstorm_tests PRIVATE ClientCursorGlobalsTests.cpp)
+diff --git a/cpppj/tests/ConnectionActivitySessionTests.cpp b/cpppj/tests/ConnectionActivitySessionTests.cpp
+--- a/cpppj/tests/ConnectionActivitySessionTests.cpp
++++ b/cpppj/tests/ConnectionActivitySessionTests.cpp
+@@ -1,3 +1,4 @@
++#include "client/CampaignCursorClientEffects.h"
+ // 실제 Client 장기 표와 Session의 일반64h 수신/타이머/현재 모드 소비를 창 없이 검사한다.
+ #include "DudeSpawnSupport.h"
+ #include "client/ClientMain.h"
+@@ -163,7 +164,7 @@
+ 
+ // 실제 Client의 snapshot/논리Renderer/목표는 일반 Session 생성·반납·재대여에서 초기화하지 않는다.
+ TEST_CASE(CameraView_ActualClientSessionAliasesFractionAndCurrentCursorReads) {
+-    ActivitySessionDevices devices;auto& camera=devices.client.GameplayGlobals()->Camera();std::uint32_t redraw{},revision{};camera.InitializeNativeRenderer(1024,768,256,redraw,revision);SetCameraViewWorld(camera.RendererView(),1.25F,2.5F);camera.CopyRendererSnapshot();camera.RequestPixels(71,83);const auto before=std::bit_cast<CameraViewWords>(camera.Snapshot());const auto requested=camera.Target().pixels;
++    ActivitySessionDevices devices;auto& camera=devices.client.GameplayGlobals()->Camera();std::uint32_t redraw{},revision{};camera.InitializeNativeRenderer(1024,768,256,redraw,revision);SetCameraViewWorld(camera.RendererView(),1.25F,2.5F);camera.CopyRendererSnapshot();camera.RequestPixels(71,83);const auto before=std::bit_cast<CameraViewWords>(camera.Snapshot());const auto requested=camera.Target().pixels;Renderer nativeRenderer(1024,768);
+     for (std::uint32_t index=0;index<2;++index) { // 같은Client owner를실제Load한두Runtime이차례로빌린다.
+         std::uint32_t invalidated{},resets{};CameraHomeState home;home.width=1024;home.height=768;std::unique_ptr<RawCampaignSession> session;auto services=devices.Services(false);
+         services.install.resetCamera=[&] { CHECK(session);++resets;session->ResetCamera(home,[&](std::int32_t x,std::int32_t y) { camera.RequestPixels(x,y);camera.ApplyPixelsToRendererAndSnapshot(x,y); }); }; // Load의실제Reset/Home본문과카메라setter를연결하며원점효과를빈함수로버리지않는다.
+@@ -174,6 +175,9 @@
+         CHECK(std::bit_cast<CameraViewWords>(camera.Snapshot())==before && camera.Target().pixels[0]==71 && cursor.Placement().ScreenOriginX()==20 && cursor.Placement().ScreenOriginY()==27);auto& drop=session->CursorDropSettings();drop.lockDepth=1;cursor.Placement().hotspotX=cursor.Placement().hotspotY=cursor.Placement().imageWidth=cursor.Placement().imageHeight=0;cursor.Update(0,0);CHECK(drop.x==1.25F && drop.y==2.5F);
+         SurfaceDisplayHooks display;display.invalidate=[&](SquidDisplayRect rect,std::uint32_t flags) { CHECK(rect.left==0 && rect.top==0 && rect.right==640 && rect.bottom==480 && flags==0);++invalidated; };session->SetParticleView({20,27,0,0,640,480},display,false);CHECK(invalidated==1); // 장치연결전pending전체갱신을실제현재장치에한번전달한다.
+         SetCameraViewWorld(camera.Snapshot(),1.5F,2.75F);session->SetParticleView({24,30,0,0,640,480},display,false);CHECK(invalidated==2);cursor.Update(0,0);CHECK(drop.x==1.5F && drop.y==2.75F && cursor.Placement().ScreenOriginX()==24 && cursor.Placement().ScreenOriginY()==30);SetCameraViewWorld(camera.Snapshot(),1.25F,2.5F);
++        auto& data=devices.client.GameplayGlobals()->CursorGlobals();CHECK(&cursor.Lifecycle()==&data.Lifecycle() && &cursor.Placement()==&data.Placement() && &cursor.SnapToGrid()==&data.SnapToGrid());data.SnapToGrid()=1;cursor.Update(0,0);CHECK(drop.x==1 && drop.y==2);data.SnapToGrid()=0; // 같은현재DWORD의변경을실제RawCursorPosition이소비한다.
++        CampaignCursorEffects effects;effects.placement.invalidate=MakeClientCursorPrepareHooks(devices.client,[&]() -> Renderer& { return nativeRenderer; }).invalidate;cursor.SetEffects(std::move(effects));const auto local=drop.localPlayer,battle=drop.battle,blocked=drop.blocked;drop.localPlayer=57;drop.battle=59;drop.blocked=61;
++        CHECK(session->HasCursorRuntimeForState());session->CancelCursorForState();CHECK(drop.localPlayer==57 && drop.battle==59 && drop.blocked==61 && drop.lockDepth==1 && data.Lifecycle().previewCount==0);drop.localPlayer=local;drop.battle=battle;drop.blocked=blocked; // NativeCancel에는외곽game.prepare의Player/모드동기화가들어가지않는다.
+     }
+     CHECK(std::bit_cast<CameraViewWords>(camera.Snapshot())==before && camera.Target().pixels[1]==83 && !devices.client.GameplayGlobals()->Borrowed());
+ }
+diff --git a/cpppj/tests/CursorActionsTests.cpp b/cpppj/tests/CursorActionsTests.cpp
+--- a/cpppj/tests/CursorActionsTests.cpp
++++ b/cpppj/tests/CursorActionsTests.cpp
+@@ -30,21 +30,21 @@
+     // 이전 관측 결과를 다음 독립 입력에 넘기지 않는다.
+     void Prepare(std::vector<std::uint32_t> values) {
+         input=std::move(values);drop={};life={};trace.clear();types[100].group=std::bit_cast<std::int32_t>(input[Group]);types[101].group=1;
+-        drop.lockDepth=input[Depth];drop.direction=input[Direction];drop.legalGump=input[Gump];drop.type=input[Selected];drop.cursorGump=2;life.abstractType=100;life.previews[0]=Sid{100};special=input[Special];
++        drop.lockDepth=input[Depth];drop.direction=input[Direction];drop.legalGump=input[Gump];drop.type=input[Selected];drop.cursorGump=2;life.abstractType=100;life.previews[0]=100;special=input[Special];
+     }
+     // 재진입 변경만 같은 실제 저장소에 적용하고 부모 계산은 C++에 맡긴다.
+     CursorActionHooks Hooks() {
+         CursorActionHooks hooks;
+         hooks.activate=[this](std::uint32_t force) { Event("A",{force});if (input[Activate]==1) drop.lockDepth=3;if (input[Activate]==2) drop.direction=0xfffffff9U;if (input[Activate]==3) { life.abstractType=101;drop.type=special; } };
+-        hooks.createPreviews=[this] { Event("B");if (input[Create]==1) drop.legalGump=9;if (input[Create]==2) drop.lockDepth=5;if (input[Create]==3) { life.previews[0]=Sid{101};types[100].group=1; } };
++        hooks.createPreviews=[this] { Event("B");if (input[Create]==1) drop.legalGump=9;if (input[Create]==2) drop.lockDepth=5;if (input[Create]==3) { life.previews[0]=101;types[100].group=1; } };
+         hooks.selectCursor=[this](std::uint32_t cursor) { Event("K",{cursor});if (input[Select]) life.abstractType=101; };
+         hooks.sound=[this](std::string_view text) { CHECK(text=="rotatepiece.wav");Event("S:rotatepiece.wav",{0,0,0,0,0});if (input[Sound]==1) drop.lockDepth=1;if (input[Sound]==2) life.abstractType=101; };
+-        hooks.removeRange=[this](Sid parent,std::uint32_t type) { Event("D",{parent.value,type,0,1});if (input[Remove]==1) life.previews[0]=Sid{102};if (input[Remove]==2) { life.abstractType=100;types[100].group=2; } };
++        hooks.removeRange=[this](Sid parent,std::uint32_t type) { Event("D",{parent.value,type,0,1});if (input[Remove]==1) life.previews[0]=102;if (input[Remove]==2) { life.abstractType=100;types[100].group=2; } };
+         hooks.createRange=[this](Sid parent,std::uint32_t form) { Event("G",{parent.value,form});return input[Range] ? 1U : 0U; };return hooks;
+     }
+     // 관측된 전역과 같은 순서로 현재 DWORD를 읽는다.
+     std::vector<std::uint32_t> Values() const {
+-        return {drop.lockDepth,drop.direction,drop.legalGump,drop.type,life.previews[0].value,drop.cursorGump,life.abstractType,std::bit_cast<std::uint32_t>(types[100].group),std::bit_cast<std::uint32_t>(types[101].group)};
++        return {drop.lockDepth,drop.direction,drop.legalGump,drop.type,life.previews[0],drop.cursorGump,life.abstractType,std::bit_cast<std::uint32_t>(types[100].group),std::bit_cast<std::uint32_t>(types[101].group)};
+     }
+ };
+ }
+diff --git a/cpppj/tests/CursorLifecycleTests.cpp b/cpppj/tests/CursorLifecycleTests.cpp
+--- a/cpppj/tests/CursorLifecycleTests.cpp
++++ b/cpppj/tests/CursorLifecycleTests.cpp
+@@ -50,7 +50,7 @@
+         types[100].flags2=values[TypeFlags];types[100].cost=std::bit_cast<float>(values[CostBits]);drop.type=state.abstractType=100;
+         drop.lockDepth=values[Lock];drop.inputFlags=values[OldWord];drop.costFlags=values[Flags];drop.preview=Sid{static_cast<std::uint16_t>(values[Operation]==1 ? values[Preview] : 0)};
+         drop.cursorGump=values[Operation]==1 ? 1U : 0U;state.previewCount=values[Operation]==2 ? std::bit_cast<std::int32_t>(values[Preview]) : 2;
+-        state.previews[0]=Sid{100};state.previews[1]=Sid{101};state.warningFont=17;state.costFont=19;
++        state.previews[0]=100;state.previews[1]=101;state.warningFont=17;state.costFont=19;
+     }
+     // 원본 실행기와 같은 외부 입력/효과만 공급한다. 수명 분기는 C++ 몸체가 계산한다.
+     CursorLifecycleHooks Hooks() {
+@@ -64,7 +64,7 @@
+         hooks.destroy=[this](Sid sid,std::uint32_t flags) { Event("K",{sid.value,flags}); };hooks.removeProcess=[this](std::uint32_t process,std::uint32_t flags) { Event("R",{process,flags}); };
+         hooks.sound=[this](std::string_view name) { Event(std::string("S:")+std::string(name),{0,0,0,0,0}); };hooks.addLocalSp=[this](float delta) { Event("A",{std::bit_cast<std::uint32_t>(delta)}); };
+         hooks.defaultArgument=[](std::uint32_t type) { CHECK(type==100);return 11U; };
+-        hooks.createPreviews=[this] { Event("B");state.previews[0]=Sid{100};state.previews[1]=Sid{101};state.previewCount=2;drop.legalGump=input[LegalGump] ? 44U : 0U; };
++        hooks.createPreviews=[this] { Event("B");state.previews[0]=100;state.previews[1]=101;state.previewCount=2;drop.legalGump=input[LegalGump] ? 44U : 0U; };
+         hooks.createMana=[this](Sid first,std::uint32_t flags) { Event("M",{first.value,flags});state.currentGump=input[ManaGump] ? 45U : 0U;return input[Mana] ? 1U : 0U; };
+         hooks.createRange=[this](Sid first,std::uint32_t flags) { Event("G",{first.value,flags});return 2U; };
+         hooks.processEvent=[this](std::uint32_t process,std::uint32_t event,std::uint32_t first,std::uint32_t second) { Event("E",{process,event,first,second}); };
+@@ -92,7 +92,7 @@
+         for (const auto value:state.warningHeights) values.push_back(static_cast<std::uint32_t>(value));
+         for (const auto value:state.warningContext) values.push_back(value);
+         for (const auto value:state.costContext) values.push_back(value);
+-        for (const auto sid:state.previews) values.push_back(sid.value);
++        for (const auto sid:state.previews) values.push_back(sid);
+         values.push_back(state.abstractType);values.push_back(state.costImage);std::string result;
+         // 원문의 DWORD 순서를 유지한다.
+         for (const auto value:values) result+=(result.empty() ? "" : ",")+std::to_string(value);return result;
+diff --git a/cpppj/tests/CursorPlacementTests.cpp b/cpppj/tests/CursorPlacementTests.cpp
+--- a/cpppj/tests/CursorPlacementTests.cpp
++++ b/cpppj/tests/CursorPlacementTests.cpp
+@@ -56,7 +56,7 @@
+         lifecycle.currentGump=values[OldGump] ? 1U : 0U;drop.legalGump=2;state.bounds={3,7,43,51};state.hotspotX=44;state.hotspotY=45;state.imageWidth=91;state.imageHeight=93;
+         drop.type=lifecycle.abstractType=100;drop.argument=7;drop.direction=3;drop.preview=Sid{50};drop.costFlags=values[CursorFlags];state.placementFlags=values[PlacementFlags];drop.cursorGump=values[Mana] ? 1U : 0U;
+         drop.x=std::bit_cast<float>(values[X]);drop.y=std::bit_cast<float>(values[Y]);drop.localPlayer=0x123401;drop.screenX=-3;drop.screenY=47;
+-        state.labelSpacing=std::bit_cast<std::int32_t>(values[Spacing]);state.obstruction=values[Obstruction];state.acceptEvent=0x123456;state.screenOrigin={-17,31};state.description="old";lifecycle.previews[0]=Sid{100};
++        state.labelSpacing=std::bit_cast<std::int32_t>(values[Spacing]);state.obstruction=values[Obstruction];state.acceptEvent=0x123456;state.screenOrigin={-17,31};state.description="old";lifecycle.previews[0]=100;
+         types[100].footX=std::bit_cast<std::int32_t>(values[FootX]);types[100].footY=std::bit_cast<std::int32_t>(values[FootY]);types[100].flags1=values[Flags1];types[100].flags2=values[Flags2];
+         types[101].footX=7;types[101].footY=9;types[101].flags1=values[Flags1];types[101].flags2=4;
+         const std::array<std::array<std::uint32_t,4>,3> sizes{{{35,17,49,23},{0xfffffffd,0xfffffff9,0xfffffff5,0xfffffff3},{0x7fffffff,0x80000001,0x7ffffffd,0x80000003}}};
+diff --git a/cpppj/tests/CursorPreviewBindingSupport.h b/cpppj/tests/CursorPreviewBindingSupport.h
+--- a/cpppj/tests/CursorPreviewBindingSupport.h
++++ b/cpppj/tests/CursorPreviewBindingSupport.h
+@@ -3,6 +3,7 @@
+ #include "client/PreviewDraw.h"
+ #include "client/RawCursorPlacement.h"
+ #include "o/RawBridgeConnect.h"
++#include <algorithm>
+ 
+ namespace netstorm::test::previewbinding {
+ // 실제 배치 검사 격자와 커서 상태를 테스트 수명 동안 소유한다.
+@@ -16,7 +17,7 @@
+     void Collection(const client::PreviewCollectionState& c) {
+         drop.lockDepth=c.lockDepth;drop.localPlayer=c.localPlayer;drop.x=c.x;drop.y=c.y;drop.legal=!c.legal;
+         lifecycle.abstractType=c.type;lifecycle.currentGump=c.parentGump;lifecycle.previewCount=c.pieceCount;
+-        std::copy(c.pieces.begin(),c.pieces.end(),lifecycle.previews.begin());
++        std::transform(c.pieces.begin(),c.pieces.end(),lifecycle.previews.begin(),[](o::Sid sid) { return std::uint32_t(sid.value); }); // 동일fixture값만DWORD저장소에공급한다.
+         placement.placementAllowed=c.legal;surfaces.islandType=c.specialTypeA;surfaces.stalagType=c.specialTypeB;
+     }
+     // 표시기의 고정 입력을 해당 원본 주소의 실제 저장소에 공급한다.
+diff --git a/cpppj/tests/CursorPreviewSupport.h b/cpppj/tests/CursorPreviewSupport.h
+--- a/cpppj/tests/CursorPreviewSupport.h
++++ b/cpppj/tests/CursorPreviewSupport.h
+@@ -65,7 +65,7 @@
+         for (const auto sid:{50,51,100,101,102,103,104}) Raw(static_cast<std::uint16_t>(sid));
+         pool.AllocatedBytes(Sid{50})[30]=static_cast<std::uint8_t>(values[Quality]);pool.AllocatedBytes(Sid{51})[30]=3;
+         // 첫 SID가 생성 여부를 정한다. 현재 개수는 별도로 유지한다.
+-        for (std::size_t index=0;index<5;++index) life.previews[index]=Sid{static_cast<std::uint16_t>(values[Existing] ? 100+index : 0)};
++        for (std::size_t index=0;index<5;++index) life.previews[index]=static_cast<std::uint16_t>(values[Existing] ? 100+index : 0);
+         life.previewCount=values[Existing] ? 5 : static_cast<std::int32_t>(values[Prefix]);life.abstractType=drop.type=100;drop.argument=7;drop.direction=3;drop.preview=Sid{50};drop.localPlayer=1;
+         drop.x=std::bit_cast<float>(values[X]);drop.y=std::bit_cast<float>(values[Y]);drop.costFlags=values[Chain] ? 0x40U : 0U;drop.screenX=-3;drop.screenY=47;
+         life.warningWidth=35;life.warningHeight=17;drop.cursorWidth=49;life.costHeight=23;placementState.screenOrigin={-17,31};surfaces.bridgeType=99;surfaces.islandType=91;surfaces.stalagType=92;
+@@ -78,7 +78,7 @@
+         if (input[Mutation]==1) { life.abstractType=drop.type=101;drop.argument=99;drop.localPlayer=2;drop.x=-3.25f;drop.y=4.75f; }
+         if (input[Mutation]==4) {
+             // 실제로 재사용 가능한 목록을 Query 경계의 독립 입력으로 공급한다.
+-            for (std::size_t index=0;index<5;++index) life.previews[index]=Sid{static_cast<std::uint16_t>(100+index)};
++            for (std::size_t index=0;index<5;++index) life.previews[index]=static_cast<std::uint16_t>(100+index);
+             life.previewCount=5;
+         }
+     }
+@@ -102,13 +102,13 @@
+         hooks.hasHitPoints=[this](Sid sid) { Event("H",{sid.value});return input[Hp]!=0; };
+         hooks.setHitPoints=[this](Sid sid,std::int32_t value) { Event("Z",{sid.value,static_cast<std::uint32_t>(value)});Put(pool.AllocatedBytes(sid),26,static_cast<std::uint32_t>(value)); };
+         hooks.frames=[this](std::uint32_t type)->const RiftTypeFrames& { Event("F",{type});return frames; };
+-        hooks.connect=[this](Sid sid,std::span<Sid> output) {
++        hooks.connect=[this](Sid sid,std::span<std::uint32_t> output) {
+             const auto raw=pool.Slot(sid);const float x=std::bit_cast<float>(Get(raw,14,4)),y=std::bit_cast<float>(Get(raw,18,4));
+             Event("B",{sid.value,Get(raw,14,4),Get(raw,18,4),Get(raw,22,2),Get(raw,24,2),Get(raw,36,4),static_cast<std::uint32_t>(life.previewCount)});
+             // 4213b0의 실제 몸체는 별도 관찰 범위다. 여기서는 입력 위치와 SID만 공급한다.
+             for (std::uint32_t index=0;index<input[Connectors];++index) {
+                 const auto target=nextConnector++;Raw(target,90);auto data=pool.AllocatedBytes(Sid{target});
+-                Put(data,14,std::bit_cast<std::uint32_t>(x+static_cast<float>(static_cast<int>(index%2)*2-1)));Put(data,18,std::bit_cast<std::uint32_t>(y+static_cast<float>(static_cast<int>(index%3)-1)));output[index]=Sid{target};
++                Put(data,14,std::bit_cast<std::uint32_t>(x+static_cast<float>(static_cast<int>(index%2)*2-1)));Put(data,18,std::bit_cast<std::uint32_t>(y+static_cast<float>(static_cast<int>(index%3)-1)));output[index]=target;
+             }
+             return static_cast<std::int32_t>(input[Connectors]);
+         };
+@@ -132,7 +132,7 @@
+         for (const auto value:placementState.bounds) values.push_back(static_cast<std::uint32_t>(value));
+         values.insert(values.end(),{static_cast<std::uint32_t>(placementState.hotspotX),static_cast<std::uint32_t>(placementState.hotspotY),static_cast<std::uint32_t>(placementState.imageWidth),static_cast<std::uint32_t>(placementState.imageHeight)});
+         // 미사용 칸도 포함한30SID를 그대로 비교한다.
+-        for (const auto sid:life.previews) values.push_back(sid.value);
++        for (const auto sid:life.previews) values.push_back(sid);
+         values.insert(values.end(),{life.abstractType,types[100].flags2,drop.preview.value});std::string result;
+         // signed 값도 원문 DWORD 표현으로 보존한다.
+         for (const auto value:values) result+=(result.empty() ? "" : ",")+std::to_string(value);return result;

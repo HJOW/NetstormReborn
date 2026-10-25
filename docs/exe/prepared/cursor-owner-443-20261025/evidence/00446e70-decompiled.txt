@@ -1,0 +1,57 @@
+void __cdecl FUN_00446e70(void)
+
+{
+  int iVar1;
+  int *piVar2;
+  int *piVar3;
+  undefined4 *puVar4;
+  
+  if ((DAT_005325c8 == 0) && (DAT_0055a2a8 != 0)) {
+    FUN_004d5bb0(0);
+    if (DAT_005325c8 == 0) {
+      FUN_00445aa0(0);
+      FUN_004a4410(1);
+    }
+    DAT_005325c8 = DAT_005325c8 + 1;
+    piVar3 = (int *)(DAT_0055a2a8 * 0x32 + DAT_005c8464);
+    if ((*(byte *)((int)piVar3 + 0xb) & 1) == 0) {
+      *(undefined2 *)(piVar3 + 5) = (undefined2)DAT_0055a2ac;
+      if ((char)DAT_0055a2ac < '\0') {
+        iVar1 = (**(code **)*piVar3)();
+        piVar2 = (int *)(iVar1 * 0x32 + DAT_005c8464);
+        if ((*(byte *)((int)piVar2 + 0xb) & 4) == 0) {
+          (**(code **)(*piVar2 + 0x48))(0);
+        }
+        (**(code **)(*piVar2 + 0x4c))(0);
+      }
+      if ((DAT_0055a2e0 & 0x100) == 0) {
+        iVar1 = (**(code **)*piVar3)();
+        (**(code **)(*(int *)(iVar1 * 0x32 + DAT_005c8464) + 0x24))(DAT_0055a2a8,4);
+        if ((char)DAT_0055a2e0 < '\0') {
+          FUN_004a9cb0("teleporterActive.wav",0,0,0,0,0);
+          if (DAT_005e4794 != 0) {
+            FUN_004e0620("false",".\\Cursor.cpp",0x3f1);
+          }
+          FUN_0040eec0(-*(float *)(DAT_0055a280 + 0xc4));
+        }
+      }
+      else {
+        (**(code **)(*piVar3 + 0x10))(0);
+      }
+    }
+  }
+  FUN_00445aa0(1);
+  if (DAT_0055a274 != 0) {
+    FUN_0041bf10(DAT_0055a274,0);
+    DAT_0055a274 = 0;
+  }
+  puVar4 = &DAT_0055a1d8;
+  for (iVar1 = 0x1e; iVar1 != 0; iVar1 = iVar1 + -1) {
+    *puVar4 = 0;
+    puVar4 = puVar4 + 1;
+  }
+  DAT_0055a2a8 = 0;
+  DAT_005325c8 = 1;
+  DAT_0055a1b8 = 0;
+  return;
+}

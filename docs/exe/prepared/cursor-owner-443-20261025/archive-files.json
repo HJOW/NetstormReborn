@@ -1,0 +1,250 @@
+{
+  "status": "443 독립 준비본; main 미적용/CPP 미빌드·미검사/Native 미실행",
+  "sourceDirectory": "extracted/cpp-cursor-owner-443-prepared",
+  "suggestedArchiveDirectory": "docs/exe/prepared/cursor-owner-443-20261025",
+  "lastDecompile": "HJOW-Athlon/2026-10-23",
+  "listedFiles": 47,
+  "listedBytes": 2163748,
+  "inventoryFile": "archive-files.json",
+  "inventoryHashPolicy": "자기 SHA는 순환하므로 이 목록에 넣지 않는다. 최종 인계 메시지에서 별도로 보고한다.",
+  "copyInstructions": "files의 47개 상대경로와 이 archive-files.json 1개를 같은 디렉터리 구조로 복사한다. 원시 ignored 폴더는 유지한다.",
+  "filesIncludingInventory": 48,
+  "bytesIncludingInventory": 2172701,
+  "files": [
+    {
+      "path": "README.md",
+      "bytes": 10947,
+      "sha256": "793674692f8876f4f3999abee4a523aee92c23809d9ea9fc47d87d3b369fcf14"
+    },
+    {
+      "path": "manifest.json",
+      "bytes": 27682,
+      "sha256": "53ec6d6d64f0f23e2dab80126c7097ea34d8015c8df8f3afb2fc7c49c02cbc95"
+    },
+    {
+      "path": "inputs.json",
+      "bytes": 10009,
+      "sha256": "ece0922b19a524bd2bb51934888ab0ace4500f2d8df89383adece82d914d4565"
+    },
+    {
+      "path": "cursor-owner-443.patch",
+      "bytes": 86116,
+      "sha256": "6aa4a0ab876c6c24b1e582ab2947507316671a81af0ec4b82e9aabd927e54a8a"
+    },
+    {
+      "path": "static-evidence.json",
+      "bytes": 7790,
+      "sha256": "fa2220f172ff36d32cfc6173508e3846aa9e53a7c199e8d853dff8d9da592cdd"
+    },
+    {
+      "path": "static-audit.json",
+      "bytes": 84014,
+      "sha256": "d92d3efc96c9954b1a4ef5124518d67861031468e58501098784070293a0d374"
+    },
+    {
+      "path": "collect_static_evidence.py",
+      "bytes": 4383,
+      "sha256": "f22fc97565439d4d7237e184923a3b59e5ec7100fac48acc5b5087c89c8b8509"
+    },
+    {
+      "path": "replay.py",
+      "bytes": 2724,
+      "sha256": "32e042a370fafbee5e67934ce66b21e30f2a9e2107506c68785b76b6c27de0b9"
+    },
+    {
+      "path": "original/cpppj/src/client/ClientGameplayGlobals.cpp",
+      "bytes": 4300,
+      "sha256": "f5302d6acdcc119d9bbe817c868671c76e0ea9d2dd3dd2fcb8f8c21f984a4ec3"
+    },
+    {
+      "path": "original/cpppj/src/client/ClientGameplayGlobals.h",
+      "bytes": 5938,
+      "sha256": "2b0cfa9205ac87c031eb9927c0aad9cfa912b166000c4596e26f0b5ccc14f432"
+    },
+    {
+      "path": "original/cpppj/src/client/PreviewCollection.cpp",
+      "bytes": 9094,
+      "sha256": "6a067ab897f31fd8bc9c046f91ac40f15c815563b74c26757bf023a9eaf3255c"
+    },
+    {
+      "path": "original/cpppj/src/client/RawCampaignCursor.cpp",
+      "bytes": 16980,
+      "sha256": "7ff3da9e9afb9788906539320e842189d8355246072061dc802d3abc72471fc1"
+    },
+    {
+      "path": "original/cpppj/src/client/RawCampaignCursor.h",
+      "bytes": 6989,
+      "sha256": "62438ae9d6af4645f95c19d09962122b69ca0abd168356dfbe2d2543ed621e8c"
+    },
+    {
+      "path": "original/cpppj/src/client/RawCampaignCursorDisplay.cpp",
+      "bytes": 12407,
+      "sha256": "0070470fb5e524009b1fd57e820a065fe71d0bbcc0a350f6cf5adb16aa7e5b84"
+    },
+    {
+      "path": "original/cpppj/src/client/RawCampaignSession.cpp",
+      "bytes": 516943,
+      "sha256": "0db0e748fcb207f1ab42f729e6025e3e0a750bce57933171c6632f3aad7fecae"
+    },
+    {
+      "path": "original/cpppj/src/client/RawCampaignSession.h",
+      "bytes": 58951,
+      "sha256": "f06ee60859189d2fd9275a3f571482e2c8b0cea119299bcd3131fd352d7b793b"
+    },
+    {
+      "path": "original/cpppj/src/client/RawCursorActions.cpp",
+      "bytes": 2600,
+      "sha256": "5db1799e6ec86520abb8a9f3a9174fc21df4cabcf2789a069b45d03419483e59"
+    },
+    {
+      "path": "original/cpppj/src/client/RawCursorDrop.h",
+      "bytes": 6634,
+      "sha256": "61de4218af3ad691e3be7a2a56902e5e35c0f7cdc10ba52b858f626010f13e5b"
+    },
+    {
+      "path": "original/cpppj/src/client/RawCursorLifecycle.cpp",
+      "bytes": 11194,
+      "sha256": "fce0a2a2eed2fc50169d36b85ac2766dd4b2b8b4b060f17966950601a103e1ce"
+    },
+    {
+      "path": "original/cpppj/src/client/RawCursorLifecycle.h",
+      "bytes": 7078,
+      "sha256": "537111c145676234c0f8ad032ca3b68e660f8e1d4245cc0e02f228c53066fd1b"
+    },
+    {
+      "path": "original/cpppj/src/client/RawCursorPlacement.cpp",
+      "bytes": 11841,
+      "sha256": "f3532e2e82af0e022658bdfb2d767755e6e22f5e63a60ac1c0174a7789e1b01d"
+    },
+    {
+      "path": "original/cpppj/src/client/RawCursorPreviews.cpp",
+      "bytes": 9788,
+      "sha256": "13f90773195aebca5469cc2de11a1293bcb9a3d097500a7feb9fb7faedb79ed4"
+    },
+    {
+      "path": "original/cpppj/src/client/RawCursorPreviews.h",
+      "bytes": 4157,
+      "sha256": "63b07afad11e3008f2c55e848c9d7f48f41e62741d759db92ff4c8e3eaf4981a"
+    },
+    {
+      "path": "original/cpppj/src/CMakeLists.txt",
+      "bytes": 13522,
+      "sha256": "5f05d44fa0c4924f343d4d24fdc43f637e69d1661f6e69903ce21c16468cf1dc"
+    },
+    {
+      "path": "original/cpppj/tests/CameraViewTests.cpp",
+      "bytes": 10267,
+      "sha256": "455f10089249c9ac662651a05a2734e94afab3d295749f58f7464026b23db64f"
+    },
+    {
+      "path": "original/cpppj/tests/CampaignExistingEditorCheckpointTests.cpp",
+      "bytes": 96765,
+      "sha256": "edfb44506e36145eda11b80b4463ad6a88dcdac5c10f03e1bb9fa676be5e3cb0"
+    },
+    {
+      "path": "original/cpppj/tests/CampaignObjectMenuTests.cpp",
+      "bytes": 64036,
+      "sha256": "613c7a2d0a8c16e077fb248645f289dfaf712f8f0d3fc9a0325170e8eb568ac9"
+    },
+    {
+      "path": "original/cpppj/tests/CampaignSessionTests.cpp",
+      "bytes": 722801,
+      "sha256": "4dfbcb90ea1ff1bd9c09dbb1d927adfa51dd0db692dbf27744a3eb5dae8e06fc"
+    },
+    {
+      "path": "original/cpppj/tests/CMakeLists.txt",
+      "bytes": 153130,
+      "sha256": "633b71940057cb70b21d60a997b652d00f37e24afe59aab62dd97fbe1e7842d8"
+    },
+    {
+      "path": "original/cpppj/tests/ConnectionActivitySessionTests.cpp",
+      "bytes": 23174,
+      "sha256": "8a9ca4713977b284318cc661c2d82600670134462303d41c82f0d7e323b77f2f"
+    },
+    {
+      "path": "original/cpppj/tests/CursorActionsTests.cpp",
+      "bytes": 4913,
+      "sha256": "adcbfb672de4ac2cdb4ba2358d1e554bf41bc0136aaccb1a1fca579a8aefacf8"
+    },
+    {
+      "path": "original/cpppj/tests/CursorLifecycleTests.cpp",
+      "bytes": 16154,
+      "sha256": "33711957a8ec13e32bcd7e63b97a499055ec40a2370345ea0ecc258f220f44e9"
+    },
+    {
+      "path": "original/cpppj/tests/CursorPlacementTests.cpp",
+      "bytes": 11950,
+      "sha256": "a03f225bbf82cce49a770d111b2d4d24f5c496cde97560f3f55c6bce50dad997"
+    },
+    {
+      "path": "original/cpppj/tests/CursorPreviewBindingSupport.h",
+      "bytes": 2769,
+      "sha256": "324ab94b2d23c33f96bf257089d77a54f88ede7bbe4f4288d070fdf08cc02b4e"
+    },
+    {
+      "path": "original/cpppj/tests/CursorPreviewSupport.h",
+      "bytes": 12456,
+      "sha256": "fa4e6b6d54bbc564af308ffd154f2ced7482a131c542222c0342e6019d6c9084"
+    },
+    {
+      "path": "original/cpppj/tests/PreviewCollectionTests.cpp",
+      "bytes": 17875,
+      "sha256": "c6faebfc2502d50278b1d0ee772206d3e4f4f63d0cb9af7aa45fbe62fe246892"
+    },
+    {
+      "path": "context/cpppj/src/client/RawCursorPlacement.h",
+      "bytes": 6459,
+      "sha256": "ebbfaf7cd09aa3e15b77fd03e50c6c134458b1382d7469e471af75193ac65bb9"
+    },
+    {
+      "path": "evidence/004458e0-decompiled.txt",
+      "bytes": 1394,
+      "sha256": "09bda64580a4205c184f7d36f593f6aaa99213683c491ef7dd0d81441e62edf1"
+    },
+    {
+      "path": "evidence/004458e0-instructions.json",
+      "bytes": 16295,
+      "sha256": "6aa65e869b7f0d9a91513851015e88881ce876acd99076736da6b8d638aba21d"
+    },
+    {
+      "path": "evidence/00445aa0-decompiled.txt",
+      "bytes": 673,
+      "sha256": "590ca7b74a83f52f769d38534b820a074d9a0d1d5ce104c9e56064cab4a3bceb"
+    },
+    {
+      "path": "evidence/00445aa0-instructions.json",
+      "bytes": 5496,
+      "sha256": "bcb7e6a716f64f1b876d2d5d5b133e6f53fedb71a07fd72bf48b2aa42ba65927"
+    },
+    {
+      "path": "evidence/00445b30-decompiled.txt",
+      "bytes": 5426,
+      "sha256": "a592c841fe4d1964928741e6d4fdb3d4f430239c0c9d2a7dd5e877f8775f55e7"
+    },
+    {
+      "path": "evidence/00445b30-instructions.json",
+      "bytes": 42745,
+      "sha256": "c246a625c0b7a4d90a8ea79bbb28059cd7e2f8ec07172440416584379d920797"
+    },
+    {
+      "path": "evidence/00446e70-decompiled.txt",
+      "bytes": 1581,
+      "sha256": "60eb54b52324b29ac25b095892a7c79f684cf9146faf0f78409784775409047e"
+    },
+    {
+      "path": "evidence/00446e70-instructions.json",
+      "bytes": 13581,
+      "sha256": "ee476956f86348cf5a1f4cc87201f0cf30a41fff143e284fc14fb6e1006bc6aa"
+    },
+    {
+      "path": "evidence/patch-format-initial-failure.json",
+      "bytes": 714,
+      "sha256": "4f6fbb721c90155ae6e4331b4d62e299ab3b58beccec6ca310a03ab127dc45a9"
+    },
+    {
+      "path": "evidence/replay-report.json",
+      "bytes": 1013,
+      "sha256": "8c68d557e873d4541be97ef37b5ab9c951eb752bcd6bca721932f2eb9bfa9927"
+    }
+  ]
+}

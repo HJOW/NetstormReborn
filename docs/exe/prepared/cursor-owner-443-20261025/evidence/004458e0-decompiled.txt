@@ -1,0 +1,40 @@
+void __cdecl FUN_004458e0(void)
+
+{
+  int iVar1;
+  int local_28;
+  int local_24;
+  int local_20;
+  int local_1c;
+  int local_18;
+  int local_14;
+  int local_10;
+  int local_c;
+  int local_8;
+  int local_4;
+  
+  FUN_00497220(&local_28,&local_20,DAT_0055a300,DAT_0055a304);
+  local_10 = (local_28 - DAT_0055a2b0) + -2;
+  local_c = (local_24 - DAT_0055a2b4) + -2;
+  local_8 = (DAT_0055a2b8 - DAT_0055a2b0) + 6 + local_28;
+  local_4 = (DAT_0055a2bc - DAT_0055a2b4) + 0xe + local_24;
+  FUN_00497580(DAT_0059a8bc,&local_10,2);
+  if ((((((byte)DAT_0055a2e0 & 0x20) != 0) && (DAT_0055a29c == 0)) || (DAT_0055a294 == 0)) ||
+     (((DAT_0055a290 == 0 && (DAT_0055a2dc != 0)) || (DAT_0055a298 == 0)))) {
+    local_20 = (DAT_0055a2b8 / 2 - DAT_0055a268 / 2) + local_10;
+    local_1c = (DAT_0055a2bc / 2 - DAT_0055a198 / 2) + local_c;
+    local_18 = DAT_0055a268 + 2 + local_20;
+    local_14 = DAT_0055a198 + 2 + local_1c;
+    FUN_00497580(DAT_0059a8bc,&local_20,0);
+  }
+  if (((byte)DAT_0055a2e0 & 0x40) != 0) {
+    iVar1 = DAT_0055a1d8 * 0x32 + DAT_005c8464;
+    local_20 = (((int)*(short *)(iVar1 + 0x16) - (*(int *)(DAT_0055a280 + 0x1d4) << 4) / 2) -
+               DAT_0055a270 / 2) - DAT_0059a91c;
+    local_18 = DAT_0055a270 + 2 + local_20;
+    local_1c = *(short *)(iVar1 + 0x18) - DAT_0059a920;
+    local_14 = DAT_0055a250 + 2 + local_1c;
+    FUN_00497580(DAT_0059a8bc,&local_20,0);
+  }
+  return;
+}

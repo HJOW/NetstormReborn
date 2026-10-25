@@ -1,0 +1,2235 @@
+{
+  "status": "정적 감사 통과; CPP 빌드/검사 및 PE/Native/GUI 실행 없음",
+  "commands": [
+    {
+      "argv": [
+        "git",
+        "init",
+        "--quiet"
+      ],
+      "cwd": "apply-check-final-2",
+      "exitCode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-c",
+        "core.autocrlf=false",
+        "apply",
+        "--check",
+        "--ignore-space-change",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-cursor-owner-443-prepared\\cursor-owner-443.patch"
+      ],
+      "cwd": "apply-check-final-2",
+      "exitCode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-c",
+        "core.autocrlf=false",
+        "apply",
+        "--ignore-space-change",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-cursor-owner-443-prepared\\cursor-owner-443.patch"
+      ],
+      "cwd": "apply-check-final-2",
+      "exitCode": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ],
+  "normalizedAppliedFilesMatch": 32,
+  "rawInputSHAAllMatch": 28,
+  "existingTestDefinitionsPreserved": 297,
+  "newTestDefinitions": [
+    "CampaignExistingEditorCheckpoint_CursorDataPreparedBorrowAndReleasePreserveCurrentValues",
+    "CampaignExistingEditorCheckpoint_CursorDataPreparedFailureKeepsOwner",
+    "ClientCursorGlobals_DwordWidthAndPreparedOwnerIdentity",
+    "ClientCursorGlobals_GeneralFreshKeepsAddressesAndCameraBinding",
+    "ClientCursorGlobals_NativeCancelRequeriesCountAndProcessThenClearsAllDwords",
+    "ClientCursorGlobals_HighWordDoesNotAliasValidPreview",
+    "ClientCursorGlobals_FirstMenuCancelUsesActualProjectAndCurrentRenderer",
+    "ClientCursorGlobals_CreateOverwritesInactiveDwordsAtActualAppend"
+  ],
+  "perTestNumericAudit": [
+    {
+      "path": "cpppj/tests/CameraViewTests.cpp",
+      "name": "CameraView_Native16WholeImageAndProjection",
+      "existingNumericTokens": 35,
+      "preparedNumericTokens": 35,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CameraViewTests.cpp",
+      "name": "CameraView_BssExplicitInitializeTargetSnapshotAndDenominatorStayDistinct",
+      "existingNumericTokens": 50,
+      "preparedNumericTokens": 50,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CameraViewTests.cpp",
+      "name": "CameraView_FirstMenuActualPrepareRequeriesSnapshotAndRenderer",
+      "existingNumericTokens": 58,
+      "preparedNumericTokens": 58,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CameraViewTests.cpp",
+      "name": "CameraView_PlacementCostRequeriesSharedPixelsAfterDirtyEffect",
+      "existingNumericTokens": 46,
+      "preparedNumericTokens": 46,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CameraViewTests.cpp",
+      "name": "CameraView_WorldSetterAssertionRequeriesCurrentFieldsAfterAllStores",
+      "existingNumericTokens": 21,
+      "preparedNumericTokens": 21,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp",
+      "name": "CampaignExistingEditorCheckpoint_DeferPreservesExistingOwnerAndDefaultStages",
+      "existingNumericTokens": 12,
+      "preparedNumericTokens": 12,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp",
+      "name": "CampaignExistingEditorCheckpoint_DeferRejectsCampaignMode",
+      "existingNumericTokens": 0,
+      "preparedNumericTokens": 0,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp",
+      "name": "CampaignExistingEditorCheckpoint_NormalReadFalseKeepsInvalidBranch",
+      "existingNumericTokens": 3,
+      "preparedNumericTokens": 3,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp",
+      "name": "CampaignExistingEditorCheckpoint_FirstNotifyUsesActualWriterBeforeSubscriber",
+      "existingNumericTokens": 7,
+      "preparedNumericTokens": 7,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp",
+      "name": "CampaignExistingEditorCheckpoint_FileTailThenActualWorldChatBoundary",
+      "existingNumericTokens": 8,
+      "preparedNumericTokens": 8,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp",
+      "name": "CampaignExistingEditorCheckpoint_CoreWriteNaturalGateKeepsActualStorage",
+      "existingNumericTokens": 7,
+      "preparedNumericTokens": 7,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp",
+      "name": "CampaignExistingEditorCheckpoint_CoreWriteManagerDiagnosticBeforeGate",
+      "existingNumericTokens": 1,
+      "preparedNumericTokens": 1,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp",
+      "name": "CampaignExistingEditorCheckpoint_CoreWriteMetamapDiagnosticBeforeGate",
+      "existingNumericTokens": 4,
+      "preparedNumericTokens": 4,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp",
+      "name": "CampaignExistingEditorCheckpoint_ActualCurrentNameSelectsWorkingFile",
+      "existingNumericTokens": 10,
+      "preparedNumericTokens": 10,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp",
+      "name": "CampaignExistingEditorCheckpoint_ActualChatRuntimeAdvancesWorldAndSnapshot",
+      "existingNumericTokens": 15,
+      "preparedNumericTokens": 15,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp",
+      "name": "CampaignExistingEditorCheckpoint_ActualPlayerUiCompletesAndReloads",
+      "existingNumericTokens": 24,
+      "preparedNumericTokens": 24,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp",
+      "name": "CampaignExistingEditorCheckpoint_ActualCustomTest01PlayerUiAndFile",
+      "existingNumericTokens": 7,
+      "preparedNumericTokens": 7,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp",
+      "name": "CampaignExistingEditorCheckpoint_AdoptsNativePlayersAndPreservesCoreUntilNextCleanup",
+      "existingNumericTokens": 22,
+      "preparedNumericTokens": 22,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp",
+      "name": "CampaignExistingEditorCheckpoint_UiScopeCommitsOnlyAfterActualStateReturn",
+      "existingNumericTokens": 30,
+      "preparedNumericTokens": 30,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp",
+      "name": "CampaignExistingEditorCheckpoint_UiTailFailureKeepsPublicAccessClosed",
+      "existingNumericTokens": 8,
+      "preparedNumericTokens": 8,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp",
+      "name": "CampaignExistingEditorCheckpoint_UiTailCannotCommitEarlyReturnOrImmediate",
+      "existingNumericTokens": 7,
+      "preparedNumericTokens": 7,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp",
+      "name": "CampaignExistingEditorCheckpoint_PreparedCtorPreservesSameClientState",
+      "existingNumericTokens": 8,
+      "preparedNumericTokens": 8,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp",
+      "name": "CampaignExistingEditorCheckpoint_PreparedCtorKeepsSharedIslandAndChunkData",
+      "existingNumericTokens": 34,
+      "preparedNumericTokens": 34,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp",
+      "name": "CampaignExistingEditorCheckpoint_PreparedCtorAndLateFailureKeepSelectionGlobals",
+      "existingNumericTokens": 47,
+      "preparedNumericTokens": 47,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp",
+      "name": "CampaignExistingEditorCheckpoint_PreparedCtorRejectsIncompleteOwnersBeforeBorrow",
+      "existingNumericTokens": 3,
+      "preparedNumericTokens": 3,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp",
+      "name": "CampaignExistingEditorCheckpoint_ActualProductionFormsInsideInstallScope",
+      "existingNumericTokens": 16,
+      "preparedNumericTokens": 16,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp",
+      "name": "CampaignExistingEditorCheckpoint_EditorWireQueuesNegativeSenderConstructionMoveAndSalvage",
+      "existingNumericTokens": 120,
+      "preparedNumericTokens": 120,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp",
+      "name": "CampaignExistingEditorCheckpoint_EditorWireReadsCurrentChargeGateWithoutSenderNormalization",
+      "existingNumericTokens": 10,
+      "preparedNumericTokens": 10,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp",
+      "name": "CampaignExistingEditorCheckpoint_EditorWireRejectsOwnedRegistrationBeforePublishing",
+      "existingNumericTokens": 5,
+      "preparedNumericTokens": 5,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp",
+      "name": "CampaignExistingEditorCheckpoint_EditorWireRejectsForeignPlayersAndLoginBeforeBorrow",
+      "existingNumericTokens": 4,
+      "preparedNumericTokens": 4,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp",
+      "name": "CampaignExistingEditorCheckpoint_ActivityWireUsesClientNineAndRetiresOnlyReceive",
+      "existingNumericTokens": 50,
+      "preparedNumericTokens": 50,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp",
+      "name": "CampaignExistingEditorCheckpoint_ActivityCollisionPreservesAllPriorRegistrations",
+      "existingNumericTokens": 31,
+      "preparedNumericTokens": 31,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp",
+      "name": "CampaignExistingEditorCheckpoint_PreparedAuthorityUsesSameClientOwnerWithoutTrueWrites",
+      "existingNumericTokens": 0,
+      "preparedNumericTokens": 0,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp",
+      "name": "CampaignExistingEditorCheckpoint_PreparedAuthoritySurvivesPartialConstructorFailure",
+      "existingNumericTokens": 0,
+      "preparedNumericTokens": 0,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp",
+      "name": "CampaignExistingEditorCheckpoint_FullDeckOwnerPreparedConsumersAndRelease",
+      "existingNumericTokens": 17,
+      "preparedNumericTokens": 17,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp",
+      "name": "CampaignExistingEditorCheckpoint_FullDeckOwnerPreservesConstructorAndLateFailure",
+      "existingNumericTokens": 5,
+      "preparedNumericTokens": 5,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp",
+      "name": "CampaignExistingEditorCheckpoint_FullDeckOwnerOrdinaryEditorCompatibility",
+      "existingNumericTokens": 3,
+      "preparedNumericTokens": 3,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp",
+      "name": "CampaignExistingEditorCheckpoint_CameraPreparedCtorAndReleasePreserveCurrentOwner",
+      "existingNumericTokens": 23,
+      "preparedNumericTokens": 23,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp",
+      "name": "CampaignExistingEditorCheckpoint_CameraPreparedCtorFailureKeepsOwner",
+      "existingNumericTokens": 15,
+      "preparedNumericTokens": 15,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp",
+      "name": "CampaignExistingEditorCheckpoint_StateAuxPreparedCtorAndLateFailurePreserveCurrentOwner",
+      "existingNumericTokens": 28,
+      "preparedNumericTokens": 28,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignObjectMenuTests.cpp",
+      "name": "CampaignKnowledge_ActualSessionAndMenuTree",
+      "existingNumericTokens": 15,
+      "preparedNumericTokens": 15,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignObjectMenuTests.cpp",
+      "name": "CampaignHelp_ActualCurrentTypeInfo",
+      "existingNumericTokens": 7,
+      "preparedNumericTokens": 7,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignObjectMenuTests.cpp",
+      "name": "CampaignObjectMenus_ActualChainAndBuildSelection",
+      "existingNumericTokens": 54,
+      "preparedNumericTokens": 54,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignObjectMenuTests.cpp",
+      "name": "CampaignObjectMenus_ActualRefundAndUninstalledGuard",
+      "existingNumericTokens": 11,
+      "preparedNumericTokens": 11,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignObjectMenuTests.cpp",
+      "name": "CampaignObjectMenus_CurrentPeerPlayerMenuUsesActualInput",
+      "existingNumericTokens": 26,
+      "preparedNumericTokens": 26,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignObjectMenuTests.cpp",
+      "name": "CampaignObjectMenus_ActualCommonOpenUsesCurrentWorld",
+      "existingNumericTokens": 42,
+      "preparedNumericTokens": 42,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignObjectMenuTests.cpp",
+      "name": "CampaignObjectMenus_ActualObjectFormBindingAndClose",
+      "existingNumericTokens": 20,
+      "preparedNumericTokens": 20,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignObjectMenuTests.cpp",
+      "name": "CampaignObjectMenus_ActualParentDeletionAndDeferredUiCleanup",
+      "existingNumericTokens": 10,
+      "preparedNumericTokens": 10,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignObjectMenuTests.cpp",
+      "name": "CampaignObjectMenus_ActualSummaryUsesCurrentIdentityAndAlliance",
+      "existingNumericTokens": 29,
+      "preparedNumericTokens": 29,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignObjectMenuTests.cpp",
+      "name": "CampaignUserSelection_SamePoolMarksRegularAndManaNotice",
+      "existingNumericTokens": 29,
+      "preparedNumericTokens": 29,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignObjectMenuTests.cpp",
+      "name": "CampaignContentPreview_RealNoticeCreatePopAndExpiry",
+      "existingNumericTokens": 44,
+      "preparedNumericTokens": 44,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignObjectMenuTests.cpp",
+      "name": "CampaignContentPreview_RealNuggetInitialRegulars",
+      "existingNumericTokens": 18,
+      "preparedNumericTokens": 18,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignObjectMenuTests.cpp",
+      "name": "CampaignNuggetRegular_ActualAnimationAndFallLifecycle",
+      "existingNumericTokens": 56,
+      "preparedNumericTokens": 56,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignObjectMenuTests.cpp",
+      "name": "CampaignCarrierFalling_ActualCapturedPriestRelease",
+      "existingNumericTokens": 73,
+      "preparedNumericTokens": 73,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignObjectMenuTests.cpp",
+      "name": "CampaignCarrierFallStart_ActualSelectedMovementReleaseAndFall",
+      "existingNumericTokens": 95,
+      "preparedNumericTokens": 95,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignObjectMenuTests.cpp",
+      "name": "CampaignCarrierFallStart_ExpiredSelectionDoesNotDangle",
+      "existingNumericTokens": 18,
+      "preparedNumericTokens": 18,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignObjectMenuTests.cpp",
+      "name": "CampaignCarrierTransfer_ActualFormReceiveAndPreview",
+      "existingNumericTokens": 46,
+      "preparedNumericTokens": 46,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignObjectMenuTests.cpp",
+      "name": "CampaignCarrierTarget_ActualBfsTargetStartAndReturn",
+      "existingNumericTokens": 21,
+      "preparedNumericTokens": 21,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_SunFlyerBombClearsActualSessionLifetime",
+      "existingNumericTokens": 45,
+      "preparedNumericTokens": 45,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_ActualDropIslandSupportAndParticles",
+      "existingNumericTokens": 38,
+      "preparedNumericTokens": 38,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignCarrierChoice_ActualListsBfsHomeAndCurrentAi",
+      "existingNumericTokens": 47,
+      "preparedNumericTokens": 47,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_PathRetargetRunsRealCarrierFrames",
+      "existingNumericTokens": 32,
+      "preparedNumericTokens": 32,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_CarrierMiningNaturalArrivalUsesSameWorld",
+      "existingNumericTokens": 57,
+      "preparedNumericTokens": 57,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_CarrierEscapeUsesRealPathsAndDepthCap",
+      "existingNumericTokens": 26,
+      "preparedNumericTokens": 26,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_CarrierEscapeSurfaceFallbackUsesRealBfs",
+      "existingNumericTokens": 21,
+      "preparedNumericTokens": 21,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_MissionInputsUseSameScrambledSpSlots",
+      "existingNumericTokens": 24,
+      "preparedNumericTokens": 24,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_PriestParticipationUsesCurrentSharedState",
+      "existingNumericTokens": 36,
+      "preparedNumericTokens": 36,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_PriestOwnerStatesUseActualSurfaceStorageAndDataReset",
+      "existingNumericTokens": 32,
+      "preparedNumericTokens": 32,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_PriestParticipationFindsRealCapturedFallbacks",
+      "existingNumericTokens": 102,
+      "preparedNumericTokens": 102,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_ConstructionSupportUsesSameWorld",
+      "existingNumericTokens": 54,
+      "preparedNumericTokens": 54,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_LocalGeysersUseCurrentInputs",
+      "existingNumericTokens": 42,
+      "preparedNumericTokens": 42,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_LocalGeysersUseActualAiRegistration",
+      "existingNumericTokens": 46,
+      "preparedNumericTokens": 46,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_LocalAiPreparationSharesOriginalWorld",
+      "existingNumericTokens": 25,
+      "preparedNumericTokens": 25,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_AiStrategyInitializationUsesActualContents",
+      "existingNumericTokens": 18,
+      "preparedNumericTokens": 18,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_AiEconomySharesActualSpAndWallet",
+      "existingNumericTokens": 20,
+      "preparedNumericTokens": 20,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_AiDeploymentUsesActualProductionAndConstruction",
+      "existingNumericTokens": 46,
+      "preparedNumericTokens": 46,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_AiCollectorSelectionUsesActualDeployment",
+      "existingNumericTokens": 46,
+      "preparedNumericTokens": 46,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_AiFactoryProductionUsesOriginalWorkshops",
+      "existingNumericTokens": 27,
+      "preparedNumericTokens": 27,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_FactoryUpgradeCommandUsesActualHostAndSp",
+      "existingNumericTokens": 21,
+      "preparedNumericTokens": 21,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_FactoryUpgradePictureAndCompletionShareWorld",
+      "existingNumericTokens": 46,
+      "preparedNumericTokens": 46,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_FactoryInputUsesActualSpAndPendingTimer",
+      "existingNumericTokens": 19,
+      "preparedNumericTokens": 19,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_FactoryInputCycleHelpAndParent",
+      "existingNumericTokens": 18,
+      "preparedNumericTokens": 18,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_AiDrySpotsUseActualBrainEnergyAndLifetime",
+      "existingNumericTokens": 38,
+      "preparedNumericTokens": 38,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_AiMovementUsesRealPathNamesAndStop",
+      "existingNumericTokens": 28,
+      "preparedNumericTokens": 28,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_AiResourceChoiceUsesActualGraphContentsAndLifetime",
+      "existingNumericTokens": 34,
+      "preparedNumericTokens": 34,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_AiCarrierActionsUseActualWorldContentsAndLifetime",
+      "existingNumericTokens": 37,
+      "preparedNumericTokens": 37,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_AiBuildSearchUsesActualStatePlacementAndClock",
+      "existingNumericTokens": 54,
+      "preparedNumericTokens": 54,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_AiBuildChoiceUsesActualSpWalletAndLifetime",
+      "existingNumericTokens": 34,
+      "preparedNumericTokens": 34,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_AiPriestActionsUseActualSearchMovementAndLifetime",
+      "existingNumericTokens": 28,
+      "preparedNumericTokens": 28,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_AiDropTargetsUseActualContentsGunAndLifetime",
+      "existingNumericTokens": 64,
+      "preparedNumericTokens": 64,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_AiDropEvaluationUsesActualManaGroundPlacementAndLifetime",
+      "existingNumericTokens": 76,
+      "preparedNumericTokens": 76,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_AiDropScanUsesActualMapsStateAndLifetime",
+      "existingNumericTokens": 33,
+      "preparedNumericTokens": 33,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_AiDropSelectionUsesActualProductsScanAndLifetime",
+      "existingNumericTokens": 34,
+      "preparedNumericTokens": 34,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_AiDropActionsUseActualSelectionScanAndWallet",
+      "existingNumericTokens": 41,
+      "preparedNumericTokens": 41,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_AiDrySeedUsesActualBrainListAndLifetime",
+      "existingNumericTokens": 25,
+      "preparedNumericTokens": 25,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_AiDryGeometryUsesActualSurface",
+      "existingNumericTokens": 18,
+      "preparedNumericTokens": 18,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_AiFakeDrySpotsUseActualStateAndLifetime",
+      "existingNumericTokens": 35,
+      "preparedNumericTokens": 35,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_AiUsesCurrentWorldAndLifetime",
+      "existingNumericTokens": 82,
+      "preparedNumericTokens": 82,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_RefundCreditsCurrentActualAiWallet",
+      "existingNumericTokens": 30,
+      "preparedNumericTokens": 30,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_ObjectNoticesUseActualPopAndDeletion",
+      "existingNumericTokens": 42,
+      "preparedNumericTokens": 42,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_AiMissingServicesKeepRealFailure",
+      "existingNumericTokens": 18,
+      "preparedNumericTokens": 18,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_AiColorPrecedesExistingBrain",
+      "existingNumericTokens": 13,
+      "preparedNumericTokens": 13,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_ParticipationUsesCurrentReads",
+      "existingNumericTokens": 51,
+      "preparedNumericTokens": 51,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_MissionOutcomeSharesCurrentWorld",
+      "existingNumericTokens": 37,
+      "preparedNumericTokens": 37,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_TechnologyUsesCurrentLifetime",
+      "existingNumericTokens": 20,
+      "preparedNumericTokens": 20,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_ProductionUsesCurrentPlayerFactoriesAndRestrictions",
+      "existingNumericTokens": 33,
+      "preparedNumericTokens": 33,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_ProductionMissingAllocationLeavesPlayerUnchanged",
+      "existingNumericTokens": 0,
+      "preparedNumericTokens": 0,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_FortSnapshotBasicsSaveCurrentWorld",
+      "existingNumericTokens": 37,
+      "preparedNumericTokens": 37,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_FortContentSaveCurrentTechnology",
+      "existingNumericTokens": 35,
+      "preparedNumericTokens": 35,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_FortTerritorySaveCurrentWorld",
+      "existingNumericTokens": 42,
+      "preparedNumericTokens": 42,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_EmptyGeyserUsesCurrentDeletion",
+      "existingNumericTokens": 11,
+      "preparedNumericTokens": 11,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_ActualWarBeginsGameWorld",
+      "existingNumericTokens": 0,
+      "preparedNumericTokens": 0,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_ActualMasterGameWorld",
+      "existingNumericTokens": 0,
+      "preparedNumericTokens": 0,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_GeneratorBodyShadowAndPicking",
+      "existingNumericTokens": 73,
+      "preparedNumericTokens": 73,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_ThunderCannonBodyNative37Frames",
+      "existingNumericTokens": 68,
+      "preparedNumericTokens": 68,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_GolemNative64WalkingFrames",
+      "existingNumericTokens": 62,
+      "preparedNumericTokens": 62,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_GeyserBodyNative51Frames",
+      "existingNumericTokens": 51,
+      "preparedNumericTokens": 51,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_SupportNative198FramesAndColors",
+      "existingNumericTokens": 54,
+      "preparedNumericTokens": 54,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_GeyserSupportBridgeOwnershipAndColors",
+      "existingNumericTokens": 43,
+      "preparedNumericTokens": 43,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_BridgeNative600FramesAndColors",
+      "existingNumericTokens": 48,
+      "preparedNumericTokens": 48,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_MissileFringeDepthAndOverlap",
+      "existingNumericTokens": 53,
+      "preparedNumericTokens": 53,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_ActualWarBeginsClickMovesSamePriest",
+      "existingNumericTokens": 0,
+      "preparedNumericTokens": 0,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_ActualSingleplayerBroadcastAndPath",
+      "existingNumericTokens": 0,
+      "preparedNumericTokens": 0,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_ActualWarBeginsCombatToOne",
+      "existingNumericTokens": 54,
+      "preparedNumericTokens": 54,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_ManowarExplosionPixelsAndDummyLifetime",
+      "existingNumericTokens": 63,
+      "preparedNumericTokens": 63,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_PriestMenuUsesActualWorldAndBuildSelection",
+      "existingNumericTokens": 25,
+      "preparedNumericTokens": 25,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_PriestMenuTracksTechnologyAndTypeExclusions",
+      "existingNumericTokens": 11,
+      "preparedNumericTokens": 11,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_PriestMenuRejectsUninstalledSession",
+      "existingNumericTokens": 0,
+      "preparedNumericTokens": 0,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_CursorManaUsesActualWorldHostAndDisplay",
+      "existingNumericTokens": 104,
+      "preparedNumericTokens": 104,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_CursorRangeActualWorldAndSharedLifetime",
+      "existingNumericTokens": 61,
+      "preparedNumericTokens": 61,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_CursorEnergyActualProvidersAndSharedSources",
+      "existingNumericTokens": 47,
+      "preparedNumericTokens": 47,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_ConstructionBuilderSharesActualEnergySources",
+      "existingNumericTokens": 23,
+      "preparedNumericTokens": 23,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_ManaBoltUsesActualFlightAndLifetime",
+      "existingNumericTokens": 20,
+      "preparedNumericTokens": 20,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_ConstructionTeleportUsesActualSurfacePath",
+      "existingNumericTokens": 27,
+      "preparedNumericTokens": 27,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_ManaBoltRegularFollowsArrivalAndCurrentTarget",
+      "existingNumericTokens": 55,
+      "preparedNumericTokens": 55,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_ConstructionBuilderUsesActualMovementAndTime",
+      "existingNumericTokens": 73,
+      "preparedNumericTokens": 73,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_PlayerFactoryCapacityMatchesNativeInitialization",
+      "existingNumericTokens": 6,
+      "preparedNumericTokens": 6,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_ActualClientPlayerOwnerAcrossSessions",
+      "existingNumericTokens": 17,
+      "preparedNumericTokens": 17,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_PlayerLinks_ExplicitCleanupKeepsKernelCoreAndFactoryStorage",
+      "existingNumericTokens": 21,
+      "preparedNumericTokens": 21,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_PlayerLinks_DestructorRunsBeforeKernelAndNextPlayerAllocation",
+      "existingNumericTokens": 6,
+      "preparedNumericTokens": 6,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_PlayerLinks_ZeroDecksDoNotAllocateDuringCleanup",
+      "existingNumericTokens": 2,
+      "preparedNumericTokens": 2,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_PlayerLinks_InvalidDeckStopsAtSelectedFreeWithPrefix",
+      "existingNumericTokens": 33,
+      "preparedNumericTokens": 33,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_PlayerLinks_PlayerLeaseOutlivesServiceCaptures",
+      "existingNumericTokens": 1,
+      "preparedNumericTokens": 1,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSharedKernel_ActualFormsAndSingleClientFrame",
+      "existingNumericTokens": 23,
+      "preparedNumericTokens": 23,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSharedKernel_GameWorldSurvivesExplicitGlobalClear",
+      "existingNumericTokens": 7,
+      "preparedNumericTokens": 7,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSharedKernel_FinalDrainPrecedesPlayerAndServiceRelease",
+      "existingNumericTokens": 24,
+      "preparedNumericTokens": 24,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSharedKernel_PartialConstructorPreservesExistingProcess",
+      "existingNumericTokens": 4,
+      "preparedNumericTokens": 4,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_ConstructionArrivalRunsActualProgressAndVisual",
+      "existingNumericTokens": 104,
+      "preparedNumericTokens": 104,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_ConstructionDefaultTimeOwnsActualSoundProcess",
+      "existingNumericTokens": 29,
+      "preparedNumericTokens": 29,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_GeneralConfirmRequiresActualReadyFactory",
+      "existingNumericTokens": 19,
+      "preparedNumericTokens": 19,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_GeneralConfirmBuildsForRemoteOwner",
+      "existingNumericTokens": 48,
+      "preparedNumericTokens": 48,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_GeneralConfirmReplacesLocalPredictionAndKeepsBuilder",
+      "existingNumericTokens": 42,
+      "preparedNumericTokens": 42,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_GeneralConfirmShortfallUsesCurrentPlayerRecords",
+      "existingNumericTokens": 59,
+      "preparedNumericTokens": 59,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_ConstructionCommandUsesActualRequestAndLocalPrediction",
+      "existingNumericTokens": 42,
+      "preparedNumericTokens": 42,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_ConstructionCommandChargesRemoteOnce",
+      "existingNumericTokens": 23,
+      "preparedNumericTokens": 23,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_ConstructionCommandRejectsForeignPrediction",
+      "existingNumericTokens": 30,
+      "preparedNumericTokens": 30,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_CursorMenuUsesActualStateAndCancel",
+      "existingNumericTokens": 45,
+      "preparedNumericTokens": 45,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_CursorContentDestroyReadsCurrentPreview",
+      "existingNumericTokens": 20,
+      "preparedNumericTokens": 20,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_CursorDropPredictsSendsChargesAndCompletes",
+      "existingNumericTokens": 58,
+      "preparedNumericTokens": 58,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_CursorRequiresActualEffectsAndSupportsRebinding",
+      "existingNumericTokens": 5,
+      "preparedNumericTokens": 5,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_CursorReturnsFactoryPieceWithActualTimer",
+      "existingNumericTokens": 29,
+      "preparedNumericTokens": 29,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_CursorDisplayUsesActualShapesCameraAndDirtyCollection",
+      "existingNumericTokens": 87,
+      "preparedNumericTokens": 87,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_CursorDisplayIllegalAndActualWarningText",
+      "existingNumericTokens": 36,
+      "preparedNumericTokens": 36,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_CursorActionsUseActualPreviewsAndInput",
+      "existingNumericTokens": 57,
+      "preparedNumericTokens": 57,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_CursorRotateUsesActualRangeLifetime",
+      "existingNumericTokens": 28,
+      "preparedNumericTokens": 28,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_CursorUserInputReadsCurrentSettingsAndMouse",
+      "existingNumericTokens": 38,
+      "preparedNumericTokens": 38,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_CursorDropNotifiesActualRangeProcess",
+      "existingNumericTokens": 23,
+      "preparedNumericTokens": 23,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_CursorHighlightSharesSelectionWithoutClearingIt",
+      "existingNumericTokens": 18,
+      "preparedNumericTokens": 18,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_CursorRequeriesReplacedGumpsAtStationaryMouse",
+      "existingNumericTokens": 36,
+      "preparedNumericTokens": 36,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_CarrierMiningRegisteredReceiverExhaustsGeyser",
+      "existingNumericTokens": 41,
+      "preparedNumericTokens": 41,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_CarrierStealUsesActualContentMovementAndReceiver",
+      "existingNumericTokens": 92,
+      "preparedNumericTokens": 92,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_CarrierPickupNuggetThroughActualLocalTransport",
+      "existingNumericTokens": 52,
+      "preparedNumericTokens": 52,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_CarrierPickupPriestMovesNestedContents",
+      "existingNumericTokens": 53,
+      "preparedNumericTokens": 53,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_GemRewardActualSelectionPopAndDestroy",
+      "existingNumericTokens": 53,
+      "preparedNumericTokens": 53,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_LightningScreenPickupThroughActualLocalTransport",
+      "existingNumericTokens": 75,
+      "preparedNumericTokens": 75,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_RepeatedRewardPickupThroughActualLocalTransport",
+      "existingNumericTokens": 39,
+      "preparedNumericTokens": 39,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_BalloonFlightShadowAndLandingThroughActualKernel",
+      "existingNumericTokens": 60,
+      "preparedNumericTokens": 60,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_CarrierMoveRequestThroughActualLocalTransportAndKernel",
+      "existingNumericTokens": 69,
+      "preparedNumericTokens": 69,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_InitSharedTablesBeforeInstall",
+      "existingNumericTokens": 31,
+      "preparedNumericTokens": 31,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_TemplateSurvivesUntilExplicitInitClear",
+      "existingNumericTokens": 11,
+      "preparedNumericTokens": 11,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_ActualLoginUsesClientCurrentCoreSlot",
+      "existingNumericTokens": 4,
+      "preparedNumericTokens": 4,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_InitRequestUsedByActualLogin",
+      "existingNumericTokens": 17,
+      "preparedNumericTokens": 17,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_AiBridgeProgressUsesActualWorldAndContents",
+      "existingNumericTokens": 71,
+      "preparedNumericTokens": 71,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_AutomaticAiFramesUseCurrentTimeAndWorld",
+      "existingNumericTokens": 43,
+      "preparedNumericTokens": 43,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_AutomaticAiTerminationReleasesOwnedMemory",
+      "existingNumericTokens": 20,
+      "preparedNumericTokens": 20,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_LocalLoginActualHandshakeAndWorldLoad",
+      "existingNumericTokens": 77,
+      "preparedNumericTokens": 77,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_WorldInputActualLoginThreeCarriersAndKernel",
+      "existingNumericTokens": 44,
+      "preparedNumericTokens": 44,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_LocalLoginMissionStartAiAlliances",
+      "existingNumericTokens": 56,
+      "preparedNumericTokens": 56,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_LocalLoginWorkshopHasActualPlacement",
+      "existingNumericTokens": 0,
+      "preparedNumericTokens": 0,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_LocalLoginGeneratorExtendsCannonFirstHit",
+      "existingNumericTokens": 0,
+      "preparedNumericTokens": 0,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignTempleDraw_Native264BodyPixels",
+      "existingNumericTokens": 88,
+      "preparedNumericTokens": 88,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignCombatDraw_BodiesAndSixFlyingShadows",
+      "existingNumericTokens": 136,
+      "preparedNumericTokens": 136,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignBurning_NaturalGeneratorCannonCombat",
+      "existingNumericTokens": 0,
+      "preparedNumericTokens": 0,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignBurning_ActualHostRecoveryAndDeletion",
+      "existingNumericTokens": 38,
+      "preparedNumericTokens": 38,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignTempleShrapnel_Native181CapturePixels",
+      "existingNumericTokens": 44,
+      "preparedNumericTokens": 44,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignTempleShrapnel_ActualWindRainExplosionLifetime",
+      "existingNumericTokens": 42,
+      "preparedNumericTokens": 42,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignTempleShrapnel_Native83RegularTables",
+      "existingNumericTokens": 6,
+      "preparedNumericTokens": 6,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignTempleShrapnel_QueuedDamageOwnsActualHpAndBurning",
+      "existingNumericTokens": 14,
+      "preparedNumericTokens": 14,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignTempleShrapnel_NaturalSafeCannonCombat",
+      "existingNumericTokens": 2,
+      "preparedNumericTokens": 2,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignGeneratorShrapnel_Native180CapturePixels",
+      "existingNumericTokens": 32,
+      "preparedNumericTokens": 32,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignGeneratorShrapnel_ActualSavedWindExplosionLifetime",
+      "existingNumericTokens": 45,
+      "preparedNumericTokens": 45,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignForwardBattle_NaturalTempleAssault",
+      "existingNumericTokens": 2,
+      "preparedNumericTokens": 2,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSalvage_NaturalCannonActualTransportRefundCollapse",
+      "existingNumericTokens": 2,
+      "preparedNumericTokens": 2,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignForwardBattle_Native120CapturePixels",
+      "existingNumericTokens": 32,
+      "preparedNumericTokens": 32,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignForwardBattle_ActualSavedStoneExplosionLifetime",
+      "existingNumericTokens": 45,
+      "preparedNumericTokens": 45,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSacrifice_ActualUiAndLocalPacketToRitualPath",
+      "existingNumericTokens": 0,
+      "preparedNumericTokens": 0,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignRitualProgress_Actual307RuneConstruction",
+      "existingNumericTokens": 0,
+      "preparedNumericTokens": 0,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSacrifice_Native30ActualShapeOffsets",
+      "existingNumericTokens": 27,
+      "preparedNumericTokens": 27,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignDais_SavedRecordFirstPopRegistersAltar",
+      "existingNumericTokens": 26,
+      "preparedNumericTokens": 26,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignAltar_AlliedReleaseUsesVirtualPriestOwner",
+      "existingNumericTokens": 39,
+      "preparedNumericTokens": 39,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignDais_AdditionalDisplayAndShrapnelCapture",
+      "existingNumericTokens": 30,
+      "preparedNumericTokens": 30,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignDude_ActualArrivalUsesPopulationLifetime",
+      "existingNumericTokens": 12,
+      "preparedNumericTokens": 12,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignDude_ActualRegularFallAndPopulation30",
+      "existingNumericTokens": 25,
+      "preparedNumericTokens": 25,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignDude_ActualPathNoticeSpeedAndArrival",
+      "existingNumericTokens": 54,
+      "preparedNumericTokens": 54,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignDais_ActualFactoryPopAndCapturedNotice",
+      "existingNumericTokens": 63,
+      "preparedNumericTokens": 63,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignDais_ActualPriestMenuCursorConstruction",
+      "existingNumericTokens": 0,
+      "preparedNumericTokens": 0,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignDais_ActualCampaignSacrificeFinish",
+      "existingNumericTokens": 0,
+      "preparedNumericTokens": 0,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSacrifice_ClickSkipsMultiplayerMenuAndKeepsRitualRequest",
+      "existingNumericTokens": 36,
+      "preparedNumericTokens": 36,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignTutorialOne_ActualSessionFrameAndInputPauseOwnership",
+      "existingNumericTokens": 76,
+      "preparedNumericTokens": 76,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignProduction_ModalPagesPreservePanelBudgetAndResize",
+      "existingNumericTokens": 53,
+      "preparedNumericTokens": 53,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignProductionLifetime_GlobalCleanupRetiresRootAndBudget",
+      "existingNumericTokens": 6,
+      "preparedNumericTokens": 6,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignProductionLifetime_IndependentBudgetCleanupRetiresText",
+      "existingNumericTokens": 3,
+      "preparedNumericTokens": 3,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignProductionLifetime_QueuedKillThenCloseDrainsOnce",
+      "existingNumericTokens": 3,
+      "preparedNumericTokens": 3,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignProductionLifetime_DuplicateOpenAndProviderRecreation",
+      "existingNumericTokens": 7,
+      "preparedNumericTokens": 7,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignTutorialTwo_ActualSessionOptionsAndInitialFrame",
+      "existingNumericTokens": 42,
+      "preparedNumericTokens": 42,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignTutorialLater_ActualSessionsAndThreeDwordEvents",
+      "existingNumericTokens": 63,
+      "preparedNumericTokens": 63,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignCarrierDrop_ActualCastRequestAndTransport",
+      "existingNumericTokens": 81,
+      "preparedNumericTokens": 81,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignCarrierDrop_ActualInsufficientFunds",
+      "existingNumericTokens": 19,
+      "preparedNumericTokens": 19,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignObjectCommand_ActualCarrierParentAndPriestOwner",
+      "existingNumericTokens": 22,
+      "preparedNumericTokens": 22,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignDevastation_ActualEnemyCaptureAndDropFromCast",
+      "existingNumericTokens": 122,
+      "preparedNumericTokens": 122,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignTest02_ActualStoredBulfSelectionAndNaturalMovement",
+      "existingNumericTokens": 73,
+      "preparedNumericTokens": 73,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignTest02_OriginalRuntimeStartupAssetParity",
+      "existingNumericTokens": 23,
+      "preparedNumericTokens": 23,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignDevastation_PacketLengthNative909",
+      "existingNumericTokens": 30,
+      "preparedNumericTokens": 30,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignDevastation_AdditionalDrawNative32",
+      "existingNumericTokens": 22,
+      "preparedNumericTokens": 22,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignDevastation_ActualActivationEffectLifetime",
+      "existingNumericTokens": 85,
+      "preparedNumericTokens": 85,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignWindFlyer_ActualTest02NaturalProductionAndLifetime",
+      "existingNumericTokens": 33,
+      "preparedNumericTokens": 33,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignWalkerPath_ActualSelectionAndNaturalMovement",
+      "existingNumericTokens": 79,
+      "preparedNumericTokens": 79,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignArcSpire_ActualKernelAttackAndDeletion",
+      "existingNumericTokens": 46,
+      "preparedNumericTokens": 46,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignAcidZap_ActualPacketCapturePixelsAndNaturalExpiry",
+      "existingNumericTokens": 123,
+      "preparedNumericTokens": 123,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignAcidFence_ActualKernelAutomaticCapture",
+      "existingNumericTokens": 70,
+      "preparedNumericTokens": 70,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignIceTower_ActualKernelRegrowthAndRepeat",
+      "existingNumericTokens": 77,
+      "preparedNumericTokens": 77,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignIceTower_ActualDeletionGates",
+      "existingNumericTokens": 37,
+      "preparedNumericTokens": 37,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignBulwark_ActualGroundAndQueuedDamage",
+      "existingNumericTokens": 32,
+      "preparedNumericTokens": 32,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignBulwark_ActualAirAttackImmunity",
+      "existingNumericTokens": 21,
+      "preparedNumericTokens": 21,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignWindTower_RightClickConstructionAndFourFaces",
+      "existingNumericTokens": 75,
+      "preparedNumericTokens": 75,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignWindAviaryDestroy_ActualProductionAndFormLifetime",
+      "existingNumericTokens": 51,
+      "preparedNumericTokens": 51,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignWindAviaryDestroy_Native54CapturePixels",
+      "existingNumericTokens": 30,
+      "preparedNumericTokens": 30,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignPlainWorkshopCapture_ExactTypeAndVtable",
+      "existingNumericTokens": 19,
+      "preparedNumericTokens": 19,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignPlainWorkshopCapture_Native2115Pixels",
+      "existingNumericTokens": 36,
+      "preparedNumericTokens": 36,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignPlainWorkshopCapture_ActualDamageBurningAndDeletion",
+      "existingNumericTokens": 42,
+      "preparedNumericTokens": 42,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignWorkshopDisplay_All25ActualBodyAndColors",
+      "existingNumericTokens": 94,
+      "preparedNumericTokens": 94,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSelectionBars_ActualCastCommandAndClock",
+      "existingNumericTokens": 36,
+      "preparedNumericTokens": 36,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSelectionBars_ActualThreeFlyerProductionTimers",
+      "existingNumericTokens": 51,
+      "preparedNumericTokens": 51,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSelectionBars_ActualStatusKernelAndExpiry",
+      "existingNumericTokens": 75,
+      "preparedNumericTokens": 75,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSelectionBars_PriestPrayerSnapshot",
+      "existingNumericTokens": 17,
+      "preparedNumericTokens": 17,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignPriestPrayer_ActualCommandTransportAndCompletion",
+      "existingNumericTokens": 68,
+      "preparedNumericTokens": 68,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignPriestPrayer_ActualMovementCancelAndRestart",
+      "existingNumericTokens": 26,
+      "preparedNumericTokens": 26,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignPriestPrayer_ActualQueuedDesiredTypeChange",
+      "existingNumericTokens": 31,
+      "preparedNumericTokens": 31,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignBombStatus_ActualCastTimerAndExpiry",
+      "existingNumericTokens": 88,
+      "preparedNumericTokens": 88,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignWindSpell_ActualThreeSummonsAndLifetime",
+      "existingNumericTokens": 75,
+      "preparedNumericTokens": 75,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSunFlyer_ActualAttackReturnLandingAndRelaunch",
+      "existingNumericTokens": 61,
+      "preparedNumericTokens": 61,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignPriestPanic_HealthyCommandAndNaturalArrival",
+      "existingNumericTokens": 18,
+      "preparedNumericTokens": 18,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignPriestPanic_WoundedTempleReturnAndRestoredSpeed",
+      "existingNumericTokens": 22,
+      "preparedNumericTokens": 22,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignPriestPanic_NeutralRegenAndRepeatedArrival",
+      "existingNumericTokens": 17,
+      "preparedNumericTokens": 17,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSession_FortObjectSaveCurrentChunk",
+      "existingNumericTokens": 36,
+      "preparedNumericTokens": 36,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSharedStorage_TwoActualSessionsUseSamePhysicalArrays",
+      "existingNumericTokens": 6,
+      "preparedNumericTokens": 6,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSharedStorage_PartialConstructorReleasesPhysicalLease",
+      "existingNumericTokens": 3,
+      "preparedNumericTokens": 3,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSharedStorage_ForeignAssetsFailBeforePhysicalMutation",
+      "existingNumericTokens": 1,
+      "preparedNumericTokens": 1,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSharedGameplay_TwoActualSessionsPublishAndRetireSameGlobals",
+      "existingNumericTokens": 15,
+      "preparedNumericTokens": 15,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "name": "CampaignSharedGameplay_ForeignAndPartialConstructionRetireLease",
+      "existingNumericTokens": 1,
+      "preparedNumericTokens": 1,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/ConnectionActivitySessionTests.cpp",
+      "name": "ConnectionActivitySession_ActualClientOwnerSurvivesUnselectedSessions",
+      "existingNumericTokens": 14,
+      "preparedNumericTokens": 14,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/ConnectionActivitySessionTests.cpp",
+      "name": "ConnectionActivitySession_ZoneAndQueuedWireUseActualClientTables",
+      "existingNumericTokens": 41,
+      "preparedNumericTokens": 41,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/ConnectionActivitySessionTests.cpp",
+      "name": "ConnectionActivitySession_CurrentServerAndFinalUiEffectsStayAliased",
+      "existingNumericTokens": 28,
+      "preparedNumericTokens": 28,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/ConnectionActivitySessionTests.cpp",
+      "name": "ConnectionActivitySession_MissingSelectedHooksFailAtNativeBoundary",
+      "existingNumericTokens": 15,
+      "preparedNumericTokens": 15,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/ConnectionActivitySessionTests.cpp",
+      "name": "ConnectionActivitySession_TimerRemoteStatusUsesSameModuleWithoutPacket",
+      "existingNumericTokens": 11,
+      "preparedNumericTokens": 11,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/ConnectionActivitySessionTests.cpp",
+      "name": "ConnectionActivitySession_AuthorityOwnerIdentityAndPrepareDoNotResynchronize",
+      "existingNumericTokens": 0,
+      "preparedNumericTokens": 0,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/ConnectionActivitySessionTests.cpp",
+      "name": "ConnectionActivitySession_ForeignAuthorityFailsBeforeAnyBorrowOrMutation",
+      "existingNumericTokens": 1,
+      "preparedNumericTokens": 1,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/ConnectionActivitySessionTests.cpp",
+      "name": "CameraView_ActualClientSessionAliasesFractionAndCurrentCursorReads",
+      "existingNumericTokens": 70,
+      "preparedNumericTokens": 86,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/ConnectionActivitySessionTests.cpp",
+      "name": "CameraView_ActualClientFailedSessionKeepsCurrentOwner",
+      "existingNumericTokens": 11,
+      "preparedNumericTokens": 11,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CursorActionsTests.cpp",
+      "name": "CursorActions_NativeWholeBodiesAndCurrentState",
+      "existingNumericTokens": 9,
+      "preparedNumericTokens": 9,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CursorLifecycleTests.cpp",
+      "name": "CursorLifecycle_NativeTakeCancelAndActivate565",
+      "existingNumericTokens": 19,
+      "preparedNumericTokens": 19,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CursorLifecycleTests.cpp",
+      "name": "CursorLifecycle_SharedMenuDropBindingsAndGuards",
+      "existingNumericTokens": 19,
+      "preparedNumericTokens": 19,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CursorLifecycleTests.cpp",
+      "name": "CursorLifecycle_ProtectedAssetsAndActualText",
+      "existingNumericTokens": 19,
+      "preparedNumericTokens": 19,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CursorLifecycleTests.cpp",
+      "name": "CursorLifecycle_NativeTypeNumberAndRange",
+      "existingNumericTokens": 11,
+      "preparedNumericTokens": 11,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CursorLifecycleTests.cpp",
+      "name": "CursorLifecycle_ActualAssetTypeRangeDuringTake",
+      "existingNumericTokens": 15,
+      "preparedNumericTokens": 15,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CursorPlacementTests.cpp",
+      "name": "CursorPlacement_OriginalBodiesMatchIndependentX86",
+      "existingNumericTokens": 15,
+      "preparedNumericTokens": 15,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/CursorPlacementTests.cpp",
+      "name": "CursorPlacement_BindsSharedLifecycleAndRequiresRealDependencies",
+      "existingNumericTokens": 27,
+      "preparedNumericTokens": 27,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/PreviewCollectionTests.cpp",
+      "name": "PreviewCollection_PatchNative",
+      "existingNumericTokens": 0,
+      "preparedNumericTokens": 0,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/PreviewCollectionTests.cpp",
+      "name": "PreviewCollection_PatchNativeSharedCursor",
+      "existingNumericTokens": 0,
+      "preparedNumericTokens": 0,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/PreviewCollectionTests.cpp",
+      "name": "PreviewCollection_CdNative",
+      "existingNumericTokens": 0,
+      "preparedNumericTokens": 0,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/PreviewCollectionTests.cpp",
+      "name": "PreviewCollection_AdditionalNative",
+      "existingNumericTokens": 0,
+      "preparedNumericTokens": 0,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/PreviewCollectionTests.cpp",
+      "name": "PreviewCollection_PairLimitAndPartialWrites",
+      "existingNumericTokens": 46,
+      "preparedNumericTokens": 46,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/PreviewCollectionTests.cpp",
+      "name": "PreviewCollection_Contracts",
+      "existingNumericTokens": 37,
+      "preparedNumericTokens": 37,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/PreviewCollectionTests.cpp",
+      "name": "PreviewCollection_ActualSpFeedback",
+      "existingNumericTokens": 42,
+      "preparedNumericTokens": 42,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/PreviewCollectionTests.cpp",
+      "name": "PreviewCollection_CurrentReadsAndSavedKey",
+      "existingNumericTokens": 33,
+      "preparedNumericTokens": 33,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/PreviewCollectionTests.cpp",
+      "name": "PreviewCollection_CommonSubmissionIntegration",
+      "existingNumericTokens": 84,
+      "preparedNumericTokens": 84,
+      "numericTokenSequenceRetained": true
+    },
+    {
+      "path": "cpppj/tests/PreviewCollectionTests.cpp",
+      "name": "PreviewCollection_SharedCursorCurrentReadsAndContracts",
+      "existingNumericTokens": 36,
+      "preparedNumericTokens": 36,
+      "numericTokenSequenceRetained": true
+    }
+  ],
+  "balancedCppDelimiterFiles": [
+    "cpppj/src/client/ClientCursorGlobals.h",
+    "cpppj/src/client/ClientCursorStateCleanup.cpp",
+    "cpppj/src/client/ClientCursorStateCleanup.h",
+    "cpppj/src/client/ClientGameplayGlobals.cpp",
+    "cpppj/src/client/ClientGameplayGlobals.h",
+    "cpppj/src/client/PreviewCollection.cpp",
+    "cpppj/src/client/RawCampaignCursor.cpp",
+    "cpppj/src/client/RawCampaignCursor.h",
+    "cpppj/src/client/RawCampaignCursorDisplay.cpp",
+    "cpppj/src/client/RawCampaignSession.cpp",
+    "cpppj/src/client/RawCampaignSession.h",
+    "cpppj/src/client/RawCursorActions.cpp",
+    "cpppj/src/client/RawCursorDrop.h",
+    "cpppj/src/client/RawCursorLifecycle.cpp",
+    "cpppj/src/client/RawCursorLifecycle.h",
+    "cpppj/src/client/RawCursorPlacement.cpp",
+    "cpppj/src/client/RawCursorPreviews.cpp",
+    "cpppj/src/client/RawCursorPreviews.h",
+    "cpppj/tests/CameraViewTests.cpp",
+    "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp",
+    "cpppj/tests/CampaignObjectMenuTests.cpp",
+    "cpppj/tests/CampaignSessionTests.cpp",
+    "cpppj/tests/ClientCursorGlobalsTests.cpp",
+    "cpppj/tests/ConnectionActivitySessionTests.cpp",
+    "cpppj/tests/CursorActionsTests.cpp",
+    "cpppj/tests/CursorLifecycleTests.cpp",
+    "cpppj/tests/CursorPlacementTests.cpp",
+    "cpppj/tests/CursorPreviewBindingSupport.h",
+    "cpppj/tests/CursorPreviewSupport.h",
+    "cpppj/tests/PreviewCollectionTests.cpp"
+  ],
+  "staleSid16ArrayUses": [],
+  "fixturesReadOnly": [
+    {
+      "path": "cpppj/tests/fixtures/cursor-actions-x86.tsv",
+      "bytes": 27004,
+      "sha256": "cf7ed24a65ed0b93d9800251e42c373f9d9de5ac398425346d8e782edc3f846b"
+    },
+    {
+      "path": "cpppj/tests/fixtures/cursor-lifecycle-x86.tsv",
+      "bytes": 385349,
+      "sha256": "153f07eb922205fa0a2adf2a4d365bbbffe82d4822d4814c79fdd539d5a4c53a"
+    },
+    {
+      "path": "cpppj/tests/fixtures/cursor-mana-display-x86.tsv",
+      "bytes": 56960,
+      "sha256": "a4538ccefab60ad875c2c0d6e0b1a2283ab541a0c234b2b92853826b7314f844"
+    },
+    {
+      "path": "cpppj/tests/fixtures/cursor-mana-x86.tsv",
+      "bytes": 5467568,
+      "sha256": "13bc12de4bee7790d44ce4138249221a49f26740538e0e9ebca9fb22348adc38"
+    },
+    {
+      "path": "cpppj/tests/fixtures/cursor-placement-x86.tsv",
+      "bytes": 139995,
+      "sha256": "92948f3001f745d088ec58fb8212f3a42e6c02514e1c69fef7e77bc3a12e742f"
+    },
+    {
+      "path": "cpppj/tests/fixtures/cursor-position-x86.tsv",
+      "bytes": 283398,
+      "sha256": "0c72511664e3837087714999c900e27ea6b70b1f15a0cc121d71988b3072927c"
+    },
+    {
+      "path": "cpppj/tests/fixtures/cursor-previews-x86.tsv",
+      "bytes": 631699,
+      "sha256": "d149954cf5475f127797d1ccd208f0d6ca6bfe2efca13cf9df1bd2aa29fd3a32"
+    },
+    {
+      "path": "cpppj/tests/fixtures/cursor-range-x86.tsv",
+      "bytes": 7731214,
+      "sha256": "d1aaf51ae3023b56c08e074cf9c671dfb6678ea54950f197cec65cd91777b616"
+    },
+    {
+      "path": "cpppj/tests/fixtures/cursor-type-range-x86.tsv",
+      "bytes": 16009,
+      "sha256": "cf2a3db28cd78c5089e7102a33b86b5ab3908e2f7137bf09de592d33df69b824"
+    },
+    {
+      "path": "cpppj/tests/fixtures/cursordrop-x86.tsv",
+      "bytes": 724559,
+      "sha256": "9a89077c528939f3450d4137a553d727a6d42869fe83b3ea226ffae962006d73"
+    }
+  ],
+  "context": {
+    "path": "context/cpppj/src/client/RawCursorPlacement.h",
+    "source": "extracted/cpp-camera-state-439440-integration/final/cpppj/src/client/RawCursorPlacement.h",
+    "sha256": "ebbfaf7cd09aa3e15b77fd03e50c6c134458b1382d7469e471af75193ac65bb9",
+    "changedBy443": false
+  },
+  "limitations": [
+    "정적 괄호/토큰 감사는 C++ 컴파일이나 런타임 검증이 아니다.",
+    "실제 main에 이 패치를 적용/검사하지 않았다. 현재 Root93/94는 다른 담당의 본 작업이며 이 사본의 입력이 아니다.",
+    "기존 Native fixture 기대 파일을 변경하지 않았으며 이번 신규 Native 관측은 없다."
+  ]
+}

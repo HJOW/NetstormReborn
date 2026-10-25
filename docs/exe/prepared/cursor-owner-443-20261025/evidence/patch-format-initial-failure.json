@@ -1,0 +1,12 @@
+{
+  "method": "ignored 입력 사본에서 git apply --check만 실행",
+  "directory": "apply-check-final",
+  "gitInitExitCode": 0,
+  "gitApplyCheckExitCode": 1,
+  "stderr": "error: dev/null: No such file or directory\nerror: dev/null: No such file or directory\nerror: dev/null: No such file or directory\nerror: dev/null: No such file or directory\n",
+  "cause": "신규4파일의 unified diff에 new file mode 100644가 빠져 있었다.",
+  "resolution": "패치 생성기만 교정해 신규 파일 헤더를 명시하고, 기존 실패 사본을 그대로 보존한 채 새 격리 경로에서 다시 검사했다.",
+  "cppSourceAffected": false,
+  "mainApplied": false,
+  "cppBuildOrTestExecuted": false
+}

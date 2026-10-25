@@ -1,0 +1,45 @@
+{
+  "status": "Git 패치 복원 및 정규화 SHA 대조만 완료; CPP/PE/게임 실행 없음",
+  "inputs": 28,
+  "outputs": 32,
+  "matched": 32,
+  "commands": [
+    {
+      "argv": [
+        "git",
+        "init",
+        "--quiet"
+      ],
+      "exitCode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-c",
+        "core.autocrlf=false",
+        "apply",
+        "--check",
+        "--ignore-space-change",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-cursor-owner-443-prepared\\cursor-owner-443.patch"
+      ],
+      "exitCode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "-c",
+        "core.autocrlf=false",
+        "apply",
+        "--ignore-space-change",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-cursor-owner-443-prepared\\cursor-owner-443.patch"
+      ],
+      "exitCode": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ]
+}

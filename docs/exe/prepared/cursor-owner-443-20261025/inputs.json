@@ -1,0 +1,177 @@
+{
+  "lastDecompile": "HJOW-Athlon/2026-10-23",
+  "files": [
+    {
+      "path": "cpppj/src/client/ClientGameplayGlobals.h",
+      "baseProvenance": "extracted\\cpp-camera-state-439440-integration\\final\\cpppj\\src\\client\\ClientGameplayGlobals.h",
+      "originalSHA256": "2b0cfa9205ac87c031eb9927c0aad9cfa912b166000c4596e26f0b5ccc14f432",
+      "mainSHA256AtStart": "8d5b1ba5aedc0c2799da11e79e85cdb92c5b08b67c45ad0c6355e53f28065d70"
+    },
+    {
+      "path": "cpppj/src/client/ClientGameplayGlobals.cpp",
+      "baseProvenance": "cpppj\\src\\client\\ClientGameplayGlobals.cpp",
+      "originalSHA256": "f5302d6acdcc119d9bbe817c868671c76e0ea9d2dd3dd2fcb8f8c21f984a4ec3",
+      "mainSHA256AtStart": "f5302d6acdcc119d9bbe817c868671c76e0ea9d2dd3dd2fcb8f8c21f984a4ec3"
+    },
+    {
+      "path": "cpppj/src/client/RawCampaignCursor.h",
+      "baseProvenance": "extracted\\cpp-camera-state-439440-integration\\final\\cpppj\\src\\client\\RawCampaignCursor.h",
+      "originalSHA256": "62438ae9d6af4645f95c19d09962122b69ca0abd168356dfbe2d2543ed621e8c",
+      "mainSHA256AtStart": "112dedf4a204f343dc8fbf97916a29fdfd2f656c4d47f2a1e0b4d903385d9579"
+    },
+    {
+      "path": "cpppj/src/client/RawCampaignCursor.cpp",
+      "baseProvenance": "extracted\\cpp-camera-state-439440-integration\\final\\cpppj\\src\\client\\RawCampaignCursor.cpp",
+      "originalSHA256": "7ff3da9e9afb9788906539320e842189d8355246072061dc802d3abc72471fc1",
+      "mainSHA256AtStart": "035d3c068e7a452661dec215704d3ba09974e36899fdf9f94ff756cd9b8b15cd"
+    },
+    {
+      "path": "cpppj/src/client/RawCampaignSession.cpp",
+      "baseProvenance": "extracted\\cpp-camera-state-439440-integration\\final\\cpppj\\src\\client\\RawCampaignSession.cpp",
+      "originalSHA256": "0db0e748fcb207f1ab42f729e6025e3e0a750bce57933171c6632f3aad7fecae",
+      "mainSHA256AtStart": "1b68d627b198eca00ac7cdf8a8ab833d991f2cccb432ec5a6091d8b32f092ca0"
+    },
+    {
+      "path": "cpppj/src/client/RawCursorLifecycle.h",
+      "baseProvenance": "cpppj\\src\\client\\RawCursorLifecycle.h",
+      "originalSHA256": "537111c145676234c0f8ad032ca3b68e660f8e1d4245cc0e02f228c53066fd1b",
+      "mainSHA256AtStart": "537111c145676234c0f8ad032ca3b68e660f8e1d4245cc0e02f228c53066fd1b"
+    },
+    {
+      "path": "cpppj/src/client/RawCursorLifecycle.cpp",
+      "baseProvenance": "cpppj\\src\\client\\RawCursorLifecycle.cpp",
+      "originalSHA256": "fce0a2a2eed2fc50169d36b85ac2766dd4b2b8b4b060f17966950601a103e1ce",
+      "mainSHA256AtStart": "fce0a2a2eed2fc50169d36b85ac2766dd4b2b8b4b060f17966950601a103e1ce"
+    },
+    {
+      "path": "cpppj/src/client/RawCursorPreviews.h",
+      "baseProvenance": "cpppj\\src\\client\\RawCursorPreviews.h",
+      "originalSHA256": "63b07afad11e3008f2c55e848c9d7f48f41e62741d759db92ff4c8e3eaf4981a",
+      "mainSHA256AtStart": "63b07afad11e3008f2c55e848c9d7f48f41e62741d759db92ff4c8e3eaf4981a"
+    },
+    {
+      "path": "cpppj/src/client/RawCursorPreviews.cpp",
+      "baseProvenance": "cpppj\\src\\client\\RawCursorPreviews.cpp",
+      "originalSHA256": "13f90773195aebca5469cc2de11a1293bcb9a3d097500a7feb9fb7faedb79ed4",
+      "mainSHA256AtStart": "13f90773195aebca5469cc2de11a1293bcb9a3d097500a7feb9fb7faedb79ed4"
+    },
+    {
+      "path": "cpppj/src/client/RawCursorPlacement.cpp",
+      "baseProvenance": "extracted\\cpp-camera-state-439440-integration\\final\\cpppj\\src\\client\\RawCursorPlacement.cpp",
+      "originalSHA256": "f3532e2e82af0e022658bdfb2d767755e6e22f5e63a60ac1c0174a7789e1b01d",
+      "mainSHA256AtStart": "64c57e1581716ad63ebf952aa9c4b7ce4c432ec20f3ca23dcfeede6fcf8a1a46"
+    },
+    {
+      "path": "cpppj/src/client/RawCursorActions.cpp",
+      "baseProvenance": "cpppj\\src\\client\\RawCursorActions.cpp",
+      "originalSHA256": "5db1799e6ec86520abb8a9f3a9174fc21df4cabcf2789a069b45d03419483e59",
+      "mainSHA256AtStart": "5db1799e6ec86520abb8a9f3a9174fc21df4cabcf2789a069b45d03419483e59"
+    },
+    {
+      "path": "cpppj/src/client/PreviewCollection.cpp",
+      "baseProvenance": "cpppj\\src\\client\\PreviewCollection.cpp",
+      "originalSHA256": "6a067ab897f31fd8bc9c046f91ac40f15c815563b74c26757bf023a9eaf3255c",
+      "mainSHA256AtStart": "6a067ab897f31fd8bc9c046f91ac40f15c815563b74c26757bf023a9eaf3255c"
+    },
+    {
+      "path": "cpppj/src/client/RawCampaignCursorDisplay.cpp",
+      "baseProvenance": "cpppj\\src\\client\\RawCampaignCursorDisplay.cpp",
+      "originalSHA256": "0070470fb5e524009b1fd57e820a065fe71d0bbcc0a350f6cf5adb16aa7e5b84",
+      "mainSHA256AtStart": "0070470fb5e524009b1fd57e820a065fe71d0bbcc0a350f6cf5adb16aa7e5b84"
+    },
+    {
+      "path": "cpppj/src/CMakeLists.txt",
+      "baseProvenance": "extracted\\cpp-camera-state-439440-integration\\final\\cpppj\\src\\CMakeLists.txt",
+      "originalSHA256": "5f05d44fa0c4924f343d4d24fdc43f637e69d1661f6e69903ce21c16468cf1dc",
+      "mainSHA256AtStart": "f9f3c70757f1b1c09b0a0340703a3326db9a7b3dc82d7489101d36c26fa7fd9b"
+    },
+    {
+      "path": "cpppj/tests/CMakeLists.txt",
+      "baseProvenance": "extracted\\cpp-camera-state-439440-integration\\final\\cpppj\\tests\\CMakeLists.txt",
+      "originalSHA256": "633b71940057cb70b21d60a997b652d00f37e24afe59aab62dd97fbe1e7842d8",
+      "mainSHA256AtStart": "0dca45a0e69c77b0bff176e318fec29998b566ec636d4e8922836273d61ddf8f"
+    },
+    {
+      "path": "cpppj/tests/CursorLifecycleTests.cpp",
+      "baseProvenance": "cpppj\\tests\\CursorLifecycleTests.cpp",
+      "originalSHA256": "33711957a8ec13e32bcd7e63b97a499055ec40a2370345ea0ecc258f220f44e9",
+      "mainSHA256AtStart": "33711957a8ec13e32bcd7e63b97a499055ec40a2370345ea0ecc258f220f44e9"
+    },
+    {
+      "path": "cpppj/tests/CursorActionsTests.cpp",
+      "baseProvenance": "cpppj\\tests\\CursorActionsTests.cpp",
+      "originalSHA256": "adcbfb672de4ac2cdb4ba2358d1e554bf41bc0136aaccb1a1fca579a8aefacf8",
+      "mainSHA256AtStart": "adcbfb672de4ac2cdb4ba2358d1e554bf41bc0136aaccb1a1fca579a8aefacf8"
+    },
+    {
+      "path": "cpppj/tests/CursorPreviewSupport.h",
+      "baseProvenance": "cpppj\\tests\\CursorPreviewSupport.h",
+      "originalSHA256": "fa4e6b6d54bbc564af308ffd154f2ced7482a131c542222c0342e6019d6c9084",
+      "mainSHA256AtStart": "fa4e6b6d54bbc564af308ffd154f2ced7482a131c542222c0342e6019d6c9084"
+    },
+    {
+      "path": "cpppj/tests/CursorPreviewBindingSupport.h",
+      "baseProvenance": "cpppj\\tests\\CursorPreviewBindingSupport.h",
+      "originalSHA256": "324ab94b2d23c33f96bf257089d77a54f88ede7bbe4f4288d070fdf08cc02b4e",
+      "mainSHA256AtStart": "324ab94b2d23c33f96bf257089d77a54f88ede7bbe4f4288d070fdf08cc02b4e"
+    },
+    {
+      "path": "cpppj/tests/CursorPlacementTests.cpp",
+      "baseProvenance": "cpppj\\tests\\CursorPlacementTests.cpp",
+      "originalSHA256": "a03f225bbf82cce49a770d111b2d4d24f5c496cde97560f3f55c6bce50dad997",
+      "mainSHA256AtStart": "a03f225bbf82cce49a770d111b2d4d24f5c496cde97560f3f55c6bce50dad997"
+    },
+    {
+      "path": "cpppj/tests/PreviewCollectionTests.cpp",
+      "baseProvenance": "cpppj\\tests\\PreviewCollectionTests.cpp",
+      "originalSHA256": "c6faebfc2502d50278b1d0ee772206d3e4f4f63d0cb9af7aa45fbe62fe246892",
+      "mainSHA256AtStart": "c6faebfc2502d50278b1d0ee772206d3e4f4f63d0cb9af7aa45fbe62fe246892"
+    },
+    {
+      "path": "cpppj/tests/CameraViewTests.cpp",
+      "baseProvenance": "extracted\\cpp-camera-state-439440-integration\\final\\cpppj\\tests\\CameraViewTests.cpp",
+      "originalSHA256": "455f10089249c9ac662651a05a2734e94afab3d295749f58f7464026b23db64f",
+      "mainSHA256AtStart": null
+    },
+    {
+      "path": "cpppj/tests/ConnectionActivitySessionTests.cpp",
+      "baseProvenance": "extracted\\cpp-camera-session-439-test-fix\\cpppj\\tests\\ConnectionActivitySessionTests.cpp",
+      "originalSHA256": "8a9ca4713977b284318cc661c2d82600670134462303d41c82f0d7e323b77f2f",
+      "mainSHA256AtStart": "fdd0ea785aa8f644b21018030a00a9a6dd0367b17694c6b4d45fd1d381b37d0a"
+    },
+    {
+      "path": "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp",
+      "baseProvenance": "extracted\\cpp-camera-state-439440-integration\\final\\cpppj\\tests\\CampaignExistingEditorCheckpointTests.cpp",
+      "originalSHA256": "edfb44506e36145eda11b80b4463ad6a88dcdac5c10f03e1bb9fa676be5e3cb0",
+      "mainSHA256AtStart": "5e545556acce08fc529f96c6a37bec96cca1beee60c9d391131e06db70048fb8"
+    },
+    {
+      "path": "cpppj/src/client/RawCampaignSession.h",
+      "baseProvenance": "extracted\\cpp-camera-state-439440-integration\\final\\cpppj\\src\\client\\RawCampaignSession.h",
+      "originalSHA256": "f06ee60859189d2fd9275a3f571482e2c8b0cea119299bcd3131fd352d7b793b",
+      "mainSHA256AtStart": "2708c333ff119d886b907f805c00c4ad36e2f81bbb9cac25e490d0dd6db7f11b"
+    },
+    {
+      "path": "cpppj/src/client/RawCursorDrop.h",
+      "baseProvenance": "main RawCursorDrop.h;815fbd67과정규화본문동일확인",
+      "originalSHA256": "61de4218af3ad691e3be7a2a56902e5e35c0f7cdc10ba52b858f626010f13e5b",
+      "mainSHA256AtStart": "61de4218af3ad691e3be7a2a56902e5e35c0f7cdc10ba52b858f626010f13e5b",
+      "unchangedSince815": true
+    },
+    {
+      "path": "cpppj/tests/CampaignSessionTests.cpp",
+      "baseProvenance": "git:815fbd67:cpppj/tests/CampaignSessionTests.cpp",
+      "originalSHA256": "4dfbcb90ea1ff1bd9c09dbb1d927adfa51dd0db692dbf27744a3eb5dae8e06fc",
+      "mainSHA256AtStart": "4dfbcb90ea1ff1bd9c09dbb1d927adfa51dd0db692dbf27744a3eb5dae8e06fc",
+      "capturedAfterRoot93": true
+    },
+    {
+      "path": "cpppj/tests/CampaignObjectMenuTests.cpp",
+      "baseProvenance": "git:815fbd67:cpppj/tests/CampaignObjectMenuTests.cpp",
+      "originalSHA256": "613c7a2d0a8c16e077fb248645f289dfaf712f8f0d3fc9a0325170e8eb568ac9",
+      "mainSHA256AtStart": "613c7a2d0a8c16e077fb248645f289dfaf712f8f0d3fc9a0325170e8eb568ac9",
+      "capturedAfterRoot93": true
+    }
+  ],
+  "scope": "별도443준비;현재439442묶음에미포함"
+}
