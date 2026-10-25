@@ -354,3 +354,19 @@ TEST_CASE(RawPriestWorldBindings_SharedAuthorityAliasesAllLeavesAndRejectsForeig
         const auto sid=world.Add();authority.boss=false;world.bindings->SetHitPoints(sid,1);CHECK(world.bindings->PriestState().CurrentHitPoints(sid)==100);authority.boss=true;world.bindings->SetHitPoints(sid,1);CHECK(world.bindings->PriestState().CurrentHitPoints(sid)==1);
     }
 }
+
+// 실제 Player9의 동일 주소만 연결하고 빈 입력·다른 폭·다른 owner의 재연결은 기존 대여를 보존한 채 거부한다.
+TEST_CASE(RawPriestWorldBindings_PlayerRecoveryRejectsForeignRecords) {
+    // 두 판본은 서로 다른 stride의 정확한 기록 폭을 요구한다.
+    for (const auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) {
+        PriestWorld world(edition);const std::size_t stride=world.patch ? 0xb4U : 0xacU;std::vector<std::uint8_t> players(9*stride),foreign(players.size());CHECK(Throws([&] { world.bindings->BindPlayerRecords({}); }) && world.state.hitPoints.playerRecords.empty());world.bindings->BindPlayerRecords(players);world.bindings->BindPlayerRecords(players);CHECK(Throws([&] { world.bindings->BindPlayerRecords(foreign); }) && Throws([&] { world.bindings->BindPlayerRecords(std::span<const std::uint8_t>(players).first(players.size()-1)); }) && world.state.hitPoints.playerRecords.data()==players.data() && world.state.hitPoints.playerRecords.size()==players.size());
+    }
+}
+
+// 실제 Regular·Kernel의 회복이 신전 필드의 새 값을 읽고 보호막을 같은 삭제기로 정리한다.
+TEST_CASE(RawPriestWorldBindings_PlayerRecoveryRunsActualRegenAndShieldCleanup) {
+    // 원본 두 판본의 HP setter·공간·Form 폭을 그대로 조합한다.
+    for (const auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) {
+        PriestWorld world(edition);const std::size_t stride=world.patch ? 0xb4U : 0xacU,field=world.patch ? 0x7cU : 0x74U;std::vector<std::uint8_t> players(9*stride);world.bindings->BindPlayerRecords(players);const auto sid=world.Add();world.bindings->SetLoadingDepth(0);world.state.hitPoints.recoveryAllowed[1]=true;world.bindings->SetHitPoints(sid,90);const auto shield=world.bindings->Forcefield().Find(sid);CHECK(shield.value && world.kernel.Size()==3);world.bindings->SetHitPoints(sid,200);CHECK(world.bindings->PriestState().CurrentHitPoints(sid)==90 && world.bindings->Forcefield().Find(sid)==shield);Put(players,stride+field,0x10000);world.state.hitPoints.recoveryAllowed[1]=false;world.clock.now=9;world.kernel.RunFrame();CHECK(world.bindings->PriestState().CurrentHitPoints(sid)==123 && !world.bindings->PriestState().Immobile(sid) && !world.bindings->Forcefield().Find(sid).value && (world.pool.Slot(shield)[11]&1) && world.kernel.Size()==1 && world.healthRequests==0 && world.book.depth==0 && world.destroy->PreDepth()==0 && world.destroy->PostDepth()==0);
+    }
+}

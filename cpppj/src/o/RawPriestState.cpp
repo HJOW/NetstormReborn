@@ -6,6 +6,17 @@
 #include <stdexcept>
 
 namespace netstorm::o {
+// 실제 Player 기록의 판본별 신전 DWORD를 읽는다. SID의 유효성·상태·하위 WORD를 별도로 검사하지 않는다.
+bool PriestHitPointMode::RecoveryAllowed(std::uint32_t owner,OriginalEdition edition) const {
+    if (owner>kPlayerCount) throw std::out_of_range("사제 HP 회복 Player 번호 오류");
+    if (playerRecords.empty()) return recoveryAllowed[owner];
+    const std::size_t stride=edition==OriginalEdition::Patch1078 ? 0xb4U : 0xacU,field=edition==OriginalEdition::Patch1078 ? 0x7cU : 0x74U; // 원문 PATCH/CD Player 배치다.
+    if (playerRecords.size()!=(kPlayerCount+1)*stride || !playerRecords.data()) throw std::invalid_argument("사제 HP 회복 Player9 기록 폭 오류");
+    const auto offset=owner*stride+field;std::uint32_t temple{}; // 현재 owner의 비정렬 DWORD 전체가 허용 조건이다.
+    // 리틀 엔디언 네 바이트만 읽으며 인접 Player 필드를 쓰지 않는다.
+    for (std::size_t index=0;index<4;++index) temple|=static_cast<std::uint32_t>(playerRecords[offset+index])<<(8*index);
+    return temple!=0;
+}
 namespace {
 // raw 타입/상태/좌표/HP의 두 판본 공통 위치다.
 constexpr std::size_t kType=10,kState=11,kX=14,kY=18,kHp=26;
@@ -78,7 +89,7 @@ void RawPriestState::SetHitPoints(Sid sid,std::int32_t value,const PriestHitPoin
     const auto owner=raw[patch ? 34 : 32];
     // 실제로 참조하는 소유자 칸과 필요한 가상 효과만 쓰기 전에 검사한다.
     if (transition && mode.Authority() && wasLow && owner>kPlayerCount) throw std::out_of_range("사제 HP 회복 소유자 오류");
-    const bool space=transition && mode.Authority() && (!wasLow || mode.recoveryAllowed[owner]);
+    const bool space=transition && mode.Authority() && (!wasLow || mode.RecoveryAllowed(owner,pool_.Edition()));
     if (space && (!hooks.unpop || !hooks.repop)) throw std::invalid_argument("사제 HP 변경 공간 효과 누락");
     // 원본 setter 폭 밖의 stale 바이트는 그대로 보존한다.
     const auto write=[&](std::int32_t hp) {
@@ -89,7 +100,7 @@ void RawPriestState::SetHitPoints(Sid sid,std::int32_t value,const PriestHitPoin
     write(value);
     if (!transition) return;
     if (!mode.Authority()) { write(half-(wasLow ? 1 : 0));return; }
-    if (wasLow && !mode.recoveryAllowed[owner]) { write(oldHp);return; }
+    if (wasLow && !mode.RecoveryAllowed(owner,pool_.Edition())) { write(oldHp);return; }
     hooks.unpop(sid,0);
     // 가상 효과 이후 HP/좌표를 다시 읽는다. 원본도 새 HP가 저HP일 때만 현재 위치를 거의 올림한다.
     if (CurrentHitPoints(sid)<hp_.MaxHitPoints(sid)/2) {

@@ -226,6 +226,14 @@ void RawPriestWorldBindings::BindAuthority(const o::RawAuthorityState& authority
     impl_->state.hitPoints.sharedAuthority=value;impl_->state.fall.sharedAuthority=value;
     impl_->state.carrier.sharedBoss=value;impl_->state.contained.sharedBoss=value;
 }
+// 실제 Session의 고정 Player 대여를 공유한다. 독립 fixture의 기존 bool 배열은 미연결 상태에서만 쓰인다.
+void RawPriestWorldBindings::BindPlayerRecords(std::span<const std::uint8_t> players) {
+    const std::size_t stride=impl_->core.pool.Edition()==o::OriginalEdition::Patch1078 ? 0xb4U : 0xacU; // 판본별 Player9의 전체 물리 폭이다.
+    const auto current=impl_->state.hitPoints.playerRecords; // 먼저 검증하여 실패한 연결이 기존 대여를 덮지 않는다.
+    if (!players.data() || players.size()!=(o::kPlayerCount+1)*stride || (!current.empty() && current.data()!=players.data()))
+        throw std::invalid_argument("사제 HP의 같은 Player9 고정 기록 필요");
+    impl_->state.hitPoints.playerRecords=players;
+}
 // 원본 현재 로컬 플레이어 범위만 허용한다. 로딩 소유자 0 문제와 구별한다.
 void RawPriestWorldBindings::SetLocalPlayer(std::uint32_t player) {
     if (player>o::kPlayerCount) throw std::out_of_range("사제 로컬 플레이어 범위 오류");

@@ -130,6 +130,8 @@ public:
     void SetAuthority(bool authority);
     // 같은 Client boss를 회복/낙하/Carrier/종속에 빌린다. authority는 이 실행기·상태보다 오래 살아야 한다.
     void BindAuthority(const o::RawAuthorityState& authority);
+    // 동일 Player9의 현재 신전 SID를 HP·회복 처리기에 빌린다. 다른 주소 재연결은 거부하며 기록의 수명은 호출자가 보장한다.
+    void BindPlayerRecords(std::span<const std::uint8_t> players);
     // 로컬 소유자에 대한 원본 owner 표식과 보호막 안내 조건을 함께 갱신한다.
     void SetLocalPlayer(std::uint32_t player);
     // 사제는 원래 소유자 규칙, 다른 자산은 공통 실제 소유자 지정으로 분배한다.

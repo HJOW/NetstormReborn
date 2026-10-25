@@ -907,7 +907,7 @@ struct RawCampaignSession::Impl {
         FillMissing(priestEffects.regen.measurement);
         priestEffects.regen.damageable=[this](Sid sid) { hits->Burning().Refresh(sid); };
         priests=std::make_unique<RawPriestWorldBindings>(RawPriestWorldCore{core.pool,core.hash,core.types,core.frames,core.spots,core.hash.Entries(0),hp,random,core.factory,core.owner,core.ownerMode,core.postPop,core.frame},priestState,std::move(priestEffects));
-        priests->BindProcesses(core.processes);priests->BindAuthority(*gameplayGlobals->Authority());priests->SetLocalPlayer(1); // 네 소비자가 매 조회 때 같은 Client boss를 읽고 Prepare의 복사를 기다리지 않는다.
+        priests->BindProcesses(core.processes);priests->BindAuthority(*gameplayGlobals->Authority());priests->BindPlayerRecords(players);priests->SetLocalPlayer(1); // 현재 boss와 Player 신전 SID를 같은 장기 주소에서 읽고 Prepare의 복사를 기다리지 않는다.
         // 첫객체전에같은실제Carrier/목록과현재타입참조만연결하며ownerState는여기서갱신하지않는다.
         priestParticipation=std::make_unique<RawPriestParticipation>(core.pool,core.hash,core.types,priests->Priests(),priests->Carrier(),
             PriestParticipationState{priestState.movement.priest,runeState.altarType,runeState.daisType});

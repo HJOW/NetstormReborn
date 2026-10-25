@@ -8,7 +8,7 @@
 - **마지막 전체 정밀 디컴파일: HJOW-Athlon (192.168.0.94) / 2026-10-23.** 결과는 `extracted/refined/`(Git 제외)에 있다. 현재 PC가 이와 다르면 AGENTS.md 규칙에 따라 재디컴파일한 뒤 작업한다. 절차는 `tools\ghidra\refine_all.ps1`이며, 힌트 생성 단계가 콘솔 인코딩(cp949) 오류로 멈추면 `PYTHONUTF8=1`, `PYTHONIOENCODING=utf-8`을 설정하고 다시 실행한다.
 - 2026-10-26의 문서 정리는 HJOW-X3D에서 인수인계 문서만 고친 것이다. 디컴파일 결과·제품 코드·검사 코드는 바꾸지 않았으므로 위 디컴파일 기록은 그대로 유효하다. 사용자는 HJOW-Athlon에서 작업을 재개할 예정이다.
 - **실제 게임 실행 확인:** HJOW-Athlon, VM-W11-Codex, vm-debian-codex는 AGENTS.md의 예외 시스템이다. 그 밖의 PC에서는 게임이나 별도 창을 띄우기 전에 목적을 설명하고 사용자 확인을 받는다.
-- **목표 상태:** 2026-10-26 사용자 지시로 HJOW-Athlon에서 재개했다. 443·444 통합과445·446의 사제/피격/건설/삭제/채집 공유 권한 집중 검증을 완료했다. 다음은 아래3절1번의 실제 Player 신전 SID를 이용한 회복 허용 조회다.
+- **목표 상태:** 2026-10-26 사용자 지시로 HJOW-Athlon에서 재개했다. 447 실제 Player 신전 SID 기반 회복과 같은 제품 통합을 완료했다. 다음은 아래3절1번의 남은 SID16/전체 Deck 및 Native State1 정리·Edit 진입 접합이다.
 - **원시 증거 위치:** 빌드·검사·GUI 원시 로그와 통합 드라이버는 `extracted/`(Git 제외)에 있으며, 작업한 PC(주로 HJOW-Athlon)에만 있다. 커밋되는 결과 보고서는 `cpppj/*.json`, 작업 문서는 `docs/exe/cpp-*.md`다.
 - 원격 저장소에 push하지 않는다. 커밋 메시지는 `YYYYMMDD-NN CP 요약` 형식이며, NN은 `git log`로 그날의 마지막 번호를 확인해 정한다.
 
@@ -38,7 +38,7 @@
 
 ### 2.1 마지막 통합 검증 기준
 
-- **더 최신인 집중 검증 제품(446):** Source3(2,027소스 동결), 게임SHA`9bc865e1…`, build3 종료0·경고/오류0, 집중480고유/480관측·실패0(신규12개 전부). [실행 보고서](cpppj/runtime-authority-20261026.json), [446 문서](docs/exe/cpp-runtime-authority-20261026.md). 전체CTest·GUI는 이 제품에서 다시 실행하지 않았다. 직전445도 집중515고유/684관측·실패0이며 아래는 443·444 제품의 마지막 통합 기록이다.
+- **최신 통합 검증 제품(447):** Source1(2,027소스 동결), 게임SHA`97bef859…`, build1 종료0·경고/오류0, 집중479고유/480관측·실패0(신규7개 전부), 같은 제품 전체CTest **3,052개·실패0**·GUI2경로·자연Early2→Tutorial3 통과. 기존3,027개와445·446 신규18개 및이번7개의 실제 이름 집합을 대조했다. [447 보고서](cpppj/priest-recovery-runtime-20261026.json), [447 문서](docs/exe/cpp-priest-recovery-runtime-20261026.md). 아래는 443·444 제품의 직전 통합 기록이다.
 - 제품: 443·444 준비본 통합 Source4(2,027소스 동결), 게임 실행 파일 SHA `423d0911…`. 시작 HEAD는 `9f5768a4`이고 통합 도중의 `1eddb0e8 / 20261026-07 CM`은 국·영 README만 변경했다.
 - build4 종료0·경고/오류0, 집중 검사422고유/430관측·실패0(신규20개 전부), 전체 CTest **3,027개·실패0**, 메뉴 GUI2실행, 자연 Early2 → Tutorial3 진입 통과. 근거는 [실행 보고서](cpppj/cursor-retirement-runtime-20261026.json)와 [작업 문서](docs/exe/cpp-cursor-retirement-runtime-20261026.md)다. 이전3,007개 실제 검사 이름도 모두 보존됐다. 최초 빌드 두 실패와 집중의 신규 fixture3실패는 원시 로그에 보존했고 제품 관문·기존 기대값을 완화하지 않았다.
 - 34경로(일반 31 + 데모 3) 초기 진입과 자연 Early1·Early2 완주를 함께 통과한 마지막 기록은 단위423 제품(`a1bfa97d / 20261025-17 CP`)이다. 그 뒤의 제품에서는 34경로와 Early1을 다시 돌리지 않았다.
@@ -72,7 +72,7 @@
 - **공통 전략 AI:** 적·아군·데모 로컬 AI를 같은 원본 전략으로 복원하고 `RawCampaignSession::RunFrame`(현재 시각 → 정지하지 않은 AI → Kernel)에 연결했다(단위320~322, [문서](docs/exe/cpp-ai-automatic-session-20261022.md)). 정상 행동 간격에서 확장·채취·생산·공격이 원본과 같은지는 자연 플레이로 대조하지 않았다.
 - **주문·의식:** Devastation의 시전 → 서버 → 효과와 사제 포획·운반·제단·다이스·룬·희생·SP·미션 완료를 연결했다. 집중 13검사는 통과했지만 일부 입력은 명시한 시전원·포로·시계 값이었다([문서](docs/exe/cpp-ritual-runtime-focused-20261021.md)). 은신·마비(단위349)와 윈드 소환 세 주문(단위350)도 복원했다. 실제 UI에서 취득 → 시전 → 포획 → 희생으로 이어지는 자연 플레이는 검증하지 않았다.
 - **유닛·건물:** 워크샾 25종(썬 6·레인 7·윈드 6·썬더 6)의 생성·이동·공격·표시·소유자 색을 복원했다(단위335~345, [목록](docs/exe/cpp-unit-restoration-20261022.md)). 캠페인 2·3장에서 추가로 쓰이는 TYPE의 전체 수명은 점검하지 않았다.
-- **내부 상태 수명(단위425~446):** Client와 Session이 공유하는 원본 장기 전역(카메라64BYTE, 상태 보조, 게임 보조17필드, 프로세스Host, Graph, TotalMade, 섬·청크·사제, 선택·권한·FullDeck, 연결 활동 표, 커서30DWORD·Lifecycle/Placement/snap)을 실제 소유자로 옮겼다. AI reset·Player 링크 정상 복귀의 이동 증빙과 중복 정리 방지, 사제4leaf·공통Carrier/생산·Damageable finder 및 피격·건설·삭제·채집10State의 현재 Client boss/server 조회를 통합했다. 계획은 [월드 장기 소유 계획](docs/exe/cpp-state-world-owner-plan-20261025.md)에 있다. Native State1 전체 cleanup/prefix와 반납 coordinator는 남았다.
+- **내부 상태 수명(단위425~447):** Client와 Session이 공유하는 원본 장기 전역(카메라64BYTE, 상태 보조, 게임 보조17필드, 프로세스Host, Graph, TotalMade, 섬·청크·사제, 선택·권한·FullDeck, 연결 활동 표, 커서30DWORD·Lifecycle/Placement/snap)을 실제 소유자로 옮겼다. AI reset·Player 링크 정상 복귀의 이동 증빙과 중복 정리 방지, 사제4leaf·공통Carrier/생산·Damageable finder 및 피격·건설·삭제·채집10State의 현재 Client boss/server 조회 및 실제 Player 신전 SID에 따른 HP 회복을 통합했다. 계획은 [월드 장기 소유 계획](docs/exe/cpp-state-world-owner-plan-20261025.md)에 있다. Native State1 전체 cleanup/prefix와 반납 coordinator는 남았다.
 - **배포:** [cpppj/package-cpppj.ps1](cpppj/package-cpppj.ps1)을 만들었다(단위359). 자동 빌드 분기(`-NoBuild` 없이 실행)는 아직 실제로 돌려 보지 않았다.
 
 ### 2.4 알려진 미해결 이슈
@@ -95,7 +95,8 @@
 - [x] 빌드 → 신규20개 포함 집중 → 동일 제품의 통합batch(전체CTest3,027개, 메뉴GUI, 자연Early2)를 완료했다. 이번 드라이버는 `extracted/cpp-cursor-retirement-443444-{build,focused,batch,gui,finalize}.py`이고 최종 원시는`batch1/`이다.
 - [x] **445 완료:** 사제 HP·회복·낙하·Carrier·내용물과 공통Carrier/생산·Damageable finder를 같은 Client boss 주소에 연결했다. Source3 빌드 경고/오류0, 집중515고유/684관측·실패0(신규6개 전부)이다. 첫 집중의 신규 실제 Session1실패는 합성 최대HP200의 경계100을 원본 타입에도 적용한 검사 오류였으며, 독립 원본`priest.type` 최대HP100·원문004942b0의 절반50을 대조해 수정하고 초기값 단언을 추가했다. 합성/기존 Native 기대값과 제품은 그대로다. PowerShell 인코딩으로 물음표가 된 새 주석·이전 보고서 설명은 UTF-8 한국어로 복원했으며 원시 로그·증거 SHA는 유지했다. [445 문서](docs/exe/cpp-priest-authority-runtime-20261026.md), [실행 보고서](cpppj/priest-authority-runtime-20261026.json), 원시`extracted/cpp-priest-authority-445-*`를 본다.
 - [x] **446 완료:** 피격·삭제·건설·Content·빌더·간헐천10개 State의 boss/server를 실제 Client 주소로 연결하고 Prepare의 복사를 제거했다. Source3 빌드 경고/오류0, 집중480고유/480관측·실패0(신규12개 전부). 원문22함수의 조회 위치와 CD 차이를 대조하고 기존269사례 바이트·fixture10개 내용을 보존했다. [446 문서](docs/exe/cpp-runtime-authority-20261026.md), [실행 보고서](cpppj/runtime-authority-20261026.json), 원시`extracted/cpp-runtime-authority-446-*`를 본다.
-- [ ] **다음:** 사제 HP의 `recoveryAllowed`는 실제 Player와 미연결이며 제품에서는 기본false 그대로다. 원문004942b0/CD0040ca40의 현재 신전 SID DWORD(PATCH stride0xb4/+7c, CD stride0xac/+74)를 값복사 없이 조회하도록 연결하고 낮은HP→절반이상 회복 허용/거부·실제 Session을 확인한다. Native State1 전체 cleanup/prefix와 Edit 진입 접합을 이어 간다.
+- [x] **447 완료:** 실제 Player9 고정 기록의 신전 SID DWORD를 HP·Regular 회복이 직접 읽도록 연결했다(PATCH stride0xb4/+7c, CD stride0xac/+74). Native setter3,936행·새 실제 PE63입력/126회·기존231사례를 보존해 신규7개와 현재 DWORD·조회 생략·Unpop 시점·실제 보호막 정리·Client Session을 확인했다. Source1 빌드 경고/오류0, 집중479고유/480관측·실패0, 같은 게임 전체CTest3,052·GUI2·자연Early2→Tutorial3 통과. [447 문서](docs/exe/cpp-priest-recovery-runtime-20261026.md), [실행 보고서](cpppj/priest-recovery-runtime-20261026.json), 원시`extracted/cpp-priest-recovery-447-*`를 본다.
+- [ ] **다음:** 아래 SID16/전체 Deck 잔여 경계를 대조하고 Native State1 전체 cleanup/prefix·GameplayUse/고정뷰 반납 coordinator를 실제 Client에 접합한다. 그 뒤 실제 Edit 예약을 소비해 기존 checkpoint·HUD·팔레트·전송을 설치한다. 기존 단위 모듈/준비 checkpoint 통과를 전체 Edit 진입 완료로 합산하지 않는다.
 - [ ] 436의 남은 기존 SID16 변환, 438의 전체 Deck 명령 부모/nullable+ac와 Native cleanup 접합, 443의 단일 Drop.preview SID16 경계를 이어서 처리한다.
 
 ### 2. Edit 메뉴 완성

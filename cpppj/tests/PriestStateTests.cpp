@@ -140,3 +140,45 @@ TEST_CASE(PriestState_SharedAuthoritySurvivesModeCopyAndChangesWithoutPrepare) {
         authority=true;scene.mode.authority=false;scene.state->SetHitPoints(kSource,1,copied,hooks);CHECK(scene.state->CurrentHitPoints(kSource)==1 && unpops==1 && repops==1 && copied.sharedAuthority==&authority);
     }
 }
+
+// 실제 세 PE의 HP setter 관찰 3,936행을 반대인 값형 배열과 현재 Player 기록으로 재생한다.
+TEST_CASE(PriestState_SharedPlayerRecordsReplaysAllNativeSetterRows) {
+    // 10.37은 기존 비교 경로와 같은 CD 배치를 쓰고 독립 PE 기대값은 그대로 유지한다.
+    for (const auto edition:{std::string_view{"originals"},std::string_view{"originalCD"},std::string_view{"original1037"}}) {
+        StateScene scene(edition=="originals" ? OriginalEdition::Patch1078 : OriginalEdition::Cd1072);const std::size_t stride=scene.patch ? 0xb4U : 0xacU,field=scene.patch ? 0x7cU : 0x74U;std::vector<std::uint8_t> players(9*stride);std::size_t count{};
+        // 기대 HP·전체 raw·공간 호출 순서는 저장된 원본 관찰에서만 읽는다.
+        for (const auto& row:Fixture()) {
+            if (row[0]!="Set" || row[1]!=edition) continue;scene.Prepare(row);std::fill(players.begin(),players.end(),std::uint8_t{0xa5});const auto owner=Number(row[13]);Put(players,owner*stride+field,Number(row[12]));scene.mode.recoveryAllowed.fill(Number(row[12])==0);scene.mode.playerRecords=players;const auto before=players;
+            scene.state->SetHitPoints(kSource,std::stoi(row[10]),scene.mode,{[&](Sid sid,std::uint32_t flags) { scene.Record('U',sid,flags); },[&](Sid sid,std::uint32_t flags) { scene.Record('R',sid,flags); }});CHECK((scene.events.empty() ? "-" : scene.events)==row[16] && Hex(scene.pool.Slot(kSource))==row[17] && players==before);++count;
+        }
+        CHECK(count==1312 && !scene.store.Initialized());
+    }
+}
+
+// 중립·첫·마지막 owner와 하위 WORD가 0인 신전 DWORD도 원문대로 현재값을 읽는다.
+TEST_CASE(PriestState_SharedPlayerRecoveryUsesCurrentWholeDwordAndCopiedView) {
+    // 각 판본의 끝 기록까지 실제 원문 폭으로 준비한다.
+    for (const auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) {
+        // 원문은 owner0도 허용하며 owner8 뒤를 읽지 않는다.
+        for (const auto owner:{0U,1U,8U}) {
+            StateScene scene(edition);std::vector<std::string> row(18,"0");row[2]="200";row[5]="20";row[7]="6";row[8]=std::to_string(std::bit_cast<std::uint32_t>(20.F));row[9]=std::to_string(std::bit_cast<std::uint32_t>(21.F));row[11]="1";row[13]=std::to_string(owner);row[14]="-";scene.Prepare(row);const std::size_t stride=scene.patch ? 0xb4U : 0xacU,field=scene.patch ? 0x7cU : 0x74U;std::vector<std::uint8_t> players(9*stride,0xa5);Put(players,owner*stride+field,0);scene.mode.playerRecords=players;auto copied=scene.mode;copied.recoveryAllowed.fill(true);std::size_t spaces{};PriestHitPointHooks hooks{[&](Sid,std::uint32_t) { ++spaces; },[&](Sid,std::uint32_t) { ++spaces; }};
+            scene.state->SetHitPoints(kSource,150,copied,hooks);CHECK(scene.state->CurrentHitPoints(kSource)==20 && spaces==0);Put(players,owner*stride+field,0x10000);copied.recoveryAllowed.fill(false);const auto before=players;scene.state->SetHitPoints(kSource,150,copied,hooks);CHECK(scene.state->CurrentHitPoints(kSource)==150 && spaces==2 && players==before && copied.playerRecords.data()==players.data());scene.state->SetHitPoints(kSource,20,copied,hooks);Put(players,owner*stride+field,0);copied.recoveryAllowed.fill(true);scene.state->SetHitPoints(kSource,150,copied,hooks);CHECK(scene.state->CurrentHitPoints(kSource)==20 && spaces==4);
+        }
+    }
+}
+
+// 권한 없는 전환·저HP로의 전환·전환 없음은 Player 허용 필드를 조회하지 않는다.
+TEST_CASE(PriestState_SharedPlayerRecoveryPreservesUnusedGuardsAndRejectsBadWidth) {
+    // 양 판본에서 필요한 경로만 잘못된 기록 폭을 거부하며 실패 전 HP를 보존한다.
+    for (const auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) {
+        StateScene scene(edition);std::vector<std::string> row(18,"0");row[2]="200";row[5]="200";row[7]="6";row[8]=std::to_string(std::bit_cast<std::uint32_t>(20.F));row[9]=std::to_string(std::bit_cast<std::uint32_t>(21.F));row[11]="1";row[13]="1";row[14]="-";scene.Prepare(row);std::array<std::uint8_t,1> wrong{};scene.mode.playerRecords=wrong;PriestHitPointHooks hooks{[](Sid,std::uint32_t) {},[](Sid,std::uint32_t) {}};scene.state->SetHitPoints(kSource,150,scene.mode,{});scene.state->SetHitPoints(kSource,20,scene.mode,hooks);const auto before=Hex(scene.pool.Slot(kSource));CHECK(Throws([&] { scene.state->SetHitPoints(kSource,150,scene.mode,hooks); }) && Hex(scene.pool.Slot(kSource))==before);scene.mode.authority=false;scene.state->SetHitPoints(kSource,150,scene.mode,{});CHECK(scene.state->CurrentHitPoints(kSource)==99);scene.mode.playerRecords={};scene.mode.authority=true;scene.mode.recoveryAllowed[1]=true;scene.state->SetHitPoints(kSource,150,scene.mode,hooks);CHECK(scene.state->CurrentHitPoints(kSource)==150 && Throws([&] { scene.mode.RecoveryAllowed(9,edition); }));
+    }
+}
+
+// 원문은 Unpop 전에 허용을 결정하므로 Unpop이 신전 필드를 지워도 진행 중인 Repop은 수행한다.
+TEST_CASE(PriestState_SharedPlayerRecoveryReadsBeforeUnpopAndAgainOnNextCall) {
+    // 두 저장 폭 모두 현재 회복은 허용하고 다음 회복부터 새 0을 반영한다.
+    for (const auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) {
+        StateScene scene(edition);std::vector<std::string> row(18,"0");row[2]="200";row[5]="20";row[7]="6";row[8]=std::to_string(std::bit_cast<std::uint32_t>(20.F));row[9]=std::to_string(std::bit_cast<std::uint32_t>(21.F));row[11]="1";row[13]="1";row[14]="-";scene.Prepare(row);const std::size_t stride=scene.patch ? 0xb4U : 0xacU,field=scene.patch ? 0x7cU : 0x74U;std::vector<std::uint8_t> players(9*stride);Put(players,stride+field,0x80000000U);scene.mode.playerRecords=players;std::size_t unpops{},repops{};PriestHitPointHooks hooks{[&](Sid,std::uint32_t) { ++unpops;Put(players,stride+field,0); },[&](Sid,std::uint32_t) { ++repops; }};scene.state->SetHitPoints(kSource,150,scene.mode,hooks);CHECK(scene.state->CurrentHitPoints(kSource)==150 && unpops==1 && repops==1 && Get(players,stride+field)==0);scene.state->SetHitPoints(kSource,20,scene.mode,hooks);scene.state->SetHitPoints(kSource,150,scene.mode,hooks);CHECK(scene.state->CurrentHitPoints(kSource)==20 && unpops==2 && repops==2);
+    }
+}
