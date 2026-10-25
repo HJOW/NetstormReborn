@@ -9,6 +9,9 @@ struct GunImpactState {
     double suppressedTime{}; // 패치005c85f0/CD00564db8의 현재 double 억제 값이다.
     std::uint32_t suppressed{}; // 패치005c89b8/CD005178d4의 추가 억제 DWORD다.
     std::uint32_t animationType{160}; // 양판본 실제 anim 자산 번호이며 임의 대체 타입을 받지 않는다.
+    double* sharedSuppressedTime{}; // 실제 장기005c85f0을 빌린다. 생략한 독립 호출만 기존 첫 필드를 소유한다.
+    double& SuppressedTime() { return sharedSuppressedTime ? *sharedSuppressedTime : suppressedTime; } // 현재 같은 원본 double을 직접 변경하며 지역 값으로 동기화하지 않는다.
+    const double& SuppressedTime() const { return sharedSuppressedTime ? *sharedSuppressedTime : suppressedTime; } // 매 조회에서 같은 소유자의 현재 double을 읽고 시각 사본을 만들지 않는다.
 };
 // 생성·공간·주기·삭제 및 아직 별도 복원할 Dude 반응을 같은 월드에 연결한다.
 struct GunImpactHooks {

@@ -47,3 +47,15 @@ TEST_CASE(ClientPause_RepeatedUiDoesNotConsumeNestedMissionDepths) {
     client.Pause(true);client.Pause(true);client.PushGamePause();client.Pause(false);client.Pause(false);
     CHECK(client.Paused());client.PopGamePause();CHECK(!client.Paused());
 }
+
+// Native cleanup 미연결인 좁은 Reset도 실제 Client의 UI/미션 깊이를 소비하거나 현재 프레임을 재캡처하지 않는다.
+TEST_CASE(ClientResetGameClock_PreservesNestedPauseOwnersAndCurrentFrame) {
+    netstorm::client::ClientOptions options; // 창/게임 루프 없이 기존 Client 생성자의 실제 전역만 만든다.
+    options.gameDirectory=std::filesystem::path(__FILE__).parent_path().parent_path().parent_path()/"originals";
+    netstorm::client::Client client(std::move(options));const auto* frame=&client.Time();const auto before=*frame; // 같은 현재 FrameTime의 주소와 각 공개 값을 보존한다.
+    client.Pause(true);client.PushGamePause();client.ResetGameClock();CHECK(client.Paused());
+    client.Pause(false);CHECK(client.Paused());client.ResetGameClock();CHECK(client.Paused());
+    client.PopGamePause();CHECK(!client.Paused());client.ResetGameClock();CHECK(!client.Paused());
+    CHECK(&client.Time()==frame && frame->game==before.game && frame->wall==before.wall && frame->delta==before.delta && frame->number==before.number);
+    client.Pause(true);CHECK(client.Paused());client.Pause(false);CHECK(!client.Paused()); // Reset이 UI의 보유 bool까지 바꾸지 않았는지 확인한다.
+}

@@ -74,3 +74,15 @@ TEST_CASE(GameClockReset_KeepsNestedPauseAndHeldGameTime) {
     const auto first=clock.Capture(12000);CHECK(first.game==2 && first.delta==2 && first.number==1);clock.Reset();
     const auto next=clock.Capture(12000);CHECK(next.game==11 && next.delta==9 && next.number==2); //pausedTotal이외저장소의초기화를검출한다.
 }
+
+// 밀리초 DWORD가 감겨도 Reset은 같은 원점과 마지막 Capture 기준을 유지하고 누적 정지만 지운다.
+TEST_CASE(GameClockReset_PreservesWrappedOriginAndNonzeroFrameHistory) {
+    constexpr std::uint32_t origin=0xfffffe00U;GameClock clock(origin); // 실제 unsigned 밀리초 원점을 감김 직전에 둔다.
+    const auto milliseconds=[origin](std::uint32_t elapsed) { return origin+elapsed; }; // 실행 입력의 unsigned 덧셈으로 감긴 현재 밀리초를 만든다.
+    const auto first=clock.Capture(milliseconds(1000));CHECK(first.game==1 && first.wall==1 && first.delta==1 && first.number==1);
+    clock.Pause(milliseconds(1000));clock.Pause(milliseconds(1500));clock.Resume(milliseconds(2000));CHECK(clock.IsPaused());
+    clock.Resume(milliseconds(3000));const auto previous=clock.Capture(milliseconds(4000)); // 마지막 Resume만2초 정지를 누적한다.
+    CHECK(previous.game==2 && previous.wall==4 && previous.delta==1 && previous.number==2);
+    clock.Reset();CHECK(!clock.IsPaused() && clock.GameSeconds(milliseconds(4000))==4 && clock.WallSeconds(milliseconds(4000))==4);
+    const auto next=clock.Capture(milliseconds(4000));CHECK(next.game==4 && next.wall==4 && next.delta==2 && next.number==3);
+}

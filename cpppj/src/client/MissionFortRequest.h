@@ -23,7 +23,7 @@ void WriteMissionFortRequest(std::string_view name,MissionFortRequestGlobals glo
 // 실제 Client Init이 작성한 요청과 Zone 복사본의 수명을 Session 설치까지 보유한다.
 struct MissionFortLoadRequest {
     o::LocalMissionStateBlock next{}; // Init이 만든 실제144BYTE의 요청 캡처다. 전체 State7 실행 상태와 구별한다.
-    std::uint32_t sequence{}; // 같은 요청 작성기의 순번이다.
+    std::uint32_t sequence{}; // 요청 작성 뒤 관측한 순번 캡처이며 실제005c85c0 owner를 대신하지 않는다.
     std::string fort; // 같은 Fort 선택 효과가 소유 복사한 UTF-8 이름이다.
     std::vector<std::uint8_t> zone; // 관찰기 확정 뒤 실제86BYTE 복사본이며 원본512BYTE 스택의 참조가 아니다.
     bool consumed{}; // 실제 Zone 설치 후 반납 여부다. 재설치는 명시 거부한다.

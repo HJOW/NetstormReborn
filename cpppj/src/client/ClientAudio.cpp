@@ -1,5 +1,6 @@
 // 클라이언트의 소리·음악 소유자. 원본 WinMain "init sound" 순서와 Interpret Options의 소리 부분을 복원된 계층에 잇는다.
 #include "client/ClientAudio.h"
+#include <cstring>
 #include <exception>
 #include <sstream>
 #include <stdexcept>
@@ -139,6 +140,9 @@ const SoundView& ClientAudio::View() const { return state_.view; }
 
 // 장면 음악의 읽기 전용 상태다.
 const SceneMusicState& ClientAudio::Scene() const { return scene_; }
+
+// 같은 double의 객체 표현8BYTE만 복사해 -0/NaN payload도 부동소수 산술이나 다른 기한 변경 없이 보존한다.
+void ClientAudio::WriteSongEndBits(std::uint64_t bits) noexcept { std::memcpy(&scene_.songEnd,&bits,sizeof(bits)); }
 
 // 장치 초기화가 끝났는지다.
 bool ClientAudio::DeviceReady() const { return state_.initialized; }

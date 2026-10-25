@@ -79,6 +79,29 @@ TEST_CASE(island_postpop_validates_hooks_maps_and_missing_upper_left) {
     state.ownerPropagationSuppressed=true;surface.Prefix(kSource,1);CHECK(scene.events.empty());
 }
 
+// 저장 게임의 같은 주소를 매 H 칸에서 다시 읽어 실제 표면·받침·종유석 소유자 전파를 차단하거나 실행한다.
+TEST_CASE(island_postpop_shared_saved_game_reads_current_owner_gate) {
+    // 두 판본의 기존 장면과 raw 소유자 기록 경계를 그대로 사용한다.
+    for (const auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) {
+        Scene scene(edition);scene.Prepare(Fixture().scenes.at("0"));scene.frames[kNoIslandType]=SurfaceFrames();scene.PutFrame(kSource,8);
+        bool savedGame=true; // Client가 소유한 현재 저장 게임 값이며 지역 호환 필드와 반대로 시작한다.
+        IslandPostPopState state{0,false,&savedGame};auto objects=scene.Hooks();RawBridgeConnect connect(scene.pool,*scene.neighbors,scene.state,objects);
+        std::uint32_t updates{}; // 실제 소유자 변경 직후 표시 갱신의 호출 수다.
+        IslandPostPopHooks hooks{objects,[&](Sid sid) { connect.Connect(sid); },
+            [&](float x,float y,std::uint32_t type) { return connect.FindTypeAt(x,y,type); },
+            [&](Sid) { ++updates; },[](bool,bool,bool) {}};
+        RawIslandPostPop surface(scene.pool,scene.hash.Entries(0),scene.types,scene.frames,scene.state,state,std::move(hooks));
+        const auto before=scene.PoolAdler();surface.Prefix(kSource,1);
+        CHECK(scene.PoolAdler()==before && scene.events.empty() && updates==0);
+        savedGame=false;state.ownerPropagationSuppressed=true;surface.Prefix(kSource,1);
+        CHECK(scene.pool.Slot(kSource)[scene.OwnerOffset()]==5 && scene.pool.Slot(Sid{80})[scene.OwnerOffset()]==5 && scene.pool.Slot(Sid{81})[scene.OwnerOffset()]==5);
+        CHECK(updates>0 && !scene.events.empty());
+        // 같은 모듈에서 다시 true로 바꾸면 이전 전파 결과와 무관하게 다음 H 전파를 막는다.
+        savedGame=true;scene.pool.AllocatedBytes(kSource)[scene.OwnerOffset()]=3;scene.events.clear();const auto previousUpdates=updates;
+        surface.Prefix(kSource,1);CHECK(scene.pool.Slot(kSource)[scene.OwnerOffset()]==3 && scene.events.empty() && updates==previousUpdates);
+    }
+}
+
 // CD는 서/북·3×3 순회를 고정 지도에서, H의 왼쪽 위·대상은 현재 지도에서 읽는다.
 TEST_CASE(island_postpop_cd_uses_separate_owner_surface_map) {
     Scene scene(OriginalEdition::Cd1072);

@@ -98,7 +98,7 @@ void RawIslandPostPop::Prefix(Sid surface,std::uint32_t flags) const {
         hooks_.objects.pop(island,static_cast<float>(static_cast<double>(Coordinate(pool_,surface,kX))+type.footX-1),
             static_cast<float>(static_cast<double>(Coordinate(pool_,surface,kY))+type.footY-1),0);
     }
-    if (!state_.ownerPropagationSuppressed && Letter(surface)=='H') {
+    if (!state_.SavedGame() && Letter(surface)=='H') {
         const float x=Coordinate(pool_,surface,kX),y=Coordinate(pool_,surface,kY);
         // 패치는 2를 뺀 float에 조회 함수가 0.9999를 더한다. CD는 x87에서 1.0001을 한 번 빼고 절삭한다.
         const bool patch=pool_.Edition()==OriginalEdition::Patch1078;

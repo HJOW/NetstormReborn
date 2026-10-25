@@ -40,7 +40,7 @@ RiftTypeFrames::LetterRun RawGunImpact::Run(std::uint32_t type,std::uint32_t eve
 }
 // 억제와 프로세스 한도에서는 원본처럼 생성·좌표 쓰기 없이 반환한다.
 void RawGunImpact::Visual(float x,float y,std::uint32_t variant,float interval) const {
-    if (state_.suppressedTime!=0 || state_.suppressed) return;if (!hooks_.processCount) throw std::logic_error("충돌 효과 실제 Kernel 개수 조회 누락");const bool patch=pool_.Edition()==OriginalEdition::Patch1078;if (hooks_.processCount()>=(patch ? kPatchLimit : kCdLimit)) return;
+    if (state_.SuppressedTime()!=0 || state_.suppressed) return;if (!hooks_.processCount) throw std::logic_error("충돌 효과 실제 Kernel 개수 조회 누락");const bool patch=pool_.Edition()==OriginalEdition::Patch1078;if (hooks_.processCount()>=(patch ? kPatchLimit : kCdLimit)) return;
     const auto run=Run(state_.animationType,variant);if (!hooks_.create || !hooks_.pop || !hooks_.regular) throw std::logic_error("충돌 효과 실제 생성/Pop/Regular 누락");const auto position=Clamp(x,y,pool_.Edition());const auto sid=hooks_.create(state_.animationType,2);if (!Handles(sid) || pool_.Slot(sid)[10]!=state_.animationType) throw std::logic_error("충돌 효과 Factory 실제 anim 생성 오류");WriteInitialFrame(pool_.AllocatedBytes(sid),patch,run.first);hooks_.pop(sid,position[0],position[1],0);hooks_.regular(sid,variant,interval);
 }
 // Dude의 실제 반응은 아직 독립 하위 경계이며 누락을 묵시 성공으로 처리하지 않는다.

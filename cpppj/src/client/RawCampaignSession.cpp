@@ -326,6 +326,7 @@ struct RawCampaignSession::Impl {
     std::shared_ptr<ClientPlayerRecords> playerRecords; // 모든 소비자보다 먼저 구성하고 마지막에 반납하는 실제 Client Player owner다.
     std::unique_ptr<ClientPlayerRecords::Use> playerUse; // Login과 서비스 callback까지 모두 소멸한 뒤 다음 Player 재할당을 허용한다.
     RawCampaignSessionServices services; // Login/장기 callback보다 먼저 만들고 나중에 반납하는 실제 클라이언트 장치다.
+    std::shared_ptr<ClientLocalStateGlobals> localStateGlobals{services.localStateGlobals ? services.localStateGlobals : std::make_shared<ClientLocalStateGlobals>()}; // 실제 Client는 같은 owner를 빌리고 독립 Session만 기존 BSS0 입력을 한 번 소유한다.
     struct SelectionLink { RawUserSelection* selection{}; }; // 살아 있는 실제 선택 객체의 주소이며 약한 토큰으로만 빌린다.
     std::weak_ptr<SelectionLink> activeSelection; // UI 몸체가 먼저 파괴돼도 낙하가 해제된 주소를 호출하지 않는다.
     struct Login; //같은실제원본로그인과현재전송의고정주소 소유자다.
@@ -447,7 +448,7 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawTempleRitual> templeRitual; // 같은 SHP/지면/생성/Host의 의식 단계 몸체다.
     std::unique_ptr<RawRunePostPop> runePostPop; // 같은 실제 룬 건설/304 후처리다.
     std::unique_ptr<DaisRegularState> daisState; // 현재 원본 상태 참조와 방향별 동맹이다.
-    double loginEnd{}; // 실제005c85f0의 로그인 종료 벽시각이며 로그인과 Dais 최초Pop이 같은 값을 읽는다.
+    double& loginEnd{localStateGlobals->LoginEnd()}; // 실제005c85f0을 Login/Dais/효과와 같은 장기 주소에서 직접 읽고 쓴다.
     AltarSacrificeState altarState; // 실제 제단 저항 주기/확률이며 난수는 같은 게임 저장소를 사용한다.
     std::unique_ptr<RawFrameAdvance> ritualAdvance; // 같은 SquidFrame으로 제단20/22/24 프레임을 진행한다.
     std::unique_ptr<RawAltarSacrifice> altarSacrifice; // 같은 포획/해방/저항과 다이스 파생 전처리다.
@@ -501,7 +502,7 @@ struct RawCampaignSession::Impl {
     PriestDamageState priestDamageState; // 실제 미션 레벨보정 차단/HP1 감시 권한이다.
     DamageableHitState generalDamageState{priestDamageState}; // 같은 레벨·현재 서버/로컬 소유자·주 섬의 일반 피해 전역이다.
     DamageableBurningState burningState; // 현재 nonzero damageEffect의 실제 생성 판정 전역이다.
-    GunImpactState impactState; // 현재 충돌 시각 효과 억제/anim160 전역이다.
+    GunImpactState impactState{0.0,0,160,&loginEnd}; // 충돌/Flare의005c85f0도 로그인/State의 같은 실제 double을 빌린다.
     std::unique_ptr<RawPriestPanic> priestPanic; // 명령/중립 회복/도착이 공유하는 실제 대피·귀환 몸체다.
     std::vector<DudeNoticeTypeData> dudeSpeeds; // 실제 TYPE 이동속도의 현재 mutable 보충 표다.
     std::unique_ptr<RawPlayerDamageNotice> playerDamage; // 같은 Player9/모드의 실제 AI 조회와 피해 통지 래퍼다.
@@ -615,7 +616,7 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RegularProcess> pendingCarrierTask; // 원본 new28과 생성자가 공유하는 하나의 확보 메모리다.
     std::unique_ptr<GumpFormHost> gumpForms; // 같은Pool의실제Form3와현재UI등록ID/부모삭제알림수명이다.
     std::unique_ptr<RawContentParentNotice> contentNotice; // 부모의 실제 현재 VT로 기본/파생 +24를 분배한다.
-    bool contentSavedGame{}; // 이 생성자는 새 미션 경로이며005c85d4 저장 게임은 선택하지 않는다.
+    bool& contentSavedGame{localStateGlobals->SavedGame()}; // 내용물 통지/돈 관문도 Login/State와 같은005c85d4의 현재0/1을 직접 읽는다.
     std::array<std::int32_t,2> contentScreenOrigin{}; // 같은 GameWorld의 현재59a91c/920이며 SetParticleView에서 함께 공급한다.
     std::array<std::uint32_t,2> contentCamera{}; // 같은 scroll pixel을497490으로 변환한59a900/904 float 비트다.
     std::uint32_t contentBombBlocked{}; // 005453e8의 초기0이며 폭탄 시각 효과 억제 전역이다.
@@ -753,7 +754,7 @@ struct RawCampaignSession::Impl {
         coreDataGlobals(input.coreDataGlobals ? input.coreDataGlobals : std::make_shared<ClientCoreDataGlobals>()),
         playerRecords(input.playerRecords ? input.playerRecords : std::make_shared<ClientPlayerRecords>()),playerUse(playerRecords->Acquire()),
         services(std::move(input)),templateStorage(services.templateStorage ? services.templateStorage : std::make_shared<CampaignTemplateStorage>()),headers(templateStorage->Headers()),assets(game,files),metadata(assets.game),
-        world(OriginalEdition::Patch1078,assets.types,assets.frames,metadata.shapes,CampaignLinks(),terrainType,services.processKernel,SessionSurfaceStorage(services,game),services.adoptPreparedWorld),core(world.Core()),
+        world(OriginalEdition::Patch1078,assets.types,assets.frames,metadata.shapes,CampaignLinks(),terrainType,services.processKernel,SessionSurfaceStorage(services,game),services.adoptPreparedWorld,&localStateGlobals->SavedGame()),core(world.Core()),
         localSp(services.spGlobals ? nullptr : std::make_unique<ScrambledSpStore>(random,[this] { return seed.Reseed(); })),
         sp(services.spGlobals ? services.spGlobals->Store() : *localSp),hp(core.pool,core.types,core.bookkeeping,rewardState,&sp,SquidRewardHooks{{},services.refreshSp}),
         battleOptions(services.missionOptions ? *services.missionOptions : localBattleOptions),
@@ -1377,7 +1378,7 @@ struct RawCampaignSession::Impl {
         hooks.update=[this](Sid sid) { core.display.Update(core.pool.Slot(sid)); };
         hooks.destroy=[this](Sid sid,std::uint32_t flags) { world.Destroy(sid,flags); };
         hooks.sound=[this](float x,float y,std::string_view name,std::uint32_t flags) { if (!services.sound.playOnceAt) throw std::logic_error("플레어 현재 위치 음향 미연결");services.sound.playOnceAt(x,y,soundNames.Lookup(name),flags,0); };
-        flare=std::make_unique<RawFlare>(core.pool,core.types,core.frames,random,FlareState{impactState.suppressedTime,objectState.loadingDepth,flareType},std::move(hooks));
+        flare=std::make_unique<RawFlare>(core.pool,core.types,core.frames,random,FlareState{impactState.SuppressedTime(),objectState.loadingDepth,flareType},std::move(hooks));
     }
     // 전체 최초 펜스 몸체를 같은 현재 해시/TYPE/동맹/가상 삭제/공통 장부에 연결한다.
     void ConnectFence() {
@@ -2043,7 +2044,7 @@ struct RawCampaignSession::Impl {
         auto pre=services.damageablePre;
         if (!pre.collapse) pre.collapse=[this](Sid sid) { static_cast<void>(particles->AddShrapnel(sid,ShrapnelKind::Collapse)); };
         if (!pre.explosion) pre.explosion=[this](Sid sid) {
-            if (impactState.suppressedTime==0 && !impactState.suppressed && core.kernel.Size()<30001) {
+            if (impactState.SuppressedTime()==0 && !impactState.suppressed && core.kernel.Size()<30001) {
                 const auto raw=core.pool.Slot(sid);const auto x=std::bit_cast<float>(Read(raw,14)),y=std::bit_cast<float>(Read(raw,18));const auto foot=static_cast<float>(core.types[raw[10]].footX);
                 hits->Impact().Visual(static_cast<float>(static_cast<double>(x)-static_cast<double>(foot)*.5),y,1,std::bit_cast<float>(0x3d23d70aU));
             }

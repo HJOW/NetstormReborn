@@ -667,6 +667,8 @@ void Client::PushGamePause() { clock_.Pause(timeGetTime()); }
 void Client::PopGamePause() { clock_.Resume(timeGetTime()); }
 // 자동 검사는 표시 단계와 실제 시계 정지를 함께 검사한다.
 bool Client::Paused() const { return clock_.IsPaused(); }
+// 실제 Client 시계의 기존 Reset만 호출하며 시각 조회/프레임 재캡처/중첩 정지 반납을 추가하지 않는다.
+void Client::ResetGameClock() { clock_.Reset(); }
 // 원본 창 제목을 ANSI 바이트로 적용한다(한국어는 후순위).
 void Client::Title(std::string_view title) { SetWindowTextA(static_cast<HWND>(window_), std::string(title).c_str()); }
 // 기본 UI만 제공한다. 검사 장면의 독립 실행은 기존 연결점을 보존한다.

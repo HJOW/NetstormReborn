@@ -1,5 +1,13 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-25 단위429 완료: State/Login 전역의 실제 Client 소유자 연결
+
+- [x] 이전428은 **33a98ea8 / 20261025-23 CP**로 전체2870/실제 메뉴/자연 Early2 통합을 마쳤다. 작업 전 AGENTS/공통·닷넷 인계를 다시 읽었고 현재/마지막 전체 정밀 디컴파일 PC는 계속 **HJOW-Athlon / 2026-10-23**이다. 작업 트리는 시작 시 깨끗했고 보호1821파일이428 기준과 같음을 확인해 `extracted/cpp-state-client-globals-429-baseline.json`으로 고정했다.
+- [x] 기존 ClientLocalStateGlobals에 Source/ZonePending/SavedGame/Begin/Central/세 가지 서로 다른 wall 기한을 소유시키고 Login/State/내용물/충돌/Flare의 실제 소비자를 참조로 연결했다. 실제 Fort 요청 writer의 next144BYTE/sequence도 Client owner에 쓰고 요청은 관측 캡처만 보관한다. 시계 Reset과 songEnd8BYTE 원시쓰기의 좁은 실제 API를 추가했다.
+- [x] 같은 SavedGame의 섬 H칸 전파 관문도 실제 표면 모듈 생성 전 연결했다. 동결23소스의 **첫 빌드 종료0·컴파일 경고/오류0**, 실제 Session/비동기 Reply/metadata/내용물·섬 관문/충돌·Flare/시계·음향의 **집중63개·실패0**이다. 신규10검사와 기존 Native/실제 checkpoint/Core 수명을 함께 확인했고 보호1821파일/23소스/4실행 파일 SHA도 같다. [작업 문서](docs/exe/cpp-state-client-globals-20261025.md)와 [실행 보고서](cpppj/state-client-globals-runtime-20261025.json)가 실제 범위/로그/미완료 경계를 기록한다. 게임 SHA는 **16203b9a…**다. 인계 후 **20261025-24 CP**로 로컬 커밋한다.
+- [ ] 바로 다음430: 같은 **005949d4**의 Session revision/Vortex·HUD 도킹·실제 미니맵 dirty 소비를 ClientGameplayGlobals의 단일 현재 DWORD로 연결한다. 준비본9소스는 `extracted/cpp-map-revision-430-prepared/`(agent5파일 manifest/patch와 root4파일 source-hashes), 신규검사 준비본3파일은 `extracted/cpp-map-revision-430-tests/`에만 있고 아직 제품에 적용하지 않았다. 적용 전 각 원본 SHA가 현재와 같은지 확인한다. Native1040/2150/864 등 기존 관측을 보존하고 실제0x2a 비동기 수신과 미니맵 소비0을 검사한다. 서버/boss 이관과 이 DWORD를 섞지 않는다.
+- [ ] 그다음 Graph/장부 등은 [월드 장기 소유 계획](docs/exe/cpp-state-world-owner-plan-20261025.md)의 실제 전역/Reset 범위/clone 독립성에 따른다. Graph431 준비본은 별도 `extracted/cpp-graph-storage-431-prepared/`에서 작성 중이며 아직 적용/검증하지 않았다. 전체 CTest/긴 GUI 플레이는 사용자 결정대로3~5단위 또는 기능 묶음의 같은 최종 제품에 통합한다. **마지막 통합 결과는 여전히33a98ea8/2870/메뉴·자연 Early2**이며 이번 제품에 이전 결과를 인용하지 않는다. Native cleanup/prefix와 실제 Edit 사용자 편집/저장, 전체 미션 완주는 계속 미완료이며 `/goal`은 활성 상태다. 원본 실행/새 디컴파일/push는 하지 않았다.
+
 ## 2026-10-25 단위428 완료: 같은 Editor 큐와 실제 Session 요청 처리기 접합
 
 - [x] 이전427은 **4c7ff020 / 20261025-22 CP**로 새 로컬 큐10/기존 캠페인 전송4·빌드/보호 감사를 마쳤다. 현재/마지막 전체 정밀 디컴파일은 계속 **HJOW-Athlon / 2026-10-23**이다.

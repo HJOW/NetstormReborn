@@ -100,6 +100,8 @@ public:
     const SoundView& View() const;
     // 장면 음악의 상태(곡 색인·곡 끝 시각 등)다. 검사에서만 읽는다.
     const SceneMusicState& Scene() const;
+    // 00565e68의 같은 songEnd8BYTE에 비트를 직접 쓴다. 곡 요청/Frame/난수/장치 효과와 Native cleanup 호출 연결은 포함하지 않는다.
+    void WriteSongEndBits(std::uint64_t bits) noexcept;
     // 소리 장치가 열려 있으면 참이다.
     bool DeviceReady() const;
     // 검사용 상태 보고다. 장치·옵션·음량·지금 곡·채널 활성·곡 길이·재생 커서·음악 스레드 오류를 줄마다 `이름\t값`으로 적는다.

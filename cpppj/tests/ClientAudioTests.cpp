@@ -6,6 +6,7 @@
 #include "TestSupport.h"
 #include "client/ClientAudio.h"
 #include <array>
+#include <bit>
 #include <chrono>
 #include <climits>
 #include <filesystem>
@@ -164,6 +165,34 @@ TEST_CASE(ClientAudio_SceneRunsWithoutDevice) {
     CHECK(!audio.DeviceReady());
     // 반복 종료와 소멸은 안전하다.
     audio.Shutdown();audio.Shutdown();
+}
+
+// 같은 장면 owner의 songEnd8BYTE만 바꾸고 곡/다른 기한/음소거·장치·난수와 현재 시각 조회를 보존한다.
+TEST_CASE(ClientAudio_WriteSongEndBitsPreservesCurrentOwnerAndOtherEffects) {
+    TemporaryDirectory directory;std::uint32_t reads{},controlReads{},effects{},controlEffects{}; // 두 실제 소유자의 외부 호출을 독립 계수한다.
+    const auto hooks=[](std::uint32_t& count) { // 실제 날씨 하위가 호출되는 경우만 관측하고 생성자에서 효과를 내지 않는다.
+        SceneMusicHooks value;value.refresh=[&count] { ++count; };value.ascendancyPalette=[&count] { ++count;return false; };value.loadPalette=[&count](auto) { ++count; };value.thunderFlash=[&count] { ++count; };return value;
+    };
+    ClientAudio audio(directory.path,OriginalEdition::Patch1078,"english",[&reads] { ++reads;return 123.25; },0x12345678U,hooks(effects));
+    ClientAudio control(directory.path,OriginalEdition::Patch1078,"english",[&controlReads] { ++controlReads;return 123.25; },0x12345678U,hooks(controlEffects));
+    for (auto* current:{&audio,&control}) { // 같은 실제 공개 API로 비영 기한/색/카메라/음소거와 같은 첫 난수 소비를 준비한다.
+        current->SetSceneTints({17,29,43,61});current->SetView({20,30,5,7,805,607});current->PushMute();current->StartScene(true);current->RequestMusic("defeat.mus");
+    }
+    const auto* owner=&audio.Scene();const auto before=*owner;const auto beforeReads=reads,beforeEffects=effects;auto report=Parse(audio.Describe());report.erase("songEnd"); // 실제 같은 상태/곡/장치 값을 고정한다.
+    CHECK(before.defeatEnd==123.25 && before.songEnd==303.25 && !audio.DeviceReady());
+    constexpr std::array<std::uint64_t,7> patterns{0x8000000000000000ULL,0x7ff0000000000001ULL,0xfff8000000001234ULL,0x0000000000000001ULL,0x7ff0000000000000ULL,0x405edd2f1a9fbe77ULL,0}; // -0/sNaN/음수qNaN/subnormal/무한/유한/+0의 원시8BYTE다.
+    for (const auto bits:patterns) { // 매번 현재 같은 owner에 쓰고 다음 명령이 실제로 요구할 때까지 곡 부모를 실행하지 않는다.
+        audio.WriteSongEndBits(bits);CHECK(&audio.Scene()==owner && std::bit_cast<std::uint64_t>(owner->songEnd)==bits);
+        CHECK(owner->index==before.index && owner->fanfareEnd==before.fanfareEnd && owner->defeatEnd==before.defeatEnd && owner->resultState==before.resultState);
+        CHECK(owner->battle==before.battle && owner->playersReady==before.playersReady && owner->localPlayer==before.localPlayer && owner->tint==before.tint && owner->tints==before.tints && owner->paletteDirty==before.paletteDirty);
+        CHECK(reads==beforeReads && effects==beforeEffects && !audio.DeviceReady());
+    }
+    auto after=Parse(audio.Describe());after.erase("songEnd");CHECK(after==report); // 음소거 깊이/음량·곡 이름/장치·재생 일련번호·카메라도 그대로다.
+    for (std::uint32_t draw=0;draw<8;++draw) { // 원시쓰기 없는 대조 소유자와 후속 실제 전투 난수/곡 순환을 비교한다.
+        audio.StartScene(true);control.StartScene(true);CHECK(audio.Scene().index==control.Scene().index && audio.Scene().tint==control.Scene().tint);
+        CHECK(Parse(audio.Describe())["musicName"]==Parse(control.Describe())["musicName"]);
+    }
+    CHECK(reads==controlReads && effects==controlEffects);
 }
 
 namespace netstorm::test {

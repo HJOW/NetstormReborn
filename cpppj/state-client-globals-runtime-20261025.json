@@ -1,0 +1,339 @@
+{
+  "unit": 429,
+  "goalComplete": false,
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "created": "2026-10-25T17:04:12.394716",
+  "sources": {
+    "cpppj/src/client/ClientAudio.cpp": "4ead7a3dce3a91b41fca4a2ba324f747edc61246c3bca5a28cd31a0b56f1dbf3",
+    "cpppj/src/client/ClientAudio.h": "43237286719af6ce57f25299e5fb35f08b0724c3c782efa68750760a4bcaff05",
+    "cpppj/src/client/ClientLocalStateGlobals.h": "c468ca5e3c544bf746ab27baa6cddcb7cb85e1e07743564b030ab3e05fc89ef3",
+    "cpppj/src/client/ClientMain.cpp": "c177601c81de36ba8b6ec2112ae65bbc65117045fc1d576a33c7961def88a212",
+    "cpppj/src/client/ClientMain.h": "7213fe800299c79d0615b8a23da8aac58bc901d18eeadaf71abca555adc75151",
+    "cpppj/src/client/MissionFortRequest.h": "bf601c96a5ff1352c3ce9bae4c4edd7b9d7f4ec9f19ee8252e32621df1f0e523",
+    "cpppj/src/client/RawCampaignSession.cpp": "ab537af8b8ea771376295c005dbd9634bf37a5bfe5be26c4b28b44bafd7cc906",
+    "cpppj/src/client/RawCampaignSessionLogin.inc": "c32712f311d8656a772ce7bf0605d1276a42c8ddf5a28d87a754acad8f4ace22",
+    "cpppj/src/client/RawSurfaceWorld.cpp": "cce701da2fe8a18f736c3fe5aee2203868ca8e38a27aebf1fae453e2274aed2d",
+    "cpppj/src/client/RawSurfaceWorld.h": "65f78ba2fb1e26ca8fd1a10df23924768a56de6bd62123ba762250e388bf92f7",
+    "cpppj/src/client/UberGump.cpp": "3a27b0d7bee420ba4413e3a5108344fa2f9b9495e9347c05405a9f3183f62250",
+    "cpppj/src/o/RawGunImpact.cpp": "0fc43af84f671469d3051bdd3db70b59cc816eae8beeeab19a7116a433300079",
+    "cpppj/src/o/RawGunImpact.h": "f222e3dbe8d7aa54c21d5b600bb488f4acb6ca9e970452f4d85e437c61272704",
+    "cpppj/src/o/RawIslandPostPop.cpp": "b415603d6e52911eecf36161ab9b60d5bd9347f544bc25c5d291e92b4cae2f9b",
+    "cpppj/src/o/RawIslandPostPop.h": "87deb4fa0a45a5c54a5db3cf318c2ef93f9873b9c22a5de6ad581c3365860b63",
+    "cpppj/tests/CMakeLists.txt": "2406833ef1a112ae3a0a0881d10191e671987010789c11a30bd749396ae8420b",
+    "cpppj/tests/ClientAudioTests.cpp": "6f86648a5e4227eb97964db87b1f43658b272ba178084899537a5c8aa19abbc3",
+    "cpppj/tests/ClientLocalStateGlobalsTests.cpp": "6068548f6871ad57ae40a371dd90764a25bdd685853daf76abf40808fda0a039",
+    "cpppj/tests/ClientMainTests.cpp": "467e6f4d3923fd96dd07e9fd2da251c1b41d71e2d781b68d93837bc578a4179e",
+    "cpppj/tests/ExistingEditorAfterCheckpointTests.cpp": "664e706bde052f0adb408ac51ca60920decb41d2a0c678003ebbdf16415d5536",
+    "cpppj/tests/GameClockResetTests.cpp": "15377d26108da18cc8c9a20989a1e86571d1eaa29a10c03f086f4de3d5b0a682",
+    "cpppj/tests/GunImpactTests.cpp": "ba38918c188cee702e74697a7bc5526bdbea0109d6fc0cca781885e001c3cebc",
+    "cpppj/tests/IslandPostPopTests.cpp": "6f46cd68e8ffcdec460f13686b4ce9313a037a87564959f451d8ea3c475c3695"
+  },
+  "artifacts": {
+    "cpppj/build/bin/Release/NetstormCpp.exe": "16203b9a639c757d8e7ac3f2d91f2c70a356993075892ed9b16b293c450ddba0",
+    "cpppj/build/bin/Release/netstorm_tests.exe": "53bfa2b672a73937922782138d59e037e5e291972aa0e5c6e679744aaa2c2064",
+    "cpppj/build/bin/Release/netstorm_cloud_probe.exe": "a969be3e59d86f9356e1d5a319ad94d9044deaa9e251999f4bdeb676308e2868",
+    "cpppj/build/bin/Release/netstorm_cloud_render_probe.exe": "a457fcea4d63509c89349aea8ecdaff176af3906a83ce1630f417752ab2cb823"
+  },
+  "focused": [
+    {
+      "filter": "ClientLocalStateGlobals",
+      "exitCode": 0,
+      "tests": 4,
+      "failures": 0,
+      "seconds": 1.2144,
+      "log": "extracted/cpp-state-client-globals-429-focused1/ClientLocalStateGlobals.log",
+      "sha256": "e1055efd7869120cbb1adee8d781fab51c079581747cf2d875c98084077944d4",
+      "caseNames": [
+        "ClientLocalStateGlobals_TwoSessionLifetimesPreserveCurrentOwner",
+        "ClientLocalStateGlobals_ActualLoginAndReplyUseCurrentOwner",
+        "ClientLocalStateGlobals_SavedGameControlsActualCarrierContentNotice",
+        "ClientLocalStateGlobals_FortRequestWritesActualNextAndPending"
+      ]
+    },
+    {
+      "filter": "GunImpact_",
+      "exitCode": 0,
+      "tests": 6,
+      "failures": 0,
+      "seconds": 3.939,
+      "log": "extracted/cpp-state-client-globals-429-focused1/GunImpact_.log",
+      "sha256": "0688c168d67470205881f52e0c3644eadb4588e1372a2bc7f9e62a8d2bd70655",
+      "caseNames": [
+        "GunImpact_PatchNativeAnimationAndProducer",
+        "GunImpact_CdNativeAnimationAndProducer",
+        "GunImpact_MissingCreationDeleteAndDudesRejected",
+        "GunImpact_SharedSuppressionReadsCurrentOwnerWithoutCopy",
+        "GunImpact_LegacyAggregateKeepsOwnedSuppression",
+        "GunImpact_ActualAssetsFactoryPopRegularAndDeletion"
+      ]
+    },
+    {
+      "filter": "Flare_",
+      "exitCode": 0,
+      "tests": 2,
+      "failures": 0,
+      "seconds": 0.4431,
+      "log": "extracted/cpp-state-client-globals-429-focused1/Flare_.log",
+      "sha256": "2d0a8c6e73c2676342f288d5014396cd3481b8bf37826edaeb2d332d2acb5e24",
+      "caseNames": [
+        "Flare_Native139",
+        "Flare_BombStatusDirectionsNative60"
+      ]
+    },
+    {
+      "filter": "island_postpop_",
+      "exitCode": 0,
+      "tests": 7,
+      "failures": 0,
+      "seconds": 0.457,
+      "log": "extracted/cpp-state-client-globals-429-focused1/island_postpop_.log",
+      "sha256": "c42cc8528a2629dd3606eb93e376b184c0d9c2b4f8021a9cd9c55cb8afd8f9e2",
+      "caseNames": [
+        "island_postpop_matches_originals_x86",
+        "island_postpop_matches_original_cd_x86",
+        "island_postpop_matches_original_1037_x86",
+        "island_postpop_validates_hooks_maps_and_missing_upper_left",
+        "island_postpop_shared_saved_game_reads_current_owner_gate",
+        "island_postpop_cd_uses_separate_owner_surface_map",
+        "island_postpop_real_raw_modules_build_support_and_propagate_owner"
+      ]
+    },
+    {
+      "filter": "ClientResetGameClock",
+      "exitCode": 0,
+      "tests": 1,
+      "failures": 0,
+      "seconds": 0.3125,
+      "log": "extracted/cpp-state-client-globals-429-focused1/ClientResetGameClock.log",
+      "sha256": "66ea1b2923e8f0c3a98c4ea33b2e7afc563f86c34a305be32ab6955e54cf48ed",
+      "caseNames": [
+        "ClientResetGameClock_PreservesNestedPauseOwnersAndCurrentFrame"
+      ]
+    },
+    {
+      "filter": "GameClockReset",
+      "exitCode": 0,
+      "tests": 4,
+      "failures": 0,
+      "seconds": 0.3252,
+      "log": "extracted/cpp-state-client-globals-429-focused1/GameClockReset.log",
+      "sha256": "c10f021c5158d859b2936daccfa4ce2f31af0b84be0b803d5a9b38ceb42dcd99",
+      "caseNames": [
+        "GameClockReset_IndependentNative138AndPublic114",
+        "GameClockReset_PreservesOriginAndCapturedFrameHistory",
+        "GameClockReset_KeepsNestedPauseAndHeldGameTime",
+        "GameClockReset_PreservesWrappedOriginAndNonzeroFrameHistory"
+      ]
+    },
+    {
+      "filter": "ClientAudio_",
+      "exitCode": 0,
+      "tests": 6,
+      "failures": 0,
+      "seconds": 0.3152,
+      "log": "extracted/cpp-state-client-globals-429-focused1/ClientAudio_.log",
+      "sha256": "d7af66a64214febe7d3681aebfa72fa4038aefec12b19d580945ea7fa58dae57",
+      "caseNames": [
+        "ClientAudio_WeatherHooksPreservePaletteAndTintOrder",
+        "ClientAudio_RejectsIncompletePaletteHooks",
+        "ClientAudio_VolumeStepFollowsOriginalJumpTable",
+        "ClientAudio_PreloadLoadsOnlyUnloadedEntries",
+        "ClientAudio_SceneRunsWithoutDevice",
+        "ClientAudio_WriteSongEndBitsPreservesCurrentOwnerAndOtherEffects"
+      ]
+    },
+    {
+      "filter": "ExistingEditorAfterCheckpoint",
+      "exitCode": 0,
+      "tests": 4,
+      "failures": 0,
+      "seconds": 0.3857,
+      "log": "extracted/cpp-state-client-globals-429-focused1/ExistingEditorAfterCheckpoint.log",
+      "sha256": "1f0850a035f57ceab693dfd688c1575f06b08e4257a1c92f2c8e71f1578c7ffa",
+      "caseNames": [
+        "ExistingEditorAfterCheckpoint_FullBlocksCommitThenNextPollFour",
+        "ExistingEditorAfterCheckpoint_LiveRequestAndCommandReads",
+        "ExistingEditorAfterCheckpoint_ImmediateAndPartialFailureStayDistinct",
+        "ExistingEditorAfterCheckpoint_ActualClientOwnsBlocksAndDeadline"
+      ]
+    },
+    {
+      "filter": "CampaignExistingEditorCheckpoint",
+      "exitCode": 0,
+      "tests": 23,
+      "failures": 0,
+      "seconds": 2.5534,
+      "log": "extracted/cpp-state-client-globals-429-focused1/CampaignExistingEditorCheckpoint.log",
+      "sha256": "8de0c270c9c4a28d6a12397ef8ce8e206c04e2b01b33f2d036eeb6f714f5214d",
+      "caseNames": [
+        "CampaignExistingEditorCheckpoint_DeferPreservesExistingOwnerAndDefaultStages",
+        "CampaignExistingEditorCheckpoint_DeferRejectsCampaignMode",
+        "CampaignExistingEditorCheckpoint_NormalReadFalseKeepsInvalidBranch",
+        "CampaignExistingEditorCheckpoint_FirstNotifyUsesActualWriterBeforeSubscriber",
+        "CampaignExistingEditorCheckpoint_FileTailThenActualWorldChatBoundary",
+        "CampaignExistingEditorCheckpoint_CoreWriteNaturalGateKeepsActualStorage",
+        "CampaignExistingEditorCheckpoint_CoreWriteManagerDiagnosticBeforeGate",
+        "CampaignExistingEditorCheckpoint_CoreWriteMetamapDiagnosticBeforeGate",
+        "CampaignExistingEditorCheckpoint_ActualCurrentNameSelectsWorkingFile",
+        "CampaignExistingEditorCheckpoint_ActualChatRuntimeAdvancesWorldAndSnapshot",
+        "CampaignExistingEditorCheckpoint_ActualPlayerUiCompletesAndReloads",
+        "CampaignExistingEditorCheckpoint_ActualCustomTest01PlayerUiAndFile",
+        "CampaignExistingEditorCheckpoint_AdoptsNativePlayersAndPreservesCoreUntilNextCleanup",
+        "CampaignExistingEditorCheckpoint_UiScopeCommitsOnlyAfterActualStateReturn",
+        "CampaignExistingEditorCheckpoint_UiTailFailureKeepsPublicAccessClosed",
+        "CampaignExistingEditorCheckpoint_UiTailCannotCommitEarlyReturnOrImmediate",
+        "CampaignExistingEditorCheckpoint_PreparedCtorPreservesSameClientState",
+        "CampaignExistingEditorCheckpoint_PreparedCtorRejectsIncompleteOwnersBeforeBorrow",
+        "CampaignExistingEditorCheckpoint_ActualProductionFormsInsideInstallScope",
+        "CampaignExistingEditorCheckpoint_EditorWireQueuesNegativeSenderConstructionMoveAndSalvage",
+        "CampaignExistingEditorCheckpoint_EditorWireReadsCurrentChargeGateWithoutSenderNormalization",
+        "CampaignExistingEditorCheckpoint_EditorWireRejectsOwnedRegistrationBeforePublishing",
+        "CampaignExistingEditorCheckpoint_EditorWireRejectsForeignPlayersAndLoginBeforeBorrow"
+      ]
+    },
+    {
+      "filter": "SessionPlayerCoreRefresh",
+      "exitCode": 0,
+      "tests": 3,
+      "failures": 0,
+      "seconds": 0.6159,
+      "log": "extracted/cpp-state-client-globals-429-focused1/SessionPlayerCoreRefresh.log",
+      "sha256": "f623d14370471c14adc41cbf96b22cf23a9edfdb0c1b5596d70a7b83e310ac76",
+      "caseNames": [
+        "SessionPlayerCoreRefresh_CurrentLoginAliasAndActualDaisCount",
+        "SessionPlayerCoreRefresh_RequiresActualSelectionAndSupportsSharedCoreWithoutLogin",
+        "SessionPlayerCoreRefresh_UnknownSelectedVirtualKeepsTechnologyPrefix"
+      ]
+    },
+    {
+      "filter": "MissionFortRequest",
+      "exitCode": 0,
+      "tests": 2,
+      "failures": 0,
+      "seconds": 0.3425,
+      "log": "extracted/cpp-state-client-globals-429-focused1/MissionFortRequest.log",
+      "sha256": "03896d48f2d5d1352de31cc40d14dc4e3f748af94909fe405ed24c5c50c9755b",
+      "caseNames": [
+        "MissionFortRequest_Native144",
+        "MissionFortRequest_OwnedImageAndCurrentFields"
+      ]
+    },
+    {
+      "filter": "CampaignSession_LocalLoginActualHandshakeAndWorldLoad",
+      "exitCode": 0,
+      "tests": 1,
+      "failures": 0,
+      "seconds": 0.536,
+      "log": "extracted/cpp-state-client-globals-429-focused1/CampaignSession_LocalLoginActualHandshakeAndWorldLoad.log",
+      "sha256": "ba144b80e4c231d80994c469ec20c1d390547c558ed201002c7d1b29f84093b6",
+      "caseNames": [
+        "CampaignSession_LocalLoginActualHandshakeAndWorldLoad"
+      ]
+    }
+  ],
+  "originalGameExecuted": false,
+  "fullCTestExecuted": false,
+  "productGuiExecuted": false,
+  "completed": true,
+  "passed": true,
+  "focusedObservations": 63,
+  "focusedUnique": 63,
+  "focusedCaseNames": [
+    "CampaignExistingEditorCheckpoint_ActualChatRuntimeAdvancesWorldAndSnapshot",
+    "CampaignExistingEditorCheckpoint_ActualCurrentNameSelectsWorkingFile",
+    "CampaignExistingEditorCheckpoint_ActualCustomTest01PlayerUiAndFile",
+    "CampaignExistingEditorCheckpoint_ActualPlayerUiCompletesAndReloads",
+    "CampaignExistingEditorCheckpoint_ActualProductionFormsInsideInstallScope",
+    "CampaignExistingEditorCheckpoint_AdoptsNativePlayersAndPreservesCoreUntilNextCleanup",
+    "CampaignExistingEditorCheckpoint_CoreWriteManagerDiagnosticBeforeGate",
+    "CampaignExistingEditorCheckpoint_CoreWriteMetamapDiagnosticBeforeGate",
+    "CampaignExistingEditorCheckpoint_CoreWriteNaturalGateKeepsActualStorage",
+    "CampaignExistingEditorCheckpoint_DeferPreservesExistingOwnerAndDefaultStages",
+    "CampaignExistingEditorCheckpoint_DeferRejectsCampaignMode",
+    "CampaignExistingEditorCheckpoint_EditorWireQueuesNegativeSenderConstructionMoveAndSalvage",
+    "CampaignExistingEditorCheckpoint_EditorWireReadsCurrentChargeGateWithoutSenderNormalization",
+    "CampaignExistingEditorCheckpoint_EditorWireRejectsForeignPlayersAndLoginBeforeBorrow",
+    "CampaignExistingEditorCheckpoint_EditorWireRejectsOwnedRegistrationBeforePublishing",
+    "CampaignExistingEditorCheckpoint_FileTailThenActualWorldChatBoundary",
+    "CampaignExistingEditorCheckpoint_FirstNotifyUsesActualWriterBeforeSubscriber",
+    "CampaignExistingEditorCheckpoint_NormalReadFalseKeepsInvalidBranch",
+    "CampaignExistingEditorCheckpoint_PreparedCtorPreservesSameClientState",
+    "CampaignExistingEditorCheckpoint_PreparedCtorRejectsIncompleteOwnersBeforeBorrow",
+    "CampaignExistingEditorCheckpoint_UiScopeCommitsOnlyAfterActualStateReturn",
+    "CampaignExistingEditorCheckpoint_UiTailCannotCommitEarlyReturnOrImmediate",
+    "CampaignExistingEditorCheckpoint_UiTailFailureKeepsPublicAccessClosed",
+    "CampaignSession_LocalLoginActualHandshakeAndWorldLoad",
+    "ClientAudio_PreloadLoadsOnlyUnloadedEntries",
+    "ClientAudio_RejectsIncompletePaletteHooks",
+    "ClientAudio_SceneRunsWithoutDevice",
+    "ClientAudio_VolumeStepFollowsOriginalJumpTable",
+    "ClientAudio_WeatherHooksPreservePaletteAndTintOrder",
+    "ClientAudio_WriteSongEndBitsPreservesCurrentOwnerAndOtherEffects",
+    "ClientLocalStateGlobals_ActualLoginAndReplyUseCurrentOwner",
+    "ClientLocalStateGlobals_FortRequestWritesActualNextAndPending",
+    "ClientLocalStateGlobals_SavedGameControlsActualCarrierContentNotice",
+    "ClientLocalStateGlobals_TwoSessionLifetimesPreserveCurrentOwner",
+    "ClientResetGameClock_PreservesNestedPauseOwnersAndCurrentFrame",
+    "ExistingEditorAfterCheckpoint_ActualClientOwnsBlocksAndDeadline",
+    "ExistingEditorAfterCheckpoint_FullBlocksCommitThenNextPollFour",
+    "ExistingEditorAfterCheckpoint_ImmediateAndPartialFailureStayDistinct",
+    "ExistingEditorAfterCheckpoint_LiveRequestAndCommandReads",
+    "Flare_BombStatusDirectionsNative60",
+    "Flare_Native139",
+    "GameClockReset_IndependentNative138AndPublic114",
+    "GameClockReset_KeepsNestedPauseAndHeldGameTime",
+    "GameClockReset_PreservesOriginAndCapturedFrameHistory",
+    "GameClockReset_PreservesWrappedOriginAndNonzeroFrameHistory",
+    "GunImpact_ActualAssetsFactoryPopRegularAndDeletion",
+    "GunImpact_CdNativeAnimationAndProducer",
+    "GunImpact_LegacyAggregateKeepsOwnedSuppression",
+    "GunImpact_MissingCreationDeleteAndDudesRejected",
+    "GunImpact_PatchNativeAnimationAndProducer",
+    "GunImpact_SharedSuppressionReadsCurrentOwnerWithoutCopy",
+    "MissionFortRequest_Native144",
+    "MissionFortRequest_OwnedImageAndCurrentFields",
+    "SessionPlayerCoreRefresh_CurrentLoginAliasAndActualDaisCount",
+    "SessionPlayerCoreRefresh_RequiresActualSelectionAndSupportsSharedCoreWithoutLogin",
+    "SessionPlayerCoreRefresh_UnknownSelectedVirtualKeepsTechnologyPrefix",
+    "island_postpop_cd_uses_separate_owner_surface_map",
+    "island_postpop_matches_original_1037_x86",
+    "island_postpop_matches_original_cd_x86",
+    "island_postpop_matches_originals_x86",
+    "island_postpop_real_raw_modules_build_support_and_propagate_owner",
+    "island_postpop_shared_saved_game_reads_current_owner_gate",
+    "island_postpop_validates_hooks_maps_and_missing_upper_left"
+  ],
+  "protectedFiles": {
+    "checked": 1821,
+    "unchanged": true
+  },
+  "state": "focused-verified-integration-pending",
+  "startingHead": "33a98ea89b366c49434a8576bb63b63161b93f02",
+  "builds": [
+    {
+      "attempt": 1,
+      "exitCode": 0,
+      "compilerWarnings": 0,
+      "compilerErrors": 0,
+      "log": "extracted/cpp-state-client-globals-429-build1.log",
+      "sha256": "9d17b8fa40f40536ba8ff02f390524aaaa5f28eac73044d82c822d03098a3418",
+      "sourceManifest": "extracted/cpp-state-client-globals-429-source1/hashes.json"
+    }
+  ],
+  "previousIntegrated": {
+    "head": "33a98ea8",
+    "productSha256": "59d41097db94850b4c38e98860c365374416809c8af4f24dfdcf69eaa3f821ac",
+    "ctestTests": 2870,
+    "ctestFailures": 0,
+    "menusGui": true,
+    "naturalEarly2": true
+  },
+  "pending": [
+    "전체 CTest와 긴 실제 플레이는 다음 기능 묶음의 같은 최종 제품에서 통합한다. 이번 단위는 집중63검사만 실행했다.",
+    "SavedGame은 기존 정상0/1 모델이며 Fort Money wrapper는 진입 직전 현재값 캡처다. 임의 Native DWORD 비트 전체 보존은 미완료다.",
+    "서버/boss,005949d4의 섬·신전·HUD·미니맵 갱신값,Graph/섬/Chunk/장부 및22DWORD 등 남은 지역 소유자를 실제 소비자에 연결해야 한다.",
+    "Native cleanup/prefix와 실제 Edit State1 설치,사용자 편집·저장·테스트 복귀,모든 미션의 자연 완주·진행 저장/재실행·원본 완전 동일성은 미완료다."
+  ]
+}

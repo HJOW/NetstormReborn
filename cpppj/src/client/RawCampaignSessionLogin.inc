@@ -13,22 +13,23 @@ struct RawCampaignSession::Impl::Login {
     std::unique_ptr<RawMissionSettingsPacket> settings; //현재Client 설정7DWORD를 송수신한다.
     std::unique_ptr<RawLocalMissionState> state; //상태8→9→10→13→14와전체0x90BYTE 확정이다.
     std::unique_ptr<RawMissionLoginTimer> timer; //실제Ready 집계와사제참여 재조회/시작종료 타이머다.
-    std::array<LocalMissionStateBlock,5> localBlocks{}; //소유자 없는 기존 독립 로그인 검사만 자체 BSS0 블록을 사용한다.
-    std::array<LocalMissionStateBlock,5>& blocks{s.services.localStateGlobals ? s.services.localStateGlobals->Blocks() : localBlocks}; //실제 Client에서는 Editor와 같은720BYTE를 직접 빌린다.
+    std::array<LocalMissionStateBlock,5>& blocks{s.localStateGlobals->Blocks()}; // Editor/State/로그인이 같은720BYTE를 직접 빌리며 독립 Session도 유일한 owner를 쓴다.
     std::array<std::uint32_t,2> zoneWords{}; //원본6BYTE Zone 주소의 실제DWORD와인접WORD를 공유한다.
     std::span<std::uint8_t> cachedCore{s.coreDataGlobals->Cached()};std::span<std::uint8_t>& currentCore{s.coreDataGlobals->Current()}; // 실제 같은 장기10BYTE와 현재 포인터 슬롯을 직접 빌린다.
     std::array<std::uint8_t,256> typeUse{}; //원본256BYTE 타입사용표다.
     std::array<float,4> ranges{14,22,30,38}; //원본5425f4의 실제4float다. 기본3번도 읽고 최대 비교는 원래2번30을 사용한다.
     float range{22}; //원본52f488이며제곱은Session의같은EnergySupplyState에 쓴다.
-    bool simul{},saved{},adjust{};std::uint8_t overrideFlags{},title{},battleByte{}; //현재단독미션의설정/저장/제목과BYTE 상태다.
-    std::uint32_t pendingStamp{},activeStamp{},zoneWord{},begin{},predictable{},beginSeed{},battleSeed{},burst{},clockStamp{},baseClock{},central{},archipelago{},optionValue{},outpost{}; // 원본 로그인 고유 현재 저장소다.
+    bool simul{},adjust{};bool& saved{s.localStateGlobals->SavedGame()};std::uint8_t overrideFlags{},title{},battleByte{}; // 저장0/1은 실제 State owner이며 나머지는 기존 로그인 입력이다.
+    std::uint32_t pendingStamp{},activeStamp{},zoneWord{},predictable{},beginSeed{},battleSeed{},burst{},clockStamp{},baseClock{},archipelago{},optionValue{},outpost{}; // 아직 별도로 소유하는 원본 로그인 전역이다.
+    std::uint32_t& begin{s.localStateGlobals->Begin()};std::uint32_t& central{s.localStateGlobals->CentralCreated()}; // 실제 Login/Ready/metadata도 Client 수명의 같은 DWORD를 읽고 쓴다.
     std::uint32_t& coreActive{s.coreDataGlobals->Active()}; // Chat/현재 Core getter/패킷이 같은00595348을 직접 사용한다.
     std::uint32_t& fortCount{s.playerRecords->FortCount()}; // 원문 Player 초기화와 같은005951f8이다.
     std::uint32_t& lastPlayer{s.playerRecords->LastLoginPlayer()}; // 같은005951fc를 로그인도 직접 쓴다.
-    std::uint32_t zonePending{},ticks{},source{},randomSeed{},metaRefresh{},metaRebuild{},scriptBreak{},requestPhase{},uiMode{},inputMode{}; //원본상태/입력/타이머가 공유하는DWORD다.
-    double captureEnd{},connectEnd{},wall{};std::int32_t timeout{}; //서로 다른 원본 벽시각 타이머다.
-    double localActivityEnd{}; //실제 소유자가 없는 독립 검사의 기존00544d58 초기 입력이다.
-    double& activityEnd{s.services.localStateGlobals ? s.services.localStateGlobals->ActivityEnd() : localActivityEnd}; //Editor가 쓴 같은 활동 기한을 Session 전환에서도 보존한다.
+    std::uint32_t& zonePending{s.localStateGlobals->ZonePending()};std::uint32_t& source{s.localStateGlobals->SourceType()}; // Fort 요청/State/Reply가 같은 실제 두 DWORD를 공유한다.
+    std::uint32_t ticks{},randomSeed{},metaRefresh{},metaRebuild{},scriptBreak{},requestPhase{},uiMode{},inputMode{}; // 아직 로그인 안에 남은 현재 DWORD 저장소다.
+    double& captureEnd{s.localStateGlobals->CaptureEnd()};double& connectEnd{s.localStateGlobals->ConnectEnd()}; // 서로 다른 원본 벽시각 기한을 직접 빌린다.
+    double wall{};std::int32_t timeout{}; // 로그인 장치의 현재 벽시각 입력과 설정 값이다.
+    double& activityEnd{s.localStateGlobals->ActivityEnd()}; // Editor가 쓴 같은00544d58도 Session 전환에서 보존한다.
     std::array<std::uint32_t,7> settingValues{1,0,0,0,0,1,8}; //실제초기7DWORD이며현재패널/디버그전역을서로별개로보존한다.
     std::vector<std::uint8_t> wireTypes; //실제수신한패킷종류의 진단기록이며 분기를 대신하지 않는다.
     //선택한 실제 장치가 빠지면 그 지점에서 명시 오류를 보인다.

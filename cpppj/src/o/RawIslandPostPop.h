@@ -10,6 +10,9 @@ inline constexpr std::uint32_t kPatchNoIslandVtable = 0x00506f08, kCdNoIslandVta
 struct IslandPostPopState {
     std::uint32_t loadingDepth{}; // 005c89b8 / CD 005178d4: 요새 읽기 중이면 서/북 칸으로 프레임 글자를 선택한다.
     bool ownerPropagationSuppressed{}; // 005c85d4 / CD 0051894c: H 칸에서의 받침 소유자 전파를 억제한다.
+    bool* sharedSavedGame{}; // 실제 Client의005c85d4를 빌리며 생략한 독립 입력은 기존 bool을 사용한다.
+    bool& SavedGame() { return sharedSavedGame ? *sharedSavedGame : ownerPropagationSuppressed; } // 현재 저장 게임 관문의 실제 주소를 반환하며 사본을 동기화하지 않는다.
+    const bool& SavedGame() const { return sharedSavedGame ? *sharedSavedGame : ownerPropagationSuppressed; } // H 칸 처리 때마다 같은 소유자의 현재 값을 직접 읽는다.
 };
 // 섬 후처리 Pop 외부 동작과 저장소 조회를 연결하는 콜백 묶음이다.
 struct IslandPostPopHooks {

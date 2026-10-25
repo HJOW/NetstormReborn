@@ -101,14 +101,20 @@ TEST_CASE(ExistingEditorAfterCheckpoint_ActualClientOwnsBlocksAndDeadline) {
     {
         Client client(options);previous=client.LocalStateGlobals();life=previous;auto state=previous->State(); //같은 Client 실제 소유자다.
         CHECK(&state.current==&previous->Blocks()[3] && &state.immediate[33]==&previous->Blocks()[2][33]);
-        state.current[5]=0x98765432U;previous->ActivityEnd()=123.75;
+        state.current[5]=0x98765432U;previous->ActivityEnd()=123.75;previous->ZonePending()=0xffffffffU;previous->SourceType()=17;previous->SavedGame()=true;
+        previous->Begin()=23;previous->CentralCreated()=29;previous->CaptureEnd()=41.5;previous->ConnectEnd()=43.5;previous->LoginEnd()=47.5; // 서로 다른 Native 주소를 구별한 입력이며 설정 변경은 이들을 초기화하지 않아야 한다.
         client.Configuration().Configuration().AppendSection("END");client.Configuration().SetInt("readOnlyForts",1);
         CHECK(client.LocalStateGlobals().get()==previous.get() && previous->Blocks()[3][5]==0x98765432U && previous->ActivityEnd()==123.75);
+        CHECK(previous->ZonePending()==0xffffffffU && previous->SourceType()==17 && previous->SavedGame() && previous->Begin()==23 && previous->CentralCreated()==29);
+        CHECK(previous->CaptureEnd()==41.5 && previous->ConnectEnd()==43.5 && previous->LoginEnd()==47.5);
     }
     CHECK(!life.expired() && previous->ActivityEnd()==123.75);
+    CHECK(previous->ZonePending()==0xffffffffU && previous->SavedGame() && previous->LoginEnd()==47.5); // Client 반납 뒤에도 외부 소비자가 유지한 동일 owner의 값이다.
     {
         Client fresh(options);CHECK(fresh.LocalStateGlobals().get()!=previous.get() && fresh.LocalStateGlobals()->ActivityEnd()==0.0);
         CHECK((fresh.LocalStateGlobals()->Blocks()==std::array<netstorm::o::LocalMissionStateBlock,5>{}));
+        const auto& initial=*fresh.LocalStateGlobals();CHECK(initial.ZonePending()==0 && initial.SourceType()==0 && !initial.SavedGame() && initial.Begin()==0 && initial.CentralCreated()==0);
+        CHECK(initial.CaptureEnd()==0.0 && initial.ConnectEnd()==0.0 && initial.LoginEnd()==0.0);
     }
     previous.reset();CHECK(life.expired()); //최종 반납 뒤에는 탈출한 참조를 역참조하지 않는다.
 }

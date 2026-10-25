@@ -4,8 +4,10 @@
 #include "o/SquidDestroyLifecycle.h"
 #include "o/SquidFrameBinding.h"
 #include "client/SquidRenderer.h"
+#include <algorithm>
 #include <cstdio>
 #include <filesystem>
+#include <type_traits>
 
 using namespace netstorm::o;
 using namespace netstorm::test::rawscene;
@@ -130,6 +132,25 @@ TEST_CASE(GunImpact_CdNativeAnimationAndProducer) { ReplayImpact("originalCD"); 
 // 실제 하위 생성/프레임 종료/Dude 반응을 누락된 성공으로 바꾸지 않는다.
 TEST_CASE(GunImpact_MissingCreationDeleteAndDudesRejected) {
     ImpactScene scene(OriginalEdition::Patch1078);scene.Prepare(ImpactRows().front());RawGunImpact missing(scene.pool,scene.frames,scene.setter,scene.random,scene.state,{});CHECK(Throws([&] { missing.Visual(50,50,3,0.02f); }));CHECK(Throws([&] { missing.Handle(kSource,0,0,0.02f); }));CHECK(Throws([&] { missing.Ground(50,50); }));CHECK(scene.events.empty() && scene.random.State()==0);
+}
+// 같은 장기 억제 double의 현재값을 양판본 실제 생성/Pop/Regular 앞에서 읽고 지역 사본은 보존한다.
+TEST_CASE(GunImpact_SharedSuppressionReadsCurrentOwnerWithoutCopy) {
+    static_assert(std::is_aggregate_v<GunImpactState>); // 기존 독립 입력의 aggregate 초기화 계약을 유지한다.
+    for (const auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) { // 두 판본의 같은 억제 관문과 각 frame 저장 폭을 함께 확인한다.
+        ImpactScene scene(edition);scene.Prepare(ImpactRows().front());double ownerTime{17.25}; // Session보다 긴 실제 소유자에 해당하는 명시 입력이며 결과를 미리 쓰지 않는다.
+        scene.state=GunImpactState{0.0,0,160,&ownerTime};const GunImpactState& current=scene.state; // 기존 값0과 반대되는 장기 비영값이 실제 관문을 선택해야 한다.
+        RawGunImpact impact(scene.pool,scene.frames,scene.setter,scene.random,scene.state,scene.Hooks());const auto before=Hex(scene.pool.Slot(kSource));const auto randomBefore=scene.random.State();
+        CHECK(&scene.state.SuppressedTime()==&ownerTime && &current.SuppressedTime()==&ownerTime);impact.Visual(50,50,3,0.02f);CHECK(scene.events.empty() && Hex(scene.pool.Slot(kSource))==before && scene.random.State()==randomBefore);
+        scene.state.suppressedTime=91.5;ownerTime=0.0;impact.Visual(50,50,3,0.02f);CHECK(std::count(scene.events.begin(),scene.events.end(),"C:160:2")==1 && scene.Frame()==15 && scene.process!="-" && scene.state.suppressedTime==91.5); // 같은 객체의 다음 호출은 소유자0을 즉시 읽어 실제 Anim/Pop/Regular를 실행한다.
+        scene.events.clear();scene.state.SuppressedTime()=-4.5;CHECK(ownerTime==-4.5 && scene.state.suppressedTime==91.5);impact.Visual(50,50,3,0.02f);CHECK(scene.events.empty()); // 쓰기도 같은 소유자로 향하며 지역 fallback을 덮지 않는다.
+        ownerTime=-0.0;impact.Visual(50,50,3,0.02f);CHECK(std::count(scene.events.begin(),scene.events.end(),"C:160:2")==1 && std::bit_cast<std::uint64_t>(current.SuppressedTime())==0x8000000000000000ULL); // 원문 double 비교의 음수0과 원시 비트를 보존한다.
+    }
+}
+// 기존 세 필드 aggregate 입력과 독립 double의 주소/쓰기/생성 의미를 그대로 유지한다.
+TEST_CASE(GunImpact_LegacyAggregateKeepsOwnedSuppression) {
+    ImpactScene scene(OriginalEdition::Patch1078);scene.Prepare(ImpactRows().front());scene.state=GunImpactState{12.5,0,160};const GunImpactState& current=scene.state; // trailing 공유 입력을 생략한 기존 형태다.
+    RawGunImpact impact(scene.pool,scene.frames,scene.setter,scene.random,scene.state,scene.Hooks());CHECK(!scene.state.sharedSuppressedTime && &scene.state.SuppressedTime()==&scene.state.suppressedTime && &current.SuppressedTime()==&scene.state.suppressedTime);
+    impact.Visual(50,50,3,0.02f);CHECK(scene.events.empty());scene.state.SuppressedTime()=0.0;impact.Visual(50,50,3,0.02f);CHECK(scene.state.suppressedTime==0.0 && std::count(scene.events.begin(),scene.events.end(),"C:160:2")==1 && scene.Frame()==15 && scene.process!="-");
 }
 // 보호 원본의88프레임/실제 SHP와 같은 Factory/Pop/Regular/장부/종속 삭제 사슬을 두 판본에서 소비한다.
 TEST_CASE(GunImpact_ActualAssetsFactoryPopRegularAndDeletion) {
