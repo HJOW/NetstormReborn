@@ -54,7 +54,7 @@ void RawMetadisplayDirty::Enqueue(float x,float y) const {
     // 같은 셀의 재통지는 먼저 검사하므로 꽉 찬 큐에서도 전체 갱신을 새로 요구하지 않는다.
     for (std::int32_t i=0;i<state_.count;++i)
         if (state_.cells[static_cast<std::size_t>(i)].x==cx && state_.cells[static_cast<std::size_t>(i)].y==cy) return;
-    if (state_.count>=static_cast<std::int32_t>(state_.cells.size())) { state_.fullRefresh=1;return; }
+    if (state_.count>=static_cast<std::int32_t>(state_.cells.size())) { state_.FullRefresh()=1;return; }
     state_.cells[static_cast<std::size_t>(state_.count)]={cx,cy,0};++state_.count;
 }
 // 원본 상태를 복사한 별도 좌표 대신 그 시점의 슬롯을 읽는다.
@@ -65,16 +65,16 @@ void RawMetadisplayDirty::Enqueue(Sid sid) const {
 // 실제 Refresh는 비활성 표시에서도 bitmap을 최초 확보하고 full을 1로 쓴다.
 void RawMetadisplayDirty::Refresh(const MetadisplayDirtyView& view) const {
     ValidateState();
-    if (state_.bitmap.empty()) { state_.bitmapWidth=kBitmapWidth;state_.bitmap.assign(kBitmapWidth*kBitmapWidth,0);state_.fullRefresh=1; }
+    if (state_.bitmap.empty()) { state_.bitmapWidth=kBitmapWidth;state_.bitmap.assign(kBitmapWidth*kBitmapWidth,0);state_.FullRefresh()=1; }
     if (!state_.displayPresent || (state_.displayFlags&1)==0) return;
     state_.initialized|=1;
     if ((state_.initialized&2)==0) { state_.initialized|=2;state_.cached.rectangle={}; }
-    if (state_.count!=0 || state_.fullRefresh!=0 || !SameCamera(pool_.Edition(),view,state_.cached) || view.rectangle!=state_.cached.rectangle) {
+    if (state_.count!=0 || state_.FullRefresh()!=0 || !SameCamera(pool_.Edition(),view,state_.cached) || view.rectangle!=state_.cached.rectangle) {
         if (!hooks_.rebuild) throw std::logic_error("미니맵 표시 재생성 몸체가 연결되지 않았습니다");
         state_.cached=view;hooks_.rebuild();
     }
     ++state_.frames;
-    if (state_.fullRefresh!=0) {
+    if (state_.FullRefresh()!=0) {
         if (!hooks_.redrawCell) throw std::logic_error("미니맵 전체 셀 그림 몸체가 연결되지 않았습니다");
         // 전체 갱신은 y를 먼저 증가시키며 모든 64×64 셀을 처리한다.
         for (std::int32_t y=0;y<kCellCount;++y) {
@@ -88,7 +88,7 @@ void RawMetadisplayDirty::Refresh(const MetadisplayDirtyView& view) const {
             ValidateState();const auto cell=state_.cells[static_cast<std::size_t>(i)];hooks_.redrawCell(cell.x,cell.y);
         }
     }
-    state_.count=0;state_.fullRefresh=0;
+    state_.count=0;state_.FullRefresh()=0;
 }
 // 풀 주소 자체로 연결의 일치 여부를 확인한다.
 const SidPool& RawMetadisplayDirty::Pool() const { return pool_; }

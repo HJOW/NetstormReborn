@@ -133,7 +133,7 @@ void RawRegionPaint::Paint(const RegionOwnershipPaint& request) {
         // stamp 중 추가된 후보도 같은 호출에서 뒤이어 처리한다.
         for (std::size_t i=0;i<state_.boundary.size();++i) { const auto point=state_.boundary[i];Boundary(point.x,point.y); }
     }
-    ++state_.revision;
+    ++state_.WorldRedraw();
 }
 // 기존 투표 wrapper를 다시 구현하지 않고 실제 도장 몸체만 공급한다.
 RegionOwnershipHooks MakeRegionPaintOwnershipHooks(const SidPool& pool,RawRegionPaint& paint,RegionOwnershipHooks hooks) {

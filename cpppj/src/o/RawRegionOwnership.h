@@ -14,7 +14,12 @@ struct OwnershipAffectedRegion {
 struct RegionOwnershipState {
     // affected: 소유권 변경의 영향을 받아 갱신할 지역 목록.
     std::vector<OwnershipAffectedRegion> affected;
-    std::uint32_t revision{},dirty{}; // 투표 wrapper 자체의 DWORD 쓰기다. 지형 도장의 내부 증가는 별도다.
+    std::uint32_t revision{},dirty{}; // 독립 입력의 패치0059a8b0 증가/005949d4의1쓰기다. 지형 도장의 내부 증가는 같은 원본 주소에 별도 수행한다.
+    std::uint32_t* sharedWorldRedraw{};std::uint32_t* sharedMapRevision{}; // 패치0059a8b0 증가와005949d4의1쓰기를 서로 다른 실제 owner에서 빌린다.
+    std::uint32_t& WorldRedraw() { return sharedWorldRedraw ? *sharedWorldRedraw : revision; } // 투표 효과 뒤 현재 월드 다시 그리기 DWORD를 직접 증가시킨다.
+    const std::uint32_t& WorldRedraw() const { return sharedWorldRedraw ? *sharedWorldRedraw : revision; } // 독립 입력만 기존 revision 필드를 읽는다.
+    std::uint32_t& MapRevision() { return sharedMapRevision ? *sharedMapRevision : dirty; } // 같은 미니맵 DWORD에는 증가 대신 원문1을 쓴다.
+    const std::uint32_t& MapRevision() const { return sharedMapRevision ? *sharedMapRevision : dirty; } // 미니맵 Refresh가0으로 소비하는 현재값이다.
 };
 // 지역 소유권 표시에 적용할 소유자·테마 정보이다.
 struct RegionOwnershipPaint {

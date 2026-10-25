@@ -103,15 +103,18 @@ TEST_CASE(ProductionInitialContext_GameplayGlobalsKeepRealAliasesAndRejectDuplic
 // 실제 Editor prefix의 준비 값은 대여/실패/반납에서도 유지하고 일반 Session의 기존 초기화는 보존한다.
 TEST_CASE(ProductionInitialContext_PreparedGameplayLeaseLeavesNativeValuesToCaller) {
     InitialProductionScene scene;auto globals=scene.client.GameplayGlobals();auto subscribers=scene.client.SubscriberGlobals();
+    CHECK(globals->MapRevision()==0);globals->MapRevision()=0xfedcba98U;const auto* mapAddress=&globals->MapRevision();const auto& current=*globals; // 실제 새 Client의 BSS0과 대여 전 현재 DWORD를 구별한다.
     subscribers->MySubscriber()=71;subscribers->LoginSubscriber()=93;globals->player.playerKnown=1;globals->player.templateOwner=1;globals->player.battleOwner=1;globals->player.fortMode=true;
     globals->world.editor=1;globals->world.missionPost=true;globals->cursor.inputFlags=0x41;globals->cursor.lockDepth=7;globals->energy.userCheat=0x845fed;
     auto prepared=globals->AcquirePrepared();bool duplicate{};try { globals->Acquire(); } catch (const std::logic_error&) { duplicate=true; }
     CHECK(duplicate && globals->Borrowed() && globals->player.playerKnown==1 && globals->player.templateOwner==1 && globals->player.battleOwner==1 && globals->player.fortMode);
     CHECK(globals->world.editor==1 && globals->cursor.inputFlags==0x41 && globals->cursor.lockDepth==7 && globals->energy.userCheat==0x845fed);
     duplicate=false;try { globals->AcquirePrepared(); } catch (const std::logic_error&) { duplicate=true; }CHECK(duplicate && globals->cursor.lockDepth==7);
+    CHECK(&current.MapRevision()==mapAddress && current.MapRevision()==0xfedcba98U); // 준비 대여/거부는 같은 전체 갱신 요청을 소비하지 않는다.
     prepared.reset();CHECK(!globals->Borrowed() && globals->player.playerKnown==1 && globals->player.fortMode && globals->world.editor==1 && globals->cursor.inputFlags==0x41 && globals->cursor.lockDepth==7);
     CHECK(&globals->world.mySubscriber==&subscribers->MySubscriber() && &globals->world.loginSubscriber==&subscribers->LoginSubscriber() && globals->world.mySubscriber==71 && globals->world.loginSubscriber==93);
     auto ordinary=globals->Acquire();CHECK(globals->player.playerKnown==0 && !globals->player.fortMode && globals->world.editor==0 && globals->cursor.inputFlags==0 && globals->cursor.lockDepth==1 && globals->energy.userCheat==0x845fed);
+    CHECK(&globals->MapRevision()==mapAddress && globals->MapRevision()==0xfedcba98U);ordinary.reset();CHECK(current.MapRevision()==0xfedcba98U); // 기존 일반 대여의 다른 초기화와 별개로 Client의005949d4 수명은 유지한다.
 }
 
 namespace {

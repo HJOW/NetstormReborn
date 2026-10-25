@@ -84,7 +84,8 @@ struct RawButtonControls::Impl {
     // 현재월드의관측대여는각소유자소멸이자기연결과일치할때만해제한다.
     void CloseMinimaps() { for (const auto& value:minimaps) value->Close();minimaps.clear(); }
     // 모든 분배 훅은 실제 호출 때 현재 노드와 처리기를 조회하여 순환 의존을 연결한다.
-    Impl(o::OriginalEdition edition,RawButtonHooks supplied):hooks(std::move(supplied)) {
+    Impl(o::OriginalEdition edition,RawButtonHooks supplied,std::uint32_t* sharedFullRefresh):hooks(std::move(supplied)) {
+        minimapState.sharedFullRefresh=sharedFullRefresh; // 첫 dirty/미니맵 생성 전 같은005949d4에 연결하며 현재 DWORD를 초기화하지 않는다.
         create.collection.edition=edition;stoneState.color=kStoneType;stoneState.defaultContext={0,0,0,0,0,0,1,1};
         inputState.overlayEvent=kOverlayEvent; // 새 Client 포인터 연결의 원본 별도 사건 전역이며 caller의 raw code와 구별한다.
         factory=std::make_unique<GumpCreate>(create,GumpCreateHooks{
@@ -190,7 +191,7 @@ struct RawButtonControls::Impl {
     }
 };
 // 구현 주소는 생성 이후 이동하지 않아 순환 훅이 안정된 처리기를 조회한다.
-RawButtonControls::RawButtonControls(o::OriginalEdition edition,RawButtonHooks hooks):impl_(std::make_unique<Impl>(edition,std::move(hooks))) {}
+RawButtonControls::RawButtonControls(o::OriginalEdition edition,RawButtonHooks hooks,std::uint32_t* sharedFullRefresh):impl_(std::make_unique<Impl>(edition,std::move(hooks),sharedFullRefresh)) {}
 // 소유자 해제 시에도 복원된 가상 소멸자가 실제 저장소/표를 정리한다.
 RawButtonControls::~RawButtonControls() { impl_->Clear();impl_->lifetime->Kill(impl_->root);impl_->lifetime->Cleanup(); }
 // 쓰기 전에 전체 화면 입력을 검증하고 이전 페이지를 실제 수명 경로로 정리한다.

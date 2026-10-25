@@ -13,7 +13,7 @@ struct RegionPaintState {
     std::uint32_t owner{};
     // theme: 패치 요청의 원소 quartile이다. 0/-1은 기본, 1/2/그 밖은 다음 세 원소다.
     std::int32_t theme{};
-    // revision: flood 호출마다 한 번 증가하는 원본 unsigned DWORD 전역이다.
+    // revision: 독립 입력의 월드 다시 그리기 DWORD이며 패치0059a8b0은 flood 호출마다 한 번 증가한다.
     std::uint32_t revision{};
     // boundary: 패치의 중복 없는 8바이트 정수 좌표 후보를 삽입 순서로 보관한다.
     std::vector<CellPoint> boundary;
@@ -21,6 +21,9 @@ struct RegionPaintState {
     std::optional<std::array<std::int32_t,99>> coreVariants;
     // boundaryVariants: 경계 도장의 AA 프레임에 사용하는 별도 99개 캐시다.
     std::optional<std::array<std::int32_t,99>> boundaryVariants;
+    std::uint32_t* sharedWorldRedraw{}; // 패치0059a8b0의 같은 현재 DWORD이며 미니맵005949d4와 합치지 않는다.
+    std::uint32_t& WorldRedraw() { return sharedWorldRedraw ? *sharedWorldRedraw : revision; } // 각 Paint의 실제 증가가 동일 Client 월드 갱신에 도달한다.
+    const std::uint32_t& WorldRedraw() const { return sharedWorldRedraw ? *sharedWorldRedraw : revision; } // 기존 독립 호출만 값형 revision을 사용한다.
 };
 // 소유자 가상 호출·빈 표면의 edgeFarm finder·현재 지역 getter를 연결한다.
 struct RegionPaintHooks {

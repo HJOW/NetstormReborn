@@ -4,6 +4,8 @@
 
 범위는 `004b2df0`의 **직접 전역 접근, 실제 소유자, 중복 초기화와 반납 순서**다. `StateWorldCleanupEffect`의 각 실제 하위 API/미복원 본문은 별도 조사 범위다. 아래의 ‘없음’은 현재 조사한 제품 연결에 해당 Native 주소의 단일 실제 저장소가 없다는 뜻이다. 원문 자체가 0이라는 뜻이 아니다. 작은 raw 모듈의 값형 검사 상태나 fixture의 주소 사전은 제품 전역 소유자로 세지 않았다.
 
+**430 정정:** 아래 표의 소유 상태는 원래428 시점 조사다. 이후429의 State/Login 공유는 [완료 문서](cpp-state-client-globals-20261025.md)에 기록했다. 이번430의 PE 직접 대조로 `RawIslandRuntime`의 첫 `revision`과 Region 투표/도장의 `revision`은 **0059a8b0**, 섬의 두 번째 `ownerChanged`와 Region `dirty`는 **005949d4**임을 확정했다. 이전 표에서 섬의 첫 인자를005949d4로 분류한 것은 잘못이었다. 아래 해당 행을 바로잡았으며 [두 DWORD 작업 문서](cpp-map-revision-owner-20261025.md)에 기계어 위치/빌드 중단/교정 검증 상태를 기록한다. Native cleanup 부모의 접합 완료를 뜻하지 않는다.
+
 ## 바로 사용할 수 있는 실제 장기 소유자
 
 | 대상 | 현재 실제 소유자/접근 | 연결 조건 |
@@ -58,14 +60,14 @@ Player 직접0쓰기는 owner1..8의 `+7c,+80,+84,+88,+8c,+90,+94,+98` 여덟 DW
 | `005ca938` | 0 store | **UI 수명.** `RawMenuControls::Impl::popupState.command`; `PopupState()`가 같은 실제 객체를 반환한다. `QuickHelpPopupState::Mark(0,nullopt)`는 인접80BYTE argument까지 지우므로 이 DWORD store의 대체가 아니다. |
 | `005c8bb0` | 0 store | **없음.** 원문 추가 분기 전역이며 `Login::archipelago`의 `005c8bb4`와 다르다. |
 | `0059a8ac` | 0 store | **UI 수명.** `UberGump::hideBuildings_`; 메뉴/실제 표시 getter가 공유한다. Native raw 루트 교체 때문에 host UberGump를 새로 만들어 조기0으로 바꾸지 않는다. |
-| `0059a8b0` | 1 store | **장기.** `ClientKencloudGlobals::WorldRedraw()`, UberGump가 직접 참조한다. `Renderer::InvalidateAll()`은 별도 동작이고 저장소가 아니다. |
+| `0059a8b0` | 1 store | **장기.** `ClientKencloudGlobals::WorldRedraw()`, UberGump가 직접 참조한다. 섬 Owner의 첫 인자와 Region 투표/도장의 `revision`도 이 주소를 증가시킨다. 430 source2에서 이 기존 실제 owner에 연결하며 검증 상태는 별도 문서를 따른다. `Renderer::InvalidateAll()`은 별도 동작이고 저장소가 아니다. |
 | `005c85a0` | 0 store | **지역.** Login `central`, `MissionServerPacketState::centralCreated`가 빌린다. Client 수명의 중앙섬 생성 DWORD가 필요하다. |
 | `0055a420` | 0 store | **지역/미접합.** Login `source`, RawLocalMissionState의 `sourceType`, RawMissionClientPackets의 `sourceTicks`, SavedStateRead tail[1]이 해당 주소다. Client에 단일 실제 필드가 없으며 frame delta/프레임 번호와 합치지 않는다. |
 | `005c848c`, `005c8490` | 각 `c61c4000` 비트 store | **없음.** 원문 `004b0b..` 공통 삭제의 unitLost 뒤 기록하는 두 float 좌표다. `GameWorld`의 카메라/스크롤이나 `ConstructionNoticeState::history` (`00558ea4`)와 다르다. 동일한 장기 최근 손실 좌표를 삭제 consumer와 공유해야 한다. |
 | `00595088` | 0 store | **지역/분산.** `rewardState.geyserPool`, Login `battleSeed`, `BombEffectState::spentCounter`의 주소 설명이 겹친다. 현재 이름만 보고 별도 전역으로 확정하지 않는다. 같은 원문 주소를 실제 한 DWORD로 통합하고 각 signed/unsigned 읽기만 구별해야 한다. |
 | `005c85d4` | 0 store | **지역.** Login `saved`, RawLocalMissionState/패킷/타이머가 참조한다. ClientLocalStateGlobals의 720BYTE 블록 안에 포함된 필드가 아니다. |
 | `00594fa0` | 마지막 모드 초기화 앞 read | **부분 장기/분산.** storage `links.mission`과 Session `objectState.mission`, 미션 객체 존재/실제 inMission 표시가 나뉜다. `world_!=nullptr`, 현재 page나 UI phase로 합성하지 않는다. Editor cleanup은 이 현재값을 `00594fa4`에 복사해야 한다. |
-| `005949d4` | 현재 read→하위32비트+1 store | **지역/UI 분산.** Session `revision` (`RawIslandRuntime`/`RawVortexOwner`/Login 패킷)과 `HudRuntime::fullRefresh` (`HudDockState`)가 분리돼 있다. 하나의 Client DWORD를 모든 소비자에 빌리고 unsigned 감김을 보존해야 한다. |
+| `005949d4` | 현재 read→하위32비트+1 store | **428 당시 지역/UI 분산.** Vortex/Login의 증가, 섬 Owner의 두 번째 인자·Region `dirty`의1쓰기, HUD fullRefresh, 미니맵 dirty의1쓰기/증가/0소비가 같은 주소다. 섬/Region의 첫 `revision`은0059a8b0이다. 430 source2에서 이 주소는 `ClientGameplayGlobals::MapRevision()`을 빌리며 unsigned 감김과store1을 구별한다. |
 | `005c7a74` | 0 store | **지역.** Login `begin`, Login/ClientPacket/Timer가 같은 Login 필드는 공유하지만 Editor/Session 교체를 넘는 Client owner는 없다. |
 | `005c85b4` | 0 store | **없음.** 원문 State의 별도 연결 표시다. Login `requestPhase`는 `005c85ac`로 다른 주소이며 이 값을 빌려서는 안 된다. |
 | `00540bc0` | 마지막 0 store | **지역/분산.** `RawSurfaceWorld::Impl::processState.server`가 현재 여러 게임 raw consumer에 연결돼 있지만 World가 없어지면 사라진다. EditorLocalTransport의 외부 `const bool& server`도 별도다. Native Client 서버 DWORD owner 공백을 wire 생성 때 임의 Session bool로 바꾸지 않는다. |

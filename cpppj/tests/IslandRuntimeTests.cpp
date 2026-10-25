@@ -1,7 +1,10 @@
 // 실제 두PE의 mutable100기록/owner/Player첫지역과 callback뒤현재목록을 동일raw저장소에서 비교한다.
 #include "RawSceneSupport.h"
 #include "o/RawIslandRuntime.h"
+#include "client/ClientGameplayGlobals.h"
+#include "client/ClientKencloudGlobals.h"
 #include <cstdio>
+#include <utility>
 
 using namespace netstorm::o;
 using namespace netstorm::test::rawscene;
@@ -160,4 +163,29 @@ TEST_CASE(IslandRuntime_RejectsMissingEffectsAndPhysicalOverflow) {
     IslandRuntimeScene scene(OriginalEdition::Patch1078);scene.Prepare(RuntimeRows().front());Put(scene.records,0,100);
     CHECK(Throws([&scene] { scene.runtime->Add(1,2); }));CHECK(scene.runtime->Count()==100);
     CHECK(Throws([&scene] { RawIslandRuntime missing(scene.pool,scene.hash,scene.records,scene.modes,scene.residences,scene.revision,scene.changed,{}); }));
+}
+
+// 실제0046ef10의0059a8b0 증가와005949d4의1 저장을 서로 다른 Client owner에서 관측한다.
+TEST_CASE(IslandRuntime_ActualClientOwnersKeepWorldIncrementAndMapStoreSeparate) {
+    netstorm::client::ClientKencloudGlobals cloud;netstorm::client::ClientGameplayGlobals gameplay;IslandRuntimeScene scene(OriginalEdition::Patch1078);
+    auto residence=scene.pool.AllocatedBytes(Sid{60});std::fill(residence.begin(),residence.end(),std::uint8_t{});residence[10]=89;residence[34]=7;
+    Put(residence,14,std::bit_cast<std::uint32_t>(50.75F));Put(residence,18,std::bit_cast<std::uint32_t>(52.5F));scene.pool.AllocatedBytes(Sid{70})[34]=2;scene.hash.Cell(0,51,53)=70;
+    scene.residences.entries={60};scene.residences.count=1;std::uint32_t notices{},assertions{},expectedWorld{18},expectedOwner{3};bool mutateDuringNotice{}; // 실제 거주 구역과 관문 뒤 관찰 입력이다.
+    IslandRuntimeHooks hooks;
+    hooks.assertion=[&](IslandRuntimeAssertion reason) {
+        CHECK(reason==IslandRuntimeAssertion::MissingIsland);++assertions;cloud.WorldRedraw()=40;gameplay.MapRevision()=0x76543210U;Put(scene.records,8,1); // 복귀 진단이 같은 존재/전역을 바꾸면 본문은 그 현재값에서 계속한다.
+    };
+    hooks.setResidenceOwner=[&](Sid sid,std::uint32_t owner) {
+        CHECK(sid==Sid{60} && owner==2 && cloud.WorldRedraw()==expectedWorld && gameplay.MapRevision()==1 && Get(scene.records,12)==expectedOwner);++notices;scene.pool.AllocatedBytes(sid)[34]=static_cast<std::uint8_t>(owner);
+        if (mutateDuringNotice) { cloud.WorldRedraw()=700;gameplay.MapRevision()=99; } // 원문 전역 쓰기 뒤의 실제 가상 효과를 반환 후 사본으로 덮지 않아야 한다.
+    };
+    RawIslandRuntime runtime(scene.pool,scene.hash,scene.records,scene.modes,scene.residences,cloud.WorldRedraw(),gameplay.MapRevision(),std::move(hooks));runtime.Reset();CHECK(runtime.Add(1,0)==0);runtime.Bounds(0,{10,20,60,70});
+    cloud.WorldRedraw()=17;gameplay.MapRevision()=0xffffffffU;runtime.Owner(0,3);
+    CHECK(cloud.WorldRedraw()==18 && gameplay.MapRevision()==1 && runtime.Owner(0)==3 && scene.pool.Slot(Sid{60})[34]==2 && notices==1 && assertions==0);
+    // 진단의 현재 존재/전역 변경을 재조회한 뒤 같은1 저장을 먼저 수행하고 가상 효과의 후속 변경은 유지한다.
+    Put(scene.records,8,0);cloud.WorldRedraw()=17;gameplay.MapRevision()=0xffffffffU;expectedWorld=41;expectedOwner=4;mutateDuringNotice=true;runtime.Owner(0,4);
+    CHECK(cloud.WorldRedraw()==700 && gameplay.MapRevision()==99 && runtime.Owner(0)==4 && notices==2 && assertions==1);
+    // unsigned 감김은 증가하는 세계 DWORD에만 적용하며 미니맵 DWORD는 여전히1을 직접 저장한다.
+    cloud.WorldRedraw()=0xffffffffU;gameplay.MapRevision()=0xffffffffU;expectedWorld=0;expectedOwner=5;mutateDuringNotice=false;runtime.Owner(0,5);
+    CHECK(cloud.WorldRedraw()==0 && gameplay.MapRevision()==1 && runtime.Owner(0)==5 && notices==3 && assertions==1);
 }

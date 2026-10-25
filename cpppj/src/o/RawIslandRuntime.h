@@ -25,7 +25,7 @@ public:
     static constexpr std::size_t kBytes=4+100*32;
     // 기존 Fort모드/Player 첫 지역과 revision/변경DWORD·실제residences/hash/pool을 공유한다.
     RawIslandRuntime(const SidPool& pool,const SquidHash& hash,std::span<std::uint8_t> records,
-        FortFinishOwnerState& modes,SquidPostPopList& residences,std::uint32_t& revision,std::uint32_t& ownerChanged,
+        FortFinishOwnerState& modes,SquidPostPopList& residences,std::uint32_t& worldRedraw,std::uint32_t& mapRevision,
         IslandRuntimeHooks hooks,std::int32_t worldExtent=256);
     // 100개 기록의Temple/존재/현재owner/원래owner/지역/경계를 초기화하고 padding2BYTE는 보존한다.
     void Reset();
@@ -85,10 +85,10 @@ private:
     FortFinishOwnerState& modes_;
     // residences_: AssetPostPop의 실제 등록목록이며 매 반복 currentcount/entries를 다시 읽는다.
     SquidPostPopList& residences_;
-    // revision_: 원본전역 revisionDWORD를 지역투표/도장과 동일하게 공유한다.
-    std::uint32_t& revision_;
-    // ownerChanged_: 패치 owner변경에서만1을 쓰는 별도DWORD다. CD는 유지한다.
-    std::uint32_t& ownerChanged_;
+    // worldRedraw_: 패치0059a8b0을 지역 투표/도장과 공유하며 실제 owner 변경 때 증가시킨다.
+    std::uint32_t& worldRedraw_;
+    // mapRevision_: 패치005949d4에는 증가 대신1을 쓴다. CD는 이 별도 참조를 유지한다.
+    std::uint32_t& mapRevision_;
     // hooks_: 필수 실제거주 구역owner와 원본 진단효과다.
     IslandRuntimeHooks hooks_;
     // worldExtent_: 실제isValid에서float로 읽는 원본월드상한DWORD다.

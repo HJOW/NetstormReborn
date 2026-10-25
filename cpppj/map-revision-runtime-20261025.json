@@ -1,0 +1,450 @@
+{
+  "unit": 430,
+  "goalComplete": false,
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "created": "2026-10-25T17:36:38.705543",
+  "sources": {
+    "cpppj/src/client/CampaignClientServices.cpp": "a759c6f4c2794f6a6c378ea9dac75618d8bbc40d77a2ef41ff26f86421e93151",
+    "cpppj/src/client/ClientGameplayGlobals.h": "40e1919955d42da477dbb1afc1189c177e0292b39e40111ec380ce0d59503ad3",
+    "cpppj/src/client/RawButtonControls.cpp": "28404271a9f62b1ba5135cd9383126c8558b4046792e72c559efa6834c4b1c78",
+    "cpppj/src/client/RawButtonControls.h": "e0778a1271075db9c9862551a95676847244bce54db29ba3a76ced1d2fb4ef01",
+    "cpppj/src/client/RawCampaignSession.cpp": "0e01d97b8ac8214e0b8345d99c222c310fbc57eceabc536f644a6e6f804bf6da",
+    "cpppj/src/client/RawCampaignSession.h": "ec3736a5de70744e2eea0eba416e89a4dcbfc62829abdf5d4be1db521ef5eba0",
+    "cpppj/src/client/RawMinimapControls.cpp": "eb4e692aad2b875b1c3ba043df8b4c3d1caa66c8eabf2efe4e6164601c729cfb",
+    "cpppj/src/client/UberGump.cpp": "5b9f034d38f1eacca15c77113c023d9488c7a94bbaf44252bdb44ef6d6fd1a2b",
+    "cpppj/src/client/UberHud.inc": "3df45c78f7b7ed9d21cc34cab4e941182a85a992c73d01d9249252649529eb45",
+    "cpppj/src/o/RawIslandRuntime.cpp": "58fe4efd885dd85406c79e188f0c59a64a78d8ba2a0c68b517c63de9239e81c2",
+    "cpppj/src/o/RawIslandRuntime.h": "308761762ab3584783ba5506883ef2542f3d368c2382f69e72023b58401d8402",
+    "cpppj/src/o/RawMetadisplayDirty.cpp": "4e520fd62ed554953dfda7c74a412ff9f73877214308ad650a1b43719f5f10b1",
+    "cpppj/src/o/RawMetadisplayDirty.h": "5f1c577dd50305341086faf47d3cfe78256ad46e52d17f945866d114e009d3b4",
+    "cpppj/src/o/RawRegionOwnership.cpp": "e7d1542f9e7b289a6f14b190ff4b13333b78a96547af9671ac0305ad6432acb4",
+    "cpppj/src/o/RawRegionOwnership.h": "d9afc6adabee00ac2900de2cbf45eeb8d177d5c9f336e0311b39019ce564d186",
+    "cpppj/src/o/RawRegionPaint.cpp": "09245413f98304125ab8bdaa95a7f3c4be8e40b56a839ec28ca898102e00cf4c",
+    "cpppj/src/o/RawRegionPaint.h": "a0eaad29319bfd2f622074608efa8582115f516b92857f4d71958b7510a5f432",
+    "cpppj/tests/ClientLocalStateGlobalsTests.cpp": "d3b617fe8d5c499f2e70ca9186f653b71bb3bdd7af8ae402c672a2cd16224e10",
+    "cpppj/tests/IslandRuntimeTests.cpp": "091097d33d8324cf7097f14dbb3ecbd732d8c0f61586f2ec11ce22fe3b2a7105",
+    "cpppj/tests/MetadisplayDirtyTests.cpp": "ddca1ede74bbf6680e8653611d3d1c324274f3c538890e644fc313a90e04a90e",
+    "cpppj/tests/ProductionInitialContextTests.cpp": "a2c57ea6dcd53607dad875630083dcfdf9ef2d231819bae4daed21e58588b750",
+    "cpppj/tests/RawMenuControlsTests.cpp": "ba720eaa4669fe80287f7420e1c9e7c0350c563bd1d0f593e37b1c92fa73aecb",
+    "cpppj/tests/RegionOwnershipTests.cpp": "e85881a8fe779f73e2c4c26c83e66c38ac1d9acb594dfd95da4d12e47f648c94",
+    "cpppj/tests/RegionPaintTests.cpp": "0c4e31d67308b1320f7aea08c0f45d7694e854ccbb35b1b01b9e4c31ce9576fa"
+  },
+  "artifacts": {
+    "cpppj/build/bin/Release/NetstormCpp.exe": "e9303f11f5689754f47496c43634f2c326860a34eda956ed65cab74d878562b2",
+    "cpppj/build/bin/Release/netstorm_tests.exe": "65bdf478fb4f12672265b564cd7bd3c5127ec67da05c20ca735f96578fb83d17",
+    "cpppj/build/bin/Release/netstorm_cloud_probe.exe": "729d971f951eebee56a7ca9e6d22c6c6ca6b1fe2453779a197c429190dc29e28",
+    "cpppj/build/bin/Release/netstorm_cloud_render_probe.exe": "c7c49780f85036cabcfda3b4cb87072634cd1c57bb219441f001845c26c8229c"
+  },
+  "focused": [
+    {
+      "filter": "metadisplayDirty_",
+      "exitCode": 0,
+      "tests": 7,
+      "failures": 0,
+      "seconds": 1.261,
+      "log": "extracted/cpp-map-revision-430-focused1/metadisplayDirty_.log",
+      "sha256": "e157953d3461a79e93dddf84b3fc88a8ed6eb94620586e4d1b5abb8c2a56d06a",
+      "caseNames": [
+        "metadisplayDirty_native_x86_replay",
+        "metadisplayDirty_same_pool_and_live_coordinates",
+        "metadisplayDirty_inactive_allocation_and_required_effects",
+        "metadisplayDirty_actual_pop_unpop_and_overlap_order",
+        "metadisplayDirty_shared_owner_full_and_partial_refresh",
+        "metadisplayDirty_shared_owner_inactive_and_first_allocation",
+        "metadisplayDirty_shared_owner_rechecked_after_rebuild"
+      ]
+    },
+    {
+      "filter": "RawMenuControls_Minimap",
+      "exitCode": 0,
+      "tests": 3,
+      "failures": 0,
+      "seconds": 0.648,
+      "log": "extracted/cpp-map-revision-430-focused1/RawMenuControls_Minimap.log",
+      "sha256": "f47dccd217c26503da99d5ac76c4b86a115782a53f43e4e29342fb3ae092afdb",
+      "caseNames": [
+        "RawMenuControls_MinimapBeforeSessionAndAcrossWorldBindings",
+        "RawMenuControls_MinimapPaletteUsesSharedClientRevision",
+        "RawMenuControls_MinimapReplacementKeepsCurrentWorldNotifications"
+      ]
+    },
+    {
+      "filter": "ClientMapRevision",
+      "exitCode": 0,
+      "tests": 1,
+      "failures": 0,
+      "seconds": 0.5246,
+      "log": "extracted/cpp-map-revision-430-focused1/ClientMapRevision.log",
+      "sha256": "a92e0a9e6a47aacea6227bd376ea5a12081bb6cb07ed8cf11fdd7e5e24b0a7ca",
+      "caseNames": [
+        "ClientMapRevision_ActualFortReceiverSharesCurrentOwnerAndWraps"
+      ]
+    },
+    {
+      "filter": "ProductionInitialContext",
+      "exitCode": 0,
+      "tests": 14,
+      "failures": 0,
+      "seconds": 0.7242,
+      "log": "extracted/cpp-map-revision-430-focused1/ProductionInitialContext.log",
+      "sha256": "234b3d2b389359ca671b6abfa113544f6e20a4a34b8b8ed7ff6f9da3353f20c9",
+      "caseNames": [
+        "ProductionInitialContext_ConstructsAllNativeChildrenWithoutSession",
+        "ProductionInitialContext_RepeatedConstructionAndGlobalPageRetirement",
+        "ProductionInitialContext_MissingTranslationKeepsAndRetiresPartialEffects",
+        "ProductionInitialContext_GameplayGlobalsKeepRealAliasesAndRejectDuplicate",
+        "ProductionInitialContext_PreparedGameplayLeaseLeavesNativeValuesToCaller",
+        "ProductionInitialContext_OverlappingParentsRetireOnlyOldDraw",
+        "ProductionInitialContext_LatestKilledDoesNotSelectOlderParent",
+        "ProductionInitialContext_PartialNewConstructorKeepsPreviousSerial",
+        "ProductionInitialContext_MinimapFactoryUsesCurrentWidthWithoutRefresh",
+        "ProductionInitialContext_OverlappingMinimapsKeepCurrentBitmapAndDraw",
+        "ProductionInitialContext_LatestMinimapKilledDoesNotSelectOlder",
+        "ProductionInitialContext_FullUberUsesActualChildrenAndDock",
+        "ProductionInitialContext_FullUberReplacementMovesOldChildren",
+        "ProductionInitialContext_FullUberReflowsExistingScreen"
+      ]
+    },
+    {
+      "filter": "HudDock_",
+      "exitCode": 0,
+      "tests": 1,
+      "failures": 0,
+      "seconds": 1.2707,
+      "log": "extracted/cpp-map-revision-430-focused1/HudDock_.log",
+      "sha256": "5ca5531774b5f13fc82081a254cff97b0cd8481d48e9e41e2ed8aa3bdb8503e5",
+      "caseNames": [
+        "HudDock_IndependentNativeBodiesAndNestedViewport"
+      ]
+    },
+    {
+      "filter": "VortexOwner_",
+      "exitCode": 0,
+      "tests": 4,
+      "failures": 0,
+      "seconds": 1.2352,
+      "log": "extracted/cpp-map-revision-430-focused1/VortexOwner_.log",
+      "sha256": "ad3fc8ca1eeda9785b2f709af71ea3f72d2143329cec89ff170c0dbfc6d1eab7",
+      "caseNames": [
+        "VortexOwner_PatchNativeCurrentPlayersAndLists",
+        "VortexOwner_CdNativeCurrentPlayersAndLists",
+        "VortexOwner_RejectsForeignTableAndPlayerSize",
+        "VortexOwner_CampaignSameCoreAndFirstRegion"
+      ]
+    },
+    {
+      "filter": "IslandRuntime_",
+      "exitCode": 0,
+      "tests": 6,
+      "failures": 0,
+      "seconds": 0.6365,
+      "log": "extracted/cpp-map-revision-430-focused1/IslandRuntime_.log",
+      "sha256": "540253dace3a532c97eceef49c4ad24b593bc1058fe4f20478c1de9bb5add2ff",
+      "caseNames": [
+        "IslandRuntime_ReplaysPatch",
+        "IslandRuntime_ReplaysCd",
+        "IslandRuntime_PatchSharedPlayerRecords",
+        "IslandRuntime_CdSharedPlayerRecords",
+        "IslandRuntime_RejectsMissingEffectsAndPhysicalOverflow",
+        "IslandRuntime_ActualClientOwnersKeepWorldIncrementAndMapStoreSeparate"
+      ]
+    },
+    {
+      "filter": "RegionOwnership_",
+      "exitCode": 0,
+      "tests": 6,
+      "failures": 0,
+      "seconds": 0.3574,
+      "log": "extracted/cpp-map-revision-430-focused1/RegionOwnership_.log",
+      "sha256": "71826a59a0c7e0d098ad7b973bb8ffcde063d170de5ce6987469d04e8e4b9ed6",
+      "caseNames": [
+        "RegionOwnership_ReplaysOriginals",
+        "RegionOwnership_ReplaysCd",
+        "RegionOwnership_ReplaysExtra1037",
+        "RegionOwnership_OutpostLifecycleImmediatelyChangesVotes",
+        "RegionOwnership_RejectsMissingBoundariesAndForeignPools",
+        "RegionOwnership_SharedWorldRedrawAndMapRequestRemainDistinct"
+      ]
+    },
+    {
+      "filter": "RegionPaint_",
+      "exitCode": 0,
+      "tests": 3,
+      "failures": 0,
+      "seconds": 0.6556,
+      "log": "extracted/cpp-map-revision-430-focused1/RegionPaint_.log",
+      "sha256": "22d1a633ba1e8849992526c9785ce679a669cf156af7bdd017b47656c1e90cb5",
+      "caseNames": [
+        "RegionPaint_ReplaysOriginals",
+        "RegionPaint_ReplaysCd",
+        "RegionPaint_SharedWorldRedrawRechecksOwnerAfterFlood"
+      ]
+    },
+    {
+      "filter": "ClientLocalStateGlobals",
+      "exitCode": 0,
+      "tests": 4,
+      "failures": 0,
+      "seconds": 0.5706,
+      "log": "extracted/cpp-map-revision-430-focused1/ClientLocalStateGlobals.log",
+      "sha256": "e1055efd7869120cbb1adee8d781fab51c079581747cf2d875c98084077944d4",
+      "caseNames": [
+        "ClientLocalStateGlobals_TwoSessionLifetimesPreserveCurrentOwner",
+        "ClientLocalStateGlobals_ActualLoginAndReplyUseCurrentOwner",
+        "ClientLocalStateGlobals_SavedGameControlsActualCarrierContentNotice",
+        "ClientLocalStateGlobals_FortRequestWritesActualNextAndPending"
+      ]
+    },
+    {
+      "filter": "CampaignExistingEditorCheckpoint",
+      "exitCode": 0,
+      "tests": 23,
+      "failures": 0,
+      "seconds": 2.4661,
+      "log": "extracted/cpp-map-revision-430-focused1/CampaignExistingEditorCheckpoint.log",
+      "sha256": "8de0c270c9c4a28d6a12397ef8ce8e206c04e2b01b33f2d036eeb6f714f5214d",
+      "caseNames": [
+        "CampaignExistingEditorCheckpoint_DeferPreservesExistingOwnerAndDefaultStages",
+        "CampaignExistingEditorCheckpoint_DeferRejectsCampaignMode",
+        "CampaignExistingEditorCheckpoint_NormalReadFalseKeepsInvalidBranch",
+        "CampaignExistingEditorCheckpoint_FirstNotifyUsesActualWriterBeforeSubscriber",
+        "CampaignExistingEditorCheckpoint_FileTailThenActualWorldChatBoundary",
+        "CampaignExistingEditorCheckpoint_CoreWriteNaturalGateKeepsActualStorage",
+        "CampaignExistingEditorCheckpoint_CoreWriteManagerDiagnosticBeforeGate",
+        "CampaignExistingEditorCheckpoint_CoreWriteMetamapDiagnosticBeforeGate",
+        "CampaignExistingEditorCheckpoint_ActualCurrentNameSelectsWorkingFile",
+        "CampaignExistingEditorCheckpoint_ActualChatRuntimeAdvancesWorldAndSnapshot",
+        "CampaignExistingEditorCheckpoint_ActualPlayerUiCompletesAndReloads",
+        "CampaignExistingEditorCheckpoint_ActualCustomTest01PlayerUiAndFile",
+        "CampaignExistingEditorCheckpoint_AdoptsNativePlayersAndPreservesCoreUntilNextCleanup",
+        "CampaignExistingEditorCheckpoint_UiScopeCommitsOnlyAfterActualStateReturn",
+        "CampaignExistingEditorCheckpoint_UiTailFailureKeepsPublicAccessClosed",
+        "CampaignExistingEditorCheckpoint_UiTailCannotCommitEarlyReturnOrImmediate",
+        "CampaignExistingEditorCheckpoint_PreparedCtorPreservesSameClientState",
+        "CampaignExistingEditorCheckpoint_PreparedCtorRejectsIncompleteOwnersBeforeBorrow",
+        "CampaignExistingEditorCheckpoint_ActualProductionFormsInsideInstallScope",
+        "CampaignExistingEditorCheckpoint_EditorWireQueuesNegativeSenderConstructionMoveAndSalvage",
+        "CampaignExistingEditorCheckpoint_EditorWireReadsCurrentChargeGateWithoutSenderNormalization",
+        "CampaignExistingEditorCheckpoint_EditorWireRejectsOwnedRegistrationBeforePublishing",
+        "CampaignExistingEditorCheckpoint_EditorWireRejectsForeignPlayersAndLoginBeforeBorrow"
+      ]
+    },
+    {
+      "filter": "ExistingEditorAfterCheckpoint",
+      "exitCode": 0,
+      "tests": 4,
+      "failures": 0,
+      "seconds": 0.3832,
+      "log": "extracted/cpp-map-revision-430-focused1/ExistingEditorAfterCheckpoint.log",
+      "sha256": "1f0850a035f57ceab693dfd688c1575f06b08e4257a1c92f2c8e71f1578c7ffa",
+      "caseNames": [
+        "ExistingEditorAfterCheckpoint_FullBlocksCommitThenNextPollFour",
+        "ExistingEditorAfterCheckpoint_LiveRequestAndCommandReads",
+        "ExistingEditorAfterCheckpoint_ImmediateAndPartialFailureStayDistinct",
+        "ExistingEditorAfterCheckpoint_ActualClientOwnsBlocksAndDeadline"
+      ]
+    },
+    {
+      "filter": "ClientKencloudGlobals",
+      "exitCode": 0,
+      "tests": 7,
+      "failures": 0,
+      "seconds": 0.4278,
+      "log": "extracted/cpp-map-revision-430-focused1/ClientKencloudGlobals.log",
+      "sha256": "4de093736e2be425428bf78fce1656f3c9933d4347505d884cb2a2536d3e0e8c",
+      "caseNames": [
+        "ClientKencloudGlobals_PhysicalGlobalsAndAddressLifetime",
+        "ClientKencloudGlobals_ActualFileAndNative400SeedRandom",
+        "ClientKencloudGlobals_MissingAndWrongSizeUseActualFallback",
+        "ClientKencloudGlobals_FallbackDivideFaultPreservesPrefix",
+        "ClientKencloudGlobals_ActualConfigCallbackAndPureOwner",
+        "ClientKencloudGlobals_ActualTransitionUsesSameGlobalsAndDeviceOrder",
+        "ClientKencloudGlobals_ActualUpdateAndDirtyUseSameMemory"
+      ]
+    }
+  ],
+  "originalGameExecuted": false,
+  "fullCTestExecuted": false,
+  "productGuiExecuted": false,
+  "completed": true,
+  "passed": true,
+  "focusedObservations": 83,
+  "focusedUnique": 83,
+  "focusedCaseNames": [
+    "CampaignExistingEditorCheckpoint_ActualChatRuntimeAdvancesWorldAndSnapshot",
+    "CampaignExistingEditorCheckpoint_ActualCurrentNameSelectsWorkingFile",
+    "CampaignExistingEditorCheckpoint_ActualCustomTest01PlayerUiAndFile",
+    "CampaignExistingEditorCheckpoint_ActualPlayerUiCompletesAndReloads",
+    "CampaignExistingEditorCheckpoint_ActualProductionFormsInsideInstallScope",
+    "CampaignExistingEditorCheckpoint_AdoptsNativePlayersAndPreservesCoreUntilNextCleanup",
+    "CampaignExistingEditorCheckpoint_CoreWriteManagerDiagnosticBeforeGate",
+    "CampaignExistingEditorCheckpoint_CoreWriteMetamapDiagnosticBeforeGate",
+    "CampaignExistingEditorCheckpoint_CoreWriteNaturalGateKeepsActualStorage",
+    "CampaignExistingEditorCheckpoint_DeferPreservesExistingOwnerAndDefaultStages",
+    "CampaignExistingEditorCheckpoint_DeferRejectsCampaignMode",
+    "CampaignExistingEditorCheckpoint_EditorWireQueuesNegativeSenderConstructionMoveAndSalvage",
+    "CampaignExistingEditorCheckpoint_EditorWireReadsCurrentChargeGateWithoutSenderNormalization",
+    "CampaignExistingEditorCheckpoint_EditorWireRejectsForeignPlayersAndLoginBeforeBorrow",
+    "CampaignExistingEditorCheckpoint_EditorWireRejectsOwnedRegistrationBeforePublishing",
+    "CampaignExistingEditorCheckpoint_FileTailThenActualWorldChatBoundary",
+    "CampaignExistingEditorCheckpoint_FirstNotifyUsesActualWriterBeforeSubscriber",
+    "CampaignExistingEditorCheckpoint_NormalReadFalseKeepsInvalidBranch",
+    "CampaignExistingEditorCheckpoint_PreparedCtorPreservesSameClientState",
+    "CampaignExistingEditorCheckpoint_PreparedCtorRejectsIncompleteOwnersBeforeBorrow",
+    "CampaignExistingEditorCheckpoint_UiScopeCommitsOnlyAfterActualStateReturn",
+    "CampaignExistingEditorCheckpoint_UiTailCannotCommitEarlyReturnOrImmediate",
+    "CampaignExistingEditorCheckpoint_UiTailFailureKeepsPublicAccessClosed",
+    "ClientKencloudGlobals_ActualConfigCallbackAndPureOwner",
+    "ClientKencloudGlobals_ActualFileAndNative400SeedRandom",
+    "ClientKencloudGlobals_ActualTransitionUsesSameGlobalsAndDeviceOrder",
+    "ClientKencloudGlobals_ActualUpdateAndDirtyUseSameMemory",
+    "ClientKencloudGlobals_FallbackDivideFaultPreservesPrefix",
+    "ClientKencloudGlobals_MissingAndWrongSizeUseActualFallback",
+    "ClientKencloudGlobals_PhysicalGlobalsAndAddressLifetime",
+    "ClientLocalStateGlobals_ActualLoginAndReplyUseCurrentOwner",
+    "ClientLocalStateGlobals_FortRequestWritesActualNextAndPending",
+    "ClientLocalStateGlobals_SavedGameControlsActualCarrierContentNotice",
+    "ClientLocalStateGlobals_TwoSessionLifetimesPreserveCurrentOwner",
+    "ClientMapRevision_ActualFortReceiverSharesCurrentOwnerAndWraps",
+    "ExistingEditorAfterCheckpoint_ActualClientOwnsBlocksAndDeadline",
+    "ExistingEditorAfterCheckpoint_FullBlocksCommitThenNextPollFour",
+    "ExistingEditorAfterCheckpoint_ImmediateAndPartialFailureStayDistinct",
+    "ExistingEditorAfterCheckpoint_LiveRequestAndCommandReads",
+    "HudDock_IndependentNativeBodiesAndNestedViewport",
+    "IslandRuntime_ActualClientOwnersKeepWorldIncrementAndMapStoreSeparate",
+    "IslandRuntime_CdSharedPlayerRecords",
+    "IslandRuntime_PatchSharedPlayerRecords",
+    "IslandRuntime_RejectsMissingEffectsAndPhysicalOverflow",
+    "IslandRuntime_ReplaysCd",
+    "IslandRuntime_ReplaysPatch",
+    "ProductionInitialContext_ConstructsAllNativeChildrenWithoutSession",
+    "ProductionInitialContext_FullUberReflowsExistingScreen",
+    "ProductionInitialContext_FullUberReplacementMovesOldChildren",
+    "ProductionInitialContext_FullUberUsesActualChildrenAndDock",
+    "ProductionInitialContext_GameplayGlobalsKeepRealAliasesAndRejectDuplicate",
+    "ProductionInitialContext_LatestKilledDoesNotSelectOlderParent",
+    "ProductionInitialContext_LatestMinimapKilledDoesNotSelectOlder",
+    "ProductionInitialContext_MinimapFactoryUsesCurrentWidthWithoutRefresh",
+    "ProductionInitialContext_MissingTranslationKeepsAndRetiresPartialEffects",
+    "ProductionInitialContext_OverlappingMinimapsKeepCurrentBitmapAndDraw",
+    "ProductionInitialContext_OverlappingParentsRetireOnlyOldDraw",
+    "ProductionInitialContext_PartialNewConstructorKeepsPreviousSerial",
+    "ProductionInitialContext_PreparedGameplayLeaseLeavesNativeValuesToCaller",
+    "ProductionInitialContext_RepeatedConstructionAndGlobalPageRetirement",
+    "RawMenuControls_MinimapBeforeSessionAndAcrossWorldBindings",
+    "RawMenuControls_MinimapPaletteUsesSharedClientRevision",
+    "RawMenuControls_MinimapReplacementKeepsCurrentWorldNotifications",
+    "RegionOwnership_OutpostLifecycleImmediatelyChangesVotes",
+    "RegionOwnership_RejectsMissingBoundariesAndForeignPools",
+    "RegionOwnership_ReplaysCd",
+    "RegionOwnership_ReplaysExtra1037",
+    "RegionOwnership_ReplaysOriginals",
+    "RegionOwnership_SharedWorldRedrawAndMapRequestRemainDistinct",
+    "RegionPaint_ReplaysCd",
+    "RegionPaint_ReplaysOriginals",
+    "RegionPaint_SharedWorldRedrawRechecksOwnerAfterFlood",
+    "VortexOwner_CampaignSameCoreAndFirstRegion",
+    "VortexOwner_CdNativeCurrentPlayersAndLists",
+    "VortexOwner_PatchNativeCurrentPlayersAndLists",
+    "VortexOwner_RejectsForeignTableAndPlayerSize",
+    "metadisplayDirty_actual_pop_unpop_and_overlap_order",
+    "metadisplayDirty_inactive_allocation_and_required_effects",
+    "metadisplayDirty_native_x86_replay",
+    "metadisplayDirty_same_pool_and_live_coordinates",
+    "metadisplayDirty_shared_owner_full_and_partial_refresh",
+    "metadisplayDirty_shared_owner_inactive_and_first_allocation",
+    "metadisplayDirty_shared_owner_rechecked_after_rebuild"
+  ],
+  "protectedFiles": {
+    "checked": 1821,
+    "unchanged": true
+  },
+  "state": "focused-verified-integration-pending",
+  "startingHead": "deaf73f84b717ec49854813555b5350f367c0acd",
+  "builds": [
+    {
+      "attempt": 1,
+      "exitCode": 1,
+      "state": "terminated-for-native-address-correction",
+      "log": "extracted/cpp-map-revision-430-build1.log",
+      "sha256": "14a8fb71b6dc547097aa05b4e76d73d2c863986631b67fe8884a79f64c3367a3",
+      "sourceManifest": "extracted/cpp-map-revision-430-source1/hashes.json",
+      "focusedTestsExecuted": false
+    },
+    {
+      "attempt": 2,
+      "exitCode": 0,
+      "compilerWarnings": 0,
+      "compilerErrors": 0,
+      "log": "extracted/cpp-map-revision-430-build2.log",
+      "sha256": "4ed5b7c47f07d30b1c9a044aafc46e92ab0395c26bf26788777828b2fd91a5fa",
+      "sourceManifest": "extracted/cpp-map-revision-430-source2/hashes.json"
+    }
+  ],
+  "sourceVersionDifferences": {
+    "modifiedOldFiles": [
+      "cpppj/src/client/RawCampaignSession.cpp"
+    ],
+    "addedFiles": [
+      "cpppj/src/client/CampaignClientServices.cpp",
+      "cpppj/src/client/RawCampaignSession.h",
+      "cpppj/src/o/RawIslandRuntime.cpp",
+      "cpppj/src/o/RawIslandRuntime.h",
+      "cpppj/src/o/RawRegionOwnership.cpp",
+      "cpppj/src/o/RawRegionOwnership.h",
+      "cpppj/src/o/RawRegionPaint.cpp",
+      "cpppj/src/o/RawRegionPaint.h",
+      "cpppj/tests/IslandRuntimeTests.cpp",
+      "cpppj/tests/RegionOwnershipTests.cpp",
+      "cpppj/tests/RegionPaintTests.cpp"
+    ]
+  },
+  "nativeAddressEvidence": {
+    "path": "extracted/cpp-map-revision-430-native-addresses.json",
+    "sha256": "c4a01580edf7fa50d59f69d25ca265f28359914014eed1230d5a09d6129d2de6",
+    "contents": {
+      "host": "HJOW-Athlon",
+      "lastFullDecompileHost": "HJOW-Athlon",
+      "lastFullDecompileDate": "2026-10-23",
+      "pePath": "originals/Netstorm.exe",
+      "sha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "originalGameExecuted": false,
+      "writes": {
+        "0x46ef99": "890db0a85900",
+        "0x46ef9f": "c705d449590001000000",
+        "0x45574d": "890db0a85900",
+        "0x455753": "c705d449590001000000",
+        "0x4709c2": "a3b0a85900",
+        "0x4dc6e8": "a3d4495900",
+        "0x4b3e7b": "8935d4495900",
+        "0x4c67f3": "ff05d4495900"
+      },
+      "interpretation": {
+        "0x59a8b0": "WorldRedraw",
+        "0x5949d4": "MapRevision"
+      }
+    }
+  },
+  "previousFocused": {
+    "head": "deaf73f8",
+    "tests": 63,
+    "failures": 0,
+    "productSha256": "16203b9a639c757d8e7ac3f2d91f2c70a356993075892ed9b16b293c450ddba0"
+  },
+  "previousIntegrated": {
+    "head": "33a98ea8",
+    "productSha256": "59d41097db94850b4c38e98860c365374416809c8af4f24dfdcf69eaa3f821ac",
+    "ctestTests": 2870,
+    "ctestFailures": 0,
+    "menusGui": true,
+    "naturalEarly2": true
+  },
+  "pending": [
+    "교정한 source2의 집중83개만 실행했다. 전체 CTest/긴 GUI·자연 플레이는 다음 기능 묶음의 같은 최종 제품에서 통합한다.",
+    "Source1은 섬의 Native 두 주소를 잘못 묶어 첫 빌드를 중단했으며 부분 제품과 미실행 검사를 성공으로 인용하지 않았다. 같은 보호PE8개 쓰기 명령을 확인하고 source2에서 교정했다.",
+    "005949d4의 Native cleanup/State/카메라64BYTE 초기화·일부 UI/신전capture/debug 부모 접합과 서버/boss·Graph/섬/Chunk/장부/22DWORD의 장기 소유 작업은 남아 있다.",
+    "전체 Native cleanup/prefix와 실제 Edit State1 설치,사용자 편집·저장·테스트 복귀,모든 미션 자연 완주·진행 저장/재실행·원본 완전 동일성은 미완료다."
+  ]
+}

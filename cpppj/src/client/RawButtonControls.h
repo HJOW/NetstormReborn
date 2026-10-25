@@ -60,8 +60,8 @@ struct RawButtonPointerResult {
 // 안정된 파생 저장소와 실제 원본 UI 처리기를 소유한다. 메뉴 행은 기존 메뉴 어댑터가 처리한다.
 class RawButtonControls {
 public:
-    // 원본 판본별 가상 표/등록 계약을 선택한다. 생성 중 장치나 창을 열지 않는다.
-    explicit RawButtonControls(o::OriginalEdition edition,RawButtonHooks hooks={});
+    // 원본 판본별 가상 표/등록 계약을 선택하며 선택적 Client 갱신 DWORD는 모든 자식보다 오래 살아야 한다. 생성 중 장치나 창을 열지 않는다.
+    explicit RawButtonControls(o::OriginalEdition edition,RawButtonHooks hooks={},std::uint32_t* sharedFullRefresh=nullptr);
     // 참조하는 처리기를 먼저 해제하고 마지막에 노드 저장소를 해제한다.
     ~RawButtonControls();
     RawButtonControls(const RawButtonControls&)=delete;

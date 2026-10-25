@@ -13,6 +13,7 @@
 #include "client/RawMinimapControls.h"
 #include "client/RawSurfaceWorld.h"
 #include "client/RawProductionControls.h"
+#include "client/ClientGameplayGlobals.h"
 #include <filesystem>
 #include <sstream>
 
@@ -41,8 +42,8 @@ struct MenuClient {
         c.read=[this](auto address)->std::uint32_t { switch (address) { case 0x531860:case 0x5c78f0:return screenWidth;case 0x531864:case 0x5c78f4:return screenHeight;case 0x5ca9b4:return htmlView.right-htmlView.left;case 0x5ca9cc:return htmlView.left;case 0x5ca9d0:return htmlView.top;case 0x5ca9d4:return htmlView.right;case 0x5ca9d8:return htmlView.bottom;case 0x563e38:return buttons.RootToken();default:throw std::logic_error("안내 검사 미등록 전역"); } };return c;
     }
     // 게임/창을 열지 않고 실제 보호 자산과 모든 복원 모듈을 조립한다.
-    explicit MenuClient(OriginalEdition edition=OriginalEdition::Patch1078):root(std::filesystem::path(__FILE__).parent_path().parent_path().parent_path()/"originals"),files(root),assets(Register(),edition),fonts(files,"Arial"),
-        buttons(edition,{[] { return 0.0; },[this](auto) { return poll; },[] {}}) {
+    explicit MenuClient(OriginalEdition edition=OriginalEdition::Patch1078,std::uint32_t* sharedFullRefresh=nullptr):root(std::filesystem::path(__FILE__).parent_path().parent_path().parent_path()/"originals"),files(root),assets(Register(),edition),fonts(files,"Arial"),
+        buttons(edition,{[] { return 0.0; },[this](auto) { return poll; },[] {}},sharedFullRefresh) {
         RawMenuHooks hooks;hooks.command=[this](auto command,auto id,auto argument) { commands.push_back({command,id,argument}); };
         hooks.readInt=[](std::string_view,std::int32_t& value) { value=0; };hooks.sound=[this](std::string_view name) { sounds.emplace_back(name); };
         hooks.poll=[this](auto) { return poll; };hooks.cursor=[this](auto value) { cursor=value; };
@@ -359,6 +360,18 @@ TEST_CASE(RawMenuControls_MinimapBeforeSessionAndAcrossWorldBindings) {
     for (std::size_t i=0;i<logical.size();++i) { const auto color=client.assets.Palette().Color(static_cast<std::uint8_t>(i));logical[i]=color.red|(std::uint32_t(color.green)<<8)|(std::uint32_t(color.blue)<<16); } // 기존 명암표와 동일한 RGB 포맷이다.
     std::vector<std::uint8_t> pixels(640*480,0x5a);client.menus->Draw(pixels,640,480,client.Palette(),BuildGumpShadeMaps(logical));CHECK(std::any_of(pixels.begin()+405*640,pixels.end(),[](auto byte) { return byte!=0x5a; }));
     client.buttons.DisableMinimap();CHECK(!client.buttons.Minimap());world.reset();CHECK(!storage->Borrowed());
+}
+
+// 실제 Button 공장에 빌린 Client 갱신값을 팔레트 변경이 증가시키고 같은 미니맵 Refresh가 소비한다.
+TEST_CASE(RawMenuControls_MinimapPaletteUsesSharedClientRevision) {
+    ClientGameplayGlobals gameplay;gameplay.MapRevision()=23;MenuClient client(OriginalEdition::Patch1078,&gameplay.MapRevision());CHECK(gameplay.MapRevision()==23); // 공통 Button 생성자가 준비된 Client 값을 초기화하지 않는다.
+    auto storage=MakeRawSurfaceStorage(client.assets);RawMinimapHooks hooks;hooks.view=[] { return MinimapGeometryView{{},{85,0,640,400},16,11}; };hooks.center=[](float,float) {};hooks.move=[](float,float) {};hooks.inputMode=[] { return 0U; };hooks.poll=[&] { return client.poll; };
+    auto& mini=client.buttons.EnableMinimap(storage,std::move(hooks));auto palette=client.Palette();mini.SetPalette(palette);mini.Resize(480);CHECK(mini.Refresh() && gameplay.MapRevision()==0 && !storage->Borrowed());
+    const auto bitmap=[&] { const auto report=mini.Report();return report.substr(report.rfind('\t')+1); };const auto first=bitmap(); // 실제128×128 bitmap 전체의 읽기 전용 해시다.
+    palette.basic[0]=(palette.basic[0]+1U)&255U;gameplay.MapRevision()=7;mini.SetPalette(palette);CHECK(gameplay.MapRevision()==8);mini.SetPalette(palette);CHECK(gameplay.MapRevision()==8); // 실제 미니맵 black 색이 변한 한 번만 동일 DWORD를 증가시킨다.
+    CHECK(mini.Refresh() && gameplay.MapRevision()==0 && bitmap()!=first);const auto changed=bitmap();CHECK(!mini.Refresh() && gameplay.MapRevision()==0 && bitmap()==changed); // 같은 view/색/빈 큐의 다음 호출은 실제 셀 그림을 반복하지 않는다.
+    gameplay.MapRevision()=11;mini.SetPalette(palette);CHECK(gameplay.MapRevision()==11);CHECK(mini.Refresh() && gameplay.MapRevision()==0 && bitmap()==changed); // 팔레트와 별개로 원래 owner의 현재값을 직접 바꾸어도 같은 Refresh가 읽는다.
+    client.buttons.DisableMinimap();CHECK(!client.buttons.Minimap() && !storage->Borrowed());
 }
 
 // 이전표시의소멸이새표시의실제Pop/Unpop연결을지우면두번째표면의셀그림변화가실패해야한다.

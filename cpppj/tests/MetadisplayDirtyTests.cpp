@@ -4,9 +4,11 @@
 #include "o/SquidFactory.h"
 #include "o/SquidPop.h"
 #include "o/SquidUnpop.h"
+#include "client/ClientGameplayGlobals.h"
 #include <bit>
 #include <limits>
 #include <sstream>
+#include <type_traits>
 using namespace netstorm::o;
 using namespace netstorm::test::rawscene;
 
@@ -156,4 +158,33 @@ TEST_CASE(metadisplayDirty_actual_pop_unpop_and_overlap_order) {
         SidPool other(edition,24000,false);MetadisplayDirtyState otherState;RawMetadisplayDirty foreign(other,otherState);
         CHECK(Throws([&] { pop.SetMetadisplayDirty(&foreign); }));CHECK(Throws([&] { unpop.SetMetadisplayDirty(&foreign); }));
     }
+}
+
+// Client의 같은 갱신 DWORD를 소비하고 지역 fallback의 비영 잔여값은 전체/부분 선택에 쓰지 않는다.
+TEST_CASE(metadisplayDirty_shared_owner_full_and_partial_refresh) {
+    static_assert(std::is_aggregate_v<MetadisplayDirtyState>); // 기존 Native1040의 aggregate 초기화 입력 계약을 유지한다.
+    netstorm::client::ClientGameplayGlobals owner;owner.MapRevision()=13;SidPool pool(OriginalEdition::Patch1078,24000,false);MetadisplayDirtyState state;
+    state.displayPresent=true;state.displayFlags=1;state.bitmap.assign(16384,0);state.bitmapWidth=128;state.initialized=3;state.fullRefresh=0xa5a5a5a5U;state.sharedFullRefresh=&owner.MapRevision();const auto& current=state; // 같은 장기 owner와 반대되는 fallback 입력이다.
+    std::uint32_t rebuilds{},cells{};bool ordered{true}; // 실제 호출 개수와 원문 행 우선4096셀의 순서만 관측한다.
+    RawMetadisplayDirty dirty(pool,state,{[&] { ++rebuilds; },[&](auto x,auto y) { ordered=ordered && x==static_cast<std::int32_t>(cells%64) && y==static_cast<std::int32_t>(cells/64);++cells; }});
+    CHECK(&state.FullRefresh()==&owner.MapRevision() && &current.FullRefresh()==&owner.MapRevision());dirty.Refresh({});CHECK(owner.MapRevision()==0 && state.fullRefresh==0xa5a5a5a5U && cells==4096 && ordered && rebuilds==1 && state.frames==1);
+    state.count=1;state.cells[0]={3,4,0};std::vector<std::array<std::int32_t,2>> partial; // owner0이면 fallback이 비영이어도 실제 고유 큐만 그려야 한다.
+    RawMetadisplayDirty queued(pool,state,{[&] { ++rebuilds; },[&](auto x,auto y) { partial.push_back({x,y}); }});queued.Refresh({});CHECK((partial==std::vector<std::array<std::int32_t,2>>{{3,4}}) && owner.MapRevision()==0 && state.fullRefresh==0xa5a5a5a5U && state.count==0 && state.frames==2 && rebuilds==2);
+}
+
+// 비활성 표시의 자연 반환은 이미 존재하는 Client 값을 보존하며 최초 bitmap 확보만 원문대로1을 쓴다.
+TEST_CASE(metadisplayDirty_shared_owner_inactive_and_first_allocation) {
+    netstorm::client::ClientGameplayGlobals owner;owner.MapRevision()=9;SidPool pool(OriginalEdition::Patch1078,24000,false);MetadisplayDirtyState state;
+    state.displayFlags=1;state.bitmap.assign(16384,0x71);state.bitmapWidth=128;state.count=1;state.cells[0]={3,4,0};state.frames=77;state.fullRefresh=0x76543210U;state.sharedFullRefresh=&owner.MapRevision();RawMetadisplayDirty dirty(pool,state);
+    dirty.Refresh({});CHECK(owner.MapRevision()==9 && state.fullRefresh==0x76543210U && state.count==1 && state.frames==77 && state.bitmap.front()==0x71);state.displayPresent=true;state.displayFlags=0;dirty.Refresh({});CHECK(owner.MapRevision()==9 && state.count==1 && state.frames==77);
+    state.bitmap.clear();state.bitmapWidth=0;dirty.Refresh({});CHECK(owner.MapRevision()==1 && state.fullRefresh==0x76543210U && state.bitmap.size()==16384 && state.bitmapWidth==128 && state.count==1 && state.frames==77); // 비활성 판단보다 먼저 수행하는 같은 실제 owner store다.
+}
+
+// view 재생성 callback이 바꾼 같은 owner를 동일 Refresh의 전체/부분 분기에서 다시 읽는다.
+TEST_CASE(metadisplayDirty_shared_owner_rechecked_after_rebuild) {
+    netstorm::client::ClientGameplayGlobals owner;SidPool pool(OriginalEdition::Patch1078,24000,false);MetadisplayDirtyState state;
+    state.displayPresent=true;state.displayFlags=1;state.bitmap.assign(16384,0);state.bitmapWidth=128;state.initialized=3;state.fullRefresh=0x13572468U;state.sharedFullRefresh=&owner.MapRevision();MetadisplayDirtyView view;view.rectangle={1,2,3,4};
+    std::uint32_t rebuilds{},cells{}; // 원문 효과 뒤 재조회의 실제 호출 개수다.
+    RawMetadisplayDirty dirty(pool,state,{[&] { CHECK(owner.MapRevision()==0);++rebuilds;owner.MapRevision()=1; },[&](auto,auto) { CHECK(owner.MapRevision()==1);++cells; }});dirty.Refresh(view);
+    CHECK(rebuilds==1 && cells==4096 && owner.MapRevision()==0 && state.fullRefresh==0x13572468U && state.frames==1 && state.cached.rectangle==view.rectangle);
 }

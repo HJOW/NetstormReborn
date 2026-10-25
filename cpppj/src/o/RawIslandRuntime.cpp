@@ -18,9 +18,9 @@ bool PositiveBits(float value) { return std::bit_cast<std::int32_t>(value)>0; }
 }
 // 실제3204바이트저장소와필수하위효과·기존모드/Player/목록을확인한다.
 RawIslandRuntime::RawIslandRuntime(const SidPool& pool,const SquidHash& hash,std::span<std::uint8_t> records,
-    FortFinishOwnerState& modes,SquidPostPopList& residences,std::uint32_t& revision,std::uint32_t& ownerChanged,
+    FortFinishOwnerState& modes,SquidPostPopList& residences,std::uint32_t& worldRedraw,std::uint32_t& mapRevision,
     IslandRuntimeHooks hooks,std::int32_t worldExtent)
-    :pool_(pool),hash_(hash),records_(records),modes_(modes),residences_(residences),revision_(revision),ownerChanged_(ownerChanged),hooks_(std::move(hooks)),worldExtent_(worldExtent) {
+    :pool_(pool),hash_(hash),records_(records),modes_(modes),residences_(residences),worldRedraw_(worldRedraw),mapRevision_(mapRevision),hooks_(std::move(hooks)),worldExtent_(worldExtent) {
     if (records.size()!=kBytes || !hooks_.setResidenceOwner || !hooks_.assertion) throw std::invalid_argument("IslandRuntime 실제기록/필수효과누락");
 }
 // raw필드의낮은바이트부터결합한다.
@@ -111,7 +111,7 @@ bool RawIslandRuntime::Contains(const FortRandomRectangle& bounds,float x,float 
 // owner변경의각전역쓰기/현재목록/가상효과/Player첫지역을원본순서로처리한다.
 void RawIslandRuntime::Owner(std::int32_t island,std::uint32_t owner) {
     if (!Require(island) || (modes_.fort && !modes_.special)) return;
-    const auto record=Record(island);Write(record+8,owner);++revision_;if (pool_.Edition()==OriginalEdition::Patch1078) ownerChanged_=1;
+    const auto record=Record(island);Write(record+8,owner);++worldRedraw_;if (pool_.Edition()==OriginalEdition::Patch1078) mapRevision_=1;
     const FortRandomRectangle bounds{std::bit_cast<float>(Read(record+16)),std::bit_cast<float>(Read(record+20)),std::bit_cast<float>(Read(record+24)),std::bit_cast<float>(Read(record+28))};
     if (!ValidBounds(bounds)) hooks_.assertion(IslandRuntimeAssertion::InvalidBounds);
     const auto ownerOffset=pool_.Edition()==OriginalEdition::Patch1078 ? 34U : 32U;

@@ -54,7 +54,7 @@ RawMinimapControls::RawMinimapControls(RawMenuTree tree,RawMenuControls& menus,s
 // 실제 같은 Pool/공간 자료를 확인한 뒤에만 현재 모듈의 통지를 설치한다.
 void RawMinimapControls::BindWorld(RawWorldCore core) {
     auto& s=*impl_;if (s.pop || s.unpop || &core.pool!=&s.storage->pool || &core.hash!=&s.storage->hash || &core.unpop.Pool()!=&s.storage->pool || &core.ownerMode!=&s.storage->ownerMode || core.types.data()!=s.storage->types.data() || core.spots.data()!=s.storage->spots.data()) throw std::invalid_argument("미니맵의 현재 월드 물리/대여 불일치");
-    s.pop=&core.pop;s.unpop=&core.unpop;s.pop->SetMetadisplayDirty(&s.dirty);s.unpop->SetMetadisplayDirty(&s.dirty);s.state.fullRefresh=1;
+    s.pop=&core.pop;s.unpop=&core.unpop;s.pop->SetMetadisplayDirty(&s.dirty);s.unpop->SetMetadisplayDirty(&s.dirty);s.state.FullRefresh()=1;
 }
 // 통지의 대여를 먼저 끊으며 실제 물리 배열과 bitmap은 유지한다.
 void RawMinimapControls::UnbindWorld() { auto& s=*impl_;if (s.pop) static_cast<void>(s.pop->ReleaseMetadisplayDirty(&s.dirty));if (s.unpop) static_cast<void>(s.unpop->ReleaseMetadisplayDirty(&s.dirty));s.pop=nullptr;s.unpop=nullptr; }
@@ -71,7 +71,7 @@ std::uint32_t RawMinimapControls::RootToken() const { return impl_->token; } // 
 // 제목/Help 문자열은 기존 공통 메뉴의 안정된 정적 토큰을 사용한다.
 void RawMinimapControls::Open() {
     auto& s=*impl_;s.dirty.Refresh({});Construct();s.node.baseWidth=s.node.width=128;s.node.baseHeight=s.node.height=128; // 기존Client의bitmap준비/기본배치를별도호스트설치경계로유지한다.
-    s.state.displayPresent=true;s.state.displayFlags=static_cast<std::uint8_t>(s.node.flags);s.state.fullRefresh=1;
+    s.state.displayPresent=true;s.state.displayFlags=static_cast<std::uint8_t>(s.node.flags);s.state.FullRefresh()=1;
     Attach(s.token,0,0,s.common.create.collection.root,0);s.node.flags|=0x20000;
 }
 // 공통Kill이Idle/캡처/등록표를 함께 처리하며 독립bitmap은 처리기와 같은 수명이다.
@@ -87,7 +87,7 @@ void RawMinimapControls::Resize(int screenHeight) {
 void RawMinimapControls::SetPalette(const PaletteColorTable& palette) {
     if (palette.named.size()<20) throw std::invalid_argument("10.78 미니맵 파일 팔레트 색 전역 누락");auto& s=*impl_;const auto old=s.colors; // 같은 팔레트 재합성은 전체 갱신을 반복하지 않는다.
     s.colors.black=palette.basic[0];s.colors.owners={palette.named[11].index,palette.basic[1],palette.basic[7],palette.named[10].index,palette.basic[4],palette.basic[5],palette.named[12].index,palette.basic[6]};s.colors.neutralIsle=palette.named[18].index;s.colors.neutralNoIsland=palette.named[19].index;s.colors.challengeGreen=palette.basic[2];
-    if (old.black!=s.colors.black || old.owners!=s.colors.owners || old.neutralIsle!=s.colors.neutralIsle || old.neutralNoIsland!=s.colors.neutralNoIsland || old.challengeGreen!=s.colors.challengeGreen) ++s.state.fullRefresh;
+    if (old.black!=s.colors.black || old.owners!=s.colors.owners || old.neutralIsle!=s.colors.neutralIsle || old.neutralNoIsland!=s.colors.neutralNoIsland || old.challengeGreen!=s.colors.challengeGreen) ++s.state.FullRefresh();
 }
 // 현재 모달/정지 상태를 추가하지 않고 원본 displayPresent/visible 조건만 같은 큐에서 읽는다.
 bool RawMinimapControls::Refresh() {
@@ -125,6 +125,6 @@ std::string RawMinimapControls::Report() const {
     const auto& s=*impl_;if (!s.token) return {};const auto bounds=s.common.collection.Bounds(s.token);std::uint32_t hash=2166136261U; // 독립bitmap의읽기전용FNV32다.
     // 초기화/셀그림을비교할때모든BYTE를포함한다.
     for (const auto byte:s.state.bitmap) hash=(hash^byte)*16777619U;
-    std::ostringstream out;out<<"minimap\t"<<s.node.id<<'\t'<<bounds.left<<'\t'<<bounds.top<<'\t'<<bounds.right-bounds.left<<'\t'<<bounds.bottom-bounds.top<<'\t'<<s.geometry.cropX<<'\t'<<s.geometry.cropY<<'\t'<<s.geometry.scrolling<<'\t'<<s.state.frames<<'\t'<<s.state.count<<'\t'<<s.state.fullRefresh<<'\t'<<hash;return out.str();
+    std::ostringstream out;out<<"minimap\t"<<s.node.id<<'\t'<<bounds.left<<'\t'<<bounds.top<<'\t'<<bounds.right-bounds.left<<'\t'<<bounds.bottom-bounds.top<<'\t'<<s.geometry.cropX<<'\t'<<s.geometry.cropY<<'\t'<<s.geometry.scrolling<<'\t'<<s.state.frames<<'\t'<<s.state.count<<'\t'<<s.state.FullRefresh()<<'\t'<<hash;return out.str();
 }
 }

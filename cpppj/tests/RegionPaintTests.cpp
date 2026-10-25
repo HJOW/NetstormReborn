@@ -2,7 +2,10 @@
 #include "RawSceneSupport.h"
 #include "o/RawRegionPaint.h"
 #include "o/RawCanonPlacementTerrain.h"
+#include "client/ClientKencloudGlobals.h"
+#include "client/ClientGameplayGlobals.h"
 #include <sstream>
+#include <type_traits>
 
 namespace {
 using namespace netstorm::test::rawscene;
@@ -90,3 +93,18 @@ void Replay(std::string_view edition) {
 TEST_CASE(RegionPaint_ReplaysOriginals) { Replay("originals"); }
 // CD는 프레임이나 후보를 바꾸지 않고 소유자 flood와 revision만 수행한다.
 TEST_CASE(RegionPaint_ReplaysCd) { Replay("originalCD"); }
+
+// 실제지면flood효과뒤월드DWORD만증가시키며미니맵요청과지역fallback은건드리지않는다.
+TEST_CASE(RegionPaint_SharedWorldRedrawRechecksOwnerAfterFlood) {
+    static_assert(std::is_aggregate_v<RegionPaintState>); // 기존 Native의값형상태와독립캐시입력계약을유지한다.
+    for (const auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) { // 두판본의실제flood와각프레임폭을같은외부owner에연결한다.
+        const bool patch=edition==OriginalEdition::Patch1078;netstorm::client::ClientKencloudGlobals kencloud;netstorm::client::ClientGameplayGlobals gameplay;kencloud.WorldRedraw()=17;gameplay.MapRevision()=0xffffffffU;
+        SidPool pool(edition,kCapacity,false);const auto surface=pool.Allocate(2);auto raw=pool.AllocatedBytes(surface);std::fill(raw.begin(),raw.end(),std::uint8_t{});raw[10]=kTerrain;raw[patch ? 34 : 32]=2;Put(raw,14,std::bit_cast<std::uint32_t>(10.125F));Put(raw,18,std::bit_cast<std::uint32_t>(10.25F));Put(raw,patch ? 36 : 34,0,patch ? 4 : 1); // 같은 raw의AA프레임에서한칸지면을시작한다.
+        std::vector<RiftTypeFrames> frames(patch ? 188 : 171,RiftTypeFrames(Codes()));std::vector<std::uint16_t> islands(65536);islands[10*256+10]=surface.value;GameRandom random(0x23456789U);RegionPaintState state;state.revision=0x76543210U;state.sharedWorldRedraw=&kencloud.WorldRedraw();const auto& current=state;RegionOwnershipState ownership;
+        std::uint32_t assignments{};bool mutate{};RegionPaintHooks hooks; // 가상소유자효과는같은raw를쓰고마지막증가가읽는장기값만선택변경한다.
+        hooks.setOwner=[&](Sid sid,std::uint32_t owner) { ++assignments;pool.AllocatedBytes(sid)[patch ? 34 : 32]=static_cast<std::uint8_t>(owner);if (mutate) kencloud.WorldRedraw()=37; };hooks.boundaryAt=[](float,float,std::uint32_t) { return Sid{}; };hooks.regionAt=[](float,float) { return 7U; };
+        RawRegionPaint paint(pool,frames,islands,kTerrain,kEdge,random,state,ownership,std::move(hooks));CHECK(&state.WorldRedraw()==&kencloud.WorldRedraw() && &current.WorldRedraw()==&kencloud.WorldRedraw());paint.Paint({10,10,3,0});CHECK(assignments==1 && pool.Slot(surface)[patch ? 34 : 32]==3 && kencloud.WorldRedraw()==18 && gameplay.MapRevision()==0xffffffffU && state.revision==0x76543210U);
+        mutate=true;paint.Paint({10,10,4,0});CHECK(assignments==2 && pool.Slot(surface)[patch ? 34 : 32]==4 && kencloud.WorldRedraw()==38 && gameplay.MapRevision()==0xffffffffU && state.revision==0x76543210U); // setOwner뒤현재37을읽으며Paint진입의18을캐시하지않는다.
+        kencloud.WorldRedraw()=0xffffffffU;paint.Paint({0,0,1,0});CHECK(assignments==2 && kencloud.WorldRedraw()==0 && gameplay.MapRevision()==0xffffffffU && state.revision==0x76543210U); // 빈시작칸도원문증가를수행하고unsigned감김을보존한다.
+    }
+}

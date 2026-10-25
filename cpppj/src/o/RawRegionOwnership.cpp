@@ -86,7 +86,7 @@ void RawRegionOwnership::Update(float x,float y,std::uint32_t mode) const {
         }
         hooks_.paint({paintX,paintY,0,0});
     }
-    hooks_.paint({paintX,paintY,owner,theme});++state_.revision;state_.dirty=1;
+    hooks_.paint({paintX,paintY,owner,theme});++state_.WorldRedraw();state_.MapRevision()=1;
     if (!special && state_.affected.size()>1) Update(x,y,10);
 }
 // 연결 객체들이 같은 실제 raw 슬롯을 조회하는지 확인할 수 있다.

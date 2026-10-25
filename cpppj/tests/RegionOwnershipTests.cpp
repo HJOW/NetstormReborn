@@ -4,7 +4,10 @@
 #include "o/RawCanonPlacementTerrain.h"
 #include "o/RawDamageablePreDestroy.h"
 #include "o/SquidFactory.h"
+#include "client/ClientKencloudGlobals.h"
+#include "client/ClientGameplayGlobals.h"
 #include <limits>
+#include <type_traits>
 
 namespace {
 using namespace netstorm::test::rawscene;
@@ -154,4 +157,17 @@ TEST_CASE(RegionOwnership_RejectsMissingBoundariesAndForeignPools) {
     CHECK(Throws([&] { static_cast<void>(MakeTerrainRegionOwnershipHooks(otherPool,terrain,hooks)); }));
     auto raw=InputRaw(pool,kSource);std::fill(raw.begin(),raw.end(),std::uint8_t{});raw[34]=9;
     CHECK(Throws([&] { ownership.Update(1,2); }) && paints==0);additional.count=2;CHECK(Throws([&] { ownership.Update(1,2); }) && paints==0);
+}
+
+// 원문0059a8b0의증가와005949d4의1쓰기를같은Client의서로다른현재owner에적용한다.
+TEST_CASE(RegionOwnership_SharedWorldRedrawAndMapRequestRemainDistinct) {
+    static_assert(std::is_aggregate_v<RegionOwnershipState>); // 기존 Native 입력의세필드aggregate를보존한다.
+    netstorm::client::ClientKencloudGlobals kencloud;netstorm::client::ClientGameplayGlobals gameplay;kencloud.WorldRedraw()=17;gameplay.MapRevision()=0xffffffffU;
+    SidPool pool(OriginalEdition::Patch1078,kCapacity,false);const auto outpost=pool.Allocate(2);auto raw=pool.AllocatedBytes(outpost);std::fill(raw.begin(),raw.end(),std::uint8_t{});raw[10]=83;raw[34]=2;Put(raw,14,std::bit_cast<std::uint32_t>(10.2F));Put(raw,18,std::bit_cast<std::uint32_t>(20.3F)); // 실제투표가읽을한raw후보의독립입력이다.
+    SquidPostPopList additional{{outpost.value},1},workshops;std::vector<std::uint32_t> themes(188);RegionOwnershipState state{{},0x12345678U,0x87654321U,&kencloud.WorldRedraw(),&gameplay.MapRevision()};const auto& current=state;
+    std::vector<RegionOwnershipPaint> paints;bool mutate{}; // 원문두도장호출의인자와마지막효과뒤현재값재조회를관측한다.
+    RegionOwnershipHooks hooks;hooks.regionAt=[](float,float) { return 7U; };hooks.themeMode=[] { return 1U; };hooks.paint=[&](const RegionOwnershipPaint& paint) { paints.push_back(paint);if (mutate && paints.size()==2) { kencloud.WorldRedraw()=37;gameplay.MapRevision()=0xffffffffU; } };
+    RawRegionOwnership ownership(pool,additional,workshops,themes,state,std::move(hooks));CHECK(&state.WorldRedraw()==&kencloud.WorldRedraw() && &current.WorldRedraw()==&kencloud.WorldRedraw() && &state.MapRevision()==&gameplay.MapRevision() && &current.MapRevision()==&gameplay.MapRevision());ownership.Update(10.2F,20.3F);
+    CHECK(paints.size()==2 && paints[0].owner==0 && paints[1].owner==2 && paints[1].x==10 && paints[1].y==20);CHECK(kencloud.WorldRedraw()==18 && gameplay.MapRevision()==1 && state.revision==0x12345678U && state.dirty==0x87654321U); // 미니맵은ffffffff를증가해0으로만드는연산이아니다.
+    paints.clear();mutate=true;gameplay.MapRevision()=19;ownership.Update(10.2F,20.3F);CHECK(paints.size()==2 && kencloud.WorldRedraw()==38 && gameplay.MapRevision()==1 && state.revision==0x12345678U && state.dirty==0x87654321U); // paint앞의18을캐시한증가나사후사본동기화를허용하지않는다.
 }

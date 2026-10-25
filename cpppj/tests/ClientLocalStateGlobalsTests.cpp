@@ -2,6 +2,7 @@
 #include "DudeSpawnSupport.h"
 #include "client/RawCampaignSession.h"
 #include "client/ClientLocalStateGlobals.h"
+#include "client/ClientGameplayGlobals.h"
 #include "client/MissionFortRequest.h"
 #include "o/SquidForms.h"
 #include <algorithm>
@@ -118,4 +119,19 @@ TEST_CASE(ClientLocalStateGlobals_FortRequestWritesActualNextAndPending) {
     for (std::size_t block=0;block<owner.Blocks().size();++block) for (std::size_t word=0;word<owner.Blocks()[block].size();++word) { // 지정한next필드와외부효과의DWORD외에는이웃블록/예약꼬리도그대로여야한다.
         if (block==4 && (word==0 || word==21 || word==22 || word==23 || word==24 || word==31 || word==32)) continue;CHECK(owner.Blocks()[block][word]==before[block][word]);
     }
+}
+
+// 실제 서버 Fort 수신이 같은 Client 갱신 DWORD에만 비동기로 쓰며 대여 자체는 값을 초기화하지 않는다.
+TEST_CASE(ClientMapRevision_ActualFortReceiverSharesCurrentOwnerAndWraps) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);LocalStateSessionDevices devices;auto state=std::make_shared<ClientLocalStateGlobals>();auto gameplay=std::make_shared<ClientGameplayGlobals>(); // 기존 실제 장치/전역만 공급하며 게임 계산을 대체하지 않는다.
+    const auto* address=&gameplay->MapRevision();gameplay->MapRevision()=0x12345678U;
+    { // 월드를 설치하지 않은 대여의 생성/반납은 전체 갱신 요청을 지우지 않는다.
+        auto services=devices.Make(state,false);services.gameplayGlobals=gameplay;auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",std::move(services));CHECK(&gameplay->MapRevision()==address && gameplay->MapRevision()==0x12345678U);
+    }
+    CHECK(&gameplay->MapRevision()==address && gameplay->MapRevision()==0x12345678U);
+    auto services=devices.Make(state,true);services.gameplayGlobals=gameplay;auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",std::move(services));session.LoadLocalConnection();CHECK(session.LocalConnectionPhase()==14 && session.LocalOwner()==1);
+    const std::array<std::uint8_t,17> packet{1,0x2a,17,0,2}; // 서버의 다른 owner2 Fort 수신은 원문처럼 재설치를 생략하고005949d4만 증가시킨다.
+    gameplay->MapRevision()=0xffffffffU;const auto received=session.LocalConnectionPackets().size();session.SendLocalPacket(1,packet);CHECK(gameplay->MapRevision()==0xffffffffU && session.LocalConnectionPackets().size()==received);session.PumpLocalConnection();
+    CHECK(&gameplay->MapRevision()==address && gameplay->MapRevision()==0 && session.LocalConnectionPackets().size()==received+1 && session.LocalConnectionPackets().back()==0x2a);
+    session.SendLocalPacket(1,packet);CHECK(gameplay->MapRevision()==0);session.PumpLocalConnection();CHECK(gameplay->MapRevision()==1 && session.LocalConnectionPackets().size()==received+2 && session.LocalConnectionPhase()==14);
 }

@@ -1,5 +1,14 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-25 단위430 완료: 월드/미니맵 두 갱신 DWORD의 실제 생산자/소비자 통합
+
+- [x] 이전429는 **deaf73f8 / 20261025-24 CP**로 집중63개/보호1821/23소스·4실행 파일 검증과 인계를 마쳤다. 현재/마지막 전체 정밀 PC는 계속 **HJOW-Athlon / 2026-10-23**이다. 시작 작업 트리는 깨끗했고 보호 기준을 `extracted/cpp-map-revision-430-baseline.json`으로 고정했다.
+- [x] 별도 준비본12파일의 원본/준비 SHA를 모두 확인한 뒤 적용했으나, 최초13소스 source1의 섬 인자 연결이 잘못됐음을 정밀C/같은보호PE로 발견해 **빌드1을 중단**했다(빌드 session58337 종료1, taskkill은종료경합128). source1/부분로그를 보존하며 부분게임파일/이전검사파일을 검증제품으로 사용하지 않았다. **Island/Region은0059a8b0 증가 +005949d4=1**, Vortex/Fort/HUD는005949d4 증가다. [작업 문서](docs/exe/cpp-map-revision-owner-20261025.md)에 실제 기계어 쓰기 위치를 기록했다.
+- [x] source2는 실제 ClientKencloudGlobals::WorldRedraw와 GameplayGlobals::MapRevision을 별도로 빌리도록 교정했다. Client 공통서비스→Session의 같은 WorldRedraw를 섬/지역 도장/투표에, MapRevision을 섬/투표의1쓰기·Vortex/Fort/HUD 증가·미니맵 소비에 직접 연결한다. Region 상태의 선택형 참조와 기존 독립 aggregate를 유지한다. 같은보호PE의8실제쓰기byte도 `extracted/cpp-map-revision-430-native-addresses.json`에 직접 확인·기록했다.
+- [x] **source2 동결24소스의 빌드2 종료0·컴파일 경고/오류0**, 같은 제품의 **집중83개·실패0**이다. 신규8검사로 실제0x2a 비동기 수신·unsigned 감김,4096셀/부분/비활성/재생성 뒤 재조회, 실제미니맵 팔레트/bitmap/소비, 섬/지역의World증가·Map1쓰기·효과 뒤 재조회를 통과했고 기존 Native/실제Client 대여/Editor도 유지했다. 보호1821/24소스/4실행 파일 SHA가 같다. [실행 보고서](cpppj/map-revision-runtime-20261025.json)에 첫 중단과 교정/실제 로그를 기록했으며 게임 SHA는 **e9303f11…**다. 인계 후 **20261025-25 CP**로 로컬 커밋한다. 전체/긴 GUI는 미실행이다.
+- [ ] 다음 Graph431은 [소유 계획](docs/exe/cpp-state-world-owner-plan-20261025.md)의 순수 records/stack만 장기화하고 실행기/recovery 정책과 임시 clone은 분리한다. 준비본8파일은 `extracted/cpp-graph-storage-431-prepared/`(baseline/구현·검사/hashes/patch/README)에 완성됐으나 아직 적용/빌드하지 않았다. 원본8SHA 확인 후 적용하고 Native16·공유 물리·Validate clone/Commit·prepared 실패/보존·기존일반fresh를 집중 검사한다. 429~431의 같은 최종 제품에서 전체 CTest/GUI/자연 플레이를 통합할 예정이다. 아직 **마지막 통합 결과는33a98ea8/2870/메뉴·자연 Early2**다.
+- [ ] 432 후보의 실제type64 수신004b6180/두22DWORD+Zone간극 장기owner는 `extracted/cpp-connection-activity-432-prepared/`에서 작성 중이다. 아직 제품에 적용하지 않았다. 전체 Native cleanup/prefix·실제 Edit 사용자 편집/저장·모든 미션 자연 완주/진행 저장은 계속 미완료며 목표는 활성 상태다. 원본 실행/새 디컴파일/push는 하지 않았다.
+
 ## 2026-10-25 단위429 완료: State/Login 전역의 실제 Client 소유자 연결
 
 - [x] 이전428은 **33a98ea8 / 20261025-23 CP**로 전체2870/실제 메뉴/자연 Early2 통합을 마쳤다. 작업 전 AGENTS/공통·닷넷 인계를 다시 읽었고 현재/마지막 전체 정밀 디컴파일 PC는 계속 **HJOW-Athlon / 2026-10-23**이다. 작업 트리는 시작 시 깨끗했고 보호1821파일이428 기준과 같음을 확인해 `extracted/cpp-state-client-globals-429-baseline.json`으로 고정했다.

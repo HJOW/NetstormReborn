@@ -31,6 +31,9 @@ struct MetadisplayDirtyState {
     std::uint32_t initialized{}; // 카메라/사각형 static 초기화 비트1·2다.
     MetadisplayDirtyView cached; // 마지막 display rebuild 전에 저장한 현재 view다.
     std::uint32_t frames{}; // 활성 표시 Refresh마다 증가하는 원본 DWORD 프레임 번호다.
+    std::uint32_t* sharedFullRefresh{}; // 실제 Client의005949d4를 빌리며 생략한 독립 입력만 기존 fullRefresh를 소유한다.
+    std::uint32_t& FullRefresh() { return sharedFullRefresh ? *sharedFullRefresh : fullRefresh; } // HUD/섬/신전과 같은 현재 DWORD를 직접 변경하며 사본을 동기화하지 않는다.
+    const std::uint32_t& FullRefresh() const { return sharedFullRefresh ? *sharedFullRefresh : fullRefresh; } // 외부 효과 뒤마다 같은 소유자의 현재 전체 갱신 요청을 다시 읽는다.
 };
 // bitmap의 셀 그림과 display 재생성 몸체는 별도 실제 구현을 반드시 연결한다.
 struct MetadisplayDirtyHooks {

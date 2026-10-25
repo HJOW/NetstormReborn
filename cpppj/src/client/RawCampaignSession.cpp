@@ -7,6 +7,7 @@
 #include "o/RawPlayerLinksCleanup.h"
 #include "client/ClientColorSortInput.h"
 #include "client/ClientLocalStateGlobals.h"
+#include "client/ClientKencloudGlobals.h"
 #include "client/ExistingEditorAfterCheckpoint.h"
 #include "client/EditorLocalTransport.h"
 #include "client/CampaignTemplateStorage.h"
@@ -464,7 +465,9 @@ struct RawCampaignSession::Impl {
     PlayerWorldState& playerState{gameplayGlobals->player}; // 현재 두 owner/known을 초기 HUD와 같은 주소에서 읽고 쓴다.
     FortObjectLoadState objectState; // 저장객체의 실제 미션/로딩 상태다.
     CampaignWorldGlobals& globals{gameplayGlobals->world}; // 두 실제 Subscriber와 editor/post도 같은 장기 주소를 사용한다.
-    std::uint32_t revision{},ownerChanged{},vortexRevision{},piece{107}; // 원본 섬/신전/패턴 전역이다.
+    std::uint32_t& revision{gameplayGlobals->MapRevision()}; // Vortex/로그인은005949d4를 증가시키고 섬/지역은 같은 주소에1을 쓴다.
+    std::uint32_t localWorldRedraw{};std::uint32_t& worldRedraw{services.kencloudGlobals ? services.kencloudGlobals->WorldRedraw() : localWorldRedraw}; // 실제 Client의0059a8b0을 직접 빌리며 장치 없는 기존 독립 Session만 기존0 입력을 사용한다.
+    std::uint32_t piece{107}; // 현재 다리 패턴은 두 갱신 DWORD와 별개의 원본 전역이다.
     std::uint32_t localCrt{}; // 소유자 없는 기존 독립Session 검사에 한해서 보존하는 초기CRT0 입력이다.
     std::uint32_t& crt{services.randomGlobals ? services.randomGlobals->CrtState() : localCrt}; // Seed/지형은같은Client실제DWORD를직접빌리며사본동기화를하지않는다.
     std::uint32_t localRandomMode{}; //독립Session의기존BSS0입력만보존한다.
@@ -477,8 +480,8 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawPlayerWorld> player; // 최초152 생성자/실제 PostPop/9기록을 연결한다.
     std::unique_ptr<RawPlayerRegular> playerRegular; // 현재 Player의 실제 사건1/2를 처리한다.
     std::unique_ptr<RawPlayerTemplateState> templateState; // 같은Template header/원본State28BYTE를 직접 읽는다.
-    RegionPaintState paint; // 실제 지역 도장의 장기 상태다.
-    RegionOwnershipState votes; // 실제 현재 신전/워크샾 투표 상태다.
+    RegionPaintState paint{.sharedWorldRedraw=&worldRedraw}; // 실제 지형 도장도0059a8b0을 증가시킨다.
+    RegionOwnershipState votes{.sharedWorldRedraw=&worldRedraw,.sharedMapRevision=&revision}; // 투표 wrapper의 월드 증가/미니맵1쓰기는 같은 두 실제 주소를 직접 사용한다.
     std::vector<std::uint32_t> themes; // 현재 TYPE의 같은 원소 번호다.
     std::vector<std::int32_t> elements; // 자산 Regular가 읽는 같은 원소 번호다.
     std::unique_ptr<RawCampaignOwnership> ownership; // 실제 Vortex/섬/Player/지역 연결이다.
@@ -839,7 +842,7 @@ struct RawCampaignSession::Impl {
         gunTargetState.playerFlagsRead=[this](std::uint32_t owner) {
             if (owner>=9) throw std::out_of_range("실제 세션 현재 Player flag 번호 오류");return static_cast<std::uint32_t>(players[owner*0xb4+0x50]);
         };
-        islands=std::make_unique<RawIslandRuntime>(core.pool,core.hash,islandBytes,finishState,assetState.residences,revision,ownerChanged,
+        islands=std::make_unique<RawIslandRuntime>(core.pool,core.hash,islandBytes,finishState,assetState.residences,worldRedraw,revision,
             IslandRuntimeHooks{[this](Sid sid,std::uint32_t owner) { ownership->SetOwner(sid,owner); },SessionMissing<void,IslandRuntimeAssertion>()});
         islands->Reset();
         auto priestEffects=services.priest;
@@ -905,7 +908,7 @@ struct RawCampaignSession::Impl {
         ownerEffects.otherOwner=[this](Sid sid,std::uint32_t owner) { priests->SetOwner(sid,owner); };
         FillMissing(ownerEffects.refreshProduction);FillMissing(ownerEffects.themeMode);
         ownerEffects.missingIsland=SessionMissing<void,Sid,std::int32_t,std::uint32_t>();
-        ownership=std::make_unique<RawCampaignOwnership>(world,*islands,assetState,players,metadata.frames,themes,random,paint,votes,vortexRevision,97,121,std::move(ownerEffects));
+        ownership=std::make_unique<RawCampaignOwnership>(world,*islands,assetState,players,metadata.frames,themes,random,paint,votes,revision,97,121,std::move(ownerEffects));
         carrier=std::make_unique<RawCarrierPostPop>(core.pool,core.types,carrierState,
             MakeCarrierPostPopHooks(core.pool,core.postPop,[this](Sid sid) { static_cast<void>(priests->CheckCarrier(sid)); },[this](float x,float y,std::uint8_t owner) { world.SetSupportOwner(x,y,owner); }));
         BalloonBodyHooks balloon;balloon.frames=[this](std::uint32_t type) { return static_cast<std::int32_t>(core.frames[type].Codes().size()); };

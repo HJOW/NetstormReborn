@@ -195,7 +195,7 @@ UberGump::UberGump(Client& client) : client_(client),initLoginSubscriber_(client
         [this](std::uint32_t form,std::uint32_t flags) {
             if (!world_ || form>65535U) throw std::logic_error("현재Client UI Form삭제의월드/SID오류");
             world_->Session().GumpForms().Destroy(o::Sid{static_cast<std::uint16_t>(form)},flags);
-        }});
+        }},&client_.GameplayGlobals()->MapRevision()); // 전체 HUD와 같은 현재 원본 DWORD를 첫 미니맵 생성 전부터 빌린다.
     rawButtons_->ConfigureTestBridgePatterns(client_.TestBridgePatterns()); // 테스트 전용 임시 조작이며 원본 분석 결과가 아니다. 첫 조각 생성 전에 명시 CLI만 반영한다.
     if (!client_.TestBridgePatterns().empty()) std::clog<<"테스트 전용 다리 조각 순서: "<<client_.TestBridgePatterns()<<" (원본 분석 결과 아님)\n";
     RawMenuHooks menuHooks;
