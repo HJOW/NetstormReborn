@@ -51,6 +51,8 @@ public:
     // 표시 팔레트를 바꾸고 팔레트에 의존하는 지면 명도 변환표를 다시 계산하게 한다. 화면 팔레트 적용 직후 부른다.
     void SetPalette(std::span<const ScreenColor> palette,std::span<const std::uint32_t> colorSortLogical={}); //실제Client는같은고정초기RGB를별도전달하며기존독립검사는명시fallback이다.
     void BindHideBuildings(std::function<std::uint32_t()> current); // 실제0059a8ac를매표시/선택시현재조회한다.호출대상은월드보다오래살아야한다.
+    void BindMapView(std::function<ScreenRect()> current); // 같은 실제 HUD의 현재 지도LTRB를 표시/미니맵/선택/음향에서 빌린다.
+    ScreenRect MapView() const; // 실제 설치된 dock가 없으면 기존 독립 호출자의 초기 영역을 유지한다.
     // 카메라를 월드 픽셀 범위 안에서 옮긴다.
     void Scroll(int dx,int dy);
     MinimapGeometryView MinimapView() const; // 같은 실제 카메라와 현재 월드 viewport를 미니맵에 빌린다.
@@ -158,6 +160,7 @@ private:
     std::unique_ptr<RawCampaignSession> campaign_; // 실제 설치/전투/경로/HP/현재 Kernel의 단일 수명 소유자다.
     std::unique_ptr<RawCampaignFactoryDisplay> factoryDisplay_; // Session보다 먼저 해제할 실제 Factory 그림/선택 출력기다.
     std::function<std::uint32_t()> hideBuildings_=[] { return 0U; }; // 원본BSS초기0의입력이다.실제Client는같은메뉴DWORD조회기를설치한다.
+    std::function<ScreenRect()> mapView_; // 실제 Client 도킹 전역보다 짧게 빌리며 사각형 값의 별도 동기화를 하지 않는다.
     CameraHomeState cameraHome_; // 실제 화면 크기·초기 시야 억제 깊이·요청/변환 갱신 번호를 보관한다.
     // surfaceTime_: 표면 프레임 갱신에 누적한 게임 시각(초).
     o::FrameTime surfaceTime_{};

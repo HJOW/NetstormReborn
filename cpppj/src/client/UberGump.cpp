@@ -50,6 +50,12 @@
 #include "o/OriginalText.h"
 #include "o/Template.h"
 #include "client/RawNsInfoContext.h"
+#include "client/RawUberRootControls.h"
+#include "client/RawChatWindowContext.h"
+#include "client/RawBackgroundGifControls.h"
+#include "client/RawTextEntryControls.h"
+#include "client/ClientCoreDataGlobals.h"
+#include "client/ClientChatManagerGlobals.h"
 #include <algorithm>
 #include <sstream>
 #include <stdexcept>
@@ -144,8 +150,9 @@ struct UberGump::MissionRuntime {
     }
 };
 
+#include "client/UberHud.inc" // 같은 실제 소유자에 전체 HUD 루트/지도 전역과 네 자식 공장을 연결한다.
 // 원본 GIF는 색 표의 RGB를 쓰지 않고 파일의 번호를 화면 팔레트에 바로 쓴다(00419ec0→004dae60).
-UberGump::UberGump(Client& client) : client_(client),initLoginSubscriber_(client.SubscriberGlobals()->MySubscriber()),initialSubscriber_(client.SubscriberGlobals()->LoginSubscriber()) {
+UberGump::UberGump(Client& client) : client_(client),initLoginSubscriber_(client.SubscriberGlobals()->MySubscriber()),initialSubscriber_(client.SubscriberGlobals()->LoginSubscriber()),commandGump_(client.ChatWindowGlobals()->window.current) {
     serializationGlobals_=std::make_shared<o::FortSerializationGlobals>(); // 원본BSS와같은한DWORD를모든manager/객체소비자보다오래소유한다.
     templateStorage_=std::make_shared<CampaignTemplateStorage>(serializationGlobals_); // 시작 초기화와 미션별 명시 정리를 별개 수명으로 유지한다.
     auto& config = client_.Configuration();
@@ -276,6 +283,7 @@ void UberGump::ClearWorld() {
     if (rawButtons_) rawButtons_->DisableMinimap(); // 같은Session/공통Gump보다먼저공간통지와미니맵을반납한다.
     if (rawButtons_) rawButtons_->DisableProduction(); // 실제 Session보다 먼저 UI Form을 반납한다.
     if (rawButtons_ && rawButtons_->Menus()) rawButtons_->Menus()->CloseNsInfo(); // 현재 모드/문자/공통 부모가 살아 있을 때 NSInfo 전체 자식을 먼저 반납한다.
+    if (rawButtons_ && rawButtons_->Menus()) rawButtons_->Menus()->CloseChatWindows(); // 실제 Chat 자식도 현재 월드 장치가 살아 있을 때 반납한다.
     client_.ClearThunderFlashes();
     if (world_) client_.GetRenderer().SetExtraCollection({}); // 월드 반납 전에 빌린 실제 커서 수집/Draw callback을 해제한다.
     client_.GetRenderer().SetOverlayProcedure({}); // 실제 메뉴 픽셀 소비자가 반납한 월드를 다시 읽지 않도록 먼저 제거한다.
@@ -316,9 +324,9 @@ RawHtmlWindowContext UberGump::LoadingHtmlContext(ScreenRect mapView) { // 미�
     BindHtmlConditionConfig(context.factory.html,client_.Configuration(),client_.Assets().Edition());BindHtmlPictureText(context.factory.html);
     BindHtmlBackground(context.factory.html,htmlGlobals_); // 미션 안내의 전체 HTML도 같은 현재 배경을 쓴다.
     context.factory.substitute=[this](auto text,auto) { return FontBytes(client_.Configuration().SubstituteLocal(o::DecodeOriginalText({reinterpret_cast<const std::uint8_t*>(text.data()),text.size()}))); };context.factory.fallback=[this] { return FontBytes(client_.Configuration().PathSpec("OkButton")); };
-    context.read=[this](auto address)->std::uint32_t { switch (address) {
+    context.read=[this](auto address)->std::uint32_t { const auto map=mission_ && rawButtons_->UberRoot() && rawButtons_->UberRoot()->Current() ? rawButtons_->MapViewRect() : htmlMapView_;switch (address) {
         case 0x531860:case 0x5c78f0:return static_cast<std::uint32_t>(client_.GetScreen().Width());case 0x531864:case 0x5c78f4:return static_cast<std::uint32_t>(client_.GetScreen().Height());
-        case 0x5ca9b4:return static_cast<std::uint32_t>(htmlMapView_.right-htmlMapView_.left);case 0x5ca9cc:return std::bit_cast<std::uint32_t>(htmlMapView_.left);case 0x5ca9d0:return std::bit_cast<std::uint32_t>(htmlMapView_.top);case 0x5ca9d4:return std::bit_cast<std::uint32_t>(htmlMapView_.right);case 0x5ca9d8:return std::bit_cast<std::uint32_t>(htmlMapView_.bottom);case 0x563e38:return rawButtons_->RootToken();
+        case 0x5ca9b4:return static_cast<std::uint32_t>(map.right-map.left);case 0x5ca9cc:return std::bit_cast<std::uint32_t>(map.left);case 0x5ca9d0:return std::bit_cast<std::uint32_t>(map.top);case 0x5ca9d4:return std::bit_cast<std::uint32_t>(map.right);case 0x5ca9d8:return std::bit_cast<std::uint32_t>(map.bottom);case 0x563e38:return rawButtons_->RootToken();
         case 0x5cab30:case 0x55a480:return client_.ScriptMenuGlobal(address); // Checked의 실제 Client/공급/Player 전역이다.
         default:throw std::logic_error("전체 HTML 현재 Client 전역 미연결: "+std::to_string(address));
     } };return context;
@@ -517,8 +525,7 @@ void UberGump::LoadMissionWorld(std::optional<std::string> requestedFort) {
     world_=std::move(world); // 호스트 어댑터는 원문 프로세스 슬롯을 차지하지 않는다.
     missionRuntime_->start=std::make_unique<RawCampaignMissionStartBindings>(world_->Session(),*mission_,missionRuntime_->gate,missionRuntime_->state,
         world_->Session().MissionStartSettings(),world_->Session().MissionAiSettings(),MakeCampaignMissionStartEffects(client_,*world_,[this] {
-            // 원본0042e440은 현재00548740이0이면 아무 메시지도 보내지 않는다.
-            if (commandGump_!=0) throw std::logic_error("미션 Start의 전용 명령 Gump0042e440 수신 미연결");
+            if (commandGump_!=0) static_cast<void>(rawButtons_->BubbleGump(commandGump_,0x02000088U,0,0)); //0042e440은현재Chat의부모에실제숨김명령을보내며0이면생략한다.
         }));
     world_->BeginLocalConnection(); //전역subscriber 조회가같은월드를보는상태에서Zone/로그인/월드로드를실행한다.
     if (type=="tutorial" && !missionRuntime_->guided) ApplyMissionTechnology(*mission_,client_.Assets().TypeTable(),world_->Session().TotalMade()); // guided Header는 이미 설치 전 같은 전역 표를 썼다.
@@ -1097,6 +1104,8 @@ void UberGump::Compose() {
             rawButtons_->Menus()->ShowMissionLoading(LoadingHtmlContext({85,0,width,height}),FontBytes(client_.Translate("Starting Mission...")),[this] { return FontBytes(client_.Translate("Cancel")); });
         }
         if (popup_.empty() && world_) {
+            if (client_.Assets().Edition()==o::OriginalEdition::Patch1078) InstallHud();
+            else { // 미복원 CD 전체 Uber에10.78 몸체를 적용하지 않고 기존 설치 계약을 유지한다.
             if (!rawButtons_->Production()) rawButtons_->EnableProduction(world_->Session(),client_.Assets(),RawProductionHooks{
                 [this] { return client_.WallSeconds(); },[this](std::string_view name) { client_.WorldAudio().Sounds().PlayByName(name,0,0,0,0,0); },
                 [this](std::string_view key) { state_.Post({"Tell",std::string(key)}); },
@@ -1115,6 +1124,7 @@ void UberGump::Compose() {
                 context.translate=[this](auto value) { return FontBytes(client_.Translate(value)); };context.storeText=[this](auto value) { const auto token=scriptStrings_.Store(value);if (token>0x0fffffffU) throw std::overflow_error("NSInfo 공유 문자열 고리 별칭 소진");return 0x70000000U|token; };context.text=[this](auto token) { return scriptStrings_.Resolve(token&0x0fffffffU); };
                 const auto token=rawButtons_->ConstructNsInfo(std::move(context));auto& node=*rawButtons_->Menus()->Node(token);node.baseWidth=static_cast<float>(width);node.width=static_cast<float>(static_cast<double>(width)*node.scale);node.baseHeight=static_cast<float>(height);node.height=static_cast<float>(static_cast<double>(height)*node.scale);node.flags|=0x20000U; // 기존 월드 UI 설치 경계에서 원문 Uber의 크기/플래그/부착만 적용한다. 전체 Uber 교체는 후속이다.
                 rawButtons_->Menus()->Attach(token,0,0,rawButtons_->RootToken(),0);
+            }
             }
         }
         if (!popup_.empty()) {
@@ -1141,6 +1151,7 @@ void UberGump::Compose() {
 }
 // 자동 검사는 라벨 좌표를 읽고 실제 버튼 입력을 보낸다. 명령을 직접 호출하지 않는다.
 std::optional<ScreenPoint> UberGump::ControlPoint(std::string_view label) const {
+    if (rawButtons_->UberRoot() && label.starts_with("hud:")) return rawButtons_->UberRoot()->Point(label); // 실제 구분선의 현재 경계로 정상 입력을 보낸다.
     if (rawButtons_->Minimap() && label.starts_with("minimap:")) return rawButtons_->Minimap()->Point(label);
     if (rawButtons_->Production() && label.starts_with("production:")) return rawButtons_->Production()->Point(static_cast<std::uint32_t>(std::stoul(std::string(label.substr(11)))));
     if (world_ && (label.starts_with("world:") || label.starts_with("cell:") || label.starts_with("placement:") || label.starts_with("placement-near:") || label.starts_with("placement-reach:") || label.starts_with("placement-fire:"))) return world_->Point(label);

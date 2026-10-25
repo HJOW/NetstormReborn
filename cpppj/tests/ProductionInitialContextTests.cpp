@@ -9,6 +9,11 @@
 #include "client/PaletteColors.h"
 #include "client/PaletteShade.h"
 #include "client/RawMinimapControls.h"
+#include "client/RawUberRootControls.h"
+#include "client/RawNsInfoContext.h"
+#include "client/RawChatWindowContext.h"
+#include "client/ClientChatManagerGlobals.h"
+#include "client/ClientCoreDataGlobals.h"
 #include <sstream>
 
 using namespace netstorm::client;
@@ -165,4 +170,80 @@ TEST_CASE(ProductionInitialContext_OverlappingMinimapsKeepCurrentBitmapAndDraw) 
 TEST_CASE(ProductionInitialContext_LatestMinimapKilledDoesNotSelectOlder) {
     InitialProductionScene scene;const auto before=scene.Count();auto& old=scene.buttons.ConstructMinimap(scene.storage,InitialMinimapHooks());const auto oldToken=old.RootToken();auto& current=scene.buttons.ConstructMinimap(scene.storage,InitialMinimapHooks());scene.buttons.KillGump(current.RootToken());scene.buttons.CleanupGumps();
     CHECK(!scene.buttons.Minimap() && old.Node(oldToken) && !old.Refresh() && scene.Count()==before+1);scene.buttons.DisableMinimap();CHECK(scene.Count()==before);
+}
+
+namespace { // 실제 자산/장기 Client와 전체 공통 HUD의 결합 입력만 준비한다.
+struct InitialUberGlobals {
+    std::int32_t width{640},height{480},left{},top{},mapWidth{},mapHeight{}; // 같은 실제 도킹이 쓰는 지도/화면 전역이다.
+    std::uint32_t shown{1},refresh{},resizes{};float chatY{}; // 명시 기본 표시와 실제 후처리 관측이다.
+    std::array<float,4> floats{};ScreenRect bottom{};std::array<char,80> title{}; // 정수 지도는 실제 GumpTree를 빌리고 메시지/float/제외 영역은 BSS 입력이다.
+    std::array<std::uint8_t,256> rankOutput,rankTemporary; // 실제 원문 임시의 미작성 입력을 보존한다.
+    PaletteColorTable palette; // 편집 자식도 현재 실제 갈색/흰색 장치를 사용한다.
+};
+// 네 자식 모두 기존 실제 공장으로 만들며 가짜 기본 노드/빈 성공으로 대체하지 않는다.
+RawUberRootContext InitialUberContext(InitialProductionScene& scene,InitialUberGlobals& state) {
+    std::array<std::uint32_t,256> logical{}; // 실제 보호 색 표의 입력이며 임의 색 번호를 공급하지 않는다.
+    for (std::size_t index=0;index<logical.size();++index) { const auto color=scene.assets.game.Palette().Color(static_cast<std::uint8_t>(index));logical[index]=color.red|(std::uint32_t(color.green)<<8)|(std::uint32_t(color.blue)<<16); } // 파일의 원래 RGB를 읽는다.
+    state.palette=BuildPaletteColorTable(logical);scene.menus->SetPalette(state.palette);
+    RawUberRootContext context{{state.width,state.height,state.shown,state.left,state.top,state.mapWidth,state.mapHeight,state.floats,scene.buttons.MapViewRect(),state.bottom,state.refresh,state.chatY},{},{},{},{},{}};
+    context.poll=[](auto) { return InputEvent{InputCode::kRelease,300,200}; };context.cursor=[](auto) {};
+    context.root.read=[&scene,&state](auto address) -> std::uint32_t {
+        if (address==0x5411c8U) return static_cast<std::uint32_t>(scene.assets.game.Find("fortGump").block+netstorm::o::kFirstAssetTypeNumber);
+        if (address==0x565e70U) return static_cast<std::uint8_t>(state.title[0]);throw std::out_of_range("초기 전체 HUD의 미선언 전역 조회");
+    };
+    context.root.type=[&scene](auto type) { CHECK(type<scene.storage->types.size());return 0x100000U+type; };
+    context.root.createMinimap=[&scene] { return scene.buttons.ConstructMinimap(scene.storage,InitialMinimapHooks()).RootToken(); };
+    context.root.createProduction=[&scene] { return scene.buttons.ConstructProduction(scene.Context(),scene.assets.game,scene.Hooks()).RootToken(); };
+    context.root.createKnowledge=[&scene,&state] {
+        RawNsInfoContext data;data.globals=scene.client.NsInfoGlobals();data.gameplay=scene.client.GameplayGlobals();data.storage=scene.storage;
+        data.read=[&scene,&state](auto address) -> std::uint32_t { if (address==0x5411c8U) return static_cast<std::uint32_t>(scene.assets.game.Find("fortGump").block+70);if (address==0x5bec3cU) return state.palette.basic[7];throw std::out_of_range("초기 NSInfo 미선언 장치"); };
+        data.translate=[](auto text) { return std::string(text); };data.storeText=[&scene](auto text) { return scene.client.ChatWindowGlobals()->Store(text); };
+        data.text=[&scene](auto token) -> std::string_view { return scene.client.ChatWindowGlobals()->strings.at(token); };return scene.buttons.ConstructNsInfo(std::move(data));
+    };
+    context.root.createChat=[&scene] {
+        RawChatWindowContext data;data.globals=scene.client.ChatWindowGlobals();data.commands=scene.client.DotCommandGlobals();data.editor.now=[&scene] { return scene.wall; };
+        data.translate=[](auto text) { return std::string(text); };data.text=[&scene](auto token) -> std::string_view { return scene.client.ChatWindowGlobals()->strings.at(token); };
+        data.read=[&scene](auto address) -> std::uint32_t { if (address==0x594fc8U) return scene.storage->ownerMode.challenge;throw std::out_of_range("초기 Chat 생성의 미선언 동적 전역"); };return scene.menus->CreateChatWindow(std::move(data));
+    };
+    context.root.refreshTechnology=[&scene,&state] { auto hooks=MakeClientChatManagerHooks(scene.client.ChatManagerGlobals());netstorm::o::RefreshChatManagerRankPrefix({scene.client.ChatManagerGlobals()->Current(),scene.client.CurrentSubscriber(),scene.client.CoreDataGlobals()->Active()},hooks,state.rankOutput,state.rankTemporary); };
+    context.root.translate=[&scene](auto text) { return scene.client.ChatWindowGlobals()->Store(text); };
+    context.root.help=[&scene](auto token,auto text) { scene.menus->SetHelpText(token,scene.client.ChatWindowGlobals()->strings.at(text)); };
+    context.root.helpWord=[&scene](auto token,auto text) { scene.menus->SetHelpWord(token,text); };
+    context.dock.invalidate=[](auto,auto,auto,auto,auto) {};context.dock.finishResize=[&state] { ++state.resizes; };
+    context.dock.chatVisible=[&scene](bool visible) { scene.menus->ChatGeometryBackend()->SetHelperVisible(scene.client.ChatWindowGlobals()->window.current,visible); };
+    context.dock.chatInput=[&scene](bool visible) { scene.menus->ChatGeometryBackend()->SetInputVisible(scene.client.ChatWindowGlobals()->window.current,visible); };
+    return context;
+}
+}
+
+// 실제 전체 자식/세 구분선·공통 입력·지도 결과와 동일 실제 Draw를 함께 확인한다.
+TEST_CASE(ProductionInitialContext_FullUberUsesActualChildrenAndDock) {
+    InitialUberGlobals globals;InitialProductionScene scene;auto& uber=scene.buttons.EnableUberRoot(InitialUberContext(scene,globals));const auto oldRoot=scene.buttons.RootToken();uber.Replace();
+    const auto root=scene.buttons.RootToken();CHECK(root!=oldRoot && uber.Current() && !uber.Node(oldRoot));const auto* node=static_cast<UberRootNode*>(uber.Node(root));CHECK(node && node->command==54 && node->vtable==0x51503c);
+    CHECK(node->minimap==scene.buttons.Minimap()->RootToken() && node->production==scene.buttons.Production()->RootToken() && node->knowledge==scene.menus->NsInfoRoot() && node->chat==scene.menus->ChatWindowRoot());
+    const auto* vertical=static_cast<HudDividerNode*>(uber.Background(node->vertical));CHECK(vertical && vertical->command==55 && vertical->slaves[0].first && vertical->slaves[5].first && !vertical->slaves[6].first);
+    scene.buttons.HandleGump(root,0x0200003dU,3,0);const auto& view=scene.buttons.MapViewRect();CHECK(view.left==85 && view.top==0 && view.right==640 && view.bottom==384 && globals.resizes==1 && globals.refresh==1);
+    const auto* mini=scene.buttons.Minimap()->Node(node->minimap);const auto* panel=scene.buttons.Production()->Node(node->production);CHECK(mini && panel && mini->parent==root && mini->baseWidth==80 && mini->baseHeight==75 && panel->baseWidth==80 && panel->baseHeight==400);
+    scene.buttons.BubbleGump(node->chat,0x02000088U,0,0);CHECK(view.bottom==480); // 실제 미션 Start의 현재 Chat→부모 숨김 명령이 지도 높이를 복원한다.
+    const auto pixels=InitialHudPixels(scene);CHECK(std::any_of(pixels.begin(),pixels.end(),[](auto color) { return color!=0x5a; }));CHECK(scene.menus->Report().find("raw_external_gumps\t0\t3\n")!=std::string::npos);
+}
+
+// 원문 교체가 실제 새 자식을 먼저 만든 뒤 이전 직계 자식을 이동하고 이전 루트만 반납하는지 확인한다.
+TEST_CASE(ProductionInitialContext_FullUberReplacementMovesOldChildren) {
+    InitialUberGlobals globals;InitialProductionScene scene;auto& uber=scene.buttons.EnableUberRoot(InitialUberContext(scene,globals));uber.Replace();const auto first=scene.buttons.RootToken();const auto* old=static_cast<UberRootNode*>(uber.Node(first));
+    const auto oldProduction=old->production,oldMinimap=old->minimap;auto* previousProduction=scene.buttons.Production();auto* previousMinimap=scene.buttons.Minimap();const auto count=scene.Count();uber.Replace();const auto next=scene.buttons.RootToken();const auto* current=static_cast<UberRootNode*>(uber.Node(next)); // 이전 두 실제 자식은 원문 이동으로 생존해야 한다.
+    CHECK(next!=first && uber.Current() && !uber.Node(first) && scene.Count()>count);CHECK(current->production!=oldProduction && current->minimap!=oldMinimap && scene.buttons.Production()->RootToken()==current->production && scene.buttons.Minimap()->RootToken()==current->minimap);
+    CHECK(previousProduction->Node(oldProduction) && previousProduction->Node(oldProduction)->parent==next);CHECK(previousMinimap->Node(oldMinimap) && previousMinimap->Node(oldMinimap)->parent==next); // 이전 루트의 두 실제 자식 모두 새 루트의 같은 주소로 이동한다.
+    CHECK(scene.buttons.Report().find("raw_hud_owners\t2\t2\t")!=std::string::npos);CHECK(scene.menus->Report().find("raw_external_gumps\t0\t5\n")!=std::string::npos); // 현재 대상을 이전 세대로 되돌려 조회하지 않는다.
+}
+
+// 새 화면 장치는 기존 Native 구분선/자식을 유지하며 현재 하단 거리와 지도/그림 크기를 갱신해야 한다.
+TEST_CASE(ProductionInitialContext_FullUberReflowsExistingScreen) {
+    InitialUberGlobals globals;InitialProductionScene scene;auto& uber=scene.buttons.EnableUberRoot(InitialUberContext(scene,globals));uber.Replace();scene.buttons.HandleGump(scene.buttons.RootToken(),0x0200003dU,3,0);
+    const auto root=scene.buttons.RootToken(),count=scene.Count();const auto* node=static_cast<UberRootNode*>(uber.Node(root));const auto mini=node->minimap,production=node->production;
+    globals.width=800;globals.height=600;const auto& asset=scene.assets.game.Find("fortGump");const auto metrics=scene.assets.game.Shapes().SquidMetrics(asset.block,0); // 기존 화면 설치와 같은 실제 헤더다.
+    scene.buttons.SetControls({}, {},800,600,{static_cast<std::uint32_t>(asset.block+70),0,metrics.width,metrics.height,{}},true);uber.Reflow();
+    CHECK(scene.buttons.RootToken()==root && scene.Count()==count && node->minimap==mini && node->production==production);const auto& view=scene.buttons.MapViewRect();CHECK(view.left==85 && view.right==800 && view.bottom==504);
+    CHECK(uber.Background(node->vertical)->baseHeight==600 && scene.buttons.Minimap()->Node(mini)->y==525 && scene.buttons.Minimap()->Node(mini)->baseHeight==75 && scene.buttons.Production()->Node(production)->baseHeight==520);
+    scene.buttons.BubbleGump(node->chat,0x02000088U,0,0);CHECK(view.bottom==600); // 같은 원문 숨김은 새 전체 화면 높이를 사용한다.
 }

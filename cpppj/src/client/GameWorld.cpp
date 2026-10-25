@@ -109,7 +109,10 @@ void GameWorld::ResetCampaignCamera() {
     campaign_->ResetCamera(cameraHome_,[this](std::int32_t x,std::int32_t y) { scrollX_=x;scrollY_=y;changed_=true;SurfaceView(); });
 }
 // 실제 카메라 비트는 같은 scroll 원점에서 원본497490의 단정도 저장으로 계산한다.
-MinimapGeometryView GameWorld::MinimapView() const { return {RawCursorPosition::CameraFromPixels(scrollX_,scrollY_),{0,std::min(kMenuHeight,height_),width_,height_},16,11}; }
+MinimapGeometryView GameWorld::MinimapView() const { return {RawCursorPosition::CameraFromPixels(scrollX_,scrollY_),MapView(),16,11}; }
+// 현재 mapRect의 같은 장기 소유자를 연결한 뒤 표시/음향에 즉시 공급한다.
+void GameWorld::BindMapView(std::function<ScreenRect()> current) { if (!current) throw std::invalid_argument("월드의 실제 지도 영역 조회 필요");mapView_=std::move(current);SurfaceView();changed_=true; }
+ScreenRect GameWorld::MapView() const { return mapView_ ? mapView_() : ScreenRect{0,std::min(kMenuHeight,height_),width_,height_}; } // 원문 dock 미설치의 독립 검사 계약을 보존한다.
 // 홈 선택과 미니맵 클릭은 동일한497f20을 사용하며 임의 월드 가장자리clamp를 추가하지 않는다.
 void GameWorld::CenterCamera(float x,float y) {
     if (!campaign_) throw std::logic_error("실제 미니맵 카메라의 Session 없음");cameraHome_.width=width_;cameraHome_.height=height_;const auto core=campaign_->Core(); // 현재 공유 풀/TYPE다.
@@ -344,7 +347,7 @@ void GameWorld::AdvanceObjects(double seconds) {
 // 현재 카메라·월드 표시 영역을 raw 표시와 위치 효과음에 함께 전달한다. 메뉴 줄을 제외한 현재 GUI 영역을 그대로 쓴다.
 // 원본 가변 생산/상태 패널의 영역 계산은 아직 복원하지 않았으며, 위치 계산 함수 자체는 SoundPlayer의 원본 규칙을 쓴다.
 void GameWorld::SurfaceView() {
-    const o::SquidDisplayRect clip{0,std::min(kMenuHeight,height_),width_,height_};
+    const auto view=MapView();const o::SquidDisplayRect clip{view.left,view.top,view.right,view.bottom}; // 실제 도킹 결과를 표면/입자/위치 음향이 함께 읽는다.
     Surfaces().SetDisplay({scrollX_,scrollY_,65536,clip},surfaceDisplay);
     if (campaign_) campaign_->SetParticleView({scrollX_,scrollY_,clip.left,clip.top,clip.right,clip.bottom},surfaceDisplay);
     if (soundViewChanged) soundViewChanged({scrollX_,scrollY_,clip.left,clip.top,clip.right,clip.bottom});
@@ -438,7 +441,7 @@ ScreenRect GameWorld::Bounds(const o::Squid& object) const {
 }
 // 가장 앞에 가까운 실제 그림을 선택한다. 모바일 그림에는 녹화 기반 4픽셀 여유가 있다.
 o::SquidId GameWorld::Pick(ScreenPoint point) const {
-    if (point.y<kMenuHeight || point.x<0 || point.y>=height_ || point.x>=width_) return 0;
+    const auto view=MapView();if (point.y<view.top || point.x<view.left || point.y>=view.bottom || point.x>=view.right) return 0;
     o::SquidId picked=0; double best=std::numeric_limits<double>::max();
     // 겹친 그림은 클릭과 중심점의 거리가 가장 가까운 객체를 고른다.
     for (const auto& object:objects_) if (object.selectable) {
@@ -491,7 +494,7 @@ const o::Squid* GameWorld::Object(o::SquidId id) const {
 }
 // 화면 경계 밖 그림은 제출하지 않아 지형 전체를 매번 그리지 않는다.
 std::vector<RenderSprite> GameWorld::Sprites() const {
-    std::vector<RenderSprite> result; const ScreenRect clip{0,kMenuHeight,width_,height_};
+    std::vector<RenderSprite> result;const auto clip=MapView(); // 실제 표면/모바일/입자 수집도 같은 현재 지도 경계를 사용한다.
     // 현재 프레임을 화면 범위와 소유자 색에 맞춰 장면에 추가한다.
     const auto add=[&](const TypeAsset& type,std::size_t frame,double x,double y,int owner,std::int16_t depth,bool shadow,std::vector<std::size_t> following=std::vector<std::size_t>{},ScreenPoint hotspot=ScreenPoint{}) {
         const auto& frames=assets_.Shapes().Blocks()[type.block].frames; if (frame>=frames.size() || frames[frame].IsSpecial()) return;
@@ -562,7 +565,7 @@ std::shared_ptr<IndexedImage> GameWorld::SelectionImage() const {
     auto image=std::make_shared<IndexedImage>(); image->width=width_; image->height=height_; image->indices.resize(static_cast<std::size_t>(width_)*height_); image->opacity.resize(image->indices.size());
     const auto cyan=Color(0,255,255),green=Color(0,255,0); const auto p=ToScreen(object->x,object->y); const auto r=Bounds(*object);
     // 게임 영역 안의 한 픽셀만 투명 선택 표시 위에 기록한다.
-    const auto dot=[&](int x,int y,std::uint8_t color) { if (x>=0 && x<width_ && y>=kMenuHeight && y<height_) { const auto i=static_cast<std::size_t>(y*width_+x); image->indices[i]=color; image->opacity[i]=255; } };
+    const auto view=MapView();const auto dot=[&](int x,int y,std::uint8_t color) { if (x>=view.left && x<view.right && y>=view.top && y<view.bottom && x>=0 && x<width_ && y>=0 && y<height_) { const auto i=static_cast<std::size_t>(y*width_+x); image->indices[i]=color; image->opacity[i]=255; } }; // 같은 실제 지도 안의 한 픽셀만 쓴다.
     // 발밑 네 모서리에 원본과 같은 청록 괄호를 표시한다.
     for (int side=-1;side<=1;side+=2)
         // 위와 아래 모서리를 각각 그린다.

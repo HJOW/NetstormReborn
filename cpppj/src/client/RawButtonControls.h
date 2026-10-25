@@ -23,6 +23,7 @@ struct RawMenuHooks; // 현재 Client의 메뉴 외부 효과다.
 class GameAssets; // Client가 소유하는 실제 TYPE/SHP 저장소다.
 class FontStore; // Client가 소유하는 실제 글꼴 저장소다.
 class WarningMessages; // 같은 등록표/삭제 큐의 실제 Warning/Pause 파생 처리기다.
+class RawUberRootControls;struct RawUberRootContext; // 같은 공통 등록표의 실제 전체 루트와 도킹 문맥이다.
 struct MessageGumpHooks; // 현재 모드/이름/번역의 Pause 생성 경계다.
 // 실제 fortGump A00 헤더와 현재 팔레트다. 픽셀 출력과 raw 배경 생성은 같은 자산을 사용한다.
 struct RawButtonAssets {
@@ -97,6 +98,10 @@ public:
     RawMenuControls& EnableMenus(const GameAssets& assets,FontStore& fonts,RawMenuHooks hooks);
     // 연결된 실제 메뉴를 빌린다. 연결 전에는 nullptr다.
     RawMenuControls* Menus() const;
+    RawUberRootControls& EnableUberRoot(RawUberRootContext context); // 실제 전체 루트/구분선의 가상 분배를 한 번 설치한다.
+    RawUberRootControls* UberRoot() const; // 같은 실제 루트 처리기를 빌린다.
+    ScreenRect& MapViewRect(); // GumpTree 정렬과 실제 dock가 같은 원문 정수 지도LTRB를 직접 공유한다.
+    std::uint32_t BubbleGump(std::uint32_t token,std::uint32_t event,std::uint32_t first,std::uint32_t second); // 원문00464e90의 현재 부모 체인에만 전달한다.
     std::uint32_t ConstructNsInfo(RawNsInfoContext context); // 같은 공통 Button/배경 전역으로 전체 NSInfo 생성만 한다.
     // 실제 공통 Gump/StyleText를 빌리는 안내 처리기를 한 번 설치한다. 별도 루트/등록표를 만들지 않는다.
     WarningMessages& EnableWarnings(std::function<double()> now,std::function<void()> sound,MessageGumpHooks pauseContext);

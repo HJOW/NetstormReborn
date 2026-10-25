@@ -14,6 +14,7 @@ add_library(netstorm STATIC)
 target_sources(netstorm PRIVATE client/ProductionShortcuts.cpp client/ProductionShortcuts.h)
 # 같은 실제 월드의 원본 미니맵 셀 래스터다.
 target_sources(netstorm PRIVATE o/RawMinimapRaster.cpp o/RawMinimapRaster.h client/MinimapGeometry.cpp client/MinimapGeometry.h client/RawMinimapControls.cpp client/RawMinimapControls.h)
+target_sources(netstorm PRIVATE client/RawUberRootControls.cpp client/RawUberRootControls.h)
 # 원본 단일 객체/청크 저장을 같은 현재 TYPE·가상 분배와 Finder에 연결한다.
 target_sources(netstorm PRIVATE o/RawFortObjectSave.cpp o/RawFortObjectSave.h)
 # 현재 섬 소유권/청크 기록과 원본 Territory 저장 부모를 함께 사용한다.
