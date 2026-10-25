@@ -17,6 +17,13 @@ struct MetaZoneCleanupGlobals {
 struct MetaZoneCleanupHooks {
     std::function<void(std::uint32_t)> clearMarker; //00479520(index)의 실제 자식이다. 전체51회 호출과 예외 부분효과를 유지한다.
 };
+// 현재 기록의 원문 가상+10 삭제에 도달했을 때만 실제 같은 Pool의 처리기를 요구한다.
+struct MetaZoneMarkerHooks {
+    std::function<void(std::uint32_t,std::uint32_t)> destroy; //원시 DWORD SID와 flags0을 전달한다. WORD로 미리 줄이거나 free/dead 필터를 추가하지 않는다.
+};
+//00479520: signed 상태>0이고 현재+4c DWORD SID가 비0일 때 실제 가상 삭제→같은 필드0 순서다.
+//records의 주소·크기는 호출/선택 callback 동안 유효해야 한다. 실패한 삭제 뒤 SID0을 앞당기지 않는다.
+void ClearMetaZoneMarker(std::span<std::uint8_t> records,std::uint32_t index,const MetaZoneMarkerHooks& hooks);
 //0042b1b0:진입flag비영이면표0→flag0, 진입0이면자식0..50→표0이며 바뀐flag는보존한다.
 void ClearMetaZoneRecords(const MetaZoneCleanupGlobals& globals,const MetaZoneCleanupHooks& hooks);
 }

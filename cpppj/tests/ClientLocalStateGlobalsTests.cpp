@@ -2,6 +2,7 @@
 #include "DudeSpawnSupport.h"
 #include "client/RawCampaignSession.h"
 #include "client/ClientLocalStateGlobals.h"
+#include "client/ClientStateStorageCleanup.h"
 #include "client/ClientMain.h"
 #include "client/ClientGameplayGlobals.h"
 #include "client/MissionFortRequest.h"
@@ -84,6 +85,24 @@ TEST_CASE(ClientLocalStateGlobals_TwoSessionLifetimesPreserveCurrentOwner) {
         { auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",devices.Make(owner,false));CHECK(session.LocalConnectionPhase()==0 && LocalStateValues(*owner)==values && owner->Blocks()==blocks); }
         CHECK(&owner->LoginEnd()==loginAddress && LocalStateValues(*owner)==values && owner->Blocks()==blocks);
     }
+}
+
+// Session 없는 새0값으로 치환하지 않고 실제 Zone·ClockSync·MetaZone 주소와 내용을 두 대여에서 유지한다.
+TEST_CASE(ClientLocalStateGlobals_ClockZoneMetaSurviveTwoActualSessions) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);LocalStateSessionDevices devices;auto owner=std::make_shared<ClientLocalStateGlobals>();auto clock=owner->ClockSynchronization();clock.connection=0x80000000U;clock.replyMode=0xffffffffU;owner->GameTicks()=0x12345678;owner->ZoneWords()={0x76543210,0xabcd9876};auto meta=owner->MetaZones();meta.firstReset=0x81;std::fill(meta.records.begin(),meta.records.end(),std::uint8_t{0xa5});
+    const auto* zoneAddress=owner->Zone().data();const auto* metaAddress=meta.records.data();
+    for (int index=0;index<2;++index) { //각 실제 Session이 사라져도 현재 장기 물리는 다시 초기화되지 않는다.
+        { auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",devices.Make(owner,false));CHECK(owner->Zone().data()==zoneAddress && owner->MetaZones().records.data()==metaAddress); }
+        CHECK(owner->SynchronizationConnection()==0x80000000U && owner->SynchronizationReplyMode()==0xffffffffU && owner->GameTicks()==0x12345678 && owner->ZoneWords()[0]==0x76543210 && owner->ZoneWords()[1]==0xabcd9876 && meta.firstReset==0x81 && std::all_of(meta.records.begin(),meta.records.end(),[](auto b) { return b==0xa5; }));
+    }
+}
+
+// 실제 Join writer가 같은 Zone을 송신하고 비동기 Join reader가 같은6BYTE에 복사하는지 확인한다.
+TEST_CASE(ClientLocalStateGlobals_ActualLoginSharesZoneAndPreservesTailWord) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);LocalStateSessionDevices devices;auto owner=std::make_shared<ClientLocalStateGlobals>();owner->ZoneWords()={0x11111111,0xabcdbeef};owner->GameTicks()=0x87654321;std::array<std::uint8_t,6> sent{};bool joined{};
+    devices.observe=[&](auto,auto packet) { if (packet[1]==0x29 && !joined) { CHECK(packet.size()==34 && std::equal(owner->Zone().begin(),owner->Zone().end(),packet.begin()+8));std::copy_n(packet.begin()+8,6,sent.begin());std::fill(owner->Zone().begin(),owner->Zone().end(),std::uint8_t{0xcc});joined=true; } }; //실제 reader 앞에서만 현재 주소를 변경하여 송신 사본·수신 대상의 alias를 구별한다.
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",devices.Make(owner,true));session.LoadLocalConnection();
+    CHECK(joined && session.LocalConnectionPhase()==14 && std::equal(sent.begin(),sent.end(),owner->Zone().begin()) && (owner->ZoneWords()[1]>>16)==0xabcd && owner->GameTicks()==0x87654321);ResetClientClockSynchronization(*owner);CHECK(owner->GameTicks()==0 && std::equal(sent.begin(),sent.end(),owner->Zone().begin()));ResetClientStateZone(*owner);CHECK(owner->ZoneWords()[0]==0 && owner->ZoneWords()[1]==0xabcd0000);
 }
 
 // 실제 Zone/Reply/Connected/Timer writer와 비동기 재수신이 같은 owner를 갱신하고 중앙섬 분기도 현재 값을 읽는다.

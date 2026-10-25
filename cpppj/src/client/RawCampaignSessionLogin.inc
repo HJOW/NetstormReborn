@@ -14,7 +14,7 @@ struct RawCampaignSession::Impl::Login {
     std::unique_ptr<RawLocalMissionState> state; //상태8→9→10→13→14와전체0x90BYTE 확정이다.
     std::unique_ptr<RawMissionLoginTimer> timer; //실제Ready 집계와사제참여 재조회/시작종료 타이머다.
     std::array<LocalMissionStateBlock,5>& blocks{s.localStateGlobals->Blocks()}; // Editor/State/로그인이 같은720BYTE를 직접 빌리며 독립 Session도 유일한 owner를 쓴다.
-    std::array<std::uint32_t,2> zoneWords{}; //원본6BYTE Zone 주소의 실제DWORD와인접WORD를 공유한다.
+    std::array<std::uint32_t,2>& zoneWords{s.localStateGlobals->ZoneWords()}; //원본 Zone6BYTE와 같은 장기 Client 물리를 실제 로그인도 빌린다.
     std::span<std::uint8_t> cachedCore{s.coreDataGlobals->Cached()};std::span<std::uint8_t>& currentCore{s.coreDataGlobals->Current()}; // 실제 같은 장기10BYTE와 현재 포인터 슬롯을 직접 빌린다.
     std::array<std::uint8_t,256> typeUse{}; //원본256BYTE 타입사용표다.
     std::array<float,4> ranges{14,22,30,38}; //원본5425f4의 실제4float다. 기본3번도 읽고 최대 비교는 원래2번30을 사용한다.
@@ -28,7 +28,8 @@ struct RawCampaignSession::Impl::Login {
     std::uint32_t& fortCount{s.playerRecords->FortCount()}; // 원문 Player 초기화와 같은005951f8이다.
     std::uint32_t& lastPlayer{s.playerRecords->LastLoginPlayer()}; // 같은005951fc를 로그인도 직접 쓴다.
     std::uint32_t& zonePending{s.localStateGlobals->ZonePending()};std::uint32_t& source{s.localStateGlobals->SourceType()}; // Fort 요청/State/Reply가 같은 실제 두 DWORD를 공유한다.
-    std::uint32_t ticks{},randomSeed{},metaRefresh{},metaRebuild{},requestPhase{},uiMode{},inputMode{}; // 아직 로그인 안에 남은 현재 DWORD 저장소다.
+    std::uint32_t& ticks{s.localStateGlobals->GameTicks()}; //State7의 저장/복원과004c1f20이 같은 현재0055b4ac를 사용한다.
+    std::uint32_t randomSeed{},metaRefresh{},metaRebuild{},requestPhase{},uiMode{},inputMode{}; // 아직 로그인 안에 남은 다른 DWORD 저장소다.
     std::uint32_t& scriptBreak{s.localStateGlobals->ScriptBreak()}; // 00542544의 최초1과 현재 DWORD를 같은 Client 수명에서 빌리고 실제 Timer도 직접 쓴다.
     double& captureEnd{s.localStateGlobals->CaptureEnd()};double& connectEnd{s.localStateGlobals->ConnectEnd()}; // 서로 다른 원본 벽시각 기한을 직접 빌린다.
     double wall{};std::int32_t timeout{}; // 로그인 장치의 현재 벽시각 입력과 설정 값이다.
@@ -38,7 +39,7 @@ struct RawCampaignSession::Impl::Login {
     //선택한 실제 장치가 빠지면 그 지점에서 명시 오류를 보인다.
     template<class F> static const F& Need(const F& hook) { if (!hook) throw std::logic_error("실제 미션 로그인 장치 미연결");return hook; }
     //실제6BYTE 주소를 같은DWORD 배열에서 빌린다.
-    std::span<std::uint8_t> Zone() { return {reinterpret_cast<std::uint8_t*>(zoneWords.data()),6}; }
+    std::span<std::uint8_t> Zone() { return s.localStateGlobals->Zone(); }
     //비정렬원문의DWORD/WORD만 읽는다.
     static std::uint32_t Get(std::span<const std::uint8_t> bytes,std::size_t at,std::size_t width=4) { std::uint32_t value{};
         //원본의낮은바이트부터조합한다.

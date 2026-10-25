@@ -2176,3 +2176,5 @@ target_sources(netstorm_tests PRIVATE CameraViewTests.cpp)
 target_sources(netstorm_tests PRIVATE ProcessHostStorageTests.cpp ProcessHostSessionTests.cpp)
 #443의장기커서상태/DWORD폭/실제Cancel꼬리검사다.
 target_sources(netstorm_tests PRIVATE ClientCursorGlobalsTests.cpp)
+# 원문 PE에서 먼저 고정한 마커·Zone과 실제 Client 정리 저장소를 대조한다.
+target_sources(netstorm_tests PRIVATE StateStorageCleanupTests.cpp)

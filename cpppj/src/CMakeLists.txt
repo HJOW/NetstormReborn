@@ -208,3 +208,5 @@ target_sources(netstorm PRIVATE client/RawProcessHostStorage.cpp client/RawProce
 target_sources(netstorm PRIVATE client/ClientCursorGlobals.h client/ClientCursorStateCleanup.h client/ClientCursorStateCleanup.cpp)
 # Native State 직접 전역의 실제 Client/TYPE/Player/UI 주소 연결이다.
 target_sources(netstorm PRIVATE client/ClientStateWorldGlobals.h client/ClientStateWorldGlobals.cpp)
+# Native ClockSync·MetaZone·Zone6BYTE 정리의 실제 장기 owner 연결이다.
+target_sources(netstorm PRIVATE client/ClientStateStorageCleanup.h client/ClientStateStorageCleanup.cpp o/RawStateZoneReset.h o/RawStateZoneReset.cpp)

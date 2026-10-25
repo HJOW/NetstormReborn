@@ -1,6 +1,8 @@
 // 같은 Client의 원문 State 다섯 블록과 로그인/기한 전역을 메뉴/Editor/로그인이 함께 빌린다.
 #pragma once
 #include "o/RawLocalMissionState.h"
+#include "o/RawClockSyncReset.h"
+#include "o/RawMetaZoneCleanup.h"
 #include <array>
 
 namespace netstorm::client {
@@ -55,6 +57,18 @@ public:
     const double& ReconnectSaveEnd() const { return reconnectSaveEnd_; } // LoginEnd005c85f0와 ActivityEnd00544d58을 대신하지 않는다.
     std::uint32_t& HudModeCommand() { return hudModeCommand_; } // 005427ec의 현재 명령을 호출 직전에 읽고 변경도 보존한다.
     std::uint32_t& AddIslandCommand() { return addIslandCommand_; } // 00542780의 현재 명령을 빈섬 예약 직전에 읽는다.
+    o::ClockSyncResetGlobals ClockSynchronization() { return {syncConnection_,syncReplyMode_,gameTicks_}; } //004c1f20이 정확히 지우는 실제 세 DWORD를 값 복사 없이 빌린다.
+    const std::uint32_t& SynchronizationConnection() const { return syncConnection_; } //005c8bf4의 현재 동기화 token이며 전체22연결표와 구별한다.
+    const std::uint32_t& SynchronizationReplyMode() const { return syncReplyMode_; } //005c8c00은 인접 동기화 송수신 카운터와 별도다.
+    std::uint32_t& GameTicks() { return gameTicks_; } //0055b4ac의 현재 DWORD를 로그인 State와 정리가 직접 공유한다.
+    const std::uint32_t& GameTicks() const { return gameTicks_; } //시계의 double·프레임 번호로 바꾸지 않고 원시32비트를 보존한다.
+    std::array<std::uint32_t,2>& ZoneWords() { return zoneWords_; } //005c86c0의 DWORD와+4 WORD다. 마지막 상위WORD는 기존 호스트 보존 칸이다.
+    const std::array<std::uint32_t,2>& ZoneWords() const { return zoneWords_; } //State 다섯144BYTE와 별개인 실제 Zone 입력을 조회한다.
+    std::span<std::uint8_t> Zone() { return {reinterpret_cast<std::uint8_t*>(zoneWords_.data()),6}; } //로그인/metadata와 정리는 같은 앞6BYTE만 빌린다.
+    std::span<const std::uint8_t> Zone() const { return {reinterpret_cast<const std::uint8_t*>(zoneWords_.data()),6}; } //인접 보존WORD를 원문 Zone 길이에 포함하지 않는다.
+    o::MetaZoneCleanupGlobals MetaZones() { return {metaFirstReset_,metaZoneRecords_}; } //00531760과00546908의51×144BYTE를 같은 장기 주소에 제공한다.
+    const std::uint32_t& MetaFirstReset() const { return metaFirstReset_; } //최초 PE값1은 Client 생성 한 번뿐이며 Session 생성/반납으로 되돌리지 않는다.
+    std::span<const std::uint8_t> MetaZoneRecords() const { return metaZoneRecords_; } //내용은 같은 mutable MetaZones에서만 변경하며 사본을 만들지 않는다.
 private:
     std::array<o::LocalMissionStateBlock,5> blocks_{}; //005c8630/8758/86c8/87e8/8878의 독립144BYTE 다섯 개다.
     double activityEnd_{}; //00544d58의 최초 BSS0이며 게임 정지 가능한 시계로 바꾸지 않는다.
@@ -73,5 +87,9 @@ private:
     double reconnectSaveEnd_{}; // 005c8610의 최초 BSS +0이며 cleanup의wall+10 store는 후속 실제 adapter가 맡는다.
     std::uint32_t hudModeCommand_{0x0200003dU}; //보호PE005427ec의 실제 명령 초기값이다.
     std::uint32_t addIslandCommand_{0x02000022U}; //보호PE00542780의 실제 Add Island 명령 초기값이다.
+    std::uint32_t syncConnection_{},syncReplyMode_{},gameTicks_{}; //세 개의 실제 최초 BSS DWORD며 정리 세 store 이외의 재초기화를 추가하지 않는다.
+    std::array<std::uint32_t,2> zoneWords_{}; //기존 로그인의8BYTE 물리를 장기화한다. 원문 Zone 정리는 앞6BYTE만 쓴다.
+    std::uint32_t metaFirstReset_{1}; //보호PE00531760의 초기값이며 이후 정리의 실제 분기 값이다.
+    std::array<std::uint8_t,o::kMetaZoneCleanupBytes> metaZoneRecords_{}; //51개 기록의 고정7344BYTE이며 다른 State·MetaMap 표와 합치지 않는다.
 };
 }

@@ -1,0 +1,9 @@
+// Native State 정리의 시계동기화·Zone·MetaZone을 같은 Client 저장소에 연결한다.
+#pragma once
+
+namespace netstorm::client { //전체 State 부모·Runtime 반납·모드 전환을 이 작은 정리에 추가하지 않는다.
+class Client;class ClientLocalStateGlobals;class RawSurfaceStorage; //현재 실제 owner와 선택된 Pool을 빌린다.
+void ResetClientClockSynchronization(ClientLocalStateGlobals& globals); //004c1f20의 세 실제 DWORD만 지운다.
+void ResetClientStateZone(ClientLocalStateGlobals& globals); //004bfd60의 같은 Zone 앞6BYTE만 지운다.
+void ClearClientMetaZoneRecords(Client& client,RawSurfaceStorage& storage); //0042b1b0→00479520을 실행하고 선택된 삭제만 현재 Session에 요구한다.
+}

@@ -8,6 +8,8 @@
 #include "o/RawBridgeDraw.h"
 #include "client/RawMenuControls.h"
 #include "client/ClientMain.h"
+#include "client/ClientLocalStateGlobals.h"
+#include "client/ClientStateStorageCleanup.h"
 #include "client/ClientPlayerRecords.h"
 #include "client/ClientCoreDataGlobals.h"
 #include "client/ClientPlayerRuntime.h"
@@ -4886,4 +4888,10 @@ TEST_CASE(CampaignSession_PriestQuarterHpUsesCurrentClientOwner) {
     quarter=true;authority->boss=false;session->Priests().SetHitPoints(priest,1);CHECK(session->Priests().PriestState().CurrentHitPoints(priest)==12); // 원문 최대HP100/4의 절반을 정수로 절삭한다.
     authority->boss=true;const auto weak=session->Core().factory.Create(kPriestType,2);CHECK(session->Priests().PriestState().CurrentHitPoints(weak)==25);quarter=false;const auto normal=session->Core().factory.Create(kPriestType,2);CHECK(session->Priests().PriestState().CurrentHitPoints(normal)==100); // 같은 공장과 실제 설정의 다음 조회다.
     session->Priests().SetHitPoints(priest,100);CHECK(session->Priests().PriestState().CurrentHitPoints(priest)==100);
+}
+
+// 명시한 MetaZone 기록이 실제 Client의 현재 Session/Pool 가상 삭제를 거쳐 전체 기록 정리로 이어진다.
+TEST_CASE(CampaignSession_MetaZoneCleanupUsesActualCurrentWorldDestroy) {
+    Client client(SessionLinksOptions());SessionServicesFixture external;auto services=SharedKernelServices(client,external);services.gameplayGlobals=client.GameplayGlobals();services.subscriberGlobals=client.SubscriberGlobals();services.localStateGlobals=client.LocalStateGlobals();auto session=SharedKernelSession(std::move(services));session->Load();const auto number=session->FindPriestParticipation(1);CHECK(number>0 && number<=65535);const Sid priest{static_cast<std::uint16_t>(number)};auto meta=client.LocalStateGlobals()->MetaZones();meta.firstReset=0;SessionLinksPut(meta.records,0,1);SessionLinksPut(meta.records,76,number);CHECK(!(session->Core().pool.Slot(priest)[11]&1));
+    ClearClientMetaZoneRecords(client,*session->World().Storage());CHECK((session->Core().pool.Slot(priest)[11]&1) && meta.firstReset==0 && std::all_of(meta.records.begin(),meta.records.end(),[](auto b) { return b==0; }) && session->Core().bookkeeping.depth==0 && session->Core().destroy.PreDepth()==0 && session->Core().destroy.PostDepth()==0); //별도 새 Session·더미 삭제·직접 dead비트 쓰기로 성공을 만들지 않는다.
 }

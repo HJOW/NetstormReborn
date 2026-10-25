@@ -1,0 +1,29 @@
+{
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "observations": {
+    "marker": 86,
+    "zone": 10
+  },
+  "statuses": {
+    "normal": 94,
+    "stop": 2
+  },
+  "entrySizes": {
+    "00479520": 63,
+    "004bfd60": 9
+  },
+  "originalGameExecuted": false,
+  "osCalls": 0,
+  "virtualDestroyBoundary": true,
+  "scope": "PATCH 실제63BYTE marker·9BYTE Zone와 가상 this/flags·실제 store 폭/순서다. 가상 삭제 자식은 관측 장치이며 전체 MetaMap/Native State1/제품 Edit 진입 완료가 아니다.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_state_storage_leaves.py": "430d6434e3ceb1d39ba7c829f2d3f1d73d899c413503c261679888845044a2fa",
+    "cpppj/tests/fixtures/meta-zone-marker-x86.tsv": "4cd779869e2eb451e9b5c5dac959067d719742a2b5220d9352090a493ea825b6",
+    "cpppj/tests/fixtures/state-zone-reset-x86.tsv": "eeac9e9bc3f6741d7193ac582956496f2ade0133fd8cdc2c1d31c708ac4c9eef"
+  }
+}
