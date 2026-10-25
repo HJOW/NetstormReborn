@@ -34,7 +34,8 @@ void Write(std::span<std::uint8_t> bytes,std::size_t offset,std::uint32_t value,
     for (std::size_t i=0;i<width;++i) bytes[offset+i]=static_cast<std::uint8_t>(value>>(8*i));
 }
 // 잘못된 판본/크기/타입 요청은 기존 실제 물리를 초기화하기 전에 거부한다.
-std::shared_ptr<RawSurfaceStorage> SelectStorage(std::shared_ptr<RawSurfaceStorage> storage,o::OriginalEdition edition,std::span<const o::RiftTypeRecord> types,std::span<const o::RiftTypeFrames> frames,std::span<const o::SquidDisplayShape> shapes,const o::BridgeConnectState& links,std::uint32_t terrain) {
+std::shared_ptr<RawSurfaceStorage> SelectStorage(std::shared_ptr<RawSurfaceStorage> storage,o::OriginalEdition edition,std::span<const o::RiftTypeRecord> types,std::span<const o::RiftTypeFrames> frames,std::span<const o::SquidDisplayShape> shapes,const o::BridgeConnectState& links,std::uint32_t terrain,bool prepared) {
+    if (prepared && (!storage || edition!=o::OriginalEdition::Patch1078)) throw std::invalid_argument("준비된 표면 대여의 실제 PATCH 저장소 누락");
     if (types.size()!=frames.size() || types.size()!=shapes.size()) throw std::invalid_argument("월드 대여 전 자산 배열 크기 불일치");
     if (terrain>=types.size() || links.bridgeType>=types.size() || links.noIslandType>=types.size()) throw std::out_of_range("월드 대여 전 타입 번호 오류");
     if (storage && (storage->pool.Edition()!=edition || storage->types.size()!=types.size() || storage->frames.size()!=frames.size() || storage->shapes.size()!=shapes.size())) throw std::invalid_argument("월드 대여 전 실제 물리/판본 불일치");
@@ -93,17 +94,17 @@ struct RawSurfaceWorld::Impl final:o::SquidDisplaySink {
     o::Kernel& kernel; // 모든 Form/경로/Regular가 같은 실제 Client Kernel 또는 독립 소유자를 직접 빌린다.
     // 순환하는 콜백은 실제 호출 전에 모든 모듈을 구성한다. 생성 중에는 Pop하지 않는다.
     Impl(o::OriginalEdition selected,std::span<const o::RiftTypeRecord> inputTypes,std::span<const o::RiftTypeFrames> inputFrames,
-        std::span<const o::SquidDisplayShape> inputShapes,o::BridgeConnectState state,std::uint32_t terrain,o::Kernel* processKernel,std::shared_ptr<RawSurfaceStorage> supplied)
-        :storage(SelectStorage(std::move(supplied),selected,inputTypes,inputFrames,inputShapes,state,terrain)),storageUse(storage->Acquire()),
+        std::span<const o::SquidDisplayShape> inputShapes,o::BridgeConnectState state,std::uint32_t terrain,o::Kernel* processKernel,std::shared_ptr<RawSurfaceStorage> supplied,bool prepared)
+        :storage(SelectStorage(std::move(supplied),selected,inputTypes,inputFrames,inputShapes,state,terrain,prepared)),storageUse(prepared ? storage->AcquirePrepared() : storage->Acquire()),
          edition(selected),types(storage->types),frames(storage->frames),shapes(storage->shapes),codes(storage->codes),pool(storage->pool),hash(storage->hash),spots(storage->spots),links(storage->links),terrainType(terrain),ownerMode(storage->ownerMode),
          localKernel(processKernel ? nullptr : std::make_unique<o::Kernel>()),kernel(processKernel ? *processKernel : *localKernel) {
-        links=state; // 대여 전 검증한 실제 설치 종류를 다른 모듈 구성보다 먼저 같은 장기 전역에 쓴다.
+        if (!prepared) links=state; // 명시 Native prefix의 현재 종류/모드는 보존하고 기존 독립 설치만 새 상태를 쓴다.
         if (pool.Edition()!=selected || frames.size()!=inputFrames.size() || shapes.size()!=inputShapes.size() || types.size()!=inputTypes.size()) throw std::invalid_argument("raw 표면 월드 실제 물리/판본 불일치");
         if (terrainType>=types.size() || links.bridgeType>=types.size() || links.noIslandType>=types.size())
             throw std::out_of_range("raw 표면 월드 타입 번호 오류");
-        bookkeeping.localOwner=1;ownerMode={false,true,false};eventState.bridgeType=links.bridgeType;
+        bookkeeping.localOwner=1;if (!prepared) ownerMode={false,true,false};else mode.editor=true;eventState.bridgeType=links.bridgeType; // 준비 대여는 ExistingEditor 전용이며 새 지역 장부/붕괴 소비자만 구성한다.
         graph=std::make_unique<o::RawGraph>(pool,hash,spots,types,codes);
-        graph->ResetTable(); // 원본 월드 초기화004b2df0의00462b20처럼 첫 객체 이전에 Graph0을 예약한다.
+        graph->ResetTable(); // 새 지역 Graph의 기록만 구성한다. 준비 대여에서도 장기 Native Graph 정리00462b20의 실행/보존을 대신하지 않는다.
         display=std::make_unique<o::SquidDisplay>(edition,types,shapes,*this,o::SquidDisplayView{0,0,65536,{0,0,640,480}});
         postPop=std::make_unique<o::SquidPostPop>(pool,types,bookkeeping,graph.get(),[this](o::Sid sid) { connect->Connect(sid); });
         postPop->SetIslandPrefix([this](o::Sid sid,std::uint32_t flags) { connect->IslandPostPopPrefix(sid,flags); });
@@ -189,8 +190,8 @@ struct RawSurfaceWorld::Impl final:o::SquidDisplaySink {
 };
 // 공개 객체는 내부 참조/콜백이 이동하지 않게 단일 구현 객체를 소유한다.
 RawSurfaceWorld::RawSurfaceWorld(o::OriginalEdition edition,std::span<const o::RiftTypeRecord> types,
-    std::span<const o::RiftTypeFrames> frames,std::span<const o::SquidDisplayShape> shapes,o::BridgeConnectState links,std::uint32_t terrainType,o::Kernel* processKernel,std::shared_ptr<RawSurfaceStorage> storage)
-    :impl_(std::make_unique<Impl>(edition,types,frames,shapes,links,terrainType,processKernel,std::move(storage))) {}
+    std::span<const o::RiftTypeFrames> frames,std::span<const o::SquidDisplayShape> shapes,o::BridgeConnectState links,std::uint32_t terrainType,o::Kernel* processKernel,std::shared_ptr<RawSurfaceStorage> storage,bool adoptPrepared)
+    :impl_(std::make_unique<Impl>(edition,types,frames,shapes,links,terrainType,processKernel,std::move(storage),adoptPrepared)) {}
 // 프로세스가 빌린 raw 데이터보다 먼저 반납되며 외부 Client Kernel 자체는 파괴하지 않는다.
 RawSurfaceWorld::~RawSurfaceWorld()=default;
 // 이 뷰는 내부 모듈의 현재 참조만 돌려주며 새 배열/풀을 만들지 않는다.

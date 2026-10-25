@@ -36,6 +36,7 @@ public:
     };
     RawSurfaceStorage(o::OriginalEdition edition,std::span<const o::RiftTypeRecord> inputTypes,std::span<const o::RiftTypeFrames> inputFrames,std::span<const o::SquidDisplayShape> inputShapes,const GameAssets* source=nullptr); // 배열은 최초 한 번만 확보한다.
     std::unique_ptr<Use> Acquire(); // 다음 월드에는 기존 풀 Reset(0)/해시/spot 초기화를 사용하며 배열 주소와 TYPE 수정은 보존한다.
+    std::unique_ptr<Use> AcquirePrepared(); // 명시 Native 정리/prefix 뒤 같은 Pool/Hash/spot/모드/종류를 재초기화하지 않고 대여한다.
     bool Borrowed() const; // 현재 실제 월드가 물리를 빌렸는지 읽는다.
     std::uint64_t Generation() const; // 성공한 월드 대여 횟수이며 원본 게임 값으로 쓰지 않는다.
     const GameAssets* Source() const; // Client 자산 정체성이다. 독립 raw 검사에서는 nullptr이다.
@@ -146,7 +147,7 @@ public:
     // 프레임/타입/SHP를 소유하여 GUI 참조와 raw 조회가 같은 판본을 사용하게 한다.
     RawSurfaceWorld(o::OriginalEdition edition,std::span<const o::RiftTypeRecord> types,
         std::span<const o::RiftTypeFrames> frames,std::span<const o::SquidDisplayShape> shapes,
-        o::BridgeConnectState links,std::uint32_t terrainType,o::Kernel* processKernel=nullptr,std::shared_ptr<RawSurfaceStorage> storage={});
+        o::BridgeConnectState links,std::uint32_t terrainType,o::Kernel* processKernel=nullptr,std::shared_ptr<RawSurfaceStorage> storage={},bool adoptPrepared=false); // 준비 대여는 제공된 실제 물리만 사용한다.
     // 실제 Client는 같은 전역 Kernel을 빌리고 독립 월드만 자체 Kernel을 소유한다. 빌린 Kernel은 월드보다 오래 살아야 한다.
     // 빌린 경우 호출자는 모듈 반납 전에 DrainProcesses를 마쳐야 한다. 자체 Kernel은 이 월드의 다른 멤버보다 먼저 반납한다.
     ~RawSurfaceWorld();

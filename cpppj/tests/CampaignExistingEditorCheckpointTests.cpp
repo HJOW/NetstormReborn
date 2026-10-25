@@ -13,6 +13,11 @@
 #include "client/ClientPlayerRuntime.h"
 #include "client/ClientPlayerRecords.h"
 #include "client/ClientSpGlobals.h"
+#include "client/ClientLocalStateGlobals.h"
+#include "client/ExistingEditorAfterCheckpoint.h"
+#include "client/RawButtonControls.h"
+#include "client/RawMenuControls.h"
+#include "client/RawProductionControls.h"
 #include "client/FortCurrentNameDevices.h"
 #include "client/FortSelection.h"
 #include "client/EditorFortFileDevices.h"
@@ -225,4 +230,108 @@ TEST_CASE(CampaignExistingEditorCheckpoint_AdoptsNativePlayersAndPreservesCoreUn
         CHECK(client.PlayerRecords()->Base()==base && !core->Current().empty() && core->Current()[4]==71 && core->Active()==7); // 소멸자가 임의 Core 선택 해제/캐시 복사를 하지 않는다.
     }
     core->Select(client.GameplayGlobals()->player,metamap,0,1);CHECK(core->Cached()[4]==71 && core->Active()==0); // 다음 Native 정리의 명시 선택만 현재 슬롯을 반납한다.
+}
+
+namespace { // 실제 checkpoint/UI scope/State 공통 확정을 연결하며 GUI 없는 장치 입력만 명시한다.
+// 실제 Chat·Player·번역·작업 파일을 갖춘 같은 Client Session을 검사 동기 범위 동안 소유한다.
+template<class Body> void WithEditorInstallSession(Body body,bool prepared=false) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);const auto input=CheckpointInput(assets.files);ClientOptions options;options.gameDirectory=assets.root;Client client(std::move(options));client.StaticStrings()->Initialize(10240);if (prepared) { client.SpGlobals()->Store().Initialize();InitializeClientPlayerRecords(client); }InitializeClientChatManager(client);
+    EditorFiles work(CheckpointRoot(assets.root.parent_path(),"ui-state-commit"),{assets.root,assets.root.parent_path()/"originalCD"});work.Prepare("Checkpoint385",input);CheckpointDevices devices;auto effects=devices.Effects(client,work);auto storage=std::make_shared<CampaignTemplateStorage>();auto services=devices.Make(client,storage,input);const auto surface=MakeRawSurfaceStorage(assets.game);
+    services.surfaceStorage=surface;services.gameplayGlobals=client.GameplayGlobals();services.subscriberGlobals=client.SubscriberGlobals();services.playerRecords=client.PlayerRecords();services.localStateGlobals=client.LocalStateGlobals();services.editorPlayerUi=MakeEditorPlayerClientHooks(client);services.fortTechnologyUi=[&] { RefreshClientChatRankPrefix(client,assets.game,*surface); };
+    if (prepared) {
+        auto& gameplay=*client.GameplayGlobals();gameplay.world.editor=1;gameplay.world.missionPost=true;gameplay.player.fortMode=true;gameplay.cursor.screenX=37;gameplay.cursor.lockDepth=3;gameplay.energy.userCheat=true; // 준비 대여에 대한 명시 입력이며 Native cleanup/prefix 전체 실행의 증거는 아니다.
+        surface->ownerMode={true,false,false};surface->links.battle=false;surface->links.mission=false;surface->spots[123]=19;const std::uint32_t metamap=0;client.CoreDataGlobals()->Select(gameplay.player,metamap,1,1);
+        services.adoptPreparedWorld=true;services.adoptInitializedPlayers=true;services.coreDataGlobals=client.CoreDataGlobals();services.spGlobals=client.SpGlobals();services.processKernel=&client.GetKernel(); // 준비된 Native 경로에서 별도 SP 초기화나 별도 Kernel을 만들지 않는다.
+    }
+    RawCampaignSession session(assets.game,assets.files,FortTemplate::Parse(input,assets.game.TypeTable()),"deferred.fort",std::move(services));body(session,client,effects,work);
+}
+// 원문 State가 요구하는 서로 다른 전역을 소유하고 같은 Client의720BYTE/Player를 직접 빌린다.
+struct EditorInstallStateContext {
+    ClientLocalStateGlobals& owner;PlayerWorldState& player; // Session 서비스와 동일한 두 실제 소유자의 참조다.
+    bool server{},boss{true},battle{},post{true},saved{},mission{},simul{},meta{}; // 선택 Editor 이외의 State 분기는 실행하지 않는 명시 입력이다.
+    std::uint32_t zone{},ticks{},source{},seed{},metaRefresh{},metaRebuild{}; // 원문 State의 별개 현재 DWORD다.
+    std::uint8_t title{},battleByte{};double connectEnd{},seconds{},wall{100.0}; // 활동 기한과 구별한 실제 참조 입력이다.
+    explicit EditorInstallStateContext(Client& client,std::uint32_t selected=1):owner(*client.LocalStateGlobals()),player(client.GameplayGlobals()->player) {
+        auto& blocks=owner.Blocks();
+        for (std::size_t block=0;block<blocks.size();++block) for (std::size_t word=0;word<blocks[block].size();++word) blocks[block][word]=static_cast<std::uint32_t>(block*1000+word); // 전체 부가 인자와 stale 블록까지 독립 입력으로 구별한다.
+        blocks[1][0]=99;blocks[2][0]=0;blocks[3][0]=selected;blocks[4][0]=0;
+    }
+    LocalMissionStateGlobals Globals() { return {server,boss,battle,post,saved,mission,simul,meta,player,zone,ticks,source,seed,owner.Blocks()[2][33],metaRefresh,metaRebuild,title,battleByte,connectEnd,owner.ActivityEnd(),seconds,wall}; } // menuWindow는 원문 immediate+84의 같은 DWORD다.
+};
+// UI tail의 원문 helper에 현재 Session/벽시각과 명시 GUI 없는 HUD·음악·팔레트 장치를 공급한다.
+ExistingEditorAfterCheckpointEffects EditorInstallTail(RawCampaignSession& session,std::uint32_t& calls) {
+    ExistingEditorAfterCheckpointEffects effects;effects.hud=[&](auto command) { CHECK(command==0x0200003dU);++calls; };effects.wallSeconds=[&] { ++calls;return 100.5; };effects.requestMusic=[&](auto name) { CHECK(name=="ser22.mus");++calls; };effects.fortPalette=[&] { ++calls; };effects.islandCount=[&] { ++calls;return session.IslandCount(); };return effects;
+}
+}
+
+// 실제 checkpoint가 끝난 설치 scope에서만 필요한 조회를 허용하고 원문 Run의 전체 확정 뒤 공개한다.
+TEST_CASE(CampaignExistingEditorCheckpoint_UiScopeCommitsOnlyAfterActualStateReturn) {
+    for (const std::uint32_t selected:{1U,2U}) WithEditorInstallSession([&](RawCampaignSession& session,Client& client,const auto& checkpoint,EditorFiles& work) { // 두 정상 선택의 같은 전체144BYTE 확정을 독립 Session으로 검증한다.
+        EditorInstallStateContext scene(client,selected);InputQueue input;std::uint32_t calls{};auto tail=EditorInstallTail(session,calls);RawCampaignCursor* cursor{};ClientLocalStateGlobals other;
+        std::uint32_t selectedSid{},mouseType{};std::array<std::uint32_t,2> remembered{};std::int32_t multipleCount{};UserSelectionState selection{selectedSid,mouseType,remembered,{},multipleCount}; // 선택 공장의 실제 참조 인자를 제공하고 미완료 공개 거부만 검사한다.
+        LocalMissionStateHooks hooks;hooks.logState=[&](auto state) { CHECK(state==selected || state==4); };hooks.parentState=[&](auto state) {
+            CHECK(state==selected);CHECK(CheckpointRejects<std::logic_error>([&] { session.WithExistingEditorInstallUi(scene.owner,input,tail,[] {}); }));session.InstallExistingEditorCheckpoint(checkpoint,client.ReadOnlyForts(),work);
+            CHECK(CheckpointRejects<std::logic_error>([&] { session.WithExistingEditorInstallUi(other,input,tail,[] {}); }));CHECK(CheckpointRejects<std::logic_error>([&] { session.Cursor(); }));
+            session.WithExistingEditorInstallUi(scene.owner,input,tail,[&] {
+                CHECK(scene.owner.Blocks()[1][0]==99);cursor=&session.Cursor();static_cast<void>(session.GumpForms());session.SynchronizeProductionContents();
+                CHECK(CheckpointRejects<std::logic_error>([&] { session.SnapshotFort(1); }));CHECK(CheckpointRejects<std::logic_error>([&] { session.MakeUserSelection(selection,{}); }));CHECK(CheckpointRejects<std::logic_error>([&] { session.CommitExistingEditorInstall(scene.owner); }));CHECK(CheckpointRejects<std::logic_error>([&] { session.WithExistingEditorInstallUi(scene.owner,input,tail,[] {}); }));
+            });
+            CHECK(CheckpointRejects<std::logic_error>([&] { session.Cursor(); }));CHECK(CheckpointRejects<std::logic_error>([&] { session.SynchronizeProductionContents(); }));CHECK(CheckpointRejects<std::logic_error>([&] { session.GumpForms(); }));CHECK(CheckpointRejects<std::logic_error>([&] { session.CommitExistingEditorInstall(scene.owner); }));return LocalMissionParentResult::Commit;
+        };
+        const auto request=scene.owner.Blocks()[3],previous=scene.owner.Blocks()[1];RawLocalMissionState state(OriginalEdition::Patch1078,scene.owner.State(),scene.Globals(),std::move(hooks));state.Run();CHECK(calls==5 && scene.owner.Blocks()[0]==previous && scene.owner.Blocks()[1]==request && scene.owner.Blocks()[3][0]==0 && scene.owner.Blocks()[4][0]==4);
+        CHECK(CheckpointRejects<std::logic_error>([&] { session.CommitExistingEditorInstall(other); }));scene.owner.Blocks()[1][5]^=1;CHECK(CheckpointRejects<std::logic_error>([&] { session.CommitExistingEditorInstall(scene.owner); }));scene.owner.Blocks()[1][5]^=1;
+        session.CommitExistingEditorInstall(scene.owner);CHECK(&session.Cursor()==cursor);session.SnapshotFort(1);CHECK(CheckpointRejects<std::logic_error>([&] { session.CommitExistingEditorInstall(scene.owner); }));CHECK(CheckpointRejects<std::logic_error>([&] { session.SendLocalPacket(9,{}); }));state.Poll();CHECK(scene.owner.Blocks()[1][0]==4); // 로컬 로그인/전송을 가짜로 만들지 않고 next4는 다음 Poll 한 번에만 확정한다.
+    });
+}
+
+// tail 중단은 scope를 닫고 부분 효과를 보존하며 loaded나 UI 재준비로 우회하지 못한다.
+TEST_CASE(CampaignExistingEditorCheckpoint_UiTailFailureKeepsPublicAccessClosed) {
+    WithEditorInstallSession([](RawCampaignSession& session,Client& client,const auto& checkpoint,EditorFiles& work) {
+        EditorInstallStateContext scene(client);session.InstallExistingEditorCheckpoint(checkpoint,client.ReadOnlyForts(),work);const auto phase=scene.owner.Blocks()[1];bool reached{};InputQueue input;std::uint32_t calls{};auto tail=EditorInstallTail(session,calls);tail.fortPalette=[&] { ++calls;throw CheckpointStop("실제 UI tail 팔레트 중단"); };
+        CHECK(CheckpointRejects<CheckpointStop>([&] { session.WithExistingEditorInstallUi(scene.owner,input,tail,[&] { static_cast<void>(session.Cursor());session.SynchronizeProductionContents();reached=true; }); }));
+        CHECK(reached && calls==4 && scene.owner.ActivityEnd()==110.5 && scene.owner.Blocks()[1]==phase && scene.owner.Blocks()[4][0]==0);CHECK(CheckpointRejects<std::logic_error>([&] { session.Cursor(); }));CHECK(CheckpointRejects<std::logic_error>([&] { session.SnapshotFort(1); }));CHECK(CheckpointRejects<std::logic_error>([&] { session.SynchronizeProductionContents(); }));CHECK(CheckpointRejects<std::logic_error>([&] { session.WithExistingEditorInstallUi(scene.owner,input,tail,[] {}); }));CHECK(CheckpointRejects<std::logic_error>([&] { session.CommitExistingEditorInstall(scene.owner); }));
+    });
+}
+
+// 원문 early return과 immediate14의 실제 공통 확정은 정상 Editor 요청1/next4 완료와 구별한다.
+TEST_CASE(CampaignExistingEditorCheckpoint_UiTailCannotCommitEarlyReturnOrImmediate) {
+    for (const bool immediate:{false,true}) WithEditorInstallSession([&](RawCampaignSession& session,Client& client,const auto& checkpoint,EditorFiles& work) { // 두 다른 반환 결과를 각각 실제 분배기로 실행한다.
+        EditorInstallStateContext scene(client);InputQueue input;std::uint32_t calls{};auto tail=EditorInstallTail(session,calls);std::unique_ptr<RawLocalMissionState> state;
+        if (immediate) tail.fortPalette=[&] { ++calls;state->Request(14); };LocalMissionStateHooks hooks;hooks.logState=[](auto) {};hooks.parentState=[&](auto selected) {
+            CHECK(selected==1);session.InstallExistingEditorCheckpoint(checkpoint,client.ReadOnlyForts(),work);session.WithExistingEditorInstallUi(scene.owner,input,tail,[] {});return immediate ? LocalMissionParentResult::Commit : LocalMissionParentResult::ReturnWithoutCommit;
+        };
+        state=std::make_unique<RawLocalMissionState>(OriginalEdition::Patch1078,scene.owner.State(),scene.Globals(),std::move(hooks));state->Run();CHECK(scene.owner.Blocks()[1][0]==(immediate ? 14U : 99U));CHECK(CheckpointRejects<std::logic_error>([&] { session.CommitExistingEditorInstall(scene.owner); }));CHECK(CheckpointRejects<std::logic_error>([&] { session.Cursor(); }));CHECK(CheckpointRejects<std::logic_error>([&] { session.SnapshotFort(1); }));
+    });
+}
+
+// 명시 준비 입력의 같은 Player/Core/커서/spot을 ctor에서 초기화하지 않고 실제 checkpoint/UI까지 빌린다.
+TEST_CASE(CampaignExistingEditorCheckpoint_PreparedCtorPreservesSameClientState) {
+    WithEditorInstallSession([](RawCampaignSession& session,Client& client,const auto& checkpoint,EditorFiles& work) {
+        const auto& gameplay=*client.GameplayGlobals();CHECK(gameplay.cursor.screenX==37 && gameplay.cursor.lockDepth==3 && gameplay.energy.userCheat);CHECK(session.Core().ownerMode.fort && !session.Core().ownerMode.battle && !session.Core().bridgeState.mission && session.Core().spots[123]==19);CHECK(session.PlayerRecords().data()==client.PlayerRecords()->Records().data() && client.CoreDataGlobals()->Current().data()==session.PlayerRecords().data()+180+0x6c);
+        EditorInstallStateContext scene(client);session.InstallExistingEditorCheckpoint(checkpoint,client.ReadOnlyForts(),work);bool scope{};InputQueue input;std::uint32_t calls{};const auto tail=EditorInstallTail(session,calls);session.WithExistingEditorInstallUi(scene.owner,input,tail,[&] { static_cast<void>(session.Cursor());session.SynchronizeProductionContents();scope=true; });CHECK(scope && calls==5 && session.ExistingEditorCheckpointReady());CHECK(CheckpointRejects<std::logic_error>([&] { session.CommitExistingEditorInstall(scene.owner); }));CHECK(CheckpointRejects<std::logic_error>([&] { session.SnapshotFort(1); })); // 실제 State 공통 확정 없는 준비 대여 자체는 공개 완료가 아니다.
+    },true);
+}
+
+// prepared 표식만으로 누락된 실제 Client 소유자를 만들거나 전역을 초기화하지 않는다.
+TEST_CASE(CampaignExistingEditorCheckpoint_PreparedCtorRejectsIncompleteOwnersBeforeBorrow) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);const auto input=CheckpointInput(assets.files);ClientOptions options;options.gameDirectory=assets.root;Client client(std::move(options));auto storage=std::make_shared<CampaignTemplateStorage>();CheckpointDevices devices;auto services=devices.Make(client,storage,input);services.adoptPreparedWorld=true;services.adoptInitializedPlayers=true;services.gameplayGlobals=client.GameplayGlobals();services.subscriberGlobals=client.SubscriberGlobals();client.GameplayGlobals()->cursor.screenX=73;
+    CHECK(CheckpointRejects<std::invalid_argument>([&] { RawCampaignSession session(assets.game,assets.files,FortTemplate::Parse(input,assets.game.TypeTable()),"deferred.fort",std::move(services)); }));CHECK(!client.GameplayGlobals()->Borrowed() && client.GameplayGlobals()->cursor.screenX==73 && storage->OwnedImages()==0);
+}
+
+// 실제 생산 패널이 미완료 Session의 같은 기술 부모에 Form을 붙이는 경로도 설치 범위에서만 연다.
+TEST_CASE(CampaignExistingEditorCheckpoint_ActualProductionFormsInsideInstallScope) {
+    WithEditorInstallSession([](RawCampaignSession& session,Client& client,const auto& checkpoint,EditorFiles& work) {
+        const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);FontStore fonts(assets.files,"Arial");double wall=100.0;EditorInstallStateContext scene(client);InputQueue input;std::uint32_t calls{};auto tail=EditorInstallTail(session,calls);
+        RawButtonControls controls(OriginalEdition::Patch1078,{[&] { return wall; },{},{},[&](auto form,auto flags) { session.GumpForms().Destroy({static_cast<std::uint16_t>(form)},flags); }});
+        RawMenuHooks menu;menu.command=[](auto,auto,auto) {};menu.readInt=[](auto,std::int32_t&) {};menu.sound=[](auto) {};menu.poll=[](auto) { return InputEvent{InputCode::kRelease,0,0}; };menu.cursor=[](auto) {};menu.objectForms=[&]() -> GumpFormHost& { return session.GumpForms(); };menu.gameSeconds=[] { return 0.0; };controls.EnableMenus(assets.game,fonts,std::move(menu));
+        const auto& texture=assets.game.Find("fortGump");const auto metrics=assets.game.Shapes().SquidMetrics(texture.block,0);const std::array<GumpControl,0> empty{};const std::array<std::string,0> labels{};controls.SetControls(empty,labels,640,480,{static_cast<std::uint32_t>(texture.block+70),0,metrics.width,metrics.height,{}});
+        LocalMissionStateHooks hooks;hooks.logState=[](auto) {};hooks.parentState=[&](auto selected) {
+            CHECK(selected==1);session.InstallExistingEditorCheckpoint(checkpoint,client.ReadOnlyForts(),work);
+            session.WithExistingEditorInstallUi(scene.owner,input,tail,[&] {
+                const auto freeBefore=session.Core().pool.FreeCount();auto& panel=controls.EnableProduction(session,assets.game,{[&] { return wall; },[](std::string_view) {},[](std::string_view) { throw std::logic_error("Editor 패널 설치의 예상 밖 Tell"); },[](std::string_view,std::int32_t fallback) { return fallback; },[](std::string_view text) { return std::string(text); }});
+                CHECK(controls.Production()==&panel && session.CurrentTechnologyParent()!=0 && session.Core().pool.FreeCount()<freeBefore);CHECK(CheckpointRejects<std::logic_error>([&] { session.SnapshotFort(1); }));
+            });return LocalMissionParentResult::Commit;
+        };
+        RawLocalMissionState state(OriginalEdition::Patch1078,scene.owner.State(),scene.Globals(),std::move(hooks));state.Run();CHECK(controls.Production() && calls==5);session.CommitExistingEditorInstall(scene.owner);controls.DisableProduction();CHECK(!controls.Production() && session.Core().bookkeeping.depth==0); // UI Form을 같은 실제 Session보다 먼저 반납한다.
+    });
 }

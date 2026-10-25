@@ -24,6 +24,11 @@ std::unique_ptr<RawSurfaceStorage::Use> RawSurfaceStorage::Acquire() {
     if (generation_) { pool.Reset(0);hash.Reset();std::fill(spots.begin(),spots.end(),std::uint8_t{}); }
     borrowed_=true;++generation_;return use;
 }
+// 앞선 명시 정리가 끝난 실제 배열을 초기화 없이 대여하며 동시 사용은 같은 관문에서 거부한다.
+std::unique_ptr<RawSurfaceStorage::Use> RawSurfaceStorage::AcquirePrepared() {
+    if (borrowed_) throw std::logic_error("준비된 실제 월드 저장소 중복 대여");
+    auto use=std::unique_ptr<Use>(new Use(*this));borrowed_=true;++generation_;return use;
+}
 // 대여 획득 전 생성한 반납 경계에는 별도 게임 효과가 없다.
 RawSurfaceStorage::Use::Use(RawSurfaceStorage& storage):storage_(storage) {}
 // 월드 모듈이 사라진 뒤에만 다음 월드가 같은 물리를 다시 사용할 수 있다.

@@ -7,6 +7,7 @@
 #include "o/RawPlayerLinksCleanup.h"
 #include "client/ClientColorSortInput.h"
 #include "client/ClientLocalStateGlobals.h"
+#include "client/ExistingEditorAfterCheckpoint.h"
 #include "client/CampaignTemplateStorage.h"
 #include "client/FortTypeConversionStorage.h"
 #include "o/RawFortTypeNamesLoad.h"
@@ -236,6 +237,7 @@ std::shared_ptr<RawSurfaceStorage> SessionSurfaceStorage(const RawCampaignSessio
 }
 // 다른 Client의 두 Subscriber를 실제 현재 전역에 섞기 전에 거부한다.
 std::shared_ptr<ClientGameplayGlobals> SessionGameplayGlobals(const RawCampaignSessionServices& services) {
+    if (services.adoptPreparedWorld && (services.installMode!=CampaignInstallMode::ExistingEditor || !services.deferExistingEditorFile || !services.adoptInitializedPlayers || !services.gameplayGlobals || !services.surfaceStorage || !services.localStateGlobals || !services.playerRecords || !services.coreDataGlobals || !services.randomGlobals || !services.spGlobals || !services.processKernel || services.localLogin)) throw std::invalid_argument("준비된 Editor의 같은 전역/표면/State/Player/Core/SP/Kernel 대여 계약"); // 대여 이전에 필수 실제 소유자를 확인하고 캠페인 로그인으로 Editor 전송을 대신하지 않는다.
     if (services.gameplayGlobals && services.gameplayGlobals->Subscribers()!=services.subscriberGlobals) throw std::invalid_argument("Session의 실제 현재 전역/Subscriber 소유자 불일치");
     return services.gameplayGlobals ? services.gameplayGlobals : std::make_shared<ClientGameplayGlobals>(services.subscriberGlobals);
 }
@@ -415,6 +417,9 @@ struct RawCampaignSession::Impl {
     bool loaded{}; // 같은 실제 저장 부모와 이동 설치가 정상 종료했을 때만 AI 생성 요청을 허용한다.
     bool editorWorldStarted{},editorWorldReady{}; //부분World단계/실제완료를구별하며전체Editor loaded로가장하지않는다.
     bool editorCheckpointStarted{},editorCheckpointRunning{},editorCheckpointReady{}; //부분실패재실행/동기단계진입/정상checkpoint복귀를전체loaded와구별한다.
+    bool editorUiStarted{},editorUiPrepared{},editorUiInstalling{},editorUiTailReady{}; // UI 한 번 준비·한정 동기 범위·실제 tail 정상 복귀를 최종 loaded와 구별한다.
+    ClientLocalStateGlobals* editorUiStateOwner{}; // 서비스를 통해 같은 Client가 소유하는 다섯 State 블록의 정체성을 보관한다.
+    LocalMissionStateBlock editorUiRequest{},editorUiPreviousPhase{}; // UI 진입의 전체144BYTE 요청/이전 phase를 공통 확정 뒤 검증한다. 원문 상태를 대신 쓰지 않는다.
     std::optional<FortTemplate> deferredEditorFort; //명시지연입력의같은파일보조metadata다.rawsection은File.load의실제reader가소유한다.
 
     MissionOutcomeState outcomeState; // 미션 종료까지 유지하는43개 사건 잠금이며 입력 배열은 현재 원문 연결로 대체한다.
@@ -737,11 +742,11 @@ struct RawCampaignSession::Impl {
 
     // 보호 자료를 읽기 전용으로 사용하며 모든 필수 후처리를 첫 생성 전에 등록한다.
     Impl(const GameAssets& game,const BaseFileSystem& files,FortTemplate fort,std::string mission,RawCampaignSessionServices input):
-        gameplayGlobals(SessionGameplayGlobals(input)),gameplayUse(gameplayGlobals->Acquire()),
+        gameplayGlobals(SessionGameplayGlobals(input)),gameplayUse(input.adoptPreparedWorld ? gameplayGlobals->AcquirePrepared() : gameplayGlobals->Acquire()),
         coreDataGlobals(input.coreDataGlobals ? input.coreDataGlobals : std::make_shared<ClientCoreDataGlobals>()),
         playerRecords(input.playerRecords ? input.playerRecords : std::make_shared<ClientPlayerRecords>()),playerUse(playerRecords->Acquire()),
         services(std::move(input)),templateStorage(services.templateStorage ? services.templateStorage : std::make_shared<CampaignTemplateStorage>()),headers(templateStorage->Headers()),assets(game,files),metadata(assets.game),
-        world(OriginalEdition::Patch1078,assets.types,assets.frames,metadata.shapes,CampaignLinks(),terrainType,services.processKernel,SessionSurfaceStorage(services,game)),core(world.Core()),
+        world(OriginalEdition::Patch1078,assets.types,assets.frames,metadata.shapes,CampaignLinks(),terrainType,services.processKernel,SessionSurfaceStorage(services,game),services.adoptPreparedWorld),core(world.Core()),
         localSp(services.spGlobals ? nullptr : std::make_unique<ScrambledSpStore>(random,[this] { return seed.Reseed(); })),
         sp(services.spGlobals ? services.spGlobals->Store() : *localSp),hp(core.pool,core.types,core.bookkeeping,rewardState,&sp,SquidRewardHooks{{},services.refreshSp}),
         battleOptions(services.missionOptions ? *services.missionOptions : localBattleOptions),
@@ -769,19 +774,25 @@ struct RawCampaignSession::Impl {
         if (!services.spGlobals) { sp.BindTrackingOffset(priestState.regen.patch.sequence);sp.Initialize(); } // 독립 Session의 기존 명시 초기화만 보존한다. 실제 Client의 현재 SP/난수/추적 offset은 다시 쓰지 않는다.
         level=std::make_unique<RawSquidLevel>(core.pool,core.types,SessionMissing<void,SquidLevelAssertion>());
         finishState.chaffMode=true;objectState.mission=true;objectState.chaffMode=true;
-        playerState.playerKnown=1;assetState.boss=true;assetState.inBattle=true;assetState.localOwner=1;gunState.boss=true;
+        if (!services.adoptPreparedWorld) playerState.playerKnown=1; // 실제 Native prefix를 대여한 경우 현재 known을 다시 쓰지 않는다.
+        assetState.boss=true;assetState.inBattle=true;assetState.localOwner=1;gunState.boss=true;
         if (services.installMode==CampaignInstallMode::ExistingEditor) {
-            world.ConfigureInstallModes(true,false,false,true); //최초Player/지형/저장객체보다먼저모든실제표면소비자를설정한다.
-            core.bridgeState.mission=false; // 같은00594fa0을 실제 다리 소비자에서도 Editor 진입 전에0으로 맞춘다.
-            globals.editor=1;globals.missionPost=true;fullDeck=1;
-            playerState.fortMode=true;assetState.fortMode=true;assetState.inBattle=false;regularState.fortMode=true;
+            if (services.adoptPreparedWorld) {
+                if (!core.ownerMode.fort || core.ownerMode.battle || core.ownerMode.challenge || core.bridgeState.battle || core.bridgeState.mission || globals.editor!=1 || !globals.missionPost || !playerState.fortMode || playerState.playerKnown!=1 || playerState.battleOwner!=1 || playerState.templateOwner!=1) throw std::logic_error("준비된 Editor의 실제 prefix 모드/Player 불일치"); // 완료한 prefix 값을 다시 만들지 않고 같은 현재 입력을 검증한다.
+            } else {
+                world.ConfigureInstallModes(true,false,false,true); // 독립 단계 검사는 최초 객체 전에 기존 Editor 모드를 구성한다.
+                core.bridgeState.mission=false;globals.editor=1;globals.missionPost=true;playerState.fortMode=true;
+            }
+            fullDeck=1;assetState.fortMode=true;assetState.inBattle=false;regularState.fortMode=true;
             objectState.special=true;objectState.mission=false;objectState.fort=true;objectState.chaffMode=true;
             objectState.fortDestroyBlocked=true; // 같은0054db14의FullDeck=1을객체삭제소비자에도적용하여저장된사제/건물을보존한다.
             finishState.chaffMode=true;finishState.special=true;finishState.fort=true;
             rewardState.fixedSpA=true;rewardState.fixedSpB=true;rewardState.halfHealthMode=false;rewardState.aiMirrorDisabled=false;
             priestState.regen.modeBlocked=true;
         }
-        if (services.coreDataGlobals) { const std::uint32_t metamap=core.ownerMode.challenge;coreDataGlobals->Select(playerState,metamap,1,1); } // 실제 모드 설정 뒤 현재 metamap을 다시 읽고 다음 Core1을 선택한다. 앞선 Native 초기화 대여에서도 prefix 선택 위치를 사용한다.
+        if (services.adoptPreparedWorld) {
+            const auto current=coreDataGlobals->Current();if (current.size()!=10 || current.data()!=players.data()+180+0x6c || coreDataGlobals->Players().data()!=players.data()) throw std::logic_error("준비된 Editor의 실제 prefix Core1 선택 불일치"); // 원문 prefix가 선택한 같은 Player뷰를 검증하며 active/cache/owner를 다시 쓰지 않는다.
+        } else if (services.coreDataGlobals) { const std::uint32_t metamap=core.ownerMode.challenge;coreDataGlobals->Select(playerState,metamap,1,1); } // 기존 독립/캠페인 어댑터는 종전 선택 순서를 보존한다.
         //BYTE호환값을DWORD const참조로넘기면임시값수명오류가나므로실제Player DWORD를빌린다.
         broadcast=std::make_unique<RawBattleBroadcast>(core.pool.Edition(),players,services.battlePeers,playerState.battleOwner,assetState.boss);
         // 별도 관찰/장치 송신이 없으면 실제 분배기를 사용한다. NULL 연결은 원본 조건에서 자연스럽게 생략한다.
@@ -2683,6 +2694,12 @@ struct RawCampaignSession::Impl {
     return std::make_unique<RawConstructionBuilder>(current->core.pool,current->core.types,current->builderTypes,state,std::move(hooks),current->energySupply.get(),std::move(reads));
 
     }
+    // 같은 실제 checkpoint가 끝난 뒤 Campaign.Load 꼬리와 동일한 하위만 한 번 구성한다. Player/Deck/World를 다시 로드하지 않는다.
+    void PrepareExistingEditorWorldUi() {
+        if (services.installMode!=CampaignInstallMode::ExistingEditor || loaded || !editorWorldReady || !editorCheckpointReady || editorCheckpointRunning || editorUiPrepared || cursor || gameplayPipeline || buildingMover) throw std::logic_error("기존 Editor UI의 실제 checkpoint/한번 준비 계약");
+        ConnectDevastation();ConnectCarrierDrop();ConnectPriestPrayer();buildingMover=MakeBuilder(buildingMoverState,{});
+        ConnectGameplayPlacement();ConnectCursor();editorUiPrepared=true; // 모든 실제 하위의 정상 복귀 뒤에만 준비 완료를 기록한다.
+    }
     // 생성용 임의 동맹 표와 구별한 현재 게임 배치 파이프라인을 한 번 구성한다.
     void ConnectGameplayPlacement() {
         if (gameplayPipeline) throw std::logic_error("실제 게임 배치 중복 연결");gameplayPlacement.geometry=metadata.geometry;
@@ -3191,6 +3208,22 @@ void RawCampaignSession::InstallExistingEditorCheckpoint(const CampaignExistingE
         s.editorCheckpointReady=true;s.editorCheckpointRunning=false; //004b743b정상복귀만표시하며후반HUD/State/최종loaded를앞당기지않는다.
     }catch (...) { s.editorCheckpointRunning=false;throw; } //동기진입guard만반납한다.manager/State/Config/파일/객체/난수는rollback하지않는다.
 }
+// 실제 State 부모의 checkpoint 정상 복귀 뒤 UI 생성과 원문 tail에 필요한 현재 조회만 한정 허용한다.
+void RawCampaignSession::WithExistingEditorInstallUi(ClientLocalStateGlobals& owner,InputQueue& input,const ExistingEditorAfterCheckpointEffects& effects,std::function<void()> prepareUi) {
+    auto& s=*impl_;const auto state=owner.State();
+    if (s.services.installMode!=CampaignInstallMode::ExistingEditor || !s.services.localStateGlobals || s.services.localStateGlobals.get()!=&owner || s.loaded || !s.editorCheckpointReady || !s.editorWorldReady || s.editorCheckpointRunning || s.editorUiStarted || !prepareUi || (state.current[0]!=1 && state.current[0]!=2) || state.immediate[0]) throw std::logic_error("기존 Editor UI의 같은 현재 State/한번 tail 계약");
+    s.editorUiStarted=true;s.editorUiStateOwner=&owner;s.editorUiRequest=state.current;s.editorUiPreviousPhase=state.phase;
+    s.PrepareExistingEditorWorldUi();s.editorUiInstalling=true;
+    try { prepareUi();ApplyExistingEditorAfterCheckpoint(owner,input,effects);s.editorUiInstalling=false;s.editorUiTailReady=true; } // 실제 helper의 정상 복귀만 tail 완료이며 빈 UI callback으로 대신하지 않는다.
+    catch (...) { s.editorUiInstalling=false;throw; } // scope만 반납하고 이미 생긴 파일/객체/UI/State 효과는 되돌리지 않는다.
+}
+// RawLocalMissionState가 실제 전체 요청을 공통 확정한 뒤 호출자가 마지막 공개를 요청한다.
+void RawCampaignSession::CommitExistingEditorInstall(ClientLocalStateGlobals& owner) {
+    auto& s=*impl_;const auto state=owner.State();
+    if (s.services.installMode!=CampaignInstallMode::ExistingEditor || !s.services.localStateGlobals || s.services.localStateGlobals.get()!=&owner || s.editorUiStateOwner!=&owner || s.loaded || !s.editorCheckpointReady || !s.editorWorldReady || !s.editorUiPrepared || s.editorCheckpointRunning || s.editorUiInstalling || !s.editorUiTailReady || !s.cursor || !s.gameplayPipeline || !s.buildingMover) throw std::logic_error("기존 Editor 최종 공개의 같은 checkpoint/UI/tail 수명 계약");
+    if ((s.editorUiRequest[0]!=1 && s.editorUiRequest[0]!=2) || state.current[0] || state.immediate[0] || state.next[0]!=4 || state.phase!=s.editorUiRequest || state.old!=s.editorUiPreviousPhase || !std::equal(state.current.begin()+1,state.current.end(),s.editorUiRequest.begin()+1)) throw std::logic_error("기존 Editor 실제 State 공통 확정/다음 Poll4 미완료");
+    s.loaded=true; // checkpoint나 UI scope가 아닌 실제 정상 State ret 확인 뒤 이 한 곳에서만 Editor 입력/공개 저장을 연다.
+}
 // 같은 장기 슬롯의 현재 Core만 갱신하며 Login이 없는 Editor도 별도 사본을 만들지 않는다.
 void RawCampaignSession::RefreshCurrentPlayerCore() {
     auto& s=*impl_;PlayerCoreRefreshHooks hooks; // 모든 하위 callback은 동기 부모가 끝나기 전 반납된다.
@@ -3332,7 +3365,7 @@ std::uint32_t RawCampaignSession::BattleActive() const { return impl_->assetStat
 // 원본48fc60의 현재 기술 부모를 값 복사 없이 같은 Player 저장소에서 읽는다.
 std::uint32_t RawCampaignSession::CurrentTechnologyParent() const { return impl_->player->CurrentTechnology(); }
 // 실제 생산 패널의 명시 갱신과 반복자는 같은 현재 장기 몸체를 사용한다.
-void RawCampaignSession::SynchronizeProductionContents() { if (!impl_->loaded) throw std::logic_error("설치 전 생산 패널 갱신");impl_->productionSync->Synchronize(); }
+void RawCampaignSession::SynchronizeProductionContents() { if (!impl_->loaded && !impl_->editorUiInstalling) throw std::logic_error("설치 전 생산 패널 갱신");impl_->productionSync->Synchronize(); } // 같은 checkpoint 뒤의 동기 UI 생성만 최종 loaded 이전 갱신을 허용한다.
 // 구식 배치용 IslandList 벡터 대신 실제 섬 목록 첫DWORD를 현재 시점에 읽는다.
 std::uint32_t RawCampaignSession::IslandCount() const { return impl_->islands->Count(); }
 const ContainedFinderState& RawCampaignSession::ProductionFinder() const { return impl_->contentFinder; }
@@ -3973,7 +4006,7 @@ std::unique_ptr<RawObjectMenuOpen> RawCampaignSession::MakeObjectMenuOpen(Object
     return std::make_unique<RawObjectMenuOpen>(current->core.pool,current->core.types,std::move(hooks));
 }
 // 초기설치이전에는Form생성/부착을노출하지않는다. 별도UI전용풀을만들지않는다.
-GumpFormHost& RawCampaignSession::GumpForms() { if (!impl_->loaded || !impl_->gumpForms) throw std::logic_error("설치 전 실제 Session GumpForm 요청");return *impl_->gumpForms; }
+GumpFormHost& RawCampaignSession::GumpForms() { if ((!impl_->loaded && !impl_->editorUiInstalling) || !impl_->gumpForms) throw std::logic_error("설치 전 실제 Session GumpForm 요청");return *impl_->gumpForms; } // 설치 scope의 실제 생산 격자 두 개가 같은 기술 부모에 부착할 때만 선행 조회를 허용한다.
 // 큰 UI/현재 관문을 보존하고 같은 월드가 이미 소유하는 게임 계산·표시 프로세스만 연결한다.
 std::unique_ptr<RawUserSelection> RawCampaignSession::MakeUserSelection(UserSelectionState state,UserSelectionHooks hooks) {
     if (!impl_->loaded) throw std::logic_error("설치 전 실제 Session 선택 요청");auto* current=impl_.get(); // 반환 몸체가 빌리는 같은 장기 Session이다.
@@ -4003,7 +4036,7 @@ CursorDropState& RawCampaignSession::CursorDropSettings() { return impl_->cursor
 // 현재 풀/동맹/타입/물리 헤더를 공유하는 실제 사격 판정기를 조회 전용으로 빌린다.
 const RawGunTarget& RawCampaignSession::GunTargeting() const { if (!impl_->gunTarget) throw std::logic_error("실제 Gun 표적 판정 설치 전 조회");return *impl_->gunTarget; }
 // 실제 설치 이후 같은 커서를 빌리며 새 몸체나 상태를 만들지 않는다.
-RawCampaignCursor& RawCampaignSession::Cursor() { if (!impl_->loaded || !impl_->cursor) throw std::logic_error("설치 전 실제 커서 요청");return *impl_->cursor; }
+RawCampaignCursor& RawCampaignSession::Cursor() { if ((!impl_->loaded && !impl_->editorUiInstalling) || !impl_->cursor) throw std::logic_error("설치 전 실제 커서 요청");return *impl_->cursor; } // 같은 설치 scope의 실제 팔레트/UI 조회만 허용하고 범위 밖 입력은 계속 닫는다.
 // 이후 커서/맵 명령도 프레임이 읽는 같은 전역을 갱신한다.
 CursorManaGlobals& RawCampaignSession::CursorManaSettings() { return impl_->cursorManaGlobals; }
 // 실제 Session 소유의 생성·표시·공간·가상 삭제·중심과 현재 Host/Kernel을 조립한다.

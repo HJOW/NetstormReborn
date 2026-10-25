@@ -100,6 +100,20 @@ TEST_CASE(ProductionInitialContext_GameplayGlobalsKeepRealAliasesAndRejectDuplic
     bool missing{};try { globals->RequireSession(); } catch (const std::logic_error&) { missing=true; }CHECK(missing); // 게임 효과를 가짜 Session 성공으로 바꾸지 않는다.
 }
 
+// 실제 Editor prefix의 준비 값은 대여/실패/반납에서도 유지하고 일반 Session의 기존 초기화는 보존한다.
+TEST_CASE(ProductionInitialContext_PreparedGameplayLeaseLeavesNativeValuesToCaller) {
+    InitialProductionScene scene;auto globals=scene.client.GameplayGlobals();auto subscribers=scene.client.SubscriberGlobals();
+    subscribers->MySubscriber()=71;subscribers->LoginSubscriber()=93;globals->player.playerKnown=1;globals->player.templateOwner=1;globals->player.battleOwner=1;globals->player.fortMode=true;
+    globals->world.editor=1;globals->world.missionPost=true;globals->cursor.inputFlags=0x41;globals->cursor.lockDepth=7;globals->energy.userCheat=0x845fed;
+    auto prepared=globals->AcquirePrepared();bool duplicate{};try { globals->Acquire(); } catch (const std::logic_error&) { duplicate=true; }
+    CHECK(duplicate && globals->Borrowed() && globals->player.playerKnown==1 && globals->player.templateOwner==1 && globals->player.battleOwner==1 && globals->player.fortMode);
+    CHECK(globals->world.editor==1 && globals->cursor.inputFlags==0x41 && globals->cursor.lockDepth==7 && globals->energy.userCheat==0x845fed);
+    duplicate=false;try { globals->AcquirePrepared(); } catch (const std::logic_error&) { duplicate=true; }CHECK(duplicate && globals->cursor.lockDepth==7);
+    prepared.reset();CHECK(!globals->Borrowed() && globals->player.playerKnown==1 && globals->player.fortMode && globals->world.editor==1 && globals->cursor.inputFlags==0x41 && globals->cursor.lockDepth==7);
+    CHECK(&globals->world.mySubscriber==&subscribers->MySubscriber() && &globals->world.loginSubscriber==&subscribers->LoginSubscriber() && globals->world.mySubscriber==71 && globals->world.loginSubscriber==93);
+    auto ordinary=globals->Acquire();CHECK(globals->player.playerKnown==0 && !globals->player.fortMode && globals->world.editor==0 && globals->cursor.inputFlags==0 && globals->cursor.lockDepth==1 && globals->energy.userCheat==0x845fed);
+}
+
 namespace {
 // 실제 파일의 RGB만 공통 Draw와 미니맵 색 해석에 공급한다.
 std::array<std::uint32_t,256> InitialHudLogical(InitialProductionScene& scene) {

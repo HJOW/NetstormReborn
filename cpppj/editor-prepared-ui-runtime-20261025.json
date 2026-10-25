@@ -1,0 +1,125 @@
+{
+  "unit": 426,
+  "goalComplete": false,
+  "state": "focused-validated-ui-assembly-not-yet-connected-to-menu",
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "sources": {
+    "cpppj/src/client/ClientGameplayGlobals.cpp": "e7bfa20b4a22b31aa2c31455cc66449a039baeb24a7648714cf60609c410dda5",
+    "cpppj/src/client/ClientGameplayGlobals.h": "fd4fe265095793ae0386f7cf770f9e0990cf05ce4121d9516f25e1d43bb0df19",
+    "cpppj/src/client/RawCampaignSession.cpp": "76c171daa42888bd5eb86f17a9a0d9fe741168252e6e881d868971f7c26d091d",
+    "cpppj/src/client/RawCampaignSession.h": "445898e0dd9a8a1e9a36d554a277d765e1df8887b48b58f579612372e10acaf5",
+    "cpppj/src/client/RawSurfaceStorage.cpp": "cfb84ac8baca988824f1d1060f74f26a75b7b0958d7460478064cba4ac498c0b",
+    "cpppj/src/client/RawSurfaceWorld.cpp": "2abee2e874269cde276b8d8b1037a3de68898031611a8b27cfc7e474114402da",
+    "cpppj/src/client/RawSurfaceWorld.h": "23523515086de699cd597379853d4418ea80736ecc94e29fdbd0453cb92bd2fd",
+    "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp": "6920e2077407ccb1fe259ee889cdd78abfcf8d77816b069582f70d8cb7cfd43b",
+    "cpppj/tests/ProductionInitialContextTests.cpp": "c5b681c6dea38fbbbe75161265e49e0fe247e8300d5edf04579511b8edc1b167",
+    "cpppj/tests/RawSurfaceStorageTests.cpp": "79d8c9a7799dbdcc9c85ef444f57c8b1553cc23beefc7c1e674f19db28be9306"
+  },
+  "artifacts": {
+    "cpppj/build/bin/Release/NetstormCpp.exe": "ffe4cbbf6ae7cd7be6b7545f7c98cee6fa7bbadd131f247c3dbc477fab48a0e0",
+    "cpppj/build/bin/Release/netstorm_tests.exe": "d2249b336e16f7f237204242932336c0c3349dad4f0f1ce67ba37893d563ca7e",
+    "cpppj/build/bin/Release/netstorm_cloud_probe.exe": "d8d09b671bc408279bdb32d82e813f5c29afe0d8cf05d999958e74a3eaba5dcc",
+    "cpppj/build/bin/Release/netstorm_cloud_render_probe.exe": "1e0d835cce4481a2bdfa6218af156497d879a71ea2c0feeea2249bad0b6692d9"
+  },
+  "builds": [
+    {
+      "attempt": 1,
+      "exitCode": 1,
+      "interruptedAfterCompileError": true,
+      "log": "extracted/cpp-editor-prepared-ui-426-build1.log",
+      "sha256": "d4a8b7a1eb70e458ddcae9a16446fb27a8a6f70d32035cd03e4bef7c23d3f8f9"
+    },
+    {
+      "attempt": 2,
+      "exitCode": 0,
+      "log": "extracted/cpp-editor-prepared-ui-426-build2.log",
+      "sha256": "5fd4f519f7322846179d7912b8c7001a2229f38f6fad246fc78aa1224ea30096"
+    }
+  ],
+  "focused": [
+    {
+      "filter": "CampaignExistingEditorCheckpoint",
+      "exitCode": 0,
+      "log": "extracted/cpp-editor-prepared-ui-426-focused/CampaignExistingEditorCheckpoint.log",
+      "sha256": "16fd22ce6da94103232457728da7d0afba665299127c86cf9a745beda84a82d6",
+      "tests": 19,
+      "failures": 0
+    },
+    {
+      "filter": "ExistingEditorAfterCheckpoint",
+      "exitCode": 0,
+      "log": "extracted/cpp-editor-prepared-ui-426-focused/ExistingEditorAfterCheckpoint.log",
+      "sha256": "1f0850a035f57ceab693dfd688c1575f06b08e4257a1c92f2c8e71f1578c7ffa",
+      "tests": 4,
+      "failures": 0
+    },
+    {
+      "filter": "RawSurfaceStorage",
+      "exitCode": 0,
+      "log": "extracted/cpp-editor-prepared-ui-426-focused/RawSurfaceStorage.log",
+      "sha256": "1c708e3bddad497736911a09d9abffe0bc3874b53fc2daf8e368d188a76254a9",
+      "tests": 5,
+      "failures": 0
+    },
+    {
+      "filter": "ProductionInitialContext",
+      "exitCode": 0,
+      "log": "extracted/cpp-editor-prepared-ui-426-focused/ProductionInitialContext.log",
+      "sha256": "234b3d2b389359ca671b6abfa113544f6e20a4a34b8b8ed7ff6f9da3353f20c9",
+      "tests": 14,
+      "failures": 0
+    },
+    {
+      "filter": "CampaignSession_ActualClientPlayerOwnerAcrossSessions",
+      "exitCode": 0,
+      "log": "extracted/cpp-editor-prepared-ui-426-focused/CampaignSession_ActualClientPlayerOwnerAcrossSessions.log",
+      "sha256": "9fa13fe7ea12bc559d7daf278d5ee76824de845550fc38f96edf96fc520af651",
+      "tests": 1,
+      "failures": 0
+    },
+    {
+      "filter": "CampaignSession_ActualLoginUsesClientCurrentCoreSlot",
+      "exitCode": 0,
+      "log": "extracted/cpp-editor-prepared-ui-426-focused/CampaignSession_ActualLoginUsesClientCurrentCoreSlot.log",
+      "sha256": "2d3b7edbcb477a0ec7455254f3076d55aebd5b01a63eabd7e176ce19f37a3930",
+      "tests": 1,
+      "failures": 0
+    },
+    {
+      "filter": "CampaignSession_PlayerLinks",
+      "exitCode": 0,
+      "log": "extracted/cpp-editor-prepared-ui-426-focused/CampaignSession_PlayerLinks.log",
+      "sha256": "92dd3b233ea52ef75b8fc85e7aad6c78f4b07e95fca1a4ff39f6bfa591b7c984",
+      "tests": 5,
+      "failures": 0
+    }
+  ],
+  "focusedTests": 49,
+  "protectedFiles": {
+    "count": 1821,
+    "unchanged": true
+  },
+  "productGuiExecuted": false,
+  "originalGameExecuted": false,
+  "fullCTestExecuted": false,
+  "lastIntegrated": {
+    "commit": "345b5691",
+    "report": "cpppj/kencloud-client-runtime-20261025.json",
+    "reportSha256": "f29ab71ae6e9bc921a79aad1fb78bbaf26d89f0bc471ab971863796fe7f02a38",
+    "productSha256": "e36f495c0125936184b98967d67a3df7e82f8c66c81769fd3a1fd4c4bae35435",
+    "testBinarySha256": "4f977376bdddfba3611fd5de66310fe32596b489f2019657b36dc80db652ba9e",
+    "ctest": {
+      "tests": 2843,
+      "failed": 0,
+      "seconds": 334.43
+    }
+  },
+  "pending": [
+    "Actual State1 cleanup(0)/prefix and native shared globals",
+    "Editor local transport registration and main-loop polling",
+    "UberGump actual Edit install, user input, custom map edit/save",
+    "Batch full CTest and long play after feature group or 3-5 units"
+  ]
+}

@@ -63,6 +63,7 @@ class ClientCoreDataGlobals; // 현재 Core/active/cache를 같은 Client 수명
 class ClientGameplayGlobals;struct ProductionControlContext; // 실제 초기 HUD와 같은 현재 전역/물리를 공유한다.
 class ClientColorSortInput; // 같은 Client 최초 고정RGB 소유자이며 raw primary 전체 복원과 구별한다.
 class ClientLocalStateGlobals; // 실제 Client의 State 다섯 블록과 활동 기한의 장기 소유자다.
+class InputQueue;struct ExistingEditorAfterCheckpointEffects; // 원문 tail의 같은 입력 고리와 실제 HUD/음악/팔레트 장치를 동기 호출로 빌린다.
 struct TemplateWriteStream; // 실제 Template 저장소가 발급하는 명시 쓰기 수명이다.
 struct QuickHelpTypeInfo; // 전용 도움말이 같은 현재 TYPE/요구 에너지를 읽는 정보다.
 class RawCampaignCursor; // 세션과 같은 실제 커서/로컬 예측의 고정 주소 소유자다.
@@ -153,6 +154,7 @@ struct CampaignExistingEditorCheckpointServices {
 struct RawCampaignSessionServices {
     CampaignInstallMode installMode{CampaignInstallMode::Campaign}; //기존모든호출은캠페인입력을보존한다.
     bool deferExistingEditorFile{}; //명시ExistingEditor만ctor파일설치를checkpoint의실제File.load까지지연한다.기존Campaign/LocalLogin/단계검사는false를유지한다.
+    bool adoptPreparedWorld{}; // 실제 State cleanup/prefix가 준비한 같은 Client 전역·표면·Player를 초기화 없이 빌린다. 지연 ExistingEditor 설치에서만 사용한다.
     std::function<void(std::span<std::uint8_t>)> templateStateBytes; // 빈 State 초기화의 미정 바이트를 현재 실제 할당 입력으로 공급한다.
     std::shared_ptr<CampaignTemplateStorage> templateStorage; // Init의 명시 정리까지 실제 manager/State/이미지를 같은 저장소에 유지한다.
     std::shared_ptr<const std::vector<std::uint8_t>> missionFortImage; // 실제 선택 파일의 같은 원문이며 초기 manager 읽기 부모가 소비한 뒤 반납한다.
@@ -234,6 +236,8 @@ public:
     void LoadExistingEditorDeck(); //실제World/Graph뒤의Deck부모만실행한다.외곽완료/loaded확정은별도다.
     void InstallExistingEditorCheckpoint(const CampaignExistingEditorCheckpointServices& effects,const std::uint32_t& readOnlyForts,const EditorFiles& files); //명시지연Editor의실제파일부터004b743b까지한번조립한다.참조장치는Session보다오래살며최종loaded는쓰지않는다.
     bool ExistingEditorCheckpointReady() const; //전체설치성공이아닌위한정부모의정상복귀여부만조회한다.
+    void WithExistingEditorInstallUi(ClientLocalStateGlobals& owner,InputQueue& input,const ExistingEditorAfterCheckpointEffects& effects,std::function<void()> prepareUi); // 같은 checkpoint 뒤 게임/UI 하위를 한 번 준비하고 실제 원문 tail을 직접 호출한다. 공개 입력·저장은 계속 거부한다.
+    void CommitExistingEditorInstall(ClientLocalStateGlobals& owner); // 같은 전체144BYTE State의 정상 공통 확정과 UI/tail 완료를 검사한 마지막 한 곳에서 Editor loaded를 공개한다.
     void WriteExistingEditorCoreData(std::uint32_t slot); //명시Editor의실제004beb30을현재Storage/모드에연결한다.직렬화하위미복원은선택위치에서거부하며loaded를변경하지않는다.
     void RefreshCurrentPlayerCore(); //실제선택Login Core/현재기술/다이스count로0044fc00을실행한다.선택Core없음은필수누락이며loaded/owner를바꾸지않는다.
 

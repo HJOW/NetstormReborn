@@ -16,16 +16,18 @@ public:
     ClientGameplayGlobals(const ClientGameplayGlobals&)=delete;ClientGameplayGlobals& operator=(const ClientGameplayGlobals&)=delete; // 살아 있는 전역 주소를 복제하지 않는다.
     class Use {
     public:
-        ~Use(); // 모든 Session 소비자 반납 뒤 현재 Runtime과 폐기된 Player/커서 상태를 해제한다.
+        ~Use(); // 일반 대여는 기존 무효화를 유지하고 준비 상태 대여는 Runtime 연결만 반납한다.
         Use(const Use&)=delete;Use& operator=(const Use&)=delete; // 단일 Runtime 대여를 복제하지 않는다.
         void Publish(RawCampaignSession& session); // 완성한 실제 Session만 현재 실행 대상으로 연결한다.
         void Withdraw(RawCampaignSession& session); // 모듈 소멸이 시작되기 전에 실행 대상만 해제한다.
     private:
         friend class ClientGameplayGlobals;
-        explicit Use(ClientGameplayGlobals& globals); // 초기화 전 중복 대여를 거부한다.
+        explicit Use(ClientGameplayGlobals& globals,bool prepared=false); // 중복 대여를 먼저 거부하며 명시 준비 대여는 게임 값을 초기화하지 않는다.
         ClientGameplayGlobals& globals_; // Client의 실제 고정 주소다.
+        bool prepared_; // 실제 Native 부모의 준비 값을 대여 종료에서도 암묵 정리하지 않는 수명 정책이다.
     };
     std::unique_ptr<Use> Acquire(); // 기존 독립 Session 생성 의미를 같은 전역 주소에서 수행한다. NativeState 전체 순서와 구별한다.
+    std::unique_ptr<Use> AcquirePrepared(); // 명시 Native 정리/prefix의 현재 값을 그대로 빌린다. 준비 완료 판정은 조립 호출자의 책임이다.
     RawCampaignSession& RequireSession() const; // 선택된 게임 효과가 실제 Runtime을 요구할 때만 호출한다.
     bool Borrowed() const; // 현재 대여 여부의 읽기 전용 관측이다.
     const std::shared_ptr<ClientSubscriberGlobals>& Subscribers() const; // 다른 Client의 참조를 잘못 합치지 않는다.
