@@ -21,6 +21,7 @@
 #include "client/ClientChatWindowGlobals.h"
 #include "client/ClientHtmlWindowGlobals.h"
 #include "client/ClientChatManagerGlobals.h"
+#include "client/ClientChatRuntime.h"
 #include "client/ClientDotCommandGlobals.h"
 #include "client/RawSurfaceWorld.h"
 #include "client/UberGump.h"
@@ -366,9 +367,10 @@ int Client::Run() {
     if (!PumpMessages()) return 0;
     // [원본] 송수신기, squid 목록(120000), 좌표 해시, spot 배열, 영상, Guide, 그래프,
     //        전체 명령 표, 인트로 감지, 연락처, 지도 모드, HTTP 서버 — 옮기지 않았다.
-    fortBadges_->ResetCounts(); // 원본0043984a의 시작 지도 초기화 뒤 count reset이며 매 Session 생성 때 반복하지 않는다.
     // 원본 00438dc0 "loadContactList" 다음의 FUN_00469fc0: 전투 밖이므로 메뉴 곡 ser22.mus로 시작한다.
     if (audio_) audio_->StartScene(false);
+    if (options_.edition==o::OriginalEdition::Patch1078) InitializeClientChatManager(*this); //00439840의 실제 map mode 시작이며 메뉴/Session 생성보다 먼저 같은 현재 manager/명령표를 구성한다.
+    fortBadges_->ResetCounts(); // 원본0043984a는 Chat 시작 다음의 같은 장부 count reset이며 매 Session 생성 때 반복하지 않는다.
     // 현재 UberGump는 단일 플레이 메뉴/브리핑과 저장 미션의 지형·선택·이동 월드를 연결한다.
     if (ready) ready(*this);
     else { menu_ = std::make_unique<UberGump>(*this); if (!options_.mission.empty()) menu_->StartMission(options_.mission); }

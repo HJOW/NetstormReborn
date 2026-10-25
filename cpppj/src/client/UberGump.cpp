@@ -58,6 +58,8 @@
 #include "client/RawTextEntryControls.h"
 #include "client/ClientCoreDataGlobals.h"
 #include "client/ClientChatManagerGlobals.h"
+#include "client/ClientChatRuntime.h"
+#include "client/ClientDotCommandGlobals.h"
 #include <algorithm>
 #include <sstream>
 #include <stdexcept>
@@ -1184,6 +1186,10 @@ std::string UberGump::Report() const {
     out<<"html_window_state\t"<<client_.HtmlWindowGlobals()->window.instances<<'\t'<<rawButtons_->DialogCount()<<'\t'<<rawButtons_->Menus()->HtmlWindowsOpen()<<'\n'; // Kill 뒤 인스턴스와 즉시 모달 반납을 구별하는 현재값이다.
     const auto& local=client_.LocalStateGlobals()->Blocks();out<<"fort_selection\t"<<fortSelectionMode_<<'\t'<<local[1][0]<<'\t'<<local[3][0]<<'\t'<<local[4][0]<<'\t'<<Field(std::string(client_.FortGlobals()->Pending()))<<'\n'; // 원문mode/확정phase/현재요청/next/pending을 설치완료와 구별해 읽는다.
     out<<"fort_names\t"<<Field(std::string(client_.FortGlobals()->Current()))<<'\t'<<Field(std::string(client_.FortGlobals()->Pending()))<<'\t'<<menuConfigRevision_<<'\t'<<client_.FortGlobals()->SelectedFileSpec()<<'\n'; // 같은 실제 두 버퍼/공유 dirty/선택 키를 읽기만 한다.
+    std::string rankPrefix;const auto chatManager=client_.ChatManagerGlobals()->Current(); // 실제 생성자가 쓴 NUL 문자열만 보고하며 미정 할당 꼬리를 읽지 않는다.
+    if (chatManager) { const auto bytes=client_.ChatManagerGlobals()->Bytes(chatManager).subspan(o::kChatManagerRankPrefixOffset);const auto end=std::find(bytes.begin(),bytes.end(),std::uint8_t{});if (end==bytes.end()) throw std::out_of_range("Chat 보고 접두 NUL 범위");rankPrefix.assign(reinterpret_cast<const char*>(bytes.data()),static_cast<std::size_t>(end-bytes.begin())); }
+    std::uint32_t dotCount{};for (std::size_t byte=0;byte<4;++byte) dotCount|=std::uint32_t(client_.DotCommandGlobals()->Bytes()[0xa04+byte])<<(8*byte); // 같은 실제 명령표 count DWORD의 읽기 전용 관측이다.
+    out<<"chat_manager\t"<<chatManager<<'\t'<<client_.CoreDataGlobals()->Active()<<'\t'<<Field(rankPrefix)<<'\t'<<dotCount<<'\n'; // 초기화/전송/상태 쓰기를 보고서에서 실행하지 않는다.
     out<<"fort_catalog\t"<<mapCatalog_->Cached().count<<'\t'<<mapCatalog_->Cached().dirty<<'\t'<<client_.Configuration().GetInt("mayEditMissions")<<'\t'<<mapFileSpec_.Current()<<'\n'; // 실제50칸캐시와현재원문설정/키를읽고목록을다시열거하지않는다.
     out<<"current_dialog\t"<<rawButtons_->CurrentDialog()<<'\n'; // Guide4c8e90과 같은 실제565dd4다.
     out << "thunder_processes\t" << client_.ThunderFlashCount() << '\n';

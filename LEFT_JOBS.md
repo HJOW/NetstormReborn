@@ -1,5 +1,16 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-25 단위420 완료: 실제 Chat 시작과 Fort 랭크 갱신 연결
+
+- [x] 이전419는 **f4493776 / 20261025-13 CP**로 실제 이름/작업 파일·공유 dirty 연결과 전체2814검사를 마친 진척이다. AGENTS/양 인계를 재독했으며 현재/마지막 전체 정밀 디컴파일 PC는 **HJOW-Athlon / 2026-10-23**으로 같다. 보호1821파일의 새 기준은 `extracted/cpp-chat-runtime-420-baseline.json`이다.
+- [x] 기존 RawChatManagerPrefix를 실제 Client의 명령표/Config/할당·CoreData·현재 icon TYPE의 B/C 개수와 연결하고 원문 공통 시작00439840의 map mode 위치에서 실행했다. 전체 HUD와 기존 Editor World의 동일 갱신 호출을 공유한다. 원본 B10/C14·최대139와 기존 Native644관측 fixture를 대조했다.
+- [x] 실제 작업 파일 설치가 종전 Chat 중단 위치를 지나 World/Deck/전체 snapshot/State 통지 뒤 EditorPlayers 번역 경계에 도달했다. 최초 생산 횟수1 기대 오류는 실제 하위 통지를 포함한 총5로 교정했고 실패1/2를 보존했다. 빌드1~3 종료0·최종 집중33/0이며 제품 **5a3c9d5f…**/검사 **f7b796e1…**,10소스/두 실행 파일을 고정했다.
+- [x] 실제 메인 메뉴/안내/F4/목록·Back와 일반31개 초기 진입이 모두 통과했다. 같은 실제 Chatmanager는 메뉴부터 비영이고 명령4→HUD clear/quit 포함6이 관측됐다. [작업 문서](docs/exe/cpp-chat-runtime-client-20261025.md)에 근거/한계를 기록한다.
+- [x] 데모3 초기 진입과 실제 Edit 선택/취소가 같은 제품에서 통과했다. 실제 마지막 캠페인/데모 이미지도 확인했다. 이는 일반31/Demo3의 사용자 전체 완주·승패나 Editor 설치 완료가 아니다.
+- [x] 같은 제품의 자연 Early2는 **195.71초·종료0**으로 A~I·발사기 생산/회수·환불75/SP3075→같은 프레임 Tutorial3 Guide4까지 통과했다. 실제 manager1/active0/명령6을 유지했고 다음 안내 이미지도 확인했다. 기존 완료값 보존·상태 주입0/제품타이머1이며 새 진행0→1/디스크 저장 증거는 아니다. 모든 GUI 종료 뒤 보호1821파일/설정이 기준과 같았다.
+- [x] 전체 CTest **2821/0·311.79초**가 통과했다. 마지막 보호1821파일·원본/CD 파일명 목록도 기준과 일치한다. [단위420 보고서](cpppj/chat-runtime-client-20261025.json)에 최종 소스/제품/검사·최초 실패·실제 입력/화면/원본 보존 근거를 기록한다. 문서 갱신 뒤 **20261025-14 CP**로 로컬 커밋한다. 원본 게임/새 Native oracle/전체 재디컴파일은 이번 단위에서 실행하지 않았다.
+- [ ] Login current/cache/active와 다른42e050 호출자0048fc51/004b4485/004c9670/004c96f0의 실제 수명 접합은 후속 필수다. 실제 정리004b2df0의 Core0 선택/캐시 보존이 Player 재할당보다 먼저 실행되도록 연결한 뒤 장기 current를 접합한다. Native State1 prefix/기존 Editor 설치의 EditorPlayers 번역·서식·0046e980 및 최종 UI/팔레트/loaded·실제 편집/저장 왕복을 이어 간다. 전체 `/goal`은 활성 상태다.
+
 ## 2026-10-25 단위419 완료: 현재 Fort 이름과 실제 작업 파일 장치
 
 - [x] 이전418은 **9ce63eec / 20261025-12 CP**로 전체 HUD 실제 연결·2806검사·두 Early 자연 회귀를 마친 진척이다. AGENTS/양 인계를 재독했고 현재/마지막 전체 정밀 디컴파일 PC는 **HJOW-Athlon / 2026-10-23**이다. 보호1821파일의 새 기준은 `extracted/cpp-fort-name-419-baseline.json`이다.

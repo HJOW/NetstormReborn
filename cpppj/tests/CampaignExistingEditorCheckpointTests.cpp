@@ -6,6 +6,9 @@
 #include "client/ClientRandomGlobals.h"
 #include "client/ClientFortGlobals.h"
 #include "client/ClientGameplayGlobals.h"
+#include "client/ClientChatRuntime.h"
+#include "client/ClientChatManagerGlobals.h"
+#include "client/ClientCoreDataGlobals.h"
 #include "client/FortCurrentNameDevices.h"
 #include "client/FortSelection.h"
 #include "client/EditorFortFileDevices.h"
@@ -162,4 +165,16 @@ TEST_CASE(CampaignExistingEditorCheckpoint_ActualCurrentNameSelectsWorkingFile) 
     devices.fileDevices=std::make_unique<EditorFortFileDevices>(work,client.Files(),client.Configuration(),std::move(paths));effects.load=devices.fileDevices->BindLoad(std::move(effects.load));
     bool stopped{};try { session.InstallExistingEditorCheckpoint(effects,client.ReadOnlyForts(),work); }catch (const CheckpointStop& error) { stopped=std::string_view(error.what())=="actual-chat-owner-required"; }
     CHECK(stopped && names.Current()==selected && names.Pending()==selected && names.Catalog().dirty==2 && client.Configuration().Configuration().Get("lastEditFort")==selected);CHECK(ReadFileBytes(storage->Name(session.TemplateOwner()))==ReadFileBytes(actual) && session.CurrentSubscriber()==7 && devices.titles==3 && devices.assertions.empty());CHECK(!session.ExistingEditorCheckpointReady() && CheckpointRejects<std::logic_error>([&] { session.SnapshotFort(1); }));
+}
+
+// 실제 비영 Chat 시작과 active0 자연 관문으로 종전 중단 위치를 지나 전체 저장/State 통지 뒤 다음 UI 경계를 확인한다.
+TEST_CASE(CampaignExistingEditorCheckpoint_ActualChatRuntimeAdvancesWorldAndSnapshot) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);const auto input=CheckpointInput(assets.files);ClientOptions options;options.gameDirectory=assets.root;Client client(std::move(options));InitializeClientChatManager(client);
+    CHECK(client.ChatManagerGlobals()->Current()!=0 && client.CoreDataGlobals()->Active()==0);auto storage=std::make_shared<CampaignTemplateStorage>();EditorFiles work(CheckpointRoot(assets.root.parent_path(),"chat-runtime"),{assets.root,assets.root.parent_path()/"originalCD"});const auto path=work.Prepare("Checkpoint385",input);CheckpointDevices devices;auto effects=devices.Effects(client,work);auto services=devices.Make(client,storage,input);
+    const auto surface=MakeRawSurfaceStorage(assets.game);services.surfaceStorage=surface;services.gameplayGlobals=client.GameplayGlobals();services.subscriberGlobals=client.SubscriberGlobals();services.playerRecords=client.PlayerRecords();
+    services.fortTechnologyUi=[&] { ++devices.chatCalls;RefreshClientChatRankPrefix(client,assets.game,*surface); }; // 동기 실제 부모가 current/active/Core/TYPE를 판정한다.
+    effects.players.translate=[](auto)->std::span<const std::uint8_t> { throw CheckpointStop("actual-editor-player-translation-required"); }; // 이 검사는 다음 미연결 UI 경계를 완료로 세지 않는다.
+    RawCampaignSession session(assets.game,assets.files,FortTemplate::Parse(input,assets.game.TypeTable()),"deferred.fort",std::move(services));bool stopped{};try { session.InstallExistingEditorCheckpoint(effects,client.ReadOnlyForts(),work); }catch (const CheckpointStop& error) { stopped=std::string_view(error.what())=="actual-editor-player-translation-required"; }
+    if (!(stopped && devices.chatCalls==1 && devices.camera==1 && devices.production==5 && session.CurrentTechnologyParent()!=0)) std::fprintf(stderr,"Actual Chat checkpoint stopped=%u chat=%u camera=%u production=%u technology=%u\n",stopped?1U:0U,devices.chatCalls,devices.camera,devices.production,session.CurrentTechnologyParent()); // 실제 하위 통지까지 포함한 부분 효과가 다른 경우 진단한다.
+    CHECK(stopped && devices.chatCalls==1 && devices.camera==1 && devices.production==5 && session.CurrentTechnologyParent()!=0);CHECK(!(storage->State(session.TemplateOwner()).bytes[0]&1U) && ReadFileBytes(path)!=input && !session.ExistingEditorCheckpointReady());CHECK(CheckpointRejects<std::logic_error>([&] { session.SnapshotFort(1); })); // 이 입력의 전체 World/저장 하위도 같은 생산 장치에 통지하므로 외곽 직접 호출1회와 총횟수5를 구별한다.
 }

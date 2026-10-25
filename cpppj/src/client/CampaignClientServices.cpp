@@ -7,6 +7,7 @@
 #include "client/UberGump.h"
 #include "client/ClientAudio.h"
 #include "client/ClientMain.h"
+#include "client/ClientChatRuntime.h"
 #include "client/RawButtonControls.h"
 #include "client/RawMenuControls.h"
 #include "client/RawChatChannels.h"
@@ -106,6 +107,7 @@ RawCampaignSessionServices MakeCampaignClientServices(Client& client,RawButtonCo
     services.screenPalette=[&client] { return client.GetScreen().Palette(); }; // Screen 재생성 뒤에도 그때의 현재 팔레트를 조회한다.
     services.randomGlobals=client.RandomGlobals(); // Session교체/Subscriber/파편/Seed/지형이같은Client의실제CRT를사용한다.
     services.localStateGlobals=client.LocalStateGlobals(); // 메뉴/Editor에서 사용한 같은 State와00544d58 기한을 로그인도 직접 빌린다.
+    services.fortTechnologyUi=[&client] { RefreshClientChatRankPrefix(client,client.Assets(),*client.SurfaceStorage()); }; // 같은 실제 Chat/Core/아이콘을 기존 Fort Technology 부모의0042f540 위치에서 갱신한다.
     services.templateStateBytes=CurrentAllocationBytes; // 원본이 쓰지 않는 State 바이트를 임의0 대신 현재 호스트 할당 입력에서 받는다.
     // 실제 커서 비용과 같은 Gump 트리/게임 시계에 Cast/Drop 금액 표시를 붙인다.
     services.carrierDropPopup=[&controls](std::int32_t cost,std::int32_t x,std::int32_t y,std::uint32_t reference) { auto* menus=controls.Menus();if (!menus) throw std::logic_error("Cast/Drop 비용표시 실제Gump미설치");menus->ShowSp(cost,x,y,reference); };

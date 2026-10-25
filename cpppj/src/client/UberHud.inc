@@ -3,7 +3,6 @@ struct UberGump::HudRuntime {
     std::int32_t width{},height{},left{},top{},mapWidth{},mapHeight{}; // 실제 화면/지도 원점·폭높이를 같은 도킹 몸체가 쓴다.
     std::uint32_t shown{1},fullRefresh{};float chatY{}; // 현재 미션 HUD 표시와 전체 갱신/이전 채팅 위치다.
     std::array<float,4> floatRect{};ScreenRect leftBottom{}; // 정수 지도LTRB는 공통 GumpTree 소유자를 직접 빌리고 float/제외 영역만 여기에 둔다.
-    std::array<std::uint8_t,256> rankOutput,rankTemporary; // 원문의 미작성 임시 BYTE를 임의0으로 채우지 않는다.
     std::string paletteProbe;bool paletteFound{}; // 실제 고정9인자 경로의 현재 결과와 파일 존재 관측이다.
 };
 // 현재 실제 네 공장과 같은 등록표의 전체 루트를 설치한다. State1의 원문 정리/prefix를 대신하지 않는다.
@@ -53,12 +52,7 @@ void UberGump::InstallHud() {
             data.config=[this](auto key) { return client_.Configuration().GetInt(key); };data.quit=[this](auto event,auto first,auto second) { client_.Input().Push(event,std::bit_cast<std::int32_t>(first),std::bit_cast<std::int32_t>(second)); };
             return rawButtons_->Menus()->CreateChatWindow(std::move(data)); // 선택한 recipient/전송/clipboard 미연결은 기존 본체의 도달 위치에서 계속 명시 거부한다.
         };
-        context.root.refreshTechnology=[this] {
-            auto hooks=MakeClientChatManagerHooks(client_.ChatManagerGlobals());
-            hooks.core=[this] { const std::uint32_t metamap=client_.SurfaceStorage()->ownerMode.challenge;return client_.CoreDataGlobals()->Read(client_.GameplayGlobals()->player,metamap,{[](auto line) { throw std::logic_error("Chat 랭크 Core 원문 진단:"+std::to_string(line)); }}); };
-            hooks.maximumRank=[]() -> std::int32_t { throw std::logic_error("Chat 실제 icon 최대랭크 장치 미연결"); };hooks.minorCount=[]() -> std::int32_t { throw std::logic_error("Chat 실제 icon 소랭크 장치 미연결"); };
-            o::RefreshChatManagerRankPrefix({client_.ChatManagerGlobals()->Current(),client_.CurrentSubscriber(),client_.CoreDataGlobals()->Active()},hooks,hud_->rankOutput,hud_->rankTemporary);
-        };
+        context.root.refreshTechnology=[this] { RefreshClientChatRankPrefix(client_,client_.Assets(),*client_.SurfaceStorage()); }; // Fort Technology와 같은 실제 현재 manager/Core/아이콘을 사용한다.
         context.root.translate=[this](auto text) { return client_.ChatWindowGlobals()->Store(FontBytes(client_.Translate(text))); };
         context.root.help=[this](auto token,auto text) { rawButtons_->Menus()->SetHelpText(token,client_.ChatWindowGlobals()->strings.at(text)); };
         context.root.helpWord=[this](auto token,auto text) { rawButtons_->Menus()->SetHelpWord(token,text); };

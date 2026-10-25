@@ -16,6 +16,7 @@ target_sources(netstorm PRIVATE client/ProductionShortcuts.cpp client/Production
 target_sources(netstorm PRIVATE o/RawMinimapRaster.cpp o/RawMinimapRaster.h client/MinimapGeometry.cpp client/MinimapGeometry.h client/RawMinimapControls.cpp client/RawMinimapControls.h)
 target_sources(netstorm PRIVATE client/RawUberRootControls.cpp client/RawUberRootControls.h)
 target_sources(netstorm PRIVATE client/ClientFortGlobals.cpp client/ClientFortGlobals.h)
+target_sources(netstorm PRIVATE client/ClientChatRuntime.cpp client/ClientChatRuntime.h) # 같은 실제 시작/명령표/설정/Core/아이콘 자산을 Chat 본체에 연결한다.
 target_sources(netstorm PRIVATE client/FortCurrentNameDevices.cpp client/FortCurrentNameDevices.h)
 # 원본 단일 객체/청크 저장을 같은 현재 TYPE·가상 분배와 Finder에 연결한다.
 target_sources(netstorm PRIVATE o/RawFortObjectSave.cpp o/RawFortObjectSave.h)
