@@ -10,36 +10,41 @@ AI 를 이용해 되살리는 프로젝트입니다.
 
 # 현재 개발 진행상황
 
-**cpppj는 2026-10-22 단위300, dotnetpj는 2026-10-21 W03 열째 조각의 인수인계 기준**입니다. 실행·플레이 가능 범위와 원본 게임과의 동일성을 구분해 기록합니다.
+**cpppj는 2026-10-26, dotnetpj는 2026-10-23 W03 열일곱째 조각, webpj는 2026-10-23 WB03-M1의 인수인계 기준**입니다. 실행·플레이 가능 범위와 원본 게임과의 동일성을 구분해 기록합니다.
 
 | 프로젝트 | 실행·플레이 가능 범위 | 원본과의 동일성 및 남은 범위 |
 | --- | --- | --- |
-| cpppj — C++ 복원판 | Windows 창 모드에서 메뉴·브리핑·안내, 건설·생산·다리 배치/회전·채취/운반·실제 교전을 연결했습니다. Early1·2의 자연 완주와 다음 튜토리얼 진입, 캠페인1-1의 적 신전 파괴를 실제로 관측했습니다. | 10.78 디컴파일·기계어 대조 기반입니다. **적·아군·데모 공통 AI의 다리 전략·전체 행동 순서/자동 프레임**, 미션 전환·정리, 자연 포획/희생·승패 및 목표15개 전체 플레이 검증이 남았습니다. Edit·커스텀 맵/시나리오와 전체 그래픽·음향·입력 동일성은 미완료입니다. |
-| dotnetpj — C# + MonoGame 클론 | 캠페인 **1-1 전쟁의 시작!(The War Begins!)**, **1-2 훨리기그의 지배자(Master of Whirligigs)**의 플레이와 건설·생산·이동·전투 조작을 구현했습니다. 영어·한국어 UI, 도움말·우클릭 메뉴·옵션을 제공합니다. Early Missions와 데모는 아직 메뉴에서 열리지 않습니다. | 원본 검증 규칙을 차례로 이식 중입니다. 공통 미션 판정 등의 세션 연결과 별도로, 원본 월드 코어의 생성·그래프·삭제 수명·일반/사제 피격 모듈을 검증했습니다. **새 월드 코어는 아직 실제 세션에 연결되지 않았으며**, 실제 플레이의 건설·전투·경로·SP·AI·시간 규칙은 관찰 기반 근사입니다. 자연 완주→진행 저장→재실행→다음 미션 해제와 원본 동일성은 추가 검증이 필요합니다. |
+| cpppj — C++ 복원판 | Windows 창 모드에서 원본 메인 메뉴·브리핑·안내, 건설·생산·다리 배치/회전·채취/운반·교전, 게임 중 UI(좌측 덱·미니맵·QWASZX 단축키·ESC 메뉴), 적·아군·데모 공통 AI의 자동 실행을 연결했습니다. Early Missions·Priest Training·캠페인 전체 31개와 데모 3개가 메뉴에서 진입·시작됩니다. Early1·2는 끝까지 진행한 뒤 다음 튜토리얼로 넘어가는 것을 확인했고, 캠페인1-1은 적 신전 파괴까지 확인했습니다. | 10.78 디컴파일·기계어 대조 기반입니다. Early3 이후와 캠페인·Priest Training의 자연 완주, 사제 포획/희생·승패·진행 저장, 데모 반복, Edit 메뉴의 편집 화면·저장·커스텀 시나리오가 남았습니다. 전체 그래픽·음향·입력 동일성도 미완료입니다. |
+| dotnetpj — C# + MonoGame 클론 | 캠페인 **1-1 전쟁의 시작!(The War Begins!)**, **1-2 훨리기그의 지배자(Master of Whirligigs)**의 플레이와 건설·생산·이동·전투 조작을 구현했습니다. 영어·한국어 UI, 도움말·우클릭 메뉴·옵션을 제공합니다. Early Missions와 데모는 아직 메뉴에서 열리지 않습니다. | 원본 검증 규칙을 차례로 이식 중입니다. 공통 미션 판정 등의 세션 연결과 별도로, 원본 월드 코어의 생성·그래프·삭제 수명·피격·Form 수명·SP 저장소/보상 모듈을 검증했습니다. **새 월드 코어는 아직 실제 세션에 연결되지 않았으며**, 실제 플레이의 건설·전투·경로·SP·AI·시간 규칙은 관찰 기반 근사입니다. 자연 완주→진행 저장→재실행→다음 미션 해제와 원본 동일성은 추가 검증이 필요합니다. |
+| webpj — HTML + JavaScript 웹 클론 | 원본 자산 적재 → "클릭하여 시작" → 원본 메인 메뉴 화면까지 구현했습니다. 메뉴 버튼이 여는 다음 화면과 게임 플레이는 아직 없습니다. | 메인 메뉴의 버튼 배치·돌 버튼 질감·입력·효과음·음악·커서를 원본 디컴파일 결과에 맞추고 스크린샷과 대조했습니다. 본격적인 게임 구현은 cpppj 완성 후 진행합니다. |
 
 ## C++ 복원판의 최신 상태
 
-현재 구현 목표는 **Early Missions1~6·캠페인1-1~1-6·데모3개, 총15개 미션의 원본10.78과 동일한 플레이와 Edit 메뉴의 커스텀 맵/시나리오 기능**입니다. 기존 플레이 기반에는 SP·기술·사제 참여·Start/StartDemo, 건설·생산·다리·경제·전투, Early 전용 판정과 공통 미션 프레임을 연결했습니다. F8 안내 재표시, Guide 전환·실패/중단/다음 미션 명령 큐, 지식 카드와 Help도 연결했습니다. 확대된 목표와 최신 완료/미완료 범위는 [인수인계](LEFT_JOBS.md)를 참고하세요.
+현재 구현 목표는 **Early Missions 6개·Priest Training 9개·캠페인 전체 16개·데모 3개를 원본 10.78과 같게 플레이**할 수 있게 하고, **Edit 메뉴(커스텀 맵/시나리오 포함)**, Multiplayer를 제외한 메인 메뉴, 게임 중 UI(좌측 덱·좌측 하단 미니맵·QWASZX 다리 단축키·ESC 메뉴)를 구현하는 것입니다. 현재 상태와 앞으로 할 작업은 [인수인계](LEFT_JOBS.md)를 참고하세요. 2026-10-25까지의 단위별 상세 이력은 [LEFT_JOBS.old.md](LEFT_JOBS.old.md)로 옮겼습니다.
 
-[Early1](docs/exe/cpp-tutorial-harvest-20261019.md)과 [Early2](docs/exe/cpp-tutorial-two-runtime-20261019.md)는 정상 입력으로 건설·채취/생산·완료 기록과 다음 튜토리얼 진입까지 관측했습니다. 캠페인1-1은 [실제 전진 캐논으로 적 시설/신전 파괴](docs/exe/cpp-forward-window-20261019.md)까지 확인했으나 적 사제 포획·희생·승리는 확인하지 못했습니다. Early5의 부분 진행과 이전 범위11개 미션의 로드/Start·짧은 프레임 검사 이력은 현재15개 전체 완주 증거와 구분합니다.
+[Early1](docs/exe/cpp-tutorial-harvest-20261019.md)과 [Early2](docs/exe/cpp-tutorial-two-runtime-20261019.md)는 정상 입력으로 건설·채취/생산·완료 기록과 다음 튜토리얼 진입까지 관측했습니다. 메뉴에서 일반 미션 31개와 데모 3개에 진입해 시작하는 검사도 통과했습니다. 캠페인1-1은 자동 AI가 활동하는 세션에서 [실제 캐논으로 적 신전을 파괴](docs/exe/cpp-forward-ai-assault-20261022.md)하는 것까지 확인했으나, 적 사제 포획·희생·승리는 확인하지 못했습니다. 미션 진입과 짧은 진행 검사는 완주 증거와 구분합니다.
 
-[Devastation·포획/희생의 집중13검사](docs/exe/cpp-ritual-runtime-focused-20261021.md)는 통과했지만 일부 입력은 명시 시전원·포로·시계 상태를 사용했습니다. 실제 UI에서 주문 취득→시전→포획→운반→희생까지 자연스럽게 이어지는 검증은 남아 있습니다. [썬 디스크 발사기/훨리베이스 본체와 비행체 그림자 수정](docs/exe/cpp-combat-draw-and-defense-20261021.md) 이후 사용자가 실제 게임 테스트를 중단했으며, 해당 테스트는 보류 중입니다.
+[공통 전략 AI](docs/exe/cpp-ai-automatic-session-20261022.md)는 적·아군·데모의 로컬 소유자가 같은 원본 전략을 쓰도록 복원해 실제 세션의 프레임에 연결했습니다. 일반 미션은 사람이 로컬 소유자를 조작하고, 데모는 로컬 소유자도 같은 AI로 움직입니다. 정상 행동 간격에서 확장·채취·생산·공격이 원본과 같은지는 자연 플레이로 대조해야 합니다.
 
-[공통 AI](docs/exe/cpp-ai-world-preparation-20261021.md)의 생성·가계부·통지·월드 인식·초기 전략에 이어 경제/다리 재고 보충·실제 생산·수집자·기술 생산/업그레이드·이동·사제 행동 하위를 복원했습니다. 최근에는 [후보 스캔](docs/exe/cpp-ai-drop-scan-20261022.md), [기술/회전별 TYPE 선택](docs/exe/cpp-ai-drop-selection-20261022.md), [가짜 에너지 부족좌표 갱신](docs/exe/cpp-ai-fake-dry-spots-20261022.md), [전체 건물 배치 행동](docs/exe/cpp-ai-drop-actions-20261022.md)을 같은 실제 Session의 기술·생산·비용·난수·지도·배치 경로에 연결했습니다.
+게임 중 UI는 원본 HUD 루트·도킹과 [미니맵](docs/exe/cpp-minimap-20261023.md), 생산 덱과 [QWASZX 단축키](docs/exe/cpp-production-shortcuts-20261023.md), [ESC 가로 메뉴](docs/exe/cpp-game-menu-runtime-20261023.md)를 실제 미션에 연결했습니다. 넓은 도킹 드래그, Chat 입력, 픽셀 단위 동일성 검증은 남아 있습니다.
 
-**다리 전략과 전체 행동 순서·자동 AI 프레임/종료는 아직 미완료**입니다. 현재의 명시 호출 연결은 자동 전략 루프의 실행 증거가 아닙니다. 일반 미션은 사람이 로컬 소유자를 조작하고, 데모는 로컬 소유자도 같은 AI로 움직여야 합니다. Template/State의 실제 전환·정리와 승패/재시작 수명 연결도 남아 있습니다.
+[Devastation·포획/희생의 집중13검사](docs/exe/cpp-ritual-runtime-focused-20261021.md)는 통과했지만 일부 입력은 명시 시전원·포로·시계 상태를 사용했습니다. 실제 UI에서 주문 취득→시전→포획→운반→희생까지 자연스럽게 이어지는 검증은 남아 있습니다. 포획·희생 테스트는 데모의 아군 AI를 우리 편에 적용하는 테스트 옵션을 만든 뒤 진행할 예정입니다.
 
-**Edit 메뉴의 전체 사용 흐름도 미완료**입니다. 신규/불러오기, 지형·섬·오브젝트·소유자 편집, Fort 저장/재불러오기, 언어별 시나리오 파일의 브리핑·플레이어·AI·시작 SP 적용, 테스트 전투와 편집 복귀를 원본과 같게 연결·검증해야 합니다.
+**Edit 메뉴는 맵 목록과 선택까지 실제 화면에 연결**했습니다. 편집 세션 조립과 Fort 저장·재불러오기는 단위 검사에서 동작하지만, 편집 화면 설치, 지형·섬·오브젝트·소유자 편집 도구, 새 맵·Save as, 테스트 전투와 편집 복귀, 언어별 시나리오 파일의 브리핑·플레이어·AI·시작 SP 적용은 남아 있습니다.
 
-최신 AI 구현 단위300의 Release 빌드는 **종료0·경고0·오류0**입니다. 이번에 추가한19개 C++검사는 **작성·컴파일만 했고 실행하지 않았습니다**. 최근 AI 복원은 빌드·정적 확인까지이며, 과거 전체 회귀/플레이 성공을 최신 코드 전체의 통과로 표시하지 않습니다. 15개 미션과 Edit 목표, 전체 그래픽·음향·입력/시간 동일성은 미완료입니다. DirectDraw 오류 수정과 Windows10/11 전체화면 안정화는 cpppj2차 목표의 별도 필수 작업입니다.
+마지막 통합 검증(2026-10-26 커밋 `e210c755`)에서 Release 빌드는 **경고0·오류0**, 전체 CTest **3,007개·실패0**이었고, 메뉴 GUI와 Early2 자연 진행도 통과했습니다. 단위 검사 통과나 미션 진입만으로 완주·동일성을 판정하지 않습니다. DirectDraw 오류 수정과 Windows10/11 전체화면 안정화는 cpppj 2차 목표의 별도 필수 작업입니다.
 
 ## C# + MonoGame 클론의 최신 상태
 
 메인 메뉴의 캠페인 목록은 원본 스크립트의 장·선행 완료 조건과 저장된 진행값을 읽고, 실제 지원 미션을 제한합니다. 옵션에서는 해상도·창/전체화면·소리·음량·바람 소리·스피커 좌우 교환을 바꿀 수 있습니다. 도움말과 F1에서 원본 도움말을 탐색하고, 사제·워크샾·생산 항목의 우클릭 메뉴를 사용할 수 있습니다. [기능·진행 저장 검토](docs/dotnet-review-20261011.md), [녹화 분석 적용 범위](docs/screens/recorded-ui-clone-20261002.md), [캠페인1-1](docs/gameplay/campaign-one.md)·[1-2 구현](docs/gameplay/campaign-two.md)을 참고하세요. 초기 구현 문서보다 [최신 인수인계](LEFT_JOBS.dotnetpj.md)가 우선합니다.
 
-공통 미션 프레임 게이트·플레이어 참여/방향별 동맹·누적 제작 장부·튜토리얼1 단계 판정기는 원본 검증 결과를 이식해 기존 세션에 연결했습니다. 별도로 원본 월드 코어를 구축하고 있으며, W02의 슬롯/공간 해시·Pop/Unpop·소유자/프레임·다리/그래프에 이어 W03의 삭제 수명·해방·일반 피해·[사제 피격/HP 변경](docs/dotnet-original-core-priestdamage-20261021.md)과 [종속 조회·삭제](docs/dotnet-original-core-containedlookup-20261021.md)까지 모듈 단위로 검증했습니다. **연결 fixture는51개**입니다. 최신 기록인 2026-10-21 W03 열째 조각의 전체 Release는 **경고0·오류0**, 단위 **1,277개 통과**(Assets363·Core914)입니다. 이 수치는 모듈 검증 기록이며 실제 플레이 범위가 늘었다는 뜻은 아닙니다.
+공통 미션 프레임 게이트·플레이어 참여/방향별 동맹·누적 제작 장부·튜토리얼1 단계 판정기는 원본 검증 결과를 이식해 기존 세션에 연결했습니다. 별도로 원본 월드 코어를 구축하고 있으며, W02의 슬롯/공간 해시·Pop/Unpop·소유자/프레임·다리/그래프에 이어 W03의 삭제 수명·해방·일반 피해·[사제 피격/HP 변경](docs/dotnet-original-core-priestdamage-20261021.md)·[종속 조회·삭제](docs/dotnet-original-core-containedlookup-20261021.md)·[Form 수명](docs/dotnet-original-core-formlifecycle-20261022.md)·Form 패킷·내용물 수명·신전 삭제 전처리·자산 가상 삭제, W05 선행인 [SP 저장소와 삭제 보상](docs/dotnet-original-core-spstore-reward-20261023.md)까지 모듈 단위로 검증했습니다. **연결 fixture는 61개**입니다. 최신 기록인 2026-10-23 W03 열일곱째 조각의 전체 Release는 **경고0·오류0**, 단위 **1,349개 통과**(Assets363·Core986)입니다. 이 수치는 모듈 검증 기록이며 실제 플레이 범위가 늘었다는 뜻은 아닙니다.
 
-다음은 W03의 내용물 수명(`ContentFormLifetime`)·Form 수명·신전 삭제·삭제 보상 계산, 파생 분배 허브와 실제 세션 연결입니다. 이후 Kernel/Regular 시간·SP/난수 등 원본 코어와 미션 시작 상태를 맞추고, 경로·건설·전투·희생·승패·표시/UI/소리를 차례로 이식합니다. cpppj의 목표가15개 미션과 Edit로 확대됐어도 dotnetpj의 현재 플레이 범위는 위 캠페인2개입니다. cpppj에서도 아직 미완료인 전략 AI 등의 동작은 근사 범위를 명시하며, [cpppj → dotnetpj 이식 계획](docs/dotnet-cpp-port-plan-20261016.md)에 따라 자연 플레이와 원본 동일성을 확인합니다.
+다음은 선택·커서·Graph·장부·Kernel 프로세스 호스트를 묶는 삭제 수명주기 조립과 실제 세션 연결로, 미션 시작 상태를 원본과 맞추는 것입니다. 이후 Kernel/Regular 시간·SP/난수 등 원본 코어를 맞추고, 경로·건설·전투·희생·승패·표시/UI/소리를 차례로 이식합니다. cpppj의 목표가 Early Missions·Priest Training·캠페인 전체·데모와 Edit로 확대됐어도 dotnetpj의 현재 플레이 범위는 위 캠페인 2개입니다. cpppj에서도 아직 미완료인 전략 AI 등의 동작은 근사 범위를 명시하며, [cpppj → dotnetpj 이식 계획](docs/dotnet-cpp-port-plan-20261016.md)에 따라 자연 플레이와 원본 동일성을 확인합니다.
+
+## HTML + JavaScript 웹 클론의 최신 상태
+
+브라우저는 화면을 한 번 클릭하기 전에는 소리를 재생하지 않으므로, 원본 자산을 적재한 뒤 "클릭하여 시작" 화면을 거쳐 원본 메인 메뉴를 보여 줍니다. 메인 메뉴는 원본 디컴파일 결과의 버튼 배치 알고리즘·돌 버튼 질감·누름/뗌 입력·효과음·음악·커서를 따릅니다. 웹에서 쓸 수 없는 Quit와 멀티플레이 항목은 원본의 빈 칸 처리로 뺍니다. 자동 검사 17개가 통과했고, 헤드리스 브라우저에서 4:3·16:10·16:9 등 여러 화면 크기를 확인했습니다. 메뉴 버튼이 여는 화면(Campaign·Demo·Credits·Help·Options·Edit)과 게임 플레이는 아직 없습니다. [최신 인수인계](LEFT_JOBS.webpj.md)를 참고하세요.
 
 # 프로젝트 구성과 개발 목표
 
@@ -47,10 +52,13 @@ AI 를 이용해 되살리는 프로젝트입니다.
 
 `dotnetpj`는 C# + MonoGame 기반입니다. 이미 구현된 클론에 `cpppj`가 원본 기계어로 검증한 부분부터 차례로 옮겨 원본과 완전히 같은 동작을 먼저 구현합니다(2026-10-16 이식 계획). `cpppj`가 완성되면 전체를 다시 대조하고, 그 뒤 추가 요구사항을 반영합니다. GUI Linux 지원과 멀티플레이는 후순위입니다. 최종 요구사항에는 전체화면·16:9/16:10/4:3 화면비·전체화면 가장자리 스크롤·영어/한국어 지원이 포함됩니다. 애니메이션은 원본 수준을 먼저 복원한 뒤 60/120프레임 지원을 진행합니다.
 
+`webpj`는 HTML + JavaScript 기반입니다. `cpppj`가 완성되면 이를 분석해 원본과 같은 동작을 목표로 개발합니다. 멀티플레이와 웹 환경에 맞지 않는 기능(게임 종료, 해상도·전체화면 설정 등)은 제외하며, 필요한 에셋은 `webpj/www/` 안으로 복사해 사용합니다.
+
 | 경로 | 용도 |
 | --- | --- |
 | `cpppj/` | C++20·Win32 기반 복원판과 검사 |
 | `dotnetpj/` | C#·MonoGame DesktopGL 클론과 검사 |
+| `webpj/` | HTML + JavaScript 웹 클론(`www/`), 정적 웹 서버, 검사·자산 준비 도구 |
 | `assets/game-data/` | 클론용 그래픽·지도·미션·음악·효과음 데이터 |
 | `fonts/` | 한국어 표시용 D2Coding 글꼴 |
 | `docs/` | 분석·복원 근거, 빌드·플레이·검증 문서 |
@@ -58,9 +66,9 @@ AI 를 이용해 되살리는 프로젝트입니다.
 | `originals/`, `originalCD/` | 분석용 원본 10.78 및 CD판 10.72 자료 |
 | `screenShots/`, `playingVideos/`, `originalFanGame/` | 스크린샷·녹화·팬게임 참고 자료. 대용량 영상과 팬게임 코드는 Git에 포함하지 않아 PC마다 없을 수 있습니다. |
 
-한국어 건물·유닛 이름은 [공통 명칭 규칙](docs/korean-unit-names.md)을 따릅니다. 사제·신전·다리·발사기·간헐천은 번역할 수 있으며, 나머지는 워크샾·제네레이터처럼 영어 발음을 한글로 표기합니다. dotnetpj의 메뉴·유닛 제목에는 공유 이름표 55개를 연결했습니다. 도움말·미션 본문의 전체 번역은 아직 완료하지 않았습니다.
+한국어 건물·유닛 이름은 [공통 명칭 규칙](docs/korean-unit-names.md)을 따릅니다. 사제·신전·다리·발사기·간헐천·제단·거주 구역(Residence)·고갈된(Empty)은 번역할 수 있으며, 나머지는 워크샾·제네레이터처럼 영어 발음을 한글로 표기합니다. dotnetpj의 메뉴·유닛 제목에는 공유 이름표 55개를 연결했습니다. 도움말·미션 본문의 전체 번역은 아직 완료하지 않았습니다.
 
-작업 전 [AGENTS.md](AGENTS.md)와 양쪽 인수인계를 확인합니다. 원본·별도 창 실행 조건은 [실행 확인 규칙](docs/execution-confirmation.md)을 따릅니다. 분석용 원본 파일은 보호하며, 클론 데이터의 변경은 `assets/game-data/`에서 관리합니다.
+작업 전 [AGENTS.md](AGENTS.md)와 각 프로젝트의 인수인계([cpppj·공통](LEFT_JOBS.md), [dotnetpj](LEFT_JOBS.dotnetpj.md), [webpj](LEFT_JOBS.webpj.md))를 확인합니다. 원본·별도 창 실행 조건은 [실행 확인 규칙](docs/execution-confirmation.md)을 따릅니다. 분석용 원본 파일은 보호하며, 클론 데이터의 변경은 `assets/game-data/`에서 관리합니다.
 
 # 개발 환경 준비
 
@@ -168,7 +176,7 @@ NETSTORM_DATA="/절대/경로/game-data" ./dist/linux-x64/NetstormClone --langua
 
 # C++ 빌드 (복원 진행 중)
 
-Windows 10/11, CMake 3.21 이상, C++20 컴파일러(Visual Studio 2022 또는 Build Tools의 C++ 도구)가 필요합니다. Win32 API를 직접 사용하는 Windows 전용 빌드입니다. 프로젝트 루트에서 실행합니다.
+Windows 10/11, CMake 3.21 이상, C++20 컴파일러(Visual Studio 2022 이상 또는 Build Tools의 C++ 도구)가 필요합니다. Win32 API를 직접 사용하는 Windows 전용 빌드입니다. 프로젝트 루트에서 실행합니다.
 
 ```sh
 cmake -S cpppj -B cpppj/build -DCMAKE_BUILD_TYPE=Release
@@ -176,13 +184,13 @@ cmake --build cpppj/build --config Release
 ctest --test-dir cpppj/build --build-config Release --output-on-failure
 ```
 
-Visual Studio 생성기 기준 실행 파일은 `cpppj/build/bin/Release/NetstormCpp.exe`입니다. 다음 명령은 창 모드로 C++ 복원판의 메인 메뉴를 엽니다.
+전체 CTest는 3,000개가 넘는 검사를 실행하므로 수 분이 걸립니다. Visual Studio 생성기 기준 실행 파일은 `cpppj/build/bin/Release/NetstormCpp.exe`입니다. 다음 명령은 창 모드로 C++ 복원판의 메인 메뉴를 엽니다.
 
 ```powershell
 .\cpppj\build\bin\Release\NetstormCpp.exe --run originals --window
 ```
 
-`--run <게임 데이터 폴더>`는 C++ 복원판을 실행합니다. `--view fonts`, `--view types`, `--view TEST01`은 글꼴·타입·미션 검사 장면입니다. 실제 건설·생산·다리·채취/운반·전투가 연결돼 있으나 공통 전략 AI의 전체 자동 실행, 목표15개 전체 완주, Edit·커스텀 맵/시나리오와 원본 동일성 검증은 미완료입니다. 빌드 절차는 [C++ 빌드](docs/cpp-build.md), 실제 최신 연결 상태는 [인수인계](LEFT_JOBS.md)를 참고하세요.
+`--run <게임 데이터 폴더>`는 C++ 복원판을 실행합니다. `--mission <미션 키>`를 붙이면 메뉴를 거치지 않고 해당 미션의 브리핑으로 들어갑니다(예: `--mission Tutorial1`). `--view fonts`, `--view types`, `--view TEST01`은 글꼴·타입·미션 검사 장면입니다. 인자 없이(또는 `--help`로) 실행하면 빌드 정보와 사용할 수 있는 옵션을 표시합니다. 실제 건설·생산·다리·채취/운반·전투와 공통 전략 AI의 자동 실행이 연결돼 있으나, 목표 미션 전체의 자연 완주, Edit의 편집 화면·저장·커스텀 시나리오와 원본 동일성 검증은 미완료입니다. 빌드 절차는 [C++ 빌드](docs/cpp-build.md), 실제 최신 연결 상태는 [인수인계](LEFT_JOBS.md)를 참고하세요.
 
 배포용 압축파일(실행 파일·Visual C++ 런타임·원본 10.78 게임 데이터·실행 배치 파일)은 다음 스크립트로 만듭니다. 저장 위치를 생략하면 실행 중에 입력받고, 빈 값을 입력하면 취소합니다. 구성과 옵션은 [C++ 빌드 7절](docs/cpp-build.md)을 봅니다.
 
@@ -190,9 +198,19 @@ Visual Studio 생성기 기준 실행 파일은 `cpppj/build/bin/Release/Netstor
 powershell -NoProfile -ExecutionPolicy Bypass -File cpppj\package-cpppj.ps1 D:\dist\NetstormReborn-cpppj.zip
 ```
 
+# 웹 클론 실행 (HTML + JavaScript)
+
+Node.js가 필요하며(v24에서 검증) 외부 npm 패키지는 쓰지 않습니다. 필요한 에셋은 `webpj/www/data/`에 커밋돼 있습니다. 프로젝트 루트에서 다음 명령으로 정적 웹 서버를 시작한 뒤 브라우저에서 `http://localhost:9803/`을 엽니다.
+
+```sh
+npm --prefix webpj start
+```
+
+자동 검사는 `npm --prefix webpj test`로 실행합니다. `assets/game-data/`의 원본 자료가 바뀌면 `npm --prefix webpj run prepare-assets`로 `webpj/www/data/`를 다시 만들고, `npm --prefix webpj run check-assets`로 복사본을 점검합니다.
+
 # 주요 문서
 
-- [cpppj·공통 인수인계](LEFT_JOBS.md) / [dotnetpj 인수인계](LEFT_JOBS.dotnetpj.md): 최신 완료·미완료 범위와 재개 순서
+- [cpppj·공통 인수인계](LEFT_JOBS.md) / [dotnetpj 인수인계](LEFT_JOBS.dotnetpj.md) / [webpj 인수인계](LEFT_JOBS.webpj.md): 최신 상태와 앞으로 할 작업. cpppj의 2026-10-25까지 단위별 이력은 [LEFT_JOBS.old.md](LEFT_JOBS.old.md)에 있습니다.
 - [C++ 복원 로드맵](docs/cpp-roadmap.md) / [실제 플레이 복원 계획](docs/cpp-playable-plan.md): 개발 단계와 복원 계획
 - [cpppj → dotnetpj 이식 계획](docs/dotnet-cpp-port-plan-20261016.md): dotnetpj를 원본과 같은 동작으로 만드는 이식 단위와 순서
 - [클론 게임 데이터](assets/README.md): 자산 구성·출처·빌드 포함 방식

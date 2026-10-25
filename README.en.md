@@ -10,36 +10,41 @@ a game developed by Activision in 1997 and abandoned long ago.
 
 # Current development status
 
-**cpppj reflects the October 22, 2026 handover (unit 300); dotnetpj reflects October 21 (W03 part 10).** Playability and fidelity to the original are assessed separately.
+**cpppj reflects the October 26, 2026 handover; dotnetpj reflects October 23 (W03 part 17); webpj reflects October 23 (WB03-M1).** Playability and fidelity to the original are assessed separately.
 
 | Project | Execution and playability | Fidelity and remaining work |
 | --- | --- | --- |
-| cpppj — C++ reconstruction | Windows windowed-mode menus, briefings, guidance, construction, production, bridge placement/rotation, harvesting/transport and live combat are connected. Natural completion of Early Missions 1–2 and entry into the next tutorial have been observed, as has destruction of the enemy temple in Campaign 1-1. | Based on decompilation and machine-code comparisons against version 10.78. **Bridge strategy, the full action sequence and automatic frame integration for the shared enemy, allied and demo AI**, mission transitions/cleanup, natural capture/sacrifice and outcomes, and full playthrough verification of all 15 target missions remain. Edit/custom maps/scenarios and complete visual, audio and input parity are unfinished. |
-| dotnetpj — C# + MonoGame clone | Campaign **1-1 The War Begins!** and **1-2 Master of Whirligigs** have playable implementations with construction, production, movement and combat controls. English/Korean UI, help, context menus and options are available. Early Missions and demos cannot be opened from the menu yet. | Original-verified rules are being ported. In addition to session-connected mission rules, original world-core modules for creation, graphs, destruction lifecycles, general damage and priest damage have been verified. **The new world core is not yet connected to live sessions.** Live construction, combat, pathing, SP, AI and timing still use observation-based approximations. Natural completion → progress save → restart → next-mission unlock and original parity require further verification. |
+| cpppj — C++ reconstruction | In Windows windowed mode, the original main menu, briefings, guidance, construction, production, bridge placement/rotation, harvesting/transport, combat, the in-game UI (left deck, minimap, QWASZX shortcuts, ESC menu) and automatic execution of the shared enemy, allied and demo AI are connected. All 31 Early Missions, Priest Training and campaign missions, plus the three demos, can be entered and started from the menu. Early Missions 1–2 have been played through to the next tutorial, and Campaign 1-1 has reached destruction of the enemy temple. | Based on decompilation and machine-code comparisons against version 10.78. Natural playthroughs from Early Mission 3 onward and of the campaigns and Priest Training, priest capture/sacrifice, outcomes, progress saving, demo looping, and the Edit menu's editing screen, saving and custom scenarios remain. Complete visual, audio and input parity is also unfinished. |
+| dotnetpj — C# + MonoGame clone | Campaign **1-1 The War Begins!** and **1-2 Master of Whirligigs** have playable implementations with construction, production, movement and combat controls. English/Korean UI, help, context menus and options are available. Early Missions and demos cannot be opened from the menu yet. | Original-verified rules are being ported. In addition to session-connected mission rules, original world-core modules for creation, graphs, destruction lifecycles, damage, Form lifetimes and the SP store/rewards have been verified. **The new world core is not yet connected to live sessions.** Live construction, combat, pathing, SP, AI and timing still use observation-based approximations. Natural completion → progress save → restart → next-mission unlock and original parity require further verification. |
+| webpj — HTML + JavaScript web clone | Asset loading → "click to start" → the original main menu screen is implemented. The screens opened by the menu buttons and gameplay do not exist yet. | Main menu button layout, stone button texture, input, sound effects, music and cursor follow the original decompilation and were compared with screenshots. Full game implementation will follow the completion of cpppj. |
 
 ## Latest C++ reconstruction
 
-The current implementation target is **Early Missions 1–6, Campaign 1-1 through 1-6 and three demos: 15 missions with version 10.78 behavior, plus the Edit menu with custom maps and scenarios**. The existing gameplay foundation connects SP, technology, priest participation, Start/StartDemo, construction, production, bridges, economy, combat, Early-specific stage checks and the common mission frame. F8 guidance replay, Guide transitions, failure/abort/next-mission command queues, knowledge cards and Help are also connected. See the [handover](LEFT_JOBS.md) for the expanded target and current completed/remaining work.
+The current target is to make **the 6 Early Missions, 9 Priest Training stages, all 16 campaign missions and 3 demos playable with version 10.78 behavior**, and to implement **the Edit menu (including custom maps and scenarios)**, every main-menu item except Multiplayer, and the in-game UI (left deck, lower-left minimap, QWASZX bridge shortcuts and ESC menu). See the [handover](LEFT_JOBS.md) for the current state and upcoming work. Detailed per-unit history up to October 25 has moved to [LEFT_JOBS.old.md](LEFT_JOBS.old.md).
 
-[Early Mission 1](docs/exe/cpp-tutorial-harvest-20261019.md) and [Early Mission 2](docs/exe/cpp-tutorial-two-runtime-20261019.md) have been observed completing through normal input, including construction, harvesting/production, completion records and entry into the next tutorial. Campaign 1-1 has reached [enemy facility/temple destruction using a forward Sun Cannon](docs/exe/cpp-forward-window-20261019.md), but natural priest capture, sacrifice and victory have not been verified. Partial Early Mission 5 progress and historical loading/Start/short-frame checks for the earlier 11-mission scope are separate from full playthrough evidence for the current 15-mission target.
+[Early Mission 1](docs/exe/cpp-tutorial-harvest-20261019.md) and [Early Mission 2](docs/exe/cpp-tutorial-two-runtime-20261019.md) have been observed completing through normal input, including construction, harvesting/production, completion records and entry into the next tutorial. Entering and starting all 31 regular missions and the 3 demos from the menu also passes. In a session with the AI running, Campaign 1-1 has reached [destruction of the enemy temple with a real cannon](docs/exe/cpp-forward-ai-assault-20261022.md), but enemy priest capture, sacrifice and victory have not been verified. Mission entry and short-run checks are kept separate from playthrough evidence.
 
-The [13 focused Devastation/capture/sacrifice checks](docs/exe/cpp-ritual-runtime-focused-20261021.md) passed, but some use explicitly supplied caster, captive and clock states. Natural UI progression from obtaining the spell through casting, capture, transport and sacrifice still needs verification. Following [Sun Disc Thrower/Whirlibase body and flying-unit shadow fixes](docs/exe/cpp-combat-draw-and-defense-20261021.md), the user stopped live game testing; those tests remain on hold.
+The [shared strategy AI](docs/exe/cpp-ai-automatic-session-20261022.md) has been reconstructed so that enemy, allied and demo local owners use the same original strategy, and it is connected to the live session frame. Normal missions leave the local owner under human control; demos run that owner through the same AI. Whether expansion, harvesting, production and attacks at normal action intervals match the original still needs comparison through natural play.
 
-Following [shared AI](docs/exe/cpp-ai-world-preparation-20261021.md) creation, wallet/notices, world recognition and initial strategy, the reconstruction now includes action routines for economy/bridge inventory replenishment, actual production, collectors, technology production/upgrades, movement and priests. Recent work connects [candidate scanning](docs/exe/cpp-ai-drop-scan-20261022.md), [technology/rotation-based TYPE selection](docs/exe/cpp-ai-drop-selection-20261022.md), [fake energy-shortage coordinate updates](docs/exe/cpp-ai-fake-dry-spots-20261022.md) and [the full building-placement action](docs/exe/cpp-ai-drop-actions-20261022.md) to the same actual Session technology, production, cost, random-number, map and placement paths.
+For the in-game UI, the original HUD root/docking, the [minimap](docs/exe/cpp-minimap-20261023.md), the production deck with [QWASZX shortcuts](docs/exe/cpp-production-shortcuts-20261023.md) and the [horizontal ESC menu](docs/exe/cpp-game-menu-runtime-20261023.md) are connected in live missions. Wide dock dragging, chat input and pixel-level parity verification remain.
 
-**Bridge strategy, the full action sequence and automatic AI frame/shutdown integration remain incomplete.** Explicit action entry points do not establish that the automatic strategy loop runs. Normal missions leave the local owner under human control; demos must also run that owner through the same AI. Remaining Template/State transition and cleanup connections and outcome/restart lifecycles also need work.
+The [13 focused Devastation/capture/sacrifice checks](docs/exe/cpp-ritual-runtime-focused-20261021.md) passed, but some use explicitly supplied caster, captive and clock states. Natural UI progression from obtaining the spell through casting, capture, transport and sacrifice still needs verification. Capture/sacrifice testing will proceed after a test option is added that applies the demo's allied AI to the player's side.
 
-**The complete Edit workflow is also unfinished.** New/load, terrain/island/object/owner editing, Fort save/reload, applying briefing/player/AI/starting-SP settings from language-specific scenario files, test battles and returning to editing still need original-equivalent integration and verification.
+**The Edit menu is connected through map listing and selection on the live screen.** Editor session assembly and Fort save/reload work in unit tests, but installing the editing screen, terrain/island/object/owner editing tools, new maps and Save as, test battles and returning to editing, and applying briefing/player/AI/starting-SP settings from language-specific scenario files remain.
 
-The latest AI implementation, unit 300, has a Release build with **exit code 0, zero warnings and zero errors**. Its 19 new C++ checks were **written and compiled, but not executed**. Recent AI work has build/static verification only; historical regression/playthrough results are not reported as passes for the entire current codebase. The 15-mission and Edit targets and full visual, audio, input and timing parity remain unfinished. DirectDraw error fixes and stable Windows 10/11 fullscreen operation are separate mandatory phase-2 work.
+In the last integrated verification (commit `e210c755`, October 26), the Release build had **zero warnings and zero errors**, the full CTest suite passed **3,007 tests with 0 failures**, and the menu GUI and natural Early Mission 2 progression passed. Unit-test passes or mission entry alone are not treated as playthrough or parity evidence. DirectDraw error fixes and stable Windows 10/11 fullscreen operation are separate mandatory phase-2 work.
 
 ## Latest C# + MonoGame clone
 
 The campaign menu reads chapters, prerequisite completion conditions and saved progress from the original scripts while restricting access to supported missions. Options include resolution, windowed/fullscreen mode, sound, volume, wind noise and speaker swap. Help and F1 expose the original help content, and priest, Workshop and production-item context menus are available. See the [feature/progress-saving review](docs/dotnet-review-20261011.md), [recording-analysis coverage](docs/screens/recorded-ui-clone-20261002.md) and [Campaign 1-1](docs/gameplay/campaign-one.md)/[1-2 implementation](docs/gameplay/campaign-two.md). The [latest handover](LEFT_JOBS.dotnetpj.md) takes precedence over early implementation notes.
 
-The common mission frame gate, player participation/directional alliances, cumulative build ledger and Tutorial 1 stage checks were ported from original-verified results and connected to the existing session. A separate original world core is being built: W02 covers slots/spatial hashing, Pop/Unpop, ownership/frames, bridges and graphs; W03 now includes destruction lifecycles, release, general damage, [priest damage/HP changes](docs/dotnet-original-core-priestdamage-20261021.md) and [contained-object lookup/deletion](docs/dotnet-original-core-containedlookup-20261021.md), verified at module level. There are **51 linked fixtures**. The latest recorded baseline, W03 part 10 on October 21, has a full Release build with **zero warnings/errors** and **1,277 passing unit tests** (Assets 363, Core 914). These are module verification results and do not expand live playability.
+The common mission frame gate, player participation/directional alliances, cumulative build ledger and Tutorial 1 stage checks were ported from original-verified results and connected to the existing session. A separate original world core is being built: W02 covers slots/spatial hashing, Pop/Unpop, ownership/frames, bridges and graphs; W03 now includes destruction lifecycles, release, general damage, [priest damage/HP changes](docs/dotnet-original-core-priestdamage-20261021.md), [contained-object lookup/deletion](docs/dotnet-original-core-containedlookup-20261021.md), [Form lifetimes](docs/dotnet-original-core-formlifecycle-20261022.md), Form packets, content lifetimes, temple pre-destruction and asset virtual deletion, and the W05 precursor covers the [SP store and destruction rewards](docs/dotnet-original-core-spstore-reward-20261023.md), all verified at module level. There are **61 linked fixtures**. The latest recorded baseline, W03 part 17 on October 23, has a full Release build with **zero warnings/errors** and **1,349 passing unit tests** (Assets 363, Core 986). These are module verification results and do not expand live playability.
 
-Next are W03 content lifetime (`ContentFormLifetime`), Form lifetimes, temple deletion, destruction rewards, derived dispatch and live-session integration. Kernel/Regular timing, SP/random-number handling and mission starting states follow, then pathing, construction, combat, sacrifice, outcomes, rendering, UI and sound. Although cpppj now targets 15 missions and Edit, dotnetpj's current playable scope remains the two campaigns listed above. Areas still unfinished in cpppj, including strategy AI, remain explicitly tracked as approximate while the [cpppj → dotnetpj porting plan](docs/dotnet-cpp-port-plan-20261016.md) guides natural playthrough and original-parity verification.
+Next is assembling the destruction lifecycle (selection, cursor, Graph, ledgers and the Kernel process host) and connecting it to live sessions so that mission starting states match the original. Kernel/Regular timing and SP/random-number handling follow, then pathing, construction, combat, sacrifice, outcomes, rendering, UI and sound. Although cpppj now targets Early Missions, Priest Training, all campaigns, the demos and Edit, dotnetpj's current playable scope remains the two campaigns listed above. Areas still unfinished in cpppj, including strategy AI, remain explicitly tracked as approximate while the [cpppj → dotnetpj porting plan](docs/dotnet-cpp-port-plan-20261016.md) guides natural playthrough and original-parity verification.
+
+## Latest HTML + JavaScript web clone
+
+Browsers do not play sound until the page has been clicked once, so the web clone loads the original assets, shows a "click to start" screen and then displays the original main menu. The main menu follows the original decompilation for the button layout algorithm, stone button texture, press/release input, sound effects, music and cursor. Quit and the multiplayer entry, which cannot work on the web, are removed using the original empty-slot handling. Its 17 automated tests pass, and several screen sizes including 4:3, 16:10 and 16:9 were checked in a headless browser. The screens opened by the menu buttons (Campaign, Demo, Credits, Help, Options, Edit) and gameplay do not exist yet. See the [latest handover](LEFT_JOBS.webpj.md).
 
 The linked analysis and handover documents are written in Korean.
 
@@ -49,10 +54,13 @@ The linked analysis and handover documents are written in Korean.
 
 `dotnetpj` uses C# and MonoGame. The existing clone receives the parts of `cpppj` already verified against original machine code, one area at a time, to match the original behavior first (October 16 porting plan). Once `cpppj` is complete, everything is compared again before new requirements are added. GUI Linux support and multiplayer have lower priority. Final requirements include fullscreen, 16:9/16:10/4:3 aspect ratios, fullscreen edge scrolling, and English/Korean support. Animation first targets the original cadence, with 60/120-frame support afterwards.
 
+`webpj` uses HTML and JavaScript. Once `cpppj` is complete, it will be analyzed to develop the web clone toward original behavior. Multiplayer and features that do not fit the web (quitting the game, resolution and fullscreen settings, and so on) are excluded, and required assets are copied into `webpj/www/`.
+
 | Path | Purpose |
 | --- | --- |
 | `cpppj/` | C++20/Win32 reconstruction and tests |
 | `dotnetpj/` | C#/MonoGame DesktopGL clone and tests |
+| `webpj/` | HTML + JavaScript web clone (`www/`), static web server, tests and asset preparation tools |
 | `assets/game-data/` | Clone graphics, maps, missions, music and sound effects |
 | `fonts/` | D2Coding fonts for Korean text |
 | `docs/` | Analysis evidence, reconstruction, build, gameplay and verification notes |
@@ -60,9 +68,9 @@ The linked analysis and handover documents are written in Korean.
 | `originals/`, `originalCD/` | Original version 10.78 and CD version 10.72 analysis material |
 | `screenShots/`, `playingVideos/`, `originalFanGame/` | Screenshot, recording and fan-game references. Large recordings and fan-game code are excluded from Git and may be absent on a given PC. |
 
-Korean building and unit names follow the [shared naming policy](docs/korean-unit-names.md). Priest, Temple, Bridge, Thrower and Geyser may be translated; other names use Korean phonetic spellings, including Workshop → 워크샾 and Generator → 제네레이터. The dotnetpj menus and unit titles use the shared 55-entry table. Full help and mission-text translation remains unfinished.
+Korean building and unit names follow the [shared naming policy](docs/korean-unit-names.md). Priest, Temple, Bridge, Thrower, Geyser, Altar, Residence and Empty may be translated; other names use Korean phonetic spellings, including Workshop → 워크샾 and Generator → 제네레이터. The dotnetpj menus and unit titles use the shared 55-entry table. Full help and mission-text translation remains unfinished.
 
-Read [AGENTS.md](AGENTS.md) and both handovers before working. Original-game and separate-window execution follows the [execution-confirmation rules](docs/execution-confirmation.md). Original analysis files are protected; changes to clone data belong in `assets/game-data/`.
+Read [AGENTS.md](AGENTS.md) and each project's handover ([cpppj/shared](LEFT_JOBS.md), [dotnetpj](LEFT_JOBS.dotnetpj.md), [webpj](LEFT_JOBS.webpj.md)) before working. Original-game and separate-window execution follows the [execution-confirmation rules](docs/execution-confirmation.md). Original analysis files are protected; changes to clone data belong in `assets/game-data/`.
 
 # Preparing the development environment
 
@@ -170,7 +178,7 @@ NETSTORM_DATA="/absolute/path/game-data" ./dist/linux-x64/NetstormClone --langua
 
 # C++ build (reconstruction in progress)
 
-You need Windows 10/11, CMake 3.21 or later, and a C++20 compiler (Visual Studio 2022 or the C++ tools in Build Tools). This build uses the Win32 API directly and is Windows only. Run from the repository root:
+You need Windows 10/11, CMake 3.21 or later, and a C++20 compiler (Visual Studio 2022 or later, or the C++ tools in Build Tools). This build uses the Win32 API directly and is Windows only. Run from the repository root:
 
 ```sh
 cmake -S cpppj -B cpppj/build -DCMAKE_BUILD_TYPE=Release
@@ -178,13 +186,13 @@ cmake --build cpppj/build --config Release
 ctest --test-dir cpppj/build --build-config Release --output-on-failure
 ```
 
-With the Visual Studio generator, the executable is `cpppj/build/bin/Release/NetstormCpp.exe`. Open the reconstruction's main menu in windowed mode with:
+The full CTest suite runs more than 3,000 tests and takes several minutes. With the Visual Studio generator, the executable is `cpppj/build/bin/Release/NetstormCpp.exe`. Open the reconstruction's main menu in windowed mode with:
 
 ```powershell
 .\cpppj\build\bin\Release\NetstormCpp.exe --run originals --window
 ```
 
-`--run <game-data folder>` runs the C++ reconstruction. `--view fonts`, `--view types`, and `--view TEST01` open font, type and mission inspection scenes. Live construction, production, bridges, harvesting/transport and combat are connected, while the complete automatic shared AI loop, full playthroughs of all 15 target missions, Edit/custom maps/scenarios and original-parity verification remain unfinished. See [C++ build](docs/cpp-build.md) for build instructions and the [handover](LEFT_JOBS.md) for current integration status.
+`--run <game-data folder>` runs the C++ reconstruction. Adding `--mission <mission key>` skips the menu and opens that mission's briefing (for example, `--mission Tutorial1`). `--view fonts`, `--view types`, and `--view TEST01` open font, type and mission inspection scenes. Running without arguments (or with `--help`) prints build information and the available options. Live construction, production, bridges, harvesting/transport, combat and automatic execution of the shared strategy AI are connected, while natural playthroughs of all target missions, the Edit menu's editing screen, saving and custom scenarios, and original-parity verification remain unfinished. See [C++ build](docs/cpp-build.md) for build instructions and the [handover](LEFT_JOBS.md) for current integration status.
 
 Build a distributable archive (executable, Visual C++ runtime DLLs, original 10.78 game data and launcher batch files) with the script below. If you omit the output path it prompts for one, and an empty answer cancels. See section 7 of [C++ build](docs/cpp-build.md) for the layout and options.
 
@@ -192,9 +200,19 @@ Build a distributable archive (executable, Visual C++ runtime DLLs, original 10.
 powershell -NoProfile -ExecutionPolicy Bypass -File cpppj\package-cpppj.ps1 D:\dist\NetstormReborn-cpppj.zip
 ```
 
+# Running the web clone (HTML + JavaScript)
+
+Node.js is required (verified with v24); no external npm packages are used. The required assets are committed in `webpj/www/data/`. From the repository root, start the static web server and open `http://localhost:9803/` in a browser:
+
+```sh
+npm --prefix webpj start
+```
+
+Run the automated tests with `npm --prefix webpj test`. If the original data in `assets/game-data/` changes, rebuild `webpj/www/data/` with `npm --prefix webpj run prepare-assets` and check the copies with `npm --prefix webpj run check-assets`.
+
 # Key documents
 
-- [C++/shared handover](LEFT_JOBS.md) / [C# handover](LEFT_JOBS.dotnetpj.md): latest completed work, remaining boundaries and resume order
+- [C++/shared handover](LEFT_JOBS.md) / [C# handover](LEFT_JOBS.dotnetpj.md) / [web handover](LEFT_JOBS.webpj.md): current state and upcoming work. The cpppj per-unit history up to October 25 is in [LEFT_JOBS.old.md](LEFT_JOBS.old.md).
 - [C++ roadmap](docs/cpp-roadmap.md) / [playable reconstruction plan](docs/cpp-playable-plan.md): development stages and reconstruction plans
 - [cpppj → dotnetpj porting plan](docs/dotnet-cpp-port-plan-20261016.md): porting units and order for matching dotnetpj to the original
 - [Clone game data](assets/README.md): asset layout, provenance and build inclusion
