@@ -1,0 +1,26 @@
+{
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "observations": 56,
+  "osExecuted": false,
+  "originalGameExecuted": false,
+  "scope": "실제447390/CD43d4c0의DWORD동등비교와자기부모WORD분기를실행했다. 선택된Cancel은명시호출관측이다. 전체ContentPreDestroy나실제Cancel본문실행으로설명하지않는다.",
+  "sha256": {
+    "cpppj/tests/fixtures/content-cursor-width-x86.tsv": "1dbbcddbf61e0c6354e8c70419c9a4bee4e4d690d92df5525313c5b59193e084",
+    "extracted/cursordrop/originalCD/creation.c": "27838017aea1bc08127191d9c7cfe02872a50e4b297dc5ed050ebeca504a1831",
+    "extracted/cursordrop/originalCD/functions.tsv": "0dad286a35489ef2a9b15c214215bd99b9fd7ac626e262f71ad42ccead3f1711",
+    "extracted/cursordrop/originals/creation.c": "ccc830e010699c7a8932d35b98f0e3439c378db3b00c27c46be206f47a57fb1c",
+    "extracted/cursordrop/originals/functions.tsv": "3470a4986ca733d682b015be62a885b1b91314724f10a0f6ada249505c4cf606",
+    "extracted/refined/originalCD/functions.tsv": "453aa383c27baf8eefa00d97bf44051d18460150556511c2eb7a46f111e92def",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_constructionplace_oracle.py": "9e21f15fd8f29abd605aedb6325d8627a82ba792745a041e12fd0e4e1fb9e5b4",
+    "tools/decomp_content_cursor_width.py": "208162d7342992dc923bb01354341bcef10928be854ada924af5bfb5de153954",
+    "tools/decomp_cursordrop_oracle.py": "cd4c63f25dd21dabce509f1f5adc855f3bf257a89cf4b14f9c267bed80b47d07",
+    "tools/decomp_damageablepredestroy_oracle.py": "6f260fca831f979df7361fb783b38de9ccadf93bced292e55a04e090c46a748b",
+    "tools/decomp_owner_oracle.py": "5a837ad7fd233d9d75c7241d52fbf2e5a508e24dc158d091f243a13ab698e7fb",
+    "tools/decomp_priestgeometry_oracle.py": "a2e100450c4e22d4f7de0bc4f725c766b7836ab3f7270a6ebb72df7b92e33dc1"
+  }
+}

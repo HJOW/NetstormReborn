@@ -48,14 +48,14 @@ struct CursorScene {
             Put(raw,12,values[Argument],2);Put(raw,18,100,2);Put(raw,20,values[OldWord],2);
         }
         types[100].flags2=values[TypeFlags];types[100].cost=std::bit_cast<float>(values[CostBits]);drop.type=state.abstractType=100;
-        drop.lockDepth=values[Lock];drop.inputFlags=values[OldWord];drop.costFlags=values[Flags];drop.preview=Sid{static_cast<std::uint16_t>(values[Operation]==1 ? values[Preview] : 0)};
+        drop.lockDepth=values[Lock];drop.inputFlags=values[OldWord];drop.costFlags=values[Flags];drop.preview=values[Operation]==1 ? values[Preview] : 0U;
         drop.cursorGump=values[Operation]==1 ? 1U : 0U;state.previewCount=values[Operation]==2 ? std::bit_cast<std::int32_t>(values[Preview]) : 2;
         state.previews[0]=100;state.previews[1]=101;state.warningFont=17;state.costFont=19;
     }
     // 원본 실행기와 같은 외부 입력/효과만 공급한다. 수명 분기는 C++ 몸체가 계산한다.
     CursorLifecycleHooks Hooks() {
         CursorLifecycleHooks hooks;
-        hooks.highlight=[this](std::uint32_t value) { Event("H",{value});if (input[HighlightChange]==1) drop.lockDepth=3;if (input[HighlightChange]==2) drop.preview=Sid{51}; };
+        hooks.highlight=[this](std::uint32_t value) { Event("H",{value});if (input[HighlightChange]==1) drop.lockDepth=3;if (input[HighlightChange]==2) drop.preview=51U; };
         hooks.prepareCursor=[this] { Event("P");if (input[PrepareChange] && ++prepared==1) state.previewCount=1; };
         hooks.selectCursor=[this](std::uint32_t cursor) { Event("C",{cursor}); };hooks.closePopups=[this] { Event("X"); };
         hooks.source=[this](Sid sid) { Event("U",{sid.value});return Sid{77}; };
@@ -84,7 +84,7 @@ struct CursorScene {
     }
     // 원본과 같은78DWORD의 현재 상태를 의미 표현에서 그대로 직렬화한다.
     std::string Snapshot() const {
-        std::vector<std::uint32_t> values{drop.lockDepth,drop.type,drop.argument,drop.direction,state.directionArgument,drop.preview.value,drop.inputFlags,drop.costFlags,drop.cursorGump,drop.legalGump,state.currentGump,
+        std::vector<std::uint32_t> values{drop.lockDepth,drop.type,drop.argument,drop.direction,state.directionArgument,drop.preview,drop.inputFlags,drop.costFlags,drop.cursorGump,drop.legalGump,state.currentGump,
             static_cast<std::uint32_t>(state.previewCount),static_cast<std::uint32_t>(state.warningWidth),static_cast<std::uint32_t>(state.warningHeight),static_cast<std::uint32_t>(state.costTextWidth),static_cast<std::uint32_t>(state.costHeight),
             static_cast<std::uint32_t>(state.costHotspotX),static_cast<std::uint32_t>(state.costHotspotY),static_cast<std::uint32_t>(drop.cursorWidth),static_cast<std::uint32_t>(state.imageHeight)};
         // 다섯 개별 치수·두 문맥·30SID의 사용하지 않은 칸까지 비교한다.
@@ -117,8 +117,8 @@ TEST_CASE(CursorLifecycle_NativeTakeCancelAndActivate565) {
 TEST_CASE(CursorLifecycle_SharedMenuDropBindingsAndGuards) {
     CursorScene scene;const auto rows=LoadFixture(NETSTORM_CURSOR_LIFECYCLE_FIXTURE).rows;scene.Prepare(Numbers(rows.front()[0]));RawCursorLifecycle logic(scene.pool,scene.types,scene.drop,scene.state,scene.Hooks());
     PriestMenuHooks priest;CursorDropHooks drop;BindCursorLifecycle(priest,drop,logic);priest.takePreview(Sid{50},0x160);
-    CHECK(scene.drop.preview==Sid{50} && scene.drop.lockDepth==0 && scene.drop.costFlags==0x160 && scene.state.previewCount==2 && &logic.Pool()==&scene.pool);
-    drop.activatePreview(0);CHECK(scene.state.previewCount==2);drop.invalidGui();CHECK(scene.drop.preview.value==0 && scene.drop.lockDepth==1 && scene.state.previewCount==0);
+    CHECK(scene.drop.preview==50U && scene.drop.lockDepth==0 && scene.drop.costFlags==0x160 && scene.state.previewCount==2 && &logic.Pool()==&scene.pool);
+    drop.activatePreview(0);CHECK(scene.state.previewCount==2);drop.invalidGui();CHECK(scene.drop.preview==0 && scene.drop.lockDepth==1 && scene.state.previewCount==0);
     scene.Prepare(Numbers(rows.front()[0]));RawCursorLifecycle missing(scene.pool,scene.types,scene.drop,scene.state,{});CHECK(Throws([&] { missing.Take(Sid{50},0x160); }));
     SidPool cd(OriginalEdition::Cd1072,24000,false);CHECK(Throws([&] { RawCursorLifecycle invalid(cd,scene.types,scene.drop,scene.state,scene.Hooks()); }));
     CHECK(Throws([&] { RawCursorLifecycle invalid(scene.pool,std::span(scene.types).first(187),scene.drop,scene.state,scene.Hooks()); }));

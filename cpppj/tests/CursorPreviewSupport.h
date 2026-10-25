@@ -66,7 +66,7 @@ struct PreviewScene {
         pool.AllocatedBytes(Sid{50})[30]=static_cast<std::uint8_t>(values[Quality]);pool.AllocatedBytes(Sid{51})[30]=3;
         // 첫 SID가 생성 여부를 정한다. 현재 개수는 별도로 유지한다.
         for (std::size_t index=0;index<5;++index) life.previews[index]=static_cast<std::uint16_t>(values[Existing] ? 100+index : 0);
-        life.previewCount=values[Existing] ? 5 : static_cast<std::int32_t>(values[Prefix]);life.abstractType=drop.type=100;drop.argument=7;drop.direction=3;drop.preview=Sid{50};drop.localPlayer=1;
+        life.previewCount=values[Existing] ? 5 : static_cast<std::int32_t>(values[Prefix]);life.abstractType=drop.type=100;drop.argument=7;drop.direction=3;drop.preview=50U;drop.localPlayer=1;
         drop.x=std::bit_cast<float>(values[X]);drop.y=std::bit_cast<float>(values[Y]);drop.costFlags=values[Chain] ? 0x40U : 0U;drop.screenX=-3;drop.screenY=47;
         life.warningWidth=35;life.warningHeight=17;drop.cursorWidth=49;life.costHeight=23;placementState.screenOrigin={-17,31};surfaces.bridgeType=99;surfaces.islandType=91;surfaces.stalagType=92;
         // 현재 TYPE 세 개는 재조회/Factory 인자 변경에 사용할 동일 입력을 갖는다.
@@ -97,7 +97,7 @@ struct PreviewScene {
         hooks.setWord=[this](Sid sid,std::uint32_t value) { Event("S",{sid.value,value});Put(pool.AllocatedBytes(sid),12,value,2); };
         hooks.setOwner=[this](Sid sid,std::uint32_t owner) {
             Event("O",{sid.value,owner});pool.AllocatedBytes(sid)[34]=static_cast<std::uint8_t>(owner);++ownerCalls;
-            if (input[Mutation]==3 && ownerCalls==1) { types[100].flags2=4;drop.preview=Sid{51}; }
+            if (input[Mutation]==3 && ownerCalls==1) { types[100].flags2=4;drop.preview=51U; }
         };
         hooks.hasHitPoints=[this](Sid sid) { Event("H",{sid.value});return input[Hp]!=0; };
         hooks.setHitPoints=[this](Sid sid,std::int32_t value) { Event("Z",{sid.value,static_cast<std::uint32_t>(value)});Put(pool.AllocatedBytes(sid),26,static_cast<std::uint32_t>(value)); };
@@ -133,7 +133,7 @@ struct PreviewScene {
         values.insert(values.end(),{static_cast<std::uint32_t>(placementState.hotspotX),static_cast<std::uint32_t>(placementState.hotspotY),static_cast<std::uint32_t>(placementState.imageWidth),static_cast<std::uint32_t>(placementState.imageHeight)});
         // 미사용 칸도 포함한30SID를 그대로 비교한다.
         for (const auto sid:life.previews) values.push_back(sid);
-        values.insert(values.end(),{life.abstractType,types[100].flags2,drop.preview.value});std::string result;
+        values.insert(values.end(),{life.abstractType,types[100].flags2,drop.preview});std::string result;
         // signed 값도 원문 DWORD 표현으로 보존한다.
         for (const auto value:values) result+=(result.empty() ? "" : ",")+std::to_string(value);return result;
     }

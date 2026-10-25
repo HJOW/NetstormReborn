@@ -36,6 +36,11 @@ o::Sid RawCursorDrop::SourceSid(std::uint32_t value) const {
     if (!value || value>=pool_.Capacity() || value>0xffff) throw std::out_of_range("커서 연관 SID 오류");
     return o::Sid{static_cast<std::uint16_t>(value)};
 }
+//원문의정수포인터계산은자료를읽지않는다. 실제호스트소비직전까지큰DWORD와선행효과를보존한다.
+o::Sid RawCursorDrop::PreviewSid(std::uint32_t value) const {
+    if (value<5 || value>=pool_.Capacity() || value>0xffffU) throw std::out_of_range("커서 미리보기 DWORD의 실제Pool/SID16범위");
+    return o::Sid{static_cast<std::uint16_t>(value)};
+}
 void RawCursorDrop::Lock() {
     if (!state_.lockDepth) { hooks_.activatePreview(0);hooks_.selectCursor(1); }
     ++state_.lockDepth;
@@ -53,33 +58,32 @@ void RawCursorDrop::Drop() {
     if (state_.lockDepth) return;
     hooks_.queryCursor();if (!state_.legal) return;
     const auto preview=state_.preview;
-    if (preview.value<5 || preview.value>=pool_.Capacity()) throw std::out_of_range("커서 미리보기 SID 오류");
     hooks_.prepareCursor();state_.x=Round(state_.x);state_.y=Round(state_.y);hooks_.prepareCursor();
     hooks_.highlight(0);hooks_.playDrop();
     if (!state_.legalGump) {
         if (state_.inputFlags&0x80) {
-            const auto source=SourceSid(hooks_.previewSource(preview));
-            hooks_.pop(source,state_.x,state_.y,0);hooks_.destroy(preview,0);
+            const auto captured=PreviewSid(preview);const auto source=SourceSid(hooks_.previewSource(captured));
+            hooks_.pop(source,state_.x,state_.y,0);hooks_.destroy(captured,0);
         } else {
             if (state_.recording) hooks_.record(state_.recorder,Type().name,state_.x,state_.y,state_.argument,state_.direction);
             const float x=Round(state_.x),y=Round(state_.y);Lock();
-            hooks_.placeLocal({preview,x,y,state_.argument,state_.direction});
+            hooks_.placeLocal({PreviewSid(preview),x,y,state_.argument,state_.direction});
         }
         Charge();
     } else {
         const auto allowed=hooks_.guiFlags(state_.legalGump);
-        const auto first=hooks_.previewSource(preview),second=hooks_.previewSource(preview);
-        const auto raw=pool_.Slot(preview);
+        const auto captured=PreviewSid(preview);const auto first=hooks_.previewSource(captured),second=hooks_.previewSource(captured);
+        const auto raw=pool_.Slot(captured);
         const auto flags=static_cast<std::uint32_t>(raw[kFlags])|(static_cast<std::uint32_t>(raw[kFlags+1])<<8);
         const auto quality=static_cast<std::uint32_t>(raw[pool_.Edition()==o::OriginalEdition::Patch1078 ? 30 : 26]);
         if (allowed&flags) { hooks_.invalidGui();return; }
-        hooks_.detach(preview,0);
+        hooks_.detach(captured,0);
         // detach 뒤 현재 슬롯에 WORD만 쓴다. detach의 다른 raw 변경은 보존한다.
-        auto writable=pool_.AllocatedBytes(preview);
+        auto writable=pool_.AllocatedBytes(captured);
         writable[kFlags]=static_cast<std::uint8_t>(allowed);writable[kFlags+1]=static_cast<std::uint8_t>(allowed>>8);
         const auto parent=hooks_.guiParent(state_.legalGump);
         if (!parent) throw std::logic_error("cursorLegalGump->parentSid 원본 assert 계약 위반");
-        hooks_.attach(preview,parent,0x10);hooks_.guiReceive(state_.legalGump,preview);
+        hooks_.attach(captured,parent,0x10);hooks_.guiReceive(state_.legalGump,captured);
         if (state_.inputFlags&0x80) hooks_.destroy(SourceSid(first),0);
         else if (flags&8) hooks_.returnPiece(flags,second,quality);
     }

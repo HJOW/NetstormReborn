@@ -193,7 +193,7 @@ TEST_CASE(ConstructionRequest_ConnectsPipelineConfirmAndNotice) {
         device.status=[](SoundBuffer) { return 0U; };device.play=[&](SoundBuffer buffer,std::uint32_t flags) { CHECK(buffer==42 && flags==0);++played; };
         device.setPosition=[](SoundBuffer,std::uint32_t) {};device.setVolume=[](SoundBuffer,std::int32_t) { return 0; };device.setPan=[](SoundBuffer,std::int32_t) { return 0; };
         device.stop=[](SoundBuffer) {};device.duplicate=[](SoundBuffer,SoundBuffer&) { CHECK(false);return -1; };SoundPlayer sound(sounds,soundState,device);
-        CursorDropState cursorState;cursorState.legal=1;cursorState.preview=preview;cursorState.type=kTypeNoIsland;cursorState.x=20.25F;cursorState.y=21.5F;
+        CursorDropState cursorState;cursorState.legal=1;cursorState.preview=preview.value;cursorState.type=kTypeNoIsland;cursorState.x=20.25F;cursorState.y=21.5F;
         cursorState.costFlags=0x40;cursorState.localPlayer=1;cursorState.screenX=100;cursorState.screenY=200;cursorState.cursorWidth=17;cursorState.cursorGump=2;
         CursorDropHooks cursorHooks;cursorHooks.queryCursor=[] {};cursorHooks.prepareCursor=[] {};cursorHooks.highlight=[](std::uint32_t) {};
         cursorHooks.previewSource=[](Sid) { CHECK(false);return 0U; };cursorHooks.destroy=[](Sid,std::uint32_t) { CHECK(false); };
@@ -208,7 +208,7 @@ TEST_CASE(ConstructionRequest_ConnectsPipelineConfirmAndNotice) {
         CHECK(predicted.size()==9 && outbound.size()==1 && shown==1 && played==1 && soundState.playing==1);
         CHECK(returned.value!=0 && pool.Slot(returned)[10]==6 && Get(pool.Slot(returned),18,2)==kTypeNoIsland &&
             Get(pool.Slot(returned),20,2)==8 && pool.Slot(returned)[patch ? 30 : 26]==2);
-        CHECK(cursorState.lockDepth==2 && cursorState.preview.value==0 && cursorState.cursorGump==0 && rewardState.aiWallet[1]==968);
+        CHECK(cursorState.lockDepth==2 && cursorState.preview==0 && cursorState.cursorGump==0 && rewardState.aiWallet[1]==968);
         CHECK((patch ? Float(store.Get(1)) : rewardState.cdLocalSp)==967.25F);
         const auto& sent=outbound.front();CHECK(sent.type==kTypeNoIsland && sent.x==20.0F && sent.y==22.0F && sent.timeLow==0 && sent.timeHigh==0);
         ConstructionClearState clearState;

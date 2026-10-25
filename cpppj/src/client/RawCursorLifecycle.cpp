@@ -54,10 +54,10 @@ void RawCursorLifecycle::Activate(std::uint32_t force) const {
 }
 // 현재 preview를 캡처한 후 콜백이 전역 preview를 바꿔도 raw 반환 대상은 유지한다.
 void RawCursorLifecycle::Cancel() const {
-    if (!drop_.lockDepth && drop_.preview.value) {
+    if (!drop_.lockDepth && drop_.preview) {
         Need(hooks_.highlight)(0);
         if (!drop_.lockDepth) { Activate(0);Need(hooks_.selectCursor)(1); }
-        ++drop_.lockDepth;const auto preview=drop_.preview;const auto raw=Raw(preview);
+        ++drop_.lockDepth;const auto preview=CursorPreviewSid(drop_.preview);const auto raw=Raw(preview);
         if (!(raw[11]&1)) {
             auto bytes=pool_.AllocatedBytes(preview);bytes[20]=static_cast<std::uint8_t>(drop_.inputFlags);bytes[21]=static_cast<std::uint8_t>(drop_.inputFlags>>8);
             if (drop_.inputFlags&0x80) {
@@ -66,7 +66,7 @@ void RawCursorLifecycle::Cancel() const {
             }
             if (drop_.costFlags&0x100) Need(hooks_.destroy)(preview,0);
             else {
-                const auto source=Need(hooks_.source)(preview);Raw(source);Need(hooks_.sourceNotice)(source,drop_.preview,4);
+                const auto source=Need(hooks_.source)(preview);Raw(source);Need(hooks_.sourceNotice)(source,CursorPreviewSid(drop_.preview),4);
                 if (drop_.costFlags&0x80) {
                     Need(hooks_.sound)("teleporterActive.wav");
                     if (state_.teleportBlocked) throw std::logic_error("커서 취소 teleporter 원본 false 진단");
@@ -82,11 +82,11 @@ void RawCursorLifecycle::Cancel() const {
 // 팝업 정리부터 현재 마우스 꼬리 호출까지 원본 순서다. 미리보기 생성/판정의 계산은 별도 몸체다.
 void RawCursorLifecycle::Take(o::Sid preview,std::uint32_t flags) const {
     Cancel();if (drop_.cursorGump) throw std::logic_error("cursorManaProcess == NULL 원본 진단");Need(hooks_.closePopups)();
-    drop_.preview=preview;auto raw=Raw(preview);drop_.type=Word(raw,18);state_.abstractType=Word(raw,18);Type();
+    drop_.preview=preview.value;auto raw=Raw(preview);drop_.type=Word(raw,18);state_.abstractType=Word(raw,18);Type();
     drop_.argument=Word(raw,12);if (!drop_.argument) drop_.argument=Need(hooks_.defaultArgument)(state_.abstractType);
     drop_.direction=0;state_.directionArgument=0;drop_.inputFlags=Word(raw,20);
     auto writable=pool_.AllocatedBytes(preview);writable[21]|=1;
-    const auto source=Need(hooks_.source)(preview);Raw(source);Need(hooks_.sourceNotice)(source,drop_.preview,4);
+    const auto source=Need(hooks_.source)(preview);Raw(source);Need(hooks_.sourceNotice)(source,CursorPreviewSid(drop_.preview),4);
     drop_.costFlags=flags;if (Type().flags2&4) drop_.costFlags=flags|0x200;
     drop_.lockDepth=0;Need(hooks_.createPreviews)();Need(hooks_.selectCursor)(drop_.legalGump ? 3 : 2);
     drop_.legalGump=0;state_.currentGump=0;

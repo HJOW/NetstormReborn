@@ -60,7 +60,7 @@ void RawCursorPreviews::Create() const {
             if (Need(hooks_.hasHitPoints)(sid)) Need(hooks_.setHitPoints)(sid,0);
             Position(sid,cell.x,cell.y);
             if (Type().flags2&4) {
-                const auto quality=pool_.Slot(drop_.preview)[30];const std::int32_t qualityFlags=quality==1 ? 0x20 : quality==3 ? 0x40 : 0;
+                const auto quality=pool_.Slot(CursorPreviewSid(drop_.preview))[30];const std::int32_t qualityFlags=quality==1 ? 0x20 : quality==3 ? 0x40 : 0;
                 const auto& frames=Need(hooks_.frames)(surfaces_.bridgeType);
                 if (cell.frame<0 || static_cast<std::size_t>(cell.frame)>=frames.Codes().size()) throw std::out_of_range("커서 다리 코드 프레임 범위");
                 const auto code=frames.Codes()[static_cast<std::size_t>(cell.frame)];

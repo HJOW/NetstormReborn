@@ -2159,17 +2159,17 @@ std::unique_ptr<RawPriestMenu> CursorMenu(RawCampaignSession& session,SessionPri
 // 실제 메뉴 취득→현재 카메라 위치/Canon/SHP/에너지/전체 MayPlace→취소/중첩 삭제를 검사한다.
 TEST_CASE(CampaignSession_CursorMenuUsesActualStateAndCancel) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());GameWorld world(assets.game,assets.files,std::move(fort),MissionPlayers{},"thewarbegins",external.Services(),{1024,768});auto& session=world.Session();auto core=session.Core();SessionCursorUi ui;auto& cursor=session.Cursor();cursor.SetEffects(ui.Effects());cursor.SnapToGrid()=1;SessionPriestMenuUi menuUi;auto menu=CursorMenu(session,menuUi);const Sid priest{static_cast<std::uint16_t>(session.FindPriestParticipation(1))};session.AddTechnology(1,core.types[75].assetName);session.SetSp(1,5000);
-    CHECK(menu->SelectBuild(75,priest));auto& drop=session.CursorDropSettings();const auto form=drop.preview;CHECK(form.value && core.pool.Slot(form)[10]==6 && Get(core.pool.Slot(form),18,2)==75);CHECK(drop.lockDepth==0 && drop.costFlags==0x160 && drop.localPlayer==1);CHECK(cursor.Lifecycle().previewCount>0 && cursor.Lifecycle().previews[0]);CHECK(cursor.Lifecycle().costImage!=0 && cursor.Lifecycle().costText==std::to_string(static_cast<int>(core.types[75].cost)));
+    CHECK(menu->SelectBuild(75,priest));auto& drop=session.CursorDropSettings();const auto form=CursorPreviewSid(drop.preview);CHECK(form.value && core.pool.Slot(form)[10]==6 && Get(core.pool.Slot(form),18,2)==75);CHECK(drop.lockDepth==0 && drop.costFlags==0x160 && drop.localPlayer==1);CHECK(cursor.Lifecycle().previewCount>0 && cursor.Lifecycle().previews[0]);CHECK(cursor.Lifecycle().costImage!=0 && cursor.Lifecycle().costText==std::to_string(static_cast<int>(core.types[75].cost)));
     const auto previews=cursor.Lifecycle().previews;const auto point=CommandPlacementPoint(session,1);session.SetParticleView({137,91,0,0,1024,768},{});ui.Point(session,point,137,91);CHECK(drop.x==point.x && drop.y==point.y && drop.legal);CHECK(cursor.Placement().sourceAllowed && cursor.Placement().placementAllowed && cursor.Placement().descriptionAllowed);CHECK(session.Sp(1)==5000 && ui.sent.empty());
-    cursor.Cancel();CHECK((core.pool.Slot(form)[11]&3)!=0);CHECK(!drop.preview.value && drop.lockDepth==1 && !drop.cursorGump);CHECK(cursor.Lifecycle().previewCount==0);CHECK(session.Sp(1)==5000);
+    cursor.Cancel();CHECK((core.pool.Slot(form)[11]&3)!=0);CHECK(!drop.preview && drop.lockDepth==1 && !drop.cursorGump);CHECK(cursor.Lifecycle().previewCount==0);CHECK(session.Sp(1)==5000);
     // 실제 생성된 임시 객체 전부가 같은 가상 삭제 사슬을 통해 반납되었는지 확인한다.
     for (const auto number:previews) if (number) CHECK((core.pool.Slot(CursorPreviewSid(number))[11]&3)!=0);
     CHECK(ui.dirty>0 && ui.highlights>0 && ui.cursors.back()==1 && ui.sent.empty());
 }
 // 현재 잡힌 Form의 외부 삭제가 값형0 사본 대신 실제 커서를 찾아 잠긴 꼬리 정리까지 수행한다.
 TEST_CASE(CampaignSession_CursorContentDestroyReadsCurrentPreview) {
-    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());GameWorld world(assets.game,assets.files,std::move(fort),MissionPlayers{},"thewarbegins",external.Services(),{1024,768});auto& session=world.Session();auto core=session.Core();SessionCursorUi ui;auto& cursor=session.Cursor();cursor.SetEffects(ui.Effects());SessionPriestMenuUi menuUi;auto menu=CursorMenu(session,menuUi);session.AddTechnology(1,core.types[75].assetName);session.SetSp(1,5000);const Sid priest{static_cast<std::uint16_t>(session.FindPriestParticipation(1))};CHECK(menu->SelectBuild(75,priest));auto& drop=session.CursorDropSettings();const auto form=drop.preview;const auto previews=cursor.Lifecycle().previews;drop.lockDepth=3;const auto dirty=ui.dirty;
-    CHECK(session.World().Destroy(form));CHECK((core.pool.Slot(form)[11]&3)!=0);CHECK(!drop.preview.value && drop.lockDepth==1 && !drop.cursorGump && cursor.Lifecycle().previewCount==0);CHECK(ui.dirty>dirty && session.Sp(1)==5000);
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());GameWorld world(assets.game,assets.files,std::move(fort),MissionPlayers{},"thewarbegins",external.Services(),{1024,768});auto& session=world.Session();auto core=session.Core();SessionCursorUi ui;auto& cursor=session.Cursor();cursor.SetEffects(ui.Effects());SessionPriestMenuUi menuUi;auto menu=CursorMenu(session,menuUi);session.AddTechnology(1,core.types[75].assetName);session.SetSp(1,5000);const Sid priest{static_cast<std::uint16_t>(session.FindPriestParticipation(1))};CHECK(menu->SelectBuild(75,priest));auto& drop=session.CursorDropSettings();const auto form=CursorPreviewSid(drop.preview);const auto previews=cursor.Lifecycle().previews;drop.lockDepth=3;const auto dirty=ui.dirty;
+    CHECK(session.World().Destroy(form));CHECK((core.pool.Slot(form)[11]&3)!=0);CHECK(!drop.preview && drop.lockDepth==1 && !drop.cursorGump && cursor.Lifecycle().previewCount==0);CHECK(ui.dirty>dirty && session.Sp(1)==5000);
     // 잠금이 있어도 실제 Activate1이 미리보기를 모두 지워야 한다.
     for (const auto number:previews) if (number) CHECK((core.pool.Slot(CursorPreviewSid(number))[11]&3)!=0);
     cursor.Cancel();CHECK(drop.lockDepth==1 && ui.sent.empty());
@@ -2179,7 +2179,7 @@ TEST_CASE(CampaignSession_CursorDropPredictsSendsChargesAndCompletes) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();services.unitLost=[&](Sid) { ++external.notices; };auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());ReadyCursorFactoryInput(fort);GameWorld world(assets.game,assets.files,std::move(fort),MissionPlayers{},"thewarbegins",std::move(services),{1024,768});auto& session=world.Session();auto core=session.Core();SessionCursorUi ui;auto& cursor=session.Cursor();cursor.SetEffects(ui.Effects());cursor.SnapToGrid()=1;session.AddTechnology(1,core.types[75].assetName);session.SetSp(1,5000);const auto source=CursorEnergyInput(session);CHECK(core.pool.Slot(source)[10]==76);const auto form=ReadyCursorFactoryForm(session);cursor.Take(form,0x41);const auto point=CursorPlacementPoint(session,ui);CHECK(session.CursorDropSettings().legal);
     const auto old=ConstructionLive(core,75);Sid prediction{};std::vector<Sid> builders;
     ui.onSend=[&] { CHECK(session.Sp(1)==5000);const auto current=ConstructionLive(core,75);CHECK(current.size()==old.size()+1);if (current.size()==old.size()+1) { /* 기존 서버 조각과 새 클라이언트 SID의 정렬 순서에 의존하지 않는다. */ for (const auto sid:current) if (std::find(old.begin(),old.end(),sid)==old.end()) prediction=sid; }builders=ConstructionLive(core,134);CHECK(builders.size()==1);CHECK(session.Construction().LastPacket().empty()); };
-    ClientOptions options;options.gameDirectory=std::filesystem::path(__FILE__).parent_path().parent_path().parent_path()/"originals";Client client(std::move(options));client.Configuration().Set("cursorSnapToGrid","1");UserInput input(client,world);input.UpdateCursor({InputCode::kLeftButton,ui.mouse.x,ui.mouse.y});input.Event({InputCode::kLeftButton,ui.mouse.x,ui.mouse.y});CHECK(ui.sent.size()==1 && prediction.value && builders.size()==1);CHECK(session.Sp(1)==5000-core.types[75].cost && ui.shown==1);CHECK((core.pool.Slot(form)[11]&3)!=0 && !session.CursorDropSettings().preview.value && cursor.Lifecycle().previewCount==0);if (ui.sent.size()!=1 || !prediction.value || builders.size()!=1) return;const auto& packet=ui.sent.front();CHECK(packet[0]==1 && packet[1]==0x3e && packet[4]==75);CHECK(Get(packet,5)==std::bit_cast<std::uint32_t>(static_cast<float>(point.x)) && Get(packet,9)==std::bit_cast<std::uint32_t>(static_cast<float>(point.y)));CHECK(Get(packet,17)==0 && Get(packet,21)==0);CHECK((core.pool.Slot(prediction)[40]&1)!=0 && prediction.value<core.pool.Layout().serverFirst);
+    ClientOptions options;options.gameDirectory=std::filesystem::path(__FILE__).parent_path().parent_path().parent_path()/"originals";Client client(std::move(options));client.Configuration().Set("cursorSnapToGrid","1");UserInput input(client,world);input.UpdateCursor({InputCode::kLeftButton,ui.mouse.x,ui.mouse.y});input.Event({InputCode::kLeftButton,ui.mouse.x,ui.mouse.y});CHECK(ui.sent.size()==1 && prediction.value && builders.size()==1);CHECK(session.Sp(1)==5000-core.types[75].cost && ui.shown==1);CHECK((core.pool.Slot(form)[11]&3)!=0 && !session.CursorDropSettings().preview && cursor.Lifecycle().previewCount==0);if (ui.sent.size()!=1 || !prediction.value || builders.size()!=1) return;const auto& packet=ui.sent.front();CHECK(packet[0]==1 && packet[1]==0x3e && packet[4]==75);CHECK(Get(packet,5)==std::bit_cast<std::uint32_t>(static_cast<float>(point.x)) && Get(packet,9)==std::bit_cast<std::uint32_t>(static_cast<float>(point.y)));CHECK(Get(packet,17)==0 && Get(packet,21)==0);CHECK((core.pool.Slot(prediction)[40]&1)!=0 && prediction.value<core.pool.Layout().serverFirst);
     std::vector<std::vector<std::uint8_t>> received;RawPacketDispatch dispatch(OriginalEdition::Patch1078,CommandDevice(received));session.RegisterConstructionCommands(dispatch);PacketConnection connection;connection.sender=1;CHECK(dispatch.Dispatch(connection,packet));CHECK((core.pool.Slot(prediction)[11]&3)!=0 && ConstructionLive(core,134)==builders);CHECK(session.Sp(1)==5000-core.types[75].cost);const auto notice=session.Construction().LastPacket();CHECK(notice.size()==29);if (notice.size()!=29) return;const Sid target{static_cast<std::uint16_t>(notice[27]|(std::uint16_t(notice[28])<<8))};FinishGeneralConstruction(session,builders.front(),target);
 }
 // 장치 누락은 도달한 dirty 경계에서 실패하고 이후 장치 교체가 같은 커서 몸체에 즉시 적용된다.
@@ -2193,7 +2193,7 @@ TEST_CASE(CampaignSession_CursorReturnsFactoryPieceWithActualTimer) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());ReadyCursorFactoryInput(fort);
     GameWorld world(assets.game,assets.files,std::move(fort),MissionPlayers{},"thewarbegins",external.Services(),{1024,768});auto& session=world.Session();auto core=session.Core();SessionCursorUi ui;auto& cursor=session.Cursor();cursor.SetEffects(ui.Effects());cursor.SnapToGrid()=1;session.SetSp(1,5000);const auto source=CursorEnergyInput(session);CHECK(core.pool.Slot(source)[10]==76);const auto form=ReadyCursorFactoryForm(session);const auto parent=SquidForms(core.pool).Parent(form);
     cursor.ReturnSettings().lifetimeIndex=1;cursor.Take(form,0x41);const auto point=CursorPlacementPoint(session,ui);CHECK(session.CursorDropSettings().x==point.x);cursor.Drop();CHECK(ui.sent.size()==1 && ui.shown==1 && session.Sp(1)==5000-core.types[75].cost);const auto returned=session.Priests().Carrier().FindContained(parent,8,75,0);CHECK(returned.value);if (!returned.value) return;
-    CHECK(core.pool.Slot(returned)[10]==6 && (Get(core.pool.Slot(returned),20,2)&0x108)==0x108);const auto timer=FindAttachedProcess(core.pool,returned,46);CHECK(timer.value);if (!timer.value) return;const auto* process=dynamic_cast<RegularProcess*>(core.processes.FromForm(timer));CHECK(process && process->Event()==0 && process->Payload()==5.0f && process->Time()==core.processState.now && core.pool.Slot(returned)[30]==2);CHECK(!session.CursorDropSettings().preview.value && cursor.Lifecycle().previewCount==0);
+    CHECK(core.pool.Slot(returned)[10]==6 && (Get(core.pool.Slot(returned),20,2)&0x108)==0x108);const auto timer=FindAttachedProcess(core.pool,returned,46);CHECK(timer.value);if (!timer.value) return;const auto* process=dynamic_cast<RegularProcess*>(core.processes.FromForm(timer));CHECK(process && process->Event()==0 && process->Payload()==5.0f && process->Time()==core.processState.now && core.pool.Slot(returned)[30]==2);CHECK(!session.CursorDropSettings().preview && cursor.Lifecycle().previewCount==0);
 }
 
 // 실제 커서 수집의 깊이/tail과 현재8비트 SHP/윤곽/파일 색표·카메라를 같은 표시기에서 검사한다.
@@ -2227,7 +2227,7 @@ TEST_CASE(CampaignSession_CursorActionsUseActualPreviewsAndInput) {
     const auto preview=cursor.Lifecycle().previews[0];cursor.Lock(0);CHECK(drop.lockDepth==1 && ui.cursors.back()==1);const auto count=ui.cursors.size();cursor.Lock(1);CHECK(drop.lockDepth==2 && ui.cursors.size()==count);cursor.Unlock();CHECK(drop.lockDepth==1 && ui.cursors.size()==count);cursor.Unlock();CHECK(drop.lockDepth==0 && cursor.Lifecycle().previews[0]==preview);
     CHECK(cursor.HandleInput({InputCode::kRightButton,ui.mouse.x,ui.mouse.y},0) && drop.direction==2);CHECK(cursor.HandleInput({0x250000|InputCode::kShift,0,0},0) && drop.direction==0);CHECK(cursor.HandleInput({InputCode::kRightButton,0,0},1) && drop.direction==6);CHECK(cursor.HandleInput({0x270000,0,0},0) && drop.direction==0);
     CHECK(!cursor.HandleInput({InputCode::kRightButton|InputCode::kRelease,0,0},0));CHECK(!cursor.HandleInput({InputCode::kRightButton|InputCode::kOutside,0,0},0));CHECK(drop.direction==0 && session.Sp(1)==5000 && ui.sent.empty());CHECK(drop.x==point.x && drop.y==point.y);
-    const auto refreshed=ui.refreshes;CHECK(cursor.HandleInput({0x1b,0,0},0));CHECK(drop.lockDepth==1 && !drop.preview.value && cursor.Lifecycle().previewCount==0 && ui.refreshes==refreshed+1);CHECK(!cursor.HandleInput({0x270000,0,0},0));
+    const auto refreshed=ui.refreshes;CHECK(cursor.HandleInput({0x1b,0,0},0));CHECK(drop.lockDepth==1 && !drop.preview && cursor.Lifecycle().previewCount==0 && ui.refreshes==refreshed+1);CHECK(!cursor.HandleInput({0x270000,0,0},0));
 }
 // 실제 회전 조건의 Range 삭제/재생성은 같은51 Form/Kernel/표시 수명을 사용한다.
 TEST_CASE(CampaignSession_CursorRotateUsesActualRangeLifetime) {
@@ -2238,7 +2238,7 @@ TEST_CASE(CampaignSession_CursorRotateUsesActualRangeLifetime) {
         auto* current=dynamic_cast<CursorRangeProcess*>(core.kernel.Get(drop.cursorGump));CHECK(current && current->Parent()==CursorPreviewSid(cursor.Lifecycle().previews[0]));CHECK(core.kernel.Size()==baseline);
         if (core.types[type].group==1 || type==session.CursorRangeSettings().targeting.windArcherType) { CHECK(core.processState.typeRotation==rotations+1);CHECK(current && FindAttachedProcess(core.pool,CursorPreviewSid(cursor.Lifecycle().previews[0]),51)==current->Form()); }
         else CHECK(drop.cursorGump==token && current && current->Form()==oldForm && core.processState.typeRotation==rotations);
-        cursor.Cancel();CHECK(!session.CursorDropSettings().preview.value && !session.CursorDropSettings().cursorGump);
+        cursor.Cancel();CHECK(!session.CursorDropSettings().preview && !session.CursorDropSettings().cursorGump);
     }
 }
 
@@ -2250,7 +2250,7 @@ TEST_CASE(CampaignSession_CursorUserInputReadsCurrentSettingsAndMouse) {
     config.Set("cursorSnapToGrid","0");config.Set("cursorShowCannotPlace","0");ui.mouse.x+=4;input.UpdateCursor({InputCode::kLeftButton,ui.mouse.x,ui.mouse.y});CHECK(drop.x==static_cast<float>(point.x)+1.25f && cursor.SnapToGrid()==0 && cursor.Placement().placementFlags==0);const auto x=drop.x;
     input.UpdateCursor({InputCode::kOutside,900,700});CHECK(drop.x==x);input.Event({InputCode::kRightButton,ui.mouse.x,ui.mouse.y});CHECK(drop.direction==2);config.Set("rotmode","1");input.Event({InputCode::kRightButton,ui.mouse.x,ui.mouse.y});CHECK(drop.direction==0);
     input.Event({0x270000,0,0});CHECK(drop.direction==2);input.Event({0x250000|InputCode::kShift,0,0});CHECK(drop.direction==0);input.Event({InputCode::kRightButton|InputCode::kRelease,0,0});CHECK(drop.direction==0 && ui.sent.empty() && session.Sp(1)==5000);
-    input.Event({0x1b,0,0});CHECK(drop.lockDepth==1 && !drop.preview.value);input.UpdateCursor({0,1000,700});CHECK(drop.x==x);
+    input.Event({0x1b,0,0});CHECK(drop.lockDepth==1 && !drop.preview);input.UpdateCursor({0,1000,700});CHECK(drop.x==x);
 }
 
 // 내려놓기의+1c(3,0,0)는 같은 실제 Range 프로세스에 도달하며 UI 닫기 콜백으로 대체하지 않는다.
@@ -2269,7 +2269,7 @@ TEST_CASE(CampaignSession_CursorDropNotifiesActualRangeProcess) {
     effects.placement.accept=[](std::uint32_t token,std::uint32_t event,std::uint32_t,std::uint32_t,std::uint32_t) { CHECK(event==0x0200003f);return token; };
     effects.placement.parent=effects.drop.guiParent=[priest](std::uint32_t token) { CHECK(token==77);return priest.value; };
     effects.drop.guiFlags=[](std::uint32_t token) { CHECK(token==77);return 0U; };
-    effects.drop.guiReceive=[&](std::uint32_t token,Sid form) { CHECK(token==77 && form==session.CursorDropSettings().preview);++received; };
+    effects.drop.guiReceive=[&](std::uint32_t token,Sid form) { CHECK(token==77 && form.value==session.CursorDropSettings().preview);++received; };
     effects.drop.closeGump=[&](auto,auto,auto,auto) { ++wrongClose; };
     cursor.SetEffects(std::move(effects));
     const auto form=cursor.Contents().Create(priest,128,0,0x20,0x10,0); // 명시 Form 입력이며 실제 생산 완료/메뉴 제공 행의 검증은 아니다.
@@ -2277,7 +2277,7 @@ TEST_CASE(CampaignSession_CursorDropNotifiesActualRangeProcess) {
     const auto token=drop.cursorGump;rangeToken=token;auto* range=dynamic_cast<CursorRangeProcess*>(core.kernel.Get(token));
     CHECK(range && token && drop.legalGump==77 && drop.legal);if (!range) return;
     CHECK(Get(range->Fields().bytes,0x1b8)==0);cursor.Drop();
-    CHECK(received==1 && wrongClose==0 && drop.lockDepth==1 && !drop.preview.value && !drop.cursorGump);
+    CHECK(received==1 && wrongClose==0 && drop.lockDepth==1 && !drop.preview && !drop.cursorGump);
     CHECK(closedObserved && core.kernel.Get(token)==nullptr); // 실제 종료 통지 뒤 부모 미리보기 삭제가 종속 Range를 반납한다.
     CHECK(SquidForms(core.pool).Parent(form)==priest); // GUI 수신은 실제 같은 ContentForm 부착을 사용한다.
 }
@@ -2837,7 +2837,7 @@ void NaturalWorkshopPlacement(bool combat,bool burning=false,CellPoint cannonLoc
             for (auto generator:generators) CHECK(!(core.pool.Slot(generator)[40]&1U) && Get(core.pool.Slot(generator),26)==700);
         }
         const auto click=production.Point(128);CHECK(click.has_value());
-        if (click) { CHECK(controls.PickGump(*click)==controls.RegisteredGump(3));controls.Event({InputCode::kLeftButton,click->x,click->y});CHECK(session.CursorDropSettings().preview==teleport && session.CursorDropSettings().type==128 && session.CursorDropSettings().lockDepth==0 && gets==(combat ? 3U : 1U));
+        if (click) { CHECK(controls.PickGump(*click)==controls.RegisteredGump(3));controls.Event({InputCode::kLeftButton,click->x,click->y});CHECK(session.CursorDropSettings().preview==teleport.value && session.CursorDropSettings().type==128 && session.CursorDropSettings().lockDepth==0 && gets==(combat ? 3U : 1U));
             const auto cannonPoint=combat ? cannonLocation : CursorPlacementPoint(session,ui);if (combat) {
                 ui.Point(session,cannonPoint,0,0,false);const auto& placement=session.Cursor().Placement();const auto& drop=session.CursorDropSettings();std::string supply; // 같은 배치 거부 원인의 현재 진단이다.
                 session.EnergySupply().Collect(supply,drop.x,drop.y,128,1);std::cout<<"캐논 실제좌표 "<<drop.x<<","<<drop.y<<" legal"<<drop.legal<<" 에너지"<<placement.descriptionAllowed<<" 공간"<<placement.placementAllowed<<" 공급문자"<<supply<<" 반경제곱"<<session.EnergySettings().radiusSquared<<"\n";
@@ -2965,7 +2965,7 @@ void NaturalWorkshopPlacement(bool combat,bool burning=false,CellPoint cannonLoc
             if (bridgeClick) {
                 // 실제 표시된 다리 아이콘을 클릭하며 생성/허용/SP 값을 검사에서 주입하지 않는다.
                 controls.Event({InputCode::kLeftButton,bridgeClick->x,bridgeClick->y});const auto preview=session.CursorDropSettings().preview;
-                CHECK(preview.value && session.CursorDropSettings().type==82 && session.CursorDropSettings().lockDepth==0 && gets==2);
+                CHECK(preview && session.CursorDropSettings().type==82 && session.CursorDropSettings().lockDepth==0 && gets==2);
                 const auto bridgePoint=CursorPlacementPoint(session,ui);std::cout<<"실제 공급 다리 배치 허용점 "<<bridgePoint.x<<","<<bridgePoint.y<<"\n";
                 const auto bridges=[&] { std::size_t total{};
                     // 서버의 실제 살아 있는 다리만 센다. 미리보기/내용물은 포함하지 않는다.

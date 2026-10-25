@@ -40,7 +40,7 @@ struct DropScene {
     // 합성 타입/Form/현재 상태의 입력만 준비한다.
     void Prepare(const std::vector<std::uint32_t>& v) {
         input=v;events.clear();prepared=sources=0;state={};
-        state.lockDepth=v[Lock];state.legal=v[Legal];state.preview=kPreview;state.x=Float(v[X]);state.y=Float(v[Y]);
+        state.lockDepth=v[Lock];state.legal=v[Legal];state.preview=kPreview.value;state.x=Float(v[X]);state.y=Float(v[Y]);
         state.inputFlags=v[InputFlags];state.costFlags=v[CostFlags];state.legalGump=v[LegalGump] ? 1U : 0U;state.cursorGump=v[CursorGump] ? 2U : 0U;
         state.recording=v[Recording];state.recorder=27;state.type=100;state.argument=v[Argument];state.direction=v[Direction];
         state.screenX=std::bit_cast<std::int32_t>(v[ScreenX]);state.screenY=std::bit_cast<std::int32_t>(v[ScreenY]);state.cursorWidth=std::bit_cast<std::int32_t>(v[Width]);
@@ -55,9 +55,9 @@ struct DropScene {
         h.queryCursor=[this] { Append('Q',{0});if (input[QueryChange]==1) state.legal^=1;if (input[QueryChange]==2) state.lockDepth=7; };
         // 첫 준비 뒤 반올림, 두 번째 준비 뒤 전역 SID 변경과 재스냅을 확인한다.
         h.prepareCursor=[this] {
-            Append('P',{++prepared,Bits(state.x),Bits(state.y),state.preview.value});
+            Append('P',{++prepared,Bits(state.x),Bits(state.y),state.preview});
             if (input[PrepareChange]==1 && prepared==1) { state.x=-0.500001F;state.y=0.499999F; }
-            if (input[PrepareChange]==2 && prepared==2) { state.x=20.25F;state.y=21.75F;state.preview=Sid{51}; }
+            if (input[PrepareChange]==2 && prepared==2) { state.x=20.25F;state.y=21.75F;state.preview=51U; }
         };
         h.highlight=[this](std::uint32_t value) { Append('H',{value}); };
         h.playDrop=[this] { Append('S',{});events+=":droppiece.wav:0:0:0:0:0"; };
@@ -96,7 +96,7 @@ struct DropScene {
     }
     // 원본 관찰과 같은 최종 전역/raw 14개를 꺼낸다.
     std::string Snapshot() const {
-        const auto raw=pool.Slot(kPreview);const std::array values{state.lockDepth,state.legal,static_cast<std::uint32_t>(state.preview.value),Bits(state.x),Bits(state.y),
+        const auto raw=pool.Slot(kPreview);const std::array values{state.lockDepth,state.legal,static_cast<std::uint32_t>(state.preview),Bits(state.x),Bits(state.y),
             state.inputFlags,state.costFlags,state.legalGump ? 1U : 0U,state.cursorGump ? 1U : 0U,state.argument,state.direction,Bits(types[100].cost),Get(raw,20,2),
             static_cast<std::uint32_t>(raw[pool.Edition()==OriginalEdition::Patch1078 ? 30 : 26])};
         std::string text;
@@ -138,7 +138,7 @@ TEST_CASE(ReturnPiece_ConnectsGuiDrop) {
         CursorReturnPieceState state;state.type=100;state.keepPieces=1;GameRandom random;
         RawCursorReturnPiece body(contained,state,random,{[](std::uint32_t) { CHECK(false);return false; },[](Sid,std::uint32_t,float) { CHECK(false); }});
         RawCursorDrop drop(scene.pool,scene.types,scene.state,MakeReturnPieceHooks(scene.pool,body,scene.Hooks()));drop.Drop();
-        CHECK(returned.value!=0 && scene.state.preview.value==0 && scene.state.lockDepth==1);
+        CHECK(returned.value!=0 && scene.state.preview==0 && scene.state.lockDepth==1);
         const auto raw=scene.pool.Slot(returned);CHECK(raw[10]==6 && Get(raw,18,2)==100 && Get(raw,20,2)==8 && raw[edition==OriginalEdition::Patch1078 ? 30 : 26]==2);
         CHECK(Get(scene.pool.Slot(kPreview),20,2)==0x100 && scene.pool.Slot(kPreview)[edition==OriginalEdition::Patch1078 ? 30 : 26]==0xfe && random.State()==0);
     }
@@ -150,11 +150,11 @@ TEST_CASE(CursorDrop_RejectsInvalidInputs) {
     CHECK(Throws([&] { RawCursorDrop bad(scene.pool,{},scene.state,h); }));CHECK(Throws([&] { RawCursorDrop bad(scene.pool,scene.types,scene.state,{}); }));
     RawCursorDrop drop(scene.pool,scene.types,scene.state,h);CHECK(&drop.Pool()==&scene.pool);
     scene.state.preview={};scene.state.lockDepth=1;drop.Drop();CHECK(scene.events.empty());
-    scene.state.lockDepth=0;CHECK(Throws([&] { drop.Drop(); }));scene.state.preview=kPreview;scene.state.x=Float(0x7fc01234);
+    scene.state.lockDepth=0;CHECK(Throws([&] { drop.Drop(); }));CHECK(scene.state.lockDepth==1 && scene.state.preview==0);scene.state.lockDepth=0;scene.state.preview=kPreview.value;scene.state.x=Float(0x7fc01234); //실제소비실패의잠금prefix를확인한뒤다음독립NaN입력을명시한다.
     CHECK(Throws([&] { drop.Drop(); }));scene.state.x=20;scene.state.type=300;scene.state.recording=1;CHECK(Throws([&] { drop.Drop(); }));
     scene.Prepare(Inputs(Fixture().front()[1]));scene.state.legalGump=1;h.guiParent=[](std::uint32_t) { return 0U; };
     RawCursorDrop missingParent(scene.pool,scene.types,scene.state,h);CHECK(Throws([&] { missingParent.Drop(); }));
-    CHECK(Get(scene.pool.Slot(kPreview),20,2)==0x100 && scene.state.preview==kPreview && scene.state.lockDepth==0);
+    CHECK(Get(scene.pool.Slot(kPreview),20,2)==0x100 && scene.state.preview==kPreview.value && scene.state.lockDepth==0);
     scene.Prepare(Inputs(Fixture().front()[1]));scene.state.inputFlags=0x80;h=scene.Hooks();h.previewSource=[](Sid) { return 0xffffffffU; };
     RawCursorDrop badSource(scene.pool,scene.types,scene.state,h);CHECK(Throws([&] { badSource.Drop(); }));
 }
@@ -165,9 +165,32 @@ TEST_CASE(CursorDrop_PreservesRejectedGuiAndLocksConstruction) {
     for (const auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) {
         DropScene scene(edition);auto v=Inputs(Fixture().front()[1]);v[LegalGump]=1;v[Allowed]=8;scene.Prepare(v);
         RawCursorDrop drop(scene.pool,scene.types,scene.state,scene.Hooks());drop.Drop();
-        CHECK(scene.events.ends_with("I:0") && scene.state.preview==kPreview && scene.state.cursorGump==2 && scene.state.lockDepth==0);
+        CHECK(scene.events.ends_with("I:0") && scene.state.preview==kPreview.value && scene.state.cursorGump==2 && scene.state.lockDepth==0);
         CHECK(Get(scene.pool.Slot(kPreview),20,2)==8);v[LegalGump]=0;scene.Prepare(v);drop.Drop();
-        CHECK(scene.state.lockDepth==2 && scene.state.preview.value==0 && scene.state.cursorGump==0);
+        CHECK(scene.state.lockDepth==2 && scene.state.preview==0 && scene.state.cursorGump==0);
         const auto before=scene.events;drop.Drop();CHECK(scene.events==before);
+    }
+}
+
+namespace { //실제준비호출의지정위치에서만중단하는독립입력장치다.
+struct CursorWidthPrepareStop {}; //Native명시중단과같이현재DWORD·선행효과를그대로남긴다.
+}
+//두판본의큰DWORD조기반환·준비중단·유효번호캡처뒤현재값변경을280관측전체로비교한다.
+TEST_CASE(CursorPreviewDword_Native280CaptureAndPreparePrefix) {
+    const auto rows=LoadFixture(std::filesystem::path(NETSTORM_CURSORDROP_FIXTURE).parent_path()/"cursor-preview-width-x86.tsv").rows;std::size_t count{},stops{};
+    for (const auto& row:rows) { //최초Native관측의입력열과실제사건/전체14필드를읽는다.
+        CHECK(row.size()==10);if (row.size()!=10) continue;DropScene scene(row[0]=="originals"?OriginalEdition::Patch1078:OriginalEdition::Cd1072);scene.Prepare(Inputs(row[6]));scene.state.preview=Number(row[2]);auto hooks=scene.Hooks();const auto prepare=hooks.prepareCursor;bool completed=true;
+        hooks.prepareCursor=[&] { prepare();if (scene.prepared==Number(row[4])) scene.state.preview=Number(row[5]);if (scene.prepared==Number(row[3])) throw CursorWidthPrepareStop{}; };
+        RawCursorDrop drop(scene.pool,scene.types,scene.state,std::move(hooks));try { drop.Drop(); }catch (const CursorWidthPrepareStop&) { completed=false;++stops; }
+        CHECK(completed==(row[7]=="1") && (scene.events.empty()?"-":scene.events)==row[8] && scene.Snapshot()==row[9]);++count;
+    }
+    CHECK(count==280 && stops==40);
+}
+
+//잘못된큰번호는prepare·소리·GUI조회/잠금의선행효과뒤호스트소비위치에서거부하고하위WORD의실제객체를건드리지않는다.
+TEST_CASE(CursorPreviewDword_DropHostGuardDoesNotAliasLowWord) {
+    for (const auto number:{0x10032U,0x80000032U,0xffff0032U}) for (const auto mode:{0U,1U,2U}) { //로컬배치·이동가상·GUI세소비위치를구별한다.
+        DropScene scene(OriginalEdition::Patch1078);auto input=Inputs(Fixture().front()[1]);input[InputFlags]=mode==1 ? 0x80U : 0U;input[LegalGump]=mode==2 ? 1U : 0U;input[Allowed]=0;input[CursorGump]=0;scene.Prepare(input);scene.state.preview=number;const auto raw=scene.pool.Slot(kPreview);const std::vector<std::uint8_t> before(raw.begin(),raw.end());auto hooks=scene.Hooks();std::uint32_t placed{};hooks.placeLocal=[&](const ConstructionLocalRequest&) { ++placed; };
+        RawCursorDrop drop(scene.pool,scene.types,scene.state,std::move(hooks));CHECK(Throws([&] { drop.Drop(); }));CHECK(scene.state.preview==number && scene.prepared==2 && scene.sources==0 && placed==0 && scene.state.lockDepth==(mode==0 ? 1U : 0U));CHECK(std::equal(before.begin(),before.end(),scene.pool.Slot(kPreview).begin()));
     }
 }

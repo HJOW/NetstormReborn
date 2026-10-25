@@ -40,7 +40,7 @@ TEST_CASE(ClientCursorGlobals_NativeCancelRequeriesCountAndProcessThenClearsAllD
     hooks.prepareCursor=[&] { order.push_back(1);state.Lifecycle().previewCount=1;state.Lifecycle().previews[0]=100; };
     hooks.destroy=[&](Sid sid,std::uint32_t flags) { CHECK(flags==0);order.push_back(sid.value);if (sid.value==100) { state.Lifecycle().previewCount=2;state.Lifecycle().previews[1]=101;drop.cursorGump=99; }else state.Lifecycle().previewCount=1; };
     hooks.removeProcess=[&](std::uint32_t process,std::uint32_t flags) { CHECK(process==99 && flags==0);order.push_back(process); };RawCursorLifecycle lifecycle(scene.pool,scene.types,drop,state.Lifecycle(),hooks);lifecycle.Cancel();
-    const std::vector<std::uint32_t> expected{1,100,101,99};CHECK(order==expected && drop.lockDepth==1 && drop.preview.value==0 && drop.cursorGump==0 && drop.legalGump==19 && state.Lifecycle().currentGump==17 && state.Lifecycle().previewCount==0);CHECK(std::all_of(state.Lifecycle().previews.begin(),state.Lifecycle().previews.end(),[](auto value) { return value==0; }));
+    const std::vector<std::uint32_t> expected{1,100,101,99};CHECK(order==expected && drop.lockDepth==1 && drop.preview==0 && drop.cursorGump==0 && drop.legalGump==19 && state.Lifecycle().currentGump==17 && state.Lifecycle().previewCount==0);CHECK(std::all_of(state.Lifecycle().previews.begin(),state.Lifecycle().previews.end(),[](auto value) { return value==0; }));
 }
 
 // 호스트SID16경계밖값을다른유효번호로접지않고부분효과/원래DWORD를보존해거부한다.
@@ -53,7 +53,7 @@ TEST_CASE(ClientCursorGlobals_HighWordDoesNotAliasValidPreview) {
 TEST_CASE(ClientCursorGlobals_FirstMenuCancelUsesActualProjectAndCurrentRenderer) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);Client client(CursorOwnerOptions());const auto globals=client.GameplayGlobals();auto surface=MakeRawSurfaceStorage(assets.game,globals->Authority());auto& state=globals->CursorGlobals();auto& camera=globals->Camera();std::uint32_t redraw{},revision{};camera.InitializeNativeRenderer(1024,768,256,redraw,revision);SetCameraViewWorld(camera.Snapshot(),5,5);globals->cursor.x=10;globals->cursor.y=10;globals->cursor.screenX=777;globals->cursor.screenY=888;globals->cursor.legalGump=0x12345678U;state.Lifecycle().currentGump=0x76543210U;state.Lifecycle().previews[29]=0xffffffffU;state.Placement().hotspotX=12;state.Placement().hotspotY=-7;globals->selection.mouse={-33,65};
     Renderer first(128,128),second(128,128);Renderer* current=&first;std::uint32_t deliveries{};std::vector<std::uint8_t> pixels(128*128);first.Draw(pixels,128);first.Present([](ScreenRect) {});second.Draw(pixels,128);second.Present([](ScreenRect) {});auto provider=[&]() -> Renderer& { ++deliveries;return *current; };
-    CancelClientCursorForState(client,*surface,{},provider);CHECK(deliveries==2 && globals->cursor.lockDepth==1 && globals->cursor.preview.value==0 && globals->cursor.cursorGump==0 && state.Lifecycle().previewCount==0 && state.Placement().sharedScreenOrigin==&camera.Snapshot().pixels);auto dirty=first.Draw(pixels,128);CHECK(dirty.size()==1 && CursorRect(dirty[0],78,53,86,69));first.Present([](ScreenRect) {});CHECK(second.Draw(pixels,128).empty());
+    CancelClientCursorForState(client,*surface,{},provider);CHECK(deliveries==2 && globals->cursor.lockDepth==1 && globals->cursor.preview==0 && globals->cursor.cursorGump==0 && state.Lifecycle().previewCount==0 && state.Placement().sharedScreenOrigin==&camera.Snapshot().pixels);auto dirty=first.Draw(pixels,128);CHECK(dirty.size()==1 && CursorRect(dirty[0],78,53,86,69));first.Present([](ScreenRect) {});CHECK(second.Draw(pixels,128).empty());
     current=&second;SetCameraViewWorld(camera.Snapshot(),6,6);CancelClientCursorForState(client,*surface,{},provider);CHECK(deliveries==4 && first.Draw(pixels,128).empty());dirty=second.Draw(pixels,128);CHECK(dirty.size()==1 && CursorRect(dirty[0],62,42,70,58));CHECK(globals->cursor.screenX==777 && globals->cursor.screenY==888 && globals->selection.mouse.x==-33 && globals->selection.mouse.y==65 && state.Lifecycle().currentGump==0x76543210U && globals->cursor.legalGump==0x12345678U && state.Placement().hotspotX==12 && state.Placement().hotspotY==-7);CHECK(std::all_of(state.Lifecycle().previews.begin(),state.Lifecycle().previews.end(),[](auto value) { return value==0; }));
 }
 
@@ -65,4 +65,22 @@ TEST_CASE(ClientCursorGlobals_CreateOverwritesInactiveDwordsAtActualAppend) {
     hooks.create=[&](std::uint32_t type,std::uint32_t flags) { CHECK(type==0 && flags==2);return Sid{born++}; };hooks.setWord=[](Sid,std::uint32_t) {};hooks.setOwner=[](Sid,std::uint32_t) {};hooks.hasHitPoints=[](Sid) { return false; }; // 가상 효과의 독립 입력이며 생성 산술을 대신하지 않는다.
     RawCursorPreviews previews(scene.pool,scene.types,drop,state.Lifecycle(),surfaces,hooks);previews.Create();
     CHECK(prepared==1 && born==102 && state.Lifecycle().previewCount==2 && state.Lifecycle().previews[0]==100 && state.Lifecycle().previews[1]==101 && state.Lifecycle().previews[29]==0x87654321U);
+}
+
+//단일현재번호의실제폭과Client장기주소를검사하며prepared대여는상위WORD도보존한다.
+TEST_CASE(CursorPreviewDword_ClientOwnerPreparedIdentityAndWidth) {
+    static_assert(std::is_same_v<decltype(CursorDropState::preview),std::uint32_t>);ClientGameplayGlobals first,second;first.cursor.preview=0x12345678U;const auto* address=&first.cursor.preview;first.CursorGlobals().Lifecycle().previews[0]=50;
+    { auto use=first.AcquirePrepared();CHECK(&first.cursor.preview==address && first.cursor.preview==0x12345678U && first.CursorGlobals().Lifecycle().previews[0]==50); }CHECK(first.cursor.preview==0x12345678U && second.cursor.preview==0 && Throws([&] { static_cast<void>(CursorPreviewSid(first.cursor.preview)); }));
+}
+
+//현재미리보기의호스트검사는원문Cancel의강조·준비·커서선택·잠금뒤에오며잘못된DWORD를보존한다.
+TEST_CASE(CursorPreviewDword_CancelRejectsAfterOriginalPrefix) {
+    Scene scene(OriginalEdition::Patch1078);CursorDropState drop;ClientCursorGlobals state;drop.lockDepth=0;drop.preview=0x10032U;std::vector<std::uint32_t> trace;CursorLifecycleHooks hooks;hooks.highlight=[&](auto value) { CHECK(value==0);trace.push_back(1); };hooks.prepareCursor=[&] { trace.push_back(2); };hooks.selectCursor=[&](auto value) { CHECK(value==1);trace.push_back(3); };
+    RawCursorLifecycle lifecycle(scene.pool,scene.types,drop,state.Lifecycle(),hooks);CHECK(Throws([&] { lifecycle.Cancel(); }));const std::vector<std::uint32_t> expected{1,2,3};CHECK(trace==expected && drop.preview==0x10032U && drop.lockDepth==1 && state.Lifecycle().previewCount==0);
+}
+
+//잠긴현재번호는역참조하지않고실제Client의첫메뉴Cancel꼬리가같은4BYTE를전부지운다.
+TEST_CASE(CursorPreviewDword_FirstMenuActualCancelClearsWholeWord) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);Client client(CursorOwnerOptions());auto globals=client.GameplayGlobals();auto surface=MakeRawSurfaceStorage(assets.game,globals->Authority(),globals->GameAux());auto& camera=globals->Camera();std::uint32_t redraw{},revision{};camera.InitializeNativeRenderer(1024,768,256,redraw,revision);SetCameraViewWorld(camera.Snapshot(),5,5);globals->cursor.preview=0xffffffffU;globals->cursor.lockDepth=1;const auto* address=&globals->cursor.preview;Renderer renderer(128,128);std::uint32_t queried{};
+    CancelClientCursorForState(client,*surface,{},[&]() -> Renderer& { ++queried;return renderer; });CHECK(queried==2 && globals->cursor.preview==0 && &globals->cursor.preview==address && globals->cursor.lockDepth==1 && globals->CursorGlobals().Lifecycle().previewCount==0);
 }

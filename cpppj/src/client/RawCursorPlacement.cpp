@@ -39,7 +39,7 @@ const o::RiftTypeRecord& RawCursorPlacement::Type() const {
 // SP 부족 판정이 아니다. Form의 연관 지역과 현재 패턴이 겹치는지 검사한다.
 std::uint32_t RawCursorPlacement::SourceAllowed() const {
     if (!(drop_.costFlags&0x20)) return 1;
-    const auto source=Need(hooks_.source)(drop_.preview);const auto region=Need(hooks_.region)(source);std::uint32_t allowed{};
+    const auto source=Need(hooks_.source)(CursorPreviewSid(drop_.preview));const auto region=Need(hooks_.region)(source);std::uint32_t allowed{};
     Need(hooks_.walk)({drop_.type,std::bit_cast<std::int32_t>(drop_.argument),std::bit_cast<std::int32_t>(drop_.direction),drop_.x,drop_.y,false},
         [this,region,&allowed](CursorCanonCell cell) {
             const auto x=Truncate(static_cast<double>(cell.x)+static_cast<double>(0.9999f));

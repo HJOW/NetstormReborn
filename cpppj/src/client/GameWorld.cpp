@@ -636,7 +636,7 @@ std::optional<ScreenPoint> GameWorld::Point(std::string_view label) const {
         if (targetX<1 || targetX>255 || targetY<1 || targetY>255) return {};
         const auto& bridge=assets_.Find("bridge");const auto bridgeType=static_cast<std::uint32_t>(bridge.block+o::kFirstAssetTypeNumber); // 현재 다리 타입이다.
         const auto& drop=campaign_->CursorDropSettings();const auto& placement=campaign_->Cursor().Placement(); // 취득한 실제 조각과 미리보기다.
-        if (drop.lockDepth || !drop.preview.value || drop.type!=bridgeType || placement.imageWidth<=0 || placement.imageHeight<=0) return {};
+        if (drop.lockDepth || !drop.preview || drop.type!=bridgeType || placement.imageWidth<=0 || placement.imageHeight<=0) return {};
         const auto patterns=o::BridgePatterns(assets_.Edition());const auto frames=bridge.definition.FrameTable(); // 보호 원문 패턴/프레임 코드다.
         if (drop.argument>=patterns.size()) throw std::out_of_range("검사 다리 패턴 번호 범위");
         constexpr int radius=24; // 목표 주변에서만 조회한다.
@@ -757,7 +757,7 @@ std::string GameWorld::Report(bool mask) const {
         out<<"raw_session\t"<<campaign_->LocalOwner()<<'\t'<<campaign_->PlayerKnown();
         const auto& drop=campaign_->CursorDropSettings();const auto& placement=campaign_->Cursor().Placement(); // 실제 배치/원본 입력과 같은 저장소다.
         out<<"\nraw_piece\t"<<drop.argument<<'\t'<<drop.direction; // 실제 무작위 조각 번호/현재 회전을 관찰하며 취득 상태를 변경하지 않는다.
-        out<<"\nraw_cursor\t"<<drop.lockDepth<<'\t'<<drop.legal<<'\t'<<drop.type<<'\t'<<drop.preview.value<<'\t'<<drop.x<<'\t'<<drop.y<<'\t'<<drop.inputFlags<<'\t'<<drop.costFlags<<'\t'<<placement.placementAllowed<<'\t'<<placement.spaceAllowed<<'\t'<<placement.sourceAllowed<<"\nraw_sp";
+        out<<"\nraw_cursor\t"<<drop.lockDepth<<'\t'<<drop.legal<<'\t'<<drop.type<<'\t'<<drop.preview<<'\t'<<drop.x<<'\t'<<drop.y<<'\t'<<drop.inputFlags<<'\t'<<drop.costFlags<<'\t'<<placement.placementAllowed<<'\t'<<placement.spaceAllowed<<'\t'<<placement.sourceAllowed<<"\nraw_sp";
         // 화면용 MissionPlayers 사본과 구별하여 실제 분산 SP의 모든 owner를 읽는다.
         for (std::uint32_t owner=0;owner<9;++owner) out<<'\t'<<campaign_->Sp(owner);
         out<<"\nraw_brains";

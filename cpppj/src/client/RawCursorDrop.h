@@ -14,7 +14,7 @@ struct CursorDropState {
     // inputFlags: 입력 플래그.
     // costFlags: 비용 플래그.
     std::uint32_t lockDepth{},legal{},type{},argument{},direction{},inputFlags{},costFlags{};
-    o::Sid preview{}; // 조회 뒤에 캡처한 미리보기 번호는 prepare 효과가 전역 번호를 바꿔도 유지한다.
+    std::uint32_t preview{}; //0055a2a8의전체DWORD다. 조회뒤캡처한번호와준비효과가바꾼현재번호를구별하고호스트Pool소비직전에만SID16으로변환한다.
     // x: X 좌표.
     // y: Y 좌표.
     float x{},y{};
@@ -28,6 +28,7 @@ struct CursorDropState {
     std::uint32_t legalGump{},cursorGump{},recording{},recorder{},battle{},blocked{},localPlayer{};
     std::int32_t screenX{},screenY{},cursorWidth{}; //0055a2f8/fc의hotspot보정커서화면점과가격폭이다.원시mouse005cae94/98과Camera0059a91c/920과다르다.
 };
+static_assert(sizeof(CursorDropState::preview)==4); //단일미리보기전역의높은WORD도저장한다.
 // 미복원 커서 판정·Form/Gump·공간 이동·기록·화면 효과만 명시 경계로 둔다. 모든 경계가 필요하다.
 struct CursorDropHooks {
     std::function<void()> queryCursor,prepareCursor; // legal/위치 전역 갱신과 미리보기 위치 준비.
@@ -75,6 +76,7 @@ private:
     const o::RiftTypeRecord& Type() const;
     // DWORD 연관 번호를 호스트 SID로 바꾼다. 0·풀 범위 밖 번호는 거부한다.
     o::Sid SourceSid(std::uint32_t value) const;
+    o::Sid PreviewSid(std::uint32_t value) const; //실제미리보기소비위치에서만같은Pool/호스트SID16범위를검사한다.
     // 잠금이 처음이면 미리보기/하드웨어 커서를 바꾸고, 현재 깊이를 DWORD 덧셈으로 증가시킨다.
     void Lock();
     // 월드 분기에서만 비용을 차감하고 절삭 비용을 화면 위치에 표시한다.

@@ -54,7 +54,7 @@ struct PlacementScene {
         surface[0]=80;surface[22*256+21]=81;surface[21*256+20]=82;surface[255*256+255]=83;
         drop.legal=5;state.placementAllowed=values[Place];state.descriptionAllowed=values[Describe];state.spaceAllowed=1-values[Obstruction];state.sourceAllowed=values[Match];
         lifecycle.currentGump=values[OldGump] ? 1U : 0U;drop.legalGump=2;state.bounds={3,7,43,51};state.hotspotX=44;state.hotspotY=45;state.imageWidth=91;state.imageHeight=93;
-        drop.type=lifecycle.abstractType=100;drop.argument=7;drop.direction=3;drop.preview=Sid{50};drop.costFlags=values[CursorFlags];state.placementFlags=values[PlacementFlags];drop.cursorGump=values[Mana] ? 1U : 0U;
+        drop.type=lifecycle.abstractType=100;drop.argument=7;drop.direction=3;drop.preview=50U;drop.costFlags=values[CursorFlags];state.placementFlags=values[PlacementFlags];drop.cursorGump=values[Mana] ? 1U : 0U;
         drop.x=std::bit_cast<float>(values[X]);drop.y=std::bit_cast<float>(values[Y]);drop.localPlayer=0x123401;drop.screenX=-3;drop.screenY=47;
         state.labelSpacing=std::bit_cast<std::int32_t>(values[Spacing]);state.obstruction=values[Obstruction];state.acceptEvent=0x123456;state.screenOrigin={-17,31};state.description="old";lifecycle.previews[0]=100;
         types[100].footX=std::bit_cast<std::int32_t>(values[FootX]);types[100].footY=std::bit_cast<std::int32_t>(values[FootY]);types[100].flags1=values[Flags1];types[100].flags2=values[Flags2];

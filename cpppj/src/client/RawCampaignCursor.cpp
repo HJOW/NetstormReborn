@@ -151,7 +151,7 @@ void RawCampaignCursor::Cancel() { impl_->Prepare();impl_->lifecycle->Cancel(); 
 void RawCampaignCursor::Update(std::int32_t x,std::int32_t y) { impl_->Prepare();impl_->position->Update(x,y); }
 // 원본의 장기 UI 포인터 대신 교체되는 호스트 토큰이므로 이전 깊이를 다음 수집에 넘기지 않는다.
 void RawCampaignCursor::GumpsChanged() {
-    if (impl_->data.drop.lockDepth || !impl_->data.drop.preview.value) return;
+    if (impl_->data.drop.lockDepth || !impl_->data.drop.preview) return;
     impl_->Prepare();impl_->placement->Prepare();impl_->placement->Query();impl_->placement->Prepare();
     Current(impl_->effects.lifecycle.selectCursor,"하드웨어 커서 선택")(impl_->data.drop.legalGump ? 3U : 2U);
 }

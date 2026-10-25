@@ -64,7 +64,7 @@ TEST_CASE(ContentLifetime_IndependentPeFixture) {
         std::vector<RiftTypeRecord> types(patch ? 188 : 171);types[154].cost=Float(Number(row[5]));types[90].footX=3;types[90].footY=5;
         SquidHash hash;std::vector<std::uint8_t> spots(65536);SquidUnpop unpop(pool,hash,spots);RawSquidDestroy destroy(pool,unpop,types);
         const Sid form{80},parent{static_cast<std::uint16_t>(Get(pool.Slot(form),16,2))};
-        ContentLifetimeState state{Sid{static_cast<std::uint16_t>(Number(row[6]))},154,Number(row[3]),0x1234,row[4]=="1"};
+        ContentLifetimeState state{Number(row[6]),154,Number(row[3]),0x1234,row[4]=="1"};
         // CD는 없는 너겟 전역의 합성 기본값만 관찰한다.
         if (!patch) { state.localOwner=1;state.boss=true; }
         const auto mutation=Number(row[7]);std::string effects,notices;
@@ -182,6 +182,16 @@ TEST_CASE(ContentLifetime_SharedBossRecheckedAfterCursorCancel) {
     SidPool pool(OriginalEdition::Patch1078,kPoolCapacity);std::vector<RiftTypeRecord> types(188);SquidFactory factory(pool,types);SquidHash hash;std::vector<std::uint8_t> spots(65536);SquidUnpop unpop(pool,hash,spots);RawSquidDestroy destroy(pool,unpop,types);const auto parent=factory.Create(90,2);pool.AllocatedBytes(parent)[34]=2;ContentFormHost forms(pool,types,[](Sid,Sid,std::uint32_t) {});bool boss=true,nextBoss=false;ContentLifetimeState state;state.localOwner=1;state.sharedBoss=&boss;std::size_t cancelled{},remote{};ContentLifetimeHooks hooks;hooks.cancelCursor=[&] { ++cancelled;boss=nextBoss; };hooks.remoteNotice=[&](std::uint32_t owner) { CHECK(owner==2);++remote; };ContentFormLifetime lifetime(pool,types,forms,destroy,state,std::move(hooks));
     // 두 실제 Form을 차례로 붙이고 공통 삭제 깊이와 부모 링크까지 정상 반납한다.
     for (std::size_t index=0;index<2;++index) {
-        const auto form=factory.CreateContained(2);auto raw=pool.AllocatedBytes(form);Put(raw,18,154,2);Put(raw,20,0x20,2);raw[22]=1;forms.Attach(form,parent,0x10);state.cursor=form;nextBoss=index!=0;state.boss=!nextBoss;lifetime.Destroy(form,0x10);CHECK(remote==index && cancelled==index+1 && Get(pool.Slot(parent),6,2)==0 && destroy.PreDepth()==0 && destroy.PostDepth()==0);
+        const auto form=factory.CreateContained(2);auto raw=pool.AllocatedBytes(form);Put(raw,18,154,2);Put(raw,20,0x20,2);raw[22]=1;forms.Attach(form,parent,0x10);state.cursor=form.value;nextBoss=index!=0;state.boss=!nextBoss;lifetime.Destroy(form,0x10);CHECK(remote==index && cancelled==index+1 && Get(pool.Slot(parent),6,2)==0 && destroy.PreDepth()==0 && destroy.PostDepth()==0);
     }
+}
+
+//내용물삭제의현재커서동등비교도같은DWORD를사용하며Native56관측을값형/실제조회두경로에재생한다.
+TEST_CASE(CursorPreviewDword_ContentComparisonNative56KeepsAllBits) {
+    const auto rows=LoadFixture(std::filesystem::path(NETSTORM_CONTENTLIFETIME_FIXTURE).parent_path()/"content-cursor-width-x86.tsv").rows;std::size_t observations{};
+    for (const auto& row:rows) for (const auto getter:{false,true}) { //독립장치fallback과Session의현재getter가같은전체값을비교한다.
+        CHECK(row.size()==7);if (row.size()!=7) continue;const auto edition=row[0]=="originals"?OriginalEdition::Patch1078:OriginalEdition::Cd1072;SidPool pool(edition,kPoolCapacity);std::vector<RiftTypeRecord> types(edition==OriginalEdition::Patch1078?188:171);SquidHash hash;std::vector<std::uint8_t> spots(65536);SquidUnpop unpop(pool,hash,spots);RawSquidDestroy destroy(pool,unpop,types);ContentFormHost forms(pool,types,[](Sid,Sid,std::uint32_t) {});const Sid form{50};auto raw=InputRaw(pool,form);std::fill(raw.begin(),raw.end(),0);raw[10]=6;Put(raw,16,Number(row[3]),2);Put(raw,18,85,2);ContentLifetimeState state;state.cursor=Number(row[2]);std::uint32_t cancelled{};ContentLifetimeHooks hooks;hooks.cancelCursor=[&] { ++cancelled; };if (getter) state.currentCursor=[&] { return state.cursor; };
+        ContentFormLifetime lifetime(pool,types,forms,destroy,state,hooks);lifetime.PreDestroy(form);CHECK(cancelled==Number(row[4]) && state.cursor==Number(row[5]) && sizeof(state.cursor)==4);++observations;
+    }
+    CHECK(observations==112);
 }

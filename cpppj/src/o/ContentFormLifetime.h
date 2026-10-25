@@ -7,11 +7,11 @@
 namespace netstorm::o {
 // 삭제 중 효과가 갱신할 수 있는 원본 전역이다. 매 분기/요청에서 최신 값을 읽는다.
 struct ContentLifetimeState {
-    Sid cursor{};                         // 패치 0055a2a8 / CD 0051b658: 잡고 있는 내용물 SID다.
+    std::uint32_t cursor{};               //패치0055a2a8/CD0051b658의전체DWORD다.내용물번호와비교할때높은WORD를자르지않는다.
     std::uint32_t nuggetType{154};         // 패치 005412c0: 너겟 kind WORD와 비교하는 현재 타입 DWORD다.
     std::uint32_t localOwner{1},notice{};  // 패치 00540c70 / 005429c4: 로컬 소유자와 수입 알림 명령이다.
     bool boss{true};                      // 패치 00540bc4: 다른 소유자에게 너겟 알림을 송신하는 권한이다.
-    std::function<Sid()> currentCursor;    // 실제 세션의 현재 커서를 매 삭제 시 읽으며 미연결 fixture는 cursor 값형 입력을 유지한다.
+    std::function<std::uint32_t()> currentCursor; //실제같은커서DWORD를매삭제시조회한다.미연결독립장치는같은폭의cursor입력을읽는다.
     const bool* sharedBoss{}; // 실제 커서 취소와 같은 Client의 boss 주소다.
     const bool& Boss() const { return sharedBoss ? *sharedBoss : boss; } // 중첩 커서 취소 뒤 원격 수입 알림 위치에서 현재값을 읽는다.
 };
