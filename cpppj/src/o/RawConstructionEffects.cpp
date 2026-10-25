@@ -117,7 +117,7 @@ void RawConstructionEffects::DropIsland(float x,float y,std::uint32_t flags,std:
     if (state_.blocked) return;
     if (state_.islandType>=types_.size()) throw std::out_of_range("섬 정리 타입 오류");
     Validate(x,y,types_[state_.islandType]);
-    if (state_.server && !(flags&kNoBroadcast))
+    if (state_.Server() && !(flags&kNoBroadcast))
         hooks_.broadcast(std::bit_cast<std::uint32_t>(Ftol(static_cast<double>(x)*kWireScale)),
             std::bit_cast<std::uint32_t>(Ftol(static_cast<double>(y)*kWireScale)),flags,player);
     if (state_.islandType>=types_.size()) throw std::out_of_range("전파 뒤 섬 정리 타입 오류");

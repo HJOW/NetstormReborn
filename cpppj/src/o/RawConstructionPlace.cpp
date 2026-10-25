@@ -83,7 +83,7 @@ void RawConstructionPlace::Place(const ConstructionPlaceRequest& request) {
     // 유효 칸마다 조각 하나를 놓는다. 한 조각의 쓰기 순서는 abstract 비트 → HP → 프레임 → 단어 → (다리 품질) → 소유자 → Pop이다.
     for (;decoder.Valid();decoder.Advance()) {
         Sid sid{request.sids[index++]};
-        if (!state_.server && (sid.value<kFirstSid || sid.value>=serverFirst)) sid=hooks_.take(request.type,sid);
+        if (!state_.Server() && (sid.value<kFirstSid || sid.value>=serverFirst)) sid=hooks_.take(request.type,sid);
         auto raw=pool_.AllocatedBytes(sid);
         if (!(raw[kState]&kVoid)) throw std::logic_error("건설 배치 조각이 void가 아니다(isVoid assert)");
         raw[extraOffset]=static_cast<std::uint8_t>((raw[extraOffset]&0xfe)|(request.abstract&1));
@@ -153,7 +153,7 @@ void RawConstructionPlace::ChargeShortfall(std::uint32_t type,std::uint32_t play
         const auto terminator=std::find(begin,end,0); // 정상 Player 이름의 종료를 인접 필드까지 넘겨 찾지 않는다.
         if (terminator==end) throw std::out_of_range("건설 비용 안내 Player 이름의 NUL 누락");return std::string(begin,terminator);
     };
-    if (state_.authority) {
+    if (state_.Authority()) {
         // 권한 쪽: 처음이면 다른 플레이어에게 알리고, 당사자에게 알린 뒤 좌표가 유효하면 환불과 취소 통지를 보낸다.
         if (!reported) hooks_.tellOthers(player,hooks_.format(kClientCheated,name()));
         hooks_.tellPlayer(player,kServerThinks);

@@ -15,6 +15,8 @@ struct LocalGeyserState {
     std::uint32_t emptyGeyserType{84},geyserType{122},noIslandType{157},isleType{97}; // 현재 삭제/생성/건설확정/프레임문자수집 타입 전역이다.
     const std::uint32_t* sharedGeyserType{}; // 현재 생성/비용 TYPE이며 값형 입력은 보존한다.
     std::uint32_t GeyserType() const { return sharedGeyserType ? *sharedGeyserType : geyserType; } // 생성/Pop 효과 뒤에도 현재 TYPE를 읽는다.
+    const bool* sharedBoss{}; // 실제 Client의 생성 권한이며 독립 입력 bool은 유지한다.
+    const bool& Boss() const { return sharedBoss ? *sharedBoss : boss; } // 각 Populate 진입의 원문 권한 관문에서 현재값을 읽는다.
 };
 // 원본 생성/공간/설정의 필수 하위다. 생성 성공을 임시 좌표나 빈 콜백으로 대신하지 않는다.
 struct LocalGeyserHooks {

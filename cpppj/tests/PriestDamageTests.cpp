@@ -131,3 +131,13 @@ TEST_CASE(PriestDamage_ActualRegularKernelAndDependChain) {
         CHECK(destroy.PreDepth()==0 && destroy.PostDepth()==0 && !store.Initialized());
     }
 }
+
+// 피격의 표시 갱신 뒤 권한을 다시 읽어 HP1 사제의 의존자 해제 여부를 정한다.
+TEST_CASE(PriestDamage_SharedBossRecheckedAfterRefresh) {
+    // 두 판본의 실제 HP setter와 원문 Hit 순서를 같은 외부 권한으로 실행한다.
+    for (const auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) {
+        bool boss=true,nextBoss=false;DamageScene scene(edition);auto row=DamageRows().front();row[2]="1";row[3]="1";row[6]="2";row[7]="1";row[8]="1";row[9]="0";row[10]="1";row[11]="0";row[12]="0";row[13]="0";row[17]="158";row[18]="200";scene.Prepare(row);scene.damageState.sharedBoss=&boss;scene.mode.sharedAuthority=&boss;
+        DamageableBurningState mode;RawDamageableBurning burning(scene.pool,scene.types,*scene.hp,mode,{});auto hooks=scene.PriestHooks(burning);std::size_t refreshes{};hooks.damageableRefresh=[&](Sid sid) { CHECK(sid==kSource);++refreshes;boss=nextBoss; };RawPriestDamage hit(scene.pool,scene.types,scene.frames,scene.damageState,std::move(hooks));
+        CHECK(hit.Hit(kSource,1,2,Sid{60}) && !boss && scene.hpState->CurrentHitPoints(kSource)==1);scene.damageState.boss=false;boss=true;nextBoss=true;CHECK(!hit.Hit(kSource,1,2,Sid{60}) && refreshes==2);
+    }
+}

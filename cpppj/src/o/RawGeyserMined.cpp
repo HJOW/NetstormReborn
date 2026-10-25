@@ -60,7 +60,7 @@ void RawGeyserMined::Handle(Sid geyser) const {
     hooks_.sound(Coordinate(raw,14),Coordinate(raw,18),sound,0);
     if (state_.nuggetType>=types_.size()) throw std::out_of_range("간헐천 채집 현재 nugget 타입 범위");
     SetQuantity(geyser,ReducedQuantity(Quantity(pool_.Slot(geyser)),types_[state_.nuggetType].cost));
-    if (!state_.boss || Quantity(pool_.Slot(geyser))!=0) return;
+    if (!state_.Boss() || Quantity(pool_.Slot(geyser))!=0) return;
     const auto current=pool_.Slot(geyser);const float x=Coordinate(current,14),y=Coordinate(current,18);
     hooks_.destroy(geyser,kGeyserDestroyFlags);
     if (!OnIsle(x,y)) { const auto next=hooks_.create(state_.emptyGeyserType,0);hooks_.pop(next,x,y,0); }

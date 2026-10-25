@@ -97,7 +97,7 @@ Sid RawLocalGeyser::FindType(float x,float y,std::uint32_t number) const {
 }
 // 각생성의100회실패는이요청전체를끝내고상위Player순회는원본처럼계속된다.
 void RawLocalGeyser::Populate(std::int32_t quantity,GameRandom& random,FortRandomRectangle rectangle) const {
-    if (!state_.boss || state_.fort) return;
+    if (!state_.Boss() || state_.fort) return;
     if (quantity<0) { hooks_.negativeQuantity();quantity=0; }
     recent_.count=0;
     const auto reuseType=state_.emptyGeyserType; // 원본ctor뒤finder+ac는이시점타입을한번보존한다.

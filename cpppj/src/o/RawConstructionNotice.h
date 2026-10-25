@@ -17,6 +17,8 @@ struct ConstructionNoticeState {
     std::uint32_t priestType{158}; // 005412d0(패치): 사제의 contained 타입 조회에 넘긴다.
     std::array<ConstructionNoticePoint,5> history{}; // 00558ea4 / 00589150: 가장 최근 배치부터 다섯 좌표.
     std::uint32_t historyCounter{}; // 00558e78 / 0053fc40: 로컬 이력이 갱신되면 0으로 초기화한다.
+    const bool* sharedAuthority{}; // 실제 배치/정리와 같은 Client boss 주소다.
+    const bool& Authority() const { return sharedAuthority ? *sharedAuthority : authority; } // 배치 효과 뒤 자동 건설/사제 이동 관문에서 현재값을 읽는다.
 };
 // 처리기 밖의 효과다. 공통 경계는 모두 필수이며 contained 두 경계는 패치판에서만 필요하다.
 struct ConstructionNoticeHooks {

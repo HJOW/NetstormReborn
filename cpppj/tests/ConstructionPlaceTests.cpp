@@ -314,3 +314,16 @@ TEST_CASE(ConstructionPlace_CurrentChargeGateFollowsLocalPlayerShortCircuit) {
     current=false;FillSlot(InputRaw(scene.pool,Sid{50}),0,kTypePlain);place.Place({kTypePlain,20.5F,21.25F,0,0,2,sids,0,0});CHECK(reads==2 && money==1 && charges==1);
     FillSlot(InputRaw(scene.pool,Sid{50}),0,kTypePlain);place.Place({kTypePlain,20.5F,21.25F,0,0,1,sids,0,0});CHECK(reads==2 && money==1 && charges==1);
 }
+
+// 잔액 조회 경계가 바꾼 boss를 비용 부족 분기 직전에 읽는다.
+TEST_CASE(ConstructionPlace_SharedBossRecheckedAfterMoneyRead) {
+    PlaceScene scene(OriginalEdition::Patch1078);scene.Prepare(kTypePlain,Bits(250.F),0,0,0,0,0,0,1,false,true,true,false,false,5);bool boss=true,nextBoss=false;scene.state.sharedAuthority=&boss;auto hooks=scene.Hooks();std::size_t charged{},rejected{};hooks.storedSp=[&](std::uint32_t owner) { CHECK(owner==2);boss=nextBoss;return 0.F; };hooks.addPlayerSp=[&](std::uint32_t owner,float delta) { CHECK(owner==2 && (delta==-250.F || delta==250.F));if (delta<0) ++charged; };hooks.sendReject=[&](std::uint32_t owner,const ConstructionRejectNotice&) { CHECK(owner==2);++rejected; };SquidReward reward(scene.pool,scene.types,scene.books,scene.rewardState,&scene.store);RawConstructionPlace place(scene.pool,scene.types,scene.frames,scene.state,reward,std::move(hooks));const std::array<std::uint16_t,1> sids{50};
+    FillSlot(InputRaw(scene.pool,Sid{50}),0,kTypePlain);place.Place({kTypePlain,20.5F,21.25F,0,0,2,sids,0,0});CHECK(charged==1 && rejected==0 && !boss);nextBoss=true;scene.state.authority=false;FillSlot(InputRaw(scene.pool,Sid{50}),0,kTypePlain);place.Place({kTypePlain,20.5F,21.25F,0,0,2,sids,0,0});CHECK(charged==1 && rejected==1 && boss);
+}
+// 서버 SID 수신은 boss와 별개인 현재 server 주소로 결정한다.
+TEST_CASE(ConstructionPlace_SharedServerControlsTakeIndependently) {
+    // 두 판본의 한 조각 배치를 같은 외부 server 변경 앞뒤로 실행한다.
+    for (const auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) {
+        PlaceScene scene(edition);scene.Prepare(kTypePlain,0,0,0,0,0,0,0,1,false,true,false,false,false,5);bool server=false;scene.state.sharedServer=&server;auto hooks=scene.Hooks();const auto take=hooks.take;std::size_t taken{};hooks.take=[&](std::uint32_t type,Sid sid) { ++taken;return take(type,sid); };SquidReward reward(scene.pool,scene.types,scene.books,scene.rewardState,scene.patch ? &scene.store : nullptr);RawConstructionPlace place(scene.pool,scene.types,scene.frames,scene.state,reward,std::move(hooks));const auto number=static_cast<std::uint16_t>(scene.pool.Layout().serverFirst);const std::array<std::uint16_t,1> sids{number};FillSlot(InputRaw(scene.pool,Sid{number}),0,kTypePlain);place.Place({kTypePlain,20.5F,21.25F,0,0,1,sids,0,0});CHECK(taken==1);server=true;scene.state.server=false;FillSlot(InputRaw(scene.pool,Sid{number}),0,kTypePlain);place.Place({kTypePlain,20.5F,21.25F,0,0,1,sids,0,0});CHECK(taken==1);
+    }
+}

@@ -132,7 +132,7 @@ void RawDamageablePostDestroy::PostDestroy(Sid sid,std::uint32_t flags) const {
             // 기존순회가 저장한next를 사용하며 각 후보 frame/state는 효과 뒤 새로 읽는다.
             for (auto current=finder.Begin(Area(sid,2));current.value;current=finder.Next()) if (Genus(current)&kBridge) {
                 if (!(FrameFlags(current)&0x20U) || hooks_.hasBridgeFall(current)) { if (!(FrameFlags(current)&0x40U)) Weaken(current); }
-                else if (state_.boss) hooks_.destroy(current,0);
+                else if (state_.Boss()) hooks_.destroy(current,0);
             }
         }
     }

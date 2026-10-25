@@ -76,7 +76,7 @@ void RawConstructionClear::Clear(const ConstructionClearRequest& request) const 
         for (Sid current=finder.Begin(area);current.value!=0;current=finder.Next()) {
             const auto raw=pool_.Slot(current);
             const std::uint32_t type=raw[kType];
-            if (!(raw[extraOffset]&1) || current.value<kFirstSid || current.value>=serverFirst || (type!=request.type && state_.authority)) continue;
+            if (!(raw[extraOffset]&1) || current.value<kFirstSid || current.value>=serverFirst || (type!=request.type && state_.Authority())) continue;
             std::uint32_t flags=0;
             if (type==request.type) {
                 // 프레임이 같거나, 다리 타입이면서 방향 글자가 같으면 통지와 같은 조각이다. 패치는 DWORD, CD는 BYTE 프레임을 비교한다.

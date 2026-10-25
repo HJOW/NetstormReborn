@@ -12,6 +12,8 @@ class RawPacketDispatch; // 원본 단일 패킷 분배기는 등록 helper에 �
 struct GeyserMinedState {
     bool boss{true},checking{}; // 원본 권한과 패치 bridge 수량 assert를 제어한다.
     std::uint32_t nuggetType{154},emptyGeyserType{84},isleType{97},bridgeType{82}; // 실제 두 PE의 현재 비용/생성/표면/수량 setter 타입 번호다.
+    const bool* sharedBoss{}; // 실제 수신/음향 효과와 같은 Client boss 주소다.
+    const bool& Boss() const { return sharedBoss ? *sharedBoss : boss; } // 음향과 수량 갱신 뒤 고갈 삭제 관문에서 현재값을 읽는다.
 };
 // 음향·가상 삭제/생성·Pop은 같은 raw 월드에 연결해야 하는 효과 경계다.
 struct GeyserMinedHooks {

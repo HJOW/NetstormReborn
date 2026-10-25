@@ -17,6 +17,8 @@ struct DamageablePostDestroyState {
     std::uint32_t bridgeCrackLife{5}; // 0052f960/CD0051f05c: 약화가 쓰는 life는 이 값−1이다.
     std::array<std::uint32_t,5> excludedDropTypes{133,156,144,138,187}; // patch5개/CD앞4개만 제외하는 현재 타입 전역이다.
     std::uint32_t specialDropType{135}; // 현재 이 타입이면 일반 수량 대신3개를 생성한다.
+    const bool* sharedBoss{}; // 원문 다리 후처리가 읽는 같은 Client boss를 빌린다.
+    const bool& Boss() const { return sharedBoss ? *sharedBoss : boss; } // 드롭·섬·주변 피해 효과 뒤 현재 권한을 재조회한다.
 };
 // 해당 하위 몸체가 필요한 경우 성공값/noop으로 바꾸지 않는 필수 효과 연결이다.
 struct DamageablePostDestroyHooks {

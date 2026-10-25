@@ -153,3 +153,11 @@ TEST_CASE(ConstructionNotice_ObservesStateChangesAtEffectBoundaries) {
     CHECK(scene.events.find(";B:3:50:305419896:1074270772;W")!=std::string::npos);
     CHECK(Bits(scene.state.history[0].x)==Bits(scene.notice.x) && scene.state.historyCounter==0);
 }
+
+// 통지의 배치 효과가 바꾼 권한을 자동 건설 시작 관문에서 다시 읽는다.
+TEST_CASE(ConstructionNotice_SharedBossRecheckedAfterPlace) {
+    // 두 판본에서 별도 사제가 필요 없는 추상 건물의 원문 순서를 사용한다.
+    for (const auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) {
+        NoticeScene scene(edition);scene.Prepare(Fixture().front()[1]);scene.types[scene.notice.type].flags1=0x10;scene.types[scene.notice.type].flags2=0;scene.types[scene.notice.type].group=2;scene.values[17]=scene.notice.type;scene.notice.flags=0;scene.notice.sids={50};bool boss=true,nextBoss=false;scene.state.sharedAuthority=&boss;auto hooks=scene.Hooks();const auto place=hooks.place;std::size_t started{};hooks.place=[&](const ConstructionPlaceRequest& value) { place(value);boss=nextBoss; };hooks.start=[&](Sid sid,std::uint32_t flags) { CHECK(sid==Sid{50} && flags==0);++started; };RawConstructionNotice notice(scene.pool,scene.types,scene.state,std::move(hooks));notice.Handle(scene.notice);CHECK(started==0 && !boss);nextBoss=true;scene.state.authority=false;notice.Handle(scene.notice);CHECK(started==1 && boss);
+    }
+}

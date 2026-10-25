@@ -142,3 +142,15 @@ TEST_CASE(DamageablePostDestroy_PackedCountAndRequiredCreationBoundary) {
     CHECK(scheduled);
     auto hooks=scene.Hooks();hooks.dropDude={};CHECK(Throws([&] { RawDamageablePostDestroy invalid(scene.pool,scene.hash,scene.types,scene.frames,*scene.hp,*scene.footprint,scene.state,hooks); }));
 }
+
+// 첫 다리 약화의 표면 통지가 권한을 바꾸면 뒤의 금 간 다리 삭제는 현재 권한을 따른다.
+TEST_CASE(DamageablePostDestroy_SharedBossRecheckedBetweenBridges) {
+    // 두 판본의 실제 finder와 프레임 약화 몸체로 같은 순서의 후보를 읽는다.
+    for (const auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) {
+        DamageablePostReplayScene scene(edition);scene.Prepare({0,1,1,0,90,0x10,0,2,100,1,1,0,0,6699,5,0,std::bit_cast<std::uint32_t>(50.F),std::bit_cast<std::uint32_t>(50.F)});bool boss=true;scene.state.sharedBoss=&boss;
+        CHECK(scene.hash.Bucket(0,49,49)==63 && scene.hash.Bucket(0,50,49)==64 && Get(scene.pool.Slot(Sid{63}),4,2)==0 && Get(scene.pool.Slot(Sid{64}),4,2)==0); // 두 좌표의 원래 독립 버킷에 같은 SID를 중복 연결하지 않는다.
+        auto hooks=scene.Hooks();const auto notify=hooks.notifySurface;std::size_t notified{},destroyed{};hooks.notifySurface=[&](Sid sid) { notify(sid);++notified;boss=false; };hooks.destroy=[&](Sid,std::uint32_t) { ++destroyed; };RawDamageablePostDestroy post(scene.pool,scene.hash,scene.types,scene.frames,*scene.hp,*scene.footprint,scene.state,std::move(hooks));post.PostDestroy(Sid{50},0);CHECK(notified==1 && destroyed==0 && !boss);
+        const auto firstFrame=Get(scene.pool.Slot(Sid{63}),scene.Frame(),scene.FrameWidth());CHECK(firstFrame==1);boss=true;scene.state.boss=false;post.PostDestroy(Sid{50},0);CHECK(destroyed==2); // 이미 약화된 두 다리는 현재 boss가 모두 삭제한다.
+        if (destroyed!=2) std::printf("공유 권한 다리 입력: 판본%d, 첫 프레임%u, 최종 프레임%u/%u, 통지%zu, 삭제%zu, boss%d\n",static_cast<int>(edition),firstFrame,Get(scene.pool.Slot(Sid{63}),scene.Frame(),scene.FrameWidth()),Get(scene.pool.Slot(Sid{64}),scene.Frame(),scene.FrameWidth()),notified,destroyed,boss); // 실패한 신규 입력의 실제 프레임과 효과 횟수를 보존한다.
+    }
+}

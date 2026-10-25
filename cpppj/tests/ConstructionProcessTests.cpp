@@ -322,3 +322,8 @@ TEST_CASE(ConstructionProcess_DeadParentAndForeignPoolAdapters) {
     RealScene other(OriginalEdition::Patch1078);
     CHECK(Throws([&] { MakeConstructionProcessHooks(scene.pool,other.reward,nullptr,{}); }));
 }
+
+// 실제 Kernel의 진행과 완료가 서로 다른 시점의 동일 boss를 읽는다.
+TEST_CASE(ConstructionProcess_SharedBossRecheckedDuringActualCompletion) {
+    RealScene scene(OriginalEdition::Patch1078);bool boss=false,flipOnRefresh=false;scene.state.sharedBoss=&boss;auto hooks=scene.Hooks();const auto refresh=hooks.refresh;hooks.refresh=[&] { refresh();if (flipOnRefresh) boss=false; };RawConstructionProcess process(scene.pool,scene.types,scene.state,std::move(hooks),&scene.host);process.Start(scene.parent,8.F);scene.state.quickBuild=true;scene.state.now=10;scene.kernel.RunFrame();CHECK(scene.kernel.Size()==1 && scene.Hp()==300 && (scene.pool.Slot(scene.parent)[40]&1));boss=true;scene.state.boss=false;flipOnRefresh=true;scene.kernel.RunFrame();CHECK(scene.kernel.Size()==0 && scene.Hp()==300 && (scene.pool.Slot(scene.parent)[40]&1) && !boss);
+}

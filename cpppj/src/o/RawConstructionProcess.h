@@ -34,6 +34,8 @@ struct ConstructionProcessState {
     std::uint32_t daisType{165};         // 005412ec / 0051cbd8: form 삭제 통지가 HP를 채우지 않는 타입이다.
     bool quickBuild{};                   // 0055a49c / 00537eb4: 콘솔 명령 quickbuild(qb). 켜져 있으면 모든 건설이 한 프레임에 끝난다.
     bool quickVortex{};                  // 0055a498 / 00537eb0: 콘솔 명령 quickvortex(qv). genus 0x200(vortex)의 건설만 바로 끝낸다.
+    const bool* sharedBoss{}; // 실제 Client boss를 건설 진행/완료 실행기보다 오래 빌린다.
+    const bool& Boss() const { return sharedBoss ? *sharedBoss : boss; } // HP·표시·소리 효과 뒤 각각의 완료 관문에서 현재값을 읽는다.
 };
 // 건설 프로세스 밖의 효과다. attach를 뺀 모든 경계가 필요하며 attach는 실제 host를 주면 비워 둘 수 있다.
 // 사용: 검사에서는 호출 사실을 기록하는 함수를, 실제 연결에서는 MakeConstructionProcessHooks가 채운 값을 넘긴다.

@@ -176,3 +176,12 @@ TEST_CASE(ContentLifetime_SharedMixedFormDispatch) {
     for (const auto sid:{root,value,processForm,gumpForm,pair.watchedForm,pair.watcherForm}) CHECK((pool.Slot(sid)[11]&3)==3);
     CHECK(destroy.PreDepth()==0);CHECK(destroy.PostDepth()==0);CHECK(Throws([&] { dispatch.Bind(gumps); }));
 }
+
+// 실제 Content 삭제가 커서 취소 뒤 현재 권한을 읽어 원격 수입 알림을 고른다.
+TEST_CASE(ContentLifetime_SharedBossRecheckedAfterCursorCancel) {
+    SidPool pool(OriginalEdition::Patch1078,kPoolCapacity);std::vector<RiftTypeRecord> types(188);SquidFactory factory(pool,types);SquidHash hash;std::vector<std::uint8_t> spots(65536);SquidUnpop unpop(pool,hash,spots);RawSquidDestroy destroy(pool,unpop,types);const auto parent=factory.Create(90,2);pool.AllocatedBytes(parent)[34]=2;ContentFormHost forms(pool,types,[](Sid,Sid,std::uint32_t) {});bool boss=true,nextBoss=false;ContentLifetimeState state;state.localOwner=1;state.sharedBoss=&boss;std::size_t cancelled{},remote{};ContentLifetimeHooks hooks;hooks.cancelCursor=[&] { ++cancelled;boss=nextBoss; };hooks.remoteNotice=[&](std::uint32_t owner) { CHECK(owner==2);++remote; };ContentFormLifetime lifetime(pool,types,forms,destroy,state,std::move(hooks));
+    // 두 실제 Form을 차례로 붙이고 공통 삭제 깊이와 부모 링크까지 정상 반납한다.
+    for (std::size_t index=0;index<2;++index) {
+        const auto form=factory.CreateContained(2);auto raw=pool.AllocatedBytes(form);Put(raw,18,154,2);Put(raw,20,0x20,2);raw[22]=1;forms.Attach(form,parent,0x10);state.cursor=form;nextBoss=index!=0;state.boss=!nextBoss;lifetime.Destroy(form,0x10);CHECK(remote==index && cancelled==index+1 && Get(pool.Slot(parent),6,2)==0 && destroy.PreDepth()==0 && destroy.PostDepth()==0);
+    }
+}

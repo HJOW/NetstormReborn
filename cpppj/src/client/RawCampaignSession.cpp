@@ -781,6 +781,10 @@ struct RawCampaignSession::Impl {
         missionStart.sharedAllowAnyCapture=&gameplayGlobals->GameAux()->AllowAnyCapture();missionStart.sharedOrdinaryGeysers=&gameplayGlobals->GameAux()->OrdinaryGeysers(); // Start 출력과 pickup을 같은 DWORD에 연결한다.
         motionState.carrier.sharedAllowAlliedPickup=&gameplayGlobals->GameAux()->AllowAnyCapture();motionState.carrier.sharedGeyserType=&geyserType;carrierState.sharedGeyserType=&geyserType;constructionState.geyser.sharedGeyserType=&geyserType; // 실제 생성/로딩/도착을 같은 TYPE에 연결한다.
         carrierState.sharedBoss=&gameplayGlobals->Authority()->boss;contentFinder.sharedBoss=&gameplayGlobals->Authority()->boss; // 공통 캐리어와 생산·Damageable 검색도 사제 네 소비자와 같은 실제 권한을 빌린다.
+        priestDamageState.sharedBoss=damageablePostState.sharedBoss=contentLifetimeState.sharedBoss=&gameplayGlobals->Authority()->boss; // 피격·삭제·중첩 커서 취소가 같은 현재 권한을 읽는다.
+        constructionState.place.sharedAuthority=constructionState.clear.sharedAuthority=constructionState.notice.sharedAuthority=constructionState.geyser.sharedBoss=&gameplayGlobals->Authority()->boss; // 건설 하위 네 몸체는 Prepare 사본을 기다리지 않는다.
+        buildingState.sharedBoss=geyserMinedState.sharedBoss=&gameplayGlobals->Authority()->boss; // 진행·표시·음향 효과 뒤에도 같은 현재 boss를 조회한다.
+        constructionState.place.sharedServer=buildingEffectsState.sharedServer=&gameplayGlobals->Authority()->server; // Take와 섬 전파는 boss와 독립인 실제 server를 읽는다.
         farm.sharedArchipelago=&gameplayGlobals->GameAux()->Archipelago();devastationEffectState.sharedSpentCounter=&gameplayGlobals->GameAux()->ResourcePool(); // Login과 별개의 bb0 및 같은595088을 빌린다.
         if (services.deferExistingEditorFile && services.installMode!=CampaignInstallMode::ExistingEditor) throw std::invalid_argument("파일지연은명시ExistingEditor전용입니다");
         objectState.sharedFullDeck=&fullDeck;constructionState.confirm.sharedFullDeck=&fullDeck;anchorState.sharedFullDeck=&fullDeck; // 하위 모듈 생성 전에 같은 장기 DWORD를 빌리며 Prepare 때 사본을 쓰지 않는다.
@@ -999,7 +1003,7 @@ struct RawCampaignSession::Impl {
         rangeHooks.frameRun=[this](std::uint32_t type,std::uint32_t variant) { if (type>=core.frames.size() || variant>=16) throw std::out_of_range("실제 사정거리 Run 범위 오류");return core.frames[type].Run(static_cast<std::uint8_t>('A'+variant)); };
         rangeHooks.diagnostic=services.cursorRangeDiagnostic;
         cursorRange=std::make_unique<RawCursorRange>(core.pool,core.types,core.processState,cursorRangeGlobals,cursorDrop,std::move(rangeHooks));
-        priestDamageState.levelCorrectionDisabled=globals.missionPost;priestDamageState.boss=assetState.Boss();
+        priestDamageState.levelCorrectionDisabled=globals.missionPost;
         priestDamageState.levelCorrectionDisabledRead=[this] { return globals.missionPost; };
         generalDamageState.serverRead=[this] { return core.processState.Server(); };
         generalDamageState.localOwnerRead=[this] { return static_cast<std::uint8_t>(playerState.battleOwner); };
@@ -2035,7 +2039,7 @@ struct RawCampaignSession::Impl {
         hooks.assertion=SessionMissing<void,FortObjectSaveAssertion>();return hooks;
     }
     // 실제 PostDestroy의 세 전역은 각 호출 직전에 같은 현재 월드에서 읽는다.
-    void PrepareDamageablePost() { damageablePostState.battle=core.ownerMode.battle;damageablePostState.boss=assetState.Boss();damageablePostState.dudeCount=static_cast<std::int32_t>(dudePopulation.count); }
+    void PrepareDamageablePost() { damageablePostState.battle=core.ownerMode.battle;damageablePostState.dudeCount=static_cast<std::int32_t>(dudePopulation.count); }
     // 실제 Damageable 해방/공통 삭제와 신전 Pre를 같은 현재 월드에 조립한다.
     void ConnectDamageable() {
         if (dudeDrop) throw std::logic_error("실제 Dude 드롭 중복 연결");
@@ -2112,15 +2116,14 @@ struct RawCampaignSession::Impl {
         geyser.dropIsland=[this](float x,float y,std::uint32_t flags,std::uint32_t owner) { PrepareBuilding(core.processState.Now());buildingEffects->DropIsland(x,y,flags,owner); };
         geyserLifetime=std::make_unique<RawGeyserLifetime>(core.pool,assetState.geysers,globals.editor,std::move(geyser));
     }
-    // 각 명시 요청에서 현재 실제 소유자/서버/권한/요새/타입만 공급한다. Player/자원/지도는 복사하지 않는다.
+    // 각 명시 요청의 소유자·모드·타입만 준비한다. server/boss는 원문 소비 위치에서 공유 주소를 읽는다.
     void PrepareConstruction() {
         if (services.adoptPreparedWorld && services.installMode==CampaignInstallMode::ExistingEditor) constructionState.place.chargeBlocked=globals.missionPost; // 이번 한정 준비 Editor는 실제00594fa4를 공급한다. 기존 Campaign/battle의 값형 어댑터 수명은 별도 대조 대상으로 유지한다.
         constructionState.place.localPlayer=constructionState.notice.localPlayer=playerState.battleOwner;
         constructionState.request.editor=core.ownerMode.fort;constructionState.request.localPlayer=playerState.battleOwner;
         constructionState.request.displaceGenus=buildingState.pushGenus;constructionState.request.patternTypes=constructionState.confirm.patternTypes;
         constructionState.command.localPlayer=playerState.battleOwner;constructionState.command.chargeBlocked=constructionState.place.chargeBlocked;
-        constructionState.place.server=core.processState.Server();constructionState.place.battleShown=playerState.playerKnown!=0;
-        constructionState.place.authority=constructionState.clear.authority=constructionState.notice.authority=constructionState.geyser.boss=assetState.Boss();
+        constructionState.place.battleShown=playerState.playerKnown!=0;
         constructionState.geyser.fort=core.ownerMode.fort;
         constructionState.place.noIslandType=constructionState.geyser.noIslandType=core.bridgeState.noIslandType;
         constructionState.place.bridgeType=constructionState.clear.bridgeType=core.bridgeState.bridgeType;
@@ -2426,7 +2429,7 @@ struct RawCampaignSession::Impl {
             throw std::logic_error("너겟 수입의 연결된 원격5a 패킷 송신 미연결"); //연결된원격사람의기존미복원경계는빈성공으로바꾸지않는다.
         };
         FillMissing(contentEffects.wallet);FillMissing(contentEffects.addSp);FillMissing(contentEffects.sound);
-        contentLifetimeState.localOwner=static_cast<std::uint8_t>(playerState.battleOwner);contentLifetimeState.boss=assetState.Boss();
+        contentLifetimeState.localOwner=static_cast<std::uint8_t>(playerState.battleOwner);
         contentLifetimeState.notice=0x020000b4; // PATCH005429c4의 실제 수입 명령 초기값이다.
         auto carrierEffects=services.carrierContent;
         carrierEffects.center=[this](Sid parent) { return gunTarget->Center(parent); };
@@ -2811,8 +2814,8 @@ struct RawCampaignSession::Impl {
     }
     // 같은 Session 전역을 건설 시작/프레임 직전에 갱신한다. 별도 건설 시계를 만들지 않는다.
     void PrepareBuilding(double now) {
-        buildingState.now=now;buildingState.boss=assetState.Boss();buildingState.localPlayer=playerState.battleOwner;
-        buildingEffectsState.alliances=alliances;buildingEffectsState.server=core.processState.Server();
+        buildingState.now=now;buildingState.localPlayer=playerState.battleOwner;
+        buildingEffectsState.alliances=alliances;
     }
     // Renderer와 캡처가 같은 전용 템플 몸체/실제 조건부 음향을 사용한다.
     void DrawTempleFrames(Sid sid,const std::function<void(std::int32_t)>& frame) const {
@@ -2922,7 +2925,7 @@ struct RawCampaignSession::Impl {
     }
     // 송신 효과 뒤 또는 외부 수신 직전에 실제 현재 전역을 같은 기존 handler에 공급한다.
     void ReceiveGeyserMined(std::span<const std::uint8_t> packet) {
-        geyserMinedState.boss=assetState.Boss();geyserMinedState.checking=gunState.checking;geyserMinedState.nuggetType=motionState.carrier.nuggetType;
+        geyserMinedState.checking=gunState.checking;geyserMinedState.nuggetType=motionState.carrier.nuggetType;
         geyserMined->HandlePacket(packet);
     }
     // 같은 Graph/Host에 실제 경로와 의식 모듈을 연결한다. 저장 객체의 첫 Pop 전에 등록해야 한다.

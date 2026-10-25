@@ -75,7 +75,7 @@ bool RawPriestDamage::Hit(Sid victim,std::int32_t damage,std::uint32_t attackerO
     }
     damage=Adjust(damage,attackerOwner,pool_.Slot(victim)[owner],state_,pool_.Edition());const auto next=std::bit_cast<std::int32_t>(std::bit_cast<std::uint32_t>(Health(victim))-std::bit_cast<std::uint32_t>(damage));hooks_.setHitPoints(victim,next<1 ? 1 : next);
     hooks_.ownerDamageNotice(pool_.Slot(victim)[owner],victim,attacker);hooks_.damageableRefresh(victim);
-    if (state_.boss && Health(victim)==1) { DropDependents(victim);return false; }return true;
+    if (state_.Boss() && Health(victim)==1) { DropDependents(victim);return false; }return true;
 }
 // 같은raw월드에대한피격분배만 허용한다.
 const SidPool& RawPriestDamage::Pool() const { return pool_; }

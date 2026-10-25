@@ -20,6 +20,8 @@ struct PriestDamageState {
     std::array<std::int32_t,40> levels{};
     // levelCorrectionDisabledRead: 같은 미션 전역을 호출 시 읽는다. 독립 입력은 위 bool을 사용한다.
     std::function<bool()> levelCorrectionDisabledRead;
+    const bool* sharedBoss{}; // 실제 Client boss의 장기 주소이며 독립 Native fixture는 위 값형 입력을 사용한다.
+    const bool& Boss() const { return sharedBoss ? *sharedBoss : boss; } // 피격/소유자/표시 효과 뒤 HP1 감시 해제 관문에서 현재 권한을 읽는다.
 };
 // 사제 피격의 현재 가상 프레임/HP/소유자/효과를 실제 월드에 연결한다.
 struct PriestDamageHooks {

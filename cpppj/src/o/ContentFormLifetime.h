@@ -12,6 +12,8 @@ struct ContentLifetimeState {
     std::uint32_t localOwner{1},notice{};  // 패치 00540c70 / 005429c4: 로컬 소유자와 수입 알림 명령이다.
     bool boss{true};                      // 패치 00540bc4: 다른 소유자에게 너겟 알림을 송신하는 권한이다.
     std::function<Sid()> currentCursor;    // 실제 세션의 현재 커서를 매 삭제 시 읽으며 미연결 fixture는 cursor 값형 입력을 유지한다.
+    const bool* sharedBoss{}; // 실제 커서 취소와 같은 Client의 boss 주소다.
+    const bool& Boss() const { return sharedBoss ? *sharedBoss : boss; } // 중첩 커서 취소 뒤 원격 수입 알림 위치에서 현재값을 읽는다.
 };
 // 실제 UI/패킷·소리 경계다. wallet/SP는 SquidReward를 공급하면 실제 저장소로 연결한다.
 struct ContentLifetimeHooks {

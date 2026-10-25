@@ -75,7 +75,7 @@ void RawConstructionNotice::Handle(const ConstructionNotice& notice) const {
         if (needsBuilder) {
             if (notice.player!=state_.localPlayer || state_.moveLocalBuilder)
                 hooks_.moveBuilder(notice.player,first,notice.timeLow,notice.timeHigh);
-        } else if (state_.authority) {
+        } else if (state_.Authority()) {
             if (Genus(first)&kPriestTargets) {
                 const Sid priest=hooks_.findPriest(notice.player);
                 if (pool_.Edition()==OriginalEdition::Patch1078) {

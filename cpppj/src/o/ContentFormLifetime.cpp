@@ -67,7 +67,7 @@ void ContentFormLifetime::PreDestroy(Sid form) const {
         if (!(pool_.Slot(parent)[kState]&kDead)) {
             if (Owner(parent)==state_.localOwner) {
                 if (!hooks_.localNotice) throw std::invalid_argument("Content 로컬 수입 알림 경계 필요");hooks_.localNotice(state_.notice);
-            } else if (state_.boss) {
+            } else if (state_.Boss()) {
                 if (!hooks_.remoteNotice) throw std::invalid_argument("Content 원격 수입 알림 경계 필요");hooks_.remoteNotice(Owner(parent));
             }
             if (!pool_.Slot(form)[kPaid]) {

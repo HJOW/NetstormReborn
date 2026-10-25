@@ -200,3 +200,11 @@ TEST_CASE(ConstructionClear_ReplacesLocalPredictionWithConfirmedPieces) {
         CHECK(found==9);
     }
 }
+
+// 다른 타입의 예측 조각 정리는 같은 Client 권한의 변경을 즉시 읽는다.
+TEST_CASE(ConstructionClear_SharedBossControlsForeignTypeCandidate) {
+    // 두 판본의 실제 CanonDecoder와 finder로 동일한 후보를 다시 조회한다.
+    for (const auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) {
+        ClearScene scene(edition);scene.Prepare(110,1,1,1,1,0,0,true);scene.Node(Sid{50},kOtherType,1,20,21,1,0,0);bool boss=true;scene.state.sharedAuthority=&boss;auto hooks=scene.Hooks();std::size_t removed{};hooks.destroy=[&](Sid sid,std::uint32_t) { CHECK(sid==Sid{50});++removed; };RawConstructionClear clear(scene.pool,scene.hash,scene.types,scene.frames,scene.state,std::move(hooks));clear.Clear({110,20,21,0,0,1});CHECK(removed==0);boss=false;clear.Clear({110,20,21,0,0,1});CHECK(removed==1);
+    }
+}

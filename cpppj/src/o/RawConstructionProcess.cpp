@@ -135,7 +135,7 @@ void RawConstructionProcess::Run(const ConstructionProcessFields& fields,Sid par
     SetHitPoints(parent,value);
     hooks_.updateDisplay(parent);
     if (!(pool_.Slot(parent)[patch ? kPatchExtra : kCdExtra]&kAbstract) && !kill(0)) return;
-    if (value==maximum && state_.boss) static_cast<void>(kill(0));
+    if (value==maximum && state_.Boss()) static_cast<void>(kill(0));
 }
 // 각 경계 뒤에 부모의 현재 HP·소유자·좌표·타입과 전역을 다시 읽는다. 최대 HP와 HP는 처음 읽은 값을 끝까지 쓴다.
 void RawConstructionProcess::Complete(Sid parent) const {
@@ -149,7 +149,7 @@ void RawConstructionProcess::Complete(Sid parent) const {
         hooks_.playAt(std::bit_cast<float>(Read(raw,kX)),std::bit_cast<float>(Read(raw,kY)),kDoneSound,0);
         if (const auto ready=hooks_.readySound(TypeOf(parent))) hooks_.play(ready);
     }
-    if (!state_.boss || !Confirmed(parent) || hitPoints!=maximum || !(pool_.Slot(parent)[extra]&kAbstract)) return;
+    if (!state_.Boss() || !Confirmed(parent) || hitPoints!=maximum || !(pool_.Slot(parent)[extra]&kAbstract)) return;
     hooks_.unpop(parent,0);
     // 0042b050 / CD 인라인: void가 아니면 원본 assert다. abstract 비트만 끄고 다른 비트는 보존한다.
     if (!(pool_.Slot(parent)[kState]&kVoid)) throw std::logic_error("건설 완료의 abstract 해제는 void 상태여야 합니다");

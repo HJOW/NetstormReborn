@@ -13,6 +13,8 @@ struct ConstructionClearState {
     std::uint32_t bridgeType{82}; // 005411a0 / CD 0051ca8c: 프레임이 달라도 방향 글자가 같으면 같은 조각으로 보는 타입이다.
     // CanonDecoder가 패턴으로 분기하는 여덟 타입 전역의 현재 번호다(puzzlePiece, bridge, island, noIsland, 전투 타입 넷).
     std::array<std::uint32_t,8> patternTypes{107,82,94,157,131,129,140,142};
+    const bool* sharedAuthority{}; // 실제 Client boss를 후보 비교마다 조회하도록 빌린다.
+    const bool& Authority() const { return sharedAuthority ? *sharedAuthority : authority; } // 앞선 가상 삭제 뒤의 다음 후보도 현재 권한을 읽는다.
 };
 // 정리 한 번의 입력이다. 통지의 타입·좌표·decoder 인자·방향·플레이어를 그대로 받는다.
 struct ConstructionClearRequest {

@@ -188,3 +188,11 @@ TEST_CASE(ConstructionEffects_ConnectsRequestMovementAndFailureCleanup) {
         CHECK(destroy.PreDepth()==0 && destroy.PostDepth()==0);
     }
 }
+
+// 섬 정리 송신은 독립 server의 현재값을 읽고 빈 검색의 후속 반환도 유지한다.
+TEST_CASE(ConstructionEffects_SharedServerControlsIslandBroadcast) {
+    // 두 판본의 빈 검색 입력에는 섬 조각 개수 assert가 발생하지 않는다.
+    for (const auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) {
+        EffectsScene scene(edition);std::vector<std::uint32_t> input(15);input[0]=kTypeIsland;input[3]=input[4]=1;input[8]=1;scene.Prepare(input);bool server=false;scene.state.sharedServer=&server;auto hooks=scene.Hooks();std::size_t broadcasts{},diagnostics{};hooks.broadcast=[&](std::uint32_t x,std::uint32_t y,std::uint32_t,std::uint32_t player) { CHECK(x==20*65536U && y==21*65536U && player==1);++broadcasts; };hooks.assertion=[&](std::string_view,int) { ++diagnostics; };RawConstructionEffects effects(scene.pool,scene.hash,scene.types,scene.spots,scene.state,std::move(hooks));effects.DropIsland(20,21,0,1);CHECK(broadcasts==0 && diagnostics==0);server=true;scene.state.server=false;effects.DropIsland(20,21,0,1);CHECK(broadcasts==1 && diagnostics==0);
+    }
+}

@@ -10,6 +10,8 @@ struct ConstructionEffectsState {
     std::uint32_t islandType{94},noIslandType{157},stalagType{95},stumpType{96}; // 두 판본의 섬/받침/종유석/그루터기 번호다.
     bool blocked{}; // 0054db84 / CD 0052e92c: 섬 정리 전체를 생략한다.
     bool server{}; // 00540bc0 / CD 00540a28: 섬 정리 메시지를 다른 플레이어에 전파한다.
+    const bool* sharedServer{}; // 실제 Client server이며 boss와 독립인 전파 권한이다.
+    const bool& Server() const { return sharedServer ? *sharedServer : server; } // 섬 정리 방송 직전에 현재 서버 역할을 읽는다.
 };
 // 각 가상 호출의 인자를 보존한다. 경계는 같은 풀/타입/지도/전역을 바꿀 수 있다.
 struct ConstructionEffectsHooks {

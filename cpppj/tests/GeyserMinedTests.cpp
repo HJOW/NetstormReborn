@@ -114,3 +114,14 @@ TEST_CASE(rawGeyserMined_real_packet_factory_destroy_and_space) {
         CHECK(Throws([&] { handler.HandlePacket({}); }));CHECK(Throws([&] { RawGeyserMined missing(pool,hash,types,random,state,{}); }));
     }
 }
+
+// 채집 소리 효과 뒤의 현재 boss로 고갈 삭제와 Empty 생성 여부를 정한다.
+TEST_CASE(rawGeyserMined_shared_boss_rechecked_after_sound) {
+    // 두 판본의 실제 수량 WORD 감소와 finder를 외부 효과 관측에 연결한다.
+    for (const auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) {
+        SidPool pool(edition,32768,true);SquidHash hash;std::vector<RiftTypeRecord> types(edition==OriginalEdition::Patch1078 ? 188 : 171);types[154].cost=1;
+        // 원본 분석 장면의 client 번호를 실제 풀에서 확보한다.
+        for (std::uint16_t sid=5;sid<=8;++sid) CHECK(pool.Allocate(2)==Sid{sid});
+        auto raw=pool.AllocatedBytes(Sid{6});std::fill(raw.begin(),raw.end(),std::uint8_t{});raw[10]=122;Put(raw,12,1,2);Put(raw,14,std::bit_cast<std::uint32_t>(40.75F));Put(raw,18,std::bit_cast<std::uint32_t>(41.25F));bool boss=true,nextBoss=false;GeyserMinedState state;state.sharedBoss=&boss;GameRandom random(123);std::size_t destroyed{},created{},popped{};GeyserMinedHooks hooks;hooks.sound=[&](float,float,std::string_view,std::uint32_t) { boss=nextBoss; };hooks.destroy=[&](Sid sid,std::uint32_t flags) { CHECK(sid==Sid{6} && flags==0x1000);++destroyed;raw[11]|=2; };hooks.create=[&](std::uint32_t type,std::uint32_t flags) { CHECK(type==84 && flags==0);++created;return Sid{7}; };hooks.pop=[&](Sid sid,float x,float y,std::uint32_t flags) { CHECK(sid==Sid{7} && x==40.75F && y==41.25F && flags==0);++popped; };RawGeyserMined mined(pool,hash,types,random,state,std::move(hooks));mined.Handle(Sid{6});CHECK(Get(raw,12,2)==0 && destroyed==0 && created==0 && popped==0);Put(raw,12,1,2);nextBoss=true;state.boss=false;mined.Handle(Sid{6});CHECK(Get(raw,12,2)==0 && destroyed==1 && created==1 && popped==1);
+    }
+}

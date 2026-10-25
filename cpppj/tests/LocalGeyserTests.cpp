@@ -146,3 +146,8 @@ TEST_CASE(LocalGeyser_RejectsMissingCreation) {
 
 // 기존221행의삭제/생성/Pop효과뒤현재자원/현재TYPE재조회를같은장기물리에서대조한다.
 TEST_CASE(GameAux_LocalGeyserOwnerReplaysNative221WithOppositeTypeFallback) { CheckLocalGeyserFixture(true,true); }
+
+// 수량 0의 실제 Populate도 boss 관문을 통과한 경우에만 최근 목록을 초기화한다.
+TEST_CASE(LocalGeyser_SharedBossControlsPopulateEntry) {
+    SidPool pool(OriginalEdition::Patch1078,kLocalPoolCapacity);SquidHash hash;std::vector<std::uint8_t> spots(65536),players(9*0xb4);std::vector<RiftTypeRecord> types(188);std::vector<RiftTypeFrames> frames(188,RiftTypeFrames({}));SquidPostPopList recent;recent.entries.resize(5);recent.count=3;LocalGeyserState state;bool boss=false;state.sharedBoss=&boss;GeyserEnvironment environment{state,recent,players,types};RawLocalGeyser geysers(pool,hash,spots,types,frames,players,recent,state,environment.Hooks());GameRandom random(123);geysers.Populate(0,random,{});CHECK(recent.count==3 && random.State()==123);boss=true;state.boss=false;geysers.Populate(0,random,{});CHECK(recent.count==0 && random.State()==123 && environment.trace.empty());
+}
