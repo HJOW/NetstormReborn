@@ -4,6 +4,17 @@
 
 주 근거는 [원문 C](../../extracted/refined/originals/Netstorm.c), [함수 목록](../../extracted/refined/originals/functions.tsv), 보호 PE의 메모리상 함수 바이트 정적 판독, [RawGraph](../../cpppj/src/o/RawGraph.cpp), [RawSurfaceStorage](../../cpppj/src/client/RawSurfaceStorage.cpp), [RawSurfaceWorld](../../cpppj/src/client/RawSurfaceWorld.cpp), [RawCampaignSession](../../cpppj/src/client/RawCampaignSession.cpp)이다. 기존 fixture/문서는 아래에서 그 증거 범위를 구별한다.
 
+## 후속 정적 대조의 주소 정정
+
+Graph431과 TotalMade433의 실제 적용/집중 검증은 각 [Graph 문서](cpp-graph-storage-owner-20261025.md)와 [TotalMade 문서](cpp-totalmade-storage-owner-20261025.md)에 기록한다. 아래 예상 파일/설계 표는 작성 당시 후보 이력이며 현재 구현 소유자를 다시 조사한 표가 아니다.
+
+433 진행 중 보호PE의12명령/초기값을 직접 확인한 기록은 `extracted/cpp-state-input-address-review-20261025.json`이다. 원본 실행이나 새 디컴파일이 아닌 같은HJOW-Athlon 정밀본/PE의 읽기 대조다. 아래 후보 계획의 잘못된 두 주소 해석을 정정한다.
+
+- cleanup의 실제 선택 해제는004b3077에서 호출하는 **004d5c60**이다. enabled005434e4 검사 뒤ClearMultiple004d5490의count005caf34=0,selected005caea0=0,Highlight004d5bb0(0)을 실행한다. 커서 취소는 앞004b2eb3의00446e70 호출이다.
+- State7의004b74fd가 호출하는 **004978d0은 렌더러 상태 선택**이다. 인자0이면00540ce0을 사용하고 현재00540ce4와다르면00540ce4=값 뒤0059a8b0=1을 쓴다. PE의두store는004978e5/004978ea이며 C표시 순서와 구별한다. 현재RawLocalMissionStateHooks의clearSelection 이름/fixture의Selection 사건은 오명명 후보다. 이 원문 하위를 hook한 기존fixture를 실제선택해제 본문의 검증으로 세거나 여기에UserSelectionClear를 연결하지 않는다. 코드·fixture 수정은 이번에 하지 않았다.
+- 커서hotspot보정 좌표는 **0055a2f8/fc**,원시마우스 좌표는 **005cae94/98**이다. PE00446b8a는`a3fca25500`,00446b95는`890df8a25500`으로보정좌표에저장한다. 두소유자를합치지않는다.
+- server00540bc0/boss00540bc4의 PE최초DWORD는 모두 **1**이다. 이후cleanup의0쓰기와구별하며 새Client owner를BSS0으로시작하지않는다. 전체권한owner접합은아직후속이다.
+
 ## 권고하는 분리
 
 **431은 Graph의 실제 기록/스택을 장기 저장소로 분리하는 한 단위부터 진행**하는 것을 권고한다. World의 실행 모듈을 전부 Storage로 이동하지 않는다. `RawGraph`에는 Session callback이 없으나 TYPE/FrameCode 스냅샷과 계산 검증 정책이 있다. `RawIslandRuntime`과 `RawCampaignCursor`에는 실제 Session/World 참조와 callback이 있으므로 데이터만 장기화하고 실행기는 현재 Runtime 수명에 남긴다.
@@ -16,7 +27,7 @@
 | ChunkMap | Session::Impl::chunks의256×12BYTE·폭/높이 | Storage의 같은 ChunkMap. 현재 클래스에 없는 첫 mode DWORD와 Reset00432360을 추가한다. GameWorld의 legacy chunks_/IslandList는 실제 Raw Session 지도와 별개다. |
 | 사제 장부 | Session::priestState.priests의 ownerState9DWORD와 SID 목록 | ClientGameplayGlobals 또는 Storage의 실제 `PriestPostPopState`. RawPriestWorldBindings/RawPriestWorldState의 다른 권한·예약·이동 상태를 무조건 함께 이동하지 않는다. |
 | 건설 커서 | RawCampaignCursor::Impl의 CursorLifecycleState/PlacementState | 기존 ClientGameplayGlobals.cursor와 같은 수명의 두 상태가 우선 필요하다. RawCursorLifecycle/Placement/Preview/Position 실행기는 실제 장치/Session 효과를 그때 빌린다. |
-| 사용자 선택 | GameWorld의 selected_/mouseType_/highlightMode_/mousePoint_, GameWorld::Input의 enabled/remembered/multiple/count | ClientGameplayGlobals의 같은 선택/강조 전역. 화면 좌표는 이미 cursor.screenX/Y에도 있으므로 같은 Native 주소를 두 사본으로 만들지 않는다. RawUserSelection/RawUserHighlight/RawCarrierInput의 callback은 Runtime/UI 수명에 남긴다. |
+| 사용자 선택 | GameWorld의 selected_/mouseType_/highlightMode_/mousePoint_, GameWorld::Input의 enabled/remembered/multiple/count | ClientGameplayGlobals의 같은 선택/강조 전역. 원시 mousePoint005cae94/98과 cursor.screenX/Y의hotspot보정0055a2f8/fc는 별개로 소유한다. RawUserSelection/RawUserHighlight/RawCarrierInput의 callback은 Runtime/UI 수명에 남긴다. |
 
 ## Graph의 원문 장기 물리와 C++ 정책
 

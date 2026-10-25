@@ -3,6 +3,7 @@
 #include "client/RawCampaignLifetimeBindings.h"
 #include "o/RawContainedCreate.h"
 #include "o/RawContentParentNotice.h"
+#include "o/RawTotalMade.h"
 #include <bit>
 
 using namespace netstorm::o;
@@ -45,6 +46,23 @@ BridgeConnectState LifetimeLinks() {
     BridgeConnectState result;result.bridgeType=82;result.islandType=94;result.stalagType=95;result.connectorType=155;
     result.noIslandType=157;result.battle=true;result.mission=true;return result;
 }
+}
+
+// 실제 World의 Pop/공통 삭제/Totalmade getter가 같은 장기 세 표를 읽고 누적/unsigned 감김을 유지한다.
+TEST_CASE(CampaignLifetime_TotalMadePopAndDestroyUseSharedPhysicalTables) {
+    LifetimeAssets data;RawSurfaceWorld world(OriginalEdition::Patch1078,data.types,data.frames,data.shapes,LifetimeLinks(),83);const auto core=world.Core();const auto storage=world.Storage(); // 기존 실제 Factory/Owner/Pop/삭제 분배 본체다.
+    constexpr std::uint32_t destroyFlags=0x200000U; // 원문 보상/UnitLost 생략 관문만 선택해 실제 집계 수명과 비용 차감을 검사한다.
+    auto& tables=storage->totalMade;tables.localCounts[84]=0xfffffffeU;tables.localSecondaryCounts[84]=0xfffffffeU;tables.globalCounts[84]=0xfffffffeU;tables.localCounts.back()=31;tables.localSecondaryCounts.back()=37;tables.globalCounts.back()=41;
+    std::array<std::uint32_t,256> restrictions{};RawTotalMade totals(OriginalEdition::Patch1078,core.types,core.bookkeeping,restrictions);const auto snapshot=tables; // 기대 snapshot은 공유 포인터가 아닌 세 배열의 독립 값 복사다.
+    CHECK(core.bookkeeping.LocalCounts().data()==tables.localCounts.data() && core.bookkeeping.LocalSecondaryCounts().data()==tables.localSecondaryCounts.data() && core.bookkeeping.GlobalCounts().data()==tables.globalCounts.data());
+    const auto first=world.Create(84);core.owner.Set(first,1);world.Pop(first,24,24,0);
+    CHECK(totals.Local(84)==0xffffffffU && totals.Built(84)==0xffffffffU && totals.Global(84)==0xffffffffU && snapshot.localCounts[84]==0xfffffffeU && core.bookkeeping.depth==0);
+    CHECK(world.Destroy(first,destroyFlags));CHECK(totals.Local(84)==0xfffffffeU && totals.Global(84)==0xfffffffeU && totals.Built(84)==0xffffffffU && (core.pool.Slot(first)[11]&1U)); // 실제 삭제는 누적 생산 수를 감소시키지 않는다.
+    const auto second=world.Create(84);core.owner.Set(second,1);world.Pop(second,25,25,0);
+    CHECK(totals.Local(84)==0xffffffffU && totals.Global(84)==0xffffffffU && totals.Built(84)==0);
+    tables.localCounts[84]=0;tables.globalCounts[84]=0;CHECK(world.Destroy(second,destroyFlags)); // 실제 소비자에 주는 현재0 입력이며 감소 뒤 DWORD 감김을 관측한다.
+    CHECK(totals.Local(84)==0xffffffffU && totals.Global(84)==0xffffffffU && totals.Built(84)==0 && core.bookkeeping.totalCost==0 && core.bookkeeping.depth==0);
+    CHECK(tables.localCounts.back()==31 && tables.localSecondaryCounts.back()==37 && tables.globalCounts.back()==41 && core.bookkeeping.localCounts[84]==0 && core.bookkeeping.localSecondaryCounts[84]==0 && core.bookkeeping.globalCounts[84]==0); // 연결되지 않은 fallback으로 값을 복사해 검사를 맞추지 않는다.
 }
 
 // 실제wrapper/접두/등록표88행의전체200BYTE/전역11필드/가상알림순서를대조한다.
@@ -95,9 +113,9 @@ TEST_CASE(CampaignLifetime_EmptyBaseAndContentUseSameDeletion) {
     ContentFormHost forms(core.pool,core.types,[&](Sid parent,Sid form,std::uint32_t reason) { parentNotice.Notice(parent,form,reason); });ContentLifetimeState contentState;
     RawCampaignLifetimeBindings lifetime(world,forms,contentState,{},reward,player);binding=&lifetime;
     core.forms.SetAssets(lifetime.DestroyHooks(effects),lifetime.Destroy());
-    const auto empty=world.Create(84);world.Pop(empty,24,24,0);selected=empty;const auto oldPool=rewardState.geyserPool;CHECK(core.bookkeeping.globalCounts[84]==1);
+    const auto empty=world.Create(84);world.Pop(empty,24,24,0);selected=empty;const auto oldPool=rewardState.geyserPool;CHECK(core.bookkeeping.GlobalCounts()[84]==1);
     CHECK(world.Destroy(empty,0x400000));CHECK(selected.value==0 && clear==1 && sounds==0 && forwarded==1);CHECK(rewardState.geyserPool==oldPool+20);
-    CHECK(core.bookkeeping.globalCounts[84]==0 && core.bookkeeping.totalCost==0 && (core.pool.Slot(empty)[11]&1U));CHECK(core.destroy.PreDepth()==0 && core.destroy.PostDepth()==0);
+    CHECK(core.bookkeeping.GlobalCounts()[84]==0 && core.bookkeeping.totalCost==0 && (core.pool.Slot(empty)[11]&1U));CHECK(core.destroy.PreDepth()==0 && core.destroy.PostDepth()==0);
     const auto parent=world.Create(152);ContainedCreateState createState;ContainedCreateHooks createHooks;createHooks.notifySurface=[&](Sid sid) { core.building.NotifySurface(sid); };
     RawContainedCreate create(core.pool,createState,forms.BindCreate(core.factory,std::move(createHooks)));const auto content=create.Create(parent,71,0,4,0x10,0);
     CHECK(Get(core.pool.Slot(parent),6,2)==content.value);CHECK(core.pool.Slot(content)[10]==6);CHECK(world.Destroy(content,0));CHECK(Get(core.pool.Slot(parent),6,2)==0);

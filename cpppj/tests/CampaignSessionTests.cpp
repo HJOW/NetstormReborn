@@ -822,7 +822,7 @@ TEST_CASE(CampaignSession_ProductionUsesCurrentPlayerFactoriesAndRestrictions) {
     CHECK(production.Contains(133) && production.Allowed(133));CHECK(production.RefreshCurrent()==token && allocations==1 && configReads==2);
     session.TotalMade().Allow(133,0);CHECK(!production.Allowed(133));CHECK(production.RefreshCurrent()==token && !production.Contains(133));
     session.TotalMade().Allow(133,1);production.RefreshCurrent();CHECK(production.Contains(133));
-    core.bookkeeping.localSecondaryCounts[133]=17;core.bookkeeping.globalCounts[133]=23;
+    core.bookkeeping.LocalSecondaryCounts()[133]=17;core.bookkeeping.GlobalCounts()[133]=23;
     CHECK(session.TotalMade().Built(133)==17 && session.TotalMade().Global(133)==23);
     const auto technology=assets.game.TypeTable().Find("sunCannon");production.IndicateTechnology(static_cast<std::uint32_t>(technology));
     const auto first=session.FindTechnology(static_cast<std::int32_t>(session.LocalOwner()),technology);CHECK(first.value!=0);

@@ -3,6 +3,8 @@
 #include "o/SquidPostPop.h"
 
 namespace netstorm::o {
+//004c2450/CD0040ba90의 같은 세 표 앞255DWORD만 local/누적/global 순서로 지운다. TYPE/허용 표/장부 목록/마지막 칸은 쓰지 않는다.
+void ResetTotalMadeCounts(RawTotalMadeStorage& storage);
 // 월드 설치 전의 같은 전역 허용 표도 기존 두 쓰기 몸체를 직접 사용한다. 256번째 칸은 전체 초기화에서 보존한다.
 void SetTotalMadeAllowAll(std::span<std::uint32_t> restrictions,std::int32_t allowed);
 void SetTotalMadeAllow(std::span<std::uint32_t> restrictions,std::int32_t type,std::int32_t allowed); // 물리 범위 밖만 쓰기 전에 거부한다.

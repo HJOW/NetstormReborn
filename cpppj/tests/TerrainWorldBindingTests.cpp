@@ -71,7 +71,7 @@ TEST_CASE(TerrainWorldBinding_ActualFactoryOwnerPopAndRegion) {
         CHECK(scene.world->Find(kBoundX,kBoundY,kBoundIsle)==sid);const auto raw=core.pool.Slot(sid);
         CHECK(Get(raw,8,2)==5 && raw[10]==kBoundIsle && raw[edition==OriginalEdition::Patch1078 ? 34 : 32]==0);
         CHECK(core.hash.Entries(0)[static_cast<std::size_t>(kBoundY)*256+kBoundX]==sid.value);
-        CHECK(core.bookkeeping.globalCounts[kBoundIsle]==1 && core.bookkeeping.depth==0);
+        CHECK(core.bookkeeping.GlobalCounts()[kBoundIsle]==1 && core.bookkeeping.depth==0);
         const auto objects=scene.world->Objects();CHECK(objects.size()==1 && objects.front().sid==sid);
         CHECK(objects.front().object.x==kBoundX && objects.front().object.y==kBoundY && objects.front().object.owner==0);
         CHECK(&stamp.Pool()==&core.pool && scene.state.variants.has_value());scene.world->FinishLoad();

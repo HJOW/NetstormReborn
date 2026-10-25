@@ -9,7 +9,15 @@ namespace netstorm::o {
 namespace {
 constexpr std::size_t kInitializedEntries=255; // 원본 rep stosd가 초기화하는 DWORD 수다.
 constexpr std::size_t kFirstType=70; // genus 집계가 시작하는 첫 실제 자산 타입 번호다.
+// 실제 장기 저장소와 독립 장부의 동일255칸 reset 몸체이며 256번째 칸과 다른 상태에는 접근하지 않는다.
+void ResetCountTables(std::span<std::uint32_t,256> local,std::span<std::uint32_t,256> secondary,std::span<std::uint32_t,256> global) {
+    std::fill_n(local.begin(),kInitializedEntries,0U);
+    std::fill_n(secondary.begin(),kInitializedEntries,0U);
+    std::fill_n(global.begin(),kInitializedEntries,0U);
 }
+}
+// Session/장부/TYPE 없이 같은 현재 세 배열에 원문 부분 reset만 실행한다.
+void ResetTotalMadeCounts(RawTotalMadeStorage& storage) { ResetCountTables(storage.localCounts,storage.localSecondaryCounts,storage.globalCounts); }
 // 실제 판본의 TYPE 크기와 초기화할 물리 저장소만 확인하고 내용을 바꾸지 않는다.
 RawTotalMade::RawTotalMade(OriginalEdition edition,std::span<const RiftTypeRecord> types,SquidPostPopState& counts,
     std::span<std::uint32_t> restrictions,std::function<void(TotalMadeAssertion)> assertion)
@@ -41,16 +49,14 @@ bool RawTotalMade::Valid(std::int32_t type) const {
 bool RawTotalMade::Allowed(std::int32_t type) const { return Valid(type) && restrictions_[static_cast<std::size_t>(type)]==0; }
 // 원본 세 배열의 물리 마지막 칸은 초기화 범위 밖이다.
 void RawTotalMade::ResetCounts() const {
-    std::fill_n(counts_.localCounts.begin(),kInitializedEntries,0U);
-    std::fill_n(counts_.localSecondaryCounts.begin(),kInitializedEntries,0U);
-    std::fill_n(counts_.globalCounts.begin(),kInitializedEntries,0U);
+    ResetCountTables(counts_.LocalCounts(),counts_.LocalSecondaryCounts(),counts_.GlobalCounts());
 }
 // 첫 로컬 표의 현재 비트를 그대로 노출한다.
-std::uint32_t RawTotalMade::Local(std::int32_t type) const { return Valid(type) ? counts_.localCounts[static_cast<std::size_t>(type)] : 0U; }
+std::uint32_t RawTotalMade::Local(std::int32_t type) const { return Valid(type) ? counts_.LocalCounts()[static_cast<std::size_t>(type)] : 0U; }
 // 두 번째 로컬 표의 현재 비트를 그대로 노출한다.
-std::uint32_t RawTotalMade::Built(std::int32_t type) const { return Valid(type) ? counts_.localSecondaryCounts[static_cast<std::size_t>(type)] : 0U; }
+std::uint32_t RawTotalMade::Built(std::int32_t type) const { return Valid(type) ? counts_.LocalSecondaryCounts()[static_cast<std::size_t>(type)] : 0U; }
 // 전역 표의 현재 비트를 그대로 노출한다.
-std::uint32_t RawTotalMade::Global(std::int32_t type) const { return Valid(type) ? counts_.globalCounts[static_cast<std::size_t>(type)] : 0U; }
+std::uint32_t RawTotalMade::Global(std::int32_t type) const { return Valid(type) ? counts_.GlobalCounts()[static_cast<std::size_t>(type)] : 0U; }
 // 전역 getter 호출로 생기는 중간 복사 없이 같은 TYPE/장부의 현재 값을 읽는다.
 std::int32_t RawTotalMade::BuiltForGenus(std::uint32_t genus) const {
     if (!genus) {
@@ -63,7 +69,7 @@ std::int32_t RawTotalMade::BuiltForGenus(std::uint32_t genus) const {
     std::uint32_t total=0; // 원본 signed 결과의 DWORD 감김을 계산할 누산기다.
     // 원본은 genus의 모든 비트 일치가 아니라 한 비트라도 겹치는 타입을 더한다.
     for (std::size_t type=kFirstType;type<types_.size();++type)
-        if (types_[type].flags2&genus) total+=counts_.localSecondaryCounts[type];
+        if (types_[type].flags2&genus) total+=counts_.LocalSecondaryCounts()[type];
     return std::bit_cast<std::int32_t>(total);
 }
 }

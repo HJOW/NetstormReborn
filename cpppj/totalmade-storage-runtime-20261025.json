@@ -1,0 +1,400 @@
+{
+  "unit": 433,
+  "goalComplete": false,
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "created": "2026-10-25T19:53:21.702590",
+  "sourceAttempt": 1,
+  "focusedAttempt": 1,
+  "sources": {
+    "cpppj/src/client/RawSurfaceStorage.cpp": "86a7c06c308824060e5461074b7d3c5f433d26e4349a38f40fdc809c04499bd6",
+    "cpppj/src/client/RawSurfaceWorld.cpp": "3292a520fa22a9e761eadb0095cd4361d39c6d076ee7a7c0da5a2ad050f84f7d",
+    "cpppj/src/client/RawSurfaceWorld.h": "9a723a37e1b23a058e5426786d6489652f6b56c785614c2f2dc1347f1b4f4ff7",
+    "cpppj/src/o/RawTotalMade.cpp": "bba88d7d58c073b00cd109b56e0da406663f915aa2b40001c01dc5ab86640f77",
+    "cpppj/src/o/RawTotalMade.h": "1b4806663c70ac91dc3e3b20098491c186b3f344dc3cc9e964eaa22e6c5eaac9",
+    "cpppj/src/o/SquidDestroyLifecycle.cpp": "e641fa9d8f3de40ace4d4566c329b05b083ebcae838c48fee9cd91d0c10a6ccd",
+    "cpppj/src/o/SquidPostPop.cpp": "0e7239520dd5bbd94f224c35e83876f4b8a67309d8f512af67592043e3043ed9",
+    "cpppj/src/o/SquidPostPop.h": "0cf4a50583d1a38be996f71f994a6c19e0d16a87f95a69b63ea1b45e47f187bb",
+    "cpppj/tests/CampaignLifetimeTests.cpp": "4a0b2f1c8ba8deda8e1b4f0e5da4c99b95c30c4da5329b1f47ae63a39505ec00",
+    "cpppj/tests/CampaignMissionStartTests.cpp": "0c5b4103c73198819457dc530196b0671ceca3d0d1334b963b935b4e01f0b73e",
+    "cpppj/tests/CampaignSessionTests.cpp": "7b14d065d3e38c104a44a6789fe57e32975591ccd6688565480a03107ddffd83",
+    "cpppj/tests/NormalTerrainWorldBindingTests.cpp": "db55e4d651058cbe5ca75cc07e9620dbd70fa4b56faefa25bd3c419c7ff6ea05",
+    "cpppj/tests/RawSurfaceStorageTests.cpp": "3a06c141e5eedc709c9ddf5a617ebc21ded24eaa041430c10b07d57e70194b5f",
+    "cpppj/tests/TerrainWorldBindingTests.cpp": "0b575868606825f55ccc0c5b453a0d9fa385f16ad9bc63b945e0130edc58e91a",
+    "cpppj/tests/TutorialOneTests.cpp": "4ff3a7b4647c4db5ae7f3cf63951734858283a4df379d314102ac4e75a92fc85"
+  },
+  "artifacts": {
+    "cpppj/build/bin/Release/NetstormCpp.exe": "fcef55f795038e757ef74a41cbcd66ac8461cc74a47be621cc95f90d93507b5f",
+    "cpppj/build/bin/Release/netstorm_tests.exe": "d69422074b7705a6548ac1b6229c42e2c44b1bdc828df58d24bcfbfcc138ffe1",
+    "cpppj/build/bin/Release/netstorm_cloud_probe.exe": "6d661af303d96942a9d3a545f3f8bf9802c4c1a14afb1037a6f55ec7a183a509",
+    "cpppj/build/bin/Release/netstorm_cloud_render_probe.exe": "d0357ade73a057b39e595c46a7b85645321256387def76ecb19696cadf8a6299"
+  },
+  "focused": [
+    {
+      "filter": "TutorialOne_",
+      "exitCode": 0,
+      "tests": 5,
+      "failures": 0,
+      "seconds": 1.1396,
+      "log": "extracted/cpp-totalmade-storage-433-focused1/TutorialOne_.log",
+      "sha256": "95a2adef8ad9c743b5d1fe1f6c91784cd7e904eb0e6bfdedc54beda24cef8b5a",
+      "caseNames": [
+        "TutorialOne_TotalMadeNative104",
+        "TutorialOne_TotalMadeSharedResetAndDirectHelperReplayNative104",
+        "TutorialOne_StageNative266",
+        "TutorialOne_SharedStateAndMutableList",
+        "CampaignTutorialOne_ActualSessionFrameAndInputPauseOwnership"
+      ]
+    },
+    {
+      "filter": "RawSurfaceStorage_",
+      "exitCode": 0,
+      "tests": 12,
+      "failures": 0,
+      "seconds": 0.51,
+      "log": "extracted/cpp-totalmade-storage-433-focused1/RawSurfaceStorage_.log",
+      "sha256": "a70e1b7c04575eb0b91398241ebda3bee4e13842536d017f032a850c53738006",
+      "caseNames": [
+        "RawSurfaceStorage_ActualBothEditionsAndSamePhysicalArrays",
+        "RawSurfaceStorage_NextWorldResetsPoolAndSpaceWithoutReplacingArrays",
+        "RawSurfaceStorage_DuplicateAndInvalidWorldKeepCurrentPhysicalBytes",
+        "RawSurfaceStorage_LeaseRetainsDataUntilModulesAreGone",
+        "RawSurfaceStorage_PreparedWorldPreservesActualMemoryAndModes",
+        "RawSurfaceStorage_GraphPhysicalArraysOutliveWorldAndPreparedLease",
+        "RawSurfaceStorage_GraphPreparedConstructionFailureKeepsCurrentBytes",
+        "RawSurfaceStorage_GraphGeneralAcquireRetainsFreshCompatibility",
+        "RawSurfaceStorage_TotalMadeLifetimeAndPreparedControlIsolation",
+        "RawSurfaceStorage_TotalMadePreparedConstructionFailureKeepsAllTables",
+        "RawSurfaceStorage_TotalMadeGeneralFreshIsSeparateFromNativeReset255",
+        "RawSurfaceStorage_TotalMadeSharingLeavesPlayerFactoryBindingsWorldLocal"
+      ]
+    },
+    {
+      "filter": "CampaignLifetime_",
+      "exitCode": 0,
+      "tests": 4,
+      "failures": 0,
+      "seconds": 0.3629,
+      "log": "extracted/cpp-totalmade-storage-433-focused1/CampaignLifetime_.log",
+      "sha256": "5f07a16a1104c2f07864d90283e4e140f62c0a30ba3cdc47726d4be762b50c37",
+      "caseNames": [
+        "CampaignLifetime_TotalMadePopAndDestroyUseSharedPhysicalTables",
+        "CampaignLifetime_PlayerNoticeIndependentPeFixture",
+        "CampaignLifetime_EmptyBaseAndContentUseSameDeletion",
+        "CampaignLifetime_RejectsMissingOrLateDeletionBinding"
+      ]
+    },
+    {
+      "filter": "SquidPostPop_",
+      "exitCode": 0,
+      "tests": 6,
+      "failures": 0,
+      "seconds": 0.5644,
+      "log": "extracted/cpp-totalmade-storage-433-focused1/SquidPostPop_.log",
+      "sha256": "b0234c04f25b764cee42fc3a487bbc59dd15bf14a1bcbd9d47a7aef004f2afb6",
+      "caseNames": [
+        "SquidPostPop_X86_CostListsTotalsAndActiveLifecycle",
+        "SquidPostPop_FirstRegistrationAndProviderDuplicate_PreserveOriginalCounters",
+        "SquidPostPop_UnsupportedEffectsAndCorruptList_RejectBeforeSpaceWrites",
+        "SquidPostPop_BridgePrefix_X86_FlagsAndExtra",
+        "SquidPostPop_BridgeRequiresConnectorAndRunsBeforeSuppressedCommon",
+        "SquidPostPop_TypeCost_LoadsFloatAndRejectsString"
+      ]
+    },
+    {
+      "filter": "DestroyLifecycle_",
+      "exitCode": 0,
+      "tests": 6,
+      "failures": 0,
+      "seconds": 5.3846,
+      "log": "extracted/cpp-totalmade-storage-433-focused1/DestroyLifecycle_.log",
+      "sha256": "e1a58d56ed81d8c3dd1e1f8e1dcbb69e530be0d0aaf8dc020b5c493bdf39d35a",
+      "caseNames": [
+        "DestroyLifecycle_ActualCommonPrePostBookkeeping",
+        "DestroyLifecycle_ActualDestroyUnpopAndReleaseIntegration",
+        "DestroyLifecycle_PostPopSharesCurrentCountsAndPreservesMade",
+        "DestroyLifecycle_RejectsUnsupportedEffectsBeforeBookkeepingWrites",
+        "DestroyLifecycle_SuppressionAndCostBoundaryGuards",
+        "DestroyLifecycle_RejectsWrongPoolAndFormOrContained"
+      ]
+    },
+    {
+      "filter": "TerrainWorldBinding_",
+      "exitCode": 0,
+      "tests": 5,
+      "failures": 0,
+      "seconds": 0.3252,
+      "log": "extracted/cpp-totalmade-storage-433-focused1/TerrainWorldBinding_.log",
+      "sha256": "c93ba673b093838b06edcd2e941e1277fee5e4937cc15ee5b9809072bd5163b6",
+      "caseNames": [
+        "TerrainWorldBinding_ActualFactoryOwnerPopAndRegion",
+        "TerrainWorldBinding_RejectsMissingExternalEffects",
+        "NormalTerrainWorldBinding_ActualNormalGenerationAndFarmRetype",
+        "NormalTerrainWorldBinding_ActualFarmCreateOwnerHpAndGameRandom",
+        "NormalTerrainWorldBinding_RejectsMissingEffectsAndUnrestoredBranches"
+      ]
+    },
+    {
+      "filter": "CampaignMissionTechnology_",
+      "exitCode": 0,
+      "tests": 1,
+      "failures": 0,
+      "seconds": 0.543,
+      "log": "extracted/cpp-totalmade-storage-433-focused1/CampaignMissionTechnology_.log",
+      "sha256": "1737f490ce7ee5ed42822104211b21c4c8209bd3585ad134ab4b0ff772834361",
+      "caseNames": [
+        "CampaignMissionTechnology_ActualSessionRestrictions"
+      ]
+    },
+    {
+      "filter": "CampaignSession_ProductionUsesCurrentPlayerFactoriesAndRestrictions",
+      "exitCode": 0,
+      "tests": 1,
+      "failures": 0,
+      "seconds": 0.5126,
+      "log": "extracted/cpp-totalmade-storage-433-focused1/CampaignSession_ProductionUsesCurrentPlayerFactoriesAndRestrictions.log",
+      "sha256": "a9d5dfc0a8abb91250de8fceb88c04528be76fa80bb6b15083eb9751f2f766c1",
+      "caseNames": [
+        "CampaignSession_ProductionUsesCurrentPlayerFactoriesAndRestrictions"
+      ]
+    },
+    {
+      "filter": "CampaignExistingEditorCheckpoint",
+      "exitCode": 0,
+      "tests": 25,
+      "failures": 0,
+      "seconds": 2.8315,
+      "log": "extracted/cpp-totalmade-storage-433-focused1/CampaignExistingEditorCheckpoint.log",
+      "sha256": "a451b26c42b4a5b950be157ede4340b5545bef8381cc74d67ad01722566a8ec0",
+      "caseNames": [
+        "CampaignExistingEditorCheckpoint_DeferPreservesExistingOwnerAndDefaultStages",
+        "CampaignExistingEditorCheckpoint_DeferRejectsCampaignMode",
+        "CampaignExistingEditorCheckpoint_NormalReadFalseKeepsInvalidBranch",
+        "CampaignExistingEditorCheckpoint_FirstNotifyUsesActualWriterBeforeSubscriber",
+        "CampaignExistingEditorCheckpoint_FileTailThenActualWorldChatBoundary",
+        "CampaignExistingEditorCheckpoint_CoreWriteNaturalGateKeepsActualStorage",
+        "CampaignExistingEditorCheckpoint_CoreWriteManagerDiagnosticBeforeGate",
+        "CampaignExistingEditorCheckpoint_CoreWriteMetamapDiagnosticBeforeGate",
+        "CampaignExistingEditorCheckpoint_ActualCurrentNameSelectsWorkingFile",
+        "CampaignExistingEditorCheckpoint_ActualChatRuntimeAdvancesWorldAndSnapshot",
+        "CampaignExistingEditorCheckpoint_ActualPlayerUiCompletesAndReloads",
+        "CampaignExistingEditorCheckpoint_ActualCustomTest01PlayerUiAndFile",
+        "CampaignExistingEditorCheckpoint_AdoptsNativePlayersAndPreservesCoreUntilNextCleanup",
+        "CampaignExistingEditorCheckpoint_UiScopeCommitsOnlyAfterActualStateReturn",
+        "CampaignExistingEditorCheckpoint_UiTailFailureKeepsPublicAccessClosed",
+        "CampaignExistingEditorCheckpoint_UiTailCannotCommitEarlyReturnOrImmediate",
+        "CampaignExistingEditorCheckpoint_PreparedCtorPreservesSameClientState",
+        "CampaignExistingEditorCheckpoint_PreparedCtorRejectsIncompleteOwnersBeforeBorrow",
+        "CampaignExistingEditorCheckpoint_ActualProductionFormsInsideInstallScope",
+        "CampaignExistingEditorCheckpoint_EditorWireQueuesNegativeSenderConstructionMoveAndSalvage",
+        "CampaignExistingEditorCheckpoint_EditorWireReadsCurrentChargeGateWithoutSenderNormalization",
+        "CampaignExistingEditorCheckpoint_EditorWireRejectsOwnedRegistrationBeforePublishing",
+        "CampaignExistingEditorCheckpoint_EditorWireRejectsForeignPlayersAndLoginBeforeBorrow",
+        "CampaignExistingEditorCheckpoint_ActivityWireUsesClientNineAndRetiresOnlyReceive",
+        "CampaignExistingEditorCheckpoint_ActivityCollisionPreservesAllPriorRegistrations"
+      ]
+    },
+    {
+      "filter": "CampaignSession_LocalLogin",
+      "exitCode": 0,
+      "tests": 4,
+      "failures": 0,
+      "seconds": 4.1225,
+      "log": "extracted/cpp-totalmade-storage-433-focused1/CampaignSession_LocalLogin.log",
+      "sha256": "daa8ed2e8fce24d14ce9143b7f90447cdcd212372f7664274f084b41933ecb40",
+      "caseNames": [
+        "CampaignSession_LocalLoginActualHandshakeAndWorldLoad",
+        "CampaignSession_LocalLoginMissionStartAiAlliances",
+        "CampaignSession_LocalLoginWorkshopHasActualPlacement",
+        "CampaignSession_LocalLoginGeneratorExtendsCannonFirstHit"
+      ]
+    },
+    {
+      "filter": "RawSurfaceWorld_",
+      "exitCode": 0,
+      "tests": 7,
+      "failures": 0,
+      "seconds": 0.4083,
+      "log": "extracted/cpp-totalmade-storage-433-focused1/RawSurfaceWorld_.log",
+      "sha256": "7f50abce8e01778f80ed6307873d585fd13227d45328e0540b1912af2ca1a56e",
+      "caseNames": [
+        "RawSurfaceWorld_PausedRegularResumesWithClientGameClock",
+        "RawSurfaceWorld_HardBridgeAndPendingMissionTeardown",
+        "RawSurfaceWorld_DisplaySuppressionAndDeviceReplacement",
+        "RawSurfaceWorld_InvalidLoadRejectedBeforeAllocation",
+        "RawSurfaceWorld_RuntimeSharesStorageAndCurrentDispatch",
+        "RawSurfaceWorld_RuntimeRejectsIncompleteOrLateBinding",
+        "RawSurfaceWorld_CampaignFinishPreservesParentGraph"
+      ]
+    }
+  ],
+  "originalGameExecuted": false,
+  "fullCTestExecuted": false,
+  "productGuiExecuted": false,
+  "completed": true,
+  "passed": true,
+  "focusedObservations": 76,
+  "focusedUnique": 76,
+  "focusedCaseNames": [
+    "CampaignExistingEditorCheckpoint_ActivityCollisionPreservesAllPriorRegistrations",
+    "CampaignExistingEditorCheckpoint_ActivityWireUsesClientNineAndRetiresOnlyReceive",
+    "CampaignExistingEditorCheckpoint_ActualChatRuntimeAdvancesWorldAndSnapshot",
+    "CampaignExistingEditorCheckpoint_ActualCurrentNameSelectsWorkingFile",
+    "CampaignExistingEditorCheckpoint_ActualCustomTest01PlayerUiAndFile",
+    "CampaignExistingEditorCheckpoint_ActualPlayerUiCompletesAndReloads",
+    "CampaignExistingEditorCheckpoint_ActualProductionFormsInsideInstallScope",
+    "CampaignExistingEditorCheckpoint_AdoptsNativePlayersAndPreservesCoreUntilNextCleanup",
+    "CampaignExistingEditorCheckpoint_CoreWriteManagerDiagnosticBeforeGate",
+    "CampaignExistingEditorCheckpoint_CoreWriteMetamapDiagnosticBeforeGate",
+    "CampaignExistingEditorCheckpoint_CoreWriteNaturalGateKeepsActualStorage",
+    "CampaignExistingEditorCheckpoint_DeferPreservesExistingOwnerAndDefaultStages",
+    "CampaignExistingEditorCheckpoint_DeferRejectsCampaignMode",
+    "CampaignExistingEditorCheckpoint_EditorWireQueuesNegativeSenderConstructionMoveAndSalvage",
+    "CampaignExistingEditorCheckpoint_EditorWireReadsCurrentChargeGateWithoutSenderNormalization",
+    "CampaignExistingEditorCheckpoint_EditorWireRejectsForeignPlayersAndLoginBeforeBorrow",
+    "CampaignExistingEditorCheckpoint_EditorWireRejectsOwnedRegistrationBeforePublishing",
+    "CampaignExistingEditorCheckpoint_FileTailThenActualWorldChatBoundary",
+    "CampaignExistingEditorCheckpoint_FirstNotifyUsesActualWriterBeforeSubscriber",
+    "CampaignExistingEditorCheckpoint_NormalReadFalseKeepsInvalidBranch",
+    "CampaignExistingEditorCheckpoint_PreparedCtorPreservesSameClientState",
+    "CampaignExistingEditorCheckpoint_PreparedCtorRejectsIncompleteOwnersBeforeBorrow",
+    "CampaignExistingEditorCheckpoint_UiScopeCommitsOnlyAfterActualStateReturn",
+    "CampaignExistingEditorCheckpoint_UiTailCannotCommitEarlyReturnOrImmediate",
+    "CampaignExistingEditorCheckpoint_UiTailFailureKeepsPublicAccessClosed",
+    "CampaignLifetime_EmptyBaseAndContentUseSameDeletion",
+    "CampaignLifetime_PlayerNoticeIndependentPeFixture",
+    "CampaignLifetime_RejectsMissingOrLateDeletionBinding",
+    "CampaignLifetime_TotalMadePopAndDestroyUseSharedPhysicalTables",
+    "CampaignMissionTechnology_ActualSessionRestrictions",
+    "CampaignSession_LocalLoginActualHandshakeAndWorldLoad",
+    "CampaignSession_LocalLoginGeneratorExtendsCannonFirstHit",
+    "CampaignSession_LocalLoginMissionStartAiAlliances",
+    "CampaignSession_LocalLoginWorkshopHasActualPlacement",
+    "CampaignSession_ProductionUsesCurrentPlayerFactoriesAndRestrictions",
+    "CampaignTutorialOne_ActualSessionFrameAndInputPauseOwnership",
+    "DestroyLifecycle_ActualCommonPrePostBookkeeping",
+    "DestroyLifecycle_ActualDestroyUnpopAndReleaseIntegration",
+    "DestroyLifecycle_PostPopSharesCurrentCountsAndPreservesMade",
+    "DestroyLifecycle_RejectsUnsupportedEffectsBeforeBookkeepingWrites",
+    "DestroyLifecycle_RejectsWrongPoolAndFormOrContained",
+    "DestroyLifecycle_SuppressionAndCostBoundaryGuards",
+    "NormalTerrainWorldBinding_ActualFarmCreateOwnerHpAndGameRandom",
+    "NormalTerrainWorldBinding_ActualNormalGenerationAndFarmRetype",
+    "NormalTerrainWorldBinding_RejectsMissingEffectsAndUnrestoredBranches",
+    "RawSurfaceStorage_ActualBothEditionsAndSamePhysicalArrays",
+    "RawSurfaceStorage_DuplicateAndInvalidWorldKeepCurrentPhysicalBytes",
+    "RawSurfaceStorage_GraphGeneralAcquireRetainsFreshCompatibility",
+    "RawSurfaceStorage_GraphPhysicalArraysOutliveWorldAndPreparedLease",
+    "RawSurfaceStorage_GraphPreparedConstructionFailureKeepsCurrentBytes",
+    "RawSurfaceStorage_LeaseRetainsDataUntilModulesAreGone",
+    "RawSurfaceStorage_NextWorldResetsPoolAndSpaceWithoutReplacingArrays",
+    "RawSurfaceStorage_PreparedWorldPreservesActualMemoryAndModes",
+    "RawSurfaceStorage_TotalMadeGeneralFreshIsSeparateFromNativeReset255",
+    "RawSurfaceStorage_TotalMadeLifetimeAndPreparedControlIsolation",
+    "RawSurfaceStorage_TotalMadePreparedConstructionFailureKeepsAllTables",
+    "RawSurfaceStorage_TotalMadeSharingLeavesPlayerFactoryBindingsWorldLocal",
+    "RawSurfaceWorld_CampaignFinishPreservesParentGraph",
+    "RawSurfaceWorld_DisplaySuppressionAndDeviceReplacement",
+    "RawSurfaceWorld_HardBridgeAndPendingMissionTeardown",
+    "RawSurfaceWorld_InvalidLoadRejectedBeforeAllocation",
+    "RawSurfaceWorld_PausedRegularResumesWithClientGameClock",
+    "RawSurfaceWorld_RuntimeRejectsIncompleteOrLateBinding",
+    "RawSurfaceWorld_RuntimeSharesStorageAndCurrentDispatch",
+    "SquidPostPop_BridgePrefix_X86_FlagsAndExtra",
+    "SquidPostPop_BridgeRequiresConnectorAndRunsBeforeSuppressedCommon",
+    "SquidPostPop_FirstRegistrationAndProviderDuplicate_PreserveOriginalCounters",
+    "SquidPostPop_TypeCost_LoadsFloatAndRejectsString",
+    "SquidPostPop_UnsupportedEffectsAndCorruptList_RejectBeforeSpaceWrites",
+    "SquidPostPop_X86_CostListsTotalsAndActiveLifecycle",
+    "TerrainWorldBinding_ActualFactoryOwnerPopAndRegion",
+    "TerrainWorldBinding_RejectsMissingExternalEffects",
+    "TutorialOne_SharedStateAndMutableList",
+    "TutorialOne_StageNative266",
+    "TutorialOne_TotalMadeNative104",
+    "TutorialOne_TotalMadeSharedResetAndDirectHelperReplayNative104"
+  ],
+  "protectedFiles": {
+    "checked": 1821,
+    "unchanged": true
+  },
+  "state": "focused-verified-batch-pending",
+  "startingHead": "bd9ea8d37045e404e1f1892fb5fde9cea2653fdc",
+  "build": {
+    "attempt": 1,
+    "sourceAttempt": 1,
+    "finished": "2026-10-25T19:52:42.045939",
+    "exitCode": 0,
+    "seconds": 1406.795,
+    "command": [
+      "cmake",
+      "--build",
+      "cpppj/build",
+      "--config",
+      "Release",
+      "--parallel",
+      "4",
+      "--",
+      "/p:UseMultiToolTask=true",
+      "/p:MultiProcMaxCount=4",
+      "/p:EnforceProcessCountAcrossBuilds=true"
+    ],
+    "log": "extracted/cpp-totalmade-storage-433-build1.log",
+    "sha256": "7318ace2b1612393315ad0cc6aeb684bd8c4456066b3224f9f95094a9a6fe39d",
+    "compilerWarnings": 0,
+    "compilerErrors": 0
+  },
+  "newTests": [
+    "CampaignLifetime_TotalMadePopAndDestroyUseSharedPhysicalTables",
+    "RawSurfaceStorage_TotalMadeGeneralFreshIsSeparateFromNativeReset255",
+    "RawSurfaceStorage_TotalMadeLifetimeAndPreparedControlIsolation",
+    "RawSurfaceStorage_TotalMadePreparedConstructionFailureKeepsAllTables",
+    "RawSurfaceStorage_TotalMadeSharingLeavesPlayerFactoryBindingsWorldLocal",
+    "TutorialOne_TotalMadeSharedResetAndDirectHelperReplayNative104"
+  ],
+  "newTestCount": 6,
+  "evidence": [
+    {
+      "path": "extracted/cpp-totalmade-storage-433-source1/hashes.json",
+      "sha256": "c45fbcb0bc1337efd53c00a9bac896df58d3f05b501a1512581105515fd4004a"
+    },
+    {
+      "path": "extracted/cpp-totalmade-storage-433-prepared/manifest.json",
+      "sha256": "0c8af814a34208b8e50a6b6a715cd1df2ce94c4b3770add239fd58f9f18be8bb"
+    },
+    {
+      "path": "extracted/cpp-totalmade-storage-433-prepared/totalmade-storage-433.patch",
+      "sha256": "d23454d653f9e32f777761343cd98ad87bbf70d09a5bc3989ed8f4f38178bc16"
+    },
+    {
+      "path": "extracted/cpp-state-input-address-review-20261025.json",
+      "sha256": "d0298cd13db5a0351bb541b7e509a74fc8d8029ab1e03974bde99b42b7aaa98d"
+    }
+  ],
+  "previousFocused": {
+    "head": "bd9ea8d3",
+    "tests": 68,
+    "failures": 0,
+    "productSha256": "4d67bffab1bad698a5b1d48684d0cc04fe638be536db6783325a7abc7236af20"
+  },
+  "previousIntegrated": {
+    "head": "60a5c7de",
+    "productSha256": "18b672612ef444352bea750b941eb310c954c12c4b5c2eec40458983ed95dc82",
+    "ctestTests": 2894,
+    "ctestFailures": 0,
+    "menusGui": true,
+    "naturalEarly2": true,
+    "nextTutorial3": true
+  },
+  "scope": {
+    "sameActualCounterStorage": true,
+    "nativeResetFrontEntriesPerTable": 255,
+    "physicalEntriesPerTable": 256,
+    "ordinaryAcquireFreshCompatibility": true,
+    "preparedAcquireAndRetirementPreserve": true,
+    "wholeNativeStateCleanupConnected": false,
+    "playerFactoryBindingsRemainWorldLocal": true,
+    "spSoundGuiEffects": "not-selected-in-new-counter-pop-destroy-tests",
+    "sourceAndArtifactsUnchanged": true
+  }
+}

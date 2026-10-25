@@ -147,8 +147,8 @@ void SquidDestroyLifecycle::PreDestroy(Sid sid,std::uint32_t flags) {
                 else hooks_.emit({SquidDeletionEffect::Refund,sid,(flags>>16)&15});
             }
             const auto number=Object(sid)[kType];
-            if (Owner(sid)==bookkeeping_.localOwner) --bookkeeping_.localCounts[number];
-            --bookkeeping_.globalCounts[number]; // localSecondaryCounts는 누적 생산 수이므로 유지한다.
+            if (Owner(sid)==bookkeeping_.localOwner) --bookkeeping_.LocalCounts()[number];
+            --bookkeeping_.GlobalCounts()[number]; // localSecondaryCounts는 누적 생산 수이므로 유지한다.
             if (LostNotice(sid,flags)) {
                 if (pool_.Edition()==OriginalEdition::Cd1072 || Object(sid)[kType]!=state_.silentType)
                     hooks_.emit({SquidDeletionEffect::UnitLostSound,sid,0});

@@ -60,6 +60,31 @@ TEST_CASE(TutorialOne_TotalMadeNative104) {
     }
     CHECK(count["originals"]==52);CHECK(count["originalCD"]==52);
 }
+// Native104의 실제 reset 행을 Session 없는 helper와 공유 장부 두 경로에 각각 재생한다.
+TEST_CASE(TutorialOne_TotalMadeSharedResetAndDirectHelperReplayNative104) {
+    std::map<std::string,std::size_t> resets; // PATCH/CD에서 실제 operation3 행을 각각 선택했는지 확인한다.
+    for (const auto& row:LoadFixture(NETSTORM_TUTORIAL_ONE_FIXTURE).rows) { // 기존 기대 fixture의 전체 표를 그대로 비교한다.
+        if (row[0]!="Total" || Number(row[2])!=3) continue;CHECK(row.size()==11);
+        const auto edition=row[1]=="originals" ? OriginalEdition::Patch1078 : OriginalEdition::Cd1072;
+        std::vector<RiftTypeRecord> types(edition==OriginalEdition::Patch1078 ? 188 : 171);RawTotalMadeStorage input;std::array<std::uint32_t,256> restrictions{}; // 원본 입력과 같은 크기의 독립 물리다.
+        for (std::size_t index=0;index<256;++index) { // 256번째 물리 칸에도 다른 비트를 주어 보존 범위를 확인한다.
+            input.localCounts[index]=InputCount(index,0);input.localSecondaryCounts[index]=InputCount(index,1);input.globalCounts[index]=InputCount(index,2);restrictions[index]=InputCount(index,3);
+        }
+        auto storage=input;const auto* local=storage.localCounts.data();const auto* secondary=storage.localSecondaryCounts.data();const auto* global=storage.globalCounts.data(); // reset 전후 주소도 같은 물리다.
+        ResetTotalMadeCounts(storage);CHECK(TableHex(storage.localCounts)==row[7] && TableHex(storage.localSecondaryCounts)==row[8] && TableHex(storage.globalCounts)==row[9]);
+        CHECK(storage.localCounts.data()==local && storage.localSecondaryCounts.data()==secondary && storage.globalCounts.data()==global && TableHex(restrictions)==row[10]);
+        storage=input;SquidPostPopState counts{.sharedTotalMade=&storage};counts.graphsEnabled=true;counts.localOwner=3;counts.depth=7;counts.totalCost=91;counts.productionDirty=13;counts.providers={{9,10},1};counts.ownerFactories[1]={{11,12},1}; // 세 표와 무관한 현재 제어/목록 입력이다.
+        const auto fallbackLocal=counts.localCounts,fallbackSecondary=counts.localSecondaryCounts,fallbackGlobal=counts.globalCounts;std::uint32_t assertions{}; // 미사용 독립 배열도 reset의 대상이 아니다.
+        RawTotalMade totals(edition,types,counts,restrictions,[&](TotalMadeAssertion) { ++assertions; });const SquidPostPopState& current=counts;
+        CHECK(counts.LocalCounts().data()==local && current.LocalCounts().data()==local && counts.LocalSecondaryCounts().data()==secondary && current.LocalSecondaryCounts().data()==secondary && counts.GlobalCounts().data()==global && current.GlobalCounts().data()==global);
+        totals.ResetCounts();CHECK(TableHex(storage.localCounts)==row[7] && TableHex(storage.localSecondaryCounts)==row[8] && TableHex(storage.globalCounts)==row[9]);
+        CHECK(assertions==Number(row[6]) && TableHex(restrictions)==row[10] && counts.localCounts==fallbackLocal && counts.localSecondaryCounts==fallbackSecondary && counts.globalCounts==fallbackGlobal);
+        CHECK(counts.graphsEnabled && counts.localOwner==3 && counts.depth==7 && counts.totalCost==91 && counts.productionDirty==13 && counts.providers.count==1 && counts.providers.entries==std::vector<std::uint32_t>({9,10}) && counts.ownerFactories[1].count==1 && counts.ownerFactories[1].entries==std::vector<std::uint32_t>({11,12}));
+        ++resets[row[1]];
+    }
+    CHECK(resets["originals"]>0 && resets["originalCD"]>0);
+}
+
 // 실제 PATCH266고유 입력에서 단락평가/반환/다중Graph/SP 포함 경계와NaN을 대조한다.
 TEST_CASE(TutorialOne_StageNative266) {
     std::size_t count=0; // 동일 fixture의 단계 입력 수만 센다.

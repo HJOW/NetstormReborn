@@ -1,6 +1,8 @@
 // 실제 자산과 기존 월드 모듈로 장기 물리의 대여·주소·초기화 범위를 검사한다.
 #include "DudeSpawnSupport.h"
 #include "client/RawSurfaceWorld.h"
+#include "client/ClientPlayerRecords.h"
+#include "o/RawTotalMade.h"
 #include <algorithm>
 #include <cstring>
 #include <type_traits>
@@ -19,6 +21,10 @@ template<class Function> bool StorageRejected(Function&& function) { try { funct
 // 고정1530BYTE 기록과4096DWORD를 전체 비교해 reserved와 비활성 stack의 소실도 검출한다.
 bool SameStorageGraph(const RawGraphStorage& first,const RawGraphStorage& second) {
     static_assert(sizeof(first.records)==1530);return std::memcmp(first.records.data(),second.records.data(),sizeof(first.records))==0 && first.stack==second.stack;
+}
+// 세 배열의 값 전체를 비교하며 장부의 선택 포인터를 기대 snapshot으로 복사하지 않는다.
+bool SameStorageTotalMade(const RawTotalMadeStorage& first,const RawTotalMadeStorage& second) {
+    return first.localCounts==second.localCounts && first.localSecondaryCounts==second.localSecondaryCounts && first.globalCounts==second.globalCounts;
 }
 }
 
@@ -104,4 +110,52 @@ TEST_CASE(RawSurfaceStorage_GraphGeneralAcquireRetainsFreshCompatibility) {
     auto ordinary=StorageWorld(storage);RawGraphStorage expected;ResetRawGraphTable(expected); // 종전 새 지역 Graph의 전체0 뒤 작은 reset과 같은 호환 결과다.
     CHECK(SameStorageGraph(storage->graph,expected) && ordinary->Core().graph.Records().data()==storage->graph.records.data());
     auto independent=MakeRawSurfaceStorage(netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078).game);CHECK(independent->graph.records.data()!=storage->graph.records.data() && independent->graph.stack.data()!=storage->graph.stack.data()); // 다른 Client/물리는 분리한다.
+}
+
+// 세 표는 World보다 오래 보존하되 새 장부의 목록/제어 상태는 이전 World에서 빌리지 않는다.
+TEST_CASE(RawSurfaceStorage_TotalMadeLifetimeAndPreparedControlIsolation) {
+    auto storage=MakeRawSurfaceStorage(netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078).game);auto first=StorageWorld(storage);const auto* local=storage->totalMade.localCounts.data();const auto* secondary=storage->totalMade.localSecondaryCounts.data();const auto* global=storage->totalMade.globalCounts.data(); // 단일 물리의 고정 주소다.
+    for (std::size_t index=0;index<256;++index) { // 마지막 물리 칸까지 모두 비영 현재값을 보존 입력으로 준다.
+        storage->totalMade.localCounts[index]=static_cast<std::uint32_t>(index+11);storage->totalMade.localSecondaryCounts[index]=static_cast<std::uint32_t>(index+101);storage->totalMade.globalCounts[index]=static_cast<std::uint32_t>(index+1001);
+    }
+    const auto current=storage->totalMade;auto firstCore=first->Core();firstCore.bookkeeping.graphsEnabled=true;firstCore.bookkeeping.suppressed=true;firstCore.bookkeeping.depth=7;firstCore.bookkeeping.totalCost=91;firstCore.bookkeeping.providers={{3,4},1};firstCore.bookkeeping.ownerFactories[1]={{5,6},1}; // Runtime 지역 상태는 다음 World의 초기 입력이 아니다.
+    CHECK(firstCore.bookkeeping.LocalCounts().data()==local && firstCore.bookkeeping.LocalSecondaryCounts().data()==secondary && firstCore.bookkeeping.GlobalCounts().data()==global);first.reset();CHECK(!storage->Borrowed() && SameStorageTotalMade(storage->totalMade,current));
+    auto second=std::make_unique<RawSurfaceWorld>(storage->pool.Edition(),storage->types,storage->frames,storage->shapes,StorageLinks(),97,nullptr,storage,true);const auto secondCore=second->Core();
+    CHECK(secondCore.bookkeeping.LocalCounts().data()==local && secondCore.bookkeeping.LocalSecondaryCounts().data()==secondary && secondCore.bookkeeping.GlobalCounts().data()==global && SameStorageTotalMade(storage->totalMade,current));
+    CHECK(!secondCore.bookkeeping.graphsEnabled && !secondCore.bookkeeping.suppressed && secondCore.bookkeeping.depth==0 && secondCore.bookkeeping.totalCost==0 && secondCore.bookkeeping.localOwner==1 && secondCore.bookkeeping.providers.entries.empty());
+    for (const auto& list:secondCore.bookkeeping.ownerFactories) CHECK(!list.current.storage && list.entries.empty() && list.count==0); // Player callback은 이전 장부에서 이월하지 않는다.
+    CHECK(StorageRejected([&] { storage->Acquire(); }) && StorageRejected([&] { storage->AcquirePrepared(); }) && SameStorageTotalMade(storage->totalMade,current));
+    std::weak_ptr<RawSurfaceStorage> lifetime=storage;storage.reset();CHECK(!lifetime.expired() && secondCore.bookkeeping.GlobalCounts().back()==1256);second.reset();CHECK(lifetime.expired()); // 마지막 실행기/Use가 끝난 뒤만 실제 물리가 소멸한다.
+}
+
+// 준비 대여 후 타입 계약에서 실패해도 세 표를 지우거나 성공 이전 값으로 rollback하지 않는다.
+TEST_CASE(RawSurfaceStorage_TotalMadePreparedConstructionFailureKeepsAllTables) {
+    std::vector<RiftTypeRecord> types(187);std::vector<RiftTypeFrames> frames(187,RiftTypeFrames({}));std::vector<SquidDisplayShape> shapes(187);auto storage=std::make_shared<RawSurfaceStorage>(OriginalEdition::Patch1078,types,frames,shapes); // Graph의 PATCH188 계약에서만 실패하는 동일 크기 입력이다.
+    storage->totalMade.localCounts.fill(0x12345678U);storage->totalMade.localSecondaryCounts.fill(0x87654321U);storage->totalMade.globalCounts.fill(0xa1b2c3d4U);const auto before=storage->totalMade; // 세 배열 모두 독립 값 snapshot이다.
+    CHECK(StorageRejected([&] { RawSurfaceWorld world(OriginalEdition::Patch1078,storage->types,storage->frames,storage->shapes,StorageLinks(),97,nullptr,storage,true); }));
+    CHECK(!storage->Borrowed() && storage->Generation()==1 && SameStorageTotalMade(storage->totalMade,before));
+    { auto lease=storage->AcquirePrepared();CHECK(storage->Borrowed() && SameStorageTotalMade(storage->totalMade,before)); }CHECK(!storage->Borrowed() && SameStorageTotalMade(storage->totalMade,before));
+}
+
+// Native255 reset/준비 대여 보존과 기존 일반 World의 전체256칸 fresh 준비를 구별한다.
+TEST_CASE(RawSurfaceStorage_TotalMadeGeneralFreshIsSeparateFromNativeReset255) {
+    auto storage=MakeRawSurfaceStorage(netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078).game);{ auto lease=storage->Acquire(); }storage->totalMade.localCounts.fill(11);storage->totalMade.localSecondaryCounts.fill(13);storage->totalMade.globalCounts.fill(17); // 초기 대여 뒤의 명시 현재값 입력이다.
+    ResetTotalMadeCounts(storage->totalMade);CHECK(storage->totalMade.localCounts[254]==0 && storage->totalMade.localSecondaryCounts[254]==0 && storage->totalMade.globalCounts[254]==0 && storage->totalMade.localCounts[255]==11 && storage->totalMade.localSecondaryCounts[255]==13 && storage->totalMade.globalCounts[255]==17);
+    const auto prepared=storage->totalMade;{ auto lease=storage->AcquirePrepared();CHECK(SameStorageTotalMade(storage->totalMade,prepared)); }CHECK(SameStorageTotalMade(storage->totalMade,prepared));
+    auto world=StorageWorld(storage);const RawTotalMadeStorage fresh;CHECK(SameStorageTotalMade(storage->totalMade,fresh) && world->Core().bookkeeping.GlobalCounts().data()==storage->totalMade.globalCounts.data());
+    auto independent=MakeRawSurfaceStorage(netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078).game);CHECK(independent->totalMade.localCounts.data()!=storage->totalMade.localCounts.data() && independent->totalMade.localSecondaryCounts.data()!=storage->totalMade.localSecondaryCounts.data() && independent->totalMade.globalCounts.data()!=storage->totalMade.globalCounts.data()); // 서로 다른 Client 물리는 alias하지 않는다.
+}
+
+// 같은 장기 표를 빌리는 다음 World도 새 ownerFactories에 현재 Player9를 다시 연결할 수 있다.
+TEST_CASE(RawSurfaceStorage_TotalMadeSharingLeavesPlayerFactoryBindingsWorldLocal) {
+    auto storage=MakeRawSurfaceStorage(netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078).game);ClientPlayerRecords records; // Player는 두 World가 끝날 때까지 살아 있는 별도 실제 소유자다.
+    for (std::uint32_t pass=0;pass<2;++pass) { // 이전 World 반납 뒤만 Player 실제 재할당과 다음9개 바인딩을 수행한다.
+        auto players=records.Acquire();players->Initialize([](std::uint32_t,std::uint32_t) {}); // 이 검사의 비선택 동맹 장치이며 Player/factory 물리는 기존 Native 부모가 만든다.
+        auto world=pass ? std::make_unique<RawSurfaceWorld>(storage->pool.Edition(),storage->types,storage->frames,storage->shapes,StorageLinks(),97,nullptr,storage,true) : StorageWorld(storage);const auto core=world->Core();
+        for (std::uint32_t owner=0;owner<9;++owner) { // 매 World의 목록은 새 바인딩을 받아 같은 현재 Player+0/+4/+8을 직접 읽는다.
+            auto& list=core.bookkeeping.ownerFactories[owner];CHECK(!list.current.storage && list.entries.empty() && list.count==0);players->BindFactory(list,owner);CHECK(list.Count()==0 && list.Capacity()==30 && netstorm::test::rawscene::Get(records.Records(),owner*180+8)==0);
+            const auto value=0x12340000U+owner;list.Append(value);CHECK(list.Count()==1 && list.Storage()[0]==value && list.Items().size()==1 && netstorm::test::rawscene::Get(records.Records(),owner*180+8)==1); // 공개 현재Player BYTE와 실제Append store로 바인딩을 확인한다.
+        }
+        CHECK(core.bookkeeping.GlobalCounts().data()==storage->totalMade.globalCounts.data() && core.bookkeeping.GlobalCounts()[84]==(pass ? 77U : 0U));core.bookkeeping.GlobalCounts()[84]=77;world.reset();CHECK(!storage->Borrowed() && storage->totalMade.globalCounts[84]==77);
+    }
 }

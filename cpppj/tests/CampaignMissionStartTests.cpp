@@ -683,10 +683,10 @@ TEST_CASE(CampaignMissionTechnology_ActualSessionRestrictions) {
     for (std::size_t index=0;index<names.size();++index) {
         ConfigInterface config([&](std::string_view path) { return assets.files.TryRead(path); });ConfigureStart(config);MissionScript script(config,names[index]);
         StartExternal external;auto fort=FortTemplate::Parse(assets.files.Read(script.FortPath()),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),script.FortName(),external.Services());session.Load();
-        const auto before=session.Core().bookkeeping;ApplyMissionTechnology(script,assets.game.TypeTable(),session.TotalMade());const auto& types=assets.game.TypeTable();
+        const auto& before=session.Core().bookkeeping;const auto beforeLocal=before.LocalCounts(),beforeSecondary=before.LocalSecondaryCounts(),beforeGlobal=before.GlobalCounts();ApplyMissionTechnology(script,assets.game.TypeTable(),session.TotalMade());const auto& types=assets.game.TypeTable(); // 세 표는 포인터가 아닌 독립 배열값으로 복사해 공유 저장소의 숨은 변경을 검출한다.
         CHECK(session.TotalMade().Allowed(types.Find("windVortex")));
         CHECK(session.TotalMade().Allowed(types.Find("dais"))==(index!=0));CHECK(session.TotalMade().Allowed(types.Find("rainCannon"))==(index==2));
         CHECK(session.TotalMade().Allowed(types.Find("sunArcher"))==(index!=0));
-        const auto& after=session.Core().bookkeeping;CHECK(after.localCounts==before.localCounts && after.localSecondaryCounts==before.localSecondaryCounts && after.globalCounts==before.globalCounts);
+        const auto& after=session.Core().bookkeeping;CHECK(after.LocalCounts()==beforeLocal && after.LocalSecondaryCounts()==beforeSecondary && after.GlobalCounts()==beforeGlobal);
     }
 }

@@ -42,6 +42,12 @@ struct SquidPostPopList {
     // 활성 항목만 읽으며 손상된 count는 거부한다.
     std::span<const std::uint32_t> Items() const;
 };
+// Totalmade의 실제 세256DWORD만 보관한다. 목록·현재 소유자·로딩/삭제 정책과 수명을 분리한다.
+struct RawTotalMadeStorage {
+    std::array<std::uint32_t,256> localCounts{}; //005c94d0의 현재 로컬 수이며 최초 BSS0이다.
+    std::array<std::uint32_t,256> localSecondaryCounts{}; //005c98d0의 누적 로컬 생산 수이며 일반 삭제에서 줄지 않는다.
+    std::array<std::uint32_t,256> globalCounts{}; //005c9cd0의 현재 전역 수이며 모든 타입의256번째 물리 칸도 보관한다.
+};
 // 객체 후처리 Pop 처리 중 조회·갱신하는 상태 묶음이다.
 struct SquidPostPopState {
     // suppressed: 표시·등록 후처리를 억제할지.
@@ -52,12 +58,19 @@ struct SquidPostPopState {
     std::array<bool,kPlayerCount+1> aiAttached{}; // AI 부착 경로는 아직 복원하지 않았다.
     std::int32_t totalCost{}; // 전역 비용 집계. Player의 현재 SP 차감과 구별한다.
     std::uint32_t productionDirty{},depth{}; // 공급/작업장 재계산 알림과 Activate/postPop 깊이.
-    std::array<std::uint32_t,256> localCounts{},localSecondaryCounts{},globalCounts{}; // Totalmade의 로컬 두 표·전역 한 표. 모두 타입 번호로 접근한다.
+    std::array<std::uint32_t,256> localCounts{},localSecondaryCounts{},globalCounts{}; // 독립 장부의 기존 값형 세 표다. 공유 World의 현재 물리는 아래 getter로만 접근한다.
     // providers: 공급원.
     // factories: 팩토리.
     SquidPostPopList providers,factories;
     // ownerFactories: 소유자 팩토리.
     std::array<SquidPostPopList,kPlayerCount+1> ownerFactories;
+    RawTotalMadeStorage* sharedTotalMade{}; // 실제 World만 장기 세 표를 빌린다. 독립 장부는 위 기존 값형 배열을 계속 소유한다.
+    std::array<std::uint32_t,256>& LocalCounts() noexcept { return sharedTotalMade ? sharedTotalMade->localCounts : localCounts; } // 같은 현재 로컬 표를 직접 읽고 쓰며 사본 동기화를 하지 않는다.
+    const std::array<std::uint32_t,256>& LocalCounts() const noexcept { return sharedTotalMade ? sharedTotalMade->localCounts : localCounts; } // const 조회도 같은 선택된 물리를 반환한다.
+    std::array<std::uint32_t,256>& LocalSecondaryCounts() noexcept { return sharedTotalMade ? sharedTotalMade->localSecondaryCounts : localSecondaryCounts; } // Pop/Totalmade의 같은 누적 생산 표를 빌린다.
+    const std::array<std::uint32_t,256>& LocalSecondaryCounts() const noexcept { return sharedTotalMade ? sharedTotalMade->localSecondaryCounts : localSecondaryCounts; } // getter의 genus 합산도 같은 현재 누적 표를 읽는다.
+    std::array<std::uint32_t,256>& GlobalCounts() noexcept { return sharedTotalMade ? sharedTotalMade->globalCounts : globalCounts; } // 같은 전역 현재 수를 Pop/삭제/조회에 전달한다.
+    const std::array<std::uint32_t,256>& GlobalCounts() const noexcept { return sharedTotalMade ? sharedTotalMade->globalCounts : globalCounts; } // 수명 보존 검사는 이 실제 물리의 값을 별도로 복사한다.
 };
 // Pop 이후 타입별 등록 목록과 표면 연결 상태를 갱신하는 처리기이다.
 class SquidPostPop {

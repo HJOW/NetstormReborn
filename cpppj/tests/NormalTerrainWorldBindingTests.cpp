@@ -159,7 +159,7 @@ TEST_CASE(NormalTerrainWorldBinding_ActualNormalGenerationAndFarmRetype) {
             if (raw[10]==kNormalFarm) { CHECK(Get(raw,26,edition==OriginalEdition::Patch1078 ? 4 : 2)==73);++farmCount; }
             else CHECK(raw[10]==kNormalIsle);
         }
-        CHECK(farmCount>0 && core.bookkeeping.globalCounts[kNormalIsle]==static_cast<std::uint32_t>(total));
+        CHECK(farmCount>0 && core.bookkeeping.GlobalCounts()[kNormalIsle]==static_cast<std::uint32_t>(total));
         CHECK(core.bookkeeping.depth==0 && scene.pipelineState.placement.forcePlacement==0);
         scene.world->FinishLoad();CHECK(scene.islands->Owner(0)==2 && scene.islands->Owner(1)==3);
     }
@@ -185,7 +185,7 @@ TEST_CASE(NormalTerrainWorldBinding_ActualFarmCreateOwnerHpAndGameRandom) {
         CHECK(scene.random.State()==expected.State() && local.State()==77 && scene.crt==previousCrt);
         CHECK(Get(raw,edition==OriginalEdition::Patch1078 ? 36 : 34,edition==OriginalEdition::Patch1078 ? 4 : 1)==expectedFrame);
         CHECK(raw[edition==OriginalEdition::Patch1078 ? 34 : 32]==2 && Get(raw,26,edition==OriginalEdition::Patch1078 ? 4 : 2)==73);
-        CHECK(core.bookkeeping.globalCounts[kNormalFarm]==1 && core.bookkeeping.totalCost==0 && core.bookkeeping.depth==0);
+        CHECK(core.bookkeeping.GlobalCounts()[kNormalFarm]==1 && core.bookkeeping.totalCost==0 && core.bookkeeping.depth==0);
         CHECK(scene.diagnostics==0 && &scene.pipeline->Pool()==&core.pool);scene.world->FinishLoad();
     }
 }

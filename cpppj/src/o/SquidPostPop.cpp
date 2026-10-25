@@ -382,8 +382,8 @@ void SquidPostPop::PostPopBase(Sid sid,std::uint32_t flags) {
         if (aiNotice_) aiNotice_(pool_.Slot(sid)[34],sid,true); // 원본의 생산 목록 뒤·통계 앞에 현재 owner로004166e0을 호출한다.
         const auto current=pool_.Slot(sid);const auto currentType=current[10];if (currentType>=types_.size()) throw std::out_of_range("AI 생성 통지 뒤 현재 TYPE 범위");
         // 통지의 실제 하위가 바꾼 현재 owner/type을 다시 읽는다. 소유자0도 로컬 번호0과 비교한다.
-        if (current[patch ? 34 : 32]==state_.localOwner) { ++state_.localCounts[currentType];++state_.localSecondaryCounts[currentType]; }
-        ++state_.globalCounts[currentType];
+        if (current[patch ? 34 : 32]==state_.localOwner) { ++state_.LocalCounts()[currentType];++state_.LocalSecondaryCounts()[currentType]; }
+        ++state_.GlobalCounts()[currentType];
     }
     --state_.depth;
 }

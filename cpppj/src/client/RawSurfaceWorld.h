@@ -38,8 +38,8 @@ public:
     RawSurfaceStorage(o::OriginalEdition edition,std::span<const o::RiftTypeRecord> inputTypes,std::span<const o::RiftTypeFrames> inputFrames,std::span<const o::SquidDisplayShape> inputShapes,const GameAssets* source=nullptr); // 배열은 최초 한 번만 확보한다.
     RawSurfaceStorage(const RawSurfaceStorage&)=delete;RawSurfaceStorage& operator=(const RawSurfaceStorage&)=delete; // 현재 모든 실행기가 빌리는 실제 물리를 복제하지 않는다.
     RawSurfaceStorage(RawSurfaceStorage&&)=delete;RawSurfaceStorage& operator=(RawSurfaceStorage&&)=delete; // Graph/Pool/공간 참조가 남은 객체의 주소를 이동하지 않는다.
-    std::unique_ptr<Use> Acquire(); // 기존 Pool/해시/spot 및 fresh 지역 Graph의 일반 설치 의미를 같은 물리에서 유지하며 TYPE 수정은 보존한다.
-    std::unique_ptr<Use> AcquirePrepared(); // 명시 Native 정리/prefix 뒤 같은 Pool/Hash/spot/Graph/모드/종류를 재초기화하지 않고 대여한다.
+    std::unique_ptr<Use> Acquire(); // 기존 Pool/해시/spot 및 fresh Graph/집계3표의 일반 설치 의미를 같은 물리에서 유지하며 TYPE 수정은 보존한다.
+    std::unique_ptr<Use> AcquirePrepared(); // 명시 Native 정리/prefix 뒤 같은 Pool/Hash/spot/Graph/집계3표/모드/종류를 재초기화하지 않고 대여한다.
     bool Borrowed() const; // 현재 실제 월드가 물리를 빌렸는지 읽는다.
     std::uint64_t Generation() const; // 성공한 월드 대여 횟수이며 원본 게임 값으로 쓰지 않는다.
     const GameAssets* Source() const; // Client 자산 정체성이다. 독립 raw 검사에서는 nullptr이다.
@@ -48,6 +48,7 @@ public:
     std::vector<std::vector<o::FrameCode>> codes; // Graph의 동일 프레임 코드 배열이다.
     o::SidPool pool;o::SquidHash hash;std::vector<std::uint8_t> spots; // Reset(0)은 기존 SID 바이트/공간 배열의 주소를 유지한다.
     o::RawGraphStorage graph; // 기록255행과 flood4096DWORD만 장기 보유한다. 실행기/TYPE snapshot/복구 정책은 World 지역이다.
+    o::RawTotalMadeStorage totalMade; // 현재 로컬/누적 로컬/전역256DWORD만 장기 보유하며 ownerFactories/로딩 정책은 World 지역이다.
     o::SquidOwnerMode ownerMode; // 미니맵과 현재 월드가 같은 실제 세 모드 값을 읽는다.
     o::BridgeConnectState links; // 생산 UI와 현재 월드가 같은 실제 표면 종류 전역을 읽는다.
 private:

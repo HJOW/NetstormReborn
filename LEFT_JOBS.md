@@ -1,5 +1,15 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-25 단위433 완료: TotalMade 세 집계 표의 실제 장기 물리
+
+- [x] 이전432는 **bd9ea8d3 / 20261025-27 CP**로 신규15 포함 집중68개·실패0/17소스·4실행 파일/보호1821 감사를 마쳤다. 현재/마지막 전체 정밀 PC는 **HJOW-Athlon / 2026-10-23**이다. 시작 트리는 깨끗했고 같은 보호 기준을 `extracted/cpp-totalmade-storage-433-baseline.json`에 고정했다.
+- [x] 준비본15파일의 원본/기준/준비 SHA와 patch SHA를 확인해 hunk를 적용했고 의미상 전체 본문도 같음을 확인했다. HEAD의 파일별 줄바꿈을 유지한 **Source1의15소스**로 동결했다. RawSurfaceStorage의 local/누적local/global 각256DWORD만 장기화하고 World의 목록/Factory binding/로딩·삭제 정책은 지역에 유지한다. 실제 PostPop·공통 삭제·TotalMade 조회/초기화는 같은 현재 getter를 소비한다.
+- [x] Session 없는 동일 Reset helper는 원문처럼 세 표 앞255칸만 순서대로0을 쓴다. 일반 Acquire의256칸 전체0은 기존 fresh 호환이며 Native 부분 reset과 구별한다. prepared 생성/반납/후반실패는 세 표와 주소를 보존한다. 기존 bound 검사 다섯 파일은 같은 getter와 값형 독립 snapshot으로 이행했으며 기대 숫자/Native fixture는 바꾸지 않았다.
+- [x] **첫 MTT 증분 빌드 종료0·컴파일 경고/오류0, 집중76개·실패0**이다. 신규6검사의 실제 실행을 확인했고 양판본 기존Native104 reset행/실제 Pop·공통삭제 감김·누적보존/장기 수명·prepared 실패·일반 fresh·Player9Factory 재대여와 기존 생성·삭제·지형·실제 Session/Editor를 통과했다. 보호1821/15소스/4실행 파일 SHA가 같다. 게임 SHA는 **fcef55f7…**다. [작업 문서](docs/exe/cpp-totalmade-storage-owner-20261025.md)와 [실행 보고서](cpppj/totalmade-storage-runtime-20261025.json)에 실제 증거를 기록했고 인계 후 **20261025-28 CP**로 로컬 커밋한다. 전체 CTest·긴 플레이는 이번에 반복하지 않았으며 마지막 통합은 **60a5c7de / 2,894검사·메뉴·자연 Early2→Tutorial3**다.
+- [x] 후속주소를보호PE12명령/초기값으로직접확인해 [장기 소유 계획](docs/exe/cpp-state-world-owner-plan-20261025.md)을정정했다. 실제선택Clear는004d5c60이고State7의004978d0은현재렌더러분모00540ce4의선택이다. 원시mouse005cae94/98과hotspot보정0055a2f8/fc는별개다. server/boss최초PE값은둘다1이다. 이정적주소확인을원본실행/해당제품기능완료로세지않는다.
+- [ ] 다음은공통헤더반복빌드를줄이기위해 **434·435의섬/청크/사제data-only소유를한작업묶음**으로적용한다. 원시준비본은 `extracted/cpp-island-chunk-storage-434-prepared/`(12사본/신규9)와 `extracted/cpp-priest-owner-storage-435-prepared/`(13사본/신규7)다. 현재433+432본문에3way로병합한 **21파일/신규16검사**가 `extracted/cpp-world-reset-storages-434435-integration/final/`에만있고아직main미적용/미빌드다. 독립추가충돌의공통base가비었음을확인해양쪽삽입을보존했고기존검사명도모두유지했다. manifest의현재main SHA를재확인한뒤적용한다.
+- [ ] 그뒤436선택데이터·실제Clear,437권한두값,438FullDeck DWORD는각ignored준비본에서작성/검토중이다. 커서Cancel은실제카메라와Prepare가필수여서별도후속으로남긴다. 실제 State1 cleanup/prefix·Edit 편집/저장·전체미션 자연 완주·진행 저장/재실행·완전 동일성은 계속 미완료·활성이다. 원본실행/새디컴파일/push는하지않았다.
+
 ## 2026-10-25 단위432 완료: 실제 연결 활동 수신과 두22DWORD 장기 표 접합
 
 - [x] 이전431은 **60a5c7de / 20261025-26 CP**로 집중94/전체2,894·실패0/메뉴·자연 Early2→Tutorial3 통합과 인계를 마쳤다. 현재/마지막 전체 정밀 PC는 **HJOW-Athlon / 2026-10-23**이다. 시작 트리는 깨끗했고 같은 보호1821파일을 `extracted/cpp-connection-activity-432-baseline.json`에 고정했다.
