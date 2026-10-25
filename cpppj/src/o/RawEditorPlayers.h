@@ -11,7 +11,7 @@ struct EditorPlayersHooks {
     std::function<std::span<std::uint8_t>()> players; //0059534c의현재9×180BYTE Player표다.본문이요청하는시점에같은현재주소를빌린다.
     std::function<std::span<std::uint8_t>()> handle; //00540ca8의현재Client NUL쓰기버퍼다.Player번역뒤조회한다.
     std::function<Sid(std::uint32_t)> technology; //00490250(owner)의실제새Player기술부모SID다.Find/Ensure/CurrentTechnology로대체하지않는다.
-    std::function<std::span<const std::uint8_t>(std::uint32_t,std::span<const std::uint8_t>,std::int32_t)> format; //004b9390(capacity30,번역원문,owner-1)의NUL포함결과다.
+    std::function<std::span<const std::uint8_t>(std::uint32_t,std::span<const std::uint8_t>,std::int32_t)> format; //004b9390(고리예약30,번역원문,owner-1)의NUL포함결과다.30은 출력 절단 한도가 아니다.
     std::function<std::int32_t()> typeCount; //00541348의현재signed개수다.각owner시작/매반복끝에다시읽는다.
     std::function<const RiftTypeRecord&(std::int32_t)> typeAt; //0049a840의현재기록이며반환뒤group/theme를직접읽는다.타입0도포함한다.
     std::function<Sid(Sid,std::uint32_t,std::uint32_t,std::uint32_t,std::uint32_t,std::uint32_t)> createContained; //004afa70(parent,type,0,4,0x10,0)의직접생성이다.반환은무시하며현재Pool주소결합은장치가맡는다.

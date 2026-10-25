@@ -39,6 +39,7 @@ class ClientFortGlobals; // 현재/pending 이름·FileSpec·목록 dirty와 선
 class ClientCoreDataGlobals; //현재Core/active/캐시와 빌린 Player 슬롯을 Client 수명에 소유한다.
 class ClientPlayerRecords; // Player/factory 전체 할당과 로그인 카운터를 Session보다 오래 소유한다.
 class ClientChatManagerGlobals; //현재 Chatmanager와 실제 미초기화 할당들을 Client 수명에 소유한다.
+class ClientStaticStrings; // 원문 공유 임시 고리의 같은 네 DWORD와 실제 할당 수명을 소유한다.
 class ClientDotCommandGlobals; //최초 say와 같은 인접 명령 표를 Session보다 오래 보유한다.
 class RawSurfaceStorage; // 실제 Pool/Hash/TYPE/spot을 모든 Session과 초기 HUD보다 오래 보유한다.
 class ClientGameplayGlobals; // 실제 현재 Player/커서/미션 전역과 짧은 Runtime 연결을 소유한다.
@@ -157,6 +158,7 @@ public:
     const std::shared_ptr<ClientChatWindowGlobals>& ChatWindowGlobals() const; // 같은 실제 Chat 현재/공유 로그 상태를 빌린다.
     const std::shared_ptr<ClientNsInfoGlobals>& NsInfoGlobals() const; // 현재 NSInfo와 서버 이름을 같은 고정 주소에서 빌린다.
     const std::shared_ptr<ClientChatManagerGlobals>& ChatManagerGlobals() const; //실제 manager 소유자를 빌리며 조회로 공통 startup을 실행하지 않는다.
+    const std::shared_ptr<ClientStaticStrings>& StaticStrings() const; // 같은 고리의 실제 수명을 빌리며 조회 자체는 예약/할당하지 않는다.
     const std::shared_ptr<ClientDotCommandGlobals>& DotCommandGlobals() const; //최초 say를 보존하는 같은 장기 등록 표를 빌린다.
     const o::BaseFileSystem& Files() const;
     const GameAssets& Assets() const;
@@ -242,6 +244,7 @@ private:
     std::shared_ptr<ClientChatWindowGlobals> chatWindowGlobals_; // 표시 부모 교체보다 오래 유지하는 공유 상태다.
     std::shared_ptr<ClientNsInfoGlobals> nsInfoGlobals_; // 모든 실제 NSInfo 자식/문자 소비자보다 오래 유지한다.
     std::shared_ptr<ClientChatManagerGlobals> chatManagerGlobals_; //같은 Client의 현재 manager/할당을 보유하며 Session마다 재구성하지 않는다.
+    std::shared_ptr<ClientStaticStrings> staticStrings_; // 메뉴/Session보다 먼저 만들고 그 소비자 뒤에 반납하는 원문 임시 고리다.
     std::shared_ptr<ClientDotCommandGlobals> dotCommandGlobals_; //menu/Session보다 먼저 구성한 실제 인접 표이며 현재 count를 별도로 복제하지 않는다.
     struct ChatState; // 실제 전역 Chat 기록과 현재 subscriber 처리기를 구현 파일의 고정 주소에 소유한다.
     std::unique_ptr<ChatState> chat_; // 메뉴/월드보다 오래 사는 단일100×48바이트이며 미션 수명과 분리한다.

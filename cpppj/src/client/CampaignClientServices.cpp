@@ -8,6 +8,7 @@
 #include "client/ClientAudio.h"
 #include "client/ClientMain.h"
 #include "client/ClientChatRuntime.h"
+#include "client/ClientStaticStrings.h"
 #include "client/RawButtonControls.h"
 #include "client/RawMenuControls.h"
 #include "client/RawChatChannels.h"
@@ -91,6 +92,13 @@ void BindCampaignAiClientServices(Client& client,CampaignAiServices& ai) {
         return std::string(bytes.begin(),bytes.end());
     };
 }
+// 같은 번역 원문은 다음 번역 조회까지 유지하며 서식 결과는 Client 공유 고리에 둔다.
+o::EditorPlayersHooks MakeEditorPlayerClientHooks(Client& client) {
+    o::EditorPlayersHooks hooks;auto translated=std::make_shared<std::vector<std::uint8_t>>(); // 첫 Human 복사가 끝난 뒤에만 다음 번역이 같은 버퍼를 재사용한다.
+    hooks.translate=[&client,translated](auto key)->std::span<const std::uint8_t> { *translated=o::EncodeOriginalText(client.Translate(key));translated->push_back(0);return *translated; };
+    hooks.format=[owner=client.StaticStrings()](auto reservation,auto pattern,auto value) { return owner->FormatInteger(reservation,pattern,value); }; // Source와 output의 별도 Native 수명을 유지한다.
+    return hooks;
+}
 // 원본 time32/번역/설정/음향/입력을 동일 클라이언트의 저장소와 장치에 연결한다.
 RawCampaignSessionServices MakeCampaignClientServices(Client& client,RawButtonControls& controls,CampaignClientUi ui) {
     if (!ui.refreshWindowTitle || !ui.tell || !ui.removeMessage)
@@ -108,6 +116,7 @@ RawCampaignSessionServices MakeCampaignClientServices(Client& client,RawButtonCo
     services.randomGlobals=client.RandomGlobals(); // Session교체/Subscriber/파편/Seed/지형이같은Client의실제CRT를사용한다.
     services.localStateGlobals=client.LocalStateGlobals(); // 메뉴/Editor에서 사용한 같은 State와00544d58 기한을 로그인도 직접 빌린다.
     services.fortTechnologyUi=[&client] { RefreshClientChatRankPrefix(client,client.Assets(),*client.SurfaceStorage()); }; // 같은 실제 Chat/Core/아이콘을 기존 Fort Technology 부모의0042f540 위치에서 갱신한다.
+    services.editorPlayerUi=MakeEditorPlayerClientHooks(client); // 실제 기존 Editor 설치가 요구할 번역/공유 고리 장치다.
     services.templateStateBytes=CurrentAllocationBytes; // 원본이 쓰지 않는 State 바이트를 임의0 대신 현재 호스트 할당 입력에서 받는다.
     // 실제 커서 비용과 같은 Gump 트리/게임 시계에 Cast/Drop 금액 표시를 붙인다.
     services.carrierDropPopup=[&controls](std::int32_t cost,std::int32_t x,std::int32_t y,std::uint32_t reference) { auto* menus=controls.Menus();if (!menus) throw std::logic_error("Cast/Drop 비용표시 실제Gump미설치");menus->ShowSp(cost,x,y,reference); };

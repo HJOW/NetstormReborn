@@ -22,6 +22,7 @@
 #include "client/ClientHtmlWindowGlobals.h"
 #include "client/ClientChatManagerGlobals.h"
 #include "client/ClientChatRuntime.h"
+#include "client/ClientStaticStrings.h"
 #include "client/ClientDotCommandGlobals.h"
 #include "client/RawSurfaceWorld.h"
 #include "client/UberGump.h"
@@ -190,6 +191,7 @@ Client::Client(ClientOptions options)
       chatWindowGlobals_(std::make_shared<ClientChatWindowGlobals>()),
       nsInfoGlobals_(std::make_shared<ClientNsInfoGlobals>()),
       chatManagerGlobals_(std::make_shared<ClientChatManagerGlobals>()),
+      staticStrings_(std::make_shared<ClientStaticStrings>()),
       dotCommandGlobals_(std::make_shared<ClientDotCommandGlobals>()),
       chat_(std::make_unique<ChatState>(*this,options_.edition)) {
     files_.RegisterArchive(options_.gameDirectory / "netstorm.tarc");
@@ -218,6 +220,7 @@ Client::~Client() {
 
 // 원본 WinMain. 옮기지 않은 단계는 원본 순서의 자리에 주석으로 남긴다.
 int Client::Run() {
+    if (options_.edition==o::OriginalEdition::Patch1078) staticStrings_->Initialize(10240); // 보호PE00438fe0의 실제0x2800→004b92b0이며 첫 경로/설정 해석보다 앞선다.
     // [원본] CreateMutexA("TitanicNetStormMutex"): 먼저 뜬 실행인지 기록한다(네트워크용). 원본 게임과 같이 띄울 때
     //        서로 영향을 주지 않도록 아직 만들지 않는다.
     // [원본] 명령줄이 "window"면 전체화면 설정을 무시한다 → options_.forceWindow.
@@ -938,6 +941,7 @@ const std::shared_ptr<ClientChatWindowGlobals>& Client::ChatWindowGlobals() cons
 const std::shared_ptr<ClientNsInfoGlobals>& Client::NsInfoGlobals() const { return nsInfoGlobals_; }
 //현재 manager와 실제 할당의 한 소유자를 반환하며 공통 초기화 시점을 앞당기지 않는다.
 const std::shared_ptr<ClientChatManagerGlobals>& Client::ChatManagerGlobals() const { return chatManagerGlobals_; }
+const std::shared_ptr<ClientStaticStrings>& Client::StaticStrings() const { return staticStrings_; } // 같은 실제 고리의 소유자를 조회한다.
 //초기 say와 이후 등록을 보존한 같은 표를 반환하며 Session 해제 때 다시 초기화하지 않는다.
 const std::shared_ptr<ClientDotCommandGlobals>& Client::DotCommandGlobals() const { return dotCommandGlobals_; }
 // 파일 시스템.

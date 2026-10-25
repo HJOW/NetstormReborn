@@ -1,5 +1,17 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-25 단위421 완료: 실제 Editor 플레이어 번역과 원문 임시 문자열 수명
+
+- [x] 이전420은 **01db03a2 / 20261025-14 CP**로 실제 Chat 시작/랭크 장치·전체2821검사·34개 초기 진입과 자연 Early2를 마친 진척이다. AGENTS/양 인계를 재독했으며 현재/마지막 전체 정밀 디컴파일 PC는 **HJOW-Athlon / 2026-10-23**으로 같다. 보호1821파일 기준은 `extracted/cpp-editor-player-ui-421-baseline.json`이다.
+- [x] 기존 Editor 설치에서 맵 마지막 처리0046e980은 같은 실제 Pool/Finder/표면/Unpop/Release/Graph에 이미 연결돼 있다. 다음 번역/서식을 연결해 checkpoint 전체 복귀와 실제 저장·재로드를 검증한다. 공통 State 정리/Core 선택 순서와 최종 HUD/loaded는 계속 필수다.
+- [x] 원문004b9390의30은 snprintf 한도가 아니라 공유 임시 고리의 예약 폭이다. 실제 공통 시작00438fe0의 **10240BYTE(0x2800)**와 lazy8192를 구별해 RawStaticStrings/ClientStaticStrings·실제 Client 시작 및 EditorPlayers 번역/서식을 연결했다. D5/wrap/같은 주소 생략/부분 효과의 제품 전 원문204관측(정상198/중단4/fault2)을 고정했다. 초기 oracle1/2의 함수 끝 범위 오류는 실제43BYTE 끝 RET로 교정했고 로그를 보존했다.
+- [x] 빌드1/2 종료0·컴파일 경고/오류0이며 집중 **21/0(고유21)**이 통과했다. 기존 맵 checkpoint 전체 정상 복귀·일곱 Computer 기술 생성/이름·실제 snapshot/State 저장 뒤 별도 Session 재설치와 보호 TEST01 원문 그대로의 작업 복사본 설치/저장이 통과했다. loaded는 여전히 최종 외곽이 완료하기 전 공개하지 않는다. 제품 **d57c5616…**/검사 **ace8a2a6…**,16소스/두 실행 파일을 고정했다.
+- [x] 같은 제품의 실제 메뉴/안내/F4·목록/Back와 일반31개 초기 진입이 통과했다. 초기 메뉴부터 실제10240/current=base+1/last0를 읽었고 안내/HUD 이미지도 확인했다. 전체 사용자 완주/Editor GUI 설치의 증거로 확대하지 않는다.
+- [x] 실제 Demo 메뉴3개와 Edit 선택/취소도 같은 제품에서 통과했다. 마지막 캠페인/데모 이미지를 확인했다. 각 묶음의 설정은 원래 바이트로 복원됐다.
+- [x] 자연 Early2는 같은 제품에서 **195.76초·종료0**으로 A~I/생산·회수·환불75/SP3075→같은 프레임 Tutorial3 Guide4가 통과했다. 실제 고리10240·현재 HUD를 유지했고 다음 안내 이미지도 확인했다. 상태 주입0·제품타이머1·기존 완료값 보존이며 새 진행0→1/디스크 진행 저장의 증거는 아니다. 모든 GUI 종료 뒤 보호1821파일/설정과 고정16소스/두 실행 파일이 기준과 같았다.
+- [x] 전체 CTest **2827/0·312.55초**가 통과했다. 최종 보호1821파일·원본/CD 파일명 목록과 고정16소스/두 실행 파일은 기준과 같다. 실제 checkpoint 저장 파일을 원시 보존하고 [단위421 보고서](cpppj/editor-player-ui-runtime-20261025.json)에 최초 probe 실패·원문204·실제 입력/제품/저장본 검증 근거를 기록한다. [작업 문서](docs/exe/cpp-editor-player-ui-20261025.md) 갱신 뒤 **20261025-15 CP**로 로컬 커밋한다. 실제 원본 게임/전체 재디컴파일은 실행하지 않았으며 마지막 전체 정밀 디컴파일은 HJOW-Athlon/2026-10-23이다.
+- [ ] 다음은 Native State1 정리004b2df0/Core0 선택·캐시 보존→Player 재할당/모드 prefix와 Login 장기 current/cache/active 접합, checkpoint 뒤 실제 HUD/팔레트/State 확정/다음Poll4/loaded 및 편집 입력/저장 UI 연결이다. 내부 checkpoint 정상 복귀를 실제 Editor 메뉴 최종 설치 완료로 확대하지 않는다. 전체 Early/캠페인/Demo 사용자 완주·승패·완전 동일성도 남으며 `/goal`은 활성 상태다.
+
 ## 2026-10-25 단위420 완료: 실제 Chat 시작과 Fort 랭크 갱신 연결
 
 - [x] 이전419는 **f4493776 / 20261025-13 CP**로 실제 이름/작업 파일·공유 dirty 연결과 전체2814검사를 마친 진척이다. AGENTS/양 인계를 재독했으며 현재/마지막 전체 정밀 디컴파일 PC는 **HJOW-Athlon / 2026-10-23**으로 같다. 보호1821파일의 새 기준은 `extracted/cpp-chat-runtime-420-baseline.json`이다.

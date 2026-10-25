@@ -9,6 +9,7 @@
 #include "client/ClientChatRuntime.h"
 #include "client/ClientChatManagerGlobals.h"
 #include "client/ClientCoreDataGlobals.h"
+#include "client/ClientStaticStrings.h"
 #include "client/FortCurrentNameDevices.h"
 #include "client/FortSelection.h"
 #include "client/EditorFortFileDevices.h"
@@ -177,4 +178,31 @@ TEST_CASE(CampaignExistingEditorCheckpoint_ActualChatRuntimeAdvancesWorldAndSnap
     RawCampaignSession session(assets.game,assets.files,FortTemplate::Parse(input,assets.game.TypeTable()),"deferred.fort",std::move(services));bool stopped{};try { session.InstallExistingEditorCheckpoint(effects,client.ReadOnlyForts(),work); }catch (const CheckpointStop& error) { stopped=std::string_view(error.what())=="actual-editor-player-translation-required"; }
     if (!(stopped && devices.chatCalls==1 && devices.camera==1 && devices.production==5 && session.CurrentTechnologyParent()!=0)) std::fprintf(stderr,"Actual Chat checkpoint stopped=%u chat=%u camera=%u production=%u technology=%u\n",stopped?1U:0U,devices.chatCalls,devices.camera,devices.production,session.CurrentTechnologyParent()); // 실제 하위 통지까지 포함한 부분 효과가 다른 경우 진단한다.
     CHECK(stopped && devices.chatCalls==1 && devices.camera==1 && devices.production==5 && session.CurrentTechnologyParent()!=0);CHECK(!(storage->State(session.TemplateOwner()).bytes[0]&1U) && ReadFileBytes(path)!=input && !session.ExistingEditorCheckpointReady());CHECK(CheckpointRejects<std::logic_error>([&] { session.SnapshotFort(1); })); // 이 입력의 전체 World/저장 하위도 같은 생산 장치에 통지하므로 외곽 직접 호출1회와 총횟수5를 구별한다.
+}
+
+// 실제 번역/공유 고리와 전체 게임 후처리를 사용해 checkpoint 정상 복귀와 별도 Session의 저장본 재설치를 확인한다.
+TEST_CASE(CampaignExistingEditorCheckpoint_ActualPlayerUiCompletesAndReloads) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);auto input=CheckpointInput(assets.files);ClientOptions options;options.gameDirectory=assets.root;Client client(std::move(options));client.StaticStrings()->Initialize(10240);InitializeClientChatManager(client);
+    EditorFiles work(CheckpointRoot(assets.root.parent_path(),"player-ui-roundtrip"),{assets.root,assets.root.parent_path()/"originalCD"});const auto path=work.Prepare("Checkpoint385",input);const auto shared=client.StaticStrings();std::size_t previous{};
+    for (std::uint32_t pass=0;pass<2;++pass) { // 첫 정상 저장의 실제 디스크 바이트를 별도 두 번째 Session 입력으로 다시 읽는다.
+        input=ReadFileBytes(path);CheckpointDevices devices;auto storage=std::make_shared<CampaignTemplateStorage>();auto effects=devices.Effects(client,work);auto services=devices.Make(client,storage,input);const auto surface=MakeRawSurfaceStorage(assets.game);
+        services.surfaceStorage=surface;services.gameplayGlobals=client.GameplayGlobals();services.subscriberGlobals=client.SubscriberGlobals();services.playerRecords=client.PlayerRecords();services.editorPlayerUi=MakeEditorPlayerClientHooks(client);services.fortTechnologyUi=[&] { ++devices.chatCalls;RefreshClientChatRankPrefix(client,assets.game,*surface); }; // 같은 실제 Client 장치를 공급하고 게임 child는 Session의 본체를 사용한다.
+        RawCampaignSession session(assets.game,assets.files,FortTemplate::Parse(input,assets.game.TypeTable()),"deferred.fort",std::move(services));session.InstallExistingEditorCheckpoint(effects,client.ReadOnlyForts(),work);
+        CHECK(session.ExistingEditorCheckpointReady() && session.CurrentHandle()=="Player" && session.CurrentSubscriber()==7 && devices.chatCalls==1 && devices.camera==1);const auto players=session.PlayerRecords();
+        for (std::uint32_t owner=1;owner<9;++owner) { // 같은 실제 Player 이름과 기술 부모를 읽어 새 EditorPlayers 설치 결과를 확인한다.
+            const auto bytes=players.subspan(owner*180+12);const auto end=std::find(bytes.begin(),bytes.end(),std::uint8_t{});CHECK(end!=bytes.end());const std::string name(reinterpret_cast<const char*>(bytes.data()),static_cast<std::size_t>(end-bytes.begin()));CHECK(name==(owner==1?"Human Player":"Computer #"+std::to_string(owner-1)));
+            std::uint32_t parent{};for (std::uint32_t byte=0;byte<4;++byte) parent|=std::uint32_t(players[owner*180+0x9c+byte])<<(8*byte);CHECK(parent!=0); // 슬롯별 실제 생성 부모이며 미리 계산한 가짜SID가 아니다.
+        }
+        CHECK(!(storage->State(session.TemplateOwner()).bytes[0]&1U) && client.StaticStrings()==shared && shared->Globals().size==10240);const auto position=shared->Globals().current-shared->Globals().base;CHECK(position>previous);previous=position;
+        const auto saved=ReadFileBytes(path);const auto restored=FortTemplate::Parse(saved,assets.game.TypeTable());CHECK(!restored.Section("State").empty() && !(restored.Section("State")[0]&1U));CHECK(CheckpointRejects<std::logic_error>([&] { session.SnapshotFort(1); })); // checkpoint 정상 복귀는 최종 HUD/State/loaded 공개와 구별한다.
+    }
+}
+
+// 보호 커스텀 TEST01의 바이트는 편집하지 않고 별도 작업 namespace에서 같은 실제 설치/저장을 실행한다.
+TEST_CASE(CampaignExistingEditorCheckpoint_ActualCustomTest01PlayerUiAndFile) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);const auto input=assets.files.Read("d/TEST01.fort");ClientOptions options;options.gameDirectory=assets.root;Client client(std::move(options));client.StaticStrings()->Initialize(10240);InitializeClientChatManager(client);
+    EditorFiles work(CheckpointRoot(assets.root.parent_path(),"custom-test01-player-ui"),{assets.root,assets.root.parent_path()/"originalCD"});CheckpointDevices devices;devices.current=devices.pending="CustomTest01421";const auto path=work.Prepare(devices.current,input);const auto effects=devices.Effects(client,work);auto storage=std::make_shared<CampaignTemplateStorage>();auto services=devices.Make(client,storage,input);const auto surface=MakeRawSurfaceStorage(assets.game);
+    services.surfaceStorage=surface;services.gameplayGlobals=client.GameplayGlobals();services.subscriberGlobals=client.SubscriberGlobals();services.playerRecords=client.PlayerRecords();services.editorPlayerUi=MakeEditorPlayerClientHooks(client);services.fortTechnologyUi=[&] { ++devices.chatCalls;RefreshClientChatRankPrefix(client,assets.game,*surface); };
+    RawCampaignSession session(assets.game,assets.files,FortTemplate::Parse(input,assets.game.TypeTable()),"deferred.fort",std::move(services));session.InstallExistingEditorCheckpoint(effects,client.ReadOnlyForts(),work);
+    CHECK(session.ExistingEditorCheckpointReady() && session.CurrentHandle()=="Player" && session.CurrentSubscriber()!=0 && devices.chatCalls==1 && session.IslandCount()>0);const auto saved=ReadFileBytes(path);const auto result=FortTemplate::Parse(saved,assets.game.TypeTable());CHECK(!result.Section("State").empty() && !(result.Section("State")[0]&1U));CHECK(CheckpointRejects<std::logic_error>([&] { session.SnapshotFort(1); })); // 실제 커스텀 checkpoint가 끝나도 최종 loaded는 이 부모 밖이다.
 }

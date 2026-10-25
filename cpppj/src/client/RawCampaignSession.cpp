@@ -3248,6 +3248,7 @@ bool RawCampaignSession::ExistingEditorCheckpointReady() const { return impl_->e
 // 원본004904b0의게임효과는같은현재Player와직접ContainedCreate로교체한다.
 void RawCampaignSession::InstallExistingEditorPlayers(EditorPlayersHooks ui) {
     auto& s=*impl_;if (s.services.installMode!=CampaignInstallMode::ExistingEditor || !s.editorWorldReady || (s.services.deferExistingEditorFile && !s.editorCheckpointRunning)) throw std::logic_error("기존Editor실제World전Player초기화");
+    if (!ui.translate) ui.translate=s.services.editorPlayerUi.translate;if (!ui.format) ui.format=s.services.editorPlayerUi.format; // 실제 Client 장치가 없는 독립 호출은 기존 도달 위치의 필수 관문을 유지한다.
     ui.players=[&s]()->std::span<std::uint8_t> { return s.players; };ui.handle=[&s]()->std::span<std::uint8_t> { return s.handle; };
     ui.technology=[&s](auto owner) { return s.player->Create(std::bit_cast<std::int32_t>(owner)); }; //CurrentTechnology/Find/Ensure로대체하지않는다.
     ui.typeCount=[&s] { return static_cast<std::int32_t>(s.core.types.size()); };ui.typeAt=[&s](auto type)->const RiftTypeRecord& { return s.core.types[static_cast<std::size_t>(type)]; };

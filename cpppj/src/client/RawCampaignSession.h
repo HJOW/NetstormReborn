@@ -177,6 +177,7 @@ struct RawCampaignSessionServices {
     std::shared_ptr<FortTypeConversionStorage> fortTypeConversion; // Objects/Technology/Deck이 같은 현재 토큰과 할당을 빌린다.
     std::optional<o::FortMissionSaveHooks> fortMission; // Guide-only가 아닌 현재 실제 Runtime getter/진단이다. write는 각 Snapshot이 같은 새 stream에 연결한다.
     std::function<void()> fortTechnologyUi; //0042f540의현재Chatmanager/CoreData관문과랭크prefix갱신이다.생산refresh나입력접두로대체하지않는다.
+    o::EditorPlayersHooks editorPlayerUi; // 같은 실제 Client 번역/임시 고리의 기본 장치다. 명시 설치 효과가 제공한 장치는 그대로 우선한다.
     std::function<void(std::string_view)> factoryTell; //Factory 입력의 같은004cf960 안내 섹션을 실제 현재Tell에연결한다.
     std::function<void(std::string_view,std::uint32_t)> factoryHelp; //researchHelp의실제전용도움말창/모드1이다.
     o::DamageablePreDestroyHooks damageablePre; // 붕괴/폭발/음향의 실제 장치/효과 경계다. 해방/공통 삭제는 Session이 공급한다.
