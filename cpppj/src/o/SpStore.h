@@ -4,6 +4,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <functional>
+#include <span>
 #include <vector>
 
 namespace netstorm::o {
@@ -32,6 +33,7 @@ public:
     static constexpr std::size_t kBits=32,kOwners=9;
     // reseed는 시각에서 새 난수 상태를 만드는 004559d0의 결과를 주입한다. fill은 초기화되지 않은 힙의 내용이다.
     ScrambledSpStore(GameRandom& rng,std::function<std::uint32_t()> reseed,std::uint32_t fill=0);
+    ScrambledSpStore(GameRandom& rng,std::function<std::uint32_t()> reseed,std::function<void(std::span<std::uint8_t>)> allocation); // 실제32개 operator_new(36)의 입력을 순서대로 제공한다. 부분 실패를 전체 초기화로 발행하지 않는다.
     // 실제 첫 배열 포인터/외부 추적 상태의 주소를 빌리므로 저장소의 복사/이동을 금지한다.
     ScrambledSpStore(const ScrambledSpStore&)=delete;
     ScrambledSpStore& operator=(const ScrambledSpStore&)=delete;
@@ -58,6 +60,7 @@ public:
     const std::uint32_t& OffsetCurrent() const;
     // 실제0054d4e0 소유자의 안정 참조다. 미연결은 임의 초기값 대신 오류다.
     const std::int32_t& TrackingOffsetCurrent() const;
+    std::int32_t& TrackingOffsetCurrent(); // 실제 사제 회복이 같은 장기0054d4e0을 직접 갱신하는 쓰기 참조다.
     // 초기화 전 NULL이며 이후 같은 실제 pools_.data()를 가리키는 첫 분산배열 주소의 안정 참조다.
     const std::uint32_t* const& FirstPoolCurrent() const;
     // SP 읽기/쓰기/회전이 공유하는00531890의 실제32개 WORD 배열이다.
@@ -71,6 +74,7 @@ private:
     std::function<std::uint32_t()> reseed_;
     // fill_: 초기화 전 힙 내용을 재현할 DWORD 채움값.
     std::uint32_t fill_{};
+    std::function<void(std::span<std::uint8_t>)> allocation_; // 실제 Client만 각36BYTE의 현재 할당 입력을 제공하며 기존 독립 fill 입력은 별도다.
     // initialized_: 초기화가 완료되어 저장소를 사용할 수 있는지.
     bool initialized_{};
     // offset_: 각 플레이어의 SP 비트를 저장한 위치의 회전 기준값.

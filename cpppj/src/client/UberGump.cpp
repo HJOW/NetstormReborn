@@ -62,6 +62,7 @@
 #include "client/ClientDotCommandGlobals.h"
 #include "client/ClientStaticStrings.h"
 #include "client/ClientPlayerRecords.h"
+#include "client/ClientSpGlobals.h"
 #include <algorithm>
 #include <sstream>
 #include <stdexcept>
@@ -1195,6 +1196,7 @@ std::string UberGump::Report() const {
     const auto temporary=client_.StaticStrings()->Globals();out<<"static_strings\t"<<temporary.size<<'\t'<<temporary.base<<'\t'<<temporary.current<<'\t'<<temporary.last<<'\n'; // 같은 실제 공통 시작/예약 수명을 읽기만 하며 새 할당하지 않는다.
     const auto playerCore=client_.CoreDataGlobals();const auto players=client_.PlayerRecords()->Records();const auto current=reinterpret_cast<std::uintptr_t>(playerCore->Current().data()),base=reinterpret_cast<std::uintptr_t>(players.data()); // 다른 할당의 포인터 뺄셈을 하지 않고 실제 소유 범위를 읽는다.
     out<<"player_core\t"<<client_.PlayerRecords()->Base()<<'\t'<<client_.PlayerRecords()->Initialized()<<'\t'<<playerCore->Players().size()<<'\t'<<playerCore->Current().size()<<'\t'<<(current && current>=base && current-base<players.size()?std::to_string(current-base):"none")<<'\t'<<(world_ && world_->Session().PlayerCoreGlobals()==playerCore)<<'\n'; // 관측이 선택/캐시/초기화를 실행하지 않는다.
+    const auto& sp=client_.SpGlobals()->Store();out<<"sp_globals\t"<<sp.Initialized()<<'\t'<<(sp.FirstPoolCurrent()!=nullptr)<<'\t'<<sp.Pools().size()<<'\t'<<sp.Offset()<<'\t'<<sp.TrackingOffsetCurrent()<<'\t'<<sp.Permutation().front()<<'\t'<<client_.RandomGlobals()->Game().State()<<'\t'<<(world_ && &world_->Session().SpStore()==&sp)<<'\n'; // 실제 현재 저장소/추적/난수와 같은 Session 여부를 읽기만 하며 SP.Get의 lazy 관문을 호출하지 않는다.
     out<<"fort_catalog\t"<<mapCatalog_->Cached().count<<'\t'<<mapCatalog_->Cached().dirty<<'\t'<<client_.Configuration().GetInt("mayEditMissions")<<'\t'<<mapFileSpec_.Current()<<'\n'; // 실제50칸캐시와현재원문설정/키를읽고목록을다시열거하지않는다.
     out<<"current_dialog\t"<<rawButtons_->CurrentDialog()<<'\n'; // Guide4c8e90과 같은 실제565dd4다.
     out << "thunder_processes\t" << client_.ThunderFlashCount() << '\n';

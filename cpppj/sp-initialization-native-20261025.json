@@ -1,0 +1,26 @@
+{
+  "observations": 48,
+  "normal": 12,
+  "stopped": 36,
+  "precisionDifferences": 0,
+  "actualEntries": [
+    "0040eba0",
+    "004558c0"
+  ],
+  "boundaries": [
+    "operator_new 36BYTE",
+    "reseed input"
+  ],
+  "gameExecuted": false,
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "hashes": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "extracted/reward/originals/functions.tsv": "23e31f31576cea3ac9c95749a60da6efd12811bc5c7847dec12bf6b67df0b10f",
+    "tools/decomp_reward_oracle.py": "ca25b2b1befd0f4626759c17dde1af5eb080e86e4137f7a2b384d97f25a7a143",
+    "tools/decomp_sp_initialization.py": "ce6b6cd9e62b87cd139625b68d7c316fb4b37c2f5c300e4edeb9d364e92d550c",
+    "cpppj/tests/fixtures/sp-initialization-x86.tsv": "2476ee2150c5fb73799a488e85b63f68770e395032b94d7401830f58dc80e9d6"
+  }
+}

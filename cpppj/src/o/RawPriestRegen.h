@@ -27,9 +27,11 @@ struct PriestRegenSpReads {
     std::function<std::int32_t()> observedSequence; // 중립 효과 뒤 현재 00568af8의 signed DWORD를 읽는다.
     std::function<const std::uint32_t*()> firstPool; // 측정 뒤 현재 00594fd0의 실제 첫 배열 주소를 읽는다.
     std::function<std::int16_t()> firstPermutation; // 첫 배열 검사와 별개로 현재 00531890의 signed WORD를 읽는다.
+    std::function<std::int32_t&()> trackingSequence; // 실제 Client는 같은0054d4e0을 직접 읽고 쓴다. 생략한 독립 fixture만 patch.sequence를 사용한다.
 };
 // store가 빌린 추적 주소는 patch.sequence여야 한다. 두 객체는 반환 조회기보다 오래 살아야 한다.
 PriestRegenSpReads BindPriestRegenSpStore(const ScrambledSpStore& store,const PriestRegenPatchState& patch);
+PriestRegenSpReads BindPriestRegenSpStore(ScrambledSpStore& store); // 공통 시작에서 이미 연결한 장기 추적 DWORD를 빌린다. Session 지역 sequence로 재연결하지 않는다.
 // 사제 회복 외부 동작과 저장소 조회를 연결하는 콜백 묶음이다.
 struct PriestRegenHooks {
     std::function<void(Sid)> refresh; // 회복을 시도한 뒤 vtable +0x88을 부른다. HP가 거부되어도 호출한다.

@@ -30,6 +30,11 @@ PriestRegenSpReads BindPriestRegenSpStore(const ScrambledSpStore& store,const Pr
         [&store] { return store.Permutation().front(); }
     };
 }
+// 초기화가 끝난 같은 저장소와 같은 추적 DWORD의 주소를 직접 빌리며 프레임별 값 복사를 만들지 않는다.
+PriestRegenSpReads BindPriestRegenSpStore(ScrambledSpStore& store) {
+    static_cast<void>(store.TrackingOffsetCurrent());
+    return {[&store] { return std::bit_cast<std::int32_t>(store.OffsetCurrent()); },[&store] { return store.FirstPoolCurrent(); },[&store] { return store.Permutation().front(); },[&store]()->std::int32_t& { return store.TrackingOffsetCurrent(); }};
+}
 // 미복원 효과를 빠뜨린 연결과 서로 다른 풀을 실행 전에 거부한다.
 RawPriestRegen::RawPriestRegen(SidPool& pool,const SquidReward& hp,const RawPriestState& priest,
     const PriestHitPointMode& mode,PriestHitPointHooks space,GameRandom& random,PriestRegenState& state,PriestRegenHooks hooks)
@@ -52,8 +57,9 @@ float RawPriestRegen::Handle(Sid sid,std::uint32_t event,std::uint32_t count,flo
         throw std::invalid_argument("사제 회복 타입/가상 표 오류");
     if (patch) {
         state_.patch.sample=random_.Next(9);
-        state_.patch.sequence=Add(state_.patch.sequence,3);
-        if (state_.patch.sequence>kSequenceLimit) state_.patch.sequence=Add(state_.patch.sequence,-kSequenceLimit);
+        auto& sequence=hooks_.spReads && hooks_.spReads->trackingSequence ? hooks_.spReads->trackingSequence() : state_.patch.sequence; // 실제 사제/통지/SP가 공유하는 현재 추적 DWORD다.
+        sequence=Add(sequence,3);
+        if (sequence>kSequenceLimit) sequence=Add(sequence,-kSequenceLimit);
     }
     if (current<hp_.MaxHitPoints(sid)) {
         const auto candidate=Add(priest_.CurrentHitPoints(sid),hp_.TypeHitPoints(kPriestType)/6);
@@ -73,7 +79,8 @@ float RawPriestRegen::Handle(Sid sid,std::uint32_t event,std::uint32_t count,flo
     if (patch) {
         auto& tracking=state_.patch;
         const auto observed=hooks_.spReads ? hooks_.spReads->observedSequence() : tracking.observedSequence;
-        if (observed!=tracking.sequence) tracking.changedSample=tracking.sample;
+        const auto sequence=hooks_.spReads && hooks_.spReads->trackingSequence ? hooks_.spReads->trackingSequence() : tracking.sequence; // 중립/외부 효과 뒤 같은 현재 추적 전역을 다시 읽는다.
+        if (observed!=sequence) tracking.changedSample=tracking.sample;
         if (tracking.remaining!=0) {
             if (hooks_.measurement()>kMeasurementLimit) tracking.changedSample=tracking.sample;
             --tracking.remaining;

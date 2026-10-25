@@ -56,6 +56,7 @@ class CampaignTemplateStorage; // Client보다 짧은 Session이 빌리는 같�
 class EditorFiles; // 실제 작업본 파일 장치이며 연결한 Session보다 오래 살아야 한다.
 class FortTypeConversionStorage; // 같은 Client의 현재 conversion DWORD와 실제 할당 소유자다.
 class ClientRandomGlobals; // 실제 Client의 CRT 상태와 Subscriber ID 최초시드 DWORD를 함께 빌린다.
+class ClientSpGlobals; // 공통 시작에서 초기화한 같은 SP/추적 offset을 모든 실제 Session이 직접 빌린다.
 class ClientSubscriberGlobals; // 실제 Client의 my/login 두 Subscriber DWORD만 빌린다.
 class ClientPlayerRecords; // 실제 Player/factory와 로그인 카운터를 Client 수명에 보관한다.
 class ClientCoreDataGlobals; // 현재 Core/active/cache를 같은 Client 수명에서 빌린다.
@@ -205,6 +206,7 @@ struct RawCampaignSessionServices {
     std::shared_ptr<ClientColorSortInput> colorSortInput; // 실제 Client가 최초 고정 lookup 입력을 수명째 빌린다. 독립 장치 없는 기존 검사만 두 색 서비스 모두 생략한다.
     std::function<std::span<const ScreenColor>()> screenPalette; // 연결 시점의 현재 화면 팔레트를 빌리며 Screen 교체 전 주소를 캐시하지 않는다.
     std::shared_ptr<ClientRandomGlobals> randomGlobals; // 생략된 독립 검사만 기존Session CRT0을 사용하고 실제Client는 같은장기소유자를 전달한다.
+    std::shared_ptr<ClientSpGlobals> spGlobals; // 실제 Client는 같은 초기화 완료 SP를 제공한다. 독립 Session만 기존 지역 SP 초기화를 유지한다.
     std::shared_ptr<ClientSubscriberGlobals> subscriberGlobals; // 생략된 독립 검사만 기존 0/0 및 Begin 값 복사를 유지한다.
     std::shared_ptr<ClientPlayerRecords> playerRecords; // 미연결 독립 Session만 자체 실제 할당 소유자를 만든다.
     std::shared_ptr<ClientCoreDataGlobals> coreDataGlobals; // 실제 Client는 Login/Chat과 같은 현재 Core 슬롯·캐시·active를 사용한다.

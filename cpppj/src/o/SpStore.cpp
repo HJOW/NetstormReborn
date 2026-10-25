@@ -28,6 +28,9 @@ void GameRandom::SetState(std::uint32_t state) { state_=state; }
 
 ScrambledSpStore::ScrambledSpStore(GameRandom& rng,std::function<std::uint32_t()> reseed,std::uint32_t fill)
     :rng_(rng),reseed_(std::move(reseed)),fill_(fill) {}
+// 명시 공급자는 실제 할당 BYTE만 제공하며 SP/순열/난수를 계산하지 않는다.
+ScrambledSpStore::ScrambledSpStore(GameRandom& rng,std::function<std::uint32_t()> reseed,std::function<void(std::span<std::uint8_t>)> allocation)
+    :rng_(rng),reseed_(std::move(reseed)),allocation_(std::move(allocation)) { if (!allocation_) throw std::invalid_argument("SP 실제 할당 입력 누락"); }
 // 원본 초기화의 두 offset 쓰기가 같은 기존 추적 전역에 도달하도록 주소만 빌린다.
 void ScrambledSpStore::BindTrackingOffset(std::int32_t& tracking) {
     if (initialized_ || (trackingOffset_ && trackingOffset_!=&tracking)) throw std::logic_error("SP 추적 offset의 늦은 연결/다른 소유자 오류");
@@ -50,8 +53,12 @@ void ScrambledSpStore::Initialize() {
     for (std::size_t index=0;index<kBits;++index) std::swap(permutation_[index],permutation_[rng_.Next(kBitLimit)]);
     // 원본은 교환 결과를 저장에 쓰기 전에 다시 항등 순열로 덮어쓴다.
     for (std::size_t index=0;index<kBits;++index) permutation_[index]=static_cast<std::int16_t>(index);
-    pools_.fill(fill_);
-    firstPool_=pools_.data();
+    for (std::size_t index=0;index<kBits;++index) { // 각 원문 할당 정상 복귀 뒤에만 같은 현재 행을 발행하며 뒤의 실패가 앞선 행을 되돌리지 않는다.
+        std::array<std::uint32_t,kOwners> input; // operator_new가 반환할36BYTE 입력이며 미반환 입력은 현재 포인터의 행을 덮지 않는다.
+        if (allocation_) allocation_({reinterpret_cast<std::uint8_t*>(input.data()),sizeof(input)});else input.fill(fill_);
+        for (std::size_t owner=0;owner<kOwners;++owner) pools_[index*kOwners+owner]=input[owner]; // 정상 반환한 같은9DWORD를 원문 포인터 행의 물리 표현에 보관한다.
+        if (index==0) firstPool_=pools_.data(); // 첫 할당 직후의 실제 비NULL 관문이며 전체 초기화 완료보다 앞선다.
+    }
     initialized_=true;
 }
 // 0040ec50: 배열 k의 (offset+k)&31번째 비트가 값의 k번째 비트다.
@@ -98,6 +105,7 @@ const std::uint32_t& ScrambledSpStore::OffsetCurrent() const { return offset_; }
 const std::int32_t& ScrambledSpStore::TrackingOffsetCurrent() const {
     if (!trackingOffset_) throw std::logic_error("SP 추적 offset의 실제 소유자 연결 누락");return *trackingOffset_;
 }
+std::int32_t& ScrambledSpStore::TrackingOffsetCurrent() { if (!trackingOffset_) throw std::logic_error("SP 추적 offset의 실제 소유자 연결 누락");return *trackingOffset_; } // 같은 주소를 사제의 원문 쓰기에도 빌린다.
 const std::uint32_t* const& ScrambledSpStore::FirstPoolCurrent() const { return firstPool_; }
 const std::array<std::int16_t,ScrambledSpStore::kBits>& ScrambledSpStore::Permutation() const { return permutation_; }
 }

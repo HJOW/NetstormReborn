@@ -108,6 +108,7 @@
 #include "o/RawSquidLevel.h"
 #include "o/RawPlayerCoreData.h"
 #include "client/ClientCoreDataGlobals.h"
+#include "client/ClientSpGlobals.h"
 #include "o/RawPlayerCoreRefresh.h"
 #include "o/RawSquidSelection.h"
 #include "o/RawCarrierRegular.h"
@@ -348,7 +349,7 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RegularProcess> builderPendingRegular; // 원본 new28 성공부터 같은 Host 부착까지의 실제 예약 객체다.
     GameRandom localRandom; //소유자없는기존독립Session만종전최초0입력을유지한다.
     GameRandom& random{services.randomGlobals ? services.randomGlobals->Game() : localRandom}; //모든기존SP/객체/지형/AI/저장이같은실제Client객체를직접빌린다.
-    ScrambledSpStore sp; // 같은 게임 난수를 사용하는 실제 패치 SP 저장소다.
+    std::unique_ptr<ScrambledSpStore> localSp;ScrambledSpStore& sp; // 실제 Client는 공통 시작의 같은 저장소를 빌리며 독립 Session만 기존 지역 SP를 소유한다.
     SquidRewardState rewardState; // 실제 HP getter의 장기 전역이다.
     SquidReward hp; // 같은 Pool/TYPE/장부로 최대HP와 실제HP를 읽는다.
     std::unique_ptr<RawSquidLevel> level; // 실제 base 가상80/84의 Factory 저장 상태를 처리한다.
@@ -741,7 +742,8 @@ struct RawCampaignSession::Impl {
         playerRecords(input.playerRecords ? input.playerRecords : std::make_shared<ClientPlayerRecords>()),playerUse(playerRecords->Acquire()),
         services(std::move(input)),templateStorage(services.templateStorage ? services.templateStorage : std::make_shared<CampaignTemplateStorage>()),headers(templateStorage->Headers()),assets(game,files),metadata(assets.game),
         world(OriginalEdition::Patch1078,assets.types,assets.frames,metadata.shapes,CampaignLinks(),terrainType,services.processKernel,SessionSurfaceStorage(services,game)),core(world.Core()),
-        sp(random,[this] { return seed.Reseed(); }),hp(core.pool,core.types,core.bookkeeping,rewardState,&sp,SquidRewardHooks{{},services.refreshSp}),
+        localSp(services.spGlobals ? nullptr : std::make_unique<ScrambledSpStore>(random,[this] { return seed.Reseed(); })),
+        sp(services.spGlobals ? services.spGlobals->Store() : *localSp),hp(core.pool,core.types,core.bookkeeping,rewardState,&sp,SquidRewardHooks{{},services.refreshSp}),
         battleOptions(services.missionOptions ? *services.missionOptions : localBattleOptions),
         aiMemory(0x20000000,[this](std::span<std::uint8_t> bytes) {
             if (!services.ai.allocationBytes) throw std::logic_error("실제 Session AI 할당 입력 바이트 미연결");services.ai.allocationBytes(bytes);
@@ -752,6 +754,7 @@ struct RawCampaignSession::Impl {
         restrictions(services.missionRestrictions ? *services.missionRestrictions : localRestrictions),
         start{core.processState,priestState.movement.dude,priestState.movement.teleport,priestState.movement.manaBolt,priestState.movement.priest,geyserType,snap,retrying},process{core.processState} {
         if (services.deferExistingEditorFile && services.installMode!=CampaignInstallMode::ExistingEditor) throw std::invalid_argument("파일지연은명시ExistingEditor전용입니다");
+        if (services.spGlobals && (!services.randomGlobals || services.spGlobals->RandomGlobals()!=services.randomGlobals || !sp.Initialized())) throw std::logic_error("실제 공통 SP 초기화/같은 Client 난수 소유자 계약"); // 현재 SP의 lazy 초기화나 다른 난수로 잘못된 시작 순서를 숨기지 않는다.
         if (services.coreDataGlobals && playerRecords->BoundCoreData()!=coreDataGlobals) throw std::invalid_argument("현재 Core와 Player base의 실제 소유자 불일치");
         if (services.coreDataGlobals && !services.adoptInitializedPlayers) { playerState.playerKnown=0;const std::uint32_t metamap=core.ownerMode.challenge;coreDataGlobals->Select(playerState,metamap,0,1); } // 기존 미션 어댑터의 재할당 앞에서 실제 원문 known0/Core0·캐시 보존을 실행한다. 전체 State 정리 완료로 세지 않는다.
         if (services.adoptInitializedPlayers) playerUse->AdoptCurrent();
@@ -763,7 +766,7 @@ struct RawCampaignSession::Impl {
         });
         players=playerRecords->Records(); // 이후 모든 기존 소비자는 이 대여의 실제 물리만 빌린다.
         if (!services.coreDataGlobals) coreDataGlobals->Players()=players; // 독립 Session만 같은 현재 Player뷰를 소유자에 직접 제공한다.
-        sp.BindTrackingOffset(priestState.regen.patch.sequence);sp.Initialize();
+        if (!services.spGlobals) { sp.BindTrackingOffset(priestState.regen.patch.sequence);sp.Initialize(); } // 독립 Session의 기존 명시 초기화만 보존한다. 실제 Client의 현재 SP/난수/추적 offset은 다시 쓰지 않는다.
         level=std::make_unique<RawSquidLevel>(core.pool,core.types,SessionMissing<void,SquidLevelAssertion>());
         finishState.chaffMode=true;objectState.mission=true;objectState.chaffMode=true;
         playerState.playerKnown=1;assetState.boss=true;assetState.inBattle=true;assetState.localOwner=1;gunState.boss=true;
@@ -844,7 +847,7 @@ struct RawCampaignSession::Impl {
         priestEffects.regen.neutralAction=[this](Sid sid) { RunPriestPanic(sid); };
         // 회전과 뒤의 읽기를 분리하여 중립 동작/측정이 바꾼 현재 SP 전역도 원본 시점에 조회한다.
         priestEffects.regen.patchAudit=[this] { sp.Rotate(); };
-        priestEffects.regen.spReads=BindPriestRegenSpStore(sp,priestState.regen.patch);
+        priestEffects.regen.spReads=services.spGlobals ? BindPriestRegenSpStore(sp) : BindPriestRegenSpStore(sp,priestState.regen.patch); // 실제 사제도 공통 시작의 같은0054d4e0을 직접 갱신한다.
         FillMissing(priestEffects.regen.measurement);
         priestEffects.regen.damageable=[this](Sid sid) { hits->Burning().Refresh(sid); };
         priests=std::make_unique<RawPriestWorldBindings>(RawPriestWorldCore{core.pool,core.hash,core.types,core.frames,core.spots,core.hash.Entries(0),hp,random,core.factory,core.owner,core.ownerMode,core.postPop,core.frame},priestState,std::move(priestEffects));

@@ -9,6 +9,7 @@
 #include "client/ClientMain.h"
 #include "client/ClientChatRuntime.h"
 #include "client/ClientStaticStrings.h"
+#include "client/ClientSpGlobals.h"
 #include "client/RawButtonControls.h"
 #include "client/RawMenuControls.h"
 #include "client/RawChatChannels.h"
@@ -108,6 +109,7 @@ RawCampaignSessionServices MakeCampaignClientServices(Client& client,RawButtonCo
     RawCampaignSessionServices services; // 게임 규칙 경계는 실제 세션의 명시 누락 판정을 유지한다.
     services.subscriberGlobals=client.SubscriberGlobals(); // Init/Chat/모든 Session이 같은 두 DWORD를 수명째 빌린다.
     services.playerRecords=client.PlayerRecords(); // 실제 Player/factory를 Client 수명에 소유하고 Session 대여 중 재할당하지 않는다.
+    services.spGlobals=client.SpGlobals(); // 공통004391ed에서 구성한 같은 SP/추적 전역을 재초기화 없이 빌린다.
     services.coreDataGlobals=client.CoreDataGlobals(); // 원문 Core 선택/캐시·Login 패킷·Chat이 같은 장기 슬롯을 직접 사용한다.
     services.gameplayGlobals=client.GameplayGlobals(); // 초기 HUD와 같은 실제 현재 Player/커서/검색/미션 전역이다.
     services.processKernel=&client.GetKernel(); // 모든 실제 Form/경로/Regular와 번개가 같은 원문 전역 Kernel을 사용한다.
@@ -131,12 +133,7 @@ RawCampaignSessionServices MakeCampaignClientServices(Client& client,RawButtonCo
     };
     services.production.effects.modeAssertion=[] { std::clog<<"생산 재계산 원본 진단: inFortMode || inBattleMode\n"; };
     // 원본 _time32의 지원 범위만 허용한다. 날짜를 DWORD로 감아 다른 난수 시드로 바꾸지 않는다.
-    services.unixSeconds=[] {
-        const auto now=std::time(nullptr); // 실제 시스템의 현재 Unix 초다.
-        if (now<0 || now>std::numeric_limits<std::int32_t>::max())
-            throw std::out_of_range("실제 캠페인 time32 지원 날짜 범위 초과");
-        return static_cast<std::int32_t>(now);
-    };
+    services.unixSeconds=ClientCurrentUnixSeconds; // 공통 시작과 같은 실제 time32 장치를 매 원문 선택 위치에서 호출한다.
     services.subscriber=MakeCampaignSubscriberClientServices(client); //실제Subscriber의같은등록Config/clock/진단을빌린다.정상ID는선택하지않는다.
     auto you=std::make_shared<std::vector<std::uint8_t>>(); // 원본 부모가 NUL까지 복사하는 동안 유지할 번역 바이트다.
     // 번역은 요청 시 다시 조회한다. 설치 사이에 바뀐 언어를 이전 문자열로 고정하지 않는다.

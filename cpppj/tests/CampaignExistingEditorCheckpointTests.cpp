@@ -12,6 +12,7 @@
 #include "client/ClientStaticStrings.h"
 #include "client/ClientPlayerRuntime.h"
 #include "client/ClientPlayerRecords.h"
+#include "client/ClientSpGlobals.h"
 #include "client/FortCurrentNameDevices.h"
 #include "client/FortSelection.h"
 #include "client/EditorFortFileDevices.h"
@@ -211,14 +212,15 @@ TEST_CASE(CampaignExistingEditorCheckpoint_ActualCustomTest01PlayerUiAndFile) {
 
 // 실제 앞선 Native 초기화의 같은 Player를 대여하고 Session 반납 뒤에도 Core0 선택 전까지 이전 데이터가 살아 있음을 확인한다.
 TEST_CASE(CampaignExistingEditorCheckpoint_AdoptsNativePlayersAndPreservesCoreUntilNextCleanup) {
-    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);const auto input=CheckpointInput(assets.files);ClientOptions options;options.gameDirectory=assets.root;Client client(std::move(options));InitializeClientPlayerRecords(client);InitializeClientChatManager(client);client.StaticStrings()->Initialize(10240);const auto core=client.CoreDataGlobals();const std::uint32_t metamap=0;
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);const auto input=CheckpointInput(assets.files);ClientOptions options;options.gameDirectory=assets.root;Client client(std::move(options));client.SpGlobals()->Store().Initialize();InitializeClientPlayerRecords(client);InitializeClientChatManager(client);client.StaticStrings()->Initialize(10240);const auto core=client.CoreDataGlobals();const std::uint32_t metamap=0;auto& sharedSp=client.SpGlobals()->Store();
     EditorFiles work(CheckpointRoot(assets.root.parent_path(),"adopt-core-lifetime"),{assets.root,assets.root.parent_path()/"originalCD"});work.Prepare("Checkpoint385",input);
     for (std::uint32_t pass=0;pass<2;++pass) { // 앞선 Core0/실제 재할당은 Native 호출 위치에서만 수행한다.
         if (pass) { core->Select(client.GameplayGlobals()->player,metamap,0,1);CHECK(core->Cached()[4]==71 && core->Active()==0);InitializeClientPlayerRecords(client); }
-        const auto base=client.PlayerRecords()->Base();
+        const auto base=client.PlayerRecords()->Base();const auto spBefore=sharedSp.Pools();const auto offset=sharedSp.Offset();const auto tracking=sharedSp.TrackingOffsetCurrent(); // Native 공통 초기화 뒤의 현재 저장소는 Session ctor에서 다시 초기화하지 않는다.
         { CheckpointDevices devices;auto storage=std::make_shared<CampaignTemplateStorage>();auto effects=devices.Effects(client,work);auto services=devices.Make(client,storage,ReadFileBytes(work.ResolvePath("d/Checkpoint385.fort")));const auto surface=MakeRawSurfaceStorage(assets.game);
           services.surfaceStorage=surface;services.gameplayGlobals=client.GameplayGlobals();services.subscriberGlobals=client.SubscriberGlobals();services.playerRecords=client.PlayerRecords();services.coreDataGlobals=core;services.adoptInitializedPlayers=true;services.editorPlayerUi=MakeEditorPlayerClientHooks(client);services.fortTechnologyUi=[&] { RefreshClientChatRankPrefix(client,assets.game,*surface); };
-          RawCampaignSession session(assets.game,assets.files,FortTemplate::Parse(input,assets.game.TypeTable()),"deferred.fort",std::move(services));CHECK(client.PlayerRecords()->Base()==base && session.PlayerCoreGlobals()==core && core->Current().data()==session.PlayerRecords().data()+180+0x6c);session.InstallExistingEditorCheckpoint(effects,client.ReadOnlyForts(),work);CHECK(session.ExistingEditorCheckpointReady());core->Current()[4]=71;core->Active()=7;
+          services.spGlobals=client.SpGlobals();services.randomGlobals=client.RandomGlobals(); // 실제 checkpoint도 공통 시작과 같은 SP/게임·CRT 난수/추적 DWORD를 빌린다.
+          RawCampaignSession session(assets.game,assets.files,FortTemplate::Parse(input,assets.game.TypeTable()),"deferred.fort",std::move(services));CHECK(&session.SpStore()==&sharedSp && sharedSp.Pools()==spBefore && sharedSp.Offset()==offset && sharedSp.TrackingOffsetCurrent()==tracking);CHECK(client.PlayerRecords()->Base()==base && session.PlayerCoreGlobals()==core && core->Current().data()==session.PlayerRecords().data()+180+0x6c);session.InstallExistingEditorCheckpoint(effects,client.ReadOnlyForts(),work);CHECK(session.ExistingEditorCheckpointReady());core->Current()[4]=71;core->Active()=7;
         }
         CHECK(client.PlayerRecords()->Base()==base && !core->Current().empty() && core->Current()[4]==71 && core->Active()==7); // 소멸자가 임의 Core 선택 해제/캐시 복사를 하지 않는다.
     }

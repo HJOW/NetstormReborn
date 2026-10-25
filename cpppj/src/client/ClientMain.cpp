@@ -10,6 +10,7 @@
 #include "client/RawChatChannels.h"
 #include "client/FortTypeConversionStorage.h"
 #include "client/ClientRandomGlobals.h"
+#include "client/ClientSpGlobals.h"
 #include "client/ClientSubscriberGlobals.h"
 #include "client/ClientColorSortInput.h"
 #include "client/ClientLocalStateGlobals.h"
@@ -182,6 +183,7 @@ Client::Client(ClientOptions options)
       fortTypeConversion_(std::make_shared<FortTypeConversionStorage>()),
       subscriberGlobals_(std::make_shared<ClientSubscriberGlobals>()),
       randomGlobals_(std::make_shared<ClientRandomGlobals>()),
+      spGlobals_(std::make_shared<ClientSpGlobals>(randomGlobals_,ClientCurrentUnixSeconds)),
       colorSortInput_(std::make_shared<ClientColorSortInput>()),
       localStateGlobals_(std::make_shared<ClientLocalStateGlobals>()),
       fortGlobals_(std::make_shared<ClientFortGlobals>()),
@@ -259,6 +261,7 @@ int Client::Run() {
     window_ = window;
     RECT windowRect{}, clientRect{};
     GetWindowRect(window, &windowRect);
+    if (options_.edition==o::OriginalEdition::Patch1078) spGlobals_->Store().Initialize(); //004391ed의 실제 공통 SP 초기화이며 옵션/화면/구름/Session보다 먼저 같은 장기 SP를 구성한다.
     GetClientRect(window, &clientRect);
     // 클라이언트 영역이 화면 크기가 되는 창 크기.
     windowWidth_ = ((clientRect.left - clientRect.right) - windowRect.left) + windowRect.right + screenWidth_;
@@ -929,6 +932,7 @@ const std::shared_ptr<ClientColorSortInput>& Client::ColorSortInput() const { re
 // 같은 Client 두 DWORD owner를 수명째 빌리며 새 객체/캐시를 만들지 않는다.
 const std::shared_ptr<ClientSubscriberGlobals>& Client::SubscriberGlobals() const { return subscriberGlobals_; }
 const std::shared_ptr<ClientRandomGlobals>& Client::RandomGlobals() const { return randomGlobals_; }
+const std::shared_ptr<ClientSpGlobals>& Client::SpGlobals() const { return spGlobals_; } // 같은 실제 저장소를 빌리며 초기화/할당/재시드는 하지 않는다.
 // 큰 메뉴/로컬 로그인 분배기가 같은 실제144BYTE 다섯 블록과 기한을 빌린다.
 const std::shared_ptr<ClientLocalStateGlobals>& Client::LocalStateGlobals() const { return localStateGlobals_; }
 const std::shared_ptr<ClientFortGlobals>& Client::FortGlobals() const { return fortGlobals_; } // 같은 실제 이름/목록의 주소를 유지한다.

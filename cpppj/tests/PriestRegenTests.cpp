@@ -204,6 +204,13 @@ TEST_CASE(priest_regen_reads_current_store_after_neutral_effect) {
     CHECK(scene.store.Get(1)==std::bit_cast<std::uint32_t>(1234.5F));
     CHECK(&scene.store.TrackingOffsetCurrent()==&scene.state.patch.sequence);
 }
+// 공통 시작의 같은 추적 DWORD를 실제 회복/회전이 직접 갱신하고 Session 지역 사본을 쓰지 않는지 확인한다.
+TEST_CASE(priest_regen_uses_shared_startup_tracking_without_session_copy) {
+    RegenScene scene(OriginalEdition::Patch1078);auto row=Fixture().front();row[1]="200";row[2]="0";row[3]="200";row[4]="1";row[5]="1";row[6]="0";row[10]="0";row[11]="0";row[12]="0";row[18]="19";row[19]="0";row[20]="0";row[21]="-1";row[23]="-";scene.Prepare(row);
+    std::int32_t sharedTracking{};scene.store.BindTrackingOffset(sharedTracking);scene.store.Initialize();scene.state.patch.sequence=-300;scene.store.Set(1,std::bit_cast<std::uint32_t>(1234.5F));auto hooks=scene.Hooks();hooks.patchAudit=[&] { scene.store.Rotate(); };hooks.spReads=BindPriestRegenSpStore(scene.store);
+    RawPriestRegen regen(scene.pool,*scene.hp,*scene.priest,scene.mode,scene.Space(),scene.random,scene.state,std::move(hooks));const auto previous=sharedTracking;regen.Handle(kSource,kPriestRegenEvent,0,8.25F);
+    CHECK(sharedTracking==previous+3 && scene.store.Offset()==static_cast<std::uint32_t>(sharedTracking) && scene.state.patch.sequence==-300 && scene.state.patch.changedSample==19);CHECK(scene.store.Get(1)==std::bit_cast<std::uint32_t>(1234.5F)); // 실제 추적 DWORD와 SP만 함께 회전하고 독립 fixture 필드는 건드리지 않는다.
+}
 // 원본의 observed→측정→첫 포인터→signed WORD 읽기 순서와 측정 안의 lazy 초기화를 확인한다.
 TEST_CASE(priest_regen_reads_store_after_measurement_in_original_order) {
     RegenScene scene(OriginalEdition::Patch1078);auto row=Fixture().front();
