@@ -14,7 +14,7 @@ template<class Function> const Function& Need(const Function& function) { // 선
 }
 }
 EditorLocalTransport::EditorLocalTransport(std::span<const std::uint8_t> players,const bool& server,o::PacketDispatchHooks hooks)
-    :hooks_(std::move(hooks)),dispatcher_(players,server,WrappedHooks()) {
+    :hooks_(std::move(hooks)),players_(players),dispatcher_(players_,server,WrappedHooks()) {
     Need(hooks_.now);Need(hooks_.record);Need(hooks_.terminate);Need(hooks_.close);Need(hooks_.release);
 }
 o::PacketDispatchHooks EditorLocalTransport::WrappedHooks() {
@@ -129,6 +129,7 @@ void EditorLocalTransport::CloseListener() { //listener가상소멸도실제장�
     if (!listenerAlive_) return;listener_.flags|=kClosed;Need(hooks_.close)(listener_);Need(hooks_.release)(listener_);listenerAlive_=false;
 }
 o::RawPacketDispatch& EditorLocalTransport::Dispatch() { return dispatcher_.Dispatch(); } //기존등록/observer/version표의같은소유자다.
+std::span<const std::uint8_t> EditorLocalTransport::Players() const { return players_; } // 같은 물리 주소/폭만 반환하며 초기화/복사/폴링을 수행하지 않는다.
 o::PacketConnection& EditorLocalTransport::Listener() { return listener_; } //client/accepted끝과다른실제listener의고정주소다.
 o::PacketConnection& EditorLocalTransport::Client() { return client_; } //연결저장소주소는전체Editor전송수명동안고정된다.
 o::PacketConnection& EditorLocalTransport::Pending() { return pending_; } //음수sender를임의localPlayer로바꾸지않는다.

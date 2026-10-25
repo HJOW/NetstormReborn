@@ -15,6 +15,7 @@ public:
     void Disconnect(std::int32_t destination); // 현재 끝에 종료를 기록하고 가상 처리 중이면 실제 최외곽 복귀까지 반납을 미룬다.
     void CloseListener(); // 새 accepted를 만들던 listener만 실제close/release로반납한다. 양끝을 대신 종료하지 않는다.
     o::RawPacketDispatch& Dispatch(); // 건설/이동/파괴의 실제 기존 처리기를 같은 표에 등록한다.
+    std::span<const std::uint8_t> Players() const; // 연결이 빌리는 같은 Player9 물리의 정체성을 Session 대여 전에 확인한다.
     o::PacketConnection& Listener(); // 원문listener의별도초기시각/소멸장치를현재수명과연결한다.
     o::PacketConnection& Client(); // 등록9의 고정 연결 저장소다. 반납 뒤 조회는 상태 관측용이며 송신 권한은 아니다.
     o::PacketConnection& Pending(); // 수락된 음수-1의 고정 저장소다. 로그인 owner로 재배치하지 않는다.
@@ -40,6 +41,7 @@ private:
     void Retire(o::PacketConnection& connection); // depth0인 선택된 끝의 실제 close→release만 실행한다.
     bool Alive(const o::PacketConnection& connection) const; // 같은 고정 두 연결의 현재 존재를 읽는다.
     o::PacketDispatchHooks hooks_; // 상위가 제공한 실제 시계/기록/종료/반납 장치이며 이 객체보다 오래 살아야 한다.
+    std::span<const std::uint8_t> players_; // Session과 같은 실제 Player9인지 확인할 읽기 뷰이며 사본을 만들지 않는다.
     zacket::LocalMissionTransport dispatcher_; // Open/Login/자체 큐를 사용하지 않고 기존 DispatchFrame/등록표만 재사용한다.
     o::PacketConnection listener_,client_,pending_; // 원문 listener와 별개 client9/accepted-1의 실제 필드 저장소다.
     std::vector<std::uint8_t> clientReceive_,pendingReceive_; //현재수신원문을각끝이보유하며004df9f0은헤더+1/+2만덮고+0을보존한다.

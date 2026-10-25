@@ -1,0 +1,386 @@
+{
+  "unit": 428,
+  "goalComplete": false,
+  "state": "same-product-focused-and-batch-validated-editor-menu-prefix-still-pending",
+  "host": "HJOW-Athlon",
+  "ip": "192.168.0.94",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "startingHead": "4c7ff020e3878ff4f64957957ae7b7672a0c7f4e",
+  "builds": [
+    {
+      "attempt": 1,
+      "exitCode": 1,
+      "diagnostics": [
+        "error C3861",
+        "error C3861"
+      ],
+      "log": "extracted/cpp-editor-session-transport-428-build1.log",
+      "sha256": "958860e1e2c522a4ece404011ba614de88416ae61a986eb4cfd9539f28b0d314"
+    },
+    {
+      "attempt": 2,
+      "exitCode": 0,
+      "diagnostics": [],
+      "log": "extracted/cpp-editor-session-transport-428-build2.log",
+      "sha256": "59f8ed5a9dcce55ffea100c7de08227e3b1b80eb88cbe5641f2bfe91a0ea35ac"
+    },
+    {
+      "attempt": 3,
+      "exitCode": 0,
+      "diagnostics": [],
+      "log": "extracted/cpp-editor-session-transport-428-build3.log",
+      "sha256": "6318dfe51d9a0b51bdff7088c544b431425e0419bfe501426b8eba112efc5598"
+    }
+  ],
+  "sourceVersionDifferences": [
+    [
+      "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp"
+    ],
+    [
+      "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp"
+    ]
+  ],
+  "sources": {
+    "cpppj/src/client/EditorLocalTransport.cpp": "5a11fea50f0c78388e0e1c583d71853896b67cf89ac78d0ce421145c262af0c2",
+    "cpppj/src/client/EditorLocalTransport.h": "d86cd9ac16f03e123c24958c29f263e962cbca1cc8478fcdcac7655a1f75b860",
+    "cpppj/src/client/RawCampaignSession.cpp": "65937326e46aa76cc0a5211ff02860e09a1d20cbb419083002291c859f941b01",
+    "cpppj/src/client/RawCampaignSession.h": "92c0542b328434ada1edb90d1da3d93ac6370f0ae3b67c0293feb28e57590af0",
+    "cpppj/src/o/RawConstructionCommand.cpp": "528068bf1d6011a115e44a45021f5be98ca14a06ce776c3f690c0d266733ace8",
+    "cpppj/src/o/RawConstructionCommand.h": "79807900a8ae069c07e8d0757fce5c6d912d6102b993349138dfa384d96eec40",
+    "cpppj/src/o/RawConstructionPlace.cpp": "ef802e74410a71e884c7e0cc313979137918f4d918b30f68c28ea4b0ed1093e2",
+    "cpppj/src/o/RawConstructionPlace.h": "7a0c895716cf988418936e5dc1a4243cf65450274ae8070afbbc56961b0bc112",
+    "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp": "3a44e7b863671bd26fa44ef259b3bd3b7dd0427d5c9a4500f73625623e6300e0",
+    "cpppj/tests/ConstructionCommandTests.cpp": "71a92f7ac929fb9bf88dd923faa3006392612373578c7113faa94af7aa8500bd",
+    "cpppj/tests/ConstructionPlaceTests.cpp": "4c506183057ad974db3de455cdae1a44c536a7f118f6652fe1a541dd1b765c6a"
+  },
+  "artifacts": {
+    "cpppj/build/bin/Release/NetstormCpp.exe": "59d41097db94850b4c38e98860c365374416809c8af4f24dfdcf69eaa3f821ac",
+    "cpppj/build/bin/Release/netstorm_tests.exe": "60294f8995506f07c6e77002622ff74dd64b8488d783960e49137d3405b85f9f",
+    "cpppj/build/bin/Release/netstorm_cloud_probe.exe": "283a0bbbe48a9650e5c7ab3484fea849f66aff7c9081fe48557b3ddd8f536f03",
+    "cpppj/build/bin/Release/netstorm_cloud_render_probe.exe": "143abac2a0bc726637ca44367ff821e4bdd08e90e6ed8cf697b74f459158773d"
+  },
+  "firstFocusedFailure": [
+    {
+      "filter": "CampaignExistingEditorCheckpoint",
+      "exitCode": 1,
+      "tests": 23,
+      "failures": 2,
+      "log": "extracted/cpp-editor-session-transport-428-focused1/CampaignExistingEditorCheckpoint.log",
+      "sha256": "76f8dbebd07eeeadeba245e73e76135234e71248fddf55dc8011a5faa50fe147"
+    }
+  ],
+  "otherFocusedBeforeCorrection": [
+    {
+      "filter": "ExistingEditorAfterCheckpoint",
+      "exitCode": 0,
+      "tests": 4,
+      "failures": 0,
+      "log": "extracted/cpp-editor-session-transport-428-other-focused1/ExistingEditorAfterCheckpoint.log",
+      "sha256": "1f0850a035f57ceab693dfd688c1575f06b08e4257a1c92f2c8e71f1578c7ffa"
+    },
+    {
+      "filter": "EditorLocalTransport",
+      "exitCode": 0,
+      "tests": 10,
+      "failures": 0,
+      "log": "extracted/cpp-editor-session-transport-428-other-focused1/EditorLocalTransport.log",
+      "sha256": "9328c73ff2d0b93a4b3a26cca738b56e85907a0ea9d7d91fd3dcd2aee997301c"
+    },
+    {
+      "filter": "LocalMissionTransport",
+      "exitCode": 0,
+      "tests": 4,
+      "failures": 0,
+      "log": "extracted/cpp-editor-session-transport-428-other-focused1/LocalMissionTransport.log",
+      "sha256": "7dc638e76e21f620f0c23757047fc7c6387dce376d1419d417174e2aacf9fd2d"
+    },
+    {
+      "filter": "ConstructionCommand",
+      "exitCode": 0,
+      "tests": 7,
+      "failures": 0,
+      "log": "extracted/cpp-editor-session-transport-428-other-focused1/ConstructionCommand.log",
+      "sha256": "2b4d47a69e4baa263ef4c681dc8a121e9710260eea1f5afd47c3972e14462d18"
+    },
+    {
+      "filter": "ConstructionPlace",
+      "exitCode": 0,
+      "tests": 7,
+      "failures": 0,
+      "log": "extracted/cpp-editor-session-transport-428-other-focused1/ConstructionPlace.log",
+      "sha256": "acb94b3f13e645d91f692b561c1f108636945466d308af24fcdcf12a4e36ebbe"
+    },
+    {
+      "filter": "CampaignSession_Construction",
+      "exitCode": 0,
+      "tests": 9,
+      "failures": 0,
+      "log": "extracted/cpp-editor-session-transport-428-other-focused1/CampaignSession_Construction.log",
+      "sha256": "3dd19eca6fbb6e4a64e6d242b31471afbcdf017f2e33346f3d410781aed46e2c"
+    },
+    {
+      "filter": "CampaignSession_ActualLoginUsesClientCurrentCoreSlot",
+      "exitCode": 0,
+      "tests": 1,
+      "failures": 0,
+      "log": "extracted/cpp-editor-session-transport-428-other-focused1/CampaignSession_ActualLoginUsesClientCurrentCoreSlot.log",
+      "sha256": "2d3b7edbcb477a0ec7455254f3076d55aebd5b01a63eabd7e176ce19f37a3930"
+    },
+    {
+      "filter": "CampaignSession_ActualClientPlayerOwnerAcrossSessions",
+      "exitCode": 0,
+      "tests": 1,
+      "failures": 0,
+      "log": "extracted/cpp-editor-session-transport-428-other-focused1/CampaignSession_ActualClientPlayerOwnerAcrossSessions.log",
+      "sha256": "9fa13fe7ea12bc559d7daf278d5ee76824de845550fc38f96edf96fc520af651"
+    }
+  ],
+  "focused": [
+    {
+      "filter": "CampaignExistingEditorCheckpoint",
+      "exitCode": 0,
+      "tests": 23,
+      "failures": 0,
+      "log": "extracted/cpp-editor-session-transport-428-focused2/CampaignExistingEditorCheckpoint.log",
+      "sha256": "8de0c270c9c4a28d6a12397ef8ce8e206c04e2b01b33f2d036eeb6f714f5214d"
+    },
+    {
+      "filter": "ExistingEditorAfterCheckpoint",
+      "exitCode": 0,
+      "tests": 4,
+      "failures": 0,
+      "log": "extracted/cpp-editor-session-transport-428-focused2/ExistingEditorAfterCheckpoint.log",
+      "sha256": "1f0850a035f57ceab693dfd688c1575f06b08e4257a1c92f2c8e71f1578c7ffa"
+    },
+    {
+      "filter": "EditorLocalTransport",
+      "exitCode": 0,
+      "tests": 10,
+      "failures": 0,
+      "log": "extracted/cpp-editor-session-transport-428-focused2/EditorLocalTransport.log",
+      "sha256": "9328c73ff2d0b93a4b3a26cca738b56e85907a0ea9d7d91fd3dcd2aee997301c"
+    },
+    {
+      "filter": "LocalMissionTransport",
+      "exitCode": 0,
+      "tests": 4,
+      "failures": 0,
+      "log": "extracted/cpp-editor-session-transport-428-focused2/LocalMissionTransport.log",
+      "sha256": "7dc638e76e21f620f0c23757047fc7c6387dce376d1419d417174e2aacf9fd2d"
+    },
+    {
+      "filter": "ConstructionCommand",
+      "exitCode": 0,
+      "tests": 7,
+      "failures": 0,
+      "log": "extracted/cpp-editor-session-transport-428-focused2/ConstructionCommand.log",
+      "sha256": "2b4d47a69e4baa263ef4c681dc8a121e9710260eea1f5afd47c3972e14462d18"
+    },
+    {
+      "filter": "ConstructionPlace",
+      "exitCode": 0,
+      "tests": 7,
+      "failures": 0,
+      "log": "extracted/cpp-editor-session-transport-428-focused2/ConstructionPlace.log",
+      "sha256": "acb94b3f13e645d91f692b561c1f108636945466d308af24fcdcf12a4e36ebbe"
+    },
+    {
+      "filter": "CampaignSession_Construction",
+      "exitCode": 0,
+      "tests": 9,
+      "failures": 0,
+      "log": "extracted/cpp-editor-session-transport-428-focused2/CampaignSession_Construction.log",
+      "sha256": "3dd19eca6fbb6e4a64e6d242b31471afbcdf017f2e33346f3d410781aed46e2c"
+    },
+    {
+      "filter": "CampaignSession_ActualLoginUsesClientCurrentCoreSlot",
+      "exitCode": 0,
+      "tests": 1,
+      "failures": 0,
+      "log": "extracted/cpp-editor-session-transport-428-focused2/CampaignSession_ActualLoginUsesClientCurrentCoreSlot.log",
+      "sha256": "2d3b7edbcb477a0ec7455254f3076d55aebd5b01a63eabd7e176ce19f37a3930"
+    },
+    {
+      "filter": "CampaignSession_ActualClientPlayerOwnerAcrossSessions",
+      "exitCode": 0,
+      "tests": 1,
+      "failures": 0,
+      "log": "extracted/cpp-editor-session-transport-428-focused2/CampaignSession_ActualClientPlayerOwnerAcrossSessions.log",
+      "sha256": "9fa13fe7ea12bc559d7daf278d5ee76824de845550fc38f96edf96fc520af651"
+    }
+  ],
+  "focusedObservations": 66,
+  "focusedUnique": 63,
+  "focusedCaseNames": [
+    "CampaignExistingEditorCheckpoint_ActualChatRuntimeAdvancesWorldAndSnapshot",
+    "CampaignExistingEditorCheckpoint_ActualCurrentNameSelectsWorkingFile",
+    "CampaignExistingEditorCheckpoint_ActualCustomTest01PlayerUiAndFile",
+    "CampaignExistingEditorCheckpoint_ActualPlayerUiCompletesAndReloads",
+    "CampaignExistingEditorCheckpoint_ActualProductionFormsInsideInstallScope",
+    "CampaignExistingEditorCheckpoint_AdoptsNativePlayersAndPreservesCoreUntilNextCleanup",
+    "CampaignExistingEditorCheckpoint_CoreWriteManagerDiagnosticBeforeGate",
+    "CampaignExistingEditorCheckpoint_CoreWriteMetamapDiagnosticBeforeGate",
+    "CampaignExistingEditorCheckpoint_CoreWriteNaturalGateKeepsActualStorage",
+    "CampaignExistingEditorCheckpoint_DeferPreservesExistingOwnerAndDefaultStages",
+    "CampaignExistingEditorCheckpoint_DeferRejectsCampaignMode",
+    "CampaignExistingEditorCheckpoint_EditorWireQueuesNegativeSenderConstructionMoveAndSalvage",
+    "CampaignExistingEditorCheckpoint_EditorWireReadsCurrentChargeGateWithoutSenderNormalization",
+    "CampaignExistingEditorCheckpoint_EditorWireRejectsForeignPlayersAndLoginBeforeBorrow",
+    "CampaignExistingEditorCheckpoint_EditorWireRejectsOwnedRegistrationBeforePublishing",
+    "CampaignExistingEditorCheckpoint_FileTailThenActualWorldChatBoundary",
+    "CampaignExistingEditorCheckpoint_FirstNotifyUsesActualWriterBeforeSubscriber",
+    "CampaignExistingEditorCheckpoint_NormalReadFalseKeepsInvalidBranch",
+    "CampaignExistingEditorCheckpoint_PreparedCtorPreservesSameClientState",
+    "CampaignExistingEditorCheckpoint_PreparedCtorRejectsIncompleteOwnersBeforeBorrow",
+    "CampaignExistingEditorCheckpoint_UiScopeCommitsOnlyAfterActualStateReturn",
+    "CampaignExistingEditorCheckpoint_UiTailCannotCommitEarlyReturnOrImmediate",
+    "CampaignExistingEditorCheckpoint_UiTailFailureKeepsPublicAccessClosed",
+    "CampaignSession_ActualClientPlayerOwnerAcrossSessions",
+    "CampaignSession_ActualLoginUsesClientCurrentCoreSlot",
+    "CampaignSession_ConstructionArrivalRunsActualProgressAndVisual",
+    "CampaignSession_ConstructionBuilderSharesActualEnergySources",
+    "CampaignSession_ConstructionBuilderUsesActualMovementAndTime",
+    "CampaignSession_ConstructionCommandChargesRemoteOnce",
+    "CampaignSession_ConstructionCommandRejectsForeignPrediction",
+    "CampaignSession_ConstructionCommandUsesActualRequestAndLocalPrediction",
+    "CampaignSession_ConstructionDefaultTimeOwnsActualSoundProcess",
+    "CampaignSession_ConstructionSupportUsesSameWorld",
+    "CampaignSession_ConstructionTeleportUsesActualSurfacePath",
+    "ConstructionCommand_CurrentChargeGatePreservesNativeReadOrder",
+    "ConstructionCommand_RegistersActualDispatch",
+    "ConstructionCommand_ReplaysNative144Receives",
+    "ConstructionCommand_WritesNative64Packets",
+    "ConstructionPlace_ChargesStoredSpAndPlacesRealObjects",
+    "ConstructionPlace_CurrentChargeGateFollowsLocalPlayerShortCircuit",
+    "ConstructionPlace_RejectsBadInputsBeforeEffects",
+    "ConstructionPlace_ReplaysCd",
+    "ConstructionPlace_ReplaysExtra1037",
+    "ConstructionPlace_ReplaysOriginals",
+    "ConstructionPlace_SetsBridgeQualityAndTakesServerSids",
+    "EditorLocalTransport_ClientVersionSentinelDefersRetirement",
+    "EditorLocalTransport_CloseDuringReceiveAndReentrantPoll",
+    "EditorLocalTransport_HandlerFailurePreservesPartialQueue",
+    "EditorLocalTransport_InvalidClientPacketStopsCurrentEndpointPoll",
+    "EditorLocalTransport_ListenerClientAndNegativePendingWithoutLogin",
+    "EditorLocalTransport_PeerCloseDispatchesTerminationOnce",
+    "EditorLocalTransport_QueuedRequestReplyAndPendingPollOrder",
+    "EditorLocalTransport_SelectedContractsAndOwnedBytes",
+    "EditorLocalTransport_TerminationPreservesCurrentReceiveProtocolForBothEnds",
+    "EditorLocalTransport_VersionTerminationUsesExistingDispatcher",
+    "ExistingEditorAfterCheckpoint_ActualClientOwnsBlocksAndDeadline",
+    "ExistingEditorAfterCheckpoint_FullBlocksCommitThenNextPollFour",
+    "ExistingEditorAfterCheckpoint_ImmediateAndPartialFailureStayDistinct",
+    "ExistingEditorAfterCheckpoint_LiveRequestAndCommandReads",
+    "LocalMissionTransport_Native66",
+    "LocalMissionTransport_SelectedBoundariesAndDepth",
+    "LocalMissionTransport_ServerOpenAndClientConnectAreSeparate",
+    "LocalMissionTransport_ZonePendingLoginAndReply"
+  ],
+  "integratedBatch": {
+    "completed": true,
+    "passed": true,
+    "productSha256": "59d41097db94850b4c38e98860c365374416809c8af4f24dfdcf69eaa3f821ac",
+    "runs": [
+      {
+        "label": "gui-home1",
+        "exitCode": 0,
+        "seconds": 6.117185799987055,
+        "stdout": "extracted/cpp-editor-session-transport-428-batch1/gui-home1.stdout.log",
+        "stderr": "extracted/cpp-editor-session-transport-428-batch1/gui-home1.stderr.log",
+        "stdoutSha256": "108fb0ac4421a85e3566c0a787bdc10d069419563564aeb93b537597d1034789",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "label": "gui-menus1",
+        "exitCode": 0,
+        "seconds": 2.4417417000513524,
+        "stdout": "extracted/cpp-editor-session-transport-428-batch1/gui-menus1.stdout.log",
+        "stderr": "extracted/cpp-editor-session-transport-428-batch1/gui-menus1.stderr.log",
+        "stdoutSha256": "7958946d9072213b8ea482f7aa9732efb3fdec46e6b545dc2ec0a38cf8091e5b",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "label": "early2",
+        "exitCode": 0,
+        "seconds": 198.5291924000485,
+        "stdout": "extracted/cpp-editor-session-transport-428-batch1/early2.stdout.log",
+        "stderr": "extracted/cpp-editor-session-transport-428-batch1/early2.stderr.log",
+        "stdoutSha256": "f3574b14da00c576a97ef97a85334b4b766047e4a27ff68a919d6e7e25901667",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "label": "ctest",
+        "exitCode": 0,
+        "seconds": 321.43083380011376,
+        "stdout": "extracted/cpp-editor-session-transport-428-batch1/ctest.stdout.log",
+        "stderr": "extracted/cpp-editor-session-transport-428-batch1/ctest.stderr.log",
+        "stdoutSha256": "1ef39f9b25113626ef09e1636c5388b881dec237e9748e5e9f20ff6fd04ee673",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    ],
+    "fullTests": 2870,
+    "protectedFiles": 1821
+  },
+  "gui": {
+    "gui-home1": {
+      "result": "extracted/cpp-editor-session-transport-428-gui-home1/result.json",
+      "sha256": "683dd450772979308fedef7de4e1d78a0b7935889fd962325179f653afd18006",
+      "userInputVerified": true,
+      "editorInstallationVerified": false
+    },
+    "gui-menus1": {
+      "result": "extracted/cpp-editor-session-transport-428-gui-menus1/result.json",
+      "sha256": "b6fc3bb91c98d240a820d6fc993a87ae063ff7362ab254ee186152c8a2b31c18",
+      "userInputVerified": true,
+      "editorInstallationVerified": false
+    }
+  },
+  "early2": {
+    "seconds": 198.5291924000485,
+    "result": "extracted/cpp-editor-session-transport-428-early2/results.json",
+    "sha256": "11420119eb291c6b37030139ecf9c85a88e11f0d2f4386dc3a3b6c5e493ad793",
+    "naturalTutorialTwoComplete": true,
+    "refund": 75,
+    "finalSp": 3075,
+    "nextMission": "tutorial3",
+    "productTimers": 1,
+    "testStateInjection": false,
+    "initialProgressInjected": false,
+    "progressSaveRestartVerified": false
+  },
+  "ctest": {
+    "tests": 2870,
+    "failedChecks": 0,
+    "seconds": 321.43083380011376,
+    "log": "extracted/cpp-editor-session-transport-428-batch1/ctest.stdout.log",
+    "lastTest": "extracted/cpp-editor-session-transport-428-batch1/LastTest.log",
+    "lastTestSha256": "c0ec89f0ade9c1241f4ec1e218d86b73c97287b9779dd561a2b946200a7b3e40"
+  },
+  "protectedFiles": {
+    "count": 1821,
+    "unchanged": true
+  },
+  "originalGameExecuted": false,
+  "newNativeExecution": false,
+  "fullCTestExecuted": true,
+  "productGuiExecuted": true,
+  "previousIntegrated": {
+    "commit": "345b5691",
+    "report": "cpppj/kencloud-client-runtime-20261025.json",
+    "reportSha256": "f29ab71ae6e9bc921a79aad1fb78bbaf26d89f0bc471ab971863796fe7f02a38",
+    "productSha256": "e36f495c0125936184b98967d67a3df7e82f8c66c81769fd3a1fd4c4bae35435",
+    "testBinarySha256": "4f977376bdddfba3611fd5de66310fe32596b489f2019657b36dc80db652ba9e",
+    "ctest": {
+      "tests": 2843,
+      "failed": 0,
+      "seconds": 334.43
+    }
+  },
+  "pending": [
+    "Actual Client State1 cleanup(0)/prefix and shared native global/lifetime aliases",
+    "Editor menu installation and user edit/save/new map/scenario test-return UI",
+    "Full Renderer994b0 flags/override/dirty/parallax natural Frame integration",
+    "All Early/Campaign/Demo natural user completion, progress save/restart and exact equivalence"
+  ]
+}

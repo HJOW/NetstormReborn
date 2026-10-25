@@ -63,6 +63,7 @@ class ClientCoreDataGlobals; // 현재 Core/active/cache를 같은 Client 수명
 class ClientGameplayGlobals;struct ProductionControlContext; // 실제 초기 HUD와 같은 현재 전역/물리를 공유한다.
 class ClientColorSortInput; // 같은 Client 최초 고정RGB 소유자이며 raw primary 전체 복원과 구별한다.
 class ClientLocalStateGlobals; // 실제 Client의 State 다섯 블록과 활동 기한의 장기 소유자다.
+class EditorLocalTransport; // 준비된 Editor가 생성한 같은 listener/client9/accepted(-1)와 단일 등록표를 빌린다.
 class InputQueue;struct ExistingEditorAfterCheckpointEffects; // 원문 tail의 같은 입력 고리와 실제 HUD/음악/팔레트 장치를 동기 호출로 빌린다.
 struct TemplateWriteStream; // 실제 Template 저장소가 발급하는 명시 쓰기 수명이다.
 struct QuickHelpTypeInfo; // 전용 도움말이 같은 현재 TYPE/요구 에너지를 읽는 정보다.
@@ -164,6 +165,7 @@ struct RawCampaignSessionServices {
     std::optional<std::uint32_t> missionSubscriber; // Init이 현재54265c에서 복사한540c74다. 독립 로그인은 기존1을 사용한다.
     std::function<void()> refreshSp; // 같은 실제 Reward.AddSp의0043dad0 표시 요청이다. 장치 없는 독립 검사는 비워 둘 수 있다.
     std::optional<CampaignLoginServices> localLogin; //실제Client는 원본 로컬로그인을 사용하며 독립 모듈 검사는 명시Load를 유지한다.
+    std::shared_ptr<EditorLocalTransport> editorTransport; // 준비된 기존 Editor만 동일 Player 물리의 로그인 없는 실제 송수신 큐를 빌린다. Session보다 긴 Client 수명을 허용한다.
     std::function<std::int32_t()> unixSeconds; // 실제 time32의 현재 Unix 초다.
     CampaignSubscriberServices subscriber; //현재같은Client등록Config/CRT clock/진단이며소진로그9는player.log를사용한다.
     RawPriestWorldEffects priest; // 원본 소유자 통지/보호막 안내/음향 등의 실제 외부 소비자다.

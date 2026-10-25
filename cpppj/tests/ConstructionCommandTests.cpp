@@ -58,3 +58,15 @@ TEST_CASE(ConstructionCommand_RegistersActualDispatch) {
     RawConstructionCommand body(types,state,std::move(hooks));RawPacketDispatch dispatch(OriginalEdition::Patch1078,std::move(device));RegisterConstructionCommand(dispatch,body,[&] { ++prepared; });const auto& registration=dispatch.Registration(0x3e);CHECK(registration.version==1 && registration.mismatch==0 && registration.length==25 && registration.observer);std::array<std::uint8_t,25> packet{};ConstructionLocalMessage message;message.type=100;WriteConstructionCommand(message,packet);PacketConnection connection;connection.sender=0xffffffffU;
     packet[2]=24;CHECK(dispatch.Dispatch(connection,packet));CHECK(!prepared && !requests);packet[2]=25;packet[0]=0x81;CHECK(dispatch.Dispatch(connection,packet));CHECK(prepared==1 && requests==1 && connection.received==123 && connection.depth==0);
 }
+
+// 준비 시점 사본 대신 실제 비용 관문에서 현재 전역을 읽고 음수 sender와 선행 TYPE/차단 순서를 보존한다.
+TEST_CASE(ConstructionCommand_CurrentChargeGatePreservesNativeReadOrder) {
+    std::vector<RiftTypeRecord> types(188);types[100].cost=100.0f;ConstructionCommandState state;bool current=true;std::uint32_t reads{},money{},requests{},shortfalls{};
+    state.chargeBlockedRead=[&] { ++reads;return current; };ConstructionCommandHooks hooks;hooks.money=[&](auto sender) { CHECK(sender==0xffffffffU);++money;return 0.0f; };hooks.shortfall=[&](const auto& request) { CHECK(request.player==0xffffffffU);++shortfalls; };hooks.request=[&](const auto& request) { CHECK(request.player==0xffffffffU || request.player==1);++requests;return true; };hooks.reject=[](const auto&) { throw std::logic_error("성공 요청의 예상 밖 환불"); };
+    RawConstructionCommand body(types,state,std::move(hooks));std::array<std::uint8_t,25> packet{};ConstructionLocalMessage message;message.type=100;WriteConstructionCommand(message,packet);
+    body.Receive(0xffffffffU,packet);CHECK(reads==1 && !money && requests==1 && !shortfalls && !state.chargeBlocked);
+    current=false;body.Receive(0xffffffffU,packet);CHECK(reads==2 && money==1 && requests==1 && shortfalls==1);
+    body.Receive(1,packet);CHECK(reads==3 && money==1 && requests==2); // 명령 수신은 로컬 sender 비교보다 먼저 전역을 읽는다.
+    packet[4]=255;bool invalid{};try { body.Receive(0xffffffffU,packet); } catch (const std::out_of_range&) { invalid=true; }CHECK(invalid && reads==3);
+    state.blocked=1;body.Receive(0xffffffffU,{});CHECK(reads==3); // 첫 차단은 본문과 현재 전역 조회 모두를 자연 생략한다.
+}

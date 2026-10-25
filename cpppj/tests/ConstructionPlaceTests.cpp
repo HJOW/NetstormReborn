@@ -304,3 +304,13 @@ TEST_CASE(ConstructionPlace_RejectsBadInputsBeforeEffects) {
     CHECK(Throws([&] { static_cast<void>(MakeConstructionPlaceHooks(scene.pool,factory,owner,foreign,&scene.store,scene.state,scene.Hooks())); }));
     CHECK(Throws([&] { static_cast<void>(MakeConstructionPlaceHooks(scene.pool,factory,owner,reward,nullptr,scene.state,scene.Hooks())); }));
 }
+
+// 배치는 로컬 Player에서 전역 조회 자체를 생략하고 비로컬 요청은 그때의 현재값으로 비용을 판정한다.
+TEST_CASE(ConstructionPlace_CurrentChargeGateFollowsLocalPlayerShortCircuit) {
+    PlaceScene scene(OriginalEdition::Patch1078);scene.Prepare(kTypePlain,Bits(250.0F),0,0,0,0,0,0,1,false,true,true,false,false,5);
+    bool current=true;std::uint32_t reads{},money{},charges{};scene.state.chargeBlockedRead=[&] { ++reads;return current; };auto hooks=scene.Hooks();hooks.storedSp=[&](auto player) { CHECK(player==2);++money;return 1000.0f; };hooks.addPlayerSp=[&](auto player,float delta) { CHECK(player==2 && delta==-250.0f);++charges; };
+    SquidReward reward(scene.pool,scene.types,scene.books,scene.rewardState,&scene.store);RawConstructionPlace place(scene.pool,scene.types,scene.frames,scene.state,reward,std::move(hooks));const std::array<std::uint16_t,1> sids{50};
+    FillSlot(InputRaw(scene.pool,Sid{50}),0,kTypePlain);place.Place({kTypePlain,20.5F,21.25F,0,0,2,sids,0,0});CHECK(reads==1 && !money && !charges && !scene.state.chargeBlocked);
+    current=false;FillSlot(InputRaw(scene.pool,Sid{50}),0,kTypePlain);place.Place({kTypePlain,20.5F,21.25F,0,0,2,sids,0,0});CHECK(reads==2 && money==1 && charges==1);
+    FillSlot(InputRaw(scene.pool,Sid{50}),0,kTypePlain);place.Place({kTypePlain,20.5F,21.25F,0,0,1,sids,0,0});CHECK(reads==2 && money==1 && charges==1);
+}

@@ -124,7 +124,7 @@ void RawConstructionPlace::Place(const ConstructionPlaceRequest& request) {
 // 로컬 플레이어·차단 전역·범위 밖 번호·비용 0·nugget은 판정하지 않는다. 잔액 비교는 x87과 같이 NaN을 "모자람"으로 본다.
 void RawConstructionPlace::ChargeForPlacement(const ConstructionPlaceRequest& request) {
     const auto player=std::bit_cast<std::int32_t>(request.player);
-    if (request.player==state_.localPlayer || state_.chargeBlocked || player<=0 || player>=static_cast<std::int32_t>(kServerPlayer)) return;
+    if (request.player==state_.localPlayer || (state_.chargeBlockedRead ? state_.chargeBlockedRead() : state_.chargeBlocked) || player<=0 || player>=static_cast<std::int32_t>(kServerPlayer)) return; // 같은 원문의 short-circuit 순서에서만 현재 전역을 조회한다.
     const float cost=types_[request.type].cost;
     if (cost==0.0F || request.type==state_.nuggetType) return;
     if (!(Money(request.player)>=cost)) ChargeShortfall(request.type,request.player,request.x,request.y,request.argument,request.direction);

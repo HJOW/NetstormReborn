@@ -26,6 +26,7 @@ struct ConstructionPlaceState {
     std::array<std::uint32_t,8> patternTypes{107,82,94,157,131,129,140,142};
     std::array<std::uint32_t,kPlayerCount+1> playerFlags{}; // Player +0x54. 0x400은 비용 부족이 한 번 보고됐다는 표시다.
     std::array<std::string,kPlayerCount+1> playerNames;     // Player +0xc. 비용 부족 안내 문구의 이름 인자다.
+    std::function<bool()> chargeBlockedRead; // 실제00594fa4의 현재값이며 로컬 Player 자연 생략 뒤에만 읽는다. 값형 fixture의 bool은 유지한다.
 };
 // 배치 한 번의 입력이다. 원본 열 개 인자 가운데 SID 개수는 sids의 길이로 받는다.
 struct ConstructionPlaceRequest {

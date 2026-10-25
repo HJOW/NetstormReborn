@@ -1,5 +1,17 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-25 단위428 완료: 같은 Editor 큐와 실제 Session 요청 처리기 접합
+
+- [x] 이전427은 **4c7ff020 / 20261025-22 CP**로 새 로컬 큐10/기존 캠페인 전송4·빌드/보호 감사를 마쳤다. 현재/마지막 전체 정밀 디컴파일은 계속 **HJOW-Athlon / 2026-10-23**이다.
+- [x] Session 생성 전 같은 `EditorLocalTransport`의 Send를 값복사 요청에도 연결하고, 최종 Editor State 확정 때 기존 Carrier→Construction→Factory13종을 같은 dispatcher에 설치했다. 기존 Login과 동시 사용/다른 Player 물리는 대여 전에 거부하고 Session 소멸 전에 수신 callback만 해제한다. observer/version/정책/길이는 보존한다. 음수 sender와 비동기 큐/원문 순서는 유지한다.
+- [x] 같은 Player span 조회와 원문 Command/Place 비용 관문의 trailing `chargeBlockedRead`·조회순서 검사2개, Session 실제 송수신/등록/반납·실제 다리 건설/사제 이동/회수 및 잘못된 소유자/등록 검사4개를 작성했다. Session의 현재 missionPost 연결은 명시 prepared Editor에 한정하고 다른 Campaign/battle의 값형 의미는 유지한다. 읽기 검토에서도 새 차단 결함은 찾지 못했다.
+- [x] 빌드1은 새 검사의 `FindAttachedProcess` 선언 헤더 누락2건으로 종료1이다. 실제 선언 `o/RawSunAviaryProcess.h`를 추가한11소스를 `...-428-source2/hashes.json`에 고정한 **빌드2는 종료0·경고/오류0**이다. 첫 빌드/소스는 보존했다. 현재 IP **192.168.0.94**와 호스트 **HJOW-Athlon**도 함께 확인했다.
+- [x] source2 첫 집중의 **23검사/실패check2**는 검사 초안의 일반 이동 커서 가정이었다. 원문004277f0와 기존 `carrier-input-x86.tsv`의18(0x12)을 확인한 뒤 검사 파일만 교정했다. 제품/fixture/이동·큐·종료3회 기대는 유지했다. source2→source3의 변경은 그 검사1파일뿐이며, 고정11소스의 **빌드3 종료0·경고/오류0**, 최종 집중 **66관측·고유63검사·실패0**이다. 실제 다리 건설/사제 이동 요청·Form/회수와13종 등록·반납이 통과했다. 첫 실패/나머지43관측/최종 통과는 각각 `...-428-focused1`, `...-428-other-focused1`, `...-428-focused2`에 보존했다.
+- [x] **426~428 같은 최종 제품 통합 완료:** 실제 메뉴/첫 미션 안내 종료·Home 입력과 Campaign/Early 목록/Back 두 GUI가 종료0이다. 자연 Early2는 **198.53초·종료0**, 생산·회수·환불75/SP3075→같은 프레임 Tutorial3 안내를 통과했다. 제품 타이머1/상태 주입0/기존 진행값 보존이며 새 진행 저장·재실행 증거는 아니다. 실제 시작/안내/다음 미션 이미지를 확인했다.
+- [x] 같은 제품의 전체 CTest는 **2870개·실패check0·321.43초·종료0**이다. 마지막 보호1821파일/11소스/4실행 파일 SHA도 같다. [최종 보고서](cpppj/editor-session-transport-runtime-20261025.json)에 최초 빌드/검사 실패와 교정·63고유 집중/전체·GUI/자연 진행·제품 해시와 미완료 경계를 기록했다. 최종 제품 SHA **59d41097…**이며 이전 마지막 통합345b5691의2843검사 대신 이번 제품/2870을 다음 회귀 기준으로 쓴다. 인계 뒤 **20261025-23 CP**로 로컬 커밋하며 `/goal`은 활성 상태다. 원본 실행/새 디컴파일/push는 하지 않았다.
+- [ ] **바로 다음429:** 실제 Client cleanup 전역/작은 미소유 leaf부터 연결한다. [34개 Effect·실제 API/수명 공백](docs/exe/cpp-state-cleanup-client-gap-20261025.md), [직접 전역·실제 소유자/반납 순서](docs/exe/cpp-state-cleanup-global-owners-20261025.md)에 전체 대조와5단위 순서를 기록했다. sourceType/여러 기한/22DWORD 장기 owner와 같은 Native주소005949d4·005424bc·00595088의 분산 필드를 실제 소비자 참조로 통합한다. 주소→0 사전이나 사후 사본 동기화로 대신하지 않는다. 기존 SP/Kernel/Template/Chat/Sound/Clock 자식은 실제 위치에서 재사용한다.
+- [ ] 최종 Editor 메뉴의 State1 전체 cleanup/prefix·초기 HUD/후반 재통지·사용자 편집/저장/새 맵/시나리오 테스트 복귀는 아직 미완료다. Renderer004994b0의 flags/override/dirty/시차 자연 Frame 연결, 모든 Early/캠페인/Demo 자연 완주·승패·진행 저장/재실행·완전 동일성도 계속 남는다. 이번 통합이나 기존 초기 진입34개를 전체 목표 완료로 세지 않는다. 긴 검사 묶음 정책은 계속 유지한다.
+
 ## 2026-10-25 단위427 완료: Editor 단일 로컬 전송의 큐·수신·종료
 
 - [x] 이전426은 **628711ce / 20261025-21 CP**로 준비 대여/UI tail/실제 State 확정과 집중49개를 마쳤다. 현재/마지막 전체 정밀 디컴파일은 계속 **HJOW-Athlon / 2026-10-23**이다. 보호1821파일 기준은 앞선426의 같은 내용이다.

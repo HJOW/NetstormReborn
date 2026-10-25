@@ -15,6 +15,7 @@ struct ConstructionCommandState {
     std::uint32_t blocked{}; // 비영이면 타입/패킷 본문을 읽기 전에 반환한다.
     bool chargeBlocked{}; // 비용 선검사를 생략한다. 후속 Request는 별도 원본 판단을 수행한다.
     std::uint32_t localPlayer{1}; // sender 전체 DWORD와 비교하며 BYTE로 줄이지 않는다.
+    std::function<bool()> chargeBlockedRead; // 연결된 실제00594fa4를 원문 비용 관문에서 조회한다. 미연결 값형 검사는 위 bool을 사용한다.
 };
 // 기존 실제 Money/ChargeShortfall/Request/Reject에 연결할 게임 몸체다.
 struct ConstructionCommandHooks {

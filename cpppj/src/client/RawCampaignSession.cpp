@@ -8,6 +8,7 @@
 #include "client/ClientColorSortInput.h"
 #include "client/ClientLocalStateGlobals.h"
 #include "client/ExistingEditorAfterCheckpoint.h"
+#include "client/EditorLocalTransport.h"
 #include "client/CampaignTemplateStorage.h"
 #include "client/FortTypeConversionStorage.h"
 #include "o/RawFortTypeNamesLoad.h"
@@ -237,11 +238,16 @@ std::shared_ptr<RawSurfaceStorage> SessionSurfaceStorage(const RawCampaignSessio
 }
 // 다른 Client의 두 Subscriber를 실제 현재 전역에 섞기 전에 거부한다.
 std::shared_ptr<ClientGameplayGlobals> SessionGameplayGlobals(const RawCampaignSessionServices& services) {
+    if (services.editorTransport) {
+        if (!services.adoptPreparedWorld || services.installMode!=CampaignInstallMode::ExistingEditor || !services.deferExistingEditorFile || !services.adoptInitializedPlayers || !services.playerRecords || services.localLogin) throw std::invalid_argument("Editor 전송의 준비된 실제 World/Player/로그인 배제 계약");
+        const auto players=services.playerRecords->Records();const auto wirePlayers=services.editorTransport->Players();if (players.size()!=9*180 || players.data()!=wirePlayers.data() || players.size()!=wirePlayers.size()) throw std::invalid_argument("Editor 전송의 같은 실제 Player9 물리 불일치"); // 대여나 모드 재설정 전에 다른 Client/이전 할당의 송수신 큐를 거부한다.
+    }
     if (services.adoptPreparedWorld && (services.installMode!=CampaignInstallMode::ExistingEditor || !services.deferExistingEditorFile || !services.adoptInitializedPlayers || !services.gameplayGlobals || !services.surfaceStorage || !services.localStateGlobals || !services.playerRecords || !services.coreDataGlobals || !services.randomGlobals || !services.spGlobals || !services.processKernel || services.localLogin)) throw std::invalid_argument("준비된 Editor의 같은 전역/표면/State/Player/Core/SP/Kernel 대여 계약"); // 대여 이전에 필수 실제 소유자를 확인하고 캠페인 로그인으로 Editor 전송을 대신하지 않는다.
     if (services.gameplayGlobals && services.gameplayGlobals->Subscribers()!=services.subscriberGlobals) throw std::invalid_argument("Session의 실제 현재 전역/Subscriber 소유자 불일치");
     return services.gameplayGlobals ? services.gameplayGlobals : std::make_shared<ClientGameplayGlobals>(services.subscriberGlobals);
 }
 constexpr std::size_t kCampaignFactoryCapacity=500; // PATCH004fc990의push1f4→0044fb20이확보하는실제0055a4d0목록의DWORD수다.
+constexpr std::array<std::uint32_t,13> kEditorGameplayMessages{0x5b,0x40,0x4f,0x50,0x60,0x61,0x5c,0x5f,0x7d,0x6d,0x3e,0x54,0x58}; // 기존 Carrier→Construction→Factory 등록 순서의 실제13종이며 로그인/응답을 추가하지 않는다.
 constexpr std::uint32_t kAiSearchTypeBase=0x6b000000U; //같은실제188TYPE의opaque32포인터기준이다.원본가상주소가아니며500stride대응만보존한다.
 // 실제83개 VT에서+10/+14/+18이4af780/44b4b0/44b9e0인14개만 일반 Damageable 수명으로 연결한다.
 constexpr std::array<std::uint32_t,14> kPlainDamageableTables{0x501ea0,0x509148,0x509930,0x5099e8,0x509aa0,0x50a820,0x50a8e8,0x50b6e8,0x50b7c0,0x50b888,0x50b9b8,0x50bad0,0x50e668,0x50e738};
@@ -420,6 +426,7 @@ struct RawCampaignSession::Impl {
     bool editorUiStarted{},editorUiPrepared{},editorUiInstalling{},editorUiTailReady{}; // UI 한 번 준비·한정 동기 범위·실제 tail 정상 복귀를 최종 loaded와 구별한다.
     ClientLocalStateGlobals* editorUiStateOwner{}; // 서비스를 통해 같은 Client가 소유하는 다섯 State 블록의 정체성을 보관한다.
     LocalMissionStateBlock editorUiRequest{},editorUiPreviousPhase{}; // UI 진입의 전체144BYTE 요청/이전 phase를 공통 확정 뒤 검증한다. 원문 상태를 대신 쓰지 않는다.
+    bool editorRegisteringCommands{};RawPacketDispatch* editorRegisteredDispatch{}; // 최종 commit의 한정 등록 범위와 현재 Session을 빌리는13종 수신기의 반납 대상을 구별한다.
     std::optional<FortTemplate> deferredEditorFort; //명시지연입력의같은파일보조metadata다.rawsection은File.load의실제reader가소유한다.
 
     MissionOutcomeState outcomeState; // 미션 종료까지 유지하는43개 사건 잠금이며 입력 배열은 현재 원문 연결로 대체한다.
@@ -770,6 +777,9 @@ struct RawCampaignSession::Impl {
             initial.SetAlliance(owner,mask);
         });
         players=playerRecords->Records(); // 이후 모든 기존 소비자는 이 대여의 실제 물리만 빌린다.
+        if (services.editorTransport) {
+            const auto wire=services.editorTransport;services.carrierRequest=[wire](auto target,std::span<const std::uint8_t> packet) { static_cast<void>(wire->Send(target,packet)); }; // ConnectMotion의 세 송신 함수 값복사보다 먼저 같은 실제 큐에 연결하며 수신을 직접 실행하지 않는다.
+        }
         if (!services.coreDataGlobals) coreDataGlobals->Players()=players; // 독립 Session만 같은 현재 Player뷰를 소유자에 직접 제공한다.
         if (!services.spGlobals) { sp.BindTrackingOffset(priestState.regen.patch.sequence);sp.Initialize(); } // 독립 Session의 기존 명시 초기화만 보존한다. 실제 Client의 현재 SP/난수/추적 offset은 다시 쓰지 않는다.
         level=std::make_unique<RawSquidLevel>(core.pool,core.types,SessionMissing<void,SquidLevelAssertion>());
@@ -793,6 +803,9 @@ struct RawCampaignSession::Impl {
         if (services.adoptPreparedWorld) {
             const auto current=coreDataGlobals->Current();if (current.size()!=10 || current.data()!=players.data()+180+0x6c || coreDataGlobals->Players().data()!=players.data()) throw std::logic_error("준비된 Editor의 실제 prefix Core1 선택 불일치"); // 원문 prefix가 선택한 같은 Player뷰를 검증하며 active/cache/owner를 다시 쓰지 않는다.
         } else if (services.coreDataGlobals) { const std::uint32_t metamap=core.ownerMode.challenge;coreDataGlobals->Select(playerState,metamap,1,1); } // 기존 독립/캠페인 어댑터는 종전 선택 순서를 보존한다.
+        if (services.adoptPreparedWorld && services.installMode==CampaignInstallMode::ExistingEditor) {
+            constructionState.command.chargeBlockedRead=constructionState.place.chargeBlockedRead=[this] { return globals.missionPost; }; // 명시 준비 Editor만 원문00594fa4를 각 실제 소비 위치에서 재조회한다. 일반 Campaign/battle의 값형 수명은 이번에 넓히지 않는다.
+        }
         //BYTE호환값을DWORD const참조로넘기면임시값수명오류가나므로실제Player DWORD를빌린다.
         broadcast=std::make_unique<RawBattleBroadcast>(core.pool.Edition(),players,services.battlePeers,playerState.battleOwner,assetState.boss);
         // 별도 관찰/장치 송신이 없으면 실제 분배기를 사용한다. NULL 연결은 원본 조건에서 자연스럽게 생략한다.
@@ -2072,6 +2085,7 @@ struct RawCampaignSession::Impl {
     }
     // 각 명시 요청에서 현재 실제 소유자/서버/권한/요새/타입만 공급한다. Player/자원/지도는 복사하지 않는다.
     void PrepareConstruction() {
+        if (services.adoptPreparedWorld && services.installMode==CampaignInstallMode::ExistingEditor) constructionState.place.chargeBlocked=globals.missionPost; // 이번 한정 준비 Editor는 실제00594fa4를 공급한다. 기존 Campaign/battle의 값형 어댑터 수명은 별도 대조 대상으로 유지한다.
         constructionState.place.localPlayer=constructionState.notice.localPlayer=playerState.battleOwner;
         constructionState.request.editor=core.ownerMode.fort;constructionState.request.localPlayer=playerState.battleOwner;
         constructionState.request.displaceGenus=buildingState.pushGenus;constructionState.request.patternTypes=constructionState.confirm.patternTypes;
@@ -3089,7 +3103,14 @@ struct RawCampaignSession::Impl {
         }});
     }
     // 외부 콜백이 참조하는 모듈을 해제하기 전에 현재 Kernel을 비운다.
+    void ReleaseEditorCommandReceivers() {
+        if (!editorRegisteredDispatch) return;
+        for (const auto type:kEditorGameplayMessages) editorRegisteredDispatch->Register(type,{}); // 같은 Session을 빌리는 receive만 해제하고 실제 observer/프로토콜/정책/길이 표는 보존한다.
+        editorRegisteredDispatch=nullptr;editorRegisteringCommands=false;
+    }
+    // 외부 등록표가 현재 Session을 더는 호출할 수 없게 한 뒤 기존 모듈/Kernel 정리를 수행한다.
     ~Impl() {
+        ReleaseEditorCommandReceivers();
         // 다른 AI의 손상/외부 예외가 나더라도 나머지 실제 brain과 Kernel 정리를 계속하고 오류를 남긴다.
         for (std::uint32_t owner=1;owner<9;++owner) if (participation) {
             try { participation->RemoveBrain(owner); }
@@ -3124,7 +3145,7 @@ void RawCampaignSession::LoadLocalConnection() {
     impl_->login=std::make_shared<Impl::Login>(*impl_,*impl_->services.localLogin,[this] { Load();RegisterCarrierCommands(impl_->login->transport->Dispatch());RegisterConstructionCommands(impl_->login->transport->Dispatch());RegisterFactoryResearchCommands(impl_->login->transport->Dispatch()); });impl_->login->Begin();
 }
 // 실제 로그인의 같은 분배기에58h 연구를 등록한다. 중간 직접 수신/가짜 확정은 없다.
-void RawCampaignSession::RegisterFactoryResearchCommands(RawPacketDispatch& dispatch) { o::RegisterFactoryResearchCommand(dispatch,*impl_->factoryResearch); }
+void RawCampaignSession::RegisterFactoryResearchCommands(RawPacketDispatch& dispatch) { if (!impl_->loaded && !impl_->editorRegisteringCommands) throw std::logic_error("미설치 Session의 연구 수신 등록");o::RegisterFactoryResearchCommand(dispatch,*impl_->factoryResearch); }
 // 현재 메뉴 부모와 signedWORD 종류를 원문 입력 몸체에 전달한다.
 std::uint32_t RawCampaignSession::SelectFactoryKnowledge(Sid parent,std::uint32_t code,std::uint32_t parameter) {
     return CommandFactory(parent,code,parameter);
@@ -3136,20 +3157,23 @@ void RawCampaignSession::RequestFactoryUpgrade(Sid parent) { if (!impl_->loaded)
 // 실제 종속그림과같은4/3예약을조회하며입력관문과같은판단을공유한다.
 bool RawCampaignSession::FactoryUpgrading(Sid parent) const { if (!impl_->loaded) throw std::logic_error("설치 전 Factory 업그레이드 조회");return impl_->factoryUpgrade->IsUpgrading(parent); }
 //현재프레임에서만같은실제두끝의큐를소비한다.
-void RawCampaignSession::PumpLocalConnection() { if (impl_->login) impl_->login->Pump(); }
+void RawCampaignSession::PumpLocalConnection() { if (impl_->login) impl_->login->Pump();else if (impl_->services.editorTransport) { if (!impl_->loaded) throw std::logic_error("기존 Editor 최종 설치 전 명령 수신");static_cast<void>(impl_->services.editorTransport->Poll()); } } // Editor는 같은 unbuffered 큐만 폴링하며 Login Flush/State/timer를 실행하지 않는다.
 //진단은현재원본확정phase를읽고성공을합성하지않는다.
 std::uint32_t RawCampaignSession::LocalConnectionPhase() const { return impl_->login ? impl_->login->blocks[1][0] : 0U; }
 //현재실제수신기록의종류만빌린다.
 std::span<const std::uint8_t> RawCampaignSession::LocalConnectionPackets() const { return impl_->login ? std::span<const std::uint8_t>(impl_->login->wireTypes) : std::span<const std::uint8_t>{}; }
 // Session의 실제 Login과 같은 두 끝/송신 큐만 사용하고 수신/게임 확정을 앞당기지 않는다.
 void RawCampaignSession::SendLocalPacket(std::int32_t target,std::span<const std::uint8_t> packet) {
-    if (!impl_->login || !impl_->loaded) throw std::logic_error("실제 로컬 로그인 전 원본 패킷 송신");impl_->login->Send(target,packet);
+    if (!impl_->loaded) throw std::logic_error("실제 설치 전 원본 패킷 송신");
+    if (impl_->login) impl_->login->Send(target,packet);
+    else if (impl_->services.editorTransport) static_cast<void>(impl_->services.editorTransport->Send(target,packet));
+    else throw std::logic_error("실제 로컬 Login/Editor 전송 없는 원본 패킷 송신"); // sender/owner/protocol/선언길이를 바꾸거나 처리기를 동기 호출하지 않는다.
 }
 // 현재 실제 자산/Template/서비스를 보관하고 모든 하위 모듈을 구성한다.
 RawCampaignSession::RawCampaignSession(const GameAssets& assets,const BaseFileSystem& files,FortTemplate fort,std::string mission,RawCampaignSessionServices services)
     :impl_(std::make_unique<Impl>(assets,files,std::move(fort),std::move(mission),std::move(services))) { impl_->gameplayUse->Publish(*this); }
 // Impl이 Kernel을 비운 뒤 실제 모듈을 해제한다.
-RawCampaignSession::~RawCampaignSession() { impl_->gameplayUse->Withdraw(*this); }
+RawCampaignSession::~RawCampaignSession() { impl_->ReleaseEditorCommandReceivers();impl_->gameplayUse->Withdraw(*this); }
 // 저장 다이스/룬의 전체 후처리를 먼저 등록한 뒤 동일 원본 부모로 월드를 로드한다.
 void RawCampaignSession::Load() {
     if (impl_->services.installMode!=CampaignInstallMode::Campaign) throw std::logic_error("기존Editor는별도World단계와외곽완료부모필요");
@@ -3222,6 +3246,13 @@ void RawCampaignSession::CommitExistingEditorInstall(ClientLocalStateGlobals& ow
     auto& s=*impl_;const auto state=owner.State();
     if (s.services.installMode!=CampaignInstallMode::ExistingEditor || !s.services.localStateGlobals || s.services.localStateGlobals.get()!=&owner || s.editorUiStateOwner!=&owner || s.loaded || !s.editorCheckpointReady || !s.editorWorldReady || !s.editorUiPrepared || s.editorCheckpointRunning || s.editorUiInstalling || !s.editorUiTailReady || !s.cursor || !s.gameplayPipeline || !s.buildingMover) throw std::logic_error("기존 Editor 최종 공개의 같은 checkpoint/UI/tail 수명 계약");
     if ((s.editorUiRequest[0]!=1 && s.editorUiRequest[0]!=2) || state.current[0] || state.immediate[0] || state.next[0]!=4 || state.phase!=s.editorUiRequest || state.old!=s.editorUiPreviousPhase || !std::equal(state.current.begin()+1,state.current.end(),s.editorUiRequest.begin()+1)) throw std::logic_error("기존 Editor 실제 State 공통 확정/다음 Poll4 미완료");
+    if (s.services.editorTransport) {
+        auto& dispatch=s.services.editorTransport->Dispatch();if (s.login || s.editorRegisteredDispatch) throw std::logic_error("Editor 실제 전송의 중복 Login/수신 등록");
+        for (const auto type:kEditorGameplayMessages) if (dispatch.Registration(type).receive) throw std::logic_error("Editor 현재 수신 등록표의 다른 소유자 존재"); // 전체13종을 먼저 확인하여 기존 처리기를 부분 덮어쓰지 않는다.
+        s.editorRegisteredDispatch=&dispatch;s.editorRegisteringCommands=true;
+        try { RegisterCarrierCommands(dispatch);RegisterConstructionCommands(dispatch);RegisterFactoryResearchCommands(dispatch);s.editorRegisteringCommands=false; }
+        catch (...) { s.ReleaseEditorCommandReceivers();throw; } // 부분 등록 예외도 살아 있는 Session 포인터를 외부 표에 남기지 않는다.
+    }
     s.loaded=true; // checkpoint나 UI scope가 아닌 실제 정상 State ret 확인 뒤 이 한 곳에서만 Editor 입력/공개 저장을 연다.
 }
 // 같은 장기 슬롯의 현재 Core만 갱신하며 Login이 없는 Editor도 별도 사본을 만들지 않는다.
@@ -3567,14 +3598,14 @@ bool RawCampaignSession::MayPlaceConstruction(const CanonPlacementQuery& query) 
 bool RawCampaignSession::RequestConstruction(const ConstructionConfirmRequest& request) { if (!impl_->loaded) throw std::logic_error("미설치 Session의 건설 요청");impl_->PrepareConstruction();return impl_->construction->Request(request); }
 // 기존 실제 패킷 분배기/로컬 전송이 같은 서버 수신 몸체를 호출한다.
 void RawCampaignSession::RegisterConstructionCommands(RawPacketDispatch& dispatch) {
-    if (!impl_->loaded) throw std::logic_error("미설치 Session의 건설 수신 등록");impl_->construction->Register(dispatch,[this] { impl_->PrepareConstruction(); });
+    if (!impl_->loaded && !impl_->editorRegisteringCommands) throw std::logic_error("미설치 Session의 건설 수신 등록");impl_->construction->Register(dispatch,[this] { impl_->PrepareConstruction(); });
     // 원본 등록 표의54h 버전1/정책0/8바이트/빈 observer와 같은 수신이다.
     dispatch.Observe(0x54,{});dispatch.Version(0x54,1,0);dispatch.RequireLength(0x54,8);
     dispatch.Register(0x54,[this](std::uint32_t sender,PacketConnection&,std::span<const std::uint8_t> packet) { impl_->salvageCommand->Receive(sender,packet); });
 }
 // 실제 초기 등록과 같은 버전/정책/빈 observer이며 수신 시점의 현재 권한/타입을 읽는다.
 void RawCampaignSession::RegisterCarrierCommands(RawPacketDispatch& dispatch) {
-    if (!impl_->loaded) throw std::logic_error("미설치 Session의 채취 수신 등록");RegisterGeyserMined(dispatch,*impl_->geyserMined);
+    if (!impl_->loaded && !impl_->editorRegisteringCommands) throw std::logic_error("미설치 Session의 채취 수신 등록");RegisterGeyserMined(dispatch,*impl_->geyserMined);
     dispatch.Register(0x5b,[this](std::uint32_t,PacketConnection&,std::span<const std::uint8_t> packet) { impl_->ReceiveGeyserMined(packet); });
     dispatch.Observe(0x40,{});dispatch.Version(0x40,1,0);dispatch.RequireLength(0x40,18);
     dispatch.Register(0x40,[this](std::uint32_t owner,PacketConnection&,std::span<const std::uint8_t> packet) { impl_->carrierMove->Receive(owner,packet); });

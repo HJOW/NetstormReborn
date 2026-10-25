@@ -15,6 +15,9 @@
 #include "client/ClientSpGlobals.h"
 #include "client/ClientLocalStateGlobals.h"
 #include "client/ExistingEditorAfterCheckpoint.h"
+#include "client/EditorLocalTransport.h"
+#include "o/RawPathProcess.h"
+#include "o/RawPriestState.h" // 같은 실제 사제의 HP/지면 이동 불가 조회 선언을 직접 사용한다.
 #include "client/RawButtonControls.h"
 #include "client/RawMenuControls.h"
 #include "client/RawProductionControls.h"
@@ -23,9 +26,11 @@
 #include "client/EditorFortFileDevices.h"
 #include "client/FortTypeConversionStorage.h"
 #include "o/RawFortBadgesGlobals.h"
+#include "o/RawSunAviaryProcess.h" // 실제 사제 이동 프로세스의 동일 풀/부착 Form 조회 선언을 사용한다.
 #include "o/RawDataManagerSelection.h"
 #include "o/OriginalText.h"
 #include <algorithm>
+#include <bit>
 #include <chrono>
 #include <cstdio>
 #include <set>
@@ -233,8 +238,18 @@ TEST_CASE(CampaignExistingEditorCheckpoint_AdoptsNativePlayersAndPreservesCoreUn
 }
 
 namespace { // 실제 checkpoint/UI scope/State 공통 확정을 연결하며 GUI 없는 장치 입력만 명시한다.
+// 실제 Editor 큐의 외부 시계/기록/종료 장치만 제공하고 게임 sender나 처리 결과를 바꾸지 않는다.
+struct EditorInstallWireScene {
+    bool server{true};std::uint32_t now{100},closed{},released{}; // 아직 Native 공유 서버 DWORD가 없는 명시 장치 입력이며 Session bool로 대체하지 않는다.
+    std::shared_ptr<EditorLocalTransport> wire;std::vector<std::uint32_t> senders;std::vector<std::vector<std::uint8_t>> packets; // 실제 큐와 수신 원문/음수 sender의 관측이다.
+    bool callbacksReleased{},sessionOwnsRegistration{true}; // 정상 설치의 수신 반납과 기존 다른 소유자 때문에 거부한 표의 보존을 구별한다.
+    PacketDispatchHooks Hooks() {
+        PacketDispatchHooks hooks;hooks.now=[this] { return ++now; };hooks.record=[this](auto& connection,auto packet,auto) { senders.push_back(connection.sender);packets.emplace_back(packet.begin(),packet.end()); };
+        hooks.terminate=[](auto& connection) { connection.flags|=0x40; };hooks.close=[this](auto&) { ++closed; };hooks.release=[this](auto&) { ++released; };return hooks;
+    }
+};
 // 실제 Chat·Player·번역·작업 파일을 갖춘 같은 Client Session을 검사 동기 범위 동안 소유한다.
-template<class Body> void WithEditorInstallSession(Body body,bool prepared=false) {
+template<class Body> void WithEditorInstallSession(Body body,bool prepared=false,EditorInstallWireScene* wireScene=nullptr) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);const auto input=CheckpointInput(assets.files);ClientOptions options;options.gameDirectory=assets.root;Client client(std::move(options));client.StaticStrings()->Initialize(10240);if (prepared) { client.SpGlobals()->Store().Initialize();InitializeClientPlayerRecords(client); }InitializeClientChatManager(client);
     EditorFiles work(CheckpointRoot(assets.root.parent_path(),"ui-state-commit"),{assets.root,assets.root.parent_path()/"originalCD"});work.Prepare("Checkpoint385",input);CheckpointDevices devices;auto effects=devices.Effects(client,work);auto storage=std::make_shared<CampaignTemplateStorage>();auto services=devices.Make(client,storage,input);const auto surface=MakeRawSurfaceStorage(assets.game);
     services.surfaceStorage=surface;services.gameplayGlobals=client.GameplayGlobals();services.subscriberGlobals=client.SubscriberGlobals();services.playerRecords=client.PlayerRecords();services.localStateGlobals=client.LocalStateGlobals();services.editorPlayerUi=MakeEditorPlayerClientHooks(client);services.fortTechnologyUi=[&] { RefreshClientChatRankPrefix(client,assets.game,*surface); };
@@ -243,7 +258,19 @@ template<class Body> void WithEditorInstallSession(Body body,bool prepared=false
         surface->ownerMode={true,false,false};surface->links.battle=false;surface->links.mission=false;surface->spots[123]=19;const std::uint32_t metamap=0;client.CoreDataGlobals()->Select(gameplay.player,metamap,1,1);
         services.adoptPreparedWorld=true;services.adoptInitializedPlayers=true;services.coreDataGlobals=client.CoreDataGlobals();services.spGlobals=client.SpGlobals();services.processKernel=&client.GetKernel(); // 준비된 Native 경로에서 별도 SP 초기화나 별도 Kernel을 만들지 않는다.
     }
-    RawCampaignSession session(assets.game,assets.files,FortTemplate::Parse(input,assets.game.TypeTable()),"deferred.fort",std::move(services));body(session,client,effects,work);
+    if (wireScene) {
+        if (!prepared) throw std::logic_error("검사의 Editor 큐도 준비된 Player 물리를 요구함");wireScene->wire=std::make_shared<EditorLocalTransport>(client.PlayerRecords()->Records(),wireScene->server,wireScene->Hooks());wireScene->wire->Open(6799);services.editorTransport=wireScene->wire;
+        services.construction.configInt=[&client](auto name,std::int32_t fallback) { client.Configuration().ReadInt(name,fallback);return fallback; };services.construction.wallSeconds=[] { return 100.0; };services.construction.refresh=[&devices] { ++devices.production; }; // 실제 Client 설정과 원문 배치 뒤 외부 UI 통지를 공급하며 게임 판정을 대신하지 않는다.
+    }
+    const std::array<std::uint32_t,13> messages{0x5b,0x40,0x4f,0x50,0x60,0x61,0x5c,0x5f,0x7d,0x6d,0x3e,0x54,0x58};std::array<PacketRegistration,13> registrations{}; // 반납 전 현재 등록 정책을 독립적으로 고정한다.
+    { RawCampaignSession session(assets.game,assets.files,FortTemplate::Parse(input,assets.game.TypeTable()),"deferred.fort",std::move(services));body(session,client,effects,work);
+      if (wireScene) for (std::size_t index=0;index<messages.size();++index) registrations[index]=wireScene->wire->Dispatch().Registration(messages[index]); } // 수신 callback의 같은 Session이 Client/Player보다 먼저 반납된다.
+    if (wireScene) {
+        for (std::size_t index=0;index<messages.size();++index) { // receive만 반납하고 원문 observer/프로토콜/정책/길이 값은 유지한다.
+            const auto& current=wireScene->wire->Dispatch().Registration(messages[index]);CHECK((wireScene->sessionOwnsRegistration ? !current.receive : bool(current.receive)==bool(registrations[index].receive)) && current.version==registrations[index].version && current.mismatch==registrations[index].mismatch && current.length==registrations[index].length && bool(current.observer)==bool(registrations[index].observer));
+        }
+        wireScene->callbacksReleased=true;wireScene->wire->Disconnect(-1);wireScene->wire->Disconnect(9);wireScene->wire->CloseListener(); // 더 긴 Client 물리가 살아 있는 동안 전송 양끝도 명시 종료한다.
+    }
 }
 // 원문 State가 요구하는 서로 다른 전역을 소유하고 같은 Client의720BYTE/Player를 직접 빌린다.
 struct EditorInstallStateContext {
@@ -262,6 +289,14 @@ struct EditorInstallStateContext {
 ExistingEditorAfterCheckpointEffects EditorInstallTail(RawCampaignSession& session,std::uint32_t& calls) {
     ExistingEditorAfterCheckpointEffects effects;effects.hud=[&](auto command) { CHECK(command==0x0200003dU);++calls; };effects.wallSeconds=[&] { ++calls;return 100.5; };effects.requestMusic=[&](auto name) { CHECK(name=="ser22.mus");++calls; };effects.fortPalette=[&] { ++calls; };effects.islandCount=[&] { ++calls;return session.IslandCount(); };return effects;
 }
+// 실제 checkpoint와 tail을 같은 RawLocalMissionState 부모에서 실행하고 최종 공개는 호출자에게 남긴다.
+void RunEditorWireInstallState(RawCampaignSession& session,Client& client,const CampaignExistingEditorCheckpointServices& checkpoint,EditorFiles& work) {
+    EditorInstallStateContext scene(client);InputQueue input;std::uint32_t calls{};const auto tail=EditorInstallTail(session,calls);LocalMissionStateHooks hooks;hooks.logState=[](auto) {};
+    hooks.parentState=[&](auto selected) { CHECK(selected==1);session.InstallExistingEditorCheckpoint(checkpoint,client.ReadOnlyForts(),work);CHECK(CheckpointRejects<std::logic_error>([&] { session.PumpLocalConnection(); }));session.WithExistingEditorInstallUi(scene.owner,input,tail,[] {});return LocalMissionParentResult::Commit; };
+    RawLocalMissionState state(OriginalEdition::Patch1078,scene.owner.State(),scene.Globals(),std::move(hooks));state.Run();CHECK(calls==5 && scene.owner.Blocks()[1][0]==1 && scene.owner.Blocks()[3][0]==0 && scene.owner.Blocks()[4][0]==4);
+}
+// 실제 원문 패킷/슬롯의 비정렬DWORD를 관측하고 반환값을 게임 처리기에 되먹이지 않는다.
+std::uint32_t EditorWireDword(std::span<const std::uint8_t> bytes,std::size_t at) { if (at>bytes.size() || bytes.size()-at<4) throw std::out_of_range("Editor 검사 현재 DWORD 범위");return std::uint32_t(bytes[at])|(std::uint32_t(bytes[at+1])<<8)|(std::uint32_t(bytes[at+2])<<16)|(std::uint32_t(bytes[at+3])<<24); }
 }
 
 // 실제 checkpoint가 끝난 설치 scope에서만 필요한 조회를 허용하고 원문 Run의 전체 확정 뒤 공개한다.
@@ -334,4 +369,49 @@ TEST_CASE(CampaignExistingEditorCheckpoint_ActualProductionFormsInsideInstallSco
         };
         RawLocalMissionState state(OriginalEdition::Patch1078,scene.owner.State(),scene.Globals(),std::move(hooks));state.Run();CHECK(controls.Production() && calls==5);session.CommitExistingEditorInstall(scene.owner);controls.DisableProduction();CHECK(!controls.Production() && session.Core().bookkeeping.depth==0); // UI Form을 같은 실제 Session보다 먼저 반납한다.
     });
+}
+
+// 준비 Editor의 같은 실제 큐에서 건설/이동/회수 요청이 송신 뒤 한 pending씩 처리되고 Session 반납 때 수신기만 해제된다.
+TEST_CASE(CampaignExistingEditorCheckpoint_EditorWireQueuesNegativeSenderConstructionMoveAndSalvage) {
+    EditorInstallWireScene link;WithEditorInstallSession([&](RawCampaignSession& session,Client& client,const auto& checkpoint,EditorFiles& work) {
+        const auto wire=link.wire;CHECK(wire->Players().data()==session.PlayerRecords().data() && !wire->Dispatch().Registration(0x3e).receive);CHECK(CheckpointRejects<std::logic_error>([&] { session.SendLocalPacket(9,{}); }));RunEditorWireInstallState(session,client,checkpoint,work);CHECK(!wire->Dispatch().Registration(0x40).receive);session.CommitExistingEditorInstall(*client.LocalStateGlobals());
+        const std::array<std::uint32_t,13> messages{0x5b,0x40,0x4f,0x50,0x60,0x61,0x5c,0x5f,0x7d,0x6d,0x3e,0x54,0x58};
+        for (const auto type:messages) { const auto& registered=wire->Dispatch().Registration(type);CHECK(registered.receive && registered.version==1 && registered.mismatch==0); } // 기존 세 등록 함수의13종과 버전/정책을 모두 확인한다.
+        CHECK(wire->Dispatch().Registration(0x3e).observer && wire->Dispatch().Registration(0x58).observer && !wire->Dispatch().Registration(0x40).observer && !wire->Dispatch().Registration(0x54).observer);CHECK(wire->Dispatch().Registration(0x3e).length==25 && wire->Dispatch().Registration(0x40).length==18 && wire->Dispatch().Registration(0x54).length==8 && wire->Dispatch().Registration(0x58).length==16);CHECK(!wire->Dispatch().Registration(0x27).receive && session.LocalConnectionPhase()==0 && session.LocalConnectionPackets().empty());
+        auto core=session.Core();RawPathPoint point{};bool found{};
+        for (int y=8;y<248 && !found;++y) for (int x=8;x<248;++x) if (session.MayPlaceConstruction({82,0,static_cast<float>(x),static_cast<float>(y),0,1,0})) { point={static_cast<float>(x),static_cast<float>(y)};found=true;break; } // 현재 실제 MayPlace가 허용한 다리 한 칸을 독립 입력으로 선택한다.
+        CHECK(found);if (!found) return;ConstructionLocalMessage message;message.type=82;message.x=point.x;message.y=point.y;message.quality=3;message.timeLow=0x89abcdefU;message.timeHigh=0x76543210U;std::array<std::uint8_t,25> construction{};WriteConstructionCommand(message,construction);const auto freeBefore=core.pool.FreeCount();const auto money=session.Sp(1);session.SendLocalPacket(9,construction);CHECK(wire->QueuedFrames()==1 && link.packets.empty() && core.pool.FreeCount()==freeBefore && session.Construction().LastPacket().empty());
+        const Sid priest{static_cast<std::uint16_t>(session.FindPriestParticipation(1))};CHECK(priest.value);if (!priest.value) return;const auto movement=session.Priests().MovementProcessType(core.pool.Slot(priest)[10]);const auto raw=core.pool.Slot(priest);CHECK(raw[10]==158 && raw[34]==1 && !(raw[40]&0x20U) && !session.Priests().PriestState().GroundImmobile(priest)); // 보호 입력의 실제 owner1 사제이며 HP/현재 지면/강제 비트도 실제 몸체로 확인한다.
+        const RawPathPoint source{std::bit_cast<float>(EditorWireDword(raw,14)),std::bit_cast<float>(EditorWireDword(raw,18))};RawPathPoint destination{};bool movable{};auto input=session.MakeCarrierInput({});
+        for (int dy=-5;dy<=5 && !movable;++dy) for (int dx=-5;dx<=5;++dx) if (dx || dy) { auto candidate=RawPathPoint{source.x+static_cast<float>(dx),source.y+static_cast<float>(dy)};if (input->Evaluate(priest,candidate)==0x12) { destination=candidate;movable=true;break; } } // 원문004277f0/기존 Native 첫 입력의 일반 연결 지면은18이다.3은 간헐천/귀환/제단 접근점이므로 받지 않는다.
+        CHECK(movable);if (!movable) return;session.RequestCarrierMove(priest,destination,0);CHECK(wire->QueuedFrames()==2 && link.packets.empty() && !FindAttachedProcess(core.pool,priest,movement).value && core.pool.FreeCount()==freeBefore);
+        session.PumpLocalConnection();CHECK(wire->QueuedFrames()==1 && link.packets.size()==1 && link.senders==std::vector<std::uint32_t>{0xffffffffU} && link.packets.front()==std::vector<std::uint8_t>(construction.begin(),construction.end()));const auto notice=session.Construction().LastPacket();CHECK(notice.size()==29 && notice[4]==82 && notice[15]==1 && notice[17]==3 && notice[26]==1);if (notice.size()!=29) return;const Sid bridge{static_cast<std::uint16_t>(notice[27]|(std::uint16_t(notice[28])<<8))};CHECK(core.pool.Slot(bridge)[10]==82 && core.pool.Slot(bridge)[34]==1 && !(core.pool.Slot(bridge)[11]&3) && session.Sp(1)==money && EditorWireDword(notice,18)==0 && EditorWireDword(notice,22)==0); // 실제 request 본문만 Fort owner를 보정하고 wire 시각은 원문대로 소비하지 않는다.
+        session.PumpLocalConnection();CHECK(wire->QueuedFrames()==0 && link.packets.size()==2 && link.packets.back()[1]==0x40 && link.senders.back()==0xffffffffU);const auto form=FindAttachedProcess(core.pool,priest,movement);CHECK(form.value && dynamic_cast<RawPathProcess*>(core.processes.FromForm(form)));CHECK(wire->Pending().sender==0xffffffffU && wire->Client().sender==9 && !(wire->Pending().flags&2U));
+        const auto beforeSalvage=session.Sp(1);session.RequestSalvage(bridge.value);CHECK(wire->QueuedFrames()==1 && link.packets.size()==2 && !(core.pool.Slot(bridge)[11]&1U) && session.Sp(1)==beforeSalvage);session.PumpLocalConnection();CHECK(!wire->QueuedFrames() && link.packets.size()==3 && link.packets.back()[1]==0x54 && link.senders.back()==0xffffffffU && (core.pool.Slot(bridge)[11]&1U));CHECK(client.GameplayGlobals()->player.battleOwner==1 && client.GameplayGlobals()->player.templateOwner==1 && session.LocalConnectionPhase()==0 && !wire->Dispatch().Registration(0x27).receive);
+    },true,&link);CHECK(link.callbacksReleased && link.closed==3 && link.released==3);
+}
+
+// 실제 현재00594fa4가 바뀌면 음수 sender의 비용 선검사도 그 소비 위치에서 다시 읽는다.
+TEST_CASE(CampaignExistingEditorCheckpoint_EditorWireReadsCurrentChargeGateWithoutSenderNormalization) {
+    EditorInstallWireScene link;WithEditorInstallSession([&](RawCampaignSession& session,Client& client,const auto& checkpoint,EditorFiles& work) {
+        RunEditorWireInstallState(session,client,checkpoint,work);session.CommitExistingEditorInstall(*client.LocalStateGlobals());CHECK(session.Core().types[75].cost>0);ConstructionLocalMessage message;message.type=75;message.x=50;message.y=50;std::array<std::uint8_t,25> packet{};WriteConstructionCommand(message,packet);client.GameplayGlobals()->world.missionPost=false;session.SendLocalPacket(9,packet);bool actualShortfall{};
+        try { session.PumpLocalConnection(); }catch (const std::out_of_range& error) { actualShortfall=std::string_view(error.what())=="건설 비용 처리 플레이어 번호 오류"; } // sender-1의 실제 Money0→비용 부족 진단을 확인하며 이를 owner1로 정규화하지 않는다.
+        CHECK(actualShortfall && link.packets.size()==1 && link.packets.front()==std::vector<std::uint8_t>(packet.begin(),packet.end()) && link.senders.front()==0xffffffffU && link.wire->Pending().depth==0 && session.Construction().LastPacket().empty());client.GameplayGlobals()->world.missionPost=true;
+    },true,&link);CHECK(link.callbacksReleased);
+}
+
+// 다른 처리기가 이미 등록된 전송 표를 부분 덮어쓰거나 미완료 Session의 입력을 공개하지 않는다.
+TEST_CASE(CampaignExistingEditorCheckpoint_EditorWireRejectsOwnedRegistrationBeforePublishing) {
+    EditorInstallWireScene link;link.sessionOwnsRegistration=false;WithEditorInstallSession([&](RawCampaignSession& session,Client& client,const auto& checkpoint,EditorFiles& work) {
+        RunEditorWireInstallState(session,client,checkpoint,work);std::uint32_t otherCalls{};link.wire->Dispatch().Register(0x58,[&](auto,auto&,auto) { ++otherCalls; });CHECK(CheckpointRejects<std::logic_error>([&] { session.CommitExistingEditorInstall(*client.LocalStateGlobals()); }));CHECK(link.wire->Dispatch().Registration(0x58).receive && !link.wire->Dispatch().Registration(0x40).receive && !link.wire->Dispatch().Registration(0x3e).receive && !otherCalls);CHECK(CheckpointRejects<std::logic_error>([&] { session.Cursor(); }));CHECK(CheckpointRejects<std::logic_error>([&] { session.SendLocalPacket(9,{}); }));
+    },true,&link);CHECK(link.callbacksReleased);
+}
+
+// 전송의 이전/다른 Player 물리와 로그인 동시 사용은 gameplay 대여/모드 변경 전 거부한다.
+TEST_CASE(CampaignExistingEditorCheckpoint_EditorWireRejectsForeignPlayersAndLoginBeforeBorrow) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);const auto input=CheckpointInput(assets.files);ClientOptions options;options.gameDirectory=assets.root;Client client(std::move(options));InitializeClientPlayerRecords(client);std::array<std::uint8_t,1620> foreign{};EditorInstallWireScene wire;const auto transport=std::make_shared<EditorLocalTransport>(foreign,wire.server,wire.Hooks());client.GameplayGlobals()->cursor.screenX=73;
+    for (const bool login:{false,true}) { // 두 잘못된 수명 계약을 각각 생성 전 검사한다.
+        auto storage=std::make_shared<CampaignTemplateStorage>();CheckpointDevices devices;auto services=devices.Make(client,storage,input);services.editorTransport=transport;services.adoptPreparedWorld=true;services.adoptInitializedPlayers=true;services.gameplayGlobals=client.GameplayGlobals();services.subscriberGlobals=client.SubscriberGlobals();services.playerRecords=client.PlayerRecords();if (login) services.localLogin.emplace();
+        CHECK(CheckpointRejects<std::invalid_argument>([&] { RawCampaignSession session(assets.game,assets.files,FortTemplate::Parse(input,assets.game.TypeTable()),"deferred.fort",std::move(services)); }));CHECK(!client.GameplayGlobals()->Borrowed() && client.GameplayGlobals()->cursor.screenX==73 && storage->OwnedImages()==0);
+    }
 }
