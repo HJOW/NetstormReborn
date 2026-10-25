@@ -14,7 +14,7 @@
 
 ## 1. 현행 목표 ([TODO.md](TODO.md))
 
-- Early Missions 6개, 캠페인 전체 16개, 데모 3개를 사용자가 플레이할 수 있고, 원본 10.78과 완전히 같게 동작하도록 한다.
+- Early Missions 6개, 캠페인 전체 16개, Priest Training 9개, 데모 3개를 사용자가 플레이할 수 있고, 원본 10.78과 완전히 같게 동작하도록 한다. Priest Training은 TODO.md의 "캠페인 (전체)" 문구에는 들어 있지 않지만, 2026-10-26 사용자 지시로 목표에 포함했다.
 - Edit 메뉴(커스텀 맵·시나리오 포함)를 구현한다.
 - 메인 메뉴 중 Multiplayer를 제외한 나머지 메뉴를 구현한다.
 - 게임 진행 중 UI(좌측 덱, 좌측 하단 미니맵, 다리 건설 단축키 QWASZX, ESC 메뉴)를 구현한다.
@@ -32,7 +32,7 @@
 | Priest Training (offical2) | bc1menu76, bc2bridging76, bc3acid_bar76, bc4bow_rush76, bc5walkers76, bc6mows76, bc7sun_bars76, bc8fury76, bc9ssun_bars76 |
 
 - 데모 2·3은 캠페인 2-4·1-6과 같은 원본 자원을 쓰지만, 일반 플레이와 데모 모드는 따로 검증한다([데모 대응 근거](docs/gameplay/demo-campaign-map.md)).
-- Priest Training 9개는 메뉴 진입 검사(34경로)에는 포함한다. TODO.md의 "캠페인 (전체)" 완주 범위에 들어가는지는 정해지지 않았으므로, 완주 검증을 계획하기 전에 사용자에게 확인한다.
+- 메뉴 진입 검사(34경로)는 위 일반 미션 31개(Early 6 + 캠페인 16 + Priest Training 9)와 데모 3개를 모두 포함한다.
 
 ## 2. 현재 상태 (2026-10-26 기준)
 
@@ -54,11 +54,11 @@
 | 캠페인 1-2~1-6 | 진입, Start, 자동 AI·Kernel 400프레임 진행(단위321) | 자연 플레이, 승패, 후속 명령 |
 | 캠페인 2장·3장 | 진입과 Start 통과 | 등장 TYPE의 미연결 경계 점검 후 자연 플레이 |
 | 데모 3개 | 실제 메뉴 진입, 15초 안내 시간 초과, 로컬 AI를 포함한 자동 진행 진입 | `demoRestartTimer=360` 만료 뒤 재시작 반복과 정리, 데모 분기 안내 |
-| Priest Training 9개 | 진입 통과(bc8fury76의 기술 선택 정지는 단위376에서 해결) | 범위 확정 후 결정 |
+| Priest Training 9개 | 진입 통과(bc8fury76의 기술 선택 정지는 단위376에서 해결) | 각 스테이지의 자연 완주와 완료 안내·메뉴 복귀 |
 
 ### 2.3 기능 영역별 상태
 
-- **메인 메뉴:** 원본 10.78의 8버튼(Campaign, Multiplayer, Demo, Help, Edit, Credits, Options, Quit)을 배치했다([UberGump.cpp](cpppj/src/client/UberGump.cpp)). Campaign(UCampaign 목록), Demo, Help, Options(해상도·음량 등)는 실제 GUI 검사에서 확인했다. Credits(`Tell Credits`)와 Quit도 연결돼 있지만, Credits의 전체 흐름(20초 자동 넘김, 마지막 쪽 뒤 메인 메뉴 복귀)을 cpppj에서 따로 검증한 기록은 없다. Multiplayer는 이번 범위 밖이라 `NotImplemented` 안내를 띄운다. 남은 메뉴 작업은 Edit 완성과 Credits·Quit 확인이다.
+- **메인 메뉴:** 원본 10.78의 8버튼(Campaign, Multiplayer, Demo, Help, Edit, Credits, Options, Quit)을 배치했다([UberGump.cpp](cpppj/src/client/UberGump.cpp)). Campaign(UCampaign 목록), Demo, Help, Options(해상도·음량 등)는 실제 GUI 검사에서 확인했다. Credits(`Tell Credits`)와 Quit도 연결돼 있지만 cpppj에서 따로 검증한 기록은 없다. Multiplayer는 이번 범위 밖이라 `NotImplemented` 안내를 띄운다. 남은 메뉴 작업은 Edit 완성과 Credits·Quit 확인(3절 7번)이다.
 - **Edit 메뉴:**
   - 메인 Edit → 편집 가능 맵 목록(원본 50칸 상한, `mayEditMissions` 옵션) → 선택 예약(State1) → LoadEditable 안내·Cancel까지 실제 GUI로 확인했다.
   - Editor Session 조립(기존 Fort의 최초 World·Deck, 작업본 파일 장치, 준비 대여·UI 설치, 로컬 전송·요청 큐)과 전체 Fort 저장·재파싱·재로드는 단위 검사에서만 동작한다. 제품에서 편집 화면을 설치하는 `RawCampaignSession::InstallExistingEditorCheckpoint`([RawCampaignSession.cpp](cpppj/src/client/RawCampaignSession.cpp))는 아직 테스트에서만 호출된다.
@@ -107,8 +107,13 @@
 - [ ] 캠페인 1-1: 적 사제 포획·운반·희생 → 자연 승리 → 1-2 진입을 확인하고, 패배와 Retry도 확인한다.
 - [ ] 캠페인 1-2 → 1-6 → 2장 → 3장 순서로 넓힌다. 각 장에 앞서 등장 유닛·건물·주문 TYPE을 목록화하고, 이동 분배(38/41/42), 총 피해·예약 피해 분배, 파생 삭제·내용물 통지, 파편 색표처럼 아직 fallback인 경계에 도달하는지 확인해 필요한 원본 몸체를 연결한다. Devastation 외 주문도 캠페인에서 쓰이면 범위에 넣는다.
 - [ ] 2026-10-21 총정리의 PLAY-1(이동 정리 환불), PLAY-2(중립 회복·사제 중립 복귀), PLAY-5(Start의 세계 랜덤 간헐천 `00486440` 등) 경계는 이후 단위에서 일부 해결됐을 수 있다. 착수 전에 현재 소스의 미공급·`FillMissing` 경계를 다시 조사한다. 옛 목록은 [LEFT_JOBS.old.md](LEFT_JOBS.old.md)의 "현행 목표 잔여 작업 총정리" 절에 있다.
-- [ ] TEST02 실제 포획·희생 테스트: 사용자 수정판(`3c12b4e7`, Fort 5,282BYTE)과 워크샾 25종 복원은 끝났지만 실제 테스트는 아직 하지 않았다. 진행 전에 사용자에게 확인하고 Fort·언어 파일의 SHA와 배치를 다시 확인한다. 옛 좌표는 재사용하지 않는다. 보행 유닛 공격에는 크로스보우·썬 디스크 발사기·맨오워풀·데빌메이커를 우선하고 훨리베이스는 제외한다.
-- [ ] Priest Training은 범위가 정해진 뒤 결정한다.
+- [ ] Priest Training 9개도 각 스테이지를 브리핑 → 실제 진행 → 완료 안내 → 메뉴 복귀까지 확인한다. bc8fury76은 원소 선택(Sun 등) 분기가 있으므로 선택지마다 확인한다.
+- [ ] **테스트용 로컬 owner AI 옵션 구현:** 일반 미션(demo0)을 유지한 채 로컬 owner에도 데모와 같은 원본 공통 AI를 생성·실행하는 명시 테스트 옵션을 만든다(예: [가능성 검토](docs/exe/cpp-test-local-ai-and-sp-feasibility-20261021.md)의 `--test-local-ai original`). 공통 AI의 자동 실행은 단위321에서 연결됐으므로 이제 구현할 수 있다.
+  - 전체 데모 모드 전환(`gate.demo=1`)은 쓰지 않는다. Early 튜토리얼 처리 생략, 사건 이름의 `Demo` 접두어, 데모 종료 타이머가 함께 바뀌기 때문이다.
+  - 로컬 AI 설정(StartMoney, Tech, 이름/Off/NoTemple/동맹/능력)은 공통·적 `ai...` 설정을 고치지 않고 별도로 준비한다. 적의 설정·동작 경로는 그대로 두고, 공유 난수 소비 차이만 보고한다.
+  - 기본 게임·적 AI·저장 프로필에 섞지 않고, 원본 분석 결과가 아닌 테스트 조작임을 주석·기록에 표시한다.
+  - 로컬 AI로 얻은 결과는 원본 규칙·연결 검증 자료다. 사람이 직접 입력한 자연 플레이 검증과 구분해 기록한다.
+- [ ] **TEST02 포획·희생 테스트(보류 중):** 작업 AI가 직접 조작하면 진행이 너무 느리므로, 위 로컬 owner AI 옵션으로 데모의 아군 AI가 플레이하게 해서 테스트한다(사용자 결정, 2026-10-26 확인). 사용자 수정판(`3c12b4e7`, Fort 5,282BYTE)과 워크샾 25종 복원은 끝났다. 옵션 구현 뒤 진행하며, 시작 전에 Fort·언어 파일의 SHA와 배치를 다시 확인하고 옛 좌표는 재사용하지 않는다. 로컬 AI의 기술 구성을 정할 때는 보행 유닛 공격용으로 크로스보우·썬 디스크 발사기·맨오워풀·데빌메이커를 우선하고 훨리베이스는 제외한다는 기존 지시를 참고한다.
 
 ### 4. 미션 수명·진행 저장·데모 반복
 
@@ -136,7 +141,8 @@
 ### 7. 기타 정리
 
 - [ ] 2.4의 미해결 이슈를 처리한다.
-- [ ] 메인 메뉴 Credits의 전체 흐름(20초 자동 넘김, 마지막 쪽 뒤 메인 메뉴 복귀)과 Quit를 원본과 대조한다.
+- [ ] **Credits:** 메인 메뉴 Credits 버튼은 창 하나를 띄운다. 원본 tell `[Credits]` 창(배경 nsstart)의 제목, 두 항목("Netstorm 10.72 Patch Credits" → `CreditsNew`, "Netstorm Original Credits" → `Creditsold`), Cancel 버튼의 표시·동작을 원본과 대조한다. 과거 원본 자동 분석(2026-09-30)에서 Original Credits는 14쪽이 20초씩 자동으로 넘어간 뒤 메인 메뉴로 돌아왔으므로, 하위 항목도 함께 확인한다.
+- [ ] **Quit:** 클릭하면 게임이 즉시 종료되므로 화면 대조는 어렵다. 디컴파일한 원본의 종료 경로(종료 전 처리)를 정적으로 비교하고, 클론에서는 정상 종료(종료 코드 0, 프로세스·창이 남지 않음)와 재실행 시 오류가 없는지만 확인한다.
 - [ ] 최신 소스 PC에서 `cpppj/package-cpppj.ps1`을 `-NoBuild` 없이 실행해 빌드 → 묶기가 이어지는지, `BUILD_INFO.txt`의 실행 파일 시각·SHA가 새 산출물인지 확인한다.
 - [ ] 국·영 README의 cpppj 진행 상태를 현재 범위로 갱신한다.
 
@@ -150,7 +156,7 @@
 
 - **긴 검사 묶음(2026-10-25 사용자 결정):** 작업 단위마다 34경로 진입, 긴 Early 완주, 전체 CTest를 반복하지 않는다. 단위별로는 원문 근거와 변경 부위 집중 검사, 필요한 증분 빌드, 인계, 커밋을 한다. 전체 CTest와 긴 실제 플레이는 기능 묶음 완성 또는 3~5개 단위 뒤 같은 최종 제품으로 통합 실행한다. 실제 입력·타이머·저장처럼 즉시 확인이 필요한 변경은 해당 장면만 짧게 먼저 실행한다.
 - **기록 원칙:** 컴파일만 한 검사를 실행 통과로 적지 않는다. 명시 입력·정적 대조·컴파일·C++ 검사·GUI 관측을 구별한다. 최초 실패와 교정 과정의 원시 로그를 지우지 않으며, 검사 기대값을 제품에 맞춰 약화하지 않는다. 단위 검사 통과나 미션 진입만으로 완주·동일성을 선언하지 않는다.
-- **테스트 전용 조작:** `--test-bridge-patterns` 같은 임시 조작은 원본 분석 결과가 아님을 주석·기록에 표시하고 기본 게임·적 AI·저장 프로필에 섞지 않는다. 우리 편만 AI 활성화·행동 빈도 증가·시작 SP 추가는 [가능성 검토](docs/exe/cpp-test-local-ai-and-sp-feasibility-20261021.md)만 했고 구현하지 않았다.
+- **테스트 전용 조작:** `--test-bridge-patterns` 같은 임시 조작은 원본 분석 결과가 아님을 주석·기록에 표시하고 기본 게임·적 AI·저장 프로필에 섞지 않는다. 우리 편만 AI 활성화·행동 빈도 증가·시작 SP 추가는 [가능성 검토](docs/exe/cpp-test-local-ai-and-sp-feasibility-20261021.md)만 했고 구현하지 않았다. 이 중 로컬 owner AI 옵션은 TEST02 포획·희생 테스트에 쓰기로 했다(3절 3번).
 - **보호 파일:** `originals/`, `originalCD/`의 파일을 수정·삭제하지 않는다(options.cfg, fullscreenStateFile.dat 제외). 게임 실행 전후 `originals/` 전체 해시를 비교하고 허용 설정 파일을 복원한다. AGENTS.md도 수정하지 않는다.
 - **빌드:** HJOW-Athlon은 Visual Studio 18(2026) 생성기·MSBuild 18.x를 쓴다. 최근 사용한 명령은 `cmake --build cpppj/build --config Release --parallel 4 -- /p:UseMultiToolTask=true /p:MultiProcMaxCount=4 /p:EnforceProcessCountAcrossBuilds=true`이며, 이전 컴파일러·CMake 자식 프로세스가 모두 끝난 뒤 시작한다. 상세는 [C++ 빌드](docs/cpp-build.md)를 본다.
 - **Git:** 작업 트리에 CRLF 파일이 있으므로 확인·스테이징에는 `git -c core.autocrlf=false`와 필요하면 `-c core.whitespace=cr-at-eol`을 쓴다. 저장소·전역 설정은 바꾸지 않는다. 다른 PC·세션의 변경이 섞일 수 있으므로 커밋할 파일만 지정해 stage한다.
