@@ -1,0 +1,33 @@
+{
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "parentObservations": 230,
+  "inputObservations": 384,
+  "normalParentReturns": 226,
+  "explicitParentStops": 4,
+  "parentRanges": [
+    [
+      4520400,
+      4520442
+    ]
+  ],
+  "nativeInputCommand": 33554637,
+  "actualFullDeckAndRandomExecuted": true,
+  "getDeckIsExplicitBoundary": true,
+  "inputParentIsExplicitBoundary": true,
+  "originalGameExecuted": false,
+  "osExecuted": false,
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_priestmenu.py": "8d1474792e7511fa777e7bd7bd369f2a2a0f9f5c35643e420d65a3fa4744bac9",
+    "tools/decomp_deck_restore.py": "4a2bf1e45233400aa46c17a12d326d3b121a61c16a2bf75462615abd6d478fa8",
+    "tools/decomp_production_shortcuts.py": "4caf1c87e4a152f65b2815395ea553b2609587be06a95512974b893e985b24e3",
+    "tools/decomp_game_menu_actions.py": "9130163b3bd761b08b37397f69ba3e074b257967a5fc934b68210bc6325f2df7",
+    "tools/decomp_full_deck_command.py": "c1af95483b92a6fd49ceff5fb2a99a235e0f3e953d5a8c2c2fde1ea70fc884dd",
+    "cpppj/tests/fixtures/full-deck-command-x86.tsv": "b74b5bb4c8d4fa91809d46bdd4750d7e303f13b13520fab0e708e252b0bccda1",
+    "cpppj/tests/fixtures/full-deck-input-x86.tsv": "524da298935a7997f0a642265e94b7e34e1d9bcfa2050974d1bd3db0a894ea04"
+  }
+}

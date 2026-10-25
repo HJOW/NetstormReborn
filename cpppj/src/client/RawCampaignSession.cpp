@@ -3451,6 +3451,15 @@ bool RawCampaignSession::UpdateProductionContents() {
     s.core.bookkeeping.productionDirty=0;static_cast<void>(s.production->Refresh(s.playerState.templateOwner));s.productionSync->Synchronize();return true;
 }
 
+//UserInput의모드관문은호출자가소유한다. 같은현재소유자의Deck만채우고즉시HUD갱신이나기술획득은추가하지않는다.
+void RawCampaignSession::GetFullDeck() {
+    auto& s=*impl_;if (!s.loaded) throw std::logic_error("설치 전 전체 Deck 명령");
+    DeckRestoreHooks hooks;hooks.assertion=SessionMissing<void,DeckRestoreAssertion>();
+    hooks.type=[&s](auto type) { if (type>=s.core.types.size()) throw std::out_of_range("전체 Deck의 실제 TYPE 범위");const auto& record=s.core.types[type];return FullDeckType{record.group,record.flags2}; };
+    const auto typeCount=static_cast<std::int32_t>(s.core.types.size());
+    GetFullDeckCommand(s.fullDeck,s.playerState.templateOwner,s.core.bookkeeping.productionDirty,[&s](auto owner) { return s.productionDeck->Bytes(s.productionDeck->Get(owner)); },s.random,{typeCount,s.motionState.carrier.nuggetType,s.geyserType},hooks);
+}
+
 // 유지 계산에 새 월드 사본을 주지 않고 같은 장기 Player/Pool/설정을 매 호출 시 조회한다.
 std::unique_ptr<RawProductionMaintenance> RawCampaignSession::MakeProductionMaintenance(ProductionMaintenanceGlobals& globals,ProductionMaintenancePanel& panel,std::function<double()> wall,std::function<void(std::uint32_t)> refresh) {
     auto* current=impl_.get();ProductionMaintenanceReads reads;

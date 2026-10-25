@@ -16,12 +16,12 @@ constexpr std::size_t kMenuRows=610,kMenuColumns=21; // 두제어어에서독립
 constexpr std::uint32_t kMenuArena=0x01010000; // 독립외부장치의고정주소다.
 constexpr std::array<std::uint32_t,16> kMenuGlobals{0x5c85a4,0x594fb8,0x594fc8,0x594fa4,0x595344,0x540c70,0x59a8ac,0x59a8b0,
     0x55b4b0,0x565dd4,0x55a714,0x5e18a4,0x59534c,0x5c8464,0x55a70c,0x5e189c}; // fixture의현재전역순서다.
-constexpr std::array<std::pair<GameMenuActionCommand,std::uint32_t>,9> kMenuCommands{{
+constexpr std::array<std::pair<GameMenuActionCommand,std::uint32_t>,10> kMenuCommands{{
     {GameMenuActionCommand::QuitApp,0x02000001},{GameMenuActionCommand::RequestQuitApp,0x02000094},
     {GameMenuActionCommand::SoundVolume,0x020000e6},{GameMenuActionCommand::MusicVolume,0x020000e7},
     {GameMenuActionCommand::Pause,0x020000cf},{GameMenuActionCommand::ViewHome,0x020000ae},
     {GameMenuActionCommand::ViewYourPriest,0x020000b8},{GameMenuActionCommand::HideBuildings,0x020000f1},
-    {GameMenuActionCommand::ReloadTheams,0x02000123}}}; // 보호PE에서읽은서로다른불변명령ID다.
+    {GameMenuActionCommand::ReloadTheams,0x02000123},{GameMenuActionCommand::GetFullDeck,0x020000cd}}}; // 보호PE에서읽은서로다른불변명령ID다.
 struct MenuExplicitStop {}; // 명시효과중단을정상메뉴반환과구별한다.
 
 // 마지막빈필드까지원문구분자사이의바이트를보존한다.

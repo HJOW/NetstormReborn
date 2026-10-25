@@ -2180,3 +2180,5 @@ target_sources(netstorm_tests PRIVATE ClientCursorGlobalsTests.cpp)
 target_sources(netstorm_tests PRIVATE StateStorageCleanupTests.cpp)
 # 원본 실제 Pool 부모·하위 Reset·삭제80DWORD와 장기 실패점을 대조한다.
 target_sources(netstorm_tests PRIVATE SquidPoolResetTests.cpp)
+#전체Deck명령부모·실제입력관문의독립CPU관측과실제Session연결을대조한다.
+target_sources(netstorm_tests PRIVATE FullDeckCommandTests.cpp)

@@ -57,4 +57,11 @@ void LoadFullDeck(std::span<std::uint8_t> deck,GameRandom& random,const FullDeck
         ++index;
     } while (index<globals.typeCount);
 }
+//별도Deck이나난수상태를만들지않고부모가선택한현재반환메모리에서기존전체본문을실행한다.
+void GetFullDeckCommand(std::uint32_t& fullDeck,const std::uint32_t& templateOwner,std::uint32_t& productionDirty,const std::function<std::span<std::uint8_t>(std::uint32_t)>& deck,GameRandom& random,const FullDeckGlobals& globals,const DeckRestoreHooks& hooks) {
+    fullDeck=1;
+    const auto current=NeedRestore(deck)(templateOwner);
+    LoadFullDeck(current,random,globals,hooks);
+    productionDirty=1;
+}
 }

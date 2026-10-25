@@ -311,6 +311,7 @@ public:
     const o::ContainedFinderState& ProductionFinder() const; // 같은 현재 내용물 검색 전역이다.
     ProductionControlContext ProductionContext() const; // 실제 같은 물리/현재 전역/Player/옵션을 초기 HUD 생성자에 빌린다.
     bool UpdateProductionContents(); // 실제현재모드/부모/dirty→Deck 재계산→43df80 단락이다.
+    void GetFullDeck(); //0044f9d0의실제전체Deck명령을같은현재Client DWORD·Player Deck·공유난수로실행한다.
     std::unique_ptr<RawProductionMaintenance> MakeProductionMaintenance(ProductionMaintenanceGlobals& globals,ProductionMaintenancePanel& panel,std::function<double()> wall,std::function<void(std::uint32_t)> refresh); // 같은 현재 Player/SP/난수/생성/삭제를 실제 UI 유지에 연결한다.
     // 실제 PlayerWorld가 공유하는00595344 DWORD를 읽는다. subscriber/Ready와 합치지 않는다.
     std::uint32_t PlayerKnown() const;

@@ -33,4 +33,6 @@ void OpenRestoredDeck(std::span<std::uint8_t> deck,GameRandom& random,std::uint3
 void AppendRestoredDeckEntry(std::span<std::uint8_t> deck,std::uint32_t type,std::uint32_t chance,std::uint32_t power,std::uint32_t remaining,const DeckRestoreHooks& hooks);
 //0044f680:세DWORD초기화→현재TYPE조건→같은random.Next(5)→실제0044f290/0044f160추가다.
 void LoadFullDeck(std::span<std::uint8_t> deck,GameRandom& random,const FullDeckGlobals& globals,const DeckRestoreHooks& hooks);
+//0044f9d0:모드1→현재owner의실제Deck확보→FullDeck전체→생산dirty1 순서다. 하위 실패 때 뒤 store는 실행하지 않는다.
+void GetFullDeckCommand(std::uint32_t& fullDeck,const std::uint32_t& templateOwner,std::uint32_t& productionDirty,const std::function<std::span<std::uint8_t>(std::uint32_t)>& deck,GameRandom& random,const FullDeckGlobals& globals,const DeckRestoreHooks& hooks);
 }

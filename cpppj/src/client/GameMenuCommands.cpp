@@ -6,7 +6,7 @@
 namespace netstorm::client {
 namespace {
 // 00542xxx는원문주소식별자다. 런타임호스트포인터로역참조하지않는다.
-constexpr std::array<std::pair<std::uint32_t,std::uint32_t>,26> kCommands{{
+constexpr std::array<std::pair<std::uint32_t,std::uint32_t>,27> kCommands{{
     {0x00542780U,0x02000022U},
     {0x005427b8U,0x02000030U},
     {0x005428acU,0x0200006dU},
@@ -24,6 +24,7 @@ constexpr std::array<std::pair<std::uint32_t,std::uint32_t>,26> kCommands{{
     {0x00542a08U,0x020000c5U},
     {0x00542a0cU,0x020000c6U},
     {0x00542a30U,0x020000cfU},
+    {0x00542a28U,0x020000cdU}, //GetFullDeck의 원본 입력 ID다.
     {0x00542a4cU,0x020000d6U},
     {0x00542a60U,0x020000dbU},
     {0x00542a8cU,0x020000e6U},
@@ -48,6 +49,7 @@ std::uint32_t GameMenuScriptCode(std::string_view name) {
     if (key=="menujustclosed") return 0x020000beU;
     if (key=="reloadtheams") return 0x02000123U;
     if (key=="pause") return 0x020000cfU;
+    if (key=="getfulldeck") return 0x020000cdU;
     return 0xffffffffU;
 }
 // 실제큐연결허용과선택후미연결명령진단에같은표를쓴다.

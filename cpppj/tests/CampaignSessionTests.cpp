@@ -14,6 +14,8 @@
 #include "client/ClientCoreDataGlobals.h"
 #include "client/ClientPlayerRuntime.h"
 #include "client/ClientGameplayGlobals.h"
+#include "client/ClientRandomGlobals.h"
+#include "o/RawDeckRestore.h"
 #include "client/ClientSubscriberGlobals.h"
 #include "client/RawCampaignMissionStartBindings.h"
 #include "client/UserInput.h"
@@ -4894,4 +4896,11 @@ TEST_CASE(CampaignSession_PriestQuarterHpUsesCurrentClientOwner) {
 TEST_CASE(CampaignSession_MetaZoneCleanupUsesActualCurrentWorldDestroy) {
     Client client(SessionLinksOptions());SessionServicesFixture external;auto services=SharedKernelServices(client,external);services.gameplayGlobals=client.GameplayGlobals();services.subscriberGlobals=client.SubscriberGlobals();services.localStateGlobals=client.LocalStateGlobals();auto session=SharedKernelSession(std::move(services));session->Load();const auto number=session->FindPriestParticipation(1);CHECK(number>0 && number<=65535);const Sid priest{static_cast<std::uint16_t>(number)};auto meta=client.LocalStateGlobals()->MetaZones();meta.firstReset=0;SessionLinksPut(meta.records,0,1);SessionLinksPut(meta.records,76,number);CHECK(!(session->Core().pool.Slot(priest)[11]&1));
     ClearClientMetaZoneRecords(client,*session->World().Storage());CHECK((session->Core().pool.Slot(priest)[11]&1) && meta.firstReset==0 && std::all_of(meta.records.begin(),meta.records.end(),[](auto b) { return b==0; }) && session->Core().bookkeeping.depth==0 && session->Core().destroy.PreDepth()==0 && session->Core().destroy.PostDepth()==0); //별도 새 Session·더미 삭제·직접 dead비트 쓰기로 성공을 만들지 않는다.
+}
+
+//실제Client의현재Template소유자·Player Deck·FullDeck DWORD·공유난수·dirty를한번에연결한다.
+TEST_CASE(FullDeckCommand_ActualClientSessionUsesSharedOwnerDeckAndRandom) {
+    Client client(SessionLinksOptions());SessionServicesFixture external;auto services=SharedKernelServices(client,external);services.gameplayGlobals=client.GameplayGlobals();services.subscriberGlobals=client.SubscriberGlobals();services.randomGlobals=client.RandomGlobals();auto session=SharedKernelSession(std::move(services));session->Load();auto core=session->Core();auto& game=*client.GameplayGlobals();game.player.templateOwner=2;const auto& decks=session->Production().Deck();const auto token=decks.Get(2),otherToken=decks.Get(1);const auto bytes=decks.Bytes(token),other=decks.Bytes(otherToken);const auto* address=bytes.data();std::vector<std::uint8_t> expected(bytes.begin(),bytes.end()),otherBefore(other.begin(),other.end());GameRandom expectedRandom(client.RandomGlobals()->Game().State());const auto typeCount=static_cast<std::int32_t>(core.types.size());const std::uint32_t nugget=154;const auto& geyser=game.GameAux()->GeyserType(); //154는보호PE005412c0의현재TYPE입력이다.복원된전체Deck본문은별도Native230관측으로검증한다.
+    DeckRestoreHooks hooks;hooks.type=[&](auto type) { const auto& record=core.types[type];return FullDeckType{record.group,record.flags2}; };hooks.assertion=[](auto) { throw std::logic_error("실제전체Deck의예상밖진단"); };LoadFullDeck(expected,expectedRandom,{typeCount,nugget,geyser},hooks);game.FullDeck()=0xffffffff;core.bookkeeping.productionDirty=77;session->GetFullDeck();
+    CHECK(game.FullDeck()==1 && core.bookkeeping.productionDirty==1 && game.player.templateOwner==2 && decks.Get(2)==token && decks.Bytes(token).data()==address);CHECK(std::equal(expected.begin(),expected.end(),bytes.begin()) && std::equal(otherBefore.begin(),otherBefore.end(),other.begin()) && client.RandomGlobals()->Game().State()==expectedRandom.State());CHECK(session->Production().Contains(154)); //현재소유자의같은Deck을읽으며다른Player의Deck·포인터는그대로다.
 }
