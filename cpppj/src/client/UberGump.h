@@ -172,7 +172,7 @@ private:
     std::unique_ptr<MissionRuntime> missionRuntime_; // 월드와 스크립트보다 먼저 해제한다.
     std::unique_ptr<o::RawMissionGuide> guide_; // 현재 미션 해제 중에도 반복 호출 스택이 살아 있도록 UberGump 수명에 둔다.
     std::uint32_t hideBuildings_{}; // 원본0059a8ac의현재표시모드이며메뉴체크와실제Draw가공유한다.
-    std::uint32_t worldRedraw_{}; // 원본0059a8b0의 메뉴 명령 갱신 요청이며 실제 Renderer 무효화에 전달한다.
+    std::uint32_t& worldRedraw_; // 원본0059a8b0의 같은 Client 장기 DWORD이며 전체 팔레트/메뉴/resize가 직접 공유한다.
     std::uint32_t& menuConfigRevision_; // 이름 변경/설정/목록이 같은00542678 dirty를 직접 사용한다.
     std::uint32_t& commandGump_; // 실제00548740의 같은 Client Chat 현재 포인터이며 전체 공장이 이 슬롯을 갱신한다.
     std::unique_ptr<GameWorld> world_; // 호스트 월드를 Kernel 밖에서 소유하여 전역 Clear 중 중복 소멸/중첩 프레임을 막는다.

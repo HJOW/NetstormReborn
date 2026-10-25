@@ -63,6 +63,7 @@
 #include "client/ClientStaticStrings.h"
 #include "client/ClientPlayerRecords.h"
 #include "client/ClientSpGlobals.h"
+#include "client/ClientKencloudGlobals.h"
 #include <algorithm>
 #include <sstream>
 #include <stdexcept>
@@ -159,7 +160,7 @@ struct UberGump::MissionRuntime {
 
 #include "client/UberHud.inc" // 같은 실제 소유자에 전체 HUD 루트/지도 전역과 네 자식 공장을 연결한다.
 // 원본 GIF는 색 표의 RGB를 쓰지 않고 파일의 번호를 화면 팔레트에 바로 쓴다(00419ec0→004dae60).
-UberGump::UberGump(Client& client) : client_(client),initLoginSubscriber_(client.SubscriberGlobals()->MySubscriber()),initialSubscriber_(client.SubscriberGlobals()->LoginSubscriber()),mapFileSpec_(client.FortGlobals()->FileSpec()),fortSelectionMode_(client.FortGlobals()->SelectionMode()),menuConfigRevision_(client.FortGlobals()->Catalog().dirty),commandGump_(client.ChatWindowGlobals()->window.current) {
+UberGump::UberGump(Client& client) : client_(client),initLoginSubscriber_(client.SubscriberGlobals()->MySubscriber()),initialSubscriber_(client.SubscriberGlobals()->LoginSubscriber()),mapFileSpec_(client.FortGlobals()->FileSpec()),fortSelectionMode_(client.FortGlobals()->SelectionMode()),worldRedraw_(client.KencloudGlobals()->WorldRedraw()),menuConfigRevision_(client.FortGlobals()->Catalog().dirty),commandGump_(client.ChatWindowGlobals()->window.current) {
     serializationGlobals_=std::make_shared<o::FortSerializationGlobals>(); // 원본BSS와같은한DWORD를모든manager/객체소비자보다오래소유한다.
     templateStorage_=std::make_shared<CampaignTemplateStorage>(serializationGlobals_); // 시작 초기화와 미션별 명시 정리를 별개 수명으로 유지한다.
     auto& config = client_.Configuration();
@@ -1197,6 +1198,7 @@ std::string UberGump::Report() const {
     const auto playerCore=client_.CoreDataGlobals();const auto players=client_.PlayerRecords()->Records();const auto current=reinterpret_cast<std::uintptr_t>(playerCore->Current().data()),base=reinterpret_cast<std::uintptr_t>(players.data()); // 다른 할당의 포인터 뺄셈을 하지 않고 실제 소유 범위를 읽는다.
     out<<"player_core\t"<<client_.PlayerRecords()->Base()<<'\t'<<client_.PlayerRecords()->Initialized()<<'\t'<<playerCore->Players().size()<<'\t'<<playerCore->Current().size()<<'\t'<<(current && current>=base && current-base<players.size()?std::to_string(current-base):"none")<<'\t'<<(world_ && world_->Session().PlayerCoreGlobals()==playerCore)<<'\n'; // 관측이 선택/캐시/초기화를 실행하지 않는다.
     const auto& sp=client_.SpGlobals()->Store();out<<"sp_globals\t"<<sp.Initialized()<<'\t'<<(sp.FirstPoolCurrent()!=nullptr)<<'\t'<<sp.Pools().size()<<'\t'<<sp.Offset()<<'\t'<<sp.TrackingOffsetCurrent()<<'\t'<<sp.Permutation().front()<<'\t'<<client_.RandomGlobals()->Game().State()<<'\t'<<(world_ && &world_->Session().SpStore()==&sp)<<'\n'; // 실제 현재 저장소/추적/난수와 같은 Session 여부를 읽기만 하며 SP.Get의 lazy 관문을 호출하지 않는다.
+    const auto cloud=client_.KencloudGlobals();const auto cg=cloud->Globals();out<<"kencloud\t"<<cg.cache<<'\t'<<cg.end<<'\t'<<cg.phase<<'\t'<<cg.spacer<<'\t'<<cg.speed<<'\t'<<cg.fury<<'\t'<<cg.seedCount<<'\t'<<cloud->Allocations()<<'\t'<<cloud->RendererToken()<<'\t'<<cloud->WorldRedraw()<<'\n'; // 현재 실제 저장소와 장치만 읽고 생성/step/난수 호출은 하지 않는다.
     out<<"fort_catalog\t"<<mapCatalog_->Cached().count<<'\t'<<mapCatalog_->Cached().dirty<<'\t'<<client_.Configuration().GetInt("mayEditMissions")<<'\t'<<mapFileSpec_.Current()<<'\n'; // 실제50칸캐시와현재원문설정/키를읽고목록을다시열거하지않는다.
     out<<"current_dialog\t"<<rawButtons_->CurrentDialog()<<'\n'; // Guide4c8e90과 같은 실제565dd4다.
     out << "thunder_processes\t" << client_.ThunderFlashCount() << '\n';

@@ -68,7 +68,7 @@ void UberGump::InstallHud() {
             if (path.size()>=256) throw std::length_error("Uber 팔레트 경로의 원문256BYTE 물리 범위");hud_->paletteProbe=path;return client_.ChatWindowGlobals()->Store(path);
         };
         context.root.testMessage=[this](auto token) -> std::uint32_t { const auto& path=client_.ChatWindowGlobals()->strings.at(token);hud_->paletteFound=client_.Files().TryRead(path).has_value();std::clog<<"Uber palette probe "<<path<<" exists "<<hud_->paletteFound<<'\n';return hud_->paletteFound ? 1U : 0U; }; // 실제 VFS 조회 결과만 조건으로 사용하며 없는 파일을 만들지 않는다.
-        context.root.visitMessage=[](auto) { throw std::logic_error("Uber 실제 전체 팔레트 전환 미연결"); };
+        context.root.visitMessage=[this](auto token) { const auto& text=client_.ChatWindowGlobals()->strings.at(token);const std::span<const std::uint8_t> name{reinterpret_cast<const std::uint8_t*>(text.c_str()),text.size()+1};client_.ChangeFortPalette(name); }; // 원문이 선택한 같은 메시지 포인터로 실제 전체 부모를 호출한다.
         context.root.messageEvent=[this](auto token,auto event,auto first,auto second) { rawButtons_->Menus()->BackgroundGifs()->Backend().SetEvent(token,event,first,second); };
         context.dock.invalidate=[this](auto left,auto top,auto width,auto height,auto flags) { client_.GetRenderer().Invalidate({left,top,left+width,top+height},flags); };
         context.dock.finishResize=[this] { worldRedraw_=1;if (world_) world_->Resize(hud_->width,hud_->height);rebuild_=true; };

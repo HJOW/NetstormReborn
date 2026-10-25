@@ -11,6 +11,7 @@
 #include "client/FortTypeConversionStorage.h"
 #include "client/ClientRandomGlobals.h"
 #include "client/ClientSpGlobals.h"
+#include "client/ClientKencloudGlobals.h"
 #include "client/ClientSubscriberGlobals.h"
 #include "client/ClientColorSortInput.h"
 #include "client/ClientLocalStateGlobals.h"
@@ -39,6 +40,7 @@
 #include <cstdio>
 #include <cerrno>
 #include <fstream>
+#include <iostream>
 #include <stdexcept>
 #include <vector>
 
@@ -184,6 +186,7 @@ Client::Client(ClientOptions options)
       subscriberGlobals_(std::make_shared<ClientSubscriberGlobals>()),
       randomGlobals_(std::make_shared<ClientRandomGlobals>()),
       spGlobals_(std::make_shared<ClientSpGlobals>(randomGlobals_,ClientCurrentUnixSeconds)),
+      kencloudGlobals_(std::make_shared<ClientKencloudGlobals>()),
       colorSortInput_(std::make_shared<ClientColorSortInput>()),
       localStateGlobals_(std::make_shared<ClientLocalStateGlobals>()),
       fortGlobals_(std::make_shared<ClientFortGlobals>()),
@@ -202,7 +205,7 @@ Client::Client(ClientOptions options)
     configuration_.Registry().environment = Environment;
     if (g_client) throw std::logic_error("Only one client may exist");
     // 원본00558dd0의 Set 직후 동기 시점에 현재 복원된 설정 전역을 갱신한다.
-    configuration_.onChanged = [this] { InterpretFortFileOptions();InterpretScriptMenuOptions(); }; // 같은 설정 변경의 즉시 해석에서 저장/메뉴 전역을 갱신한다.
+    configuration_.onChanged = [this] { InterpretFortFileOptions();InterpretScriptMenuOptions();kencloudGlobals_->ReadOptions(configuration_); }; // 같은 설정 변경에서 기존 저장/메뉴와 현재 구름 DWORD를 함께 해석하며 생성은 하지 않는다.
     g_client = this;
 }
 // 월드/소리 프로세스→음악·음향→화면→GDI/창 순서로 참조 대상보다 사용자를 먼저 정리한다.
@@ -212,7 +215,7 @@ Client::~Client() {
     ClearThunderFlashes();
     audio_.reset(); // 월드의 반복 소리를 멈춘 뒤 음악 스레드를 합류하고 장치를 닫는다.
     disabledAudio_.reset(); // noAudio 이름표도 같은 월드 프로세스 해제 이후에 없앤다.
-    renderer_.reset(); fonts_.reset(); cursor_.reset();
+    kencloudGlobals_->BindRenderer(nullptr);renderer_.reset(); fonts_.reset(); cursor_.reset(); // 실제 장치 반납 전에 현재 opaque32 연결도 해제한다.
     screen_.reset();
     if (loadingFont_) DeleteObject(static_cast<HFONT>(loadingFont_));
     if (loadingBitmap_) DeleteObject(static_cast<HBITMAP>(loadingBitmap_));
@@ -362,6 +365,7 @@ int Client::Run() {
     // "init kernel"(FUN_00471930): Kernel은 멤버로 이미 만들어져 있다.
     // "init renderer": 화면 장치와 같은 크기의 변경 표·프레임 캐시를 만든다.
     renderer_ = std::make_unique<Renderer>(screenWidth_, screenHeight_,options_.edition);
+    kencloudGlobals_->BindRenderer(renderer_.get()); // Native renderer 존재 관문은 실제 현재 장치와 같은 수명을 사용한다.
     cursor_ = std::make_unique<Cursor>(resources_, window_);
     if ((mode & ScreenMode::kSoftwareMouse) != 0) cursor_->BuildSoftware(screen_->Palette());
     screen_->ShowCursor(true);
@@ -552,6 +556,7 @@ void Client::InterpretOptions() {
     configuration_.ReadInt("initWindowPos", initWindowPos_);
     InterpretFortFileOptions(); // 원본처럼 sleepPerLoop/maxFPS보다 먼저 같은 저장 관문 DWORD를 읽는다.
     configuration_.ReadInt("sleepPerLoop", sleepPerLoop_);
+    kencloudGlobals_->ReadOptions(configuration_); // 원문435220의 cloudiness/speed/fury/spacer/recenter/algorithm/kenCloud 위치다.
     maxFps_ = kDefaultMaxFps;
     configuration_.ReadInt("maxFPS", maxFps_);
     frameInterval_ = FrameIntervalSeconds(maxFps_);
@@ -685,6 +690,13 @@ void Client::LoadScenePalette(std::string_view name) {
 void Client::LoadPaletteFile(std::string_view path,std::uint32_t clear) {
     screen_->LoadPalette(GamePalette(files_.Read(path)),options_.edition,clear);
 }
+// 기존 전체 부모에 실제 파일/구름/Screen과 같은 고정 초기RGB의9표를 연결한다.
+void Client::ChangeFortPalette(const std::span<const std::uint8_t>& name) {
+    o::FortPaletteTransitionHooks devices;devices.log=[](auto level,auto text) { std::clog<<"Palette "<<level<<' '<<text; };
+    devices.loadPalette=[this](auto path,auto clear) { const auto end=std::find(path.begin(),path.end(),std::uint8_t{});if (end==path.end()) throw std::out_of_range("전체 팔레트 현재 경로 NUL 누락");LoadPaletteFile({reinterpret_cast<const char*>(path.data()),static_cast<std::size_t>(end-path.begin())},clear); };
+    devices.buildMaps=[this] { RebuildColorSortMaps();RefreshPaletteConsumers(); }; // 현재 Screen 명명색과 최초 고정RGB 표를 각 실제 소비자에 제공한다.
+    kencloudGlobals_->Transition(name,files_,configuration_,randomGlobals_->Game(),std::move(devices));
+}
 // 기존소비자갱신은한군데에서재사용한다.구름캐시생성이나추가표부모자체의성공을대신하지않는다.
 void Client::RebuildColorSortMaps() { static_cast<void>(colorSortInput_->Rebuild(screen_->Colors().basic[1])); }
 //현재명명색과같은초기ColorSort입력은별개로소비자에전달한다.
@@ -717,7 +729,7 @@ void Client::ChangeResolution(int width, int height) {
     std::array<std::uint8_t,1024> palette{};
     std::memcpy(palette.data(),screen_->Palette().data(),palette.size());
     sceneVisible_ = false;
-    renderer_.reset(); screen_.reset();
+    kencloudGlobals_->BindRenderer(nullptr);renderer_.reset(); screen_.reset(); // 장치 재생성은 구름 할당/이름/옵션을 지우지 않는다.
     screenWidth_ = width; screenHeight_ = height;
     screen_ = std::make_unique<Screen>(window_, windowDc_, width, height,&paletteLoaded_);
     screen_->Init(); screen_->InitDibSection();
@@ -729,6 +741,7 @@ void Client::ChangeResolution(int width, int height) {
     if (!screen_->SetMode(ScreenMode::kFallbackWindowed, windowWidth_, windowHeight_, initWindowPos_))
         throw std::runtime_error("Unable to change window resolution");
     renderer_ = std::make_unique<Renderer>(width, height,options_.edition);
+    kencloudGlobals_->BindRenderer(renderer_.get()); // 새 장치를 같은 현재 renderer 전역에 공개한다.
     // 메뉴/독립 검사 화면도 새 화면 크기로 위치 효과음을 계산한다. 미션은 다음 Compose/Resize에서 실제 카메라를 공급한다.
     const auto previous=WorldAudio().View(); // noAudio도 같은 실제 카메라/화면 영역을 유지한다.
     WorldAudio().SetView({previous.cameraX,previous.cameraY,previous.left,previous.top,width,height});
@@ -933,6 +946,7 @@ const std::shared_ptr<ClientColorSortInput>& Client::ColorSortInput() const { re
 const std::shared_ptr<ClientSubscriberGlobals>& Client::SubscriberGlobals() const { return subscriberGlobals_; }
 const std::shared_ptr<ClientRandomGlobals>& Client::RandomGlobals() const { return randomGlobals_; }
 const std::shared_ptr<ClientSpGlobals>& Client::SpGlobals() const { return spGlobals_; } // 같은 실제 저장소를 빌리며 초기화/할당/재시드는 하지 않는다.
+const std::shared_ptr<ClientKencloudGlobals>& Client::KencloudGlobals() const { return kencloudGlobals_; } // 조회 자체에 생성/난수 소비/초기화 효과는 없다.
 // 큰 메뉴/로컬 로그인 분배기가 같은 실제144BYTE 다섯 블록과 기한을 빌린다.
 const std::shared_ptr<ClientLocalStateGlobals>& Client::LocalStateGlobals() const { return localStateGlobals_; }
 const std::shared_ptr<ClientFortGlobals>& Client::FortGlobals() const { return fortGlobals_; } // 같은 실제 이름/목록의 주소를 유지한다.

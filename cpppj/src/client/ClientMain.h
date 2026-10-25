@@ -34,6 +34,7 @@ class FortTypeConversionStorage; // 원본 현재 변환표의 실제 할당을 
 class ClientColorSortInput; //최초논리RGB와43c010의같은표입력을Client수명으로소유한다.
 class ClientRandomGlobals; // 같은 Client의 CRT holdrand와 Subscriber ID 최초시드 전역을 소유한다.
 class ClientSpGlobals; // 공통 시작의 SP/추적 offset을 사제와 Session보다 오래 같은 주소에 소유한다.
+class ClientKencloudGlobals; // 같은 구름/팔레트 전역과 현재 메모리를 모든 메뉴/장치 교체에서 유지한다.
 class ClientSubscriberGlobals; // 같은 Client의 실제 my/login 두 DWORD만 장기 소유한다.
 class ClientLocalStateGlobals; // 실제 메뉴/Editor/로그인이 같은 State 블록과 벽시각 기한을 빌린다.
 class ClientFortGlobals; // 현재/pending 이름·FileSpec·목록 dirty와 선택 모드의 실제 Client 소유자다.
@@ -151,6 +152,8 @@ public:
     const std::shared_ptr<ClientSubscriberGlobals>& SubscriberGlobals() const; //Init/Session이 같은 실제 두 DWORD를 빌리는 owner다.
     const std::shared_ptr<ClientRandomGlobals>& RandomGlobals() const; // 미션마다 복제하지 않는 실제 난수/ID초기화 소유자를 전달한다.
     const std::shared_ptr<ClientSpGlobals>& SpGlobals() const; // 생성자/getter에서 초기화하지 않는 같은 SP/추적 DWORD 소유자다.
+    const std::shared_ptr<ClientKencloudGlobals>& KencloudGlobals() const; // 같은 실제 구름/팔레트/현재 Renderer 전역을 순수 조회한다.
+    void ChangeFortPalette(const std::span<const std::uint8_t>& name); //004b6100의 전체 부모를 같은 구름/Screen clear1/추가9표/dirty에 실행한다.
     const std::shared_ptr<ClientLocalStateGlobals>& LocalStateGlobals() const; // 실제 State144BYTE와 활동기한의 Client 수명을 Session에 전달한다.
     const std::shared_ptr<ClientFortGlobals>& FortGlobals() const; // 같은 이름/키/목록 물리를 메뉴/Native 이름 부모에 빌린다.
     const std::shared_ptr<ClientCoreDataGlobals>& CoreDataGlobals() const; //같은 현재 Core 슬롯/캐시를 빌리며 Player 자동 선택이나 해제를 실행하지 않는다.
@@ -237,6 +240,7 @@ private:
     std::shared_ptr<ClientSubscriberGlobals> subscriberGlobals_; //Chat/메뉴/Session보다 먼저 만들고 그 소비자보다 오래 유지한다.
     std::shared_ptr<ClientRandomGlobals> randomGlobals_; // 모든 실제 Session과 Subscriber 생성기가 같은 holdrand/초기화DWORD를 빌린다.
     std::shared_ptr<ClientSpGlobals> spGlobals_; // 같은 난수 뒤에 만들고 모든 Session/사제 반납 뒤에 소멸하는 실제 SP/추적 전역이다.
+    std::shared_ptr<ClientKencloudGlobals> kencloudGlobals_; // 구름 현재 주소/이름/옵션과 Native redraw를 같은 Client 수명에 보관한다.
     std::shared_ptr<ClientColorSortInput> colorSortInput_; //메뉴/월드/두Screen생성경로보다오래유지하는같은초기RGB다.
     std::shared_ptr<ClientLocalStateGlobals> localStateGlobals_; // Session 소멸/Editor 메뉴 재진입에서 State/기한을 초기화하지 않는 한 소유자다.
     std::shared_ptr<ClientFortGlobals> fortGlobals_; // 모든 메뉴/Session보다 오래 사는 같은 두 이름/목록/dirty 소유자다.
