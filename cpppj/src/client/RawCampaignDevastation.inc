@@ -10,7 +10,7 @@ BombEffectTimerHooks MakeBombTimerHooks() {
 }
 // 7d는 현재 free Form에 새 타이머를 읽고 같은 Host의 지정 SID 부착으로 전달한다.
 void ReceiveBombTimer(std::span<const std::uint8_t> packet) {
-    const std::uint32_t boss=assetState.boss;BombTimerReceiveHooks hooks;
+    const std::uint32_t boss=assetState.Boss();BombTimerReceiveHooks hooks;
     hooks.assertion=[](std::uint32_t line) { throw std::logic_error("원본 상태 타이머 수신 진단 "+std::to_string(line)); };
     hooks.create=[this](std::uint32_t type,std::uint32_t x,std::uint32_t y) { if (type!=57 || x || y || pendingBombTimer) throw std::logic_error("상태 타이머 수신 factory 계약 오류");pendingBombTimer=std::make_unique<BombEffectTimerProcess>(core.pool,core.types,core.processState.now,0,std::span<const std::uint32_t>{},0,MakeBombTimerHooks());return 1U; };
     hooks.read=[this](std::uint32_t token,std::span<const std::uint8_t> bytes) { if (token!=1 || !pendingBombTimer) throw std::logic_error("상태 타이머 수신 객체 누락");pendingBombTimer->ReadPacket(bytes); };
@@ -19,7 +19,7 @@ void ReceiveBombTimer(std::span<const std::uint8_t> packet) {
 }
 // 외부 효과 뒤 다시 들어오는 실제 몸체마다 현재 권한/로컬 owner/동맹을 공급한다.
 void PrepareDevastation() {
-    devastationTargetState.boss=devastationBlastState.boss=devastationRegularState.boss=devastationEffectState.boss=assetState.boss;
+    devastationTargetState.boss=devastationBlastState.boss=devastationRegularState.boss=devastationEffectState.boss=assetState.Boss();
     devastationRegularState.localOwner=playerState.battleOwner;devastationBlastState.alliances=alliances;
 }
 // 아직 복원하지 않은 파생을 다른 효과로 실행하지 않으며 free/dead의 원본 조기 반환은 유지한다.
@@ -48,7 +48,7 @@ void ConnectDevastation() {
     windSpellState.counts=windSpellCounts;WindSpellHooks summons;summons.exists=[this](Sid parent,std::uint32_t type) { return FindAttachedProcess(core.pool,parent,type).value!=0; };
     summons.allocate=[]()->std::optional<WindAviaryProcessFields> { auto* storage=std::malloc(80);if (!storage) return std::nullopt;WindAviaryProcessFields fields;std::memcpy(fields.bytes.data(),storage,80);std::free(storage);return fields; };
     summons.attach=[this](WindAviaryProcessFields fields,Sid parent,std::uint32_t type,std::uint32_t flags) { static_cast<void>(core.processes.Attach(std::make_unique<WindAviaryProcess>(*windAviary,std::move(fields)),type,parent,flags)); };
-    windSpell=std::make_unique<RawWindSpell>(core.pool,core.processState.server,core.processState.now,windSpellState,std::move(summons));
+    windSpell=std::make_unique<RawWindSpell>(core.pool,core.processState.Server(),core.processState.now,windSpellState,std::move(summons));
     BombTargetHooks targets;
     // 실제502370의b4는41e3c0이며 다른 표의 반경으로 대체하지 않는다.
     targets.radius=[this](Sid parent,std::uint32_t table) { if (!ConnectedBombTable(table)) throw std::logic_error("주문 반경 표 오류");return devastationTargets->DefaultRadius(parent); };

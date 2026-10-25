@@ -1,6 +1,7 @@
 // 본섬 표면·noIsland·다리와 파생 받침을 실제 raw 풀/Graph/Kernel로 소유하는 새 월드 연결부다.
 #pragma once
 #include "o/GameClock.h"
+#include "o/RawAuthorityState.h"
 #include "o/RawGraph.h"
 #include "o/RawIslandRuntime.h"
 #include "o/ChunkMap.h"
@@ -27,6 +28,8 @@ namespace netstorm::client {
 class GameAssets; // 실제 Client가 먼저 읽은 자산의 정체성을 물리 저장소와 공유한다.
 // Session보다 오래 사는 실제 Pool/공간/자산 배열이다. Runtime 모듈의 수명과 구별한다.
 class RawSurfaceStorage {
+private:
+    std::shared_ptr<o::RawAuthorityState> authority_; // Pool의 현재 서버 포인터와 World 실행기보다 먼저 만들고 마지막에 반납한다.
 public:
     // 대여 중에는 두 번째 월드가 같은 풀을 초기화하지 못하게 한다.
     class Use {
@@ -38,13 +41,14 @@ public:
         explicit Use(RawSurfaceStorage& storage); // 이미 검증한 단일 소유자의 반납 경계다.
         RawSurfaceStorage& storage_; // 실제 물리 소유자는 대여보다 오래 살아야 한다.
     };
-    RawSurfaceStorage(o::OriginalEdition edition,std::span<const o::RiftTypeRecord> inputTypes,std::span<const o::RiftTypeFrames> inputFrames,std::span<const o::SquidDisplayShape> inputShapes,const GameAssets* source=nullptr); // 배열은 최초 한 번만 확보한다.
+    RawSurfaceStorage(o::OriginalEdition edition,std::span<const o::RiftTypeRecord> inputTypes,std::span<const o::RiftTypeFrames> inputFrames,std::span<const o::SquidDisplayShape> inputShapes,const GameAssets* source=nullptr,std::shared_ptr<o::RawAuthorityState> authority={}); // 배열은 최초 한 번만 확보한다.
     RawSurfaceStorage(const RawSurfaceStorage&)=delete;RawSurfaceStorage& operator=(const RawSurfaceStorage&)=delete; // 현재 모든 실행기가 빌리는 실제 물리를 복제하지 않는다.
     RawSurfaceStorage(RawSurfaceStorage&&)=delete;RawSurfaceStorage& operator=(RawSurfaceStorage&&)=delete; // Graph/Pool/공간 참조가 남은 객체의 주소를 이동하지 않는다.
     std::unique_ptr<Use> Acquire(); // 기존 Pool/해시/spot 및 fresh Graph/집계3표의 일반 설치 의미를 같은 물리에서 유지하며 TYPE 수정은 보존한다.
     std::unique_ptr<Use> AcquirePrepared(); // 명시 Native 정리/prefix 뒤 같은 Pool/Hash/spot/Graph/집계3표/모드/종류를 재초기화하지 않고 대여한다.
     bool Borrowed() const; // 현재 실제 월드가 물리를 빌렸는지 읽는다.
     std::uint64_t Generation() const; // 성공한 월드 대여 횟수이며 원본 게임 값으로 쓰지 않는다.
+    const std::shared_ptr<o::RawAuthorityState>& Authority() const { return authority_; } // Client 전역/Session과 같은 실제 서버·권한 주소의 정체성이다.
     const GameAssets* Source() const; // Client 자산 정체성이다. 독립 raw 검사에서는 nullptr이다.
     std::vector<o::RiftTypeRecord> types; // 같은 수정 가능한 전역 TYPE이며 Session마다 원본 파일로 덮어쓰지 않는다.
     std::vector<o::RiftTypeFrames> frames;std::vector<o::SquidDisplayShape> shapes; // 자산보다 짧고 모든 Session보다 긴 프레임/셰이프 배열이다.
@@ -60,7 +64,7 @@ private:
     const GameAssets* source_;bool borrowed_{};std::uint64_t generation_{}; // 최초 자산 정체성·단일 대여·호스트 관측 번호다.
 };
 // 실제 보관 중인 자산에서 프레임/SHP를 한 번 구성한다. 게임이나 창은 실행하지 않는다.
-std::shared_ptr<RawSurfaceStorage> MakeRawSurfaceStorage(const GameAssets& assets);
+std::shared_ptr<RawSurfaceStorage> MakeRawSurfaceStorage(const GameAssets& assets,std::shared_ptr<o::RawAuthorityState> authority={});
 // 저장/지형 어댑터에서 넘기는 초기 위치다. 등록 뒤 현재 값은 raw 슬롯만 읽는다.
 struct SurfaceSeed { /* type: 타입 표에서 객체 종류를 찾는 번호. */ /* owner: 객체나 지역을 소유한 플레이어 번호. */ std::uint32_t type{},owner{};/* frame: 타입에서 사용할 그림 프레임 번호. */ std::int32_t frame{};/* x: X 좌표. */ /* y: Y 좌표. */ float x{},y{}; };
 // 표면 객체의 현재 SID와 직렬화할 배치 정보이다.
@@ -157,7 +161,7 @@ public:
     // 프레임/타입/SHP를 소유하여 GUI 참조와 raw 조회가 같은 판본을 사용하게 한다.
     RawSurfaceWorld(o::OriginalEdition edition,std::span<const o::RiftTypeRecord> types,
         std::span<const o::RiftTypeFrames> frames,std::span<const o::SquidDisplayShape> shapes,
-        o::BridgeConnectState links,std::uint32_t terrainType,o::Kernel* processKernel=nullptr,std::shared_ptr<RawSurfaceStorage> storage={},bool adoptPrepared=false,bool* sharedSavedGame=nullptr); // 준비 대여는 실제 물리를 사용하며 저장 게임 관문은 첫 객체 전부터 Client의 같은 bool을 빌린다.
+        o::BridgeConnectState links,std::uint32_t terrainType,o::Kernel* processKernel=nullptr,std::shared_ptr<RawSurfaceStorage> storage={},bool adoptPrepared=false,bool* sharedSavedGame=nullptr,std::shared_ptr<o::RawAuthorityState> authority={}); // 준비 대여는 실제 물리를 사용하며 저장 게임 관문은 첫 객체 전부터 Client의 같은 bool을 빌린다.
     // 실제 Client는 같은 전역 Kernel을 빌리고 독립 월드만 자체 Kernel을 소유한다. 빌린 Kernel은 월드보다 오래 살아야 한다.
     // 빌린 경우 호출자는 모듈 반납 전에 DrainProcesses를 마쳐야 한다. 자체 Kernel은 이 월드의 다른 멤버보다 먼저 반납한다.
     ~RawSurfaceWorld();

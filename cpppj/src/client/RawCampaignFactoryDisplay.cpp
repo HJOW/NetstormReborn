@@ -113,7 +113,7 @@ struct RawCampaignFactoryDisplay::Impl {
         };
         rules.resource=[this](o::Sid object)->std::optional<SpriteResourceStatus> {
             const auto* cast=core.processes.FindEvent(object,0x493);if (!cast) return std::nullopt;
-            const o::ContainedFinderState current{core.processState.boss,6,false};o::RawContainedFinder finder(core.pool,current);o::Sid content{}; // 같은 실제 기본 finder의 타입6/mask1 조회다. 현재 제품의 개발자 dead 진단은 꺼져 있다.
+            const o::ContainedFinderState current{core.processState.Boss(),6,false};o::RawContainedFinder finder(core.pool,current);o::Sid content{}; // 같은 실제 기본 finder의 타입6/mask1 조회다. 현재 제품의 개발자 dead 진단은 꺼져 있다.
             for (auto candidate=finder.Begin(object);candidate.value;candidate=finder.Next()) { // 원본처럼 상태를 추가로 거르지 않고 첫 mask1 일치를 고른다.
                 const auto bytes=core.pool.Slot(candidate);if ((std::uint32_t(bytes[20])|(std::uint32_t(bytes[21])<<8))&1U) { content=candidate;break; }
             }

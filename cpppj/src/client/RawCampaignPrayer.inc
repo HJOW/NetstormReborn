@@ -20,5 +20,5 @@ void ConnectPriestPrayer() {
     hooks.setFrame=[this](Sid sid,std::int32_t frame,std::uint32_t flags) { core.frame.Set(sid,frame,flags); };
     hooks.panic=[this](Sid sid) { RunPriestPanic(sid); }; // 같은 명령/중립 회복·도착의 실제491db0을 사용한다.
     hooks.parent=[this](Sid sid,std::uint32_t code,std::uint32_t parameter) { if (!carrierDrop) throw std::logic_error("사제 입력의 현재 Carrier 부모 미설치");return carrierDrop->Command(sid,code,Sid{static_cast<std::uint16_t>(parameter)}); };
-    priestPrayer=std::make_unique<RawPriestPrayer>(core.pool,priestPrayerTypes,assetState.boss,std::move(hooks));
+    priestPrayer=std::make_unique<RawPriestPrayer>(core.pool,priestPrayerTypes,assetState.Boss(),std::move(hooks));
 }

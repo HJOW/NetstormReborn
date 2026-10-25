@@ -120,12 +120,14 @@ struct AssetScene {
     }
 };
 // 현재 C++ 경계와 원본 PE 결과를 각 body별로 독립 비교한다.
-void Replay(const char* edition) {
-    AssetScene scene(std::string_view(edition)=="originals" ? OriginalEdition::Patch1078 : OriginalEdition::Cd1072);std::size_t count=0;int failures=0;
+void Replay(const char* edition,bool sharedAuthority=false) {
+    RawAuthorityState authority;AssetScene scene(std::string_view(edition)=="originals" ? OriginalEdition::Patch1078 : OriginalEdition::Cd1072);std::size_t count=0;int failures=0; // 같은 owner 주소를 Scene과 모든 모듈보다 오래 보관한다.
     // 새 body의 정상 반환마다 raw·목록·Player·사건을 비교한다.
     for (const auto& row:Rows()) {
         if (row[0]!=edition) continue;
-        scene.Prepare(row);SquidPostPop base(scene.pool,scene.types,scene.baseState);RawCarrierPostPop damageable(scene.pool,scene.types,scene.carrierState,scene.CarrierHooks(base));
+        scene.Prepare(row);authority={true,scene.state.boss}; // 원본 입력을 현재 owner로 공급한다.
+        if (sharedAuthority) { scene.state.sharedAuthority=&authority;scene.state.boss=!authority.boss; } // Vortex는 반대 fallback 대신 실제 권한을 소비해야 한다.
+        SquidPostPop base(scene.pool,scene.types,scene.baseState);RawCarrierPostPop damageable(scene.pool,scene.types,scene.carrierState,scene.CarrierHooks(base));
         RawAssetPostPop assets(scene.pool,scene.types,base,damageable,scene.state,scene.Hooks());base.SetAssetPostPop(&assets);
         CHECK(base.HandlesAsset(kSource));base.Activate(kSource,Number(row[2]));CHECK(scene.baseState.depth==0);
         const auto output=scene.Output();const auto expected=std::vector<std::string>(row.begin()+15,row.end());const bool same=output==expected;CHECK(same);
@@ -256,3 +258,6 @@ void ReplayMutablePlayers(const char* edition) {
 TEST_CASE(AssetPostPop_PatchMutablePlayerNativeRecords) { ReplayMutablePlayers("originals"); }
 // CD의 다른 기록배치·원소wrapper·abstract/buried를 같은 독립 입력으로 비교한다.
 TEST_CASE(AssetPostPop_CdMutablePlayerNativeRecords) { ReplayMutablePlayers("originalCD"); }
+
+// 동일 독립 Native 결과로 Vortex의 현재 shared 권한과 fallback 격리를 확인한다.
+TEST_CASE(AssetPostPop_SharedAuthorityReplaysBothNativeBodies) { Replay("originals",true);Replay("originalCD",true); }

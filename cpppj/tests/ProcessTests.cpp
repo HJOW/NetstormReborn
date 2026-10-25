@@ -201,14 +201,16 @@ struct Scene {
     }
 };
 // 판본 이름으로 고른 시나리오를 모두 재생한다.
-void ReplayEdition(std::string_view name,std::size_t minimum) {
+void ReplayEdition(std::string_view name,std::size_t minimum,bool sharedAuthority=false) {
     std::size_t scenarios=0,operations=0;
     // 한 줄이 한 시나리오다.
     for (const auto& row:Fixture()) {
         if (row[0]!=name) continue;
         CHECK(row.size()==8);
+        RawAuthorityState authority{row[2]=="1",row[3]=="1"}; // Scene보다 먼저 선언해 남은 Kernel 소멸까지 현재 주소를 보존한다.
         Scene scene(row[0]=="originals",row[2]=="1",row[3]=="1",std::bit_cast<double>(std::stoull(row[4])),
             static_cast<std::uint32_t>(std::stoul(row[5])));
+        if (sharedAuthority) { scene.state.sharedAuthority=&authority;scene.state.boss=!authority.boss;scene.state.server=!authority.server; } // Kill/Form의 소비 경로가 fallback을 읽으면 독립 fixture와 달라진다.
         const auto ops=Split(row[6],' ');const auto expected=Split(row[7],' ');
         CHECK(expected.size()==ops.size()+1);
         CHECK(scene.Observe(0,{})==expected[0]);
@@ -339,3 +341,6 @@ TEST_CASE(process_form_root_requires_unpop_hook) {
     CHECK(Throws([&] { scene.destroy.Destroy(form,0,bare); }));
     CHECK(scene.kernel.Size()==1);CHECK(!(scene.pool.Slot(form)[11]&2));
 }
+
+// Native Kill의 서버 번호/권한/flags 관문을 같은 장기 bool 조회로 다시 비교한다.
+TEST_CASE(Process_SharedAuthorityReplaysBothNativeBodies) { ReplayEdition("originals",100,true);ReplayEdition("originalCD",100,true); }

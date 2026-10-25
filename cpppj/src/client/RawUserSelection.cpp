@@ -2,6 +2,7 @@
 #include "client/RawUserSelection.h"
 #include <bit>
 #include <stdexcept>
+#include <limits>
 #include <unordered_set>
 
 namespace netstorm::client {
@@ -18,7 +19,11 @@ RawUserSelection::RawUserSelection(const o::SidPool& pool,std::span<const o::Rif
 }
 // 0번 슬롯은 유효 범위 검사에만 사용하며 실제 선택 객체로 읽지 않는다.
 std::span<const std::uint8_t> RawUserSelection::Raw(std::uint32_t sid) const {
-    if (!sid || sid>=pool_.Capacity()) throw std::out_of_range("사용자 선택 SID 범위 오류");return pool_.Slot(o::Sid{static_cast<std::uint16_t>(sid)});
+    return pool_.Slot(SlotId(sid));
+}
+// SidPool은 최대65535칸을 지원한다. 원문의 넓은 DWORD를 조용히 하위WORD로 접지 않는다.
+o::Sid RawUserSelection::SlotId(std::uint32_t sid) const {
+    if (!sid || sid>=pool_.Capacity() || sid>std::numeric_limits<std::uint16_t>::max()) throw std::out_of_range("사용자 선택 SID 범위 오류");return o::Sid{static_cast<std::uint16_t>(sid)};
 }
 // 부모/현재 TYPE를 매 호출 시점에서 조회한다.
 const o::RiftTypeRecord& RawUserSelection::Type(std::uint32_t type) const {
@@ -35,10 +40,11 @@ std::uint32_t RawUserSelection::Read(std::span<const std::uint8_t> raw,std::size
 void RawUserSelection::ClearMultiple() const {
     // callback이 개수/다음 항목을 바꾸면 다음 반복에서 그 현재 값을 사용한다.
     for (std::int32_t index=0;index<state_.multipleCount;++index) {
-        if (static_cast<std::size_t>(index)>=state_.multiple.size()) throw std::out_of_range("사용자 다중 선택 배열 범위 오류");
-        const auto number=state_.multiple[static_cast<std::size_t>(index)];
+        const auto multiple=state_.currentMultiple ? state_.currentMultiple() : state_.multiple; // 통지에서 재할당된 배열의 현재 pointer/size다.
+        if (static_cast<std::size_t>(index)>=multiple.size()) throw std::out_of_range("사용자 다중 선택 배열 범위 오류");
+        const auto number=multiple[static_cast<std::size_t>(index)];
         if (!number || number>=pool_.Capacity() || (Raw(number)[11]&3)) continue;
-        const o::Sid sid{static_cast<std::uint16_t>(number)};Need(hooks_.selectNotice)(sid,0);Need(hooks_.refresh)(sid);
+        const auto sid=SlotId(number);Need(hooks_.selectNotice)(sid,0);Need(hooks_.refresh)(sid);
     }
     state_.multipleCount=0;
 }
@@ -50,7 +56,7 @@ void RawUserSelection::ClearPrevious(o::Sid sid) const {
         const auto number=next;if (!visited.insert(number).second) throw std::logic_error("사용자 선택 프로세스 체인 순환");
         const auto raw=Raw(number);next=Read(raw,4,2);const auto type=raw[10];
         if (type>=10 && type<70 && (type==Need(hooks_.manaProcess)() || type==Need(hooks_.rangeProcess)()))
-            Need(hooks_.processNotice)(o::Sid{static_cast<std::uint16_t>(number)},3,0,0);
+            Need(hooks_.processNotice)(SlotId(number),3,0,0);
     }
     Need(hooks_.selectNotice)(sid,0);Need(hooks_.refresh)(sid);state_.selected=0;
 }
@@ -63,9 +69,9 @@ std::uint32_t RawUserSelection::Select(std::uint32_t number,std::uint32_t forceS
     // dais가 같은 위치의 유효 제단으로 위임하면 최초 관문과 다중 선택 정리부터 다시 수행한다.
     for (;;) {
         if ((number && Need(hooks_.paused)()) || (!Need(hooks_.enabled)() && !number) || Need(hooks_.blocked)()) return 0;
-        ClearMultiple();if (state_.selected) { Raw(state_.selected);ClearPrevious(o::Sid{static_cast<std::uint16_t>(state_.selected)}); }
+        ClearMultiple();if (state_.selected) { Raw(state_.selected);ClearPrevious(SlotId(state_.selected)); }
         if (!number || (Raw(number)[11]&2)) { Need(hooks_.highlight)(0);return 0; }
-        const o::Sid sid{static_cast<std::uint16_t>(number)};Need(hooks_.dump)(sid);
+        const auto sid=SlotId(number);Need(hooks_.dump)(sid);
         if (Type(Raw(number)[10]).flags1&0x10000000U) Need(hooks_.showMana)(sid,0);
         if (Need(hooks_.rangeType)(Raw(number)[10])) Need(hooks_.showRange)(sid,0);
         if ((Type(Raw(number)[10]).flags2&0x30000U) && Need(hooks_.content)(sid).value) Need(hooks_.showRange)(sid,0);

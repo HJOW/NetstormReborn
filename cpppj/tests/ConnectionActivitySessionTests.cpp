@@ -106,9 +106,9 @@ TEST_CASE(ConnectionActivitySession_ZoneAndQueuedWireUseActualClientTables) {
 TEST_CASE(ConnectionActivitySession_CurrentServerAndFinalUiEffectsStayAliased) {
     ActivitySessionDevices devices;auto session=devices.Create(devices.Services());session->LoadLocalConnection();auto core=session->Core();const auto owner=devices.client.ConnectionActivityGlobals();devices.client.GameplayGlobals()->world.missionPost=false;
     owner->Frames()[9]=17;owner->WallSeconds()[9]=19;devices.wall=200.75;devices.frame=0xfedcba98U;
-    devices.onFrame=[&] { CHECK(owner->Frames()[9]==17 && owner->WallSeconds()[9]==19);core.processState.server=false; };
+    devices.onFrame=[&] { CHECK(owner->Frames()[9]==17 && owner->WallSeconds()[9]==19);devices.client.GameplayGlobals()->Server()=false; };
     devices.onRemove=[&](auto kind,auto player) { CHECK(kind==1 && player==0 && owner->Frames()[9]==0xfedcba98U && owner->WallSeconds()[9]==200);owner->Frames()[9]=0xabcdef01U;owner->WallSeconds()[9]=0x12345678U; };
-    session->SendLocalPacket(1,ActivitySessionPacket());session->PumpLocalConnection();CHECK((devices.removed==std::vector<std::array<std::uint32_t,2>>{{1,0}}));CHECK(owner->Frames()[9]==0xabcdef01U && owner->WallSeconds()[9]==0x12345678U && !core.processState.server);
+    session->SendLocalPacket(1,ActivitySessionPacket());session->PumpLocalConnection();CHECK((devices.removed==std::vector<std::array<std::uint32_t,2>>{{1,0}}));CHECK(owner->Frames()[9]==0xabcdef01U && owner->WallSeconds()[9]==0x12345678U && !core.processState.Server());
     CHECK((devices.trace==std::vector<std::string>{"record","wall","frame","remove"}));
 }
 
@@ -127,8 +127,34 @@ TEST_CASE(ConnectionActivitySession_MissingSelectedHooksFailAtNativeBoundary) {
 
 // 비서버 Timer는 Client9 객체가 존재할 때 같은 Receive를 부르며 가짜64h 송수신을 만들지 않는다.
 TEST_CASE(ConnectionActivitySession_TimerRemoteStatusUsesSameModuleWithoutPacket) {
-    ActivitySessionDevices devices;auto session=devices.Create(devices.Services());session->LoadLocalConnection();const auto owner=devices.client.ConnectionActivityGlobals();auto core=session->Core();core.processState.server=false;
+    ActivitySessionDevices devices;auto session=devices.Create(devices.Services());session->LoadLocalConnection();const auto owner=devices.client.ConnectionActivityGlobals();auto core=session->Core();core.processState.Server()=false;
     CHECK(devices.client.GameplayGlobals()->world.missionPost);devices.wall=130.75;devices.frame=0x12345678U;devices.client.LocalStateGlobals()->LoginEnd()=160.75;const auto before=std::vector<std::uint8_t>(session->LocalConnectionPackets().begin(),session->LocalConnectionPackets().end());
     session->PumpLocalConnection();CHECK(owner->Frames()[9]==0x12345678U && owner->WallSeconds()[9]==130 && devices.frameReads==1 && devices.removed.empty());CHECK(devices.client.LocalStateGlobals()->LoginEnd()==0.0 && session->LocalConnectionPhase()==14);
     CHECK(std::equal(before.begin(),before.end(),session->LocalConnectionPackets().begin(),session->LocalConnectionPackets().end()) && ActivityWireCount(*session)==0 && devices.trace.empty()); // 같은 표 갱신은 타이머의 직접 Native 호출이며 packet record를 합성하지 않는다.
+}
+
+// 실제 Client/Session/Storage가 같은 owner를 빌리고 기존 Prepare의 Gun 사본으로 false를 재오염하지 않는다.
+TEST_CASE(ConnectionActivitySession_AuthorityOwnerIdentityAndPrepareDoNotResynchronize) {
+    std::shared_ptr<netstorm::client::ClientGameplayGlobals> globals; // 첫Client반납뒤에도같은Authority를가진실제공유owner를유지한다.
+    {
+        ActivitySessionDevices first;auto session=first.Create(first.Services(false));auto core=session->Core();globals=first.client.GameplayGlobals();
+        CHECK(session->World().Storage()->Authority()==globals->Authority() && &core.processState.Server()==&globals->Server() && &core.processState.Boss()==&globals->Boss());
+        globals->Server()=false;globals->Boss()=false;core.processState.server=core.processState.boss=true;session->PrepareFrame({},true);CHECK(!core.processState.Server() && !core.processState.Boss() && !core.pool.IsServer());
+        core.processState.Server()=true;CHECK(globals->Server() && !globals->Boss());globals->Server()=false;session.reset();CHECK(!globals->Borrowed() && !globals->Server() && !globals->Boss());
+        session=first.Create(first.Services(false));CHECK(globals->Server() && globals->Boss() && session->Core().pool.IsServer()); // 같은일반Session의기존fresh호환정책을검사한다.
+        globals->Server()=false;globals->Boss()=false; // 다음Client의최초true가보존한첫owner의false를덮지않는지구별한다.
+    }
+    CHECK(!globals->Borrowed() && !globals->Server() && !globals->Boss()); // Session을먼저반납하고Client도정상소멸한뒤두번째Client를만든다.
+    {
+        ActivitySessionDevices second;auto other=second.Create(second.Services(false));auto separate=other->Core();const auto independent=second.client.GameplayGlobals();
+        CHECK(other->World().Storage()->Authority()==independent->Authority() && globals->Authority()!=independent->Authority());
+        CHECK(independent->Server() && independent->Boss() && separate.pool.IsServer());CHECK(!globals->Server() && !globals->Boss());
+    }
+}
+
+// 다른 실제 권한 owner는 gameplay/fresh/Player/Storage 대여보다 먼저 거부한다.
+TEST_CASE(ConnectionActivitySession_ForeignAuthorityFailsBeforeAnyBorrowOrMutation) {
+    ActivitySessionDevices devices;const auto globals=devices.client.GameplayGlobals();globals->Server()=globals->Boss()=false;auto services=devices.Services(false);auto foreign=MakeRawSurfaceStorage(devices.assets.game);services.surfaceStorage=foreign;
+    const auto before=std::vector<std::uint8_t>(foreign->pool.Bytes().begin(),foreign->pool.Bytes().end());bool rejected{};try { devices.Create(std::move(services)); }catch (const std::invalid_argument&) { rejected=true; }
+    CHECK(rejected && !globals->Borrowed() && !foreign->Borrowed() && foreign->Generation()==0 && !globals->Server() && !globals->Boss() && foreign->Authority()->server && foreign->Authority()->boss);CHECK(std::equal(before.begin(),before.end(),foreign->pool.Bytes().begin()));
 }

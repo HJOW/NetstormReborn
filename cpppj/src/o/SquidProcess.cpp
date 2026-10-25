@@ -247,7 +247,7 @@ void SquidProcessHost::FormParentDying(Sid form,Sid parent) {
 void SquidProcessHost::Kill(SquidProcess& process,std::uint32_t flags) {
     const auto form=process.form_;
     // 권한이 없고 form이 서버 번호이며 client flag도 없으면 아무것도 하지 않는다.
-    if (!state_.boss && !(form.value>4 && form.value<pool_.Layout().serverFirst) && !(flags&kClientForm)) return;
+    if (!state_.Boss() && !(form.value>4 && form.value<pool_.Layout().serverFirst) && !(flags&kClientForm)) return;
     if (form.value==0 || form.value>=pool_.Capacity() || (pool_.Slot(form)[kState]&kDead))
         throw std::logic_error("프로세스 form 상태 오류");
     destroy_.Destroy(form,flags,Hooks());
@@ -263,7 +263,7 @@ SquidProcess* SquidProcessHost::FromForm(Sid form) const {
 }
 // 실제 가상34는 server0이면 PID조차 읽지 않는다. 정상 현재 PID의 가상notify만 호출한다.
 void SquidProcessHost::NotifyDependency(Sid watcher,Sid watched,Sid dependForm) const {
-    if (!state_.server) return;
+    if (!state_.Server()) return;
     auto* process=FromForm(watcher);
     if (!process) throw std::logic_error("현재 Depend 통지의 실제 ProcessForm/PID 미연결");
     process->Notify(2,dependForm.value,watched.value);

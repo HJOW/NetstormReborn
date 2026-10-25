@@ -2,6 +2,7 @@
 #include "DudeSpawnSupport.h"
 #include "client/RawSurfaceWorld.h"
 #include "client/ClientPlayerRecords.h"
+#include "client/ClientGameplayGlobals.h"
 #include "o/RawTotalMade.h"
 #include <algorithm>
 #include <cstring>
@@ -207,4 +208,41 @@ TEST_CASE(RawSurfaceStorage_PriestOwnerStateSurvivesPreparedConstructionFailure)
     storage->priestOwnerState.fill(0x76543210U);const auto expected=storage->priestOwnerState;const auto* address=storage->priestOwnerState.data();
     CHECK(StorageRejected([&] { RawSurfaceWorld invalid(OriginalEdition::Patch1078,storage->types,storage->frames,storage->shapes,StorageLinks(),999,nullptr,storage,true); }));CHECK(storage->Generation()==0 && !storage->Borrowed() && storage->priestOwnerState==expected);
     CHECK(StorageRejected([&] { RawSurfaceWorld partial(OriginalEdition::Patch1078,storage->types,storage->frames,storage->shapes,StorageLinks(),97,nullptr,storage,true); }));CHECK(storage->Generation()==1 && !storage->Borrowed() && storage->priestOwnerState==expected && storage->priestOwnerState.data()==address);
+}
+
+// 같은 실제 Gameplay/Storage/Process/Pool 주소가 prepared 대여와 World 소멸 뒤에도 살아 있다.
+TEST_CASE(RawSurfaceStorage_AuthorityOwnerSharesCurrentValuesAndOutlivesWorld) {
+    auto globals=std::make_shared<ClientGameplayGlobals>();auto owner=globals->Authority();auto storage=MakeRawSurfaceStorage(netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078).game,owner);auto first=StorageWorld(storage);
+    auto core=first->Core();CHECK(owner->server && owner->boss && storage->Authority()==owner && &core.processState.Server()==&globals->Server() && &core.processState.Boss()==&globals->Boss());
+    globals->Server()=false;globals->Boss()=false;core.processState.server=core.processState.boss=true;CHECK(!core.processState.Server() && !core.processState.Boss() && !core.pool.IsServer()); // 반대 fallback을 owner에 복사하지 않는다.
+    first.reset();CHECK(!storage->Borrowed() && !globals->Server() && !globals->Boss());auto lease=globals->AcquirePrepared();CHECK(!globals->Server() && !globals->Boss());
+    auto second=std::make_unique<RawSurfaceWorld>(OriginalEdition::Patch1078,storage->types,storage->frames,storage->shapes,storage->links,97,nullptr,storage,true,nullptr,owner);const auto next=second->Core();CHECK(!next.processState.Server() && !next.processState.Boss() && !next.pool.IsServer());
+    std::weak_ptr<RawAuthorityState> lifetime=owner;owner.reset();lease.reset();globals.reset();storage.reset();CHECK(!lifetime.expired()); // 살아 있는 World의 Storage만 작은 owner를 계속 소유한다.
+    next.processState.Server()=true;next.processState.Boss()=false;CHECK(next.pool.IsServer() && !next.processState.Boss());second.reset();CHECK(lifetime.expired());
+}
+
+// 일반 설치만 종전 fresh true/true로 시작하고 prepared/실패/중복은 현재 권한을 보존한다.
+TEST_CASE(RawSurfaceStorage_AuthorityFreshPreparedAndIdentityFailureAreDistinct) {
+    auto globals=std::make_shared<ClientGameplayGlobals>();auto storage=MakeRawSurfaceStorage(netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078).game,globals->Authority());globals->Server()=false;globals->Boss()=false;
+    auto other=std::make_shared<RawAuthorityState>();CHECK(StorageRejected([&] { RawSurfaceWorld wrong(OriginalEdition::Patch1078,storage->types,storage->frames,storage->shapes,storage->links,97,nullptr,storage,false,nullptr,other); }));
+    CHECK(!storage->Borrowed() && storage->Generation()==0 && !globals->Server() && !globals->Boss());auto first=StorageWorld(storage);CHECK(globals->Server() && globals->Boss());globals->Server()=false;globals->Boss()=true;
+    CHECK(StorageRejected([&] { StorageWorld(storage); }));CHECK(!globals->Server() && globals->Boss());first.reset();auto prepared=storage->AcquirePrepared();CHECK(!globals->Server() && globals->Boss());prepared.reset();CHECK(!globals->Server() && globals->Boss());
+    auto ordinary=storage->Acquire();CHECK(globals->Server() && globals->Boss());ordinary.reset();globals->Server()=globals->Boss()=false;auto preparedGlobals=globals->AcquirePrepared();preparedGlobals.reset();CHECK(!globals->Server() && !globals->Boss());
+    auto freshGlobals=globals->Acquire();CHECK(globals->Server() && globals->Boss());globals->Server()=false;freshGlobals.reset();CHECK(!globals->Server() && globals->Boss()); // 반납은 권한 초기화가 아니다.
+    std::vector<RiftTypeRecord> types(187);std::vector<RiftTypeFrames> frames(187,RiftTypeFrames({}));std::vector<SquidDisplayShape> shapes(187);auto failing=std::make_shared<RawSurfaceStorage>(OriginalEdition::Patch1078,types,frames,shapes,nullptr,globals->Authority());globals->Boss()=false;
+    CHECK(StorageRejected([&] { RawSurfaceWorld invalid(OriginalEdition::Patch1078,types,frames,shapes,StorageLinks(),97,nullptr,failing,true,nullptr,globals->Authority()); }));CHECK(!failing->Borrowed() && !globals->Server() && !globals->Boss()); // prepared 실행기 생성 실패는 앞선 실제 두 bool을 복구/초기화하지 않는다.
+}
+
+// 두 PE의 Allocate/Release 관문은 생성 때 bool 사본이 아니라 각 호출의 같은 현재 서버값을 읽는다.
+TEST_CASE(RawSurfaceStorage_AuthorityCurrentPoolGatesAndIndependentOwners) {
+    for (const auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) { // 판본별 서버 첫 번호와 같은 실제 장치를 검증한다.
+        auto first=MakeRawSurfaceStorage(netstorm::test::dudespawn::Assets(edition).game);auto second=MakeRawSurfaceStorage(netstorm::test::dudespawn::Assets(edition).game);CHECK(first->Authority()!=second->Authority());
+        auto& authority=*first->Authority();authority.server=false;authority.boss=false;CHECK(!first->pool.IsServer() && second->pool.IsServer() && second->Authority()->boss);
+        const auto before=first->pool.FreeCount();CHECK(StorageRejected([&] { first->pool.Allocate(0); }));CHECK(first->pool.FreeCount()==before);const auto client=first->pool.Allocate(2);CHECK(client==Sid{5});
+        authority.server=true;const auto server=first->pool.Allocate(0);CHECK(server.value==first->pool.Layout().serverFirst);const auto free=first->pool.FreeCount();const auto tail=first->pool.Tail(false);
+        authority.server=false;first->pool.Release(server);CHECK(first->pool.FreeCount()==free && first->pool.Tail(false)==tail && (first->pool.Slot(server)[11]&1U)); // 비서버의 server 슬롯 반납은 FIFO/freeCount를 늘리지 않는다.
+        authority.server=true;const auto next=first->pool.Allocate(0);CHECK(next.value==server.value+1);first->pool.Release(next);CHECK(first->pool.FreeCount()==free && first->pool.Tail(false)==next);
+        first->pool.Release(client);CHECK(first->pool.FreeCount()==free+1 && first->pool.Tail(true)==client);CHECK(!authority.boss && second->Authority()->server && second->Authority()->boss);
+        SidPool standalone(edition,32768,false);CHECK(!standalone.IsServer() && StorageRejected([&] { standalone.Allocate(0); })); // 미연결 순수 fallback은 종전 동작을 유지한다.
+    }
 }

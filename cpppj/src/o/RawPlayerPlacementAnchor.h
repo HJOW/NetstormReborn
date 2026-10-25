@@ -7,8 +7,10 @@
 namespace netstorm::o {
 // 플레이어 배치 앵커 처리 중 조회·갱신하는 상태 묶음이다.
 struct PlayerPlacementAnchorState {
-    std::uint32_t graphReady{},invalidGraph{254},ignoreRestrictions{}; // 실제 그래프 활성·무효 번호·종속 조건 우회 전역이다.
+    std::uint32_t graphReady{},invalidGraph{254},ignoreRestrictions{}; // 실제 그래프 활성·무효 번호와 독립 raw용 종속 조건 우회 fallback이다.
     std::uint32_t fenceType{},windArcherType{}; // 패치 raw graph getter가 surface 이외에도 허용하는 두 현재 타입 번호다.
+    const std::uint32_t* sharedFullDeck{}; // 실제0054db14 owner를 빌리며 상태 값 복사도 같은 주소의 현재 값을 소비한다.
+    const std::uint32_t& IgnoreRestrictions() const { return sharedFullDeck ? *sharedFullDeck : ignoreRestrictions; } // 후보별 종속 조회 뒤 DWORD 전체를 정규화 없이 다시 읽는다.
 };
 // 플레이어 앵커 선택한 대상과 배치 기준 정보이다.
 struct PlayerAnchorSelection {

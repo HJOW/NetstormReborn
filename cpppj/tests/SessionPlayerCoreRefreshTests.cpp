@@ -5,6 +5,8 @@
 #include "client/ClientGameplayGlobals.h"
 #include "client/ClientPlayerRecords.h"
 #include "o/RawFortTerritorySave.h"
+#include "client/GameWorld.h"
+#include "client/ClientUserSelectionCleanup.h"
 #include <algorithm>
 #include <array>
 #include <stdexcept>
@@ -119,4 +121,25 @@ TEST_CASE(SessionIslandChunkStorage_ActualLoadAndSnapshotUseSameCurrentRecords) 
     selectedChunk->record[4]=0x4d;selectedChunk->record[5]=0x72;session.SnapshotFortTerritory(slot);const auto saved=templates->Template(slot).Section("Territory"); // 전체 파일 저장이나 임의 좌표 생성 없이 같은 실제 snapshot reader를 실행한다.
     CHECK(saved.size()==120 && saved[static_cast<std::size_t>(selectedRegion)*6+4]==0x4d && saved[static_cast<std::size_t>(selectedRegion)*6+5]==0x72);
     CHECK(surface->islands.records.data()==islands && surface->chunks.Entries().data()==chunks); // loaded 이후 reader도 최초 배열/지도 물리를 유지한다.
+}
+
+// 실제 GameWorld/Session/입력이 같은9DWORD를 읽고 실제 객체의+7c 선택 비트도 공통 adapter에서 지운다.
+TEST_CASE(GameWorldSelectionGlobals_ActualWorldInputAndCleanupShareCurrentOwner) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);CoreRefreshSessionDevices devices;auto gameplay=std::make_shared<ClientGameplayGlobals>();auto surface=MakeRawSurfaceStorage(assets.game,gameplay->Authority());auto services=devices.Make(false);services.gameplayGlobals=gameplay;services.surfaceStorage=surface;
+    auto fort=FortTemplate::Parse(assets.files.Read("d/bc8fury76.fort"),assets.game.TypeTable());std::uint32_t cursorCalls{}; // 실제 장치 선택만 외부에서 관찰한다.
+    {
+        GameWorld world(assets.game,assets.files,std::move(fort),{},"bc8fury76",std::move(services),{640,480});CHECK(&world.SelectionGlobals()==&gameplay->selection);
+        UserSelectionHooks selection;selection.paused=[] { return 0U; };UserHighlightHooks highlight;highlight.selectCursor=[&](auto cursor) { CHECK(cursor==1);++cursorCalls; };world.BindUserInput(std::move(selection),std::move(highlight),{});
+        auto& owner=gameplay->selection;owner.selected=0xfedcba98U;owner.mode=2;owner.mouseType=71;owner.multipleCount=-3;owner.remembered={17,19};world.SetMousePoint({-33,65});
+        CHECK(world.Selected()==0xfedcba98U && world.InputMode()==2 && owner.mouse.x==-33 && &world.HighlightSettings().selectedSid==&owner.selected);
+        world.ClearSelection();CHECK(owner.selected==0 && owner.mode==0 && owner.mouseType==0 && owner.multipleCount==0 && cursorCalls==1);
+        const auto sid=world.Session().World().Create(94);auto raw=world.Session().Core().pool.AllocatedBytes(sid);raw[40]|=4;owner.multiple={sid.value};owner.multipleCount=1;owner.selected=sid.value;owner.mode=2;owner.mouseType=71;
+        ClearClientUserSelection(*gameplay,*surface,[&](auto cursor) { CHECK(cursor==1);++cursorCalls; });CHECK(!(raw[40]&4) && owner.multipleCount==0 && owner.selected==0 && owner.mode==0 && owner.mouseType==0 && cursorCalls==2);
+        owner.mouseType=0x89abcdefU;world.ClearSelection();CHECK(owner.mouseType==0x89abcdefU && owner.multiple[0]==sid.value); // 동기 adapter가 기존 입력/activeSelection 수명을 교체하지 않는다.
+    }
+    CHECK(!gameplay->Borrowed() && gameplay->selection.mouseType==0x89abcdefU && gameplay->selection.mouse.x==-33 && gameplay->selection.remembered[1]==19 && !gameplay->selection.multiple.empty()); // Runtime 반납 뒤에도 선택 전역의 현재 값은 남는다.
+    ClearClientUserSelection(*gameplay,*surface);CHECK(gameplay->selection.mouseType==0x89abcdefU && gameplay->selection.multipleCount==0); // 같은mode0의 후속 빈 경로는 Session을 다시 요구하지 않는다.
+    CoreRefreshSessionDevices independentDevices;auto independent=independentDevices.Make(false);independent.surfaceStorage=surface; // Gameplay를 생략한 독립 호출자는 기존 Storage의 같은 Authority만 채택한다.
+    auto nextFort=FortTemplate::Parse(assets.files.Read("d/bc8fury76.fort"),assets.game.TypeTable());
+    { GameWorld next(assets.game,assets.files,std::move(nextFort),{},"bc8fury76",std::move(independent),{640,480});CHECK(&next.SelectionGlobals()!=&gameplay->selection && next.Selected()==0 && &next.Session().Core().processState.Server()==&surface->Authority()->server); } // 새 선택 owner와 공유 권한 owner를 구별한다.
 }

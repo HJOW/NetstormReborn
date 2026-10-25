@@ -2,7 +2,7 @@
 void PrepareRitual() {
     runeState.suppressDuration=globals.missionPost; // 원본00594fa4는 룬 시간·다이스 후처리·희생 완료가 함께 읽는 현재 미션 상태다.
     for (std::uint32_t owner=0;owner<=kPlayerCount;++owner) runeState.playerFlags[owner]=players[owner*0xb4+0x50]; // 룬 건설시간도 같은 현재 Player flag를 읽는다.
-    ritualState.boss=assetState.boss;ritualState.priestType=priestState.movement.priest;ritualState.runeType=runeState.runeType;
+    ritualState.boss=assetState.Boss();ritualState.priestType=priestState.movement.priest;ritualState.runeType=runeState.runeType;
     for (std::size_t index=0;index<alliances.size();++index) daisState->alliances[index]=std::bit_cast<std::int32_t>(alliances[index]); // 현재 방향별 DWORD 비트를 부호 변환 없이 공유한다.
 }
 // 원본 new0x28 한 번의 성공을 실제 Regular 저장 공간 한 번의 확보로 보존한다.

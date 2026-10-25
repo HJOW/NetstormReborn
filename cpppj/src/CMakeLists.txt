@@ -10,6 +10,7 @@
 # 게임 본체. 실행 파일과 테스트가 함께 쓰도록 정적 라이브러리로 묶는다.
 # 소스 목록은 각 폴더의 CMakeLists.txt 가 target_sources 로 더한다.
 add_library(netstorm STATIC)
+target_sources(netstorm PRIVATE o/RawAuthorityState.h) # 같은 Client의 실제 서버/권한 두 논리값만 장기 소유한다.
 # 생산 문자 단축키의 원본 큐 예약을 클라이언트 입력과 같은 명령으로 연결한다.
 target_sources(netstorm PRIVATE client/ProductionShortcuts.cpp client/ProductionShortcuts.h)
 # 같은 실제 월드의 원본 미니맵 셀 래스터다.
@@ -82,6 +83,9 @@ target_sources(netstorm PRIVATE client/RawUserHighlight.cpp client/RawUserHighli
 
 # 세 인자 선택과 다중 선택 정리 및 사제/Carrier/Archer 메뉴 입구다.
 target_sources(netstorm PRIVATE client/RawUserSelection.cpp client/RawUserSelection.h)
+
+# 같은 선택9DWORD/현재 다중 배열과 첫 메뉴의 실제 raw Clear adapter다.
+target_sources(netstorm PRIVATE client/ClientUserSelectionGlobals.h client/ClientUserSelectionCleanup.h client/ClientUserSelectionCleanup.cpp)
 
 # 원본 선택 가상+7c와 사정거리/491 생성 입구다.
 target_sources(netstorm PRIVATE o/RawSquidSelection.cpp o/RawSquidSelection.h o/SelectionVtables.inc)

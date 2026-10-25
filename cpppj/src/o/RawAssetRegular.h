@@ -20,6 +20,9 @@ struct AssetRegularState {
     std::uint32_t constructionProcessType{30}; // abstract 건설 재시도가 찾는 부착 프로세스 번호다.
     std::uint32_t animationType{0x2000013}; // 신전 event4의 삭제 통지 대상 토큰이다. 두 PE 초기DWORD는0x2000013이다.
     std::uint32_t regionGeneration{}; // event4 통지 토큰의 상위 WORD를 만드는 전역이다.
+    RawAuthorityState* sharedAuthority{}; // Session/물리 저장소와 같은 권한만 공유하며 예약/목록은 실행기에 남긴다.
+    bool& Boss() { return sharedAuthority ? sharedAuthority->boss : boss; } // 신전 이탈 대기의 실제 비교 위치에서 읽는다.
+    const bool& Boss() const { return sharedAuthority ? sharedAuthority->boss : boss; } // 독립 raw 입력의 bool fallback을 보존한다.
 };
 // 아직 독립 하위 모듈로 연결해야 하는 효과다. 누락 시 해당 사건을 거부하며 무효 반환으로 대신하지 않는다.
 struct AssetRegularHooks {

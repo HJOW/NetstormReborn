@@ -14,9 +14,11 @@ struct FortObjectLoadState {
     std::uint32_t loadingDepth{},scope{}; // 005c89b8/005c89b0: 중첩 로딩 깊이와Terr1/Chaff2의별도전역이다.
     std::uint32_t bridgeType{82},islandType{94},largeIslandType{95},noIslandType{157}; // 실제 PE의 다리/island/islandStalag/noIsland 전역이다. 지면isle97/98과 구별한다.
     std::uint32_t ownerSavedMask{0x5d77cf00},ownerClearedMask{0x10002000},fortKeepMask{0x40480002}; // 두 PE의 초기 mask다.
-    bool special{},mission{},fort{},chaffMode{},fortDestroyBlocked{}; // 편집/미션·Fort/Chaff 허용·Fort 삭제 억제 전역이다.
+    bool special{},mission{},fort{},chaffMode{},fortDestroyBlocked{}; // 편집/미션·Fort/Chaff 허용과 독립 raw용 Fort 삭제 억제 fallback이다.
     std::int32_t chunksX{16},chunksY{16}; // 현재 원본 청크 지도 크기다. 각 행/열에서 현재 값으로 비교한다.
     std::uint32_t battleSavedMask{0x40480002}; //0054263c: 저장 시 현재 flags2와 비교하며 fortKeepMask와 다른 전역이다.
+    const std::uint32_t* sharedFullDeck{}; // 선택형0054db14 대여이며 실제 owner가 이 상태와 로더보다 오래 살아야 한다.
+    bool FortDestroyBlocked() const { return sharedFullDeck ? *sharedFullDeck!=0 : fortDestroyBlocked; } // Pop/Contents 효과 뒤 현재 DWORD를 읽으며 독립 raw 입력은 기존 bool을 사용한다.
 };
 // 계산을 기본값으로 대체하지 않는 실제 가상/월드 경계다. 각 반환값은 현재 raw/type에 적용된다.
 struct FortObjectLoadHooks {

@@ -128,7 +128,7 @@ struct InstallScene {
         priestState.regen.patch.sequence=std::bit_cast<std::int32_t>(sp.Offset());
         priestState.regen.patch.observedSequence=priestState.regen.patch.sequence;
         finishState.chaffMode=true;objectState.mission=true;objectState.chaffMode=true;
-        playerState.playerKnown=1;assetState.boss=true;assetState.inBattle=true;assetState.localOwner=1;gunState.boss=true;
+        playerState.playerKnown=1;assetState.Boss()=true;assetState.inBattle=true;assetState.localOwner=1;gunState.boss=true;
         priestState.priests.priests.entries.resize(100);assetState.residences.entries.resize(100);
         assetState.temples.entries.resize(100);assetState.outposts.entries.resize(100);assetState.geysers.entries.resize(100);
         // 원본 Player의 첫 지역 sentinel은9기록에 직접 쓴다. 별도 playerRegions 배열을 사용하지 않는다.
@@ -221,7 +221,7 @@ struct InstallScene {
         }
         gunMode=std::make_unique<RawGunMode>(core.pool,core.frames,gunState.windArcherType);
         gunTarget=std::make_unique<RawGunTarget>(core.pool,core.hash,core.types,gunTypes,core.shapes,gunTargetState);
-        priestDamageState.levelCorrectionDisabled=globals.missionPost;priestDamageState.boss=assetState.boss;
+        priestDamageState.levelCorrectionDisabled=globals.missionPost;priestDamageState.boss=assetState.Boss();
         RawCampaignHitEffects hitEffects;
         hitEffects.priest.defaultFrame=[this](Sid sid) { return projectileTypes[core.pool.Slot(sid)[10]].defaultFrame; };
         // 소유자 AI/알림은 현재 외부 요청으로 관찰한다. 실제 HP/회복/감시 처리는 바인딩의 원본 몸체다.

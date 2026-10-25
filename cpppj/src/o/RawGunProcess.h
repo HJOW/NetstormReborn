@@ -39,6 +39,11 @@ struct GunProcessState {
     // allies: 동맹.
     std::array<std::array<bool,kPlayerCount+1>,kPlayerCount+1> allies{};
     std::function<std::uint32_t(std::uint32_t,std::uint32_t)> allianceRead; // 같은 실제 방향별81DWORD의 현재 한 칸을 읽는다. 없으면 독립 검사 배열을 사용한다.
+    RawAuthorityState* sharedAuthority{}; // 실제 Process/Pool과 같은 두 bool을 빌리며 독립 fixture는 기존 필드를 사용한다.
+    bool& Boss() { return sharedAuthority ? sharedAuthority->boss : boss; } // 총의 각 원문 권한 관문이 현재값을 재조회한다.
+    const bool& Boss() const { return sharedAuthority ? sharedAuthority->boss : boss; } // const 논리도 현재 물리 참조를 유지한다.
+    bool& Server() { return sharedAuthority ? sharedAuthority->server : server; } // 총의 서버 assert/부착/통지 관문이 현재값을 재조회한다.
+    const bool& Server() const { return sharedAuthority ? sharedAuthority->server : server; } // 연결하지 않은 순수 모듈만 값형 입력을 읽는다.
     // 원본 방향을 유지해 현재 nonzero 동맹 칸을 판정한다. 반대 방향을 자동으로 읽지 않는다.
     bool IsAlly(std::uint32_t owner,std::uint32_t target) const;
 };

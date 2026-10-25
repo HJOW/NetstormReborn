@@ -1,6 +1,7 @@
 // 초기 요새 자산의 실제 postPop 재정의를 raw SID와 공통 장부에 연결한다.
 #pragma once
 #include "o/RawCarrierPostPop.h"
+#include "o/RawAuthorityState.h"
 #include <array>
 #include <span>
 
@@ -38,6 +39,9 @@ struct AssetPostPopState {
     // geysers: 간헐천.
     SquidPostPopList residences,temples,geysers;
     SquidPostPopList outposts; // DAT0055a70c/CD005670e0: 신전/아웃포스트의 섬 소유권 재계산에 쓰는 별도 목록이다.
+    RawAuthorityState* sharedAuthority{}; // 실제 제품은 같은 Client 권한만 빌리고 목록/Player 상태를 이동하지 않는다.
+    bool& Boss() { return sharedAuthority ? sharedAuthority->boss : boss; } // Vortex의 실제 권한 소비 시점에서 현재값을 읽는다.
+    const bool& Boss() const { return sharedAuthority ? sharedAuthority->boss : boss; } // 순수 독립 모듈의 기존 bool fallback도 유지한다.
 };
 // 외부 몸체를 생략하지 않고 호출 순서대로 연결하는 명시 경계다. 필요한 경계가 없으면 사전 검사에서 거부한다.
 struct AssetPostPopHooks {

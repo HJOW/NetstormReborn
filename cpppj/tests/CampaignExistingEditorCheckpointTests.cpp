@@ -31,6 +31,7 @@
 #include "o/RawDataManagerSelection.h"
 #include "o/OriginalText.h"
 #include <algorithm>
+#include <functional> // 생성 직전의 명시 prefix/선택 실패 입력만 공급한다.
 #include <bit>
 #include <chrono>
 #include <cstdio>
@@ -187,7 +188,7 @@ TEST_CASE(CampaignExistingEditorCheckpoint_ActualCurrentNameSelectsWorkingFile) 
 TEST_CASE(CampaignExistingEditorCheckpoint_ActualChatRuntimeAdvancesWorldAndSnapshot) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);const auto input=CheckpointInput(assets.files);ClientOptions options;options.gameDirectory=assets.root;Client client(std::move(options));InitializeClientChatManager(client);
     CHECK(client.ChatManagerGlobals()->Current()!=0 && client.CoreDataGlobals()->Active()==0);auto storage=std::make_shared<CampaignTemplateStorage>();EditorFiles work(CheckpointRoot(assets.root.parent_path(),"chat-runtime"),{assets.root,assets.root.parent_path()/"originalCD"});const auto path=work.Prepare("Checkpoint385",input);CheckpointDevices devices;auto effects=devices.Effects(client,work);auto services=devices.Make(client,storage,input);
-    const auto surface=MakeRawSurfaceStorage(assets.game);services.surfaceStorage=surface;services.gameplayGlobals=client.GameplayGlobals();services.subscriberGlobals=client.SubscriberGlobals();services.playerRecords=client.PlayerRecords();
+    const auto surface=MakeRawSurfaceStorage(assets.game,client.GameplayGlobals()->Authority());services.surfaceStorage=surface;services.gameplayGlobals=client.GameplayGlobals();services.subscriberGlobals=client.SubscriberGlobals();services.playerRecords=client.PlayerRecords();
     services.fortTechnologyUi=[&] { ++devices.chatCalls;RefreshClientChatRankPrefix(client,assets.game,*surface); }; // 동기 실제 부모가 current/active/Core/TYPE를 판정한다.
     effects.players.translate=[](auto)->std::span<const std::uint8_t> { throw CheckpointStop("actual-editor-player-translation-required"); }; // 이 검사는 다음 미연결 UI 경계를 완료로 세지 않는다.
     RawCampaignSession session(assets.game,assets.files,FortTemplate::Parse(input,assets.game.TypeTable()),"deferred.fort",std::move(services));bool stopped{};try { session.InstallExistingEditorCheckpoint(effects,client.ReadOnlyForts(),work); }catch (const CheckpointStop& error) { stopped=std::string_view(error.what())=="actual-editor-player-translation-required"; }
@@ -200,7 +201,7 @@ TEST_CASE(CampaignExistingEditorCheckpoint_ActualPlayerUiCompletesAndReloads) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);auto input=CheckpointInput(assets.files);ClientOptions options;options.gameDirectory=assets.root;Client client(std::move(options));client.StaticStrings()->Initialize(10240);InitializeClientChatManager(client);
     EditorFiles work(CheckpointRoot(assets.root.parent_path(),"player-ui-roundtrip"),{assets.root,assets.root.parent_path()/"originalCD"});const auto path=work.Prepare("Checkpoint385",input);const auto shared=client.StaticStrings();std::size_t previous{};
     for (std::uint32_t pass=0;pass<2;++pass) { // 첫 정상 저장의 실제 디스크 바이트를 별도 두 번째 Session 입력으로 다시 읽는다.
-        input=ReadFileBytes(path);CheckpointDevices devices;auto storage=std::make_shared<CampaignTemplateStorage>();auto effects=devices.Effects(client,work);auto services=devices.Make(client,storage,input);const auto surface=MakeRawSurfaceStorage(assets.game);
+        input=ReadFileBytes(path);CheckpointDevices devices;auto storage=std::make_shared<CampaignTemplateStorage>();auto effects=devices.Effects(client,work);auto services=devices.Make(client,storage,input);const auto surface=MakeRawSurfaceStorage(assets.game,client.GameplayGlobals()->Authority());
         services.surfaceStorage=surface;services.gameplayGlobals=client.GameplayGlobals();services.subscriberGlobals=client.SubscriberGlobals();services.playerRecords=client.PlayerRecords();services.editorPlayerUi=MakeEditorPlayerClientHooks(client);services.fortTechnologyUi=[&] { ++devices.chatCalls;RefreshClientChatRankPrefix(client,assets.game,*surface); }; // 같은 실제 Client 장치를 공급하고 게임 child는 Session의 본체를 사용한다.
         RawCampaignSession session(assets.game,assets.files,FortTemplate::Parse(input,assets.game.TypeTable()),"deferred.fort",std::move(services));session.InstallExistingEditorCheckpoint(effects,client.ReadOnlyForts(),work);
         CHECK(session.ExistingEditorCheckpointReady() && session.CurrentHandle()=="Player" && session.CurrentSubscriber()==7 && devices.chatCalls==1 && devices.camera==1);const auto players=session.PlayerRecords();
@@ -216,7 +217,7 @@ TEST_CASE(CampaignExistingEditorCheckpoint_ActualPlayerUiCompletesAndReloads) {
 // 보호 커스텀 TEST01의 바이트는 편집하지 않고 별도 작업 namespace에서 같은 실제 설치/저장을 실행한다.
 TEST_CASE(CampaignExistingEditorCheckpoint_ActualCustomTest01PlayerUiAndFile) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);const auto input=assets.files.Read("d/TEST01.fort");ClientOptions options;options.gameDirectory=assets.root;Client client(std::move(options));client.StaticStrings()->Initialize(10240);InitializeClientChatManager(client);
-    EditorFiles work(CheckpointRoot(assets.root.parent_path(),"custom-test01-player-ui"),{assets.root,assets.root.parent_path()/"originalCD"});CheckpointDevices devices;devices.current=devices.pending="CustomTest01421";const auto path=work.Prepare(devices.current,input);const auto effects=devices.Effects(client,work);auto storage=std::make_shared<CampaignTemplateStorage>();auto services=devices.Make(client,storage,input);const auto surface=MakeRawSurfaceStorage(assets.game);
+    EditorFiles work(CheckpointRoot(assets.root.parent_path(),"custom-test01-player-ui"),{assets.root,assets.root.parent_path()/"originalCD"});CheckpointDevices devices;devices.current=devices.pending="CustomTest01421";const auto path=work.Prepare(devices.current,input);const auto effects=devices.Effects(client,work);auto storage=std::make_shared<CampaignTemplateStorage>();auto services=devices.Make(client,storage,input);const auto surface=MakeRawSurfaceStorage(assets.game,client.GameplayGlobals()->Authority());
     services.surfaceStorage=surface;services.gameplayGlobals=client.GameplayGlobals();services.subscriberGlobals=client.SubscriberGlobals();services.playerRecords=client.PlayerRecords();services.editorPlayerUi=MakeEditorPlayerClientHooks(client);services.fortTechnologyUi=[&] { ++devices.chatCalls;RefreshClientChatRankPrefix(client,assets.game,*surface); };
     RawCampaignSession session(assets.game,assets.files,FortTemplate::Parse(input,assets.game.TypeTable()),"deferred.fort",std::move(services));session.InstallExistingEditorCheckpoint(effects,client.ReadOnlyForts(),work);
     CHECK(session.ExistingEditorCheckpointReady() && session.CurrentHandle()=="Player" && session.CurrentSubscriber()!=0 && devices.chatCalls==1 && session.IslandCount()>0);const auto saved=ReadFileBytes(path);const auto result=FortTemplate::Parse(saved,assets.game.TypeTable());CHECK(!result.Section("State").empty() && !(result.Section("State")[0]&1U));CHECK(CheckpointRejects<std::logic_error>([&] { session.SnapshotFort(1); })); // 실제 커스텀 checkpoint가 끝나도 최종 loaded는 이 부모 밖이다.
@@ -229,7 +230,7 @@ TEST_CASE(CampaignExistingEditorCheckpoint_AdoptsNativePlayersAndPreservesCoreUn
     for (std::uint32_t pass=0;pass<2;++pass) { // 앞선 Core0/실제 재할당은 Native 호출 위치에서만 수행한다.
         if (pass) { core->Select(client.GameplayGlobals()->player,metamap,0,1);CHECK(core->Cached()[4]==71 && core->Active()==0);InitializeClientPlayerRecords(client); }
         const auto base=client.PlayerRecords()->Base();const auto spBefore=sharedSp.Pools();const auto offset=sharedSp.Offset();const auto tracking=sharedSp.TrackingOffsetCurrent(); // Native 공통 초기화 뒤의 현재 저장소는 Session ctor에서 다시 초기화하지 않는다.
-        { CheckpointDevices devices;auto storage=std::make_shared<CampaignTemplateStorage>();auto effects=devices.Effects(client,work);auto services=devices.Make(client,storage,ReadFileBytes(work.ResolvePath("d/Checkpoint385.fort")));const auto surface=MakeRawSurfaceStorage(assets.game);
+        { CheckpointDevices devices;auto storage=std::make_shared<CampaignTemplateStorage>();auto effects=devices.Effects(client,work);auto services=devices.Make(client,storage,ReadFileBytes(work.ResolvePath("d/Checkpoint385.fort")));const auto surface=MakeRawSurfaceStorage(assets.game,client.GameplayGlobals()->Authority());
           services.surfaceStorage=surface;services.gameplayGlobals=client.GameplayGlobals();services.subscriberGlobals=client.SubscriberGlobals();services.playerRecords=client.PlayerRecords();services.coreDataGlobals=core;services.adoptInitializedPlayers=true;services.editorPlayerUi=MakeEditorPlayerClientHooks(client);services.fortTechnologyUi=[&] { RefreshClientChatRankPrefix(client,assets.game,*surface); };
           services.spGlobals=client.SpGlobals();services.randomGlobals=client.RandomGlobals(); // 실제 checkpoint도 공통 시작과 같은 SP/게임·CRT 난수/추적 DWORD를 빌린다.
           RawCampaignSession session(assets.game,assets.files,FortTemplate::Parse(input,assets.game.TypeTable()),"deferred.fort",std::move(services));CHECK(&session.SpStore()==&sharedSp && sharedSp.Pools()==spBefore && sharedSp.Offset()==offset && sharedSp.TrackingOffsetCurrent()==tracking);CHECK(client.PlayerRecords()->Base()==base && session.PlayerCoreGlobals()==core && core->Current().data()==session.PlayerRecords().data()+180+0x6c);session.InstallExistingEditorCheckpoint(effects,client.ReadOnlyForts(),work);CHECK(session.ExistingEditorCheckpointReady());core->Current()[4]=71;core->Active()=7;
@@ -252,12 +253,12 @@ struct EditorInstallWireScene {
     }
 };
 // 실제 Chat·Player·번역·작업 파일을 갖춘 같은 Client Session을 검사 동기 범위 동안 소유한다.
-template<class Body> void WithEditorInstallSession(Body body,bool prepared=false,EditorInstallWireScene* wireScene=nullptr,const std::function<void(RawSurfaceStorage&)>& prepareStorage={}) {
+template<class Body> void WithEditorInstallSession(Body body,bool prepared=false,EditorInstallWireScene* wireScene=nullptr,const std::function<void(RawSurfaceStorage&)>& prepareStorage={},const std::function<void(Client&,RawCampaignSessionServices&)>& beforeCtor={}) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);const auto input=CheckpointInput(assets.files);ClientOptions options;options.gameDirectory=assets.root;Client client(std::move(options));client.StaticStrings()->Initialize(10240);if (prepared) { client.SpGlobals()->Store().Initialize();InitializeClientPlayerRecords(client); }InitializeClientChatManager(client);
-    EditorFiles work(CheckpointRoot(assets.root.parent_path(),"ui-state-commit"),{assets.root,assets.root.parent_path()/"originalCD"});work.Prepare("Checkpoint385",input);CheckpointDevices devices;auto effects=devices.Effects(client,work);auto storage=std::make_shared<CampaignTemplateStorage>();auto services=devices.Make(client,storage,input);const auto surface=MakeRawSurfaceStorage(assets.game);
+    EditorFiles work(CheckpointRoot(assets.root.parent_path(),"ui-state-commit"),{assets.root,assets.root.parent_path()/"originalCD"});work.Prepare("Checkpoint385",input);CheckpointDevices devices;auto effects=devices.Effects(client,work);auto storage=std::make_shared<CampaignTemplateStorage>();auto services=devices.Make(client,storage,input);const auto surface=MakeRawSurfaceStorage(assets.game,client.GameplayGlobals()->Authority());
     services.surfaceStorage=surface;services.gameplayGlobals=client.GameplayGlobals();services.subscriberGlobals=client.SubscriberGlobals();services.playerRecords=client.PlayerRecords();services.localStateGlobals=client.LocalStateGlobals();services.editorPlayerUi=MakeEditorPlayerClientHooks(client);services.fortTechnologyUi=[&] { RefreshClientChatRankPrefix(client,assets.game,*surface); };
     if (prepared) {
-        auto& gameplay=*client.GameplayGlobals();gameplay.world.editor=1;gameplay.world.missionPost=true;gameplay.player.fortMode=true;gameplay.cursor.screenX=37;gameplay.cursor.lockDepth=3;gameplay.energy.userCheat=true; // 준비 대여에 대한 명시 입력이며 Native cleanup/prefix 전체 실행의 증거는 아니다.
+        auto& gameplay=*client.GameplayGlobals();gameplay.world.editor=1;gameplay.world.missionPost=true;gameplay.FullDeck()=1;gameplay.player.fortMode=true;gameplay.cursor.screenX=37;gameplay.cursor.lockDepth=3;gameplay.energy.userCheat=true; // 준비 대여에 대한 명시 입력이며 Native cleanup/prefix 전체 실행의 증거는 아니다.
         surface->ownerMode={true,false,false};surface->links.battle=false;surface->links.mission=false;surface->spots[123]=19;const std::uint32_t metamap=0;client.CoreDataGlobals()->Select(gameplay.player,metamap,1,1);
         services.adoptPreparedWorld=true;services.adoptInitializedPlayers=true;services.coreDataGlobals=client.CoreDataGlobals();services.spGlobals=client.SpGlobals();services.processKernel=&client.GetKernel(); // 준비된 Native 경로에서 별도 SP 초기화나 별도 Kernel을 만들지 않는다.
     }
@@ -269,6 +270,7 @@ template<class Body> void WithEditorInstallSession(Body body,bool prepared=false
     if (prepareStorage) prepareStorage(*surface); // 실제 Session 생성 전 같은 물리에 명시 입력만 넣고 prepared 생성자의 암묵 Reset을 검출한다.
     const std::array<std::uint32_t,13> messages{0x5b,0x40,0x4f,0x50,0x60,0x61,0x5c,0x5f,0x7d,0x6d,0x3e,0x54,0x58};std::array<PacketRegistration,13> registrations{}; // 반납 전 현재 등록 정책을 독립적으로 고정한다.
     PacketRegistration activityRegistration; //64h는 기존13종 목록 밖에서 수신 반납과 정책 보존을 별도로 관측한다.
+    if (beforeCtor) beforeCtor(client,services); // 실제 장기 owner의 준비 입력/부분 실패만 주입하고 Session 계산은 우회하지 않는다.
     { RawCampaignSession session(assets.game,assets.files,FortTemplate::Parse(input,assets.game.TypeTable()),"deferred.fort",std::move(services));body(session,client,effects,work);
       if (wireScene) activityRegistration=wireScene->wire->Dispatch().Registration(0x64);
       if (wireScene) for (std::size_t index=0;index<messages.size();++index) registrations[index]=wireScene->wire->Dispatch().Registration(messages[index]); } // 수신 callback의 같은 Session이 Client/Player보다 먼저 반납된다.
@@ -367,6 +369,21 @@ TEST_CASE(CampaignExistingEditorCheckpoint_PreparedCtorKeepsSharedIslandAndChunk
     });
 }
 
+// 실제 prepared 대여 뒤 SoundList 필수 계약에서 생성이 실패해도 선택 owner의 모든 입력을 남기고 Use만 반납한다.
+TEST_CASE(CampaignExistingEditorCheckpoint_PreparedCtorAndLateFailureKeepSelectionGlobals) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);const auto input=CheckpointInput(assets.files);ClientOptions options;options.gameDirectory=assets.root;Client client(std::move(options));client.StaticStrings()->Initialize(10240);client.SpGlobals()->Store().Initialize();InitializeClientPlayerRecords(client);InitializeClientChatManager(client);
+    auto& gameplay=*client.GameplayGlobals();gameplay.world.editor=1;gameplay.world.missionPost=true;gameplay.player.fortMode=true;const std::uint32_t metamap=0;client.CoreDataGlobals()->Select(gameplay.player,metamap,1,1);
+    auto storage=std::make_shared<CampaignTemplateStorage>();CheckpointDevices devices;auto services=devices.Make(client,storage,input);auto surface=MakeRawSurfaceStorage(assets.game,client.GameplayGlobals()->Authority());surface->ownerMode={true,false,false};surface->links.battle=false;surface->links.mission=false;
+    services.adoptPreparedWorld=true;services.adoptInitializedPlayers=true;services.gameplayGlobals=client.GameplayGlobals();services.subscriberGlobals=client.SubscriberGlobals();services.playerRecords=client.PlayerRecords();services.coreDataGlobals=client.CoreDataGlobals();services.localStateGlobals=client.LocalStateGlobals();services.spGlobals=client.SpGlobals();services.processKernel=&client.GetKernel();services.surfaceStorage=surface;services.soundNames=nullptr; // 실제 후반 SoundList 검증에서만 실패하도록 나머지 준비 소유자를 제공한다.
+    auto& owner=gameplay.selection;owner.enabled=0x80000000U;owner.mode=5;owner.selected=0xfedcba98U;owner.mouseType=71;owner.mouse={-33,65};owner.remembered={0x7fc00001U,19};owner.multipleCount=-7;owner.multiple={0x10037U,0xffffffffU};bool rejected{};
+    try { RawCampaignSession session(assets.game,assets.files,FortTemplate::Parse(input,assets.game.TypeTable()),"deferred.fort",std::move(services)); }catch (const std::invalid_argument& error) { rejected=std::string_view(error.what())=="세션의 실제 SoundList 누락"; }
+    CHECK(rejected && surface->Generation()==1 && !surface->Borrowed() && !gameplay.Borrowed()); // World 대여까지 진행한 뒤의 실제 필수 계약 실패다.
+    CHECK(owner.enabled==0x80000000U && owner.mode==5 && owner.selected==0xfedcba98U && owner.mouseType==71 && owner.mouse.x==-33 && owner.mouse.y==65 && owner.remembered[0]==0x7fc00001U && owner.remembered[1]==19 && owner.multipleCount==-7 && owner.multiple[0]==0x10037U && owner.multiple[1]==0xffffffffU);
+    auto recovered=devices.Make(client,storage,input);recovered.adoptPreparedWorld=true;recovered.adoptInitializedPlayers=true;recovered.gameplayGlobals=client.GameplayGlobals();recovered.subscriberGlobals=client.SubscriberGlobals();recovered.playerRecords=client.PlayerRecords();recovered.coreDataGlobals=client.CoreDataGlobals();recovered.localStateGlobals=client.LocalStateGlobals();recovered.spGlobals=client.SpGlobals();recovered.processKernel=&client.GetKernel();recovered.surfaceStorage=surface; // 이번에는 실제 같은 SoundList도 제공해 성공한 생성과 반납을 대조한다.
+    { RawCampaignSession session(assets.game,assets.files,FortTemplate::Parse(input,assets.game.TypeTable()),"deferred.fort",std::move(recovered));CHECK(gameplay.Borrowed() && surface->Borrowed() && surface->Generation()==2 && owner.selected==0xfedcba98U && owner.mode==5 && owner.multipleCount==-7 && owner.multiple[0]==0x10037U && owner.mouse.x==-33); }
+    CHECK(!gameplay.Borrowed() && !surface->Borrowed() && owner.selected==0xfedcba98U && owner.mode==5 && owner.mouseType==71 && owner.multipleCount==-7 && owner.multiple[1]==0xffffffffU && owner.remembered[0]==0x7fc00001U);
+}
+
 // prepared 표식만으로 누락된 실제 Client 소유자를 만들거나 전역을 초기화하지 않는다.
 TEST_CASE(CampaignExistingEditorCheckpoint_PreparedCtorRejectsIncompleteOwnersBeforeBorrow) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);const auto input=CheckpointInput(assets.files);ClientOptions options;options.gameDirectory=assets.root;Client client(std::move(options));auto storage=std::make_shared<CampaignTemplateStorage>();CheckpointDevices devices;auto services=devices.Make(client,storage,input);services.adoptPreparedWorld=true;services.adoptInitializedPlayers=true;services.gameplayGlobals=client.GameplayGlobals();services.subscriberGlobals=client.SubscriberGlobals();client.GameplayGlobals()->cursor.screenX=73;
@@ -446,7 +463,7 @@ TEST_CASE(CampaignExistingEditorCheckpoint_ActivityWireUsesClientNineAndRetiresO
         const std::array<std::uint8_t,5> packet{1,0x64,5,0,0xa5};session.SendLocalPacket(-1,packet);CHECK(wire->QueuedFrames()==1 && owner->Frames()[9]==17 && owner->WallSeconds()[9]==19 && link.packets.empty());
         session.PumpLocalConnection();CHECK(!wire->QueuedFrames() && link.packets==std::vector<std::vector<std::uint8_t>>{std::vector<std::uint8_t>(packet.begin(),packet.end())} && link.senders==std::vector<std::uint32_t>{9});
         CHECK(owner->Frames()[9]==71 && owner->WallSeconds()[9]==100 && owner->ActiveStamp()==37 && owner->ActiveZoneWord()==41 && link.activityRemoved.empty()); // 현재missionPost1은 삭제 UI를 선택하지 않는다.
-        client.GameplayGlobals()->world.missionPost=false;session.Core().processState.server=true;link.activityFrame=0;session.SendLocalPacket(-1,packet);session.PumpLocalConnection();
+        client.GameplayGlobals()->world.missionPost=false;session.Core().processState.Server()=true;link.activityFrame=0;session.SendLocalPacket(-1,packet);session.PumpLocalConnection();
         CHECK(owner->Frames()[9]==0 && owner->WallSeconds()[9]==100 && (link.activityRemoved==std::vector<std::array<std::uint32_t,2>>{{2,9}}));
         client.GameplayGlobals()->world.missionPost=true;CHECK(session.LocalConnectionPackets().empty() && session.LocalConnectionPhase()==0); // 일반 Login 기록/phase를 Editor에서 합성하지 않는다.
     },true,&link);
@@ -466,4 +483,53 @@ TEST_CASE(CampaignExistingEditorCheckpoint_ActivityCollisionPreservesAllPriorReg
         CHECK(CheckpointRejects<std::logic_error>([&] { session.Cursor(); }) && CheckpointRejects<std::logic_error>([&] { session.SendLocalPacket(9,{}); }));
     },true,&link);
     const auto& after=link.wire->Dispatch().Registration(0x64);CHECK(link.callbacksReleased && after.receive && after.observer && after.version==7 && after.mismatch==4 && after.length==9);
+}
+
+// 준비된 false/false는 실제 Session 구성/현재 조회/반납 모두에서 같은 두 bool에 남는다.
+TEST_CASE(CampaignExistingEditorCheckpoint_PreparedAuthorityUsesSameClientOwnerWithoutTrueWrites) {
+    std::shared_ptr<RawAuthorityState> retained;
+    WithEditorInstallSession([&](RawCampaignSession& session,Client& client,const auto&,EditorFiles&) {
+        auto core=session.Core();CHECK(retained==client.GameplayGlobals()->Authority() && retained==session.World().Storage()->Authority());CHECK(&core.processState.Server()==&client.GameplayGlobals()->Server() && &core.processState.Boss()==&client.GameplayGlobals()->Boss());
+        CHECK(!core.processState.Server() && !core.processState.Boss() && !core.pool.IsServer());core.processState.server=core.processState.boss=true;session.PrepareFrame({},true);CHECK(!retained->server && !retained->boss && !core.pool.IsServer());
+    },true,nullptr,[&](RawSurfaceStorage& storage) { retained=storage.Authority();retained->server=retained->boss=false; });
+    CHECK(retained && !retained->server && !retained->boss); // Session/World/Client가 모두 반납된 뒤에도 관측한 같은 owner 값이 남는다.
+}
+
+// 실제 prepared World 뒤 prefix 검증 실패도 owner의 현재 값을 초기화/복원하지 않는다.
+TEST_CASE(CampaignExistingEditorCheckpoint_PreparedAuthoritySurvivesPartialConstructorFailure) {
+    std::shared_ptr<RawAuthorityState> retained;bool entered{};
+    CHECK(CheckpointRejects<std::logic_error>([&] {
+        WithEditorInstallSession([&](RawCampaignSession&,Client&,const auto&,EditorFiles&) { entered=true; },true,nullptr,[&](RawSurfaceStorage& storage) { retained=storage.Authority();retained->server=false;retained->boss=true;storage.ownerMode.fort=false; });
+    }));
+    CHECK(retained && !entered && !retained->server && retained->boss);
+}
+
+// 실제 준비 Session의 객체/생산/Deck은 같은 Client DWORD를 빌리고 생성/반납에서 비영 원시값을 바꾸지 않는다.
+TEST_CASE(CampaignExistingEditorCheckpoint_FullDeckOwnerPreparedConsumersAndRelease) {
+    for (const std::uint32_t value:{0U,0x80000000U,0xffffffffU}) { // 자연 prefix의1 외 입력은 읽기와 물리 보존 검증용이며 Native writer의 추가 값으로 세지 않는다.
+        std::shared_ptr<ClientGameplayGlobals> owner;const std::uint32_t* address{};
+        WithEditorInstallSession([&](RawCampaignSession& session,Client& client,const auto& checkpoint,EditorFiles& work) {
+            CHECK(owner==client.GameplayGlobals() && owner->FullDeck()==value && session.FortObjectSettings().sharedFullDeck==address && session.FortObjectSettings().FortDestroyBlocked()==(value!=0));
+            if (!value) return; // 준비0의 생성 보존과 실제1/비영 편집 설치의 정상 관문을 구별한다.
+            session.InstallExistingEditorCheckpoint(checkpoint,client.ReadOnlyForts(),work);CHECK(session.ExistingEditorCheckpointReady() && owner->FullDeck()==value);const auto players=session.PlayerRecords();const auto at=std::size_t(session.TemplateOwner())*180+0x68;std::uint32_t token{};
+            for (std::size_t byte=0;byte<4;++byte) token|=std::uint32_t(players[at+byte])<<(byte*8); // 현재 Player의 실제 Deck 포인터만 읽으며 가짜 블록을 만들지 않는다.
+            auto deck=session.Production().Deck().Bytes(token);CHECK(deck.size()==0x160 && deck[0x14c]!=0);deck[2]=0x7e;const auto before=std::vector<std::uint8_t>(deck.begin(),deck.end());session.Production().RefreshCurrent();CHECK(std::equal(before.begin(),before.end(),deck.begin()) && owner->FullDeck()==value); // 같은 fullDeck 비영이 실제 재계산의 자연 return을 선택한다.
+            owner->FullDeck()=0;session.Production().RefreshCurrent();CHECK(deck[2]!=0x7e && !session.FortObjectSettings().FortDestroyBlocked());owner->FullDeck()=value;
+        },true,nullptr,{},[&](Client& client,RawCampaignSessionServices&) { owner=client.GameplayGlobals();address=&owner->FullDeck();owner->FullDeck()=value; });
+        CHECK(owner && !owner->Borrowed() && &owner->FullDeck()==address && owner->FullDeck()==value);
+    }
+}
+
+// 준비 prefix 검증 실패와 실제 World 후처리의 후반 예외도 현재 DWORD를0/1로 되돌리지 않는다.
+TEST_CASE(CampaignExistingEditorCheckpoint_FullDeckOwnerPreservesConstructorAndLateFailure) {
+    std::shared_ptr<ClientGameplayGlobals> owner;bool constructed{},selected{},caught{};
+    try { WithEditorInstallSession([&](auto&,auto&,const auto&,auto&) { constructed=true; },true,nullptr,{},[&](Client& client,RawCampaignSessionServices&) { owner=client.GameplayGlobals();owner->FullDeck()=0xffffffffU;owner->player.templateOwner=2; }); }catch (const std::logic_error& error) { caught=std::string_view(error.what())=="준비된 Editor의 실제 prefix 모드/Player 불일치"; }
+    CHECK(caught && !constructed && owner && !owner->Borrowed() && owner->FullDeck()==0xffffffffU);
+    caught=false;try { WithEditorInstallSession([&](RawCampaignSession& session,Client& client,const auto& checkpoint,EditorFiles& work) { constructed=true;CHECK(session.FortObjectSettings().sharedFullDeck==&client.GameplayGlobals()->FullDeck());session.InstallExistingEditorCheckpoint(checkpoint,client.ReadOnlyForts(),work); },true,nullptr,{},[&](Client& client,RawCampaignSessionServices& services) { owner=client.GameplayGlobals();owner->FullDeck()=0x80000000U;services.fortTechnologyUi=[&] { selected=true;throw CheckpointStop("full-deck-after-world"); }; }); }catch (const CheckpointStop& error) { caught=std::string_view(error.what())=="full-deck-after-world"; }
+    CHECK(caught && constructed && selected && owner && !owner->Borrowed() && owner->FullDeck()==0x80000000U);
+}
+
+// 기존 비준비 Editor만 fresh0 뒤 호환1을 쓰며 반납은 이 같은 owner의 현재 값을 보존한다.
+TEST_CASE(CampaignExistingEditorCheckpoint_FullDeckOwnerOrdinaryEditorCompatibility) {
+    std::shared_ptr<ClientGameplayGlobals> owner;WithEditorInstallSession([&](RawCampaignSession& session,Client&,const auto&,EditorFiles&) { CHECK(owner->FullDeck()==1 && session.FortObjectSettings().sharedFullDeck==&owner->FullDeck() && session.FortObjectSettings().FortDestroyBlocked()); },false,nullptr,{},[&](Client& client,RawCampaignSessionServices&) { owner=client.GameplayGlobals();owner->FullDeck()=0xffffffffU; });CHECK(owner && !owner->Borrowed() && owner->FullDeck()==1);
 }

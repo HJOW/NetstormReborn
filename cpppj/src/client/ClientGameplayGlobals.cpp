@@ -6,15 +6,18 @@
 
 namespace netstorm::client {
 // prvalue 직접 구성으로 CampaignWorldGlobals의 값 복사/이동을 거치지 않고 실제 두 DWORD에 연결한다.
-ClientGameplayGlobals::ClientGameplayGlobals(std::shared_ptr<ClientSubscriberGlobals> subscribers)
-    :subscribers_(std::move(subscribers)),world(subscribers_ ? o::CampaignWorldGlobals::BorrowSubscribers(subscribers_->MySubscriber(),subscribers_->LoginSubscriber()) : o::CampaignWorldGlobals{}) {}
+ClientGameplayGlobals::ClientGameplayGlobals(std::shared_ptr<ClientSubscriberGlobals> subscribers,std::shared_ptr<o::RawAuthorityState> authority)
+    :authority_(authority ? std::move(authority) : std::make_shared<o::RawAuthorityState>()),subscribers_(std::move(subscribers)),world(subscribers_ ? o::CampaignWorldGlobals::BorrowSubscribers(subscribers_->MySubscriber(),subscribers_->LoginSubscriber()) : o::CampaignWorldGlobals{}) {}
 // Session 모듈보다 먼저 대여하여 아직 살아 있는 전역을 초기화하지 않는다.
 ClientGameplayGlobals::Use::Use(ClientGameplayGlobals& globals,bool prepared):globals_(globals),prepared_(prepared) {
     if (globals_.borrowed_) throw std::logic_error("현재 게임 전역 중복 대여");
     if (prepared_) { globals_.borrowed_=true;return; } // Native prefix가 쓴 같은 owner/모드/커서/에너지를 재작성하지 않는다.
     const auto special=globals_.player.special;const auto userCheat=globals_.energy.userCheat; // 설정 해석이 소유하는 두 전역은 다음 Runtime에도 같은 값을 유지한다.
     globals_.borrowed_=true;globals_.player={};globals_.player.special=special;globals_.cursor=CursorDropState{.lockDepth=1};globals_.finder={};globals_.world.editor=0;globals_.world.missionPost=true;
+    globals_.Server()=true;globals_.Boss()=true; // 기존 일반 Session의 fresh 권한true/true만 유지한다. Native cleanup/prefix의 쓰기로 세지 않는다.
+    globals_.fullDeck_=0; // 기존 일반 fresh 입력만 준비하며 authority/선택 reset도 함께 보존한다.
     globals_.energy={};globals_.energy.userCheat=userCheat; // 나머지 공급 상태는 기존 Session 초기화 의미를 유지한다. NativeState 전체 초기화 이행과 구별한다.
+    globals_.selection.ResetForGeneralWorld(); // 기존 일반 GameWorld의 fresh 입력 호환이다. prepared와 반납에서는 이 전역을 암묵 초기화하지 않는다.
 }
 // Player/커서의 기존 C++ 소멸 의미를 장기 전역의 명시 무효화로 바꾸며 두 Subscriber는 유지한다.
 ClientGameplayGlobals::Use::~Use() { globals_.current_=nullptr;if (!prepared_) { globals_.player.playerKnown=0;globals_.cursor=CursorDropState{.lockDepth=1};globals_.world.editor=0; }globals_.borrowed_=false; }

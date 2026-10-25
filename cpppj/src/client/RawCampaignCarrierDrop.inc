@@ -1,7 +1,7 @@
 // Impl 안에서 포함하여 원본427070/42aa50/444bc0을 같은 Session에 연결한다.
 // 요청과수신직전에현재소유자/권한/진단/지도한계를공급한다.
 void PrepareCarrierDrop() {
-    carrierDropState.localOwner=playerState.battleOwner;carrierDropState.server=core.processState.server;carrierDropState.checking=gunState.checking;carrierDropState.numTypes=static_cast<std::uint32_t>(core.types.size());carrierDropState.mapLimit=carrierDropPointState.mapLimit=static_cast<std::int32_t>(cursorManaGlobals.mapLimit);
+    carrierDropState.localOwner=playerState.battleOwner;carrierDropState.server=core.processState.Server();carrierDropState.checking=gunState.checking;carrierDropState.numTypes=static_cast<std::uint32_t>(core.types.size());carrierDropState.mapLimit=carrierDropPointState.mapLimit=static_cast<std::int32_t>(cursorManaGlobals.mapLimit);
 }
 // 게임 계산은기존몸체에연결하고실제팝업/전송/선택은현재소비자만사용한다.
 void ConnectCarrierDrop() {

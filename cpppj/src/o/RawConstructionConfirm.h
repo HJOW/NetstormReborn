@@ -10,10 +10,12 @@
 namespace netstorm::o {
 // 확정이 읽는 전역이다. 주소는 패치 / CD 순서다.
 struct ConstructionConfirmState {
-    bool skipBuilderCheck{}; // 0054db14 / CD 0052e8a8: 켜져 있으면 작업장/그래프 기준점 검사를 생략한다.
+    bool skipBuilderCheck{}; // 0054db14 / CD 0052e8a8의 독립 raw용 fallback이며 공유 시 현재 DWORD로 작업장/그래프 기준점 검사를 생략한다.
     bool recorderEnabled{};  // 0059a7e4 / CD 00537214: 켜져 있으면 기록기에 활성 여부를 묻는다.
     // CanonDecoder가 패턴으로 분기하는 여덟 타입 전역의 현재 번호다(puzzlePiece, bridge, island, noIsland, 전투 타입 넷).
     std::array<std::uint32_t,8> patternTypes{107,82,94,157,131,129,140,142};
+    const std::uint32_t* sharedFullDeck{}; // 실제0054db14 owner를 선택적으로 빌리며 기존 독립 aggregate의 순서를 유지한다.
+    bool SkipBuilderCheck() const { return sharedFullDeck ? *sharedFullDeck!=0 : skipBuilderCheck; } // 각 Confirm의 원문 분기에서 현재 비영 여부를 다시 읽는다.
 };
 // 확정 한 번의 입력이다. 원본 열 개 인자와 같은 순서다.
 struct ConstructionConfirmRequest {

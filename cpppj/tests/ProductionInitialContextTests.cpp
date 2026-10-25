@@ -25,7 +25,7 @@ ClientOptions ProductionInitialOptions() { ClientOptions options;options.gameDir
 struct InitialProductionScene {
     const netstorm::test::dudespawn::DudeAssets& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078); // 보호 자산을 읽기만 한다.
     Client client{ProductionInitialOptions()};FontStore fonts{assets.files,"Arial"}; // 모든 물리/글꼴 소비자보다 오래 유지한다.
-    std::shared_ptr<RawSurfaceStorage> storage=MakeRawSurfaceStorage(assets.game);std::array<std::uint8_t,87> options{}; // 실제 초기 물리와 명시 옵션 BYTE 입력이다.
+    std::shared_ptr<RawSurfaceStorage> storage=MakeRawSurfaceStorage(assets.game,client.GameplayGlobals()->Authority());std::array<std::uint8_t,87> options{}; // 실제 초기 물리와 명시 옵션 BYTE 입력이다.
     double wall{123.25},game{};std::uint32_t configReads{},timeReads{};std::vector<std::string> translations; // 실제 선택된 외부 읽기만 관측한다.
     RawButtonControls buttons{OriginalEdition::Patch1078,{[this] { return wall; }}};RawMenuControls* menus{}; // 같은 공통 등록/트리/수명이다.
     // 초기 화면과 실제 메뉴/폰트를 연결한다. Session/Player 초기화는 수행하지 않는다.
@@ -198,11 +198,11 @@ struct InitialUberGlobals {
     PaletteColorTable palette; // 편집 자식도 현재 실제 갈색/흰색 장치를 사용한다.
 };
 // 네 자식 모두 기존 실제 공장으로 만들며 가짜 기본 노드/빈 성공으로 대체하지 않는다.
-RawUberRootContext InitialUberContext(InitialProductionScene& scene,InitialUberGlobals& state) {
+RawUberRootContext InitialUberContext(InitialProductionScene& scene,InitialUberGlobals& state,const std::uint32_t* sharedFullDeck=nullptr) {
     std::array<std::uint32_t,256> logical{}; // 실제 보호 색 표의 입력이며 임의 색 번호를 공급하지 않는다.
     for (std::size_t index=0;index<logical.size();++index) { const auto color=scene.assets.game.Palette().Color(static_cast<std::uint8_t>(index));logical[index]=color.red|(std::uint32_t(color.green)<<8)|(std::uint32_t(color.blue)<<16); } // 파일의 원래 RGB를 읽는다.
     state.palette=BuildPaletteColorTable(logical);scene.menus->SetPalette(state.palette);
-    RawUberRootContext context{{state.width,state.height,state.shown,state.left,state.top,state.mapWidth,state.mapHeight,state.floats,scene.buttons.MapViewRect(),state.bottom,state.refresh,state.chatY},{},{},{},{},{}};
+    RawUberRootContext context{{state.width,state.height,sharedFullDeck ? *sharedFullDeck : state.shown,state.left,state.top,state.mapWidth,state.mapHeight,state.floats,scene.buttons.MapViewRect(),state.bottom,state.refresh,state.chatY},{},{},{},{},{}};
     context.poll=[](auto) { return InputEvent{InputCode::kRelease,300,200}; };context.cursor=[](auto) {};
     context.root.read=[&scene,&state](auto address) -> std::uint32_t {
         if (address==0x5411c8U) return static_cast<std::uint32_t>(scene.assets.game.Find("fortGump").block+netstorm::o::kFirstAssetTypeNumber);
@@ -263,4 +263,24 @@ TEST_CASE(ProductionInitialContext_FullUberReflowsExistingScreen) {
     CHECK(scene.buttons.RootToken()==root && scene.Count()==count && node->minimap==mini && node->production==production);const auto& view=scene.buttons.MapViewRect();CHECK(view.left==85 && view.right==800 && view.bottom==504);
     CHECK(uber.Background(node->vertical)->baseHeight==600 && scene.buttons.Minimap()->Node(mini)->y==525 && scene.buttons.Minimap()->Node(mini)->baseHeight==75 && scene.buttons.Production()->Node(production)->baseHeight==520);
     scene.buttons.BubbleGump(node->chat,0x02000088U,0,0);CHECK(view.bottom==600); // 같은 원문 숨김은 새 전체 화면 높이를 사용한다.
+}
+
+// 실제 Client의 최초0과 비영 DWORD를 준비 생성/반납/중복 거부에서 보존하고 일반 fresh만0으로 쓴다.
+TEST_CASE(ProductionInitialContext_FullDeckOwnerPreparedAndOrdinaryLifetime) {
+    InitialProductionScene scene;auto globals=scene.client.GameplayGlobals();const auto& current=*globals;const auto* address=&globals->FullDeck();CHECK(current.FullDeck()==0 && &current.FullDeck()==address);
+    for (const std::uint32_t value:{0U,0x80000000U,0xffffffffU}) { // 자연 writer의0/1과 구별하여 현재 DWORD의 비영 의미와 물리를 검사한다.
+        globals->FullDeck()=value;auto prepared=globals->AcquirePrepared();bool rejected{};try { globals->Acquire(); }catch (const std::logic_error&) { rejected=true; }
+        CHECK(rejected && current.FullDeck()==value && &current.FullDeck()==address);prepared.reset();CHECK(!globals->Borrowed() && current.FullDeck()==value);
+    }
+    auto ordinary=globals->Acquire();CHECK(current.FullDeck()==0 && &current.FullDeck()==address);globals->FullDeck()=0x80000000U;ordinary.reset();CHECK(current.FullDeck()==0x80000000U); // 반납은 다음 Native cleanup의0쓰기를 앞당기지 않는다.
+}
+
+// 살아 있는 실제 HUD가 같은 Client DWORD를 매 모드 입력에서 읽고 mode3의 자연 표시 관문을 유지한다.
+TEST_CASE(ProductionInitialContext_FullDeckOwnerMovesActualHudDivider) {
+    InitialUberGlobals globals;InitialProductionScene scene;auto& full=scene.client.GameplayGlobals()->FullDeck();auto context=InitialUberContext(scene,globals,&full);CHECK(&context.globals.showHud==&full);
+    auto& uber=scene.buttons.EnableUberRoot(std::move(context));uber.Replace();const auto root=scene.buttons.RootToken();const auto* node=static_cast<UberRootNode*>(uber.Node(root));CHECK(node);
+    for (const std::uint32_t value:{0U,0x80000000U,0xffffffffU,0U}) { // 생성 후 현재 owner만 바꾸며 HUD/자식을 재생성하지 않는다.
+        full=value;scene.buttons.HandleGump(root,0x0200003dU,1,0);const auto* divider=uber.Node(node->vertical);CHECK(divider && divider->x==(value ? 80.0F : -divider->baseWidth) && full==value);
+    }
+    scene.buttons.HandleGump(root,0x0200003dU,3,0);CHECK(full==0 && uber.Node(node->vertical)->x==80.0F);
 }

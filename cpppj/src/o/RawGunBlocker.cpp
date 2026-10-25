@@ -102,7 +102,7 @@ std::vector<std::uint32_t> RawGunBlocker::Collect(std::uint32_t owner,std::array
 }
 // 현재 수집을 마친 뒤 각 번호의 기존 Gun을 다시 조회하므로 도중 삭제된 Gun도 자연스럽게 건너뛴다.
 void RawGunBlocker::Notify(Sid blocker) const {
-    if (!process_.boss) return;
+    if (!process_.Boss()) return;
     if (!hooks_.setTarget) throw std::logic_error("장애물 통지 실제 Gun 표적 지정 누락");
     const auto owner=Slot(blocker)[34];const auto candidates=Collect(owner,Position(blocker));
     // 실제20DWORD 목록 순서를 유지하며 같은 번호의 중복 통지도 보존한다.

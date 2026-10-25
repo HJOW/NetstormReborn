@@ -165,7 +165,7 @@ TEST_CASE(CampaignSession_ActualDropIslandSupportAndParticles) {
         if (object.object.type==157) ++surfaces;else if (object.object.type==94) ++islands;else if (object.object.type==95) ++stalags;else continue;family.push_back(object.sid);
     }
     CHECK(surfaces==9 && islands==1 && stalags==1);if (family.size()!=11) return;
-    const auto source=session.World().Create(75,0);CHECK(source.value>=core.pool.Layout().serverFirst && core.processState.server);core.owner.Set(source,1);session.World().Pop(source,right,bottom,0); // 실제 서버 삭제로 방송 관문까지 실행한다. extra80은 원본DropIsland 관문이 아니다.
+    const auto source=session.World().Create(75,0);CHECK(source.value>=core.pool.Layout().serverFirst && core.processState.Server());core.owner.Set(source,1);session.World().Pop(source,right,bottom,0); // 실제 서버 삭제로 방송 관문까지 실행한다. extra80은 원본DropIsland 관문이 아니다.
     const auto sp=session.Sp(1);const auto notices=external.notices;CHECK(session.World().Destroy(source,0));CHECK((core.pool.Slot(source)[11]&3U)==3U);
     // 모든 부품의 실제 반납과 공통 삭제 깊이를 확인한다.
     for (const auto sid:family) CHECK((core.pool.Slot(sid)[11]&3U)==3U);
@@ -2364,7 +2364,7 @@ struct SessionPickupWire {
     std::vector<std::vector<std::uint8_t>> recorded; // 실제등록분배기의기록전체바이트다.
     netstorm::zacket::LocalMissionTransport transport; // 실제buffer/집합/서버분배큐다.
     // Session/현재Player기록은이연결보다오래살아야한다.
-    explicit SessionPickupWire(RawCampaignSession& session):transport(session.PlayerRecords(),session.Core().processState.server,CommandDevice(recorded)) {
+    explicit SessionPickupWire(RawCampaignSession& session):transport(session.PlayerRecords(),session.Core().processState.Server(),CommandDevice(recorded)) {
         transport.RegisterLogin([](std::uint32_t,PacketConnection&,std::span<const std::uint8_t>) { throw std::logic_error("포획검사에서로그인요청선택금지"); });
         transport.Open(6799);transport.AssignConnection(-1,1);session.PlayerRecords()[0xb4+0x50]|=1;session.RegisterCarrierCommands(transport.Dispatch());
         const auto& registration=transport.Dispatch().Registration(0x4f);CHECK(registration.length==9 && registration.version==1 && registration.mismatch==0 && !registration.observer);
@@ -4810,7 +4810,7 @@ TEST_CASE(CampaignSharedStorage_ForeignAssetsFailBeforePhysicalMutation) {
 
 // 실제 두 Session과 Client가 커서/검색/Player/editor의 같은 주소를 공유하며 Runtime만 교체한다.
 TEST_CASE(CampaignSharedGameplay_TwoActualSessionsPublishAndRetireSameGlobals) {
-    Client client(SessionLinksOptions());SessionServicesFixture external;auto globals=client.GameplayGlobals();auto storage=MakeRawSurfaceStorage(netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078).game);const auto* cursor=&globals->cursor;const auto* finder=&globals->finder; // 창 없는 실제 자산 물리와 같은 Client 전역 고정 주소다.
+    Client client(SessionLinksOptions());SessionServicesFixture external;auto globals=client.GameplayGlobals();auto storage=MakeRawSurfaceStorage(netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078).game,globals->Authority());const auto* cursor=&globals->cursor;const auto* finder=&globals->finder; // 창 없는 실제 자산 물리와 같은 Client 전역 고정 주소다.
     const auto* energy=&globals->energy;globals->energy.userCheat=0x845fed;globals->player.special=true; // 설정 전역은 실제 Runtime 생성 전에 같은 Client에 존재한다.
     for (int generation=0;generation<2;++generation) { // 실제 첫 반납 뒤 새 Session을 설치한다.
         auto services=SharedKernelServices(client,external);services.gameplayGlobals=globals;services.subscriberGlobals=client.SubscriberGlobals();services.surfaceStorage=storage;

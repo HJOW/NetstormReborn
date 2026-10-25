@@ -1,3 +1,4 @@
+#include "client/ClientGameplayGlobals.h" // 실제0054db14 DWORD의 동일 장기 owner를 빌린다.
 // 두 실제 PE의 Fort 객체/내용물/전체 순회를 저장 관찰과 실제 월드 어댑터로 검사한다.
 #include "ConstructionSupport.h"
 #include "o/RawFortObjectLoad.h"
@@ -186,4 +187,13 @@ TEST_CASE(FortObjectLoad_RejectsMissingFieldsEffectsAndForeignPools) {
     SidPool foreign(OriginalEdition::Patch1078,kCapacity,true);SquidFactory factory(foreign,scene.types);ContainedCreateState state;
     RawContainedCreate contained(scene.pool,state,ContainedCreateHooks{[&](std::uint32_t,std::uint32_t) { return Sid{5}; },[&](Sid sid) { scene.Event('N',{sid.value}); },[&](Sid,Sid,std::uint32_t) { scene.Event('N',{5}); }});
     CHECK(Throws([&] { MakeFortObjectLoadHooks(scene.pool,factory,*scene.hp,contained,scene.Hooks()); }));
+}
+
+// Pop/Contents가 같은 owner를 바꾼 뒤 실제 Fort 삭제 분기가 현재 DWORD를 다시 읽는다.
+TEST_CASE(FortObjectLoad_SharedFullDeckReadsAfterPopAndContents) {
+    for (const bool afterContents:{false,true}) for (const std::uint32_t value:{0U,0x80000000U,0xffffffffU}) { // 두 효과 위치와 비영 전체 DWORD를 독립 장면으로 검사한다.
+        netstorm::client::ClientGameplayGlobals globals;globals.FullDeck()=value ? 0U : 0xffffffffU;auto values=Inputs(Fixture().front()[2]);values[Stored]=values[FortTypeInput]=100;values[Flags1]=afterContents ? 0x20000U : 0U;values[Flags2]=0;values[Version]=2;values[Fort]=1;values[Blocked]=1;values[Mutation]=0;values[ContentsInput]=afterContents ? 1U : 0U;FortLoadScene scene(OriginalEdition::Patch1078,values);scene.state.sharedFullDeck=&globals.FullDeck();auto hooks=scene.Hooks();std::uint32_t destroyed{},effects{};
+        const auto pop=hooks.pop;hooks.pop=[&](Sid sid,float x,float y,auto flags) { pop(sid,x,y,flags);if (!afterContents) { globals.FullDeck()=value;++effects; } };const auto content=hooks.createContent;hooks.createContent=[&](auto parent,auto type,auto quantity,auto listFlags,auto flags,auto quality) { const auto sid=content(parent,type,quantity,listFlags,flags,quality);globals.FullDeck()=value;++effects;return sid; };hooks.destroy=[&](Sid,auto flags) { CHECK(flags==0);++destroyed; };
+        RawFortObjectLoad loader(scene.pool,scene.hash,scene.types,scene.frames,scene.random,scene.state,hooks);CHECK(loader.Object(Record(values),16,32,1).value!=0);CHECK(effects==(afterContents ? 2U : 1U) && destroyed==(value ? 0U : 1U) && globals.FullDeck()==value && scene.state.fortDestroyBlocked); // fallback true가 공유0의 삭제를 가리지 않는다.
+    }
 }

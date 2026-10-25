@@ -122,7 +122,7 @@ TEST_CASE(CampaignExistingEditor_FirstWorldModesPlayerHpSpAndTechnology) {
     session.BindFortFileSave(client.ReadOnlyForts(),files);const auto core=session.Core(); // 실제 장치 참조도 Session보다 오래 유지한다.
     CHECK(storage->Name(1)==path.string() && core.pool.FreeCount()==core.pool.Capacity()-5 && session.CurrentTechnologyParent()==0);
     CHECK(session.Editor()==1 && core.ownerMode.fort && !core.ownerMode.battle && !core.ownerMode.challenge && !core.bridgeState.battle && !core.bridgeState.mission);
-    CHECK(session.FortObjectSettings().special && session.FortObjectSettings().fort && !session.FortObjectSettings().mission && session.FortObjectSettings().chaffMode && session.FortObjectSettings().fortDestroyBlocked);
+    CHECK(session.FortObjectSettings().special && session.FortObjectSettings().fort && !session.FortObjectSettings().mission && session.FortObjectSettings().chaffMode && session.FortObjectSettings().FortDestroyBlocked());
     CHECK(EditorRejects<std::logic_error>([&] { session.LoadExistingEditorDeck(); }));EditorSnapshotStillUnavailable(session,*storage,devices);
     session.LoadExistingEditorWorld();
     CHECK(session.PlayerKnown()==1 && session.LocalOwner()==1 && session.TemplateOwner()==1 && session.CurrentTechnologyParent()==5);

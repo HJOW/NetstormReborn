@@ -110,12 +110,14 @@ struct GunScene {
     }
 };
 // 같은 판본의 모든 저장 native 행을 복원 결과와 비교한다.
-void Replay(const char* edition) {
-    GunScene scene(std::string_view(edition)=="originals" ? OriginalEdition::Patch1078 : OriginalEdition::Cd1072);std::size_t count=0;int failures=0;
+void Replay(const char* edition,bool sharedAuthority=false) {
+    RawAuthorityState authority;GunScene scene(std::string_view(edition)=="originals" ? OriginalEdition::Patch1078 : OriginalEdition::Cd1072);std::size_t count=0;int failures=0; // owner를 먼저 선언하여 Scene/실행기보다 오래 보관한다.
     // 정상 반환당 전체 결과를 독립 비교한다.
     for (const auto& row:Rows()) {
         if (row[0]!=edition) continue;
-        scene.Prepare(row);RawGunProcess logic(scene.pool,scene.types,scene.state,scene.Hooks());const auto length=scene.Run(row,logic);
+        scene.Prepare(row);authority={scene.state.server,scene.state.boss}; // Native 입력만 같은 두 bool에 옮기고 기대값은 수정하지 않는다.
+        if (sharedAuthority) { scene.state.sharedAuthority=&authority;scene.state.server=!authority.server;scene.state.boss=!authority.boss; } // 잘못된 fallback이 실제 관문으로 새지 않는지 독립 검증한다.
+        RawGunProcess logic(scene.pool,scene.types,scene.state,scene.Hooks());const auto length=scene.Run(row,logic);
         const auto output=scene.Output(length);const auto expected=std::vector<std::string>(row.begin()+30,row.end());const bool same=output==expected;CHECK(same);
         if (!same) {
             // 최초 차이를 출력하고 기대값을 구현값으로 덮지 않는다.
@@ -221,4 +223,14 @@ TEST_CASE(GunProcess_ActualHostTransmitAndLifetime) {
         host.Kill(*gun,0x40);CHECK(kernel.Size()==0 && Get(pool.Slot(parent),6,2)==0 && (pool.Slot(form)[11]&3));
         CHECK(destroy.PreDepth()==0 && destroy.PostDepth()==0);
     }
+}
+
+// 기존 두 PE의 모든 raw/packet/효과 기대값으로 같은 공유 권한 경로를 대조한다.
+TEST_CASE(GunProcess_SharedAuthorityReplaysBothNativeBodies) { Replay("originals",true);Replay("originalCD",true); }
+// 생성 이후 바뀐 실제 boss/server를 각 Clear 호출이 다시 읽으며 잘못된 fallback은 무시한다.
+TEST_CASE(GunProcess_SharedAuthorityChangesWithoutShadowSynchronization) {
+    RawAuthorityState authority{false,false};GunScene scene(OriginalEdition::Patch1078);scene.Prepare(Rows().front());scene.state.sharedAuthority=&authority;scene.state.boss=scene.state.server=true;
+    Put(scene.fields.bytes,24,0,2);Put(scene.fields.bytes,28,1);scene.fields.bytes[8]=0;const auto before=scene.fields.bytes;RawGunProcess logic(scene.pool,scene.types,scene.state,{});
+    logic.ClearTarget(scene.fields,false);CHECK(scene.fields.bytes==before);authority.boss=true;CHECK(Throws([&] { logic.ClearTarget(scene.fields,false); }));
+    authority.server=true;logic.ClearTarget(scene.fields,false);CHECK(scene.fields.Dirty()==4 && !scene.fields.Target().value && scene.fields.Stage()==1 && scene.state.boss && scene.state.server); // 자연 빈 표적도 원문 target dirty4는 쓰고 효과 장치는 요구하지 않는다.
 }

@@ -87,8 +87,8 @@ void RawGunProcess::Attached(GunProcessFields& fields) {
 }
 // clear(false)는 stage를 보존하며 clear(true)는 idle로 돌아간다. 전송 필요성은 변경 전 값으로 결정한다.
 void RawGunProcess::ClearTarget(GunProcessFields& fields,bool restart) const {
-    if (!state_.boss) return;
-    if (!state_.server) throw std::logic_error("GunProcess clear 서버 원본 assert");
+    if (!state_.Boss()) return;
+    if (!state_.Server()) throw std::logic_error("GunProcess clear 서버 원본 assert");
     const auto old=fields.Target();const bool transmit=restart ? (old.value || fields.Stage()!=1) : old.value!=0;
     // 표적0/전송없음의 자연 분기는 실제 외부 호출이 없으므로 미사용 경계를 요구하지 않는다.
     if ((old.value && !hooks_.removeDependency) || (transmit && !hooks_.repopForm)) throw std::logic_error("GunProcess clear 실제 효과 경계 누락");
@@ -98,7 +98,7 @@ void RawGunProcess::ClearTarget(GunProcessFields& fields,bool restart) const {
 }
 // 표적 교체는 공격 모드와 무관한 서버 작업이다. 원본은 current AnimationForm을 반복 조회한다.
 void RawGunProcess::SetTarget(GunProcessFields& fields,Sid target) const {
-    if (!state_.server || !hooks_.removeDependency || !hooks_.addDependency || !hooks_.animationForm || !hooks_.killAnimation || !hooks_.refreshRange || !hooks_.repopForm)
+    if (!state_.Server() || !hooks_.removeDependency || !hooks_.addDependency || !hooks_.animationForm || !hooks_.killAnimation || !hooks_.refreshRange || !hooks_.repopForm)
         throw std::logic_error("GunProcess 표적 지정 효과 누락");
     if (fields.Target().value) hooks_.removeDependency(fields.Form(),fields.Target());
     Target(fields,target);hooks_.addDependency(fields.Target(),fields);Stage(fields,2);
@@ -124,7 +124,7 @@ void RawGunProcess::Frame(GunProcessFields& fields) const {
     if (fields.Group()!=types_[parent[10]].group || (parent[extra]&9)) throw std::logic_error("GunProcess Frame group/abstract/astral 원본 assert");
     if ((parent[extra]&0x20) || state_.fixedMode || state_.disabled) return;
     // 원본 boss 조건이 거짓이면 표적 슬롯/소유자/동맹 조회 자체를 실행하지 않는다.
-    if (state_.boss) {
+    if (state_.Boss()) {
         const auto target=fields.Target();const bool valid=target.value && target.value<pool_.Capacity();
         bool clear=!valid;
         if (valid) {
@@ -146,7 +146,7 @@ void RawGunProcess::Frame(GunProcessFields& fields) const {
         break;
     case 1:
         if (patch && state_.checking && fields.Target().value) throw std::logic_error("GunProcess 검색 표적 원본 assert");
-        if (state_.server && (!state_.fortMode || state_.friendlyFire)) {
+        if (state_.Server() && (!state_.fortMode || state_.friendlyFire)) {
             if (!hooks_.targetingMode || !hooks_.findTarget || !hooks_.randomBetween) throw std::logic_error("GunProcess 검색 경계 누락");
             const auto mode=hooks_.targetingMode(fields.Parent(),parent[owner]);
             const auto found=hooks_.findTarget(Coordinate(parent,14),Coordinate(parent,18),type,mode,parent[owner]);
@@ -198,7 +198,7 @@ void RawGunProcess::Notify(GunProcessFields& fields,std::uint32_t event,std::uin
             Stage(fields,value);return;
         }
         if (value!=7 && value!=10) throw std::logic_error("GunProcess animation notify 원본 assert");
-    } else if (state_.server && event==2) {
+    } else if (state_.Server() && event==2) {
         if (patch && state_.checking && value!=fields.Target().value) throw std::logic_error("GunProcess notify 표적 원본 assert");
         if (value==fields.Target().value) {
             ClearTarget(fields,true);

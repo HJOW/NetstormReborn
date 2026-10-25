@@ -1,10 +1,8 @@
 // 같은 namespace에서 GameWorld 생성자보다 앞에 포함한다. 실제 선택/강조/명령 수명을 고정한다.
 struct GameWorld::Input {
     GameWorld& world; //선택 SID/카메라/마우스/Session의 유일한 소유자다.
-    std::uint32_t enabled{1},consoleFocus{}; //보호 PE의5434e4 초기1/콘솔 포인터0 분기를 현재 상태로 유지한다.
-    std::array<std::uint32_t,2> remembered{}; //5caf38/3c의 현재 기억한 두 float 비트다.
-    std::vector<std::uint32_t> multiple; //다중 선택 SID 배열이며 단일 선택과 저장소를 합치지 않는다.
-    std::int32_t multipleCount{}; //5caf34의 현재 signed 개수다.
+    ClientUserSelectionGlobals& globals{world.SelectionGlobals()}; // 실제9DWORD/현재 다중 배열은 World 교체 뒤에도 같은 Client owner에 남는다.
+    std::uint32_t consoleFocus{}; // 기존 호스트 콘솔 관문은 선택 cleanup이 읽지 않는 별도 Runtime 상태다.
     std::unique_ptr<RawCarrierInput> carrier; //같은 Session/로그인 전송을 사용하는 실제 커서/클릭 몸체다.
     std::shared_ptr<RawUserHighlight> highlight; //커서 수명과 원본 선택이 공유하는 같은 강조 몸체다.
     std::unique_ptr<RawUserSelection> selection; //현재 선택의 실제+7c/프로세스/마나/범위/음향을 분배한다.
@@ -12,10 +10,10 @@ struct GameWorld::Input {
     Input(GameWorld& owner,UserSelectionHooks selectHooks,UserHighlightHooks highlightHooks,CarrierInputHooks carrierHooks):world(owner) {
         highlightHooks.project=[this](std::int32_t x,std::int32_t y) { const auto point=Project({x,y});return std::array<std::uint32_t,2>{std::bit_cast<std::uint32_t>(point.x),std::bit_cast<std::uint32_t>(point.y)}; };
         highlightHooks.move=[this](std::uint32_t sid,std::uint32_t x,std::uint32_t y,std::uint32_t force) { carrier->Highlight(sid,{std::bit_cast<float>(x),std::bit_cast<float>(y)},force); };
-        carrierHooks.highlight=[this](std::uint32_t mode) { highlight->Highlight(mode); };carrierHooks.multiple=[this] { return multipleCount>0 ? 1U : 0U; };
+        carrierHooks.highlight=[this](std::uint32_t mode) { highlight->Highlight(mode); };carrierHooks.multiple=[this] { return globals.multipleCount>0 ? 1U : 0U; };
         carrier=world.campaign_->MakeCarrierInput(std::move(carrierHooks));highlight=std::make_shared<RawUserHighlight>(world.HighlightSettings(),std::move(highlightHooks));
-        selectHooks.enabled=[this] { return enabled; };selectHooks.blocked=[this] { return consoleFocus; };selectHooks.highlight=[this](std::uint32_t mode) { highlight->Highlight(mode); };
-        selection=world.campaign_->MakeUserSelection({world.selected_,world.mouseType_,remembered,multiple,multipleCount},std::move(selectHooks));
+        selectHooks.enabled=[this] { return globals.enabled; };selectHooks.blocked=[this] { return consoleFocus; };selectHooks.highlight=[this](std::uint32_t mode) { highlight->Highlight(mode); };
+        selection=world.campaign_->MakeUserSelection(globals.SelectionState(),std::move(selectHooks));
     }
     //원본4971e0의 같은 현재 카메라/역투영을 사용한다.
     o::RawPathPoint Project(ScreenPoint point) const { const auto p=RawCursorPosition::ScreenToWorld(point.x,point.y,RawCursorPosition::CameraFromPixels(world.scrollX_,world.scrollY_));return {p[0],p[1]}; }

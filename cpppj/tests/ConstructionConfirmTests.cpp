@@ -1,3 +1,4 @@
+#include "client/ClientGameplayGlobals.h" // 실제0054db14 DWORD의 동일 장기 owner를 빌린다.
 // 서버 건설 확정의 세 PE 관찰 재생과 실제 SID 생성·배치 실행 연결을 검사한다.
 #include "ConstructionSupport.h"
 #include "o/RawConstructionConfirm.h"
@@ -140,4 +141,16 @@ TEST_CASE(ConstructionConfirm_RejectsBadInputsAndRecordsFirstSid) {
     RawConstructionConfirm recording(pool,types,frames,state,hooks);
     CHECK(recording.Confirm({kTypePlain,20.0F,21.0F,1,0,0,0,0,0,0}));frames[kTypePlain].defaultFrame=-1;
     CHECK(recording.Confirm({kTypePlain,20.0F,21.0F,1,0,0,0,0,0,0}) && recorded==std::vector<std::uint16_t>({15010,0}) && sent==2);
+}
+
+// 실제 Confirm이 생성 뒤 바뀐 같은 DWORD를 읽고 독립 bool 사본으로 builder 관문을 덮지 않는다.
+TEST_CASE(ConstructionConfirm_SharedFullDeckReadsCurrentDword) {
+    netstorm::client::ClientGameplayGlobals globals;SidPool pool(OriginalEdition::Patch1078,kCapacity,true);std::vector<RiftTypeRecord> types(188);std::vector<PriestPlainCanonType> frames(types.size());
+    types[kTypePlain].flags1=kNeedsBuilder;frames[kTypePlain]={InputFrames(0),3};ConstructionConfirmState state;state.skipBuilderCheck=true;state.sharedFullDeck=&globals.FullDeck();std::uint32_t builders{},sent{};
+    auto hooks=QuietHooks();hooks.findBuilder=[&](auto,auto,auto,auto) { ++builders;return Sid{}; };hooks.create=[](auto,auto) { return Sid{15010}; };hooks.broadcast=[&](const auto&) { ++sent; };RawConstructionConfirm confirm(pool,types,frames,state,hooks);
+    CHECK(!confirm.Confirm({kTypePlain,20,21,1,0,0,0,0,0,0}) && builders==1 && sent==0);
+    for (const std::uint32_t value:{0x80000000U,0xffffffffU}) { // 최상위 비트도 원문과 같은 비영 참이며 DWORD 값은 보존한다.
+        globals.FullDeck()=value;CHECK(confirm.Confirm({kTypePlain,20,21,1,0,0,0,0,0,0}) && builders==1 && globals.FullDeck()==value);
+    }
+    globals.FullDeck()=0;CHECK(!confirm.Confirm({kTypePlain,20,21,1,0,0,0,0,0,0}) && builders==2 && sent==2);state.sharedFullDeck=nullptr;CHECK(confirm.Confirm({kTypePlain,20,21,1,0,0,0,0,0,0}) && builders==2 && sent==3); // 기존 독립 bool 입력도 유지한다.
 }

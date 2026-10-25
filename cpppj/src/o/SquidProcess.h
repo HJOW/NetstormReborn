@@ -1,6 +1,7 @@
 // Baseprocess.cpp·Regular.cpp: 객체에 부착되는 프로세스(ProcessForm 종속 SID + Kernel 슬롯)와 지연/주기 이벤트를 복원한다.
 #pragma once
 #include "o/Kernel.h"
+#include "o/RawAuthorityState.h"
 #include "o/RawBridgeLifecycle.h"
 #include "o/RawSquidDestroy.h"
 #include "o/SquidForms.h"
@@ -74,6 +75,11 @@ struct SquidProcessState {
     std::uint32_t typeRotation{}; // 패치 Kernel 등록이 전진시키는 타입 순환 값(DAT_0059af74). CD에는 없다.
     std::uint32_t pollType{122};  // geyser(DAT_00541240 / CD 0051cb2c): 0.5초보다 먼 예약을 현재 시각으로 당긴다.
     bool server{true}; // ProcessForm34가 매 통지 읽는 서버 전역(DAT_00540bc0 / CD00540a28)이다.
+    RawAuthorityState* sharedAuthority{}; // 실행기보다 오래 사는 실제 두 bool이다. 미연결이면 기존 값형 입력만 읽는다.
+    bool& Boss() { return sharedAuthority ? sharedAuthority->boss : boss; } // Kill의 원문 소비 위치에서 현재 권한을 직접 읽거나 쓴다.
+    const bool& Boss() const { return sharedAuthority ? sharedAuthority->boss : boss; } // const 조회도 같은 물리값을 읽는다.
+    bool& Server() { return sharedAuthority ? sharedAuthority->server : server; } // Form 통지/서버 상태 출력이 현재 주소를 직접 사용한다.
+    const bool& Server() const { return sharedAuthority ? sharedAuthority->server : server; } // fallback 동기화 사본을 만들지 않는다.
 };
 // 부모 객체의 이벤트 처리기(vtable +0x5c)다. 원본 base(00496e70)는 payload를 그대로 돌려준다.
 using RegularHandler=std::function<float(Sid parent,std::uint32_t event,std::uint32_t count,float payload)>;

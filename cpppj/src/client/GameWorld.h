@@ -7,6 +7,7 @@
 #include "client/RawCampaignSession.h"
 #include "client/Sound.h"
 #include "client/RawUserHighlight.h"
+#include "client/ClientGameplayGlobals.h"
 #include "client/MinimapGeometry.h"
 #include "o/Player.h"
 #include "o/Squid.h"
@@ -69,6 +70,7 @@ public:
     // 선택 번호를 현재 월드에서 검증하고 표시를 갱신한다.
     void Select(o::SquidId id);
     o::SquidId Selected() const { return selected_; } // 004d5430의 현재 단일SID 조회이며 선택을 바꾸거나 캐시하지 않는다.
+    ClientUserSelectionGlobals& SelectionGlobals();const ClientUserSelectionGlobals& SelectionGlobals() const; // 같은 장기 raw DWORD/배열이며 실제 SID 변환은 소비자가 검증한다.
     void ResetSelection(); // 미션이 요구한 실제004d5c90(0,0,0)을 셋째1인 일반 Select와 구별한다.
     void ClearSelection(); // 후속004d5c60의 별도 enabled/다중 선택/강조 정리다.
     // 강조는 같은 현재 선택을 읽기만 한다. 마우스 모드/TYPE/좌표를 별도 원본 전역으로 빌린다.
@@ -137,6 +139,7 @@ private:
     std::uint8_t Color(int r,int g,int b) const;
     // 원본 기본 색 띠 및 지면 명도 표 중 연결한 타입의 변환표.
     std::optional<ColorMap> Remap(const TypeAsset& type,int owner) const;
+    std::shared_ptr<ClientGameplayGlobals> gameplayGlobals_; // 선택 ref와 Session/Input 모두보다 오래 같은 owner를 유지한다. 독립 어댑터만 자체 owner를 한 번 소유한다.
     // assets_: 타입·셰이프·팔레트 자산 또는 해당 자산의 처리 경계.
     const GameAssets& assets_;
     // chunks_: 월드를 청크 격자로 나누어 섬·영역 소속을 조회하는 지도 (o::ChunkMap).
@@ -185,9 +188,9 @@ private:
     // scrollY_: 카메라 스크롤의 Y 원점.
     int width_{},height_{},scrollX_{},scrollY_{};
     // selected_: 현재 선택한 객체·컨트롤의 번호 또는 토큰.
-    o::SquidId selected_{};
-    std::uint32_t highlightMode_{},mouseType_{}; // 원본5cae90/5caea4이며 현재 선택 SID와 구별한다.
-    ScreenPoint mousePoint_{}; // 원본5cae94/98의 현재 화면 좌표다.
+    std::uint32_t& selected_{gameplayGlobals_->selection.selected}; // SquidId도uint32이며 Sid16bit로 alias하거나 잘라 저장하지 않는다.
+    std::uint32_t& highlightMode_{gameplayGlobals_->selection.mode};std::uint32_t& mouseType_{gameplayGlobals_->selection.mouseType}; //5cae90/5caea4의 같은 현재 DWORD다.
+    ScreenPoint& mousePoint_{gameplayGlobals_->selection.mouse}; //5cae94/98의 같은 원시 정수 입력이며 커서 보정 좌표와 합치지 않는다.
     // changed_: 상태 변경으로 후속 갱신이 필요한지.
     bool changed_{true};
 };

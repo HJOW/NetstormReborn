@@ -213,7 +213,7 @@ float RawAssetRegular::Vortex(Sid sid,std::uint32_t event,std::uint32_t count,fl
         Require(hooks_.countForeignOwnedIslands,"신전 이탈 다른 소유자 섬 조회 누락");
         if (!count) { Require(hooks_.playerLeavingNotice,"신전 이탈 알림 누락");Write(pool_.AllocatedBytes(sid),12,2,2);hooks_.playerLeavingNotice(pool_.Slot(sid)[ownerOffset]); }
         static_cast<void>(hooks_.countForeignOwnedIslands(pool_.Slot(sid)[ownerOffset]));
-        if (signedCount<(state_.boss ? 3 : 23)) return 1.0f;
+        if (signedCount<(state_.Boss() ? 3 : 23)) return 1.0f;
         if (!state_.suppressLeaveRequest) {
             Require(hooks_.islandNumber,"신전 이탈 섬 조회 누락");Require(hooks_.requestLeave,"신전 이탈 요청 누락");
             const auto raw=pool_.Slot(sid);const auto island=hooks_.islandNumber(std::bit_cast<float>(Read(raw,14)),std::bit_cast<float>(Read(raw,18)));

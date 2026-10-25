@@ -1,5 +1,23 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-25 묶음436~438 완료: 선택·권한·FullDeck의 실제 입력 전역
+
+- [x] 이전434·435는 **da6c61ae / 20261025-30 CP**로 집중121/전체2,931·실패0·메뉴GUI/자연Early2→Tutorial3 통합을 마쳤다. 시작 트리는 깨끗했고 현재/마지막 정밀 PC는 **HJOW-Athlon / 2026-10-23**이다. 목표는 계속 활성이다.
+- [x] `extracted/cpp-native-input-globals-436438-integration/`의 manifest/patch SHA와65개 현재main·준비SHA를 확인해 hunk를 적용했다. 동일한2파일을 제외한 실제 변경은 **63파일(기존59+신규4)** 이다. 기존37개와 합친 누적69 보존 감사와 이번 신규32개(436의9+437의12+438의11)를 구분한다. 공통5파일9충돌은 독립 추가 보존과 실제 의미 병합으로 해결했으며 공통helper의 두callback은 각각1회다.
+- [x] 선택9DWORD/현재 다중 배열, 같은 권한 논리owner, FullDeck DWORD를 실제 입력·Pool·생산·배치·Load·HUD·Session 소비자에 연결했다. 일반fresh와 prepared 보존을 구분했다. [작업 문서](docs/exe/cpp-native-input-globals-20261025.md)에 정확한 연결·초기화·잔여 범위를 기록했다.
+- [x] **Source1의63소스**를 `...-source1/hashes.json`에 동결했다. 보호1821 기준은 `...-baseline.json`이다. **첫 MTT 빌드 종료0·컴파일 경고/오류0(2,119.089초)**다. 집중1은349관측/340고유 중 동시Client 생성 검사1개만 실패했다. 신규32개는 모두 실행했으며 실패 로그 `...-focused1/ConnectionActivitySession_.log`의 `Only one client may exist`를 보존했다.
+- [x] 해당 신규 권한 검사가 실제Client2개를 동시에 만들던 구성 결함을 순차 생성으로 교정했다. 첫owner를 공유 포인터로 유지하고 기존7조건·이름·숫자를 보존했으며 격리2조건을 추가했다. 제품 코드는 바꾸지 않았다. 최소patch는 `extracted/cpp-authority-single-client-437-fix/single-client.patch`, SHA는 **fef7842e…**다.
+- [x] **Source2의63소스**를 `...-source2/hashes.json`에 동결했다. Source1과 차이는 검사1파일뿐이며 파일SHA는 **fdd0ea78…**다. **build2 종료0·경고/오류0(29.868초), 집중2의340고유/349관측·실패0**이다. 신규32개 모두와 기존Native·실제Session/Editor를 확인했다. 보호1821/63소스/4실행 파일 SHA가 같으며 최종 게임은 **a49f474f…**다.
+- [x] 같은 최종 제품의 **통합batch1 종료0·전체CTest2,963개/실패0**이다. 메뉴GUI2실행, 자연Early2→Tutorial3, 실제3캡처 육안 확인, 보호1821/63소스/4exe·8보고서 원시 사본/driver/helper/PLAN SHA·원본 전체 집합/두설정 복원을 확인했다. 원시 증거는 `extracted/cpp-native-input-globals-436438-batch1/` 및 같은 접두사의 GUI/early2 폴더다. 실행은 정상 종료했다.
+- [x] 자연timer1/상태주입false/초기진행주입false로 환불75·종료SP3075·다음Tutorial3 초기SP2000·같은프레임 안내·기존done1→1을 관측했다. 평상시 Host Game 버튼은 계속 없다. 다음 안내 캡처의 SP1700은 설치 후 실제 생산이 진행된 시점이며 초기SP2000과 구분한다. 첫 플레이 캡처에는 Bridges 안내가 열려 있다.
+- [x] 전체 로그의 기존Chat/미션 진행stderr가 검사명 중간에 끼어든2곳은 원시 로그를 바꾸지 않고 확인된 출력prefix만 메모리에서 분리했다. 현재/이전 각44진단과 raw/정규화SHA를 보존했다. 복원 이름 집합이 현재2963/이전HEAD2931의 실제 소스 등록과 완전히 같으며, 기존 제거0·추가32가 신규32와 정확히 일치했다. 제품 변경이나 전체 검사 재실행은 없었다.
+- [x] [최종 보고서](cpppj/native-input-globals-runtime-20261025.json)와 작업 문서에 실패 이력·같은 제품 검증·지원 한계를 기록했다. 인계 후 **20261025-31 CP**로 로컬 커밋한다. 원본실행/새디컴파일/push는 하지 않았다. 마지막 전체 통합은 **이번436~438 Source2 / 제품a49f474f… / 2,963검사·메뉴·자연Early2**로 갱신한다.
+- [ ] 437의 사제4leaf/Prepare 값형 권한 사본, 436의 일부 기존SID16 변환, 438의 전체Deck 명령 부모/nullable+ac와 Nativecleanup 접합은 후속이다. NativeState1 전체 부모·실제Edit 편집/저장·전체미션 자연 완주·진행 저장/재실행·완전 동일성은 계속 미완료다.
+- [ ] 다음439440은 `extracted/cpp-camera-state-439440-integration/`에 Source2 기준 **33파일(기존27+신규6)/신규16**을 최종 동결했다. patch SHA **6ae5aaa4d5651de87d9161ece40a7cefba2b85f0d4ba2029927e22d4a96a8550**, manifest SHA **01cbdb1d819aa7b79a42e687bf8d8e5337e41aa6bbef84fec03162c8064457e6**이다. 기존32본문·같은Camera getter/지역owner 제거·공통helper 각1회를 정적 감사했다. root의 실제main33입력SHA도 일치한다. 아직 main미적용·CPP빌드/검사 미실행이다.
+- [ ] 439440의 ClientMain.cpp는 기존CRLF여서 `core.autocrlf=false apply --check`는1, `--ignore-space-change` 추가 시0이다. 적용할 때33입력SHA→hunk→HEAD의 파일별EOL복원→정규화final본문 일치→새SourceSHA 동결 순서를 따른다. README SHA **920845e4…**와 별도추가JSON에 실제root 사전검사를 기록했다. 카메라 Native32관측/극단정밀도2관측은 별도에뮬레이터 자료이며 원본exe 실행이 아니다. 전체Frame/zoom 부모는 후속이다.
+- [ ] 441은 `extracted/cpp-game-aux-owner-441-prepared/`에서 게임보조17필드·같은GameAux/GeyserType owner·595088 네소비자 등을 준비했다. 잠정 실제patch50파일/신규14검사이며 Login2검사의 독립 읽기 회신을 기다린다. 442는 `extracted/cpp-process-host-owner-442-prepared/`에서 Host/ProcessState/실제Kernel·FrameTime 공유·현재Runtime 분배/단일Clear pass를 준비한다. 독립검토에서 명시반납 후 holder 할당 실패가 잔류를Drain하는 결함을 지적해 담당자가 교정 중이다. 전체retirement·AI/Player뷰/UI 정리 완료로 세지 않는다. 두준비 모두 main/CPP빌드·검사/게임 미실행이다.
+
+
 ## 2026-10-25 묶음434·435 완료: 섬·청크·사제의 같은 장기 물리와 부분 초기화
 
 - [x] 이전 턴은 **b4630287 / 20261025-29 CP**의 Game버튼 제거·14집중/두해상도GUI 검증으로 실제 진척을 마쳤다. 이번 목표 계속 요청에 따라 AGENTS/공통·닷넷 인계를 다시 읽었으며 트리는 깨끗했다. 현재호스트/IP는 **HJOW-Athlon/192.168.0.94**, 마지막 전체 정밀PC/날짜는 **HJOW-Athlon/2026-10-23**으로 같다. 보호1821기준도 다시 확인했다.

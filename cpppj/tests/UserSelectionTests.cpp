@@ -2,6 +2,10 @@
 #include "RawSceneSupport.h"
 #include "client/RawUserSelection.h"
 #include "client/RawUserHighlight.h"
+#include "client/ClientGameplayGlobals.h"
+#include "client/ClientUserSelectionCleanup.h"
+#include "client/RawSurfaceWorld.h"
+#include "DudeSpawnSupport.h"
 #include <bit>
 #include <stdexcept>
 using namespace netstorm::test::rawscene;
@@ -157,4 +161,84 @@ TEST_CASE(UserSelection_ClearLazyBoundaryAndWrittenPrefix) {
     RawUserSelection denied(scene.pool,scene.types,{scene.selected,scene.mouseType,scene.remembered,scene.multiple,scene.count},std::move(disabled));denied.Clear();CHECK(scene.selected==51 && scene.count==2);
     scene.count=0;UserSelectionHooks enabled;enabled.enabled=[] { return 1U; };RawUserSelection missing(scene.pool,scene.types,{scene.selected,scene.mouseType,scene.remembered,scene.multiple,scene.count},std::move(enabled));bool rejected{}; // 강조 경계를 의도적으로 비운다.
     try { missing.Clear(); } catch (const std::logic_error&) { rejected=true; }CHECK(rejected && !scene.selected && !scene.count);
+}
+
+namespace { // 공유 owner의 입력/출력을 실제 아홉 DWORD 비트로만 비교한다.
+// signed 좌표/count와 나머지 uint32를 같은 순서의 독립 값 사본으로 읽는다.
+std::array<std::uint32_t,9> SelectionOwnerDwords(const ClientUserSelectionGlobals& owner) {
+    using Field=ClientUserSelectionGlobals::Field;const std::array fields{Field::Enabled,Field::Mode,Field::Selected,Field::MouseType,Field::MouseX,Field::MouseY,Field::RememberedX,Field::RememberedY,Field::MultipleCount};
+    std::array<std::uint32_t,9> values{}; // 현재 owner와 별개인 검사용 출력 snapshot이다.
+    for (std::size_t index=0;index<fields.size();++index) values[index]=owner.ReadDword(fields[index]); // 각 DWORD를 현재 필드에서 읽는다.
+    return values;
+}
+}
+
+// bool/SID16 재해석 없이 아홉 DWORD의 비트를 쓰며 원시 mouse와 Cursor 보정 좌표를 합치지 않는다.
+TEST_CASE(UserSelectionGlobals_NativeDwordBitsAndDistinctRawMouse) {
+    ClientGameplayGlobals gameplay;auto& owner=gameplay.selection;gameplay.cursor.screenX=37;gameplay.cursor.screenY=41;
+    using Field=ClientUserSelectionGlobals::Field;const std::array fields{Field::Enabled,Field::Mode,Field::Selected,Field::MouseType,Field::MouseX,Field::MouseY,Field::RememberedX,Field::RememberedY,Field::MultipleCount};
+    const std::array<std::uint32_t,9> input{0x80000000U,0xffffffffU,0xfedcba98U,0x12345678U,0xfffffffeU,0x80000000U,0x7fc00001U,0xffffffffU,0xfffffff9U}; // 전체 상위비트·NaN비트·음수count의 명시 입력이다.
+    for (std::size_t index=0;index<fields.size();++index) owner.WriteDword(fields[index],input[index]); // 형식의 의미를 바꾸지 않는 원시 DWORD store다.
+    CHECK(SelectionOwnerDwords(owner)==input && owner.mouse.x==-2 && owner.multipleCount==-7 && gameplay.cursor.screenX==37 && gameplay.cursor.screenY==41);
+    auto selection=owner.SelectionState();auto highlight=owner.HighlightState();CHECK(&selection.selected==&owner.selected && &highlight.selectedSid==&owner.selected && &highlight.mouseX==&owner.mouse.x);
+    owner.selected=0x87654321U;CHECK(selection.selected==0x87654321U && highlight.selectedSid==0x87654321U); // DWORD를 저장할 때 SID 소비용 WORD로 잘리지 않는다.
+}
+
+// 첫 메뉴는 Session 없이 실제 raw Clear를 실행하고 같은 mode0이면 mouseType와 나머지 전역을 보존한다.
+TEST_CASE(UserSelectionGlobals_FirstMenuClearKeepsMouseTypeAndNegativeCountTail) {
+    ClientGameplayGlobals gameplay;const auto surface=MakeRawSurfaceStorage(netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078).game,gameplay.Authority());auto& owner=gameplay.selection;
+    CHECK(owner.enabled==1 && owner.mode==0 && owner.selected==0 && owner.multipleCount==0 && !gameplay.Borrowed());
+    owner.enabled=0x80000000U;owner.selected=0xfedcba98U;owner.mouseType=0x89abcdefU;owner.multipleCount=-7;owner.multiple={0x10037U,0xffffffffU};owner.mouse={-2,73};owner.remembered={0x7fc00001U,0x80000000U};
+    const auto multiple=owner.multiple;ClearClientUserSelection(gameplay,*surface); // mode0이므로 하드웨어 커서 함수도 필요 없다.
+    CHECK(owner.enabled==0x80000000U && owner.selected==0 && owner.multipleCount==0 && owner.mode==0 && owner.mouseType==0x89abcdefU && owner.multiple==multiple);
+    CHECK(owner.mouse.x==-2 && owner.mouse.y==73 && owner.remembered[0]==0x7fc00001U && owner.remembered[1]==0x80000000U && !gameplay.Borrowed());
+}
+
+// enabled0은 count/선택/강조까지 보존하며 배열 getter·게임·커서 효과를 호출하지 않는다.
+TEST_CASE(UserSelectionGlobals_DisabledClearPreservesAllCurrentDwords) {
+    ClientGameplayGlobals gameplay;const auto surface=MakeRawSurfaceStorage(netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078).game,gameplay.Authority());auto& owner=gameplay.selection;
+    owner.enabled=0;owner.mode=5;owner.selected=0x12345678U;owner.mouseType=71;owner.multipleCount=-3;owner.mouse={-33,65};owner.remembered={1,2};owner.multiple={55,56};const auto before=SelectionOwnerDwords(owner);const auto multiple=owner.multiple;
+    ClearClientUserSelection(gameplay,*surface,[](auto) { throw std::logic_error("비활성 선택의 커서 효과 도달"); });CHECK(SelectionOwnerDwords(owner)==before && owner.multiple==multiple);
+}
+
+// 가상 통지 중 재할당된 실제 DWORD 배열과 signed count를 다음 반복에서 모두 다시 읽는다.
+TEST_CASE(UserSelectionGlobals_CurrentMultipleGetterSurvivesReallocationAndCountChanges) {
+    SelectionScene scene;ClientGameplayGlobals gameplay;auto& owner=gameplay.selection;owner.selected=0xfedcba98U;owner.multiple={55,56};owner.multipleCount=2;
+    for (const std::uint32_t number:{55U,56U,57U}) { auto raw=scene.Raw(number);std::fill(raw.begin(),raw.end(),std::uint8_t{});raw[10]=100; } // 실제 raw 후보만 준비한다.
+    RawUserHighlight highlight(owner.HighlightState(),{});UserSelectionHooks hooks;std::vector<std::uint32_t> notices,refreshes;const auto* first=owner.multiple.data(); // 이전 pointer는 역참조하지 않고 재할당 여부만 대조한다.
+    hooks.enabled=[&owner] { return owner.enabled; };hooks.highlight=[&highlight](auto mode) { highlight.Highlight(mode); };
+    hooks.selectNotice=[&](Sid sid,std::uint32_t on) {
+        CHECK(on==0 && owner.selected==0xfedcba98U);notices.push_back(sid.value);
+        if (sid.value==55) { std::vector<std::uint32_t> next(4096,0);next[0]=55;next[1]=57;owner.multiple.swap(next);owner.multipleCount=3; } // 이전 배열을 반납하고 다음 항목을 바꾼다.
+    };
+    hooks.refresh=[&](Sid sid) { refreshes.push_back(sid.value);if (sid.value==55) owner.enabled=0;else owner.multipleCount=2; }; // enabled는 최초 한 번만, count는 반복마다 읽는다.
+    RawUserSelection selection(scene.pool,scene.types,owner.SelectionState(),std::move(hooks));selection.Clear();
+    CHECK(owner.multiple.data()!=first && (notices==std::vector<std::uint32_t>{55,57}) && refreshes==notices && owner.multipleCount==0 && owner.selected==0 && owner.enabled==0);
+}
+
+// 원문 DWORD 후보가 Pool 밖이면 자연 생략하며 하위WORD55로 잘라 실제 객체를 통지하지 않는다.
+TEST_CASE(UserSelectionGlobals_WideDwordCandidatesAreNotTruncatedToSid) {
+    SelectionScene scene;ClientUserSelectionGlobals owner;owner.selected=0xffffffffU;owner.multiple={0x10037U,0xffffffffU};owner.multipleCount=2;const auto input=owner.multiple;
+    RawUserHighlight highlight(owner.HighlightState(),{});UserSelectionHooks hooks;hooks.enabled=[&] { return owner.enabled; };hooks.highlight=[&](auto mode) { highlight.Highlight(mode); };
+    hooks.selectNotice=[](Sid,std::uint32_t) { throw std::logic_error("범위 밖 DWORD의 잘린 SID 통지"); };RawUserSelection selection(scene.pool,scene.types,owner.SelectionState(),std::move(hooks));selection.Clear();
+    CHECK(owner.multiple==input && owner.multipleCount==0 && owner.selected==0);
+}
+
+// 후반 배열 경계 실패는 앞선 통지를 보존하고 아직 실행하지 않은 count0/selected0 tail을 만들지 않는다.
+TEST_CASE(UserSelectionGlobals_LateArrayFailureKeepsWrittenPrefix) {
+    SelectionScene scene;ClientUserSelectionGlobals owner;owner.selected=0x87654321U;owner.multiple={55};owner.multipleCount=2;auto raw=scene.Raw(55);std::fill(raw.begin(),raw.end(),std::uint8_t{});
+    std::uint32_t notices{},refreshes{};UserSelectionHooks hooks;hooks.enabled=[&] { return owner.enabled; };hooks.selectNotice=[&](Sid sid,auto) { CHECK(sid.value==55);++notices; };hooks.refresh=[&](Sid) { ++refreshes; };
+    RawUserSelection selection(scene.pool,scene.types,owner.SelectionState(),std::move(hooks));bool rejected{};try { selection.Clear(); }catch (const std::out_of_range&) { rejected=true; }
+    CHECK(rejected && notices==1 && refreshes==1 && owner.multipleCount==2 && owner.selected==0x87654321U);
+}
+
+// prepared 대여/중복 거부/반납과 raw 꼬리 실패는 같은 owner의 현재 값을 암묵 reset하거나 rollback하지 않는다.
+TEST_CASE(UserSelectionGlobals_PreparedLifetimeAndLateHighlightFailureKeepCurrentOwner) {
+    ClientGameplayGlobals gameplay;const auto surface=MakeRawSurfaceStorage(netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078).game,gameplay.Authority());auto& owner=gameplay.selection;
+    owner.selected=0xfedcba98U;owner.mode=4;owner.mouseType=71;owner.multipleCount=-1;owner.multiple={0x12345678};owner.mouse={-33,65};owner.remembered={17,19};const auto before=SelectionOwnerDwords(owner);
+    { auto use=gameplay.AcquirePrepared();CHECK(SelectionOwnerDwords(owner)==before && gameplay.Borrowed());CHECK(Throws([&] { gameplay.Acquire(); }) && Throws([&] { gameplay.AcquirePrepared(); }) && SelectionOwnerDwords(owner)==before);
+      bool rejected{};try { ClearClientUserSelection(gameplay,*surface,[](auto cursor) { CHECK(cursor==1);throw std::runtime_error("실제 커서 장치 후반 실패 입력"); }); }catch (const std::runtime_error&) { rejected=true; }
+      CHECK(rejected && owner.multipleCount==0 && owner.selected==0 && owner.mode==0 && owner.mouseType==0 && owner.mouse.x==-33 && owner.remembered[0]==17 && owner.multiple[0]==0x12345678); }
+    CHECK(!gameplay.Borrowed() && owner.mode==0 && owner.mouseType==0 && owner.mouse.y==65 && owner.remembered[1]==19 && owner.multiple[0]==0x12345678);
+    { auto use=gameplay.Acquire();CHECK(owner.enabled==1 && owner.mode==0 && owner.selected==0 && owner.mouseType==0 && owner.multiple.empty() && owner.multipleCount==0); } // 일반 fresh는 Native Clear와 구별한 기존 호스트 입력 준비다.
 }

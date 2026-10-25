@@ -1,3 +1,4 @@
+#include "client/ClientGameplayGlobals.h" // 실제0054db14 DWORD의 동일 장기 owner를 빌린다.
 // Player 조회·거리 선택·그래프와 원본 임시 후보 목록을 독립 fixture로 대조한다.
 #include "RawSceneSupport.h"
 #include "o/RawPlayerPlacementAnchor.h"
@@ -104,4 +105,16 @@ TEST_CASE(player_anchor_required_data_and_lazy_guards) {
     bookkeeping.ownerFactories[1].count=1;CHECK(Throws([&] { anchor.Locate(1,82,20,21); }));
     CHECK(anchor.GraphFor(0)==0);contained.checkingDead=true;CHECK(Throws([&] { anchor.GraphFor(0); }));
     CHECK(Throws([&] { anchor.GraphFor(65536); }));
+}
+
+// 실제 작업장 후보가 같은 DWORD의 현재값을 읽고 상태 복사 뒤에도 장기 owner 주소를 유지한다.
+TEST_CASE(player_anchor_shared_full_deck_current_candidates) {
+    netstorm::client::ClientGameplayGlobals globals;SidPool pool(OriginalEdition::Patch1078,kCapacity,true);std::vector<RiftTypeRecord> types(188);std::vector<std::uint16_t> surfaces(65536);SquidPostPopState books;SquidPostPopList additional;ContainedFinderState contained;
+    const auto workshop=pool.Allocate(),island=pool.Allocate();auto work=pool.AllocatedBytes(workshop),land=pool.AllocatedBytes(island);types[82].flags1=types[84].flags1=0x800;types[84].flags2=2;work[10]=82;work[11]=0;work[30]=7;work[34]=1;Put(work,6,0,2);Put(work,14,std::bit_cast<std::uint32_t>(20.0F));Put(work,18,std::bit_cast<std::uint32_t>(21.0F));
+    land[10]=84;land[11]=0;land[30]=7;land[34]=1;Put(land,36,0);surfaces[21*256+20]=island.value;books.ownerFactories[1].entries={workshop.value};books.ownerFactories[1].count=1;
+    PlayerPlacementAnchorState state;state.graphReady=1;state.ignoreRestrictions=0xffffffffU;state.sharedFullDeck=&globals.FullDeck();auto copied=state;RawPlayerPlacementAnchor anchor(pool,types,surfaces,books,additional,contained,copied);CHECK(&copied.IgnoreRestrictions()==&globals.FullDeck());
+    for (const std::uint32_t value:{0U,0x80000000U,0xffffffffU,0U}) { // 공유0은 fallback 비영을 무시하고 공유 비영은 종속 없는 실제 작업장을 허용한다.
+        globals.FullDeck()=value;const auto selected=anchor.Inspect(1,83,20,21);CHECK(selected.sid==(value ? workshop.value : 0U) && selected.candidates.size()==(value ? 1U : 0U) && globals.FullDeck()==value);
+    }
+    copied.sharedFullDeck=nullptr;CHECK(anchor.Locate(1,83,20,21)==workshop.value);
 }

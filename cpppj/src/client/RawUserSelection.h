@@ -16,6 +16,7 @@ struct UserSelectionState {
     std::array<std::uint32_t,2>& rememberedPoint; // 005caf38/3c의 두 float 원문 비트다.
     std::span<const std::uint32_t> multiple; // 005caf2c의 다중 선택 배열이며 정리 중에도 현재 항목을 읽는다.
     std::int32_t& multipleCount; // 005caf34의 signed 개수이며 통지 뒤 다음 반복 조건에서 다시 읽는다.
+    std::function<std::span<const std::uint32_t>()> currentMultiple{}; // 명시 장기 owner의 현재 배열을 매 반복 재조회한다. 기존 aggregate는 위 span fallback을 유지한다.
 };
 // 현재 게임 전역과 실제 파생 가상함수·마나/사정거리·이동·장치만 공급한다. 도달한 경계의 누락은 오류다.
 struct UserSelectionHooks {
@@ -52,6 +53,7 @@ public:
 private:
     friend class RawCampaignSession; // 자연 낙하가 같은 살아 있는 Select를 호출하도록 수명 토큰을 설치한다.
     std::span<const std::uint8_t> Raw(std::uint32_t sid) const; // 원본의 물리 범위만 확인하며 free/dead를 추가 제외하지 않는다.
+    o::Sid SlotId(std::uint32_t sid) const; // 전체 원문 DWORD를 현재 지원 Pool/WORD SID 범위 확인 뒤에만 명시 변환한다.
     const o::RiftTypeRecord& Type(std::uint32_t type) const; // 현재 TYPE 번호를 검증한다.
     static std::uint32_t Read(std::span<const std::uint8_t> raw,std::size_t offset,std::size_t width=4); // 정렬되지 않은 원문 DWORD/WORD다.
     void ClearPrevious(o::Sid sid) const; // ProcessFinder의 다음 링크를 효과 전에 저장하여50/51만 통지한다.

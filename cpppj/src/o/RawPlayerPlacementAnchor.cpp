@@ -103,7 +103,7 @@ PlayerAnchorSelection RawPlayerPlacementAnchor::Inspect(std::uint32_t owner,std:
         const auto sid=workshops.Items()[i];static_cast<void>(Raw(sid));
         if (type>=types_.size()) throw std::out_of_range("Player 기준점 요청 타입 오류");
         bool allowed=(types_[type].flags2&6)!=0;
-        if (!allowed) { allowed=HasContained(sid,type);linked=linked || allowed;if (!allowed) allowed=state_.ignoreRestrictions!=0; }
+        if (!allowed) { allowed=HasContained(sid,type);linked=linked || allowed;if (!allowed) allowed=state_.IgnoreRestrictions()!=0; }
         if (allowed && GraphFor(sid)==graph && result.candidates.size()<kLimit) result.candidates.push_back(sid);
     }
     if (!result.candidates.empty() || linked) {

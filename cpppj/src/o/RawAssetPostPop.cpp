@@ -238,7 +238,7 @@ void RawAssetPostPop::VortexBase(Sid sid,std::uint32_t flags) const {
         if (!hooks_.islandExists(island)) throw std::logic_error("Vortex postPop islandList.exists assert");
         if (!patch && hooks_.islandTemple(island).value) throw std::logic_error("CD Vortex postPop 기존 신전 assert");
         hooks_.registerTemple(island,sid);hooks_.setOwner(sid,pool_.Slot(sid)[ownerOffset]);
-        if (state_.boss) {
+        if (state_.Boss()) {
             auto current=2U;
             // 최초 번호는 해제 슬롯을 건너뛰며 첫 할당 자산/Form을 그대로 반환한다.
             while (current<pool_.Capacity() && (pool_.Slot(Sid{static_cast<std::uint16_t>(current)})[11]&1)) ++current;

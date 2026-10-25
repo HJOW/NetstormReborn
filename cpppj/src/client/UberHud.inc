@@ -1,7 +1,7 @@
 // 같은 UberGump의 실제 장기 화면/지도 전역과 전체 HUD 설치를 연결한다.
 struct UberGump::HudRuntime {
     std::int32_t width{},height{},left{},top{},mapWidth{},mapHeight{}; // 실제 화면/지도 원점·폭높이를 같은 도킹 몸체가 쓴다.
-    std::uint32_t shown{1};float chatY{}; // 현재 미션 HUD 표시/이전 채팅 위치이며 전체 갱신은 Client의 같은 DWORD를 직접 빌린다.
+    float chatY{}; // 이전 채팅 위치이며 표시/전체 갱신 DWORD는 Client의 같은 실제 owner를 직접 빌린다.
     std::array<float,4> floatRect{};ScreenRect leftBottom{}; // 정수 지도LTRB는 공통 GumpTree 소유자를 직접 빌리고 float/제외 영역만 여기에 둔다.
     std::string paletteProbe;bool paletteFound{}; // 실제 고정9인자 경로의 현재 결과와 파일 존재 관측이다.
 };
@@ -15,7 +15,7 @@ void UberGump::InstallHud() {
         RawBackgroundGifContext gif;gif.files=&client_.Files();gif.config=&client_.Configuration();
         gif.dispatch=[this](auto event,auto first,auto second) { client_.Input().Push(event,std::bit_cast<std::int32_t>(first),std::bit_cast<std::int32_t>(second)); };
         menus.EnableBackgroundGifs(std::move(gif));
-        RawUberRootContext context{{value.width,value.height,value.shown,value.left,value.top,value.mapWidth,value.mapHeight,value.floatRect,rawButtons_->MapViewRect(),value.leftBottom,client_.GameplayGlobals()->MapRevision(),value.chatY},{},{},{},{},{}};
+        RawUberRootContext context{{value.width,value.height,client_.GameplayGlobals()->FullDeck(),value.left,value.top,value.mapWidth,value.mapHeight,value.floatRect,rawButtons_->MapViewRect(),value.leftBottom,client_.GameplayGlobals()->MapRevision(),value.chatY},{},{},{},{},{}};
         context.poll=[this](auto code) { return client_.Poll(code); };context.cursor=[this](auto cursor) { client_.GetCursor().Set(static_cast<int>(cursor)); };
         context.root.read=[this](auto address) -> std::uint32_t { switch (address) {
             case 0x5411c8:return static_cast<std::uint32_t>(client_.Assets().Find("fortGump").block+o::kFirstAssetTypeNumber);

@@ -60,6 +60,9 @@ struct RawCampaignAssetBindings::Impl {
         geyser(core.pool.Edition(),players),contained(core.pool,[this](o::Sid sid,std::uint32_t flags) { world.Destroy(sid,flags); }),advance(core.pool,core.frames,core.frame) {
         const auto count=core.pool.Edition()==o::OriginalEdition::Patch1078 ? 188U : 171U;
         if (&damageable.Pool()!=&core.pool || &islands.Pool()!=&core.pool || core.types.size()!=count || core.frames.size()!=count || core.shapes.size()!=count || globals.elements.size()!=count || players.size()!=9*(core.pool.Edition()==o::OriginalEdition::Patch1078 ? 0xb4U : 0xacU)) throw std::invalid_argument("캠페인 자산 현재 Core/TYPE/Player 저장소 불일치");
+        const auto authority=world.Storage()->Authority().get(); // 같은 World가 모듈보다 오래 소유하는 두 bool의 실제 주소다.
+        if ((assets.sharedAuthority && assets.sharedAuthority!=authority) || (globals.gun.sharedAuthority && globals.gun.sharedAuthority!=authority) || (globals.regular.sharedAuthority && globals.regular.sharedAuthority!=authority)) throw std::invalid_argument("캠페인 자산 실제 권한 소유자 불일치"); // 다른 실행기의 이미 연결한 권한 참조를 몰래 바꾸지 않는다.
+        assets.sharedAuthority=authority;globals.gun.sharedAuthority=authority;globals.regular.sharedAuthority=authority; // 실제 조립은 한 owner만 연결하며 기존 bool 사본으로 동기화하지 않는다.
         gun=std::make_unique<o::RawGunProcess>(core.pool,core.types,globals.gun,GunHooks());
         postPop=std::make_unique<o::RawAssetPostPop>(core.pool,core.types,core.postPop,damageable,assets,PostHooks());
         postPop->BindPlayerRecords(players,&playerState.battleOwner);
@@ -84,7 +87,6 @@ struct RawCampaignAssetBindings::Impl {
     void Prepare(double now) {
         if (!std::isfinite(now) || playerState.battleOwner>o::kPlayerCount) throw std::out_of_range("캠페인 자산 현재 clock/Player owner 오류");
         globals.gun.now=now;globals.gun.fortMode=playerState.fortMode;globals.regular.fortMode=playerState.fortMode;assets.fortMode=playerState.fortMode;
-        core.processState.server=globals.gun.server;
     }
     // 실제 getter0046f530/CD004bdc50은 plain 절삭한 hash0을 읽고 bridge/없음이면127이다.
     std::int32_t IslandNumber(float x,float y) const {

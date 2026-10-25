@@ -1,3 +1,4 @@
+#include "client/ClientGameplayGlobals.h" // 실제0054db14 DWORD의 동일 장기 owner를 빌린다.
 // 독립 원본98입력의 생산 내용물 삭제/생성/중복·신전/조회 순서를 새 몸체와 대조한다.
 #include "ConstructionSupport.h"
 #include "o/RawProductionSync.h"
@@ -52,4 +53,13 @@ TEST_CASE(ProductionSync_Native98) {
         CHECK(scene.trace==row[7]);CHECK(std::equal(before.begin(),before.end(),scene.pool.Bytes().begin()));++count;
     }
     CHECK(count==98);
+}
+
+// 실제 기술 부모 순회는 같은 Client DWORD를 매 동기화에서 읽고 Deck getter 효과 뒤 비영을 보존한다.
+TEST_CASE(ProductionSync_SharedFullDeckReadsAfterDeckGetter) {
+    netstorm::client::ClientGameplayGlobals globals;SyncScene scene({"71:8","-","2","0","0","0","0",""});std::uint32_t destroyed{},getterValue{0x80000000U};auto hooks=scene.hooks;const auto deck=hooks.deck;hooks.deck=[&] { globals.FullDeck()=getterValue;return deck(); };hooks.destroy=[&](Sid sid,auto flags) { CHECK(sid==Sid{100} && flags==0);++destroyed; };
+    RawProductionSync sync(scene.pool,scene.types,scene.finder,{scene.owner,globals.FullDeck()},hooks);
+    for (const std::uint32_t value:{0x80000000U,0xffffffffU,0U}) { // 부모는 같은 raw 내용물을 유지하므로 삭제 관문의 변화만 관측한다.
+        getterValue=value;sync.Synchronize();CHECK(globals.FullDeck()==value && scene.full==0 && destroyed==(value ? 0U : 1U));
+    }
 }

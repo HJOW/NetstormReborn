@@ -1,3 +1,4 @@
+#include "client/ClientGameplayGlobals.h" // 실제0054db14 DWORD의 동일 장기 owner를 빌린다.
 // Deck부모의독립PE관측1020행과별도cleanup/선택미연결장치를대조한다.
 #include "TestSupport.h"
 #include "o/RawFortDeckLoad.h"
@@ -99,4 +100,13 @@ TEST_CASE(FortDeckLoad_SelectedDevicesAndPhysicalBounds) {
     LoadFortDeck(1,{d.depth,d.conversion,d.full},hooks);CHECK(d.depth==0 && d.conversion==11 && d.trace=="L:1;G:1:101;S:11:Deck:1;clear:101;open:101:0;full:101;L:0");
     d.trace.clear();hooks.open={};CHECK(DeckRejects([&] { LoadFortDeck(1,{d.depth,d.conversion,d.full},hooks); }));CHECK(d.depth==1 && d.trace=="L:1;G:1:101;S:11:Deck:1;clear:101");UnwindFortDeckLoad({d.depth,d.conversion,d.full},hooks);CHECK(d.depth==0);
     DeckDevices physical({"1","11","101","0","0","1","1","0","0","11","0","none"});auto bounded=physical.Hooks();bounded.prepareTypeNames=[&](auto) { DeckPut(physical.streams[0],4,2048); };CHECK(DeckRejects([&] { LoadFortDeck(1,{physical.depth,physical.conversion,physical.full},bounded); }));CHECK(physical.depth==1 && DeckU(physical.streams[0],4)==2048); //end가1이어도읽기를미리생략하지않고실제물리끝에서거부한다.
+}
+
+// Clear/Open 뒤 현재 Client DWORD를 읽고 최초 캡처나 독립 fallback으로 분기를 고정하지 않는다.
+TEST_CASE(FortDeckLoad_SharedFullDeckReadsAfterOpen) {
+    netstorm::client::ClientGameplayGlobals globals;DeckDevices d({"1","11","101","0","0","1","1","0","0","0","0","none"});const FortDeckLoadGlobals state{d.depth,d.conversion,globals.FullDeck()};
+    for (const std::uint32_t value:{0x80000000U,0xffffffffU,0U}) { // 동일 부모/참조에서 외부 Open 효과가 full/저장 Deck 가지를 바꾼다.
+        d.trace.clear();d.appends=0;DeckPut(d.streams[0],4,0);auto hooks=d.Hooks();const auto open=hooks.open;hooks.open=[&](auto token,auto seed) { open(token,seed);globals.FullDeck()=value; };LoadFortDeck(1,state,hooks);
+        CHECK(globals.FullDeck()==value && d.full==0 && d.depth==0);CHECK((d.trace.find("full:101")!=std::string::npos)==(value!=0));CHECK(d.appends==(value ? 0U : 1U));
+    }
 }

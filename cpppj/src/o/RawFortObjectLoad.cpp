@@ -120,7 +120,7 @@ Sid RawFortObjectLoad::Object(const FortObject& object,std::int32_t originX,std:
     if (Type(sid).flags1&kRandomFrame) { const auto frame=RandomFrame(sid);Frame(sid,frame==-1 ? 0U : static_cast<std::uint32_t>(frame)); }
     hooks_.pop(sid,x,y,9);
     if (Type(sid).flags1&kContainer) Contents(sid,Required(object.contents,"contents"),9);
-    if (state_.fort && !state_.fortDestroyBlocked) {
+    if (state_.fort && !state_.FortDestroyBlocked()) {
         const auto genus=Type(sid).flags2;
         if (!(genus&state_.fortKeepMask) ||
             (!state_.special && !state_.mission && (Type(sid).flags2&kDais) && hooks_.virtualCount(sid)==1)) hooks_.destroy(sid,0);

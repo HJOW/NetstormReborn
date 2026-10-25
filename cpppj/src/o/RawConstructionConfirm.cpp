@@ -23,7 +23,7 @@ RawConstructionConfirm::RawConstructionConfirm(const SidPool& pool,std::span<con
 // 원본 순서: 기준점 조회 → decoder 생성 → 조각마다 SID 생성 → 통지 필드 → 전송 → 직접 처리 → 기록기.
 bool RawConstructionConfirm::Confirm(const ConstructionConfirmRequest& request) const {
     if (request.type>=types_.size() || request.type>=frames_.size() || request.type>0xff) throw std::out_of_range("건설 확정 타입 번호 오류");
-    if ((types_[request.type].flags1&kNeedsBuilder) && !(request.flags&kSkipBuilderFlag) && !state_.skipBuilderCheck &&
+    if ((types_[request.type].flags1&kNeedsBuilder) && !(request.flags&kSkipBuilderFlag) && !state_.SkipBuilderCheck() &&
         hooks_.findBuilder(request.player,request.type,request.x,request.y).value==0) return false;
     const auto& meta=frames_[request.type];
     auto decoder=DecodeCanonType(meta.frames,meta.defaultFrame,state_.patternTypes,{request.type,std::bit_cast<int>(request.argument),

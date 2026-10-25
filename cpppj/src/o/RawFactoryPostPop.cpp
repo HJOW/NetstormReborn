@@ -59,7 +59,7 @@ void RawFactoryPostPop::Validate(Sid sid,std::uint32_t flags,const RawGraphPop* 
     base_.ValidateBase(sid,flags,pop);
     if ((flags&1) && (!hooks_.reserveRegular || !hooks_.addRegular)) throw std::invalid_argument("Factory Regular 경계 누락");
     if (!hooks_.setFrame) throw std::invalid_argument("Factory 실제 프레임 설정 경계 누락");
-    if (state_.boss && (!hooks_.destroy || !hooks_.warnDuplicate)) throw std::invalid_argument("Factory 중복 삭제/경고 경계 누락");
+    if (state_.Boss() && (!hooks_.destroy || !hooks_.warnDuplicate)) throw std::invalid_argument("Factory 중복 삭제/경고 경계 누락");
     if (kind==2) {
         static_cast<void>(state_.outposts.Items());static_cast<void>(state_.residences.Items());
         if (!hooks_.regionOwnership) throw std::invalid_argument("아웃포스트 실제 섬 소유권 경계 누락");
@@ -93,7 +93,7 @@ void RawFactoryPostPop::PostPop(Sid sid,std::uint32_t flags) const {
         if (patch) Regular(sid,5,0.5f);
     }
     damageable_.DamageablePostPop(sid,flags);AdjustFrame(sid);
-    if (!state_.boss) return;
+    if (!state_.Boss()) return;
     const int x=Truncate(Position(pool_.Slot(sid),14)),y=Truncate(Position(pool_.Slot(sid),18));
     RawSquidFinder finder(pool_,hash_,types_);auto candidate=finder.Begin({x,y,x,y});
     // 실제 finder는 다음 raw 연결을 먼저 저장하므로 가상 삭제 뒤에도 원본 순서로 진행한다.

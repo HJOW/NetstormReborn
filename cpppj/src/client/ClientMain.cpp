@@ -376,7 +376,7 @@ int Client::Run() {
     InvalidateRect(window,nullptr,FALSE);UpdateWindow(window);GdiFlush();DwmFlush(); // 유효한 WM_PAINT 갱신을 실행한 뒤 Windows 합성 화면의 다음 표시까지 완료하여 빠른 메뉴 교체가 로딩을 덮지 않게 한다.
     // "init types"(FUN_0049ebb0): 타입·그림·타입 표.
     assets_ = std::make_unique<GameAssets>(files_, options_.edition, palettePath);
-    surfaceStorage_=MakeRawSurfaceStorage(*assets_); // init squid/hash/spot의 실제 장기 물리를 메뉴보다 먼저 확보한다.
+    surfaceStorage_=MakeRawSurfaceStorage(*assets_,gameplayGlobals_->Authority()); // init squid/hash/spot의 실제 장기 물리를 메뉴보다 먼저 확보한다.
     const auto serverPath=configuration_.SubstituteLocal("{DataDir}/!rootservers.dat");const auto serverFile=files_.TryRead(serverPath); // 현재 보호 시작 목록을 읽으며 네트워크 갱신/저장 부모와 구별한다.
     if (serverFile) nsInfoGlobals_->LoadServerNames(*serverFile);else if (const auto original=files_.TryRead(configuration_.SubstituteLocal("{DataDir}/rootservers.dat"))) nsInfoGlobals_->LoadServerNames(*original);
     if (!PumpMessages()) return 0;

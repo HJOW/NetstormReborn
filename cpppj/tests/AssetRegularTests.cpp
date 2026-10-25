@@ -113,12 +113,14 @@ struct AssetRegularScene {
     }
 };
 // 한 판본의 독립 실제 반환/raw/난수/최대 조사·효과 순서를 production 모듈로 재생한다.
-void Replay(const char* edition) {
-    AssetRegularScene scene(std::string_view(edition)=="originals" ? OriginalEdition::Patch1078 : OriginalEdition::Cd1072);
+void Replay(const char* edition,bool sharedAuthority=false) {
+    RawAuthorityState authority;AssetRegularScene scene(std::string_view(edition)=="originals" ? OriginalEdition::Patch1078 : OriginalEdition::Cd1072); // 행 사이에도 실제 Regular가 빌린 owner 주소를 살려 둔다.
     std::size_t count=0;
     // 각 행의 결과는 원본이 정했으며 테스트가 재계산하지 않는다.
     for (const auto& row:Rows()) {
         if (row[0]!=edition) continue;CHECK(row.size()==8);scene.Prepare(row);
+        authority={true,scene.state.boss}; // 이 행의 Native 권한값만 제공한다.
+        if (sharedAuthority) { scene.state.sharedAuthority=&authority;scene.state.boss=!authority.boss; } // 이미 구성한 모듈도 다음 실제 Handle에서 현재 owner를 읽는다.
         const auto& in=scene.input;
         const auto result=in[0]==3 ? scene.regular->DamageableHandle(kSource,in[1],in[2],std::bit_cast<float>(in[3])) :
             scene.regular->Handle(kSource,in[1],in[2],std::bit_cast<float>(in[3]));
@@ -210,3 +212,6 @@ void ReplayResidenceCoordinates(std::string_view edition) {
 TEST_CASE(AssetRegular_ResidenceCoordinatesPatch) { ReplayResidenceCoordinates("originals"); }
 // CD10.72의 별도 명령/배치를 같은 추가 좌표 입력으로 검증한다.
 TEST_CASE(AssetRegular_ResidenceCoordinatesCd) { ReplayResidenceCoordinates("originalCD"); }
+
+// 기존 두 PE 반환/효과/raw 기대값을 바꾸지 않고 현재 shared 권한을 소비한다.
+TEST_CASE(AssetRegular_SharedAuthorityReplaysBothNativeBodies) { Replay("originals",true);Replay("originalCD",true); }

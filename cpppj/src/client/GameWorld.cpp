@@ -49,7 +49,7 @@ bool IsGolem(std::span<const std::uint8_t> raw) { return raw[10]==133 && raw[0]=
 #include "client/GameWorldInput.inc"
 // 저장 위치와 파일 필드를 유지하여 표시와 이동이 공유하는 월드를 만든다.
 GameWorld::GameWorld(const GameAssets& assets,const o::FortTemplate& fort,o::MissionPlayers players)
-    : assets_(assets),ground_(std::make_unique<o::GroundGrid>()),players_(std::move(players)) {
+    : gameplayGlobals_(std::make_shared<ClientGameplayGlobals>()),assets_(assets),ground_(std::make_unique<o::GroundGrid>()),players_(std::move(players)) {
     // 표시 팔레트는 원본 번호를 그대로 캐시한다.
     for (std::size_t i=0;i<palette_.size();++i) palette_[i]=assets_.Palette().Color(static_cast<std::uint8_t>(i));
     const auto frames=assets.Find("puzzlePiece").definition.FrameTable();
@@ -72,7 +72,7 @@ GameWorld::GameWorld(const GameAssets& assets,const o::FortTemplate& fort,o::Mis
 }
 // 실제 캠페인에서는 이전 관찰기반 객체/지형 어댑터를 생성하지 않고 같은 raw 세션을 설치한다.
 GameWorld::GameWorld(const GameAssets& assets,const o::BaseFileSystem& files,o::FortTemplate fort,o::MissionPlayers players,
-    std::string mission,RawCampaignSessionServices services,ScreenPoint viewport,bool deferConnection):assets_(assets),players_(std::move(players)) {
+    std::string mission,RawCampaignSessionServices services,ScreenPoint viewport,bool deferConnection):gameplayGlobals_(services.gameplayGlobals ? services.gameplayGlobals : std::make_shared<ClientGameplayGlobals>(services.subscriberGlobals,services.surfaceStorage ? services.surfaceStorage->Authority() : nullptr)),assets_(assets),players_(std::move(players)) {
     if (viewport.x<=0 || viewport.y<=0) throw std::invalid_argument("실제 캠페인 설치 전 화면 크기 누락");
     width_=viewport.x;height_=viewport.y;
     // 현재 보호 팔레트 번호만 UI 색 조회용으로 보관한다.
@@ -89,6 +89,7 @@ GameWorld::GameWorld(const GameAssets& assets,const o::BaseFileSystem& files,o::
     const bool connect=services.localLogin.has_value(); //실제Client는로그인서버가Load를호출한다.
     const bool existingEditor=services.installMode==CampaignInstallMode::ExistingEditor; //Editor는 전체 외곽/State가 끝나기 전 Campaign.Load나 로그인으로 우회하지 않는다.
     if (existingEditor && !deferConnection) throw std::logic_error("기존 Editor는 실제 외곽의 명시 지연 설치가 필요함");
+    services.gameplayGlobals=gameplayGlobals_; // 독립 호출자도 GameWorld와 Session이 서로 다른 선택 전역을 만들지 않는다.
     campaign_=std::make_unique<RawCampaignSession>(assets,files,std::move(fort),std::move(mission),std::move(services));
     if (assets_.Edition()==o::OriginalEdition::Patch1078) {
         factoryDisplay_=std::make_unique<RawCampaignFactoryDisplay>(campaign_->Core(),assets_,[this](o::Sid sid,const auto& frame) { campaign_->DrawTemple(sid,frame); });std::array<ScreenColor,256> palette{};
@@ -464,6 +465,10 @@ void GameWorld::Select(o::SquidId id) {
 }
 // 처리기 수명 동안 같은 선택/마우스 전역을 공유하며 선택 번호를 복사하지 않는다.
 UserHighlightState GameWorld::HighlightSettings() { return {highlightMode_,selected_,mouseType_,mousePoint_.x,mousePoint_.y}; }
+// 입력 모듈이 교체되어도 같은 실제 선택 저장소를 읽고 쓴다.
+ClientUserSelectionGlobals& GameWorld::SelectionGlobals() { return gameplayGlobals_->selection; }
+// 읽기 전용 caller도 같은 owner를 빌린다.
+const ClientUserSelectionGlobals& GameWorld::SelectionGlobals() const { return gameplayGlobals_->selection; }
 // 폴링 후 키/마우스 사건이 함께 조회할 현재 화면 위치다.
 void GameWorld::SetMousePoint(ScreenPoint point) { mousePoint_=point; }
 // 선택한 유닛의 주인이 나일 때만 명령을 적용한다.

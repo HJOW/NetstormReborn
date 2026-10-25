@@ -14,9 +14,9 @@ constexpr std::uint8_t kFree=1,kDead=2,kVoid=4;
 constexpr std::array<std::size_t,2> kHeads{0,14};
 }
 // raw 슬롯을 저장하는 호스트 벡터와 원본 판본 경계를 준비한다.
-SidPool::SidPool(OriginalEdition edition,std::uint32_t capacity,bool server)
+SidPool::SidPool(OriginalEdition edition,std::uint32_t capacity,bool server,const bool* sharedServer)
     :layout_(edition==OriginalEdition::Patch1078 ? SidLayout{50,15000,23001} : SidLayout{36,6000,14000}),
-     capacity_(capacity),server_(server) {
+     capacity_(capacity),server_(server),sharedServer_(sharedServer) {
     // 원본의 고정 free list가 풀 밖을 쓰는 잘못된 크기는 새 C++에서 거부한다.
     if (capacity_<=layout_.predictableFirst+1 || capacity_>65535) throw std::invalid_argument("SID 풀 크기 오류");
     bytes_.resize(static_cast<std::size_t>(capacity_)*layout_.stride);
@@ -55,7 +55,7 @@ Sid SidPool::Allocate(std::uint32_t flags) {
         if (sid>=capacity_ || !(bytes_[head+kState]&kFree)) throw std::out_of_range("예측 SID 소진");
         const auto offset=sid*layout_.stride;
         if (!(bytes_[offset+kState]&kFree)) throw std::logic_error("예측 SID가 사용 중입니다");
-        if (server_) {
+        if (IsServer()) {
             const auto next=ReadNext(offset);
             if (next!=sid+1 || next>=capacity_ || !(bytes_[next*layout_.stride+kState]&kFree))
                 throw std::out_of_range("예측 SID 서버 꼬리 소진");
@@ -64,7 +64,7 @@ Sid SidPool::Allocate(std::uint32_t flags) {
         ++predictableCursor_;
     } else {
         const bool client=(flags&2)!=0;
-        if (!client && !server_) throw std::logic_error("서버 SID 할당 권한이 없습니다");
+        if (!client && !IsServer()) throw std::logic_error("서버 SID 할당 권한이 없습니다");
         const auto list=client ? 0U : 1U;
         sid=ReadNext(kHeads[list]);
         // 원본의 소진 시 UI/다리 파괴 분기는 후속이다. 이 보호 경로에서는 풀을 바꾸지 않는다.
@@ -91,7 +91,7 @@ void SidPool::Release(Sid sid) {
     Record(sid,type);
     std::fill_n(bytes_.begin()+offset,layout_.stride,std::uint8_t{0});
     bytes_[offset+kType]=type;
-    if (!server_ && sid.value>=layout_.serverFirst) {
+    if (!IsServer() && sid.value>=layout_.serverFirst) {
         bytes_[offset+kState]=kFree;
         return;
     }
@@ -132,7 +132,7 @@ std::span<const SidDeletion> SidPool::Deletions(bool client) const { return dele
 // 원본 판본의 raw 슬롯 크기와 영역 경계를 반환한다.
 SidLayout SidPool::Layout() const { return layout_; }
 // owner/HP 초기화의 원본 서버 분기를 선택한다.
-bool SidPool::IsServer() const { return server_; }
+bool SidPool::IsServer() const { return sharedServer_ ? *sharedServer_ : server_; }
 // 이미 확정된 raw 슬롯 크기에서 판본을 반환한다.
 OriginalEdition SidPool::Edition() const { return layout_.stride==50 ? OriginalEdition::Patch1078 : OriginalEdition::Cd1072; }
 // 확보한 raw 슬롯 수를 반환한다.

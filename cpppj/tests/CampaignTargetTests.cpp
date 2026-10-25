@@ -46,7 +46,7 @@ void CheckCampaignNotifyNative(OriginalEdition edition) {
     // 기존 원본의 가상34 호출 결과만 비교하며 기대 인자 순서를 재계산하지 않는다.
     for (const auto& row:rows) {
         if (row[0]!=(edition==OriginalEdition::Patch1078 ? "originals" : "originalCD") || row[1]!="N") continue;
-        events.clear();core.processState.server=netstorm::test::rawscene::Number(row[2])!=0;
+        events.clear();core.processState.Server()=netstorm::test::rawscene::Number(row[2])!=0;
         const auto pid=netstorm::test::rawscene::Number(row[3]);
         core.processes.NotifyDependency(pid==0xffffffffU ? Sid{} : forms[pid],
             Sid{static_cast<std::uint16_t>(netstorm::test::rawscene::Number(row[4]))},

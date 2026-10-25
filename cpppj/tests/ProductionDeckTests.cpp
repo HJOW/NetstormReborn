@@ -1,3 +1,4 @@
+#include "client/ClientGameplayGlobals.h" // 실제0054db14 DWORD의 동일 장기 owner를 빌린다.
 // 원본Deck/Contains전체와기술표시상위관찰을실제Player/Factory/ContentHost/SP통지에대조한다.
 #include "DudeSpawnSupport.h"
 #include "o/RawProductionDeck.h"
@@ -163,4 +164,13 @@ TEST_CASE(ProductionDeck_RequiresRealStorageAndPhysicalBounds) {
     Put(scene.records,180+0x68,0x7fffffff);CHECK(Throws([&] { scene.deck->Contains(71); }));Put(scene.records,180+0x68,kDeckToken);
     auto raw=scene.deck->Bytes(kDeckToken);Put(raw,0x14c,66);const auto before=Hex(raw);CHECK(Throws([&] { scene.deck->Append(kDeckToken,83,1); }));CHECK(Hex(raw)==before);
     Put(raw,0x14c,67);CHECK(Throws([&] { scene.deck->Contains(71); }));
+}
+
+// 모드 진단 효과 뒤 현재 fullDeck를 다시 읽고 같은 장기 DWORD로 실제 재계산의 자연 return을 선택한다.
+TEST_CASE(ProductionDeck_SharedFullDeckReadsAfterModeDiagnostic) {
+    netstorm::client::ClientGameplayGlobals globals;ProductionScene scene(Split("Initialize,1,0,0,4,167,1,1,1",','));scene.deck->ClearEntries(kDeckToken);scene.deck->Append(kDeckToken,71,1);scene.deck->Bytes(kDeckToken)[2]=0x7e;scene.core.ownerMode.fort=scene.core.ownerMode.battle=false;
+    std::array<std::uint32_t,256> restrictions{};RawTotalMade allowed(OriginalEdition::Patch1078,scene.types,scene.book,restrictions,[](TotalMadeAssertion) { ProductionMissing(); });bool mission=false;std::uint32_t freeTechnology=153,templeProduct=133,queries{},diagnostics{};netstorm::client::CampaignProductionEffects effects;
+    effects.configInt=[&](auto) { ++queries;return 0; };effects.modeAssertion=[&] { ++diagnostics;globals.FullDeck()=0x80000000U; };netstorm::client::RawCampaignProductionBindings production(scene.core,*scene.player,scene.carrier,*scene.create,*scene.deck,allowed,scene.carrierState,{mission,globals.FullDeck(),freeTechnology,templeProduct},effects);const auto before=Hex(scene.deck->Bytes(kDeckToken));
+    CHECK(production.RefreshCurrent()==kDeckToken && diagnostics==1 && queries==0 && globals.FullDeck()==0x80000000U && Hex(scene.deck->Bytes(kDeckToken))==before);
+    scene.core.ownerMode.battle=true;globals.FullDeck()=0xffffffffU;production.RefreshCurrent();CHECK(queries==0 && Hex(scene.deck->Bytes(kDeckToken))==before && globals.FullDeck()==0xffffffffU);globals.FullDeck()=0;production.RefreshCurrent();CHECK(queries==1 && Get(scene.deck->Bytes(kDeckToken),0x14c)==0 && globals.FullDeck()==0);
 }

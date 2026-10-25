@@ -25,8 +25,9 @@ struct SidDeletion { /* sid: 원본 풀에서 객체를 찾는 SID 번호. */ /*
 // 원본 SID 영역별 자유 슬롯과 예측 슬롯을 할당·반납하는 저장소이다.
 class SidPool {
 public:
-    // 기존에 확보한 풀의 초기화 경로를 복원한다. CRT malloc의 포인터/실패 처리 자체는 복제하지 않는다.
-    SidPool(OriginalEdition edition,std::uint32_t capacity,bool server=true);
+    // 기존에 확보한 풀의 초기화 경로를 복원한다. sharedServer는 Pool보다 오래 살아야 하며 없으면 기존 server 입력을 보유한다.
+    // CRT malloc의 포인터/실패 처리 자체는 복제하지 않는다.
+    SidPool(OriginalEdition edition,std::uint32_t capacity,bool server=true,const bool* sharedServer=nullptr);
     // 004abb10 ↔ CD 004aaad0: capacity>0이면 풀 크기를 다시 확보하고, 0/음수면 기존 풀을 초기화한다.
     // 삭제 기록은 유지한다. 호출자는 기존 프로세스/UI를 먼저 정리해야 하며 양수 재확보 뒤 빌린 span은 무효다.
     void Reset(std::int32_t capacity=0);
@@ -85,6 +86,7 @@ private:
     std::uint32_t capacity_{},freeCount_{},predictableCursor_{};
     // server_: 서버 전용 초기화와 동작을 적용할지.
     bool server_{};
+    const bool* sharedServer_{}; // Pool보다 오래 사는 실제 서버 bool이다. 미연결 독립 풀만 기존 server_ 입력을 읽는다.
     // bytes_: 필드 접근이나 파일 읽기에 사용하는 원시 바이트.
     std::vector<std::uint8_t> bytes_;
     // tails_: 할당 영역별 자유 슬롯 연결 목록의 꼬리 번호.
