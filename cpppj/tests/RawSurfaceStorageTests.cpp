@@ -2,6 +2,8 @@
 #include "DudeSpawnSupport.h"
 #include "client/RawSurfaceWorld.h"
 #include <algorithm>
+#include <cstring>
+#include <type_traits>
 
 using namespace netstorm::client;
 using namespace netstorm::o;
@@ -14,6 +16,10 @@ std::unique_ptr<RawSurfaceWorld> StorageWorld(const std::shared_ptr<RawSurfaceSt
 }
 // 계약 실패가 기존 물리를 바꾸는 성공 경로로 처리되지 않는지 확인한다.
 template<class Function> bool StorageRejected(Function&& function) { try { function();return false; } catch (const std::exception&) { return true; } }
+// 고정1530BYTE 기록과4096DWORD를 전체 비교해 reserved와 비활성 stack의 소실도 검출한다.
+bool SameStorageGraph(const RawGraphStorage& first,const RawGraphStorage& second) {
+    static_assert(sizeof(first.records)==1530);return std::memcmp(first.records.data(),second.records.data(),sizeof(first.records))==0 && first.stack==second.stack;
+}
 }
 
 // 두 판본 모두 같은 실제 Pool/해시/TYPE/spot/셰이프 주소를 월드 모듈이 읽는다.
@@ -65,4 +71,37 @@ TEST_CASE(RawSurfaceStorage_PreparedWorldPreservesActualMemoryAndModes) {
     CHECK(StorageRejected([&] { storage->AcquirePrepared(); }) && StorageRejected([&] { storage->Acquire(); }));
     world.reset();CHECK(!storage->Borrowed() && storage->hash.Cell(0,1,1)==0x1234 && storage->spots[257]==0x71 && std::equal(bytes.begin(),bytes.end(),storage->pool.Bytes().begin()));
     auto ordinary=storage->Acquire();CHECK(storage->Generation()==3 && storage->hash.Cell(0,1,1)==0 && storage->spots[257]==0); // 기존 독립 설치의 명시 초기화 계약도 유지한다.
+}
+
+// World 실행기를 반납해도 실제 기록/stack을 유지하고 다음 준비 대여도 같은 주소를 빌린다.
+TEST_CASE(RawSurfaceStorage_GraphPhysicalArraysOutliveWorldAndPreparedLease) {
+    static_assert(!std::is_copy_constructible_v<RawSurfaceStorage> && !std::is_move_constructible_v<RawSurfaceStorage>); // 장기 물리 참조의 주소를 복제/이동하지 않는다.
+    auto storage=MakeRawSurfaceStorage(netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078).game);auto first=StorageWorld(storage);const auto* records=storage->graph.records.data();const auto* stack=storage->graph.stack.data(); // 최초 실제 대여의 고정 주소다.
+    CHECK(first->Core().graph.Records().data()==records && first->Core().graph.FloodStack().data()==stack);
+    storage->graph.records[1]={9,1,0x4567};storage->graph.records[252]={3,4,0x2345};storage->graph.records[254].reserved=0x3456;storage->graph.stack[0]=0x10203040U;storage->graph.stack.back()=0xa1b2c3d4U;const auto current=storage->graph; // Native 완료를 가장하지 않는 비영 보존 입력이다.
+    first.reset();CHECK(!storage->Borrowed() && SameStorageGraph(storage->graph,current));
+    auto next=std::make_unique<RawSurfaceWorld>(storage->pool.Edition(),storage->types,storage->frames,storage->shapes,StorageLinks(),97,nullptr,storage,true); // 준비 대여에는 Graph reset이 없다.
+    CHECK(next->Core().graph.Records().data()==records && next->Core().graph.FloodStack().data()==stack && SameStorageGraph(storage->graph,current));
+    CHECK(StorageRejected([&] { storage->Acquire(); }) && StorageRejected([&] { storage->AcquirePrepared(); }) && SameStorageGraph(storage->graph,current));
+    std::weak_ptr<RawSurfaceStorage> lifetime=storage;storage.reset();CHECK(!lifetime.expired() && next->Core().graph.Records()[252].reserved==0x2345 && next->Core().graph.FloodStack().back()==0xa1b2c3d4U);
+    next.reset();CHECK(lifetime.expired()); // 실행기/모듈의 참조와 Use가 끝난 뒤에만 같은 물리가 소멸한다.
+}
+
+// 준비 대여 뒤 실행기 생성이 실패해도 lease만 반납하고 이미 있던 기록/stack을 초기화하지 않는다.
+TEST_CASE(RawSurfaceStorage_GraphPreparedConstructionFailureKeepsCurrentBytes) {
+    std::vector<RiftTypeRecord> types(187);std::vector<RiftTypeFrames> frames(187,RiftTypeFrames({}));std::vector<SquidDisplayShape> shapes(187); // RawGraph의 PATCH188 계약에서만 실패하도록 같은 크기의 물리를 준비한다.
+    auto storage=std::make_shared<RawSurfaceStorage>(OriginalEdition::Patch1078,types,frames,shapes);storage->graph.records[0]={2,3,0x4567};storage->graph.records[254]={6,7,0x1234};storage->graph.stack[13]=0x89abcdefU;const auto before=storage->graph; // 생성자 전에 실제 공유 바이트를 고정한다.
+    CHECK(StorageRejected([&] { RawSurfaceWorld world(OriginalEdition::Patch1078,storage->types,storage->frames,storage->shapes,StorageLinks(),97,nullptr,storage,true); }));
+    CHECK(!storage->Borrowed() && storage->Generation()==1 && SameStorageGraph(storage->graph,before)); // 성공한 대여 세대는 남고 실패 뒤 암묵 rollback/reset은 없다.
+}
+
+// 기존 일반 World의 fresh 표/stack 의미는 유지하되 Native partial Reset 및 prepared 보존과 분리한다.
+TEST_CASE(RawSurfaceStorage_GraphGeneralAcquireRetainsFreshCompatibility) {
+    auto storage=MakeRawSurfaceStorage(netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078).game); // 실제 같은 자산으로 기존 일반 설치를 준비한다.
+    { auto lease=storage->Acquire(); }storage->graph.records[0].reserved=0x7b23;storage->graph.records[252]={3,4,5};storage->graph.stack[11]=0xa1b2c3d4U;
+    ResetRawGraphTable(storage->graph);CHECK(static_cast<std::uint16_t>(storage->graph.records[0].reserved)==0x7b01 && storage->graph.records[252].surfaces==3 && storage->graph.stack[11]==0xa1b2c3d4U); // Native 작은 reset은 지정 범위 밖을 보존한다.
+    const auto prepared=storage->graph;{ auto lease=storage->AcquirePrepared();CHECK(SameStorageGraph(storage->graph,prepared)); }CHECK(SameStorageGraph(storage->graph,prepared));
+    auto ordinary=StorageWorld(storage);RawGraphStorage expected;ResetRawGraphTable(expected); // 종전 새 지역 Graph의 전체0 뒤 작은 reset과 같은 호환 결과다.
+    CHECK(SameStorageGraph(storage->graph,expected) && ordinary->Core().graph.Records().data()==storage->graph.records.data());
+    auto independent=MakeRawSurfaceStorage(netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078).game);CHECK(independent->graph.records.data()!=storage->graph.records.data() && independent->graph.stack.data()!=storage->graph.stack.data()); // 다른 Client/물리는 분리한다.
 }

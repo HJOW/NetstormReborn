@@ -103,8 +103,7 @@ struct RawSurfaceWorld::Impl final:o::SquidDisplaySink {
         if (terrainType>=types.size() || links.bridgeType>=types.size() || links.noIslandType>=types.size())
             throw std::out_of_range("raw 표면 월드 타입 번호 오류");
         bookkeeping.localOwner=1;if (!prepared) ownerMode={false,true,false};else mode.editor=true;eventState.bridgeType=links.bridgeType; // 준비 대여는 ExistingEditor 전용이며 새 지역 장부/붕괴 소비자만 구성한다.
-        graph=std::make_unique<o::RawGraph>(pool,hash,spots,types,codes);
-        graph->ResetTable(); // 새 지역 Graph의 기록만 구성한다. 준비 대여에서도 장기 Native Graph 정리00462b20의 실행/보존을 대신하지 않는다.
+        graph=std::make_unique<o::RawGraph>(pool,hash,spots,types,codes,storage->graph); // 실행기만 새로 만들고 prepared의 현재 기록/reserved/stack에는 쓰지 않는다. 일반 Acquire의 fresh 준비와 구별한다.
         display=std::make_unique<o::SquidDisplay>(edition,types,shapes,*this,o::SquidDisplayView{0,0,65536,{0,0,640,480}});
         postPop=std::make_unique<o::SquidPostPop>(pool,types,bookkeeping,graph.get(),[this](o::Sid sid) { connect->Connect(sid); });
         postPop->SetIslandPrefix([this](o::Sid sid,std::uint32_t flags) { connect->IslandPostPopPrefix(sid,flags); });

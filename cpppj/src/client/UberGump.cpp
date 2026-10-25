@@ -281,6 +281,7 @@ UberGump::~UberGump() { ClearWorld(); }
 // 입력 참조를 먼저 없애고 월드의 실제 소유권을 해제한다. 위치 효과음은 카메라 0의 전체 메뉴 영역으로 되돌린다.
 void UberGump::ClearWorld() {
     ClearPage(); // 현재 부모의 OnExit를 월드/미션 수명보다 먼저 같은 큐에 반납한다.
+    if (world_) client_.LocalStateGlobals()->CaptureEnd()=0.0; // 현재 월드 정리 어댑터에서004b2df0의005c8618 +0쓰기를 Session/UI/Kernel 반납 전에 실행한다. 전체 State7 cleanup 연결은 후속이다.
     if (world_) mapUserName_=world_->Session().CurrentHandle(); // 원본 Client 전역 이름은 월드를 해제한 뒤에도 다음 목록 조회에 남는다.
     state_.Cancel("LoadMissionFort"); // 현재 미션이 설치 전에 교체돼도 그 소유자의 이전 요청을 새 미션에서 소비하지 않는다.
     state_.Cancel("LoadMissionWorld"); // 비 Tutorial의 지연 설치도 같은 소유자 해제 때 취소한다.
@@ -304,7 +305,10 @@ void UberGump::ClearWorld() {
     missionRuntime_.reset(); // 같은 Session/Script를 참조하는 Start를 대상보다 먼저 해제한다.
     userInput_.reset();
     auto retiringWorld=std::move(world_); // 실제 소멸 callback의 현재 subscriber 조회는 이미 NULL인 같은 슬롯을 본다.
-    retiringWorld.reset(); // Session이 같은 전역 Kernel을 먼저 비운 뒤 나머지 월드 소유권을 반납한다.
+    if (retiringWorld) {
+        retiringWorld.reset(); // Session이 같은 전역 Kernel을 먼저 비운 뒤 나머지 월드 소유권을 반납한다.
+        client_.LocalStateGlobals()->LoginEnd()=0.0;client_.LocalStateGlobals()->ConnectEnd()=0.0; //004b2df0 말미의 두 별도 기한0은 실제 월드 반납 뒤에 쓴다. ActivityEnd와 State 블록은 보존한다.
+    }
     client_.WorldAudio().SetView({0,0,0,0,client_.GetScreen().Width(),client_.GetScreen().Height()});
 }
 // 현재 어댑터의 월드 수명으로 원본 번개 부모 조회 경계를 제공한다.

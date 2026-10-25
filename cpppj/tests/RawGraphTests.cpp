@@ -122,6 +122,13 @@ std::array<std::uint32_t,2> GraphHashes(const o::RawGraph& graph) {
     for (auto value:graph.FloodStack()) Append(stack,value,4);
     return {Adler(records),Adler(stack)};
 }
+// 새 공유 수명 검사는 checksum 대신 모든 기록/stack BYTE를 직접 보존 대조한다.
+std::vector<std::uint8_t> SharedGraphBytes(const o::RawGraphStorage& storage) {
+    std::vector<std::uint8_t> bytes; // 호스트 padding을 제외한 원문의 두 별도 배열만 직렬화한다.
+    for (const auto& record:storage.records) { Append(bytes,static_cast<std::uint16_t>(record.surfaces),2);Append(bytes,static_cast<std::uint16_t>(record.inUse),2);Append(bytes,static_cast<std::uint16_t>(record.reserved),2); } // 각 행의 세WORD를 모두 비교한다.
+    for (const auto value:storage.stack) Append(bytes,value,4); // 비활성 flood 흔적까지 보존해야 한다.
+    return bytes;
+}
 }
 
 // 공통 입력/전체 출력 대조를 공유하되 기대값은 각 실제 x86 도구가 독립적으로 기록한다.
@@ -489,4 +496,37 @@ TEST_CASE(RawGraph_CorruptCandidatesAndMismatchedConnectionsRejectBeforeMutation
     CHECK(Throws([&]{region.Activate(sid,1);})); CHECK(state.depth==0); CHECK(pool.Slot(sid)[30]==254);
     Put(pool.AllocatedBytes(sid),4,0,2); region.Activate(sid,1);
     CHECK(state.depth==0); CHECK(pool.Slot(sid)[30]==0); CHECK(regionGraph.Records()[0].surfaces==1);
+}
+
+// 대여 실행기는 같은 물리에 쓰고 명시 records/stack snapshot 생성자는 계속 독립 사본을 소유한다.
+TEST_CASE(RawGraph_SharedStorageAndExplicitSnapshotHaveSeparateOwnership) {
+    const auto edition=o::OriginalEdition::Patch1078;auto types=Types(edition);std::vector<std::vector<o::FrameCode>> frames(types.size()); // 공간 계산 없는 Allocate의 현재 입력이다.
+    o::SidPool pool(edition,32768,false);o::SquidHash hash;std::vector<std::uint8_t> spots(65536);o::RawGraphStorage shared; // 실행기보다 오래 사는 두 실제 배열이다.
+    for (std::size_t index=0;index<shared.records.size();++index) shared.records[index]={3,0,static_cast<std::int16_t>(0x1200+index)}; // 생성자가 sentinel도 고치지 않는지 비영 입력으로 확인한다.
+    for (std::size_t index=0;index<shared.stack.size();++index) shared.stack[index]=0x70000000U+static_cast<std::uint32_t>(index); // 전체 stack을 서로 다른 값으로 채운다.
+    const auto initial=SharedGraphBytes(shared);o::RawGraph borrowed(pool,hash,spots,types,frames,shared); // 공유 생성자에는 초기화 효과가 없다.
+    CHECK(SharedGraphBytes(shared)==initial && borrowed.Records().data()==shared.records.data() && borrowed.FloodStack().data()==shared.stack.data());
+    o::RawGraph snapshot(pool,hash,spots,types,frames,shared.records,shared.stack);const auto snapshotBefore=GraphHashes(snapshot); // 기존 snapshot 계약을 같은 입력으로 유지한다.
+    CHECK(snapshot.Records().data()!=shared.records.data() && snapshot.FloodStack().data()!=shared.stack.data());
+    shared.records[0].inUse=1;CHECK(borrowed.Records()[0].inUse==1 && snapshot.Records()[0].inUse==0);
+    CHECK(borrowed.Allocate()==1 && shared.records[1].surfaces==0 && shared.records[1].inUse==1 && shared.records[1].reserved==0x1201);
+    CHECK(GraphHashes(snapshot)==snapshotBefore);const auto afterBorrowed=SharedGraphBytes(shared);CHECK(snapshot.Allocate()==0 && SharedGraphBytes(shared)==afterBorrowed);
+}
+
+// PostDestroy의 임시 next가 독립 사본이어야 Validate 성공/후반 체인 실패 모두 실제 장기 표에 쓰지 않는다.
+TEST_CASE(RawGraph_SharedPostDestroyValidationKeepsCloneAndCommitSeparate) {
+    const auto edition=o::OriginalEdition::Patch1078;auto types=Types(edition);types[74].flags1=o::TypeFlag1::kSurface; // 비표면 원천과 같은 칸의 실제 표면 둘을 사용한다.
+    std::vector<std::vector<o::FrameCode>> frames(types.size());frames[74]={{65,80,1,0}};o::SidPool pool(edition,32768,false);o::SquidFactory factory(pool,types);
+    const auto source=factory.Create(75,2),first=factory.Create(74,2),second=factory.Create(74,2); // 원천은 finder에 등록하지 않고 표면 체인만 실제 해시에 둔다.
+    Node(pool,source,75,{20,20,1,1,0,0,65,80,0,0,9,254,0});Node(pool,first,74,{20,20,1,1,2048,0,65,80,0,0,0,254,0},second.value);Node(pool,second,74,{20,20,1,1,2048,0,65,80,0,0,0,254,0});
+    o::SquidHash hash;hash.Cell(0,20,20)=first.value;std::vector<std::uint8_t> spots(65536);o::RawGraphStorage shared;o::ResetRawGraphTable(shared); // 초기 reset은 실제 작은 본문을 명시 호출한다.
+    shared.records[252]={7,8,0x4567};shared.records[1].reserved=0x1234;shared.stack.back()=0xa1b2c3d4U;o::RawGraph graph(pool,hash,spots,types,frames,shared);
+    const auto original=SharedGraphBytes(shared);const auto raw=std::vector<std::uint8_t>(pool.Bytes().begin(),pool.Bytes().end());const auto oldSpots=spots; // 계획 전 실제 모든 저장소다.
+    graph.ValidatePostDestroy(source);CHECK(SharedGraphBytes(shared)==original && std::equal(raw.begin(),raw.end(),pool.Bytes().begin()) && spots==oldSpots && hash.Cell(0,20,20)==first.value);
+    Put(pool.AllocatedBytes(second),4,second.value,2);const auto cyclicRaw=std::vector<std::uint8_t>(pool.Bytes().begin(),pool.Bytes().end()); // 첫 Add 뒤 다음 finder 방문에서 실패할 실제 체인이다.
+    CHECK(Throws([&] { graph.ValidatePostDestroy(source); }) && Throws([&] { graph.PostDestroy(source); }));
+    CHECK(SharedGraphBytes(shared)==original && std::equal(cyclicRaw.begin(),cyclicRaw.end(),pool.Bytes().begin()) && spots==oldSpots && hash.Cell(0,20,20)==first.value);
+    Put(pool.AllocatedBytes(second),4,0,2);auto expectedPool=pool;o::RawGraph expected(expectedPool,hash,spots,types,frames,shared.records,shared.stack); // 기존 독립 생성자가 같은 계산의 대조 사본이다.
+    expected.PostDestroy(source);graph.PostDestroy(source);CHECK(GraphHashes(graph)==GraphHashes(expected) && std::equal(expectedPool.Bytes().begin(),expectedPool.Bytes().end(),pool.Bytes().begin()));
+    CHECK(SharedGraphBytes(shared)!=original && graph.Records().data()==shared.records.data() && graph.FloodStack().data()==shared.stack.data());
 }

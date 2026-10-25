@@ -1,5 +1,19 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-25 단위431 완료: Graph 장기 물리 분리와 미션 교체 기한 정리
+
+- [x] 이전430은 **bae8b702 / 20261025-25 CP**로 Native 두 갱신 주소의 교정·집중83개/보호1821/24소스·4실행 파일 검증을 마쳤다. 현재/마지막 전체 정밀 PC는 계속 **HJOW-Athlon / 2026-10-23**이다. 시작 트리는 깨끗했고 `extracted/cpp-graph-storage-431-baseline.json`에 같은 보호 기준을 고정했다.
+- [x] 준비본8원본/준비 SHA가 현재와 같음을 확인해 hunk를 적용했고 준비본과 현재8파일의 전체 본문도 같음을 확인했다. `RawSurfaceStorage::graph`가 records255×6BYTE/stack4096DWORD를 보유하며 World 실행기는 같은 물리를 빌린다. 기존 snapshot/CalculatePostDestroy 임시 clone은 독립이고, recovery/TYPE snapshot은 실행기 정책으로 남긴다. Session 없는 동일 partial Reset helper도 추가했다.
+- [x] **8소스 동결(source1)의 빌드2 종료0·컴파일 경고/오류0**이다. 파일별정의438개/433종으로기존CL배치가직렬화됨을로컬VS18 targets에서확인했고, 남은dirty약86개 시점에서 빌드1(session36676)을자기PID940 트리만중단(exit1)해부분로그를보존했다. 소스8개는변경하지않았다. 빌드2는별도CL의/MP주입없이 `cmake --build cpppj/build --config Release --parallel 4 -- /p:UseMultiToolTask=true /p:MultiProcMaxCount=4 /p:EnforceProcessCountAcrossBuilds=true`로완료했다. 이전compiler/CMake자식이모두끝난뒤재개했으며실제4개cl동시실행을확인했다. MTT on/off증분지원은로컬targets와Microsoft문서로확인했다.
+- [x] 신규6검사의 Native16 두경로/공유·사본/Validate 후반실패/Commit/장기 수명/prepared 실패·보존/일반fresh와 기존Graph·Form·삭제·표면·Editor의 **첫 집중94개·실패0**이다. 당시 보호1821/8소스/4실행 파일 SHA가같고 게임SHA는 **66921ea8…**다. 당시 보고서는 batch1의 `source-reports/` 원시 사본에 보존했다. 현재 보고서는 아래 Source3 최종 결과다.
+- [x] **첫 통합 batch1은 Early2→다음Tutorial3 전환에서 실패했으며 교정 후 batch2로 해결했다.** batch1의 Home GUI6.93초/메뉴GUI3.46초는종료0·검증통과했고안내/덱/미니맵/목록을육안확인했다. 자연Early2는goal.bmp까지도달했으나다음미션Zone설치전194.19초게임exit1이며CTest는실행하지않았다. Source/제품/보호원본/두설정복원은모두같다. `extracted/cpp-graph-storage-431-batch1/`와`...-batch1-early2/`의실패증거를 보존한다.
+- [x] 정밀C/보호PE로 State7이004b2df0→Zone004b4be0 순서이고 CaptureEnd0이PE004b30ed에서Session/UI/Kernel정리전에쓰임을확인했다. 429의장기owner가현재부분C++ClearWorld에서지워지지않아다음Zone의실제assert경로가선택됐다. assertion은실제진단창부모라noop로가리지않는다. **현재Source2에서 Uber.ClearWorld의ClearPage뒤/Session·UI·Kernel반납전에같은owner CaptureEnd=+0을명시연결했다.** RawSession ctor/dtor의값보존은유지한다. 전체NativeState7 cleanup접합으로세지않는다.
+- [x] Source2의 CaptureEnd 교정 빌드3 뒤, 같은 cleanup 말미004b329b/004b32b9의 LoginEnd/ConnectEnd +0도 실제 월드 반납 뒤 연결해 **Source3(9소스)**로 동결했다. ActivityEnd/State는 보존하며 RawSession 생성/소멸의 암묵 초기화는 추가하지 않았다. 빌드4가 최종 파일을 생성했고 같은 Source3의 명시적 종료 기록을 남긴 빌드5도 종료0이다.
+- [x] Source3의 **집중검사2도94개·실패0**, 보호1821/9소스/4실행 파일 SHA가 같다. 최종 게임 SHA는 **18b67261…**이며 현재431보고서를 이 결과로 교체했다. Source1 보고서는 batch1의 원시 사본에 남겨 교정 제품의 통과로 재사용하지 않는다.
+- [x] 같은 Source3 제품의 **batch2 통합 종료0·전체2,894개/실패0**이다. Home/메뉴 GUI와 자연 Early2→Tutorial3가 통과했고 세 실제 캡처를 육안확인했다. 실제 타이머1/상태 주입false/기존 진행값 보존으로 환불75·SP3075·다음 초기SP2000·같은 프레임 안내를 확인했다. 원본/CD 불변과 두 설정 복원, 보호1821/9소스/4실행 파일 SHA도 같다. 호스트/IP **HJOW-Athlon/192.168.0.94**의 실행 확인 예외가 적용되며 원본 게임은 실행하지 않았다.
+- [x] 이번은429~431 세 단위의 통합 검증 완료다. 마지막 통합 제품을 **이번431 Source3 / 게임18b67261… / 2,894검사·메뉴·자연 Early2**로 갱신한다. [작업 문서](docs/exe/cpp-graph-storage-owner-20261025.md)와 [실행 보고서](cpppj/graph-storage-runtime-20261025.json)에 첫 실패·교정·실제 증거와 한계를 기록했다. 인계 후 **20261025-26 CP**로 로컬 커밋하며 push하지 않는다.
+- [ ] 다음432: `extracted/cpp-connection-activity-432-prepared/` 신규4소스와 `...-432-integration/` 실제 접합8사본, `...-432-tests-prepared/` CMake/추가9검사(앞 순수6과 합15)가 준비됐다. 원본·준비 SHA를 확인해 적용/빌드/집중 검사한다. 아직 제품에 적용하거나 실행하지 않았다. 그뒤433은 TotalMade 세 표,434는 섬/청크의 좁은 장기 물리와 data-only Reset 준비를 진행한다. 전체 Native cleanup/State1·실제 Edit 사용자 편집·저장/전체미션 완주는 계속 미완료·활성 상태다.
+
 ## 2026-10-25 단위430 완료: 월드/미니맵 두 갱신 DWORD의 실제 생산자/소비자 통합
 
 - [x] 이전429는 **deaf73f8 / 20261025-24 CP**로 집중63개/보호1821/23소스·4실행 파일 검증과 인계를 마쳤다. 현재/마지막 전체 정밀 PC는 계속 **HJOW-Athlon / 2026-10-23**이다. 시작 작업 트리는 깨끗했고 보호 기준을 `extracted/cpp-map-revision-430-baseline.json`으로 고정했다.

@@ -37,12 +37,23 @@ int Coordinate(float value) {
 RawGraph::RawGraph(SidPool& pool,SquidHash& hash,std::span<const std::uint8_t> spots,
     std::span<const RiftTypeRecord> types,std::span<const std::vector<FrameCode>> frames,
     std::span<const GraphRecord> records,std::span<const std::uint32_t> stack,GraphRecovery recovery)
-    :pool_(pool),hash_(hash),spots_(spots),types_(types.begin(),types.end()),frames_(frames.begin(),frames.end()),recovery_(recovery) {
+    :RawGraph(pool,hash,spots,types,frames,nullptr,records,stack,recovery) {}
+// 장기 물리의 현재값은 생성 효과 없이 빌리고 현재 TYPE/코드 snapshot만 실행기 수명에 둔다.
+RawGraph::RawGraph(SidPool& pool,SquidHash& hash,std::span<const std::uint8_t> spots,
+    std::span<const RiftTypeRecord> types,std::span<const std::vector<FrameCode>> frames,RawGraphStorage& storage,GraphRecovery recovery)
+    :RawGraph(pool,hash,spots,types,frames,&storage,{},{},recovery) {}
+// CalculatePostDestroy의 임시 next는 shared를 받지 않으므로 실제 장기 표에 선행 쓰지 않는다.
+RawGraph::RawGraph(SidPool& pool,SquidHash& hash,std::span<const std::uint8_t> spots,
+    std::span<const RiftTypeRecord> types,std::span<const std::vector<FrameCode>> frames,
+    RawGraphStorage* shared,std::span<const GraphRecord> records,std::span<const std::uint32_t> stack,GraphRecovery recovery)
+    :pool_(pool),hash_(hash),spots_(spots),types_(types.begin(),types.end()),frames_(frames.begin(),frames.end()),
+     storage_(shared ? *shared : localStorage_),records_(storage_.records),stack_(storage_.stack),recovery_(recovery) {
     const auto count=pool.Edition()==OriginalEdition::Patch1078 ? 188U : 171U;
     if (types.size()!=count || frames.size()!=count || spots.size()!=kWorldCells*kWorldCells)
         throw std::invalid_argument("raw 그래프 타입/프레임/지도 크기 오류");
     if (!records.empty() && records.size()!=records_.size()) throw std::invalid_argument("raw 그래프 표 크기 오류");
     if (!stack.empty() && stack.size()!=stack_.size()) throw std::invalid_argument("raw 그래프 스택 크기 오류");
+    if (shared) return; // 실제 공유 표의 sentinel/reserved/stack도 생성자가 다시 초기화하지 않는다.
     if (records.empty()) records_[Graph::kInvalid]={0x7dfd,0x7dfd,0};
     else std::copy(records.begin(),records.end(),records_.begin());
     if (!stack.empty()) std::copy(stack.begin(),stack.end(),stack_.begin());
@@ -412,9 +423,13 @@ std::uint32_t RawGraph::Flood(Sid sid,std::uint8_t graph) {
 void RawGraph::Rebuild(bool resetAll) { Commit(Calculate(Sid{},Operation::Rebuild,resetAll ? 1 : 0,nullptr)); }
 // 같은 전체 월드가 첫 저장 객체를 설치하기 전에 호출하는 원본 표 초기화다.
 void RawGraph::ResetTable() {
-    for (std::size_t index=0;index<Graph::kCount;++index) records_[index].surfaces=records_[index].inUse=0; // 앞251개의 두 WORD만 지우고 reserved/나머지 행은 보존한다.
-    records_[0].inUse=1;records_[0].reserved=std::bit_cast<std::int16_t>(static_cast<std::uint16_t>((static_cast<std::uint16_t>(records_[0].reserved)&0xff00U)|1U));
-    records_[Graph::kInvalid].surfaces=records_[Graph::kInvalid].inUse=0x7dfd;
+    ResetRawGraphTable(storage_);
+}
+// 같은 원문85BYTE의 쓰기를 Session/Pool/타입/stack 효과 없이 현재 장기 물리에도 적용한다.
+void ResetRawGraphTable(RawGraphStorage& storage) {
+    for (std::size_t index=0;index<Graph::kCount;++index) storage.records[index].surfaces=storage.records[index].inUse=0; // 앞251개의 두 WORD만 지우고 reserved/나머지 행은 보존한다.
+    storage.records[0].inUse=1;storage.records[0].reserved=std::bit_cast<std::int16_t>(static_cast<std::uint16_t>((static_cast<std::uint16_t>(storage.records[0].reserved)&0xff00U)|1U));
+    storage.records[Graph::kInvalid].surfaces=storage.records[Graph::kInvalid].inUse=0x7dfd;
 }
 // 재구성 결과의 번호/표/스택을 함께 적용한 뒤 확보한 번호를 돌려준다.
 std::uint8_t RawGraph::Allocate() {

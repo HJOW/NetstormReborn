@@ -1,0 +1,663 @@
+{
+  "unit": 431,
+  "goalComplete": false,
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "created": "2026-10-25T19:02:57.361641",
+  "sources": {
+    "cpppj/src/client/RawSurfaceStorage.cpp": "82967c6fa0d53f63a2c41de1152e31b5ea021b783bbe827d5b370c2388d8ebb2",
+    "cpppj/src/client/RawSurfaceWorld.cpp": "940fa32768f5bc51eb2dc53c095c579a83a8d193fcbc40d0fd21b970ec2e1c52",
+    "cpppj/src/client/RawSurfaceWorld.h": "fe9bb909314982773eaeaa54c816deb2ec4162bbd523f95617f164dd0773d6ca",
+    "cpppj/src/client/UberGump.cpp": "b41f5a56063d63a5612f6cb5e3dcfab401d59ad321f05e682085229bab5796a9",
+    "cpppj/src/o/RawGraph.cpp": "4459253e6208dc4628aafcdbdc36ba8875b65fa316b9d0d6b1f296894425099a",
+    "cpppj/src/o/RawGraph.h": "564da5cd52cb86081108b09c3fe1da75561e077380f1f03393a31551a30034a4",
+    "cpppj/tests/GraphResetTests.cpp": "39752623c07407eb0fdeb866883e54c3f2e5892ad9ddd0de0de98c9d81cee9ab",
+    "cpppj/tests/RawGraphTests.cpp": "c9bf654578e399239e82d8ce93c8f775cb01448390df0cfbf5b0a239eefa6fd1",
+    "cpppj/tests/RawSurfaceStorageTests.cpp": "b3e31092c7b14cd72a8620a3fbbaad92f8fb14918e6ed3b821b404749580f4d9"
+  },
+  "artifacts": {
+    "cpppj/build/bin/Release/NetstormCpp.exe": "18b672612ef444352bea750b941eb310c954c12c4b5c2eec40458983ed95dc82",
+    "cpppj/build/bin/Release/netstorm_tests.exe": "88bdd0275969c2b9650794f71fbb700b63816ab6d8eda55a60418b095867bca8",
+    "cpppj/build/bin/Release/netstorm_cloud_probe.exe": "bc3db33306bd3af9ecaaa22845ed9ad59b8c3f58a972115cb092cf1c5c1c0ff3",
+    "cpppj/build/bin/Release/netstorm_cloud_render_probe.exe": "8d8884bc25bd1d8da460a935c4640755192917393a783895404e9f9a8dfb2e05"
+  },
+  "focused": [
+    {
+      "filter": "RawGraph_",
+      "exitCode": 0,
+      "tests": 17,
+      "failures": 0,
+      "seconds": 40.3582,
+      "log": "extracted/cpp-graph-storage-431-focused2/RawGraph_.log",
+      "sha256": "ee45eae536598999bf66f2b147f769e2a4f216f41948a4da5588cd7ba175bd6e",
+      "caseNames": [
+        "RawGraph_X86_AllocatedSidPostPopAndProjectedPop",
+        "RawGraph_X86_DetachGeneralIslandBridgeUnpopAndRelease",
+        "RawGraph_X86_DetachUsesPositionHeadGraphAndSourceFrame",
+        "RawGraph_X86_GlobalRebuildAndExhaustedAllocation",
+        "RawGraph_X86_RecoveryInsideAddDetachPopAndPostPop",
+        "RawGraph_RecoveryPreflightRejectsOtherVoidAndOutOfRangeTypeBeforePop",
+        "RawGraph_RebuildRejectsDamageAndFastAllocateDoesNotReadPool",
+        "RawGraph_PositionHeadEarlyReturnAndPreflightPreserveSource",
+        "RawGraph_RegionX86_ThreeBinariesAndNormalBridgeIslandPop",
+        "RawGraph_ProjectedPopRejectsExhaustionAndFractionalBeforeMutation",
+        "RawGraph_RegionThenAddExhaustionRejectsBeforeAnyPopMutation",
+        "RawGraph_RefreshesFramesMapAndRawMembershipBetweenCalls",
+        "RawGraph_DetachPreflightRejectsBeforePoolSpaceOrGraphMutation",
+        "RawGraph_NonSurfaceFractionalRegionPreservesPositionAndNeighbor",
+        "RawGraph_CorruptCandidatesAndMismatchedConnectionsRejectBeforeMutation",
+        "RawGraph_SharedStorageAndExplicitSnapshotHaveSeparateOwnership",
+        "RawGraph_SharedPostDestroyValidationKeepsCloneAndCommitSeparate"
+      ]
+    },
+    {
+      "filter": "GraphReset_",
+      "exitCode": 0,
+      "tests": 2,
+      "failures": 0,
+      "seconds": 0.3948,
+      "log": "extracted/cpp-graph-storage-431-focused2/GraphReset_.log",
+      "sha256": "a36d5e85a1fc25f5cac28cecf5ead01d8566ef09efdaa1f0fe4e0c5d0750b43c",
+      "caseNames": [
+        "GraphReset_Native16AndUnrelatedStorage",
+        "GraphReset_SharedStorageAndDirectHelperReplayNative16"
+      ]
+    },
+    {
+      "filter": "GraphForms_",
+      "exitCode": 0,
+      "tests": 2,
+      "failures": 0,
+      "seconds": 0.6451,
+      "log": "extracted/cpp-graph-storage-431-focused2/GraphForms_.log",
+      "sha256": "4646ff991808cd423f9bb90981e1768f0cf5c3fd2300eb8a7c7cbf401f56f472",
+      "caseNames": [
+        "GraphForms_ActualNativeFullPoolSkipsNonSpatialForms",
+        "GraphForms_HashFormRejectsBeforeGraphOrPoolWrites"
+      ]
+    },
+    {
+      "filter": "DestroyGraph_",
+      "exitCode": 0,
+      "tests": 8,
+      "failures": 0,
+      "seconds": 9.5224,
+      "log": "extracted/cpp-graph-storage-431-focused2/DestroyGraph_.log",
+      "sha256": "7cf44a69b70fa369d8cedd30ab14e15ed94496c824559bab21eac65d1477b405",
+      "caseNames": [
+        "DestroyGraph_ActualPreDetachFreeAndSpecialFrame",
+        "DestroyGraph_ActualPostFootprintFinderAndSequentialAdd",
+        "DestroyGraph_ActualDestroyUnpopGraphAndRelease",
+        "DestroyGraph_ActualIslandH8AndSingleFrameReplacement",
+        "DestroyGraph_FreeGuardsAndUntouchedPayload",
+        "DestroyGraph_SpecialReplacementValidationBeforeWrites",
+        "DestroyGraph_PostRejectsInvalidCandidateBeforeAnyWrites",
+        "DestroyGraph_RejectsMismatchedRawSpaceAndTypes"
+      ]
+    },
+    {
+      "filter": "RawSurfaceStorage_",
+      "exitCode": 0,
+      "tests": 8,
+      "failures": 0,
+      "seconds": 0.6535,
+      "log": "extracted/cpp-graph-storage-431-focused2/RawSurfaceStorage_.log",
+      "sha256": "e6d470d0259409b872ab10a21ec450dd94018b3971ab6d5140d0fac664118c0a",
+      "caseNames": [
+        "RawSurfaceStorage_ActualBothEditionsAndSamePhysicalArrays",
+        "RawSurfaceStorage_NextWorldResetsPoolAndSpaceWithoutReplacingArrays",
+        "RawSurfaceStorage_DuplicateAndInvalidWorldKeepCurrentPhysicalBytes",
+        "RawSurfaceStorage_LeaseRetainsDataUntilModulesAreGone",
+        "RawSurfaceStorage_PreparedWorldPreservesActualMemoryAndModes",
+        "RawSurfaceStorage_GraphPhysicalArraysOutliveWorldAndPreparedLease",
+        "RawSurfaceStorage_GraphPreparedConstructionFailureKeepsCurrentBytes",
+        "RawSurfaceStorage_GraphGeneralAcquireRetainsFreshCompatibility"
+      ]
+    },
+    {
+      "filter": "RawSurfaceWorld_",
+      "exitCode": 0,
+      "tests": 7,
+      "failures": 0,
+      "seconds": 0.4159,
+      "log": "extracted/cpp-graph-storage-431-focused2/RawSurfaceWorld_.log",
+      "sha256": "7f50abce8e01778f80ed6307873d585fd13227d45328e0540b1912af2ca1a56e",
+      "caseNames": [
+        "RawSurfaceWorld_PausedRegularResumesWithClientGameClock",
+        "RawSurfaceWorld_HardBridgeAndPendingMissionTeardown",
+        "RawSurfaceWorld_DisplaySuppressionAndDeviceReplacement",
+        "RawSurfaceWorld_InvalidLoadRejectedBeforeAllocation",
+        "RawSurfaceWorld_RuntimeSharesStorageAndCurrentDispatch",
+        "RawSurfaceWorld_RuntimeRejectsIncompleteOrLateBinding",
+        "RawSurfaceWorld_CampaignFinishPreservesParentGraph"
+      ]
+    },
+    {
+      "filter": "surface_lifecycle_",
+      "exitCode": 0,
+      "tests": 7,
+      "failures": 0,
+      "seconds": 0.6631,
+      "log": "extracted/cpp-graph-storage-431-focused2/surface_lifecycle_.log",
+      "sha256": "665d64f8acad66ccfcf63fb5c3a7d7b453c9b1b06f3084f58a3eb52094a45823",
+      "caseNames": [
+        "surface_lifecycle_island_delete_replaces_bridge_and_cleans_link",
+        "surface_lifecycle_island_delete_removes_isolated_bridge",
+        "surface_lifecycle_hard_bridge_keeps_link_until_real_delete",
+        "surface_lifecycle_keep_bridges_skips_fall_schedule",
+        "surface_lifecycle_surface_delete_dispatches_walker_before_island_fall",
+        "surface_lifecycle_graph_active_replacement_isolation_hard_and_keep",
+        "surface_lifecycle_rejects_missing_hooks_and_preserves_common_dispatch"
+      ]
+    },
+    {
+      "filter": "CampaignExistingEditorCheckpoint",
+      "exitCode": 0,
+      "tests": 23,
+      "failures": 0,
+      "seconds": 2.79,
+      "log": "extracted/cpp-graph-storage-431-focused2/CampaignExistingEditorCheckpoint.log",
+      "sha256": "8de0c270c9c4a28d6a12397ef8ce8e206c04e2b01b33f2d036eeb6f714f5214d",
+      "caseNames": [
+        "CampaignExistingEditorCheckpoint_DeferPreservesExistingOwnerAndDefaultStages",
+        "CampaignExistingEditorCheckpoint_DeferRejectsCampaignMode",
+        "CampaignExistingEditorCheckpoint_NormalReadFalseKeepsInvalidBranch",
+        "CampaignExistingEditorCheckpoint_FirstNotifyUsesActualWriterBeforeSubscriber",
+        "CampaignExistingEditorCheckpoint_FileTailThenActualWorldChatBoundary",
+        "CampaignExistingEditorCheckpoint_CoreWriteNaturalGateKeepsActualStorage",
+        "CampaignExistingEditorCheckpoint_CoreWriteManagerDiagnosticBeforeGate",
+        "CampaignExistingEditorCheckpoint_CoreWriteMetamapDiagnosticBeforeGate",
+        "CampaignExistingEditorCheckpoint_ActualCurrentNameSelectsWorkingFile",
+        "CampaignExistingEditorCheckpoint_ActualChatRuntimeAdvancesWorldAndSnapshot",
+        "CampaignExistingEditorCheckpoint_ActualPlayerUiCompletesAndReloads",
+        "CampaignExistingEditorCheckpoint_ActualCustomTest01PlayerUiAndFile",
+        "CampaignExistingEditorCheckpoint_AdoptsNativePlayersAndPreservesCoreUntilNextCleanup",
+        "CampaignExistingEditorCheckpoint_UiScopeCommitsOnlyAfterActualStateReturn",
+        "CampaignExistingEditorCheckpoint_UiTailFailureKeepsPublicAccessClosed",
+        "CampaignExistingEditorCheckpoint_UiTailCannotCommitEarlyReturnOrImmediate",
+        "CampaignExistingEditorCheckpoint_PreparedCtorPreservesSameClientState",
+        "CampaignExistingEditorCheckpoint_PreparedCtorRejectsIncompleteOwnersBeforeBorrow",
+        "CampaignExistingEditorCheckpoint_ActualProductionFormsInsideInstallScope",
+        "CampaignExistingEditorCheckpoint_EditorWireQueuesNegativeSenderConstructionMoveAndSalvage",
+        "CampaignExistingEditorCheckpoint_EditorWireReadsCurrentChargeGateWithoutSenderNormalization",
+        "CampaignExistingEditorCheckpoint_EditorWireRejectsOwnedRegistrationBeforePublishing",
+        "CampaignExistingEditorCheckpoint_EditorWireRejectsForeignPlayersAndLoginBeforeBorrow"
+      ]
+    },
+    {
+      "filter": "ProductionInitialContext",
+      "exitCode": 0,
+      "tests": 14,
+      "failures": 0,
+      "seconds": 0.7736,
+      "log": "extracted/cpp-graph-storage-431-focused2/ProductionInitialContext.log",
+      "sha256": "234b3d2b389359ca671b6abfa113544f6e20a4a34b8b8ed7ff6f9da3353f20c9",
+      "caseNames": [
+        "ProductionInitialContext_ConstructsAllNativeChildrenWithoutSession",
+        "ProductionInitialContext_RepeatedConstructionAndGlobalPageRetirement",
+        "ProductionInitialContext_MissingTranslationKeepsAndRetiresPartialEffects",
+        "ProductionInitialContext_GameplayGlobalsKeepRealAliasesAndRejectDuplicate",
+        "ProductionInitialContext_PreparedGameplayLeaseLeavesNativeValuesToCaller",
+        "ProductionInitialContext_OverlappingParentsRetireOnlyOldDraw",
+        "ProductionInitialContext_LatestKilledDoesNotSelectOlderParent",
+        "ProductionInitialContext_PartialNewConstructorKeepsPreviousSerial",
+        "ProductionInitialContext_MinimapFactoryUsesCurrentWidthWithoutRefresh",
+        "ProductionInitialContext_OverlappingMinimapsKeepCurrentBitmapAndDraw",
+        "ProductionInitialContext_LatestMinimapKilledDoesNotSelectOlder",
+        "ProductionInitialContext_FullUberUsesActualChildrenAndDock",
+        "ProductionInitialContext_FullUberReplacementMovesOldChildren",
+        "ProductionInitialContext_FullUberReflowsExistingScreen"
+      ]
+    },
+    {
+      "filter": "ClientLocalStateGlobals",
+      "exitCode": 0,
+      "tests": 4,
+      "failures": 0,
+      "seconds": 0.7035,
+      "log": "extracted/cpp-graph-storage-431-focused2/ClientLocalStateGlobals.log",
+      "sha256": "e1055efd7869120cbb1adee8d781fab51c079581747cf2d875c98084077944d4",
+      "caseNames": [
+        "ClientLocalStateGlobals_TwoSessionLifetimesPreserveCurrentOwner",
+        "ClientLocalStateGlobals_ActualLoginAndReplyUseCurrentOwner",
+        "ClientLocalStateGlobals_SavedGameControlsActualCarrierContentNotice",
+        "ClientLocalStateGlobals_FortRequestWritesActualNextAndPending"
+      ]
+    },
+    {
+      "filter": "ClientMapRevision",
+      "exitCode": 0,
+      "tests": 1,
+      "failures": 0,
+      "seconds": 0.5931,
+      "log": "extracted/cpp-graph-storage-431-focused2/ClientMapRevision.log",
+      "sha256": "a92e0a9e6a47aacea6227bd376ea5a12081bb6cb07ed8cf11fdd7e5e24b0a7ca",
+      "caseNames": [
+        "ClientMapRevision_ActualFortReceiverSharesCurrentOwnerAndWraps"
+      ]
+    },
+    {
+      "filter": "CampaignSession_LocalLoginActualHandshakeAndWorldLoad",
+      "exitCode": 0,
+      "tests": 1,
+      "failures": 0,
+      "seconds": 0.6031,
+      "log": "extracted/cpp-graph-storage-431-focused2/CampaignSession_LocalLoginActualHandshakeAndWorldLoad.log",
+      "sha256": "ba144b80e4c231d80994c469ec20c1d390547c558ed201002c7d1b29f84093b6",
+      "caseNames": [
+        "CampaignSession_LocalLoginActualHandshakeAndWorldLoad"
+      ]
+    }
+  ],
+  "originalGameExecuted": false,
+  "fullCTestExecuted": true,
+  "productGuiExecuted": true,
+  "completed": true,
+  "passed": true,
+  "focusedObservations": 94,
+  "focusedUnique": 94,
+  "focusedCaseNames": [
+    "CampaignExistingEditorCheckpoint_ActualChatRuntimeAdvancesWorldAndSnapshot",
+    "CampaignExistingEditorCheckpoint_ActualCurrentNameSelectsWorkingFile",
+    "CampaignExistingEditorCheckpoint_ActualCustomTest01PlayerUiAndFile",
+    "CampaignExistingEditorCheckpoint_ActualPlayerUiCompletesAndReloads",
+    "CampaignExistingEditorCheckpoint_ActualProductionFormsInsideInstallScope",
+    "CampaignExistingEditorCheckpoint_AdoptsNativePlayersAndPreservesCoreUntilNextCleanup",
+    "CampaignExistingEditorCheckpoint_CoreWriteManagerDiagnosticBeforeGate",
+    "CampaignExistingEditorCheckpoint_CoreWriteMetamapDiagnosticBeforeGate",
+    "CampaignExistingEditorCheckpoint_CoreWriteNaturalGateKeepsActualStorage",
+    "CampaignExistingEditorCheckpoint_DeferPreservesExistingOwnerAndDefaultStages",
+    "CampaignExistingEditorCheckpoint_DeferRejectsCampaignMode",
+    "CampaignExistingEditorCheckpoint_EditorWireQueuesNegativeSenderConstructionMoveAndSalvage",
+    "CampaignExistingEditorCheckpoint_EditorWireReadsCurrentChargeGateWithoutSenderNormalization",
+    "CampaignExistingEditorCheckpoint_EditorWireRejectsForeignPlayersAndLoginBeforeBorrow",
+    "CampaignExistingEditorCheckpoint_EditorWireRejectsOwnedRegistrationBeforePublishing",
+    "CampaignExistingEditorCheckpoint_FileTailThenActualWorldChatBoundary",
+    "CampaignExistingEditorCheckpoint_FirstNotifyUsesActualWriterBeforeSubscriber",
+    "CampaignExistingEditorCheckpoint_NormalReadFalseKeepsInvalidBranch",
+    "CampaignExistingEditorCheckpoint_PreparedCtorPreservesSameClientState",
+    "CampaignExistingEditorCheckpoint_PreparedCtorRejectsIncompleteOwnersBeforeBorrow",
+    "CampaignExistingEditorCheckpoint_UiScopeCommitsOnlyAfterActualStateReturn",
+    "CampaignExistingEditorCheckpoint_UiTailCannotCommitEarlyReturnOrImmediate",
+    "CampaignExistingEditorCheckpoint_UiTailFailureKeepsPublicAccessClosed",
+    "CampaignSession_LocalLoginActualHandshakeAndWorldLoad",
+    "ClientLocalStateGlobals_ActualLoginAndReplyUseCurrentOwner",
+    "ClientLocalStateGlobals_FortRequestWritesActualNextAndPending",
+    "ClientLocalStateGlobals_SavedGameControlsActualCarrierContentNotice",
+    "ClientLocalStateGlobals_TwoSessionLifetimesPreserveCurrentOwner",
+    "ClientMapRevision_ActualFortReceiverSharesCurrentOwnerAndWraps",
+    "DestroyGraph_ActualDestroyUnpopGraphAndRelease",
+    "DestroyGraph_ActualIslandH8AndSingleFrameReplacement",
+    "DestroyGraph_ActualPostFootprintFinderAndSequentialAdd",
+    "DestroyGraph_ActualPreDetachFreeAndSpecialFrame",
+    "DestroyGraph_FreeGuardsAndUntouchedPayload",
+    "DestroyGraph_PostRejectsInvalidCandidateBeforeAnyWrites",
+    "DestroyGraph_RejectsMismatchedRawSpaceAndTypes",
+    "DestroyGraph_SpecialReplacementValidationBeforeWrites",
+    "GraphForms_ActualNativeFullPoolSkipsNonSpatialForms",
+    "GraphForms_HashFormRejectsBeforeGraphOrPoolWrites",
+    "GraphReset_Native16AndUnrelatedStorage",
+    "GraphReset_SharedStorageAndDirectHelperReplayNative16",
+    "ProductionInitialContext_ConstructsAllNativeChildrenWithoutSession",
+    "ProductionInitialContext_FullUberReflowsExistingScreen",
+    "ProductionInitialContext_FullUberReplacementMovesOldChildren",
+    "ProductionInitialContext_FullUberUsesActualChildrenAndDock",
+    "ProductionInitialContext_GameplayGlobalsKeepRealAliasesAndRejectDuplicate",
+    "ProductionInitialContext_LatestKilledDoesNotSelectOlderParent",
+    "ProductionInitialContext_LatestMinimapKilledDoesNotSelectOlder",
+    "ProductionInitialContext_MinimapFactoryUsesCurrentWidthWithoutRefresh",
+    "ProductionInitialContext_MissingTranslationKeepsAndRetiresPartialEffects",
+    "ProductionInitialContext_OverlappingMinimapsKeepCurrentBitmapAndDraw",
+    "ProductionInitialContext_OverlappingParentsRetireOnlyOldDraw",
+    "ProductionInitialContext_PartialNewConstructorKeepsPreviousSerial",
+    "ProductionInitialContext_PreparedGameplayLeaseLeavesNativeValuesToCaller",
+    "ProductionInitialContext_RepeatedConstructionAndGlobalPageRetirement",
+    "RawGraph_CorruptCandidatesAndMismatchedConnectionsRejectBeforeMutation",
+    "RawGraph_DetachPreflightRejectsBeforePoolSpaceOrGraphMutation",
+    "RawGraph_NonSurfaceFractionalRegionPreservesPositionAndNeighbor",
+    "RawGraph_PositionHeadEarlyReturnAndPreflightPreserveSource",
+    "RawGraph_ProjectedPopRejectsExhaustionAndFractionalBeforeMutation",
+    "RawGraph_RebuildRejectsDamageAndFastAllocateDoesNotReadPool",
+    "RawGraph_RecoveryPreflightRejectsOtherVoidAndOutOfRangeTypeBeforePop",
+    "RawGraph_RefreshesFramesMapAndRawMembershipBetweenCalls",
+    "RawGraph_RegionThenAddExhaustionRejectsBeforeAnyPopMutation",
+    "RawGraph_RegionX86_ThreeBinariesAndNormalBridgeIslandPop",
+    "RawGraph_SharedPostDestroyValidationKeepsCloneAndCommitSeparate",
+    "RawGraph_SharedStorageAndExplicitSnapshotHaveSeparateOwnership",
+    "RawGraph_X86_AllocatedSidPostPopAndProjectedPop",
+    "RawGraph_X86_DetachGeneralIslandBridgeUnpopAndRelease",
+    "RawGraph_X86_DetachUsesPositionHeadGraphAndSourceFrame",
+    "RawGraph_X86_GlobalRebuildAndExhaustedAllocation",
+    "RawGraph_X86_RecoveryInsideAddDetachPopAndPostPop",
+    "RawSurfaceStorage_ActualBothEditionsAndSamePhysicalArrays",
+    "RawSurfaceStorage_DuplicateAndInvalidWorldKeepCurrentPhysicalBytes",
+    "RawSurfaceStorage_GraphGeneralAcquireRetainsFreshCompatibility",
+    "RawSurfaceStorage_GraphPhysicalArraysOutliveWorldAndPreparedLease",
+    "RawSurfaceStorage_GraphPreparedConstructionFailureKeepsCurrentBytes",
+    "RawSurfaceStorage_LeaseRetainsDataUntilModulesAreGone",
+    "RawSurfaceStorage_NextWorldResetsPoolAndSpaceWithoutReplacingArrays",
+    "RawSurfaceStorage_PreparedWorldPreservesActualMemoryAndModes",
+    "RawSurfaceWorld_CampaignFinishPreservesParentGraph",
+    "RawSurfaceWorld_DisplaySuppressionAndDeviceReplacement",
+    "RawSurfaceWorld_HardBridgeAndPendingMissionTeardown",
+    "RawSurfaceWorld_InvalidLoadRejectedBeforeAllocation",
+    "RawSurfaceWorld_PausedRegularResumesWithClientGameClock",
+    "RawSurfaceWorld_RuntimeRejectsIncompleteOrLateBinding",
+    "RawSurfaceWorld_RuntimeSharesStorageAndCurrentDispatch",
+    "surface_lifecycle_graph_active_replacement_isolation_hard_and_keep",
+    "surface_lifecycle_hard_bridge_keeps_link_until_real_delete",
+    "surface_lifecycle_island_delete_removes_isolated_bridge",
+    "surface_lifecycle_island_delete_replaces_bridge_and_cleans_link",
+    "surface_lifecycle_keep_bridges_skips_fall_schedule",
+    "surface_lifecycle_rejects_missing_hooks_and_preserves_common_dispatch",
+    "surface_lifecycle_surface_delete_dispatches_walker_before_island_fall"
+  ],
+  "protectedFiles": {
+    "checked": 1821,
+    "unchanged": true
+  },
+  "startingHead": "bae8b702b3f400c2a08d75fbb0806db9662ecb4d",
+  "previousFocused": {
+    "head": "bae8b702",
+    "tests": 83,
+    "failures": 0,
+    "productSha256": "e9303f11f5689754f47496c43634f2c326860a34eda956ed65cab74d878562b2"
+  },
+  "previousIntegrated": {
+    "head": "33a98ea8",
+    "productSha256": "59d41097db94850b4c38e98860c365374416809c8af4f24dfdcf69eaa3f821ac",
+    "ctestTests": 2870,
+    "ctestFailures": 0,
+    "menusGui": true,
+    "naturalEarly2": true
+  },
+  "state": "focused-and-integration-verified",
+  "builds": [
+    {
+      "attempt": 1,
+      "exitCode": 1,
+      "state": "terminated-for-parallel-build-resume",
+      "log": "extracted/cpp-graph-storage-431-build1.log",
+      "sha256": "518d73dabaf99d4aec091e7af65dbd73a10c5c1a9b98633ab4a7ad5cc1c8a350",
+      "sourceManifest": "extracted/cpp-graph-storage-431-source1/hashes.json",
+      "focusedTestsExecuted": false
+    },
+    {
+      "attempt": 2,
+      "exitCode": 0,
+      "compilerWarnings": 0,
+      "compilerErrors": 0,
+      "log": "extracted/cpp-graph-storage-431-build2.log",
+      "sha256": "19623719b7cf52694d61d02417009a872562136ec70b9aab9e5dfde5d94425a4",
+      "sourceManifest": "extracted/cpp-graph-storage-431-source1/hashes.json",
+      "sourceChanged": false,
+      "cmakeParallel": 4,
+      "UseMultiToolTask": true,
+      "MultiProcMaxCount": 4,
+      "EnforceProcessCountAcrossBuilds": true,
+      "injectedCompilerMP": false
+    },
+    {
+      "attempt": 3,
+      "exitCode": 0,
+      "exitCodeRecorded": true,
+      "state": "intermediate-capture-end-fix",
+      "compilerWarnings": 0,
+      "compilerErrors": 0,
+      "log": "extracted/cpp-graph-storage-431-build3.log",
+      "sha256": "36b815fbe91bc93fd88c85e9c33f391c085987b3deb8c99c27d47142066c7827",
+      "sourceManifest": "extracted/cpp-graph-storage-431-source2/hashes.json",
+      "UseMultiToolTask": true,
+      "MultiProcMaxCount": 4,
+      "EnforceProcessCountAcrossBuilds": true
+    },
+    {
+      "attempt": 4,
+      "exitCode": null,
+      "exitCodeRecorded": false,
+      "state": "targets-emitted-without-retained-exit-code",
+      "compilerWarnings": 0,
+      "compilerErrors": 0,
+      "log": "extracted/cpp-graph-storage-431-build4.log",
+      "sha256": "e249742b0d9e7c16597453724469fb6bfce2387842072bf191612532b8bc1f40",
+      "sourceManifest": "extracted/cpp-graph-storage-431-source3/hashes.json",
+      "UseMultiToolTask": true,
+      "MultiProcMaxCount": 4,
+      "EnforceProcessCountAcrossBuilds": true
+    },
+    {
+      "attempt": 5,
+      "exitCode": 0,
+      "exitCodeRecorded": true,
+      "state": "explicit-no-change-build-verification",
+      "compilerWarnings": 0,
+      "compilerErrors": 0,
+      "log": "extracted/cpp-graph-storage-431-build5.log",
+      "sha256": "740370cf89774a3a47bdec2f81bd6e99e7c0957fbd3879846a75c6bd6792c9d2",
+      "sourceManifest": "extracted/cpp-graph-storage-431-source3/hashes.json",
+      "UseMultiToolTask": true,
+      "MultiProcMaxCount": 4,
+      "EnforceProcessCountAcrossBuilds": true
+    }
+  ],
+  "failedIntegration": {
+    "path": "extracted/cpp-graph-storage-431-batch1/execution.json",
+    "sha256": "ff6999d5190cee43ed65af9752db8b91c999957c8e64391b5da8c63e889b399c",
+    "completed": false,
+    "passed": false,
+    "sourceAttempt": 1,
+    "productSha256": "66921ea800cb7e08ea1faab447ee6dd9296291d073b4337654216b6a452b5056",
+    "early2ExitCode": 1,
+    "nextMissionEntered": false,
+    "fullCTestExecuted": false,
+    "originalsUnchanged": true,
+    "reason": "capture-end-survived-partial-current-world-cleanup",
+    "retainedSourceReport": "extracted/cpp-graph-storage-431-batch1/source-reports/graph-storage-runtime-20261025.json"
+  },
+  "sourceAttempts": [
+    {
+      "attempt": 1,
+      "path": "extracted/cpp-graph-storage-431-source1/hashes.json",
+      "sha256": "8045f6c00fd8ae027b90e690003a3dcd83a6ef302a4dba69c3ac50bd01504438"
+    },
+    {
+      "attempt": 2,
+      "path": "extracted/cpp-graph-storage-431-source2/hashes.json",
+      "sha256": "7db33e90e71cac46a99fdc7c30fe86a1543c4cde64e16191dc6af67160cc92fd"
+    },
+    {
+      "attempt": 3,
+      "path": "extracted/cpp-graph-storage-431-source3/hashes.json",
+      "sha256": "d1c608fc30bd8d3a2eb948bdb5f5c746ce504fdc5c2847db2d908366f4c4f8cc"
+    }
+  ],
+  "firstFocused": {
+    "path": "extracted/cpp-graph-storage-431-focused1/results.json",
+    "sha256": "8e2a0ddd0dff804e26c939430cefaa76b1ed19ffedf599064f730f1275b2da82",
+    "sourceAttempt": 1,
+    "tests": 94,
+    "failures": 0
+  },
+  "focusedAttempt": 2,
+  "sourceAttempt": 3,
+  "pending": [
+    "Native 최초Graph heap 확보/초기화와lazy stack확보,전체cleanup부모의동일partialReset호출은미완료다.",
+    "전체Native cleanup/prefix와실제Edit State1설치,사용자편집·저장·테스트복귀,모든미션자연완주·진행저장/재실행·원본완전동일성은미완료다."
+  ],
+  "naturalEarly2Executed": true,
+  "integrationVerifiedAt": "2026-10-25T19:15:28.459683",
+  "integration": {
+    "path": "extracted/cpp-graph-storage-431-batch2/execution.json",
+    "sha256": "e330fc3db83aace88c75304e69987428f525530e86497a05cb468e52694ff36a",
+    "completed": true,
+    "passed": true,
+    "sourceAttempt": 3,
+    "productSha256": "18b672612ef444352bea750b941eb310c954c12c4b5c2eec40458983ed95dc82",
+    "fullTests": 2894,
+    "failedChecks": 0,
+    "lastTestSha256": "46ce27642686b3d4bd6ab965da177d16be6c88c7405d9ccd50ac43b722cbaf26",
+    "protectedFiles": 1821,
+    "originalsUnchanged": true,
+    "sourceReports": [
+      {
+        "originalPath": "cpppj/state-client-globals-runtime-20261025.json",
+        "snapshot": "extracted/cpp-graph-storage-431-batch2/source-reports/state-client-globals-runtime-20261025.json",
+        "sha256": "1f61490a019fddff05c1f6d963cf74e35a2368e3db72521ab9faa1b68cd67e62"
+      },
+      {
+        "originalPath": "cpppj/map-revision-runtime-20261025.json",
+        "snapshot": "extracted/cpp-graph-storage-431-batch2/source-reports/map-revision-runtime-20261025.json",
+        "sha256": "0e73ed9ebc18d3f1ee046dca3fb682ee78843c2733a1b0c31f30bdff27e5965a"
+      },
+      {
+        "originalPath": "cpppj/graph-storage-runtime-20261025.json",
+        "snapshot": "extracted/cpp-graph-storage-431-batch2/source-reports/graph-storage-runtime-20261025.json",
+        "sha256": "986ff5136452186477f6176ab935f9134b78f9c0cf1faf380385d1072000c9c9"
+      },
+      {
+        "originalPath": "extracted/cpp-graph-storage-431-baseline.json",
+        "snapshot": "extracted/cpp-graph-storage-431-batch2/source-reports/cpp-graph-storage-431-baseline.json",
+        "sha256": "ca7f3968cb4863c154cb7da50c96cbe9313351cb24de25390d0148778a81cf6d"
+      }
+    ],
+    "runs": [
+      {
+        "label": "gui-home",
+        "passed": true,
+        "beforeAudit": {
+          "path": "extracted/cpp-graph-storage-431-batch2/gui-home-audit-before.json",
+          "sha256": "add16f3e72e785a70fe972cca157e6912903d64d1f449f2846fa2d7ec5721013",
+          "checked": 1891
+        },
+        "exitCode": 0,
+        "seconds": 7.336781800026074,
+        "settingsRestored": true,
+        "originalsUnchanged": true,
+        "afterAudit": {
+          "path": "extracted/cpp-graph-storage-431-batch2/gui-home-audit-after.json",
+          "sha256": "6ad2a76817a8796d9a6c4d876bbd4de491087d0d43fc9679261ecde55e2a24de",
+          "checked": 1891
+        },
+        "evidence": {
+          "path": "extracted/cpp-graph-storage-431-batch2-gui-home/result.json",
+          "sha256": "4e5b26f7cc4cc0479cfaf5458e2d359b00e52a849eeebc8fcaf2f5d5a3cd404c"
+        }
+      },
+      {
+        "label": "gui-menus",
+        "passed": true,
+        "beforeAudit": {
+          "path": "extracted/cpp-graph-storage-431-batch2/gui-menus-audit-before.json",
+          "sha256": "9b5a78f6a91952c8b3c8080c6b1303633bf39d42523a384490227ec53f7bb597",
+          "checked": 1891
+        },
+        "exitCode": 0,
+        "seconds": 4.187087300000712,
+        "settingsRestored": true,
+        "originalsUnchanged": true,
+        "afterAudit": {
+          "path": "extracted/cpp-graph-storage-431-batch2/gui-menus-audit-after.json",
+          "sha256": "31baee1026b612894291d5397ea0442365ae1928f6dcfc392e5e0230700e1c22",
+          "checked": 1891
+        },
+        "evidence": {
+          "path": "extracted/cpp-graph-storage-431-batch2-gui-menus/result.json",
+          "sha256": "32a9753a89a06a9425fa27937d5ad21cdb4afe1504846f6aeec92795d5be8411"
+        }
+      },
+      {
+        "label": "early2",
+        "passed": true,
+        "beforeAudit": {
+          "path": "extracted/cpp-graph-storage-431-batch2/early2-audit-before.json",
+          "sha256": "3e2bf948892db5fece591560ebaa18c9c7500ff0ac3a84354a23edb03d61876c",
+          "checked": 1891
+        },
+        "exitCode": 0,
+        "seconds": 198.80926699994598,
+        "settingsRestored": true,
+        "originalsUnchanged": true,
+        "afterAudit": {
+          "path": "extracted/cpp-graph-storage-431-batch2/early2-audit-after.json",
+          "sha256": "099b8f2aac98d5cc8b942719116e0be0504874b30ef289a728e874e0a11bc903",
+          "checked": 1891
+        },
+        "evidence": {
+          "execution.json": {
+            "path": "extracted/cpp-graph-storage-431-batch2-early2/execution.json",
+            "sha256": "b5044e6845c6015b6ceefd89aa23ef4baefd17b6d5b7663c1f6326e7f4cba9f0"
+          },
+          "results.json": {
+            "path": "extracted/cpp-graph-storage-431-batch2-early2/results.json",
+            "sha256": "a0c1012440a5828eef7dffe9b512a108783ca0130e087b93cca858ab351c585e"
+          },
+          "prepared.json": {
+            "path": "extracted/cpp-graph-storage-431-batch2-early2/prepared.json",
+            "sha256": "109a18f00eee0f37c2fdf76b2b7514702c44d08b7cb88f1f8a407f3060144b33"
+          },
+          "steps.tsv": {
+            "path": "extracted/cpp-graph-storage-431-batch2-early2/steps.tsv",
+            "sha256": "6e6b11168ebc6635cbfe05e2ea187753220f86d6d0cef541b24ab5bf5d036b92"
+          }
+        }
+      },
+      {
+        "label": "ctest",
+        "passed": true,
+        "beforeAudit": {
+          "path": "extracted/cpp-graph-storage-431-batch2/ctest-audit-before.json",
+          "sha256": "348bc4befcf06d51ba48fb8a60a0655435ae494dc9b997c701ce83f24d8941fa",
+          "checked": 1891
+        },
+        "exitCode": 0,
+        "seconds": 338.3054727000417,
+        "settingsRestored": true,
+        "originalsUnchanged": true,
+        "lastTest": {
+          "path": "extracted/cpp-graph-storage-431-batch2/LastTest.log",
+          "sha256": "46ce27642686b3d4bd6ab965da177d16be6c88c7405d9ccd50ac43b722cbaf26",
+          "fresh": true
+        },
+        "afterAudit": {
+          "path": "extracted/cpp-graph-storage-431-batch2/ctest-audit-after.json",
+          "sha256": "f6fe6d2e73a61d6473ac1c617ad4dbbc93cdc9876c7dbab6bf568a614e6b7b97",
+          "checked": 1891
+        }
+      }
+    ]
+  },
+  "naturalEarly2": {
+    "path": "extracted/cpp-graph-storage-431-batch2-early2/results.json",
+    "sha256": "a0c1012440a5828eef7dffe9b512a108783ca0130e087b93cca858ab351c585e",
+    "startSp": 10000,
+    "finalSp": 3075,
+    "refund": 75,
+    "nextMission": "tutorial3",
+    "nextSp": 2000,
+    "doneBefore": 1,
+    "doneAfter": 1,
+    "productTimers": 1,
+    "testStateInjection": false,
+    "initialProgressInjected": false,
+    "sameFrameNextBriefingVerified": true,
+    "goalComplete": false
+  },
+  "visualInspection": [
+    {
+      "path": "extracted/cpp-graph-storage-431-batch2-gui-home/home.bmp",
+      "sha256": "5922746d9153184eaafa427d00dc17195f1a0f3ad820f09638034db421d8d5ae",
+      "inspected": true
+    },
+    {
+      "path": "extracted/cpp-graph-storage-431-batch2-gui-menus/early.bmp",
+      "sha256": "3901369f51647844a1df20100cd16b83203ab11e12b2a3b1ec53b008cabbf77c",
+      "inspected": true
+    },
+    {
+      "path": "extracted/cpp-graph-storage-431-batch2-early2/nextBriefing.bmp",
+      "sha256": "44ba55ef0c1a83c6ca838d50c270614462b9242c5fb8ba1ce767624c90aeca3d",
+      "inspected": true
+    }
+  ]
+}

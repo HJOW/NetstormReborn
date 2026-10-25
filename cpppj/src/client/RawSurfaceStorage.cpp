@@ -22,6 +22,7 @@ std::unique_ptr<RawSurfaceStorage::Use> RawSurfaceStorage::Acquire() {
     if (borrowed_) throw std::logic_error("실제 월드 저장소 중복 대여");
     auto use=std::unique_ptr<Use>(new Use(*this));
     if (generation_) { pool.Reset(0);hash.Reset();std::fill(spots.begin(),spots.end(),std::uint8_t{}); }
+    graph=o::RawGraphStorage{};o::ResetRawGraphTable(graph); // 기존 일반 World의 fresh 지역 Graph 의미를 같은 주소에서 유지한다. Native 시작00462eb0/부분 cleanup의 실행으로 세지 않는다.
     borrowed_=true;++generation_;return use;
 }
 // 앞선 명시 정리가 끝난 실제 배열을 초기화 없이 대여하며 동시 사용은 같은 관문에서 거부한다.

@@ -7,6 +7,13 @@
 namespace netstorm::o {
 // 공간 쓰기 전 Pop이 검사할 최종 좌표·해시 단계·타입이다. 타입 포인터는 검사 동안만 사용한다.
 struct RawGraphPop { /* x: X 좌표. */ /* y: Y 좌표. */ float x{},y{}; /* level: 공간 해시에서 조회할 높이 단계. */ int level{}; /* type: 객체 종류를 구별하는 타입 자료. */ const RiftTypeRecord* type{}; };
+// World 실행기보다 오래 보관할 두 실제 배열이다. 원문의 별도 heap 두 개를 호스트의 한 연속 Native 객체로 가장하지 않는다.
+struct RawGraphStorage {
+    std::array<GraphRecord,Graph::kTableSize> records{}; //00562c18의255행6BYTE이며 reserved와 틈3행을 포함한다.
+    std::array<std::uint32_t,Graph::kFloodSize> stack{}; //00562c20의4096DWORD이며 이전 flood의 비활성 흔적도 남긴다.
+};
+//00462b20의 지정WORD/BYTE만 쓴다. 시작00462eb0의 최초 할당/전체 초기화나 stack의 lazy 확보는 포함하지 않는다.
+void ResetRawGraphTable(RawGraphStorage& storage);
 // 실제 SID·프레임 코드·4단계 해시·spot을 정수 Graph/영역 계산에 연결한다.
 class RawGraph {
 public:
@@ -15,6 +22,12 @@ public:
     RawGraph(SidPool& pool,SquidHash& hash,std::span<const std::uint8_t> spots,
         std::span<const RiftTypeRecord> types,std::span<const std::vector<FrameCode>> frames,
         std::span<const GraphRecord> records={},std::span<const std::uint32_t> stack={},GraphRecovery recovery=GraphRecovery::Reject);
+    // 명시 장기 물리만 빌리며 생성/소멸에서 기록·stack을 쓰지 않는다. 타입/코드 snapshot과 recovery 정책은 이 실행기가 소유한다.
+    RawGraph(SidPool& pool,SquidHash& hash,std::span<const std::uint8_t> spots,
+        std::span<const RiftTypeRecord> types,std::span<const std::vector<FrameCode>> frames,
+        RawGraphStorage& storage,GraphRecovery recovery=GraphRecovery::Reject);
+    RawGraph(const RawGraph&)=delete;RawGraph& operator=(const RawGraph&)=delete; // 독립 사본은 records/stack 입력 생성자로 만들며 내부 참조를 복제하지 않는다.
+    RawGraph(RawGraph&&)=delete;RawGraph& operator=(RawGraph&&)=delete; // 현재 실행기가 빌린 실제 물리의 주소를 이동하지 않는다.
     // 새 좌표/void 해제/spot·해시 등록까지 예측하여 실패를 공간 쓰기 전에 검출한다.
     void ValidateAdd(Sid sid,const RawGraphPop* pop=nullptr) const;
     // 영역 통지→표면 Add 순서를 한 복사본에서 시험하여 Pop 전에 모든 실패를 검출한다.
@@ -58,6 +71,10 @@ public:
     // postPop과 표면 필터/발자국이 다른 타입 표를 연결하지 않는다.
     void ValidateTypes(std::span<const RiftTypeRecord> types) const;
 private:
+    // 독립 입력은 지역 물리에 복사하고 명시 shared 입력은 그대로 빌리는 공통 생성 경계다.
+    RawGraph(SidPool& pool,SquidHash& hash,std::span<const std::uint8_t> spots,
+        std::span<const RiftTypeRecord> types,std::span<const std::vector<FrameCode>> frames,
+        RawGraphStorage* shared,std::span<const GraphRecord> records,std::span<const std::uint32_t> stack,GraphRecovery recovery);
     // 예외가 생겨도 기존 raw 슬롯·표·스택을 보존하는 계산 결과다.
     struct Plan {
         // records: 기록.
@@ -92,10 +109,10 @@ private:
     std::vector<RiftTypeRecord> types_;
     // frames_: 타입별 프레임 자료.
     std::vector<std::vector<FrameCode>> frames_;
-    // records_: 기록.
-    std::array<GraphRecord,Graph::kTableSize> records_{};
-    // stack_: 스택.
-    std::array<std::uint32_t,Graph::kFloodSize> stack_{};
+    RawGraphStorage localStorage_; // 기존 독립 snapshot과 CalculatePostDestroy의 임시 next만 사용하는 실제 사본이다.
+    RawGraphStorage& storage_; // 명시 공유 입력 또는 위 지역 물리를 한 번 정하고 실행기보다 오래 유지한다.
+    std::array<GraphRecord,Graph::kTableSize>& records_; // 모든 기존 계산/Commit이 같은 현재 기록을 읽고 쓴다.
+    std::array<std::uint32_t,Graph::kFloodSize>& stack_; // 현재 기록과 같은 owner의 flood 흔적이다.
     // 전체 원본 자산 풀 계약을 선택한 경우 Add/Detach/Pop의 내부 번호 소진도 복구한다.
     GraphRecovery recovery_{GraphRecovery::Reject};
 };
