@@ -2,6 +2,12 @@
 
 기준은 보호10.78 PE와 VM-W11-Codex에서 2026-10-23 마지막 전체 정밀 디컴파일한 `extracted/refined/originals/Netstorm.c`다. 새 전체 디컴파일이나 기존 보호 원문 변경은 하지 않았다.
 
+## 2026-10-25 후속: 임시 Game 돌 버튼 제거 완료
+
+사용자 요청으로 평상시 왼쪽 위 임시 Game 버튼의 생성·클릭 영역을 제거했다. 이는 초기 호스트 UI(`00c04b75`)가 실제 생산 패널 옆으로 이동(`3447c500`)한 뒤 남은 것으로, 원본 ESC 가로 메뉴(`5adcf532`)의 Game 열과 다르다. 아래10/23 당시 남은 범위 중 이 임시 버튼 항목은 이번에 완료했다.
+
+현재PC/마지막 전체 정밀PC는 HJOW-Athlon/2026-10-23이다. 첫 증분 빌드 경고·오류0, 기존 집중14개 통과와 같은 제품의1024×768/1280×720 GUI를 확인했다. 평상시 클릭영역 부재와 ESC 토글·원본Game/Options하위가 통과했고 세 실제 캡처를 육안확인했다. 원본/허용설정 복원·보호1821/1소스/4실행 파일 해시도 같다. [실행 보고서](../../cpppj/game-button-removal-runtime-20261025.json)가 실제 증거와 범위를 기록한다. 전체CTest·긴플레이·아래다른미완료항목을이번완료로확대하지않는다.
+
 ## 제품 연결
 
 `RawGameMenuBar`와 `RawGameMenus`는 같은 공통 Gump 등록표/controlled 스택에 실제 가로 부모와 Game·Edit·View·Options·Players·About 하위를 생성한다. root 위치는 현재 월드 viewport.left와 화면폭을 사용한다. 메뉴 serial은 +2c를 사용하고 등록 id와 혼동하지 않는다. SP 준비는 실제 Rotate, 검산은 같은 사제 재생 sequence 참조다. 호스트의 선행 Close/Cleanup을 생략한 채 생성한다. 실제 루트 Attach의 replace 비트가 이전 팝업을 지연 Kill하므로, 열기 뒤 이전 팝업이 계속 보인다고 해석하지 않는다. ESC 토글은 현재 serial 검색과 지연 Kill을 사용한다.

@@ -1,0 +1,219 @@
+{
+  "goalComplete": false,
+  "sources": {
+    "cpppj/src/client/UberGump.cpp": "8c0c7c3731a4b56250bb308736d68b9956073421b9405e77f240e6da40e4c5cf"
+  },
+  "artifacts": {
+    "cpppj/build/bin/Release/NetstormCpp.exe": "ec352a53fcf431a07bb3fa1ccc68d19c7b963274b9035e1d5c17c2a02f0cc183",
+    "cpppj/build/bin/Release/netstorm_tests.exe": "bf571737d57747546927cf78585c9fd2da48856b69ba7883cfbac6f19364469e",
+    "cpppj/build/bin/Release/netstorm_cloud_probe.exe": "39eecfbb1370834c4c7aa5bb328f33289382087ba50e428fa88a3b069516ad43",
+    "cpppj/build/bin/Release/netstorm_cloud_render_probe.exe": "e2df346e8dd418c35a342a4fb6c7475b6ed1c7db52b24bedb8919f2616067a29"
+  },
+  "focused": [
+    {
+      "filter": "GameMenuBar_",
+      "exitCode": 0,
+      "tests": 2,
+      "failures": 0,
+      "log": "extracted/cpp-game-button-removal-verify1/GameMenuBar_.log",
+      "sha256": "b9f012292145442f13d5956c1c6c599de208764d70396a56153d0df6fa4391f3"
+    },
+    {
+      "filter": "GameMenus_Native",
+      "exitCode": 0,
+      "tests": 1,
+      "failures": 0,
+      "log": "extracted/cpp-game-button-removal-verify1/GameMenus_Native.log",
+      "sha256": "82f4be24af178141015d2d38b054e339ba0d13ce999a0f8598e3c4c2e371b3b1"
+    },
+    {
+      "filter": "GameMenuActions_",
+      "exitCode": 0,
+      "tests": 2,
+      "failures": 0,
+      "log": "extracted/cpp-game-button-removal-verify1/GameMenuActions_.log",
+      "sha256": "103ff7a83c83e9da1caf7b1bdd8c7327f254d5b3cb322b4d910f8d7f8e209994"
+    },
+    {
+      "filter": "CampaignGameMenus_",
+      "exitCode": 0,
+      "tests": 2,
+      "failures": 0,
+      "log": "extracted/cpp-game-button-removal-verify1/CampaignGameMenus_.log",
+      "sha256": "58f70c9ea9c0f1503a6bc658fc6114abb3a62300620a6816a940534b8c30b176"
+    },
+    {
+      "filter": "RawMenuControls_HorizontalPointAndDeferredReplace",
+      "exitCode": 0,
+      "tests": 1,
+      "failures": 0,
+      "log": "extracted/cpp-game-button-removal-verify1/RawMenuControls_HorizontalPointAndDeferredReplace.log",
+      "sha256": "64fa3030b5fbfdb21e6e262f643c4f7fe4dd5e2fe3562f22c6e899509484a1c4"
+    },
+    {
+      "filter": "HudDock_",
+      "exitCode": 0,
+      "tests": 1,
+      "failures": 0,
+      "log": "extracted/cpp-game-button-removal-verify1/HudDock_.log",
+      "sha256": "5ca5531774b5f13fc82081a254cff97b0cd8481d48e9e41e2ed8aa3bdb8503e5"
+    },
+    {
+      "filter": "ProductionInitialContext_FullUber",
+      "exitCode": 0,
+      "tests": 3,
+      "failures": 0,
+      "log": "extracted/cpp-game-button-removal-verify1/ProductionInitialContext_FullUber.log",
+      "sha256": "3bce10e147661b4b7cc72311b902700163030050e8b24a142c89c03593f014fb"
+    },
+    {
+      "filter": "ClientPause_",
+      "exitCode": 0,
+      "tests": 2,
+      "failures": 0,
+      "log": "extracted/cpp-game-button-removal-verify1/ClientPause_.log",
+      "sha256": "021ee99dca87af2833ee510fffc0f49821b2690e96711e64c7b7ab102509843d"
+    }
+  ],
+  "gui": [
+    {
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\originals",
+        "--mission",
+        "thewarbegins",
+        "--window",
+        "--no-audio",
+        "--frames",
+        "80",
+        "--set",
+        "SCREENW=1024;SCREENH=768;maxFPS=60;sleepPerLoop=8;autoDemo=0;tellTips=0;currentLanguage=english;useProductTimers=1",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-game-button-removal-verify1\\gui-1024x768\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-game-button-removal-verify1\\gui-1024x768\\states.tsv"
+      ],
+      "binarySha256": "ec352a53fcf431a07bb3fa1ccc68d19c7b963274b9035e1d5c17c2a02f0cc183",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 3.869477199972607,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+      "originalsUnchanged": true,
+      "width": 1024,
+      "height": 768,
+      "passed": true,
+      "hostGameControlAbsent": true,
+      "escapeToggle": true,
+      "nativeGameSubmenu": true,
+      "nativeOptionsSubmenu": true
+    },
+    {
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\originals",
+        "--mission",
+        "thewarbegins",
+        "--window",
+        "--no-audio",
+        "--frames",
+        "80",
+        "--set",
+        "SCREENW=1280;SCREENH=720;maxFPS=60;sleepPerLoop=8;autoDemo=0;tellTips=0;currentLanguage=english;useProductTimers=1",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-game-button-removal-verify1\\gui-1280x720\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-game-button-removal-verify1\\gui-1280x720\\states.tsv"
+      ],
+      "binarySha256": "ec352a53fcf431a07bb3fa1ccc68d19c7b963274b9035e1d5c17c2a02f0cc183",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 3.7215797000098974,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "4b37069a2e6ffffe1ca0668274f09d3d09c027663fb577bb9e7e9687ee9dfc5e",
+      "originalsUnchanged": true,
+      "width": 1280,
+      "height": 720,
+      "passed": true,
+      "hostGameControlAbsent": true,
+      "escapeToggle": true,
+      "nativeGameSubmenu": true,
+      "nativeOptionsSubmenu": true
+    }
+  ],
+  "originalGameExecuted": false,
+  "fullCTestExecuted": false,
+  "completed": true,
+  "passed": true,
+  "focusedTests": 14,
+  "protectedFiles": {
+    "checked": 1821,
+    "unchanged": true
+  },
+  "task": "remove-legacy-host-game-button",
+  "specificTaskComplete": true,
+  "state": "focused-and-short-gui-verified",
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "verifiedAt": "2026-10-25T20:04:00.107967",
+  "build": {
+    "attempt": 1,
+    "sourceAttempt": 1,
+    "finished": "2026-10-25T19:59:52.153242",
+    "exitCode": 0,
+    "seconds": 39.013,
+    "command": [
+      "cmake",
+      "--build",
+      "cpppj/build",
+      "--config",
+      "Release",
+      "--parallel",
+      "4",
+      "--",
+      "/p:UseMultiToolTask=true",
+      "/p:MultiProcMaxCount=4",
+      "/p:EnforceProcessCountAcrossBuilds=true"
+    ],
+    "log": "extracted/cpp-game-button-removal-build1.log",
+    "sha256": "3523a1a86385c8aa1b760c7143ff0d4039a411104528845e774a7fd05460e379",
+    "compilerWarnings": 0,
+    "compilerErrors": 0
+  },
+  "history": {
+    "introduced": "00c04b75",
+    "movedForProductionPanel": "3447c500",
+    "nativeEscapeMenuConnected": "5adcf532",
+    "previouslyRecordedRemovalTodo": "docs/exe/cpp-game-menu-runtime-20261023.md"
+  },
+  "evidence": {
+    "path": "extracted/cpp-game-button-removal-verify1/results.json",
+    "sha256": "fbe75ac3d27538999c07b6c731eca636bb7f4768926cdeb113fa4a8bee21ce3a"
+  },
+  "visualInspection": [
+    {
+      "path": "extracted/cpp-game-button-removal-verify1/gui-1024x768/initial.bmp",
+      "sha256": "f4583d1bc7b205308d4b5520629f0226666ee5b4bd8df74233f63a44f1e0e28f",
+      "inspected": true
+    },
+    {
+      "path": "extracted/cpp-game-button-removal-verify1/gui-1280x720/initial.bmp",
+      "sha256": "7dc50b60f5b507a9aa5f164bd317b914d580249081eba149388f310de8eaf85c",
+      "inspected": true
+    },
+    {
+      "path": "extracted/cpp-game-button-removal-verify1/gui-1024x768/game.bmp",
+      "sha256": "1085715307226e67e3fe401207638ab0e622ad7f35ada29864acdffd5701f44a",
+      "inspected": true
+    }
+  ],
+  "previousIntegrated": {
+    "head": "60a5c7de",
+    "tests": 2894,
+    "failures": 0,
+    "scope": "menus-and-natural-early2-to-tutorial3"
+  }
+}

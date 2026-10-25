@@ -1,5 +1,13 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-25 사용자 추가 요청 완료: 플레이 화면의 임시 Game 버튼 제거
+
+- [x] 사용자가 원본에 없는 왼쪽 위 Game 버튼의 원인 확인과 숨김/제거를 요청했다. 초기 호스트 UI의 `00c04b75`에서 추가되고 `3447c500`에서 생산 패널 옆x84,y4로 옮겨 남은 잔재였다. 실제 원본 ESC 가로 메뉴는 `5adcf532`에서 별도로 연결됐으며 10/23 작업 문서에도 임시 버튼 제거가 미완료로 기록돼 있었다.
+- [x] `UberGump::Compose`의 임시 `button` 생성 호출을 제거해 평상시 그림·라벨·클릭 영역을 함께 없앴다. 원본 ESC 메뉴 안의 Game/View/Options 등은 유지한다. **1소스 첫 증분 빌드 종료0·컴파일 경고/오류0**, 기존 메뉴·도킹·정지 **14검사·실패0**이다.
+- [x] 같은 최종 제품에서 **1024×768/1280×720** 실제 짧은 GUI 입력으로 평상시/메뉴 닫은 뒤 임시Game클릭영역 부재,ESC열기·닫기,원본Game의Leave하위/Options의Pause하위를 확인했다. 세 실제 캡처도 육안확인했다. 보호1821/1소스/4실행 파일 SHA와 원본 전체·두 설정 복원이 같으며 게임 SHA는 **ec352a53…**다. [실행 보고서](cpppj/game-button-removal-runtime-20261025.json)에 근거를 기록했고 인계 후 **20261025-29 CP**로 로컬 커밋한다. 이번에 전체 CTest·긴 플레이·원본 실행은 하지 않았다.
+- [ ] 일부 오래된 스모크(`cpp_menu_smoke`, `cpp_rawbuttons_smoke`, `cpp_thunder_smoke`, `cpp_weather_smoke`, `cpp_audio_smoke`, `check_dialog_controls.check_mission`)는 이 구형버튼/옛popup을 전제로 하므로 재사용할 때 현행 ESC→실제 메뉴 입력으로 이행해야 한다. 이번에는 기존 단위검사와 현행원문메뉴의실제입력을사용했으며 옛스모크통과로세지않는다.
+- [ ] 기존 `/goal`은 계속 활성이다. 바로 다음은 아래433 완료 뒤 준비한 **434·435 섬/청크/사제 묶음21파일/신규16검사** 적용이다. `extracted/cpp-world-reset-storages-434435-integration/manifest.json`의 현재main SHA를 재확인하고 main에 적용한다. Game버튼 수정은 이21파일과 겹치지 않는다. 436선택·437권한·438FullDeck 준비본도후속 hunk로병합하며전체미션/실제Edit완료로세지않는다. 마지막 전체 통합은계속60a5c7de/2,894검사·자연Early2다. AGENTS/원본/CD파일을수정하거나push하지않았다.
+
 ## 2026-10-25 단위433 완료: TotalMade 세 집계 표의 실제 장기 물리
 
 - [x] 이전432는 **bd9ea8d3 / 20261025-27 CP**로 신규15 포함 집중68개·실패0/17소스·4실행 파일/보호1821 감사를 마쳤다. 현재/마지막 전체 정밀 PC는 **HJOW-Athlon / 2026-10-23**이다. 시작 트리는 깨끗했고 같은 보호 기준을 `extracted/cpp-totalmade-storage-433-baseline.json`에 고정했다.

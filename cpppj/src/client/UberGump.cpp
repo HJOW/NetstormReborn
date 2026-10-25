@@ -1074,9 +1074,7 @@ void UberGump::Compose() {
         for (std::size_t i = 0; i < buttons.size(); ++i) button(buttons[i], x + static_cast<int>(i % 4) * kButtonPitch, y + static_cast<int>(i / 4) * 23, kButtonWidth);
     }
     if (state_.phase == ClientPhase::Mission && popup_.empty()) {
-        // 현재 연결한 Game 메뉴와 실제 로컬 Storm Power를 월드 위에 표시한다.
-        button({"Game", {"Menu", "game"}}, 84, 4, kButtonWidth);
-
+        // 원본 HUD와 월드를 합성한다. 가로 메뉴는 기존 ESC 입력으로 연다.
         client_.GetRenderer().SetBackground(canvas); client_.GetRenderer().SetScene(std::move(worldSprites), std::move(text));
         if (world_) client_.GetRenderer().SetOverlay(world_->SelectionImage());
         if (rawButtons_->Menus()->HasOverlay()) {
