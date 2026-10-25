@@ -1,0 +1,85 @@
+{
+  "unit": 425,
+  "state": "focused-and-actual-screen-device-validated",
+  "goalComplete": false,
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "startingHead": "7553aefd53b61356105b0275e108322abdb926e0",
+  "frozenHashes": {
+    "cpppj/src/CMakeLists.txt": "b39a2ce74bfd79405498d771337a22ebbe9c39ffde9b4ed80ec5585528492d3f",
+    "cpppj/src/o/RawKencloudRender.cpp": "e7500d21d7976dfbe7bcda8fe4a0a089a55ff8ca573b54a2304dedf6d70f040a",
+    "cpppj/src/o/RawKencloudRender.h": "6a9d851022c33f7a84a89c2f3d857bb5a4c5994ce1f2824a2189078f74c0c877",
+    "cpppj/src/client/ClientKencloudGlobals.cpp": "92366409d0357140edf4758af3eb9c59cd8567ed23e0ca6c3ed1b5002c72d084",
+    "cpppj/src/client/ClientKencloudGlobals.h": "f19064d725219484869eb0eaab9a51ac2b7968d0ec23d568931e8a567cb63871",
+    "cpppj/src/client/Screen.cpp": "43adaf8649c66282faeead2f4917d8c4cf07bbae72d3523ec8ab072bccf5a274",
+    "cpppj/src/client/Screen.h": "0960b9d3575315530eca612c025a0013213b9e50ac1fcca0ac47f56d42b3a35b",
+    "cpppj/tests/CMakeLists.txt": "27f712b8cae5e170c6a1e63355d7d652f29f5b156535a4a16957feec89e6f510",
+    "cpppj/tests/KencloudRenderTests.cpp": "8d27bc0ff5f8a694ed2f86026a462e640080efe24dbc26003a2ffb75789f356c",
+    "cpppj/tests/ClientKencloudGlobalsTests.cpp": "d8822425feeddefaca046f63670ae95d6ef8f2af3927b207d962f5a085042c00",
+    "cpppj/tests/KencloudRenderClientProbe.cpp": "fd31f16575dfe7dffc2a061b94af7293c2159c7426057f30e5090c6293185a2a",
+    "cpppj/build/bin/Release/NetstormCpp.exe": "1cb876ca053f8a39eb9042fb716b73ba84e0e5289a72857babba90acb57ed31f",
+    "cpppj/build/bin/Release/netstorm_tests.exe": "c0b87e30d8b0f55eb1fe321ff89de66cbbf7d082784c7330c3168737ae48c53a",
+    "cpppj/build/bin/Release/netstorm_cloud_probe.exe": "8728f69e9d7e61ee441740f6b840e416b084a20f71ca6a655cfec2d035bdfa69",
+    "cpppj/build/bin/Release/netstorm_cloud_render_probe.exe": "183941fe61fcb44953dd06a82c1080135c1a0c0fec3e734ced5b59cd51aef021"
+  },
+  "protectedFiles": {
+    "count": 1821,
+    "unchanged": true
+  },
+  "focused": [
+    {
+      "filter": "KencloudRender",
+      "tests": 2,
+      "exitCode": 0,
+      "log": "extracted/cpp-kencloud-render-425-resume/KencloudRender.log",
+      "sha256": "8a6703ead8202b00b8ba17e83e5e72333be0be7eaf62f7353e182c269ca0515f"
+    },
+    {
+      "filter": "ClientKencloudGlobals",
+      "tests": 7,
+      "exitCode": 0,
+      "log": "extracted/cpp-kencloud-render-425-resume/ClientKencloudGlobals.log",
+      "sha256": "4de093736e2be425428bf78fce1656f3c9933d4347505d884cb2a2536d3e0e8c"
+    }
+  ],
+  "device": {
+    "render": {
+      "result": "extracted/cpp-kencloud-render-425-device1/results.json",
+      "sha256": "05d3461d950725329387ad640227c3002014102acaa8a562a49b272fffb14e53",
+      "steps": 9,
+      "binarySha256": "183941fe61fcb44953dd06a82c1080135c1a0c0fec3e734ced5b59cd51aef021",
+      "passed": true,
+      "originalsUnchanged": true,
+      "userPlayVerified": false
+    },
+    "palette": {
+      "result": "extracted/cpp-kencloud-render-425-palette-device1/results.json",
+      "sha256": "f7e3a59b1f985832074f6a44ef07a730b82abac12e0e180257f228be7faf918a",
+      "steps": 7,
+      "binarySha256": "8728f69e9d7e61ee441740f6b840e416b084a20f71ca6a655cfec2d035bdfa69",
+      "passed": true,
+      "originalsUnchanged": true,
+      "userPlayVerified": false
+    }
+  },
+  "fullCTestExecuted": false,
+  "lastIntegrated": {
+    "commit": "345b5691",
+    "report": "cpppj/kencloud-client-runtime-20261025.json",
+    "reportSha256": "f29ab71ae6e9bc921a79aad1fb78bbaf26d89f0bc471ab971863796fe7f02a38",
+    "productSha256": "e36f495c0125936184b98967d67a3df7e82f8c66c81769fd3a1fd4c4bae35435",
+    "testBinarySha256": "4f977376bdddfba3611fd5de66310fe32596b489f2019657b36dc80db652ba9e",
+    "ctest": {
+      "tests": 2843,
+      "failed": 0,
+      "seconds": 334.43
+    }
+  },
+  "pending": [
+    "Renderer004994b0 natural Frame integration",
+    "Actual Editor edit/save installation",
+    "Batch full CTest and long play after feature group or 3-5 units",
+    "All missions natural user completion and save/restart equivalence"
+  ]
+}

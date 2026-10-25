@@ -31,3 +31,9 @@ Native944를 먼저 고정한 뒤11소스의 빌드·집중 검사와 실제 화
 자연 Renderer **004994b0 전체2823BYTE**는 화면 flags 변경/세계 redraw→공통 Gump overrideHead00463fe0/00565dd8→animating bit0x20의 갱신→행별 변경 영역·시차/덮개→실제 표시→dirty 정리를 함께 소유한다. 이번 부모와 실제 장치의 연결을 곧바로 이 전체 Frame 순서의 완료로 확대하지 않는다. 기존 정적 GIF 배경은 자연 Frame 접합 때 교체하며 무조건 Step을 호출해 난수/override 관문을 우회하지 않는다. Native State1 정리·최종 Editor 편집/저장 UI와 전체 미션 사용자 완주/진행 저장·재실행·완전 동일성은 계속 남는다. `/goal`은 활성 상태다.
 
 앞선424의 “공통 모달” 명칭은 이번에 호출자까지 확인해 **overrideHead**로 정정한다. 실제004654c0의 유일한 직접 호출자는 Moviegump의00484010이며, 일반 모달00466600을 호출한 다음 별도로 override를 설정한다. 현재 `GumpInput::SetOverride`와 `GumpCollectionState::overrideHead`가 이 토글을 이미 소유한다. 일반 dialogCount나 Guide 포인터를 이 관문으로 대신하지 않는다. 과거 고정 원시 증거는 수정하지 않는다.
+
+## 같은 목표 재개 뒤 검증 완료
+
+2026-10-25 사용자가 같은 목표를 다시 요청했다. 인계의11소스·4실행 파일 SHA15개가 현재와 일치한 뒤 `KencloudRender`2개와 `ClientKencloudGlobals`7개가 실패0으로 통과했다. 실제 Screen 픽셀 도구9단계와 팔레트 도구7단계도 종료0으로 통과했다. 두 도구는 원본 설정을 복구했고 보호1821파일은 기존 기준과 같다. 원시 출력은 위의 예정 경로 `...-device1`, `...-palette-device1`과 `extracted/cpp-kencloud-render-425-resume`에 보존했다. [재개 검증 보고서](../../cpppj/kencloud-render-runtime-20261025.json)에 같은 제품 해시/로그 SHA를 기록했다.
+
+이로써425의 빌드 뒤 미검증이었던 집중·장치 검증을 완료했다. 새 빌드나 전체 CTest/긴 플레이는 하지 않았고, 마지막 통합 제품은 계속345b5691이다. 이번 검증으로 자연 Renderer004994b0이나 최종 Editor 설치·사용자 미션 완주를 완료 처리하지 않는다. 다음에는 실제 Edit의 State1 소비와 최종 설치·편집/저장을 우선 연결한다. 전체 Renderer 관문과 시차 장치는 남은 기능이다. 마지막 전체 정밀 디컴파일 PC/날짜는 계속 **HJOW-Athlon / 2026-10-23**이다.
