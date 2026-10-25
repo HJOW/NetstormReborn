@@ -14,7 +14,7 @@
 
 ## 1. 현행 목표 ([TODO.md](TODO.md))
 
-- Early Missions 6개, 캠페인 전체 16개, Priest Training 9개, 데모 3개를 사용자가 플레이할 수 있고, 원본 10.78과 완전히 같게 동작하도록 한다. Priest Training은 TODO.md의 "캠페인 (전체)" 문구에는 들어 있지 않지만, 2026-10-26 사용자 지시로 목표에 포함했다.
+- Early Missions 6개, 캠페인 전체 16개, Priest Training 9개, 데모 3개를 사용자가 플레이할 수 있고, 원본 10.78과 완전히 같게 동작하도록 한다. Priest Training은 2026-10-26 사용자 지시로 목표에 추가했으며, TODO.md에도 반영됐다.
 - Edit 메뉴(커스텀 맵·시나리오 포함)를 구현한다.
 - 메인 메뉴 중 Multiplayer를 제외한 나머지 메뉴를 구현한다.
 - 게임 진행 중 UI(좌측 덱, 좌측 하단 미니맵, 다리 건설 단축키 QWASZX, ESC 메뉴)를 구현한다.
