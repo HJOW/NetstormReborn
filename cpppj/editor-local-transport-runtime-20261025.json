@@ -1,0 +1,73 @@
+{
+  "unit": 427,
+  "goalComplete": false,
+  "state": "single-editor-transport-focused-validated-not-yet-connected-to-session",
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "startingHead": "628711ce6e5f12aadee31e9c571bb5fa3ef4eedd",
+  "sources": {
+    "cpppj/src/CMakeLists.txt": "faaff20e32d87d39895b2dc36758757d8a119fa7979f82db572313534a31e95f",
+    "cpppj/tests/CMakeLists.txt": "bf36b355607a12743e83690a129905c509ad07a8b8d7db0d589100131bfffa95",
+    "cpppj/src/client/EditorLocalTransport.cpp": "3bf467bf470825c2a7aa4b41ef5b3b70a29e05dbad9c616ecdd5800372ae84ad",
+    "cpppj/src/client/EditorLocalTransport.h": "de548366266c7a85e65d21ea6b6790ec0d1b16da3e577e6f377c9abf4a089453",
+    "cpppj/tests/EditorLocalTransportTests.cpp": "fc65bb5af629b75a0acae2a1590fa52c46772733d2dd3a1e76b9fb24b9a84bd8"
+  },
+  "artifacts": {
+    "cpppj/build/bin/Release/NetstormCpp.exe": "66d45bcc33371cbcb0637a8c944cc110e73c930126fdfa866f8bf722c2c9b9ec",
+    "cpppj/build/bin/Release/netstorm_tests.exe": "cca7a4de74d6b7d24142be94265e22da56acb249e8fc574b80d8c617f2efec36",
+    "cpppj/build/bin/Release/netstorm_cloud_probe.exe": "041cab3ab44520e3d79707ac6afa14122e97fe35982a23bb19420884df804bf7",
+    "cpppj/build/bin/Release/netstorm_cloud_render_probe.exe": "baceb329bbdcd566611b9e8a038e513a21e4e90e61530d8cec8d6f02e7629e6f"
+  },
+  "build": {
+    "attempts": 1,
+    "exitCode": 0,
+    "log": "extracted/cpp-editor-local-transport-427-build1.log",
+    "sha256": "6b1dff2054536dec4f5cfbc2c061f52c2ae07751469c74f4880afde9a7c415f3"
+  },
+  "focused": [
+    {
+      "filter": "EditorLocalTransport",
+      "exitCode": 0,
+      "tests": 10,
+      "failures": 0,
+      "log": "extracted/cpp-editor-local-transport-427-focused1/EditorLocalTransport.log",
+      "sha256": "9328c73ff2d0b93a4b3a26cca738b56e85907a0ea9d7d91fd3dcd2aee997301c"
+    },
+    {
+      "filter": "LocalMissionTransport",
+      "exitCode": 0,
+      "tests": 4,
+      "failures": 0,
+      "log": "extracted/cpp-editor-local-transport-427-focused1/LocalMissionTransport.log",
+      "sha256": "7dc638e76e21f620f0c23757047fc7c6387dce376d1419d417174e2aacf9fd2d"
+    }
+  ],
+  "focusedTests": 14,
+  "protectedFiles": {
+    "count": 1821,
+    "unchanged": true
+  },
+  "newNativeExecution": false,
+  "originalGameExecuted": false,
+  "productGuiExecuted": false,
+  "fullCTestExecuted": false,
+  "lastIntegrated": {
+    "commit": "345b5691",
+    "report": "cpppj/kencloud-client-runtime-20261025.json",
+    "reportSha256": "f29ab71ae6e9bc921a79aad1fb78bbaf26d89f0bc471ab971863796fe7f02a38",
+    "productSha256": "e36f495c0125936184b98967d67a3df7e82f8c66c81769fd3a1fd4c4bae35435",
+    "testBinarySha256": "4f977376bdddfba3611fd5de66310fe32596b489f2019657b36dc80db652ba9e",
+    "ctest": {
+      "tests": 2843,
+      "failed": 0,
+      "seconds": 334.43
+    }
+  },
+  "pending": [
+    "Actual State1 cleanup(0)/prefix and long-lived native globals",
+    "Same Session request handlers, send/poll lifetime and chargeBlocked gate",
+    "User Editor UI input/edit/save and scenario test/return",
+    "Batch full CTest and long play after next feature group or 3-5 implementation units"
+  ]
+}

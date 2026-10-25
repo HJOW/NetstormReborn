@@ -333,6 +333,7 @@ add_executable(netstorm_tests
     CampaignConstructionTests.cpp
     ChatChannelsTests.cpp
     LocalMissionTransportTests.cpp
+    EditorLocalTransportTests.cpp # Editor의 실제 음수 sender/큐/폴링 중단/상대 종료와 현재 수신 BYTE를 검사한다.
     MissionGuideTests.cpp
     PriestParticipationTests.cpp
     TutorialLaterTests.cpp

@@ -1,5 +1,12 @@
 # LEFT_JOBS — NetStorm 클론 프로젝트 작업 계획 및 인수인계
 
+## 2026-10-25 단위427 완료: Editor 단일 로컬 전송의 큐·수신·종료
+
+- [x] 이전426은 **628711ce / 20261025-21 CP**로 준비 대여/UI tail/실제 State 확정과 집중49개를 마쳤다. 현재/마지막 전체 정밀 디컴파일은 계속 **HJOW-Athlon / 2026-10-23**이다. 보호1821파일 기준은 앞선426의 같은 내용이다.
+- [x] `EditorLocalTransport`는 원문004e22c0의 listener/client9와 accepted(-1), 로그인 없는 unbuffered 큐를 소유하고 기존 `LocalMissionTransport::DispatchFrame/Dispatch`를 재사용한다. CMake에 새 본체/검사3파일을 등록했다. 수신 sentinel·상대 종료·현재 protocol BYTE 보존을 원문과 읽기 대조해 교정했다. 새 Native 실행은 하지 않았다.
+- [x] 고정5소스의 **빌드1 종료0·컴파일 경고/오류0**, 새 전송 **10개**와 기존 캠페인 로컬 전송 **4개** 집중 검사가 실패0으로 통과했다. 보호1821파일/5소스 SHA도 같다. [실행 보고서](cpppj/editor-local-transport-runtime-20261025.json)에 같은4실행 파일/빌드/집중 로그를 기록했다. 새 GUI/전체 CTest/긴 플레이는 미실행이며 마지막 통합345b5691을 유지한다. 인계 뒤 **20261025-22 CP**로 로컬 커밋한다.
+- [ ] 다음428은 같은 Session의 기존 세 요청 등록 함수/송신/폴링 수명과 실제 chargeBlocked 관문 연결이다. 실제 State1 cleanup/prefix·일반 사용자 편집은 계속 미완료다. [전송 문서](docs/exe/cpp-editor-local-transport-20261025.md)에 기존3등록 함수·생성 전 송신 함수 값복사·Session 반납 전 callback 해제와 음수 sender 보존 근거를 기록했다. 기능 묶음 완료 또는 기본3~5구현단위 뒤 같은 최종 제품으로 전체 CTest/긴 실제 플레이를 통합한다.
+
 ## 2026-10-25 단위426 완료: Editor 준비 상태 대여·UI 설치/공통 State 확정 보호
 
 - [x] 단위425 재개 검증은 **6fcd82e8 / 20261025-20 CP**로 커밋했다. AGENTS/양 인계를 확인했으며 현재/마지막 전체 정밀 디컴파일은 계속 **HJOW-Athlon / 2026-10-23**이다. 보호1821파일 기준은 `extracted/cpp-editor-prepared-ui-426-baseline.json`이다.
@@ -7,7 +14,7 @@
 - [x] 빌드1은 새 검사에서 참조 필드가 있는 `UserSelectionState`를 `{}`로 만든 컴파일 오류2건을 확인한 뒤 중단했고 원시 로그를 보존했다. 실제 참조 입력·SP/난수/Kernel 필수 대여·실제 생산 패널/Form 검사까지 교정한10소스를 source2에 고정했다. **빌드2 종료0·컴파일 경고/오류0**, 최종 집중 **49검사/실패0**이 통과했다. 실제 Editor checkpoint19·tail4·표면5·초기 생산14·기존 Campaign Player/Core2·Player링크5다. 실제 패널/Form 설치·해제와 부분 실패/State1·2 확정/다음Poll4를 검사했고 보호1821파일/소스10개의 SHA가 같았다. [검증 보고서](cpppj/editor-prepared-ui-runtime-20261025.json)에 같은4실행 파일/첫 실패/최종 로그를 기록했다.
 - [x] 이번은 장치 없는 실제 Session/공통 UI/State 조립의 완료이며 자연 메뉴 Edit 설치나 전체 Native cleanup/prefix의 완료는 아니다. 새 GUI/전체 CTest/긴 플레이는 하지 않았다. [작업 문서](docs/exe/cpp-editor-prepared-ui-20261025.md)에 지원 경계를 적었다. 긴 검사 묶음 결정과 마지막 통합345b5691/2843검사는 유지하며 **20261025-21 CP**로 로컬 커밋한다. 전체 목표는 활성 상태다.
 - [ ] 실제 `UberGump::Tick`의 State1 소비/전체 cleanup(인자0)/prefix와 최종 UI 연결은 아직 남는다. 원문004e22c0는 Editor에서도 로컬 listener/client9를 만들므로, 로그인 없는 Editor에 동기 직접 수신이나 빈 전송을 붙이지 않는다. 기존 `InstallHud()`는 `UberHud.inc`에 이미 있으므로 새 중복 HUD 공장을 만들지 않는다.
-- [ ] 후속427 초안은 `EditorLocalTransport.h/.cpp`, `EditorLocalTransportTests.cpp`, [로컬 전송 문서](docs/exe/cpp-editor-local-transport-20261025.md)에 있다. listener/client9/음수 pending(-1)·unbuffered 큐·기존 분배 재사용·sentinel/상대 종료/수신 BYTE 보존을 정적으로 대조했고 검사10개를 작성했다. **CMake 미등록·빌드/검사 미실행·제품 호출자 미연결**이며426 커밋 뒤 별도 단위로 검증한다.
+- [x] 후속427은 위 완료 기록의 새10/기존4 집중 검사와 CMake 등록/빌드/보호 감사를 마쳤다. 실제 Session/제품 UI 연결은 다음428부터 계속한다.
 
 ## 2026-10-25 재개: 단위425 집중·실제 화면 장치 검증 완료
 
