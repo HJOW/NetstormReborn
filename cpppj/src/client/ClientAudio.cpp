@@ -53,6 +53,16 @@ std::int32_t VolumeFromStep(std::int32_t step) {
 // 어떤 OS 자원도 여기서 열지 않는다(장치·스레드는 Initialize가 연다).
 ClientAudio::ClientAudio(std::filesystem::path gameDirectory,o::OriginalEdition edition,std::string language,
     std::function<double()> wallSeconds,std::uint32_t randomSeed,SceneMusicHooks external)
+    :ClientAudio(std::move(gameDirectory),edition,std::move(language),std::move(wallSeconds),randomSeed,std::move(external),nullptr) {}
+
+// Client의 같은 게임 난수를 빌리고 생성 시점에는 원문 난수 호출/재시드를 추가하지 않는다.
+ClientAudio::ClientAudio(std::filesystem::path gameDirectory,o::OriginalEdition edition,std::string language,
+    std::function<double()> wallSeconds,o::GameRandom& random,SceneMusicHooks external)
+    :ClientAudio(std::move(gameDirectory),edition,std::move(language),std::move(wallSeconds),0,std::move(external),&random) {}
+
+// 독립 검사와 실제 Client의 장치/감독 조립은 동일하며 활성 난수의 주소만 명시적으로 선택한다.
+ClientAudio::ClientAudio(std::filesystem::path gameDirectory,o::OriginalEdition edition,std::string language,
+    std::function<double()> wallSeconds,std::uint32_t randomSeed,SceneMusicHooks external,o::GameRandom* sharedRandom)
     :list_(edition),
      device_(list_,state_,MakeDiskSoundResolver(gameDirectory),language,kSoundDirectory),
      player_(list_,state_,device_.Hooks()),
@@ -62,7 +72,8 @@ ClientAudio::ClientAudio(std::filesystem::path gameDirectory,o::OriginalEdition 
      runtime_(state_,runtimeState_,primary_,secondary_,music_,device_.MusicBuffers(),MakeWin32MusicRuntimeHooks()),
      selection_(selected_,music_,MusicDirectories{std::string(kMusicDirectory),std::nullopt},
          files_.OpenHooks(MakeDiskSoundResolver(gameDirectory)),device_.MusicBuffers()),
-     random_(randomSeed),
+     localRandom_(randomSeed),
+     random_(sharedRandom ? *sharedRandom : localRandom_),
      sceneMusic_(scene_,random_,MakeSceneMusicHooks(selection_,selected_,primaryState_,player_,CompleteSceneBoundaries(std::move(wallSeconds),std::move(external)))) {}
 
 // 스레드 합류 → 장치 닫기 순서를 Shutdown이 지킨다. 그 뒤 멤버가 선언의 반대 순서로 사라진다.

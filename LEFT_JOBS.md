@@ -8,7 +8,7 @@
 - **마지막 전체 정밀 디컴파일: HJOW-Athlon (192.168.0.94) / 2026-10-23.** 결과는 `extracted/refined/`(Git 제외)에 있다. 현재 PC가 이와 다르면 AGENTS.md 규칙에 따라 재디컴파일한 뒤 작업한다. 절차는 `tools\ghidra\refine_all.ps1`이며, 힌트 생성 단계가 콘솔 인코딩(cp949) 오류로 멈추면 `PYTHONUTF8=1`, `PYTHONIOENCODING=utf-8`을 설정하고 다시 실행한다.
 - 2026-10-26의 문서 정리는 HJOW-X3D에서 인수인계 문서만 고친 것이다. 디컴파일 결과·제품 코드·검사 코드는 바꾸지 않았으므로 위 디컴파일 기록은 그대로 유효하다. 사용자는 HJOW-Athlon에서 작업을 재개할 예정이다.
 - **실제 게임 실행 확인:** HJOW-Athlon, VM-W11-Codex, vm-debian-codex는 AGENTS.md의 예외 시스템이다. 그 밖의 PC에서는 게임이나 별도 창을 띄우기 전에 목적을 설명하고 사용자 확인을 받는다.
-- **목표 상태:** 2026-10-26 재개 뒤460까지 복원 단위를 완료했다. 최신460 Source3는 빌드 경고/오류0·집중222개·신규5개·실패0이며 실제 State 정리의 색9DWORD/다리 스캔 reset을 같은 Client 물리에 연결했다. 마지막 전체/GUI는459의CTest3130개·실패0 및 실제 Early1 ESC·메뉴 복귀·재진입이다. 전체 목표는 계속 진행 중이며 Native State1/7 전체 정리·별도 송신버퍼 writer·실제 Edit 설치·전체 미션 자연 완주·동일성 검증이 남아 있다.
+- **목표 상태:** 2026-10-26 재개 뒤461까지 복원 단위를 완료했다. 최신461은 일반/noAudio 음향의 전투 음악이 실제 Client의 공통 게임 난수를 빌리도록 연결했으며 Release build2 경고/오류0·집중41개·신규4개·실패0이다. 마지막 전체/GUI는459의CTest3130개·실패0 및 실제 Early1 ESC·메뉴 복귀·재진입이다. 전체 목표는 계속 진행 중이며 Native State1/7 전체 정리·별도 송신버퍼 writer·실제 Edit 설치·전체 미션 자연 완주·동일성 검증이 남아 있다.
 - **원시 증거 위치:** 빌드·검사·GUI 원시 로그와 통합 드라이버는 `extracted/`(Git 제외)에 있으며, 작업한 PC(주로 HJOW-Athlon)에만 있다. 커밋되는 결과 보고서는 `cpppj/*.json`, 작업 문서는 `docs/exe/cpp-*.md`다.
 - 원격 저장소에 push하지 않는다. 커밋 메시지는 `YYYYMMDD-NN CP 요약` 형식이며, NN은 `git log`로 그날의 마지막 번호를 확인해 정한다.
 
@@ -87,7 +87,7 @@
 
 ## 3. 앞으로 할 작업 (권장 순서)
 
-### 0. 2026-10-26 재개 — 460까지 완료
+### 0. 2026-10-26 재개 — 461까지 완료
 
 - **452 기준 제품:** Source6(2,039소스), `NetstormCpp.exe` SHA `471ec293…`, Release build6 종료0·경고/오류0, 집중444고유/444관측·실패0(기존 신규6개 전부)이다. 실제 복사본 GUI에서 QWASZX 여섯 슬롯·회전/반대 회전·합법 위치 배치(새 서버 다리15211)·보충을 확인했다. 원본/CD 등 보호1,821파일은 동일하다.
 - **복구:** 두 신규 fixture 조회에 `<filesystem>`과 `LoadFixture(const char*)`의 문자열 인자를 명시했다. Source5에서 드러난 기존 `CampaignObjectMenuTests`의 Sid 접근형4진단도 같은 숫자의 DWORD 비교/실제 소비 직전 checked SID변환으로 고쳤다. 신규 바이트 채움의 C4244 두 원인도 `uint8_t{}`로 교정했다. 기존 단언·Native fixture·신규6개 검사 이름은 유지했다.
@@ -129,6 +129,8 @@
 - [x] **459 완료:** 실제 배경244가 ESC를 소비하던 원인을 Source1 임시 진단으로 확인했다. 원문 State7의565e70 첫BYTE0을 Tell/Help/HUD와 같은 ClientHtmlWindowGlobals에 연결했으며 나머지79BYTE/P 억제를 보존한다. 전체 State7 cleanup은 여전히 후속이다. Source4(2056소스) build4 경고/오류0·집중263·신규2·전체CTest3130·실패0, 같은 게임7a8e5387의 실제 Early1 ESC 및 Game→Main Menu→Early1 재진입 GUI2가 통과했다. 현재 연결2→0→2, client9 토큰1828716545→1828716547을 확인하고 세 최종 화면을 직접 검토했다. 기존 검사 본문·653자료(TSV650)·원본/CD 등 보호1821파일은 보존했다. 첫 집중의 새 반복 입력은 ClearWorld 없이 CaptureEnd를 재사용해 실패했고 독립 입력 전제조건을 교정했다. 배경/79BYTE/P 단언을 유지하고 같은 Client의 실제 정리는 GUI로 확인했다. 임시 진단은 최종 소스에서 제거했다. 마지막 정밀 디컴파일 HJOW-Athlon/2026-10-23 그대로다. [459 문서](docs/exe/cpp-mission-background-runtime-20261026.md), [실행 보고서](cpppj/mission-background-runtime-20261026.json), 원시 `extracted/cpp-escape-routing-459-*`. State1/Edit·전체 자연 완주·픽셀/음향 동일성 완료는 아니다.
 
 - [x] **460 완료:** 실제 PE0043b540/00422490의64관측을 제품 전에 고정했다(하위 치환 없음). 같은 links.ownerColors의 앞9DWORD0..8과 같은 Storage의 다리 스캔 범위/커서/현재float 지연·double 기한을 Native Effect에 연결했다. 색 표는 원문 위치상 World 반납 앞에서도 허용하고 스캔은 반납 뒤만 허용한다. 실제 초기 first/last는 PE의-1로 교정했다. Source3(2059소스) build3 경고/오류0·집중222·신규5·실패0, 게임01324a3b이다. 기존 검사 본문·653자료(TSV650)·원본/CD 등 보호1821파일을 보존했다. 첫 집중의 새 두 Client 입력은 단일 Client 제약으로 실패했고 독립 표면 owner를 넘겨 같은 거부/미변경을 검증하도록 교정했다. Native 기대/기존 단언은 유지했다. 전체CTest/GUI는 반복하지 않았고 마지막 전체는459의3130개다. 전체 State1 조립·실제 Edit 설치·원문 Frame의 다리 스캔 호출은 아직 미완료다. 마지막 전체 정밀 디컴파일 HJOW-Athlon/2026-10-23 그대로다. [460 문서](docs/exe/cpp-state-bridge-reset-runtime-20261026.md), [실행 보고서](cpppj/state-bridge-reset-runtime-20261026.json), 원시 `extracted/cpp-state-bridge-reset-460-*`.
+
+- [x] **461 완료:** 원문00469fc0→004558f0(0,4000)의 전투 음악도 공통00532710을 소비하므로, 기존 timeGetTime 별도 시드 대신 실제 ClientRandomGlobals::Game()을 일반/noAudio 음향에 연결했다. 독립 정수 시드 생성자는 유지하고 생성/종료/구성 실패의 공통 상태 쓰기를 추가하지 않았다. 기존 Native6시드·실제 SP 교차 소비·실제 Client 초기화/반납 등 신규4개 포함 집중41개·실패0, Release build2 종료0·경고/오류0이다. 게임SHA는dde9d6dc이며 기존 검사 본문/fixture654파일과 이번 명시 보호범위(originals/CD/AGENTS)1820파일은 검사 전후 같다. 과거1821파일 manifest와 같은 집합으로 간주하지 않는다. 전체CTest/GUI는 반복하지 않았으며 공통 난수 소비가 바뀐 다음 제품의 통합 검증은 후속이다. 마지막 전체 정밀 디컴파일 HJOW-Athlon/2026-10-23은 그대로다. [461 문서](docs/exe/cpp-scene-random-runtime-20261026.md), [실행 보고서](cpppj/scene-random-runtime-20261026.json), 원시 `extracted/cpp-scene-random-461-*`. 전체 State1/Edit·전체 미션 완주·화면/음향 동일성 완료는 아니다.
 
 ### 2. Edit 메뉴 완성
 

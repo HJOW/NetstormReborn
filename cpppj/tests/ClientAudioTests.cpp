@@ -5,6 +5,9 @@
 #include <windows.h>
 #include "TestSupport.h"
 #include "client/ClientAudio.h"
+#include "client/ClientMain.h"
+#include "client/ClientRandomGlobals.h"
+#include "client/ClientSpGlobals.h"
 #include <array>
 #include <bit>
 #include <chrono>
@@ -193,6 +196,63 @@ TEST_CASE(ClientAudio_WriteSongEndBitsPreservesCurrentOwnerAndOtherEffects) {
         CHECK(Parse(audio.Describe())["musicName"]==Parse(control.Describe())["musicName"]);
     }
     CHECK(reads==controlReads && effects==controlEffects);
+}
+
+// 기존 원본 scenemusic-x86.tsv의 PATCH Start 여섯 시드 결과를 실제 음향의 외부 난수 대여에도 적용한다.
+TEST_CASE(ClientAudio_SharedGameRandomMatchesNativeStartSeeds) {
+    TemporaryDirectory directory;
+    constexpr std::array<std::uint32_t,6> seeds{0,1,195890093U,305419896U,4294967295U,7}; // 독립 PE 관측의 rng 입력이며 제품 출력에서 역산하지 않는다.
+    constexpr std::array<std::uint32_t,6> after{783557386U,65542U,783557386U,2366964587U,4294901760U,458776U}; // 같은 원본 관측의 현재00532710이다.
+    constexpr std::array<std::int32_t,6> indices{0,1,0,1,2,1}; // 같은 관측의 Start 뒤00469f00까지 적용한 곡 색인이다.
+    for (std::size_t index=0;index<seeds.size();++index) { // 각 입력을 독립 음향 수명으로 만들어 이전 곡 이름의 조기 반환을 섞지 않는다.
+        netstorm::o::GameRandom shared(seeds[index]);
+        {
+            ClientAudio audio(directory.path,OriginalEdition::Patch1078,"english",[] { return 1000.0; },shared);
+            CHECK(shared.State()==seeds[index]);audio.StartScene(false);CHECK(shared.State()==seeds[index] && audio.Scene().index==3);
+            audio.StartScene(true);CHECK(shared.State()==after[index] && audio.Scene().index==indices[index]);
+            audio.RequestMusic("defeat.mus");audio.SceneFrame();audio.NextSceneMusic();audio.WriteSongEndBits(0);audio.Shutdown();CHECK(shared.State()==after[index]);
+        }
+        CHECK(shared.State()==after[index]); // 음향 소멸도 빌린 게임 난수를 재시드하거나 더 소비하지 않는다.
+    }
+}
+
+// 공통 난수의 외부 변경과 실제 분산 SP 쓰기가 음향 사이에서도 하나의 현재 스트림으로 이어져야 한다.
+TEST_CASE(ClientAudio_SharedRandomInterleavesCurrentSpState) {
+    TemporaryDirectory directory;auto actual=std::make_shared<ClientRandomGlobals>();auto control=std::make_shared<ClientRandomGlobals>();
+    const auto fill=[](std::span<std::uint8_t> bytes) { std::fill(bytes.begin(),bytes.end(),std::uint8_t{0xa5}); }; // 실제 할당의 시작 바이트만 고정하고 SP 난수/비트 쓰기는 그대로 실행한다.
+    ClientSpGlobals sp(actual,[] { return 0; },fill),reference(control,[] { return 0; },fill);
+    sp.Store().Initialize();reference.Store().Initialize();CHECK(actual->Game().State()==control->Game().State());
+    ClientAudio audio(directory.path,OriginalEdition::Patch1078,"english",[] { return 100.0; },actual->Game());
+    for (std::uint32_t owner=1;owner<9;++owner) { // 메뉴·전투 전환과 실제 owner별 SP 잡음 쓰기를 같은 순서로 교차한다.
+        const auto bits=std::bit_cast<std::uint32_t>(static_cast<float>(owner)*123.25F);
+        sp.Store().Set(owner,bits);reference.Store().Set(owner,bits);CHECK(actual->Game().State()==control->Game().State());
+        audio.StartScene(false);CHECK(actual->Game().State()==control->Game().State());
+        static_cast<void>(control->Game().Next(4000));audio.StartScene(true);CHECK(actual->Game().State()==control->Game().State());
+        sp.Store().Set(owner,bits+1);reference.Store().Set(owner,bits+1);CHECK(actual->Game().State()==control->Game().State() && sp.Store().Get(owner)==reference.Store().Get(owner));
+    }
+    actual->Game().SetState(7);audio.StartScene(true);CHECK(actual->Game().State()==458776U && audio.Scene().index==1); // 생성 뒤 재시드도 사본 아닌 현재 객체에서 즉시 읽는다.
+}
+
+// 실제 Client의 noAudio 분기도 장치·창 없이 공통 전역을 빌리고 초기화/재초기화 실패로 시드를 쓰지 않는다.
+TEST_CASE(ClientAudio_ActualClientWithoutDeviceUsesGameGlobals) {
+    ClientOptions options;options.gameDirectory=std::filesystem::path(__FILE__).parent_path().parent_path().parent_path()/"originals";options.noAudio=true;
+    std::shared_ptr<ClientRandomGlobals> globals;
+    {
+        Client client(std::move(options));globals=client.RandomGlobals();globals->Game().SetState(1);client.InitializeNativeAudio();
+        CHECK(client.Audio()==nullptr && !client.WorldAudio().DeviceReady() && globals->Game().State()==1);
+        client.WorldAudio().StartScene(true);CHECK(globals->Game().State()==65542U && client.WorldAudio().Scene().index==1);
+        client.WorldAudio().StartScene(false);CHECK(globals->Game().State()==65542U);
+        CHECK(Throws([&] { client.InitializeNativeAudio(); }) && globals->Game().State()==65542U);
+        globals->Game().SetState(0xffffffffU);client.WorldAudio().StartScene(true);CHECK(globals->Game().State()==4294901760U && client.WorldAudio().Scene().index==2);
+    }
+    CHECK(globals->Game().State()==4294901760U); // Client와 음향이 소멸한 뒤에도 보존한 실제 난수 owner의 상태는 같다.
+}
+
+// 외부 팔레트 장치 쌍의 구성 실패에도 빌린 난수의 현재 값과 원본0시드 첫 호출을 보존한다.
+TEST_CASE(ClientAudio_SharedRandomFailedConstructionKeepsSeed) {
+    TemporaryDirectory directory;netstorm::o::GameRandom shared;SceneMusicHooks invalid;invalid.ascendancyPalette=[] { return true; };
+    CHECK(Throws([&] { ClientAudio audio(directory.path,OriginalEdition::Patch1078,"english",[] { return 0.0; },shared,invalid); }) && shared.State()==0);
+    ClientAudio audio(directory.path,OriginalEdition::Patch1078,"english",[] { return 0.0; },shared);audio.StartScene(true);CHECK(shared.State()==783557386U && audio.Scene().index==0);
 }
 
 namespace netstorm::test {

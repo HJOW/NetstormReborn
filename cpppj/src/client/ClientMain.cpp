@@ -445,7 +445,7 @@ void Client::InitializeNativeAudio() {
         // 원본 00469c80은 천둥 효과음을 내기 전에 번개 프로세스를 생성한다. 소리 옵션과 별개로 진행한다.
         scene.thunderFlash=[this]() { StartThunderFlash(); };
         audio_ = std::make_unique<ClientAudio>(options_.gameDirectory, options_.edition, kLanguages[static_cast<std::size_t>(languageNumber_)],
-            [this]() { return clock_.WallSeconds(timeGetTime()); }, timeGetTime(),std::move(scene));
+            [this]() { return clock_.WallSeconds(timeGetTime()); },randomGlobals_->Game(),std::move(scene)); // 원문 전투 음악도 게임/SP/AI와 같은00532710을 소비한다.
         audio_->SetSceneTints(screen_->Colors().weather);
         audio_->SetView({0,0,0,0,screenWidth_,screenHeight_});
         audio_->Initialize(reinterpret_cast<std::uintptr_t>(window_), ReadAudioOptions());
@@ -453,7 +453,7 @@ void Client::InitializeNativeAudio() {
     } else {
         // 생성자/이름표 초기화는 OS 장치와 음악 스레드를 열지 않는다. 실제 Play가 미초기화 상태에서 0을 반환한다.
         disabledAudio_=std::make_unique<ClientAudio>(options_.gameDirectory,options_.edition,kLanguages[static_cast<std::size_t>(languageNumber_)],
-            [this] { return clock_.WallSeconds(timeGetTime()); },timeGetTime());
+            [this] { return clock_.WallSeconds(timeGetTime()); },randomGlobals_->Game()); // 장치 없는 검사도 같은 난수 소비 계약을 유지한다.
         disabledAudio_->Names().Initialize();disabledAudio_->SetView({0,0,0,0,screenWidth_,screenHeight_});
     }
 }

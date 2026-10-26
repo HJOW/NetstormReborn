@@ -56,6 +56,9 @@ public:
     // external은 화면/월드 경계다. 미제공 기능은 기본값으로 비우며 팔레트 설정 조회와 로더는 한 쌍으로 제공한다.
     ClientAudio(std::filesystem::path gameDirectory,o::OriginalEdition edition,std::string language,
         std::function<double()> wallSeconds,std::uint32_t randomSeed,SceneMusicHooks external={});
+    // 실제 Client는 게임과 같은00532710을 빌린다. random은 음향보다 오래 살아야 하며 생성/종료는 시드나 상태를 쓰지 않는다.
+    ClientAudio(std::filesystem::path gameDirectory,o::OriginalEdition edition,std::string language,
+        std::function<double()> wallSeconds,o::GameRandom& random,SceneMusicHooks external={});
     // 음악 스레드를 합류하고 장치를 닫는다. 이미 닫혔으면 아무 일도 하지 않는다.
     ~ClientAudio();
     // 내부 객체가 서로의 주소를 보관하므로 복제·이동하지 않는다.
@@ -107,6 +110,9 @@ public:
     // 검사용 상태 보고다. 장치·옵션·음량·지금 곡·채널 활성·곡 길이·재생 커서·음악 스레드 오류를 줄마다 `이름\t값`으로 적는다.
     std::string Describe();
 private:
+    // 두 공개 생성자가 같은 음향 계층을 조립한다. sharedRandom이 있으면 지역 시드 대신 해당 장기 객체를 빌린다.
+    ClientAudio(std::filesystem::path gameDirectory,o::OriginalEdition edition,std::string language,
+        std::function<double()> wallSeconds,std::uint32_t randomSeed,SceneMusicHooks external,o::GameRandom* sharedRandom);
     // 장치를 열고(성공하면 true) 음악 스레드를 시작한다. 이미 열려 있으면 false다. Initialize·Interpret가 함께 쓴다.
     bool OpenDevice(std::uintptr_t window,int quality);
     // 음악 스레드를 합류한 뒤 장치를 닫는다(원본에 없는 순서 보장: 스레드가 닫힌 버퍼를 건드리면 안 된다).
@@ -140,8 +146,10 @@ private:
     MusicSelectionState selected_;
     // selection_: 원본 00435200→00435160 / CD 00484aa0→00484a10의 음악 선택 계층이다 (MusicSelection).
     MusicSelection selection_;
-    // 장면 음악의 난수·상태·감독이다.
-    o::GameRandom random_;
+    // 독립 음향 검사의 기존 시드만 보관한다. 공통 난수를 빌리는 제품에서는 이 객체를 소비하지 않는다.
+    o::GameRandom localRandom_;
+    // 장면 음악이 실제 소비하는 동일 난수다. 제품은 Client 전역을, 독립 검사는 localRandom_을 참조한다.
+    o::GameRandom& random_;
     // scene_: 장면별 음악 감독이 읽고 쓰는 원본 전역이다. 값은 클라이언트가 소유하고 감독이 살아 있는 동안 유지해야 한다 (SceneMusicState).
     SceneMusicState scene_;
     // sceneMusic_: 사용: state·random·hooks 대상은 이 객체보다 오래 살아야 한다. 주 스레드에서만 부른다 (SceneMusic).
