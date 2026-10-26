@@ -1,0 +1,3594 @@
+{
+  "host": "HJOW-Athlon",
+  "date": "2026-10-26",
+  "lastFullDecompilation": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23",
+    "changed": false
+  },
+  "binaryIdentities": {
+    "cpppj/build/bin/Release/NetstormCpp.exe": "c8739bd5d0ada3b4a8d675042203cdfe647f768fcecb70dc85de1a42a562fcd9",
+    "cpppj/build/bin/Release/netstorm_tests.exe": "a1faddeb1fbad4a0951f92fe7fa7ffc2c0eb77198e9561bd846bb52a69415646"
+  },
+  "registryCount": 3165,
+  "oldRegistryCount": 3156,
+  "addedTests": [
+    "CampaignExistingEditorCheckpoint_GuideLifetimeSurvivesPreparedCtorUntilSelectedLateClose",
+    "CampaignExistingEditorCheckpoint_GuideReleaseClearsSameNativeMissionBeforeEditor",
+    "CampaignExistingEditorCheckpoint_GuideReleaseKeepsPartialEffectsOnConfigNotificationFailure",
+    "CampaignExistingEditorCheckpoint_SameNameKeepsGuideAndSelectsMissionOutside",
+    "CampaignGameMenus_EditorBridgeQualityUsesLiveAssetsAndSharedRandom",
+    "IslandPlacement_CurrentMapAndBoundsAreBorrowed",
+    "IslandPlacement_ReplaysNativeReadOnlyCollisionAndBounds",
+    "RawBridgeEditor_PreservesPartialWriteAndUnsupportedNoop",
+    "RawBridgeEditor_ReplaysNativeWholePoolTraceAndRandom"
+  ],
+  "runs": [
+    {
+      "filter": "RawBridgeEditor",
+      "exitCode": 0,
+      "expected": [
+        "RawBridgeEditor_PreservesPartialWriteAndUnsupportedNoop",
+        "RawBridgeEditor_ReplaysNativeWholePoolTraceAndRandom"
+      ],
+      "passed": true,
+      "log": "extracted\\cpp-editor-runtime-466-verify1-1.log"
+    },
+    {
+      "filter": "IslandPlacement",
+      "exitCode": 0,
+      "expected": [
+        "IslandPlacement_CurrentMapAndBoundsAreBorrowed",
+        "IslandPlacement_ReplaysNativeReadOnlyCollisionAndBounds"
+      ],
+      "passed": true,
+      "log": "extracted\\cpp-editor-runtime-466-verify1-2.log"
+    },
+    {
+      "filter": "GameMenu",
+      "exitCode": 0,
+      "expected": [
+        "CampaignGameMenus_CurrentWorldReaders",
+        "CampaignGameMenus_EditorBridgeQualityUsesLiveAssetsAndSharedRandom",
+        "CampaignGameMenus_SharedSpAndTracking",
+        "GameMenuActions_Native610CurrentBodyAndPartialEffects",
+        "GameMenuActions_UnhandledReleaseAndRequiredEffects",
+        "GameMenuBar_MissingChildIsExplicit",
+        "GameMenuBar_Native510",
+        "GameMenus_Native918"
+      ],
+      "passed": true,
+      "log": "extracted\\cpp-editor-runtime-466-verify1-3.log"
+    },
+    {
+      "filter": "CampaignExistingEditor",
+      "exitCode": 0,
+      "expected": [
+        "CampaignExistingEditorCheckpoint_ActivityCollisionPreservesAllPriorRegistrations",
+        "CampaignExistingEditorCheckpoint_ActivityWireUsesClientNineAndRetiresOnlyReceive",
+        "CampaignExistingEditorCheckpoint_ActualChatRuntimeAdvancesWorldAndSnapshot",
+        "CampaignExistingEditorCheckpoint_ActualCurrentNameSelectsWorkingFile",
+        "CampaignExistingEditorCheckpoint_ActualCustomTest01PlayerUiAndFile",
+        "CampaignExistingEditorCheckpoint_ActualPlayerUiCompletesAndReloads",
+        "CampaignExistingEditorCheckpoint_ActualProductionFormsInsideInstallScope",
+        "CampaignExistingEditorCheckpoint_AdoptsNativePlayersAndPreservesCoreUntilNextCleanup",
+        "CampaignExistingEditorCheckpoint_CameraPreparedCtorAndReleasePreserveCurrentOwner",
+        "CampaignExistingEditorCheckpoint_CameraPreparedCtorFailureKeepsOwner",
+        "CampaignExistingEditorCheckpoint_CoreWriteManagerDiagnosticBeforeGate",
+        "CampaignExistingEditorCheckpoint_CoreWriteMetamapDiagnosticBeforeGate",
+        "CampaignExistingEditorCheckpoint_CoreWriteNaturalGateKeepsActualStorage",
+        "CampaignExistingEditorCheckpoint_CursorDataPreparedBorrowAndReleasePreserveCurrentValues",
+        "CampaignExistingEditorCheckpoint_CursorDataPreparedFailureKeepsOwner",
+        "CampaignExistingEditorCheckpoint_DeferPreservesExistingOwnerAndDefaultStages",
+        "CampaignExistingEditorCheckpoint_DeferRejectsCampaignMode",
+        "CampaignExistingEditorCheckpoint_EditorWireQueuesNegativeSenderConstructionMoveAndSalvage",
+        "CampaignExistingEditorCheckpoint_EditorWireReadsCurrentChargeGateWithoutSenderNormalization",
+        "CampaignExistingEditorCheckpoint_EditorWireRejectsForeignPlayersAndLoginBeforeBorrow",
+        "CampaignExistingEditorCheckpoint_EditorWireRejectsOwnedRegistrationBeforePublishing",
+        "CampaignExistingEditorCheckpoint_FileTailThenActualWorldChatBoundary",
+        "CampaignExistingEditorCheckpoint_FirstNotifyUsesActualWriterBeforeSubscriber",
+        "CampaignExistingEditorCheckpoint_FullDeckOwnerOrdinaryEditorCompatibility",
+        "CampaignExistingEditorCheckpoint_FullDeckOwnerPreparedConsumersAndRelease",
+        "CampaignExistingEditorCheckpoint_FullDeckOwnerPreservesConstructorAndLateFailure",
+        "CampaignExistingEditorCheckpoint_GuideLifetimeSurvivesPreparedCtorUntilSelectedLateClose",
+        "CampaignExistingEditorCheckpoint_GuideReleaseClearsSameNativeMissionBeforeEditor",
+        "CampaignExistingEditorCheckpoint_GuideReleaseKeepsPartialEffectsOnConfigNotificationFailure",
+        "CampaignExistingEditorCheckpoint_InputFactoriesStayClosedUntilActualStateCommit",
+        "CampaignExistingEditorCheckpoint_NormalReadFalseKeepsInvalidBranch",
+        "CampaignExistingEditorCheckpoint_PreparedAuthoritySurvivesPartialConstructorFailure",
+        "CampaignExistingEditorCheckpoint_PreparedAuthorityUsesSameClientOwnerWithoutTrueWrites",
+        "CampaignExistingEditorCheckpoint_PreparedCtorAndLateFailureKeepSelectionGlobals",
+        "CampaignExistingEditorCheckpoint_PreparedCtorKeepsSharedIslandAndChunkData",
+        "CampaignExistingEditorCheckpoint_PreparedCtorPreservesSameClientState",
+        "CampaignExistingEditorCheckpoint_PreparedCtorRejectsIncompleteOwnersBeforeBorrow",
+        "CampaignExistingEditorCheckpoint_SameNameKeepsGuideAndSelectsMissionOutside",
+        "CampaignExistingEditorCheckpoint_StateAuxPreparedCtorAndLateFailurePreserveCurrentOwner",
+        "CampaignExistingEditorCheckpoint_UiScopeCommitsOnlyAfterActualStateReturn",
+        "CampaignExistingEditorCheckpoint_UiTailCannotCommitEarlyReturnOrImmediate",
+        "CampaignExistingEditorCheckpoint_UiTailFailureKeepsPublicAccessClosed",
+        "CampaignExistingEditorPrefix_ActualDeckBeforeCheckpointAndScopeRetirement",
+        "CampaignExistingEditorPrefix_FailureClosesScopeWithoutPublishingRuntime",
+        "CampaignExistingEditorPrefix_RequiresPreparedOwnerAndCurrentState1",
+        "CampaignExistingEditorSubscriber_ActualClientRegisteredId",
+        "CampaignExistingEditorSubscriber_ActualSharedCrtAndConfig",
+        "CampaignExistingEditorSubscriber_KnownIdUsesActualStorage",
+        "CampaignExistingEditorSubscriber_MissingRegistrationPreservesPrefix",
+        "CampaignExistingEditor_FirstWorldModesPlayerHpSpAndTechnology",
+        "CampaignExistingEditor_MissingOwnerAndUiKeepPartialEffects",
+        "CampaignExistingEditor_WorkingTerritoryBadgesAndFullDeck"
+      ],
+      "passed": true,
+      "log": "extracted\\cpp-editor-runtime-466-verify1-4.log"
+    },
+    {
+      "filter": "EditorFiles",
+      "exitCode": 0,
+      "expected": [
+        "EditorFiles_FortSelectionUsesCurrentStateAndWriter",
+        "EditorFiles_NotifySaveAndReloadProtectedTest01",
+        "EditorFiles_ProtectedNameRejectedThroughSaveParent",
+        "EditorFiles_RealManagerSignatureAndCurrentSearch",
+        "EditorFiles_RejectsProtectedPathsAndKeepsExistingWork",
+        "EditorFiles_WorkingRootNormalizesDirectorySpellingsAndPreservesWork",
+        "EditorFiles_WorkingRootStillRejectsProtectedAndNamelessRoots"
+      ],
+      "passed": true,
+      "log": "extracted\\cpp-editor-runtime-466-verify1-5.log"
+    },
+    {
+      "filter": "StateWorldCleanup",
+      "exitCode": 0,
+      "expected": [
+        "ClientStateWorldCleanup_ActualInitialClientAndAllHudFactories",
+        "ClientStateWorldCleanup_BudgetIdleUsesLongLivedSpWithoutRuntime",
+        "ClientStateWorldCleanup_MissingSelectedHudKeepsPriorNativeWrites",
+        "ClientStateWorldCleanup_NestedResumeReleasesUiPauseOwner",
+        "ClientStateWorldCleanup_SecondInitialPassUsesCurrentCoreAndNewHud",
+        "StateWorldCleanup_MissingCorePreservesEarlierEffects",
+        "StateWorldCleanup_ReplaysIndependentPe294"
+      ],
+      "passed": true,
+      "log": "extracted\\cpp-editor-runtime-466-verify1-6.log"
+    },
+    {
+      "filter": "ClientStateWorldCleanup",
+      "exitCode": 0,
+      "expected": [
+        "ClientStateWorldCleanup_ActualInitialClientAndAllHudFactories",
+        "ClientStateWorldCleanup_BudgetIdleUsesLongLivedSpWithoutRuntime",
+        "ClientStateWorldCleanup_MissingSelectedHudKeepsPriorNativeWrites",
+        "ClientStateWorldCleanup_NestedResumeReleasesUiPauseOwner",
+        "ClientStateWorldCleanup_SecondInitialPassUsesCurrentCoreAndNewHud"
+      ],
+      "passed": true,
+      "log": "extracted\\cpp-editor-runtime-466-verify1-7.log"
+    },
+    {
+      "filter": "Tutorial",
+      "exitCode": 0,
+      "expected": [
+        "CampaignKernelFrames_Tutorial1",
+        "CampaignKernelFrames_Tutorial2",
+        "CampaignKernelFrames_Tutorial3",
+        "CampaignKernelFrames_Tutorial4",
+        "CampaignKernelFrames_Tutorial5",
+        "CampaignKernelFrames_Tutorial6",
+        "CampaignSunFlyer_Tutorial5NaturalDedicatedFrames60Seconds",
+        "CampaignSunFlyer_Tutorial5NaturalPostPop",
+        "CampaignTutorialLater_ActualSessionsAndThreeDwordEvents",
+        "CampaignTutorialOne_ActualSessionFrameAndInputPauseOwnership",
+        "CampaignTutorialTwo_ActualSessionOptionsAndInitialFrame",
+        "SubscriberGlobals_TutorialInitUsesCurrentLoginAfterConfiguration",
+        "TutorialInit_Native152",
+        "TutorialInit_PendingRequestReleasedWithOwner",
+        "TutorialInit_ProtectedElevenBeforeQueuedLoad",
+        "TutorialLater_Native533",
+        "TutorialLater_RejectsMissingConsumerAndEvent",
+        "TutorialOne_SharedStateAndMutableList",
+        "TutorialOne_StageNative266",
+        "TutorialOne_TotalMadeNative104",
+        "TutorialOne_TotalMadeSharedResetAndDirectHelperReplayNative104",
+        "TutorialTwo_IndependentPeFixture",
+        "TutorialTwo_RejectsMissingBoundary"
+      ],
+      "passed": true,
+      "log": "extracted\\cpp-editor-runtime-466-verify1-9.log"
+    },
+    {
+      "filter": "GuideTransitions",
+      "expected": [
+        "GuideTransitions_AuthoredNextMissionQueueAndOwnedString",
+        "GuideTransitions_Native286"
+      ],
+      "passed": true,
+      "exitCode": 0,
+      "log": "extracted\\cpp-editor-runtime-466-verify2-GuideTransitions.log"
+    },
+    {
+      "filter": "TutorialInit",
+      "expected": [
+        "SubscriberGlobals_TutorialInitUsesCurrentLoginAfterConfiguration",
+        "TutorialInit_Native152",
+        "TutorialInit_PendingRequestReleasedWithOwner",
+        "TutorialInit_ProtectedElevenBeforeQueuedLoad"
+      ],
+      "passed": true,
+      "exitCode": 0,
+      "log": "extracted\\cpp-editor-runtime-466-verify2-TutorialInit.log"
+    }
+  ],
+  "uniqueFocusedPassed": 103,
+  "observations": 112,
+  "full": {
+    "exitCode": 0,
+    "caseCount": 3165,
+    "ctestWrapperCount": 1,
+    "passed": true,
+    "log": "extracted\\cpp-editor-runtime-466-verify1-full.log"
+  },
+  "protectedChanges": [],
+  "sourceChanges": [],
+  "binaryUnchanged": true,
+  "initialValidationInputErrors": [
+    {
+      "filter": "MissionTransition",
+      "exitCode": 1,
+      "expected": [],
+      "passed": false,
+      "log": "extracted\\cpp-editor-runtime-466-verify1-8.log"
+    },
+    {
+      "filter": "MissionInit",
+      "exitCode": 1,
+      "expected": [],
+      "passed": false,
+      "log": "extracted\\cpp-editor-runtime-466-verify1-10.log"
+    }
+  ],
+  "recoveredFrom": "extracted/cpp-editor-runtime-466-verify1.json",
+  "unit": 466,
+  "ip": "192.168.0.94",
+  "builds": [
+    {
+      "attempt": 1,
+      "exitCode": 0,
+      "errors": 0,
+      "warnings": 0,
+      "log": "extracted/cpp-editor-runtime-466-build1.log",
+      "sha256": "726db20aa7b94ec3dee145e13c2aee61d759b1caee908cd35afbe4f2ed5761ab"
+    },
+    {
+      "attempt": 2,
+      "exitCode": 0,
+      "errors": 0,
+      "warnings": 0,
+      "log": "extracted/cpp-editor-runtime-466-build2.log",
+      "sha256": "4cefde820b37991b8cf326833d79d7b87289d9d770218ec547eb54ff366ae378"
+    }
+  ],
+  "gui": [
+    {
+      "name": "quit1",
+      "case": "quit",
+      "run": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-editor-entry-464-data\\",
+          "--window",
+          "--no-audio",
+          "--frames",
+          "220",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=60;sleepPerLoop=10;autoDemo=0;tellTips=0;currentLanguage=english;useProductTimers=0",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-editor-runtime-466-quit1\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-editor-runtime-466-quit1\\states.tsv"
+        ],
+        "binarySha256": "c8739bd5d0ada3b4a8d675042203cdfe647f768fcecb70dc85de1a42a562fcd9",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 1.0627297999999428,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "gameSha256": "c8739bd5d0ada3b4a8d675042203cdfe647f768fcecb70dc85de1a42a562fcd9",
+        "binaryUnchanged": true,
+        "originalsUnchanged": true,
+        "dataUnchanged": true,
+        "originalGameExecuted": false,
+        "trailingSeparator": true,
+        "tags": [
+          "startup"
+        ]
+      },
+      "tags": [
+        "startup"
+      ],
+      "observations": {
+        "startup": {
+          "phase": [
+            [
+              "0"
+            ]
+          ],
+          "page": [
+            [
+              "main"
+            ]
+          ],
+          "fort_selection": [
+            [
+              "0",
+              "0",
+              "0",
+              "0",
+              ""
+            ]
+          ],
+          "fort_names": [
+            [
+              "",
+              "",
+              "1",
+              "fortSpec"
+            ]
+          ],
+          "game_menu_bar": [
+            [
+              "0",
+              "0",
+              "0"
+            ]
+          ],
+          "connection_table": [
+            [
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ]
+          ]
+        }
+      },
+      "pictures": {}
+    },
+    {
+      "name": "quit2",
+      "case": "quit",
+      "run": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-editor-entry-464-data\\",
+          "--window",
+          "--no-audio",
+          "--frames",
+          "220",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=60;sleepPerLoop=10;autoDemo=0;tellTips=0;currentLanguage=english;useProductTimers=0",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-editor-runtime-466-quit2\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-editor-runtime-466-quit2\\states.tsv"
+        ],
+        "binarySha256": "c8739bd5d0ada3b4a8d675042203cdfe647f768fcecb70dc85de1a42a562fcd9",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 0.9859247999997933,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "gameSha256": "c8739bd5d0ada3b4a8d675042203cdfe647f768fcecb70dc85de1a42a562fcd9",
+        "binaryUnchanged": true,
+        "originalsUnchanged": true,
+        "dataUnchanged": true,
+        "originalGameExecuted": false,
+        "trailingSeparator": true,
+        "tags": [
+          "startup"
+        ]
+      },
+      "tags": [
+        "startup"
+      ],
+      "observations": {
+        "startup": {
+          "phase": [
+            [
+              "0"
+            ]
+          ],
+          "page": [
+            [
+              "main"
+            ]
+          ],
+          "fort_selection": [
+            [
+              "0",
+              "0",
+              "0",
+              "0",
+              ""
+            ]
+          ],
+          "fort_names": [
+            [
+              "",
+              "",
+              "1",
+              "fortSpec"
+            ]
+          ],
+          "game_menu_bar": [
+            [
+              "0",
+              "0",
+              "0"
+            ]
+          ],
+          "connection_table": [
+            [
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ]
+          ]
+        }
+      },
+      "pictures": {}
+    },
+    {
+      "name": "cracked1",
+      "case": "Cracked",
+      "run": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-editor-entry-464-data\\",
+          "--window",
+          "--no-audio",
+          "--frames",
+          "76",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=60;sleepPerLoop=10;autoDemo=0;tellTips=0;currentLanguage=english;useProductTimers=0",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-editor-runtime-466-cracked1\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-editor-runtime-466-cracked1\\states.tsv"
+        ],
+        "binarySha256": "c8739bd5d0ada3b4a8d675042203cdfe647f768fcecb70dc85de1a42a562fcd9",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 3.7423635000000104,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "0ad755a43600773b6fb5dba81206809a7f4f3d700fb9e342b9aa162b7c60e796",
+        "gameSha256": "c8739bd5d0ada3b4a8d675042203cdfe647f768fcecb70dc85de1a42a562fcd9",
+        "binaryUnchanged": true,
+        "originalsUnchanged": true,
+        "dataUnchanged": true,
+        "originalGameExecuted": false,
+        "trailingSeparator": true,
+        "tags": [
+          "startup",
+          "list",
+          "ready",
+          "quality-menu",
+          "changed"
+        ]
+      },
+      "tags": [
+        "startup",
+        "list",
+        "ready",
+        "quality-menu",
+        "changed"
+      ],
+      "observations": {
+        "startup": {
+          "phase": [
+            [
+              "0"
+            ]
+          ],
+          "page": [
+            [
+              "main"
+            ]
+          ],
+          "fort_selection": [
+            [
+              "0",
+              "0",
+              "0",
+              "0",
+              ""
+            ]
+          ],
+          "fort_names": [
+            [
+              "",
+              "",
+              "1",
+              "fortSpec"
+            ]
+          ],
+          "game_menu_bar": [
+            [
+              "0",
+              "0",
+              "0"
+            ]
+          ],
+          "connection_table": [
+            [
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ]
+          ]
+        },
+        "list": {
+          "phase": [
+            [
+              "1"
+            ]
+          ],
+          "page": [
+            [
+              "LoadEditable"
+            ]
+          ],
+          "fort_selection": [
+            [
+              "2",
+              "0",
+              "0",
+              "0",
+              ""
+            ]
+          ],
+          "fort_names": [
+            [
+              "",
+              "",
+              "1",
+              "fortSpec"
+            ]
+          ],
+          "game_menu_bar": [
+            [
+              "0",
+              "0",
+              "0"
+            ]
+          ],
+          "connection_table": [
+            [
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ]
+          ]
+        },
+        "ready": {
+          "phase": [
+            [
+              "4"
+            ]
+          ],
+          "page": [
+            [
+              "editor"
+            ]
+          ],
+          "fort_selection": [
+            [
+              "2",
+              "4",
+              "0",
+              "0",
+              "Battle1"
+            ]
+          ],
+          "fort_names": [
+            [
+              "Battle1",
+              "Battle1",
+              "2",
+              "fortSpec"
+            ]
+          ],
+          "editor_runtime": [
+            [
+              "1",
+              "1",
+              "1",
+              "4294967295",
+              "0"
+            ]
+          ],
+          "game_menu_bar": [
+            [
+              "0",
+              "0",
+              "0"
+            ]
+          ],
+          "connection_table": [
+            [
+              "1",
+              "1",
+              "1",
+              "1828716544",
+              "0"
+            ]
+          ]
+        },
+        "quality-menu": {
+          "phase": [
+            [
+              "4"
+            ]
+          ],
+          "page": [
+            [
+              "editor"
+            ]
+          ],
+          "fort_selection": [
+            [
+              "2",
+              "4",
+              "0",
+              "0",
+              "Battle1"
+            ]
+          ],
+          "fort_names": [
+            [
+              "Battle1",
+              "Battle1",
+              "2",
+              "fortSpec"
+            ]
+          ],
+          "editor_runtime": [
+            [
+              "1",
+              "1",
+              "1",
+              "4294967295",
+              "0"
+            ]
+          ],
+          "game_menu_bar": [
+            [
+              "3248",
+              "1",
+              "3"
+            ]
+          ],
+          "connection_table": [
+            [
+              "1",
+              "1",
+              "1",
+              "1828716544",
+              "0"
+            ]
+          ]
+        },
+        "changed": {
+          "phase": [
+            [
+              "4"
+            ]
+          ],
+          "page": [
+            [
+              "editor"
+            ]
+          ],
+          "fort_selection": [
+            [
+              "2",
+              "4",
+              "0",
+              "0",
+              "Battle1"
+            ]
+          ],
+          "fort_names": [
+            [
+              "Battle1",
+              "Battle1",
+              "2",
+              "fortSpec"
+            ]
+          ],
+          "editor_runtime": [
+            [
+              "1",
+              "1",
+              "1",
+              "4294967295",
+              "0"
+            ]
+          ],
+          "game_menu_bar": [
+            [
+              "3248",
+              "0",
+              "3"
+            ]
+          ],
+          "connection_table": [
+            [
+              "1",
+              "1",
+              "1",
+              "1828716544",
+              "0"
+            ]
+          ]
+        }
+      },
+      "bridgeCount": 314,
+      "changedFrames": 314,
+      "actualFrameCodesVerified": true,
+      "pictures": {
+        "ready.bmp": {
+          "path": "extracted/cpp-editor-runtime-466-cracked1/ready.bmp",
+          "sha256": "4063add2b3c3401b1fc14f292e5b34a55bb81676dfea25178a8a45ace001ac4d"
+        },
+        "changed.bmp": {
+          "path": "extracted/cpp-editor-runtime-466-cracked1/changed.bmp",
+          "sha256": "d647f163d059f5d6fd403962a67b32b9f8c763b8dddcef896ad3633c9d9327fb"
+        }
+      }
+    },
+    {
+      "name": "normal1",
+      "case": "Normal",
+      "run": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-editor-entry-464-data\\",
+          "--window",
+          "--no-audio",
+          "--frames",
+          "76",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=60;sleepPerLoop=10;autoDemo=0;tellTips=0;currentLanguage=english;useProductTimers=0",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-editor-runtime-466-normal1\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-editor-runtime-466-normal1\\states.tsv"
+        ],
+        "binarySha256": "c8739bd5d0ada3b4a8d675042203cdfe647f768fcecb70dc85de1a42a562fcd9",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 3.868998900000406,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "0ad755a43600773b6fb5dba81206809a7f4f3d700fb9e342b9aa162b7c60e796",
+        "gameSha256": "c8739bd5d0ada3b4a8d675042203cdfe647f768fcecb70dc85de1a42a562fcd9",
+        "binaryUnchanged": true,
+        "originalsUnchanged": true,
+        "dataUnchanged": true,
+        "originalGameExecuted": false,
+        "trailingSeparator": true,
+        "tags": [
+          "startup",
+          "list",
+          "ready",
+          "quality-menu",
+          "changed"
+        ]
+      },
+      "tags": [
+        "startup",
+        "list",
+        "ready",
+        "quality-menu",
+        "changed"
+      ],
+      "observations": {
+        "startup": {
+          "phase": [
+            [
+              "0"
+            ]
+          ],
+          "page": [
+            [
+              "main"
+            ]
+          ],
+          "fort_selection": [
+            [
+              "0",
+              "0",
+              "0",
+              "0",
+              ""
+            ]
+          ],
+          "fort_names": [
+            [
+              "",
+              "",
+              "1",
+              "fortSpec"
+            ]
+          ],
+          "game_menu_bar": [
+            [
+              "0",
+              "0",
+              "0"
+            ]
+          ],
+          "connection_table": [
+            [
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ]
+          ]
+        },
+        "list": {
+          "phase": [
+            [
+              "1"
+            ]
+          ],
+          "page": [
+            [
+              "LoadEditable"
+            ]
+          ],
+          "fort_selection": [
+            [
+              "2",
+              "0",
+              "0",
+              "0",
+              ""
+            ]
+          ],
+          "fort_names": [
+            [
+              "",
+              "",
+              "1",
+              "fortSpec"
+            ]
+          ],
+          "game_menu_bar": [
+            [
+              "0",
+              "0",
+              "0"
+            ]
+          ],
+          "connection_table": [
+            [
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ]
+          ]
+        },
+        "ready": {
+          "phase": [
+            [
+              "4"
+            ]
+          ],
+          "page": [
+            [
+              "editor"
+            ]
+          ],
+          "fort_selection": [
+            [
+              "2",
+              "4",
+              "0",
+              "0",
+              "Battle1"
+            ]
+          ],
+          "fort_names": [
+            [
+              "Battle1",
+              "Battle1",
+              "2",
+              "fortSpec"
+            ]
+          ],
+          "editor_runtime": [
+            [
+              "1",
+              "1",
+              "1",
+              "4294967295",
+              "0"
+            ]
+          ],
+          "game_menu_bar": [
+            [
+              "0",
+              "0",
+              "0"
+            ]
+          ],
+          "connection_table": [
+            [
+              "1",
+              "1",
+              "1",
+              "1828716544",
+              "0"
+            ]
+          ]
+        },
+        "quality-menu": {
+          "phase": [
+            [
+              "4"
+            ]
+          ],
+          "page": [
+            [
+              "editor"
+            ]
+          ],
+          "fort_selection": [
+            [
+              "2",
+              "4",
+              "0",
+              "0",
+              "Battle1"
+            ]
+          ],
+          "fort_names": [
+            [
+              "Battle1",
+              "Battle1",
+              "2",
+              "fortSpec"
+            ]
+          ],
+          "editor_runtime": [
+            [
+              "1",
+              "1",
+              "1",
+              "4294967295",
+              "0"
+            ]
+          ],
+          "game_menu_bar": [
+            [
+              "3249",
+              "1",
+              "3"
+            ]
+          ],
+          "connection_table": [
+            [
+              "1",
+              "1",
+              "1",
+              "1828716544",
+              "0"
+            ]
+          ]
+        },
+        "changed": {
+          "phase": [
+            [
+              "4"
+            ]
+          ],
+          "page": [
+            [
+              "editor"
+            ]
+          ],
+          "fort_selection": [
+            [
+              "2",
+              "4",
+              "0",
+              "0",
+              "Battle1"
+            ]
+          ],
+          "fort_names": [
+            [
+              "Battle1",
+              "Battle1",
+              "2",
+              "fortSpec"
+            ]
+          ],
+          "editor_runtime": [
+            [
+              "1",
+              "1",
+              "1",
+              "4294967295",
+              "0"
+            ]
+          ],
+          "game_menu_bar": [
+            [
+              "3249",
+              "0",
+              "3"
+            ]
+          ],
+          "connection_table": [
+            [
+              "1",
+              "1",
+              "1",
+              "1828716544",
+              "0"
+            ]
+          ]
+        }
+      },
+      "bridgeCount": 314,
+      "changedFrames": 222,
+      "actualFrameCodesVerified": true,
+      "pictures": {
+        "ready.bmp": {
+          "path": "extracted/cpp-editor-runtime-466-normal1/ready.bmp",
+          "sha256": "4f44cb9f3922b8469114baa2682099bf4077d8bc0b44e452a65fe94583e302ab"
+        },
+        "changed.bmp": {
+          "path": "extracted/cpp-editor-runtime-466-normal1/changed.bmp",
+          "sha256": "42ed7bf6f60477fe2136b77e9b9b289257231b3c46724edebb5479b2f1622007"
+        }
+      }
+    },
+    {
+      "name": "hard1",
+      "case": "Hard",
+      "run": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-editor-entry-464-data\\",
+          "--window",
+          "--no-audio",
+          "--frames",
+          "76",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=60;sleepPerLoop=10;autoDemo=0;tellTips=0;currentLanguage=english;useProductTimers=0",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-editor-runtime-466-hard1\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-editor-runtime-466-hard1\\states.tsv"
+        ],
+        "binarySha256": "c8739bd5d0ada3b4a8d675042203cdfe647f768fcecb70dc85de1a42a562fcd9",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 3.782658700000411,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "0ad755a43600773b6fb5dba81206809a7f4f3d700fb9e342b9aa162b7c60e796",
+        "gameSha256": "c8739bd5d0ada3b4a8d675042203cdfe647f768fcecb70dc85de1a42a562fcd9",
+        "binaryUnchanged": true,
+        "originalsUnchanged": true,
+        "dataUnchanged": true,
+        "originalGameExecuted": false,
+        "trailingSeparator": true,
+        "tags": [
+          "startup",
+          "list",
+          "ready",
+          "quality-menu",
+          "changed"
+        ]
+      },
+      "tags": [
+        "startup",
+        "list",
+        "ready",
+        "quality-menu",
+        "changed"
+      ],
+      "observations": {
+        "startup": {
+          "phase": [
+            [
+              "0"
+            ]
+          ],
+          "page": [
+            [
+              "main"
+            ]
+          ],
+          "fort_selection": [
+            [
+              "0",
+              "0",
+              "0",
+              "0",
+              ""
+            ]
+          ],
+          "fort_names": [
+            [
+              "",
+              "",
+              "1",
+              "fortSpec"
+            ]
+          ],
+          "game_menu_bar": [
+            [
+              "0",
+              "0",
+              "0"
+            ]
+          ],
+          "connection_table": [
+            [
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ]
+          ]
+        },
+        "list": {
+          "phase": [
+            [
+              "1"
+            ]
+          ],
+          "page": [
+            [
+              "LoadEditable"
+            ]
+          ],
+          "fort_selection": [
+            [
+              "2",
+              "0",
+              "0",
+              "0",
+              ""
+            ]
+          ],
+          "fort_names": [
+            [
+              "",
+              "",
+              "1",
+              "fortSpec"
+            ]
+          ],
+          "game_menu_bar": [
+            [
+              "0",
+              "0",
+              "0"
+            ]
+          ],
+          "connection_table": [
+            [
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ]
+          ]
+        },
+        "ready": {
+          "phase": [
+            [
+              "4"
+            ]
+          ],
+          "page": [
+            [
+              "editor"
+            ]
+          ],
+          "fort_selection": [
+            [
+              "2",
+              "4",
+              "0",
+              "0",
+              "Battle1"
+            ]
+          ],
+          "fort_names": [
+            [
+              "Battle1",
+              "Battle1",
+              "2",
+              "fortSpec"
+            ]
+          ],
+          "editor_runtime": [
+            [
+              "1",
+              "1",
+              "1",
+              "4294967295",
+              "0"
+            ]
+          ],
+          "game_menu_bar": [
+            [
+              "0",
+              "0",
+              "0"
+            ]
+          ],
+          "connection_table": [
+            [
+              "1",
+              "1",
+              "1",
+              "1828716544",
+              "0"
+            ]
+          ]
+        },
+        "quality-menu": {
+          "phase": [
+            [
+              "4"
+            ]
+          ],
+          "page": [
+            [
+              "editor"
+            ]
+          ],
+          "fort_selection": [
+            [
+              "2",
+              "4",
+              "0",
+              "0",
+              "Battle1"
+            ]
+          ],
+          "fort_names": [
+            [
+              "Battle1",
+              "Battle1",
+              "2",
+              "fortSpec"
+            ]
+          ],
+          "editor_runtime": [
+            [
+              "1",
+              "1",
+              "1",
+              "4294967295",
+              "0"
+            ]
+          ],
+          "game_menu_bar": [
+            [
+              "3248",
+              "1",
+              "3"
+            ]
+          ],
+          "connection_table": [
+            [
+              "1",
+              "1",
+              "1",
+              "1828716544",
+              "0"
+            ]
+          ]
+        },
+        "changed": {
+          "phase": [
+            [
+              "4"
+            ]
+          ],
+          "page": [
+            [
+              "editor"
+            ]
+          ],
+          "fort_selection": [
+            [
+              "2",
+              "4",
+              "0",
+              "0",
+              "Battle1"
+            ]
+          ],
+          "fort_names": [
+            [
+              "Battle1",
+              "Battle1",
+              "2",
+              "fortSpec"
+            ]
+          ],
+          "editor_runtime": [
+            [
+              "1",
+              "1",
+              "1",
+              "4294967295",
+              "0"
+            ]
+          ],
+          "game_menu_bar": [
+            [
+              "3248",
+              "0",
+              "3"
+            ]
+          ],
+          "connection_table": [
+            [
+              "1",
+              "1",
+              "1",
+              "1828716544",
+              "0"
+            ]
+          ]
+        }
+      },
+      "bridgeCount": 314,
+      "changedFrames": 92,
+      "actualFrameCodesVerified": true,
+      "pictures": {
+        "ready.bmp": {
+          "path": "extracted/cpp-editor-runtime-466-hard1/ready.bmp",
+          "sha256": "a23e6a747e5b4281f7c63708226dedf168df5b93bd7638aba25e1c55a7c6c77e"
+        },
+        "changed.bmp": {
+          "path": "extracted/cpp-editor-runtime-466-hard1/changed.bmp",
+          "sha256": "dbd471cefb7743131907e718fe0b5000a01349744e632b48c4815f75fb9c26e1"
+        }
+      }
+    },
+    {
+      "name": "cancel1",
+      "case": "cancel",
+      "run": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-editor-entry-464-data\\",
+          "--window",
+          "--no-audio",
+          "--frames",
+          "86",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=60;sleepPerLoop=10;autoDemo=0;tellTips=0;currentLanguage=english;useProductTimers=0",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-editor-runtime-466-cancel1\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-editor-runtime-466-cancel1\\states.tsv"
+        ],
+        "binarySha256": "c8739bd5d0ada3b4a8d675042203cdfe647f768fcecb70dc85de1a42a562fcd9",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 4.299988100000064,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "0ad755a43600773b6fb5dba81206809a7f4f3d700fb9e342b9aa162b7c60e796",
+        "gameSha256": "c8739bd5d0ada3b4a8d675042203cdfe647f768fcecb70dc85de1a42a562fcd9",
+        "binaryUnchanged": true,
+        "originalsUnchanged": true,
+        "dataUnchanged": true,
+        "originalGameExecuted": false,
+        "trailingSeparator": true,
+        "tags": [
+          "startup",
+          "list",
+          "ready",
+          "game",
+          "question",
+          "restored"
+        ]
+      },
+      "tags": [
+        "startup",
+        "list",
+        "ready",
+        "game",
+        "question",
+        "restored"
+      ],
+      "observations": {
+        "startup": {
+          "phase": [
+            [
+              "0"
+            ]
+          ],
+          "page": [
+            [
+              "main"
+            ]
+          ],
+          "fort_selection": [
+            [
+              "0",
+              "0",
+              "0",
+              "0",
+              ""
+            ]
+          ],
+          "fort_names": [
+            [
+              "",
+              "",
+              "1",
+              "fortSpec"
+            ]
+          ],
+          "game_menu_bar": [
+            [
+              "0",
+              "0",
+              "0"
+            ]
+          ],
+          "connection_table": [
+            [
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ]
+          ]
+        },
+        "list": {
+          "phase": [
+            [
+              "1"
+            ]
+          ],
+          "page": [
+            [
+              "LoadEditable"
+            ]
+          ],
+          "fort_selection": [
+            [
+              "2",
+              "0",
+              "0",
+              "0",
+              ""
+            ]
+          ],
+          "fort_names": [
+            [
+              "",
+              "",
+              "1",
+              "fortSpec"
+            ]
+          ],
+          "game_menu_bar": [
+            [
+              "0",
+              "0",
+              "0"
+            ]
+          ],
+          "connection_table": [
+            [
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ]
+          ]
+        },
+        "ready": {
+          "phase": [
+            [
+              "4"
+            ]
+          ],
+          "page": [
+            [
+              "editor"
+            ]
+          ],
+          "fort_selection": [
+            [
+              "2",
+              "4",
+              "0",
+              "0",
+              "Battle1"
+            ]
+          ],
+          "fort_names": [
+            [
+              "Battle1",
+              "Battle1",
+              "2",
+              "fortSpec"
+            ]
+          ],
+          "editor_runtime": [
+            [
+              "1",
+              "1",
+              "1",
+              "4294967295",
+              "0"
+            ]
+          ],
+          "game_menu_bar": [
+            [
+              "0",
+              "0",
+              "0"
+            ]
+          ],
+          "connection_table": [
+            [
+              "1",
+              "1",
+              "1",
+              "1828716544",
+              "0"
+            ]
+          ]
+        },
+        "game": {
+          "phase": [
+            [
+              "4"
+            ]
+          ],
+          "page": [
+            [
+              "editor"
+            ]
+          ],
+          "fort_selection": [
+            [
+              "2",
+              "4",
+              "0",
+              "0",
+              "Battle1"
+            ]
+          ],
+          "fort_names": [
+            [
+              "Battle1",
+              "Battle1",
+              "2",
+              "fortSpec"
+            ]
+          ],
+          "editor_runtime": [
+            [
+              "1",
+              "1",
+              "1",
+              "4294967295",
+              "0"
+            ]
+          ],
+          "game_menu_bar": [
+            [
+              "3246",
+              "1",
+              "3"
+            ]
+          ],
+          "connection_table": [
+            [
+              "1",
+              "1",
+              "1",
+              "1828716544",
+              "0"
+            ]
+          ]
+        },
+        "question": {
+          "phase": [
+            [
+              "1"
+            ]
+          ],
+          "page": [
+            [
+              "QuitEditMode"
+            ]
+          ],
+          "fort_selection": [
+            [
+              "2",
+              "4",
+              "0",
+              "0",
+              "Battle1"
+            ]
+          ],
+          "fort_names": [
+            [
+              "Battle1",
+              "Battle1",
+              "2",
+              "fortSpec"
+            ]
+          ],
+          "editor_runtime": [
+            [
+              "1",
+              "1",
+              "1",
+              "4294967295",
+              "0"
+            ]
+          ],
+          "game_menu_bar": [
+            [
+              "3246",
+              "0",
+              "3"
+            ]
+          ],
+          "connection_table": [
+            [
+              "1",
+              "1",
+              "1",
+              "1828716544",
+              "0"
+            ]
+          ]
+        },
+        "restored": {
+          "phase": [
+            [
+              "4"
+            ]
+          ],
+          "page": [
+            [
+              "editor"
+            ]
+          ],
+          "fort_selection": [
+            [
+              "2",
+              "4",
+              "0",
+              "0",
+              "Battle1"
+            ]
+          ],
+          "fort_names": [
+            [
+              "Battle1",
+              "Battle1",
+              "2",
+              "fortSpec"
+            ]
+          ],
+          "editor_runtime": [
+            [
+              "1",
+              "1",
+              "1",
+              "4294967295",
+              "0"
+            ]
+          ],
+          "game_menu_bar": [
+            [
+              "3246",
+              "0",
+              "3"
+            ]
+          ],
+          "connection_table": [
+            [
+              "1",
+              "1",
+              "1",
+              "1828716544",
+              "0"
+            ]
+          ]
+        }
+      },
+      "pictures": {
+        "ready.bmp": {
+          "path": "extracted/cpp-editor-runtime-466-cancel1/ready.bmp",
+          "sha256": "ab033de31df3f209d483509e5d420c62ac8f1f157effd34928855c309c80b361"
+        },
+        "question.bmp": {
+          "path": "extracted/cpp-editor-runtime-466-cancel1/question.bmp",
+          "sha256": "e26a9549b930b64a108e5590e19f1c2fcdaf6e72950df41236187582d85d1797"
+        },
+        "restored.bmp": {
+          "path": "extracted/cpp-editor-runtime-466-cancel1/restored.bmp",
+          "sha256": "8b59aac71d5195817ce7151878ffcdd42ca4e53c7ae356b1990423dfa280c654"
+        }
+      }
+    },
+    {
+      "name": "credits1",
+      "case": "credits",
+      "run": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-editor-entry-464-data\\",
+          "--window",
+          "--no-audio",
+          "--frames",
+          "240",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=60;sleepPerLoop=10;autoDemo=0;tellTips=0;currentLanguage=english;useProductTimers=0",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-editor-runtime-466-credits1\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-editor-runtime-466-credits1\\states.tsv"
+        ],
+        "binarySha256": "c8739bd5d0ada3b4a8d675042203cdfe647f768fcecb70dc85de1a42a562fcd9",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 5.630277799999931,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "gameSha256": "c8739bd5d0ada3b4a8d675042203cdfe647f768fcecb70dc85de1a42a562fcd9",
+        "binaryUnchanged": true,
+        "originalsUnchanged": true,
+        "dataUnchanged": true,
+        "originalGameExecuted": false,
+        "trailingSeparator": true,
+        "tags": [
+          "startup",
+          "list",
+          "patch",
+          "patch-next",
+          "patch-back",
+          "patch-new1",
+          "patch-new2",
+          "patch-new3",
+          "closed",
+          "original",
+          "original-next",
+          "original-back",
+          "original-page1",
+          "original-page2",
+          "original-page3",
+          "original-page4",
+          "original-page5",
+          "original-page6",
+          "original-page7",
+          "original-page8",
+          "original-page9",
+          "original-page10",
+          "original-page11",
+          "original-page12",
+          "original-page13",
+          "final"
+        ]
+      },
+      "tags": [
+        "startup",
+        "list",
+        "patch",
+        "patch-next",
+        "patch-back",
+        "patch-new1",
+        "patch-new2",
+        "patch-new3",
+        "closed",
+        "original",
+        "original-next",
+        "original-back",
+        "original-page1",
+        "original-page2",
+        "original-page3",
+        "original-page4",
+        "original-page5",
+        "original-page6",
+        "original-page7",
+        "original-page8",
+        "original-page9",
+        "original-page10",
+        "original-page11",
+        "original-page12",
+        "original-page13",
+        "final"
+      ],
+      "observations": {
+        "startup": {
+          "phase": [
+            [
+              "0"
+            ]
+          ],
+          "page": [
+            [
+              "main"
+            ]
+          ],
+          "fort_selection": [
+            [
+              "0",
+              "0",
+              "0",
+              "0",
+              ""
+            ]
+          ],
+          "fort_names": [
+            [
+              "",
+              "",
+              "1",
+              "fortSpec"
+            ]
+          ],
+          "game_menu_bar": [
+            [
+              "0",
+              "0",
+              "0"
+            ]
+          ],
+          "connection_table": [
+            [
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ]
+          ]
+        },
+        "list": {
+          "phase": [
+            [
+              "1"
+            ]
+          ],
+          "page": [
+            [
+              "Credits"
+            ]
+          ],
+          "fort_selection": [
+            [
+              "0",
+              "0",
+              "0",
+              "0",
+              ""
+            ]
+          ],
+          "fort_names": [
+            [
+              "",
+              "",
+              "1",
+              "fortSpec"
+            ]
+          ],
+          "game_menu_bar": [
+            [
+              "0",
+              "0",
+              "0"
+            ]
+          ],
+          "connection_table": [
+            [
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ]
+          ]
+        },
+        "patch": {
+          "phase": [
+            [
+              "1"
+            ]
+          ],
+          "page": [
+            [
+              "CreditsNew"
+            ]
+          ],
+          "fort_selection": [
+            [
+              "0",
+              "0",
+              "0",
+              "0",
+              ""
+            ]
+          ],
+          "fort_names": [
+            [
+              "",
+              "",
+              "1",
+              "fortSpec"
+            ]
+          ],
+          "game_menu_bar": [
+            [
+              "0",
+              "0",
+              "0"
+            ]
+          ],
+          "connection_table": [
+            [
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ]
+          ]
+        },
+        "patch-next": {
+          "phase": [
+            [
+              "1"
+            ]
+          ],
+          "page": [
+            [
+              "CreditsNew1"
+            ]
+          ],
+          "fort_selection": [
+            [
+              "0",
+              "0",
+              "0",
+              "0",
+              ""
+            ]
+          ],
+          "fort_names": [
+            [
+              "",
+              "",
+              "1",
+              "fortSpec"
+            ]
+          ],
+          "game_menu_bar": [
+            [
+              "0",
+              "0",
+              "0"
+            ]
+          ],
+          "connection_table": [
+            [
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ]
+          ]
+        },
+        "patch-back": {
+          "phase": [
+            [
+              "1"
+            ]
+          ],
+          "page": [
+            [
+              "CreditsNew"
+            ]
+          ],
+          "fort_selection": [
+            [
+              "0",
+              "0",
+              "0",
+              "0",
+              ""
+            ]
+          ],
+          "fort_names": [
+            [
+              "",
+              "",
+              "1",
+              "fortSpec"
+            ]
+          ],
+          "game_menu_bar": [
+            [
+              "0",
+              "0",
+              "0"
+            ]
+          ],
+          "connection_table": [
+            [
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ]
+          ]
+        },
+        "patch-new1": {
+          "phase": [
+            [
+              "1"
+            ]
+          ],
+          "page": [
+            [
+              "CreditsNew1"
+            ]
+          ],
+          "fort_selection": [
+            [
+              "0",
+              "0",
+              "0",
+              "0",
+              ""
+            ]
+          ],
+          "fort_names": [
+            [
+              "",
+              "",
+              "1",
+              "fortSpec"
+            ]
+          ],
+          "game_menu_bar": [
+            [
+              "0",
+              "0",
+              "0"
+            ]
+          ],
+          "connection_table": [
+            [
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ]
+          ]
+        },
+        "patch-new2": {
+          "phase": [
+            [
+              "1"
+            ]
+          ],
+          "page": [
+            [
+              "CreditsNew2"
+            ]
+          ],
+          "fort_selection": [
+            [
+              "0",
+              "0",
+              "0",
+              "0",
+              ""
+            ]
+          ],
+          "fort_names": [
+            [
+              "",
+              "",
+              "1",
+              "fortSpec"
+            ]
+          ],
+          "game_menu_bar": [
+            [
+              "0",
+              "0",
+              "0"
+            ]
+          ],
+          "connection_table": [
+            [
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ]
+          ]
+        },
+        "patch-new3": {
+          "phase": [
+            [
+              "1"
+            ]
+          ],
+          "page": [
+            [
+              "CreditsNew3"
+            ]
+          ],
+          "fort_selection": [
+            [
+              "0",
+              "0",
+              "0",
+              "0",
+              ""
+            ]
+          ],
+          "fort_names": [
+            [
+              "",
+              "",
+              "1",
+              "fortSpec"
+            ]
+          ],
+          "game_menu_bar": [
+            [
+              "0",
+              "0",
+              "0"
+            ]
+          ],
+          "connection_table": [
+            [
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ]
+          ]
+        },
+        "closed": {
+          "phase": [
+            [
+              "0"
+            ]
+          ],
+          "page": [
+            [
+              "main"
+            ]
+          ],
+          "fort_selection": [
+            [
+              "0",
+              "0",
+              "0",
+              "0",
+              ""
+            ]
+          ],
+          "fort_names": [
+            [
+              "",
+              "",
+              "1",
+              "fortSpec"
+            ]
+          ],
+          "game_menu_bar": [
+            [
+              "0",
+              "0",
+              "0"
+            ]
+          ],
+          "connection_table": [
+            [
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ]
+          ]
+        },
+        "original": {
+          "phase": [
+            [
+              "1"
+            ]
+          ],
+          "page": [
+            [
+              "Creditsold"
+            ]
+          ],
+          "fort_selection": [
+            [
+              "0",
+              "0",
+              "0",
+              "0",
+              ""
+            ]
+          ],
+          "fort_names": [
+            [
+              "",
+              "",
+              "1",
+              "fortSpec"
+            ]
+          ],
+          "game_menu_bar": [
+            [
+              "0",
+              "0",
+              "0"
+            ]
+          ],
+          "connection_table": [
+            [
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ]
+          ]
+        },
+        "original-next": {
+          "phase": [
+            [
+              "1"
+            ]
+          ],
+          "page": [
+            [
+              "Credits1"
+            ]
+          ],
+          "fort_selection": [
+            [
+              "0",
+              "0",
+              "0",
+              "0",
+              ""
+            ]
+          ],
+          "fort_names": [
+            [
+              "",
+              "",
+              "1",
+              "fortSpec"
+            ]
+          ],
+          "game_menu_bar": [
+            [
+              "0",
+              "0",
+              "0"
+            ]
+          ],
+          "connection_table": [
+            [
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ]
+          ]
+        },
+        "original-back": {
+          "phase": [
+            [
+              "1"
+            ]
+          ],
+          "page": [
+            [
+              "Creditsold"
+            ]
+          ],
+          "fort_selection": [
+            [
+              "0",
+              "0",
+              "0",
+              "0",
+              ""
+            ]
+          ],
+          "fort_names": [
+            [
+              "",
+              "",
+              "1",
+              "fortSpec"
+            ]
+          ],
+          "game_menu_bar": [
+            [
+              "0",
+              "0",
+              "0"
+            ]
+          ],
+          "connection_table": [
+            [
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ]
+          ]
+        },
+        "original-page1": {
+          "phase": [
+            [
+              "1"
+            ]
+          ],
+          "page": [
+            [
+              "Credits1"
+            ]
+          ],
+          "fort_selection": [
+            [
+              "0",
+              "0",
+              "0",
+              "0",
+              ""
+            ]
+          ],
+          "fort_names": [
+            [
+              "",
+              "",
+              "1",
+              "fortSpec"
+            ]
+          ],
+          "game_menu_bar": [
+            [
+              "0",
+              "0",
+              "0"
+            ]
+          ],
+          "connection_table": [
+            [
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ]
+          ]
+        },
+        "original-page2": {
+          "phase": [
+            [
+              "1"
+            ]
+          ],
+          "page": [
+            [
+              "Credits2"
+            ]
+          ],
+          "fort_selection": [
+            [
+              "0",
+              "0",
+              "0",
+              "0",
+              ""
+            ]
+          ],
+          "fort_names": [
+            [
+              "",
+              "",
+              "1",
+              "fortSpec"
+            ]
+          ],
+          "game_menu_bar": [
+            [
+              "0",
+              "0",
+              "0"
+            ]
+          ],
+          "connection_table": [
+            [
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ]
+          ]
+        },
+        "original-page3": {
+          "phase": [
+            [
+              "1"
+            ]
+          ],
+          "page": [
+            [
+              "Credits3"
+            ]
+          ],
+          "fort_selection": [
+            [
+              "0",
+              "0",
+              "0",
+              "0",
+              ""
+            ]
+          ],
+          "fort_names": [
+            [
+              "",
+              "",
+              "1",
+              "fortSpec"
+            ]
+          ],
+          "game_menu_bar": [
+            [
+              "0",
+              "0",
+              "0"
+            ]
+          ],
+          "connection_table": [
+            [
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ]
+          ]
+        },
+        "original-page4": {
+          "phase": [
+            [
+              "1"
+            ]
+          ],
+          "page": [
+            [
+              "Credits4"
+            ]
+          ],
+          "fort_selection": [
+            [
+              "0",
+              "0",
+              "0",
+              "0",
+              ""
+            ]
+          ],
+          "fort_names": [
+            [
+              "",
+              "",
+              "1",
+              "fortSpec"
+            ]
+          ],
+          "game_menu_bar": [
+            [
+              "0",
+              "0",
+              "0"
+            ]
+          ],
+          "connection_table": [
+            [
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ]
+          ]
+        },
+        "original-page5": {
+          "phase": [
+            [
+              "1"
+            ]
+          ],
+          "page": [
+            [
+              "Credits5"
+            ]
+          ],
+          "fort_selection": [
+            [
+              "0",
+              "0",
+              "0",
+              "0",
+              ""
+            ]
+          ],
+          "fort_names": [
+            [
+              "",
+              "",
+              "1",
+              "fortSpec"
+            ]
+          ],
+          "game_menu_bar": [
+            [
+              "0",
+              "0",
+              "0"
+            ]
+          ],
+          "connection_table": [
+            [
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ]
+          ]
+        },
+        "original-page6": {
+          "phase": [
+            [
+              "1"
+            ]
+          ],
+          "page": [
+            [
+              "Credits6"
+            ]
+          ],
+          "fort_selection": [
+            [
+              "0",
+              "0",
+              "0",
+              "0",
+              ""
+            ]
+          ],
+          "fort_names": [
+            [
+              "",
+              "",
+              "1",
+              "fortSpec"
+            ]
+          ],
+          "game_menu_bar": [
+            [
+              "0",
+              "0",
+              "0"
+            ]
+          ],
+          "connection_table": [
+            [
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ]
+          ]
+        },
+        "original-page7": {
+          "phase": [
+            [
+              "1"
+            ]
+          ],
+          "page": [
+            [
+              "Credits7"
+            ]
+          ],
+          "fort_selection": [
+            [
+              "0",
+              "0",
+              "0",
+              "0",
+              ""
+            ]
+          ],
+          "fort_names": [
+            [
+              "",
+              "",
+              "1",
+              "fortSpec"
+            ]
+          ],
+          "game_menu_bar": [
+            [
+              "0",
+              "0",
+              "0"
+            ]
+          ],
+          "connection_table": [
+            [
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ]
+          ]
+        },
+        "original-page8": {
+          "phase": [
+            [
+              "1"
+            ]
+          ],
+          "page": [
+            [
+              "Credits8"
+            ]
+          ],
+          "fort_selection": [
+            [
+              "0",
+              "0",
+              "0",
+              "0",
+              ""
+            ]
+          ],
+          "fort_names": [
+            [
+              "",
+              "",
+              "1",
+              "fortSpec"
+            ]
+          ],
+          "game_menu_bar": [
+            [
+              "0",
+              "0",
+              "0"
+            ]
+          ],
+          "connection_table": [
+            [
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ]
+          ]
+        },
+        "original-page9": {
+          "phase": [
+            [
+              "1"
+            ]
+          ],
+          "page": [
+            [
+              "Credits9"
+            ]
+          ],
+          "fort_selection": [
+            [
+              "0",
+              "0",
+              "0",
+              "0",
+              ""
+            ]
+          ],
+          "fort_names": [
+            [
+              "",
+              "",
+              "1",
+              "fortSpec"
+            ]
+          ],
+          "game_menu_bar": [
+            [
+              "0",
+              "0",
+              "0"
+            ]
+          ],
+          "connection_table": [
+            [
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ]
+          ]
+        },
+        "original-page10": {
+          "phase": [
+            [
+              "1"
+            ]
+          ],
+          "page": [
+            [
+              "Credits10"
+            ]
+          ],
+          "fort_selection": [
+            [
+              "0",
+              "0",
+              "0",
+              "0",
+              ""
+            ]
+          ],
+          "fort_names": [
+            [
+              "",
+              "",
+              "1",
+              "fortSpec"
+            ]
+          ],
+          "game_menu_bar": [
+            [
+              "0",
+              "0",
+              "0"
+            ]
+          ],
+          "connection_table": [
+            [
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ]
+          ]
+        },
+        "original-page11": {
+          "phase": [
+            [
+              "1"
+            ]
+          ],
+          "page": [
+            [
+              "Credits11"
+            ]
+          ],
+          "fort_selection": [
+            [
+              "0",
+              "0",
+              "0",
+              "0",
+              ""
+            ]
+          ],
+          "fort_names": [
+            [
+              "",
+              "",
+              "1",
+              "fortSpec"
+            ]
+          ],
+          "game_menu_bar": [
+            [
+              "0",
+              "0",
+              "0"
+            ]
+          ],
+          "connection_table": [
+            [
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ]
+          ]
+        },
+        "original-page12": {
+          "phase": [
+            [
+              "1"
+            ]
+          ],
+          "page": [
+            [
+              "Credits12"
+            ]
+          ],
+          "fort_selection": [
+            [
+              "0",
+              "0",
+              "0",
+              "0",
+              ""
+            ]
+          ],
+          "fort_names": [
+            [
+              "",
+              "",
+              "1",
+              "fortSpec"
+            ]
+          ],
+          "game_menu_bar": [
+            [
+              "0",
+              "0",
+              "0"
+            ]
+          ],
+          "connection_table": [
+            [
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ]
+          ]
+        },
+        "original-page13": {
+          "phase": [
+            [
+              "1"
+            ]
+          ],
+          "page": [
+            [
+              "Credits13"
+            ]
+          ],
+          "fort_selection": [
+            [
+              "0",
+              "0",
+              "0",
+              "0",
+              ""
+            ]
+          ],
+          "fort_names": [
+            [
+              "",
+              "",
+              "1",
+              "fortSpec"
+            ]
+          ],
+          "game_menu_bar": [
+            [
+              "0",
+              "0",
+              "0"
+            ]
+          ],
+          "connection_table": [
+            [
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ]
+          ]
+        },
+        "final": {
+          "phase": [
+            [
+              "0"
+            ]
+          ],
+          "page": [
+            [
+              "main"
+            ]
+          ],
+          "fort_selection": [
+            [
+              "0",
+              "0",
+              "0",
+              "0",
+              ""
+            ]
+          ],
+          "fort_names": [
+            [
+              "",
+              "",
+              "1",
+              "fortSpec"
+            ]
+          ],
+          "game_menu_bar": [
+            [
+              "0",
+              "0",
+              "0"
+            ]
+          ],
+          "connection_table": [
+            [
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ]
+          ]
+        }
+      },
+      "manualPagesVerified": 18,
+      "naturalAutoRollVerified": false,
+      "pictures": {
+        "patch.bmp": {
+          "path": "extracted/cpp-editor-runtime-466-credits1/patch.bmp",
+          "sha256": "0f5d3c27babf4244c467a17b61d2ff6a35a1e6f51a61a3427ea2b3a5db18a828"
+        },
+        "original.bmp": {
+          "path": "extracted/cpp-editor-runtime-466-credits1/original.bmp",
+          "sha256": "0c09bafc87c90f5abeb56e02ebfff354faecbe50a3910c37d6d725a5b1d8821e"
+        }
+      }
+    },
+    {
+      "name": "cycle1",
+      "case": "cycle",
+      "run": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-editor-entry-464-data\\",
+          "--window",
+          "--no-audio",
+          "--frames",
+          "266",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=60;sleepPerLoop=10;autoDemo=0;tellTips=0;currentLanguage=english;useProductTimers=0",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-editor-runtime-466-cycle1\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-editor-runtime-466-cycle1\\states.tsv"
+        ],
+        "binarySha256": "c8739bd5d0ada3b4a8d675042203cdfe647f768fcecb70dc85de1a42a562fcd9",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 7.910027099999752,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "1f551bfbe79ceac15340bfd66c76e65fe9edd4a498e95a2e4c6f6058280ed7e0",
+        "gameSha256": "c8739bd5d0ada3b4a8d675042203cdfe647f768fcecb70dc85de1a42a562fcd9",
+        "binaryUnchanged": true,
+        "originalsUnchanged": true,
+        "dataUnchanged": true,
+        "originalGameExecuted": false,
+        "trailingSeparator": true,
+        "tags": [
+          "startup",
+          "started",
+          "ready",
+          "bar",
+          "confirm",
+          "returned",
+          "secondStarted",
+          "secondReady"
+        ]
+      },
+      "tags": [
+        "startup",
+        "started",
+        "ready",
+        "bar",
+        "confirm",
+        "returned",
+        "secondStarted",
+        "secondReady"
+      ],
+      "observations": {
+        "startup": {
+          "phase": [
+            [
+              "0"
+            ]
+          ],
+          "page": [
+            [
+              "main"
+            ]
+          ],
+          "fort_selection": [
+            [
+              "0",
+              "0",
+              "0",
+              "0",
+              ""
+            ]
+          ],
+          "fort_names": [
+            [
+              "",
+              "",
+              "1",
+              "fortSpec"
+            ]
+          ],
+          "game_menu_bar": [
+            [
+              "0",
+              "0",
+              "0"
+            ]
+          ],
+          "connection_table": [
+            [
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ]
+          ]
+        },
+        "started": {
+          "phase": [
+            [
+              "3"
+            ]
+          ],
+          "page": [
+            [
+              "A."
+            ]
+          ],
+          "fort_selection": [
+            [
+              "0",
+              "14",
+              "0",
+              "0",
+              ""
+            ]
+          ],
+          "fort_names": [
+            [
+              "BridgeTheGap",
+              "",
+              "2",
+              "fortSpec"
+            ]
+          ],
+          "game_menu_bar": [
+            [
+              "0",
+              "0",
+              "0"
+            ]
+          ],
+          "connection_table": [
+            [
+              "2",
+              "0",
+              "0",
+              "1828716545",
+              "0"
+            ]
+          ]
+        },
+        "ready": {
+          "phase": [
+            [
+              "4"
+            ]
+          ],
+          "page": [
+            [
+              "mission"
+            ]
+          ],
+          "fort_selection": [
+            [
+              "0",
+              "14",
+              "0",
+              "0",
+              ""
+            ]
+          ],
+          "fort_names": [
+            [
+              "BridgeTheGap",
+              "",
+              "2",
+              "fortSpec"
+            ]
+          ],
+          "game_menu_bar": [
+            [
+              "0",
+              "0",
+              "0"
+            ]
+          ],
+          "connection_table": [
+            [
+              "2",
+              "0",
+              "0",
+              "1828716545",
+              "0"
+            ]
+          ]
+        },
+        "bar": {
+          "phase": [
+            [
+              "4"
+            ]
+          ],
+          "page": [
+            [
+              "mission"
+            ]
+          ],
+          "fort_selection": [
+            [
+              "0",
+              "14",
+              "0",
+              "0",
+              ""
+            ]
+          ],
+          "fort_names": [
+            [
+              "BridgeTheGap",
+              "",
+              "2",
+              "fortSpec"
+            ]
+          ],
+          "game_menu_bar": [
+            [
+              "286",
+              "1",
+              "3"
+            ]
+          ],
+          "connection_table": [
+            [
+              "2",
+              "0",
+              "0",
+              "1828716545",
+              "0"
+            ]
+          ]
+        },
+        "confirm": {
+          "phase": [
+            [
+              "1"
+            ]
+          ],
+          "page": [
+            [
+              "ABORT"
+            ]
+          ],
+          "fort_selection": [
+            [
+              "0",
+              "14",
+              "0",
+              "0",
+              ""
+            ]
+          ],
+          "fort_names": [
+            [
+              "BridgeTheGap",
+              "",
+              "2",
+              "fortSpec"
+            ]
+          ],
+          "game_menu_bar": [
+            [
+              "286",
+              "0",
+              "3"
+            ]
+          ],
+          "connection_table": [
+            [
+              "2",
+              "0",
+              "0",
+              "1828716545",
+              "0"
+            ]
+          ]
+        },
+        "returned": {
+          "phase": [
+            [
+              "0"
+            ]
+          ],
+          "page": [
+            [
+              "main"
+            ]
+          ],
+          "fort_selection": [
+            [
+              "0",
+              "14",
+              "0",
+              "0",
+              ""
+            ]
+          ],
+          "fort_names": [
+            [
+              "BridgeTheGap",
+              "",
+              "2",
+              "fortSpec"
+            ]
+          ],
+          "game_menu_bar": [
+            [
+              "0",
+              "0",
+              "0"
+            ]
+          ],
+          "connection_table": [
+            [
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ]
+          ]
+        },
+        "secondStarted": {
+          "phase": [
+            [
+              "3"
+            ]
+          ],
+          "page": [
+            [
+              "A."
+            ]
+          ],
+          "fort_selection": [
+            [
+              "0",
+              "14",
+              "0",
+              "0",
+              ""
+            ]
+          ],
+          "fort_names": [
+            [
+              "BridgeTheGap",
+              "",
+              "3",
+              "fortSpec"
+            ]
+          ],
+          "game_menu_bar": [
+            [
+              "0",
+              "0",
+              "0"
+            ]
+          ],
+          "connection_table": [
+            [
+              "2",
+              "0",
+              "0",
+              "1828716547",
+              "0"
+            ]
+          ]
+        },
+        "secondReady": {
+          "phase": [
+            [
+              "4"
+            ]
+          ],
+          "page": [
+            [
+              "mission"
+            ]
+          ],
+          "fort_selection": [
+            [
+              "0",
+              "14",
+              "0",
+              "0",
+              ""
+            ]
+          ],
+          "fort_names": [
+            [
+              "BridgeTheGap",
+              "",
+              "3",
+              "fortSpec"
+            ]
+          ],
+          "game_menu_bar": [
+            [
+              "0",
+              "0",
+              "0"
+            ]
+          ],
+          "connection_table": [
+            [
+              "2",
+              "0",
+              "0",
+              "1828716547",
+              "0"
+            ]
+          ]
+        }
+      },
+      "pictures": {
+        "ready.bmp": {
+          "path": "extracted/cpp-editor-runtime-466-cycle1/ready.bmp",
+          "sha256": "95ba217a04ba99c938e9a020039cddb0300583e3fabc5ee8f5ba6ccae0cb1849"
+        },
+        "returned.bmp": {
+          "path": "extracted/cpp-editor-runtime-466-cycle1/returned.bmp",
+          "sha256": "78508b37669a9706f508a4b89b25b3d2a7d3c0e0cf914cf93d64dccd7177925e"
+        },
+        "second-ready.bmp": {
+          "path": "extracted/cpp-editor-runtime-466-cycle1/second-ready.bmp",
+          "sha256": "418f7c45074fa51bdc65c182ccca776bbb0041e569ef6c6d483b1a81cf9e7386"
+        }
+      }
+    }
+  ],
+  "naturalEarlyTwo": {
+    "execution": {
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-editor-entry-464-data",
+        "--mission",
+        "tutorial2",
+        "--window",
+        "--no-audio",
+        "--frames",
+        "4524",
+        "--set",
+        "SCREENW=1024;SCREENH=768;maxFPS=40;sleepPerLoop=25;autoDemo=0;tellTips=0;useProductTimers=1",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-editor-runtime-466-early2-first\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-editor-runtime-466-early2-first\\states.tsv"
+      ],
+      "binarySha256": "c8739bd5d0ada3b4a8d675042203cdfe647f768fcecb70dc85de1a42a562fcd9",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 195.25629810000055,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "7bda425048640ffbe4f58f699a5c42b3cd433844b83d886ded35b1cce28766c9",
+      "profile": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-editor-entry-464-data",
+          "--mission",
+          "tutorial2",
+          "--window",
+          "--no-audio",
+          "--frames",
+          "4524",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=40;sleepPerLoop=25;autoDemo=0;tellTips=0;useProductTimers=1",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-editor-runtime-466-early2-first\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-editor-runtime-466-early2-first\\states.tsv"
+        ],
+        "initialProgressInjected": false,
+        "productTimers": 1,
+        "testStateInjection": false,
+        "noStateInjection": true,
+        "sameFrameNextBriefing": true,
+        "planSha256": "281ef438b5b5cc53572efb16f95e7956507b0a8325983efc48030a9876270e65",
+        "replaySha256": "8c344a6322c87d9bad43f391459a79ac45b594cfbd90353eb6ee07ae03c49c67",
+        "inspectionContract": "native-guide-0-6",
+        "dataCopy": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-editor-entry-464-data",
+        "originalGameExecuted": false
+      },
+      "originalsUnchanged": true,
+      "dataUnchanged": true,
+      "binaryUnchanged": true,
+      "gameSha256": "c8739bd5d0ada3b4a8d675042203cdfe647f768fcecb70dc85de1a42a562fcd9",
+      "originalGameExecuted": false
+    },
+    "summary": {
+      "returnCode": 0,
+      "originalsUnchanged": true,
+      "stages": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H",
+        "I"
+      ],
+      "startSp": 10000,
+      "finalSp": 3075,
+      "templeCount": 1,
+      "workshopCount": 1,
+      "maxArchers": 4,
+      "finalArchers": 3,
+      "salvagePackets": 1,
+      "refund": 75,
+      "doneBefore": 1,
+      "doneAfter": 1,
+      "nextMission": "tutorial3",
+      "nextSp": 2000,
+      "initialProgressInjected": false,
+      "noStateInjection": true,
+      "nextGuideSequence": 4,
+      "inspectionContract": "native-guide-0-6",
+      "lastGameTime": 81.735,
+      "naturalTutorialTwoComplete": true,
+      "goalComplete": false,
+      "sameFrameNextBriefingVerified": true,
+      "scope": "실제 A~I/사제 신전·워크샾/지식·생산/발사기4개/신전 선택/정상 회수·완료값 관측/다음 Tutorial3 진입이다. 영구 진행 저장·Early3 진행·전체 동일성은 별도다."
+    }
+  },
+  "legacyBodiesPreserved": [
+    "cpppj/tests/EditorFilesTests.cpp",
+    "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp",
+    "cpppj/tests/CampaignGameMenuTests.cpp"
+  ],
+  "oldProtectedFiles": 2474,
+  "sourceFileCount": 2725,
+  "fullRegisteredNamesVerified": true,
+  "fullOutputNormalization": [
+    {
+      "rawHead": "EditorLoca실제 미션 Start 검사: Tutorial1",
+      "observedName": "EditorLocalTransport_NativeDeferredCloseKeepsCapturedDepth",
+      "reason": "CTest가 합친 stdout/stderr의 중간 진단 분리"
+    },
+    {
+      "rawHead": "CampaignDamage_실제 Tutorial5 훨리기그 생성: frame409 game10.225000 SID15059 home15013 frame10 현재QA163 shadow65 sound47=64 전용Frame미연결0",
+      "observedName": "CampaignDamage_StartedDemoTrackedAiReaction",
+      "reason": "CTest가 합친 stdout/stderr의 중간 진단 분리"
+    },
+    {
+      "rawHead": "Chat 원문 진단:2474",
+      "observedName": "MissionLoadingClient_ReusedParentReadsCurrentView",
+      "reason": "CTest가 합친 stdout/stderr의 중간 진단 분리"
+    }
+  ],
+  "nativeEvidence": [
+    "cpppj/editor-bridges-native-20261026.json",
+    "cpppj/island-placement.json"
+  ],
+  "goalComplete": false,
+  "remaining": [
+    "SaveGoMain와 자연 State3 전체",
+    "Save as/NewFort/AddIsland GUI/Test Battle/시나리오",
+    "기존 저장 상태 복구",
+    "Credits 자연 자동롤/전체 동일성",
+    "나머지 미션 자연 완주/동일성"
+  ]
+}

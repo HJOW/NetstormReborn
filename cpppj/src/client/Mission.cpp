@@ -45,4 +45,12 @@ std::optional<std::string> MissionScript::Section(std::string_view name) const {
 std::string MissionScript::SectionNames(std::string_view prefix) const { return script_.SectionNames(prefix); }
 // 객체 접두어를 더하지 않고 현재 미션 Config에 직접 기록하여 Start의 실제 설정 쓰기를 연결한다.
 bool MissionScript::Set(std::string_view key,std::string_view value) { return script_.Set(key,value); }
+// 원문00482bf0의00594fa0/Config 쓰기를 현재 Guide가 소유한 실제 미션 생성에 연결한다.
+std::unique_ptr<MissionScript> CreateGuideMissionScript(o::ConfigInterface& configuration,std::string_view name,bool& missionMode) {
+    auto mission=std::make_unique<MissionScript>(configuration,name);missionMode=true;configuration.Set("global.inMission","1");return mission;
+}
+// 원문00483210/00483260은 보유 Config 해제 뒤 Native0,그 뒤 global.inMission0을 공개한다.
+void ReleaseGuideMissionScript(std::unique_ptr<MissionScript>& mission,bool& missionMode,o::ConfigInterface& configuration) {
+    if (!mission) return;mission.reset();missionMode=false;configuration.Set("global.inMission","0"); //전체 State cleanup이나 Editor prefix에서 원문에 없는 모드 초기화를 추가하지 않는다.
+}
 }

@@ -1,0 +1,749 @@
+{
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": "HJOW-Athlon / 2026-10-23",
+  "originalGameExecuted": false,
+  "rows": 30,
+  "binarySha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+  "fixtureSha256": "7e6fb85bf465a8f8f8347bb95aa8ff44a3edfd9e6a88f77267ebb4a95f3386b1",
+  "toolSha256": "4df91bf595d1612b8e3b119f70cc3bf827d48324b63e6d1025d4fe58f22b88fe",
+  "functionsTsvSha256": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+  "codeEvidence": [
+    {
+      "entry": "0040eb40",
+      "ranges": [
+        "0040eb40-0040eb71"
+      ],
+      "bytes": 50,
+      "sha256": "b1e8f7a451d4d42753b5140e17e9543251a815216dd0db84c91950319e798353"
+    },
+    {
+      "entry": "004214a0",
+      "ranges": [
+        "004214a0-004214f7"
+      ],
+      "bytes": 88,
+      "sha256": "74d477b17184227507e4bfd12c352f485c5c922038494ece887a097d1e636664"
+    },
+    {
+      "entry": "00421bd0",
+      "ranges": [
+        "00421bd0-00421c24"
+      ],
+      "bytes": 85,
+      "sha256": "b67f6a3aa88a4e10c2adc59643d9a1264c919732650313a877af9d5e8bf17089"
+    },
+    {
+      "entry": "00421db0",
+      "ranges": [
+        "00421db0-00421e5a"
+      ],
+      "bytes": 171,
+      "sha256": "ed5cd16c0228e98f415c432f535f229c8cd942df842eb6dae5bf614e812a45fd"
+    },
+    {
+      "entry": "00421e60",
+      "ranges": [
+        "00421e60-00421ea0"
+      ],
+      "bytes": 65,
+      "sha256": "d5333580f723cef67e3c0f17fcfc967a3ca657ba39582ec77ffb2f23858c65fd"
+    },
+    {
+      "entry": "00421eb0",
+      "ranges": [
+        "00421eb0-00421f19"
+      ],
+      "bytes": 106,
+      "sha256": "832b1fb34d9525e86afd3fca2bc0cc8ddf10a82a50ba6a6cadfc6ea954f090a8"
+    },
+    {
+      "entry": "00422a70",
+      "ranges": [
+        "00422a70-00422b9d"
+      ],
+      "bytes": 302,
+      "sha256": "cc4c34a40eeb2086df2384539a7571cebbd49a394cc53c08180207cd0c6bf622"
+    },
+    {
+      "entry": "004558c0",
+      "ranges": [
+        "004558c0-004558e7"
+      ],
+      "bytes": 40,
+      "sha256": "86b2d1fcfd125840f9fdbecb6a2825ac82eeb58b984b6b1f40eea54b77fc8cbb"
+    },
+    {
+      "entry": "0049a840",
+      "ranges": [
+        "0049a840-0049a852"
+      ],
+      "bytes": 19,
+      "sha256": "ef7fb1ddc081345687d5f8823c7b1131b872fa37d6086dfc9d26d4d693b82339"
+    },
+    {
+      "entry": "0049a9a0",
+      "ranges": [
+        "0049a9a0-0049a9dd"
+      ],
+      "bytes": 62,
+      "sha256": "ccf4671157531099fc7682712be45f827741e258e15a674042160b4dab45db92"
+    },
+    {
+      "entry": "0049a9e0",
+      "ranges": [
+        "0049a9e0-0049aa2e"
+      ],
+      "bytes": 79,
+      "sha256": "26821d1a39e34c2d85b335300812c4ba5be149a2809091e104cd70f4ca948ac6"
+    },
+    {
+      "entry": "0049aa90",
+      "ranges": [
+        "0049aa90-0049acd5"
+      ],
+      "bytes": 582,
+      "sha256": "c22a119773c6365f811fc86867d5a32dfec56d3288baadd9e76a90a349d3234d"
+    },
+    {
+      "entry": "004ac550",
+      "ranges": [
+        "004ac550-004ac55d"
+      ],
+      "bytes": 14,
+      "sha256": "bf03e2e7e3d1c4416af61f790177c31299ef776547da9cafa32f12b0afa6e4ab"
+    },
+    {
+      "entry": "004ad680",
+      "ranges": [
+        "004ad680-004ad6bd"
+      ],
+      "bytes": 62,
+      "sha256": "290256b771187c7a51415416439ed8e2cf3dfafe31f7a9ce2ffdae47d77270af"
+    }
+  ],
+  "codeImageUnchanged": true,
+  "input": {
+    "pool": 301989888,
+    "capacity": 24000,
+    "stride": 50,
+    "bridgeType": 82,
+    "codesHex": "4150010041500b2041501440415015604250010042500b204250144043500100",
+    "codesSha256": "de1a3165985337a88e7ea9fb6208628bd0fcb6e6418b49ecf2f79c0f75f530b1",
+    "observedSids": [
+      1,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      15000
+    ],
+    "nativeMaximumInstructions": 200000,
+    "nativeTimeoutMicroseconds": 500000
+  },
+  "actualFunctions": [
+    "0040eb40",
+    "004214a0",
+    "00421bd0",
+    "00421db0",
+    "00421eb0",
+    "00422a70",
+    "004558c0",
+    "0049a840",
+    "0049a9a0",
+    "0049a9e0",
+    "0049aa90",
+    "004ac550",
+    "004ad680"
+  ],
+  "allowedFunctions": [
+    "0040eb40",
+    "004214a0",
+    "00421bd0",
+    "00421db0",
+    "00421e60",
+    "00421eb0",
+    "00422a70",
+    "004558c0",
+    "0049a840",
+    "0049a9a0",
+    "0049a9e0",
+    "0049aa90",
+    "004ac550",
+    "004ad680"
+  ],
+  "replaced": [
+    "operator_new(1024)",
+    "free",
+    "virtual+88"
+  ],
+  "normalReturns": 30,
+  "verifiedExistingFixture": true,
+  "runs": [
+    {
+      "mode": 0,
+      "seed": 1,
+      "pattern": 0,
+      "instructions": 145070,
+      "allocations": 0,
+      "frees": 0,
+      "redraws": 4,
+      "normalReturn": true,
+      "stackRestored": true,
+      "functionEntries": {
+        "0040eb40": 1,
+        "004214a0": 6,
+        "00421db0": 6,
+        "00422a70": 1,
+        "0049a840": 11,
+        "0049a9e0": 5,
+        "004ac550": 6,
+        "004ad680": 5
+      }
+    },
+    {
+      "mode": 0,
+      "seed": 1,
+      "pattern": 23160,
+      "instructions": 145070,
+      "allocations": 0,
+      "frees": 0,
+      "redraws": 4,
+      "normalReturn": true,
+      "stackRestored": true,
+      "functionEntries": {
+        "0040eb40": 1,
+        "004214a0": 6,
+        "00421db0": 6,
+        "00422a70": 1,
+        "0049a840": 11,
+        "0049a9e0": 5,
+        "004ac550": 6,
+        "004ad680": 5
+      }
+    },
+    {
+      "mode": 0,
+      "seed": 305419896,
+      "pattern": 0,
+      "instructions": 145070,
+      "allocations": 0,
+      "frees": 0,
+      "redraws": 4,
+      "normalReturn": true,
+      "stackRestored": true,
+      "functionEntries": {
+        "0040eb40": 1,
+        "004214a0": 6,
+        "00421db0": 6,
+        "00422a70": 1,
+        "0049a840": 11,
+        "0049a9e0": 5,
+        "004ac550": 6,
+        "004ad680": 5
+      }
+    },
+    {
+      "mode": 0,
+      "seed": 305419896,
+      "pattern": 23160,
+      "instructions": 145070,
+      "allocations": 0,
+      "frees": 0,
+      "redraws": 4,
+      "normalReturn": true,
+      "stackRestored": true,
+      "functionEntries": {
+        "0040eb40": 1,
+        "004214a0": 6,
+        "00421db0": 6,
+        "00422a70": 1,
+        "0049a840": 11,
+        "0049a9e0": 5,
+        "004ac550": 6,
+        "004ad680": 5
+      }
+    },
+    {
+      "mode": 0,
+      "seed": 4294967295,
+      "pattern": 0,
+      "instructions": 145070,
+      "allocations": 0,
+      "frees": 0,
+      "redraws": 4,
+      "normalReturn": true,
+      "stackRestored": true,
+      "functionEntries": {
+        "0040eb40": 1,
+        "004214a0": 6,
+        "00421db0": 6,
+        "00422a70": 1,
+        "0049a840": 11,
+        "0049a9e0": 5,
+        "004ac550": 6,
+        "004ad680": 5
+      }
+    },
+    {
+      "mode": 0,
+      "seed": 4294967295,
+      "pattern": 23160,
+      "instructions": 145070,
+      "allocations": 0,
+      "frees": 0,
+      "redraws": 4,
+      "normalReturn": true,
+      "stackRestored": true,
+      "functionEntries": {
+        "0040eb40": 1,
+        "004214a0": 6,
+        "00421db0": 6,
+        "00422a70": 1,
+        "0049a840": 11,
+        "0049a9e0": 5,
+        "004ac550": 6,
+        "004ad680": 5
+      }
+    },
+    {
+      "mode": 1,
+      "seed": 1,
+      "pattern": 0,
+      "instructions": 144998,
+      "allocations": 0,
+      "frees": 0,
+      "redraws": 6,
+      "normalReturn": true,
+      "stackRestored": true,
+      "functionEntries": {
+        "0040eb40": 1,
+        "004214a0": 6,
+        "00421bd0": 6,
+        "00422a70": 1,
+        "0049a840": 12,
+        "0049a9a0": 6,
+        "004ac550": 6,
+        "004ad680": 6
+      }
+    },
+    {
+      "mode": 1,
+      "seed": 1,
+      "pattern": 23160,
+      "instructions": 144998,
+      "allocations": 0,
+      "frees": 0,
+      "redraws": 6,
+      "normalReturn": true,
+      "stackRestored": true,
+      "functionEntries": {
+        "0040eb40": 1,
+        "004214a0": 6,
+        "00421bd0": 6,
+        "00422a70": 1,
+        "0049a840": 12,
+        "0049a9a0": 6,
+        "004ac550": 6,
+        "004ad680": 6
+      }
+    },
+    {
+      "mode": 1,
+      "seed": 305419896,
+      "pattern": 0,
+      "instructions": 144998,
+      "allocations": 0,
+      "frees": 0,
+      "redraws": 6,
+      "normalReturn": true,
+      "stackRestored": true,
+      "functionEntries": {
+        "0040eb40": 1,
+        "004214a0": 6,
+        "00421bd0": 6,
+        "00422a70": 1,
+        "0049a840": 12,
+        "0049a9a0": 6,
+        "004ac550": 6,
+        "004ad680": 6
+      }
+    },
+    {
+      "mode": 1,
+      "seed": 305419896,
+      "pattern": 23160,
+      "instructions": 144998,
+      "allocations": 0,
+      "frees": 0,
+      "redraws": 6,
+      "normalReturn": true,
+      "stackRestored": true,
+      "functionEntries": {
+        "0040eb40": 1,
+        "004214a0": 6,
+        "00421bd0": 6,
+        "00422a70": 1,
+        "0049a840": 12,
+        "0049a9a0": 6,
+        "004ac550": 6,
+        "004ad680": 6
+      }
+    },
+    {
+      "mode": 1,
+      "seed": 4294967295,
+      "pattern": 0,
+      "instructions": 144998,
+      "allocations": 0,
+      "frees": 0,
+      "redraws": 6,
+      "normalReturn": true,
+      "stackRestored": true,
+      "functionEntries": {
+        "0040eb40": 1,
+        "004214a0": 6,
+        "00421bd0": 6,
+        "00422a70": 1,
+        "0049a840": 12,
+        "0049a9a0": 6,
+        "004ac550": 6,
+        "004ad680": 6
+      }
+    },
+    {
+      "mode": 1,
+      "seed": 4294967295,
+      "pattern": 23160,
+      "instructions": 144998,
+      "allocations": 0,
+      "frees": 0,
+      "redraws": 6,
+      "normalReturn": true,
+      "stackRestored": true,
+      "functionEntries": {
+        "0040eb40": 1,
+        "004214a0": 6,
+        "00421bd0": 6,
+        "00422a70": 1,
+        "0049a840": 12,
+        "0049a9a0": 6,
+        "004ac550": 6,
+        "004ad680": 6
+      }
+    },
+    {
+      "mode": 2,
+      "seed": 1,
+      "pattern": 0,
+      "instructions": 145742,
+      "allocations": 6,
+      "frees": 6,
+      "redraws": 5,
+      "normalReturn": true,
+      "stackRestored": true,
+      "functionEntries": {
+        "0040eb40": 1,
+        "004214a0": 6,
+        "00421eb0": 6,
+        "00422a70": 1,
+        "004558c0": 5,
+        "0049a840": 12,
+        "0049aa90": 6,
+        "004ac550": 6,
+        "004ad680": 6
+      }
+    },
+    {
+      "mode": 2,
+      "seed": 1,
+      "pattern": 23160,
+      "instructions": 145742,
+      "allocations": 6,
+      "frees": 6,
+      "redraws": 5,
+      "normalReturn": true,
+      "stackRestored": true,
+      "functionEntries": {
+        "0040eb40": 1,
+        "004214a0": 6,
+        "00421eb0": 6,
+        "00422a70": 1,
+        "004558c0": 5,
+        "0049a840": 12,
+        "0049aa90": 6,
+        "004ac550": 6,
+        "004ad680": 6
+      }
+    },
+    {
+      "mode": 2,
+      "seed": 305419896,
+      "pattern": 0,
+      "instructions": 145742,
+      "allocations": 6,
+      "frees": 6,
+      "redraws": 5,
+      "normalReturn": true,
+      "stackRestored": true,
+      "functionEntries": {
+        "0040eb40": 1,
+        "004214a0": 6,
+        "00421eb0": 6,
+        "00422a70": 1,
+        "004558c0": 5,
+        "0049a840": 12,
+        "0049aa90": 6,
+        "004ac550": 6,
+        "004ad680": 6
+      }
+    },
+    {
+      "mode": 2,
+      "seed": 305419896,
+      "pattern": 23160,
+      "instructions": 145742,
+      "allocations": 6,
+      "frees": 6,
+      "redraws": 5,
+      "normalReturn": true,
+      "stackRestored": true,
+      "functionEntries": {
+        "0040eb40": 1,
+        "004214a0": 6,
+        "00421eb0": 6,
+        "00422a70": 1,
+        "004558c0": 5,
+        "0049a840": 12,
+        "0049aa90": 6,
+        "004ac550": 6,
+        "004ad680": 6
+      }
+    },
+    {
+      "mode": 2,
+      "seed": 4294967295,
+      "pattern": 0,
+      "instructions": 145742,
+      "allocations": 6,
+      "frees": 6,
+      "redraws": 5,
+      "normalReturn": true,
+      "stackRestored": true,
+      "functionEntries": {
+        "0040eb40": 1,
+        "004214a0": 6,
+        "00421eb0": 6,
+        "00422a70": 1,
+        "004558c0": 5,
+        "0049a840": 12,
+        "0049aa90": 6,
+        "004ac550": 6,
+        "004ad680": 6
+      }
+    },
+    {
+      "mode": 2,
+      "seed": 4294967295,
+      "pattern": 23160,
+      "instructions": 145742,
+      "allocations": 6,
+      "frees": 6,
+      "redraws": 5,
+      "normalReturn": true,
+      "stackRestored": true,
+      "functionEntries": {
+        "0040eb40": 1,
+        "004214a0": 6,
+        "00421eb0": 6,
+        "00422a70": 1,
+        "004558c0": 5,
+        "0049a840": 12,
+        "0049aa90": 6,
+        "004ac550": 6,
+        "004ad680": 6
+      }
+    },
+    {
+      "mode": 3,
+      "seed": 1,
+      "pattern": 0,
+      "instructions": 144212,
+      "allocations": 0,
+      "frees": 0,
+      "redraws": 0,
+      "normalReturn": true,
+      "stackRestored": true,
+      "functionEntries": {
+        "0040eb40": 1,
+        "00422a70": 1
+      }
+    },
+    {
+      "mode": 3,
+      "seed": 1,
+      "pattern": 23160,
+      "instructions": 144212,
+      "allocations": 0,
+      "frees": 0,
+      "redraws": 0,
+      "normalReturn": true,
+      "stackRestored": true,
+      "functionEntries": {
+        "0040eb40": 1,
+        "00422a70": 1
+      }
+    },
+    {
+      "mode": 3,
+      "seed": 305419896,
+      "pattern": 0,
+      "instructions": 144212,
+      "allocations": 0,
+      "frees": 0,
+      "redraws": 0,
+      "normalReturn": true,
+      "stackRestored": true,
+      "functionEntries": {
+        "0040eb40": 1,
+        "00422a70": 1
+      }
+    },
+    {
+      "mode": 3,
+      "seed": 305419896,
+      "pattern": 23160,
+      "instructions": 144212,
+      "allocations": 0,
+      "frees": 0,
+      "redraws": 0,
+      "normalReturn": true,
+      "stackRestored": true,
+      "functionEntries": {
+        "0040eb40": 1,
+        "00422a70": 1
+      }
+    },
+    {
+      "mode": 3,
+      "seed": 4294967295,
+      "pattern": 0,
+      "instructions": 144212,
+      "allocations": 0,
+      "frees": 0,
+      "redraws": 0,
+      "normalReturn": true,
+      "stackRestored": true,
+      "functionEntries": {
+        "0040eb40": 1,
+        "00422a70": 1
+      }
+    },
+    {
+      "mode": 3,
+      "seed": 4294967295,
+      "pattern": 23160,
+      "instructions": 144212,
+      "allocations": 0,
+      "frees": 0,
+      "redraws": 0,
+      "normalReturn": true,
+      "stackRestored": true,
+      "functionEntries": {
+        "0040eb40": 1,
+        "00422a70": 1
+      }
+    },
+    {
+      "mode": 4294967295,
+      "seed": 1,
+      "pattern": 0,
+      "instructions": 144212,
+      "allocations": 0,
+      "frees": 0,
+      "redraws": 0,
+      "normalReturn": true,
+      "stackRestored": true,
+      "functionEntries": {
+        "0040eb40": 1,
+        "00422a70": 1
+      }
+    },
+    {
+      "mode": 4294967295,
+      "seed": 1,
+      "pattern": 23160,
+      "instructions": 144212,
+      "allocations": 0,
+      "frees": 0,
+      "redraws": 0,
+      "normalReturn": true,
+      "stackRestored": true,
+      "functionEntries": {
+        "0040eb40": 1,
+        "00422a70": 1
+      }
+    },
+    {
+      "mode": 4294967295,
+      "seed": 305419896,
+      "pattern": 0,
+      "instructions": 144212,
+      "allocations": 0,
+      "frees": 0,
+      "redraws": 0,
+      "normalReturn": true,
+      "stackRestored": true,
+      "functionEntries": {
+        "0040eb40": 1,
+        "00422a70": 1
+      }
+    },
+    {
+      "mode": 4294967295,
+      "seed": 305419896,
+      "pattern": 23160,
+      "instructions": 144212,
+      "allocations": 0,
+      "frees": 0,
+      "redraws": 0,
+      "normalReturn": true,
+      "stackRestored": true,
+      "functionEntries": {
+        "0040eb40": 1,
+        "00422a70": 1
+      }
+    },
+    {
+      "mode": 4294967295,
+      "seed": 4294967295,
+      "pattern": 0,
+      "instructions": 144212,
+      "allocations": 0,
+      "frees": 0,
+      "redraws": 0,
+      "normalReturn": true,
+      "stackRestored": true,
+      "functionEntries": {
+        "0040eb40": 1,
+        "00422a70": 1
+      }
+    },
+    {
+      "mode": 4294967295,
+      "seed": 4294967295,
+      "pattern": 23160,
+      "instructions": 144212,
+      "allocations": 0,
+      "frees": 0,
+      "redraws": 0,
+      "normalReturn": true,
+      "stackRestored": true,
+      "functionEntries": {
+        "0040eb40": 1,
+        "00422a70": 1
+      }
+    }
+  ]
+}

@@ -158,6 +158,7 @@ target_sources(netstorm PRIVATE
     RawAltarSacrifice.cpp RawAltarSacrifice.h
     RawDaisLifecycle.cpp RawDaisLifecycle.h
     RawIslandBuilder.cpp RawIslandBuilder.h
+    RawIslandPlacement.cpp RawIslandPlacement.h # 편집기의 실제 임시 지도 충돌 판정이다.
     RawFortMoneyLoad.cpp RawFortMoneyLoad.h
     RawDudeNotice.cpp RawDudeNotice.h
     RawDamageablePostDestroy.cpp RawDamageablePostDestroy.h
@@ -508,3 +509,6 @@ target_sources(netstorm PRIVATE RawClockSyncReset.h RawClockSyncReset.cpp
 target_sources(netstorm PRIVATE RawColorSortPrimary.h RawColorSortPrimary.cpp)
 # 이전 공장/Player 해제와 같은 현재base 재조회로236BYTE 전체 초기화를 실행한다.
 target_sources(netstorm PRIVATE RawPlayerInitialization.h RawPlayerInitialization.cpp)
+
+# 원본10.78의 전체 다리 품질 변경과 같은 풀/게임 난수/표시 경계다.
+target_sources(netstorm PRIVATE RawBridgeEditor.h RawBridgeEditor.cpp)

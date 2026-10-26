@@ -58,7 +58,7 @@ o::LocalMissionParentResult UberGump::InstallExistingEditorState(std::uint32_t s
     checkpoint.fort.currentName=[this] { return client_.FortGlobals()->Current(); };checkpoint.fort.pendingName=[this] { return client_.FortGlobals()->Pending(); };
     checkpoint.fort.compare=[](auto first,auto second) { return o::CompareDataManagerSectionNames(first,second); };
     checkpoint.fort.setName=[this](auto name) { SelectCurrentFortName(name); };checkpoint.fort.missionName=[this](auto name) { return mapCatalog_->Kind(name); };
-    checkpoint.fort.closeGuide=[] { throw std::logic_error("Editor 기존 파일의 선택된 Guide 종료 미연결"); };
+    checkpoint.fort.closeGuide=[this] { ReleaseCurrentGuideMission(); }; //원문 부모가 이름 변경/현재 미션/대상 맵 속성을 판정한 뒤에만 보존한 Tutorial 데이터와 Guide를 해제한다.
     checkpoint.fort.setConfig=[this](auto name,auto value) { client_.Configuration().Set(name,o::DecodeOriginalText({reinterpret_cast<const std::uint8_t*>(value.data()),value.size()})); };
     checkpoint.fort.outside=[](auto branch) { throw std::logic_error("Editor 기존 파일 외의 설치 분기:"+std::to_string(static_cast<int>(branch))); };
     checkpoint.file.path=[&e] { return e.paths->CurrentPath(); };checkpoint.file.exists=[&e](auto path) { return e.paths->Exists(path); };checkpoint.file.title=[this] { RefreshWindowTitle(); };

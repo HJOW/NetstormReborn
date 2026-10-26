@@ -1,0 +1,81 @@
+{
+  "host": "HJOW-Athlon",
+  "date": "2026-10-26",
+  "total": 4896,
+  "controls": [
+    639,
+    895
+  ],
+  "editions": {
+    "originals": {
+      "unique": 2448,
+      "returns": 4896,
+      "native_calls": {
+        "0046d9b0": 4896,
+        "0046da20": 4896,
+        "00431fc0": 4896,
+        "0046de50": 4896,
+        "00425c20": 4896,
+        "0049a840": 4896,
+        "00425860": 10512,
+        "00425700": 15312,
+        "0049a940": 10012,
+        "004e49c0": 18944,
+        "00432180": 6672
+      }
+    },
+    "originalCD": {
+      "unique": 2448,
+      "returns": 4896,
+      "native_calls": {
+        "00490430": 4896,
+        "004904d0": 4896,
+        "00403d20": 4896,
+        "00490a50": 4896,
+        "0041fcf0": 4896,
+        "0041feb0": 10512,
+        "0041fbb0": 15312,
+        "004442f0": 10012,
+        "004f161c": 18944,
+        "00404090": 6672
+      }
+    }
+  },
+  "game_runs": 0,
+  "os_calls": 0,
+  "limits": [
+    "원문 CanPlace의 읽기 전용 판정만 완료; 실제 AddIsland GUI·배치·지형·저장은 별도 미완료다."
+  ],
+  "files": {
+    "cpppj/src/o/CanonDecoder.cpp": "ae3553973ff29257ed2b723b160503f6fc729919a97f082f16132e919dd69eaa",
+    "cpppj/src/o/CanonDecoder.h": "4de94611aa28b10eee3ab1a201cc8d07fc10d9a081ad237c17b909a21b3f87a7",
+    "cpppj/src/o/CanonDecoderTables.inc": "2cdc2b33b12e0cb001efd1a78737e3247d19a0afd145ee9f3aa675c3f4959c94",
+    "cpppj/src/o/ChunkMap.cpp": "ce1463c7bfdafd9cae59702878523e975b6c06b7989e45a3d039c9da185df2ac",
+    "cpppj/src/o/ChunkMap.h": "05aa97313d20875e250607f8a8e9c36adcc4b194ba60bbbd3aaf2c8c7086d3c2",
+    "cpppj/src/o/RawIslandBuilder.h": "569e95e4070f166d014f7a97777a6d03677347ee3c799052a1b5e66e086688b2",
+    "cpppj/src/o/RawIslandPlacement.cpp": "46e6e94687a4b68edea753a3a08e08b653724eb0069e96e7725d3fadd78bc22f",
+    "cpppj/src/o/RawIslandPlacement.h": "0ea4506456f596a985f2b9ed4c6968d51c1ff5e2f28e1cd0bf34ef55691693f4",
+    "cpppj/src/o/RiftType.cpp": "795554df3a4538ba475a2095a1b87a6bf9ddf4ba5ff904b469cef1f7128dc895",
+    "cpppj/src/o/RiftType.h": "7483e08f5a5e2cbae5191b7e3362e66ba99d3711a41e54a3e84f18bcb6f7c9f3",
+    "cpppj/tests/fixtures/island-placement-x86.tsv": "ce55460c6af7cfe37c790e55e63b43b1e9c28a58fec032eed14f0b9e8d772445",
+    "cpppj/tests/IslandPlacementTests.cpp": "c199bcd84898b9a7874c359d5e7e1b0eb21de30d1e89a89372634ab5acce30ea",
+    "extracted/island-runtime/originalCD/creation.c": "e4f5b3782a53e30af16bed2cb16517cd3841cf9972938446a30c80b4c3cc91ee",
+    "extracted/island-runtime/originalCD/functions.tsv": "c2a545e7c7022987bc079c987787f95596422b10129fdb46558a8c41fb490e4d",
+    "extracted/islandbuilder/originalCD/creation.c": "dd088ba75d501c4d1143ebdf928d1d8f4e8d9a2bc9000599cd0ff14f397703e4",
+    "extracted/islandbuilder/originalCD/functions.tsv": "57e69b351e242f6500d9eea8b3efbf31cca328643f26349d35171f2c52aea5cb",
+    "extracted/islandbuilder/originals/creation.c": "768061c394c182c30a168db085f580670f6b3c840a8b15e4fbb0035939280eb6",
+    "extracted/islandbuilder/originals/functions.tsv": "d4fbc65991702edd6a5a97a4e8ea5333127828af44c2182a0f06206da8e0c41f",
+    "extracted/refined/originalCD/functions.tsv": "453aa383c27baf8eefa00d97bf44051d18460150556511c2eb7a46f111e92def",
+    "extracted/refined/originalCD/Netstorm.c": "9306f621576571c85280f9e25f024e3ec8b7b68c5c8ec6731c1f109dc3f25ebb",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_canontype_oracle.py": "1509f5b903242cac8a64ced514b092ecdf63d7eb527fa6fe20c5b5830e39d052",
+    "tools/decomp_damageablepredestroy_oracle.py": "6f260fca831f979df7361fb783b38de9ccadf93bced292e55a04e090c46a748b",
+    "tools/decomp_islandbuilder_oracle.py": "4413a5737d165f2ec20b87d2493efbc386819644dd951f11e49d74b48ad4cfd7",
+    "tools/decomp_islandplacement_oracle.py": "e7200ad73a757f9801931179d235876e33b84d8f33639427a6500d2ee22d9947",
+    "tools/decomp_owner_oracle.py": "5a837ad7fd233d9d75c7241d52fbf2e5a508e24dc158d091f243a13ab698e7fb",
+    "tools/decomp_priestgeometry_oracle.py": "a2e100450c4e22d4f7de0bc4f725c766b7836ab3f7270a6ebb72df7b92e33dc1"
+  }
+}

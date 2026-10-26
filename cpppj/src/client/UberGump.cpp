@@ -292,7 +292,21 @@ UberGump::UberGump(Client& client) : client_(client),initLoginSubscriber_(client
     MainMenu(); Compose(); client_.ShowScene();
 }
 // 입력 참조를 먼저 없애고 메뉴가 소유한 월드를 이 구현 파일에서 제거한다.
-UberGump::~UberGump() { ClearWorld(); }
+UberGump::~UberGump() { ClearWorld();ReleaseCurrentGuideMission(); }
+// 먼저 Tutorial→Start 순서로 같은 Session의 참조를 닫고 미션의 실제 데이터와 Script는 Guide 해제까지 남긴다.
+void UberGump::DetachMissionWorldBindings() {
+    if (missionRuntime_) { missionRuntime_->tutorial.reset();missionRuntime_->start.reset(); } //Tutorial이 빌리는 Start를 먼저 파괴하지 않는다. gate/state/guided는 이 경계에서 쓰지 않는다.
+    userInput_.reset(); //현재 World를 빌리는 호스트 입력도 Session보다 먼저 반납한다.
+}
+// 기존 Tutorial 소멸 효과를 원문 late closeGuide에 모으고 그 뒤에만 base Mission의 Config/Native 수명을 끝낸다.
+void UberGump::ReleaseCurrentGuideMission() {
+    if (missionRuntime_ && missionRuntime_->gate.scriptPaused) {
+        client_.PopGamePause();missionRuntime_->gate.scriptPaused=0; //미션이 보유했던 자기 정지를 반납한다. Native cleanup이 이미 깊이를 비웠으면 기존 Resume의 자연 무동작을 따른다.
+    }
+    if (missionRuntime_ && missionRuntime_->guided) { o::SetTotalMadeAllowAll(*missionRestrictions_,1);missionNumber_=0;missionRuntime_->gate.tutorialNumber=0;missionRuntime_->gate.stage=0;missionRuntime_->gate.stageDirty=0; } //기존 ClearWorld의 허용255DWORD/번호/단계 효과를 실제 Guide 해제 위치로 옮긴다.
+    DetachMissionWorldBindings();missionRuntime_.reset(); //World 참조가 닫힌 뒤 현재 미션의 남은 데이터만 반납한다.
+    ReleaseGuideMissionScript(mission_,client_.SurfaceStorage()->links.mission,client_.Configuration()); //실제 Script 해제→Native0→Config0 순서는 기존 공통 부모를 재사용한다.
+}
 // 입력 참조를 먼저 없애고 월드의 실제 소유권을 해제한다. 위치 효과음은 카메라 0의 전체 메뉴 영역으로 되돌린다.
 void UberGump::ClearWorld() {
     ClearPage(); // 현재 부모의 OnExit를 월드/미션 수명보다 먼저 같은 큐에 반납한다.
@@ -313,12 +327,7 @@ void UberGump::ClearWorld() {
     if (world_) client_.GetRenderer().SetExtraCollection({}); // 월드 반납 전에 빌린 실제 커서 수집/Draw callback을 해제한다.
     client_.GetRenderer().SetOverlayProcedure({}); // 실제 메뉴 픽셀 소비자가 반납한 월드를 다시 읽지 않도록 먼저 제거한다.
     if (objectMenus_) objectMenus_->Clear();
-    if (missionRuntime_ && missionRuntime_->gate.scriptPaused) {
-        client_.PopGamePause();missionRuntime_->gate.scriptPaused=0; // 미션이 보유한 자기 깊이를 반납한 뒤 참조를 해제한다.
-    }
-    if (missionRuntime_ && missionRuntime_->guided) { o::SetTotalMadeAllowAll(*missionRestrictions_,1);missionNumber_=0;missionRuntime_->gate.tutorialNumber=0;missionRuntime_->gate.stage=0;missionRuntime_->gate.stageDirty=0; } // 실제 Tutorial 소멸의 허용/번호/단계 해제를 전역 수명에도 유지한다.
-    missionRuntime_.reset(); // 같은 Session/Script를 참조하는 Start를 대상보다 먼저 해제한다.
-    userInput_.reset();
+    DetachMissionWorldBindings(); //같은 Session을 빌리는 실행기만 닫는다. 실제 Guide 데이터/자기정지/소멸 전역은 선택된 ReleaseCurrentGuideMission까지 보존한다.
     auto retiringWorld=std::move(world_); // 실제 소멸 callback의 현재 subscriber 조회는 이미 NULL인 같은 슬롯을 본다.
     if (retiringWorld) {
         retiringWorld.reset(); // Session이 같은 전역 Kernel을 먼저 비운 뒤 나머지 월드 소유권을 반납한다.
@@ -335,7 +344,7 @@ void UberGump::RetireWorldForState() {
     mapUserName_=world_->Session().CurrentHandle();state_.Cancel("LoadMissionFort");state_.Cancel("LoadMissionWorld");missionFortRequest_.reset();
     gameMenuState_.reset();if (objectMenus_) objectMenus_->Clear(); //현재 Runtime에 대한 메뉴/Form 비소유 참조만 반납한다.
     client_.GetRenderer().SetExtraCollection({});client_.GetRenderer().SetOverlayProcedure({}); //새 HUD를 지우지 않고 이전 월드 Draw callback만 닫는다.
-    missionRuntime_.reset();userInput_.reset();mission_.reset();briefingSections_.clear();briefingIndex_=0;fortObjects_=0; //반납한 Runtime을 다음 호스트 Guide/합성이 다시 참조하지 않게 한다. 실제 Native 전역은 이 위치에서 쓰지 않는다.
+    DetachMissionWorldBindings();briefingSections_.clear();briefingIndex_=0;fortObjects_=0; //Runtime의 Session 참조만 반납한다. gate/state/Script와 Native mission은 State1 이름 비교 뒤 실제 closeGuide 또는 메인 메뉴 해제까지 유지한다.
     auto retiring=std::move(world_);retiring.reset(); //같은 Session의 실제 자식 증빙이 C++ 소멸자의 중복 전역 쓰기를 막는다.
 }
 // 같은34Effect/직접 전역/Runtime 조정기를 실제 공통 UI와 원문 부모 위치에 연결한다.
@@ -383,6 +392,7 @@ void UberGump::ClearPage() {
 // 기존 메인/팝업 메뉴만 호스트 전환 큐를 사용한다. HTML 선택은 실제 부모가 원시 입력 큐에 쓴다.
 void UberGump::ActivatePageAction(DialogAction action) {
     if (QueueFortSelectionAction(action.command,action.argument,client_.Input(),scriptStrings_)) return; // 메인Edit의원문명령은버튼콜백에서같은일반입력고리에직접예약한다.
+    if (GameMenuScriptCode(action.command)!=0xffffffffU) { QueueScriptCommand(action.command+','+action.argument,client_.Input(),scriptStrings_,{GameMenuScriptCode,{}});return; } // 메인 Quit도 원문 버튼처럼 현재 일반 입력 큐에 예약하여 확인/종료음/반환을 같은 처리기에 맡긴다.
     state_.Post(std::move(action));
 }
 // Mission Init의 원문 이름 선택 위치에서 실제 두 버퍼/고정Template/Config/dirty를 사용한다.
@@ -413,7 +423,8 @@ bool UberGump::FortSelectionEvent(const InputEvent& event) {
 // 실제 전체 창의 Kill 직후 표시 phase만 복귀시키며 소멸/OnExit를 앞당기지 않는다.
 void UberGump::SyncTellPresentation() {
     if (!popup_.empty() || (state_.phase!=ClientPhase::Dialog && state_.phase!=ClientPhase::Briefing) || rawButtons_->Menus()->HtmlWindowsOpen()) return;
-    state_.phase=mission_ ? ClientPhase::Mission : ClientPhase::MainMenu;pageName_=mission_ ? "mission" : "main";page_={};
+    const bool inWorld=world_ || mission_; //Editor는 미션 Script가 없어도 같은 설치 World로 돌아간다.
+    state_.phase=inWorld ? ClientPhase::Mission : ClientPhase::MainMenu;pageName_=inWorld ? (world_ && client_.GameplayGlobals()->world.editor ? "editor" : "mission") : "main";page_={};
     if (!(missionRuntime_ && missionRuntime_->tutorial)) client_.Pause(false);RebuildControls();
 }
 // 명시 사용자 명령에서 잘못된 섹션은 기존 진단을 유지한다. 선택적 미션 사건은 TryTell을 사용한다.
@@ -427,7 +438,7 @@ void UberGump::Tell(std::string target, bool briefing) {
 bool UberGump::TryTell(std::string target,bool briefing,bool* windowCreated,std::uint32_t suppress) {
     if (windowCreated) *windowCreated=false;
     if (o::AsciiLower(target)=="blank") {
-        if (mission_) { state_.phase=ClientPhase::Mission;pageName_="mission";popup_.clear();ClearPage();client_.Pause(false); }
+        if (world_ || mission_) { state_.phase=ClientPhase::Mission;pageName_=world_ && client_.GameplayGlobals()->world.editor ? "editor" : "mission";popup_.clear();ClearPage();client_.Pause(false); } //Blank는 현재 Editor World도 유지하며 별도 MainMenu 전환을 만들지 않는다.
         else MainMenu();RebuildControls();return true;
     }
     const auto result=ShowTellInConfig(client_.HtmlWindowGlobals()->tell,FontBytes(target),suppress,client_.Configuration(),
@@ -446,7 +457,9 @@ bool UberGump::TryTell(std::string target,bool briefing,bool* windowCreated,std:
 void UberGump::MainMenu() {
     client_.GetRenderer().SetScene({}); client_.GetRenderer().SetBackground(nullptr);
     client_.GetRenderer().SetOverlay(nullptr);
-    ClearWorld(); mission_.reset(); fortObjects_ = 0; briefingSections_.clear(); briefingIndex_ = 0;
+    if (world_ && client_.Assets().Edition()==o::OriginalEdition::Patch1078) CleanupNativeStateWorld(0); //현재 Runtime 이탈은 원문 State3의 같은 전체 cleanup을 먼저 수행한다. Editor 모드0을 호스트에서 합성하지 않는다.
+    ClearWorld(); ReleaseCurrentGuideMission(); fortObjects_ = 0; briefingSections_.clear(); briefingIndex_ = 0;
+    client_.SurfaceStorage()->ownerMode.fort=true;client_.GameplayGlobals()->player.fortMode=true; // 원문 State3 공통 prefix의00594fb8=1을 같은 물리와 기존 Player 별칭에 전달한다. 전체 State3 부모의 나머지 연결은 별도다.
     state_.phase = ClientPhase::MainMenu; pageName_ = "main"; popup_.clear(); ClearPage(); input_.Cancel();
     client_.Pause(false); RefreshWindowTitle(); RebuildControls();
 }
@@ -469,7 +482,7 @@ void UberGump::BeginMission(std::string name,std::uint32_t demo,std::uint32_t mo
 // Guide 공장의 현재 Client 소비자다. 이전 미션 해제는 호출자가 원본 순서로 마친 상태여야 한다.
 void UberGump::CreateMission(std::string name,std::uint32_t demo,std::uint32_t mode) {
     if (mission_ || missionRuntime_ || world_) throw std::logic_error("Guide 새 미션 공장 전에 기존 현재가 남아 있음");
-    mission_ = std::make_unique<MissionScript>(client_.Configuration(), name);
+    mission_ = CreateGuideMissionScript(client_.Configuration(),name,client_.SurfaceStorage()->links.mission);
     if (!mission_->Loaded()) throw std::runtime_error("Missing mission: " + name);
     const auto type = o::AsciiLower(mission_->MissionType());
     if (type != "tutorial" && type != "battle") throw std::runtime_error("Mission type pending: " + mission_->MissionType());
@@ -486,7 +499,7 @@ GuideMissionTransitionHooks UberGump::MissionTransitionEffects() {
         if (!missionRuntime_) throw std::logic_error("현재 미션 없는 Guide 가상 종료");
         if (missionRuntime_->guided) RunTutorialMissionStage(missionRuntime_->state,6,{}); // 실제 Tutorial+1c의 빈 종료다. 다른 형식은 기존 teardown 어댑터를 유지한다.
     };
-    hooks.release=[this] { ClearWorld();mission_.reset(); }; // 교체 도중 MainMenu/메뉴 음악을 끼워 넣지 않는다.
+    hooks.release=[this] { ClearWorld();ReleaseCurrentGuideMission(); }; //교체 도중 MainMenu/메뉴 음악을 끼워 넣지 않고 같은 실제 Tutorial 데이터와 Guide 미션 모드도 해제한다.
     hooks.create=[this](std::string_view name) { CreateMission(std::string(name)); };
     hooks.get=[this](std::string_view key) { if (!mission_) throw std::logic_error("현재 설정 없는 Guide Fork");return mission_->Get(key).value_or(""); };
     hooks.mode=[this](std::uint32_t value) { if (!missionRuntime_) throw std::logic_error("재시작 공장 뒤 모드 수신 누락");missionRuntime_->mode64=value; };
@@ -741,9 +754,11 @@ bool UberGump::GameMenuCommand(const InputEvent& event) {
     }
     if (!IsGameMenuCommand(code)) return false;
     auto binding=world_ ? world_->Session().BindGameMenus({}) : GameMenusHooks{}; // 종료/음량은 월드 설치 전후에도 같은 Client 명령이다.
-    if (!world_) binding.global=[](std::uint32_t address)->std::uint32_t {
-        switch (address) { // 메인 메뉴에서 해제된 미션/Player 모드는 원본 초기0이다.
-        case 0x5c85a4:case 0x594fb8:case 0x594fc8:case 0x594fa4:case 0x595344:case 0x540c70:return 0;
+    if (!world_) binding.global=[this](std::uint32_t address)->std::uint32_t {
+        const auto& gameplay=*client_.GameplayGlobals();const auto& surface=*client_.SurfaceStorage(); // 월드 반납 뒤에도 같은 Client 소유자의 현재 모드/Player를 읽으며 초기0을 합성하지 않는다.
+        switch (address) {
+        case 0x5c85a4:return gameplay.world.editor;case 0x594fb8:return surface.ownerMode.fort;case 0x594fc8:return surface.ownerMode.challenge;
+        case 0x594fa4:return gameplay.world.missionPost;case 0x595344:return gameplay.player.playerKnown;case 0x540c70:return gameplay.player.battleOwner;
         default:throw std::logic_error("월드 밖 메뉴의 다른 현재 전역 미연결");
         }
     };
@@ -853,6 +868,10 @@ void UberGump::Event(InputEvent event) {
     if (transitionCode==0x02000095U) { if (!(event.code&InputCode::kRelease)) { const auto name=std::string(scriptStrings_.Resolve(std::bit_cast<std::uint32_t>(event.y)));static_cast<void>(TryTell(name)); }return; } // Help Back의 스크립트 복귀다.
     if (transitionCode==kDialogDoNothing) return; // 원본 명령 자체는 효과가 없으며 HTML 부모는 발화 시 이미 Kill되었다.
     if (FortSelectionEvent(event)) return; // Guide와 실제 Gump 입력 뒤 원문 일반 부모의 같은 두 명령을 처리한다.
+    if (transitionCode==0x020000d6U) {
+        if (!(event.code&InputCode::kRelease) && world_) world_->Session().SetAllBridgeQuality(std::bit_cast<std::uint32_t>(event.y));
+        rebuild_=true;return; //원문 SetAllBridge는 일반 입력의 뗌 거부 뒤 숫자 인자를 그대로 현재 월드에 전달한다.
+    }
     if (transitionCode==kStartDemo) {
         if (!(event.code&InputCode::kRelease)) BeginMission(std::string(scriptStrings_.Resolve(std::bit_cast<std::uint32_t>(event.y))),1);
         return; // 원본005429f4의 실제 세 번째 인자를 동일 공장으로 전달한다.
@@ -954,7 +973,7 @@ bool UberGump::Input() {
         if (state_.phase==ClientPhase::MainMenu && popup_.empty()) client_.ClearFullScreenState();
         ActivatePageAction(actions_[static_cast<std::size_t>(*pointer.activated)]);rebuild_=true;
     }
-    while (!client_.Input().Empty()) { Event(client_.Input().Pop(false));SyncTellPresentation(); } // 실제 부모 Kill 뒤 다음 큐 사건 전에 표시 phase를 맞춘다.
+    while (!client_.Input().Empty()) { Event(client_.Input().Pop(false));if (quit_) return true;SyncTellPresentation(); } // 원문 QuitApp의 즉시1반환 뒤 남은 같은 큐 사건과 UI 합성을 실행하지 않는다. 그 외에는 실제 부모 Kill 뒤 표시 phase를 맞춘다.
     if (input_.Move({mouse.x, mouse.y}, (mouse.code & InputCode::kOutside) == 0)) rebuild_ = true;
     if (world_ && world_->TakeChanged()) rebuild_=true;
     if (rebuild_) Compose();
@@ -1011,7 +1030,7 @@ void UberGump::Execute(const DialogAction& action) {
     if (GameMenuScriptCode(action.command)!=0xffffffffU) { QueueScriptCommand(action.command+','+action.argument,client_.Input(),scriptStrings_,{GameMenuScriptCode,{}});return; } // 원본확인창/메뉴닫기효과도같은정수명령큐를사용한다.
     if (KnowledgeScriptCode(action.command)!=0xffffffffU) { QueueScriptCommand(action.command+','+action.argument,client_.Input(),scriptStrings_,{KnowledgeScriptCode,{}});return; }
     const auto command = o::AsciiLower(action.command);
-    if (command == "quit") { quit_ = true; return; }
+    if (command == "quit") { QueueScriptCommand("RequestQuitApp,0",client_.Input(),scriptStrings_,{GameMenuScriptCode,{}});return; } // 이전 호스트 명령도 원문 요청으로 변환하며 QuitApp의99/효과음/종료 반환을 생략하지 않는다.
     if (command == "tell") { Tell(action.argument, state_.phase == ClientPhase::Briefing); return; }
     if (command == "startdemo") { BeginMission(action.argument,1);return; }
     if (command == "donothing" || command == "resume") {
@@ -1105,7 +1124,7 @@ void UberGump::Compose() {
         // 원본 10.78의 8개 버튼. 미복원 기능도 원본 자료의 창을 통해 상태를 알린다.
         const std::array<DialogItem, 8> buttons{{
             {"Campaign", {"Tell", campaign}}, {"Multiplayer", {"Tell", "NotImplemented"}}, {"Demo", {"Tell", "DEMOVILLE"}}, {"Help", {"Menu", "help"}},
-            {"Edit", {"AskEditFort", "0"}}, {"Credits", {"Tell", "Credits"}}, {"Options", {"Menu", "options"}}, {"Quit", {"Quit", "0"}}}};
+            {"Edit", {"AskEditFort", "0"}}, {"Credits", {"Tell", "Credits"}}, {"Options", {"Menu", "options"}}, {"Quit", {"RequestQuitApp", "0"}}}};
         // 펼침 메뉴 동안 밑에 보이는 버튼은 입력 영역에 넣지 않는다.
         for (std::size_t i = 0; i < buttons.size(); ++i) button(buttons[i], x + static_cast<int>(i % 4) * kButtonPitch, y + static_cast<int>(i / 4) * 23, kButtonWidth);
     }

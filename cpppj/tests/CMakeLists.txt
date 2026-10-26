@@ -2192,3 +2192,11 @@ target_sources(netstorm_tests PRIVATE ConnectionCleanupTests.cpp) # 원문580관
 target_sources(netstorm_tests PRIVATE ConnectionRegistrationTests.cpp) #원문288관측과 실제 장기 표/양끝/재배치를 검사한다.
 target_sources(netstorm_tests PRIVATE MissionBackgroundLifetimeTests.cpp) #실제 같은 HTML 배경의 시작 첫BYTE와 연속 미션 보존을 검사한다.
 target_sources(netstorm_tests PRIVATE StateBridgeResetTests.cpp) #Native64관측과 실제 World 앞/뒤의 현재 색 표·스캔 초기화를 검사한다.
+
+# 원문 두 PE의 섬 배치 검사와 현재 임시 지도 불변을 독립 fixture로 재생한다.
+target_sources(netstorm_tests PRIVATE IslandPlacementTests.cpp)
+set_source_files_properties(IslandPlacementTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_ISLAND_PLACEMENT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/island-placement-x86.tsv\"")
+
+# 독립 원문30행과 전체 풀·공유 난수·현재 실제 Session 소비자를 대조한다.
+target_sources(netstorm_tests PRIVATE RawBridgeEditorTests.cpp)
+set_source_files_properties(RawBridgeEditorTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_EDITOR_BRIDGES_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/editor-bridges-x86.tsv\"")

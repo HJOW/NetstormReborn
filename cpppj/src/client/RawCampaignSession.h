@@ -430,6 +430,7 @@ public:
     bool ConfirmSupport(float x,float y);
     // 원본 미션 부모가 정한 위치에서 명시 호출한다. Load/프레임의 자동 생성은 하지 않는다.
     void GenerateLocalGeysers();
+    void SetAllBridgeQuality(std::uint32_t quality); //실제 Editor 또는 missionPost에서 전체 다리의 Cracked/Normal/Hard 원문 명령을 실행한다.
     // 같은 실제 Pool/현재 Bounds/최근목록/자원/마지막 패킷을 읽는 연결부다.
     const RawCampaignConstructionBindings& Construction() const;
     // 같은 Player+68과 현재 Factory 목록을 사용하는 실제 생산 계산기를 빌린다. 조회만으로 재계산하지 않는다.

@@ -132,6 +132,8 @@ private:
     void OpenObjectMenu(o::SquidId id,const InputEvent& event);
     // 메뉴가 소유한 월드와 입력 참조를 안전한 순서로 제거한다.
     void ClearWorld();
+    void DetachMissionWorldBindings(); //Session을 빌리는 Tutorial/Start/입력만 반납하고 실제 Guide 해제까지 미션 gate/state를 보존한다.
+    void ReleaseCurrentGuideMission(); //선택된 Guide 소멸 시점에만 자기 정지/허용표/번호/단계를 반납한 뒤 스크립트와 Native mission을 해제한다.
     // client_: 원본 전역 변수로 흩어져 있던 클라이언트 상태를 객체 하나로 묶는다. 한 프로세스에 하나만 만든다 (Client).
     Client& client_;
     // state_: 처리 중 조회·갱신하는 상태 (State).

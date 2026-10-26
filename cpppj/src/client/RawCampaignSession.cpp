@@ -1,5 +1,6 @@
 // 기존 원본 몸체의 단일 저장소 조립을 실제 클라이언트 세션이 소유한다.
 #include "client/RawCampaignSession.h"
+#include "o/RawBridgeEditor.h" //Editor의 전체 품질 명령도 현재 월드와 같은 풀/코드/난수를 사용한다.
 #include "client/ClientHtmlWindowGlobals.h"
 #include "client/ClientRandomGlobals.h"
 #include "client/ClientSubscriberGlobals.h"
@@ -825,7 +826,7 @@ struct RawCampaignSession::Impl {
         assetState.inBattle=true;assetState.localOwner=1;
         if (services.installMode==CampaignInstallMode::ExistingEditor) {
             if (services.adoptPreparedWorld) {
-                if (!core.ownerMode.fort || core.ownerMode.battle || core.ownerMode.challenge || core.bridgeState.battle || core.bridgeState.mission || globals.editor!=1 || !globals.missionPost || !playerState.fortMode || playerState.playerKnown!=1 || playerState.battleOwner!=1 || playerState.templateOwner!=1) throw std::logic_error("준비된 Editor의 실제 prefix 모드/Player 불일치"); // 완료한 prefix 값을 다시 만들지 않고 같은 현재 입력을 검증한다.
+                if (!core.ownerMode.fort || core.ownerMode.battle || core.ownerMode.challenge || core.bridgeState.battle || globals.editor!=1 || !globals.missionPost || !playerState.fortMode || playerState.playerKnown!=1 || playerState.battleOwner!=1 || playerState.templateOwner!=1) throw std::logic_error("준비된 Editor의 실제 prefix 모드/Player 불일치"); //파일 지연 중의 기존 mission은 이름 비교 뒤 closeGuide까지 보존한다. World 시작의 별도 관문이 잔류 mission을 거부한다.
             } else {
                 world.ConfigureInstallModes(true,false,false,true); // 독립 단계 검사는 최초 객체 전에 기존 Editor 모드를 구성한다.
                 core.bridgeState.mission=false;globals.editor=1;globals.missionPost=true;playerState.fortMode=true;fullDeck=1; // 기존 비준비 Editor 생성의 호환 입력이며 준비 prefix의 현재 DWORD는 덮지 않는다.
@@ -3240,7 +3241,7 @@ void RawCampaignSession::LoadExistingEditorSubscriber() {
 }
 // 일반Fort생성전모드는생성자가이미설정했다.캠페인Load로돌아가우회하지않는다.
 void RawCampaignSession::LoadExistingEditorWorld() {
-    auto& s=*impl_;if (s.services.installMode!=CampaignInstallMode::ExistingEditor || s.loaded || s.editorWorldStarted || !s.services.fortBadges || (s.services.deferExistingEditorFile && !s.editorCheckpointRunning)) throw std::logic_error("기존Editor실제입력/공유장부누락또는재설치");
+    auto& s=*impl_;if (s.services.installMode!=CampaignInstallMode::ExistingEditor || s.loaded || s.editorWorldStarted || s.core.bridgeState.mission || !s.services.fortBadges || (s.services.deferExistingEditorFile && !s.editorCheckpointRunning)) throw std::logic_error("기존Editor실제입력/공유장부누락또는재설치"); //원문 외곽의 이름 비교/closeGuide/Mission 분기 뒤에만 일반 Editor World를 연다.
     s.editorWorldStarted=true;s.ConnectBuilding();s.ConnectMotion();
     s.runtime->LoadExistingFort([&s] {
         s.player->Create(std::bit_cast<std::int32_t>(s.playerState.battleOwner));
@@ -3557,6 +3558,15 @@ GameMenusHooks RawCampaignSession::BindGameMenus(GameMenusHooks hooks) {
     };
     hooks.refreshPriest=[current](std::uint32_t owner) { current->priestParticipation->Refresh(owner); };
     return hooks;
+}
+// 원문 입력 부모의 Editor/missionPost 관문 뒤 같은 현재 월드의 전체 다리 품질을 바꾼다.
+void RawCampaignSession::SetAllBridgeQuality(std::uint32_t quality) {
+    if (!impl_->loaded) throw std::logic_error("설치 전 전체 다리 품질 명령");auto& current=*impl_;
+    if (!current.globals.editor && !current.globals.missionPost) return;
+    BridgeEditorHooks hooks;hooks.frames=[&current](auto type)->const RiftTypeFrames& { if (type>=current.core.frames.size()) throw std::out_of_range("편집 다리의 실제 TYPE 범위");return current.core.frames[type]; };
+    hooks.notifySurface=[&current](Sid sid) { current.core.building.NotifySurface(sid); };hooks.refresh=[&current](Sid sid) { current.core.display.Update(current.core.pool.Slot(sid)); };
+    const std::int32_t crackLife=kBridgeCrackLife; //현재 복원된0052f960은 기존 다리 규칙과 같은 불변5다. 호출 범위 동안만 참조를 빌린다.
+    RawBridgeEditor(current.core.pool,current.core.bridgeState.bridgeType,crackLife,current.random,std::move(hooks)).SetAll(quality);
 }
 // 원본 로그인/AI 초기화와 승패 판정은 같은9 Player 바이트를 공유한다.
 std::span<std::uint8_t> RawCampaignSession::PlayerRecords() { return impl_->players; }

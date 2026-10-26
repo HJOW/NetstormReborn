@@ -2,6 +2,8 @@
 #include "DudeSpawnSupport.h"
 #include "client/RawCampaignSession.h"
 #include "client/RawGameMenus.h"
+#include "client/ClientRandomGlobals.h"
+#include "client/ClientGameplayGlobals.h"
 #include "o/RawEnergySupply.h"
 #include "o/RawMissionStart.h"
 #include <stdexcept>
@@ -54,4 +56,44 @@ TEST_CASE(CampaignGameMenus_CurrentWorldReaders) {
     CHECK(hooks.templeCost()==session.Core().types[123].cost); // 같은불변원본TYPE의123비용을사용하고생산품133과혼동하지않는다.
     const auto logged=hooks.loggedIn();Put(records,8*180+0x2c,808);Put(records,8*180+0x50,3);CHECK(hooks.loggedIn()==logged+1);Put(records,8*180+0x2c,0);CHECK(hooks.loggedIn()==logged);
     hooks.refreshPriest(1);CHECK(session.Priests().Priests().OwnerState()[1]==0); // 같은원본사제목록의갱신결과를직접읽는다.
+}
+// 실제 메뉴 소비자가 같은 보호 프레임/현재 모드/장기 난수에 연결되고 공간 등록을 재생성하지 않는지 확인한다.
+TEST_CASE(CampaignGameMenus_EditorBridgeQualityUsesLiveAssetsAndSharedRandom) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);GameMenuSessionServices devices;
+    auto services=devices.Make();auto random=std::make_shared<ClientRandomGlobals>();auto globals=std::make_shared<ClientGameplayGlobals>();
+    services.randomGlobals=random;services.gameplayGlobals=globals;
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",std::move(services));
+    CHECK(Throws([&] { session.SetAllBridgeQuality(2); }));session.Load();const auto core=session.Core();const auto bridge=core.bridgeState.bridgeType;
+    const auto added=core.factory.Create(bridge);CHECK(core.pool.Slot(added)[10]==bridge); // 명시 새 void 다리도 실제 보호 TYPE/생성자/프레임을 쓴다.
+    const auto before=std::vector<std::uint8_t>(core.pool.Bytes().begin(),core.pool.Bytes().end());const auto freeCount=core.pool.FreeCount();const auto* physical=core.pool.Bytes().data();
+    std::array<std::uint32_t,4> hashBefore{};
+    // 같은 실제 공간 해시의 네 단계 전체를 저장하며 명령 뒤 재등록이 없음을 확인한다.
+    for (std::size_t level=0;level<hashBefore.size();++level) hashBefore[level]=netstorm::test::dudespawn::WordAdler<std::uint16_t>(core.hash.Entries(static_cast<int>(level)));
+    const auto spotsBefore=Adler(core.spots);random->Game().SetState(0x12345678U);globals->world.editor=0;globals->world.missionPost=false;
+    session.SetAllBridgeQuality(2);CHECK(std::equal(before.begin(),before.end(),core.pool.Bytes().begin()));CHECK(random->Game().State()==0x12345678U);
+    std::uint32_t hardChoices=0;std::vector<Sid> bridges;
+    // 실제 iterator와 같은 대상에서 현재 보호 프레임에 Hard 후보가 존재하는지만 센다.
+    for (std::uint32_t index=2;index<core.pool.Capacity();++index) {
+        const Sid sid{static_cast<std::uint16_t>(index)};const auto raw=core.pool.Slot(sid);
+        if ((raw[11]&1U) || raw[10]!=bridge) continue;bridges.push_back(sid);
+        const auto codes=core.frames[raw[10]].Codes();const auto current=Get(raw,36);CHECK(current<codes.size());
+        const auto side=codes[current].side;
+        if (std::any_of(codes.begin(),codes.end(),[side](const FrameCode& code) { return code.side==side && code.variant=='P' && (code.flags&0x40U); })) ++hardChoices;
+    }
+    CHECK(!bridges.empty() && hardChoices>0);GameRandom expected(0x12345678U);
+    // Next의 limit과 무관한 상태 전진 횟수만 독립 예상하며 실제 선택 프레임은 보호 표의 속성으로 확인한다.
+    for (std::uint32_t index=0;index<hardChoices;++index) static_cast<void>(expected.Next(1));
+    globals->world.editor=1;session.SetAllBridgeQuality(2);CHECK(random->Game().State()==expected.State());
+    // 모든 현재 다리의 수명 비트는 지워지고 선택 프레임도 같은 보호 표 안에 남아야 한다.
+    for (const auto sid:bridges) {
+        const auto raw=core.pool.Slot(sid);CHECK((Get(raw,12,2)&0x78U)==0);CHECK(Get(raw,36)<core.frames[raw[10]].Codes().size());
+    }
+    globals->world.editor=0;globals->world.missionPost=true;session.SetAllBridgeQuality(0);CHECK(random->Game().State()==expected.State());
+    // missionPost 단독 관문도 같은 실제 소비자로 이어지고 Cracked는 게임 난수를 소비하지 않는다.
+    for (const auto sid:bridges) CHECK((Get(core.pool.Slot(sid),12,2)&0x78U)==0x20U);
+    session.SetAllBridgeQuality(1);CHECK(random->Game().State()==expected.State());
+    // 원문의 직접 프레임 변경은 같은 풀/자유 목록/해시/spot을 그대로 보존한다.
+    CHECK(core.pool.Bytes().data()==physical && core.pool.FreeCount()==freeCount && Adler(core.spots)==spotsBefore);
+    // 직접 DWORD 쓰기의 공간 재등록 부재를 각 실제 해시 단계에서 확인한다.
+    for (std::size_t level=0;level<hashBefore.size();++level) CHECK(hashBefore[level]==netstorm::test::dudespawn::WordAdler<std::uint16_t>(core.hash.Entries(static_cast<int>(level))));
 }

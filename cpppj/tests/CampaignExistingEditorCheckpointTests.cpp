@@ -26,6 +26,7 @@
 #include "client/FortSelection.h"
 #include "client/EditorFortFileDevices.h"
 #include "client/FortTypeConversionStorage.h"
+#include "client/Mission.h" //Guide 해제가 같은 Client의 Native 미션 모드를 반납한 뒤 prepared Editor가 그 물리를 빌리는지 확인한다.
 #include "o/RawFortBadgesGlobals.h"
 #include "o/RawSunAviaryProcess.h" // 실제 사제 이동 프로세스의 동일 풀/부착 Form 조회 선언을 사용한다.
 #include "o/RawDataManagerSelection.h"
@@ -677,4 +678,70 @@ TEST_CASE(CampaignExistingEditorCheckpoint_InputFactoriesStayClosedUntilActualSt
         const auto carrier=session.MakeCarrierInput({});const auto selection=session.MakeUserSelection(globals.SelectionState(),{});
         CHECK(carrier && selection && owner.State().phase[0]==1 && owner.State().next[0]==4);
     },true,&link);
+}
+
+// 같은 실제 Guide 스크립트의 Config/Native 모드 해제 뒤 prepared Editor가 강제 덮어쓰기 없이 설치되어야 한다.
+TEST_CASE(CampaignExistingEditorCheckpoint_GuideReleaseClearsSameNativeMissionBeforeEditor) {
+    EditorInstallWireScene link;bool observed{}; //실제 Config 알림에서 확인한 스크립트 해제/Native0/Config0 순서의 관측이다.
+    WithEditorInstallSession([&](RawCampaignSession& session,Client& client,const auto& checkpoint,EditorFiles& work) {
+        CHECK(observed && !session.Core().bridgeState.mission && client.Configuration().GetInt("global.inMission")==0);
+        RunEditorWireInstallState(session,client,checkpoint,work);session.CommitExistingEditorInstall(*client.LocalStateGlobals());
+        CHECK(!session.Core().bridgeState.mission && client.Configuration().GetInt("global.inMission")==0 && session.ExistingEditorCheckpointReady());
+    },true,&link,{},[&](Client& client,RawCampaignSessionServices& services) {
+        auto& configuration=client.Configuration();configuration.Set("missionSpec","d/{local.1}.english");auto& missionMode=services.surfaceStorage->links.mission;
+        auto mission=CreateGuideMissionScript(configuration,"TEST01",missionMode);CHECK(mission && mission->Loaded() && missionMode && configuration.GetInt("global.inMission")==1);
+        const auto notify=configuration.onChanged;configuration.onChanged=[&] { //실제 Set 알림은 스크립트 등록 반납과 Native 모드0 이후에만 실행되어야 한다.
+            CHECK(!mission && !configuration.Registry().FindByName("mission") && !missionMode && configuration.GetInt("global.inMission")==0);observed=true;if (notify) notify();
+        };
+        ReleaseGuideMissionScript(mission,missionMode,configuration);configuration.onChanged=notify;
+        CHECK(observed && services.gameplayGlobals->world.editor==1 && services.gameplayGlobals->world.missionPost && services.surfaceStorage->ownerMode.fort);
+    });
+}
+
+// 실제 Config 알림이 중단되어도 앞선 스크립트/Native 해제를 되돌리지 않고 빈 현재의 재해제도 추가 쓰기를 만들지 않는다.
+TEST_CASE(CampaignExistingEditorCheckpoint_GuideReleaseKeepsPartialEffectsOnConfigNotificationFailure) {
+    bool observed{}; //선택된 Config 알림 중단과 다음 실제 Editor 생성까지의 부분효과를 구별한다.
+    WithEditorInstallSession([&](RawCampaignSession& session,Client& client,const auto&,EditorFiles&) {
+        CHECK(observed && !session.Core().bridgeState.mission && client.Configuration().GetInt("global.inMission")==0);
+    },true,nullptr,{},[&](Client& client,RawCampaignSessionServices& services) {
+        auto& configuration=client.Configuration();configuration.Set("missionSpec","d/{local.1}.english");auto& missionMode=services.surfaceStorage->links.mission;
+        auto mission=CreateGuideMissionScript(configuration,"TEST01",missionMode);CHECK(mission && mission->Loaded() && missionMode);
+        const auto notify=configuration.onChanged;std::uint32_t notifications{};configuration.onChanged=[&] { //이미 실행한 원문 prefix를 확인한 뒤 선택 장치의 실제 예외를 전파한다.
+            ++notifications;CHECK(!mission && !missionMode && !configuration.Registry().FindByName("mission") && configuration.GetInt("global.inMission")==0);throw CheckpointStop("guide-release-notification");
+        };
+        CHECK(CheckpointRejects<CheckpointStop>([&] { ReleaseGuideMissionScript(mission,missionMode,configuration); }));
+        CHECK(!mission && !missionMode && notifications==1);ReleaseGuideMissionScript(mission,missionMode,configuration);CHECK(notifications==1);
+        configuration.onChanged=notify;observed=true;
+    });
+}
+
+// 준비 Session은 이전 Guide를 유지하고 원문 이름 비교/맵 속성 판정이 선택한 늦은 closeGuide 뒤에만 World를 연다.
+TEST_CASE(CampaignExistingEditorCheckpoint_GuideLifetimeSurvivesPreparedCtorUntilSelectedLateClose) {
+    std::unique_ptr<MissionScript> mission;EditorInstallWireScene link;std::uint32_t classified{},closed{},renamed{}; //실제 이전 스크립트 수명과 외곽 분기 도달 횟수다.
+    WithEditorInstallSession([&](RawCampaignSession& session,Client& client,const auto& checkpoint,EditorFiles& work) {
+        auto& mode=session.Core().bridgeState.mission;CHECK(mission && mode && client.Configuration().GetInt("global.inMission")==1);
+        auto selected=checkpoint;std::string current="FormerCampaign"; //독립 입력인 이전 이름은 실제 파일 조회 전에 원문 setName 위치에서 선택 이름으로 바뀐다.
+        selected.fort.currentName=[&]()->std::string_view { return current; };
+        selected.fort.missionName=[&](auto name) { CHECK(name=="Checkpoint385" && mission && mode && !closed && !renamed);++classified;return 0; };
+        selected.fort.closeGuide=[&] { CHECK(classified==1 && mission && mode && !renamed);ReleaseGuideMissionScript(mission,mode,client.Configuration());++closed; };
+        selected.fort.setName=[&](auto name) { CHECK(name=="Checkpoint385" && !mission && !mode && closed==1);current=name;++renamed; };
+        RunEditorWireInstallState(session,client,selected,work);session.CommitExistingEditorInstall(*client.LocalStateGlobals());
+        CHECK(!mission && !mode && classified==1 && closed==1 && renamed==1 && client.Configuration().GetInt("global.inMission")==0);
+    },true,&link,{},[&](Client& client,RawCampaignSessionServices& services) {
+        client.Configuration().Set("missionSpec","d/{local.1}.english");mission=CreateGuideMissionScript(client.Configuration(),"TEST01",services.surfaceStorage->links.mission);CHECK(mission && mission->Loaded());
+    });
+}
+
+// 이름이 같은 원문 경로는 closeGuide를 강제로 선택하지 않고 미션 설치 분기로 빠져 일반 Editor World를 열지 않는다.
+TEST_CASE(CampaignExistingEditorCheckpoint_SameNameKeepsGuideAndSelectsMissionOutside) {
+    std::unique_ptr<MissionScript> mission;bool outside{}; //같은 현재 미션의 범위 밖 분기와 일반 Editor 설치 완료를 구별한다.
+    WithEditorInstallSession([&](RawCampaignSession& session,Client& client,const auto& checkpoint,EditorFiles& work) {
+        auto selected=checkpoint;selected.fort.closeGuide=[] { throw std::logic_error("같은 이름에서 선택하면 안 되는 Guide 해제"); };
+        selected.fort.outside=[&](auto branch) { CHECK(branch==ExistingEditorInstallOutside::Mission);outside=true;throw CheckpointStop("same-name-mission"); };
+        CHECK(CheckpointRejects<CheckpointStop>([&] { session.InstallExistingEditorCheckpoint(selected,client.ReadOnlyForts(),work); }));
+        CHECK(outside && mission && session.Core().bridgeState.mission && !session.ExistingEditorCheckpointReady());
+        ReleaseGuideMissionScript(mission,session.Core().bridgeState.mission,client.Configuration()); //검사 종료의 실제 스크립트 소유권을 Client보다 먼저 반납한다.
+    },true,nullptr,{},[&](Client& client,RawCampaignSessionServices& services) {
+        client.Configuration().Set("missionSpec","d/{local.1}.english");mission=CreateGuideMissionScript(client.Configuration(),"TEST01",services.surfaceStorage->links.mission);CHECK(mission && mission->Loaded());
+    });
 }

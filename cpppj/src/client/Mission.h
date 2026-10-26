@@ -2,6 +2,7 @@
 // UberGump가 원본 브리핑 본문을 표시한다. 미션 종류별 실제 객체·게임 명령은 후속이다.
 #pragma once
 #include "o/ConfigInterface.h"
+#include <memory>
 #include <optional>
 #include <string>
 #include <string_view>
@@ -43,4 +44,8 @@ private:
     // script_: 안내·명령·섹션을 조회할 미션 스크립트.
     o::Config script_;
 };
+// 실제 Guide 미션 생성의 Native 모드와 global.inMission=1을 같은 스크립트 수명 시작에 공개한다.
+std::unique_ptr<MissionScript> CreateGuideMissionScript(o::ConfigInterface& configuration,std::string_view name,bool& missionMode);
+// 실제 Guide 해제처럼 스크립트 등록을 먼저 반납한 뒤 Native 모드와 global.inMission을0으로 쓴다. 현재가 없으면 효과가 없다.
+void ReleaseGuideMissionScript(std::unique_ptr<MissionScript>& mission,bool& missionMode,o::ConfigInterface& configuration);
 }
