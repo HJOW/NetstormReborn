@@ -2212,6 +2212,9 @@ set_source_files_properties(TellTipTests.cpp PROPERTIES COMPILE_DEFINITIONS "NET
 target_sources(netstorm_tests PRIVATE EditorMapCatalogFilesTests.cpp TextClipboardTests.cpp)
 target_sources(netstorm_tests PRIVATE EditorAtomicWriteTests.cpp)
 
+# 보호 원본의 실제 토글 마커와 공통 메뉴 픽셀을 대조한다.
+target_sources(netstorm_tests PRIVATE MenuCheckMarkerTests.cpp)
+
 # 원문 NewFort1400행과 실제 manager/작업 파일의 보호·수명을 함께 검증한다.
 target_sources(netstorm_tests PRIVATE NewFortTests.cpp NewFortManagerDevicesTests.cpp)
 set_source_files_properties(NewFortTests.cpp PROPERTIES COMPILE_DEFINITIONS

@@ -121,14 +121,16 @@ void BindMenuGumpDraw(GumpDrawHooks& hooks,std::function<const MenuGumpDraw*(std
         else { if (!previous) throw std::invalid_argument("메뉴 외 Draw 경계 필요");previous(token); }
     };
 }
-// +154는 J 첫 인덱스가 아니라 I 구간 count다. 같은 장식 SHP의 count+2를 물리 프레임으로 출력한다.
+// 체크 표시는 같은 장식 SHP의 J 구간 첫 번호+2를 출력한다. 실제 fortGump에서는 J02(물리60번)다.
+// 원본: 10.78 00476080 / CD10.72 004523b0은 타입+154+2를 사용한다. 0049b060의 첫 번호 표는+130, 개수 표는+170이다.
+// 이력: 2026-10-27 수정 — +154를 I 구간 개수로 오인해 B01(물리6번)을 선택하던 표시 오류를 정정했다.
 void BindMenuGumpDrawAssets(MenuGumpDrawHooks& hooks,const GameAssets& assets,GumpDecorationPixelTarget& pixels) {
     const auto shape=pixels.Hooks({}).shape;
     // 매 표시 요청의 현재 타입 정의를 조회하고 기존 원색 해제 캐시/클립/투명 합성을 사용한다.
     hooks.marker=[&assets,shape](std::uint32_t type,ScreenPoint point) {
         if (type<o::kFirstAssetTypeNumber || type-o::kFirstAssetTypeNumber>=assets.Types().size()) throw std::out_of_range("메뉴 체크 실제 타입 범위 초과");
-        const auto count=assets.Types()[type-o::kFirstAssetTypeNumber].definition.FrameTable().Run('I').count;
-        shape(type,static_cast<std::uint32_t>(count)+2U,point);
+        const auto first=assets.Types()[type-o::kFirstAssetTypeNumber].definition.FrameTable().Run('J').first;
+        shape(type,static_cast<std::uint32_t>(first)+2U,point);
     };
 }
 }

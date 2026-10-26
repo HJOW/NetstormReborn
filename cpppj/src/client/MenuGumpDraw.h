@@ -60,6 +60,6 @@ private:
 };
 // 복원 메뉴의 실제 Draw만 교체하며 버튼/배경/텍스트 등 기존 다른 파생 처리기를 보존한다.
 void BindMenuGumpDraw(GumpDrawHooks& hooks,std::function<const MenuGumpDraw*(std::uint32_t)> resolve);
-// 체크 그림은 타입 +154의 I 구간 개수+2 물리 프레임이다. 기존 장식 원색 픽셀 캐시를 공유한다.
+// 체크 그림은 타입+154의 J 구간 첫 번호+2 물리 프레임이다. 기존 장식 원색 픽셀 캐시를 공유한다.
 void BindMenuGumpDrawAssets(MenuGumpDrawHooks& hooks,const GameAssets& assets,GumpDecorationPixelTarget& pixels);
 }

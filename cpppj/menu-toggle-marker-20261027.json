@@ -1,0 +1,184 @@
+{
+  "unit": 471,
+  "date": "2026-10-27",
+  "host": "HJOW-Athlon",
+  "baseCommit": "51e2d8f4",
+  "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+  "decompileChanged": false,
+  "issue": "메인 메뉴 옵션과 게임 중 ESC 메뉴가 공유하는 토글 표시가 원본과 다른 장식 조각으로 보인다.",
+  "cause": {
+    "wrongField": "타입+154를 I.count로 오인",
+    "actualField": "+130+9*4 = J.first",
+    "countField": "+170+8*4 = I.count(+190)",
+    "fortGump": {
+      "iFirst": 54,
+      "iCount": 4,
+      "jFirst": 58,
+      "wrongFrame": 6,
+      "wrongCluster": "B01",
+      "correctFrame": 60,
+      "correctCluster": "J02"
+    }
+  },
+  "staticOriginalEvidence": {
+    "firstAndCountBuilder": "10.78 0049b060 / 10.72 00444da0",
+    "menuDraw": "10.78 00476080 / 10.72 004523b0",
+    "binaryCodeEmulatedThisUnit": false,
+    "sourceSha256": {
+      "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+      "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "originalCD/Netstorm.exe": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233"
+    }
+  },
+  "builds": [
+    {
+      "command": [
+        "cmake",
+        "--build",
+        "cpppj/build",
+        "--config",
+        "Release",
+        "--parallel",
+        "4",
+        "--",
+        "/p:UseMultiToolTask=true",
+        "/p:MultiProcMaxCount=4",
+        "/p:EnforceProcessCountAcrossBuilds=true"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-menu-toggle-471/build-before-fix.log",
+      "sha256": "1b3ca2bee7c22b3096e1a41b4e57836367efad59b191d1cb856f85b14bda6c3f",
+      "summaries": [],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cmake",
+        "--build",
+        "cpppj/build",
+        "--config",
+        "Release",
+        "--parallel",
+        "4",
+        "--",
+        "/p:UseMultiToolTask=true",
+        "/p:MultiProcMaxCount=4",
+        "/p:EnforceProcessCountAcrossBuilds=true"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-menu-toggle-471/build-before-fix2.log",
+      "sha256": "e5899c49bc1c47a1e27d76d8ba976831fdd1ec0f29f47a33c1261cc541305dc7",
+      "summaries": [],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cmake",
+        "--build",
+        "cpppj/build",
+        "--config",
+        "Release",
+        "--parallel",
+        "4",
+        "--",
+        "/p:UseMultiToolTask=true",
+        "/p:MultiProcMaxCount=4",
+        "/p:EnforceProcessCountAcrossBuilds=true"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-menu-toggle-471/build-fixed.log",
+      "sha256": "39a7fd09fba4b225635d5b0ce5aa39c70ba0cdab7fb1f1b6d16cdc3c83c7c613",
+      "summaries": [],
+      "diagnostics": []
+    }
+  ],
+  "beforeFix": [
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "MenuCheckMarker"
+      ],
+      "exit": 1,
+      "log": "extracted/cpp-menu-toggle-471/fails-before-fix.log",
+      "sha256": "cb660d086a364242b36482a0b5fd7d6a78ea6e71bc20a838e127af7bd6529284",
+      "summaries": [
+        "1 test(s), 6 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "MenuCheckMarker"
+      ],
+      "exit": 1,
+      "log": "extracted/cpp-menu-toggle-471/fails-before-fix2.log",
+      "sha256": "195f57c4d0353e66520a8284c38a2e594d4715a64f7460c4dfad39f6f662bab4",
+      "summaries": [
+        "2 test(s), 6 failed check(s)"
+      ],
+      "diagnostics": []
+    }
+  ],
+  "firstTestCorrection": "새 검사의 SHP 폭/높이 가정11을 원시 rect[-6,-6,5,5]의 양끝 포함12로 정정했다. 수정 전 제품에 다시 실행해 두 검사/6실패를 확인한 다음 제품 선택식을 수정했다.",
+  "focused": [
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "Menu"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-menu-toggle-471/final-Menu.log",
+      "sha256": "a55e7d8e711c9617dbd07e2a5f6280c3d0bc026370ed4bd9eeed1268c89e12ae",
+      "summaries": [
+        "109 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "GumpDraw"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-menu-toggle-471/final-GumpDraw.log",
+      "sha256": "a7fdfe882d2d3435caf8800199de03e976b85c7ee19550ce604ba104df234b3f",
+      "summaries": [
+        "11 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    }
+  ],
+  "observedFocused": 120,
+  "uniqueFocused": 120,
+  "newTests": [
+    "MenuCheckMarker_CommonMenuTreeDrawsOriginalToggleWithoutChangingOtherPixels",
+    "MenuCheckMarker_OriginalJ02PixelsAndClipInBothEditions"
+  ],
+  "registeredBefore": 3228,
+  "registeredAfter": 3230,
+  "missingPreviousTests": [],
+  "preservedInputs": 3160,
+  "changedProtectedOrExistingTests": [],
+  "sourceManifest": {
+    "path": "extracted/cpp-menu-toggle-471/source-final.json",
+    "files": 2784,
+    "sha256": "44163988483bc9d7506de5bbf480115885ccfc3370e41466ff471bf8dec9b654"
+  },
+  "gameExeSha256": "76c257c56bba1414f21449f916b8fb77aafc6d877c739ae98bc511a7b5660433",
+  "testExeSha256": "ab6925c033ee99943417d3907d1ea57313729b8600cc964a86fb88eb9943124a",
+  "comparisonImage": {
+    "path": "docs/exe/menu-toggle-marker-20261027.png",
+    "sha256": "18511936df36e2da5f02565fd40fab514288803ebeef162ff0500cc4793b5c00",
+    "kind": "보호 SHP의 잘못된6번/원본60번 확대 비교이며 실제 GUI 캡처가 아니다"
+  },
+  "validationScope": "양판본 마커의 실제 픽셀/핫스폿/클립,10.78 공통 메뉴 트리 두 대표 행의 체크 on/off 차이. 실제 메뉴 실행/GUI 관측/전체 동일성 검증과 구별한다.",
+  "gameRuns": 0,
+  "guiRuns": 0,
+  "wholeCTestExecuted": false,
+  "remainingOverallGoal": "NewFort 실제 Client 설치/Add Island/Test Battle/시나리오 및 전체 미션 자연 완주·원본 동일성"
+}
