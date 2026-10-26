@@ -13,6 +13,8 @@ struct GuideMissionTransitionHooks {
 };
 // 00463b70: 현재가 있으면 finish/release 한 번 뒤 이름을 복사해 공장을 호출한다.
 void BeginGuideMission(std::string_view name,const GuideMissionTransitionHooks& hooks);
+//00463b20: 현재가 있을 때만 해제하며 가상+1c 종료를 호출하지 않는다. 해제 재진입도 한 번만 처리한다.
+void CloseGuideMission(const GuideMissionTransitionHooks& hooks);
 // 00463da0: 현재 fork값을 먼저 복사한 뒤 finish/release하고 Begin의 재진입 확인/공장을 수행한다.
 void ForkGuideMission(std::uint32_t parameter,const GuideMissionTransitionHooks& hooks);
 // 00463cf0: 캡처한 이름/정규화 필드로 release부터 시작하고 공장 뒤 원래 모드/데모를 복원한다.

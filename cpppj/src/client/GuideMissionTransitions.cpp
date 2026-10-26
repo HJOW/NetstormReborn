@@ -13,8 +13,10 @@ template<class Function> const Function& TransitionEffect(const Function& functi
 // Begin은 기존 해제 중 새 현재가 생겨도 재확인 루프 없이 한 번의 공장으로 덮어쓴다.
 void BeginGuideMission(std::string_view name,const GuideMissionTransitionHooks& hooks) {
     if (TransitionEffect(hooks.current)()) { TransitionEffect(hooks.finish)();TransitionEffect(hooks.release)(); }
-    const std::string copied(name);TransitionEffect(hooks.create)(copied); // 기존 해제 뒤 Guide 이름을 복사하는 원본 위치다.
+    const std::string copied(name.substr(0,name.find('\0')));TransitionEffect(hooks.create)(copied); //기존 해제 뒤 현재 NUL까지 복사한다. 고정 버퍼를 빌린 경우 해제 중 바뀐 길이도 이 위치에서 읽는다.
 }
+//Close는 현재가 없으면 해제를 요구하지 않고, 있으면 finish 없이 같은 현재를 한 번 반납한다.
+void CloseGuideMission(const GuideMissionTransitionHooks& hooks) { if (TransitionEffect(hooks.current)()) TransitionEffect(hooks.release)(); }
 // Fork의 설정 결과는 첫 해제 전에 반드시 소유 복사한다.
 void ForkGuideMission(std::uint32_t parameter,const GuideMissionTransitionHooks& hooks) {
     const auto key="fork"+std::to_string(std::bit_cast<std::int32_t>(parameter)); // 원본 fork%d는 signed DWORD 서식이다.

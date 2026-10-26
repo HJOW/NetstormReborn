@@ -1,0 +1,221 @@
+{
+  "unit": 481,
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": "HJOW-Athlon / 2026-10-23",
+  "startingHead": "1e8ff825",
+  "completedScope": [
+    "004d81d0 c2 command parent module",
+    "00463b20 conditional Close helper without finish",
+    "BeginGuideMission late first-NUL copy from borrowed fixed buffers",
+    "actual Game menu numeric parameters through InputQueue to restored parent"
+  ],
+  "runtimeConnection": false,
+  "limits": [
+    "UberGump c2 dispatch is not wired yet; editor World/Guide/State7 and working Fort/script readers remain pending",
+    "native snapshot/release/factory/pending are explicit external boundaries; Battle14 preservation uses existing fixture",
+    "no original or clone game, GUI or audio execution; full C++ suite deferred after unit480 full3260 pass"
+  ],
+  "build": {
+    "command": [
+      "cmake",
+      "--build",
+      "cpppj/build",
+      "--config",
+      "Release",
+      "--parallel",
+      "4",
+      "--",
+      "/p:UseMultiToolTask=true",
+      "/p:MultiProcMaxCount=4",
+      "/p:EnforceProcessCountAcrossBuilds=true"
+    ],
+    "exit": 0,
+    "log": "extracted/cpp-editor-test-battle-481/build1.log",
+    "sha256": "1ebfa6aa9b0ae52e7c25bf4497d6172becc57e127145268790a6ca981e6d000f",
+    "summaries": [],
+    "diagnostics": []
+  },
+  "sourceFiles": 2843,
+  "executables": {
+    "cpppj/build/bin/Release/NetstormCpp.exe": "2421b871e91d5c4055ba58b0a9b21b9cc4985b2a0a816392c9d40ba721569fcd",
+    "cpppj/build/bin/Release/netstorm_tests.exe": "b59b6d9d835d3d4c94c8d23ed714406fa56d7cc4c804776adb38d74ba3c5521a"
+  },
+  "native": {
+    "inputs": 87,
+    "rows": 174,
+    "normalReturns": 162,
+    "partialStops": 12,
+    "reproduced": true,
+    "report": "cpppj/editor-test-battle-native-20261027.json",
+    "fixtureSha256": "5d0b1ec2926b27e159c1517d01c6ae2a6f66d32e96049948dc0b8e35b2b9e6fe"
+  },
+  "focused": {
+    "unique": 42,
+    "observations": 44,
+    "failures": 0,
+    "newTests": [
+      "EditorTestBattle_ReplaysNative174LateNamesReentryAndPartialStops",
+      "EditorTestBattle_RequiresOnlySelectedEffectsAtOriginalFailurePosition",
+      "EditorTestBattle_UsesActualGameMenuNumbersAndInputQueue"
+    ],
+    "logs": [
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "EditorTestBattle"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-editor-test-battle-481/focused1.log",
+        "sha256": "88feabc2cc023a5911b3478f60a3677ba63baadb4ac86726928920f6e596055a",
+        "summaries": [
+          "3 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "FortSelection"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-editor-test-battle-481/focused2-FortSelection.log",
+        "sha256": "831cc15264aa3743e4db3e72c855f7f3b718884f90ccec6aa25d849643bee098",
+        "summaries": [
+          "5 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "GameMenu"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-editor-test-battle-481/focused2-GameMenu.log",
+        "sha256": "bdf466c1626f575abbe68f6f4ccc06d5e11dc5fd41b7d812c75476da0efc5591",
+        "summaries": [
+          "9 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "Guide"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-editor-test-battle-481/focused2-Guide.log",
+        "sha256": "9c4d412b8feef926c402f13af2584a6736abc6007a5bddeac703f2c2c7478c54",
+        "summaries": [
+          "13 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "RawMenuEditorIslandWindow"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-editor-test-battle-481/focused2-RawMenuEditorIslandWindow.log",
+        "sha256": "48e2202586e40fcbe0df9376beabbd950cc54bd02ec9c16182ba9046196a63c6",
+        "summaries": [
+          "2 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "SaveGoMain"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-editor-test-battle-481/focused2-SaveGoMain.log",
+        "sha256": "7f00411a0573127ed261d0cc1ad29c8fe613d34ef70ece7674eb65a3418c5257",
+        "summaries": [
+          "5 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "Toggle"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-editor-test-battle-481/focused2-Toggle.log",
+        "sha256": "1990136af1de36d1b4adbe15ba6bbd931c41fb8cede4f62035797ee5b076ee3b",
+        "summaries": [
+          "1 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "TutorialInit"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-editor-test-battle-481/focused2-TutorialInit.log",
+        "sha256": "08eb74725aeec2d83af8b026ef9c2317f9ee8dd7e7344741a6901d98189779e5",
+        "summaries": [
+          "4 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "MenuCheckMarker"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-editor-test-battle-481/focused3.log",
+        "sha256": "28afc25132f7a5b192fa27af0b7686e1a3075a0c4d4c014697597ba80cc59e99",
+        "summaries": [
+          "2 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      }
+    ]
+  },
+  "preservation": {
+    "protectedAndExistingTests": 3190,
+    "existingTestCMakeRegistrationOnly": "cpppj/tests/CMakeLists.txt",
+    "changedProtectedOrExistingTests": [],
+    "existingRegistrations": 3260,
+    "registeredAfter": 3263,
+    "allPriorRegisteredNamesPreserved": true,
+    "frozenSourcesUnchanged": true
+  },
+  "firstFailure": {
+    "log": {
+      "command": [
+        "python",
+        "-X",
+        "utf8",
+        "tools/decomp_editor_test_battle.py"
+      ],
+      "exit": 1,
+      "log": "extracted/cpp-editor-test-battle-481/native1.log",
+      "sha256": "a3147cb057f7b0fd0ae872de8d6dcaaf3a78f43b166320591064a33bb7221f5b",
+      "summaries": [],
+      "diagnostics": []
+    },
+    "reason": "기존 gate 허용 범위가 현재 Mission0의 Guide 입력 마지막 반환00463f63을 포함하지 않았다. functions.tsv의 실제00463e40 전체 범위를 추가한 뒤 최초 fixture를 생성했다. 입력/기대 관측은 변경하지 않았다."
+  },
+  "next": [
+    "separate actual Guide release from World retirement at original parent positions",
+    "connect c2 to live Editor and real State7/State1 transitions",
+    "preserve working namespace across Fort and language script loads",
+    "deferred GUI Add Island/save/reentry and Test Battle/Return round trip"
+  ]
+}

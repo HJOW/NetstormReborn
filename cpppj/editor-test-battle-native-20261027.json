@@ -1,0 +1,99 @@
+{
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": "HJOW-Athlon / 2026-10-23",
+  "gameExecuted": false,
+  "osExecuted": false,
+  "command": 33554626,
+  "inputs": 87,
+  "rows": 174,
+  "normalReturns": 162,
+  "partialStops": 12,
+  "binarySha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+  "toolSha256": "6f0d2448e12fe041eafa73d02662f283871118298cab794013340877abdaf901",
+  "fixtureSha256": "5d0b1ec2926b27e159c1517d01c6ae2a6f66d32e96049948dc0b8e35b2b9e6fe",
+  "gateToolSha256": "4caf1c87e4a152f65b2815395ea553b2609587be06a95512974b893e985b24e3",
+  "codeImageUnchanged": true,
+  "codeEvidence": [
+    {
+      "first": "004437f0",
+      "bytes": 1,
+      "sha256": "ae3f4619b0413d70d3004b9131c3752153074e45725be13b9a148978895e359e"
+    },
+    {
+      "first": "00445330",
+      "bytes": 14,
+      "sha256": "09612bd1e73b9e876d8342a734b7bb81c341ff6d100e1ffecdf6e3fb762cbc31"
+    },
+    {
+      "first": "00452fe0",
+      "bytes": 92,
+      "sha256": "120001e4faa9f48cd3e2fe547895b157c501b7458b70fb0a983fba3403097f56"
+    },
+    {
+      "first": "00460de0",
+      "bytes": 15,
+      "sha256": "3cab06c9d5fcb713cd79dc1a30cb14b68c3e7fc0434d99fc9da595785f2a4f0e"
+    },
+    {
+      "first": "004639d0",
+      "bytes": 16,
+      "sha256": "d4811adb27138e38ae46e2d2e13ef90fb9ff1613da56856dc8eb263ea54980ba"
+    },
+    {
+      "first": "00463b20",
+      "bytes": 16,
+      "sha256": "542e1a96c30aec717d6f62b7db4f8d86fc9371940256c12ff977d84cb6df32c6"
+    },
+    {
+      "first": "00463b70",
+      "bytes": 62,
+      "sha256": "35fcad22dc8db355d2de26c1a9f8d293ae171692cbd1cc6557991fab26703693"
+    },
+    {
+      "first": "00463e40",
+      "bytes": 295,
+      "sha256": "f9257b9fc02bfb1ffed3652d72aa443267dfe512c7897d2d944c1f26d505f32f"
+    },
+    {
+      "first": "004b3560",
+      "bytes": 191,
+      "sha256": "58530c8fd37c325cf59dfd8a9ccc88af7a601833b13fd72815459837d5191d65"
+    },
+    {
+      "first": "004d6e61",
+      "bytes": 13846,
+      "sha256": "462f2d16e9e121243d9ff1391557c8aea045760cc41677858be312d8d9309450"
+    },
+    {
+      "first": "004e63d0",
+      "bytes": 5,
+      "sha256": "129f1135daa1b60c707996d1ed0561b8f4731388ee1f4732c0a27db4c5e3a907"
+    },
+    {
+      "first": "004e63e0",
+      "bytes": 190,
+      "sha256": "832152b36fa9dcc0d0acbc02aaf1313b9465e54b60f70f26f95fd7d139ae088c"
+    }
+  ],
+  "replaced": [
+    "Guide virtual input result",
+    "Gump input result",
+    "004bfb50 snapshot",
+    "00463ab0 release and explicit reentry",
+    "00482fb0 mission factory",
+    "00460bb0 pending copy"
+  ],
+  "actual": [
+    "general input c2 branch",
+    "00463b70 Begin and late NUL copy",
+    "00463b20 conditional Close without finish",
+    "004639d0 current Mission +64 store",
+    "004437f0 empty finish",
+    "004b3560 next1/Battle0 branch"
+  ],
+  "limits": [
+    "actual Runtime/State7 and working-file namespace not connected by this fixture",
+    "Battle14 preservation remains covered by existing FortSelection fixture"
+  ],
+  "verifiedExistingFixture": true
+}

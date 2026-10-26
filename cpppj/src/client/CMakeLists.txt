@@ -275,3 +275,6 @@ target_sources(netstorm PRIVATE NativeMainMenuState.cpp NativeMainMenuState.h
 
 # 실제 편집 작업본의 목록/읽기와 공통 문자 UI의 원문 CF_TEXT 장치를 연결한다.
 target_sources(netstorm PRIVATE EditorMapCatalogFiles.cpp EditorMapCatalogFiles.h TextClipboard.cpp TextClipboard.h)
+
+# 원본 편집 테스트의 저장/Guide 교체/복귀 예약 순서를 같은 미션 수명 하위와 조립한다.
+target_sources(netstorm PRIVATE EditorTestBattle.cpp EditorTestBattle.h)

@@ -2259,3 +2259,7 @@ set_source_files_properties(EditorIslandLayoutTests.cpp PROPERTIES COMPILE_DEFIN
 # 원본 내장 설명의 조회/부모 설치와 실제 Config 수명을 재생한다.
 target_sources(netstorm_tests PRIVATE EmbeddedTellTests.cpp)
 set_source_files_properties(EmbeddedTellTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_EMBEDDED_TELL_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/embedded-tell-x86.tsv\"")
+
+# 실제 일반 입력/Guide174행과 편집 테스트 메뉴·부분 실패를 재생한다.
+target_sources(netstorm_tests PRIVATE EditorTestBattleTests.cpp)
+set_source_files_properties(EditorTestBattleTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_EDITOR_TEST_BATTLE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/editor-test-battle-x86.tsv\"")
