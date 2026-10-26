@@ -1,6 +1,7 @@
 // 특수 내용물 삭제의 실제 PE 출력과 공유 Form 분배/경제 저장소 연결을 검사한다.
 #include "ConstructionSupport.h"
 #include "o/SquidFormDispatch.h"
+#include <filesystem>
 
 using namespace netstorm::o;
 using namespace netstorm::test::construction;
@@ -188,9 +189,11 @@ TEST_CASE(ContentLifetime_SharedBossRecheckedAfterCursorCancel) {
 
 //내용물삭제의현재커서동등비교도같은DWORD를사용하며Native56관측을값형/실제조회두경로에재생한다.
 TEST_CASE(CursorPreviewDword_ContentComparisonNative56KeepsAllBits) {
-    const auto rows=LoadFixture(std::filesystem::path(NETSTORM_CONTENTLIFETIME_FIXTURE).parent_path()/"content-cursor-width-x86.tsv").rows;std::size_t observations{};
+    // 같은 fixture 디렉터리의 독립 관측 파일을 기존 const char* 읽기 함수에 전달한다.
+    const auto fixturePath=(std::filesystem::path(NETSTORM_CONTENTLIFETIME_FIXTURE).parent_path()/"content-cursor-width-x86.tsv").string();
+    const auto rows=LoadFixture(fixturePath.c_str()).rows;std::size_t observations{};
     for (const auto& row:rows) for (const auto getter:{false,true}) { //독립장치fallback과Session의현재getter가같은전체값을비교한다.
-        CHECK(row.size()==7);if (row.size()!=7) continue;const auto edition=row[0]=="originals"?OriginalEdition::Patch1078:OriginalEdition::Cd1072;SidPool pool(edition,kPoolCapacity);std::vector<RiftTypeRecord> types(edition==OriginalEdition::Patch1078?188:171);SquidHash hash;std::vector<std::uint8_t> spots(65536);SquidUnpop unpop(pool,hash,spots);RawSquidDestroy destroy(pool,unpop,types);ContentFormHost forms(pool,types,[](Sid,Sid,std::uint32_t) {});const Sid form{50};auto raw=InputRaw(pool,form);std::fill(raw.begin(),raw.end(),0);raw[10]=6;Put(raw,16,Number(row[3]),2);Put(raw,18,85,2);ContentLifetimeState state;state.cursor=Number(row[2]);std::uint32_t cancelled{};ContentLifetimeHooks hooks;hooks.cancelCursor=[&] { ++cancelled; };if (getter) state.currentCursor=[&] { return state.cursor; };
+        CHECK(row.size()==7);if (row.size()!=7) continue;const auto edition=row[0]=="originals"?OriginalEdition::Patch1078:OriginalEdition::Cd1072;SidPool pool(edition,kPoolCapacity);std::vector<RiftTypeRecord> types(edition==OriginalEdition::Patch1078?188:171);SquidHash hash;std::vector<std::uint8_t> spots(65536);SquidUnpop unpop(pool,hash,spots);RawSquidDestroy destroy(pool,unpop,types);ContentFormHost forms(pool,types,[](Sid,Sid,std::uint32_t) {});const Sid form{50};auto raw=InputRaw(pool,form);std::fill(raw.begin(),raw.end(),std::uint8_t{});raw[10]=6;Put(raw,16,Number(row[3]),2);Put(raw,18,85,2);ContentLifetimeState state;state.cursor=Number(row[2]);std::uint32_t cancelled{};ContentLifetimeHooks hooks;hooks.cancelCursor=[&] { ++cancelled; };if (getter) state.currentCursor=[&] { return state.cursor; };
         ContentFormLifetime lifetime(pool,types,forms,destroy,state,hooks);lifetime.PreDestroy(form);CHECK(cancelled==Number(row[4]) && state.cursor==Number(row[5]) && sizeof(state.cursor)==4);++observations;
     }
     CHECK(observations==112);

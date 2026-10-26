@@ -17,7 +17,9 @@ def main():
     """원본 파일이나 게임 상태를 주입하지 않고 현재 빌드와 입력 계획/화면/전체 보고를 보존한다."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output', type=Path, required=True)
+    parser.add_argument('--data-root', type=Path, default=ROOT/'originals', help='실행 자료 복사본 경로. 생략하면 기존 originals를 사용한다.')
     args = parser.parse_args();out = args.output.resolve();out.mkdir(parents=True, exist_ok=False)
+    data_root = args.data_root.resolve()  # 별도 복사본에서도 같은 원본 자원과 입력열로 검사한다.
     steps = [(5, 'key', 'q'), (8, 'report', 'briefingKey'), (10, 'click', 'Play Mission'),
              (15, 'key', 'X'), (18, 'report', 'missingSlot'),
              (1100, 'report', 'mature'), (1100, 'snapshot', str(out/'mature.bmp')),
@@ -32,12 +34,12 @@ def main():
                   (1280, 'report', 'placed'), (1280, 'snapshot', str(out/'placed.bmp')), (1880, 'report', 'refilled'), (1880, 'snapshot', str(out/'refilled.bmp'))])  # 양방향 회전 후 원래 방향의 실제 합법 위치에 배치한다.
     steps.sort(key=lambda item:item[0]);script = out/'steps.tsv';report = out/'states.tsv'
     script.write_text(''.join(f'{frame}\t{op}\t{argument}\n' for frame, op, argument in steps), encoding='utf-8', newline='\n')
-    command = [str(GAME), '--run', str(ROOT/'originals'), '--mission', 'thewarbegins', '--window', '--no-audio', '--frames', '1883',
+    command = [str(GAME), '--run', str(data_root), '--mission', 'thewarbegins', '--window', '--no-audio', '--frames', '1883',
                '--set', 'SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0', '--ui-script', str(script), '--ui-report', str(report)]
-    before = snapshots(ROOT/'originals');save(out/'originals-before.json', before)
-    with preserve_game_settings(ROOT/'originals', 'd'):
+    before = snapshots(data_root);save(out/'originals-before.json', before)
+    with preserve_game_settings(data_root, 'd'):
         result = execute(command, out, GAME, 110)
-    result.update(originalsUnchanged=snapshots(ROOT/'originals')==before, testOnlyBridgeManipulation=False)
+    result.update(originalsUnchanged=snapshots(data_root)==before, dataRoot=str(data_root), testOnlyBridgeManipulation=False)
     save(out/'run.json', result)
     if result['returnCode'] or result['timedOut'] or not result['originalsUnchanged']:
         raise RuntimeError(result)

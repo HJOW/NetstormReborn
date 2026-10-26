@@ -151,9 +151,10 @@ TEST_CASE(CampaignObjectMenus_ActualChainAndBuildSelection) {
     if (knowledge) ui.Click(*knowledge);const auto command=ui.commands.Pop(false);CHECK(command.code==session.PriestMenuSettings().knowledgeCommand && command.x!=0 && command.y==0);
     const auto target=session.PriestMenuSettings().dais;const auto row=std::find_if(ui.buildRows.begin(),ui.buildRows.end(),[&](const auto& value) { return value[0]==session.PriestMenuSettings().buildCommand && (value[1]>>16)==target; });
     CHECK(row!=ui.buildRows.end());if (row==ui.buildRows.end()) return;CHECK(((*row)[1]&0xffffU)==priest.value && (*row)[2]==1);
-    session.SetSp(1,0);CHECK(!chain->SelectBuild((*row)[1]>>16,Sid{static_cast<std::uint16_t>((*row)[1])}));CHECK(ui.tells==std::vector<std::string>({"BuildNoBucks"}));CHECK(!session.CursorDropSettings().preview.value);
+    session.SetSp(1,0);CHECK(!chain->SelectBuild((*row)[1]>>16,Sid{static_cast<std::uint16_t>((*row)[1])}));CHECK(ui.tells==std::vector<std::string>({"BuildNoBucks"}));CHECK(!session.CursorDropSettings().preview);
     session.SetSp(1,100000);session.Cursor().SetEffects(ui.CursorEffects());const auto before=session.Sp(1);CHECK(chain->SelectBuild((*row)[1]>>16,Sid{static_cast<std::uint16_t>((*row)[1])}));
-    const auto form=session.CursorDropSettings().preview;CHECK(form.value && session.Core().pool.Slot(form)[10]==6);CHECK(Get(session.Core().pool.Slot(form),18,2)==target);CHECK(session.CursorDropSettings().costFlags==0x160 && session.Sp(1)==before);
+    // 실제 Pool을 읽는 위치에서만 전체 DWORD의 유효 범위를 검사해 SID16으로 변환한다.
+    const auto form=CursorPreviewSid(session.CursorDropSettings().preview);CHECK(form.value && session.Core().pool.Slot(form)[10]==6);CHECK(Get(session.Core().pool.Slot(form),18,2)==target);CHECK(session.CursorDropSettings().costFlags==0x160 && session.Sp(1)==before);
     const auto preview=CursorPreviewSid(session.Cursor().Lifecycle().previews[0]);CHECK(session.Core().pool.Slot(preview)[10]==target && (session.Core().pool.Slot(preview)[40]&8));
     auto records=session.PlayerRecords();Put(records,180+0x94,preview.value);Put(records,180+0x98,123);Put(records,180+0x8c,priest.value);Put(records,180+0x90,456); // 실제 등록 쌍 하나만 일치시키고 다른 쌍은 표식으로 보존한다.
     session.Cursor().Cancel();ui.menus->Close();chain.reset();CHECK(!ui.menus->HasMenus());

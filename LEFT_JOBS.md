@@ -8,7 +8,7 @@
 - **마지막 전체 정밀 디컴파일: HJOW-Athlon (192.168.0.94) / 2026-10-23.** 결과는 `extracted/refined/`(Git 제외)에 있다. 현재 PC가 이와 다르면 AGENTS.md 규칙에 따라 재디컴파일한 뒤 작업한다. 절차는 `tools\ghidra\refine_all.ps1`이며, 힌트 생성 단계가 콘솔 인코딩(cp949) 오류로 멈추면 `PYTHONUTF8=1`, `PYTHONIOENCODING=utf-8`을 설정하고 다시 실행한다.
 - 2026-10-26의 문서 정리는 HJOW-X3D에서 인수인계 문서만 고친 것이다. 디컴파일 결과·제품 코드·검사 코드는 바꾸지 않았으므로 위 디컴파일 기록은 그대로 유효하다. 사용자는 HJOW-Athlon에서 작업을 재개할 예정이다.
 - **실제 게임 실행 확인:** HJOW-Athlon, VM-W11-Codex, vm-debian-codex는 AGENTS.md의 예외 시스템이다. 그 밖의 PC에서는 게임이나 별도 창을 띄우기 전에 목적을 설명하고 사용자 확인을 받는다.
-- **목표 상태:** 2026-10-26 사용자 요청으로 작업을 중단하고 인수인계를 작성했다. 451까지 완료했고, 452는 Source4/build4 컴파일 실패 상태로 보존한다. 452 집중·GUI 검사는 실행하지 않았다. 문서와 미완료 변경을 커밋한 뒤 목표를 일시 중지한다. 재개 시 3절 0번부터 확인한다.
+- **목표 상태:** 2026-10-26 사용자가 목표 작업 재개를 요청했다. HJOW-Athlon에서 452의 미완료 빌드를 복구했고 Source6/build6 경고·오류0, 집중444개·실패0, 실제 QWASZX·회전·Drop·보충 GUI를 통과했다. 전체 목표는 계속 진행 중이며 Edit 설치·전체 미션 자연 완주·동일성 검증이 남아 있다.
 - **원시 증거 위치:** 빌드·검사·GUI 원시 로그와 통합 드라이버는 `extracted/`(Git 제외)에 있으며, 작업한 PC(주로 HJOW-Athlon)에만 있다. 커밋되는 결과 보고서는 `cpppj/*.json`, 작업 문서는 `docs/exe/cpp-*.md`다.
 - 원격 저장소에 push하지 않는다. 커밋 메시지는 `YYYYMMDD-NN CP 요약` 형식이며, NN은 `git log`로 그날의 마지막 번호를 확인해 정한다.
 
@@ -85,29 +85,14 @@
 
 ## 3. 앞으로 할 작업 (권장 순서)
 
-### 0. 2026-10-26 사용자 요청 중단 — 452 미완료 인수인계
+### 0. 2026-10-26 재개 — 452 완료
 
-- **중단 지시:** 사용자가 작업 중단 → 인수인계 작성 → git 커밋 → 목표 일시 중지를 요청했다. 요청 뒤 제품 코드·검사를 고치거나 새 빌드·테스트를 실행하지 않았다. 문서와 중단 기록만 작성했다.
-- **마지막 완료:** `1ecdfa2a / 20261026-15 CP`의 451이다. 집중 459고유/461관측·신규 5개·GetFullDeck 실제 입력 GUI를 통과했다. 마지막 전체 통합은 다른 제품인 450(`74bc5941`)의 3,076개·GUI 2실행·자연 Early2다. 현재 452 코드를 빌드·플레이 가능 상태로 간주하지 않는다.
-- **452 변경:** 단일 `CursorDropState::preview`를 `uint32_t`로 보존하고, Drop의 캡처·준비 prefix와 실제 SID16 소비를 분리했다. Lifecycle·배치·미리보기 품질·보고와 ContentLifetime의 값형·현재 getter도 같은 DWORD를 쓴다. 기존 검사 8파일의 입력형·접근형을 대응했고 신규 6개를 추가했다. 원문 280관측(정상 240/준비 중단 40)과 추가 커서 비교 leaf 56관측은 제품 변경 전에 고정했다. Native 가상·GUI·Cancel 경계의 범위는 각 보고서와 작업 문서에 구분했다.
-
-| 시도 | 실제 결과 |
-| --- | --- |
-| Source1 / build1 | VS18 설치 미완료로 컴파일 전에 종료 1, 0.130초. 캐시를 강제 변경하지 않았다. |
-| Source2 / build2 | 설치 완료 뒤 Content 현재 커서 getter가 기존 Sid를 반환하여 오류 1, 종료 1, 63.739초. 논리 비교를 DWORD로 옮겼다. |
-| Source3 / build3 | 제품 컴파일 뒤 기존 Campaign 검사의 Sid 접근형 누락으로 10진단, 종료 1, 309.911초. 동일 숫자의 checked 변환·정수 비교로 대응했다. |
-| **Source4 / build4** | **종료 1, 컴파일 진단 14개·경고 0, 99.755초. 신규 ContentLifetimeTests.cpp:191의 `std::filesystem::path` 정의 누락이 첫 오류다. 아직 수정하지 않았다.** |
-
-- **재개 첫 수정:** [ContentLifetimeTests.cpp](cpppj/tests/ContentLifetimeTests.cpp):191과 [CursorDropTests.cpp](cpppj/tests/CursorDropTests.cpp):180의 신규 fixture 조회부터 점검한다. `<filesystem>`의 명시 포함이 필요하며, 기존 [RawSceneSupport.h](cpppj/tests/RawSceneSupport.h):88의 `LoadFixture`는 `const char*`만 받는다. 새 코드는 `filesystem::path`를 직접 넘겼으므로 문자열 인자 또는 정확한 파일 입력으로 고쳐야 한다. 첫 include 오류에 가린 후속 형식 오류가 있을 수 있으니 기존 단언·Native 행을 약화하지 말고 빌드로 확인한다.
-- **실행 여부:** 452의 집중·GUI·전체 CTest는 전부 미실행이다. `focused1/` 성공 자료와 452 runtime 결과 JSON도 아직 없다. 남아 있는 실행 파일을 452의 성공 산출물로 쓰지 않는다. 게임 실행 파일은 중간 제품일 수 있고 테스트 실행 파일은 이전 빌드일 수 있다.
-- **현재 프로세스:** 중단 확인 시점의 build4와 자동 집중 대기기는 이미 위 실패로 종료했다. 세션 `2828`(build4), `26873`(after-build), `27684`(설치 대기 pipeline1), `59287`(build3)은 모두 종료 상태를 확인했다. `extracted/cpp-cursor-preview-width-452-user-stop.json`의 stopped/remaining은 빈 배열이다. 실제 빌드·cl/link·게임·테스트 프로세스도 없었다. 자동 재시작하지 않는다.
-- **환경 변경:** 작업 중 기존 VS2026 설치 프로세스 24908/5060이 실행되며 VS18 인스턴스가 일시 미완료였다. 이후 `vswhere -all -products * -utf8 -format json`으로 `18.11.12324.101`·isComplete/isLaunchable true를 확인했다. 새 MSBuild는 `18.11.1-1.26513.3`이다. 사용자 설치 프로세스는 종료시키지 않았다. 현재 PC는 HJOW-Athlon이고 마지막 전체 정밀 디컴파일은 같은 호스트의 2026-10-23 결과다.
-- **동결·보호:** Source4는 2,039소스이고 신규 검사는 6개다. 중단 후 동결 소스와 보호 1,821파일의 SHA, 원본·CD 1,819파일 집합 유지를 다시 확인했다. `AGENTS.md`, 원본·CD, 기존 Native fixture는 바꾸지 않았다.
-- **원시 재개 자료(HJOW-Athlon에만 있음):** `extracted/cpp-cursor-preview-width-452-` 접두어 아래 `source1~4/hashes.json`, `build1~4.log`와 각 `buildN-result.json`, `pipeline1.json`·`pipeline2.json`(둘 다 실패), `native1.log`, `content-native1.log`(가상표 입력 누락 실패)·`content-native2.log`(성공), `test-migration.json`, `resume.json`, `user-stop.json`을 본다. Native 보고서 2개·fixture 2개·관측 도구 2개와 작업 문서는 Git에 보존한다.
-- **재개 순서:** AGENTS.md·본 인계·닷넷 인계를 읽고 호스트·VS·작업 트리를 확인한다 → 위 테스트 컴파일 오류 수정 → 새 Source5 동결 → `python extracted/cpp-cursor-preview-width-452-build.py 5 5` → 종료 0·경고/오류 0 확인 → 새 집중 시도(현재 focused1이 없으면 `python extracted/cpp-cursor-preview-width-452-focused.py 1 5`) → 실제 QWASZX·회전·Drop GUI → 보고서·인계 갱신과 완료 커밋. 기존 pipeline1과 after-build.py는 실패한 build2/build4에 고정돼 있으므로 재사용하지 않는다.
-- **커밋 뒤 동결 드라이버 주의:** 현재 `freeze.py`는 현재 HEAD와 비교해 신규 6개를 요구한다. 이번 미완료 커밋에는 그 6개가 이미 들어가므로 그대로 실행하면 단언이 실패한다. 재개 시 EOL 보존용 현재 HEAD와 검사 집합 비교 기준을 구분하고, 후자는 원래 기준 `1ecdfa2a9ffedd927a30a9271ce7bd39043da73d`로 유지한다. Source5 manifest의 `head`와 `newTestCases`도 이 기준·기존 신규 6개를 기록해야 `focused.py`가 같은 신규 집합을 검증한다. 성공 조건을 없애거나 기대 개수를 임의로 낮추지 않는다.
-- **GUI 계획만 있음:** `tools/cpp_production_shortcuts_smoke.py`의 기존 실제 입력을 사용하려 했다. 원본을 별도 폴더에 복사한 환경에서 실행하는 wrapper는 아직 작성하지 않았다. 이 도구는 `--output`만 받고 ROOT/originals를 고정하므로 코드를 먼저 읽는다. 기존 프로필은 `useProductTimers=0`이며, 원본 제품 타이머로 자연 완주한 검증과 구분해 기록한다.
-- 452 완료 뒤에도 다른 SID16·전체 Deck nullable `+ac`·작은 leaf·Native State1 전체 Effect/prefix·Runtime/Player 고정뷰 반납과 실제 Edit 설치, 전체 Early·훈련·캠페인·데모 자연 완주와 동일성 목표가 남는다. 사용자가 재개하기 전에는 목표 작업을 진행하지 않는다.
+- **현재 제품:** Source6(2,039소스), `NetstormCpp.exe` SHA `471ec293…`, Release build6 종료0·경고/오류0, 집중444고유/444관측·실패0(기존 신규6개 전부)이다. 실제 복사본 GUI에서 QWASZX 여섯 슬롯·회전/반대 회전·합법 위치 배치(새 서버 다리15211)·보충을 확인했다. 원본/CD 등 보호1,821파일은 동일하다.
+- **복구:** 두 신규 fixture 조회에 `<filesystem>`과 `LoadFixture(const char*)`의 문자열 인자를 명시했다. Source5에서 드러난 기존 `CampaignObjectMenuTests`의 Sid 접근형4진단도 같은 숫자의 DWORD 비교/실제 소비 직전 checked SID변환으로 고쳤다. 신규 바이트 채움의 C4244 두 원인도 `uint8_t{}`로 교정했다. 기존 단언·Native fixture·신규6개 검사 이름은 유지했다.
+- **최초 실패 보존:** build1~4는 중단 전 실패, build5는 위 후속4오류·C4244 두 원인(컴파일러 반복 출력14행), build6은 성공이다. 동결 manifest의 검사 기준은 최초 `1ecdfa2a`이며 실제 재개 HEAD `46e65408`을 별도 기록했다.
+- **검증 범위:** GUI는 `tools/cpp_production_shortcuts_smoke.py --data-root`에 실제 파일 복사본을 전달했다. `useProductTimers=0`의 기존 입력이며 원본 타이머 자연 완주·원본 픽셀/음향 동일성의 완료 증거가 아니다. 전체 CTest는 이번에 반복하지 않았다. 마지막 전체 통합은450의3,076개다.
+- [452 작업 문서](docs/exe/cpp-cursor-preview-width-runtime-20261026.md), [실행 보고서](cpppj/cursor-preview-width-runtime-20261026.json), 원시 `extracted/cpp-cursor-preview-width-452-{source6,build5,build6,focused1,gui1}`를 본다. 디컴파일 산출물을 변경하지 않았으며 마지막 전체 정밀 디컴파일은 **HJOW-Athlon / 2026-10-23**이다.
+- **다음:** Native State1의 작은 잔여 leaf·전체 Effect/prefix·Runtime/Player 반납 coordinator와 실제 Edit 설치를 이어서 복원한다. 3절2~7의 플레이·메뉴·동일성 목표도 계속 남는다.
 
 ### 1. 443·444 준비본 병합과 검증 (재개 시 첫 작업)
 
@@ -124,9 +109,9 @@
 - [x] **449 완료:** ClockSync3 DWORD와 Zone6BYTE·MetaZone51기록/flag를 같은 ClientLocalStateGlobals에 연결하고 실제 로그인도 같은 Zone/ticks를 빌린다. 마커 signed 상태·DWORD SID·현재 월드의 실제 가상 삭제→SID0, Zone의4+2BYTE 정리를 복원했다. 제품 전에 원본PE 마커86·Zone10관측을 고정했고 기존229사례 본문·Native fixture3개를 보존했다. Source1 빌드 경고/오류0, 집중480고유/480관측·실패0(신규8개), 같은 제품 Early1 실제 로그인/화면 GUI1 통과다. [449 문서](docs/exe/cpp-state-storage-runtime-20261026.md), [실행 보고서](cpppj/state-storage-runtime-20261026.json), [Native 보고서](cpppj/state-storage-leaves-native-20261026.json), 원시`extracted/cpp-state-storage-449-*`를 본다. 전체 State1·시각 동기화·MetaMap·자연 Edit 진입 완료는 아니다.
 - [x] **450 완료:** 기존 SidPool 삭제 기록 두20쌍(80DWORD)을 쓰는 실제 Pool 부모를 복원하고 실패점 BoardTargetState를 Storage 수명으로 옮겨 Board/AI가 직접 빌린다. 제품 전 두 PE에서 부모·하위 Reset을 치환 없이12관측(각82store)했다. 하위 Reset·Record·Release 본문은 바이트 보존, 기존46사례/fixture3개 내용도 유지했다. Source1 빌드 경고/오류0, 집중487고유/489관측·실패0(신규5), 같은 제품 전체CTest3076·GUI2·자연Early2→Tutorial3 통과. [450 문서](docs/exe/cpp-squid-pool-reset-runtime-20261026.md), [실행 보고서](cpppj/squid-pool-reset-runtime-20261026.json), [Native 보고서](cpppj/squid-pool-reset-native-20261026.json), 원시`extracted/cpp-squid-pool-reset-450-*`를 본다. 전체 State1·자연 Edit 완료는 아니다.
 - [x] **451 완료:** 전체 Deck 부모0044f9d0와 GetFullDeck(00542a28/020000cd)을 같은 Client FullDeck·현재 Player Deck·공유 난수·생산 dirty에 연결했다. 제품 전 실제 부모230관측(실제FullDeck/Append/Entry/난수 포함)·Guide/Gump/입력384관측을 고정했다. Source1 span at 컴파일 실패와 Source2 검사 optional 비교 경고2를 보존했고 Source3(2,039소스) 빌드 경고/오류0, 집중459고유/461관측·실패0(신규5개)을 확인했다. 별도 자료 복사본의 검사 Tell 버튼을 실제 클릭해 같은 Client FullDeck0→1을 관측했다. 기존222사례 본문·fixture6개를 유지했고 원본/CD도 그대로다. [451 문서](docs/exe/cpp-full-deck-command-runtime-20261026.md), [실행 보고서](cpppj/full-deck-command-runtime-20261026.json), [Native 보고서](cpppj/full-deck-command-native-20261026.json), 원시`extracted/cpp-full-deck-command-451-*`를 본다. 전체 State1/Edit 완료는 아니다.
-- [ ] **452 사용자 요청 중단·미완료:** 단일 CursorDropState.preview와 Content 현재 커서 값을 DWORD로 옮겼다. 두 PE Drop 280관측·내용물 커서 leaf 56관측은 고정했으나 신규 6개 C++ 검사는 아직 실행하지 않았다. Source4/build4는 ContentLifetimeTests.cpp:191의 filesystem 정의 누락에서 시작한 14진단으로 종료 1이었다. 빌드·자동 집중·게임 프로세스는 종료 상태다. 3절 0번의 오류와 재개 순서를 따른다. [작업 문서](docs/exe/cpp-cursor-preview-width-runtime-20261026.md), 원시 `extracted/cpp-cursor-preview-width-452-*`를 본다. 완료로 합산하지 않는다.
+- [x] **452 완료:** 단일 CursorDropState.preview/Content 현재 커서의 DWORD 보존과 실제 SID16 소비 경계를 복구했다. Source6 빌드 경고/오류0, 집중444개·신규6개·실패0, 복사본 실제 QWASZX·회전·Drop·보충 GUI 통과. [452 문서](docs/exe/cpp-cursor-preview-width-runtime-20261026.md), [실행 보고서](cpppj/cursor-preview-width-runtime-20261026.json). 전체 State1/Edit·전체 자연 완주 완료는 아니다.
 - [ ] **다음:** 아래 SID16/전체 Deck 잔여 경계를 대조하고, 남은 작은 leaf(255DWORD/20 pool header 등)와 Native State1 전체 cleanup/prefix·GameplayUse/고정뷰 반납 coordinator를 실제 Client에 접합한다. 그 뒤 실제 Edit 예약을 소비해 기존 checkpoint·HUD·팔레트·전송을 설치한다. 기존 단위 모듈/준비 checkpoint 통과를 전체 Edit 진입 완료로 합산하지 않는다.
-- [ ] 436의 남은 기존 SID16 변환, 438의 전체 Deck nullable+ac와 Native cleanup 접합, 443의 단일 Drop.preview SID16 경계를 이어서 처리한다. 전체 Deck 명령 부모와 UserInput writer는451에서 완료했다.
+- [ ] 436의 남은 기존 SID16 변환, 438의 전체 Deck nullable+ac와 Native cleanup 접합, 443의 단일 Drop.preview SID16 경계는452에서 완료했다. 나머지 SID16/nullable 경계를 이어서 처리한다. 전체 Deck 명령 부모와 UserInput writer는451에서 완료했다.
 
 ### 2. Edit 메뉴 완성
 

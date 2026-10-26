@@ -1,0 +1,121 @@
+{
+  "unit": 452,
+  "goalComplete": false,
+  "fullFidelityVerified": false,
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "testBaselineHead": "1ecdfa2a9ffedd927a30a9271ce7bd39043da73d",
+  "resumeHead": "46e65408",
+  "sources": {
+    "cpppj/src/client/GameWorld.cpp": "dea2510672a977d2ae18e289e6c2e4181e86a5b216924aee427d62a9b5f04b96",
+    "cpppj/src/client/RawCampaignCursor.cpp": "79fde327f38eaf6c728ba252908f63275960b8b7de74d3542e11e7f64ed80aa3",
+    "cpppj/src/client/RawCursorDrop.cpp": "3d0d34c9ca943e5cc855052dbeecb780e713bc6f2c98e38436f5a24f3b86dde2",
+    "cpppj/src/client/RawCursorDrop.h": "15e8c2af5bc8914501315b39d59601e6fc094d6a7ca3240dd5bf6c50797d8866",
+    "cpppj/src/client/RawCursorLifecycle.cpp": "f16a356bcc71b291f972eb89a00a9147310133fb6b3e186bdd652ce393f50765",
+    "cpppj/src/client/RawCursorPlacement.cpp": "e0acfa6a8c6f4df2962d6b287a1a66cfd4acaa108bf8cfcf114d10933d6064e2",
+    "cpppj/src/client/RawCursorPreviews.cpp": "65e3b5d689648a7b20f9dd2a0531afc828f9fa4bc45a266982b3273d0b736177",
+    "cpppj/src/o/ContentFormLifetime.cpp": "aa0c8b97ac250982ad80b43d2eb895de5c8580d22e685daa2e8eec1b46322a0f",
+    "cpppj/src/o/ContentFormLifetime.h": "5058eab075443fed03ca705c4f8fbf05494a114b5d8578787145c5b41da7ad52",
+    "cpppj/tests/CampaignObjectMenuTests.cpp": "ffff50f9c9a25697286a06bb86c0ea892bf3522d2f2a4483cf32d69b390f1c28",
+    "cpppj/tests/CampaignSessionTests.cpp": "be2a08b20b22f33768d438eb95d00c5225dad6571a51e4ad1e336cb81b93cc76",
+    "cpppj/tests/ClientCursorGlobalsTests.cpp": "f2cc11d9cd6ce8ec62b8380774d5e8370f2b78ab7b2709dc950dd3b3b4959e45",
+    "cpppj/tests/ConstructionRequestTests.cpp": "e110f5e14330c683445cb8c753c0a5277bd9db91167662371088066bee021597",
+    "cpppj/tests/ContentLifetimeTests.cpp": "cefc1d3c5919aadb181c623e30a4fb5b69550eb569f01cbd396c14502a95f586",
+    "cpppj/tests/CursorDropTests.cpp": "304fb182a72068073a01e9014e26a173e3d6453b94e0e5ef3319035fcd00ccda",
+    "cpppj/tests/CursorLifecycleTests.cpp": "ac61a954a989ff2ff065f9548366ca32272a267ea41c0b3745da8d7f423c7229",
+    "cpppj/tests/CursorPlacementTests.cpp": "12d2b6dda0b66f7f93d53de9bd21aa79463b741068b4635f987ff0dd02a07c50",
+    "cpppj/tests/CursorPreviewSupport.h": "8f49188d83553bf43b2347e6273c1f788b1a2c6f644afcc17bc78f3ef99ecfbc",
+    "cpppj/tests/fixtures/content-cursor-width-x86.tsv": "1dbbcddbf61e0c6354e8c70419c9a4bee4e4d690d92df5525313c5b59193e084",
+    "cpppj/tests/fixtures/cursor-preview-width-x86.tsv": "5a63b41fce76031c6525e722832e482f62096d7de141e7f189461e18f90844ad",
+    "tools/cpp_production_shortcuts_smoke.py": "906a6e8f3a010092f12721fa98871433bd7c4aed1c95ddf04a170137e87de152"
+  },
+  "artifacts": {
+    "cpppj/build/bin/Release/NetstormCpp.exe": "471ec293a520bc3c519a5fd7d07ef3d9b09a3755a1f82cbc2af687e2527f2c92",
+    "cpppj/build/bin/Release/netstorm_tests.exe": "14e2d364089c919ee99d2df79a718473f084a6b5e6167b114d77523d18ad3f7c",
+    "cpppj/build/bin/Release/netstorm_cloud_probe.exe": "16d071af3fdbee093c3b9d1e0487ba14153abda08d1ac299f8db739e82733327",
+    "cpppj/build/bin/Release/netstorm_cloud_render_probe.exe": "ff601c95b275459d698f62572c9129f3cdbcf80a1e5d8e25d287ec1bb0f66857"
+  },
+  "build": {
+    "attempt": 6,
+    "sourceAttempt": 6,
+    "finished": "2026-10-26T09:43:27.588371",
+    "exitCode": 0,
+    "seconds": 116.931,
+    "command": [
+      "cmake",
+      "--build",
+      "cpppj/build",
+      "--config",
+      "Release",
+      "--parallel",
+      "4",
+      "--",
+      "/p:UseMultiToolTask=true",
+      "/p:MultiProcMaxCount=4",
+      "/p:EnforceProcessCountAcrossBuilds=true"
+    ],
+    "log": "extracted/cpp-cursor-preview-width-452-build6.log",
+    "sha256": "8e2cf01d5377ed889f3090a3dbd6122fa2c353cefe8955978aedab701070f44f",
+    "compilerWarnings": 0,
+    "compilerErrors": 0
+  },
+  "newTestCases": [
+    "CursorPreviewDword_CancelRejectsAfterOriginalPrefix",
+    "CursorPreviewDword_ClientOwnerPreparedIdentityAndWidth",
+    "CursorPreviewDword_ContentComparisonNative56KeepsAllBits",
+    "CursorPreviewDword_DropHostGuardDoesNotAliasLowWord",
+    "CursorPreviewDword_FirstMenuActualCancelClearsWholeWord",
+    "CursorPreviewDword_Native280CaptureAndPreparePrefix"
+  ],
+  "focused": {
+    "observations": 444,
+    "unique": 444,
+    "failures": 0,
+    "missingRequiredNewCases": []
+  },
+  "gui": {
+    "passed": true,
+    "newServerBridges": [
+      15211
+    ],
+    "slots": {
+      "0": 73,
+      "1": 88,
+      "2": 91,
+      "3": 92,
+      "4": 93,
+      "5": 94
+    },
+    "dataRoot": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-cursor-preview-width-452-gui-data",
+    "useProductTimers": 0,
+    "bridgePatternInjection": false,
+    "screenshotsVisuallyInspected": [
+      "rotated.bmp",
+      "placed.bmp"
+    ]
+  },
+  "protectedFiles": {
+    "checked": 1821,
+    "unchanged": true
+  },
+  "originalGameExecuted": false,
+  "fullCTestExecuted": false,
+  "evidence": {
+    "extracted/cpp-cursor-preview-width-452-source6/hashes.json": "d85b1c19a4be3c4a4cc23b5c9ae61f0b76dd19a43b46105680105cbf559fac5d",
+    "extracted/cpp-cursor-preview-width-452-build5-result.json": "d1ab77571d4d3a65b6e79d378b2594fba058e25b780460e3d95d604738464a38",
+    "extracted/cpp-cursor-preview-width-452-build5.log": "ce02f1c240150a2e3a405d17dea16fcbd7bf4f4fe5018343f92171273080539b",
+    "extracted/cpp-cursor-preview-width-452-build6-result.json": "ecdd6a71e5ae9333112c90c9f6f601ffc3c0bae8bc01650118fcf64afa62ac26",
+    "extracted/cpp-cursor-preview-width-452-build6.log": "8e2cf01d5377ed889f3090a3dbd6122fa2c353cefe8955978aedab701070f44f",
+    "extracted/cpp-cursor-preview-width-452-focused1/results.json": "348e8fb2b62659a7b90227184047140d4e4e4030191bd1296bcbee3aa9b5636e",
+    "extracted/cpp-cursor-preview-width-452-gui1/verified.json": "126f3bc266497839dbb1e26d95fe92fcf1bd16703770df46ab9daffb4611c4e7",
+    "extracted/cpp-cursor-preview-width-452-gui1/summary.json": "1eef154dcb42bd1b79d8b939be0173d459cc470844c9bd05918177a4fee97d3d",
+    "extracted/cpp-cursor-preview-width-452-gui1/states.tsv": "1b782b7b9229f6232a4fc05659d6f83e8efe82e8cb240ebeaf898e1c92bc777b",
+    "extracted/cpp-cursor-preview-width-452-gui1/rotated.bmp": "00d6507c4412a64577c8488c00a9a807d75ca1258950408d17c1ddbf2cb6d120",
+    "extracted/cpp-cursor-preview-width-452-gui1/placed.bmp": "a531beb1678f6b51df09ae173b9fef9c5bc8550501ca957c2dc7fd9855bedbd5"
+  },
+  "limitations": [
+    "실제 QWASZX 문자/회전/Drop/보충 입력의 검증이며 미션 완주·원본 픽셀/음향 동일성은 미확인이다.",
+    "다른 SID16 소비·전체 Deck nullable +ac·Native State1 cleanup/prefix 및 실제 Edit 설치는 후속이다."
+  ]
+}

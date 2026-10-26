@@ -2,6 +2,7 @@
 #include "ConstructionSupport.h"
 #include "client/RawCursorDrop.h"
 #include "client/RawCursorReturnPiece.h"
+#include <filesystem>
 
 namespace {
 using namespace netstorm::test::construction;
@@ -177,7 +178,9 @@ struct CursorWidthPrepareStop {}; //Native명시중단과같이현재DWORD·선�
 }
 //두판본의큰DWORD조기반환·준비중단·유효번호캡처뒤현재값변경을280관측전체로비교한다.
 TEST_CASE(CursorPreviewDword_Native280CaptureAndPreparePrefix) {
-    const auto rows=LoadFixture(std::filesystem::path(NETSTORM_CURSORDROP_FIXTURE).parent_path()/"cursor-preview-width-x86.tsv").rows;std::size_t count{},stops{};
+    // 같은 fixture 디렉터리의 독립 관측 파일을 기존 const char* 읽기 함수에 전달한다.
+    const auto fixturePath=(std::filesystem::path(NETSTORM_CURSORDROP_FIXTURE).parent_path()/"cursor-preview-width-x86.tsv").string();
+    const auto rows=LoadFixture(fixturePath.c_str()).rows;std::size_t count{},stops{};
     for (const auto& row:rows) { //최초Native관측의입력열과실제사건/전체14필드를읽는다.
         CHECK(row.size()==10);if (row.size()!=10) continue;DropScene scene(row[0]=="originals"?OriginalEdition::Patch1078:OriginalEdition::Cd1072);scene.Prepare(Inputs(row[6]));scene.state.preview=Number(row[2]);auto hooks=scene.Hooks();const auto prepare=hooks.prepareCursor;bool completed=true;
         hooks.prepareCursor=[&] { prepare();if (scene.prepared==Number(row[4])) scene.state.preview=Number(row[5]);if (scene.prepared==Number(row[3])) throw CursorWidthPrepareStop{}; };
