@@ -237,6 +237,13 @@ RawButtonInputResult RawButtonControls::RouteInput(InputEvent event) {
 std::uint32_t RawButtonControls::RootToken() const { return impl_->create.entries[0]; }
 // count/visible로 대체하지 않고 원문처럼 고정 등록칸과 현재 serial/dead만 읽는다.
 std::uint32_t RawButtonControls::SerialGump(std::uint32_t serial) const { return FindCurrentGumpSerial(impl_->create.entries,serial,[this](auto token) { return impl_->Node(token); }); }
+// 원문은 등록 ID를 읽으며 serial이나 명령으로 다시 검색하지 않는다.
+bool RawButtonControls::PulseRegisteredIfIdle(std::uint32_t id) {
+    auto& s=*impl_;if (id>=s.create.entries.size()) throw std::out_of_range("점멸 대상의 원본 등록 ID 범위");const auto token=s.create.entries[id];if (!token) return false;
+    if (const auto* node=s.Node(token);node && node->vtable==0x51503cU) { const auto& root=*static_cast<const UberRootNode*>(node);if (root.minimapDivider || root.vertical || (root.minimap&0x10U)) return false;throw std::logic_error("필수 자식 없는 Uber의 원문 버튼 점멸 가상 호출"); }
+    auto* button=s.stones.contains(token) ? static_cast<ButtonGumpNode*>(s.stones.at(token).get()) : s.menus ? s.menus->BaseButton(token) : nullptr;
+    if (!button) throw std::logic_error("원본 버튼 점멸 대상의 실제+a0/+a4/+ac 미복원");if (button->pressed || button->value || (button->buttonFlags&0x10U)) return false;s.buttons->SetPulse(token,true);return true;
+}
 //004666d0은 같은 현재 표의 유지 타입과 dead를 제외해 실제 Kill만 예약한다.
 void RawButtonControls::KillStateGumps() { impl_->lifetime->KillExceptType(impl_->stateRetainedType); } //현재 실제 등록표의 원문 필터를 재사용하며 Cleanup은 별도다.
 // 원문 현재 예산 serial의 같은 노드를 Push/Attach하며 금액/시각/전체 화면을 새로 쓰지 않는다.

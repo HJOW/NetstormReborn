@@ -1,4 +1,4 @@
-// 실제 Add Island 메뉴와 아직 미복원인 전용 GUI 생성 경계를 구분한다.
+// 실제 Add Island 명령의 release 관문과 전용 창 생성/부착 장치를 연결한다.
 #pragma once
 #include "client/InputEvent.h"
 #include <cstdint>

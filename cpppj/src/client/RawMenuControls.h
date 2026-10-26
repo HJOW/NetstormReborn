@@ -22,6 +22,7 @@ struct RawChatWindowContext;class ChatWindow;class HudChatGeometry; // 전체 Ch
 struct RawHtmlWindowContext;class HtmlWindowGump; // 실제 HTML 부모의 전역/본문·수명 처리기다.
 struct SaveFortNameDialogContext;struct SaveFortNameDialogNode; // 원본 이름 입력 부모와 같은 편집 작업본 장치다.
 struct RawBackgroundGifContext;class RawBackgroundGifControls; // 새 Uber의 실제 BackgroundGif 자식이다.
+struct EditorIslandWindowContext;struct EditorIslandWindowNode; // 실제 섬 추가 창의 현재 필드와 Session 대여다.
 // 같은 수집/정렬/클립 안에서 생산 패널의 원본 파생 Draw를 호출한다.
 struct RawMenuExternalGumps {
     std::function<TextGumpNode*(std::uint32_t)> text; // 같은 TextGump/StyleText가 읽는 외부 텍스트 노드다.
@@ -102,6 +103,10 @@ public:
     const MetaImageList& ImageListBackend() const; // 같은 목록 Add/Attach/Handle/Remove 몸체다.
     std::uint32_t ShowEmbeddedTell(std::string_view name,o::ConfigInterface& config,std::function<std::optional<std::string>(std::string_view)> mission={}); //004c8f60: 실제 HtmlBody/다중 줄 자식을 생성하고 serial을 반환한다. 팝업/phase/모달을 만들지 않는다.
     void CloseEmbeddedTells(); // 미부착/파싱 실패 부모도 같은 등록표의 Kill/Cleanup으로 반납한다.
+    std::uint32_t ShowEditorIslandWindow(EditorIslandWindowContext context); //00480090→실제 Attach(0,0,root,2)→00466600 모달 등록이다.
+    const EditorIslandWindowNode* EditorIslandWindow(std::uint32_t token) const; // 같은 창/현재 Image·목록·입력 상태를 읽는다.
+    std::uint32_t EditorIslandWindowCount() const; // Kill과 구별되는 원본00593154 참조 수다.
+    void CloseEditorIslandWindows(); // 상태 이탈 시 부모/루트 드래그와 부분 생성 자식을 먼저 반납한 뒤 후보 소유권을 해제한다.
     std::uint32_t CreateNsInfo(RawNsInfoContext context); // 실제 전체 숨김 NSInfo와 필수 Player8/Battle/문자/버튼을 생성한다.
     std::uint32_t NsInfoRoot() const; // 같은 현재 전역 토큰의 실제 생존 여부만 조회한다.
     void CloseNsInfo(); // 미부착/부분 생성도 같은 공통 자식 우선 수명으로 정리한다.

@@ -19,6 +19,7 @@ std::int32_t Origin(std::int32_t point,float size) {
 std::int32_t Chunk(std::int32_t value,std::int32_t offset) { return std::bit_cast<std::int32_t>(static_cast<std::uint32_t>(value)-static_cast<std::uint32_t>(offset))/16; }
 }
 bool HandleEditorIslandDrag(EditorIslandDragState& s,const InputEvent& e,const EditorIslandDragHooks& h) {
+    auto& flags=s.sharedFlags ? *s.sharedFlags : s.flags; // 가상 Kill/Push가 바꾼 같은 원본+4를 덮어쓰지 않는다.
     const auto code=e.code&0x03ffffffU;
     if (code==0x0200002cU || code==0x0200002fU) { if (std::bit_cast<std::uint32_t>(e.x)==h.closeSerial()) h.killParent();return true; }
     if (code==0x02000004U) {
@@ -33,7 +34,7 @@ bool HandleEditorIslandDrag(EditorIslandDragState& s,const InputEvent& e,const E
                 for (std::size_t byte=0;byte<6;++byte) s.record[byte]=s.choices[offset+byte]; //원문DWORD+WORD 복사와 같은6BYTE다.
                 h.adjustDrag(s.drag);static_cast<void>(h.parentBounds());
                 const auto size=h.size(s.drag);h.attachDrag(s.drag,static_cast<float>(Origin(e.x,size[0])),static_cast<float>(Origin(e.y,size[1])));
-                s.flags|=0x100U;h.pushParent();s.flags|=0x200U;
+                flags|=0x100U;h.pushParent();flags|=0x200U;
             }
         }
         return true;
@@ -41,7 +42,7 @@ bool HandleEditorIslandDrag(EditorIslandDragState& s,const InputEvent& e,const E
     if (code==0x02000003U) s.dirty=1;
     if (code!=0x10000U || (e.code&InputCode::kRelease) || !s.drag) return false;
     if (Inside(h.listBounds(),e.x,e.y)) {
-        s.flags&=~0x300U;h.killDrag(s.drag);s.drag=0;h.clearSelectionAndUpdate();return true;
+        flags&=~0x300U;h.killDrag(s.drag);s.drag=0;h.clearSelectionAndUpdate();return true;
     }
     const auto bounds=h.mapBounds();if (!Inside(bounds,e.x,e.y)) return false;
     const auto size=h.size(s.drag);const auto x=Chunk(Origin(e.x,size[0]),bounds[0]),y=Chunk(Origin(e.y,size[1]),bounds[1]);
@@ -49,7 +50,7 @@ bool HandleEditorIslandDrag(EditorIslandDragState& s,const InputEvent& e,const E
     s.record[2]=static_cast<std::uint8_t>((y<<4)|(x&15));const auto map=h.mapSize();
     if (!h.drop(s.record)) return false;
     h.camera(static_cast<float>(map[0]*16)*0.5F,static_cast<float>(map[1]*16)*0.5F);
-    s.flags&=~0x300U;h.killDrag(s.drag);s.drag=0;
+    flags&=~0x300U;h.killDrag(s.drag);s.drag=0;
     const auto image=h.image(h.selection());if (image) h.releaseImage(image);
     h.remove(h.selection());h.clearSelectionAndUpdate();s.dirty=1;h.incrementRevision();return true;
 }

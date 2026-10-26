@@ -12,11 +12,12 @@ struct EditorIslandDragState {
     std::array<std::uint8_t,126> choices{}; //원본21행이며 Territory120BYTE와 별개다.
     std::array<std::uint8_t,6> record{}; //드래그 시작 때 복사한 원문6BYTE다.
     std::int32_t sourceIndex{}; //목록의 현재 선택을 원문 ID로 바꾼+d90 값이다.
+    std::uint32_t* sharedFlags{}; // 실제 창에서는 같은 기본 Gump+4를 직접 사용하고 독립 원문 재생에서는 기존 flags를 사용한다.
 };
 // 이미지와 목록의 현재 필드를 매 호출 재조회하며 빈 장치는 성공으로 간주하지 않는다.
 struct EditorIslandDragHooks {
     std::function<std::uint32_t()> closeSerial; //실제 닫기 버튼의 현재+2c다.
-    std::function<void()> killParent,pushParent; //공통 실제 Kill/Push다.
+    std::function<void()> killParent,pushParent; // 실제 Kill과00465250의 비어 있는 focus 등록이다. 기존 pushParent 이름은 관측 API 호환을 위해 유지한다.
     std::function<void(const char*)> assertion; //dragNULL/nonNULL 진단 후 원문대로 계속한다.
     std::function<std::uint32_t(std::int32_t)> image; //0047d1c0의 현재 목록 항목 image 포인터다.
     std::function<std::int32_t()> selection; //같은 목록+14c를 매번 재조회한다.

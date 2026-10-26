@@ -1,4 +1,10 @@
 // 기존 Editor의 실제 지도·섬·Pool을 빌리는 Add Island 접합이다. 전체 창 생성은 별도 경계다.
+bool RawCampaignSession::EditorIslandManagerAvailable() const {
+    const auto& s=*impl_;
+    if (!s.loaded || s.services.installMode!=CampaignInstallMode::ExistingEditor || !s.globals.editor || !s.core.ownerMode.fort || s.core.ownerMode.battle) throw std::logic_error("섬 추가 창의 실제 Editor 설치 관문");
+    const auto owner=s.playerState.templateOwner;if (owner>=9) throw std::out_of_range("섬 추가 창의 실제 Template9 범위");return Read(s.templateStorage->Headers(),owner*20U)!=0;
+}
+// 실제 설치 완료와 기존 Editor 모드만 허용하며 State1 동기 UI 예외 범위를 넓히지 않는다.
 // 실제 설치 완료와 기존 Editor 모드만 허용하며 State1 동기 UI 예외 범위를 넓히지 않는다.
 bool RawCampaignSession::BuildEditorIslandMap(o::ChunkMap& target) {
     auto& s=*impl_;

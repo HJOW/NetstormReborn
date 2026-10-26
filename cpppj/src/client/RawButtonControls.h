@@ -123,6 +123,7 @@ public:
     o::GumpFormNotice ObjectNotice() const;
     // Player 내용물 통지는 현재 등록ID를 직접 조회하며 생산 갱신 사건으로 바꾸지 않는다.
     std::uint32_t RegisteredGump(std::uint32_t id) const;
+    bool PulseRegisteredIfIdle(std::uint32_t id); //00419d50: 현재+a4/+a0/+ac 관문 뒤 실제 버튼 SetPulse(true)를 호출한다. Uber 루트 자식도 같은 필드로 판정한다.
     // 등록된 대상 자신의 가상+28만 실행한다. 전체 트리 Route/재귀 분배를 수행하지 않는다.
     std::uint32_t HandleGump(std::uint32_t token,std::uint32_t event,std::uint32_t first,std::uint32_t second);
     // 00465ed0: 루트 직계 자식만 현재 화면 경계/visible/dead/signed 깊이로 고른다. 월드 영역은0이다.

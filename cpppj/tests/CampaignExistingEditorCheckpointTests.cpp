@@ -763,3 +763,6 @@ TEST_CASE(CampaignExistingEditorCheckpoint_SameNameKeepsGuideAndSelectsMissionOu
 
 // 같은 실제 Session과 드래그 미리보기의 좌표/색상/읽기 전용 계약을 확인한다.
 #include "CampaignEditorIslandMotionTests.inc"
+
+// 새 공통 UI 검사가 같은 실제 Editor 설치 helper를 동기 범위에 빌린다.
+#include "CampaignEditorIslandWindowSession.inc"

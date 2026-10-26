@@ -36,6 +36,7 @@
 #include "client/ClientLocalStateGlobals.h"
 #include "client/ClientFortGlobals.h"
 #include "client/FortCurrentNameDevices.h"
+#include "client/EditorIslandWindow.h"
 #include "client/ClientGameplayGlobals.h"
 #include "client/RawKnowledgeMenu.h"
 #include "o/RawMissionGuide.h"
@@ -330,6 +331,7 @@ void UberGump::ReleaseCurrentGuideMission() {
 // 입력 참조를 먼저 없애고 월드의 실제 소유권을 해제한다. 위치 효과음은 카메라 0의 전체 메뉴 영역으로 되돌린다.
 void UberGump::ClearWorld() {
     ClearPage(); // 현재 부모의 OnExit를 월드/미션 수명보다 먼저 같은 큐에 반납한다.
+    if (rawButtons_ && rawButtons_->Menus()) rawButtons_->Menus()->CloseEditorIslandWindows(); // 창/루트 드래그의 실제 Session 대여를 월드보다 먼저 반납한다.
     if (world_) client_.LocalStateGlobals()->CaptureEnd()=0.0; // 현재 월드 정리 어댑터에서004b2df0의005c8618 +0쓰기를 Session/UI/Kernel 반납 전에 실행한다. 전체 State7 cleanup 연결은 후속이다.
     if (world_) mapUserName_=world_->Session().CurrentHandle(); // 원본 Client 전역 이름은 월드를 해제한 뒤에도 다음 목록 조회에 남는다.
     state_.Cancel("LoadMissionFort"); // 현재 미션이 설치 전에 교체돼도 그 소유자의 이전 요청을 새 미션에서 소비하지 않는다.
@@ -908,7 +910,12 @@ void UberGump::Event(InputEvent event) {
         [this](auto key,auto value) { client_.Configuration().Set(std::string(key),std::string(value)); }, //동기 옵션 재해석도 같은 현재 TipNumber를 갱신한다.
         [this](auto section) { Tell(std::string(section)); }
     })) { rebuild_=true;return; }
-    if (DispatchEditorIslandDialog(event,[] { throw std::logic_error("Add Island의 실제00480090→0047f450 및 MetaImage/목록/Bitmap GUI 장치 미연결"); })) return; // release는 소비하고 press의 미완성 전용 창 경계는 명시한다.
+    if (DispatchEditorIslandDialog(event,[this] {
+        if (!world_) throw std::logic_error("섬 추가의 실제 현재 Editor Session 없음");EditorIslandWindowContext context;context.session=&world_->Session();context.translate=[this](auto text) { return FontBytes(client_.Translate(text)); };
+        context.tell=[this](auto name) { return rawButtons_->Menus()->ShowEmbeddedTell(name,client_.Configuration(),[this](auto section)->std::optional<std::string> { return mission_ ? mission_->Section(section) : std::nullopt; }); };
+        context.random=[this](auto limit) { return client_.RandomGlobals()->Game().Next(limit); };context.camera=[this](float x,float y) { world_->CenterCamera(x,y); };context.revision=[this] { ++client_.GameplayGlobals()->MapRevision(); };context.pulseRegistered=[this](auto id) { static_cast<void>(rawButtons_->PulseRegisteredIfIdle(id)); };
+        rawButtons_->Menus()->ShowEditorIslandWindow(std::move(context));rebuild_=true;
+    })) return; // release는 소비만 하고 press는 실제 공장/부착/모달 등록을 수행한다.
     if (DispatchEditorSaveGoMain(event,client_.LocalStateGlobals()->State().next[0],[this] { if (!world_) throw std::logic_error("SaveGoMain의 현재 Session 없음");world_->Session().SaveCurrentMap(); })) return;
     if (transitionCode==0x02000079U) {
         if (!(event.code&InputCode::kRelease)) OpenSaveFortNameDialog(std::bit_cast<std::uint32_t>(event.y));

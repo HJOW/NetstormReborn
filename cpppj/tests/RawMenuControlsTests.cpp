@@ -392,3 +392,6 @@ TEST_CASE(RawMenuControls_MinimapReplacementKeepsCurrentWorldNotifications) {
 
 // 일반 팝업과 별개인 내장 설명의 실제 자식/그리기/링크/반납을 확인한다.
 #include "RawMenuEmbeddedTellTests.inc"
+
+// 실제 기존/신규 Editor 월드의 전체 섬 추가 창과 입력/수명을 검증한다.
+#include "RawMenuEditorIslandWindowTests.inc"

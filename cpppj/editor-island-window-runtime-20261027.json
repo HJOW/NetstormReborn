@@ -1,0 +1,450 @@
+{
+  "unit": 480,
+  "date": "2026-10-27",
+  "host": "HJOW-Athlon",
+  "baseCommit": "2e2b24f2",
+  "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+  "decompileChanged": false,
+  "builds": [
+    {
+      "command": [
+        "cmake",
+        "--build",
+        "cpppj/build",
+        "--config",
+        "Release",
+        "--parallel",
+        "4",
+        "--",
+        "/p:UseMultiToolTask=true",
+        "/p:MultiProcMaxCount=4",
+        "/p:EnforceProcessCountAcrossBuilds=true"
+      ],
+      "exit": 1,
+      "log": "extracted/cpp-island-window-480/build1.log",
+      "sha256": "0b86378e54987e1c8309b1df6c2ef201bf0c5287ca5a1599326b4aa588217a0e",
+      "summaries": [],
+      "diagnostics": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\tests\\RawMenuEditorIslandWindowTests.inc(4,10): error C1083: 포함 파일을 열 수 없습니다. 'client/Client.h': No such file or directory [H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\tests\\netstorm_tests.vcxproj]"
+      ]
+    },
+    {
+      "command": [
+        "cmake",
+        "--build",
+        "cpppj/build",
+        "--config",
+        "Release",
+        "--parallel",
+        "4",
+        "--",
+        "/p:UseMultiToolTask=true",
+        "/p:MultiProcMaxCount=4",
+        "/p:EnforceProcessCountAcrossBuilds=true"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-island-window-480/build2.log",
+      "sha256": "8e90ea840c7ac2f4eddccce59b2638c00a961bfd4d4be069ff1622dcaecbdbe2",
+      "summaries": [],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cmake",
+        "--build",
+        "cpppj/build",
+        "--config",
+        "Release",
+        "--parallel",
+        "4",
+        "--",
+        "/p:UseMultiToolTask=true",
+        "/p:MultiProcMaxCount=4",
+        "/p:EnforceProcessCountAcrossBuilds=true"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-island-window-480/build3.log",
+      "sha256": "97557e05fd31eb963994f25f9dbece6bfe79addd5e804d35d16ffd3b04f6e6b1",
+      "summaries": [],
+      "diagnostics": []
+    }
+  ],
+  "firstFocused": {
+    "command": [
+      "cpppj/build/bin/Release/netstorm_tests.exe",
+      "--filter",
+      "EditorIslandWindow"
+    ],
+    "exit": 1,
+    "log": "extracted/cpp-island-window-480/focused1-EditorIslandWindow.log",
+    "sha256": "13fef255a7a1291aef4625238100e1afe4efc8417021765efa6bf30f16564a2f",
+    "summaries": [
+      "2 test(s), 1 failed check(s)"
+    ],
+    "diagnostics": []
+  },
+  "focused": [
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "EditorIslandWindow"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-island-window-480/focused2-EditorIslandWindow.log",
+      "sha256": "48e2202586e40fcbe0df9376beabbd950cc54bd02ec9c16182ba9046196a63c6",
+      "summaries": [
+        "2 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "EditorIslandDrag"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-island-window-480/focused3-EditorIslandDrag.log",
+      "sha256": "9d5e7337f5bf0d062c71603e280aa4185d8a6dcf08d917525aa1fed98998a80d",
+      "summaries": [
+        "1 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "EditorIslandLayout"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-island-window-480/focused3-EditorIslandLayout.log",
+      "sha256": "5d122ff2612d3db402d2cb7667c0c1bc93ed48e1e69167fe42f5b5c2bbd96af4",
+      "summaries": [
+        "1 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "EditorIslandDialog"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-island-window-480/focused3-EditorIslandDialog.log",
+      "sha256": "e6fca36444a415d9274cac00db5b3f3644ce1faedea63006538d3b272d164fc6",
+      "summaries": [
+        "1 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "CampaignEditorIsland"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-island-window-480/focused3-CampaignEditorIsland.log",
+      "sha256": "af68a442bf55f35d34e18a66eed192af561f5573637dc30ca29fa941d96fe43a",
+      "summaries": [
+        "3 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "IslandBitmap"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-island-window-480/focused3-IslandBitmap.log",
+      "sha256": "7a5f6e018dd5e016845bf3f6863eae873e6415ab7c6a5bfdab7e208ac6fbe746",
+      "summaries": [
+        "6 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "IslandPlacement"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-island-window-480/focused3-IslandPlacement.log",
+      "sha256": "e8accc25240a8a40a103d692e737ac9fcfbb99687084136ff3e85755ea2c5653",
+      "summaries": [
+        "2 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "IslandPopulation"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-island-window-480/focused3-IslandPopulation.log",
+      "sha256": "6bf1efe05335cc71de7bbc6926069060f857d8603265872d1f1983ca19a3e0ab",
+      "summaries": [
+        "1 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "IslandAdd"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-island-window-480/focused3-IslandAdd.log",
+      "sha256": "09a41265388b8fc6a228502ce59f504e24768202a854d7e4c62525305e5e472f",
+      "summaries": [
+        "1 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "MetaImage"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-island-window-480/focused3-MetaImage.log",
+      "sha256": "e6baeeedde0ea6bfc36accf39e18d651275a4c700e457fa0060b86ed6f152bbd",
+      "summaries": [
+        "3 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "ImageList"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-island-window-480/focused3-ImageList.log",
+      "sha256": "17f7279da3f08c12c131670edd04035f36111912b5ebd3df5a4d00e773aa60cd",
+      "summaries": [
+        "2 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "EmbeddedTell"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-island-window-480/focused3-EmbeddedTell.log",
+      "sha256": "63e6b2eb91e4dc5153e74ed4b1a12b0665d261a68b525d1eef7aab6e2a85710d",
+      "summaries": [
+        "4 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "QuickHelp"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-island-window-480/focused3-QuickHelp.log",
+      "sha256": "978637a9ed715fcedb23242e4a0da82e024599b352e9df3660370a2296b3f6c0",
+      "summaries": [
+        "8 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "HtmlWindow"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-island-window-480/focused3-HtmlWindow.log",
+      "sha256": "7ec06489cdb9d6fd421ba1effaedbfa9da0feca4e199d541f567b692149b95f8",
+      "summaries": [
+        "40 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "RawMenuControls"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-island-window-480/focused3-RawMenuControls.log",
+      "sha256": "72e485c814ab8a1456410ce8591105388e15f7a54d55c02e2dc9ed1f4e0a6581",
+      "summaries": [
+        "14 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "ExistingEditor"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-island-window-480/focused3-ExistingEditor.log",
+      "sha256": "e1f1b9a026b8ee6f493beeb6d593c1e12b556d781d1235d73c8bb52e40809183",
+      "summaries": [
+        "58 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "NewFort"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-island-window-480/focused3-NewFort.log",
+      "sha256": "4262fd2309d2e3dfa1a70e833eb3661567dcb8a7ecff51653d21d760a3ef670c",
+      "summaries": [
+        "13 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "UberRoot"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-island-window-480/focused3-UberRoot.log",
+      "sha256": "688dd03368db1e8e3668a88d62baabfaf41891dc28e61379dfeb1a07ec4e18c0",
+      "summaries": [
+        "6 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "MenuCheck"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-island-window-480/focused3-MenuCheck.log",
+      "sha256": "98bebb032a9c2a1a45c47ed6be61a2762f2e2ad8156422a199b22ecb2656c56a",
+      "summaries": [
+        "3 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    }
+  ],
+  "uniqueFocused": 166,
+  "observedFocused": 169,
+  "wholeCpp": {
+    "command": [
+      "cpppj/build/bin/Release/netstorm_tests.exe"
+    ],
+    "exit": 0,
+    "log": "extracted/cpp-island-window-480/whole1.log",
+    "sha256": "2842f7d4c0d20cd13ecce05282d8a28764e99157db70629a41eeb863884d202d",
+    "summaries": [
+      "3260 test(s), 0 failed check(s)"
+    ],
+    "diagnostics": []
+  },
+  "wholeCppCases": 3260,
+  "ctestWrapperExecuted": false,
+  "sourceFacts": {
+    "command": [
+      "python",
+      "-X",
+      "utf8",
+      "extracted/cpp-island-window-480-facts.py"
+    ],
+    "exit": 0,
+    "log": "extracted/cpp-island-window-480/source-facts.log",
+    "sha256": "3853cdcab89d83c8e101748ba20d57f7e46864312fe8050999eec7ad0968982b",
+    "summaries": [],
+    "diagnostics": []
+  },
+  "newNativeCpuFixture": false,
+  "previousNativeFixturesReplayed": [
+    "EditorIslandDrag40",
+    "EditorIslandLayout184",
+    "EmbeddedTell82",
+    "MetaImage326",
+    "ImageList514",
+    "IslandBitmap40",
+    "IslandPopulation118"
+  ],
+  "corrections": [
+    "최초 검사 include를 실제 ClientMain.h로 정정했다.",
+    "새 맵 준비에 기존 맵 전용 PumpLocalConnection 거부 전제를 가진 helper를 재사용한 신규 검사 오류를 기존 NewFort 설치 흐름으로 정정했다. 기존 검사 본문/기대값과 제품은 유지했다.",
+    "00465250은 트리 Push가 아닌 빈 focus 등록이다. 실제 공유 Gump.flags와 이 등록을 연결했다.",
+    "설명 기본색005b5dc8을 원문 RGB219/213/203으로 복원했다. Done 호출의005acd24는 원문 갈색 인자다."
+  ],
+  "registeredBefore": 3258,
+  "registeredAfter": 3260,
+  "newTests": [
+    "RawMenuEditorIslandWindow_ActualExistingAndFreshWorldFullInputLifecycle",
+    "RawMenuEditorIslandWindow_ReferencesPartialConstructionAndRootDragRetirement"
+  ],
+  "missingPreviousTests": [],
+  "preservedWholeInputFiles": 3187,
+  "changedProtectedInputs": [],
+  "appendedExistingTests": [
+    {
+      "path": "cpppj/tests/RawMenuControlsTests.cpp",
+      "originalBytes": 46494,
+      "originalBytePrefixPreserved": true
+    },
+    {
+      "path": "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp",
+      "originalBytes": 117193,
+      "originalBytePrefixPreserved": true
+    }
+  ],
+  "sourceManifest": {
+    "path": "extracted/cpp-island-window-480/source-final.json",
+    "files": 2839,
+    "sha256": "23e29f235c88a99e18b4f05933bba7914785dc56fe08740a348a333ed11022ae"
+  },
+  "gameExeSha256": "52abfb6ba5c9c335c1df4f2bd685b435e41ae38ebdac5f4dcce39e018bd37be9",
+  "testExeSha256": "a161001120fdaeaab0f1e85423d983975de32a162f274cc2e8f21e3f5b950fb6",
+  "build2To3ChangedSources": [
+    "cpppj/tests/CampaignEditorIslandWindowSession.inc"
+  ],
+  "gameExeUnchangedAfterFixtureCorrection": true,
+  "coverage": [
+    "실제 창 생성/모달/21후보/지도/글자/배경·현재 Session/공유 난수",
+    "기존·빈 신규 맵에서 목록 선택·취소/격자·실제 섬 배치·재갱신/Done",
+    "원본 참조 수/부분 중복 생성/루트 드래그의 비소유 Image와 상태 이탈 정리",
+    "실제 전체 창 그리기/행 padding·설명 기본색"
+  ],
+  "limits": [
+    "신규 UI 검사는 실제 Session과 공통 UI를 동기 fixture로 조립한다. 카메라/점멸/음향 장치 경계의 요청과 데이터 효과를 구별한다.",
+    "새 Native CPU fixture는 만들지 않았다. 기존 기계어 관측을 C++ 재생하고 새 연결은 정적 원문/실제 UI·Session 통합으로 검증했다.",
+    "실제 사용자 입력/창·저장 재진입과 원본 전체 화면·음향 동일성은 후속 GUI 범위다."
+  ],
+  "gameRuns": 0,
+  "guiRuns": 0,
+  "audioDeviceRuns": 0,
+  "remaining": [
+    "기존/신규 맵 실제 Add Island GUI·저장/재진입",
+    "Test Battle/언어별 시나리오",
+    "전체 미션 자연 완주·원본 동일성"
+  ]
+}
