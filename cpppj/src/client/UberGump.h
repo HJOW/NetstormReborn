@@ -152,7 +152,7 @@ private:
     std::shared_ptr<TellFileMenus> fileMenus_; // 기존 Tell과 실제 전체 HTML 메타가 같은 @/# Config를 공유한다.
     std::string mapUserName_; // 원본 초기 빈 사용자 이름이며 두 Fort 이름 버퍼와 다르다.
     std::uint32_t& fortSelectionMode_; // 같은 Client005cae84이며 Ask의2와 진행State1을 구별한다.
-    HtmlTextParserGlobals htmlGlobals_; // 원본의페이지간공유P억제전역이다.
+    HtmlTextParserGlobals& htmlGlobals_; //Client 장기565e70 배경과565ec0 P 억제를 Tell/Help/로그인 상태가 같은 주소로 사용한다.
     ScreenRect htmlMapView_{};std::string htmlCurrentFortName_; // 각 조회에서 현재 뷰와 반환 문자열의 수명을 보존한다.
     std::uint32_t buttonTextureType_{},buttonTextureFrame_{}; // 실제 버튼 배경 생성자에 전달할 fortGump/A01 타입·프레임 번호다.
     // scripts_: 스크립트.

@@ -1,5 +1,6 @@
 // 기존 원본 몸체의 단일 저장소 조립을 실제 클라이언트 세션이 소유한다.
 #include "client/RawCampaignSession.h"
+#include "client/ClientHtmlWindowGlobals.h"
 #include "client/ClientRandomGlobals.h"
 #include "client/ClientSubscriberGlobals.h"
 #include "client/ClientPlayerRecords.h"

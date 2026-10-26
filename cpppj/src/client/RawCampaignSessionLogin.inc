@@ -19,7 +19,8 @@ struct RawCampaignSession::Impl::Login {
     std::array<std::uint8_t,256> typeUse{}; //원본256BYTE 타입사용표다.
     std::array<float,4> ranges{14,22,30,38}; //원본5425f4의 실제4float다. 기본3번도 읽고 최대 비교는 원래2번30을 사용한다.
     float range{22}; //원본52f488이며제곱은Session의같은EnergySupplyState에 쓴다.
-    bool simul{},adjust{};bool& saved{s.localStateGlobals->SavedGame()};std::uint8_t overrideFlags{},title{},battleByte{}; // 저장0/1은 실제 State owner이며 나머지는 기존 로그인 입력이다.
+    bool simul{},adjust{};bool& saved{s.localStateGlobals->SavedGame()};std::uint8_t overrideFlags{},localTitle{},battleByte{}; //저장0/1은 실제 State owner이며 독립 검사만 별도 배경 첫BYTE를 사용한다.
+    std::uint8_t& title{s.services.htmlWindowGlobals ? reinterpret_cast<std::uint8_t&>(s.services.htmlWindowGlobals->text.background[0]) : localTitle}; //현재 HTML 배경80BYTE의 첫BYTE만 같은 주소로 빌린다.
     std::uint32_t& activeStamp{s.connectionActivityGlobals->ActiveStamp()};std::uint32_t& zoneWord{s.connectionActivityGlobals->ActiveZoneWord()}; // 두 활동 표 사이005c8540/544의 실제 현재 Zone 출력을 직접 빌린다.
     std::uint32_t pendingStamp{},predictable{},beginSeed{},battleSeed{},burst{},clockStamp{},baseClock{},archipelago{},outpost{}; // 아직 별도로 소유하는 원본 로그인 전역이다.
     std::uint32_t& optionValue{s.gameplayGlobals->GameAux()->RefundPercent()}; // 실제25비율을 Reward/Options와 공유한다.
@@ -131,6 +132,7 @@ struct RawCampaignSession::Impl::Login {
         auto request=s.services.missionFortRequest;std::optional<netstorm::zacket::LocalMissionPacket> fallback; // Init에서 작성한 같은86BYTE를 사용하며 독립 Session만 기존 작성기를 호출한다.
         if (request) { if (request->consumed || request->next[0]!=7 || request->next[0x80/4]!=1 || request->zone.size()!=86) throw std::logic_error("현재 Init Fort 요청/이미지 계약 위반");blocks[3]=request->next; }
         else fallback=netstorm::zacket::MakeLocalMissionZone();
+        title=0; //원문 State7은 Zone 설치/실제 HUD 생성 전에565e70 첫BYTE를 지운다. 나머지79BYTE/P 억제와 전체 미복원 cleanup은 건드리지 않는다.
         const auto zone=request ? std::span<const std::uint8_t>(request->zone) : fallback->Bytes();netstorm::zacket::LocalMissionZoneHooks hooks;hooks.loginTimeout=[this] { return Need(effects.configInt)("loginTimeout",30); };hooks.seconds=effects.wallSeconds;
         hooks.storeName=[](std::uint32_t subscriber,std::string_view name) { SanitizeMissionPlayerName(subscriber,{reinterpret_cast<std::uint8_t*>(const_cast<char*>(name.data())),name.size()+1}); };
         hooks.serve=[this](std::uint32_t port) { transport->Open(port,false); };

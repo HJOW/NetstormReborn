@@ -67,6 +67,7 @@ class ClientGameplayGlobals;struct ProductionControlContext; // 실제 초기 HU
 class ClientKencloudGlobals; // 같은0059a8b0 월드 다시 그리기 DWORD를 지형/섬도 직접 빌린다.
 class ClientColorSortInput; // 같은 Client 최초 고정RGB 소유자이며 raw primary 전체 복원과 구별한다.
 class ClientLocalStateGlobals; // 실제 Client의 State 다섯 블록과 활동 기한의 장기 소유자다.
+struct ClientHtmlWindowGlobals; //같은 실제 HTML 배경80BYTE와 창/Tell/P 억제의 장기 owner다.
 class EditorLocalTransport; // 준비된 Editor가 생성한 같은 listener/client9/accepted(-1)와 단일 등록표를 빌린다.
 class InputQueue;struct ExistingEditorAfterCheckpointEffects; // 원문 tail의 같은 입력 고리와 실제 HUD/음악/팔레트 장치를 동기 호출로 빌린다.
 struct TemplateWriteStream; // 실제 Template 저장소가 발급하는 명시 쓰기 수명이다.
@@ -228,6 +229,7 @@ struct RawCampaignSessionServices {
     std::function<std::uint32_t()> connectionFrameNumber; // 실제 Client::Time().number의 현재 하위32비트를 Receive의 원문 시점에 읽는다.
     std::function<void(std::uint32_t,std::uint32_t)> removeConnectionStatus; // missionPost 관문 뒤004d3090(kind,player,0,0,빈문자열)의 실제 WarningMessages 삭제를 호출한다.
     std::shared_ptr<o::RawConnectionRegistry> connectionRegistry; //실제 Client의 생성/수락/재배치/정리 표이며 독립 전송만 자체 표를 만든다.
+    std::shared_ptr<ClientHtmlWindowGlobals> htmlWindowGlobals; //실제 Client는 Tell/Help/HUD와 로그인 시작이 같은565e70 첫BYTE를 읽고 쓴다.
 };
 // 초기 객체 생성부터 Kernel 해제까지 동일 주소에서 실제 모듈과 상태를 소유한다.
 class RawCampaignSession {
