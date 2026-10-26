@@ -1,0 +1,81 @@
+{
+  "unit": 453,
+  "goalComplete": false,
+  "fullFidelityVerified": false,
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "sourceHead": "e3f40b38455f96f71af319fc4867993f021352cc",
+  "sources": {
+    "cpppj/src/client/ClientLocalStateGlobals.h": "0f0cdfb8dde0247440e98f9f180373b1a97b435b9b43ff7fbfe313a087417311",
+    "cpppj/src/client/ClientStateStorageCleanup.cpp": "b7c935d2337b711af33fbb67ba721193403311b8c22946b826fa408c1be518af",
+    "cpppj/src/client/ClientStateStorageCleanup.h": "8d622b2cbff9ee122c69d9d0df572022c07a5e98923278989e51ea1d6b650f5d",
+    "cpppj/src/o/RawStateWorldCleanup.cpp": "fdd7dcc8a3eb50d7646529deffd97a14cb48ddfe8c586ee7733355ead017fc77",
+    "cpppj/src/o/RawStateWorldCleanup.h": "34da6c20d5ab4d1b28492bdf7661c1c2110a150421eb35251fca5f2be94d8c35",
+    "cpppj/tests/StateStorageCleanupTests.cpp": "760c1e83200a1b11763ddf549dd6c75b4c389e314aa9f5eaf5194af80893278a",
+    "tools/decomp_state_flat_reset.py": "06bde7d8d97a8dab4f61b1d3508daa22c13289708a3197c8b936472b4852d7c5",
+    "cpppj/tests/fixtures/state-flat-reset-x86.tsv": "dd87f5c131381376737060cace5f1a7390304a2752bb41227568ff3166ca8e72"
+  },
+  "artifacts": {
+    "cpppj/build/bin/Release/NetstormCpp.exe": "04bd1764ef8bd66b286ba97faf8d7976f93c3ec450c29a103b84e9e4769e2778",
+    "cpppj/build/bin/Release/netstorm_tests.exe": "0b205ea745b5ef1c8f21431ae2e5575dc1368943835dbf82498d150fb95fbc46",
+    "cpppj/build/bin/Release/netstorm_cloud_probe.exe": "fd181e68c1683ac8747e54f46398dce56fdd8f26821d325e235ec652e39998b8",
+    "cpppj/build/bin/Release/netstorm_cloud_render_probe.exe": "c27b6ffa6dd98f09718af07e3699a01856a736558d149b323725a0f2f05dd306"
+  },
+  "build": {
+    "attempt": 1,
+    "sourceAttempt": 1,
+    "finished": "2026-10-26T09:55:41.701366",
+    "exitCode": 0,
+    "seconds": 159.023,
+    "command": [
+      "cmake",
+      "--build",
+      "cpppj/build",
+      "--config",
+      "Release",
+      "--parallel",
+      "4",
+      "--",
+      "/p:UseMultiToolTask=true",
+      "/p:MultiProcMaxCount=4",
+      "/p:EnforceProcessCountAcrossBuilds=true"
+    ],
+    "log": "extracted/cpp-state-flat-storage-453-build1.log",
+    "sha256": "a99b426b4a6051505b29edf24ad64b9ec24076f0b71479da776e66c12f493199",
+    "compilerWarnings": 0,
+    "compilerErrors": 0
+  },
+  "newTestCases": [
+    "StateFlatReset_Native16AndAdjacentBytes",
+    "StateFlatReset_ShortPhysicalRejectsWithoutWriting",
+    "StateStorageCleanup_PhysicalEffectOwnersAndBorrowedGuard",
+    "StateStorageCleanup_SevenPhysicalEffectsShareCurrentStorage"
+  ],
+  "focused": {
+    "unique": 104,
+    "observations": 108,
+    "failures": 0,
+    "missingRequiredNewCases": []
+  },
+  "protectedFiles": {
+    "checked": 1821,
+    "unchanged": true
+  },
+  "nativeObservations": 16,
+  "originalGameExecuted": false,
+  "productGuiExecuted": false,
+  "fullCTestExecuted": false,
+  "evidence": {
+    "extracted/cpp-state-flat-storage-453-source1/hashes.json": "e8e2b13ceb2f0f52e185c06f86ed80bfffab20f6843a02e8fc9b1aa27ee9bd75",
+    "extracted/cpp-state-flat-storage-453-build1-result.json": "2838a0bc61f07f7c10fa7233bd91b82da74efd3d6b831764228df372175cbdaa",
+    "extracted/cpp-state-flat-storage-453-build1.log": "a99b426b4a6051505b29edf24ad64b9ec24076f0b71479da776e66c12f493199",
+    "extracted/cpp-state-flat-storage-453-focused1/results.json": "293a51f019e62be16bc82023c131129593a4d4c64a25e313375c9eee9d8558ab",
+    "extracted/cpp-state-flat-storage-453-static.json": "4b24ff76fb53a14c79c0499a0c6ae21f0396da57d0d3093fe658148a1602d1aa",
+    "cpppj/state-flat-reset-native-20261026.json": "968c864c6a76e68283d8eba86bacee85a07881b7bbbfeb34bf5b1cf9b3d2b217"
+  },
+  "limitations": [
+    "같은 Client 물리 표를 쓰는 일곱 Effect의 실제 하위 연결이며 자연 State1/Edit 진입은 후속이다.",
+    "PlayerNoMake 패킷 수신 부모와20 pool-header·전체 Effect/prefix·Runtime/Player 반납 coordinator는 미완료다."
+  ]
+}

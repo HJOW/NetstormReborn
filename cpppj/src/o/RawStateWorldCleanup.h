@@ -70,4 +70,8 @@ struct StateWorldCleanupHooks {
 //004b2df0:전송/정지→저장/Player→UI/Kernel→Core0→Pool→Player재구성→모드/기한/전역순서다.
 //PATCH10.78몸체만구현한다. CD10.72대응0042f5c0은SourceMap문서이며동일몸체로가장하지않는다.
 void CleanupStateWorld(std::uint32_t reason,const StateWorldCleanupGlobals& globals,const StateWorldCleanupHooks& hooks);
+// PATCH004328a0의 PlayerNoMake 경고 첫255DWORD만0으로 만든다. 이웃 SP 추적값·추가 물리 칸은 보존한다.
+void ResetStatePlayerNoMakeWarnings(std::span<std::uint32_t> warnings);
+// PATCH004ab940의 같은256×256BYTE spot만0으로 만든다. 다른 Pool/Hash/Graph를 초기화하지 않는다.
+void ResetStateSpotMap(std::span<std::uint8_t> spots);
 }

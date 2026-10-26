@@ -1,9 +1,20 @@
 // 실제State부모의현재값재조회·직접필드쓰기·선택하위호출순서를보존한다.
 #include "o/RawStateWorldCleanup.h"
+#include <algorithm>
 #include <bit>
 #include <stdexcept>
 
 namespace netstorm::o {
+// 두 고정 크기는 실제 rep stosd의 ECX이며 짧은 호스트 물리는 쓰기 전에 거부한다.
+void ResetStatePlayerNoMakeWarnings(std::span<std::uint32_t> warnings) {
+    if (warnings.size()<255) throw std::invalid_argument("State PlayerNoMake의 실제255DWORD 누락");
+    std::fill_n(warnings.begin(),255,std::uint32_t{});
+}
+// 현재 spot 포인터의65536BYTE만 쓰고 이웃 버퍼·그 크기·주소는 바꾸지 않는다.
+void ResetStateSpotMap(std::span<std::uint8_t> spots) {
+    if (spots.size()<65536) throw std::invalid_argument("State spot의 실제65536BYTE 누락");
+    std::fill_n(spots.begin(),65536,std::uint8_t{});
+}
 namespace {
 // 원문이실제로도달한장치만그위치에서요구한다.
 template<class Function> const Function& Need(const Function& function) { if (!function) throw std::logic_error("State정리의실제선택장치누락");return function; }

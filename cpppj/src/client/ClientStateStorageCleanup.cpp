@@ -7,6 +7,7 @@
 #include "client/RawSurfaceWorld.h"
 #include "o/RawStateZoneReset.h"
 #include "o/RawSquidPoolReset.h"
+#include "o/RawTotalMade.h"
 #include <stdexcept>
 
 namespace netstorm::client { //장기 Client 물리의 주소와 실제 효과 실행기의 수명을 구별한다.
@@ -18,6 +19,23 @@ void ResetClientSquidPool(Client& client,RawSurfaceStorage& storage,int capacity
     if (storage.pool.Edition()!=o::OriginalEdition::Patch1078 || storage.Authority()!=client.GameplayGlobals()->Authority() || storage.GameAux()!=client.GameplayGlobals()->GameAux() || (current && current.get()!=&storage)) throw std::invalid_argument("State Pool 정리의 실제 Client/표면 owner 불일치");
     if (storage.Borrowed()) throw std::logic_error("State Pool 정리 전 실제 World 대여 반납 필요");
     o::ResetSquidWorldPool(storage.pool,storage.boardTargetState.invalid,capacity);
+}
+// 원문 각 위치에서 같은 장기 물리의 기존 작은 몸체를 호출하며 Session/AI/Player를 재생성하지 않는다.
+void ResetClientStateWorldStorage(Client& client,RawSurfaceStorage& storage,o::StateWorldCleanupEffect effect) {
+    const auto& current=client.SurfaceStorageIfInitialized(); //검사 때문에 아직 없는 실제 Client 저장소를 새로 만들지 않는다.
+    if (storage.pool.Edition()!=o::OriginalEdition::Patch1078 || storage.Authority()!=client.GameplayGlobals()->Authority() || storage.GameAux()!=client.GameplayGlobals()->GameAux() || (current && current.get()!=&storage))
+        throw std::invalid_argument("State 물리 정리의 실제 Client/표면 owner 불일치");
+    if (storage.Borrowed()) throw std::logic_error("State 물리 정리 전 실제 World 대여 반납 필요");
+    switch (effect) {
+    case o::StateWorldCleanupEffect::Clear4c2450:o::ResetTotalMadeCounts(storage.totalMade);return;
+    case o::StateWorldCleanupEffect::Clear4b2b50:storage.hash.Reset();return;
+    case o::StateWorldCleanupEffect::Clear4328a0:o::ResetStatePlayerNoMakeWarnings(client.LocalStateGlobals()->PlayerNoMakeWarnings());return;
+    case o::StateWorldCleanupEffect::Clear4ab940:o::ResetStateSpotMap(storage.spots);return;
+    case o::StateWorldCleanupEffect::Reset568b60:o::ResetRawIslandRecords(storage.islands.records);return;
+    case o::StateWorldCleanupEffect::Reset54c8a0:storage.chunks.Reset();return;
+    case o::StateWorldCleanupEffect::ResetGraph:o::ResetRawGraphTable(storage.graph);return;
+    default:throw std::invalid_argument("State 물리 정리의 미지원 실제 Effect");
+    }
 }
 void ClearClientMetaZoneRecords(Client& client,RawSurfaceStorage& storage) {
     const auto& current=client.SurfaceStorageIfInitialized(); //미초기화 조회가 새 물리나 Session을 만들지 않는다.

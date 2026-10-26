@@ -1,0 +1,29 @@
+{
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "edition": "PATCH 10.78",
+  "observations": 16,
+  "effectsStubbed": false,
+  "originalGameExecuted": false,
+  "functions": {
+    "warnings": {
+      "entry": "0x4328a0",
+      "bytes": 17,
+      "bodyHex": "57b9ff00000033c0bfe8d45400f3ab5fc3"
+    },
+    "spots": {
+      "entry": "0x4ab940",
+      "bytes": 18,
+      "bodyHex": "578b3d447c5c00b90040000033c0f3ab5fc3"
+    }
+  },
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_state_flat_reset.py": "06bde7d8d97a8dab4f61b1d3508daa22c13289708a3197c8b936472b4852d7c5",
+    "cpppj/tests/fixtures/state-flat-reset-x86.tsv": "dd87f5c131381376737060cace5f1a7390304a2752bb41227568ff3166ca8e72"
+  },
+  "cdNote": "자동 대응표의00487900은 CD에서65536BYTE spot 정리다. PATCH의255DWORD PlayerNoMake 정리와 동일 함수로 취급하지 않는다."
+}

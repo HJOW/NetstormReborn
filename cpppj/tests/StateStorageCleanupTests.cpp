@@ -8,6 +8,7 @@
 #include "o/RawStateZoneReset.h"
 #include <algorithm>
 #include <array>
+#include <bit>
 #include <fstream>
 #include <stdexcept>
 #include <string>
@@ -89,4 +90,66 @@ TEST_CASE(StateStorageCleanup_ActualClientMetaFirstAndRepeatedEmptyPath) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);Client client(StorageOptions());auto storage=MakeRawSurfaceStorage(assets.game,client.GameplayGlobals()->Authority(),client.GameplayGlobals()->GameAux());auto meta=client.LocalStateGlobals()->MetaZones();std::fill(meta.records.begin(),meta.records.end(),std::uint8_t{0xa5});ClearClientMetaZoneRecords(client,*storage);CHECK(meta.firstReset==0 && std::all_of(meta.records.begin(),meta.records.end(),[](auto b) { return b==0; }));ClearClientMetaZoneRecords(client,*storage);
     StoragePut(meta.records,2*kMetaZoneCleanupStride,1);StoragePut(meta.records,2*kMetaZoneCleanupStride+76,5);const auto before=std::vector<std::uint8_t>(meta.records.begin(),meta.records.end());CHECK(StorageThrows([&] { ClearClientMetaZoneRecords(client,*storage); }) && std::equal(before.begin(),before.end(),meta.records.begin()) && meta.firstReset==0); //선택된 실제 삭제를 빈 성공으로 바꾸지 않는다.
     auto foreign=MakeRawSurfaceStorage(assets.game);CHECK(StorageThrows([&] { ClearClientMetaZoneRecords(client,*foreign); }) && std::equal(before.begin(),before.end(),meta.records.begin()));
+}
+
+// 먼저 고정한 전체 버퍼의 Adler32이며 C++ 정리 결과로 기대값을 계산하지 않는다.
+namespace { // 같은 검사 파일 안에서만 독립 CPU 관측의 버퍼 체크섬을 읽는다.
+std::uint32_t FlatResetAdler(std::span<const std::uint8_t> bytes) {
+    std::uint32_t first=1,second=0; //zlib과 같은 두 누적값이며 주소·호스트 정렬과 무관하다.
+    for (const auto byte:bytes) { first=(first+byte)%65521U;second=(second+first)%65521U; } //입력 순서의 모든 바이트를 한 번씩 포함한다.
+    return (second<<16)|first;
+}
+}
+
+// 실제 PE16관측의 전체 체크섬과 인접32BYTE로 두 작은 몸체의 정확한 쓰기 범위를 확인한다.
+TEST_CASE(StateFlatReset_Native16AndAdjacentBytes) {
+    std::ifstream file(std::filesystem::path(__FILE__).parent_path()/"fixtures/state-flat-reset-x86.tsv");CHECK(bool(file));std::string line;std::size_t rows{};
+    while (std::getline(file,line)) { //두 x87 상태와 네 비영 패턴의 최초 관측을 빠짐없이 재생한다.
+        if (line.empty() || line.front()=='#') continue;if (line.back()=='\r') line.pop_back();const auto row=StorageFields(line);CHECK(row.size()==9);if (row.size()!=9) continue;
+        const auto length=static_cast<std::size_t>(std::stoul(row[3]));const auto seed=std::stoul(row[1]);std::vector<std::uint32_t> words((length+32)/4); //DWORD 객체를 먼저 만들고 그 표현 바이트만 준비한다.
+        auto bytes=std::span(reinterpret_cast<std::uint8_t*>(words.data()),words.size()*4);
+        for (std::size_t index=0;index<bytes.size();++index) bytes[index]=static_cast<std::uint8_t>(seed+index*17); //Native의 명시 초기 패턴이며 기대 출력은 fixture에서 읽는다.
+        CHECK(FlatResetAdler(bytes)==std::stoul(row[4]));
+        if (row[0]=="warnings") ResetStatePlayerNoMakeWarnings(std::span(words).subspan(4));
+        else { CHECK(row[0]=="spots");ResetStateSpotMap(bytes.subspan(16)); }
+        CHECK(FlatResetAdler(bytes)==std::stoul(row[5]));CHECK(StorageHex(bytes.first(16))+StorageHex(bytes.last(16))==row[6]);CHECK(std::stoul(row[7])==length/4 && std::stoul(row[8])>0);++rows;
+    }
+    CHECK(rows==16);
+}
+
+// 지원한 호스트 물리 크기 밖에서는 기존 버퍼를 보존하고 다른 reset까지 실행하지 않는다.
+TEST_CASE(StateFlatReset_ShortPhysicalRejectsWithoutWriting) {
+    std::array<std::uint32_t,256> warnings;warnings.fill(0xabcdef01U);const auto before=warnings;
+    CHECK(StorageThrows([&] { ResetStatePlayerNoMakeWarnings(std::span(warnings).first(254)); }) && warnings==before);
+    std::vector<std::uint8_t> spots(65537,0xb3);const auto saved=spots;
+    CHECK(StorageThrows([&] { ResetStateSpotMap(std::span(spots).first(65535)); }) && spots==saved);
+    ResetStatePlayerNoMakeWarnings(warnings);CHECK(std::all_of(warnings.begin(),warnings.begin()+255,[](auto value) { return value==0; }) && warnings[255]==before[255]);
+    ResetStateSpotMap(spots);CHECK(std::all_of(spots.begin(),spots.begin()+65536,[](auto value) { return value==0; }) && spots.back()==0xb3);
+}
+
+// 실제 Client owner와 World 대여 반납을 요구하며 같은 경고 표를 SP 추적·Session 준비와 독립으로 유지한다.
+TEST_CASE(StateStorageCleanup_PhysicalEffectOwnersAndBorrowedGuard) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);Client client(StorageOptions());auto storage=MakeRawSurfaceStorage(assets.game,client.GameplayGlobals()->Authority(),client.GameplayGlobals()->GameAux());
+    auto owner=client.LocalStateGlobals();auto& warnings=owner->PlayerNoMakeWarnings();CHECK(std::all_of(warnings.begin(),warnings.end(),[](auto value) { return value==0; }));warnings.fill(0x80000001U);const auto* address=warnings.data();owner->GameTicks()=123;owner->SourceType()=456;
+    { auto use=storage->AcquirePrepared();CHECK(StorageThrows([&] { ResetClientStateWorldStorage(client,*storage,StateWorldCleanupEffect::Clear4328a0); }) && warnings.front()==0x80000001U && warnings.back()==0x80000001U); }
+    { auto use=client.GameplayGlobals()->AcquirePrepared();CHECK(warnings.data()==address && warnings.front()==0x80000001U); } //Gameplay 준비도 다른 실제 전역을 임의 초기화하지 않는다.
+    auto foreign=MakeRawSurfaceStorage(assets.game);CHECK(StorageThrows([&] { ResetClientStateWorldStorage(client,*foreign,StateWorldCleanupEffect::Clear4328a0); }) && warnings.front()==0x80000001U);
+    CHECK(StorageThrows([&] { ResetClientStateWorldStorage(client,*storage,StateWorldCleanupEffect::ReplaceUber); }) && warnings.front()==0x80000001U);
+    ResetClientStateWorldStorage(client,*storage,StateWorldCleanupEffect::Clear4328a0);CHECK(warnings.data()==address && std::all_of(warnings.begin(),warnings.end(),[](auto value) { return value==0; }) && owner->GameTicks()==123 && owner->SourceType()==456);
+}
+
+// 일곱 Effect는 같은 장기 물리의 선택한 표만 변경하고 Pool·다른 표의 보존 영역을 유지한다.
+TEST_CASE(StateStorageCleanup_SevenPhysicalEffectsShareCurrentStorage) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);Client client(StorageOptions());auto storage=MakeRawSurfaceStorage(assets.game,client.GameplayGlobals()->Authority(),client.GameplayGlobals()->GameAux());
+    const auto poolBefore=std::vector<std::uint8_t>(storage->pool.Bytes().begin(),storage->pool.Bytes().end());auto& counts=storage->totalMade;counts.localCounts.fill(0x12345678U);counts.localSecondaryCounts.fill(0xabcdef01U);counts.globalCounts.fill(0x87654321U);storage->spots.assign(65536,0xb3);storage->hash.Select(2);
+    for (int level=0;level<4;++level) storage->hash.Cell(level,0,0)=77; //각 해시 단계에 실제 비영 머리를 준비한다.
+    storage->graph.records[0].reserved=std::bit_cast<std::int16_t>(std::uint16_t{0xabcd});storage->graph.records[252]={17,18,19};storage->graph.stack[5]=0xabcdef01U;storage->islands.records.fill(0xb3);storage->chunks.Mode()=0x80000000U;storage->chunks.At(0,0).ordinal=55;
+    ResetClientStateWorldStorage(client,*storage,StateWorldCleanupEffect::Clear4c2450);CHECK(counts.localCounts[0]==0 && counts.localSecondaryCounts[254]==0 && counts.globalCounts[254]==0 && counts.localCounts[255]==0x12345678U && counts.localSecondaryCounts[255]==0xabcdef01U && counts.globalCounts[255]==0x87654321U && storage->spots[0]==0xb3);
+    ResetClientStateWorldStorage(client,*storage,StateWorldCleanupEffect::Clear4b2b50);CHECK(storage->hash.Selected()==2);
+    for (int level=0;level<4;++level) CHECK(storage->hash.Cell(level,0,0)==0); //표0의 정리로 다른 높이 단계가 남지 않아야 한다.
+    ResetClientStateWorldStorage(client,*storage,StateWorldCleanupEffect::Clear4ab940);CHECK(std::all_of(storage->spots.begin(),storage->spots.end(),[](auto value) { return value==0; }));
+    ResetClientStateWorldStorage(client,*storage,StateWorldCleanupEffect::Reset568b60);CHECK(storage->islands.records[0]==0 && storage->islands.records[1]==0 && storage->islands.records[18]==0xb3 && storage->islands.records[19]==0xb3);
+    ResetClientStateWorldStorage(client,*storage,StateWorldCleanupEffect::Reset54c8a0);CHECK(storage->chunks.Mode()==0x80000000U && storage->chunks.At(0,0).island==0x7f && storage->chunks.At(0,0).ordinal==0);
+    ResetClientStateWorldStorage(client,*storage,StateWorldCleanupEffect::ResetGraph);CHECK(storage->graph.records[0].inUse==1 && static_cast<std::uint16_t>(storage->graph.records[0].reserved)==0xab01U && storage->graph.records[252].surfaces==17 && storage->graph.records[252].inUse==18 && storage->graph.records[252].reserved==19 && storage->graph.stack[5]==0xabcdef01U);
+    ResetClientStateWorldStorage(client,*storage,StateWorldCleanupEffect::Clear4328a0);CHECK(std::equal(poolBefore.begin(),poolBefore.end(),storage->pool.Bytes().begin()));
 }

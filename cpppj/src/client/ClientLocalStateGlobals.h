@@ -69,6 +69,8 @@ public:
     o::MetaZoneCleanupGlobals MetaZones() { return {metaFirstReset_,metaZoneRecords_}; } //00531760과00546908의51×144BYTE를 같은 장기 주소에 제공한다.
     const std::uint32_t& MetaFirstReset() const { return metaFirstReset_; } //최초 PE값1은 Client 생성 한 번뿐이며 Session 생성/반납으로 되돌리지 않는다.
     std::span<const std::uint8_t> MetaZoneRecords() const { return metaZoneRecords_; } //내용은 같은 mutable MetaZones에서만 변경하며 사본을 만들지 않는다.
+    std::array<std::uint32_t,255>& PlayerNoMakeWarnings() { return playerNoMakeWarnings_; } //0054d4e8의 타입별 경고 비트 표이며 SP 추적/TotalMade와 별개다.
+    const std::array<std::uint32_t,255>& PlayerNoMakeWarnings() const { return playerNoMakeWarnings_; } //Session 대여 전후에도 같은 전체255DWORD를 조회한다.
 private:
     std::array<o::LocalMissionStateBlock,5> blocks_{}; //005c8630/8758/86c8/87e8/8878의 독립144BYTE 다섯 개다.
     double activityEnd_{}; //00544d58의 최초 BSS0이며 게임 정지 가능한 시계로 바꾸지 않는다.
@@ -91,5 +93,6 @@ private:
     std::array<std::uint32_t,2> zoneWords_{}; //기존 로그인의8BYTE 물리를 장기화한다. 원문 Zone 정리는 앞6BYTE만 쓴다.
     std::uint32_t metaFirstReset_{1}; //보호PE00531760의 초기값이며 이후 정리의 실제 분기 값이다.
     std::array<std::uint8_t,o::kMetaZoneCleanupBytes> metaZoneRecords_{}; //51개 기록의 고정7344BYTE이며 다른 State·MetaMap 표와 합치지 않는다.
+    std::array<std::uint32_t,255> playerNoMakeWarnings_{}; //PATCH 최초 BSS0이며 Session 생성/반납이나 SP 초기화로 지우지 않는다.
 };
 }
