@@ -1,0 +1,148 @@
+{
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon/2026-10-23",
+  "runs": 118,
+  "cases": 59,
+  "fixtureSha": "f63a926ccb280a96078a97dc8f025f9fcae9c22fffe947bf9f53cc27006e0f13",
+  "sourceSha": "11c998ab0da7c625c657cbd2b983c34cac56491a29a37525dfd8061474d46614",
+  "peSha": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+  "native": {
+    "0046df80": 76,
+    "00432210": 118,
+    "0046ee30": 158,
+    "00432180": 44172,
+    "0040d900": 118,
+    "0040e130": 74,
+    "00432430": 196,
+    "0040ded0": 232,
+    "004e49c0": 664,
+    "004bca20": 528,
+    "0046e000": 42,
+    "0040e2b0": 80,
+    "004324e0": 40,
+    "004adca0": 40,
+    "004bcab0": 40
+  },
+  "entries": {
+    "Residence": 4644736,
+    "Populate": 4644864,
+    "Replace": 4252336
+  },
+  "helpers": [
+    4251952,
+    4251344,
+    4966944,
+    4967088,
+    5130688,
+    4249856,
+    4399632,
+    4399488,
+    4400176,
+    4400352,
+    4648496,
+    4906144
+  ],
+  "code": [
+    {
+      "address": "0046df80",
+      "bytes": 124,
+      "sha": "e06930dbe4c92918fadbe3ffaef4f3a551a728673e17dad84dd1d4eb2cbbf5c9"
+    },
+    {
+      "address": "0046e000",
+      "bytes": 203,
+      "sha": "a5f03318be72f7d7826eea8fcaca8a3dac3321da835090eb5734b95a3b64b8ef"
+    },
+    {
+      "address": "0040e2b0",
+      "bytes": 679,
+      "sha": "a6572b816ce7f78ced4e2d1391f265859e66de161a3d859576a1872bc5713fa8"
+    },
+    {
+      "address": "0040e130",
+      "bytes": 100,
+      "sha": "cf6e7899f1c6d9121378bf4d4745c4600c241b2d90c490bef04764b164f4cbea"
+    },
+    {
+      "address": "0040ded0",
+      "bytes": 241,
+      "sha": "626091855f7c490d16300aff21706bcbc9d044b20ee0779c4aa269b6d36a4e14"
+    },
+    {
+      "address": "004bca20",
+      "bytes": 54,
+      "sha": "da17a5424615636219eb482a425793cb43a1fc376613f1a65d9e71ac25586033"
+    },
+    {
+      "address": "004bcab0",
+      "bytes": 51,
+      "sha": "88942c1396336dcdf2b6ffcc6235585dc8994895470eccaca96f7b8676ac0b52"
+    },
+    {
+      "address": "004e49c0",
+      "bytes": 117,
+      "sha": "5333b186c02836974c6f792303aeb2c00d856316b93ccbbe65f51def6ae661b4"
+    },
+    {
+      "address": "0040d900",
+      "bytes": 119,
+      "sha": "7c2594c8c9a3e5c7781734da394702387ef7f06fa1064e0c747e3895084dfb47"
+    },
+    {
+      "address": "00432210",
+      "bytes": 207,
+      "sha": "04c4219166ee30f7c0a336af22f0376d415d5f9cb721cb5173f4b051eba90b39"
+    },
+    {
+      "address": "00432180",
+      "bytes": 143,
+      "sha": "de0b2d79a9549f98fa4cd236a54b70b3815fb1815c95c1ae6855c3008f8e093f"
+    },
+    {
+      "address": "00432430",
+      "bytes": 173,
+      "sha": "54d710e0459563cb80c9f20bd4b199c2272fc5aae9532c445c5b2d8a5ef1e824"
+    },
+    {
+      "address": "004324e0",
+      "bytes": 150,
+      "sha": "79a5756b86fede1f1be8590fa7c6b4d59e5b523e1ff019def0fd4c8bbbef06c1"
+    },
+    {
+      "address": "0046ee30",
+      "bytes": 27,
+      "sha": "4503f30b366d7c186b7caa45ad1c683393949711cad5f007e15b60c0f0d6babe"
+    },
+    {
+      "address": "004adca0",
+      "bytes": 10,
+      "sha": "275083dbbb09f7a0f5f441a4507203dce68df1410815950fb2d6afd3e848f5a6"
+    }
+  ],
+  "limits": [
+    "원문46df80/46e000/40e130/40e2b0·실제지도getter/setter·40ded0/PRNG/x87실행",
+    "기존독립검증40db90의단일객체World효과·실제시간·가상삭제/생성/owner/Pop·현재TYPE/HP는명시장치",
+    "제품코드/기존fixture/PE/export수정및게임실행없음"
+  ],
+  "adoption473": {
+    "date": "2026-10-27",
+    "host": "HJOW-Athlon",
+    "copiedFrom": "docs/exe/prepared/add-island-469-20261027/work/cpppj/island-population-native-20261026.json",
+    "currentToolSha256": "6792a5e16602d5660cefc67a1f41d5cbea666ad8c94227c934a88f418f5bf56b",
+    "verify": {
+      "command": [
+        "python",
+        "-X",
+        "utf8",
+        "tools/decomp_island_population.py",
+        "--verify"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-add-island-473/native-population2.log",
+      "sha256": "79303265efc0eb1159f0d33ca9f5f0035b5bc1b9842b8278a01f2b1f318f674d",
+      "summaries": [],
+      "diagnostics": []
+    },
+    "change": "도구 루트 탐색에 자신의 부모 디렉터리를 포함했다. 원문 관측/fixture는 변경하지 않았다."
+  }
+}

@@ -441,6 +441,10 @@ public:
     void SnapshotFortTerritory(std::uint32_t slot); // 기존120BYTE와 현재 섬/지도/공유 난수에서004bf6d0을 명시 실행한다.
     void SnapshotFortObjects(std::uint32_t slot); // 현재 월드의 Terr00~19와 조건부 Chaff를 실제 Temp/rename·청크 writer로 저장한다. 전체 snapshot/Notify는 별도다.
     void SnapshotFort(std::uint32_t slot); // 설치된 명시 Fort 모드에서 원본 전체 부모와 마지막 Notify를 실행하며 모드를 자동 변경하지 않는다.
+    bool BuildEditorIslandMap(o::ChunkMap& target); // 0046e4a0의 독립14×14 지도 부분이다. Bitmap 생성과 전체 GUI 완료를 뜻하지 않는다.
+    bool SeedEditorIslandChoices(std::span<std::uint8_t,126> records); // 0047f9b0의 창 전용21행에서 비활성 레코드만 같은 공유 난수로 보충한다.
+    void BuildEditorIslandChoiceMap(std::span<const std::uint8_t,6> record,o::ChunkMap& target); // 0046e5a0의 owner0/ignorePosition 단일 지도 부분이다.
+    bool DropEditorIsland(const o::ChunkMap& preview,std::span<std::uint8_t,6> record); // 실제 섬 배치→지형→population→Graph→현재 Territory 쓰기를 실행한다.
     void SaveCurrentMap(); //004bfb50의 현재 owner/manager 존재/독립 Battle·Fort 선택으로 전체 저장을 실행한다. 선택된 전체 Battle 저장은 미연결 위치에서 거부한다.
     void BindFortFileSave(const std::uint32_t& readOnlyForts,const EditorFiles& files); // 두 참조는 Session보다 오래 살아야 하며 현재 manager 이름은 이미 준비한 작업본 경로여야 한다.
     o::FortCurrentNameHooks BindFortCurrentName(o::FortCurrentNameHooks hooks); // 같은 실제 Template/State/Notify와 현재 Fort snapshot을 연결한다. Battle snapshot 선택은 미복원 위치에서 거부한다.

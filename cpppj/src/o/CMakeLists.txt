@@ -481,6 +481,9 @@ target_sources(netstorm PRIVATE RawFortSubscriberWrite.cpp RawFortSubscriberWrit
 
 # 신규 Fort manager/초기 자료/파일 부재 부모의 원문 제어 순서를 복원한다.
 target_sources(netstorm PRIVATE RawNewFort.cpp RawNewFort.h)
+
+# 실제 섬 추가의 지형·초기 객체 교체·Territory 후처리 부모를 등록한다.
+target_sources(netstorm PRIVATE RawIslandAdd.cpp RawIslandAdd.h RawIslandPopulation.cpp RawIslandPopulation.h)
 # 더스트 데빌의 전용104BYTE·애니메이션·범위 피해를 실제 월드에서 사용한다.
 target_sources(netstorm PRIVATE RawWindFlyer.h RawWindFlyer.cpp)
 

@@ -1,0 +1,572 @@
+{
+  "unit": 473,
+  "date": "2026-10-27",
+  "host": "HJOW-Athlon",
+  "baseCommit": "e21f695b",
+  "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+  "decompileChanged": false,
+  "builds": [
+    {
+      "command": [
+        "cmake",
+        "--build",
+        "cpppj/build",
+        "--config",
+        "Release",
+        "--parallel",
+        "4",
+        "--",
+        "/p:UseMultiToolTask=true",
+        "/p:MultiProcMaxCount=4",
+        "/p:EnforceProcessCountAcrossBuilds=true"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-add-island-473/build1.log",
+      "sha256": "f6a72b7f1715f2b3dc12ac7b59d804c4afeb756c4c8ad09646d467db7f64e352",
+      "summaries": [],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cmake",
+        "--build",
+        "cpppj/build",
+        "--config",
+        "Release",
+        "--parallel",
+        "4",
+        "--",
+        "/p:UseMultiToolTask=true",
+        "/p:MultiProcMaxCount=4",
+        "/p:EnforceProcessCountAcrossBuilds=true"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-add-island-473/build2.log",
+      "sha256": "79f77a6aded9d39fba865e47a7ebc9f3e8421e8a14858c00f271ce9cc4605af0",
+      "summaries": [],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cmake",
+        "--build",
+        "cpppj/build",
+        "--config",
+        "Release",
+        "--parallel",
+        "4",
+        "--",
+        "/p:UseMultiToolTask=true",
+        "/p:MultiProcMaxCount=4",
+        "/p:EnforceProcessCountAcrossBuilds=true"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-add-island-473/build3.log",
+      "sha256": "cf3d863da19dbf6831a2e8dbccb51548af7ed1e6ac75f1ee62060ce76e6e0311",
+      "summaries": [],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cmake",
+        "--build",
+        "cpppj/build",
+        "--config",
+        "Release",
+        "--parallel",
+        "4",
+        "--",
+        "/p:UseMultiToolTask=true",
+        "/p:MultiProcMaxCount=4",
+        "/p:EnforceProcessCountAcrossBuilds=true"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-add-island-473/build4.log",
+      "sha256": "5f081b61d8cd48c1051240f5b003d70526174e85b1ef9b83d7355727ee1a9d44",
+      "summaries": [],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cmake",
+        "--build",
+        "cpppj/build",
+        "--config",
+        "Release",
+        "--parallel",
+        "4",
+        "--",
+        "/p:UseMultiToolTask=true",
+        "/p:MultiProcMaxCount=4",
+        "/p:EnforceProcessCountAcrossBuilds=true"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-add-island-473/build5.log",
+      "sha256": "71a2b4603c9d85c7c89f672d0ce1adaf3b967ef251630c31545cc0af49452c22",
+      "summaries": [],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cmake",
+        "--build",
+        "cpppj/build",
+        "--config",
+        "Release",
+        "--parallel",
+        "4",
+        "--",
+        "/p:UseMultiToolTask=true",
+        "/p:MultiProcMaxCount=4",
+        "/p:EnforceProcessCountAcrossBuilds=true"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-add-island-473/build6.log",
+      "sha256": "97557e05fd31eb963994f25f9dbece6bfe79addd5e804d35d16ffd3b04f6e6b1",
+      "summaries": [],
+      "diagnostics": []
+    }
+  ],
+  "firstCppFailures": [
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "IslandPopulation"
+      ],
+      "exit": 1,
+      "log": "extracted/cpp-add-island-473/first-IslandPopulation.log",
+      "sha256": "32df233022466104c5b4ac9da915855f9a1b1a3624412ef749d7f87356cbb07c",
+      "summaries": [
+        "1 test(s), 1 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "IslandAdd"
+      ],
+      "exit": 1,
+      "log": "extracted/cpp-add-island-473/first-IslandAdd.log",
+      "sha256": "dac071970fcf4599471224bc30e0602a18f262430268d255616dc91961d3284c",
+      "summaries": [
+        "1 test(s), 1 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "EditorIsland"
+      ],
+      "exit": 1,
+      "log": "extracted/cpp-add-island-473/first-EditorIsland.log",
+      "sha256": "1d40546d5bbdcafbf1cb7efe0bde3ad2a3c548953404bb6b8389577826fc671d",
+      "summaries": [
+        "4 test(s), 2 failed check(s)"
+      ],
+      "diagnostics": []
+    }
+  ],
+  "secondCppFailures": [
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "IslandPopulation"
+      ],
+      "exit": 1,
+      "log": "extracted/cpp-add-island-473/second-IslandPopulation.log",
+      "sha256": "d307fc74209bb0c82cbf9cab0049a77c09a97ecb3bb45dfb6bd112c3477f23af",
+      "summaries": [
+        "1 test(s), 356 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "IslandAdd"
+      ],
+      "exit": 1,
+      "log": "extracted/cpp-add-island-473/second-IslandAdd.log",
+      "sha256": "2d1fcdbed676ff0fa59ce5419b704efc7490a0f4b22e344507c85e0defa391d3",
+      "summaries": [
+        "1 test(s), 1 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "EditorIsland"
+      ],
+      "exit": 1,
+      "log": "extracted/cpp-add-island-473/second-EditorIsland.log",
+      "sha256": "3291355aab94db9c5d879b94971a54bdf4cf1fe925e31d717389558b48b28d7e",
+      "summaries": [
+        "4 test(s), 1 failed check(s)"
+      ],
+      "diagnostics": []
+    }
+  ],
+  "thirdCppFailures": [
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "EditorIsland"
+      ],
+      "exit": 1,
+      "log": "extracted/cpp-add-island-473/third-EditorIsland.log",
+      "sha256": "bf12ec6a53e976b1aae528266e63ed4d6d238d8f80c8a447f59dd3deb764b392",
+      "summaries": [
+        "4 test(s), 1 failed check(s)"
+      ],
+      "diagnostics": []
+    }
+  ],
+  "fourthCppFailures": [
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "EditorIsland"
+      ],
+      "exit": 1,
+      "log": "extracted/cpp-add-island-473/fourth-EditorIsland.log",
+      "sha256": "0e2cb8b8a5a807884f1ffcef1769389ce01def21cd9a68a815ab16fab3ec021f",
+      "summaries": [
+        "4 test(s), 1 failed check(s)"
+      ],
+      "diagnostics": []
+    }
+  ],
+  "intermittentInitialSp": {
+    "firstPass": {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "EditorIsland"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-add-island-473/fifth-EditorIsland.log",
+      "sha256": "e9544b5422c2578b7d9b47e6aade5fea2157c65fc0d80a4d89807e5632dd6401",
+      "summaries": [
+        "4 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    "repeatFailure": {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "EditorIsland"
+      ],
+      "exit": 1,
+      "log": "extracted/cpp-add-island-473/final-EditorIsland.log",
+      "sha256": "f9de62ea2073d77be0ea9442ec65c5ca24d030540d361c23591097acf98665f3",
+      "summaries": [
+        "4 test(s), 1 failed check(s)"
+      ],
+      "diagnostics": []
+    }
+  },
+  "emptyFilterFailure": {
+    "command": [
+      "cpppj/build/bin/Release/netstorm_tests.exe",
+      "--filter",
+      "FortRandom"
+    ],
+    "exit": 1,
+    "log": "extracted/cpp-add-island-473/final2-FortRandom.log",
+    "sha256": "e68689bc187a3561805c293b587e9045b5622d6674c2cd83851a9a1774bfaa8a",
+    "summaries": [
+      "0 test(s), 1 failed check(s)"
+    ],
+    "diagnostics": []
+  },
+  "nativeConstants": {
+    "command": [
+      "python",
+      "extracted/cpp-add-island-473-constants.py"
+    ],
+    "exit": 0,
+    "log": "extracted/cpp-add-island-473/native-constants1.log",
+    "sha256": "a4dddce5408b7f4b11b282a2e737ea58e55fa004411aedb1ef17e9ba140be7db",
+    "summaries": [],
+    "diagnostics": []
+  },
+  "failureCorrections": [
+    "보관 도구 루트 탐색에 자신의 부모 디렉터리도 포함했다.",
+    "Native 검사 입력의 SID 풀 용량16000을 현재 제품이 요구하는 서버/예측 영역까지 확보한24000으로 정정했다. 기존 Pool 제약은 유지했다.",
+    "신규 Session 검사가 별도로 초기화하지 않은 Client getter 대신 helper가 실제 Session에 공급한 같은 surfaceStorage를 빌리도록 정정했다. 실제 설치 관문은 유지했다.",
+    "Native가 선택한15001/15002에 맞춰 검사에서 실제 서버 첫15000을 먼저 확보했다. 원래 SID 기대값은 유지했다.",
+    "원본 PE00500fc8=10.0과 x87 명령을 대조해 중앙 영역의4.0 오해를10.0으로 수정했다. Native158행의 기존 기대 자료는 유지했다.",
+    "실제 population의 MissingPlacement는 초기 생성용 pipeline의 고정 관문이었다. 같은 실제 MayPlaceGameplay로 연결해 현재 Editor/Player/동맹/섬·Graph를 매 요청 조회한다. 원본 판정이나 충돌 검사를 성공으로 대체하지 않았다.",
+    "신규 검사에 누락한 unitLost 음향 장치를 관측 콜백으로 공급하고 실제 요청1회를 확인한다. 실제 호스트는 기존 CampaignClientServices의 PlayByName 장치를 그대로 사용한다.",
+    "Native 준비를 생략하는 신규 검사에 시작 SP0을 명시했다. 미정 할당을 정상 금액으로 간주한 반복 실패를 보존하고 실제 삭제 뒤 Fort/Editor 보상194162도 확인한다."
+  ],
+  "nativeFirstFailures": [
+    {
+      "command": [
+        "python",
+        "-X",
+        "utf8",
+        "tools/decomp_editor_island_drag.py",
+        "--verify"
+      ],
+      "exit": 1,
+      "log": "extracted/cpp-add-island-473/native-drag1.log",
+      "sha256": "a821152cd193565d75cde7c6063d8a367c02f79aef8eee03e76d89113935e138",
+      "summaries": [],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "python",
+        "-X",
+        "utf8",
+        "tools/decomp_island_population.py",
+        "--verify"
+      ],
+      "exit": 1,
+      "log": "extracted/cpp-add-island-473/native-population1.log",
+      "sha256": "0e60333398e346c86a130e240047109ac25db5a2371a292f0446e1661809f4c5",
+      "summaries": [],
+      "diagnostics": []
+    }
+  ],
+  "nativeVerify": [
+    {
+      "command": [
+        "python",
+        "-X",
+        "utf8",
+        "tools/decomp_editor_island_drag.py",
+        "--verify"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-add-island-473/native-drag2.log",
+      "sha256": "06f5a64507ad2ffdcae12053890fb9f53baa6e1870625f1817ed834e545a2eb7",
+      "summaries": [],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "python",
+        "-X",
+        "utf8",
+        "tools/decomp_island_population.py",
+        "--verify"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-add-island-473/native-population2.log",
+      "sha256": "79303265efc0eb1159f0d33ca9f5f0035b5bc1b9842b8278a01f2b1f318f674d",
+      "summaries": [],
+      "diagnostics": []
+    }
+  ],
+  "nativeRows": 158,
+  "preparedArchiveVerify": {
+    "command": [
+      "python",
+      "docs/exe/prepared/restore-469-20261027.py"
+    ],
+    "exit": 0,
+    "log": "extracted/cpp-add-island-473/archive-verify1.log",
+    "sha256": "3893a859425d9574bdbac23a131303c690fcbbf1931beb1eda78e4788f0efe0d",
+    "summaries": [],
+    "diagnostics": []
+  },
+  "focused": [
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "IslandPopulation"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-add-island-473/final2-IslandPopulation.log",
+      "sha256": "6bf1efe05335cc71de7bbc6926069060f857d8603265872d1f1983ca19a3e0ab",
+      "summaries": [
+        "1 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "IslandAdd"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-add-island-473/final2-IslandAdd.log",
+      "sha256": "09a41265388b8fc6a228502ce59f504e24768202a854d7e4c62525305e5e472f",
+      "summaries": [
+        "1 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "EditorIsland"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-add-island-473/final2-EditorIsland.log",
+      "sha256": "e9544b5422c2578b7d9b47e6aade5fea2157c65fc0d80a4d89807e5632dd6401",
+      "summaries": [
+        "4 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "ExistingEditor"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-add-island-473/final2-ExistingEditor.log",
+      "sha256": "e1f1b9a026b8ee6f493beeb6d593c1e12b556d781d1235d73c8bb52e40809183",
+      "summaries": [
+        "58 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "NewFort"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-add-island-473/final2-NewFort.log",
+      "sha256": "95b3621967be08458e000ffbe14a68354aa6b9fa29bc1c66a7f568b2084f1684",
+      "summaries": [
+        "12 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "IslandPlacement"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-add-island-473/final2-IslandPlacement.log",
+      "sha256": "e8accc25240a8a40a103d692e737ac9fcfbb99687084136ff3e85755ea2c5653",
+      "summaries": [
+        "2 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "FortFinishOwner"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-add-island-473/final2-FortFinishOwner.log",
+      "sha256": "496974f5370377e356217e5bf789222b1aed196d9bc20781732fec9b7d7f1e67",
+      "summaries": [
+        "6 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "FortTerritory"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-add-island-473/final2-FortTerritory.log",
+      "sha256": "34eacd285c9839a08a5e41825bc5ba483907c2e2f099caebe03c55993618932e",
+      "summaries": [
+        "7 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "NormalTerrain"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-add-island-473/final2-NormalTerrain.log",
+      "sha256": "f35363be73d3ccc7b10661bd84a960444d57bf9eba38badbe7123c2a11b10034",
+      "summaries": [
+        "3 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    }
+  ],
+  "observedFocused": 94,
+  "uniqueFocused": 94,
+  "newTests": [
+    "CampaignEditorIsland_ActualPreviewChoicesAndRejectedDrop",
+    "CampaignEditorIsland_ActualWorldPopulationGraphAndTerritory",
+    "EditorIslandDialog_ActualCommandReleaseAndRequiredFactory",
+    "EditorIslandDrag_ReplaysActualNativeParent",
+    "IslandAdd_ActualPreviewCollisionAndPlaceBeforeMissingGeneration",
+    "IslandPopulation_ReplaysNative118ActualMapRandomAndEffects"
+  ],
+  "registeredBefore": 3233,
+  "registeredAfter": 3239,
+  "missingPreviousTests": [],
+  "changedProtectedInputs": [],
+  "preservedWholeInputFiles": 3161,
+  "appendedExistingTest": {
+    "path": "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp",
+    "originalBytes": 116632,
+    "originalSha256": "81e9ae99c1cea0ed0aaf846cdb7b41f18cc752730246fa36a1e7728be0b5f1d6",
+    "originalBytePrefixPreserved": true
+  },
+  "sourceManifest": {
+    "path": "extracted/cpp-add-island-473/source-final.json",
+    "files": 2800,
+    "sha256": "3a88b5cb8b2eafa4e22fdace7b80e3b6b2d029d52363a9cc41ae01c53cf954da"
+  },
+  "gameExeSha256": "000c7889fd9858ebb754549706d7774632b3bb65274de51b194c51640c2554fc",
+  "testExeSha256": "2dbcfcd11093e435dee36b75596b8157fe7523c64d57e756abfecef39f15759d",
+  "coverage": [
+    "독립14×14 미리보기/실제 Pool·섬·난수 불변",
+    "전용21행 seed와 공유 GameRandom",
+    "충돌 거부/실제 섬 배치→지형→거주 구역·사제→Graph(false)→Territory",
+    "원본 드래그 부모의 좌표/선택/취소/실패 부분 효과와 호출 순서",
+    "실제 메뉴 명령의 release 소비/선택 factory 경계"
+  ],
+  "gameRuns": 0,
+  "guiRuns": 0,
+  "ctestWrapperExecuted": false,
+  "remaining": [
+    "전용 MetaImage/Bitmap/목록/창수명·공통 Gump 조립",
+    "새 맵/기존 맵에서 실제 Add Island GUI",
+    "Test Battle/시나리오",
+    "전체 미션 자연 완주·원본 화면/음향 동일성"
+  ],
+  "wholeCpp": {
+    "command": [
+      "cpppj/build/bin/Release/netstorm_tests.exe"
+    ],
+    "exit": 0,
+    "log": "extracted/cpp-add-island-473/whole1.log",
+    "sha256": "dddbcda93d04ba57ecc278fa9b82de68108def56d859de3e1c0226542aa44961",
+    "summaries": [
+      "3239 test(s), 0 failed check(s)"
+    ],
+    "diagnostics": []
+  },
+  "wholeCppCases": 3239
+}

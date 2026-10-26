@@ -751,3 +751,6 @@ TEST_CASE(CampaignExistingEditorCheckpoint_SameNameKeepsGuideAndSelectsMissionOu
 
 // 파일 부재의 신규 자료와 같은 Client/State 확정/자동 섬 추가 큐를 검증한다. 기존 사례 본문은 보존한다.
 #include "CampaignNewFortTests.inc"
+
+// 실제 Editor 섬 배치와 독립 미리보기 검사를 같은 장치 수명에서 실행한다.
+#include "CampaignEditorIslandTests.inc"

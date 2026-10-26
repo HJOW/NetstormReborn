@@ -72,6 +72,7 @@
 #include "client/EditorMapCatalogFiles.h" //저장 작업본의 현재 읽기와 원본 순서/새 이름 목록을 동일 Catalog에 제공한다.
 #include "client/EditorFortFileDevices.h"
 #include "client/EditorLocalTransport.h"
+#include "client/EditorIslandDialog.h" // 실제 Add Island 명령의 release와 전용 창 생성 경계를 분리한다.
 #include "client/ExistingEditorAfterCheckpoint.h"
 #include "client/NativeMainMenuState.h" //State3의 원문 부모와 호스트 표시 확정은 다른 시점이다.
 #include "client/EditorSaveGoMain.h" //Yes/No의 실제 저장과 next3 예약을 일반 입력 뒤에 실행한다.
@@ -907,6 +908,7 @@ void UberGump::Event(InputEvent event) {
         [this](auto key,auto value) { client_.Configuration().Set(std::string(key),std::string(value)); }, //동기 옵션 재해석도 같은 현재 TipNumber를 갱신한다.
         [this](auto section) { Tell(std::string(section)); }
     })) { rebuild_=true;return; }
+    if (DispatchEditorIslandDialog(event,[] { throw std::logic_error("Add Island의 실제00480090→0047f450 및 MetaImage/목록/Bitmap GUI 장치 미연결"); })) return; // release는 소비하고 press의 미완성 전용 창 경계는 명시한다.
     if (DispatchEditorSaveGoMain(event,client_.LocalStateGlobals()->State().next[0],[this] { if (!world_) throw std::logic_error("SaveGoMain의 현재 Session 없음");world_->Session().SaveCurrentMap(); })) return;
     if (transitionCode==0x02000079U) {
         if (!(event.code&InputCode::kRelease)) OpenSaveFortNameDialog(std::bit_cast<std::uint32_t>(event.y));

@@ -6,6 +6,7 @@ target_sources(netstorm PRIVATE
     ClientTemplateSectionNames.cpp ClientTemplateSectionNames.h
     # 신규 manager의 실제 할당/생성/작업 파일/소멸/초기화 장치를 연결한다.
     NewFortManagerDevices.cpp NewFortManagerDevices.h
+    EditorIslandDialog.cpp EditorIslandDialog.h EditorIslandDrag.cpp EditorIslandDrag.h # 원문 섬 추가 명령과 드래그 부모다. 전용 창/Bitmap 생성은 후속이다.
     # State 부모의 실제 AI/Deck/Kernel 증빙을 Core0 뒤 Session 반납으로 연결한다.
     ClientStateRuntimeRetirement.cpp ClientStateRuntimeRetirement.h
     ClientStateWorldCleanup.cpp ClientStateWorldCleanup.h

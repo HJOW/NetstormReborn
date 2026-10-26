@@ -1,5 +1,7 @@
 // 기존 원본 몸체의 단일 저장소 조립을 실제 클라이언트 세션이 소유한다.
 #include "client/RawCampaignSession.h"
+#include "o/RawIslandAdd.h"
+#include "o/RawFortRandomPlacement.h"
 #include "o/RawBridgeEditor.h" //Editor의 전체 품질 명령도 현재 월드와 같은 풀/코드/난수를 사용한다.
 #include "client/ClientHtmlWindowGlobals.h"
 #include "client/ClientRandomGlobals.h"
@@ -3179,6 +3181,7 @@ struct RawCampaignSession::Impl {
     }
 
 };
+#include "client/RawCampaignEditorIsland.inc" // 설치된 같은 Editor의 실제 Pool/지도에 섬 배치 부모를 연결한다.
 #include "client/RawCampaignSessionLogin.inc"
 #include "client/RawCampaignCarrierInput.inc"
 

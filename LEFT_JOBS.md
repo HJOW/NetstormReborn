@@ -8,16 +8,18 @@
 - **마지막 전체 정밀 디컴파일: HJOW-Athlon (192.168.0.94) / 2026-10-23.** 결과는 `extracted/refined/`(Git 제외)에 있다. 현재 PC가 이와 다르면 AGENTS.md 규칙에 따라 재디컴파일한 뒤 작업한다. 절차는 `tools\ghidra\refine_all.ps1`이며, 힌트 생성 단계가 콘솔 인코딩(cp949) 오류로 멈추면 `PYTHONUTF8=1`, `PYTHONIOENCODING=utf-8`을 설정하고 다시 실행한다.
 - 2026-10-26의 문서 정리는 HJOW-X3D에서 인수인계 문서만 고친 것이다. 디컴파일 결과·제품 코드·검사 코드는 바꾸지 않았으므로 위 디컴파일 기록은 그대로 유효하다. 사용자는 HJOW-Athlon에서 작업을 재개할 예정이다.
 - **실제 게임 실행 확인:** HJOW-Athlon, VM-W11-Codex, vm-debian-codex는 AGENTS.md의 예외 시스템이다. 그 밖의 PC에서는 게임이나 별도 창을 띄우기 전에 목적을 설명하고 사용자 확인을 받는다.
-- **목표 상태:** 2026-10-27 사용자 지시로 재개했다.472까지 새 맵 저장소·세 부모·실제 Client 자료/작업 파일·alternate1 빈 월드·State 확정·자동AddIsland 큐를 연결했다. 최신472는 Release 경고/오류0·집중148개/실패0·신규3개·전체C++3,233개/실패0, 게임 `b5c59950…`다. NewFort/AddIsland GUI·실제 섬 배치/TestBattle/시나리오·전체미션자연완주/원본전체동일성은 남아 전체목표는 진행 중이다. 실제 게임 구동과 사용자 개입 검증은 뒤로 미룬다.
+- **목표 상태:** 2026-10-27 사용자 지시로 재개했다.472의 신규 Fort 실제 자료·빈 월드·State 확정·자동AddIsland 큐에 이어473에서 섬 추가 지도/21행 후보/드래그·실제 섬·거주 구역·사제/Graph/Territory를 연결했다. 최신473은 Release 경고/오류0·집중94개/실패0·신규6개·원본CPU158행 재검증·전체C++3,239개/실패0, 게임 `000c7889…`다. NewFort/AddIsland 전용 GUI/TestBattle/시나리오·전체미션자연완주/원본전체동일성은 남아 전체목표는 진행 중이다. 실제 게임 구동과 사용자 개입 검증은 뒤로 미룬다.
 - **원시 증거 위치:** 빌드·검사·GUI 원시 로그와 통합 드라이버는 `extracted/`(Git 제외)에 있으며, 작업한 PC(주로 HJOW-Athlon)에만 있다. 커밋되는 결과 보고서는 `cpppj/*.json`, 작업 문서는 `docs/exe/cpp-*.md`다.
 - **471 추가 수정 완료:** 사용자 신고의 공통 메뉴 토글 표시를 원본 J02(60번)로 고쳤다. 타입+154는 I.count가 아니라 J.first다. 메인 Options/ESC 메뉴가 같은 렌더러를 사용하며, 양판본 원본 픽셀·공통 메뉴 체크 on/off를 포함한 집중120개/실패0·신규2개, Release 경고/오류0이다. 게임 `76c257c5…`, 등록3,230개이며 전체CTest/게임/GUI는 실행하지 않았다. [문서](docs/exe/cpp-menu-toggle-marker-20261027.md), [보고서](cpppj/menu-toggle-marker-20261027.json). 기존 검사/원본/CD/AGENTS3,160파일 바이트동일, 마지막 전체 디컴파일 HJOW-Athlon/2026-10-23 유지. NewFort 이후 잔여 목표는 계속 진행한다.
-- **다음 재개점:** [472 통합 문서](docs/exe/cpp-new-editor-runtime-20261027.md)를 확인한다. NewData/파일 부재에 같은 Client의 Subscriber/handle·SP·Core·난수·Territory/Money/State/Notify를 연결했고 빈 월드 전체설치/State확정/자동AddIsland 큐를 GUI 없이 검증했다. 다음은 [Add Island 준비본](docs/exe/prepared/add-island-469-20261027/README.md)을 최신 소스와 대조해 실제 전용MetaImage·Bitmap·목록/창수명·배치/population을 연결하는 것이다. 실제 Create New Map GUI·TestBattle/시나리오·전체State7/Native3남은선택과 자연완주는 후속이다.142파일 보관SHA는469에서 모두 확인했으며 원시 전체 덮어쓰기는 하지 않는다. 다른PC면 AGENTS에 따라 전체정밀디컴파일부터 다시 한다.
+- **다음 재개점:** [473 통합 문서](docs/exe/cpp-add-island-runtime-20261027.md)를 확인한다. 실제 섬 배치/population/Graph/Territory API와 드래그 입력 부모는 채택·전체 검증했다. 다음은 전용 `0046e410→004c1cc0→004c1860` Bitmap, `0047f2a0` MetaImage, 목록/생성/Refresh/Idle/소멸·단일창 참조 수를 같은 RawMenuControls 트리에 연결하는 것이다. 기존 지형 Context/Growth/MarkEdges는 있으나 전용 래스터와 이미지 수명은 미연결이다. 현재 호스트의 AddIsland press는 실제 전용 factory 필수 경계에서 멈추며 일반 이미지/가짜 창으로 바꾸지 않는다. 실제 Create New Map·기존 맵의 AddIsland GUI, TestBattle/시나리오·전체State7/Native3남은선택과 자연완주는 후속이다. 준비본142파일 SHA는473에서도 재검증했다. 다른PC면 AGENTS에 따라 전체정밀디컴파일부터 다시 한다.
 - **465 완료:** `EditorWorkingRoot`로 실제 자산 디렉터리를 먼저 정규화하여 후행 `/`·`\\`·`.`·`d/..`에서도 같은 형제 `<이름>-editor`를 사용한다. 기존 작업본 보존/원본 보호 검사는 유지한다. Release build1 종료0·EditorFiles 집중7개(신규2)·실패0. 실제 후행 구분자 Edit GUI는 다음 기능 묶음에서 검증한다. [작업 문서](docs/exe/cpp-editor-working-root-20261026.md), [보고서](cpppj/editor-working-root-20261026.json). 마지막 전체 디컴파일 HJOW-Athlon/2026-10-23 유지, 디컴파일 변경 없음. Edit 도구/상태 복구·전체 미션 완주 목표는 계속 진행 중이다.
 - **466 완료:** 같은 실제 풀/게임 난수/표시의 Set All Bridge, 양판본 CanPlaceIsland, 늦은 Guide 해제와 Tutorial 데이터 수명, 실제 메인 Quit 큐/즉시 반환, Script 없는 Editor의 HTML 취소/Blank 복귀를 연결했다. Release 경고/오류0·집중103고유/112관측·신규9개·전체C++3,165개·실패0, 같은 게임 `c8739bd5…`의 GUI8·자연Early2→Tutorial3를 확인했다. 기존 검사3파일 본문·기존3156등록·보호2474파일을 보존했다. 최초 필터명2오류와 stdout/stderr 이름3개 혼합은 검사기에서만 보완하고 원시를 보존했다. [통합 문서](docs/exe/cpp-editor-runtime-integration-20261026.md), [보고서](cpppj/editor-runtime-integration-20261026.json), 원시 extracted/cpp-editor-runtime-466-*. SaveGoMain/전체State3·Editor 도구 전체·나머지 미션 자연 완주/동일성은 후속이다. 마지막 전체 디컴파일 HJOW-Athlon/2026-10-23 유지.
 - **467 완료:** SaveGoMain/기본 Native3·무World 장기 Deck·Save as·Tips 입력과 초기HUD→미션 진입을 연결했다. Source6 빌드6 경고/오류0·집중181/189관측·신규29·전체3194/실패0, GUI8·자연Early2 A~I→Tutorial3 통과. No/Yes의314다리 재로드 차이와 새Fort파싱/중복거부, 보호2476/소스2748·기존3165등록/본문을 확인했다. [통합 문서](docs/exe/cpp-editor-menu-runtime-integration-20261026.md), [보고서](cpppj/editor-menu-runtime-integration-20261026.json), 원시 extracted/cpp-editor-menu-467-*. 최초빌드/신규검사/마우스serial/미션가드·Client9·미도킹Draw 실패도 보존했다. 새이름메뉴재진입·편집도구/전체미션·원본동일성은 계속 진행한다. 마지막전체디컴파일 HJOW-Athlon/2026-10-23 유지.
 - 원격 저장소에 push하지 않는다. 커밋 메시지는 `YYYYMMDD-NN CP 요약` 형식이며, NN은 `git log`로 그날의 마지막 번호를 확인해 정한다.
 
 ## 1. 현행 목표 ([TODO.md](TODO.md))
+
+- **473 완료 — 섬 추가의 실제 배치/입력 부모:** 독립14×14 지도/21행 seed와 실제 섬·정상 지형·거주 구역·사제/Graph(false)/Territory를 같은 Session에 연결했다. Native drag40/population118행을 재검증·재생하고 중앙 영역 상수00500fc8의4.0 오해를 실제10.0으로 수정했다. 초기 객체 배치는 현재 Editor/Player/동맹을 읽는 전체 MayPlaceGameplay를 사용한다. 최종 build6 경고/오류0·집중94/실패0·신규6·전체C++3,239/실패0, 기존3,233등록/검사본문·보호3,161파일/보관142파일을 보존했다. 준비본 검사 입력/장치/SP 누락과 최초 실패는 모두 원시 보존했다. 게임SHA `000c7889…`, 게임/GUI실행0이다. [문서](docs/exe/cpp-add-island-runtime-20261027.md), [보고서](cpppj/add-island-runtime-20261027.json). 마지막 전체 디컴파일 HJOW-Athlon/2026-10-23 유지. 전용 GUI·실제 메뉴 배치·전체 목표는 미완료다.
 
 - **472 완료 — 신규 Fort 실제 Client 설치:** NewData/파일 부재 부모를 같은 실제 Subscriber/SP/Core/난수·manager/작업 파일에 연결했다. alternate1 빈 월드·Player/Deck/Snapshot/EditorPlayers·State 확정·실제 Add Island 입력 예약까지 신규3검사로 확인했다. 기존파일 exists를 중복하지 않고, 이름 mode0/작업 디렉터리/State 장치 초기화도 연결했다. 최종 Release 경고/오류0·집중148/실패0·전체C++3,233/실패0, 기존3,230등록/검사본문·보호3,161파일을 보존했다. 최초 헤더/신규 검사 입력 실패는 원시 보존했다. 게임SHA `b5c59950…`, 게임/GUI/새Native실행0이다. [문서](docs/exe/cpp-new-editor-runtime-20261027.md), [보고서](cpppj/new-editor-runtime-20261027.json). 마지막 전체 디컴파일 HJOW-Athlon/2026-10-23 유지. Add Island 전용 창/실제 배치와 새 맵 GUI·전체 목표는 계속 미완료다.
 
@@ -55,6 +57,8 @@
 ## 2. 현재 상태 (2026-10-27 기준)
 
 ### 2.1 마지막 통합 검증 기준
+
+- **최신473 통합:** 최종 build6 게임 `000c7889…`, Release 경고/오류0·집중94/실패0·신규6·전체C++3,239/실패0이다. 섬 추가의 실제 배치·초기 객체 교체·Graph/Territory와 원본 입력40/생성118행을 확인했다. 기존3,233등록, Checkpoint 검사 본문116,632BYTE 접두부와 보호3,161파일을 보존했다. 실제 GUI·자연 완주는 이번에 실행하지 않았으며 아래468 이하 기록과 구별한다. [문서](docs/exe/cpp-add-island-runtime-20261027.md), [보고서](cpppj/add-island-runtime-20261027.json).
 
 - **최신472 통합:** Source최종/build4 게임 `b5c59950…`, Release 경고/오류0·집중148/실패0·신규3·전체C++3,233/실패0이다. 새 맵은 실제 작업 파일과 같은 Client의 자료·빈 월드·State 확정·Add Island 큐를 GUI 없이 확인했다. 471의 공통 토글 표시 회귀 검사도 전체 실행에 포함됐다. 기존3,230등록, 기존 검사 본문 전체 접두부와 보호3,161파일을 보존했다. 실제 GUI·자연 완주가 확인된 제품은 아래468 이하 이력을 별도로 본다. [문서](docs/exe/cpp-new-editor-runtime-20261027.md), [보고서](cpppj/new-editor-runtime-20261027.json).
 
@@ -171,9 +175,9 @@
 
 
 - [x] **464 완료 — 기존 맵:** 실제 목록 클릭→Native State1 cleanup/prefix→현재 이름·작업본→InstallExistingEditorCheckpoint→HUD mode1/전체 팔레트→공통 확정/loaded→호스트 입력→다음 Poll4를 연결했다. 기존 InstallHud/공통 HUD를 재사용하고 실제 listener/client9/동일 연결표를 사용한다. 실제 Battle1과 TEST01의 ESC/Game/Edit 표시·ESC 닫기까지 통과했다. TEST01 GUI 입력은 새 복사본의 loose Fort 한 개로 제한했으며 전체 원본 폴더 목록에서 TEST01 접근을 확인한 것은 아니다.
-- [ ] 남은 편집 도구(지형·섬·오브젝트·소유자), Add Island, Test Battle을 연결한다. Set All Bridge와 SaveGoMain은466~467, Save as·새이름재로드/재시작은468, 신규 Fort의 실제 자료·빈 월드·State 확정·자동AddIsland 예약은472에서 완료한 범위다. 전용 섬 추가 창/배치와 전체 원본 동일성은 남아 있다.
+- [ ] 남은 편집 도구(지형·섬·오브젝트·소유자), Add Island 전용 GUI, Test Battle을 연결한다. Set All Bridge와 SaveGoMain은466~467, Save as·새이름재로드/재시작은468, 신규 Fort의 실제 자료·빈 월드·State 확정·자동AddIsland 예약은472, 섬 추가의 지도/드래그 부모·실제 배치/population/Graph/Territory는473에서 완료한 범위다. 실제 전용 창/메뉴 입력과 전체 원본 동일성은 남아 있다.
 - [x] Save as·전체저장·새이름목록재진입/재시작·전체Fort파싱, SaveGoMain의실제저장/미저장→메인복귀를 연결했다(467~468). 원문50개 목록상한은 유지한다.
-- [ ] Create New Map(`LOADLOADFORT`, NewFort alternate1)의 실제 이름 입력→자동AddIsland GUI와 섬 배치를 완성·확인한다.472의 실제 파일 부재/NewData/빈 월드·State 확정은 완료했다. Test Battle과 편집 화면 복귀(`020000c2`), 남은 LeaveEditMode 전체 분기도 후속이다.
+- [ ] Create New Map(`LOADLOADFORT`, NewFort alternate1)의 실제 이름 입력→자동AddIsland GUI와 실제 사용자 배치를 완성·확인한다.472의 파일 부재/NewData/빈 월드·State 확정과473의 실제 섬 배치 API는 완료했다. Test Battle과 편집 화면 복귀(`020000c2`), 남은 LeaveEditMode 전체 분기도 후속이다.
 - [ ] 언어별 시나리오 파일(`.english`)의 사용자·AI 구성, 시작 SP, 브리핑 적용을 연결한다.
 - [ ] `originals/d/TEST01.fort`·`TEST01.english`와 TEST02는 읽기 참조로만 쓰고, 저장은 실제 작업본 경로에 한다.
 

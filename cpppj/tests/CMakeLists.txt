@@ -2226,3 +2226,8 @@ set_source_files_properties(FortSubscriberWriteTests.cpp PROPERTIES COMPILE_DEFI
 set_source_files_properties(DataManagerInitializeTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_DATA_MANAGER_INITIALIZE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/data-manager-initialize-x86.tsv\";NETSTORM_TEMPLATE_SECTION_NAMES_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/template-section-names-x86.tsv\"")
 set_source_files_properties(TextClipboardTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_TEXT_CLIPBOARD_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/text-clipboard-x86.tsv\"")
+
+# 독립 원본 population118행/drag40행과 실제 Editor 섬 배치·충돌 거부를 검증한다.
+target_sources(netstorm_tests PRIVATE IslandPopulationTests.cpp EditorIslandDragTests.cpp)
+set_source_files_properties(IslandPopulationTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_ISLAND_POPULATION_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/island-population-x86.tsv\"")
+set_source_files_properties(EditorIslandDragTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_EDITOR_ISLAND_DRAG_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/editor-island-drag-x86.tsv\"")

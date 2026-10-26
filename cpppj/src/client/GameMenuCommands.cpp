@@ -52,6 +52,7 @@ std::uint32_t GameMenuScriptCode(std::string_view name) {
     if (key=="reloadtheams") return 0x02000123U;
     if (key=="pause") return 0x020000cfU;
     if (key=="getfulldeck") return 0x020000cdU;
+    if (key=="addisland") return 0x02000022U; // 00542780의 실제 Editor 섬 추가 명령이다.
     if (key=="savegomain") return 0x020000cbU;
     if (key=="telltip") return 0x020000ebU;
     if (key=="newfort") return 0x02000079U; // LOADLOADFORT가 예약하는 새 이름 창의 원본 명령이다. y=0/1은 실제 큐에 그대로 보존한다.
