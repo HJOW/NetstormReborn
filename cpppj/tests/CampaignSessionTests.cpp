@@ -10,6 +10,7 @@
 #include "client/ClientMain.h"
 #include "client/ClientLocalStateGlobals.h"
 #include "client/ClientStateStorageCleanup.h"
+#include "client/ClientStateRuntimeRetirement.h"
 #include "client/ClientPlayerRecords.h"
 #include "client/ClientCoreDataGlobals.h"
 #include "client/ClientPlayerRuntime.h"
@@ -4963,4 +4964,63 @@ TEST_CASE(CampaignSession_StateSidListsRealProviderAndPriestDeletion) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;std::vector<Sid> lost;auto services=external.Services();services.unitLost=[&](Sid sid) { lost.push_back(sid); };auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());GameWorld world(assets.game,assets.files,std::move(fort),MissionPlayers{},"thewarbegins",std::move(services),{1024,768});auto& session=world.Session();auto core=session.Core();auto storage=session.World().Storage();auto& lists=storage->sidLists;
     const auto before=lists.providers.count;const auto point=EmptySessionSupport(core);const auto source=session.World().Create(76);core.owner.Set(source,1);session.World().Pop(source,static_cast<float>(point.x+2),static_cast<float>(point.y+2),0);CHECK(lists.providers.count==before+1 && lists.providers.Items().back()==source.value && core.bookkeeping.Providers().count==lists.providers.count);
     CHECK(session.World().Destroy(source,0) && lists.providers.count==before && std::find(lost.begin(),lost.end(),source)!=lost.end());const auto priestCount=lists.priests.count;CHECK(priestCount>0);if (!priestCount) return;const Sid priest{static_cast<std::uint16_t>(lists.priests.Items().front())};CHECK(session.World().Destroy(priest,0));CHECK(lists.priests.count==priestCount-1 && std::find(lists.priests.Items().begin(),lists.priests.Items().end(),priest.value)==lists.priests.Items().end());
+}
+
+namespace { // 조정기도 같은 실제 Client/Kernel/Player/자산으로 검사하고 게임 결과를 공급하지 않는다.
+struct StateCoordinatorScene {
+    Client client{SessionLinksOptions()};SessionServicesFixture external; // 실제 Client를 소비자보다 먼저 만들고 마지막에 반납한다.
+    std::shared_ptr<RawSurfaceStorage> storage;std::unique_ptr<RawCampaignSession> session; // 조정기가 잠시 빌리는 실제 물리와 현재 실행기의 소유권이다.
+    StateCoordinatorScene() { // 동일한 보호 미션과 실제 장기 owner로 새 Session을 적재한다.
+        auto game=client.GameplayGlobals();storage=MakeRawSurfaceStorage(netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078).game,game->Authority(),game->GameAux());storage->Processes().BindDevices(client.ProcessKernelOwner(),client.FrameClockOwner());Load();
+    }
+    void Load() { // 다음 세대도 같은 실제 Player/Storage/Kernel을 재사용한다.
+        auto services=SharedKernelServices(client,external);services.surfaceStorage=storage;services.gameplayGlobals=client.GameplayGlobals();services.subscriberGlobals=client.SubscriberGlobals();services.coreDataGlobals=client.CoreDataGlobals();
+        services.ai.allocationBytes=[](auto bytes) { std::fill(bytes.begin(),bytes.end(),std::uint8_t{0x71}); }; //실제 AI 할당의 보존 바이트만 고정한다.
+        services.ai.participation.clearChat=[this](auto) { ++external.notices; };services.ai.participation.addChat=[this](auto,auto,auto) { ++external.notices; }; //실제 Chat 요청의 횟수만 관측한다.
+        session=SharedKernelSession(std::move(services));session->Load();
+    }
+    void CoreZero() { // 원문 부모의 known0→Select(0,1) 두 위치를 명시 입력으로 실행한다.
+        client.GameplayGlobals()->player.playerKnown=0;client.CoreDataGlobals()->Select(client.GameplayGlobals()->player,0,0,1);
+    }
+};
+}
+
+// 실제 자식 정상 정리 뒤에만 Session을 반납하고 Native 부모가 쓴 전역·Player base를 소멸자가 다시 쓰지 않는다.
+TEST_CASE(StateRuntimeCoordinator_ActualAiDeckKernelAndFixedViewsRetireOnce) {
+    StateCoordinatorScene scene;auto game=scene.client.GameplayGlobals();ClientStateRuntimeRetirement retire(scene.client,scene.storage);const auto ai=scene.session->CreateAi(2,SessionAiSettings("State Coordinator AI","sunCannon"));CHECK(ai && scene.session->AiMemory().Contains(ai));
+    for (std::uint32_t owner=0;owner<9;++owner) static_cast<void>(scene.session->Production().Deck().Get(owner)); //아홉 실제 Deck 할당을 같은 Player 링크 부모로 반납한다.
+    std::uint32_t destroyed{};scene.client.GetKernel().Add(std::make_unique<SharedKernelProbe>([] {},[&] { ++destroyed; }));
+    for (std::uint32_t owner=1;owner<9;++owner) retire.ResetAi(owner); //실제 원문 순서에서 각 AI 증빙을 현재 모듈에 소비한다.
+    CHECK(!scene.session->AiMemory().Contains(ai));retire.ClearPlayerLinks();retire.ClearKernel();CHECK(destroyed==1 && !scene.session->World().ProcessBindingsReturned());
+    const auto records=scene.client.PlayerRecords();const auto base=records->Base();CHECK(Throws([&] { static_cast<void>(records->Acquire()); }));scene.CoreZero();game->world.editor=9;game->FullDeck()=0x80000001U;game->cursor.lockDepth=13;const auto notices=scene.external.notices;
+    retire.Retire([&] { CHECK(scene.storage->Borrowed() && game->Borrowed() && scene.session->World().ProcessBindingsReturned());scene.session.reset(); });
+    CHECK(!scene.storage->Borrowed() && !game->Borrowed() && records->Base()==base && destroyed==1 && scene.external.notices==notices && game->world.editor==9 && game->FullDeck()==0x80000001U && game->cursor.lockDepth==13);
+    ResetClientSquidPool(scene.client,*scene.storage);InitializeClientPlayerRecords(scene.client);CHECK(records->Base()!=base && records->Initialized()); //모든 고정뷰 소멸 뒤 원문 후반 Pool/Player 초기화를 실제로 진행한다.
+}
+
+// 누락 자식·Core·실제 소유자 장치의 실패를 순서대로 확인하며, 정상 증빙 뒤 빈 callback은 실제 반납으로 인정하지 않는다.
+TEST_CASE(StateRuntimeCoordinator_RejectsMissingProofAndCanRetryOwnerRelease) {
+    StateCoordinatorScene scene;ClientStateRuntimeRetirement retire(scene.client,scene.storage);std::uint32_t callbacks{};
+    CHECK(Throws([&] { retire.Retire([&] { ++callbacks; }); }) && callbacks==0 && !scene.session->World().ProcessBindingsReturned());scene.CoreZero();
+    for (std::uint32_t owner=1;owner<8;++owner) retire.ResetAi(owner); //실제 여덟 번째 owner만 누락해 빈 brain을 정상 증빙으로 대체하지 못하게 한다.
+    retire.ClearPlayerLinks();retire.ClearKernel();CHECK(Throws([&] { retire.Retire([&] { ++callbacks; }); }) && callbacks==0 && !scene.session->World().ProcessBindingsReturned());
+    retire.ResetAi(8);CHECK(Throws([&] { retire.Retire({}); }) && !scene.session->World().ProcessBindingsReturned());
+    CHECK(Throws([&] { retire.Retire([&] { ++callbacks; }); }) && callbacks==1 && scene.storage->Borrowed() && scene.session->World().ProcessBindingsReturned());
+    retire.Retire([&] { ++callbacks;scene.session.reset(); });CHECK(callbacks==2 && !scene.storage->Borrowed() && !scene.client.GameplayGlobals()->Borrowed()); //실제 처리기 반환은 되풀이하지 않고 같은 정상 증빙에서 소유자 반납만 재시도한다.
+}
+
+// 첫 메뉴도 실제 Player/Kernel에 도달한다. 비영 brain/Deck은 없는 Runtime 장치로 지우지 않고 앞선 실제 쓰기를 보존한다.
+TEST_CASE(StateRuntimeCoordinator_FirstMenuUsesActualPlayerFieldsAndSingleKernelClear) {
+    Client client(SessionLinksOptions());InitializeClientPlayerRecords(client);auto game=client.GameplayGlobals();auto storage=MakeRawSurfaceStorage(netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078).game,game->Authority(),game->GameAux());storage->Processes().BindDevices(client.ProcessKernelOwner(),client.FrameClockOwner());ClientStateRuntimeRetirement retire(client,storage);auto records=client.PlayerRecords()->Records();
+    SessionLinksPut(records,2*180+0xb0,0x12345678U);CHECK(Throws([&] { retire.ResetAi(2); }) && Get(records,2*180+0xb0)==0x12345678U);SessionLinksPut(records,2*180+0xb0,0);
+    for (std::uint32_t owner=1;owner<9;++owner) retire.ResetAi(owner); //실제 현재 brain0의 원문 자연 반환을 선택한다.
+    SessionLinksPut(records,0x9c,77);SessionLinksPut(records,3*180+0x68,0xdead1234U);CHECK(Throws([&] { retire.ClearPlayerLinks(); }) && Get(records,0x9c)==0 && Get(records,3*180+0x68)==0xdead1234U);SessionLinksPut(records,3*180+0x68,0);retire.ClearPlayerLinks();
+    std::uint32_t destroyed{},ownerCalls{};client.GetKernel().Add(std::make_unique<SharedKernelProbe>([] {},[&] { ++destroyed; }));retire.ClearKernel();CHECK(destroyed==1 && client.GetKernel().Size()==0);
+    game->player.playerKnown=0;client.CoreDataGlobals()->Select(game->player,0,0,1);retire.Retire([&] { ++ownerCalls; });CHECK(ownerCalls==0 && !game->Borrowed() && !storage->Borrowed() && client.PlayerRecords()->Initialized()); //Runtime 부재가 다른 원문 전역/Player 재초기화를 대신하지 않는다.
+}
+
+// 소유자·Kernel 불일치와 다음 실제 대여 세대를 초기 store/자식 소멸 전에 거부한다.
+TEST_CASE(StateRuntimeCoordinator_RejectsForeignStorageKernelAndStaleGeneration) {
+    StateCoordinatorScene scene;auto game=scene.client.GameplayGlobals();auto foreign=MakeRawSurfaceStorage(netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078).game);foreign->Processes().BindDevices(scene.client.ProcessKernelOwner(),scene.client.FrameClockOwner());CHECK(Throws([&] { ClientStateRuntimeRetirement rejected(scene.client,foreign); }));
+    auto wrongKernel=MakeRawSurfaceStorage(netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078).game,game->Authority(),game->GameAux());CHECK(Throws([&] { ClientStateRuntimeRetirement rejected(scene.client,wrongKernel); }));ClientStateRuntimeRetirement stale(scene.client,scene.storage);const auto generation=scene.storage->Generation();scene.session.reset();CHECK(Throws([&] { stale.ResetAi(1); }));scene.Load();const auto base=scene.client.PlayerRecords()->Base();CHECK(scene.storage->Generation()!=generation && Throws([&] { stale.ClearPlayerLinks(); }) && scene.storage->Borrowed() && game->Borrowed() && scene.client.PlayerRecords()->Base()==base);
 }

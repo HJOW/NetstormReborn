@@ -8,7 +8,7 @@
 - **마지막 전체 정밀 디컴파일: HJOW-Athlon (192.168.0.94) / 2026-10-23.** 결과는 `extracted/refined/`(Git 제외)에 있다. 현재 PC가 이와 다르면 AGENTS.md 규칙에 따라 재디컴파일한 뒤 작업한다. 절차는 `tools\ghidra\refine_all.ps1`이며, 힌트 생성 단계가 콘솔 인코딩(cp949) 오류로 멈추면 `PYTHONUTF8=1`, `PYTHONIOENCODING=utf-8`을 설정하고 다시 실행한다.
 - 2026-10-26의 문서 정리는 HJOW-X3D에서 인수인계 문서만 고친 것이다. 디컴파일 결과·제품 코드·검사 코드는 바꾸지 않았으므로 위 디컴파일 기록은 그대로 유효하다. 사용자는 HJOW-Athlon에서 작업을 재개할 예정이다.
 - **실제 게임 실행 확인:** HJOW-Athlon, VM-W11-Codex, vm-debian-codex는 AGENTS.md의 예외 시스템이다. 그 밖의 PC에서는 게임이나 별도 창을 띄우기 전에 목적을 설명하고 사용자 확인을 받는다.
-- **목표 상태:** 2026-10-26 재개 뒤461까지 복원 단위를 완료했다. 최신461은 일반/noAudio 음향의 전투 음악이 실제 Client의 공통 게임 난수를 빌리도록 연결했으며 Release build2 경고/오류0·집중41개·신규4개·실패0이다. 마지막 전체/GUI는459의CTest3130개·실패0 및 실제 Early1 ESC·메뉴 복귀·재진입이다. 전체 목표는 계속 진행 중이며 Native State1/7 전체 정리·별도 송신버퍼 writer·실제 Edit 설치·전체 미션 자연 완주·동일성 검증이 남아 있다.
+- **목표 상태:** 2026-10-26 재개 뒤462까지 복원 단위를 완료했다. 최신462은 실제 AI·Player 링크·Kernel 정상 정리 증빙을 같은 Client/Session의 Core0 뒤 반납에 연결하는 조정기이며 Release build1 경고/오류0·집중197고유/202관측·신규4개·실패0이다. 아직 Uber의 전체 State 부모에서는 호출하지 않는다. 마지막 전체/GUI는459의CTest3130개·실패0 및 실제 Early1 ESC·메뉴 복귀·재진입이다. 전체 목표는 계속 진행 중이며 Native State1/7 전체 정리·별도 송신버퍼 writer·실제 Edit 설치·전체 미션 자연 완주·동일성 검증이 남아 있다.
 - **원시 증거 위치:** 빌드·검사·GUI 원시 로그와 통합 드라이버는 `extracted/`(Git 제외)에 있으며, 작업한 PC(주로 HJOW-Athlon)에만 있다. 커밋되는 결과 보고서는 `cpppj/*.json`, 작업 문서는 `docs/exe/cpp-*.md`다.
 - 원격 저장소에 push하지 않는다. 커밋 메시지는 `YYYYMMDD-NN CP 요약` 형식이며, NN은 `git log`로 그날의 마지막 번호를 확인해 정한다.
 
@@ -87,7 +87,7 @@
 
 ## 3. 앞으로 할 작업 (권장 순서)
 
-### 0. 2026-10-26 재개 — 461까지 완료
+### 0. 2026-10-26 재개 — 462까지 완료
 
 - **452 기준 제품:** Source6(2,039소스), `NetstormCpp.exe` SHA `471ec293…`, Release build6 종료0·경고/오류0, 집중444고유/444관측·실패0(기존 신규6개 전부)이다. 실제 복사본 GUI에서 QWASZX 여섯 슬롯·회전/반대 회전·합법 위치 배치(새 서버 다리15211)·보충을 확인했다. 원본/CD 등 보호1,821파일은 동일하다.
 - **복구:** 두 신규 fixture 조회에 `<filesystem>`과 `LoadFixture(const char*)`의 문자열 인자를 명시했다. Source5에서 드러난 기존 `CampaignObjectMenuTests`의 Sid 접근형4진단도 같은 숫자의 DWORD 비교/실제 소비 직전 checked SID변환으로 고쳤다. 신규 바이트 채움의 C4244 두 원인도 `uint8_t{}`로 교정했다. 기존 단언·Native fixture·신규6개 검사 이름은 유지했다.
@@ -131,6 +131,8 @@
 - [x] **460 완료:** 실제 PE0043b540/00422490의64관측을 제품 전에 고정했다(하위 치환 없음). 같은 links.ownerColors의 앞9DWORD0..8과 같은 Storage의 다리 스캔 범위/커서/현재float 지연·double 기한을 Native Effect에 연결했다. 색 표는 원문 위치상 World 반납 앞에서도 허용하고 스캔은 반납 뒤만 허용한다. 실제 초기 first/last는 PE의-1로 교정했다. Source3(2059소스) build3 경고/오류0·집중222·신규5·실패0, 게임01324a3b이다. 기존 검사 본문·653자료(TSV650)·원본/CD 등 보호1821파일을 보존했다. 첫 집중의 새 두 Client 입력은 단일 Client 제약으로 실패했고 독립 표면 owner를 넘겨 같은 거부/미변경을 검증하도록 교정했다. Native 기대/기존 단언은 유지했다. 전체CTest/GUI는 반복하지 않았고 마지막 전체는459의3130개다. 전체 State1 조립·실제 Edit 설치·원문 Frame의 다리 스캔 호출은 아직 미완료다. 마지막 전체 정밀 디컴파일 HJOW-Athlon/2026-10-23 그대로다. [460 문서](docs/exe/cpp-state-bridge-reset-runtime-20261026.md), [실행 보고서](cpppj/state-bridge-reset-runtime-20261026.json), 원시 `extracted/cpp-state-bridge-reset-460-*`.
 
 - [x] **461 완료:** 원문00469fc0→004558f0(0,4000)의 전투 음악도 공통00532710을 소비하므로, 기존 timeGetTime 별도 시드 대신 실제 ClientRandomGlobals::Game()을 일반/noAudio 음향에 연결했다. 독립 정수 시드 생성자는 유지하고 생성/종료/구성 실패의 공통 상태 쓰기를 추가하지 않았다. 기존 Native6시드·실제 SP 교차 소비·실제 Client 초기화/반납 등 신규4개 포함 집중41개·실패0, Release build2 종료0·경고/오류0이다. 게임SHA는dde9d6dc이며 기존 검사 본문/fixture654파일과 이번 명시 보호범위(originals/CD/AGENTS)1820파일은 검사 전후 같다. 과거1821파일 manifest와 같은 집합으로 간주하지 않는다. 전체CTest/GUI는 반복하지 않았으며 공통 난수 소비가 바뀐 다음 제품의 통합 검증은 후속이다. 마지막 전체 정밀 디컴파일 HJOW-Athlon/2026-10-23은 그대로다. [461 문서](docs/exe/cpp-scene-random-runtime-20261026.md), [실행 보고서](cpppj/scene-random-runtime-20261026.json), 원시 `extracted/cpp-scene-random-461-*`. 전체 State1/Edit·전체 미션 완주·화면/음향 동일성 완료는 아니다.
+
+- [x] **462 완료:** `ClientStateRuntimeRetirement`가 실제 AI owner1..8·9Deck·Kernel Clear 증빙을 현재 Client/Session에 연결한다. ClearKernel 뒤에도 UI 정리/교체가 현재 처리기를 쓸 수 있게 보관하고 실제 known0/Core0 뒤 모든 증빙을 확인하여 처리기→외부 Session 소유자→고정뷰를 반납한다. 첫 메뉴도 실제 brain/Player 링크/Kernel을 조회·정리하며 비영 자식의 장치 부재는 도달 위치에서 거부한다. 실제 반납 없는 callback·다른 소유자/Kernel·이전 대여 세대를 거부하고 처리기 반납 뒤의 실제 소유자 반환은 재시도 가능하다. Release build1 경고/오류0·신규4개 포함 집중197고유/202관측·실패0, 게임3f570713이다. 기존 검사 본문과461의 보호1820/fixture654 집합은 유지했다. 전체CTest/GUI는 반복하지 않았다. 마지막 정밀 디컴파일 HJOW-Athlon/2026-10-23 그대로다. [462 문서](docs/exe/cpp-state-runtime-coordinator-20261026.md), [실행 보고서](cpppj/state-runtime-coordinator-20261026.json), 원시 `extracted/cpp-state-runtime-coordinator-462-*`. 다음 전체 부모는 원문 Core0와 두 직접 store 뒤 resetPool의 실제 Pool reset 앞에서 이 조정기를 호출해야 한다. `UberGump::ClearWorld()`는 기한/미션 정지/전역 쓰기가 섞여 있으므로 실제 반납 callback으로 그대로 호출하지 않고 참조 해제와 중복 게임 쓰기를 분리한다. 전체 State1/Edit 설치·자연 완주는 아직 미완료다.
 
 ### 2. Edit 메뉴 완성
 

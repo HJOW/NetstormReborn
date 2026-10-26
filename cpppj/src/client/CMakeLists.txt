@@ -2,6 +2,8 @@
 # (ClientMain·UserInput·Gump 계열·Screen·Renderer·Sound·State·Mission 등)
 # 다시 만든 파일을 아래 목록에 더한다. 파일 이름은 SOURCE_MAP.md 의 "cpppj 경로"를 따른다.
 target_sources(netstorm PRIVATE
+    # State 부모의 실제 AI/Deck/Kernel 증빙을 Core0 뒤 Session 반납으로 연결한다.
+    ClientStateRuntimeRetirement.cpp ClientStateRuntimeRetirement.h
     # 기존 Editor checkpoint 이후의 실제 State/입력 고리와 장치 순서를 연결한다.
     ExistingEditorAfterCheckpoint.cpp ExistingEditorAfterCheckpoint.h
     # 실제게임메뉴부모·명령ID와Tell지역param파서를같은Client/Session에연결한다.
