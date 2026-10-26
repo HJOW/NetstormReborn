@@ -383,3 +383,6 @@ TEST_CASE(RawMenuControls_MinimapReplacementKeepsCurrentWorldNotifications) {
     client.buttons.KillGump(oldToken);client.buttons.CleanupGumps();CHECK(client.buttons.Minimap()==&current);const auto sid=world->Create(157);world->Core().owner.Set(sid,1);world->Pop(sid,128,128,0);current.Refresh();CHECK(bitmap()!=empty);
     CHECK(world->Destroy(sid));current.Refresh();CHECK(bitmap()==empty);client.buttons.DisableMinimap();world.reset();CHECK(!storage->Borrowed());
 }
+
+// 같은 실제 트리의 전용 MetaImage 수명과 픽셀 검증이다.
+#include "RawMenuMetaImageTests.inc"

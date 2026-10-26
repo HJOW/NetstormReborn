@@ -13,6 +13,8 @@
 #include "client/GumpHelp.h"
 #include "client/SpriteColorMaps.h"
 #include "client/ImageGump.h"
+#include "client/MetaImageGump.h"
+#include "client/ProductionColorMaps.h"
 #include "client/RawNsInfoContext.h"
 #include "client/ClientGameplayGlobals.h"
 #include "client/HudNsInfoCreate.h"
@@ -107,6 +109,9 @@ struct RawMenuControls::Impl {
     std::vector<std::uint32_t> imageOwners;ScreenPoint imageShadow{5,5}; // 모드8/배율1의 비소유자 표와 안정된 그림자 전역이다.
     std::unique_ptr<QuickHelpWindow> helpWindow;std::unique_ptr<HtmlBodyGump> helpBody;std::unique_ptr<ImageGump> helpImage; // 기존 전체 몸체다.
     ImageGumpHooks activeImage; // Draw 동안 같은 실제 표면에 연결한다.
+    std::map<std::uint32_t,std::unique_ptr<MetaImageGumpNode>> metaImages; // 실제0xa8 파생은 창/목록의 Image를 빌린다.
+    std::unique_ptr<MetaImageGump> metaImage;MetaImageGumpHooks activeMetaImage; // 같은 공통 생성/부착/출력과 일시 픽셀 문맥이다.
+    ColorMap metaDisabled{}; // 원문00556038과 같은 파일 팔레트에서 만든 실제 비활성 색표다.
     mutable std::array<std::uint32_t,4> lastInput{}; // 실제 파생 가상 입력의 마지막 토큰/사건/좌표를 진단 보고에만 보관한다.
     std::map<std::uint32_t,std::unique_ptr<MenuGumpNode>> menus; // 같은 기본 배경을 가진 실제 메뉴 노드다.
     std::map<std::uint32_t,std::unique_ptr<GumpDecorationNode>> decorations; // 실제 모서리 장식 노드다.
@@ -193,6 +198,9 @@ struct RawMenuControls::Impl {
             fh.kill=[this](auto token) { common.lifetime.Kill(token); };fh.attach=common.attach;
             fh.reference=[](auto,auto) { throw std::logic_error("비용 표시00464540의 실제 객체 참조 미연결"); };
             fh.deleteText=[this](auto token,auto flags) { return costText->DeleteScalar(token,flags); };costGump=std::make_unique<FloatingSpGump>(common.create,std::move(fh));
+            MetaImageGumpHooks meta;meta.node=[this](auto token) { return Find(metaImages,token); };meta.attach=[this](auto token,float x,float y,auto parent,auto mode) { common.tree.Attach(token,x,y,parent,mode); };
+            meta.position=[this](auto token) { return common.collection.Position(token); };meta.color=[this](auto color) { activeMetaImage.color(color); };meta.draw=[this](auto request) { activeMetaImage.draw(request); };
+            metaImage=std::make_unique<MetaImageGump>(common.create,common.factory,std::move(meta));metaDisabled=BuildProductionColorMaps(picturePalette).disabled;
         }
         ScrollGumpHooks sl;sl.node=[this](auto token) { return Find(sliders,token); };sl.thumbNode=[this](auto token) { return Find(thumbs,token); };sl.baseNode=common.node;sl.push=[this](auto token) { common.tree.Push(token); };sl.attach=common.attach;sl.redraw=[this](auto,bool) { common.changed(); };sl.poll=hooks.poll;
         slider=std::make_unique<ScrollGump>(common.create,sliderState,common.tree,common.collection,common.events,common.input,std::move(sl));
@@ -313,6 +321,7 @@ struct RawMenuControls::Impl {
     #include "client/RawMenuSaveFort.inc" // 같은 장식/문자/두 버튼과 실제 작업본으로 Save as를 조립한다.
     // 모든 공통 처리는 같은 실제 파생 기본 주소를 받는다.
     GumpCreateNode* Node(std::uint32_t token) const {
+        if (auto* node=Find(metaImages,token)) return node;
         if (auto* node=Find(saveFortRoots,token)) return node;
         if (auto* node=Find(htmlRoots,token)) return node;
         if (gifWindows) if (auto* node=gifWindows->Node(token)) return node;
@@ -338,6 +347,7 @@ struct RawMenuControls::Impl {
     }
     // 각 실제 가상 Attach를 현재 분류로 호출한다.
     void Attach(std::uint32_t token,float x,float y,std::uint32_t parent,std::uint32_t mode) const {
+        if (metaImages.contains(token)) { metaImage->Attach(token,x,y,parent,mode);return; }
         if (htmlRoots.contains(token)) { if (!htmlContext->read) throw std::logic_error("HTML 실제 현재 뷰/화면 전역 미연결");htmlFit->Attach(token,x,y,parent,mode); }else if (chatRoots.contains(token)) chatWindow->Attach(token,x,y,parent,mode);else if (textEntries && textEntries->Node(token)) textEntries->Attach(token,x,y,parent,mode);else if (nsRoots.contains(token)) nsGeometry->Attach(token,x,y,parent,mode);else if (nsPlayers.contains(token)) nsCreate->AttachPlayer(token,x,y,parent,mode);else if (nsBattles.contains(token)) nsCreate->AttachBattle(token,x,y,parent,mode);else if (helpWindows.contains(token)) helpWindow->Attach(token,x,y,parent,mode);else if (helpBodies.contains(token)) helpBody->Attach(token,x,y,parent,mode);else if (helpButtons.contains(token)) common.stones.Attach(token,x,y,parent,mode);
         else if (helpImages.contains(token)) helpImage->Attach(token,x,y,parent,mode);else if (menus.contains(token)) widgets->Attach(token,x,y,parent,mode);else if (titles.contains(token)) titleWidgets->Attach(token,x,y,parent,mode);
         else if (sliders.contains(token)) slider->Attach(token,x,y,parent,mode);else if (arrows.contains(token)) common.stones.Attach(token,x,y,parent,mode);else common.tree.Attach(token,x,y,parent,mode);
@@ -530,7 +540,15 @@ void RawMenuControls::DeleteScalar(std::uint32_t token,std::uint32_t flags) cons
     else if (s.decorations.contains(token)) s.decoration->DeleteScalar(token,flags);else if (s.costs.contains(token)) s.costGump->DeleteScalar(token,flags);else if (s.plainTexts.contains(token)) s.costText->DeleteScalar(token,flags);else if (s.sliders.contains(token) || s.thumbs.contains(token) || s.arrows.contains(token)) s.sliderWidgets->DeleteScalar(token,flags);else s.common.lifetime.DeleteScalar(token,flags);
 }
 // 공통 scalar의 release만 실제 저장소를 지운다.
-void RawMenuControls::Release(std::uint32_t token) { auto& s=*impl_;s.saveFortOwned.erase(token);s.saveFortContexts.erase(token);s.saveFortRoots.erase(token);s.htmlOwned.erase(token);s.htmlConstructed.erase(token);s.htmlLinkBases.erase(token);s.htmlRoots.erase(token);if (s.gifWindows) s.gifWindows->Release(token);s.chatOwned.erase(token);s.chatRoots.erase(token);if (s.textEntries) s.textEntries->Release(token);s.nsOwned.erase(token);s.nsRoots.erase(token);s.nsPlayers.erase(token);s.nsBattles.erase(token);s.nsButtons.erase(token);s.plainTexts.erase(token);s.helpStrings.erase(token);s.helpWindows.erase(token);s.helpBodies.erase(token);s.helpButtons.erase(token);s.helpImages.erase(token);s.helpLinks.erase(token);s.menus.erase(token);s.decorations.erase(token);s.titles.erase(token);s.sliders.erase(token);s.arrows.erase(token);s.thumbs.erase(token);s.backgrounds.erase(token);s.costs.erase(token); }
+void RawMenuControls::Release(std::uint32_t token) { auto& s=*impl_;s.metaImages.erase(token);s.saveFortOwned.erase(token);s.saveFortContexts.erase(token);s.saveFortRoots.erase(token);s.htmlOwned.erase(token);s.htmlConstructed.erase(token);s.htmlLinkBases.erase(token);s.htmlRoots.erase(token);if (s.gifWindows) s.gifWindows->Release(token);s.chatOwned.erase(token);s.chatRoots.erase(token);if (s.textEntries) s.textEntries->Release(token);s.nsOwned.erase(token);s.nsRoots.erase(token);s.nsPlayers.erase(token);s.nsBattles.erase(token);s.nsButtons.erase(token);s.plainTexts.erase(token);s.helpStrings.erase(token);s.helpWindows.erase(token);s.helpBodies.erase(token);s.helpButtons.erase(token);s.helpImages.erase(token);s.helpLinks.erase(token);s.menus.erase(token);s.decorations.erase(token);s.titles.erase(token);s.sliders.erase(token);s.arrows.erase(token);s.thumbs.erase(token);s.backgrounds.erase(token);s.costs.erase(token); }
+// 생성자는 같은 등록표를 사용하고 Image의 소유권은 호출자에게 남긴다.
+std::uint32_t RawMenuControls::CreateMetaImage(RawImage& image) {
+    auto& s=*impl_;if (!s.metaImage) throw std::logic_error("MetaImage 실제10.78 공장 미설치");const auto token=s.common.token();s.metaImages.emplace(token,std::make_unique<MetaImageGumpNode>());return s.metaImage->Construct(token,image);
+}
+// 같은 원문 파생 저장소를 빌리며 이미 반납한 토큰에는 nullptr를 반환한다.
+MetaImageGumpNode* RawMenuControls::MetaImageNode(std::uint32_t token) const { return Find(impl_->metaImages,token); }
+// 현재 판본의 실제 메타 이미지 몸체를 빌린다.
+const MetaImageGump& RawMenuControls::MetaImageBackend() const { if (!impl_->metaImage) throw std::logic_error("MetaImage 실제10.78 처리기 없음");return *impl_->metaImage; }
 // 전체 Native wrapper를 호출하며 첫0xd8의 파생 종류 문맥은 예외에도 반납한다.
 std::uint32_t RawMenuControls::CreateNsInfo(RawNsInfoContext context) {
     auto& s=*impl_;s.BindNs(std::move(context));s.nsRootAllocation=true;
@@ -672,13 +690,15 @@ void RawMenuControls::Draw(std::span<std::uint8_t> pixels,int pitch,int height,c
     SetGumpDrawClip(s.clip,region);GumpPixelTarget target(pixels,pitch,height,s.clip);GumpTextDraw text(s.fonts,MakeGumpGlyphPixelHooks(target,s.colors),s.assets.Edition());GumpBackgroundPixelTarget bgPixels(target,s.backgroundAssets,maps,s.colors.vfxColors);MarkupPixelTarget picturePixels(target,s.markupAssets,s.colors.vfxColors,s.pictureColors);
     std::unique_ptr<ImageGumpPixelTarget> helpPictures; // 10.78 전용 Help를 설치한 판본에서만 해당 픽셀 처리기를 생성한다.
     if (s.helpImage) { helpPictures=std::make_unique<ImageGumpPixelTarget>(target,s.assets,s.pictureColors,[](auto) -> ColorMap { throw std::logic_error("Help 모드8 이외 소유자 색표 미연결"); });s.activeImage=helpPictures->Hooks({}); }
+    if (s.metaImage) s.activeMetaImage=BindMetaImagePixels({},target,s.colors.vfxColors,s.metaDisabled);
     s.activeText=&text;s.activeBackground=bgPixels.Hooks(s.clip);s.activePicture=picturePixels.Hooks({});GumpDrawHooks draw;
     // 예외 반환에서도 현재 표면을 참조한 일시 훅을 파기해 다음 출력에 댕글링 참조를 남기지 않는다.
     struct ResetDraw {
         Impl& state; // 현재 출력 동안만 연결된 실제 픽셀 문맥이다.
-        ~ResetDraw() { state.activeText=nullptr;state.activeBackground={};state.activePicture={};state.activeImage={}; } // 정상/예외 반환의 같은 정리다.
+        ~ResetDraw() { state.activeText=nullptr;state.activeBackground={};state.activePicture={};state.activeImage={};state.activeMetaImage={}; } // 정상/예외 반환의 같은 정리다.
     } reset{s};
     draw.draw=[&](auto token) {
+        if (s.metaImages.contains(token)) { s.metaImage->Draw(token);return; }
         if (s.gifWindows && s.gifWindows->Node(token)) s.gifWindows->Draw(token,target);else if (s.textEntries && s.textEntries->Node(token)) s.textEntries->Draw(token,text,target);else if (s.helpButtons.contains(token)) s.common.stones.Draw(token,s.common.collection,text,target);else if (s.helpImages.contains(token)) s.helpImage->Draw(token);else if (const auto* external=s.External(token)) external->draw(token,target,s.colors,*s.backgroundDraw);else if (s.costs.contains(token) || s.plainTexts.contains(token)) s.costText->Draw(token);else if (s.nsButtons.contains(token)) throw std::logic_error("PlayerInfo 전용 버튼의 전체 메타맵 Draw 미연결");else if (s.saveFortRoots.contains(token) || s.htmlRoots.contains(token) || s.decorations.contains(token)) s.decoration->Draw(token);else if (s.titles.contains(token)) s.title->Draw(token);else if (s.arrows.contains(token)) s.sliderWidgets->DrawArrow(token,s.common.collection,text,target);
         else if (s.thumbs.contains(token)) s.sliderWidgets->DrawThumb(token,s.common.collection,*s.backgroundDraw);else if (s.Background(token)) s.backgroundDraw->Draw(token);
     };

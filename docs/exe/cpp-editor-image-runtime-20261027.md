@@ -31,3 +31,5 @@
 원시 로그와 최종 소스 manifest는 `extracted/cpp-editor-image-475/`, 실제 명령·종료값·SHA는 [실행 보고서](../../cpppj/editor-image-runtime-20261027.json), 원문 범위는 [Native 보고서](../../cpppj/editor-image-native-20261027.json)에 둔다. 실제 게임/GUI/음향 장치는0회다.
 
 다음은 실제 `0047f2a0` MetaImage의 생성, `0047cbd0`의 image 크기+1, `0047cc00`의 Attach 후 배율, `0047cae0`의 plain/mapped/배율 Draw다. Draw의 기준점은 실제 image 폭/높이를 더하므로 crop 크기와 VFX 기준점의 차이를 유지해야 한다. 이후21개 목록과 Add Island 창의 생성/Refresh/Idle/소멸·단일 창 수명을 같은 공통 트리에 연결한다. 전체 Edit/시나리오와 모든 미션의 자연 완주/원본 전체 동일성 목표는 계속 미완료다.
+
+**476 후속:** 실제 MetaImage 생성/측정/부착 뒤 배율/Draw를 원본326행과 대조하고 공통 등록·트리·픽셀/클립·지연 삭제에 연결했다. 최종 Release 경고/오류0·전체C++3,250개·실패0이며 Native raster와 C++ 픽셀 증거의 범위를 구분했다. 목록과 전체 창은 후속이다. [후속 문서](cpp-meta-image-runtime-20261027.md)를 본다.

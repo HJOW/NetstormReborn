@@ -1,0 +1,277 @@
+{
+  "unit": 476,
+  "date": "2026-10-27",
+  "host": "HJOW-Athlon",
+  "baseCommit": "479ff24c",
+  "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+  "decompileChanged": false,
+  "builds": [
+    {
+      "command": [
+        "cmake",
+        "--build",
+        "cpppj/build",
+        "--config",
+        "Release",
+        "--parallel",
+        "4",
+        "--",
+        "/p:UseMultiToolTask=true",
+        "/p:MultiProcMaxCount=4",
+        "/p:EnforceProcessCountAcrossBuilds=true"
+      ],
+      "exit": 1,
+      "log": "extracted/cpp-meta-image-476/build1.log",
+      "sha256": "ffd86aa254c39e075618242d72fd9fe99cd247f976d7a23b3f71aad887499e22",
+      "summaries": [],
+      "diagnostics": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\tests\\RawMenuControlsTests.cpp(388,10): error C2001: 문자열 리터럴 내 줄 바꿈 [H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\tests\\netstorm_tests.vcxproj]",
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\tests\\RawMenuControlsTests.cpp(388,10): error C1083: 포함 파일을 열 수 없습니다. ' RawMenuMetaImageTests.inc\\n': No such file or directory [H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\tests\\netstorm_tests.vcxproj]"
+      ]
+    },
+    {
+      "command": [
+        "cmake",
+        "--build",
+        "cpppj/build",
+        "--config",
+        "Release",
+        "--parallel",
+        "4",
+        "--",
+        "/p:UseMultiToolTask=true",
+        "/p:MultiProcMaxCount=4",
+        "/p:EnforceProcessCountAcrossBuilds=true"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-meta-image-476/build2.log",
+      "sha256": "dece293b101d7eb5c2c52d25b246853dc25ff676d2cfc4ee642eb78e044af6e8",
+      "summaries": [],
+      "diagnostics": []
+    }
+  ],
+  "nativeSmoke": {
+    "command": [
+      "python",
+      "-X",
+      "utf8",
+      "tools/decomp_meta_image.py",
+      "--smoke"
+    ],
+    "exit": 0,
+    "log": "extracted/cpp-meta-image-476/native-smoke1.log",
+    "sha256": "ccb3a6b30beee8d62daf21471a932c66a05c8cc0506901ee5d35ef8186b3504a",
+    "summaries": [],
+    "diagnostics": []
+  },
+  "nativeGenerate": {
+    "command": [
+      "python",
+      "-X",
+      "utf8",
+      "tools/decomp_meta_image.py"
+    ],
+    "exit": 0,
+    "log": "extracted/cpp-meta-image-476/native-generate1.log",
+    "sha256": "521b3a70be3c155573ee99ae0d8826955500380885a7f9be141bcf9139dbf870",
+    "summaries": [],
+    "diagnostics": []
+  },
+  "nativeVerify": {
+    "command": [
+      "python",
+      "-X",
+      "utf8",
+      "tools/decomp_meta_image.py",
+      "--verify"
+    ],
+    "exit": 0,
+    "log": "extracted/cpp-meta-image-476/native-verify1.log",
+    "sha256": "0996f8383cb988a6eacc893b36d0621efd84b22074ec656b114848a9fa3bdcd5",
+    "summaries": [],
+    "diagnostics": []
+  },
+  "nativeReport": "cpppj/meta-image-native-20261027.json",
+  "nativeObservations": 326,
+  "corrections": [
+    "첫 빌드의 새 검사 include 문자열/한국어 주석2곳을 수정했다. 기존 검사 본문은 바이트 접두부로 보존했다.",
+    "Source 최종판은 build2 뒤 동결했다. 제품 원본 로직의 검사 실패나 기존 기대값 변경은 없었다."
+  ],
+  "initialCommentAudit": {
+    "path": "extracted/cpp-meta-image-476/initial-comment-audit.json",
+    "sha256": "bf832e512ffa20e46191622a626bdeb7b2dc13c1ef42d893972ce86e6d39a572"
+  },
+  "focused": [
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "MetaImage"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-meta-image-476/focused2-MetaImage.log",
+      "sha256": "8004323d9e15f34a44b7aaf1546eb8fd4adb0850a2f7b1091214019f9ce52fd7",
+      "summaries": [
+        "2 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "RawMenuControls"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-meta-image-476/focused2-RawMenuControls.log",
+      "sha256": "72e485c814ab8a1456410ce8591105388e15f7a54d55c02e2dc9ed1f4e0a6581",
+      "summaries": [
+        "14 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "ImageGump"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-meta-image-476/focused2-ImageGump.log",
+      "sha256": "59420ab222db81dde1c3db70e4b716f375fe5c3556a93eba256342ba913bcfb1",
+      "summaries": [
+        "3 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "EditorImage"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-meta-image-476/focused2-EditorImage.log",
+      "sha256": "ce2dbf8b7e712b740d2b6a4952aafcda1e9f1cad8f3afff3c91ec3a4702ae8a6",
+      "summaries": [
+        "2 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "MenuCheck"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-meta-image-476/focused2-MenuCheck.log",
+      "sha256": "98bebb032a9c2a1a45c47ed6be61a2762f2e2ad8156422a199b22ecb2656c56a",
+      "summaries": [
+        "3 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "EditorIsland"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-meta-image-476/focused2-EditorIsland.log",
+      "sha256": "e9544b5422c2578b7d9b47e6aade5fea2157c65fc0d80a4d89807e5632dd6401",
+      "summaries": [
+        "4 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "ExistingEditor"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-meta-image-476/focused2-ExistingEditor.log",
+      "sha256": "e1f1b9a026b8ee6f493beeb6d593c1e12b556d781d1235d73c8bb52e40809183",
+      "summaries": [
+        "58 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "NewFort"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-meta-image-476/focused2-NewFort.log",
+      "sha256": "4262fd2309d2e3dfa1a70e833eb3661567dcb8a7ecff51653d21d760a3ef670c",
+      "summaries": [
+        "13 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    }
+  ],
+  "uniqueFocused": 98,
+  "observedFocused": 99,
+  "wholeCpp": {
+    "command": [
+      "cpppj/build/bin/Release/netstorm_tests.exe"
+    ],
+    "exit": 0,
+    "log": "extracted/cpp-meta-image-476/whole1.log",
+    "sha256": "0236177465e040d37f57484763ea3c364783c9b6c3ac4a79904837d14a6643eb",
+    "summaries": [
+      "3250 test(s), 0 failed check(s)"
+    ],
+    "diagnostics": []
+  },
+  "wholeCppCases": 3250,
+  "ctestWrapperExecuted": false,
+  "registeredBefore": 3248,
+  "registeredAfter": 3250,
+  "newTests": [
+    "MetaImageGump_ReplaysNativeConstructorGeometryAndDraw",
+    "RawMenuMetaImage_ActualTreePixelsClipAndBorrowedImageLifetime"
+  ],
+  "missingPreviousTests": [],
+  "preservedWholeInputFiles": 3175,
+  "changedProtectedInputs": [],
+  "appendedExistingTest": {
+    "path": "cpppj/tests/RawMenuControlsTests.cpp",
+    "originalBytes": 46116,
+    "originalSha256": "ba720eaa4669fe80287f7420e1c9e7c0350c563bd1d0f593e37b1c92fa73aecb",
+    "originalBytePrefixPreserved": true
+  },
+  "sourceManifest": {
+    "path": "extracted/cpp-meta-image-476/source-final.json",
+    "files": 2820,
+    "sha256": "8eb77cce303d09330eaac38a60010764142739547ac32373d38c2ee6f091679f"
+  },
+  "gameExeSha256": "1856b2a8629998974c117c674aabc01bf33ce1870cba3383711390fcd999bb58",
+  "testExeSha256": "6c3eeab0d4274f05af80f96f990448bd83dba1a88915116d6d6d96166b15cbb4",
+  "coverage": [
+    "원본 MetaImage 및 실제 기본 Gump 생성/등록",
+    "원본 측정/부착 뒤 비율float 저장·reciprocal·현재 Image 재조회",
+    "원본 unit 비트 비교·기준점/ftol·색표 및 Draw 인자 순서",
+    "같은 실제 공통 등록/트리/수집/클립/기존 RLE 픽셀·mapped 색표·지연 소멸",
+    "비소유 Image를 파생 소멸 뒤까지 보존"
+  ],
+  "limits": [
+    "Native의 기본 Attach 효과/위치·색표·픽셀 소비자는 명시 경계다. 이326행을 Native raster 픽셀 관측으로 주장하지 않는다.",
+    "공통 트리/픽셀/클립/수명은 실제 C++ 조립과 이전에 검증한 VFX 처리기로 검사했다."
+  ],
+  "gameRuns": 0,
+  "guiRuns": 0,
+  "audioDeviceRuns": 0,
+  "remaining": [
+    "21개 전용 목록의 생성/추가/배치/선택/소멸",
+    "Add Island 창 생성/Refresh/Idle/소멸/단일창 참조 수·공통 트리 조립",
+    "실제 새 맵/기존 맵 Add Island GUI와 저장/재진입",
+    "Test Battle/언어별 시나리오",
+    "전체 미션 자연 완주·화면/음향 동일성"
+  ]
+}

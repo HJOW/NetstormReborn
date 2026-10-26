@@ -2243,3 +2243,7 @@ set_source_files_properties(RewardSpBitsTests.cpp PROPERTIES COMPILE_DEFINITIONS
 # 원본 Image crop/실제 VFX 인코더/복사/이중 소멸의 전체 바이트를 재생한다.
 target_sources(netstorm_tests PRIVATE EditorImageTests.cpp)
 set_source_files_properties(EditorImageTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_EDITOR_IMAGE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/editor-image-x86.tsv\"")
+
+# 원본 MetaImage326행과 실제 공통 트리/픽셀/비소유 수명을 검증한다.
+target_sources(netstorm_tests PRIVATE MetaImageGumpTests.cpp)
+set_source_files_properties(MetaImageGumpTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_META_IMAGE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/meta-image-x86.tsv\"")
