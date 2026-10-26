@@ -13,6 +13,18 @@ namespace netstorm::o {
 inline constexpr std::size_t kProductionDeckBytes=0x160,kProductionEntryBytes=5,kProductionEntryCapacity=66;
 // 기존목록추가의원본진단위치다.호스트물리영역을넘는손상개수는별도로거부한다.
 enum class ProductionDeckAssertion { DuplicateType,Capacity,TypeTruncated,ChanceTruncated,PowerTruncated,RemainingTruncated };
+// 실제 Deck 블록과 opaque 주소만 장기 소유한다. Player/World 실행기나 반납 증빙은 보관하지 않는다.
+class RawProductionDeckStorage {
+public:
+    explicit RawProductionDeckStorage(std::uint32_t firstToken=0x30000000); // 최초 주소만 검증하며 getter 호출 전에는 할당하지 않는다.
+    std::uint32_t Get(std::span<std::uint8_t> players,std::uint32_t owner,const std::function<void(std::span<std::uint8_t>)>& fill); //0044f700의 현재 Player+68 조회/실제 할당/다섯 DWORD 초기화다.
+    std::span<std::uint8_t> Bytes(std::uint32_t token) const; // 현재 생존 블록의 실제352BYTE를 빌린다.
+    void Release(std::uint32_t token); // 원문 free(NULL)는 허용하며 비영은 같은 저장소의 생존 블록이어야 한다.
+private:
+    friend class RawProductionDeck; // 기존 Session 뷰의 소멸/반납 검증도 같은 실제 블록을 사용한다.
+    mutable std::map<std::uint32_t,std::array<std::uint8_t,kProductionDeckBytes>> blocks_; // 모든 World/HUD가 공유하는 유일한 실제 할당이다.
+    std::uint32_t next_; // 원문 크기352만큼 진행하며 새 Session에서 재설정하지 않는다.
+};
 // Player+68의32비트토큰에대응하는유일한Deck수명저장소다.다른Player사본은만들지않는다.
 class RawProductionDeck {
     struct RetirementLifetime {}; // 같은 실제 Deck 모듈의 C++ 수명을 구별하며 Native 게임 필드가 아니다.
@@ -30,7 +42,7 @@ public:
     // 할당직후의원본미초기화바이트를공급한다.0채움관찰기본값을묵시적으로넣지않는다.
     using Fill=std::function<void(std::span<std::uint8_t>)>;
     // PATCH Player9와현재templateOwner는player자체에서읽는다.할당기/진단대상은더오래살아야한다.
-    RawProductionDeck(RawPlayerWorld& player,Fill fill,std::function<void(ProductionDeckAssertion)> assertion={},std::uint32_t firstToken=0x30000000);
+    RawProductionDeck(RawPlayerWorld& player,Fill fill,std::function<void(ProductionDeckAssertion)> assertion={},std::uint32_t firstToken=0x30000000,std::shared_ptr<RawProductionDeckStorage> storage={});
     // 같은현재Player기록이더오래살아있어야한다.자신이소유한현재포인터만지운다.
     ~RawProductionDeck();
     RawProductionDeck(const RawProductionDeck&)=delete; // Player포인터와실제블록의단일소유자를유지한다.
@@ -71,8 +83,7 @@ private:
     RawPlayerWorld& player_; // 원본Player기록과templateOwner의장기저장소다.
     Fill fill_; // 실제할당직후바이트공급경계이며할당성공판정을대신하지않는다.
     std::function<void(ProductionDeckAssertion)> assertion_; // 원본assert를분기성공으로바꾸지않는진단이다.
-    mutable std::map<std::uint32_t,std::array<std::uint8_t,kProductionDeckBytes>> blocks_; // 각현재토큰의유일한실제블록이다.
-    mutable std::uint32_t next_; // 새블록마다원본물리크기만큼진행하는opaque32비트주소다.
+    std::shared_ptr<RawProductionDeckStorage> storage_; // Client의 장기 물리를 빌리며 독립 검사만 자체 저장소를 소유한다.
 };
 // 004929e0의현재기술부모/반환kindWORD/실제contained생성사슬이다.타입assert를임의로추가하지않는다.
 class RawIndicateTechnology {

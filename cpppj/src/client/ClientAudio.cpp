@@ -151,6 +151,10 @@ const SoundView& ClientAudio::View() const { return state_.view; }
 
 // 장면 음악의 읽기 전용 상태다.
 const SceneMusicState& ClientAudio::Scene() const { return scene_; }
+// Native State와 로그인 Timer가 원래 장면 음악이 읽던 같은 결과 DWORD를 직접 사용한다.
+std::uint32_t& ClientAudio::ResultState() { return scene_.resultState; }
+// 읽기 전용 조회도 같은 필드 주소를 유지하며 상태를 초기화하지 않는다.
+const std::uint32_t& ClientAudio::ResultState() const { return scene_.resultState; }
 
 // 같은 double의 객체 표현8BYTE만 복사해 -0/NaN payload도 부동소수 산술이나 다른 기한 변경 없이 보존한다.
 void ClientAudio::WriteSongEndBits(std::uint64_t bits) noexcept { std::memcpy(&scene_.songEnd,&bits,sizeof(bits)); }

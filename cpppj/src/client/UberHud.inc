@@ -97,10 +97,10 @@ void UberGump::ApplyHudModeForState(std::uint32_t mode) { rawButtons_->NotifyHud
 void UberGump::InstallHud() {
     if (!world_ || client_.Assets().Edition()!=o::OriginalEdition::Patch1078) return;EnsureHudFactories();
     if (!rawButtons_->UberRoot()->Current()) {
-        ReplaceHudForState();rawButtons_->HandleGump(rawButtons_->RootToken(),0x0200003dU,3,0); // 기존 미션 설치 위치에서 실제 일반 HUD mode3을 적용한다.
+        ReplaceHudForState(); //원문 State 정리가 이미 만든 실제 루트도 아래 첫 World 대여에서 같은 도킹을 수행한다.
     }
     rawButtons_->UberRoot()->Reflow(); // 같은 기존 구분선/등록/드래그 위치를 화면 장치 크기 전환에서도 유지한다.
     rawButtons_->Production()->SetPalette(client_.GetScreen().Palette(),client_.ColorSortInput()->Logical());rawButtons_->Minimap()->SetPalette(client_.GetScreen().Colors());
-    const auto minimap=rawButtons_->Minimap()->RootToken();if (hud_->boundMinimap!=minimap) { rawButtons_->Minimap()->BindWorld(world_->Session().Core());hud_->boundMinimap=minimap; } //초기 생성 뒤 첫 실제 World에서만 같은 물리의 통지를 빌린다.
+    const auto minimap=rawButtons_->Minimap()->RootToken();if (hud_->boundMinimap!=minimap) { if (!client_.GameplayGlobals()->world.editor) rawButtons_->HandleGump(rawButtons_->RootToken(),0x0200003dU,3,0);rawButtons_->Minimap()->BindWorld(world_->Session().Core());hud_->boundMinimap=minimap; } //실제 일반 World의 첫 대여에서 mode3과 통지를 연결한다. Editor는 Native prefix/tail이 선택한 mode1을 유지한다.
     world_->BindMapView([this] { return rawButtons_->MapViewRect(); }); // 현재 지도 영역의 같은 저장소를 표시/미니맵/선택/음향에서 읽는다.
 }

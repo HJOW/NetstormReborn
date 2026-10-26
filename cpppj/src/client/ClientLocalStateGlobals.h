@@ -17,6 +17,14 @@ public:
     std::array<o::LocalMissionStateBlock,5>& Blocks() { return blocks_; } // old/phase/immediate/current/next 순서의 물리 배열 한 개다.
     const std::array<o::LocalMissionStateBlock,5>& Blocks() const { return blocks_; } // 진단도 같은720BYTE를 읽는다.
     o::LocalMissionStateStorage State() { return {blocks_[0],blocks_[1],blocks_[2],blocks_[3],blocks_[4]}; } // 기존 원문 분배기에 같은 블록 참조를 제공한다.
+    std::uint32_t& FirstMenuPending() { return firstMenuPending_; } //00542530의 초기1이며 WelcomeGiven 비영 분기의 안내 종료 위치에서만0을 쓴다.
+    const std::uint32_t& FirstMenuPending() const { return firstMenuPending_; } //재진입에서도 같은 현재 DWORD를 읽는다.
+    std::uint32_t& UserUpdated() { return userUpdated_; } //0054da8c의 BSS0이며 security.dat/명령줄 검증의 별도 writer를 기다리는 실제 저장소다.
+    const std::uint32_t& UserUpdated() const { return userUpdated_; } //Config의 같은 이름 키로 값을 대체하지 않는다.
+    std::uint32_t& TellTips() { return tellTips_; } //0053190c의 초기1과 실제 tellTips ReadInt writer가 같은 DWORD를 공유한다.
+    const std::uint32_t& TellTips() const { return tellTips_; } //State3는 Tell callback 뒤의 현재 옵션값을 이 주소에서 다시 읽는다.
+    std::uint32_t& TipNumber() { return tipNumber_; } //00531910의 초기1과 tipNumber ReadInt/실제 TellTip 순번 변경이 같은 DWORD를 공유한다.
+    const std::uint32_t& TipNumber() const { return tipNumber_; } //옵션 변경과 안내 재진입 뒤에도 같은 현재 순번 주소를 읽는다.
     double& ActivityEnd() { return activityEnd_; } // 기존 Login과 Editor가00544d58의 같은 벽시각 기한을 직접 쓴다.
     const double& ActivityEnd() const { return activityEnd_; } // 기한 사본이나 별도 Editor 타이머를 만들지 않는다.
     std::uint32_t& ZonePending() { return zonePending_; } // 005c85c0이며 실제 Fort 요청 작성과 State 정리가 같은 DWORD를 쓴다.
@@ -78,6 +86,8 @@ public:
     const std::array<std::uint32_t,255>& PlayerNoMakeWarnings() const { return playerNoMakeWarnings_; } //Session 대여 전후에도 같은 전체255DWORD를 조회한다.
 private:
     std::array<o::LocalMissionStateBlock,5> blocks_{}; //005c8630/8758/86c8/87e8/8878의 독립144BYTE 다섯 개다.
+    std::uint32_t firstMenuPending_{1},userUpdated_{},tellTips_{1}; //각 PE 초기값1/BSS0/1을 새 Client에서만 한 번 구성하며 State 교체로 되돌리지 않는다.
+    std::uint32_t tipNumber_{1}; //00531910의 PE 초기1이며 TellTips 옵션과 별개인 실제32비트 안내 순번이다.
     double activityEnd_{}; //00544d58의 최초 BSS0이며 게임 정지 가능한 시계로 바꾸지 않는다.
     std::uint32_t zonePending_{},sourceType_{},begin_{},centralCreated_{}; // 순서가 다른 Native 주소들의 명시 소유자이며 주소 산술 배열로 쓰지 않는다.
     bool savedGame_{}; // 기존 실제 소비자의 정상0/1 표현을 유지하며 임의 Native DWORD 모델은 후속이다.

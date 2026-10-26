@@ -45,7 +45,7 @@ void ClientStateRuntimeRetirement::ResetAi(std::uint32_t owner) {
 }
 void ClientStateRuntimeRetirement::ClearPlayerLinks() {
     if (auto* current=Current()) { auto pass=current->ClearPlayerLinksForState();Current()->ReturnPlayerLinksForState(std::move(pass)); }
-    else o::CleanupPlayerLinks({[this] { return client_.PlayerRecords()->Records(); },[](auto) { throw std::logic_error("현재 비영 Deck의 실제 반납 owner 누락"); }}); //첫 메뉴도 실제9기록의 무조건 쓰기를 수행하고 선택된 비영 free만 거부한다.
+    else o::CleanupPlayerLinks({[this] { return client_.PlayerRecords()->Records(); },[this](auto token) { client_.PlayerRecords()->ProductionDeckMemory()->Release(token); }}); //World 없는 HUD가 만든 같은 실제 Deck도 원문 free 위치에서 반납한다.
 }
 void ClientStateRuntimeRetirement::ClearKernel() {
     if (processes_) throw std::logic_error("같은 State Runtime의 단일 Kernel Clear 증빙 중복 생성");

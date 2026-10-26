@@ -1,0 +1,82 @@
+{
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": "HJOW-Athlon / 2026-10-23",
+  "originalGameExecuted": false,
+  "command": 33554635,
+  "rows": 166,
+  "normalReturns": 162,
+  "partialStops": 4,
+  "binarySha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+  "toolSha256": "bfe035e1da8598e8a3f8838f2852017cdd39c344a1f7828659b70197f0fa3334",
+  "gateToolSha256": "4caf1c87e4a152f65b2815395ea553b2609587be06a95512974b893e985b24e3",
+  "fixtureSha256": "6dce0bf479869104e0f85809b1c841655f79ea572e1a7486004f3a14b54e177e",
+  "codeEvidence": [
+    {
+      "first": "00445330",
+      "lastExclusive": "0044533e",
+      "sha256": "09612bd1e73b9e876d8342a734b7bb81c341ff6d100e1ffecdf6e3fb762cbc31",
+      "bytes": 14
+    },
+    {
+      "first": "00452fe0",
+      "lastExclusive": "0045303c",
+      "sha256": "120001e4faa9f48cd3e2fe547895b157c501b7458b70fb0a983fba3403097f56",
+      "bytes": 92
+    },
+    {
+      "first": "00460de0",
+      "lastExclusive": "00460def",
+      "sha256": "3cab06c9d5fcb713cd79dc1a30cb14b68c3e7fc0434d99fc9da595785f2a4f0e",
+      "bytes": 15
+    },
+    {
+      "first": "00463e40",
+      "lastExclusive": "00463f62",
+      "sha256": "7eca17cdceed2792d1d5548213ef63a0f9e3b491e4a8c3d5b9c20fe7b43dd3af",
+      "bytes": 290
+    },
+    {
+      "first": "004b3540",
+      "lastExclusive": "004b354b",
+      "sha256": "3da516416af07ddf2f3b92ac2461fe5c7335f9a1f72e1a6c69c5b8d80bd3923d",
+      "bytes": 11
+    },
+    {
+      "first": "004bfb50",
+      "lastExclusive": "004bfb98",
+      "sha256": "49581b3a793267978bbbd8e0118305389fe485ce9b1a99109c81e3665fb90460",
+      "bytes": 72
+    },
+    {
+      "first": "004d6e61",
+      "lastExclusive": "004da477",
+      "sha256": "462f2d16e9e121243d9ff1391557c8aea045760cc41677858be312d8d9309450",
+      "bytes": 13846
+    },
+    {
+      "first": "004e63d0",
+      "lastExclusive": "004e63d5",
+      "sha256": "129f1135daa1b60c707996d1ed0561b8f4731388ee1f4732c0a27db4c5e3a907",
+      "bytes": 5
+    },
+    {
+      "first": "004e63e0",
+      "lastExclusive": "004e649e",
+      "sha256": "832152b36fa9dcc0d0acbc02aaf1313b9465e54b60f70f26f95fd7d139ae088c",
+      "bytes": 190
+    }
+  ],
+  "codeImageUnchanged": true,
+  "replaced": [
+    "Guide virtual input result",
+    "Gump input result",
+    "004bf880 Battle snapshot child",
+    "004bf9a0 Fort snapshot child"
+  ],
+  "actualSmallParents": [
+    "004d815b SaveGoMain branch",
+    "004bfb50 current snapshot selection",
+    "004b3540 next3 store"
+  ],
+  "verifiedExistingFixture": true
+}

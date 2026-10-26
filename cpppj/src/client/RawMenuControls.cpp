@@ -26,6 +26,9 @@
 #include "client/TellMapMenus.h"
 #include "client/ClientDotCommandGlobals.h"
 #include "client/TextEntryStorage.h"
+#include "client/SaveFortNameDialog.h"
+#include "client/EditorFiles.h"
+#include <cctype>
 #include <cstdio>
 #include <set>
 #include "o/OriginalText.h"
@@ -52,6 +55,10 @@ struct RawMenuControls::Impl {
     std::unique_ptr<HudNsInfoCreate> nsCreate;std::unique_ptr<HudNsInfo> nsGeometry;bool nsRootAllocation{}; // 같은 Native 생성/일반 부착 몸체와 첫0xd8 할당의 형 문맥이다.
     std::set<std::uint32_t> nsOwned; // 원문 생성 경계가 직접 할당한50노드의 실제 토큰이다. 포인터 대입/부착 전 실패도 소유한다.
     std::unique_ptr<RawTextEntryControls> textEntries; // 같은 공통 수명/클립과 실제 문자 물리를 사용하는 편집 노드다.
+    std::map<std::uint32_t,std::unique_ptr<SaveFortNameDialogNode>> saveFortRoots; // 같은 장식/가상 분배가 사용하는 실제0xdc 부모다.
+    std::map<std::uint32_t,SaveFortNameDialogContext> saveFortContexts; // 각 부모보다 오래 유지하는 현재 작업본/이름 callback이다.
+    std::set<std::uint32_t> saveFortOwned; // 원문 포인터 대입 전 실패도 같은 실제 정리 대상으로 보관한다.
+    const SaveFortNameDialogContext* saveFortBuilding{};std::unique_ptr<SaveFortNameDialog> saveFortDialog; // 동기 생성 장치와 장기 원문 부모 처리기다.
     std::optional<RawChatWindowContext> chatContext; // 실제 Client 전역과 선택 장치 수명을 빌린다.
     std::map<std::uint32_t,std::unique_ptr<HudChatNode>> chatRoots;std::set<std::uint32_t> chatOwned; // 실제 root와 기본 생성 전 직접 할당도 소유한다.
     std::unique_ptr<ChatWindow> chatWindow;std::unique_ptr<HudChatGeometry> chatGeometry; // 같은 원문 공장/입력/일반 부착 본체다.
@@ -165,7 +172,7 @@ struct RawMenuControls::Impl {
         bgDraw.clip=[this](auto rect) { SetGumpDrawClip(clip,rect); };bgDraw.shade=[this](auto amount) { activeBackground.shade(amount); };
         bgDraw.shape=[this](auto request) { activeBackground.shape(request); };bgDraw.fill=[this](auto rect,auto color,auto checker) { activeBackground.fill(rect,color,checker); };bgDraw.line=[this](auto line) { activeBackground.line(line); };
         backgroundCreate=std::make_unique<GumpBackgroundCreate>(common.create,common.factory,backgroundColor,std::move(bg));backgroundDraw=std::make_unique<GumpBackgroundDraw>(common.collection,clip,backgroundState,std::move(bgDraw));
-        GumpDecorationHooks dh;dh.node=[this](auto token)->GumpDecorationNode* { if (auto* node=Find(htmlRoots,token)) return node;return Find(decorations,token); };dh.base=common.node;BindGumpDecorationAssets(dh,assets);
+        GumpDecorationHooks dh;dh.node=[this](auto token)->GumpDecorationNode* { if (auto* node=Find(saveFortRoots,token)) return node;if (auto* node=Find(htmlRoots,token)) return node;return Find(decorations,token); };dh.base=common.node;BindGumpDecorationAssets(dh,assets);
         dh.shape=[this](auto type,auto frame,auto point) { activeBackground.shape({type,frame,point,false}); };dh.invalidate=[this](auto) { common.changed(); };
         decoration=std::make_unique<GumpDecoration>(common.create,decorationState,*backgroundCreate,*backgroundDraw,common.collection,common.lifetime,std::move(dh));
         MarkupHooks ph;BindMarkupAssets(pictureState,ph,markupAssets);ph.color=[this] { if (!activePicture.color) throw std::logic_error("메뉴 그림 실제 Draw 색표 문맥 없음");activePicture.color(); };ph.shape=[this](auto request) { activePicture.shape(request); };pictures=std::make_unique<Markup>(fragments,pictureState,std::move(ph),assets.Edition());
@@ -301,8 +308,10 @@ struct RawMenuControls::Impl {
     }
     #include "client/RawMenuHtml.inc" // 같은 실제 장식/본문/돌 버튼과 부모 수명을 연결한다.
     #include "client/RawMenuChat.inc" // 같은 Impl 저장소에 실제 Chat 공장만 연결한다.
+    #include "client/RawMenuSaveFort.inc" // 같은 장식/문자/두 버튼과 실제 작업본으로 Save as를 조립한다.
     // 모든 공통 처리는 같은 실제 파생 기본 주소를 받는다.
     GumpCreateNode* Node(std::uint32_t token) const {
+        if (auto* node=Find(saveFortRoots,token)) return node;
         if (auto* node=Find(htmlRoots,token)) return node;
         if (gifWindows) if (auto* node=gifWindows->Node(token)) return node;
         if (auto* node=Find(chatRoots,token)) return node;
@@ -319,6 +328,7 @@ struct RawMenuControls::Impl {
     }
     // 배경을 공유하는 파생 객체만 현재 배경 필드로 연결한다.
     GumpBackgroundNode* Background(std::uint32_t token) const {
+        if (auto* node=Find(saveFortRoots,token)) return node;
         if (auto* node=Find(htmlRoots,token)) return node;
         if (textEntries) if (auto* node=textEntries->Node(token)) return node;
         if (auto* n=Find(menus,token)) return n;if (auto* n=Find(decorations,token)) return n;if (auto* n=Find(thumbs,token)) return n;
@@ -331,10 +341,11 @@ struct RawMenuControls::Impl {
         else if (sliders.contains(token)) slider->Attach(token,x,y,parent,mode);else if (arrows.contains(token)) common.stones.Attach(token,x,y,parent,mode);else common.tree.Attach(token,x,y,parent,mode);
     }
     // 기존 표시 통지와 원본의 실제 메뉴 재그리기 요청을 유지한다.
-    void Redraw(std::uint32_t token,bool erase) const { if (menus.contains(token)) menu->Redraw(token,erase);else if (decorations.contains(token)) decoration->Redraw(token,erase);else common.changed(); }
+    void Redraw(std::uint32_t token,bool erase) const { if (menus.contains(token)) menu->Redraw(token,erase);else if (decorations.contains(token) || saveFortRoots.contains(token)) decoration->Redraw(token,erase);else common.changed(); }
     // 부모가 전달한 원본 사건을 대상 자신에게 분배한다.
     std::uint32_t Handle(std::uint32_t token,std::uint32_t event,std::uint32_t first,std::uint32_t second) const {
         lastInput={token,event,first,second};
+        if (saveFortRoots.contains(token)) return saveFortDialog->Handle(token,event,first,second);
         if (htmlRoots.contains(token)) return htmlWindow->Handle(token,event,first,second);
         if (gifWindows && gifWindows->Node(token)) return gifWindows->Handle(token,event,first,second);
         if (chatRoots.contains(token)) {
@@ -448,7 +459,7 @@ struct RawMenuControls::Impl {
 RawMenuControls::RawMenuControls(RawMenuTree tree,const GameAssets& assets,FontStore& fonts,RawMenuHooks hooks):impl_(std::make_unique<Impl>(std::move(tree),assets,fonts,std::move(hooks))) {}
 // 노드는 소유자의 공통 GumpLifetime으로 먼저 삭제한다.
 RawMenuControls::~RawMenuControls() {
-    CloseHtmlWindows();CloseBackgroundGifs();CloseChatWindows();auto& s=*impl_;if (s.chatContext && s.chatContext->globals->uiOwner==&s) { s.buffers->Destroy(0x548758);s.chatContext->globals->uiOwner=nullptr; } // 표시 자식 뒤에 Client 공유 버퍼의 실제 조각을 반납한다.
+    CloseSaveFortNameDialogs();CloseHtmlWindows();CloseBackgroundGifs();CloseChatWindows();auto& s=*impl_;if (s.chatContext && s.chatContext->globals->uiOwner==&s) { s.buffers->Destroy(0x548758);s.chatContext->globals->uiOwner=nullptr; } // 표시 자식 뒤에 Client 공유 버퍼의 실제 조각을 반납한다.
 }
 // 실제 생산 자식도 기존 파서/글리프/배경과 같은 현재 문맥을 사용한다.
 void RawMenuControls::SetExternalGumps(RawMenuExternalGumps hooks) { SetExternalGumps(0,std::move(hooks)); }
@@ -507,14 +518,15 @@ void RawMenuControls::Idle(std::uint32_t token) const { if (impl_->htmlRoots.con
 void RawMenuControls::Redraw(std::uint32_t token,bool erase) const { impl_->Redraw(token,erase); }
 // 원본 파서·제목·메뉴가 소유한 자원을 각 소멸자로 반납한다.
 void RawMenuControls::DeleteScalar(std::uint32_t token,std::uint32_t flags) const {
-    auto& s=*impl_;if (s.htmlRoots.contains(token)) { if (s.htmlConstructed.contains(token)) s.htmlWindow->Destruct(token);else s.common.lifetime.DestructBase(token);if (flags&1) { s.htmlConstructed.erase(token);s.htmlOwned.erase(token);s.htmlLinkBases.erase(token);s.htmlRoots.erase(token); } }
+    auto& s=*impl_;if (s.saveFortRoots.contains(token)) s.decoration->DeleteScalar(token,flags);
+    else if (s.htmlRoots.contains(token)) { if (s.htmlConstructed.contains(token)) s.htmlWindow->Destruct(token);else s.common.lifetime.DestructBase(token);if (flags&1) { s.htmlConstructed.erase(token);s.htmlOwned.erase(token);s.htmlLinkBases.erase(token);s.htmlRoots.erase(token); } }
     else if (s.gifWindows && s.gifWindows->Node(token)) s.gifWindows->DeleteScalar(token,flags);else if (s.chatRoots.contains(token)) { s.chatWindow->Destruct(token);if (flags&1) { s.chatOwned.erase(token);s.chatRoots.erase(token); } } // 원문 scalar 반납은 같은 실제 Chat 저장소만 해제한다.
     else if (s.textEntries && s.textEntries->Node(token)) { s.textEntries->DeleteScalar(token,flags);if (flags&1) s.chatOwned.erase(token); }else if (s.helpWindows.contains(token)) { s.helpHistory=QuickHelpHistory{};s.popupState.command=0;s.common.lifetime.DeleteScalar(token,flags); } // 실제4c6d40은 이력/명령만 지우고80바이트 인자는 보존한다.
     else if (s.helpButtons.contains(token)) s.common.stones.DeleteScalar(token,flags);else if (s.menus.contains(token)) s.widgets->DeleteScalar(token,flags);else if (s.titles.contains(token)) s.titleWidgets->DeleteScalar(token,flags);
     else if (s.decorations.contains(token)) s.decoration->DeleteScalar(token,flags);else if (s.costs.contains(token)) s.costGump->DeleteScalar(token,flags);else if (s.plainTexts.contains(token)) s.costText->DeleteScalar(token,flags);else if (s.sliders.contains(token) || s.thumbs.contains(token) || s.arrows.contains(token)) s.sliderWidgets->DeleteScalar(token,flags);else s.common.lifetime.DeleteScalar(token,flags);
 }
 // 공통 scalar의 release만 실제 저장소를 지운다.
-void RawMenuControls::Release(std::uint32_t token) { auto& s=*impl_;s.htmlOwned.erase(token);s.htmlConstructed.erase(token);s.htmlLinkBases.erase(token);s.htmlRoots.erase(token);if (s.gifWindows) s.gifWindows->Release(token);s.chatOwned.erase(token);s.chatRoots.erase(token);if (s.textEntries) s.textEntries->Release(token);s.nsOwned.erase(token);s.nsRoots.erase(token);s.nsPlayers.erase(token);s.nsBattles.erase(token);s.nsButtons.erase(token);s.plainTexts.erase(token);s.helpStrings.erase(token);s.helpWindows.erase(token);s.helpBodies.erase(token);s.helpButtons.erase(token);s.helpImages.erase(token);s.helpLinks.erase(token);s.menus.erase(token);s.decorations.erase(token);s.titles.erase(token);s.sliders.erase(token);s.arrows.erase(token);s.thumbs.erase(token);s.backgrounds.erase(token);s.costs.erase(token); }
+void RawMenuControls::Release(std::uint32_t token) { auto& s=*impl_;s.saveFortOwned.erase(token);s.saveFortContexts.erase(token);s.saveFortRoots.erase(token);s.htmlOwned.erase(token);s.htmlConstructed.erase(token);s.htmlLinkBases.erase(token);s.htmlRoots.erase(token);if (s.gifWindows) s.gifWindows->Release(token);s.chatOwned.erase(token);s.chatRoots.erase(token);if (s.textEntries) s.textEntries->Release(token);s.nsOwned.erase(token);s.nsRoots.erase(token);s.nsPlayers.erase(token);s.nsBattles.erase(token);s.nsButtons.erase(token);s.plainTexts.erase(token);s.helpStrings.erase(token);s.helpWindows.erase(token);s.helpBodies.erase(token);s.helpButtons.erase(token);s.helpImages.erase(token);s.helpLinks.erase(token);s.menus.erase(token);s.decorations.erase(token);s.titles.erase(token);s.sliders.erase(token);s.arrows.erase(token);s.thumbs.erase(token);s.backgrounds.erase(token);s.costs.erase(token); }
 // 전체 Native wrapper를 호출하며 첫0xd8의 파생 종류 문맥은 예외에도 반납한다.
 std::uint32_t RawMenuControls::CreateNsInfo(RawNsInfoContext context) {
     auto& s=*impl_;s.BindNs(std::move(context));s.nsRootAllocation=true;
@@ -527,6 +539,22 @@ RawTextEntryControls& RawMenuControls::EnableTextEntry(RawTextEntryContext conte
         [&s](auto token) { return Find(s.sliders,token); },[&s](auto bytes) { return s.Allocate(bytes,1); },std::move(context));s.textEntries->SetPalette(s.palette); }return *s.textEntries;
 }
 RawTextEntryControls* RawMenuControls::TextEntryControls() const { return impl_->textEntries.get(); } // 실제 설치 여부만 관측한다.
+// 원문 공장을 호출하는 동안만 생성 번역 문맥을 빌리고 각 root에는 실제 장치 수명을 보관한다.
+std::uint32_t RawMenuControls::ShowSaveFortNameDialog(SaveFortNameDialogContext context,std::uint32_t fortMode,std::uint32_t canCancel,std::optional<std::string_view> initial) {
+    auto& s=*impl_;if (!context.work || !context.editor.now || !context.translate || !context.fortPath || !context.tell || (fortMode && (!context.header || !context.setName)) || (!fortMode && !context.readFort)) throw std::invalid_argument("Save as 실제 작업본/Client/이름 장치 누락");
+    EnableTextEntry(context.editor);s.BindSaveFortDialog();if (s.saveFortBuilding) throw std::logic_error("Save as 생성 안의 재귀 생성 미지원");s.saveFortBuilding=&context;
+    struct Reset { Impl& state;~Reset() { state.saveFortBuilding=nullptr; } }; // 정상/예외 반환에서 생성 지역 문맥 별칭만 반납한다.
+    Reset reset{s};return s.saveFortDialog->Show(fortMode,canCancel,context.currentName,initial);
+}
+// 실제 반납 전까지 같은 root/자식 필드를 읽으며 등록 또는 별도 복사본으로 대체하지 않는다.
+const SaveFortNameDialogNode* RawMenuControls::SaveFortNameNode(std::uint32_t token) const { return Find(impl_->saveFortRoots,token); }
+// Session 장치가 사라지기 전에 부분 생성도 같은 등록표·지연 Kill·자식 우선 소멸로 반납한다.
+void RawMenuControls::CloseSaveFortNameDialogs() {
+    auto& s=*impl_;
+    for (std::size_t id=1;id<s.common.create.entries.size();++id) { const auto token=s.common.create.entries[id];if (s.saveFortOwned.contains(token)) { const auto* node=s.common.node(token);if (node && !(node->flags&0x10000U)) s.common.lifetime.Kill(token); } } // 부착 전 실패한 등록 자식도 함께 정리한다.
+    s.common.lifetime.Cleanup();
+    while (!s.saveFortOwned.empty()) { const auto token=*s.saveFortOwned.begin();if (std::find(s.common.create.entries.begin(),s.common.create.entries.end(),token)!=s.common.create.entries.end()) throw std::logic_error("Save as 정리 뒤 등록 노드 잔류");Release(token); } // 기본 생성 전 미등록 할당만 직접 반납한다.
+}
 void RawMenuControls::CloseTextEntries() { if (impl_->textEntries) impl_->textEntries->Close(); } // 같은 공통 Kill/Cleanup이다.
 // 현재 실제 Client 파일/설정을 같은 공통 장치의 GIF 공장에 한 번 연결한다.
 RawBackgroundGifControls& RawMenuControls::EnableBackgroundGifs(RawBackgroundGifContext context) { auto& s=*impl_;if (!s.gifWindows) s.gifWindows=std::make_unique<RawBackgroundGifControls>(s.common,std::move(context),[&s](auto token,auto event,auto first,auto second) { return s.BaseHelp(token,event,first,second); });return *s.gifWindows; }
@@ -647,7 +675,7 @@ void RawMenuControls::Draw(std::span<std::uint8_t> pixels,int pitch,int height,c
         ~ResetDraw() { state.activeText=nullptr;state.activeBackground={};state.activePicture={};state.activeImage={}; } // 정상/예외 반환의 같은 정리다.
     } reset{s};
     draw.draw=[&](auto token) {
-        if (s.gifWindows && s.gifWindows->Node(token)) s.gifWindows->Draw(token,target);else if (s.textEntries && s.textEntries->Node(token)) s.textEntries->Draw(token,text,target);else if (s.helpButtons.contains(token)) s.common.stones.Draw(token,s.common.collection,text,target);else if (s.helpImages.contains(token)) s.helpImage->Draw(token);else if (const auto* external=s.External(token)) external->draw(token,target,s.colors,*s.backgroundDraw);else if (s.costs.contains(token) || s.plainTexts.contains(token)) s.costText->Draw(token);else if (s.nsButtons.contains(token)) throw std::logic_error("PlayerInfo 전용 버튼의 전체 메타맵 Draw 미연결");else if (s.htmlRoots.contains(token) || s.decorations.contains(token)) s.decoration->Draw(token);else if (s.titles.contains(token)) s.title->Draw(token);else if (s.arrows.contains(token)) s.sliderWidgets->DrawArrow(token,s.common.collection,text,target);
+        if (s.gifWindows && s.gifWindows->Node(token)) s.gifWindows->Draw(token,target);else if (s.textEntries && s.textEntries->Node(token)) s.textEntries->Draw(token,text,target);else if (s.helpButtons.contains(token)) s.common.stones.Draw(token,s.common.collection,text,target);else if (s.helpImages.contains(token)) s.helpImage->Draw(token);else if (const auto* external=s.External(token)) external->draw(token,target,s.colors,*s.backgroundDraw);else if (s.costs.contains(token) || s.plainTexts.contains(token)) s.costText->Draw(token);else if (s.nsButtons.contains(token)) throw std::logic_error("PlayerInfo 전용 버튼의 전체 메타맵 Draw 미연결");else if (s.saveFortRoots.contains(token) || s.htmlRoots.contains(token) || s.decorations.contains(token)) s.decoration->Draw(token);else if (s.titles.contains(token)) s.title->Draw(token);else if (s.arrows.contains(token)) s.sliderWidgets->DrawArrow(token,s.common.collection,text,target);
         else if (s.thumbs.contains(token)) s.sliderWidgets->DrawThumb(token,s.common.collection,*s.backgroundDraw);else if (s.Background(token)) s.backgroundDraw->Draw(token);
     };
     MenuGumpDrawHooks mh;mh.node=[&](auto token) { return Find(s.menus,token); };mh.base=s.common.node;GumpDecorationPixelTarget decorationPixels(target,s.assets);BindMenuGumpDrawAssets(mh,s.assets,decorationPixels);
@@ -659,6 +687,9 @@ void RawMenuControls::Draw(std::span<std::uint8_t> pixels,int pitch,int height,c
 // 실제 입력/출력과 같은 현재 배치에서 자동 입력 지점을 읽는다.
 std::optional<ScreenPoint> RawMenuControls::Point(std::string_view label) const {
     auto& s=*impl_;
+    if (const auto* root=s.common.life.dialogCount ? Find(s.saveFortRoots,s.common.life.dialogs[s.common.life.dialogCount-1]) : nullptr) {
+        for (const auto token:{root->ok,root->cancel}) { const auto* node=Find(s.helpButtons,token);if (node && std::string_view(node->label.data())==label) { const auto rect=s.common.collection.Bounds(token);return ScreenPoint{(rect.left+rect.right)/2,(rect.top+rect.bottom)/2}; } } // 실제 최상위 모달의 두 버튼만 현재 공통 경계로 읽는다.
+    }
     // 가장 위의 실제 모달 HTML 부모에서 돌 버튼의 현재 공통 경계를 읽는다.
     if (const auto* root=s.common.life.dialogCount ? Find(s.htmlRoots,s.common.life.dialogs[s.common.life.dialogCount-1]) : nullptr) {
         for (std::uint32_t index=0;index<root->controlCount;++index) { const auto* node=Find(s.helpButtons,root->controls[index].child);if (node && std::string_view(node->label.data())==label) { const auto rect=s.common.collection.Bounds(root->controls[index].child);return ScreenPoint{(rect.left+rect.right)/2,(rect.top+rect.bottom)/2}; } } // 생성 순서의 실제 controlCount 안에서만 조회한다.
@@ -736,6 +767,7 @@ bool RawMenuControls::Contains(ScreenPoint point) const {
 // 같은 실제 저장소의 개수/controlled 깊이를 진단 보고에 기록한다.
 std::string RawMenuControls::Report() const {
     auto& s=*impl_;std::ostringstream out;out<<"raw_menus\t"<<s.menuState.instances<<'\t'<<s.menuState.index<<'\t'<<s.menus.size()<<'\t'<<s.titles.size()<<'\t'<<s.fragments.fragments.size()<<'\n';
+    for (const auto& [token,node]:s.saveFortRoots) { out<<"raw_save_fort_name\t"<<token<<'\t'<<node->id<<'\t'<<node->serial<<'\t'<<node->flags<<'\t'<<node->entry<<'\t'<<node->ok<<'\t'<<node->cancel<<'\t'<<node->fortMode<<'\t'<<node->canCancel<<'\n'; } // 원문 실제 모달/필드만 자동 관측에 제공한다.
     out<<"raw_external_gumps\t"<<s.external.size()<<'\t'<<s.ownedExternal.size()<<'\n'; // 고정 슬롯과 실제 HUD 처리기 수명을 구별하는 읽기 관측이다.
     if (s.nsContext) out<<"raw_nsinfo\t"<<s.nsContext->globals->current<<'\t'<<s.nsRoots.size()<<'\t'<<s.nsPlayers.size()<<'\t'<<s.nsBattles.size()<<'\t'<<s.nsButtons.size()<<'\t'<<s.plainTexts.size()<<'\t'<<s.titles.size()<<'\n'; // 실제 현재 전역/등록 파생만 관측한다.
     out<<"raw_nsinfo_owned\t"<<s.nsOwned.size()<<'\n'; // 기본 생성자 전 미등록 저장소까지 같은 실제 소유 집합에서 관측한다.

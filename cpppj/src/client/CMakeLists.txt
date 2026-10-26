@@ -255,3 +255,8 @@ target_sources(netstorm PRIVATE HtmlWindowMetadata.cpp HtmlWindowMetadata.h)
 target_sources(netstorm PRIVATE HtmlWindowFactory.cpp HtmlWindowFactory.h) # 원문 전체 HTML 생성과 같은 두 번 파서·메타·모달 순서다.
 target_sources(netstorm PRIVATE TellSection.cpp TellSection.h) # 현재 Tell 이름/이전 이름과 등록 객체·미션·매번 새 tell 조회다.
 target_sources(netstorm PRIVATE TellFileMenus.cpp TellFileMenus.h) # 원문 @/# 파일 Config의 등록·정렬과 실제 행 작성 수명이다.
+
+# 실제 State3와 편집 저장·이름 모달·World 없는 생산 덱·Tips 입력을 공통 Client에 연결한다.
+target_sources(netstorm PRIVATE NativeMainMenuState.cpp NativeMainMenuState.h
+    EditorSaveGoMain.cpp EditorSaveGoMain.h ClientProductionSync.cpp ClientProductionSync.h
+    SaveFortNameDialog.cpp SaveFortNameDialog.h RawMenuSaveFort.inc TellTip.cpp TellTip.h)

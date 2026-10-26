@@ -1,0 +1,19 @@
+{
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": "HJOW-Athlon / 2026-10-23",
+  "command": 33554667,
+  "initialTipNumber": 1,
+  "rows": 388,
+  "originalGameExecuted": false,
+  "binarySha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+  "toolSha256": "1380eecbc704cdf2f7e41fbeedf9d2fdc4d719fcfb967be09a69bc7fd485c149",
+  "gateToolSha256": "4caf1c87e4a152f65b2815395ea553b2609587be06a95512974b893e985b24e3",
+  "fixtureSha256": "bf710d5bbc4724a9ec15d11e6d2e34e4293128a85d4ceecd37455013dbea2b07",
+  "scope": "실제 Guide/Gump/release 관문·TellTip0xEB 분기·직접 번호 쓰기·현재 signed %d 입력·Config/Tell 선택·분기 끝과 스택 균형",
+  "replaced": [
+    "Guide/Gump 소비 반환",
+    "004a89c0 %d 서식 장치",
+    "004414d0 Config 장치",
+    "004cf960 Tell 장치"
+  ]
+}

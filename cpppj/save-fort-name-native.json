@@ -1,0 +1,19 @@
+{
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": "HJOW-Athlon / 2026-10-23",
+  "observations": 288,
+  "gameRuns": 0,
+  "osCalls": 0,
+  "binarySha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+  "fixtureSha256": "88545a13019189b7b16d80fe099a7976633afdcce2dca67a6a22fec13b5c425b",
+  "toolSha256": "a009de14b4aa5f7b0597c1d8e7d145e4a3ec8d3d4c23680d3cd11f77abe85b84",
+  "cancelLeaf": {
+    "entry": "004cfab0",
+    "range": "004cfab0..004cfad1",
+    "bytes": "8b81d800000085c075126a0068085f5100e86afcffff83c40833c0c3b801000000c3"
+  },
+  "limits": [
+    "실제 확정/취소 부모의 반환/readonly직접쓰기/선택된 장치 순서다. CopyText·ASCII CRT 분류·path/exists·전체이름·Tell·고리/queue는 명시 경계다.",
+    "전체 GUI/전체이름부모/snapshot/파일저장 완료는 실제 공통 장치 통합검사와 별도 게임증거로 확인해야 한다."
+  ]
+}

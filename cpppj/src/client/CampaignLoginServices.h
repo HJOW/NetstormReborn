@@ -13,5 +13,6 @@ struct CampaignLoginServices {
     std::function<void(std::uint32_t,std::uint32_t,std::uint32_t)> playerNotice; //현재 Player 표시 사건을 실제 UI에 전달한다.
     std::function<void(std::uint32_t,bool,std::uint32_t,std::span<const std::uint8_t>)> observePacket; //선택검사전용현재sender/boss/local과수신바이트의읽기전용관측이다.
     std::function<void(std::string_view)> log; //로그인/전송의 원본 진단과 상태를 실제 로그에 남긴다.
+    std::uint32_t* requestPhase{}; //실제 ClientAudio의005c85ac 결과DWORD를 빌리며 독립fixture는 기존 지역fallback을 쓴다.
 };
 }

@@ -25,6 +25,7 @@
 #include "o/RawFortTerritoryRecover.h"
 #include "client/EditorFiles.h"
 #include "client/EditorFortFileDevices.h"
+#include "client/EditorSaveGoMain.h" //현재 Template manager 관문과 저장 순서를 같은 실제 Session에 연결한다.
 #include "o/RawFortSnapshotParent.h"
 #include "o/RawFortCoreWrite.h"
 #include "o/RawFortSpWrite.h"
@@ -2491,7 +2492,7 @@ struct RawCampaignSession::Impl {
         productionDeck=std::make_unique<RawProductionDeck>(*player,[this](std::span<std::uint8_t> bytes) {
             if (!services.production.allocationBytes) throw std::logic_error("실제 Session 생산 Deck 할당 입력 미연결");
             services.production.allocationBytes(bytes);
-        },SessionMissing<void,ProductionDeckAssertion>());
+        },SessionMissing<void,ProductionDeckAssertion>(),0x30000000U,playerRecords->ProductionDeckMemory());
         production=std::make_unique<RawCampaignProductionBindings>(core,*player,priests->Carrier(),*contained,*productionDeck,*totalMade,contentFinder,
             CampaignProductionState{objectState.mission,fullDeck,freeTechnologyType,templeProduct},services.production.effects);
         ProductionSyncHooks sync;
@@ -3829,6 +3830,15 @@ void RawCampaignSession::WriteFortTechnology(std::uint32_t parent,TemplateWriteS
 // 현재 Fort 모드와 선택을 원본 부모가 진단하며 각 child는 같은 저장소/월드/난수/장부를 사용한다.
 void RawCampaignSession::SnapshotFort(std::uint32_t slot) {
     if (!impl_->loaded) throw std::logic_error("실제 Session 설치 전 전체 Fort 저장");SnapshotFortBody(slot);
+}
+// 다음 Native 상태를 예약하지 않고 현재 manager의 원문 저장 선택 부모만 실행한다.
+void RawCampaignSession::SaveCurrentMap() {
+    auto& current=*impl_;if (!current.loaded) throw std::logic_error("실제 Session 설치 전 현재 맵 저장");
+    CurrentMapSnapshotReads reads;
+    reads.owner=[&current] { return current.playerState.templateOwner; };reads.manager=[&current](auto slot) { if (slot>=9) throw std::out_of_range("현재 맵 저장의 실제 Template9 범위");return Read(current.templateStorage->Headers(),slot*20U); };
+    reads.battle=[&current] { return current.core.ownerMode.battle ? 1U : 0U; };reads.fort=[&current] { return current.core.ownerMode.fort ? 1U : 0U; };
+    CurrentMapSnapshotHooks hooks;hooks.battle=[](auto) { throw std::logic_error("현재 맵 저장의 전체 Battle snapshot 004bf880 미연결"); };hooks.fort=[this](auto slot) { SnapshotFort(slot); };
+    SnapshotCurrentMap(reads,hooks);
 }
 // Editor 외곽은 실제 월드 설치가 끝난 뒤에만 호출하고 전체 loaded를 미리 켜지 않는다.
 void RawCampaignSession::SnapshotFortBody(std::uint32_t slot) {

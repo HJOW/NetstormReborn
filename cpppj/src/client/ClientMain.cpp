@@ -209,7 +209,7 @@ Client::Client(ClientOptions options)
     configuration_.Registry().environment = Environment;
     if (g_client) throw std::logic_error("Only one client may exist");
     // 원본00558dd0의 Set 직후 동기 시점에 현재 복원된 설정 전역을 갱신한다.
-    configuration_.onChanged = [this] { InterpretFortFileOptions();InterpretScriptMenuOptions();kencloudGlobals_->ReadOptions(configuration_); }; // 같은 설정 변경에서 기존 저장/메뉴와 현재 구름 DWORD를 함께 해석하며 생성은 하지 않는다.
+    configuration_.onChanged = [this] { InterpretFortFileOptions();InterpretScriptMenuOptions();kencloudGlobals_->ReadOptions(configuration_);InterpretMainMenuOptions(); }; //같은 설정 변경에서 저장/메뉴/구름과 현재 tellTips DWORD를 동기 반영하며 새 장치를 만들지 않는다.
     g_client = this;
 }
 // 월드/소리 프로세스→음악·음향→화면→GDI/창 순서로 참조 대상보다 사용자를 먼저 정리한다.
@@ -540,7 +540,12 @@ std::uint32_t Client::ScriptMenuGlobal(std::uint32_t address) const {
     switch (address) { case 0x5cab30:return gameplayGlobals_->energy.userCheat;case 0x55a480:return gameplayGlobals_->player.special ? 1U : 0U;default:throw std::out_of_range("HTML 메뉴 현재 전역 주소 미연결"); }
 }
 
-// 원본 00435220에서 지금 쓰는 설정만 읽는다. 나머지 키(소리·네트워크·구름 등)는 해당 모듈을 옮길 때 더한다.
+// 원본의 현재 DWORD를 signed ReadInt로 빌려 누락 시 보존하고 음수/상위 비트도 그대로 기록한다.
+void Client::InterpretMainMenuOptions() {
+    auto value=std::bit_cast<std::int32_t>(localStateGlobals_->TellTips());configuration_.ReadInt("tellTips",value);localStateGlobals_->TellTips()=std::bit_cast<std::uint32_t>(value);
+    value=std::bit_cast<std::int32_t>(localStateGlobals_->TipNumber());configuration_.ReadInt("tipNumber",value);localStateGlobals_->TipNumber()=std::bit_cast<std::uint32_t>(value); //원문435220처럼 tellTips 바로 뒤에 현재 순번을 읽고 누락/상위 비트를 보존한다.
+}
+// 원본 00435220에서 지금 쓰는 설정만 읽는다. 나머지 키(네트워크 등)의 전체 부모 순서는 후속이다.
 void Client::InterpretOptions() {
     std::string language;
     configuration_.ReadString("currentLanguage", language);
@@ -567,6 +572,7 @@ void Client::InterpretOptions() {
     }
     configuration_.ReadInt("highPriorityValue", highPriority_);
     configuration_.ReadInt("initWindowPos", initWindowPos_);
+    static_cast<void>(ReadAudioOptions());InterpretMainMenuOptions(); //원문의 음질/음량/maxSimulSounds ReadInt 뒤 tellTips를 읽는다. 이 부분 부모는 음향 장치 적용이나 전체435220 완료를 대신하지 않는다.
     InterpretFortFileOptions(); // 원본처럼 sleepPerLoop/maxFPS보다 먼저 같은 저장 관문 DWORD를 읽는다.
     configuration_.ReadInt("sleepPerLoop", sleepPerLoop_);
     kencloudGlobals_->ReadOptions(configuration_); // 원문435220의 cloudiness/speed/fury/spacer/recenter/algorithm/kenCloud 위치다.

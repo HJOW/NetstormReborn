@@ -14,6 +14,7 @@
 #include "o/RawMissionGuide.h"
 #include "o/RawFortMissionSave.h"
 #include "o/RawLocalMissionState.h" //실제 Editor 부모 반환과 다섯 State 블록의 공통 확정 계약이다.
+#include "o/RawStartupStateCheck.h" //State1/3의 같은 실제 저장상태 reader와 재접속 질문 장치를 공유한다.
 #include "client/GuideMissionTransitions.h"
 #include "client/TutorialInit.h"
 #include "client/SoloMapCatalog.h"
@@ -98,8 +99,13 @@ private:
     void EnsureHudFactories(); //현재 Client 장기 전역·물리로 네 공장만 준비하며 새 월드/Session을 생성하지 않는다.
     void RetireWorldForState(); //실제 State 자식 정리 뒤 같은 Runtime의 호스트 참조만 반납한다. 게임 전역·기한·정지를 다시 쓰지 않는다.
     void InstallHud(); // 현재 실제 월드와 같은 공통 전체 Uber/자식 공장·도킹을 연결한다.
-    void PollEditorState(); //메인 Edit의 실제 next1과 뒤따르는 next4를 같은 Native State 분배기로 소비한다.
+    void PollEditorState(); //메인 Edit의 next1과 SaveGoMain의 next3 및 뒤따르는 next4를 같은 Native State 분배기로 소비한다.
+    void OpenSaveFortNameDialog(std::uint32_t fortMode); //현재 Editor의 실제 파일/헤더/이름 부모를 원문 fortMode 인자의 TextEntry 모달에 연결한다.
     o::LocalMissionParentResult InstallExistingEditorState(std::uint32_t selected); //State1의 정리/prefix/현재 파일/UI tail을 실행하며 공통 확정은 분배기에 맡긴다.
+    void PrepareNativeFortState(bool editor); //State1/3의 같은 실제 cleanup/Chat/listener/Fort/Core/Renderer/Chunk/options 준비를 실행한다. HUD는 각 원문 위치의 별도 호출이다.
+    o::LocalMissionParentResult InstallMainMenuNativeState(std::uint32_t selected); //State3의 실제 전체 부모를 실행하며 호스트 메뉴 표시는 Native 공통 확정 뒤에만 공개한다.
+    o::StartupStateCheckHooks EditorStartupStateHooks(); //State1/3이 같은 실제 saved-state reader/벽시각을 사용한다. 기본 옵션을 강제로 바꾸지 않는다.
+    void PublishNativeMainMenuState(); //실제 State3 공통 확정/다음4/world 반납을 확인한 뒤 Native 전역 재작성 없이 호스트 메뉴 표시만 공개한다.
     // 기존 미션을 원본 Begin 순서로 종료/해제하고 새 빈 미션을 준비한다.
     void BeginMission(std::string name,std::uint32_t demo=0,std::uint32_t mode=0);
     // 이전 현재가 없는 Guide 공장 위치에서만 Script/빈 Runtime을 만든다.

@@ -1,6 +1,7 @@
 // 43e640/43ddd0/43ec00을 기존 격자·항목·SHP·글자 및 현재 Session에 조립한다.
 #include "client/ClientColorSortInput.h"
 #include "client/ClientSpGlobals.h"
+#include "client/ClientProductionSync.h"
 #include "client/RawProductionControls.h"
 #include "client/ProductionShortcuts.h"
 #include "client/HudDividerInput.h"
@@ -217,7 +218,7 @@ struct RawProductionControls::Impl {
             }
             if (!context.storage->types[Word(raw,18)].flags2) return 1;Session().Cursor().Take({static_cast<std::uint16_t>(first)},(Word(raw,20)&8) ? 0x41U : 1U);hooks.sound("getPiece.wav");common.changed();return 1;
         }
-        if (code==0x0200003d) { Bind(bridgeGrid,Technology());Bind(teleportGrid,Technology());if (first==1) Session().SynchronizeProductionContents();return 0; }
+        if (code==0x0200003d) { Bind(bridgeGrid,Technology());Bind(teleportGrid,Technology());if (first==1) SynchronizeProductionControlContents(context);return 0; }
         if (code==kProductionBridgeCommand) {
             o::RawContainedFinder finder(context.storage->pool,context.gameplay->finder);
             // 실제 현재 기술의flags40/슬롯 BYTE가 같은 항목을 순서대로 찾는다.

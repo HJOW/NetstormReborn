@@ -2,6 +2,7 @@
 #pragma once
 #include "o/RawPlayerInitialization.h"
 #include "o/SquidPostPop.h"
+#include "o/RawProductionDeck.h"
 #include <map>
 #include <memory>
 
@@ -42,6 +43,7 @@ public:
     std::uint32_t& FortCount(); // 초기화와 실제 MissionLogin이 함께 쓰는005951f8이다.
     std::uint32_t& LastLoginPlayer(); // 같은005951fc의 실제 현재 DWORD다.
     std::array<std::uint32_t,81>& Alliances(); // 실제 동맹 자식과 모든 세션 소비자가 공유하는 방향별 표다.
+    const std::shared_ptr<o::RawProductionDeckStorage>& ProductionDeckMemory() const { return productionDeck_; } // World 없는 HUD와 현재 Session이 같은 Player+68 블록을 빌린다.
 private:
     struct Block {
         std::vector<std::uint32_t> words; // 실제 DWORD 정렬 저장소이며 Player405칸 또는 factory30칸이다.
@@ -61,5 +63,6 @@ private:
     AllocationBytes allocationBytes_; // 명시 검사는 고정 입력, 실제 Client는 현재 CRT의 할당 BYTE를 공급한다.
     bool inUse_{}; // 기존 고정span 소비자가 살아 있는 동안 재할당을 막는 호스트 수명 관문이다.
     bool initialized_{};std::weak_ptr<ClientCoreDataGlobals> core_; // 실제 초기화 정상 복귀와 외부 장기 Core 슬롯의 약한 연결이다.
+    std::shared_ptr<o::RawProductionDeckStorage> productionDeck_{std::make_shared<o::RawProductionDeckStorage>()}; // 초기화/대여/반납으로 재생성하지 않는 실제 Deck 할당 소유자다.
 };
 }

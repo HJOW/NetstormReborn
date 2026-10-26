@@ -1,0 +1,195 @@
+{
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": "HJOW-Athlon / 2026-10-23",
+  "binarySha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+  "dialogHandleComparisons": [
+    {
+      "address": "00487484",
+      "bytes": "3b532c",
+      "instruction": "cmp edx, dword ptr [ebx + 0x2c]",
+      "meaning": "버튼 serial +2c이며 등록 id와 구별한다."
+    },
+    {
+      "address": "004874b8",
+      "bytes": "3b512c",
+      "instruction": "cmp edx, dword ptr [ecx + 0x2c]",
+      "meaning": "버튼 serial +2c이며 등록 id와 구별한다."
+    }
+  ],
+  "excludedDestructor": {
+    "host": "HJOW-Athlon",
+    "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+    "entry": "00452730",
+    "excludedOffset": "0x104",
+    "bufferOffset": "0x108",
+    "ownsOffset": "0xc0",
+    "observations": [
+      {
+        "input": {
+          "name": "destroyExcluded",
+          "operation": "destroy",
+          "node": "16826368:1:15:17:1065353216:1117782016:1105199104:1117782016:1105199104:1077936128:1082130432:0:5:31:0:0:0:1:1:67108967:16818176:16822272:0:2779096485:0:1071644672:1:0:1:1:0:0:0:0:1:1:1:0:0:16801792:16781312:2779096485:16830512:16830528:1:0:2:2779096485",
+          "buffer": "5279144:16908288:128:7:1:1:1:5:16:16842752",
+          "blocks": "16842752:16:1:61620a636400a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5;16908288:512:1:a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5",
+          "arguments": "-",
+          "text": "61620a6364",
+          "excluded": "5c2f3a2a3f223c3e7c",
+          "clipboard": "4109420a43",
+          "clock": "0.5:0.75",
+          "completion": "776f726c64",
+          "recipient": 0,
+          "fill": 165
+        },
+        "owns": 0,
+        "x87Control": "0x27f",
+        "excludedBefore": 16801792,
+        "excludedAfter": 16801792,
+        "bufferBefore": 16781312,
+        "bufferAfter": 16781312,
+        "trace": "destructBase:16814080",
+        "stackDelta": 4,
+        "instructions": 27,
+        "rawOutput": [
+          "5279248:1:15:17:1065353216:1117782016:1105199104:1117782016:1105199104:1077936128:1082130432:0:5:31:0:0:0:1:1:67108967:16818176:16822272:0:2779096485:0:1071644672:1:0:1:1:0:0:0:0:1:1:1:0:0:16801792:16781312:2779096485:16830512:16830528:1:0:2:2779096485",
+          "16826368:1:31:1065353216:1092616192:1120403456:1092616192:1120403456:0:0:3",
+          "16826368:1:32:1065353216:1120403456:1092616192:1120403456:1092616192:0:0:3",
+          "5279144:16908288:128:7:1:1:1:5:16:16842752",
+          "16842752:16:1:61620a636400a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5;16908288:512:1:a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5",
+          "-",
+          "destructBase:16814080",
+          0,
+          4,
+          27
+        ]
+      },
+      {
+        "input": {
+          "name": "destroyExcluded",
+          "operation": "destroy",
+          "node": "16826368:1:15:17:1065353216:1117782016:1105199104:1117782016:1105199104:1077936128:1082130432:0:5:31:0:0:0:1:1:67108967:16818176:16822272:0:2779096485:0:1071644672:1:0:1:1:0:0:0:0:1:1:1:0:0:16801792:16781312:2779096485:16830512:16830528:1:0:2:2779096485",
+          "buffer": "5279144:16908288:128:7:1:1:1:5:16:16842752",
+          "blocks": "16842752:16:1:61620a636400a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5;16908288:512:1:a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5",
+          "arguments": "-",
+          "text": "61620a6364",
+          "excluded": "5c2f3a2a3f223c3e7c",
+          "clipboard": "4109420a43",
+          "clock": "0.5:0.75",
+          "completion": "776f726c64",
+          "recipient": 0,
+          "fill": 165
+        },
+        "owns": 0,
+        "x87Control": "0x37f",
+        "excludedBefore": 16801792,
+        "excludedAfter": 16801792,
+        "bufferBefore": 16781312,
+        "bufferAfter": 16781312,
+        "trace": "destructBase:16814080",
+        "stackDelta": 4,
+        "instructions": 27,
+        "rawOutput": [
+          "5279248:1:15:17:1065353216:1117782016:1105199104:1117782016:1105199104:1077936128:1082130432:0:5:31:0:0:0:1:1:67108967:16818176:16822272:0:2779096485:0:1071644672:1:0:1:1:0:0:0:0:1:1:1:0:0:16801792:16781312:2779096485:16830512:16830528:1:0:2:2779096485",
+          "16826368:1:31:1065353216:1092616192:1120403456:1092616192:1120403456:0:0:3",
+          "16826368:1:32:1065353216:1120403456:1092616192:1120403456:1092616192:0:0:3",
+          "5279144:16908288:128:7:1:1:1:5:16:16842752",
+          "16842752:16:1:61620a636400a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5;16908288:512:1:a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5",
+          "-",
+          "destructBase:16814080",
+          0,
+          4,
+          27
+        ]
+      },
+      {
+        "input": {
+          "name": "destroyExcluded",
+          "operation": "destroy",
+          "node": "16826368:1:15:17:1065353216:1117782016:1105199104:1117782016:1105199104:1077936128:1082130432:0:5:31:0:0:0:1:1:67108967:16818176:16822272:1:2779096485:0:1071644672:1:0:1:1:0:0:0:0:1:1:1:0:0:16801792:16781312:2779096485:16830512:16830528:1:0:2:2779096485",
+          "buffer": "5279144:16908288:128:7:1:1:1:5:16:16842752",
+          "blocks": "16842752:16:1:61620a636400a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5;16908288:512:1:a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5",
+          "arguments": "-",
+          "text": "61620a6364",
+          "excluded": "5c2f3a2a3f223c3e7c",
+          "clipboard": "4109420a43",
+          "clock": "0.5:0.75",
+          "completion": "776f726c64",
+          "recipient": 0,
+          "fill": 165
+        },
+        "owns": 1,
+        "x87Control": "0x27f",
+        "excludedBefore": 16801792,
+        "excludedAfter": 16801792,
+        "bufferBefore": 16781312,
+        "bufferAfter": 0,
+        "trace": "release:16842752;release:16908288;delete:16781312;destructBase:16814080",
+        "stackDelta": 4,
+        "instructions": 50,
+        "rawOutput": [
+          "5279248:1:15:17:1065353216:1117782016:1105199104:1117782016:1105199104:1077936128:1082130432:0:5:31:0:0:0:1:1:67108967:16818176:16822272:1:2779096485:0:1071644672:1:0:1:1:0:0:0:0:1:1:1:0:0:16801792:0:2779096485:16830512:16830528:1:0:2:2779096485",
+          "16826368:1:31:1065353216:1092616192:1120403456:1092616192:1120403456:0:0:3",
+          "16826368:1:32:1065353216:1120403456:1092616192:1120403456:1092616192:0:0:3",
+          "5279144:0:128:7:1:1:1:5:0:0",
+          "16842752:16:0:61620a636400a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5;16908288:512:0:a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5",
+          "-",
+          "release:16842752;release:16908288;delete:16781312;destructBase:16814080",
+          0,
+          4,
+          50
+        ]
+      },
+      {
+        "input": {
+          "name": "destroyExcluded",
+          "operation": "destroy",
+          "node": "16826368:1:15:17:1065353216:1117782016:1105199104:1117782016:1105199104:1077936128:1082130432:0:5:31:0:0:0:1:1:67108967:16818176:16822272:1:2779096485:0:1071644672:1:0:1:1:0:0:0:0:1:1:1:0:0:16801792:16781312:2779096485:16830512:16830528:1:0:2:2779096485",
+          "buffer": "5279144:16908288:128:7:1:1:1:5:16:16842752",
+          "blocks": "16842752:16:1:61620a636400a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5;16908288:512:1:a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5",
+          "arguments": "-",
+          "text": "61620a6364",
+          "excluded": "5c2f3a2a3f223c3e7c",
+          "clipboard": "4109420a43",
+          "clock": "0.5:0.75",
+          "completion": "776f726c64",
+          "recipient": 0,
+          "fill": 165
+        },
+        "owns": 1,
+        "x87Control": "0x37f",
+        "excludedBefore": 16801792,
+        "excludedAfter": 16801792,
+        "bufferBefore": 16781312,
+        "bufferAfter": 0,
+        "trace": "release:16842752;release:16908288;delete:16781312;destructBase:16814080",
+        "stackDelta": 4,
+        "instructions": 50,
+        "rawOutput": [
+          "5279248:1:15:17:1065353216:1117782016:1105199104:1117782016:1105199104:1077936128:1082130432:0:5:31:0:0:0:1:1:67108967:16818176:16822272:1:2779096485:0:1071644672:1:0:1:1:0:0:0:0:1:1:1:0:0:16801792:0:2779096485:16830512:16830528:1:0:2:2779096485",
+          "16826368:1:31:1065353216:1092616192:1120403456:1092616192:1120403456:0:0:3",
+          "16826368:1:32:1065353216:1120403456:1092616192:1120403456:1092616192:0:0:3",
+          "5279144:0:128:7:1:1:1:5:0:0",
+          "16842752:16:0:61620a636400a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5;16908288:512:0:a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5",
+          "-",
+          "release:16842752;release:16908288;delete:16781312;destructBase:16814080",
+          0,
+          4,
+          50
+        ]
+      }
+    ],
+    "sha256": {
+      "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "tools/decomp_text_entry_gump.py": "f7799f7288ed5648ad8830e50952a588d89a5d010527fbff305052b13f2f7a6b",
+      "tools/decomp_text_entry_buffer.py": "25db4ac870d7083a924722162bb897db10f8a4b9386477e72bde2e9060d0a4a1",
+      "cpppj/tests/fixtures/text-entry-gump-x86.tsv": "658245fb178eae9f9b03365caabd65f8f189fe04867babbcda0c102fca003474",
+      "cpppj/src/client/TextEntryGump.cpp": "7c11109dcb73e569b60ae579100f45ea0dcb98c566576411681ec0e4590d29bc"
+    },
+    "gameRuns": 0,
+    "osCalls": 0,
+    "existingFixtureModified": false,
+    "boundaries": "?? Oracle? ?? TextEntry ?????? ?? ??? ??. base00464420? ?? ?? destructBase ???. ?? ?? base?+78/+7c?????+104????????????."
+  },
+  "rawSha256": "6e55b64bfbfbc77b0d8271e3e1b756132379274997bb59d82166b38da4f3e16b",
+  "originalGameExecuted": false,
+  "scope": "serial 비교는 실제 PE 명령 정적 관찰이며 제외문자 소멸4회는 실제 CPU 재관측이다. 실제 버튼 발화는 제품 GUI와 별도 C++ 마우스 검사에서 확인한다."
+}

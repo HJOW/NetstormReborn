@@ -2,6 +2,8 @@
 
 이 문서는 다음 구현을 위한 **읽기 전용 조사 결과**다. Save as GUI·이름 확정·자연 저장/재로드는 아직 완료하지 않았다. 조사 PC는 **HJOW-Athlon**이며 마지막 전체 정밀 디컴파일은 **HJOW-Athlon / 2026-10-23**이다. `cpppj/src`, `cpppj/tests`, 원본/CD, 디컴파일 결과를 변경하거나 실제 게임을 실행하지 않았다.
 
+후속 구현에서 기계어로 보정한 kind·multiline·제목 높이/font·부모104높이·깊이 AddDepth와 실제 조립 API는 [Save as 구현 문서](cpp-save-fort-name-dialog-20261026.md)를 우선한다. 아래 최초 조사 문구의 일부 필드 해석은 그 문서에서 정정했다.
+
 Save as는 Add Island 전체 모달보다 먼저 완료할 수 있는 단위다. 실제 편집 버퍼·장식·돌 버튼·일반 모달·Fort 전체 snapshot·파일 writer·현재 이름 변경 부모가 이미 있다. 새로 필요한 것은 작은 2버튼 입력 대화창의 부모와 Save as의 두 확정 callback, 같은 공통 UI에 대한 조립이다.
 
 ## 1. 정확한 원본 진입과 함수 주소

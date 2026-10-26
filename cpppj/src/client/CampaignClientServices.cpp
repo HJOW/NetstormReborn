@@ -214,6 +214,7 @@ RawCampaignSessionServices MakeCampaignClientServices(Client& client,RawButtonCo
     };
     BindCampaignAiClientServices(client,services.ai); // 장치 없는 검사와 실제 GUI 월드가 동일한 장기 Client 경계를 사용한다.
     CampaignLoginServices login; //실제Client의현재설정/시계/표시를원본로컬로그인에연결한다.
+    login.requestPhase=&audio.ResultState(); //Login Timer/State3/SceneMusic이 같은005c85ac 결과 DWORD를 빌린다. 새 결과0을 만들어 덮지 않는다.
     login.configInt=[&client](std::string_view key,std::int32_t fallback) { client.Configuration().ReadInt(key,fallback);return fallback; };
     login.wallSeconds=[&client] { return client.WallSeconds(); };login.clock=[] { return static_cast<std::uint32_t>(std::clock()); };
     login.refresh=[&client] { client.GetRenderer().InvalidateAll(); };

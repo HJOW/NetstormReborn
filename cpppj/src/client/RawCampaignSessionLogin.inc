@@ -31,7 +31,8 @@ struct RawCampaignSession::Impl::Login {
     std::uint32_t& zonePending{s.localStateGlobals->ZonePending()};std::uint32_t& source{s.localStateGlobals->SourceType()}; // Fort 요청/State/Reply가 같은 실제 두 DWORD를 공유한다.
     std::uint32_t& ticks{s.localStateGlobals->GameTicks()}; //State7의 저장/복원과004c1f20이 같은 현재0055b4ac를 사용한다.
     std::uint32_t& randomSeed{s.localStateGlobals->RandomSeed()};std::uint32_t& metaRefresh{s.localStateGlobals->MetaRefresh()};std::uint32_t& metaRebuild{s.localStateGlobals->MetaRebuild()}; //Editor와 로그인 State가 같은 세 현재 DWORD를 빌린다.
-    std::uint32_t requestPhase{},uiMode{},inputMode{}; // 아직 로그인 안에 남은 다른 DWORD 저장소다.
+    std::uint32_t localRequestPhase{},uiMode{},inputMode{}; //독립 fixture의 기존 결과0과 아직 별도로 소유한 두 DWORD다.
+    std::uint32_t& requestPhase{effects.requestPhase ? *effects.requestPhase : localRequestPhase}; //실제 Client 로그인은 SceneMusic/State3와 같은005c85ac 주소를 직접 빌린다.
     std::uint32_t& scriptBreak{s.localStateGlobals->ScriptBreak()}; // 00542544의 최초1과 현재 DWORD를 같은 Client 수명에서 빌리고 실제 Timer도 직접 쓴다.
     double& captureEnd{s.localStateGlobals->CaptureEnd()};double& connectEnd{s.localStateGlobals->ConnectEnd()}; // 서로 다른 원본 벽시각 기한을 직접 빌린다.
     double wall{};std::int32_t timeout{}; // 로그인 장치의 현재 벽시각 입력과 설정 값이다.

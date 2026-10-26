@@ -226,6 +226,7 @@ private:
     // 원본00435860의 현재 ReadInt만 재해석한다. 설정 변경 callback과 초기 해석이 공유한다.
     void InterpretFortFileOptions();
     void InterpretScriptMenuOptions(); // 원본4353ea의 개발 모드0/현재 userCheat ReadInt·허용값 검사를 같은 장기 전역에 적용한다.
+    void InterpretMainMenuOptions(); //원문435220의 tellTips ReadInt를 현재 DWORD에 적용한다. 전체 옵션 부모의 미복원 순서를 대신하지 않는다.
     // 원본 FUN_00436260: 로딩 화면(검은 바탕, 가운데 그림, 오른쪽 아래의 두 줄 글).
     void PaintLoading(NativeHandle dc);
     // 원본 FUN_00436450: 프레임 제한 뒤 그리고 창으로 내보낸다.

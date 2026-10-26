@@ -8,14 +8,16 @@
 - **마지막 전체 정밀 디컴파일: HJOW-Athlon (192.168.0.94) / 2026-10-23.** 결과는 `extracted/refined/`(Git 제외)에 있다. 현재 PC가 이와 다르면 AGENTS.md 규칙에 따라 재디컴파일한 뒤 작업한다. 절차는 `tools\ghidra\refine_all.ps1`이며, 힌트 생성 단계가 콘솔 인코딩(cp949) 오류로 멈추면 `PYTHONUTF8=1`, `PYTHONIOENCODING=utf-8`을 설정하고 다시 실행한다.
 - 2026-10-26의 문서 정리는 HJOW-X3D에서 인수인계 문서만 고친 것이다. 디컴파일 결과·제품 코드·검사 코드는 바꾸지 않았으므로 위 디컴파일 기록은 그대로 유효하다. 사용자는 HJOW-Athlon에서 작업을 재개할 예정이다.
 - **실제 게임 실행 확인:** HJOW-Athlon, VM-W11-Codex, vm-debian-codex는 AGENTS.md의 예외 시스템이다. 그 밖의 PC에서는 게임이나 별도 창을 띄우기 전에 목적을 설명하고 사용자 확인을 받는다.
-- **목표 상태:** 2026-10-26 재개 뒤466까지 완료했다. 최종 Source2 게임SHA `c8739bd5…`, build1·2 경고/오류0, 집중103고유/112관측·신규9개·전체C++3,165개·실패0이다. 같은 제품 GUI8실행(후행 경로 Edit/Cracked·Normal·Hard/종료질문 No/Credits18쪽/메인 Quit 재실행/미션 메뉴 복귀·재진입), 원본 타이머1 자연 Early2→Tutorial3를 통과했다. SaveGoMain와 자연 Native State3, 새 맵·Add Island GUI·Save as·Test Battle·시나리오·저장상태 복구·나머지 미션 완주/동일성이 남아 전체 목표는 계속 진행 중이다.
+- **목표 상태:** 2026-10-26 재개 뒤467까지 완료했다. 최종 Source6 게임SHA `6bfa1865…`, 빌드6 경고/오류0, 집중181고유/189관측·신규29·전체C++3,194개·실패0이다. 같은 게임 GUI8건과 자연Early2 A~I→Tutorial3를 확인했다. SaveGoMain의 실제 저장/미저장→Native3/Poll4→재진입, Save as 파일 생성·재파싱/중복거부, 기본 시작/Tips 및 초기HUD→미션 진입을 연결했다. 새 이름의 작업본 목록 재진입·NewFort/AddIsland GUI/TestBattle/시나리오·기존 저장상태 복구·나머지 미션 자연 완주/전체 동일성은 남아 목표는 계속 진행 중이다.
 - **원시 증거 위치:** 빌드·검사·GUI 원시 로그와 통합 드라이버는 `extracted/`(Git 제외)에 있으며, 작업한 PC(주로 HJOW-Athlon)에만 있다. 커밋되는 결과 보고서는 `cpppj/*.json`, 작업 문서는 `docs/exe/cpp-*.md`다.
-- **466 재개점:** 다음은 Editor의 SaveGoMain(020000cb,event.y) Yes/No→현재 전체 저장/next3→Native State3의 cleanup/prefix/메뉴 설치/공통 확정/다음 Poll4다. next3 예약만으로 성공 처리하지 않는다. Save as의 실제 텍스트 입력/확정/작업본 장치도 기존 부품을 재사용해 구현할 수 있다. 근거는 [SaveGoMain](docs/exe/cpp-editor-save-go-main-next-20261026.md), [Save as](docs/exe/cpp-editor-save-as-next-20261026.md), [로컬 AI 옵션](docs/exe/cpp-test-local-ai-integration-next-20261026.md)이다. 기존 d/!state.dat가 있으면 open 이후가 미연결이며 기본 옵션을 꺼서 우회하지 않는다. 마지막 전체 디컴파일 HJOW-Athlon/2026-10-23 유지, 디컴파일 변경 없음.
+- **467 재개점:** 다음은 저장한 새 이름을 실제 목록에서 읽고 다시 여는 작업이다. `extracted/cpp-editor-catalog-468-staging/editor-catalog-468.patch`는 원본 disk 순서→work-only 이름 추가/내용 work 우선/기존50개 상한을 보존하는 초안이며 제품 미적용이다. `cpp-text-clipboard-468-staging`, `cpp-add-island-468-staging`, `cpp-tutorial3-468-staging`도 미적용 준비본이다. 전체 덮어쓰기 대신 각 patch/hunk·현재 SHA를 대조한다. Native3의 승패/Intro39/기존!state.dat와 전체 Native7 prefix/prepared World는 후속이다. 마지막 전체 디컴파일 HJOW-Athlon/2026-10-23 유지.
 - **465 완료:** `EditorWorkingRoot`로 실제 자산 디렉터리를 먼저 정규화하여 후행 `/`·`\\`·`.`·`d/..`에서도 같은 형제 `<이름>-editor`를 사용한다. 기존 작업본 보존/원본 보호 검사는 유지한다. Release build1 종료0·EditorFiles 집중7개(신규2)·실패0. 실제 후행 구분자 Edit GUI는 다음 기능 묶음에서 검증한다. [작업 문서](docs/exe/cpp-editor-working-root-20261026.md), [보고서](cpppj/editor-working-root-20261026.json). 마지막 전체 디컴파일 HJOW-Athlon/2026-10-23 유지, 디컴파일 변경 없음. Edit 도구/상태 복구·전체 미션 완주 목표는 계속 진행 중이다.
 - **466 완료:** 같은 실제 풀/게임 난수/표시의 Set All Bridge, 양판본 CanPlaceIsland, 늦은 Guide 해제와 Tutorial 데이터 수명, 실제 메인 Quit 큐/즉시 반환, Script 없는 Editor의 HTML 취소/Blank 복귀를 연결했다. Release 경고/오류0·집중103고유/112관측·신규9개·전체C++3,165개·실패0, 같은 게임 `c8739bd5…`의 GUI8·자연Early2→Tutorial3를 확인했다. 기존 검사3파일 본문·기존3156등록·보호2474파일을 보존했다. 최초 필터명2오류와 stdout/stderr 이름3개 혼합은 검사기에서만 보완하고 원시를 보존했다. [통합 문서](docs/exe/cpp-editor-runtime-integration-20261026.md), [보고서](cpppj/editor-runtime-integration-20261026.json), 원시 extracted/cpp-editor-runtime-466-*. SaveGoMain/전체State3·Editor 도구 전체·나머지 미션 자연 완주/동일성은 후속이다. 마지막 전체 디컴파일 HJOW-Athlon/2026-10-23 유지.
+- **467 완료:** SaveGoMain/기본 Native3·무World 장기 Deck·Save as·Tips 입력과 초기HUD→미션 진입을 연결했다. Source6 빌드6 경고/오류0·집중181/189관측·신규29·전체3194/실패0, GUI8·자연Early2 A~I→Tutorial3 통과. No/Yes의314다리 재로드 차이와 새Fort파싱/중복거부, 보호2476/소스2748·기존3165등록/본문을 확인했다. [통합 문서](docs/exe/cpp-editor-menu-runtime-integration-20261026.md), [보고서](cpppj/editor-menu-runtime-integration-20261026.json), 원시 extracted/cpp-editor-menu-467-*. 최초빌드/신규검사/마우스serial/미션가드·Client9·미도킹Draw 실패도 보존했다. 새이름메뉴재진입·편집도구/전체미션·원본동일성은 계속 진행한다. 마지막전체디컴파일 HJOW-Athlon/2026-10-23 유지.
 - 원격 저장소에 push하지 않는다. 커밋 메시지는 `YYYYMMDD-NN CP 요약` 형식이며, NN은 `git log`로 그날의 마지막 번호를 확인해 정한다.
 
 ## 1. 현행 목표 ([TODO.md](TODO.md))
+
 
 - Early Missions 6개, 캠페인 전체 16개, Priest Training 9개, 데모 3개를 사용자가 플레이할 수 있고, 원본 10.78과 완전히 같게 동작하도록 한다. Priest Training은 2026-10-26 사용자 지시로 목표에 추가했으며, TODO.md에도 반영됐다.
 - Edit 메뉴(커스텀 맵·시나리오 포함)를 구현한다.
@@ -41,6 +43,7 @@
 
 ### 2.1 마지막 통합 검증 기준
 
+- **최신467 통합:** Source6 게임 `6bfa1865…`, 집중181고유/189관측·신규29·전체C++3,194개·실패0, 같은 게임 GUI8·자연Early2→Tutorial3 통과. 보호2476파일/최종2748소스·기존3165등록·기존검사본문을 유지했다. [통합 문서](docs/exe/cpp-editor-menu-runtime-integration-20261026.md), [보고서](cpppj/editor-menu-runtime-integration-20261026.json)을 본다. Source3에서 녹색 전체검사 후 실제미션3경계가 드러나 Source6을 다시 전체검증했고 최초원시를 보존했다. 전체 목표 완료는 아니다.
 - **최신466 통합:** Source2 게임 `c8739bd5…`, 빌드2회 경고/오류0·집중103고유/112관측·신규9·전체C++3,165개·실패0. 같은 제품 GUI8과 자연Early2→Tutorial3를 통과했다. 기존3156등록/검사3본문/보호2474파일을 보존했다. 자세한 범위와 최초 검사기 오류는 [통합 문서](docs/exe/cpp-editor-runtime-integration-20261026.md), [보고서](cpppj/editor-runtime-integration-20261026.json)를 본다. SaveGoMain/전체State3·Editor 전체·전체 자연 완주 완료는 아니다.
 
 - **최신 실제 Editor 진입(464):** build9 경고/오류0, 집중298고유/309관측·신규6개·전체C++ **3,154개·실패0**. 같은 게임SHA `661a19c1…`의 실제 Battle1/TEST01 메뉴 클릭→State4·현재 이름·공개 Runtime·실제 HUD·양끝·ESC/Game/Edit/닫기 GUI2건을 확인했다. 명시 test-state 호출은 사용하지 않았다. 기존3148등록 이름/검사3파일의 본문·보호1820/fixture654파일을 보존했다. UI scope의 선택 공장 차단을 풀었던 시도는 기존 검사2실패 후 폐기하고 기존 차단/본문을 유지했다. [464 문서](docs/exe/cpp-existing-editor-entry-20261026.md), [보고서](cpppj/existing-editor-entry-20261026.json), 원시 extracted/cpp-editor-entry-464-*. 새 맵·도구·저장·시나리오·전체 자연 완주 완료는 아니다.
@@ -68,11 +71,11 @@
 
 ### 2.3 기능 영역별 상태
 
-- **메인 메뉴:** 원본10.78의8버튼을 배치했다([UberGump.cpp](cpppj/src/client/UberGump.cpp)). Campaign/Demo/Help/Options는 기존 GUI에서 확인했고,466에서 Credits의 Patch4쪽·Original14쪽 실제 버튼/Back/최종OK·메인 복귀와 메인 Quit 종료0/재실행을 확인했다. Credits20초 자동롤·원본 픽셀/음향 대조와 Native State3 전체는 후속이다. Multiplayer는 범위 밖이고 Edit 완성도 남아 있다.
+- **메인 메뉴:** 원본8버튼과 Campaign/Demo/Help/Options,466 Credits18쪽/메인Quit을 확인했다.467은 기본 Native3의 실제 UserNotUpdated+Tips 두창, Prior/Next/OK/하위OK→메인, Quit 종료/재실행과 Edit의 Native3복귀를 검증했다. 승패/Intro39/저장상태복구·미션이탈의 전체Native3 선택·원본픽셀/음향은 후속이다. Multiplayer는 범위 밖이다.
 - **Edit 메뉴:**
   - 메인 Edit → 편집 가능 맵 목록(원본 50칸 상한, `mayEditMissions` 옵션) → 선택 예약(State1) → LoadEditable 안내·Cancel까지 실제 GUI로 확인했다.
   - 기존 Fort의 Session/World·Deck·작업본 파일·로컬 전송과 준비 checkpoint는464에서 실제 메뉴 선택→State1→공통 확정→Poll4에 연결했다.466은 기존 Guide의 late closeGuide/모드 해제와 후행 경로를 검증했다. 전체 저장·재파싱·재로드는 기존 집중 검사 근거이며 사용자 Save as/복귀 저장 GUI 완료와 구별한다.
-  -466에서 실제 Set All Bridge의 Cracked/Normal/Hard와 종료질문 No 뒤 Editor 복귀를 완료했다. Add Island 필수 하위 CanPlaceIsland도 양판본 독립관찰/새 C++2개를 통과했지만 실제 창은 미연결이다. NewFort, Add Island GUI, Save as, SaveGoMain/전체State3, Test Battle, 언어별 시나리오 적용은 남아 있다.
+  -466의 Set All Bridge/종료취소 뒤467에서 실제 Cracked314개 변경 후 No→원래314개/Yes→변경314개를 재로드했다. Save as는 문자입력·실제마우스OK·전체작업본Fort파싱·중복거부/Cancel까지 확인했다. **새 이름의 목록 재진입은 아직 미연결**이다. NewFort/AddIsland GUI/TestBattle/언어별시나리오·전체State7은 다음 작업이다.
 - **게임 중 UI:**
   - QWASZX: 문자 입력 → 생산 슬롯 예약 → 취득·회전·배치·보충을 실제 GUI로 확인했다(단위366, [문서](docs/exe/cpp-production-shortcuts-20261023.md)).
   - ESC 메뉴: 원본 가로 메뉴(Game·Edit·View·Options·Players·About)와 하위 명령·사건 큐를 연결했다(단위369, [문서](docs/exe/cpp-game-menu-runtime-20261023.md)). 원본에 없던 임시 Game 버튼은 2026-10-25에 제거했다. 459에서 원문 State7의 같은 HTML 배경 첫BYTE 초기화를 연결해 남은 배경이 ESC를 소비하던 회귀를 해결했고 실제 Early1 메뉴 복귀·재진입을 확인했다([459 문서](docs/exe/cpp-mission-background-runtime-20261026.md)).

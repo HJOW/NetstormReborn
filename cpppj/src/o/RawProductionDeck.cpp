@@ -31,8 +31,8 @@ void Put(std::span<std::uint8_t> raw,std::size_t offset,std::uint32_t value) {
 }
 }
 // Player의실제opaqueDWORD와할당블록을단일소유하며PATCH배치만허용한다.
-RawProductionDeck::RawProductionDeck(RawPlayerWorld& player,Fill fill,std::function<void(ProductionDeckAssertion)> assertion,std::uint32_t firstToken)
-    :player_(player),fill_(std::move(fill)),assertion_(std::move(assertion)),next_(firstToken) {
+RawProductionDeck::RawProductionDeck(RawPlayerWorld& player,Fill fill,std::function<void(ProductionDeckAssertion)> assertion,std::uint32_t firstToken,std::shared_ptr<RawProductionDeckStorage> storage)
+    :player_(player),fill_(std::move(fill)),assertion_(std::move(assertion)),storage_(storage ? std::move(storage) : std::make_shared<RawProductionDeckStorage>(firstToken)) {
     if (player.Pool().Edition()!=OriginalEdition::Patch1078 || !fill_ || firstToken==0 || firstToken>std::numeric_limits<std::uint32_t>::max()-kProductionDeckBytes)
         throw std::invalid_argument("실제Deck의PATCH/할당바이트/토큰연결누락");
 }
@@ -40,7 +40,8 @@ RawProductionDeck::RawProductionDeck(RawPlayerWorld& player,Fill fill,std::funct
 RawProductionDeck::~RawProductionDeck() {
     if (returnedLinks_) return; // 실제 부모의 전체 반납 증빙을 소비한 경우만 oldPlayer를 다시 읽지 않는다.
     // 동일9기록의현재포인터와자신이소유한토큰을확인한다.
-    for (std::uint32_t owner=0;owner<9;++owner) { auto records=player_.Records();const auto offset=PointerOffset(owner);if (blocks_.contains(Read(records,offset))) Put(records,offset,0); }
+    for (std::uint32_t owner=0;owner<9;++owner) { auto records=player_.Records();const auto offset=PointerOffset(owner);if (storage_->blocks_.contains(Read(records,offset))) Put(records,offset,0); }
+    storage_->blocks_.clear(); // 이 실제 Player 뷰의 일반 소멸도 같은 블록을 반납하며 다음 토큰은 되감지 않는다.
 }
 // 원본은Player0도사용할수있지만물리9기록밖주소는호스트계약에서거부한다.
 std::size_t RawProductionDeck::PointerOffset(std::uint32_t owner) const {
@@ -51,15 +52,12 @@ std::size_t RawProductionDeck::PointerOffset(std::uint32_t owner) const {
 // opaque토큰을호스트포인터로해석하지않고이저장소의실제블록만반환한다.
 std::span<std::uint8_t> RawProductionDeck::Bytes(std::uint32_t token) const {
     RequireLiveLinks();
-    const auto found=blocks_.find(token);if (found==blocks_.end()) throw std::out_of_range("현재PlayerDeck의실제할당블록누락");return found->second;
+    return storage_->Bytes(token);
 }
 // 0048fcd0의 선택된 free 인자를 동일한 할당 소유자에 연결한다. Player+68의 후속0쓰기는 부모가 수행한다.
 void RawProductionDeck::Release(std::uint32_t token) const {
     RequireLiveLinks();
-    if (!token) return;
-    const auto found=blocks_.find(token); // 다른 월드/이미 반납한 비영 토큰을 성공으로 처리하지 않는다.
-    if (found==blocks_.end()) throw std::out_of_range("현재PlayerDeck의실제반납블록누락");
-    blocks_.erase(found);
+    storage_->Release(token);
 }
 // 같은 실제 현재 Player getter와 자기 Deck 메모리만 기존 원문 부모에 공급한다.
 RawProductionDeck::PlayerLinksPass RawProductionDeck::CleanupPlayerLinksForState(std::function<std::span<std::uint8_t>()> currentPlayers) {
@@ -69,7 +67,7 @@ RawProductionDeck::PlayerLinksPass RawProductionDeck::CleanupPlayerLinksForState
 void RawProductionDeck::ReturnPlayerLinksForState(PlayerLinksPass&& pass) {
     if (pass.source_!=this || pass.lifetime_.lock()!=retirementLifetime_) throw std::invalid_argument("같은 실제 Deck의 Player 링크 정상 복귀 증빙 필요");
     RequireLiveLinks();if (activeLinkCalls_) throw std::logic_error("진행 중 Player 링크 효과의 증빙 소비 금지");
-    if (!blocks_.empty()) throw std::logic_error("현재 실제 Deck 소유 블록 반납 미완료");
+    if (!storage_->blocks_.empty()) throw std::logic_error("현재 실제 Deck 소유 블록 반납 미완료");
     const auto records=player_.Records();if (records.size()!=9*180) throw std::logic_error("현재 Player 링크 반납의 실제9기록 누락");
     for (std::size_t owner=0;owner<9;++owner) { // 실제 부모가 정리한 세 DWORD만 확인하며 다른 상태는 바꾸지 않는다.
         if (Read(records,owner*180+0x9c) || Read(records,owner*180+8) || Read(records,owner*180+0x68)) throw std::logic_error("현재 Player 링크 세 DWORD 반납 미완료");
@@ -82,10 +80,27 @@ bool RawProductionDeck::PlayerLinksReturnedForState() const { return bool(return
 void RawProductionDeck::RequireLiveLinks() const { if (returnedLinks_) throw std::logic_error("Native 반납된 Player 링크의 Deck 소비 금지"); }
 // 새할당의미초기화영역은fill입력을보존하고원본다섯DWORD만쓴다.
 std::uint32_t RawProductionDeck::Get(std::uint32_t owner) const {
-    const auto offset=PointerOffset(owner);const auto current=Read(player_.Records(),offset);if (current) { static_cast<void>(Bytes(current));return current; }
-    if (next_>std::numeric_limits<std::uint32_t>::max()-kProductionDeckBytes) throw std::overflow_error("실제Deck토큰주소고갈");
-    const auto token=next_;std::array<std::uint8_t,kProductionDeckBytes> bytes;fill_(bytes);blocks_.emplace(token,std::move(bytes));next_+=static_cast<std::uint32_t>(kProductionDeckBytes);
-    Initialize(token);Put(player_.Records(),offset,token);return token;
+    static_cast<void>(PointerOffset(owner));return storage_->Get(player_.Records(),owner,fill_);
+}
+// 주소 공간은 기존 Session 물리와 같고 생성자는 실제 할당을 앞당기지 않는다.
+RawProductionDeckStorage::RawProductionDeckStorage(std::uint32_t firstToken):next_(firstToken) {
+    if (!firstToken || firstToken>std::numeric_limits<std::uint32_t>::max()-kProductionDeckBytes) throw std::invalid_argument("실제Deck의토큰연결누락");
+}
+// 현재 Player 포인터를 먼저 읽고 없는 경우만 실제352BYTE를 할당한다. 미정 꼬리에는 fill 입력을 보존한다.
+std::uint32_t RawProductionDeckStorage::Get(std::span<std::uint8_t> players,std::uint32_t owner,const std::function<void(std::span<std::uint8_t>)>& fill) {
+    if (owner>=9 || players.size()!=9*180) throw std::out_of_range("실제Deck의Player범위오류");
+    const auto offset=std::size_t(owner)*180+0x68;const auto current=Read(players,offset);if (current) { static_cast<void>(Bytes(current));return current; }
+    if (!fill) throw std::logic_error("실제Deck할당바이트입력누락");if (next_>std::numeric_limits<std::uint32_t>::max()-kProductionDeckBytes) throw std::overflow_error("실제Deck토큰주소고갈");
+    const auto token=next_;std::array<std::uint8_t,kProductionDeckBytes> bytes;fill(bytes);blocks_.emplace(token,std::move(bytes));next_+=static_cast<std::uint32_t>(kProductionDeckBytes);
+    RawDeckDraw::Initialize(Bytes(token));Put(players,offset,token);return token;
+}
+// 불투명 DWORD를 호스트 주소로 해석하지 않고 현재 생존 블록만 조회한다.
+std::span<std::uint8_t> RawProductionDeckStorage::Bytes(std::uint32_t token) const {
+    const auto found=blocks_.find(token);if (found==blocks_.end()) throw std::out_of_range("현재PlayerDeck의실제할당블록누락");return found->second;
+}
+// Player 포인터의 후속0쓰기는 원문 정리 부모에 맡기며 이 장치는 블록만 반납한다.
+void RawProductionDeckStorage::Release(std::uint32_t token) {
+    if (!token) return;const auto found=blocks_.find(token);if (found==blocks_.end()) throw std::out_of_range("현재PlayerDeck의실제반납블록누락");blocks_.erase(found);
 }
 // 원본의호출가능한진단은그대로전달하고누락은성공으로넘기지않는다.
 void RawProductionDeck::Assert(ProductionDeckAssertion where) const { if (!assertion_) throw std::logic_error("실제Deck원본진단경계누락");assertion_(where); }

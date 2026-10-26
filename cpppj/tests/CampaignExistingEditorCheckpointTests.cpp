@@ -745,3 +745,6 @@ TEST_CASE(CampaignExistingEditorCheckpoint_SameNameKeepsGuideAndSelectsMissionOu
         client.Configuration().Set("missionSpec","d/{local.1}.english");mission=CreateGuideMissionScript(client.Configuration(),"TEST01",services.surfaceStorage->links.mission);CHECK(mission && mission->Loaded());
     });
 }
+
+//같은 실제 Client/Session 설치 도우미로 저장·State3 예약과 장기 덱 소유권을 검사한다.
+#include "CampaignSaveGoMainTests.inc"

@@ -17,6 +17,7 @@ struct RawNsInfoContext; // 전체 NSInfo 생성의 실제 Client 전역과 문�
 struct RawTextEntryContext;class RawTextEntryControls; // 같은 실제 편집 버퍼/Console 조립 계층이다.
 struct RawChatWindowContext;class ChatWindow;class HudChatGeometry; // 전체 Chat 공장과 같은 실제 자식 기하다.
 struct RawHtmlWindowContext;class HtmlWindowGump; // 실제 HTML 부모의 전역/본문·수명 처리기다.
+struct SaveFortNameDialogContext;struct SaveFortNameDialogNode; // 원본 이름 입력 부모와 같은 편집 작업본 장치다.
 struct RawBackgroundGifContext;class RawBackgroundGifControls; // 새 Uber의 실제 BackgroundGif 자식이다.
 // 같은 수집/정렬/클립 안에서 생산 패널의 원본 파생 Draw를 호출한다.
 struct RawMenuExternalGumps {
@@ -94,6 +95,9 @@ public:
     void CloseNsInfo(); // 미부착/부분 생성도 같은 공통 자식 우선 수명으로 정리한다.
     RawTextEntryControls& EnableTextEntry(RawTextEntryContext context); // 실제 편집 노드의 생성/입력/Draw를 같은 공통 장치에 연결한다.
     RawTextEntryControls* TextEntryControls() const; // 설치된 실제 처리기만 조회한다.
+    std::uint32_t ShowSaveFortNameDialog(SaveFortNameDialogContext context,std::uint32_t fortMode=1,std::uint32_t canCancel=1,std::optional<std::string_view> initial={}); // 실제 공통 모달/문자 입력/두 버튼을 생성한다.
+    const SaveFortNameDialogNode* SaveFortNameNode(std::uint32_t token) const; // 검사도 실제 파생/자식 필드를 그대로 읽는다.
+    void CloseSaveFortNameDialogs(); // Session 장치 반납 전에 현재 부모와 부분 생성 자식을 공통 수명으로 정리한다.
     void CloseTextEntries(); // 화면 교체에서 미부착/부분 생성도 같은 공통 수명으로 반납한다.
     std::uint32_t CreateChatWindow(RawChatWindowContext context); // 실제 네 자식·편집/로그·공유128줄 버퍼와 명령 등록 공장이다.
     std::uint32_t ChatWindowRoot() const; // 원문 현재 전역의 실제 생존만 읽는다.
