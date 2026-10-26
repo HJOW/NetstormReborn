@@ -13,7 +13,7 @@ class MissionScript {
 public:
     // `mission` 이름의 설정 객체를 만들어 추가 설정 글(원본의 두 번째 인자)과 `missionSpec` 경로의 스크립트를 읽는다.
     // 이 객체가 살아 있는 동안 다른 설정에서 `{mission.키}`로 스크립트 값을 쓸 수 있다.
-    MissionScript(o::ConfigInterface& configuration, std::string_view name, std::string_view extraSettings = {});
+    MissionScript(o::ConfigInterface& configuration, std::string_view name, std::string_view extraSettings = {},o::ConfigInterface::FileReader source = {}); //명시 source가 있으면 추가 설정 파일/언어 script/Fort에 같은 수명으로 사용하며 전역 Config reader를 바꾸지 않는다.
     // 스크립트의 값(치환 포함). 원본처럼 `mission.키`로 조회한다.
     std::optional<std::string> Get(std::string_view key);
     // 미션 이름(스크립트 파일 이름).
@@ -26,6 +26,7 @@ public:
     std::string FortName();
     // 요새 파일의 경로(`fortSpec`, 원본 FUN_00460650).
     std::string FortPath();
+    std::vector<std::uint8_t> ReadFortImage(std::string_view selectedFort); //Init 요청이 고른 이름의 fortSpec을 현재 Config로 해석해 같은 미션 source에서 읽는다. loadFort를 다시 선택하지 않는다.
     // `mission.missionType`: 원본은 이 이름으로 등록된 미션 종류를 찾아 객체를 만든다.
     std::string MissionType();
     // 미션 파일의 원본 브리핑 본문을 설정 치환 전 상태로 읽는다.
@@ -41,11 +42,12 @@ private:
     std::string name_;
     // scriptPath_: 스크립트 경로.
     std::string scriptPath_;
+    o::ConfigInterface::FileReader source_; //선택한 작업 namespace/자산 reader의 소유 복사다. Editor World 반납 뒤에도 같은 경로 장치가 살아 있다.
     // script_: 안내·명령·섹션을 조회할 미션 스크립트.
     o::Config script_;
 };
 // 실제 Guide 미션 생성의 Native 모드와 global.inMission=1을 같은 스크립트 수명 시작에 공개한다.
-std::unique_ptr<MissionScript> CreateGuideMissionScript(o::ConfigInterface& configuration,std::string_view name,bool& missionMode);
+std::unique_ptr<MissionScript> CreateGuideMissionScript(o::ConfigInterface& configuration,std::string_view name,bool& missionMode,o::ConfigInterface::FileReader source={}); //선택 source를 새 미션에 넘기고 생성 정상 반환 뒤 기존 Native/Config 공개 순서를 유지한다.
 // 실제 Guide 해제처럼 스크립트 등록을 먼저 반납한 뒤 Native 모드와 global.inMission을0으로 쓴다. 현재가 없으면 효과가 없다.
 void ReleaseGuideMissionScript(std::unique_ptr<MissionScript>& mission,bool& missionMode,o::ConfigInterface& configuration);
 }

@@ -111,7 +111,7 @@ private:
     // 기존 미션을 원본 Begin 순서로 종료/해제하고 새 빈 미션을 준비한다.
     void BeginMission(std::string name,std::uint32_t demo=0,std::uint32_t mode=0);
     // 이전 현재가 없는 Guide 공장 위치에서만 Script/빈 Runtime을 만든다.
-    void CreateMission(std::string name,std::uint32_t demo=0,std::uint32_t mode=0);
+    void CreateMission(std::string name,std::uint32_t demo=0,std::uint32_t mode=0,o::ConfigInterface::FileReader source={}); //편집 테스트는 같은 작업 source를 미션에 넘길 수 있으며 일반 진입은 기존 자산 reader를 사용한다.
     // 교체마다 같은 실제 현재/빈 종료/해제/공장/설정/필드 소비자를 묶는다.
     GuideMissionTransitionHooks MissionTransitionEffects();
     // 실제 Guide 단계1의 Header/월드/로그인/커서를 설치하고 다음 단계만 요청한다.

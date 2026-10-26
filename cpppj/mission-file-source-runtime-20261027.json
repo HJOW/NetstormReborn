@@ -1,0 +1,299 @@
+{
+  "unit": 482,
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": "HJOW-Athlon / 2026-10-23",
+  "startingHead": "9148dbab",
+  "completedScope": [
+    "MissionScript owns the selected reader for extra files, language script and Fort images",
+    "CreateGuideMissionScript and UberGump::CreateMission accept explicit source",
+    "actual LoadMissionWorld consumes MissionScript::ReadFortImage for the captured selected Fort",
+    "same workspace canonical mapping, ledger tombstones and current work reads via existing EditorCatalogWorkspace"
+  ],
+  "testBattleCommandConnected": false,
+  "limits": [
+    "live Editor World/Guide retirement and State7/State1 c2 integration still pending",
+    "working-source selection must still be bound from c2; normal mission default reader stays asset VFS",
+    "SP/AI/briefing in new tests are explicit fixture inputs passed to actual Config/Fort/Player parsing, not natural game play",
+    "no new native fixture or CPU execution in this unit; original algorithm fidelity is not inferred from host file-source tests",
+    "no game/GUI/audio execution; last full C++ suite was unit480 3260/0"
+  ],
+  "builds": [
+    {
+      "command": [
+        "cmake",
+        "--build",
+        "cpppj/build",
+        "--config",
+        "Release",
+        "--parallel",
+        "4",
+        "--",
+        "/p:UseMultiToolTask=true",
+        "/p:MultiProcMaxCount=4",
+        "/p:EnforceProcessCountAcrossBuilds=true"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-mission-file-source-482/build1.log",
+      "sha256": "61303fc02fb33ceb74436713127534538895d2e77591d00fff0279f6b3b6400b",
+      "summaries": [],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cmake",
+        "--build",
+        "cpppj/build",
+        "--config",
+        "Release",
+        "--parallel",
+        "4",
+        "--",
+        "/p:UseMultiToolTask=true",
+        "/p:MultiProcMaxCount=4",
+        "/p:EnforceProcessCountAcrossBuilds=true"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-mission-file-source-482/build2.log",
+      "sha256": "051d46092641fa9d618c8557f64fcd2d8d67ceb4402b6ef8d88198343fc0d4c0",
+      "summaries": [],
+      "diagnostics": []
+    }
+  ],
+  "sourceFiles": 2844,
+  "changedBuild1To2": [
+    "cpppj/tests/MissionFileSourceTests.cpp"
+  ],
+  "gameUnchangedBuild1To2": true,
+  "executables": {
+    "cpppj/build/bin/Release/NetstormCpp.exe": "741e33af31e0cb7c7d4d3fd6833dc88a50080c0ce3fb586b2470134245197019",
+    "cpppj/build/bin/Release/netstorm_tests.exe": "1aae3a27a30c30ca47e868816716c1c407e92a85c75138ba43d1cbe9d666de6a"
+  },
+  "focused": {
+    "unique": 102,
+    "observations": 108,
+    "failures": 0,
+    "newTests": [
+      "MissionFileSource_ActualWorkspaceScenarioAliasFortAndPlayerHeader",
+      "MissionFileSource_CompletedMissingNeverResurrectsOriginalScriptOrFort",
+      "MissionFileSource_CurrentLanguageAndNormalMissionReaderStayIndependent",
+      "MissionFileSource_ExplicitReaderMissingEmptyAndThrowRemainDistinct",
+      "MissionFileSource_OwnsWorkspaceUntilActualGuideRelease"
+    ],
+    "logs": [
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "MissionFileSource"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-mission-file-source-482/focused2.log",
+        "sha256": "4a3e6ede9eccdac282e514c7aea9f7bea1557261155eb3bd7ccce2a5a9fcc247",
+        "summaries": [
+          "5 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "CampaignExistingEditorCheckpoint"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-mission-file-source-482/focused3-CampaignExistingEditorCheckpoint.log",
+        "sha256": "9f8c6064fd046501c65612c99e6699993d240c931e56361ae4f22fb408ebd157",
+        "summaries": [
+          "42 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "CampaignMissionStart"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-mission-file-source-482/focused3-CampaignMissionStart.log",
+        "sha256": "f020bd3b115ee10e1ea131faee4152978d497e5e943a19e58d908b683e415341",
+        "summaries": [
+          "3 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "ConfigInterface"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-mission-file-source-482/focused3-ConfigInterface.log",
+        "sha256": "1f059d081f91e54c17773b35779fee06853efd0e436f40e08d47d3dcf4c1a360",
+        "summaries": [
+          "10 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "EditorFiles"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-mission-file-source-482/focused3-EditorFiles.log",
+        "sha256": "3915624ac236da874929e52f6ac2c92f1e1bd9a9a5e71f94a6a3ffbe5f8b676b",
+        "summaries": [
+          "7 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "EditorTestBattle"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-mission-file-source-482/focused3-EditorTestBattle.log",
+        "sha256": "88feabc2cc023a5911b3478f60a3677ba63baadb4ac86726928920f6e596055a",
+        "summaries": [
+          "3 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "Guide"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-mission-file-source-482/focused3-Guide.log",
+        "sha256": "1eb40eb06ed0b39be9cbb54275adfb46d281acc345d548250a3b094022fba930",
+        "summaries": [
+          "14 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "MenuCheckMarker"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-mission-file-source-482/focused3-MenuCheckMarker.log",
+        "sha256": "28afc25132f7a5b192fa27af0b7686e1a3075a0c4d4c014697597ba80cc59e99",
+        "summaries": [
+          "2 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "MissionScript"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-mission-file-source-482/focused3-MissionScript.log",
+        "sha256": "f1de97e08ba18f83e9644931e8896d8967db57b8d81ef60805258e83465eddd9",
+        "summaries": [
+          "2 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "TutorialInit"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-mission-file-source-482/focused3-TutorialInit.log",
+        "sha256": "08eb74725aeec2d83af8b026ef9c2317f9ee8dd7e7344741a6901d98189779e5",
+        "summaries": [
+          "4 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "CampaignTutorial"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-mission-file-source-482/focused4-CampaignTutorial.log",
+        "sha256": "425f11c38f7f675c732c2bd2e49ce2dec20d96a08a94706eaa5766524a010095",
+        "summaries": [
+          "3 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "EditorCatalogFiles"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-mission-file-source-482/focused4-EditorCatalogFiles.log",
+        "sha256": "773def2098f51e74be6e8dd7b36c2540c15a54729a45122d24b095101e84deb6",
+        "summaries": [
+          "11 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "RawMenuEditorIslandWindow"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-mission-file-source-482/focused4-RawMenuEditorIslandWindow.log",
+        "sha256": "48e2202586e40fcbe0df9376beabbd950cc54bd02ec9c16182ba9046196a63c6",
+        "summaries": [
+          "2 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      }
+    ]
+  },
+  "preservation": {
+    "protectedAndExistingTests": 3192,
+    "existingTestCMakeRegistrationOnly": "cpppj/tests/CMakeLists.txt",
+    "changedProtectedOrExistingTests": [],
+    "existingRegistrations": 3263,
+    "registeredAfter": 3268,
+    "allPriorRegisteredNamesPreserved": true,
+    "frozenSourcesUnchanged": true
+  },
+  "firstFailure": {
+    "log": {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "MissionFileSource"
+      ],
+      "exit": 1,
+      "log": "extracted/cpp-mission-file-source-482/focused1.log",
+      "sha256": "bfd0b5446d29644ab6d50164086f27e51ecb32ae0f8a0a04ba49d37c000ca7f0",
+      "summaries": [
+        "5 test(s), 1 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    "reason": "신규 검사 입력이 Tutorial2와 동명 Fort가 있다고 가정했다. 실제 보호 Tutorial2 script의 FortPath/loadFort로 원본 VFS에서 비교 입력을 읽도록 신규 helper를 정정했다. 제품 소스/게임/기존 검사/기대 조건은 유지했다."
+  },
+  "next": [
+    "bind captured editorCatalog reader at c2 mission creation after actual snapshot",
+    "resolve live Editor World and Template views through Guide Init and actual State7 retirement",
+    "preserve pending request/zone through State7 retirement and return via State1",
+    "deferred Add Island GUI/save/reentry and Test Battle/Return GUI"
+  ]
+}

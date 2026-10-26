@@ -2263,3 +2263,6 @@ set_source_files_properties(EmbeddedTellTests.cpp PROPERTIES COMPILE_DEFINITIONS
 # 실제 일반 입력/Guide174행과 편집 테스트 메뉴·부분 실패를 재생한다.
 target_sources(netstorm_tests PRIVATE EditorTestBattleTests.cpp)
 set_source_files_properties(EditorTestBattleTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_EDITOR_TEST_BATTLE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/editor-test-battle-x86.tsv\"")
+
+# 실제 작업 namespace/미션 source 수명과 언어 script/선택 Fort의 같은 읽기를 검증한다.
+target_sources(netstorm_tests PRIVATE MissionFileSourceTests.cpp)

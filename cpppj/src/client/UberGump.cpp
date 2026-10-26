@@ -514,9 +514,9 @@ void UberGump::BeginMission(std::string name,std::uint32_t demo,std::uint32_t mo
     BeginGuideMission(name,effects);
 }
 // Guide 공장의 현재 Client 소비자다. 이전 미션 해제는 호출자가 원본 순서로 마친 상태여야 한다.
-void UberGump::CreateMission(std::string name,std::uint32_t demo,std::uint32_t mode) {
+void UberGump::CreateMission(std::string name,std::uint32_t demo,std::uint32_t mode,o::ConfigInterface::FileReader source) {
     if (mission_ || missionRuntime_ || world_) throw std::logic_error("Guide 새 미션 공장 전에 기존 현재가 남아 있음");
-    mission_ = CreateGuideMissionScript(client_.Configuration(),name,client_.SurfaceStorage()->links.mission);
+    mission_ = CreateGuideMissionScript(client_.Configuration(),name,client_.SurfaceStorage()->links.mission,std::move(source));
     if (!mission_->Loaded()) throw std::runtime_error("Missing mission: " + name);
     const auto type = o::AsciiLower(mission_->MissionType());
     if (type != "tutorial" && type != "battle") throw std::runtime_error("Mission type pending: " + mission_->MissionType());
@@ -593,7 +593,7 @@ void UberGump::LoadMissionWorld(std::optional<std::string> requestedFort) {
     const auto type=o::AsciiLower(mission_->MissionType()); // 현재 미션의 실제 가상 형식에 맞는 기존 설치 경로다.
     if (!missionRuntime_->guided) { missionRuntime_->gate.tutorialNumber=std::bit_cast<std::uint32_t>(o::ConfigParseLong(mission_->Get("tutorialNumber").value_or("")));ApplyMissionDemo(mission_->Get("demo").value_or(""),missionRuntime_->gate.demo);o::ResetMissionBattleOptions(o::OriginalEdition::Patch1078,*missionOptions_);o::SetTotalMadeAllowAll(*missionRestrictions_,1);initLoginSubscriber_=1; }
     const auto selectedFort=requestedFort ? *requestedFort : mission_->FortName(); // Init의 지역256BYTE에서 캡처한 값을 이후 설정 재조회로 바꾸지 않는다.
-    const auto fortPath=client_.Configuration().PathSpec("fortSpec",selectedFort);const auto fortImage=std::make_shared<const std::vector<std::uint8_t>>(client_.Files().Read(fortPath));auto fort = o::FortTemplate::Parse(*fortImage, client_.Assets().TypeTable());
+    const auto fortImage=std::make_shared<const std::vector<std::uint8_t>>(mission_->ReadFortImage(selectedFort));auto fort = o::FortTemplate::Parse(*fortImage, client_.Assets().TypeTable()); //실제 설치도 script/추가 설정과 같은 미션 source를 사용한다. 편집 모드0이나 Editor Runtime 반납으로 reader를 자산 폴더에 되돌리지 않는다.
     // 전체 요새 레코드를 세어 자동 검사에서 미션 선택과 파일 로드를 함께 확인한다.
     const auto count = [this](const o::FortChunkSection& section) { for (const auto& chunk : section.chunks) fortObjects_ += chunk.objects.size(); };
     fortObjects_ = 0; count(fort.chaff);
