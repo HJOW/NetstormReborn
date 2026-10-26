@@ -2239,3 +2239,7 @@ set_source_files_properties(IslandBitmapTests.cpp PROPERTIES COMPILE_DEFINITIONS
 # 섬 추가 중 수신자0 삭제 보상도 원본 float/ftol 비트로 처리하는지 독립 관측과 대조한다.
 target_sources(netstorm_tests PRIVATE RewardSpBitsTests.cpp)
 set_source_files_properties(RewardSpBitsTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_SP_ADD_BITS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/sp-add-bits-x86.tsv\"")
+
+# 원본 Image crop/실제 VFX 인코더/복사/이중 소멸의 전체 바이트를 재생한다.
+target_sources(netstorm_tests PRIVATE EditorImageTests.cpp)
+set_source_files_properties(EditorImageTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_EDITOR_IMAGE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/editor-image-x86.tsv\"")

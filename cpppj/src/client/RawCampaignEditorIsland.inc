@@ -48,6 +48,15 @@ void RawCampaignSession::BuildEditorIslandChoiceMap(std::span<const std::uint8_t
     o::RawIslandBuilder builder(target,s.chunks,*s.islands,s.core.frames,s.piece,state,SessionMissing<void,o::RawIslandBuilderAssertion>());
     static_cast<void>(builder.Place(record,0,true));
 }
+// 원본 Refresh의 현재 지도는 crop0으로 변환하며 bitmap 실패와 빈 shape를 구별한다.
+std::optional<RawImage> RawCampaignSession::BuildEditorIslandMapShape(o::ChunkMap& target) {
+    auto bitmap=BuildEditorIslandMapImage(target);if (!bitmap) return std::nullopt;
+    RawImage image;image.Convert(std::move(*bitmap),false);return image;
+}
+// 원본 Refresh는 후보마다 crop1을 사용하며 왼쪽/위쪽 여백은 유지한다.
+RawImage RawCampaignSession::BuildEditorIslandChoiceShape(std::span<const std::uint8_t,6> record) {
+    RawImage image;image.Convert(BuildEditorIslandChoiceImage(record),true);return image;
+}
 // 같은 실제 배치 부모를 연결한다. 거부는 false이며 중간 하위 실패의 앞선 월드 효과는 보존한다.
 bool RawCampaignSession::DropEditorIsland(const o::ChunkMap& preview,std::span<std::uint8_t,6> record) {
     auto& s=*impl_;

@@ -1,0 +1,71 @@
+{
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+  "runs": 1570,
+  "cases": 785,
+  "peSha": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+  "sourceSha": "cec15f4d91e80ea5b760fc7c2b848149d691e9394fa7695d3ee3eb06108ba09b",
+  "fixtureSha": "5e7bf7cb98a53697f0d33b6204a69ad425a38fe2b528993bd20371831e4342eb",
+  "entered": {
+    "0046d790": 1570,
+    "004dad20": 1570,
+    "004042cd": 1570,
+    "0046d900": 1570,
+    "0046d8a0": 7850,
+    "004437f0": 6280,
+    "0040463b": 2008,
+    "004047ab": 10664
+  },
+  "code": [
+    {
+      "address": "0046d790",
+      "bytes": 77,
+      "sha": "a78077a5c79e013902ab356fe184230a2ce6f0c282a1af0cfac60b6f8c1674a7"
+    },
+    {
+      "address": "0046d7e0",
+      "bytes": 180,
+      "sha": "f8ea6a8dea42520200f39e1ca5e53b16c759a848699d2e40fbe70a5f4e34fe29"
+    },
+    {
+      "address": "0046d8a0",
+      "bytes": 87,
+      "sha": "4ce8547d39488968edb32b75c6486792525b62679febe6534aff0d189ad6f070"
+    },
+    {
+      "address": "0046d900",
+      "bytes": 171,
+      "sha": "d86ccd2eb96b354eb7cb4614b94738c647bf420ba701d30f174af95eb4581297"
+    },
+    {
+      "address": "004dad20",
+      "bytes": 187,
+      "sha": "3da999571f58245ebab5d16aec4d0f794573402f357f86101b06acd39a6d5ae3"
+    },
+    {
+      "address": "004042cd",
+      "bytes": 730,
+      "sha": "8571f1641f90cb9691b7c581e1978114dd8b391ca6fab03f56aad2a36154165a"
+    },
+    {
+      "address": "0040463b",
+      "bytes": 368,
+      "sha": "d3c760e13eaba918660f347fd4560d08d295b13ff549de4107eda84f547c8e2b"
+    },
+    {
+      "address": "004047ab",
+      "bytes": 479,
+      "sha": "489746b0049b48b057b7b2414136107786f0679126c2b726605f5c6aaa75ed98"
+    },
+    {
+      "address": "004437f0",
+      "bytes": 1,
+      "sha": "ae3f4619b0413d70d3004b9131c3752153074e45725be13b9a148978895e359e"
+    }
+  ],
+  "limits": [
+    "0046d790→004dad20→004042cd→0040463b/004047ab의 실제 crop/헤더/토큰을 실행한다.",
+    "실제0046d900 deep copy와0046d8a0 이중 소멸을 실행한다. malloc/free 주소만 명시 장치다.",
+    "10.78 변환된 shape를 관측하며 raw imageBits 복사와 MetaImage 가상 함수/GUI는 이 자료 범위 밖이다."
+  ]
+}

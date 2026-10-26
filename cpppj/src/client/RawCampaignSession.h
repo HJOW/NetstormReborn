@@ -1,6 +1,7 @@
 #include "client/ClientCameraGlobals.h"
 // 실제 캠페인 초기화/전투/이동의 상태와 모듈 수명을 클라이언트 세션 하나에 보관한다.
 #pragma once
+#include "client/RawImage.h"
 #include "o/RawTerrainBitmap.h"
 #include "client/GameAssets.h"
 #include "client/CampaignLoginServices.h"
@@ -446,6 +447,8 @@ public:
     bool BuildEditorIslandMap(o::ChunkMap& target); // 0046e4a0의 독립14×14 지도 부분이다. Bitmap 생성과 전체 GUI 완료를 뜻하지 않는다.
     std::optional<o::TerrainBitmapImage> BuildEditorIslandMapImage(o::ChunkMap& target); // 같은 실제 지도와004c1cc0 Bitmap을 만들고 manager 부재는 nullopt로 구별한다.
     o::TerrainBitmapImage BuildEditorIslandChoiceImage(std::span<const std::uint8_t,6> record); // 원문 owner0 단일 지도/로컬 난수/보호 texture의 실제 목록 이미지를 만든다.
+    std::optional<RawImage> BuildEditorIslandMapShape(o::ChunkMap& target); //0047f9b0의 현재 지도는 crop0으로 변환하고 bitmap 소유권을 소비한다.
+    RawImage BuildEditorIslandChoiceShape(std::span<const std::uint8_t,6> record); // 같은 후보 bitmap을 crop1 Image로 바꾸어 전용 목록/드래그의 실제 크기를 제공한다.
     bool SeedEditorIslandChoices(std::span<std::uint8_t,126> records); // 0047f9b0의 창 전용21행에서 비활성 레코드만 같은 공유 난수로 보충한다.
     void BuildEditorIslandChoiceMap(std::span<const std::uint8_t,6> record,o::ChunkMap& target); // 0046e5a0의 owner0/ignorePosition 단일 지도 부분이다.
     bool DropEditorIsland(const o::ChunkMap& preview,std::span<std::uint8_t,6> record); // 실제 섬 배치→지형→population→Graph→현재 Territory 쓰기를 실행한다.

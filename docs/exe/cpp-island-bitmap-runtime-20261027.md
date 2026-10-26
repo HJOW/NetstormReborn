@@ -41,3 +41,5 @@ Windows에서는 `reward`/`Reward` 로그 이름이 같은 파일이므로 검�
 - 최종2,810소스/검사 파일의 manifest는 `extracted/cpp-island-bitmap-474/source-final.json`에 있다. 보고서에는 최초 실패·원본 관측·최종 실행 로그의 SHA를 기록했다.
 
 원시 로그는 `extracted/cpp-island-bitmap-474/`, 최종 실행 결과와 SHA는 [보고서](../../cpppj/island-bitmap-runtime-20261027.json)에 둔다. 실제 게임·GUI·음향 장치는 실행하지 않았다. 다음은 MetaImage의 크기·출력·소멸,21개 전용 목록과 Add Island 창의 생성/Refresh/Idle/단일 창 수명·공통 트리 등록이다. 전체 Edit/시나리오·자연 미션 완주·화면/음향 동일성 목표는 계속 미완료다.
+
+**475 후속:** 실제 Image 변환/crop/원본 VFX 인코더·복사/이중 소멸을1,570행으로 대조하고 같은 Session의 지도crop0/후보crop1에 연결했다. 최종 Release 경고/오류0·전체C++3,248개·실패0이며 게임/GUI는 실행하지 않았다. 전용 MetaImage/목록/창 연결은 남는다. [후속 문서](cpp-editor-image-runtime-20261027.md)를 본다.

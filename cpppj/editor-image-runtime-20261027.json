@@ -1,0 +1,256 @@
+{
+  "unit": 475,
+  "date": "2026-10-27",
+  "host": "HJOW-Athlon",
+  "baseCommit": "58839028",
+  "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+  "decompileChanged": false,
+  "builds": [
+    {
+      "command": [
+        "cmake",
+        "--build",
+        "cpppj/build",
+        "--config",
+        "Release",
+        "--parallel",
+        "4",
+        "--",
+        "/p:UseMultiToolTask=true",
+        "/p:MultiProcMaxCount=4",
+        "/p:EnforceProcessCountAcrossBuilds=true"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-editor-image-475/build1.log",
+      "sha256": "6c997e365ec0a649b02689c274198e5d08b6f4aa06c1b733bef45b94d675e6bc",
+      "summaries": [],
+      "diagnostics": []
+    }
+  ],
+  "nativeFirstFailure": {
+    "command": [
+      "python",
+      "-X",
+      "utf8",
+      "tools/decomp_editor_image.py",
+      "--smoke"
+    ],
+    "exit": 1,
+    "log": "extracted/cpp-editor-image-475/native-smoke1.log",
+    "sha256": "7983e772da9e26e18263fd57bc4be7037d7c0dabd950113687f0327cd16c03d3",
+    "summaries": [],
+    "diagnostics": []
+  },
+  "nativeSmoke": {
+    "command": [
+      "python",
+      "-X",
+      "utf8",
+      "tools/decomp_editor_image.py",
+      "--smoke"
+    ],
+    "exit": 0,
+    "log": "extracted/cpp-editor-image-475/native-smoke2.log",
+    "sha256": "c8cf504c2ad640c80529d0e16a6c5cd8717a86f4ac69bdf26e7a0704bab203c0",
+    "summaries": [],
+    "diagnostics": []
+  },
+  "nativeGenerate": {
+    "command": [
+      "python",
+      "-X",
+      "utf8",
+      "tools/decomp_editor_image.py"
+    ],
+    "exit": 0,
+    "log": "extracted/cpp-editor-image-475/native-generate1.log",
+    "sha256": "1796b3f5524d935d36cb1b78854c9f6a20b1bf0270718dd47a1f5c1e37251dd6",
+    "summaries": [],
+    "diagnostics": []
+  },
+  "nativeVerify": {
+    "command": [
+      "python",
+      "-X",
+      "utf8",
+      "tools/decomp_editor_image.py",
+      "--verify"
+    ],
+    "exit": 0,
+    "log": "extracted/cpp-editor-image-475/native-verify1.log",
+    "sha256": "114eb3f0f7a4d7fa18c4efa1617f5954675b80f2925fe3164332027255522f04",
+    "summaries": [],
+    "diagnostics": []
+  },
+  "nativeReport": "cpppj/editor-image-native-20261027.json",
+  "nativeObservations": 1570,
+  "firstCommandFailure": {
+    "command": [
+      "cpppj/build/bin/Release/netstorm_tests.exe",
+      "EditorImage"
+    ],
+    "exit": 1,
+    "log": "extracted/cpp-editor-image-475/focused-EditorImage.log",
+    "sha256": "5847b92902896a00ad086a1aab96ab610277f73068c43cfabec7dde02c7c6646",
+    "summaries": [],
+    "diagnostics": []
+  },
+  "corrections": [
+    "격리 최초 실행에 원문 malloc/free thunk0043fa80/0043fa90 경계를 추가했다. CODE와 변환/인코더 몸체는 그대로 실행했다.",
+    "첫 집중 명령의 --filter 누락을 실행기가 거부했다. 올바른 인자로 같은 제품을 실행하고 첫 로그도 보존했다."
+  ],
+  "focused": [
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "EditorImage"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-editor-image-475/focused2-EditorImage.log",
+      "sha256": "ce2dbf8b7e712b740d2b6a4952aafcda1e9f1cad8f3afff3c91ec3a4702ae8a6",
+      "summaries": [
+        "2 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "EditorIsland"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-editor-image-475/focused2-EditorIsland.log",
+      "sha256": "e9544b5422c2578b7d9b47e6aade5fea2157c65fc0d80a4d89807e5632dd6401",
+      "summaries": [
+        "4 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "IslandBitmap"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-editor-image-475/focused2-IslandBitmap.log",
+      "sha256": "7a5f6e018dd5e016845bf3f6863eae873e6415ab7c6a5bfdab7e208ac6fbe746",
+      "summaries": [
+        "6 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "ExistingEditor"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-editor-image-475/focused2-ExistingEditor.log",
+      "sha256": "e1f1b9a026b8ee6f493beeb6d593c1e12b556d781d1235d73c8bb52e40809183",
+      "summaries": [
+        "58 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "NewFort"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-editor-image-475/focused2-NewFort.log",
+      "sha256": "4262fd2309d2e3dfa1a70e833eb3661567dcb8a7ecff51653d21d760a3ef670c",
+      "summaries": [
+        "13 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "reward"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-editor-image-475/focused2-reward.log",
+      "sha256": "b74226b7552ec6720cacb596c7b85fff225bed018315f844f2468df88d403220",
+      "summaries": [
+        "9 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "Reward"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-editor-image-475/focused3-Reward.log",
+      "sha256": "72d7f2e7a241283ef7253306f3ff78469b32d48503750e8cb3d8968d959a0b7d",
+      "summaries": [
+        "8 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    }
+  ],
+  "uniqueFocused": 99,
+  "observedFocused": 100,
+  "wholeCpp": {
+    "command": [
+      "cpppj/build/bin/Release/netstorm_tests.exe"
+    ],
+    "exit": 0,
+    "log": "extracted/cpp-editor-image-475/whole1.log",
+    "sha256": "f724bcb51335e317e66ec9fc8c57cd4c956f90fae30871112f9ad5f95683d73f",
+    "summaries": [
+      "3248 test(s), 0 failed check(s)"
+    ],
+    "diagnostics": []
+  },
+  "wholeCppCases": 3248,
+  "ctestWrapperExecuted": false,
+  "registeredBefore": 3246,
+  "registeredAfter": 3248,
+  "newTests": [
+    "CampaignEditorImage_ActualMapAndCroppedChoicesUseSameSession",
+    "EditorImage_ReplaysNativeCropEncoderCopyAndDestroy"
+  ],
+  "missingPreviousTests": [],
+  "preservedWholeInputFiles": 3172,
+  "changedProtectedInputs": [],
+  "appendedExistingTest": {
+    "path": "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp",
+    "originalBytes": 116911,
+    "originalSha256": "37d6765dcaf30852f849c95b20eb699ed172b7bd1369fd8bcd6476482d3a446c",
+    "originalBytePrefixPreserved": true
+  },
+  "sourceManifest": {
+    "path": "extracted/cpp-editor-image-475/source-final.json",
+    "files": 2815,
+    "sha256": "d1f96ef616a8fe76cf1f5308b2fa82f1673bbd02c602d93b4d2bb2d9aa312146"
+  },
+  "gameExeSha256": "69edeaccc1ba105fc9c3a92110ea80d4416cf06f50076dfa31e7bfd8dfc06f14",
+  "testExeSha256": "55c51a0c73e2de3980c31a9455078ab98e440f231ebf2447b760cb07e39491d9",
+  "coverage": [
+    "원본0046d790→004dad20→004042cd/0040463b/004047ab의 crop/헤더/RLE 전체 바이트",
+    "원본 변환 shape의 깊은 복사·이중 소멸·shapeSize 보존",
+    "실제 기존 RLE renderer의 입력 픽셀 재생",
+    "같은 실제 Editor Session의 지도crop0/후보crop1과 공유 난수/섬/Pool 불변"
+  ],
+  "gameRuns": 0,
+  "guiRuns": 0,
+  "audioDeviceRuns": 0,
+  "remaining": [
+    "MetaImage 실제 생성/크기/부착/Draw",
+    "21개 목록·Add Island 창 생성/Refresh/Idle/소멸/단일 창 수명·공통 트리",
+    "실제 새 맵/기존 맵 Add Island GUI·저장/재진입",
+    "Test Battle/언어별 시나리오",
+    "전체 미션 자연 완주·화면/음향 동일성"
+  ]
+}
