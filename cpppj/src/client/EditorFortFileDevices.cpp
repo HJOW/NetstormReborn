@@ -16,11 +16,11 @@ EditorFortFileDevices::EditorFortFileDevices(EditorFiles& work,const o::BaseFile
 std::string_view EditorFortFileDevices::CurrentPath() {
     const auto name=Need(effects_.currentName)();if (name.empty() || !name.front()) Need(effects_.assertion)(39);
     Need(effects_.selectFileSpec)();const auto key=Need(effects_.fileSpecKey)();const auto current=Need(effects_.currentName)();configuredPath_=config_.PathSpec(key,current);
-    namespacePath_=std::filesystem::path(configuredPath_).is_absolute() ? configuredPath_ : o::NormalizeGamePath(configuredPath_);workingPath_=work_.ResolvePath(namespacePath_).string();return workingPath_;
+    namespacePath_=std::filesystem::path(configuredPath_).is_absolute() ? configuredPath_ : o::NormalizeGamePath(configuredPath_);workingPath_=(effects_.resolve ? effects_.resolve(configuredPath_) : work_.ResolvePath(namespacePath_)).string();return workingPath_;
 }
 // 파일존재/읽기는설치부모가별도로실행한다.이준비는작업namespace에없는복사본만만든다.
 std::string_view EditorFortFileDevices::PrepareCurrent() {
-    static_cast<void>(CurrentPath());if (work_.Exists(workingPath_)) return workingPath_;
+    static_cast<void>(CurrentPath());if (effects_.prepare) { effects_.prepare(configuredPath_);return workingPath_; }if (work_.Exists(workingPath_)) return workingPath_;
     const auto bytes=source_.TryRead(configuredPath_);if (bytes) static_cast<void>(work_.PreparePath(namespacePath_,*bytes));return workingPath_;
 }
 // 실제경로를재검사한뒤출처5/0을그대로반환한다.

@@ -2207,3 +2207,8 @@ target_sources(netstorm_tests PRIVATE NativeMainMenuStateTests.cpp NativeMainMen
 set_source_files_properties(EditorSaveGoMainTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_EDITOR_SAVE_GO_MAIN_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/editor-save-go-main-x86.tsv\"")
 set_source_files_properties(SaveFortNameDialogTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_SAVE_FORT_NAME_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/save-fort-name-x86.tsv\"")
 set_source_files_properties(TellTipTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_TELL_TIP_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/tell-tip-x86.tsv\"")
+
+# 작업본의 실제 파일 재조회/보호 경계와 독립 clipboard880관측을 같은 제품에서 검증한다.
+target_sources(netstorm_tests PRIVATE EditorMapCatalogFilesTests.cpp TextClipboardTests.cpp)
+target_sources(netstorm_tests PRIVATE EditorAtomicWriteTests.cpp)
+set_source_files_properties(TextClipboardTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_TEXT_CLIPBOARD_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/text-clipboard-x86.tsv\"")

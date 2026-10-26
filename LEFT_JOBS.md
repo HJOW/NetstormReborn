@@ -8,15 +8,19 @@
 - **마지막 전체 정밀 디컴파일: HJOW-Athlon (192.168.0.94) / 2026-10-23.** 결과는 `extracted/refined/`(Git 제외)에 있다. 현재 PC가 이와 다르면 AGENTS.md 규칙에 따라 재디컴파일한 뒤 작업한다. 절차는 `tools\ghidra\refine_all.ps1`이며, 힌트 생성 단계가 콘솔 인코딩(cp949) 오류로 멈추면 `PYTHONUTF8=1`, `PYTHONIOENCODING=utf-8`을 설정하고 다시 실행한다.
 - 2026-10-26의 문서 정리는 HJOW-X3D에서 인수인계 문서만 고친 것이다. 디컴파일 결과·제품 코드·검사 코드는 바꾸지 않았으므로 위 디컴파일 기록은 그대로 유효하다. 사용자는 HJOW-Athlon에서 작업을 재개할 예정이다.
 - **실제 게임 실행 확인:** HJOW-Athlon, VM-W11-Codex, vm-debian-codex는 AGENTS.md의 예외 시스템이다. 그 밖의 PC에서는 게임이나 별도 창을 띄우기 전에 목적을 설명하고 사용자 확인을 받는다.
-- **목표 상태:** 2026-10-26 재개 뒤467까지 완료했다. 최종 Source6 게임SHA `6bfa1865…`, 빌드6 경고/오류0, 집중181고유/189관측·신규29·전체C++3,194개·실패0이다. 같은 게임 GUI8건과 자연Early2 A~I→Tutorial3를 확인했다. SaveGoMain의 실제 저장/미저장→Native3/Poll4→재진입, Save as 파일 생성·재파싱/중복거부, 기본 시작/Tips 및 초기HUD→미션 진입을 연결했다. 새 이름의 작업본 목록 재진입·NewFort/AddIsland GUI/TestBattle/시나리오·기존 저장상태 복구·나머지 미션 자연 완주/전체 동일성은 남아 목표는 계속 진행 중이다.
+- **목표 상태:** 468까지 마감하고 사용자 요청에 따른 일시중지로 인계한다. Source10 게임 `dca65cf3…`, Release 경고/오류0·집중267/270관측·신규17·전체3,211개/실패0, 실제GUI3·저장Fort전체파싱/새이름메뉴재진입·재시작·두화면회귀 수정까지 검증했다. NewFort/AddIsland GUI/TestBattle/시나리오·전체미션자연완주/원본전체동일성은 남아 전체목표는 미완료다.
 - **원시 증거 위치:** 빌드·검사·GUI 원시 로그와 통합 드라이버는 `extracted/`(Git 제외)에 있으며, 작업한 PC(주로 HJOW-Athlon)에만 있다. 커밋되는 결과 보고서는 `cpppj/*.json`, 작업 문서는 `docs/exe/cpp-*.md`다.
-- **467 재개점:** 다음은 저장한 새 이름을 실제 목록에서 읽고 다시 여는 작업이다. `extracted/cpp-editor-catalog-468-staging/editor-catalog-468.patch`는 원본 disk 순서→work-only 이름 추가/내용 work 우선/기존50개 상한을 보존하는 초안이며 제품 미적용이다. `cpp-text-clipboard-468-staging`, `cpp-add-island-468-staging`, `cpp-tutorial3-468-staging`도 미적용 준비본이다. 전체 덮어쓰기 대신 각 patch/hunk·현재 SHA를 대조한다. Native3의 승패/Intro39/기존!state.dat와 전체 Native7 prefix/prepared World는 후속이다. 마지막 전체 디컴파일 HJOW-Athlon/2026-10-23 유지.
+- **다음 재개점:** 먼저468 최종제품/보고서·[469 준비본 복원 안내](docs/exe/prepared/README.md)를 확인한다. NewFort 부모→Subscriber저장→공유이름표/빈Image의 base·겹치는Storage hunk를 최신제품에 대조해 조합·C++빌드/집중검사한다. 이어 NewEditor 전체설치/State확정/자동AddIsland 큐와 전용MetaImage·Bitmap·목록/창수명을 연결한다. TestBattle/시나리오·전체State7/Native3남은선택과 자연완주는 후속이다. 준비본을 제품에 통째로 덮지 않으며 현재142파일의SHA를 먼저 검증한다. 다른PC면 AGENTS에 따라 전체정밀디컴파일부터 다시 한다.
 - **465 완료:** `EditorWorkingRoot`로 실제 자산 디렉터리를 먼저 정규화하여 후행 `/`·`\\`·`.`·`d/..`에서도 같은 형제 `<이름>-editor`를 사용한다. 기존 작업본 보존/원본 보호 검사는 유지한다. Release build1 종료0·EditorFiles 집중7개(신규2)·실패0. 실제 후행 구분자 Edit GUI는 다음 기능 묶음에서 검증한다. [작업 문서](docs/exe/cpp-editor-working-root-20261026.md), [보고서](cpppj/editor-working-root-20261026.json). 마지막 전체 디컴파일 HJOW-Athlon/2026-10-23 유지, 디컴파일 변경 없음. Edit 도구/상태 복구·전체 미션 완주 목표는 계속 진행 중이다.
 - **466 완료:** 같은 실제 풀/게임 난수/표시의 Set All Bridge, 양판본 CanPlaceIsland, 늦은 Guide 해제와 Tutorial 데이터 수명, 실제 메인 Quit 큐/즉시 반환, Script 없는 Editor의 HTML 취소/Blank 복귀를 연결했다. Release 경고/오류0·집중103고유/112관측·신규9개·전체C++3,165개·실패0, 같은 게임 `c8739bd5…`의 GUI8·자연Early2→Tutorial3를 확인했다. 기존 검사3파일 본문·기존3156등록·보호2474파일을 보존했다. 최초 필터명2오류와 stdout/stderr 이름3개 혼합은 검사기에서만 보완하고 원시를 보존했다. [통합 문서](docs/exe/cpp-editor-runtime-integration-20261026.md), [보고서](cpppj/editor-runtime-integration-20261026.json), 원시 extracted/cpp-editor-runtime-466-*. SaveGoMain/전체State3·Editor 도구 전체·나머지 미션 자연 완주/동일성은 후속이다. 마지막 전체 디컴파일 HJOW-Athlon/2026-10-23 유지.
 - **467 완료:** SaveGoMain/기본 Native3·무World 장기 Deck·Save as·Tips 입력과 초기HUD→미션 진입을 연결했다. Source6 빌드6 경고/오류0·집중181/189관측·신규29·전체3194/실패0, GUI8·자연Early2 A~I→Tutorial3 통과. No/Yes의314다리 재로드 차이와 새Fort파싱/중복거부, 보호2476/소스2748·기존3165등록/본문을 확인했다. [통합 문서](docs/exe/cpp-editor-menu-runtime-integration-20261026.md), [보고서](cpppj/editor-menu-runtime-integration-20261026.json), 원시 extracted/cpp-editor-menu-467-*. 최초빌드/신규검사/마우스serial/미션가드·Client9·미도킹Draw 실패도 보존했다. 새이름메뉴재진입·편집도구/전체미션·원본동일성은 계속 진행한다. 마지막전체디컴파일 HJOW-Athlon/2026-10-23 유지.
 - 원격 저장소에 push하지 않는다. 커밋 메시지는 `YYYYMMDD-NN CP 요약` 형식이며, NN은 `git log`로 그날의 마지막 번호를 확인해 정한다.
 
 ## 1. 현행 목표 ([TODO.md](TODO.md))
+
+- **2026-10-27 일시중지 인계:** 사용자 요청대로 단위468과 실행 중이던 서브AI 작업을 마감했다. Source10 Release 경고/오류0·집중267고유/270관측·신규17·전체C++3,211개/실패0이며 기존3,194등록/검사본문을 보존했다. 최종 게임SHA `dca65cf3…`의 실제 Save as 두번→목록재진입→재시작, Main↔Edit·Tips·Options GUI3건과 새Fort전체파싱을 확인했다. 사용자가 신고한 Editor중앙titleMenu와 메인버튼표면/글자배치 회귀도 수정·픽셀검증했다. 서브AI는 모두 종료했고 미적용469 네 구현묶음/Early3부분기록을142파일 보관본으로 인계한다. 로컬 커밋 후 목표를 paused로 전환하며 전체 목표 완료로 처리하지 않는다. [통합문서](docs/exe/cpp-editor-input-runtime-20261027.md), [보고서](cpppj/editor-input-runtime-integration-20261027.json), [준비본](docs/exe/prepared/README.md). 마지막 전체 디컴파일 HJOW-Athlon/2026-10-23 유지.
+
+- **468 완료:** 실제 work OS 목록/원문50개 상한·물리중복/대소문자·현재읽기, 최초loose이관/readonly보존·Pending/Completed장부·삭제원본부활방지·전체source/work절대경로매핑을 연결했다. 원본CF_TEXT read/write와 최초TextEntry 문맥도 연결했다. H:장부교체오류5에는 제한적atomic재시도/영구실패보존을 추가했다. 최종GUI에서 NTFS기본433맵의 새B470이 실제첫50 안에 나타나 재로드/재시작됐고64다리프레임을 보존했다. exFAT에서 새이름이50개밖인 관찰을 원문상한과 구별했다. Native클립보드880관측/실제OS복사미검증, 픽셀/실제GUI/전체결과와 처음실패는 통합문서에 구분했다. Early3는 Source1에서 A채취귀환→C까지이고 미완주다. NewFort/Subscriber/공유이름표·빈Image/AddIsland는 C++미빌드 준비본으로 인계했다. 별도webpj 커밋의AGENTS 변경은 보존하고 cpppj Edit범위는 유지한다. 전체 미션/원본 동일성 목표는 계속 미완료다.
 
 
 - Early Missions 6개, 캠페인 전체 16개, Priest Training 9개, 데모 3개를 사용자가 플레이할 수 있고, 원본 10.78과 완전히 같게 동작하도록 한다. Priest Training은 2026-10-26 사용자 지시로 목표에 추가했으며, TODO.md에도 반영됐다.
@@ -43,6 +47,8 @@
 
 ### 2.1 마지막 통합 검증 기준
 
+- **최신468 통합:** Source10 게임 `dca65cf3…`, 빌드10 경고/오류0·집중267고유/270관측·신규17·전체C++3,211개/실패0, 최종같은게임GUI3·새B470전체Fort파싱/재진입/재시작을 확인했다. Editor중앙배경·메인버튼표면/글자중앙·독립메뉴출력범위 회귀를 고쳤다. 기존3194등록/본문, 원본/CD/기존fixture 2479보호입력은 바이트동일이다. AGENTS는 병행webpj별도커밋 변경을 별도감사로 보존했다. 미적용142파일보관본은 제품검사통과수에 합산하지 않는다. [통합문서](docs/exe/cpp-editor-input-runtime-20261027.md), [보고서](cpppj/editor-input-runtime-integration-20261027.json).
+
 - **최신467 통합:** Source6 게임 `6bfa1865…`, 집중181고유/189관측·신규29·전체C++3,194개·실패0, 같은 게임 GUI8·자연Early2→Tutorial3 통과. 보호2476파일/최종2748소스·기존3165등록·기존검사본문을 유지했다. [통합 문서](docs/exe/cpp-editor-menu-runtime-integration-20261026.md), [보고서](cpppj/editor-menu-runtime-integration-20261026.json)을 본다. Source3에서 녹색 전체검사 후 실제미션3경계가 드러나 Source6을 다시 전체검증했고 최초원시를 보존했다. 전체 목표 완료는 아니다.
 - **최신466 통합:** Source2 게임 `c8739bd5…`, 빌드2회 경고/오류0·집중103고유/112관측·신규9·전체C++3,165개·실패0. 같은 제품 GUI8과 자연Early2→Tutorial3를 통과했다. 기존3156등록/검사3본문/보호2474파일을 보존했다. 자세한 범위와 최초 검사기 오류는 [통합 문서](docs/exe/cpp-editor-runtime-integration-20261026.md), [보고서](cpppj/editor-runtime-integration-20261026.json)를 본다. SaveGoMain/전체State3·Editor 전체·전체 자연 완주 완료는 아니다.
 
@@ -57,6 +63,8 @@
 - 보호 파일 기준은 1,821개다. 게임 실행 전후 `originals/` 전체 해시가 같아야 하고, 허용 설정 파일(options.cfg, fullscreenStateFile.dat)은 복원한다.
 
 ### 2.2 미션별 상태
+
+- **Early3 추가 부분 근거:** 단위468 Source1의실제19다리입력뒤골렘이106,103간헐천으로자연이동/채취귀환해SP2000→2200→2400, A→B→C를 관찰했다. 최종Src10에서완주한것이아니며 attempt4는종료프레임뒤명령이남아return1이다. 다음Workshop메뉴에서71/75생산과공급·사제무력화/포획이필요하다. [원시·다음계획 보관](docs/exe/prepared/tutorial3-partial-468-20261027/ATTEMPT4-NEXT-C-H.md).
 
 | 대상 | 현재 확보한 증거 | 남은 확인 |
 | --- | --- | --- |
@@ -75,7 +83,7 @@
 - **Edit 메뉴:**
   - 메인 Edit → 편집 가능 맵 목록(원본 50칸 상한, `mayEditMissions` 옵션) → 선택 예약(State1) → LoadEditable 안내·Cancel까지 실제 GUI로 확인했다.
   - 기존 Fort의 Session/World·Deck·작업본 파일·로컬 전송과 준비 checkpoint는464에서 실제 메뉴 선택→State1→공통 확정→Poll4에 연결했다.466은 기존 Guide의 late closeGuide/모드 해제와 후행 경로를 검증했다. 전체 저장·재파싱·재로드는 기존 집중 검사 근거이며 사용자 Save as/복귀 저장 GUI 완료와 구별한다.
-  -466의 Set All Bridge/종료취소 뒤467에서 실제 Cracked314개 변경 후 No→원래314개/Yes→변경314개를 재로드했다. Save as는 문자입력·실제마우스OK·전체작업본Fort파싱·중복거부/Cancel까지 확인했다. **새 이름의 목록 재진입은 아직 미연결**이다. NewFort/AddIsland GUI/TestBattle/언어별시나리오·전체State7은 다음 작업이다.
+  -466의 Set All Bridge/종료취소 뒤467에서 실제 Cracked314개 변경 후 No→원래314개/Yes→변경314개를 재로드했다. Save as는 문자입력·실제마우스OK·전체작업본Fort파싱·중복거부/Cancel까지 확인했다. 468에서 실제 작업본 목록과 새이름 재진입/프로세스 재시작을 연결했다(원문 수락50개 상한 유지). NewFort/AddIsland GUI/TestBattle/언어별시나리오·전체State7은 다음 작업이다.
 - **게임 중 UI:**
   - QWASZX: 문자 입력 → 생산 슬롯 예약 → 취득·회전·배치·보충을 실제 GUI로 확인했다(단위366, [문서](docs/exe/cpp-production-shortcuts-20261023.md)).
   - ESC 메뉴: 원본 가로 메뉴(Game·Edit·View·Options·Players·About)와 하위 명령·사건 큐를 연결했다(단위369, [문서](docs/exe/cpp-game-menu-runtime-20261023.md)). 원본에 없던 임시 Game 버튼은 2026-10-25에 제거했다. 459에서 원문 State7의 같은 HTML 배경 첫BYTE 초기화를 연결해 남은 배경이 ESC를 소비하던 회귀를 해결했고 실제 Early1 메뉴 복귀·재진입을 확인했다([459 문서](docs/exe/cpp-mission-background-runtime-20261026.md)).
@@ -152,8 +160,9 @@
 
 
 - [x] **464 완료 — 기존 맵:** 실제 목록 클릭→Native State1 cleanup/prefix→현재 이름·작업본→InstallExistingEditorCheckpoint→HUD mode1/전체 팔레트→공통 확정/loaded→호스트 입력→다음 Poll4를 연결했다. 기존 InstallHud/공통 HUD를 재사용하고 실제 listener/client9/동일 연결표를 사용한다. 실제 Battle1과 TEST01의 ESC/Game/Edit 표시·ESC 닫기까지 통과했다. TEST01 GUI 입력은 새 복사본의 loose Fort 한 개로 제한했으며 전체 원본 폴더 목록에서 TEST01 접근을 확인한 것은 아니다.
-- [ ] 편집 도구(지형·섬·오브젝트·소유자)와 ESC의 Editor 명령(Save as, NewFort, 다리 수준0/1/2, Test Battle, Main Menu)을 연결한다. 464에서 메뉴 표시/열기/닫기는 완료했으며 실제 명령 동작은 별도다.
-- [ ] Create New Map(`LOADLOADFORT`, NewFort alternate1), Save as·저장·다시 불러오기, Test Battle과 편집 화면 복귀(`020000c2`), 종료(`LeaveEditMode`/`SaveGoMain`)를 구현한다.
+- [ ] 남은 편집 도구(지형·섬·오브젝트·소유자), NewFort, Test Battle을 연결한다. Set All Bridge와 SaveGoMain은466~467, Save as·새이름재로드/재시작은468에서 완료한 범위이며 나머지 도구/전체 원본 동일성과 구별한다.
+- [x] Save as·전체저장·새이름목록재진입/재시작·전체Fort파싱, SaveGoMain의실제저장/미저장→메인복귀를 연결했다(467~468). 원문50개 목록상한은 유지한다.
+- [ ] Create New Map(`LOADLOADFORT`, NewFort alternate1), Test Battle과 편집 화면 복귀(`020000c2`), 남은 LeaveEditMode 전체 분기를 구현한다.
 - [ ] 언어별 시나리오 파일(`.english`)의 사용자·AI 구성, 시작 SP, 브리핑 적용을 연결한다.
 - [ ] `originals/d/TEST01.fort`·`TEST01.english`와 TEST02는 읽기 참조로만 쓰고, 저장은 실제 작업본 경로에 한다.
 

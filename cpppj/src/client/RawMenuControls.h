@@ -73,6 +73,7 @@ struct RawHelpHooks {
 // 가상 분배만 조립한다. 개별 생성/배치/입력/출력의 계산은 기존 원본 몸체를 그대로 사용한다.
 class RawMenuControls {
 public:
+    void BindCommonButtons(RawMenuExternalGumps hooks); //공통 돌 버튼/자식 배경을 같은 수집·정렬·Draw에 연결한다. 별도 HUD 외부 등록 번호나 개수를 만들지 않는다.
     // 공유 트리/자산/글꼴은 메뉴보다 오래 살아야 한다. 생성 중 게임/창을 실행하지 않는다.
     RawMenuControls(RawMenuTree tree,const GameAssets& assets,FontStore& fonts,RawMenuHooks hooks);
     // 공통 트리의 자식 삭제가 끝난 뒤 해제한다.

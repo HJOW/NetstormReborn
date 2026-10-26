@@ -12,6 +12,8 @@ struct EditorFortPathEffects {
     std::function<void()> selectFileSpec; //005327e0이같은고정9BYTE FileSpec버퍼를가리키게한다.버퍼를fortSpec으로덮지않는다.
     std::function<std::string_view()> fileSpecKey; //선택한기존SoloMapFileSpec::Current등의같은현재키다.
     std::function<void(std::uint32_t)> assertion; //빈currentName의Fortspec.cpp39와stat실패Basefile.cpp진단이다.
+    std::function<std::filesystem::path(std::string_view)> resolve; //선택적 실제 namespace 매핑이며 source/work 절대 경로를 같은 장기 이관 정책에 연결한다.
+    std::function<void(std::string_view)> prepare; //선택적 실제 이관/tombstone 준비다. 생략한 독립 호출은 기존 lazy 복사를 유지한다.
 };
 // Client/Config/작업본보다짧게살고외곽호출이빌리는경로scratch만소유한다.
 class EditorFortFileDevices {

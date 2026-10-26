@@ -42,7 +42,7 @@ struct MapProbe {
     }
     // 파일이 없어지면 빈 Template을 유지한다. 서명/본문 오류를 성공으로 대신하지 않는다.
     void Load(const o::BaseFileSystem& files,o::ConfigInterface& config,SoloMapCatalogEffects& effects,std::string_view name,bool mine) {
-        const auto path=config.PathSpec(Need(effects.fileSpecKey)(),name);const auto bytes=files.TryRead(path);if (!bytes) return;
+        const auto path=config.PathSpec(Need(effects.fileSpecKey)(),name);const auto bytes=effects.readFile ? effects.readFile(path) : files.TryRead(path);if (!bytes) return;
         storage.InstallFile(0,{},*bytes,path,Need(effects.typeCount)());
         storage.Headers()[8]=mine ? 1 : 0; // 목록 임시 Template의 isMine=1은 실제 파일 쓰기를 발생시키지 않는다.
     }
@@ -78,7 +78,9 @@ struct SoloMapCatalog::Impl {
         o::SoloMapListHooks hooks;hooks.mayEditMissions=[this] { return config.GetInt("mayEditMissions"); };
         hooks.enumerate=[this] {
             std::vector<std::string> names;
-            for (const auto& path:files.MatchDisk(config.PathSpec(Need(effects.fileSpecKey)(),"*"))) names.push_back(MapName(path)); // 원본 OS 순서와 전체 점 제거를 유지하고 TAFF 목록은 합치지 않는다.
+            const auto pattern=config.PathSpec(Need(effects.fileSpecKey)(),"*"); //실제 열거 직전의 현재 키/설정만 읽으며 분류와 메타 읽기까지 캡처하지 않는다.
+            const auto paths=effects.enumeratePaths ? effects.enumeratePaths(pattern) : files.MatchDisk(pattern); //새 장치를 제공하지 않은 독립/기존 호출의 원래 디스크 경계를 보존한다.
+            for (const auto& path:paths) names.push_back(MapName(path)); // 원본 OS 순서와 전체 점 제거를 유지하고 TAFF 목록은 합치지 않는다.
             return names;
         };
         hooks.kind=[this](auto name) { return Kind(name); };

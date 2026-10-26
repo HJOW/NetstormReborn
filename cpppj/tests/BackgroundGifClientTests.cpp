@@ -94,3 +94,5 @@ TEST_CASE(BackgroundGifClient_MissingFilePartialDecodeAndPageLifetime) {
     scene.client.Configuration().Set("BackgroundGifSpec","d/setup.cfg");bool rejected{};try { scene.gifs->Create("invalid-gif-input"); }catch (const std::runtime_error&) { rejected=true; }CHECK(rejected && scene.Count()==before+1 && scene.gifs->ImageCount()==0);scene.menus->CloseBackgroundGifs();CHECK(scene.Count()==before);
     scene.client.Configuration().Set("BackgroundGifSpec","d/titleMenu.gif");scene.gifs->Create("first");scene.gifs->Create("second");CHECK(scene.gifs->ImageCount()==2);scene.Resize();CHECK(scene.Count()==before && scene.gifs->ImageCount()==0);
 }
+// ?? ??? ?? ?? Draw????????? ?? ?? ??? ?? GifScene?? ????.
+#include "MainMenuPaintTests.inc"

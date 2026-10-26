@@ -1,0 +1,22 @@
+{
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+  "date": "2026-10-27",
+  "patchSha256": "e66295fe635cb4bcf9f16bdaea3b2c2dcd8ce35b9f4763651912cfdddbae5792",
+  "applyCheck": {
+    "command": "git apply --check --whitespace=error extracted/cpp-data-manager-initialize-469-staging/work/data-manager-initialize-469.patch",
+    "exitCode": 0,
+    "stdout": "",
+    "stderr": "",
+    "applied": false
+  },
+  "cppBuilds": 0,
+  "cppTestsRun": 0,
+  "originalGameRuns": 0,
+  "cloneGameRuns": 0,
+  "productChangesByThisAgent": 0,
+  "newFortFrozenParentsModified": false,
+  "native76FixturesModified": false,
+  "testsDrafted": 6,
+  "limit": "적용 전 정적 확인만 통과했다. C++와 실제 Storage/목록/Client 동작은 재개 후 검증해야 한다."
+}

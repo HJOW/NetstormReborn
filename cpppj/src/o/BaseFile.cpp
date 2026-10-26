@@ -129,6 +129,11 @@ std::optional<std::vector<std::uint8_t>> BaseFileSystem::TryRead(std::string_vie
     for (const auto& archive : archives_) if (archive.Find(name)) return archive.Read(name);
     return netstorm::o::TryRead(secondary_ / relative);
 }
+// 등록 archive만 조회하는 새 읽기 경계이며 기존 TryRead/Read의 disk 우선순위는 바꾸지 않는다.
+std::optional<std::vector<std::uint8_t>> BaseFileSystem::TryReadArchiveOnly(std::string_view name) const {
+    for (const auto& archive:archives_) if (archive.Find(name)) return archive.Read(name); //기존 등록 순서의 첫 일치만 읽고 어떤 디스크 경로도 호출하지 않는다.
+    return std::nullopt;
+}
 // 찾지 못하면 호출자에게 예외로 알린다.
 std::vector<std::uint8_t> BaseFileSystem::Read(std::string_view name) const {
     auto bytes = TryRead(name);

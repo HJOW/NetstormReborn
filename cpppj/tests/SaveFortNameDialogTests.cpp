@@ -98,3 +98,5 @@ TEST_CASE(SaveFortNameDialog_ActualMouseUsesSerialAfterPriorGumpRetirement) {
     const auto point=scene.menus->Point("OK");CHECK(point);scene.buttons.RouteInput({InputCode::kLeftButton,point->x,point->y});scene.buttons.RouteInput({InputCode::kLeftButton|InputCode::kRelease,point->x,point->y});
     CHECK(scene.saved=="Mouse New" && scene.work.Exists(path.string()) && (root->flags&0x10000U));scene.buttons.CleanupGumps();CHECK(!scene.menus->SaveFortNameNode(token) && !scene.buttons.CurrentDialog());scene.work.Delete(path.string());
 }
+
+#include "SaveFortNameClipboardTests.inc" //같은 비공개 SaveNameScene으로 최초 TextEntry 문맥의 clipboard/저장/모달 수명을 추가 검증한다.

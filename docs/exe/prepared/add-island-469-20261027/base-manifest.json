@@ -1,0 +1,25 @@
+{
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+  "baseDescription": "468 Source3 ?? ?? ??? ?? ?? ???? ?? ?? ? ?? SHA? ?? ????.",
+  "files": {
+    "cpppj/src/client/RawCampaignSession.h": "6fc68cb0b4291beccfb935c2fa5f218c8b4225c23c5ba291c0cb119d96902688",
+    "cpppj/src/client/RawCampaignSession.cpp": "16feac1eccc13436f82a6fcbdfa44029c3d2f6ebe32e626d7c142ff8a1eed1d3",
+    "cpppj/src/client/RawMenuControls.h": "5e1992e74947249f0e13bde5827ea48d7ee27209bf05c3086d4218ab80622c9c",
+    "cpppj/src/client/RawMenuControls.cpp": "8cb1c66abd7bb696a717004642efc2cb5e66ecbb96c5bcec4856252dd4b370dc",
+    "cpppj/src/client/UberGump.cpp": "51fb65077e4da230a1cfd06d3b17f5f05b9958bea9aa72321af7d99984bcaadd",
+    "cpppj/src/client/GameMenuCommands.cpp": "e496c370b2a86d30add267ee37541bd7782cd150d02778dc376a8d36b59f228f"
+  },
+  "inherited468": {
+    "cpppj/src/o/RawIslandAdd.h": "05b2b8df22adee439bfcfa79f325cb96d1f382b176b441f4d6419589cae1c58d",
+    "cpppj/src/o/RawIslandAdd.cpp": "753831e9c241451cd9988d078c4b82359eebcb8b23216994127ec470f55a9bd3",
+    "cpppj/src/o/RawIslandPopulation.h": "434f6a92d6c7b933d93aa907c1b950367bf5193ca458bfa22e04341f03e1544b",
+    "cpppj/src/o/RawIslandPopulation.cpp": "a6c45756ef33b5742d5c35e866243b40dcaef04d7ff915b2862674ab9ea18ad6",
+    "cpppj/tests/IslandPopulationTests.cpp": "fff005988831044e7678741fa56c7e576f4ec88a224961aff6126cfd3dfc62a8",
+    "cpppj/tests/fixtures/island-population-x86.tsv": "f63a926ccb280a96078a97dc8f025f9fcae9c22fffe947bf9f53cc27006e0f13",
+    "cpppj/island-population-native-20261026.json": "390759e062f50e0fdeb64f5a507f2167ae65197548dcfc4578a9ce5cb9274f09",
+    "tools/decomp_island_population.py": "11c998ab0da7c625c657cbd2b983c34cac56491a29a37525dfd8061474d46614"
+  },
+  "actualProductWritten": false,
+  "buildOrGuiRun": false
+}

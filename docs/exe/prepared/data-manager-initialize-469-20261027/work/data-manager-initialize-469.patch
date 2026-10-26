@@ -1,0 +1,495 @@
+--- a/cpppj/src/client/CampaignTemplateStorage.cpp
++++ b/cpppj/src/client/CampaignTemplateStorage.cpp
+@@ -7,6 +7,8 @@
+ #include "o/RawDataManagerResize.h"
+ #include "o/RawDataManagerImage.h"
+ #include "o/RawTemplateLoad.h"
++#include "o/RawDataManagerInitialize.h"
++#include <new>
+ #include <algorithm>
+ #include <optional>
+ #include <stdexcept>
+@@ -48,6 +50,8 @@
+     std::uint64_t nextStreamGeneration{}; // 같은 manager 안에서 재생성마다 증가하는 비영 번호다.
+     std::uint32_t nextStreamHandle{1}; // 이름/표준 파일 위치와 독립적인 단조 증가 노드 토큰이다.
+     std::array<bool,o::FortTemplate::kSectionCount> seeded{}; // 외부 파싱 자료의 각 표준 위치를 최초 목록에 한 번만 연결한다.
++    ClientTemplateSectionNames& sectionNames; // Client와같은lazy이름표이며이Image보다긴Storageowner에서빌린다.
++    bool constructed{}; // 실제new된Image에원문ctor가끝났는지를구별한다.
+     o::FortTemplate fort; // 원시 State 섹션을 포함한 실제 파싱 자료와 소유 버퍼다.
+     o::PlayerTemplateStateStream state; // 같은 fort.sections[State]의 현재 cursor다.
+     o::FortTerritoryStream territory; // 같은 fort.sections[Territory]의 현재 cursor다.
+@@ -324,11 +328,8 @@
+         RequireNoAccess();
+         if (streams.empty() && !Read(std::span(manager).subspan(4))) { fort.sections.clear();fort.sections.resize(o::FortTemplate::kSectionCount);seeded.fill(true);state={{},0,0,false};territory={}; }
+         else SyncStreams();
+-        std::vector<std::uint8_t> source,names;std::uint32_t allocating{},created{}; // 파일 할당과 새 임시 노드는 서로 다른 실제 소유자다.
+-        names.push_back('/');
+-        for (const auto section:o::FortTemplate::SectionNames()) { names.insert(names.end(),section.begin(),section.end());names.push_back('/'); } // 실제 SNART35개 이름과 마지막 빈 이름을 공급한다.
+-        names.push_back('/');names.push_back(0);
+-        o::DataManagerImageHooks hooks;hooks.names=[&names] { return std::span(names); };hooks.assertion=[](auto) { throw std::logic_error("Template 실제 파일 이미지의 원본 진단"); };
++        std::vector<std::uint8_t> source;std::uint32_t allocating{},created{}; // 파일할당은지역소유지만이름표는같은Client에서빌린다.
++        o::DataManagerImageHooks hooks;hooks.names=[this] { return sectionNames.Names(); };hooks.assertion=[](auto) { throw std::logic_error("Template 실제 파일 이미지의 원본 진단"); };
+         hooks.streams.selection.stream=[this](auto handle) { return std::span(streams.at(handle)->bytes); };hooks.streams.list=ListEffects();
+         hooks.streams.allocateStream=[this,&allocating,&created](auto size) { if (size!=60 || created>=o::FortTemplate::kSectionCount) throw std::logic_error("Template 파일 이미지의 새 노드 계약 위반");++created;allocating=AllocateStream();return allocating; }; // 기존 canonical 버퍼는 원문 제거 전까지 덮어쓰지 않는다.
+         hooks.streams.memory.buffer=[this,&source](auto pointer)->std::span<std::uint8_t> {
+@@ -357,20 +358,27 @@
+         file.tooManyTypes=[] { throw std::logic_error("Template 파일의 numTypes<256 진단"); };file.rejectFile=[](auto) { throw std::runtime_error("Template 잘못된 서명의 원본 파일 제거 요청: 보호 원문은 삭제하지 않습니다"); };
+         if (!ReadFile(file)) throw std::runtime_error("Template 실제 파일 열기/서명 거부");
+     }
++    // new276의같은할당이다.원문ctor/목록생성은아직하지않고metadata의선행노드투영도막는다.
++    explicit Image(ClientTemplateSectionNames& names):sectionNames(names) { seeded.fill(true); }
++    // 원문ctor는같은생성수명의실제manager와Client version을바꾼다.이름표할당은하지않는다.
++    void ConstructName(std::string_view file,std::uint32_t& version) {
++        if (constructed || !streams.empty() || file.size()>=256 || file.find('\0')!=std::string_view::npos) throw std::invalid_argument("Template 빈Image 실제ctor계약");
++        const std::span<std::uint8_t,4> global(reinterpret_cast<std::uint8_t*>(&version),4);o::ConstructTemplateDataManager(manager,file,global);name.assign(file);constructed=true;
++    }
+     // State와 Territory 모두 같은 원시 섹션 바이트를 빌리며 파일 입력이면 원본 읽기 부모가 초기 목록을 만든다.
+-    Image(o::FortTemplate value,std::string file,std::uint32_t& version,bool fileImage=false):fort(std::move(value)),name(std::move(file)) {
++    Image(o::FortTemplate value,std::string file,std::uint32_t& version,ClientTemplateSectionNames& names,bool fileImage=false):sectionNames(names),fort(std::move(value)),name(std::move(file)) {
+         if (name.size()>=256 || name.find('\0')!=std::string::npos) throw std::invalid_argument("Template 실제 파일명256BYTE 계약 위반");
+         const std::span<std::uint8_t,4> global(reinterpret_cast<std::uint8_t*>(&version),4); // 실제DWORD객체의BYTE뷰다. 기존BYTE배열을DWORD참조로역캐스팅하지않는다.
+         o::ConstructTemplateDataManager(manager,name,global); // 같은Client의실제005c89c0에0을쓰는효과를기존원본생성자에서수행한다.
+-        if (fileImage) return;
++        constructed=true;if (fileImage) return;
+         const auto at=StateSection();const auto bytes=at<fort.sections.size() ? std::span<std::uint8_t>(fort.sections[at]) : std::span<std::uint8_t>{};state={bytes,0,static_cast<std::uint32_t>(bytes.size()),!bytes.empty()};
+         const auto territoryAt=TerritorySection();const auto territoryBytes=territoryAt<fort.sections.size() ? std::span<const std::uint8_t>(fort.sections[territoryAt]) : std::span<const std::uint8_t>{};
+         territory={territoryBytes,0,static_cast<std::uint32_t>(territoryBytes.size())};SyncStreams();
+     }
+ };
+ // 시작 초기화는 기존 manager를 반납하는 전역 정리와 다르다.
+-CampaignTemplateStorage::CampaignTemplateStorage(std::shared_ptr<o::FortSerializationGlobals> serializationGlobals)
+-    :serializationGlobals_(serializationGlobals ? std::move(serializationGlobals) : std::make_shared<o::FortSerializationGlobals>()) {
++CampaignTemplateStorage::CampaignTemplateStorage(std::shared_ptr<o::FortSerializationGlobals> serializationGlobals,std::shared_ptr<ClientTemplateSectionNames> sectionNames)
++    :serializationGlobals_(serializationGlobals ? std::move(serializationGlobals) : std::make_shared<o::FortSerializationGlobals>()),sectionNames_(sectionNames ? std::move(sectionNames) : std::make_shared<ClientTemplateSectionNames>()) {
+     // 아홉 개의 처음20BYTE만 원본 생성 몸체로 초기화한다.
+     for (std::uint32_t slot=0;slot<9;++slot) o::InitializeTemplateHeader(Header(slot));
+ }
+@@ -378,6 +386,24 @@
+ CampaignTemplateStorage::~CampaignTemplateStorage()=default;
+ // 같은 고정 물리 표를 빌린다.
+ std::span<std::uint8_t> CampaignTemplateStorage::Headers() { return headers_; }
++// 원문new276만실행하며header/ctor/이름표는나중에선택된부모가진행한다.
++std::uint32_t CampaignTemplateStorage::AllocateEmptyManager(std::uint32_t bytes) {
++    if (bytes!=276 || !nextHandle_) throw std::invalid_argument("Template 실제빈Image276할당계약");
++    auto image=std::unique_ptr<Image>(new(std::nothrow) Image(*sectionNames_));if (!image) return 0;const auto token=nextHandle_++;images_.emplace(token,std::move(image));return token;
++}
++// 존재하는같은미생성할당만원문ctor로전환한다.
++std::uint32_t CampaignTemplateStorage::ConstructEmptyManager(std::uint32_t token,std::string_view name) { images_.at(token)->ConstructName(name,SerializationVersion());return token; }
++// 고정token의물리는header교체후에도같은Image이다.
++std::span<std::uint8_t> CampaignTemplateStorage::ManagerBytes(std::uint32_t token) { return images_.at(token)->manager; }
++// 실제표는진단뒤한번받고같은Image의기존rawCreate를매이름마다실행한다.
++void CampaignTemplateStorage::InitializeEmptyManager(std::uint32_t token,const std::function<void(o::DataManagerInitializeAssertion)>& assertion) {
++    auto& image=*images_.at(token);if (!image.constructed) throw std::logic_error("Template 실제ctor이전초기화");o::DataManagerInitializeHooks hooks;hooks.assertion=assertion;hooks.names=[&image] { return image.sectionNames.Names(); };
++    hooks.create=[&image](std::span<const std::uint8_t> name) { const auto end=std::find(name.begin(),name.end(),std::uint8_t{});if (end==name.end()) throw std::out_of_range("Template 실제Create이름NUL범위");image.CreateSection({reinterpret_cast<const char*>(name.data()),static_cast<std::size_t>(end-name.begin())}); };o::InitializeDataManager(image.manager,hooks);
++}
++// 같은실제Image의소멸/할당반납을원문바깥부모에빌린다.
++o::TemplateLifetimeHooks CampaignTemplateStorage::ManagerLifetime() { return Effects(); }
++// 다른Storage도동일Client이름표를명시공유할수있다.
++std::shared_ptr<ClientTemplateSectionNames> CampaignTemplateStorage::SectionNamesOwner() const { return sectionNames_; }
+ // 같은DWORD의현재값과주소를호출자에게빌린다. 조회/Storage생성자에서공유값을재초기화하지않는다.
+ std::uint32_t& CampaignTemplateStorage::SerializationVersion() { return serializationGlobals_->version; }
+ // 유효 슬롯의 현재 기록만 반환한다.
+@@ -389,10 +415,10 @@
+     return {[this](auto handle) { auto& image=*images_.at(handle);image.Destroy();image.fort=o::FortTemplate{};image.state={{},0,0,false};image.territory={};std::vector<std::uint8_t>{}.swap(image.retiredState); },[this](auto handle) { if (images_.erase(handle)!=1) throw std::logic_error("Template 같은 manager 중복 반납"); }};
+ }
+ // 기존 한 manager를 정확히 해제한 뒤 새 실제 객체를 소유한다.
+-void CampaignTemplateStorage::Install(std::uint32_t slot,o::FortTemplate fort,std::string name) { Clear(slot);if (!nextHandle_) throw std::overflow_error("Template 호스트 manager 핸들 소진");const auto handle=nextHandle_++;images_.emplace(handle,std::make_unique<Image>(std::move(fort),std::move(name),SerializationVersion()));Put(Header(slot),0,handle); }
++void CampaignTemplateStorage::Install(std::uint32_t slot,o::FortTemplate fort,std::string name) { Clear(slot);if (!nextHandle_) throw std::overflow_error("Template 호스트 manager 핸들 소진");const auto handle=nextHandle_++;images_.emplace(handle,std::make_unique<Image>(std::move(fort),std::move(name),SerializationVersion(),*sectionNames_));Put(Header(slot),0,handle); }
+ // 파싱된 보조 자료와 같은 실제 파일 원문을 새 manager에 읽으며 임의 빈 섹션 목록을 먼저 만들지 않는다.
+ void CampaignTemplateStorage::InstallFile(std::uint32_t slot,o::FortTemplate fort,std::span<const std::uint8_t> bytes,std::string name,std::int32_t typeCount) {
+-    Clear(slot);if (!nextHandle_) throw std::overflow_error("Template 파일 manager 핸들 소진");auto image=std::make_unique<Image>(std::move(fort),std::move(name),SerializationVersion(),true);image->ReadFile(bytes,typeCount);const auto handle=nextHandle_++;images_.emplace(handle,std::move(image));Put(Header(slot),0,handle);
++    Clear(slot);if (!nextHandle_) throw std::overflow_error("Template 파일 manager 핸들 소진");auto image=std::make_unique<Image>(std::move(fort),std::move(name),SerializationVersion(),*sectionNames_,true);image->ReadFile(bytes,typeCount);const auto handle=nextHandle_++;images_.emplace(handle,std::move(image));Put(Header(slot),0,handle);
+ }
+ // 실제 원문 부모가 설치/읽기/정상 false 정리를 지휘하며 기존 같은 manager는 건드리지 않는다.
+ void CampaignTemplateStorage::LoadFile(std::uint32_t slot,o::FortTemplate fort,std::string_view name,const TemplateFileLoadHooks& file) {
+@@ -401,7 +427,7 @@
+     hooks.sameName=[&file](auto first,auto second) { return NeedFile(file.sameName)(first,second); };hooks.wrongName=[&file] { NeedFile(file.wrongName)(); };
+     hooks.allocate=[this](auto bytes) { if (bytes!=276 || !nextHandle_) throw std::overflow_error("Template Load의 실제276BYTE/호스트handle 소진");return nextHandle_++; };
+     hooks.construct=[this,&fort](auto manager,auto fileName) {
+-        auto image=std::make_unique<Image>(std::move(fort),std::string(fileName),SerializationVersion(),true);image->fort.sections.clear();
++        auto image=std::make_unique<Image>(std::move(fort),std::string(fileName),SerializationVersion(),*sectionNames_,true);image->fort.sections.clear();
+         if (!images_.emplace(manager,std::move(image)).second) throw std::logic_error("Template Load manager의 같은 할당 중복");return manager;
+     }; // 생성자의 공유 version0과 실제 Image 소유를 끝낸 뒤 원문 부모가 header.ptr를 공개한다.
+     hooks.readOnly=[&file](auto fileName) { return NeedFile(file.readOnly)(fileName); };
+--- a/cpppj/src/client/CampaignTemplateStorage.h
++++ b/cpppj/src/client/CampaignTemplateStorage.h
+@@ -9,6 +9,8 @@
+ #include "o/RawMemStream.h"
+ #include "o/FortSerializationGlobals.h"
+ #include "o/RawFortCurrentName.h"
++#include "o/RawDataManagerInitialize.h"
++#include "client/ClientTemplateSectionNames.h"
+ #include <map>
+ #include <memory>
+ namespace netstorm::client {
+@@ -37,11 +39,17 @@
+ // 실제 파싱 자료를 단독 소유하고 빌린 헤더는 같은 manager/State cursor를 조회한다.
+ class CampaignTemplateStorage {
+ public:
+-    explicit CampaignTemplateStorage(std::shared_ptr<o::FortSerializationGlobals> serializationGlobals={}); // 원본9개헤더를초기화하고같은Client전역을빌린다. 생략하면독립전역한개를소유한다.
++    explicit CampaignTemplateStorage(std::shared_ptr<o::FortSerializationGlobals> serializationGlobals={},std::shared_ptr<ClientTemplateSectionNames> sectionNames={}); // 원본9개헤더를초기화하고같은Client전역을빌린다. 생략하면독립전역한개를소유한다.
+     ~CampaignTemplateStorage(); // 호스트 종료 때 남은 실제 소유 이미지를 반납한다. 원본 State 전환을 대신하지 않는다.
+     CampaignTemplateStorage(const CampaignTemplateStorage&)=delete; // 고정 헤더/이미지 참조는 복사하지 않는다.
+     CampaignTemplateStorage& operator=(const CampaignTemplateStorage&)=delete; // 같은 수명의 표/실제 이미지를 별개 사본으로 만들지 않는다.
+     std::span<std::uint8_t> Headers(); // 실제180BYTE를 같은 Player/로더에 공급한다.
++    std::uint32_t AllocateEmptyManager(std::uint32_t bytes); // 원문new276의실제미생성Image를소유표에추가하고불투명token/0을돌려준다.header는쓰지않는다.
++    std::uint32_t ConstructEmptyManager(std::uint32_t manager,std::string_view name); // 같은할당에기존원문ctor와공유version0을쓰며header공개는바깥부모가맡는다.
++    void InitializeEmptyManager(std::uint32_t manager,const std::function<void(o::DataManagerInitializeAssertion)>& assertion={}); // 고정manager의실제35개Create를공유mutable표로순회한다.선택진단은생략하지않는다.
++    std::span<std::uint8_t> ManagerBytes(std::uint32_t manager); // 이미선택한같은manager276BYTE다.현재header를다시읽지않는다.
++    o::TemplateLifetimeHooks ManagerLifetime(); // 같은owner의실제Destroy/Release를분리하여바깥NewManager에빌린다.
++    std::shared_ptr<ClientTemplateSectionNames> SectionNamesOwner() const; // reader/신규초기화가공유하는Clientowner를읽는다.
+     std::uint32_t& SerializationVersion(); // 생성자/객체로더/저장부모가직접같이쓰는실제005c89c0 DWORD다. 복사값을반환하지않는다.
+     void Install(std::uint32_t slot,o::FortTemplate fort,std::string name); // 이전 한 헤더를 실제 반납한 뒤 새 소유 manager를 설치한다.
+     void InstallFile(std::uint32_t slot,o::FortTemplate fort,std::span<const std::uint8_t> image,std::string name,std::int32_t typeCount=188); // 실제 파일/서명/섹션 읽기 부모를 실행한다. 기본188은10.78 독립 호출용이며 Session은 현재 타입 수를 전달한다.
+@@ -86,6 +94,7 @@
+     std::span<std::uint8_t> Header(std::uint32_t slot); // 같은 표의 한20BYTE를 빌린다.
+     o::TemplateLifetimeHooks Effects(); // 실제 manager 소멸과 객체 할당 반납을 분리한다.
+     std::shared_ptr<o::FortSerializationGlobals> serializationGlobals_; // 모든Image/외부Session보다먼저확보하는실제공유DWORD소유권이다.
++    std::shared_ptr<ClientTemplateSectionNames> sectionNames_; // 모든Image보다오래사는동일512BYTE lazy표owner다.독립Storage는새Client상태를한개소유한다.
+     std::array<std::uint8_t,180> headers_{}; // Client보다 짧은 Session이 사라져도 유지되는 실제9개 헤더다.
+     std::map<std::uint32_t,std::unique_ptr<Image>> images_; // 호스트 포인터를DWORD로 자르지 않는 실제 소유 객체 표다.
+     std::uint32_t nextHandle_{1}; // 서로 살아 있는 manager를 구별하는 비영 호스트 핸들이다.
+--- a/cpppj/src/client/SoloMapCatalog.cpp
++++ b/cpppj/src/client/SoloMapCatalog.cpp
+@@ -31,7 +31,7 @@
+     bool mission{}; // 목록의 임시 Template은 미션 소유자가 아니다.
+     o::RawPlayerTemplateState state; // 같은 현재 manager의 State를 읽는 실제 getter다.
+     // 원본 10.78의 기존/빈/짧은 State 부모를 모두 동일 저장소에 연결한다.
+-    explicit MapProbe(SoloMapCatalogEffects& effects):storage(effects.serializationGlobals),state(o::OriginalEdition::Patch1078,storage.Headers(),
++    explicit MapProbe(SoloMapCatalogEffects& effects):storage(effects.serializationGlobals,effects.sectionNames),state(o::OriginalEdition::Patch1078,storage.Headers(),
+         [this](auto slot)->o::PlayerTemplateStateStream& { return storage.SelectState(slot); },
+         [this](auto slot)->const std::string& { return storage.Name(slot); },depth,mission,
+         [](auto) { throw std::logic_error("단독 맵 메타 조회의 실제 Template State 진단"); },
+@@ -63,6 +63,7 @@
+     Impl(const o::BaseFileSystem& source,o::ConfigInterface& settings,SoloMapCatalogEffects devices)
+         :files(source),config(settings),effects(std::move(devices)),cache(effects.listState ? *effects.listState : localCache),list(cache,Hooks()) {
+         if (!effects.serializationGlobals) effects.serializationGlobals=std::make_shared<o::FortSerializationGlobals>(); // 같은catalog의분류/메타가공유하는한개DWORD이며Storage생성시마다복제하지않는다.
++        if (!effects.sectionNames) effects.sectionNames=std::make_shared<ClientTemplateSectionNames>(); // 목록의모든임시manager가동일lazy표를공유한다.
+         if (!effects.fileSpecKey) effects.fileSpecKey=[this] { return defaultFileSpec.Current(); }; // 현재 기본 키도 파일 읽기 직전에 조회한다.
+     }
+     // 원본 분류 함수의 임시 Template은 목록 메타 Template을 건드리지 않는다.
+--- a/cpppj/src/client/SoloMapCatalog.h
++++ b/cpppj/src/client/SoloMapCatalog.h
+@@ -7,6 +7,7 @@
+ 
+ namespace netstorm::o { class BaseFileSystem;class ConfigInterface;struct FortSerializationGlobals; }
+ namespace netstorm::client {
++class ClientTemplateSectionNames; // 모든Templatemanager가빌리는같은Client이름표owner다.
+ // 원본005327ac의 같은9BYTE를 덮어쓰는 키 저장소다. Client가 소유하면 모든 목록 경계가 같은 수명을 빌린다.
+ class SoloMapFileSpec {
+ public:
+@@ -27,6 +28,7 @@
+     o::SoloMapListState* listState{}; // 실제 Client는 같은 목록/dirty를 제공하며 이 catalog보다 오래 살아야 한다. 독립 호출은 자체 저장소를 쓴다.
+     std::function<std::vector<std::string>(std::string_view)> enumeratePaths; //선택적 실제 파일 열거 장치다. 현재 PathSpec을 받고 경로를 돌려주며 생략하면 기존 기본 디스크만 사용한다.
+     std::function<std::optional<std::vector<std::uint8_t>>(std::string_view)> readFile; //선택적 현재 파일 reader다. 분류/메타마다 다시 호출하며 생략하면 기존 디스크/TAFF/보조 읽기를 유지한다.
++    std::shared_ptr<ClientTemplateSectionNames> sectionNames; // 두MapProbe도주Storage와같은005c8aa4표를빌린다.생략하면catalog수명에한개를소유한다.
+ };
+ // 파일마다 분류와 목록 메타 조회를 다른 임시 Template에서 수행한다.
+ class SoloMapCatalog {
+--- a/cpppj/src/client/UberGump.cpp
++++ b/cpppj/src/client/UberGump.cpp
+@@ -193,6 +193,7 @@
+     EditorCatalogSourceDevices catalogSource;catalogSource.root=client_.GameDirectory();catalogSource.archiveOnly=[this](auto path) { return client_.Files().TryReadArchiveOnly(path); }; //실제 기존 등록순서의 TAFF만 읽어 완료키 삭제의 disk 우회를 막는다.
+     editorCatalog_=std::make_shared<EditorCatalogWorkspace>(catalogFiles,std::move(catalogSource)); //한 장기 이관 owner를 목록과 실제 Editor 경로 모두에 공유한다.
+     SoloMapCatalogEffects mapEffects; // 현재 실제 장치만 제공하며 목록 분류/행 처리는 기존 몸체를 사용한다.
++    mapEffects.sectionNames=templateStorage_->SectionNamesOwner(); // 주Template/분류/메타가같은Client이름표와변환상태를빌린다.
+     mapEffects.serializationGlobals=serializationGlobals_; // 목록의두임시MapProbe도실제manager생성자의같은전역0쓰기를공유한다.
+     mapEffects.listState=&client_.FortGlobals()->Catalog(); // 이름 변경/설정 증가와 Raw 목록 정리가 같은 dirty DWORD를 쓴다.
+     mapEffects.typeCount=[this] { return static_cast<std::int32_t>(client_.Assets().TypeTable().Types().size()); };
+--- a/cpppj/src/o/RawDataManagerImage.cpp
++++ b/cpppj/src/o/RawDataManagerImage.cpp
+@@ -1,5 +1,6 @@
+ // 큰 원본 부모의 인라인 본문도 같은 공통 하위와 효과 뒤 재조회 순서로 복원한다.
+ #include "o/RawDataManagerImage.h"
++#include "o/RawSnart.h"
+ #include <algorithm>
+ #include <array>
+ #include <bit>
+@@ -36,16 +37,7 @@
+ }
+ // 004a8800/004a8850의 같은 SNART 표를 한 번 변환하고 지정 이름/NUL을 빌린다.
+ std::string_view Name(std::span<std::uint8_t> names,std::uint32_t index,const DataManagerImageHooks& hooks) {
+-    if (names.empty()) throw std::out_of_range("DataManager 파일 이미지의 실제 이름 표 누락");
+-    if (names[0]) {
+-        if (names[0]!='/') Assert(hooks,DataManagerImageAssertion::NameSeparator);const auto end=std::find(names.begin(),names.end(),std::uint8_t{});if (end==names.end()) throw std::out_of_range("DataManager SNART 입력 NUL 누락");*end=0xff;
+-        // 원본처럼 첫FF 전의 구분자만NUL로 바꾸고 나머지는 보존한다.
+-        for (std::size_t at=0;at<names.size() && names[at]!=0xff;++at) if (names[at]=='/') names[at]=0;
+-    }
+-    std::size_t at=1;
+-    // 지정한 개수의NUL을 지나되 다음FF를 만나면 원본처럼 그 위치에서 멈춘다.
+-    while (index) { if (at>=names.size()) throw std::out_of_range("DataManager SNART 이름 번호 범위");if (!names[at]) { --index;++at;if (at>=names.size()) throw std::out_of_range("DataManager SNART 끝 누락");if (names[at]==0xff) break; } else ++at; }
+-    if (at>=names.size()) throw std::out_of_range("DataManager SNART 이름 시작 범위");const auto tail=names.subspan(at);const auto end=std::find(tail.begin(),tail.end(),std::uint8_t{});if (end==tail.end()) throw std::out_of_range("DataManager SNART 이름 NUL 누락");return {reinterpret_cast<const char*>(tail.data()),static_cast<std::size_t>(end-tail.begin())};
++    return ReadSnartName(names,index,[&hooks] { Assert(hooks,DataManagerImageAssertion::NameSeparator); }); // 동일몸체를공유하며기존reader의현재strlen시점은보존한다.
+ }
+ }
+ // 진단이 mark/pos/end를 바꾸면 원본 본문처럼 그 현재 값을 후속 쓰기에 사용한다.
+--- /dev/null
++++ b/cpppj/src/client/ClientTemplateSectionNames.cpp
+@@ -0,0 +1,19 @@
++// 원문미작성끝을0으로정의하지않고실제소유할당을한번만만든다.
++#include "client/ClientTemplateSectionNames.h"
++#include <array>
++#include <new>
++#include <stdexcept>
++#include <utility>
++namespace netstorm::client { // 같은owner는여러TemplateStorage와Session이공유할수있다.
++ClientTemplateSectionNames::ClientTemplateSectionNames(TemplateSectionNamesAllocator allocate):allocate_(std::move(allocate)) { // 생성자는표할당/쓰기를하지않는다.
++    if (!allocate_) allocate_=[](std::size_t size) { return std::unique_ptr<std::uint8_t[]>(new(std::nothrow) std::uint8_t[size]); }; // 괄호/중괄호값초기화없이512를빌린다.
++}
++std::span<std::uint8_t> ClientTemplateSectionNames::Names() { // 원문부모가현재token을공개한뒤같은할당에만쓴다.
++    std::array<std::uint8_t,7> formatted{}; // 원문서식의정의된7BYTE만출력하며미정local256끝을빌리지않는다.
++    o::TemplateSectionNamesHooks hooks;hooks.allocate=[this](auto size) { if (size!=o::kTemplateSectionNamesCapacity) throw std::logic_error("Client 이름표 실제512할당계약");bytes_=allocate_(size);return bytes_ ? 1U : 0U; };
++    hooks.buffer=[this](auto token)->std::span<std::uint8_t> { if (token!=1 || !bytes_) throw std::out_of_range("Client 이름표 실제NULL할당접근");return {bytes_.get(),o::kTemplateSectionNamesCapacity}; };
++    hooks.format=[&formatted](auto index)->std::span<const std::uint8_t> { if (index>=20) throw std::out_of_range("Template Terr원문서식0..19범위");formatted={'T','e','r','r',static_cast<std::uint8_t>('0'+index/10),static_cast<std::uint8_t>('0'+index%10),0};return formatted; }; // 실제선택범위에서는Terr%02d의ASCII/NUL과동일하다.
++    const auto token=o::GetTemplateSectionNames(current_,hooks);return hooks.buffer(token);
++}
++std::uint32_t ClientTemplateSectionNames::CurrentToken() const { return current_; } // 같은현재포인터슬롯의읽기투영이다.
++}
+--- /dev/null
++++ b/cpppj/src/client/ClientTemplateSectionNames.h
+@@ -0,0 +1,21 @@
++// Client수명의005c8aa4표한개를파일reader와신규manager초기화가같이빌린다.
++#pragma once
++#include "o/RawTemplateSectionNames.h"
++#include <memory>
++namespace netstorm::client { // Session/Storage교체와독립인원문lazy owner다.
++using TemplateSectionNamesAllocator=std::function<std::unique_ptr<std::uint8_t[]>(std::size_t)>; // 실제할당또는독립검사의알려진BYTE할당장치다.
++class ClientTemplateSectionNames { // 이름표의포인터/변환상태를같은고정주소에보관한다.
++public:
++    explicit ClientTemplateSectionNames(TemplateSectionNamesAllocator allocate={}); // 할당은아직하지않으며최초Names에서만원문부모를실행한다.
++    ClientTemplateSectionNames(const ClientTemplateSectionNames&)=delete; // 살아있는이름포인터와변환상태를복제하지않는다.
++    ClientTemplateSectionNames& operator=(const ClientTemplateSectionNames&)=delete; // 기존소비자의alias를다른할당으로바꾸지않는다.
++    ClientTemplateSectionNames(ClientTemplateSectionNames&&)=delete; // 고정Client주소를유지한다.
++    ClientTemplateSectionNames& operator=(ClientTemplateSectionNames&&)=delete; // 빌린포인터를이동후이전owner에남기지않는다.
++    std::span<std::uint8_t> Names(); // 실제512BYTE의동일포인터를lazy생성/반환한다.235BYTE미정끝을게임규칙으로읽지않는다.
++    std::uint32_t CurrentToken() const; // 최초0/성공1인호스트불투명token만읽는다.실제주소를DWORD로자르지않는다.
++private:
++    TemplateSectionNamesAllocator allocate_; // 최초선택시에만실행하는실제또는검사allocator다.
++    std::unique_ptr<std::uint8_t[]> bytes_; // 값초기화없는실제512BYTE이며원문이쓴277BYTE만정의한다.
++    std::uint32_t current_{}; // 새Client의BSS0이며Session정리에서reset하지않는다.
++};
++}
+--- /dev/null
++++ b/cpppj/src/o/RawDataManagerInitialize.cpp
+@@ -0,0 +1,18 @@
++// 초기화 앞/중간의 외부 효과를 되돌리거나 표를 사전 문자열 목록으로 복사하지 않는다.
++#include "o/RawDataManagerInitialize.h"
++#include <stdexcept>
++namespace netstorm::o { // 같은 rawmanager와 mutable표의 원문 부모다.
++namespace { // 선택한 하위와 고정DWORD 읽기만 확인한다.
++template<class Function> const Function& Need(const Function& function) { if (!function) throw std::logic_error("DataManager 초기화의 선택된 실제 하위 미연결");return function; } // 도달한 경계만 요구한다.
++std::uint32_t Root(std::span<const std::uint8_t> manager) { // 현재 고정this의+4DWORD를 읽는다.
++    if (manager.size()<8) throw std::out_of_range("DataManager 초기화의 실제 root 물리 범위");std::uint32_t value{};
++    // 현재 네 BYTE를 little endian으로만 합친다.
++    for (std::size_t at=0;at<4;++at) value|=std::uint32_t(manager[4+at])<<(at*8);return value;
++}
++}
++void InitializeDataManager(std::span<std::uint8_t> manager,const DataManagerInitializeHooks& hooks) { // 진단이 owner/표를 바꿔도 실제 그 뒤 위치에서 조회한다.
++    if (Root(manager)) Need(hooks.assertion)(DataManagerInitializeAssertion::RootNotEmpty);auto names=Need(hooks.names)();
++    // 반환표 포인터는 고정하되 미래 이름의 내용은 각Create 뒤 같은 표에서 다시 읽는다.
++    for (std::uint32_t index=0;;++index) { const auto name=SelectSnartName(names,index,[&hooks] { Need(hooks.assertion)(DataManagerInitializeAssertion::NameSeparator); });if (!name[0]) return;Need(hooks.create)(name); }
++}
++}
+--- /dev/null
++++ b/cpppj/src/o/RawDataManagerInitialize.h
+@@ -0,0 +1,12 @@
++// 원문0044d870은 진단 뒤 받은 이름표 포인터와 고정manager를 끝까지 보존한다.
++#pragma once
++#include "o/RawSnart.h"
++namespace netstorm::o { // 초기화 반복의 제어와 현재 실제 이름표만 담당한다.
++enum class DataManagerInitializeAssertion : std::uint32_t { RootNotEmpty=0xc9,NameSeparator=0x46 }; // 실제 Datamanager.cpp/Snart.cpp 진단이다.
++struct DataManagerInitializeHooks { // 큰 실제stream 생성은 같은 고정manager의 어댑터에 인계한다.
++    std::function<void(DataManagerInitializeAssertion)> assertion; // 진단에서 반환하면 그 뒤 현재 표를 얻는다.
++    std::function<std::span<std::uint8_t>()> names; // 가상+4의 현재 실제 표이며 한 번만 호출한다.
++    std::function<void(std::span<const std::uint8_t>)> create; // 같은 이름 시작 포인터/물리범위다. 실제0044d1b0에 고정manager를 연결한다.
++};
++void InitializeDataManager(std::span<std::uint8_t> manager,const DataManagerInitializeHooks& hooks); // root검사→이름표1회조회→현재이름/실제Create→마지막빈이름 반환이다.
++}
+--- /dev/null
++++ b/cpppj/src/o/RawSnart.cpp
+@@ -0,0 +1,22 @@
++// 기존 RawDataManagerImage의 Name 몸체를 공유하며 이름 선택과 strlen 시점을 분리한다.
++#include "o/RawSnart.h"
++#include <algorithm>
++#include <stdexcept>
++namespace netstorm::o { // 같은 표를 파일 읽기와 신규 초기화가 함께 빌린다.
++std::span<std::uint8_t> SelectSnartName(std::span<std::uint8_t> names,std::uint32_t index,const SnartSeparatorAssertion& assertion) { // 한 번 변환한 첫BYTE0과 마지막FF는 다음 호출에도 그대로 남긴다.
++    if (names.empty()) throw std::out_of_range("SNART 실제 이름표 누락");
++    if (names[0]) {
++        if (names[0]!='/') { if (!assertion) throw std::logic_error("SNART separator 실제 진단 미연결");assertion(); }
++        const auto end=std::find(names.begin(),names.end(),std::uint8_t{});if (end==names.end()) throw std::out_of_range("SNART 입력 NUL 누락");*end=0xff;
++        // 원문 첫FF 전의 slash만NUL로 바꾸며 나머지 원시 BYTE는 보존한다.
++        for (std::size_t at=0;at<names.size() && names[at]!=0xff;++at) if (names[at]=='/') names[at]=0;
++    }
++    std::size_t at=1; // index0은 같은 표의 첫 separator 바로 다음 포인터다.
++    // 기존 파일 reader와 같은 현재NUL 개수만 지나고 다음FF를 만나면 멈춘다.
++    while (index) { if (at>=names.size()) throw std::out_of_range("SNART 이름 번호 범위");if (!names[at]) { --index;++at;if (at>=names.size()) throw std::out_of_range("SNART 끝 누락");if (names[at]==0xff) break; } else ++at; }
++    if (at>=names.size()) throw std::out_of_range("SNART 이름 시작 범위");return names.subspan(at);
++}
++std::string_view ReadSnartName(std::span<std::uint8_t> names,std::uint32_t index,const SnartSeparatorAssertion& assertion) { // 초기화 부모와 달리 실제 기존 reader가 선택하는 현재길이 읽기다.
++    const auto tail=SelectSnartName(names,index,assertion);const auto end=std::find(tail.begin(),tail.end(),std::uint8_t{});if (end==tail.end()) throw std::out_of_range("SNART 이름 NUL 누락");return {reinterpret_cast<const char*>(tail.data()),static_cast<std::size_t>(end-tail.begin())};
++}
++}
+--- /dev/null
++++ b/cpppj/src/o/RawSnart.h
+@@ -0,0 +1,11 @@
++// 같은 SNART 물리표를 제자리 변환하고 현재 이름의 시작 포인터를 빌린다.
++#pragma once
++#include <cstdint>
++#include <functional>
++#include <span>
++#include <string_view>
++namespace netstorm::o { // 원문004a8800/004a8850의 공유 mutable 이름표 도구다.
++using SnartSeparatorAssertion=std::function<void()>; // 잘못된 첫 separator의 Snart.cpp:0x46 진단이며 복귀하면 계속한다.
++std::span<std::uint8_t> SelectSnartName(std::span<std::uint8_t> names,std::uint32_t index,const SnartSeparatorAssertion& assertion); // 현재 표의 이름 시작부터 같은 물리 끝까지 반환한다. 길이를 미리 읽지 않는다.
++std::string_view ReadSnartName(std::span<std::uint8_t> names,std::uint32_t index,const SnartSeparatorAssertion& assertion); // 기존 파일 이미지 reader처럼 현재 첫NUL까지 읽는 편의 경계다.
++}
+--- /dev/null
++++ b/cpppj/src/o/RawTemplateSectionNames.cpp
+@@ -0,0 +1,26 @@
++// 표 끝의 미정235BYTE를 채우지 않으며 SNART 변환은 실제 선택할 때만 수행한다.
++#include "o/RawTemplateSectionNames.h"
++#include <array>
++#include <stdexcept>
++#include <string_view>
++namespace netstorm::o { // 반환포인터는 Client전역과 같은 현재token이다.
++namespace { // 보호PE의 기본문자열과 앞으로복사/append만 표현한다.
++constexpr std::string_view kBaseNames="/Subscriber/State/Mission/CoreData/Chaff/Badges/Territory/TypeNames/CompressedData/Technology/Money/Deck/Reserved2/Reserved3/Reserved4/"; // 원문 기본135문자다.
++template<class Function> const Function& Need(const Function& function) { if (!function) throw std::logic_error("Template 이름표의 선택된 실제 하위 미연결");return function; } // 기존표 반환에는 미사용하위를 요구하지 않는다.
++void Byte(std::span<std::uint8_t> bytes,std::size_t at,std::uint8_t value) { if (at>=bytes.size()) throw std::out_of_range("Template 이름표 실제 쓰기범위");bytes[at]=value; } // 이미 쓴 앞BYTE는 물리 실패 때도 보존한다.
++std::size_t End(std::span<const std::uint8_t> bytes) { // 같은 현재표의 최초NUL 위치를 매append마다 찾는다.
++    for (std::size_t at=0;at<bytes.size();++at) if (!bytes[at]) return at;throw std::out_of_range("Template 이름표 현재NUL 누락"); // 현재실제범위만앞으로읽는다.
++}
++void Append(std::span<std::uint8_t> bytes,std::span<const std::uint8_t> text) { const auto length=End(text)+1,end=End(bytes);for (std::size_t at=0;at<length;++at) Byte(bytes,end+at,text[at]); } // 처음읽은NUL포함길이만현재끝에앞으로복사한다.
++}
++std::uint32_t GetTemplateSectionNames(std::uint32_t& current,const TemplateSectionNamesHooks& hooks) { // 실제004437f0은RET이므로 별도성공callback을만들지않는다.
++    if (current) return current;current=Need(hooks.allocate)(kTemplateSectionNamesCapacity);auto bytes=Need(hooks.buffer)(current);
++    if (!current) throw std::out_of_range("원문004bcced의NULL 이름표복사");
++    // 원문0x22DWORD의136BYTE를같은순서로복사한다.할당나머지는읽거나쓰지않는다.
++    for (std::size_t at=0;at<kBaseNames.size();++at) Byte(bytes,at,static_cast<std::uint8_t>(kBaseNames[at]));Byte(bytes,kBaseNames.size(),0);
++    constexpr std::array<std::uint8_t,2> slash{'/',0}; // 원문DAT00507bd8의동일한2BYTE다.
++    // 각Terr서식은ASCII숫자두자리이며실제표의현재NUL뒤로붙인다.
++    for (std::uint32_t index=0;index<20;++index) { const auto name=Need(hooks.format)(index);Append(Need(hooks.buffer)(current),name);Append(Need(hooks.buffer)(current),slash); }
++    Append(Need(hooks.buffer)(current),slash);return current;
++}
++}
+--- /dev/null
++++ b/cpppj/src/o/RawTemplateSectionNames.h
+@@ -0,0 +1,16 @@
++// 원문004bccb0의 Client전역005c8aa4 lazy표 생성만 복원한다.
++#pragma once
++#include <cstddef>
++#include <cstdint>
++#include <functional>
++#include <span>
++namespace netstorm::o { // 원문 token과 실제512BYTE owner를 분리한다.
++inline constexpr std::uint32_t kTemplateSectionNamesCapacity=512; // 실제operator new의 크기다.
++inline constexpr std::size_t kTemplateSectionNamesWrittenBytes=277; // 정상 신규표에서 실제 쓰는 접두부와 마지막NUL까지다.
++struct TemplateSectionNamesHooks { // 새 할당의 미정 BYTE는 allocator가 소유하며 이 부모는 초기화하지 않는다.
++    std::function<std::uint32_t(std::uint32_t)> allocate; // 실제512BYTE의 불투명 token/0이다.
++    std::function<std::span<std::uint8_t>(std::uint32_t)> buffer; // 현재 token의같은물리범위이며조회자체는무효과다.0을정상표로만들지않는다.
++    std::function<std::span<const std::uint8_t>(std::uint32_t)> format; //004a89c0(local256,"Terr%02d",index)의같은NUL포함출력이다.반환뒤현재전역표를다시조회한다.
++};
++std::uint32_t GetTemplateSectionNames(std::uint32_t& current,const TemplateSectionNamesHooks& hooks); // 최초할당→현재전역공개→277BYTE쓰기이며 비영현재값이면 하위없이 반환한다.
++}
+--- /dev/null
++++ b/cpppj/tests/DataManagerInitializeTests.cpp
+@@ -0,0 +1,98 @@
++// 동결된Native76행과실제Storage/공유표수명을대조하는미빌드검사초안이다.
++#include "DudeSpawnSupport.h"
++#include "client/ClientTemplateSectionNames.h"
++#include "client/CampaignTemplateStorage.h"
++#include "client/SoloMapCatalog.h"
++#include "o/ConfigInterface.h"
++#include "o/RawDataManagerInitialize.h"
++#include "o/RawTemplateSectionNames.h"
++#include <array>
++#include <memory>
++
++using namespace netstorm::o;
++using namespace netstorm::client;
++using namespace netstorm::test::rawscene;
++namespace { // Native장치의입력만재생하며초기화판단은제품초안본문이수행한다.
++constexpr std::uint32_t kInitManager=0x10001000,kInitTable=0x10002000,kInitAlternate=0x10003000; // 실제가상입력주소와같은불투명번호다.
++// Native에서실제RET만실행하는004437f0은C++효과가없으므로trace의그한항목만제외한다.
++std::string InitializeTraceWithoutNoop(std::string_view text) { std::string result;for (const auto& entry:Split(text,';')) { if (entry=="baseNoop") continue;if (!result.empty()) result+=';';result+=entry; }return result; }
++// 같은물리이름포인터의현재NUL을읽는다.부모에서선행길이를계산하지않는다.
++std::string_view InitializeText(std::span<const std::uint8_t> bytes) { const auto end=std::find(bytes.begin(),bytes.end(),0);if (end==bytes.end()) throw std::out_of_range("초기화검사실제NUL범위");return {reinterpret_cast<const char*>(bytes.data()),static_cast<std::size_t>(end-bytes.begin())}; }
++// 명시formatter출력과table/manager변이를동결Native와동일한순서로제공한다.
++struct InitializeReplay {
++    std::array<std::uint8_t,12> manager{}; // Native의고정this와root/current전체12BYTE다.
++    std::array<std::uint8_t,512> table{},alternate{}; // 미정영역까지A5로명시한검사입력이며제품기본초기값이아니다.
++    std::array<std::uint8_t,7> formatted{}; // 서식장치가반환하는정의된Terr00/NUL범위다.
++    std::uint32_t current{},mutation{},allocation{1},creates{},selected{},index{}; // 실제전역/외부장치입력과호출횟수다.
++    std::string trace; // 하위호출의고정포인터와현재문자열을관측한다.
++    // Native와같은kind/root/외부장치입력을준비한다.
++    InitializeReplay(std::uint32_t kind,std::uint32_t root,std::uint32_t change,std::uint32_t allocated=1):mutation(change),allocation(allocated) {
++        table.fill(0xa5);alternate.fill(0xa5);Put(manager,0,0x514690);Put(manager,4,root);Put(manager,8,0xa5a5a5a5);const std::string alt="/Alt/Last//";std::copy(alt.begin(),alt.end(),alternate.begin());alternate[alt.size()]=0;
++        if (kind==1) { const std::string raw="/One/Two//";std::copy(raw.begin(),raw.end(),table.begin());table[raw.size()]=0; }
++        if (kind==2) { constexpr std::array<std::uint8_t,11> raw{0,'O','n','e',0,'T','w','o',0,0,0xff};std::copy(raw.begin(),raw.end(),table.begin()); }
++        if (kind==3) { table[0]='/';table[1]='/';table[2]=0; }current=kind ? kInitTable : 0;
++    }
++    // trace에이미캡처한인자만붙인다.
++    void Event(std::string entry) { if (!trace.empty()) trace+=';';trace+=entry; }
++    // 읽기조회자체는전역을변경하지않고같은물리표를반환한다.
++    std::span<std::uint8_t> Buffer(std::uint32_t token) { if (token==kInitTable) return table;if (token==kInitAlternate) return alternate;throw std::out_of_range("Native이름표NULL접근"); }
++    // 실제getter진입과선택된할당/서식을기록하며부모모듈을그대로실행한다.
++    std::span<std::uint8_t> Names() {
++        Event("names:"+std::to_string(current));TemplateSectionNamesHooks hooks;hooks.allocate=[this](auto size) { Event("allocate:"+std::to_string(size));return allocation ? kInitTable : 0U; };hooks.buffer=[this](auto token) { return Buffer(token); };
++        hooks.format=[this](auto number)->std::span<const std::uint8_t> { Event("format:"+std::to_string(number));formatted={'T','e','r','r',static_cast<std::uint8_t>('0'+number/10),static_cast<std::uint8_t>('0'+number%10),0};return formatted; };
++        return Buffer(GetTemplateSectionNames(current,hooks));
++    }
++    // 한initialize호출의표포인터/인덱스를고정하되전체creates는반복사이에보존한다.
++    void Initialize() {
++        DataManagerInitializeHooks hooks;hooks.assertion=[this](auto kind) { Event("assert:"+std::to_string(static_cast<std::uint32_t>(kind)));if (mutation==1 && kind==DataManagerInitializeAssertion::RootNotEmpty) current=kInitAlternate; };
++        hooks.names=[this] { auto bytes=Names();selected=current;index=0;return bytes; };
++        hooks.create=[this](std::span<const std::uint8_t> name) {
++            Event("at:"+std::to_string(selected)+':'+std::to_string(index++));const auto base=Buffer(selected);const auto address=selected+static_cast<std::uint32_t>(name.data()-base.data());const auto text=InitializeText(name);Event("create:"+std::to_string(kInitManager)+':'+std::to_string(address)+':'+Hex({reinterpret_cast<const std::uint8_t*>(text.data()),text.size()}));++creates;Put(manager,4,0x10004000);Put(manager,8,0x10004000+creates*60);
++            if (creates==1 && mutation==2) current=kInitAlternate;
++            if (creates==1 && mutation==3) { // 같은표의미래항목만명시외부입력으로바꾼다.
++                const std::array<std::string,2> before{std::string("State\0",6),std::string("Two\0",4)},after{std::string("Other\0",6),std::string("Six\0",4)};
++                // Native와같은기지문자열만BYTE검색하며길이를바꾸지않는다.
++                for (std::size_t at=0;at<before.size();++at) { const auto found=std::search(table.begin(),table.end(),before[at].begin(),before[at].end());if (found!=table.end()) std::copy(after[at].begin(),after[at].end(),found); }
++            }
++        };
++        InitializeDataManager(manager,hooks);Event("at:"+std::to_string(selected)+':'+std::to_string(index)); // 마지막빈항목은Create가없으므로반환위치에서같은무효과관측을기록한다.
++    }
++};
++}
++
++// 초기화64행의전체manager/두표/순서를같은외부입력으로재생한다.
++TEST_CASE(DataManagerInitialize_Native64) {
++    const auto rows=LoadFixture(NETSTORM_DATA_MANAGER_INITIALIZE_FIXTURE).rows;CHECK(rows.size()==64);
++    // 각행의repeat도원래같은Client/manager에서계속한다.
++    for (const auto& row:rows) { CHECK(row.size()==11);if (row.size()!=11) return;InitializeReplay scene(Number(row[0]),Number(row[1]),Number(row[3]));for (std::uint32_t call=0;call<Number(row[2]);++call) scene.Initialize();CHECK(row[4]=="1" && row[5]=="0x0");CHECK(scene.current==Number(row[6]));CHECK(Hex(scene.manager)==row[7]);CHECK(Hex(scene.table)==row[8]);CHECK(Hex(scene.alternate)==row[9]);CHECK(scene.trace==InitializeTraceWithoutNoop(row[10])); }
++}
++
++// getter12행의최초512할당/재사용/NULL공개후실패를전체BYTE에대조한다.
++TEST_CASE(TemplateSectionNames_Native12) {
++    const auto rows=LoadFixture(NETSTORM_TEMPLATE_SECTION_NAMES_FIXTURE).rows;CHECK(rows.size()==12);
++    // 기존표이면할당입력0에서도실제할당을선택하지않는다.
++    for (const auto& row:rows) { CHECK(row.size()==10);if (row.size()!=10) return;InitializeReplay scene(Number(row[0]),0,0,Number(row[1]));bool completed=true;try { for (std::uint32_t call=0;call<Number(row[2]);++call) static_cast<void>(scene.Names()); }catch (const std::out_of_range&) { completed=false; }CHECK(completed==(row[3]=="1"));CHECK(row[4]==(completed ? "0x0" : "0x4bcced"));CHECK(scene.current==Number(row[5]));CHECK(Hex(scene.manager)==row[6]);CHECK(Hex(scene.table)==row[7]);CHECK(Hex(scene.alternate)==row[8]);CHECK(scene.trace==InitializeTraceWithoutNoop(row[9])); }
++}
++
++// 알려진할당입력을사용해277BYTE밖235BYTE의미작성과동일포인터/변환상태를검사한다.
++TEST_CASE(ClientTemplateSectionNames_LazyMutableAndUnknownTail) {
++    std::size_t calls{};ClientTemplateSectionNames names([&](auto size) { ++calls;CHECK(size==512);auto bytes=std::make_unique<std::uint8_t[]>(size);std::fill_n(bytes.get(),size,std::uint8_t{0xa5});return bytes; });CHECK(names.CurrentToken()==0 && !calls);auto bytes=names.Names();CHECK(calls==1 && names.CurrentToken()==1);const auto pointer=bytes.data();CHECK(std::all_of(bytes.begin()+277,bytes.end(),[](auto value) { return value==0xa5; }));CHECK(bytes[0]=='/' && bytes[275]=='/' && bytes[276]==0);CHECK(ReadSnartName(bytes,0,{})=="Subscriber" && ReadSnartName(bytes,34,{})=="Terr19" && ReadSnartName(bytes,35,{}).empty());CHECK(bytes[0]==0 && bytes[276]==0xff);CHECK(names.Names().data()==pointer && calls==1 && bytes[0]==0);CHECK(std::all_of(bytes.begin()+277,bytes.end(),[](auto value) { return value==0xa5; }));
++}
++
++// 실제할당0은물리실패로남으며같은current0을보존한다.
++TEST_CASE(ClientTemplateSectionNames_AllocationZeroIsFailure) {
++    std::size_t calls{};ClientTemplateSectionNames names([&](auto size)->std::unique_ptr<std::uint8_t[]> { ++calls;CHECK(size==512);return {}; });CHECK(Throws([&] { static_cast<void>(names.Names()); }));CHECK(names.CurrentToken()==0 && calls==1);
++}
++
++// 실제빈Image생성과보호TEST01 reader를같은Client표에연결해목록/stream/cursor/수명을검사한다.
++TEST_CASE(CampaignTemplates_EmptyImageAndExistingFileShareLazyNames) {
++    std::size_t calls{};const auto names=std::make_shared<ClientTemplateSectionNames>([&](auto size) { ++calls;auto bytes=std::make_unique<std::uint8_t[]>(size);std::fill_n(bytes.get(),size,std::uint8_t{0xa5});return bytes; });CampaignTemplateStorage fresh({},names);fresh.SerializationVersion()=0xdeadbeef;const auto token=fresh.AllocateEmptyManager(276);CHECK(token && fresh.OwnedImages()==1 && Get(fresh.Headers(),20)==0 && !calls);CHECK(fresh.ConstructEmptyManager(token,"d/New.fort")==token && fresh.SerializationVersion()==0);CHECK(Get(fresh.ManagerBytes(token),4)==0 && !calls);Put(fresh.Headers(),20,token);fresh.InitializeEmptyManager(token);const auto pointer=names->Names().data();CHECK(calls==1);const auto order=fresh.SectionOrder(1);CHECK(order==std::vector<std::string>(FortTemplate::SectionNames().begin(),FortTemplate::SectionNames().end()) && fresh.CurrentSection(1)=="Terr19");
++    // 각stream은같은실제raw생성의비NULL버퍼/pos0/end0/16384용량을가진다.
++    for (const auto name:FortTemplate::SectionNames()) { const auto stream=fresh.FindSection(1,name);fresh.AccessSection(stream,[](auto raw,const auto&) { CHECK(Get(raw,0)!=0 && Get(raw,4)==0 && Get(raw,8)==0 && Get(raw,12)==16384); }); }
++    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);const auto file=assets.files.Read("d/TEST01.fort");CampaignTemplateStorage existing({},names);existing.InstallFile(1,FortTemplate::Parse(file,assets.game.TypeTable()),file,"d/TEST01.fort");CHECK(names->Names().data()==pointer && calls==1 && names->Names()[0]==0);fresh.ClearAll();existing.ClearAll();CHECK(names->Names().data()==pointer && calls==1 && !fresh.OwnedImages() && !existing.OwnedImages());
++}
++
++// 실제목록의분류/메타임시manager와주Storage가한512표를공유하는지확인한다.
++TEST_CASE(SoloMapCatalog_ProbeManagersShareClientSectionNames) {
++    std::size_t allocations{};const auto names=std::make_shared<ClientTemplateSectionNames>([&](auto size) { ++allocations;auto bytes=std::make_unique<std::uint8_t[]>(size);std::fill_n(bytes.get(),size,std::uint8_t{0xa5});return bytes; });CampaignTemplateStorage main({},names);const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);ConfigInterface config({});config.Set("fortSpec","d/TEST01.fort");SoloMapCatalogEffects effects;effects.sectionNames=main.SectionNamesOwner();effects.typeCount=[] { return 188; };effects.userName=[] { return std::string("author"); };effects.translate=[](auto text) { return std::string(text); };effects.allocationBytes=[](auto bytes) { std::fill(bytes.begin(),bytes.end(),std::uint8_t{0xa5}); };SoloMapCatalog catalog(assets.files,config,std::move(effects));CHECK(!allocations);CHECK(catalog.Kind("TEST01")==2);const auto pointer=names->Names().data();CHECK(allocations==1 && names->Names()[0]==0);CHECK(catalog.Refresh(2)==1 && catalog.Cached().names[0]=="TEST01");catalog.Invalidate();CHECK(catalog.Kind("TEST01")==2 && catalog.Refresh(2)==1);CHECK(names->Names().data()==pointer && allocations==1 && main.SectionNamesOwner()==names);
++}

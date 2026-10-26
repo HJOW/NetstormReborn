@@ -2066,3 +2066,13 @@ cpppj/mission-background-runtime-20261026.json text eol=lf
 # State 소유자 색/다리 스캔 초기화의 최초 관측 SHA를 보존한다.
 cpppj/state-bridge-reset-native-20261026.json text eol=lf
 cpppj/state-bridge-reset-runtime-20261026.json text eol=lf
+
+# 2026-10-27 일시중지 준비본의 원시 바이트를 보존한다.
+docs/exe/prepared/new-fort-469-20261027/** -text
+docs/exe/prepared/subscriber-write-469-20261027/** -text
+docs/exe/prepared/data-manager-initialize-469-20261027/** -text
+docs/exe/prepared/add-island-469-20261027/** -text
+docs/exe/prepared/tutorial3-partial-468-20261027/** -text
+
+# Native 관측에 기록한 클립보드 생성기의 실행 바이트를 보존한다.
+tools/decomp_text_clipboard.py -text

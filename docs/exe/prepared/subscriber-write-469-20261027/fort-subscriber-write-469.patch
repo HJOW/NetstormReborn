@@ -1,0 +1,663 @@
+diff --git a/cpppj/fort-subscriber-write-native.json b/cpppj/fort-subscriber-write-native.json
+new file mode 100644
+--- /dev/null
++++ b/cpppj/fort-subscriber-write-native.json
+@@ -0,0 +1,47 @@
++{
++  "host": "HJOW-Athlon",
++  "lastDecompileHost": "HJOW-Athlon / 2026-10-23",
++  "uniqueInputs": 45,
++  "observations": 90,
++  "instructions": 575800,
++  "statuses": {
++    "normal": 72,
++    "fault:manager0": 2,
++    "stop:assert": 2,
++    "stop:register": 2,
++    "stop:create": 2,
++    "stop:write1": 2,
++    "stop:write2": 2,
++    "stop:write3": 2,
++    "stop:capacity": 2,
++    "stop:null": 2
++  },
++  "boundaries": {
++    "register": 88,
++    "create": 86,
++    "write1": 82,
++    "write2": 76,
++    "write3": 74,
++    "null": 4,
++    "capacity": 16,
++    "read": 16,
++    "generate": 14,
++    "config": 14,
++    "assert": 6
++  },
++  "scope": "004bd400/004b38d0/004bcbf0/0044cce0 실제 CPU. Create/진단/ReadInt/ID생성/설정/sprintf는 명시 장치. 전체 물리출력 FNV와64BYTE prefix/두stream/전역/순서를 관측. 실제 게임·OS·파일 저장 아님.",
++  "gameExecuted": false,
++  "osExecuted": false,
++  "originalFilesMutated": false,
++  "sha256": {
++    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
++    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
++    "tools/decomp_priestmenu.py": "8d1474792e7511fa777e7bd7bd369f2a2a0f9f5c35643e420d65a3fa4744bac9",
++    "tools/decomp_fort_subscriber_write.py": "a5df3540853fa4aa2d9db8a3e1ce4842bdf57fa596a56c90311dcd56ac15f068"
++  },
++  "fixtureSha256": "8619983808122e17dd261c974a25906374fa46aee16293a51f119d3fad9fe973",
++  "postObservationChanges": [
++    "Generator member documentation comments only; fixture bytes unchanged; full PE --verify rerun required."
++  ],
++  "nullManagerBoundary": "fault:manager0 is an explicit Create boundary rejection; actual DataManager Create body is not executed."
++}
+diff --git a/cpppj/src/client/CampaignTemplateStorage.cpp b/cpppj/src/client/CampaignTemplateStorage.cpp
+--- a/cpppj/src/client/CampaignTemplateStorage.cpp
++++ b/cpppj/src/client/CampaignTemplateStorage.cpp
+@@ -427,6 +427,10 @@
+ o::PlayerTemplateStateStream& CampaignTemplateStorage::InitializeState(std::uint32_t slot,std::span<const std::uint8_t,28> bytes) { auto& image=Current(slot);image.InitializeState(bytes);return image.state; }
+ // 생성한 manager/노드/수명을 고정하고 이후 current 변경과 분리한다.
+ TemplateWriteStream CampaignTemplateStorage::CreateSection(std::uint32_t slot,std::string_view name) { const auto manager=Read(Header(slot));auto& image=Current(slot);const auto section=image.CreateSection(name);return {manager,section,image.streams.at(section)->generation}; }
++// 고정 manager 토큰의 실제 소유 Image만 선택하므로 Subscriber 부모의 Create(this) 주소를 그대로 유지한다.
++TemplateWriteStream CampaignTemplateStorage::CreateManagerSection(std::uint32_t manager,std::string_view name) {
++    const auto found=images_.find(manager);if (!manager || found==images_.end()) throw std::out_of_range("섹션 생성의 실제 manager 수명 누락");auto& image=*found->second;const auto section=image.CreateSection(name);return {manager,section,image.streams.at(section)->generation};
++}
+ // 검색 실패도 원문 current0을 유지하며 참조 유효성과 빈 결과를 구별한다.
+ TemplateWriteStream CampaignTemplateStorage::FindSection(std::uint32_t slot,std::string_view name) { const auto manager=Read(Header(slot));auto& image=Current(slot);const auto section=image.FindSection(name);return section ? TemplateWriteStream{manager,section,image.streams.at(section)->generation} : TemplateWriteStream{}; }
+ // 선택 부모의 실제 pos0/읽기 진단을 끝낸 같은 노드의 생성 수명을 반환한다.
+diff --git a/cpppj/src/client/CampaignTemplateStorage.h b/cpppj/src/client/CampaignTemplateStorage.h
+--- a/cpppj/src/client/CampaignTemplateStorage.h
++++ b/cpppj/src/client/CampaignTemplateStorage.h
+@@ -55,6 +55,7 @@
+     std::string ReadSubscriberName(std::uint32_t slot); // 004bd4d0처럼 실제 Subscriber 선택/ID 건너뜀/signed 길이 읽기로 현재 이름을 반환한다.
+     o::PlayerTemplateStateStream& InitializeState(std::uint32_t slot,std::span<const std::uint8_t,28> bytes); // 기존 State 반납 뒤 새 섹션을 목록 끝에 만들고 원본16384BYTE 버퍼에28BYTE를 쓴다.
+     TemplateWriteStream CreateSection(std::uint32_t slot,std::string_view name); // 원본 생성 부모로 이름의 기존 노드를 교체하고 새 마지막 노드의 참조를 반환한다. Temp 같은 동적 이름도 허용한다.
++    TemplateWriteStream CreateManagerSection(std::uint32_t manager,std::string_view name); //원문이 이미 선택한 현재 manager를 고정해 섹션을 만든다. 뒤 callback의 header 교체로 다른 manager를 재선택하지 않는다.
+     TemplateWriteStream FindSection(std::uint32_t slot,std::string_view name); // 원본 검색으로 current를 갱신한다. 없으면 current0/빈 참조이며 pos는 보존한다.
+     TemplateWriteStream SelectSection(std::uint32_t slot,std::string_view name,std::int32_t writable); // 실제 선택 부모의 검색/진단/pos0을 같은 노드에 수행한다.
+     TemplateWriteStream RenameSection(std::uint32_t slot,std::string_view destination,std::string_view source); // 실제 Rename 부모가 대상을 반납한 뒤 원래 source 노드의 이름만 교체한다. handle/생성수명/버퍼할당을 보존한다.
+diff --git a/cpppj/src/o/RawFortSubscriberWrite.cpp b/cpppj/src/o/RawFortSubscriberWrite.cpp
+new file mode 100644
+--- /dev/null
++++ b/cpppj/src/o/RawFortSubscriberWrite.cpp
+@@ -0,0 +1,19 @@
++// helper가 global ID/이름포인터/manager를 바꾸어도 원문이 캡처·재조회하는 경계만 보존한다.
++#include "o/RawFortSubscriberWrite.h"
++#include "o/RawFortMissionSave.h"
++#include <array>
++#include <stdexcept>
++
++namespace netstorm::o { //게임 상태나 임시 Fort 이미지를 대신 만들지 않는 원문 저장 부모다.
++namespace { //선택한 실제 하위만 필요한 순간에 요구한다.
++template<class Function> const Function& Need(const Function& function) { if (!function) throw std::logic_error("Fort Subscriber 저장의 실제 하위 미연결");return function; } //앞선 진단/일반 쓰기 효과를 rollback하지 않는다.
++}
++void SaveFortSubscriber(std::uint32_t slot,std::uint32_t capturedId,std::optional<std::span<const std::uint8_t>> capturedHandle,const FortSubscriberWriteHooks& hooks) {
++    if (!Need(hooks.manager)(slot)) Need(hooks.assertion)(0x1cfU);
++    Need(hooks.registerSubscriber)();const auto manager=Need(hooks.manager)(slot),stream=Need(hooks.create)(manager,"Subscriber"); //등록 helper 뒤의 현재 manager만 Create에서 선택한다.
++    std::array<std::uint8_t,4> id{};for (std::size_t byte=0;byte<id.size();++byte) id[byte]=static_cast<std::uint8_t>(capturedId>>(8*byte)); //global의 현재 재등록값과 별개인 부모 인자4BYTE다.
++    Need(hooks.write)(stream,id);
++    FortMissionSaveHooks string;string.write=hooks.write;string.assertion=[&](auto) { Need(hooks.assertion)(0x9bU); }; //기존004bcbf0의 null 진단과 길이WORD/본문 일반쓰기를 그대로 공유한다.
++    SaveFortMissionName(stream,capturedHandle,string);
++}
++}
+diff --git a/cpppj/src/o/RawFortSubscriberWrite.h b/cpppj/src/o/RawFortSubscriberWrite.h
+new file mode 100644
+--- /dev/null
++++ b/cpppj/src/o/RawFortSubscriberWrite.h
+@@ -0,0 +1,18 @@
++// 원본004bd400의 Subscriber 생성과 캡처한 ID/현재 원문 이름 쓰기 부모다.
++#pragma once
++#include <cstdint>
++#include <functional>
++#include <optional>
++#include <span>
++#include <string_view>
++
++namespace netstorm::o { //현재 manager/등록/stream 장치를 기존 저장 본체에 연결한다.
++struct FortSubscriberWriteHooks { //선택한 외부 경계만 요구하고 실제 이름/일반 writer는 기존 본체를 재사용한다.
++    std::function<std::uint32_t(std::uint32_t)> manager; //고정 this 슬롯의 현재 manager를 진단 전과 등록 helper 복귀 뒤 다시 읽는다.
++    std::function<void(std::uint32_t)> assertion; //Template.cpp463(manager0)/155(null 이름)의 실제 줄 진단이며 복귀하면 원문을 계속한다.
++    std::function<void()> registerSubscriber; //004b38d0의 실제 FinishFortSubscriberRegistration을 같은 Client 전역/Config에 연결한다.
++    std::function<std::uint32_t(std::uint32_t,std::string_view)> create; //현재 manager에서 CreateDataManagerSection("Subscriber")가 반환한 고정 stream 토큰이다.
++    std::function<void(std::uint32_t,std::span<const std::uint8_t>)> write; //같은 명시 stream에 기존 WriteMemStream을 연결한다. 입력 span을 선행 복사/절단하지 않는다.
++};
++void SaveFortSubscriber(std::uint32_t slot,std::uint32_t capturedId,std::optional<std::span<const std::uint8_t>> capturedHandle,const FortSubscriberWriteHooks& hooks); //ID는 부모의 인자값을 유지하고 이름은 캡처된 같은 물리 포인터를 ID쓰기 뒤 문자열 writer에서 처음 읽는다.
++}
+diff --git a/cpppj/tests/fixtures/fort-subscriber-write-x86.tsv b/cpppj/tests/fixtures/fort-subscriber-write-x86.tsv
+new file mode 100644
+--- /dev/null
++++ b/cpppj/tests/fixtures/fort-subscriber-write-x86.tsv
+@@ -0,0 +1,91 @@
++# label/control/slot,manager,capturedID,globalID,name,readResult,readID,newID,stream,pos,end,alloc,mutation/status/globalID,manager,handleIndex/twoStreams8DWORD/twoFullFNV/twoPrefix64/trace
++default	639	1,11,305419896,305419896,0,0,4294967295,9,0,0,0,64,none	normal	305419896,11,0	1,11,11,64,2,0,0,64	d397e47da404cc78:b94fb6e482132325	785634120500416c706861cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc	H;C:11;W:1:4:cccfd053e47c3365;W:2:2:08218a07b4dd0020;W:3:5:4fda04cbc245e18b
++default	895	1,11,305419896,305419896,0,0,4294967295,9,0,0,0,64,none	normal	305419896,11,0	1,11,11,64,2,0,0,64	d397e47da404cc78:b94fb6e482132325	785634120500416c706861cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc	H;C:11;W:1:4:cccfd053e47c3365;W:2:2:08218a07b4dd0020;W:3:5:4fda04cbc245e18b
++name1	639	1,11,305419896,305419896,1,0,4294967295,9,0,0,0,64,none	normal	305419896,11,0	1,6,6,64,2,0,0,64	9f187fe3d83a222d:b94fb6e482132325	785634120000cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc	H;C:11;W:1:4:cccfd053e47c3365;A:155;W:2:2:08328807b4eb6fed;W:3:0:cbf29ce484222325
++name1	895	1,11,305419896,305419896,1,0,4294967295,9,0,0,0,64,none	normal	305419896,11,0	1,6,6,64,2,0,0,64	9f187fe3d83a222d:b94fb6e482132325	785634120000cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc	H;C:11;W:1:4:cccfd053e47c3365;A:155;W:2:2:08328807b4eb6fed;W:3:0:cbf29ce484222325
++name2	639	1,11,305419896,305419896,2,0,4294967295,9,0,0,0,64,none	normal	305419896,11,0	1,6,6,64,2,0,0,64	9f187fe3d83a222d:b94fb6e482132325	785634120000cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc	H;C:11;W:1:4:cccfd053e47c3365;W:2:2:08328807b4eb6fed;W:3:0:cbf29ce484222325
++name2	895	1,11,305419896,305419896,2,0,4294967295,9,0,0,0,64,none	normal	305419896,11,0	1,6,6,64,2,0,0,64	9f187fe3d83a222d:b94fb6e482132325	785634120000cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc	H;C:11;W:1:4:cccfd053e47c3365;W:2:2:08328807b4eb6fed;W:3:0:cbf29ce484222325
++name3	639	1,11,305419896,305419896,3,0,4294967295,9,0,0,0,64,none	normal	305419896,11,0	1,7,7,64,2,0,0,64	cf95baa295dc7169:b94fb6e482132325	78563412010041cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc	H;C:11;W:1:4:cccfd053e47c3365;W:2:2:082f2207b4e88cc4;W:3:1:af63fc4c860222ec
++name3	895	1,11,305419896,305419896,3,0,4294967295,9,0,0,0,64,none	normal	305419896,11,0	1,7,7,64,2,0,0,64	cf95baa295dc7169:b94fb6e482132325	78563412010041cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc	H;C:11;W:1:4:cccfd053e47c3365;W:2:2:082f2207b4e88cc4;W:3:1:af63fc4c860222ec
++name4	639	1,11,305419896,305419896,4,0,4294967295,9,0,0,0,64,none	normal	305419896,11,0	1,261,261,64,2,0,0,64	9c7b77bf7b9aba3b:b94fb6e482132325	78563412ff004142434445464748494a4b4c4d4e4f50515253545556574142434445464748494a4b4c4d4e4f50515253545556574142434445464748494a4b4c:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc	H;C:11;W:1:4:cccfd053e47c3365;W:2:2:0a99a607b6f60bea;W:3:255:eb32ac3f5e379d50;A:36
++name4	895	1,11,305419896,305419896,4,0,4294967295,9,0,0,0,64,none	normal	305419896,11,0	1,261,261,64,2,0,0,64	9c7b77bf7b9aba3b:b94fb6e482132325	78563412ff004142434445464748494a4b4c4d4e4f50515253545556574142434445464748494a4b4c4d4e4f50515253545556574142434445464748494a4b4c:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc	H;C:11;W:1:4:cccfd053e47c3365;W:2:2:0a99a607b6f60bea;W:3:255:eb32ac3f5e379d50;A:36
++name5	639	1,11,305419896,305419896,5,0,4294967295,9,0,0,0,64,none	normal	305419896,11,0	1,262,262,64,2,0,0,64	4d50d6a507589642:b94fb6e482132325	7856341200014142434445464748494a4b4c4d4e4f50515253545556574142434445464748494a4b4c4d4e4f50515253545556574142434445464748494a4b4c:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc	H;C:11;W:1:4:cccfd053e47c3365;W:2:2:08328707b4eb6e3a;W:3:256:deb7c2ad187fe749;A:36
++name5	895	1,11,305419896,305419896,5,0,4294967295,9,0,0,0,64,none	normal	305419896,11,0	1,262,262,64,2,0,0,64	4d50d6a507589642:b94fb6e482132325	7856341200014142434445464748494a4b4c4d4e4f50515253545556574142434445464748494a4b4c4d4e4f50515253545556574142434445464748494a4b4c:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc	H;C:11;W:1:4:cccfd053e47c3365;W:2:2:08328707b4eb6e3a;W:3:256:deb7c2ad187fe749;A:36
++name6	639	1,11,305419896,305419896,6,0,4294967295,9,0,0,0,64,none	normal	305419896,11,0	1,65542,65542,64,2,0,0,64	46ea3e035fde8072:b94fb6e482132325	7856341200004142434445464748494a4b4c4d4e4f50515253545556574142434445464748494a4b4c4d4e4f50515253545556574142434445464748494a4b4c:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc	H;C:11;W:1:4:cccfd053e47c3365;W:2:2:08328807b4eb6fed;W:3:65536:6498493ef513b87a;A:36
++name6	895	1,11,305419896,305419896,6,0,4294967295,9,0,0,0,64,none	normal	305419896,11,0	1,65542,65542,64,2,0,0,64	46ea3e035fde8072:b94fb6e482132325	7856341200004142434445464748494a4b4c4d4e4f50515253545556574142434445464748494a4b4c4d4e4f50515253545556574142434445464748494a4b4c:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc	H;C:11;W:1:4:cccfd053e47c3365;W:2:2:08328807b4eb6fed;W:3:65536:6498493ef513b87a;A:36
++id0	639	1,11,0,305419896,0,0,4294967295,9,0,0,0,64,none	normal	305419896,11,0	1,11,11,64,2,0,0,64	d7a0e552adfd4868:b94fb6e482132325	000000000500416c706861cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc	H;C:11;W:1:4:4d25767f9dce13f5;W:2:2:08218a07b4dd0020;W:3:5:4fda04cbc245e18b
++id0	895	1,11,0,305419896,0,0,4294967295,9,0,0,0,64,none	normal	305419896,11,0	1,11,11,64,2,0,0,64	d7a0e552adfd4868:b94fb6e482132325	000000000500416c706861cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc	H;C:11;W:1:4:4d25767f9dce13f5;W:2:2:08218a07b4dd0020;W:3:5:4fda04cbc245e18b
++id-max	639	1,11,4294967295,305419896,0,0,4294967295,9,0,0,0,64,none	normal	305419896,11,0	1,11,11,64,2,0,0,64	13d680fc1a97821c:b94fb6e482132325	ffffffff0500416c706861cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc	H;C:11;W:1:4:994f76653e2a3951;W:2:2:08218a07b4dd0020;W:3:5:4fda04cbc245e18b
++id-max	895	1,11,4294967295,305419896,0,0,4294967295,9,0,0,0,64,none	normal	305419896,11,0	1,11,11,64,2,0,0,64	13d680fc1a97821c:b94fb6e482132325	ffffffff0500416c706861cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc	H;C:11;W:1:4:994f76653e2a3951;W:2:2:08218a07b4dd0020;W:3:5:4fda04cbc245e18b
++register-read	639	1,11,305419896,4294967295,0,1,7,9,0,0,0,64,none	normal	7,11,0	1,11,11,64,2,0,0,64	d397e47da404cc78:b94fb6e482132325	785634120500416c706861cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc	H;R:registeredSubId;C:11;W:1:4:cccfd053e47c3365;W:2:2:08218a07b4dd0020;W:3:5:4fda04cbc245e18b
++register-read	895	1,11,305419896,4294967295,0,1,7,9,0,0,0,64,none	normal	7,11,0	1,11,11,64,2,0,0,64	d397e47da404cc78:b94fb6e482132325	785634120500416c706861cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc	H;R:registeredSubId;C:11;W:1:4:cccfd053e47c3365;W:2:2:08218a07b4dd0020;W:3:5:4fda04cbc245e18b
++register-generate	639	1,11,305419896,4294967295,0,0,4294967295,9,0,0,0,64,none	normal	9,11,0	1,11,11,64,2,0,0,64	d397e47da404cc78:b94fb6e482132325	785634120500416c706861cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc	H;R:registeredSubId;G;F:registerdSubId = "9";C:11;W:1:4:cccfd053e47c3365;W:2:2:08218a07b4dd0020;W:3:5:4fda04cbc245e18b
++register-generate	895	1,11,305419896,4294967295,0,0,4294967295,9,0,0,0,64,none	normal	9,11,0	1,11,11,64,2,0,0,64	d397e47da404cc78:b94fb6e482132325	785634120500416c706861cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc	H;R:registeredSubId;G;F:registerdSubId = "9";C:11;W:1:4:cccfd053e47c3365;W:2:2:08218a07b4dd0020;W:3:5:4fda04cbc245e18b
++register-false-changed	639	1,11,305419896,4294967295,0,0,7,9,0,0,0,64,none	normal	9,11,0	1,11,11,64,2,0,0,64	d397e47da404cc78:b94fb6e482132325	785634120500416c706861cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc	H;R:registeredSubId;G;F:registerdSubId = "9";C:11;W:1:4:cccfd053e47c3365;W:2:2:08218a07b4dd0020;W:3:5:4fda04cbc245e18b
++register-false-changed	895	1,11,305419896,4294967295,0,0,7,9,0,0,0,64,none	normal	9,11,0	1,11,11,64,2,0,0,64	d397e47da404cc78:b94fb6e482132325	785634120500416c706861cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc	H;R:registeredSubId;G;F:registerdSubId = "9";C:11;W:1:4:cccfd053e47c3365;W:2:2:08218a07b4dd0020;W:3:5:4fda04cbc245e18b
++generated-max	639	1,11,305419896,4294967295,0,0,4294967295,4294967295,0,0,0,64,none	normal	4294967295,11,0	1,11,11,64,2,0,0,64	d397e47da404cc78:b94fb6e482132325	785634120500416c706861cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc	H;R:registeredSubId;G;F:registerdSubId = "4294967295";C:11;W:1:4:cccfd053e47c3365;W:2:2:08218a07b4dd0020;W:3:5:4fda04cbc245e18b
++generated-max	895	1,11,305419896,4294967295,0,0,4294967295,4294967295,0,0,0,64,none	normal	4294967295,11,0	1,11,11,64,2,0,0,64	d397e47da404cc78:b94fb6e482132325	785634120500416c706861cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc	H;R:registeredSubId;G;F:registerdSubId = "4294967295";C:11;W:1:4:cccfd053e47c3365;W:2:2:08218a07b4dd0020;W:3:5:4fda04cbc245e18b
++stream1	639	1,11,305419896,305419896,0,0,4294967295,9,1,0,0,64,none	normal	305419896,11,0	1,0,0,64,2,11,11,64	b94fb6e482132325:d397e47da404cc78	cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc:785634120500416c706861cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc	H;C:11;W:1:4:cccfd053e47c3365;W:2:2:08218a07b4dd0020;W:3:5:4fda04cbc245e18b
++stream1	895	1,11,305419896,305419896,0,0,4294967295,9,1,0,0,64,none	normal	305419896,11,0	1,0,0,64,2,11,11,64	b94fb6e482132325:d397e47da404cc78	cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc:785634120500416c706861cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc	H;C:11;W:1:4:cccfd053e47c3365;W:2:2:08218a07b4dd0020;W:3:5:4fda04cbc245e18b
++offset	639	1,11,305419896,305419896,0,0,4294967295,9,0,3,20,64,none	normal	305419896,11,0	1,14,20,64,2,3,20,64	17042a68f123f816:b94fb6e482132325	cccccc785634120500416c706861cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc	H;C:11;W:1:4:cccfd053e47c3365;W:2:2:08218a07b4dd0020;W:3:5:4fda04cbc245e18b
++offset	895	1,11,305419896,305419896,0,0,4294967295,9,0,3,20,64,none	normal	305419896,11,0	1,14,20,64,2,3,20,64	17042a68f123f816:b94fb6e482132325	cccccc785634120500416c706861cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc	H;C:11;W:1:4:cccfd053e47c3365;W:2:2:08218a07b4dd0020;W:3:5:4fda04cbc245e18b
++capacity	639	1,11,305419896,305419896,0,0,4294967295,9,0,0,0,0,none	normal	305419896,11,0	1,11,11,0,2,0,0,0	d397e47da404cc78:b94fb6e482132325	785634120500416c706861cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc	H;C:11;W:1:4:cccfd053e47c3365;A:36;W:2:2:08218a07b4dd0020;A:36;W:3:5:4fda04cbc245e18b;A:36
++capacity	895	1,11,305419896,305419896,0,0,4294967295,9,0,0,0,0,none	normal	305419896,11,0	1,11,11,0,2,0,0,0	d397e47da404cc78:b94fb6e482132325	785634120500416c706861cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc	H;C:11;W:1:4:cccfd053e47c3365;A:36;W:2:2:08218a07b4dd0020;A:36;W:3:5:4fda04cbc245e18b;A:36
++manager0	639	1,0,305419896,305419896,0,0,4294967295,9,0,0,0,64,none	fault:manager0	305419896,0,0	1,0,0,64,2,0,0,64	b94fb6e482132325:b94fb6e482132325	cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc	A:463;H;C:0
++manager0	895	1,0,305419896,305419896,0,0,4294967295,9,0,0,0,64,none	fault:manager0	305419896,0,0	1,0,0,64,2,0,0,64	b94fb6e482132325:b94fb6e482132325	cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc	A:463;H;C:0
++assert-manager22	639	1,0,305419896,305419896,0,0,4294967295,9,0,0,0,64,assert-manager22	normal	305419896,22,0	1,11,11,64,2,0,0,64	d397e47da404cc78:b94fb6e482132325	785634120500416c706861cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc	A:463;H;C:22;W:1:4:cccfd053e47c3365;W:2:2:08218a07b4dd0020;W:3:5:4fda04cbc245e18b
++assert-manager22	895	1,0,305419896,305419896,0,0,4294967295,9,0,0,0,64,assert-manager22	normal	305419896,22,0	1,11,11,64,2,0,0,64	d397e47da404cc78:b94fb6e482132325	785634120500416c706861cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc	A:463;H;C:22;W:1:4:cccfd053e47c3365;W:2:2:08218a07b4dd0020;W:3:5:4fda04cbc245e18b
++assert-stop	639	1,0,305419896,305419896,0,0,4294967295,9,0,0,0,64,assert-stop	stop:assert	305419896,0,0	1,0,0,64,2,0,0,64	b94fb6e482132325:b94fb6e482132325	cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc	A:463
++assert-stop	895	1,0,305419896,305419896,0,0,4294967295,9,0,0,0,64,assert-stop	stop:assert	305419896,0,0	1,0,0,64,2,0,0,64	b94fb6e482132325:b94fb6e482132325	cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc	A:463
++register-manager22	639	1,11,305419896,305419896,0,0,4294967295,9,0,0,0,64,register-manager22	normal	305419896,22,0	1,11,11,64,2,0,0,64	d397e47da404cc78:b94fb6e482132325	785634120500416c706861cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc	H;C:22;W:1:4:cccfd053e47c3365;W:2:2:08218a07b4dd0020;W:3:5:4fda04cbc245e18b
++register-manager22	895	1,11,305419896,305419896,0,0,4294967295,9,0,0,0,64,register-manager22	normal	305419896,22,0	1,11,11,64,2,0,0,64	d397e47da404cc78:b94fb6e482132325	785634120500416c706861cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc	H;C:22;W:1:4:cccfd053e47c3365;W:2:2:08218a07b4dd0020;W:3:5:4fda04cbc245e18b
++register-id9	639	1,11,305419896,305419896,0,0,4294967295,9,0,0,0,64,register-id9	normal	9,11,0	1,11,11,64,2,0,0,64	d397e47da404cc78:b94fb6e482132325	785634120500416c706861cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc	H;C:11;W:1:4:cccfd053e47c3365;W:2:2:08218a07b4dd0020;W:3:5:4fda04cbc245e18b
++register-id9	895	1,11,305419896,305419896,0,0,4294967295,9,0,0,0,64,register-id9	normal	9,11,0	1,11,11,64,2,0,0,64	d397e47da404cc78:b94fb6e482132325	785634120500416c706861cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc	H;C:11;W:1:4:cccfd053e47c3365;W:2:2:08218a07b4dd0020;W:3:5:4fda04cbc245e18b
++register-pointer2	639	1,11,305419896,305419896,0,0,4294967295,9,0,0,0,64,register-pointer2	normal	305419896,11,1	1,11,11,64,2,0,0,64	d397e47da404cc78:b94fb6e482132325	785634120500416c706861cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc	H;C:11;W:1:4:cccfd053e47c3365;W:2:2:08218a07b4dd0020;W:3:5:4fda04cbc245e18b
++register-pointer2	895	1,11,305419896,305419896,0,0,4294967295,9,0,0,0,64,register-pointer2	normal	305419896,11,1	1,11,11,64,2,0,0,64	d397e47da404cc78:b94fb6e482132325	785634120500416c706861cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc	H;C:11;W:1:4:cccfd053e47c3365;W:2:2:08218a07b4dd0020;W:3:5:4fda04cbc245e18b
++register-name	639	1,11,305419896,305419896,0,0,4294967295,9,0,0,0,64,register-name	normal	305419896,11,0	1,7,7,64,2,0,0,64	8932202e47532e42:b94fb6e482132325	7856341201005acccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc	H;C:11;W:1:4:cccfd053e47c3365;W:2:2:082f2207b4e88cc4;W:3:1:af64174c860250cd
++register-name	895	1,11,305419896,305419896,0,0,4294967295,9,0,0,0,64,register-name	normal	305419896,11,0	1,7,7,64,2,0,0,64	8932202e47532e42:b94fb6e482132325	7856341201005acccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc	H;C:11;W:1:4:cccfd053e47c3365;W:2:2:082f2207b4e88cc4;W:3:1:af64174c860250cd
++register-grow	639	1,11,305419896,305419896,0,0,4294967295,9,0,0,0,64,register-grow	normal	305419896,11,0	1,16,16,64,2,0,0,64	6ecb9a8e3210b09e:b94fb6e482132325	785634120a0047726f776e20576f7264cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc	H;C:11;W:1:4:cccfd053e47c3365;W:2:2:08548407b5084f87;W:3:10:67daad290e2a415c
++register-grow	895	1,11,305419896,305419896,0,0,4294967295,9,0,0,0,64,register-grow	normal	305419896,11,0	1,16,16,64,2,0,0,64	6ecb9a8e3210b09e:b94fb6e482132325	785634120a0047726f776e20576f7264cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc	H;C:11;W:1:4:cccfd053e47c3365;W:2:2:08548407b5084f87;W:3:10:67daad290e2a415c
++register-stop	639	1,11,305419896,305419896,0,0,4294967295,9,0,0,0,64,register-stop	stop:register	305419896,11,0	1,0,0,64,2,0,0,64	b94fb6e482132325:b94fb6e482132325	cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc	H
++register-stop	895	1,11,305419896,305419896,0,0,4294967295,9,0,0,0,64,register-stop	stop:register	305419896,11,0	1,0,0,64,2,0,0,64	b94fb6e482132325:b94fb6e482132325	cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc	H
++read-manager22	639	1,11,305419896,4294967295,0,0,4294967295,9,0,0,0,64,read-manager22	normal	9,22,0	1,11,11,64,2,0,0,64	d397e47da404cc78:b94fb6e482132325	785634120500416c706861cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc	H;R:registeredSubId;G;F:registerdSubId = "9";C:22;W:1:4:cccfd053e47c3365;W:2:2:08218a07b4dd0020;W:3:5:4fda04cbc245e18b
++read-manager22	895	1,11,305419896,4294967295,0,0,4294967295,9,0,0,0,64,read-manager22	normal	9,22,0	1,11,11,64,2,0,0,64	d397e47da404cc78:b94fb6e482132325	785634120500416c706861cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc	H;R:registeredSubId;G;F:registerdSubId = "9";C:22;W:1:4:cccfd053e47c3365;W:2:2:08218a07b4dd0020;W:3:5:4fda04cbc245e18b
++read-id9	639	1,11,305419896,4294967295,0,0,4294967295,9,0,0,0,64,read-id9	normal	9,11,0	1,11,11,64,2,0,0,64	d397e47da404cc78:b94fb6e482132325	785634120500416c706861cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc	H;R:registeredSubId;G;F:registerdSubId = "9";C:11;W:1:4:cccfd053e47c3365;W:2:2:08218a07b4dd0020;W:3:5:4fda04cbc245e18b
++read-id9	895	1,11,305419896,4294967295,0,0,4294967295,9,0,0,0,64,read-id9	normal	9,11,0	1,11,11,64,2,0,0,64	d397e47da404cc78:b94fb6e482132325	785634120500416c706861cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc	H;R:registeredSubId;G;F:registerdSubId = "9";C:11;W:1:4:cccfd053e47c3365;W:2:2:08218a07b4dd0020;W:3:5:4fda04cbc245e18b
++generate-name	639	1,11,305419896,4294967295,0,0,4294967295,9,0,0,0,64,generate-name	normal	9,11,0	1,7,7,64,2,0,0,64	8932202e47532e42:b94fb6e482132325	7856341201005acccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc	H;R:registeredSubId;G;F:registerdSubId = "9";C:11;W:1:4:cccfd053e47c3365;W:2:2:082f2207b4e88cc4;W:3:1:af64174c860250cd
++generate-name	895	1,11,305419896,4294967295,0,0,4294967295,9,0,0,0,64,generate-name	normal	9,11,0	1,7,7,64,2,0,0,64	8932202e47532e42:b94fb6e482132325	7856341201005acccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc	H;R:registeredSubId;G;F:registerdSubId = "9";C:11;W:1:4:cccfd053e47c3365;W:2:2:082f2207b4e88cc4;W:3:1:af64174c860250cd
++config-name	639	1,11,305419896,4294967295,0,0,4294967295,9,0,0,0,64,config-name	normal	9,11,0	1,7,7,64,2,0,0,64	8932202e47532e42:b94fb6e482132325	7856341201005acccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc	H;R:registeredSubId;G;F:registerdSubId = "9";C:11;W:1:4:cccfd053e47c3365;W:2:2:082f2207b4e88cc4;W:3:1:af64174c860250cd
++config-name	895	1,11,305419896,4294967295,0,0,4294967295,9,0,0,0,64,config-name	normal	9,11,0	1,7,7,64,2,0,0,64	8932202e47532e42:b94fb6e482132325	7856341201005acccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc	H;R:registeredSubId;G;F:registerdSubId = "9";C:11;W:1:4:cccfd053e47c3365;W:2:2:082f2207b4e88cc4;W:3:1:af64174c860250cd
++create-manager0	639	1,11,305419896,305419896,0,0,4294967295,9,0,0,0,64,create-manager0	normal	305419896,0,0	1,11,11,64,2,0,0,64	d397e47da404cc78:b94fb6e482132325	785634120500416c706861cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc	H;C:11;W:1:4:cccfd053e47c3365;W:2:2:08218a07b4dd0020;W:3:5:4fda04cbc245e18b
++create-manager0	895	1,11,305419896,305419896,0,0,4294967295,9,0,0,0,64,create-manager0	normal	305419896,0,0	1,11,11,64,2,0,0,64	d397e47da404cc78:b94fb6e482132325	785634120500416c706861cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc	H;C:11;W:1:4:cccfd053e47c3365;W:2:2:08218a07b4dd0020;W:3:5:4fda04cbc245e18b
++create-name	639	1,11,305419896,305419896,0,0,4294967295,9,0,0,0,64,create-name	normal	305419896,11,0	1,7,7,64,2,0,0,64	8932202e47532e42:b94fb6e482132325	7856341201005acccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc	H;C:11;W:1:4:cccfd053e47c3365;W:2:2:082f2207b4e88cc4;W:3:1:af64174c860250cd
++create-name	895	1,11,305419896,305419896,0,0,4294967295,9,0,0,0,64,create-name	normal	305419896,11,0	1,7,7,64,2,0,0,64	8932202e47532e42:b94fb6e482132325	7856341201005acccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc	H;C:11;W:1:4:cccfd053e47c3365;W:2:2:082f2207b4e88cc4;W:3:1:af64174c860250cd
++create-stop	639	1,11,305419896,305419896,0,0,4294967295,9,0,0,0,64,create-stop	stop:create	305419896,11,0	1,0,0,64,2,0,0,64	b94fb6e482132325:b94fb6e482132325	cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc	H;C:11
++create-stop	895	1,11,305419896,305419896,0,0,4294967295,9,0,0,0,64,create-stop	stop:create	305419896,11,0	1,0,0,64,2,0,0,64	b94fb6e482132325:b94fb6e482132325	cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc	H;C:11
++write1-name	639	1,11,305419896,305419896,0,0,4294967295,9,0,0,0,64,write1-name	normal	305419896,11,0	1,7,7,64,2,0,0,64	8932202e47532e42:b94fb6e482132325	7856341201005acccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc	H;C:11;W:1:4:cccfd053e47c3365;W:2:2:082f2207b4e88cc4;W:3:1:af64174c860250cd
++write1-name	895	1,11,305419896,305419896,0,0,4294967295,9,0,0,0,64,write1-name	normal	305419896,11,0	1,7,7,64,2,0,0,64	8932202e47532e42:b94fb6e482132325	7856341201005acccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc	H;C:11;W:1:4:cccfd053e47c3365;W:2:2:082f2207b4e88cc4;W:3:1:af64174c860250cd
++write1-grow	639	1,11,305419896,305419896,0,0,4294967295,9,0,0,0,64,write1-grow	normal	305419896,11,0	1,16,16,64,2,0,0,64	6ecb9a8e3210b09e:b94fb6e482132325	785634120a0047726f776e20576f7264cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc	H;C:11;W:1:4:cccfd053e47c3365;W:2:2:08548407b5084f87;W:3:10:67daad290e2a415c
++write1-grow	895	1,11,305419896,305419896,0,0,4294967295,9,0,0,0,64,write1-grow	normal	305419896,11,0	1,16,16,64,2,0,0,64	6ecb9a8e3210b09e:b94fb6e482132325	785634120a0047726f776e20576f7264cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc	H;C:11;W:1:4:cccfd053e47c3365;W:2:2:08548407b5084f87;W:3:10:67daad290e2a415c
++write1-pointer2	639	1,11,305419896,305419896,0,0,4294967295,9,0,0,0,64,write1-pointer2	normal	305419896,11,1	1,11,11,64,2,0,0,64	d397e47da404cc78:b94fb6e482132325	785634120500416c706861cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc	H;C:11;W:1:4:cccfd053e47c3365;W:2:2:08218a07b4dd0020;W:3:5:4fda04cbc245e18b
++write1-pointer2	895	1,11,305419896,305419896,0,0,4294967295,9,0,0,0,64,write1-pointer2	normal	305419896,11,1	1,11,11,64,2,0,0,64	d397e47da404cc78:b94fb6e482132325	785634120500416c706861cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc	H;C:11;W:1:4:cccfd053e47c3365;W:2:2:08218a07b4dd0020;W:3:5:4fda04cbc245e18b
++write1-id9	639	1,11,305419896,305419896,0,0,4294967295,9,0,0,0,64,write1-id9	normal	9,11,0	1,11,11,64,2,0,0,64	d397e47da404cc78:b94fb6e482132325	785634120500416c706861cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc	H;C:11;W:1:4:cccfd053e47c3365;W:2:2:08218a07b4dd0020;W:3:5:4fda04cbc245e18b
++write1-id9	895	1,11,305419896,305419896,0,0,4294967295,9,0,0,0,64,write1-id9	normal	9,11,0	1,11,11,64,2,0,0,64	d397e47da404cc78:b94fb6e482132325	785634120500416c706861cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc	H;C:11;W:1:4:cccfd053e47c3365;W:2:2:08218a07b4dd0020;W:3:5:4fda04cbc245e18b
++write1-stop	639	1,11,305419896,305419896,0,0,4294967295,9,0,0,0,64,write1-stop	stop:write1	305419896,11,0	1,0,0,64,2,0,0,64	b94fb6e482132325:b94fb6e482132325	cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc	H;C:11;W:1:4:cccfd053e47c3365
++write1-stop	895	1,11,305419896,305419896,0,0,4294967295,9,0,0,0,64,write1-stop	stop:write1	305419896,11,0	1,0,0,64,2,0,0,64	b94fb6e482132325:b94fb6e482132325	cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc	H;C:11;W:1:4:cccfd053e47c3365
++write2-name	639	1,11,305419896,305419896,0,0,4294967295,9,0,0,0,64,write2-name	normal	305419896,11,0	1,11,11,64,2,0,0,64	4aef63242a7696ee:b94fb6e482132325	7856341205005a00596861cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc	H;C:11;W:1:4:cccfd053e47c3365;W:2:2:08218a07b4dd0020;W:3:5:e15c0ac7cc7bfe45
++write2-name	895	1,11,305419896,305419896,0,0,4294967295,9,0,0,0,64,write2-name	normal	305419896,11,0	1,11,11,64,2,0,0,64	4aef63242a7696ee:b94fb6e482132325	7856341205005a00596861cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc	H;C:11;W:1:4:cccfd053e47c3365;W:2:2:08218a07b4dd0020;W:3:5:e15c0ac7cc7bfe45
++write2-grow	639	1,11,305419896,305419896,0,0,4294967295,9,0,0,0,64,write2-grow	normal	305419896,11,0	1,11,11,64,2,0,0,64	040f2ea9619b32b9:b94fb6e482132325	78563412050047726f776ecccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc	H;C:11;W:1:4:cccfd053e47c3365;W:2:2:08218a07b4dd0020;W:3:5:98b7e18fb62d9afc
++write2-grow	895	1,11,305419896,305419896,0,0,4294967295,9,0,0,0,64,write2-grow	normal	305419896,11,0	1,11,11,64,2,0,0,64	040f2ea9619b32b9:b94fb6e482132325	78563412050047726f776ecccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc	H;C:11;W:1:4:cccfd053e47c3365;W:2:2:08218a07b4dd0020;W:3:5:98b7e18fb62d9afc
++write2-stop	639	1,11,305419896,305419896,0,0,4294967295,9,0,0,0,64,write2-stop	stop:write2	305419896,11,0	1,4,4,64,2,0,0,64	cbbf72e0ce6418a5:b94fb6e482132325	78563412cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc	H;C:11;W:1:4:cccfd053e47c3365;W:2:2:08218a07b4dd0020
++write2-stop	895	1,11,305419896,305419896,0,0,4294967295,9,0,0,0,64,write2-stop	stop:write2	305419896,11,0	1,4,4,64,2,0,0,64	cbbf72e0ce6418a5:b94fb6e482132325	78563412cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc	H;C:11;W:1:4:cccfd053e47c3365;W:2:2:08218a07b4dd0020
++write3-name	639	1,11,305419896,305419896,0,0,4294967295,9,0,0,0,64,write3-name	normal	305419896,11,0	1,11,11,64,2,0,0,64	4aef63242a7696ee:b94fb6e482132325	7856341205005a00596861cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc	H;C:11;W:1:4:cccfd053e47c3365;W:2:2:08218a07b4dd0020;W:3:5:4fda04cbc245e18b
++write3-name	895	1,11,305419896,305419896,0,0,4294967295,9,0,0,0,64,write3-name	normal	305419896,11,0	1,11,11,64,2,0,0,64	4aef63242a7696ee:b94fb6e482132325	7856341205005a00596861cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc	H;C:11;W:1:4:cccfd053e47c3365;W:2:2:08218a07b4dd0020;W:3:5:4fda04cbc245e18b
++write3-stop	639	1,11,305419896,305419896,0,0,4294967295,9,0,0,0,64,write3-stop	stop:write3	305419896,11,0	1,6,6,64,2,0,0,64	c93664db9013ecb8:b94fb6e482132325	785634120500cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc	H;C:11;W:1:4:cccfd053e47c3365;W:2:2:08218a07b4dd0020;W:3:5:4fda04cbc245e18b
++write3-stop	895	1,11,305419896,305419896,0,0,4294967295,9,0,0,0,64,write3-stop	stop:write3	305419896,11,0	1,6,6,64,2,0,0,64	c93664db9013ecb8:b94fb6e482132325	785634120500cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc	H;C:11;W:1:4:cccfd053e47c3365;W:2:2:08218a07b4dd0020;W:3:5:4fda04cbc245e18b
++capacity-streamB	639	1,11,305419896,305419896,0,0,4294967295,9,0,0,0,0,capacity-streamB	normal	305419896,11,0	2,15,15,69632,2,0,0,0	b94fb6e482132325:205b711bc766ce48	cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc:cccccccc785634120500416c706861cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc	H;C:11;W:1:4:cccfd053e47c3365;A:36;W:2:2:08218a07b4dd0020;W:3:5:4fda04cbc245e18b
++capacity-streamB	895	1,11,305419896,305419896,0,0,4294967295,9,0,0,0,0,capacity-streamB	normal	305419896,11,0	2,15,15,69632,2,0,0,0	b94fb6e482132325:205b711bc766ce48	cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc:cccccccc785634120500416c706861cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc	H;C:11;W:1:4:cccfd053e47c3365;A:36;W:2:2:08218a07b4dd0020;W:3:5:4fda04cbc245e18b
++capacity-stop	639	1,11,305419896,305419896,0,0,4294967295,9,0,0,0,0,capacity-stop	stop:capacity	305419896,11,0	1,0,0,0,2,0,0,0	b94fb6e482132325:b94fb6e482132325	cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc	H;C:11;W:1:4:cccfd053e47c3365;A:36
++capacity-stop	895	1,11,305419896,305419896,0,0,4294967295,9,0,0,0,0,capacity-stop	stop:capacity	305419896,11,0	1,0,0,0,2,0,0,0	b94fb6e482132325:b94fb6e482132325	cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc	H;C:11;W:1:4:cccfd053e47c3365;A:36
++null-stop	639	1,11,305419896,305419896,1,0,4294967295,9,0,0,0,64,null-stop	stop:null	305419896,11,0	1,4,4,64,2,0,0,64	cbbf72e0ce6418a5:b94fb6e482132325	78563412cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc	H;C:11;W:1:4:cccfd053e47c3365;A:155
++null-stop	895	1,11,305419896,305419896,1,0,4294967295,9,0,0,0,64,null-stop	stop:null	305419896,11,0	1,4,4,64,2,0,0,64	cbbf72e0ce6418a5:b94fb6e482132325	78563412cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc	H;C:11;W:1:4:cccfd053e47c3365;A:155
+diff --git a/cpppj/tests/FortSubscriberWriteTests.cpp b/cpppj/tests/FortSubscriberWriteTests.cpp
+new file mode 100644
+--- /dev/null
++++ b/cpppj/tests/FortSubscriberWriteTests.cpp
+@@ -0,0 +1,111 @@
++// 최초 Subscriber 저장90관측과 같은 실제 등록/문자열/MemStream 및 현재 manager 수명을 대조한다.
++#include "TestSupport.h"
++#include "DudeSpawnSupport.h"
++#include "o/RawFortSubscriberWrite.h"
++#include "o/RawFortSubscriberLoad.h"
++#include "o/RawMemStream.h"
++#include "client/CampaignTemplateStorage.h"
++#include <algorithm>
++#include <array>
++#include <filesystem>
++#include <fstream>
++#include <sstream>
++#include <stdexcept>
++#include <string>
++#include <vector>
++
++namespace { //원문 fixture의 입력/현재 장치/독립 BYTE 관측만 준비한다.
++using namespace netstorm::o; //원문 부모와 기존 실제 등록/쓰기 몸체를 그대로 호출한다.
++constexpr std::array<std::uint32_t,2> kSubWriteBuffers{0x12040000U,0x12060000U}; //CPU fixture의 두 물리 버퍼 토큰이며 호스트 주소가 아니다.
++constexpr std::size_t kSubWritePhysical=0x11000; //전체 output/이름의 명시 물리 용량이다.
++// TSV의 마지막 빈 값도 보존하여 입력과 관측을 분리한다.
++std::vector<std::string> SubWriteFields(std::string_view text,char delimiter) { std::vector<std::string> fields;std::size_t at{};for (;;) { const auto end=text.find(delimiter,at);fields.emplace_back(text.substr(at,end==text.npos ? text.npos : end-at));if (end==text.npos) return fields;at=end+1; } } //구분자가 끝나야 반환한다.
++// 같은16BYTE stream의 지정 DWORD만 읽는다.
++std::uint32_t SubWriteGet(std::span<const std::uint8_t> bytes,std::size_t at) { std::uint32_t value{};for (unsigned index=0;index<4;++index) value|=std::uint32_t(bytes[at+index])<<(8*index);return value; } //낮은 BYTE부터 원문 순서로 조립한다.
++// 같은16BYTE stream의 지정 DWORD만 쓴다.
++void SubWritePut(std::span<std::uint8_t> bytes,std::size_t at,std::uint32_t value) { for (unsigned index=0;index<4;++index) bytes[at+index]=static_cast<std::uint8_t>(value>>(8*index)); } //주변 필드/바이트는 유지한다.
++// 모든 물리 BYTE를 독립 FNV1a로 계산해 원문 전체 출력 관측과 대조한다.
++std::string SubWriteHash(std::span<const std::uint8_t> bytes) {
++    std::uint64_t value=0xcbf29ce484222325ULL;for (const auto byte:bytes) value=(value^byte)*0x100000001b3ULL; //unsigned64 곱셈의 wrap까지 동일한 관측 형식이다.
++    constexpr std::string_view digits="0123456789abcdef";std::string result(16,'0');for (std::size_t index=0;index<16;++index) result[index]=digits[(value>>(4*(15-index)))&15U];return result; //고정16글자다.
++}
++// 출력64BYTE prefix는 NUL에서 자르지 않고 원시 hex로 대조한다.
++std::string SubWriteHex(std::span<const std::uint8_t> bytes) { constexpr std::string_view digits="0123456789abcdef";std::string result;for (const auto byte:bytes) { result+=digits[byte>>4];result+=digits[byte&15U]; }return result; } //실제 순서의 각 BYTE만 표시한다.
++// 명시 callback/잘못된 manager 경계를 원문의 정상 반환과 구별한다.
++struct SubWriteStop { std::string status; }; //fixture가 관측한 도달 상태만 담는다.
++// fixture 위치는 등록된 매크로를 우선하고 staging의 독립 준비도 같은 내용을 읽는다.
++std::filesystem::path SubWriteFixture() {
++#ifdef NETSTORM_FORT_SUBSCRIBER_WRITE_FIXTURE
++    return NETSTORM_FORT_SUBSCRIBER_WRITE_FIXTURE;
++#else
++    auto path=std::filesystem::path(__FILE__).parent_path();while (!path.empty()) { //원본/현재 작업 디렉터리를 추측하지 않고 저장소 marker까지 오른다.
++        if (std::filesystem::exists(path/"AGENTS.md")) { const auto target=path/"cpppj/tests/fixtures/fort-subscriber-write-x86.tsv";return std::filesystem::exists(target) ? target : path/"extracted/cpp-fort-subscriber-write-469-staging/work/cpppj/tests/fixtures/fort-subscriber-write-x86.tsv"; }const auto parent=path.parent_path();if (parent==path) break;path=parent;
++    }throw std::runtime_error("Subscriber 저장 fixture 저장소 경로 누락");
++#endif
++}
++// 기대는 fixture에서만 읽고 이 구조체는 원문과 같은 외부 입력/현재 장치만 제공한다.
++struct SubWriteScene {
++    std::array<std::uint32_t,12> input{};std::string mutation,trace; //slot~alloc 입력과 지정 외부효과/실제 순서다.
++    std::uint32_t manager{},subscriber{},currentHandle{},writes{}; //실제 helper가 바꾸는 현재 전역/헤더와 선택된 write 순번이다.
++    std::array<std::vector<std::uint8_t>,2> names,output;std::array<std::array<std::uint8_t,16>,2> stream{}; //캡처 포인터/대체 포인터/stream/물리 output은 서로 다르다.
++    explicit SubWriteScene(std::string_view text) {
++        const auto fields=SubWriteFields(text,',');if (fields.size()!=13) throw std::runtime_error("Subscriber 저장 입력 열 수 오류");for (std::size_t index=0;index<input.size();++index) input[index]=static_cast<std::uint32_t>(std::stoull(fields[index]));mutation=fields[12];manager=input[1];subscriber=input[3];
++        for (std::size_t index=0;index<2;++index) { //원문과 같은 초기 물리 guard/stream을 명시 입력한다.
++            names[index].assign(kSubWritePhysical,0xcc);output[index].assign(kSubWritePhysical,0xcc);SubWritePut(stream[index],0,kSubWriteBuffers[index]);SubWritePut(stream[index],4,input[9]);SubWritePut(stream[index],8,input[10]);SubWritePut(stream[index],12,input[11]);
++        }
++        std::copy_n("Other",6,names[1].begin());
++        if (input[4]>=4) { const auto length=input[4]==4 ? 255U : input[4]==5 ? 256U : 65536U;for (std::uint32_t index=0;index<length;++index) names[0][index]=static_cast<std::uint8_t>(65+index%23);names[0][length]=0; } //길이WORD wrap의 실제 전체 입력을 유지한다.
++        else if (input[4]==2) names[0][0]=0;
++        else if (input[4]==3) { const std::array<std::uint8_t,5> value{'A',0,'B','C',0};std::copy(value.begin(),value.end(),names[0].begin()); }
++        else std::copy_n("Alpha",6,names[0].begin());
++    }
++    // 실제 경계의 외부 응답/내용만 바꾸고 부모의 조건/재조회는 계산하지 않는다.
++    void Event(std::string_view boundary,std::string text) {
++        if (!trace.empty()) trace+=';';trace+=text;const auto dash=mutation.find('-');if (dash==std::string::npos || mutation.substr(0,dash)!=boundary) return;const auto action=mutation.substr(dash+1);
++        if (action=="stop") throw SubWriteStop{"stop:"+std::string(boundary)};
++        if (action=="manager22") manager=22;else if (action=="manager0") manager=0;else if (action=="id9") subscriber=9;else if (action=="pointer2") currentHandle=1;
++        else if (action=="name") { names[0][0]='Z';names[0][1]=0;names[0][2]='Y'; }
++        else if (action=="grow") std::copy_n("Grown Word",11,names[0].begin());
++        else if (action=="streamB") { auto& selected=stream.at(input[8]);SubWritePut(selected,0,kSubWriteBuffers[1]);SubWritePut(selected,4,4);SubWritePut(selected,8,2);SubWritePut(selected,12,kSubWritePhysical); }
++        else throw std::logic_error("Subscriber 저장 미해석 외부 변경");
++    }
++    // 실제 일반 MemStream 몸체에 물리 버퍼만 제공한다.
++    MemStreamHooks Memory() {
++        MemStreamHooks hooks;hooks.buffer=[&](auto token)->std::span<std::uint8_t> { const auto at=std::find(kSubWriteBuffers.begin(),kSubWriteBuffers.end(),token);if (at==kSubWriteBuffers.end()) throw std::out_of_range("Subscriber 저장 물리 output 토큰");return output[static_cast<std::size_t>(at-kSubWriteBuffers.begin())]; };
++        hooks.assertion=[&](auto value) { if (value!=MemStreamAssertion::WriteCapacity) throw std::logic_error("Subscriber 저장 예상 밖 할당 진단");Event("capacity","A:36"); };return hooks;
++    }
++    // actual 등록helper/문자열/일반writer를 연결하고 Create/Config만 명시 장치로 제공한다.
++    FortSubscriberWriteHooks Hooks() {
++        FortSubscriberWriteHooks hooks;hooks.manager=[&](auto slot) { CHECK(slot==input[0]);return manager; };hooks.assertion=[&](auto line) { Event(line==0x1cfU ? "assert" : "null","A:"+std::to_string(line)); };
++        hooks.registerSubscriber=[&] { Event("register","H");FortSubscriberLoadHooks registration;registration.readRegistered=[&](auto key,auto& target) { target=input[6];Event("read","R:"+std::string(key));return input[5]!=0; };registration.generate=[&] { Event("generate","G");return input[7]; };registration.configure=[&](auto value) { Event("config","F:"+std::string(value)); };FinishFortSubscriberRegistration({subscriber},registration); };
++        hooks.create=[&](auto selected,auto section) { CHECK(section=="Subscriber");Event("create","C:"+std::to_string(selected));if (!selected) throw SubWriteStop{"fault:manager0"};return input[8]+1; };
++        hooks.write=[&](auto selected,auto bytes) { ++writes;Event("write"+std::to_string(writes),"W:"+std::to_string(writes)+':'+std::to_string(bytes.size())+':'+SubWriteHash(bytes));WriteMemStream(stream.at(selected-1),bytes,static_cast<std::uint32_t>(bytes.size()),Memory()); };return hooks;
++    }
++    // 실제 두 stream의 필드를 포인터만 fixture 번호로 바꾸어 관측한다.
++    std::string Streams() const {
++        std::string result;for (const auto& selected:stream) { //다른 stream이 바뀌지 않았는지도 같은8DWORD에 포함한다.
++            const auto pointer=SubWriteGet(selected,0);for (unsigned index=0;index<4;++index) { if (!result.empty()) result+=',';result+=std::to_string(index ? SubWriteGet(selected,index*4) : pointer==kSubWriteBuffers[0] ? 1U : pointer==kSubWriteBuffers[1] ? 2U : 0U); }
++        }return result;
++    }
++};
++}
++
++// 부모/등록/기존 문자열/실제 MemStream의 상태와 전체 물리 output을 최초 Native 관측에 대조한다.
++TEST_CASE(FortSubscriberWrite_ReplaysNative90CapturedIdAndDelayedNameWrites) {
++    std::ifstream file(SubWriteFixture(),std::ios::binary);if (!file) throw std::runtime_error("Subscriber 저장 최초 fixture 열기 실패");std::string line;std::size_t checked{};
++    while (std::getline(file,line)) { //첫 독립 관측의 두 x87 precision90행을 빠짐없이 재생한다.
++        if (line.empty() || line[0]=='#') continue;if (line.back()=='\r') line.pop_back();const auto row=SubWriteFields(line,'\t');if (row.size()!=9) throw std::runtime_error("Subscriber 저장 fixture 열 수 오류");SubWriteScene scene(row[2]);std::string status="normal";
++        try { SaveFortSubscriber(scene.input[0],scene.input[2],scene.input[4]==1 ? std::nullopt : std::optional<std::span<const std::uint8_t>>(scene.names[0]),scene.Hooks()); }catch (const SubWriteStop& stopped) { status=stopped.status; }
++        CHECK(status==row[3]);CHECK(std::to_string(scene.subscriber)+','+std::to_string(scene.manager)+','+std::to_string(scene.currentHandle)==row[4]);CHECK(scene.Streams()==row[5]);CHECK(SubWriteHash(scene.output[0])+':'+SubWriteHash(scene.output[1])==row[6]);CHECK(SubWriteHex(std::span(scene.output[0]).first(64))+':'+SubWriteHex(std::span(scene.output[1]).first(64))==row[7]);CHECK(scene.trace==row[8]);++checked;
++    }
++    CHECK(checked==90);
++}
++
++// 실제 보호 Fort의 기존 manager/Subscriber를 사용하고 helper/ID쓰기 뒤 header가 바뀌어도 선택 stream을 유지한다.
++TEST_CASE(FortSubscriberWrite_RealStorageKeepsChosenManagerAndCapturedPhysicalName) {
++    using namespace netstorm::client;const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);const auto original=assets.files.Read("d/TEST01.fort");CampaignTemplateStorage storage;storage.InstallFile(0,FortTemplate::Parse(original,assets.game.TypeTable()),original,"first.fort");storage.InstallFile(2,FortTemplate::Parse(original,assets.game.TypeTable()),original,"second.fort");storage.Borrow(1,0);const auto first=storage.ReadSubscriberName(0);std::uint32_t subscriber=0xffffffffU,writes{};TemplateWriteStream selected;std::array<std::uint8_t,64> name{};std::copy_n("Original",9,name.begin());
++    FortSubscriberWriteHooks hooks;hooks.manager=[&](auto slot) { return SubWriteGet(storage.Headers(),slot*20); };hooks.assertion=[](auto) { throw std::logic_error("실제 Subscriber 저장 예상 밖 진단"); };
++    hooks.registerSubscriber=[&] { FortSubscriberLoadHooks registration;registration.readRegistered=[](auto,auto& value) { value=7;return true; };FinishFortSubscriberRegistration({subscriber},registration);storage.Borrow(1,2);std::copy_n("Helper",7,name.begin()); };
++    hooks.create=[&](auto manager,auto section) { selected=storage.CreateManagerSection(manager,section);return 1U; };hooks.write=[&](auto stream,auto bytes) { CHECK(stream==1);storage.WriteSection(selected,bytes);if (++writes==1) { storage.Borrow(1,0);std::copy_n("AfterID",8,name.begin()); } };
++    SaveFortSubscriber(1,0xffffffffU,std::span<const std::uint8_t>(name),hooks);CHECK(subscriber==7 && writes==3 && storage.ReadSubscriberName(2)=="AfterID" && storage.ReadSubscriberName(0)==first);CHECK(SubWriteGet(storage.Template(2).Section("Subscriber"),0)==0xffffffffU && assets.files.Read("d/TEST01.fort")==original);
++}
+diff --git a/docs/exe/cpp-fort-subscriber-write-20261027.md b/docs/exe/cpp-fort-subscriber-write-20261027.md
+new file mode 100644
+--- /dev/null
++++ b/docs/exe/cpp-fort-subscriber-write-20261027.md
+@@ -0,0 +1,48 @@
++# 469 준비: 실제 Fort Subscriber 저장 부모
++
++현재 PC와 마지막 전체 정밀 디컴파일 PC는 **HJOW-Athlon / 2026-10-23**으로 같다. 작업일은2026-10-27이다. 468 제품은 동결/통합 검증 중이므로 이번 작업은 `extracted/cpp-fort-subscriber-write-469-staging`에만 준비했다. 제품 src/tests/CMake/기존 fixture/원본/디컴파일 결과는 변경하지 않았다. 게임·창·OS 장치 실행과 C++ 빌드는 하지 않았다.
++
++## 원문과 선택/캡처 순서
++
++10.78 `004bd400(this,id,name)`은 다음 순서를 실행한다.
++
++1. 고정 Template this의 첫 DWORD manager가0이면 Template.cpp463(`0x1cf`) 진단을 호출한다. 복귀하면 계속한다.
++2. `004b38d0` 등록 helper를 호출한다. 기존 `FinishFortSubscriberRegistration`이 실제 같은 현재00540c74와 ReadInt/새 ID/설정식을 처리한다.
++3. 그 뒤 고정 this의 **현재 manager를 다시 읽어** `0044d1b0(manager,"Subscriber")`를 호출한다. manager 선택을 진단 전이나 helper 전으로 앞당기지 않는다.
++4. Create가 돌려준 stream에 부모 인자로 들어온 **캡처 ID 4BYTE**를 쓴다. helper가 바꾼 현재 global ID를 대신 저장하지 않는다.
++5. **캡처된 같은 name 포인터**를 `004bcbf0` 문자열 writer에 넘긴다. helper가 전역 포인터00540ca8만 교체해도 이미 캡처한 포인터는 바뀌지 않는다. helper 또는 ID쓰기가 같은 버퍼의 내용/길이를 바꾸면 ID쓰기 뒤에 처음 수행하는 NUL 검색에서 현재 내용이 보인다.
++
++`004bcbf0`은 null이면 Template.cpp155(`0x9b`) 진단 뒤 빈 이름으로 계속하고, 첫 NUL까지 길이의 하위WORD를 쓴 뒤 같은 주소의 최초 전체 길이를 NUL 없이 쓴다. 길이쓰기 callback이 이름 내용을 바꾸더라도 길이를 다시 계산하지 않는다. 기존 `SaveFortMissionName`이 이 몸체를 이미 복원했으므로 새 문자열 계산기를 만들지 않았다.
++
++NewFort의 바깥 부모는 handle 포인터→현재 owner→현재 MySubscriber를 호출 직전에 캡처한다. 이 바깥 캡처는 별도 `cpp-new-fort-469-staging`이 담당한다. 이번 child API는 캡처 ID 값과 NUL 길이를 미리 자르지 않은 물리 span을 받는다. null data 포인터는 호출자가 nullopt로 연결한다.
++
++## 준비한 구현과 실제 manager 장치
++
++`RawFortSubscriberWrite`의 `SaveFortSubscriber`는 위 부모만 소유한다. 현재 manager getter, 줄 진단, 실제 등록 helper, Create, 일반 write를 선택 장치로 받고 기존 등록/문자열/MemStream을 재사용한다. 가짜 Fort 이미지나 임시 State를 대신 만들어 성공 처리하지 않는다.
++
++`CampaignTemplateStorage::CreateManagerSection(manager,name)`은 **이미 선택한 manager 토큰**으로 실제 소유 Image를 찾아 기존 `Image::CreateSection`을 호출하고 실제 generation을 포함한 `TemplateWriteStream`을 반환한다. 기존 `CreateSection(slot,name)` 본문은 바꾸지 않았다. 슬롯을 다시 읽는 기존 API를 Create 경계에서 사용하면 callback이 바꾼 header 때문에 다른 manager가 선택될 수 있으므로 좁은 manager API를 추가했다.
++
++동기 child 호출 동안 Create가 반환한 typed stream 하나를 지역 장치가 유지하면 뒤 ID/이름 쓰기 중 header가 다른 manager로 바뀌어도 `WriteSection(typedStream,bytes)`가 동일 노드/생성 수명에 쓴다. 다른 슬롯/새 fake manager를 만들지 않는다. 잘못된 manager나 반납된 generation은 기존 물리 장치의 예외로 중단한다.
++
++## 독립 x86 관측
++
++새 도구 `decomp_fort_subscriber_write.py`는 보호 PE의 **004bd400/004b38d0/004bcbf0/0044cce0** 네 몸체를 실제 Unicorn CPU로 실행했다. DataManager Create, ReadInt, 새 ID 생성, 설정, 진단, sprintf는 명시 외부 장치다. 실제 게임/OS/file 저장을 실행한 관측이 아니다.
++
++입력45개를 두 x87 control에서 실행한 **90관측·575,800명령**이다. 정상72관측, null manager의 명시 Create 거부2관측, assert/register/create/write1/write2/write3/capacity/null 중단 각2관측을 구분한다. `fault:manager0`은 실제 Create 몸체의 null 역참조를 CPU로 실행한 결과가 아니라 그 외부 경계에서 null을 거부한 상태다.
++
++입력에는 ID0/상위32비트/-1, 등록 ReadInt/생성/false지만 현재ID 변경, null/빈이름/NUL뒤 내용/255·256·65536길이, 두 stream/현재 cursor/용량 진단, 진단·helper 뒤 manager 재조회, global 포인터 교체와 같은 버퍼 변경, ID쓰기 중 이름 변경, 길이쓰기 뒤 이름 변경, 의미 있는 중간 중단을 포함했다. 제품 결과는 fixture 생성 입력으로 사용하지 않았다.
++
++fixture는 두 stream의8DWORD, 현재ID/manager/global handle포인터 선택, 전체 두 물리 output의 FNV1a64, 각64BYTE prefix, 실제 효과 순서를 기록한다. 전체 물리 output은 각각69,632BYTE이며 미사용 guard도 hash에 포함한다. 출력 전체를 직접 hex로 저장한 자료라고 주장하지 않는다.
++
++최초 fixture SHA256은 **`8619983808122e17dd261c974a25906374fa46aee16293a51f119d3fad9fe973`**이다. 생성기 멤버 설명 주석만 보완한 뒤 보고서의 생성기 SHA 메타데이터를 갱신했고 fixture 바이트는 그대로 보존했다. 동일 도구 `--verify`는 PE/함수표/기반도구/현재생성기/최초fixture SHA를 확인하고 원문90관측을 실제 재실행하여 차이0을 확인했다.
++
++## C++ 재생/실제 저장소 검사 초안
++
++- `FortSubscriberWrite_ReplaysNative90CapturedIdAndDelayedNameWrites`는 fixture90행을 실제 `SaveFortSubscriber`, 기존 `FinishFortSubscriberRegistration`, `SaveFortMissionName`, `WriteMemStream`으로 재생한다. 입력/외부 변경만 구성하고 모든 기대는 독립 fixture의 상태/효과/전체 hash에서 읽는다.
++- `FortSubscriberWrite_RealStorageKeepsChosenManagerAndCapturedPhysicalName`은 보호 TEST01의 실제 파일/일반 로더로 두 manager를 설치하고 빌린 헤더를 사용한다. helper가 현재 manager를 바꾸고 ID쓰기 뒤 header를 다시 바꾸어도 선택한 실제 Subscriber stream에 캡처 ID와 ID쓰기 뒤 바뀐 이름을 저장하는지 확인한다. 보호 원문과 다른 manager의 Subscriber는 보존한다. 새 Fort 이미지/생성자를 우회하여 NewFort 전체 성공을 합성하는 검사가 아니다.
++
++두 C++ 검사는 아직 컴파일/실행하지 않았다. 원문 도구 검증과 실제 C++ 회귀 통과를 합산하지 않는다. root가 다음 단위에서 CMake/제품/검사에 채택하고 집중/전체/GUI를 수행해야 한다.
++
++## 후속 연결
++
++NewFort 부모의 subscriber callback은 owner/capturedID/capturedHandle을 그대로 child에 전달하고, 실제 같은 Client Subscriber/Config로 등록 helper를 연결해야 한다. Create/Write의 실제 저장소 장치와 양쪽 staging의 patch를 충돌 없이 합친다. TypeNames/초기화 부모와 Client의 lazy 이름표 owner, AddIsland, 전체 Native State7 및 실제 NewFort GUI는 별도 후속이다. 이번 child 관측으로 전체 편집기/미션 목표 완료를 주장하지 않는다.
+diff --git a/tools/decomp_fort_subscriber_write.py b/tools/decomp_fort_subscriber_write.py
+new file mode 100644
+--- /dev/null
++++ b/tools/decomp_fort_subscriber_write.py
+@@ -0,0 +1,269 @@
++#!/usr/bin/env python3
++# -*- coding: utf-8 -*-
++"""004bd400/등록helper/기존문자열/실제MemStream을게임·OS없이독립관측하고재실행검증한다."""
++import argparse
++import csv
++import hashlib
++import json
++import socket
++import struct
++import sys
++from collections import Counter
++from pathlib import Path
++
++# staging과 제품 양쪽에서 같은 저장소/읽기 전용 기반 도구를 찾는다.
++HERE = Path(__file__).resolve()
++ROOT = next(path for path in HERE.parents if (path / 'AGENTS.md').is_file())
++sys.path.insert(0, str(ROOT / 'tools'))
++from decomp_priestmenu import Oracle as MemoryOracle, POOL, STACK, STOP
++from unicorn import UC_HOOK_MEM_WRITE
++from unicorn.x86_const import (UC_X86_REG_EAX, UC_X86_REG_EBX, UC_X86_REG_ECX,
++    UC_X86_REG_EDX, UC_X86_REG_ESI, UC_X86_REG_EDI, UC_X86_REG_EBP,
++    UC_X86_REG_ESP, UC_X86_REG_EIP, UC_X86_REG_FPCW)
++
++OUT = ROOT if HERE.parent == ROOT / 'tools' else ROOT / 'extracted/cpp-fort-subscriber-write-469-staging/work'  # 미채택 단계의 fixture/보고서는 staging 안에만 쓴다.
++FIXTURE = OUT / 'cpppj/tests/fixtures/fort-subscriber-write-x86.tsv'  # 최초 생성 뒤 제품 예상값으로 덮어쓰지 않는 관측이다.
++REPORT = OUT / 'cpppj/fort-subscriber-write-native.json'  # PE/기반도구/생성기/fixture 해시와 실행 범위를 기록한다.
++HEADER = POOL + 0x100  # 같은 고정 this가 가리키는 실제20BYTE 입력이다.
++STREAMS = (POOL + 0x200, POOL + 0x220)  # Create 경계가 선택한 두 실제16BYTE stream이다.
++NAMES = (POOL + 0x10000, POOL + 0x22000)  # 원래 캡처 포인터와 바뀐 global 포인터를 구별한다.
++BUFFERS = (POOL + 0x40000, POOL + 0x60000)  # 실제 MemStream이 쓸 수 있는 두 물리출력이다.
++PHYSICAL = 0x11000  # 길이WORD wrap과 주변 guard까지 포함한 물리 용량이다.
++SUBSCRIBER, HANDLE = 0x540c74, 0x540ca8  # 등록helper가 쓰는현재ID와부모가이미캡처한뒤인global이름포인터다.
++SELECTED = (0x4bd400, 0x4b38d0, 0x4bcbf0, 0x44cce0)  # 부모/실제등록/기존문자열/일반write만원문CPU로실행한다.
++
++
++def digest(path):
++    """현재 원문 바이트의 SHA256을 계산한다."""
++    return hashlib.sha256(Path(path).read_bytes()).hexdigest()
++
++
++def fnv(data):
++    """출력 전체 바이트를 고정64비트 FNV1a로 관측하며 제품 결과를 입력하지 않는다."""
++    value = 0xcbf29ce484222325
++    for byte in data:  # 모든 물리 BYTE와 미사용 guard를 순서대로 포함한다.
++        value = ((value ^ byte) * 0x100000001b3) & 0xffffffffffffffff
++    return f'{value:016x}'
++
++
++def name_input(kind):
++    """NUL/빈이름/255·256·65536길이와 원래 포인터의 물리 범위를 명시한다."""
++    if kind == 3:
++        return b'A\0BC\0'
++    if kind in (4, 5, 6):
++        length = {4: 255, 5: 256, 6: 65536}[kind]
++        return bytes(65 + index % 23 for index in range(length)) + b'\0'
++    return b'\0' if kind == 2 else b'Alpha\0'
++
++
++def cases():
++    """정상 경계와 의미 있는 재조회/현재값 변경/중단을 각각 독립 입력한다."""
++    base = (1, 11, 0x12345678, 0x12345678, 0, 0, 0xffffffff, 9, 0, 0, 0, 64, 'none')
++    variants = [('default', {})]
++    for kind in range(1, 7):  # null 포인터와 살아 있는 빈 이름을 구별한다.
++        variants.append(('name' + str(kind), {4: kind}))
++    variants += [('id0', {2: 0}), ('id-max', {2: 0xffffffff}), ('register-read', {3: 0xffffffff, 5: 1, 6: 7}),
++        ('register-generate', {3: 0xffffffff}), ('register-false-changed', {3: 0xffffffff, 6: 7}),
++        ('generated-max', {3: 0xffffffff, 7: 0xffffffff}), ('stream1', {8: 1}),
++        ('offset', {9: 3, 10: 20}), ('capacity', {11: 0}), ('manager0', {1: 0})]
++    mutations = ('assert-manager22', 'assert-stop', 'register-manager22', 'register-id9',
++        'register-pointer2', 'register-name', 'register-grow', 'register-stop', 'read-manager22',
++        'read-id9', 'generate-name', 'config-name', 'create-manager0', 'create-name', 'create-stop',
++        'write1-name', 'write1-grow', 'write1-pointer2', 'write1-id9', 'write1-stop',
++        'write2-name', 'write2-grow', 'write2-stop', 'write3-name', 'write3-stop',
++        'capacity-streamB', 'capacity-stop', 'null-stop')
++    for mutation in mutations:  # 불필요한 전체 조합 대신 callback 위치마다 한 의미를 관측한다.
++        change = {12: mutation}
++        if mutation.startswith('assert'):
++            change[1] = 0
++        if mutation.startswith(('read', 'generate', 'config')):
++            change[3] = 0xffffffff
++        if mutation.startswith('capacity'):
++            change[11] = 0
++        if mutation == 'null-stop':
++            change[4] = 1
++        variants.append((mutation, change))
++    result = []
++    for label, changes in variants:  # 명시 입력만 바꾸며 효과/분기는 실제 CPU가 결정한다.
++        value = list(base)
++        for index, field in changes.items():  # 지정 필드 이외의 기본 입력은 유지한다.
++            value[index] = field
++        result.append((label, tuple(value)))
++    return result
++
++
++class Oracle(MemoryOracle):
++    """선택한 PE 네 몸체를 실행하고 Create/Config/진단/새 ID 생성만 외부 장치로 둔다."""
++    def __init__(self):
++        """보호 PE를 격리 복사하고 실제 함수표와 CPU 쓰기 범위를 제한한다."""
++        super().__init__()
++        with (ROOT / 'extracted/refined/originals/functions.tsv').open(encoding='utf-8') as source:
++            facts = {int(row['entry'], 16): row for row in csv.DictReader(source, delimiter='\t')}
++        self.allowed = []  # 함수표가 허용한 실제 PE 명령 구간만 저장한다.
++        for entry in SELECTED:  # 함수표의 불연속 실제 명령 범위만 허용한다.
++            for part in facts[entry]['ranges'].split(';'):
++                low, high = (int(value, 16) for value in part.split('-'))
++                self.allowed.append((low, high + 1))
++        self.mu.hook_add(UC_HOOK_MEM_WRITE, self.guard)
++        self.total = 0  # 모든 관측의 실제 CPU 명령 수다.
++        self.boundaries = Counter()  # 실제 도달한 외부 장치 종류/순번의 누적 관측이다.
++        self.statuses = Counter()  # 정상/명시 중단/Create-null 경계 결과를 구별한다.
++
++    def guard(self, mu, access, address, size, value, data):
++        """CPU는 stack/currentID/두stream/두물리출력 밖에 쓸 수 없다."""
++        ranges = [(STACK - 0x1000, STACK + 16), (SUBSCRIBER, SUBSCRIBER + 4)]
++        ranges += [(node, node + 16) for node in STREAMS]
++        ranges += [(buffer, buffer + PHYSICAL) for buffer in BUFFERS]
++        if not any(low <= address and address + size <= high for low, high in ranges):
++            raise RuntimeError(f'SubscriberWrite CPU 쓰기 범위 밖 {address:08x}/{size}')
++
++    def event(self, boundary, text):
++        """실제 하위 진입 순서를 기록하고 지정한 외부 변경만 해당 시점에 적용한다."""
++        self.events.append(text)
++        self.boundaries[boundary] += 1
++        mutation = self.case[-1]
++        if '-' not in mutation:
++            return
++        trigger, action = mutation.split('-', 1)
++        if trigger != boundary:
++            return
++        if action == 'stop':
++            self.status = 'stop:' + boundary
++            self.mu.emu_stop()
++        elif action == 'manager22':
++            self.put(HEADER, 22)
++        elif action == 'manager0':
++            self.put(HEADER, 0)
++        elif action == 'id9':
++            self.put(SUBSCRIBER, 9)
++        elif action == 'pointer2':
++            self.put(HANDLE, NAMES[1])
++        elif action == 'name':
++            self.mu.mem_write(NAMES[0], b'Z\0Y')
++        elif action == 'grow':
++            self.mu.mem_write(NAMES[0], b'Grown Word\0')
++        elif action == 'streamB':
++            node = STREAMS[self.case[8]]
++            self.mu.mem_write(node, struct.pack('<4I', BUFFERS[1], 4, 2, PHYSICAL))
++        else:
++            raise RuntimeError('SubscriberWrite 변경 미해석:' + mutation)
++
++    def instruction(self, mu, address, size, data):
++        """부모/등록/문자열/일반write를 실제 실행하며 외부 하위만 명시 반환한다."""
++        self.instructions += 1
++        self.total += 1
++        if self.instructions > 1000000:
++            raise RuntimeError('SubscriberWrite 명령 상한')
++        esp, ecx = mu.reg_read(UC_X86_REG_ESP), mu.reg_read(UC_X86_REG_ECX)
++        args = self.words(esp + 4, 4)
++        if address == 0x4b38d0:
++            self.event('register', 'H')
++        elif address == 0x44cce0:
++            self.writes += 1
++            self.event('write' + str(self.writes), f'W:{self.writes}:{args[1]}:{fnv(bytes(mu.mem_read(args[0], args[1])))}')
++        elif address == 0x44d1b0:
++            if self.string(args[0]) != b'Subscriber':
++                raise RuntimeError('Subscriber 아닌 section 생성')
++            self.event('create', 'C:' + str(ecx))
++            if self.status == 'normal':
++                if not ecx:
++                    self.status = 'fault:manager0'; mu.emu_stop()
++                else:
++                    self.ret(STREAMS[self.case[8]], 4)
++            return
++        elif address == 0x4e0620:
++            line = args[2]
++            boundary = {0x1cf: 'assert', 0x9b: 'null', 0x24: 'capacity'}[line]
++            self.event(boundary, 'A:' + str(line))
++            if self.status == 'normal':
++                self.ret()
++            return
++        elif address == 0x441270:
++            if args[1] != SUBSCRIBER:
++                raise RuntimeError('현재 Subscriber 참조가 아닌 ReadInt')
++            self.put(SUBSCRIBER, self.case[6])
++            self.event('read', 'R:' + self.string(args[0]).decode('ascii'))
++            if self.status == 'normal':
++                self.ret(self.case[5])
++            return
++        elif address == 0x4bc950:
++            self.event('generate', 'G')
++            if self.status == 'normal':
++                self.ret(self.case[7])
++            return
++        elif address == 0x4e58e9:
++            if self.string(args[1]) != b'registerdSubId = "%u"':
++                raise RuntimeError('등록 helper 원문 설정 형식 차이')
++            value = b'registerdSubId = "' + str(args[2]).encode('ascii') + b'"'
++            mu.mem_write(args[0], value + b'\0'); self.ret(len(value)); return
++        elif address == 0x441580:
++            self.event('config', 'F:' + self.string(args[0]).decode('ascii'))
++            if self.status == 'normal':
++                self.ret()
++            return
++        if self.status == 'normal' and not any(low <= address < high for low, high in self.allowed):
++            raise RuntimeError(f'SubscriberWrite 관측 범위 밖 {address:08x}')
++
++    def sample(self, label, case, control):
++        """독립 입력만 설치하고 출력전체hash/필드/원문이름/부분실패/trace를 관측한다."""
++        self.case, self.status, self.events = case, 'normal', []  # 현재 입력/부분실패 상태/효과 순서를 같은 관측 동안 유지한다.
++        self.instructions, self.writes = 0, 0  # 이번 CPU 명령 수와 실제 일반 write 진입 횟수다.
++        self.mu.mem_write(HEADER, b'\0' * 20); self.put(HEADER, case[1])
++        self.put(SUBSCRIBER, case[3]); self.put(HANDLE, NAMES[0])
++        for index, name in enumerate(NAMES):  # 캡처 포인터와 교체 포인터의 내용을 구별한다.
++            self.mu.mem_write(name, b'\xcc' * PHYSICAL)
++            self.mu.mem_write(name, name_input(case[4]) if not index else b'Other\0')
++        for index, node in enumerate(STREAMS):  # 두 반환 stream과 각 물리출력의 초기입력이다.
++            self.mu.mem_write(node, struct.pack('<4I', BUFFERS[index], case[9], case[10], case[11]))
++            self.mu.mem_write(BUFFERS[index], b'\xcc' * PHYSICAL)
++        for register in (UC_X86_REG_EAX, UC_X86_REG_EBX, UC_X86_REG_ECX, UC_X86_REG_EDX, UC_X86_REG_ESI, UC_X86_REG_EDI, UC_X86_REG_EBP):  # CPU 일반 레지스터는 입력마다 초기화한다.
++            self.mu.reg_write(register, 0)
++        self.mu.reg_write(UC_X86_REG_ESP, STACK); self.mu.reg_write(UC_X86_REG_ECX, HEADER); self.mu.reg_write(UC_X86_REG_FPCW, control)
++        self.mu.mem_write(STACK, struct.pack('<III', STOP, case[2], 0 if case[4] == 1 else NAMES[0]))
++        self.mu.emu_start(0x4bd400, STOP)
++        if self.status == 'normal' and self.mu.reg_read(UC_X86_REG_ESP) != STACK + 12:
++            raise RuntimeError('SubscriberWrite ret8 스택 정리 차이')
++        words = []
++        for node in STREAMS:  # 포인터만 두 독립버퍼 번호로 정규화한다.
++            value = self.words(node, 4); words.extend((BUFFERS.index(value[0]) + 1, *value[1:]))
++        outputs = [bytes(self.mu.mem_read(buffer, PHYSICAL)) for buffer in BUFFERS]
++        state = (self.words(SUBSCRIBER, 1)[0], self.words(HEADER, 1)[0], NAMES.index(self.words(HANDLE, 1)[0]))
++        self.statuses[self.status] += 1
++        return '\t'.join((label, str(control), ','.join(map(str, case)), self.status, ','.join(map(str, state)), ','.join(map(str, words)), ':'.join(fnv(output) for output in outputs), ':'.join(output[:64].hex() for output in outputs), ';'.join(self.events) or '-'))
++
++
++def observe():
++    """두 x87 입력의 독립 관측을 매번 실제 PE로 재실행한다."""
++    oracle, rows = Oracle(), ['# label/control/slot,manager,capturedID,globalID,name,readResult,readID,newID,stream,pos,end,alloc,mutation/status/globalID,manager,handleIndex/twoStreams8DWORD/twoFullFNV/twoPrefix64/trace']
++    for label, case in cases():  # 제품/fixture의 예상 결과를 입력하지 않고 같은 원문만 두 번 실행한다.
++        first, second = oracle.sample(label, case, 0x27f), oracle.sample(label, case, 0x37f)
++        if first.split('\t')[2:] != second.split('\t')[2:]:
++            raise RuntimeError('SubscriberWrite x87 차이')
++        rows += [first, second]
++    return '\n'.join(rows) + '\n', oracle
++
++
++def main():
++    """최초 fixture를 새로 고정하거나 같은 도구/PE/fixture를 재실행 검증한다."""
++    parser = argparse.ArgumentParser(description=__doc__); parser.add_argument('--verify', action='store_true'); options = parser.parse_args()
++    sources = {'originals/Netstorm.exe': ROOT / 'originals/Netstorm.exe', 'extracted/refined/originals/functions.tsv': ROOT / 'extracted/refined/originals/functions.tsv', 'tools/decomp_priestmenu.py': ROOT / 'tools/decomp_priestmenu.py', 'tools/decomp_fort_subscriber_write.py': HERE}
++    if options.verify:
++        report = json.loads(REPORT.read_text(encoding='utf-8'))
++        for name, path in sources.items():  # 기존 관측 근거와 현재 도구 바이트를 먼저 검증한다.
++            if digest(path) != report['sha256'][name]:
++                raise RuntimeError('SubscriberWrite 근거 SHA 차이:' + name)
++        if digest(FIXTURE) != report['fixtureSha256']:
++            raise RuntimeError('SubscriberWrite 최초 fixture SHA 차이')
++        generated, oracle = observe()
++        if generated.encode('utf-8') != FIXTURE.read_bytes():
++            raise RuntimeError('SubscriberWrite 실제 PE 재실행 관측 차이')
++        print(json.dumps({'verified': len(cases()) * 2, 'differences': 0, 'instructions': oracle.total})); return
++    if FIXTURE.exists() or REPORT.exists():
++        raise RuntimeError('최초 SubscriberWrite fixture/보고서 덮어쓰기 금지')
++    generated, oracle = observe(); FIXTURE.parent.mkdir(parents=True, exist_ok=True); FIXTURE.write_text(generated, encoding='utf-8', newline='\n')
++    report = {'host': socket.gethostname(), 'lastDecompileHost': 'HJOW-Athlon / 2026-10-23', 'uniqueInputs': len(cases()), 'observations': len(cases()) * 2, 'instructions': oracle.total, 'statuses': dict(oracle.statuses), 'boundaries': dict(oracle.boundaries), 'scope': '004bd400/004b38d0/004bcbf0/0044cce0 실제 CPU. Create/진단/ReadInt/ID생성/설정/sprintf는 명시 장치. 전체 물리출력 FNV와64BYTE prefix/두stream/전역/순서를 관측. 실제 게임·OS·파일 저장 아님.', 'gameExecuted': False, 'osExecuted': False, 'originalFilesMutated': False, 'sha256': {name: digest(path) for name, path in sources.items()}, 'fixtureSha256': digest(FIXTURE)}
++    REPORT.parent.mkdir(parents=True, exist_ok=True); REPORT.write_text(json.dumps(report, ensure_ascii=False, indent=2) + '\n', encoding='utf-8'); print(json.dumps({'observations': report['observations'], 'instructions': oracle.total, 'statuses': report['statuses']}))
++
++
++if __name__ == '__main__':
++    main()

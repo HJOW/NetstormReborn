@@ -1,0 +1,34 @@
+{
+  "command": [
+    "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+    "--run",
+    "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-tutorial3-468-data",
+    "--mission",
+    "Tutorial3",
+    "--window",
+    "--no-audio",
+    "--frames",
+    "2404",
+    "--set",
+    "SCREENW=1024;SCREENH=768;maxFPS=40;sleepPerLoop=25;autoDemo=0;useProductTimers=1",
+    "--ui-script",
+    "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-tutorial3-468-attempt2\\steps.tsv",
+    "--ui-report",
+    "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-tutorial3-468-attempt2\\states.tsv"
+  ],
+  "originalGameExecuted": false,
+  "testStateInjection": false,
+  "testSpHpOwnerInjection": false,
+  "testBridgePatterns": false,
+  "initialProgressInjected": false,
+  "gameSha256": "6bfa1865fcc6bee83a82577e740f55e4b6723fd9e03f7c5f9021ab43a4d88567",
+  "inputSha256": "98d7f043f5e4a83aa8beffb6dcf36b560b53530ed5e688e122b542e444a40193",
+  "allowedOperations": [
+    "click",
+    "right",
+    "esc",
+    "when",
+    "report",
+    "snapshot"
+  ]
+}

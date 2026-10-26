@@ -1,0 +1,17 @@
+{
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+  "originalGameRuns": 0,
+  "cloneGameRuns": 0,
+  "osCalls": 0,
+  "binarySha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+  "toolSha256": "5e6c05ecbbd01d86fa8ab808e86b306afe816625ef198660d4a8a364c38329a5",
+  "baseToolSha256": "25f3abb452adc9004b55f468f193318e8036d63b064d15106dc85ea330a03cc3",
+  "rows": 78,
+  "sha256": "1a78e64220673bdf374b6c712b4d769930bb35d949dfd854238336a35553f2c4",
+  "limits": [
+    "004b5ca0 파일부재 부모만 실제 실행, manager/NewData 및 큰 외부하위는 명시장치",
+    "기존세fixture 불변, bit0=0인 State 입력의 실제 선택 owner쓰기만 보강",
+    "제품 C++/빌드/GUI 미검증"
+  ]
+}

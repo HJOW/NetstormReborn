@@ -1,0 +1,14 @@
+{
+  "cpppj/src/client/SoloMapCatalog.h": {
+    "sourceSha256": "819203a71509866c13f7eb4fb1d4d4ebd4c96056637e2bccb9db8fac3307af20",
+    "proposalSha256": "caa4620f23cc2962f34a7c0889922b589a93a78968ac79aaaf7c5993e5b0f63d"
+  },
+  "cpppj/src/client/SoloMapCatalog.cpp": {
+    "sourceSha256": "78cbdcb539ffb55a09f30d9c14ff94f735d86b0f48a26d1e274e33bfd93ddffb",
+    "proposalSha256": "fa1a1924c67a7bbbdc76f9e4622775f1528d4ac926afe69139a6d2149038ef98"
+  },
+  "cpppj/src/client/UberGump.cpp": {
+    "sourceSha256": "51fb65077e4da230a1cfd06d3b17f5f05b9958bea9aa72321af7d99984bcaadd",
+    "proposalSha256": "730832dc4cc3f2bc3884ad845d7e38d2e19aa538aadddde4b95118a5a4d5aa41"
+  }
+}

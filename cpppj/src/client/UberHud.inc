@@ -42,6 +42,7 @@ void UberGump::EnsureHudFactories() {
         };
         context.root.createChat=[this] {
             RawChatWindowContext data;data.globals=client_.ChatWindowGlobals();data.commands=client_.DotCommandGlobals();data.editor.now=[this] { return client_.WallSeconds(); };
+            BindTextClipboard(data.editor,textClipboard_); //공통 TextEntry가 처음 생성될 때 같은 장치를 설치하고 Console/벽시계 문맥은 보존한다.
             data.translate=[this](auto text) { return FontBytes(client_.Translate(text)); };data.storeText=[this](auto text) { return client_.ChatWindowGlobals()->Store(text); };
             data.text=[this](auto token) -> std::string_view { return client_.ChatWindowGlobals()->strings.at(token); };
             data.read=[this](auto address) -> std::uint32_t { switch (address) {

@@ -1,0 +1,34 @@
+{
+  "files": {
+    "cpppj/fort-subscriber-write-native.json": "0f96901dc65a1907d7c63a423c1770824e1a2295c87c72b9f139b26db9261cc9",
+    "cpppj/src/client/CampaignTemplateStorage.cpp": "6620f4dd2fdf3c0c7808fbf03a8956732da569e6b9a4cf3a5b4827119970a051",
+    "cpppj/src/client/CampaignTemplateStorage.h": "312eeacb2af2e88d953b3d073a170206d51aa375de58b1b3ccc5c85030fb3426",
+    "cpppj/src/o/RawFortSubscriberWrite.cpp": "434cf17d9d9b707f3bd33d775fb018fb6aab36e2989998f16cdd080a0fd1495e",
+    "cpppj/src/o/RawFortSubscriberWrite.h": "bb05a11a31ac5f8beb58b1723b768b576f2907a098d746f32cc244a49d61dc1a",
+    "cpppj/tests/fixtures/fort-subscriber-write-x86.tsv": "8619983808122e17dd261c974a25906374fa46aee16293a51f119d3fad9fe973",
+    "cpppj/tests/FortSubscriberWriteTests.cpp": "f6134cd2d75322e9c5020713758ead2ded8624f59e848fbf9571ede226e54266",
+    "docs/exe/cpp-fort-subscriber-write-20261027.md": "3d49bde2a0d5ac06f49866bb24c51d53af16911d1e1d5d57773ca93fa0628d38",
+    "tools/decomp_fort_subscriber_write.py": "a5df3540853fa4aa2d9db8a3e1ce4842bdf57fa596a56c90311dcd56ac15f068"
+  },
+  "base_unchanged": {
+    "cpppj/src/client/CampaignTemplateStorage.h": true,
+    "cpppj/src/client/CampaignTemplateStorage.cpp": true
+  },
+  "independent_pe_observations": 90,
+  "independent_pe_verify_differences": 0,
+  "cpp_test_cases_prepared": 2,
+  "cpp_tests_compiled_or_run": false,
+  "game_os_gui_executed": false,
+  "patch_sha256": "e4952ea6ce97170dbd9dbcce639cadeeffadc71cfc7d347d0e70f47ace9c941b",
+  "report_normalized_to_lf_without_fixture_change": true,
+  "git_apply_check": {
+    "exit_code": 0,
+    "whitespace": "error",
+    "files": 9,
+    "added_lines": 608
+  },
+  "utf8_whitespace_hash_check": {
+    "exit_code": 0,
+    "files": 9
+  }
+}

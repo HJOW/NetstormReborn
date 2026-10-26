@@ -9,9 +9,11 @@
 #include "client/GumpFormBinding.h"
 #include "client/RawNsInfoContext.h"
 #include "client/RawUberRootControls.h"
+#include "client/GumpTextDraw.h" //공통 돌 버튼의 실제 글리프를 메뉴와 같은 현재 픽셀 표면에 출력한다.
 #include <algorithm>
 #include <bit>
 #include <map>
+#include <set> //공통 Draw를 명시 선택한 메인 버튼 가족만 별도로 추적한다.
 #include <sstream>
 #include <stdexcept>
 #include <utility>
@@ -44,6 +46,7 @@ struct RawButtonControls::Impl {
     std::map<std::uint32_t,std::unique_ptr<GumpCreateNode>> bases;
     // stones: 돌버튼.
     std::map<std::uint32_t,std::unique_ptr<StoneButtonGumpNode>> stones;
+    std::set<std::uint32_t> commonButtonNodes; //선택적 familyDepth로 설치한 메인 버튼/배경만 공통 Draw에 제출한다. 독립 메뉴의 기존 출력 범위는 보존한다.
     // backgrounds: 배경.
     std::map<std::uint32_t,std::unique_ptr<GumpBackgroundNode>> backgrounds;
     // controls: 입력 대상인 UI 컨트롤의 목록.
@@ -189,7 +192,7 @@ struct RawButtonControls::Impl {
             // Kill이 root.child를 바꾸므로 현재 머리를 매번 읽는다.
             while (Node(root)->child) lifetime->Kill(Node(root)->child);
         }
-        if (!deferCleanup) lifetime->Cleanup();if (!preserveWorldUi) { CloseMinimaps();CloseProduction();if (menus) { menus->CloseHtmlWindows();menus->CloseBackgroundGifs();menus->CloseChatWindows();menus->CloseNsInfo();menus->CloseTextEntries(); } }controls.clear();activated.reset();
+        if (!deferCleanup) lifetime->Cleanup();if (!preserveWorldUi) { CloseMinimaps();CloseProduction();if (menus) { menus->CloseHtmlWindows();menus->CloseBackgroundGifs();menus->CloseChatWindows();menus->CloseNsInfo();menus->CloseTextEntries(); } }controls.clear();commonButtonNodes.clear();activated.reset();
     }
 };
 // 구현 주소는 생성 이후 이동하지 않아 순환 훅이 안정된 처리기를 조회한다.
@@ -198,7 +201,7 @@ RawButtonControls::RawButtonControls(o::OriginalEdition edition,RawButtonHooks h
 RawButtonControls::~RawButtonControls() { impl_->Clear();impl_->lifetime->Kill(impl_->root);impl_->lifetime->Cleanup(); }
 // 쓰기 전에 전체 화면 입력을 검증하고 이전 페이지를 실제 수명 경로로 정리한다.
 void RawButtonControls::SetControls(std::span<const GumpControl> controls,std::span<const std::string> labels,
-    int width,int height,RawButtonAssets assets,bool preserveWorldUi,bool deferCleanup) {
+    int width,int height,RawButtonAssets assets,bool preserveWorldUi,bool deferCleanup,std::optional<std::int32_t> familyDepth) {
     if (deferCleanup && !preserveWorldUi) throw std::invalid_argument("전체 UI 반납에서 HTML 지연 보존을 사용할 수 없음"); // 잘못된 수명 계약을 변경 전에 거부한다.
     auto& state=*impl_;if (width<=0 || height<=0 || controls.size()*2+1>=kGumpRegistryCapacity) throw std::out_of_range("raw 버튼 화면/개수 범위 오류");
     std::map<int,bool> ids;
@@ -215,8 +218,10 @@ void RawButtonControls::SetControls(std::span<const GumpControl> controls,std::s
     for (const auto& control:controls) if (!control.menu) {
         const auto token=++state.nextToken;state.stones.emplace(token,std::make_unique<StoneButtonGumpNode>());
         state.stone->Construct(token,control.rect.right-control.rect.left,control.rect.bottom-control.rect.top,labels[static_cast<std::size_t>(control.id)].c_str());
+        if (state.menus) { auto& node=*state.stones.at(token);state.menus->MeasureText(node.label,node.textContext,node.textWidth,node.textHeight,0xffffffffU); } //Stone의 같은 실제 문맥/글꼴 측정기로 가운데 배치한다. 예전 canvas DrawPlan의 부수 측정에 의존하지 않는다.
         state.controls.emplace(control.id,token);if (control.instant) state.stones.at(token)->buttonFlags|=kInstant;
         state.buttons->SetEnabled(token,control.enabled);state.stone->Attach(token,static_cast<float>(control.rect.left),static_cast<float>(control.rect.top),state.root,1);
+        if (familyDepth) { state.tree->AddDepth(token,std::bit_cast<std::uint32_t>(*familyDepth)-state.Node(token)->depth);state.commonButtonNodes.insert(token);state.commonButtonNodes.insert(state.stones.at(token)->background); } //원문 MainMenu 자식-83/배경-82를 맞추고 이 가족만 공통 Draw에 명시 제출한다.
     }
     state.changed=true;
 }
@@ -288,7 +293,13 @@ RawMenuControls& RawButtonControls::EnableMenus(const GameAssets& assets,FontSto
         [&s](auto token) -> GumpBackgroundNode* { if (s.uber) if (auto* node=s.uber->Background(token)) return node;const auto it=s.backgrounds.find(token);const auto* production=s.ProductionOwner(token);return it==s.backgrounds.end() ? (production ? production->Background(token) : nullptr) : it->second.get(); },
         [&s] { return ++s.nextToken; },[&s](auto token) { return s.Node(token); },
         [&s](auto token,float x,float y,auto parent,auto mode) { s.Attach(token,x,y,parent,mode); },[&s] { s.changed=true; }};
-    s.menus=std::make_unique<RawMenuControls>(std::move(tree),assets,fonts,std::move(hooks));return *s.menus;
+    s.menus=std::make_unique<RawMenuControls>(std::move(tree),assets,fonts,std::move(hooks));
+    RawMenuExternalGumps commonButtons;commonButtons.owns=[&s](auto token) { return s.commonButtonNodes.contains(token); }; //명시 선택한 메인 버튼과 실제 배경 자식만 분배하며 기존 독립 메뉴 호출은 바꾸지 않는다.
+    commonButtons.draw=[&s,&fonts](auto token,GumpPixelTarget& target,GumpGlyphColorState& colors,GumpBackgroundDraw& background) {
+        if (s.stones.contains(token)) { GumpTextDraw text(fonts,MakeGumpGlyphPixelHooks(target,colors),s.create.collection.edition);s.stone->Draw(token,*s.collection,text,target); } //선/글자는 원문 Stone.Draw가 그리며 배경은 자신의 정렬 항목에서 그린다.
+        else background.Draw(token); //같은 배경 저장소와 현재 클립/팔레트/눌림 비트를 사용한다.
+    };
+    s.menus->BindCommonButtons(std::move(commonButtons));return *s.menus;
 }
 // 별도 메뉴 트리 사본을 만들지 않고 같은 현재 확장 계층을 반환한다.
 RawMenuControls* RawButtonControls::Menus() const { return impl_->menus.get(); }

@@ -1,0 +1,74 @@
+{
+  "cpppj/src/client/CampaignTemplateStorage.cpp": {
+    "baselineSourceSha256": "98ea0b53829784398a4f24fc7e498209d9aca1dae5c0b204f4581890f3c54e6f",
+    "baselineNormalizedSha256": "98ea0b53829784398a4f24fc7e498209d9aca1dae5c0b204f4581890f3c54e6f",
+    "proposalSha256": "1cf44d8bcddd996fc3358419b63f0ab38367160705b2dcde40493604c8f06645",
+    "currentProductSha256": "98ea0b53829784398a4f24fc7e498209d9aca1dae5c0b204f4581890f3c54e6f"
+  },
+  "cpppj/src/client/CampaignTemplateStorage.h": {
+    "baselineSourceSha256": "be675ef5dffa0d635de1335a22a04172b9fc22962f14006b335169c693ce4d50",
+    "baselineNormalizedSha256": "be675ef5dffa0d635de1335a22a04172b9fc22962f14006b335169c693ce4d50",
+    "proposalSha256": "3e286864053d5f64e60b87dea1ea0948c53315f0c578d01d2753cc76cac417ef",
+    "currentProductSha256": "be675ef5dffa0d635de1335a22a04172b9fc22962f14006b335169c693ce4d50"
+  },
+  "cpppj/src/client/SoloMapCatalog.cpp": {
+    "baselineSourceSha256": "78cbdcb539ffb55a09f30d9c14ff94f735d86b0f48a26d1e274e33bfd93ddffb",
+    "baselineNormalizedSha256": "78cbdcb539ffb55a09f30d9c14ff94f735d86b0f48a26d1e274e33bfd93ddffb",
+    "proposalSha256": "fa1a1924c67a7bbbdc76f9e4622775f1528d4ac926afe69139a6d2149038ef98",
+    "currentProductSha256": "78cbdcb539ffb55a09f30d9c14ff94f735d86b0f48a26d1e274e33bfd93ddffb"
+  },
+  "cpppj/src/client/SoloMapCatalog.h": {
+    "baselineSourceSha256": "819203a71509866c13f7eb4fb1d4d4ebd4c96056637e2bccb9db8fac3307af20",
+    "baselineNormalizedSha256": "819203a71509866c13f7eb4fb1d4d4ebd4c96056637e2bccb9db8fac3307af20",
+    "proposalSha256": "0215d7063059f08d4613f58402c89272e308f1eca4d55917021862919d746752",
+    "currentProductSha256": "819203a71509866c13f7eb4fb1d4d4ebd4c96056637e2bccb9db8fac3307af20"
+  },
+  "cpppj/src/client/UberGump.cpp": {
+    "baselineSourceSha256": "51fb65077e4da230a1cfd06d3b17f5f05b9958bea9aa72321af7d99984bcaadd",
+    "baselineNormalizedSha256": "51fb65077e4da230a1cfd06d3b17f5f05b9958bea9aa72321af7d99984bcaadd",
+    "proposalSha256": "730832dc4cc3f2bc3884ad845d7e38d2e19aa538aadddde4b95118a5a4d5aa41",
+    "currentProductSha256": "51fb65077e4da230a1cfd06d3b17f5f05b9958bea9aa72321af7d99984bcaadd"
+  },
+  "cpppj/src/o/RawDataManagerImage.cpp": {
+    "baselineSourceSha256": "520ce39de37d7dbd6e083e62ad0316a8da4a0546610847488f5313cf22d97d40",
+    "baselineNormalizedSha256": "520ce39de37d7dbd6e083e62ad0316a8da4a0546610847488f5313cf22d97d40",
+    "proposalSha256": "33c130a552928db5c948e1bf7dbf31bc0432502648cbc96141ff29c3088fef9e",
+    "currentProductSha256": "520ce39de37d7dbd6e083e62ad0316a8da4a0546610847488f5313cf22d97d40"
+  },
+  "cpppj/src/client/ClientTemplateSectionNames.cpp": {
+    "newFile": true,
+    "sha256": "dd170be6d162740d9a118c5be9188b339fb2bdd75a939edb3ba85e1d0da695da"
+  },
+  "cpppj/src/client/ClientTemplateSectionNames.h": {
+    "newFile": true,
+    "sha256": "4649f64eeca63dfc8567bdf6d36fbc04f311262eed8a2e63940bac1d0c7ad6da"
+  },
+  "cpppj/src/o/RawDataManagerInitialize.cpp": {
+    "newFile": true,
+    "sha256": "1b3ba1f5ea910bbd9ed5c9f41f827f16b664db4557069da8fa28a2d02b2b2d4c"
+  },
+  "cpppj/src/o/RawDataManagerInitialize.h": {
+    "newFile": true,
+    "sha256": "99fe55173d03a64ca8a9c4c6932679c6520699449bae53e8d3f698e74ee86795"
+  },
+  "cpppj/src/o/RawSnart.cpp": {
+    "newFile": true,
+    "sha256": "2c9a1f516ed97488b4b490798685ecc4c6e523ce6f6ab6d1a3265d9d8f306a0a"
+  },
+  "cpppj/src/o/RawSnart.h": {
+    "newFile": true,
+    "sha256": "a8d9b096be1ae37b19723f4cc55a1b46b2f47969588d678cd12ef5ebef076b57"
+  },
+  "cpppj/src/o/RawTemplateSectionNames.cpp": {
+    "newFile": true,
+    "sha256": "af9a95682f85140301f143a296c8554d4a4261ee4306335ccb425531786aae4c"
+  },
+  "cpppj/src/o/RawTemplateSectionNames.h": {
+    "newFile": true,
+    "sha256": "5dc6ee6b86abcb09da96028ad72cc64b421e53e1dd13c8514caebeffcc2e2ec0"
+  },
+  "cpppj/tests/DataManagerInitializeTests.cpp": {
+    "newFile": true,
+    "sha256": "ca93c533e0a7e1dce5a80e89d9e8bdafca1537a2d4afb46e90aea8ae192efc3a"
+  }
+}

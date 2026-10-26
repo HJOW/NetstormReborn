@@ -1,0 +1,472 @@
+4	report	initial
+4	snapshot	H:\T5Workspace\NetstormReborn\extracted\cpp-tutorial3-468-attempt3\initial.bmp
+25	when	page\tA\.\n;;click;;MORE
+35	when	page\tA1\.\n;;click;;OK
+60	when	page\tmission\n&&!object\t[0-9]+\tsunWalker\t1\t;;click;;production:133
+75	when	page\tmission\n&&raw_cursor\t0\t[0-9]+\t133\t[1-9][0-9]*\t;;click;;placement-near:128,96
+90	report	f90
+90	snapshot	H:\T5Workspace\NetstormReborn\extracted\cpp-tutorial3-468-attempt3\f90.bmp
+90	report	f90
+90	snapshot	H:\T5Workspace\NetstormReborn\extracted\cpp-tutorial3-468-attempt3\f90.bmp
+100	when	page\tmission\n&&mission_gate\t3\t65\t;;click;;production:82
+110	when	page\tmission\n&&mission_gate\t3\t65\t&&raw_cursor\t0\t[0-9]+\t82\t[1-9][0-9]*\t;;click;;placement-reach:106,103
+140	when	page\tmission\n&&mission_gate\t3\t65\t;;click;;production:82
+150	when	page\tmission\n&&mission_gate\t3\t65\t&&raw_cursor\t0\t[0-9]+\t82\t[1-9][0-9]*\t;;click;;placement-reach:106,103
+180	when	page\tmission\n&&mission_gate\t3\t65\t;;click;;production:82
+190	when	page\tmission\n&&mission_gate\t3\t65\t&&raw_cursor\t0\t[0-9]+\t82\t[1-9][0-9]*\t;;click;;placement-reach:106,103
+200	report	f200
+220	when	page\tmission\n&&mission_gate\t3\t65\t;;click;;production:82
+230	when	page\tmission\n&&mission_gate\t3\t65\t&&raw_cursor\t0\t[0-9]+\t82\t[1-9][0-9]*\t;;click;;placement-reach:106,103
+260	when	page\tmission\n&&mission_gate\t3\t65\t;;click;;production:82
+270	when	page\tmission\n&&mission_gate\t3\t65\t&&raw_cursor\t0\t[0-9]+\t82\t[1-9][0-9]*\t;;click;;placement-reach:106,103
+300	when	page\tmission\n&&mission_gate\t3\t65\t;;click;;production:82
+310	when	page\tmission\n&&mission_gate\t3\t65\t&&raw_cursor\t0\t[0-9]+\t82\t[1-9][0-9]*\t;;click;;placement-reach:106,103
+340	when	page\tmission\n&&mission_gate\t3\t65\t;;click;;production:82
+350	when	page\tmission\n&&mission_gate\t3\t65\t&&raw_cursor\t0\t[0-9]+\t82\t[1-9][0-9]*\t;;click;;placement-reach:106,103
+380	when	page\tmission\n&&mission_gate\t3\t65\t;;click;;production:82
+390	when	page\tmission\n&&mission_gate\t3\t65\t&&raw_cursor\t0\t[0-9]+\t82\t[1-9][0-9]*\t;;click;;placement-reach:106,103
+400	report	f400
+420	when	page\tmission\n&&mission_gate\t3\t65\t;;click;;production:82
+430	when	page\tmission\n&&mission_gate\t3\t65\t&&raw_cursor\t0\t[0-9]+\t82\t[1-9][0-9]*\t;;click;;placement-reach:106,103
+460	when	page\tmission\n&&mission_gate\t3\t65\t;;click;;production:82
+470	when	page\tmission\n&&mission_gate\t3\t65\t&&raw_cursor\t0\t[0-9]+\t82\t[1-9][0-9]*\t;;click;;placement-reach:106,103
+500	when	page\tmission\n&&mission_gate\t3\t65\t;;click;;production:82
+510	when	page\tmission\n&&mission_gate\t3\t65\t&&raw_cursor\t0\t[0-9]+\t82\t[1-9][0-9]*\t;;click;;placement-reach:106,103
+550	report	f550
+550	snapshot	H:\T5Workspace\NetstormReborn\extracted\cpp-tutorial3-468-attempt3\f550.bmp
+550	report	f550
+550	snapshot	H:\T5Workspace\NetstormReborn\extracted\cpp-tutorial3-468-attempt3\f550.bmp
+560	when	page\tmission\n;;click;;cell:128,94
+565	report	cellExact
+575	when	page\tmission\n&&raw_input\t[0-9]+\t0\t;;click;;cell:129,95
+580	report	cellAdjacent
+590	when	page\tmission\n&&raw_input\t[0-9]+\t0\t;;click;;world:sunWalker
+590	report	f590
+595	report	worldBounds
+610	when	page\tmission\n&&raw_input\t[0-9]+\t0\t;;right;;world:sunWalker
+615	report	rightGolem
+615	snapshot	H:\T5Workspace\NetstormReborn\extracted\cpp-tutorial3-468-attempt3\rightGolem.bmp
+630	when	page\tmission\n&&raw_input\t[0-9]+\t0\t;;click;;cell:128,94
+635	report	afterMenuCell
+650	when	page\tmission\n&&raw_input\t[0-9]+\t0\t;;click;;world:sunWalker
+655	report	reselectGolem
+675	when	page\tmission\n&&raw_input\t[1-9][0-9]*\t(2|5)\t;;click;;cell:106,103
+680	report	afterMove
+710	when	page\tmission\n&&!raw_packets[^\n]*\t64(?:\t|\n);;click;;world:priest
+715	report	priestSelection
+740	when	page\tmission\n&&!raw_packets[^\n]*\t64(?:\t|\n);;right;;world:priest
+745	report	priestMenu
+745	snapshot	H:\T5Workspace\NetstormReborn\extracted\cpp-tutorial3-468-attempt3\priestMenu.bmp
+800	when	page\tB\.\n;;click;;MORE
+800	report	f800
+805	when	page\tB1\.\n;;click;;OK
+810	when	page\tC\.\n;;click;;OK
+815	when	page\tD\.\n;;click;;MORE
+820	when	page\tD1\.\n;;click;;OK
+825	when	page\tE\.\n;;click;;MORE
+830	when	page\tE1\.\n;;click;;OK
+835	when	page\tF\.\n;;click;;OK
+845	when	page\tmission\n&&mission_gate\t3\t66\t;;click;;production:82
+855	when	page\tmission\n&&mission_gate\t3\t66\t&&raw_cursor\t0\t[0-9]+\t82\t[1-9][0-9]*\t;;click;;placement-reach:130,129
+860	when	page\tmission\n&&mission_gate\t3\t68\t;;right;;world:sunFactory
+870	when	page\tmission\n&&mission_gate\t3\t68\t;;click;;Put Knowledge into Production
+880	when	page\tmission\n&&mission_gate\t3\t68\t;;click;;Wind Generator
+900	when	page\tB\.\n;;click;;MORE
+905	when	page\tB1\.\n;;click;;OK
+910	when	page\tC\.\n;;click;;OK
+915	when	page\tD\.\n;;click;;MORE
+920	when	page\tD1\.\n;;click;;OK
+925	when	page\tE\.\n;;click;;MORE
+930	when	page\tE1\.\n;;click;;OK
+935	when	page\tF\.\n;;click;;OK
+945	when	page\tmission\n&&mission_gate\t3\t66\t;;click;;production:82
+955	when	page\tmission\n&&mission_gate\t3\t66\t&&raw_cursor\t0\t[0-9]+\t82\t[1-9][0-9]*\t;;click;;placement-reach:130,129
+960	when	page\tmission\n&&mission_gate\t3\t68\t;;right;;world:sunFactory
+970	when	page\tmission\n&&mission_gate\t3\t68\t;;click;;Put Knowledge into Production
+980	when	page\tmission\n&&mission_gate\t3\t68\t;;click;;Wind Generator
+1000	when	page\tB\.\n;;click;;MORE
+1000	report	f1000
+1005	when	page\tB1\.\n;;click;;OK
+1010	when	page\tC\.\n;;click;;OK
+1015	when	page\tD\.\n;;click;;MORE
+1020	when	page\tD1\.\n;;click;;OK
+1025	when	page\tE\.\n;;click;;MORE
+1030	when	page\tE1\.\n;;click;;OK
+1035	when	page\tF\.\n;;click;;OK
+1045	when	page\tmission\n&&mission_gate\t3\t66\t;;click;;production:82
+1055	when	page\tmission\n&&mission_gate\t3\t66\t&&raw_cursor\t0\t[0-9]+\t82\t[1-9][0-9]*\t;;click;;placement-reach:130,129
+1060	when	page\tmission\n&&mission_gate\t3\t68\t;;right;;world:sunFactory
+1070	when	page\tmission\n&&mission_gate\t3\t68\t;;click;;Put Knowledge into Production
+1080	when	page\tmission\n&&mission_gate\t3\t68\t;;click;;Wind Generator
+1100	when	page\tB\.\n;;click;;MORE
+1105	when	page\tB1\.\n;;click;;OK
+1110	when	page\tC\.\n;;click;;OK
+1115	when	page\tD\.\n;;click;;MORE
+1120	when	page\tD1\.\n;;click;;OK
+1125	when	page\tE\.\n;;click;;MORE
+1130	when	page\tE1\.\n;;click;;OK
+1135	when	page\tF\.\n;;click;;OK
+1145	when	page\tmission\n&&mission_gate\t3\t66\t;;click;;production:82
+1155	when	page\tmission\n&&mission_gate\t3\t66\t&&raw_cursor\t0\t[0-9]+\t82\t[1-9][0-9]*\t;;click;;placement-reach:130,129
+1160	when	page\tmission\n&&mission_gate\t3\t68\t;;right;;world:sunFactory
+1170	when	page\tmission\n&&mission_gate\t3\t68\t;;click;;Put Knowledge into Production
+1180	when	page\tmission\n&&mission_gate\t3\t68\t;;click;;Wind Generator
+1200	when	page\tB\.\n;;click;;MORE
+1200	report	f1200
+1200	snapshot	H:\T5Workspace\NetstormReborn\extracted\cpp-tutorial3-468-attempt3\f1200.bmp
+1205	when	page\tB1\.\n;;click;;OK
+1210	when	page\tC\.\n;;click;;OK
+1215	when	page\tD\.\n;;click;;MORE
+1220	when	page\tD1\.\n;;click;;OK
+1225	when	page\tE\.\n;;click;;MORE
+1230	when	page\tE1\.\n;;click;;OK
+1235	when	page\tF\.\n;;click;;OK
+1245	when	page\tmission\n&&mission_gate\t3\t66\t;;click;;production:82
+1255	when	page\tmission\n&&mission_gate\t3\t66\t&&raw_cursor\t0\t[0-9]+\t82\t[1-9][0-9]*\t;;click;;placement-reach:130,129
+1260	when	page\tmission\n&&mission_gate\t3\t68\t;;right;;world:sunFactory
+1270	when	page\tmission\n&&mission_gate\t3\t68\t;;click;;Put Knowledge into Production
+1280	when	page\tmission\n&&mission_gate\t3\t68\t;;click;;Wind Generator
+1300	when	page\tB\.\n;;click;;MORE
+1305	when	page\tB1\.\n;;click;;OK
+1310	when	page\tC\.\n;;click;;OK
+1315	when	page\tD\.\n;;click;;MORE
+1320	when	page\tD1\.\n;;click;;OK
+1325	when	page\tE\.\n;;click;;MORE
+1330	when	page\tE1\.\n;;click;;OK
+1335	when	page\tF\.\n;;click;;OK
+1345	when	page\tmission\n&&mission_gate\t3\t66\t;;click;;production:82
+1355	when	page\tmission\n&&mission_gate\t3\t66\t&&raw_cursor\t0\t[0-9]+\t82\t[1-9][0-9]*\t;;click;;placement-reach:130,129
+1360	when	page\tmission\n&&mission_gate\t3\t68\t;;right;;world:sunFactory
+1370	when	page\tmission\n&&mission_gate\t3\t68\t;;click;;Put Knowledge into Production
+1380	when	page\tmission\n&&mission_gate\t3\t68\t;;click;;Wind Generator
+1400	when	page\tB\.\n;;click;;MORE
+1400	report	f1400
+1405	when	page\tB1\.\n;;click;;OK
+1410	when	page\tC\.\n;;click;;OK
+1415	when	page\tD\.\n;;click;;MORE
+1420	when	page\tD1\.\n;;click;;OK
+1425	when	page\tE\.\n;;click;;MORE
+1430	when	page\tE1\.\n;;click;;OK
+1435	when	page\tF\.\n;;click;;OK
+1445	when	page\tmission\n&&mission_gate\t3\t66\t;;click;;production:82
+1455	when	page\tmission\n&&mission_gate\t3\t66\t&&raw_cursor\t0\t[0-9]+\t82\t[1-9][0-9]*\t;;click;;placement-reach:130,129
+1460	when	page\tmission\n&&mission_gate\t3\t68\t;;right;;world:sunFactory
+1470	when	page\tmission\n&&mission_gate\t3\t68\t;;click;;Put Knowledge into Production
+1480	when	page\tmission\n&&mission_gate\t3\t68\t;;click;;Wind Generator
+1500	when	page\tB\.\n;;click;;MORE
+1505	when	page\tB1\.\n;;click;;OK
+1510	when	page\tC\.\n;;click;;OK
+1515	when	page\tD\.\n;;click;;MORE
+1520	when	page\tD1\.\n;;click;;OK
+1525	when	page\tE\.\n;;click;;MORE
+1530	when	page\tE1\.\n;;click;;OK
+1535	when	page\tF\.\n;;click;;OK
+1545	when	page\tmission\n&&mission_gate\t3\t66\t;;click;;production:82
+1555	when	page\tmission\n&&mission_gate\t3\t66\t&&raw_cursor\t0\t[0-9]+\t82\t[1-9][0-9]*\t;;click;;placement-reach:130,129
+1560	when	page\tmission\n&&mission_gate\t3\t68\t;;right;;world:sunFactory
+1570	when	page\tmission\n&&mission_gate\t3\t68\t;;click;;Put Knowledge into Production
+1580	when	page\tmission\n&&mission_gate\t3\t68\t;;click;;Wind Generator
+1600	when	page\tB\.\n;;click;;MORE
+1600	report	f1600
+1605	when	page\tB1\.\n;;click;;OK
+1610	when	page\tC\.\n;;click;;OK
+1615	when	page\tD\.\n;;click;;MORE
+1620	when	page\tD1\.\n;;click;;OK
+1625	when	page\tE\.\n;;click;;MORE
+1630	when	page\tE1\.\n;;click;;OK
+1635	when	page\tF\.\n;;click;;OK
+1645	when	page\tmission\n&&mission_gate\t3\t66\t;;click;;production:82
+1655	when	page\tmission\n&&mission_gate\t3\t66\t&&raw_cursor\t0\t[0-9]+\t82\t[1-9][0-9]*\t;;click;;placement-reach:130,129
+1660	when	page\tmission\n&&mission_gate\t3\t68\t;;right;;world:sunFactory
+1670	when	page\tmission\n&&mission_gate\t3\t68\t;;click;;Put Knowledge into Production
+1680	when	page\tmission\n&&mission_gate\t3\t68\t;;click;;Wind Generator
+1700	when	page\tB\.\n;;click;;MORE
+1705	when	page\tB1\.\n;;click;;OK
+1710	when	page\tC\.\n;;click;;OK
+1715	when	page\tD\.\n;;click;;MORE
+1720	when	page\tD1\.\n;;click;;OK
+1725	when	page\tE\.\n;;click;;MORE
+1730	when	page\tE1\.\n;;click;;OK
+1735	when	page\tF\.\n;;click;;OK
+1745	when	page\tmission\n&&mission_gate\t3\t66\t;;click;;production:82
+1755	when	page\tmission\n&&mission_gate\t3\t66\t&&raw_cursor\t0\t[0-9]+\t82\t[1-9][0-9]*\t;;click;;placement-reach:130,129
+1760	when	page\tmission\n&&mission_gate\t3\t68\t;;right;;world:sunFactory
+1770	when	page\tmission\n&&mission_gate\t3\t68\t;;click;;Put Knowledge into Production
+1780	when	page\tmission\n&&mission_gate\t3\t68\t;;click;;Wind Generator
+1800	when	page\tB\.\n;;click;;MORE
+1800	report	f1800
+1800	snapshot	H:\T5Workspace\NetstormReborn\extracted\cpp-tutorial3-468-attempt3\f1800.bmp
+1805	when	page\tB1\.\n;;click;;OK
+1810	when	page\tC\.\n;;click;;OK
+1815	when	page\tD\.\n;;click;;MORE
+1820	when	page\tD1\.\n;;click;;OK
+1825	when	page\tE\.\n;;click;;MORE
+1830	when	page\tE1\.\n;;click;;OK
+1835	when	page\tF\.\n;;click;;OK
+1845	when	page\tmission\n&&mission_gate\t3\t66\t;;click;;production:82
+1855	when	page\tmission\n&&mission_gate\t3\t66\t&&raw_cursor\t0\t[0-9]+\t82\t[1-9][0-9]*\t;;click;;placement-reach:130,129
+1860	when	page\tmission\n&&mission_gate\t3\t68\t;;right;;world:sunFactory
+1870	when	page\tmission\n&&mission_gate\t3\t68\t;;click;;Put Knowledge into Production
+1880	when	page\tmission\n&&mission_gate\t3\t68\t;;click;;Wind Generator
+1900	when	page\tB\.\n;;click;;MORE
+1905	when	page\tB1\.\n;;click;;OK
+1910	when	page\tC\.\n;;click;;OK
+1915	when	page\tD\.\n;;click;;MORE
+1920	when	page\tD1\.\n;;click;;OK
+1925	when	page\tE\.\n;;click;;MORE
+1930	when	page\tE1\.\n;;click;;OK
+1935	when	page\tF\.\n;;click;;OK
+1945	when	page\tmission\n&&mission_gate\t3\t66\t;;click;;production:82
+1955	when	page\tmission\n&&mission_gate\t3\t66\t&&raw_cursor\t0\t[0-9]+\t82\t[1-9][0-9]*\t;;click;;placement-reach:130,129
+1960	when	page\tmission\n&&mission_gate\t3\t68\t;;right;;world:sunFactory
+1970	when	page\tmission\n&&mission_gate\t3\t68\t;;click;;Put Knowledge into Production
+1980	when	page\tmission\n&&mission_gate\t3\t68\t;;click;;Wind Generator
+2000	when	page\tB\.\n;;click;;MORE
+2000	report	f2000
+2005	when	page\tB1\.\n;;click;;OK
+2010	when	page\tC\.\n;;click;;OK
+2015	when	page\tD\.\n;;click;;MORE
+2020	when	page\tD1\.\n;;click;;OK
+2025	when	page\tE\.\n;;click;;MORE
+2030	when	page\tE1\.\n;;click;;OK
+2035	when	page\tF\.\n;;click;;OK
+2045	when	page\tmission\n&&mission_gate\t3\t66\t;;click;;production:82
+2055	when	page\tmission\n&&mission_gate\t3\t66\t&&raw_cursor\t0\t[0-9]+\t82\t[1-9][0-9]*\t;;click;;placement-reach:130,129
+2060	when	page\tmission\n&&mission_gate\t3\t68\t;;right;;world:sunFactory
+2070	when	page\tmission\n&&mission_gate\t3\t68\t;;click;;Put Knowledge into Production
+2080	when	page\tmission\n&&mission_gate\t3\t68\t;;click;;Wind Generator
+2100	when	page\tB\.\n;;click;;MORE
+2105	when	page\tB1\.\n;;click;;OK
+2110	when	page\tC\.\n;;click;;OK
+2115	when	page\tD\.\n;;click;;MORE
+2120	when	page\tD1\.\n;;click;;OK
+2125	when	page\tE\.\n;;click;;MORE
+2130	when	page\tE1\.\n;;click;;OK
+2135	when	page\tF\.\n;;click;;OK
+2145	when	page\tmission\n&&mission_gate\t3\t66\t;;click;;production:82
+2155	when	page\tmission\n&&mission_gate\t3\t66\t&&raw_cursor\t0\t[0-9]+\t82\t[1-9][0-9]*\t;;click;;placement-reach:130,129
+2160	when	page\tmission\n&&mission_gate\t3\t68\t;;right;;world:sunFactory
+2170	when	page\tmission\n&&mission_gate\t3\t68\t;;click;;Put Knowledge into Production
+2180	when	page\tmission\n&&mission_gate\t3\t68\t;;click;;Wind Generator
+2200	when	page\tB\.\n;;click;;MORE
+2200	report	f2200
+2205	when	page\tB1\.\n;;click;;OK
+2210	when	page\tC\.\n;;click;;OK
+2215	when	page\tD\.\n;;click;;MORE
+2220	when	page\tD1\.\n;;click;;OK
+2225	when	page\tE\.\n;;click;;MORE
+2230	when	page\tE1\.\n;;click;;OK
+2235	when	page\tF\.\n;;click;;OK
+2245	when	page\tmission\n&&mission_gate\t3\t66\t;;click;;production:82
+2255	when	page\tmission\n&&mission_gate\t3\t66\t&&raw_cursor\t0\t[0-9]+\t82\t[1-9][0-9]*\t;;click;;placement-reach:130,129
+2260	when	page\tmission\n&&mission_gate\t3\t68\t;;right;;world:sunFactory
+2270	when	page\tmission\n&&mission_gate\t3\t68\t;;click;;Put Knowledge into Production
+2280	when	page\tmission\n&&mission_gate\t3\t68\t;;click;;Wind Generator
+2350	report	f2350
+2350	snapshot	H:\T5Workspace\NetstormReborn\extracted\cpp-tutorial3-468-attempt3\f2350.bmp
+2400	when	page\tB\.\n;;click;;MORE
+2405	when	page\tB1\.\n;;click;;OK
+2410	when	page\tC\.\n;;click;;OK
+2415	when	page\tD\.\n;;click;;MORE
+2420	when	page\tD1\.\n;;click;;OK
+2425	when	page\tE\.\n;;click;;MORE
+2430	when	page\tE1\.\n;;click;;OK
+2435	when	page\tF\.\n;;click;;OK
+2445	when	page\tmission\n&&mission_gate\t3\t66\t;;click;;production:82
+2455	when	page\tmission\n&&mission_gate\t3\t66\t&&raw_cursor\t0\t[0-9]+\t82\t[1-9][0-9]*\t;;click;;placement-reach:130,129
+2460	when	page\tmission\n&&mission_gate\t3\t68\t;;right;;world:sunFactory
+2470	when	page\tmission\n&&mission_gate\t3\t68\t;;click;;Put Knowledge into Production
+2480	when	page\tmission\n&&mission_gate\t3\t68\t;;click;;Wind Generator
+2500	when	page\tB\.\n;;click;;MORE
+2500	report	f2500
+2500	snapshot	H:\T5Workspace\NetstormReborn\extracted\cpp-tutorial3-468-attempt3\f2500.bmp
+2505	when	page\tB1\.\n;;click;;OK
+2510	when	page\tC\.\n;;click;;OK
+2515	when	page\tD\.\n;;click;;MORE
+2520	when	page\tD1\.\n;;click;;OK
+2525	when	page\tE\.\n;;click;;MORE
+2530	when	page\tE1\.\n;;click;;OK
+2535	when	page\tF\.\n;;click;;OK
+2545	when	page\tmission\n&&mission_gate\t3\t66\t;;click;;production:82
+2555	when	page\tmission\n&&mission_gate\t3\t66\t&&raw_cursor\t0\t[0-9]+\t82\t[1-9][0-9]*\t;;click;;placement-reach:130,129
+2560	when	page\tmission\n&&mission_gate\t3\t68\t;;right;;world:sunFactory
+2570	when	page\tmission\n&&mission_gate\t3\t68\t;;click;;Put Knowledge into Production
+2580	when	page\tmission\n&&mission_gate\t3\t68\t;;click;;Wind Generator
+2600	when	page\tB\.\n;;click;;MORE
+2605	when	page\tB1\.\n;;click;;OK
+2610	when	page\tC\.\n;;click;;OK
+2615	when	page\tD\.\n;;click;;MORE
+2620	when	page\tD1\.\n;;click;;OK
+2625	when	page\tE\.\n;;click;;MORE
+2630	when	page\tE1\.\n;;click;;OK
+2635	when	page\tF\.\n;;click;;OK
+2645	when	page\tmission\n&&mission_gate\t3\t66\t;;click;;production:82
+2655	when	page\tmission\n&&mission_gate\t3\t66\t&&raw_cursor\t0\t[0-9]+\t82\t[1-9][0-9]*\t;;click;;placement-reach:130,129
+2660	when	page\tmission\n&&mission_gate\t3\t68\t;;right;;world:sunFactory
+2670	when	page\tmission\n&&mission_gate\t3\t68\t;;click;;Put Knowledge into Production
+2680	when	page\tmission\n&&mission_gate\t3\t68\t;;click;;Wind Generator
+2700	when	page\tB\.\n;;click;;MORE
+2705	when	page\tB1\.\n;;click;;OK
+2710	when	page\tC\.\n;;click;;OK
+2715	when	page\tD\.\n;;click;;MORE
+2720	when	page\tD1\.\n;;click;;OK
+2725	when	page\tE\.\n;;click;;MORE
+2730	when	page\tE1\.\n;;click;;OK
+2735	when	page\tF\.\n;;click;;OK
+2745	when	page\tmission\n&&mission_gate\t3\t66\t;;click;;production:82
+2750	report	f2750
+2755	when	page\tmission\n&&mission_gate\t3\t66\t&&raw_cursor\t0\t[0-9]+\t82\t[1-9][0-9]*\t;;click;;placement-reach:130,129
+2760	when	page\tmission\n&&mission_gate\t3\t68\t;;right;;world:sunFactory
+2770	when	page\tmission\n&&mission_gate\t3\t68\t;;click;;Put Knowledge into Production
+2780	when	page\tmission\n&&mission_gate\t3\t68\t;;click;;Wind Generator
+2800	when	page\tB\.\n;;click;;MORE
+2805	when	page\tB1\.\n;;click;;OK
+2810	when	page\tC\.\n;;click;;OK
+2815	when	page\tD\.\n;;click;;MORE
+2820	when	page\tD1\.\n;;click;;OK
+2825	when	page\tE\.\n;;click;;MORE
+2830	when	page\tE1\.\n;;click;;OK
+2835	when	page\tF\.\n;;click;;OK
+2845	when	page\tmission\n&&mission_gate\t3\t66\t;;click;;production:82
+2855	when	page\tmission\n&&mission_gate\t3\t66\t&&raw_cursor\t0\t[0-9]+\t82\t[1-9][0-9]*\t;;click;;placement-reach:130,129
+2860	when	page\tmission\n&&mission_gate\t3\t68\t;;right;;world:sunFactory
+2870	when	page\tmission\n&&mission_gate\t3\t68\t;;click;;Put Knowledge into Production
+2880	when	page\tmission\n&&mission_gate\t3\t68\t;;click;;Wind Generator
+2900	when	page\tB\.\n;;click;;MORE
+2905	when	page\tB1\.\n;;click;;OK
+2910	when	page\tC\.\n;;click;;OK
+2915	when	page\tD\.\n;;click;;MORE
+2920	when	page\tD1\.\n;;click;;OK
+2925	when	page\tE\.\n;;click;;MORE
+2930	when	page\tE1\.\n;;click;;OK
+2935	when	page\tF\.\n;;click;;OK
+2945	when	page\tmission\n&&mission_gate\t3\t66\t;;click;;production:82
+2955	when	page\tmission\n&&mission_gate\t3\t66\t&&raw_cursor\t0\t[0-9]+\t82\t[1-9][0-9]*\t;;click;;placement-reach:130,129
+2960	when	page\tmission\n&&mission_gate\t3\t68\t;;right;;world:sunFactory
+2970	when	page\tmission\n&&mission_gate\t3\t68\t;;click;;Put Knowledge into Production
+2980	when	page\tmission\n&&mission_gate\t3\t68\t;;click;;Wind Generator
+3000	when	page\tB\.\n;;click;;MORE
+3000	report	f3000
+3000	snapshot	H:\T5Workspace\NetstormReborn\extracted\cpp-tutorial3-468-attempt3\f3000.bmp
+3005	when	page\tB1\.\n;;click;;OK
+3010	when	page\tC\.\n;;click;;OK
+3015	when	page\tD\.\n;;click;;MORE
+3020	when	page\tD1\.\n;;click;;OK
+3025	when	page\tE\.\n;;click;;MORE
+3030	when	page\tE1\.\n;;click;;OK
+3035	when	page\tF\.\n;;click;;OK
+3045	when	page\tmission\n&&mission_gate\t3\t66\t;;click;;production:82
+3055	when	page\tmission\n&&mission_gate\t3\t66\t&&raw_cursor\t0\t[0-9]+\t82\t[1-9][0-9]*\t;;click;;placement-reach:130,129
+3060	when	page\tmission\n&&mission_gate\t3\t68\t;;right;;world:sunFactory
+3070	when	page\tmission\n&&mission_gate\t3\t68\t;;click;;Put Knowledge into Production
+3080	when	page\tmission\n&&mission_gate\t3\t68\t;;click;;Wind Generator
+3100	when	page\tB\.\n;;click;;MORE
+3105	when	page\tB1\.\n;;click;;OK
+3110	when	page\tC\.\n;;click;;OK
+3115	when	page\tD\.\n;;click;;MORE
+3120	when	page\tD1\.\n;;click;;OK
+3125	when	page\tE\.\n;;click;;MORE
+3130	when	page\tE1\.\n;;click;;OK
+3135	when	page\tF\.\n;;click;;OK
+3145	when	page\tmission\n&&mission_gate\t3\t66\t;;click;;production:82
+3155	when	page\tmission\n&&mission_gate\t3\t66\t&&raw_cursor\t0\t[0-9]+\t82\t[1-9][0-9]*\t;;click;;placement-reach:130,129
+3160	when	page\tmission\n&&mission_gate\t3\t68\t;;right;;world:sunFactory
+3170	when	page\tmission\n&&mission_gate\t3\t68\t;;click;;Put Knowledge into Production
+3180	when	page\tmission\n&&mission_gate\t3\t68\t;;click;;Wind Generator
+3200	when	page\tB\.\n;;click;;MORE
+3205	when	page\tB1\.\n;;click;;OK
+3210	when	page\tC\.\n;;click;;OK
+3215	when	page\tD\.\n;;click;;MORE
+3220	when	page\tD1\.\n;;click;;OK
+3225	when	page\tE\.\n;;click;;MORE
+3230	when	page\tE1\.\n;;click;;OK
+3235	when	page\tF\.\n;;click;;OK
+3245	when	page\tmission\n&&mission_gate\t3\t66\t;;click;;production:82
+3250	report	f3250
+3255	when	page\tmission\n&&mission_gate\t3\t66\t&&raw_cursor\t0\t[0-9]+\t82\t[1-9][0-9]*\t;;click;;placement-reach:130,129
+3260	when	page\tmission\n&&mission_gate\t3\t68\t;;right;;world:sunFactory
+3270	when	page\tmission\n&&mission_gate\t3\t68\t;;click;;Put Knowledge into Production
+3280	when	page\tmission\n&&mission_gate\t3\t68\t;;click;;Wind Generator
+3300	when	page\tB\.\n;;click;;MORE
+3305	when	page\tB1\.\n;;click;;OK
+3310	when	page\tC\.\n;;click;;OK
+3315	when	page\tD\.\n;;click;;MORE
+3320	when	page\tD1\.\n;;click;;OK
+3325	when	page\tE\.\n;;click;;MORE
+3330	when	page\tE1\.\n;;click;;OK
+3335	when	page\tF\.\n;;click;;OK
+3345	when	page\tmission\n&&mission_gate\t3\t66\t;;click;;production:82
+3355	when	page\tmission\n&&mission_gate\t3\t66\t&&raw_cursor\t0\t[0-9]+\t82\t[1-9][0-9]*\t;;click;;placement-reach:130,129
+3360	when	page\tmission\n&&mission_gate\t3\t68\t;;right;;world:sunFactory
+3370	when	page\tmission\n&&mission_gate\t3\t68\t;;click;;Put Knowledge into Production
+3380	when	page\tmission\n&&mission_gate\t3\t68\t;;click;;Wind Generator
+3400	when	page\tB\.\n;;click;;MORE
+3405	when	page\tB1\.\n;;click;;OK
+3410	when	page\tC\.\n;;click;;OK
+3415	when	page\tD\.\n;;click;;MORE
+3420	when	page\tD1\.\n;;click;;OK
+3425	when	page\tE\.\n;;click;;MORE
+3430	when	page\tE1\.\n;;click;;OK
+3435	when	page\tF\.\n;;click;;OK
+3445	when	page\tmission\n&&mission_gate\t3\t66\t;;click;;production:82
+3455	when	page\tmission\n&&mission_gate\t3\t66\t&&raw_cursor\t0\t[0-9]+\t82\t[1-9][0-9]*\t;;click;;placement-reach:130,129
+3460	when	page\tmission\n&&mission_gate\t3\t68\t;;right;;world:sunFactory
+3470	when	page\tmission\n&&mission_gate\t3\t68\t;;click;;Put Knowledge into Production
+3480	when	page\tmission\n&&mission_gate\t3\t68\t;;click;;Wind Generator
+3500	when	page\tB\.\n;;click;;MORE
+3500	report	f3500
+3500	snapshot	H:\T5Workspace\NetstormReborn\extracted\cpp-tutorial3-468-attempt3\f3500.bmp
+3505	when	page\tB1\.\n;;click;;OK
+3510	when	page\tC\.\n;;click;;OK
+3515	when	page\tD\.\n;;click;;MORE
+3520	when	page\tD1\.\n;;click;;OK
+3525	when	page\tE\.\n;;click;;MORE
+3530	when	page\tE1\.\n;;click;;OK
+3535	when	page\tF\.\n;;click;;OK
+3545	when	page\tmission\n&&mission_gate\t3\t66\t;;click;;production:82
+3555	when	page\tmission\n&&mission_gate\t3\t66\t&&raw_cursor\t0\t[0-9]+\t82\t[1-9][0-9]*\t;;click;;placement-reach:130,129
+3560	when	page\tmission\n&&mission_gate\t3\t68\t;;right;;world:sunFactory
+3570	when	page\tmission\n&&mission_gate\t3\t68\t;;click;;Put Knowledge into Production
+3580	when	page\tmission\n&&mission_gate\t3\t68\t;;click;;Wind Generator
+3600	when	page\tB\.\n;;click;;MORE
+3605	when	page\tB1\.\n;;click;;OK
+3610	when	page\tC\.\n;;click;;OK
+3615	when	page\tD\.\n;;click;;MORE
+3620	when	page\tD1\.\n;;click;;OK
+3625	when	page\tE\.\n;;click;;MORE
+3630	when	page\tE1\.\n;;click;;OK
+3635	when	page\tF\.\n;;click;;OK
+3645	when	page\tmission\n&&mission_gate\t3\t66\t;;click;;production:82
+3655	when	page\tmission\n&&mission_gate\t3\t66\t&&raw_cursor\t0\t[0-9]+\t82\t[1-9][0-9]*\t;;click;;placement-reach:130,129
+3660	when	page\tmission\n&&mission_gate\t3\t68\t;;right;;world:sunFactory
+3670	when	page\tmission\n&&mission_gate\t3\t68\t;;click;;Put Knowledge into Production
+3680	when	page\tmission\n&&mission_gate\t3\t68\t;;click;;Wind Generator
+3700	when	page\tB\.\n;;click;;MORE
+3705	when	page\tB1\.\n;;click;;OK
+3710	when	page\tC\.\n;;click;;OK
+3715	when	page\tD\.\n;;click;;MORE
+3720	when	page\tD1\.\n;;click;;OK
+3725	when	page\tE\.\n;;click;;MORE
+3730	when	page\tE1\.\n;;click;;OK
+3735	when	page\tF\.\n;;click;;OK
+3745	when	page\tmission\n&&mission_gate\t3\t66\t;;click;;production:82
+3750	report	f3750
+3755	when	page\tmission\n&&mission_gate\t3\t66\t&&raw_cursor\t0\t[0-9]+\t82\t[1-9][0-9]*\t;;click;;placement-reach:130,129
+3760	when	page\tmission\n&&mission_gate\t3\t68\t;;right;;world:sunFactory
+3770	when	page\tmission\n&&mission_gate\t3\t68\t;;click;;Put Knowledge into Production
+3780	when	page\tmission\n&&mission_gate\t3\t68\t;;click;;Wind Generator
+3800	when	page\tB\.\n;;click;;MORE
+3805	when	page\tB1\.\n;;click;;OK
+3810	when	page\tC\.\n;;click;;OK
+3815	when	page\tD\.\n;;click;;MORE
+3820	when	page\tD1\.\n;;click;;OK
+3825	when	page\tE\.\n;;click;;MORE
+3830	when	page\tE1\.\n;;click;;OK
+3835	when	page\tF\.\n;;click;;OK
+3845	when	page\tmission\n&&mission_gate\t3\t66\t;;click;;production:82
+3855	when	page\tmission\n&&mission_gate\t3\t66\t&&raw_cursor\t0\t[0-9]+\t82\t[1-9][0-9]*\t;;click;;placement-reach:130,129
+3860	when	page\tmission\n&&mission_gate\t3\t68\t;;right;;world:sunFactory
+3870	when	page\tmission\n&&mission_gate\t3\t68\t;;click;;Put Knowledge into Production
+3880	when	page\tmission\n&&mission_gate\t3\t68\t;;click;;Wind Generator
+4000	report	f4000
+4000	snapshot	H:\T5Workspace\NetstormReborn\extracted\cpp-tutorial3-468-attempt3\f4000.bmp

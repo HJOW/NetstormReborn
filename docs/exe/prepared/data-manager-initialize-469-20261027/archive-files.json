@@ -1,0 +1,208 @@
+{
+  "restoreDirectory": "cpp-data-manager-initialize-469-staging",
+  "archiveDirectory": "data-manager-initialize-469-20261027",
+  "productApplied": false,
+  "cppBuildExecuted": false,
+  "files": [
+    {
+      "path": "README.md",
+      "bytes": 9314,
+      "sha256": "e6e05f5712196bf66984a6dc0dc1feb98ca3af2e8c6decc85b098c9469436679"
+    },
+    {
+      "path": "fixtures/data-manager-initialize-x86.tsv",
+      "bytes": 182972,
+      "sha256": "402557fde72688da3f6f2b694767e08a711b428ab5b916aeff6aa4a818c1298d"
+    },
+    {
+      "path": "fixtures/template-section-names-x86.tsv",
+      "bytes": 25961,
+      "sha256": "af4e140f46ddaaefc7b7e6335b234065bef5d495b329c262ff025d871f51117a"
+    },
+    {
+      "path": "initialize-native.json",
+      "bytes": 1880,
+      "sha256": "8ecd73c5c045ca7ffa3baf0c8ac4dbcc650b1cff854cbc9c6849703e8ce3a7ab"
+    },
+    {
+      "path": "manifest.json",
+      "bytes": 1175,
+      "sha256": "31fd03cd50debe4db21e8895cd7dcfba6ff3259b3e3df38584bb41eb60048f0f"
+    },
+    {
+      "path": "tools/decomp_initialize.py",
+      "bytes": 9514,
+      "sha256": "25d0edec288a84c08f81eda0b68939444c6d6840a0002f6b6b3fa14cd594074e"
+    },
+    {
+      "path": "tools/freeze_manifest.py",
+      "bytes": 1546,
+      "sha256": "b52a25356d946654c93f9fc677b26c7b0e7b94be09264e7c5a6993d112c67116"
+    },
+    {
+      "path": "work/README.md",
+      "bytes": 9192,
+      "sha256": "6ec50840a8a62b69e943fd08c4c71494cb9ed600e7fb6912b7e8bb11690cf573"
+    },
+    {
+      "path": "work/baseline/src/client/CampaignTemplateStorage.cpp",
+      "bytes": 55484,
+      "sha256": "98ea0b53829784398a4f24fc7e498209d9aca1dae5c0b204f4581890f3c54e6f"
+    },
+    {
+      "path": "work/baseline/src/client/CampaignTemplateStorage.h",
+      "bytes": 10980,
+      "sha256": "be675ef5dffa0d635de1335a22a04172b9fc22962f14006b335169c693ce4d50"
+    },
+    {
+      "path": "work/baseline/src/client/SoloMapCatalog.cpp",
+      "bytes": 9061,
+      "sha256": "78cbdcb539ffb55a09f30d9c14ff94f735d86b0f48a26d1e274e33bfd93ddffb"
+    },
+    {
+      "path": "work/baseline/src/client/SoloMapCatalog.h",
+      "bytes": 4126,
+      "sha256": "819203a71509866c13f7eb4fb1d4d4ebd4c96056637e2bccb9db8fac3307af20"
+    },
+    {
+      "path": "work/baseline/src/client/UberGump.cpp",
+      "bytes": 141764,
+      "sha256": "51fb65077e4da230a1cfd06d3b17f5f05b9958bea9aa72321af7d99984bcaadd"
+    },
+    {
+      "path": "work/baseline/src/o/RawDataManagerImage.cpp",
+      "bytes": 10501,
+      "sha256": "520ce39de37d7dbd6e083e62ad0316a8da4a0546610847488f5313cf22d97d40"
+    },
+    {
+      "path": "work/client-wiring-baselines.json",
+      "bytes": 684,
+      "sha256": "8938f2e01fb99df3875fa8d28f8bbd035bc11200ed86a23e2f2ca0d130693ef7"
+    },
+    {
+      "path": "work/client-wiring.patch",
+      "bytes": 4830,
+      "sha256": "79a003c9b3f6cca7bb3b3f0caa4b551d8655026328b6a69035b6b0ec0c581fa6"
+    },
+    {
+      "path": "work/data-manager-initialize-469.patch",
+      "bytes": 51013,
+      "sha256": "e66295fe635cb4bcf9f16bdaea3b2c2dcd8ce35b9f4763651912cfdddbae5792"
+    },
+    {
+      "path": "work/existing-files.patch",
+      "bytes": 19432,
+      "sha256": "227e3407540096e63c25293ec7518b461e8edcea9d3ec14a3fe9774007e0515c"
+    },
+    {
+      "path": "work/final-changes.json",
+      "bytes": 4028,
+      "sha256": "3739fa69bd7e3df2fdede2739700e5ec8912b79aceca0cb4a756c7afb990f7c2"
+    },
+    {
+      "path": "work/manifest.json",
+      "bytes": 5323,
+      "sha256": "a9fbb69c9500cfe6e271d860a712124943ecac643c8c3db18a0d7eb92c37c8e7"
+    },
+    {
+      "path": "work/src/client/CampaignTemplateStorage.cpp",
+      "bytes": 58636,
+      "sha256": "1cf44d8bcddd996fc3358419b63f0ab38367160705b2dcde40493604c8f06645"
+    },
+    {
+      "path": "work/src/client/CampaignTemplateStorage.h",
+      "bytes": 12333,
+      "sha256": "3e286864053d5f64e60b87dea1ea0948c53315f0c578d01d2753cc76cac417ef"
+    },
+    {
+      "path": "work/src/client/ClientTemplateSectionNames.cpp",
+      "bytes": 1974,
+      "sha256": "dd170be6d162740d9a118c5be9188b339fb2bdd75a939edb3ba85e1d0da695da"
+    },
+    {
+      "path": "work/src/client/ClientTemplateSectionNames.h",
+      "bytes": 1881,
+      "sha256": "4649f64eeca63dfc8567bdf6d36fbc04f311262eed8a2e63940bac1d0c7ad6da"
+    },
+    {
+      "path": "work/src/client/SoloMapCatalog.cpp",
+      "bytes": 9250,
+      "sha256": "fa1a1924c67a7bbbdc76f9e4622775f1528d4ac926afe69139a6d2149038ef98"
+    },
+    {
+      "path": "work/src/client/SoloMapCatalog.h",
+      "bytes": 4400,
+      "sha256": "0215d7063059f08d4613f58402c89272e308f1eca4d55917021862919d746752"
+    },
+    {
+      "path": "work/src/client/UberGump.cpp",
+      "bytes": 141912,
+      "sha256": "730832dc4cc3f2bc3884ad845d7e38d2e19aa538aadddde4b95118a5a4d5aa41"
+    },
+    {
+      "path": "work/src/o/RawDataManagerImage.cpp",
+      "bytes": 9378,
+      "sha256": "33c130a552928db5c948e1bf7dbf31bc0432502648cbc96141ff29c3088fef9e"
+    },
+    {
+      "path": "work/src/o/RawDataManagerInitialize.cpp",
+      "bytes": 1600,
+      "sha256": "1b3ba1f5ea910bbd9ed5c9f41f827f16b664db4557069da8fa28a2d02b2b2d4c"
+    },
+    {
+      "path": "work/src/o/RawDataManagerInitialize.h",
+      "bytes": 1118,
+      "sha256": "99fe55173d03a64ca8a9c4c6932679c6520699449bae53e8d3f698e74ee86795"
+    },
+    {
+      "path": "work/src/o/RawSnart.cpp",
+      "bytes": 2133,
+      "sha256": "2c9a1f516ed97488b4b490798685ecc4c6e523ce6f6ab6d1a3265d9d8f306a0a"
+    },
+    {
+      "path": "work/src/o/RawSnart.h",
+      "bytes": 875,
+      "sha256": "a8d9b096be1ae37b19723f4cc55a1b46b2f47969588d678cd12ef5ebef076b57"
+    },
+    {
+      "path": "work/src/o/RawTemplateSectionNames.cpp",
+      "bytes": 2736,
+      "sha256": "af9a95682f85140301f143a296c8554d4a4261ee4306335ccb425531786aae4c"
+    },
+    {
+      "path": "work/src/o/RawTemplateSectionNames.h",
+      "bytes": 1300,
+      "sha256": "5dc6ee6b86abcb09da96028ad72cc64b421e53e1dd13c8514caebeffcc2e2ec0"
+    },
+    {
+      "path": "work/static-checks.json",
+      "bytes": 783,
+      "sha256": "2ccc6d4f6618e2eeec8155e34d1da18ead563e177f1a2b36b6445d794850ba3e"
+    },
+    {
+      "path": "work/storage-baselines.json",
+      "bytes": 708,
+      "sha256": "1b35c0975d626cee8b8bdda662d3ec0f4d29c5ec0973919d0dd0b3b8160558c7"
+    },
+    {
+      "path": "work/tests/DataManagerInitializeTests.cpp",
+      "bytes": 12380,
+      "sha256": "ca93c533e0a7e1dce5a80e89d9e8bdafca1537a2d4afb46e90aea8ae192efc3a"
+    },
+    {
+      "path": "work/tools/package_patch.py",
+      "bytes": 3713,
+      "sha256": "4e0fdf2cc2ca098f3fcbe831181de3d1eb39e83d3d2b3f686c7f188e1c39233e"
+    },
+    {
+      "path": "work/tools/prepare_client_wiring_patch.py",
+      "bytes": 3442,
+      "sha256": "11fe41f5c281069eedba41bd85846d7e9f7d94ab7a463b9c107cc4f4958646a1"
+    },
+    {
+      "path": "work/tools/prepare_storage_patch.py",
+      "bytes": 10953,
+      "sha256": "2149cd5e303091814f3be2bbee3eae98c7f91a628b100896d140bca14ed49c56"
+    }
+  ]
+}

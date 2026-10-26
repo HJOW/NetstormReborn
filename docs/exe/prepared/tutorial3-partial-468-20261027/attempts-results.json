@@ -1,0 +1,102 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "output": "extracted\\cpp-tutorial3-468-attempt1",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 124.90038710000044,
+      "binarySha256": "6bfa1865fcc6bee83a82577e740f55e4b6723fd9e03f7c5f9021ab43a4d88567",
+      "originalsUnchanged": true,
+      "dataUnchanged": true,
+      "binaryUnchanged": true,
+      "initialProgress": [
+        "1"
+      ],
+      "stages": [
+        "65"
+      ],
+      "startSp": "2000",
+      "endSp": "2000",
+      "move64Packets": 0,
+      "placement62Packets": 12,
+      "bridgeCells": 35,
+      "finalGolem": {
+        "sid": 15037,
+        "x": "128",
+        "y": "94"
+      },
+      "hashes": {
+        "prepared.json": "3c9dd36296b095e7f5e01323c1eb9227d89e55ad9f92d777232038b7d5420f9c",
+        "steps.tsv": "ab79138bf1d4e0f6b215a9a3a4fddba7795f69d2ab84e73e19c027e92a1a3b82",
+        "states.tsv": "8f204a8b0820f0b6e0414e13a4b9022d8b518ba9eff485fda41cc2a6f2c85a56",
+        "execution.json": "2b1d29070b7ba4ec69b1754ac7262a7149b9a50103c34645c3c8f7790a2d196f",
+        "driver-source.py": "9f48aeeabf2286f8dd1a94f8e519c6fa2b2507ae7eccc1ffb7a7f09a80efdb85",
+        "initial.bmp": "ebe0ecd4efb7c5e5802fd975ff41becb2a0451df51061075511ee7bba02585a1",
+        "f550.bmp": "3444058afbdfd1eebe2674f4a1d60b1394a328c50224df58b544df872b33c8f1",
+        "f2350.bmp": "8bc3871c52bb402c718c24be3571a64dace1010d7cdd8f53477caa672ffc5eaf",
+        "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr.log": "251d38785d5c3ec3eb896d8a2c949e483c48fbef50241c1cf9406481473d23f1"
+      }
+    },
+    {
+      "attempt": 2,
+      "output": "extracted\\cpp-tutorial3-468-attempt2",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 124.243923,
+      "binarySha256": "6bfa1865fcc6bee83a82577e740f55e4b6723fd9e03f7c5f9021ab43a4d88567",
+      "originalsUnchanged": true,
+      "dataUnchanged": true,
+      "binaryUnchanged": true,
+      "initialProgress": [
+        "1"
+      ],
+      "stages": [
+        "65"
+      ],
+      "startSp": "2000",
+      "endSp": "2000",
+      "move64Packets": 1,
+      "placement62Packets": 12,
+      "bridgeCells": 31,
+      "finalGolem": {
+        "sid": 15037,
+        "x": "103",
+        "y": "106"
+      },
+      "hashes": {
+        "prepared.json": "347fb08f82736c215691ab8a95ccef12c044a9450788843fbefc9aba374c9d3e",
+        "steps.tsv": "98d7f043f5e4a83aa8beffb6dcf36b560b53530ed5e688e122b542e444a40193",
+        "states.tsv": "0f33cde37f596eca0ab113e76509a37153fc32baaefbabef9c86983fffd679f9",
+        "execution.json": "6326a0b4aac022f3220b403fd75cffd50cb77d2dd7f7147412f18ab063adbe5e",
+        "driver-source.py": "a8e733ad976d377504dacac89ad362d5b3a0fae41ae41d2eb982f73f0b61677f",
+        "initial.bmp": "82a021c582637b4a23328668bfd95dbe8257b8e8095ba2b7a4c7bb25784ee190",
+        "f550.bmp": "fed3df8fb886baa16cef7ae74d4333d521dfc739ac9c3908b8ad4f2fa40e7cae",
+        "f2350.bmp": "00bf97fa85bad8666e40510ecc36829d72503f30928782069063e3ccb1c38855",
+        "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr.log": "251d38785d5c3ec3eb896d8a2c949e483c48fbef50241c1cf9406481473d23f1"
+      },
+      "cellSelection": [
+        "15037",
+        "5",
+        "14",
+        "24"
+      ],
+      "observedGeyser": {
+        "sid": 15036,
+        "x": "106",
+        "y": "103"
+      }
+    }
+  ],
+  "originalGameRuns": 0,
+  "cloneGuiRuns": 2,
+  "naturalTutorial3Complete": false,
+  "tutorial4Entered": false,
+  "stateSpHpOwnerInjected": false,
+  "objectsDeletedExternally": false,
+  "testBridgePatternsInjected": false,
+  "actualBoundary": "? ??? ?? ??/64??/?? ?? ?? ??. ??? ???106,103? ??103,106?? ?? ???? ? ? ??. ??/??/??/??/??/??? ? ??? ?? ??.",
+  "nextInput": "?? ?? initial Report? geyser106,103? ????+cell106,103? ????. ??? cell128,94? ??? ?? ????? ????."
+}

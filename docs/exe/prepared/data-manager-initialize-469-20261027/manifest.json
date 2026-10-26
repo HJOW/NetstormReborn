@@ -1,0 +1,32 @@
+{
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+  "frozenDate": "2026-10-27",
+  "status": "read-only child research; Native76 verified twice; C++ implementation/tests absent; no product/build/GUI changes",
+  "files": {
+    "fixtures/data-manager-initialize-x86.tsv": {
+      "bytes": 182972,
+      "sha256": "402557fde72688da3f6f2b694767e08a711b428ab5b916aeff6aa4a818c1298d"
+    },
+    "fixtures/template-section-names-x86.tsv": {
+      "bytes": 25961,
+      "sha256": "af4e140f46ddaaefc7b7e6335b234065bef5d495b329c262ff025d871f51117a"
+    },
+    "initialize-native.json": {
+      "bytes": 1880,
+      "sha256": "8ecd73c5c045ca7ffa3baf0c8ac4dbcc650b1cff854cbc9c6849703e8ce3a7ab"
+    },
+    "README.md": {
+      "bytes": 9314,
+      "sha256": "e6e05f5712196bf66984a6dc0dc1feb98ca3af2e8c6decc85b098c9469436679"
+    },
+    "tools/decomp_initialize.py": {
+      "bytes": 9514,
+      "sha256": "25d0edec288a84c08f81eda0b68939444c6d6840a0002f6b6b3fa14cd594074e"
+    },
+    "tools/freeze_manifest.py": {
+      "bytes": 1546,
+      "sha256": "b52a25356d946654c93f9fc677b26c7b0e7b94be09264e7c5a6993d112c67116"
+    }
+  }
+}

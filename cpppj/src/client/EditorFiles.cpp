@@ -1,13 +1,19 @@
 // 원본을 수정하지 않는 준비/권한/쓰기 경계만 제공하며 게임의 저장 관문과 직렬화는 기존 몸체가 수행한다.
 #include "client/EditorFiles.h"
 #include "client/CampaignTemplateStorage.h"
+#include "o/BaseFile.h"
 #include "o/OriginalText.h"
 #include <cstdio>
 #include <stdexcept>
 #include <sys/stat.h>
 #include <utility>
+#include <limits>
 #ifdef _WIN32
 #include <io.h>
+#ifndef NOMINMAX
+#define NOMINMAX //원문 Win32 복사/flush 장치의 매크로가 표준 수치 범위를 바꾸지 않게 한다.
+#endif
+#include <windows.h>
 #else
 #include <unistd.h>
 #endif
@@ -48,6 +54,68 @@ std::filesystem::path EditorFiles::Prepare(std::string_view name,std::span<const
 }
 // 실제 설정 경로도 기존의 같은 root/보호 루트 검사를 거친다.
 std::filesystem::path EditorFiles::ResolvePath(std::string_view configuredPath) const { return Checked(std::filesystem::path(configuredPath)); }
+// root 주소는 장치 수명 동안 고정이며 경로 조회를 파일 쓰기로 바꾸지 않는다.
+const std::filesystem::path& EditorFiles::RootPath() const { return root_; }
+// 정규화된 절대 표기에서 root 길이만 제거하므로 ASCII case 별칭과 파일명의 모든 점을 유지한다.
+std::filesystem::path EditorFiles::RelativePath(std::string_view configuredPath) const {
+    const std::filesystem::path requested(configuredPath);const auto lexical=std::filesystem::absolute(requested.is_absolute() ? requested : root_/requested).lexically_normal(); //키는 실제 디렉터리 안의 물리 이름 전체다.
+    if (lexical.filename().string().find_first_of("*?")==std::string::npos) static_cast<void>(Checked(lexical));else static_cast<void>(Checked(lexical.parent_path()));
+    const auto selected=Contains(root_,lexical) ? lexical : Checked(lexical);const auto prefix=root_.generic_string(),name=selected.generic_string();return name.size()==prefix.size() ? std::filesystem::path(".") : std::filesystem::path(name.substr(prefix.size()+1));
+}
+// metadata가 임의 fortSpec 목록에 끼지 않도록 writable root 밖의 검증된 형제만 허용한다.
+EditorFiles EditorFiles::SiblingNamespace(std::string_view suffix) const {
+    if (suffix.empty() || suffix.find('\0')!=std::string_view::npos || suffix.find_first_of("./\\:*?\"<>|")!=std::string_view::npos) throw std::invalid_argument("편집 metadata 형제 이름 범위 위반");
+    auto roots=protected_;roots.push_back(root_);auto name=root_.filename();name+=std::string(suffix);const auto expected=root_.parent_path()/name;if (o::AsciiLower(Actual(expected).generic_string())!=o::AsciiLower(expected.lexically_normal().generic_string())) throw std::invalid_argument("편집 metadata 형제의 외부 링크 경계");return EditorFiles(expected,std::move(roots));
+}
+// 생성 앞뒤 같은 실제 경로를 검사하고 원본/CD/외부 junction은 폴더 생성 전에 거부한다.
+void EditorFiles::EnsureDirectory(std::string_view configuredPath) const { const auto path=ResolvePath(configuredPath);std::filesystem::create_directories(path);static_cast<void>(ResolvePath(configuredPath)); }
+// copy source는 읽기만 열며 fail-if-exists로 기존 사용자 데이터/속성을 덮어쓰지 않는다.
+void EditorFiles::CopyMissing(const std::filesystem::path& source,std::string_view configuredPath) const {
+    const auto path=ResolvePath(configuredPath);if (std::filesystem::exists(path)) return;EnsureDirectory(path.parent_path().string());const auto checked=ResolvePath(configuredPath);
+#ifdef _WIN32
+    if (!CopyFileW(source.c_str(),checked.c_str(),TRUE)) { const auto error=GetLastError();if ((error==ERROR_FILE_EXISTS || error==ERROR_ALREADY_EXISTS) && std::filesystem::exists(ResolvePath(configuredPath))) return;throw std::runtime_error("편집 원본 최초 복사 실패:"+std::to_string(error)); }
+#else
+    std::filesystem::copy_file(source,checked,std::filesystem::copy_options::skip_existing);
+#endif
+}
+// 검증된 metadata 임시 파일과 최종 파일만 쓰며 실패 시 기존 장부와 앞선 효과를 보존한다.
+void EditorFiles::WriteAtomic(std::string_view configuredPath,std::span<const std::uint8_t> bytes) const {
+    if (bytes.size()>std::numeric_limits<std::uint32_t>::max()) throw std::length_error("편집 장부 DWORD 쓰기 범위");const auto target=ResolvePath(configuredPath);EnsureDirectory(target.parent_path().string());const auto pending=ResolvePath(target.string()+".pending");
+#ifdef _WIN32
+    const auto handle=CreateFileW(pending.c_str(),GENERIC_WRITE,0,nullptr,CREATE_ALWAYS,FILE_ATTRIBUTE_NORMAL,nullptr);if (handle==INVALID_HANDLE_VALUE) throw std::runtime_error("편집 장부 임시 파일 열기 실패");
+    DWORD written{};const auto good=WriteFile(handle,bytes.data(),static_cast<DWORD>(bytes.size()),&written,nullptr) && written==bytes.size() && FlushFileBuffers(handle);const auto closed=CloseHandle(handle);
+    if (!good || !closed) throw std::runtime_error("편집 장부 쓰기/flush/닫기 실패");
+    constexpr unsigned kReplaceAttempts=51; //외부 인덱서 등의 짧은 공유 거부만 최대1초 기다리고 장부를 직접 덮어쓰지 않는다.
+    constexpr DWORD kReplaceWaitMilliseconds=20; //실패한 OS 교체 사이의 실제 장치 대기이며 게임 상태나 진행값을 변경하지 않는다.
+    for (unsigned attempt=0;attempt<kReplaceAttempts;++attempt) { //매 교체 직전에 같은 원본/외부 링크 보호 경로를 다시 검사한다.
+        if (MoveFileExW(ResolvePath(pending.string()).c_str(),ResolvePath(target.string()).c_str(),MOVEFILE_REPLACE_EXISTING|MOVEFILE_WRITE_THROUGH)) return;
+        const auto error=GetLastError(); //실패 직후 원시 오류를 보존하며 이후 경로/속성 조회의 오류와 혼동하지 않는다.
+        const bool transient=error==ERROR_ACCESS_DENIED || error==ERROR_SHARING_VIOLATION || error==ERROR_LOCK_VIOLATION || error==ERROR_USER_MAPPED_FILE; //Windows 파일 교체의 공유/매핑 거부만 제한적으로 다시 시도한다.
+        if (!transient || attempt+1==kReplaceAttempts) throw std::runtime_error("편집 장부 durable 교체 실패:"+std::to_string(error));
+        Sleep(kReplaceWaitMilliseconds); //성공을 합성하거나 old 장부를 삭제하지 않고 같은 atomic 교체만 다시 요청한다.
+    }
+#else
+    Write(pending.string(),bytes);std::filesystem::rename(pending,target); //Windows 외의 준비용 대응이며 실제 durable 검증으로 주장하지 않는다.
+#endif
+}
+// 와일드카드는 마지막 파일 요소에서만 허용하고 열거 폴더와 각 실제 결과를 같은 보호 경계에서 검사한다.
+std::vector<std::string> EditorFiles::MatchDisk(std::string_view pattern) const {
+    if (pattern.find('\0')!=std::string_view::npos) throw std::invalid_argument("편집 목록 패턴의 NUL 경계 위반");
+    const std::filesystem::path requested(pattern); //현재 설정의 상대/절대 패턴을 파일명과 부모 경로로 분리한다.
+    if (requested.parent_path().string().find_first_of("*?")!=std::string::npos) throw std::invalid_argument("편집 목록의 폴더 와일드카드 범위 위반");
+    const auto directory=ResolvePath(requested.parent_path().string()),absolute=directory/requested.filename(); //실제 부모만 canonical 검사하고 파일 와일드카드를 filesystem 경로 조회에 넘기지 않는다.
+    const o::BaseFileSystem disk(root_);std::vector<std::string> result; //기존 읽기 전용 OS 열거만 빌리며 전역 파일 저장소는 바꾸지 않는다.
+    for (const auto& name:disk.MatchDisk(absolute.string())) { //원본 FindFirst/Next 순서를 유지하되 작업본 밖으로 향하는 링크는 여기서 거부한다.
+        auto listed=std::filesystem::path(name);const auto leaf=listed.filename().string();if (leaf!="." && leaf!="..") static_cast<void>(ResolvePath(name));listed.make_preferred();result.push_back(listed.string()); //OS 자체 . / .. 후보는 읽기 요청이 아니므로 부모 검사 뒤 보존한다. 실제 reader/writer의 root 보호는 그대로다.
+    }
+    return result;
+}
+// 실제 파일을 읽는 매번 canonical 검사를 반복하므로 열거 이후 링크 교체도 다음 접근에서 다시 확인한다.
+std::optional<std::vector<std::uint8_t>> EditorFiles::TryRead(std::string_view configuredPath) const {
+    if (configuredPath.find('\0')!=std::string_view::npos) throw std::invalid_argument("편집 목록 파일명의 NUL 경계 위반");
+    const std::filesystem::path requested(configuredPath);const auto path=requested.filename().string().find_first_of("*?")==std::string::npos ? ResolvePath(configuredPath) : ResolvePath(requested.parent_path().string())/requested.filename(); //파일명 wildcard를 fopen에 전달하는 원문 실패도 canonical wildcard 조회 없이 보존한다.
+    return o::BaseFileSystem(root_).TryRead(path.string());
+}
 // 원래 Prepare의 기존 파일 보존/새 파일 생성 순서를 설정 경로에서도 그대로 사용한다.
 std::filesystem::path EditorFiles::PreparePath(std::string_view configuredPath,std::span<const std::uint8_t> original) {
     const auto target=ResolvePath(configuredPath);

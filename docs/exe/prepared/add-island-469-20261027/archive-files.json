@@ -1,0 +1,203 @@
+{
+  "restoreDirectory": "cpp-add-island-469-staging",
+  "archiveDirectory": "add-island-469-20261027",
+  "productApplied": false,
+  "cppBuildExecuted": false,
+  "files": [
+    {
+      "path": "README.md",
+      "bytes": 6444,
+      "sha256": "eec57a6deb1c2a3932261fbfa59853bdec103f043ac3cb3a9c8795c00d07edae"
+    },
+    {
+      "path": "add-island-469.patch",
+      "bytes": 861407,
+      "sha256": "3384d812cb0db57709b4eb95618c0a1db8ae11b74a0ccd3a4c9e09fdd1ad1601"
+    },
+    {
+      "path": "base-manifest.json",
+      "bytes": 1844,
+      "sha256": "b6c44ea21cfe3a44026c9c1c5e46cf52955121463735951fc4a1be8c4c7b497c"
+    },
+    {
+      "path": "base/cpppj/src/client/GameMenuCommands.cpp",
+      "bytes": 2802,
+      "sha256": "e496c370b2a86d30add267ee37541bd7782cd150d02778dc376a8d36b59f228f"
+    },
+    {
+      "path": "base/cpppj/src/client/RawCampaignSession.cpp",
+      "bytes": 528306,
+      "sha256": "16feac1eccc13436f82a6fcbdfa44029c3d2f6ebe32e626d7c142ff8a1eed1d3"
+    },
+    {
+      "path": "base/cpppj/src/client/RawCampaignSession.h",
+      "bytes": 61433,
+      "sha256": "6fc68cb0b4291beccfb935c2fa5f218c8b4225c23c5ba291c0cb119d96902688"
+    },
+    {
+      "path": "base/cpppj/src/client/RawMenuControls.cpp",
+      "bytes": 108240,
+      "sha256": "8cb1c66abd7bb696a717004642efc2cb5e66ecbb96c5bcec4856252dd4b370dc"
+    },
+    {
+      "path": "base/cpppj/src/client/RawMenuControls.h",
+      "bytes": 17968,
+      "sha256": "5e1992e74947249f0e13bde5827ea48d7ee27209bf05c3086d4218ab80622c9c"
+    },
+    {
+      "path": "base/cpppj/src/client/UberGump.cpp",
+      "bytes": 141764,
+      "sha256": "51fb65077e4da230a1cfd06d3b17f5f05b9958bea9aa72321af7d99984bcaadd"
+    },
+    {
+      "path": "manifest.json",
+      "bytes": 7649,
+      "sha256": "939e8f70980ded11f148a5bd9c4486b26bab5cfc7a853f3144b234dd16d77f84"
+    },
+    {
+      "path": "native1.log",
+      "bytes": 228,
+      "sha256": "4c158ca8e8d8f4575cbd471d7af95084453e493ec3f84fe4b8335087d7d7bccf"
+    },
+    {
+      "path": "native2-verify.log",
+      "bytes": 226,
+      "sha256": "9c983276c33b5cb95c9dc942b0851845e1399306ebb407a64f7c7044bcded90b"
+    },
+    {
+      "path": "patch-check1.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "population-native1-verify.log",
+      "bytes": 254,
+      "sha256": "dcd19eb59ba4c9f3dc206e8ffd855dcb95992ed0998df5e8349024ef2814d2b8"
+    },
+    {
+      "path": "work/cpppj/editor-island-drag-native-20261027.json",
+      "bytes": 2500,
+      "sha256": "20e0271437f1f907b0163587bb797e96762bc6826b9b8cc7e01feeddac7ddb04"
+    },
+    {
+      "path": "work/cpppj/island-population-native-20261026.json",
+      "bytes": 3532,
+      "sha256": "390759e062f50e0fdeb64f5a507f2167ae65197548dcfc4578a9ce5cb9274f09"
+    },
+    {
+      "path": "work/cpppj/src/client/EditorIslandDialog.cpp",
+      "bytes": 640,
+      "sha256": "36a2541b716b287e9b1555fbc478a321a8c81015c32e9fd82a5e23ebda1758b3"
+    },
+    {
+      "path": "work/cpppj/src/client/EditorIslandDialog.h",
+      "bytes": 624,
+      "sha256": "02cc2ea4e3ef52f585d94797a111fe15d66f8aadc3a6752ea74b49baa61af4d8"
+    },
+    {
+      "path": "work/cpppj/src/client/EditorIslandDrag.cpp",
+      "bytes": 3510,
+      "sha256": "00514efa4aeca816bb5da0b7ddd3594a0292d2299cf2724dd3e499bfc13db887"
+    },
+    {
+      "path": "work/cpppj/src/client/EditorIslandDrag.h",
+      "bytes": 2853,
+      "sha256": "bdff723be1bb03fb59200f64e35b987c748970eccdedfb53c94639b88eb4fdae"
+    },
+    {
+      "path": "work/cpppj/src/client/GameMenuCommands.cpp",
+      "bytes": 2962,
+      "sha256": "915d3eee380d6936afcd113e3fc4bfc8ec685d71e6e199a1cc8949a98467c995"
+    },
+    {
+      "path": "work/cpppj/src/client/RawCampaignEditorIsland.inc",
+      "bytes": 7256,
+      "sha256": "5e0b0f82ea478f7780f2fcdb2a3f3ba57b7d1deb0dc30cbec623caf70635e949"
+    },
+    {
+      "path": "work/cpppj/src/client/RawCampaignSession.cpp",
+      "bytes": 532703,
+      "sha256": "200b01d0df3622f8cd4999c5093331c5f348a26a6cb51fa39abda8251e35c03e"
+    },
+    {
+      "path": "work/cpppj/src/client/RawCampaignSession.h",
+      "bytes": 62477,
+      "sha256": "b901ce22aeffa41ed741b902c526e60a252b7a8b49bd8405cb947699a03108d3"
+    },
+    {
+      "path": "work/cpppj/src/client/RawMenuControls.cpp",
+      "bytes": 108240,
+      "sha256": "8cb1c66abd7bb696a717004642efc2cb5e66ecbb96c5bcec4856252dd4b370dc"
+    },
+    {
+      "path": "work/cpppj/src/client/RawMenuControls.h",
+      "bytes": 17968,
+      "sha256": "5e1992e74947249f0e13bde5827ea48d7ee27209bf05c3086d4218ab80622c9c"
+    },
+    {
+      "path": "work/cpppj/src/client/UberGump.cpp",
+      "bytes": 143402,
+      "sha256": "75865944834e90c99c5b30c0f789f82538450d7e5da2ca64a2ed21d14ea37c13"
+    },
+    {
+      "path": "work/cpppj/src/o/RawIslandAdd.cpp",
+      "bytes": 2318,
+      "sha256": "753831e9c241451cd9988d078c4b82359eebcb8b23216994127ec470f55a9bd3"
+    },
+    {
+      "path": "work/cpppj/src/o/RawIslandAdd.h",
+      "bytes": 1997,
+      "sha256": "05b2b8df22adee439bfcfa79f325cb96d1f382b176b441f4d6419589cae1c58d"
+    },
+    {
+      "path": "work/cpppj/src/o/RawIslandPopulation.cpp",
+      "bytes": 7411,
+      "sha256": "a6c45756ef33b5742d5c35e866243b40dcaef04d7ff915b2862674ab9ea18ad6"
+    },
+    {
+      "path": "work/cpppj/src/o/RawIslandPopulation.h",
+      "bytes": 3974,
+      "sha256": "434f6a92d6c7b933d93aa907c1b950367bf5193ca458bfa22e04341f03e1544b"
+    },
+    {
+      "path": "work/cpppj/tests/CampaignEditorIslandTests.inc",
+      "bytes": 7100,
+      "sha256": "6536365befb0847ec6dca82f2ca98b1abcf39c5ed75c2bf4ff18ff44fcc5412c"
+    },
+    {
+      "path": "work/cpppj/tests/EditorIslandDragTests.cpp",
+      "bytes": 4978,
+      "sha256": "070e574f07b577a31f53b47d130cf55626fca1af863a348d422a93533c01ffa5"
+    },
+    {
+      "path": "work/cpppj/tests/IslandPopulationTests.cpp",
+      "bytes": 11141,
+      "sha256": "a9c47797dfa8b56530c3460e04d47918bbcad51b12c09c95d415ce194bb7af61"
+    },
+    {
+      "path": "work/cpppj/tests/fixtures/editor-island-drag-x86.tsv",
+      "bytes": 5202,
+      "sha256": "883f1a6c1af9e79af2b6485beee69859a96be10d76c4cb7f0fc81825195038d1"
+    },
+    {
+      "path": "work/cpppj/tests/fixtures/island-population-x86.tsv",
+      "bytes": 756982,
+      "sha256": "f63a926ccb280a96078a97dc8f025f9fcae9c22fffe947bf9f53cc27006e0f13"
+    },
+    {
+      "path": "work/docs/exe/cpp-add-island-runtime-prepared-20261027.md",
+      "bytes": 11910,
+      "sha256": "caa872c29f5cfae7c556342b6e3a3e6c1a8affcbdf40a8afeec4a041feaa562c"
+    },
+    {
+      "path": "work/tools/decomp_editor_island_drag.py",
+      "bytes": 9815,
+      "sha256": "74bf7128791b27b5825efc81bd6f06917e242bd4461187c9d5b14c2e41219316"
+    },
+    {
+      "path": "work/tools/decomp_island_population.py",
+      "bytes": 10689,
+      "sha256": "11c998ab0da7c625c657cbd2b983c34cac56491a29a37525dfd8061474d46614"
+    }
+  ]
+}

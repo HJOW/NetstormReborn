@@ -1,0 +1,47 @@
+--- a/cpppj/src/client/SoloMapCatalog.h
++++ b/cpppj/src/client/SoloMapCatalog.h
+@@ -7,6 +7,7 @@
+ 
+ namespace netstorm::o { class BaseFileSystem;class ConfigInterface;struct FortSerializationGlobals; }
+ namespace netstorm::client {
++class ClientTemplateSectionNames; // 모든Templatemanager가빌리는같은Client이름표owner다.
+ // 원본005327ac의 같은9BYTE를 덮어쓰는 키 저장소다. Client가 소유하면 모든 목록 경계가 같은 수명을 빌린다.
+ class SoloMapFileSpec {
+ public:
+@@ -26,6 +27,7 @@
+     std::shared_ptr<o::FortSerializationGlobals> serializationGlobals; // 분류/메타두임시Storage도같은Client의005c89c0을쓴다. 생략하면catalog수명에한개를만든다.
+     o::SoloMapListState* listState{}; // 실제 Client는 같은 목록/dirty를 제공하며 이 catalog보다 오래 살아야 한다. 독립 호출은 자체 저장소를 쓴다.
+     std::function<std::vector<std::string>(std::string_view)> enumeratePaths; //선택적 실제 파일 열거 장치다. 현재 PathSpec을 받고 경로를 돌려주며 생략하면 기존 기본 디스크만 사용한다.
++    std::shared_ptr<ClientTemplateSectionNames> sectionNames; // 두MapProbe도주Storage와같은005c8aa4표를빌린다.생략하면catalog수명에한개를소유한다.
+     std::function<std::optional<std::vector<std::uint8_t>>(std::string_view)> readFile; //선택적 현재 파일 reader다. 분류/메타마다 다시 호출하며 생략하면 기존 디스크/TAFF/보조 읽기를 유지한다.
+ };
+ // 파일마다 분류와 목록 메타 조회를 다른 임시 Template에서 수행한다.
+--- a/cpppj/src/client/SoloMapCatalog.cpp
++++ b/cpppj/src/client/SoloMapCatalog.cpp
+@@ -31,7 +31,7 @@
+     bool mission{}; // 목록의 임시 Template은 미션 소유자가 아니다.
+     o::RawPlayerTemplateState state; // 같은 현재 manager의 State를 읽는 실제 getter다.
+     // 원본 10.78의 기존/빈/짧은 State 부모를 모두 동일 저장소에 연결한다.
+-    explicit MapProbe(SoloMapCatalogEffects& effects):storage(effects.serializationGlobals),state(o::OriginalEdition::Patch1078,storage.Headers(),
++    explicit MapProbe(SoloMapCatalogEffects& effects):storage(effects.serializationGlobals,effects.sectionNames),state(o::OriginalEdition::Patch1078,storage.Headers(),
+         [this](auto slot)->o::PlayerTemplateStateStream& { return storage.SelectState(slot); },
+         [this](auto slot)->const std::string& { return storage.Name(slot); },depth,mission,
+         [](auto) { throw std::logic_error("단독 맵 메타 조회의 실제 Template State 진단"); },
+@@ -63,6 +63,7 @@
+     Impl(const o::BaseFileSystem& source,o::ConfigInterface& settings,SoloMapCatalogEffects devices)
+         :files(source),config(settings),effects(std::move(devices)),cache(effects.listState ? *effects.listState : localCache),list(cache,Hooks()) {
+         if (!effects.serializationGlobals) effects.serializationGlobals=std::make_shared<o::FortSerializationGlobals>(); // 같은catalog의분류/메타가공유하는한개DWORD이며Storage생성시마다복제하지않는다.
++        if (!effects.sectionNames) effects.sectionNames=std::make_shared<ClientTemplateSectionNames>(); // 목록의모든임시manager가동일lazy표를공유한다.
+         if (!effects.fileSpecKey) effects.fileSpecKey=[this] { return defaultFileSpec.Current(); }; // 현재 기본 키도 파일 읽기 직전에 조회한다.
+     }
+     // 원본 분류 함수의 임시 Template은 목록 메타 Template을 건드리지 않는다.
+--- a/cpppj/src/client/UberGump.cpp
++++ b/cpppj/src/client/UberGump.cpp
+@@ -193,6 +193,7 @@
+     EditorCatalogSourceDevices catalogSource;catalogSource.root=client_.GameDirectory();catalogSource.archiveOnly=[this](auto path) { return client_.Files().TryReadArchiveOnly(path); }; //실제 기존 등록순서의 TAFF만 읽어 완료키 삭제의 disk 우회를 막는다.
+     editorCatalog_=std::make_shared<EditorCatalogWorkspace>(catalogFiles,std::move(catalogSource)); //한 장기 이관 owner를 목록과 실제 Editor 경로 모두에 공유한다.
+     SoloMapCatalogEffects mapEffects; // 현재 실제 장치만 제공하며 목록 분류/행 처리는 기존 몸체를 사용한다.
++    mapEffects.sectionNames=templateStorage_->SectionNamesOwner(); // 주Template/분류/메타가같은Client이름표와변환상태를빌린다.
+     mapEffects.serializationGlobals=serializationGlobals_; // 목록의두임시MapProbe도실제manager생성자의같은전역0쓰기를공유한다.
+     mapEffects.listState=&client_.FortGlobals()->Catalog(); // 이름 변경/설정 증가와 Raw 목록 정리가 같은 dirty DWORD를 쓴다.
+     mapEffects.typeCount=[this] { return static_cast<std::int32_t>(client_.Assets().TypeTable().Types().size()); };

@@ -68,7 +68,7 @@ public:
     RawButtonControls& operator=(const RawButtonControls&)=delete;
     // 기본은 기존 자식을 Kill/Cleanup한다. preserveWorldUi는 돌 버튼만 교체한다. deferCleanup은 보존 모드에서 실제 HTML의 후반 소멸을 유지한다.
     void SetControls(std::span<const GumpControl> controls,std::span<const std::string> labels,
-        int width,int height,RawButtonAssets assets,bool preserveWorldUi=false,bool deferCleanup=false);
+        int width,int height,RawButtonAssets assets,bool preserveWorldUi=false,bool deferCleanup=false,std::optional<std::int32_t> familyDepth={}); //선택 깊이는 실제 메인 container 자식의 깊이이며 AddDepth로 배경의 상대+1을 보존한다.
     // 실제 GumpInput::Route와 부모 click 통지로 활성화된 화면 명령 번호를 반환한다.
     std::optional<int> Event(InputEvent event);
     RawButtonInputResult RouteInput(InputEvent event); // 같은 실제 Route를 한 번 실행해 월드 전 입력 소비를 돌려준다.

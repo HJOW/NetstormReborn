@@ -25,8 +25,9 @@ struct UberGump::EditorRuntime {
 void UberGump::OpenSaveFortNameDialog(std::uint32_t fortMode) {
     if (!editor_ || !world_ || !client_.GameplayGlobals()->world.editor) throw std::logic_error("실제 Editor 밖의 Save as 파일 장치 미연결");
     SaveFortNameDialogContext context;context.work=&editor_->files;context.currentName=client_.FortGlobals()->Current();context.editor.now=[this] { return client_.WallSeconds(); };
+    BindTextClipboard(context.editor,textClipboard_); //최초 Chat이 이미 만든 공통 문자 UI와 같은 장치를 계속 빌린다.
     context.translate=[this](auto text) { return FontBytes(client_.Translate(o::DecodeOriginalText({reinterpret_cast<const std::uint8_t*>(text.data()),text.size()}))); };
-    context.fortPath=[this](auto name) { mapFileSpec_.SelectFort();client_.FortGlobals()->SelectFileSpec();const auto configured=client_.Configuration().PathSpec(mapFileSpec_.Current(),name);return editor_->files.ResolvePath(std::filesystem::path(configured).is_absolute() ? configured : o::NormalizeGamePath(configured)).string(); };
+    context.fortPath=[this](auto name) { mapFileSpec_.SelectFort();client_.FortGlobals()->SelectFileSpec();const auto configured=client_.Configuration().PathSpec(mapFileSpec_.Current(),name);return editorCatalog_->Resolve(configured).string(); }; //같은 현재 FileSpec의 source/work 절대 경로도 명시 전체 매핑을 사용한다.
     context.header=[this] { const auto owner=client_.GameplayGlobals()->player.templateOwner;auto headers=templateStorage_->Headers();if (owner>=9 || headers.size()<static_cast<std::size_t>(owner+1U)*20U) throw std::out_of_range("Save as의 현재 Template 헤더 범위");return headers.subspan(static_cast<std::size_t>(owner)*20U,20); };
     context.setName=[this](auto name) { SelectCurrentFortName(name); };context.tell=[this](auto section) { Tell(std::string(section)); };
     context.readFort=[this](auto name) { const auto token=std::bit_cast<std::int32_t>(scriptStrings_.Store(name));client_.Input().PushCommand(kReadFortCommand,token,token); }; //원문 mode0은 같은 현재 이름 token을 두 인자에 복제하여 일반 입력 큐에 예약한다.
@@ -35,6 +36,7 @@ void UberGump::OpenSaveFortNameDialog(std::uint32_t fortMode) {
 //State1과3이 같은 Native 장치의 공통 준비를 원문 순서로 사용하고 선택 Editor 전역만 구별한다.
 void UberGump::PrepareNativeFortState(bool editing) {
     if (!editor_) throw std::logic_error("실제 State1/3 공통 장기 장치 누락");
+    if (editing) htmlGlobals_.background[0]=0; //원문004b7016은 State1의 HUD 재생성 전에00565e70 첫BYTE를 지운다. State3이 이미 선택한 titleMenu/승패 배경은 보존한다.
     CleanupNativeStateWorld(0); //실제 연결/AI/Deck/Kernel/Core/풀/HUD를 같은 원문 순서로 반납하고 새 Player를 만든다.
     if (commandGump_) static_cast<void>(rawButtons_->BubbleGump(commandGump_,0x02000088U,0,0)); //0042e440의 현재 Chat 부모 숨김이다.
     auto& e=*editor_;if (e.transport) e.transport->CloseListener(); //앞선 CloseAll이 닫은 이전 양끝 뒤에 이전 listener만 반납한다.
@@ -53,10 +55,7 @@ o::LocalMissionParentResult UberGump::InstallExistingEditorState(std::uint32_t s
     PrepareNativeFortState(true);auto& e=*editor_;
     //호스트 Session은 준비된 물리만 빌리고 파일 설치/Template 변경은 아래 실제 checkpoint의 위치까지 지연한다.
     const std::string pending(client_.FortGlobals()->Pending());const auto configured=client_.Configuration().PathSpec("fortSpec",pending);
-    const auto relative=std::filesystem::path(configured).is_absolute() ? configured : o::NormalizeGamePath(configured);
-    auto working=e.files.ResolvePath(relative);if (!e.files.Exists(working.string())) { //기존 사용자 작업본은 원본을 재읽거나 덮어쓰지 않는다.
-        if (const auto bytes=client_.Files().TryRead(configured)) working=e.files.PreparePath(relative,*bytes);
-    }
+    const auto working=editorCatalog_->Prepare(configured); //목록을 거치지 않는 직접 설치도 완료된 삭제 항목을 원본에서 다시 복사하지 않는다.
     const auto image=std::make_shared<const std::vector<std::uint8_t>>(client_.Files().Read(working.string()));
     auto fort=o::FortTemplate::Parse(*image,client_.Assets().TypeTable());
     auto services=MakeCampaignClientServices(client_,*rawButtons_,{[this] { RefreshWindowTitle(); },[this](auto name) { Tell(std::string(name)); },[this](auto kind,auto player,auto parameter) { warnings_->Remove(kind,player,parameter);rebuild_=true; }});
@@ -69,6 +68,7 @@ o::LocalMissionParentResult UberGump::InstallExistingEditorState(std::uint32_t s
     world_->surfaceDisplay={[this] { return client_.GetRenderer().FullRedrawPending(); },[this](auto rect,auto flags) { client_.GetRenderer().Invalidate({rect.left,rect.top,rect.right,rect.bottom},flags); }};
     auto& session=world_->Session();session.WithExistingEditorPrefixUi(*client_.LocalStateGlobals(),[this] { ApplyHudModeForState(1); });
     EditorFortPathEffects paths;paths.currentName=[this] { return client_.FortGlobals()->Current(); };paths.selectFileSpec=[this] { mapFileSpec_.SelectFort(); };paths.fileSpecKey=[this] { return mapFileSpec_.Current(); };
+    paths.resolve=[this](auto configured) { return editorCatalog_->Resolve(configured); };paths.prepare=[this](auto configured) { static_cast<void>(editorCatalog_->Prepare(configured)); }; //현재 경로와 lazy 준비 모두 같은 이관 장부/삭제 상태를 공유한다.
     paths.assertion=[](auto line) { std::clog<<"Editor 파일 진단 "<<line<<'\n'; };e.paths=std::make_unique<EditorFortFileDevices>(e.files,client_.Files(),client_.Configuration(),std::move(paths));
     CampaignExistingEditorCheckpointServices checkpoint;
     checkpoint.fort.currentName=[this] { return client_.FortGlobals()->Current(); };checkpoint.fort.pendingName=[this] { return client_.FortGlobals()->Pending(); };

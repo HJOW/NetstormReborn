@@ -1,0 +1,89 @@
+{
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon/2026-10-23",
+  "runs": 40,
+  "cases": 20,
+  "fixtureSha": "883f1a6c1af9e79af2b6485beee69859a96be10d76c4cb7f0fc81825195038d1",
+  "sourceSha": "74bf7128791b27b5825efc81bd6f06917e242bd4461187c9d5b14c2e41219316",
+  "peSha": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+  "entered": {
+    "0047fb90": 40,
+    "004239c0": 34,
+    "004e49c0": 32,
+    "004bd300": 8,
+    "0046d9f0": 8,
+    "0046da20": 6,
+    "00431fc0": 6,
+    "0046ee50": 6,
+    "0040d900": 6,
+    "0041cc20": 6
+  },
+  "helpers": [
+    4340160,
+    5130688,
+    4643312,
+    4643360,
+    4399040,
+    4648528,
+    4969216,
+    4249856,
+    4312096
+  ],
+  "code": [
+    {
+      "address": "0047fb90",
+      "size": 1276,
+      "sha": "ee5f87b38a644b02e2349e7c708467e1e16ccc2e01001296a2d31827687f484c"
+    },
+    {
+      "address": "004239c0",
+      "size": 40,
+      "sha": "7dd85f784c8574b6acec0eeb41813c1e49916a943743a2aa827358e1bcbc40ae"
+    },
+    {
+      "address": "004e49c0",
+      "size": 117,
+      "sha": "5333b186c02836974c6f792303aeb2c00d856316b93ccbbe65f51def6ae661b4"
+    },
+    {
+      "address": "0046d9f0",
+      "size": 48,
+      "sha": "a31fac5e4e69cff5f1d8a09346ea8d6341693db48a6d1d72a64ff4ed6b3d6992"
+    },
+    {
+      "address": "0046da20",
+      "size": 64,
+      "sha": "56b0a2fb7ccc002535ee14b38f7967efc2107191545a11b74d1ec39df924a163"
+    },
+    {
+      "address": "00431fc0",
+      "size": 39,
+      "sha": "333062433a88b6ae473d40699266dad82566c4e1ff0ea77fcf3d50bf73163978"
+    },
+    {
+      "address": "0046ee50",
+      "size": 3,
+      "sha": "19d200194d49b34530548575f37a1bb4203ee60f18d42f0084e86b7a8c899faa"
+    },
+    {
+      "address": "004bd300",
+      "size": 36,
+      "sha": "4c91ea412a6c45e83f71badcf12393cc2c5aad16bc536549a122fd9d480959e2"
+    },
+    {
+      "address": "0040d900",
+      "size": 119,
+      "sha": "7c2594c8c9a3e5c7781734da394702387ef7f06fa1064e0c747e3895084dfb47"
+    },
+    {
+      "address": "0041cc20",
+      "size": 35,
+      "sha": "425742484cb194eb520f5a32fc2257961bf52b38b96141fa44e987b5d77ad159"
+    }
+  ],
+  "limits": [
+    "전체0047fb90·실제half-size x87/ftol/rect/Builder재설정/중심계산을실행",
+    "전용Gump/목록/이미지할당반납·CanPlace결과·큰AddIsland월드효과는명시장치",
+    "제품/src/test/기존fixture/원문수정및빌드/게임실행없음"
+  ]
+}

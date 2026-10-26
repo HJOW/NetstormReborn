@@ -69,6 +69,7 @@
 #include "client/ClientCursorStateCleanup.h"
 #include "client/ClientKencloudGlobals.h"
 #include "client/EditorFiles.h"
+#include "client/EditorMapCatalogFiles.h" //저장 작업본의 현재 읽기와 원본 순서/새 이름 목록을 동일 Catalog에 제공한다.
 #include "client/EditorFortFileDevices.h"
 #include "client/EditorLocalTransport.h"
 #include "client/ExistingEditorAfterCheckpoint.h"
@@ -76,6 +77,7 @@
 #include "client/EditorSaveGoMain.h" //Yes/No의 실제 저장과 next3 예약을 일반 입력 뒤에 실행한다.
 #include "client/SaveFortNameDialog.h" //실제 TextEntry/두 버튼/전체 Fort 이름 부모를 사용하는 모달이다.
 #include "client/TellTip.h" //같은 현재 팁 번호와 실제 Config/Tell을 일반 입력에서 갱신한다.
+#include "client/TextClipboard.h" //최초 TextEntry 생성 전에 같은 CF_TEXT 장치를 준비한다.
 #include "o/RawStartupStateCheck.h" //State1과3의 startupStateCheck가 같은 저장 파일/시계를 빌린다.
 #include "o/RawDataManagerSelection.h"
 #include "o/RawSavedStateRead.h" //startupStateCheck의 실제 저장 파일 부재 관문도 원문 reader에서 판정한다.
@@ -182,9 +184,14 @@ struct UberGump::MissionRuntime {
 #include "client/UberEditor.inc" //실제 Edit 선택의 Native State1/파일/후반 UI와 다음 Poll4를 연결한다.
 // 원본 GIF는 색 표의 RGB를 쓰지 않고 파일의 번호를 화면 팔레트에 바로 쓴다(00419ec0→004dae60).
 UberGump::UberGump(Client& client) : client_(client),initLoginSubscriber_(client.SubscriberGlobals()->MySubscriber()),initialSubscriber_(client.SubscriberGlobals()->LoginSubscriber()),mapFileSpec_(client.FortGlobals()->FileSpec()),fortSelectionMode_(client.FortGlobals()->SelectionMode()),htmlGlobals_(client.HtmlWindowGlobals()->text),hideBuildings_(client.GameplayGlobals()->HideBuildings()),worldRedraw_(client.KencloudGlobals()->WorldRedraw()),menuConfigRevision_(client.FortGlobals()->Catalog().dirty),commandGump_(client.ChatWindowGlobals()->window.current) {
+    textClipboard_=std::make_shared<TextClipboard>(Win32TextClipboardDevices()); //API를 연결만 하며 이 생성은 OS 클립보드를 열거나 변경하지 않는다.
     serializationGlobals_=std::make_shared<o::FortSerializationGlobals>(); // 원본BSS와같은한DWORD를모든manager/객체소비자보다오래소유한다.
     templateStorage_=std::make_shared<CampaignTemplateStorage>(serializationGlobals_); // 시작 초기화와 미션별 명시 정리를 별개 수명으로 유지한다.
     auto& config = client_.Configuration();
+    const auto catalogRoot=EditorWorkingRoot(client_.GameDirectory()); //목록의 작업 namespace는 Native 전송/World가 반납된 뒤에도 같은 자산 경로로 계산한다.
+    const auto catalogFiles=std::make_shared<EditorFiles>(catalogRoot,std::vector<std::filesystem::path>{client_.GameDirectory(),catalogRoot.parent_path()/"originals",catalogRoot.parent_path()/"originalCD"}); //생성은 경로 보호만 확인하고 파일을 만들거나 쓰지 않는다. 두 Catalog callback이 읽기 장치 수명을 함께 소유한다.
+    EditorCatalogSourceDevices catalogSource;catalogSource.root=client_.GameDirectory();catalogSource.archiveOnly=[this](auto path) { return client_.Files().TryReadArchiveOnly(path); }; //실제 기존 등록순서의 TAFF만 읽어 완료키 삭제의 disk 우회를 막는다.
+    editorCatalog_=std::make_shared<EditorCatalogWorkspace>(catalogFiles,std::move(catalogSource)); //한 장기 이관 owner를 목록과 실제 Editor 경로 모두에 공유한다.
     SoloMapCatalogEffects mapEffects; // 현재 실제 장치만 제공하며 목록 분류/행 처리는 기존 몸체를 사용한다.
     mapEffects.serializationGlobals=serializationGlobals_; // 목록의두임시MapProbe도실제manager생성자의같은전역0쓰기를공유한다.
     mapEffects.listState=&client_.FortGlobals()->Catalog(); // 이름 변경/설정 증가와 Raw 목록 정리가 같은 dirty DWORD를 쓴다.
@@ -193,6 +200,8 @@ UberGump::UberGump(Client& client) : client_(client),initLoginSubscriber_(client
     mapEffects.userName=[this] { return world_ ? std::string(world_->Session().CurrentHandle()) : mapUserName_; };
     mapEffects.translate=[this](auto text) { return FontBytes(client_.Translate(o::DecodeOriginalText({reinterpret_cast<const std::uint8_t*>(text.data()),text.size()}))); };
     mapEffects.fileSpecKey=[this] { return mapFileSpec_.Current(); };
+    mapEffects.enumeratePaths=[this](auto pattern) { return editorCatalog_->Enumerate(pattern); }; //최초 loose 이관 뒤 같은 writable 폴더의 실제 OS 순서만 원문 목록에 전달한다.
+    mapEffects.readFile=[this](auto path) { return editorCatalog_->Read(path); }; //분류/메타의 현재 읽기가 같은 durable 삭제 상태를 지키며 원본으로 부활시키지 않는다.
     mapCatalog_=std::make_unique<SoloMapCatalog>(client_.Files(),config,std::move(mapEffects));
     title_ = DecodeGif(client_.Files().Read(config.PathSpec("BackgroundGifSpec", "titleMenu")));
     clouds_ = DecodeGif(client_.Files().Read(config.PathSpec("CloudFileSpec")));
@@ -412,7 +421,7 @@ void UberGump::SelectCurrentFortName(std::string_view name) {
     o::FortCurrentNameGlobals globals{[&gameplay] { return gameplay.player.templateOwner; },[this] { return client_.SurfaceStorage()->ownerMode.fort ? 1U : 0U; },
         [&gameplay] { return gameplay.world.editor; },[this] { return mission_ ? 1U : 0U; },names.Catalog().dirty}; // 현재 owner/모드는 원문 각 callback 위치에서 재조회한다.
     const EditorFiles* work=editor_ && gameplay.world.editor ? &editor_->files : nullptr; //실제 Editor의 rename/snapshot/old 삭제는 같은 보호 작업본 장치만 사용한다.
-    FortCurrentNameDevices devices(names,*templateStorage_,client_.Configuration(),std::move(globals),std::move(hooks),work);
+    FortCurrentNameDevices devices(names,*templateStorage_,client_.Configuration(),std::move(globals),std::move(hooks),work,[this](auto configured) { return editorCatalog_->Resolve(configured); }); //절대 source FileSpec도 old/new snapshot/삭제의 같은 작업 namespace로 매핑한다.
     const std::string source(name.substr(0,name.find('\0')));devices.Set({reinterpret_cast<const std::uint8_t*>(source.c_str()),source.size()+1}); // 현재 요청의 안정된 NUL 입력을 동기 부모가 끝날 때까지 유지한다.
 }
 // 현재Guide/Gump가 소비하지 않은 원문 사건만 받고 숫자State 예약을 선착순UI큐와 분리한다.
@@ -1103,10 +1112,8 @@ void UberGump::Compose() {
     canvas->indices.resize(static_cast<std::size_t>(width) * height); canvas->opacity.assign(canvas->indices.size(), 255);
     Tile(*canvas, clouds_, all);
     std::vector<RenderText> text; std::vector<GumpControl> regions;
-    const auto& font = client_.Fonts().Get(0);
     // 마지막 파일 로딩의 실제 버튼 색/문맥을 사용한다. 일시 번개 팔레트에서 색 번호를 다시 찾지 않는다.
     const auto buttonColors=ButtonColors(client_.GetScreen().Colors());
-    const auto buttonContexts=ButtonTextContexts(buttonColors);
     warnings_->SetView(width,height,client_.GetScreen().Colors());
     std::vector<RenderSprite> worldSprites,dialogSprites; // 월드와본문그림은같은실제자산을읽으며UI본문목록은해당패널에만제출한다.
     bool commonDrawSubmitted=false; // 같은 raw 수집/정렬을 배경 또는 Overlay에 이미 제출했는지 기록한다.
@@ -1134,21 +1141,16 @@ void UberGump::Compose() {
         if (controls) { labels_.push_back(item.label); actions_.push_back(item.action); }
         return id;
     };
-    // 돌 버튼은 누르는 동안만 명암과 글자 위치를 바꾼다.
+    // 메인 버튼의 실제 노드를 준비한다. 표면/선/글자는 GIF와 같은 원본 Gump 정렬에서 한 번만 출력한다.
     const auto button = [&](const DialogItem& item, int x, int y, int w) {
         const int id = control(item, {x, y, x + w, y + kButtonHeight + 1});
-        const bool drawRaw=!controls && (popup_.empty() || state_.phase==ClientPhase::MainMenu); // 팝업 아래 메인 버튼도 같은 실제 노드를 유지한다.
-        const auto label=drawRaw ? rawButtons_->Label(id) : FontBytes(item.label);
-        const ScreenRect r{x, y, x + w, y + kButtonHeight};
-        // 실제 raw 자식의 상대 (1,1) 부착/크기/눌림을 사용한다. 첫 준비 합성은 다음 raw 합성으로 대체된다.
-        const auto background=!drawRaw ? PlanGumpBackground({r.left+1,r.top+1,r.right-1,r.bottom-1},all,
-            buttonTextureMetrics_.width,buttonTextureMetrics_.height,GumpBackgroundFlags::kButton) : rawButtons_->BackgroundPlan(id,all);
+        if (client_.Assets().Edition()==o::OriginalEdition::Patch1078) return; //복원 대상10.78은 공통 깊이 정렬에서 한 번 출력한다.
+        const auto& font=client_.Fonts().Get(0);const auto contexts=ButtonTextContexts(buttonColors); //CD의 기존 호스트 표시 계약은10.78 공통 부모 접합과 구별하여 보존한다.
+        const bool drawRaw=!controls && (popup_.empty() || state_.phase==ClientPhase::MainMenu);const auto label=drawRaw ? rawButtons_->Label(id) : FontBytes(item.label);const ScreenRect rect{x,y,x+w,y+kButtonHeight}; //기존 CD 버튼의 라벨/화면 경계다.
+        const auto background=drawRaw ? rawButtons_->BackgroundPlan(id,all) : PlanGumpBackground({rect.left+1,rect.top+1,rect.right-1,rect.bottom-1},all,buttonTextureMetrics_.width,buttonTextureMetrics_.height,GumpBackgroundFlags::kButton); //기존 CD 배경 출력의 타일 계획이다.
         DrawGumpBackground(*canvas,decorations_.at("A01"),buttonTextureOffset_,background,client_.GetScreen().ShadeMaps());
-        const auto plan=!drawRaw ? PlanButtonDraw({r,font.Measure(label),font.Height(),0,0,item.enabled ? 0U : 1U},buttonContexts,buttonColors.edge) :
-            rawButtons_->DrawPlan(id,font.Measure(label),font.Height());
-        DrawGumpLines(*canvas,plan.lines);
-        text.push_back({&font,label,x+plan.textOffset.x,y+plan.textOffset.y,static_cast<std::uint8_t>(plan.text.color),
-            static_cast<std::uint8_t>(plan.text.shadowColor),{plan.text.shadowX,plan.text.shadowY},(plan.text.flags&2)!=0,(plan.text.flags&4)!=0});
+        const auto plan=drawRaw ? rawButtons_->DrawPlan(id,font.Measure(label),font.Height()) : PlanButtonDraw({rect,font.Measure(label),font.Height(),0,0,item.enabled ? 0U : 1U},contexts,buttonColors.edge); //기존 CD 호스트의 글자/테두리 계획이다.
+        DrawGumpLines(*canvas,plan.lines);text.push_back({&font,label,x+plan.textOffset.x,y+plan.textOffset.y,static_cast<std::uint8_t>(plan.text.color),static_cast<std::uint8_t>(plan.text.shadowColor),{plan.text.shadowX,plan.text.shadowY},(plan.text.flags&2)!=0,(plan.text.flags&4)!=0}); //CD에10.78의 미복원 전체 메뉴 부모를 대신 적용하지 않는다.
     };
     const bool nativeHud=rawButtons_->UberRoot() && rawButtons_->UberRoot()->Current(); //원문 전체 루트가 현재이면 World 생성 전에도 폐기된 호스트 MainMenu 버튼을 그리지 않는다.
     if ((state_.phase==ClientPhase::MainMenu && (!world_ || !nativeHud)) || (!mission_ && !popup_.empty())) {
@@ -1209,7 +1211,8 @@ void UberGump::Compose() {
         // 원본 돌 버튼의 63바이트 라벨은 UTF-8가 아닌 기존 게임 글꼴 바이트를 사용한다.
         for (const auto& label:labels_) originalLabels.push_back(FontBytes(label));
         if (popup_.empty()) rawButtons_->SetControls(regions,originalLabels,width,height,{buttonTextureType_,buttonTextureFrame_,
-            static_cast<std::int16_t>(buttonTextureMetrics_.width),static_cast<std::int16_t>(buttonTextureMetrics_.height),buttonColors},world_!=nullptr || (rawButtons_->UberRoot() && rawButtons_->UberRoot()->Current()) || client_.HtmlWindowGlobals()->window.instances!=0,client_.HtmlWindowGlobals()->window.instances!=0);
+            static_cast<std::int16_t>(buttonTextureMetrics_.width),static_cast<std::int16_t>(buttonTextureMetrics_.height),buttonColors},world_!=nullptr || (rawButtons_->UberRoot() && rawButtons_->UberRoot()->Current()) || client_.HtmlWindowGlobals()->window.instances!=0,client_.HtmlWindowGlobals()->window.instances!=0,
+            state_.phase==ClientPhase::MainMenu && client_.Assets().Edition()==o::OriginalEdition::Patch1078 ? std::optional<std::int32_t>{-83} : std::nullopt); //원문004d0530의 container-80 아래 실제 stone 자식 깊이다.
         if (state_.phase==ClientPhase::LoadingMission && !(missionRuntime_ && missionRuntime_->guided)) {
             rawButtons_->Menus()->SetPalette(client_.GetScreen().Colors());
             // 원본 기본 HUD의 수직 구분선 오른쪽 지도 사각형이다. 전체 dock 드래그 연결 전의 초기값85를 사용한다.
@@ -1255,7 +1258,7 @@ void UberGump::Compose() {
         // 새 페이지는 같은 raw 노드로 한 번 다시 합성하며 중간 어댑터 그림은 화면에 제출하지 않는다.
         controlsChanged_=false;Compose();return;
     }
-    if (!commonDrawSubmitted && (nativeHud || rawButtons_->Menus()->KnowledgeOpen() || rawButtons_->Menus()->HelpOpen() || warnings_->HasMessages())) client_.GetRenderer().SetOverlayProcedure(RenderProcedure{{0,0,width,height},[this](std::span<std::uint8_t> pixels,int pitch,int height,ScreenRect clip) {
+    if (!commonDrawSubmitted && (state_.phase==ClientPhase::MainMenu || nativeHud || rawButtons_->Menus()->KnowledgeOpen() || rawButtons_->Menus()->HelpOpen() || warnings_->HasMessages())) client_.GetRenderer().SetOverlayProcedure(RenderProcedure{{0,0,width,height},[this](std::span<std::uint8_t> pixels,int pitch,int height,ScreenRect clip) {
         rawButtons_->Menus()->Draw(pixels,pitch,height,client_.GetScreen().Colors(),client_.GetScreen().ShadeMaps(),clip);
     }}); //World 생성 전 현재 전체 HUD와 브리핑 위 지식 카드도 같은 실제 공통 트리로 그린다.
     if (world_) world_->TakeChanged();

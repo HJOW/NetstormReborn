@@ -1,0 +1,874 @@
+{
+  "command": [
+    "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+    "--run",
+    "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-tutorial3-468-data",
+    "--mission",
+    "Tutorial3",
+    "--window",
+    "--no-audio",
+    "--frames",
+    "2404",
+    "--set",
+    "SCREENW=1024;SCREENH=768;maxFPS=40;sleepPerLoop=25;autoDemo=0;useProductTimers=1",
+    "--ui-script",
+    "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-tutorial3-468-attempt1\\steps.tsv",
+    "--ui-report",
+    "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-tutorial3-468-attempt1\\states.tsv"
+  ],
+  "binarySha256": "6bfa1865fcc6bee83a82577e740f55e4b6723fd9e03f7c5f9021ab43a4d88567",
+  "returnCode": 0,
+  "timedOut": false,
+  "seconds": 124.90038710000044,
+  "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stderrSha256": "251d38785d5c3ec3eb896d8a2c949e483c48fbef50241c1cf9406481473d23f1",
+  "profile": {
+    "command": [
+      "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+      "--run",
+      "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-tutorial3-468-data",
+      "--mission",
+      "Tutorial3",
+      "--window",
+      "--no-audio",
+      "--frames",
+      "2404",
+      "--set",
+      "SCREENW=1024;SCREENH=768;maxFPS=40;sleepPerLoop=25;autoDemo=0;useProductTimers=1",
+      "--ui-script",
+      "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-tutorial3-468-attempt1\\steps.tsv",
+      "--ui-report",
+      "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-tutorial3-468-attempt1\\states.tsv"
+    ],
+    "originalGameExecuted": false,
+    "testStateInjection": false,
+    "testSpHpOwnerInjection": false,
+    "testBridgePatterns": false,
+    "initialProgressInjected": false,
+    "gameSha256": "6bfa1865fcc6bee83a82577e740f55e4b6723fd9e03f7c5f9021ab43a4d88567",
+    "inputSha256": "ab79138bf1d4e0f6b215a9a3a4fddba7795f69d2ab84e73e19c027e92a1a3b82",
+    "allowedOperations": [
+      "click",
+      "right",
+      "esc",
+      "when",
+      "report",
+      "snapshot"
+    ]
+  },
+  "originalsUnchanged": true,
+  "dataUnchanged": true,
+  "binaryUnchanged": true,
+  "observations": {
+    "initial": {
+      "page": [
+        "mission"
+      ],
+      "mission": [
+        "Tutorial3",
+        "Tutorial",
+        "37"
+      ],
+      "mission_progress": [
+        "1"
+      ],
+      "mission_gate": [
+        "3",
+        "65",
+        "8",
+        "1",
+        "0",
+        "1",
+        "0",
+        "0"
+      ],
+      "raw_input": [
+        "0",
+        "0",
+        "14",
+        "12"
+      ],
+      "raw_cursor": [
+        "1",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0"
+      ],
+      "raw_sp": [
+        "0",
+        "2000",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0"
+      ],
+      "frame": 4
+    },
+    "f90": {
+      "page": [
+        "mission"
+      ],
+      "mission": [
+        "Tutorial3",
+        "Tutorial",
+        "37"
+      ],
+      "mission_progress": [
+        "1"
+      ],
+      "mission_gate": [
+        "3",
+        "65",
+        "0",
+        "0",
+        "0",
+        "1",
+        "0",
+        "0"
+      ],
+      "raw_input": [
+        "0",
+        "0",
+        "14",
+        "13"
+      ],
+      "raw_cursor": [
+        "2",
+        "1",
+        "133",
+        "0",
+        "128",
+        "94",
+        "8",
+        "65",
+        "1",
+        "1",
+        "1"
+      ],
+      "raw_sp": [
+        "0",
+        "2000",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0"
+      ],
+      "frame": 90
+    },
+    "f200": {
+      "page": [
+        "mission"
+      ],
+      "mission": [
+        "Tutorial3",
+        "Tutorial",
+        "37"
+      ],
+      "mission_progress": [
+        "1"
+      ],
+      "mission_gate": [
+        "3",
+        "65",
+        "0",
+        "0",
+        "0",
+        "1",
+        "0",
+        "0"
+      ],
+      "raw_input": [
+        "0",
+        "0",
+        "14",
+        "16"
+      ],
+      "raw_cursor": [
+        "2",
+        "1",
+        "82",
+        "0",
+        "110",
+        "109",
+        "64",
+        "513",
+        "1",
+        "1",
+        "1"
+      ],
+      "raw_sp": [
+        "0",
+        "2000",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0"
+      ],
+      "frame": 200
+    },
+    "f400": {
+      "page": [
+        "mission"
+      ],
+      "mission": [
+        "Tutorial3",
+        "Tutorial",
+        "37"
+      ],
+      "mission_progress": [
+        "1"
+      ],
+      "mission_gate": [
+        "3",
+        "65",
+        "0",
+        "0",
+        "0",
+        "1",
+        "0",
+        "0"
+      ],
+      "raw_input": [
+        "0",
+        "0",
+        "14",
+        "21"
+      ],
+      "raw_cursor": [
+        "2",
+        "1",
+        "82",
+        "0",
+        "104",
+        "105",
+        "64",
+        "513",
+        "1",
+        "1",
+        "1"
+      ],
+      "raw_sp": [
+        "0",
+        "2000",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0"
+      ],
+      "frame": 400
+    },
+    "f550": {
+      "page": [
+        "mission"
+      ],
+      "mission": [
+        "Tutorial3",
+        "Tutorial",
+        "37"
+      ],
+      "mission_progress": [
+        "1"
+      ],
+      "mission_gate": [
+        "3",
+        "65",
+        "0",
+        "0",
+        "0",
+        "1",
+        "0",
+        "0"
+      ],
+      "raw_input": [
+        "0",
+        "0",
+        "14",
+        "24"
+      ],
+      "raw_cursor": [
+        "2",
+        "1",
+        "82",
+        "0",
+        "104",
+        "104",
+        "64",
+        "513",
+        "1",
+        "1",
+        "1"
+      ],
+      "raw_sp": [
+        "0",
+        "2000",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0"
+      ],
+      "frame": 550
+    },
+    "f590": {
+      "page": [
+        "mission"
+      ],
+      "mission": [
+        "Tutorial3",
+        "Tutorial",
+        "37"
+      ],
+      "mission_progress": [
+        "1"
+      ],
+      "mission_gate": [
+        "3",
+        "65",
+        "0",
+        "0",
+        "0",
+        "1",
+        "0",
+        "0"
+      ],
+      "raw_input": [
+        "0",
+        "0",
+        "14",
+        "24"
+      ],
+      "raw_cursor": [
+        "2",
+        "1",
+        "82",
+        "0",
+        "104",
+        "104",
+        "64",
+        "513",
+        "1",
+        "1",
+        "1"
+      ],
+      "raw_sp": [
+        "0",
+        "2000",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0"
+      ],
+      "frame": 590
+    },
+    "f800": {
+      "page": [
+        "mission"
+      ],
+      "mission": [
+        "Tutorial3",
+        "Tutorial",
+        "37"
+      ],
+      "mission_progress": [
+        "1"
+      ],
+      "mission_gate": [
+        "3",
+        "65",
+        "0",
+        "0",
+        "0",
+        "1",
+        "0",
+        "0"
+      ],
+      "raw_input": [
+        "0",
+        "0",
+        "14",
+        "24"
+      ],
+      "raw_cursor": [
+        "2",
+        "1",
+        "82",
+        "0",
+        "104",
+        "104",
+        "64",
+        "513",
+        "1",
+        "1",
+        "1"
+      ],
+      "raw_sp": [
+        "0",
+        "2000",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0"
+      ],
+      "frame": 800
+    },
+    "f1000": {
+      "page": [
+        "mission"
+      ],
+      "mission": [
+        "Tutorial3",
+        "Tutorial",
+        "37"
+      ],
+      "mission_progress": [
+        "1"
+      ],
+      "mission_gate": [
+        "3",
+        "65",
+        "0",
+        "0",
+        "0",
+        "1",
+        "0",
+        "0"
+      ],
+      "raw_input": [
+        "0",
+        "0",
+        "14",
+        "24"
+      ],
+      "raw_cursor": [
+        "2",
+        "1",
+        "82",
+        "0",
+        "104",
+        "104",
+        "64",
+        "513",
+        "1",
+        "1",
+        "1"
+      ],
+      "raw_sp": [
+        "0",
+        "2000",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0"
+      ],
+      "frame": 1000
+    },
+    "f1200": {
+      "page": [
+        "mission"
+      ],
+      "mission": [
+        "Tutorial3",
+        "Tutorial",
+        "37"
+      ],
+      "mission_progress": [
+        "1"
+      ],
+      "mission_gate": [
+        "3",
+        "65",
+        "0",
+        "0",
+        "0",
+        "1",
+        "0",
+        "0"
+      ],
+      "raw_input": [
+        "0",
+        "0",
+        "14",
+        "24"
+      ],
+      "raw_cursor": [
+        "2",
+        "1",
+        "82",
+        "0",
+        "104",
+        "104",
+        "64",
+        "513",
+        "1",
+        "1",
+        "1"
+      ],
+      "raw_sp": [
+        "0",
+        "2000",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0"
+      ],
+      "frame": 1200
+    },
+    "f1400": {
+      "page": [
+        "mission"
+      ],
+      "mission": [
+        "Tutorial3",
+        "Tutorial",
+        "37"
+      ],
+      "mission_progress": [
+        "1"
+      ],
+      "mission_gate": [
+        "3",
+        "65",
+        "0",
+        "0",
+        "0",
+        "1",
+        "0",
+        "0"
+      ],
+      "raw_input": [
+        "0",
+        "0",
+        "14",
+        "24"
+      ],
+      "raw_cursor": [
+        "2",
+        "1",
+        "82",
+        "0",
+        "104",
+        "104",
+        "64",
+        "513",
+        "1",
+        "1",
+        "1"
+      ],
+      "raw_sp": [
+        "0",
+        "2000",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0"
+      ],
+      "frame": 1400
+    },
+    "f1600": {
+      "page": [
+        "mission"
+      ],
+      "mission": [
+        "Tutorial3",
+        "Tutorial",
+        "37"
+      ],
+      "mission_progress": [
+        "1"
+      ],
+      "mission_gate": [
+        "3",
+        "65",
+        "0",
+        "0",
+        "0",
+        "1",
+        "0",
+        "0"
+      ],
+      "raw_input": [
+        "0",
+        "0",
+        "14",
+        "24"
+      ],
+      "raw_cursor": [
+        "2",
+        "1",
+        "82",
+        "0",
+        "104",
+        "104",
+        "64",
+        "513",
+        "1",
+        "1",
+        "1"
+      ],
+      "raw_sp": [
+        "0",
+        "2000",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0"
+      ],
+      "frame": 1600
+    },
+    "f1800": {
+      "page": [
+        "mission"
+      ],
+      "mission": [
+        "Tutorial3",
+        "Tutorial",
+        "37"
+      ],
+      "mission_progress": [
+        "1"
+      ],
+      "mission_gate": [
+        "3",
+        "65",
+        "0",
+        "0",
+        "0",
+        "1",
+        "0",
+        "0"
+      ],
+      "raw_input": [
+        "0",
+        "0",
+        "14",
+        "24"
+      ],
+      "raw_cursor": [
+        "2",
+        "1",
+        "82",
+        "0",
+        "104",
+        "104",
+        "64",
+        "513",
+        "1",
+        "1",
+        "1"
+      ],
+      "raw_sp": [
+        "0",
+        "2000",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0"
+      ],
+      "frame": 1800
+    },
+    "f2000": {
+      "page": [
+        "mission"
+      ],
+      "mission": [
+        "Tutorial3",
+        "Tutorial",
+        "37"
+      ],
+      "mission_progress": [
+        "1"
+      ],
+      "mission_gate": [
+        "3",
+        "65",
+        "0",
+        "0",
+        "0",
+        "1",
+        "0",
+        "0"
+      ],
+      "raw_input": [
+        "0",
+        "0",
+        "14",
+        "24"
+      ],
+      "raw_cursor": [
+        "2",
+        "1",
+        "82",
+        "0",
+        "104",
+        "104",
+        "64",
+        "513",
+        "1",
+        "1",
+        "1"
+      ],
+      "raw_sp": [
+        "0",
+        "2000",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0"
+      ],
+      "frame": 2000
+    },
+    "f2200": {
+      "page": [
+        "mission"
+      ],
+      "mission": [
+        "Tutorial3",
+        "Tutorial",
+        "37"
+      ],
+      "mission_progress": [
+        "1"
+      ],
+      "mission_gate": [
+        "3",
+        "65",
+        "0",
+        "0",
+        "0",
+        "1",
+        "0",
+        "0"
+      ],
+      "raw_input": [
+        "0",
+        "0",
+        "14",
+        "24"
+      ],
+      "raw_cursor": [
+        "2",
+        "1",
+        "82",
+        "0",
+        "104",
+        "104",
+        "64",
+        "513",
+        "1",
+        "1",
+        "1"
+      ],
+      "raw_sp": [
+        "0",
+        "2000",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0"
+      ],
+      "frame": 2200
+    },
+    "f2350": {
+      "page": [
+        "mission"
+      ],
+      "mission": [
+        "Tutorial3",
+        "Tutorial",
+        "37"
+      ],
+      "mission_progress": [
+        "1"
+      ],
+      "mission_gate": [
+        "3",
+        "65",
+        "0",
+        "0",
+        "0",
+        "1",
+        "0",
+        "0"
+      ],
+      "raw_input": [
+        "0",
+        "0",
+        "14",
+        "24"
+      ],
+      "raw_cursor": [
+        "2",
+        "1",
+        "82",
+        "0",
+        "104",
+        "104",
+        "64",
+        "513",
+        "1",
+        "1",
+        "1"
+      ],
+      "raw_sp": [
+        "0",
+        "2000",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0"
+      ],
+      "frame": 2350
+    }
+  }
+}

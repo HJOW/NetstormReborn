@@ -1,0 +1,47 @@
+{
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon / 2026-10-23",
+  "uniqueInputs": 45,
+  "observations": 90,
+  "instructions": 575800,
+  "statuses": {
+    "normal": 72,
+    "fault:manager0": 2,
+    "stop:assert": 2,
+    "stop:register": 2,
+    "stop:create": 2,
+    "stop:write1": 2,
+    "stop:write2": 2,
+    "stop:write3": 2,
+    "stop:capacity": 2,
+    "stop:null": 2
+  },
+  "boundaries": {
+    "register": 88,
+    "create": 86,
+    "write1": 82,
+    "write2": 76,
+    "write3": 74,
+    "null": 4,
+    "capacity": 16,
+    "read": 16,
+    "generate": 14,
+    "config": 14,
+    "assert": 6
+  },
+  "scope": "004bd400/004b38d0/004bcbf0/0044cce0 실제 CPU. Create/진단/ReadInt/ID생성/설정/sprintf는 명시 장치. 전체 물리출력 FNV와64BYTE prefix/두stream/전역/순서를 관측. 실제 게임·OS·파일 저장 아님.",
+  "gameExecuted": false,
+  "osExecuted": false,
+  "originalFilesMutated": false,
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_priestmenu.py": "8d1474792e7511fa777e7bd7bd369f2a2a0f9f5c35643e420d65a3fa4744bac9",
+    "tools/decomp_fort_subscriber_write.py": "a5df3540853fa4aa2d9db8a3e1ce4842bdf57fa596a56c90311dcd56ac15f068"
+  },
+  "fixtureSha256": "8619983808122e17dd261c974a25906374fa46aee16293a51f119d3fad9fe973",
+  "postObservationChanges": [
+    "Generator member documentation comments only; fixture bytes unchanged; full PE --verify rerun required."
+  ],
+  "nullManagerBoundary": "fault:manager0 is an explicit Create boundary rejection; actual DataManager Create body is not executed."
+}

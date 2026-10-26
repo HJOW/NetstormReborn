@@ -1,0 +1,168 @@
+{
+  "restoreDirectory": "cpp-tutorial3-468-staging",
+  "archiveDirectory": "tutorial3-partial-468-20261027",
+  "productApplied": false,
+  "cppBuildExecuted": false,
+  "files": [
+    {
+      "path": "ATTEMPT4-NEXT-C-H.md",
+      "bytes": 11744,
+      "sha256": "428b9bf0956935ec196dc9819769afefe8f480fe0852ff5f24f9199db7a59d5f"
+    },
+    {
+      "path": "ATTEMPTS.md",
+      "bytes": 6082,
+      "sha256": "7c3ecc01afdafa67f40663625f06fbb8465ebb513f297d79878a7bb66575a87f"
+    },
+    {
+      "path": "README.before-observed-coordinates.md",
+      "bytes": 17634,
+      "sha256": "49bccfe109a72c67f4b08f6c53e07c006d76b15691cb3620ec13189b9acae490"
+    },
+    {
+      "path": "README.md",
+      "bytes": 19463,
+      "sha256": "b4b64c199eaf9ab9343506d1fb75f9c134f46f7bd931dc25c6a824788907b38f"
+    },
+    {
+      "path": "attempts-results.json",
+      "bytes": 3979,
+      "sha256": "c4ad13f1a82b70f088bdd2743f8e8b4f6328c74ba62048f8d16c226523fd5659"
+    },
+    {
+      "path": "attempts/1/driver-source.py",
+      "bytes": 5059,
+      "sha256": "9f48aeeabf2286f8dd1a94f8e519c6fa2b2507ae7eccc1ffb7a7f09a80efdb85"
+    },
+    {
+      "path": "attempts/1/execution.json",
+      "bytes": 14468,
+      "sha256": "2b1d29070b7ba4ec69b1754ac7262a7149b9a50103c34645c3c8f7790a2d196f"
+    },
+    {
+      "path": "attempts/1/prepared.json",
+      "bytes": 1084,
+      "sha256": "3c9dd36296b095e7f5e01323c1eb9227d89e55ad9f92d777232038b7d5420f9c"
+    },
+    {
+      "path": "attempts/1/states.tsv",
+      "bytes": 3555558,
+      "sha256": "8f204a8b0820f0b6e0414e13a4b9022d8b518ba9eff485fda41cc2a6f2c85a56"
+    },
+    {
+      "path": "attempts/1/stderr.log",
+      "bytes": 455,
+      "sha256": "251d38785d5c3ec3eb896d8a2c949e483c48fbef50241c1cf9406481473d23f1"
+    },
+    {
+      "path": "attempts/1/steps.tsv",
+      "bytes": 9850,
+      "sha256": "ab79138bf1d4e0f6b215a9a3a4fddba7795f69d2ab84e73e19c027e92a1a3b82"
+    },
+    {
+      "path": "attempts/2/driver-source.py",
+      "bytes": 7913,
+      "sha256": "a8e733ad976d377504dacac89ad362d5b3a0fae41ae41d2eb982f73f0b61677f"
+    },
+    {
+      "path": "attempts/2/execution.json",
+      "bytes": 22273,
+      "sha256": "6326a0b4aac022f3220b403fd75cffd50cb77d2dd7f7147412f18ab063adbe5e"
+    },
+    {
+      "path": "attempts/2/prepared.json",
+      "bytes": 1084,
+      "sha256": "347fb08f82736c215691ab8a95ccef12c044a9450788843fbefc9aba374c9d3e"
+    },
+    {
+      "path": "attempts/2/states.tsv",
+      "bytes": 6163677,
+      "sha256": "0f33cde37f596eca0ab113e76509a37153fc32baaefbabef9c86983fffd679f9"
+    },
+    {
+      "path": "attempts/2/stderr.log",
+      "bytes": 455,
+      "sha256": "251d38785d5c3ec3eb896d8a2c949e483c48fbef50241c1cf9406481473d23f1"
+    },
+    {
+      "path": "attempts/2/steps.tsv",
+      "bytes": 14867,
+      "sha256": "98d7f043f5e4a83aa8beffb6dcf36b560b53530ed5e688e122b542e444a40193"
+    },
+    {
+      "path": "attempts/3/execution.json",
+      "bytes": 27403,
+      "sha256": "20f2761a486c8c3b35939e2e01143fcc1f6b3e8f03888fe7288d0dd449caef6e"
+    },
+    {
+      "path": "attempts/3/prepared.json",
+      "bytes": 1016,
+      "sha256": "ba4fd5b7ab17891f50bcb835a4b6dc50d91e028c66c3c7f7b1e6d6e4bc0d015e"
+    },
+    {
+      "path": "attempts/3/states.tsv",
+      "bytes": 7847272,
+      "sha256": "7a7ec3c64eddb2b2a7f008425c5d297af060aed023b4f1e3f4ea822b2d4d1ff1"
+    },
+    {
+      "path": "attempts/3/stderr.log",
+      "bytes": 455,
+      "sha256": "251d38785d5c3ec3eb896d8a2c949e483c48fbef50241c1cf9406481473d23f1"
+    },
+    {
+      "path": "attempts/3/steps.tsv",
+      "bytes": 25857,
+      "sha256": "0cc1989316e3a86334d827b1a248cb463a1d5cad82a1c6c4a4ba3aa7d09ea7e9"
+    },
+    {
+      "path": "attempts/4/driver-source.py",
+      "bytes": 4736,
+      "sha256": "c8058d985cb63b3a0a26a6fcea825b000ac027d696fb2977620084ca527525e3"
+    },
+    {
+      "path": "attempts/4/execution.json",
+      "bytes": 25829,
+      "sha256": "4b3a97594ef2079a63aa7a1a28d440106526991a38979ce4e3ba91ffb78e37c6"
+    },
+    {
+      "path": "attempts/4/prepared.json",
+      "bytes": 1048,
+      "sha256": "d85fce30f5876d06464e03197a9553f10f16b9997dab2be23cb01edeb40c3ba1"
+    },
+    {
+      "path": "attempts/4/states.tsv",
+      "bytes": 7477506,
+      "sha256": "4e0cb1d74a9404c83edf2d2b0614b309bc138fa28cf6a93a2c34fc595ff54ff1"
+    },
+    {
+      "path": "attempts/4/stderr.log",
+      "bytes": 493,
+      "sha256": "c5458621dbadf5e9f017d150a19c24339849f84c0d773bb1649d325c55e3b2be"
+    },
+    {
+      "path": "attempts/4/steps.tsv",
+      "bytes": 27544,
+      "sha256": "2b76de4517aba785bbfc77a2d7702e80102c490e2f49b5a8c7b40d0d04ef3328"
+    },
+    {
+      "path": "original-tutorial3.english",
+      "bytes": 7851,
+      "sha256": "30c55191b0118da2d0c17d6f3c20da9184fefd7ef56f4cbfe77d565e0aa4da7f"
+    },
+    {
+      "path": "static-evidence-corrected.json",
+      "bytes": 6702,
+      "sha256": "7a9a994ea05a5c38012739cfd34e97c2a2dfbe165836b47def747189dfb906ad"
+    },
+    {
+      "path": "static-evidence.json",
+      "bytes": 4723,
+      "sha256": "3e018fb8a46fe618c70b848bdadf458b4dd94febf8a72d5b0b2ec847e4b9f7a5"
+    },
+    {
+      "path": "unexecuted/cpp-tutorial3-468-attempt5.py",
+      "bytes": 4871,
+      "sha256": "a9ec44619cd5b4de45f35aea36f7f714095ef9ff31e0324cae7b16f9203ac84e"
+    }
+  ]
+}

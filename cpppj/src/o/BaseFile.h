@@ -60,6 +60,7 @@ public:
     std::vector<std::uint8_t> Read(std::string_view name) const;
     // Read와 같은 순서로 찾되, 없으면 예외 대신 빈 값을 돌려준다(없어도 되는 설정 파일용).
     std::optional<std::vector<std::uint8_t>> TryRead(std::string_view name) const;
+    std::optional<std::vector<std::uint8_t>> TryReadArchiveOnly(std::string_view name) const; //등록된 TAFF 순서만 읽는다. disk/secondary fallback 없이 원본 삭제 상태와 archive-only 입력을 구분한다.
     // 캠페인 목록의 와일드카드: 디스크/TAFF/보조 경로를 합쳐 중복을 제거하고 이름순으로 반환한다.
     std::vector<std::string> Match(std::string_view pattern) const;
     // 원본 Filespec.cpp의 Win32 FindFirst/Next 순서다. 기본 디스크만 열거하며 TAFF/보조 경로/정렬을 적용하지 않는다.

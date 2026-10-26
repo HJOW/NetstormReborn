@@ -1,0 +1,33 @@
+{
+  "date": "2026-10-27",
+  "host": "HJOW-Athlon",
+  "packages": [
+    {
+      "archive": "new-fort-469-20261027",
+      "fileCount": 16,
+      "bytes": 2074649
+    },
+    {
+      "archive": "subscriber-write-469-20261027",
+      "fileCount": 15,
+      "bytes": 315015
+    },
+    {
+      "archive": "data-manager-initialize-469-20261027",
+      "fileCount": 40,
+      "bytes": 840285
+    },
+    {
+      "archive": "add-island-469-20261027",
+      "fileCount": 39,
+      "bytes": 3460749
+    },
+    {
+      "archive": "tutorial3-partial-468-20261027",
+      "fileCount": 32,
+      "bytes": 25318951
+    }
+  ],
+  "archiveCopyVerified": true,
+  "productBuildOrNativeReplayExecuted": false
+}

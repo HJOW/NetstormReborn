@@ -16,13 +16,13 @@ std::string_view Text(std::span<const std::uint8_t> bytes) {
 }
 }
 // 기존 세부 게임 효과는 보존하고 물리/경로/CRT/설정 장치만 같은 owner에 연결한다.
-FortCurrentNameDevices::FortCurrentNameDevices(ClientFortGlobals& names,CampaignTemplateStorage& storage,o::ConfigInterface& config,o::FortCurrentNameGlobals globals,o::FortCurrentNameHooks hooks,const EditorFiles* work)
+FortCurrentNameDevices::FortCurrentNameDevices(ClientFortGlobals& names,CampaignTemplateStorage& storage,o::ConfigInterface& config,o::FortCurrentNameGlobals globals,o::FortCurrentNameHooks hooks,const EditorFiles* work,std::function<std::filesystem::path(std::string_view)> resolve)
     :names_(names),storage_(storage),config_(config),globals_(std::move(globals)),hooks_(storage.BindCurrentName(std::move(hooks))),work_(work) {
     if (&globals_.dirty!=&names_.Catalog().dirty) throw std::invalid_argument("Fort 이름과 목록의 dirty 물리 불일치");
     hooks_.currentName=[this] { return names_.CurrentBytes(); };hooks_.selectFileSpec=[this] { names_.SelectFileSpec(); };
-    hooks_.pathSpec=[this](auto name)->std::span<const std::uint8_t> {
+    hooks_.pathSpec=[this,resolve=std::move(resolve)](auto name)->std::span<const std::uint8_t> {
         path_=config_.PathSpec(names_.SelectedFileSpec(),Text(name));
-        if (work_) path_=work_->ResolvePath(std::filesystem::path(path_).is_absolute() ? path_ : o::NormalizeGamePath(path_)).string(); // 실제 편집만 보호 작업 namespace로 해석한다.
+        if (work_) path_=(resolve ? resolve(path_) : work_->ResolvePath(std::filesystem::path(path_).is_absolute() ? path_ : o::NormalizeGamePath(path_))).string(); //절대 source 매핑은 명시 장치만 허용하며 기존 writer의 보호 범위를 넓히지 않는다.
         return {reinterpret_cast<const std::uint8_t*>(path_.c_str()),path_.size()+1};
     };
     hooks_.samePath=[](auto first,auto second) { const std::string left(Text(first)),right(Text(second));return _stricmp(left.c_str(),right.c_str())==0; }; // 원문 CRT의 현재 NUL/대소문자 비교다.

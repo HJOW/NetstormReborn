@@ -71,6 +71,7 @@ struct RawMenuControls::Impl {
     RawMenuTree common; // Client 돌 버튼과 같은 공통 상태/처리기다.
     const GameAssets& assets; // 보호 TYPE/SHP를 읽는 같은 자산 저장소다.
     FontStore& fonts; // Client 글꼴 캐시를 공유한다.
+    RawMenuExternalGumps commonButtons; //공통 호스트 돌 버튼과 자식 배경의 실제 가상 Draw이며 외부 HUD 소유 등록과 수명을 구별한다.
     std::map<std::uint32_t,RawMenuExternalGumps> external; // 생산/미니맵의 독립 수명도 같은 실제 표면과 가상 Draw를 공유한다.
     std::map<std::uint32_t,RawMenuExternalGumps> ownedExternal;std::uint32_t nextExternal{}; // 기존 슬롯과 분리한 실제 처리기 수명 토큰이며 반납한 번호를 재사용하지 않는다.
     RawMenuHooks hooks; // 실제 설정/명령/음향/마우스 경계다.
@@ -219,6 +220,7 @@ struct RawMenuControls::Impl {
     }
     // 현재 토큰을 소유한 외부 파생을 등록 순서대로 조회하며 다른 UI의 수명을 바꾸지 않는다.
     const RawMenuExternalGumps* External(std::uint32_t token) const {
+        if (commonButtons.owns && commonButtons.owns(token)) return &commonButtons; //메인 버튼과 자식 배경도 GIF/메뉴와 같은 전역 깊이 정렬에서 한 번 출력한다.
         // 등록하지 않은 슬롯과 비소유 노드는 그대로 다음 처리기로 넘긴다.
         for (const auto& [slot,externalHooks]:external) if (externalHooks.owns && externalHooks.owns(token)) return &externalHooks;
         for (const auto& [registration,externalHooks]:ownedExternal) if (externalHooks.owns(token)) return &externalHooks; // 살아 있는 각 HUD의 같은 파생만 조회한다.
@@ -463,6 +465,8 @@ RawMenuControls::~RawMenuControls() {
 }
 // 실제 생산 자식도 기존 파서/글리프/배경과 같은 현재 문맥을 사용한다.
 void RawMenuControls::SetExternalGumps(RawMenuExternalGumps hooks) { SetExternalGumps(0,std::move(hooks)); }
+// 고정 공통 버튼의 수명은 이 메뉴 처리기와 같으며 HUD 외부 등록 표에는 추가하지 않는다.
+void RawMenuControls::BindCommonButtons(RawMenuExternalGumps hooks) { if (!hooks.owns || !hooks.draw) throw std::invalid_argument("공통 돌 버튼의 실제 소유/표면 Draw 미연결");impl_->commonButtons=std::move(hooks); }
 // 빈 소유자 훅은 해당 슬롯만 반납한다. 다른 살아 있는 월드 UI는 유지한다.
 void RawMenuControls::SetExternalGumps(std::uint32_t slot,RawMenuExternalGumps hooks) { if (hooks.owns) impl_->external[slot]=std::move(hooks);else impl_->external.erase(slot); }
 // 원문 가상 Draw의 호스트 연결 수명만 관리하며 Gump 등록ID나 깊이는 만들지 않는다.
@@ -681,7 +685,7 @@ void RawMenuControls::Draw(std::span<std::uint8_t> pixels,int pitch,int height,c
     MenuGumpDrawHooks mh;mh.node=[&](auto token) { return Find(s.menus,token); };mh.base=s.common.node;GumpDecorationPixelTarget decorationPixels(target,s.assets);BindMenuGumpDrawAssets(mh,s.assets,decorationPixels);
     MenuGumpDraw menuDraw(s.common.create,s.clip,s.drawState,s.common.collection,*s.backgroundDraw,text,*s.style,*s.layout,std::move(mh));BindMenuGumpDraw(draw,[&](auto token)->const MenuGumpDraw* { return s.menus.contains(token) ? &menuDraw : nullptr; });GumpDraw dispatch(s.common.collection,s.clip,std::move(draw));
     std::array<o::RenderCollectionEntry,kDrawSubmissionCapacity> entries{};const auto count=s.common.collection.Collect({0,0,s.common.create.screenWidth,height},entries,kDrawSubmissionCapacity);auto used=std::span(entries).first(static_cast<std::size_t>(count));SortDrawEntries(used,s.assets.Edition());
-    // 같은 등록표의 다른 버튼은 Client에서 이미 출력했으므로 메뉴 소유 노드만 제출한다.
+    // 메뉴/공통 돌 버튼/외부 HUD의 실제 노드를 한 번 수집한 같은 깊이 순서로 출력한다.
     for (const auto& entry:used) if (s.OwnsBranch(entry.token)) dispatch.Draw(entry.token);
 }
 // 실제 입력/출력과 같은 현재 배치에서 자동 입력 지점을 읽는다.

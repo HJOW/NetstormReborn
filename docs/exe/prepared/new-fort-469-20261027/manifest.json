@@ -1,0 +1,71 @@
+{
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+  "frozenDate": "2026-10-27",
+  "status": "staging only; Native fixtures verified twice; C++ unbuilt/unregistered; product/GUI unchanged",
+  "nativeRows": 1400,
+  "testsDrafted": 4,
+  "utf8ReplacementFiles": [],
+  "files": {
+    "fixtures/new-fort-data-x86.tsv": {
+      "bytes": 1843856,
+      "sha256": "6119e88b96262dbbe319df077d72802f03d4d9540d1142a96d92abf78de45ce3"
+    },
+    "fixtures/new-fort-manager-x86.tsv": {
+      "bytes": 62591,
+      "sha256": "edb8e5bb6ef8b048b738d41dcabd74435383f3257313644f1b9d1859d1f23938"
+    },
+    "fixtures/new-fort-missing-bits-x86.tsv": {
+      "bytes": 60622,
+      "sha256": "1a78e64220673bdf374b6c712b4d769930bb35d949dfd854238336a35553f2c4"
+    },
+    "fixtures/new-fort-missing-x86.tsv": {
+      "bytes": 20144,
+      "sha256": "c01e26f982c3fb9eae1e3e9636e32e2f205d6f5a748d11dc8e4348e17d12001e"
+    },
+    "native-code-digests.json": {
+      "bytes": 983,
+      "sha256": "2717987b40e264e4f7bd79949634e06df3dcfc8fd53f6e49b0998e4578995a4a"
+    },
+    "new-fort-missing-bits-native.json": {
+      "bytes": 769,
+      "sha256": "fadbc3a9a0e5d2af47334b3627810119e462cd0d262f7373f268297b9ec86a25"
+    },
+    "new-fort-native.json": {
+      "bytes": 3990,
+      "sha256": "40bf7ba1749504952224ee218738715079f6f58fb69a0f6302b8631a10210afa"
+    },
+    "parents-x86.txt": {
+      "bytes": 18726,
+      "sha256": "c60e26614b0150aca2d1d2adad12478b46944970dba8f5bdb5007a568970e7b5"
+    },
+    "README.md": {
+      "bytes": 16519,
+      "sha256": "1cb93a28f350e84b0f0687413eb7a3018e1f91e83d56d87e3c192d3a9ae3b2ef"
+    },
+    "src/o/RawNewFort.cpp": {
+      "bytes": 6153,
+      "sha256": "31651bca2a3be60e9cbfe49477c2c6ac27e804de0496a7e462e57c5a2aefd959"
+    },
+    "src/o/RawNewFort.h": {
+      "bytes": 5852,
+      "sha256": "8f365947850f4cfba669f48254918b8eb857306cf84bc85602f172a1652d13ec"
+    },
+    "tests/NewFortTests.cpp": {
+      "bytes": 14020,
+      "sha256": "15a27601c97c325f81c6f6056a1277c3780cc8ca775e5f4b338eb7fd193f299f"
+    },
+    "tools/decomp_new_fort.py": {
+      "bytes": 13557,
+      "sha256": "25f3abb452adc9004b55f468f193318e8036d63b064d15106dc85ea330a03cc3"
+    },
+    "tools/decomp_new_fort_missing_bits.py": {
+      "bytes": 2603,
+      "sha256": "5e6c05ecbbd01d86fa8ab808e86b306afe816625ef198660d4a8a364c38329a5"
+    },
+    "tools/freeze_manifest.py": {
+      "bytes": 1682,
+      "sha256": "f00da458a366c43965466fe2fb77ae0dce73f12d118d570ff44abe813100022f"
+    }
+  }
+}

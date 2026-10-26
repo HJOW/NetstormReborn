@@ -1,0 +1,311 @@
+{
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+  "preparedOnly": false,
+  "originalGameRuns": 0,
+  "cloneGameRuns": 2,
+  "builds": 0,
+  "scriptAsset": "\\d\\tutorial3.english",
+  "scriptSha256": "30c55191b0118da2d0c17d6f3c20da9184fefd7ef56f4cbfe77d565e0aa4da7f",
+  "fortAsset": "\\d\\capturethepriest.fort",
+  "fortSha256": "74fbda7b0bd3c6ccc4e62fddccabec293f4b267c1b81088c9fae8ffc89b5bb52",
+  "regions": [
+    {
+      "region": 7,
+      "record": "070946320000",
+      "chunks": [
+        [
+          7,
+          5
+        ],
+        [
+          8,
+          5
+        ],
+        [
+          7,
+          6
+        ],
+        [
+          8,
+          6
+        ]
+      ]
+    },
+    {
+      "region": 16,
+      "record": "1009753d0000",
+      "chunks": [
+        [
+          6,
+          8
+        ],
+        [
+          7,
+          8
+        ],
+        [
+          8,
+          8
+        ],
+        [
+          7,
+          9
+        ],
+        [
+          8,
+          9
+        ]
+      ]
+    }
+  ],
+  "objects": [
+    {
+      "section": "Terr07",
+      "type": "windVortex",
+      "x": 125,
+      "y": 92,
+      "fields": {
+        "owner": 1,
+        "contents": [
+          {
+            "type": "sunWalker",
+            "contents": []
+          }
+        ]
+      }
+    },
+    {
+      "section": "Terr07",
+      "type": "residence",
+      "x": 132,
+      "y": 93,
+      "fields": {
+        "owner": 1
+      }
+    },
+    {
+      "section": "Terr07",
+      "type": "priest",
+      "x": 129,
+      "y": 103,
+      "fields": {
+        "qa": 129,
+        "owner": 1,
+        "contents": []
+      }
+    },
+    {
+      "section": "Terr07",
+      "type": "sunFactory",
+      "x": 129,
+      "y": 102,
+      "fields": {
+        "factory": 0,
+        "owner": 1,
+        "contents": []
+      }
+    },
+    {
+      "section": "Terr16",
+      "type": "residence",
+      "x": 117,
+      "y": 139,
+      "fields": {
+        "owner": 2
+      }
+    },
+    {
+      "section": "Terr16",
+      "type": "priest",
+      "x": 138,
+      "y": 153,
+      "fields": {
+        "qa": 2,
+        "owner": 2,
+        "contents": []
+      }
+    },
+    {
+      "section": "Terr16",
+      "type": "windVortex",
+      "x": 138,
+      "y": 152,
+      "fields": {
+        "owner": 2,
+        "contents": [
+          {
+            "type": "sunWalker",
+            "contents": []
+          }
+        ]
+      }
+    },
+    {
+      "section": "Chaff",
+      "type": "geyser",
+      "x": 135,
+      "y": 73,
+      "fields": {
+        "owner": 0
+      }
+    },
+    {
+      "section": "Chaff",
+      "type": "geyser",
+      "x": 109,
+      "y": 86,
+      "fields": {
+        "owner": 0
+      }
+    },
+    {
+      "section": "Chaff",
+      "type": "geyser",
+      "x": 106,
+      "y": 103,
+      "fields": {
+        "owner": 0
+      }
+    }
+  ],
+  "typeIds": {
+    "71": "sunArcher",
+    "75": "windBattery",
+    "85": "sunFactory",
+    "122": "geyser",
+    "123": "windVortex",
+    "133": "sunWalker",
+    "158": "priest"
+  },
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6",
+    "cpppj/src/o/RawTutorialLater.cpp": "3ff41fc6f360ddf0f1d33530661bafca8ba4d03fdbc4ea8f345f34cacf7eea11",
+    "cpppj/src/client/RawCampaignCarrierInput.inc": "5d79b1615c8d2da17ddf11cbf13aac30ef53ead81e730a472fcff5468c358cb3",
+    "cpppj/src/client/RawCarrierInput.cpp": "7f54b8a61c0d94e04e709d93aa138fe34d698cc90af2a9301259f232c93b0da6",
+    "cpppj/src/o/RawCarrierPickup.cpp": "627a2e9b2b49ce2516e038676090ad2606646289d4634db0a72476ec6a611e7c",
+    "cpppj/src/client/GameWorld.cpp": "dea2510672a977d2ae18e289e6c2e4181e86a5b216924aee427d62a9b5f04b96",
+    "cpppj/src/client/RawSurfaceWorld.cpp": "61591a0dac076960ed05890b4897502966f9b84d74066120a9b2662374e7e95c",
+    "cpppj/src/client/RawProductionControls.cpp": "128db2d13a3661ffdb40f58bbb0d5543f8ec59f7d606dedad1e8329d63fc551c",
+    "cpppj/src/client/RawMinimapControls.cpp": "eb4e692aad2b875b1c3ba043df8b4c3d1caa66c8eabf2efe4e6164601c729cfb",
+    "cpppj/src/client/MinimapGeometry.cpp": "895f9ccd8417ef90f7c78636731bba3cab872c7d6b46bc8efd38df53a2f13651",
+    "cpppj/src/app/main.cpp": "b79b8a5ea52ef16a75ec4e99a4cb2b5006c0937276a112a2596bccb30c7ef5da"
+  },
+  "limits": [
+    "?? ?? ???? ?? ?? SID/HP/owner/?? ??? ???",
+    "?? ?? API/?? ?? ??? ?? ?? ???? ?? ?? ?? ??",
+    "legal placement??? ???/crop??? frame timing? GUI ?? ? ??"
+  ],
+  "correction": "?? ???? cell=(????x,????y)? ??? ?? ??? Template.h:49/50? Source6 ?? initial Report? ????. ?? ??/?? ??? ????.",
+  "basedOnSha256": "3e018fb8a46fe618c70b848bdadf458b4dd94febf8a72d5b0b2ec847e4b9f7a5",
+  "observedInitialSource6": [
+    {
+      "sid": 15000,
+      "type": "windVortex",
+      "owner": 1,
+      "x": 125.0,
+      "y": 92.0
+    },
+    {
+      "sid": 15002,
+      "type": "priest",
+      "owner": 1,
+      "x": 129.0,
+      "y": 103.0
+    },
+    {
+      "sid": 15003,
+      "type": "sunFactory",
+      "owner": 1,
+      "x": 129.0,
+      "y": 102.0
+    },
+    {
+      "sid": 15005,
+      "type": "priest",
+      "owner": 2,
+      "x": 138.0,
+      "y": 153.0
+    },
+    {
+      "sid": 15016,
+      "type": "geyser",
+      "owner": 0,
+      "x": 135.0,
+      "y": 73.0
+    },
+    {
+      "sid": 15026,
+      "type": "geyser",
+      "owner": 0,
+      "x": 109.0,
+      "y": 86.0
+    },
+    {
+      "sid": 15036,
+      "type": "geyser",
+      "owner": 0,
+      "x": 106.0,
+      "y": 103.0
+    }
+  ],
+  "actualInitialBothRunsMatch": true,
+  "actualInitialRowsBothRuns": [
+    [
+      15000,
+      "windVortex",
+      "1",
+      "125",
+      "92"
+    ],
+    [
+      15002,
+      "priest",
+      "1",
+      "129",
+      "103"
+    ],
+    [
+      15003,
+      "sunFactory",
+      "1",
+      "129",
+      "102"
+    ],
+    [
+      15005,
+      "priest",
+      "2",
+      "138",
+      "153"
+    ],
+    [
+      15016,
+      "geyser",
+      "0",
+      "135",
+      "73"
+    ],
+    [
+      15026,
+      "geyser",
+      "0",
+      "109",
+      "86"
+    ],
+    [
+      15036,
+      "geyser",
+      "0",
+      "106",
+      "103"
+    ]
+  ],
+  "TemplateCellRuleSource": {
+    "path": "cpppj/src/o/Template.h",
+    "cellX": "position >> 4",
+    "cellY": "position & 0xf",
+    "sha256": "3426d9944a042cfa62f600168e59afcbf8c6b44308293f43f35c4a6283075500"
+  }
+}

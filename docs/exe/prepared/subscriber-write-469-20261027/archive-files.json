@@ -1,0 +1,83 @@
+{
+  "restoreDirectory": "cpp-fort-subscriber-write-469-staging",
+  "archiveDirectory": "subscriber-write-469-20261027",
+  "productApplied": false,
+  "cppBuildExecuted": false,
+  "files": [
+    {
+      "path": "README.md",
+      "bytes": 2733,
+      "sha256": "808e4b42dbc2f963154df06cc039a817a855aba67d9bc2e08c19acb72c5aad5f"
+    },
+    {
+      "path": "base-manifest.json",
+      "bytes": 241,
+      "sha256": "e8acaaf00ea1c48754c74fb31c0fc925ac2527ec7ef13beb903a68f427b6b0a0"
+    },
+    {
+      "path": "base/cpppj/src/client/CampaignTemplateStorage.cpp",
+      "bytes": 55484,
+      "sha256": "98ea0b53829784398a4f24fc7e498209d9aca1dae5c0b204f4581890f3c54e6f"
+    },
+    {
+      "path": "base/cpppj/src/client/CampaignTemplateStorage.h",
+      "bytes": 10980,
+      "sha256": "be675ef5dffa0d635de1335a22a04172b9fc22962f14006b335169c693ce4d50"
+    },
+    {
+      "path": "fort-subscriber-write-469.patch",
+      "bytes": 91083,
+      "sha256": "e4952ea6ce97170dbd9dbcce639cadeeffadc71cfc7d347d0e70f47ace9c941b"
+    },
+    {
+      "path": "stage-manifest.json",
+      "bytes": 1764,
+      "sha256": "3f93b12ece1e9bf75881feeedcb248c7d446714f0bdae51b40ac3b6201ba4d6d"
+    },
+    {
+      "path": "work/cpppj/fort-subscriber-write-native.json",
+      "bytes": 1746,
+      "sha256": "0f96901dc65a1907d7c63a423c1770824e1a2295c87c72b9f139b26db9261cc9"
+    },
+    {
+      "path": "work/cpppj/src/client/CampaignTemplateStorage.cpp",
+      "bytes": 56024,
+      "sha256": "6620f4dd2fdf3c0c7808fbf03a8956732da569e6b9a4cf3a5b4827119970a051"
+    },
+    {
+      "path": "work/cpppj/src/client/CampaignTemplateStorage.h",
+      "bytes": 11227,
+      "sha256": "312eeacb2af2e88d953b3d073a170206d51aa375de58b1b3ccc5c85030fb3426"
+    },
+    {
+      "path": "work/cpppj/src/o/RawFortSubscriberWrite.cpp",
+      "bytes": 1625,
+      "sha256": "434cf17d9d9b707f3bd33d775fb018fb6aab36e2989998f16cdd080a0fd1495e"
+    },
+    {
+      "path": "work/cpppj/src/o/RawFortSubscriberWrite.h",
+      "bytes": 1603,
+      "sha256": "bb05a11a31ac5f8beb58b1723b768b576f2907a098d746f32cc244a49d61dc1a"
+    },
+    {
+      "path": "work/cpppj/tests/FortSubscriberWriteTests.cpp",
+      "bytes": 12945,
+      "sha256": "f6134cd2d75322e9c5020713758ead2ded8624f59e848fbf9571ede226e54266"
+    },
+    {
+      "path": "work/cpppj/tests/fixtures/fort-subscriber-write-x86.tsv",
+      "bytes": 43816,
+      "sha256": "8619983808122e17dd261c974a25906374fa46aee16293a51f119d3fad9fe973"
+    },
+    {
+      "path": "work/docs/exe/cpp-fort-subscriber-write-20261027.md",
+      "bytes": 7230,
+      "sha256": "3d49bde2a0d5ac06f49866bb24c51d53af16911d1e1d5d57773ca93fa0628d38"
+    },
+    {
+      "path": "work/tools/decomp_fort_subscriber_write.py",
+      "bytes": 16514,
+      "sha256": "a5df3540853fa4aa2d9db8a3e1ce4842bdf57fa596a56c90311dcd56ac15f068"
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "cpppj/src/o/RawDataManagerImage.cpp": {
+    "sourceSha256": "520ce39de37d7dbd6e083e62ad0316a8da4a0546610847488f5313cf22d97d40",
+    "proposalSha256": "33c130a552928db5c948e1bf7dbf31bc0432502648cbc96141ff29c3088fef9e"
+  },
+  "cpppj/src/client/CampaignTemplateStorage.h": {
+    "sourceSha256": "be675ef5dffa0d635de1335a22a04172b9fc22962f14006b335169c693ce4d50",
+    "proposalSha256": "3e286864053d5f64e60b87dea1ea0948c53315f0c578d01d2753cc76cac417ef"
+  },
+  "cpppj/src/client/CampaignTemplateStorage.cpp": {
+    "sourceSha256": "98ea0b53829784398a4f24fc7e498209d9aca1dae5c0b204f4581890f3c54e6f",
+    "proposalSha256": "1cf44d8bcddd996fc3358419b63f0ab38367160705b2dcde40493604c8f06645"
+  }
+}

@@ -1,5 +1,23 @@
 # 적용 전 코드 준비본 보관
 
+## 2026-10-27 일시중지 인계
+
+현재 단위468 제품 수정과 별개로 아래 준비본을 원시 바이트 그대로 보관했다. **네 구현 묶음은 제품 미적용·C++ 미빌드·검사 초안 미실행**이다. Native PE 관측·재검증과 정적 patch 확인은 각 README에 적힌 범위만 완료했다. Early3는 미완주 기록이며 뒤의 입력 계획은 미실행이다.
+
+- [NewFort 세 부모](new-fort-469-20261027/README.md): Native 1,400관측, C++ 검사 초안4개. Core10BYTE clear와 Money 저장의 기존 문서 해석도 정정했다.
+- [Subscriber 저장](subscriber-write-469-20261027/README.md): Native90관측, C++ 검사 초안2개. 재등록 이후 현재 manager와 캡처한 ID/이름 수명을 보존한다.
+- [공유 이름표와 빈 Image 초기화](data-manager-initialize-469-20261027/work/README.md): Native76관측, C++ 검사 초안6개. 512BYTE 최초 할당·277BYTE 작성·공유 표의 제자리 변환과 기존 ReadFile 접합을 준비했다.
+- [Add Island 접합](add-island-469-20261027/README.md): 새 Drag40관측과 Population118 재검증, C++ 검사 초안6개. MetaImage·Bitmap·목록/창 수명은 필수 미완성 경계다.
+- [Early3 부분 진행](tutorial3-partial-468-20261027/ATTEMPT4-NEXT-C-H.md): 실제 다리·골렘 채취/귀환 후 C까지 관찰했다. attempt4는 종료 프레임 뒤 남은 명령 때문에 return1이며 실행 통과/완주로 합산하지 않는다. `unexecuted/`의 다음 계획은 실행하지 않았다.
+
+이 다섯 보관본은142파일/32,009,649BYTE다. `archive-files.json`과 [보관 검증](archive-verification-469-20261027.json)에 전체 바이트 SHA를 기록했다. 다른 체크아웃에서는 다음 명령으로 먼저 검증한다.
+
+```text
+python docs/exe/prepared/restore-469-20261027.py
+```
+
+`--restore`는 기존 다섯 `extracted/` 준비 디렉터리가 모두 없을 때만 원래 이름으로 복사한다. 현재 PC의 준비본을 덮어쓰거나 삭제하지 않는다. 복원 뒤에도 최신 제품과 base/patch를 대조하고, 다른 PC라면 AGENTS.md에 따라 정밀 디컴파일을 다시 수행한다. Subscriber와 빈 Image patch는 같은 Storage를 건드리므로 hunk별로 조합한다. 보관 검증은 C++ 실행·제품 채택 검증을 대신하지 않는다.
+
 **2026-10-26 후속:** 443·444 준비본을 현재 제품에 삼방향 병합하고 Release 빌드·집중422개·전체CTest3,027개·메뉴 GUI·자연Early2→Tutorial3 검증을 완료했다. [통합 결과와 남은 경계](../cpp-cursor-retirement-runtime-20261026.md)를 본다. 아래 문장과 개별 보관본의 미적용·미검증 표시는 보관 당시 상태이며, 원시 base·patch·manifest는 그대로 유지한다.
 
 사용자의 2026-10-25 일시정지 요청에 따라 서브 AI가 이미 수행 중이던 작업의 재개 자료를 보관한다. 이 폴더의 패치는 **제품에 미적용이며 C++ 빌드·검사를 실행하지 않았다.** 현재 제품의 통과 수에 포함하지 않는다.
