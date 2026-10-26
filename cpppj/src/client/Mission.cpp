@@ -9,6 +9,11 @@ namespace netstorm::client {
 namespace {
 // 원본이 조회하는 키의 접두어. 설정 객체 이름 "mission"에 구분자 '.'을 붙인 것이다.
 constexpr std::string_view kMissionPrefix = "mission.";
+//최초 설치와 로그인 재로드 모두 같은 선택 source와 현재 fortSpec을 사용하며 부재/예외를 우회하지 않는다.
+std::vector<std::uint8_t> ReadFortSource(o::ConfigInterface& configuration,const o::ConfigInterface::FileReader& source,std::string_view selectedFort) {
+    const auto path=configuration.PathSpec("fortSpec",selectedFort);auto bytes=source ? source(path) : std::nullopt;
+    if (!bytes) throw std::runtime_error("Game file not found: "+path);return std::move(*bytes);
+}
 }
 
 // 원본 순서: 객체 생성 → 추가 설정(FUN_00440410) → `missionSpec` 경로의 파일(FUN_00440380).
@@ -38,8 +43,11 @@ std::string MissionScript::FortName() {
 std::string MissionScript::FortPath() { return configuration_.PathSpec("fortSpec", FortName()); }
 //같은 source의 명시 부재/예외를 다른 자산 reader로 우회하지 않는다. 기존 BaseFileSystem::Read의 부재 진단을 유지한다.
 std::vector<std::uint8_t> MissionScript::ReadFortImage(std::string_view selectedFort) {
-    const auto path=configuration_.PathSpec("fortSpec",selectedFort);auto bytes=source_ ? source_(path) : std::nullopt;
-    if (!bytes) throw std::runtime_error("Game file not found: "+path);return std::move(*bytes);
+    return ReadFortSource(configuration_,source_,selectedFort);
+}
+//Config는 실제 Client 수명을 빌리고, 파일 namespace는 미션 객체 자체와 독립된 소유 복사로 유지한다.
+std::function<std::vector<std::uint8_t>(std::string_view)> MissionScript::FortReader() const {
+    return [configuration=&configuration_,source=source_](auto selectedFort) { return ReadFortSource(*configuration,source,selectedFort); };
 }
 // 없으면 빈 문자열이다.
 std::string MissionScript::MissionType() { return Get("missionType").value_or(std::string()); }

@@ -1,0 +1,326 @@
+{
+  "unit": 483,
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": "HJOW-Athlon / 2026-10-23",
+  "startingHead": "7a19ff4e",
+  "completedScope": [
+    "MissionScript::FortReader owns the same file source independently of Script lifetime and borrows current Client Config",
+    "UberGump passes owned Fort reader to actual Session services",
+    "actual local Login::Reload uses explicit mission reader including current fortSpec and never asset-fallbacks on selected-reader failure",
+    "same isolated workspace survives external Script/editor owners until actual Session retirement"
+  ],
+  "integration": {
+    "normalLocalHandshakes": 3,
+    "selectedFailureHandshakes": 3,
+    "normalFinalState": 14,
+    "workingOnlyFortName": "WorkingReload483",
+    "liveGameExecuted": false
+  },
+  "limits": [
+    "c2 general input and live Editor World/Guide/State7 retirement are still pending",
+    "original 004bf550 remains an explicit large child in existing MissionLogin native fixture; this unit restores host file-source propagation, not that whole parent/cache timing",
+    "no new native CPU fixture/run, game/GUI/audio execution; full C++ suite includes existing native replays and headless tests",
+    "runtime Config owner must outlive the borrowed Fort reader; namespace itself is shared-owned"
+  ],
+  "build": {
+    "command": [
+      "cmake",
+      "--build",
+      "cpppj/build",
+      "--config",
+      "Release",
+      "--parallel",
+      "4",
+      "--",
+      "/p:UseMultiToolTask=true",
+      "/p:MultiProcMaxCount=4",
+      "/p:EnforceProcessCountAcrossBuilds=true"
+    ],
+    "exit": 0,
+    "log": "extracted/cpp-mission-reload-source-483/build1.log",
+    "sha256": "2709a968495976adbe03621da586371292ca2d9ec7ccaa613d6ed71187b6b418",
+    "summaries": [],
+    "diagnostics": []
+  },
+  "sourceFiles": 2845,
+  "executables": {
+    "cpppj/build/bin/Release/NetstormCpp.exe": "e13aea9cce887e7581caed04867a9d680bd9bea71e0d50b244946173781d16fa",
+    "cpppj/build/bin/Release/netstorm_tests.exe": "ffde99aca195e70d310d71530098fa3ad8144e9c29ee6ac807e4e54a4c34b40c"
+  },
+  "focused": {
+    "unique": 65,
+    "observations": 68,
+    "failures": 0,
+    "newTests": [
+      "CampaignMissionReloadSource_ActualLoginRereadsWorkingFortAndCurrentSpec",
+      "CampaignMissionReloadSource_SelectedMissingEmptyAndThrowPreservePriorManager",
+      "CampaignMissionReloadSource_SessionOwnsReaderAfterScriptAndEditorOwnersRelease"
+    ],
+    "logs": [
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "CampaignMissionReloadSource"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-mission-reload-source-483/focused1.log",
+        "sha256": "067e4366066602c01d69a3288c7ba3a58026599c9a3ed47b0bddc08a5847f8c2",
+        "summaries": [
+          "3 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "ActualLogin"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-mission-reload-source-483/focused2-ActualLogin.log",
+        "sha256": "9c68f79f6d7a5ad49495e0786301268ca2a020cd436ed7845f8bfcfcd3733a30",
+        "summaries": [
+          "8 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "ConfigInterface"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-mission-reload-source-483/focused2-ConfigInterface.log",
+        "sha256": "1f059d081f91e54c17773b35779fee06853efd0e436f40e08d47d3dcf4c1a360",
+        "summaries": [
+          "10 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "EditorTestBattle"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-mission-reload-source-483/focused2-EditorTestBattle.log",
+        "sha256": "88feabc2cc023a5911b3478f60a3677ba63baadb4ac86726928920f6e596055a",
+        "summaries": [
+          "3 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "Guide"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-mission-reload-source-483/focused2-Guide.log",
+        "sha256": "1eb40eb06ed0b39be9cbb54275adfb46d281acc345d548250a3b094022fba930",
+        "summaries": [
+          "14 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "LocalLogin"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-mission-reload-source-483/focused2-LocalLogin.log",
+        "sha256": "daa8ed2e8fce24d14ce9143b7f90447cdcd212372f7664274f084b41933ecb40",
+        "summaries": [
+          "4 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "MenuCheckMarker"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-mission-reload-source-483/focused2-MenuCheckMarker.log",
+        "sha256": "28afc25132f7a5b192fa27af0b7686e1a3075a0c4d4c014697597ba80cc59e99",
+        "summaries": [
+          "2 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "MissionFileSource"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-mission-reload-source-483/focused2-MissionFileSource.log",
+        "sha256": "4a3e6ede9eccdac282e514c7aea9f7bea1557261155eb3bd7ccce2a5a9fcc247",
+        "summaries": [
+          "5 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "MissionLogin"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-mission-reload-source-483/focused2-MissionLogin.log",
+        "sha256": "42b9a1ea89a5b48416c2559c1a254cfb7d303e018d21d6a3e1cbf2577cf069a8",
+        "summaries": [
+          "10 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "MissionScript"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-mission-reload-source-483/focused2-MissionScript.log",
+        "sha256": "f1de97e08ba18f83e9644931e8896d8967db57b8d81ef60805258e83465eddd9",
+        "summaries": [
+          "2 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "TutorialInit"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-mission-reload-source-483/focused2-TutorialInit.log",
+        "sha256": "08eb74725aeec2d83af8b026ef9c2317f9ee8dd7e7344741a6901d98189779e5",
+        "summaries": [
+          "4 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "CampaignThunderMissile_DissolvedAllianceNaturalShot"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-mission-reload-source-483/focused3-CampaignThunderMissile_DissolvedAllianceNaturalShot.log",
+        "sha256": "cb9a929e2ada01a0ebe44fc42b26b962d9495f6991ebc53dfdfaae3f718b6ef4",
+        "summaries": [
+          "1 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "EditorLocalTransport_InvalidClientPacketStopsCurrentEndpointPoll"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-mission-reload-source-483/focused3-EditorLocalTransport_InvalidClientPacketStopsCurrentEndpointPoll.log",
+        "sha256": "152bf552a5b1a90d12a739980a5633980ea5111e66f479c2909acb58ea0104b8",
+        "summaries": [
+          "1 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "HtmlWindowFactoryClient_ActualBackgroundAcrossWindowsAndSuppressedParsing"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-mission-reload-source-483/focused3-HtmlWindowFactoryClient_ActualBackgroundAcrossWindowsAndSuppressedParsing.log",
+        "sha256": "3232000030983f567a98fdf3a42fea7a33f37bb9f37e5e2f182c8dc7e5d0795e",
+        "summaries": [
+          "1 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      }
+    ]
+  },
+  "whole": {
+    "cppTests": 3271,
+    "failedChecks": 0,
+    "ctestCases": 1,
+    "ctestFailed": 0,
+    "log": {
+      "command": [
+        "ctest",
+        "--test-dir",
+        "cpppj/build",
+        "-C",
+        "Release",
+        "--verbose",
+        "--output-on-failure"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-mission-reload-source-483/whole1.log",
+      "sha256": "086c319b3805523a115acd1725edc109b001fc1d461d4084220931da48f1d054",
+      "summaries": [
+        "3271 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    }
+  },
+  "preservation": {
+    "unchangedProtectedAndExistingTestFiles": 3192,
+    "campaignPrefixBytes": 759330,
+    "campaignPrefixSha256": "c6225de521886da117828aa9108ab62e0dd11784e7a008575919de32618ccdb3",
+    "campaignAppendedIncludeOnly": true,
+    "existingTestCMakeRegistrationOnly": true,
+    "existingRegistrations": 3268,
+    "registeredAfter": 3271,
+    "allPriorRegisteredNamesPreserved": true,
+    "frozenSourcesUnchanged": true
+  },
+  "firstFailure": null,
+  "aggregationCorrection": {
+    "reason": "전체 C++는3271/0·CTest0이었으나 stdout 이름3개에 stderr가 삽입돼 최초 집계의 등록 이름 비교가 실패했다. 동일 성공 표식 안의 앞/뒤 조각을 원시 그대로 대조하고 세 전체 이름을 별도 집중 실행해 통과를 확인했다. 원시 로그/제품/검사는 수정하지 않았다.",
+    "repairs": [
+      {
+        "fullName": "EditorLocalTransport_InvalidClientPacketStopsCurrentEndpointPoll",
+        "prefix": "EditorLocalTransport_InvalidClientPacketStopsCurrentEndp",
+        "suffix": "ointPoll",
+        "interleavedFirstLine": "EditorLocalTransport_InvalidClientPacketStopsCurrentEndp실제 미션 Start 검사: Tutorial1"
+      },
+      {
+        "fullName": "CampaignThunderMissile_DissolvedAllianceNaturalShot",
+        "prefix": "CampaignThunderMissile_DissolvedAllianceNat",
+        "suffix": "uralShot",
+        "interleavedFirstLine": "CampaignThunderMissile_DissolvedAllianceNat실제 Start 전 화살 자연 피격: frame20 source15003 target15305 HP1000→988 projectile121 Form122"
+      },
+      {
+        "fullName": "HtmlWindowFactoryClient_ActualBackgroundAcrossWindowsAndSuppressedParsing",
+        "prefix": "HtmlWindowFactoryClient_ActualBackgroundAcrossWin",
+        "suffix": "dowsAndSuppressedParsing",
+        "interleavedFirstLine": "HtmlWindowFactoryClient_ActualBackgroundAcrossWinChat 원문 진단:2474"
+      }
+    ],
+    "ctestSummary": "100% tests passed out of 1",
+    "initialFinalizerSha256": "e40a9768e1d81884909a26ff75eb3a601b8cda808d81841a7143633522a4042c",
+    "rawWholeLogUnmodified": true
+  },
+  "next": [
+    "separate actual Guide release and Editor World retirement",
+    "verify live Session Template clear during Init and preserve pending request/Zone in State7",
+    "bind c2 workspace creation and actual State7/State1 round trip",
+    "deferred actual Add Island/save/reentry and Test Battle GUI; full mission natural play/fidelity remains pending"
+  ]
+}

@@ -5024,3 +5024,5 @@ TEST_CASE(StateRuntimeCoordinator_RejectsForeignStorageKernelAndStaleGeneration)
     StateCoordinatorScene scene;auto game=scene.client.GameplayGlobals();auto foreign=MakeRawSurfaceStorage(netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078).game);foreign->Processes().BindDevices(scene.client.ProcessKernelOwner(),scene.client.FrameClockOwner());CHECK(Throws([&] { ClientStateRuntimeRetirement rejected(scene.client,foreign); }));
     auto wrongKernel=MakeRawSurfaceStorage(netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078).game,game->Authority(),game->GameAux());CHECK(Throws([&] { ClientStateRuntimeRetirement rejected(scene.client,wrongKernel); }));ClientStateRuntimeRetirement stale(scene.client,scene.storage);const auto generation=scene.storage->Generation();scene.session.reset();CHECK(Throws([&] { stale.ResetAi(1); }));scene.Load();const auto base=scene.client.PlayerRecords()->Base();CHECK(scene.storage->Generation()!=generation && Throws([&] { stale.ClearPlayerLinks(); }) && scene.storage->Borrowed() && game->Borrowed() && scene.client.PlayerRecords()->Base()==base);
 }
+
+#include "CampaignMissionReloadSourceTests.inc"

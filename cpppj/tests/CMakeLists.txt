@@ -2266,3 +2266,6 @@ set_source_files_properties(EditorTestBattleTests.cpp PROPERTIES COMPILE_DEFINIT
 
 # 실제 작업 namespace/미션 source 수명과 언어 script/선택 Fort의 같은 읽기를 검증한다.
 target_sources(netstorm_tests PRIVATE MissionFileSourceTests.cpp)
+
+# 기존 Session helper를 빌리는 실제 로그인 작업본 재로드/소유 수명/실패 검사를 IDE에도 표시한다.
+target_sources(netstorm_tests PRIVATE CampaignMissionReloadSourceTests.inc)

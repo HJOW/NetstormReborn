@@ -56,7 +56,7 @@ struct RawCampaignSession::Impl::Login {
     //현재 파일을 실제 VFS로 다시 읽어 같은Template/State/territory cursor를 교체한다.
     void Reload(std::uint32_t owner) {
         const auto name=s.templateStorage->Name(owner);if (owner!=1 || name.empty()) throw std::logic_error("로컬 미션 이외 Template 파일 선택 미연결");
-        const auto bytes=s.assets.files.Read("d/"+name+".fort");s.templateStorage->InstallFile(owner,FortTemplate::Parse(bytes,s.assets.game.TypeTable()),bytes,name);
+        const auto bytes=s.services.missionFortRead ? s.services.missionFortRead(name) : s.assets.files.Read("d/"+name+".fort");s.templateStorage->InstallFile(owner,FortTemplate::Parse(bytes,s.assets.game.TypeTable()),bytes,name); //명시 Client reader는 같은 현재 작업 파일을 다시 읽으며 독립 Session만 기존 d/ 자산 경계를 사용한다.
     }
     //현재20BYTE zlocal주소에서 실제클라이언트의포트와주소를 제공한다.
     std::array<std::uint8_t,20> Address() const {
