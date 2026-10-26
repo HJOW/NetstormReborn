@@ -16,6 +16,7 @@
 #include "client/ClientColorSortInput.h"
 #include "client/ClientLocalStateGlobals.h"
 #include "client/ClientConnectionActivityGlobals.h"
+#include "client/ClientConnectionGlobals.h"
 #include "client/ClientFortGlobals.h"
 #include "client/ClientCoreDataGlobals.h"
 #include "client/ClientPlayerRecords.h"
@@ -191,6 +192,7 @@ Client::Client(ClientOptions options)
       colorSortInput_(std::make_shared<ClientColorSortInput>()),
       localStateGlobals_(std::make_shared<ClientLocalStateGlobals>()),
       connectionActivityGlobals_(std::make_shared<ClientConnectionActivityGlobals>()),
+      connectionGlobals_(std::make_shared<ClientConnectionGlobals>()),
       fortGlobals_(std::make_shared<ClientFortGlobals>()),
       coreDataGlobals_(std::make_shared<ClientCoreDataGlobals>()),
       playerRecords_(std::make_shared<ClientPlayerRecords>()),
@@ -968,6 +970,8 @@ const std::shared_ptr<ClientKencloudGlobals>& Client::KencloudGlobals() const { 
 const std::shared_ptr<ClientLocalStateGlobals>& Client::LocalStateGlobals() const { return localStateGlobals_; }
 // 같은 활동 표/Zone owner를 조회하며 Session 교체나 조회 자체로 초기화하지 않는다.
 const std::shared_ptr<ClientConnectionActivityGlobals>& Client::ConnectionActivityGlobals() const { return connectionActivityGlobals_; }
+// 같은 현재 표의 소유권만 조회하며 연결 종료·등록·개수 쓰기를 실행하지 않는다.
+const std::shared_ptr<ClientConnectionGlobals>& Client::ConnectionGlobals() const { return connectionGlobals_; }
 const std::shared_ptr<ClientFortGlobals>& Client::FortGlobals() const { return fortGlobals_; } // 같은 실제 이름/목록의 주소를 유지한다.
 //같은 Client의 현재 Core/캐시 소유자를 조회하며 외부 Player 수명을 변경하지 않는다.
 const std::shared_ptr<ClientCoreDataGlobals>& Client::CoreDataGlobals() const { return coreDataGlobals_; }

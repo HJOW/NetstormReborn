@@ -1,5 +1,6 @@
 // Editor에도 실제 zlocal 큐가 있으므로 사용자 명령을 서버 처리기로 동기 우회하지 않는다.
 #include "client/EditorLocalTransport.h"
+#include "o/RawConnectionCleanup.h"
 #include <bit>
 #include <stdexcept>
 #include <utility>
@@ -120,10 +121,11 @@ void EditorLocalTransport::Retire(o::PacketConnection& connection) {
     auto hooks=WrappedHooks();hooks.close(connection);hooks.release(connection); //원문가상소멸뒤소유메모리반납순서이며Player성공값을쓰지않는다.
 }
 void EditorLocalTransport::Disconnect(std::int32_t destination) {
-    if (destination< -32 || destination>21) throw std::out_of_range("Editor 종료 transceiver 번호 범위");
+    if (destination<=-32) return; //004e2940은 모든 음수를004df520에 넘기며 -32 이하는 아무 효과 없이 반환한다.
+    if (destination>21) throw std::out_of_range("Editor 종료 transceiver 번호 범위");
     if (destination!=9 && destination!=-1) return;
     auto& connection=destination==9 ? client_ : pending_;if (!Alive(connection)) return;
-    connection.flags|=kClosed;if (!connection.depth) Retire(connection); //수신깊이가비0이면기존분배기의최외곽복귀가실제로반납한다.
+    auto hooks=WrappedHooks();o::DeferConnectionClose(connection,[&] { hooks.close(connection); },[&] { hooks.release(connection); }); //수신 중이면 원문 closed만 쓰고 실제 최외곽 복귀가 반납한다.
 }
 void EditorLocalTransport::CloseListener() { //listener가상소멸도실제장치에전달하며양끝의명시정리는호출자가순서대로한다.
     if (!listenerAlive_) return;listener_.flags|=kClosed;Need(hooks_.close)(listener_);Need(hooks_.release)(listener_);listenerAlive_=false;

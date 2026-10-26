@@ -33,12 +33,12 @@ private:
     bool PeerLost(const o::PacketConnection& connection) const; //004e1770이상대socket에기록한0x1000의같은수명상태다.
     void SocketClosed(o::PacketConnection& connection); //실제close복귀뒤상대의peer소멸표식과더는읽을수없는바이트를정리한다.
     std::vector<std::uint8_t>& ReceiveBuffer(o::PacketConnection& connection); //같은끝의실제현재수신버퍼를빌려합성type1/2의보존BYTE도이어쓴다.
+    void Retire(o::PacketConnection& connection); //depth0인 선택된 끝의 실제 close→release만 실행하며 이미 닫힌 수신 끝도 이 경계에서 반납한다.
     struct ReceiveResult { //원문길이0sentinel의반복중단과이미소비한실제바이트를별도로기록한다.
         bool consumed{}; //한프레임을socket큐에서꺼냈는지다.무효/거부도소비에는포함한다.
         bool again{}; //004e28b0가같은등록끝의가상수신을다시호출할실제정상packet반환인지다.
     };
     ReceiveResult Receive(bool pending); // 한 큐에서 실제 소유 프레임 하나만 꺼내 현재 등록표를 분배한다.
-    void Retire(o::PacketConnection& connection); // depth0인 선택된 끝의 실제 close→release만 실행한다.
     bool Alive(const o::PacketConnection& connection) const; // 같은 고정 두 연결의 현재 존재를 읽는다.
     o::PacketDispatchHooks hooks_; // 상위가 제공한 실제 시계/기록/종료/반납 장치이며 이 객체보다 오래 살아야 한다.
     std::span<const std::uint8_t> players_; // Session과 같은 실제 Player9인지 확인할 읽기 뷰이며 사본을 만들지 않는다.

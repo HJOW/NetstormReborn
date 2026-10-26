@@ -27,6 +27,7 @@ target_sources(netstorm PRIVATE o/RawKencloudRender.cpp o/RawKencloudRender.h) #
 
 target_sources(netstorm PRIVATE client/EditorLocalTransport.cpp client/EditorLocalTransport.h) # Editor의 로그인 없는 같은 단일 로컬 접속/비동기 큐를 기존 분배기에 연결한다.
 target_sources(netstorm PRIVATE o/RawConnectionActivity.cpp o/RawConnectionActivity.h client/ClientConnectionActivityGlobals.h) # 실제64h 수신 몸체와 두22DWORD/Zone 간극의 Client 장기 소유자를 연결한다.
+target_sources(netstorm PRIVATE o/RawConnectionCleanup.cpp o/RawConnectionCleanup.h client/ClientConnectionGlobals.h) # 원문 연결/pending 표와 실제 Editor 지연 종료 부모를 연결한다.
 target_sources(netstorm PRIVATE client/FortCurrentNameDevices.cpp client/FortCurrentNameDevices.h)
 # 원본 단일 객체/청크 저장을 같은 현재 TYPE·가상 분배와 Finder에 연결한다.
 target_sources(netstorm PRIVATE o/RawFortObjectSave.cpp o/RawFortObjectSave.h)

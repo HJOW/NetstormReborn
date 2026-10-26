@@ -149,3 +149,16 @@ TEST_CASE(EditorLocalTransport_TerminationPreservesCurrentReceiveProtocolForBoth
         CHECK(wire.Poll()==0 && terminated==1 && effects.records==1); //type2는한번만직접분배되며일반패킷기록은추가하지않는다.
     }
 }
+
+// 원문 pending의 -32 이하 자연 반환은 살아 있는 실제 로컬 양끝/큐를 변경하지 않는다.
+TEST_CASE(EditorLocalTransport_NativeNegativeDisconnectBoundsPreserveLiveEnds) {
+    EditorWireEffects effects;EditorLocalTransport wire(effects.players,effects.server,effects.Hooks());wire.Open(6799);CHECK(wire.Poll()==0);CHECK(wire.Send(9,kMessage));const auto flags=wire.Client().flags,pendingFlags=wire.Pending().flags;const auto queued=wire.QueuedFrames();
+    for (const std::int32_t id:{-2147483647-1,-33,-32,-31,0,1,8,21}) wire.Disconnect(id); //이 전송이 실제 소유한-1/9 이외의 부재와 음수 한계를 함께 확인한다.
+    CHECK(wire.ClientAlive() && wire.PendingAlive() && wire.ListenerAlive() && wire.Client().flags==flags && wire.Pending().flags==pendingFlags && wire.QueuedFrames()==queued && !effects.closes && !effects.releases);
+}
+
+// 실제 소멸 장치가 depth를 바꿔도 진입 때0이었던 원문 deferred 부모의 free는 계속한다.
+TEST_CASE(EditorLocalTransport_NativeDeferredCloseKeepsCapturedDepth) {
+    EditorWireEffects effects;auto hooks=effects.Hooks();const auto close=hooks.close;hooks.close=[close](auto& connection) { close(connection);connection.depth=7; };EditorLocalTransport wire(effects.players,effects.server,std::move(hooks));wire.Open(6799);wire.Disconnect(9);
+    CHECK(!wire.ClientAlive() && wire.ListenerAlive() && wire.Client().depth==7 && (wire.Client().flags&0x40) && effects.closes==1 && effects.releases==1 && effects.trace==std::vector<std::string>({"close","release"}));
+}

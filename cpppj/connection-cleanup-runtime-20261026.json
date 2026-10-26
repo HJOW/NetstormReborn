@@ -1,0 +1,217 @@
+{
+  "unit": 457,
+  "goalComplete": false,
+  "host": "HJOW-Athlon",
+  "date": "2026-10-26",
+  "edition": "PATCH10.78",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "originalGameExecuted": false,
+  "productGuiExecuted": false,
+  "fullCTestExecuted": false,
+  "sourceAttempt": 4,
+  "sourceFileCount": 2049,
+  "buildAttempt": 4,
+  "build": {
+    "attempt": 4,
+    "sourceAttempt": 4,
+    "finished": "2026-10-26T13:10:25.208180",
+    "exitCode": 0,
+    "seconds": 23.796,
+    "command": [
+      "cmake",
+      "--build",
+      "cpppj/build",
+      "--config",
+      "Release",
+      "--parallel",
+      "4",
+      "--",
+      "/p:UseMultiToolTask=true",
+      "/p:MultiProcMaxCount=4",
+      "/p:EnforceProcessCountAcrossBuilds=true"
+    ],
+    "log": "extracted/cpp-connection-cleanup-457-build4.log",
+    "sha256": "01a5bbb97195bfbe4442fdc7b33cea55c0f60a0341094e327e6d06b71ed9812b",
+    "compilerWarnings": 0,
+    "compilerErrors": 0
+  },
+  "native": {
+    "report": "cpppj/connection-cleanup-native-20261026.json",
+    "observations": 580,
+    "stoppedObservations": 268,
+    "realFunctions": [
+      "0x4df440",
+      "0x4df520",
+      "0x4e2940",
+      "0x4e29c0",
+      "0x4e2a10",
+      "0x4df4a0"
+    ],
+    "stubbedEffects": [
+      "004e03d0 connection destructor",
+      "004e4354 CRT free",
+      "004e0620 assertion"
+    ],
+    "sha256": {
+      "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+      "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+      "tools/decomp_connection_cleanup.py": "91e7aef0ddf14204c6a8c1c3c51db767f04b5b57262cbd36886f69e0f0dea194",
+      "cpppj/tests/fixtures/connection-cleanup-x86.tsv": "46d1c839cf052e4caccd50a4d9d2dedf3d6871aaa281033eb25b8515222232c5"
+    }
+  },
+  "focused": {
+    "attempt": 2,
+    "unique": 230,
+    "observations": 230,
+    "newCasesExecuted": 6,
+    "failures": 0,
+    "requiredNewCases": [
+      "ConnectionCleanup_ClientLongTablesPreserveAddressAndCurrentValues",
+      "ConnectionCleanup_EmptyAndNegativeBoundsDemandNoDevices",
+      "ConnectionCleanup_IndependentNative580AndCurrentSlotEffects",
+      "ConnectionCleanup_LateMissingEffectsPreserveNativePrefix",
+      "EditorLocalTransport_NativeDeferredCloseKeepsCapturedDepth",
+      "EditorLocalTransport_NativeNegativeDisconnectBoundsPreserveLiveEnds"
+    ],
+    "missingNewCases": [],
+    "filters": [
+      {
+        "filter": "ConnectionCleanup_",
+        "tests": 4,
+        "failures": 0,
+        "exitCode": 0
+      },
+      {
+        "filter": "EditorLocalTransport_",
+        "tests": 12,
+        "failures": 0,
+        "exitCode": 0
+      },
+      {
+        "filter": "ExistingEditor",
+        "tests": 50,
+        "failures": 0,
+        "exitCode": 0
+      },
+      {
+        "filter": "PacketDispatch",
+        "tests": 3,
+        "failures": 0,
+        "exitCode": 0
+      },
+      {
+        "filter": "LocalMission",
+        "tests": 7,
+        "failures": 0,
+        "exitCode": 0
+      },
+      {
+        "filter": "ClientLocalStateGlobals",
+        "tests": 9,
+        "failures": 0,
+        "exitCode": 0
+      },
+      {
+        "filter": "ClientStateWorldGlobals",
+        "tests": 7,
+        "failures": 0,
+        "exitCode": 0
+      },
+      {
+        "filter": "CampaignSession_",
+        "tests": 138,
+        "failures": 0,
+        "exitCode": 0
+      }
+    ]
+  },
+  "testPreservation": {
+    "head": "a0a17c4358f9bfcb4631e669d12fe2017551a418",
+    "oldTestCases": 3114,
+    "addedTestCases": 6,
+    "removedTestCases": 0,
+    "oldNativeFixtures": {
+      "checked": 651,
+      "tsvFiles": 648,
+      "sameGitBlobsWithCheckoutFilters": true,
+      "checkedAfterFocused": 651,
+      "sameGitBlobsAfterFocused": true
+    },
+    "existingTestBodies": {
+      "EditorLocalTransportTests.cpp": "기존 본문/단언을 그대로 보존하고 신규2사례를 끝에 추가"
+    }
+  },
+  "productSourcesUnchangedAfterSource2": true,
+  "lastFullCTest": {
+    "unit": 456,
+    "cppTests": 3114,
+    "failedChecks": 0,
+    "report": "cpppj/state-hud-runtime-20261026.json",
+    "currentRegisteredCases": 3120,
+    "currentFullRunClaimed": false
+  },
+  "protectedFiles": {
+    "checked": 1821,
+    "unchanged": true,
+    "originals": 1394,
+    "originalCD": 425,
+    "AGENTS": 1,
+    "decompiledSource": 1
+  },
+  "changedSourceSha256": {
+    "cpppj/src/CMakeLists.txt": "56a3f6f89ffb3c6557896ce6b31cafc563ee72e6129b93c36796ad541db4e8f5",
+    "cpppj/src/client/ClientConnectionGlobals.h": "45c000aa7c0573c3266d10b942de1dd87ce88d2fc8bff2eec36e8eaaae23b9a2",
+    "cpppj/src/client/ClientMain.cpp": "1a832d84a2724b87d15bebe5d9bbb164f9c365bb8c8106518646ce8b651ce982",
+    "cpppj/src/client/ClientMain.h": "618053f085ccd6bb2096db8228dd71de3da72351f67681cf2e3b22f114e11ee2",
+    "cpppj/src/client/EditorLocalTransport.cpp": "631f920053fd8d6c97ec5822e1d1568fd27cba5291ea463308d853658751b92c",
+    "cpppj/src/client/EditorLocalTransport.h": "6de304430c5b7c04aa0842778ff881bf65b272f60c56a8caed020c6f6b065ec9",
+    "cpppj/src/o/RawConnectionCleanup.cpp": "72aa2fbd74d7e4377c5be56c4d085407b604c8cd69db3e6a1ac1e6c950ccb5e0",
+    "cpppj/src/o/RawConnectionCleanup.h": "04e261212fe6f83567f1f63084e6b4c64aa8d32b7d1b2e1544a9f6c2b8373ad4",
+    "cpppj/tests/CMakeLists.txt": "9797229c5e6bb2930cab420d49ba1c54981d3d81d7b0e14cd5b416fcf2c27170",
+    "cpppj/tests/ConnectionCleanupTests.cpp": "bb303784f8222113f6840d4781b0774635d04fbc2b85c7f6795ead17b2e5230c",
+    "cpppj/tests/EditorLocalTransportTests.cpp": "4ceed9eee0ca78df3125a63bb7b8c4ca4079c3bdcc616509eaa893c45d05cbd6"
+  },
+  "artifacts": {
+    "cpppj/build/bin/Release/NetstormCpp.exe": "1eaab3e9f634751b1a69b89d246287442ce6b40c7830c1f525e3982a3e7e0046",
+    "cpppj/build/bin/Release/netstorm_tests.exe": "25eaf3a1abf14311b50149d44268cf04f2986d15521f0d008d9f2fbddbdb1d1e",
+    "cpppj/build/bin/Release/netstorm_cloud_probe.exe": "430d09f900e8ee979de2835c899628fa13b7545331e1d576376f12daf36bbf32",
+    "cpppj/build/bin/Release/netstorm_cloud_render_probe.exe": "c6e25816a569c941fdb4a1a3f575450d339429932c0a4f2b34d32452e245e7b0"
+  },
+  "rawEvidenceSha256": {
+    "extracted/cpp-connection-cleanup-457-source4/hashes.json": "03fce2be19aa9aa61f537e1cfdbb119274bc91d0ad366089114429c033b0ab81",
+    "extracted/cpp-connection-cleanup-457-build1-result.json": "14ca152a38b403c0b45461e9f14f88a0ddb8429cd65d49047fce084462675ace",
+    "extracted/cpp-connection-cleanup-457-build1.log": "bee6852fa84f6ac27798b211505c64d244825cfe49f8cb7a2bd115574e2861ee",
+    "extracted/cpp-connection-cleanup-457-build2-result.json": "1c24fff3c657c92dbf7eacf431278ab68f2317623dcd70074c57c823590f5310",
+    "extracted/cpp-connection-cleanup-457-build3-result.json": "af4a5cbaa1b06dae3df7d0cb4d09c815d8acadb808ef62559f565ce8a1e243f3",
+    "extracted/cpp-connection-cleanup-457-build4-result.json": "248bcb776d0edf9b68adaabce9f4816723d039cb7e1d0eec33f916232d9641d7",
+    "extracted/cpp-connection-cleanup-457-build4.log": "01a5bbb97195bfbe4442fdc7b33cea55c0f60a0341094e327e6d06b71ed9812b",
+    "extracted/cpp-connection-cleanup-457-focused1/results.json": "57957964a1aa097f39b27b90ca2e3d7e46fb570f489813d84a9169ab8ca4d9d2",
+    "extracted/cpp-connection-cleanup-457-focused1/ConnectionCleanup_.log": "157fc1c71d48e4e61b9cd7bee22b16d8af4217eeb49c3c6b24e20ca3bef4e4a5",
+    "extracted/cpp-connection-cleanup-457-focused2/results.json": "68b178d54178ca24c527b728b1816806fb572a8d3b76396480068a1b4d8734fe",
+    "extracted/cpp-connection-cleanup-457-test-preservation.json": "2bf02665b20ba1fdbd0e8d837fe35f6eaad8787a9f10aacb1e13a415b01c384f"
+  },
+  "corrections": [
+    {
+      "attempt": "build1",
+      "compilerErrors": 1,
+      "cause": "수신 경로도 사용하던 Retire 선언/몸체 제거로 C3861이 발생했다. 원래 경계를 복원하고 명시 종료만 새 부모에 연결했다"
+    },
+    {
+      "attempt": "focused1",
+      "failedCases": 1,
+      "cause": "새 Client 보관 fixture에 게임 자료 경로가 없어 netstorm.tarc 읽기에 실패했다. 기존 실제 자료 경로만 제공하고 Native/기존 단언/제품 코드는 유지했다"
+    }
+  ],
+  "limits": {
+    "actualClientTableWritersConnected": false,
+    "legacyTransportAbsenceMayBeInferredFromNewTables": false,
+    "state1CoordinatorComplete": false,
+    "actualEditInstalled": false,
+    "fullNaturalMissionCompletionVerified": false,
+    "fullPixelOrSoundIdentityVerified": false,
+    "cd1072EquivalenceClaimed": false
+  },
+  "passed": true
+}

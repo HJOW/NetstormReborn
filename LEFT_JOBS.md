@@ -8,7 +8,7 @@
 - **마지막 전체 정밀 디컴파일: HJOW-Athlon (192.168.0.94) / 2026-10-23.** 결과는 `extracted/refined/`(Git 제외)에 있다. 현재 PC가 이와 다르면 AGENTS.md 규칙에 따라 재디컴파일한 뒤 작업한다. 절차는 `tools\ghidra\refine_all.ps1`이며, 힌트 생성 단계가 콘솔 인코딩(cp949) 오류로 멈추면 `PYTHONUTF8=1`, `PYTHONIOENCODING=utf-8`을 설정하고 다시 실행한다.
 - 2026-10-26의 문서 정리는 HJOW-X3D에서 인수인계 문서만 고친 것이다. 디컴파일 결과·제품 코드·검사 코드는 바꾸지 않았으므로 위 디컴파일 기록은 그대로 유효하다. 사용자는 HJOW-Athlon에서 작업을 재개할 예정이다.
 - **실제 게임 실행 확인:** HJOW-Athlon, VM-W11-Codex, vm-debian-codex는 AGENTS.md의 예외 시스템이다. 그 밖의 PC에서는 게임이나 별도 창을 띄우기 전에 목적을 설명하고 사용자 확인을 받는다.
-- **목표 상태:** 2026-10-26 재개 뒤456까지 완료했다. 최신456 Source7 제품의 빌드 경고/오류0, 집중283개·전체C++3,114개·실패0, World 이전 HUD와 정상 Early1 GUI2 통과다. 전체 목표는 계속 진행 중이며 실제 Edit 설치·전체 미션 자연 완주·동일성 검증이 남아 있다.
+- **목표 상태:** 2026-10-26 재개 뒤457까지 복원 단위를 완료했다. 최신457 Source4는 빌드 경고/오류0·집중230개·신규6개·실패0이다. 마지막 전체/GUI 통합은456의C++3114개·실패0 및 World 이전 HUD/정상 Early1 GUI2다. 전체 목표는 계속 진행 중이며 연결 writer·실제 Edit 설치·전체 미션 자연 완주·동일성 검증이 남아 있다.
 - **원시 증거 위치:** 빌드·검사·GUI 원시 로그와 통합 드라이버는 `extracted/`(Git 제외)에 있으며, 작업한 PC(주로 HJOW-Athlon)에만 있다. 커밋되는 결과 보고서는 `cpppj/*.json`, 작업 문서는 `docs/exe/cpp-*.md`다.
 - 원격 저장소에 push하지 않는다. 커밋 메시지는 `YYYYMMDD-NN CP 요약` 형식이며, NN은 `git log`로 그날의 마지막 번호를 확인해 정한다.
 
@@ -86,7 +86,7 @@
 
 ## 3. 앞으로 할 작업 (권장 순서)
 
-### 0. 2026-10-26 재개 — 456까지 완료
+### 0. 2026-10-26 재개 — 457까지 완료
 
 - **452 기준 제품:** Source6(2,039소스), `NetstormCpp.exe` SHA `471ec293…`, Release build6 종료0·경고/오류0, 집중444고유/444관측·실패0(기존 신규6개 전부)이다. 실제 복사본 GUI에서 QWASZX 여섯 슬롯·회전/반대 회전·합법 위치 배치(새 서버 다리15211)·보충을 확인했다. 원본/CD 등 보호1,821파일은 동일하다.
 - **복구:** 두 신규 fixture 조회에 `<filesystem>`과 `LoadFixture(const char*)`의 문자열 인자를 명시했다. Source5에서 드러난 기존 `CampaignObjectMenuTests`의 Sid 접근형4진단도 같은 숫자의 DWORD 비교/실제 소비 직전 checked SID변환으로 고쳤다. 신규 바이트 채움의 C4244 두 원인도 `uint8_t{}`로 교정했다. 기존 단언·Native fixture·신규6개 검사 이름은 유지했다.
@@ -96,7 +96,8 @@
 - **최신453:** Source1(2,039소스) build1 종료0·경고/오류0, 집중104고유/108관측·실패0(신규4개·편집 설치50개 포함)이다. 같은 Client의 집계·Hash·경고255DWORD·spot65536BYTE·Island·Chunk·Graph 일곱 Effect 하위를 연결했다. [453 문서](docs/exe/cpp-state-flat-storage-runtime-20261026.md), [실행 보고서](cpppj/state-flat-storage-runtime-20261026.json). 전체 CTest·GUI는 이번에 반복하지 않았다.
 - **454 완료:** 실제 AI1~8·Player 링크·Kernel 현재 처리기의 반환 증빙을 모두 소비한 경우에만 일반 Session 소멸의 게임 전역 재초기화를 생략한다. 고정뷰·표면 대여는 전체 소비자 소멸 뒤에 반납하고 실제 Regular 잔류는 장기 Host에 남긴다. Source2 build2 경고/오류0, 집중99·전체CTest3,096·실패0, GUI2·자연Early2 통과. 최초 집중의3실패는 장기 Kernel 조립2개와 Native known0 store 누락1개로, 기존 관문·단언·Native fixture를 유지해 교정했다. [454 문서](docs/exe/cpp-state-runtime-retirement-20261026.md), [실행 보고서](cpppj/state-runtime-retirement-20261026.json).
 - **455 완료:** SID8목록과 선택 count의 장기 수명·원문16/50/20/30용량·등록20포인터 개수 정리 및 ReloadTheams 신전 연결을 복원했다. Source4 빌드 경고/오류0, 집중320·전체C++3108·GUI2 통과. [455 문서](docs/exe/cpp-state-sid-lists-runtime-20261026.md), [실행 보고서](cpppj/state-sid-lists-runtime-20261026.json).
-- **최신456 완료:** SP 표시의 실제 현재 serial 재부착과 World 이전 HUD 생성/정리/모드·공통 Draw를 연결했다. Source7 build8 경고/오류0, 집중283·전체C++3114·GUI2 통과. [456 문서](docs/exe/cpp-state-hud-runtime-20261026.md), [실행 보고서](cpppj/state-hud-runtime-20261026.json).
+- **456 완료:** SP 표시의 실제 현재 serial 재부착과 World 이전 HUD 생성/정리/모드·공통 Draw를 연결했다. Source7 build8 경고/오류0, 집중283·전체C++3114·GUI2 통과. [456 문서](docs/exe/cpp-state-hud-runtime-20261026.md), [실행 보고서](cpppj/state-hud-runtime-20261026.json).
+- **최신457 완료:** 실제 연결 정리6몸체580관측과 기존 Editor의 원문 지연 종료를 연결했다. Source4 build4 경고/오류0·집중230·신규6개 통과. 장기22/22/32표의 실제 생성·재배치 writer 연결은 다음 단계다. [457 문서](docs/exe/cpp-connection-cleanup-runtime-20261026.md), [실행 보고서](cpppj/connection-cleanup-runtime-20261026.json).
 - **다음:** Native State1의 작은 잔여 leaf·전체 Effect/prefix·Runtime/Player 반납 coordinator와 실제 Edit 설치를 이어서 복원한다. 3절2~7의 플레이·메뉴·동일성 목표도 계속 남는다.
 
 ### 1. 443·444 준비본 병합과 검증 (재개 시 첫 작업)
@@ -119,7 +120,8 @@
 - [x] **454 완료:** 같은 실제 자식 반환 증빙 전체를 조건으로 Session/Gameplay 대여를 보존 반납한다. 기존 일반 종료·부분 증빙은 종전 정책을 유지하며 실제 Player/표면 고정뷰는 전체 모듈 소멸 뒤에만 해제된다. 전체CTest3,096·GUI2·자연Early2까지 통합했다. 전체 Native 부모·자연 Edit 설치 완료는 아니다.
 - [x] **455 완료:** 실제 정적 SID8목록을 Client 표면 owner에 연결하고 Client 선택30칸/count와 같은 등록20포인터로 정리한다. 원문 용량은 factories500/dude30/outposts100/providers256/geysers100/priests16/residences50/selection30/temples20이며 count만0으로 쓰고 포인터/데이터/용량을 보존한다. ReloadTheams의 두 번째 목록도 원문005e1898 신전으로 바로잡았다. Native66관측, Source4 build4 경고/오류0, 집중320고유/324관측·신규12개·실패0, 전체C++3108·실패0, 같은 게임`e10efe65…`의 복사본 Early1 및 QWASZX GUI2를 확인했다. 최초 집중의 신규3사례와 첫 전체의 생산2사례/89단언 실패는 동일 제품의 fixture 입력 조립으로 교정했고 Native 기대·기존 숫자 단언·원시 실패를 보존했다. 기존 fixture649개와 원본/CD 보호1821파일도 유지했다. 마지막 전체 디컴파일은 HJOW-Athlon/2026-10-23 그대로다. [455 문서](docs/exe/cpp-state-sid-lists-runtime-20261026.md), [실행 보고서](cpppj/state-sid-lists-runtime-20261026.json), 원시`extracted/cpp-state-sid-lists-455-*`를 본다. 전체 State1/Edit·전체 미션 자연 완주 완료는 아니다.
 - [x] **456 완료:** 실제 SP 부모0043dad0/serial조회00464020의120관측(중단48)을 고정하고 현재 예산의 Push/현재좌표 Attach/정상 깊이 복구를 연결했다. 초기 HUD 네 공장을 World 없이 구성하고 실제 미니맵 통지는 현재 토큰의 첫 World에서만 빌린다. Native Kill/Cleanup·mode3/4도 같은 Gump 표/입력에 연결하며 실제 정리 뒤 해제된 호스트 버튼 별칭을 반납한다. Source7(2045소스) build8 경고/오류0, 집중283·신규6·전체C++3114·실패0, 같은 게임`17d6201e…`의 World 이전 HUD 생성/교환/SP/mode4 및 Early1 MORE/OK/Home GUI2를 확인했다. 일반/편집 좌측50,022픽셀 차이와 최종 화면을 직접 검토했다. build2 컴파일5오류·build4 manifest 사전 경합·GUI1 중간 기하 bitmap 범위·GUI2 삭제 버튼 별칭 실패를 보존했으며 Native 기대/기존 단언650자료·원본/CD 등 보호1821파일은 유지했다. 마지막 전체 디컴파일은 HJOW-Athlon/2026-10-23 그대로다. [456 문서](docs/exe/cpp-state-hud-runtime-20261026.md), [실행 보고서](cpppj/state-hud-runtime-20261026.json), 원시`extracted/cpp-state-hud-456-*`를 본다. 전체 State1/Edit·미션 자연 완주 완료는 아니다.
-- [ ] **다음:** Native State1 전체34Effect/cleanup·prefix와 Runtime/Player 반납 coordinator를 실제 Client 장기에 연결한다. 455의 현재 등록 SID목록/count와454의 실제 자식 반환 증빙을 재사용한다. 456의 World 이전 HUD 공장·Kill/Cleanup·모드와 현재 토큰의 지연 World 통지를 원문 부모 순서로 연결하고, 기존 Editor checkpoint·팔레트·로컬 전송을 같은 Tick의 실제 Edit 예약 소비에 설치한다. 현재 실제 Player/Pool/연결의 관문으로 첫 MainMenu의 생략을 판정해야 하며, 단순히 World가 없다는 이유로 가짜0/빈 효과를 제공하면 안 된다. 초기 모듈/준비 checkpoint 통과를 실제 Edit 진입 완료로 합산하지 않는다.
+- [x] **457 완료:** 원문 연결표/pending/deferred 여섯 실제 PE580관측(중단268)을 고정하고 현재22/22/32표·동기화·개수와 같은 소멸/free 순서를 복원했다. 기존 Editor 명시 종료도 같은004df440을 쓰며 -32 이하의 원문 자연 반환을 유지한다. Source4(2049소스) build4 경고/오류0·집중230고유/관측·신규6개·실패0, 기존 fixture651개·원본/CD 등 보호1821파일을 보존했다. build1 Retire 경계 제거의 C3861 한 건과 첫 집중의 새 Client fixture 자료 경로 누락1실패를 원시 보존했고 Native/기존 단언을 유지해 교정했다. Source2 이후 제품 본문/게임`1eaab3e9…`는 같다. 장기표의 실제 생성/수락/재배치/해제 writer는 미연결이므로 빈 표를 기존 Session 연결 부재나 전체 cleanup 성공으로 판단하지 않는다. 이번 GUI/전체CTest는 반복하지 않았다. 마지막 전체 정밀 디컴파일 HJOW-Athlon/2026-10-23 그대로다. [457 문서](docs/exe/cpp-connection-cleanup-runtime-20261026.md), [실행 보고서](cpppj/connection-cleanup-runtime-20261026.json), 원시`extracted/cpp-connection-cleanup-457-*`. State1/Edit·미션 자연 완주 완료는 아니다.
+- [ ] **다음:** 먼저 기존 로컬 전송의 실제 생성·수락·재배치·해제 writer를457 ClientConnectionGlobals의 같은 현재 표에 연결한다. 원문 연결 정리의 진짜 종료/반납 장치를 재사용하고 음수 pending/양수 owner/버퍼를 복제하지 않는다. 이어 Native State1 전체34Effect/cleanup·prefix와 Runtime/Player 반납 coordinator를 실제 Client 장기에 연결한다. 455의 현재 등록 SID목록/count와454의 실제 자식 반환 증빙을 재사용한다. 456의 World 이전 HUD 공장·Kill/Cleanup·모드와 현재 토큰의 지연 World 통지를 원문 부모 순서로 연결하고, 기존 Editor checkpoint·팔레트·로컬 전송을 같은 Tick의 실제 Edit 예약 소비에 설치한다. 현재 실제 Player/Pool/연결의 관문으로 첫 MainMenu의 생략을 판정해야 하며, 단순히 World가 없다는 이유로 가짜0/빈 효과를 제공하면 안 된다. 초기 모듈/준비 checkpoint 통과를 실제 Edit 진입 완료로 합산하지 않는다.
 - [ ] 436의 남은 기존 SID16 변환, 438의 전체 Deck nullable+ac와 Native cleanup 접합, 443의 단일 Drop.preview SID16 경계는452에서 완료했다. 나머지 SID16/nullable 경계를 이어서 처리한다. 전체 Deck 명령 부모와 UserInput writer는451에서 완료했다.
 
 ### 2. Edit 메뉴 완성

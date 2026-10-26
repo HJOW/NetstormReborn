@@ -1,0 +1,29 @@
+{
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "edition": "PATCH10.78",
+  "observations": 580,
+  "stoppedObservations": 268,
+  "realFunctions": [
+    "0x4df440",
+    "0x4df520",
+    "0x4e2940",
+    "0x4e29c0",
+    "0x4e2a10",
+    "0x4df4a0"
+  ],
+  "stubbedEffects": [
+    "004e03d0 connection destructor",
+    "004e4354 CRT free",
+    "004e0620 assertion"
+  ],
+  "originalGameExecuted": false,
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_connection_cleanup.py": "91e7aef0ddf14204c6a8c1c3c51db767f04b5b57262cbd36886f69e0f0dea194",
+    "cpppj/tests/fixtures/connection-cleanup-x86.tsv": "46d1c839cf052e4caccd50a4d9d2dedf3d6871aaa281033eb25b8515222232c5"
+  }
+}
