@@ -22,6 +22,8 @@ void InspectGumpBackgroundAssets(const std::filesystem::path& root,bool cd);
 
 // 등록된 테스트를 모두 실행한다. 실패한 검사가 하나라도 있으면 1 을 돌려준다.
 int main(int argc,char** argv) {
+    // 실제 컴파일된 등록 이름만 읽는다. 사례 본문/원본/창/장치를 실행하지 않아 stderr 혼입 없는 목록을 제공한다.
+    if (argc==2 && std::string_view(argv[1])=="--list") { for (const auto& testCase:netstorm::test::Registry()) std::printf("%s\n",testCase.name);return 0; } //등록 순서를 유지하고 임의 소스 이름으로 성공을 만들지 않는다.
     // 특정 복원 모듈만 빠르게 재검사할 때 --filter <이름 일부>를 지정한다. 기본 CTest는 전체를 실행한다.
     const bool filtered=argc==3 && std::string_view(argv[1])=="--filter";
     // 선택 검사는 원본 파일을 읽을 때만 실행한다. 일반 CTest에는 원본 자산이 필요 없다.

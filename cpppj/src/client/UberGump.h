@@ -53,6 +53,7 @@ public:
     void CleanupGumpsForState(); //004662b0 실제 공통 정리와 호스트 페이지 캐시 반납이며 State 확정은 하지 않는다.
     void ApplyHudModeForState(std::uint32_t mode); //00466280의 현재 명령/원문 모드를 자식 우선·숨김 포함으로 분배하며 State/loaded는 쓰지 않는다.
     void ReplaceHudForState(); //004c77c0의 전체 네 자식 공장을 World 생성 전에 구성하며 mode/Player/loaded를 쓰지 않는다.
+    void CleanupNativeStateWorld(std::uint32_t reason); //004b2df0 전체 부모를 같은 실제 Client/UI와 Core0 뒤 Runtime 반납에 실행한다. State1 prefix/확정은 별도다.
     // 새 화면 팔레트를 월드 어댑터에도 전달하고 UI/표시를 다시 그린다.
     void PaletteChanged();
     // 현재 월드가 번개 효과의 부모로 살아 있는지 반환한다. 브리핑 정지 중에도 월드는 존재한다.
@@ -94,6 +95,7 @@ private:
     bool FortSelectionEvent(const InputEvent& event); // 실제 AskEditFort/ReadFort를 같은 pending 이름·목록·숫자 nextState에 분배한다.
     void SelectCurrentFortName(std::string_view name); // 원문 MissionFortRequest.selectFort 위치에서 전체 현재 이름 부모를 실제 Client/Template에 연결한다.
     void EnsureHudFactories(); //현재 Client 장기 전역·물리로 네 공장만 준비하며 새 월드/Session을 생성하지 않는다.
+    void RetireWorldForState(); //실제 State 자식 정리 뒤 같은 Runtime의 호스트 참조만 반납한다. 게임 전역·기한·정지를 다시 쓰지 않는다.
     void InstallHud(); // 현재 실제 월드와 같은 공통 전체 Uber/자식 공장·도킹을 연결한다.
     // 기존 미션을 원본 Begin 순서로 종료/해제하고 새 빈 미션을 준비한다.
     void BeginMission(std::string name,std::uint32_t demo=0,std::uint32_t mode=0);

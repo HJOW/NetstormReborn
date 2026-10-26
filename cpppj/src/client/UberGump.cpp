@@ -65,6 +65,8 @@
 #include "client/ClientStaticStrings.h"
 #include "client/ClientPlayerRecords.h"
 #include "client/ClientSpGlobals.h"
+#include "client/ClientStateWorldCleanup.h"
+#include "client/ClientCursorStateCleanup.h"
 #include "client/ClientKencloudGlobals.h"
 #include <algorithm>
 #include <sstream>
@@ -315,6 +317,22 @@ void UberGump::ClearWorld() {
 }
 // 현재 어댑터의 월드 수명으로 원본 번개 부모 조회 경계를 제공한다.
 bool UberGump::HasWorld() const { return world_!=nullptr; }
+// Native 부모가 실제 AI/링크/Kernel을 정리하고 Core0을 선택한 뒤 호출하는 호스트 소비자 반납이다.
+void UberGump::RetireWorldForState() {
+    if (!world_) throw std::logic_error("State Runtime 반납의 현재 GameWorld 소유자 누락");
+    mapUserName_=world_->Session().CurrentHandle();state_.Cancel("LoadMissionFort");state_.Cancel("LoadMissionWorld");missionFortRequest_.reset();
+    gameMenuState_.reset();if (objectMenus_) objectMenus_->Clear(); //현재 Runtime에 대한 메뉴/Form 비소유 참조만 반납한다.
+    client_.GetRenderer().SetExtraCollection({});client_.GetRenderer().SetOverlayProcedure({}); //새 HUD를 지우지 않고 이전 월드 Draw callback만 닫는다.
+    missionRuntime_.reset();userInput_.reset();mission_.reset();briefingSections_.clear();briefingIndex_=0;fortObjects_=0; //반납한 Runtime을 다음 호스트 Guide/합성이 다시 참조하지 않게 한다. 실제 Native 전역은 이 위치에서 쓰지 않는다.
+    auto retiring=std::move(world_);retiring.reset(); //같은 Session의 실제 자식 증빙이 C++ 소멸자의 중복 전역 쓰기를 막는다.
+}
+// 같은34Effect/직접 전역/Runtime 조정기를 실제 공통 UI와 원문 부모 위치에 연결한다.
+void UberGump::CleanupNativeStateWorld(std::uint32_t reason) {
+    ClientStateWorldDevices devices;devices.cancelInitialCursor=[this] { CancelClientCursorForState(client_,*client_.SurfaceStorage()); };
+    devices.killGumps=[this] { KillGumpsForState(); };devices.cleanupGumps=[this] { CleanupGumpsForState(); };devices.replaceUber=[this] { ReplaceHudForState(); };devices.refreshSp=[this] { RefreshStormPower(); };
+    devices.retireRuntime=[this] { RetireWorldForState(); };devices.assertion=[](auto line) { throw std::logic_error("원문 State 중복 모드 진단:"+std::to_string(line)); };
+    CleanupClientStateWorld(reason,{client_,*client_.SurfaceStorage(),*templateStorage_,*rawButtons_->Menus(),client_.WorldAudio()},client_.SurfaceStorage(),devices);
+}
 // 별도 로그인 값 없이 현재 월드의 같은 Session 전역을 직접 조회한다.
 std::uint32_t UberGump::CurrentSubscriber() const { return client_.CurrentSubscriber(); }
 // 기본 메뉴를 초기화한 다음 프레임에 미션을 시작한다.

@@ -1,5 +1,6 @@
 // 43e640/43ddd0/43ec00을 기존 격자·항목·SHP·글자 및 현재 Session에 조립한다.
 #include "client/ClientColorSortInput.h"
+#include "client/ClientSpGlobals.h"
 #include "client/RawProductionControls.h"
 #include "client/ProductionShortcuts.h"
 #include "client/HudDividerInput.h"
@@ -85,7 +86,7 @@ struct RawProductionControls::Impl {
         h.allocate=[this](auto bytes) { const auto token=common.token();if (bytes==0xb4) images.emplace(token,std::make_unique<ImageGumpNode>());else if (bytes==0xa4) texts.emplace(token,std::make_unique<TextGumpNode>());else throw std::logic_error("생산 자식 할당 크기 오류");return token; };
         h.image=[this](auto token,auto type,auto frame,auto mode) { image->Construct(token,type,static_cast<std::uint32_t>(frame),mode); };h.text=[this](auto token) { menus.TextBackend().Construct(token,0,0,0,0); };
         h.styledText=[this](auto token,std::string_view text) { Style(token,text); };h.fitText=[this](auto token) { menus.TextBackend().Fit(token); };h.attach=common.attach;
-        h.costUnits=[this](auto type) { return Session().HitPoints().TypeCostUnits(type); };h.money=[this](auto who) { return Session().Sp(who); };h.position=[this](auto token) { return common.collection.Position(token); };
+        h.costUnits=[this](auto type) { return Session().HitPoints().TypeCostUnits(type); };h.money=[this](auto who) { return Money(who); };h.position=[this](auto token) { return common.collection.Position(token); };
         h.background=[this](auto rect,auto flags,auto type,auto frame) { if (!activeBackground) throw std::logic_error("생산 장식 실제 표면 없음");activeBackground->Texture(rect,flags,type,frame); };
         h.local=[this](auto token,auto,auto x,auto y) { return common.collection.ScreenToLocal(token,{std::bit_cast<std::int32_t>(x),std::bit_cast<std::int32_t>(y)}); };h.knowledgeOpen=[this] { return context.gameplay->cursor.lockDepth==0 ? 1U : 0U; };
         h.imageHit=[this](auto token,float x,float y) { return image->Hit(token,x,y); };h.denied=[this](auto first,auto flags) { return first==productionGlobals.policyFirst && static_cast<std::uint8_t>(flags)==productionGlobals.policyByte ? 1U : 0U; };h.tell=hooks.tell;
@@ -118,6 +119,8 @@ struct RawProductionControls::Impl {
     void Prepare() { ReadCurrent();if (!constructing) stock=static_cast<std::uint32_t>(hooks.configInt("useProductTimers",1)); }
     // 선택한 게임 효과에서만 현재 실제 Runtime을 요구한다.
     RawCampaignSession& Session() const { return context.gameplay->RequireSession(); }
+    //0043e530의 SP 읽기는 World가 아니라 실제 Client 장기 분산표를 사용한다. 독립 기존 문맥만 같은 Session의 표로 돌아간다.
+    float Money(std::uint32_t who) const { return context.sp ? std::bit_cast<float>(context.sp->Store().Get(who)) : Session().Sp(who); }
     // 원문 known0에서는 실제 Player 포인터를 읽지 않는다. 알려진 현재 parent만 같은9기록에서 읽는다.
     std::uint32_t Technology() const { if (!context.gameplay->player.playerKnown) return 0;return Technology(context.gameplay->player.battleOwner); }
     // 명시 owner 조회는 known 진단과 실제 물리 범위를 보존한다.
@@ -225,7 +228,7 @@ struct RawProductionControls::Impl {
     // 43e530의 금액 표시와43ef10의 dirty/부모 재연결→공급/내용물 유지 순서다.
     void Idle(std::uint32_t token) {
         Prepare();if (hints.contains(token)) { hint->Idle(token);return; }if (token==budgetToken) {
-            const auto target=context.gameplay->player.playerKnown ? static_cast<std::int32_t>(Session().Sp(owner)) : 0;
+            const auto target=context.gameplay->player.playerKnown ? static_cast<std::int32_t>(Money(owner)) : 0;
             if (budget.flash && budget.until<=hooks.now()) { --budget.flash;budget.until=hooks.now()+kFlashInterval;BudgetText(); }
             if (budget.amount!=target) { const auto distance=static_cast<std::int64_t>(target)-budget.amount;budget.amount+=distance<0 ? (distance<-300 ? -100 : distance<-30 ? -10 : -1) : (distance>300 ? 100 : distance>30 ? 10 : 1);if (context.storage->ownerMode.fort) budget.amount=target;BudgetText(); }
         } else if (token==rootToken) {

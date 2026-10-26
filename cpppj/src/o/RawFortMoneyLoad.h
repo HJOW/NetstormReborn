@@ -3,6 +3,12 @@
 #include "o/SquidReward.h"
 
 namespace netstorm::o {
+// PATCH00447810이 실제 사용 위치에서 읽는 같은 Client 전역이다. 로컬/Editor 상태의 사본을 새로 만들지 않는다.
+struct PlayerSpSetReads {
+    std::function<std::uint32_t()> clientActive,localOwner,editor; //00595344/00540c70/005c85a4의 현재 DWORD 조회다.
+};
+//00447810의 같은 지정 몸체를 Fort Money와 Session 없는 State 정리가 공유한다. 표시 callback은 로컬 활성 분기에서만 필요하다.
+void SetPlayerSpAmount(std::int32_t owner,std::int32_t amount,ScrambledSpStore& store,const PlayerSpSetReads& reads,const std::function<void()>& refresh);
 // MemStream이 실제로 읽는 pos/end DWORD다. 저장금액의float값은 이함수에서 사용하지 않는다.
 struct FortMoneyCursor {
     std::uint32_t position{}; // 현재스트림pos이며 실제몸체가4를감김가산한다.

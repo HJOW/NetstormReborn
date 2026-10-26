@@ -3455,7 +3455,7 @@ void RawCampaignSession::SynchronizeProductionContents() { if (!impl_->loaded &&
 std::uint32_t RawCampaignSession::IslandCount() const { return impl_->islands->Count(); }
 const ContainedFinderState& RawCampaignSession::ProductionFinder() const { return impl_->contentFinder; }
 // 별도 값 버퍼나 가짜 Session 없이 현재 실제 생성 자료를 빌린다.
-ProductionControlContext RawCampaignSession::ProductionContext() const { return {impl_->world.Storage(),impl_->gameplayGlobals,impl_->playerRecords,impl_->battleOptions}; }
+ProductionControlContext RawCampaignSession::ProductionContext() const { return {impl_->world.Storage(),impl_->gameplayGlobals,impl_->playerRecords,impl_->battleOptions,impl_->services.spGlobals}; }
 // 원본43ef10의 생산 단락만 현재 Gump idle 위치에서 실행한다. 나머지HUD/공급 주기는 별도 몸체다.
 bool RawCampaignSession::UpdateProductionContents() {
     auto& s=*impl_;if (!s.loaded || (!s.core.ownerMode.fort && !s.core.ownerMode.battle && !s.core.ownerMode.challenge)) return false;

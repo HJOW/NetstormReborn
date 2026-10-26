@@ -109,6 +109,7 @@ public:
     bool Paused() const;
     // 00460e70의 같은 시계 누적 정지 시간만0으로 쓴다. Native cleanup 호출 연결은 별도이며 현재 프레임/원점/정지 소유권은 보존한다.
     void ResetGameClock();
+    void InterpretStateOptions(); //004b2df0 후반의 실제435220을 같은 현재 설정/장치에 재실행한다. State/미션 확정은 하지 않는다.
     // 원본 세 해상도의 창 모드 장치와 Renderer를 다시 만든다.
     void ChangeResolution(int width, int height);
     // 원본 창 제목을 현재 미션/메뉴 상태에 맞춘다.

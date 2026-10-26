@@ -6,10 +6,12 @@
 #include <array>
 
 namespace netstorm::client {
+class ClientSpGlobals; // 원문 예산 Idle이 World 유무와 무관하게 읽는 실제 장기 SP owner다.
 struct ProductionControlContext {
     std::shared_ptr<RawSurfaceStorage> storage; // 실제 Client Pool/TYPE/공간의 고정 물리다.
     std::shared_ptr<ClientGameplayGlobals> gameplay; // 실제 현재 Player/커서/검색/editor이며 Session 없는 생성도 이를 읽는다.
     std::shared_ptr<ClientPlayerRecords> players; // PlayerKnown일 때만 실제 현재 Player 기록을 조회한다.
     const std::array<std::uint8_t,87>& options; // 실제 현재 BYTE1의 초기 슬롯 수다. UI보다 오래 살아야 한다.
+    std::shared_ptr<ClientSpGlobals> sp{}; // 실제 Client는 같은00531890 분산표를 제공한다. 기존 독립 Session 문맥만 생략하여 종전 Runtime 경로를 쓴다.
 };
 }

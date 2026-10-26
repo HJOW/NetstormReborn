@@ -681,11 +681,13 @@ void Client::Pause(bool paused) {
 // 원본 미션 정지는 메뉴 정지 여부와 무관하게 실제 같은 시계 깊이를 한 번 증가시킨다.
 void Client::PushGamePause() { clock_.Pause(timeGetTime()); }
 // 원본 미션 재개는 실제 같은 시계의 마지막 깊이가 해제될 때만 시간을 진행한다.
-void Client::PopGamePause() { clock_.Resume(timeGetTime()); }
+void Client::PopGamePause() { clock_.Resume(timeGetTime());if (!clock_.IsPaused()) uiPaused_=false; } //실제 마지막 정지가 풀리면 호스트 UI의 보유 표식도 반납한다. Native State의 전체 Resume 뒤 다음 모달이 다시 정지할 수 있어야 한다.
 // 자동 검사는 표시 단계와 실제 시계 정지를 함께 검사한다.
 bool Client::Paused() const { return clock_.IsPaused(); }
 // 실제 Client 시계의 기존 Reset만 호출하며 시각 조회/프레임 재캡처/중첩 정지 반납을 추가하지 않는다.
 void Client::ResetGameClock() { clock_.Reset(); }
+// Native State 부모의 정확한 위치에서 기존 설정 해석 본문을 재사용한다.
+void Client::InterpretStateOptions() { InterpretOptions(); }
 // 원본 창 제목을 ANSI 바이트로 적용한다(한국어는 후순위).
 void Client::Title(std::string_view title) { SetWindowTextA(static_cast<HWND>(window_), std::string(title).c_str()); }
 // 기본 UI만 제공한다. 검사 장면의 독립 실행은 기존 연결점을 보존한다.

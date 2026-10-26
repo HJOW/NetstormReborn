@@ -4,6 +4,7 @@
 target_sources(netstorm PRIVATE
     # State 부모의 실제 AI/Deck/Kernel 증빙을 Core0 뒤 Session 반납으로 연결한다.
     ClientStateRuntimeRetirement.cpp ClientStateRuntimeRetirement.h
+    ClientStateWorldCleanup.cpp ClientStateWorldCleanup.h
     # 기존 Editor checkpoint 이후의 실제 State/입력 고리와 장치 순서를 연결한다.
     ExistingEditorAfterCheckpoint.cpp ExistingEditorAfterCheckpoint.h
     # 실제게임메뉴부모·명령ID와Tell지역param파서를같은Client/Session에연결한다.

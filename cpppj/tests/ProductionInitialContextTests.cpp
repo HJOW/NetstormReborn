@@ -2,6 +2,13 @@
 #include "DudeSpawnSupport.h"
 #include "client/ClientMain.h"
 #include "client/ClientLocalStateGlobals.h"
+#include "client/ClientStateWorldCleanup.h"
+#include "client/ClientCursorStateCleanup.h"
+#include "client/ClientPlayerRuntime.h"
+#include "client/ClientPlayerRecords.h"
+#include "client/ClientAudio.h"
+#include "client/ClientSpGlobals.h"
+#include "client/CampaignTemplateStorage.h"
 #include "client/ClientSubscriberGlobals.h"
 #include "client/RawButtonControls.h"
 #include "client/RawProductionControls.h"
@@ -311,4 +318,62 @@ TEST_CASE(ProductionInitialContext_AtomicHudModeFinishesNative1024Layout) {
 TEST_CASE(ProductionInitialContext_StateCleanupReleasesOnlyFreedControlAliases) {
     InitialProductionScene scene;const auto& type=scene.assets.game.Find("fortGump");const auto metrics=scene.assets.game.Shapes().SquidMetrics(type.block,0);GumpControl control;control.id=0;control.rect={10,10,90,40};control.enabled=true;const std::array<GumpControl,1> controls{control};const std::array<std::string,1> labels{"STATE"};scene.buttons.SetControls(controls,labels,640,480,{static_cast<std::uint32_t>(type.block+70),0,metrics.width,metrics.height,{}});const auto root=scene.buttons.RootToken();CHECK(scene.buttons.Report().starts_with("RawButtons\t1\t"));
     scene.buttons.KillStateGumps();CHECK(scene.buttons.Report().starts_with("RawButtons\t1\t"));scene.buttons.CleanupGumps();CHECK(scene.buttons.RootToken()==root && scene.Count()==1 && scene.buttons.Report().starts_with("RawButtons\t0\t1\t"));scene.buttons.SetControls(controls,labels,640,480,{static_cast<std::uint32_t>(type.block+70),0,metrics.width,metrics.height,{}},true);CHECK(scene.buttons.RootToken()==root && scene.buttons.Report().starts_with("RawButtons\t1\t"));
+}
+
+namespace { // 전체 State의 UI 효과에도 기존 실제 공장만 전달하는 초기 Client 입력이다.
+struct WholeStateScene {
+    InitialProductionScene scene;InitialUberGlobals layout;CampaignTemplateStorage templates;Renderer renderer{640,480,OriginalEdition::Patch1078}; // 같은 Client/물리/공통 HUD/Renderer 수명을 전체 호출 동안 유지한다.
+    std::uint32_t cancelled{},killed{},cleaned{},replaced{},refreshed{},retired{}; // 실제 외부 호출의 순서와 횟수만 관측한다.
+    WholeStateScene() { // 원문 공통 Player 시작과 같은 장기 Kernel을 연결하며 화면/음향 장치는 열지 않는다.
+        scene.storage->Processes().BindDevices(scene.client.ProcessKernelOwner(),scene.client.FrameClockOwner());InitializeClientPlayerRecords(scene.client);scene.client.InitializeNativeAudio();auto context=InitialUberContext(scene,layout,&scene.client.GameplayGlobals()->FullDeck());
+        context.root.createProduction=[this] { auto data=scene.Context();data.sp=scene.client.SpGlobals();return scene.buttons.ConstructProduction(std::move(data),scene.assets.game,scene.Hooks()).RootToken(); };scene.buttons.EnableUberRoot(std::move(context)); //기존 독립 fixture는 그대로 두고 실제 Client 초기 HUD처럼 같은 장기 SP를 연결한다.
+    }
+    ClientStateWorldDevices Devices() { // 선택한 UI 효과를 같은 실제 등록표와 기존 네 공장에 직접 분배한다.
+        ClientStateWorldDevices result;result.cancelInitialCursor=[this] { ++cancelled;CancelClientCursorForState(scene.client,*scene.storage,{},[this]() -> Renderer& { return renderer; }); };
+        result.killGumps=[this] { ++killed;scene.buttons.KillStateGumps(); };result.cleanupGumps=[this] { ++cleaned;scene.buttons.CleanupGumps(); };
+        result.replaceUber=[this] { ++replaced;scene.buttons.UberRoot()->Replace(); };result.refreshSp=[this] { ++refreshed;scene.buttons.RefreshStormPower(); };
+        result.retireRuntime=[this] { ++retired;throw std::logic_error("첫 메뉴에는 실제 Runtime 반납이 선택되면 안 됨"); };result.assertion=[](auto) { throw std::logic_error("전체 초기 State의 예상 밖 진단"); };return result;
+    }
+    ClientStateWorldContext Context() { return {scene.client,*scene.storage,templates,*scene.menus,scene.client.WorldAudio()}; } //전체 직접 전역도 같은 실제 owner에서 빌린다.
+};
+}
+
+// Session 없는 첫 메뉴도 원문 전체 부모의 실제 UI·SP·Player/Pool·표·Core를 순서대로 실행한다.
+TEST_CASE(ClientStateWorldCleanup_ActualInitialClientAndAllHudFactories) {
+    WholeStateScene input;auto& client=input.scene.client;auto storage=input.scene.storage;auto game=client.GameplayGlobals();const auto base=client.PlayerRecords()->Base();const auto root=input.scene.buttons.RootToken();storage->links.ownerColors.fill(77);storage->priestOwnerState.fill(123);game->FullDeck()=0x80000001U;game->HideBuildings()=5;client.LocalStateGlobals()->PlayerNoMakeWarnings().fill(9);
+    CleanupClientStateWorld(0,input.Context(),storage,input.Devices());
+    CHECK(input.cancelled==1 && input.killed==1 && input.cleaned==1 && input.replaced==1 && input.refreshed==1 && input.retired==0 && !storage->Borrowed() && !game->Borrowed());
+    CHECK(client.PlayerRecords()->Base()!=base && client.PlayerRecords()->Initialized() && client.CoreDataGlobals()->Current().data()==client.PlayerRecords()->Records().data()+180+0x6c && game->player.playerKnown==1 && game->player.battleOwner==1);
+    CHECK(input.scene.buttons.RootToken()!=root && input.scene.buttons.UberRoot()->Current() && input.scene.buttons.Production() && input.scene.buttons.Minimap() && input.scene.menus->NsInfoRoot() && input.scene.menus->ChatWindowRoot());
+    CHECK(game->FullDeck()==0 && game->HideBuildings()==0 && !game->Server() && !game->Boss() && !storage->ownerMode.fort && !storage->ownerMode.battle && storage->chunks.Mode()==1 && storage->bridgeDecayScan.first==15000 && storage->bridgeDecayScan.last==23001);
+    CHECK(storage->links.ownerColors.size()==9 && storage->links.ownerColors[0]==0 && storage->links.ownerColors[8]==8 && storage->priestOwnerState[0]==123 && storage->priestOwnerState[8]==0 && client.LocalStateGlobals()->PlayerNoMakeWarnings()[254]==0); //실제 색 표는9칸이다. 원문 밖 열째 canary는 기존 StateBridgeReset의 별도10칸 입력에서 검증한다.
+}
+
+// 두 번째 정리는 앞선 Core1의 현재 Player를 실제로 읽고 SP 표시와 새/이전 HUD를 다시 교체한다.
+TEST_CASE(ClientStateWorldCleanup_SecondInitialPassUsesCurrentCoreAndNewHud) {
+    WholeStateScene input;auto devices=input.Devices();CleanupClientStateWorld(0,input.Context(),input.scene.storage,devices);const auto base=input.scene.client.PlayerRecords()->Base();const auto root=input.scene.buttons.RootToken();const auto count=input.scene.Count();const auto revision=input.scene.client.GameplayGlobals()->MapRevision();
+    CleanupClientStateWorld(0,input.Context(),input.scene.storage,devices);
+    CHECK(input.cancelled==2 && input.killed==2 && input.cleaned==2 && input.replaced==2 && input.refreshed==3 && input.retired==0);CHECK(input.scene.client.PlayerRecords()->Base()!=base && input.scene.buttons.RootToken()!=root && input.scene.Count()==count && input.scene.client.GameplayGlobals()->MapRevision()==revision+1U);
+}
+
+// 선택한 실제 UI 장치가 없으면 그 위치에서 중단하며 후반 Pool/Player를 성공으로 처리하지 않는다.
+TEST_CASE(ClientStateWorldCleanup_MissingSelectedHudKeepsPriorNativeWrites) {
+    WholeStateScene input;auto storage=input.scene.storage;const auto base=input.scene.client.PlayerRecords()->Base();storage->links.ownerColors.fill(77);auto devices=input.Devices();devices.replaceUber={};bool failed{};
+    try { CleanupClientStateWorld(0,input.Context(),storage,devices); }catch (const std::logic_error&) { failed=true; }
+    CHECK(failed && input.cancelled==1 && input.killed==1 && input.cleaned==1 && input.replaced==0 && input.scene.client.PlayerRecords()->Base()==base && storage->links.ownerColors[8]==77 && input.scene.client.LocalStateGlobals()->ScriptBreak()==1 && input.scene.client.GameplayGlobals()->FullDeck()==0);
+}
+
+// 원문0043e530 예산 Idle은 현재 Core1을 선택한 뒤에도 Runtime 없이 같은 장기 분산 SP를 읽는다.
+TEST_CASE(ClientStateWorldCleanup_BudgetIdleUsesLongLivedSpWithoutRuntime) {
+    WholeStateScene input;CleanupClientStateWorld(0,input.Context(),input.scene.storage,input.Devices());auto& panel=*input.scene.buttons.Production();const auto token=input.scene.Token(0x506948);CHECK(token && !input.scene.client.GameplayGlobals()->Borrowed());auto& store=input.scene.client.SpGlobals()->Store();
+    const auto amount=[&] { std::istringstream report(panel.Report());std::string label;std::uint32_t root{},id{};float width{},height{};std::int32_t value{};report>>label>>root>>id>>width>>height>>value;CHECK(label=="raw_production_gump");return value; }; //실제 현재 예산 값을 보고서에서 읽으며 SP 쓰기·수신을 실행하지 않는다.
+    store.Set(1,std::bit_cast<std::uint32_t>(1000.0F));const auto before=input.scene.client.RandomGlobals()->Game().State();panel.Idle(token);CHECK(amount()==100 && input.scene.client.RandomGlobals()->Game().State()==before);
+    store.Set(1,std::bit_cast<std::uint32_t>(50.0F));panel.Idle(token);CHECK(amount()==90 && !input.scene.client.GameplayGlobals()->Borrowed()); //외부의 다음 실제 SP 변경도 새 Session이나 값 사본 없이 즉시 표시 목표에 반영한다.
+}
+
+// 전체 Resume가 실제 모든 정지 깊이를 해제하면 호스트 UI 표식도 사라져 다음 모달이 다시 게임을 멈춘다.
+TEST_CASE(ClientStateWorldCleanup_NestedResumeReleasesUiPauseOwner) {
+    WholeStateScene input;auto& client=input.scene.client;client.Pause(true);client.PushGamePause();client.WorldAudio().PushMute();client.WorldAudio().PushMute();CHECK(client.Paused());
+    CleanupClientStateWorld(0,input.Context(),input.scene.storage,input.Devices());CHECK(!client.Paused() && client.WorldAudio().Describe().find("muteDepth\t0\n")!=std::string::npos);
+    client.Pause(true);CHECK(client.Paused());client.Pause(false);CHECK(!client.Paused()); //새 UI 소유자가 실제 한 깊이를 취득·반납하며 전환 전의 stale bool로 정지를 건너뛰지 않는다.
 }

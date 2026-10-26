@@ -10,6 +10,19 @@ constexpr std::array<std::int32_t,3> kInitialSp{1000,2500,3000}; // 패치0041c7
 constexpr std::uint8_t kExcludedPlayer=0x20; // Money시작SP지정에서건너뛰는현재Player+50 비트다.
 constexpr float kPatchFortSp=194162.0f,kCdFortSp=100000.0f,kSpecialLocalSp=194162.0f; // 실제판본별Money fort값과모든유효owner의special 지정값이다.
 constexpr std::uint32_t kBonusSp=4000,kSpCheckCount=99; // 패치시작SP의가산DWORD와검사잔여횟수다.
+// 원문이 선택한 실제 조회/표시 장치만 그 호출 위치에서 요구한다.
+template<class F> const F& NeedSp(const F& function) { if (!function) throw std::logic_error("현재 Player SP 지정 장치 누락");return function; }
+}
+
+// 현재 known/owner/Editor를 원문 위치에서 조회하고 같은 분산 SP·난수 쓰기를 실행한다.
+void SetPlayerSpAmount(std::int32_t owner,std::int32_t amount,ScrambledSpStore& store,const PlayerSpSetReads& reads,const std::function<void()>& refresh) {
+    if (NeedSp(reads.clientActive)() && static_cast<std::uint32_t>(owner)==NeedSp(reads.localOwner)()) {
+        const float value=NeedSp(reads.editor)() ? kSpecialLocalSp : static_cast<float>(amount);
+        store.Set(NeedSp(reads.localOwner)(),std::bit_cast<std::uint32_t>(value));NeedSp(refresh)();
+    } else if (owner>0 && owner<9) {
+        const float value=NeedSp(reads.editor)() ? kSpecialLocalSp : static_cast<float>(amount);
+        store.Set(static_cast<std::uint32_t>(owner),std::bit_cast<std::uint32_t>(value));
+    }
 }
 
 // 판본별Player기록크기와필수효과/분산저장소를구성전에확인한다.
@@ -33,13 +46,7 @@ std::uint8_t RawFortMoneyLoad::PlayerFlags(std::uint32_t owner) const {
 // AI지갑가산이나SP차감용AddSp를사용하지않고실제지정몸체의분기를따른다.
 void RawFortMoneyLoad::SetPlayerSp(std::int32_t owner,std::int32_t amount) const {
     if (edition_!=OriginalEdition::Patch1078) throw std::logic_error("CD Money에패치SetPlayerSp를호출할수없습니다");
-    if (state_.clientActive && static_cast<std::uint32_t>(owner)==players_.localOwner) {
-        const float value=reward_.fixedSpB ? kSpecialLocalSp : static_cast<float>(amount);
-        patchStore_->Set(players_.localOwner,std::bit_cast<std::uint32_t>(value));hooks_.refreshSp();
-    } else if (owner>0 && owner<9) {
-        const float value=reward_.fixedSpB ? kSpecialLocalSp : static_cast<float>(amount);
-        patchStore_->Set(static_cast<std::uint32_t>(owner),std::bit_cast<std::uint32_t>(value));
-    }
+    SetPlayerSpAmount(owner,amount,*patchStore_,{[this] { return state_.clientActive ? 1U : 0U; },[this] { return std::uint32_t(players_.localOwner); },[this] { return reward_.fixedSpB ? 1U : 0U; }},hooks_.refreshSp);
 }
 
 // wrapper의현재깊이/Template진단뒤Money4바이트소비·현재모드별SP를순서대로적용한다.
