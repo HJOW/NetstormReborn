@@ -1,0 +1,277 @@
+{
+  "unit": 472,
+  "date": "2026-10-27",
+  "host": "HJOW-Athlon",
+  "baseCommit": "ead0c3ae",
+  "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+  "decompileChanged": false,
+  "builds": [
+    {
+      "command": [
+        "cmake",
+        "--build",
+        "cpppj/build",
+        "--config",
+        "Release",
+        "--parallel",
+        "4",
+        "--",
+        "/p:UseMultiToolTask=true",
+        "/p:MultiProcMaxCount=4",
+        "/p:EnforceProcessCountAcrossBuilds=true"
+      ],
+      "exit": 1,
+      "log": "extracted/cpp-new-editor-472/build1.log",
+      "sha256": "16d42fd76c3b82326315ab47f7b968729ed55642b1d8f27e4f231bf783c3e6a2",
+      "summaries": [],
+      "diagnostics": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\tests\\CampaignNewFortTests.inc(29,89): error C2027: 정의되지 않은 형식 'netstorm::client::ClientSubscriberGlobals'을(를) 사용했습니다. [H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\tests\\netstorm_tests.vcxproj]",
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\tests\\CampaignNewFortTests.inc(29,89): error C2039: 'MySubscriber': 'std::shared_ptr<netstorm::client::ClientSubscriberGlobals>'의 멤버가 아닙니다. [H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\tests\\netstorm_tests.vcxproj]"
+      ]
+    },
+    {
+      "command": [
+        "cmake",
+        "--build",
+        "cpppj/build",
+        "--config",
+        "Release",
+        "--parallel",
+        "4",
+        "--",
+        "/p:UseMultiToolTask=true",
+        "/p:MultiProcMaxCount=4",
+        "/p:EnforceProcessCountAcrossBuilds=true"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-new-editor-472/build2.log",
+      "sha256": "9a37cbad650f95880224d9eb1986dcff11ccb10baf69faa1e00a381f73242373",
+      "summaries": [],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cmake",
+        "--build",
+        "cpppj/build",
+        "--config",
+        "Release",
+        "--parallel",
+        "4",
+        "--",
+        "/p:UseMultiToolTask=true",
+        "/p:MultiProcMaxCount=4",
+        "/p:EnforceProcessCountAcrossBuilds=true"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-new-editor-472/build3.log",
+      "sha256": "0e451e9eb7d3ace2239caf58954df16d9cf7d0e0fea69ba0d1ddb403d5a777d9",
+      "summaries": [],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cmake",
+        "--build",
+        "cpppj/build",
+        "--config",
+        "Release",
+        "--parallel",
+        "4",
+        "--",
+        "/p:UseMultiToolTask=true",
+        "/p:MultiProcMaxCount=4",
+        "/p:EnforceProcessCountAcrossBuilds=true"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-new-editor-472/build4.log",
+      "sha256": "dc0d18be5247ad1d06ce42e406a618ca9bea827f038d9fb890e7cb033b309d24",
+      "summaries": [],
+      "diagnostics": []
+    }
+  ],
+  "firstFailures": [
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "CampaignNewFort"
+      ],
+      "exit": 1,
+      "log": "extracted/cpp-new-editor-472/focused-source2-NewFort.log",
+      "sha256": "a877e0c0cade55ec478c624b0ab8e20abfa5822abfc1fa0f7b96fe45b661cab1",
+      "summaries": [
+        "3 test(s), 3 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "CampaignNewFort"
+      ],
+      "exit": 1,
+      "log": "extracted/cpp-new-editor-472/focused-source3-NewFort.log",
+      "sha256": "9c8028c10e7e008664cb15a2cd9ddb93b3ecf3298ffca1f3a1e54e1ea64f2f39",
+      "summaries": [
+        "3 test(s), 1 failed check(s)"
+      ],
+      "diagnostics": []
+    }
+  ],
+  "failureCorrections": [
+    "새 검사에서 직접 조회하는 ClientSubscriberGlobals의 선언 헤더를 추가했다.",
+    "검사 조립에서 누락한 빈 State의 미정 할당 입력 장치를 A5로 명시했다. 실제 Client는 기존 CurrentAllocationBytes 장치를 계속 사용한다.",
+    "known1의 SP를 미정 할당 비트에 맡기지 않고 검사 시작 입력0으로 명시했다. 실제 신규 부모의 원문 AddSp와194162 고정 모드를 우회하지 않았다."
+  ],
+  "focused": [
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "ExistingEditor"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-new-editor-472/final-ExistingEditor.log",
+      "sha256": "e1f1b9a026b8ee6f493beeb6d593c1e12b556d781d1235d73c8bb52e40809183",
+      "summaries": [
+        "58 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "NewFort"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-new-editor-472/final-NewFort.log",
+      "sha256": "95b3621967be08458e000ffbe14a68354aa6b9fa29bc1c66a7f568b2084f1684",
+      "summaries": [
+        "12 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "Template"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-new-editor-472/final-Template.log",
+      "sha256": "333dc58a38b96cd9744a5b17a0fc54d3b34042295e0fa98b36310ea6030c42d5",
+      "summaries": [
+        "47 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "DataManager"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-new-editor-472/final-DataManager.log",
+      "sha256": "a1914cb4fea38abbc97c28582e120fabd62870ce4d51a5f2b9f5caccb14751b8",
+      "summaries": [
+        "21 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "FortSubscriber"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-new-editor-472/final-FortSubscriber.log",
+      "sha256": "38b06b8788f5a23f35709878bc1924bce771db4aed66e115f01d0d4658c2ae10",
+      "summaries": [
+        "4 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "SaveFortName"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-new-editor-472/final-SaveFortName.log",
+      "sha256": "c49617a9f843fc78604bdd05ad700b470be22436c0f033324d8c6d0f843a7a11",
+      "summaries": [
+        "6 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    }
+  ],
+  "uniqueFocused": 148,
+  "observedFocused": 148,
+  "wholeCpp": {
+    "command": [
+      "cpppj/build/bin/Release/netstorm_tests.exe"
+    ],
+    "exit": 0,
+    "log": "extracted/cpp-new-editor-472/whole1.log",
+    "sha256": "854d9775c751738ba0d43761aa62d6b868bd27371f7ea530329bc19a08390856",
+    "summaries": [
+      "3233 test(s), 0 failed check(s)"
+    ],
+    "diagnostics": []
+  },
+  "wholeCppCases": 3233,
+  "ctestWrapperExecuted": false,
+  "newTests": [
+    "CampaignNewFort_ActualDataOwnersAndSavedFileBeforeWorld",
+    "CampaignNewFort_EmptyWorldCheckpointStateCommitAndAddIslandQueue",
+    "CampaignNewFort_FirstTitleFailureKeepsOnlyNativePrefix"
+  ],
+  "registeredBefore": 3230,
+  "registeredAfter": 3233,
+  "missingPreviousTests": [],
+  "preservedWholeInputFiles": 3161,
+  "changedProtectedInputs": [],
+  "appendedExistingTest": {
+    "path": "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp",
+    "originalBytes": 116454,
+    "originalSha256": "ca797a51f74ccf84bf440aeb64eb3fc741158fa49ade4b4dc64ff991f7a3835b",
+    "originalBytePrefixPreserved": true
+  },
+  "sourceManifest": {
+    "path": "extracted/cpp-new-editor-472/source-final.json",
+    "files": 2786,
+    "sha256": "ead83e1a49d644a7b1b7225b37e7594cc15a9bdcad246115bff40484aec0db24"
+  },
+  "gameExeSha256": "b5c59950d0778bbb8c458c62576159717c21bbe9d088bfe4c597694395cc3506",
+  "testExeSha256": "0aff69cf274d9cd0e23164e6483381ae7ac4c046b7fe714ea14a8f46b49b3d2e",
+  "coverage": [
+    "빈 Fort 입력/실제 manager/State28부분 초기화/실제 작업 파일 생성·저장·재파싱",
+    "같은 Client Subscriber/SP/Core/seed·Money와 실제 등록 부모",
+    "첫 제목 실패의 Native 부분 효과 보존",
+    "alternate1 빈 월드/실제 Player·Deck·Snapshot·EditorPlayers·State 공통 확정/최종 공개",
+    "원래 입력 큐의 Add Island 명령 예약"
+  ],
+  "fixedInputChecks": {
+    "unixSeconds": 946684800,
+    "subscriber": 7,
+    "editorSp": 194162,
+    "newSeedLowWord": 30897,
+    "money": 502,
+    "gameRandomAfterData": 2857353399
+  },
+  "gameRuns": 0,
+  "guiRuns": 0,
+  "newNativePeReplayExecuted": false,
+  "remaining": [
+    "실제 Create New Map 이름 창/State/자동 Add Island GUI 검증",
+    "Add Island 전용 MetaImage/Bitmap/목록/창 수명과 실제 배치",
+    "Test Battle/시나리오",
+    "전체 미션 자연 완주·원본 화면/음향 동일성"
+  ]
+}

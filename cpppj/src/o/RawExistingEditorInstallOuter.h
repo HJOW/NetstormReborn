@@ -49,6 +49,8 @@ struct ExistingEditorFortHooks {
 };
 // 정상기존파일부모만실행한다.범위밖/선택경계실패는앞선부분효과를보존한다.
 void InstallExistingEditorFile(const ExistingEditorFileHooks& hooks);
+// 004b5ca0의 최초 exists가 비영으로 확정한 뒤 경로를 다시 읽는 기존 파일 몸체다. 앞선 존재 검사를 반복하지 않는다.
+void InstallPresentEditorFile(const ExistingEditorFileHooks& hooks);
 // 004b743b의부분checkpoint까지다.전체State부모반환/후속UI/최종loaded는설정하지않는다.
 void InstallExistingEditorFort(const ExistingEditorFortHooks& hooks);
 }

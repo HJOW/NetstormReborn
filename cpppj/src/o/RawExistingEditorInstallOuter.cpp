@@ -20,6 +20,10 @@ std::span<std::uint8_t> State(const std::function<std::span<std::uint8_t>(std::u
 // 004bd340은현재manager진단뒤항상0이므로기존유효파일에서도State|1/Notify가실행된다.
 void InstallExistingEditorFile(const ExistingEditorFileHooks& hooks) {
     if (!Need(hooks.exists)(Need(hooks.path)())) Outside(hooks.outside,ExistingEditorInstallOutside::NewFort);
+    InstallPresentEditorFile(hooks);
+}
+// 신규/기존 공통 분배가 이미 수행한 존재 검사는 다시 하지 않고 그 뒤 원문 위치부터 이어간다.
+void InstallPresentEditorFile(const ExistingEditorFileHooks& hooks) {
     const auto path=Need(hooks.path)();Need(hooks.load)(Need(hooks.owner)(),path); //경로getter복귀뒤현재owner를읽는다.
     if (!Need(hooks.valid)(Need(hooks.owner)())) Outside(hooks.outside,ExistingEditorInstallOutside::InvalidFile);
     const auto fixed=Need(hooks.owner)();if (!Need(hooks.manager)(fixed)) Need(hooks.assertion)(410); //원문IsDemo의정상결과0을다른headerflag로대체하지않는다.

@@ -30,6 +30,9 @@
 #include "o/RawFortCoreWrite.h"
 #include "o/RawFortSpWrite.h"
 #include "o/RawFortMoneySave.h"
+#include "o/RawNewFort.h"
+#include "o/RawFortSubscriberWrite.h"
+#include "client/NewFortManagerDevices.h"
 #include "o/RawFortBadgesGlobals.h"
 #include "o/RawFortBadgesSave.h"
 #include "o/RawEditorWorldFinish.h"
@@ -433,6 +436,7 @@ struct RawCampaignSession::Impl {
     std::uint32_t aiExcludedType{133},aiMissionFallback{}; // 실제 sunWalker 분류 제외 번호와 현재 getter를 사용할 때 읽지 않는 값형 호환 저장소다.
     bool loaded{}; // 같은 실제 저장 부모와 이동 설치가 정상 종료했을 때만 AI 생성 요청을 허용한다.
     bool editorWorldStarted{},editorWorldReady{}; //부분World단계/실제완료를구별하며전체Editor loaded로가장하지않는다.
+    std::uint32_t editorAlternate{}; //004b5ca0이 파일 부재/NewData 정상 복귀 뒤1로 확정하는 실제 월드 적재 인자다.
     bool editorCheckpointStarted{},editorCheckpointRunning{},editorCheckpointReady{}; //부분실패재실행/동기단계진입/정상checkpoint복귀를전체loaded와구별한다.
     bool editorUiStarted{},editorUiPrepared{},editorUiInstalling{},editorUiTailReady{}; // UI 한 번 준비·한정 동기 범위·실제 tail 정상 복귀를 최종 loaded와 구별한다.
     bool editorPrefixUiStarted{},editorPrefixUiInstalling{}; //State1 prefix의 파일 전 HUD 동기 범위이며 게임 입력/최종 loaded를 열지 않는다.
@@ -2602,20 +2606,13 @@ struct RawCampaignSession::Impl {
         };
         return children;
     }
+    #include "RawCampaignNewFort.inc" // 신규 자료와 기존 Subscriber 읽기가 같은 실제 등록 장치를 공유한다.
     // 파일읽기정상꼬리의현재owner를고정this로받고같은Subscriber노드/ID/handle에읽는다.
     void ReadExistingEditorSubscriber(std::uint32_t slot) {
-        std::vector<TemplateWriteStream> streams;FortSubscriberLoadHooks hooks; //선택반환의생성수명만호출동안보존한다.
+        std::vector<TemplateWriteStream> streams;auto hooks=SubscriberRegistrationHooks(); //선택반환의생성수명만호출동안보존한다.
         hooks.manager=[this](auto owner) { if (owner<0 || owner>=9) throw std::out_of_range("Subscriber 실제Template 범위");return Read(templateStorage->Headers(),static_cast<std::size_t>(owner)*20); };
         hooks.select=[&](auto manager,auto name,auto writable) { if (manager!=hooks.manager(std::bit_cast<std::int32_t>(slot))) throw std::logic_error("Subscriber 현재manager 불일치");streams.push_back(templateStorage->SelectSection(slot,name,writable));return static_cast<std::uint32_t>(streams.size()); };
         hooks.access=[&](auto token,const auto& operation) { if (!token || token>streams.size()) throw std::out_of_range("Subscriber 선택반환stream 범위");templateStorage->AccessSection(streams[token-1],operation); };
-        hooks.assertion=services.subscriber.assertion;hooks.readRegistered=services.subscriber.readRegistered;hooks.configure=services.subscriber.configure;
-        hooks.generate=[this] {
-            const auto randomOwner=services.randomGlobals;if (!randomOwner) throw std::logic_error("Subscriber 실제Client CRT 소유자 미연결"); //등록ID를새로만들때만같은장기소유자를요구한다.
-            SubscriberIdGenerateHooks devices;devices.time32=services.unixSeconds;devices.clock=services.subscriber.clock;
-            devices.expired=[this](auto level,auto text) { if (!services.player.log) throw std::logic_error("Subscriber ID 실제소진 로그 미연결");services.player.log(static_cast<std::uint32_t>(level),text); };
-            const auto bound=BindSubscriberIdCrtRandom(randomOwner->Crt(),std::move(devices)); //현재장기CRT를빌리고별도난수/시드를만들지않는다.
-            return GenerateSubscriberId({randomOwner->SubscriberIdInitialized()},bound);
-        };
         LoadFortSubscriber(std::bit_cast<std::int32_t>(slot),handle,{globals.mySubscriber},hooks); //원시ID/문자열/등록마감만실행하고Config이름/제목/World는외곽이순서대로호출한다.
     }
     // 실제 반환 노드와 같은 fields/버퍼를 빌려 현재255BYTE 변환표를 준비하고 실패한 본문만 cleanup한다.
@@ -3248,7 +3245,7 @@ void RawCampaignSession::LoadExistingEditorWorld() {
         s.player->Create(std::bit_cast<std::int32_t>(s.playerState.battleOwner));
         if (!s.globals.editor && !s.globals.missionPost) throw std::logic_error("004beca0의기존Editor자연생략관문변경");
         s.RecoverEditorTerritory();
-    });
+    },std::bit_cast<std::int32_t>(s.editorAlternate));
     s.editorWorldReady=true; //Deck/생산/전체Snapshot/State/EditorPlayers는아직안끝났으므로loaded는false다.
 }
 // 같은실제World단계뒤원본외곽이요청할때만Deck을로드한다.
@@ -3275,7 +3272,14 @@ void RawCampaignSession::InstallExistingEditorCheckpoint(const CampaignExistingE
         file.manager=[&s](auto slot) { if (slot>=9) throw std::out_of_range("EditorFile의실제9슬롯범위");return Read(s.templateStorage->Headers(),slot*20); };
         file.state=state;file.notify=notify;file.subscriber=[&s](auto slot) { s.ReadExistingEditorSubscriber(slot); };file.handle=[this] { return CurrentHandle(); };file.setConfig=fort.setConfig;
         fort.owner=owner;fort.inMission=[&s] { return s.core.bridgeState.mission ? 1U : 0U; };fort.editor=[&s] { return s.globals.editor; }; //기존GameMenus도같은두현재전역을읽는다.
-        fort.file=[&file] { o::InstallExistingEditorFile(file); };fort.world=[this] { LoadExistingEditorWorld(); };
+        fort.file=[this,&s,&file,&files] {
+            NewFortMissingFileHooks missing;missing.path=file.path;missing.exists=file.exists;missing.owner=file.owner;missing.state=file.state;missing.notify=file.notify;
+            missing.manager=[&s,&files,&file](auto slot,auto path,auto argument) { NewFortManagerDiagnostics diagnostics;diagnostics.templateAssertion=file.assertion;CreateNewEditorFortManager(*s.templateStorage,files,slot,path,argument,diagnostics); };
+            missing.data=[this,&s] { s.CreateEditorFortData([this](auto slot) { WriteExistingEditorCoreData(slot); }); };
+            missing.subscriber=file.subscriber;missing.handle=file.handle;missing.configure=file.setConfig;missing.title=file.title;
+            if (InstallMissingNewFort(s.editorAlternate,missing)) { s.deferredEditorFort.reset();s.services.missionFortImage.reset(); }
+            else InstallPresentEditorFile(file); // 최초 존재 검사와 그 뒤 현재 경로 조회를 중복 실행하지 않는다.
+        };fort.world=[this] { LoadExistingEditorWorld(); };
         fort.deck=[&s](auto slot) { if (!s.editorWorldReady) throw std::logic_error("Editor checkpoint의World전Deck");s.ReadExistingFortDeck(slot); }; //부모가인자로고정한slot을편의현재값으로다시바꾸지않는다.
         fort.priests=[&s] { s.runtime->FinishMissionPriests(); };fort.camera=s.services.install.resetCamera;fort.production=s.services.ownership.refreshProduction; //빈기본효과없이같은기존몸체/실제장치를선택한다.
         fort.coreWrite=[this](auto slot) { WriteExistingEditorCoreData(slot); }; //외부의빈성공/임의Editor생략대신현재같은실제부모가진단과자연관문을판정한다.

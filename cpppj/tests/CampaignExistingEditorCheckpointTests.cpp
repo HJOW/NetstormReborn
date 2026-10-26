@@ -748,3 +748,6 @@ TEST_CASE(CampaignExistingEditorCheckpoint_SameNameKeepsGuideAndSelectsMissionOu
 
 //같은 실제 Client/Session 설치 도우미로 저장·State3 예약과 장기 덱 소유권을 검사한다.
 #include "CampaignSaveGoMainTests.inc"
+
+// 파일 부재의 신규 자료와 같은 Client/State 확정/자동 섬 추가 큐를 검증한다. 기존 사례 본문은 보존한다.
+#include "CampaignNewFortTests.inc"

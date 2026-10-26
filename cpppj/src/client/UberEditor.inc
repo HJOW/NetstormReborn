@@ -23,7 +23,8 @@ struct UberGump::EditorRuntime {
 };
 // 원문 이름 대화창은 현재 작업본과 Template 헤더를 동기 호출 동안 그대로 빌린다.
 void UberGump::OpenSaveFortNameDialog(std::uint32_t fortMode) {
-    if (!editor_ || !world_ || !client_.GameplayGlobals()->world.editor) throw std::logic_error("실제 Editor 밖의 Save as 파일 장치 미연결");
+    if (fortMode && (!world_ || !client_.GameplayGlobals()->world.editor)) throw std::logic_error("실제 Editor 밖의 Save as 파일 장치 미연결");
+    if (!editor_) editor_=std::make_unique<EditorRuntime>(client_); // mode0 새 이름 창은 World/State1 이전에도 같은 작업 파일 장치를 빌린다.
     SaveFortNameDialogContext context;context.work=&editor_->files;context.currentName=client_.FortGlobals()->Current();context.editor.now=[this] { return client_.WallSeconds(); };
     BindTextClipboard(context.editor,textClipboard_); //최초 Chat이 이미 만든 공통 문자 UI와 같은 장치를 계속 빌린다.
     context.translate=[this](auto text) { return FontBytes(client_.Translate(o::DecodeOriginalText({reinterpret_cast<const std::uint8_t*>(text.data()),text.size()}))); };
@@ -56,8 +57,10 @@ o::LocalMissionParentResult UberGump::InstallExistingEditorState(std::uint32_t s
     //호스트 Session은 준비된 물리만 빌리고 파일 설치/Template 변경은 아래 실제 checkpoint의 위치까지 지연한다.
     const std::string pending(client_.FortGlobals()->Pending());const auto configured=client_.Configuration().PathSpec("fortSpec",pending);
     const auto working=editorCatalog_->Prepare(configured); //목록을 거치지 않는 직접 설치도 완료된 삭제 항목을 원본에서 다시 복사하지 않는다.
-    const auto image=std::make_shared<const std::vector<std::uint8_t>>(client_.Files().Read(working.string()));
-    auto fort=o::FortTemplate::Parse(*image,client_.Assets().TypeTable());
+    e.files.EnsureDirectory(working.parent_path().string()); // 새 작업 namespace도 원본 설치의 d 폴더처럼 저장 부모 디렉터리를 먼저 확보한다. Fort 파일은 원문 Notify가 생성한다.
+    const auto bytes=client_.Files().TryRead(working.string());
+    const auto image=bytes ? std::make_shared<const std::vector<std::uint8_t>>(*bytes) : std::shared_ptr<const std::vector<std::uint8_t>>{};
+    o::FortTemplate fort;if (image) fort=o::FortTemplate::Parse(*image,client_.Assets().TypeTable()); // 파일 부재는 새 manager/자료 부모가 처리하며 가짜 빈 Fort 파일을 읽지 않는다.
     auto services=MakeCampaignClientServices(client_,*rawButtons_,{[this] { RefreshWindowTitle(); },[this](auto name) { Tell(std::string(name)); },[this](auto kind,auto player,auto parameter) { warnings_->Remove(kind,player,parameter);rebuild_=true; }});
     services.installMode=CampaignInstallMode::ExistingEditor;services.deferExistingEditorFile=true;services.adoptPreparedWorld=true;services.adoptInitializedPlayers=true;services.localLogin.reset();
     services.templateStorage=templateStorage_;services.missionFortImage=image;services.missionOptions=missionOptions_;services.missionRestrictions=missionRestrictions_;services.editorTransport=e.transport;services.fortMission=FortMissionSaveEffects();
@@ -136,8 +139,9 @@ o::LocalMissionParentResult UberGump::InstallMainMenuNativeState(std::uint32_t s
 void UberGump::PollEditorState() {
     auto& local=*client_.LocalStateGlobals();const auto next=local.State().next[0];
     if (next!=1 && next!=3 && !(editor_ && next==4)) return;
-    if (!editor_) {
-        editor_=std::make_unique<EditorRuntime>(client_);auto& game=*client_.GameplayGlobals();auto& surface=*client_.SurfaceStorage();
+    if (!editor_) editor_=std::make_unique<EditorRuntime>(client_);
+    if (!editor_->state) { // 새 이름 창에서 먼저 확보한 파일 장치가 있어도 실제 State 분배기는 별도로 처음 한 번 구성한다.
+        auto& game=*client_.GameplayGlobals();auto& surface=*client_.SurfaceStorage();
         o::LocalMissionStateHooks hooks;hooks.logState=[](auto value) { std::clog<<"State "<<value<<'\n'; };hooks.parentState=[this](auto selected) { return selected==3 ? InstallMainMenuNativeState(selected) : InstallExistingEditorState(selected); };
         hooks.invalidState=[](auto state) { throw std::logic_error("Editor/메인 분배기의 선택된 Native State 미연결:"+std::to_string(state)); };
         editor_->state=std::make_unique<o::RawLocalMissionState>(client_.Assets().Edition(),local.State(),o::LocalMissionStateGlobals{game.Server(),game.Boss(),surface.ownerMode.battle,game.world.missionPost,local.SavedGame(),surface.links.mission,local.Simulconnect(),surface.ownerMode.challenge,game.player,local.ZonePending(),local.GameTicks(),local.SourceType(),local.RandomSeed(),local.Blocks()[2][33],local.MetaRefresh(),local.MetaRebuild(),reinterpret_cast<std::uint8_t&>(htmlGlobals_.background[0]),local.BattleByte(),local.ConnectEnd(),local.ActivityEnd(),client_.Time().game,client_.Time().wall},std::move(hooks));

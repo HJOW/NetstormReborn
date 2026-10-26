@@ -147,7 +147,7 @@ struct CampaignSubscriberServices {
     std::function<void(o::FortSubscriberLoadAssertion)> assertion; //고정Template/직접읽기의원문진단이다.
 };
 // 생성전선택이며캠페인생성후Editor bool을켜는전환으로대체하지않는다.
-enum class CampaignInstallMode { Campaign,ExistingEditor }; //NewFort alternate1은아직별도필수미연결이다.
+enum class CampaignInstallMode { Campaign,ExistingEditor }; // Fort 편집 설치는 기존/신규 파일을 공통 부모에서 구분하고 원문 alternate0/1을 유지한다.
 // 기존raw부모가소유한외곽순서에현재Client장치만공급한다.게임저장소는Session이덮어연결한다.
 struct CampaignExistingEditorCheckpointServices {
     o::ExistingEditorFortHooks fort; //현재/pending이름·비교·Guide·setName·Config·outside만외부에서공급한다.CoreWrite를포함한게임child는Session이연결한다.

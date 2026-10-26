@@ -54,6 +54,7 @@ std::uint32_t GameMenuScriptCode(std::string_view name) {
     if (key=="getfulldeck") return 0x020000cdU;
     if (key=="savegomain") return 0x020000cbU;
     if (key=="telltip") return 0x020000ebU;
+    if (key=="newfort") return 0x02000079U; // LOADLOADFORT가 예약하는 새 이름 창의 원본 명령이다. y=0/1은 실제 큐에 그대로 보존한다.
     return 0xffffffffU;
 }
 // 실제큐연결허용과선택후미연결명령진단에같은표를쓴다.

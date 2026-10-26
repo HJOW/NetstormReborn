@@ -103,10 +103,10 @@ void RawCampaignWorldRuntime::Load() {
     state.world.FinishLoadAfterGraph();state.objectState.loadingDepth=0;
 }
 // 캠페인전용이름/readonly/Objects부모를우회호출하지않고일반Fort의실제네child를선택한다.
-void RawCampaignWorldRuntime::LoadExistingFort(const std::function<void()>& beforeWorld) {
+void RawCampaignWorldRuntime::LoadExistingFort(const std::function<void()>& beforeWorld,std::int32_t alternate) {
     auto& state=*impl_;if (state.started || !state.existing || !beforeWorld) throw std::logic_error("일반Fort실제자원/외곽준비누락또는재실행");
     state.started=true;state.world.BeginLoad();state.objectState.loadingDepth=1;
-    beforeWorld();state.territory->Load(0); //Player생성/회복의필수원본단계를지난뒤에만일반월드를설치한다.
+    beforeWorld();state.territory->Load(alternate); // 새 Fort는 원문 alternate1로 Objects/Money/Badges/Technology 읽기를 생략한다. 실제 Island0이 있으면 기존 필수 population 경계로 간다.
     state.world.FinishLoadAfterGraph();state.objectState.loadingDepth=0; //부모의Graph(false)를중복호출하지않는다.
 }
 // 별도사제stub을만들지않고같은실제globals를읽는기존몸체로전달한다.
