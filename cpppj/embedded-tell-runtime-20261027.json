@@ -1,0 +1,239 @@
+{
+  "unit": 479,
+  "date": "2026-10-27",
+  "host": "HJOW-Athlon",
+  "baseCommit": "4a835942",
+  "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+  "decompileChanged": false,
+  "builds": [
+    {
+      "command": [
+        "cmake",
+        "--build",
+        "cpppj/build",
+        "--config",
+        "Release",
+        "--parallel",
+        "4",
+        "--",
+        "/p:UseMultiToolTask=true",
+        "/p:MultiProcMaxCount=4",
+        "/p:EnforceProcessCountAcrossBuilds=true"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-island-window-479/build1.log",
+      "sha256": "09cb1dae46ffc5fcd5a071ff7178210718ff68cec735b053fb14382854e960ba",
+      "summaries": [],
+      "diagnostics": []
+    }
+  ],
+  "nativeFirstSmoke": {
+    "command": [
+      "python",
+      "-X",
+      "utf8",
+      "tools/decomp_embedded_tell.py",
+      "--smoke"
+    ],
+    "exit": 1,
+    "log": "extracted/cpp-island-window-479/native-smoke.log",
+    "sha256": "2eb8b48999b6b70e9a518065adcb07e123dbc59e1440a2f3f806ce3be47ed846",
+    "summaries": [],
+    "diagnostics": []
+  },
+  "nativeSmoke": {
+    "command": [
+      "python",
+      "-X",
+      "utf8",
+      "tools/decomp_embedded_tell.py",
+      "--smoke"
+    ],
+    "exit": 0,
+    "log": "extracted/cpp-island-window-479/native-smoke2.log",
+    "sha256": "9bb9e020ad0a96520d55bf9bfd4f97d9961864e035b9bf3569698549530ad1ed",
+    "summaries": [],
+    "diagnostics": []
+  },
+  "nativeGenerate": {
+    "command": [
+      "python",
+      "-X",
+      "utf8",
+      "tools/decomp_embedded_tell.py"
+    ],
+    "exit": 0,
+    "log": "extracted/cpp-island-window-479/native-generate.log",
+    "sha256": "80629db843bae0e937322a67b0912a54a28de4fe60b251694820fa283a3e4b4c",
+    "summaries": [],
+    "diagnostics": []
+  },
+  "nativeVerify": {
+    "command": [
+      "python",
+      "-X",
+      "utf8",
+      "tools/decomp_embedded_tell.py",
+      "--verify"
+    ],
+    "exit": 0,
+    "log": "extracted/cpp-island-window-479/native-verify.log",
+    "sha256": "7c24c7b2b944f275483fbd7dc1680f3ec2e319c958c4d06381c53993fbcf1786",
+    "summaries": [],
+    "diagnostics": []
+  },
+  "nativeObservations": 82,
+  "nativeReport": "cpppj/embedded-tell-native-20261027.json",
+  "nativeCalibration": "최초 smoke의cdecl 호출자 인자 반납 규약을 관측 장치에서 정정했다. 정정 이후에 최초 fixture를 생성했으며 기존 기대 자료/제품을 결과에 맞춰 바꾸지 않았다.",
+  "focused": [
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "EmbeddedTell"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-island-window-479/focused1-EmbeddedTell.log",
+      "sha256": "63e6b2eb91e4dc5153e74ed4b1a12b0665d261a68b525d1eef7aab6e2a85710d",
+      "summaries": [
+        "4 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "TellSection"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-island-window-479/focused2-TellSection.log",
+      "sha256": "7d47ca619626a5fa1c2c6a65b9ae465b7d92d39e2df0f603a113f77d6de3bbf8",
+      "summaries": [
+        "5 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "HtmlTextParser"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-island-window-479/focused2-HtmlTextParser.log",
+      "sha256": "a04a85193afa1cb1483ff23d7b51711bc221222250a3b4b64fed1a8dd7ed2513",
+      "summaries": [
+        "8 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "QuickHelp"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-island-window-479/focused2-QuickHelp.log",
+      "sha256": "978637a9ed715fcedb23242e4a0da82e024599b352e9df3660370a2296b3f6c0",
+      "summaries": [
+        "8 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "HtmlWindow"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-island-window-479/focused2-HtmlWindow.log",
+      "sha256": "7ec06489cdb9d6fd421ba1effaedbfa9da0feca4e199d541f567b692149b95f8",
+      "summaries": [
+        "40 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "RawMenuControls"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-island-window-479/focused2-RawMenuControls.log",
+      "sha256": "72e485c814ab8a1456410ce8591105388e15f7a54d55c02e2dc9ed1f4e0a6581",
+      "summaries": [
+        "14 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "MenuCheck"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-island-window-479/focused2-MenuCheck.log",
+      "sha256": "98bebb032a9c2a1a45c47ed6be61a2762f2e2ad8156422a199b22ecb2656c56a",
+      "summaries": [
+        "3 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    }
+  ],
+  "uniqueFocused": 81,
+  "observedFocused": 82,
+  "wholeCppExecuted": false,
+  "lastWholeCpp": {
+    "unit": 478,
+    "cases": 3254,
+    "failed": 0
+  },
+  "integrationPolicy": "직전478에서 전체를 통과했으므로 이번 단위는 변경 경계 집중 검증을 수행한다. 다음 기능 묶음에서 전체를 통합 실행한다.",
+  "registeredBefore": 3254,
+  "registeredAfter": 3258,
+  "newTests": [
+    "EmbeddedTell_ActualConfigPriorityFreshFallbackAndNoPopupParameters",
+    "EmbeddedTell_ReplaysNativeQueriesBodyInstallAndSerial",
+    "RawMenuEmbeddedTell_ActualLinksEmptyBodyAndParserFailureCleanup",
+    "RawMenuEmbeddedTell_ActualPlacingIslandsAndBorrowedParentLifecycle"
+  ],
+  "missingPreviousTests": [],
+  "preservedWholeInputFiles": 3184,
+  "changedProtectedInputs": [],
+  "appendedExistingTest": {
+    "path": "cpppj/tests/RawMenuControlsTests.cpp",
+    "originalBytes": 46351,
+    "originalBytePrefixPreserved": true
+  },
+  "sourceManifest": {
+    "path": "extracted/cpp-island-window-479/source-final.json",
+    "files": 2835,
+    "sha256": "f0b92e0112afc81c6d7c5e7ac5a0a82677364d5a1c9dfe0b010736ad05622d7a"
+  },
+  "gameExeSha256": "8bd82075ef1d74e138b3d5a1f0da2d8451d42c276430b6a5f0da994503b48a27",
+  "testExeSha256": "be30300315a72e3e557c16e8acdaffc121fee6fd6b8472f172f88c95840fd679",
+  "coverage": [
+    "실제 내장 TELL 조회/빈 섹션/새 Config 반납/일반 팝업 이력·param 독립",
+    "실제 HtmlBody 기본 HTML/다중 줄 자식/링크/클립·padding/공통 삭제",
+    "기본 HTML 효과 앞의 현재 접두부와 실패 부모의 부분 효과·반납"
+  ],
+  "limits": [
+    "실제004c8f60/0046c9c0/0046cc60/0046cac0와 기본 Gump 생성 몸체를 실행한다.",
+    "Config/heap/기본 HTML 파서/다중 줄과 가상 Attach·Push·Kill은 명시 장치 경계다.",
+    "Native 기본 파서/픽셀·전체 섬 추가 창·GUI는 이 신규 관측 범위 밖이다."
+  ],
+  "gameRuns": 0,
+  "guiRuns": 0,
+  "audioDeviceRuns": 0,
+  "remaining": [
+    "Add Island 창 생성/Refresh/Idle/참조 수·수명과 공통 Layout/Motion/입력 조립",
+    "기존/신규 맵 섬 추가 GUI·저장/재진입",
+    "Test Battle/언어별 시나리오",
+    "전체 미션 자연 완주·원본 동일성"
+  ]
+}

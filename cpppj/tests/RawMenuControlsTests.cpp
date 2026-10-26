@@ -389,3 +389,6 @@ TEST_CASE(RawMenuControls_MinimapReplacementKeepsCurrentWorldNotifications) {
 
 // 같은 공통 트리의21개 후보 목록과 입력/픽셀/수명 검증이다.
 #include "RawMenuImageListTests.inc"
+
+// 일반 팝업과 별개인 내장 설명의 실제 자식/그리기/링크/반납을 확인한다.
+#include "RawMenuEmbeddedTellTests.inc"

@@ -1,5 +1,6 @@
 // 원본 부모/자식의 현재 필드를 각 효과 뒤 다시 읽고 가상 Push 뒤 위치/크기 재조회를 유지한다.
 #include "client/HtmlBodyGump.h"
+#include <algorithm>
 #include <new>
 #include <stdexcept>
 namespace netstorm::client {
@@ -33,6 +34,12 @@ void HtmlBodyGump::SetText(std::uint32_t token,std::string_view text) const {
     const auto child=Need(hooks_.allocate)(0xd8);if (!child) throw std::bad_alloc();Need(hooks_.constructText)(child,0,0,5,state_.color);Node(token).text=child;
     Need(hooks_.attach)(Node(token).text,0,0,token,0);Need(hooks_.styled)(Node(token).text,text);Need(hooks_.scroll)(Node(token).text,0);Need(hooks_.slider)(Node(token).text,1);Need(hooks_.scrollable)(Node(token).text,1);
     if (!(Node(token).flags&8U)) { Need(hooks_.push)(token);Need(hooks_.attach)(token,Node(token).x,Node(token).y,0,0); }
+}
+// 실제 기본 HTML은 두 소유 영역에 직접 쓰고 현재 본문으로 표시 자식을 교체한다.
+void HtmlBodyGump::SetHtml(std::uint32_t token,std::string_view source,const std::function<void(std::string_view,std::span<char>,std::span<char>)>& parse) const {
+    Node(token).body[0]=Node(token).links[0]=0;Need(parse)(source,Node(token).body,Node(token).links);
+    const auto& bytes=Node(token).body;const auto end=std::find(bytes.begin(),bytes.end(),'\0');if (end==bytes.end()) throw std::length_error("내장 TELL 본문의 실제8192BYTE NUL 범위 초과");
+    SetText(token,{bytes.data(),static_cast<std::size_t>(end-bytes.begin())});
 }
 // 가로 여백을 뺀 x87 계산값을 기본/배율 크기에 각각 저장한다.
 void HtmlBodyGump::Fit(std::uint32_t token,float inset) const {

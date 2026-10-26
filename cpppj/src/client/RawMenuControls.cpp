@@ -15,6 +15,8 @@
 #include "client/ImageGump.h"
 #include "client/MetaImageGump.h"
 #include "client/MetaImageList.h"
+#include "client/EmbeddedTell.h"
+#include <iostream>
 #include "client/ProductionColorMaps.h"
 #include "client/RawNsInfoContext.h"
 #include "client/ClientGameplayGlobals.h"
@@ -115,6 +117,7 @@ struct RawMenuControls::Impl {
     ColorMap metaDisabled{}; // 원문00556038과 같은 파일 팔레트에서 만든 실제 비활성 색표다.
     std::map<std::uint32_t,std::unique_ptr<MetaImageListNode>> imageLists; // 같은 실제 등록표의21칸 목록 저장소다.
     std::unique_ptr<MetaImageList> imageList;std::function<void(ScreenRect,std::uint32_t)> activeImageListFill; // 실제 목록 몸체와 현재 선택 체크무늬 표면이다.
+    std::set<std::uint32_t> embeddedTells; // 내장 설명 부모만 추적하며 자식은 같은 공통 트리가 소유한다.
     mutable std::array<std::uint32_t,4> lastInput{}; // 실제 파생 가상 입력의 마지막 토큰/사건/좌표를 진단 보고에만 보관한다.
     std::map<std::uint32_t,std::unique_ptr<MenuGumpNode>> menus; // 같은 기본 배경을 가진 실제 메뉴 노드다.
     std::map<std::uint32_t,std::unique_ptr<GumpDecorationNode>> decorations; // 실제 모서리 장식 노드다.
@@ -439,6 +442,23 @@ struct RawMenuControls::Impl {
         helpBody->Parse(body,{[] { return false; },[](auto,auto) {},[&] { const auto result=parser.Parse(helpState.helpData.value_or(std::string{}));std::copy(result.begin(),result.end(),node.body.begin());node.body[result.size()]=0; }});
         if (links.bytes.size()>node.links.size()) throw std::length_error("Help 링크8192바이트 초과");std::copy(links.bytes.begin(),links.bytes.end(),node.links.begin());
     }
+    // 기본 HTML 파서가 같은 실제 본문/링크 저장소를 쓰고 현재 전역/효과를 공유한다.
+    void RenderEmbeddedTell(std::uint32_t token,std::string_view source) {
+        if (!helpBody || !helpHooks.globals) throw std::logic_error("내장 TELL의 실제 HtmlBody/Client HTML 전역 미연결");
+        helpBody->SetHtml(token,source,[this,token](auto input,std::span<char> body,std::span<char> linkBytes) {
+            HtmlTextParserState parser;auto effects=helpHooks.html;auto& links=helpLinks.at(token);links.cursor=0;links.capacity=linkBytes.size();links.bytes.assign(linkBytes.begin(),linkBytes.end());
+            const auto publish=[&] { const auto count=std::min(parser.output.size(),body.size()-1);std::copy_n(parser.output.begin(),count,body.begin());body[count]=0; }; // 현재 접두부는 외부 HTML 효과와 실패 경계에서도 실제 부모에 보인다.
+            const auto command=effects.command;const auto condition=effects.condition;const auto picture=effects.picture;const auto background=effects.background;
+            if (command) effects.command=[&](auto& state,auto text) { publish();command(state,text);publish(); };
+            if (condition) effects.condition=[&](auto& state,auto text,auto closing) { publish();condition(state,text,closing);publish(); };
+            if (picture) effects.picture=[&](auto& state,auto text) { publish();return picture(state,text); };
+            if (background) effects.background=[&](auto& state,auto text) { publish();background(state,text);publish(); };
+            effects.link=[&](auto&,auto text,auto closing) { publish();links.bytes.assign(linkBytes.begin(),linkBytes.end());const auto result=HtmlLinkText(links,text,closing);std::copy(links.bytes.begin(),links.bytes.end(),linkBytes.begin());return result; };
+            try { static_cast<void>(HtmlTextParser(parser,*helpHooks.globals,std::move(effects),assets.Edition()).Parse(input,static_cast<std::int32_t>(body.size()))); }
+            catch (...) { publish();throw; } // 파싱 실패 앞의 원문 접두부/링크와 전역 부수 효과를 보존한다.
+            publish();
+        });
+    }
     // 실제 전용 요청/이력/배치에 현재 입력을 전달한다. 화면 밖 클릭도 같은 원본 처리기가 판단한다.
     std::uint32_t HelpEvent(std::uint32_t token,InputEvent event) const {
         auto& window=*Find(helpWindows,token);QuickHelpEventHooks h;h.local=[this,token](auto e) { return common.collection.ScreenToLocal(token,{e.x,e.y}); };h.node=common.node;h.typeName=helpHooks.typeName;h.translate=helpHooks.translate;h.text=[this](auto value) { return HelpText(value); };
@@ -486,7 +506,7 @@ struct RawMenuControls::Impl {
 RawMenuControls::RawMenuControls(RawMenuTree tree,const GameAssets& assets,FontStore& fonts,RawMenuHooks hooks):impl_(std::make_unique<Impl>(std::move(tree),assets,fonts,std::move(hooks))) {}
 // 노드는 소유자의 공통 GumpLifetime으로 먼저 삭제한다.
 RawMenuControls::~RawMenuControls() {
-    CloseSaveFortNameDialogs();CloseHtmlWindows();CloseBackgroundGifs();CloseChatWindows();auto& s=*impl_;if (s.chatContext && s.chatContext->globals->uiOwner==&s) { s.buffers->Destroy(0x548758);s.chatContext->globals->uiOwner=nullptr; } // 표시 자식 뒤에 Client 공유 버퍼의 실제 조각을 반납한다.
+    CloseEmbeddedTells();CloseSaveFortNameDialogs();CloseHtmlWindows();CloseBackgroundGifs();CloseChatWindows();auto& s=*impl_;if (s.chatContext && s.chatContext->globals->uiOwner==&s) { s.buffers->Destroy(0x548758);s.chatContext->globals->uiOwner=nullptr; } // 표시 자식 뒤에 Client 공유 버퍼의 실제 조각을 반납한다.
 }
 // 실제 생산 자식도 기존 파서/글리프/배경과 같은 현재 문맥을 사용한다.
 void RawMenuControls::SetExternalGumps(RawMenuExternalGumps hooks) { SetExternalGumps(0,std::move(hooks)); }
@@ -556,7 +576,7 @@ void RawMenuControls::DeleteScalar(std::uint32_t token,std::uint32_t flags) cons
     else if (s.decorations.contains(token)) s.decoration->DeleteScalar(token,flags);else if (s.costs.contains(token)) s.costGump->DeleteScalar(token,flags);else if (s.plainTexts.contains(token)) s.costText->DeleteScalar(token,flags);else if (s.sliders.contains(token) || s.thumbs.contains(token) || s.arrows.contains(token)) s.sliderWidgets->DeleteScalar(token,flags);else s.common.lifetime.DeleteScalar(token,flags);
 }
 // 공통 scalar의 release만 실제 저장소를 지운다.
-void RawMenuControls::Release(std::uint32_t token) { auto& s=*impl_;s.imageLists.erase(token);s.metaImages.erase(token);s.saveFortOwned.erase(token);s.saveFortContexts.erase(token);s.saveFortRoots.erase(token);s.htmlOwned.erase(token);s.htmlConstructed.erase(token);s.htmlLinkBases.erase(token);s.htmlRoots.erase(token);if (s.gifWindows) s.gifWindows->Release(token);s.chatOwned.erase(token);s.chatRoots.erase(token);if (s.textEntries) s.textEntries->Release(token);s.nsOwned.erase(token);s.nsRoots.erase(token);s.nsPlayers.erase(token);s.nsBattles.erase(token);s.nsButtons.erase(token);s.plainTexts.erase(token);s.helpStrings.erase(token);s.helpWindows.erase(token);s.helpBodies.erase(token);s.helpButtons.erase(token);s.helpImages.erase(token);s.helpLinks.erase(token);s.menus.erase(token);s.decorations.erase(token);s.titles.erase(token);s.sliders.erase(token);s.arrows.erase(token);s.thumbs.erase(token);s.backgrounds.erase(token);s.costs.erase(token); }
+void RawMenuControls::Release(std::uint32_t token) { auto& s=*impl_;s.embeddedTells.erase(token);s.imageLists.erase(token);s.metaImages.erase(token);s.saveFortOwned.erase(token);s.saveFortContexts.erase(token);s.saveFortRoots.erase(token);s.htmlOwned.erase(token);s.htmlConstructed.erase(token);s.htmlLinkBases.erase(token);s.htmlRoots.erase(token);if (s.gifWindows) s.gifWindows->Release(token);s.chatOwned.erase(token);s.chatRoots.erase(token);if (s.textEntries) s.textEntries->Release(token);s.nsOwned.erase(token);s.nsRoots.erase(token);s.nsPlayers.erase(token);s.nsBattles.erase(token);s.nsButtons.erase(token);s.plainTexts.erase(token);s.helpStrings.erase(token);s.helpWindows.erase(token);s.helpBodies.erase(token);s.helpButtons.erase(token);s.helpImages.erase(token);s.helpLinks.erase(token);s.menus.erase(token);s.decorations.erase(token);s.titles.erase(token);s.sliders.erase(token);s.arrows.erase(token);s.thumbs.erase(token);s.backgrounds.erase(token);s.costs.erase(token); }
 // 생성자는 같은 등록표를 사용하고 Image의 소유권은 호출자에게 남긴다.
 std::uint32_t RawMenuControls::CreateMetaImage(RawImage& image) {
     return impl_->CreateMeta(image);
@@ -573,6 +593,19 @@ std::uint32_t RawMenuControls::CreateImageList(std::int32_t columns) {
 MetaImageListNode* RawMenuControls::ImageListNode(std::uint32_t token) const { return Find(impl_->imageLists,token); }
 // 실제 목록의 원문 몸체를 빌린다.
 const MetaImageList& RawMenuControls::ImageListBackend() const { if (!impl_->imageList) throw std::logic_error("Image 목록 실제10.78 처리기 없음");return *impl_->imageList; }
+// 내장 설명은 일반 HTML 팝업의 인스턴스/이력/phase와 별도로 같은 공통 등록표에 생성한다.
+std::uint32_t RawMenuControls::ShowEmbeddedTell(std::string_view name,o::ConfigInterface& config,std::function<std::optional<std::string>(std::string_view)> mission) {
+    auto& s=*impl_;if (!s.helpBody) throw std::logic_error("내장 TELL의 실제 공통 HtmlBody 처리기 미설치");EmbeddedTellHooks h;
+    h.missing=[](auto key) { std::clog<<"TELL cannot find \""<<key<<"\".\n"; };
+    h.construct=[&] { s.bodyState.screenWidth=s.common.create.screenWidth;s.bodyState.screenHeight=s.common.create.screenHeight;const auto token=s.AllocateHelp(0x40a4);s.embeddedTells.insert(token);return s.helpBody->Construct(token); };
+    h.setHtml=[&](auto token,auto body) { const auto bytes=o::EncodeOriginalText(body);s.RenderEmbeddedTell(token,{reinterpret_cast<const char*>(bytes.data()),bytes.size()}); };h.serial=[&](auto token) { return s.common.node(token)->serial; };
+    return ShowEmbeddedTellInConfig(name,config,std::move(mission),std::move(h));
+}
+// 미부착 상태에서도 현재 등록된 실제 부모를 먼저 Kill하고 자식 우선으로 반납한다.
+void RawMenuControls::CloseEmbeddedTells() {
+    auto& s=*impl_;for (const auto token:s.embeddedTells) { const auto* node=s.common.node(token);if (node && !(node->flags&0x10000U)) s.common.lifetime.Kill(token); } // Kill은 즉시 저장소를 해제하지 않는다.
+    s.common.lifetime.Cleanup();
+}
 // 전체 Native wrapper를 호출하며 첫0xd8의 파생 종류 문맥은 예외에도 반납한다.
 std::uint32_t RawMenuControls::CreateNsInfo(RawNsInfoContext context) {
     auto& s=*impl_;s.BindNs(std::move(context));s.nsRootAllocation=true;

@@ -42,6 +42,7 @@ public:
     void Clear(std::uint32_t token) const; // 현재 표시 자식을 Kill한 뒤0으로 쓴다.
     void Parse(std::uint32_t token,const HtmlBodyParserHooks& parser) const; // 두 첫바이트0→필요 시 출력 설치→실제 순회다.
     void SetText(std::uint32_t token,std::string_view text) const; // 이전 자식 Kill→새 다중 줄/본문/scroll0/Slider·scrollable→현재 부모 재부착이다.
+    void SetHtml(std::uint32_t token,std::string_view source,const std::function<void(std::string_view,std::span<char>,std::span<char>)>& parse) const; //0046cc60: 두 첫NUL→같은8192BYTE 본문/링크를 쓰는 기본 파서→현재 본문의 SetText다.
     void Fit(std::uint32_t token,float inset) const; // 현재 표시 자식 Push→부모 크기-가로 여백/같은 높이→부착이다.
     void Attach(std::uint32_t token,float x,float y,std::uint32_t parent,std::uint32_t mode) const; // 기본 부착 뒤 inset0으로 표시 자식을 다시 맞춘다.
 private:

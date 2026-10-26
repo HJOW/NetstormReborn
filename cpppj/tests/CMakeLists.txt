@@ -2255,3 +2255,7 @@ set_source_files_properties(MetaImageListTests.cpp PROPERTIES COMPILE_DEFINITION
 # 실제 섬 추가 창의 배치/드래그 격자·색상·효과 순서를 원문 관측과 비교한다.
 target_sources(netstorm_tests PRIVATE EditorIslandLayoutTests.cpp)
 set_source_files_properties(EditorIslandLayoutTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_EDITOR_ISLAND_LAYOUT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/editor-island-layout-x86.tsv\"")
+
+# 원본 내장 설명의 조회/부모 설치와 실제 Config 수명을 재생한다.
+target_sources(netstorm_tests PRIVATE EmbeddedTellTests.cpp)
+set_source_files_properties(EmbeddedTellTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_EMBEDDED_TELL_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/embedded-tell-x86.tsv\"")

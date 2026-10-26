@@ -12,6 +12,7 @@ target_sources(netstorm PRIVATE
     MetaImageGump.cpp MetaImageGump.h # 동적 Image 전용 생성/크기/부착/출력이다.
     MetaImageList.cpp MetaImageList.h # 실제21칸 후보의 배치/적중/선택/삭제다.
     EditorIslandLayout.cpp EditorIslandLayout.h # 섬 추가 창의 현재 자식 배치/격자 미리보기다.
+    EmbeddedTell.cpp EmbeddedTell.h # 섬 추가 창에 붙는 원본 HtmlBody 설명 조회/serial 반환이다.
     # State 부모의 실제 AI/Deck/Kernel 증빙을 Core0 뒤 Session 반납으로 연결한다.
     ClientStateRuntimeRetirement.cpp ClientStateRuntimeRetirement.h
     ClientStateWorldCleanup.cpp ClientStateWorldCleanup.h

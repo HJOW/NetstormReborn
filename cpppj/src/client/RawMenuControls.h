@@ -11,6 +11,7 @@
 #include "o/GumpFormHost.h"
 #include <memory>
 
+namespace netstorm::o { class ConfigInterface; } // 내장 설명도 현재 Client의 같은 설정 등록부를 빌린다.
 namespace netstorm::client {
 class RawCampaignSession; // 현재 지식 창도 같은 세션의 실제 기술/제외/생산 상태를 빌린다.
 class RawImage;class MetaImageGump;struct MetaImageGumpNode; // 같은 공통 트리의 전용 동적 Image 파생이다.
@@ -99,6 +100,8 @@ public:
     std::uint32_t CreateImageList(std::int32_t columns); //0047ccb0: 실제 목록을 등록하고 부착은 호출자에게 맡긴다.
     MetaImageListNode* ImageListNode(std::uint32_t token) const; // 실제 ID/자식/선택/셀 기하를 빌린다.
     const MetaImageList& ImageListBackend() const; // 같은 목록 Add/Attach/Handle/Remove 몸체다.
+    std::uint32_t ShowEmbeddedTell(std::string_view name,o::ConfigInterface& config,std::function<std::optional<std::string>(std::string_view)> mission={}); //004c8f60: 실제 HtmlBody/다중 줄 자식을 생성하고 serial을 반환한다. 팝업/phase/모달을 만들지 않는다.
+    void CloseEmbeddedTells(); // 미부착/파싱 실패 부모도 같은 등록표의 Kill/Cleanup으로 반납한다.
     std::uint32_t CreateNsInfo(RawNsInfoContext context); // 실제 전체 숨김 NSInfo와 필수 Player8/Battle/문자/버튼을 생성한다.
     std::uint32_t NsInfoRoot() const; // 같은 현재 전역 토큰의 실제 생존 여부만 조회한다.
     void CloseNsInfo(); // 미부착/부분 생성도 같은 공통 자식 우선 수명으로 정리한다.
