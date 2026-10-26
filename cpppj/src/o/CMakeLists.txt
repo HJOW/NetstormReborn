@@ -478,6 +478,9 @@ target_sources(netstorm PRIVATE RawDataManagerFileSave.h RawDataManagerFileSave.
 target_sources(netstorm PRIVATE RawFortSubscriberWrite.cpp RawFortSubscriberWrite.h
     RawSnart.cpp RawSnart.h RawDataManagerInitialize.cpp RawDataManagerInitialize.h
     RawTemplateSectionNames.cpp RawTemplateSectionNames.h)
+
+# 신규 Fort manager/초기 자료/파일 부재 부모의 원문 제어 순서를 복원한다.
+target_sources(netstorm PRIVATE RawNewFort.cpp RawNewFort.h)
 # 더스트 데빌의 전용104BYTE·애니메이션·범위 피해를 실제 월드에서 사용한다.
 target_sources(netstorm PRIVATE RawWindFlyer.h RawWindFlyer.cpp)
 

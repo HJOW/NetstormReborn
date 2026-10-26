@@ -2212,6 +2212,11 @@ set_source_files_properties(TellTipTests.cpp PROPERTIES COMPILE_DEFINITIONS "NET
 target_sources(netstorm_tests PRIVATE EditorMapCatalogFilesTests.cpp TextClipboardTests.cpp)
 target_sources(netstorm_tests PRIVATE EditorAtomicWriteTests.cpp)
 
+# 원문 NewFort1400행과 실제 manager/작업 파일의 보호·수명을 함께 검증한다.
+target_sources(netstorm_tests PRIVATE NewFortTests.cpp NewFortManagerDevicesTests.cpp)
+set_source_files_properties(NewFortTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_NEW_FORT_MANAGER_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/new-fort-manager-x86.tsv\";NETSTORM_NEW_FORT_DATA_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/new-fort-data-x86.tsv\";NETSTORM_NEW_FORT_MISSING_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/new-fort-missing-x86.tsv\";NETSTORM_NEW_FORT_MISSING_BITS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/new-fort-missing-bits-x86.tsv\"")
+
 # 독립 원본 Subscriber 90관측과 공유 이름표/빈 manager 76관측 및 실제 저장소 수명을 대조한다.
 target_sources(netstorm_tests PRIVATE FortSubscriberWriteTests.cpp DataManagerInitializeTests.cpp)
 set_source_files_properties(FortSubscriberWriteTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_FORT_SUBSCRIBER_WRITE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/fort-subscriber-write-x86.tsv\"")

@@ -4,6 +4,8 @@
 target_sources(netstorm PRIVATE
     # 모든 Template reader와 새 맵 초기화가 같은 Client 수명의 이름표를 빌린다.
     ClientTemplateSectionNames.cpp ClientTemplateSectionNames.h
+    # 신규 manager의 실제 할당/생성/작업 파일/소멸/초기화 장치를 연결한다.
+    NewFortManagerDevices.cpp NewFortManagerDevices.h
     # State 부모의 실제 AI/Deck/Kernel 증빙을 Core0 뒤 Session 반납으로 연결한다.
     ClientStateRuntimeRetirement.cpp ClientStateRuntimeRetirement.h
     ClientStateWorldCleanup.cpp ClientStateWorldCleanup.h

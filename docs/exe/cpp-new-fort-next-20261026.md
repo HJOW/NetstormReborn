@@ -1,5 +1,7 @@
 # New Fort·Add Island 후속 연결 조사
 
+**2026-10-27 후속:** [469](cpp-new-map-storage-runtime-20261027.md)에서 Subscriber 저장·공유 이름표/빈 Image를, [470](cpp-new-fort-manager-runtime-20261027.md)에서 NewFort 세 부모와 실제 manager 장치를 채택했다. 아래는2026-10-26 조사 범위이며, 신규 자료의 Core clear/Money 저장 해석은 실제 PE 재현 근거로 정정했다. NewEditor 전체 설치·Add Island 창·GUI는 아직 미완료다.
+
 이 문서는 **HJOW-Athlon / 2026-10-26**의 읽기 전용 조사다. 마지막 전체 정밀 디컴파일은 **HJOW-Athlon / 2026-10-23**이며 `AGENTS.md`, `LEFT_JOBS.md`, `LEFT_JOBS.dotnetpj.md`를 다시 확인했다. 제품 코드·기존 fixture·보호 원본·디컴파일 산출물은 변경하지 않았고 게임·빌드는 실행하지 않았다. 단위467의 Save as/State3/장기 Deck 코드는 통합 검증 중인 현재 소스로 조회했으며 검증 완료로 합산하지 않는다.
 
 입력 식별자는 다음과 같다.
@@ -58,9 +60,9 @@ ReadFort는 현재 SelectionMode2이면 next1, mode0이면 next6을 예약한다
 
 1. 같은 MySubscriber DWORD를−1로 쓰고 Unnamed 번역을 실제 handle에 복사한다. fort.mySubHandle/제목을 갱신하고004b38d0으로 실제 registeredSubId를 확보한다. 설정 이름의 원문 철자 차이도 현재 설정 부모에서 그대로 처리해야 한다.
 2. 로컬 **20×6BYTE Territory를0**으로 만든다. Editor0에서만 첫 Territory의 모양/seed/기본 위치를 채운다. Editor1인 새 맵은 기본 첫 섬 생성의 이 쓰기를 건너뛴다.
-3. 현재 SP를 실제 getter로 읽어 그 음수를 차감하고,00595348=1→현재 Player의 실제 기술/슬롯 초기화→CoreData 쓰기를 실행한다.
+3. 현재 known이 비영일 때 실제 SP getter를 읽고 아니면+0.0을 사용한다. 그 음수를 차감한 뒤00595348=1→현재 Core getter→0042b200의10BYTE clear→CoreData 쓰기를 실행한다. 기술/Deck 초기화가 아니다.
 4. 실제 게임 난수 준비004559d0을 호출한 뒤 `Next(65536)`을 **lowWORD가 비영일 때까지 반복**해 같은005c89b4.low16에 쓴다. DWORD 상위WORD는 유지한다.
-5. Subscriber 저장→설정/제목→Territory120BYTE 저장→Deck 초기 저장을 실행한다.
+5. Subscriber 저장→설정/제목→Territory120BYTE 저장→004beec0의 Money 저장을 실행한다. Money는 같은 게임 난수 `Next(1010)+333.0f`의float32이며 Deck 초기 저장이 아니다.
 6. 현재 State를 다시 얻어 +0x11 kind를 Editor이면2, 일반이면0으로 쓰고 Notify한다.
 
 이 뒤 `004b5f70(alternate1)`은 Builder/실제 지도 attach→Territory 읽기→PlaceAll→Generate를 실행한다. Objects/Money/Badges/Technology 읽기 네 단계는 alternate0에서만 실행한다. alternate1은 실제 Island0 Exists가 비영일 때 `0046e630` populate를 실행하고 Graph(false)를 한 번 실행한다. Editor 신규 자료가 자연 빈 지도이면 이 populate는 미선택이지만 Add Island 성공 경로의 population까지 완료됐다는 뜻은 아니다.
@@ -77,7 +79,7 @@ ReadFort는 현재 SelectionMode2이면 next1, mode0이면 next6을 예약한다
 | `FortSerializationGlobals` | manager 생성자와 객체 소비자가 같은005c89c0을 빌리는 현재 구조가 있다. 과거 문서의 별도 version 사본 잔여는 그대로 반복하지 않는다. 신규 manager도 같은 owner를 주입해야 한다. |
 | `ClientRandomGlobals` | 실제 게임/CRT 난수, ID 초기화,005c89b4 FortCoreSeed가 이미 장기 소유다. 신규 비영WORD 반복은 이 실제 DWORD와 같은 GameRandom에 연결할 수 있다. 별도 seed/고정 난수는 필요하지 않다. |
 | `ClientSubscriberGlobals`, `RawFortSubscriberLoad` | 같은 MySubscriber/LoginSubscriber, 실제 Subscriber 읽기/등록ID 장치가 있다. 신규 handle/등록ID/Subscriber writer 호출 순서는 신규 부모에 연결해야 한다. |
-| `RawPlayerWorld`, `ClientCoreDataGlobals`, `WriteExistingEditorCoreData` | 현재 Player/Core/실제 Core writer의 진단·자연 관문을 재사용한다. 신규 자료의00595348와 기술 슬롯 초기화 선택을 포함해야 한다. |
+| `RawPlayerWorld`, `ClientCoreDataGlobals`, `WriteExistingEditorCoreData` | 현재 Player/Core/실제 Core writer의 진단·자연 관문을 재사용한다. 신규 자료의00595348=1과 현재 Core10BYTE clear를 포함해야 한다. |
 | `SeedFortTerritoryRecord`, `WriteFortTerritoryRecords`, `SnapshotFortTerritory` | 현재 seed·120BYTE stream writer·실제 지도 snapshot을 보유한다. 새20레코드 초기 저장과 Add Island 뒤 현재 owner/stream 재조회에 재사용한다. |
 | `RawFortWorldLoad`, `RawFortWorldLoadBinding`, `RawNormalTerrainWorldBinding` | Builder/PlaceAll/실제 일반 지형/기존 네 후처리/Graph 연결이 있다. alternate1 Island0 population은 현재 명시 미연결 예외다. |
 | `SnapshotFort`, `SaveCurrentMap`, `EditorFortFileDevices` | 새 manager가 원문 초기 섹션과 State를 만든 뒤 같은 전체 Fort/Notify/작업본 저장 부모에 연결할 수 있다. 최초 생성을 snapshot 한 번으로 대신하지 않는다. |

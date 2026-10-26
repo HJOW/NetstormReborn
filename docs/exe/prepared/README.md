@@ -2,6 +2,8 @@
 
 ## 2026-10-27 일시중지 인계
 
+**재개 후 채택 상태:** [단위469](../cpp-new-map-storage-runtime-20261027.md)에서 Subscriber 저장과 공유 이름표/빈 Image 초기화를 병합·빌드·집중 검증했다. [단위470](../cpp-new-fort-manager-runtime-20261027.md)에서는 NewFort 세 부모와 실제 manager/작업본 장치를 채택·집중 검증했다. NewData/파일 부재의 실제 Session 연결과 NewEditor 전체 설치, Add Island 전용 창은 남아 있다. 아래의 미적용/미빌드 표시는 보관 당시 상태이며142파일의 원시 바이트는 유지했다.
+
 현재 단위468 제품 수정과 별개로 아래 준비본을 원시 바이트 그대로 보관했다. **네 구현 묶음은 제품 미적용·C++ 미빌드·검사 초안 미실행**이다. Native PE 관측·재검증과 정적 patch 확인은 각 README에 적힌 범위만 완료했다. Early3는 미완주 기록이며 뒤의 입력 계획은 미실행이다.
 
 - [NewFort 세 부모](new-fort-469-20261027/README.md): Native 1,400관측, C++ 검사 초안4개. Core10BYTE clear와 Money 저장의 기존 문서 해석도 정정했다.

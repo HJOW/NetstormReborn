@@ -1,0 +1,208 @@
+{
+  "unit": 470,
+  "date": "2026-10-27",
+  "host": "HJOW-Athlon",
+  "baseCommit": "c4b75d7a",
+  "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+  "decompileChanged": false,
+  "builds": [
+    {
+      "command": [
+        "cmake",
+        "--build",
+        "cpppj/build",
+        "--config",
+        "Release",
+        "--parallel",
+        "4",
+        "--",
+        "/p:UseMultiToolTask=true",
+        "/p:MultiProcMaxCount=4",
+        "/p:EnforceProcessCountAcrossBuilds=true"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-new-fort-470/build1.log",
+      "sha256": "b22d39d95d6aad40fbb66e85f0509fe31705580269302a7aaa7964505da93799",
+      "summaries": [],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cmake",
+        "--build",
+        "cpppj/build",
+        "--config",
+        "Release",
+        "--parallel",
+        "4",
+        "--",
+        "/p:UseMultiToolTask=true",
+        "/p:MultiProcMaxCount=4",
+        "/p:EnforceProcessCountAcrossBuilds=true"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-new-fort-470/build2.log",
+      "sha256": "1db946caa2bda4594a3563c921df5f6430fda03515c22ac07dd0d9680acb5924",
+      "summaries": [],
+      "diagnostics": []
+    }
+  ],
+  "initialFocused": {
+    "command": [
+      "cpppj/build/bin/Release/netstorm_tests.exe",
+      "--filter",
+      "NewFort"
+    ],
+    "exit": 0,
+    "log": "extracted/cpp-new-fort-470/focused-NewFort.log",
+    "sha256": "e1a9c7fd58a00f1ae9dbd835bcc18bcd17e1158dbe3ae758b8b7b2df0d64cba2",
+    "summaries": [
+      "8 test(s), 0 failed check(s)"
+    ],
+    "diagnostics": []
+  },
+  "focused": [
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "NewFort"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-new-fort-470/final-NewFort.log",
+      "sha256": "c7583d60369954be491bf1b6aedfee61790d12ebc323bf4b75b5fded6837ab85",
+      "summaries": [
+        "9 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "DataManager"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-new-fort-470/final-DataManager.log",
+      "sha256": "a1914cb4fea38abbc97c28582e120fabd62870ce4d51a5f2b9f5caccb14751b8",
+      "summaries": [
+        "21 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "Template"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-new-fort-470/final-Template.log",
+      "sha256": "333dc58a38b96cd9744a5b17a0fc54d3b34042295e0fa98b36310ea6030c42d5",
+      "summaries": [
+        "47 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "EditorFiles"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-new-fort-470/final-EditorFiles.log",
+      "sha256": "3915624ac236da874929e52f6ac2c92f1e1bd9a9a5e71f94a6a3ffbe5f8b676b",
+      "summaries": [
+        "7 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "FortSubscriber"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-new-fort-470/final-FortSubscriber.log",
+      "sha256": "38b06b8788f5a23f35709878bc1924bce771db4aed66e115f01d0d4658c2ae10",
+      "summaries": [
+        "4 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    }
+  ],
+  "uniqueFocused": 88,
+  "observedFocused": 88,
+  "nativeReplays": [
+    {
+      "command": [
+        "python",
+        "extracted/cpp-new-fort-469-staging/tools/decomp_new_fort.py",
+        "--verify"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-new-map-469/native-new-fort.log",
+      "sha256": "21a1f64ccf4d27780d12c28936fef310eeb06a5468fa329646d41e20e5ddb157",
+      "summaries": [],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "python",
+        "extracted/cpp-new-fort-469-staging/tools/decomp_new_fort_missing_bits.py",
+        "--verify"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-new-map-469/native-new-fort-bits.log",
+      "sha256": "b3b00fe815e27467413e8013b67649cece216b875ac9e3f28f7c197c5f031bf7",
+      "summaries": [],
+      "diagnostics": []
+    }
+  ],
+  "nativeRows": {
+    "manager": 48,
+    "data": 1248,
+    "missing": 26,
+    "missingStateBit": 78
+  },
+  "fixtureSha256": {
+    "new-fort-manager-x86.tsv": "edb8e5bb6ef8b048b738d41dcabd74435383f3257313644f1b9d1859d1f23938",
+    "new-fort-data-x86.tsv": "6119e88b96262dbbe319df077d72802f03d4d9540d1142a96d92abf78de45ce3",
+    "new-fort-missing-x86.tsv": "c01e26f982c3fb9eae1e3e9636e32e2f205d6f5a748d11dc8e4348e17d12001e",
+    "new-fort-missing-bits-x86.tsv": "1a78e64220673bdf374b6c712b4d769930bb35d949dfd854238336a35553f2c4"
+  },
+  "newTests": [
+    "NewFortManagerDevices_ExistingManagerAssertionPrecedesAllMutations",
+    "NewFortManagerDevices_ExistingWorkUsesTemporaryLifetimeBeforeFinalImage",
+    "NewFortManagerDevices_MissingFileInitializesRealImageAndKeepsStaleHeaderWords",
+    "NewFortManagerDevices_ProtectedPathRejectionKeepsNativePrefixWithoutFileMutation",
+    "NewFortManagerDevices_RelativeNameChecksAndDeletesSameWorkspaceFile",
+    "NewFort_DataNative1248",
+    "NewFort_ManagerNative48",
+    "NewFort_MissingNative26",
+    "NewFort_MissingStateBitNative78"
+  ],
+  "registeredBefore": 3219,
+  "registeredAfter": 3228,
+  "preservedInputs": 3154,
+  "changedProtectedOrExistingTests": [],
+  "missingPreviousTests": [],
+  "sourceManifest": {
+    "path": "extracted/cpp-new-fort-470/source-final.json",
+    "files": 2783,
+    "sha256": "3a628c224fb4ca871dacdfad2e1c6194284d655703f4363eb1acb92717039e3f"
+  },
+  "gameExeSha256": "7414a4157a22090f3765bec6f6db24ccbd47813674cd3ba55c1215f857636f62",
+  "testExeSha256": "37d5c410dda22385633da2a074577fcb0977e983f464c61c8e7526eb3b97c8bf",
+  "gameRuns": 0,
+  "guiRuns": 0,
+  "wholeCTestExecuted": false,
+  "remaining": [
+    "NewFort 초기 자료/파일 부재 부모의 실제 Client/SP/Core/등록/저장 연결",
+    "NewEditor alternate1/State/tail/자동 Add Island 큐",
+    "Add Island 전용 창과 실제 배치",
+    "Test Battle/시나리오 및 전체 미션 자연 완주/원본 동일성"
+  ]
+}
