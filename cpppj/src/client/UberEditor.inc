@@ -8,8 +8,8 @@ struct UberGump::EditorRuntime {
     std::string savedPath; //004b5470의 게임 폴더/d/!state.dat 절대 경로를 reader 동기 호출 동안 보존한다.
     std::function<void(std::uint32_t)> selectCursor; //실제 커서 장치를 공통 State 확정 뒤의 호스트 입력 구성에도 같은 callback으로 전달한다.
     bool committed{}; //실제 Session.Commit 복귀의 호스트 관측이며 Native State나 loaded 대신 쓰지 않는다.
-    explicit EditorRuntime(Client& value):client(value),files(std::filesystem::absolute(value.GameDirectory()).parent_path()/(std::filesystem::absolute(value.GameDirectory()).filename().string()+"-editor"),
-        {value.GameDirectory(),std::filesystem::absolute(value.GameDirectory()).parent_path()/"originals",std::filesystem::absolute(value.GameDirectory()).parent_path()/"originalCD"}) {} //생성만으로 파일/게임 상태를 쓰지 않는다.
+    explicit EditorRuntime(Client& value):client(value),files(EditorWorkingRoot(value.GameDirectory()),
+        {value.GameDirectory(),EditorWorkingRoot(value.GameDirectory()).parent_path()/"originals",EditorWorkingRoot(value.GameDirectory()).parent_path()/"originalCD"}) {} //실제 자산 디렉터리의 같은 형제 작업본과 보호 루트를 선택한다. 생성만으로 파일/게임 상태를 쓰지 않는다.
     //호스트 메인 메뉴/종료에서 Session 수신기를 반납한 뒤 남은 실제 양끝/리스너를 닫는다.
     void Close() { if (transport) { client.ConnectionGlobals()->CloseAll();transport->CloseListener();transport.reset(); } }
     //큐/노드 소유권은 기존 전송의 SocketClosed/Track이 처리하고 이 경계는 실제 시각과 진단만 제공한다.

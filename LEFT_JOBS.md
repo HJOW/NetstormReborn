@@ -11,6 +11,7 @@
 - **목표 상태:** 2026-10-26 재개 뒤464까지 완료했다. 최신464는 실제 메인 Edit 목록→기존 Fort→State1 전체 cleanup/prefix/listener/준비 Session/checkpoint/HUD/tail→공통 확정/loaded→다음 Poll4와 ESC 메뉴 표시를 연결했다. build9 경고/오류0·집중298고유/309관측·신규6개·전체C++3154개·실패0이다. 같은 게임661a19c1의 Battle1·TEST01 자연 GUI2건도 통과했다. TEST01은 새 자산 복사본에 loose Fort만 하나로 제한해 원문 목록50한도 안에서 선택했다. 일반 캠페인 ESC·메뉴 복귀·재진입의 마지막 검사는459이며, 긴 자연 완주는 확대하지 않았다. 새 맵/실제 편집 도구/저장/시나리오/기존 저장 상태 복구/다른 State1·State7 자연 정리/전체 미션 완주·동일성이 남아 전체 목표는 계속 진행 중이다.
 - **원시 증거 위치:** 빌드·검사·GUI 원시 로그와 통합 드라이버는 `extracted/`(Git 제외)에 있으며, 작업한 PC(주로 HJOW-Athlon)에만 있다. 커밋되는 결과 보고서는 `cpppj/*.json`, 작업 문서는 `docs/exe/cpp-*.md`다.
 - **464 재개점:** 기존 맵의 자연 Edit 설치는 완료했다. 다음은 Editor 도구·새 맵·저장·Test Battle·Main Menu/재진입이다. 기존 d/!state.dat가 존재할 때의 open/복구/질문도 미연결이며 기본 옵션을 꺼서 우회하지 않는다. 캠페인 이탈 뒤 Edit 전환의 mission/모드 수명과 끝 구분자가 있는 게임 경로의 작업본 루트도 점검한다. 원시 실패와 최종 증거는 extracted/cpp-editor-entry-464-*에 보존했다. 마지막 전체 디컴파일 HJOW-Athlon/2026-10-23 유지, 디컴파일 소스 변경 없음.
+- **465 완료:** `EditorWorkingRoot`로 실제 자산 디렉터리를 먼저 정규화하여 후행 `/`·`\\`·`.`·`d/..`에서도 같은 형제 `<이름>-editor`를 사용한다. 기존 작업본 보존/원본 보호 검사는 유지한다. Release build1 종료0·EditorFiles 집중7개(신규2)·실패0. 실제 후행 구분자 Edit GUI는 다음 기능 묶음에서 검증한다. [작업 문서](docs/exe/cpp-editor-working-root-20261026.md), [보고서](cpppj/editor-working-root-20261026.json). 마지막 전체 디컴파일 HJOW-Athlon/2026-10-23 유지, 디컴파일 변경 없음. Edit 도구/상태 복구·전체 미션 완주 목표는 계속 진행 중이다.
 - 원격 저장소에 push하지 않는다. 커밋 메시지는 `YYYYMMDD-NN CP 요약` 형식이며, NN은 `git log`로 그날의 마지막 번호를 확인해 정한다.
 
 ## 1. 현행 목표 ([TODO.md](TODO.md))

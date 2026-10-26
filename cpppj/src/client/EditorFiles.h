@@ -9,6 +9,7 @@
 
 namespace netstorm::client {
 struct TemplateFileWriteHooks; //실제 Template 저장 부모가 사용하는 권한/쓰기 경계다.
+std::filesystem::path EditorWorkingRoot(const std::filesystem::path& gameDirectory); //실제 자산 디렉터리의 형제 <이름>-editor를 계산한다. 끝 구분자와 ./.. 표기는 같은 작업본을 선택하며 파일을 만들지 않는다.
 // 사용자 작업본과 보호된 원본 경로를 다른 실제 디렉터리로 유지한다.
 class EditorFiles {
 public:

@@ -21,6 +21,13 @@ bool Contains(const std::filesystem::path& root,const std::filesystem::path& pat
     auto prefix=o::AsciiLower(root.generic_string());const auto name=o::AsciiLower(path.generic_string());if (prefix==name) return true;if (!prefix.ends_with('/')) prefix+='/';return name.starts_with(prefix);
 }
 }
+// 자산 경로를 실제 디렉터리로 먼저 정규화하여 끝 구분자가 자식 -editor 경로를 만들지 않게 한다.
+std::filesystem::path EditorWorkingRoot(const std::filesystem::path& gameDirectory) {
+    auto directory=Actual(gameDirectory); //기존 상위 링크와 ./..를 해석한 실제 자산 디렉터리다.
+    while (directory.has_relative_path() && directory.filename().empty()) directory=directory.parent_path(); //끝 구분자의 빈 요소만 제거하고 드라이브/파일시스템 루트는 넘지 않는다.
+    if (!directory.has_filename() || directory==directory.root_path()) throw std::invalid_argument("편집 작업본의 자산 디렉터리 이름이 없습니다");
+    auto name=directory.filename();name+="-editor";return directory.parent_path()/name; //같은 실제 이름으로 형제 작업 디렉터리만 선택한다. 원본 보호 검사는 EditorFiles가 계속 수행한다.
+}
 // 작업 경로를 원본/CD 아래로 지정한 경우 파일 생성 전에 거부한다.
 EditorFiles::EditorFiles(std::filesystem::path root,std::vector<std::filesystem::path> protectedRoots):root_(Actual(root)) {
     if (protectedRoots.empty()) throw std::invalid_argument("편집 파일 장치의 원본 보호 경로 누락");

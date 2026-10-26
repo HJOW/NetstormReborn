@@ -1,0 +1,29 @@
+{
+  "unit": 465,
+  "host": "HJOW-Athlon",
+  "date": "2026-10-26",
+  "lastFullDecompilation": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23",
+    "changed": false
+  },
+  "build": {
+    "exitCode": 0,
+    "log": "extracted/cpp-editor-root-465-build1.log"
+  },
+  "focused": {
+    "filter": "EditorFiles",
+    "count": 7,
+    "failed": 0,
+    "log": "extracted/cpp-editor-root-465-focused1.log"
+  },
+  "binaryIdentities": {
+    "cpppj/build/bin/Release/NetstormCpp.exe": "094f7a0c497d9f7a2df1abb2571a1075ae772f579271720d5059c2746ad55b11",
+    "cpppj/build/bin/Release/netstorm_tests.exe": "f5a2e1357304da385f5ddcc89576a3aaa52ffeb06c64b5ed2c75716e1d856dfd"
+  },
+  "registryCount": 3156,
+  "protectedBaselineCount": 2474,
+  "protectedBaselineChanges": [],
+  "guiExecuted": false,
+  "fullCtestExecuted": false
+}

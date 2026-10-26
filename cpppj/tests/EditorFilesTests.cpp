@@ -93,3 +93,29 @@ TEST_CASE(EditorFiles_FortSelectionUsesCurrentStateAndWriter) {
     CampaignTemplateStorage reload;reload.InstallFile(1,decoded,saved,path.string());const auto reloaded=reload.State(1).bytes;CHECK(std::vector<std::uint8_t>(reloaded.begin(),reloaded.end())==expected);
     CHECK(assets.files.Read("d/TEST01.fort")==original); // 원본은 읽기 전용 입력으로만 사용했고 저장은 새 작업본에 수행했다.
 }
+
+// 끝 구분자와 ./..가 다른 작업본을 만들지 않으며 모든 표기에서 수정한 같은 파일을 다시 선택한다.
+TEST_CASE(EditorFiles_WorkingRootNormalizesDirectorySpellingsAndPreservesWork) {
+    const auto base=WorkRoot("root-normalization"),source=base/"assets";std::filesystem::create_directories(source/"d");
+    const auto expected=std::filesystem::weakly_canonical(base)/"assets-editor";const std::vector<std::uint8_t> original{1,2,3},edited{4,5};
+    std::vector<std::filesystem::path> spellings{source,source.string()+"/",source/".",source/"d"/"..",source/"d"/".."/""}; //같은 실제 디렉터리를 지정하는 일반/끝 구분자/상대 요소 표기다.
+#ifdef _WIN32
+    spellings.emplace_back(source.string()+"\\"); //Windows가 경로 구분자로 해석하는 역슬래시도 같은 디렉터리다.
+#endif
+    EditorFiles first(EditorWorkingRoot(source),{source});const auto saved=first.Prepare("Working",original);first.Write(saved.string(),edited);
+    for (const auto& spelling:spellings) { //모든 재진입 표기가 같은 작업 namespace와 기존 수정본을 사용해야 한다.
+        CHECK(EditorWorkingRoot(spelling)==expected);EditorFiles again(EditorWorkingRoot(spelling),{spelling});
+        CHECK(again.Prepare("Working",original)==saved && ReadFileBytes(saved)==edited);
+        CHECK(Rejects([&] { again.Write((source/"d/Working.fort").string(),original); }));
+    }
+    CHECK(!std::filesystem::exists(source/"-editor") && !std::filesystem::exists(source/"d/Working.fort"));
+}
+
+// 정규화로 원본 보호 검사를 우회하지 않으며 이름 없는 파일시스템 루트는 형제 작업본으로 바꾸지 않는다.
+TEST_CASE(EditorFiles_WorkingRootStillRejectsProtectedAndNamelessRoots) {
+    const auto base=WorkRoot("root-guards"),source=base/"assets";std::filesystem::create_directories(source);
+    const auto working=EditorWorkingRoot(source/".");CHECK(Rejects([&] { EditorFiles forbidden(working,{base}); }));
+    CHECK(Rejects([&] { EditorFiles forbidden(source/".."/"assets"/"-editor",{source}); }));
+    CHECK(Rejects([&] { static_cast<void>(EditorWorkingRoot(std::filesystem::absolute(source).root_path())); }));
+    CHECK(!std::filesystem::exists(working) && !std::filesystem::exists(source/"-editor"));
+}
