@@ -192,7 +192,7 @@ Client::Client(ClientOptions options)
       colorSortInput_(std::make_shared<ClientColorSortInput>()),
       localStateGlobals_(std::make_shared<ClientLocalStateGlobals>()),
       connectionActivityGlobals_(std::make_shared<ClientConnectionActivityGlobals>()),
-      connectionGlobals_(std::make_shared<ClientConnectionGlobals>()),
+      connectionGlobals_(std::make_shared<ClientConnectionGlobals>(localStateGlobals_)),
       fortGlobals_(std::make_shared<ClientFortGlobals>()),
       coreDataGlobals_(std::make_shared<ClientCoreDataGlobals>()),
       playerRecords_(std::make_shared<ClientPlayerRecords>()),

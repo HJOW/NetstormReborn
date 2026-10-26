@@ -52,6 +52,7 @@
 #include "o/RawMissionFrameGate.h"
 #include "client/RawCampaignParticles.h"
 namespace netstorm::o { class RawCarrierSteal; class RawCarrierPickup; class RawCarrierMove; class RawGemReward; class RawDudeBehavior; struct MissionStartGlobals; struct MissionAiSettingsState; struct FortObjectLoadState; class RawFortBadgesGlobals; } // 포획/Dude 몸체와 미션 시작 전역의 고정 참조만 공개한다.
+namespace netstorm::o { class RawConnectionRegistry; } //실제 Client와 로컬 양끝이 빌리는 같은 연결표다.
 namespace netstorm::client {
 class CampaignTemplateStorage; // Client보다 짧은 Session이 빌리는 같은 실제 Template9 수명이다.
 class EditorFiles; // 실제 작업본 파일 장치이며 연결한 Session보다 오래 살아야 한다.
@@ -226,6 +227,7 @@ struct RawCampaignSessionServices {
     std::shared_ptr<ClientConnectionActivityGlobals> connectionActivityGlobals; // 실제 Client와 Login/Editor 수신이 같은 두22DWORD 및 Zone DWORD를 직접 공유한다.
     std::function<std::uint32_t()> connectionFrameNumber; // 실제 Client::Time().number의 현재 하위32비트를 Receive의 원문 시점에 읽는다.
     std::function<void(std::uint32_t,std::uint32_t)> removeConnectionStatus; // missionPost 관문 뒤004d3090(kind,player,0,0,빈문자열)의 실제 WarningMessages 삭제를 호출한다.
+    std::shared_ptr<o::RawConnectionRegistry> connectionRegistry; //실제 Client의 생성/수락/재배치/정리 표이며 독립 전송만 자체 표를 만든다.
 };
 // 초기 객체 생성부터 Kernel 해제까지 동일 주소에서 실제 모듈과 상태를 소유한다.
 class RawCampaignSession {

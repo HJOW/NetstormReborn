@@ -94,9 +94,30 @@ void InstallLocalMissionZone(std::span<const std::uint8_t> zone,std::span<std::u
     Need(hooks.serve)(port);
 }
 // 모든 도달한 분배 효과는 기존 RawPacketDispatch와 같은 콜백을 사용한다.
-LocalMissionTransport::LocalMissionTransport(std::span<const std::uint8_t> players,const bool& server,o::PacketDispatchHooks hooks)
-    :players_(players),serverMode_(server),hooks_(std::move(hooks)),dispatch_(o::OriginalEdition::Patch1078,hooks_) {
+LocalMissionTransport::LocalMissionTransport(std::span<const std::uint8_t> players,const bool& server,o::PacketDispatchHooks hooks,std::shared_ptr<o::RawConnectionRegistry> registry)
+    :players_(players),serverMode_(server),hooks_(std::move(hooks)),registry_(registry?std::move(registry):std::make_shared<o::RawConnectionRegistry>()),dispatch_(o::OriginalEdition::Patch1078,WrappedHooks()) {
     if (players.size()!=kPlayers*kPlayerBytes) throw std::invalid_argument("로컬 전송 같은 실제 Player9 누락");
+    if (!hooks_.now || !hooks_.record || !hooks_.terminate || !hooks_.close || !hooks_.release) throw std::invalid_argument("로컬 전송의 실제 분배 장치 누락"); //감싼 함수의 존재로 원래 장치 누락을 가리지 않는다.
+}
+// Native 부모를 대신 실행하지 않고 C++ owner가 실제 없애는 자기 주소의 별칭만 반납한다.
+LocalMissionTransport::~LocalMissionTransport() { registry_->Forget(clientToken_);registry_->Forget(serverToken_); }
+// 실제 같은 두 주소만 Registry 토큰으로 연결한다.
+std::uint32_t LocalMissionTransport::Token(const o::PacketConnection& connection) const { if (&connection==&client_) return clientToken_;if (&connection==&server_) return serverToken_;throw std::logic_error("로컬 전송의 다른 연결 주소"); }
+// 실제 장치 성공 뒤 반대 socket/큐와 현재 끝의 존재를 같은 저장소에서 반납한다.
+std::uint32_t LocalMissionTransport::Track(o::PacketConnection& connection) {
+    auto* node=&connection;return registry_->Track(connection,[this,node] {
+        hooks_.close(*node);if (node==&client_) { serverPeerLost_=true;clientOutput_.clear(); }else { clientPeerLost_=true;serverOutput_.clear(); }toServer_.clear();toClient_.clear();
+    },[this,node] { const bool client=node==&client_;hooks_.release(*node);if (client) clientPresent_=false;else { serverPresent_=false;pending_=false;owner_=0; } });
+}
+// 실제 RawPacketDispatch와 집합 분배가 같은 노드/수명 장치를 사용한다.
+o::PacketDispatchHooks LocalMissionTransport::WrappedHooks() {
+    o::PacketDispatchHooks result;result.now=[this] { return hooks_.now(); };result.record=[this](auto& connection,auto bytes,auto length) { hooks_.record(connection,bytes,length); };result.terminate=[this](auto& connection) { hooks_.terminate(connection); };
+    result.close=[this](auto& connection) { if (&connection==&client_ || &connection==&server_) registry_->Destroy(Token(connection));else hooks_.close(connection); }; //Editor가 빌려 쓰는 외부 노드는 제공된 실제 owner 장치에만 전달한다.
+    result.release=[this](auto& connection) { if (&connection==&client_ || &connection==&server_) registry_->Release(Token(connection));else hooks_.release(connection); };return result;
+}
+// 수신 중에는 건드리지 않고 다음 실제 폴링 경계에서만 닫힌 끝을 반납한다.
+void LocalMissionTransport::RetireClosed() {
+    for (const bool client:{false,true}) { auto& node=client?client_:server_;if ((client?clientPresent_:serverPresent_) && !node.depth && (node.flags&0x40U)) { const auto token=Token(node);registry_->Destroy(token);registry_->Release(token); } } //각 끝의 현재 존재를 매번 다시 읽는다.
 }
 // 실제 큰 로그인 몸체를 제공해야 분배할 수 있으며 대용 flags2를 쓰지 않는다.
 void LocalMissionTransport::RegisterLogin(decltype(o::PacketRegistration::receive) receive) {
@@ -105,28 +126,32 @@ void LocalMissionTransport::RegisterLogin(decltype(o::PacketRegistration::receiv
 // 실제 두 PacketConnection을 만들고 각각 다른 endpoint/수신 큐를 사용한다.
 void LocalMissionTransport::Open(std::uint32_t port,bool connectImmediately) {
     if (open_ || !port || port>65535 || !dispatch_.Registration(kLoginType).receive) throw std::logic_error("로컬 서버 포트/새 수명/실제 로그인 처리기 계약 오류");
+    if (!registry_->CanAccept() || (connectImmediately && registry_->Cleanup().transceivers[9])) throw std::logic_error("현재 로컬 연결표의 새 수명/빈칸 관문");
     port_=port;client_={};server_={};client_.sender=9;server_.sender=std::bit_cast<std::uint32_t>(std::int32_t{-1});
     if (connectImmediately) { client_.received=hooks_.now();client_.heartbeat=hooks_.now(); }
     server_.received=hooks_.now();server_.heartbeat=hooks_.now();
     client_.flags=connectImmediately ? 0x26U : 0U;server_.flags=0x24;open_=true;pending_=true;serverBuffered_=false;owner_=0;clientPresent_=connectImmediately;
+    serverPresent_=true;clientPeerLost_=serverPeerLost_=false;serverToken_=Track(server_);pendingId_=registry_->Accept(serverToken_);
+    if (connectImmediately) { clientToken_=Track(client_);registry_->Register(9,clientToken_); } //기존 실제 생성 위치에서 같은 client9를 등록한다.
 }
 // 서버열기는성공한접속과별개다.같은클라이언트기록의실제접속시각/flags만지정한다.
 void LocalMissionTransport::Connect() {
     if (!open_ || client_.flags || !pending_ || owner_) throw std::logic_error("로컬 클라이언트 새접속/현재서버 계약 오류");
-    client_.received=hooks_.now();client_.heartbeat=hooks_.now();client_.flags=0x26;clientPresent_=true;
+    if (registry_->Cleanup().transceivers[9]) throw std::logic_error("현재 Client9 연결 중복 생성");
+    client_.received=hooks_.now();client_.heartbeat=hooks_.now();client_.flags=0x26;clientPresent_=true;clientToken_=Track(client_);registry_->Register(9,clientToken_);
 }
 // 같은 실제 pending 객체의 sender/등록 위치만 바꾼다. 새 연결이나 연결 성공 flag를 합성하지 않는다.
 void LocalMissionTransport::AssignConnection(std::int32_t pending,std::int32_t owner) {
-    if (!serverMode_ || !open_ || !pending_ || pending!=-1 || owner<1 || owner>=static_cast<std::int32_t>(kPlayers) || owner_)
+    if (!serverMode_ || !open_ || !pending_ || pending!=pendingId_ || owner<1 || owner>=static_cast<std::int32_t>(kPlayers) || owner_)
         throw std::logic_error("로컬 실제 pending-1 재배치 계약 오류");
-    owner_=static_cast<std::uint32_t>(owner);server_.sender=owner_;server_.flags|=2;serverBuffered_=true;serverOutput_.clear();pending_=false;
+    registry_->Assign(pending,owner,serverMode_?1U:0U,[this](auto token) { if (token!=serverToken_) throw std::logic_error("현재 로컬 재배치의 다른 buffered 연결");server_.flags|=2;serverBuffered_=true;serverOutput_.clear(); });owner_=static_cast<std::uint32_t>(owner);pending_=false;
 }
 // packet observer가 확정한 WORD 바이트를 전송하며 없는 연결의 자연 생략과 실제 송신을 구분한다.
 bool LocalMissionTransport::Send(std::int32_t destination,std::span<const std::uint8_t> packet) {
     if (!open_) throw std::logic_error("로컬 전송 연결을 열기 전 송신");
-    if (destination==9 && !(client_.flags&2U)) return false; // 서버만열린상태의클라이언트송신은아직연결이없다.
+    if (destination==9 && (!clientPresent_ || !(client_.flags&2U) || (client_.flags&0x40U) || clientPeerLost_)) return false; //현재 실제 Client9/반대 끝 수명을 사용한다.
     if (destination>=1 && destination<static_cast<std::int32_t>(kPlayers) && !(players_[std::size_t(destination)*kPlayerBytes+0x50]&1U)) return false;
-    const bool client=destination==9,server=(destination==-1 && pending_) || (destination>=1 && static_cast<std::uint32_t>(destination)==owner_);
+    const bool client=destination==9,server=serverPresent_ && !serverPeerLost_ && !(server_.flags&0x40U) && ((destination==pendingId_ && pending_) || (destination>=1 && static_cast<std::uint32_t>(destination)==owner_));
     if (!client && !server) return false;const auto length=Read(packet,2,2);if (length<4 || length>packet.size()) throw std::out_of_range("로컬 전송 패킷 실제 선언 바이트 부족");
     auto& output=client ? clientOutput_ : serverOutput_;const auto bytes=packet.first(length);
     if (!client && !serverBuffered_) toClient_.emplace_back(bytes.begin(),bytes.end());
@@ -166,7 +191,7 @@ bool LocalMissionTransport::DispatchFrame(o::PacketConnection& connection,std::s
         }
     }
     if (cursor!=total) { hooks_.terminate(connection);return false; }
-    if (!connection.depth && (connection.flags&0x40U)) { hooks_.close(connection);hooks_.release(connection);return false; }return true;
+    if (!connection.depth && (connection.flags&0x40U)) { auto hooks=WrappedHooks();hooks.close(connection);hooks.release(connection);return false; }return true;
 }
 // 수신 프레임은 callback 동안 고정된 로컬 소유 벡터에 두고 같은 실제 연결을 넘긴다.
 bool LocalMissionTransport::ReceiveOne(bool serverSide) {
@@ -175,7 +200,7 @@ bool LocalMissionTransport::ReceiveOne(bool serverSide) {
 }
 // pending이 같은 호출 중 owner로 이동하면 그 뒤 실제 등록 연결 순회에서 계속 읽는다.
 std::size_t LocalMissionTransport::Poll() {
-    if (!open_) throw std::logic_error("로컬 연결을 열기 전 수신");std::size_t count=0;
+    if (!open_) throw std::logic_error("로컬 연결을 열기 전 수신");RetireClosed();std::size_t count=0;
     if (pending_ && !toServer_.empty()) { ReceiveOne(true);++count; }
     // pending에서 이동한 현재 owner 끝의 나머지 프레임을 같은 번호순 방문에서 처리한다.
     if (owner_) { while (!toServer_.empty() && !(server_.flags&0x40U)) { ReceiveOne(true);++count; } }

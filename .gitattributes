@@ -2055,3 +2055,7 @@ cpppj/state-hud-runtime-20261026.json text eol=lf
 # 연결 정리의 최초 Native/실행 보고서 SHA를 Windows 체크아웃에서도 보존한다.
 cpppj/connection-cleanup-native-20261026.json text eol=lf
 cpppj/connection-cleanup-runtime-20261026.json text eol=lf
+
+# 실제 등록/재배치 관측과 실행 보고서의 원시 SHA를 보존한다.
+cpppj/connection-registration-native-20261026.json text eol=lf
+cpppj/connection-registration-runtime-20261026.json text eol=lf

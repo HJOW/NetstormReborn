@@ -3,6 +3,7 @@
 #include "o/RawPacketDispatch.h"
 #include "o/RawPlayerWorld.h"
 #include "o/RawBattleBroadcast.h"
+#include "o/RawConnectionRegistry.h"
 #include <deque>
 
 namespace netstorm::zacket {
@@ -57,7 +58,10 @@ void InstallLocalMissionZone(std::span<const std::uint8_t> zone,std::span<std::u
 class LocalMissionTransport {
 public:
     // 같은 Player9와 서버 전역/실제 분배 효과를 빌린다. hooks의 모든 경계는 실제 소비자여야 한다.
-    LocalMissionTransport(std::span<const std::uint8_t> players,const bool& server,o::PacketDispatchHooks hooks);
+    LocalMissionTransport(std::span<const std::uint8_t> players,const bool& server,o::PacketDispatchHooks hooks,std::shared_ptr<o::RawConnectionRegistry> registry={});
+    ~LocalMissionTransport(); //현재 호스트 수명에서 없어지는 자기 양끝의 남은 별칭/장치를 반납한다.
+    LocalMissionTransport(const LocalMissionTransport&)=delete; //실제 양끝과 등록된 주소를 복제하지 않는다.
+    LocalMissionTransport& operator=(const LocalMissionTransport&)=delete; //살아 있는 연결/큐의 현재 owner를 대입으로 바꾸지 않는다.
     //0x27/version1/정책0 등록이다. 실제004a7800 상위 몸체가 없으면 열기 전에 거부한다.
     void RegisterLogin(decltype(o::PacketRegistration::receive) receive);
     // 원본 zlocal 서버/접속 두 끝을 열고 서버 측을 pending-1로 등록한다. 포트는 실제 게임 설정값이다.
@@ -86,6 +90,10 @@ public:
     std::uint32_t Owner() const;
     std::size_t QueuedFrames() const;
 private:
+    o::PacketDispatchHooks WrappedHooks(); //실제 분배와 같은 Client 표의 소멸/free를 연결한다.
+    std::uint32_t Track(o::PacketConnection& connection); //현재 실제 양끝의 수명과 큐 장치에 한 토큰을 발급한다.
+    std::uint32_t Token(const o::PacketConnection& connection) const; //같은 실제 두 주소의 현재 토큰만 읽는다.
+    void RetireClosed(); //이전 폴링이 닫힘 sentinel로 남긴 실제 끝만 다음 폴링에서 반납한다.
     // 지정 끝의 실제 한 프레임을 꺼내 분배한다. callback 이후에도 고정 주소 연결은 살아 있다.
     bool ReceiveOne(bool serverSide);
     // buffered 데이터의 실제 집합 헤더를 만들고 다른 끝의 수신 큐로 옮긴다.
@@ -93,10 +101,13 @@ private:
     std::span<const std::uint8_t> players_; //같은 현재 Player9 원문이며 active 사본을 만들지 않는다.
     const bool& serverMode_; //004e27b0이 현재 읽는 실제 서버 모드다.
     o::PacketDispatchHooks hooks_; //같은 실제 시계/기록/종료/반납 경계다.
+    std::shared_ptr<o::RawConnectionRegistry> registry_; //생성/재배치/분배/State 정리가 같은 실제 표를 빌린다.
     o::RawPacketDispatch dispatch_; //로그인/건설/응답이 공유하는 실제 등록표다.
     o::PacketConnection client_,server_; //포인터 없는 표식이 아닌 실제 서로 다른 연결 저장소다.
     bool open_{},pending_{},serverBuffered_{}; //실제 두 끝의 열림/서버 pending/서버 buffered 모드다.
     bool clientPresent_{}; // 서버만 열면 부재이며 실제 Client9 접속 생성 완료 뒤 존재한다. flags 변경으로 객체 수명을 지우지 않는다.
+    bool serverPresent_{},clientPeerLost_{},serverPeerLost_{}; //실제 accepted 끝의 존재와 반대 끝 소멸을 구별한다.
+    std::uint32_t clientToken_{},serverToken_{};std::int32_t pendingId_{}; //현재 실제 양끝/첫 빈 pending의 식별자이며 소유자 성공값과 다르다.
     std::uint32_t owner_{},port_{}; //pending 재배치 뒤의 현재owner와 실제 열린 로컬 포트다.
     std::vector<std::uint8_t> clientOutput_,serverOutput_; //원본 buffered 전송의 아직 flush하지 않은 바이트다.
     std::deque<std::vector<std::uint8_t>> toServer_,toClient_; //다른 끝이 실제로 받을 완성된 프레임의 소유 큐다.

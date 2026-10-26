@@ -1,12 +1,15 @@
 // 기존 Editor의004e22c0 로컬 양끝과004e28b0의 비동기 수신 순서만 소유한다.
 #pragma once
 #include "zacket/LocalMissionTransport.h"
+#include "o/RawConnectionRegistry.h"
 
 namespace netstorm::client { // 게임 계산은 등록된 기존 패킷 처리기에 맡기는 실제 Client 전송 경계다.
 // 원문단일listener/client9수명에실제처리기를주입하며로그인/Player번호재배치를추가하지않는다.
 class EditorLocalTransport {
 public:
-    EditorLocalTransport(std::span<const std::uint8_t> players,const bool& server,o::PacketDispatchHooks hooks); // 같은 Player9/현재 서버/외부 시계·수명 장치를 빌린다.
+    const std::shared_ptr<o::RawConnectionRegistry>& Registry() const; //같은 실제 Client 연결표의 정체성을 Session 설치 전에 확인한다.
+    EditorLocalTransport(std::span<const std::uint8_t> players,const bool& server,o::PacketDispatchHooks hooks,std::shared_ptr<o::RawConnectionRegistry> registry={}); //같은 실제 Client 표를 빌리며 독립 검사만 별도 표를 소유한다.
+    ~EditorLocalTransport(); //호스트 owner 최종 반납 전에 자기 노드의 남은 별칭/장치를 떼며 Native 정리 성공을 합성하지 않는다.
     EditorLocalTransport(const EditorLocalTransport&)=delete; // 콜백이 빌리는 연결 주소와 큐를 복제하지 않는다.
     EditorLocalTransport& operator=(const EditorLocalTransport&)=delete; // 생존 연결의 장치 참조를 교체하지 않는다.
     void Open(std::uint32_t port); // 로그인 등록 없이 listener→client9를 만들며 서버 모드·Player 성공 값은 쓰지 않는다.
@@ -26,6 +29,8 @@ public:
     std::size_t QueuedFrames() const; // 아직 폴링되지 않은 두 방향의 단일 프레임 수다.
 private:
     o::PacketDispatchHooks WrappedHooks(); // 기존 분배의 close/release를 같은 연결 소유권 반납과 이어 준다.
+    std::uint32_t Track(o::PacketConnection& connection); //같은 실제 노드의 close/free와 현재 Client 표를 연결한다.
+    std::uint32_t Token(const o::PacketConnection& connection) const; //현재 양끝의 숫자 식별자를 순수 조회한다.
     void Initialize(o::PacketConnection& connection,std::uint32_t sender); //004df2c0의 두 별도 시각 조회와 unbuffered 초기0x24를 쓴다.
     void Accept(); //004e02d0의 첫 빈 pending칸-1에 실제 한 accepted끝을 만든다.
     void Connected(o::PacketConnection& connection); //004dfc00의 bit0x20 해제→004dfa40의 선택된type1 분배다.
@@ -42,6 +47,7 @@ private:
     bool Alive(const o::PacketConnection& connection) const; // 같은 고정 두 연결의 현재 존재를 읽는다.
     o::PacketDispatchHooks hooks_; // 상위가 제공한 실제 시계/기록/종료/반납 장치이며 이 객체보다 오래 살아야 한다.
     std::span<const std::uint8_t> players_; // Session과 같은 실제 Player9인지 확인할 읽기 뷰이며 사본을 만들지 않는다.
+    std::shared_ptr<o::RawConnectionRegistry> registry_; //실제 생성/수락/정리가 함께 읽는 Client 장기 표다.
     zacket::LocalMissionTransport dispatcher_; // Open/Login/자체 큐를 사용하지 않고 기존 DispatchFrame/등록표만 재사용한다.
     o::PacketConnection listener_,client_,pending_; // 원문 listener와 별개 client9/accepted-1의 실제 필드 저장소다.
     std::vector<std::uint8_t> clientReceive_,pendingReceive_; //현재수신원문을각끝이보유하며004df9f0은헤더+1/+2만덮고+0을보존한다.
@@ -49,5 +55,6 @@ private:
     bool listenerAlive_{},clientAlive_{},pendingAlive_{},accepted_{},polling_{}; // 존재·첫 수락·호스트 재진입 보호이며 게임 상태/로그인 성공 값이 아니다.
     bool clientPeerLost_{},pendingPeerLost_{}; //PacketConnection+34와다른원문socket의0x1000상태를각실제끝에보관한다.
     std::uint32_t port_{}; //004e22c0이 실제 설정에서 받은 두 끝의 같은 포트다.
+    std::uint32_t clientToken_{},pendingToken_{}; //같은 실제 양끝의 현재 세대 토큰이며 재실행 때 새로 발급한다.
 };
 }

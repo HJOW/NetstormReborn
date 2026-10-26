@@ -17,6 +17,7 @@
 #include "client/TellFileMenus.h"
 #include "client/ClientAudio.h"
 #include "client/ClientMain.h"
+#include "client/ClientConnectionGlobals.h"
 #include "client/ClientSubscriberGlobals.h"
 #include "client/CampaignClientServices.h"
 #include "client/CampaignObjectMenuClient.h"
@@ -1210,6 +1211,8 @@ std::string UberGump::Report() const {
     out << "thunder_processes\t" << client_.ThunderFlashCount() << '\n';
     out<<"game_menu_bar\t"<<(gameMenuState_ ? gameMenuState_->menuSerial : 0U)<<'\t'<<GameMenuOpen()<<'\t'<<(gameMenuState_ ? gameMenuState_->checksum : 0)<<'\n'; // 같은serial조회와기존SP검산을관찰한다.
     out<<"state_hud\t"<<(world_!=nullptr)<<'\t'<<(rawButtons_->UberRoot() && rawButtons_->UberRoot()->Current())<<'\t'<<(hud_?hud_->boundMinimap:0)<<'\t'<<(rawButtons_->Minimap()?rawButtons_->Minimap()->RootToken():0)<<'\t'<<client_.GameplayGlobals()->Borrowed()<<'\n'; //생성/현재 World 통지 대여를 분리 관측하며 State 설치 완료를 합성하지 않는다.
+    const auto connections=client_.ConnectionGlobals()->Cleanup();std::size_t mainCount{},pendingCount{};for (const auto token:connections.transceivers) if (token) ++mainCount;for (const auto token:connections.pending) if (token) ++pendingCount; //같은 실제 고정표를 관측만 하며 포인터/개수/노드를 새로 만들지 않는다.
+    out<<"connection_table\t"<<mainCount<<'\t'<<pendingCount<<'\t'<<connections.pendingCount<<'\t'<<connections.transceivers[9]<<'\t'<<connections.synchronization<<'\n'; //Client 장기의 실제 토큰이 정상 미션 로그인에서도 사용되는지 확인한다.
     out<<rawButtons_->Report()<<'\n';
     out<<rawButtons_->Menus()->Report();
     out<<warnings_->Report();

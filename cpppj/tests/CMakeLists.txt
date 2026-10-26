@@ -2189,3 +2189,4 @@ target_sources(netstorm_tests PRIVATE StateSidListsTests.cpp)
 # SP 표시 부모의 최초 Native120관측과 실제 UI 대여 경계다.
 target_sources(netstorm_tests PRIVATE StormPowerRefreshTests.cpp)
 target_sources(netstorm_tests PRIVATE ConnectionCleanupTests.cpp) # 원문580관측과 실제 Client/Editor 반환을 검사한다.
+target_sources(netstorm_tests PRIVATE ConnectionRegistrationTests.cpp) #원문288관측과 실제 장기 표/양끝/재배치를 검사한다.

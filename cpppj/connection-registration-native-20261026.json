@@ -1,0 +1,25 @@
+{
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "edition": "PATCH10.78",
+  "observations": 288,
+  "stoppedObservations": 60,
+  "realFunctions": [
+    "0x4e2870",
+    "0x4df4f0",
+    "0x4e27b0"
+  ],
+  "stubbedEffects": [
+    "004df470 buffered setting",
+    "004e0620 assertion"
+  ],
+  "originalGameExecuted": false,
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_connection_registration.py": "cd70e85fb1898e86f59294cafeae007b1af21c7b49babc5e2e8b8632f4090a9c",
+    "cpppj/tests/fixtures/connection-registration-x86.tsv": "d6d37ed9d7f1018789e235293376d647b10c48784e1386f4ecbb43c653a4927d"
+  }
+}

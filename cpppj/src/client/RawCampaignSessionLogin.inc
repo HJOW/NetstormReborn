@@ -66,7 +66,7 @@ struct RawCampaignSession::Impl::Login {
         PacketDispatchHooks hooks;hooks.now=[this] { return static_cast<std::uint32_t>(Need(effects.wallSeconds)()); };
         hooks.record=[this](PacketConnection& connection,std::span<const std::uint8_t> packet,std::uint16_t) { wireTypes.push_back(packet[1]);if (effects.observePacket) effects.observePacket(connection.sender,s.assetState.Boss(),s.assetState.localOwner,packet); };
         hooks.terminate=[this](PacketConnection& connection) { connection.flags|=0x40;Need(effects.log)("로컬 미션 연결 종료\n"); };
-        hooks.close=hooks.release=[](PacketConnection&) { throw std::logic_error("로그인 연결 해제/반납의 실제 수명 처리 미연결"); };return hooks;
+        hooks.close=[this](PacketConnection&) { Need(effects.log)("로컬 연결 큐/소켓 종료\n"); };hooks.release=[this](PacketConnection&) { Need(effects.log)("로컬 연결 반납\n"); };return hooks; //실제 큐/endpoint 반납은 LocalMissionTransport의 같은 수명 장치가 수행한다.
     }
     //같은상태9/응답13이사용하는실제시계/연결/Template/UI/타이머 경계다.
     LocalMissionStateHooks StateHooks() {
@@ -87,7 +87,7 @@ struct RawCampaignSession::Impl::Login {
     Login(Impl& owner,CampaignLoginServices device,std::function<void()> load):s(owner),effects(std::move(device)),install(std::move(load)) {
         // 첫 실제 접속/설치 전에 Init의22개 기본 옵션/색과 예약 영역 보존을 같은87BYTE에 적용한다.
         if (!s.services.missionOptions) ResetMissionBattleOptions(OriginalEdition::Patch1078,s.battleOptions); // 실제 Client Init이 쓴 전역을 다시 지우지 않는다.
-        transport=std::make_unique<netstorm::zacket::LocalMissionTransport>(s.players,s.core.processState.Server(),Device());
+        transport=std::make_unique<netstorm::zacket::LocalMissionTransport>(s.players,s.core.processState.Server(),Device(),s.services.connectionRegistry);
         auto send=[this](std::int32_t target,std::span<const std::uint8_t> bytes) { Send(target,bytes); }; //모든 부모가 공유하는 같은 실제 연결이다.
         options=std::make_unique<RawMissionBattleOptions>(OriginalEdition::Patch1078,MissionBattleOptionState{s.battleOptions,s.world.MutableTypes(),typeUse,ranges,s.geyserType,range,s.energyState.radiusSquared,optionValue});
         MissionServerPacketHooks packets;packets.send=send;packets.peerAddress=[this](std::uint32_t) { return "*:"+std::to_string(Need(effects.configInt)("gameServerPort",6799)); };packets.log=effects.log;

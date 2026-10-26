@@ -10,6 +10,7 @@
 #include "client/ClientChatRuntime.h"
 #include "client/ClientStaticStrings.h"
 #include "client/ClientSpGlobals.h"
+#include "client/ClientConnectionGlobals.h"
 #include "client/RawButtonControls.h"
 #include "client/RawMenuControls.h"
 #include "client/RawChatChannels.h"
@@ -109,6 +110,7 @@ RawCampaignSessionServices MakeCampaignClientServices(Client& client,RawButtonCo
     RawCampaignSessionServices services; // 게임 규칙 경계는 실제 세션의 명시 누락 판정을 유지한다.
     services.subscriberGlobals=client.SubscriberGlobals(); // Init/Chat/모든 Session이 같은 두 DWORD를 수명째 빌린다.
     services.playerRecords=client.PlayerRecords(); // 실제 Player/factory를 Client 수명에 소유하고 Session 대여 중 재할당하지 않는다.
+    services.connectionRegistry=client.ConnectionGlobals(); //실제 로컬 연결도 State 정리와 같은 장기22/32칸을 사용한다.
     services.spGlobals=client.SpGlobals(); // 공통004391ed에서 구성한 같은 SP/추적 전역을 재초기화 없이 빌린다.
     services.coreDataGlobals=client.CoreDataGlobals(); // 원문 Core 선택/캐시·Login 패킷·Chat이 같은 장기 슬롯을 직접 사용한다.
     services.gameplayGlobals=client.GameplayGlobals(); // 초기 HUD와 같은 실제 현재 Player/커서/검색/미션 전역이다.

@@ -242,6 +242,7 @@ std::shared_ptr<RawSurfaceStorage> SessionSurfaceStorage(const RawCampaignSessio
 // 다른 Client의 두 Subscriber를 실제 현재 전역에 섞기 전에 거부한다.
 std::shared_ptr<ClientGameplayGlobals> SessionGameplayGlobals(const RawCampaignSessionServices& services) {
     if (services.editorTransport) {
+        if (services.connectionRegistry && services.connectionRegistry!=services.editorTransport->Registry()) throw std::invalid_argument("Editor의 서로 다른 실제 Client 연결표");
         if (!services.adoptPreparedWorld || services.installMode!=CampaignInstallMode::ExistingEditor || !services.deferExistingEditorFile || !services.adoptInitializedPlayers || !services.playerRecords || services.localLogin) throw std::invalid_argument("Editor 전송의 준비된 실제 World/Player/로그인 배제 계약");
         const auto players=services.playerRecords->Records();const auto wirePlayers=services.editorTransport->Players();if (players.size()!=9*180 || players.data()!=wirePlayers.data() || players.size()!=wirePlayers.size()) throw std::invalid_argument("Editor 전송의 같은 실제 Player9 물리 불일치"); // 대여나 모드 재설정 전에 다른 Client/이전 할당의 송수신 큐를 거부한다.
     }
@@ -776,6 +777,7 @@ struct RawCampaignSession::Impl {
         soundNames(RequireSounds(services)),archerTypes(core.types.size()),missileTypes(core.types.size()),projectileTypes(core.types.size()),
         restrictions(services.missionRestrictions ? *services.missionRestrictions : localRestrictions),
         start{core.processState,priestState.movement.dude,priestState.movement.teleport,priestState.movement.manaBolt,priestState.movement.priest,geyserType,snap,retrying},process{core.processState} {
+        if (services.editorTransport && !services.connectionRegistry) services.connectionRegistry=services.editorTransport->Registry(); //검증 후 소유한 독립 서비스에 실제 wire의 같은 표를 보관한다.
         rewardState.sharedPercent=&gameplayGlobals->GameAux()->RefundPercent();rewardState.sharedGeyserPool=&gameplayGlobals->GameAux()->ResourcePool(); // 실제 Reward/LocalGeyser의 같은 물리다.
         rewardState.sharedPriestQuarterHp=&gameplayGlobals->GameAux()->PriestQuarterHp(); // State 직접 쓰기와 기존 HP setter/최대HP가 같은 현재 전역을 쓴다.
         missionStart.sharedAllowAnyCapture=&gameplayGlobals->GameAux()->AllowAnyCapture();missionStart.sharedOrdinaryGeysers=&gameplayGlobals->GameAux()->OrdinaryGeysers(); // Start 출력과 pickup을 같은 DWORD에 연결한다.
