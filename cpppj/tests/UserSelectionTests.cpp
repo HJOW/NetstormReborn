@@ -7,6 +7,7 @@
 #include "client/RawSurfaceWorld.h"
 #include "DudeSpawnSupport.h"
 #include <bit>
+#include <algorithm>
 #include <stdexcept>
 using namespace netstorm::test::rawscene;
 using namespace netstorm::client;
@@ -240,5 +241,5 @@ TEST_CASE(UserSelectionGlobals_PreparedLifetimeAndLateHighlightFailureKeepCurren
       bool rejected{};try { ClearClientUserSelection(gameplay,*surface,[](auto cursor) { CHECK(cursor==1);throw std::runtime_error("실제 커서 장치 후반 실패 입력"); }); }catch (const std::runtime_error&) { rejected=true; }
       CHECK(rejected && owner.multipleCount==0 && owner.selected==0 && owner.mode==0 && owner.mouseType==0 && owner.mouse.x==-33 && owner.remembered[0]==17 && owner.multiple[0]==0x12345678); }
     CHECK(!gameplay.Borrowed() && owner.mode==0 && owner.mouseType==0 && owner.mouse.y==65 && owner.remembered[1]==19 && owner.multiple[0]==0x12345678);
-    { auto use=gameplay.Acquire();CHECK(owner.enabled==1 && owner.mode==0 && owner.selected==0 && owner.mouseType==0 && owner.multiple.empty() && owner.multipleCount==0); } // 일반 fresh는 Native Clear와 구별한 기존 호스트 입력 준비다.
+    { auto use=gameplay.Acquire();CHECK(owner.enabled==1 && owner.mode==0 && owner.selected==0 && owner.mouseType==0 && owner.multiple.size()==30 && std::all_of(owner.multiple.begin(),owner.multiple.end(),[](auto sid) { return sid==0; }) && owner.multipleCount==0); } // 일반 fresh는 Native Clear와 구별한 기존 호스트 입력 준비다.
 }

@@ -21,6 +21,7 @@
 #include "o/SquidFrameBinding.h"
 #include "o/SquidDestroyLifecycle.h"
 #include "o/SquidOwner.h"
+#include "o/RawStateSidLists.h"
 #include <functional>
 #include <memory>
 #include <span>
@@ -65,9 +66,10 @@ public:
     o::SidPool pool;o::SquidHash hash;std::vector<std::uint8_t> spots; // Reset(0)은 기존 SID 바이트/공간 배열의 주소를 유지한다.
     o::BoardTargetState boardTargetState; //545370/545374 실패점을 Pool과 같은 장기 수명에 두고 Board/AI가 직접 빌린다.
     o::RawGraphStorage graph; // 기록255행과 flood4096DWORD만 장기 보유한다. 실행기/TYPE snapshot/복구 정책은 World 지역이다.
+    o::RawStateSidLists sidLists; //실제 정적 SID8목록/count와 등록20포인터를 World/Session 전후에 보존한다.
     o::RawTotalMadeStorage totalMade; // 현재 로컬/누적 로컬/전역256DWORD만 장기 보유하며 ownerFactories/로딩 정책은 World 지역이다.
     o::RawIslandStorage islands;o::ChunkMap chunks; // 같은3204BYTE 섬과 mode/크기/256×12BYTE 청크를 Session 전후에도 유지한다. 실행기/효과는 포함하지 않는다.
-    std::array<std::uint32_t,o::kPlayerCount+1> priestOwnerState{}; //00595428..00595448의9DWORD 최초BSS0이다. 실제 사제 SID목록/count/지갑은 포함하지 않는다.
+    std::array<std::uint32_t,o::kPlayerCount+1> priestOwnerState{}; //00595428..00595448의9DWORD 최초BSS0이다. 실제 사제 SID목록/count는 sidLists에 있고 지갑은 포함하지 않는다.
     o::SquidOwnerMode ownerMode; // 미니맵과 현재 월드가 같은 실제 세 모드 값을 읽는다.
     o::BridgeConnectState links; // 생산 UI와 현재 월드가 같은 실제 표면 종류 전역을 읽는다.
 private:

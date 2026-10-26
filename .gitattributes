@@ -2044,3 +2044,6 @@ tools/decomp_player_initialization.py -text
 # 구름 표시 원문의 빈 마지막 trace 칸과 최초 JSON 줄끝을 그대로 보존한다.
 cpppj/tests/fixtures/kencloud-render-x86.tsv text eol=lf whitespace=-blank-at-eol
 cpppj/kencloud-render-native.json text eol=lf
+# SID 목록의 최초 Native 보고서와 실행 보고서 SHA를 Windows 체크아웃에서도 보존한다.
+cpppj/state-sid-lists-native-20261026.json text eol=lf
+cpppj/state-sid-lists-runtime-20261026.json text eol=lf

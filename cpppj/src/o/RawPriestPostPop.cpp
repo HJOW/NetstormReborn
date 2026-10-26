@@ -45,7 +45,7 @@ void RawPriestPostPop::Validate(Sid sid) const {
     const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
     if (raw[kType]!=kPriestType || Vtable(raw)!=(patch ? kPatchPriestVtable : kCdPriestVtable))
         throw std::invalid_argument("사제 postPop 가상 표/타입 불일치");
-    if (state_.priests.count>state_.priests.entries.size()) throw std::invalid_argument("사제 목록 개수 오류");
+    if (state_.Priests().count>state_.Priests().entries.size()) throw std::invalid_argument("사제 목록 개수 오류");
 }
 // 목록/회복 접두 뒤 전체 Carrier/보호막 처리는 RawPriestPostPopTail이 이어 준다.
 void RawPriestPostPop::Prefix(Sid sid,std::uint32_t flags) const {
@@ -53,7 +53,7 @@ void RawPriestPostPop::Prefix(Sid sid,std::uint32_t flags) const {
     const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
     if (raw[patch ? 40 : 35]&9) return;
     if (flags&1) {
-        AddUnique(state_.priests,sid);
+        AddUnique(state_.Priests(),sid);
         if (!hooks_.findRegular(sid,kPriestRegenEvent) && hooks_.reserveRegular()) {
             // x87은 int / 6을 0방향으로 절삭한 뒤 곱하고 float으로 저장한다. int를 먼저 float으로 줄이지 않는다.
             const float numerator=static_cast<float>(static_cast<double>(hp_.TypeHitPoints(kPriestType)/kRegenDivisor)*kRegenScale);

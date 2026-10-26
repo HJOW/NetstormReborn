@@ -78,8 +78,8 @@ std::uint32_t RawCampaignProductionBindings::Refresh(std::uint32_t owner) const 
     if (!effects_.configInt) throw std::logic_error("생산재계산getTeleportTechFree실제설정미연결");
     if (effects_.configInt("getTeleportTechFree")) deck_.Activate(token,state_.freeTechnologyType,1);
     // 같은공통PostPop/삭제가변경하는현재Factory개수와DWORD목록을매반복읽는다.
-    for (std::uint32_t index=0;index<core_.bookkeeping.factories.count;++index) {
-        const auto current=Factory(core_.bookkeeping.factories.Items()[index]);const auto object=core_.pool.Slot(current);
+    for (std::uint32_t index=0;index<core_.bookkeeping.Factories().count;++index) {
+        const auto current=Factory(core_.bookkeeping.Factories().Items()[index]);const auto object=core_.pool.Slot(current);
         if (static_cast<std::uint32_t>(object[34])!=owner) continue;
         const auto type=object[10];if (type>=core_.types.size()) throw std::out_of_range("생산Factory현재TYPE범위오류");
         if (core_.types[type].flags2&0x200U) { if (allowed_.Allowed(static_cast<std::int32_t>(state_.templeProduct))) deck_.Activate(token,state_.templeProduct,1); }

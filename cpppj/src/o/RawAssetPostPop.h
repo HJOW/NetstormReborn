@@ -39,9 +39,21 @@ struct AssetPostPopState {
     // geysers: 간헐천.
     SquidPostPopList residences,temples,geysers;
     SquidPostPopList outposts; // DAT0055a70c/CD005670e0: 신전/아웃포스트의 섬 소유권 재계산에 쓰는 별도 목록이다.
-    RawAuthorityState* sharedAuthority{}; // 실제 제품은 같은 Client 권한만 빌리고 목록/Player 상태를 이동하지 않는다.
+    RawAuthorityState* sharedAuthority{}; // 실제 제품은 같은 Client 권한을 빌린다. 실제 SID목록은 아래 별도 shared 포인터로 빌린다.
     bool& Boss() { return sharedAuthority ? sharedAuthority->boss : boss; } // Vortex의 실제 권한 소비 시점에서 현재값을 읽는다.
     const bool& Boss() const { return sharedAuthority ? sharedAuthority->boss : boss; } // 순수 독립 모듈의 기존 bool fallback도 유지한다.
+    SquidPostPopList* sharedResidences{}; //실제 거주 구역50칸을 Session보다 긴 owner에서 빌린다.
+    SquidPostPopList* sharedTemples{}; //실제 신전20칸이며 outposts100칸과 구별한다.
+    SquidPostPopList* sharedGeysers{}; //실제 간헐천100칸을 Pop/삭제/AI가 공유한다.
+    SquidPostPopList* sharedOutposts{}; //실제 아웃포스트100칸을 지역/캐리어와 공유한다.
+    SquidPostPopList& Residences() { return sharedResidences ? *sharedResidences : residences; } //현재 생성/삭제가 같은 목록에 직접 쓴다.
+    const SquidPostPopList& Residences() const { return sharedResidences ? *sharedResidences : residences; } //섬/피해 조회도 같은 목록을 빌린다.
+    SquidPostPopList& Temples() { return sharedTemples ? *sharedTemples : temples; } //현재 신전 SID와 개수를 반환한다.
+    const SquidPostPopList& Temples() const { return sharedTemples ? *sharedTemples : temples; } //신전 조회에 복사본을 만들지 않는다.
+    SquidPostPopList& Geysers() { return sharedGeysers ? *sharedGeysers : geysers; } //현재 간헐천 Pop/삭제의 실제 목록이다.
+    const SquidPostPopList& Geysers() const { return sharedGeysers ? *sharedGeysers : geysers; } //AI/채집도 같은 활성 목록을 읽는다.
+    SquidPostPopList& Outposts() { return sharedOutposts ? *sharedOutposts : outposts; } //지역 소유권과 캐리어의 현재 아웃포스트다.
+    const SquidPostPopList& Outposts() const { return sharedOutposts ? *sharedOutposts : outposts; } //원본의 별도100칸 정체성을 보존한다.
 };
 // 외부 몸체를 생략하지 않고 호출 순서대로 연결하는 명시 경계다. 필요한 경계가 없으면 사전 검사에서 거부한다.
 struct AssetPostPopHooks {

@@ -251,7 +251,6 @@ std::shared_ptr<ClientGameplayGlobals> SessionGameplayGlobals(const RawCampaignS
     if (services.gameplayGlobals && services.surfaceStorage && services.gameplayGlobals->GameAux()!=services.surfaceStorage->GameAux()) throw std::invalid_argument("Session의 실제 게임 보조 owner 불일치"); // 초기화/대여 전에 다른 owner를 거부한다.
     return services.gameplayGlobals ? services.gameplayGlobals : std::make_shared<ClientGameplayGlobals>(services.subscriberGlobals,services.surfaceStorage ? services.surfaceStorage->Authority() : nullptr,services.surfaceStorage ? services.surfaceStorage->GameAux() : nullptr);
 }
-constexpr std::size_t kCampaignFactoryCapacity=500; // PATCH004fc990의push1f4→0044fb20이확보하는실제0055a4d0목록의DWORD수다.
 constexpr std::array<std::uint32_t,13> kEditorGameplayMessages{0x5b,0x40,0x4f,0x50,0x60,0x61,0x5c,0x5f,0x7d,0x6d,0x3e,0x54,0x58}; // 기존 Carrier→Construction→Factory 등록 순서의 실제13종이며 로그인/응답을 추가하지 않는다.
 constexpr std::uint32_t kAiSearchTypeBase=0x6b000000U; //같은실제188TYPE의opaque32포인터기준이다.원본가상주소가아니며500stride대응만보존한다.
 // 실제83개 VT에서+10/+14/+18이4af780/44b4b0/44b9e0인14개만 일반 Damageable 수명으로 연결한다.
@@ -518,7 +517,7 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawPlayerDamageNotice> playerDamage; // 같은 Player9/모드의 실제 AI 조회와 피해 통지 래퍼다.
     std::unique_ptr<RawAiDamage> aiDamage; // 같은 AI 본체·목록에 실제 피해 대상/공격자 반응을 기록한다.
     std::unique_ptr<RawCampaignHitBindings> hits; // 같은 피해/감시/충돌/주변Dude/자산수명 처리기다.
-    SquidPostPopList dudePopulation; //static4fc9b0의30칸/count0을 첫 Pop 전에 준비한다. 원본 데이터의CRT 실행 전0과 구별한다.
+    SquidPostPopList& dudePopulation{world.Storage()->sidLists.dudes}; //같은 장기30칸 population/count를 생성/행동/삭제가 직접 빌린다.
     std::int32_t dudeProviderIndex{}; //0055a4fc의현재공급자 보행 순환 전역이며 초기값은0이다.
     DudeSpawnState dudeSpawnState{dudePopulation}; // 생성과 최초 Pop이 같은 현재 목록을 사용한다.
     std::unique_ptr<RawDudeSpawn> dudeSpawn; // 실제 factory/owner/가상Pop 생성 몸체다.
@@ -754,7 +753,7 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawFormPacket> formWriter; // 동일 Pool의 실제 가상+54/+58 직렬화 몸체다.
     std::array<std::uint8_t,2048> formBuffer{}; // 감시/내용물/삭제 요청이 공유하는 원본 크기의 현재 송신 버퍼다.
     RawCampaignConstructionState constructionState; // 실제 받침 확정/Notice 이력과 로컬 수량 전역의 장기 저장소다.
-    SquidPostPopList recentGeysers; // 00595094/98의 전용 최근5목록이며 전체 assetState.geysers와 분리한다.
+    SquidPostPopList recentGeysers; // 00595094/98의 전용 최근5목록이며 전체 assetState.Geysers()와 분리한다.
     std::uint8_t geyserMapSize{}; // 실제0052f7e6 초기BYTE0이며 PlayerBounds가 현재 참조로 읽는다.
     std::array<std::uint32_t,9> playerDirections{16448,4,0,6,2,7,3,5,1}; // 실제0053181c의 Player0까지 보존한 초기9DWORD다.
     std::unique_ptr<RawCampaignConstructionBindings> construction; // 같은 실제 HP/SP/장부/Player/지도에 첫 객체 전 설치한다.
@@ -850,12 +849,10 @@ struct RawCampaignSession::Impl {
             const auto size=formWriter->WriteData(form,formBuffer); // 원본 반환 크기13/18이며 헤더의 선언 길이와 별개다.
             services.formPacket(std::span<const std::uint8_t>(formBuffer).first(size));
         };
-        priestState.priests.sharedOwnerState=&world.Storage()->priestOwnerState; // 첫 PostPop/Participation/outcome/AI/메뉴 앞에 같은 장기9DWORD만 연결한다. 목록/count는 Session 지역이다.
-        priestState.priests.priests.entries.resize(100);assetState.residences.entries.resize(100);
-        assetState.temples.entries.resize(100);assetState.outposts.entries.resize(100);assetState.geysers.entries.resize(100);
-        core.bookkeeping.factories.entries.resize(kCampaignFactoryCapacity); // 첫저장객체Pop전에예약하여원본Append의capacity0생략을방지한다.
-        core.bookkeeping.providers.entries.resize(kEnergyProviderCapacity); // 원본4fcb60의256칸을 첫 실제 공급자 Pop 전에 확보한다.
-        InitializeDudePopulation(dudePopulation); //실제4fc9b0→44fb20의30칸을 첫 저장 객체/피해 후 생성 전에 확보한다.
+        auto& sidLists=world.Storage()->sidLists; //첫 파생 소비자 전에 같은 장기 실제 목록8개를 연결한다.
+        priestState.priests.sharedOwnerState=&world.Storage()->priestOwnerState;
+        priestState.priests.sharedPriests=&sidLists.priests;assetState.sharedResidences=&sidLists.residences;
+        assetState.sharedTemples=&sidLists.temples;assetState.sharedOutposts=&sidLists.outposts;assetState.sharedGeysers=&sidLists.geysers;
         // 원문 전체 초기화가 만든 실제 Player 배열과 같은 공장 목록을 연결한다.
         for (std::uint32_t owner=0;owner<9;++owner) {
             playerUse->BindFactory(core.bookkeeping.ownerFactories[owner],owner); // +0/+4/+8을 매번 읽으며 SID 목록 사본을 만들지 않는다.
@@ -871,7 +868,7 @@ struct RawCampaignSession::Impl {
         gunTargetState.playerFlagsRead=[this](std::uint32_t owner) {
             if (owner>=9) throw std::out_of_range("실제 세션 현재 Player flag 번호 오류");return static_cast<std::uint32_t>(players[owner*0xb4+0x50]);
         };
-        islands=std::make_unique<RawIslandRuntime>(core.pool,core.hash,islandBytes,finishState,assetState.residences,worldRedraw,revision,
+        islands=std::make_unique<RawIslandRuntime>(core.pool,core.hash,islandBytes,finishState,assetState.Residences(),worldRedraw,revision,
             IslandRuntimeHooks{[this](Sid sid,std::uint32_t owner) { ownership->SetOwner(sid,owner); },SessionMissing<void,IslandRuntimeAssertion>()});
         // 일반 Acquire의 fresh 호환 준비 또는 실제 앞 cleanup/prefix가 같은 섬 물리를 준비한다. prepared 생성자는 다시 Reset하지 않는다.
         auto priestEffects=services.priest;
@@ -986,7 +983,7 @@ struct RawCampaignSession::Impl {
         gunTarget=std::make_unique<RawGunTarget>(core.pool,core.hash,core.types,gunTypes,core.shapes,gunTargetState);
         EnergySupplyHooks energyHooks;energyHooks.providerEntry=EnergyProviderEntry;energyHooks.requirement=BindAiTypeRequiredEnergy(assets.game,core.types);
         EnergySupplyReads energyReads;energyReads.editor=[this] { return globals.editor; };energyReads.special=[this] { return playerState.special ? 1U : 0U; };energyReads.mission=[this] { return globals.missionPost ? 1U : 0U; };
-        energySupply=std::make_unique<RawEnergySupply>(core.pool,core.types,core.bookkeeping.providers,energySources,alliances,cursorManaGlobals.mapLimit,energyState,std::move(energyHooks),std::move(energyReads));
+        energySupply=std::make_unique<RawEnergySupply>(core.pool,core.types,core.bookkeeping.Providers(),energySources,alliances,cursorManaGlobals.mapLimit,energyState,std::move(energyHooks),std::move(energyReads));
         CursorManaHooks cursorManaHooks;BindCursorManaWorld(cursorManaHooks,world,[this](Sid sid) { return gunTarget->Center(sid); });
         cursorMana=std::make_unique<RawCursorMana>(core.pool,core.types,core.processState,cursorManaGlobals,cursorDrop,std::move(cursorManaHooks));
         CursorRangeHooks rangeHooks;BindCursorManaWorld(rangeHooks.world,world,[this](Sid sid) { return gunTarget->Center(sid); });
@@ -1061,7 +1058,7 @@ struct RawCampaignSession::Impl {
         if (!hitEffects.dudes.startPath) hitEffects.dudes.startPath=[this](Sid sid,float x,float y) {
             if (!motion) throw std::logic_error("Dude 대피 시작 전 이동 연결 누락");return motion->Paths().StartDude({sid,{x,y}})!=nullptr;
         };
-        hits=std::make_unique<RawCampaignHitBindings>(world,*priests,hp,random,dudeSpeeds,assetState.residences,
+        hits=std::make_unique<RawCampaignHitBindings>(world,*priests,hp,random,dudeSpeeds,assetState.Residences(),
             priestDamageState,generalDamageState,burningState,impactState,std::move(hitEffects));
         // 미복원 가상 피해는 실제 공격자/표적 TYPE를 기록해 다음 원본 복원 지점을 식별한다.
         gunHit=std::make_unique<RawGunHit>(core.pool,core.types,hitTypes,hits->DamageHooks(GunHitHooks{
@@ -1371,7 +1368,7 @@ struct RawCampaignSession::Impl {
         pipeline=std::make_unique<RawCanonPlacementPipeline>(core.pool,core.hash,CanonPlacementPipelineData{core.types,metadata.frames,core.shapes,metadata.hotspots,core.spots,core.hash.Entries(0),{}},core.bookkeeping,additional,contentFinder,placement);
         NormalTerrainDiagnostics diagnostics{SessionMissing<void,TerrainContextAssertion>(),SessionMissing<void,TerrainStampAssertion>(),SessionMissing<void,SquidRegionAssert>(),SessionMissing<void,FarmClusterAssertion>(),SessionMissing<void,TerrainFarmPostpassAssertion>()};
         normal=std::make_unique<RawNormalTerrainWorldBinding>(world,chunks,*islands,random,crt,terrainGlobals,stamp,randomPlacement,farm,piece,*pipeline,hp,*carrier,std::move(diagnostics));
-        finish=std::make_unique<RawFortFinishOwner>(core.pool,core.types,assetState.residences,finishState,FortFinishOwnerHooks{SessionMissing<FortRandomRectangle,std::int32_t>(),SessionMissing<double>(),SessionMissing<std::uint32_t,GameRandom&,const FortRandomPlaceRequest&>(),SessionMissing<void>()});
+        finish=std::make_unique<RawFortFinishOwner>(core.pool,core.types,assetState.Residences(),finishState,FortFinishOwnerHooks{SessionMissing<FortRandomRectangle,std::int32_t>(),SessionMissing<double>(),SessionMissing<std::uint32_t,GameRandom&,const FortRandomPlaceRequest&>(),SessionMissing<void>()});
         if (services.deferExistingEditorFile) deferredEditorFort.emplace(std::move(fort)); //manager를공개하거나현재Slot을Clear하지않고입력/파일요청수명만보유한다.
         else if (services.missionFortImage) { templateStorage->InstallFile(1,std::move(fort),*services.missionFortImage,std::string(mission),static_cast<std::int32_t>(core.types.size()));services.missionFortImage.reset(); } //기존Campaign/LocalLogin/단계별Editor의즉시설치계약은그대로다.
         else templateStorage->Install(1,std::move(fort),std::string(mission)); //기존합성입력의실제섹션목록도변경하지않는다.
@@ -2068,7 +2065,7 @@ struct RawCampaignSession::Impl {
         regular.pop=[this](Sid sid,RawPathPoint point,std::uint32_t flags) { world.Pop(sid,point.x,point.y,flags); };
         regular.destroy=[this](Sid sid,std::uint32_t flags) { static_cast<void>(world.Destroy(sid,flags)); };
         regular.assertion=[](std::uint32_t line) { throw std::logic_error("원본 Dude.cpp 정기 진단 "+std::to_string(line)); };
-        dudeRegular=std::make_unique<RawDudeRegular>(core.pool,core.frames,random,DudeRegularState{gunState.checking,core.bookkeeping.providers,dudeProviderIndex},std::move(regular));
+        dudeRegular=std::make_unique<RawDudeRegular>(core.pool,core.frames,random,DudeRegularState{gunState.checking,core.bookkeeping.Providers(),dudeProviderIndex},std::move(regular));
         dudeDrop=std::make_unique<RawDudeDrop>(core.pool,core.types,*dudeSpawn,*dudeTask,hits->Dudes(),random);
         DamageableReleaseHooks release;release.create=[this](std::uint32_t type,std::uint32_t flags) { return world.Create(type,flags); };
         release.setOwner=[this](Sid sid,std::uint32_t owner) { ownership->SetOwner(sid,owner); };
@@ -2108,7 +2105,7 @@ struct RawCampaignSession::Impl {
         vortex.islandOwner=[this](std::int32_t island,std::uint32_t owner) { islands->Owner(island,owner); };vortex.regionOwnership=[this](float x,float y) { ownership->UpdateRegion(x,y); };
         vortex.damageablePre=[this](Sid sid,std::uint32_t flags) { damageablePre->PreDestroy(sid,flags); };vortex.refreshProduction=services.ownership.refreshProduction;
         vortex.assertion=SessionMissing<void,std::uint32_t>();
-        vortexPre=std::make_unique<RawVortexPreDestroy>(core.pool,players,assetState.temples,assetState.residences,assetState.outposts,objectState.loadingDepth,std::move(vortex));
+        vortexPre=std::make_unique<RawVortexPreDestroy>(core.pool,players,assetState.Temples(),assetState.Residences(),assetState.Outposts(),objectState.loadingDepth,std::move(vortex));
         GeyserLifetimeHooks geyser;
         geyser.defaultFrame=[this](Sid sid) { const auto type=core.pool.Slot(sid)[10];if (type<70 || type-70>=assets.game.Types().size()) throw std::out_of_range("간헐천 기본 프레임 TYPE 오류");return static_cast<std::uint32_t>(assets.game.Types()[type-70].definition.specialFrames.defaultFrame); };
         geyser.update=[this](Sid sid) { core.display.Update(core.pool.Slot(sid)); };
@@ -2116,7 +2113,7 @@ struct RawCampaignSession::Impl {
         geyser.damageablePre=[this](Sid sid,std::uint32_t flags) { damageablePre->PreDestroy(sid,flags); };
         geyser.damageablePost=[this](Sid sid,std::uint32_t flags) { PrepareDamageablePost();damageablePost->PostDestroy(sid,flags); };
         geyser.dropIsland=[this](float x,float y,std::uint32_t flags,std::uint32_t owner) { PrepareBuilding(core.processState.Now());buildingEffects->DropIsland(x,y,flags,owner); };
-        geyserLifetime=std::make_unique<RawGeyserLifetime>(core.pool,assetState.geysers,globals.editor,std::move(geyser));
+        geyserLifetime=std::make_unique<RawGeyserLifetime>(core.pool,assetState.Geysers(),globals.editor,std::move(geyser));
     }
     // 각 명시 요청의 소유자·모드·타입만 준비한다. server/boss는 원문 소비 위치에서 공유 주소를 읽는다.
     void PrepareConstruction() {
@@ -2169,7 +2166,7 @@ struct RawCampaignSession::Impl {
         gameplay.notice.start=[this](Sid parent,std::uint32_t bits) { if (!building) throw std::logic_error("일반 통지의 실제30 미설치");PrepareBuilding(core.processState.Now());building->Start(parent,std::bit_cast<float>(bits)); };
         construction=std::make_unique<RawCampaignConstructionBindings>(world,hp,sp,rewardState,metadata.frames,chunks,players,*broadcast,constructionState,
             PlayerGeyserBoundsState{core.ownerMode.battle,objectState.mission,core.ownerMode.challenge,geyserMapSize,piece,playerDirections},
-            recentGeysers,assetState.geysers,std::move(effects),std::move(gameplay));
+            recentGeysers,assetState.Geysers(),std::move(effects),std::move(gameplay));
     }
     // 실제 AI 계산/색 표/섬 프레임은 Session이 연결하고 언어/채팅/표시 통지는 외부 소비자에 남긴다.
     void ConnectAi() {
@@ -3007,7 +3004,7 @@ struct RawCampaignSession::Impl {
         choice.graphFor=[this](Sid sid) { return anchor->GraphFor(sid.value); };
         choice.assertion=[](std::uint32_t line) { throw std::logic_error("원본 Carrier.cpp 후보 선택 진단 "+std::to_string(line)); };
         const auto movement=choice.movement; // 같은 현재 TYPE 속성 getter를 회피 후보 평가에도 사용한다.
-        carrierChoice=std::make_unique<RawCarrierChoice>(core.pool,core.types,players,assetState.outposts,assetState.geysers,core.processState.Now(),gunState.checking,*boardTarget,carrierChoiceState,std::move(choice));
+        carrierChoice=std::make_unique<RawCarrierChoice>(core.pool,core.types,players,assetState.Outposts(),assetState.Geysers(),core.processState.Now(),gunState.checking,*boardTarget,carrierChoiceState,std::move(choice));
         effects.carrier.chooseReturn=[this](Sid sid) { return carrierChoice->ChooseReturn(sid); };
         effects.carrier.chooseGeyser=[this](Sid sid) { return carrierChoice->ChooseGeyser(sid); };
         effects.carrier.currentControlled=[this](std::uint32_t owner) { return participation->Brain(owner)!=0; };
@@ -3397,13 +3394,13 @@ void RawCampaignSession::ViewHome(CameraHomeState& state,std::function<void(std:
 void RawCampaignSession::ViewYourPriest(std::uint32_t owner,CameraHomeState& state,std::function<void(std::int32_t,std::int32_t)> apply) const {
     const auto sid=impl_->priestParticipation->Find(owner);if (sid) CenterCameraOn(sid,state,std::move(apply));
 }
-// 원본 첫 목록은 outposts이며 두 번째 factories와 순서를 바꾸지 않는다.
+// 원본 첫 목록은 outposts이며 두 번째 temples와 순서를 바꾸지 않는다.
 std::int32_t RawCampaignSession::GameMenuReloadCount(bool second) const {
-    const auto& list=second ? impl_->core.bookkeeping.factories : impl_->assetState.outposts;return std::bit_cast<std::int32_t>(list.count);
+    const auto& list=second ? impl_->assetState.Temples() : impl_->assetState.Outposts();return std::bit_cast<std::int32_t>(list.count);
 }
 // Items는 같은 목록의 현재 저장소 뷰이며 뒤따르는 효과 후에는 다음 호출이 다시 읽는다.
 std::uint32_t RawCampaignSession::GameMenuReloadSid(bool second,std::uint32_t index) const {
-    const auto& list=second ? impl_->core.bookkeeping.factories : impl_->assetState.outposts;const auto items=list.Items();if (index>=items.size()) throw std::out_of_range("ReloadTheams의 현재 목록 인덱스");return items[index];
+    const auto& list=second ? impl_->assetState.Temples() : impl_->assetState.Outposts();const auto items=list.Items();if (index>=items.size()) throw std::out_of_range("ReloadTheams의 현재 목록 인덱스");return items[index];
 }
 // 기존 ownership이 실제 원본455380의 투표/지형 갱신 전체를 소유한다.
 void RawCampaignSession::ReloadTheamAt(std::uint32_t x,std::uint32_t y,std::uint32_t mode) const {

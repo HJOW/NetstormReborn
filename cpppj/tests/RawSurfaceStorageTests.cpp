@@ -114,13 +114,13 @@ TEST_CASE(RawSurfaceStorage_GraphGeneralAcquireRetainsFreshCompatibility) {
     auto independent=MakeRawSurfaceStorage(netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078).game);CHECK(independent->graph.records.data()!=storage->graph.records.data() && independent->graph.stack.data()!=storage->graph.stack.data()); // 다른 Client/물리는 분리한다.
 }
 
-// 세 표는 World보다 오래 보존하되 새 장부의 목록/제어 상태는 이전 World에서 빌리지 않는다.
+// 세 표는 World보다 오래 보존하되 새 장부의 지역 fallback/제어 상태는 이전 World에서 빌리지 않는다. 실제 공유 SID목록은 StateSidLists 검사에서 별도로 확인한다.
 TEST_CASE(RawSurfaceStorage_TotalMadeLifetimeAndPreparedControlIsolation) {
     auto storage=MakeRawSurfaceStorage(netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078).game);auto first=StorageWorld(storage);const auto* local=storage->totalMade.localCounts.data();const auto* secondary=storage->totalMade.localSecondaryCounts.data();const auto* global=storage->totalMade.globalCounts.data(); // 단일 물리의 고정 주소다.
     for (std::size_t index=0;index<256;++index) { // 마지막 물리 칸까지 모두 비영 현재값을 보존 입력으로 준다.
         storage->totalMade.localCounts[index]=static_cast<std::uint32_t>(index+11);storage->totalMade.localSecondaryCounts[index]=static_cast<std::uint32_t>(index+101);storage->totalMade.globalCounts[index]=static_cast<std::uint32_t>(index+1001);
     }
-    const auto current=storage->totalMade;auto firstCore=first->Core();firstCore.bookkeeping.graphsEnabled=true;firstCore.bookkeeping.suppressed=true;firstCore.bookkeeping.depth=7;firstCore.bookkeeping.TotalCost()=91;firstCore.bookkeeping.providers={{3,4},1};firstCore.bookkeeping.ownerFactories[1]={{5,6},1}; // 제어/목록은 지역이며 TotalCost만 실제0059508c의 장기 DWORD다.
+    const auto current=storage->totalMade;auto firstCore=first->Core();firstCore.bookkeeping.graphsEnabled=true;firstCore.bookkeeping.suppressed=true;firstCore.bookkeeping.depth=7;firstCore.bookkeeping.TotalCost()=91;firstCore.bookkeeping.providers={{3,4},1};firstCore.bookkeeping.ownerFactories[1]={{5,6},1}; // 제어/독립 fallback은 지역이다. 실제 목록 getter와 장기 TotalCost는 별도 물리를 빌린다.
     CHECK(firstCore.bookkeeping.LocalCounts().data()==local && firstCore.bookkeeping.LocalSecondaryCounts().data()==secondary && firstCore.bookkeeping.GlobalCounts().data()==global);first.reset();CHECK(!storage->Borrowed() && SameStorageTotalMade(storage->totalMade,current));
     auto second=std::make_unique<RawSurfaceWorld>(storage->pool.Edition(),storage->types,storage->frames,storage->shapes,StorageLinks(),97,nullptr,storage,true);const auto secondCore=second->Core();
     CHECK(secondCore.bookkeeping.LocalCounts().data()==local && secondCore.bookkeeping.LocalSecondaryCounts().data()==secondary && secondCore.bookkeeping.GlobalCounts().data()==global && SameStorageTotalMade(storage->totalMade,current));

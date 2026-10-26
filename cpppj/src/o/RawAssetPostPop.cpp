@@ -145,7 +145,7 @@ void RawAssetPostPop::Validate(Sid sid,std::uint32_t flags,const RawGraphPop* po
         !hooks_.islandExists || !hooks_.registerTemple || !hooks_.regionNumber || !hooks_.destroy || !hooks_.hasContent ||
         !hooks_.createSlot || !hooks_.refreshProduction || !hooks_.clearPlacement || (!patch && !hooks_.islandTemple)))
         throw std::invalid_argument("Vortex 전체 postPop 효과 누락");
-    static_cast<void>(state_.residences.Items());static_cast<void>(state_.temples.Items());static_cast<void>(state_.geysers.Items());
+    static_cast<void>(state_.Residences().Items());static_cast<void>(state_.Temples().Items());static_cast<void>(state_.Geysers().Items());
 }
 // 각각의 확보가 실패해도 뒤의 다음 확보/공통 후처리를 계속한다.
 void RawAssetPostPop::Regular(Sid sid,std::uint32_t event,float delay) const {
@@ -178,7 +178,7 @@ void RawAssetPostPop::Residence(Sid sid,std::uint32_t flags) const {
     if (flags&1) {
         const auto raw=pool_.Slot(sid);const auto surface=hooks_.surface(Position(raw,14),Position(raw,18));
         if (surface.value) { const auto owner=pool_.Slot(surface)[patch ? 34 : 32];if (owner) hooks_.setOwner(sid,owner); }
-        Add(state_.residences,sid,false);Regular(sid,0,0);Regular(sid,1,0);
+        Add(state_.Residences(),sid,false);Regular(sid,0,0);Regular(sid,1,0);
         if (patch) Regular(sid,3,0);
         pool_.AllocatedBytes(sid)[12]&=0xf0;hooks_.notifySurface(sid);
         if (patch) {
@@ -197,7 +197,7 @@ void RawAssetPostPop::Residence(Sid sid,std::uint32_t flags) const {
 void RawAssetPostPop::Geyser(Sid sid,std::uint32_t flags) const {
     const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
     if ((flags&1) && !(pool_.Slot(sid)[patch ? 40 : 35]&9)) {
-        Add(state_.geysers,sid,false);hooks_.geyserRegistration(sid,1);
+        Add(state_.Geysers(),sid,false);hooks_.geyserRegistration(sid,1);
         Write(pool_.AllocatedBytes(sid),12,Truncate(Type(sid).cost),2);Regular(sid,0,0.1f);
         const auto raw=pool_.Slot(sid);const auto neighbors=hooks_.atPosition(Position(raw,14),Position(raw,18));
         // 현재 지점에 걸린 섬 받침/종유석만 중립 프레임으로 다시 등록한다.
@@ -228,7 +228,7 @@ void RawAssetPostPop::VortexBase(Sid sid,std::uint32_t flags) const {
         }
     }
     if (!(pool_.Slot(sid)[extraOffset]&9)) {
-        Add(state_.temples,sid,true);Add(state_.residences,sid,true);
+        Add(state_.Temples(),sid,true);Add(state_.Residences(),sid,true);
         if (state_.selected && pool_.Slot(sid)[ownerOffset]==LocalOwner()) {
             const auto form=pool_.Slot(Sid{static_cast<std::uint16_t>(state_.selected)});const auto type=Read(form,18,2);
             if (type<types_.size() && (types_[type].flags2&0x200)) hooks_.clearPlacement();

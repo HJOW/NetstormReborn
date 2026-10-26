@@ -36,6 +36,7 @@ std::unique_ptr<RawSurfaceStorage::Use> RawSurfaceStorage::Acquire() {
     if (generation_) { pool.Reset(0);hash.Reset();std::fill(spots.begin(),spots.end(),std::uint8_t{}); }
     priestOwnerState.fill(0); // 기존 일반 Session 지역9DWORD의 fresh0 호환만 유지한다. Native00492240의 지정1..8쓰기와 다른 부모다.
     graph=o::RawGraphStorage{};o::ResetRawGraphTable(graph); // 기존 일반 World의 fresh 지역 Graph 의미를 같은 주소에서 유지한다. Native 시작00462eb0/부분 cleanup의 실행으로 세지 않는다.
+    sidLists.PrepareGeneralWorld(); //일반 설치만 기존 새 목록 의미를 유지한다. prepared/반납은 현재 SID/count/용량을 보존한다.
     totalMade=o::RawTotalMadeStorage{}; // 기존 일반 World의 새 장부3×256 전체0 의미만 유지한다. Native의 각255칸 부분 reset과 구별한다.
     islands=o::RawIslandStorage{};o::ResetRawIslandRecords(islands.records);chunks=o::ChunkMap{}; // 기존 일반 Session의 fresh 입력/Reset/기본 청크 의미를 같은 주소에서 유지한다. Native cleanup이나 최초 할당 복원으로 세지 않는다.
     borrowed_=true;++generation_;return use;

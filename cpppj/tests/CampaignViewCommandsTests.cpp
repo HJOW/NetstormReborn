@@ -46,8 +46,16 @@ TEST_CASE(CampaignViewCommands_ActualPriestPreviewAndResetDepth) {
 }
 // Reload 목록은 사본이 아니라 현재 signed count와 현재 DWORD 항목을 재조회한다.
 TEST_CASE(CampaignViewCommands_ReloadCurrentListsAndModeContract) {
-    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);CameraCommandServices services;auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",services.Make());session.Load();const auto core=session.Core();auto& factories=core.bookkeeping.factories;const auto saved=factories;const auto firstCount=session.GameMenuReloadCount(false); // first는 별도 outposts이며 factories 변경과 독립이다.
-    factories.entries={100U,200U,300U};factories.count=2;CHECK(session.GameMenuReloadCount(true)==2 && session.GameMenuReloadSid(true,0)==100 && session.GameMenuReloadSid(true,1)==200 && session.GameMenuReloadCount(false)==firstCount);
-    factories.entries[0]=400;factories.count=1;CHECK(session.GameMenuReloadCount(true)==1 && session.GameMenuReloadSid(true,0)==400);factories.count=0xffffffffU;CHECK(session.GameMenuReloadCount(true)==-1);factories=saved;
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);CameraCommandServices services;auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",services.Make());session.Load();auto& temples=session.World().Storage()->sidLists.temples;const auto saved=temples;const auto firstCount=session.GameMenuReloadCount(false); // first는 별도 outposts이며 temples 변경과 독립이다.
+    temples.entries={100U,200U,300U};temples.count=2;CHECK(session.GameMenuReloadCount(true)==2 && session.GameMenuReloadSid(true,0)==100 && session.GameMenuReloadSid(true,1)==200 && session.GameMenuReloadCount(false)==firstCount);
+    temples.entries[0]=400;temples.count=1;CHECK(session.GameMenuReloadCount(true)==1 && session.GameMenuReloadSid(true,0)==400);temples.count=0xffffffffU;CHECK(session.GameMenuReloadCount(true)==-1);temples=saved;
     bool rejected{};try { session.ReloadTheamAt(std::bit_cast<std::uint32_t>(10.0F),std::bit_cast<std::uint32_t>(20.0F),1); }catch (const std::invalid_argument&) { rejected=true; }CHECK(rejected); // 이 명령 어댑터는 원본 caller의 mode0만 수용한다.
+}
+
+// 같은 원문 두 번째 헤더005e1898은500칸 공장과 독립인20칸 신전 목록이다.
+TEST_CASE(CampaignViewCommands_ReloadSecondUsesActualTempleRegistry) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);CameraCommandServices services;auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",services.Make());session.Load();auto& lists=session.World().Storage()->sidLists;CHECK(lists.temples.count>0);if (!lists.temples.count) return;
+    const auto count=lists.temples.count,first=lists.temples.Items()[0],factoryCount=lists.factories.count;const auto factoryFirst=lists.factories.entries[0];lists.factories.count=0xffffffffU;lists.factories.entries[0]=0xfedcba98;
+    CHECK(session.GameMenuReloadCount(true)==std::bit_cast<std::int32_t>(count) && session.GameMenuReloadSid(true,0)==first);lists.factories.count=factoryCount;lists.factories.entries[0]=factoryFirst;
+    lists.temples.entries[0]=0x89abcdef;CHECK(session.GameMenuReloadSid(true,0)==0x89abcdef);lists.temples.entries[0]=first;
 }

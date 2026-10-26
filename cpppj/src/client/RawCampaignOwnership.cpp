@@ -48,14 +48,14 @@ struct RawCampaignOwnership::Impl {
         o::RegionOwnershipHooks ownershipHooks;ownershipHooks.themeMode=effects.themeMode;
         ownershipHooks=o::MakeRegionPaintOwnershipHooks(core.pool,*paint,std::move(ownershipHooks));
         ownershipHooks=o::MakeTerrainRegionOwnershipHooks(core.pool,*getter,std::move(ownershipHooks));
-        ownership=std::make_unique<o::RawRegionOwnership>(core.pool,assets.outposts,core.bookkeeping.factories,themes,ownershipState,std::move(ownershipHooks));
+        ownership=std::make_unique<o::RawRegionOwnership>(core.pool,assets.Outposts(),core.bookkeeping.Factories(),themes,ownershipState,std::move(ownershipHooks));
         o::VortexOwnerHooks vortexHooks;
         vortexHooks.islandNumber=[this](float x,float y) { return IslandNumber(x,y); };
         vortexHooks.islandExists=[this](std::int32_t island) { return islands.Exists(island)!=0; };
         vortexHooks.setIslandOwner=[this](std::int32_t island,std::uint32_t owner) { islands.Owner(island,owner); };
         vortexHooks.regionOwnership=[this](float x,float y) { ownership->Update(x,y); };
         vortexHooks.refreshProduction=effects.refreshProduction;vortexHooks.missingIsland=effects.missingIsland;
-        vortex=std::make_unique<o::RawVortexOwner>(core.pool,core.owner,players,assets.outposts,revision,std::move(vortexHooks));
+        vortex=std::make_unique<o::RawVortexOwner>(core.pool,core.owner,players,assets.Outposts(),revision,std::move(vortexHooks));
         islands.BindPlayerRecords(players);
     }
     // plain getter는 float를 먼저 원본 정수로 변환하고 현재 hash0를 조회한다.

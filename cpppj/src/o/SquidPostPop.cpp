@@ -267,9 +267,9 @@ void SquidPostPop::ValidateBase(Sid sid,std::uint32_t flags,const RawGraphPop* p
     if (!aiNotice_ && owner && state_.aiAttached[owner]) throw std::logic_error("postPop AI 생성 통지 미복원");
     if (state_.pendingPlacement) throw std::logic_error("postPop 배치 선택 해제 미복원");
     static_cast<void>(TotalCost(bytes[10]));
-    if (type.flags1&kProvider) static_cast<void>(state_.providers.Items());
+    if (type.flags1&kProvider) static_cast<void>(state_.Providers().Items());
     if (type.flags2&kFactoryMask) {
-        static_cast<void>(state_.factories.Items());
+        static_cast<void>(state_.Factories().Items());
         if (owner) static_cast<void>(state_.ownerFactories[owner].Items());
     }
 }
@@ -370,14 +370,14 @@ void SquidPostPop::PostPopBase(Sid sid,std::uint32_t flags) {
     if ((flags&1) && !(bytes[patch ? 40 : 35]&kAbstractBuried)) {
         state_.TotalCost()=TotalCost(number);
         if (type.flags1&kProvider) {
-            const auto items=state_.providers.Items();
-            if (std::find(items.begin(),items.end(),sid.value)==items.end()) Append(state_.providers,sid);
+            const auto items=state_.Providers().Items();
+            if (std::find(items.begin(),items.end(),sid.value)==items.end()) Append(state_.Providers(),sid);
             ++state_.productionDirty;
         }
         const auto owner=bytes[patch ? 34 : 32];
         if (type.flags2&kFactoryMask) {
             if (owner) Append(state_.ownerFactories[owner],sid);
-            Append(state_.factories,sid); ++state_.productionDirty;
+            Append(state_.Factories(),sid); ++state_.productionDirty;
         }
         if (aiNotice_) aiNotice_(pool_.Slot(sid)[34],sid,true); // 원본의 생산 목록 뒤·통계 앞에 현재 owner로004166e0을 호출한다.
         const auto current=pool_.Slot(sid);const auto currentType=current[10];if (currentType>=types_.size()) throw std::out_of_range("AI 생성 통지 뒤 현재 TYPE 범위");

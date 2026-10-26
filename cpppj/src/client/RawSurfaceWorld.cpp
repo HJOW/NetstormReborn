@@ -55,7 +55,7 @@ struct RawSurfaceWorld::Impl final:o::SquidDisplaySink {
     // pool: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀.
     o::SidPool& pool;/* hash: 같은 실제 공간 해시다. */ o::SquidHash& hash;/* spots: 같은 실제 공간 배열이다. */ std::vector<std::uint8_t>& spots;
     // links: 연결 함수들이 읽는 원본 전역이다. 패치 주소 / CD 주소를 주석에 둔다 (o::BridgeConnectState).
-    o::BridgeConnectState& links;/* terrainType: isle 지면 자산을 타입 표에서 찾는 번호. */ std::uint32_t terrainType;/* bookkeeping: 목록/제어 상태는 새 World가 소유하고 세 집계 표만 같은 장기 물리에서 빌린다. */ o::SquidPostPopState bookkeeping{.sharedTotalMade=&storage->totalMade,.sharedTotalCost=&storage->GameAux()->TotalCost()};
+    o::BridgeConnectState& links;/* terrainType: isle 지면 자산을 타입 표에서 찾는 번호. */ std::uint32_t terrainType;/* bookkeeping: 제어 상태는 새 World가 소유하고 목록2개/세 집계 표는 같은 장기 물리에서 빌린다. */ o::SquidPostPopState bookkeeping{.sharedTotalMade=&storage->totalMade,.sharedTotalCost=&storage->GameAux()->TotalCost(),.sharedProviders=&storage->sidLists.providers,.sharedFactories=&storage->sidLists.factories};
     // deletion: 삭제.
     o::SquidDeletionState deletion{.sharedLostX=&storage->GameAux()->LostX(),.sharedLostY=&storage->GameAux()->LostY()};/* mode: 원본 실행 상태 전역. 기본값은 싱글 플레이(로컬이 서버) 전투 화면이다 (o::BridgeDecayMode). */ o::BridgeDecayMode mode;/* eventState: 처리기가 읽는 원본 전역이다. 패치 주소 / CD 주소를 괄호에 둔다 (o::BridgeEventState). */ o::BridgeEventState eventState;
     // loadState: 로딩 상태.

@@ -93,7 +93,7 @@ struct RawPriestWorldBindings::Impl {
             !effects.repop || !effects.destroy || !effects.claimGround || !effects.ownerNotice ||
             !effects.notifySurface || !effects.dependentFound || !effects.reserveRegular || !effects.fallSound)
             throw std::invalid_argument("사제 월드의 풀/공간/필수 효과 연결 오류");
-        (void)state.priests.priests.Items();
+        (void)state.priests.Priests().Items();
         // 실제 타입 +0x154/+0x140은 방향 J/E의 첫 프레임 표다. 저장/낙하마다 임의 프레임을 만들지 않는다.
         for (std::size_t index=0;index<core.frames.size();++index)
             fallFrames[index]={core.frames[index].Run('J').first,core.frames[index].Run('E').first};

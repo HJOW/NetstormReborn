@@ -2182,3 +2182,6 @@ target_sources(netstorm_tests PRIVATE StateStorageCleanupTests.cpp)
 target_sources(netstorm_tests PRIVATE SquidPoolResetTests.cpp)
 #전체Deck명령부모·실제입력관문의독립CPU관측과실제Session연결을대조한다.
 target_sources(netstorm_tests PRIVATE FullDeckCommandTests.cpp)
+
+# 최초 Native66관측과 같은 장기 SID/count 소비자를 검증한다.
+target_sources(netstorm_tests PRIVATE StateSidListsTests.cpp)

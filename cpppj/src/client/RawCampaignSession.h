@@ -271,7 +271,7 @@ public:
     void ViewHome(CameraHomeState& state,std::function<void(std::int32_t,std::int32_t)> apply) const;
     //004950d0→00494f10: live 사제/포획 Carrier/제단을 실제 참여 조회로 찾은 뒤 같은 CenterOn을 호출한다.
     void ViewYourPriest(std::uint32_t owner,CameraHomeState& state,std::function<void(std::int32_t,std::int32_t)> apply) const;
-    //ReloadTheams의 현재 signed count다. first는0055a70c outposts, second는005e189c factories이며 사본을 만들지 않는다.
+    //ReloadTheams의 현재 signed count다. first는0055a70c outposts, second는005e189c temples이며 사본을 만들지 않는다.
     std::int32_t GameMenuReloadCount(bool second) const;
     //현재 목록의 DWORD SID를 그 호출 시점에 다시 읽는다. count 확인/순회는 원본 GameMenuActions가 소유한다.
     std::uint32_t GameMenuReloadSid(bool second,std::uint32_t index) const;

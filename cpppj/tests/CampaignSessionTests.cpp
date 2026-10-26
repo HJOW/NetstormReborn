@@ -834,7 +834,7 @@ TEST_CASE(CampaignSession_ProductionUsesCurrentPlayerFactoriesAndRestrictions) {
     services.production.effects.modeAssertion=[] { throw std::logic_error("설치된실제미션의Fort/Battle모드진단"); };
     RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",std::move(services));session.Load();
     const auto core=session.Core();const auto& production=session.Production();CHECK(&production.Pool()==&core.pool && allocations==0 && configReads==0);
-    CHECK(core.bookkeeping.factories.entries.size()==500 && core.bookkeeping.factories.count==2);const auto factoryCount=core.bookkeeping.factories.count;
+    CHECK(core.bookkeeping.Factories().entries.size()==500 && core.bookkeeping.Factories().count==2);const auto factoryCount=core.bookkeeping.Factories().count;
     const auto token=production.RefreshCurrent();CHECK(token!=0 && allocations==1 && configReads==1);
     CHECK(Get(session.PlayerRecords(),session.LocalOwner()*0xb4+0x68)==token && production.Deck().Player().Records().data()==session.PlayerRecords().data());
     CHECK(production.Contains(133) && production.Allowed(133));CHECK(production.RefreshCurrent()==token && allocations==1 && configReads==2);
@@ -846,7 +846,7 @@ TEST_CASE(CampaignSession_ProductionUsesCurrentPlayerFactoriesAndRestrictions) {
     const auto first=session.FindTechnology(static_cast<std::int32_t>(session.LocalOwner()),technology);CHECK(first.value!=0);
     production.IndicateTechnology(static_cast<std::uint32_t>(technology));CHECK(session.FindTechnology(static_cast<std::int32_t>(session.LocalOwner()),technology)==first);
     session.ClearTechnology(static_cast<std::int32_t>(session.LocalOwner()));CHECK(session.FindTechnology(static_cast<std::int32_t>(session.LocalOwner()),technology).value==0);
-    CHECK(core.bookkeeping.factories.count==factoryCount && core.bookkeeping.depth==0);
+    CHECK(core.bookkeeping.Factories().count==factoryCount && core.bookkeeping.depth==0);
 }
 // 실제 할당 입력이 없으면 원본 Player 포인터를 붙이거나 0채움 성공으로 진행하지 않아야 한다.
 TEST_CASE(CampaignSession_ProductionMissingAllocationLeavesPlayerUnchanged) {
@@ -1547,9 +1547,9 @@ TEST_CASE(CampaignSession_CursorEnergyActualProvidersAndSharedSources) {
     auto services=external.Services();std::vector<Sid> lostSounds; // 실제 클라이언트의 unitLost.wav 장치 요청만 외부에서 관찰한다.
     services.unitLost=[&](Sid sid) { lostSounds.push_back(sid); };
     GameWorld world(assets.game,assets.files,std::move(fort),MissionPlayers{},"thewarbegins",std::move(services),{1024,768});
-    auto& session=world.Session();auto core=session.Core();const auto before=core.bookkeeping.providers.count;const auto origin=EmptySessionSupport(core);const auto created=session.World().Create(76); // 실제 Rain 제네레이터이며 원본 Factory/Owner/Pop이 공급 장부를 등록한다.
+    auto& session=world.Session();auto core=session.Core();const auto before=core.bookkeeping.Providers().count;const auto origin=EmptySessionSupport(core);const auto created=session.World().Create(76); // 실제 Rain 제네레이터이며 원본 Factory/Owner/Pop이 공급 장부를 등록한다.
     core.owner.Set(created,1);session.World().Pop(created,static_cast<float>(origin.x+2),static_cast<float>(origin.y+2),0);
-    const auto providers=core.bookkeeping.providers.Items();CHECK(core.bookkeeping.providers.entries.size()==kEnergyProviderCapacity);CHECK(providers.size()==before+1 && providers.back()==created.value);
+    const auto providers=core.bookkeeping.Providers().Items();CHECK(core.bookkeeping.Providers().entries.size()==kEnergyProviderCapacity);CHECK(providers.size()==before+1 && providers.back()==created.value);
     const Sid source=created;const auto raw=core.pool.Slot(source);const auto& type=core.types[raw[10]];const auto owner=static_cast<std::uint32_t>(raw[34]);
     const float x=static_cast<float>(static_cast<double>(std::bit_cast<float>(Get(raw,14)))-type.footX*0.5),y=static_cast<float>(static_cast<double>(std::bit_cast<float>(Get(raw,18)))-type.footY*0.5);
     CHECK(&session.EnergySupply().Pool()==&core.pool && session.EnergySources().entries.size()==kEnergySourceCapacity);
@@ -1565,7 +1565,7 @@ TEST_CASE(CampaignSession_CursorEnergyActualProvidersAndSharedSources) {
     session.EnergySettings().allied=0;alliances[owner*9+other]=1;hooks.describe(label,x,y,target,other);CHECK(!contains());
     // 동일 실제 공급 설정을 다음 가상 범위 호출에서 즉시 읽는다.
     session.EnergySettings().radiusSquared=0;CHECK(!session.EnergySupply().Covers(source,{},x,y,0,0));session.EnergySettings().radiusSquared=484;
-    CHECK(session.World().Destroy(created,0));CHECK(core.bookkeeping.providers.count==before);hooks.describe(label,x,y,target,owner);CHECK(!contains());
+    CHECK(session.World().Destroy(created,0));CHECK(core.bookkeeping.Providers().count==before);hooks.describe(label,x,y,target,owner);CHECK(!contains());
     CHECK(lostSounds.size()==1 && lostSounds.front()==created);
     CHECK(core.destroy.PreDepth()==0 && core.destroy.PostDepth()==0 && core.bookkeeping.depth==0);
 }
@@ -2132,9 +2132,9 @@ Sid ReadyCursorFactoryForm(RawCampaignSession& session) {
 }
 // 현재 실제 배치가 허용하는 지면에 명시 시작 상태의 완성76 공급원을 실제 생성/소유자/Pop으로 공급한다.
 Sid CursorEnergyInput(RawCampaignSession& session) {
-    const auto point=CommandPlacementPoint(session,1);auto core=session.Core();const auto before=core.bookkeeping.providers.count;
+    const auto point=CommandPlacementPoint(session,1);auto core=session.Core();const auto before=core.bookkeeping.Providers().count;
     const auto source=session.World().Create(76);core.owner.Set(source,1);session.World().Pop(source,static_cast<float>(point.x),static_cast<float>(point.y),0);
-    CHECK(core.bookkeeping.providers.count==before+1);return source;
+    CHECK(core.bookkeeping.Providers().count==before+1);return source;
 }
 // 현재 커서의 실제 에너지/모드1 공간/SourceAllowed가 모두 허용하는 위치만 찾는다.
 CellPoint CursorPlacementPoint(RawCampaignSession& session,SessionCursorUi& ui) {
@@ -2410,7 +2410,7 @@ TEST_CASE(CampaignSession_CarrierPickupPriestMovesNestedContents) {
     while (!input.Empty()) static_cast<void>(input.Pop(false));
     ArriveForPickup(session,golem,point);CHECK(link.recorded.empty() && (core.pool.Slot(priest)[11]&3)==0);link.transport.Flush();CHECK(link.transport.Poll()==1);const auto captured=session.Priests().Carrier().FindContained(golem,0x20,158,0);CHECK(captured.value);if (!captured.value) return;
     CHECK(SquidForms(core.pool).Parent(captured)==golem && Get(core.pool.Slot(captured),12,2)==argument);CHECK(SquidForms(core.pool).Parent(child)==captured);CHECK(session.Priests().Carrier().FindContained(captured,4,75,0)==child);CHECK((core.pool.Slot(priest)[11]&1)!=0 && session.FindPriestParticipation(3)==golem.value);
-    const auto livePriests=session.Priests().Priests().priests.Items();CHECK(std::find(livePriests.begin(),livePriests.end(),priest.value)==livePriests.end()); // 실제4919b0이같은사제등록목록에서도원객체를제거했다.CHECK(link.recorded.size()==1 && link.recorded[0][8]==158);
+    const auto livePriests=session.Priests().Priests().Priests().Items();CHECK(std::find(livePriests.begin(),livePriests.end(),priest.value)==livePriests.end()); // 실제4919b0이같은사제등록목록에서도원객체를제거했다.CHECK(link.recorded.size()==1 && link.recorded[0][8]==158);
     const std::array<std::uint32_t,6> expectedSound{external.names.Lookup("golemPickup.wav"),0,0,0,1,0};CHECK(std::find(pickupSounds.begin(),pickupSounds.end(),expectedSound)!=pickupSounds.end());
     const auto event=input.Pop(false);CHECK(event.code==0x030000b1 && event.x==priest.value && event.y==golem.value);CHECK(link.transport.Server().depth==0 && core.destroy.PreDepth()==0 && core.destroy.PostDepth()==0 && core.bookkeeping.depth==0);wire=nullptr;
 }
@@ -2813,7 +2813,7 @@ void NaturalWorkshopPlacement(bool combat,bool burning=false,CellPoint cannonLoc
         auto& production=controls.EnableProduction(session,assets.game,{[&] { return wall; },[&](std::string_view name) { CHECK(name=="getPiece.wav");++gets; },[](auto) { throw std::logic_error("생산 검사 예상 밖 Tell"); },[&](std::string_view key,std::int32_t fallback) { return key=="useProductTimers" ? static_cast<std::int32_t>(productTimers) : fallback; },[](std::string_view text) { return std::string(text); }});production.SetPalette(palette);
         CHECK(controls.RegisteredGump(3) && production.Node(controls.RegisteredGump(3)));CHECK(production.Report().find("\t128\t")!=std::string::npos);
         std::vector<std::uint8_t> pixels(1024*768,0x5a);menus.Draw(pixels,1024,768,colors,BuildGumpShadeMaps(logical));CHECK(std::any_of(pixels.begin(),pixels.end(),[](auto pixel) { return pixel!=0x5a; }));
-        std::cout<<"실제 초기 에너지 공급원 "<<core.bookkeeping.providers.count<<"/Cannon level"<<core.types[128].level<<"/theme"<<core.types[128].theme<<"/요구"<<BindAiTypeRequiredEnergy(assets.game,core.types)(128)<<"\n";
+        std::cout<<"실제 초기 에너지 공급원 "<<core.bookkeeping.Providers().count<<"/Cannon level"<<core.types[128].level<<"/theme"<<core.types[128].theme<<"/요구"<<BindAiTypeRequiredEnergy(assets.game,core.types)(128)<<"\n";
         // 완공한 첫 제네레이터의 현재 공급을 이용해 두 번째 제네레이터까지 정상 건설한다.
         if (combat) for (std::uint32_t generatorIndex=0;generatorIndex<2;++generatorIndex) {
             const auto generatorClick=production.Point(76);CHECK(generatorClick.has_value());if (!generatorClick) return; // 실제 생산 클릭 좌표다.
@@ -2842,7 +2842,7 @@ void NaturalWorkshopPlacement(bool combat,bool burning=false,CellPoint cannonLoc
                 ui.Point(session,cannonPoint,0,0,false);const auto& placement=session.Cursor().Placement();const auto& drop=session.CursorDropSettings();std::string supply; // 같은 배치 거부 원인의 현재 진단이다.
                 session.EnergySupply().Collect(supply,drop.x,drop.y,128,1);std::cout<<"캐논 실제좌표 "<<drop.x<<","<<drop.y<<" legal"<<drop.legal<<" 에너지"<<placement.descriptionAllowed<<" 공간"<<placement.placementAllowed<<" 공급문자"<<supply<<" 반경제곱"<<session.EnergySettings().radiusSquared<<"\n";
                 // 현재 공급 장부의 실제 위치/소유자/가상 표를 읽는다.
-                for (auto number:core.bookkeeping.providers.Items()) { const auto raw=core.pool.Slot({static_cast<std::uint16_t>(number)});std::cout<<"공급 "<<number<<" type"<<unsigned(raw[10])<<" owner"<<unsigned(raw[34])<<" xy"<<std::bit_cast<float>(Get(raw,14))<<","<<std::bit_cast<float>(Get(raw,18))<<" vt"<<Get(raw,0)<<"\n"; }
+                for (auto number:core.bookkeeping.Providers().Items()) { const auto raw=core.pool.Slot({static_cast<std::uint16_t>(number)});std::cout<<"공급 "<<number<<" type"<<unsigned(raw[10])<<" owner"<<unsigned(raw[34])<<" xy"<<std::bit_cast<float>(Get(raw,14))<<","<<std::bit_cast<float>(Get(raw,18))<<" vt"<<Get(raw,0)<<"\n"; }
                 CHECK(drop.legal);if (!drop.legal) return;
             }std::cout<<"실제 생산 썬 캐논 배치 허용점 "<<cannonPoint.x<<","<<cannonPoint.y<<"\n";
             session.Cursor().Drop();session.PumpLocalConnection();CHECK(session.Sp(1)==(combat ? 1000 : 1800));session.Cursor().Cancel();
@@ -4945,4 +4945,22 @@ TEST_CASE(CampaignStateRetirement_OrdinaryBodiesDoNotInventStateProof) {
     Client client(SessionLinksOptions());SessionServicesFixture external;auto game=client.GameplayGlobals();auto services=SharedKernelServices(client,external);services.gameplayGlobals=game;services.subscriberGlobals=client.SubscriberGlobals();auto session=SharedKernelSession(std::move(services));
     for (std::uint32_t owner=1;owner<9;++owner) session->RemoveAi(owner); //현재 brain0만으로 여덟 State 반환 증빙을 합성하지 않는다.
     session->ReleasePlayerLinks();session->World().ClearProcesses();game->player.playerKnown=3;game->world.editor=5;game->cursor.lockDepth=7;session.reset();CHECK(!game->Borrowed() && game->player.playerKnown==0 && game->world.editor==0 && game->cursor.lockDepth==1);
+}
+
+// 실제 저장 미션을 읽는 Session의 모든 정적 목록은 같은 장기 owner에 기록되고 반납 뒤에도 남는다.
+TEST_CASE(CampaignSession_StateSidListsActualLoadAndRetainedOwners) {
+    Client client(SessionLinksOptions());SessionServicesFixture external;auto game=client.GameplayGlobals();auto services=SharedKernelServices(client,external);services.gameplayGlobals=game;services.subscriberGlobals=client.SubscriberGlobals();auto storage=MakeRawSurfaceStorage(netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078).game,game->Authority(),game->GameAux());storage->Processes().BindDevices(client.ProcessKernelOwner(),client.FrameClockOwner());services.surfaceStorage=storage;auto session=SharedKernelSession(std::move(services));session->Load();auto core=session->Core();auto& lists=storage->sidLists;
+    CHECK(&core.bookkeeping.Providers()==&lists.providers && &core.bookkeeping.Factories()==&lists.factories && &session->Priests().Priests().Priests()==&lists.priests);CHECK(lists.priests.entries.size()==16 && lists.residences.entries.size()==50 && lists.temples.entries.size()==20 && lists.outposts.entries.size()==100);
+    CHECK(lists.priests.count>0 && lists.temples.count>0 && lists.residences.count>=lists.temples.count && lists.factories.count>0 && lists.geysers.count>0);
+    const std::array<SquidPostPopList*,8> owners{&lists.factories,&lists.dudes,&lists.outposts,&lists.providers,&lists.geysers,&lists.priests,&lists.residences,&lists.temples};std::array<std::uint32_t,8> counts{};std::array<std::vector<std::uint32_t>,8> data;std::array<const std::uint32_t*,8> pointers{};
+    for (std::size_t index=0;index<owners.size();++index) { counts[index]=owners[index]->count;data[index]=owners[index]->entries;pointers[index]=owners[index]->entries.data(); } //생성/Load가 기록한 실제 전체 물리를 반납 전에 고정한다.
+    session.reset();CHECK(!storage->Borrowed());for (std::size_t index=0;index<owners.size();++index) CHECK(owners[index]->count==counts[index] && owners[index]->entries==data[index] && owners[index]->entries.data()==pointers[index]); //일반 Session 반납도 정적 목록을 지우는 Native 부모로 가장하지 않는다.
+    ResetClientStateWorldStorage(client,*storage,StateWorldCleanupEffect::Clear472830);for (std::size_t index=0;index<owners.size();++index) CHECK(owners[index]->count==0 && owners[index]->entries==data[index] && owners[index]->entries.data()==pointers[index]); //별도 실제 State 효과만 현재 개수를 지운다.
+}
+
+// 실제 공급원 생성/삭제와 사제 삭제의 기존 부모가 장기 공급/사제 목록을 직접 갱신한다.
+TEST_CASE(CampaignSession_StateSidListsRealProviderAndPriestDeletion) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;std::vector<Sid> lost;auto services=external.Services();services.unitLost=[&](Sid sid) { lost.push_back(sid); };auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());GameWorld world(assets.game,assets.files,std::move(fort),MissionPlayers{},"thewarbegins",std::move(services),{1024,768});auto& session=world.Session();auto core=session.Core();auto storage=session.World().Storage();auto& lists=storage->sidLists;
+    const auto before=lists.providers.count;const auto point=EmptySessionSupport(core);const auto source=session.World().Create(76);core.owner.Set(source,1);session.World().Pop(source,static_cast<float>(point.x+2),static_cast<float>(point.y+2),0);CHECK(lists.providers.count==before+1 && lists.providers.Items().back()==source.value && core.bookkeeping.Providers().count==lists.providers.count);
+    CHECK(session.World().Destroy(source,0) && lists.providers.count==before && std::find(lost.begin(),lost.end(),source)!=lost.end());const auto priestCount=lists.priests.count;CHECK(priestCount>0);if (!priestCount) return;const Sid priest{static_cast<std::uint16_t>(lists.priests.Items().front())};CHECK(session.World().Destroy(priest,0));CHECK(lists.priests.count==priestCount-1 && std::find(lists.priests.Items().begin(),lists.priests.Items().end(),priest.value)==lists.priests.Items().end());
 }

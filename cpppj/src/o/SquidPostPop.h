@@ -74,6 +74,12 @@ struct SquidPostPopState {
     std::int32_t* sharedTotalCost{}; //0059508c의 실제 장기 signed 비용을 빌린다.
     std::int32_t& TotalCost() { return sharedTotalCost ? *sharedTotalCost : totalCost; } // Pop/삭제가 같은 물리를 읽는다.
     const std::int32_t& TotalCost() const { return sharedTotalCost ? *sharedTotalCost : totalCost; } // 독립 fixture의 값은 보존한다.
+    SquidPostPopList* sharedProviders{}; //실제 World는 장기 공급원 목록/count를 직접 빌린다.
+    SquidPostPopList* sharedFactories{}; //실제 생성/삭제/생산은 같은 장기 공장 목록/count를 사용한다.
+    SquidPostPopList& Providers() { return sharedProviders ? *sharedProviders : providers; } //그때 현재 실제 공급원을 반환하며 독립 fixture는 기존 목록을 유지한다.
+    const SquidPostPopList& Providers() const { return sharedProviders ? *sharedProviders : providers; } //배치/에너지 조회도 같은 물리를 읽는다.
+    SquidPostPopList& Factories() { return sharedFactories ? *sharedFactories : factories; } //공통 Pop/삭제의 현재 공장 목록이다.
+    const SquidPostPopList& Factories() const { return sharedFactories ? *sharedFactories : factories; } //생산/소유권 검색에 사본을 공급하지 않는다.
 };
 // Pop 이후 타입별 등록 목록과 표면 연결 상태를 갱신하는 처리기이다.
 class SquidPostPop {

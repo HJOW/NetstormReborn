@@ -109,7 +109,7 @@ void RefreshNodes(ProductionScene& scene,std::uint32_t variant,std::uint32_t lev
     }};
     // 실제VT/TYPE를보존하고원문관찰의현재owner/head/next/kind/mask/state만명시입력한다.
     for (const auto& input:nodes) { auto raw=scene.pool.AllocatedBytes(Sid{static_cast<std::uint16_t>(input[0])});CHECK(raw[10]==input[1]);raw[34]=static_cast<std::uint8_t>(input[3]);Put(raw,6,input[4],2);Put(raw,4,input[5],2);if (input[1]==6) { Put(raw,18,input[6],2);Put(raw,20,input[7],2); }raw[11]=static_cast<std::uint8_t>(input[2]); }
-    scene.book.factories.entries={5,6,7};scene.book.factories.count=3;
+    scene.book.Factories().entries={5,6,7};scene.book.Factories().count=3;
     CHECK((scene.types[85].flags1&0x04000000U)!=0 && (scene.types[85].flags2&0x4000U)!=0 && (scene.types[124].flags2&0x200U)!=0);
 }
 }
@@ -156,7 +156,7 @@ TEST_CASE(ProductionDeck_CurrentRestrictionsAndFactoriesAreShared) {
     netstorm::client::RawCampaignProductionBindings production(scene.core,*scene.player,scene.carrier,*scene.create,*scene.deck,allowed,scene.carrierState,{mission,full,freeTechnology,templeProduct},{[&](std::string_view key) { CHECK(key=="getTeleportTechFree");return static_cast<std::int32_t>(config); },[] { ProductionMissing(); }});
     production.RefreshCurrent();CHECK(production.Contains(71) && production.Contains(133) && !production.Contains(153));allowed.Allow(71,0);allowed.Allow(133,0);production.RefreshCurrent();
     CHECK(production.Contains(71) && !production.Allowed(71) && !production.Contains(133) && !production.Allowed(133)); // 일반Factory는허용조회후에도포함하고신전기본생산만금지조건으로제외한다.
-    scene.book.factories.count=0;CHECK(production.Contains(71));production.RefreshCurrent();CHECK(!production.Contains(71));config=1;production.RefreshCurrent();CHECK(production.Contains(153));
+    scene.book.Factories().count=0;CHECK(production.Contains(71));production.RefreshCurrent();CHECK(!production.Contains(71));config=1;production.RefreshCurrent();CHECK(production.Contains(153));
     scene.state.templateOwner=8;CHECK(!production.Contains(153));production.RefreshCurrent();CHECK(production.Contains(153));
 }
 // 누락할당/모르는현재포인터/물리capacity를생산성공이나빈목록으로숨기지않는다.

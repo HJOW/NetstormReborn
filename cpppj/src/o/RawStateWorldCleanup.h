@@ -31,7 +31,7 @@ enum class StateWorldCleanupEffect : std::uint32_t {
     Clear4c2450=0x4c2450, //기존세표정리몸체다.
     MapMode=0x4437f0, //이름은기존API호환용이다.실제본문은C3빈RET이며지도/모드계산이없다.두호출위치를보존한다.
     SceneMusic=0x469fc0, //실제음악부모를그시점에호출한다.
-    Clear472830=0x472830, //기존Graph/명령관련자식을실행한다.
+    Clear472830=0x472830, //등록20포인터의 현재 SID목록+0c 개수만0으로 만든다.
     Clear4b2b50=0x4b2b50, //원문의현재State하위몸체다.
     Clear4328a0=0x4328a0, //기존해당정리몸체를필수로호출한다.
     Clear4ab940=0x4ab940, //기존해시/목록정리몸체를재사용한다.

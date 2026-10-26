@@ -27,6 +27,8 @@ void ResetClientStateWorldStorage(Client& client,RawSurfaceStorage& storage,o::S
         throw std::invalid_argument("State 물리 정리의 실제 Client/표면 owner 불일치");
     if (storage.Borrowed()) throw std::logic_error("State 물리 정리 전 실제 World 대여 반납 필요");
     switch (effect) {
+    case o::StateWorldCleanupEffect::Clear472830:
+        o::ResetRegisteredStateSidLists(storage.sidLists.registeredHeaders,[&](auto header) { storage.sidLists.ResetCount(header,client.GameplayGlobals()->selection.multipleCount); });return;
     case o::StateWorldCleanupEffect::Clear4c2450:o::ResetTotalMadeCounts(storage.totalMade);return;
     case o::StateWorldCleanupEffect::Clear4b2b50:storage.hash.Reset();return;
     case o::StateWorldCleanupEffect::Clear4328a0:o::ResetStatePlayerNoMakeWarnings(client.LocalStateGlobals()->PlayerNoMakeWarnings());return;

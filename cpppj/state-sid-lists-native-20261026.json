@@ -1,0 +1,34 @@
+{
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "edition": "PATCH 10.78",
+  "observations": 66,
+  "effectsStubbed": false,
+  "originalGameExecuted": false,
+  "functions": {
+    "reset": {
+      "entry": "0x472830",
+      "bytes": 67,
+      "bodyHex": "b83c29590033d28b48fc3bca740389510c8b083bca740389510c8b48043bca740389510c8b48083bca740389510c8b480c3bca740389510c83c0143d8c2959007cc5c3"
+    },
+    "register": {
+      "entry": "0x472880",
+      "bytes": 32,
+      "bodyHex": "33c08b0c853829590085c974074083f8147cefc38b4c2404890c8538295900c3"
+    },
+    "unregister": {
+      "entry": "0x4728a0",
+      "bytes": 37,
+      "bodyHex": "8b4c2404b8382959008da4240000000039087506c7000000000083c0043d882959007cecc3"
+    }
+  },
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_state_sid_lists.py": "65c34382ebfdceb06c7d3ce8641d3d1188a6da72f396f67dd9db331205d4f490",
+    "cpppj/tests/fixtures/state-sid-lists-x86.tsv": "bf6e68d182afe25e18e47ee39b004c93a720f720445b9e9ec3f211bf31736e13"
+  },
+  "cdNote": "CD 10.72의 등록 목록 몸체를 실행하지 않았으므로 동등성 근거에 포함하지 않는다."
+}

@@ -87,8 +87,8 @@ void SquidDestroyLifecycle::ValidatePre(Sid sid,std::uint32_t flags) const {
     if (!(flags&kNoRefund)) { if (reward_) static_cast<void>(reward_->Plan(sid,(flags>>16)&15,false)); else if (!hooks_.emit) throw std::invalid_argument("삭제 훅 보상 콜백 누락"); }
     if (LostNotice(sid,flags) && (pool_.Edition()==OriginalEdition::Cd1072 || raw[kType]!=state_.silentType) && !hooks_.emit)
         throw std::invalid_argument("삭제 훅 소리 콜백 누락");
-    if (type.flags1&kProvider) static_cast<void>(bookkeeping_.providers.Items());
-    if (type.flags2&kFactoryMask) static_cast<void>(bookkeeping_.factories.Items());
+    if (type.flags1&kProvider) static_cast<void>(bookkeeping_.Providers().Items());
+    if (type.flags2&kFactoryMask) static_cast<void>(bookkeeping_.Factories().Items());
 }
 // post의 비용 효과는 suppressed와 무관하며 Graph 분기를 앞서 거부한다.
 void SquidDestroyLifecycle::ValidatePost(Sid sid,std::uint32_t flags) const {
@@ -154,9 +154,9 @@ void SquidDestroyLifecycle::PreDestroy(Sid sid,std::uint32_t flags) {
                     hooks_.emit({SquidDeletionEffect::UnitLostSound,sid,0});
                 const auto raw=Object(sid);state_.LostX()=Coordinate(raw,kX);state_.LostY()=Coordinate(raw,kY);
             }
-            if (Type(sid).flags1&kProvider) { Remove(bookkeeping_.providers,sid);++bookkeeping_.productionDirty; }
+            if (Type(sid).flags1&kProvider) { Remove(bookkeeping_.Providers(),sid);++bookkeeping_.productionDirty; }
             if (aiNotice_) aiNotice_(Owner(sid),sid,false); // 현재 owner의 실제 AI 통지는 공급 목록 뒤·전체 작업장 목록 앞이다.
-            if (Type(sid).flags2&kFactoryMask) { Remove(bookkeeping_.factories,sid);++bookkeeping_.productionDirty; }
+            if (Type(sid).flags2&kFactoryMask) { Remove(bookkeeping_.Factories(),sid);++bookkeeping_.productionDirty; }
         }
     }
     destroy_.CompletePreDestroy();

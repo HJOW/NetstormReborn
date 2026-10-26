@@ -4,6 +4,7 @@
 #include "client/RawUserHighlight.h"
 #include "client/Renderer.h"
 #include <bit>
+#include <algorithm>
 #include <stdexcept>
 #include <type_traits>
 #include <vector>
@@ -21,9 +22,9 @@ public:
     ScreenPoint mouse{}; //005cae94/98: 원시 화면 정수 좌표이며 커서의 보정55a2f8/fc와 별개다.
     std::array<std::uint32_t,2> remembered{}; //005caf38/3c: 기억한 두 float의 원시 DWORD 비트다.
     std::int32_t multipleCount{}; //005caf34: 반복 조건이 매번 다시 읽는 signed DWORD다.
-    std::vector<std::uint32_t> multiple; //005caf2c가 가리키는 실제 DWORD 요소들이다. 호스트 vector header를 Native pointer/header와 같다고 하지 않는다.
+    std::vector<std::uint32_t> multiple=std::vector<std::uint32_t>(30); //005caf2c가 가리키는 실제 DWORD 요소들이다. 호스트 vector header를 Native pointer/header와 같다고 하지 않는다.
     // 기존 일반 World의 새 입력 상태만 같은 주소에서 준비한다. Native Clear나 prepared 대여에 사용하지 않는다.
-    void ResetForGeneralWorld() { enabled=1;mode=selected=mouseType=0;mouse={};remembered={};multipleCount=0;multiple.clear(); }
+    void ResetForGeneralWorld() { enabled=1;mode=selected=mouseType=0;mouse={};remembered={};multipleCount=0;multiple.resize(30);std::fill(multiple.begin(),multiple.end(),0U); }
     // 실제 다중 배열은 callback의 재할당 뒤에도 다음 반복에서 현재 pointer/size를 다시 읽는다.
     UserSelectionState SelectionState() { return {selected,mouseType,remembered,{},multipleCount,[this] { return std::span<const std::uint32_t>(multiple); }}; }
     // 기존 강조 모듈도 같은 선택·마우스 필드를 직접 빌린다.

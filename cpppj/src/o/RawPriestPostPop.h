@@ -11,9 +11,12 @@ inline constexpr std::uint32_t kPriestRegenEvent=0x25a;
 struct PriestPostPopState {
     SquidPostPopList priests; // 005954c4 / CD 00549188: 중복 없이 등록하는 사제 목록이다.
     std::array<std::uint32_t,kPlayerCount+1> ownerState{}; // 00595428 / CD 005119a0의 독립 raw 검사 호환 저장소다.
-    std::array<std::uint32_t,kPlayerCount+1>* sharedOwnerState{}; // 실제 Session은 첫 소비자 구성 전에 장기9DWORD를 고정 연결하며 목록/count는 이관하지 않는다.
+    std::array<std::uint32_t,kPlayerCount+1>* sharedOwnerState{}; // 실제 Session은 첫 소비자 구성 전에 장기9DWORD를 고정 연결한다. 사제 SID/count는 별도 sharedPriests로 빌린다.
     std::array<std::uint32_t,kPlayerCount+1>& OwnerState() { return sharedOwnerState ? *sharedOwnerState : ownerState; } // 실제 writer가 그 시점의 동일 공유 표에 직접 쓴다.
     const std::array<std::uint32_t,kPlayerCount+1>& OwnerState() const { return sharedOwnerState ? *sharedOwnerState : ownerState; } // outcome/AI/메뉴가 같은 현재9DWORD를 사본 없이 읽는다.
+    SquidPostPopList* sharedPriests{}; //실제 Session은 장기16칸 SID/count를 직접 빌린다.
+    SquidPostPopList& Priests() { return sharedPriests ? *sharedPriests : priests; } //Pop/삭제가 같은 현재 사제 목록에 직접 쓴다.
+    const SquidPostPopList& Priests() const { return sharedPriests ? *sharedPriests : priests; } //AI/메뉴/outcome 조회가 같은 현재 목록을 읽는다.
 };
 // PATCH00492240의 진단→유효owner1..8 한DWORD0쓰기다. Pool/목록/Session 없이 같은 실제 표에 사용할 수 있다.
 void ResetPriestOwnerState(std::array<std::uint32_t,kPlayerCount+1>& states,std::uint32_t player,

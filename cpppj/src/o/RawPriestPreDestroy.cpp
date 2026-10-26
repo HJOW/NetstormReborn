@@ -34,10 +34,10 @@ void RawPriestPreDestroy::PreDestroy(Sid sid,std::uint32_t flags) const {
     if (!Handles(sid) || (pool_.Slot(sid)[11]&kInvalidState)) throw std::invalid_argument("사제 삭제 준비 raw 상태 오류");
     const auto extraOffset=pool_.Edition()==OriginalEdition::Patch1078 ? 40U : 35U;
     const bool ordinary=(pool_.Slot(sid)[extraOffset]&kSkipPrefix)==0;
-    if (ordinary) (void)state_.priests.Items();
+    if (ordinary) (void)state_.Priests().Items();
     hooks_.validateCarrier(sid,flags);
     if (ordinary) {
-        auto& list=state_.priests;std::uint32_t removed=0;
+        auto& list=state_.Priests();std::uint32_t removed=0;
         // 모든 일치 항목을 지우고 남은 활성 DWORD만 압축한다. 비활성 꼬리는 원본처럼 지우지 않는다.
         for (std::uint32_t i=0;i<list.count;++i) {
             if (list.entries[i]==sid.value) ++removed;
