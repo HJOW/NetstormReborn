@@ -1,0 +1,273 @@
+{
+  "unit": 454,
+  "passed": true,
+  "goalComplete": false,
+  "fullFidelityVerified": false,
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "sourceHead": "a18bf611",
+  "sources": {
+    "cpppj/src/client/ClientGameplayGlobals.cpp": "e4b3614dcd11859e783eb257ede625813a5fbb1768ab90940fd8d054ecf35db2",
+    "cpppj/src/client/ClientGameplayGlobals.h": "a57ab3fa505bc3df3a0528594d9927b897620d43ff1b2c0c87d75965f71876ed",
+    "cpppj/src/client/RawCampaignSession.cpp": "33e30c9e333ce4ba9be4cea4db04303134b37eb51d2a22d43174665b6a3f686b",
+    "cpppj/tests/CampaignSessionTests.cpp": "b1e0e629b79a7115b55af7cd7537d30c434d6e3880a3d526dd41b427444052fa",
+    "cpppj/tests/ProcessHostSessionTests.cpp": "c257c0f3c4a6b20eab367dbaa2cb4caed2c495fa1bc718dacc0c0b6908d921f2"
+  },
+  "artifacts": {
+    "cpppj/build/bin/Release/NetstormCpp.exe": "8624fefbf9c1022aecff9e9733ff21c85de6fedd03ee5f0e236419961c6d2350",
+    "cpppj/build/bin/Release/netstorm_tests.exe": "feb6a93fa4d9469924a5bd6e67a5e23e7fc4a3d4894acfde212ace4e6b425053",
+    "cpppj/build/bin/Release/netstorm_cloud_probe.exe": "d0c508ab47d6f0d78ffa1f62af99b28045a7a7ff67afecea42c4b39e7a022d83",
+    "cpppj/build/bin/Release/netstorm_cloud_render_probe.exe": "51850f31a6c0ba2d78d3b7462f7d408148e50520619eab989ab399b43dc464bd"
+  },
+  "build": {
+    "attempt": 2,
+    "sourceAttempt": 2,
+    "finished": "2026-10-26T10:12:01.373191",
+    "exitCode": 0,
+    "seconds": 53.382,
+    "command": [
+      "cmake",
+      "--build",
+      "cpppj/build",
+      "--config",
+      "Release",
+      "--parallel",
+      "4",
+      "--",
+      "/p:UseMultiToolTask=true",
+      "/p:MultiProcMaxCount=4",
+      "/p:EnforceProcessCountAcrossBuilds=true"
+    ],
+    "log": "extracted/cpp-state-retirement-coordinator-454-build2.log",
+    "sha256": "f57338bd7ed16acfd8479eb7dc34d7d6354a4a819d71bc71c3072c97bc9b6173",
+    "compilerWarnings": 0,
+    "compilerErrors": 0
+  },
+  "requiredNewCases": [
+    "CampaignStateRetirement_AllActualChildrenPreserveGlobalsAndReleaseFixedViews",
+    "CampaignStateRetirement_EveryAiOwnerNeedsConsumedProof",
+    "CampaignStateRetirement_FullProofKeepsRealKernelResidualAndCurrentGlobals",
+    "CampaignStateRetirement_LinksAndKernelNeedConsumedProofs",
+    "CampaignStateRetirement_OrdinaryBodiesDoNotInventStateProof"
+  ],
+  "focused": {
+    "unique": 99,
+    "observations": 99,
+    "failed": 0
+  },
+  "fullCTestExecuted": true,
+  "productGuiExecuted": true,
+  "naturalEarly2Executed": true,
+  "integration": {
+    "fullTests": 3096,
+    "failedChecks": 0,
+    "productSha256": "8624fefbf9c1022aecff9e9733ff21c85de6fedd03ee5f0e236419961c6d2350",
+    "originalsUnchanged": true,
+    "protectedFiles": 1821,
+    "lastTestSha256": "724beebaaf7f59662b82443eccc97340467eb1bdd886f0cb67254bbc28afd1d3"
+  },
+  "caseNames": {
+    "previous450": 3076,
+    "current": 3096,
+    "removed": [],
+    "addedSince450": [
+      "CampaignStateRetirement_AllActualChildrenPreserveGlobalsAndReleaseFixedViews",
+      "CampaignStateRetirement_EveryAiOwnerNeedsConsumedProof",
+      "CampaignStateRetirement_FullProofKeepsRealKernelResidualAndCurrentGlobals",
+      "CampaignStateRetirement_LinksAndKernelNeedConsumedProofs",
+      "CampaignStateRetirement_OrdinaryBodiesDoNotInventStateProof",
+      "CursorPreviewDword_CancelRejectsAfterOriginalPrefix",
+      "CursorPreviewDword_ClientOwnerPreparedIdentityAndWidth",
+      "CursorPreviewDword_ContentComparisonNative56KeepsAllBits",
+      "CursorPreviewDword_DropHostGuardDoesNotAliasLowWord",
+      "CursorPreviewDword_FirstMenuActualCancelClearsWholeWord",
+      "CursorPreviewDword_Native280CaptureAndPreparePrefix",
+      "FullDeckCommand_ActualClientSessionUsesSharedOwnerDeckAndRandom",
+      "FullDeckCommand_ActualGetFullDeckCommandMapping",
+      "FullDeckCommand_MissingDevicePrefixAndInputShortCircuit",
+      "FullDeckCommand_NativeInput384ModeGateAndRelease",
+      "FullDeckCommand_NativeParent230AndPartialStores",
+      "StateFlatReset_Native16AndAdjacentBytes",
+      "StateFlatReset_ShortPhysicalRejectsWithoutWriting",
+      "StateStorageCleanup_PhysicalEffectOwnersAndBorrowedGuard",
+      "StateStorageCleanup_SevenPhysicalEffectsShareCurrentStorage"
+    ],
+    "prior451to453Reverified": [
+      "CursorPreviewDword_CancelRejectsAfterOriginalPrefix",
+      "CursorPreviewDword_ClientOwnerPreparedIdentityAndWidth",
+      "CursorPreviewDword_ContentComparisonNative56KeepsAllBits",
+      "CursorPreviewDword_DropHostGuardDoesNotAliasLowWord",
+      "CursorPreviewDword_FirstMenuActualCancelClearsWholeWord",
+      "CursorPreviewDword_Native280CaptureAndPreparePrefix",
+      "FullDeckCommand_ActualClientSessionUsesSharedOwnerDeckAndRandom",
+      "FullDeckCommand_ActualGetFullDeckCommandMapping",
+      "FullDeckCommand_MissingDevicePrefixAndInputShortCircuit",
+      "FullDeckCommand_NativeInput384ModeGateAndRelease",
+      "FullDeckCommand_NativeParent230AndPartialStores",
+      "StateFlatReset_Native16AndAdjacentBytes",
+      "StateFlatReset_ShortPhysicalRejectsWithoutWriting",
+      "StateStorageCleanup_PhysicalEffectOwnersAndBorrowedGuard",
+      "StateStorageCleanup_SevenPhysicalEffectsShareCurrentStorage"
+    ],
+    "new454": [
+      "CampaignStateRetirement_AllActualChildrenPreserveGlobalsAndReleaseFixedViews",
+      "CampaignStateRetirement_EveryAiOwnerNeedsConsumedProof",
+      "CampaignStateRetirement_FullProofKeepsRealKernelResidualAndCurrentGlobals",
+      "CampaignStateRetirement_LinksAndKernelNeedConsumedProofs",
+      "CampaignStateRetirement_OrdinaryBodiesDoNotInventStateProof"
+    ]
+  },
+  "normalization": {
+    "current": {
+      "path": "extracted/cpp-state-retirement-coordinator-454-batch1/LastTest.log",
+      "rawSha256": "724beebaaf7f59662b82443eccc97340467eb1bdd886f0cb67254bbc28afd1d3",
+      "normalizedSha256": "bd7dd814b844616962d5b0ec8f2f7814d1edee608e4076bbc324267645de7b2b",
+      "knownDiagnostics": [
+        {
+          "prefix": "Chat 원문 진단:2474",
+          "count": 1
+        },
+        {
+          "prefix": "실제 미션 Start 검사: ",
+          "count": 8
+        },
+        {
+          "prefix": "실제 미션 Load 완료: ",
+          "count": 8
+        },
+        {
+          "prefix": "실제 데모 Load 검사: ",
+          "count": 3
+        },
+        {
+          "prefix": "실제 데모 Start 검사: ",
+          "count": 3
+        },
+        {
+          "prefix": "실제 Kernel400프레임 완료: ",
+          "count": 15
+        },
+        {
+          "prefix": "현재 펜스 연결 객체 ",
+          "count": 2
+        },
+        {
+          "prefix": "실제 썬더 투사체 자연 삭제: ",
+          "count": 1
+        },
+        {
+          "prefix": "실제 Start 전 화살 자연 피격: ",
+          "count": 1
+        },
+        {
+          "prefix": "실제 Tutorial5 훨리기그 생성: ",
+          "count": 1
+        },
+        {
+          "prefix": "실제 Tutorial5 전용 훨리기그: ",
+          "count": 1
+        }
+      ],
+      "rawFileModified": false
+    },
+    "previous": {
+      "path": "extracted/cpp-squid-pool-reset-450-batch1/LastTest.log",
+      "rawSha256": "4d97bec78babfb48ee393dfa8284fcd9fb8ca3d68ab604bec15d636fe03fe38e",
+      "normalizedSha256": "a71461282ccc65551ada7e1606018349b1cf70b01a4b169c4e9ba960a918102e",
+      "knownDiagnostics": [
+        {
+          "prefix": "Chat 원문 진단:2474",
+          "count": 1
+        },
+        {
+          "prefix": "실제 미션 Start 검사: ",
+          "count": 8
+        },
+        {
+          "prefix": "실제 미션 Load 완료: ",
+          "count": 8
+        },
+        {
+          "prefix": "실제 데모 Load 검사: ",
+          "count": 3
+        },
+        {
+          "prefix": "실제 데모 Start 검사: ",
+          "count": 3
+        },
+        {
+          "prefix": "실제 Kernel400프레임 완료: ",
+          "count": 15
+        },
+        {
+          "prefix": "현재 펜스 연결 객체 ",
+          "count": 2
+        },
+        {
+          "prefix": "실제 썬더 투사체 자연 삭제: ",
+          "count": 1
+        },
+        {
+          "prefix": "실제 Start 전 화살 자연 피격: ",
+          "count": 1
+        },
+        {
+          "prefix": "실제 Tutorial5 훨리기그 생성: ",
+          "count": 1
+        },
+        {
+          "prefix": "실제 Tutorial5 전용 훨리기그: ",
+          "count": 1
+        }
+      ],
+      "rawFileModified": false
+    }
+  },
+  "naturalEarly2": {
+    "refund": 75,
+    "finalSp": 3075,
+    "nextMission": "tutorial3",
+    "doneBefore": 1,
+    "doneAfter": 1,
+    "sameFrameNextBriefingVerified": true
+  },
+  "visualInspection": [
+    {
+      "path": "extracted/cpp-state-retirement-coordinator-454-batch1-gui-home/ready.bmp",
+      "sha256": "6454b95f0d26b0fce4a21635757c5c617abf9a78463271cab06fc0bf90b691f5",
+      "inspected": true,
+      "originalPixelEqualityVerified": false
+    },
+    {
+      "path": "extracted/cpp-state-retirement-coordinator-454-batch1-early2/goal.bmp",
+      "sha256": "7445b16ea0d6d1146dc789d018f00c72198d3424404415f9e34b4bb68ebd6352",
+      "inspected": true,
+      "originalPixelEqualityVerified": false
+    },
+    {
+      "path": "extracted/cpp-state-retirement-coordinator-454-batch1-early2/nextBriefing.bmp",
+      "sha256": "2692b9163b96fe95efe8a608d57ac85699b2cc0668660cbcee74f3ae0abfc917",
+      "inspected": true,
+      "originalPixelEqualityVerified": false
+    }
+  ],
+  "evidence": {
+    "extracted/cpp-state-retirement-coordinator-454-source1/hashes.json": "c74d09e5dae97fc52207fe793273fdb3573c8cf3224092208d9ec41624e77eb1",
+    "extracted/cpp-state-retirement-coordinator-454-source2/hashes.json": "3c57b5edee2b05afbc872d594f8712aa9c8f04f767714854ad4908593301f6ad",
+    "extracted/cpp-state-retirement-coordinator-454-build1-result.json": "958fb3e3461d10b3b9c73fc763041f368442ca2d6f90fb17b6191b14f52c1277",
+    "extracted/cpp-state-retirement-coordinator-454-build2-result.json": "a12032c028d307c693442fbb80c6c8ff441be30c7ff1c88bba3938a1253e1632",
+    "extracted/cpp-state-retirement-coordinator-454-focused1/results.json": "9601c04830ceddf51e45020615e958382bc0174dc324103f346f431464365174",
+    "extracted/cpp-state-retirement-coordinator-454-focused2/results.json": "e633520344dc987557ef6a6de20c909e447e9b45db4a5af5e5c4899d8f9ee570",
+    "extracted/cpp-state-retirement-coordinator-454-batch1/execution.json": "7823b0b2fc640d77e1cfa301702cf32f3f2fdb71d5973778e00d3fec8fd2b2f7",
+    "extracted/cpp-state-retirement-coordinator-454-batch1/LastTest.log": "724beebaaf7f59662b82443eccc97340467eb1bdd886f0cb67254bbc28afd1d3",
+    "extracted/cpp-state-retirement-coordinator-454-batch1-early2/results.json": "a15017566568ddbeae461ed80b749b69fe2cbd331d212bef3495d37bbb4d6f27",
+    "extracted/cpp-state-retirement-coordinator-454-test-preservation.json": "aecda00ecf8a4632fcec48244233a114837e748428f6898be975866858c1390f",
+    "extracted/cpp-state-retirement-coordinator-454-list-audit.json": "87dce51e25ed7128396cde3ea804ae14656f229a42c0f9f8374f27aec70853f0"
+  },
+  "limitations": [
+    "실제 전체 State1/Edit와 전체 미션 자연 완주는 아직 미완료다.",
+    "증빙이 모두 소비된 실제 C++ 반납 경계의 검증이며 Native 부분 실패 재개 프로토콜·원본 픽셀/음향 동일성의 완료 증거가 아니다.",
+    "Early2 기존 완료값1을 보존했으므로 영구 저장0→1 검증으로 세지 않는다."
+  ]
+}

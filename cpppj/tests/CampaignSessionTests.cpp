@@ -4904,3 +4904,45 @@ TEST_CASE(FullDeckCommand_ActualClientSessionUsesSharedOwnerDeckAndRandom) {
     DeckRestoreHooks hooks;hooks.type=[&](auto type) { const auto& record=core.types[type];return FullDeckType{record.group,record.flags2}; };hooks.assertion=[](auto) { throw std::logic_error("실제전체Deck의예상밖진단"); };LoadFullDeck(expected,expectedRandom,{typeCount,nugget,geyser},hooks);game.FullDeck()=0xffffffff;core.bookkeeping.productionDirty=77;session->GetFullDeck();
     CHECK(game.FullDeck()==1 && core.bookkeeping.productionDirty==1 && game.player.templateOwner==2 && decks.Get(2)==token && decks.Bytes(token).data()==address);CHECK(std::equal(expected.begin(),expected.end(),bytes.begin()) && std::equal(otherBefore.begin(),otherBefore.end(),other.begin()) && client.RandomGlobals()->Game().State()==expectedRandom.State());CHECK(session->Production().Contains(154)); //현재소유자의같은Deck을읽으며다른Player의Deck·포인터는그대로다.
 }
+
+// 실제 AI·9Deck·Kernel 정리를 마친 Session 소멸은 Native 부모가 보유한 전역을 다시 쓰지 않는다.
+TEST_CASE(CampaignStateRetirement_AllActualChildrenPreserveGlobalsAndReleaseFixedViews) {
+    Client client(SessionLinksOptions());SessionServicesFixture external;auto game=client.GameplayGlobals();auto services=SharedKernelServices(client,external);services.gameplayGlobals=game;services.subscriberGlobals=client.SubscriberGlobals();services.coreDataGlobals=client.CoreDataGlobals();
+    services.ai.allocationBytes=[](auto bytes) { std::fill(bytes.begin(),bytes.end(),std::uint8_t{0x71}); };services.ai.participation.clearChat=[&external](std::uint32_t) { ++external.notices; };services.ai.participation.addChat=[&external](std::uint32_t,std::string_view,std::uint32_t) { ++external.notices; }; //실제 Chat 장치 요청만 관측하며 AI 정리의 결과는 공급하지 않는다.
+    auto storage=MakeRawSurfaceStorage(netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078).game,game->Authority(),game->GameAux());storage->Processes().BindDevices(client.ProcessKernelOwner(),client.FrameClockOwner());services.surfaceStorage=storage;auto session=SharedKernelSession(std::move(services));session->Load();const auto ai=session->CreateAi(2,SessionAiSettings("State Return AI","sunCannon"));CHECK(ai && session->AiMemory().Contains(ai));
+    for (std::uint32_t owner=1;owner<9;++owner) { auto pass=session->ResetAiForState(owner);session->ReturnAiForState(std::move(pass)); } //현재 여덟 AI의 실제 정상 복귀를 각 원문 위치에서 소비한다.
+    CHECK(!session->AiMemory().Contains(ai));
+    for (std::uint32_t owner=0;owner<9;++owner) static_cast<void>(session->Production().Deck().Get(owner)); //모든 실제 Deck 할당이 같은 Player 링크 부모에서 반납돼야 한다.
+    auto links=session->ClearPlayerLinksForState();session->ReturnPlayerLinksForState(std::move(links));auto processes=session->ClearProcessesForState();session->ReturnProcessBindingsForState(std::move(processes));const auto records=client.PlayerRecords();const auto base=records->Base();CHECK(Throws([&] { static_cast<void>(records->Acquire()); }) && storage->Borrowed() && game->Borrowed() && &game->RequireSession()==session.get());
+    game->player.playerKnown=7;game->world.editor=0x80000000U;game->cursor.preview=0x12345678U;game->cursor.lockDepth=9;game->CursorGlobals().Lifecycle().previews[29]=0x87654321U;const auto* cursor=&game->cursor; //Native 부모의 현재 DWORD·비활성 꼬리 보존을 확인하는 명시 입력이며 실제 플레이 관측은 아니다.
+    session.reset();CHECK(!game->Borrowed() && !storage->Borrowed() && Throws([&] { static_cast<void>(game->RequireSession()); }));CHECK(&game->cursor==cursor && game->player.playerKnown==7 && game->world.editor==0x80000000U && game->cursor.preview==0x12345678U && game->cursor.lockDepth==9 && game->CursorGlobals().Lifecycle().previews[29]==0x87654321U && records->Base()==base);
+    { auto next=game->AcquirePrepared();CHECK(game->player.playerKnown==7 && game->world.editor==0x80000000U && game->cursor.preview==0x12345678U); } //다음 준비 대여가 이전 반납의 손실을 뒤에서 보정하지 않는다.
+    game->player.playerKnown=0;client.CoreDataGlobals()->Select(game->player,0,0,1);ResetClientSquidPool(client,*storage);InitializeClientPlayerRecords(client);CHECK(records->Base()!=base && records->Initialized() && client.CoreDataGlobals()->Players().data()==records->Records().data()); //원문 known0 store와 모든 고정뷰 소멸 뒤에만 Pool/Core/Player 후반 단계를 진행한다.
+}
+
+// 여덟 owner 중 어느 하나라도 증빙을 소비하지 않았으면 전체 Native 반납으로 판단하지 않는다.
+TEST_CASE(CampaignStateRetirement_EveryAiOwnerNeedsConsumedProof) {
+    for (std::uint32_t missing=1;missing<9;++missing) { //각 owner를 한 번씩 누락해 단순 개수·빈 brain 추정을 구별한다.
+        Client client(SessionLinksOptions());SessionServicesFixture external;auto game=client.GameplayGlobals();auto services=SharedKernelServices(client,external);services.gameplayGlobals=game;services.subscriberGlobals=client.SubscriberGlobals();auto storage=MakeRawSurfaceStorage(netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078).game,game->Authority(),game->GameAux());storage->Processes().BindDevices(client.ProcessKernelOwner(),client.FrameClockOwner());services.surfaceStorage=storage;auto session=SharedKernelSession(std::move(services));
+        for (std::uint32_t owner=1;owner<9;++owner) { auto pass=session->ResetAiForState(owner);if (owner!=missing) session->ReturnAiForState(std::move(pass)); } //원문 자식의 정상 복귀만으로 아직 반환 증빙을 소비한 것이 아니다.
+        auto links=session->ClearPlayerLinksForState();session->ReturnPlayerLinksForState(std::move(links));auto processes=session->ClearProcessesForState();session->ReturnProcessBindingsForState(std::move(processes));game->player.playerKnown=7;game->world.editor=9;game->cursor.lockDepth=11;game->CursorGlobals().Lifecycle().previews[29]=0x87654321U;
+        session.reset();CHECK(!game->Borrowed() && game->player.playerKnown==0 && game->world.editor==0 && game->cursor.lockDepth==1 && game->CursorGlobals().Lifecycle().previews[29]==0 && Throws([&] { static_cast<void>(game->RequireSession()); }));
+    }
+}
+
+// 링크와 Kernel도 실제 호출의 정상 복귀 증빙을 현재 모듈에 각각 소비해야 보존 반납을 선택한다.
+TEST_CASE(CampaignStateRetirement_LinksAndKernelNeedConsumedProofs) {
+    for (const auto missing:{0,1}) { //0은 링크 증빙,1은 Kernel 현재 처리기 반납을 누락한다.
+        Client client(SessionLinksOptions());SessionServicesFixture external;auto game=client.GameplayGlobals();auto services=SharedKernelServices(client,external);services.gameplayGlobals=game;services.subscriberGlobals=client.SubscriberGlobals();auto storage=MakeRawSurfaceStorage(netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078).game,game->Authority(),game->GameAux());storage->Processes().BindDevices(client.ProcessKernelOwner(),client.FrameClockOwner());services.surfaceStorage=storage;auto session=SharedKernelSession(std::move(services));
+        for (std::uint32_t owner=1;owner<9;++owner) { auto pass=session->ResetAiForState(owner);session->ReturnAiForState(std::move(pass)); } //AI 여덟 정상 반납만으로 다른 모듈의 수명을 대신하지 않는다.
+        auto links=session->ClearPlayerLinksForState();if (missing!=0) session->ReturnPlayerLinksForState(std::move(links));auto processes=session->ClearProcessesForState();if (missing!=1) session->ReturnProcessBindingsForState(std::move(processes));game->player.playerKnown=5;game->world.editor=9;game->cursor.lockDepth=11;
+        session.reset();CHECK(!game->Borrowed() && game->player.playerKnown==0 && game->world.editor==0 && game->cursor.lockDepth==1 && client.GetKernel().Size()==0);
+    }
+}
+
+// 같은 원문 자식을 호출했더라도 증빙 경로를 쓰지 않은 기존 일반 종료의 무효화 정책은 유지한다.
+TEST_CASE(CampaignStateRetirement_OrdinaryBodiesDoNotInventStateProof) {
+    Client client(SessionLinksOptions());SessionServicesFixture external;auto game=client.GameplayGlobals();auto services=SharedKernelServices(client,external);services.gameplayGlobals=game;services.subscriberGlobals=client.SubscriberGlobals();auto session=SharedKernelSession(std::move(services));
+    for (std::uint32_t owner=1;owner<9;++owner) session->RemoveAi(owner); //현재 brain0만으로 여덟 State 반환 증빙을 합성하지 않는다.
+    session->ReleasePlayerLinks();session->World().ClearProcesses();game->player.playerKnown=3;game->world.editor=5;game->cursor.lockDepth=7;session.reset();CHECK(!game->Borrowed() && game->player.playerKnown==0 && game->world.editor==0 && game->cursor.lockDepth==1);
+}

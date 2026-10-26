@@ -29,9 +29,11 @@ public:
         void Withdraw(RawCampaignSession& session); // 모듈 소멸이 시작되기 전에 실행 대상만 해제한다.
     private:
         friend class ClientGameplayGlobals;
+        friend class RawCampaignSession; // 실제 Session 소멸자만 자식 정리 증빙을 확인한 뒤 보존 반납을 선택한다.
+        void WithdrawForState(RawCampaignSession& session); // 정상 반납된 모든 자식의 같은 Session만 현재 공개를 닫고 전역 쓰기를 생략한다.
         explicit Use(ClientGameplayGlobals& globals,bool prepared=false); // 중복 대여를 먼저 거부하며 명시 준비 대여는 게임 값을 초기화하지 않는다.
         ClientGameplayGlobals& globals_; // Client의 실제 고정 주소다.
-        bool prepared_; // 실제 Native 부모의 준비 값을 대여 종료에서도 암묵 정리하지 않는 수명 정책이다.
+        bool prepared_; // Native 준비 대여 또는 실제 자식 증빙을 모두 소비한 종료에서 전역을 재초기화하지 않는 C++ 수명 정책이다.
     };
     std::unique_ptr<Use> Acquire(); // 기존 독립 Session 생성 의미를 같은 전역 주소에서 수행한다. NativeState 전체 순서와 구별한다.
     std::unique_ptr<Use> AcquirePrepared(); // 명시 Native 정리/prefix의 현재 값을 그대로 빌린다. 준비 완료 판정은 조립 호출자의 책임이다.

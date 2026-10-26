@@ -3137,6 +3137,12 @@ struct RawCampaignSession::Impl {
             if (!productionDeck) throw std::logic_error("실제 Session Player링크의 Deck 소유자 미연결");productionDeck->Release(token);
         }});
     }
+    // 실제 세 종류 자식의 정상 복귀·증빙 소비가 모두 끝났는지 조회한다. 빈 brain/Kernel만으로 성공을 추정하지 않는다.
+    bool StateChildrenReturned() const {
+        if (!participation || !productionDeck || !productionDeck->PlayerLinksReturnedForState() || !world.ProcessBindingsReturned()) return false;
+        for (std::uint32_t owner=1;owner<9;++owner) if (!participation->BrainReturnedForState(owner)) return false; //중립0을 제외한 원문 여덟 자식이 각각 같은 모듈에 반납돼야 한다.
+        return true;
+    }
     // 외부 콜백이 참조하는 모듈을 해제하기 전에 현재 Kernel을 비운다.
     void ReleaseEditorCommandReceivers() {
         if (editorActivityRegisteredDispatch) { editorActivityRegisteredDispatch->Register(0x64,{});editorActivityRegisteredDispatch=nullptr; } //64h receive만 지우고 실제 observer/version/정책/길이는 유지한다.
@@ -3209,7 +3215,14 @@ void RawCampaignSession::SendLocalPacket(std::int32_t target,std::span<const std
 RawCampaignSession::RawCampaignSession(const GameAssets& assets,const BaseFileSystem& files,FortTemplate fort,std::string mission,RawCampaignSessionServices services)
     :impl_(std::make_unique<Impl>(assets,files,std::move(fort),std::move(mission),std::move(services))) { impl_->gameplayUse->Publish(*this); }
 // Impl이 Kernel을 비운 뒤 실제 모듈을 해제한다.
-RawCampaignSession::~RawCampaignSession() { impl_->ReleaseEditorCommandReceivers();impl_->gameplayUse->Withdraw(*this); }
+RawCampaignSession::~RawCampaignSession() {
+    impl_->ReleaseEditorCommandReceivers();bool stateReturned{}; //같은 실제 수신기를 먼저 닫은 뒤 자식 증빙을 검사한다.
+    try { stateReturned=impl_->StateChildrenReturned(); }
+    catch (const std::exception& error) { std::fprintf(stderr,"실제 Session State 반납 증빙 오류: %s\n",error.what()); } //손상된 외부 필드는 진단하고 기존 일반 최종 반납을 계속한다.
+    catch (...) { std::fprintf(stderr,"실제 Session State 반납 증빙 오류: 알 수 없는 예외\n"); } //C++ 소멸 중 예외를 밖으로 전파하지 않는다.
+    if (stateReturned) impl_->gameplayUse->WithdrawForState(*this);
+    else impl_->gameplayUse->Withdraw(*this); //미반납 자식·부분 실패·일반 종료는 종전 대여 무효화 정책을 유지한다.
+}
 // 저장 다이스/룬의 전체 후처리를 먼저 등록한 뒤 동일 원본 부모로 월드를 로드한다.
 void RawCampaignSession::Load() {
     if (impl_->services.installMode!=CampaignInstallMode::Campaign) throw std::logic_error("기존Editor는별도World단계와외곽완료부모필요");

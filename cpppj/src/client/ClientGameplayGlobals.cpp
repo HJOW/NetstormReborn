@@ -25,6 +25,11 @@ ClientGameplayGlobals::Use::~Use() { globals_.current_=nullptr;if (!prepared_) {
 void ClientGameplayGlobals::Use::Publish(RawCampaignSession& session) { if (globals_.current_) throw std::logic_error("현재 게임 Runtime 중복 연결");globals_.current_=&session; }
 // 현재 실제 객체의 공개 메서드가 부분 반납된 Impl을 다시 읽지 않도록 한다.
 void ClientGameplayGlobals::Use::Withdraw(RawCampaignSession& session) { if (globals_.current_!=&session) throw std::logic_error("현재 게임 Runtime 반납 불일치");globals_.current_=nullptr; }
+// 자식 정리 증빙은 실제 Session 소멸자가 먼저 검사하며 이 함수는 같은 공개 대상의 C++ 대여 정책만 바꾼다.
+void ClientGameplayGlobals::Use::WithdrawForState(RawCampaignSession& session) {
+    if (!globals_.borrowed_ || globals_.current_!=&session) throw std::logic_error("State 반납의 같은 현재 게임 Runtime 필요");
+    prepared_=true;globals_.current_=nullptr;
+}
 // 실제 대여 객체가 모든 주소를 반납할 때까지 단일 상태를 유지한다.
 std::unique_ptr<ClientGameplayGlobals::Use> ClientGameplayGlobals::Acquire() { return std::unique_ptr<Use>(new Use(*this)); }
 // 게임 초기화/정리의 원문 위치를 호출자가 소유할 때 단일 대여만 획득한다.

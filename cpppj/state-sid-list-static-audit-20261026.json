@@ -1,0 +1,144 @@
+{
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "rows": [
+    {
+      "callSite": "0x4fc99a",
+      "header": "0x55a4d0",
+      "countAddress": "0x55a4dc",
+      "capacity": 500,
+      "currentList": "factories",
+      "instructionBytes": "68f4010000b9d0a45500e88131f5ff",
+      "instructions": [
+        "4fc990 push 0x1f4",
+        "4fc995 mov ecx, 0x55a4d0",
+        "4fc99a call 0x44fb20"
+      ]
+    },
+    {
+      "callSite": "0x4fc9b7",
+      "header": "0x55a4ec",
+      "countAddress": "0x55a4f8",
+      "capacity": 30,
+      "currentList": "dudePopulation",
+      "instructionBytes": "6a1eb9eca45500e86431f5ff",
+      "instructions": [
+        "4fc9b0 push 0x1e",
+        "4fc9b2 mov ecx, 0x55a4ec",
+        "4fc9b7 call 0x44fb20"
+      ]
+    },
+    {
+      "callSite": "0x4fca07",
+      "header": "0x55a708",
+      "countAddress": "0x55a714",
+      "capacity": 100,
+      "currentList": "outposts",
+      "instructionBytes": "6a64b908a75500e81431f5ff",
+      "instructions": [
+        "4fca00 push 0x64",
+        "4fca02 mov ecx, 0x55a708",
+        "4fca07 call 0x44fb20"
+      ]
+    },
+    {
+      "callSite": "0x4fcb6a",
+      "header": "0x592f80",
+      "countAddress": "0x592f8c",
+      "capacity": 256,
+      "currentList": "providers",
+      "instructionBytes": "6800010000b9802f5900e8b12ff5ff",
+      "instructions": [
+        "4fcb60 push 0x100",
+        "4fcb65 mov ecx, 0x592f80",
+        "4fcb6a call 0x44fb20"
+      ]
+    },
+    {
+      "callSite": "0x4fea47",
+      "header": "0x5950d8",
+      "countAddress": "0x5950e4",
+      "capacity": 100,
+      "currentList": "geysers",
+      "instructionBytes": "6a64b9d8505900e8d410f5ff",
+      "instructions": [
+        "4fea40 push 0x64",
+        "4fea42 mov ecx, 0x5950d8",
+        "4fea47 call 0x44fb20"
+      ]
+    },
+    {
+      "callSite": "0x4feb17",
+      "header": "0x5954c0",
+      "countAddress": "0x5954cc",
+      "capacity": 16,
+      "currentList": "priests",
+      "instructionBytes": "6a10b9c0545900e80410f5ff",
+      "instructions": [
+        "4feb10 push 0x10",
+        "4feb12 mov ecx, 0x5954c0",
+        "4feb17 call 0x44fb20"
+      ]
+    },
+    {
+      "callSite": "0x4feb87",
+      "header": "0x59a9d4",
+      "countAddress": "0x59a9e0",
+      "capacity": 50,
+      "currentList": "residences",
+      "instructionBytes": "6a32b9d4a95900e8940ff5ff",
+      "instructions": [
+        "4feb80 push 0x32",
+        "4feb82 mov ecx, 0x59a9d4",
+        "4feb87 call 0x44fb20"
+      ]
+    },
+    {
+      "callSite": "0x4fefa7",
+      "header": "0x5caf28",
+      "countAddress": "0x5caf34",
+      "capacity": 30,
+      "currentList": "multipleSelection",
+      "instructionBytes": "6a1eb928af5c00e8740bf5ff",
+      "instructions": [
+        "4fefa0 push 0x1e",
+        "4fefa2 mov ecx, 0x5caf28",
+        "4fefa7 call 0x44fb20"
+      ]
+    },
+    {
+      "callSite": "0x4fefd7",
+      "header": "0x5e1898",
+      "countAddress": "0x5e18a4",
+      "capacity": 20,
+      "currentList": "temples",
+      "instructionBytes": "6a14b998185e00e8440bf5ff",
+      "instructions": [
+        "4fefd0 push 0x14",
+        "4fefd2 mov ecx, 0x5e1898",
+        "4fefd7 call 0x44fb20"
+      ]
+    }
+  ],
+  "registerEntry": "0x472880",
+  "resetEntry": "0x472830",
+  "unregisterEntry": "0x4728a0",
+  "registry": "0x592938",
+  "registryPointers": 20,
+  "currentlyMappedStaticConstructors": 9,
+  "originalGameExecuted": false,
+  "nativeFunctionsExecuted": false,
+  "productChangedByThisAudit": false,
+  "nextAction": "남은20 pool-header는 고정 용량 SID 목록 등록표다. 실제 아홉 목록의 같은 count를 장기화·등록하고,005954c0/0059a9d4/005e1898의16/50/20 용량을 현재100과 구별해야 한다. 단위454에는 이를 구현하지 않았다.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "cpppj/src/client/RawCampaignSession.cpp": "33e30c9e333ce4ba9be4cea4db04303134b37eb51d2a22d43174665b6a3f686b",
+    "cpppj/src/client/ClientUserSelectionGlobals.h": "0516a020bbcea12f717bc0364baad7a43026081b72040d0cb3024950b8f46128",
+    "cpppj/src/o/RawAssetPostPop.h": "e11439575d4c70b5f007b50ec6c586c7d2f97b2bfe8393768e64eb84805e66f4",
+    "cpppj/src/o/RawDudeRegular.cpp": "1a95b32d4143e22472e06f958aa8f94f37ae12f572928ba2da11f5d6eaa93fc1",
+    "cpppj/src/o/RawEnergySupply.h": "16298ecafac440612cf5722175fe7adade050e9bdd67015f8308fd37077998be"
+  }
+}
