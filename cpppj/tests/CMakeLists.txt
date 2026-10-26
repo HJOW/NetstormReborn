@@ -2231,3 +2231,11 @@ set_source_files_properties(TextClipboardTests.cpp PROPERTIES COMPILE_DEFINITION
 target_sources(netstorm_tests PRIVATE IslandPopulationTests.cpp EditorIslandDragTests.cpp)
 set_source_files_properties(IslandPopulationTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_ISLAND_POPULATION_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/island-population-x86.tsv\"")
 set_source_files_properties(EditorIslandDragTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_EDITOR_ISLAND_DRAG_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/editor-island-drag-x86.tsv\"")
+
+# 실제 보호 texture/RLE를 실행한 Native Bitmap28행과 같은 Client 장기 분류를 비교한다.
+target_sources(netstorm_tests PRIVATE IslandBitmapTests.cpp)
+set_source_files_properties(IslandBitmapTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_ISLAND_BITMAP_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/island-bitmap-x86.tsv\";NETSTORM_ISLAND_BITMAP_PARENT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/island-bitmap-parent-x86.tsv\"")
+
+# 섬 추가 중 수신자0 삭제 보상도 원본 float/ftol 비트로 처리하는지 독립 관측과 대조한다.
+target_sources(netstorm_tests PRIVATE RewardSpBitsTests.cpp)
+set_source_files_properties(RewardSpBitsTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_SP_ADD_BITS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/sp-add-bits-x86.tsv\"")

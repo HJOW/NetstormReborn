@@ -157,6 +157,7 @@ RawCampaignSessionServices MakeCampaignClientServices(Client& client,RawButtonCo
     services.install.refreshWindowTitle=std::move(ui.refreshWindowTitle); // 월드 설치 중 현재 미션 제목도 갱신한다.
     // 원본 0047d890의 사건을 같은 실제 Gump 트리로 분배한다. 생산 노드 자체의 구현은 별도다.
     services.ownership.refreshProduction=[&controls] { controls.RefreshProduction(); };
+    services.editorIslandGreen=[&client] { return client.GetScreen().Colors().basic[2]; }; // 원본 최초 bitmap 분류가 현재 화면의 녹색005acd20을 그대로 읽는다.
     services.assets.postPop.refreshProduction=services.ownership.refreshProduction; // 신전 PostPop도 동일한 사건을 보낸다.
     // Player 부모 통지는 현재 등록표와 대상 가상+28을 직접 사용한다.
     services.playerContent.gump=[&controls](std::uint32_t id) { return controls.RegisteredGump(id); };

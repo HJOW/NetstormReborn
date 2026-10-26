@@ -1,0 +1,447 @@
+{
+  "unit": 474,
+  "date": "2026-10-27",
+  "host": "HJOW-Athlon",
+  "baseCommit": "afe4ce5b",
+  "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+  "decompileChanged": false,
+  "builds": [
+    {
+      "command": [
+        "cmake",
+        "--build",
+        "cpppj/build",
+        "--config",
+        "Release",
+        "--parallel",
+        "4",
+        "--",
+        "/p:UseMultiToolTask=true",
+        "/p:MultiProcMaxCount=4",
+        "/p:EnforceProcessCountAcrossBuilds=true"
+      ],
+      "exit": 1,
+      "log": "extracted/cpp-island-bitmap-474/build1.log",
+      "sha256": "c12956070e6707b8af39b2a6f285a87278c15c3b8429dbb5c0ce05b426db8b8a",
+      "summaries": [],
+      "diagnostics": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\tests\\IslandBitmapTests.cpp(71,117): error C2065: 'NETSTORM_ISLAND_BITMAP_PARENT_FIXTURE': 선언되지 않은 식별자입니다. [H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\tests\\netstorm_tests.vcxproj]",
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\tests\\IslandBitmapTests.cpp(72,22): error C2530: 'row': 참조를 초기화해야 합니다. [H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\tests\\netstorm_tests.vcxproj]",
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\tests\\IslandBitmapTests.cpp(72,22): error C3531: 'row': 형식에 'auto'이(가) 포함된 기호에는 이니셜라이저가 있어야 합니다. [H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\tests\\netstorm_tests.vcxproj]",
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\tests\\IslandBitmapTests.cpp(72,25): error C2143: 구문 오류: ';'이(가) ':' 앞에 없습니다. [H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\tests\\netstorm_tests.vcxproj]",
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\tests\\IslandBitmapTests.cpp(72,38): error C2143: 구문 오류: ';'이(가) ')' 앞에 없습니다. [H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\tests\\netstorm_tests.vcxproj]",
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\tests\\IslandBitmapTests.cpp(73,18): error C2109: 첨자는 배열 또는 포인터 형식을 사용해야 합니다. [H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\tests\\netstorm_tests.vcxproj]",
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\tests\\IslandBitmapTests.cpp(74,60): error C2109: 첨자는 배열 또는 포인터 형식을 사용해야 합니다. [H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\tests\\netstorm_tests.vcxproj]",
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\tests\\IslandBitmapTests.cpp(74,40): error C2737: 'profile': const 개체를 초기화해야 합니다 [H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\tests\\netstorm_tests.vcxproj]",
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\tests\\IslandBitmapTests.cpp(74,107): error C3536: 'profile': 초기화되기 전에 사용할 수 없습니다. [H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\tests\\netstorm_tests.vcxproj]",
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\tests\\IslandBitmapTests.cpp(79,78): error C2109: 첨자는 배열 또는 포인터 형식을 사용해야 합니다. [H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\tests\\netstorm_tests.vcxproj]",
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\tests\\IslandBitmapTests.cpp(79,97): error C2109: 첨자는 배열 또는 포인터 형식을 사용해야 합니다. [H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\tests\\netstorm_tests.vcxproj]",
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\tests\\IslandBitmapTests.cpp(79,115): error C2109: 첨자는 배열 또는 포인터 형식을 사용해야 합니다. [H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\tests\\netstorm_tests.vcxproj]",
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\tests\\IslandBitmapTests.cpp(79,133): error C2109: 첨자는 배열 또는 포인터 형식을 사용해야 합니다. [H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\tests\\netstorm_tests.vcxproj]",
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\tests\\IslandBitmapTests.cpp(79,151): error C2109: 첨자는 배열 또는 포인터 형식을 사용해야 합니다. [H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\tests\\netstorm_tests.vcxproj]",
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\tests\\IslandBitmapTests.cpp(79,26): error C2660: 'netstorm::client::BuildEditorIslandBitmap': 함수는 6개의 인수를 사용하지 않습니다. [H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\tests\\netstorm_tests.vcxproj]",
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\tests\\IslandBitmapTests.cpp(80,9): error C2109: 첨자는 배열 또는 포인터 형식을 사용해야 합니다. [H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\tests\\netstorm_tests.vcxproj]",
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\tests\\IslandBitmapTests.cpp(81,63): error C2109: 첨자는 배열 또는 포인터 형식을 사용해야 합니다. [H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\tests\\netstorm_tests.vcxproj]",
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\tests\\IslandBitmapTests.cpp(81,149): error C2109: 첨자는 배열 또는 포인터 형식을 사용해야 합니다. [H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\tests\\netstorm_tests.vcxproj]",
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\tests\\IslandBitmapTests.cpp(81,86): warning C4473: 'fprintf': 서식 문자열에 대한 인수가 충분하게 전달되지 않았습니다. [H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\tests\\netstorm_tests.vcxproj]",
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\tests\\IslandBitmapTests.cpp(81,160): error C2109: 첨자는 배열 또는 포인터 형식을 사용해야 합니다. [H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\tests\\netstorm_tests.vcxproj]"
+      ]
+    },
+    {
+      "command": [
+        "cmake",
+        "--build",
+        "cpppj/build",
+        "--config",
+        "Release",
+        "--parallel",
+        "4",
+        "--",
+        "/p:UseMultiToolTask=true",
+        "/p:MultiProcMaxCount=4",
+        "/p:EnforceProcessCountAcrossBuilds=true"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-island-bitmap-474/build2.log",
+      "sha256": "da027a668620e19e7181c119ef5d1203585540514d208a7d0ce51ddb2ed39a92",
+      "summaries": [],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cmake",
+        "--build",
+        "cpppj/build",
+        "--config",
+        "Release",
+        "--parallel",
+        "4",
+        "--",
+        "/p:UseMultiToolTask=true",
+        "/p:MultiProcMaxCount=4",
+        "/p:EnforceProcessCountAcrossBuilds=true"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-island-bitmap-474/build3.log",
+      "sha256": "c62e4f1de662c2c8f288b971171cc712701eaec6f1e678e3daab8811f81d1efb",
+      "summaries": [],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cmake",
+        "--build",
+        "cpppj/build",
+        "--config",
+        "Release",
+        "--parallel",
+        "4",
+        "--",
+        "/p:UseMultiToolTask=true",
+        "/p:MultiProcMaxCount=4",
+        "/p:EnforceProcessCountAcrossBuilds=true"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-island-bitmap-474/build4.log",
+      "sha256": "f726abedf3f72787d897bdcf94e529e1f009d63499173101040f6181fc65dc3d",
+      "summaries": [],
+      "diagnostics": []
+    }
+  ],
+  "nativeFirstFailures": [
+    {
+      "command": [
+        "python",
+        "-X",
+        "utf8",
+        "tools/decomp_island_bitmap.py",
+        "--smoke"
+      ],
+      "exit": 1,
+      "log": "extracted/cpp-island-bitmap-474/native-smoke1.log",
+      "sha256": "18a689b3283d3302193dfd3d9c0045f447051c7de7727e542ecb086e51e813fe",
+      "summaries": [],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "python",
+        "-X",
+        "utf8",
+        "tools/decomp_island_bitmap.py",
+        "--smoke"
+      ],
+      "exit": 1,
+      "log": "extracted/cpp-island-bitmap-474/native-smoke2.log",
+      "sha256": "3ef6b76648da78c635b002825ea1bf7b873c5eb1d9da219631e066bc3a0beb61",
+      "summaries": [],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "python",
+        "-X",
+        "utf8",
+        "tools/decomp_island_bitmap.py",
+        "--smoke"
+      ],
+      "exit": 1,
+      "log": "extracted/cpp-island-bitmap-474/native-smoke3.log",
+      "sha256": "762dfab6bc3c6d2391402778f9aa654e093e4c177c773f8a3f1c0d21c0c5e3c1",
+      "summaries": [],
+      "diagnostics": []
+    }
+  ],
+  "nativeVerify": [
+    {
+      "command": [
+        "python",
+        "-X",
+        "utf8",
+        "tools/decomp_island_bitmap.py",
+        "--verify"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-island-bitmap-474/native-verify1.log",
+      "sha256": "82541aef0d4b1d69b10a914ebf31c8769ffe743c5bf54a5352bdf56f4244e4db",
+      "summaries": [],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "python",
+        "-X",
+        "utf8",
+        "tools/decomp_island_bitmap_parent.py",
+        "--verify"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-island-bitmap-474/parent-verify1.log",
+      "sha256": "2adb0ecbfb9a5fd3a642782383d7e5e66e36c4daa1f83c68c5464b92d863b4df",
+      "summaries": [],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "python",
+        "-X",
+        "utf8",
+        "tools/decomp_sp_add_bits.py",
+        "--verify"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-island-bitmap-474/sp-bits-verify1.log",
+      "sha256": "924bb45a192f50d8f10ef2d0651669182d7e50fa42b0bc53a3ff41a54f3b1a47",
+      "summaries": [],
+      "diagnostics": []
+    }
+  ],
+  "nativeObservations": {
+    "bitmapRaster": 28,
+    "wholeBitmapParent": 12,
+    "spAddBits": 504,
+    "total": 544
+  },
+  "nativeReports": [
+    "cpppj/island-bitmap-native-20261027.json",
+    "cpppj/island-bitmap-parent-native-20261027.json",
+    "cpppj/sp-add-bits-native-20261027.json"
+  ],
+  "firstCppRegression": {
+    "command": [
+      "cpppj/build/bin/Release/netstorm_tests.exe",
+      "--filter",
+      "EditorIsland"
+    ],
+    "exit": 1,
+    "log": "extracted/cpp-island-bitmap-474/final-EditorIsland.log",
+    "sha256": "f9de62ea2073d77be0ea9442ec65c5ca24d030540d361c23591097acf98665f3",
+    "summaries": [
+      "4 test(s), 1 failed check(s)"
+    ],
+    "diagnostics": []
+  },
+  "caseInsensitiveLogGuard": {
+    "command": [
+      "python",
+      "-X",
+      "utf8",
+      "extracted/cpp-island-bitmap-474-audit.py",
+      "final2-Reward",
+      "cpppj/build/bin/Release/netstorm_tests.exe",
+      "--filter",
+      "Reward"
+    ],
+    "exit": 1,
+    "log": "extracted/cpp-island-bitmap-474/driver-collision1.log",
+    "sha256": "cc2e1b3c6bd3a4b35f430bd2bee00c866f814c3fab66e4fbafc559b478ad6e8c",
+    "summaries": [],
+    "diagnostics": []
+  },
+  "corrections": [
+    "격리 Native 입력에 FS:[0]과 원래 VFX fast 경로를 추가했다. 원문 CODE를 변경하지 않았다.",
+    "전체 부모 검사를 첫 빌드 도중 추가하여 첫 구성에 fixture macro가 없었다. CMake를 재구성하고 최종 소스를 빌드4로 동결했다.",
+    "기존 섬 추가가 수신자0의 미정 SP 비트에서 중단됐다. 실제0040eec0/0041df80 및 ftol504행을 관측해 SP 가산의 비유한/64비트 초과 변환을 원본 하위DWORD0으로 복원했다.",
+    "Windows에서 reward/Reward 로그 이름이 충돌해 덮어쓰기 보호가 거부했다. 원래 reward 로그를 유지하고 Reward만 final3 경로로 실행했다."
+  ],
+  "focused": [
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "IslandBitmap"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-island-bitmap-474/final2-IslandBitmap.log",
+      "sha256": "7a5f6e018dd5e016845bf3f6863eae873e6415ab7c6a5bfdab7e208ac6fbe746",
+      "summaries": [
+        "6 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "EditorIsland"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-island-bitmap-474/final2-EditorIsland.log",
+      "sha256": "e9544b5422c2578b7d9b47e6aade5fea2157c65fc0d80a4d89807e5632dd6401",
+      "summaries": [
+        "4 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "ExistingEditor"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-island-bitmap-474/final2-ExistingEditor.log",
+      "sha256": "e1f1b9a026b8ee6f493beeb6d593c1e12b556d781d1235d73c8bb52e40809183",
+      "summaries": [
+        "58 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "TerrainContext"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-island-bitmap-474/final2-TerrainContext.log",
+      "sha256": "73abab84bb80e513f57ab6f1ea09975ed1e62302ee098f59cdedb8df047afee1",
+      "summaries": [
+        "2 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "TerrainGrowth"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-island-bitmap-474/final2-TerrainGrowth.log",
+      "sha256": "31ec98b0fa4aeb20881606cea91e9d97d238b2505ece9ed61b6e3f6300b45a1c",
+      "summaries": [
+        "2 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "NormalTerrain"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-island-bitmap-474/final2-NormalTerrain.log",
+      "sha256": "f35363be73d3ccc7b10661bd84a960444d57bf9eba38badbe7123c2a11b10034",
+      "summaries": [
+        "3 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "ClientStateWorld"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-island-bitmap-474/final2-ClientStateWorld.log",
+      "sha256": "7c5b252b24b42cdd8619149605897691185f109d620eafabaa5930d0bc5b2487",
+      "summaries": [
+        "13 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "NewFort"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-island-bitmap-474/final2-NewFort.log",
+      "sha256": "4262fd2309d2e3dfa1a70e833eb3661567dcb8a7ecff51653d21d760a3ef670c",
+      "summaries": [
+        "13 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "reward"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-island-bitmap-474/final2-reward.log",
+      "sha256": "b74226b7552ec6720cacb596c7b85fff225bed018315f844f2468df88d403220",
+      "summaries": [
+        "9 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "Reward"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-island-bitmap-474/final3-Reward.log",
+      "sha256": "72d7f2e7a241283ef7253306f3ff78469b32d48503750e8cb3d8968d959a0b7d",
+      "summaries": [
+        "8 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    }
+  ],
+  "uniqueFocused": 117,
+  "observedFocused": 118,
+  "wholeCpp": {
+    "command": [
+      "cpppj/build/bin/Release/netstorm_tests.exe"
+    ],
+    "exit": 0,
+    "log": "extracted/cpp-island-bitmap-474/whole1.log",
+    "sha256": "d0af789130979e0af5de98f8d92787764237097093f79da17c191943d04b5bfb",
+    "summaries": [
+      "3246 test(s), 0 failed check(s)"
+    ],
+    "diagnostics": []
+  },
+  "wholeCppCases": 3246,
+  "ctestWrapperExecuted": false,
+  "registeredBefore": 3239,
+  "registeredAfter": 3246,
+  "newTests": [
+    "CampaignIslandBitmap_ActualEditorMapChoiceAndSharedOwners",
+    "CampaignIslandBitmap_NewFortEmptyMapAndRealCandidate",
+    "IslandBitmap_ActualGrowthLocalSeedAndPersistentClassification",
+    "IslandBitmap_ReplaysNativeRasterAndActualProtectedRle",
+    "IslandBitmap_ReplaysNativeWholeParentWithContextGrowthAndRle",
+    "IslandBitmap_TextureFailurePreservesClassificationPrefix",
+    "RewardSpBits_ReplaysNativeLocalAndOtherOwnerIncludingZero"
+  ],
+  "missingPreviousTests": [],
+  "preservedWholeInputFiles": 3166,
+  "changedProtectedInputs": [],
+  "appendedExistingTest": {
+    "path": "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp",
+    "originalBytes": 116776,
+    "originalSha256": "e1e4c01b3a977c4cd0e06a5607312226ce834ddbc2213d851ebbd79eacc3e953",
+    "originalBytePrefixPreserved": true
+  },
+  "sourceManifest": {
+    "path": "extracted/cpp-island-bitmap-474/source-final.json",
+    "files": 2810,
+    "sha256": "12ca091b5f9bd74ba0a6abe961978bbe4ba1f93fb3284330c9ce4c520effbf4c"
+  },
+  "gameExeSha256": "3c26ebe9fdfcc841754674b7a9204bc5726f05d1f5581f69207bd8baf1c64add",
+  "testExeSha256": "f960367f44e679b5c034e31f7064a7fdd4e0816bbc5ce7fe56ea52ef1a41a4bf",
+  "coverage": [
+    "실제 지형 Context/Growth/경계/보호 SHP0 RLE/200 stride texture와8비트 Bitmap",
+    "원본 래스터/전체 부모 픽셀과 local seed·최초 분류 캐시",
+    "같은 Client 수명의 분류/현재 Screen 녹색·기존 및 신규 Editor Session API",
+    "월드/Pool/섬/공유 GameRandom 불변과 빈 신규 지도/실제 후보",
+    "SP 가산의 큰 유한/무한대/NaN/서브노멀 비트·수신자0·원본 ftol 반환"
+  ],
+  "gameRuns": 0,
+  "guiRuns": 0,
+  "remaining": [
+    "전용 MetaImage/목록/창수명·공통 Gump 조립",
+    "실제 Add Island/새 맵 GUI와 저장/재진입",
+    "Test Battle/언어별 시나리오",
+    "전체 미션 자연 완주·화면/음향 동일성"
+  ]
+}

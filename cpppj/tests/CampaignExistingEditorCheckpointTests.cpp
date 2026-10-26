@@ -754,3 +754,6 @@ TEST_CASE(CampaignExistingEditorCheckpoint_SameNameKeepsGuideAndSelectsMissionOu
 
 // 실제 Editor 섬 배치와 독립 미리보기 검사를 같은 장치 수명에서 실행한다.
 #include "CampaignEditorIslandTests.inc"
+
+// 실제 기존/신규 Fort의 같은 소유자에서 원본 Bitmap 생성을 검증한다.
+#include "CampaignIslandBitmapTests.inc"

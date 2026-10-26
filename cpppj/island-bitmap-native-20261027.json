@@ -1,0 +1,66 @@
+{
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+  "runs": 28,
+  "cases": 14,
+  "peSha": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+  "shapeSha": "c878353c8054208deef832e34c514b30fe670e175505b129333a5728ba70f68e",
+  "sourceSha": "b3a323f7256e5f216a6f24e850fb55495ef774f6fa5cfd450c6f9ef36c49e376",
+  "fixtureSha": "fc10eb07e99800cab63682b7f3d287130a2a38a3cdcb71ddcff546f1f6383d23",
+  "entered": {
+    "004c1860": 28,
+    "004a2b10": 56,
+    "004daa70": 56,
+    "00401d92": 56,
+    "004021b5": 56,
+    "004a2c70": 56,
+    "004bca20": 656
+  },
+  "code": [
+    {
+      "address": "004c1860",
+      "size": 1110,
+      "sha": "55f9ef1abff391c72c06f88a746c589b9dabce47f4e5ae15ea6b35c8cce7e6ff"
+    },
+    {
+      "address": "004a2b10",
+      "size": 345,
+      "sha": "11749c6068fa8ccf18baf8fa34a8fbd78f9c6800f1bff5731abdce1e791e348f"
+    },
+    {
+      "address": "004a2c70",
+      "size": 178,
+      "sha": "c45f902a450cc9c7b671c94d82233a0926a1dd9e1c20127472de9fecdb6cd0c5"
+    },
+    {
+      "address": "004daa70",
+      "size": 49,
+      "sha": "dc38b6ba471b9c2a18ab0564ca66a537eefd00a4347f717f8415aa63c99cba9b"
+    },
+    {
+      "address": "00401d92",
+      "size": 929,
+      "sha": "85025130e2e7f6c93e5abe4f5f622f0e711f0fb303fe371800af1b769a670293"
+    },
+    {
+      "address": "0040213e",
+      "size": 119,
+      "sha": "dea3e15f83c46da69ec474f3c559d14c1b2661b73792a4e916dc2936285e7da6"
+    },
+    {
+      "address": "004021b5",
+      "size": 201,
+      "sha": "f177c235c306b63abb5497bdb526a9c2b0aed500ddbdc2a4debb6cdc470489cb"
+    },
+    {
+      "address": "004bca20",
+      "size": 54,
+      "sha": "da17a5424615636219eb482a425793cb43a1fc376613f1a65d9e71ac25586033"
+    }
+  ],
+  "limits": [
+    "실제 bitmap·로컬 난수·texture200×200 저장/복구·보호97/102 SHP의 RLE를 실행한다.",
+    "TYPE 조회 포인터와 bitmap heap만 명시 장치다.",
+    "지형 Context/Growth 전체 부모와 전용 Gump/GUI는 이 관측 범위 밖이다."
+  ]
+}

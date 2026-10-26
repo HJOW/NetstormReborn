@@ -1,6 +1,7 @@
 #include "client/ClientCameraGlobals.h"
 // 실제 캠페인 초기화/전투/이동의 상태와 모듈 수명을 클라이언트 세션 하나에 보관한다.
 #pragma once
+#include "o/RawTerrainBitmap.h"
 #include "client/GameAssets.h"
 #include "client/CampaignLoginServices.h"
 #include "client/MissionFortRequest.h"
@@ -189,6 +190,7 @@ struct RawCampaignSessionServices {
     std::optional<o::FortMissionSaveHooks> fortMission; // Guide-only가 아닌 현재 실제 Runtime getter/진단이다. write는 각 Snapshot이 같은 새 stream에 연결한다.
     std::function<void()> fortTechnologyUi; //0042f540의현재Chatmanager/CoreData관문과랭크prefix갱신이다.생산refresh나입력접두로대체하지않는다.
     o::EditorPlayersHooks editorPlayerUi; // 같은 실제 Client 번역/임시 고리의 기본 장치다. 명시 설치 효과가 제공한 장치는 그대로 우선한다.
+    std::function<std::uint32_t()> editorIslandGreen; // bitmap 최초 분류가 실제 현재 Screen005acd20 녹색을 읽는 장치다.
     std::function<void(std::string_view)> factoryTell; //Factory 입력의 같은004cf960 안내 섹션을 실제 현재Tell에연결한다.
     std::function<void(std::string_view,std::uint32_t)> factoryHelp; //researchHelp의실제전용도움말창/모드1이다.
     o::DamageablePreDestroyHooks damageablePre; // 붕괴/폭발/음향의 실제 장치/효과 경계다. 해방/공통 삭제는 Session이 공급한다.
@@ -442,6 +444,8 @@ public:
     void SnapshotFortObjects(std::uint32_t slot); // 현재 월드의 Terr00~19와 조건부 Chaff를 실제 Temp/rename·청크 writer로 저장한다. 전체 snapshot/Notify는 별도다.
     void SnapshotFort(std::uint32_t slot); // 설치된 명시 Fort 모드에서 원본 전체 부모와 마지막 Notify를 실행하며 모드를 자동 변경하지 않는다.
     bool BuildEditorIslandMap(o::ChunkMap& target); // 0046e4a0의 독립14×14 지도 부분이다. Bitmap 생성과 전체 GUI 완료를 뜻하지 않는다.
+    std::optional<o::TerrainBitmapImage> BuildEditorIslandMapImage(o::ChunkMap& target); // 같은 실제 지도와004c1cc0 Bitmap을 만들고 manager 부재는 nullopt로 구별한다.
+    o::TerrainBitmapImage BuildEditorIslandChoiceImage(std::span<const std::uint8_t,6> record); // 원문 owner0 단일 지도/로컬 난수/보호 texture의 실제 목록 이미지를 만든다.
     bool SeedEditorIslandChoices(std::span<std::uint8_t,126> records); // 0047f9b0의 창 전용21행에서 비활성 레코드만 같은 공유 난수로 보충한다.
     void BuildEditorIslandChoiceMap(std::span<const std::uint8_t,6> record,o::ChunkMap& target); // 0046e5a0의 owner0/ignorePosition 단일 지도 부분이다.
     bool DropEditorIsland(const o::ChunkMap& preview,std::span<std::uint8_t,6> record); // 실제 섬 배치→지형→population→Graph→현재 Territory 쓰기를 실행한다.

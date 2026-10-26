@@ -26,6 +26,12 @@ std::int32_t Ftol(double value) {
     if (!std::isfinite(value) || std::fabs(value)>=9.2e18) throw std::out_of_range("보상 정수 변환 범위 오류");
     return std::bit_cast<std::int32_t>(static_cast<std::uint32_t>(static_cast<std::int64_t>(value)));
 }
+// SP 가산의 원본 CRT는 비유한/64비트 초과에서 정수 불확정값의 하위DWORD0을 반환한다. 수신자0의 미정 SP 비트도 원문대로 처리한다.
+std::int32_t SpMirrorFtol(float value) {
+    const auto exact=static_cast<double>(value);
+    if (!std::isfinite(exact) || exact>=9223372036854775808.0 || exact< -9223372036854775808.0) return 0;
+    return std::bit_cast<std::int32_t>(static_cast<std::uint32_t>(static_cast<std::int64_t>(exact)));
+}
 // 32비트 감김 덧셈/뺄셈이다.
 std::int32_t Wrap(std::int64_t value) { return std::bit_cast<std::int32_t>(static_cast<std::uint32_t>(value)); }
 // 정렬되지 않은 little endian 필드를 호스트 엔디언과 무관하게 읽는다.
@@ -178,11 +184,10 @@ void SquidReward::AddSp(std::uint32_t owner,float delta) {
     const bool fixed=state_.fixedSpA || state_.fixedSpB;
     if (pool_.Edition()==OriginalEdition::Patch1078) {
         const float sp=std::bit_cast<float>(store_->Get(owner));
-        if (!std::isfinite(sp)) throw std::invalid_argument("보상 SP 저장값이 유한하지 않습니다");
         // SP 고정 모드에서는 지급액이 고정값과 현재 SP의 차이로 바뀐다.
         if (fixed) delta=static_cast<float>(kPatchFixedSp-static_cast<double>(sp));
         const float sum=static_cast<float>(static_cast<double>(sp)+static_cast<double>(delta));
-        const auto mirror=Ftol(static_cast<double>(delta));
+        const auto mirror=SpMirrorFtol(delta);
         store_->Set(owner,std::bit_cast<std::uint32_t>(sum));
         AddWallet(owner,mirror);
     } else {

@@ -13,6 +13,17 @@ bool RawCampaignSession::BuildEditorIslandMap(o::ChunkMap& target) {
     o::RawIslandBuilder builder(target,s.chunks,*s.islands,s.core.frames,s.piece,state,SessionMissing<void,o::RawIslandBuilderAssertion>());
     builder.PlaceAll(records,0,20);return true;
 }
+// 원본 지도/로컬 지형/Bitmap을 같은 Client 최초 분류와 실제 자산으로 생성한다.
+std::optional<o::TerrainBitmapImage> RawCampaignSession::BuildEditorIslandMapImage(o::ChunkMap& target) {
+    if (!BuildEditorIslandMap(target)) return {};
+    auto& s=*impl_;const auto owner=s.playerState.templateOwner;
+    return client::BuildEditorIslandBitmap(s.assets.game,target,owner>=1 && owner<=8 ? owner : 0,{0,0,14,14},s.terrainGlobals,s.gameplayGlobals->TerrainBitmaps(),s.services.editorIslandGreen);
+}
+// 목록 이미지도 실제 임시 지도에 Place(ignorePosition)를 실행한 뒤 같은 renderer를 사용한다.
+o::TerrainBitmapImage RawCampaignSession::BuildEditorIslandChoiceImage(std::span<const std::uint8_t,6> record) {
+    o::ChunkMap map(14,14);BuildEditorIslandChoiceMap(record,map);auto& s=*impl_;
+    return client::BuildEditorIslandBitmap(s.assets.game,map,0,{0,0,14,14},s.terrainGlobals,s.gameplayGlobals->TerrainBitmaps(),s.services.editorIslandGreen);
+}
 // 창 전용21행은 저장 Territory20행과 별개이며 비활성 행만 같은 공용 난수로 보충한다.
 bool RawCampaignSession::SeedEditorIslandChoices(std::span<std::uint8_t,126> records) {
     auto& s=*impl_;

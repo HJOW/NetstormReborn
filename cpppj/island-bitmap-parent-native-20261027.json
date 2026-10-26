@@ -1,0 +1,199 @@
+{
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+  "runs": 12,
+  "cases": 6,
+  "fixtureSha": "5e09783b6f7d6eab409852bb8506b9c9839df57d7081b5d1bd66f53a1947ade1",
+  "peSha": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+  "shapeSha": "c878353c8054208deef832e34c514b30fe670e175505b129333a5728ba70f68e",
+  "sourceSha": "472e1b565ab8e85d2f5773a9a949da54ee7510acd4bc270e4fe8ab12a60f8ba6",
+  "rasterToolSha": "b3a323f7256e5f216a6f24e850fb55495ef774f6fa5cfd450c6f9ef36c49e376",
+  "entered": {
+    "004c1cc0": 12,
+    "004c0390": 12,
+    "004c02d0": 12,
+    "004c10a0": 12,
+    "00432300": 552,
+    "00432180": 5402,
+    "004c0ec0": 12,
+    "004c0cf0": 12,
+    "004c09a0": 12,
+    "004e49c0": 8332,
+    "004c1860": 12,
+    "004a2b10": 24,
+    "004daa70": 24,
+    "00401d92": 24,
+    "004021b5": 24,
+    "004a2c70": 24,
+    "00432330": 128,
+    "004c0930": 34,
+    "004bca20": 33892,
+    "004c0800": 16,
+    "004c0780": 97830,
+    "004c0020": 4154,
+    "004322e0": 4154,
+    "004c0c30": 1442
+  },
+  "code": [
+    {
+      "address": "004c1860",
+      "size": 1110,
+      "sha": "55f9ef1abff391c72c06f88a746c589b9dabce47f4e5ae15ea6b35c8cce7e6ff"
+    },
+    {
+      "address": "004a2b10",
+      "size": 345,
+      "sha": "11749c6068fa8ccf18baf8fa34a8fbd78f9c6800f1bff5731abdce1e791e348f"
+    },
+    {
+      "address": "004a2c70",
+      "size": 178,
+      "sha": "c45f902a450cc9c7b671c94d82233a0926a1dd9e1c20127472de9fecdb6cd0c5"
+    },
+    {
+      "address": "004daa70",
+      "size": 49,
+      "sha": "dc38b6ba471b9c2a18ab0564ca66a537eefd00a4347f717f8415aa63c99cba9b"
+    },
+    {
+      "address": "00401d92",
+      "size": 929,
+      "sha": "85025130e2e7f6c93e5abe4f5f622f0e711f0fb303fe371800af1b769a670293"
+    },
+    {
+      "address": "0040213e",
+      "size": 119,
+      "sha": "dea3e15f83c46da69ec474f3c559d14c1b2661b73792a4e916dc2936285e7da6"
+    },
+    {
+      "address": "004021b5",
+      "size": 201,
+      "sha": "f177c235c306b63abb5497bdb526a9c2b0aed500ddbdc2a4debb6cdc470489cb"
+    },
+    {
+      "address": "004bca20",
+      "size": 54,
+      "sha": "da17a5424615636219eb482a425793cb43a1fc376613f1a65d9e71ac25586033"
+    },
+    {
+      "address": "004c0800",
+      "size": 298,
+      "sha": "6bb13df59063cf3e9d055db09d4fafdb9f31cce1fe3704ba4a270179d4995ffa"
+    },
+    {
+      "address": "004c0780",
+      "size": 126,
+      "sha": "5e74964fe66ff8fc87f1e6e28a50d4c28452ac83fe7a6fa8c85966105a7ffe8f"
+    },
+    {
+      "address": "00432180",
+      "size": 143,
+      "sha": "de0b2d79a9549f98fa4cd236a54b70b3815fb1815c95c1ae6855c3008f8e093f"
+    },
+    {
+      "address": "00432300",
+      "size": 36,
+      "sha": "bae3e645ee34d60f9106cb70b2b51bf0e929173d588f0157557fc596f531efec"
+    },
+    {
+      "address": "004c0390",
+      "size": 282,
+      "sha": "422eb151574651a95f918caa52a37181c78beb8387f764ac019753889eda30a4"
+    },
+    {
+      "address": "004c09a0",
+      "size": 70,
+      "sha": "ee023cc6ad1e153148d7f9540b9d7459751d08c90a95d5d44f74fd0ba28ca9be"
+    },
+    {
+      "address": "004c09f0",
+      "size": 214,
+      "sha": "dd3582afaaf4ce02ef714c1aea9f551c60e20727ba28f80b70fdc7a424294bd1"
+    },
+    {
+      "address": "004c10a0",
+      "size": 88,
+      "sha": "1f5b072185fcfb3ed505fcc39358a478de8ce854a7ceb3fc5c36d3e970137e97"
+    },
+    {
+      "address": "004c1100",
+      "size": 45,
+      "sha": "e493ece9be223e0c7ef16b30a5747d17924652a6c75c67d43f477237555ce3c0"
+    },
+    {
+      "address": "004c1130",
+      "size": 694,
+      "sha": "ba3a4e34113a5e641d308e415dff919ab7cefc47ac29462b8db3541a4b25e8e8"
+    },
+    {
+      "address": "004c0020",
+      "size": 101,
+      "sha": "0fb74811b61ad310d638d189435f1f997bba05623c2707b8589d5dba85a7aff2"
+    },
+    {
+      "address": "004bca20",
+      "size": 54,
+      "sha": "da17a5424615636219eb482a425793cb43a1fc376613f1a65d9e71ac25586033"
+    },
+    {
+      "address": "004c0930",
+      "size": 97,
+      "sha": "fa1b63656ee6cbe7062e9381231c970b171f0fdb16ca661585cd00092ee7150e"
+    },
+    {
+      "address": "004c0c30",
+      "size": 181,
+      "sha": "67c3d4592963116a30209fd3a9534c09a84a0f189423b8899fe5d4edeb78cd0b"
+    },
+    {
+      "address": "00432330",
+      "size": 40,
+      "sha": "a66cc58f8138f23661e1b69e968ee22a5aa485bfcb443a23276770061a6aeec5"
+    },
+    {
+      "address": "0046ee30",
+      "size": 27,
+      "sha": "4503f30b366d7c186b7caa45ad1c683393949711cad5f007e15b60c0f0d6babe"
+    },
+    {
+      "address": "004c1cc0",
+      "size": 288,
+      "sha": "5f78a75f17c1b1a6561c624c688546ca20333d7a00899e2f03298512c87c445c"
+    },
+    {
+      "address": "004e49c0",
+      "size": 117,
+      "sha": "5333b186c02836974c6f792303aeb2c00d856316b93ccbbe65f51def6ae661b4"
+    },
+    {
+      "address": "004c0ec0",
+      "size": 282,
+      "sha": "c69aa2da822d4a304a3d964b93dda58bb3918fa072cddadca7f49f25562d54e3"
+    },
+    {
+      "address": "004c02d0",
+      "size": 178,
+      "sha": "4cbc4a8bec0e0dc5a84e15260f29b8c381e2fd55e8b69118f1a9ccb67ccd6613"
+    },
+    {
+      "address": "004322e0",
+      "size": 20,
+      "sha": "ec866def362a30397ee2eec9e56cfebe62b6117bbfbd904b8e4107a4a1601e27"
+    },
+    {
+      "address": "004c0cf0",
+      "size": 24,
+      "sha": "b05894bcfe91bbc99342bb0879d5c4e3ea95e4165a76d28aac90d4c10190fc25"
+    },
+    {
+      "address": "004c0d10",
+      "size": 145,
+      "sha": "75b2803188237bb66c2ecc4dbcd9702fce51625cbe4efcbf0c9d39dac628a54e"
+    }
+  ],
+  "limits": [
+    "004c1cc0→실제Context/Growth/MarkEdges→실제보호RLE/Bitmap/로컬난수를 실행한다.",
+    "타입 포인터 조회와 heap/free만 명시 장치다. 캐시는 녹색43으로 사전 준비한다.",
+    "원본 게임/GUI/월드 객체는 실행하지 않는다."
+  ]
+}

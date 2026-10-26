@@ -1,13 +1,14 @@
 // 초기 HUD가 읽는 실제 전역과 Session 실행 효과의 수명을 분리한다.
 #include "client/ClientGameplayGlobals.h"
 #include "client/ClientSubscriberGlobals.h"
+#include "o/RawTerrainBitmap.h"
 #include <stdexcept>
 #include <utility>
 
 namespace netstorm::client {
 // prvalue 직접 구성으로 CampaignWorldGlobals의 값 복사/이동을 거치지 않고 실제 두 DWORD에 연결한다.
 ClientGameplayGlobals::ClientGameplayGlobals(std::shared_ptr<ClientSubscriberGlobals> subscribers,std::shared_ptr<o::RawAuthorityState> authority,std::shared_ptr<o::RawGameAuxState> gameAux)
-    :authority_(authority ? std::move(authority) : std::make_shared<o::RawAuthorityState>()),gameAux_(gameAux ? std::move(gameAux) : std::make_shared<o::RawGameAuxState>()),subscribers_(std::move(subscribers)),world(subscribers_ ? o::CampaignWorldGlobals::BorrowSubscribers(subscribers_->MySubscriber(),subscribers_->LoginSubscriber()) : o::CampaignWorldGlobals{}) { finder.sharedBoss=&authority_->boss; } //World 이전 SID0 finder도 같은 실제 권한을 재조회한다.
+    :authority_(authority ? std::move(authority) : std::make_shared<o::RawAuthorityState>()),gameAux_(gameAux ? std::move(gameAux) : std::make_shared<o::RawGameAuxState>()),subscribers_(std::move(subscribers)),world(subscribers_ ? o::CampaignWorldGlobals::BorrowSubscribers(subscribers_->MySubscriber(),subscribers_->LoginSubscriber()) : o::CampaignWorldGlobals{}),terrainBitmaps_(std::make_shared<o::TerrainBitmapState>()) { finder.sharedBoss=&authority_->boss; } //World 이전 SID0 finder도 같은 실제 권한을 재조회한다.
 // Session 모듈보다 먼저 대여하여 아직 살아 있는 전역을 초기화하지 않는다.
 ClientGameplayGlobals::Use::Use(ClientGameplayGlobals& globals,bool prepared):globals_(globals),prepared_(prepared) {
     if (globals_.borrowed_) throw std::logic_error("현재 게임 전역 중복 대여");
@@ -40,4 +41,6 @@ RawCampaignSession& ClientGameplayGlobals::RequireSession() const { if (!current
 bool ClientGameplayGlobals::Borrowed() const { return borrowed_; }
 // 실제 Subscriber 소유자의 정체성을 조회한다.
 const std::shared_ptr<ClientSubscriberGlobals>& ClientGameplayGlobals::Subscribers() const { return subscribers_; }
+// 최초 BSS 상태와 현재 캐시의 고정 주소만 빌리며 조회로 분류를 실행하지 않는다.
+o::TerrainBitmapState& ClientGameplayGlobals::TerrainBitmaps() { return *terrainBitmaps_; }
 }

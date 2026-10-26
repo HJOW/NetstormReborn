@@ -1,0 +1,30 @@
+{
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+  "runs": 504,
+  "fixtureSha": "4b3e88cafe531ba46a66cba1f8eda2b019ad337ca148973884bb26cb52066f0b",
+  "peSha": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+  "sourceSha": "528c677734a2880bceb530b747113f55861ea84211bb5fb84edd60edfc990485",
+  "code": [
+    {
+      "address": "0040eec0",
+      "size": 104,
+      "sha": "f199ae89497d4fce94c8d1747286174ddac12a30692c3d50197f6a91721d1f15"
+    },
+    {
+      "address": "0041df80",
+      "size": 97,
+      "sha": "2b8023efd4c9e9956966628e0854f8541ca3ac8f8e4c263a36611e21bb6ad015"
+    },
+    {
+      "address": "004e49c0",
+      "size": 117,
+      "sha": "5333b186c02836974c6f792303aeb2c00d856316b93ccbbe65f51def6ae661b4"
+    }
+  ],
+  "limits": [
+    "실제0040eec0/0041df80 및 원본 ftol을 실행한다.",
+    "SP store Get/Set과 지갑·표시는 명시 장치이며 실제 원문 호출 순서/인자를 대조한다.",
+    "원본 파일/기존 보상 fixture/게임/GUI를 변경하거나 실행하지 않는다."
+  ]
+}
