@@ -36,9 +36,9 @@ RawProductionSync::RawProductionSync(const SidPool& pool,std::span<const RiftTyp
     :pool_(pool),types_(types),finder_(finder),state_(state),hooks_(std::move(hooks)) {
     if (pool.Edition()!=OriginalEdition::Patch1078 || types.size()!=188) throw std::invalid_argument("생산 내용물 동기화 PATCH 자료 오류");
 }
-// pointer 산술 전에 원문DWORD를 검사하며0을 임의 부모로 바꾸지 않는다.
+// 원문4b2270은 SID0도 실제 예약 슬롯의 head를 읽는다. DWORD 절단/물리 밖 접근만 거부한다.
 Sid RawProductionSync::Parent(std::uint32_t value) const {
-    if (!value || value>=pool_.Capacity() || value>std::numeric_limits<std::uint16_t>::max()) throw std::out_of_range("생산 동기화 현재 기술 부모 범위 오류");return {static_cast<std::uint16_t>(value)};
+    if (value>=pool_.Capacity() || value>std::numeric_limits<std::uint16_t>::max()) throw std::out_of_range("생산 동기화 현재 기술 부모 범위 오류");return {static_cast<std::uint16_t>(value)};
 }
 // 삭제되는 기존 내용물도 seen을 먼저 증가시키므로 같은 호출 안에서는 다시 만들지 않는다.
 void RawProductionSync::Synchronize() const {

@@ -124,3 +124,14 @@ TEST_CASE(ClientStateWorldGlobals_FactoryQuarterHpBindingKeepsActualOwner) {
     CleanupScene scene;SquidFactory factory(scene.surface->pool,scene.surface->types);auto& quarter=scene.client.GameplayGlobals()->GameAux()->PriestQuarterHp();factory.BindWeakenedMana(quarter);factory.BindWeakenedMana(quarter);bool foreign{};CHECK(CleanupThrows([&] { factory.BindWeakenedMana(foreign); }));
     quarter=true;const auto weak=factory.Create(158,2);const auto bytes=scene.surface->pool.AllocatedBytes(weak);CHECK(bytes[26]==25 && bytes[27]==0 && bytes[28]==0 && bytes[29]==0);quarter=false;const auto normal=factory.Create(158,2);const auto next=scene.surface->pool.AllocatedBytes(normal);CHECK(next[26]==100 && next[27]==0 && next[28]==0 && next[29]==0);
 }
+
+// Native 두 모드 쓰기는 원문의 같은 주소를 읽는 기존 Player/Bridge 어댑터에도 전달되어야 한다.
+TEST_CASE(ClientStateWorldGlobals_ModeWritesReachPlayerAndBridgeAliases) {
+    CleanupScene scene;auto& player=scene.client.GameplayGlobals()->player;
+    scene.globals.write32(0x594fb8,1);CHECK(scene.surface->ownerMode.fort && player.fortMode);
+    scene.globals.write32(0x594fb8,0);CHECK(!scene.surface->ownerMode.fort && !player.fortMode);
+    scene.globals.write32(0x594fbc,1);CHECK(scene.surface->ownerMode.battle && scene.surface->links.battle);
+    scene.globals.write32(0x594fbc,0);CHECK(!scene.surface->ownerMode.battle && !scene.surface->links.battle);
+    CHECK(CleanupThrows([&] { scene.globals.write32(0x594fb8,2); }) && !player.fortMode);
+    CHECK(CleanupThrows([&] { scene.globals.write32(0x594fbc,2); }) && !scene.surface->links.battle);
+}

@@ -433,6 +433,7 @@ struct RawCampaignSession::Impl {
     bool editorWorldStarted{},editorWorldReady{}; //부분World단계/실제완료를구별하며전체Editor loaded로가장하지않는다.
     bool editorCheckpointStarted{},editorCheckpointRunning{},editorCheckpointReady{}; //부분실패재실행/동기단계진입/정상checkpoint복귀를전체loaded와구별한다.
     bool editorUiStarted{},editorUiPrepared{},editorUiInstalling{},editorUiTailReady{}; // UI 한 번 준비·한정 동기 범위·실제 tail 정상 복귀를 최종 loaded와 구별한다.
+    bool editorPrefixUiStarted{},editorPrefixUiInstalling{}; //State1 prefix의 파일 전 HUD 동기 범위이며 게임 입력/최종 loaded를 열지 않는다.
     ClientLocalStateGlobals* editorUiStateOwner{}; // 서비스를 통해 같은 Client가 소유하는 다섯 State 블록의 정체성을 보관한다.
     LocalMissionStateBlock editorUiRequest{},editorUiPreviousPhase{}; // UI 진입의 전체144BYTE 요청/이전 phase를 공통 확정 뒤 검증한다. 원문 상태를 대신 쓰지 않는다.
     bool editorRegisteringCommands{};RawPacketDispatch* editorRegisteredDispatch{}; // 최종 commit의 한정 등록 범위와 현재 Session을 빌리는13종 수신기의 반납 대상을 구별한다.
@@ -791,6 +792,7 @@ struct RawCampaignSession::Impl {
         farm.sharedArchipelago=&gameplayGlobals->GameAux()->Archipelago();devastationEffectState.sharedSpentCounter=&gameplayGlobals->GameAux()->ResourcePool(); // Login과 별개의 bb0 및 같은595088을 빌린다.
         if (services.deferExistingEditorFile && services.installMode!=CampaignInstallMode::ExistingEditor) throw std::invalid_argument("파일지연은명시ExistingEditor전용입니다");
         objectState.sharedFullDeck=&fullDeck;constructionState.confirm.sharedFullDeck=&fullDeck;anchorState.sharedFullDeck=&fullDeck; // 하위 모듈 생성 전에 같은 장기 DWORD를 빌리며 Prepare 때 사본을 쓰지 않는다.
+        objectState.sharedFortKeepGenus=damageableReleaseState.sharedAllowedGenus=&gameplayGlobals->FortKeepGenus(); //객체 보존과 내용물 해방이 Editor prefix의 같은 현재 마스크를 읽는다.
         ConnectionActivityHooks activity; // ctor에서는 실제 장치를 실행하지 않고 선택된 Receive 위치에서만 필수 경계를 요구한다.
         activity.wallSeconds=[this] { if (!services.sound.wallSeconds) throw std::logic_error("실제 연결 활동 벽시각 미연결");return services.sound.wallSeconds(); };
         activity.frameNumber=[this] { if (!services.connectionFrameNumber) throw std::logic_error("실제 연결 활동 프레임 조회 미연결");return services.connectionFrameNumber(); };
@@ -3255,7 +3257,7 @@ void RawCampaignSession::LoadExistingEditorDeck() {
 // 실제File/World/Deck/저장/State/Startup/EditorPlayers의원문부모를단일Session에묶는다.
 void RawCampaignSession::InstallExistingEditorCheckpoint(const CampaignExistingEditorCheckpointServices& effects,const std::uint32_t& readOnlyForts,const EditorFiles& files) {
     auto& s=*impl_;
-    if (s.services.installMode!=CampaignInstallMode::ExistingEditor || !s.services.deferExistingEditorFile || s.loaded || s.editorCheckpointStarted || s.editorWorldStarted) throw std::logic_error("명시지연Editor checkpoint의한번설치계약");
+    if (s.services.installMode!=CampaignInstallMode::ExistingEditor || !s.services.deferExistingEditorFile || s.loaded || s.editorPrefixUiInstalling || s.editorCheckpointStarted || s.editorWorldStarted) throw std::logic_error("명시지연Editor checkpoint의한번설치계약");
     s.editorCheckpointStarted=true;s.editorCheckpointRunning=true;
     try {
         BindFortFileSave(readOnlyForts,files); //setName의선택snapshot/Notify보다도먼저같은실제저장장치를빌린다.
@@ -3280,6 +3282,13 @@ void RawCampaignSession::InstallExistingEditorCheckpoint(const CampaignExistingE
         o::InstallExistingEditorFort(fort); //CoreWrite는위의실제004beb30으로연결된다.후반HUD/State/loaded는여전히이부모밖이다.
         s.editorCheckpointReady=true;s.editorCheckpointRunning=false; //004b743b정상복귀만표시하며후반HUD/State/최종loaded를앞당기지않는다.
     }catch (...) { s.editorCheckpointRunning=false;throw; } //동기진입guard만반납한다.manager/State/Config/파일/객체/난수는rollback하지않는다.
+}
+// 실제 State1의 준비 대여가 파일 전 HUD를 한 번 분배할 때 생산 동기화만 같은 실제 Deck에 허용한다.
+void RawCampaignSession::WithExistingEditorPrefixUi(ClientLocalStateGlobals& owner,std::function<void()> prepareUi) {
+    auto& s=*impl_;
+    if (s.services.installMode!=CampaignInstallMode::ExistingEditor || !s.services.adoptPreparedWorld || s.services.localStateGlobals.get()!=&owner || owner.State().current[0]!=1 || s.loaded || s.editorCheckpointStarted || s.editorPrefixUiStarted || !prepareUi) throw std::logic_error("기존 Editor prefix의 같은 State1/준비 대여/한번 HUD 계약");
+    s.editorPrefixUiStarted=true;s.editorPrefixUiInstalling=true;
+    try { prepareUi();s.editorPrefixUiInstalling=false; }catch (...) { s.editorPrefixUiInstalling=false;throw; } //이미 만들어진 실제 Deck/표시 효과는 남기고 동기 scope만 닫는다.
 }
 // 실제 State 부모의 checkpoint 정상 복귀 뒤 UI 생성과 원문 tail에 필요한 현재 조회만 한정 허용한다.
 void RawCampaignSession::WithExistingEditorInstallUi(ClientLocalStateGlobals& owner,InputQueue& input,const ExistingEditorAfterCheckpointEffects& effects,std::function<void()> prepareUi) {
@@ -3450,7 +3459,7 @@ std::uint32_t RawCampaignSession::BattleActive() const { return impl_->assetStat
 // 원본48fc60의 현재 기술 부모를 값 복사 없이 같은 Player 저장소에서 읽는다.
 std::uint32_t RawCampaignSession::CurrentTechnologyParent() const { return impl_->player->CurrentTechnology(); }
 // 실제 생산 패널의 명시 갱신과 반복자는 같은 현재 장기 몸체를 사용한다.
-void RawCampaignSession::SynchronizeProductionContents() { if (!impl_->loaded && !impl_->editorUiInstalling) throw std::logic_error("설치 전 생산 패널 갱신");impl_->productionSync->Synchronize(); } // 같은 checkpoint 뒤의 동기 UI 생성만 최종 loaded 이전 갱신을 허용한다.
+void RawCampaignSession::SynchronizeProductionContents() { if (!impl_->loaded && !impl_->editorUiInstalling && !impl_->editorPrefixUiInstalling) throw std::logic_error("설치 전 생산 패널 갱신");impl_->productionSync->Synchronize(); } //같은 State1 prefix/후반 UI의 동기 범위만 실제 Deck 본체에 접근한다. 일반 입력/저장은 계속 닫는다.
 // 구식 배치용 IslandList 벡터 대신 실제 섬 목록 첫DWORD를 현재 시점에 읽는다.
 std::uint32_t RawCampaignSession::IslandCount() const { return impl_->islands->Count(); }
 const ContainedFinderState& RawCampaignSession::ProductionFinder() const { return impl_->contentFinder; }

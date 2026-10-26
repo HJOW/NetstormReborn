@@ -1,0 +1,1282 @@
+{
+  "unit": 464,
+  "host": "HJOW-Athlon",
+  "date": "2026-10-26",
+  "lastFullDecompilation": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23",
+    "changed": false
+  },
+  "binaryIdentities": {
+    "cpppj\\build\\bin\\Release\\netstorm_tests.exe": "1479260475e7ced9e65881944cbe74aadb8c144f9f8ef00b1cf54dc251158264",
+    "cpppj\\build\\bin\\Release\\NetstormCpp.exe": "661a19c19766c74f1743f40d57b241739e82a7b0803d01b6e619eabef95c77cf"
+  },
+  "registryCount": 3154,
+  "oldRegistryCount": 3148,
+  "addedTests": [
+    "CampaignExistingEditorCheckpoint_InputFactoriesStayClosedUntilActualStateCommit",
+    "CampaignExistingEditorPrefix_ActualDeckBeforeCheckpointAndScopeRetirement",
+    "CampaignExistingEditorPrefix_FailureClosesScopeWithoutPublishingRuntime",
+    "CampaignExistingEditorPrefix_RequiresPreparedOwnerAndCurrentState1",
+    "ClientStateWorldGlobals_ModeWritesReachPlayerAndBridgeAliases",
+    "ProductionSync_ZeroTechnologyReadsActualReservedSlotAndEmptyDeck"
+  ],
+  "runs": [
+    {
+      "filter": "CampaignExistingEditor",
+      "exitCode": 0,
+      "expected": [
+        "CampaignExistingEditorCheckpoint_DeferPreservesExistingOwnerAndDefaultStages",
+        "CampaignExistingEditorCheckpoint_DeferRejectsCampaignMode",
+        "CampaignExistingEditorCheckpoint_NormalReadFalseKeepsInvalidBranch",
+        "CampaignExistingEditorCheckpoint_FirstNotifyUsesActualWriterBeforeSubscriber",
+        "CampaignExistingEditorCheckpoint_FileTailThenActualWorldChatBoundary",
+        "CampaignExistingEditorCheckpoint_CoreWriteNaturalGateKeepsActualStorage",
+        "CampaignExistingEditorCheckpoint_CoreWriteManagerDiagnosticBeforeGate",
+        "CampaignExistingEditorCheckpoint_CoreWriteMetamapDiagnosticBeforeGate",
+        "CampaignExistingEditorCheckpoint_ActualCurrentNameSelectsWorkingFile",
+        "CampaignExistingEditorCheckpoint_ActualChatRuntimeAdvancesWorldAndSnapshot",
+        "CampaignExistingEditorCheckpoint_ActualPlayerUiCompletesAndReloads",
+        "CampaignExistingEditorCheckpoint_ActualCustomTest01PlayerUiAndFile",
+        "CampaignExistingEditorCheckpoint_AdoptsNativePlayersAndPreservesCoreUntilNextCleanup",
+        "CampaignExistingEditorCheckpoint_UiScopeCommitsOnlyAfterActualStateReturn",
+        "CampaignExistingEditorCheckpoint_UiTailFailureKeepsPublicAccessClosed",
+        "CampaignExistingEditorCheckpoint_UiTailCannotCommitEarlyReturnOrImmediate",
+        "CampaignExistingEditorCheckpoint_PreparedCtorPreservesSameClientState",
+        "CampaignExistingEditorCheckpoint_PreparedCtorKeepsSharedIslandAndChunkData",
+        "CampaignExistingEditorCheckpoint_PreparedCtorAndLateFailureKeepSelectionGlobals",
+        "CampaignExistingEditorCheckpoint_PreparedCtorRejectsIncompleteOwnersBeforeBorrow",
+        "CampaignExistingEditorCheckpoint_ActualProductionFormsInsideInstallScope",
+        "CampaignExistingEditorCheckpoint_EditorWireQueuesNegativeSenderConstructionMoveAndSalvage",
+        "CampaignExistingEditorCheckpoint_EditorWireReadsCurrentChargeGateWithoutSenderNormalization",
+        "CampaignExistingEditorCheckpoint_EditorWireRejectsOwnedRegistrationBeforePublishing",
+        "CampaignExistingEditorCheckpoint_EditorWireRejectsForeignPlayersAndLoginBeforeBorrow",
+        "CampaignExistingEditorCheckpoint_ActivityWireUsesClientNineAndRetiresOnlyReceive",
+        "CampaignExistingEditorCheckpoint_ActivityCollisionPreservesAllPriorRegistrations",
+        "CampaignExistingEditorCheckpoint_PreparedAuthorityUsesSameClientOwnerWithoutTrueWrites",
+        "CampaignExistingEditorCheckpoint_PreparedAuthoritySurvivesPartialConstructorFailure",
+        "CampaignExistingEditorCheckpoint_FullDeckOwnerPreparedConsumersAndRelease",
+        "CampaignExistingEditorCheckpoint_FullDeckOwnerPreservesConstructorAndLateFailure",
+        "CampaignExistingEditorCheckpoint_FullDeckOwnerOrdinaryEditorCompatibility",
+        "CampaignExistingEditorCheckpoint_CameraPreparedCtorAndReleasePreserveCurrentOwner",
+        "CampaignExistingEditorCheckpoint_CameraPreparedCtorFailureKeepsOwner",
+        "CampaignExistingEditorCheckpoint_StateAuxPreparedCtorAndLateFailurePreserveCurrentOwner",
+        "CampaignExistingEditorCheckpoint_CursorDataPreparedBorrowAndReleasePreserveCurrentValues",
+        "CampaignExistingEditorCheckpoint_CursorDataPreparedFailureKeepsOwner",
+        "CampaignExistingEditorPrefix_ActualDeckBeforeCheckpointAndScopeRetirement",
+        "CampaignExistingEditorPrefix_FailureClosesScopeWithoutPublishingRuntime",
+        "CampaignExistingEditorPrefix_RequiresPreparedOwnerAndCurrentState1",
+        "CampaignExistingEditorCheckpoint_InputFactoriesStayClosedUntilActualStateCommit",
+        "CampaignExistingEditorSubscriber_KnownIdUsesActualStorage",
+        "CampaignExistingEditorSubscriber_ActualClientRegisteredId",
+        "CampaignExistingEditorSubscriber_ActualSharedCrtAndConfig",
+        "CampaignExistingEditorSubscriber_MissingRegistrationPreservesPrefix",
+        "CampaignExistingEditor_FirstWorldModesPlayerHpSpAndTechnology",
+        "CampaignExistingEditor_WorkingTerritoryBadgesAndFullDeck",
+        "CampaignExistingEditor_MissingOwnerAndUiKeepPartialEffects"
+      ],
+      "passed": true,
+      "log": "extracted\\cpp-editor-entry-464-focused5-1.log"
+    },
+    {
+      "filter": "LocalMissionState",
+      "exitCode": 0,
+      "expected": [
+        "LocalMissionState_Native33",
+        "LocalMissionState_QueuedReplyRunsAfterPhaseTenCommit",
+        "LocalMissionState_AliasesAndRequiredConsumers"
+      ],
+      "passed": true,
+      "log": "extracted\\cpp-editor-entry-464-focused5-2.log"
+    },
+    {
+      "filter": "Production",
+      "exitCode": 0,
+      "expected": [
+        "CampaignExistingEditorCheckpoint_ActualProductionFormsInsideInstallScope",
+        "ProductionShortcuts_Native4280ReachableCases",
+        "ProductionShortcuts_ReleasePauseAndLazyDevices",
+        "AiCollectors_NormalProductionAndRandomOrder",
+        "AiFactoryProduction_FirstMatchingKnownUnregisteredType",
+        "AiFactoryProduction_BatteryThemeReplacementModes",
+        "AiFactoryProduction_FinderKeepsSavedNextAcrossProductEffects",
+        "AiFactoryProduction_AddOneProductKeepsFactoryWithRoom",
+        "AiFactoryProduction_FullFactoryMovesToUpgradeQueue",
+        "AiFactoryProduction_NoCandidateAndDuplicateProductCounting",
+        "AiFactoryProduction_UpgradeGatesAndRequestOrder",
+        "AiFactoryProduction_SelectedMissingAndPhysicalContracts",
+        "AiFactoryProduction_UpgradedRequeuesAndSubtractsTypeCost",
+        "AiFactoryProduction_UpgradedFullQueueAndCurrentDemoWallet",
+        "CampaignSession_AiDeploymentUsesActualProductionAndConstruction",
+        "CampaignSession_AiFactoryProductionUsesOriginalWorkshops",
+        "CampaignSession_ProductionUsesCurrentPlayerFactoriesAndRestrictions",
+        "CampaignSession_ProductionMissingAllocationLeavesPlayerUnchanged",
+        "CampaignProduction_ModalPagesPreservePanelBudgetAndResize",
+        "CampaignProductionLifetime_GlobalCleanupRetiresRootAndBudget",
+        "CampaignProductionLifetime_IndependentBudgetCleanupRetiresText",
+        "CampaignProductionLifetime_QueuedKillThenCloseDrainsOnce",
+        "CampaignProductionLifetime_DuplicateOpenAndProviderRecreation",
+        "CampaignWindFlyer_ActualTest02NaturalProductionAndLifetime",
+        "CampaignWindAviaryDestroy_ActualProductionAndFormLifetime",
+        "CampaignSelectionBars_ActualThreeFlyerProductionTimers",
+        "ProductionDeck_ReplaysNative248",
+        "ProductionDeck_CurrentPlayerAndOwnedLifetime",
+        "ProductionDeck_ReplaysFactoryRefreshNative242",
+        "ProductionDeck_CurrentRestrictionsAndFactoriesAreShared",
+        "ProductionDeck_RequiresRealStorageAndPhysicalBounds",
+        "ProductionDeck_SharedFullDeckReadsAfterModeDiagnostic",
+        "ProductionDeck_StateLinksProofUsesActualParentAndClosesConsumers",
+        "ProductionDeck_StateLinksFailurePreservesNativePrefixAndNeedsActualRecovery",
+        "ProductionDeck_StateLinksForeignMovedAndExpiredProofsAreRejected",
+        "ProductionDeck_StateLinksActualParentMustReturnBeforeConsumption",
+        "ProductionSync_Native98",
+        "ProductionSync_SharedFullDeckReadsAfterDeckGetter",
+        "ProductionSync_ZeroTechnologyReadsActualReservedSlotAndEmptyDeck",
+        "ProductionColorMaps_NativeAllEntries",
+        "ProductionMaintenance_TestBridgeSequence",
+        "ProductionMaintenance_TestBridgeOverrideAfterOriginalRules",
+        "ProductionMaintenance_NativeAllInputs",
+        "ProductionMaintenance_TransientNeighborNativeBoundary",
+        "ProductionHintGump_Native126",
+        "ProductionDeckRelease_OnlySelectedAllocationAndNoPlayerWrites",
+        "ProductionDeckRelease_RealPlayerLinksParentReleasesSameOwner",
+        "ProductionDeckRelease_NullUnknownDuplicateAndDestructorLifetime",
+        "ProductionInitialContext_ConstructsAllNativeChildrenWithoutSession",
+        "ProductionInitialContext_RepeatedConstructionAndGlobalPageRetirement",
+        "ProductionInitialContext_MissingTranslationKeepsAndRetiresPartialEffects",
+        "ProductionInitialContext_GameplayGlobalsKeepRealAliasesAndRejectDuplicate",
+        "ProductionInitialContext_PreparedGameplayLeaseLeavesNativeValuesToCaller",
+        "ProductionInitialContext_OverlappingParentsRetireOnlyOldDraw",
+        "ProductionInitialContext_LatestKilledDoesNotSelectOlderParent",
+        "ProductionInitialContext_PartialNewConstructorKeepsPreviousSerial",
+        "ProductionInitialContext_MinimapFactoryUsesCurrentWidthWithoutRefresh",
+        "ProductionInitialContext_OverlappingMinimapsKeepCurrentBitmapAndDraw",
+        "ProductionInitialContext_LatestMinimapKilledDoesNotSelectOlder",
+        "ProductionInitialContext_FullUberUsesActualChildrenAndDock",
+        "ProductionInitialContext_FullUberReplacementMovesOldChildren",
+        "ProductionInitialContext_FullUberReflowsExistingScreen",
+        "ProductionInitialContext_FullDeckOwnerPreparedAndOrdinaryLifetime",
+        "ProductionInitialContext_FullDeckOwnerMovesActualHudDivider",
+        "ProductionInitialContext_StormPowerParentPreservesActualBudgetAndDepth",
+        "ProductionInitialContext_StormPowerUsesLatestSerialAndDeadNoop",
+        "ProductionInitialContext_AtomicHudModeFinishesNative1024Layout",
+        "ProductionInitialContext_StateCleanupReleasesOnlyFreedControlAliases"
+      ],
+      "passed": true,
+      "log": "extracted\\cpp-editor-entry-464-focused5-3.log"
+    },
+    {
+      "filter": "FortObject",
+      "exitCode": 0,
+      "expected": [
+        "FortObjectsSave_IndependentNative714",
+        "FortObjectsSave_ExplicitUnselectedAndMissingBoundary",
+        "CampaignFortObjectsSnapshot_TwoTerritoriesAndChaffRealRoundtrip",
+        "FortObjectSave_IndependentNativeObject",
+        "FortObjectSave_IndependentNativeChunk",
+        "CampaignSession_FortObjectSaveCurrentChunk",
+        "FortObjectLoad_ReplaysPatch",
+        "FortObjectLoad_ReplaysCd",
+        "FortObjectLoad_ActualFactoryOwnerHpPopAndContent",
+        "FortObjectLoad_RejectsMissingFieldsEffectsAndForeignPools",
+        "FortObjectLoad_SharedFullDeckReadsAfterPopAndContents",
+        "FortObjectSaveFactory_ConstructedVtableCoverage",
+        "FortObjectSaveBalloon_RobustCurrentFrameAndType"
+      ],
+      "passed": true,
+      "log": "extracted\\cpp-editor-entry-464-focused5-4.log"
+    },
+    {
+      "filter": "damageable_release",
+      "exitCode": 0,
+      "expected": [
+        "damageable_release_patch_x86",
+        "damageable_release_cd_x86",
+        "damageable_release_1037_x86",
+        "damageable_release_guards_and_binding"
+      ],
+      "passed": true,
+      "log": "extracted\\cpp-editor-entry-464-focused5-5.log"
+    },
+    {
+      "filter": "ClientStateWorldCleanup",
+      "exitCode": 0,
+      "expected": [
+        "ClientStateWorldCleanup_ActualInitialClientAndAllHudFactories",
+        "ClientStateWorldCleanup_SecondInitialPassUsesCurrentCoreAndNewHud",
+        "ClientStateWorldCleanup_MissingSelectedHudKeepsPriorNativeWrites",
+        "ClientStateWorldCleanup_BudgetIdleUsesLongLivedSpWithoutRuntime",
+        "ClientStateWorldCleanup_NestedResumeReleasesUiPauseOwner"
+      ],
+      "passed": true,
+      "log": "extracted\\cpp-editor-entry-464-focused5-6.log"
+    },
+    {
+      "filter": "StateWorldCleanup",
+      "exitCode": 0,
+      "expected": [
+        "StateWorldCleanup_ReplaysIndependentPe294",
+        "StateWorldCleanup_MissingCorePreservesEarlierEffects",
+        "ClientStateWorldCleanup_ActualInitialClientAndAllHudFactories",
+        "ClientStateWorldCleanup_SecondInitialPassUsesCurrentCoreAndNewHud",
+        "ClientStateWorldCleanup_MissingSelectedHudKeepsPriorNativeWrites",
+        "ClientStateWorldCleanup_BudgetIdleUsesLongLivedSpWithoutRuntime",
+        "ClientStateWorldCleanup_NestedResumeReleasesUiPauseOwner"
+      ],
+      "passed": true,
+      "log": "extracted\\cpp-editor-entry-464-focused5-7.log"
+    },
+    {
+      "filter": "ClientStateWorldGlobals",
+      "exitCode": 0,
+      "expected": [
+        "ClientStateWorldGlobals_AllDwordOwnersAndIndependentCurrentReads",
+        "ClientStateWorldGlobals_BoolContractSignedAndFloatBits",
+        "ClientStateWorldGlobals_FrameTableLowWordAndWideStoresPreserveNeighbors",
+        "ClientStateWorldGlobals_CurrentPlayerTypeTemplateAndUnknownAddresses",
+        "ClientStateWorldGlobals_NativeParentUsesActualStoresAndKeepsBoundaryOrder",
+        "ClientStateWorldGlobals_RejectsForeignSurfaceBeforeEffects",
+        "ClientStateWorldGlobals_FactoryQuarterHpBindingKeepsActualOwner",
+        "ClientStateWorldGlobals_ModeWritesReachPlayerAndBridgeAliases"
+      ],
+      "passed": true,
+      "log": "extracted\\cpp-editor-entry-464-focused5-8.log"
+    },
+    {
+      "filter": "CampaignSession",
+      "exitCode": 0,
+      "expected": [
+        "CampaignSession_SunFlyerBombClearsActualSessionLifetime",
+        "CampaignSession_ActualDropIslandSupportAndParticles",
+        "CampaignSession_PathRetargetRunsRealCarrierFrames",
+        "CampaignSession_CarrierMiningNaturalArrivalUsesSameWorld",
+        "CampaignSession_CarrierEscapeUsesRealPathsAndDepthCap",
+        "CampaignSession_CarrierEscapeSurfaceFallbackUsesRealBfs",
+        "CampaignSession_MissionInputsUseSameScrambledSpSlots",
+        "CampaignSession_PriestParticipationUsesCurrentSharedState",
+        "CampaignSession_PriestOwnerStatesUseActualSurfaceStorageAndDataReset",
+        "CampaignSession_PriestParticipationFindsRealCapturedFallbacks",
+        "CampaignSession_ConstructionSupportUsesSameWorld",
+        "CampaignSession_LocalGeysersUseCurrentInputs",
+        "CampaignSession_LocalGeysersUseActualAiRegistration",
+        "CampaignSession_LocalAiPreparationSharesOriginalWorld",
+        "CampaignSession_AiStrategyInitializationUsesActualContents",
+        "CampaignSession_AiEconomySharesActualSpAndWallet",
+        "CampaignSession_AiDeploymentUsesActualProductionAndConstruction",
+        "CampaignSession_AiCollectorSelectionUsesActualDeployment",
+        "CampaignSession_AiFactoryProductionUsesOriginalWorkshops",
+        "CampaignSession_FactoryUpgradeCommandUsesActualHostAndSp",
+        "CampaignSession_FactoryUpgradePictureAndCompletionShareWorld",
+        "CampaignSession_FactoryInputUsesActualSpAndPendingTimer",
+        "CampaignSession_FactoryInputCycleHelpAndParent",
+        "CampaignSession_AiDrySpotsUseActualBrainEnergyAndLifetime",
+        "CampaignSession_AiMovementUsesRealPathNamesAndStop",
+        "CampaignSession_AiResourceChoiceUsesActualGraphContentsAndLifetime",
+        "CampaignSession_AiCarrierActionsUseActualWorldContentsAndLifetime",
+        "CampaignSession_AiBuildSearchUsesActualStatePlacementAndClock",
+        "CampaignSession_AiBuildChoiceUsesActualSpWalletAndLifetime",
+        "CampaignSession_AiPriestActionsUseActualSearchMovementAndLifetime",
+        "CampaignSession_AiDropTargetsUseActualContentsGunAndLifetime",
+        "CampaignSession_AiDropEvaluationUsesActualManaGroundPlacementAndLifetime",
+        "CampaignSession_AiDropScanUsesActualMapsStateAndLifetime",
+        "CampaignSession_AiDropSelectionUsesActualProductsScanAndLifetime",
+        "CampaignSession_AiDropActionsUseActualSelectionScanAndWallet",
+        "CampaignSession_AiDrySeedUsesActualBrainListAndLifetime",
+        "CampaignSession_AiDryGeometryUsesActualSurface",
+        "CampaignSession_AiFakeDrySpotsUseActualStateAndLifetime",
+        "CampaignSession_AiUsesCurrentWorldAndLifetime",
+        "CampaignSession_RefundCreditsCurrentActualAiWallet",
+        "CampaignSession_ObjectNoticesUseActualPopAndDeletion",
+        "CampaignSession_AiMissingServicesKeepRealFailure",
+        "CampaignSession_AiColorPrecedesExistingBrain",
+        "CampaignSession_ParticipationUsesCurrentReads",
+        "CampaignSession_MissionOutcomeSharesCurrentWorld",
+        "CampaignSession_TechnologyUsesCurrentLifetime",
+        "CampaignSession_ProductionUsesCurrentPlayerFactoriesAndRestrictions",
+        "CampaignSession_ProductionMissingAllocationLeavesPlayerUnchanged",
+        "CampaignSession_FortSnapshotBasicsSaveCurrentWorld",
+        "CampaignSession_FortContentSaveCurrentTechnology",
+        "CampaignSession_FortTerritorySaveCurrentWorld",
+        "CampaignSession_EmptyGeyserUsesCurrentDeletion",
+        "CampaignSession_ActualWarBeginsGameWorld",
+        "CampaignSession_ActualMasterGameWorld",
+        "CampaignSession_GeneratorBodyShadowAndPicking",
+        "CampaignSession_ThunderCannonBodyNative37Frames",
+        "CampaignSession_GolemNative64WalkingFrames",
+        "CampaignSession_GeyserBodyNative51Frames",
+        "CampaignSession_SupportNative198FramesAndColors",
+        "CampaignSession_GeyserSupportBridgeOwnershipAndColors",
+        "CampaignSession_BridgeNative600FramesAndColors",
+        "CampaignSession_MissileFringeDepthAndOverlap",
+        "CampaignSession_ActualWarBeginsClickMovesSamePriest",
+        "CampaignSession_ActualSingleplayerBroadcastAndPath",
+        "CampaignSession_ActualWarBeginsCombatToOne",
+        "CampaignSession_ManowarExplosionPixelsAndDummyLifetime",
+        "CampaignSession_PriestMenuUsesActualWorldAndBuildSelection",
+        "CampaignSession_PriestMenuTracksTechnologyAndTypeExclusions",
+        "CampaignSession_PriestMenuRejectsUninstalledSession",
+        "CampaignSession_CursorManaUsesActualWorldHostAndDisplay",
+        "CampaignSession_CursorRangeActualWorldAndSharedLifetime",
+        "CampaignSession_CursorEnergyActualProvidersAndSharedSources",
+        "CampaignSession_ConstructionBuilderSharesActualEnergySources",
+        "CampaignSession_ManaBoltUsesActualFlightAndLifetime",
+        "CampaignSession_ConstructionTeleportUsesActualSurfacePath",
+        "CampaignSession_ManaBoltRegularFollowsArrivalAndCurrentTarget",
+        "CampaignSession_ConstructionBuilderUsesActualMovementAndTime",
+        "CampaignSession_PlayerFactoryCapacityMatchesNativeInitialization",
+        "CampaignSession_ActualClientPlayerOwnerAcrossSessions",
+        "CampaignSession_PlayerLinks_ExplicitCleanupKeepsKernelCoreAndFactoryStorage",
+        "CampaignSession_PlayerLinks_DestructorRunsBeforeKernelAndNextPlayerAllocation",
+        "CampaignSession_PlayerLinks_ZeroDecksDoNotAllocateDuringCleanup",
+        "CampaignSession_PlayerLinks_InvalidDeckStopsAtSelectedFreeWithPrefix",
+        "CampaignSession_PlayerLinks_PlayerLeaseOutlivesServiceCaptures",
+        "CampaignSession_ConstructionArrivalRunsActualProgressAndVisual",
+        "CampaignSession_ConstructionDefaultTimeOwnsActualSoundProcess",
+        "CampaignSession_GeneralConfirmRequiresActualReadyFactory",
+        "CampaignSession_GeneralConfirmBuildsForRemoteOwner",
+        "CampaignSession_GeneralConfirmReplacesLocalPredictionAndKeepsBuilder",
+        "CampaignSession_GeneralConfirmShortfallUsesCurrentPlayerRecords",
+        "CampaignSession_ConstructionCommandUsesActualRequestAndLocalPrediction",
+        "CampaignSession_ConstructionCommandChargesRemoteOnce",
+        "CampaignSession_ConstructionCommandRejectsForeignPrediction",
+        "CampaignSession_CursorMenuUsesActualStateAndCancel",
+        "CampaignSession_CursorContentDestroyReadsCurrentPreview",
+        "CampaignSession_CursorDropPredictsSendsChargesAndCompletes",
+        "CampaignSession_CursorRequiresActualEffectsAndSupportsRebinding",
+        "CampaignSession_CursorReturnsFactoryPieceWithActualTimer",
+        "CampaignSession_CursorDisplayUsesActualShapesCameraAndDirtyCollection",
+        "CampaignSession_CursorDisplayIllegalAndActualWarningText",
+        "CampaignSession_CursorActionsUseActualPreviewsAndInput",
+        "CampaignSession_CursorRotateUsesActualRangeLifetime",
+        "CampaignSession_CursorUserInputReadsCurrentSettingsAndMouse",
+        "CampaignSession_CursorDropNotifiesActualRangeProcess",
+        "CampaignSession_CursorHighlightSharesSelectionWithoutClearingIt",
+        "CampaignSession_CursorRequeriesReplacedGumpsAtStationaryMouse",
+        "CampaignSession_CarrierMiningRegisteredReceiverExhaustsGeyser",
+        "CampaignSession_CarrierStealUsesActualContentMovementAndReceiver",
+        "CampaignSession_CarrierPickupNuggetThroughActualLocalTransport",
+        "CampaignSession_CarrierPickupPriestMovesNestedContents",
+        "CampaignSession_GemRewardActualSelectionPopAndDestroy",
+        "CampaignSession_LightningScreenPickupThroughActualLocalTransport",
+        "CampaignSession_RepeatedRewardPickupThroughActualLocalTransport",
+        "CampaignSession_BalloonFlightShadowAndLandingThroughActualKernel",
+        "CampaignSession_CarrierMoveRequestThroughActualLocalTransportAndKernel",
+        "CampaignSession_InitSharedTablesBeforeInstall",
+        "CampaignSession_TemplateSurvivesUntilExplicitInitClear",
+        "CampaignSession_ActualLoginUsesClientCurrentCoreSlot",
+        "CampaignSession_InitRequestUsedByActualLogin",
+        "CampaignSession_AiBridgeProgressUsesActualWorldAndContents",
+        "CampaignSession_AutomaticAiFramesUseCurrentTimeAndWorld",
+        "CampaignSession_AutomaticAiTerminationReleasesOwnedMemory",
+        "CampaignSession_LocalLoginActualHandshakeAndWorldLoad",
+        "CampaignSession_WorldInputActualLoginThreeCarriersAndKernel",
+        "CampaignSession_LocalLoginMissionStartAiAlliances",
+        "CampaignSession_LocalLoginWorkshopHasActualPlacement",
+        "CampaignSession_LocalLoginGeneratorExtendsCannonFirstHit",
+        "CampaignSession_FortObjectSaveCurrentChunk",
+        "CampaignSession_StateRuntimeRetirement_ActualChildrenAndDestructorKeepOrdering",
+        "CampaignSession_StateRuntimeRetirement_ForeignProofAndPartialLinkFailureStayOpen",
+        "CampaignSession_StateRuntimeRetirement_CoreZeroStillNeedsAllFixedViewsReturned",
+        "CampaignSession_PriestAuthorityReadsSharedOwnerWithoutPrepare",
+        "CampaignSession_GeyserAuthorityReadsSharedOwnerWithoutPrepare",
+        "CampaignSession_PriestRecoveryUsesActualClientPlayerTemple",
+        "CampaignSession_PriestQuarterHpUsesCurrentClientOwner",
+        "CampaignSession_MetaZoneCleanupUsesActualCurrentWorldDestroy",
+        "CampaignSession_StateSidListsActualLoadAndRetainedOwners",
+        "CampaignSession_StateSidListsRealProviderAndPriestDeletion"
+      ],
+      "passed": true,
+      "log": "extracted\\cpp-editor-entry-464-focused5-9.log"
+    },
+    {
+      "filter": "ClientLocalState",
+      "exitCode": 0,
+      "expected": [
+        "ClientLocalStateGlobals_TwoSessionLifetimesPreserveCurrentOwner",
+        "ClientLocalStateGlobals_ClockZoneMetaSurviveTwoActualSessions",
+        "ClientLocalStateGlobals_ActualLoginSharesZoneAndPreservesTailWord",
+        "ClientLocalStateGlobals_ActualLoginAndReplyUseCurrentOwner",
+        "ClientLocalStateGlobals_SavedGameControlsActualCarrierContentNotice",
+        "ClientLocalStateGlobals_FortRequestWritesActualNextAndPending",
+        "ClientLocalStateGlobals_StateAuxInitialBitsAndTwoActualClientsAreIndependent",
+        "ClientLocalStateGlobals_StateAuxOrdinarySessionAndLoginLifetimesPreserveCurrentBits",
+        "ClientLocalStateGlobals_ActualLoginTimerClearsCurrentScriptBreakOnly"
+      ],
+      "passed": true,
+      "log": "extracted\\cpp-editor-entry-464-focused5-10.log"
+    },
+    {
+      "filter": "SavedStateRead",
+      "exitCode": 0,
+      "expected": [
+        "SavedStateRead_IndependentNative538AndPhysical4",
+        "SavedStateRead_SelectedMissingDevicesAndCleanup",
+        "SavedStateRead_PhysicalContractsPreservePrefix",
+        "SavedStateRead_ActualBaseFileBytesAndShortTail"
+      ],
+      "passed": true,
+      "log": "extracted\\cpp-editor-entry-464-focused5-11.log"
+    },
+    {
+      "filter": "StartupStateCheck",
+      "exitCode": 0,
+      "expected": [
+        "StartupStateCheck_All390OriginalParentObservations",
+        "StartupStateCheck_SelectedDevicesAreRequired"
+      ],
+      "passed": true,
+      "log": "extracted\\cpp-editor-entry-464-focused5-12.log"
+    }
+  ],
+  "uniqueFocusedPassed": 298,
+  "full": {
+    "exitCode": 0,
+    "passed": true,
+    "caseCount": 3154,
+    "ctestWrapperCount": 1,
+    "log": "extracted\\cpp-editor-entry-464-full5.log"
+  },
+  "protectionUnchanged": true,
+  "binaryUnchanged": true,
+  "gameSha256": "661a19c19766c74f1743f40d57b241739e82a7b0803d01b6e619eabef95c77cf",
+  "guiRuns": [
+    {
+      "map": "Battle1",
+      "run": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-editor-entry-464-data",
+          "--window",
+          "--no-audio",
+          "--frames",
+          "80",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=60;sleepPerLoop=10;autoDemo=0;tellTips=0;currentLanguage=english;useProductTimers=0",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-editor-entry-464-gui-battle1-final2\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-editor-entry-464-gui-battle1-final2\\states.tsv"
+        ],
+        "binarySha256": "661a19c19766c74f1743f40d57b241739e82a7b0803d01b6e619eabef95c77cf",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 4.720127400010824,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "0ad755a43600773b6fb5dba81206809a7f4f3d700fb9e342b9aa162b7c60e796",
+        "gameSha256": "661a19c19766c74f1743f40d57b241739e82a7b0803d01b6e619eabef95c77cf",
+        "binaryUnchanged": true,
+        "originalsUnchanged": true,
+        "dataUnchanged": true,
+        "originalGameExecuted": false
+      },
+      "isolatedLooseFort": false,
+      "observations": {
+        "selected": {
+          "fort_selection": [
+            [
+              "2",
+              "4",
+              "0",
+              "0",
+              "Battle1"
+            ]
+          ],
+          "fort_names": [
+            [
+              "Battle1",
+              "Battle1",
+              "2",
+              "fortSpec"
+            ]
+          ],
+          "editor_runtime": [
+            [
+              "1",
+              "1",
+              "1",
+              "4294967295",
+              "0"
+            ]
+          ],
+          "state_hud": [
+            [
+              "1",
+              "1",
+              "53",
+              "53",
+              "1"
+            ]
+          ],
+          "game_menu_bar": [
+            [
+              "0",
+              "0",
+              "0"
+            ]
+          ],
+          "connection_table": [
+            [
+              "1",
+              "1",
+              "1",
+              "1828716544",
+              "0"
+            ]
+          ]
+        },
+        "ready": {
+          "fort_selection": [
+            [
+              "2",
+              "4",
+              "0",
+              "0",
+              "Battle1"
+            ]
+          ],
+          "fort_names": [
+            [
+              "Battle1",
+              "Battle1",
+              "2",
+              "fortSpec"
+            ]
+          ],
+          "editor_runtime": [
+            [
+              "1",
+              "1",
+              "1",
+              "4294967295",
+              "0"
+            ]
+          ],
+          "state_hud": [
+            [
+              "1",
+              "1",
+              "53",
+              "53",
+              "1"
+            ]
+          ],
+          "game_menu_bar": [
+            [
+              "0",
+              "0",
+              "0"
+            ]
+          ],
+          "connection_table": [
+            [
+              "1",
+              "1",
+              "1",
+              "1828716544",
+              "0"
+            ]
+          ]
+        },
+        "esc": {
+          "fort_selection": [
+            [
+              "2",
+              "4",
+              "0",
+              "0",
+              "Battle1"
+            ]
+          ],
+          "fort_names": [
+            [
+              "Battle1",
+              "Battle1",
+              "2",
+              "fortSpec"
+            ]
+          ],
+          "editor_runtime": [
+            [
+              "1",
+              "1",
+              "1",
+              "4294967295",
+              "0"
+            ]
+          ],
+          "state_hud": [
+            [
+              "1",
+              "1",
+              "53",
+              "53",
+              "1"
+            ]
+          ],
+          "game_menu_bar": [
+            [
+              "3249",
+              "1",
+              "3"
+            ]
+          ],
+          "connection_table": [
+            [
+              "1",
+              "1",
+              "1",
+              "1828716544",
+              "0"
+            ]
+          ]
+        },
+        "game": {
+          "fort_selection": [
+            [
+              "2",
+              "4",
+              "0",
+              "0",
+              "Battle1"
+            ]
+          ],
+          "fort_names": [
+            [
+              "Battle1",
+              "Battle1",
+              "2",
+              "fortSpec"
+            ]
+          ],
+          "editor_runtime": [
+            [
+              "1",
+              "1",
+              "1",
+              "4294967295",
+              "0"
+            ]
+          ],
+          "state_hud": [
+            [
+              "1",
+              "1",
+              "53",
+              "53",
+              "1"
+            ]
+          ],
+          "game_menu_bar": [
+            [
+              "3249",
+              "1",
+              "3"
+            ]
+          ],
+          "connection_table": [
+            [
+              "1",
+              "1",
+              "1",
+              "1828716544",
+              "0"
+            ]
+          ]
+        },
+        "tools": {
+          "fort_selection": [
+            [
+              "2",
+              "4",
+              "0",
+              "0",
+              "Battle1"
+            ]
+          ],
+          "fort_names": [
+            [
+              "Battle1",
+              "Battle1",
+              "2",
+              "fortSpec"
+            ]
+          ],
+          "editor_runtime": [
+            [
+              "1",
+              "1",
+              "1",
+              "4294967295",
+              "0"
+            ]
+          ],
+          "state_hud": [
+            [
+              "1",
+              "1",
+              "53",
+              "53",
+              "1"
+            ]
+          ],
+          "game_menu_bar": [
+            [
+              "3249",
+              "1",
+              "3"
+            ]
+          ],
+          "connection_table": [
+            [
+              "1",
+              "1",
+              "1",
+              "1828716544",
+              "0"
+            ]
+          ]
+        },
+        "closed": {
+          "fort_selection": [
+            [
+              "2",
+              "4",
+              "0",
+              "0",
+              "Battle1"
+            ]
+          ],
+          "fort_names": [
+            [
+              "Battle1",
+              "Battle1",
+              "2",
+              "fortSpec"
+            ]
+          ],
+          "editor_runtime": [
+            [
+              "1",
+              "1",
+              "1",
+              "4294967295",
+              "0"
+            ]
+          ],
+          "state_hud": [
+            [
+              "1",
+              "1",
+              "53",
+              "53",
+              "1"
+            ]
+          ],
+          "game_menu_bar": [
+            [
+              "0",
+              "0",
+              "3"
+            ]
+          ],
+          "connection_table": [
+            [
+              "1",
+              "1",
+              "1",
+              "1828716544",
+              "0"
+            ]
+          ]
+        }
+      },
+      "pictures": {
+        "ready": {
+          "path": "extracted/cpp-editor-entry-464-gui-battle1-final2/ready.bmp",
+          "sha256": "434fb865a53ea58973c422803341aeaa1a056f5af7fadbd1bace5face76a06be"
+        },
+        "esc": {
+          "path": "extracted/cpp-editor-entry-464-gui-battle1-final2/esc.bmp",
+          "sha256": "2f8b0b4c0843556e4004534f1268ecb9e979e4ac95fe754ebdb5210b2bbc26dd"
+        },
+        "game": {
+          "path": "extracted/cpp-editor-entry-464-gui-battle1-final2/game.bmp",
+          "sha256": "5c159f5d212e72e694fd0b3c5a6661afb628c9dde40243dba93248518bb75b59"
+        },
+        "tools": {
+          "path": "extracted/cpp-editor-entry-464-gui-battle1-final2/tools.bmp",
+          "sha256": "00a29a3f55084b6ec2448c3f94a4cc680b67133e140b17cafa5aa02ff9764043"
+        }
+      },
+      "originalGameExecuted": false,
+      "branch": "natural menu click -> State1 common commit -> Poll4; ESC/Game/Edit/close"
+    },
+    {
+      "map": "TEST01",
+      "run": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-editor-entry-464-custom-data",
+          "--window",
+          "--no-audio",
+          "--frames",
+          "80",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=60;sleepPerLoop=10;autoDemo=0;tellTips=0;currentLanguage=english;useProductTimers=0",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-editor-entry-464-gui-test01-only-final2\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-editor-entry-464-gui-test01-only-final2\\states.tsv"
+        ],
+        "binarySha256": "661a19c19766c74f1743f40d57b241739e82a7b0803d01b6e619eabef95c77cf",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 4.499325399985537,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "0ad755a43600773b6fb5dba81206809a7f4f3d700fb9e342b9aa162b7c60e796",
+        "gameSha256": "661a19c19766c74f1743f40d57b241739e82a7b0803d01b6e619eabef95c77cf",
+        "binaryUnchanged": true,
+        "originalsUnchanged": true,
+        "dataUnchanged": true,
+        "originalGameExecuted": false
+      },
+      "isolatedLooseFort": true,
+      "observations": {
+        "selected": {
+          "fort_selection": [
+            [
+              "2",
+              "4",
+              "0",
+              "0",
+              "TEST01"
+            ]
+          ],
+          "fort_names": [
+            [
+              "TEST01",
+              "TEST01",
+              "2",
+              "fortSpec"
+            ]
+          ],
+          "editor_runtime": [
+            [
+              "1",
+              "1",
+              "1",
+              "4294967295",
+              "0"
+            ]
+          ],
+          "state_hud": [
+            [
+              "1",
+              "1",
+              "52",
+              "52",
+              "1"
+            ]
+          ],
+          "game_menu_bar": [
+            [
+              "0",
+              "0",
+              "0"
+            ]
+          ],
+          "connection_table": [
+            [
+              "1",
+              "1",
+              "1",
+              "1828716544",
+              "0"
+            ]
+          ]
+        },
+        "ready": {
+          "fort_selection": [
+            [
+              "2",
+              "4",
+              "0",
+              "0",
+              "TEST01"
+            ]
+          ],
+          "fort_names": [
+            [
+              "TEST01",
+              "TEST01",
+              "2",
+              "fortSpec"
+            ]
+          ],
+          "editor_runtime": [
+            [
+              "1",
+              "1",
+              "1",
+              "4294967295",
+              "0"
+            ]
+          ],
+          "state_hud": [
+            [
+              "1",
+              "1",
+              "52",
+              "52",
+              "1"
+            ]
+          ],
+          "game_menu_bar": [
+            [
+              "0",
+              "0",
+              "0"
+            ]
+          ],
+          "connection_table": [
+            [
+              "1",
+              "1",
+              "1",
+              "1828716544",
+              "0"
+            ]
+          ]
+        },
+        "esc": {
+          "fort_selection": [
+            [
+              "2",
+              "4",
+              "0",
+              "0",
+              "TEST01"
+            ]
+          ],
+          "fort_names": [
+            [
+              "TEST01",
+              "TEST01",
+              "2",
+              "fortSpec"
+            ]
+          ],
+          "editor_runtime": [
+            [
+              "1",
+              "1",
+              "1",
+              "4294967295",
+              "0"
+            ]
+          ],
+          "state_hud": [
+            [
+              "1",
+              "1",
+              "52",
+              "52",
+              "1"
+            ]
+          ],
+          "game_menu_bar": [
+            [
+              "3247",
+              "1",
+              "3"
+            ]
+          ],
+          "connection_table": [
+            [
+              "1",
+              "1",
+              "1",
+              "1828716544",
+              "0"
+            ]
+          ]
+        },
+        "game": {
+          "fort_selection": [
+            [
+              "2",
+              "4",
+              "0",
+              "0",
+              "TEST01"
+            ]
+          ],
+          "fort_names": [
+            [
+              "TEST01",
+              "TEST01",
+              "2",
+              "fortSpec"
+            ]
+          ],
+          "editor_runtime": [
+            [
+              "1",
+              "1",
+              "1",
+              "4294967295",
+              "0"
+            ]
+          ],
+          "state_hud": [
+            [
+              "1",
+              "1",
+              "52",
+              "52",
+              "1"
+            ]
+          ],
+          "game_menu_bar": [
+            [
+              "3247",
+              "1",
+              "3"
+            ]
+          ],
+          "connection_table": [
+            [
+              "1",
+              "1",
+              "1",
+              "1828716544",
+              "0"
+            ]
+          ]
+        },
+        "tools": {
+          "fort_selection": [
+            [
+              "2",
+              "4",
+              "0",
+              "0",
+              "TEST01"
+            ]
+          ],
+          "fort_names": [
+            [
+              "TEST01",
+              "TEST01",
+              "2",
+              "fortSpec"
+            ]
+          ],
+          "editor_runtime": [
+            [
+              "1",
+              "1",
+              "1",
+              "4294967295",
+              "0"
+            ]
+          ],
+          "state_hud": [
+            [
+              "1",
+              "1",
+              "52",
+              "52",
+              "1"
+            ]
+          ],
+          "game_menu_bar": [
+            [
+              "3247",
+              "1",
+              "3"
+            ]
+          ],
+          "connection_table": [
+            [
+              "1",
+              "1",
+              "1",
+              "1828716544",
+              "0"
+            ]
+          ]
+        },
+        "closed": {
+          "fort_selection": [
+            [
+              "2",
+              "4",
+              "0",
+              "0",
+              "TEST01"
+            ]
+          ],
+          "fort_names": [
+            [
+              "TEST01",
+              "TEST01",
+              "2",
+              "fortSpec"
+            ]
+          ],
+          "editor_runtime": [
+            [
+              "1",
+              "1",
+              "1",
+              "4294967295",
+              "0"
+            ]
+          ],
+          "state_hud": [
+            [
+              "1",
+              "1",
+              "52",
+              "52",
+              "1"
+            ]
+          ],
+          "game_menu_bar": [
+            [
+              "0",
+              "0",
+              "3"
+            ]
+          ],
+          "connection_table": [
+            [
+              "1",
+              "1",
+              "1",
+              "1828716544",
+              "0"
+            ]
+          ]
+        }
+      },
+      "pictures": {
+        "ready": {
+          "path": "extracted/cpp-editor-entry-464-gui-test01-only-final2/ready.bmp",
+          "sha256": "243b820b47e29a719db6080d39d4ffb8ef2121649b8e92a5cd0c50aad0b74b5b"
+        },
+        "esc": {
+          "path": "extracted/cpp-editor-entry-464-gui-test01-only-final2/esc.bmp",
+          "sha256": "a20b7053886fb5315c217b34663b831388a3083d42802ec76d505998a594251a"
+        },
+        "game": {
+          "path": "extracted/cpp-editor-entry-464-gui-test01-only-final2/game.bmp",
+          "sha256": "28e5826b9696f52778591247f56b7afc13ff34815af23d6edf6afc84b5adc34c"
+        },
+        "tools": {
+          "path": "extracted/cpp-editor-entry-464-gui-test01-only-final2/tools.bmp",
+          "sha256": "3b063a057c79e15177ca6d020740ff469812e73336bc72c66cc532df5d5b7067"
+        }
+      },
+      "originalGameExecuted": false,
+      "branch": "natural menu click -> State1 common commit -> Poll4; ESC/Game/Edit/close"
+    }
+  ],
+  "builds": [
+    {
+      "attempt": "1",
+      "log": "extracted/cpp-editor-entry-464-build1.log",
+      "errors": 0,
+      "warnings": 0
+    },
+    {
+      "attempt": "2",
+      "log": "extracted/cpp-editor-entry-464-build2.log",
+      "errors": 0,
+      "warnings": 0
+    },
+    {
+      "attempt": "3",
+      "log": "extracted/cpp-editor-entry-464-build3.log",
+      "errors": 0,
+      "warnings": 0
+    },
+    {
+      "attempt": "4",
+      "log": "extracted/cpp-editor-entry-464-build4.log",
+      "errors": 4,
+      "warnings": 0
+    },
+    {
+      "attempt": "5",
+      "log": "extracted/cpp-editor-entry-464-build5.log",
+      "errors": 0,
+      "warnings": 0
+    },
+    {
+      "attempt": "6",
+      "log": "extracted/cpp-editor-entry-464-build6.log",
+      "errors": 0,
+      "warnings": 0
+    },
+    {
+      "attempt": "7",
+      "log": "extracted/cpp-editor-entry-464-build7.log",
+      "errors": 0,
+      "warnings": 0
+    },
+    {
+      "attempt": "8-library",
+      "log": "extracted/cpp-editor-entry-464-build8-library.log",
+      "errors": 0,
+      "warnings": 0
+    },
+    {
+      "attempt": "8-final",
+      "log": "extracted/cpp-editor-entry-464-build8-final.log",
+      "errors": 0,
+      "warnings": 0
+    },
+    {
+      "attempt": "9",
+      "log": "extracted/cpp-editor-entry-464-build9.log",
+      "errors": 0,
+      "warnings": 0
+    }
+  ],
+  "legacyTestSourcesPreserved": [
+    "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp",
+    "cpppj/tests/ClientStateWorldGlobalsTests.cpp",
+    "cpppj/tests/ProductionSyncTests.cpp"
+  ],
+  "protectedFileCount": 1820,
+  "fixtureFileCount": 654,
+  "originalGameExecuted": false,
+  "rawPrefixes": "extracted/cpp-editor-entry-464-*",
+  "naturalMissionCompletionVerified": false,
+  "editorToolsCompleted": false,
+  "savedBattleRestoreCompleted": false,
+  "scope": "기존 Fort의 실제 Edit State1/다음 Poll4/loaded/입력 및 ESC 하위 메뉴 표시",
+  "limits": [
+    "새 맵/기본 이름/잘못된 파일/미션 전환은 미완성",
+    "실제 편집 도구와 Save as/NewFort/Test Battle/Main Menu 동작은 후속",
+    "기존 d/!state.dat의 open/복구/질문은 미연결",
+    "전체 미션 자연 완주와 원본 화면/음향 동일성은 미검증"
+  ],
+  "initialFailures": {
+    "firstGui": "Player fort 별칭 미전달",
+    "secondGui": "Client 장부/변환표 미주입",
+    "firstFocus": "SID0 거부 및 실제 등록 이름과 다른 빈 필터",
+    "newPrefixKernelAssumption": "새 Deck은 열기 전 Kernel 프로세스를 만들지 않음",
+    "thirdGui": "기본 startupStateCheck reader 누락",
+    "build4": "Win32 선언 include 누락",
+    "fourthGui": "공통 확정 앞 호스트 입력 구성",
+    "fifthGui": "ESC의 미션 Runtime 강제",
+    "focus3AndFull3": "UI scope의 선택 공장 허용이 기존 차단 검사2회와 충돌. 기존 검사/차단을 복구하고 호스트 입력을 실제 공통 확정 뒤로 옮김",
+    "focus4": "새 State 검사 도우미에 실제 로컬 전송을 제공하지 않음. 실제 양끝 입력으로 수정",
+    "test01First": "fortSpec 명령줄 입력으로 목록이 좁혀지지 않아 실제 목록50개에 없음. 새 자산 복사본의 loose Fort만 TEST01로 제한"
+  }
+}

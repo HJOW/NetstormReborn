@@ -18,6 +18,8 @@ struct FortObjectLoadState {
     std::int32_t chunksX{16},chunksY{16}; // 현재 원본 청크 지도 크기다. 각 행/열에서 현재 값으로 비교한다.
     std::uint32_t battleSavedMask{0x40480002}; //0054263c: 저장 시 현재 flags2와 비교하며 fortKeepMask와 다른 전역이다.
     const std::uint32_t* sharedFullDeck{}; // 선택형0054db14 대여이며 실제 owner가 이 상태와 로더보다 오래 살아야 한다.
+    const std::uint32_t* sharedFortKeepGenus{}; //실제 Client의00542640을 빌리며 독립 raw 검사는 기존 fortKeepMask를 쓴다.
+    std::uint32_t FortKeepGenus() const { return sharedFortKeepGenus ? *sharedFortKeepGenus : fortKeepMask; } //후보마다 실제 현재 마스크를 읽는다.
     bool FortDestroyBlocked() const { return sharedFullDeck ? *sharedFullDeck!=0 : fortDestroyBlocked; } // Pop/Contents 효과 뒤 현재 DWORD를 읽으며 독립 raw 입력은 기존 bool을 사용한다.
 };
 // 계산을 기본값으로 대체하지 않는 실제 가상/월드 경계다. 각 반환값은 현재 raw/type에 적용된다.

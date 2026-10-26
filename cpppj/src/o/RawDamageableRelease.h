@@ -10,6 +10,8 @@ struct DamageableReleaseState {
     bool battle{}; // 00594fbc / CD 00540a20: 전투에서는 허용 genus 검사를 건너뛴다.
     std::uint32_t allowedGenus{0x40480002}; // 00542640 / CD 005178c4의 초기 마스크다.
     std::uint32_t bridgeType{82}; // 005411a0 / CD 0051ca8c: WORD 쓰기 후 표면 알림 대상이다.
+    const std::uint32_t* sharedAllowedGenus{}; //실제 Client의00542640을 빌리며 기존 독립 aggregate 인자의 순서는 유지한다.
+    std::uint32_t AllowedGenus() const { return sharedAllowedGenus ? *sharedAllowedGenus : allowedGenus; } //가상 효과 뒤 후보마다 현재 전체 DWORD를 읽는다.
 };
 // 피해가능객체 해제 외부 동작과 저장소 조회를 연결하는 콜백 묶음이다.
 struct DamageableReleaseHooks {

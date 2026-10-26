@@ -42,6 +42,8 @@ public:
     const std::shared_ptr<ClientSubscriberGlobals>& Subscribers() const; // 다른 Client의 참조를 잘못 합치지 않는다.
     std::uint32_t& FullDeck() { return fullDeck_; } // 0054db14의 실제 DWORD를 생산/건설/배치/객체/HUD가 같은 주소로 빌린다.
     const std::uint32_t& FullDeck() const { return fullDeck_; } // 자연 writer의0/1 외에도 현재 비영 DWORD를 정규화 없이 보존한다.
+    std::uint32_t& FortKeepGenus() { return fortKeepGenus_; } //00542640의 같은 현재 마스크를 Editor prefix/객체 읽기/해방이 공유한다.
+    std::uint32_t& StateAuxFC4() { return stateAuxFC4_; } //00594fc4의 별도 현재 DWORD이며 battle/fort bool과 합치지 않는다.
     std::uint32_t& MapRevision() { return mapRevision_; } // 005949d4의 같은 전체 미니맵 갱신 DWORD를 지형/소유자/HUD/표시 소비자가 공유한다.
     const std::uint32_t& MapRevision() const { return mapRevision_; } // 단조 버전이 아니며 실제 Refresh가0으로 소비한 현재값도 즉시 읽는다.
     std::uint32_t& HideBuildings() { return hideBuildings_; } //0059a8ac의 실제 DWORD를 메뉴·Draw·State 정리가 직접 공유한다.
@@ -67,6 +69,7 @@ public:
     std::uint32_t specialAuxiliary{}; // 원문55a484이며 설정 해석에서55a480과 함께0으로 쓴다. 별도 기능 해석은 후속이다.
 private:
     std::uint32_t fullDeck_{}; // 최초 PE BSS0이며 준비 대여/반납은 Native 부모가 쓴 현재 값을 보존한다.
+    std::uint32_t fortKeepGenus_{0x40480002U},stateAuxFC4_{}; //보호 PE00542640의 초기 마스크와00594fc4의 별도 BSS0이다.
     std::uint32_t hideBuildings_{}; // 원문 최초 BSS0이며 명시 State store 외에 임의 초기화를 추가하지 않는다.
     ClientCameraGlobals camera_; // 전역snapshot과논리Renderer/목표를분리하고명시Native초기화외에는현재값을보존한다.
     ClientCursorGlobals cursorGlobals_; // callback/타이머없이Lifecycle/Placement/snap만장기소유한다.

@@ -50,7 +50,10 @@ void WriteStateWord(const ClientStateWorldContext& c,std::uint32_t address,std::
     case 0x5424bc:aux.RefundPercent()=value;return;case 0x542534:local.CachedPeerIndex()=value;return;case 0x542538:local.CachedPeerValue()=value;return;case 0x54253c:local.CachedPeerFieldA4()=value;return;case 0x542540:local.CachedPeerFieldA8()=value;return;case 0x542544:local.ScriptBreak()=value;return;
     case 0x5453e4:aux.AllowAnyCapture()=std::bit_cast<std::int32_t>(value);return;case 0x5467b8:c.client.NsInfoGlobals()->zone=value;return;case 0x5467bc:aux.SubscriberMarker()=value;return;
     case 0x54c8a0:c.surface.chunks.Mode()=value;return;case 0x54db14:game.FullDeck()=value;return;case 0x55a420:local.SourceType()=value;return;
-    case 0x5949d4:game.MapRevision()=value;return;case 0x594fa4:game.world.missionPost=StateBoolean(value);return;case 0x594fb8:c.surface.ownerMode.fort=StateBoolean(value);return;case 0x594fbc:c.surface.ownerMode.battle=StateBoolean(value);return;case 0x594fc8:c.surface.ownerMode.challenge=StateBoolean(value);return;
+    case 0x5949d4:game.MapRevision()=value;return;case 0x594fa4:game.world.missionPost=StateBoolean(value);return;
+    case 0x594fb8:c.surface.ownerMode.fort=StateBoolean(value);game.player.fortMode=c.surface.ownerMode.fort;return; //같은 Native 주소의 기존 Player 어댑터 별칭도 동일 쓰기를 반영한다.
+    case 0x594fbc:c.surface.ownerMode.battle=StateBoolean(value);c.surface.links.battle=c.surface.ownerMode.battle;return; //같은00594fbc을 읽는 기존 Bridge 어댑터 별칭이다.
+    case 0x594fc8:c.surface.ownerMode.challenge=StateBoolean(value);return;
     case 0x595088:aux.StoreResourcePoolBits(value);return;case 0x59508c:aux.TotalCost()=std::bit_cast<std::int32_t>(value);return;case 0x595090:aux.SavedGeyserCount()=value;return;case 0x5950ac:aux.OrdinaryGeysers()=value;return;case 0x5950b0:aux.GeyserFrameFlag()=value;return;case 0x595344:game.player.playerKnown=value;return;
     case 0x59a8ac:game.HideBuildings()=value;return;case 0x59a8b0:c.client.KencloudGlobals()->WorldRedraw()=value;return;
     case 0x5c7a74:local.Begin()=value;return;case 0x5c848c:aux.LostX()=std::bit_cast<float>(value);return;case 0x5c8490:aux.LostY()=std::bit_cast<float>(value);return;

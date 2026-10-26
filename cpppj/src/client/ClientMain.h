@@ -173,6 +173,7 @@ public:
     const std::shared_ptr<ClientStaticStrings>& StaticStrings() const; // 같은 고리의 실제 수명을 빌리며 조회 자체는 예약/할당하지 않는다.
     const std::shared_ptr<ClientDotCommandGlobals>& DotCommandGlobals() const; //최초 say를 보존하는 같은 장기 등록 표를 빌린다.
     const o::BaseFileSystem& Files() const;
+    const std::filesystem::path& GameDirectory() const { return options_.gameDirectory; } //편집 작업본을 읽기 전용 게임 자산의 형제 디렉터리에 배치할 실제 입력 경로다.
     const GameAssets& Assets() const;
     o::Kernel& GetKernel();
     const std::shared_ptr<o::Kernel>& ProcessKernelOwner() const; // 같은 실제 전역 Kernel 소유권만 전달한다.

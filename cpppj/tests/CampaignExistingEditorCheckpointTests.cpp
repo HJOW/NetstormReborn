@@ -1,4 +1,4 @@
-// Session접합의검사초안이다.실제Chat/CoreWrite부모가없는경계를성공stub으로통과시키지않는다.
+// Session접합과 실제 State1의 한정 UI 범위를 검사한다. 원문 게임 하위는 같은 Session 본체를 사용한다.
 #include "DudeSpawnSupport.h"
 #include "client/CampaignClientServices.h"
 #include "client/CampaignTemplateStorage.h"
@@ -613,4 +613,68 @@ TEST_CASE(CampaignExistingEditorCheckpoint_CursorDataPreparedFailureKeepsOwner) 
     std::shared_ptr<ClientGameplayGlobals> owner;bool rejected{};
     try { WithEditorInstallSession([&](auto&,auto&,const auto&,auto&) { throw std::logic_error("커서prepared실패검사의body도달오류"); },true,nullptr,{},[&](Client& client,RawCampaignSessionServices& services) { owner=client.GameplayGlobals();auto& data=owner->CursorGlobals();data.Lifecycle().previews[29]=0xffffffffU;data.Lifecycle().previewCount=-3;data.Placement().description="partial-cursor";data.SnapToGrid()=0x87654321U;services.soundNames=nullptr; }); }catch (const std::invalid_argument& error) { rejected=std::string(error.what()).find("SoundList")!=std::string::npos; }
     CHECK(rejected && owner && !owner->Borrowed() && owner->CursorGlobals().Lifecycle().previews[29]==0xffffffffU && owner->CursorGlobals().Lifecycle().previewCount==-3 && owner->CursorGlobals().Placement().description=="partial-cursor" && owner->CursorGlobals().SnapToGrid()==0x87654321U);
+}
+
+// 파일 전 HUD가 실제 현재 Deck을 생성하되 커서/저장/일반 생산 입력은 공통 확정까지 닫혀 있어야 한다.
+TEST_CASE(CampaignExistingEditorPrefix_ActualDeckBeforeCheckpointAndScopeRetirement) {
+    WithEditorInstallSession([](RawCampaignSession& session,Client& client,const auto& checkpoint,EditorFiles& work) {
+        auto& owner=*client.LocalStateGlobals();owner.State().current[0]=1;ClientLocalStateGlobals other;
+        CHECK(CheckpointRejects<std::logic_error>([&] { session.WithExistingEditorPrefixUi(other,[] {}); }));
+        CHECK(CheckpointRejects<std::logic_error>([&] { session.SynchronizeProductionContents(); }));
+        const auto kernelBefore=client.GetKernel().Size(); //44f760의 새 Deck은 저장 블록이며 열기 전에는 Kernel 프로세스를 만들지 않는다.
+        session.WithExistingEditorPrefixUi(owner,[&] {
+            session.SynchronizeProductionContents();
+            CHECK(CheckpointRejects<std::logic_error>([&] { session.InstallExistingEditorCheckpoint(checkpoint,client.ReadOnlyForts(),work); }));
+            CHECK(CheckpointRejects<std::logic_error>([&] { session.Cursor(); }));
+            CHECK(CheckpointRejects<std::logic_error>([&] { session.SnapshotFort(1); }));
+        });
+        const auto players=client.PlayerRecords()->Records();const auto at=180U+0x68U;
+        CHECK(players[at] || players[at+1] || players[at+2] || players[at+3]);
+        CHECK(client.GetKernel().Size()==kernelBefore);
+        CHECK(CheckpointRejects<std::logic_error>([&] { session.WithExistingEditorPrefixUi(owner,[] {}); }));
+        CHECK(CheckpointRejects<std::logic_error>([&] { session.SynchronizeProductionContents(); }));
+        session.InstallExistingEditorCheckpoint(checkpoint,client.ReadOnlyForts(),work);CHECK(session.ExistingEditorCheckpointReady());
+        CHECK(CheckpointRejects<std::logic_error>([&] { session.WithExistingEditorPrefixUi(owner,[] {}); }));
+    },true);
+}
+
+// prefix callback의 실제 부분 효과를 보존하고 예외 복귀 뒤 설치 전 접근 허용 범위가 남지 않아야 한다.
+TEST_CASE(CampaignExistingEditorPrefix_FailureClosesScopeWithoutPublishingRuntime) {
+    WithEditorInstallSession([](RawCampaignSession& session,Client& client,const auto&,EditorFiles&) {
+        auto& owner=*client.LocalStateGlobals();owner.State().current[0]=1;
+        CHECK(CheckpointRejects<CheckpointStop>([&] { session.WithExistingEditorPrefixUi(owner,[&] { session.SynchronizeProductionContents();throw CheckpointStop("실제 prefix UI 중단"); }); }));
+        CHECK(!session.ExistingEditorCheckpointReady() && owner.State().phase[0]==0 && owner.State().current[0]==1);
+        CHECK(CheckpointRejects<std::logic_error>([&] { session.SynchronizeProductionContents(); }));
+        CHECK(CheckpointRejects<std::logic_error>([&] { session.Cursor(); }));
+        CHECK(CheckpointRejects<std::logic_error>([&] { session.WithExistingEditorPrefixUi(owner,[] {}); }));
+    },true);
+}
+
+// 미준비 Session 및 State2는 State1 prefix의 우회 설치 통로를 열지 않아야 한다.
+TEST_CASE(CampaignExistingEditorPrefix_RequiresPreparedOwnerAndCurrentState1) {
+    WithEditorInstallSession([](RawCampaignSession& session,Client& client,const auto&,EditorFiles&) {
+        auto& owner=*client.LocalStateGlobals();owner.State().current[0]=1;
+        CHECK(CheckpointRejects<std::logic_error>([&] { session.WithExistingEditorPrefixUi(owner,[] {}); }));
+    });
+    WithEditorInstallSession([](RawCampaignSession& session,Client& client,const auto&,EditorFiles&) {
+        auto& owner=*client.LocalStateGlobals();owner.State().current[0]=2;
+        CHECK(CheckpointRejects<std::logic_error>([&] { session.WithExistingEditorPrefixUi(owner,[] {}); }));
+        CHECK(CheckpointRejects<std::logic_error>([&] { session.SynchronizeProductionContents(); }));
+    },true);
+}
+
+// 호스트 입력 두 몸체는 기존 UI scope에서도 닫고 실제 공통 State 확정/최종 공개 뒤에만 구성한다.
+TEST_CASE(CampaignExistingEditorCheckpoint_InputFactoriesStayClosedUntilActualStateCommit) {
+    EditorInstallWireScene link; //같은 State 도우미의 실제 수신 차단 검사에도 실제 로컬 양끝을 제공한다.
+    WithEditorInstallSession([](RawCampaignSession& session,Client& client,const auto& checkpoint,EditorFiles& work) {
+        auto& owner=*client.LocalStateGlobals();auto& globals=client.GameplayGlobals()->selection;
+        CHECK(CheckpointRejects<std::logic_error>([&] { session.MakeCarrierInput({}); }));
+        CHECK(CheckpointRejects<std::logic_error>([&] { session.MakeUserSelection(globals.SelectionState(),{}); }));
+        RunEditorWireInstallState(session,client,checkpoint,work);
+        CHECK(CheckpointRejects<std::logic_error>([&] { session.MakeCarrierInput({}); }));
+        CHECK(CheckpointRejects<std::logic_error>([&] { session.MakeUserSelection(globals.SelectionState(),{}); }));
+        session.CommitExistingEditorInstall(owner);
+        const auto carrier=session.MakeCarrierInput({});const auto selection=session.MakeUserSelection(globals.SelectionState(),{});
+        CHECK(carrier && selection && owner.State().phase[0]==1 && owner.State().next[0]==4);
+    },true,&link);
 }

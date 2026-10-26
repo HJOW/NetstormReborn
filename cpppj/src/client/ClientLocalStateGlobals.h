@@ -62,6 +62,11 @@ public:
     const std::uint32_t& SynchronizationReplyMode() const { return syncReplyMode_; } //005c8c00은 인접 동기화 송수신 카운터와 별도다.
     std::uint32_t& GameTicks() { return gameTicks_; } //0055b4ac의 현재 DWORD를 로그인 State와 정리가 직접 공유한다.
     const std::uint32_t& GameTicks() const { return gameTicks_; } //시계의 double·프레임 번호로 바꾸지 않고 원시32비트를 보존한다.
+    std::uint32_t& RandomSeed() { return randomSeed_; } //005c85b8의 같은 현재 State 난수 기록을 로그인과 Editor가 빌린다.
+    std::uint32_t& MetaRefresh() { return metaRefresh_; } //005c85d8의 현재 메타 갱신 예약 DWORD다.
+    std::uint32_t& MetaRebuild() { return metaRebuild_; } //005c85dc의 별도 메타 재구성 예약 DWORD다.
+    bool& Simulconnect() { return simulconnect_; } //0054db50의 정상0/1을 모든 State 소비자가 함께 읽는다.
+    std::uint8_t& BattleByte() { return battleByte_; } //005c85d0의 첫 BYTE이며 인접 stateAuxCC와 다른 저장소다.
     std::array<std::uint32_t,2>& ZoneWords() { return zoneWords_; } //005c86c0의 DWORD와+4 WORD다. 마지막 상위WORD는 기존 호스트 보존 칸이다.
     const std::array<std::uint32_t,2>& ZoneWords() const { return zoneWords_; } //State 다섯144BYTE와 별개인 실제 Zone 입력을 조회한다.
     std::span<std::uint8_t> Zone() { return {reinterpret_cast<std::uint8_t*>(zoneWords_.data()),6}; } //로그인/metadata와 정리는 같은 앞6BYTE만 빌린다.
@@ -90,6 +95,8 @@ private:
     std::uint32_t hudModeCommand_{0x0200003dU}; //보호PE005427ec의 실제 명령 초기값이다.
     std::uint32_t addIslandCommand_{0x02000022U}; //보호PE00542780의 실제 Add Island 명령 초기값이다.
     std::uint32_t syncConnection_{},syncReplyMode_{},gameTicks_{}; //세 개의 실제 최초 BSS DWORD며 정리 세 store 이외의 재초기화를 추가하지 않는다.
+    std::uint32_t randomSeed_{},metaRefresh_{},metaRebuild_{}; //세 State DWORD의 최초 BSS0을 Client 수명에 한 번 구성한다.
+    bool simulconnect_{};std::uint8_t battleByte_{}; //각 최초 BSS0이며 Session 교체가 초기화하지 않는다.
     std::array<std::uint32_t,2> zoneWords_{}; //기존 로그인의8BYTE 물리를 장기화한다. 원문 Zone 정리는 앞6BYTE만 쓴다.
     std::uint32_t metaFirstReset_{1}; //보호PE00531760의 초기값이며 이후 정리의 실제 분기 값이다.
     std::array<std::uint8_t,o::kMetaZoneCleanupBytes> metaZoneRecords_{}; //51개 기록의 고정7344BYTE이며 다른 State·MetaMap 표와 합치지 않는다.

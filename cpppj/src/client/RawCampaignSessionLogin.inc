@@ -19,7 +19,7 @@ struct RawCampaignSession::Impl::Login {
     std::array<std::uint8_t,256> typeUse{}; //원본256BYTE 타입사용표다.
     std::array<float,4> ranges{14,22,30,38}; //원본5425f4의 실제4float다. 기본3번도 읽고 최대 비교는 원래2번30을 사용한다.
     float range{22}; //원본52f488이며제곱은Session의같은EnergySupplyState에 쓴다.
-    bool simul{},adjust{};bool& saved{s.localStateGlobals->SavedGame()};std::uint8_t overrideFlags{},localTitle{},battleByte{}; //저장0/1은 실제 State owner이며 독립 검사만 별도 배경 첫BYTE를 사용한다.
+    bool& simul{s.localStateGlobals->Simulconnect()};bool adjust{};bool& saved{s.localStateGlobals->SavedGame()};std::uint8_t overrideFlags{},localTitle{};std::uint8_t& battleByte{s.localStateGlobals->BattleByte()}; //State의 현재 입력은 같은 Client 수명이며 독립 검사만 별도 배경 첫BYTE를 사용한다.
     std::uint8_t& title{s.services.htmlWindowGlobals ? reinterpret_cast<std::uint8_t&>(s.services.htmlWindowGlobals->text.background[0]) : localTitle}; //현재 HTML 배경80BYTE의 첫BYTE만 같은 주소로 빌린다.
     std::uint32_t& activeStamp{s.connectionActivityGlobals->ActiveStamp()};std::uint32_t& zoneWord{s.connectionActivityGlobals->ActiveZoneWord()}; // 두 활동 표 사이005c8540/544의 실제 현재 Zone 출력을 직접 빌린다.
     std::uint32_t pendingStamp{},predictable{},beginSeed{},battleSeed{},burst{},clockStamp{},baseClock{},archipelago{},outpost{}; // 아직 별도로 소유하는 원본 로그인 전역이다.
@@ -30,7 +30,8 @@ struct RawCampaignSession::Impl::Login {
     std::uint32_t& lastPlayer{s.playerRecords->LastLoginPlayer()}; // 같은005951fc를 로그인도 직접 쓴다.
     std::uint32_t& zonePending{s.localStateGlobals->ZonePending()};std::uint32_t& source{s.localStateGlobals->SourceType()}; // Fort 요청/State/Reply가 같은 실제 두 DWORD를 공유한다.
     std::uint32_t& ticks{s.localStateGlobals->GameTicks()}; //State7의 저장/복원과004c1f20이 같은 현재0055b4ac를 사용한다.
-    std::uint32_t randomSeed{},metaRefresh{},metaRebuild{},requestPhase{},uiMode{},inputMode{}; // 아직 로그인 안에 남은 다른 DWORD 저장소다.
+    std::uint32_t& randomSeed{s.localStateGlobals->RandomSeed()};std::uint32_t& metaRefresh{s.localStateGlobals->MetaRefresh()};std::uint32_t& metaRebuild{s.localStateGlobals->MetaRebuild()}; //Editor와 로그인 State가 같은 세 현재 DWORD를 빌린다.
+    std::uint32_t requestPhase{},uiMode{},inputMode{}; // 아직 로그인 안에 남은 다른 DWORD 저장소다.
     std::uint32_t& scriptBreak{s.localStateGlobals->ScriptBreak()}; // 00542544의 최초1과 현재 DWORD를 같은 Client 수명에서 빌리고 실제 Timer도 직접 쓴다.
     double& captureEnd{s.localStateGlobals->CaptureEnd()};double& connectEnd{s.localStateGlobals->ConnectEnd()}; // 서로 다른 원본 벽시각 기한을 직접 빌린다.
     double wall{};std::int32_t timeout{}; // 로그인 장치의 현재 벽시각 입력과 설정 값이다.

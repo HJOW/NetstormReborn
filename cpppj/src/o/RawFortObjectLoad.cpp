@@ -122,7 +122,7 @@ Sid RawFortObjectLoad::Object(const FortObject& object,std::int32_t originX,std:
     if (Type(sid).flags1&kContainer) Contents(sid,Required(object.contents,"contents"),9);
     if (state_.fort && !state_.FortDestroyBlocked()) {
         const auto genus=Type(sid).flags2;
-        if (!(genus&state_.fortKeepMask) ||
+        if (!(genus&state_.FortKeepGenus()) ||
             (!state_.special && !state_.mission && (Type(sid).flags2&kDais) && hooks_.virtualCount(sid)==1)) hooks_.destroy(sid,0);
     }
     return sid; // Fort의 삭제 분기에서는 반환 SID가 이미 해제됐을 수 있다. 원본 body의 반환 의미를 새로 만들지 않는다.

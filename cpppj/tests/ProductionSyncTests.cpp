@@ -63,3 +63,14 @@ TEST_CASE(ProductionSync_SharedFullDeckReadsAfterDeckGetter) {
         getterValue=value;sync.Synchronize();CHECK(globals.FullDeck()==value && scene.full==0 && destroyed==(value ? 0U : 1U));
     }
 }
+
+// State1 파일 전 기술 SID0은 원문 Finder의 실제 예약 슬롯을 조회하며 빈 Deck에서 항목을 생성하지 않는다.
+TEST_CASE(ProductionSync_ZeroTechnologyReadsActualReservedSlotAndEmptyDeck) {
+    SyncScene scene({"-","-","0","0","0","0","0",""});
+    scene.hooks.technology=[&] { ++scene.getters;scene.Event("T,0");return 0U; };
+    scene.hooks.findKind=[](Sid,auto,auto,auto)->std::uint32_t { throw std::logic_error("빈 Deck의 예상 밖 조회"); };
+    scene.hooks.create=[](Sid,auto,auto,auto,auto,auto)->Sid { throw std::logic_error("빈 Deck의 예상 밖 생성"); };
+    const auto before=std::vector<std::uint8_t>(scene.pool.Bytes().begin(),scene.pool.Bytes().end());
+    RawProductionSync sync(scene.pool,scene.types,scene.finder,{scene.owner,scene.full},scene.hooks);sync.Synchronize();
+    CHECK(scene.getters==2 && scene.trace=="K;T,0;T,0" && std::equal(before.begin(),before.end(),scene.pool.Bytes().begin()));
+}

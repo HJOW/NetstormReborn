@@ -249,6 +249,7 @@ public:
     void LoadExistingEditorDeck(); //실제World/Graph뒤의Deck부모만실행한다.외곽완료/loaded확정은별도다.
     void InstallExistingEditorCheckpoint(const CampaignExistingEditorCheckpointServices& effects,const std::uint32_t& readOnlyForts,const EditorFiles& files); //명시지연Editor의실제파일부터004b743b까지한번조립한다.참조장치는Session보다오래살며최종loaded는쓰지않는다.
     bool ExistingEditorCheckpointReady() const; //전체설치성공이아닌위한정부모의정상복귀여부만조회한다.
+    void WithExistingEditorPrefixUi(ClientLocalStateGlobals& owner,std::function<void()> prepareUi); //State1 prefix의 실제 HUD 동기화만 파일 설치 전에 허용한다. Session은 게임 상태를 쓰지 않는 prepared 대여여야 한다.
     void WithExistingEditorInstallUi(ClientLocalStateGlobals& owner,InputQueue& input,const ExistingEditorAfterCheckpointEffects& effects,std::function<void()> prepareUi); // 같은 checkpoint 뒤 게임/UI 하위를 한 번 준비하고 실제 원문 tail을 직접 호출한다. 공개 입력·저장은 계속 거부한다.
     void CommitExistingEditorInstall(ClientLocalStateGlobals& owner); // 같은 전체144BYTE State의 정상 공통 확정과 UI/tail 완료를 검사한 마지막 한 곳에서 Editor loaded를 공개한다.
     void WriteExistingEditorCoreData(std::uint32_t slot); //명시Editor의실제004beb30을현재Storage/모드에연결한다.직렬화하위미복원은선택위치에서거부하며loaded를변경하지않는다.

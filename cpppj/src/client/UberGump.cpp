@@ -68,12 +68,22 @@
 #include "client/ClientStateWorldCleanup.h"
 #include "client/ClientCursorStateCleanup.h"
 #include "client/ClientKencloudGlobals.h"
+#include "client/EditorFiles.h"
+#include "client/EditorFortFileDevices.h"
+#include "client/EditorLocalTransport.h"
+#include "client/ExistingEditorAfterCheckpoint.h"
+#include "o/RawDataManagerSelection.h"
+#include "o/RawSavedStateRead.h" //startupStateCheck의 실제 저장 파일 부재 관문도 원문 reader에서 판정한다.
 #include <algorithm>
 #include <sstream>
 #include <stdexcept>
 #include <bit>
 #include <iostream>
 #include <utility>
+#ifndef NOMINMAX
+#define NOMINMAX //Win32 파일 속성 장치의 min/max 매크로가 기존 표준 호출을 바꾸지 않게 한다.
+#endif
+#include <windows.h> //원문004dd560의 GetFileAttributesA 부재/디렉터리 판정을 실제 Windows 장치에 연결한다.
 
 namespace netstorm::client {
 // 테스트 전용 임시 조작이며 원본 분석 결과가 아니다. 미션 진행/적 상태/기술은 바꾸지 않는다.
@@ -163,6 +173,7 @@ struct UberGump::MissionRuntime {
 };
 
 #include "client/UberHud.inc" // 같은 실제 소유자에 전체 HUD 루트/지도 전역과 네 자식 공장을 연결한다.
+#include "client/UberEditor.inc" //실제 Edit 선택의 Native State1/파일/후반 UI와 다음 Poll4를 연결한다.
 // 원본 GIF는 색 표의 RGB를 쓰지 않고 파일의 번호를 화면 팔레트에 바로 쓴다(00419ec0→004dae60).
 UberGump::UberGump(Client& client) : client_(client),initLoginSubscriber_(client.SubscriberGlobals()->MySubscriber()),initialSubscriber_(client.SubscriberGlobals()->LoginSubscriber()),mapFileSpec_(client.FortGlobals()->FileSpec()),fortSelectionMode_(client.FortGlobals()->SelectionMode()),htmlGlobals_(client.HtmlWindowGlobals()->text),hideBuildings_(client.GameplayGlobals()->HideBuildings()),worldRedraw_(client.KencloudGlobals()->WorldRedraw()),menuConfigRevision_(client.FortGlobals()->Catalog().dirty),commandGump_(client.ChatWindowGlobals()->window.current) {
     serializationGlobals_=std::make_shared<o::FortSerializationGlobals>(); // 원본BSS와같은한DWORD를모든manager/객체소비자보다오래소유한다.
@@ -313,6 +324,7 @@ void UberGump::ClearWorld() {
         retiringWorld.reset(); // Session이 같은 전역 Kernel을 먼저 비운 뒤 나머지 월드 소유권을 반납한다.
         client_.LocalStateGlobals()->LoginEnd()=0.0;client_.LocalStateGlobals()->ConnectEnd()=0.0; //004b2df0 말미의 두 별도 기한0은 실제 월드 반납 뒤에 쓴다. ActivityEnd와 State 블록은 보존한다.
     }
+    if (editor_) { editor_->Close();editor_.reset(); } //현재 Session 수신기 뒤에 같은 작업 파일/양끝/State 분배기의 호스트 수명을 반납한다.
     client_.WorldAudio().SetView({0,0,0,0,client_.GetScreen().Width(),client_.GetScreen().Height()});
 }
 // 현재 어댑터의 월드 수명으로 원본 번개 부모 조회 경계를 제공한다.
@@ -442,6 +454,7 @@ void UberGump::MainMenu() {
 void UberGump::RefreshWindowTitle() {
     WindowTitleState state; // 현재 메뉴는 요새 없음이며 데모 여부는 같은 실제 미션 필드다.
     if (mission_) { state.fortName=missionRuntime_ && missionRuntime_->guided ? std::string(client_.FortGlobals()->Current()) : mission_->FortName();state.mission=true; } // 원문 Init이 연결된 미션은 같은 실제 현재 Fort를 읽는다. 다른 기존 로더의 이름 계약은 유지한다.
+    if (world_ && client_.GameplayGlobals()->world.editor) { state.fortName=std::string(client_.FortGlobals()->Current());state.editor=true; } //실제 Editor 파일 설치 중의 제목도 같은 현재 이름과 EditorWindowName을 사용한다.
     if (missionRuntime_) state.demo=missionRuntime_->gate.demo!=0;
     netstorm::client::RefreshWindowTitle(state,{
         [this](std::string_view key,std::optional<std::string_view> argument) { return client_.Configuration().PathSpec(key,argument); },
@@ -647,7 +660,7 @@ void UberGump::ToggleGameMenu() {
 }
 // 실제현재Session의조회/검산과기존공통controlled메뉴를한수명안에서작성한다.
 void UberGump::OpenGameMenu() {
-    if (!world_ || !missionRuntime_ || state_.phase!=ClientPhase::Mission) throw std::logic_error("게임메뉴의현재미션없음");
+    if (!world_ || state_.phase!=ClientPhase::Mission) throw std::logic_error("게임메뉴의현재설치월드없음"); //Editor도 실제 Session/Template의 같은 원본 메뉴를 사용한다.
     auto& session=world_->Session(); // 원본cc210은앞서열린다른팝업을임의로닫지않는다.
     if (!gameMenuState_) gameMenuState_=std::make_unique<GameMenuBarState>(session.GameMenuTrackingOffset());
     rawButtons_->Menus()->SetPalette(client_.GetScreen().Colors());
@@ -672,7 +685,7 @@ void UberGump::OpenGameMenu() {
         hooks.config=[this](auto key) { return client_.Configuration().GetInt(key); };
         hooks.readInt=[this](auto key,std::int32_t& value) { client_.Configuration().ReadInt(key,value); };
         hooks.translate=[this](auto text) { return FontBytes(client_.Translate(o::DecodeOriginalText({reinterpret_cast<const std::uint8_t*>(text.data()),text.size()}))); };
-        hooks.editingMission=[this] { return missionRuntime_->mode64; };hooks.demo=[this] { return missionRuntime_->gate.demo; };
+        hooks.editingMission=[this] { return missionRuntime_ ? missionRuntime_->mode64 : 0U; };hooks.demo=[this] { return missionRuntime_ ? missionRuntime_->gate.demo : 0U; }; //원문 Guide getter는 현재 미션이 없으면0을 돌려준다.
         hooks.playerMenu=[&](auto subscriber) { return objectMenus_->BuildPlayerMenu(*world_,subscriber,widgets,controls,menu); };
         BindGameMenusControls(hooks,widgets,controls,menu,[this](auto text) { return scriptStrings_.Store(text); });
         hooks.node=[this](auto token) { return rawButtons_->Menus()->Node(token); };
@@ -949,6 +962,7 @@ bool UberGump::Input() {
 }
 // 예약 명령은 메시지/입력보다 앞서 실행한다(원본 004b88c0 자리).
 void UberGump::Tick() {
+    PollEditorState(); //원문004b88c0 자리에서 실제 next1/4를 소비하고 공통 확정 뒤에만 Editor 입력을 연다.
     const bool loading = state_.phase == ClientPhase::LoadingMission;
     if (const auto action = state_.Take()) Execute(*action);
     else if (loading && !(missionRuntime_ && missionRuntime_->guided)) AdvanceBriefing();
@@ -1216,6 +1230,7 @@ std::string UberGump::Report() const {
     out<<"html_window_state\t"<<client_.HtmlWindowGlobals()->window.instances<<'\t'<<rawButtons_->DialogCount()<<'\t'<<rawButtons_->Menus()->HtmlWindowsOpen()<<'\n'; // Kill 뒤 인스턴스와 즉시 모달 반납을 구별하는 현재값이다.
     const auto& local=client_.LocalStateGlobals()->Blocks();out<<"fort_selection\t"<<fortSelectionMode_<<'\t'<<local[1][0]<<'\t'<<local[3][0]<<'\t'<<local[4][0]<<'\t'<<Field(std::string(client_.FortGlobals()->Pending()))<<'\n'; // 원문mode/확정phase/현재요청/next/pending을 설치완료와 구별해 읽는다.
     out<<"fort_names\t"<<Field(std::string(client_.FortGlobals()->Current()))<<'\t'<<Field(std::string(client_.FortGlobals()->Pending()))<<'\t'<<menuConfigRevision_<<'\t'<<client_.FortGlobals()->SelectedFileSpec()<<'\n'; // 같은 실제 두 버퍼/공유 dirty/선택 키를 읽기만 한다.
+    if (editor_) out<<"editor_runtime\t"<<editor_->committed<<'\t'<<(editor_->transport ? editor_->transport->ClientAlive() : false)<<'\t'<<(editor_->transport ? editor_->transport->PendingAlive() : false)<<'\t'<<client_.GameplayGlobals()->FortKeepGenus()<<'\t'<<client_.GameplayGlobals()->StateAuxFC4()<<'\n'; //실제 공통 확정 복귀/양끝/두 현재 전역만 조회한다.
     std::string rankPrefix;const auto chatManager=client_.ChatManagerGlobals()->Current(); // 실제 생성자가 쓴 NUL 문자열만 보고하며 미정 할당 꼬리를 읽지 않는다.
     if (chatManager) { const auto bytes=client_.ChatManagerGlobals()->Bytes(chatManager).subspan(o::kChatManagerRankPrefixOffset);const auto end=std::find(bytes.begin(),bytes.end(),std::uint8_t{});if (end==bytes.end()) throw std::out_of_range("Chat 보고 접두 NUL 범위");rankPrefix.assign(reinterpret_cast<const char*>(bytes.data()),static_cast<std::size_t>(end-bytes.begin())); }
     std::uint32_t dotCount{};for (std::size_t byte=0;byte<4;++byte) dotCount|=std::uint32_t(client_.DotCommandGlobals()->Bytes()[0xa04+byte])<<(8*byte); // 같은 실제 명령표 count DWORD의 읽기 전용 관측이다.

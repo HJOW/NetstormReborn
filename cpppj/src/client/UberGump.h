@@ -13,6 +13,7 @@
 #include "o/Squid.h"
 #include "o/RawMissionGuide.h"
 #include "o/RawFortMissionSave.h"
+#include "o/RawLocalMissionState.h" //실제 Editor 부모 반환과 다섯 State 블록의 공통 확정 계약이다.
 #include "client/GuideMissionTransitions.h"
 #include "client/TutorialInit.h"
 #include "client/SoloMapCatalog.h"
@@ -97,6 +98,8 @@ private:
     void EnsureHudFactories(); //현재 Client 장기 전역·물리로 네 공장만 준비하며 새 월드/Session을 생성하지 않는다.
     void RetireWorldForState(); //실제 State 자식 정리 뒤 같은 Runtime의 호스트 참조만 반납한다. 게임 전역·기한·정지를 다시 쓰지 않는다.
     void InstallHud(); // 현재 실제 월드와 같은 공통 전체 Uber/자식 공장·도킹을 연결한다.
+    void PollEditorState(); //메인 Edit의 실제 next1과 뒤따르는 next4를 같은 Native State 분배기로 소비한다.
+    o::LocalMissionParentResult InstallExistingEditorState(std::uint32_t selected); //State1의 정리/prefix/현재 파일/UI tail을 실행하며 공통 확정은 분배기에 맡긴다.
     // 기존 미션을 원본 Begin 순서로 종료/해제하고 새 빈 미션을 준비한다.
     void BeginMission(std::string name,std::uint32_t demo=0,std::uint32_t mode=0);
     // 이전 현재가 없는 Guide 공장 위치에서만 Script/빈 Runtime을 만든다.
@@ -146,6 +149,7 @@ private:
     GumpControlInput input_;
     GumpPointerBoundaryState pointerBoundary_; // 원본 정적 안팎/버튼 기록은 같은 Client UI 수명 동안 유지하고 페이지·월드 교체에서 지우지 않는다.
     struct HudRuntime;std::unique_ptr<HudRuntime> hud_; // 실제 화면/지도 전역의 주소를 Client UI 수명에 고정한다.
+    struct EditorRuntime;std::unique_ptr<EditorRuntime> editor_; //실제 파일/전송/State 장치는 World보다 먼저 만들고 Session 반납 뒤 해제한다.
     std::unique_ptr<RawButtonControls> rawButtons_; // 돌 버튼은 실제 공유 트리/수명/캡처를 사용한다. input_은 메뉴 행/판정 보고용이다.
     WarningMessages* warnings_{}; // rawButtons가 소유하는 같은 실제 Gump/StyleText의10초 안내를 빌린다.
     ScriptStringRing scriptStrings_; // 입력 큐에 예약한 문자열의 원본80칸 수명이며 페이지가 바뀌어도 보존한다.

@@ -70,7 +70,7 @@ void RawDamageableRelease::Release(Sid parent) const {
     for (Sid current=finder.Begin(parent,true);current.value;current=finder.Next()) {
         if (!(pool_.Slot(current)[kMask]&kReleasable)) continue;
         const auto kind=Read(pool_.Slot(current),kKind,2);
-        if (!state_.battle && !(Type(kind).flags2&state_.allowedGenus)) continue;
+        if (!state_.battle && !(Type(kind).flags2&state_.AllowedGenus())) continue;
         if (Type(kind).flags2&kPriest) {
             auto position=Position(parent);
             if (Type(pool_.Slot(parent)[kType]).flags2&kCenteredParent) {
