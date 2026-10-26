@@ -14,6 +14,7 @@
 namespace netstorm::client {
 class RawCampaignSession; // 현재 지식 창도 같은 세션의 실제 기술/제외/생산 상태를 빌린다.
 class RawImage;class MetaImageGump;struct MetaImageGumpNode; // 같은 공통 트리의 전용 동적 Image 파생이다.
+class MetaImageList;struct MetaImageListNode; // 실제21개 후보의 목록 파생과 같은 공통 저장소다.
 struct RawNsInfoContext; // 전체 NSInfo 생성의 실제 Client 전역과 문자열 수명이다.
 struct RawTextEntryContext;class RawTextEntryControls; // 같은 실제 편집 버퍼/Console 조립 계층이다.
 struct RawChatWindowContext;class ChatWindow;class HudChatGeometry; // 전체 Chat 공장과 같은 실제 자식 기하다.
@@ -95,6 +96,9 @@ public:
     std::uint32_t CreateMetaImage(RawImage& image); //0047f2a0의 기본 등록/비소유 Image 연결만 수행하고 부착은 호출자가 결정한다.
     MetaImageGumpNode* MetaImageNode(std::uint32_t token) const; // 목록/창이 같은 파생 기하/색표 필드를 사용한다.
     const MetaImageGump& MetaImageBackend() const; // 같은 실제 Resize/Attach/Draw 처리기를 빌린다.
+    std::uint32_t CreateImageList(std::int32_t columns); //0047ccb0: 실제 목록을 등록하고 부착은 호출자에게 맡긴다.
+    MetaImageListNode* ImageListNode(std::uint32_t token) const; // 실제 ID/자식/선택/셀 기하를 빌린다.
+    const MetaImageList& ImageListBackend() const; // 같은 목록 Add/Attach/Handle/Remove 몸체다.
     std::uint32_t CreateNsInfo(RawNsInfoContext context); // 실제 전체 숨김 NSInfo와 필수 Player8/Battle/문자/버튼을 생성한다.
     std::uint32_t NsInfoRoot() const; // 같은 현재 전역 토큰의 실제 생존 여부만 조회한다.
     void CloseNsInfo(); // 미부착/부분 생성도 같은 공통 자식 우선 수명으로 정리한다.

@@ -1,0 +1,436 @@
+{
+  "unit": 477,
+  "date": "2026-10-27",
+  "host": "HJOW-Athlon",
+  "baseCommit": "99bb3f8c",
+  "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+  "decompileChanged": false,
+  "builds": [
+    {
+      "command": [
+        "cmake",
+        "--build",
+        "cpppj/build",
+        "--config",
+        "Release",
+        "--parallel",
+        "4",
+        "--",
+        "/p:UseMultiToolTask=true",
+        "/p:MultiProcMaxCount=4",
+        "/p:EnforceProcessCountAcrossBuilds=true"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-meta-list-477/build1.log",
+      "sha256": "69ad067e51ada409fa5c7261ac0f993edc58285cb65d03a1132f6579e6ca06e0",
+      "summaries": [],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cmake",
+        "--build",
+        "cpppj/build",
+        "--config",
+        "Release",
+        "--parallel",
+        "4",
+        "--",
+        "/p:UseMultiToolTask=true",
+        "/p:MultiProcMaxCount=4",
+        "/p:EnforceProcessCountAcrossBuilds=true"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-meta-list-477/build2.log",
+      "sha256": "aad6ab33d9b59d605fafae9f6cf812b7158eac3aed1233e5d7b6fb8f6a712e97",
+      "summaries": [],
+      "diagnostics": []
+    }
+  ],
+  "nativeSmoke": {
+    "command": [
+      "python",
+      "-X",
+      "utf8",
+      "tools/decomp_meta_image_list.py",
+      "--smoke"
+    ],
+    "exit": 0,
+    "log": "extracted/cpp-meta-list-477/native-smoke1.log",
+    "sha256": "95ef3d340976fb839b0c5034310be7edf97b149c04b9bfc951212c44e9022101",
+    "summaries": [],
+    "diagnostics": []
+  },
+  "nativeGenerate": [
+    {
+      "command": [
+        "python",
+        "-X",
+        "utf8",
+        "tools/decomp_meta_image_list.py"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-meta-list-477/native-generate1.log",
+      "sha256": "900da8319e8fde5e1384f6dc2be23235ee2dfa3abb119333df0a2a9fe32aec9f",
+      "summaries": [],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "python",
+        "-X",
+        "utf8",
+        "tools/decomp_meta_image_list.py"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-meta-list-477/native-generate2.log",
+      "sha256": "19715b6ad568ec4a267207714ab0e648648989537db47aec275bb942043981a1",
+      "summaries": [],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "python",
+        "-X",
+        "utf8",
+        "tools/decomp_meta_image_list.py"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-meta-list-477/native-generate3.log",
+      "sha256": "6d3964c7d1fecec6f6b0c91dc56ad91702b923765bf2354b60295cb6c545dd31",
+      "summaries": [],
+      "diagnostics": []
+    }
+  ],
+  "calibrationVerify": {
+    "command": [
+      "python",
+      "-X",
+      "utf8",
+      "tools/decomp_meta_image_list.py",
+      "--verify"
+    ],
+    "exit": 0,
+    "log": "extracted/cpp-meta-list-477/native-verify1.log",
+    "sha256": "9b8e5a60ef38f64a9a59d4c7c8dbff54f42830b2c599ac271062842aef05c71a",
+    "summaries": [],
+    "diagnostics": []
+  },
+  "nativeVerify": {
+    "command": [
+      "python",
+      "-X",
+      "utf8",
+      "tools/decomp_meta_image_list.py",
+      "--verify"
+    ],
+    "exit": 0,
+    "log": "extracted/cpp-meta-list-477/native-verify2.log",
+    "sha256": "2cfe8957098692b4cbce5242f0ab70f071c74841964fe4fc6a9a4a5837aae1e8",
+    "summaries": [],
+    "diagnostics": []
+  },
+  "nativeReport": "cpppj/meta-image-list-native-20261027.json",
+  "nativeObservations": 514,
+  "firstCppMismatch": {
+    "command": [
+      "cpppj/build/bin/Release/netstorm_tests.exe",
+      "--filter",
+      "ImageList"
+    ],
+    "exit": 1,
+    "log": "extracted/cpp-meta-list-477/focused1-ImageList.log",
+    "sha256": "2b70bfc2d0dc2270c48ac153981397e80d233639e8bd26fa5c59a8f1b8d9b842",
+    "summaries": [
+      "2 test(s), 12 failed check(s)"
+    ],
+    "diagnostics": []
+  },
+  "nativeCorrection": {
+    "rows": 514,
+    "changed": [
+      {
+        "row": 196,
+        "count": "1",
+        "index": "0",
+        "control": "639",
+        "before": "kill:-1114160",
+        "after": "kill:0"
+      },
+      {
+        "row": 197,
+        "count": "1",
+        "index": "0",
+        "control": "895",
+        "before": "kill:-1114160",
+        "after": "kill:0"
+      },
+      {
+        "row": 298,
+        "count": "5",
+        "index": "0",
+        "control": "639",
+        "before": "kill:-1114160",
+        "after": "kill:0"
+      },
+      {
+        "row": 299,
+        "count": "5",
+        "index": "0",
+        "control": "895",
+        "before": "kill:-1114160",
+        "after": "kill:0"
+      },
+      {
+        "row": 304,
+        "count": "5",
+        "index": "4",
+        "control": "639",
+        "before": "kill:-1114160",
+        "after": "kill:4"
+      },
+      {
+        "row": 305,
+        "count": "5",
+        "index": "4",
+        "control": "895",
+        "before": "kill:-1114160",
+        "after": "kill:4"
+      },
+      {
+        "row": 400,
+        "count": "21",
+        "index": "0",
+        "control": "639",
+        "before": "kill:-1114160",
+        "after": "kill:0"
+      },
+      {
+        "row": 401,
+        "count": "21",
+        "index": "0",
+        "control": "895",
+        "before": "kill:-1114160",
+        "after": "kill:0"
+      },
+      {
+        "row": 406,
+        "count": "21",
+        "index": "4",
+        "control": "639",
+        "before": "kill:-1114160",
+        "after": "kill:4"
+      },
+      {
+        "row": 407,
+        "count": "21",
+        "index": "4",
+        "control": "895",
+        "before": "kill:-1114160",
+        "after": "kill:4"
+      },
+      {
+        "row": 412,
+        "count": "21",
+        "index": "20",
+        "control": "639",
+        "before": "kill:-1114160",
+        "after": "kill:20"
+      },
+      {
+        "row": 413,
+        "count": "21",
+        "index": "20",
+        "control": "895",
+        "before": "kill:-1114160",
+        "after": "kill:20"
+      }
+    ],
+    "onlyRemoveTraceChanged": true,
+    "inputsStorageGeometryResultsPreserved": true,
+    "originalPeAndCodePreserved": true,
+    "calibrationsPreserved": true
+  },
+  "nativeCorrectionSha256": "b81d973d5cef46ee9096b6932d2c49a38518df11acb74f78a8d9f3722b189a9c",
+  "dataOnlyCorrection": {
+    "changed": [
+      "cpppj/tests/fixtures/meta-image-list-x86.tsv"
+    ],
+    "compiledCodeAndTestsUnchanged": true,
+    "exeUnchanged": true
+  },
+  "corrections": [
+    "작은 Image의 최초 자료를 보존하고 실제224/112 치수를 포함하는 자료로 확대했다.",
+    "원본0047d226/0047d235의thiscall에 맞춰 Kill 장치의 대상을 ECX에서 읽도록 정정했다. C++ 제품/검사 로직/입력/저장소/기하/반환값은 유지하고12행의trace만 정정했다."
+  ],
+  "focused": [
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "ImageList"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-meta-list-477/focused2-ImageList.log",
+      "sha256": "17f7279da3f08c12c131670edd04035f36111912b5ebd3df5a4d00e773aa60cd",
+      "summaries": [
+        "2 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "MetaImage"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-meta-list-477/focused2-MetaImage.log",
+      "sha256": "e6baeeedde0ea6bfc36accf39e18d651275a4c700e457fa0060b86ed6f152bbd",
+      "summaries": [
+        "3 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "RawMenuControls"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-meta-list-477/focused2-RawMenuControls.log",
+      "sha256": "72e485c814ab8a1456410ce8591105388e15f7a54d55c02e2dc9ed1f4e0a6581",
+      "summaries": [
+        "14 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "EditorImage"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-meta-list-477/focused2-EditorImage.log",
+      "sha256": "ce2dbf8b7e712b740d2b6a4952aafcda1e9f1cad8f3afff3c91ec3a4702ae8a6",
+      "summaries": [
+        "2 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "MenuCheck"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-meta-list-477/focused2-MenuCheck.log",
+      "sha256": "98bebb032a9c2a1a45c47ed6be61a2762f2e2ad8156422a199b22ecb2656c56a",
+      "summaries": [
+        "3 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "EditorIsland"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-meta-list-477/focused2-EditorIsland.log",
+      "sha256": "e9544b5422c2578b7d9b47e6aade5fea2157c65fc0d80a4d89807e5632dd6401",
+      "summaries": [
+        "4 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "ExistingEditor"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-meta-list-477/focused2-ExistingEditor.log",
+      "sha256": "e1f1b9a026b8ee6f493beeb6d593c1e12b556d781d1235d73c8bb52e40809183",
+      "summaries": [
+        "58 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "NewFort"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-meta-list-477/focused2-NewFort.log",
+      "sha256": "4262fd2309d2e3dfa1a70e833eb3661567dcb8a7ecff51653d21d760a3ef670c",
+      "summaries": [
+        "13 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    }
+  ],
+  "uniqueFocused": 98,
+  "observedFocused": 99,
+  "wholeCpp": {
+    "command": [
+      "cpppj/build/bin/Release/netstorm_tests.exe"
+    ],
+    "exit": 0,
+    "log": "extracted/cpp-meta-list-477/whole1.log",
+    "sha256": "4ed77f74b305dfd0f64f5e9959d26483888ab1474c60b5f37bbc8cb498fd545b",
+    "summaries": [
+      "3252 test(s), 0 failed check(s)"
+    ],
+    "diagnostics": []
+  },
+  "wholeCppCases": 3252,
+  "ctestWrapperExecuted": false,
+  "registeredBefore": 3250,
+  "registeredAfter": 3252,
+  "newTests": [
+    "MetaImageList_ReplaysNativeWholeListAndActualMetaChildren",
+    "RawMenuImageList_ActualTreeTwentyOneSlotsSelectionPixelsAndRemoval"
+  ],
+  "missingPreviousTests": [],
+  "preservedWholeInputFiles": 3178,
+  "changedProtectedInputs": [],
+  "appendedExistingTest": {
+    "path": "cpppj/tests/RawMenuControlsTests.cpp",
+    "originalBytes": 46229,
+    "originalSha256": "7ac116ef8e65329c357e25c7510911e68dfddec90dec6b42e417ce2878fd2ccb",
+    "originalBytePrefixPreserved": true
+  },
+  "sourceManifest": {
+    "path": "extracted/cpp-meta-list-477/source-final.json",
+    "files": 2825,
+    "sha256": "119fccb3eb799be2a8fb31dd42728628b03642051d87d1faf20530918ba47163"
+  },
+  "gameExeSha256": "6066d89d264b9e4d1c0af1cb348dcbca1da2acc95840a1452bbf26ad474a6a16",
+  "testExeSha256": "d11dd229d03632534eef790a3733125fe706e57da0f13cb10a621978737fbdb3",
+  "coverage": [
+    "실제21칸 목록 생성/ID·Image/추가/자식배치/적중/선택/체크무늬/제거/소멸",
+    "실제 MetaImage 자식의 원문 배율과 현재 count/셀 변경·tail 보존",
+    "공통 실제 등록/입력 라우팅/토글·ID/전체 선택 픽셀/padding/지연 삭제와 비소유 Image"
+  ],
+  "limits": [
+    "Native 기본 부착/Push·Bounds/Redraw/Bubble/Kill·픽셀 소비자와 자식 heap 주소는 명시 경계다.",
+    "저장소 밖 ID/Remove 및 비정상 count는 호스트 진단 범위이며 신규 Native 자료에 포함하지 않는다."
+  ],
+  "gameRuns": 0,
+  "guiRuns": 0,
+  "audioDeviceRuns": 0,
+  "remaining": [
+    "Add Island 창 생성/Refresh/Idle/단일 창 수명·공통 조립",
+    "실제 기존/신규 맵 Add Island GUI·저장/재진입",
+    "Test Battle/언어별 시나리오",
+    "전체 미션 자연 완주·화면/음향 동일성"
+  ]
+}

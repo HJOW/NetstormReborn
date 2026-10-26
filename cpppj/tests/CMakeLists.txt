@@ -2247,3 +2247,7 @@ set_source_files_properties(EditorImageTests.cpp PROPERTIES COMPILE_DEFINITIONS 
 # 원본 MetaImage326행과 실제 공통 트리/픽셀/비소유 수명을 검증한다.
 target_sources(netstorm_tests PRIVATE MetaImageGumpTests.cpp)
 set_source_files_properties(MetaImageGumpTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_META_IMAGE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/meta-image-x86.tsv\"")
+
+# 실제 목록/MetaImage 자식의 전체 tail/기하/효과 순서를 재생한다.
+target_sources(netstorm_tests PRIVATE MetaImageListTests.cpp)
+set_source_files_properties(MetaImageListTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_META_IMAGE_LIST_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/meta-image-list-x86.tsv\"")

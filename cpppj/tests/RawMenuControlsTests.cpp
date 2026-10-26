@@ -386,3 +386,6 @@ TEST_CASE(RawMenuControls_MinimapReplacementKeepsCurrentWorldNotifications) {
 
 // 같은 실제 트리의 전용 MetaImage 수명과 픽셀 검증이다.
 #include "RawMenuMetaImageTests.inc"
+
+// 같은 공통 트리의21개 후보 목록과 입력/픽셀/수명 검증이다.
+#include "RawMenuImageListTests.inc"
