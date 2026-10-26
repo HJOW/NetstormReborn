@@ -2191,3 +2191,4 @@ target_sources(netstorm_tests PRIVATE StormPowerRefreshTests.cpp)
 target_sources(netstorm_tests PRIVATE ConnectionCleanupTests.cpp) # 원문580관측과 실제 Client/Editor 반환을 검사한다.
 target_sources(netstorm_tests PRIVATE ConnectionRegistrationTests.cpp) #원문288관측과 실제 장기 표/양끝/재배치를 검사한다.
 target_sources(netstorm_tests PRIVATE MissionBackgroundLifetimeTests.cpp) #실제 같은 HTML 배경의 시작 첫BYTE와 연속 미션 보존을 검사한다.
+target_sources(netstorm_tests PRIVATE StateBridgeResetTests.cpp) #Native64관측과 실제 World 앞/뒤의 현재 색 표·스캔 초기화를 검사한다.

@@ -1,0 +1,47 @@
+{
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "edition": "PATCH10.78",
+  "observations": 64,
+  "effectsStubbed": false,
+  "originalGameExecuted": false,
+  "functions": {
+    "colors": {
+      "entry": "0x43b540",
+      "bytes": 91,
+      "bodyHex": "c705081b530000000000c7050c1b530001000000c705101b530002000000c705141b530003000000c705181b530004000000c7051c1b530005000000c705201b530006000000c705241b530007000000c705281b530008000000c3"
+    },
+    "scan": {
+      "entry": "0x422490",
+      "bytes": 44,
+      "bodyHex": "d90568f95200b8983a0000dc05d0b45500a36cf95200c70570f95200d9590000a3a8535400dd1db8535400c3"
+    }
+  },
+  "regions": [
+    [
+      5446392,
+      68
+    ],
+    [
+      5437784,
+      40
+    ],
+    [
+      5526424,
+      64
+    ],
+    [
+      5616832,
+      40
+    ]
+  ],
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_state_bridge_reset.py": "20e83db7e61928953d43c0db90555f9ea26de3ee88225af4f540698db258f984",
+    "cpppj/tests/fixtures/state-bridge-reset-x86.tsv": "ff0b91cb76c5b4a2abc52abecb5921445621391b76abc5c7b8b3bfdbee532b34"
+  },
+  "cdNote": "10.72 대응은 색 표00495d10/005365a0, 스캔00449200이다. 이번에는 실행하지 않았다."
+}

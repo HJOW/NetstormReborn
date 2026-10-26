@@ -72,6 +72,8 @@ public:
     std::array<std::uint32_t,o::kPlayerCount+1> priestOwnerState{}; //00595428..00595448의9DWORD 최초BSS0이다. 실제 사제 SID목록/count는 sidLists에 있고 지갑은 포함하지 않는다.
     o::SquidOwnerMode ownerMode; // 미니맵과 현재 월드가 같은 실제 세 모드 값을 읽는다.
     o::BridgeConnectState links; // 생산 UI와 현재 월드가 같은 실제 표면 종류 전역을 읽는다.
+    o::BridgeDecayScanState bridgeDecayScan; //0052f96c/970·005453a8/b8의 같은 현재 스캔 범위·커서·기한을 World 반납 뒤에도 유지한다.
+    float bridgeDecayPeriod{10.0F}; //0052f968의 원문 최초float10이며 Native 정리는 이 현재 값을 읽고 덮어쓰지 않는다.
 private:
     std::unique_ptr<RawProcessHostStorage> processes_; // 실제 Pool/TYPE 뒤에 선언하여 그 참조보다 먼저 최종 반납한다.
     const GameAssets* source_;bool borrowed_{};std::uint64_t generation_{}; // 최초 자산 정체성·단일 대여·호스트 관측 번호다.

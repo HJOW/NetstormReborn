@@ -8,6 +8,7 @@
 #include "o/RawStateZoneReset.h"
 #include "o/RawSquidPoolReset.h"
 #include "o/RawTotalMade.h"
+#include "o/RawStateBridgeReset.h"
 #include <stdexcept>
 
 namespace netstorm::client { //장기 Client 물리의 주소와 실제 효과 실행기의 수명을 구별한다.
@@ -25,6 +26,7 @@ void ResetClientStateWorldStorage(Client& client,RawSurfaceStorage& storage,o::S
     const auto& current=client.SurfaceStorageIfInitialized(); //검사 때문에 아직 없는 실제 Client 저장소를 새로 만들지 않는다.
     if (storage.pool.Edition()!=o::OriginalEdition::Patch1078 || storage.Authority()!=client.GameplayGlobals()->Authority() || storage.GameAux()!=client.GameplayGlobals()->GameAux() || (current && current.get()!=&storage))
         throw std::invalid_argument("State 물리 정리의 실제 Client/표면 owner 불일치");
+    if (effect==o::StateWorldCleanupEffect::Clear43b540) { o::ResetStateOwnerColors(storage.links.ownerColors);return; } //원문은 Core0/World 반납 앞에서 같은 색 표를 정리한다.
     if (storage.Borrowed()) throw std::logic_error("State 물리 정리 전 실제 World 대여 반납 필요");
     switch (effect) {
     case o::StateWorldCleanupEffect::Clear472830:
@@ -36,6 +38,7 @@ void ResetClientStateWorldStorage(Client& client,RawSurfaceStorage& storage,o::S
     case o::StateWorldCleanupEffect::Reset568b60:o::ResetRawIslandRecords(storage.islands.records);return;
     case o::StateWorldCleanupEffect::Reset54c8a0:storage.chunks.Reset();return;
     case o::StateWorldCleanupEffect::ResetGraph:o::ResetRawGraphTable(storage.graph);return;
+    case o::StateWorldCleanupEffect::Reset422490:o::ResetStateBridgeDecayScan(storage.bridgeDecayScan,storage.bridgeDecayPeriod,client.Time().game);return;
     default:throw std::invalid_argument("State 물리 정리의 미지원 실제 Effect");
     }
 }

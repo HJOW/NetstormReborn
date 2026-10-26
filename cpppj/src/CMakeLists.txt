@@ -220,3 +220,6 @@ target_sources(netstorm PRIVATE o/RawStateSidLists.cpp o/RawStateSidLists.h)
 
 # 실제 SP 표시의 serial 조회와 가상 재부착 부모다.
 target_sources(netstorm PRIVATE client/RawStormPowerRefresh.cpp client/RawStormPowerRefresh.h)
+
+# State의 현재 소유자 색과 장기 다리 스캔 초기화다.
+target_sources(netstorm PRIVATE o/RawStateBridgeReset.cpp o/RawStateBridgeReset.h)

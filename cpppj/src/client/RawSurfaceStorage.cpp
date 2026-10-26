@@ -15,7 +15,8 @@ constexpr std::size_t kCells=65536; // 원본256×256 spot 배열의 실제 바�
 }
 // 참조 배열을 원본 자산에서 최초 한 번만 복사해 이후 주소를 고정한다.
 RawSurfaceStorage::RawSurfaceStorage(o::OriginalEdition edition,std::span<const o::RiftTypeRecord> inputTypes,std::span<const o::RiftTypeFrames> inputFrames,std::span<const o::SquidDisplayShape> inputShapes,const GameAssets* source,std::shared_ptr<o::RawAuthorityState> authority,std::shared_ptr<o::RawGameAuxState> gameAux)
-    :authority_(authority ? std::move(authority) : std::make_shared<o::RawAuthorityState>()),gameAux_(gameAux ? std::move(gameAux) : std::make_shared<o::RawGameAuxState>()),types(inputTypes.begin(),inputTypes.end()),frames(inputFrames.begin(),inputFrames.end()),shapes(inputShapes.begin(),inputShapes.end()),codes(types.size()),pool(edition,kCapacity,true,&authority_->server),spots(kCells),source_(source) {
+    :authority_(authority ? std::move(authority) : std::make_shared<o::RawAuthorityState>()),gameAux_(gameAux ? std::move(gameAux) : std::make_shared<o::RawGameAuxState>()),types(inputTypes.begin(),inputTypes.end()),frames(inputFrames.begin(),inputFrames.end()),shapes(inputShapes.begin(),inputShapes.end()),codes(types.size()),pool(edition,kCapacity,true,&authority_->server),spots(kCells),bridgeDecayScan{edition==o::OriginalEdition::Patch1078 ? -1 : 0,edition==o::OriginalEdition::Patch1078 ? -1 : 0,0,0.0},source_(source) {
+    //PATCH의 초기 스캔 first/last는 실제 PE DWORD-1이며 cursor/기한만 BSS0이다. 다른 판본의 새 필드는 종전0을 유지한다.
     if (frames.size()!=types.size() || shapes.size()!=types.size()) throw std::invalid_argument("실제 월드 저장소의 자산 배열 크기 불일치");
     o::FinishSquidPoolReset(pool,boardTargetState.invalid); //Pool 생성자가 이미 실행한 하위 Reset 뒤 원문 시작의 기록80DWORD·Y/X 꼬리를 한 번 잇는다.
     links.bridgeType=82;links.islandType=94;links.stalagType=95;links.connectorType=155;links.noIslandType=157; // 기존10.78 표면/초기 생산 경계의 실제 종류다. 월드 설치는 자기 판본의 실제 값을 직접 쓴다.

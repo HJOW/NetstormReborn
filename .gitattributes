@@ -2062,3 +2062,7 @@ cpppj/connection-registration-runtime-20261026.json text eol=lf
 
 # 실제 HTML 배경 수명과 ESC 복구의 실행 증거를 보존한다.
 cpppj/mission-background-runtime-20261026.json text eol=lf
+
+# State 소유자 색/다리 스캔 초기화의 최초 관측 SHA를 보존한다.
+cpppj/state-bridge-reset-native-20261026.json text eol=lf
+cpppj/state-bridge-reset-runtime-20261026.json text eol=lf
