@@ -760,3 +760,6 @@ TEST_CASE(CampaignExistingEditorCheckpoint_SameNameKeepsGuideAndSelectsMissionOu
 
 // 같은 실제 Editor와 Image 변환의 소유권/크기를 이어서 검증한다.
 #include "CampaignEditorImageTests.inc"
+
+// 같은 실제 Session과 드래그 미리보기의 좌표/색상/읽기 전용 계약을 확인한다.
+#include "CampaignEditorIslandMotionTests.inc"

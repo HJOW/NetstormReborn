@@ -452,6 +452,7 @@ public:
     bool SeedEditorIslandChoices(std::span<std::uint8_t,126> records); // 0047f9b0의 창 전용21행에서 비활성 레코드만 같은 공유 난수로 보충한다.
     void BuildEditorIslandChoiceMap(std::span<const std::uint8_t,6> record,o::ChunkMap& target); // 0046e5a0의 owner0/ignorePosition 단일 지도 부분이다.
     bool DropEditorIsland(const o::ChunkMap& preview,std::span<std::uint8_t,6> record); // 실제 섬 배치→지형→population→Graph→현재 Territory 쓰기를 실행한다.
+    bool CanPlaceEditorIsland(const o::ChunkMap& preview,std::span<const std::uint8_t,6> record); //0047d5f0의 같은 독립 preview/현재 TYPE·owner 검사이며 월드/record/난수를 변경하지 않는다.
     void SaveCurrentMap(); //004bfb50의 현재 owner/manager 존재/독립 Battle·Fort 선택으로 전체 저장을 실행한다. 선택된 전체 Battle 저장은 미연결 위치에서 거부한다.
     void BindFortFileSave(const std::uint32_t& readOnlyForts,const EditorFiles& files); // 두 참조는 Session보다 오래 살아야 하며 현재 manager 이름은 이미 준비한 작업본 경로여야 한다.
     o::FortCurrentNameHooks BindFortCurrentName(o::FortCurrentNameHooks hooks); // 같은 실제 Template/State/Notify와 현재 Fort snapshot을 연결한다. Battle snapshot 선택은 미복원 위치에서 거부한다.

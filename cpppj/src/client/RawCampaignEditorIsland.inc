@@ -57,6 +57,16 @@ std::optional<RawImage> RawCampaignSession::BuildEditorIslandMapShape(o::ChunkMa
 RawImage RawCampaignSession::BuildEditorIslandChoiceShape(std::span<const std::uint8_t,6> record) {
     RawImage image;image.Convert(BuildEditorIslandChoiceImage(record),true);return image;
 }
+// 같은 독립 지도와 현재 프레임/owner를 사용하며 실제 배치의 부수 효과는 실행하지 않는다.
+bool RawCampaignSession::CanPlaceEditorIsland(const o::ChunkMap& preview,std::span<const std::uint8_t,6> record) {
+    auto& s=*impl_;
+    if (!s.loaded || s.services.installMode!=CampaignInstallMode::ExistingEditor || !s.globals.editor || !s.core.ownerMode.fort || s.core.ownerMode.battle)
+        throw std::logic_error("Add Island 미리보기의 실제 기존 Editor 설치 관문");
+    if (&preview==&s.chunks || preview.XLength()!=14 || preview.YLength()!=14) throw std::invalid_argument("Add Island 미리보기의 독립14×14 지도 계약");
+    const auto owner=s.playerState.templateOwner;
+    o::RawIslandBuilderState state{{0,0,preview.XLength(),preview.YLength()},owner>=1 && owner<=8 ? owner : 0};
+    return o::CanPlaceIsland(s.core.pool.Edition(),preview,s.core.frames,s.piece,state,record,SessionMissing<void,o::RawIslandBuilderAssertion>());
+}
 // 같은 실제 배치 부모를 연결한다. 거부는 false이며 중간 하위 실패의 앞선 월드 효과는 보존한다.
 bool RawCampaignSession::DropEditorIsland(const o::ChunkMap& preview,std::span<std::uint8_t,6> record) {
     auto& s=*impl_;

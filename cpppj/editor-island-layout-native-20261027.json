@@ -1,0 +1,143 @@
+{
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+  "runs": 184,
+  "cases": 92,
+  "peSha": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+  "sourceSha": "8408a59314b6bb3e9ae9a2af916225ce2a22102ca96cfe59f789217529a9b604",
+  "fixtureSha": "3721ca05513b30965dbb24f9d2269890b35570ae34eb8718ea277aa35c4ec5cd",
+  "entered": {
+    "0047d280": 104,
+    "0047d5f0": 80,
+    "004e49c0": 160,
+    "004bd300": 40,
+    "0046d9f0": 40
+  },
+  "limits": [
+    "0047d280/0047d5f0 전체 몸체와 실제 Builder/owner/CRT ftol을 실행한다.",
+    "기본/자식 가상 Attach·Push·지도 Bounds/Position·CanPlace 반환은 명시 장치 경계다.",
+    "창 생성/Refresh/Idle/수명·실제 GUI는 이 관측 범위 밖이다."
+  ],
+  "code": [
+    {
+      "address": "0046d790",
+      "bytes": 77,
+      "sha": "a78077a5c79e013902ab356fe184230a2ce6f0c282a1af0cfac60b6f8c1674a7"
+    },
+    {
+      "address": "0046d7e0",
+      "bytes": 180,
+      "sha": "f8ea6a8dea42520200f39e1ca5e53b16c759a848699d2e40fbe70a5f4e34fe29"
+    },
+    {
+      "address": "0046d8a0",
+      "bytes": 87,
+      "sha": "4ce8547d39488968edb32b75c6486792525b62679febe6534aff0d189ad6f070"
+    },
+    {
+      "address": "0046d900",
+      "bytes": 171,
+      "sha": "d86ccd2eb96b354eb7cb4614b94738c647bf420ba701d30f174af95eb4581297"
+    },
+    {
+      "address": "004dad20",
+      "bytes": 187,
+      "sha": "3da999571f58245ebab5d16aec4d0f794573402f357f86101b06acd39a6d5ae3"
+    },
+    {
+      "address": "004042cd",
+      "bytes": 730,
+      "sha": "8571f1641f90cb9691b7c581e1978114dd8b391ca6fab03f56aad2a36154165a"
+    },
+    {
+      "address": "0040463b",
+      "bytes": 368,
+      "sha": "d3c760e13eaba918660f347fd4560d08d295b13ff549de4107eda84f547c8e2b"
+    },
+    {
+      "address": "004047ab",
+      "bytes": 479,
+      "sha": "489746b0049b48b057b7b2414136107786f0679126c2b726605f5c6aaa75ed98"
+    },
+    {
+      "address": "004437f0",
+      "bytes": 1,
+      "sha": "ae3f4619b0413d70d3004b9131c3752153074e45725be13b9a148978895e359e"
+    },
+    {
+      "address": "0047f2a0",
+      "bytes": 154,
+      "sha": "a4de02bdabaffdee2ae63b9675c47e2545f648b9243ad1f8de90ca0cc3f5d95c"
+    },
+    {
+      "address": "0047cbd0",
+      "bytes": 47,
+      "sha": "a3fa0c6bae0c10397cebb379628dd15e097f71cc55fb32e3849c8f2461470cc4"
+    },
+    {
+      "address": "0047cc00",
+      "bytes": 174,
+      "sha": "9e06b4d99b22500a23738490a35c440dd0a4a989e21c7e939e1c98ae7d5f43bb"
+    },
+    {
+      "address": "0047cae0",
+      "bytes": 227,
+      "sha": "2cf6203ce3ac6bb58c57604362550b041d2dd4248efbbb0613e7734c8a34cec1"
+    },
+    {
+      "address": "004642c0",
+      "bytes": 338,
+      "sha": "dcab8851344b20012712a1bf80f270b6e0f989e84131e03a8fb58fe29bfb075c"
+    },
+    {
+      "address": "004e49c0",
+      "bytes": 117,
+      "sha": "5333b186c02836974c6f792303aeb2c00d856316b93ccbbe65f51def6ae661b4"
+    },
+    {
+      "address": "0047d280",
+      "bytes": 872,
+      "sha": "3d649d1753d6c5df6bb1cbde6519e3f8cdbaa4ece2dc314dfbba9902ccb34201"
+    },
+    {
+      "address": "0047d5f0",
+      "bytes": 455,
+      "sha": "8459086246fca54e73158643617ae8f19ff295e6abea4fa8be8167ae75feb1b0"
+    },
+    {
+      "address": "0046d9f0",
+      "bytes": 48,
+      "sha": "a31fac5e4e69cff5f1d8a09346ea8d6341693db48a6d1d72a64ff4ed6b3d6992"
+    },
+    {
+      "address": "0046da20",
+      "bytes": 64,
+      "sha": "56b0a2fb7ccc002535ee14b38f7967efc2107191545a11b74d1ec39df924a163"
+    },
+    {
+      "address": "00431fc0",
+      "bytes": 39,
+      "sha": "333062433a88b6ae473d40699266dad82566c4e1ff0ea77fcf3d50bf73163978"
+    },
+    {
+      "address": "0046ee50",
+      "bytes": 3,
+      "sha": "19d200194d49b34530548575f37a1bb4203ee60f18d42f0084e86b7a8c899faa"
+    },
+    {
+      "address": "004bd300",
+      "bytes": 36,
+      "sha": "4c91ea412a6c45e83f71badcf12393cc2c5aad16bc536549a122fd9d480959e2"
+    },
+    {
+      "address": "0040d900",
+      "bytes": 119,
+      "sha": "7c2594c8c9a3e5c7781734da394702387ef7f06fa1064e0c747e3895084dfb47"
+    },
+    {
+      "address": "0041cc20",
+      "bytes": 35,
+      "sha": "425742484cb194eb520f5a32fc2257961bf52b38b96141fa44e987b5d77ad159"
+    }
+  ]
+}

@@ -1,0 +1,328 @@
+{
+  "unit": 478,
+  "date": "2026-10-27",
+  "host": "HJOW-Athlon",
+  "baseCommit": "f0ac043f",
+  "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+  "decompileChanged": false,
+  "builds": [
+    {
+      "command": [
+        "cmake",
+        "--build",
+        "cpppj/build",
+        "--config",
+        "Release",
+        "--parallel",
+        "4",
+        "--",
+        "/p:UseMultiToolTask=true",
+        "/p:MultiProcMaxCount=4",
+        "/p:EnforceProcessCountAcrossBuilds=true"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-island-window-478/build1.log",
+      "sha256": "2371143c21687b5f4d0b76d506bf99ac0968e0fb905e22cc37823f98053ac325",
+      "summaries": [],
+      "diagnostics": []
+    }
+  ],
+  "nativeSmoke": {
+    "command": [
+      "python",
+      "-X",
+      "utf8",
+      "tools/decomp_editor_island_layout.py",
+      "--smoke"
+    ],
+    "exit": 0,
+    "log": "extracted/cpp-island-window-478/native-smoke.log",
+    "sha256": "ed2beeb5c34ed3117af7d2e53e4461b0154ce173563c171d0504ed6e25fd5450",
+    "summaries": [],
+    "diagnostics": []
+  },
+  "nativeGenerate": {
+    "command": [
+      "python",
+      "-X",
+      "utf8",
+      "tools/decomp_editor_island_layout.py"
+    ],
+    "exit": 0,
+    "log": "extracted/cpp-island-window-478/native-generate.log",
+    "sha256": "605235b004ec98ae76e7904b6f90ae1a331539770d48e2a471a6e1e04e4183a6",
+    "summaries": [],
+    "diagnostics": []
+  },
+  "nativeVerify": {
+    "command": [
+      "python",
+      "-X",
+      "utf8",
+      "tools/decomp_editor_island_layout.py",
+      "--verify"
+    ],
+    "exit": 0,
+    "log": "extracted/cpp-island-window-478/native-verify.log",
+    "sha256": "63abded8531413b5a99fab47a65925a3be5864c09d4ba2799db9cb5d3c73d5e8",
+    "summaries": [],
+    "diagnostics": []
+  },
+  "nativeObservations": 184,
+  "nativeReport": "cpppj/editor-island-layout-native-20261027.json",
+  "focused": [
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "EditorIslandLayout"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-island-window-478/focused1-EditorIslandLayout.log",
+      "sha256": "5d122ff2612d3db402d2cb7667c0c1bc93ed48e1e69167fe42f5b5c2bbd96af4",
+      "summaries": [
+        "1 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "CampaignEditorIslandMotion"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-island-window-478/focused1-CampaignEditorIslandMotion.log",
+      "sha256": "debc811f959c06f66323dc621285395be9a40b15005c651cfd0e53fc2e20f1b5",
+      "summaries": [
+        "1 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "EditorIslandDrag"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-island-window-478/focused2-EditorIslandDrag.log",
+      "sha256": "9d5e7337f5bf0d062c71603e280aa4185d8a6dcf08d917525aa1fed98998a80d",
+      "summaries": [
+        "1 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "EditorIslandDialog"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-island-window-478/focused2-EditorIslandDialog.log",
+      "sha256": "e6fca36444a415d9274cac00db5b3f3644ce1faedea63006538d3b272d164fc6",
+      "summaries": [
+        "1 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "IslandPlacement"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-island-window-478/focused2-IslandPlacement.log",
+      "sha256": "e8accc25240a8a40a103d692e737ac9fcfbb99687084136ff3e85755ea2c5653",
+      "summaries": [
+        "2 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "IslandPopulation"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-island-window-478/focused2-IslandPopulation.log",
+      "sha256": "6bf1efe05335cc71de7bbc6926069060f857d8603265872d1f1983ca19a3e0ab",
+      "summaries": [
+        "1 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "IslandAdd"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-island-window-478/focused2-IslandAdd.log",
+      "sha256": "09a41265388b8fc6a228502ce59f504e24768202a854d7e4c62525305e5e472f",
+      "summaries": [
+        "1 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "ImageList"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-island-window-478/focused2-ImageList.log",
+      "sha256": "17f7279da3f08c12c131670edd04035f36111912b5ebd3df5a4d00e773aa60cd",
+      "summaries": [
+        "2 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "MetaImage"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-island-window-478/focused2-MetaImage.log",
+      "sha256": "e6baeeedde0ea6bfc36accf39e18d651275a4c700e457fa0060b86ed6f152bbd",
+      "summaries": [
+        "3 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "ExistingEditor"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-island-window-478/focused2-ExistingEditor.log",
+      "sha256": "e1f1b9a026b8ee6f493beeb6d593c1e12b556d781d1235d73c8bb52e40809183",
+      "summaries": [
+        "58 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "NewFort"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-island-window-478/focused2-NewFort.log",
+      "sha256": "4262fd2309d2e3dfa1a70e833eb3661567dcb8a7ecff51653d21d760a3ef670c",
+      "summaries": [
+        "13 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "MenuCheck"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-island-window-478/focused2-MenuCheck.log",
+      "sha256": "98bebb032a9c2a1a45c47ed6be61a2762f2e2ad8156422a199b22ecb2656c56a",
+      "summaries": [
+        "3 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "RawMenuControls"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-island-window-478/focused2-RawMenuControls.log",
+      "sha256": "72e485c814ab8a1456410ce8591105388e15f7a54d55c02e2dc9ed1f4e0a6581",
+      "summaries": [
+        "14 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "EditorImage"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-island-window-478/focused2-EditorImage.log",
+      "sha256": "ce2dbf8b7e712b740d2b6a4952aafcda1e9f1cad8f3afff3c91ec3a4702ae8a6",
+      "summaries": [
+        "2 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    }
+  ],
+  "uniqueFocused": 102,
+  "observedFocused": 103,
+  "wholeCpp": {
+    "command": [
+      "cpppj/build/bin/Release/netstorm_tests.exe"
+    ],
+    "exit": 0,
+    "log": "extracted/cpp-island-window-478/whole1.log",
+    "sha256": "b1a57cc2e8c6068edce654a328aacd11e7f07865133f731950abbbb36e0b9349",
+    "summaries": [
+      "3254 test(s), 0 failed check(s)"
+    ],
+    "diagnostics": []
+  },
+  "wholeCppCases": 3254,
+  "ctestWrapperExecuted": false,
+  "registeredBefore": 3252,
+  "registeredAfter": 3254,
+  "newTests": [
+    "CampaignEditorIslandMotion_ActualSessionPreviewColorAndReadOnlyWorld",
+    "EditorIslandLayout_ReplaysNativeGeometryAndMotion"
+  ],
+  "missingPreviousTests": [],
+  "preservedWholeInputFiles": 3181,
+  "changedProtectedInputs": [],
+  "appendedExistingTest": {
+    "path": "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp",
+    "originalBytes": 117039,
+    "originalSha256": "4fdf78ae3d70ca4f8b6c0566e26adb8f69892dafafbd18cfe7c99ee27bb9f89d",
+    "originalBytePrefixPreserved": true
+  },
+  "sourceManifest": {
+    "path": "extracted/cpp-island-window-478/source-final.json",
+    "files": 2830,
+    "sha256": "9b2a225840a887da129a5dcc39bb4be633ce2a9e7ad27b4402a1e091c9c72615"
+  },
+  "gameExeSha256": "1d7b84a6d06ca9ce5373b747b419be3a9870196aa8ecd21e0b7faa1d9da3e3ea",
+  "testExeSha256": "973f465af93d7f2c01d9b977dddcc1940ce02ead75403f0e8a672b17eac9ad8a",
+  "coverage": [
+    "실제0047d280 Image 측정·일곱 자식 Push/배치와 가상 효과 후 현재 필드 재조회",
+    "실제0047d5f0 반크기/지도 원점 동시 절삭·격자·충돌 색상·화면 위치/깊이",
+    "같은 실제 Session/독립 지도·후보 Image·읽기 전용 CanPlace의 합법/거부/지도 밖 관문"
+  ],
+  "limits": [
+    "0047d280/0047d5f0 전체 몸체와 실제 Builder/owner/CRT ftol을 실행한다.",
+    "기본/자식 가상 Attach·Push·지도 Bounds/Position·CanPlace 반환은 명시 장치 경계다.",
+    "창 생성/Refresh/Idle/수명·실제 GUI는 이 관측 범위 밖이다."
+  ],
+  "gameRuns": 0,
+  "guiRuns": 0,
+  "audioDeviceRuns": 0,
+  "remaining": [
+    "Add Island 창 생성/Refresh/Idle/단일 창 수명·공통 분배에 Layout/Motion 조립",
+    "실제 기존/신규 맵 Add Island GUI·저장/재진입",
+    "Test Battle/언어별 시나리오",
+    "전체 미션 자연 완주·화면/음향 동일성"
+  ]
+}
