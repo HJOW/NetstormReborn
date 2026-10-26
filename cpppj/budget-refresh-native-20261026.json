@@ -1,0 +1,24 @@
+{
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "edition": "PATCH10.78",
+  "observations": 120,
+  "realFunctions": [
+    "0x43dad0",
+    "0x464020"
+  ],
+  "effectsStubbed": [
+    "virtual+18 Push",
+    "virtual+20 Attach"
+  ],
+  "originalGameExecuted": false,
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_budget_refresh.py": "49df1ac685157047254fff3950beb6d14b927b7330075cc7cb0c18e63b97cdb0",
+    "cpppj/tests/fixtures/budget-refresh-x86.tsv": "5751f03a844bf48b56a8043d230e5d416d7fbf0560d66dbc7b9bdba192f24cae"
+  },
+  "scope": "실제 serial 조회·현재 필드·정상 깊이 복구·중단 prefix만 관측한다. 개별 가상 Push/Attach 몸체 동등성은 기존 GumpTree Native 근거를 재사용한다."
+}

@@ -1,3 +1,4 @@
+#include "client/RawStormPowerRefresh.h" //현재 예산 serial과 가상 재부착의 원문 부모다.
 // 가상 함수의 호스트 분배만 구성하며 개별 원본 몸체는 기존 Gump/Button 모듈을 호출한다.
 #include "client/RawButtonControls.h"
 #include "client/RawMenuControls.h"
@@ -31,6 +32,7 @@ constexpr std::uint32_t kRefreshProductionEvent=0x02000003;
 }
 // 기본·돌 버튼·배경은 같은 기본 노드 주소로 조회되며 저장소 이동은 하지 않는다.
 struct RawButtonControls::Impl {
+    std::int8_t stateRetainedType{11}; //보호PE00540426의 초기0b이며 원문004666d0만 읽는 같은 Client 수명 BYTE다.
     ProductionMaintenanceGlobals productionGlobals; // 전역 TYPE 시계/추첨 순번이며 패널 필드는 실제 생산 노드가 소유한다.
     // create: 등록 표 +0이 실제 루트다. 외부에서 표를 바꿀 때 collection.root도 같은 토큰으로 맞춰야 한다 (GumpCreateState).
     GumpCreateState create;/* life: 원본의 고정 크기 idle/overlay/삭제/dialog 표와 현재 삭제 전역이다 (GumpLifetimeState). */ GumpLifetimeState life;/* treeState: 원본 지도 화면 영역과 패치판의 밀어내기 링크 진단 전역이다 (GumpTreeState). */ GumpTreeState treeState;/* eventState: 원본 전체 트리 커서 선택의 현재 좌표/필터/최소 signed 깊이/선택 토큰 전역이다 (GumpEventState). */ GumpEventState eventState;/* inputState: overlay 처리기는 호출자의 사건 대신 원본의 별도 사건 코드 전역을 사용한다 (GumpInputState). */ GumpInputState inputState;
@@ -102,7 +104,7 @@ struct RawButtonControls::Impl {
         lifeHooks.deletingDestructor=[this](auto token,auto flags) {
             if (warnings && warnings->Node(token)) warnings->DeleteScalar(token,flags);else if (uber && uber->Node(token)) uber->DeleteScalar(token,flags);else if (auto* minimap=MinimapOwner(token)) minimap->DeleteScalar(token,flags);else if (auto* production=ProductionOwner(token)) production->DeleteScalar(token,flags);else if (menus && menus->Node(token)) menus->DeleteScalar(token,flags);else if (stones.contains(token)) stone->DeleteScalar(token,flags);else lifetime->DeleteScalar(token,flags);
         };
-        lifeHooks.release=[this](auto token) { if (warnings) warnings->Release(token);if (auto* minimap=MinimapOwner(token)) minimap->Release(token);if (auto* production=ProductionOwner(token)) production->Release(token);if (menus) menus->Release(token);if (uber) uber->Release(token);bases.erase(token);stones.erase(token);backgrounds.erase(token); };
+        lifeHooks.release=[this](auto token) { if (warnings) warnings->Release(token);if (auto* minimap=MinimapOwner(token)) minimap->Release(token);if (auto* production=ProductionOwner(token)) production->Release(token);if (menus) menus->Release(token);if (uber) uber->Release(token);bases.erase(token);stones.erase(token);backgrounds.erase(token);std::erase_if(controls,[token](const auto& control) { return control.second==token; }); }; //실제 scalar가 반납한 호스트 버튼 별칭만 제거하며 다른 노드/대기 명령은 유지한다.
         lifetime=std::make_unique<GumpLifetime>(create,life,std::move(lifeHooks));
         GumpEventHooks eventHooks;eventHooks.node=[this](auto token) { return Node(token); };
         eventHooks.handle=[this](auto token,auto event,auto first,auto second) { return Handle(token,event,first,second); };
@@ -229,12 +231,12 @@ RawButtonInputResult RawButtonControls::RouteInput(InputEvent event) {
 // 루트 교체 뒤에도 처음 생성한 토큰의 사본을 반환하지 않는다.
 std::uint32_t RawButtonControls::RootToken() const { return impl_->create.entries[0]; }
 // count/visible로 대체하지 않고 원문처럼 고정 등록칸과 현재 serial/dead만 읽는다.
-std::uint32_t RawButtonControls::SerialGump(std::uint32_t serial) const {
-    for (std::size_t index=1;index<impl_->create.entries.size();++index) { // 등록0칸의 루트는 검색하지 않는다.
-        const auto token=impl_->create.entries[index];if (!token) continue;const auto& node=*impl_->Node(token); // 각 현재 비영 슬롯만 역참조한다.
-        if (node.serial==serial && !(node.flags&0x10000U)) return token;
-    }
-    return 0;
+std::uint32_t RawButtonControls::SerialGump(std::uint32_t serial) const { return FindCurrentGumpSerial(impl_->create.entries,serial,[this](auto token) { return impl_->Node(token); }); }
+//004666d0은 같은 현재 표의 유지 타입과 dead를 제외해 실제 Kill만 예약한다.
+void RawButtonControls::KillStateGumps() { impl_->lifetime->KillExceptType(impl_->stateRetainedType); } //현재 실제 등록표의 원문 필터를 재사용하며 Cleanup은 별도다.
+// 원문 현재 예산 serial의 같은 노드를 Push/Attach하며 금액/시각/전체 화면을 새로 쓰지 않는다.
+void RawButtonControls::RefreshStormPower() {
+    auto& s=*impl_;RefreshStormPowerGump(s.create.entries,s.productionGlobals.budgetSerial,{[&s](auto token) { return s.Node(token); },[&s](auto token) { s.tree->Push(token); },[&s](auto token,float x,float y,auto parent,auto mode) { s.Attach(token,x,y,parent,mode); }});
 }
 // Kill에서 즉시 해제하지 않아 현재 메뉴 입력 callback의 나머지 실행을 보존한다.
 void RawButtonControls::KillGump(std::uint32_t token) { impl_->lifetime->Kill(token);impl_->changed=true; }
@@ -275,7 +277,9 @@ void RawButtonControls::RetirePageControls() {
 // 캡처 우선 및 includeHidden=1의 실제 원본 분배이며 UI 상태를 임의 갱신하지 않는다.
 void RawButtonControls::RefreshProduction() { impl_->input->Route(kRefreshProductionEvent,0,0,true); }
 // 원문004b7444의 includeHidden1을 실제 공통 Route에 전달하며 포인터 폴링 기록을 새로 쓰지 않는다.
-std::uint32_t RawButtonControls::NotifyHudMode(std::uint32_t command) { return impl_->input->Route(command,1,0,true); }
+std::uint32_t RawButtonControls::NotifyHudMode(std::uint32_t command) { return NotifyHudMode(command,1); }
+// 실제 원문00466200의 현재 캡처 우선/선택 modal/루트 분배를 그대로 사용한다.
+std::uint32_t RawButtonControls::NotifyHudMode(std::uint32_t command,std::uint32_t mode) { return impl_->input->Route(command,mode,0,true); }
 // 공통 등록표와 현재 파생 가상 분배를 그대로 빌려 메뉴 처리기를 생성한다.
 RawMenuControls& RawButtonControls::EnableMenus(const GameAssets& assets,FontStore& fonts,RawMenuHooks hooks) {
     auto& s=*impl_;if (s.menus) throw std::logic_error("실제 메뉴 계층은 한 번만 연결 가능");

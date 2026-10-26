@@ -2185,3 +2185,6 @@ target_sources(netstorm_tests PRIVATE FullDeckCommandTests.cpp)
 
 # 최초 Native66관측과 같은 장기 SID/count 소비자를 검증한다.
 target_sources(netstorm_tests PRIVATE StateSidListsTests.cpp)
+
+# SP 표시 부모의 최초 Native120관측과 실제 UI 대여 경계다.
+target_sources(netstorm_tests PRIVATE StormPowerRefreshTests.cpp)

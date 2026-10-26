@@ -1,13 +1,14 @@
 // 같은 UberGump의 실제 장기 화면/지도 전역과 전체 HUD 설치를 연결한다.
 struct UberGump::HudRuntime {
     std::int32_t width{},height{},left{},top{},mapWidth{},mapHeight{}; // 실제 화면/지도 원점·폭높이를 같은 도킹 몸체가 쓴다.
+    std::uint32_t boundMinimap{}; //현재 World에 실제 Pop/Unpop을 연결한 미니맵 토큰이며 새 생성의 토큰과 구별한다.
     float chatY{}; // 이전 채팅 위치이며 표시/전체 갱신 DWORD는 Client의 같은 실제 owner를 직접 빌린다.
     std::array<float,4> floatRect{};ScreenRect leftBottom{}; // 정수 지도LTRB는 공통 GumpTree 소유자를 직접 빌리고 float/제외 영역만 여기에 둔다.
     std::string paletteProbe;bool paletteFound{}; // 실제 고정9인자 경로의 현재 결과와 파일 존재 관측이다.
 };
 // 현재 실제 네 공장과 같은 등록표의 전체 루트를 설치한다. State1의 원문 정리/prefix를 대신하지 않는다.
-void UberGump::InstallHud() {
-    if (!world_ || client_.Assets().Edition()!=o::OriginalEdition::Patch1078) return;
+void UberGump::EnsureHudFactories() {
+    if (client_.Assets().Edition()!=o::OriginalEdition::Patch1078) throw std::logic_error("State HUD 전체 공장의 실제 PATCH 판본 필요");
     if (!hud_) hud_=std::make_unique<HudRuntime>();auto& value=*hud_;
     value.width=client_.GetScreen().Width();value.height=client_.GetScreen().Height();
     auto& menus=*rawButtons_->Menus();
@@ -26,12 +27,12 @@ void UberGump::InstallHud() {
         } };
         context.root.type=[this](auto type) { if (type>=client_.Assets().TypeTable().Types().size()) throw std::out_of_range("전체 Uber 실제 TYPE 범위");return 0x100000U+type; };
         context.root.createMinimap=[this] { auto& mini=rawButtons_->ConstructMinimap(client_.SurfaceStorage(),RawMinimapHooks{
-            [this] { return world_->MinimapView(); },[this](auto x,auto y) { world_->CenterCamera(x,y); },[this](auto x,auto y) { world_->MoveFromMinimap(x,y); },
-            [this] { return world_->InputMode(); },[this] { return client_.Poll(0xffff); }});mini.BindWorld(world_->Session().Core());return mini.RootToken(); };
-        context.root.createProduction=[this] { auto& panel=rawButtons_->ConstructProduction(world_->Session().ProductionContext(),client_.Assets(),RawProductionHooks{
+            [this] { const auto& camera=client_.GameplayGlobals()->Camera().Snapshot();return MinimapGeometryView{camera.worldBits,rawButtons_->MapViewRect(),camera.cellPixels[0],camera.cellPixels[1]}; },[this](auto x,auto y) { if (!world_) throw std::logic_error("미니맵 중심 입력의 현재 월드 미연결");world_->CenterCamera(x,y); },[this](auto x,auto y) { if (!world_) throw std::logic_error("미니맵 선택 이동의 현재 월드 미연결");world_->MoveFromMinimap(x,y); },
+            [this] { return client_.GameplayGlobals()->selection.mode; },[this] { return client_.Poll(0xffff); }});return mini.RootToken(); };
+        context.root.createProduction=[this] { auto& panel=rawButtons_->ConstructProduction(ProductionControlContext{client_.SurfaceStorage(),client_.GameplayGlobals(),client_.PlayerRecords(),*missionOptions_},client_.Assets(),RawProductionHooks{
             [this] { return client_.WallSeconds(); },[this](auto name) { client_.WorldAudio().Sounds().PlayByName(name,0,0,0,0,0); },[this](auto name) { state_.Post({"Tell",std::string(name)}); },
             [this](auto key,std::int32_t fallback) { client_.Configuration().ReadInt(key,fallback);return fallback; },[this](auto key) { return FontBytes(client_.Translate(o::DecodeOriginalText({reinterpret_cast<const std::uint8_t*>(key.data()),key.size()}))); },
-            [this](const InventoryItemNode& item,ScreenPoint point,const std::function<bool(o::Sid)>& affordable) { return objectMenus_->OpenProduction(*world_,item,point,affordable); },
+            [this](const InventoryItemNode& item,ScreenPoint point,const std::function<bool(o::Sid)>& affordable) { if (!world_ || !objectMenus_) throw std::logic_error("생산 정보 입력의 현재 월드 미연결");return objectMenus_->OpenProduction(*world_,item,point,affordable); },
             [this](auto code) { return client_.Poll(code); },[this](auto cursor) { client_.GetCursor().Set(static_cast<int>(cursor)); },[this] { return client_.Time().game; }});return panel.RootToken(); };
         context.root.createKnowledge=[this] {
             RawNsInfoContext data;data.globals=client_.NsInfoGlobals();data.gameplay=client_.GameplayGlobals();data.storage=client_.SurfaceStorage();
@@ -76,10 +77,30 @@ void UberGump::InstallHud() {
         context.dock.chatInput=[this](bool visible) { const auto token=client_.ChatWindowGlobals()->window.current;rawButtons_->Menus()->ChatGeometryBackend()->SetInputVisible(token,visible); };
         rawButtons_->EnableUberRoot(std::move(context));
     }
+}
+//004666d0/004662b0의 실제 UI 자식을 분리해 Native 부모 순서에서 각각 호출한다.
+void UberGump::KillGumpsForState() { rawButtons_->KillStateGumps(); }
+// 실제 scalar 정리 뒤 호스트 페이지 캐시만 비운다. Native State/요새/Player 값은 쓰지 않는다.
+void UberGump::CleanupGumpsForState() {
+    if (rawButtons_->CleanupGumps()) rebuild_=true;
+    page_={};labels_.clear();actions_.clear();input_.SetControls({});controlsChanged_=false; //실제 정리로 사라진 버튼의 호스트 별칭도 반납하며 이전 MainMenu를 재생성하지 않는다.
+}
+// State004c77c0의 원문 전체 공장/기존 자식 이동만 수행한다. 일반 mode3·World 통지를 추가하지 않는다.
+void UberGump::ReplaceHudForState() {
+    EnsureHudFactories();rawButtons_->UberRoot()->Replace();hud_->boundMinimap=0;rebuild_=true;
+}
+// Native0043dad0은 실제 현재 serial과 공통 노드에만 동작한다. Session/SP 조회를 요구하지 않는다.
+void UberGump::RefreshStormPower() { rawButtons_->RefreshStormPower(); }
+//00466280은 현재 루트에 원문 자식 우선 GumpInput/숨김포함1로 현재 HUD 명령을 보낸다.
+void UberGump::ApplyHudModeForState(std::uint32_t mode) { rawButtons_->NotifyHudMode(client_.LocalStateGlobals()->HudModeCommand(),mode); }
+// 현재 실제 World와 같은 초기 생성물을 연결하고 기존 미션 HUD mode3/팔레트·도킹을 유지한다.
+void UberGump::InstallHud() {
+    if (!world_ || client_.Assets().Edition()!=o::OriginalEdition::Patch1078) return;EnsureHudFactories();
     if (!rawButtons_->UberRoot()->Current()) {
-        rawButtons_->UberRoot()->Replace();rawButtons_->HandleGump(rawButtons_->RootToken(),0x0200003dU,3,0); // 기존 미션 설치 위치에서 실제 일반 HUD mode3을 적용한다.
+        ReplaceHudForState();rawButtons_->HandleGump(rawButtons_->RootToken(),0x0200003dU,3,0); // 기존 미션 설치 위치에서 실제 일반 HUD mode3을 적용한다.
     }
     rawButtons_->UberRoot()->Reflow(); // 같은 기존 구분선/등록/드래그 위치를 화면 장치 크기 전환에서도 유지한다.
     rawButtons_->Production()->SetPalette(client_.GetScreen().Palette(),client_.ColorSortInput()->Logical());rawButtons_->Minimap()->SetPalette(client_.GetScreen().Colors());
+    const auto minimap=rawButtons_->Minimap()->RootToken();if (hud_->boundMinimap!=minimap) { rawButtons_->Minimap()->BindWorld(world_->Session().Core());hud_->boundMinimap=minimap; } //초기 생성 뒤 첫 실제 World에서만 같은 물리의 통지를 빌린다.
     world_->BindMapView([this] { return rawButtons_->MapViewRect(); }); // 현재 지도 영역의 같은 저장소를 표시/미니맵/선택/음향에서 읽는다.
 }

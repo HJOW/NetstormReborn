@@ -1,6 +1,7 @@
 // 실제 Client 전역과 공통 UI로 Session 이전의 생산 전체 생성/자식/문자열/정리를 검사한다.
 #include "DudeSpawnSupport.h"
 #include "client/ClientMain.h"
+#include "client/ClientLocalStateGlobals.h"
 #include "client/ClientSubscriberGlobals.h"
 #include "client/RawButtonControls.h"
 #include "client/RawProductionControls.h"
@@ -283,4 +284,31 @@ TEST_CASE(ProductionInitialContext_FullDeckOwnerMovesActualHudDivider) {
         full=value;scene.buttons.HandleGump(root,0x0200003dU,1,0);const auto* divider=uber.Node(node->vertical);CHECK(divider && divider->x==(value ? 80.0F : -divider->baseWidth) && full==value);
     }
     scene.buttons.HandleGump(root,0x0200003dU,3,0);CHECK(full==0 && uber.Node(node->vertical)->x==80.0F);
+}
+
+// 실제 예산 Gump의 공통 Push/Attach는 금액·SP·시각 조회·노드 생성을 추가하지 않는다.
+TEST_CASE(ProductionInitialContext_StormPowerParentPreservesActualBudgetAndDepth) {
+    InitialProductionScene scene;auto& panel=scene.buttons.ConstructProduction(scene.Context(),scene.assets.game,scene.Hooks());const auto token=scene.Token(0x506948);auto* money=panel.Node(token);CHECK(money);if (!money) return;money->depth=0x89abcdefU;const auto serial=money->serial,parent=money->parent,text=money->textPointer,count=scene.Count(),timeReads=scene.timeReads,configReads=scene.configReads;const auto context=money->textContext;const auto x=money->x,y=money->y;const auto report=panel.Report();
+    scene.buttons.RefreshStormPower();CHECK(money->depth==0x89abcdefU && money->serial==serial && money->parent==parent && money->x==x && money->y==y && money->textPointer==text && money->textContext==context);CHECK(scene.Count()==count && scene.timeReads==timeReads && scene.configReads==configReads && panel.Report()==report && !scene.client.GameplayGlobals()->Borrowed() && !scene.client.PlayerRecords()->Initialized());
+}
+
+// 전역 serial이 가리키는 새 예산만 재부착하며 죽은 새 대상 대신 이전 것을 고르지 않는다.
+TEST_CASE(ProductionInitialContext_StormPowerUsesLatestSerialAndDeadNoop) {
+    InitialProductionScene scene;scene.buttons.RefreshStormPower();auto& old=scene.buttons.ConstructProduction(scene.Context(),scene.assets.game,scene.Hooks());const auto oldToken=scene.Token(0x506948);old.Node(oldToken)->depth=11;auto& current=scene.buttons.ConstructProduction(scene.Context(),scene.assets.game,scene.Hooks());const auto token=scene.Token(0x506948);current.Node(token)->depth=29;const auto before=scene.Count();
+    scene.buttons.RefreshStormPower();CHECK(old.Node(oldToken)->depth==11 && current.Node(token)->depth==29 && scene.Count()==before);scene.buttons.KillGump(token);const auto report=current.Report();scene.buttons.RefreshStormPower();CHECK(old.Node(oldToken)->depth==11 && current.Node(token)->depth==29 && current.Report()==report && scene.Count()==before);
+}
+
+// 원문 생성자의 임시400 위치를 Frame에 노출하지 않고 같은 GumpInput 모드가 고해상도 배치를 완성한다.
+TEST_CASE(ProductionInitialContext_AtomicHudModeFinishesNative1024Layout) {
+    InitialProductionScene scene;InitialUberGlobals globals;globals.width=1024;globals.height=768;const auto& type=scene.assets.game.Find("fortGump");const auto metrics=scene.assets.game.Shapes().SquidMetrics(type.block,0);const std::array<GumpControl,0> controls{};const std::array<std::string,0> labels{};scene.buttons.SetControls(controls,labels,1024,768,{static_cast<std::uint32_t>(type.block+70),0,metrics.width,metrics.height,{}});
+    scene.buttons.KillStateGumps();scene.buttons.CleanupGumps();auto& uber=scene.buttons.EnableUberRoot(InitialUberContext(scene,globals));uber.Replace();const auto token=scene.buttons.Minimap()->RootToken();auto* mini=scene.buttons.Minimap()->Node(token);CHECK(mini && mini->y==405 && mini->baseHeight==363); //원문 고정400/5 뒤의 실제 중간 기하다. 생성자를 화면에 맞춰 임의 변경하지 않는다.
+    scene.buttons.NotifyHudMode(scene.client.LocalStateGlobals()->HudModeCommand(),3);CHECK(mini->y==693 && mini->baseHeight==75 && (mini->flags&1) && !scene.client.GameplayGlobals()->Borrowed() && !scene.client.PlayerRecords()->Initialized());
+    scene.buttons.NotifyHudMode(scene.client.LocalStateGlobals()->HudModeCommand(),4);CHECK(!(mini->flags&1) && !(scene.buttons.Production()->Node(scene.buttons.Production()->RootToken())->flags&1));
+    const auto oldRoot=scene.buttons.RootToken();scene.buttons.KillStateGumps();scene.buttons.CleanupGumps();CHECK(scene.buttons.RootToken()==oldRoot && !scene.buttons.Minimap() && !scene.buttons.Production()); //실제 원문 필터는 등록0칸을 정리하지 않는다.
+}
+
+// Native Kill/Cleanup가 실제 버튼을 반납하면 호스트의 ID 별칭도 사라져 다음 UI 교체가 해제된 노드를 읽지 않는다.
+TEST_CASE(ProductionInitialContext_StateCleanupReleasesOnlyFreedControlAliases) {
+    InitialProductionScene scene;const auto& type=scene.assets.game.Find("fortGump");const auto metrics=scene.assets.game.Shapes().SquidMetrics(type.block,0);GumpControl control;control.id=0;control.rect={10,10,90,40};control.enabled=true;const std::array<GumpControl,1> controls{control};const std::array<std::string,1> labels{"STATE"};scene.buttons.SetControls(controls,labels,640,480,{static_cast<std::uint32_t>(type.block+70),0,metrics.width,metrics.height,{}});const auto root=scene.buttons.RootToken();CHECK(scene.buttons.Report().starts_with("RawButtons\t1\t"));
+    scene.buttons.KillStateGumps();CHECK(scene.buttons.Report().starts_with("RawButtons\t1\t"));scene.buttons.CleanupGumps();CHECK(scene.buttons.RootToken()==root && scene.Count()==1 && scene.buttons.Report().starts_with("RawButtons\t0\t1\t"));scene.buttons.SetControls(controls,labels,640,480,{static_cast<std::uint32_t>(type.block+70),0,metrics.width,metrics.height,{}},true);CHECK(scene.buttons.RootToken()==root && scene.buttons.Report().starts_with("RawButtons\t1\t"));
 }

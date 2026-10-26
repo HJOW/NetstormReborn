@@ -434,8 +434,8 @@ void Client::InitializeNativeAudio() {
     // 장치가 없거나 열리지 않으면 소리 없이 계속 실행한다. noAudio도 실제 이름표/재생 계층은 유지한다.
     if (!options_.noAudio) {
         SceneMusicHooks scene;
-        // 원본 0043dad0의 전체 재표시 경계를 현재 UI 어댑터의 합성/Renderer 변경 영역에 연결한다.
-        scene.refresh=[this]() { if (menu_) menu_->Refresh();else if (renderer_) renderer_->InvalidateAll(); };
+        // 원본0043dad0의 현재 예산 serial 재부착이다. UI 생성 전에는 등록된 예산도 없다.
+        scene.refresh=[this]() { if (menu_) menu_->RefreshStormPower(); };
         // 원본 00441470(key,1)은 값이 정확히 1일 때만 참이다. 음악/소리 옵션과는 별개다.
         scene.ascendancyPalette=[this]() { return configuration_.GetInt(kAscendancyPaletteOption)==1; };
         // 파일 이름에는 이미 .col이 포함돼 있으므로 GamePalSpec의 .COL을 추가하지 않는다.

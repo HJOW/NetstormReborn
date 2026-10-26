@@ -188,6 +188,7 @@ struct RawProductionControls::Impl {
     }
     // 원본43ddd0의 Push/현재 크기/재부착/깊이 순서를 보존한다.
     void Attach(std::uint32_t token,float x,float y,std::uint32_t parent,std::uint32_t mode) {
+        if (token && token==budgetToken) { common.tree.Attach(token,x,y,parent,mode);return; } //예산 가상+20은00466750 기본 부착이며43ddd0의 생산 설정 조회를 거치지 않는다.
         Prepare();if (dividers.contains(token)) { dividerGeometry->Attach(token,x,y,parent,mode);return; }if (grids.contains(token)) { grid->AttachGrid(token,x,y,parent,mode);return; }if (items.contains(token)) { item->Attach(token,x,y,parent,mode);return; }if (images.contains(token)) { image->Attach(token,x,y,parent,mode);return; }
         common.tree.Attach(token,x,y,parent,mode);if (token!=rootToken) return;
         common.tree.Push(budgetToken);common.tree.Attach(budgetToken,0,2,rootToken,2);common.tree.Push(bottom);auto& e=*backgrounds.at(bottom);e.baseHeight=root.baseHeight-e.y;e.height=e.baseHeight*e.scale;common.tree.Attach(bottom,e.x,e.y,0,0);

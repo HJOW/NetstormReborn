@@ -1,0 +1,239 @@
+{
+  "unit": 456,
+  "goalComplete": false,
+  "host": "HJOW-Athlon",
+  "date": "2026-10-26",
+  "edition": "PATCH10.78",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "originalGameExecuted": false,
+  "productGuiExecuted": true,
+  "sourceAttempt": 7,
+  "buildAttempt": 8,
+  "focusedAttempt": 4,
+  "fullAttempt": 2,
+  "native": {
+    "report": "cpppj/budget-refresh-native-20261026.json",
+    "observations": 120,
+    "stoppedObservations": 48,
+    "realFunctions": [
+      "0x43dad0",
+      "0x464020"
+    ],
+    "stubbedEffects": [
+      "virtual+18 Push",
+      "virtual+20 Attach"
+    ],
+    "sha256": {
+      "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+      "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+      "tools/decomp_budget_refresh.py": "49df1ac685157047254fff3950beb6d14b927b7330075cc7cb0c18e63b97cdb0",
+      "cpppj/tests/fixtures/budget-refresh-x86.tsv": "5751f03a844bf48b56a8043d230e5d416d7fbf0560d66dbc7b9bdba192f24cae"
+    }
+  },
+  "build": {
+    "attempt": 8,
+    "sourceAttempt": 7,
+    "finished": "2026-10-26T12:36:00.442732",
+    "exitCode": 0,
+    "seconds": 43.052,
+    "command": [
+      "cmake",
+      "--build",
+      "cpppj/build",
+      "--config",
+      "Release",
+      "--parallel",
+      "4",
+      "--",
+      "/p:UseMultiToolTask=true",
+      "/p:MultiProcMaxCount=4",
+      "/p:EnforceProcessCountAcrossBuilds=true"
+    ],
+    "log": "extracted/cpp-state-hud-456-build8.log",
+    "sha256": "549632f73d684ec8b647dab8ba7ae316e92636664d5d96acbe86412eb978fe7c",
+    "compilerWarnings": 0,
+    "compilerErrors": 0
+  },
+  "focused": {
+    "unique": 283,
+    "observations": 283,
+    "newCasesExecuted": 6,
+    "failures": 0,
+    "removedCaseNames": []
+  },
+  "full": {
+    "cppTests": 3114,
+    "failedChecks": 0,
+    "seconds": 335.756,
+    "missingNames": [],
+    "unexpectedNames": [],
+    "removedOldNames": [],
+    "newNames": [
+      "ProductionInitialContext_AtomicHudModeFinishesNative1024Layout",
+      "ProductionInitialContext_StateCleanupReleasesOnlyFreedControlAliases",
+      "ProductionInitialContext_StormPowerParentPreservesActualBudgetAndDepth",
+      "ProductionInitialContext_StormPowerUsesLatestSerialAndDeadNoop",
+      "StormPowerRefresh_DemandAndLateFailureKeepActualPrefix",
+      "StormPowerRefresh_IndependentNative120AndCurrentCoordinates"
+    ]
+  },
+  "gui": {
+    "component": {
+      "visibleHudPixelDifference": 50022,
+      "passed": true,
+      "sameGameSha256": "17d6201ecb6c051fcf620db25986baa714970cd020818fccb6bf743d982aff4e",
+      "beforeWorldFrames": [
+        "initial",
+        "initialSp",
+        "replaced"
+      ],
+      "worldFrames": [],
+      "initialHud": [
+        "0",
+        "1",
+        "0",
+        "22",
+        "0"
+      ],
+      "replacedHud": [
+        "0",
+        "1",
+        "0",
+        "203",
+        "0"
+      ],
+      "editorHud": [
+        "0",
+        "1",
+        "0",
+        "203",
+        "0"
+      ],
+      "state1EditInstalled": false,
+      "fullNaturalMissionCompletionVerified": false
+    },
+    "normalEarly1": {
+      "passed": true,
+      "scenario": "Campaign / Early Missions / Bridge the Gap / MORE / OK / Home",
+      "sameGameSha256": "17d6201ecb6c051fcf620db25986baa714970cd020818fccb6bf743d982aff4e"
+    },
+    "screenshotsReviewed": [
+      "gui4/initial.bmp",
+      "gui4/editor.bmp",
+      "gui-normal2/ready.bmp",
+      "gui-normal2/home.bmp"
+    ],
+    "audioEnabled": false
+  },
+  "testPreservation": {
+    "head": "1e8e43d9a4c54caa3f69a669e827b726cd331ef2",
+    "oldTestCases": 3108,
+    "addedTestCases": 6,
+    "removedTestCases": 0,
+    "oldNativeFixtures": {
+      "checked": 650,
+      "tsvFiles": 647,
+      "sameGitBlobsWithCheckoutFilters": true
+    },
+    "existingTestBodies": {
+      "ProductionInitialContextTests.cpp": "include1개 추가 뒤 기존 본문/단언을 그대로 보존하고 신규4사례를 끝에 추가"
+    },
+    "missingOldNames": []
+  },
+  "protectedFiles": {
+    "checked": 1821,
+    "unchanged": true,
+    "originals": 1394,
+    "originalCD": 425,
+    "AGENTS": 1,
+    "decompiledSource": 1
+  },
+  "sourceFileCount": 2045,
+  "changedSourceSha256": {
+    "cpppj/src/CMakeLists.txt": "b53e13016dd8db98a6b2774d550b615099b7d5e9106e2465591f7eb54ca0feb2",
+    "cpppj/src/app/main.cpp": "60386453fb1d642145f6442199eee9c2abc23300631fd320420bbd8f001dfe04",
+    "cpppj/src/client/CampaignClientServices.cpp": "ca47c02e8bb2b721f70c57dbec7dddecab5adc77ca3eb36ffba8450aa13dc038",
+    "cpppj/src/client/ClientMain.cpp": "7ed5dc0cc206f73903645b30df6bd15815a0c8bf772811c762d1047e84b31654",
+    "cpppj/src/client/RawButtonControls.cpp": "620df4aed4acd65f33becbe7141b26a1ea60f47a835f41a853a89aa07b3b322e",
+    "cpppj/src/client/RawButtonControls.h": "98fb75f13d684ce56169ae44477f8b53cd5e94258e4c6e6c3872bca37acbe9bd",
+    "cpppj/src/client/RawProductionControls.cpp": "f57b66b54a0bbb165b62837009ec42c6bc40085eb4cdc19c0493fda8df93f7a0",
+    "cpppj/src/client/RawStormPowerRefresh.cpp": "80f84bec9ae7d5b415012c038d4c18cedd28a1f61cd8e5dc92d96f5abc6e3a18",
+    "cpppj/src/client/RawStormPowerRefresh.h": "e3f32f8810c364b44ac638fc93342cb41f91d141924bc6f0efda6ae2068dfa76",
+    "cpppj/src/client/UberGump.cpp": "a59ba76777d81380504393126f3bc082905e52aabf3b012b347c6c885581b002",
+    "cpppj/src/client/UberGump.h": "8c8b64b5b2650da33bf473510e3ce662c60e3e3611f3626bc9c66dfe2f0d2603",
+    "cpppj/src/client/UberHud.inc": "3f7b47f5678213fcfbb07224c847d07fa835841a4c1b992d2f41bc145e4614c7",
+    "cpppj/tests/CMakeLists.txt": "9a5d06bf4ede83a5db92f45a2cd27e1cfd2f02f0fe60d0239b5683e76f2c8b56",
+    "cpppj/tests/ProductionInitialContextTests.cpp": "3faf42c7ec860b5ae8473b75bc5624c0dffc9a7d70b7394529902b1d34cc9e88",
+    "cpppj/tests/StormPowerRefreshTests.cpp": "26df0da30acebc34687546d103d6984ae58794a706196c274ad9f1c8064d3385"
+  },
+  "artifacts": {
+    "cpppj/build/bin/Release/NetstormCpp.exe": "17d6201ecb6c051fcf620db25986baa714970cd020818fccb6bf743d982aff4e",
+    "cpppj/build/bin/Release/netstorm_tests.exe": "ef73f96438687f41918dff764f980d74ef39502df915d92851ea49a2d8ec7f12",
+    "cpppj/build/bin/Release/netstorm_cloud_probe.exe": "5259e8ece1b182d04dc1f9476a350ed3c92868cb44e8c311e6a886d609e501ea",
+    "cpppj/build/bin/Release/netstorm_cloud_render_probe.exe": "a261546d0352cb4de0e005c780734a29bf5841110b574f5accd3046aba2cd2c6"
+  },
+  "rawEvidenceSha256": {
+    "extracted/cpp-state-hud-456-source7/hashes.json": "5d2d27c2d27a848d2a28b9faa09a023b04658640af5604656bbc61b8c7ed6dbb",
+    "extracted/cpp-state-hud-456-build8.log": "549632f73d684ec8b647dab8ba7ae316e92636664d5d96acbe86412eb978fe7c",
+    "extracted/cpp-state-hud-456-build8-result.json": "a58e29bff5e1cff74e628f34e4cb1b643b7b1789eda710ada452910200e17253",
+    "extracted/cpp-state-hud-456-focused4/results.json": "1cfcb31e4eca5d52e4705e23e17c5790f6577d5488ebc226a8c8206ab2534364",
+    "extracted/cpp-state-hud-456-full2/ctest.log": "5f11de3512e6c651382d9e2941d577e33033bfa76eca7aace0d39b5e635b8ce2",
+    "extracted/cpp-state-hud-456-full2/LastTest.log": "d86237e3111736fadbc82a3793ed67a45cea1479280f39ded9ad65769f19bac9",
+    "extracted/cpp-state-hud-456-full2/results.json": "b3da1d3b1591def0b2a37ca611ef97415337ba6bea533da8073f10b45fe1b11f",
+    "extracted/cpp-state-hud-456-test-preservation.json": "704b928d7e8269bc69161aeedf7ed099df364fc23b7e3a4cd6c1c357990b6e0c",
+    "extracted/cpp-state-hud-456-gui4/run.json": "60112919256ffe68bd15f9de2fda4fa3696b946a8fd2273643591d2f17ded15f",
+    "extracted/cpp-state-hud-456-gui4/summary.json": "9ae052ae22ca0eb693cb907e4e6dd0d6628e4ae67a8003d28280242ed0d3de03",
+    "extracted/cpp-state-hud-456-gui4/states.tsv": "536d8e58e085e62ad0fc35c87b94e6d38b274eb4d67c3a0e3f42750d83e917e5",
+    "extracted/cpp-state-hud-456-gui4/initial.bmp": "a33e0a769fb2a465de011ffa496a4c45c889a5c85eb7c71099c6320265f00991",
+    "extracted/cpp-state-hud-456-gui4/editor.bmp": "197ba19028a868480d91c338e8d74355a04a16f83789a1e0f6bfe10dd8a01b59",
+    "extracted/cpp-state-hud-456-gui-normal2/result.json": "86a366ee71be2cf2b8e34e03e27603336451263bb0d0f0f296f3ffa280e92ef7",
+    "extracted/cpp-state-hud-456-gui-normal2/states.tsv": "be71418e0ada64b1b504b6d33377089439af1bf7e4bffbb1500b833a37d07802",
+    "extracted/cpp-state-hud-456-gui-normal2/ready.bmp": "603fbb62c26b295e8c96f8aae5cc6f5d411413d3952653183bf604023065f91e",
+    "extracted/cpp-state-hud-456-gui-normal2/home.bmp": "9cfffe1f31eac98bd121175250866f838577566dcfc618f3fab7ebd4206319fe",
+    "extracted/cpp-state-hud-456-gui1/run.json": "29e34abc4a1dc7231fee453597c444f08ec96e08a2c270122132225db5393924",
+    "extracted/cpp-state-hud-456-gui1/stderr.log": "abdf2e0b7ca3fa5cd55e61c955d22ed8c13d65e403df309fca26c55114acee64",
+    "extracted/cpp-state-hud-456-gui2/run.json": "0156db43e971f7e92c6eb3fbc1f1ec29150ffdd3a761833af031ea7102e677c5",
+    "extracted/cpp-state-hud-456-gui2/stderr.log": "6ce007aa5453953ed83dcb9350add5329a713e45f68512774eaa83516cf8ffb3",
+    "extracted/cpp-state-hud-456-build2-result.json": "b475a1cc1f0a21af686f94f31563dd3bae092713c372031b72eafd08c148c0eb",
+    "extracted/cpp-state-hud-456-build4-preflight-error.json": "5542822b11ab872c0da1dba8e1a211a6db29c30e8e781eab1d421e4553fcecfb"
+  },
+  "correctionsAndEarlierAttempts": [
+    {
+      "attempt": "build2",
+      "kind": "compile",
+      "errors": 5,
+      "cause": "예산 Attach 분기가 Handle에도 중복 삽입돼 x/y/parent/mode와 반환형 컴파일 오류가 났다. 중복만 제거했다"
+    },
+    {
+      "attempt": "build4",
+      "kind": "preflight",
+      "cause": "source4 manifest 완성 전에 시작했다. 컴파일하지 않았고 사전 실패 로그를 보존했다"
+    },
+    {
+      "attempt": "gui1",
+      "kind": "runtime",
+      "cause": "원문1024 생성 중간 기하를 프레임에 노출했다. 실제 mode3을 같은 프레임에서 완료하도록 검사 호출을 교정했다"
+    },
+    {
+      "attempt": "gui2",
+      "kind": "runtime",
+      "cause": "Native 정리 뒤 삭제된 MainMenu 버튼 별칭을 호스트 합성기가 다시 읽었다. 실제 노드/Native 기대 대신 호스트 별칭 수명을 교정했다"
+    },
+    {
+      "attempt": "gui3",
+      "kind": "visual-review",
+      "runtimeChecksPassed": true,
+      "cause": "구성/입력은 통과했으나 World 이전 현재 루트의 공통 Draw 제출이 빠졌다. Source7에서 연결하고 픽셀 확인을 추가했다"
+    }
+  ],
+  "limits": {
+    "state1CoordinatorComplete": false,
+    "actualEditInstalled": false,
+    "fullNaturalMissionCompletionVerified": false,
+    "fullPixelOrSoundIdentityVerified": false,
+    "cd1072EquivalenceClaimed": false
+  },
+  "passed": true
+}

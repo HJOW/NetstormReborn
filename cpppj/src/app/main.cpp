@@ -654,6 +654,7 @@ int RunClient(std::vector<std::string> arguments) {
                 }
                 if (step.operation == "snapshot" || step.operation == "report" || step.operation=="refresh") continue;
                 // 테스트 전용 임시 조작이며 원본 분석 결과가 아니다. 이미 생성된 조각은 바꾸지 않는다.
+                if (step.operation=="test-state-hud") { if (step.argument=="clear") { c.Menu()->KillGumpsForState();c.Menu()->CleanupGumpsForState(); }else if (step.argument=="replace") c.Menu()->ReplaceHudForState();else if (step.argument=="sp") c.Menu()->RefreshStormPower();else if (step.argument=="normal") c.Menu()->ApplyHudModeForState(3);else if (step.argument=="editor") c.Menu()->ApplyHudModeForState(4);else throw std::invalid_argument("State HUD 검사 동작은 clear/replace/sp/normal/editor만 허용");continue; } //검사 전용 실제 Native 자식 호출이며 State 전환/loaded 성공을 만들지 않는다.
                 if (step.operation=="test-bridge-patterns") { c.Menu()->InspectBridgePatterns(step.argument);continue; }
                 // 직전 완성 프레임의 실제 상태가 조건을 만족할 때만 다음 검사 입력으로 진행한다.
                 if (step.operation=="require") {

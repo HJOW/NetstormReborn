@@ -215,3 +215,6 @@ target_sources(netstorm PRIVATE o/RawSquidPoolReset.h o/RawSquidPoolReset.cpp)
 
 # State의 장기 SID 목록과 실제20포인터 개수 정리다.
 target_sources(netstorm PRIVATE o/RawStateSidLists.cpp o/RawStateSidLists.h)
+
+# 실제 SP 표시의 serial 조회와 가상 재부착 부모다.
+target_sources(netstorm PRIVATE client/RawStormPowerRefresh.cpp client/RawStormPowerRefresh.h)

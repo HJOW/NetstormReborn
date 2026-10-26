@@ -74,6 +74,8 @@ public:
     RawButtonInputResult RouteInput(InputEvent event); // 같은 실제 Route를 한 번 실행해 월드 전 입력 소비를 돌려준다.
     std::uint32_t RootToken() const; // 현재 등록표0칸의 실제 공통 루트다.
     std::uint32_t SerialGump(std::uint32_t serial) const; //00464020: 등록1..999에서 같은serial·비dead의 첫 대상이다.
+    void KillStateGumps(); //004666d0의 등록1..999·현재 제외타입11/dead 관문으로 Kill만 예약한다.
+    void RefreshStormPower(); //0043dad0의 현재 예산 serial 조회/가상 Push/Attach/깊이 복원을 실행한다.
     void KillGump(std::uint32_t token); // 같은 실제 수명으로 Kill만 하고 callback 밖 프레임 Cleanup을 유지한다.
     std::uint32_t DialogCount() const; // Guide가 공통 입력/수명과 같은 현재 모달 개수를 읽는다. Kill의 즉시 반납과 소멸 전 창 인스턴스 수를 구별한다.
     std::uint32_t CurrentDialog() const; // 원문565dd4의 실제 현재 모달 토큰이다.4c8e90은 개수가 아닌 이 값의0 여부를 읽는다.
@@ -93,6 +95,7 @@ public:
     // 0047d890/CD004773a0: 현재 캡처/dialog/루트에 생산 갱신 사건을 원본 Route 순서로 분배한다.
     // 생산 패널 노드가 아직 없으면 실제 트리의 미처리 반환을 유지한다.
     void RefreshProduction();
+    std::uint32_t NotifyHudMode(std::uint32_t command,std::uint32_t mode); //00466200/280의 현재 캡처·modal·root에 명시 원문 모드를 숨김 포함1로 전달한다.
     std::uint32_t NotifyHudMode(std::uint32_t command); //현재 캡처/dialog/root에(command,1,0,includeHidden1)을 보내며 반환토큰과 캡처해제 효과를 보존한다.
     // 같은 트리/입력/수명에 실제 원본 메뉴 계층을 한 번 연결한다. 자산/글꼴은 Client가 소유한다.
     RawMenuControls& EnableMenus(const GameAssets& assets,FontStore& fonts,RawMenuHooks hooks);

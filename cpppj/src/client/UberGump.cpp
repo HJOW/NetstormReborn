@@ -1063,7 +1063,8 @@ void UberGump::Compose() {
         text.push_back({&font,label,x+plan.textOffset.x,y+plan.textOffset.y,static_cast<std::uint8_t>(plan.text.color),
             static_cast<std::uint8_t>(plan.text.shadowColor),{plan.text.shadowX,plan.text.shadowY},(plan.text.flags&2)!=0,(plan.text.flags&4)!=0});
     };
-    if (state_.phase == ClientPhase::MainMenu || (!mission_ && !popup_.empty())) {
+    const bool nativeHud=rawButtons_->UberRoot() && rawButtons_->UberRoot()->Current(); //원문 전체 루트가 현재이면 World 생성 전에도 폐기된 호스트 MainMenu 버튼을 그리지 않는다.
+    if ((!nativeHud && state_.phase == ClientPhase::MainMenu) || (!mission_ && !popup_.empty())) {
         Paste(*canvas, title_, (width - 640) / 2, (height - 480) / 2, all);
         const int x = width / 2 - 156, y = height / 2 - 73;
         const std::string campaign = client_.Assets().Edition()==o::OriginalEdition::Patch1078 ? "UCampaign" : Script("tell").Section("UCampaign") ? "UCampaign" : "Campaign"; // 원문10.78 MainMenu의 고정 target이며 영구 tell Config를 새로 등록하지 않는다.
@@ -1121,7 +1122,7 @@ void UberGump::Compose() {
         // 원본 돌 버튼의 63바이트 라벨은 UTF-8가 아닌 기존 게임 글꼴 바이트를 사용한다.
         for (const auto& label:labels_) originalLabels.push_back(FontBytes(label));
         if (popup_.empty()) rawButtons_->SetControls(regions,originalLabels,width,height,{buttonTextureType_,buttonTextureFrame_,
-            static_cast<std::int16_t>(buttonTextureMetrics_.width),static_cast<std::int16_t>(buttonTextureMetrics_.height),buttonColors},world_!=nullptr || client_.HtmlWindowGlobals()->window.instances!=0,client_.HtmlWindowGlobals()->window.instances!=0);
+            static_cast<std::int16_t>(buttonTextureMetrics_.width),static_cast<std::int16_t>(buttonTextureMetrics_.height),buttonColors},world_!=nullptr || (rawButtons_->UberRoot() && rawButtons_->UberRoot()->Current()) || client_.HtmlWindowGlobals()->window.instances!=0,client_.HtmlWindowGlobals()->window.instances!=0);
         if (state_.phase==ClientPhase::LoadingMission && !(missionRuntime_ && missionRuntime_->guided)) {
             rawButtons_->Menus()->SetPalette(client_.GetScreen().Colors());
             // 원본 기본 HUD의 수직 구분선 오른쪽 지도 사각형이다. 전체 dock 드래그 연결 전의 초기값85를 사용한다.
@@ -1167,9 +1168,9 @@ void UberGump::Compose() {
         // 새 페이지는 같은 raw 노드로 한 번 다시 합성하며 중간 어댑터 그림은 화면에 제출하지 않는다.
         controlsChanged_=false;Compose();return;
     }
-    if (!commonDrawSubmitted && (rawButtons_->Menus()->KnowledgeOpen() || rawButtons_->Menus()->HelpOpen() || warnings_->HasMessages())) client_.GetRenderer().SetOverlayProcedure(RenderProcedure{{0,0,width,height},[this](std::span<std::uint8_t> pixels,int pitch,int height,ScreenRect clip) {
+    if (!commonDrawSubmitted && (nativeHud || rawButtons_->Menus()->KnowledgeOpen() || rawButtons_->Menus()->HelpOpen() || warnings_->HasMessages())) client_.GetRenderer().SetOverlayProcedure(RenderProcedure{{0,0,width,height},[this](std::span<std::uint8_t> pixels,int pitch,int height,ScreenRect clip) {
         rawButtons_->Menus()->Draw(pixels,pitch,height,client_.GetScreen().Colors(),client_.GetScreen().ShadeMaps(),clip);
-    }}); // 원래 브리핑을 유지한 상태에서도 같은 실제 지식 카드를 가장 위에 그린다.
+    }}); //World 생성 전 현재 전체 HUD와 브리핑 위 지식 카드도 같은 실제 공통 트리로 그린다.
     if (world_) world_->TakeChanged();
     rebuild_ = false;
 }
@@ -1208,6 +1209,7 @@ std::string UberGump::Report() const {
     out<<"current_dialog\t"<<rawButtons_->CurrentDialog()<<'\n'; // Guide4c8e90과 같은 실제565dd4다.
     out << "thunder_processes\t" << client_.ThunderFlashCount() << '\n';
     out<<"game_menu_bar\t"<<(gameMenuState_ ? gameMenuState_->menuSerial : 0U)<<'\t'<<GameMenuOpen()<<'\t'<<(gameMenuState_ ? gameMenuState_->checksum : 0)<<'\n'; // 같은serial조회와기존SP검산을관찰한다.
+    out<<"state_hud\t"<<(world_!=nullptr)<<'\t'<<(rawButtons_->UberRoot() && rawButtons_->UberRoot()->Current())<<'\t'<<(hud_?hud_->boundMinimap:0)<<'\t'<<(rawButtons_->Minimap()?rawButtons_->Minimap()->RootToken():0)<<'\t'<<client_.GameplayGlobals()->Borrowed()<<'\n'; //생성/현재 World 통지 대여를 분리 관측하며 State 설치 완료를 합성하지 않는다.
     out<<rawButtons_->Report()<<'\n';
     out<<rawButtons_->Menus()->Report();
     out<<warnings_->Report();

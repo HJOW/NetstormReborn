@@ -2047,3 +2047,7 @@ cpppj/kencloud-render-native.json text eol=lf
 # SID 목록의 최초 Native 보고서와 실행 보고서 SHA를 Windows 체크아웃에서도 보존한다.
 cpppj/state-sid-lists-native-20261026.json text eol=lf
 cpppj/state-sid-lists-runtime-20261026.json text eol=lf
+
+# 실제 예산 부모의 최초 Native/실행 보고서 SHA를 같은 LF로 보존한다.
+cpppj/budget-refresh-native-20261026.json text eol=lf
+cpppj/state-hud-runtime-20261026.json text eol=lf
