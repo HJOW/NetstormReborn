@@ -7,6 +7,8 @@
 #include "o/RawDataManagerResize.h"
 #include "o/RawDataManagerImage.h"
 #include "o/RawTemplateLoad.h"
+#include "o/RawDataManagerInitialize.h"
+#include <new>
 #include <algorithm>
 #include <optional>
 #include <stdexcept>
@@ -48,6 +50,8 @@ struct CampaignTemplateStorage::Image {
     std::uint64_t nextStreamGeneration{}; // 같은 manager 안에서 재생성마다 증가하는 비영 번호다.
     std::uint32_t nextStreamHandle{1}; // 이름/표준 파일 위치와 독립적인 단조 증가 노드 토큰이다.
     std::array<bool,o::FortTemplate::kSectionCount> seeded{}; // 외부 파싱 자료의 각 표준 위치를 최초 목록에 한 번만 연결한다.
+    ClientTemplateSectionNames& sectionNames; // Client와같은lazy이름표이며이Image보다긴Storageowner에서빌린다.
+    bool constructed{}; // 실제new된Image에원문ctor가끝났는지를구별한다.
     o::FortTemplate fort; // 원시 State 섹션을 포함한 실제 파싱 자료와 소유 버퍼다.
     o::PlayerTemplateStateStream state; // 같은 fort.sections[State]의 현재 cursor다.
     o::FortTerritoryStream territory; // 같은 fort.sections[Territory]의 현재 cursor다.
@@ -324,11 +328,8 @@ struct CampaignTemplateStorage::Image {
         RequireNoAccess();
         if (streams.empty() && !Read(std::span(manager).subspan(4))) { fort.sections.clear();fort.sections.resize(o::FortTemplate::kSectionCount);seeded.fill(true);state={{},0,0,false};territory={}; }
         else SyncStreams();
-        std::vector<std::uint8_t> source,names;std::uint32_t allocating{},created{}; // 파일 할당과 새 임시 노드는 서로 다른 실제 소유자다.
-        names.push_back('/');
-        for (const auto section:o::FortTemplate::SectionNames()) { names.insert(names.end(),section.begin(),section.end());names.push_back('/'); } // 실제 SNART35개 이름과 마지막 빈 이름을 공급한다.
-        names.push_back('/');names.push_back(0);
-        o::DataManagerImageHooks hooks;hooks.names=[&names] { return std::span(names); };hooks.assertion=[](auto) { throw std::logic_error("Template 실제 파일 이미지의 원본 진단"); };
+        std::vector<std::uint8_t> source;std::uint32_t allocating{},created{}; // 파일할당은지역소유지만이름표는같은Client에서빌린다.
+        o::DataManagerImageHooks hooks;hooks.names=[this] { return sectionNames.Names(); };hooks.assertion=[](auto) { throw std::logic_error("Template 실제 파일 이미지의 원본 진단"); };
         hooks.streams.selection.stream=[this](auto handle) { return std::span(streams.at(handle)->bytes); };hooks.streams.list=ListEffects();
         hooks.streams.allocateStream=[this,&allocating,&created](auto size) { if (size!=60 || created>=o::FortTemplate::kSectionCount) throw std::logic_error("Template 파일 이미지의 새 노드 계약 위반");++created;allocating=AllocateStream();return allocating; }; // 기존 canonical 버퍼는 원문 제거 전까지 덮어쓰지 않는다.
         hooks.streams.memory.buffer=[this,&source](auto pointer)->std::span<std::uint8_t> {
@@ -357,20 +358,27 @@ struct CampaignTemplateStorage::Image {
         file.tooManyTypes=[] { throw std::logic_error("Template 파일의 numTypes<256 진단"); };file.rejectFile=[](auto) { throw std::runtime_error("Template 잘못된 서명의 원본 파일 제거 요청: 보호 원문은 삭제하지 않습니다"); };
         if (!ReadFile(file)) throw std::runtime_error("Template 실제 파일 열기/서명 거부");
     }
+    // new276의같은할당이다.원문ctor/목록생성은아직하지않고metadata의선행노드투영도막는다.
+    explicit Image(ClientTemplateSectionNames& names):sectionNames(names) { seeded.fill(true); }
+    // 원문ctor는같은생성수명의실제manager와Client version을바꾼다.이름표할당은하지않는다.
+    void ConstructName(std::string_view file,std::uint32_t& version) {
+        if (constructed || !streams.empty() || file.size()>=256 || file.find('\0')!=std::string_view::npos) throw std::invalid_argument("Template 빈Image 실제ctor계약");
+        const std::span<std::uint8_t,4> global(reinterpret_cast<std::uint8_t*>(&version),4);o::ConstructTemplateDataManager(manager,file,global);name.assign(file);constructed=true;
+    }
     // State와 Territory 모두 같은 원시 섹션 바이트를 빌리며 파일 입력이면 원본 읽기 부모가 초기 목록을 만든다.
-    Image(o::FortTemplate value,std::string file,std::uint32_t& version,bool fileImage=false):fort(std::move(value)),name(std::move(file)) {
+    Image(o::FortTemplate value,std::string file,std::uint32_t& version,ClientTemplateSectionNames& names,bool fileImage=false):sectionNames(names),fort(std::move(value)),name(std::move(file)) {
         if (name.size()>=256 || name.find('\0')!=std::string::npos) throw std::invalid_argument("Template 실제 파일명256BYTE 계약 위반");
         const std::span<std::uint8_t,4> global(reinterpret_cast<std::uint8_t*>(&version),4); // 실제DWORD객체의BYTE뷰다. 기존BYTE배열을DWORD참조로역캐스팅하지않는다.
         o::ConstructTemplateDataManager(manager,name,global); // 같은Client의실제005c89c0에0을쓰는효과를기존원본생성자에서수행한다.
-        if (fileImage) return;
+        constructed=true;if (fileImage) return;
         const auto at=StateSection();const auto bytes=at<fort.sections.size() ? std::span<std::uint8_t>(fort.sections[at]) : std::span<std::uint8_t>{};state={bytes,0,static_cast<std::uint32_t>(bytes.size()),!bytes.empty()};
         const auto territoryAt=TerritorySection();const auto territoryBytes=territoryAt<fort.sections.size() ? std::span<const std::uint8_t>(fort.sections[territoryAt]) : std::span<const std::uint8_t>{};
         territory={territoryBytes,0,static_cast<std::uint32_t>(territoryBytes.size())};SyncStreams();
     }
 };
 // 시작 초기화는 기존 manager를 반납하는 전역 정리와 다르다.
-CampaignTemplateStorage::CampaignTemplateStorage(std::shared_ptr<o::FortSerializationGlobals> serializationGlobals)
-    :serializationGlobals_(serializationGlobals ? std::move(serializationGlobals) : std::make_shared<o::FortSerializationGlobals>()) {
+CampaignTemplateStorage::CampaignTemplateStorage(std::shared_ptr<o::FortSerializationGlobals> serializationGlobals,std::shared_ptr<ClientTemplateSectionNames> sectionNames)
+    :serializationGlobals_(serializationGlobals ? std::move(serializationGlobals) : std::make_shared<o::FortSerializationGlobals>()),sectionNames_(sectionNames ? std::move(sectionNames) : std::make_shared<ClientTemplateSectionNames>()) {
     // 아홉 개의 처음20BYTE만 원본 생성 몸체로 초기화한다.
     for (std::uint32_t slot=0;slot<9;++slot) o::InitializeTemplateHeader(Header(slot));
 }
@@ -378,6 +386,24 @@ CampaignTemplateStorage::CampaignTemplateStorage(std::shared_ptr<o::FortSerializ
 CampaignTemplateStorage::~CampaignTemplateStorage()=default;
 // 같은 고정 물리 표를 빌린다.
 std::span<std::uint8_t> CampaignTemplateStorage::Headers() { return headers_; }
+// 원문new276만실행하며header/ctor/이름표는나중에선택된부모가진행한다.
+std::uint32_t CampaignTemplateStorage::AllocateEmptyManager(std::uint32_t bytes) {
+    if (bytes!=276 || !nextHandle_) throw std::invalid_argument("Template 실제빈Image276할당계약");
+    auto image=std::unique_ptr<Image>(new(std::nothrow) Image(*sectionNames_));if (!image) return 0;const auto token=nextHandle_++;images_.emplace(token,std::move(image));return token;
+}
+// 존재하는같은미생성할당만원문ctor로전환한다.
+std::uint32_t CampaignTemplateStorage::ConstructEmptyManager(std::uint32_t token,std::string_view name) { images_.at(token)->ConstructName(name,SerializationVersion());return token; }
+// 고정token의물리는header교체후에도같은Image이다.
+std::span<std::uint8_t> CampaignTemplateStorage::ManagerBytes(std::uint32_t token) { return images_.at(token)->manager; }
+// 실제표는진단뒤한번받고같은Image의기존rawCreate를매이름마다실행한다.
+void CampaignTemplateStorage::InitializeEmptyManager(std::uint32_t token,const std::function<void(o::DataManagerInitializeAssertion)>& assertion) {
+    auto& image=*images_.at(token);if (!image.constructed) throw std::logic_error("Template 실제ctor이전초기화");o::DataManagerInitializeHooks hooks;hooks.assertion=assertion;hooks.names=[&image] { return image.sectionNames.Names(); };
+    hooks.create=[&image](std::span<const std::uint8_t> name) { const auto end=std::find(name.begin(),name.end(),std::uint8_t{});if (end==name.end()) throw std::out_of_range("Template 실제Create이름NUL범위");image.CreateSection({reinterpret_cast<const char*>(name.data()),static_cast<std::size_t>(end-name.begin())}); };o::InitializeDataManager(image.manager,hooks);
+}
+// 같은실제Image의소멸/할당반납을원문바깥부모에빌린다.
+o::TemplateLifetimeHooks CampaignTemplateStorage::ManagerLifetime() { return Effects(); }
+// 다른Storage도동일Client이름표를명시공유할수있다.
+std::shared_ptr<ClientTemplateSectionNames> CampaignTemplateStorage::SectionNamesOwner() const { return sectionNames_; }
 // 같은DWORD의현재값과주소를호출자에게빌린다. 조회/Storage생성자에서공유값을재초기화하지않는다.
 std::uint32_t& CampaignTemplateStorage::SerializationVersion() { return serializationGlobals_->version; }
 // 유효 슬롯의 현재 기록만 반환한다.
@@ -389,10 +415,10 @@ o::TemplateLifetimeHooks CampaignTemplateStorage::Effects() {
     return {[this](auto handle) { auto& image=*images_.at(handle);image.Destroy();image.fort=o::FortTemplate{};image.state={{},0,0,false};image.territory={};std::vector<std::uint8_t>{}.swap(image.retiredState); },[this](auto handle) { if (images_.erase(handle)!=1) throw std::logic_error("Template 같은 manager 중복 반납"); }};
 }
 // 기존 한 manager를 정확히 해제한 뒤 새 실제 객체를 소유한다.
-void CampaignTemplateStorage::Install(std::uint32_t slot,o::FortTemplate fort,std::string name) { Clear(slot);if (!nextHandle_) throw std::overflow_error("Template 호스트 manager 핸들 소진");const auto handle=nextHandle_++;images_.emplace(handle,std::make_unique<Image>(std::move(fort),std::move(name),SerializationVersion()));Put(Header(slot),0,handle); }
+void CampaignTemplateStorage::Install(std::uint32_t slot,o::FortTemplate fort,std::string name) { Clear(slot);if (!nextHandle_) throw std::overflow_error("Template 호스트 manager 핸들 소진");const auto handle=nextHandle_++;images_.emplace(handle,std::make_unique<Image>(std::move(fort),std::move(name),SerializationVersion(),*sectionNames_));Put(Header(slot),0,handle); }
 // 파싱된 보조 자료와 같은 실제 파일 원문을 새 manager에 읽으며 임의 빈 섹션 목록을 먼저 만들지 않는다.
 void CampaignTemplateStorage::InstallFile(std::uint32_t slot,o::FortTemplate fort,std::span<const std::uint8_t> bytes,std::string name,std::int32_t typeCount) {
-    Clear(slot);if (!nextHandle_) throw std::overflow_error("Template 파일 manager 핸들 소진");auto image=std::make_unique<Image>(std::move(fort),std::move(name),SerializationVersion(),true);image->ReadFile(bytes,typeCount);const auto handle=nextHandle_++;images_.emplace(handle,std::move(image));Put(Header(slot),0,handle);
+    Clear(slot);if (!nextHandle_) throw std::overflow_error("Template 파일 manager 핸들 소진");auto image=std::make_unique<Image>(std::move(fort),std::move(name),SerializationVersion(),*sectionNames_,true);image->ReadFile(bytes,typeCount);const auto handle=nextHandle_++;images_.emplace(handle,std::move(image));Put(Header(slot),0,handle);
 }
 // 실제 원문 부모가 설치/읽기/정상 false 정리를 지휘하며 기존 같은 manager는 건드리지 않는다.
 void CampaignTemplateStorage::LoadFile(std::uint32_t slot,o::FortTemplate fort,std::string_view name,const TemplateFileLoadHooks& file) {
@@ -401,7 +427,7 @@ void CampaignTemplateStorage::LoadFile(std::uint32_t slot,o::FortTemplate fort,s
     hooks.sameName=[&file](auto first,auto second) { return NeedFile(file.sameName)(first,second); };hooks.wrongName=[&file] { NeedFile(file.wrongName)(); };
     hooks.allocate=[this](auto bytes) { if (bytes!=276 || !nextHandle_) throw std::overflow_error("Template Load의 실제276BYTE/호스트handle 소진");return nextHandle_++; };
     hooks.construct=[this,&fort](auto manager,auto fileName) {
-        auto image=std::make_unique<Image>(std::move(fort),std::string(fileName),SerializationVersion(),true);image->fort.sections.clear();
+        auto image=std::make_unique<Image>(std::move(fort),std::string(fileName),SerializationVersion(),*sectionNames_,true);image->fort.sections.clear();
         if (!images_.emplace(manager,std::move(image)).second) throw std::logic_error("Template Load manager의 같은 할당 중복");return manager;
     }; // 생성자의 공유 version0과 실제 Image 소유를 끝낸 뒤 원문 부모가 header.ptr를 공개한다.
     hooks.readOnly=[&file](auto fileName) { return NeedFile(file.readOnly)(fileName); };
@@ -427,6 +453,10 @@ std::string CampaignTemplateStorage::ReadSubscriberName(std::uint32_t slot) { re
 o::PlayerTemplateStateStream& CampaignTemplateStorage::InitializeState(std::uint32_t slot,std::span<const std::uint8_t,28> bytes) { auto& image=Current(slot);image.InitializeState(bytes);return image.state; }
 // 생성한 manager/노드/수명을 고정하고 이후 current 변경과 분리한다.
 TemplateWriteStream CampaignTemplateStorage::CreateSection(std::uint32_t slot,std::string_view name) { const auto manager=Read(Header(slot));auto& image=Current(slot);const auto section=image.CreateSection(name);return {manager,section,image.streams.at(section)->generation}; }
+// 고정 manager 토큰의 실제 소유 Image만 선택하므로 Subscriber 부모의 Create(this) 주소를 그대로 유지한다.
+TemplateWriteStream CampaignTemplateStorage::CreateManagerSection(std::uint32_t manager,std::string_view name) {
+    const auto found=images_.find(manager);if (!manager || found==images_.end()) throw std::out_of_range("섹션 생성의 실제 manager 수명 누락");auto& image=*found->second;const auto section=image.CreateSection(name);return {manager,section,image.streams.at(section)->generation};
+}
 // 검색 실패도 원문 current0을 유지하며 참조 유효성과 빈 결과를 구별한다.
 TemplateWriteStream CampaignTemplateStorage::FindSection(std::uint32_t slot,std::string_view name) { const auto manager=Read(Header(slot));auto& image=Current(slot);const auto section=image.FindSection(name);return section ? TemplateWriteStream{manager,section,image.streams.at(section)->generation} : TemplateWriteStream{}; }
 // 선택 부모의 실제 pos0/읽기 진단을 끝낸 같은 노드의 생성 수명을 반환한다.

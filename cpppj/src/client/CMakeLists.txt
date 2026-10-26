@@ -2,6 +2,8 @@
 # (ClientMain·UserInput·Gump 계열·Screen·Renderer·Sound·State·Mission 등)
 # 다시 만든 파일을 아래 목록에 더한다. 파일 이름은 SOURCE_MAP.md 의 "cpppj 경로"를 따른다.
 target_sources(netstorm PRIVATE
+    # 모든 Template reader와 새 맵 초기화가 같은 Client 수명의 이름표를 빌린다.
+    ClientTemplateSectionNames.cpp ClientTemplateSectionNames.h
     # State 부모의 실제 AI/Deck/Kernel 증빙을 Core0 뒤 Session 반납으로 연결한다.
     ClientStateRuntimeRetirement.cpp ClientStateRuntimeRetirement.h
     ClientStateWorldCleanup.cpp ClientStateWorldCleanup.h

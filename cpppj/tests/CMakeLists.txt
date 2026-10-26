@@ -2211,4 +2211,10 @@ set_source_files_properties(TellTipTests.cpp PROPERTIES COMPILE_DEFINITIONS "NET
 # 작업본의 실제 파일 재조회/보호 경계와 독립 clipboard880관측을 같은 제품에서 검증한다.
 target_sources(netstorm_tests PRIVATE EditorMapCatalogFilesTests.cpp TextClipboardTests.cpp)
 target_sources(netstorm_tests PRIVATE EditorAtomicWriteTests.cpp)
+
+# 독립 원본 Subscriber 90관측과 공유 이름표/빈 manager 76관측 및 실제 저장소 수명을 대조한다.
+target_sources(netstorm_tests PRIVATE FortSubscriberWriteTests.cpp DataManagerInitializeTests.cpp)
+set_source_files_properties(FortSubscriberWriteTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_FORT_SUBSCRIBER_WRITE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/fort-subscriber-write-x86.tsv\"")
+set_source_files_properties(DataManagerInitializeTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_DATA_MANAGER_INITIALIZE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/data-manager-initialize-x86.tsv\";NETSTORM_TEMPLATE_SECTION_NAMES_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/template-section-names-x86.tsv\"")
 set_source_files_properties(TextClipboardTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_TEXT_CLIPBOARD_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/text-clipboard-x86.tsv\"")

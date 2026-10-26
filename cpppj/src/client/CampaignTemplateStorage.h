@@ -9,6 +9,8 @@
 #include "o/RawMemStream.h"
 #include "o/FortSerializationGlobals.h"
 #include "o/RawFortCurrentName.h"
+#include "o/RawDataManagerInitialize.h"
+#include "client/ClientTemplateSectionNames.h"
 #include <map>
 #include <memory>
 namespace netstorm::client {
@@ -37,11 +39,17 @@ struct TemplateWriteStream {
 // 실제 파싱 자료를 단독 소유하고 빌린 헤더는 같은 manager/State cursor를 조회한다.
 class CampaignTemplateStorage {
 public:
-    explicit CampaignTemplateStorage(std::shared_ptr<o::FortSerializationGlobals> serializationGlobals={}); // 원본9개헤더를초기화하고같은Client전역을빌린다. 생략하면독립전역한개를소유한다.
+    explicit CampaignTemplateStorage(std::shared_ptr<o::FortSerializationGlobals> serializationGlobals={},std::shared_ptr<ClientTemplateSectionNames> sectionNames={}); // 원본9개헤더를초기화하고같은Client전역을빌린다. 생략하면독립전역한개를소유한다.
     ~CampaignTemplateStorage(); // 호스트 종료 때 남은 실제 소유 이미지를 반납한다. 원본 State 전환을 대신하지 않는다.
     CampaignTemplateStorage(const CampaignTemplateStorage&)=delete; // 고정 헤더/이미지 참조는 복사하지 않는다.
     CampaignTemplateStorage& operator=(const CampaignTemplateStorage&)=delete; // 같은 수명의 표/실제 이미지를 별개 사본으로 만들지 않는다.
     std::span<std::uint8_t> Headers(); // 실제180BYTE를 같은 Player/로더에 공급한다.
+    std::uint32_t AllocateEmptyManager(std::uint32_t bytes); // 원문new276의실제미생성Image를소유표에추가하고불투명token/0을돌려준다.header는쓰지않는다.
+    std::uint32_t ConstructEmptyManager(std::uint32_t manager,std::string_view name); // 같은할당에기존원문ctor와공유version0을쓰며header공개는바깥부모가맡는다.
+    void InitializeEmptyManager(std::uint32_t manager,const std::function<void(o::DataManagerInitializeAssertion)>& assertion={}); // 고정manager의실제35개Create를공유mutable표로순회한다.선택진단은생략하지않는다.
+    std::span<std::uint8_t> ManagerBytes(std::uint32_t manager); // 이미선택한같은manager276BYTE다.현재header를다시읽지않는다.
+    o::TemplateLifetimeHooks ManagerLifetime(); // 같은owner의실제Destroy/Release를분리하여바깥NewManager에빌린다.
+    std::shared_ptr<ClientTemplateSectionNames> SectionNamesOwner() const; // reader/신규초기화가공유하는Clientowner를읽는다.
     std::uint32_t& SerializationVersion(); // 생성자/객체로더/저장부모가직접같이쓰는실제005c89c0 DWORD다. 복사값을반환하지않는다.
     void Install(std::uint32_t slot,o::FortTemplate fort,std::string name); // 이전 한 헤더를 실제 반납한 뒤 새 소유 manager를 설치한다.
     void InstallFile(std::uint32_t slot,o::FortTemplate fort,std::span<const std::uint8_t> image,std::string name,std::int32_t typeCount=188); // 실제 파일/서명/섹션 읽기 부모를 실행한다. 기본188은10.78 독립 호출용이며 Session은 현재 타입 수를 전달한다.
@@ -55,6 +63,7 @@ public:
     std::string ReadSubscriberName(std::uint32_t slot); // 004bd4d0처럼 실제 Subscriber 선택/ID 건너뜀/signed 길이 읽기로 현재 이름을 반환한다.
     o::PlayerTemplateStateStream& InitializeState(std::uint32_t slot,std::span<const std::uint8_t,28> bytes); // 기존 State 반납 뒤 새 섹션을 목록 끝에 만들고 원본16384BYTE 버퍼에28BYTE를 쓴다.
     TemplateWriteStream CreateSection(std::uint32_t slot,std::string_view name); // 원본 생성 부모로 이름의 기존 노드를 교체하고 새 마지막 노드의 참조를 반환한다. Temp 같은 동적 이름도 허용한다.
+    TemplateWriteStream CreateManagerSection(std::uint32_t manager,std::string_view name); //원문이 이미 선택한 현재 manager를 고정해 섹션을 만든다. 뒤 callback의 header 교체로 다른 manager를 재선택하지 않는다.
     TemplateWriteStream FindSection(std::uint32_t slot,std::string_view name); // 원본 검색으로 current를 갱신한다. 없으면 current0/빈 참조이며 pos는 보존한다.
     TemplateWriteStream SelectSection(std::uint32_t slot,std::string_view name,std::int32_t writable); // 실제 선택 부모의 검색/진단/pos0을 같은 노드에 수행한다.
     TemplateWriteStream RenameSection(std::uint32_t slot,std::string_view destination,std::string_view source); // 실제 Rename 부모가 대상을 반납한 뒤 원래 source 노드의 이름만 교체한다. handle/생성수명/버퍼할당을 보존한다.
@@ -86,6 +95,7 @@ private:
     std::span<std::uint8_t> Header(std::uint32_t slot); // 같은 표의 한20BYTE를 빌린다.
     o::TemplateLifetimeHooks Effects(); // 실제 manager 소멸과 객체 할당 반납을 분리한다.
     std::shared_ptr<o::FortSerializationGlobals> serializationGlobals_; // 모든Image/외부Session보다먼저확보하는실제공유DWORD소유권이다.
+    std::shared_ptr<ClientTemplateSectionNames> sectionNames_; // 모든Image보다오래사는동일512BYTE lazy표owner다.독립Storage는새Client상태를한개소유한다.
     std::array<std::uint8_t,180> headers_{}; // Client보다 짧은 Session이 사라져도 유지되는 실제9개 헤더다.
     std::map<std::uint32_t,std::unique_ptr<Image>> images_; // 호스트 포인터를DWORD로 자르지 않는 실제 소유 객체 표다.
     std::uint32_t nextHandle_{1}; // 서로 살아 있는 manager를 구별하는 비영 호스트 핸들이다.

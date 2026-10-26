@@ -7,6 +7,7 @@
 
 namespace netstorm::o { class BaseFileSystem;class ConfigInterface;struct FortSerializationGlobals; }
 namespace netstorm::client {
+class ClientTemplateSectionNames; // 모든Templatemanager가빌리는같은Client이름표owner다.
 // 원본005327ac의 같은9BYTE를 덮어쓰는 키 저장소다. Client가 소유하면 모든 목록 경계가 같은 수명을 빌린다.
 class SoloMapFileSpec {
 public:
@@ -27,6 +28,7 @@ struct SoloMapCatalogEffects {
     o::SoloMapListState* listState{}; // 실제 Client는 같은 목록/dirty를 제공하며 이 catalog보다 오래 살아야 한다. 독립 호출은 자체 저장소를 쓴다.
     std::function<std::vector<std::string>(std::string_view)> enumeratePaths; //선택적 실제 파일 열거 장치다. 현재 PathSpec을 받고 경로를 돌려주며 생략하면 기존 기본 디스크만 사용한다.
     std::function<std::optional<std::vector<std::uint8_t>>(std::string_view)> readFile; //선택적 현재 파일 reader다. 분류/메타마다 다시 호출하며 생략하면 기존 디스크/TAFF/보조 읽기를 유지한다.
+    std::shared_ptr<ClientTemplateSectionNames> sectionNames; // 두MapProbe도주Storage와같은005c8aa4표를빌린다.생략하면catalog수명에한개를소유한다.
 };
 // 파일마다 분류와 목록 메타 조회를 다른 임시 Template에서 수행한다.
 class SoloMapCatalog {

@@ -1,5 +1,6 @@
 // 큰 원본 부모의 인라인 본문도 같은 공통 하위와 효과 뒤 재조회 순서로 복원한다.
 #include "o/RawDataManagerImage.h"
+#include "o/RawSnart.h"
 #include <algorithm>
 #include <array>
 #include <bit>
@@ -36,16 +37,7 @@ std::span<std::uint8_t> Node(const DataManagerImageHooks& hooks,std::uint32_t ha
 }
 // 004a8800/004a8850의 같은 SNART 표를 한 번 변환하고 지정 이름/NUL을 빌린다.
 std::string_view Name(std::span<std::uint8_t> names,std::uint32_t index,const DataManagerImageHooks& hooks) {
-    if (names.empty()) throw std::out_of_range("DataManager 파일 이미지의 실제 이름 표 누락");
-    if (names[0]) {
-        if (names[0]!='/') Assert(hooks,DataManagerImageAssertion::NameSeparator);const auto end=std::find(names.begin(),names.end(),std::uint8_t{});if (end==names.end()) throw std::out_of_range("DataManager SNART 입력 NUL 누락");*end=0xff;
-        // 원본처럼 첫FF 전의 구분자만NUL로 바꾸고 나머지는 보존한다.
-        for (std::size_t at=0;at<names.size() && names[at]!=0xff;++at) if (names[at]=='/') names[at]=0;
-    }
-    std::size_t at=1;
-    // 지정한 개수의NUL을 지나되 다음FF를 만나면 원본처럼 그 위치에서 멈춘다.
-    while (index) { if (at>=names.size()) throw std::out_of_range("DataManager SNART 이름 번호 범위");if (!names[at]) { --index;++at;if (at>=names.size()) throw std::out_of_range("DataManager SNART 끝 누락");if (names[at]==0xff) break; } else ++at; }
-    if (at>=names.size()) throw std::out_of_range("DataManager SNART 이름 시작 범위");const auto tail=names.subspan(at);const auto end=std::find(tail.begin(),tail.end(),std::uint8_t{});if (end==tail.end()) throw std::out_of_range("DataManager SNART 이름 NUL 누락");return {reinterpret_cast<const char*>(tail.data()),static_cast<std::size_t>(end-tail.begin())};
+    return ReadSnartName(names,index,[&hooks] { Assert(hooks,DataManagerImageAssertion::NameSeparator); }); // 동일몸체를공유하며기존reader의현재strlen시점은보존한다.
 }
 }
 // 진단이 mark/pos/end를 바꾸면 원본 본문처럼 그 현재 값을 후속 쓰기에 사용한다.

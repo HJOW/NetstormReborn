@@ -1,0 +1,310 @@
+{
+  "unit": 469,
+  "date": "2026-10-27",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+  "decompileChanged": false,
+  "baseCommit": "85f886f8",
+  "archiveVerified": {
+    "packages": 5,
+    "files": 142,
+    "bytes": 32009649
+  },
+  "builds": [
+    {
+      "command": [
+        "cmake",
+        "--build",
+        "cpppj/build",
+        "--config",
+        "Release",
+        "--parallel",
+        "4",
+        "--",
+        "/p:UseMultiToolTask=true",
+        "/p:MultiProcMaxCount=4",
+        "/p:EnforceProcessCountAcrossBuilds=true"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-new-map-469/build1.log",
+      "sha256": "35863fe351c1b112028262a80956727bd99f55f314f2083a8e1dec2bd0e645ec",
+      "summaries": [],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cmake",
+        "--build",
+        "cpppj/build",
+        "--config",
+        "Release",
+        "--parallel",
+        "4",
+        "--",
+        "/p:UseMultiToolTask=true",
+        "/p:MultiProcMaxCount=4",
+        "/p:EnforceProcessCountAcrossBuilds=true"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-new-map-469/build2.log",
+      "sha256": "1735886f809f3625595c7760c60648eb5b4497e5deb0e5876f91980ab35b1685",
+      "summaries": [],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cmake",
+        "--build",
+        "cpppj/build",
+        "--config",
+        "Release",
+        "--parallel",
+        "4",
+        "--",
+        "/p:UseMultiToolTask=true",
+        "/p:MultiProcMaxCount=4",
+        "/p:EnforceProcessCountAcrossBuilds=true"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-new-map-469/build3.log",
+      "sha256": "1735886f809f3625595c7760c60648eb5b4497e5deb0e5876f91980ab35b1685",
+      "summaries": [],
+      "diagnostics": []
+    }
+  ],
+  "nativeReplays": [
+    {
+      "command": [
+        "python",
+        "tools/decomp_fort_subscriber_write.py",
+        "--verify"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-new-map-469/native-subscriber.log",
+      "sha256": "77c80319ab010015ccf85ede0a8a58244f9f295671bbfe77c1d4fcca70a02c53",
+      "summaries": [],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "python",
+        "extracted/cpp-data-manager-initialize-469-staging/tools/decomp_initialize.py",
+        "--verify"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-new-map-469/native-names.log",
+      "sha256": "619fce8fc1df8fc2dc4e09b86c7657e5ced4fc74b52a66684a4c37f1145ce4c9",
+      "summaries": [],
+      "diagnostics": []
+    }
+  ],
+  "nativeObservations": 166,
+  "focused": [
+    {
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+        "--filter",
+        "DataManager"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-new-map-469/focused-DataManager.log",
+      "sha256": "a1914cb4fea38abbc97c28582e120fabd62870ce4d51a5f2b9f5caccb14751b8",
+      "summaries": [
+        "21 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "Template"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-new-map-469/focused3-Template.log",
+      "sha256": "333dc58a38b96cd9744a5b17a0fc54d3b34042295e0fa98b36310ea6030c42d5",
+      "summaries": [
+        "47 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+        "--filter",
+        "FortSubscriber"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-new-map-469/focused-FortSubscriber.log",
+      "sha256": "38b06b8788f5a23f35709878bc1924bce771db4aed66e115f01d0d4658c2ae10",
+      "summaries": [
+        "4 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+        "--filter",
+        "SoloMapCatalog"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-new-map-469/focused-SoloMapCatalog.log",
+      "sha256": "9d03d00241325cd770deb4cac36d7c51ec779742ad7f12e7e06ab4c74444a6b5",
+      "summaries": [
+        "10 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+        "--filter",
+        "EditorCatalogFiles"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-new-map-469/focused-EditorCatalogFiles.log",
+      "sha256": "773def2098f51e74be6e8dd7b36c2540c15a54729a45122d24b095101e84deb6",
+      "summaries": [
+        "11 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+        "--filter",
+        "EditorFiles"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-new-map-469/focused-EditorFiles.log",
+      "sha256": "3915624ac236da874929e52f6ac2c92f1e1bd9a9a5e71f94a6a3ffbe5f8b676b",
+      "summaries": [
+        "7 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+        "--filter",
+        "EditorFort"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-new-map-469/focused-EditorFort.log",
+      "sha256": "b19ba7fb2e68ff8d01b5533e10af14243ccc379d7c8ad9561615c299b056047c",
+      "summaries": [
+        "9 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+        "--filter",
+        "ExistingEditor"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-new-map-469/focused-ExistingEditor.log",
+      "sha256": "e1f1b9a026b8ee6f493beeb6d593c1e12b556d781d1235d73c8bb52e40809183",
+      "summaries": [
+        "58 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+        "--filter",
+        "FortMission"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-new-map-469/focused-FortMission.log",
+      "sha256": "313fcddfd9e5505197421da829aab5e8a4a41f090616f8e907070e97f9cb3e61",
+      "summaries": [
+        "2 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+        "--filter",
+        "FortCurrentName"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-new-map-469/focused-FortCurrentName.log",
+      "sha256": "eb68c212c9f87a80ec6de3c40049915f04e9bb64edc14d33ed5b323046ac42da",
+      "summaries": [
+        "2 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    }
+  ],
+  "uniqueFocused": 171,
+  "observedFocused": 171,
+  "newTests": [
+    "CampaignTemplates_EmptyImageAndExistingFileShareLazyNames",
+    "ClientTemplateSectionNames_AllocationZeroIsFailure",
+    "ClientTemplateSectionNames_LazyMutableAndUnknownTail",
+    "DataManagerInitialize_Native64",
+    "FortSubscriberWrite_RealStorageKeepsChosenManagerAndCapturedPhysicalName",
+    "FortSubscriberWrite_ReplaysNative90CapturedIdAndDelayedNameWrites",
+    "SoloMapCatalog_ProbeManagersShareClientSectionNames",
+    "TemplateSectionNames_Native12"
+  ],
+  "registeredBefore": 3211,
+  "registeredAfter": 3219,
+  "missingPreviousTests": [],
+  "preservedInputs": 3149,
+  "changedProtectedOrExistingTests": [],
+  "protectedOriginalCdAndAgents": 1820,
+  "sourceManifest": {
+    "path": "extracted/cpp-new-map-469/source-final.json",
+    "files": 2773,
+    "sha256": "1819d7db0906e9c15c1ea537a96900bc66cddbad7cde8156d1f9dd1f345ec29d"
+  },
+  "gameExeSha256": "464464af2d7ac8cfb8c024e99f1a2bcb0cde69c0b1cc531dce2c344f5b2fab98",
+  "testExeSha256": "38f252dba1b20283680c1de85602788fa7bfc8a26bdef8bc4710b52aa4c0ce17",
+  "firstFailures": [
+    {
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+        "--filter",
+        "Template"
+      ],
+      "exit": 1,
+      "log": "extracted/cpp-new-map-469/focused-Template.log",
+      "sha256": "7a9db09f4311e5ab13b15bd215bafda513ae202604ba2965b3402030c8477b4b",
+      "summaries": [
+        "47 test(s), 34 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "Template"
+      ],
+      "exit": 1,
+      "log": "extracted/cpp-new-map-469/focused2-Template.log",
+      "sha256": "719941aeebf67dbc1b1d9f6c30bed50a33f2d773dd2e7e16e6cae92c3f146362",
+      "summaries": [
+        "47 test(s), 34 failed check(s)"
+      ],
+      "diagnostics": []
+    }
+  ],
+  "failureCorrection": "새 미실행 초안이 빈 35개 stream 모두의 포인터 비영/용량16384를 기대했다. 원문0044ce10→0044cd40의 빈 tail 반납으로 앞34개 포인터/pos/end/용량은0, 마지막Terr19만 실제 버퍼/용량16384임을 확인해 새 검사만 정정했다. 기존 제품/검사/Native fixture는 변경하지 않았다.",
+  "gameRuns": 0,
+  "guiRuns": 0,
+  "wholeCTestExecuted": false,
+  "remaining": [
+    "NewFort 세 부모의 제품 채택 및 실제 Client/작업본 연결",
+    "NewEditor 설치와 자동 Add Island 큐",
+    "Add Island 전용 MetaImage/Bitmap/목록/창 수명",
+    "Test Battle 및 시나리오",
+    "전체 미션 자연 완주 및 원본 동일성"
+  ]
+}
