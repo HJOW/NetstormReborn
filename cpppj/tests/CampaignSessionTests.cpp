@@ -5106,3 +5106,26 @@ TEST_CASE(CampaignSession_FenceShieldUsesCurrentOwnerColorPixels) {
     }
     CHECK(cases==20 && coloredPixels>0);
 }
+// 원본 여덟 이동 타입과 실제 공간/사제 HP 조회를 묶어 스톰 크리스탈·포획 가능 사제의 커서를 대조한다.
+TEST_CASE(CampaignSession_CarrierHoverUsesRealNuggetAndCapturablePriest) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);
+    // 원본 .type의 이동형 여덟 종류다. 사제는 10.78에서 다른 사제를 직접 포획하지 않는다.
+    for (const auto type:{111U,133U,135U,137U,141U,146U,156U,158U}) {
+        // 대상마다 새 실제 세션을 써서 앞 대상의 공간 등록이나 운반 내용을 섞지 않는다.
+        for (const auto targetType:{154U,158U}) {
+            SessionServicesFixture external;auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());
+            RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",external.Services());session.Load();auto core=session.Core();
+            const auto actor=session.World().Create(type,2),target=session.World().Create(targetType,2); // 생성/소유자/HP만 명시 입력이며 선택 성공을 주입하지 않는다.
+            const bool battle=core.ownerMode.battle;core.ownerMode.battle=false;
+            if (type==158) session.Priests().SetOwner(actor,1);else core.owner.Set(actor,1);
+            if (targetType==158) session.Priests().SetOwner(target,2);
+            core.ownerMode.battle=battle;session.World().Pop(actor,97,122,0);session.World().Pop(target,98,122,0);
+            if (targetType==158) session.Priests().SetHitPoints(target,session.HitPoints().MaxHitPoints(target)/2-1);
+            std::uint32_t displayed{};CarrierInputHooks hooks;hooks.multiple=[] { return 0U; };hooks.selectCursor=[&](auto number) { displayed=number; }; // 실제 UI 장치 경계의 마지막 선택 번호만 관측한다.
+            auto input=session.MakeCarrierInput(std::move(hooks));RawPathPoint point{98,122};
+            const auto expected=type==158 && targetType==158 ? 18U : 13U; // 원본 426900의 사제 포획 제외와 4277f0의 실제 pickup 커서다.
+            CHECK(input->Evaluate(actor,point)==expected);input->Highlight(actor.value,{97.5F,121.5F},0);CHECK(displayed==expected);
+            CHECK((core.pool.Slot(target)[11]&3U)==0 && !session.Priests().Carrier().FindContained(actor,0x20,0,0).value); // 호버가 포획/경제/내용물 변경을 실행하지 않는다.
+        }
+    }
+}

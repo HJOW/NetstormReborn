@@ -1343,6 +1343,7 @@ std::string UberGump::Report(bool cameraOnly) const {
     out << "phase\t" << static_cast<int>(state_.phase) << "\npage\t" << Field(pageName_) << "\npopup\t" << Field(popup_) << "\n";
     out << "size\t" << client_.GetScreen().Width() << '\t' << client_.GetScreen().Height() << "\n";
     out << "paused\t" << client_.Paused() << "\nsound\t" << client_.Configuration().GetInt("sound") << "\n";
+    out<<"mouse_cursor\t"<<client_.GetCursor().Index()<<'\t'<<client_.Active()<<'\n'; // 검사 보고서는 실제 표시 장치의 커서 번호와 창 활성을 읽기만 한다. 선택/대상 판정은 바꾸지 않는다.
     if (cameraOnly) { out<<"current_dialog\t"<<rawButtons_->CurrentDialog()<<"\ngame_menu_bar\t"<<(gameMenuState_ ? gameMenuState_->menuSerial : 0U)<<'\t'<<GameMenuOpen()<<"\ncamera_runtime\t"<<(world_!=nullptr)<<'\t'<<client_.Time().game<<'\t'<<client_.Time().number<<'\t'<<client_.GetKernel().Size()<<'\n';return out.str(); } //실제 같은 프레임/장치 값만 읽어 Win32 입력 관측의 큰 파일 재쓰기를 줄인다.
     out<<"map_menu\t"<<rawButtons_->Menus()->HtmlMenuColumns()<<'\t'<<mapCatalog_->Cached().count<<'\t'<<mapCatalog_->Cached().dirty<<'\t'<<mapFileSpec_.Current()<<'\n'; // 실제 부착된 열과 캐시 상태만 관찰한다. 선택/로딩 성공을 합성하지 않는다.
     out<<"html_window_state\t"<<client_.HtmlWindowGlobals()->window.instances<<'\t'<<rawButtons_->DialogCount()<<'\t'<<rawButtons_->Menus()->HtmlWindowsOpen()<<'\n'; // Kill 뒤 인스턴스와 즉시 모달 반납을 구별하는 현재값이다.
