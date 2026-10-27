@@ -1,0 +1,55 @@
+{
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": "HJOW-Athlon / 2026-10-23",
+  "uniqueInputs": 1302,
+  "normalReturns": 2604,
+  "precisionDifferences": [],
+  "inputKinds": {
+    "0": 144,
+    "1": 1158
+  },
+  "nativeCalls": {
+    "00481a50": 144,
+    "004ac550": 1428,
+    "0049a840": 4696,
+    "0049a900": 72,
+    "0041d0d0": 1648,
+    "0040e800": 2788,
+    "0041cfc0": 1284,
+    "0041d6e0": 144,
+    "0043fa50": 144,
+    "004e49c0": 415,
+    "00482340": 1158,
+    "0040e880": 680,
+    "0040e8f0": 680,
+    "00468cc0": 680,
+    "004ac950": 914,
+    "004ac200": 120
+  },
+  "boundaries": {
+    "004af530": 144,
+    "20000110": 144,
+    "20000120": 1284,
+    "0041bd20": 144,
+    "004a9c30": 92,
+    "20000130": 1140,
+    "00436d00": 176,
+    "0049af10": 176,
+    "0045a750": 622,
+    "20000140": 924
+  },
+  "damageScaleBits": "9a99193f",
+  "limits": "실제 반사 ctor/frame/타입·방향·치수·중심·flags2·CRT를 실행한다. 일반 충돌 상자/표시·공간·소리·가상98 피해·재반사00482190은 명시 경계다. 실제 세션/완주 증거가 아니다.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_ice_reflected.py": "d3882771d6e460552e86809ea1aba1ec817fc838c49656fa0e7a38d7cfb686ed",
+    "tools/decomp_ice_missile_initial.py": "62ed4e16c98db0e2e05f627ee8f2884a09830256831e9ad69528144e5a0bbc01",
+    "tools/decomp_thunder_missile.py": "b556de87937ff814794abccb6a4d392af7224a8556d6b827b0fe518e80b71122",
+    "tools/decomp_crossbow_missile.py": "e54abc592c7c07a866814a591f25e37ac9d654c39cb67ff4bf8a10e10196468f",
+    "tools/decomp_gunmissile_oracle.py": "4671a0a69ee91d6e0280a6c4af73d38e6ca6b096ee04161aeaef8d2d3e5c0fd1",
+    "tools/decomp_owner_oracle.py": "5a837ad7fd233d9d75c7241d52fbf2e5a508e24dc158d091f243a13ab698e7fb",
+    "cpppj/tests/fixtures/ice-reflected-x86.tsv": "7afa74a296a56bf6afa3c68f2692949601e96f69e754f0046b7dd91ccdc98432"
+  }
+}

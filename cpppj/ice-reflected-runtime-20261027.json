@@ -1,0 +1,446 @@
+{
+  "unit": 491,
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": "HJOW-Athlon / 2026-10-23",
+  "native": {
+    "report": "cpppj/ice-reflected-native-20261027.json",
+    "uniqueInputs": 1302,
+    "normalReturns": 2604,
+    "precisionDifferences": 0,
+    "damageScaleBits": "9a99193f"
+  },
+  "builds": [
+    {
+      "command": [
+        "cmake",
+        "--build",
+        "cpppj/build",
+        "--config",
+        "Release",
+        "--parallel",
+        "4",
+        "--",
+        "/p:UseMultiToolTask=true",
+        "/p:MultiProcMaxCount=4",
+        "/p:EnforceProcessCountAcrossBuilds=true"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-ice-reflected-491/build1.log",
+      "sha256": "70701623eba260a8c33bf3afbf90431e6febaeefffed13333cb2f7f860712d17",
+      "summaries": [],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cmake",
+        "--build",
+        "cpppj/build",
+        "--config",
+        "Release",
+        "--parallel",
+        "4",
+        "--",
+        "/p:UseMultiToolTask=true",
+        "/p:MultiProcMaxCount=4",
+        "/p:EnforceProcessCountAcrossBuilds=true"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-ice-reflected-491/build2.log",
+      "sha256": "967a94b18493a2316d0fa8a33ba9fe0810b42b78ddca133ca8b0295292b75539",
+      "summaries": [],
+      "diagnostics": []
+    }
+  ],
+  "focusedFinal": {
+    "command": [
+      "cpppj/build/bin/Release/netstorm_tests.exe",
+      "--filter",
+      "IceReflected"
+    ],
+    "exit": 0,
+    "log": "extracted/cpp-ice-reflected-491/focused2-IceReflected.log",
+    "sha256": "7b32a1d344c122255c82695830b0c9ebe4d29958e826af241e01e39764c01c08",
+    "summaries": [
+      "2 test(s), 0 failed check(s)"
+    ],
+    "diagnostics": []
+  },
+  "whole": {
+    "cppTests": 3293,
+    "failedChecks": 0,
+    "ctest": {
+      "command": [
+        "ctest",
+        "--test-dir",
+        "cpppj/build",
+        "-C",
+        "Release",
+        "--output-on-failure"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-ice-reflected-491/all-ctest.log",
+      "sha256": "b67a90b1f86ba40419e1e0ba1f4fb9c7c9adb4022d38fa6f6f7ac8ee7ec7e2b1",
+      "summaries": [],
+      "diagnostics": []
+    },
+    "rawLog": "extracted/cpp-ice-reflected-491/all-netstorm-tests.log",
+    "interleavedNames": {
+      "reason": "전체 요약3293/실패0과 성공3293줄은 있으나 세 줄에 stderr가 중간 삽입되어 이름 집합의 직접 대조가 실패했다.",
+      "missing": [
+        "CampaignKernelFrames_SaveTheIsland",
+        "EditorLocalTransport_QueuedRequestReplyAndPendingPollOrder",
+        "HtmlWindowFactoryClient_ActualTellParamLifetimeZeroSizeAndSuppressedModes"
+      ],
+      "interleaved": [
+        "Ca실제 Kernel400프레임 완료: FragileFortune",
+        "EditorLocalTransport_QueuedRequest실제 미션 Start 검사: Tutorial1",
+        "HtmlWindowFactoryClient_ActualChat 원문 진단:2474"
+      ]
+    },
+    "separateOutputSupplement": {
+      "binarySha256": "d7b36ede0521c33e8d4468342edf473fa0b444ca8ef7bb5838b2be4be159444b",
+      "records": [
+        {
+          "name": "CampaignKernelFrames_SaveTheIsland",
+          "exit": 0,
+          "stdout": "extracted/cpp-ice-reflected-491/supplement-0-stdout.log",
+          "stderr": "extracted/cpp-ice-reflected-491/supplement-0-stderr.log",
+          "stdoutSha256": "2f22ee052ed0536113abf2bac623b140bc183336fc4f88182517584ccbad4718",
+          "stderrSha256": "86b3f4f5a43332fa7829b81851d7736759924bdf68d1b016a801adc50f456c0d"
+        },
+        {
+          "name": "EditorLocalTransport_QueuedRequestReplyAndPendingPollOrder",
+          "exit": 0,
+          "stdout": "extracted/cpp-ice-reflected-491/supplement-1-stdout.log",
+          "stderr": "extracted/cpp-ice-reflected-491/supplement-1-stderr.log",
+          "stdoutSha256": "32036913bc59cc7d4e45200646e2e28b4fe8486fd07ee9497f453da76de36e61",
+          "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "name": "HtmlWindowFactoryClient_ActualTellParamLifetimeZeroSizeAndSuppressedModes",
+          "exit": 0,
+          "stdout": "extracted/cpp-ice-reflected-491/supplement-2-stdout.log",
+          "stderr": "extracted/cpp-ice-reflected-491/supplement-2-stderr.log",
+          "stdoutSha256": "607d564c5652bb10f7724e1f7e057b53b2c2bc71a6900b99ddff1e0d6f546320",
+          "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    }
+  },
+  "registered": {
+    "before": 3291,
+    "after": 3293,
+    "added": [
+      "IceReflected_NativeConstructorTargetZeroAndPadding",
+      "IceReflected_NativeFrameDamageAndLifetime"
+    ],
+    "removed": []
+  },
+  "protection": {
+    "files": 3202,
+    "changed": [],
+    "agentsUnchanged": true,
+    "appendOnlyPrefixBytes": {
+      "cpppj/tests/CMakeLists.txt": 163820
+    }
+  },
+  "finalSourceFiles": 2860,
+  "exes": {
+    "NetstormCpp.exe": "4d3ccf776a0844705d4e55f1a2f866f62b73a6c2004c6a779319788e5bc68690",
+    "netstorm_tests.exe": "d7b36ede0521c33e8d4468342edf473fa0b444ca8ef7bb5838b2be4be159444b"
+  },
+  "live": {
+    "live-roundtrip1": {
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-ice-reflected-491\\test01-data",
+        "--window",
+        "--no-audio",
+        "--frames",
+        "365",
+        "--set",
+        "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=1;currentLanguage=english",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-ice-reflected-491\\live-roundtrip1\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-ice-reflected-491\\live-roundtrip1\\states.tsv"
+      ],
+      "binarySha256": "4d3ccf776a0844705d4e55f1a2f866f62b73a6c2004c6a779319788e5bc68690",
+      "returnCode": 1,
+      "timedOut": false,
+      "seconds": 9.835646799998358,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "554ef9f9dda12da5041b168f04deab4e7b20f05f74d76b4e9590cc9e19da17b2",
+      "originalsUnchanged": true
+    },
+    "live-flight1": {
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-ice-reflected-491\\test01-data",
+        "--window",
+        "--no-audio",
+        "--frames",
+        "170",
+        "--set",
+        "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=1;currentLanguage=english",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-ice-reflected-491\\live-flight1\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-ice-reflected-491\\live-flight1\\states.tsv"
+      ],
+      "binarySha256": "4d3ccf776a0844705d4e55f1a2f866f62b73a6c2004c6a779319788e5bc68690",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 7.571859300005599,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "f0c532f9a4e26eaefa1c66eddf813264102af562ef139c96769b5f29fc336729",
+      "originalsUnchanged": true
+    },
+    "live-fastreturn1": {
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-ice-reflected-491\\test01-data",
+        "--window",
+        "--no-audio",
+        "--frames",
+        "205",
+        "--set",
+        "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=1;currentLanguage=english",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-ice-reflected-491\\live-fastreturn1\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-ice-reflected-491\\live-fastreturn1\\states.tsv"
+      ],
+      "binarySha256": "4d3ccf776a0844705d4e55f1a2f866f62b73a6c2004c6a779319788e5bc68690",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 8.8137837999966,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "61fb2064f0379a13ab64f050b735f5a95260b59ab836fac94830d19707a74ebc",
+      "originalsUnchanged": true
+    }
+  },
+  "movingSameIds": [
+    "425",
+    "427",
+    "429",
+    "431"
+  ],
+  "projectiles": {
+    "flight-122": {
+      "425": [
+        "130",
+        "3",
+        "14",
+        "177.4375",
+        "90.5454559326"
+      ],
+      "427": [
+        "130",
+        "3",
+        "7",
+        "166.875",
+        "114.181816101"
+      ],
+      "429": [
+        "130",
+        "3",
+        "21",
+        "198.125",
+        "113.181816101"
+      ],
+      "431": [
+        "130",
+        "3",
+        "0",
+        "177.5625",
+        "125.363632202"
+      ]
+    },
+    "flight-124": {
+      "425": [
+        "130",
+        "3",
+        "14",
+        "177.4375",
+        "94.3054580688"
+      ],
+      "427": [
+        "130",
+        "3",
+        "7",
+        "170.634994507",
+        "114.181816101"
+      ],
+      "429": [
+        "130",
+        "3",
+        "21",
+        "194.365005493",
+        "113.181816101"
+      ],
+      "431": [
+        "130",
+        "3",
+        "0",
+        "177.5625",
+        "121.603630066"
+      ]
+    },
+    "flight-126": {
+      "425": [
+        "130",
+        "3",
+        "14",
+        "177.4375",
+        "98.6854553223"
+      ],
+      "427": [
+        "130",
+        "3",
+        "7",
+        "175.01499939",
+        "114.181816101"
+      ],
+      "429": [
+        "130",
+        "3",
+        "21",
+        "189.98500061",
+        "113.181816101"
+      ],
+      "431": [
+        "130",
+        "3",
+        "0",
+        "177.5625",
+        "117.223632812"
+      ]
+    },
+    "flight-145": {
+      "447": [
+        "130",
+        "3",
+        "14",
+        "177.4375",
+        "101.945457458"
+      ],
+      "451": [
+        "130",
+        "3",
+        "21",
+        "186.725006104",
+        "113.181816101"
+      ],
+      "493": [
+        "130",
+        "3",
+        "14",
+        "177.4375",
+        "96.3854522705"
+      ],
+      "495": [
+        "130",
+        "3",
+        "7",
+        "172.714996338",
+        "114.181816101"
+      ],
+      "497": [
+        "130",
+        "3",
+        "21",
+        "192.285003662",
+        "113.181816101"
+      ],
+      "499": [
+        "130",
+        "3",
+        "0",
+        "177.5625",
+        "119.523635864"
+      ],
+      "547": [
+        "130",
+        "3",
+        "0",
+        "177.65776062",
+        "113.965316772"
+      ],
+      "555": [
+        "130",
+        "3",
+        "0",
+        "177.616134644",
+        "108.953216553"
+      ],
+      "559": [
+        "130",
+        "3",
+        "2",
+        "177.282836914",
+        "112.420188904"
+      ],
+      "563": [
+        "130",
+        "3",
+        "14",
+        "177.4375",
+        "90.5454559326"
+      ],
+      "565": [
+        "130",
+        "3",
+        "7",
+        "166.875",
+        "114.181816101"
+      ],
+      "567": [
+        "130",
+        "3",
+        "21",
+        "198.125",
+        "113.181816101"
+      ],
+      "569": [
+        "130",
+        "3",
+        "0",
+        "177.5625",
+        "125.363632202"
+      ]
+    }
+  },
+  "offAxis": {
+    "ids": [
+      "547",
+      "555",
+      "559"
+    ],
+    "reason": "4개 캐논의16/11 포구 격자에서 한 축을 고정하는 초기 직선 궤적과 달라 반사 궤적에 부합한다. 프로세스 반사 필드 자체를 덤프한 증거는 아니다."
+  },
+  "staticBindingEvidence": "extracted/cpp-ice-reflected-491/static-binding.json",
+  "pull": {
+    "command": [
+      "git",
+      "pull",
+      "--no-rebase",
+      "--no-commit"
+    ],
+    "exit": 0,
+    "log": "extracted/cpp-ice-reflected-491/git-pull1.log",
+    "sha256": "e5d6c99aec87ec07a2d1b5c1222d8b690d0a61c3548a55c795fff56db9450d0d",
+    "summaries": [],
+    "diagnostics": []
+  },
+  "limits": [
+    "실제 반사 ctor/frame·target0/사거리·0.6F 피해/현재 조건과 일반 삭제·Session 반사 생성에 연결했다. 원문 재반사00482190/가상98 피해 장치/일반 상자·음향·공간은 새 수명 fixture의 명시 경계이며 별도 기존 본체/실제 세션에 연결했다.",
+    "긴 TEST01 왕복은 냉각 표시004a8770 미연결에서 종료1이다. 전체 Test Battle 플레이/몇 초 뒤 편집 복귀 완료가 아니다. 비행170프레임/Go 직후 편집 복귀205프레임은 각각 종료0이다.",
+    "변위0 반사점의 원문 미초기화 지역점과 클라우드 플로터 회피는 별도 미복원 경계다.10.72의 새 반사 몸체는 이번에 복원하지 않았다.",
+    "스테이지 완주/사용자 개입 검증과 .english 부재 개선은 계속 보류하며 Windows10/11·전체화면은 현행 목표다."
+  ],
+  "pushed": false
+}

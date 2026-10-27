@@ -22,6 +22,9 @@ struct MissileTypeData {
     std::int32_t frameCount{};
     // firingSound/impactSound: 타입 +0x70/+0x74의 실제 사운드 토큰이다.
     std::uint32_t firingSound{},impactSound{};
+    float damagePerSecond{}; // 실제 TYPE+48의 DPS이며 반사 피해에서는 float0.6을 곱한다.
+    bool specialFlyerDamage{}; // TYPE+1b0이 켜지면 비행 표적의 별도 피해로 교체한다.
+    float flyerDamagePerSecond{}; // TYPE+1b4의 현재 float DPS이며 교체 뒤0.6을 다시 곱하지 않는다.
 };
 // 같은 실제 게임 시각과 원본 전역 타입 번호다.
 struct MissileState {
@@ -93,8 +96,9 @@ struct MissileHooks {
     std::function<std::int32_t(std::int32_t,std::int32_t)> randomInteger; //004558f0의 min포함/max제외 정수 난수이며 아이스 전용 음향이 소비한다.
     std::function<void(float,float,std::string_view)> impactName; //004a9d70의 실제 파일명 위치 음향이며 token 재생과 구별한다.
     std::function<void(const MissileFields&)> ricochet; //00482190의 현재 필드/표시를 사용하는 실제 반사 생성이다. 선택된 누락은 거부한다.
+    std::function<void(Sid,std::int32_t,std::uint8_t,Sid)> damage; // 반사 경로의 실제 가상98이며 원문처럼 공격자0/현재 표시 소유자를 전달한다.
 };
-// 최초썬캐논및SunArcher 발사의실제숫자필드와표시자산수명/이동/충돌사슬이다.
+// 초기 총 발사와10.78 아이스 반사의 실제 숫자 필드·표시 자산 수명/이동/충돌 사슬이다.
 class RawMissile {
 public:
     // 전체 판본 타입 표와 보충 사운드/방향 데이터를 같은 저장소로 연결한다.
@@ -102,15 +106,15 @@ public:
     // 실제 ctor의 숫자·좌표·예약을 쓴 뒤 표시 자산 생성/소유자/Pop/비행 효과까지 수행한다.
     // returned SID는 실제 Missile 표시 자산이다. 이어지는 Host 부착은 factory가 완료한다.
     Sid Construct(MissileFields& fields,const GunProjectileRequest& request) const;
-    // 썬캐논/SunArcher 최초incomingCorner의실제이동·swept충돌·범위종료를처리한다.
-    // 반사/다른총/원작debug 좌표이동은아직명시미복원계약이다.
+    // 최초incomingCorner와 아이스 반사의 실제 이동·swept 충돌·범위 종료를 처리한다.
+    // 다른 미복원 총/클라우드 플로터 회피·원작debug 좌표이동은 별도 계약이다.
     void Frame(MissileFields& fields) const;
     // 동일한 월드인지 검증하는 adapter 자료다.
     const SidPool& Pool() const;
     std::uint32_t ProcessType() const;
 private:
     // 지정한 SID와 raw 타입이 실제 살아 있는 입력 계약을 충족하는지 검사한다.
-    std::span<const std::uint8_t> Slot(Sid sid) const;
+    std::span<const std::uint8_t> Slot(Sid sid,bool allowZero=false) const;
     // 원본 frame의 패치 DWORD/CD BYTE 폭으로 표시 자산 프레임을 쓴다.
     void FrameNumber(Sid sid,std::uint32_t frame) const;
     // pool_: 실제 표시 자산/발사 건물/표적이 공유하는 저장소다.

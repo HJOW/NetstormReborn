@@ -81,9 +81,9 @@ struct RawCampaignHitBindings::Impl {
     bool CommonAsset(o::Sid sid) const {
         const auto raw=core.pool.Slot(sid);const bool patch=core.pool.Edition()==o::OriginalEdition::Patch1078;
         // PATCH132는83과 같은0046a6c0 생성자/0050b570 가상 표를 사용하므로 같은 실제 공통 삭제를 따른다.
-        // PATCH80/81은 기본00501dd0이며80에 부착된 실제 Fiery Tail도 같은 종속 삭제가 정리한다.
+        // PATCH80/81/130은 생성자 없는 기본00501dd0이다. 아이스 반사도 같은 실제 공통 Pre/Post/종속 삭제를 따른다.
         return ((raw[10]==83 || (patch && raw[10]==132)) && HitTable(raw)==(patch ? 0x50b570U : 0x501440U)) ||
-            (patch && (raw[10]==80 || raw[10]==81) && HitTable(raw)==0x501dd0U) || impact->Handles(sid);
+            (patch && (raw[10]==80 || raw[10]==81 || raw[10]==130) && HitTable(raw)==0x501dd0U) || impact->Handles(sid);
     }
 };
 // 초기 객체 생성 전에 실제 하위 모듈의 동일 Pool 계약을 확인한다.

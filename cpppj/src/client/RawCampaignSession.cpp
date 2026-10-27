@@ -1,5 +1,6 @@
 // 기존 원본 몸체의 단일 저장소 조립을 실제 클라이언트 세션이 소유한다.
 #include "client/RawCampaignSession.h"
+#include "o/RawIceRicochet.h" // 실제 아이스 반사점/선택도 같은 풀·HP·해시·게임 난수를 사용한다.
 #include "o/RawIslandAdd.h"
 #include "o/RawIslandQueries.h"
 #include "client/EditorIslandBitmap.h"
@@ -553,6 +554,7 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawProjectileGeometry> projectileGeometry; // 실제 포구/표적 치수/충돌 상자다.
     std::unique_ptr<RawFenceTarget> fenceTarget; // 같은 해시/배리어 끝점/현재 동맹의 실제 표적 코너 계산이다.
     std::unique_ptr<RawCampaignArcherBindings> combat; // 같은 Archer/Missile 생성/공간/Host를 소유한다.
+    std::unique_ptr<RawIceRicochet> iceRicochet; // 같은 현재 슬롯과 실제 후속 Missile 생성/Host 부착을 연결한다.
     CrtRandom localParticleCrt{CrtRandom::Borrow(localCrt)}; // 소유자 없는 독립검사의기존CRT0을빌리는fallback wrapper다.
     CrtRandom& particleCrt{services.randomGlobals ? services.randomGlobals->Crt() : localParticleCrt}; // 실제Client에서는Subscriber와같은장기CRT객체를쓴다.
     std::array<std::uint32_t,188> shrapnelMapTokens{}; // 원본 일반 소유자 색표가 복원된 다리/73/144의 실제 토큰이다.
@@ -978,6 +980,9 @@ struct RawCampaignSession::Impl {
             // 원본 방향별 L/M/N/O 첫 프레임 표다. 없는Run의-1은 실제 검색 몸체가 처리한다.
             for (std::uint8_t direction=0;direction<4;++direction) target.directionFrames[direction]=core.frames[type].Run(static_cast<std::uint8_t>('L'+direction)).first;
             hitTypes[type].damagePerSecond=static_cast<float>(asset.definition.Number("hpPerSec").value_or(0));
+            hitTypes[type].specialFlyerDamage=static_cast<std::int32_t>(asset.definition.Number("useairdamage").value_or(0))!=0; //0049c3b0의 TYPE+1b0 정수 절삭 입력이다.
+            hitTypes[type].flyerDamagePerSecond=static_cast<float>(asset.definition.Number("airdamage").value_or(0)); // 같은 parser의 TYPE+1b4 float 입력이다.
+            missileTypes[type].damagePerSecond=hitTypes[type].damagePerSecond;missileTypes[type].specialFlyerDamage=hitTypes[type].specialFlyerDamage;missileTypes[type].flyerDamagePerSecond=hitTypes[type].flyerDamagePerSecond; // 반사 피해와 직접 총 피해가 같은 보호 TYPE 값을 사용한다.
             firingIntervals[type]=static_cast<float>(asset.definition.Number("delayBetweenShots").value_or(0));
             archerTypes[type]=ReadRawArcherTypeData(asset.definition);missileTypes[type].range=target.range;
             missileTypes[type].frameCount=archerTypes[type].directions;
@@ -1178,6 +1183,13 @@ struct RawCampaignSession::Impl {
             services.assets.queueCommand(command,std::bit_cast<std::int32_t>(display),std::bit_cast<std::int32_t>(target));
         };
         combatEffects.missile=hits->MissileHooks(*gunHit,missileState,std::move(combatEffects.missile));
+        if (!combatEffects.missile.damage) combatEffects.missile.damage=hits->DamageHooks({}).damage; // 반사 가상98도 사제/신전/일반 자산의 실제 현재 분배를 사용한다.
+        IceRicochetHooks ricochetHooks;ricochetHooks.createProjectile=[this](const GunProjectileRequest& request) {
+            if (!combat) throw std::logic_error("아이스 반사 실제 Missile 설치 전 생성");
+            if (!CreateMissile(core.processes,combat->Missile(),request)) throw std::logic_error("아이스 반사 실제 Host 부착 실패");
+        };
+        iceRicochet=std::make_unique<RawIceRicochet>(core.pool,core.types,missileTypes,random,MakeIceRicochetWorldHooks(core.pool,core.hash,core.types,hp,std::move(ricochetHooks)));
+        combatEffects.missile.ricochet=[this](const MissileFields& fields) { iceRicochet->Generate(fields); };
         combat=std::make_unique<RawCampaignArcherBindings>(world,*gunTarget,random,archerTypes,metadata.frames,missileTypes,archerState,missileState,std::move(combatEffects));
         auto assetEffects=services.assets;assetEffects.postPop.reserveRegular=[] { return true; };
         assetEffects.postPop.startBlocker=[this](Sid sid) { gunBlocker->Notify(sid); }; // 기존 이름을 유지하며 실제0046ae80의 장애물 통지를 연결한다.
