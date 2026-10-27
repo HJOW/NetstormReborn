@@ -131,7 +131,7 @@ private:
     void RefreshWindowTitle();
     // 원본 Options/Help의 목록과 하위 메뉴를 구성한다.
     void OpenMenu(std::string name);
-    void OpenGameMenu(); //004cc210의같은controlled가로막대와실제하위메뉴를현재Session에작성한다.
+    void OpenGameMenu(bool playerList=false); // 기본값은004cc210 가로막대, true는004cbf10 중앙 Player List를 같은 Session/controlled 생성기로 작성한다.
     void ToggleGameMenu(); // ESC의현재serial조회→열기또는Kill/serial0/팝업닫기를실행한다.
     bool GameMenuOpen() const; // 현재serial을공통등록표에서조회하며과거열림bool을저장하지않는다.
     bool GameMenuCommand(const InputEvent& event); // 메뉴부모가예약한현재원본명령을각실제소유자로분배한다.

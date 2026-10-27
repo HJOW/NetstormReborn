@@ -731,7 +731,7 @@ void UberGump::ToggleGameMenu() {
     else { rawButtons_->KillGump(token);gameMenuState_->menuSerial=0;rawButtons_->RequestClosePopups();rebuild_=true; }
 }
 // 실제현재Session의조회/검산과기존공통controlled메뉴를한수명안에서작성한다.
-void UberGump::OpenGameMenu() {
+void UberGump::OpenGameMenu(bool playerList) {
     if (!world_ || state_.phase!=ClientPhase::Mission) throw std::logic_error("게임메뉴의현재설치월드없음"); //Editor도 실제 Session/Template의 같은 원본 메뉴를 사용한다.
     auto& session=world_->Session(); // 원본cc210은앞서열린다른팝업을임의로닫지않는다.
     if (!gameMenuState_) gameMenuState_=std::make_unique<GameMenuBarState>(session.GameMenuTrackingOffset());
@@ -763,7 +763,9 @@ void UberGump::OpenGameMenu() {
         hooks.node=[this](auto token) { return rawButtons_->Menus()->Node(token); };
         hooks=session.BindGameMenus(std::move(hooks));const auto globals=hooks.global;const auto translate=hooks.translate; // 바인더가교체한같은현재소유자의getter를빌린다.
         hooks.compatibilityResolutions=kCompatibilityScreenResolutions; // 원본과 다른Windows10/11 DIB 호환 화면비만 명시 추가하며 기본 원문 검사는 빈 목록을 유지한다.
-        RawGameMenus children(std::move(hooks));GameMenuBarHooks bar;
+        RawGameMenus children(std::move(hooks));
+        if (playerList) return children.Players(true); // 원본004d8a56은 명령 인자와 무관하게 fancy=1을 넘기며 현재 루트 중앙에 직접 부착한다.
+        GameMenuBarHooks bar; // 가로막대만 현재 serial과 실제 미니맵 왼쪽 경계를 사용한다.
         bar.prepare=[&session] { session.PrepareGameMenus(); };bar.translate=translate;
         bar.read=[this,globals](GameMenuBarValue value) {
             switch (value) {
@@ -797,6 +799,7 @@ void UberGump::OpenGameMenu() {
 // 공통 입력/Guide가 소비하지 않은 현재 메뉴 명령을 같은 Session·음향·설정·시계에 전달한다.
 bool UberGump::GameMenuCommand(const InputEvent& event) {
     const auto code=event.code&0x03ffffffU;
+    if (code==0x020000f0U) { if (!(event.code&InputCode::kRelease)) OpenGameMenu(true);return true; } // 원본 일반 분배의 뗌 거부 뒤 같은 Player List 전체 부모를 연다.
     if (code==0x02000030U) {
         if (!(event.code&InputCode::kRelease)) {
             client_.ChangeScreenMode(std::bit_cast<std::uint32_t>(event.y));
@@ -990,6 +993,7 @@ void UberGump::Event(InputEvent event) {
     if (world_ && state_.phase==ClientPhase::Mission && !(event.code&(InputCode::kRelease|InputCode::kControl|InputCode::kShift)) && transitionCode==(0x75U<<InputCode::kVirtualKeyShift)) {
         client_.Input().PushCommand(kShowTechnologyCommand,0,0);return; // 사제 메뉴/Review 버튼과 같은 명령 큐로 F6을 예약한다.
     }
+    if (world_ && state_.phase==ClientPhase::Mission && QueuePlayerListKey(event,client_.Input())) return; // F9와 Shift+F9는 실제 메뉴/정지 명령을 큐 끝에 예약한다.
     if (!worldUiRouted && rawButtons_->Menus()->KnowledgeOpen()) {
         if ((event.code&0xffffU)==0x1b && !(event.code&InputCode::kRelease)) { rawButtons_->Menus()->RequestClosePopups();rebuild_=true;return; }
         if (transitionCode==InputCode::kLeftButton || transitionCode==InputCode::kRightButton || transitionCode==InputCode::kMiddleButton) { static_cast<void>(rawButtons_->Event(event));rebuild_=true;return; }

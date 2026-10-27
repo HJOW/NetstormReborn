@@ -1,0 +1,633 @@
+{
+  "unit": 511,
+  "date": "2026-10-28",
+  "host": "HJOW-Athlon",
+  "lastCompletedDecompileHost": "HJOW-Athlon / 2026-10-23",
+  "baselineHead": "5a6eca61053c11263d42215c1f786767699a97bd",
+  "scope": "ESC/View Player List의 원본 fancy 부모 연결과 F9/Shift+F9 실제 입력",
+  "gameSha256": "b6d6ccfe54f4c933c785beaf1b622b72d35916b77312b7082ef46cbdf6f6ad89",
+  "testsSha256": "968ef344f4f3bd508a5481bc48acb9773a80373deb48c468cfee86e90f2fa640",
+  "sourceChanges": [
+    "cpppj/src/client/GameMenuCommands.cpp",
+    "cpppj/src/client/GameMenuCommands.h",
+    "cpppj/src/client/UberGump.cpp",
+    "cpppj/src/client/UberGump.h",
+    "cpppj/src/app/main.cpp",
+    "cpppj/tests/GameMenusTests.cpp"
+  ],
+  "originalAndCDAndAgentsUnchanged": true,
+  "existingFixturesUnchanged": true,
+  "originalDisassembly": "extracted/cpp-player-list-runtime-511/original-disassembly.json",
+  "build": {
+    "command": [
+      "cmake",
+      "--build",
+      "cpppj/build",
+      "--config",
+      "Release",
+      "--parallel",
+      "4"
+    ],
+    "exit": 0,
+    "log": "extracted/cpp-player-list-runtime-511/build.log",
+    "sha256": "44ced4316019fcec03f22f2988c4b8e0534ac9d2ee76ee2a9d30e2ae9adec9f7",
+    "summaries": [],
+    "diagnostics": []
+  },
+  "focusedTests": {
+    "unique": 26,
+    "failedChecks": 0,
+    "runs": [
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "GameMenu"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-player-list-runtime-511/test-menu.log",
+        "sha256": "ae73af70d1cbb91d73899e402dcc39c75141ba99cb665c6c87ca43edfecf9101",
+        "summaries": [
+          "10 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "PlayerList"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-player-list-runtime-511/test-players.log",
+        "sha256": "86df6abf51326fc95aa74e18236ca0d7eac9baab1139d076fb20bd2877b4ec4a",
+        "summaries": [
+          "2 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "MenuGump"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-player-list-runtime-511/test-gump.log",
+        "sha256": "9150d505f212b52692e7c2c01020c879975e1be01058c40de0b5f6a9362e2a73",
+        "summaries": [
+          "5 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "GumpInput"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-player-list-runtime-511/test-input.log",
+        "sha256": "5cb6f3cb1b6bdd62ef1d41345d897757c626f075b9e5e9090ce843bb678c7b93",
+        "summaries": [
+          "9 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      }
+    ],
+    "existingNativeObservations": {
+      "gameMenuParents": 918,
+      "playerList": 530
+    },
+    "currentRegistered": 3338
+  },
+  "actualExecutions": {
+    "total": 10,
+    "normalExit": 8,
+    "failedExit": 2,
+    "runs": [
+      {
+        "path": "extracted/cpp-player-list-runtime-511/actual-first/1024x768/probe/run.json",
+        "exit": 0,
+        "seconds": 3.4161239999957616,
+        "gameSha256": "b6d6ccfe54f4c933c785beaf1b622b72d35916b77312b7082ef46cbdf6f6ad89",
+        "originalAndCopyUnchanged": true
+      },
+      {
+        "path": "extracted/cpp-player-list-runtime-511/actual-first/1024x768/scenario/run.json",
+        "exit": 1,
+        "seconds": 6.9736052000080235,
+        "gameSha256": "b6d6ccfe54f4c933c785beaf1b622b72d35916b77312b7082ef46cbdf6f6ad89",
+        "originalAndCopyUnchanged": true
+      },
+      {
+        "path": "extracted/cpp-player-list-runtime-511/actual-second/1024x768/probe/run.json",
+        "exit": 0,
+        "seconds": 3.4548309999954654,
+        "gameSha256": "b6d6ccfe54f4c933c785beaf1b622b72d35916b77312b7082ef46cbdf6f6ad89",
+        "originalAndCopyUnchanged": true
+      },
+      {
+        "path": "extracted/cpp-player-list-runtime-511/actual-second/1024x768/scenario/run.json",
+        "exit": 0,
+        "seconds": 9.070969000007608,
+        "gameSha256": "b6d6ccfe54f4c933c785beaf1b622b72d35916b77312b7082ef46cbdf6f6ad89",
+        "originalAndCopyUnchanged": true
+      },
+      {
+        "path": "extracted/cpp-player-list-runtime-511/actual-third/1024x768/probe/run.json",
+        "exit": 0,
+        "seconds": 3.352719199989224,
+        "gameSha256": "b6d6ccfe54f4c933c785beaf1b622b72d35916b77312b7082ef46cbdf6f6ad89",
+        "originalAndCopyUnchanged": true
+      },
+      {
+        "path": "extracted/cpp-player-list-runtime-511/actual-third/1024x768/scenario/run.json",
+        "exit": 0,
+        "seconds": 9.170255899996846,
+        "gameSha256": "b6d6ccfe54f4c933c785beaf1b622b72d35916b77312b7082ef46cbdf6f6ad89",
+        "originalAndCopyUnchanged": true
+      },
+      {
+        "path": "extracted/cpp-player-list-runtime-511/actual-third/1280x720/probe/run.json",
+        "exit": 0,
+        "seconds": 3.5437630000087665,
+        "gameSha256": "b6d6ccfe54f4c933c785beaf1b622b72d35916b77312b7082ef46cbdf6f6ad89",
+        "originalAndCopyUnchanged": true
+      },
+      {
+        "path": "extracted/cpp-player-list-runtime-511/actual-third/1280x720/scenario/run.json",
+        "exit": 0,
+        "seconds": 9.336656100000255,
+        "gameSha256": "b6d6ccfe54f4c933c785beaf1b622b72d35916b77312b7082ef46cbdf6f6ad89",
+        "originalAndCopyUnchanged": true
+      },
+      {
+        "path": "extracted/cpp-player-list-runtime-511/green-first/run.json",
+        "exit": 0,
+        "seconds": 6.163294500001939,
+        "gameSha256": "b6d6ccfe54f4c933c785beaf1b622b72d35916b77312b7082ef46cbdf6f6ad89",
+        "originalAndCopyUnchanged": true
+      },
+      {
+        "path": "extracted/cpp-player-list-runtime-511/repro/run.json",
+        "exit": 1,
+        "seconds": 3.215658800007077,
+        "gameSha256": "26401d6fcd36c21c0045065cce574154d4945e33544c91c68947868d53327cf1",
+        "originalAndCopyUnchanged": true
+      }
+    ],
+    "baselineFailure": "508 제품에서 View Player List 선택 후 실제 명령33554672 미연결로 종료1.",
+    "firstHarnessFailure": "actual-first는 ESC가 여는 가로막대를 추가 ESC로 닫지 않아 나중 View 입력에서 종료1.",
+    "secondHarnessFailure": "actual-second의 두 게임은 종료0이나 가로막대의 숨은 Player 하위 제목까지 부재라고 검사해 Python assertion 실패.",
+    "finalAccepted": {
+      "processes": 4,
+      "normalExit": 4,
+      "summary": {
+        "results": [
+          {
+            "size": [
+              1024,
+              768
+            ],
+            "labels": {
+              "view": "View",
+              "entry": "View Player List - F9",
+              "player": "You",
+              "find": "Find Priest!"
+            },
+            "players": [
+              "You",
+              "The Jailer"
+            ],
+            "centered": {
+              "menuPlayers": {
+                "token": 476,
+                "bounds": [
+                  464,
+                  367,
+                  559,
+                  401
+                ]
+              },
+              "keyPlayers": {
+                "token": 531,
+                "bounds": [
+                  464,
+                  367,
+                  559,
+                  401
+                ]
+              },
+              "pausedPlayers": {
+                "token": 673,
+                "bounds": [
+                  464,
+                  367,
+                  559,
+                  401
+                ]
+              },
+              "reopened": {
+                "token": 822,
+                "bounds": [
+                  464,
+                  367,
+                  559,
+                  401
+                ]
+              }
+            },
+            "pauseResumeVerified": true,
+            "subMenuAndFindPriestVerified": true,
+            "escAndOutsideCleanupVerified": true,
+            "runs": [
+              {
+                "command": [
+                  "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+                  "--run",
+                  "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-stage-entry-502-data",
+                  "--mission",
+                  "thewarbegins",
+                  "--window",
+                  "--mute-audio",
+                  "--frames",
+                  "56",
+                  "--set",
+                  "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3",
+                  "--ui-script",
+                  "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-player-list-runtime-511\\actual-third\\1024x768\\probe\\steps.tsv",
+                  "--ui-report",
+                  "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-player-list-runtime-511\\actual-third\\1024x768\\probe\\states.tsv",
+                  "--audio-report",
+                  "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-player-list-runtime-511\\actual-third\\1024x768\\probe\\audio.tsv"
+                ],
+                "binarySha256": "b6d6ccfe54f4c933c785beaf1b622b72d35916b77312b7082ef46cbdf6f6ad89",
+                "scriptSha256": "89602894f260722f08fb32b0b1cfe4ac8b62e4efc4040a6b51e044886077e7e6",
+                "returnCode": 0,
+                "timedOut": false,
+                "seconds": 3.352719199989224,
+                "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                "stderrSha256": "9fba4f7e2bb0be090e62265ef1203d93a429672f7ce307b7cf3aa08e3bfebbbb",
+                "originalsUnchanged": true,
+                "dataUnchanged": true,
+                "dataRoot": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-stage-entry-502-data"
+              },
+              {
+                "command": [
+                  "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+                  "--run",
+                  "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-stage-entry-502-data",
+                  "--mission",
+                  "thewarbegins",
+                  "--window",
+                  "--mute-audio",
+                  "--frames",
+                  "234",
+                  "--set",
+                  "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3",
+                  "--ui-script",
+                  "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-player-list-runtime-511\\actual-third\\1024x768\\scenario\\steps.tsv",
+                  "--ui-report",
+                  "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-player-list-runtime-511\\actual-third\\1024x768\\scenario\\states.tsv",
+                  "--audio-report",
+                  "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-player-list-runtime-511\\actual-third\\1024x768\\scenario\\audio.tsv"
+                ],
+                "binarySha256": "b6d6ccfe54f4c933c785beaf1b622b72d35916b77312b7082ef46cbdf6f6ad89",
+                "scriptSha256": "2c8fba6812d8bf8da1b7fbf5fcad69ce88550fb18c52a4e3430febe9cce2c10d",
+                "returnCode": 0,
+                "timedOut": false,
+                "seconds": 9.170255899996846,
+                "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                "stderrSha256": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2",
+                "originalsUnchanged": true,
+                "dataUnchanged": true,
+                "dataRoot": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-stage-entry-502-data"
+              }
+            ]
+          },
+          {
+            "size": [
+              1280,
+              720
+            ],
+            "labels": {
+              "view": "View",
+              "entry": "View Player List - F9",
+              "player": "You",
+              "find": "Find Priest!"
+            },
+            "players": [
+              "You",
+              "The Jailer"
+            ],
+            "centered": {
+              "menuPlayers": {
+                "token": 476,
+                "bounds": [
+                  592,
+                  343,
+                  687,
+                  377
+                ]
+              },
+              "keyPlayers": {
+                "token": 533,
+                "bounds": [
+                  592,
+                  343,
+                  687,
+                  377
+                ]
+              },
+              "pausedPlayers": {
+                "token": 683,
+                "bounds": [
+                  592,
+                  343,
+                  687,
+                  377
+                ]
+              },
+              "reopened": {
+                "token": 830,
+                "bounds": [
+                  592,
+                  343,
+                  687,
+                  377
+                ]
+              }
+            },
+            "pauseResumeVerified": true,
+            "subMenuAndFindPriestVerified": true,
+            "escAndOutsideCleanupVerified": true,
+            "runs": [
+              {
+                "command": [
+                  "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+                  "--run",
+                  "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-stage-entry-502-data",
+                  "--mission",
+                  "thewarbegins",
+                  "--window",
+                  "--mute-audio",
+                  "--frames",
+                  "56",
+                  "--set",
+                  "SCREENW=1280;SCREENH=720;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3",
+                  "--ui-script",
+                  "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-player-list-runtime-511\\actual-third\\1280x720\\probe\\steps.tsv",
+                  "--ui-report",
+                  "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-player-list-runtime-511\\actual-third\\1280x720\\probe\\states.tsv",
+                  "--audio-report",
+                  "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-player-list-runtime-511\\actual-third\\1280x720\\probe\\audio.tsv"
+                ],
+                "binarySha256": "b6d6ccfe54f4c933c785beaf1b622b72d35916b77312b7082ef46cbdf6f6ad89",
+                "scriptSha256": "cda4379b7e5d0d8ed92fef5ff35c15fe00cdc5039d54799d60e85fba4c1172be",
+                "returnCode": 0,
+                "timedOut": false,
+                "seconds": 3.5437630000087665,
+                "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                "stderrSha256": "9fba4f7e2bb0be090e62265ef1203d93a429672f7ce307b7cf3aa08e3bfebbbb",
+                "originalsUnchanged": true,
+                "dataUnchanged": true,
+                "dataRoot": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-stage-entry-502-data"
+              },
+              {
+                "command": [
+                  "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+                  "--run",
+                  "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-stage-entry-502-data",
+                  "--mission",
+                  "thewarbegins",
+                  "--window",
+                  "--mute-audio",
+                  "--frames",
+                  "234",
+                  "--set",
+                  "SCREENW=1280;SCREENH=720;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3",
+                  "--ui-script",
+                  "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-player-list-runtime-511\\actual-third\\1280x720\\scenario\\steps.tsv",
+                  "--ui-report",
+                  "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-player-list-runtime-511\\actual-third\\1280x720\\scenario\\states.tsv",
+                  "--audio-report",
+                  "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-player-list-runtime-511\\actual-third\\1280x720\\scenario\\audio.tsv"
+                ],
+                "binarySha256": "b6d6ccfe54f4c933c785beaf1b622b72d35916b77312b7082ef46cbdf6f6ad89",
+                "scriptSha256": "4a1a4679fc05b04baa934cf38ee687b75309f278017428d7581e95f6cabd200c",
+                "returnCode": 0,
+                "timedOut": false,
+                "seconds": 9.336656100000255,
+                "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                "stderrSha256": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2",
+                "originalsUnchanged": true,
+                "dataUnchanged": true,
+                "dataRoot": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-stage-entry-502-data"
+              }
+            ]
+          }
+        ]
+      },
+      "clockObservations": [
+        {
+          "size": [
+            1024,
+            768
+          ],
+          "pausedGameTime": "4.165",
+          "resumedGameTime": "4.474",
+          "windowVisible": true,
+          "closedMenuState": [
+            "0",
+            "0",
+            "0",
+            "13",
+            "13"
+          ]
+        },
+        {
+          "size": [
+            1280,
+            720
+          ],
+          "pausedGameTime": "4.492",
+          "resumedGameTime": "4.803",
+          "windowVisible": true,
+          "closedMenuState": [
+            "0",
+            "0",
+            "0",
+            "13",
+            "13"
+          ]
+        }
+      ]
+    }
+  },
+  "limits": [
+    "이번 실제 입력은 창 모드의 4:3/16:9 짧은 클론 실행이다. 전체화면/16:10/Windows11/자연 완주를 재검증하지 않았다.",
+    "현재 제품의 전체3338개는 반복하지 않았다. 마지막 전체3337/실패0은510의 이전508제품이고 전체34경로는506제품이다.",
+    "멀티플레이/비미션 Player List의 랭크/레벨/통신 전체 복원 완료 증거가 아니다.",
+    "연녹색 직사각형 분석/추가 재현은 사용자 지시로 보류한다. 원격 데스크톱 원인은 확정하지 않는다."
+  ],
+  "next": "사용자 추가 우선: 명령 가능한 이동 유닛의 대상별 커서, 이동/일반 건물형 유닛 전체·신전/제단/워크샾 메뉴 및 다리/풀숲 등 기타 우클릭 동작. 이후 잔여 View/도킹/Edit/호환성.",
+  "rawEvidenceHashes": {
+    "extracted/cpp-player-list-runtime-511/actual-first/1024x768/probe/audio.tsv": "2bef916b96d2aec94a6202685d7e44459e05ae24cb672cae4bc6aba0571276ff",
+    "extracted/cpp-player-list-runtime-511/actual-first/1024x768/probe/data-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-player-list-runtime-511/actual-first/1024x768/probe/originals-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-player-list-runtime-511/actual-first/1024x768/probe/players.bmp": "ca35e18c52cc3f990a0fccc2220cef593fb84a68d497e802586abfa36ee46f37",
+    "extracted/cpp-player-list-runtime-511/actual-first/1024x768/probe/run.json": "00564a893f81e7c53fca38daaaaf359e4aee0a57aec9e3b97929332e3022a20c",
+    "extracted/cpp-player-list-runtime-511/actual-first/1024x768/probe/running.json": "04a476804df8b50c24265ebc1d9b84d434913e16f183136f3dc0f91c19632f20",
+    "extracted/cpp-player-list-runtime-511/actual-first/1024x768/probe/settings-backup/fullscreenStateFile.dat": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-player-list-runtime-511/actual-first/1024x768/probe/settings-backup/options.cfg": "7c986d379a533456fb34d19f7937d1a028812c4560389d43cb663f1bd10cd7d4",
+    "extracted/cpp-player-list-runtime-511/actual-first/1024x768/probe/states.tsv": "6e3a2f9ff5d5213b70188e9b0a88ea0065b773849a71eb3b6745bf20123c2b76",
+    "extracted/cpp-player-list-runtime-511/actual-first/1024x768/probe/stderr.log": "9fba4f7e2bb0be090e62265ef1203d93a429672f7ce307b7cf3aa08e3bfebbbb",
+    "extracted/cpp-player-list-runtime-511/actual-first/1024x768/probe/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-player-list-runtime-511/actual-first/1024x768/probe/steps.tsv": "5695e12728d89cf3973f1f7db8c0684e1ff1a5a832c77a7f7d74a35169f38600",
+    "extracted/cpp-player-list-runtime-511/actual-first/1024x768/scenario/data-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-player-list-runtime-511/actual-first/1024x768/scenario/key-players.bmp": "e063fef0d1cafc6518038ce93291aa745870e8fa8d9c7a01212c1d174bfa5300",
+    "extracted/cpp-player-list-runtime-511/actual-first/1024x768/scenario/menu-players.bmp": "63caed749c146f3bbd829cd0a6e3dd5de96e6ec9b9606d6fd68a6f52e464e5d2",
+    "extracted/cpp-player-list-runtime-511/actual-first/1024x768/scenario/originals-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-player-list-runtime-511/actual-first/1024x768/scenario/paused-players.bmp": "2f3389aaa41282bd425a771b121467b8ae848d21a2d249e6aec415aa226013d5",
+    "extracted/cpp-player-list-runtime-511/actual-first/1024x768/scenario/player-submenu.bmp": "fe57d96f681e829e59dfb2b07e5f7570e6cd8158828fd9f23803b39f6782cb07",
+    "extracted/cpp-player-list-runtime-511/actual-first/1024x768/scenario/run.json": "e91ea3079df3dbd8deb10db52c9e0fd7598cea144c04e1db1827a576b73f9f8e",
+    "extracted/cpp-player-list-runtime-511/actual-first/1024x768/scenario/running.json": "bbb95e2346c6d24bc908eea81bb2a053973de13c11d76cb4e34c47471ce46505",
+    "extracted/cpp-player-list-runtime-511/actual-first/1024x768/scenario/settings-backup/fullscreenStateFile.dat": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-player-list-runtime-511/actual-first/1024x768/scenario/settings-backup/options.cfg": "7c986d379a533456fb34d19f7937d1a028812c4560389d43cb663f1bd10cd7d4",
+    "extracted/cpp-player-list-runtime-511/actual-first/1024x768/scenario/states.tsv": "15fd8a27bbb73f4e4f3276a1649df8d1ddff5e6bd840d3c70342142e9c975c57",
+    "extracted/cpp-player-list-runtime-511/actual-first/1024x768/scenario/stderr.log": "8cd475cc246a56e95cf590e14a20dd77ef92b66c2c7e96ff7963b29f9cdb2bca",
+    "extracted/cpp-player-list-runtime-511/actual-first/1024x768/scenario/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-player-list-runtime-511/actual-first/1024x768/scenario/steps.tsv": "329918941cb57c419e6829ec7455813bb410c0b4124491f0b82d9b8bb67984ee",
+    "extracted/cpp-player-list-runtime-511/actual-first.json": "ffa1d9c70d6737bed66eb25f8766db4c2986ccd5f3ab9cb1de792cfa0764c898",
+    "extracted/cpp-player-list-runtime-511/actual-first.log": "33a728b1b26f52a20b68a7b69095d5dbf85afec130c2a48c68e759fea0a612a1",
+    "extracted/cpp-player-list-runtime-511/actual-second/1024x768/probe/audio.tsv": "f0c28139f23204f8dafe4f55e91fe386f0df6537b33e8cc3172250f2d89741f6",
+    "extracted/cpp-player-list-runtime-511/actual-second/1024x768/probe/data-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-player-list-runtime-511/actual-second/1024x768/probe/originals-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-player-list-runtime-511/actual-second/1024x768/probe/players.bmp": "5739d3ba4963ce29c0b5c11b6b437b316046445a4582b777f0599727932750a7",
+    "extracted/cpp-player-list-runtime-511/actual-second/1024x768/probe/run.json": "f8e2407a4931ff26225429736bceeb497deb43453f13a2e5941d3274089f6bb8",
+    "extracted/cpp-player-list-runtime-511/actual-second/1024x768/probe/running.json": "1200cb153dfd9d09fb24b6d0df9e0268df4fbfbda7507c0ca4a89b1e6ce690a7",
+    "extracted/cpp-player-list-runtime-511/actual-second/1024x768/probe/settings-backup/fullscreenStateFile.dat": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-player-list-runtime-511/actual-second/1024x768/probe/settings-backup/options.cfg": "7c986d379a533456fb34d19f7937d1a028812c4560389d43cb663f1bd10cd7d4",
+    "extracted/cpp-player-list-runtime-511/actual-second/1024x768/probe/states.tsv": "cd10ec4bbe208535772c58d4d66bafaa6c545d05a6ebdf3dc7391ae07b11de7d",
+    "extracted/cpp-player-list-runtime-511/actual-second/1024x768/probe/stderr.log": "9fba4f7e2bb0be090e62265ef1203d93a429672f7ce307b7cf3aa08e3bfebbbb",
+    "extracted/cpp-player-list-runtime-511/actual-second/1024x768/probe/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-player-list-runtime-511/actual-second/1024x768/probe/steps.tsv": "15d5e7e586cc1a770935ca9599c3ecdce9684d051c7ec3db95912032544debb1",
+    "extracted/cpp-player-list-runtime-511/actual-second/1024x768/scenario/audio.tsv": "9067293ead7186c2813256bd35cff10b7bbf9703ffe18792ba4d8355991f7e0f",
+    "extracted/cpp-player-list-runtime-511/actual-second/1024x768/scenario/data-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-player-list-runtime-511/actual-second/1024x768/scenario/key-players.bmp": "92804cec85d5e9f02929882fd214033f2c528d0b3709849481f14740e64783cd",
+    "extracted/cpp-player-list-runtime-511/actual-second/1024x768/scenario/menu-players.bmp": "1d439eb587823aa20aeefe5edbd3c76a1592c33cde8e370664d62dc6df96bdb9",
+    "extracted/cpp-player-list-runtime-511/actual-second/1024x768/scenario/originals-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-player-list-runtime-511/actual-second/1024x768/scenario/paused-players.bmp": "f0cf057712d509b806563e909e73e4b7c4d332375c10a9785b4d62fbf5eb0755",
+    "extracted/cpp-player-list-runtime-511/actual-second/1024x768/scenario/player-submenu.bmp": "92db6e2c7973ebcea0e0062806407d7e9204f0824221f03fac78f499e51fe9b8",
+    "extracted/cpp-player-list-runtime-511/actual-second/1024x768/scenario/run.json": "bb78c2acd17ffe9f24bf2b0571676ed92406a5d0d91b4af5f6aa187b82936f1d",
+    "extracted/cpp-player-list-runtime-511/actual-second/1024x768/scenario/running.json": "4ff53c3b8ddec09aaaf803739aa0e7d780e438b1ceb7be9534b144832c723f43",
+    "extracted/cpp-player-list-runtime-511/actual-second/1024x768/scenario/settings-backup/fullscreenStateFile.dat": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-player-list-runtime-511/actual-second/1024x768/scenario/settings-backup/options.cfg": "7c986d379a533456fb34d19f7937d1a028812c4560389d43cb663f1bd10cd7d4",
+    "extracted/cpp-player-list-runtime-511/actual-second/1024x768/scenario/states.tsv": "5fc661535992b4a8c66e9768e61e7007867efa0a4d61bc3411cdace809a14e3f",
+    "extracted/cpp-player-list-runtime-511/actual-second/1024x768/scenario/stderr.log": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2",
+    "extracted/cpp-player-list-runtime-511/actual-second/1024x768/scenario/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-player-list-runtime-511/actual-second/1024x768/scenario/steps.tsv": "1d0df76dd3be2f66e1e011ab1acdb78ec2e55a20d4d2d6a1d9f95c46cadd68c1",
+    "extracted/cpp-player-list-runtime-511/actual-second.json": "8785d759ddd50a7c2e7b84fce52669e30cefabc4805993b34bc9a271d75c6be6",
+    "extracted/cpp-player-list-runtime-511/actual-second.log": "847a1aa1cd8b6cd3ceeebfdc69d64fe1dcc577a12831f47b406550baf8de800d",
+    "extracted/cpp-player-list-runtime-511/actual-third/1024x768/probe/audio.tsv": "93ca105b0772a86aa8b53a72d5b7f990fd101e63802349c569ed61d6851200a9",
+    "extracted/cpp-player-list-runtime-511/actual-third/1024x768/probe/data-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-player-list-runtime-511/actual-third/1024x768/probe/originals-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-player-list-runtime-511/actual-third/1024x768/probe/players.bmp": "1c59d43a58949d281cebf6b38530dc11fc45f9bc3efdb177827f536a2b7ae631",
+    "extracted/cpp-player-list-runtime-511/actual-third/1024x768/probe/run.json": "cad3c59987babd113a9efe7e4c353e65378713d2fd31a1c37f5330fb473f0e96",
+    "extracted/cpp-player-list-runtime-511/actual-third/1024x768/probe/running.json": "70ba4ce8cba6cef3bac806ed23c4812ee0d90e1d2350333e03a50e090893bb10",
+    "extracted/cpp-player-list-runtime-511/actual-third/1024x768/probe/settings-backup/fullscreenStateFile.dat": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-player-list-runtime-511/actual-third/1024x768/probe/settings-backup/options.cfg": "7c986d379a533456fb34d19f7937d1a028812c4560389d43cb663f1bd10cd7d4",
+    "extracted/cpp-player-list-runtime-511/actual-third/1024x768/probe/states.tsv": "9fccf36d46d886b6ecd257559025655430468a4eb0318811e808f9b421fa5a5b",
+    "extracted/cpp-player-list-runtime-511/actual-third/1024x768/probe/stderr.log": "9fba4f7e2bb0be090e62265ef1203d93a429672f7ce307b7cf3aa08e3bfebbbb",
+    "extracted/cpp-player-list-runtime-511/actual-third/1024x768/probe/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-player-list-runtime-511/actual-third/1024x768/probe/steps.tsv": "89602894f260722f08fb32b0b1cfe4ac8b62e4efc4040a6b51e044886077e7e6",
+    "extracted/cpp-player-list-runtime-511/actual-third/1024x768/scenario/audio.tsv": "21e5c5050d1aaf2af2b7ffd4319ab057668a3a965a919d7ac81032e214425c10",
+    "extracted/cpp-player-list-runtime-511/actual-third/1024x768/scenario/data-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-player-list-runtime-511/actual-third/1024x768/scenario/key-players.bmp": "2970030ca8dfe3d8b41123caade52a673a84c06d76d0dac69a2adfd407355dd8",
+    "extracted/cpp-player-list-runtime-511/actual-third/1024x768/scenario/menu-players.bmp": "2b3132cfca9867e7c158a99866bc9b50c83c35dd25e118bb3236dd4465129387",
+    "extracted/cpp-player-list-runtime-511/actual-third/1024x768/scenario/originals-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-player-list-runtime-511/actual-third/1024x768/scenario/paused-players.bmp": "8fa211e0b4c3e76841e665d0fa2a6685f5072d530c5971b3c98502f37813d82b",
+    "extracted/cpp-player-list-runtime-511/actual-third/1024x768/scenario/player-submenu.bmp": "83d543b1c851ace1069c8a60c0a2971223834e2fc41aa3e5d150fd48797c0217",
+    "extracted/cpp-player-list-runtime-511/actual-third/1024x768/scenario/run.json": "011558f3f652157cd10f354cccd50ec9133624a4c12d10cc85d7a5ac8649feaf",
+    "extracted/cpp-player-list-runtime-511/actual-third/1024x768/scenario/running.json": "9ec8e8cf4c8f2398dd5b161a1a4aa60b7d96633adf83f0ebf87c1dd8929bb158",
+    "extracted/cpp-player-list-runtime-511/actual-third/1024x768/scenario/settings-backup/fullscreenStateFile.dat": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-player-list-runtime-511/actual-third/1024x768/scenario/settings-backup/options.cfg": "7c986d379a533456fb34d19f7937d1a028812c4560389d43cb663f1bd10cd7d4",
+    "extracted/cpp-player-list-runtime-511/actual-third/1024x768/scenario/states.tsv": "a5349b1c02efbb37a4aeba38f0f8ac0dd5ce3dddbf6ad82c0eac0d85ff4a4ef8",
+    "extracted/cpp-player-list-runtime-511/actual-third/1024x768/scenario/stderr.log": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2",
+    "extracted/cpp-player-list-runtime-511/actual-third/1024x768/scenario/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-player-list-runtime-511/actual-third/1024x768/scenario/steps.tsv": "2c8fba6812d8bf8da1b7fbf5fcad69ce88550fb18c52a4e3430febe9cce2c10d",
+    "extracted/cpp-player-list-runtime-511/actual-third/1024x768/summary.json": "337d559bfc363e7ae89e75cd56d35ed3437055a544a0210e64176f3fa1e4be90",
+    "extracted/cpp-player-list-runtime-511/actual-third/1280x720/probe/audio.tsv": "14e113b852ae95318debfd5fbd4b7075dd543d76d89a986531d5c3d7c413948e",
+    "extracted/cpp-player-list-runtime-511/actual-third/1280x720/probe/data-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-player-list-runtime-511/actual-third/1280x720/probe/originals-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-player-list-runtime-511/actual-third/1280x720/probe/players.bmp": "e73dda4c42e9c779b89486865612a57bc84a87c79307fd63c6f1fefba28b0e5b",
+    "extracted/cpp-player-list-runtime-511/actual-third/1280x720/probe/run.json": "e6b83aaee0483bfb982e4e5d66c773e48ac223b26ad7527c99fe50b6c6f286b9",
+    "extracted/cpp-player-list-runtime-511/actual-third/1280x720/probe/running.json": "7299b5457a7bcbf48e90fc82445ee75de67bf9d221e876cada90f5f7a4616475",
+    "extracted/cpp-player-list-runtime-511/actual-third/1280x720/probe/settings-backup/fullscreenStateFile.dat": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-player-list-runtime-511/actual-third/1280x720/probe/settings-backup/options.cfg": "7c986d379a533456fb34d19f7937d1a028812c4560389d43cb663f1bd10cd7d4",
+    "extracted/cpp-player-list-runtime-511/actual-third/1280x720/probe/states.tsv": "ce8b65400bbbc6d187186e34d3979ba1afad2277f0ff1212a959bab5582a7bd4",
+    "extracted/cpp-player-list-runtime-511/actual-third/1280x720/probe/stderr.log": "9fba4f7e2bb0be090e62265ef1203d93a429672f7ce307b7cf3aa08e3bfebbbb",
+    "extracted/cpp-player-list-runtime-511/actual-third/1280x720/probe/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-player-list-runtime-511/actual-third/1280x720/probe/steps.tsv": "cda4379b7e5d0d8ed92fef5ff35c15fe00cdc5039d54799d60e85fba4c1172be",
+    "extracted/cpp-player-list-runtime-511/actual-third/1280x720/scenario/audio.tsv": "f7c77d72924a76339b18823560981d3a2a99969b9ed23fe3fd150d0fd6848046",
+    "extracted/cpp-player-list-runtime-511/actual-third/1280x720/scenario/data-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-player-list-runtime-511/actual-third/1280x720/scenario/key-players.bmp": "a89988de2c69e794cdd43fac02b38d09c6fef6c3bb9c57a208b4106835bb3e60",
+    "extracted/cpp-player-list-runtime-511/actual-third/1280x720/scenario/menu-players.bmp": "654fed3f7cbdadbe46340f4016e7aff0c0df7d200670345cbb372a92a46efedd",
+    "extracted/cpp-player-list-runtime-511/actual-third/1280x720/scenario/originals-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-player-list-runtime-511/actual-third/1280x720/scenario/paused-players.bmp": "2b604283341784df29721bf0ba7697c13a8b138b46e4047081db57e3fd9b8aa7",
+    "extracted/cpp-player-list-runtime-511/actual-third/1280x720/scenario/player-submenu.bmp": "6c2fe39befa659475478ffbd3708896eb7e1f9f7ff9a480b40961776abb9286f",
+    "extracted/cpp-player-list-runtime-511/actual-third/1280x720/scenario/run.json": "69b2898a68adfacf34ba4dfdeac49403cebb398451ee695b4cf5a81819d1908f",
+    "extracted/cpp-player-list-runtime-511/actual-third/1280x720/scenario/running.json": "c998ac75dc53ccb8869d6a1216d1316811b0998c399d25fa7bc49e71ffed86bb",
+    "extracted/cpp-player-list-runtime-511/actual-third/1280x720/scenario/settings-backup/fullscreenStateFile.dat": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-player-list-runtime-511/actual-third/1280x720/scenario/settings-backup/options.cfg": "7c986d379a533456fb34d19f7937d1a028812c4560389d43cb663f1bd10cd7d4",
+    "extracted/cpp-player-list-runtime-511/actual-third/1280x720/scenario/states.tsv": "348c18fb1cffb2e301554571160f61172a3b4b296933bb29e311b5fe130ec06e",
+    "extracted/cpp-player-list-runtime-511/actual-third/1280x720/scenario/stderr.log": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2",
+    "extracted/cpp-player-list-runtime-511/actual-third/1280x720/scenario/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-player-list-runtime-511/actual-third/1280x720/scenario/steps.tsv": "4a1a4679fc05b04baa934cf38ee687b75309f278017428d7581e95f6cabd200c",
+    "extracted/cpp-player-list-runtime-511/actual-third/1280x720/summary.json": "3fcff6de67d5e9b4313ad00cb413725676129ead12cd7599a74dab9b366c3b38",
+    "extracted/cpp-player-list-runtime-511/actual-third/summary.json": "cdc173342dbfd98b0bd8b02c27a32ce06fa9248d0b89247ef4d7d7de2fe57fea",
+    "extracted/cpp-player-list-runtime-511/actual-third.json": "a9a5dbb80374107d96f95af7bbfa57a87eefc73bbf15f88b6f0fea07bcb3a06c",
+    "extracted/cpp-player-list-runtime-511/actual-third.log": "10be300d4ce379beded68b3fc95cfca8f59ea8eee7be88aad3aed69a49ddbc56",
+    "extracted/cpp-player-list-runtime-511/before.json": "810337f03101e226e42b566679863b8188c952a96658855c3b464431d6a6d47a",
+    "extracted/cpp-player-list-runtime-511/build.json": "a6324bcf6c1769439d17cb79857e4e9ad69ced0c8d4d9d63aef4fb08cfa4b2c0",
+    "extracted/cpp-player-list-runtime-511/build.log": "44ced4316019fcec03f22f2988c4b8e0534ac9d2ee76ee2a9d30e2ae9adec9f7",
+    "extracted/cpp-player-list-runtime-511/freeze-baseline.json": "f57521037ced70eeabfa4e3e4301634745d0c427ee618103b6f2d66861a8f33a",
+    "extracted/cpp-player-list-runtime-511/freeze-final.json": "7f79eef8b8ec078dde11cf1c59ed8ad795454117323fe337d054ed13991845f4",
+    "extracted/cpp-player-list-runtime-511/green-first/audio.tsv": "da4e42d22530a5c01920c7af52f459d3cf87d2c8a38289683d83a845b696416b",
+    "extracted/cpp-player-list-runtime-511/green-first/data-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-player-list-runtime-511/green-first/originals-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-player-list-runtime-511/green-first/players.bmp": "6483aa7e602b8b554ba5a4061bdf18f336dc41cb46ec10f46a6fbec1fd35760a",
+    "extracted/cpp-player-list-runtime-511/green-first/run.json": "8fc7833d8cdd217a78efdb57f20e74cb94b1f4cbe069a236ea1741c7f792ce5a",
+    "extracted/cpp-player-list-runtime-511/green-first/running.json": "83bdfa119061f871a60706ef684b5ce55542241063353122f2626e50c524e29f",
+    "extracted/cpp-player-list-runtime-511/green-first/settings-backup/fullscreenStateFile.dat": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-player-list-runtime-511/green-first/settings-backup/options.cfg": "7c986d379a533456fb34d19f7937d1a028812c4560389d43cb663f1bd10cd7d4",
+    "extracted/cpp-player-list-runtime-511/green-first/states.tsv": "e1406d796238dbb48ed82c725e2f23b4854b1df15de6e774a9b94757e7b98e7b",
+    "extracted/cpp-player-list-runtime-511/green-first/stderr.log": "9fba4f7e2bb0be090e62265ef1203d93a429672f7ce307b7cf3aa08e3bfebbbb",
+    "extracted/cpp-player-list-runtime-511/green-first/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-player-list-runtime-511/green-first/steps.tsv": "4ecfdddc48b4ce1aeea3e4d3d7ee1ea83420be4bb059e9a6695f04fa00fd8e1b",
+    "extracted/cpp-player-list-runtime-511/green-first.json": "8f2335b0c69e5a7a4f91ad551a4fce24b9e5d403b6a5157ffecaa28c6ce5e2d0",
+    "extracted/cpp-player-list-runtime-511/green-first.log": "cf2a3d72d572fe3e0c66c7089bdf57aba490ef8e72d8f35606626ecd240fb229",
+    "extracted/cpp-player-list-runtime-511/original-disassembly.json": "7a264760f457d3e86b084b81e4b1475130e39470bfc307e1f3f45a1caaa49572",
+    "extracted/cpp-player-list-runtime-511/repro/data-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-player-list-runtime-511/repro/originals-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-player-list-runtime-511/repro/run.json": "f7e4828e22f23b1b3c4064d14b62b8f3696cca045da34388a4ab65ad857ef0e1",
+    "extracted/cpp-player-list-runtime-511/repro/running.json": "abb2f6a5a3826875c665a019462821e47aa46c6fc51cfd2417a3f805ece3c8ac",
+    "extracted/cpp-player-list-runtime-511/repro/settings-backup/fullscreenStateFile.dat": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-player-list-runtime-511/repro/settings-backup/options.cfg": "7c986d379a533456fb34d19f7937d1a028812c4560389d43cb663f1bd10cd7d4",
+    "extracted/cpp-player-list-runtime-511/repro/states.tsv": "8a6705d7d9bc7168695b54609e6c635e4c90e6d0662895267d536ca2cec3b86a",
+    "extracted/cpp-player-list-runtime-511/repro/stderr.log": "f4d915973ad95a6f1b9426f38e5102ab80acff17e6356c29626a563b0a00edb1",
+    "extracted/cpp-player-list-runtime-511/repro/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-player-list-runtime-511/repro/steps.tsv": "59f7db2dbf701c228ff2b7aeb6f8dae3b465efe8844bfd8c5c5d1ce529339f46",
+    "extracted/cpp-player-list-runtime-511/repro.json": "c4d19f147827ccc643263a78211406e172a4cd1ff7e13243f670c4074effcaec",
+    "extracted/cpp-player-list-runtime-511/repro.log": "043bc48bff06c8aa7950d55a7c9229863b9944e95b7fefcb46d392fcb7b2a387",
+    "extracted/cpp-player-list-runtime-511/test-gump.json": "8645929351823ae9508baec473d5ca3add6124e33f9de8a95bf0880fb4e72287",
+    "extracted/cpp-player-list-runtime-511/test-gump.log": "9150d505f212b52692e7c2c01020c879975e1be01058c40de0b5f6a9362e2a73",
+    "extracted/cpp-player-list-runtime-511/test-input.json": "93d76f6a35d1e4a6baaee99529441ec07bfb2c93d96eb090585290943097416e",
+    "extracted/cpp-player-list-runtime-511/test-input.log": "5cb6f3cb1b6bdd62ef1d41345d897757c626f075b9e5e9090ce843bb678c7b93",
+    "extracted/cpp-player-list-runtime-511/test-menu.json": "52d49d2ca0b44d805f8442e54a5b0123838a8e94a9e6f80b03846e4416c0bf50",
+    "extracted/cpp-player-list-runtime-511/test-menu.log": "ae73af70d1cbb91d73899e402dcc39c75141ba99cb665c6c87ca43edfecf9101",
+    "extracted/cpp-player-list-runtime-511/test-players.json": "2144b749a1c3b6e94a24d89ec9e2398603aab9fd28c4da798bba536773a1fee7",
+    "extracted/cpp-player-list-runtime-511/test-players.log": "86df6abf51326fc95aa74e18236ca0d7eac9baab1139d076fb20bd2877b4ec4a"
+  }
+}

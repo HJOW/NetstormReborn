@@ -1,6 +1,7 @@
 // 원본네메뉴부모의918독립관측과실제공개C++몸체를비교한다.
 #include "DudeSpawnSupport.h"
 #include "client/RawGameMenus.h"
+#include "client/GameMenuCommands.h"
 #include <map>
 using namespace netstorm::client;
 namespace {
@@ -111,4 +112,21 @@ TEST_CASE(PlayerListMenu_Native530) {
     const auto rows=LoadFixture(NETSTORM_PLAYER_LIST_MENU_FIXTURE).rows;CHECK(rows.size()==530);
     // 각행은같은현재Player9와실제공개부모를새로준비한다.
     for (const auto& row:rows) { CHECK(row.size()==3);PlayerListMenuScene scene(row[1]);CHECK(scene.Run()==row[2]); }
+}
+// F9의 기존 큐 순서와 Shift/Control/Alt/뗌 분기를 실제 명령으로 대조한다.
+TEST_CASE(PlayerListMenu_QueuesF9AndShiftPause) {
+    InputQueue queue;queue.Push(0x1234,5,6);
+    CHECK(QueuePlayerListKey({0x780000U,99,88},queue));
+    CHECK(QueuePlayerListKey({InputCode::kShift|0x780000U,0,0},queue));
+    CHECK(QueuePlayerListKey({InputCode::kAlt|0x780000U,0,0},queue));
+    CHECK(!QueuePlayerListKey({InputCode::kControl|0x780000U,0,0},queue));
+    CHECK(!QueuePlayerListKey({InputCode::kControl|InputCode::kShift|0x780000U,0,0},queue));
+    CHECK(!QueuePlayerListKey({InputCode::kRelease|0x780000U,0,0},queue));
+    CHECK(!QueuePlayerListKey({0x770000U,0,0},queue));
+    const auto old=queue.Pop(false);CHECK(old.code==0x1234 && old.x==5 && old.y==6);
+    // 원본 예약 순서대로 기존 사건 다음에 목록/정지/목록이 오며 좌표를 인자로 재사용하지 않는다.
+    for (const auto code:{0x020000f0U,0x020000cfU,0x020000f0U}) {
+        const auto event=queue.Pop(false);CHECK(event.code==code && event.x==0 && event.y==0);
+    }
+    CHECK(queue.Empty());
 }

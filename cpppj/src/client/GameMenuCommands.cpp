@@ -66,4 +66,9 @@ bool IsGameMenuCommand(std::uint32_t code) {
     for (const auto& [address,value]:kCommands) if (value==code) return true; // 같은값의주소항목이여럿이어도허용결과는같다.
     return code==0x02000049U || code==0x02000002U || code==0x020000e4U; // TechnicalHelp와 화면 조정/확인의 실제 원문 기본 전역 명령이다.
 }
+// 원본 F9는 Alt를 별도로 거부하지 않으며 Shift만 목적 명령을 바꾸고 두 인자는 항상0이다.
+bool QueuePlayerListKey(const InputEvent& event,InputQueue& queue) {
+    if ((event.code&(InputCode::kRelease|InputCode::kControl)) || (event.code&0x03ffffffU)!=(0x78U<<InputCode::kVirtualKeyShift)) return false;
+    queue.PushCommand(event.code&InputCode::kShift ? 0x020000cfU : 0x020000f0U,0,0);return true;
+}
 }
