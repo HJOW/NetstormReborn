@@ -97,4 +97,5 @@ void ConnectDevastation() {
     effect.release=[this] { if (!devastationEffectMemory) throw std::logic_error("Devastation 효과 배열 해제 순서 오류");devastationEffectMemory.reset(); };
     devastationEffect=std::make_unique<RawBombEffect>(core.pool,devastationEffectTypes,devastationEffectState,std::move(effect));
     PrepareDevastation();
+    ConnectMeltdown(); // 같은 실제 피해/공간/음향의 설치가 끝난 뒤 연결한다.
 }

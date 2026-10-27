@@ -1,0 +1,47 @@
+{
+  "unit": 520,
+  "host": "HJOW-Athlon",
+  "date": "2026-10-28",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23"
+  },
+  "uniqueInputs": 442,
+  "normalReturns": 884,
+  "instructions": 371474,
+  "nativeCalls": {
+    "0041c290": 20,
+    "0040b1a0": 12,
+    "004df230": 12,
+    "00420340": 64,
+    "004ac200": 1044,
+    "0049a840": 2328,
+    "00422560": 16,
+    "004ac550": 64,
+    "004204f0": 1060,
+    "004adea0": 1220,
+    "0049a900": 1220,
+    "0041cfc0": 48,
+    "004207a0": 256,
+    "004e4a40": 128,
+    "004df590": 128,
+    "004205f0": 448,
+    "0040b190": 7996,
+    "0041d7a0": 320,
+    "004e49c0": 640,
+    "0041d0d0": 960,
+    "0040b150": 28
+  },
+  "boundaries": "41c290/420340/4204f0/4207a0/4205f0/40b150와 TYPE/중심/거리/Clamp/Snap/패킷 전체. 4203a0 검색·할당/해제·가상피해/삭제·소리/visual/edge·배포/로컬효과는 명시 경계. 검색 본체/실제 게임 전체 완료를 뜻하지 않는다. 실제 OS/창/통신 없음.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_meltdown.py": "deacbaba956c10dd302e9b1289f7f31946c386c6563cbf8d79fa82e64425fa73",
+    "tools/decomp_cursor_lifecycle.py": "202783ba2a582f8f86997bee9ba1b14e7515c6206fbc08a1fa13c9518c0e99f9",
+    "tools/decomp_cursor_position.py": "e15bcdbc4c6be9c131c30f15416c945d650dba9f7dc6def404b47f63c635c212",
+    "tools/decomp_carrier_falling.py": "f8702db0708a543b73213c8df9154503afe977767a11bd7c150b639ee1b587a6",
+    "tools/decomp_particle_gradient.py": "4258e0f715b5fe52aa29f3f9e854fd708fa1731f495b2cffb72b5c934b7e608e",
+    "cpppj/tests/fixtures/meltdown-x86.tsv": "1767cd85fd19411aefa05793bbbe91c5421d24b95c34658b6e92200aaa9e4bcf"
+  },
+  "commentOnlyToolUpdate": true
+}

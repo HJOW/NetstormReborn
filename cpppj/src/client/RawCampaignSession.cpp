@@ -101,6 +101,7 @@
 #include "o/RawBalloonBody.h"
 #include "o/RawBombPreDestroy.h"
 #include "o/RawBombActivation.h"
+#include "o/RawMeltdown.h"
 #include "o/RawBombRegular.h"
 #include "o/RawBombEffect.h"
 #include "o/RawPriestPrayer.h"
@@ -264,7 +265,7 @@ std::shared_ptr<ClientGameplayGlobals> SessionGameplayGlobals(const RawCampaignS
     if (services.gameplayGlobals && services.surfaceStorage && services.gameplayGlobals->GameAux()!=services.surfaceStorage->GameAux()) throw std::invalid_argument("Session의 실제 게임 보조 owner 불일치"); // 초기화/대여 전에 다른 owner를 거부한다.
     return services.gameplayGlobals ? services.gameplayGlobals : std::make_shared<ClientGameplayGlobals>(services.subscriberGlobals,services.surfaceStorage ? services.surfaceStorage->Authority() : nullptr,services.surfaceStorage ? services.surfaceStorage->GameAux() : nullptr);
 }
-constexpr std::array<std::uint32_t,13> kEditorGameplayMessages{0x5b,0x40,0x4f,0x50,0x60,0x61,0x5c,0x5f,0x7d,0x6d,0x3e,0x54,0x58}; // 기존 Carrier→Construction→Factory 등록 순서의 실제13종이며 로그인/응답을 추가하지 않는다.
+constexpr std::array<std::uint32_t,15> kEditorGameplayMessages{0x5b,0x40,0x4f,0x50,0x60,0x61,0x5c,0x5f,0x7d,0x6d,0x75,0x76,0x3e,0x54,0x58}; // Carrier→Construction→Factory의 실제15종이며 Meltdown75/76도 같은 해제 수명을 따른다.
 constexpr std::uint32_t kAiSearchTypeBase=0x6b000000U; //같은실제188TYPE의opaque32포인터기준이다.원본가상주소가아니며500stride대응만보존한다.
 // 실제83개 VT에서+10/+14/+18이4af780/44b4b0/44b9e0인14개만 일반 Damageable 수명으로 연결한다.
 constexpr std::array<std::uint32_t,14> kPlainDamageableTables{0x501ea0,0x509148,0x509930,0x5099e8,0x509aa0,0x50a820,0x50a8e8,0x50b6e8,0x50b7c0,0x50b888,0x50b9b8,0x50bad0,0x50e668,0x50e738};
@@ -684,6 +685,7 @@ struct RawCampaignSession::Impl {
     std::vector<BombRegularType> devastationRegularTypes;std::vector<BombEffectType> devastationEffectTypes; // 기존188TYPE의A프레임/casttime/cost/fireSound만 보충한다.
     std::unique_ptr<RawBombTargets> devastationTargets;std::unique_ptr<RawBombBlast> devastationBlast; // 같은 네 공간 해시/현재 피해/지면/다리 효과 몸체다.
     std::unique_ptr<RawBombActivation> devastationActivation;std::unique_ptr<RawBombRegular> devastationRegular;std::unique_ptr<RawBombEffect> devastationEffect; // 0x5c/주기/0x5f의 실제 공용 몸체를 연결한다.
+    MeltdownState meltdownState;std::unique_ptr<RawMeltdown> meltdown; // 같은 풀/해시/권한/동맹의 실제76h 요청과75h 효과다.
     std::unique_ptr<RegularProcess> pendingDevastationRegular; // 실제 활성화 확보부터 SharedRegular 부착까지 한 객체를 보관한다.
     std::unique_ptr<std::uint8_t[]> devastationSearchMemory,devastationEffectMemory; // 각각 원본new400/대상배열의 실제 확보와 해제 수명을 보존한다.
     WindSpellState windSpellState;std::vector<std::int32_t> windSpellCounts;std::unique_ptr<RawWindSpell> windSpell; // 세 소환 주문의 현재spawns와 실제59 생성을 소유한다.
@@ -2957,6 +2959,7 @@ struct RawCampaignSession::Impl {
     }
     // 같은 Graph/Host에 실제 경로와 의식 모듈을 연결한다. 저장 객체의 첫 Pop 전에 등록해야 한다.
     #include "client/RawCampaignDevastation.inc"
+    #include "client/RawCampaignMeltdown.inc"
     #include "client/RawCampaignCarrierDrop.inc"
     #include "client/RawCampaignPrayer.inc"
     #include "client/RawCampaignPanic.inc"
@@ -3762,6 +3765,10 @@ void RawCampaignSession::RegisterCarrierCommands(RawPacketDispatch& dispatch) {
     dispatch.Register(0x7d,[this](std::uint32_t,PacketConnection&,std::span<const std::uint8_t> packet) { impl_->ReceiveBombTimer(packet); });
     dispatch.Observe(0x6d,{});dispatch.Version(0x6d,1,0);dispatch.RequireLength(0x6d,8);
     dispatch.Register(0x6d,[this](std::uint32_t,PacketConnection&,std::span<const std::uint8_t> packet) { impl_->priestPrayer->Receive(packet); }); // 원본493f80은송신자/두번째인수를기도관문에추가하지않는다.
+    dispatch.Observe(0x75,{});dispatch.Version(0x75,1,0);dispatch.RequireLength(0x75,0xffff); // 단일 분배기는 writer를 호출하지 않으며 실제 송신 경계에서 FinalizePacket을 실행한다.
+    dispatch.Register(0x75,[this](std::uint32_t,PacketConnection&,std::span<const std::uint8_t> packet) { impl_->meltdown->ReceiveEffect(packet); });
+    dispatch.Observe(0x76,{});dispatch.Version(0x76,1,0);dispatch.RequireLength(0x76,6);
+    dispatch.Register(0x76,[this](std::uint32_t,PacketConnection&,std::span<const std::uint8_t> packet) { impl_->meltdown->ReceiveRequest(packet); }); // 원문4207a0은 송신자를 새 권한 조건으로 쓰지 않는다.
 }
 // 요청은 실제 선택/중복 검사와 전송만 수행하고 직접 Start를 부르지 않는다.
 void RawCampaignSession::RequestCarrierMove(Sid parent,RawPathPoint destination,std::uint32_t sacrifice) { CarrierMove().Request(parent,destination,sacrifice); }
@@ -3772,6 +3779,9 @@ std::uint32_t RawCampaignSession::CommandCarrierDrop(Sid parent,std::uint32_t co
 // 실제 가상6c가 비석/주문 전환이면 같은 SID를 재사용하고 나머지는 공통 객체 부모에 위임한다.
 std::uint32_t RawCampaignSession::CommandObject(Sid parent,std::uint32_t command) {
     if (!impl_->loaded || !impl_->objectCommand) throw std::logic_error("설치 전 공통 객체 명령");auto& current=*impl_;
+    if (Read(current.core.pool.Slot(parent),0)==0x501ea0U && (command&0x03ffffffU)==0x030000f8U) {
+        if (!current.meltdown) throw std::logic_error("실제 제네레이터 Meltdown 미설치");current.meltdown->Command(parent,command,[&current](Sid sid,auto code) { static_cast<void>(current.objectCommand->Command(sid,code)); });return 1; // 원문41c290은void이며 전송 뒤 부모0을 UI 미처리로 잘못 해석하지 않는다.
+    }
     const auto body=ObjectConversionBody(Read(current.core.pool.Slot(parent),0));
     if (!body) return current.objectCommand->Command(parent,command);
     ObjectConversionHooks hooks;hooks.unpop=[&current](Sid sid,auto flags) { current.world.Unpop(sid,flags); };hooks.repop=[&current](Sid sid,auto flags) { current.world.Repop(sid,flags); };

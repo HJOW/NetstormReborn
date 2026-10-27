@@ -1,0 +1,1039 @@
+{
+  "unit": 520,
+  "date": "2026-10-28",
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23",
+    "outputsModified": false
+  },
+  "product": {
+    "NetstormCpp.exe": "bd24a7336738596b97c07055fbe9d889a29dfd4b7525be52473fb99334c1f23c",
+    "netstorm_tests.exe": "602675814df35e042009efdd49ff02997fd4d1679edecc597534c44bc2dbfd98"
+  },
+  "releaseBuild": {
+    "command": [
+      "cmake",
+      "--build",
+      "cpppj/build",
+      "--config",
+      "Release",
+      "-j",
+      "3"
+    ],
+    "exit": 0,
+    "log": "extracted/cpp-meltdown-520/build9.log",
+    "sha256": "1fa6e212af91a189e35e212b98d5b7af4d2f8abc8b2b370094417c215548f077",
+    "summaries": [],
+    "diagnostics": []
+  },
+  "tests": {
+    "registered": 3349,
+    "focused": 98,
+    "failed": 0,
+    "fullSuiteRun": false,
+    "groups": [
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "Meltdown"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-meltdown-520/accepted-meltdown.log",
+        "sha256": "62c94636c2702f11a722f07e78b113803ef3e0ec659b1e668aaa06875f849137",
+        "summaries": [
+          "2 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "ObjectMenu"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-meltdown-520/accepted-objectmenu.log",
+        "sha256": "8a8af06d96d90f20f0d15e2bb2f1f5e27ac8d59367fd70a1d1ecd2c207f2a977",
+        "summaries": [
+          "20 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "ObjectCommand"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-meltdown-520/accepted-objectcommand.log",
+        "sha256": "376fe357bce15a18cd6356fc8165cc0ead2b5e29f5cdf75a012464300d58f4e5",
+        "summaries": [
+          "3 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "ObjectOwnerCommand"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-meltdown-520/accepted-objectownercommand.log",
+        "sha256": "06ddb23daf4aa682bf8cbaa4f45f372caa0f3a741bdb4177146b1cdb94da499e",
+        "summaries": [
+          "2 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "EditorLocalTransport"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-meltdown-520/accepted-editorlocaltransport.log",
+        "sha256": "3c15825e4f671f2cf0184c6412f563425e9e13598dc249675e6c803cbaddde54",
+        "summaries": [
+          "12 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "CampaignExistingEditor"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-meltdown-520/accepted-campaignexistingeditor.log",
+        "sha256": "6c64a8120334123fb89ca1e2334662152e4bfee0f2b34846906782bb078f790a",
+        "summaries": [
+          "52 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "ScriptCommand"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-meltdown-520/accepted-scriptcommand.log",
+        "sha256": "d53a62b4a163d0f9ea3a91ef526f525e9e22d2f4201ca2bf652a1a2a2d9ceb12",
+        "summaries": [
+          "3 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "BombBlast"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-meltdown-520/accepted-bombblast.log",
+        "sha256": "38007a7e3646db61c56b13a864412f43292179fa0d71ff482ab1a13c9eb3ff42",
+        "summaries": [
+          "2 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "BombTargets"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-meltdown-520/accepted-bombtargets.log",
+        "sha256": "3da5d066c15c0e700b80654b3c83410e9a668c639e84d2541631627df223f06a",
+        "summaries": [
+          "2 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      }
+    ]
+  },
+  "native": {
+    "report": "cpppj/meltdown-native-20261028.json",
+    "uniqueInputs": 442,
+    "normalReturns": 884,
+    "replay": {
+      "uniqueInputs": 442,
+      "normalReturns": 884,
+      "instructions": 371474,
+      "differences": 0,
+      "controls": [
+        639,
+        895
+      ],
+      "description": "tools.decomp_meltdown.Oracle/cases를 최종 주석 정리 후 다시 실행하여 동결 fixture의 두 정밀도 네 필드와 각각 직접 비교했다. 기대값 변경 없음."
+    },
+    "audit": {
+      "command": [
+        "python",
+        "tools/decomp_meltdown.py",
+        "--verify"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-meltdown-520/native-final-audit.log",
+      "sha256": "8060bb3864d7a49f215fc1efd4f24f4f1738758a4ec0739f79451faed4869800",
+      "summaries": [],
+      "diagnostics": []
+    },
+    "findBodyIsDeclaredBoundary": true
+  },
+  "acceptedRuntime": [
+    {
+      "mode": "editor",
+      "size": [
+        1280,
+        720
+      ],
+      "parentSid": 15019,
+      "parentBefore": [
+        "windBattery",
+        "2",
+        "-1",
+        "174",
+        "124",
+        "174",
+        "124",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "700",
+        "0"
+      ],
+      "parentAfter": [
+        "windBattery",
+        "2",
+        "-1",
+        "174",
+        "124",
+        "174",
+        "124",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "700",
+        "0"
+      ],
+      "meltdownHidden": true,
+      "menu": [
+        {
+          "token": 3484,
+          "index": 0,
+          "flags": 66697,
+          "command": 50331669,
+          "parameter": 15019,
+          "visible": true,
+          "label": "Destroy"
+        },
+        {
+          "token": 3484,
+          "index": 1,
+          "flags": 66689,
+          "command": 33554455,
+          "parameter": 75,
+          "visible": true,
+          "label": "About"
+        },
+        {
+          "token": 3484,
+          "index": 2,
+          "flags": 66689,
+          "command": 33554581,
+          "parameter": 1610612737,
+          "visible": true,
+          "label": "CHEAT Set Owner"
+        },
+        {
+          "token": 3484,
+          "index": 3,
+          "flags": 66592,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": "Player"
+        }
+      ],
+      "run": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-meltdown-520\\accepted-editor\\1280x720\\data",
+          "--window",
+          "--no-audio",
+          "--frames",
+          "125",
+          "--set",
+          "SCREENW=1280;SCREENH=720;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-meltdown-520\\accepted-editor\\1280x720\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-meltdown-520\\accepted-editor\\1280x720\\states.tsv"
+        ],
+        "binarySha256": "bd24a7336738596b97c07055fbe9d889a29dfd4b7525be52473fb99334c1f23c",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 6.1251326000056,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "939d4670df5eaaef3c45e0901e1903ee29d8d85f0f8a8404ffa3010c676b326c",
+        "originalsUnchanged": true,
+        "dataUnchanged": true
+      },
+      "attackFlyersNotReproduced": true,
+      "effectNotForced": true
+    },
+    {
+      "mode": "editor",
+      "size": [
+        1024,
+        768
+      ],
+      "parentSid": 15019,
+      "parentBefore": [
+        "windBattery",
+        "2",
+        "-1",
+        "174",
+        "124",
+        "174",
+        "124",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "700",
+        "0"
+      ],
+      "parentAfter": [
+        "windBattery",
+        "2",
+        "-1",
+        "174",
+        "124",
+        "174",
+        "124",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "700",
+        "0"
+      ],
+      "meltdownHidden": true,
+      "menu": [
+        {
+          "token": 3469,
+          "index": 0,
+          "flags": 66697,
+          "command": 50331669,
+          "parameter": 15019,
+          "visible": true,
+          "label": "Destroy"
+        },
+        {
+          "token": 3469,
+          "index": 1,
+          "flags": 66689,
+          "command": 33554455,
+          "parameter": 75,
+          "visible": true,
+          "label": "About"
+        },
+        {
+          "token": 3469,
+          "index": 2,
+          "flags": 66689,
+          "command": 33554581,
+          "parameter": 1610612737,
+          "visible": true,
+          "label": "CHEAT Set Owner"
+        },
+        {
+          "token": 3469,
+          "index": 3,
+          "flags": 66592,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": "Player"
+        }
+      ],
+      "run": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-meltdown-520\\accepted-editor\\1024x768\\data",
+          "--window",
+          "--no-audio",
+          "--frames",
+          "125",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-meltdown-520\\accepted-editor\\1024x768\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-meltdown-520\\accepted-editor\\1024x768\\states.tsv"
+        ],
+        "binarySha256": "bd24a7336738596b97c07055fbe9d889a29dfd4b7525be52473fb99334c1f23c",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 5.5166319999989355,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "939d4670df5eaaef3c45e0901e1903ee29d8d85f0f8a8404ffa3010c676b326c",
+        "originalsUnchanged": true,
+        "dataUnchanged": true
+      },
+      "attackFlyersNotReproduced": true,
+      "effectNotForced": true
+    },
+    {
+      "mode": "mission",
+      "size": [
+        1280,
+        720
+      ],
+      "parentSid": 15002,
+      "parentBefore": [
+        "windBattery",
+        "1",
+        "-1",
+        "137",
+        "166",
+        "137",
+        "166",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "700",
+        "0"
+      ],
+      "parentAfter": [
+        "windBattery",
+        "1",
+        "-1",
+        "137",
+        "166",
+        "137",
+        "166",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "700",
+        "0"
+      ],
+      "meltdownHidden": true,
+      "menu": [
+        {
+          "token": 432,
+          "index": 0,
+          "flags": 66697,
+          "command": 33554525,
+          "parameter": 15002,
+          "visible": true,
+          "label": "Salvage gains 100"
+        },
+        {
+          "token": 432,
+          "index": 1,
+          "flags": 66689,
+          "command": 33554455,
+          "parameter": 75,
+          "visible": true,
+          "label": "About"
+        },
+        {
+          "token": 432,
+          "index": 2,
+          "flags": 66592,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": "Player"
+        },
+        {
+          "token": 442,
+          "index": 0,
+          "flags": 66689,
+          "command": 33554616,
+          "parameter": 1,
+          "visible": false,
+          "label": "Find Priest!"
+        }
+      ],
+      "run": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-meltdown-520\\accepted-mission\\1280x720\\data",
+          "--window",
+          "--no-audio",
+          "--frames",
+          "65",
+          "--set",
+          "SCREENW=1280;SCREENH=720;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-meltdown-520\\accepted-mission\\1280x720\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-meltdown-520\\accepted-mission\\1280x720\\states.tsv",
+          "--mission",
+          "TEST02"
+        ],
+        "binarySha256": "bd24a7336738596b97c07055fbe9d889a29dfd4b7525be52473fb99334c1f23c",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 3.8962839000014355,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "9fba4f7e2bb0be090e62265ef1203d93a429672f7ce307b7cf3aa08e3bfebbbb",
+        "originalsUnchanged": true,
+        "dataUnchanged": true
+      },
+      "attackFlyersNotReproduced": true,
+      "effectNotForced": true
+    },
+    {
+      "mode": "mission",
+      "size": [
+        1024,
+        768
+      ],
+      "parentSid": 15002,
+      "parentBefore": [
+        "windBattery",
+        "1",
+        "-1",
+        "137",
+        "166",
+        "137",
+        "166",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "700",
+        "0"
+      ],
+      "parentAfter": [
+        "windBattery",
+        "1",
+        "-1",
+        "137",
+        "166",
+        "137",
+        "166",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "700",
+        "0"
+      ],
+      "meltdownHidden": true,
+      "menu": [
+        {
+          "token": 432,
+          "index": 0,
+          "flags": 66697,
+          "command": 33554525,
+          "parameter": 15002,
+          "visible": true,
+          "label": "Salvage gains 100"
+        },
+        {
+          "token": 432,
+          "index": 1,
+          "flags": 66689,
+          "command": 33554455,
+          "parameter": 75,
+          "visible": true,
+          "label": "About"
+        },
+        {
+          "token": 432,
+          "index": 2,
+          "flags": 66592,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": "Player"
+        },
+        {
+          "token": 442,
+          "index": 0,
+          "flags": 66689,
+          "command": 33554616,
+          "parameter": 1,
+          "visible": false,
+          "label": "Find Priest!"
+        }
+      ],
+      "run": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-meltdown-520\\accepted-mission\\1024x768\\data",
+          "--window",
+          "--no-audio",
+          "--frames",
+          "65",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-meltdown-520\\accepted-mission\\1024x768\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-meltdown-520\\accepted-mission\\1024x768\\states.tsv",
+          "--mission",
+          "TEST02"
+        ],
+        "binarySha256": "bd24a7336738596b97c07055fbe9d889a29dfd4b7525be52473fb99334c1f23c",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 3.953445400009514,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "9fba4f7e2bb0be090e62265ef1203d93a429672f7ce307b7cf3aa08e3bfebbbb",
+        "originalsUnchanged": true,
+        "dataUnchanged": true
+      },
+      "attackFlyersNotReproduced": true,
+      "effectNotForced": true
+    }
+  ],
+  "allRuntimeRuns": [
+    {
+      "path": "extracted/cpp-meltdown-520/accepted-mission/1280x720/run.json",
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-meltdown-520\\accepted-mission\\1280x720\\data",
+        "--window",
+        "--no-audio",
+        "--frames",
+        "65",
+        "--set",
+        "SCREENW=1280;SCREENH=720;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-meltdown-520\\accepted-mission\\1280x720\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-meltdown-520\\accepted-mission\\1280x720\\states.tsv",
+        "--mission",
+        "TEST02"
+      ],
+      "binarySha256": "bd24a7336738596b97c07055fbe9d889a29dfd4b7525be52473fb99334c1f23c",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 3.8962839000014355,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "9fba4f7e2bb0be090e62265ef1203d93a429672f7ce307b7cf3aa08e3bfebbbb",
+      "originalsUnchanged": true,
+      "dataUnchanged": true
+    },
+    {
+      "path": "extracted/cpp-meltdown-520/accepted-mission/1024x768/run.json",
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-meltdown-520\\accepted-mission\\1024x768\\data",
+        "--window",
+        "--no-audio",
+        "--frames",
+        "65",
+        "--set",
+        "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-meltdown-520\\accepted-mission\\1024x768\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-meltdown-520\\accepted-mission\\1024x768\\states.tsv",
+        "--mission",
+        "TEST02"
+      ],
+      "binarySha256": "bd24a7336738596b97c07055fbe9d889a29dfd4b7525be52473fb99334c1f23c",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 3.953445400009514,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "9fba4f7e2bb0be090e62265ef1203d93a429672f7ce307b7cf3aa08e3bfebbbb",
+      "originalsUnchanged": true,
+      "dataUnchanged": true
+    },
+    {
+      "path": "extracted/cpp-meltdown-520/accepted-editor/1280x720/run.json",
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-meltdown-520\\accepted-editor\\1280x720\\data",
+        "--window",
+        "--no-audio",
+        "--frames",
+        "125",
+        "--set",
+        "SCREENW=1280;SCREENH=720;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-meltdown-520\\accepted-editor\\1280x720\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-meltdown-520\\accepted-editor\\1280x720\\states.tsv"
+      ],
+      "binarySha256": "bd24a7336738596b97c07055fbe9d889a29dfd4b7525be52473fb99334c1f23c",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 6.1251326000056,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "939d4670df5eaaef3c45e0901e1903ee29d8d85f0f8a8404ffa3010c676b326c",
+      "originalsUnchanged": true,
+      "dataUnchanged": true
+    },
+    {
+      "path": "extracted/cpp-meltdown-520/accepted-editor/1024x768/run.json",
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-meltdown-520\\accepted-editor\\1024x768\\data",
+        "--window",
+        "--no-audio",
+        "--frames",
+        "125",
+        "--set",
+        "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-meltdown-520\\accepted-editor\\1024x768\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-meltdown-520\\accepted-editor\\1024x768\\states.tsv"
+      ],
+      "binarySha256": "bd24a7336738596b97c07055fbe9d889a29dfd4b7525be52473fb99334c1f23c",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 5.5166319999989355,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "939d4670df5eaaef3c45e0901e1903ee29d8d85f0f8a8404ffa3010c676b326c",
+      "originalsUnchanged": true,
+      "dataUnchanged": true
+    },
+    {
+      "path": "extracted/cpp-meltdown-520/final-mission/1280x720/run.json",
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-meltdown-520\\final-mission\\1280x720\\data",
+        "--window",
+        "--no-audio",
+        "--frames",
+        "65",
+        "--set",
+        "SCREENW=1280;SCREENH=720;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-meltdown-520\\final-mission\\1280x720\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-meltdown-520\\final-mission\\1280x720\\states.tsv",
+        "--mission",
+        "TEST02"
+      ],
+      "binarySha256": "52dc6a6aab42cecf10b39bbad03186ae6e8d2dc5d333cb962f7ef8284917d316",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 4.015438899994479,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "9fba4f7e2bb0be090e62265ef1203d93a429672f7ce307b7cf3aa08e3bfebbbb",
+      "originalsUnchanged": true,
+      "dataUnchanged": true
+    },
+    {
+      "path": "extracted/cpp-meltdown-520/final-mission/1024x768/run.json",
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-meltdown-520\\final-mission\\1024x768\\data",
+        "--window",
+        "--no-audio",
+        "--frames",
+        "65",
+        "--set",
+        "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-meltdown-520\\final-mission\\1024x768\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-meltdown-520\\final-mission\\1024x768\\states.tsv",
+        "--mission",
+        "TEST02"
+      ],
+      "binarySha256": "52dc6a6aab42cecf10b39bbad03186ae6e8d2dc5d333cb962f7ef8284917d316",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 3.868383900000481,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "9fba4f7e2bb0be090e62265ef1203d93a429672f7ce307b7cf3aa08e3bfebbbb",
+      "originalsUnchanged": true,
+      "dataUnchanged": true
+    },
+    {
+      "path": "extracted/cpp-meltdown-520/final-editor/1280x720/run.json",
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-meltdown-520\\final-editor\\1280x720\\data",
+        "--window",
+        "--no-audio",
+        "--frames",
+        "125",
+        "--set",
+        "SCREENW=1280;SCREENH=720;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-meltdown-520\\final-editor\\1280x720\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-meltdown-520\\final-editor\\1280x720\\states.tsv"
+      ],
+      "binarySha256": "52dc6a6aab42cecf10b39bbad03186ae6e8d2dc5d333cb962f7ef8284917d316",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 6.020811900001718,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "939d4670df5eaaef3c45e0901e1903ee29d8d85f0f8a8404ffa3010c676b326c",
+      "originalsUnchanged": true,
+      "dataUnchanged": true
+    },
+    {
+      "path": "extracted/cpp-meltdown-520/final-editor/1024x768/run.json",
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-meltdown-520\\final-editor\\1024x768\\data",
+        "--window",
+        "--no-audio",
+        "--frames",
+        "125",
+        "--set",
+        "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-meltdown-520\\final-editor\\1024x768\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-meltdown-520\\final-editor\\1024x768\\states.tsv"
+      ],
+      "binarySha256": "52dc6a6aab42cecf10b39bbad03186ae6e8d2dc5d333cb962f7ef8284917d316",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 5.340025099998456,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "939d4670df5eaaef3c45e0901e1903ee29d8d85f0f8a8404ffa3010c676b326c",
+      "originalsUnchanged": true,
+      "dataUnchanged": true
+    },
+    {
+      "path": "extracted/cpp-meltdown-520/mission-accepted/1280x720/run.json",
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-meltdown-520\\mission-accepted\\1280x720\\data",
+        "--window",
+        "--no-audio",
+        "--frames",
+        "65",
+        "--set",
+        "SCREENW=1280;SCREENH=720;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-meltdown-520\\mission-accepted\\1280x720\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-meltdown-520\\mission-accepted\\1280x720\\states.tsv",
+        "--mission",
+        "TEST02"
+      ],
+      "binarySha256": "ee88a645992d12abb208fba7f18b5781f5bc92a683c9fb5b5467789e310c1c7e",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 3.901565899999696,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "9fba4f7e2bb0be090e62265ef1203d93a429672f7ce307b7cf3aa08e3bfebbbb",
+      "originalsUnchanged": true,
+      "dataUnchanged": true
+    },
+    {
+      "path": "extracted/cpp-meltdown-520/mission-accepted/1024x768/run.json",
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-meltdown-520\\mission-accepted\\1024x768\\data",
+        "--window",
+        "--no-audio",
+        "--frames",
+        "65",
+        "--set",
+        "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-meltdown-520\\mission-accepted\\1024x768\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-meltdown-520\\mission-accepted\\1024x768\\states.tsv",
+        "--mission",
+        "TEST02"
+      ],
+      "binarySha256": "ee88a645992d12abb208fba7f18b5781f5bc92a683c9fb5b5467789e310c1c7e",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 4.1095696999982465,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "9fba4f7e2bb0be090e62265ef1203d93a429672f7ce307b7cf3aa08e3bfebbbb",
+      "originalsUnchanged": true,
+      "dataUnchanged": true
+    },
+    {
+      "path": "extracted/cpp-meltdown-520/editor-accepted/1280x720/run.json",
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-meltdown-520\\editor-accepted\\1280x720\\data",
+        "--window",
+        "--no-audio",
+        "--frames",
+        "125",
+        "--set",
+        "SCREENW=1280;SCREENH=720;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-meltdown-520\\editor-accepted\\1280x720\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-meltdown-520\\editor-accepted\\1280x720\\states.tsv"
+      ],
+      "binarySha256": "ee88a645992d12abb208fba7f18b5781f5bc92a683c9fb5b5467789e310c1c7e",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 6.072267499999725,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "939d4670df5eaaef3c45e0901e1903ee29d8d85f0f8a8404ffa3010c676b326c",
+      "originalsUnchanged": true,
+      "dataUnchanged": true
+    },
+    {
+      "path": "extracted/cpp-meltdown-520/editor-accepted/1024x768/run.json",
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-meltdown-520\\editor-accepted\\1024x768\\data",
+        "--window",
+        "--no-audio",
+        "--frames",
+        "125",
+        "--set",
+        "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-meltdown-520\\editor-accepted\\1024x768\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-meltdown-520\\editor-accepted\\1024x768\\states.tsv"
+      ],
+      "binarySha256": "ee88a645992d12abb208fba7f18b5781f5bc92a683c9fb5b5467789e310c1c7e",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 5.53516590000072,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "939d4670df5eaaef3c45e0901e1903ee29d8d85f0f8a8404ffa3010c676b326c",
+      "originalsUnchanged": true,
+      "dataUnchanged": true
+    },
+    {
+      "path": "extracted/cpp-meltdown-520/editor-final/1280x720/run.json",
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-meltdown-520\\editor-final\\1280x720\\data",
+        "--window",
+        "--no-audio",
+        "--frames",
+        "120",
+        "--set",
+        "SCREENW=1280;SCREENH=720;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-meltdown-520\\editor-final\\1280x720\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-meltdown-520\\editor-final\\1280x720\\states.tsv"
+      ],
+      "binarySha256": "ee88a645992d12abb208fba7f18b5781f5bc92a683c9fb5b5467789e310c1c7e",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 5.551793899998302,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "939d4670df5eaaef3c45e0901e1903ee29d8d85f0f8a8404ffa3010c676b326c",
+      "originalsUnchanged": true,
+      "dataUnchanged": true
+    },
+    {
+      "path": "extracted/cpp-meltdown-520/gui1/1280x720/run.json",
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-meltdown-520\\gui1\\1280x720\\data",
+        "--window",
+        "--no-audio",
+        "--frames",
+        "180",
+        "--set",
+        "SCREENW=1280;SCREENH=720;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-meltdown-520\\gui1\\1280x720\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-meltdown-520\\gui1\\1280x720\\states.tsv"
+      ],
+      "binarySha256": "ee88a645992d12abb208fba7f18b5781f5bc92a683c9fb5b5467789e310c1c7e",
+      "returnCode": 1,
+      "timedOut": false,
+      "seconds": 6.599672899988946,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "8e7bfb176a6cc176ed14a285a81af2957b7ab9d881c9182aafe45bb65963f949",
+      "originalsUnchanged": true,
+      "dataUnchanged": true
+    }
+  ],
+  "runtimeTotals": {
+    "runs": 14,
+    "exitZero": 13,
+    "exitOne": 1,
+    "finalAccepted": 4
+  },
+  "protected": {
+    "originalsUnchanged": true,
+    "originalCdUnchanged": true,
+    "agentsUnchanged": true,
+    "oldFixturesUnchanged": true,
+    "changedExistingTestFiles": [
+      "cpppj/tests/CMakeLists.txt"
+    ],
+    "finalCompiledSourcesUnchanged": true
+  },
+  "limitations": [
+    "실제 Meltdown 폭발 UI는 미검증이다. 미션/편집의 원본 관문을 유지해 메뉴를 숨겼다.",
+    "원본4203a0 전체 새 기계어 fixture는 없고, 실제 제품 Hash의 별도 거리/번호/한도 검사다.",
+    "LAN/멀티플레이 실제 송수신 및 신규 통신 실행은 없다.",
+    "공격형 공중3종의 생산/생성/우클릭 재현·전용 검사 없이 정적 제한을 유지한다.",
+    "연녹색 직사각형 분석과 자연 완주/영문 누락 개선은 보류한다."
+  ],
+  "sourceSha256": {
+    "cpppj/src/o/RawMeltdown.cpp": "3d7ca7cc93b17c86bd90d7e6937ec18456370d3f5a9ab93afd9f40711de66010",
+    "cpppj/src/o/RawMeltdown.h": "abee71192a331aa24af37730bfe884ef1aae4676bba40036d98999e2714ad45b",
+    "cpppj/src/client/RawCampaignMeltdown.inc": "43a57dc01b04095bc621af7fdc172ba5360ba65b9d4931e53cd087c09454af45",
+    "cpppj/src/client/RawCampaignSession.cpp": "50d6d13f8216cfb4ddf3ffe4a6db728e900c0ee670d69df0cde844edb228c03a",
+    "cpppj/src/client/CampaignObjectMenuClient.cpp": "0f3eda1a332faf0ed950f6291b4993a72c9de73ad0b835fa9b4c378c633508dc",
+    "cpppj/src/client/RawCampaignDevastation.inc": "4c7ba9437ade026340028f407dcd61ffffd6127a696be81a4cc41831071f01e8",
+    "cpppj/src/CMakeLists.txt": "b21d22f5eabaaf25e43c41a0bc2d4ac80ccd02c4fde817340729908c9f0832bf",
+    "cpppj/tests/CMakeLists.txt": "2334f4ed8f1b3d12879735ba9f8bf9d412693a59ec4fd9b666cb2ad0718ed0af",
+    "cpppj/tests/MeltdownTests.cpp": "1745305f57ed8e733f036d03100de0e597e9c457180f3551f87485ffe458517f",
+    "tools/decomp_meltdown.py": "deacbaba956c10dd302e9b1289f7f31946c386c6563cbf8d79fa82e64425fa73",
+    "tools/cpp_meltdown_smoke.py": "598f74faf3b268e16a6a06011dfb9080ad7ab5461be504a55d1dbb325dcb7e72",
+    "cpppj/tests/fixtures/meltdown-x86.tsv": "1767cd85fd19411aefa05793bbbe91c5421d24b95c34658b6e92200aaa9e4bcf"
+  },
+  "finalRadiusArithmetic": "420544 fiadd의 정수 반경을 먼저float로 축소하지 않는 순서를 맞춘 뒤 build9/집중98/실제4사례를 다시 확인했다."
+}

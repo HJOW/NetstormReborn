@@ -150,6 +150,7 @@ target_sources(netstorm PRIVATE o/RawBombActivation.cpp o/RawBombActivation.h)
 target_sources(netstorm PRIVATE o/RawBombRegular.cpp o/RawBombRegular.h)
 target_sources(netstorm PRIVATE o/RawBombEffect.cpp o/RawBombEffect.h)
 target_sources(netstorm PRIVATE o/RawBombTargets.cpp o/RawBombTargets.h)
+target_sources(netstorm PRIVATE o/RawMeltdown.cpp o/RawMeltdown.h) # 제네레이터의 실제 요청/검색/폭발 경로다.
 target_sources(netstorm PRIVATE o/RawBombBlast.cpp o/RawBombBlast.h)
 target_sources(netstorm PRIVATE o/RawBombStrike.cpp o/RawBombStrike.h)
 

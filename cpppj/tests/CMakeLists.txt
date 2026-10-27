@@ -2337,3 +2337,7 @@ set_source_files_properties(ObjectOwnerCommandsTests.cpp PROPERTIES COMPILE_DEFI
 target_sources(netstorm_tests PRIVATE ObjectConversionTests.cpp)
 set_source_files_properties(ObjectConversionTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_SQUID_RETYPE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/squid-retype-x86.tsv\";NETSTORM_OBJECT_CONVERSION_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/object-conversion-x86.tsv\"")
+
+# 독립 Meltdown 기계어의 전체 요청/피해/패킷을 제품에 재생한다.
+target_sources(netstorm_tests PRIVATE MeltdownTests.cpp)
+set_source_files_properties(MeltdownTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_MELTDOWN_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/meltdown-x86.tsv\"")
