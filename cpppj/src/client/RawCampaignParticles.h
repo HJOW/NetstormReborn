@@ -12,6 +12,7 @@
 #include "o/ShrapnelVisualSystem.h"
 #include "o/DissolveVisualSystem.h"
 #include "o/BurningVisualSystem.h"
+#include "o/SmokeVisualSystem.h" // 실제21 냉각 연기도 같은 공통 표시 수명을 사용한다.
 
 namespace netstorm::client {
 // 같은 Session의 실제 dummy/공간/캡처/의존과 부착 전 실패 삭제 경계다.
@@ -43,6 +44,7 @@ public:
     o::ConstructionVisualProcess* AddConstruction(o::Sid parent,bool instant);
     void ConnectBurning(std::function<o::ConstructionVisualImage(o::Sid)> capture,std::function<void(std::uint32_t)> stopSound); // 같은14의 실제 캡처/장치 정지를 설치한다.
     o::BurningVisualProcess* AddBurning(o::Sid victim,std::uint32_t mode); // 실제0/1 wrapper의 확보 실패는nullptr다.
+    o::SmokeVisualProcess* AddCooling(o::Sid parent,std::array<std::int32_t,2> hotspot); // 현재 SHP 포인트에서 실제21/10회/간격3 연기를 만든다.
     // 같은 전체 Kernel 실행 직전 현재 게임 시각을 공급한다.
     void PrepareFrame(double now,std::uint32_t frameNumber=0,bool weakenedMana=false); // 원본 현재DWORD frame과 약화 마나도 같은 월드에서 공급한다.
     // 현재 실제 카메라/표시 영역과 장치 재생성에도 유효한 dirty 경계를 갱신한다.
@@ -65,6 +67,7 @@ private:
     // 실제 bitmap 픽셀을 현재 clip/pitch 표면에 연결하고 메모리는 소유 vector가 반납한다.
     o::ShrapnelSystemHooks ShrapnelHooks(CampaignShrapnelHooks hooks);
     o::DissolveSystemHooks DissolveHooks(const CampaignShrapnelHooks& hooks); //같은 실제 dummy/캡처/반납과0바이트 입자 확보를 연결한다.
+    o::SmokeSystemHooks SmokeHooks(); // 실제12색/200입자·같은 dirty/선 표면의 냉각 표시를 공급한다.
     // 현재 dirty 큐와 실제 renderer에 같은 요청을 전달한다.
     void Invalidate(o::FieryTailDirtyRect rect);
     // 장치 연결 전 쌓인 원본 변경 표는 버리지 않고 실제 장치에 전달한다.
@@ -114,5 +117,9 @@ private:
     std::vector<o::ParticleGradient> burningGradients_; // 첫 생성자의 실제 색 띠 한 개다.
     std::uint32_t burningFrameNumber_{}; // 실제487940 gate가 읽는 현재55b4a8이다.
     std::unique_ptr<o::BurningVisualSystem> burning_; // 모든 하위가 살아 있을 때 먼저 해제하는 실제14 수명이다.
+    o::SmokeLifetimeState smokeLifetime_; // 원본005c7aa8을 같은 Session의 모든 연기가 공유한다.
+    ParticlePaletteMemory smokeMemory_; // 실제77..88의12색48BYTE 할당과 현재 인접 메모리다.
+    o::FieryTailFramePalette smokeColors_; // 실제 색수/읽을 수 있는 메모리 view다.
+    std::unique_ptr<o::SmokeVisualSystem> smoke_; // 같은 Host/공통 renderer의 실제21 수명이다.
 };
 }

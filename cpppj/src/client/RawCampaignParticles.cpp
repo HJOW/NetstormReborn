@@ -15,6 +15,7 @@ RawCampaignParticles::RawCampaignParticles(RawWorldCore core,o::GameRandom& rand
     std::function<void(float,float,std::string_view)> sound,std::optional<CampaignShrapnelHooks> shrapnel)
     :core_(core),random_(random),source_(palette),sound_(std::move(sound)),rendering_(core.pool,core.processes,renderState_,RegistryHooks()),
      fiery_(rendering_,random,lifetime_,frame_,colors_,FieryHooks()),lightning_(rendering_,random,lightningLifetime_,frame_,LightningHooks()) {
+    smoke_=std::make_unique<o::SmokeVisualSystem>(rendering_,random_,smokeLifetime_,frame_,smokeColors_,SmokeHooks());
     if (shrapnel) {
         if (!shrapnel->crt) throw std::invalid_argument("파편 실제 공유 CRT 상태 미연결");auto& crt=*shrapnel->crt;
         dissolve_=std::make_unique<o::DissolveVisualSystem>(rendering_,random_,frame_,DissolveHooks(*shrapnel));
@@ -60,6 +61,20 @@ o::FieryTailSystemHooks RawCampaignParticles::FieryHooks() {
 void RawCampaignParticles::Add(std::uint32_t type,o::Sid parent) { RefreshCamera();
     if (type!=11) throw std::logic_error("캠페인 비행 표시 효과 미복원 TYPE"+std::to_string(type));
     static_cast<void>(fiery_.Add(parent));
+}
+// 실제48BYTE 색 배열과 원본2픽셀 선/dirty를 같은8비트 표면에 연결한다.
+o::SmokeSystemHooks RawCampaignParticles::SmokeHooks() {
+    o::SmokeSystemHooks hooks;hooks.lifetime.reserve=[](std::uint32_t bytes) { if (bytes!=4800 && bytes!=8) throw std::logic_error("냉각 연기 실제 확보량 오류");return true; }; // vector/공유 색 소유자가 실제 확보한다.
+    hooks.lifetime.createPalette=[] { return 3U; }; // 다른 표시와 구별하는 공유 색 객체 토큰이며 색 번호가 아니다.
+    hooks.lifetime.buildPalette=[this](std::uint32_t token) { if (token!=3) throw std::logic_error("냉각 연기 공유 색 객체 오류");const auto colors=o::BuildSmokePalette();smokeMemory_.Assign(colors);smokeColors_.count=static_cast<std::int32_t>(smokeMemory_.Count());smokeColors_.readable=smokeMemory_.Snapshot(); };
+    hooks.frame.invalidate=[this](o::FieryTailDirtyRect rect) { Invalidate(rect); };
+    hooks.frame.line=[this](o::FieryTailLine line) { if (!target_) throw std::logic_error("냉각 연기 실제 그리기 표면 미연결");DrawVfxLine(target_->pixels,target_->pitch,target_->height,target_->clip,{line.x1,line.y1},{line.x2,line.y2},line.color); };
+    hooks.release=[](o::SmokeRelease) {}; // 실제 vector/공통 registry와 Kernel이 입자/객체를 반납한다.
+    return hooks;
+}
+//004a8770의 포인트 추출은 같은 실제 Geometry가 수행하며 확보 실패만 원문처럼0을 반환한다.
+o::SmokeVisualProcess* RawCampaignParticles::AddCooling(o::Sid parent,std::array<std::int32_t,2> hotspot) { RefreshCamera();
+    try { return smoke_->AddCooling(parent,hotspot); }catch (const std::bad_alloc&) { return nullptr; }
 }
 // 공유 빔의 계산은 원본 몸체이며 현재 중심/메모리/출력 장치만 실제 클라이언트에 연결한다.
 o::LightningSystemHooks RawCampaignParticles::LightningHooks() {
@@ -185,7 +200,7 @@ std::vector<RenderSprite> RawCampaignParticles::Sprites(ScreenRect clip) { Refre
 void RawCampaignParticles::Draw(std::uint32_t token,std::span<std::uint8_t> pixels,int pitch,int height,ScreenRect clip) { RefreshCamera();
     if (!rendering_.Lookup(token)) return;if (target_) throw std::logic_error("입자 표면 중첩 그리기 오류");
     target_=Target{pixels,pitch,height,clip};
-    try { if (memory_.Count()) colors_.readable=memory_.Snapshot();if (burningMemory_.Count()) burningColors_.readable=burningMemory_.Snapshot();rendering_.DrawToken(token); }
+    try { if (memory_.Count()) colors_.readable=memory_.Snapshot();if (burningMemory_.Count()) burningColors_.readable=burningMemory_.Snapshot();if (smokeMemory_.Count()) smokeColors_.readable=smokeMemory_.Snapshot();rendering_.DrawToken(token); }
     catch (...) { target_.reset();throw; }
     target_.reset();
 }

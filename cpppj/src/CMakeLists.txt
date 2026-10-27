@@ -10,6 +10,8 @@
 # 게임 본체. 실행 파일과 테스트가 함께 쓰도록 정적 라이브러리로 묶는다.
 # 소스 목록은 각 폴더의 CMakeLists.txt 가 target_sources 로 더한다.
 add_library(netstorm STATIC)
+target_sources(netstorm PRIVATE o/RawSmokeEffect.cpp o/RawSmokeEffect.h) # 실제 냉각 연기 생성/프레임/색/소멸이다.
+target_sources(netstorm PRIVATE o/SmokeVisualSystem.cpp o/SmokeVisualSystem.h) # 같은 Host/Kernel·공통 표시 목록의 실제21 수명이다.
 target_sources(netstorm PRIVATE o/RawIceRicochet.cpp o/RawIceRicochet.h) # 원본 반사점/표적 선택과 후속 Missile 생성 요청이다.
 target_sources(netstorm PRIVATE o/RawGameAuxState.h) # 같은 실제 게임17보조 전역 owner다.
 target_sources(netstorm PRIVATE o/RawAuthorityState.h) # 같은 Client의 실제 서버/권한 두 논리값만 장기 소유한다.

@@ -1143,6 +1143,7 @@ struct RawCampaignSession::Impl {
         particles->BindCameraView(gameplayGlobals->Camera().Snapshot()); // 생성 직후부터 같은 전역 현재값을 사용한다.
         particles->BindWeakenedMana(gameplayGlobals->GameAux()->PriestQuarterHp()); // 연소점 선택도 Frame 준비 사본을 기다리지 않는다.
         auto combatEffects=services.archer;
+        if (!combatEffects.iceCooling) combatEffects.iceCooling=[this](Sid parent) { static_cast<void>(particles->AddCooling(parent,projectileGeometry->Hotspot(parent))); }; //004a8770의 현재 SHP signed 포인트와 실제21 수명을 연결한다.
         // 반더는 빔 생성 뒤 초기 source/target snapshot으로 피해/회피를 처리한다.
         combatEffects.beam.create=[this](Sid source,Sid target) { static_cast<void>(particles->AddBeam(source,target,std::string{"shortZap.wav"})); };
         combatEffects.beam.refresh=[this](Sid source) { gunHit->SetTime(source,core.processState.Now()); };

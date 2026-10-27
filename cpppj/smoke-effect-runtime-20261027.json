@@ -1,0 +1,545 @@
+{
+  "unit": 492,
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": "HJOW-Athlon / 2026-10-23",
+  "native": {
+    "report": "cpppj/smoke-effect-native-20261027.json",
+    "uniqueInputs": 893,
+    "returns": {
+      "frame": 1682,
+      "draw": 1738,
+      "spawn": 56,
+      "cold": 16,
+      "destroy": 48,
+      "wrapper": 16,
+      "ctor": 16
+    },
+    "rootReturns": 3572,
+    "precisionDifferences": 0
+  },
+  "builds": [
+    {
+      "command": [
+        "cmake",
+        "--build",
+        "cpppj/build",
+        "--config",
+        "Release",
+        "--parallel",
+        "4",
+        "--",
+        "/p:UseMultiToolTask=true",
+        "/p:MultiProcMaxCount=4",
+        "/p:EnforceProcessCountAcrossBuilds=true"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-ice-cooling-492/build1.log",
+      "sha256": "d28e4718b67ce0a8804ba5ad9c13d237ee5fa2ef18999677eec007936c64628f",
+      "summaries": [],
+      "diagnostics": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\src\\o\\RawSmokeEffect.cpp(94,67): warning C4018: '>=': signed 또는 unsigned가 일치하지 않습니다. [H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\src\\netstorm.vcxproj]"
+      ]
+    },
+    {
+      "command": [
+        "cmake",
+        "--build",
+        "cpppj/build",
+        "--config",
+        "Release",
+        "--parallel",
+        "4",
+        "--",
+        "/p:UseMultiToolTask=true",
+        "/p:MultiProcMaxCount=4",
+        "/p:EnforceProcessCountAcrossBuilds=true"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-ice-cooling-492/build2.log",
+      "sha256": "7e30c123d89c5bac0f9f673d216b9a83c1613eabd6fe151ea76d9375076f2544",
+      "summaries": [],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cmake",
+        "--build",
+        "cpppj/build",
+        "--config",
+        "Release",
+        "--parallel",
+        "4",
+        "--",
+        "/p:UseMultiToolTask=true",
+        "/p:MultiProcMaxCount=4",
+        "/p:EnforceProcessCountAcrossBuilds=true"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-ice-cooling-492/build3.log",
+      "sha256": "ed2c6554fa385dc003963dfd55a4e71ae69fb4170fd0b09c00cabbc5943b9660",
+      "summaries": [],
+      "diagnostics": []
+    }
+  ],
+  "initialFocused": {
+    "command": [
+      "cpppj/build/bin/Release/netstorm_tests.exe",
+      "--filter",
+      "SmokeEffect"
+    ],
+    "exit": 1,
+    "log": "extracted/cpp-ice-cooling-492/focused1-SmokeEffect.log",
+    "sha256": "0f9d9452250bb96e5e0c8f78092fc85c8db1f953ed8f57f368ad4d932de80ec1",
+    "summaries": [
+      "5 test(s), 1 failed check(s)"
+    ],
+    "diagnostics": []
+  },
+  "focusedCore": {
+    "command": [
+      "cpppj/build/bin/Release/netstorm_tests.exe",
+      "--filter",
+      "SmokeEffect"
+    ],
+    "exit": 0,
+    "log": "extracted/cpp-ice-cooling-492/focused2-SmokeEffect.log",
+    "sha256": "5b4b6982901fa13cb8c4450c41637ef190f19310768a8457c25178e7cc32785b",
+    "summaries": [
+      "5 test(s), 0 failed check(s)"
+    ],
+    "diagnostics": []
+  },
+  "focusedFinal": {
+    "command": [
+      "cpppj/build/bin/Release/netstorm_tests.exe",
+      "--filter",
+      "Smoke"
+    ],
+    "exit": 0,
+    "log": "extracted/cpp-ice-cooling-492/focused3-Smoke.log",
+    "sha256": "e1339aec81081503a2aaa6f5164548439fd318ea21369d51534874f2d15c8d02",
+    "summaries": [
+      "7 test(s), 0 failed check(s)"
+    ],
+    "diagnostics": []
+  },
+  "whole": {
+    "cppTests": 3300,
+    "failedChecks": 0,
+    "ctest": {
+      "command": [
+        "ctest",
+        "--test-dir",
+        "cpppj/build",
+        "-C",
+        "Release",
+        "--output-on-failure"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-ice-cooling-492/all-ctest.log",
+      "sha256": "86119988a76936cd1919807f7212aa4e6566df6ec3118a93074d7fef14788f8b",
+      "summaries": [],
+      "diagnostics": []
+    },
+    "rawLog": "extracted/cpp-ice-cooling-492/all-netstorm-tests.log",
+    "interleavedNames": [
+      "Ca실제 Kernel400프레임 완료: FragileFortune",
+      "EditorLocalTransport_QueuedRequest실제 미션 Start 검사: Tutorial1",
+      "HtmlWindowFactoryClient_ActualChat 원문 진단:2474"
+    ],
+    "missingNames": [
+      "CampaignKernelFrames_SaveTheIsland",
+      "EditorLocalTransport_QueuedRequestReplyAndPendingPollOrder",
+      "HtmlWindowFactoryClient_ActualTellParamLifetimeZeroSizeAndSuppressedModes"
+    ],
+    "separateOutputSupplement": [
+      {
+        "name": "CampaignKernelFrames_SaveTheIsland",
+        "exit": 0,
+        "stdout": "extracted/cpp-ice-cooling-492/supplement-1.stdout",
+        "stderr": "extracted/cpp-ice-cooling-492/supplement-1.stderr"
+      },
+      {
+        "name": "EditorLocalTransport_QueuedRequestReplyAndPendingPollOrder",
+        "exit": 0,
+        "stdout": "extracted/cpp-ice-cooling-492/supplement-2.stdout",
+        "stderr": "extracted/cpp-ice-cooling-492/supplement-2.stderr"
+      },
+      {
+        "name": "HtmlWindowFactoryClient_ActualTellParamLifetimeZeroSizeAndSuppressedModes",
+        "exit": 0,
+        "stdout": "extracted/cpp-ice-cooling-492/supplement-3.stdout",
+        "stderr": "extracted/cpp-ice-cooling-492/supplement-3.stderr"
+      }
+    ]
+  },
+  "registered": {
+    "before": 3293,
+    "after": 3300,
+    "added": [
+      "SmokeEffect_NativeBaseConstructorPreservesTimerPadding",
+      "SmokeEffect_NativeCoolingConstructorAndRelease",
+      "SmokeEffect_NativeCurrentShapeCoolingWrapper",
+      "SmokeEffect_NativeEmitSlotFailureAndReuse",
+      "SmokeEffect_NativeFrameDrawAndSharedRandom",
+      "SmokeVisualSystem_ActualHostFramesDrawAndSelfDeletion",
+      "SmokeVisualSystem_CreationVisibilityFailureAndPaletteReuse"
+    ],
+    "removed": []
+  },
+  "protection": {
+    "files": 3204,
+    "changed": [],
+    "agentsUnchanged": true,
+    "appendOnlyPrefixBytes": {
+      "cpppj/tests/CMakeLists.txt": 164157
+    }
+  },
+  "finalSourceFiles": 2867,
+  "exes": {
+    "NetstormCpp.exe": "51d6926af6f4a007ed96bb755e2382a05e0a5b5a6182d49bafc5761216717a0b",
+    "netstorm_tests.exe": "7621fc369f293e6e8c7bab1c2a5abaaeae7edec07f14d4b2b141a9bd8e52d12d"
+  },
+  "live": {
+    "command": [
+      "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+      "--run",
+      "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-ice-cooling-492\\test01-data",
+      "--window",
+      "--no-audio",
+      "--frames",
+      "365",
+      "--set",
+      "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=1;currentLanguage=english",
+      "--ui-script",
+      "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-ice-cooling-492\\live-roundtrip1\\steps.tsv",
+      "--ui-report",
+      "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-ice-cooling-492\\live-roundtrip1\\states.tsv"
+    ],
+    "binarySha256": "51d6926af6f4a007ed96bb755e2382a05e0a5b5a6182d49bafc5761216717a0b",
+    "returnCode": 0,
+    "timedOut": false,
+    "seconds": 14.316216800012626,
+    "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderrSha256": "c3e27d4cf1024864a303d61ff85bccdc30a964bd6df0f2ab1958940561565f65",
+    "originalsUnchanged": true
+  },
+  "observed": {
+    "catalog": {
+      "page": [
+        "LoadEditable"
+      ],
+      "paused": [
+        "0"
+      ],
+      "frame": 14,
+      "editor_runtime": [
+        "0",
+        "1",
+        "0",
+        "1078460418",
+        "0"
+      ]
+    },
+    "editor": {
+      "page": [
+        "editor"
+      ],
+      "paused": [
+        "0"
+      ],
+      "frame": 55,
+      "raw_session": [
+        "1",
+        "1"
+      ],
+      "shared_kernel": [
+        "1",
+        "51",
+        "51"
+      ],
+      "editor_runtime": [
+        "1",
+        "1",
+        "1",
+        "4294967295",
+        "0"
+      ],
+      "raw_world": [
+        "2.341",
+        "55",
+        "51",
+        "0",
+        "0",
+        "85400",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0"
+      ]
+    },
+    "game": {
+      "page": [
+        "editor"
+      ],
+      "paused": [
+        "0"
+      ],
+      "frame": 66,
+      "raw_session": [
+        "1",
+        "1"
+      ],
+      "shared_kernel": [
+        "1",
+        "51",
+        "51"
+      ],
+      "editor_runtime": [
+        "1",
+        "1",
+        "1",
+        "4294967295",
+        "0"
+      ],
+      "raw_world": [
+        "2.812",
+        "66",
+        "51",
+        "0",
+        "0",
+        "85400",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0"
+      ]
+    },
+    "briefing": {
+      "page": [
+        "A."
+      ],
+      "paused": [
+        "1"
+      ],
+      "frame": 100,
+      "raw_session": [
+        "1",
+        "1"
+      ],
+      "shared_kernel": [
+        "1",
+        "90",
+        "90"
+      ],
+      "editor_runtime": [
+        "1",
+        "0",
+        "1",
+        "4294967295",
+        "0"
+      ],
+      "raw_world": [
+        "3.242",
+        "100",
+        "90",
+        "0",
+        "0",
+        "85400",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0"
+      ]
+    },
+    "playing": {
+      "page": [
+        "mission"
+      ],
+      "paused": [
+        "0"
+      ],
+      "frame": 260,
+      "raw_session": [
+        "1",
+        "1"
+      ],
+      "shared_kernel": [
+        "1",
+        "127",
+        "127"
+      ],
+      "editor_runtime": [
+        "1",
+        "0",
+        "1",
+        "4294967295",
+        "0"
+      ],
+      "raw_world": [
+        "7.537",
+        "260",
+        "127",
+        "0",
+        "0",
+        "85400",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0"
+      ]
+    },
+    "battle-menu": {
+      "page": [
+        "mission"
+      ],
+      "paused": [
+        "0"
+      ],
+      "frame": 282,
+      "raw_session": [
+        "1",
+        "1"
+      ],
+      "shared_kernel": [
+        "1",
+        "108",
+        "108"
+      ],
+      "editor_runtime": [
+        "1",
+        "0",
+        "1",
+        "4294967295",
+        "0"
+      ],
+      "raw_world": [
+        "8.258",
+        "282",
+        "108",
+        "0",
+        "0",
+        "85400",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0"
+      ]
+    },
+    "returned": {
+      "page": [
+        "editor"
+      ],
+      "paused": [
+        "0"
+      ],
+      "frame": 330,
+      "raw_session": [
+        "1",
+        "1"
+      ],
+      "shared_kernel": [
+        "1",
+        "51",
+        "51"
+      ],
+      "editor_runtime": [
+        "1",
+        "1",
+        "1",
+        "4294967295",
+        "0"
+      ],
+      "raw_world": [
+        "12.023",
+        "330",
+        "51",
+        "0",
+        "0",
+        "85400",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0"
+      ]
+    },
+    "editor-menu": {
+      "page": [
+        "editor"
+      ],
+      "paused": [
+        "0"
+      ],
+      "frame": 352,
+      "raw_session": [
+        "1",
+        "1"
+      ],
+      "shared_kernel": [
+        "1",
+        "51",
+        "51"
+      ],
+      "editor_runtime": [
+        "1",
+        "1",
+        "1",
+        "4294967295",
+        "0"
+      ],
+      "raw_world": [
+        "12.889",
+        "352",
+        "51",
+        "0",
+        "0",
+        "85400",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0"
+      ]
+    }
+  },
+  "firstCorrections": [
+    "최초 독립 입력의 깊이 raw12를 실제 signed BYTE raw35로 정정하고 첫 공유 색 초기 입력을1000..1011로 바꿔77..88 쓰기를 확인했다. 최초 자료는 native1-fixture.tsv/native1-report.json에 보존했다.",
+    "최초 core 비교는 누적 double을 float로 줄인 오류1개다.00418454 FADD QWORD에 맞춰 본체를 수정했고 fixture 기대값은 유지했다. 최초 C4018은 음수 검사 뒤 용량 비교의 명시 unsigned 변환으로 해결했다.",
+    "등록 목록의 지원하지 않는 --list-tests 호출은 종료1이었다. 제품/검사를 바꾸지 않고 실제 --list로 다시 읽었다. 빈 최초 파일도 보존했다."
+  ],
+  "pull": {
+    "command": [
+      "git",
+      "-c",
+      "core.autocrlf=false",
+      "pull",
+      "--no-rebase"
+    ],
+    "exit": 0,
+    "log": "extracted/cpp-ice-cooling-492/git-pull1.log",
+    "sha256": "e5d6c99aec87ec07a2d1b5c1222d8b690d0a61c3548a55c795fff56db9450d0d",
+    "summaries": [],
+    "diagnostics": []
+  },
+  "limits": [
+    "원문 heap 성공·Host/SHP·kill/dirty/VFX 장치는 새 독립 fixture의 명시 경계다. 실제 Host/공통 renderer 수명은 별도2검사와 같은 Session/8비트 표면에 연결했다.",
+    "실제365프레임/14.32초는 Test Battle 잠시 진행 뒤 편집 복귀다. 전투 프로세스 수127→편집51은 관측했지만 process21 필드나 연기 픽셀 자체를 GUI 보고서에서 직접 덤프한 것은 아니다. 무음이며 원본과 픽셀/음향 전체 동일성·자연 완주를 증명하지 않는다.",
+    "분리 복사에서 다른 느슨한 fort를 제외하여 원문50개 목록 상한에 가려진 TEST01을 선택했다. TEST01.fort/english 자체는 원본 바이트 그대로다.",
+    "클라우드 플로터 회피·변위0 반사의 미초기화 지역점과 Edit NewFort/AddIsland 전체는 잔여다.10.72 Smoke의 새 복원은 이번 범위 밖이다.",
+    "스테이지 완주/사용자 개입 검증과 .english 부재 개선은 보류하며 Windows10/11·전체화면은 현행 목표다."
+  ],
+  "pushed": false,
+  "formatCheck": {
+    "nonFixtureDiffCheckExit": 0,
+    "fixtureRows": 893,
+    "fixtureColumns": 19,
+    "emptyLastColumnRows": 755,
+    "reason": "이벤트 없음은 마지막19열의 빈 문자열이다. 마지막 TAB을 지우면18열이 되므로 독립 원문 데이터 그대로 보존한다."
+  }
+}
