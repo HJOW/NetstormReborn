@@ -35,6 +35,8 @@ public:
     void Initialize(GunAnimationFields& fields,Sid gunForm,Sid target) const;
     // 실제00467330: due 앞 추적·가상 단계·현재 부모 재조회·발사/완료/지연이다.
     void Frame(GunAnimationFields& fields) const;
+    // 같은00467330의 가상 Step만80BYTE 아이스 파생에 맡기며 추적/발사/완료 순서는 공유한다.
+    void FrameWithStep(GunAnimationFields& fields,const std::function<std::uint32_t(std::int32_t)>& step) const;
     //004684b0/00468520/00468130의 단계표/효과음과 반더 동시 비트를 계산한다.
     std::uint32_t Step(GunAnimationFields& fields,std::int32_t frame) const;
     //00466f50의 일반 투사체/즉시 빔을 구별하고 callback 뒤의 현재 인수를 재조회한다.

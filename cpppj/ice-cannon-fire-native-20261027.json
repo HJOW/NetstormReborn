@@ -1,0 +1,22 @@
+{
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": "HJOW-Athlon / 2026-10-23",
+  "date": "2026-10-27",
+  "uniqueInputs": 3585,
+  "normalReturns": 7170,
+  "precisionDifferences": 0,
+  "limits": "공통Frame/아이스Ctor/Step/가상getter/Launch를 실제 실행한다. 냉각 표시004a8770·문맥0045ae60·MayTarget0046af80·공간/중심/Host/Missile ctor는 명시 외부 입력이다. 전체80BYTE/네 슬롯200BYTE/효과/반환/ABI/쓰기guard를 대조하며 전체 투사체·냉각 표시·게임 완주 근거는 아니다.",
+  "sha256": {
+    "cpppj/tests/fixtures/ice-cannon-fire-x86.tsv": "fc77d37af375595b785c557f8e5a36f09ff4a120b8749a1a163ff1a72343d9ce",
+    "extracted/owner/originals/creation.c": "f9919c046d5259526946f106b47b6259fe5e04971f743d6fa02d6a5361b9dc16",
+    "extracted/owner/originals/functions.tsv": "3ea66dace80a85999a8b2c2dbadb4d5f1bd18b0dcdb0768f9c41075206c7c72d",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_cannon_fire.py": "fae9802bb3035bd54235c4ea7481ad6e60753b32c4644316ec096bcdba96e61a",
+    "tools/decomp_crossbow_animation.py": "084528d7a621507fe708fcacc1e51d439da4eb4c32629996d4f00417244f1f46",
+    "tools/decomp_gunanimation_oracle.py": "7dad644a16ef1e166f96e995de12dc516768874dbde5ee43c5bf146b08af4f3e",
+    "tools/decomp_gunarcher_oracle.py": "964f87ac4e39b1a832eaf452db87e972d403de1df21f99139c7106a90b06562e",
+    "tools/decomp_ice_cannon_fire.py": "f095c5b7edba5bea61af520e3f3ac5caa9f9082aeac65a7711937ae63ebc1bad",
+    "tools/decomp_owner_oracle.py": "5a837ad7fd233d9d75c7241d52fbf2e5a508e24dc158d091f243a13ab698e7fb"
+  }
+}

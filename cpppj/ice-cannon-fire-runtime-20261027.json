@@ -1,0 +1,852 @@
+{
+  "unit": 488,
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": "HJOW-Athlon / 2026-10-23",
+  "native": {
+    "path": "cpppj/ice-cannon-fire-native-20261027.json",
+    "sha256": "d322a0005cca480eb20479ae43477958e23ea1295bf3c69d550ae6c76987d483",
+    "uniqueInputs": 3585,
+    "normalReturns": 7170,
+    "precisionDifferences": 0
+  },
+  "builds": [
+    {
+      "command": [
+        "cmake",
+        "--build",
+        "cpppj/build",
+        "--config",
+        "Release",
+        "--parallel",
+        "4",
+        "--",
+        "/p:UseMultiToolTask=true",
+        "/p:MultiProcMaxCount=4",
+        "/p:EnforceProcessCountAcrossBuilds=true"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-ice-cannon-488/build1.log",
+      "sha256": "f4afad0b606d30fad7253844539e94666996cac10fe3601dc6e52a7a7c1458d9",
+      "summaries": [],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cmake",
+        "--build",
+        "cpppj/build",
+        "--config",
+        "Release",
+        "--parallel",
+        "4",
+        "--",
+        "/p:UseMultiToolTask=true",
+        "/p:MultiProcMaxCount=4",
+        "/p:EnforceProcessCountAcrossBuilds=true"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-ice-cannon-488/build2.log",
+      "sha256": "aa8f488d92cd6a1d91c957394f3ab01cc13e03b5b2267bdbbcb17b144ce731e6",
+      "summaries": [],
+      "diagnostics": []
+    }
+  ],
+  "firstComparison": {
+    "command": [
+      "cpppj/build/bin/Release/netstorm_tests.exe",
+      "--filter",
+      "IceCannonFire"
+    ],
+    "exit": 1,
+    "log": "extracted/cpp-ice-cannon-488/focused1-IceCannonFire.log",
+    "sha256": "6e6c32cc0b3adbd332d94c720bfdc020e04afc039ad2a93c0f12b4572a736827",
+    "summaries": [
+      "4 test(s), 2 failed check(s)"
+    ],
+    "diagnostics": []
+  },
+  "focused": {
+    "unique": 83,
+    "observations": 88,
+    "failedChecks": 0,
+    "addedTests": [
+      "IceCannonFire_ActualHostNotifyAndSelfDeletion",
+      "IceCannonFire_ReplaysNativeCommonFrame",
+      "IceCannonFire_ReplaysNativeConstructorPadding",
+      "IceCannonFire_ReplaysNativeLaunchGetters",
+      "IceCannonFire_ReplaysNativeStepCurrentFields"
+    ],
+    "runs": [
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "CampaignExistingEditorCheckpoint"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-ice-cannon-488/focused2-CampaignExistingEditorCheckpoint.log",
+        "sha256": "9f8c6064fd046501c65612c99e6699993d240c931e56361ae4f22fb408ebd157",
+        "summaries": [
+          "42 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "CampaignFire"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-ice-cannon-488/focused2-CampaignFire.log",
+        "sha256": "21bae3981b26941bc848216ad9fa4f6094f6bc646d63bb830791657e94bd55c1",
+        "summaries": [
+          "5 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "CampaignGuideWorldLifetime"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-ice-cannon-488/focused2-CampaignGuideWorldLifetime.log",
+        "sha256": "22fbeccdcc8f829a3d3f340ac3432ea007e943b5131652da19150fce74aa53dd",
+        "summaries": [
+          "3 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "CampaignMissionFortPath"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-ice-cannon-488/focused2-CampaignMissionFortPath.log",
+        "sha256": "99770507f4d3dec1e0551206e5db1031616a514a90ba2955e0d1d7875f9d542e",
+        "summaries": [
+          "2 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "CampaignMissionReloadSource"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-ice-cannon-488/focused2-CampaignMissionReloadSource.log",
+        "sha256": "067e4366066602c01d69a3288c7ba3a58026599c9a3ed47b0bddc08a5847f8c2",
+        "summaries": [
+          "3 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "CannonFire"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-ice-cannon-488/focused2-CannonFire.log",
+        "sha256": "9ab30b702c44fb3370c2da63376e81f2ecd8e8d45233072d40ee899d05081910",
+        "summaries": [
+          "10 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "EditorTestBattle"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-ice-cannon-488/focused2-EditorTestBattle.log",
+        "sha256": "88feabc2cc023a5911b3478f60a3677ba63baadb4ac86726928920f6e596055a",
+        "summaries": [
+          "3 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "FortSelection"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-ice-cannon-488/focused2-FortSelection.log",
+        "sha256": "831cc15264aa3743e4db3e72c855f7f3b718884f90ccec6aa25d849643bee098",
+        "summaries": [
+          "5 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "GuideTransitions"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-ice-cannon-488/focused2-GuideTransitions.log",
+        "sha256": "fc634be4a85847815c96e6244b702aa1cfa7f46bce70cd0e770e9b9b5351c13b",
+        "summaries": [
+          "2 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "IceCannonFire"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-ice-cannon-488/focused2-IceCannonFire.log",
+        "sha256": "ab1a44ee34e75da7ff5a6591e60622f942c7c1ed5f8679b03b1b79584e772412",
+        "summaries": [
+          "5 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "IslandQueries"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-ice-cannon-488/focused2-IslandQueries.log",
+        "sha256": "4721e0f03fa50161b7a1888cd4a753bc3ed7aa05b37457e49378518b5c9b4ee4",
+        "summaries": [
+          "3 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "TutorialInit"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-ice-cannon-488/focused2-TutorialInit.log",
+        "sha256": "08eb74725aeec2d83af8b026ef9c2317f9ee8dd7e7344741a6901d98189779e5",
+        "summaries": [
+          "4 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "VanderFire"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-ice-cannon-488/focused2-VanderFire.log",
+        "sha256": "f8ab1c617a779735eb23a82a6847a0fae076bed2f8d0131c7f5a2d34cc001c72",
+        "summaries": [
+          "1 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      }
+    ]
+  },
+  "whole": {
+    "cppCases": 3281,
+    "cppFailedChecks": 0,
+    "ctestCases": 1,
+    "ctestFailed": 0,
+    "execution": {
+      "command": [
+        "ctest",
+        "--test-dir",
+        "cpppj/build",
+        "-C",
+        "Release",
+        "-V"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-ice-cannon-488/whole1.log",
+      "sha256": "967502d26f8b6aca322792e5f4f636a7c069f47dff70937ddb991daf24cbdee7",
+      "summaries": [
+        "3281 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    }
+  },
+  "registered": {
+    "before": 3276,
+    "after": 3281,
+    "removed": []
+  },
+  "protection": {
+    "files": 3196,
+    "changed": [],
+    "agentsUnchanged": true,
+    "appendOnlyPrefixBytes": {
+      "cpppj/tests/CMakeLists.txt": 162817
+    }
+  },
+  "finalSourceFiles": 2852,
+  "exes": {
+    "NetstormCpp.exe": "f9db010d7b461e4fdd71d9123b60ca9db6bce1511d1b99a074e0c56acaf69092",
+    "netstorm_tests.exe": "cc362446ec386b5bfdfdb68bdf7d5f8aa75807d69b5ef0d4b50d19b736bb677b"
+  },
+  "finalEditorLive": {
+    "live-fastreturn2": {
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-ice-cannon-488\\test01-data",
+        "--window",
+        "--no-audio",
+        "--frames",
+        "205",
+        "--set",
+        "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=1;currentLanguage=english",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-ice-cannon-488\\live-fastreturn2\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-ice-cannon-488\\live-fastreturn2\\states.tsv"
+      ],
+      "binarySha256": "f9db010d7b461e4fdd71d9123b60ca9db6bce1511d1b99a074e0c56acaf69092",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 9.082810100000643,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "61fb2064f0379a13ab64f050b735f5a95260b59ab836fac94830d19707a74ebc",
+      "originalsUnchanged": true
+    },
+    "live-roundtrip2": {
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-ice-cannon-488\\test01-data",
+        "--window",
+        "--no-audio",
+        "--frames",
+        "365",
+        "--set",
+        "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=1;currentLanguage=english",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-ice-cannon-488\\live-roundtrip2\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-ice-cannon-488\\live-roundtrip2\\states.tsv"
+      ],
+      "binarySha256": "f9db010d7b461e4fdd71d9123b60ca9db6bce1511d1b99a074e0c56acaf69092",
+      "returnCode": 1,
+      "timedOut": false,
+      "seconds": 5.2729834999991,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "7c94726bd7a1a07105d6f5c8b12b9a6add78cb075891a2b6d0c62ef65ef79bcc",
+      "originalsUnchanged": true
+    }
+  },
+  "warRegression": {
+    "result": {
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-editor-test-battle-487\\live-data",
+        "--window",
+        "--no-audio",
+        "--frames",
+        "500",
+        "--set",
+        "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=1",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-ice-cannon-488\\live-war2\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-ice-cannon-488\\live-war2\\states.tsv",
+        "--mission",
+        "TheWarBegins"
+      ],
+      "binarySha256": "f9db010d7b461e4fdd71d9123b60ca9db6bce1511d1b99a074e0c56acaf69092",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 14.026619800002663,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "988ae57ba0bb1171522a3f909f386bcceceab053830e1e2a63aebc1cf9ba5079"
+    },
+    "checks": {
+      "normalExit": true,
+      "originalsUnchanged": true,
+      "firstPlaying": true,
+      "restartBriefing": true,
+      "secondPlaying": true
+    },
+    "passed": true,
+    "observed": {
+      "briefing": {
+        "phase": [
+          "3"
+        ],
+        "page": [
+          "A."
+        ],
+        "paused": [
+          "1"
+        ],
+        "fort_names": [
+          "TheWarBegins",
+          "",
+          "2",
+          "fortSpec"
+        ],
+        "mission": [
+          "TheWarBegins",
+          "Tutorial",
+          "172"
+        ],
+        "mission_start": [
+          "1",
+          "4",
+          "0",
+          "0.318",
+          "0"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ]
+      },
+      "playing": {
+        "phase": [
+          "4"
+        ],
+        "page": [
+          "mission"
+        ],
+        "paused": [
+          "0"
+        ],
+        "fort_names": [
+          "TheWarBegins",
+          "",
+          "2",
+          "fortSpec"
+        ],
+        "mission": [
+          "TheWarBegins",
+          "Tutorial",
+          "172"
+        ],
+        "mission_start": [
+          "1",
+          "4",
+          "0",
+          "0.318",
+          "0"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ]
+      },
+      "before-restart": {
+        "phase": [
+          "4"
+        ],
+        "page": [
+          "mission"
+        ],
+        "paused": [
+          "0"
+        ],
+        "fort_names": [
+          "TheWarBegins",
+          "",
+          "2",
+          "fortSpec"
+        ],
+        "mission": [
+          "TheWarBegins",
+          "Tutorial",
+          "172"
+        ],
+        "mission_start": [
+          "1",
+          "4",
+          "0",
+          "0.318",
+          "0"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ]
+      },
+      "restarted": {
+        "phase": [
+          "3"
+        ],
+        "page": [
+          "A."
+        ],
+        "paused": [
+          "1"
+        ],
+        "fort_names": [
+          "TheWarBegins",
+          "",
+          "3",
+          "fortSpec"
+        ],
+        "mission": [
+          "TheWarBegins",
+          "Tutorial",
+          "172"
+        ],
+        "mission_start": [
+          "1",
+          "4",
+          "0",
+          "6.178",
+          "0"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ]
+      },
+      "after-restart": {
+        "phase": [
+          "4"
+        ],
+        "page": [
+          "mission"
+        ],
+        "paused": [
+          "0"
+        ],
+        "fort_names": [
+          "TheWarBegins",
+          "",
+          "3",
+          "fortSpec"
+        ],
+        "mission": [
+          "TheWarBegins",
+          "Tutorial",
+          "172"
+        ],
+        "mission_start": [
+          "1",
+          "4",
+          "0",
+          "6.178",
+          "0"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ]
+      }
+    }
+  },
+  "editorReturn": {
+    "actualState1Cleanup": true,
+    "newHudOwner": true,
+    "loadedSession": true,
+    "returned": [
+      "1",
+      "1",
+      "1",
+      "4294967295",
+      "0"
+    ]
+  },
+  "earlierLive": {
+    "live-briefing1": {
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-ice-cannon-488\\test01-data",
+        "--window",
+        "--no-audio",
+        "--frames",
+        "110",
+        "--set",
+        "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=1;currentLanguage=english",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-ice-cannon-488\\live-briefing1\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-ice-cannon-488\\live-briefing1\\states.tsv"
+      ],
+      "binarySha256": "b7e67b015a1f3a1ee069c7981dc86bd42bdab765e946172b4eaf3a9996765c17",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 7.609332499996526,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "f0c532f9a4e26eaefa1c66eddf813264102af562ef139c96769b5f29fc336729",
+      "originalsUnchanged": true
+    },
+    "live-fastreturn1": {
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-ice-cannon-488\\test01-data",
+        "--window",
+        "--no-audio",
+        "--frames",
+        "205",
+        "--set",
+        "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=1;currentLanguage=english",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-ice-cannon-488\\live-fastreturn1\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-ice-cannon-488\\live-fastreturn1\\states.tsv"
+      ],
+      "binarySha256": "b7e67b015a1f3a1ee069c7981dc86bd42bdab765e946172b4eaf3a9996765c17",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 9.252341600004002,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "61fb2064f0379a13ab64f050b735f5a95260b59ab836fac94830d19707a74ebc",
+      "originalsUnchanged": true
+    },
+    "live-roundtrip1": {
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-ice-cannon-488\\test01-data",
+        "--window",
+        "--no-audio",
+        "--frames",
+        "365",
+        "--set",
+        "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=1;currentLanguage=english",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-ice-cannon-488\\live-roundtrip1\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-ice-cannon-488\\live-roundtrip1\\states.tsv"
+      ],
+      "binarySha256": "b7e67b015a1f3a1ee069c7981dc86bd42bdab765e946172b4eaf3a9996765c17",
+      "returnCode": 1,
+      "timedOut": false,
+      "seconds": 5.681194799995865,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "7c94726bd7a1a07105d6f5c8b12b9a6add78cb075891a2b6d0c62ef65ef79bcc",
+      "originalsUnchanged": true
+    },
+    "live-war1": {
+      "result": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-editor-test-battle-487\\live-data",
+          "--window",
+          "--no-audio",
+          "--frames",
+          "500",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=1",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-ice-cannon-488\\live-war1\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-ice-cannon-488\\live-war1\\states.tsv",
+          "--mission",
+          "TheWarBegins"
+        ],
+        "binarySha256": "b7e67b015a1f3a1ee069c7981dc86bd42bdab765e946172b4eaf3a9996765c17",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 13.312486299997545,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "988ae57ba0bb1171522a3f909f386bcceceab053830e1e2a63aebc1cf9ba5079"
+      },
+      "checks": {
+        "normalExit": true,
+        "originalsUnchanged": true,
+        "firstPlaying": true,
+        "restartBriefing": true,
+        "secondPlaying": true
+      },
+      "passed": true,
+      "observed": {
+        "briefing": {
+          "phase": [
+            "3"
+          ],
+          "page": [
+            "A."
+          ],
+          "paused": [
+            "1"
+          ],
+          "fort_names": [
+            "TheWarBegins",
+            "",
+            "2",
+            "fortSpec"
+          ],
+          "mission": [
+            "TheWarBegins",
+            "Tutorial",
+            "172"
+          ],
+          "mission_start": [
+            "1",
+            "4",
+            "0",
+            "0.386",
+            "0"
+          ],
+          "raw_session": [
+            "1",
+            "1"
+          ]
+        },
+        "playing": {
+          "phase": [
+            "4"
+          ],
+          "page": [
+            "mission"
+          ],
+          "paused": [
+            "0"
+          ],
+          "fort_names": [
+            "TheWarBegins",
+            "",
+            "2",
+            "fortSpec"
+          ],
+          "mission": [
+            "TheWarBegins",
+            "Tutorial",
+            "172"
+          ],
+          "mission_start": [
+            "1",
+            "4",
+            "0",
+            "0.386",
+            "0"
+          ],
+          "raw_session": [
+            "1",
+            "1"
+          ]
+        },
+        "before-restart": {
+          "phase": [
+            "4"
+          ],
+          "page": [
+            "mission"
+          ],
+          "paused": [
+            "0"
+          ],
+          "fort_names": [
+            "TheWarBegins",
+            "",
+            "2",
+            "fortSpec"
+          ],
+          "mission": [
+            "TheWarBegins",
+            "Tutorial",
+            "172"
+          ],
+          "mission_start": [
+            "1",
+            "4",
+            "0",
+            "0.386",
+            "0"
+          ],
+          "raw_session": [
+            "1",
+            "1"
+          ]
+        },
+        "restarted": {
+          "phase": [
+            "3"
+          ],
+          "page": [
+            "A."
+          ],
+          "paused": [
+            "1"
+          ],
+          "fort_names": [
+            "TheWarBegins",
+            "",
+            "3",
+            "fortSpec"
+          ],
+          "mission": [
+            "TheWarBegins",
+            "Tutorial",
+            "172"
+          ],
+          "mission_start": [
+            "1",
+            "4",
+            "0",
+            "5.578",
+            "0"
+          ],
+          "raw_session": [
+            "1",
+            "1"
+          ]
+        },
+        "after-restart": {
+          "phase": [
+            "4"
+          ],
+          "page": [
+            "mission"
+          ],
+          "paused": [
+            "0"
+          ],
+          "fort_names": [
+            "TheWarBegins",
+            "",
+            "3",
+            "fortSpec"
+          ],
+          "mission": [
+            "TheWarBegins",
+            "Tutorial",
+            "172"
+          ],
+          "mission_start": [
+            "1",
+            "4",
+            "0",
+            "5.578",
+            "0"
+          ],
+          "raw_session": [
+            "1",
+            "1"
+          ]
+        }
+      }
+    }
+  },
+  "next": [
+    "아이스129 초기 투사체/포구/사정선/비행·피해/소리와 반사00482190을 원문대로 복원한다. 단순 guard 확장만으로 완료 처리하지 않는다.",
+    "4초 뒤 선택되는 실제 냉각 표시004a8770도 아직 미연결이다.",
+    "최종 실제 즉시 편집 복귀와 몇 초 진행 실패를 구별한다. 전체 Test Battle 플레이 완료가 아니다.",
+    "Windows10/11/전체화면 호환성은 현재 목표다. .english 부재 개선과 스테이지 완주/사용자 개입 검증은 사용자 지시로 뒤로 미룬다."
+  ],
+  "pushed": false
+}

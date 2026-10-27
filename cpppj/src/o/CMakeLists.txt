@@ -525,3 +525,6 @@ target_sources(netstorm PRIVATE RawPlayerInitialization.h RawPlayerInitializatio
 
 # 원본10.78의 전체 다리 품질 변경과 같은 풀/게임 난수/표시 경계다.
 target_sources(netstorm PRIVATE RawBridgeEditor.h RawBridgeEditor.cpp)
+
+# 원본 아이스 캐논의80BYTE 발사와4초/6초 전환을 같은 공통 Fire에 연결한다.
+target_sources(netstorm PRIVATE RawIceCannonFire.h RawIceCannonFire.cpp)

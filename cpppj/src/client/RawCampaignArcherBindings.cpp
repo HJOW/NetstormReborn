@@ -3,6 +3,8 @@
 #include "o/RawDiscRegular.h"
 #include "o/RawCrossbowAnimation.h"
 #include "o/RawCannonFire.h"
+#include "o/RawIceCannonFire.h"
+#include <bit>
 #include <cmath>
 #include <stdexcept>
 
@@ -25,6 +27,9 @@ struct RawCampaignArcherBindings::Impl {
     std::unique_ptr<o::RawCannonFire> sunFire,thunderFire; // 초기화 이후 공통 Fire와 별도 가상 단계 본체다.
     o::CannonFireState vanderFireState; // 반더의 동시 발사/완료·속도20·지연float0.3이다.
     std::unique_ptr<o::RawCannonFire> vanderFire; // 일반 Missile과 구별한 즉시 빔/피해 발사 몸체다.
+    o::CannonFireState iceState; // 아이스129/표시130/지연float0.08과 같은 현재 게임 시각이다.
+    std::unique_ptr<o::RawIceCannonFire> ice; // 공통 Fire와80BYTE 파생의 실제 상태를 함께 실행한다.
+    std::function<std::array<std::uint32_t,8>(o::Sid)> iceContext; // GunHooks가 받은 같은 실제0045ae60을 장기 수명에 빌린다.
     o::ArcherAnimationState crossbowRotateState; // TYPE140의 실제 공유 회전이 읽는 같은 현재 시계다.
     o::CrossbowAnimationState crossbowState; // 실제 크로스보우 발사 getter와 현재 시계다.
     std::unique_ptr<o::RawArcherAnimation> crossbowRotate; //00467940의 실제 공통 회전만 재사용한다.
@@ -64,6 +69,12 @@ struct RawCampaignArcherBindings::Impl {
         sunFire=std::make_unique<o::RawCannonFire>(core.pool,core.types,frameTypes,sunFireState,fireHooks);
         vanderFireState.kind=o::CannonFireKind::Vander;vanderFireState.type=148;vanderFireState.displayType=80;vanderFireState.effectType=19;vanderFireState.delay=.3F;
         effects.beam.random=&random;vanderFire=std::make_unique<o::RawCannonFire>(core.pool,core.types,frameTypes,vanderFireState,fireHooks,std::move(effects.beam));
+        iceState.type=129;iceState.displayType=130;iceState.delay=.08F;
+        auto iceCommon=o::MakeIceCannonFireHostHooks(core.processes,hooks.common);iceCommon=o::MakeGunMissileHooks(core.processes,*missile,std::move(iceCommon));
+        o::IceCannonFireHooks iceHooks;iceHooks.cooling=std::move(effects.iceCooling);
+        iceHooks.context=[this](auto sid) { if (!iceContext) throw std::logic_error("아이스 발사의 실제 현재 문맥 미연결");return iceContext(sid); };
+        iceHooks.mayTarget=[this](const auto& context,auto sid) { return target.MayTarget(std::bit_cast<o::GunTargetQuery>(context),sid); }; //같은8DWORD를 원문 값형 문맥으로 전달하며 표적 결과를 만들지 않는다.
+        ice=std::make_unique<o::RawIceCannonFire>(core.pool,core.types,frameTypes,iceState,std::move(iceCommon),std::move(iceHooks));
         thunderFire=std::make_unique<o::RawCannonFire>(core.pool,core.types,frameTypes,thunderFireState,std::move(fireHooks));
         auto crossbowHooks=o::MakeCrossbowAnimationHostHooks(core.processes,hooks.common); // 같은 공간/Missile과 별도 발사 클래스의 수명을 연결한다.
         crossbowHooks=o::MakeGunMissileHooks(core.processes,*missile,std::move(crossbowHooks));
@@ -89,12 +100,15 @@ void RawCampaignArcherBindings::PrepareFrame(o::FrameTime time) {
     impl_->crossbowRotateState.now=time.game;impl_->crossbowRotateState.delta=time.delta;impl_->crossbowState.now=time.game;
     impl_->thunderRotateState.now=time.game;impl_->sunFireState.now=time.game;impl_->thunderFireState.now=time.game;
     impl_->vanderFireState.now=time.game;
+    impl_->iceState.now=time.game; // 아이스4초/6초 전환도 같은 Kernel 게임 시각을 읽는다.
 }
 // 실제71/128/131/140/148을 부모 TYPE/단계로 분배하고 원래 다른 소비자는 보존한다.
 o::GunProcessHooks RawCampaignArcherBindings::GunHooks(o::GunProcessHooks hooks) const {
+    impl_->iceContext=hooks.shotContext; // 실제 Query 연결 뒤의 같은 getter를 복사하며 호출 시 현재 raw를 읽는다.
     hooks.startAnimation=[this,fallback=std::move(hooks.startAnimation)](std::uint32_t stage,o::Sid form,o::Sid target) {
         const auto* gun=dynamic_cast<const o::GunProcess*>(impl_->core.processes.FromForm(form));if (!gun) throw std::logic_error("캠페인 총 애니메이션의 현재 GunProcess 조회 실패");
         const auto type=impl_->core.pool.Slot(gun->Parent())[10];
+        if (type==impl_->ice->Type() && stage==5) { if (!o::CreateIceCannonFire(impl_->core.processes,*impl_->ice,form,target)) throw std::logic_error("캠페인 아이스 캐논 발사 부착 실패");return; }
         if (type==impl_->sunFire->Type() && stage==5) { if (!o::CreateCannonFire(impl_->core.processes,*impl_->sunFire,form,target)) throw std::logic_error("캠페인 썬 캐논 발사 부착 실패");return; }
         if (type==impl_->cannon->SunCannonType() && (stage==2 || stage==8)) { if (!o::CreateGunAnimation(impl_->core.processes,*impl_->cannon,stage,form,target)) throw std::logic_error("캠페인 썬 캐논 애니메이션 부착 실패");return; }
         if (type==impl_->thunderFire->Type() && stage==5) { if (!o::CreateCannonFire(impl_->core.processes,*impl_->thunderFire,form,target)) throw std::logic_error("캠페인 썬더 캐논 발사 부착 실패");return; }

@@ -78,9 +78,13 @@ bool RawCannonFire::Launch(GunAnimationFields& fields) const {
 }
 // 00467330은 처음 추적한 표적의 생존 상태를 효과 이후 현재 표적과 구별한다.
 void RawCannonFire::Frame(GunAnimationFields& fields) const {
+    FrameWithStep(fields,[this,&fields](auto current) { return Step(fields,current); });
+}
+// 실제 공통 부모가 선택한 가상 Step 뒤에도 현재 부모/표적/시각을 같은 위치에서 재조회한다.
+void RawCannonFire::FrameWithStep(GunAnimationFields& fields,const std::function<std::uint32_t(std::int32_t)>& step) const {
     const auto target=fields.Target();if (!target.value || target.value>=pool_.Capacity()) throw std::logic_error("캐논 발사 표적0 원본 assert");const auto raw=pool_.Slot(target);const bool dead=(raw[11]&3)!=0;
     if (!dead) { if (!hooks_.center) throw std::logic_error("캐논 발사 실제 표적 중심 경계 누락");Put(fields.bytes,12,Read(raw,14));Put(fields.bytes,16,Read(raw,18));const auto center=hooks_.center(target);Put(fields.bytes,20,std::bit_cast<std::uint32_t>(center[0]));Put(fields.bytes,24,std::bit_cast<std::uint32_t>(center[1])); }
-    const auto source=pool_.Slot(Parent(fields));if (!(fields.Time()<=state_.now)) return;const auto current=static_cast<std::int32_t>(Read(source,36));const auto code=Step(fields,current);SetFrame(fields,code&0x3fffU);
+    const auto source=pool_.Slot(Parent(fields));if (!(fields.Time()<=state_.now)) return;const auto current=static_cast<std::int32_t>(Read(source,36));if (!step) throw std::logic_error("캐논 발사의 실제 가상 Step 미연결");const auto code=step(current);SetFrame(fields,code&0x3fffU);
     if ((code&0x4000U) && !Launch(fields) && !dead) return;
     if (code&0x8000U) { Finish(fields);return; }
     fields.bytes[40]|=8;Time(fields,state_.now);const auto delay=static_cast<double>(state_.delay)*((code&0x4000U) && source[10]==state_.scaledType ? static_cast<double>(state_.launchScale) : 1.0);Time(fields,state_.now+delay);

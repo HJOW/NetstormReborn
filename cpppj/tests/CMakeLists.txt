@@ -2275,3 +2275,7 @@ target_sources(netstorm_tests PRIVATE CampaignGuideWorldLifetimeTests.inc)
 
 # 실제 미션 파일의 바이트/경로와 논리 이름을 같은 로그인에 전달하는지 검사한다.
 target_sources(netstorm_tests PRIVATE CampaignMissionFortPathTests.inc)
+
+# 보호PE에서 독립 관찰한 아이스80BYTE 발사와 공통 부모를 대조한다.
+target_sources(netstorm_tests PRIVATE IceCannonFireTests.cpp)
+target_compile_definitions(netstorm_tests PRIVATE NETSTORM_ICE_CANNON_FIRE_FIXTURE="${CMAKE_CURRENT_SOURCE_DIR}/fixtures/ice-cannon-fire-x86.tsv")

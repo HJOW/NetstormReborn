@@ -14,6 +14,7 @@ struct RawCampaignArcherEffects {
     o::ArcherAnimationHooks animation; // 현재 음향/방향/배리어 코너의 실제 경계다.
     o::MissileHooks missile; // 포구/SHP/피해/충돌의 실제 경계이며 기본 성공으로 대신하지 않는다.
     o::CannonBeamHooks beam; // 실제 반더 빔 생성·초기 source 시각/피해와 같은 게임 난수다.
+    std::function<void(o::Sid)> iceCooling; //004a8770의 실제 아이스 냉각 표시이며 선택 시 누락을 거부한다.
 };
 // 같은 풀의 실제 Archer/Missile 몸체를 고정 주소에 소유한다.
 class RawCampaignArcherBindings {

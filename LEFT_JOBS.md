@@ -4,6 +4,12 @@
 
 ## 0. 재개 전 확인 사항
 
+- **488 완료 / 최신 통합:** 아이스 캐논129의80BYTE 발사·4초/6초 전환·현재 문맥/MayTarget·공통 Frame·실제 Host 완료/반납을 연결했다. 원문3,585입력/두 정밀도7,170정상 반환·차이0, Release build1/2 경고/오류0·집중83고유/88관측·신규5/실패0·전체C++3,281/실패0·CTest1/실패0(333.51초), 게임 `f9db010d…`다. 최종 실제 TEST01 브리핑→Go! 직후 편집 복귀는205프레임/약9.08초 종료0이며 새 State1/HUD/설치 Session을 확인했다. War 짧은 진입/Restart도500프레임/약14.03초 종료0이다. **몇 초 진행은 Missile 미복원 TYPE129에서 종료1**이므로 전체 Test Battle 플레이 완료는 아니다. 다음은129 초기 투사체/포구/사정선/비행·피해/소리 및00482190 반사, 실제 냉각 표시004a8770이다. guard만 넓혀 완료 처리하지 않는다. 첫 원문 RET3BYTE 범위 오류/최초 C++ 외부 할당 관찰 누락2실패는 보존했고 fixture 기대값은 유지했다. 보호3,196파일/AGENTS(기존 tests/CMakeLists.txt의162,817BYTE 뒤 등록만 추가)·최종 소스/검사2,852파일을 감사했다. [문서](docs/exe/cpp-ice-cannon-fire-20261027.md), [보고서](cpppj/ice-cannon-fire-runtime-20261027.json), 원시 extracted/cpp-ice-cannon-488/. Windows10/11·전체화면은 현행 목표이고 .english 부재 개선/스테이지 완주/사용자 개입 검증은 계속 뒤로 미룬다.
+
+
+
+
+
 - **487 연결 완료 / 실제 왕복은 진행 중:** c2 일반 입력과 Battle14 RequestFortEdit를 실제 작업본 로더·현재 State·섬 개수·Notify 및 후행 State1에 연결했다. Release build2 경고/오류0·집중67고유/67관측·실패0·등록3,276 유지, 게임 `b241bc7b…`다. 실제 War 진입/Restart는500프레임/약14.33초 종료0이다. 실제 TEST01은 Editor→Test Battle→로그인/State14까지 진행했으나 **총 애니메이션 미복원 TYPE129 stage5**에서 종료1이다. 다음은 이 실제 동작 복원 후 편집 왕복 재검증이다. 전체 맵 구성에서는 원문 목록50칸 상한에 TEST01이 가려져 첫 선택 실패를 보존했고 별도 TEST01 맵 구성의 fort/english는 원본 바이트를 그대로 썼다. 첫 빌드 API 이름 오류도 보존했다. 원본/CD/기존 검사3,196파일/AGENTS·최종 소스/검사2,848파일은 변경 없음이다. [문서](docs/exe/cpp-editor-test-battle-runtime-20261027.md), [보고서](cpppj/editor-test-battle-runtime-20261027.json), 원시 extracted/cpp-editor-test-battle-487/.
 
 
@@ -11,8 +17,8 @@
 - **마지막 전체 정밀 디컴파일: HJOW-Athlon (192.168.0.94) / 2026-10-23.** 결과는 `extracted/refined/`(Git 제외)에 있다. 현재 PC가 이와 다르면 AGENTS.md 규칙에 따라 재디컴파일한 뒤 작업한다. 절차는 `tools\ghidra\refine_all.ps1`이며, 힌트 생성 단계가 콘솔 인코딩(cp949) 오류로 멈추면 `PYTHONUTF8=1`, `PYTHONIOENCODING=utf-8`을 설정하고 다시 실행한다.
 - 2026-10-26의 문서 정리는 HJOW-X3D에서 인수인계 문서만 고친 것이다. 디컴파일 결과·제품 코드·검사 코드는 바꾸지 않았으므로 위 디컴파일 기록은 그대로 유효하다. 사용자는 HJOW-Athlon에서 작업을 재개할 예정이다.
 - **실제 게임 실행 확인:** HJOW-Athlon, VM-W11-Codex, vm-debian-codex는 AGENTS.md의 예외 시스템이다. 그 밖의 PC에서는 게임이나 별도 창을 띄우기 전에 목적을 설명하고 사용자 확인을 받는다.
-- **목표 상태 — 재개/485 완료:** 2026-10-27 사용자의 새 `/goal`로 전체 목표를 재개했다.484의 Guide/World 분리·새 요청/Zone 보존에 이어485에서 War 진입의 미니맵 중간 crop을 Refresh 전에 읽던 호스트 표시 순서를 수정했다. Release build2 경고/오류0·집중59고유/65관측·실패0·등록3,274, 게임 `3786327a…`다. 실제 메인 메뉴·War 메뉴 진입·War CLI 진입/Restart·Early1 메뉴 진입/Restart의 짧은4실행이 종료0이다. 기존 검사/fixture·원본/CD3,195파일/AGENTS와 최종 소스/검사2,846파일을 보존했다. c2/전체 Editor 왕복·AddIsland/저장 재진입·전체미션 자연완주/전체동일성은 남는다. 짧은 실제 실행은 허용되며 스테이지 클리어와 사용자 개입 검증은 계속 뒤로 미룬다.
-- **486 완료 / 최신 통합:** 논리 요새 이름과 manager의 실제 파일 경로를 분리하고 같은 읽기의 바이트/경로를 최초 설치·Login에 전달했다. 명시 source는 Guide Begin/Restart/Fork에서 소유 복사하며 기본 자산 경계는 유지한다. Release build2 경고/오류0·집중19/신규2/실패0·전체C++3,276/실패0·CTest1/실패0, 게임 `ac6d445e…`다. 실제 War 짧은 진입/Restart는500프레임/약13.18초 종료0이다. 기존3,274등록·원본/CD/기존 검사3,195파일/AGENTS(기존2파일 끝 등록만 추가)와 최종 소스/검사2,848파일을 보존했다. 최초 지역 이름 shadow 경고1건은 이름만 수정해 없앴고 첫 로그를 유지했다. [문서](docs/exe/cpp-mission-fort-path-20261027.md), [보고서](cpppj/mission-fort-path-20261027.json), 원시 extracted/cpp-mission-fort-path-486/. c2 일반 입력과 Battle14 RequestFortEdit/State1 실제 편집 복귀는 후속이다.
+- **485 통합 기록:** 2026-10-27 사용자의 새 `/goal`로 전체 목표를 재개했다.484의 Guide/World 분리·새 요청/Zone 보존에 이어485에서 War 진입의 미니맵 중간 crop을 Refresh 전에 읽던 호스트 표시 순서를 수정했다. Release build2 경고/오류0·집중59고유/65관측·실패0·등록3,274, 게임 `3786327a…`다. 실제 메인 메뉴·War 메뉴 진입·War CLI 진입/Restart·Early1 메뉴 진입/Restart의 짧은4실행이 종료0이다. 기존 검사/fixture·원본/CD3,195파일/AGENTS와 최종 소스/검사2,846파일을 보존했다. c2/전체 Editor 왕복·AddIsland/저장 재진입·전체미션 자연완주/전체동일성은 남는다. 짧은 실제 실행은 허용되며 스테이지 클리어와 사용자 개입 검증은 계속 뒤로 미룬다.
+- **486 완료 / 최신 통합:** 논리 요새 이름과 manager의 실제 파일 경로를 분리하고 같은 읽기의 바이트/경로를 최초 설치·Login에 전달했다. 명시 source는 Guide Begin/Restart/Fork에서 소유 복사하며 기본 자산 경계는 유지한다. Release build2 경고/오류0·집중19/신규2/실패0·전체C++3,276/실패0·CTest1/실패0, 게임 `ac6d445e…`다. 실제 War 짧은 진입/Restart는500프레임/약13.18초 종료0이다. 기존3,274등록·원본/CD/기존 검사3,195파일/AGENTS(기존2파일 끝 등록만 추가)와 최종 소스/검사2,848파일을 보존했다. 최초 지역 이름 shadow 경고1건은 이름만 수정해 없앴고 첫 로그를 유지했다. [문서](docs/exe/cpp-mission-fort-path-20261027.md), [보고서](cpppj/mission-fort-path-20261027.json), 원시 extracted/cpp-mission-fort-path-486/. c2 실제 입력은487에서 연결했고 즉시 편집 복귀는488에서 확인했다. 몇 초 진행은488의 미복원 경계를 참고한다.
 - **현행 목표 확장(2026-10-27):** 사용자 수정 `/goal`에 따라 Windows 10/11 호환성·전체화면 DirectDraw 오류 해결도 지금 목표에 포함된다. 원본과 다른 호환성 처리는 반드시 코드 주석에 명시한다. 아래 옛 기록의 “2차/이번 목표 밖”으로 이 작업을 미루지 않는다. 기존 스테이지·Edit·비멀티 메뉴·덱/미니맵/QWASZX/ESC 목표도 그대로 유지한다.
 - **원시 증거 위치:** 빌드·검사·GUI 원시 로그와 통합 드라이버는 `extracted/`(Git 제외)에 있으며, 작업한 PC(주로 HJOW-Athlon)에만 있다. 커밋되는 결과 보고서는 `cpppj/*.json`, 작업 문서는 `docs/exe/cpp-*.md`다.
 - **471 추가 수정 완료:** 사용자 신고의 공통 메뉴 토글 표시를 원본 J02(60번)로 고쳤다. 타입+154는 I.count가 아니라 J.first다. 메인 Options/ESC 메뉴가 같은 렌더러를 사용하며, 양판본 원본 픽셀·공통 메뉴 체크 on/off를 포함한 집중120개/실패0·신규2개, Release 경고/오류0이다. 게임 `76c257c5…`, 등록3,230개이며 전체CTest/게임/GUI는 실행하지 않았다. [문서](docs/exe/cpp-menu-toggle-marker-20261027.md), [보고서](cpppj/menu-toggle-marker-20261027.json). 기존 검사/원본/CD/AGENTS3,160파일 바이트동일, 마지막 전체 디컴파일 HJOW-Athlon/2026-10-23 유지. NewFort 이후 잔여 목표는 계속 진행한다.
@@ -138,7 +144,7 @@
   -487에서 Test Battle 일반 입력/실제 편집 복귀 장치를 연결했다. 실제 TEST01 로그인 뒤 TYPE129 stage5 미복원으로 중단되어 왕복 완료는 아니다. 위 최신 기록의 복원/재검증이 우선이다.
   - 메인 Edit → 편집 가능 맵 목록(원본 50칸 상한, `mayEditMissions` 옵션) → 선택 예약(State1) → LoadEditable 안내·Cancel까지 실제 GUI로 확인했다.
   - 기존 Fort의 Session/World·Deck·작업본 파일·로컬 전송과 준비 checkpoint는464에서 실제 메뉴 선택→State1→공통 확정→Poll4에 연결했다.466은 기존 Guide의 late closeGuide/모드 해제와 후행 경로를 검증했다. 전체 저장·재파싱·재로드는 기존 집중 검사 근거이며 사용자 Save as/복귀 저장 GUI 완료와 구별한다.
-  -466의 Set All Bridge/종료취소 뒤467에서 실제 Cracked314개 변경 후 No→원래314개/Yes→변경314개를 재로드했다. Save as는 문자입력·실제마우스OK·전체작업본Fort파싱·중복거부/Cancel까지 확인했다. 468에서 실제 작업본 목록과 새이름 재진입/프로세스 재시작을 연결했다(원문 수락50개 상한 유지). NewFort/AddIsland GUI/TestBattle/언어별시나리오·전체State7은 다음 작업이다.
+  -466의 Set All Bridge/종료취소 뒤467에서 실제 Cracked314개 변경 후 No→원래314개/Yes→변경314개를 재로드했다. Save as는 문자입력·실제마우스OK·전체작업본Fort파싱·중복거부/Cancel까지 확인했다. 468에서 실제 작업본 목록과 새이름 재진입/프로세스 재시작을 연결했다(원문 수락50개 상한 유지). NewFort/AddIsland GUI/언어별시나리오·전체State7은 다음 작업이다. Test Battle은488의 브리핑/즉시 편집 복귀와 투사체 미복원 경계를 참고한다.
 - **게임 중 UI:**
   - QWASZX: 문자 입력 → 생산 슬롯 예약 → 취득·회전·배치·보충을 실제 GUI로 확인했다(단위366, [문서](docs/exe/cpp-production-shortcuts-20261023.md)).
   - ESC 메뉴: 원본 가로 메뉴(Game·Edit·View·Options·Players·About)와 하위 명령·사건 큐를 연결했다(단위369, [문서](docs/exe/cpp-game-menu-runtime-20261023.md)). 원본에 없던 임시 Game 버튼은 2026-10-25에 제거했다. 459에서 원문 State7의 같은 HTML 배경 첫BYTE 초기화를 연결해 남은 배경이 ESC를 소비하던 회귀를 해결했고 실제 Early1 메뉴 복귀·재진입을 확인했다([459 문서](docs/exe/cpp-mission-background-runtime-20261026.md)).
