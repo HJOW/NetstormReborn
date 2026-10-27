@@ -4,9 +4,10 @@
 
 ## 0. 재개 전 확인 사항
 
+- **2026-10-27 / HJOW-X3D 새 오류 인계 — 수정 보류:** README대로 빌드한 cpppj의 캠페인1-1 진입 종료를 재현했다. 로그인 요청/현재 ID는 `0xffffffff`, Player1의 ID는 `1`이며, 가입 대상 미발견 뒤 미연결 `pendingReply`에서 예외가 발생한다. 현재 PC의 기존 Subscriber 집중 검사도9개 중2사례·4CHECK 실패다. 상세와 원시 로그는 **2.5절**을 따른다. 사용자의 마지막 지시는 **지금은 조사 내용만 정리하고, 실제 수정은 디컴파일 소스도 참고하여 진행**하는 것이다. 추가 수정·빌드·게임 실행은 중단했다.
 - **개발 목표는 단위504 인수인계·커밋 후 사용자 요청으로 일시 중지한 상태다.** 이번 요청은 문서 정리이며 다음 개발 단위를 시작하지 않는다. 마지막 제품 커밋은 `98c3aea8 / 20261027-39 CP`, 사용자 목표 변경 커밋은 `2f2b5a46`이다.
-- 개발 재개 시 [AGENTS.md](AGENTS.md), 이 문서, [닷넷 인수인계](LEFT_JOBS.dotnetpj.md), [TODO.md](TODO.md)를 다시 읽는다. **첫 작업은 현재 최종 게임의 전체34경로에 대한 짧은 진입 재검증**이다. 502의32경로 성공·503의bc5 성공·504의bc8 성공은 서로 다른 제품의 결과이므로 최종 제품의34경로 전체 성공으로 합산하지 않는다.
-- **마지막 전체 정밀 디컴파일: HJOW-Athlon (192.168.0.94) / 2026-10-23.** 결과는 `extracted/refined/`(Git 제외)에 있다. cpppj 코드 작업·디컴파일 소스 분석 전 현재 PC가 다르면 AGENTS.md에 따라 다시 디컴파일한다. 이번 문서 정리에서는 산출물을 변경하지 않았다.
+- 개발 재개 시 [AGENTS.md](AGENTS.md), 이 문서, [닷넷 인수인계](LEFT_JOBS.dotnetpj.md), [TODO.md](TODO.md)를 다시 읽는다. **먼저2.5절의 HJOW-X3D 로그인 불일치를 원본과 대조해 수정하고, 이후 현재 최종 게임의 전체34경로를 짧게 재검증한다.** 502의32경로 성공·503의bc5 성공·504의bc8 성공은 서로 다른 제품의 결과이므로 최종 제품의34경로 전체 성공으로 합산하지 않는다.
+- **마지막 완료된 전체 정밀 디컴파일: HJOW-Athlon (192.168.0.94) / 2026-10-23.** cpppj 코드 작업·디컴파일 소스 분석 전 현재 PC가 다르면 AGENTS.md에 따라 다시 디컴파일한다. **HJOW-X3D에서는 이번 재실행을 시작했다가 사용자 생략 지시로 중단했다.** 이 PC의 `extracted/refined/originals/`는 불완전하며 `raw.c`·`functions.tsv`·`conventions.tsv`가 없는 상태다. 남아 있는 `Netstorm.c` 등을 이번에 완료된 결과로 쓰지 않는다. 재개 시 전체 정밀 디컴파일을 다시 수행한다(2.5절).
 - 재디컴파일 절차는 `tools\ghidra\refine_all.ps1`이다. 힌트 생성이 cp949 오류로 멈추면 `PYTHONUTF8=1`, `PYTHONIOENCODING=utf-8`을 설정하고 재실행한다.
 - 실제 게임/별도 창 실행은 AGENTS.md의 확인·예외 규칙을 따른다. HJOW-Athlon·VM-W11-Codex·vm-debian-codex는 예외 시스템이다. **자연 완주·사용자 개입 검증과 `.english` 누락 개선은 계속 보류**하며, 메뉴 표시·진입·수초 진행의 짧은 검증은 허용된 범위다.
 - 빌드·검사·GUI 원시 로그와 드라이버는 작업 PC의 `extracted/`(Git 제외)에 있다. 커밋되는 보고서는 `cpppj/*.json`, 작업 문서는 `docs/exe/cpp-*.md`다. 다른 PC에 원시 자료가 있다고 가정하지 않는다.
@@ -82,10 +83,44 @@ Early3 후속 입력과 미실행 계획은 [부분 진행 보관](docs/exe/prep
 - **PlayerNoMake:** 경고255DWORD/정리004328a0의 장기 연결은453에서 완료했으나 패킷 부모00433c30의 실제 writer는 남았다. CD00487900은 spot 정리이므로 같은 함수로 취급하지 않는다.
 - **섬 추가 후 Graph:** 배치 직후 Graph1/연결 표면694→재로드0 차이의 원본 전체 월드 대조는 미완료다(493~494). 저장 seed/Money/Deck의 난수 변화와 배치 레코드 보존을 구별한다.
 
+### 2.5 HJOW-X3D 캠페인1-1 로그인 ID 불일치 — 조사만 완료, 수정 미착수
+
+**사용자 결정(2026-10-27):** 처음에는 이 작업에 한해 디컴파일을 생략하고 cpppj 빌드·실행을 확인하도록 요청했다. 이후 이 문제의 실제 수정에는 디컴파일 소스도 참고해야 한다며, 지금은 이 문서에 문제와 발견 사항만 정리하도록 지시했다. 아래는 중단 시점의 증거이며 수정 완료·플레이 성공 기록이 아니다.
+
+**환경과 재현:** 현재 PC는 `HJOW-X3D`, 시작 제품 소스는 `98c3aea8`이다. CMake 생성기는 Visual Studio17(2022), 도구 집합은 v143, CMake에 기록된 컴파일러는 MSVC `19.44.35229.0`이다. 앞선504의 HJOW-Athlon/Visual Studio18 검증과 구별한다. 다음 README 명령은 디컴파일 완료 없이 종료0이었다.
+
+```powershell
+cmake -S cpppj -B cpppj/build -DCMAKE_BUILD_TYPE=Release
+cmake --build cpppj/build --config Release --parallel 4
+```
+
+실제 재현은 원본 데이터를 `extracted/cpp-campaign-entry-20261027-data/`에 복사한 뒤 `tools/cpp_solo_entry_smoke.py --scope campaign --mission TheWarBegins --frames 180 --fps 40 --game-dir extracted/cpp-campaign-entry-20261027-data --output extracted/cpp-campaign-entry-20261027-before`로 실행했다. 이 도구는 창 모드·무음·안내 버튼 입력을 사용한다. 원본/원본 복사본의 실행파일은 실행하지 않았다. 상태 로그는 `State 3 → Palette 29 init palette → State 4 → 로컬 미션 상태8 → 9 → 10 → 미션 로그인 실제 외부 몸체 미연결`이며 게임 종료1이다. 사용자가 붙인 깨진 한글은 같은 메시지의 인코딩 표시 문제였고, 이번 원시 UTF-8 로그에서는 정상 한글을 확인했다. 이 조사는 CLI 미션 진입으로 재현했으며 Campaign 메뉴의 전체 클릭 경로를 새로 검증한 것은 아니다.
+
+**확인된 직접 종료 경로:** `cpppj/src/o/RawMissionLogin.cpp`의 `RawMissionLogin::Receive()`가 0x27 패킷의 subscriber를 Player1~8의 `+0x2c`와 비교하지만 일치하는 owner를 찾지 못한다. 이어 `if (!owner)`에서 거부 응답을 만들고 `Need(hooks_.pendingReply)`를 호출한다. `cpppj/src/client/RawCampaignSessionLogin.inc`의 실제 Session 조립에는 이 콜백이 없어 위 예외로 종료된다. 이는 정상 로컬 가입에서 owner를 찾지 못한 선행 문제와, 거부 응답 장치 누락을 구별해야 하는 상황이다. 콜백만 빈 성공으로 채우거나 ID를 무조건1로 덮어쓰는 수정은 하지 않았다.
+
+임시 진단 빌드로 같은 입력을 두 번 더 실행했다. 첫 진단은 `RawMissionLogin::Receive:104`의 미연결 호출을 가리켰고, 두 번째 진단은 **`로그인 ID 불일치: 요청=4294967295, 현재=4294967295, Player1=1`**을 기록했다. `0xffffffff`는 Client의 `MySubscriber()` 최초값이며, 로컬 Zone은 Player1에 ID1을 설치한다. `TutorialInit.cpp`의 `InitializeTutorialMission()`에는 현재 LoginSubscriber를 MySubscriber로 복사하는 코드가 이미 있다. 왜 그 값이 실제 Session 로그인에 연결되지 않는지는 아래 참조 연결 후보와 함께 원본에 대조해야 한다.
+
+**참조 연결의 유력한 조사 지점(최종 원인 미확정):** `ClientGameplayGlobals.cpp`는 `world(subscribers_ ? CampaignWorldGlobals::BorrowSubscribers(...) : CampaignWorldGlobals{})`로 두 DWORD를 바인딩한다. `CampaignWorldGlobals`의 명시 바인딩은 참조를 빌리지만 복사/이동 생성자는 자기 fallback에 값을 복제한다. 현재 PC에서 기존 `SubscriberGlobals_BoundConstructionDoesNotResetOrShareModes`의 조건식 구성/참조 주소·변경 전파 검사와, `ClientSubscriberGlobals_TwoActualSessionsShareOnlySubscribers`의 실제 Session 참조 주소·변경 전파 검사가 실패했다. **조건식 구성 과정의 값 복사로 참조가 분리되는지, MSVC 버전/설정에 따른 차이인지가 유력한 후속 조사 대상**이다. 이번에는 최소 재현·다른 컴파일러 비교·원본 디컴파일 대조를 마치지 않았으므로 컴파일러 결함이나 최종 수정 방법으로 단정하지 않는다.
+
+기존 집중 검사 실행은 `netstorm_tests.exe --filter SubscriberGlobals`이며 **9사례 실행, 실패2사례/4CHECK, 종료1**이다. `SubscriberGlobals_TutorialInitUsesCurrentLoginAfterConfiguration` 등 나머지7사례는 통과했다. 검사/fixture/기대값은 변경하지 않았고 전체 CTest·34경로는 실행하지 않았다. 과거504의3,334개 성공을 현재 PC의 검사 성공으로 표시하지 않는다.
+
+**원시 증거(이 PC의 Git 제외 경로):**
+
+- `extracted/cpp-campaign-entry-20261027-build-baseline.log`: 소스 수정 전 Release 빌드.
+- `extracted/cpp-campaign-entry-20261027-before/`: 최초 실패의 `results.json`, `TheWarBegins/{steps.tsv,stdout.log,stderr.log,result.json,running.json}`.
+- `extracted/cpp-campaign-entry-20261027-diagnostic/`, `extracted/cpp-campaign-entry-20261027-identity/`: 호출 위치/ID 값 진단의 실제 재실행과 실패 로그. 대응 빌드는 `extracted/cpp-campaign-entry-20261027-build-diagnostic.log`, `extracted/cpp-campaign-entry-20261027-build-identity.log`다.
+- `extracted/cpp-campaign-entry-20261027-subscriber-before.log`: 집중 검사9사례/4CHECK 실패 원문.
+- 각 실제 실행의 `results.json`은 보호 원본 `originalsUnchanged=true`를 기록했다. 실행 중 설정은 별도 데이터 사본에서만 변경·복원했다.
+
+**디컴파일 중단과 작업본 상태:** PC 불일치 규칙에 따라 `tools/ghidra/refine_all.ps1`을 시작했으나 사용자의 이번 생략 지시를 받고 해당 프로세스와 자식만 종료했다. 원본 실행파일을 읽는 Ghidra 정적 분석이었으며 게임 실행은 아니다. 첫 `originals` 분석 중 중단되어 두 판본 전체 디컴파일은 완료하지 않았다. 로그는 `extracted/cpp-campaign-entry-20261027-decompile-HJOW-X3D.log`이고 마지막 완료 호스트는 **HJOW-Athlon/2026-10-23 유지**다. 이 PC의 중단된 `extracted/refined/originals/`를 완료된 정밀 산출물로 취급하지 않는다.
+
+사용자 중단 지시 뒤 임시 진단으로 바꿨던 `RawMissionLogin.cpp`는 HEAD 내용으로 복원했다. **제품 코드 수정은 남기지 않으며 이 인계 문서만 커밋한다.** 로컬 `cpppj/build/bin/Release/NetstormCpp.exe`와 검사 실행파일에는 마지막 임시 진단 빌드가 남아 있으므로 수정 완료 제품으로 사용하지 않는다. 소스 복원 뒤 빌드·게임·검사를 추가 실행하지 않았다. 후속 수정은 정밀 디컴파일을 완료하고 Init의 `00540c74←0054265c`, 실제 두 전역의 주소/수명, 로컬 Zone/로그인 거부 응답 순서를 대조한 뒤 결정한다.
+
 ## 3. 앞으로 할 작업 (권장 순서)
 
 ### 1. 재개 첫 작업 — 현재 제품의 짧은 진입 기준선
 
+- [ ] **우선2.5절:** HJOW-X3D의 캠페인1-1 로그인 ID 불일치와 기존 Subscriber 검사 실패를 디컴파일 소스도 참고하여 수정한다. 현재는 사용자 요청으로 조사 인계만 마쳤으며 개발을 재개하지 않는다.
 - [ ] 504 최종 게임과 자산/설정·실행 파일SHA를 확인하고34경로를 짧게 재검증한다. 정상 종료뿐 아니라 정확한 미션/데모 구분·Start/Session·비정지·실제 gameTime 증가를 확인한다. 502의 최초 오류/도구실패 로그와503/504의 수정 근거를 보존한다.
 - [ ] 실제 오류가 나오면 해당 원본 몸체/호출 순서를 대조해 복원한다. guard 제거·배열 임의 확장·손상 후보 무조건 건너뛰기·진단6 강제·임시 속도로 숨기지 않는다.
 - [ ] 이후 DD 조정UI·미니맵/덱/QWASZX/ESC·편집/시나리오의 남은 기능과 짧은 실제 입력을 진행한다. 완주/사용자 개입 검증은 보류를 유지한다.
@@ -178,4 +213,4 @@ cpppj 1차 목표 달성 및 윈도우 10, 11 호환성 작업, MCP 추가 작�
 
 ---
 
-**이번 문서 정리 완료(2026-10-27):** 정리 전 원문 전체를 기존 보관본 뒤에 보존하고, 현행 본문은504 기준으로 갱신했다. 해결된 bc5/bc8 오류·완료된 준비본 병합/섬 추가/편집 왕복을 옛 “다음 작업”에서 제외했다. 개발 목표의 일시 중지와 미완료/보류 결정은 유지한다. 이번에는 인수인계 두 문서만 변경하고 원문 보존·문서 링크/앵커·UTF-8을 확인했다. 게임 실행·게임 빌드/C++검사·디컴파일은 수행하지 않았다.
+**선행 문서 정리 완료(2026-10-27 / e73a6961):** 정리 전 원문 전체를 기존 보관본 뒤에 보존하고, 현행 본문은504 기준으로 갱신했다. 해결된 bc5/bc8 오류·완료된 준비본 병합/섬 추가/편집 왕복을 옛 “다음 작업”에서 제외했다. 개발 목표의 일시 중지와 미완료/보류 결정은 유지한다. 이 선행 정리에서는 인수인계 두 문서만 변경하고 원문 보존·문서 링크/앵커·UTF-8을 확인했으며 게임 실행·게임 빌드/C++검사·디컴파일을 수행하지 않았다. 그 이후 HJOW-X3D에서 진행한 캠페인1-1 조사는2.5절과 구별한다.
