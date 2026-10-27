@@ -1170,6 +1170,7 @@ struct RawCampaignSession::Impl {
         };
         if (!combatEffects.missile.firingSound) combatEffects.missile.firingSound=missileSound;
         if (!combatEffects.missile.impactSound) combatEffects.missile.impactSound=missileSound;
+        if (!combatEffects.missile.impactName) combatEffects.missile.impactName=[this](float x,float y,std::string_view name) { if (!services.sound.playOnceAt) throw std::logic_error("아이스 투사체의 실제 파일명 위치 음향 미연결");static_cast<void>(services.sound.playOnceAt(x,y,soundNames.Lookup(name),0,0)); }; // 원문 동적 iceCannonImpact1..4 이름을 같은 SoundList/위치 장치에 전달한다.
         // 원본5429c8 토큰과 실제452fe0의 타입 인자를 같은 튜토리얼 소비자의 입력 큐로 전달한다.
         missileState.hitCommand=tutorialTechnologyCommand;
         combatEffects.missile.queueCommand=[this](std::uint32_t command,std::uint32_t display,std::uint32_t target) {

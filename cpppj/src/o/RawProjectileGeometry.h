@@ -20,9 +20,9 @@ public:
         std::span<const ProjectileGeometryType> geometry,float scaleX=16,float scaleY=11,const RawGunMode* gunMode=nullptr);
     // PATCH0046a780/CD00437390: 기본+현재 물리 SHP 포구 픽셀을 더한 뒤 현재 좌표에 반영한다.
     std::array<float,2> ArcherMuzzle(Sid firing) const;
-    // 실제 가상+b4를 분배한다.71은 두 SHP 포구의 합,10.78의128·131·140은 현재 자산 좌표다.
+    // 실제 가상+b4를 분배한다.71은 두 SHP 포구의 합,10.78의128·129·131·140은 현재 자산 좌표다.
     std::array<float,2> Muzzle(Sid firing) const;
-    // PATCH00481750: 썬은 허용 프레임, 썬더는 같은 RawGunMode로 방향을 읽고 불일치하면 절삭 사정거리로 보정한다.
+    // PATCH00481750: 썬은 허용 프레임, 아이스/썬더는 같은 RawGunMode로 방향을 읽고 불일치하면 절삭 사정거리로 보정한다.
     std::array<float,2> CannonRayEnd(std::array<float,2> from,std::array<float,2> to,Sid firing) const;
     // 현재 물리 SHP header+20/+22를 읽는다. 기본 프레임과 합산하지 않는다.
     std::array<std::int32_t,2> Hotspot(Sid firing) const;

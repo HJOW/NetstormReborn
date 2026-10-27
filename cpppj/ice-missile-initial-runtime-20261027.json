@@ -1,0 +1,387 @@
+{
+  "unit": 489,
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": "HJOW-Athlon / 2026-10-23",
+  "native": {
+    "report": "cpppj/ice-missile-initial-native-20261027.json",
+    "uniqueInputs": 1693,
+    "normalReturns": 3386,
+    "precisionDifferences": 0
+  },
+  "builds": [
+    {
+      "command": [
+        "cmake",
+        "--build",
+        "cpppj/build",
+        "--config",
+        "Release",
+        "--parallel",
+        "4",
+        "--",
+        "/p:UseMultiToolTask=true",
+        "/p:MultiProcMaxCount=4",
+        "/p:EnforceProcessCountAcrossBuilds=true"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-ice-missile-489/build1.log",
+      "sha256": "3a8ffc530a876928cc132c2daa211b3ae2eeb5f067796104bf82a944da0ccbd9",
+      "summaries": [],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cmake",
+        "--build",
+        "cpppj/build",
+        "--config",
+        "Release",
+        "--parallel",
+        "4",
+        "--",
+        "/p:UseMultiToolTask=true",
+        "/p:MultiProcMaxCount=4",
+        "/p:EnforceProcessCountAcrossBuilds=true"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-ice-missile-489/build2.log",
+      "sha256": "c6a98a7feca39e8508c993ad07d11935888810d5fbae0441a4f554035db39895",
+      "summaries": [],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cmake",
+        "--build",
+        "cpppj/build",
+        "--config",
+        "Release",
+        "--parallel",
+        "4",
+        "--",
+        "/p:UseMultiToolTask=true",
+        "/p:MultiProcMaxCount=4",
+        "/p:EnforceProcessCountAcrossBuilds=true"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-ice-missile-489/build3.log",
+      "sha256": "674c53f0ff3a3fafb933048e196fd875115dcffd5c2197fef7cf26c98ef79ce4",
+      "summaries": [],
+      "diagnostics": []
+    }
+  ],
+  "firstComparisons": [
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "IceMissileInitial"
+      ],
+      "exit": 1,
+      "log": "extracted/cpp-ice-missile-489/focused1-IceMissileInitial.log",
+      "sha256": "d8a697ca49768ceaec31d859afddbeb2a8effcaac3f3e05555057625f286d8b6",
+      "summaries": [
+        "4 test(s), 24 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "Missile"
+      ],
+      "exit": 1,
+      "log": "extracted/cpp-ice-missile-489/focused2-Missile.log",
+      "sha256": "8b1ebad4f8ce73ff9ee7723b9fd495635c6ea172397db81c1593d055accea446",
+      "summaries": [
+        "24 test(s), 6 failed check(s)"
+      ],
+      "diagnostics": []
+    }
+  ],
+  "focused": {
+    "unique": 88,
+    "observations": 89,
+    "failedChecks": 0,
+    "addedTests": [
+      "IceMissileInitial_NativeCtorAndDirection",
+      "IceMissileInitial_NativeFramesAndImpact",
+      "IceMissileInitial_NativeRayEnd",
+      "IceMissileInitial_NativeVirtualMuzzle"
+    ],
+    "runs": [
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "CampaignExistingEditorCheckpoint"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-ice-missile-489/focused3-CampaignExistingEditorCheckpoint.log",
+        "sha256": "9f8c6064fd046501c65612c99e6699993d240c931e56361ae4f22fb408ebd157",
+        "summaries": [
+          "42 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "CampaignFire"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-ice-missile-489/focused3-CampaignFire.log",
+        "sha256": "21bae3981b26941bc848216ad9fa4f6094f6bc646d63bb830791657e94bd55c1",
+        "summaries": [
+          "5 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "CampaignGuideWorldLifetime"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-ice-missile-489/focused3-CampaignGuideWorldLifetime.log",
+        "sha256": "22fbeccdcc8f829a3d3f340ac3432ea007e943b5131652da19150fce74aa53dd",
+        "summaries": [
+          "3 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "CampaignMissionFortPath"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-ice-missile-489/focused3-CampaignMissionFortPath.log",
+        "sha256": "99770507f4d3dec1e0551206e5db1031616a514a90ba2955e0d1d7875f9d542e",
+        "summaries": [
+          "2 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "CannonFire"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-ice-missile-489/focused3-CannonFire.log",
+        "sha256": "9ab30b702c44fb3370c2da63376e81f2ecd8e8d45233072d40ee899d05081910",
+        "summaries": [
+          "10 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "EditorTestBattle"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-ice-missile-489/focused3-EditorTestBattle.log",
+        "sha256": "88feabc2cc023a5911b3478f60a3677ba63baadb4ac86726928920f6e596055a",
+        "summaries": [
+          "3 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "Missile"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-ice-missile-489/focused3-Missile.log",
+        "sha256": "d7b3d5f4a9503624829d92bbec873fd03570a6f43123f73e4a6a14b513971413",
+        "summaries": [
+          "24 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      }
+    ]
+  },
+  "registered": {
+    "before": 3281,
+    "after": 3285,
+    "removed": []
+  },
+  "protection": {
+    "files": 3198,
+    "changed": [],
+    "agentsUnchanged": true,
+    "appendOnlyPrefixBytes": {
+      "cpppj/tests/CMakeLists.txt": 163118
+    }
+  },
+  "finalSourceFiles": 2854,
+  "exes": {
+    "NetstormCpp.exe": "97c875f99d1af6eded9447217f7095e43eae2141656b2ccb221cd2c0884d22a2",
+    "netstorm_tests.exe": "19604fd9e5106e93d075c795ff2889c697158afb62c01e525632e7c8af75728c"
+  },
+  "live": {
+    "flight": {
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-ice-missile-489\\test01-data",
+        "--window",
+        "--no-audio",
+        "--frames",
+        "170",
+        "--set",
+        "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=1;currentLanguage=english",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-ice-missile-489\\live-flight2\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-ice-missile-489\\live-flight2\\states.tsv"
+      ],
+      "binarySha256": "97c875f99d1af6eded9447217f7095e43eae2141656b2ccb221cd2c0884d22a2",
+      "returnCode": 1,
+      "timedOut": false,
+      "seconds": 5.8902279999965685,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "2cf97f1ff1904ce125a87c248984419db9de0c0a967424c54e34d323443e295a",
+      "originalsUnchanged": true
+    },
+    "projectiles": {
+      "flight-122": {
+        "418": [
+          "130",
+          "3",
+          "14",
+          "177.4375",
+          "90.5454559326"
+        ],
+        "420": [
+          "130",
+          "3",
+          "7",
+          "166.875",
+          "114.181816101"
+        ],
+        "422": [
+          "130",
+          "3",
+          "21",
+          "198.125",
+          "113.181816101"
+        ],
+        "424": [
+          "130",
+          "3",
+          "0",
+          "177.5625",
+          "125.363632202"
+        ]
+      },
+      "flight-124": {
+        "418": [
+          "130",
+          "3",
+          "14",
+          "177.4375",
+          "94.2254562378"
+        ],
+        "420": [
+          "130",
+          "3",
+          "7",
+          "170.554992676",
+          "114.181816101"
+        ],
+        "422": [
+          "130",
+          "3",
+          "21",
+          "194.445007324",
+          "113.181816101"
+        ],
+        "424": [
+          "130",
+          "3",
+          "0",
+          "177.5625",
+          "121.683631897"
+        ]
+      },
+      "flight-126": {
+        "418": [
+          "130",
+          "3",
+          "14",
+          "177.4375",
+          "98.5854568481"
+        ],
+        "420": [
+          "130",
+          "3",
+          "7",
+          "174.914993286",
+          "114.181816101"
+        ],
+        "422": [
+          "130",
+          "3",
+          "21",
+          "190.085006714",
+          "113.181816101"
+        ],
+        "424": [
+          "130",
+          "3",
+          "0",
+          "177.5625",
+          "117.323631287"
+        ]
+      }
+    },
+    "movedSameIds": [
+      "418",
+      "420",
+      "422",
+      "424"
+    ],
+    "immediateReturn": {
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-ice-missile-489\\test01-data",
+        "--window",
+        "--no-audio",
+        "--frames",
+        "205",
+        "--set",
+        "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=1;currentLanguage=english",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-ice-missile-489\\live-fastreturn1\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-ice-missile-489\\live-fastreturn1\\states.tsv"
+      ],
+      "binarySha256": "97c875f99d1af6eded9447217f7095e43eae2141656b2ccb221cd2c0884d22a2",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 8.692979299994477,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "61fb2064f0379a13ab64f050b735f5a95260b59ab836fac94830d19707a74ebc",
+      "originalsUnchanged": true
+    }
+  },
+  "limits": [
+    "원문 반사00482190은 이번 초기 투사체 자료에서 명시 외부 경계다. 실제 게임은 이 경계에서 종료1이며 계속 플레이 가능한 Test Battle 완료가 아니다.",
+    "4초 냉각 표시와 반사점/후속 생성/반사탄 ctor/frame·피해/소리는 후속이다.",
+    "이번은 집중/실제 짧은 실행이며 전체 검사는 반복하지 않았다. 직전488의 전체C++3281/실패0과 현재 등록3285를 구별한다.",
+    "원본/CD/기존 검사/fixture는 유지했다. 스테이지 클리어/사용자 개입 검증과 .english 부재 개선은 사용자 지시로 뒤로 미룬다. Windows10/11·전체화면은 현재 목표다."
+  ],
+  "pushed": false
+}

@@ -56,8 +56,8 @@ std::array<float,2> RawProjectileGeometry::ArcherMuzzle(Sid firing) const {
 std::array<float,2> RawProjectileGeometry::Muzzle(Sid firing) const {
     const auto raw=Slot(firing);
     if (raw[10]==71) return ArcherMuzzle(firing);
-    // PATCH TYPE128/131의 +0xb4 getter(0041c110)는 원시 x/y 좌표를 그대로 복사한다.
-    if (pool_.Edition()==OriginalEdition::Patch1078 && (raw[10]==128 || raw[10]==131))
+    // PATCH TYPE128/129/131의 +0xb4 getter(0041c110)는 원시 x/y 좌표를 그대로 복사한다.
+    if (pool_.Edition()==OriginalEdition::Patch1078 && (raw[10]==128 || raw[10]==129 || raw[10]==131))
         return {std::bit_cast<float>(Read(raw,14)),std::bit_cast<float>(Read(raw,18))};
     if (pool_.Edition()==OriginalEdition::Patch1078 && raw[10]==140)
         return {std::bit_cast<float>(Read(raw,14)),std::bit_cast<float>(Read(raw,18))};
@@ -66,14 +66,14 @@ std::array<float,2> RawProjectileGeometry::Muzzle(Sid firing) const {
 // 실제00481750의 썬/썬더 분기다. 방향 불일치는 난수 없이 TYPE 사정거리의 정수 변환으로 보정한다.
 std::array<float,2> RawProjectileGeometry::CannonRayEnd(std::array<float,2> from,std::array<float,2> to,Sid firing) const {
     const auto raw=Slot(firing);
-    if (pool_.Edition()!=OriginalEdition::Patch1078 || (raw[10]!=128 && raw[10]!=131)) throw std::logic_error("Cannon rayEnd 미복원 판본/TYPE");
+    if (pool_.Edition()!=OriginalEdition::Patch1078 || (raw[10]!=128 && raw[10]!=129 && raw[10]!=131)) throw std::logic_error("Cannon rayEnd 미복원 판본/TYPE");
     if (!std::isfinite(from[0]) || !std::isfinite(from[1]) || !std::isfinite(to[0]) || !std::isfinite(to[1])) throw std::invalid_argument("Cannon rayEnd 비유한 좌표");
     const float dx=static_cast<float>(static_cast<double>(to[0])-from[0]),dy=static_cast<float>(static_cast<double>(to[1])-from[1]);
     const std::int32_t direction=std::abs(dx)<=std::abs(dy) ? (dy>0 ? 4 : 0) : (dx<=0 ? 6 : 2);
     const auto frame=std::bit_cast<std::int32_t>(Read(raw,36));
     std::int32_t frameDirection=-1;
-    if (raw[10]==131) {
-        if (!gunMode_) throw std::logic_error("썬더 사정선의 실제 방향 getter 미연결");
+    if (raw[10]==129 || raw[10]==131) {
+        if (!gunMode_) throw std::logic_error("아이스/썬더 사정선의 실제 방향 getter 미연결");
         frameDirection=static_cast<std::int32_t>(gunMode_->Get(firing));
     } else if (frame>=0 && frame<4) frameDirection=kSunCannonFrameDirections[static_cast<std::size_t>(frame)];
     else if (frame>=24 && frame<28) frameDirection=kSunCannonFrameDirections[static_cast<std::size_t>(frame-24)];

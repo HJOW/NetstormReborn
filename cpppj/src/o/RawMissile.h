@@ -47,6 +47,7 @@ struct MissileState {
     std::uint32_t cornerImpactType{136};
     // scaleX/scaleY: 원본 BoardCoord.add가 읽는 현재 타일별 픽셀 배율이다.
     float scaleX{16.0f},scaleY{11.0f};
+    std::uint32_t rainCannonType{129},iceMissileType{130}; //10.78의 초기 아이스 발사자와 충돌/반사 표시 TYPE다. 기존 값형 초기화 순서는 유지한다.
 };
 // 실제 원본 월드 효과 경계다. 미복원 효과를 빈 성공으로 처리하지 않는다.
 struct MissileHooks {
@@ -89,6 +90,9 @@ struct MissileHooks {
     std::function<void(float,float,std::uint32_t)> impactSound;
     // destroy: 표시 자산의 가상 Destroy(0)이며 부착한 Missile 프로세스도 같은 Host가 삭제한다.
     std::function<void(Sid,std::uint32_t)> destroy;
+    std::function<std::int32_t(std::int32_t,std::int32_t)> randomInteger; //004558f0의 min포함/max제외 정수 난수이며 아이스 전용 음향이 소비한다.
+    std::function<void(float,float,std::string_view)> impactName; //004a9d70의 실제 파일명 위치 음향이며 token 재생과 구별한다.
+    std::function<void(const MissileFields&)> ricochet; //00482190의 현재 필드/표시를 사용하는 실제 반사 생성이다. 선택된 누락은 거부한다.
 };
 // 최초썬캐논및SunArcher 발사의실제숫자필드와표시자산수명/이동/충돌사슬이다.
 class RawMissile {

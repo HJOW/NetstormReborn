@@ -4,6 +4,7 @@
 #include <bit>
 #include <cmath>
 #include <stdexcept>
+#include <string>
 #include <utility>
 
 namespace netstorm::o {
@@ -68,7 +69,7 @@ Sid RawMissile::Construct(MissileFields& fields,const GunProjectileRequest& requ
     const bool archer=firing[10]==state_.sunArcherType;
     // group0 탄도와 썬 디스크 발사기71 전용 포구 보정 생략을 독립 판정한다.
     const bool groupZero=archer || (patch && firing[10]==state_.crossbowType);
-    const bool cannon=firing[10]==state_.sunCannonType || (patch && firing[10]==state_.thunderCannonType); // 복원한 두 group1 파생만 허용한다.
+    const bool cannon=firing[10]==state_.sunCannonType || (patch && (firing[10]==state_.thunderCannonType || firing[10]==state_.rainCannonType)); // 같은 group1의 초기 아이스129도 원문 수치/표시 생성 순서를 사용한다.
     if (request.ricochet || (!groupZero && !cannon) || Valid(request.firingPosition)) throw std::logic_error("Missile 미복원 반사/부모/포구 생성 경로 TYPE"+std::to_string(firing[10]));
     if (types_[firing[10]].group!=(groupZero ? 0 : 1)) throw std::logic_error("Missile 실제부모 group 계약 오류");
     if (!std::isfinite(request.speed) || request.speed<=0 || !Valid(request.targetPosition)) throw std::invalid_argument("Missile 생성 좌표/속도 오류");
@@ -111,7 +112,7 @@ void RawMissile::Frame(MissileFields& fields) const {
     const bool archer=firing[10]==state_.sunArcherType;
     // 원본 group0 사거리/코너 종료는 크로스보우에도 같고71 전용 포구와 무관하다.
     const bool groupZero=archer || (patch && firing[10]==state_.crossbowType);
-    const bool cannon=firing[10]==state_.sunCannonType || (patch && firing[10]==state_.thunderCannonType); // 썬더도 같은 원본 group1 충돌/만료를 따른다.
+    const bool cannon=firing[10]==state_.sunCannonType || (patch && (firing[10]==state_.thunderCannonType || firing[10]==state_.rainCannonType)); // 초기 아이스도 같은 group1 이동/만료를 사용하고 충돌의 파생 효과는 아래에서 구별한다.
     if ((!groupZero && !cannon) || Read(fields.bytes,kRicochet) || (patch && (Read(fields.bytes,40) || Read(fields.bytes,44)))) throw std::logic_error("Missile 미복원 frame 파생/반사/빗나감 경로");
     const float margin=static_cast<float>(patch && asset[10]==state_.thunderMissileType ? state_.thunderRangeMargin : state_.rangeMargin); // 실제 Pop 이전에 현재 int 여유를 float에 저장한다.
     if (!hooks_.unpop || !hooks_.pop || !hooks_.destroy || !hooks_.center) throw std::logic_error("Missile 실제 이동/삭제 경계 누락");
@@ -148,8 +149,16 @@ void RawMissile::Frame(MissileFields& fields) const {
         if (!(target[11]&1)) {
             if (corner) { if (!hooks_.impact) throw std::logic_error("Missile 실제 배리어 충돌 효과 경계 누락");hooks_.impact(last[0],last[1],2,0.02f);const auto sound=missileTypes_[state_.cornerImpactType].impactSound;if (!hooks_.impactSound) throw std::logic_error("Missile 실제 충돌 사운드 경계 누락");hooks_.impactSound(last[0],last[1],sound); }
             // CD10.72는 사거리 종료와 충돌이 겹쳐도 nonzero 표적 충돌 사운드를 요청한다.
-            else { if (!hooks_.hitEffect) throw std::logic_error("Missile 실제 표적 충돌 효과 경계 누락");hooks_.hitEffect(last[0],last[1]);if (missileTypes_[asset[10]].impactSound && (!patch || !exhausted)) { if (!hooks_.impactSound) throw std::logic_error("Missile 실제 표적 충돌 사운드 경계 누락");hooks_.impactSound(last[0],last[1],missileTypes_[asset[10]].impactSound); } }
+            else {
+                if (patch && asset[10]==state_.iceMissileType) {
+                    if (!hooks_.impact) throw std::logic_error("아이스 투사체의 실제 충돌 표시 미연결");hooks_.impact(last[0],last[1],2,.02F); // 아이스는 일반 HitEffect 대신 코너와 같은 실제2번 표시를 생성한다.
+                    if (missileTypes_[asset[10]].impactSound) {
+                        if (!hooks_.randomInteger || !hooks_.impactName) throw std::logic_error("아이스 투사체의 실제 난수/파일명 음향 미연결");const auto number=hooks_.randomInteger(1000,5000);hooks_.impactName(last[0],last[1],"iceCannonImpact"+std::to_string(number/1000)+".wav"); // 사거리 종료와 겹쳐도 전용 음향을 요청한다.
+                    }
+                } else { if (!hooks_.hitEffect) throw std::logic_error("Missile 실제 표적 충돌 효과 경계 누락");hooks_.hitEffect(last[0],last[1]);if (missileTypes_[asset[10]].impactSound && (!patch || !exhausted)) { if (!hooks_.impactSound) throw std::logic_error("Missile 실제 표적 충돌 사운드 경계 누락");hooks_.impactSound(last[0],last[1],missileTypes_[asset[10]].impactSound); } }
+            }
         }
+        if (patch && asset[10]==state_.iceMissileType && !corner) { if (!hooks_.ricochet) throw std::logic_error("아이스 투사체의 실제 반사00482190 미연결");hooks_.ricochet(fields); } // 최초 표적의 free 비트와 별개로 효과 뒤의 현재 표시 TYPE를 읽는다.
         // 원본10.78은 표적의 free 비트나 코너와 별개로 충돌 확인 뒤 이 타입 조합의 사건을 보낸다.
         // 이전 좌표 기록·직접 피해·삭제보다 먼저 같은 클라이언트 입력 큐에 세 DWORD를 전달한다.
         if (patch && asset[10]==state_.thunderMissileType && target[10]==state_.stoneTowerType) {
@@ -159,6 +168,7 @@ void RawMissile::Frame(MissileFields& fields) const {
     }
     PutPoint(fields.bytes,layout.previous,last);if (!hit && !exhausted) return;
     if (!(firing[11]&1)) { if (hit && !corner) { if (!hooks_.hit) throw std::logic_error("Missile 실제 직접 총 피해 경계 누락");hooks_.hit(fields.Firing(),fields.Target()); }else { if (!hooks_.refresh) throw std::logic_error("Missile 실제 총 사거리 갱신 경계 누락");hooks_.refresh(fields.Firing()); } }
+    if (patch && !hit && asset[10]==state_.iceMissileType) { if (!hooks_.impact) throw std::logic_error("아이스 투사체의 실제 사거리 종료 표시 미연결");hooks_.impact(last[0],last[1],2,.02F); } //00482b00은 비충돌 종료의 사거리 갱신 뒤에도2번 표시를 생성한다.
     hooks_.destroy(fields.Parent(),0);static_cast<void>(asset);
 }
 // 같은 월드/프로세스 타입 번호를 factory에 제공한다.

@@ -43,6 +43,7 @@ struct RawCampaignArcherBindings::Impl {
         if (&target.Pool()!=&core.pool) throw std::invalid_argument("캠페인 Archer 현재 표적 Pool 불일치");
         disc=std::make_unique<o::RawDiscRegular>(core.pool,animationTypes,core.frame);
         auto flight=std::move(effects.missile);
+        flight.randomInteger=[this](auto low,auto high) { if (high<=low) throw std::invalid_argument("투사체 정수 난수 구간 오류");return low+static_cast<std::int32_t>(random.Next(static_cast<std::uint32_t>(high-low))); }; // 같은 게임 난수의 원문 min포함/max제외 변환이다.
         flight.owner=[this](o::Sid sid,std::uint8_t owner) { core.owner.Set(sid,owner); };
         flight.unpop=[this](o::Sid sid,std::uint32_t flags) { world.Unpop(sid,flags); };
         flight.pop=[this](o::Sid sid,float x,float y,std::uint32_t flags) { world.Pop(sid,x,y,flags); };

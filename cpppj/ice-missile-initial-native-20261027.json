@@ -1,0 +1,19 @@
+{
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": "HJOW-Athlon / 2026-10-23",
+  "uniqueInputs": 1693,
+  "normalReturns": 3386,
+  "precisionDifferences": [],
+  "limits": "실제 초기129→130 ctor/frame/포구/사정선/방향/타입·치수·중심과 충돌 순서를 실행한다. 난수/format/파일명 음향/반사00482190/외부 자산·공간·피해는 명시 입력이다. 반사 생성·반사탄 ctor/frame·냉각 표시·전체 게임 완주 증거가 아니다.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_ice_missile_initial.py": "62ed4e16c98db0e2e05f627ee8f2884a09830256831e9ad69528144e5a0bbc01",
+    "tools/decomp_thunder_missile.py": "b556de87937ff814794abccb6a4d392af7224a8556d6b827b0fe518e80b71122",
+    "tools/decomp_crossbow_missile.py": "e54abc592c7c07a866814a591f25e37ac9d654c39cb67ff4bf8a10e10196468f",
+    "tools/decomp_gunmissile_oracle.py": "4671a0a69ee91d6e0280a6c4af73d38e6ca6b096ee04161aeaef8d2d3e5c0fd1",
+    "tools/decomp_owner_oracle.py": "5a837ad7fd233d9d75c7241d52fbf2e5a508e24dc158d091f243a13ab698e7fb",
+    "cpppj/tests/fixtures/ice-missile-initial-x86.tsv": "d5a4d8c851617f544bfb8139db91fec222b3b5df6a0b0bca645b6fe63b4064da"
+  }
+}

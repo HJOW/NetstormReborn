@@ -2279,3 +2279,7 @@ target_sources(netstorm_tests PRIVATE CampaignMissionFortPathTests.inc)
 # 보호PE에서 독립 관찰한 아이스80BYTE 발사와 공통 부모를 대조한다.
 target_sources(netstorm_tests PRIVATE IceCannonFireTests.cpp)
 target_compile_definitions(netstorm_tests PRIVATE NETSTORM_ICE_CANNON_FIRE_FIXTURE="${CMAKE_CURRENT_SOURCE_DIR}/fixtures/ice-cannon-fire-x86.tsv")
+
+# 초기 아이스 투사체의 실제128BYTE/세 슬롯/포구·사정선과 파생 충돌 호출을 대조한다.
+target_sources(netstorm_tests PRIVATE IceMissileInitialTests.cpp)
+set_source_files_properties(IceMissileInitialTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_ICE_MISSILE_INITIAL_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/ice-missile-initial-x86.tsv\"")
