@@ -456,3 +456,5 @@ TEST_CASE(CampaignCarrierTarget_ActualBfsTargetStartAndReturn) {
     const auto second=session.CarrierTarget().StartTarget(golem,priest,1,0);CHECK(second);if (!second) return;auto* current=reinterpret_cast<RawPathProcess*>(second);CHECK(current->Parent()==golem && current->MovementType()==40 && packets==2);CHECK(core.processes.FromForm(current->Form())==current);RawContainedLookup lookup(core.pool,[](Sid,std::uint32_t) { throw std::logic_error("대상 이동 검사에서 삭제 조회 금지"); });CHECK(lookup.Find(golem,40)==current->Form());CHECK(!lookup.Find(golem,40,1).value); // 기존 경로 교체는 같은 실제 종속 체인에 하나만 남긴다.
     CHECK(core.destroy.PreDepth()==0 && core.destroy.PostDepth()==0);
 }
+
+#include "CampaignDetonateInputTests.inc" // 같은 실제 메뉴/자산 장치를 사용해 Detonate 입력을 확인한다.

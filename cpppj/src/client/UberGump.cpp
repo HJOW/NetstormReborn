@@ -98,6 +98,7 @@
 #endif
 #include <windows.h> //원문004dd560의 GetFileAttributesA 부재/디렉터리 판정을 실제 Windows 장치에 연결한다.
 #include "client/ObjectOwnerCommands.h"
+#include "client/DetonateInput.h"
 
 namespace netstorm::client {
 // 테스트 전용 임시 조작이며 원본 분석 결과가 아니다. 미션 진행/적 상태/기술은 바꾸지 않는다.
@@ -1000,6 +1001,9 @@ void UberGump::Event(InputEvent event) {
         }
         rebuild_=true;return; // 원본005427ac의 일반 입력은 메뉴의 special 노출 조건을 실행 관문으로 다시 추가하지 않는다.
     }
+    if (DispatchDetonateInput(event,[this](o::Sid target,std::uint32_t code) {
+        if (!world_) throw std::logic_error("Detonate의 현재 Session 없음");static_cast<void>(world_->Session().CommandObject(target,code));
+    })) { rebuild_=true;return; } // 원본은 실제6c의0반환 뒤에도 다음 사건으로 진행한다. 미연결 명령 예외를 만들지 않는다.
     if (transitionCode==kStartDemo) {
         if (!(event.code&InputCode::kRelease)) BeginMission(std::string(scriptStrings_.Resolve(std::bit_cast<std::uint32_t>(event.y))),1);
         return; // 원본005429f4의 실제 세 번째 인자를 동일 공장으로 전달한다.

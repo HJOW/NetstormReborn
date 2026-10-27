@@ -1,0 +1,27 @@
+{
+  "unit": 521,
+  "host": "HJOW-Athlon",
+  "date": "2026-10-28",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23"
+  },
+  "uniqueInputs": 768,
+  "instructions": 308640,
+  "nativeCalls": {
+    "00413d50": 576,
+    "004e63e0": 576,
+    "00445330": 576,
+    "0041e400": 288,
+    "004ae010": 288,
+    "004ac9b0": 288
+  },
+  "boundaries": "Guide/Gump 소비 뒤4d6eca..다음 사건4da477과16VT의41e400→4ae010→4ac9b0·AI키·strchr·커서활성판정 전체. 460de0 팝업 없음만 명시 경계이며 실제 OS/게임/통신 없음. 원문은 아무 요청/월드 쓰기 없이 끝난다. 초기 데이터의 명령 ID와 비활성 커서 조건이다.10.72/모든 다른 입력 경로까지의 주장은 아니다.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_detonate_input.py": "8f112ce4f68042634bcdd11b2b111fca5fe5887a54c7538545540c09b4bcc49f",
+    "tools/decomp_oracle.py": "227b9a8b703cfd81d05ac4a7c72a42eaecf9c804fc028680466a19a591f2335d",
+    "cpppj/tests/fixtures/detonate-input-x86.tsv": "1d4188dcad5180c1167817600d3a67c282126ebcb321de8086ee78a841f3df03"
+  }
+}

@@ -2341,3 +2341,7 @@ set_source_files_properties(ObjectConversionTests.cpp PROPERTIES COMPILE_DEFINIT
 # 독립 Meltdown 기계어의 전체 요청/피해/패킷을 제품에 재생한다.
 target_sources(netstorm_tests PRIVATE MeltdownTests.cpp)
 set_source_files_properties(MeltdownTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_MELTDOWN_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/meltdown-x86.tsv\"")
+
+# 실제 일반 입력의 Detonate 미시전 경로와 부모0반환을 대조한다.
+target_sources(netstorm_tests PRIVATE DetonateInputTests.cpp)
+set_source_files_properties(DetonateInputTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_DETONATE_INPUT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/detonate-input-x86.tsv\"")

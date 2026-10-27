@@ -241,3 +241,6 @@ target_sources(netstorm PRIVATE client/UberGumpCamera.cpp)
 
 # 같은 SID의 비석·주문 가상 입력과 원문 타입 변경을 연결한다.
 target_sources(netstorm PRIVATE o/RawObjectConversion.cpp o/RawObjectConversion.h)
+
+# 원본 Detonate의 실제 가상 입력과 반환 무시를 일반 부모에 연결한다.
+target_sources(netstorm PRIVATE client/DetonateInput.cpp client/DetonateInput.h)

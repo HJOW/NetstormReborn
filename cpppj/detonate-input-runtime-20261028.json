@@ -1,0 +1,243 @@
+{
+  "unit": 521,
+  "host": "HJOW-Athlon",
+  "date": "2026-10-28",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23",
+    "outputsModified": false
+  },
+  "product": {
+    "NetstormCpp.exe": "89dd05d4c740da6de43d53e476365acc8e48d2ad326f31325acc1092d42990f5",
+    "netstorm_tests.exe": "bd0be2b4519842c31a0786dd420ac6130d547dfce4900c9fe255340dc7f9fd6d"
+  },
+  "releaseBuild": {
+    "command": [
+      "cmake",
+      "--build",
+      "cpppj/build",
+      "--config",
+      "Release",
+      "-j",
+      "3"
+    ],
+    "exit": 0,
+    "log": "extracted/cpp-detonate-521/build1.log",
+    "sha256": "b5e9414364d92072691d7b08806827ccf4fbb5e39a8640a9357f565d4b75fec4",
+    "summaries": [],
+    "diagnostics": []
+  },
+  "native": {
+    "report": "cpppj/detonate-input-native-20261028.json",
+    "uniqueInputs": 768,
+    "replay": {
+      "command": [
+        "python",
+        "tools/decomp_detonate_input.py",
+        "--verify"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-detonate-521/native-verify.log",
+      "sha256": "f4f63d365c8d400e14cb3e5ccd31f97af39c286e40265cf062d9dc189b047481",
+      "summaries": [],
+      "diagnostics": []
+    },
+    "assertions": {
+      "inputs": 768,
+      "assertions": 0,
+      "instructions": 308640
+    },
+    "entry": "004d6eca",
+    "exit": "004da477",
+    "windowOrOsOrNetworkExecuted": false
+  },
+  "tests": {
+    "registered": 3352,
+    "focused": 37,
+    "unique": 37,
+    "failed": 0,
+    "fullSuiteRun": false,
+    "groups": [
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "DetonateInput"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-detonate-521/focus-detonate.log",
+        "sha256": "664b8a43680d2472394ed8c5b5154eb8f3e877c4cb7a032642d325d5a680a0fc",
+        "summaries": [
+          "3 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "ObjectMenu"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-detonate-521/focus-objectmenu.log",
+        "sha256": "8a8af06d96d90f20f0d15e2bb2f1f5e27ac8d59367fd70a1d1ecd2c207f2a977",
+        "summaries": [
+          "20 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "ObjectCommand"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-detonate-521/focus-objectcommand.log",
+        "sha256": "376fe357bce15a18cd6356fc8165cc0ead2b5e29f5cdf75a012464300d58f4e5",
+        "summaries": [
+          "3 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "ScriptCommand"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-detonate-521/focus-scriptcommand.log",
+        "sha256": "d53a62b4a163d0f9ea3a91ef526f525e9e22d2f4201ca2bf652a1a2a2d9ceb12",
+        "summaries": [
+          "3 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "ObjectConversion"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-detonate-521/focus-objectconversion.log",
+        "sha256": "d8f22d702a06b0f49725c71b08b933b4d1c883b407fe318939d1eedeb74db15f",
+        "summaries": [
+          "2 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "DialogCommand"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-detonate-521/focus-dialogcommand.log",
+        "sha256": "d4b27a55819edc216b236c551f2dbcd380c3f77ece8e74deee7bf087474d6ecf",
+        "summaries": [
+          "3 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "MissionGuideInput"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-detonate-521/focus-missionguideinput.log",
+        "sha256": "f94676fd8de1126c9bfb04a5ad9f39ccdf6afd890c8f2981348822c916d29961",
+        "summaries": [
+          "3 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      }
+    ],
+    "actualSessionMenuQueueTest": "CampaignDetonateInput_ActualSpellMenuQueueAndUnchangedWorld"
+  },
+  "windowProbes": [
+    {
+      "path": "extracted/cpp-detonate-521/baseline",
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-detonate-521\\baseline\\data",
+        "--window",
+        "--no-audio",
+        "--frames",
+        "240",
+        "--set",
+        "SCREENW=1280;SCREENH=720;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-detonate-521\\baseline\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-detonate-521\\baseline\\states.tsv"
+      ],
+      "binarySha256": "bd24a7336738596b97c07055fbe9d889a29dfd4b7525be52473fb99334c1f23c",
+      "returnCode": 1,
+      "timedOut": false,
+      "seconds": 6.897465300004114,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "2d9d7ae0dbdc07c11ec7629429b5ebbf16e5a1c2fafe684cc6699ab7d2c16907"
+    },
+    {
+      "path": "extracted/cpp-detonate-521/baseline2",
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-detonate-521\\baseline2\\data",
+        "--window",
+        "--no-audio",
+        "--frames",
+        "240",
+        "--set",
+        "SCREENW=1280;SCREENH=720;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-detonate-521\\baseline2\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-detonate-521\\baseline2\\states.tsv"
+      ],
+      "binarySha256": "bd24a7336738596b97c07055fbe9d889a29dfd4b7525be52473fb99334c1f23c",
+      "returnCode": 1,
+      "timedOut": false,
+      "seconds": 8.461602600000333,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "7f2ad291cff5878d3134f7db14253f1ff905cd365ac1d822a6c714fc8fa42a9a"
+    }
+  ],
+  "acceptedWindowCases": 0,
+  "protected": {
+    "originalsUnchanged": true,
+    "originalCdUnchanged": true,
+    "agentsUnchanged": true,
+    "oldFixturesUnchanged": true,
+    "changedExistingTestFiles": [
+      "cpppj/tests/CampaignObjectMenuTests.cpp",
+      "cpppj/tests/CMakeLists.txt"
+    ],
+    "finalCompiledSourcesUnchanged": true
+  },
+  "limitations": [
+    "원문의Guide/Gump 소비 뒤·초기 명령ID·비활성 커서 조건의 일반 입력768조건이다.",
+    "실제 Session/Gump 클릭/큐는 명시 생성한114 주문의 단위 장면이다. 자연 획득/별도 창의 끝까지 진행한 증거가 아니다.",
+    "별도 창2회는 Play Mission 버튼 가정과 Test Battle 뒤 대상 좌표 미탐색으로 모두 종료1이며 Detonate 클릭 미도달이다. 기존 미연결 예외의 실제 재현으로 세지 않는다.",
+    "Test Battle 뒤Editor1/Spell frame0·선택 가능 여부는 원본과 추가 대조할 잔여다.",
+    "공중3종은 정적 제한 유지. 직사각형 분석·자연 완주/영문 부재 개선은 보류."
+  ],
+  "sourceSha256": {
+    "cpppj/src/client/DetonateInput.cpp": "93fcc32b176e2b91877e31f642a4b002d79c844f1331a7e8a5350783799958d1",
+    "cpppj/src/client/DetonateInput.h": "811b51a3e0ec190575bb9649be2174aaad8e58e9392566e1c29ec68f599ab5fc",
+    "cpppj/src/client/UberGump.cpp": "43aff56c3c4d09d761e229513b6408722a75e0da57bcccbbf6e8a198d6d462d4",
+    "cpppj/src/CMakeLists.txt": "e5480b7261e7fb3c00a70f55bb19a91cf262130c3e545e34489b9a994876051e",
+    "cpppj/tests/CMakeLists.txt": "199400dd2f83d58ee2df3d56d3b41748cfd3505115325c9b3d3e729843c8237b",
+    "cpppj/tests/CampaignObjectMenuTests.cpp": "8d447e47be0d8587d67a13d968ee634fcd95d6fc6384c7e04d0820f9c7daec7e",
+    "cpppj/tests/CampaignDetonateInputTests.inc": "777bb16b57b7203e82a76a5297a7f7c3190288c83ee154628e3c7c10781dcd7c",
+    "cpppj/tests/DetonateInputTests.cpp": "3311e8e02f91ad2d7466b16603178f09e17b38ba6be1f8c1f32cf3b1d932d932",
+    "cpppj/tests/fixtures/detonate-input-x86.tsv": "1d4188dcad5180c1167817600d3a67c282126ebcb321de8086ee78a841f3df03",
+    "tools/decomp_detonate_input.py": "8f112ce4f68042634bcdd11b2b111fca5fe5887a54c7538545540c09b4bcc49f"
+  }
+}
