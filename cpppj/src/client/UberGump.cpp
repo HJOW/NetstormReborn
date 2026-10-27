@@ -321,6 +321,7 @@ void UberGump::DetachMissionWorldBindings() {
 }
 // 기존 Tutorial 소멸 효과를 원문 late closeGuide에 모으고 그 뒤에만 base Mission의 Config/Native 수명을 끝낸다.
 void UberGump::ReleaseCurrentGuideMission() {
+    ReleaseMissionFortLoad(state_,missionFortRequest_); //새 Init 전 이전 Guide의 지연 요청만 닫는다. 기존 World는 원문 State 부모의 위치까지 보존한다.
     if (missionRuntime_ && missionRuntime_->gate.scriptPaused) {
         client_.PopGamePause();missionRuntime_->gate.scriptPaused=0; //미션이 보유했던 자기 정지를 반납한다. Native cleanup이 이미 깊이를 비웠으면 기존 Resume의 자연 무동작을 따른다.
     }
@@ -334,10 +335,8 @@ void UberGump::ClearWorld() {
     if (rawButtons_ && rawButtons_->Menus()) rawButtons_->Menus()->CloseEditorIslandWindows(); // 창/루트 드래그의 실제 Session 대여를 월드보다 먼저 반납한다.
     if (world_) client_.LocalStateGlobals()->CaptureEnd()=0.0; // 현재 월드 정리 어댑터에서004b2df0의005c8618 +0쓰기를 Session/UI/Kernel 반납 전에 실행한다. 전체 State7 cleanup 연결은 후속이다.
     if (world_) mapUserName_=world_->Session().CurrentHandle(); // 원본 Client 전역 이름은 월드를 해제한 뒤에도 다음 목록 조회에 남는다.
-    state_.Cancel("LoadMissionFort"); // 현재 미션이 설치 전에 교체돼도 그 소유자의 이전 요청을 새 미션에서 소비하지 않는다.
-    state_.Cancel("LoadMissionWorld"); // 비 Tutorial의 지연 설치도 같은 소유자 해제 때 취소한다.
+    ReleaseMissionFortLoad(state_,missionFortRequest_); //전체 종료도 같은 요청 owner 반납을 사용한다.
     if (rawButtons_ && rawButtons_->Menus()) rawButtons_->Menus()->CloseMissionLoading(); // 로딩 중 이탈한 부모를 다음 장면에 남기지 않는다.
-    missionFortRequest_.reset(); // Session이 살아 있으면 공유 소유권으로 실제 설치/해제 완료까지 이미지를 보존한다.
     if (rawButtons_ && rawButtons_->Menus()) rawButtons_->Menus()->CloseHelp(); // 동적 정보/그림의 현재 Session보다 먼저 실제 창을 반납한다.
     if (world_ && rawButtons_ && rawButtons_->Menus()) rawButtons_->Menus()->Close(); // 같은Form을반납한뒤에만Session/월드포인터를해제한다.
     gameMenuState_.reset(); // 같은Session의검산참조를월드보다먼저반납한다.
@@ -363,7 +362,7 @@ bool UberGump::HasWorld() const { return world_!=nullptr; }
 // Native 부모가 실제 AI/링크/Kernel을 정리하고 Core0을 선택한 뒤 호출하는 호스트 소비자 반납이다.
 void UberGump::RetireWorldForState() {
     if (!world_) throw std::logic_error("State Runtime 반납의 현재 GameWorld 소유자 누락");
-    mapUserName_=world_->Session().CurrentHandle();state_.Cancel("LoadMissionFort");state_.Cancel("LoadMissionWorld");missionFortRequest_.reset();
+    mapUserName_=world_->Session().CurrentHandle(); //State7은 새 Guide의 Init이 작성한 요청/Zone을 사용한다. 이전 Session 반납으로 그 owner를 지우지 않는다.
     gameMenuState_.reset();if (objectMenus_) objectMenus_->Clear(); //현재 Runtime에 대한 메뉴/Form 비소유 참조만 반납한다.
     client_.GetRenderer().SetExtraCollection({});client_.GetRenderer().SetOverlayProcedure({}); //새 HUD를 지우지 않고 이전 월드 Draw callback만 닫는다.
     DetachMissionWorldBindings();briefingSections_.clear();briefingIndex_=0;fortObjects_=0; //Runtime의 Session 참조만 반납한다. gate/state/Script와 Native mission은 State1 이름 비교 뒤 실제 closeGuide 또는 메인 메뉴 해제까지 유지한다.
@@ -515,7 +514,7 @@ void UberGump::BeginMission(std::string name,std::uint32_t demo,std::uint32_t mo
 }
 // Guide 공장의 현재 Client 소비자다. 이전 미션 해제는 호출자가 원본 순서로 마친 상태여야 한다.
 void UberGump::CreateMission(std::string name,std::uint32_t demo,std::uint32_t mode,o::ConfigInterface::FileReader source) {
-    if (mission_ || missionRuntime_ || world_) throw std::logic_error("Guide 새 미션 공장 전에 기존 현재가 남아 있음");
+    if (mission_ || missionRuntime_) throw std::logic_error("Guide 새 미션 공장 전에 기존 현재가 남아 있음"); //기존 World는 새 Init 뒤 State7의 실제 cleanup 위치까지 살아 있을 수 있다.
     mission_ = CreateGuideMissionScript(client_.Configuration(),name,client_.SurfaceStorage()->links.mission,std::move(source));
     if (!mission_->Loaded()) throw std::runtime_error("Missing mission: " + name);
     const auto type = o::AsciiLower(mission_->MissionType());
@@ -533,7 +532,7 @@ GuideMissionTransitionHooks UberGump::MissionTransitionEffects() {
         if (!missionRuntime_) throw std::logic_error("현재 미션 없는 Guide 가상 종료");
         if (missionRuntime_->guided) RunTutorialMissionStage(missionRuntime_->state,6,{}); // 실제 Tutorial+1c의 빈 종료다. 다른 형식은 기존 teardown 어댑터를 유지한다.
     };
-    hooks.release=[this] { ClearWorld();ReleaseCurrentGuideMission(); }; //교체 도중 MainMenu/메뉴 음악을 끼워 넣지 않고 같은 실제 Tutorial 데이터와 Guide 미션 모드도 해제한다.
+    hooks.release=[this] { ReleaseCurrentGuideMission(); }; //원문 Guide 해제는 Mission만 닫는다. World/Player/Kernel/HUD 반납은 뒤 State1/7의 전체 부모가 수행한다.
     hooks.create=[this](std::string_view name) { CreateMission(std::string(name)); };
     hooks.get=[this](std::string_view key) { if (!mission_) throw std::logic_error("현재 설정 없는 Guide Fork");return mission_->Get(key).value_or(""); };
     hooks.mode=[this](std::uint32_t value) { if (!missionRuntime_) throw std::logic_error("재시작 공장 뒤 모드 수신 누락");missionRuntime_->mode64=value; };
@@ -542,8 +541,8 @@ GuideMissionTransitionHooks UberGump::MissionTransitionEffects() {
 }
 // 원본 Init은 현재 전역/Config를 쓰고 로드 요청 뒤 Header/flags를 수행한다. 실제 월드는 다음 루프에 설치한다.
 void UberGump::InitializeMission() {
-    if (!mission_ || !missionRuntime_ || !missionRuntime_->guided || world_) throw std::logic_error("Tutorial Init의 현재/빈 월드 계약 위반");
-    TutorialInitHooks hooks;hooks.clearTemplates=[this] { if (world_ || client_.GameplayGlobals()->Borrowed() || client_.SurfaceStorage()->Borrowed()) throw std::logic_error("이전 미션 Runtime의 실제 고정뷰가 아직 살아 있음");templateStorage_->ClearAll(); }; //실제 Runtime 대여는 계속 거부한다. State3의 World 없는 HUD는 장기 Client만 빌리므로 원문 Init의 manager 정리를 막지 않는다.
+    if (!mission_ || !missionRuntime_ || !missionRuntime_->guided) throw std::logic_error("Tutorial Init의 현재 Guide 계약 위반");
+    TutorialInitHooks hooks;hooks.clearTemplates=[this] { templateStorage_->ClearAll(); }; //원문004c3290 첫 호출은 살아 있는 Editor/Session과 별개로 같은9개 manager를 반납한다. Session은 현재 헤더를 다시 조회하며 Template 참조를 고정 보유하지 않는다.
     hooks.resetOptions=[this] { o::ResetMissionBattleOptions(o::OriginalEdition::Patch1078,*missionOptions_); };
     hooks.get=[this](std::string_view key,std::optional<std::string_view> fallback) { auto value=FontBytes(mission_->Get(key).value_or(""));if (const auto end=value.find('\0');end!=std::string::npos) value.resize(end);if (value.empty() && fallback) value=*fallback;return value; };
     hooks.set=[this](auto key,auto value) { const auto text=o::DecodeOriginalText({reinterpret_cast<const std::uint8_t*>(value.data()),value.size()});static_cast<void>(mission_->Set(key,text)); };
@@ -581,7 +580,7 @@ o::FortMissionSaveHooks UberGump::FortMissionSaveEffects() {
 }
 // 캡처한 요새 요청을 다음 State 자리에서 실제 설치한다. Start는 원래 Guide 단계3에 남긴다.
 void UberGump::LoadMissionWorld(std::optional<std::string> requestedFort) {
-    if (!mission_ || !missionRuntime_ || world_) throw std::logic_error("Guide 초기화의 현재 Script/Runtime/빈 월드 계약 위반");
+    if (!mission_ || !missionRuntime_) throw std::logic_error("Guide 초기화의 현재 Script/Runtime 계약 위반");
     const bool nativePlayers=client_.Assets().Edition()==o::OriginalEdition::Patch1078; //실제 State7의 앞선 Player 초기화 완료를 뒤 Session에 인계하는 호스트 대여 선택이다.
     struct LoadingRetirement { // 원문 진행 안내의 수명을 실제 동기 로드 호출에 한정한다.
         RawMenuControls& menus; // 로드/실패 반납보다 오래 사는 같은 실제 UI 소유자다.
@@ -590,6 +589,8 @@ void UberGump::LoadMissionWorld(std::optional<std::string> requestedFort) {
     rawButtons_->Menus()->ShowMissionLoading(LoadingHtmlContext({85,0,client_.GetScreen().Width(),client_.GetScreen().Height()}),FontBytes(client_.Translate("Starting Mission...")),[this] { return FontBytes(client_.Translate("Cancel")); });
     rebuild_=true;Compose();client_.PresentScene(); // 실제 파일 읽기 전에 같은 전체 부모를 먼저 출력하며 가짜 표시 지연을 넣지 않는다.
     if (nativePlayers) { htmlGlobals_.background[0]=0;CleanupNativeStateWorld(1); } //원문 State7은 배경 첫BYTE를 지운 뒤 reason1로 Client9/덱/HUD를 반납한다. 호스트 로딩 안내 제출 뒤에는 새 HUD의 초기 도킹 전 중간 화면을 출력하지 않는다.
+    else if (world_) ClearWorld(); //10.72의 기존 동기 World 어댑터는 해당 판본 전체 State 복원 전까지 유지한다.
+    if (world_) throw std::logic_error("미션 State cleanup 뒤 이전 World 대여가 남아 있음"); //원문 정리의 실제 반납을 확인한 뒤에만 새 Session을 만든다.
     const auto type=o::AsciiLower(mission_->MissionType()); // 현재 미션의 실제 가상 형식에 맞는 기존 설치 경로다.
     if (!missionRuntime_->guided) { missionRuntime_->gate.tutorialNumber=std::bit_cast<std::uint32_t>(o::ConfigParseLong(mission_->Get("tutorialNumber").value_or("")));ApplyMissionDemo(mission_->Get("demo").value_or(""),missionRuntime_->gate.demo);o::ResetMissionBattleOptions(o::OriginalEdition::Patch1078,*missionOptions_);o::SetTotalMadeAllowAll(*missionRestrictions_,1);initLoginSubscriber_=1; }
     const auto selectedFort=requestedFort ? *requestedFort : mission_->FortName(); // Init의 지역256BYTE에서 캡처한 값을 이후 설정 재조회로 바꾸지 않는다.

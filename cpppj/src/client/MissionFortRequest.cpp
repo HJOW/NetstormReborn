@@ -1,5 +1,6 @@
 // 원본 주소의 마지막BYTE와 요청의 stale 꼬리를 서로 구별해 보존한다.
 #include "client/MissionFortRequest.h"
+#include "client/State.h"
 #include <algorithm>
 #include <stdexcept>
 namespace netstorm::client {
@@ -25,5 +26,9 @@ std::uint32_t CaptureMissionFortZone(MissionFortLoadRequest& request,zacket::Loc
     if (request.consumed || !request.zone.empty() || packet.storage.size()!=512) throw std::logic_error("Fort 요청 Zone 중복/예약 크기 오류");
     const auto length=15U+std::uint32_t(packet.storage[14])*71U;if (length>packet.storage.size()) throw std::out_of_range("Fort 요청 현재 Zone client 범위");packet.storage[2]=static_cast<std::uint8_t>(length);packet.storage[3]=static_cast<std::uint8_t>(length>>8);
     const auto bytes=packet.Bytes();request.zone.assign(bytes.begin(),bytes.end());return 1;
+}
+// Session이 아직 빌리는 이전 이미지의 실제 반납은 그 공유 소유자가 끝나는 시점에 맡긴다.
+void ReleaseMissionFortLoad(State& pending,std::shared_ptr<MissionFortLoadRequest>& request) {
+    pending.Cancel("LoadMissionFort");pending.Cancel("LoadMissionWorld");request.reset();
 }
 }

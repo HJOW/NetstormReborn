@@ -3,9 +3,11 @@
 #include "o/RawLocalMissionState.h"
 #include "zacket/LocalMissionTransport.h"
 #include <functional>
+#include <memory>
 #include <string>
 
 namespace netstorm::client {
+class State; // 호스트 지연 로드 큐를 요청 owner 해제 때만 함께 반납한다.
 // 요청 작성 시점의 원본 전역을 빌려 큰 효과 뒤 현재 값을 다시 읽는다.
 struct MissionFortRequestGlobals {
     o::LocalMissionStateBlock& next; // 005c8878의 전체144BYTE다. 지정 필드 밖은 보존한다.
@@ -30,4 +32,6 @@ struct MissionFortLoadRequest {
 };
 // 원본0040a1e0(1)의 길이 확정과004dece0의 실제 소유 복제를 같은 버퍼에 수행한다.
 std::uint32_t CaptureMissionFortZone(MissionFortLoadRequest& request,zacket::LocalMissionPacket& packet);
+// Guide 교체/전체 종료에서 이전 미션의 지연 로드만 취소한다. State의 이전 World 반납에서는 호출하지 않는다.
+void ReleaseMissionFortLoad(State& pending,std::shared_ptr<MissionFortLoadRequest>& request);
 }

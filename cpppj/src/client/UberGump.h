@@ -148,7 +148,7 @@ private:
     State state_;
     std::shared_ptr<o::FortSerializationGlobals> serializationGlobals_; // 주Template·맵목록임시manager·실제Session이같은판본DWORD를빌리는Client수명이다.
     std::shared_ptr<CampaignTemplateStorage> templateStorage_; // 이전 Session이 사라져도 같은 Template9를 명시 정리 전까지 보유한다.
-    std::shared_ptr<MissionFortLoadRequest> missionFortRequest_; // 현재 미션의 지연 요청이다. 미션 교체 시 이전 큐와 함께 반납한다.
+    std::shared_ptr<MissionFortLoadRequest> missionFortRequest_; //현재 Guide의 지연 요청이다. Guide/전체 종료에서 반납하며 이전 World의 State 반납은 보존한다.
     std::shared_ptr<std::array<std::uint8_t,87>> missionOptions_{std::make_shared<std::array<std::uint8_t,87>>()}; // 월드보다 오래 사는 실제 Init/로그인 옵션이다.
     std::shared_ptr<std::array<std::uint32_t,256>> missionRestrictions_{std::make_shared<std::array<std::uint32_t,256>>()}; // 설치 전/후가 공유하는 기술 허용 표다.
     std::uint32_t missionNumber_{},tutorialSeen_{}; // 실제5ca8e0/f0의 현재 전역이다.

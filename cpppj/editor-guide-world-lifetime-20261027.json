@@ -1,0 +1,721 @@
+{
+  "unit": 484,
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": "HJOW-Athlon / 2026-10-23",
+  "remotePull": {
+    "before": "93c054f10a4f25de342939706c96713bb06ec620",
+    "after": "bbbb69f3",
+    "mode": "fast-forward; local changes reapplied and LEFT_JOBS auto-merged",
+    "sourceBytesPreserved": 2846,
+    "pushed": false
+  },
+  "build": [
+    {
+      "command": [
+        "cmake",
+        "--build",
+        "cpppj/build",
+        "--config",
+        "Release",
+        "--parallel",
+        "4",
+        "--",
+        "/p:UseMultiToolTask=true",
+        "/p:MultiProcMaxCount=4",
+        "/p:EnforceProcessCountAcrossBuilds=true"
+      ],
+      "exit": 1,
+      "log": "extracted/cpp-editor-guide-world-484/build1.log",
+      "sha256": "f2104d8f0d4d935944cfa2949d36b8f3b3b6e225d3e136751fd9d60f8c3671c0",
+      "summaries": [],
+      "diagnostics": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\tests\\CampaignGuideWorldLifetimeTests.inc(27,72): error C2039: 'connectionGlobals': 'netstorm::client::RawCampaignSessionServices'의 멤버가 아닙니다. [H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\tests\\netstorm_tests.vcxproj]"
+      ]
+    },
+    {
+      "command": [
+        "cmake",
+        "--build",
+        "cpppj/build",
+        "--config",
+        "Release",
+        "--parallel",
+        "4",
+        "--",
+        "/p:UseMultiToolTask=true",
+        "/p:MultiProcMaxCount=4",
+        "/p:EnforceProcessCountAcrossBuilds=true"
+      ],
+      "exit": 1,
+      "log": "extracted/cpp-editor-guide-world-484/build2.log",
+      "sha256": "a2677f18c44064e62cd779553b3381e5608faef6196613708e7e2b8c24e48d44",
+      "summaries": [],
+      "diagnostics": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\tests\\CampaignGuideWorldLifetimeTests.inc(33,135): error C3861: 'RunTutorialMissionStage': 식별자를 찾을 수 없습니다. [H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\tests\\netstorm_tests.vcxproj]"
+      ]
+    },
+    {
+      "command": [
+        "cmake",
+        "--build",
+        "cpppj/build",
+        "--config",
+        "Release",
+        "--parallel",
+        "4",
+        "--",
+        "/p:UseMultiToolTask=true",
+        "/p:MultiProcMaxCount=4",
+        "/p:EnforceProcessCountAcrossBuilds=true"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-editor-guide-world-484/build3.log",
+      "sha256": "8cd5d8f11db213d72da559efb4d739731b010e493bb756f10f5acd394f58483f",
+      "summaries": [],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cmake",
+        "--build",
+        "cpppj/build",
+        "--config",
+        "Release",
+        "--parallel",
+        "4",
+        "--",
+        "/p:UseMultiToolTask=true",
+        "/p:MultiProcMaxCount=4",
+        "/p:EnforceProcessCountAcrossBuilds=true"
+      ],
+      "exit": 1,
+      "log": "extracted/cpp-editor-guide-world-484/build4.log",
+      "sha256": "caa72ba29a151327937dbf9a97932f26c43d7cf4d7ef16de5d481388c5490f81",
+      "summaries": [],
+      "diagnostics": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\tests\\CampaignGuideWorldLifetimeTests.inc(25,107): error C2679: 이항 '=': 오른쪽 피연산자로 '`anonymous-namespace'::GuideWorldScene484::{ctor}::<lambda_4>' 형식을 사용하는 연산자가 없거나 허용되는 변환이 없습니다. [H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\tests\\netstorm_tests.vcxproj]"
+      ]
+    },
+    {
+      "command": [
+        "cmake",
+        "--build",
+        "cpppj/build",
+        "--config",
+        "Release",
+        "--parallel",
+        "4",
+        "--",
+        "/p:UseMultiToolTask=true",
+        "/p:MultiProcMaxCount=4",
+        "/p:EnforceProcessCountAcrossBuilds=true"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-editor-guide-world-484/build5.log",
+      "sha256": "e4780dcd6d58fb8c2c882535cc0aa43b919903148e31f9ddd4782858c0ce2d5f",
+      "summaries": [],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cmake",
+        "--build",
+        "cpppj/build",
+        "--config",
+        "Release",
+        "--parallel",
+        "4",
+        "--",
+        "/p:UseMultiToolTask=true",
+        "/p:MultiProcMaxCount=4",
+        "/p:EnforceProcessCountAcrossBuilds=true"
+      ],
+      "exit": 1,
+      "log": "extracted/cpp-editor-guide-world-484/build6.log",
+      "sha256": "0a2728fccd4a718d57531d2952ae2d8d2c6cdf71a5c0ef26501e479707acd3c9",
+      "summaries": [],
+      "diagnostics": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\tests\\CampaignGuideWorldLifetimeTests.inc(26,122): error C2027: 정의되지 않은 형식 'netstorm::client::ClientSpGlobals'을(를) 사용했습니다. [H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\tests\\netstorm_tests.vcxproj]",
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\tests\\CampaignGuideWorldLifetimeTests.inc(26,126): error C2039: 'Store': 'std::shared_ptr<netstorm::client::ClientSpGlobals>'의 멤버가 아닙니다. [H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\tests\\netstorm_tests.vcxproj]"
+      ]
+    },
+    {
+      "command": [
+        "cmake",
+        "--build",
+        "cpppj/build",
+        "--config",
+        "Release",
+        "--parallel",
+        "4",
+        "--",
+        "/p:UseMultiToolTask=true",
+        "/p:MultiProcMaxCount=4",
+        "/p:EnforceProcessCountAcrossBuilds=true"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-editor-guide-world-484/build7.log",
+      "sha256": "c7d3711029ca30de3d91afc9fad6e008b59f9433ce4e5f582ee4d68501446220",
+      "summaries": [],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cmake",
+        "--build",
+        "cpppj/build",
+        "--config",
+        "Release",
+        "--parallel",
+        "4",
+        "--",
+        "/p:UseMultiToolTask=true",
+        "/p:MultiProcMaxCount=4",
+        "/p:EnforceProcessCountAcrossBuilds=true"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-editor-guide-world-484/build8.log",
+      "sha256": "e4780dcd6d58fb8c2c882535cc0aa43b919903148e31f9ddd4782858c0ce2d5f",
+      "summaries": [],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cmake",
+        "--build",
+        "cpppj/build",
+        "--config",
+        "Release",
+        "--parallel",
+        "4",
+        "--",
+        "/p:UseMultiToolTask=true",
+        "/p:MultiProcMaxCount=4",
+        "/p:EnforceProcessCountAcrossBuilds=true"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-editor-guide-world-484/build9.log",
+      "sha256": "e4780dcd6d58fb8c2c882535cc0aa43b919903148e31f9ddd4782858c0ce2d5f",
+      "summaries": [],
+      "diagnostics": []
+    }
+  ],
+  "focused": {
+    "unique": 82,
+    "observations": 82,
+    "failedChecks": 0,
+    "addedTests": [
+      "CampaignGuideWorldLifetime_GuideCloseBeforeStateOneKeepsPriorSessionAndNewZone",
+      "CampaignGuideWorldLifetime_InitClearsActualManagersBeforePriorSessionRetires",
+      "CampaignGuideWorldLifetime_RequestReleaseKeepsSessionOwnedImageAlive"
+    ],
+    "runs": [
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "CampaignExistingEditorCheckpoint"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-editor-guide-world-484/focused5-CampaignExistingEditorCheckpoint.log",
+        "sha256": "9f8c6064fd046501c65612c99e6699993d240c931e56361ae4f22fb408ebd157",
+        "summaries": [
+          "42 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "CampaignGuideWorldLifetime"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-editor-guide-world-484/focused5-CampaignGuideWorldLifetime.log",
+        "sha256": "22fbeccdcc8f829a3d3f340ac3432ea007e943b5131652da19150fce74aa53dd",
+        "summaries": [
+          "3 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "CampaignMissionReloadSource"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-editor-guide-world-484/focused5-CampaignMissionReloadSource.log",
+        "sha256": "067e4366066602c01d69a3288c7ba3a58026599c9a3ed47b0bddc08a5847f8c2",
+        "summaries": [
+          "3 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "EditorTestBattle"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-editor-guide-world-484/focused5-EditorTestBattle.log",
+        "sha256": "88feabc2cc023a5911b3478f60a3677ba63baadb4ac86726928920f6e596055a",
+        "summaries": [
+          "3 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "GuideTransitions"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-editor-guide-world-484/focused5-GuideTransitions.log",
+        "sha256": "fc634be4a85847815c96e6244b702aa1cfa7f46bce70cd0e770e9b9b5351c13b",
+        "summaries": [
+          "2 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "MissionFileSource"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-editor-guide-world-484/focused5-MissionFileSource.log",
+        "sha256": "4a3e6ede9eccdac282e514c7aea9f7bea1557261155eb3bd7ccce2a5a9fcc247",
+        "summaries": [
+          "5 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "MissionFortRequest"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-editor-guide-world-484/focused5-MissionFortRequest.log",
+        "sha256": "03896d48f2d5d1352de31cc40d14dc4e3f748af94909fe405ed24c5c50c9755b",
+        "summaries": [
+          "2 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "MissionGuide"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-editor-guide-world-484/focused5-MissionGuide.log",
+        "sha256": "d55abafbe699d835edfc228b008173417ea044dba8b0cd680abb8468c448a09d",
+        "summaries": [
+          "7 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "StateRuntimeCoordinator"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-editor-guide-world-484/focused5-StateRuntimeCoordinator.log",
+        "sha256": "d48ae2a117d0af367b185053cdadbea62dc85a5a8babf97f60288c76faad4255",
+        "summaries": [
+          "4 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "StateWorldCleanup"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-editor-guide-world-484/focused5-StateWorldCleanup.log",
+        "sha256": "1430d69bf75abe60f28df6ac32dac88ae41c3e81be33a989c141b24302e9e820",
+        "summaries": [
+          "7 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "TutorialInit"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-editor-guide-world-484/focused5-TutorialInit.log",
+        "sha256": "08eb74725aeec2d83af8b026ef9c2317f9ee8dd7e7344741a6901d98189779e5",
+        "summaries": [
+          "4 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      }
+    ]
+  },
+  "registered": {
+    "before": 3271,
+    "after": 3274,
+    "removed": []
+  },
+  "protection": {
+    "originalsCdExistingTests": 3194,
+    "agentsUnchanged": true,
+    "changedProtectedOrExistingTests": [],
+    "appendOnlyPrefixBytes": {
+      "cpppj/tests/CampaignSessionTests.cpp": 759379,
+      "cpppj/tests/CMakeLists.txt": 162466
+    }
+  },
+  "finalSourceFiles": 2846,
+  "exes": {
+    "NetstormCpp.exe": "d72c785dbdafa1aa9458310de0be785415502e112459e702e209bfdb37f7396d",
+    "netstorm_tests.exe": "d6af750ac1f7a68ff0fb67e4dc79e4a2df198f89925951b60cbca00927370ba1"
+  },
+  "live": {
+    "live-menu1": {
+      "result": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-editor-guide-world-484\\live-data",
+          "--window",
+          "--no-audio",
+          "--frames",
+          "34",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=1",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-editor-guide-world-484\\live-menu1\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-editor-guide-world-484\\live-menu1\\states.tsv"
+        ],
+        "binarySha256": "d72c785dbdafa1aa9458310de0be785415502e112459e702e209bfdb37f7396d",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 6.637583299998369,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "cb76758e176fb9498de489bf084e9844f54d645d0fb4457c2c91e00a6a78d515"
+      },
+      "checks": {
+        "normalExit": true,
+        "originalsUnchanged": true,
+        "main": true
+      },
+      "passed": true,
+      "observed": {
+        "startup": {
+          "phase": [
+            "1"
+          ],
+          "page": [
+            "UserNotUpdated"
+          ],
+          "paused": [
+            "0"
+          ],
+          "fort_names": [
+            "",
+            "",
+            "1",
+            "fortSpec"
+          ]
+        },
+        "main": {
+          "phase": [
+            "0"
+          ],
+          "page": [
+            "main"
+          ],
+          "paused": [
+            "0"
+          ],
+          "fort_names": [
+            "",
+            "",
+            "1",
+            "fortSpec"
+          ]
+        }
+      }
+    },
+    "live-stage1": {
+      "result": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-editor-guide-world-484\\live-data",
+          "--window",
+          "--no-audio",
+          "--frames",
+          "500",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=1",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-editor-guide-world-484\\live-stage1\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-editor-guide-world-484\\live-stage1\\states.tsv",
+          "--mission",
+          "TheWarBegins"
+        ],
+        "binarySha256": "d72c785dbdafa1aa9458310de0be785415502e112459e702e209bfdb37f7396d",
+        "returnCode": 1,
+        "timedOut": false,
+        "seconds": 1.014820000003965,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "821b3929732619574748fd65705d5f1f64f1b667368596d5992f2073bbd699db"
+      },
+      "checks": {
+        "normalExit": false,
+        "originalsUnchanged": true,
+        "firstPlaying": false,
+        "restartBriefing": false,
+        "secondPlaying": false
+      },
+      "passed": false,
+      "observed": {}
+    },
+    "live-menu-entry1": {
+      "result": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-editor-guide-world-484\\live-data",
+          "--window",
+          "--no-audio",
+          "--frames",
+          "530",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=1",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-editor-guide-world-484\\live-menu-entry1\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-editor-guide-world-484\\live-menu-entry1\\states.tsv"
+        ],
+        "binarySha256": "d72c785dbdafa1aa9458310de0be785415502e112459e702e209bfdb37f7396d",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 13.971043199999258,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "988ae57ba0bb1171522a3f909f386bcceceab053830e1e2a63aebc1cf9ba5079"
+      },
+      "checks": {
+        "normalExit": true,
+        "originalsUnchanged": true,
+        "firstPlaying": true,
+        "restartBriefing": true,
+        "secondPlaying": true
+      },
+      "passed": true,
+      "observed": {
+        "main": {
+          "phase": [
+            "0"
+          ],
+          "page": [
+            "main"
+          ],
+          "paused": [
+            "0"
+          ],
+          "fort_names": [
+            "",
+            "",
+            "1",
+            "fortSpec"
+          ]
+        },
+        "briefing": {
+          "phase": [
+            "3"
+          ],
+          "page": [
+            "A."
+          ],
+          "paused": [
+            "1"
+          ],
+          "fort_names": [
+            "BridgeTheGap",
+            "",
+            "2",
+            "fortSpec"
+          ],
+          "mission": [
+            "Tutorial1",
+            "Tutorial",
+            "3"
+          ],
+          "mission_start": [
+            "1",
+            "4",
+            "0",
+            "0.909",
+            "0"
+          ],
+          "raw_session": [
+            "1",
+            "1"
+          ]
+        },
+        "playing": {
+          "phase": [
+            "4"
+          ],
+          "page": [
+            "mission"
+          ],
+          "paused": [
+            "0"
+          ],
+          "fort_names": [
+            "BridgeTheGap",
+            "",
+            "2",
+            "fortSpec"
+          ],
+          "mission": [
+            "Tutorial1",
+            "Tutorial",
+            "3"
+          ],
+          "mission_start": [
+            "1",
+            "4",
+            "0",
+            "0.909",
+            "0"
+          ],
+          "raw_session": [
+            "1",
+            "1"
+          ]
+        },
+        "before-restart": {
+          "phase": [
+            "4"
+          ],
+          "page": [
+            "mission"
+          ],
+          "paused": [
+            "0"
+          ],
+          "fort_names": [
+            "BridgeTheGap",
+            "",
+            "2",
+            "fortSpec"
+          ],
+          "mission": [
+            "Tutorial1",
+            "Tutorial",
+            "3"
+          ],
+          "mission_start": [
+            "1",
+            "4",
+            "0",
+            "0.909",
+            "0"
+          ],
+          "raw_session": [
+            "1",
+            "1"
+          ]
+        },
+        "restarted": {
+          "phase": [
+            "3"
+          ],
+          "page": [
+            "A."
+          ],
+          "paused": [
+            "1"
+          ],
+          "fort_names": [
+            "BridgeTheGap",
+            "",
+            "3",
+            "fortSpec"
+          ],
+          "mission": [
+            "Tutorial1",
+            "Tutorial",
+            "3"
+          ],
+          "mission_start": [
+            "1",
+            "4",
+            "0",
+            "7.152",
+            "0"
+          ],
+          "raw_session": [
+            "1",
+            "1"
+          ]
+        },
+        "after-restart": {
+          "phase": [
+            "4"
+          ],
+          "page": [
+            "mission"
+          ],
+          "paused": [
+            "0"
+          ],
+          "fort_names": [
+            "BridgeTheGap",
+            "",
+            "3",
+            "fortSpec"
+          ],
+          "mission": [
+            "Tutorial1",
+            "Tutorial",
+            "3"
+          ],
+          "mission_start": [
+            "1",
+            "4",
+            "0",
+            "7.152",
+            "0"
+          ],
+          "raw_session": [
+            "1",
+            "1"
+          ]
+        }
+      }
+    }
+  },
+  "fullSuite": {
+    "executed": false,
+    "previousUnit": 483,
+    "previousCases": 3271,
+    "previousFailedChecks": 0
+  },
+  "limits": [
+    "실제 HUD 교체는 신규 창 없는 검사의 외부 경계이며 기존 UI 검사와 실제 Early1 재시작을 별도 검증했다.",
+    "명령줄 TheWarBegins 직접 진입은 미니맵 평면 bitmap 할당 밖 읽기에서 실패했다. 원시 로그를 보존하고 다음 수정 대상으로 남긴다.",
+    "c2 일반 입력/Editor 전체 왕복·전체 미션 자연 완주·화면/음향 전체 동일성은 미완료다."
+  ]
+}

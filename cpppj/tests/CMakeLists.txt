@@ -2269,3 +2269,6 @@ target_sources(netstorm_tests PRIVATE MissionFileSourceTests.cpp)
 
 # 기존 Session helper를 빌리는 실제 로그인 작업본 재로드/소유 수명/실패 검사를 IDE에도 표시한다.
 target_sources(netstorm_tests PRIVATE CampaignMissionReloadSourceTests.inc)
+
+# 실제 Init/State의 이전 Session 반납과 새 Guide 요청 보존을 검사한다.
+target_sources(netstorm_tests PRIVATE CampaignGuideWorldLifetimeTests.inc)
