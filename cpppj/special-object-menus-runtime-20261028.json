@@ -1,0 +1,386 @@
+{
+  "unit": 515,
+  "host": "HJOW-Athlon",
+  "date": "2026-10-28",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "decompileChanged": false,
+  "gameSha256": "74548abb1600396188d4365464a808d555418a3bb080211b97e78f8cdfb2c362",
+  "testSha256": "995c41d3abc70ba8be1f3c838c08a22249cea0539380c8a47cf3658587a5a146",
+  "sourceUnchanged": true,
+  "buildExecuted": false,
+  "cppTestsExecuted": false,
+  "registeredTests": 3340,
+  "acceptedCases": [
+    {
+      "name": "crystal",
+      "size": [
+        1024,
+        768
+      ],
+      "kind": "nugget",
+      "type": 154,
+      "objectSid": 15024,
+      "root": [
+        "446",
+        "15024",
+        "320",
+        "414"
+      ],
+      "items": [
+        {
+          "token": 446,
+          "index": 0,
+          "flags": 66697,
+          "command": 33554455,
+          "parameter": 154,
+          "visible": true,
+          "label": "About"
+        },
+        {
+          "token": 446,
+          "index": 1,
+          "flags": 66592,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": "Player"
+        }
+      ],
+      "helpWindow": [
+        "490",
+        "456",
+        "2049",
+        "495",
+        "500",
+        "508",
+        "498",
+        "496",
+        "1"
+      ],
+      "helpWindowsAfterEscape": 1,
+      "closedMenus": [
+        "0",
+        "0",
+        "0"
+      ],
+      "run": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-stage-entry-502-data",
+          "--mission",
+          "TEST02",
+          "--window",
+          "--mute-audio",
+          "--frames",
+          "104",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-object-menus-515\\actual-final\\crystal\\1024x768\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-object-menus-515\\actual-final\\crystal\\1024x768\\states.tsv",
+          "--audio-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-object-menus-515\\actual-final\\crystal\\1024x768\\audio.tsv"
+        ],
+        "binarySha256": "74548abb1600396188d4365464a808d555418a3bb080211b97e78f8cdfb2c362",
+        "scriptSha256": "de2fab3b70e8af7979bd99ee952e5ab57da795bbe004da6ed58873e1749a6312",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 5.562728300006711,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "9fba4f7e2bb0be090e62265ef1203d93a429672f7ce307b7cf3aa08e3bfebbbb",
+        "originalsUnchanged": true,
+        "dataUnchanged": true,
+        "dataRoot": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-stage-entry-502-data"
+      }
+    },
+    {
+      "name": "crystal",
+      "size": [
+        1280,
+        720
+      ],
+      "kind": "nugget",
+      "type": 154,
+      "objectSid": 15024,
+      "root": [
+        "446",
+        "15024",
+        "320",
+        "414"
+      ],
+      "items": [
+        {
+          "token": 446,
+          "index": 0,
+          "flags": 66697,
+          "command": 33554455,
+          "parameter": 154,
+          "visible": true,
+          "label": "About"
+        },
+        {
+          "token": 446,
+          "index": 1,
+          "flags": 66592,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": "Player"
+        }
+      ],
+      "helpWindow": [
+        "488",
+        "454",
+        "2049",
+        "493",
+        "498",
+        "506",
+        "496",
+        "494",
+        "1"
+      ],
+      "helpWindowsAfterEscape": 1,
+      "closedMenus": [
+        "0",
+        "0",
+        "0"
+      ],
+      "run": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-stage-entry-502-data",
+          "--mission",
+          "TEST02",
+          "--window",
+          "--mute-audio",
+          "--frames",
+          "104",
+          "--set",
+          "SCREENW=1280;SCREENH=720;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-object-menus-515\\actual-final\\crystal\\1280x720\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-object-menus-515\\actual-final\\crystal\\1280x720\\states.tsv",
+          "--audio-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-object-menus-515\\actual-final\\crystal\\1280x720\\audio.tsv"
+        ],
+        "binarySha256": "74548abb1600396188d4365464a808d555418a3bb080211b97e78f8cdfb2c362",
+        "scriptSha256": "34c11260e3248f2c8f09303781f8279690b65800ed13ba0fd07845cc9ed8f441",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 5.881746300001396,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "9fba4f7e2bb0be090e62265ef1203d93a429672f7ce307b7cf3aa08e3bfebbbb",
+        "originalsUnchanged": true,
+        "dataUnchanged": true,
+        "dataRoot": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-stage-entry-502-data"
+      }
+    },
+    {
+      "name": "obelisk",
+      "size": [
+        1024,
+        768
+      ],
+      "kind": "buried",
+      "type": 112,
+      "objectSid": 15026,
+      "root": [
+        "448",
+        "15026",
+        "168",
+        "416"
+      ],
+      "items": [
+        {
+          "token": 448,
+          "index": 0,
+          "flags": 66697,
+          "command": 33554455,
+          "parameter": 112,
+          "visible": true,
+          "label": "About"
+        }
+      ],
+      "helpWindow": [
+        "480",
+        "447",
+        "2049",
+        "485",
+        "490",
+        "498",
+        "488",
+        "486",
+        "1"
+      ],
+      "helpWindowsAfterEscape": 1,
+      "closedMenus": [
+        "0",
+        "0",
+        "0"
+      ],
+      "run": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-stage-entry-502-data",
+          "--mission",
+          "dissolvedalliance",
+          "--window",
+          "--mute-audio",
+          "--frames",
+          "104",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-object-menus-515\\actual-final\\obelisk\\1024x768\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-object-menus-515\\actual-final\\obelisk\\1024x768\\states.tsv",
+          "--audio-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-object-menus-515\\actual-final\\obelisk\\1024x768\\audio.tsv"
+        ],
+        "binarySha256": "74548abb1600396188d4365464a808d555418a3bb080211b97e78f8cdfb2c362",
+        "scriptSha256": "8090bccdc72187f1db3527f3cf833a50a1624b40e337b1765743aec213953a83",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 5.283045700009097,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "9fba4f7e2bb0be090e62265ef1203d93a429672f7ce307b7cf3aa08e3bfebbbb",
+        "originalsUnchanged": true,
+        "dataUnchanged": true,
+        "dataRoot": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-stage-entry-502-data"
+      }
+    },
+    {
+      "name": "obelisk",
+      "size": [
+        1280,
+        720
+      ],
+      "kind": "buried",
+      "type": 112,
+      "objectSid": 15026,
+      "root": [
+        "448",
+        "15026",
+        "168",
+        "416"
+      ],
+      "items": [
+        {
+          "token": 448,
+          "index": 0,
+          "flags": 66697,
+          "command": 33554455,
+          "parameter": 112,
+          "visible": true,
+          "label": "About"
+        }
+      ],
+      "helpWindow": [
+        "486",
+        "453",
+        "2049",
+        "491",
+        "496",
+        "504",
+        "494",
+        "492",
+        "1"
+      ],
+      "helpWindowsAfterEscape": 1,
+      "closedMenus": [
+        "0",
+        "0",
+        "0"
+      ],
+      "run": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-stage-entry-502-data",
+          "--mission",
+          "dissolvedalliance",
+          "--window",
+          "--mute-audio",
+          "--frames",
+          "104",
+          "--set",
+          "SCREENW=1280;SCREENH=720;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-object-menus-515\\actual-final\\obelisk\\1280x720\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-object-menus-515\\actual-final\\obelisk\\1280x720\\states.tsv",
+          "--audio-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-object-menus-515\\actual-final\\obelisk\\1280x720\\audio.tsv"
+        ],
+        "binarySha256": "74548abb1600396188d4365464a808d555418a3bb080211b97e78f8cdfb2c362",
+        "scriptSha256": "6147a61dab3093b6fa9f28a92103b00276b82da241bfc248648fb587695cdbb7",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 5.577100499998778,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "9fba4f7e2bb0be090e62265ef1203d93a429672f7ce307b7cf3aa08e3bfebbbb",
+        "originalsUnchanged": true,
+        "dataUnchanged": true,
+        "dataRoot": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-stage-entry-502-data"
+      }
+    }
+  ],
+  "allRuns": [
+    {
+      "path": "extracted/cpp-object-menus-515/actual-final/crystal/1024x768/run.json",
+      "gameSha": "74548abb1600396188d4365464a808d555418a3bb080211b97e78f8cdfb2c362",
+      "exit": 0
+    },
+    {
+      "path": "extracted/cpp-object-menus-515/actual-final/crystal/1280x720/run.json",
+      "gameSha": "74548abb1600396188d4365464a808d555418a3bb080211b97e78f8cdfb2c362",
+      "exit": 0
+    },
+    {
+      "path": "extracted/cpp-object-menus-515/actual-final/obelisk/1024x768/run.json",
+      "gameSha": "74548abb1600396188d4365464a808d555418a3bb080211b97e78f8cdfb2c362",
+      "exit": 0
+    },
+    {
+      "path": "extracted/cpp-object-menus-515/actual-final/obelisk/1280x720/run.json",
+      "gameSha": "74548abb1600396188d4365464a808d555418a3bb080211b97e78f8cdfb2c362",
+      "exit": 0
+    },
+    {
+      "path": "extracted/cpp-object-menus-515/actual-first/crystal/1024x768/run.json",
+      "gameSha": "74548abb1600396188d4365464a808d555418a3bb080211b97e78f8cdfb2c362",
+      "exit": 0
+    },
+    {
+      "path": "extracted/cpp-object-menus-515/crystal/run.json",
+      "gameSha": "74548abb1600396188d4365464a808d555418a3bb080211b97e78f8cdfb2c362",
+      "exit": 0
+    },
+    {
+      "path": "extracted/cpp-object-menus-515/obelisk/run.json",
+      "gameSha": "74548abb1600396188d4365464a808d555418a3bb080211b97e78f8cdfb2c362",
+      "exit": 0
+    },
+    {
+      "path": "extracted/cpp-object-menus-515/obelisk-release/run.json",
+      "gameSha": "74548abb1600396188d4365464a808d555418a3bb080211b97e78f8cdfb2c362",
+      "exit": 0
+    }
+  ],
+  "protectedUnchanged": true,
+  "attackFlyersStaticOnly": true,
+  "greenRectanglesDeferred": true,
+  "limitations": [
+    "실제4사례는 두 화면비 창 모드의 메뉴/Help 왕복이다.",
+    "크리스탈은 TEST02 사본의 geyser/nugget 해시 교환을 사용했다. 모든 바이트는 복구했다.",
+    "비석은 dissolvedalliance의 원래 SID15026을 사용했다.",
+    "최초 카메라 키 뗌 누락과 Help ESC 자동닫기 가정 오류는 도구 문제로 별도 보존했다.",
+    "학습/운반/회수와 신규 파생 명령 및 전체 타입/상태 검증은 잔여다."
+  ]
+}
