@@ -5107,6 +5107,34 @@ TEST_CASE(CampaignSession_FenceShieldUsesCurrentOwnerColorPixels) {
     CHECK(cases==20 && coloredPixels>0);
 }
 // 원본 여덟 이동 타입과 실제 공간/사제 HP 조회를 묶어 스톰 크리스탈·포획 가능 사제의 커서를 대조한다.
+TEST_CASE(CampaignSession_ObjectHitUsesCurrentRawPhysicalShapeAndCamera) { // 실제RLE의투명구멍/현재raw프레임/카메라를픽셀선택기에연결한다.
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();UseWorldTestLogin(services);services.install.resetCamera={}; // 실제장치대신기존독립Session경계를쓴다.
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());GameWorld world(assets.game,assets.files,std::move(fort),MissionPlayers{},"thewarbegins",std::move(services),{1024,768});auto& session=world.Session();const auto core=session.Core();
+    RawCampaignFactoryDisplay display(core,assets.game,[&](Sid sid,const auto& draw) { session.DrawTemple(sid,draw); });display.SetPalette(WorkshopDisplayPalette(assets.game));std::size_t cases{},hits{},misses{}; // 같은실제출력기와현재풀만공유한다.
+    constexpr std::array<std::uint32_t,7> kinds{158,142,154,86,123,82,114}; // 사제/윈드타워/크리스탈/워크샾/신전/다리/주문이며공중3종은포함하지않는다.
+    for (const auto type:kinds) { // 생성/생산진행없이동일자산의명시현재상태를샘플링한다.
+        const auto actor=session.World().Create(type,2);auto raw=core.pool.AllocatedBytes(actor);const auto saved=std::vector<std::uint8_t>(raw.begin(),raw.end());raw[40]=0;Put(raw,14,std::bit_cast<std::uint32_t>(50.25F));Put(raw,18,std::bit_cast<std::uint32_t>(51.5F)); // 표시사본을만들거나포획/이동처리를진행하지않는다.
+        const auto current=Get(raw,36);const auto& asset=assets.game.Types()[type-70];const auto& record=core.types[type];auto headerFrame=asset.definition.specialFrames.baseFrame; // +78의독립기본값이며Factory만현재단계의Run을쓴다.
+        if (type==86) headerFrame=core.frames[type].Run(static_cast<std::uint8_t>('A'+(raw[11]>>5))).first;
+        if (type==82 || headerFrame==-1) headerFrame=static_cast<int>(current);
+        CHECK(headerFrame>=0);const auto header=assets.game.Shapes().SquidMetrics(type-70,static_cast<std::size_t>(headerFrame));const auto& source=assets.game.Shapes().Blocks()[type-70].frames[current];const auto image=source.IsSpecial() ? IndexedImage{} : assets.game.Shapes().Decode(type-70,current);const auto rect=source.rect; // 빈주문레코드는픽셀이없으며나머지는독립Decode의opacity와색으로예상값을구한다.
+        for (const auto camera:std::array<std::array<int,2>,2>{{{700,500},{-16,33}}}) { // 같은raw를두다른카메라에서검사해표시사본/이전카메라캐시를검출한다.
+            const int anchorX=804-camera[0]-record.hotspotX,anchorY=567-camera[1]-record.hotspotY; // 원문16/11·0.5·절삭의명시입력결과다.
+            for (int ry=0;ry<202;ry+=7) { // 헤더영역밖을포함한격자샘플이다.
+                for (int rx=0;rx<202;rx+=7) { // 현재RLE의실제투명부분도같은기준점에대조한다.
+                    const int sx=rx-header.hotspotX-rect.left,sy=ry-header.hotspotY-rect.top;bool expected=false; // Decode영역의상대픽셀이다.
+                    if (record.flags1&0x800000U) expected=rx<header.width && ry<header.height;
+                    else if (rx<200 && ry<200 && sx>=0 && sy>=0 && static_cast<std::size_t>(sx)<image.width && static_cast<std::size_t>(sy)<image.height) { const auto offset=static_cast<std::size_t>(sy)*image.width+sx;expected=image.opacity[offset] && image.indices[offset]!=255; }
+                    const bool actual=display.Hit(actor,anchorX-header.hotspotX+rx,anchorY-header.hotspotY+ry,camera,1,[&](Sid sid,int x,int y) { session.DrawBridgeAdditional(sid,x,y); });
+                    CHECK(actual==expected);++cases;hits+=actual;misses+=!actual;
+                }
+            }
+        }
+        CHECK(std::equal(saved.begin(),saved.begin()+14,raw.begin()));std::copy(saved.begin(),saved.end(),raw.begin()); // 명시좌표/상태입력을돌려놓고객체수명은Session이소유한다.
+    }
+    CHECK(cases==11774 && hits>0 && misses>0);
+}
+
 TEST_CASE(CampaignSession_CarrierHoverUsesRealNuggetAndCapturablePriest) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);
     // 원본 .type의 이동형 여덟 종류다. 사제는 10.78에서 다른 사제를 직접 포획하지 않는다.

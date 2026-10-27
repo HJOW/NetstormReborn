@@ -1,0 +1,18 @@
+{
+  "unit": 524,
+  "host": "HJOW-Athlon",
+  "lastDecompile": "HJOW-Athlon / 2026-10-23",
+  "outputsModified": false,
+  "inputs": 608,
+  "instructions": 1578191,
+  "assertions": 0,
+  "boundaries": "498000/4ac550/419850/4a2b10/4a2c70/실제CRT. +78은3회명시입력, plain과+a4는단일픽셀출력경계. 실제RLE/파생Draw/게임/OS/네트워크 실행 아님. 합성TYPE80만 사용.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_oracle.py": "227b9a8b703cfd81d05ac4a7c72a42eaecf9c804fc028680466a19a591f2335d",
+    "tools/decomp_object_hit.py": "4b6db7e789cea7e2a1906e72bc2a7d510bc04c3571e57564542f8f3100abdba9",
+    "cpppj/tests/fixtures/object-hit-x86.tsv": "959730b40a2d8b6dde016bc87e7f1e7a3d324726547def1de8fe9b0c69c917f6",
+    "cpppj/src/client/ObjectHitVtables.inc": "1e8114549fbccd237b3e9b007771cb55b3ae7db95a19dccf1b8b63ed35e37cfb"
+  }
+}

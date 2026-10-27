@@ -4085,6 +4085,7 @@ void RawCampaignSession::DrawRainTemple(Sid sid,const std::function<void(std::in
 }
 // 실제 같은 TYPE의 baseFrame/구간 표를 현재 raw 전용 가상표로 분배한다.
 void RawCampaignSession::DrawTemple(Sid sid,const std::function<void(std::int32_t)>& frame) const { impl_->DrawTempleFrames(sid,frame); }
+void RawCampaignSession::DrawBridgeAdditional(Sid sid,std::int32_t x,std::int32_t y) const { impl_->bridgeDraw->Additional(sid,x,y); } // 현재실제가상몸체와같은005453ac을사용한다.
 // 실제 설치된 Session의 게임 계산을 연결하고 UI의 실제 번역/작성/커서 소비자는 보존한다.
 std::unique_ptr<RawPriestMenu> RawCampaignSession::MakePriestMenu(PriestMenuHooks hooks) {
     if (!impl_->loaded) throw std::logic_error("설치 전 실제 Session 사제 메뉴 요청");

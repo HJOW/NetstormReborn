@@ -1,6 +1,7 @@
 // 원본433660→498220→Factory +78/+a4를 실제8비트 장면의 동일 정렬 위치에서 실행한다.
 #include "client/ClientColorSortInput.h"
 #include "client/RawCampaignFactoryDisplay.h"
+#include "client/RawObjectHit.h"
 #include "client/ObjectCollection.h"
 #include "client/SpriteDraw.h"
 #include "client/SpriteColorMaps.h"
@@ -23,7 +24,19 @@
 #include <stdexcept>
 #include <map>
 namespace netstorm::client {
-namespace {
+namespace { // 보호PE 슬롯은 실제 실행분배만 확인하며 새로운 상태를 소유하지 않는다.
+struct ObjectHitVtable { std::uint32_t table,frame,additional,hit; }; // 실제VT와+78/+a4/+b0 주소다.
+#include "client/ObjectHitVtables.inc"
+std::uint32_t DisplayDword(std::span<const std::uint8_t> raw,std::size_t at) { // 현재 비정렬DWORD만 읽는다.
+    std::uint32_t value{}; // 원문DWORD 비트다.
+    for (std::size_t byte=0;byte<4;++byte) value|=std::uint32_t(raw[at+byte])<<(8*byte); // 정렬이나이웃필드를가정하지않는다.
+    return value;
+}
+const ObjectHitVtable& HitVtable(std::span<const std::uint8_t> raw) { // 실제VT가확인되지않은타입을빈+a4로대체하지않는다.
+    const auto address=DisplayDword(raw,0); // 현재슬롯의실제가상표다.
+    for (const auto& entry:kObjectHitVtables) if (entry.table==address) return entry; // 보호PE의83실제표만분배한다.
+    throw std::logic_error("픽셀 선택의 실제 가상 표 미복원");
+}
 constexpr std::array<std::uint32_t,12> kStandardOwnerTypes{82,155,158,164,135,133,156,73,170,146,144,126}; // 원본43be30의 일반 색표 대상이다.
 constexpr std::array<std::uint32_t,5> kSpecialOwnerTypes{111,141,137,94,97}; // 원본43bc40의 명도 정렬 전용 색표 대상이다.
 }
@@ -85,54 +98,13 @@ struct RawCampaignFactoryDisplay::Impl {
         const auto found=ownerColors.find(type);if (found==ownerColors.end()) throw std::logic_error("실제 자산 현재 소유자 색표 미연결");
         const auto index=core.bridgeState.ownerColors[owner];if (index<0 || index>8) throw std::out_of_range("실제 자산 현재 소유자 색 번호");return found->second[static_cast<std::size_t>(index)];
     }
-    // 원본 현재 슬롯과 실제 dirty clip을 읽고 일반 Draw의 모든 픽셀을 같은 표면에 쓴다.
-    void Draw(o::RenderCollectionEntry entry,std::span<std::uint8_t> pixels,int pitch,int height,ScreenRect clip) {
-        const auto sid=collection.Object(entry.token);if (!Handles(sid)) return;if (!ready) throw std::logic_error("Factory 파일 팔레트 미설치");
-        state.now=core.processState.Now();state.ownerPalettes.assign(core.bridgeState.ownerColors.begin(),core.bridgeState.ownerColors.end());
-        SpritePixelTarget target(pixels,pitch,height,clip,MakeSpriteAssetShapes(assets,state),[this](auto mode,auto type,auto owner) { return Color(mode,type,owner); });
-        SpriteDrawHooks rules;rules.virtualFrame=[this](o::Sid object) {
-            if (Bomb(object)) return -1; // 원본 공통 주문의+a0는 빈 본체다.
-            if (Temple(object)) return o::PatchTempleMainFrame(core.pool.Slot(object),templeBaseFrames);
-            if (ThunderCannon(object)) return o::ThunderCannonCaptureMainFrame(core.pool.Slot(object),core.frames[core.pool.Slot(object)[10]]);
-            if (o::IsSunAviaryCapture(core.pool.Slot(object))) return o::SunAviaryCaptureMainFrame(core.pool.Slot(object));
-            if (o::IsBurningArcherCapture(core.pool.Slot(object)) || o::IsPlainAssetDraw(core.pool.Slot(object))) return assets.Types()[core.pool.Slot(object)[10]-o::kFirstAssetTypeNumber].definition.specialFrames.baseFrame;
-            return Flare(object) || Generator(object) || Geyser(object) || o::IsPatchDais(core.pool.Slot(object)) ? assets.Types()[core.pool.Slot(object)[10]-o::kFirstAssetTypeNumber].definition.specialFrames.baseFrame : factory.MainFrame(object);
-        };rules.surface=MakeSpriteSurfaceLookup(core.hash);
-        rules.constructionActive=[this](o::Sid object) { return core.processes.FindEvent(object,0x25d)!=nullptr; }; // 491af0은 현재 사제의 기도 Regular를 조회한다.
-        rules.timers=[this](o::Sid object,std::uint32_t type)->std::optional<std::array<double,3>> {
-            const auto form=o::FindAttachedProcess(core.pool,object,type);if (!form.value) return std::nullopt;
-            const auto* process=dynamic_cast<const o::FlyerProcess*>(core.processes.FromForm(form)); // 4ae2d0의 현재 inner 포인터에 대응하는 같은 소유 프로세스다.
-            if (!process) throw std::logic_error("비행 선택 타이머의 현재 프로세스 미연결");
-            std::array<double,3> result{};const auto& bytes=process->Fields().bytes;
-            constexpr std::array<std::size_t,3> offsets{72,104,40}; // 원본498220의 outer+48/+68/+28이며 inner에서-30 보정한 뒤 읽는다.
-            for (std::size_t index=0;index<offsets.size();++index) { // 각 선택 막대의 실제 double 기한을 그대로 전달한다.
-                std::uint64_t bits{};for (std::size_t byte=0;byte<8;++byte) bits|=std::uint64_t(bytes[offsets[index]+byte])<<(byte*8); // unaligned 원문을 little endian으로 읽는다.
-                result[index]=std::bit_cast<double>(bits);
-            }
-            return result;
-        };
-        rules.resource=[this](o::Sid object)->std::optional<SpriteResourceStatus> {
-            const auto* cast=core.processes.FindEvent(object,0x493);if (!cast) return std::nullopt;
-            const o::ContainedFinderState current{core.processState.Boss(),6,false};o::RawContainedFinder finder(core.pool,current);o::Sid content{}; // 같은 실제 기본 finder의 타입6/mask1 조회다. 현재 제품의 개발자 dead 진단은 꺼져 있다.
-            for (auto candidate=finder.Begin(object);candidate.value;candidate=finder.Next()) { // 원본처럼 상태를 추가로 거르지 않고 첫 mask1 일치를 고른다.
-                const auto bytes=core.pool.Slot(candidate);if ((std::uint32_t(bytes[20])|(std::uint32_t(bytes[21])<<8))&1U) { content=candidate;break; }
-            }
-            const auto bytes=core.pool.Slot(content);return SpriteResourceStatus{std::uint32_t(bytes[18])|(std::uint32_t(bytes[19])<<8),std::bit_cast<std::int32_t>(cast->Count())}; // 빈 내용물도 원본은0번 슬롯의 kind를 읽는다.
-        };
-        rules.statusProcesses=[this]()->std::span<const SpriteStatusProcess> {
-            statusSlots.clear();statusSlots.push_back({}); // 원본이 건너뛰는 첫 슬롯을 유지한다.
-            for (o::ProcessId pid=1;pid<=core.kernel.Capacity();++pid) { // 실제 현재 Kernel을 원래 PID 순서로 읽으며57만 순서를 보존해 모은다.
-                const auto* process=dynamic_cast<const o::SquidProcess*>(core.kernel.Get(pid));if (!process || core.pool.Slot(process->Form())[10]!=state.statusProcessType) continue;
-                const auto* effect=dynamic_cast<const o::BombEffectTimerProcess*>(process);if (!effect) throw std::logic_error("상태57의 실제 타이머 필드 미연결");
-                const auto& fields=effect->Fields();statusSlots.push_back({state.statusProcessType,fields.flags,fields.members,fields.endTime}); // 별도 대상/시계를 만들지 않고 같은 현재 필드를 빌린다.
-            }
-            return statusSlots;
-        };
-        auto hooks=target.Hooks(std::move(rules));
-        // +a4의0044c180은 같은 기준점/단위 배율의 plain SHP다. 일반 owner 문맥으로 바꾸지 않는다.
-        hooks.virtualDraw=[this,shape=hooks.shape](o::Sid object,ScreenPoint point) {
+    // 같은+a4 본체를화면과픽셀선택에서호출한다. 선택만의새로운파생분배를만들지않는다.
+    void Additional(o::Sid object,ScreenPoint point,const std::function<void(SpriteShapeRequest)>& shape,const std::function<void(o::Sid,int,int)>& bridgeDraw={}) {
             const auto composite=core.pool.Slot(object); // 같은 프레임의 현재 본체/추가 그림 분배에 사용한다.
-            if (Bomb(object)) { const auto frame=std::uint32_t(composite[36])|(std::uint32_t(composite[37])<<8)|(std::uint32_t(composite[38])<<16)|(std::uint32_t(composite[39])<<24);if (!(composite[40]&0x10U)) shape({composite[10],frame,point,SpriteShapeMode::Plain});else if (composite[34]==state.localPlayer) shape({composite[10],frame,point,SpriteShapeMode::Abstract});return; } // 같은 현재497280 상태색/로컬 관문으로 추가 그림을 그린다.
+            const auto& dispatch=HitVtable(composite); // 같은 실제+a4 분배를 일반화면과선택캡처가공유한다.
+            if (dispatch.additional==0x41c100U) return; // 실제빈ret8만정상반환한다.
+            if (dispatch.additional==0x4223c0U) { if (!bridgeDraw) throw std::logic_error("선택용 다리의 실제 추가Draw 미연결");bridgeDraw(object,point.x,point.y);return; }
+            if (dispatch.additional==0x41e3d0U) { const auto frame=std::uint32_t(composite[36])|(std::uint32_t(composite[37])<<8)|(std::uint32_t(composite[38])<<16)|(std::uint32_t(composite[39])<<24);if (!(composite[40]&0x10U)) shape({composite[10],frame,point,SpriteShapeMode::Plain});else if (composite[34]==state.localPlayer) shape({composite[10],frame,point,SpriteShapeMode::Abstract});return; } // 같은 현재497280 상태색/로컬 관문으로 추가 그림을 그린다.
             if (o::IsPlainAssetDraw(composite)) return; // 검증한 일반 자산의+a4=41c100은 원본처럼 빈ret8이다.
             if (o::IsSunAviaryCapture(composite) || o::IsBurningArcherCapture(composite)) {
                 const auto draw=[this,object,&shape](auto type,auto frame,auto x,auto y) { // 실제497280과 같은 현재 추상/로컬 소유자 관문으로 추가 그림을 출력한다.
@@ -179,14 +151,87 @@ struct RawCampaignFactoryDisplay::Impl {
                     else if (current[34]==state.localPlayer) shape({type,static_cast<std::uint32_t>(frame),point,SpriteShapeMode::Abstract}); // 실제497280의 현재 추상/로컬 소유자 관문이다.
                 });return;
             }
+            if (!factory.Handles(object)) throw std::logic_error("픽셀 선택의 파생 추가Draw 미복원 TYPE="+std::to_string(composite[10]));
             factory.Additional(object,point.x,point.y,[&shape](auto x,auto y,auto type,auto frame) { if (frame<0) throw std::out_of_range("Factory 추가 그림 음수 프레임");shape({type,static_cast<std::uint32_t>(frame),{x,y},SpriteShapeMode::Plain}); });
+    }
+    // 화면+a0와달리선택은실제+78을읽으며일반주문도TYPE+128을반환한다.
+    std::int32_t HitFrame(o::Sid sid) const {
+        const auto raw=core.pool.Slot(sid); // 실제getter호출마다현재TYPE/단계를읽는다.
+        switch (HitVtable(raw).frame) {
+        case 0x4acfe0U:return assets.Types()[raw[10]-o::kFirstAssetTypeNumber].definition.specialFrames.baseFrame;
+        case 0x4222f0U:return std::bit_cast<std::int32_t>(DisplayDword(raw,36));
+        case 0x454cd0U:return factory.MainFrame(sid);
+        case 0x45b530U:return o::SunAviaryCaptureMainFrame(raw);
+        case 0x46ae10U:return o::ThunderCannonCaptureMainFrame(raw,core.frames[raw[10]]);
+        default:throw std::logic_error("픽셀 선택의 실제+78 미복원");
+        }
+    }
+    // 현재카메라와로컬소유자를읽고고정200픽셀plain캡처를실제RLE에연결한다.
+    bool Hit(o::Sid sid,int x,int y,const std::array<std::int32_t,2>& camera,std::uint32_t localPlayer,const std::function<void(o::Sid,int,int)>& bridgeDraw) {
+        state.localPlayer=localPlayer;ObjectHitHooks hooks; // 화면호출여부와무관하게같은현재소유자관문을쓴다.
+        hooks.frame=[this](o::Sid object) { return HitFrame(object); };
+        hooks.plain=[this](auto type,auto frame,auto px,auto py,std::span<std::uint8_t> pixels) { // 선택기본그림에는소유자색/추상색/배율을적용하지않는다.
+            if (frame<0) throw std::out_of_range("픽셀 선택의 plain 음수 프레임");
+            static_cast<void>(DrawShape(pixels,200,200,assets.Shapes(),type-o::kFirstAssetTypeNumber,static_cast<std::size_t>(frame),px,py,{0,0,199,199}));
         };
+        hooks.additional=[this,&bridgeDraw](o::Sid object,auto px,auto py,std::span<std::uint8_t> pixels) { // 실제497280의추상/로컬관문과Factory의plain을보존한다.
+            SpritePixelTarget target(pixels,200,200,{0,0,200,200},MakeSpriteAssetShapes(assets,state),[this](auto mode,auto type,auto owner) { return Color(mode,type,owner); });
+            Additional(object,{px,py},target.Hooks().shape,bridgeDraw);
+        };
+        return RawObjectHit(core.pool,core.types,core.shapes,std::move(hooks)).Hit(sid,x,y,camera);
+    }
+    // 원본 현재 슬롯과 실제 dirty clip을 읽고 일반 Draw의 모든 픽셀을 같은 표면에 쓴다.
+    void Draw(o::RenderCollectionEntry entry,std::span<std::uint8_t> pixels,int pitch,int height,ScreenRect clip) {
+        const auto sid=collection.Object(entry.token);if (!Handles(sid)) return;if (!ready) throw std::logic_error("Factory 파일 팔레트 미설치");
+        state.now=core.processState.Now();state.ownerPalettes.assign(core.bridgeState.ownerColors.begin(),core.bridgeState.ownerColors.end());
+        SpritePixelTarget target(pixels,pitch,height,clip,MakeSpriteAssetShapes(assets,state),[this](auto mode,auto type,auto owner) { return Color(mode,type,owner); });
+        SpriteDrawHooks rules;rules.virtualFrame=[this](o::Sid object) {
+            if (Bomb(object)) return -1; // 원본 공통 주문의+a0는 빈 본체다.
+            if (Temple(object)) return o::PatchTempleMainFrame(core.pool.Slot(object),templeBaseFrames);
+            if (ThunderCannon(object)) return o::ThunderCannonCaptureMainFrame(core.pool.Slot(object),core.frames[core.pool.Slot(object)[10]]);
+            if (o::IsSunAviaryCapture(core.pool.Slot(object))) return o::SunAviaryCaptureMainFrame(core.pool.Slot(object));
+            if (o::IsBurningArcherCapture(core.pool.Slot(object)) || o::IsPlainAssetDraw(core.pool.Slot(object))) return assets.Types()[core.pool.Slot(object)[10]-o::kFirstAssetTypeNumber].definition.specialFrames.baseFrame;
+            return Flare(object) || Generator(object) || Geyser(object) || o::IsPatchDais(core.pool.Slot(object)) ? assets.Types()[core.pool.Slot(object)[10]-o::kFirstAssetTypeNumber].definition.specialFrames.baseFrame : factory.MainFrame(object);
+        };rules.surface=MakeSpriteSurfaceLookup(core.hash);
+        rules.constructionActive=[this](o::Sid object) { return core.processes.FindEvent(object,0x25d)!=nullptr; }; // 491af0은 현재 사제의 기도 Regular를 조회한다.
+        rules.timers=[this](o::Sid object,std::uint32_t type)->std::optional<std::array<double,3>> {
+            const auto form=o::FindAttachedProcess(core.pool,object,type);if (!form.value) return std::nullopt;
+            const auto* process=dynamic_cast<const o::FlyerProcess*>(core.processes.FromForm(form)); // 4ae2d0의 현재 inner 포인터에 대응하는 같은 소유 프로세스다.
+            if (!process) throw std::logic_error("비행 선택 타이머의 현재 프로세스 미연결");
+            std::array<double,3> result{};const auto& bytes=process->Fields().bytes;
+            constexpr std::array<std::size_t,3> offsets{72,104,40}; // 원본498220의 outer+48/+68/+28이며 inner에서-30 보정한 뒤 읽는다.
+            for (std::size_t index=0;index<offsets.size();++index) { // 각 선택 막대의 실제 double 기한을 그대로 전달한다.
+                std::uint64_t bits{};for (std::size_t byte=0;byte<8;++byte) bits|=std::uint64_t(bytes[offsets[index]+byte])<<(byte*8); // unaligned 원문을 little endian으로 읽는다.
+                result[index]=std::bit_cast<double>(bits);
+            }
+            return result;
+        };
+        rules.resource=[this](o::Sid object)->std::optional<SpriteResourceStatus> {
+            const auto* cast=core.processes.FindEvent(object,0x493);if (!cast) return std::nullopt;
+            const o::ContainedFinderState current{core.processState.Boss(),6,false};o::RawContainedFinder finder(core.pool,current);o::Sid content{}; // 같은 실제 기본 finder의 타입6/mask1 조회다. 현재 제품의 개발자 dead 진단은 꺼져 있다.
+            for (auto candidate=finder.Begin(object);candidate.value;candidate=finder.Next()) { // 원본처럼 상태를 추가로 거르지 않고 첫 mask1 일치를 고른다.
+                const auto bytes=core.pool.Slot(candidate);if ((std::uint32_t(bytes[20])|(std::uint32_t(bytes[21])<<8))&1U) { content=candidate;break; }
+            }
+            const auto bytes=core.pool.Slot(content);return SpriteResourceStatus{std::uint32_t(bytes[18])|(std::uint32_t(bytes[19])<<8),std::bit_cast<std::int32_t>(cast->Count())}; // 빈 내용물도 원본은0번 슬롯의 kind를 읽는다.
+        };
+        rules.statusProcesses=[this]()->std::span<const SpriteStatusProcess> {
+            statusSlots.clear();statusSlots.push_back({}); // 원본이 건너뛰는 첫 슬롯을 유지한다.
+            for (o::ProcessId pid=1;pid<=core.kernel.Capacity();++pid) { // 실제 현재 Kernel을 원래 PID 순서로 읽으며57만 순서를 보존해 모은다.
+                const auto* process=dynamic_cast<const o::SquidProcess*>(core.kernel.Get(pid));if (!process || core.pool.Slot(process->Form())[10]!=state.statusProcessType) continue;
+                const auto* effect=dynamic_cast<const o::BombEffectTimerProcess*>(process);if (!effect) throw std::logic_error("상태57의 실제 타이머 필드 미연결");
+                const auto& fields=effect->Fields();statusSlots.push_back({state.statusProcessType,fields.flags,fields.members,fields.endTime}); // 별도 대상/시계를 만들지 않고 같은 현재 필드를 빌린다.
+            }
+            return statusSlots;
+        };
+        auto hooks=target.Hooks(std::move(rules));
+        hooks.virtualDraw=[this,shape=hooks.shape](o::Sid object,ScreenPoint point) { Additional(object,point,shape); }; // 같은실제+a4를선택캡처와공유한다.
         SpriteDraw draw(core.pool,core.types,views,state,std::move(hooks),0);draw.Draw(entry);
     }
 };
 // 같은 Session의 수명이 끝나기 전에 표시기를 해제한다.
 RawCampaignFactoryDisplay::RawCampaignFactoryDisplay(RawWorldCore core,const GameAssets& assets,TempleDraw templeDraw,const std::uint32_t* patchDiagnostic):impl_(std::make_unique<Impl>(core,assets,std::move(templeDraw))) { impl_->state.sharedPatchDiagnostic=patchDiagnostic; }
 RawCampaignFactoryDisplay::~RawCampaignFactoryDisplay()=default; // procedure가 더 이상 호출되지 않을 때 반납한다.
+bool RawCampaignFactoryDisplay::Hit(o::Sid sid,int x,int y,const std::array<std::int32_t,2>& camera,std::uint32_t localPlayer,const std::function<void(o::Sid,int,int)>& bridgeDraw) const { return impl_->Hit(sid,x,y,camera,localPlayer,bridgeDraw); } // 선택의현재raw와실제추가그림을공유한다.
 bool RawCampaignFactoryDisplay::Handles(o::Sid sid) const { return impl_->Handles(sid); } // 별도 TYPE 이름 휴리스틱을 쓰지 않는다.
 // 장치 BGRX와 별개로 원본 R/G/B/예약 DWORD를 만들어 실제 파일 색 표를 계산한다.
 void RawCampaignFactoryDisplay::SetPalette(std::span<const ScreenColor> palette,std::span<const std::uint32_t> colorSortLogical) {

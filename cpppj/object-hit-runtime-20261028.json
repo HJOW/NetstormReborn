@@ -1,0 +1,467 @@
+{
+  "unit": 524,
+  "host": "HJOW-Athlon",
+  "date": "2026-10-28",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23",
+    "outputsModified": false
+  },
+  "product": {
+    "NetstormCpp.exe": "ab2862d7e56fb3751d0a2aab270404f9e7b2da03d94e16abc376ed1d9e6412af",
+    "netstorm_tests.exe": "266562c4bad85c2c5fc22fe015f4956c292d5a1fcbbc46200ba4b59ebf0af57b"
+  },
+  "native": {
+    "unit": 524,
+    "host": "HJOW-Athlon",
+    "lastDecompile": "HJOW-Athlon / 2026-10-23",
+    "outputsModified": false,
+    "inputs": 608,
+    "instructions": 1578191,
+    "assertions": 0,
+    "boundaries": "498000/4ac550/419850/4a2b10/4a2c70/실제CRT. +78은3회명시입력, plain과+a4는단일픽셀출력경계. 실제RLE/파생Draw/게임/OS/네트워크 실행 아님. 합성TYPE80만 사용.",
+    "sha256": {
+      "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+      "tools/decomp_oracle.py": "227b9a8b703cfd81d05ac4a7c72a42eaecf9c804fc028680466a19a591f2335d",
+      "tools/decomp_object_hit.py": "4b6db7e789cea7e2a1906e72bc2a7d510bc04c3571e57564542f8f3100abdba9",
+      "cpppj/tests/fixtures/object-hit-x86.tsv": "959730b40a2d8b6dde016bc87e7f1e7a3d324726547def1de8fe9b0c69c917f6",
+      "cpppj/src/client/ObjectHitVtables.inc": "1e8114549fbccd237b3e9b007771cb55b3ae7db95a19dccf1b8b63ed35e37cfb"
+    }
+  },
+  "builds": [
+    {
+      "log": "extracted/cpp-object-hit-524/build-game-first.log",
+      "sha256": "db31546cc30d3fe1aff6ee7ba575f3b964009a3842e70e8d847b005dd7d0b2b7",
+      "diagnostics": []
+    },
+    {
+      "log": "extracted/cpp-object-hit-524/build-tests-first.log",
+      "sha256": "1b673c39111b2ccd5997a4e909d2f1557fdebd3afd8d1c86afcb4c8153a8a2f9",
+      "diagnostics": [
+        "C:\\Program Files\\Microsoft Visual Studio\\18\\Community\\VC\\Tools\\MSVC\\14.51.36231\\include\\xutility(5547,37): warning C4244:             _Ty=int [H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\tests\\netstorm_tests.vcxproj]",
+        "C:\\Program Files\\Microsoft Visual Studio\\18\\Community\\VC\\Tools\\MSVC\\14.51.36231\\include\\xutility(5547,37): warning C4244:         [ [H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\tests\\netstorm_tests.vcxproj]",
+        "C:\\Program Files\\Microsoft Visual Studio\\18\\Community\\VC\\Tools\\MSVC\\14.51.36231\\include\\xutility(5547,37): warning C4244:         ] [H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\tests\\netstorm_tests.vcxproj]",
+        "C:\\Program Files\\Microsoft Visual Studio\\18\\Community\\VC\\Tools\\MSVC\\14.51.36231\\include\\xutility(5547,37): warning C4244:         with [H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\tests\\netstorm_tests.vcxproj]",
+        "C:\\Program Files\\Microsoft Visual Studio\\18\\Community\\VC\\Tools\\MSVC\\14.51.36231\\include\\xutility(5547,37): warning C4244: '초기화 중': 'const _Ty'에서 'unsigned char'(으)로 변환하면서 데이터가 손실될 수 있습니다. [H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\tests\\netstorm_tests.vcxproj]",
+        "C:\\Program Files\\Microsoft Visual Studio\\18\\Community\\VC\\Tools\\MSVC\\14.51.36231\\include\\xutility(5604,24): warning C4244:             _Ty=int [H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\tests\\netstorm_tests.vcxproj]",
+        "C:\\Program Files\\Microsoft Visual Studio\\18\\Community\\VC\\Tools\\MSVC\\14.51.36231\\include\\xutility(5604,24): warning C4244:             _Ty=uint8_t [H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\tests\\netstorm_tests.vcxproj]",
+        "C:\\Program Files\\Microsoft Visual Studio\\18\\Community\\VC\\Tools\\MSVC\\14.51.36231\\include\\xutility(5604,24): warning C4244:         [ [H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\tests\\netstorm_tests.vcxproj]",
+        "C:\\Program Files\\Microsoft Visual Studio\\18\\Community\\VC\\Tools\\MSVC\\14.51.36231\\include\\xutility(5604,24): warning C4244:         ] [H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\tests\\netstorm_tests.vcxproj]",
+        "C:\\Program Files\\Microsoft Visual Studio\\18\\Community\\VC\\Tools\\MSVC\\14.51.36231\\include\\xutility(5604,24): warning C4244:         and [H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\tests\\netstorm_tests.vcxproj]",
+        "C:\\Program Files\\Microsoft Visual Studio\\18\\Community\\VC\\Tools\\MSVC\\14.51.36231\\include\\xutility(5604,24): warning C4244:         with [H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\tests\\netstorm_tests.vcxproj]",
+        "C:\\Program Files\\Microsoft Visual Studio\\18\\Community\\VC\\Tools\\MSVC\\14.51.36231\\include\\xutility(5604,24): warning C4244: '=': 'const _Ty'에서 '_Ty'(으)로 변환하면서 데이터가 손실될 수 있습니다. [H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\tests\\netstorm_tests.vcxproj]"
+      ]
+    },
+    {
+      "log": "extracted/cpp-object-hit-524/build-tests-final.log",
+      "sha256": "d24069ac4f64fcec77353c49291d5d45ab967aca2b8536c9c36d665d6251300e",
+      "diagnostics": []
+    }
+  ],
+  "tests": {
+    "registered": 3357,
+    "unique": 33,
+    "names": [
+      "CampaignDais_AdditionalDisplayAndShrapnelCapture",
+      "CampaignSession_ObjectHitUsesCurrentRawPhysicalShapeAndCamera",
+      "CampaignSession_ThunderCannonBodyNative37Frames",
+      "CampaignTempleDraw_Native264BodyPixels",
+      "CampaignUserSelection_SamePoolMarksRegularAndManaNotice",
+      "GeyserCapture_ExactVtableAndCurrentFrame",
+      "ObjectHit_ReplaysNative608PixelBranchesAndCallOrder",
+      "ObjectHit_RequiresOnlyReachedDrawingAndRejectsInvalidHeader",
+      "ShapeToBuffer_AltarNative1824Pixels",
+      "ShapeToBuffer_CdNativePlainPixelsAndFallback",
+      "ShapeToBuffer_FactoryNative200Pixels",
+      "ShapeToBuffer_GeyserNative459Pixels",
+      "ShapeToBuffer_NativeMappedOwnerPixels",
+      "ShapeToBuffer_PatchNativePlainPixels",
+      "ShapeToBuffer_SunAviaryNative384Pixels",
+      "ShapeToBuffer_SupportNative162Pixels",
+      "ShapeToBuffer_ThunderCannonNative333Pixels",
+      "SunAviaryCapture_ExactVtableAndSuppressedDraw",
+      "ThunderCannonCapture_RejectsOtherVtableAndInvalidFrame",
+      "UserPick_OnlyReachedBoundariesAreRequired",
+      "UserPick_ReplaysNative1092PrioritiesFiltersAndNearestFallback",
+      "UserSelectionGlobals_CurrentMultipleGetterSurvivesReallocationAndCountChanges",
+      "UserSelectionGlobals_DisabledClearPreservesAllCurrentDwords",
+      "UserSelectionGlobals_FirstMenuClearKeepsMouseTypeAndNegativeCountTail",
+      "UserSelectionGlobals_LateArrayFailureKeepsWrittenPrefix",
+      "UserSelectionGlobals_NativeDwordBitsAndDistinctRawMouse",
+      "UserSelectionGlobals_PreparedLifetimeAndLateHighlightFailureKeepCurrentOwner",
+      "UserSelectionGlobals_WideDwordCandidatesAreNotTruncatedToSid",
+      "UserSelection_ClearLazyBoundaryAndWrittenPrefix",
+      "UserSelection_ClearNativeEnabledAndCurrentEffects",
+      "UserSelection_EditionAndTypeContract",
+      "UserSelection_LazyBoundariesAndWrittenPrefix",
+      "UserSelection_NativeThreeArgumentsAndCurrentEffects"
+    ],
+    "runs": [
+      {
+        "filter": "ObjectHit",
+        "names": [
+          "CampaignSession_ObjectHitUsesCurrentRawPhysicalShapeAndCamera",
+          "ObjectHit_ReplaysNative608PixelBranchesAndCallOrder",
+          "ObjectHit_RequiresOnlyReachedDrawingAndRejectsInvalidHeader"
+        ],
+        "exit": 0,
+        "summary": [
+          [
+            "3",
+            "0"
+          ]
+        ],
+        "log": "extracted/cpp-object-hit-524/focus-00.log"
+      },
+      {
+        "filter": "UserPick",
+        "names": [
+          "UserPick_ReplaysNative1092PrioritiesFiltersAndNearestFallback",
+          "UserPick_OnlyReachedBoundariesAreRequired"
+        ],
+        "exit": 0,
+        "summary": [
+          [
+            "2",
+            "0"
+          ]
+        ],
+        "log": "extracted/cpp-object-hit-524/focus-01.log"
+      },
+      {
+        "filter": "UserSelection",
+        "names": [
+          "CampaignUserSelection_SamePoolMarksRegularAndManaNotice",
+          "UserSelection_NativeThreeArgumentsAndCurrentEffects",
+          "UserSelection_LazyBoundariesAndWrittenPrefix",
+          "UserSelection_EditionAndTypeContract",
+          "UserSelection_ClearNativeEnabledAndCurrentEffects",
+          "UserSelection_ClearLazyBoundaryAndWrittenPrefix",
+          "UserSelectionGlobals_NativeDwordBitsAndDistinctRawMouse",
+          "UserSelectionGlobals_FirstMenuClearKeepsMouseTypeAndNegativeCountTail",
+          "UserSelectionGlobals_DisabledClearPreservesAllCurrentDwords",
+          "UserSelectionGlobals_CurrentMultipleGetterSurvivesReallocationAndCountChanges",
+          "UserSelectionGlobals_WideDwordCandidatesAreNotTruncatedToSid",
+          "UserSelectionGlobals_LateArrayFailureKeepsWrittenPrefix",
+          "UserSelectionGlobals_PreparedLifetimeAndLateHighlightFailureKeepCurrentOwner"
+        ],
+        "exit": 0,
+        "summary": [
+          [
+            "13",
+            "0"
+          ]
+        ],
+        "log": "extracted/cpp-object-hit-524/focus-02.log"
+      },
+      {
+        "filter": "ShapeToBuffer",
+        "names": [
+          "ShapeToBuffer_PatchNativePlainPixels",
+          "ShapeToBuffer_CdNativePlainPixelsAndFallback",
+          "ShapeToBuffer_FactoryNative200Pixels",
+          "ShapeToBuffer_SupportNative162Pixels",
+          "ShapeToBuffer_ThunderCannonNative333Pixels",
+          "ShapeToBuffer_SunAviaryNative384Pixels",
+          "ShapeToBuffer_GeyserNative459Pixels",
+          "ShapeToBuffer_NativeMappedOwnerPixels",
+          "ShapeToBuffer_AltarNative1824Pixels"
+        ],
+        "exit": 0,
+        "summary": [
+          [
+            "9",
+            "0"
+          ]
+        ],
+        "log": "extracted/cpp-object-hit-524/focus-03.log"
+      },
+      {
+        "filter": "ThunderCannonCapture_",
+        "names": [
+          "ThunderCannonCapture_RejectsOtherVtableAndInvalidFrame"
+        ],
+        "exit": 0,
+        "summary": [
+          [
+            "1",
+            "0"
+          ]
+        ],
+        "log": "extracted/cpp-object-hit-524/focus-04.log"
+      },
+      {
+        "filter": "SunAviaryCapture_",
+        "names": [
+          "SunAviaryCapture_ExactVtableAndSuppressedDraw"
+        ],
+        "exit": 0,
+        "summary": [
+          [
+            "1",
+            "0"
+          ]
+        ],
+        "log": "extracted/cpp-object-hit-524/focus-05.log"
+      },
+      {
+        "filter": "GeyserCapture_",
+        "names": [
+          "GeyserCapture_ExactVtableAndCurrentFrame"
+        ],
+        "exit": 0,
+        "summary": [
+          [
+            "1",
+            "0"
+          ]
+        ],
+        "log": "extracted/cpp-object-hit-524/focus-06.log"
+      },
+      {
+        "filter": "CampaignSession_ThunderCannonBody",
+        "names": [
+          "CampaignSession_ThunderCannonBodyNative37Frames"
+        ],
+        "exit": 0,
+        "summary": [
+          [
+            "1",
+            "0"
+          ]
+        ],
+        "log": "extracted/cpp-object-hit-524/focus-07.log"
+      },
+      {
+        "filter": "CampaignTempleDraw_",
+        "names": [
+          "CampaignTempleDraw_Native264BodyPixels"
+        ],
+        "exit": 0,
+        "summary": [
+          [
+            "1",
+            "0"
+          ]
+        ],
+        "log": "extracted/cpp-object-hit-524/focus-08.log"
+      },
+      {
+        "filter": "CampaignDais_Additional",
+        "names": [
+          "CampaignDais_AdditionalDisplayAndShrapnelCapture"
+        ],
+        "exit": 0,
+        "summary": [
+          [
+            "1",
+            "0"
+          ]
+        ],
+        "log": "extracted/cpp-object-hit-524/focus-09.log"
+      }
+    ],
+    "exeSha256": "266562c4bad85c2c5fc22fe015f4956c292d5a1fcbbc46200ba4b59ebf0af57b"
+  },
+  "actualRawShapeSamples": {
+    "types": [
+      158,
+      142,
+      154,
+      86,
+      123,
+      82,
+      114
+    ],
+    "cameras": 2,
+    "points": 11774,
+    "extra": "명시extra0의현재raw/SHP/camera를독립Decode와비교. 실제+a4는기존표시/캡처회귀와두GUI로검사. 전체상태검증이아님."
+  },
+  "gui": [
+    {
+      "size": [
+        1280,
+        720
+      ],
+      "run": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-object-hit-524\\gui-1280x720\\data",
+          "--window",
+          "--no-audio",
+          "--frames",
+          "310",
+          "--set",
+          "SCREENW=1280;SCREENH=720;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-object-hit-524\\gui-1280x720\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-object-hit-524\\gui-1280x720\\states.tsv"
+        ],
+        "binarySha256": "ab2862d7e56fb3751d0a2aab270404f9e7b2da03d94e16abc376ed1d9e6412af",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 14.226915899998858,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "d604cc1723325d347fd5aacba9ef7ddc1f8651927c3a1b2916fc90d9cb7650e1"
+      },
+      "targets": [
+        {
+          "label": "priest",
+          "sid": 15000,
+          "kind": "priest",
+          "labels": [
+            "Construct",
+            "View Netstorm Knowledge",
+            "",
+            "About",
+            "Player"
+          ],
+          "captureSha256": "250cf2b151c3e71856f8b3bb655cfefabd8741f8192df17b585e78e33bf3cb37"
+        },
+        {
+          "label": "tower",
+          "sid": 15004,
+          "kind": "windBlocker",
+          "labels": [
+            "Salvage gains 200",
+            "About",
+            "Player"
+          ],
+          "captureSha256": "8c24b5ad9c887ac2fa970136f208127d25b2ebbe41cc055725c0d0935703a514"
+        },
+        {
+          "label": "workshop",
+          "sid": 15002,
+          "kind": "windFactory",
+          "labels": [
+            "View Current Production",
+            "Put Knowledge into Production",
+            "Upgrade costs 1000",
+            "",
+            "Salvage gains 493",
+            "About",
+            "Player"
+          ],
+          "captureSha256": "a37a17d596a088e7b222120671d532d90e5de2f714a168db6f325b6bbf434dc9"
+        }
+      ],
+      "modes": [
+        [
+          "1",
+          "1"
+        ],
+        [
+          "0",
+          "1"
+        ],
+        [
+          "1",
+          "1"
+        ]
+      ]
+    },
+    {
+      "size": [
+        1024,
+        768
+      ],
+      "run": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-object-hit-524\\gui-1024x768\\data",
+          "--window",
+          "--no-audio",
+          "--frames",
+          "310",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-object-hit-524\\gui-1024x768\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-object-hit-524\\gui-1024x768\\states.tsv"
+        ],
+        "binarySha256": "ab2862d7e56fb3751d0a2aab270404f9e7b2da03d94e16abc376ed1d9e6412af",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 15.076964000007138,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "d604cc1723325d347fd5aacba9ef7ddc1f8651927c3a1b2916fc90d9cb7650e1"
+      },
+      "targets": [
+        {
+          "label": "priest",
+          "sid": 15000,
+          "kind": "priest",
+          "labels": [
+            "Construct",
+            "View Netstorm Knowledge",
+            "",
+            "About",
+            "Player"
+          ],
+          "captureSha256": "e5dadf1f49802d42ef43ed63036737974b852f56eca845c46f75f660d2677899"
+        },
+        {
+          "label": "tower",
+          "sid": 15004,
+          "kind": "windBlocker",
+          "labels": [
+            "Salvage gains 200",
+            "About",
+            "Player"
+          ],
+          "captureSha256": "1e1cb7711a1718895d7eb3d03160967e951427303b28b3fc03f498bc6c90ae69"
+        },
+        {
+          "label": "workshop",
+          "sid": 15002,
+          "kind": "windFactory",
+          "labels": [
+            "View Current Production",
+            "Put Knowledge into Production",
+            "Upgrade costs 1000",
+            "",
+            "Salvage gains 500",
+            "About",
+            "Player"
+          ],
+          "captureSha256": "42b39188a052c89e113f84fe12ff54b76cf7b59729d8fa5165a2b679e7e3bd39"
+        }
+      ],
+      "modes": [
+        [
+          "1",
+          "1"
+        ],
+        [
+          "0",
+          "1"
+        ],
+        [
+          "1",
+          "1"
+        ]
+      ]
+    }
+  ],
+  "protected": {
+    "files": 1819,
+    "unchanged": true
+  },
+  "initialFailures": [
+    "원문첫실행은허용목록49a840누락으로거부. 원문하위를추가하고608조건/재실행차이0.",
+    "최초검사빌드의std::fill<int> C4244를uint8_t명시로수정. 최종증분빌드경고/오류0."
+  ],
+  "limitations": [
+    "등록3357중집중33고유실행. 전체CTest/34경로/자연완주를반복하지않음.",
+    "83VT정적표는83종동적생성/선택검증이아님. 일반선택에서원래제외하는메타/효과의미연결+a4는빈성공으로바꾸지않음.",
+    "공중공격3종의생산/생성/우클릭재현/신규전용검사/추가원문관측없음.",
+    "연녹색직사각형/자연완주/영문부재개선보류유지. MP사전구현/검사금지는후속."
+  ],
+  "rawEvidence": "extracted/cpp-object-hit-524",
+  "headBeforeCommit": "1a4d51b13fdca0718b7e90a77dd379620e6b3b09"
+}

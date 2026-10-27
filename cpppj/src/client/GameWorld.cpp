@@ -447,7 +447,7 @@ ScreenRect GameWorld::Bounds(const o::Squid& object) const {
     const ScreenPoint offset=native ? ScreenPoint{record.hotspotX,record.hotspotY} : ScreenPoint{}; // 일반 출력에 남은 타입의 기존 그림/클릭 정합성을 유지한다.
     const auto p=ToScreen(object.x,object.y); return {p.x-offset.x+frame.rect.left,p.y-offset.y+frame.rect.top,p.x-offset.x+frame.rect.right+1,p.y-offset.y+frame.rect.bottom+1};
 }
-// 가장 앞에 가까운 실제 그림을 선택한다. 모바일 그림에는 녹화 기반 4픽셀 여유가 있다.
+// 실제10.78은현재해시순위와원본픽셀hit을사용하며다른값형월드는기존선택기를유지한다.
 o::SquidId GameWorld::Pick(ScreenPoint point) const {
     const auto view=MapView();if (point.y<view.top || point.x<view.left || point.y>=view.bottom || point.x>=view.right) return 0;
     if (campaign_ && assets_.Edition()==o::OriginalEdition::Patch1078) {
@@ -459,9 +459,9 @@ o::SquidId GameWorld::Pick(ScreenPoint point) const {
             const auto snapped=RawCarrierDropPoint::Snap(at);const int x=static_cast<int>(snapped[0]),y=static_cast<int>(snapped[1]);return finder.Begin({x-radiusX,y-radiusY,x+radiusX,y+radiusY},0).value;
         };
         hooks.next=[&finder] { return finder.Next().value; };hooks.center=[&core](auto sid) { return core.neighbors.Center(sid); };
-        hooks.hit=[this](auto sid,auto x,auto y) { //가상+b0의 픽셀 캡처 전체 복원 전까지 기존 그림 사각형 경계를 명시적으로 유지한다.
-            const auto* object=Object(sid.value);if (!object || !object->visible) return false;const auto rect=Bounds(*object);const int margin=object->mobile ? 4 : 0;
-            return x>=rect.left-margin && x<rect.right+margin && y>=rect.top-margin && y<rect.bottom+margin;
+        hooks.hit=[this](auto sid,auto x,auto y) { // 원본498000은현재raw/SHP의투명픽셀을판정하며표시사본/모바일여유를추가하지않는다.
+            if (!factoryDisplay_) throw std::logic_error("실제 픽셀 선택 표시기 미설치");
+            return factoryDisplay_->Hit(sid,x,y,CameraGlobals().Snapshot().pixels,campaign_->LocalOwner(),[this](o::Sid object,int px,int py) { campaign_->DrawBridgeAdditional(object,px,py); });
         };
         return RawUserPick(core.pool,core.types,std::move(hooks)).Pick(point.x,point.y).value;
     }
