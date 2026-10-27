@@ -744,7 +744,7 @@ void UberGump::OpenGameMenu() {
             case 0x531860:case 0x5c78f0:return static_cast<std::uint32_t>(client_.GetScreen().Width());
             case 0x531864:case 0x5c78f4:return static_cast<std::uint32_t>(client_.GetScreen().Height());
             case 0x5c78d4:return client_.GetScreen().Flags();
-            case 0x5c7910:return 0; // 현재실제Screen은DIB전용이며DirectDraw장치를설치하지않는다.
+            case 0x5c7910:return 1; // 원본 DirectDraw 설치 관문 대신 Windows10/11 호환 전체화면 기능을 메뉴에 공개한다.
             case 0x5c7b14:return client_.WorldAudio().DeviceReady() ? 1U : 0U;
             case 0x531900:return std::bit_cast<std::uint32_t>(client_.Configuration().GetInt("soundVolume"));
             case 0x531904:return std::bit_cast<std::uint32_t>(client_.Configuration().GetInt("musicVolume"));
@@ -795,6 +795,16 @@ void UberGump::OpenGameMenu() {
 // 공통 입력/Guide가 소비하지 않은 현재 메뉴 명령을 같은 Session·음향·설정·시계에 전달한다.
 bool UberGump::GameMenuCommand(const InputEvent& event) {
     const auto code=event.code&0x03ffffffU;
+    if (code==0x02000030U) {
+        if (!(event.code&InputCode::kRelease)) {
+            client_.ChangeScreenMode(std::bit_cast<std::uint32_t>(event.y));
+            if (!popup_.empty()) { popup_.clear();ClearPage();if (world_ && state_.phase==ClientPhase::Mission) client_.Pause(false);RebuildControls(); } // 호환 모드 전환 때 닫힌 호스트 Options의 입력 목록도 같이 반납한다.
+            ++menuConfigRevision_;Refresh();
+        }
+        return true;
+    } // 원본 절대 모드 값은 같은 입력 큐 뒤 실제 호환 Screen 장치로 전달한다.
+    if (code==0x02000002U) { if (!(event.code&InputCode::kRelease)) { const auto previous=client_.GetScreen().Flags();client_.ChangeScreenMode(previous^std::bit_cast<std::uint32_t>(event.y),false);Tell("DirectDrawVerify("+std::to_string(previous)+")"); }return true; } // 원본 조정 비트를 반전하고 같은15초 Tell/Cancel 절대 복구 경로를 사용한다.
+    if (code==0x020000e4U) { if (!(event.code&InputCode::kRelease)) { client_.AcceptScreenMode();Tell("AdjustDirectDraw"); }return true; } // 원본 확인 뒤에만 현재 전체화면 모드를 기억하고 같은 조정 창으로 돌아간다.
     if (code==0x020000beU) {
         if (state_.phase==ClientPhase::Dialog) Tell("Blank"); // 원본 대화 부모의 MenuJustClosed→Kill에 대응하는 페이지 수명 정리다.
         rawButtons_->RequestClosePopups();rebuild_=true;return true;
@@ -854,7 +864,8 @@ void UberGump::OpenMenu(std::string name) {
         page_.items.push_back({std::move(label), {std::move(command), std::move(argument)}, true, checked, enabled});
     };
     if (popup_ == "options") {
-        add("Direct Draw / Full Screen", "", "", false, false);
+        if (client_.GetScreen().Flags()&ScreenMode::kFullScreen) { add("Adjust Direct Draw","Tell","AdjustDirectDraw");add("Window Mode","ScreenModeAbsChange","10"); }
+        else add("Direct Draw / Full Screen","Tell","DirectDrawManager"); // 원본 Tell/설정의 전체화면 선택 값을 그대로 사용한다.
         add("Resolution >", "Menu", "resolution");
         add("Sound On", "Toggle", "sound", config.GetInt("sound") != 0);
         add("Play Music", "Toggle", "music", config.GetInt("music") != 0);
@@ -1319,6 +1330,7 @@ std::optional<ScreenPoint> UberGump::ControlPoint(std::string_view label) const 
 // 실제 메뉴 상태·활성 조건·원본 미션 로드 결과를 한 파일에 기록한다.
 std::string UberGump::Report() const {
     std::ostringstream out;
+    out<<client_.ScreenDiagnostics(); // 실제 OS 창과 논리/확대 출력의 관찰만 추가한다.
     out << "phase\t" << static_cast<int>(state_.phase) << "\npage\t" << Field(pageName_) << "\npopup\t" << Field(popup_) << "\n";
     out << "size\t" << client_.GetScreen().Width() << '\t' << client_.GetScreen().Height() << "\n";
     out << "paused\t" << client_.Paused() << "\nsound\t" << client_.Configuration().GetInt("sound") << "\n";

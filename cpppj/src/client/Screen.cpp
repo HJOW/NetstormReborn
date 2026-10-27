@@ -4,17 +4,21 @@
 //       004a2640(팔레트) ↔ CD 00424500, 004a40d0(커서 표시), 004a4570(DIB 섹션), 004a4fe0(화면 모드) ↔ CD 004220b0,
 //       00445290(사각형 자르기).
 // 범위: 창 모드(DIB 섹션) 경로와 가장 가까운 색 검색·파일 팔레트의 전체 색 표다. 글꼴·커서는 별도 실제 모듈에 연결했다.
-// DirectDraw 표면(종류 3·4·5), 전체화면 전환, 플리핑, 구름 시차 표면은 아직 옮기지 않았다.
+// Windows10/11 호환성: 원본 DirectDraw 전체화면/flip 대신 같은 DIB의 비율 유지 borderless 출력을 사용한다.
 #include "client/Screen.h"
+#include "client/ScreenPresentation.h"
 #include "client/ScreenPaletteApply.h"
 #include <algorithm>
 #include <bit>
+#include <cstring>
 #include <stdexcept>
 #include <utility>
+#include <vector>
 
 #define WIN32_LEAN_AND_MEAN
 #define NOMINMAX
 #include <windows.h>
+#include <dwmapi.h>
 
 namespace netstorm::client {
 namespace {
@@ -125,7 +129,8 @@ ScreenSurface::ScreenSurface(Kind kind, int width, int height, NativeHandle dc, 
     bitmap_ = CreateDIBSection(static_cast<HDC>(referenceDc), reinterpret_cast<BITMAPINFO*>(&info), DIB_PAL_COLORS, &bits, nullptr, 0);
     bits_ = static_cast<std::uint8_t*>(bits);
     if (!bits_) throw std::runtime_error("dibBuffer"); // 원본 assert.
-    std::fill_n(bits_, static_cast<std::size_t>(width) * static_cast<std::size_t>(height), std::uint8_t{0});
+    // 원본 폭=간격 가정과 달리 Windows10/11의1366폭 등도 실제4BYTE DIB 행 정렬을 사용한다.
+    std::fill_n(bits_, static_cast<std::size_t>(Pitch()) * static_cast<std::size_t>(height), std::uint8_t{0});
     if (dc_) SelectObject(static_cast<HDC>(dc_), static_cast<HBITMAP>(bitmap_));
 }
 // 원본은 비트맵을 지우고 머리 정보 메모리를 푼다(여기서는 머리 정보를 따로 잡아 두지 않는다).
@@ -149,14 +154,18 @@ void ScreenSurface::BlitFrom(int x, int y, const ScreenSurface& source, int left
 int ScreenSurface::Width() const { return width_; }
 // 표면의 높이.
 int ScreenSurface::Height() const { return height_; }
-// 원본은 줄 간격에 폭을 그대로 넣는다(화면 폭 640·800·1024는 4의 배수라 DIB의 실제 줄 간격과 같다).
-int ScreenSurface::Pitch() const { return width_; }
+// 원본4:3 폭에서는 같지만 Windows10/11 호환 와이드 DIB의 실제 줄 간격은 DWORD 정렬이다.
+int ScreenSurface::Pitch() const { return kind_==Kind::Dib ? (width_+3)&~3 : width_; }
+// 호환 확대 출력은 같은8비트 DIB를 읽고 중첩 잠금/표면 수명을 바꾸지 않는다.
+const std::uint8_t* ScreenSurface::Pixels() const { return bits_; }
 
 // 창과 크기만 받아 둔다. 표면은 Init·InitDibSection에서 만든다.
 Screen::Screen(NativeHandle window, NativeHandle windowDc, int width, int height,std::uint32_t* paletteLoaded)
     : paletteLoaded_(paletteLoaded?*paletteLoaded:localPaletteLoaded_),window_(window), windowDc_(windowDc), width_(width), height_(height) {}
 // 표면을 먼저 없애고 GDI 객체를 푼다.
 Screen::~Screen() {
+    flags_&=~ScreenMode::kFullScreen;RestoreWindowed(); // 원본과 다른 borderless 자원/커서 제한을 장치 반납 전에 복원한다.
+    flags_&=~ScreenMode::kSoftwareMouse;cursorHidden_=1;ShowCursor(true); // 호환 전체화면 종료 때 하드웨어 커서 표시도 반납한다.
     dibSurface_.reset();
     windowSurface_.reset();
     if (palette_) {
@@ -167,8 +176,7 @@ Screen::~Screen() {
     }
     if (memoryDc_) DeleteDC(static_cast<HDC>(memoryDc_));
 }
-// 원본 004a1270. 원본은 여기서 ddraw.dll의 DirectDrawCreate를 찾아 "DirectDraw 있음"(DAT_005c7910)을 정한다.
-// DirectDraw 경로를 아직 옮기지 않아 그 표시는 항상 꺼 둔다(SetMode가 원본 규칙대로 창 모드로 바꾼다).
+// 원본004a1270의 DIB 장치다. Windows10/11 호환 전체화면은 ddraw.dll/독점 디스플레이 모드를 요구하지 않는다.
 void Screen::Init() {
     windowSurface_ = std::make_unique<ScreenSurface>(ScreenSurface::Kind::DeviceContext, width_, height_, windowDc_, nullptr);
     memoryDc_ = CreateCompatibleDC(static_cast<HDC>(windowDc_));
@@ -191,17 +199,26 @@ void Screen::InitDibSection() {
 }
 // 원본 004a4fe0의 창 모드 경로.
 bool Screen::SetMode(std::uint32_t flags, int windowWidth, int windowHeight, int initWindowPos) {
-    flags |= ScreenMode::kModeSet;
+    flags=ModernScreenMode(flags); // 원본과 다른 Windows10/11의 실제 DIB/비flip 모드로 정규화한다.
     lockDepth_ = 0;
     if (flags == flags_) return true;
-    // DirectDraw가 없으면 전체화면 요구를 창 모드 값으로 바꾼다(원본 `param_1 = 10`).
-    if ((flags & ScreenMode::kFullScreen) != 0) flags = ScreenMode::kFallbackWindowed;
-    if (!ScreenModeIsLegal(flags, false)) return false;
+    if (!ScreenModeIsLegal(flags,true) || !dibSurface_) return false;
+    const bool wasFull=(flags_&ScreenMode::kFullScreen)!=0,wasSet=(flags_&ScreenMode::kModeSet)!=0;
+    const HWND window=static_cast<HWND>(window_);if (!IsWindow(window)) return false;
     ShowCursor(false);
-    if ((flags & ScreenMode::kFullScreen) == 0) flags &= ~ScreenMode::kSoftwareMouse;
     saved_ = current_;
-    flags_ = 0;
-    const HWND window = static_cast<HWND>(window_);
+    drawSurface_=dibSurface_.get();primarySurface_=windowSurface_.get();flags_=flags;
+    if (flags&ScreenMode::kFullScreen) {
+        if (!wasFull) {
+            RECT bounds{};GetWindowRect(window,&bounds);windowedStyle_=GetWindowLongPtrA(window,GWL_STYLE)&~(WS_MINIMIZE|WS_MAXIMIZE);
+            if (wasSet) windowedBounds_={bounds.left,bounds.top,bounds.right,bounds.bottom};
+            else { const auto initial=InitialWindowPosition(initWindowPos,GetSystemMetrics(SM_CXSCREEN),GetSystemMetrics(SM_CYSCREEN),windowWidth,windowHeight,position_);windowedBounds_={initial.x,initial.y,initial.x+windowWidth,initial.y+windowHeight}; }
+            windowedSaved_=true;
+        }
+        // 원본 독점8비트 DirectDraw와 달리 현재 모니터의 데스크톱 모드/색 깊이를 그대로 유지한다.
+        SetWindowLongPtrA(window,GWL_STYLE,WS_POPUP);SetMenu(window,nullptr);border_={};ShowWindow(window,SW_SHOWNORMAL);RelayoutFullscreen();
+    } else if (wasFull && windowedSaved_) RestoreWindowed();
+    else {
     LONG style = WS_OVERLAPPEDWINDOW;
     if (GetSystemMetrics(SM_CXSCREEN) == width_ && GetSystemMetrics(SM_CYSCREEN) == height_) {
         // 바탕 화면이 게임 화면과 같은 크기면 테두리 없는 창으로 화면을 덮는다.
@@ -211,24 +228,49 @@ bool Screen::SetMode(std::uint32_t flags, int windowWidth, int windowHeight, int
         border_.x = GetSystemMetrics(SM_CXFRAME);
         border_.y = GetSystemMetrics(SM_CYCAPTION) + GetSystemMetrics(SM_CYFRAME) + (menu_ ? GetSystemMetrics(SM_CYMENU) : 0);
     }
-    SetWindowLongA(window, GWL_STYLE, style);
+    SetWindowLongPtrA(window, GWL_STYLE, style);
     SetMenu(window, static_cast<HMENU>(menu_));
     position_ = InitialWindowPosition(initWindowPos, GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN),
         windowWidth, windowHeight, position_);
-    SetWindowPos(window, HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE | SWP_NOACTIVATE);
-    ShowWindow(window, SW_SHOWMAXIMIZED);
-    MoveWindow(window, position_.x, position_.y, windowWidth, windowHeight, TRUE);
+    ShowWindow(window,SW_SHOWNORMAL);
+    SetWindowPos(window,HWND_NOTOPMOST,position_.x,position_.y,windowWidth,windowHeight,SWP_FRAMECHANGED);
+    }
     UpdateWindow(window);
-    if (!dibSurface_) return false;
-    drawSurface_ = dibSurface_.get();
-    primarySurface_ = windowSurface_.get();
-    flags_ = flags;
     SetPalette(0, kPaletteSize, nullptr, true);
     cursorHidden_ = 1;
     ShowCursor(true);
     if (!drawSurface_) throw std::runtime_error("drawSurf"); // 원본 assert.
     ShowCursor(true);
+    SetActive(GetForegroundWindow()==window);
     return true;
+}
+// 원본과 다른 호환 전체화면이 소유한 제한/창 스타일만 반납한다.
+void Screen::RestoreWindowed() {
+    if (cursorClipped_) { ClipCursor(nullptr);cursorClipped_=false; }
+    const HWND window=static_cast<HWND>(window_);if (!windowedSaved_ || !IsWindow(window)) return;
+    SetWindowLongPtrA(window,GWL_STYLE,windowedStyle_);SetMenu(window,static_cast<HMENU>(menu_));
+    SetWindowPos(window,HWND_NOTOPMOST,windowedBounds_.left,windowedBounds_.top,windowedBounds_.right-windowedBounds_.left,windowedBounds_.bottom-windowedBounds_.top,SWP_FRAMECHANGED|SWP_NOACTIVATE);
+    windowedSaved_=false;RECT bounds{};POINT origin{};GetWindowRect(window,&bounds);ClientToScreen(window,&origin);border_={origin.x-bounds.left,origin.y-bounds.top};
+}
+// 크기는 디스플레이/DPI/활성 변경 뒤에도 현재 Win32 클라이언트 영역에서 읽는다.
+ScreenRect Screen::PresentationRect() const {
+    if (!(flags_&ScreenMode::kFullScreen)) return {0,0,width_,height_};RECT client{};GetClientRect(static_cast<HWND>(window_),&client);
+    if (client.right<=0 || client.bottom<=0) return {0,0,width_,height_};return FitScreenPresentation(width_,height_,client.right,client.bottom);
+}
+// 창 모드의 기존1:1 입력을 유지하며 호환 전체화면만 배율을 되돌린다.
+ScreenPoint Screen::ToLogicalPoint(ScreenPoint point) const { return flags_&ScreenMode::kFullScreen ? MapScreenPresentationPoint(point,PresentationRect(),width_,height_) : point; }
+// Win32 커서는 공유 자원이므로 다른 앱으로 전환하기 전에 반드시 제한을 해제한다.
+void Screen::SetActive(bool active) {
+    active_=active;const HWND window=static_cast<HWND>(window_);
+    if (active_ && (flags_&ScreenMode::kFullScreen) && IsWindowVisible(window) && !IsIconic(window)) {
+        const auto output=PresentationRect();POINT first{output.left,output.top},last{output.right,output.bottom};ClientToScreen(window,&first);ClientToScreen(window,&last);const RECT clip{first.x,first.y,last.x,last.y};cursorClipped_=ClipCursor(&clip)!=FALSE;
+    } else if (cursorClipped_) { ClipCursor(nullptr);cursorClipped_=false; }
+}
+// 원본 디스플레이 모드 변경과 달리 현재 모니터 전체를 덮고 논리 화면은 다시 만들지 않는다.
+void Screen::RelayoutFullscreen() {
+    if (!(flags_&ScreenMode::kFullScreen)) return;const HWND window=static_cast<HWND>(window_);MONITORINFO monitor{sizeof(MONITORINFO)};
+    if (!GetMonitorInfoA(MonitorFromWindow(window,MONITOR_DEFAULTTONEAREST),&monitor)) throw std::runtime_error("전체화면 모니터 조회 실패");
+    SetWindowPos(window,HWND_TOP,monitor.rcMonitor.left,monitor.rcMonitor.top,monitor.rcMonitor.right-monitor.rcMonitor.left,monitor.rcMonitor.bottom-monitor.rcMonitor.top,SWP_FRAMECHANGED|SWP_NOACTIVATE);SetActive(active_);
 }
 // 원본 004a2640.
 void Screen::SetPalette(unsigned start, unsigned count, ScreenColor* colors, bool apply) {
@@ -272,6 +314,8 @@ void Screen::SetPalette(unsigned start, unsigned count, ScreenColor* colors, boo
     previousPalette_ = SelectPalette(windowDc, static_cast<HPALETTE>(palette_), FALSE);
     SelectPalette(static_cast<HDC>(memoryDc_), static_cast<HPALETTE>(palette_), FALSE);
     RealizePalette(windowDc);
+    // 원본8비트 독점 팔레트와 달리 현대 데스크톱은 이미 출력한 RGB 픽셀도 다시 칠해야 번개/날씨가 전체에 적용된다.
+    if ((flags_&ScreenMode::kFullScreen) && drawSurface_) Update({0,0,width_,height_});
 }
 // 원본 004a4850: 파일의 256색을 저장 팔레트(DAT_005acd28)에 RGBQUAD 순서로 읽고 FUN_004a2640(0, 256, 0, 1)로 적용한다.
 // clear비영은현재GDI의실제지우기/viewport복사를팔레트적용전에실행한다.기존호출의default0은그대로다.
@@ -295,14 +339,13 @@ void Screen::LoadPalette(const GamePalette& palette,o::OriginalEdition edition,s
     colors_=BuildPaletteColorTable(logical_,edition);
     shadeMaps_=BuildGumpShadeMaps(colorSortInput_ ? colorSortInput_() : std::span<const std::uint32_t,256>(logical_));
 }
-// 원문004a1fb0은DirectDraw비트0이면명령상자연반환한다.미복원장치를성공으로가장하지않는다.
+// 원본과 다른 Windows10/11 DIB 전체화면은 독점 DirectDraw vblank 대신 현재 GDI/데스크톱 합성을 동기화한다.
 void Screen::WaitPaletteVerticalBlank() {
-    if ((flags_&ScreenMode::kFullScreen)!=0) throw std::logic_error("팔레트전환DirectDraw vblank장치미복원");
+    if ((flags_&ScreenMode::kFullScreen)!=0) { GdiFlush();DwmFlush(); }
 }
 // 현재구현의viewport는SetMode에서정한0,0,width,height이다.004a46d0은Update가바꾼clip을복구한다.
 void Screen::PresentPaletteClear() {
     const auto previous=clip_; //실제현재clip을Update앞에캡처한다.
-    if ((flags_&ScreenMode::kFullScreen)!=0) throw std::logic_error("팔레트전환DirectDraw표면미복원");
     Update({0,0,width_,height_});
     clip_=previous;
 }
@@ -386,6 +429,24 @@ void Screen::Update(ScreenRect rect) {
     const ScreenRect screen{0, 0, width_, height_};
     rect = ClipScreenRect(rect, screen);
     clip_ = screen;
+    if (rect.right<=rect.left || rect.bottom<=rect.top) return;
+    if (flags_&ScreenMode::kFullScreen) {
+        const HWND window=static_cast<HWND>(window_);
+        if (!active_ || IsIconic(window) || !IsWindowVisible(window) || !dibSurface_) return;
+        const auto output=PresentationRect();const HDC dc=static_cast<HDC>(windowDc_);
+        RECT client{};GetClientRect(window,&client);
+        // 원본과 다른 호환 확대의 레터박스만 검정으로 칠한다. 실제 비정수 GDI clip의 표본 위상 차이 때문에 전체 출력만 사용한다.
+        const RECT bars[]={{0,0,client.right,output.top},{0,output.bottom,client.right,client.bottom},{0,output.top,output.left,output.bottom},{output.right,output.top,client.right,output.bottom}};
+        for (const auto& bar:bars) if (bar.right>bar.left && bar.bottom>bar.top) ::FillRect(dc,&bar,static_cast<HBRUSH>(GetStockObject(BLACK_BRUSH))); // 네 바깥 띠만 갱신한다.
+        // 원본과 다른 호환 확대는 실제 표시DC와 메모리DC의 비정수 GDI 표본 차이를 피하도록 CPU 정수 최근접 복사 뒤1:1로 출력한다.
+        struct OutputBitmap { BITMAPINFOHEADER header{}; /* header: 실제 DIB 크기/형식이다. */ RGBQUAD colors[256]{}; /* colors: 현재 출력256색이다. */ }; // 호환 출력 머리와 색 표다.
+        const int outputWidth=output.right-output.left,outputHeight=output.bottom-output.top,outputPitch=(outputWidth+3)&~3;
+        OutputBitmap bitmap;bitmap.header.biSize=sizeof(BITMAPINFOHEADER);bitmap.header.biWidth=outputWidth;bitmap.header.biHeight=-outputHeight;bitmap.header.biPlanes=1;bitmap.header.biBitCount=8;bitmap.header.biCompression=BI_RGB;
+        std::memcpy(bitmap.colors,current_.data(),sizeof bitmap.colors);
+        std::vector<std::uint8_t> pixels(static_cast<std::size_t>(outputPitch)*outputHeight);
+        ScaleScreenPresentation({dibSurface_->Pixels(),static_cast<std::size_t>(dibSurface_->Pitch())*height_},dibSurface_->Pitch(),width_,height_,pixels,outputPitch,outputWidth,outputHeight);
+        SetDIBitsToDevice(dc,output.left,output.top,outputWidth,outputHeight,0,0,0,outputHeight,pixels.data(),reinterpret_cast<const BITMAPINFO*>(&bitmap),DIB_RGB_COLORS);return;
+    }
     if (primarySurface_ && drawSurface_) primarySurface_->BlitFrom(rect.left, rect.top, *drawSurface_, rect.left, rect.top, rect.right, rect.bottom);
 }
 // 원본 004a40d0: 숨김 횟수에 맞춰 Windows의 커서 표시 횟수를 0(보임) 또는 -1(숨김)로 맞춘다.

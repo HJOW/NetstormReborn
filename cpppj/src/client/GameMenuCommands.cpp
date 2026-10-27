@@ -56,11 +56,14 @@ std::uint32_t GameMenuScriptCode(std::string_view name) {
     if (key=="savegomain") return 0x020000cbU;
     if (key=="telltip") return 0x020000ebU;
     if (key=="newfort") return 0x02000079U; // LOADLOADFORT가 예약하는 새 이름 창의 원본 명령이다. y=0/1은 실제 큐에 그대로 보존한다.
+    if (key=="screenmodeabschange") return 0x02000030U; // 원본 DirectDrawManager/Window Mode가 사용하는 절대 모드 명령이다.
+    if (key=="screenmodechange") return 0x02000002U; // 실제542704 조정 비트 반전 명령이다.
+    if (key=="acceptscreenmodechange") return 0x020000e4U; // 실제542a84 확인 뒤 기억 명령이다.
     return 0xffffffffU;
 }
 // 실제큐연결허용과선택후미연결명령진단에같은표를쓴다.
 bool IsGameMenuCommand(std::uint32_t code) {
     for (const auto& [address,value]:kCommands) if (value==code) return true; // 같은값의주소항목이여럿이어도허용결과는같다.
-    return code==0x02000049U; // About의TechnicalHelp는별도부모기본전역0054281c다.
+    return code==0x02000049U || code==0x02000002U || code==0x020000e4U; // TechnicalHelp와 화면 조정/확인의 실제 원문 기본 전역 명령이다.
 }
 }

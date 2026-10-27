@@ -1,0 +1,1688 @@
+{
+  "unit": 495,
+  "date": "2026-10-27",
+  "host": "HJOW-Athlon",
+  "os": "Windows10 10.0.19045",
+  "lastFullDecompilation": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23",
+    "changed": false
+  },
+  "final": {
+    "NetstormCpp.exe": "1b61d810cd94be10902b937b712054e8b533416e2516608b853a22488eb1148b",
+    "netstorm_tests.exe": "8f2b13e3a9eecba14b5deff8cb3294d6ed28728384309792b8636f587cd49628"
+  },
+  "sourceFiles": 2873,
+  "protected": {
+    "files": 3210,
+    "unchanged": true,
+    "agentsUnchanged": true,
+    "cmakePrefixes": {
+      "cpppj/tests/CMakeLists.txt": 165029
+    }
+  },
+  "build": [
+    {
+      "command": [
+        "cmake",
+        "--build",
+        "cpppj/build",
+        "--config",
+        "Release",
+        "--parallel",
+        "4",
+        "--",
+        "/p:UseMultiToolTask=true",
+        "/p:MultiProcMaxCount=4",
+        "/p:EnforceProcessCountAcrossBuilds=true"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-modern-fullscreen-495/build1.log",
+      "sha256": "d3cfaf80395ac966b27005a18654b941fa88dd1b74791e424c6e3d9e1a5daa8e",
+      "summaries": [],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cmake",
+        "--build",
+        "cpppj/build",
+        "--config",
+        "Release",
+        "--parallel",
+        "4",
+        "--",
+        "/p:UseMultiToolTask=true",
+        "/p:MultiProcMaxCount=4",
+        "/p:EnforceProcessCountAcrossBuilds=true"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-modern-fullscreen-495/build2.log",
+      "sha256": "6d0aebe43182fea13d1fbfc519b25e9e920333df39f6f234b96a88550824b3f5",
+      "summaries": [],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cmake",
+        "--build",
+        "cpppj/build",
+        "--config",
+        "Release",
+        "--parallel",
+        "4",
+        "--",
+        "/p:UseMultiToolTask=true",
+        "/p:MultiProcMaxCount=4",
+        "/p:EnforceProcessCountAcrossBuilds=true"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-modern-fullscreen-495/build3.log",
+      "sha256": "ee24c63f51bea9a75192d7d956d111ba6b91e04b4ffe3354ab667e1e91c74470",
+      "summaries": [],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cmake",
+        "--build",
+        "cpppj/build",
+        "--config",
+        "Release",
+        "--parallel",
+        "4",
+        "--",
+        "/p:UseMultiToolTask=true",
+        "/p:MultiProcMaxCount=4",
+        "/p:EnforceProcessCountAcrossBuilds=true"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-modern-fullscreen-495/build4.log",
+      "sha256": "6d9f57165e087dee6511a78226bbe23cd56c4f13b23b1c574fa41e0af3f6e6bb",
+      "summaries": [],
+      "diagnostics": []
+    }
+  ],
+  "tests": {
+    "registered": 3308,
+    "oldRegistered": 3303,
+    "new": [
+      "ScreenPresentation_AspectFitAndLetterbox",
+      "ScreenPresentation_CompatibilityFlagsAndNativeCommands",
+      "ScreenPresentation_IntegerNearestPixelsAndBounds",
+      "ScreenPresentation_InversePointAndDirtyPhase",
+      "ScreenPresentation_WideDibUsesActualAlignedPitch"
+    ],
+    "focusedUnique": 72,
+    "focusedObservations": 84,
+    "focusedFailed": 0,
+    "cppWhole": 3308,
+    "cppFailed": 0,
+    "ctest": 1,
+    "ctestFailed": 0,
+    "seconds": 371.98
+  },
+  "runtime": {
+    "cases": {
+      "menu4": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-modern-fullscreen-495\\live-final\\game-data",
+          "--no-audio",
+          "--frames",
+          "120",
+          "--set",
+          "maxFPS=40;sleepPerLoop=1;autoDemo=0;tellTips=0;currentLanguage=english;SCREENW=1024;SCREENH=768;startInFullScreen=1;workingFullScreenFlags=111",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-modern-fullscreen-495\\live-final\\menu4\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-modern-fullscreen-495\\live-final\\menu4\\states.tsv",
+          "--window"
+        ],
+        "binarySha256": "1b61d810cd94be10902b937b712054e8b533416e2516608b853a22488eb1148b",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 6.1574625999928685,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "cb76758e176fb9498de489bf084e9844f54d645d0fb4457c2c91e00a6a78d515",
+        "os": "Windows-10-10.0.19045-SP0",
+        "host": "HJOW-Athlon",
+        "originalsUnchanged": true,
+        "legacyMarkerRemoved": true,
+        "actualStageCompletion": false,
+        "screens": {
+          "startup": {
+            "page": [
+              "main"
+            ],
+            "screen_mode": [
+              "138",
+              "1024",
+              "768",
+              "1024",
+              "1"
+            ],
+            "screen_window": [
+              "0",
+              "0",
+              "1040",
+              "807",
+              "1024",
+              "768",
+              "80674816"
+            ],
+            "screen_output": [
+              "0",
+              "0",
+              "1024",
+              "768"
+            ],
+            "screen_cursor_clip": [
+              "0",
+              "0",
+              "1920",
+              "1080"
+            ],
+            "mission": null
+          },
+          "full": {
+            "page": [
+              "main"
+            ],
+            "screen_mode": [
+              "235",
+              "1024",
+              "768",
+              "1024",
+              "1"
+            ],
+            "screen_window": [
+              "0",
+              "0",
+              "1920",
+              "1080",
+              "1920",
+              "1080",
+              "2483027968"
+            ],
+            "screen_output": [
+              "240",
+              "0",
+              "1680",
+              "1080"
+            ],
+            "screen_cursor_clip": [
+              "240",
+              "0",
+              "1680",
+              "1080"
+            ],
+            "mission": null
+          },
+          "full-resized": {
+            "page": [
+              "main"
+            ],
+            "screen_mode": [
+              "235",
+              "800",
+              "600",
+              "800",
+              "1"
+            ],
+            "screen_window": [
+              "0",
+              "0",
+              "1920",
+              "1080",
+              "1920",
+              "1080",
+              "2483027968"
+            ],
+            "screen_output": [
+              "240",
+              "0",
+              "1680",
+              "1080"
+            ],
+            "screen_cursor_clip": [
+              "240",
+              "0",
+              "1680",
+              "1080"
+            ],
+            "mission": null
+          },
+          "window": {
+            "page": [
+              "main"
+            ],
+            "screen_mode": [
+              "138",
+              "800",
+              "600",
+              "800",
+              "1"
+            ],
+            "screen_window": [
+              "0",
+              "0",
+              "816",
+              "639",
+              "800",
+              "600",
+              "80674816"
+            ],
+            "screen_output": [
+              "0",
+              "0",
+              "800",
+              "600"
+            ],
+            "screen_cursor_clip": [
+              "0",
+              "0",
+              "1920",
+              "1080"
+            ],
+            "mission": null
+          },
+          "full-again": {
+            "page": [
+              "main"
+            ],
+            "screen_mode": [
+              "235",
+              "800",
+              "600",
+              "800",
+              "1"
+            ],
+            "screen_window": [
+              "0",
+              "0",
+              "1920",
+              "1080",
+              "1920",
+              "1080",
+              "2483027968"
+            ],
+            "screen_output": [
+              "240",
+              "0",
+              "1680",
+              "1080"
+            ],
+            "screen_cursor_clip": [
+              "240",
+              "0",
+              "1680",
+              "1080"
+            ],
+            "mission": null
+          }
+        },
+        "savedOptionsSha256": "b60060f463ff56d6b1811f6fc028c7502b518ed5e380514548d1209bc594327b"
+      },
+      "restart4": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-modern-fullscreen-495\\live-final\\game-data",
+          "--no-audio",
+          "--frames",
+          "45",
+          "--set",
+          "maxFPS=40;sleepPerLoop=1;autoDemo=0;tellTips=0;currentLanguage=english",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-modern-fullscreen-495\\live-final\\restart4\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-modern-fullscreen-495\\live-final\\restart4\\states.tsv"
+        ],
+        "binarySha256": "1b61d810cd94be10902b937b712054e8b533416e2516608b853a22488eb1148b",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 1.6544681000086712,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "cb76758e176fb9498de489bf084e9844f54d645d0fb4457c2c91e00a6a78d515",
+        "os": "Windows-10-10.0.19045-SP0",
+        "host": "HJOW-Athlon",
+        "originalsUnchanged": true,
+        "legacyMarkerRemoved": true,
+        "actualStageCompletion": false,
+        "screens": {
+          "startup": {
+            "page": [
+              "main"
+            ],
+            "screen_mode": [
+              "139",
+              "800",
+              "600",
+              "800",
+              "1"
+            ],
+            "screen_window": [
+              "0",
+              "0",
+              "1920",
+              "1080",
+              "1920",
+              "1080",
+              "2483027968"
+            ],
+            "screen_output": [
+              "240",
+              "0",
+              "1680",
+              "1080"
+            ],
+            "screen_cursor_clip": [
+              "240",
+              "0",
+              "1680",
+              "1080"
+            ],
+            "mission": null
+          }
+        },
+        "savedOptionsSha256": "a1758fbbd690c598a70bfe630e73599f1a74aec68627618ce41ca5b0c9605425"
+      },
+      "stage4": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-modern-fullscreen-495\\live-final\\game-data",
+          "--no-audio",
+          "--frames",
+          "130",
+          "--set",
+          "maxFPS=40;sleepPerLoop=1;autoDemo=0;tellTips=0;currentLanguage=english;SCREENW=1024;SCREENH=768;startInFullScreen=1",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-modern-fullscreen-495\\live-final\\stage4\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-modern-fullscreen-495\\live-final\\stage4\\states.tsv",
+          "--mission",
+          "TheWarBegins"
+        ],
+        "binarySha256": "1b61d810cd94be10902b937b712054e8b533416e2516608b853a22488eb1148b",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 5.875390100001823,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "9fba4f7e2bb0be090e62265ef1203d93a429672f7ce307b7cf3aa08e3bfebbbb",
+        "os": "Windows-10-10.0.19045-SP0",
+        "host": "HJOW-Athlon",
+        "originalsUnchanged": true,
+        "legacyMarkerRemoved": true,
+        "actualStageCompletion": false,
+        "screens": {
+          "briefing": {
+            "page": [
+              "A."
+            ],
+            "screen_mode": [
+              "139",
+              "1024",
+              "768",
+              "1024",
+              "1"
+            ],
+            "screen_window": [
+              "0",
+              "0",
+              "1920",
+              "1080",
+              "1920",
+              "1080",
+              "2483027968"
+            ],
+            "screen_output": [
+              "240",
+              "0",
+              "1680",
+              "1080"
+            ],
+            "screen_cursor_clip": [
+              "240",
+              "0",
+              "1680",
+              "1080"
+            ],
+            "mission": [
+              "TheWarBegins",
+              "Tutorial",
+              "172"
+            ]
+          },
+          "stage": {
+            "page": [
+              "mission"
+            ],
+            "screen_mode": [
+              "139",
+              "1024",
+              "768",
+              "1024",
+              "1"
+            ],
+            "screen_window": [
+              "0",
+              "0",
+              "1920",
+              "1080",
+              "1920",
+              "1080",
+              "2483027968"
+            ],
+            "screen_output": [
+              "240",
+              "0",
+              "1680",
+              "1080"
+            ],
+            "screen_cursor_clip": [
+              "240",
+              "0",
+              "1680",
+              "1080"
+            ],
+            "mission": [
+              "TheWarBegins",
+              "Tutorial",
+              "172"
+            ]
+          },
+          "require36": {
+            "page": [
+              "mission"
+            ],
+            "screen_mode": [
+              "139",
+              "1024",
+              "768",
+              "1024",
+              "1"
+            ],
+            "screen_window": [
+              "0",
+              "0",
+              "1920",
+              "1080",
+              "1920",
+              "1080",
+              "2483027968"
+            ],
+            "screen_output": [
+              "240",
+              "0",
+              "1680",
+              "1080"
+            ],
+            "screen_cursor_clip": [
+              "240",
+              "0",
+              "1680",
+              "1080"
+            ],
+            "mission": [
+              "TheWarBegins",
+              "Tutorial",
+              "172"
+            ]
+          },
+          "stage-later": {
+            "page": [
+              "mission"
+            ],
+            "screen_mode": [
+              "139",
+              "1024",
+              "768",
+              "1024",
+              "1"
+            ],
+            "screen_window": [
+              "0",
+              "0",
+              "1920",
+              "1080",
+              "1920",
+              "1080",
+              "2483027968"
+            ],
+            "screen_output": [
+              "240",
+              "0",
+              "1680",
+              "1080"
+            ],
+            "screen_cursor_clip": [
+              "240",
+              "0",
+              "1680",
+              "1080"
+            ],
+            "mission": [
+              "TheWarBegins",
+              "Tutorial",
+              "172"
+            ]
+          }
+        },
+        "savedOptionsSha256": "a1758fbbd690c598a70bfe630e73599f1a74aec68627618ce41ca5b0c9605425"
+      },
+      "wide4": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-modern-fullscreen-495\\live-final\\game-data",
+          "--no-audio",
+          "--frames",
+          "45",
+          "--set",
+          "maxFPS=40;sleepPerLoop=1;autoDemo=0;tellTips=0;currentLanguage=english;startInFullScreen=1;SCREENW=1366;SCREENH=768",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-modern-fullscreen-495\\live-final\\wide4\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-modern-fullscreen-495\\live-final\\wide4\\states.tsv"
+        ],
+        "binarySha256": "1b61d810cd94be10902b937b712054e8b533416e2516608b853a22488eb1148b",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 1.779283800002304,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "cb76758e176fb9498de489bf084e9844f54d645d0fb4457c2c91e00a6a78d515",
+        "os": "Windows-10-10.0.19045-SP0",
+        "host": "HJOW-Athlon",
+        "originalsUnchanged": true,
+        "legacyMarkerRemoved": true,
+        "actualStageCompletion": false,
+        "screens": {
+          "startup": {
+            "page": [
+              "main"
+            ],
+            "screen_mode": [
+              "139",
+              "1366",
+              "768",
+              "1368",
+              "1"
+            ],
+            "screen_window": [
+              "0",
+              "0",
+              "1920",
+              "1080",
+              "1920",
+              "1080",
+              "2483027968"
+            ],
+            "screen_output": [
+              "0",
+              "0",
+              "1920",
+              "1079"
+            ],
+            "screen_cursor_clip": [
+              "0",
+              "0",
+              "1920",
+              "1079"
+            ],
+            "mission": null
+          }
+        },
+        "savedOptionsSha256": "a1758fbbd690c598a70bfe630e73599f1a74aec68627618ce41ca5b0c9605425"
+      },
+      "nine4": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-modern-fullscreen-495\\live-final\\game-data",
+          "--no-audio",
+          "--frames",
+          "45",
+          "--set",
+          "maxFPS=40;sleepPerLoop=1;autoDemo=0;tellTips=0;currentLanguage=english;startInFullScreen=1;SCREENW=1280;SCREENH=720",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-modern-fullscreen-495\\live-final\\nine4\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-modern-fullscreen-495\\live-final\\nine4\\states.tsv"
+        ],
+        "binarySha256": "1b61d810cd94be10902b937b712054e8b533416e2516608b853a22488eb1148b",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 1.804287300008582,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "cb76758e176fb9498de489bf084e9844f54d645d0fb4457c2c91e00a6a78d515",
+        "os": "Windows-10-10.0.19045-SP0",
+        "host": "HJOW-Athlon",
+        "originalsUnchanged": true,
+        "legacyMarkerRemoved": true,
+        "actualStageCompletion": false,
+        "screens": {
+          "startup": {
+            "page": [
+              "main"
+            ],
+            "screen_mode": [
+              "139",
+              "1280",
+              "720",
+              "1280",
+              "1"
+            ],
+            "screen_window": [
+              "0",
+              "0",
+              "1920",
+              "1080",
+              "1920",
+              "1080",
+              "2483027968"
+            ],
+            "screen_output": [
+              "0",
+              "0",
+              "1920",
+              "1080"
+            ],
+            "screen_cursor_clip": [
+              "0",
+              "0",
+              "1920",
+              "1080"
+            ],
+            "mission": null
+          }
+        },
+        "savedOptionsSha256": "a1758fbbd690c598a70bfe630e73599f1a74aec68627618ce41ca5b0c9605425"
+      },
+      "ten4": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-modern-fullscreen-495\\live-final\\game-data",
+          "--no-audio",
+          "--frames",
+          "45",
+          "--set",
+          "maxFPS=40;sleepPerLoop=1;autoDemo=0;tellTips=0;currentLanguage=english;startInFullScreen=1;SCREENW=1280;SCREENH=800",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-modern-fullscreen-495\\live-final\\ten4\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-modern-fullscreen-495\\live-final\\ten4\\states.tsv"
+        ],
+        "binarySha256": "1b61d810cd94be10902b937b712054e8b533416e2516608b853a22488eb1148b",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 2.1637937000050442,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "cb76758e176fb9498de489bf084e9844f54d645d0fb4457c2c91e00a6a78d515",
+        "os": "Windows-10-10.0.19045-SP0",
+        "host": "HJOW-Athlon",
+        "originalsUnchanged": true,
+        "legacyMarkerRemoved": true,
+        "actualStageCompletion": false,
+        "screens": {
+          "startup": {
+            "page": [
+              "main"
+            ],
+            "screen_mode": [
+              "139",
+              "1280",
+              "800",
+              "1280",
+              "1"
+            ],
+            "screen_window": [
+              "0",
+              "0",
+              "1920",
+              "1080",
+              "1920",
+              "1080",
+              "2483027968"
+            ],
+            "screen_output": [
+              "96",
+              "0",
+              "1824",
+              "1080"
+            ],
+            "screen_cursor_clip": [
+              "96",
+              "0",
+              "1824",
+              "1080"
+            ],
+            "mission": null
+          }
+        },
+        "savedOptionsSha256": "a1758fbbd690c598a70bfe630e73599f1a74aec68627618ce41ca5b0c9605425"
+      },
+      "window-override4": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-modern-fullscreen-495\\live-final\\game-data",
+          "--no-audio",
+          "--frames",
+          "45",
+          "--set",
+          "maxFPS=40;sleepPerLoop=1;autoDemo=0;tellTips=0;currentLanguage=english;startInFullScreen=1",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-modern-fullscreen-495\\live-final\\window-override4\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-modern-fullscreen-495\\live-final\\window-override4\\states.tsv",
+          "--window"
+        ],
+        "binarySha256": "1b61d810cd94be10902b937b712054e8b533416e2516608b853a22488eb1148b",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 1.55222660000436,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "cb76758e176fb9498de489bf084e9844f54d645d0fb4457c2c91e00a6a78d515",
+        "os": "Windows-10-10.0.19045-SP0",
+        "host": "HJOW-Athlon",
+        "originalsUnchanged": true,
+        "legacyMarkerRemoved": true,
+        "actualStageCompletion": false,
+        "screens": {
+          "startup": {
+            "page": [
+              "main"
+            ],
+            "screen_mode": [
+              "138",
+              "800",
+              "600",
+              "800",
+              "1"
+            ],
+            "screen_window": [
+              "0",
+              "0",
+              "816",
+              "639",
+              "800",
+              "600",
+              "80674816"
+            ],
+            "screen_output": [
+              "0",
+              "0",
+              "800",
+              "600"
+            ],
+            "screen_cursor_clip": [
+              "0",
+              "0",
+              "1920",
+              "1080"
+            ],
+            "mission": null
+          }
+        },
+        "savedOptionsSha256": "a1758fbbd690c598a70bfe630e73599f1a74aec68627618ce41ca5b0c9605425"
+      },
+      "adjust4": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-modern-fullscreen-495\\live-final\\game-data",
+          "--no-audio",
+          "--frames",
+          "125",
+          "--set",
+          "maxFPS=40;sleepPerLoop=1;autoDemo=0;tellTips=0;currentLanguage=english;SCREENW=1024;SCREENH=768;startInFullScreen=1;workingFullScreenFlags=111",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-modern-fullscreen-495\\live-final\\adjust4\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-modern-fullscreen-495\\live-final\\adjust4\\states.tsv"
+        ],
+        "binarySha256": "1b61d810cd94be10902b937b712054e8b533416e2516608b853a22488eb1148b",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 4.568631300004199,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "cb76758e176fb9498de489bf084e9844f54d645d0fb4457c2c91e00a6a78d515",
+        "os": "Windows-10-10.0.19045-SP0",
+        "host": "HJOW-Athlon",
+        "originalsUnchanged": true,
+        "legacyMarkerRemoved": true,
+        "actualStageCompletion": false,
+        "screens": {
+          "startup": {
+            "page": [
+              "main"
+            ],
+            "screen_mode": [
+              "235",
+              "1024",
+              "768",
+              "1024",
+              "1"
+            ],
+            "screen_window": [
+              "0",
+              "0",
+              "1920",
+              "1080",
+              "1920",
+              "1080",
+              "2483027968"
+            ],
+            "screen_output": [
+              "240",
+              "0",
+              "1680",
+              "1080"
+            ],
+            "screen_cursor_clip": [
+              "240",
+              "0",
+              "1680",
+              "1080"
+            ],
+            "mission": null
+          },
+          "adjust": {
+            "page": [
+              "AdjustDirectDraw"
+            ],
+            "screen_mode": [
+              "235",
+              "1024",
+              "768",
+              "1024",
+              "1"
+            ],
+            "screen_window": [
+              "0",
+              "0",
+              "1920",
+              "1080",
+              "1920",
+              "1080",
+              "2483027968"
+            ],
+            "screen_output": [
+              "240",
+              "0",
+              "1680",
+              "1080"
+            ],
+            "screen_cursor_clip": [
+              "240",
+              "0",
+              "1680",
+              "1080"
+            ],
+            "mission": null
+          },
+          "mouse-explain": {
+            "page": [
+              "ToggleMouse"
+            ],
+            "screen_mode": [
+              "235",
+              "1024",
+              "768",
+              "1024",
+              "1"
+            ],
+            "screen_window": [
+              "0",
+              "0",
+              "1920",
+              "1080",
+              "1920",
+              "1080",
+              "2483027968"
+            ],
+            "screen_output": [
+              "240",
+              "0",
+              "1680",
+              "1080"
+            ],
+            "screen_cursor_clip": [
+              "240",
+              "0",
+              "1680",
+              "1080"
+            ],
+            "mission": null
+          },
+          "preview": {
+            "page": [
+              "DirectDrawVerify"
+            ],
+            "screen_mode": [
+              "171",
+              "1024",
+              "768",
+              "1024",
+              "1"
+            ],
+            "screen_window": [
+              "0",
+              "0",
+              "1920",
+              "1080",
+              "1920",
+              "1080",
+              "2483027968"
+            ],
+            "screen_output": [
+              "240",
+              "0",
+              "1680",
+              "1080"
+            ],
+            "screen_cursor_clip": [
+              "240",
+              "0",
+              "1680",
+              "1080"
+            ],
+            "mission": null
+          },
+          "cancelled": {
+            "page": [
+              "main"
+            ],
+            "screen_mode": [
+              "235",
+              "1024",
+              "768",
+              "1024",
+              "1"
+            ],
+            "screen_window": [
+              "0",
+              "0",
+              "1920",
+              "1080",
+              "1920",
+              "1080",
+              "2483027968"
+            ],
+            "screen_output": [
+              "240",
+              "0",
+              "1680",
+              "1080"
+            ],
+            "screen_cursor_clip": [
+              "240",
+              "0",
+              "1680",
+              "1080"
+            ],
+            "mission": null
+          },
+          "preview-again": {
+            "page": [
+              "DirectDrawVerify"
+            ],
+            "screen_mode": [
+              "171",
+              "1024",
+              "768",
+              "1024",
+              "1"
+            ],
+            "screen_window": [
+              "0",
+              "0",
+              "1920",
+              "1080",
+              "1920",
+              "1080",
+              "2483027968"
+            ],
+            "screen_output": [
+              "240",
+              "0",
+              "1680",
+              "1080"
+            ],
+            "screen_cursor_clip": [
+              "240",
+              "0",
+              "1680",
+              "1080"
+            ],
+            "mission": null
+          },
+          "accepted": {
+            "page": [
+              "AdjustDirectDraw"
+            ],
+            "screen_mode": [
+              "171",
+              "1024",
+              "768",
+              "1024",
+              "1"
+            ],
+            "screen_window": [
+              "0",
+              "0",
+              "1920",
+              "1080",
+              "1920",
+              "1080",
+              "2483027968"
+            ],
+            "screen_output": [
+              "240",
+              "0",
+              "1680",
+              "1080"
+            ],
+            "screen_cursor_clip": [
+              "240",
+              "0",
+              "1680",
+              "1080"
+            ],
+            "mission": null
+          }
+        },
+        "savedOptionsSha256": "ec8a982a1ddf014d1cc58c5e9cea9eeb8e5db2d846a10729b9fb01153b1c6455"
+      },
+      "restart-adjust4": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-modern-fullscreen-495\\live-final\\game-data",
+          "--no-audio",
+          "--frames",
+          "45",
+          "--set",
+          "maxFPS=40;sleepPerLoop=1;autoDemo=0;tellTips=0;currentLanguage=english",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-modern-fullscreen-495\\live-final\\restart-adjust4\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-modern-fullscreen-495\\live-final\\restart-adjust4\\states.tsv"
+        ],
+        "binarySha256": "1b61d810cd94be10902b937b712054e8b533416e2516608b853a22488eb1148b",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 1.6800976999948034,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "cb76758e176fb9498de489bf084e9844f54d645d0fb4457c2c91e00a6a78d515",
+        "os": "Windows-10-10.0.19045-SP0",
+        "host": "HJOW-Athlon",
+        "originalsUnchanged": true,
+        "legacyMarkerRemoved": true,
+        "actualStageCompletion": false,
+        "screens": {
+          "startup": {
+            "page": [
+              "main"
+            ],
+            "screen_mode": [
+              "171",
+              "800",
+              "600",
+              "800",
+              "1"
+            ],
+            "screen_window": [
+              "0",
+              "0",
+              "1920",
+              "1080",
+              "1920",
+              "1080",
+              "2483027968"
+            ],
+            "screen_output": [
+              "240",
+              "0",
+              "1680",
+              "1080"
+            ],
+            "screen_cursor_clip": [
+              "240",
+              "0",
+              "1680",
+              "1080"
+            ],
+            "mission": null
+          }
+        },
+        "savedOptionsSha256": "ed99fbb94a24548fc4eab6a957cebc14c4d5e37f6e2c7aab67df887d1725ee28"
+      },
+      "timeout4": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-modern-fullscreen-495\\live-final\\game-data",
+          "--no-audio",
+          "--frames",
+          "725",
+          "--set",
+          "maxFPS=40;sleepPerLoop=1;autoDemo=0;tellTips=0;currentLanguage=english;SCREENW=1024;SCREENH=768;startInFullScreen=1;workingFullScreenFlags=111",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-modern-fullscreen-495\\live-final\\timeout4\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-modern-fullscreen-495\\live-final\\timeout4\\states.tsv"
+        ],
+        "binarySha256": "1b61d810cd94be10902b937b712054e8b533416e2516608b853a22488eb1148b",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 22.865816799996537,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "cb76758e176fb9498de489bf084e9844f54d645d0fb4457c2c91e00a6a78d515",
+        "os": "Windows-10-10.0.19045-SP0",
+        "host": "HJOW-Athlon",
+        "originalsUnchanged": true,
+        "legacyMarkerRemoved": true,
+        "actualStageCompletion": false,
+        "screens": {
+          "startup": {
+            "page": [
+              "main"
+            ],
+            "screen_mode": [
+              "235",
+              "1024",
+              "768",
+              "1024",
+              "1"
+            ],
+            "screen_window": [
+              "0",
+              "0",
+              "1920",
+              "1080",
+              "1920",
+              "1080",
+              "2483027968"
+            ],
+            "screen_output": [
+              "240",
+              "0",
+              "1680",
+              "1080"
+            ],
+            "screen_cursor_clip": [
+              "240",
+              "0",
+              "1680",
+              "1080"
+            ],
+            "mission": null
+          },
+          "adjust": {
+            "page": [
+              "AdjustDirectDraw"
+            ],
+            "screen_mode": [
+              "235",
+              "1024",
+              "768",
+              "1024",
+              "1"
+            ],
+            "screen_window": [
+              "0",
+              "0",
+              "1920",
+              "1080",
+              "1920",
+              "1080",
+              "2483027968"
+            ],
+            "screen_output": [
+              "240",
+              "0",
+              "1680",
+              "1080"
+            ],
+            "screen_cursor_clip": [
+              "240",
+              "0",
+              "1680",
+              "1080"
+            ],
+            "mission": null
+          },
+          "mouse-explain": {
+            "page": [
+              "ToggleMouse"
+            ],
+            "screen_mode": [
+              "235",
+              "1024",
+              "768",
+              "1024",
+              "1"
+            ],
+            "screen_window": [
+              "0",
+              "0",
+              "1920",
+              "1080",
+              "1920",
+              "1080",
+              "2483027968"
+            ],
+            "screen_output": [
+              "240",
+              "0",
+              "1680",
+              "1080"
+            ],
+            "screen_cursor_clip": [
+              "240",
+              "0",
+              "1680",
+              "1080"
+            ],
+            "mission": null
+          },
+          "preview": {
+            "page": [
+              "DirectDrawVerify"
+            ],
+            "screen_mode": [
+              "171",
+              "1024",
+              "768",
+              "1024",
+              "1"
+            ],
+            "screen_window": [
+              "0",
+              "0",
+              "1920",
+              "1080",
+              "1920",
+              "1080",
+              "2483027968"
+            ],
+            "screen_output": [
+              "240",
+              "0",
+              "1680",
+              "1080"
+            ],
+            "screen_cursor_clip": [
+              "240",
+              "0",
+              "1680",
+              "1080"
+            ],
+            "mission": null
+          },
+          "timed-out": {
+            "page": [
+              "main"
+            ],
+            "screen_mode": [
+              "235",
+              "1024",
+              "768",
+              "1024",
+              "1"
+            ],
+            "screen_window": [
+              "0",
+              "0",
+              "1920",
+              "1080",
+              "1920",
+              "1080",
+              "2483027968"
+            ],
+            "screen_output": [
+              "240",
+              "0",
+              "1680",
+              "1080"
+            ],
+            "screen_cursor_clip": [
+              "240",
+              "0",
+              "1680",
+              "1080"
+            ],
+            "mission": null
+          }
+        },
+        "savedOptionsSha256": "62c3a0dd5fb2911fca7a82c3b6a6e38bc54c88d31dc5106a7a1ed7f597351b2e"
+      }
+    },
+    "nativeInput": {
+      "returnCode": 0,
+      "events": [
+        {
+          "at": "welcome1",
+          "click": "OK",
+          "logical": [
+            511,
+            465
+          ],
+          "actual": [
+            958,
+            653
+          ]
+        },
+        {
+          "at": "initial",
+          "click": "Options",
+          "logical": [
+            551,
+            344
+          ],
+          "actual": [
+            1014,
+            483
+          ]
+        },
+        {
+          "at": "options",
+          "click": "Window Mode",
+          "logical": [
+            597,
+            382
+          ],
+          "actual": [
+            1079,
+            537
+          ]
+        },
+        {
+          "at": "window",
+          "key": "Alt-Enter"
+        },
+        {
+          "at": "full",
+          "syntheticActive": 0
+        },
+        {
+          "at": "inactive-synthetic",
+          "syntheticActive": 1
+        },
+        {
+          "at": "active-synthetic",
+          "click": "Quit",
+          "logical": [
+            630,
+            344
+          ],
+          "actual": [
+            1125,
+            483
+          ]
+        }
+      ],
+      "seen": [
+        "active-synthetic",
+        "full",
+        "inactive-synthetic",
+        "initial",
+        "options",
+        "welcome1",
+        "welcome2",
+        "window"
+      ],
+      "cursorClipAfter": [
+        0,
+        0,
+        1920,
+        1080
+      ],
+      "binarySha256": "1b61d810cd94be10902b937b712054e8b533416e2516608b853a22488eb1148b"
+    },
+    "nativeActivationIsSynthetic": true,
+    "actualOtherAppFocusTest": false,
+    "originalGameExecutions": 0,
+    "stageCompletion": false,
+    "userIntervention": false,
+    "windows11Tested": false,
+    "originalOptions": {
+      "workingFullScreenFlags": "11",
+      "startInFullScreen": "1",
+      "windowScreenFlags": "10"
+    }
+  },
+  "pixels": {
+    "cases": [
+      {
+        "case": "menu4",
+        "logicalSize": [
+          1024,
+          768
+        ],
+        "physicalSize": [
+          1920,
+          1080
+        ],
+        "viewport": [
+          240,
+          0,
+          1680,
+          1080
+        ],
+        "differentPixels": 0,
+        "viewportPixels": 1555200,
+        "letterboxBlack": true
+      },
+      {
+        "case": "stage4",
+        "logicalSize": [
+          1024,
+          768
+        ],
+        "physicalSize": [
+          1920,
+          1080
+        ],
+        "viewport": [
+          240,
+          0,
+          1680,
+          1080
+        ],
+        "differentPixels": 0,
+        "viewportPixels": 1555200,
+        "letterboxBlack": true
+      },
+      {
+        "case": "wide4",
+        "logicalSize": [
+          1366,
+          768
+        ],
+        "physicalSize": [
+          1920,
+          1080
+        ],
+        "viewport": [
+          0,
+          0,
+          1920,
+          1079
+        ],
+        "differentPixels": 0,
+        "viewportPixels": 2071680,
+        "letterboxBlack": true
+      },
+      {
+        "case": "nine4",
+        "logicalSize": [
+          1280,
+          720
+        ],
+        "physicalSize": [
+          1920,
+          1080
+        ],
+        "viewport": [
+          0,
+          0,
+          1920,
+          1080
+        ],
+        "differentPixels": 0,
+        "viewportPixels": 2073600,
+        "letterboxBlack": true
+      },
+      {
+        "case": "ten4",
+        "logicalSize": [
+          1280,
+          800
+        ],
+        "physicalSize": [
+          1920,
+          1080
+        ],
+        "viewport": [
+          96,
+          0,
+          1824,
+          1080
+        ],
+        "differentPixels": 0,
+        "viewportPixels": 1866240,
+        "letterboxBlack": true
+      }
+    ],
+    "pixels": 9121920,
+    "different": 0
+  },
+  "nativeScreenCommands": {
+    "host": "HJOW-Athlon",
+    "originalExecutions": 0,
+    "cases": 3,
+    "runs": 6,
+    "boundaries": [
+      "00435ba0 실제 모드 장치만 관찰",
+      "004414d0 실제 기억 문자열만 관찰",
+      "기존 메뉴 관측기의 Guide/Gump/기타 UI 장치"
+    ],
+    "observations": [
+      {
+        "control": 639,
+        "address": 5515012,
+        "command": 33554434,
+        "value": 64,
+        "completed": 1,
+        "stackDelta": 0,
+        "trace": "mode:171;tell:DirectDrawVerify(235)",
+        "instructions": 479
+      },
+      {
+        "control": 639,
+        "address": 5515192,
+        "command": 33554480,
+        "value": 10,
+        "completed": 1,
+        "stackDelta": 0,
+        "trace": "mode:10",
+        "instructions": 445
+      },
+      {
+        "control": 639,
+        "address": 5515908,
+        "command": 33554660,
+        "value": 1,
+        "completed": 1,
+        "stackDelta": 0,
+        "trace": "remember:workingFullScreenFlags:235;tell:AdjustDirectDraw",
+        "instructions": 564
+      },
+      {
+        "control": 895,
+        "address": 5515012,
+        "command": 33554434,
+        "value": 64,
+        "completed": 1,
+        "stackDelta": 0,
+        "trace": "mode:171;tell:DirectDrawVerify(235)",
+        "instructions": 479
+      },
+      {
+        "control": 895,
+        "address": 5515192,
+        "command": 33554480,
+        "value": 10,
+        "completed": 1,
+        "stackDelta": 0,
+        "trace": "mode:10",
+        "instructions": 445
+      },
+      {
+        "control": 895,
+        "address": 5515908,
+        "command": 33554660,
+        "value": 1,
+        "completed": 1,
+        "stackDelta": 0,
+        "trace": "remember:workingFullScreenFlags:235;tell:AdjustDirectDraw",
+        "instructions": 564
+      }
+    ],
+    "sha256": {
+      "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "tools/decomp_screen_mode_commands.py": "f76bc2654369e0ebec37535b099b8b749b160c488fc333905b520bcc9e175c75",
+      "tools/decomp_game_menu_actions.py": "9130163b3bd761b08b37397f69ba3e074b257967a5fc934b68210bc6325f2df7",
+      "tools/decomp_production_shortcuts.py": "4caf1c87e4a152f65b2815395ea553b2609587be06a95512974b893e985b24e3"
+    }
+  },
+  "firstFailures": [
+    "새 GDI 행 검사에서 모드 미설정 Screen.Lock을 사용해 drawSurf 진단: 독립 실제 ScreenSurface로 준비를 수정하고 기존1368 기대값 유지",
+    "첫 실제 메뉴의 닫힌 Options 입력 상태가 남아 다음 Options가 없음: 같은 장치 명령 뒤 팝업/목록 정리",
+    "잘못된 War 약칭 입력으로 Missing mission: 원래 TheWarBegins 이름 사용",
+    "선택적 Go! 클릭으로 브리핑에 머문 관측: 필수 Play Mission/page=mission으로 새 사본에서 다시 진행",
+    "이전 조정171을 기억한 사본 재사용에 따른 재시작235 감사 실패: 새 원본 자산 사본으로 시작 입력을 분리하여 실제 저장/재시작 대조",
+    "Win32 검사 첫 시작 안내를 처리하지 않아 Options 없음: 실제 HTML OK 좌표/Win32 클릭으로 시작 안내 처리",
+    "표시 GDI 확대의1366폭5160픽셀 차이: 전체 프레임 배치만으로 해결되지 않아 정수 최근접 복사와1:1 출력으로 수정. 원래 독립 GDI 표본 기대는 유지"
+  ],
+  "remaining": [
+    "Windows11 실기",
+    "다른 DPI/모니터/디스플레이 변경 실기",
+    "실제 다른 앱 포커스 전환",
+    "전체화면 가장자리 스크롤",
+    "와이드 해상도 선택 메뉴",
+    "DirectDraw 하드웨어 전용 DIB/flip/Parallax의 현대 UI 정리/전체 원본 동일성",
+    "34스테이지/기타 UI/편집·시나리오 잔여",
+    "스테이지 완주/사용자 개입 검증 및 .english 부재 개선은 보류"
+  ],
+  "git": {
+    "pull": {
+      "command": [
+        "git",
+        "-c",
+        "core.autocrlf=false",
+        "pull",
+        "--no-rebase",
+        "--no-commit"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-modern-fullscreen-495/git-pull1.log",
+      "sha256": "e5d6c99aec87ec07a2d1b5c1222d8b690d0a61c3548a55c795fff56db9450d0d",
+      "summaries": [],
+      "diagnostics": []
+    },
+    "push": false
+  },
+  "raw": "extracted\\cpp-modern-fullscreen-495",
+  "sha256": {
+    "tools/cpp_modern_fullscreen_smoke.py": "fc1d2e7ffef2eefb6cc81d25db81e8a3a178932ffa54cc35363e1270241ad631",
+    "tools/cpp_fullscreen_pixel_audit.py": "4921359466a1ce9bbebfc745279b2db14d8285e04aaa21013aa726ee67f2ab16",
+    "tools/decomp_screen_mode_commands.py": "f76bc2654369e0ebec37535b099b8b749b160c488fc333905b520bcc9e175c75"
+  }
+}

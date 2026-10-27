@@ -43,6 +43,7 @@
 #include <cerrno>
 #include <fstream>
 #include <iostream>
+#include <sstream>
 #include <stdexcept>
 #include <vector>
 
@@ -143,13 +144,12 @@ std::uint32_t ModifierBits() {
     return bits;
 }
 
-// 원본 00436df0 → BaseFile 모드 1: r+b로 열고 없으면 w+b로 만든 뒤, 데이터를 쓰지 않고 닫는다.
-void CreateFullScreenState(const std::filesystem::path& directory) {
-    const auto name = (directory / kFullScreenStateFile).string();
-    FILE* file = std::fopen(name.c_str(), "r+b");
-    if (!file) file = std::fopen(name.c_str(), "w+b");
-    if (!file) throw std::runtime_error("Unable to open fullscreenStateFile.dat");
-    std::fclose(file);
+// 원본과 다른 Windows10/11 호환 출력은 DPI 가상 좌표 대신 실제 모니터 픽셀과 입력을 사용한다.
+void EnableModernScreenDpi() {
+    using SetAwareness=BOOL(WINAPI*)(HANDLE); // Windows10의 DPI 컨텍스트 진입 API이며 구버전에서는 조회만 실패한다.
+    const auto user=GetModuleHandleW(L"user32.dll");const auto set=reinterpret_cast<SetAwareness>(GetProcAddress(user,"SetProcessDpiAwarenessContext"));
+    if (set && set(reinterpret_cast<HANDLE>(-4))) return; // PER_MONITOR_AWARE_V2: 모니터별 실제 픽셀이다.
+    SetProcessDPIAware(); // 초기 Windows10/이미 설정된 프로세스의 시스템 DPI 호환 관문이다.
 }
 }
 
@@ -238,6 +238,7 @@ int Client::Run() {
     // [원본] FUN_00435cd0: 명령줄이 있으면 그것을, 없으면 실행 파일 위치를 게임 폴더로 삼는다 → options_.gameDirectory.
     // [원본] CD-ROM에서 직접 실행하면 안내 창을 띄우고 끝낸다 — 옮기지 않았다.
     instance_ = GetModuleHandleA(nullptr);
+    EnableModernScreenDpi(); // 원본에 없던 현대 Windows DPI 처리이며 첫 HWND 생성 전에만 실행한다.
     // 아이콘·커서·로딩 그림은 원본 실행 파일의 리소스다. 게임 폴더에 원본 실행 파일이 있으면 자료로 열어 쓴다.
     for (const char* name : {"Netstorm.exe", "NETSTORM.EXE"}) {
         const auto path = options_.gameDirectory / name;
@@ -319,14 +320,10 @@ int Client::Run() {
     // "init screen mode": startInFullScreen이면 workingFullScreenFlags, 아니면 windowScreenFlags.
     std::uint32_t flags = static_cast<std::uint32_t>(configuration_.GetInt("workingFullScreenFlags"));
     if (configuration_.GetInt("startInFullScreen") == 0 || options_.forceWindow) flags = 0;
-    // 원본 00436dd0 → 004dd560(GetFileAttributesA): 남은 표시 파일이 있으면 전체화면 시도를 건너뛴다.
-    // 디컴파일은 004395df를 별도 함수로 잘못 읽었다. 실제 분기(004395ad)는 flags=0인 창 모드 경로다.
-    if (GetFileAttributesA((options_.gameDirectory / kFullScreenStateFile).string().c_str()) != INVALID_FILE_ATTRIBUTES)
-        flags = 0;
+    // 원본과 다른 호환 DIB는 독점 DirectDraw 복구 표식을 만들지 않으며 남은 옛 표식 때문에 다음 실행을 창 모드로 강제하지 않는다.
+    ClearFullScreenState();
     bool modeSet = false;
-    // 원본 004395b5: 전체화면 시도 전에 표시 파일을 만든다. 실패하면 원본도 창 모드로 이어 간다.
     if (flags != 0) {
-        CreateFullScreenState(options_.gameDirectory);
         modeSet = screen_->SetMode(flags, windowWidth_, windowHeight_, initWindowPos_);
     }
     if (!modeSet) {
@@ -334,14 +331,9 @@ int Client::Run() {
         if (!screen_->SetMode(flags, windowWidth_, windowHeight_, initWindowPos_))
             throw std::runtime_error("init screen mode completely failed"); // 원본 로그 + assert.
     }
-    // 원본 004a4fe0의 끝: 정해진 모드를 설정에 적는다.
+    // 원본 004a4fe0의 끝: 정해진 실제 모드를 설정에 적는다. --window는 시작 시에만 적용하고 저장된 사용자 선택을 바꾸지 않는다.
     const auto mode = screen_->Flags();
-    configuration_.SetInt("global.ddFullScreen", (mode & ScreenMode::kFullScreen) != 0);
-    configuration_.SetInt("global.ddBackBufferDib", (mode & ScreenMode::kBackBufferDib) != 0);
-    configuration_.SetInt("global.ddFlipping", (mode & ScreenMode::kFlipping) != 0);
-    configuration_.SetInt("global.ddParallax", (mode & ScreenMode::kParallax) != 0);
-    configuration_.SetInt("global.ddSoftwareMouse", (mode & ScreenMode::kSoftwareMouse) != 0);
-    configuration_.SetInt("global.ddFourPage", 0);
+    PublishScreenMode();
     InitializeNativeAudio(); // 원본 init sound의 기존 위치에서 같은 본체를 실행한다.
     // "init kernel"(FUN_00471930): Kernel은 멤버로 이미 만들어져 있다.
     // "init renderer": 화면 장치와 같은 크기의 변경 표·프레임 캐시를 만든다.
@@ -584,6 +576,22 @@ void Client::InterpretOptions() {
 
 // 원본 00436260.
 void Client::PaintLoading(NativeHandle dcHandle) {
+    if (!screen_ || !(screen_->Flags()&ScreenMode::kFullScreen)) { PaintLoadingLogical(dcHandle);return; }
+    // 원본과 다른 전체화면에서도 로딩 그림/문자 위치는 같은 논리 크기에 그린 후 같은 레터박스 안으로 확대한다.
+    const HDC dc=static_cast<HDC>(dcHandle);BITMAPINFO bitmap{};bitmap.bmiHeader.biSize=sizeof(BITMAPINFOHEADER);bitmap.bmiHeader.biWidth=screenWidth_;bitmap.bmiHeader.biHeight=-screenHeight_;bitmap.bmiHeader.biPlanes=1;bitmap.bmiHeader.biBitCount=32;bitmap.bmiHeader.biCompression=BI_RGB;
+    struct LoadingSurface { HDC dc{}; /* dc: 임시 논리 출력이다. */ HBITMAP bitmap{}; /* bitmap: 실제32비트 픽셀이다. */ HGDIOBJ previous{}; /* previous: 종료 전 되돌릴 선택이다. */
+        ~LoadingSurface() { if (previous) SelectObject(dc,previous);if (bitmap) DeleteObject(bitmap);if (dc) DeleteDC(dc); } // 예외 때도 GDI 임시 자원을 반납한다.
+    } surface;
+    surface.dc=CreateCompatibleDC(dc);void* pixels{};surface.bitmap=CreateDIBSection(dc,&bitmap,DIB_RGB_COLORS,&pixels,nullptr,0);
+    if (!surface.dc || !surface.bitmap) throw std::runtime_error("전체화면 로딩 DIB 생성 실패");
+    surface.previous=SelectObject(surface.dc,surface.bitmap);PaintLoadingLogical(surface.dc);GdiFlush();
+    RECT all{};GetClientRect(static_cast<HWND>(window_),&all);FillRect(dc,&all,static_cast<HBRUSH>(GetStockObject(BLACK_BRUSH)));
+    const auto output=screen_->PresentationRect();const int saved=SaveDC(dc);SetStretchBltMode(dc,COLORONCOLOR);
+    StretchDIBits(dc,output.left,output.top,output.right-output.left,output.bottom-output.top,0,0,screenWidth_,screenHeight_,pixels,&bitmap,DIB_RGB_COLORS,SRCCOPY);
+    if (saved) RestoreDC(dc,saved);
+}
+// 원본00436260의 배치/문자 출력은 창/전체화면 양쪽에 동일하게 사용한다.
+void Client::PaintLoadingLogical(NativeHandle dcHandle) {
     const HDC dc = static_cast<HDC>(dcHandle);
     RECT all{0, 0, screenWidth_, screenHeight_};
     FillRect(dc, &all, static_cast<HBRUSH>(GetStockObject(BLACK_BRUSH)));
@@ -646,14 +654,17 @@ void Client::PresentScene() {
             const auto position = Poll(0); const auto hotspot = cursor_->Hotspot();
             renderer_->SetSoftwareCursor(active_ && (position.code & InputCode::kOutside) == 0 ? cursor_->SoftwareImage() : nullptr,
                 {position.x - hotspot.x, position.y - hotspot.y});
-        }
+        } else renderer_->SetSoftwareCursor(nullptr,{}); // 호환 모드 복귀 때 이전 소프트웨어 커서 캐시를 지운다.
         screen_->SetClip(0, 0, screenWidth_, screenHeight_);
         std::uint8_t* buffer = screen_->Lock();
         try {
             renderer_->Draw(std::span<std::uint8_t>(buffer, static_cast<std::size_t>(screen_->Pitch()) * static_cast<std::size_t>(screenHeight_)), screen_->Pitch());
         } catch (...) { screen_->Unlock(); throw; }
         screen_->Unlock();
-        renderer_->Present([this](ScreenRect rect) { screen_->Update(rect); });
+        if (screen_->Flags()&ScreenMode::kFullScreen) {
+            bool changed=false;renderer_->Present([&changed](ScreenRect) { changed=true; }); // 원본 dirty 소비/캐시는 그대로 진행한다.
+            if (changed) screen_->Update({0,0,screenWidth_,screenHeight_}); // Windows10/11의 비정수 확대는 clip별 GDI 샘플 위상 차이를 피하도록 프레임당 전체 DIB를 한 번 출력한다.
+        } else renderer_->Present([this](ScreenRect rect) { screen_->Update(rect); });
     }
 }
 void Client::SaveScreenshot() {
@@ -678,6 +689,20 @@ void Client::Capture(const std::filesystem::path& path) {
     platform::WriteBitmap(path, static_cast<std::uint32_t>(screenWidth_), static_cast<std::uint32_t>(screenHeight_), rgba);
 }
 
+// 검사 전용 OS 클라이언트 캡처다. 논리 DIB를 재확대하지 않고 실제 출력된 픽셀/레터박스를 읽는다.
+void Client::CapturePresentation(const std::filesystem::path& path) {
+    RECT client{};GetClientRect(static_cast<HWND>(window_),&client);const int width=client.right,height=client.bottom;if (width<=0 || height<=0) throw std::runtime_error("실제 화면 캡처의 양수 클라이언트 필요");
+    struct CaptureSurface { HDC dc{}; /* dc: 실제 창 출력의 복사 대상이다. */ HBITMAP bitmap{}; /* bitmap: 읽을32비트 DIB다. */ HGDIOBJ previous{}; /* previous: 반납 전의 GDI 선택이다. */
+        ~CaptureSurface() { if (previous) SelectObject(dc,previous);if (bitmap) DeleteObject(bitmap);if (dc) DeleteDC(dc); } // 캡처 성공/실패 모두 임시 GDI를 반납한다.
+    } surface;
+    BITMAPINFO bitmap{};bitmap.bmiHeader.biSize=sizeof(BITMAPINFOHEADER);bitmap.bmiHeader.biWidth=width;bitmap.bmiHeader.biHeight=-height;bitmap.bmiHeader.biPlanes=1;bitmap.bmiHeader.biBitCount=32;bitmap.bmiHeader.biCompression=BI_RGB;
+    void* pixels{};surface.dc=CreateCompatibleDC(static_cast<HDC>(windowDc_));surface.bitmap=CreateDIBSection(static_cast<HDC>(windowDc_),&bitmap,DIB_RGB_COLORS,&pixels,nullptr,0);
+    if (!surface.dc || !surface.bitmap) throw std::runtime_error("실제 화면 캡처 DIB 생성 실패");surface.previous=SelectObject(surface.dc,surface.bitmap);
+    GdiFlush();if (!BitBlt(surface.dc,0,0,width,height,static_cast<HDC>(windowDc_),0,0,SRCCOPY)) throw std::runtime_error("실제 화면 캡처 복사 실패");GdiFlush();
+    const auto source=static_cast<const std::uint8_t*>(pixels);std::vector<std::uint8_t> rgba(static_cast<std::size_t>(width)*height*4);
+    for (std::size_t i=0;i<rgba.size();i+=4) { rgba[i]=source[i+2];rgba[i+1]=source[i+1];rgba[i+2]=source[i];rgba[i+3]=255; } // GDI BGRA만 저장 도구의 RGBA로 바꾼다.
+    platform::WriteBitmap(path,static_cast<std::uint32_t>(width),static_cast<std::uint32_t>(height),rgba);
+}
 // UI는 정지 상태를 한 번만 적용한다. wall 시각은 계속 흐른다.
 void Client::Pause(bool paused) {
     if (paused==uiPaused_) return;
@@ -746,12 +771,13 @@ void Client::ClearThunderFlashes() {
 }
 // 개별 효과의 종료/취소 콜백으로 유지되는 현재 등록 수다.
 std::size_t Client::ThunderFlashCount() const { return thunderProcesses_.size(); }
-// 현재 단계의 창 모드 세 해상도만 지원한다. 전체화면 장치는 후속이다.
+// 원본 세 논리 해상도를 바꾸되 Windows10/11 호환 전체화면 선택은 같은 모드로 유지한다.
 void Client::ChangeResolution(int width, int height) {
     if (!((width == 640 && height == 480) || (width == 800 && height == 600) || (width == 1024 && height == 768)))
         throw std::invalid_argument("Unsupported original resolution");
     if (screenWidth_ == width && screenHeight_ == height) return;
     ClearThunderFlashes();
+    const auto mode=screen_->Flags(); // 재생성 전 실제 모드를 보존한다.
     // 현재 RGBQUAD 256개를 새 장치의 저장 팔레트로도 옮긴다. SetPalette만 하면 SetMode의 기본 팔레트 재적용에서 검정으로 덮인다.
     std::array<std::uint8_t,1024> palette{};
     std::memcpy(palette.data(),screen_->Palette().data(),palette.size());
@@ -765,8 +791,9 @@ void Client::ChangeResolution(int width, int height) {
     RECT rect{0, 0, width, height};
     AdjustWindowRectEx(&rect, static_cast<DWORD>(GetWindowLongPtrA(static_cast<HWND>(window_), GWL_STYLE)), FALSE, 0);
     windowWidth_ = rect.right - rect.left; windowHeight_ = rect.bottom - rect.top;
-    if (!screen_->SetMode(ScreenMode::kFallbackWindowed, windowWidth_, windowHeight_, initWindowPos_))
+    if (!screen_->SetMode(mode, windowWidth_, windowHeight_, initWindowPos_))
         throw std::runtime_error("Unable to change window resolution");
+    PublishScreenMode();if ((mode&ScreenMode::kSoftwareMouse) && cursor_) cursor_->BuildSoftware(screen_->Palette());
     renderer_ = std::make_unique<Renderer>(width, height,options_.edition);
     kencloudGlobals_->BindRenderer(renderer_.get()); // 새 장치를 같은 현재 renderer 전역에 공개한다.
     // 메뉴/독립 검사 화면도 새 화면 크기로 위치 효과음을 계산한다. 미션은 다음 Compose/Resize에서 실제 카메라를 공급한다.
@@ -776,6 +803,39 @@ void Client::ChangeResolution(int width, int height) {
     configuration_.SetInt("SCREENW", width); configuration_.SetInt("SCREENH", height);
 }
 
+// 원본 모드 결과의 전역 이름은 유지하되 Windows10/11 호환 장치가 실제 지원하는 플래그를 공개한다.
+void Client::PublishScreenMode() {
+    const auto mode=screen_->Flags();
+    configuration_.SetInt("global.ddFullScreen",(mode&ScreenMode::kFullScreen)!=0);
+    configuration_.SetInt("global.ddBackBufferDib",(mode&ScreenMode::kBackBufferDib)!=0);
+    configuration_.SetInt("global.ddFlipping",(mode&ScreenMode::kFlipping)!=0);
+    configuration_.SetInt("global.ddClouds",(mode&ScreenMode::kClouds)!=0);
+    configuration_.SetInt("global.ddAnimating",(mode&ScreenMode::kAnimating)!=0);
+    configuration_.SetInt("global.ddParallax",(mode&ScreenMode::kParallax)!=0);
+    configuration_.SetInt("global.ddSoftwareMouse",(mode&ScreenMode::kSoftwareMouse)!=0);
+    configuration_.SetInt("global.ddFourPage",0);
+}
+// 원본 ScreenModeAbsChange 명령의 모드 값을 같은 장치에 적용하고 사용자 선택만 저장한다.
+void Client::ChangeScreenMode(std::uint32_t flags,bool remember) {
+    if (!screen_) throw std::logic_error("화면 모드 변경의 현재 장치 없음");
+    if (!screen_->SetMode(flags,windowWidth_,windowHeight_,initWindowPos_)) throw std::runtime_error("지원하지 않는 화면 모드 조합");
+    PublishScreenMode();const auto mode=screen_->Flags();
+    if (remember) configuration_.SetInt("startInFullScreen",(mode&ScreenMode::kFullScreen)!=0); // 마지막 유효 workingFullScreenFlags는 원본처럼 별도 확인 명령에서만 바꾼다.
+    ClearFullScreenState(); // 원본 DirectDraw 실패 표식을 새 호환 모드에 남기지 않는다.
+    if (cursor_) { if (mode&ScreenMode::kSoftwareMouse) cursor_->BuildSoftware(screen_->Palette());else cursor_->Apply(); }
+    if (renderer_) { renderer_->SetSoftwareCursor(nullptr,{});renderer_->InvalidateAll(); }
+    InvalidateRect(static_cast<HWND>(window_),nullptr,FALSE);
+}
+// 원본 AcceptScreenModeChange의 workingFullScreenFlags 저장은 실제 미리보기를 사용자가 확인한 뒤에만 한다.
+void Client::AcceptScreenMode() { if (screen_ && (screen_->Flags()&ScreenMode::kFullScreen)) configuration_.SetInt("workingFullScreenFlags",static_cast<std::int32_t>(screen_->Flags())); }
+// 실제 UI 자동 검증이 논리 크기/모드와 현재 OS 창/출력/커서 제한을 구별해 기록한다.
+std::string Client::ScreenDiagnostics() const {
+    std::ostringstream out;if (!screen_) return {};RECT window{},client{},clip{};GetWindowRect(static_cast<HWND>(window_),&window);GetClientRect(static_cast<HWND>(window_),&client);GetClipCursor(&clip);const auto output=screen_->PresentationRect();
+    out<<"screen_mode\t"<<screen_->Flags()<<'\t'<<screenWidth_<<'\t'<<screenHeight_<<'\t'<<screen_->Pitch()<<'\t'<<active_<<'\n';
+    out<<"screen_window\t"<<window.left<<'\t'<<window.top<<'\t'<<window.right<<'\t'<<window.bottom<<'\t'<<client.right<<'\t'<<client.bottom<<'\t'<<GetWindowLongPtrA(static_cast<HWND>(window_),GWL_STYLE)<<'\n';
+    out<<"screen_output\t"<<output.left<<'\t'<<output.top<<'\t'<<output.right<<'\t'<<output.bottom<<'\n';
+    out<<"screen_cursor_clip\t"<<clip.left<<'\t'<<clip.top<<'\t'<<clip.right<<'\t'<<clip.bottom<<'\n';return out.str();
+}
 // 원본 00435b30. 원본은 WM_QUIT을 받으면 곧바로 프로세스를 끝낸다(_exit).
 bool Client::PumpMessages() {
     MSG message;
@@ -794,11 +854,9 @@ void Client::KeyEvent(NativeHandle windowHandle, unsigned message, std::uintptr_
     const std::uint32_t release = message == WM_KEYUP || message == WM_MBUTTONUP || message == WM_SYSKEYUP ? InputCode::kRelease : 0;
     const std::uint32_t modifiers = ModifierBits();
     POINT cursor{};
-    RECT rect{};
     GetCursorPos(&cursor);
-    GetWindowRect(window, &rect);
-    const auto border = screen_ ? screen_->BorderOffset() : ScreenPoint{};
-    const std::int32_t x = cursor.x - (border.x + rect.left), y = cursor.y - (border.y + rect.top);
+    ScreenToClient(window,&cursor);const auto point=screen_ ? screen_->ToLogicalPoint({cursor.x,cursor.y}) : ScreenPoint{cursor.x,cursor.y}; // 원본1:1 입력과 호환 확대 입력의 같은 논리 좌표다.
+    const std::int32_t x=point.x,y=point.y;
     BYTE keyboard[256];
     GetKeyboardState(keyboard);
     WORD characters[2] = {0, 0};
@@ -811,11 +869,9 @@ void Client::KeyEvent(NativeHandle windowHandle, unsigned message, std::uintptr_
 // 원본 00436190: 글자 코드를 아래 비트에 넣는다.
 void Client::CharacterEvent(NativeHandle windowHandle, std::uintptr_t wParam) {
     POINT cursor{};
-    RECT rect{};
     GetCursorPos(&cursor);
-    GetWindowRect(static_cast<HWND>(windowHandle), &rect);
-    const auto border = screen_ ? screen_->BorderOffset() : ScreenPoint{};
-    input_.Push(ModifierBits() | static_cast<std::uint32_t>(wParam), cursor.x - (border.x + rect.left), cursor.y - (border.y + rect.top));
+    ScreenToClient(static_cast<HWND>(windowHandle),&cursor);const auto point=screen_ ? screen_->ToLogicalPoint({cursor.x,cursor.y}) : ScreenPoint{cursor.x,cursor.y};
+    input_.Push(ModifierBits() | static_cast<std::uint32_t>(wParam),point.x,point.y);
 }
 
 // 원본 00452e00.
@@ -828,16 +884,14 @@ InputEvent Client::Poll(std::uint32_t code) const {
     std::uint32_t result = (~(static_cast<std::uint32_t>(static_cast<std::int32_t>(state)) << 16) & InputCode::kRelease)
         | ((static_cast<std::uint32_t>(state) & 1u) << 30) | kept;
     POINT cursor{};
-    RECT rect{};
     GetCursorPos(&cursor);
-    GetWindowRect(static_cast<HWND>(window_), &rect);
-    const auto border = screen_ ? screen_->BorderOffset() : ScreenPoint{};
-    if (cursor.x < border.x + rect.left || rect.right < cursor.x || cursor.y < border.y + rect.top || rect.bottom < cursor.y)
+    ScreenToClient(static_cast<HWND>(window_),&cursor);const auto output=screen_ ? screen_->PresentationRect() : ScreenRect{0,0,screenWidth_,screenHeight_};
+    if (cursor.x<output.left || output.right<cursor.x || cursor.y<output.top || output.bottom<cursor.y)
         result |= InputCode::kOutside;
     if (!active_) result |= InputCode::kOutside;
     // 좌표는 화면 안으로 넣는다(0 ~ 폭, 0 ~ 높이).
-    const std::int32_t x = std::clamp<std::int32_t>(cursor.x - border.x - rect.left, 0, screenWidth_);
-    const std::int32_t y = std::clamp<std::int32_t>(cursor.y - border.y - rect.top, 0, screenHeight_);
+    const auto point=screen_ ? screen_->ToLogicalPoint({cursor.x,cursor.y}) : ScreenPoint{cursor.x,cursor.y};
+    const std::int32_t x=std::clamp<std::int32_t>(point.x,0,screenWidth_),y=std::clamp<std::int32_t>(point.y,0,screenHeight_);
     return {result, x, y};
 }
 
@@ -857,9 +911,17 @@ std::intptr_t Client::HandleMessage(NativeHandle windowHandle, unsigned message,
     case WM_SIZE:
         clientWidth_ = LOWORD(lParam);
         clientHeight_ = HIWORD(lParam);
+        if (screen_) screen_->SetActive(active_);
+        if (renderer_) renderer_->InvalidateAll();
+        break;
+    case WM_DISPLAYCHANGE:
+    case WM_DPICHANGED:
+        // 원본 독점 모드 복구와 달리 현대 Windows 모니터/DPI 변경은 같은 DIB의 출력/입력 범위만 갱신한다.
+        if (screen_) screen_->RelayoutFullscreen();
+        if (renderer_) renderer_->InvalidateAll();
         break;
     case WM_ACTIVATE:
-        // [원본] 전체화면에서 비활성이 되면 창을 최소화한다 — 전체화면을 옮기면 더한다.
+        // 원본과 다른 borderless는 강제 최소화 없이 다른 앱에 커서를 반납한다.
         // 클릭으로 활성화됐으면 그 클릭은 게임 입력으로 넣지 않는다(제목 표시줄 클릭은 예외).
         activatedByClick_ = LOWORD(wParam) == WA_CLICKACTIVE && !nonClientClick_;
         nonClientClick_ = false;
@@ -881,11 +943,13 @@ std::intptr_t Client::HandleMessage(NativeHandle windowHandle, unsigned message,
         return 1;
     case WM_ACTIVATEAPP:
         active_ = wParam != 0;
+        if (screen_) screen_->SetActive(active_);
+        if (active_ && renderer_) renderer_->InvalidateAll();
         if (!active_) {
             Sleep(0);
             return DefWindowProcA(window, message, 0, lParam);
         }
-        // [원본] FUN_004a1470: 전체화면이면 DirectDraw 표면을 되살린다 — 옮기지 않았다.
+        // Windows10/11 DIB 호환 전체화면은 잃어버린 독점 DirectDraw 표면이 없어 같은 버퍼를 다시 출력한다.
         break;
     case WM_SETCURSOR:
         if (cursor_ && LOWORD(lParam) == HTCLIENT) {
@@ -895,7 +959,7 @@ std::intptr_t Client::HandleMessage(NativeHandle windowHandle, unsigned message,
         }
         break;
     case WM_GETMINMAXINFO:
-        if (windowWidth_ != -1) {
+        if (windowWidth_ != -1 && (!screen_ || !(screen_->Flags()&ScreenMode::kFullScreen))) {
             // 창을 화면 크기에 맞춘 한 가지 크기로만 둔다.
             auto* info = reinterpret_cast<MINMAXINFO*>(lParam);
             info->ptMaxSize = {windowWidth_, windowHeight_};
@@ -917,6 +981,8 @@ std::intptr_t Client::HandleMessage(NativeHandle windowHandle, unsigned message,
     case WM_SYSKEYDOWN:
     case WM_SYSKEYUP:
         if ((lParam & 0x20000000) != 0) { // Alt와 함께 눌린 키.
+            // 원본 Alt-Enter의 모드 전환을 Windows10/11 호환 장치로 전달한다. 반복 keydown은 무시한다.
+            if (wParam==VK_RETURN) { if (message==WM_SYSKEYDOWN && !(lParam&0x40000000) && screen_) ChangeScreenMode((screen_->Flags()&ScreenMode::kFullScreen) ? static_cast<std::uint32_t>(configuration_.GetInt("windowScreenFlags")) : static_cast<std::uint32_t>(configuration_.GetInt("workingFullScreenFlags")));return 0; }
             if (wParam != VK_MENU) KeyEvent(window, message, wParam, lParam);
             return 0;
         }
@@ -946,7 +1012,8 @@ std::intptr_t Client::HandleMessage(NativeHandle windowHandle, unsigned message,
         const bool release = message == WM_LBUTTONUP || message == WM_RBUTTONUP || message == WM_MBUTTONUP;
         const std::uint32_t button = message == WM_LBUTTONUP || message == WM_LBUTTONDOWN ? InputCode::kLeftButton
             : message == WM_RBUTTONUP || message == WM_RBUTTONDOWN ? InputCode::kRightButton : InputCode::kMiddleButton;
-        input_.Push(button | ModifierBits() | (release ? InputCode::kRelease : 0u), LOWORD(lParam), HIWORD(lParam));
+        const ScreenPoint actual{static_cast<std::int16_t>(LOWORD(lParam)),static_cast<std::int16_t>(HIWORD(lParam))};const auto point=screen_ ? screen_->ToLogicalPoint(actual) : actual; // 캡처된 음수 좌표/확대 좌표를 signed로 유지한다.
+        input_.Push(button | ModifierBits() | (release ? InputCode::kRelease : 0u),point.x,point.y);
         break;
     }
     default:

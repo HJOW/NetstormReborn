@@ -2300,3 +2300,5 @@ target_sources(netstorm_tests PRIVATE SmokeVisualSystemTests.cpp) # 실제21 Hos
 # 실제 두 판본의 섬 설명 자료와 원문 섹션/HTML을 파일 전용 정의로 대조한다.
 target_sources(netstorm_tests PRIVATE EmbeddedIslandTextTests.cpp)
 set_source_files_properties(EmbeddedIslandTextTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_EMBEDDED_ISLAND_TEXT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/embedded-island-text-x86.tsv\"")
+
+target_sources(netstorm_tests PRIVATE ScreenPresentationTests.cpp) # Windows10/11 호환 화면비/실제 DIB 행과 입력 변환이다.

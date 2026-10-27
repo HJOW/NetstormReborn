@@ -112,6 +112,9 @@ public:
     void InterpretStateOptions(); //004b2df0 후반의 실제435220을 같은 현재 설정/장치에 재실행한다. State/미션 확정은 하지 않는다.
     // 원본 세 해상도의 창 모드 장치와 Renderer를 다시 만든다.
     void ChangeResolution(int width, int height);
+    void ChangeScreenMode(std::uint32_t flags,bool remember=true); // 원본 절대 모드를 적용하며 조정 미리보기만 기억된 전체화면 값을 보존한다.
+    void AcceptScreenMode(); // 조정 확인창에서 현재 실제 모드를 다음 실행의 전체화면 선택으로 저장한다.
+    std::string ScreenDiagnostics() const; // 실제 창/출력/커서 제한을 짧은 UI 실행의 관측 자료로만 읽는다.
     // 원본 창 제목을 현재 미션/메뉴 상태에 맞춘다.
     void Title(std::string_view title);
     // 기본 실행의 메뉴 상태와 입력 경로. --view 검사에서는 널이다.
@@ -126,6 +129,7 @@ public:
     int LanguageNumber() const { return languageNumber_; }
     // 검사 전용으로 이미 그려진 화면을 지정 파일에 저장한다.
     void Capture(const std::filesystem::path& path);
+    void CapturePresentation(const std::filesystem::path& path); // 검사 전용 실제 클라이언트 RGB 출력을 저장하며 논리 버퍼 캡처와 구별한다.
 
     // 독립 검사 화면의 입력 연결점. 기본 실행은 부분 UserInput/UberGump를 사용한다. 참이면 종료한다.
     std::function<bool(Client&)> input;
@@ -229,6 +233,8 @@ private:
     void InterpretMainMenuOptions(); //원문435220의 tellTips ReadInt를 현재 DWORD에 적용한다. 전체 옵션 부모의 미복원 순서를 대신하지 않는다.
     // 원본 FUN_00436260: 로딩 화면(검은 바탕, 가운데 그림, 오른쪽 아래의 두 줄 글).
     void PaintLoading(NativeHandle dc);
+    void PaintLoadingLogical(NativeHandle dc); // 원본 로딩 배치를 논리 화면에 그린 뒤 호환 전체화면에서 같은 비율로 확대한다.
+    void PublishScreenMode(); // 현재 실제 장치 플래그를 같은 Client 설정 전역에 공개한다.
     // 원본 FUN_00436450: 프레임 제한 뒤 그리고 창으로 내보낸다.
     void Frame();
     // 원본 FUN_00436020 / FUN_00436190: 키·글자 사건을 큐에 넣는다.

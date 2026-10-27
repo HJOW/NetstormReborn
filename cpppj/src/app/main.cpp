@@ -652,7 +652,7 @@ int RunClient(std::vector<std::string> arguments) {
                     if (operation!="click" && operation!="click-if" && operation!="up-if" && operation!="down" && operation!="up" && operation!="right" && operation!="outside" && operation!="pointer" && operation!="esc" && operation!="key" && operation!="keyup") throw std::invalid_argument("UI when supports input operations only");
                     step.operation=operation;step.argument=argument;
                 }
-                if (step.operation == "snapshot" || step.operation == "report" || step.operation=="refresh") continue;
+                if (step.operation == "snapshot" || step.operation=="snapshot-output" || step.operation == "report" || step.operation=="refresh") continue;
                 // 테스트 전용 임시 조작이며 원본 분석 결과가 아니다. 이미 생성된 조각은 바꾸지 않는다.
                 if (step.operation=="test-state-hud") { if (step.argument=="clear") { c.Menu()->KillGumpsForState();c.Menu()->CleanupGumpsForState(); }else if (step.argument=="replace") c.Menu()->ReplaceHudForState();else if (step.argument=="sp") c.Menu()->RefreshStormPower();else if (step.argument=="normal") c.Menu()->ApplyHudModeForState(3);else if (step.argument=="editor") c.Menu()->ApplyHudModeForState(4);else throw std::invalid_argument("State HUD 검사 동작은 clear/replace/sp/normal/editor만 허용");continue; } //검사 전용 실제 Native 자식 호출이며 State 전환/loaded 성공을 만들지 않는다.
                 if (step.operation=="test-state-world") { if (step.argument!="0") throw std::invalid_argument("전체 State 검사 reason0만 허용");c.Menu()->CleanupNativeStateWorld(0);continue; } //검사 전용 명시 호출이다. 자연 Edit 예약/State 확정을 대신하지 않는다.
@@ -730,6 +730,7 @@ int RunClient(std::vector<std::string> arguments) {
             while (next < steps.size() && steps[next].frame == c.Time().number) {
                 const auto& step = steps[next++];
                 if (step.operation == "snapshot") c.Capture(step.argument);
+                if (step.operation=="snapshot-output") c.CapturePresentation(step.argument); // 검사 전용 실제 Win32 출력이며 논리 캡처와 구별한다.
                 if (step.operation == "report") {
                     report += "frame\t" + std::to_string(step.frame) + "\t" + step.argument + "\n" + c.Menu()->Report();
                     saveUiReport(); // 구동 테스트가 중단돼도 직전 실제 관측을 남긴다. 게임 상태를 바꾸는 동작은 아니다.

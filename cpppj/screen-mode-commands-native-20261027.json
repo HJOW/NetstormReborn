@@ -1,0 +1,79 @@
+{
+  "host": "HJOW-Athlon",
+  "originalExecutions": 0,
+  "cases": 3,
+  "runs": 6,
+  "boundaries": [
+    "00435ba0 실제 모드 장치만 관찰",
+    "004414d0 실제 기억 문자열만 관찰",
+    "기존 메뉴 관측기의 Guide/Gump/기타 UI 장치"
+  ],
+  "observations": [
+    {
+      "control": 639,
+      "address": 5515012,
+      "command": 33554434,
+      "value": 64,
+      "completed": 1,
+      "stackDelta": 0,
+      "trace": "mode:171;tell:DirectDrawVerify(235)",
+      "instructions": 479
+    },
+    {
+      "control": 639,
+      "address": 5515192,
+      "command": 33554480,
+      "value": 10,
+      "completed": 1,
+      "stackDelta": 0,
+      "trace": "mode:10",
+      "instructions": 445
+    },
+    {
+      "control": 639,
+      "address": 5515908,
+      "command": 33554660,
+      "value": 1,
+      "completed": 1,
+      "stackDelta": 0,
+      "trace": "remember:workingFullScreenFlags:235;tell:AdjustDirectDraw",
+      "instructions": 564
+    },
+    {
+      "control": 895,
+      "address": 5515012,
+      "command": 33554434,
+      "value": 64,
+      "completed": 1,
+      "stackDelta": 0,
+      "trace": "mode:171;tell:DirectDrawVerify(235)",
+      "instructions": 479
+    },
+    {
+      "control": 895,
+      "address": 5515192,
+      "command": 33554480,
+      "value": 10,
+      "completed": 1,
+      "stackDelta": 0,
+      "trace": "mode:10",
+      "instructions": 445
+    },
+    {
+      "control": 895,
+      "address": 5515908,
+      "command": 33554660,
+      "value": 1,
+      "completed": 1,
+      "stackDelta": 0,
+      "trace": "remember:workingFullScreenFlags:235;tell:AdjustDirectDraw",
+      "instructions": 564
+    }
+  ],
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_screen_mode_commands.py": "f76bc2654369e0ebec37535b099b8b749b160c488fc333905b520bcc9e175c75",
+    "tools/decomp_game_menu_actions.py": "9130163b3bd761b08b37397f69ba3e074b257967a5fc934b68210bc6325f2df7",
+    "tools/decomp_production_shortcuts.py": "4caf1c87e4a152f65b2815395ea553b2609587be06a95512974b893e985b24e3"
+  }
+}

@@ -1,5 +1,5 @@
 // 원본 Screen.cpp: 팔레트 파일 읽기와 화면 장치(표면·화면 모드·팔레트·잠금·창으로 내보내기).
-// 창 모드(8비트 DIB 섹션 → BitBlt)를 원본 방식 그대로 옮겼다. DirectDraw 표면(전체화면·플리핑)은 아직 옮기지 않았다.
+// 창 모드의 원본8비트 DIB를 유지한다. Windows10/11 호환 전체화면은 원본 DirectDraw와 달리 비율 유지 GDI 출력이다.
 // 근거·범위: docs/exe/cpp-screen-reconstruction.md
 #pragma once
 #include "client/PaletteColors.h"
@@ -61,6 +61,14 @@ ScreenRect ClipScreenRect(ScreenRect rect, ScreenRect bounds);
 // 원본 004a4fe0의 창 위치 계산(설정 `initWindowPos`): 1 왼쪽 위, 2 오른쪽 위, 3 오른쪽 아래, 4 왼쪽 아래, 5 가운데.
 // 그 밖의 값이면 지금 위치를 그대로 둔다.
 struct ScreenPoint { /* x: X 좌표. */ /* y: Y 좌표. */ int x{}, y{}; };
+// Windows10/11 호환 경로의 실제 DIB/비flip 플래그다. 원본 ScreenModeIsLegal 계산은 변경하지 않는다.
+std::uint32_t ModernScreenMode(std::uint32_t requested);
+// 원본과 다른 호환 출력은4:3·16:9·16:10 등의 논리 비율을 유지하며 남는 영역을 검정으로 둔다.
+ScreenRect FitScreenPresentation(int width,int height,int clientWidth,int clientHeight);
+// 실제 클라이언트 픽셀을 논리 원본 입력으로 바꾸며 [0,width]/[0,height]를 보존한다.
+ScreenPoint MapScreenPresentationPoint(ScreenPoint point,ScreenRect output,int width,int height);
+// 같은 전체 표면의 배율/위상으로 dirty 출력 클립만 확장한다.
+ScreenRect MapScreenPresentationRect(ScreenRect rect,ScreenRect output,int width,int height);
 ScreenPoint InitialWindowPosition(int initWindowPos, int desktopWidth, int desktopHeight,
     int windowWidth, int windowHeight, ScreenPoint current);
 
@@ -89,6 +97,7 @@ public:
     int Width() const;
     int Height() const;
     int Pitch() const;
+    const std::uint8_t* Pixels() const; // 호환 전체화면이 잠금 수를 바꾸지 않고 실제 DIB를 출력할 때만 읽는다.
 private:
     // kind_: 자료나 동작의 종류를 구별하는 값.
     Kind kind_;
@@ -121,6 +130,10 @@ public:
     // 원본 FUN_004a4fe0: 화면 모드를 정한다. 창 모드면 창 모양·위치를 맞추고 팔레트를 적용한다.
     // windowWidth·windowHeight는 클라이언트 영역이 화면 크기가 되는 창 크기(DAT_00542390·DAT_00542394)다.
     bool SetMode(std::uint32_t flags, int windowWidth, int windowHeight, int initWindowPos);
+    ScreenRect PresentationRect() const; // Windows10/11 호환 전체화면의 현재 실제 클라이언트 출력 범위다.
+    ScreenPoint ToLogicalPoint(ScreenPoint point) const; // 확대/레터박스를 실제 입력과 일치시킨다.
+    void SetActive(bool active); // 활성 전체화면에서만 커서를 출력 안에 두고 다른 앱으로 나가면 반납한다.
+    void RelayoutFullscreen(); // 디스플레이/DPI 변경 뒤 같은 모니터를 다시 덮고 입력 제한을 갱신한다.
     // 원본 FUN_004a2640: 팔레트의 [start, start+count)를 colors로 바꾼다. colors가 널이면 저장해 둔 팔레트를 쓴다.
     // apply가 참이면 현재 팔레트에 복사하고 DIB 색 표와 논리 팔레트에 반영한다.
     void SetPalette(unsigned start, unsigned count, ScreenColor* colors, bool apply);
@@ -169,6 +182,7 @@ public:
     NativeHandle WindowDc() const;
 private:
     void WaitPaletteVerticalBlank(); //004a1fb0의GDI자연반환과미복원DirectDraw경계를구별한다.
+    void RestoreWindowed(); // 원본과 다른 호환 창의 모양/위치/커서 제한을 전환/종료 때 되돌린다.
     void PresentPaletteClear(); //004a46d0의viewport복사전후같은clip을복구한다.
     void FlipPaletteClear(); //004a16d0의bit4관문을보존하며미복원flip은거부한다.
     std::uint32_t localPaletteLoaded_{}; //Client없는독립Screen만쓰는BSS0입력이다.
@@ -219,5 +233,8 @@ private:
     ScreenPoint position_{};                       // DAT_005c78d8, DAT_005c78dc
     // cursorHidden_: Win32 커서 숨김 상태를 복원할 때 사용하는 표식.
     int cursorHidden_{};                           // DAT_005c7a3c
+    ScreenRect windowedBounds_{}; // 호환 전체화면 진입 전의 실제 창 위치/크기다.
+    std::intptr_t windowedStyle_{}; // 복귀할 원래 창 스타일이며 Win32 포인터 폭을 유지한다.
+    bool windowedSaved_{},active_{},cursorClipped_{}; // 저장된 창/활성 상태와 이 Screen이 소유한 커서 제한이다.
 };
 }
