@@ -336,6 +336,7 @@ int Client::Run() {
     PublishScreenMode();
     InitializeNativeAudio(); // 원본 init sound의 기존 위치에서 같은 본체를 실행한다.
     // "init kernel"(FUN_00471930): Kernel은 멤버로 이미 만들어져 있다.
+    gameplayGlobals_->WorldCells()=256; //00438dc0/004395df의 실제 kernel 뒤 명시00531928 store다. Session 생성에서 다시 쓰지 않는다.
     // "init renderer": 화면 장치와 같은 크기의 변경 표·프레임 캐시를 만든다.
     renderer_ = std::make_unique<Renderer>(screenWidth_, screenHeight_,options_.edition);
     kencloudGlobals_->BindRenderer(renderer_.get()); // Native renderer 존재 관문은 실제 현재 장치와 같은 수명을 사용한다.
@@ -622,7 +623,7 @@ void Client::PaintLoadingLogical(NativeHandle dcHandle) {
 }
 
 // 원본 00436450. 메뉴/검사 장면이 준비된 뒤 Renderer의 변경 영역만 그려 내보낸다.
-void Client::InitializeNativeRendererView() { gameplayGlobals_->Camera().InitializeNativeRenderer(screenWidth_,screenHeight_,256,kencloudGlobals_->WorldRedraw(),gameplayGlobals_->MapRevision()); }
+void Client::InitializeNativeRendererView() { gameplayGlobals_->Camera().InitializeNativeRenderer(screenWidth_,screenHeight_,gameplayGlobals_->WorldCells(),kencloudGlobals_->WorldRedraw(),gameplayGlobals_->MapRevision()); }
 
 // 현재 장치 화면과 논리 Native Renderer의 수명을 혼동하지 않는다.
 void Client::Frame() {
@@ -633,6 +634,7 @@ void Client::Frame() {
     }
     lastDraw_ = clock_.WallSeconds(timeGetTime());
     PresentScene();
+    if (menu_) menu_->ApplyCameraFrame(); //499fe0 말미의 목표 제한/497960 적용은 화면 출력 뒤·마지막 snapshot 복사 앞이다.
     gameplayGlobals_->Camera().CopyRendererSnapshot(); //00436532: 프레임 말미 현재 논리 Renderer의16DWORD를 복사한다.
     ++frames_;
     if (options_.frameLimit != 0 && frames_ == options_.frameLimit) {
@@ -650,6 +652,7 @@ void Client::Frame() {
 // 같은 실제 Draw/Lock/Present 경로를 장면 표시와 일반 프레임에서 공유한다. 프레임 대기는 호출자가 소유한다.
 void Client::PresentScene() {
     if (sceneVisible_) {
+        if (kencloudGlobals_->WorldRedraw()) renderer_->InvalidateAll(); // 원문 zoom/지형의 전체 갱신을 같은 현재 프레임의 Draw에 반영한다.
         if ((screen_->Flags() & ScreenMode::kSoftwareMouse) != 0) {
             const auto position = Poll(0); const auto hotspot = cursor_->Hotspot();
             renderer_->SetSoftwareCursor(active_ && (position.code & InputCode::kOutside) == 0 ? cursor_->SoftwareImage() : nullptr,
@@ -665,6 +668,7 @@ void Client::PresentScene() {
             bool changed=false;renderer_->Present([&changed](ScreenRect) { changed=true; }); // 원본 dirty 소비/캐시는 그대로 진행한다.
             if (changed) screen_->Update({0,0,screenWidth_,screenHeight_}); // Windows10/11의 비정수 확대는 clip별 GDI 샘플 위상 차이를 피하도록 프레임당 전체 DIB를 한 번 출력한다.
         } else renderer_->Present([this](ScreenRect rect) { screen_->Update(rect); });
+        kencloudGlobals_->WorldRedraw()=0; //499fe0은 출력/dirty clear 뒤 같은 전역을0으로 쓰며 뒤 카메라 zoom이 다시1을 쓸 수 있다.
     }
 }
 void Client::SaveScreenshot() {

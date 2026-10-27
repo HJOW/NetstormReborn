@@ -1,0 +1,21 @@
+{
+  "host": "HJOW-Athlon",
+  "cases": 357,
+  "normalReturns": 357,
+  "originalExecutions": 0,
+  "executedBodies": [
+    "4a1ad0 DIB 분기"
+  ],
+  "boundaries": [
+    "4a14e0/4a0950 DIB 잠금/해제",
+    "4e5b40 CRT memmove의 원시 바이트 복사"
+  ],
+  "pitch": 16,
+  "width": 13,
+  "height": 9,
+  "sha256": {
+    "originals\\Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools\\decomp_screen_scroll.py": "ebe6377e6be589c84a9446dc236c6fb05d85cffd006c3eb4a2d0cb2959928ceb",
+    "extracted\\cpp-edge-runtime-500\\screen-scroll-x86.tsv": "07302c86eebc0e4a5cccb7c1d2a6b7bcff86a3983ff66391b107fa79cfb25375"
+  }
+}

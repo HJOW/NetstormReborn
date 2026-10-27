@@ -268,6 +268,7 @@ RawButtonPointerResult RawButtonControls::NotifyPointer(InputEvent event,std::ui
 bool RawButtonControls::CleanupGumps() { impl_->lifetime->Cleanup();impl_->RetireHudOwners();return std::exchange(impl_->changed,false); }
 // 같은 idle 표에 대한 실제 가상 분배만 실행한다. Idle 중 Kill한 대상은 다음 Cleanup까지 실제 저장소에 남는다.
 bool RawButtonControls::IdleGumps() { impl_->frame->Idle();return std::exchange(impl_->changed,false); }
+void RawButtonControls::RedrawRoots() { impl_->frame->RedrawRoots(); } //실제 공통 필터와 각 노드의 현재 redraw를 사용한다.
 // 기존 독립 검사 계약을 유지하는 결합 경계다. Client 프레임 연결에서는 사용하지 않는다.
 bool RawButtonControls::Poll(InputEvent event) {
     auto& state=*impl_;state.currentPoll=event;

@@ -5050,3 +5050,25 @@ TEST_CASE(CampaignSharedDiagnostic_ActualContentAndPriestWriters) {
         session.reset();CHECK(&globals->PatchDiagnostic()==address && !globals->Borrowed());
     }
 }
+
+// 실제 두 Session의 마나/공급/AI와 Native Renderer 초기화가 같은 Client 세계 크기 주소를 빌린다.
+TEST_CASE(CampaignSharedCamera_WorldCellsCurrentAddressAndRendererInit) {
+    Client client(SessionLinksOptions());SessionServicesFixture external;const auto globals=client.GameplayGlobals();auto* address=&globals->WorldCells();CHECK(*address==256);
+    for (int generation=0;generation<2;++generation) { // Session을 반납해도 같은 주소를 다음 실제 설치가 사용한다.
+        auto services=SharedKernelServices(client,external);services.gameplayGlobals=globals;services.subscriberGlobals=client.SubscriberGlobals();auto session=SharedKernelSession(std::move(services));session->Load();
+        CHECK(&session->CursorManaSettings().mapLimit==address);session->CursorManaSettings().mapLimit=192;CHECK(globals->WorldCells()==192);client.InitializeNativeRendererView();
+        CHECK((globals->Camera().Target().limits==std::array<std::int32_t,2>{192*16-kDefaultScreenWidth,192*11-kDefaultScreenHeight}));
+        *address=256;session.reset();CHECK(&globals->WorldCells()==address && globals->WorldCells()==256 && !globals->Borrowed());
+    }
+}
+
+#include "client/ClientSpGlobals.h"
+// 실제 Client의 공유 SP를 쓴 메뉴 checksum은 사제/저장소의 같은 장기 추적 주소에3을 쓴다.
+TEST_CASE(CampaignSharedCamera_GameMenuUsesActualSharedSpTracking) {
+    Client client(SessionLinksOptions());SessionServicesFixture external;client.SpGlobals()->Store().Initialize();
+    auto services=SharedKernelServices(client,external);services.gameplayGlobals=client.GameplayGlobals();services.subscriberGlobals=client.SubscriberGlobals();services.randomGlobals=client.RandomGlobals();services.spGlobals=client.SpGlobals();
+    auto session=SharedKernelSession(std::move(services));session->Load();auto& store=client.SpGlobals()->Store();auto& checksum=session->GameMenuTrackingOffset();CHECK(&checksum==&store.TrackingOffsetCurrent());
+    for (int menu=0;menu<3;++menu) { // Native 메뉴의 Prepare→checksum+3 순서를 같은 실제 SP에 반복 적용한다.
+        session->PrepareGameMenus();checksum+=3;if (checksum>9600) checksum-=9600;CHECK(store.OffsetCurrent()==static_cast<std::uint32_t>(checksum));
+    }
+}

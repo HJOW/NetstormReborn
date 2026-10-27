@@ -178,6 +178,8 @@ public:
     std::span<const ScreenColor> Palette() const;
     // 창 테두리의 왼쪽·위쪽 두께(DAT_005c7904·DAT_005c7908). 입력 좌표를 화면 좌표로 바꿀 때 쓴다.
     ScreenPoint BorderOffset() const;
+    void Flip(); //004a16d0의 실제 bit4 관문을 공유한다. 호환 DIB는 flip을 요청하지 않는다.
+    void Scroll(int x,int y,int width,int height,int dx,int dy); //004a1ad0의 DIB 행 이동을 현재 같은 표면에서 수행한다.
     // 창의 장치 문맥.
     NativeHandle WindowDc() const;
 private:

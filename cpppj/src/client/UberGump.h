@@ -50,6 +50,7 @@ public:
     void FinishKernelFrame(); // 전역 Kernel 뒤 같은 월드의 표시 자료만 수집한다.
     // 커널이 월드를 진행한 직후 변경된 실제 장면을 제출한다.
     void Frame();
+    void ApplyCameraFrame(); //Present 말미의 실제 목표 제한/적용을 같은 Client·현재 월드·Gump/Screen 장치에서 수행한다.
     void RefreshMinimap(); // 원본00481320의커널앞위치에서실제같은HUD큐를소비한다.
     // 호스트 장면 합성을 예약한다. 원문0043dad0의 예산 재부착은 RefreshStormPower로 구별한다.
     void Refresh();
@@ -72,7 +73,7 @@ public:
     // 검사도 실제 메뉴가 사용하는 같은 사건 처리기로 입력한다.
     void Event(InputEvent event);
     // 자동 검사에서 화면과 활성 상태를 읽는다.
-    std::string Report() const;
+    std::string Report(bool cameraOnly=false) const; //카메라 검사 전용 간결 관측은 큰 월드 덤프를 생략하며 게임 상태를 바꾸지 않는다.
     // 버튼/목록의 실제 위치를 라벨로 찾는다. 없으면 빈 값.
     std::optional<ScreenPoint> ControlPoint(std::string_view label) const;
     bool QuitRequested() const { return quit_; } // 실제 QuitApp/사용자 종료 요청만 읽으며 검사 프레임 제한 종료와 구별한다.
@@ -160,6 +161,9 @@ private:
     // input_: 처리할 입력 또는 입력 분배기.
     GumpControlInput input_;
     GumpPointerBoundaryState pointerBoundary_; // 원본 정적 안팎/버튼 기록은 같은 Client UI 수명 동안 유지하고 페이지·월드 교체에서 지우지 않는다.
+    double edgeScrollSince_{}; //005cafc8의 장기 최초 시각이며 World/페이지 교체로 지우지 않는다.
+    std::int32_t edgeScrollEnabled_{1},edgeScrollSpeed_{20}; //보호 PE의005318f8/005318f0 초기값이다. 누락 설정은 현재값을 유지한다.
+    void PollEdgeScroll(const InputEvent& mouse); //Guide 통지 뒤·Overlay/일반 큐 앞에서 원문 가장자리 입력 본체를 수행한다.
     struct HudRuntime;std::unique_ptr<HudRuntime> hud_; // 실제 화면/지도 전역의 주소를 Client UI 수명에 고정한다.
     struct EditorRuntime;std::unique_ptr<EditorRuntime> editor_; //실제 파일/전송/State 장치는 World보다 먼저 만들고 Session 반납 뒤 해제한다.
     std::shared_ptr<const TextClipboard> textClipboard_; //최초 Chat과 뒤 Save as의 두 callback이 같은 OS 장치 수명을 공유한다.

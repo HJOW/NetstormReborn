@@ -732,7 +732,7 @@ int RunClient(std::vector<std::string> arguments) {
                 if (step.operation == "snapshot") c.Capture(step.argument);
                 if (step.operation=="snapshot-output") c.CapturePresentation(step.argument); // 검사 전용 실제 Win32 출력이며 논리 캡처와 구별한다.
                 if (step.operation == "report") {
-                    report += "frame\t" + std::to_string(step.frame) + "\t" + step.argument + "\n" + c.Menu()->Report();
+                    report += "frame\t" + std::to_string(step.frame) + "\t" + step.argument + "\n" + c.Menu()->Report(step.argument.starts_with("camera:")); //검사 전용 접두는 같은 현재 카메라/프레임의 간결 관측만 선택한다.
                     saveUiReport(); // 구동 테스트가 중단돼도 직전 실제 관측을 남긴다. 게임 상태를 바꾸는 동작은 아니다.
                 }
                 // 다음 Tick에서 표시만 갱신하여 버튼 캡처/serial을 보존하는지 검사한다.

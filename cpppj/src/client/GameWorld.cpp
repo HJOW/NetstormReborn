@@ -353,10 +353,12 @@ void GameWorld::SurfaceView() {
     if (campaign_) campaign_->SetParticleView({CameraX(),CameraY(),clip.left,clip.top,clip.right,clip.bottom},surfaceDisplay,false);
     if (soundViewChanged) soundViewChanged({CameraX(),CameraY(),clip.left,clip.top,clip.right,clip.bottom});
 }
+// 입력 시 현재 view를 다시 쓰지 않고 원문 후처리의 적용 결과만 기존 표시 장치에 전달한다.
+void GameWorld::CameraApplied() { SurfaceView();changed_=true; }
 // 카메라 크기만 바뀌어도 다시 표시하고 위치 효과음의 화면 기준을 갱신한다. 같은 크기로 불러도 새 수신자를 갱신한다.
 void GameWorld::Resize(int width,int height) {
     const bool first=width_==0; if (width_==width && height_==height) { SurfaceView();return; }
-    width_=width; height_=height; CameraGlobals().UpdateTargetLimits(width,height,256.0F,256.0F);if (first) Home(false); else Scroll(0,0); changed_=true;
+    width_=width; height_=height;const auto cells=static_cast<float>(gameplayGlobals_->WorldCells());CameraGlobals().UpdateTargetLimits(width,height,cells,cells);if (first) Home(false); else Scroll(0,0); changed_=true;
 }
 // 월드 테두리 밖으로 카메라가 나가지 않게 제한하고, 같은 입력 단계의 위치 효과음에 새 원점을 전달한다.
 void GameWorld::Scroll(int dx,int dy) {

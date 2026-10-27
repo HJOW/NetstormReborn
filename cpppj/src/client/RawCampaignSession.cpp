@@ -366,7 +366,7 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawCampaignCursor> cursor; // 같은 실제 Form/마나/위치/로컬 예측 몸체를 설치 뒤 소유한다.
     SoundView cursorViewport{}; // 카메라 두값은 사용하지 않는 현재 화면clip 전달자료다.
     CursorDropState& cursorDrop{gameplayGlobals->cursor}; // 초기 HUD와 같은 실제 취득/배치/취소/마우스 전역이다.
-    CursorManaGlobals cursorManaGlobals; // 현재 마나 종류/반경과 월드 좌표 제한 전역이다.
+    CursorManaGlobals cursorManaGlobals{&gameplayGlobals->WorldCells()}; // 카메라와 같은00531928을 모든 마나/공급/AI 참조가 직접 빌린다.
     std::unique_ptr<RawCursorMana> cursorMana; // Kernel을 먼저 비운 뒤 해제하는 실제 마나 프레임/수명 몸체다.
     EnergySupplyState& energyState{gameplayGlobals->energy}; // 같은 Client의 공급 전역을 빌려 메뉴/설정과5cab30의 실제 주소를 공유한다.
     SquidPostPopList energySources{std::vector<std::uint32_t>(kEnergySourceCapacity),0}; // 4fcb80의 실제30칸 lastSource다.
@@ -3549,7 +3549,7 @@ void RawCampaignSession::PrepareGameMenus() {
 }
 // SpStore가첫초기화전부터빌린같은기존소유자의주소를반환한다.
 std::int32_t& RawCampaignSession::GameMenuTrackingOffset() {
-    if (!impl_->loaded) throw std::logic_error("설치전게임메뉴추적주소요청");return impl_->priestState.regen.patch.sequence;
+    if (!impl_->loaded) throw std::logic_error("설치전게임메뉴추적주소요청");return impl_->sp.TrackingOffsetCurrent(); // 실제 Client는 장기 SP 추적 주소를 빌리고 독립 Session만 기존 patch.sequence에 연결되어 있다.
 }
 // GUI/설정/현재미션/네트워크경계는caller가유지하고실제Session소유자료만현재getter로연결한다.
 GameMenusHooks RawCampaignSession::BindGameMenus(GameMenusHooks hooks) {

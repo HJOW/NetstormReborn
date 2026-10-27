@@ -353,6 +353,15 @@ void Screen::PresentPaletteClear() {
 void Screen::FlipPaletteClear() {
     if ((flags_&ScreenMode::kFlipping)!=0) throw std::logic_error("팔레트전환DirectDraw flip장치미복원");
 }
+// Windows10/11 호환 모드는 원본 독점 DirectDraw flip 대신 DIB를 사용하므로 bit4의 자연 반환을 공유한다.
+void Screen::Flip() { FlipPaletteClear(); }
+// 원본 DIB 복사를 그대로 사용한다. 호환 전체화면의 실제 창 확대 출력은 다음 Present에서 같은 완성 프레임을 내보낸다.
+void Screen::Scroll(int x,int y,int width,int height,int dx,int dy) {
+    if (!(flags_&ScreenMode::kBackBufferDib)) throw std::logic_error("화면 이동의 현재 DIB 장치 필요");
+    if (!dx && !dy) return;auto* pixels=Lock();
+    try { ScrollScreenPixels(std::span<std::uint8_t>(pixels,static_cast<std::size_t>(Pitch())*height_),Pitch(),width_,height_,x,y,width,height,dx,dy); }catch (...) { Unlock();throw; }
+    Unlock();
+}
 // 실제paletteLoaded의참조를돌려주며별도bool사본을만들지않는다.
 const std::uint32_t& Screen::PaletteLoaded() const { return paletteLoaded_; }
 // 원본처럼 파일 읽기가 끝난 뒤 계산된 표를 보존한다. 번개의 부분 적용/복구는 표를 다시 만들지 않는다.

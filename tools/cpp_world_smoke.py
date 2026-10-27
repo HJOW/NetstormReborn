@@ -4,6 +4,7 @@
 import argparse
 import hashlib
 import json
+import re
 from pathlib import Path
 
 from PIL import Image
@@ -63,7 +64,7 @@ def states(path):
     """보고 지점마다 독립 스냅샷을 만든다."""
     result = {}
     # 맨 앞 frame 필드는 뒤 내용의 관찰 이름이다.
-    for block in path.read_text(encoding='utf-8').split('frame\t')[1:]:
+    for block in re.split(r'(?m)^frame\t',path.read_text(encoding='utf-8'))[1:]:
         header, body = block.split('\n', 1)
         frame, label = header.split('\t', 1)
         result[label] = parse(body)

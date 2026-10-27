@@ -30,6 +30,7 @@ public:
     std::span<const DirtyRegion> Entries() const;
     // 전체 화면 변화나 100항목 넘침이 등록됐는지 읽는다.
     bool FullRedraw() const;
+    std::vector<DirtyRegion>& CameraEntries() { return entries_; } //497960이 현재 표를 직접 이동/확장한다. Add 뒤에도 vector 소유자 주소는 유지한다.
 private:
     // width_: 가로 크기.
     // height_: 세로 크기.
@@ -112,7 +113,9 @@ public:
     // raw Squid 표시가 원본 전체 갱신 전역처럼 변경 표 추가를 생략할지 확인한다.
     bool FullRedrawPending() const;
     // 소프트웨어 커서의 이전·새 범위를 모두 무효화한다. nullptr이면 표시를 지운다.
-    void SetSoftwareCursor(const IndexedImage* image, ScreenPoint position);
+    void SetSoftwareCursor(const IndexedImage* image, ScreenPoint position,bool force=false); //force는4a41c0의 같은 위치에서도 이전/새 사각형을 추가하는 호출이다.
+    std::uint32_t& CameraRedraw() { return cameraRedraw_; } // Native Renderer+5c의 같은 현재 DWORD다. 다음 Draw에서 소비한다.
+    std::vector<DirtyRegion>& CameraDirtyEntries() { return dirty_.CameraEntries(); } // Present가 비운 뒤 커서가 추가한 같은 실제 표를 빌린다.
     // 변경 영역만 합성한다. 반환 사각형은 Present 이전까지 유효하다.
     std::span<const ScreenRect> Draw(std::span<std::uint8_t> pixels, int pitch, std::uint8_t background = 0);
     // 00499fe0: 그린 사각형만 내보내고 변경 표를 비운다. 콜백은 Screen::Update에 연결한다.
@@ -135,6 +138,7 @@ private:
     o::OriginalEdition edition_; // 실제 PE마다 다른 CRT 표시 목록 정렬을 선택한다.
     // dirty_: 부분 갱신 사각형을 수집하고 화면 경계로 제한하는 관리자 (DirtyRegions).
     DirtyRegions dirty_;
+    std::uint32_t cameraRedraw_{}; //497960의 이동1을 다음4994b0 위치의 Draw가 전체 무효화로 소비한다.
     // sprites_: 스프라이트.
     std::vector<RenderSprite> sprites_;
     std::vector<RenderSprite> sourceSprites_; // 추가 수집을 병합할 때 정렬 전의 원본 제출 순서를 유지한다.

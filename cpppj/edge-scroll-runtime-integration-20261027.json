@@ -1,0 +1,416 @@
+{
+  "unit": 500,
+  "date": "2026-10-27",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23",
+    "changed": false
+  },
+  "nativeDib": {
+    "host": "HJOW-Athlon",
+    "cases": 357,
+    "normalReturns": 357,
+    "originalExecutions": 0,
+    "executedBodies": [
+      "4a1ad0 DIB 분기"
+    ],
+    "boundaries": [
+      "4a14e0/4a0950 DIB 잠금/해제",
+      "4e5b40 CRT memmove의 원시 바이트 복사"
+    ],
+    "pitch": 16,
+    "width": 13,
+    "height": 9,
+    "sha256": {
+      "originals\\Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "tools\\decomp_screen_scroll.py": "ebe6377e6be589c84a9446dc236c6fb05d85cffd006c3eb4a2d0cb2959928ceb",
+      "extracted\\cpp-edge-runtime-500\\screen-scroll-x86.tsv": "07302c86eebc0e4a5cccb7c1d2a6b7bcff86a3983ff66391b107fa79cfb25375"
+    }
+  },
+  "fixtureSha256": "07302c86eebc0e4a5cccb7c1d2a6b7bcff86a3983ff66391b107fa79cfb25375",
+  "sourceFiles": 2888,
+  "protectedFiles": 3217,
+  "fullyUnchangedProtectedFiles": 3215,
+  "prefixBytes": {
+    "cpppj/tests/CMakeLists.txt": 166147,
+    "cpppj/tests/CampaignSessionTests.cpp": 761649,
+    "cpppj/src/CMakeLists.txt": 16645
+  },
+  "exes": {
+    "NetstormCpp.exe": "edbdec749c9cd0923355f5b531769676b8114ce022e58e501976ca941a75cf41",
+    "netstorm_tests.exe": "3e8e813a06e1360dc1e6831982ebf4c236ac581190ee35ded5afd5bd5a934f23"
+  },
+  "registered": 3329,
+  "previousRegistered": 3323,
+  "addedTests": [
+    "CampaignSharedCamera_GameMenuUsesActualSharedSpTracking",
+    "CampaignSharedCamera_WorldCellsCurrentAddressAndRendererInit",
+    "ScreenScroll_AllDirectionsPreserveSourceAndPadding",
+    "ScreenScroll_CameraUsesActualRendererDirtyAndNextDraw",
+    "ScreenScroll_MatchesNativeDibPixels",
+    "ScreenScroll_SelectedSurfaceBounds"
+  ],
+  "focusedUnique": 44,
+  "focusedObservations": 88,
+  "gui": {
+    "full": {
+      "directory": "extracted/cpp-edge-runtime-500/live-source3/full",
+      "returnCode": 0,
+      "observations": 25,
+      "start": [
+        976,
+        793
+      ],
+      "end": [
+        1454,
+        793
+      ],
+      "screenMode": [
+        139,
+        1024,
+        768,
+        1024
+      ],
+      "captureSha256": "4a8556a47e8ca27630bc1379e06cb87806c17addc8db753695d92cfa2b406264"
+    },
+    "disabled": {
+      "directory": "extracted/cpp-edge-runtime-500/live-source3/disabled",
+      "returnCode": 0,
+      "observations": 8,
+      "start": [
+        976,
+        793
+      ],
+      "end": [
+        976,
+        793
+      ],
+      "screenMode": [
+        139,
+        1024,
+        768,
+        1024
+      ],
+      "captureSha256": "1e51c5bc9a1ab88957a6f228843b85c7507a953b598f84e5b7141c39e34dbdfd"
+    },
+    "window": {
+      "directory": "extracted/cpp-edge-runtime-500/live-source3b/window",
+      "returnCode": 0,
+      "observations": 8,
+      "start": [
+        976,
+        793
+      ],
+      "end": [
+        976,
+        793
+      ],
+      "screenMode": [
+        138,
+        1024,
+        768,
+        1024
+      ],
+      "captureSha256": "5bdff62c913c774adf5f410d0806836602d5b310c783d79ad8654428b3bf6bb1"
+    },
+    "wide": {
+      "directory": "extracted/cpp-edge-runtime-500/live-source3b/wide",
+      "returnCode": 0,
+      "observations": 8,
+      "start": [
+        805,
+        793
+      ],
+      "end": [
+        1282,
+        793
+      ],
+      "screenMode": [
+        139,
+        1366,
+        768,
+        1368
+      ],
+      "captureSha256": "1e109463c8160ce4b705be9bcc632c2c63ccdb09d71393e93ee148d39f5e3d37"
+    },
+    "ten": {
+      "directory": "extracted/cpp-edge-runtime-500/live-source3b/ten",
+      "returnCode": 0,
+      "observations": 8,
+      "start": [
+        848,
+        777
+      ],
+      "end": [
+        1322,
+        777
+      ],
+      "screenMode": [
+        139,
+        1280,
+        800,
+        1280
+      ],
+      "captureSha256": "13d1be7e2a87404a5852b0a2f1160bae5ce13f00850adc4755dbd5adb108f955"
+    },
+    "soft": {
+      "directory": "extracted/cpp-edge-runtime-500/live-source3b/soft",
+      "returnCode": 0,
+      "observations": 8,
+      "start": [
+        976,
+        793
+      ],
+      "end": [
+        1463,
+        793
+      ],
+      "screenMode": [
+        235,
+        1024,
+        768,
+        1024
+      ],
+      "captureSha256": "52cf02c8556112727682ac1727d8a01210956e5857fe3ca8d28c01dd3b90057d"
+    },
+    "menu": {
+      "directory": "extracted/cpp-edge-runtime-500/menu-source3/menu",
+      "returnCode": 0,
+      "observations": 5
+    },
+    "restart": {
+      "directory": "extracted/cpp-edge-runtime-500/menu-source3/restart",
+      "returnCode": 0,
+      "observations": 1
+    }
+  },
+  "stageCompletion": false,
+  "windows11Live": false,
+  "rawDirectory": "extracted/cpp-edge-runtime-500",
+  "whole": {
+    "cppTests": 3329,
+    "failedChecks": 0,
+    "ctestTests": 1,
+    "ctestFailed": 0,
+    "seconds": 347.33,
+    "lastTestSha256": "af95d84675a29585b0a69eadd3392b3b672792eaef3ae51e441df4251297ce6d"
+  },
+  "git": {
+    "fetch": {
+      "command": [
+        "git",
+        "fetch",
+        "origin"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-edge-runtime-500/fetch1.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "summaries": [],
+      "diagnostics": []
+    },
+    "pull": {
+      "command": [
+        "git",
+        "pull",
+        "--no-rebase"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-edge-runtime-500/pull1.log",
+      "sha256": "e5d6c99aec87ec07a2d1b5c1222d8b690d0a61c3548a55c795fff56db9450d0d",
+      "summaries": [],
+      "diagnostics": []
+    },
+    "pullText": "Already up to date.",
+    "pushed": false
+  },
+  "observabilityFailures": [
+    {
+      "directory": "extracted/cpp-edge-runtime-500/live-source2/full",
+      "gameReturnCode": 0,
+      "toolInitiallyAccepted": true,
+      "deliveredLabels": 8,
+      "requiredLabels": 25,
+      "acceptedAsBehaviorPass": false,
+      "reason": "mtime을 조기 소비한 부분 쓰기/과도한 frame 분리",
+      "fixed": "실제 frame 줄에 고정·부분 쓰기 재읽기·간결 관측·전체시점 필수 확인"
+    },
+    {
+      "directory": "extracted/cpp-edge-runtime-500/live-source3/window",
+      "gameReturnCode": 0,
+      "toolReturnCode": 1,
+      "deliveredLabels": 0,
+      "acceptedAsBehaviorPass": false,
+      "reason": "도구 STARTUPINFO가 창 모드를 숨김",
+      "fixed": "실제 자기 PID 창을 표시하고 새 폴더에서 재실행"
+    }
+  ],
+  "gameExecutions": {
+    "total": 10,
+    "validShortRuns": 8,
+    "rejectedObservationRuns": 2,
+    "stageClear": 0
+  },
+  "compatibility": [
+    "495 borderless/DIB 출력과 bit4 비요청 유지",
+    "비활성 앱의 배경 가장자리 이동 차단",
+    "선택되지 않는 비DIB 시차 장치와 NoWorld 활성preview 경계는 명시 미복원"
+  ],
+  "remaining": [
+    "Windows11/다른 모니터·DPI 실제 검증",
+    "와이드 해상도 선택 메뉴·DD 조정 UI와 편집/시나리오·덱/미니맵/다리 잔여",
+    "원본 동일성 및34스테이지 자연 완주/사용자 개입 검증",
+    "english 누락 개선은 참고만 유지",
+    "목표 뒤 멀티플레이어는 디컴파일만 참고해 신규 테스트 없이 사전 구현"
+  ],
+  "evidenceSha256": {
+    "extracted/cpp-edge-runtime-500/before.json": "955a6543a522ac20d0e8bbf46ffa2fc4a07499dbeeb24d64c25f15f88bc5e2ce",
+    "extracted/cpp-edge-runtime-500/build1.json": "5c382a917938ffe6ab4a3f4ecad051d4acb39b3407401936b4a65d2fde285bbf",
+    "extracted/cpp-edge-runtime-500/build1.log": "bb781a2c4759113711f20909e0751e2f2ed5f90bdf653c0d7f4f18af3da0ad5a",
+    "extracted/cpp-edge-runtime-500/build2.json": "f1cd05714be33a74b2b849ee025b5e298dbb82c1926d7c5c8e04b30402fb3daa",
+    "extracted/cpp-edge-runtime-500/build2.log": "077519a180b31008277086aa9211d38774d0481552f8fbb67c38413baa2047b8",
+    "extracted/cpp-edge-runtime-500/build3.json": "74dea41bec490700e91fe5edc892dc01277b6b6fd4841fff7753d2a858a0d724",
+    "extracted/cpp-edge-runtime-500/build3.log": "0d7c13b18ba6a33f7b93cbef1dc9d792ceea78d411b3eebab70bb2dc4fbf3997",
+    "extracted/cpp-edge-runtime-500/fetch1.json": "91d4a99a240d8a6c46a76ed82debae33e42c813ba405dac827b14f6ad3d2b17e",
+    "extracted/cpp-edge-runtime-500/fetch1.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-edge-runtime-500/focused1-CampaignSharedCamera.json": "96696308f62527844fa2a9395197e4c7a23b582e15f5856059b5b4e43f67a43d",
+    "extracted/cpp-edge-runtime-500/focused1-CampaignSharedCamera.log": "d740098facf66404ca08682876128df68d29637843799ed7d097de3b79badc00",
+    "extracted/cpp-edge-runtime-500/focused1-ScreenScroll.json": "57ea64f682c1672cb950cffc29d42af53779b5f4c14a7114c8fb86e3b4e20b82",
+    "extracted/cpp-edge-runtime-500/focused1-ScreenScroll.log": "314d1c6e378b85d0fef2f1a79263acd60003c146e95acb3d8d4d9c581a9f61af",
+    "extracted/cpp-edge-runtime-500/focused2-Camera.json": "7622e4ec13618ef152760deebe2721d618c9e028aacf10b3726707cecd9fce04",
+    "extracted/cpp-edge-runtime-500/focused2-Camera.log": "a06efd1ae89641eff8563a42c29baa2d30a4c9d6e4a382d33b2e03a841371387",
+    "extracted/cpp-edge-runtime-500/focused2-CampaignSharedCamera.json": "d4825218d233ad0cc81e97af81dba0457142415a30f986d18058557ee82cfe40",
+    "extracted/cpp-edge-runtime-500/focused2-CampaignSharedCamera.log": "ec96a365dcf4e444279be95aa8bd46b6a1f3a505cc3dd9fab10852b135b12c8f",
+    "extracted/cpp-edge-runtime-500/focused2-CursorMana.json": "708495cd50329f9221d51bc9930f721cc9eac4c4161842bbe4450acfa895ba7e",
+    "extracted/cpp-edge-runtime-500/focused2-CursorMana.log": "d665c21899b10bd05669c6b5f754416b47d044627abc178786ff1e8e260de48d",
+    "extracted/cpp-edge-runtime-500/focused2-CursorRange.json": "3afe351cff86f33deae6953da2e6ea678163719a2af2ac6de9b98596dd81dd48",
+    "extracted/cpp-edge-runtime-500/focused2-CursorRange.log": "85486fe7a8555dcf1867d932e0baf02360d3c7c882318f648e2cd35e890a8723",
+    "extracted/cpp-edge-runtime-500/focused2-EdgeScroll.json": "1072cfa2dccafcf143851758e621565eff6156051a8a331c387d755605450140",
+    "extracted/cpp-edge-runtime-500/focused2-EdgeScroll.log": "212a23cb4049a0df7e0fe87c4b8ad4f8428e6e4561a4bd73d346b63c72144f99",
+    "extracted/cpp-edge-runtime-500/focused2-GameMenuBar.json": "dc87ed5bcfc971b57986cd1aabb49115c599b7a8be8b5c31710ca591b7461955",
+    "extracted/cpp-edge-runtime-500/focused2-GameMenuBar.log": "b9f012292145442f13d5956c1c6c599de208764d70396a56153d0df6fa4391f3",
+    "extracted/cpp-edge-runtime-500/focused2-ScreenScroll.json": "12e3a5aad75cf12799ebcbe0549492502b26979192f6a6824b38499ac0c6d128",
+    "extracted/cpp-edge-runtime-500/focused2-ScreenScroll.log": "64faf6fc3fcc1ff18eb62fc27bd3ceb7626642f4e219ed9c535526a5a8c30be3",
+    "extracted/cpp-edge-runtime-500/focused3-Camera.json": "ace924482264b9079ca0f5e596c13cfdac8c58eae8dc1138c3998d683570f9e6",
+    "extracted/cpp-edge-runtime-500/focused3-Camera.log": "a06efd1ae89641eff8563a42c29baa2d30a4c9d6e4a382d33b2e03a841371387",
+    "extracted/cpp-edge-runtime-500/focused3-CampaignSharedCamera.json": "1fd222ea02525eb5777c9ef9ed3a6b7550b1ab18f6545d3e4fa2819077a74081",
+    "extracted/cpp-edge-runtime-500/focused3-CampaignSharedCamera.log": "ec96a365dcf4e444279be95aa8bd46b6a1f3a505cc3dd9fab10852b135b12c8f",
+    "extracted/cpp-edge-runtime-500/focused3-ScreenScroll.json": "d1486c03d2c59c091a6905cec6ca4f0e8615cd3a502c14e4948ad2d327dbe632",
+    "extracted/cpp-edge-runtime-500/focused3-ScreenScroll.log": "64faf6fc3fcc1ff18eb62fc27bd3ceb7626642f4e219ed9c535526a5a8c30be3",
+    "extracted/cpp-edge-runtime-500/freeze-after-build2.json": "03c8082cb4b2714aaafb1a8d50b6609614bf03e696214d077d2022dbc335b544",
+    "extracted/cpp-edge-runtime-500/freeze-after-build3.json": "bd5c823b3fed390b7963689a48b173e373c6783c9bd37e26394ad36ebdc32aae",
+    "extracted/cpp-edge-runtime-500/freeze-baseline.json": "f4cc4173a7e94cf69c37d1c7beb8b388a36dc3177a56c57d094de004055e3303",
+    "extracted/cpp-edge-runtime-500/freeze-source1.json": "413e27cfaac9b1d7a07cd0170517f421bda98c7032deca68943f6401aaa4b8c4",
+    "extracted/cpp-edge-runtime-500/freeze-source2.json": "c51a6f0e2e163b525ead5cc123163c156cef3dd476fd36f20091158a72d1b6be",
+    "extracted/cpp-edge-runtime-500/freeze-source3.json": "d2dcb74f3f045c793c1dad69952d145b26f29a468fc5e8e888e28332ca00fad2",
+    "extracted/cpp-edge-runtime-500/LastTest-whole1.log": "af95d84675a29585b0a69eadd3392b3b672792eaef3ae51e441df4251297ce6d",
+    "extracted/cpp-edge-runtime-500/live-source2/full/output.bmp": "6c06d8cead859aea0061575d56aaeb08b4409a2625592f29da69368b952b3c03",
+    "extracted/cpp-edge-runtime-500/live-source2/full/result.json": "db56da1348c2410b60c3d248cad9c6114804766d2a9ef0e425712b1b40a2bb56",
+    "extracted/cpp-edge-runtime-500/live-source2/full/running.json": "ccfc9042034064a0e32a652cfd289bb7ca2232fac49b48778e3adc89a2144d36",
+    "extracted/cpp-edge-runtime-500/live-source2/full/states.tsv": "c131ce11972f04973f1aba075eabbaf02383f59f1f064edb51c70f8b4337c852",
+    "extracted/cpp-edge-runtime-500/live-source2/full/stderr.log": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2",
+    "extracted/cpp-edge-runtime-500/live-source2/full/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-edge-runtime-500/live-source2/full/steps.tsv": "4ab215d54e01bb5a21a9c7d08554a4f68d902fb0cc088d0f4cfc04310f9ce126",
+    "extracted/cpp-edge-runtime-500/live-source3/disabled/output.bmp": "1e51c5bc9a1ab88957a6f228843b85c7507a953b598f84e5b7141c39e34dbdfd",
+    "extracted/cpp-edge-runtime-500/live-source3/disabled/result.json": "10d0d287f63bb851c5196c8768a88aadad126d05e12b80d32306e693a23a7827",
+    "extracted/cpp-edge-runtime-500/live-source3/disabled/running.json": "8309c6d7d67bdcf355bc478a3afb6c48673ef7a099ad9813a56f5cea443d03cf",
+    "extracted/cpp-edge-runtime-500/live-source3/disabled/states.tsv": "6a578532c6bab1baf4be46d49a03e6c7a4dad293a29c2d5019ba3796757ee358",
+    "extracted/cpp-edge-runtime-500/live-source3/disabled/stderr.log": "9fba4f7e2bb0be090e62265ef1203d93a429672f7ce307b7cf3aa08e3bfebbbb",
+    "extracted/cpp-edge-runtime-500/live-source3/disabled/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-edge-runtime-500/live-source3/disabled/steps.tsv": "ca7458083a28a88825765ac779d186085e0b004f5b3cf0123ce5aa33345371bf",
+    "extracted/cpp-edge-runtime-500/live-source3/full/output.bmp": "4a8556a47e8ca27630bc1379e06cb87806c17addc8db753695d92cfa2b406264",
+    "extracted/cpp-edge-runtime-500/live-source3/full/result.json": "3787e3612e6e06bf1139514967fbe75811fbb33d20d965ac5938cf1b914db0a7",
+    "extracted/cpp-edge-runtime-500/live-source3/full/running.json": "2b09715cc8a08116c8d5fde76c36d60a1f2ed311e1cb6ac4ca3632f3c079a657",
+    "extracted/cpp-edge-runtime-500/live-source3/full/states.tsv": "e8db75be0f882272f5dc83f458ead1dc228571b0f3cef07ae93f09fd04b8985b",
+    "extracted/cpp-edge-runtime-500/live-source3/full/stderr.log": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2",
+    "extracted/cpp-edge-runtime-500/live-source3/full/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-edge-runtime-500/live-source3/full/steps.tsv": "deaf7e5acb705aad1b40fbf2ea4e58ec1f17d880e6403ff5a5f09abb0aa77974",
+    "extracted/cpp-edge-runtime-500/live-source3/window/output.bmp": "c709cd5bf3f0b538d4a659901ebdd88520f12e233c9dedec327eac25dca6f31b",
+    "extracted/cpp-edge-runtime-500/live-source3/window/result.json": "6f14a1b485c88a301a2da19d5bb0a544e436b3856618d897f3b2978109f889bb",
+    "extracted/cpp-edge-runtime-500/live-source3/window/running.json": "88230ae3c17a927588828f13a37ec261811cec251d915b7c7e8e7332788997d6",
+    "extracted/cpp-edge-runtime-500/live-source3/window/states.tsv": "fdccb7df5e2a2ea95c3d96ca3023ae30e35ae91cfc0d3e991ffb2fc13d5b81ed",
+    "extracted/cpp-edge-runtime-500/live-source3/window/stderr.log": "9fba4f7e2bb0be090e62265ef1203d93a429672f7ce307b7cf3aa08e3bfebbbb",
+    "extracted/cpp-edge-runtime-500/live-source3/window/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-edge-runtime-500/live-source3/window/steps.tsv": "5b8b364296a44c07c32cabb41993ec20cd86c900b294b00d3304fb7d31dfb0c9",
+    "extracted/cpp-edge-runtime-500/live-source3b/soft/output.bmp": "52cf02c8556112727682ac1727d8a01210956e5857fe3ca8d28c01dd3b90057d",
+    "extracted/cpp-edge-runtime-500/live-source3b/soft/result.json": "982d12d619216741e79627fd0099bc6af141c74e6e4fd25544cbb8be82937149",
+    "extracted/cpp-edge-runtime-500/live-source3b/soft/running.json": "222daaadf651a5b444dc82921522294a4541d687dc09c65bf772d78f55bfe421",
+    "extracted/cpp-edge-runtime-500/live-source3b/soft/states.tsv": "f7402a79da8157215c0c43a0682cebc4f3dc0df2f51b79ced82eec65d508d76f",
+    "extracted/cpp-edge-runtime-500/live-source3b/soft/stderr.log": "9fba4f7e2bb0be090e62265ef1203d93a429672f7ce307b7cf3aa08e3bfebbbb",
+    "extracted/cpp-edge-runtime-500/live-source3b/soft/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-edge-runtime-500/live-source3b/soft/steps.tsv": "107a42d71c17f8b1bb00e7a7923c40997b93dc669dc95661879e067acb996659",
+    "extracted/cpp-edge-runtime-500/live-source3b/ten/output.bmp": "13d1be7e2a87404a5852b0a2f1160bae5ce13f00850adc4755dbd5adb108f955",
+    "extracted/cpp-edge-runtime-500/live-source3b/ten/result.json": "8cdf1a2a3211ff449e8ccdf66a2657670b488402c664747fb4314193082d8367",
+    "extracted/cpp-edge-runtime-500/live-source3b/ten/running.json": "c0821fbce0270abe8e5839b1771f347771043e97d5fac671a1f13e9cdb6e4a07",
+    "extracted/cpp-edge-runtime-500/live-source3b/ten/states.tsv": "9f595ef8520b17c45b54052b2633fc5ada91ecc0cf9b146692c6e63b41dc7cc9",
+    "extracted/cpp-edge-runtime-500/live-source3b/ten/stderr.log": "9fba4f7e2bb0be090e62265ef1203d93a429672f7ce307b7cf3aa08e3bfebbbb",
+    "extracted/cpp-edge-runtime-500/live-source3b/ten/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-edge-runtime-500/live-source3b/ten/steps.tsv": "8c067bdf89d4720e4f7ecc187e9ef626c9a898459db5e6d169ed2629e41fe50d",
+    "extracted/cpp-edge-runtime-500/live-source3b/wide/output.bmp": "1e109463c8160ce4b705be9bcc632c2c63ccdb09d71393e93ee148d39f5e3d37",
+    "extracted/cpp-edge-runtime-500/live-source3b/wide/result.json": "f2b7c013c9de492586ca45e1e3621dc07b067835bcfbf6849895246588b30c21",
+    "extracted/cpp-edge-runtime-500/live-source3b/wide/running.json": "2753fb4a5c7905eab5d6938f9ef530b86ae7072f5907bd5ccd728cc545da1842",
+    "extracted/cpp-edge-runtime-500/live-source3b/wide/states.tsv": "52ba5a247f7250528c9c36cc1eed746bfb4bbcfa9a858422061ebd7b245369cd",
+    "extracted/cpp-edge-runtime-500/live-source3b/wide/stderr.log": "9fba4f7e2bb0be090e62265ef1203d93a429672f7ce307b7cf3aa08e3bfebbbb",
+    "extracted/cpp-edge-runtime-500/live-source3b/wide/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-edge-runtime-500/live-source3b/wide/steps.tsv": "3c896054e1ddd4b85b396741f2c89e12998ebf8e7a6355c55b7f9bc5b50b2d39",
+    "extracted/cpp-edge-runtime-500/live-source3b/window/output.bmp": "5bdff62c913c774adf5f410d0806836602d5b310c783d79ad8654428b3bf6bb1",
+    "extracted/cpp-edge-runtime-500/live-source3b/window/result.json": "98f1a80874fd71ce7da447abefed387bca0f147daccfa52db00f11901ba8f821",
+    "extracted/cpp-edge-runtime-500/live-source3b/window/running.json": "36d436fe8690970a90daf86f42073630b9cefe422a128f177ace061c6ade8412",
+    "extracted/cpp-edge-runtime-500/live-source3b/window/states.tsv": "7f3ce8d154f72f7af40f7677b92489b61d062c536bf0e3346156fd334582793d",
+    "extracted/cpp-edge-runtime-500/live-source3b/window/stderr.log": "9fba4f7e2bb0be090e62265ef1203d93a429672f7ce307b7cf3aa08e3bfebbbb",
+    "extracted/cpp-edge-runtime-500/live-source3b/window/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-edge-runtime-500/live-source3b/window/steps.tsv": "f18b140c0c6212b7e85c0cc2cff527d1b668638129bf50ed01921e3b65442672",
+    "extracted/cpp-edge-runtime-500/live2-full.json": "844ee4e0dbd77947e6f1ae8247dcf80b3999775d9929ef5f7baedce58afb7666",
+    "extracted/cpp-edge-runtime-500/live2-full.log": "1abd1fde48d673122d393a2b99251f062c37c51b24c740f8a0bcbae4e367368c",
+    "extracted/cpp-edge-runtime-500/live3-disabled.json": "4ddfd53865d96df1f2c98a665902466060ed22e7ccbfef6f20d298c8013fa3cc",
+    "extracted/cpp-edge-runtime-500/live3-disabled.log": "e285c012a053bc2146a6db62f449b937c73db27413776e9c221f5a1350facd55",
+    "extracted/cpp-edge-runtime-500/live3-full.json": "288c6c4519f22fc292699f8e98a14134e9db521cc5f789742b36cdc4f2485272",
+    "extracted/cpp-edge-runtime-500/live3-full.log": "12bdb2ecd62a18fa9e5f9e793608567ab9a6e572e04af5e789dadd099155af5a",
+    "extracted/cpp-edge-runtime-500/live3-menu.json": "8b30da46cf24ab607e67f4bccfd93ada2e77da0a80d7e794cce2efb2bfa21783",
+    "extracted/cpp-edge-runtime-500/live3-menu.log": "c9c91a9b2d3e9b7612691087a7d5b980ba978badf0b297796b3a6a04c177f31f",
+    "extracted/cpp-edge-runtime-500/live3-restart.json": "58d0d04c2a0b6d1f48a1f389c4ac065d17125e2cec4d5ce0c8514e2893feeed9",
+    "extracted/cpp-edge-runtime-500/live3-restart.log": "5ab7110580bf7cb335be278a6f62f1303e127bb5d74802b92d7ecf1d3f2b4e79",
+    "extracted/cpp-edge-runtime-500/live3-window.json": "9301f8b1cab8fb676f37ba2279b101fbcfdd5809b0623b915f85a73dca04a26b",
+    "extracted/cpp-edge-runtime-500/live3-window.log": "34fa7df0eef9a4caa8dfc1be8e613fe284cb5704398694305eab0b50336dd20c",
+    "extracted/cpp-edge-runtime-500/live3b-soft.json": "e7fc8818b628aee24ab496f1f15fd6f501ffaeb5215f7931085d8d449fe2b19f",
+    "extracted/cpp-edge-runtime-500/live3b-soft.log": "5bca893215d70a8a5ebaf59275b0d351c816795f015209a891a7d492fe944a4f",
+    "extracted/cpp-edge-runtime-500/live3b-ten.json": "d99ce5deefed9a5befd973e4cd87fd585aa37d9dc6272524fa521cdbdf01abd7",
+    "extracted/cpp-edge-runtime-500/live3b-ten.log": "a264e91d1f0266bc133cf25e207c0d4375f6e31ae4abdd6cf5e1d683ecf6186f",
+    "extracted/cpp-edge-runtime-500/live3b-wide.json": "f0f4a59c01f81494520954cec3413f2d49b8c5b1f345a67857c141499d5d6ba0",
+    "extracted/cpp-edge-runtime-500/live3b-wide.log": "86c4346f8049a7c60819d1248bf3d656c9590607a6bb880747c0b5fe03bd077b",
+    "extracted/cpp-edge-runtime-500/live3b-window.json": "c7a101856c46820f04b90dbbc51d6009e45cbeda3eb73ef32e5960047419cde6",
+    "extracted/cpp-edge-runtime-500/live3b-window.log": "8969cd0046393af5c61c79eb8896c74c7ca5caf5e58e405339d6f21059b43bc8",
+    "extracted/cpp-edge-runtime-500/menu-source3/menu/logical-full.bmp": "44e804f180238de3fccb30ce494ccbd438fd151c75440fb02a1ed51cf0670a7a",
+    "extracted/cpp-edge-runtime-500/menu-source3/menu/output-full.bmp": "0427e6737c1966513dc4626aeaa0507e17966d0ee15747e82697096a91951400",
+    "extracted/cpp-edge-runtime-500/menu-source3/menu/output-resized.bmp": "9b82633900e4456eeb1aab3269843b560d95251e65529a5fef328dd4cfbdbae6",
+    "extracted/cpp-edge-runtime-500/menu-source3/menu/output-window.bmp": "422af2a6a83d8c9a4bedba6648da53f4c479aa4b0181733654ab6fe47aca5f99",
+    "extracted/cpp-edge-runtime-500/menu-source3/menu/result.json": "1b2853941845ed40d60901e18f10be6bfed84078b1000cd2fde682fb9739fe41",
+    "extracted/cpp-edge-runtime-500/menu-source3/menu/running.json": "b802799b717cb7b529d3f5574f11219440900cf1905edb0527d31285de679665",
+    "extracted/cpp-edge-runtime-500/menu-source3/menu/states.tsv": "cb80fb2094f1fdbc8e4ecd60c5da782c2cd1fc14e05bcbd42a57adb116eb4f5e",
+    "extracted/cpp-edge-runtime-500/menu-source3/menu/stderr.log": "cb76758e176fb9498de489bf084e9844f54d645d0fb4457c2c91e00a6a78d515",
+    "extracted/cpp-edge-runtime-500/menu-source3/menu/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-edge-runtime-500/menu-source3/menu/steps.tsv": "658551e6ed68bea3ce9b39d050b43bc7f6ac582964277c76c18c02c79d896c6c",
+    "extracted/cpp-edge-runtime-500/menu-source3/restart/output-restart.bmp": "6f97f05f7c14a3e9be36820975fe52ef9f72017367c64c1b7563043cf20375c6",
+    "extracted/cpp-edge-runtime-500/menu-source3/restart/result.json": "ba657a664da3723eef84380521878a0e1bc7605bf20bfec8f7a5e67b78296e85",
+    "extracted/cpp-edge-runtime-500/menu-source3/restart/running.json": "d79f758cb77c1fefc3fd8139ce9c036d9c91ad437693076f149db8814d2f074d",
+    "extracted/cpp-edge-runtime-500/menu-source3/restart/states.tsv": "a22ce9fd99ac643bed6e0299608872f2f73947ec317176e0fc3089bd8da7e349",
+    "extracted/cpp-edge-runtime-500/menu-source3/restart/stderr.log": "cb76758e176fb9498de489bf084e9844f54d645d0fb4457c2c91e00a6a78d515",
+    "extracted/cpp-edge-runtime-500/menu-source3/restart/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-edge-runtime-500/menu-source3/restart/steps.tsv": "dd6c5fc7145b3934f3fac863bd18018ec10617217d974d368f2a5b0eb9cc2061",
+    "extracted/cpp-edge-runtime-500/native-scroll1.json": "1572a09ac0d3b862550f7143ba868068a5795e8e253e6d366d1e2d9aad8bfa32",
+    "extracted/cpp-edge-runtime-500/native-scroll1.log": "524ca2f52394144b5abe34f1776aafb15d981775f51bc1f924a92ebe8e6620ec",
+    "extracted/cpp-edge-runtime-500/pull1.json": "6c7ab8419324c903593ead72b3a818c4e4713c22623844c48ca2badee3f5d096",
+    "extracted/cpp-edge-runtime-500/pull1.log": "e5d6c99aec87ec07a2d1b5c1222d8b690d0a61c3548a55c795fff56db9450d0d",
+    "extracted/cpp-edge-runtime-500/registered2.json": "4ebfdb36fb3990a3ce9b6643475021b290964f9fb2bf172ccc05cc0e576ba1bc",
+    "extracted/cpp-edge-runtime-500/registered2.log": "bf8ed39e4509f297bc5f459480863be4096493fed02b2be8689874093c26e36c",
+    "extracted/cpp-edge-runtime-500/registered3.json": "c3f860fd0d0eefdbb2a26d35c8982f5cd539377dfb2588d5c87cdd4194942211",
+    "extracted/cpp-edge-runtime-500/registered3.log": "bf8ed39e4509f297bc5f459480863be4096493fed02b2be8689874093c26e36c",
+    "extracted/cpp-edge-runtime-500/screen-scroll-x86.tsv": "07302c86eebc0e4a5cccb7c1d2a6b7bcff86a3983ff66391b107fa79cfb25375",
+    "extracted/cpp-edge-runtime-500/validate-final.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-edge-runtime-500/validate-pre.json": "e70261c7d74e730a15154ad1333285aa0e18fe3bed4281b81723cc0e2ddc604f",
+    "extracted/cpp-edge-runtime-500/validate-pre.log": "9974b57960afaecb335fb881bfb793c81b3205cae2617775d115975e4d1ffc31",
+    "extracted/cpp-edge-runtime-500/validation-pre.json": "51212d58d9df18e7dfbd748aa61ff0b3f4b99d9cf8ad7db3bf6179e9c1e7820c",
+    "extracted/cpp-edge-runtime-500/whole1.json": "494acf443d846c0d6a8f1c2154288da00c021b8330114159770c419bfe88e386",
+    "extracted/cpp-edge-runtime-500/whole1.log": "e4a3fab599588a048c6dff164275ea3fde6585594655a4f7077fd85ce921f3d9"
+  }
+}

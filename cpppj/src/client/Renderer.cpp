@@ -187,8 +187,8 @@ void Renderer::Invalidate(ScreenRect rect, std::uint32_t flags) { dirty_.Add(rec
 // 표시 억제/변경 표 넘침에 대응하는 현재 전체 갱신 상태다.
 bool Renderer::FullRedrawPending() const { return dirty_.FullRedraw(); }
 // 커서가 움직이지 않았으면 새 변경 영역을 만들지 않는다.
-void Renderer::SetSoftwareCursor(const IndexedImage* image, ScreenPoint position) {
-    if (cursor_ == image && position.x == cursorPosition_.x && position.y == cursorPosition_.y) return;
+void Renderer::SetSoftwareCursor(const IndexedImage* image, ScreenPoint position,bool force) {
+    if (!force && cursor_ == image && position.x == cursorPosition_.x && position.y == cursorPosition_.y) return;
     // 이전·새 프레임의 사각형을 각각 등록한다.
     const auto invalidate = [this](const IndexedImage* item, ScreenPoint at) {
         if (item) {
@@ -229,6 +229,7 @@ void Renderer::Text(std::span<std::uint8_t> pixels, int pitch, ScreenRect clip, 
 std::span<const ScreenRect> Renderer::Draw(std::span<std::uint8_t> pixels, int pitch, std::uint8_t background) {
     if (!painted_.empty()) throw std::logic_error("Present must follow Draw");
     if (pitch < width_ || pixels.size() < static_cast<std::size_t>(pitch) * static_cast<std::size_t>(height_)) throw std::invalid_argument("Invalid renderer surface");
+    if (cameraRedraw_) { dirty_.InvalidateAll();cameraRedraw_=0; } // 원문 카메라 적용은 현재 Present 뒤에1을 쓰고 다음 Draw에서 전체를 다시 구성한다.
     if (dirty_.FullRedraw()) { painted_.push_back({0, 0, width_, height_}); paintFlags_.push_back(0); }
     else {
         // 무시 플래그가 없는 영역만 화면 안으로 자른다.

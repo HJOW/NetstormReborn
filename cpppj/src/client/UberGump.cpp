@@ -1054,6 +1054,7 @@ bool UberGump::Input() {
     const auto mouse=PrepareGumpPointerBoundary(pointerBoundary_,static_cast<std::uint32_t>(client_.LanguageNumber()),
         [this](auto code) { return client_.Poll(code); },client_.Input()); // Alt/언어3 Ctrl·재진입 release를 같은 원본40칸 큐에 연결한다.
     if (missionRuntime_ && missionRuntime_->tutorial) static_cast<void>(missionRuntime_->tutorial->Event(mouse)); //4d65a7의Guide 폴링 통지는 반환을 검사하지 않는다. 일반 큐 Event의 소비 관문은 별개다.
+    PollEdgeScroll(mouse); // 같은 pointerBoundary flags와 장기 since를 사용하는004d65ac의 실제 호출 위치다.
     // 현재 카메라 폴링 어댑터는 원본처럼 Overlay/일반 큐보다 앞에서 실행한다. Tick 내부 UpdateCursor와 기존 직접 호출을 중복하지 않는다.
     if (userInput_ && state_.phase==ClientPhase::Mission && popup_.empty()) userInput_->Tick();
     else if (userInput_) userInput_->Cancel();
@@ -1328,12 +1329,14 @@ std::optional<ScreenPoint> UberGump::ControlPoint(std::string_view label) const 
     return {};
 }
 // 실제 메뉴 상태·활성 조건·원본 미션 로드 결과를 한 파일에 기록한다.
-std::string UberGump::Report() const {
+std::string UberGump::Report(bool cameraOnly) const {
     std::ostringstream out;
     out<<client_.ScreenDiagnostics(); // 실제 OS 창과 논리/확대 출력의 관찰만 추가한다.
+    const auto& camera=client_.GameplayGlobals()->Camera();out<<"raw_camera_frame\t"<<camera.RendererView().pixels[0]<<'\t'<<camera.RendererView().pixels[1]<<'\t'<<camera.Target().pixels[0]<<'\t'<<camera.Target().pixels[1]<<'\t'<<client_.GameplayGlobals()->PatchDiagnostic()<<'\t'<<client_.LocalStateGlobals()->MetaRebuild()<<'\t'<<pointerBoundary_.initializationFlags<<'\t'<<edgeScrollSince_<<'\n'; //실제 적용/요청·공유 전역만 관측한다.
     out << "phase\t" << static_cast<int>(state_.phase) << "\npage\t" << Field(pageName_) << "\npopup\t" << Field(popup_) << "\n";
     out << "size\t" << client_.GetScreen().Width() << '\t' << client_.GetScreen().Height() << "\n";
     out << "paused\t" << client_.Paused() << "\nsound\t" << client_.Configuration().GetInt("sound") << "\n";
+    if (cameraOnly) { out<<"current_dialog\t"<<rawButtons_->CurrentDialog()<<"\ngame_menu_bar\t"<<(gameMenuState_ ? gameMenuState_->menuSerial : 0U)<<'\t'<<GameMenuOpen()<<"\ncamera_runtime\t"<<(world_!=nullptr)<<'\t'<<client_.Time().game<<'\t'<<client_.Time().number<<'\t'<<client_.GetKernel().Size()<<'\n';return out.str(); } //실제 같은 프레임/장치 값만 읽어 Win32 입력 관측의 큰 파일 재쓰기를 줄인다.
     out<<"map_menu\t"<<rawButtons_->Menus()->HtmlMenuColumns()<<'\t'<<mapCatalog_->Cached().count<<'\t'<<mapCatalog_->Cached().dirty<<'\t'<<mapFileSpec_.Current()<<'\n'; // 실제 부착된 열과 캐시 상태만 관찰한다. 선택/로딩 성공을 합성하지 않는다.
     out<<"html_window_state\t"<<client_.HtmlWindowGlobals()->window.instances<<'\t'<<rawButtons_->DialogCount()<<'\t'<<rawButtons_->Menus()->HtmlWindowsOpen()<<'\n'; // Kill 뒤 인스턴스와 즉시 모달 반납을 구별하는 현재값이다.
     out<<"main_menu_globals\t"<<client_.LocalStateGlobals()->FirstMenuPending()<<'\t'<<client_.LocalStateGlobals()->UserUpdated()<<'\t'<<client_.LocalStateGlobals()->TellTips()<<'\t'<<client_.LocalStateGlobals()->TipNumber()<<'\t'<<client_.WorldAudio().ResultState()<<'\n'; //동일 Client의 현재 DWORD만 읽으며 설정 해석·번호 갱신·시작 안내를 실행하지 않는다.

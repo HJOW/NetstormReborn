@@ -87,6 +87,7 @@ public:
     bool CleanupGumps();
     // 00439b18/00439b69: 같은 현재 idle 표를 한 번 순회한다. Broadcast/정리/활성화 초기화를 섞지 않는다.
     bool IdleGumps();
+    void RedrawRoots(); //004660f0의 같은 현재 공통 루트/visible 자식 재그리기를 수행한다.
     // 기존 독립 검사 호환용 Broadcast(0)/밖 release/Idle 결합이다. 실제 Client는 위 세 단계를 각각 사용한다.
     bool Poll(InputEvent event);
     // 화면 전환/포커스 상실 때 실제 캡처 처리기에 화면 밖 release를 전달한다.

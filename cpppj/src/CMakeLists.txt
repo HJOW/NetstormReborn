@@ -234,3 +234,6 @@ target_sources(netstorm PRIVATE client/RawCameraPresent.cpp client/RawCameraPres
 
 # 원문 현재 view/snapshot·dirty/배율 적용 본체를 외부 장치와 구별한다.
 target_sources(netstorm PRIVATE client/RawCameraCommit.cpp client/RawCameraCommit.h)
+
+# 실제 Guide 뒤 입력과 Present 말미에 같은 카메라/현재 Client 장치를 연결한다.
+target_sources(netstorm PRIVATE client/UberGumpCamera.cpp)

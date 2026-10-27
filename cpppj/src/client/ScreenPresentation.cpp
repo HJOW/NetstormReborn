@@ -2,10 +2,22 @@
 #include "client/Screen.h"
 #include "client/ScreenPresentation.h"
 #include <algorithm>
+#include <cstring>
+#include <cstdlib>
 #include <stdexcept>
 #include <vector>
 
 namespace netstorm::client { // 원본 화면 크기를 유지하는 호환 출력 경계다.
+// 원본 DIB처럼 양수 카메라 이동은 원본 오른쪽/아래 픽셀을 왼쪽/위로 복사한다. 화면 밖 읽기는 호스트에서 거부한다.
+void ScrollScreenPixels(std::span<std::uint8_t> pixels,int pitch,int width,int height,int x,int y,int regionWidth,int regionHeight,int dx,int dy) {
+    if (regionWidth<=0 || regionHeight<=0 || std::abs(std::int64_t(dx))>=regionWidth || std::abs(std::int64_t(dy))>=regionHeight || (!dx && !dy)) return;
+    if (width<=0 || height<=0 || pitch<width || x<0 || y<0 || std::int64_t(x)+regionWidth>width || std::int64_t(y)+regionHeight>height || pixels.size()<static_cast<std::size_t>(pitch)*height) throw std::out_of_range("DIB 화면 이동의 실제 픽셀 범위 오류");
+    const int sourceX=x+std::max(dx,0),destinationX=x+std::max(-dx,0),rows=regionHeight-static_cast<int>(std::abs(std::int64_t(dy))),columns=regionWidth-static_cast<int>(std::abs(std::int64_t(dx)));
+    for (int index=0;index<rows;++index) { // 아래로 복사할 때는 뒤쪽 행부터 옮겨 겹친 원본을 보존한다.
+        const int row=dy>0 ? index : rows-1-index,sourceY=y+std::max(dy,0)+row,destinationY=y+std::max(-dy,0)+row;
+        std::memmove(pixels.data()+static_cast<std::size_t>(destinationY)*pitch+destinationX,pixels.data()+static_cast<std::size_t>(sourceY)*pitch+sourceX,static_cast<std::size_t>(columns));
+    }
+}
 // 원본과 다른 Windows10/11 경로는8비트 DIB를 쓰며 실제로 없는 DirectDraw flip 비트를 공개하지 않는다.
 std::uint32_t ModernScreenMode(std::uint32_t requested) {
     requested|=ScreenMode::kModeSet;
