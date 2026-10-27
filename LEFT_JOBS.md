@@ -4,6 +4,8 @@
 
 ## 0. 재개 전 확인 사항
 
+- **487 연결 완료 / 실제 왕복은 진행 중:** c2 일반 입력과 Battle14 RequestFortEdit를 실제 작업본 로더·현재 State·섬 개수·Notify 및 후행 State1에 연결했다. Release build2 경고/오류0·집중67고유/67관측·실패0·등록3,276 유지, 게임 `b241bc7b…`다. 실제 War 진입/Restart는500프레임/약14.33초 종료0이다. 실제 TEST01은 Editor→Test Battle→로그인/State14까지 진행했으나 **총 애니메이션 미복원 TYPE129 stage5**에서 종료1이다. 다음은 이 실제 동작 복원 후 편집 왕복 재검증이다. 전체 맵 구성에서는 원문 목록50칸 상한에 TEST01이 가려져 첫 선택 실패를 보존했고 별도 TEST01 맵 구성의 fort/english는 원본 바이트를 그대로 썼다. 첫 빌드 API 이름 오류도 보존했다. 원본/CD/기존 검사3,196파일/AGENTS·최종 소스/검사2,848파일은 변경 없음이다. [문서](docs/exe/cpp-editor-test-battle-runtime-20261027.md), [보고서](cpppj/editor-test-battle-runtime-20261027.json), 원시 extracted/cpp-editor-test-battle-487/.
+
 
 - 작업 전에 [AGENTS.md](AGENTS.md), 이 문서, [LEFT_JOBS.dotnetpj.md](LEFT_JOBS.dotnetpj.md)를 읽는다.
 - **마지막 전체 정밀 디컴파일: HJOW-Athlon (192.168.0.94) / 2026-10-23.** 결과는 `extracted/refined/`(Git 제외)에 있다. 현재 PC가 이와 다르면 AGENTS.md 규칙에 따라 재디컴파일한 뒤 작업한다. 절차는 `tools\ghidra\refine_all.ps1`이며, 힌트 생성 단계가 콘솔 인코딩(cp949) 오류로 멈추면 `PYTHONUTF8=1`, `PYTHONIOENCODING=utf-8`을 설정하고 다시 실행한다.
@@ -133,6 +135,7 @@
 
 - **메인 메뉴:** 원본8버튼과 Campaign/Demo/Help/Options,466 Credits18쪽/메인Quit을 확인했다.467은 기본 Native3의 실제 UserNotUpdated+Tips 두창, Prior/Next/OK/하위OK→메인, Quit 종료/재실행과 Edit의 Native3복귀를 검증했다. 승패/Intro39/저장상태복구·미션이탈의 전체Native3 선택·원본픽셀/음향은 후속이다. Multiplayer는 범위 밖이다.
 - **Edit 메뉴:**
+  -487에서 Test Battle 일반 입력/실제 편집 복귀 장치를 연결했다. 실제 TEST01 로그인 뒤 TYPE129 stage5 미복원으로 중단되어 왕복 완료는 아니다. 위 최신 기록의 복원/재검증이 우선이다.
   - 메인 Edit → 편집 가능 맵 목록(원본 50칸 상한, `mayEditMissions` 옵션) → 선택 예약(State1) → LoadEditable 안내·Cancel까지 실제 GUI로 확인했다.
   - 기존 Fort의 Session/World·Deck·작업본 파일·로컬 전송과 준비 checkpoint는464에서 실제 메뉴 선택→State1→공통 확정→Poll4에 연결했다.466은 기존 Guide의 late closeGuide/모드 해제와 후행 경로를 검증했다. 전체 저장·재파싱·재로드는 기존 집중 검사 근거이며 사용자 Save as/복귀 저장 GUI 완료와 구별한다.
   -466의 Set All Bridge/종료취소 뒤467에서 실제 Cracked314개 변경 후 No→원래314개/Yes→변경314개를 재로드했다. Save as는 문자입력·실제마우스OK·전체작업본Fort파싱·중복거부/Cancel까지 확인했다. 468에서 실제 작업본 목록과 새이름 재진입/프로세스 재시작을 연결했다(원문 수락50개 상한 유지). NewFort/AddIsland GUI/TestBattle/언어별시나리오·전체State7은 다음 작업이다.

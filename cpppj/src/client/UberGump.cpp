@@ -77,6 +77,7 @@
 #include "client/ExistingEditorAfterCheckpoint.h"
 #include "client/NativeMainMenuState.h" //State3의 원문 부모와 호스트 표시 확정은 다른 시점이다.
 #include "client/EditorSaveGoMain.h" //Yes/No의 실제 저장과 next3 예약을 일반 입력 뒤에 실행한다.
+#include "client/EditorTestBattle.h" //c2의 snapshot/Guide 교체와 편집 복귀 순서를 실제 일반 입력에 연결한다.
 #include "client/SaveFortNameDialog.h" //실제 TextEntry/두 버튼/전체 Fort 이름 부모를 사용하는 모달이다.
 #include "client/TellTip.h" //같은 현재 팁 번호와 실제 Config/Tell을 일반 입력에서 갱신한다.
 #include "client/TextClipboard.h" //최초 TextEntry 생성 전에 같은 CF_TEXT 장치를 준비한다.
@@ -427,19 +428,33 @@ void UberGump::SelectCurrentFortName(std::string_view name) {
     FortCurrentNameDevices devices(names,*templateStorage_,client_.Configuration(),std::move(globals),std::move(hooks),work,[this](auto configured) { return editorCatalog_->Resolve(configured); }); //절대 source FileSpec도 old/new snapshot/삭제의 같은 작업 namespace로 매핑한다.
     const std::string source(name.substr(0,name.find('\0')));devices.Set({reinterpret_cast<const std::uint8_t*>(source.c_str()),source.size()+1}); // 현재 요청의 안정된 NUL 입력을 동기 부모가 끝날 때까지 유지한다.
 }
-// 현재Guide/Gump가 소비하지 않은 원문 사건만 받고 숫자State 예약을 선착순UI큐와 분리한다.
-bool UberGump::FortSelectionEvent(const InputEvent& event) {
-    const auto command=event.code&0x03ffffffU;
-    if (command!=kAskEditFortCommand && command!=kReadFortCommand) return false;
-    auto native=client_.LocalStateGlobals()->State();auto& player=client_.GameplayGlobals()->player;
-    const std::uint32_t battle=world_ ? world_->Session().BattleActive() : 0U; // 원문의 첫 Battle 관문에서만 읽으므로 이후 callback의 사본 상태로 재사용하지 않는다.
+//같은 현재 이름/파일 장치와 실제 Session의 State/섬 검색/Notify를 원문 선택 위치에 제공한다.
+FortSelectionHooks UberGump::FortEditEffects() {
     FortSelectionHooks hooks;hooks.resolveString=[this](auto token) { return scriptStrings_.Resolve(token); };
     hooks.lastEditPath=[this] { return client_.Configuration().PathSpec("lastEditFort"); };
     hooks.pending=[this](auto name) { const std::string source(name);SetPendingFortName(client_.FortGlobals()->PendingBytes(),{reinterpret_cast<const std::uint8_t*>(source.c_str()),source.size()+1},[] { std::clog<<"Fort pending 이름의 점 진단\n"; }); };
     hooks.refresh=[this](auto mode) { static_cast<void>(mapCatalog_->Refresh(static_cast<std::int32_t>(mode))); };
     hooks.tell=[this](auto name) { Tell(std::string(name)); };hooks.gameSeconds=[this] { return client_.Time().game; };
-    // Battle/phase14의 파일 보존 하위는 아직 현재 Fort 파일 장치가 필요하며 빈 성공으로 채우지 않는다.
-    const auto result=DispatchFortSelectionCommand(event,{fortSelectionMode_,native.next[0],battle,native.phase[0],player.templateOwner,player.battleOwner},hooks);
+    hooks.currentFortPath=[this] { if (!editor_ || !editor_->paths) throw std::logic_error("편집 복귀의 실제 현재 Fort 파일 장치 없음");return std::string(editor_->paths->CurrentPath()); };
+    hooks.loadFort=[this](auto slot,auto path) {
+        if (!editor_ || !editor_->paths) throw std::logic_error("편집 복귀의 실제 파일 reader 없음");TemplateFileLoadHooks load;
+        load.wrongName=[] { std::clog<<"편집 복귀의 Template 파일 이름 불일치\n"; };load.tooManyTypes=[] { std::clog<<"편집 복귀의 TYPE 개수 진단\n"; };
+        load.rejectFile=[this](auto name) { editor_->files.Delete(name); };load.typeCount=[this] { return static_cast<std::int32_t>(client_.Assets().TypeTable().Types().size()); };
+        load.currentSlot=[this] { return client_.GameplayGlobals()->player.templateOwner; };load.refreshTitle=[this] { RefreshWindowTitle(); };
+        templateStorage_->LoadFile(slot,{},path,editor_->paths->BindLoad(std::move(load))); //Request 부모는 raw State만 사용한다. 뒤 State1은 작업 파일을 다시 해석해 새 World를 설치한다.
+    };
+    hooks.core=[this](auto slot) { if (!world_) throw std::logic_error("편집 복귀의 실제 State Session 없음");return world_->Session().MutableFortState(slot); };
+    hooks.ownedIslands=[this](auto owner) { if (!world_) throw std::logic_error("편집 복귀의 실제 섬 목록 없음");return static_cast<std::int32_t>(world_->Session().OwnedIslandCount(owner)); };
+    hooks.notify=[this](auto slot) { if (!world_) throw std::logic_error("편집 복귀의 실제 Notify Session 없음");world_->Session().BindFortCurrentName({}).notify(slot); };
+    return hooks;
+}
+//현재Guide/Gump가 소비하지 않은 원문 사건만 받고 숫자State 예약을 선착순UI큐와 분리한다.
+bool UberGump::FortSelectionEvent(const InputEvent& event) {
+    const auto command=event.code&0x03ffffffU;
+    if (command!=kAskEditFortCommand && command!=kReadFortCommand) return false;
+    auto native=client_.LocalStateGlobals()->State();auto& player=client_.GameplayGlobals()->player;
+    const std::uint32_t battle=world_ ? world_->Session().BattleActive() : 0U; //원문 진입의 첫 관문만 캡처하고 owner/State는 같은 현재 저장소를 빌린다.
+    const auto result=DispatchFortSelectionCommand(event,{fortSelectionMode_,native.next[0],battle,native.phase[0],player.templateOwner,player.battleOwner},FortEditEffects());
     if (result) Refresh();return result;
 }
 // 실제 전체 창의 Kill 직후 표시 phase만 복귀시키며 소멸/OnExit를 앞당기지 않는다.
@@ -636,6 +651,7 @@ void UberGump::LoadMissionWorld(std::optional<std::string> requestedFort) {
         [this]() { return client_.GetRenderer().FullRedrawPending(); },
         [this](o::SquidDisplayRect rect,std::uint32_t flags) { client_.GetRenderer().Invalidate({rect.left,rect.top,rect.right,rect.bottom},flags); }};
     world_=std::move(world); // 호스트 어댑터는 원문 프로세스 슬롯을 차지하지 않는다.
+    if (missionRuntime_->mode64) { if (!editor_) throw std::logic_error("편집 Test Battle의 실제 작업 파일 owner 없음");world_->Session().BindFortFileSave(client_.ReadOnlyForts(),editor_->files); } //테스트 복귀의 선택된 Notify도 실제 작업본 경로에만 저장한다.
     missionRuntime_->start=std::make_unique<RawCampaignMissionStartBindings>(world_->Session(),*mission_,missionRuntime_->gate,missionRuntime_->state,
         world_->Session().MissionStartSettings(),world_->Session().MissionAiSettings(),MakeCampaignMissionStartEffects(client_,*world_,[this] {
             if (commandGump_!=0) static_cast<void>(rawButtons_->BubbleGump(commandGump_,0x02000088U,0,0)); //0042e440은현재Chat의부모에실제숨김명령을보내며0이면생략한다.
@@ -909,6 +925,16 @@ void UberGump::Event(InputEvent event) {
     }
     if (transitionCode==0x02000095U) { if (!(event.code&InputCode::kRelease)) { const auto name=std::string(scriptStrings_.Resolve(std::bit_cast<std::uint32_t>(event.y)));static_cast<void>(TryTell(name)); }return; } // Help Back의 스크립트 복귀다.
     if (transitionCode==kDialogDoNothing) return; // 원본 명령 자체는 효과가 없으며 HTML 부모는 발화 시 이미 Kill되었다.
+    if (transitionCode==kEditorTestBattleCommand) {
+        EditorTestBattleHooks hooks;hooks.snapshot=[this] { if (!world_) throw std::logic_error("Test Battle의 실제 Editor Session 없음");world_->Session().SaveCurrentMap(); };
+        hooks.currentFortName=[this] { const auto bytes=client_.FortGlobals()->CurrentBytes();return std::string_view(reinterpret_cast<const char*>(bytes.data()),bytes.size()); }; //늦은 이름 복사는 같은 실제256BYTE의 NUL까지 읽는다.
+        hooks.guide=MissionTransitionEffects();hooks.guide.create=[this,workspace=editorCatalog_](auto name) { CreateMission(std::string(name),0,0,[workspace](auto path) { return workspace->Read(path); }); }; //실제 편집 작업본의 동일 namespace를 Script/별칭 Fort/재로드까지 소유한다.
+        hooks.pending=FortEditEffects().pending;hooks.requestEdit=[this] {
+            auto native=client_.LocalStateGlobals()->State();auto& player=client_.GameplayGlobals()->player;const std::uint32_t battle=world_ ? world_->Session().BattleActive() : 0U;
+            RequestFortEdit({fortSelectionMode_,native.next[0],battle,native.phase[0],player.templateOwner,player.battleOwner},FortEditEffects()); //next1을 먼저 쓰고 실제 Battle14의 파일/State/섬/Notify를 원문 순서대로 수행한다.
+        };
+        static_cast<void>(DispatchEditorTestBattle(event,fortSelectionMode_,hooks));rebuild_=true;return;
+    }
     if (FortSelectionEvent(event)) return; // Guide와 실제 Gump 입력 뒤 원문 일반 부모의 같은 두 명령을 처리한다.
     if (DispatchTellTip(event,client_.LocalStateGlobals()->TipNumber(),{
         [](std::int32_t value) { char text[32]{};std::snprintf(text,sizeof(text),"%d",value);return std::string(text); }, //원문 호출자의 지역 버퍼와 signed 정수 서식만 사용한다.

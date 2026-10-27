@@ -1,0 +1,482 @@
+{
+  "unit": 487,
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": "HJOW-Athlon / 2026-10-23",
+  "builds": [
+    {
+      "command": [
+        "cmake",
+        "--build",
+        "cpppj/build",
+        "--config",
+        "Release",
+        "--parallel",
+        "4",
+        "--",
+        "/p:UseMultiToolTask=true",
+        "/p:MultiProcMaxCount=4",
+        "/p:EnforceProcessCountAcrossBuilds=true"
+      ],
+      "exit": 1,
+      "log": "extracted/cpp-editor-test-battle-487/build1.log",
+      "sha256": "eb21cf50864a52df025a7236494f6ea5ac387773cfd5d4f2b1fa39ffcdaf1e23",
+      "summaries": [],
+      "diagnostics": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\src\\client\\UberGump.cpp(654,150): error C2039: 'BindEditorFortFiles': 'netstorm::client::RawCampaignSession'의 멤버가 아닙니다. [H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\src\\netstorm.vcxproj]"
+      ]
+    },
+    {
+      "command": [
+        "cmake",
+        "--build",
+        "cpppj/build",
+        "--config",
+        "Release",
+        "--parallel",
+        "4",
+        "--",
+        "/p:UseMultiToolTask=true",
+        "/p:MultiProcMaxCount=4",
+        "/p:EnforceProcessCountAcrossBuilds=true"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-editor-test-battle-487/build2.log",
+      "sha256": "7c88b18b5a86395db20d5494a5f3fc57f5d0690a09c92ab2eda263fa471f92eb",
+      "summaries": [],
+      "diagnostics": []
+    }
+  ],
+  "focused": {
+    "unique": 67,
+    "observations": 67,
+    "failedChecks": 0,
+    "runs": [
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "CampaignExistingEditorCheckpoint"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-editor-test-battle-487/focused1-CampaignExistingEditorCheckpoint.log",
+        "sha256": "9f8c6064fd046501c65612c99e6699993d240c931e56361ae4f22fb408ebd157",
+        "summaries": [
+          "42 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "CampaignGuideWorldLifetime"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-editor-test-battle-487/focused1-CampaignGuideWorldLifetime.log",
+        "sha256": "22fbeccdcc8f829a3d3f340ac3432ea007e943b5131652da19150fce74aa53dd",
+        "summaries": [
+          "3 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "CampaignMissionFortPath"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-editor-test-battle-487/focused1-CampaignMissionFortPath.log",
+        "sha256": "99770507f4d3dec1e0551206e5db1031616a514a90ba2955e0d1d7875f9d542e",
+        "summaries": [
+          "2 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "CampaignMissionReloadSource"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-editor-test-battle-487/focused1-CampaignMissionReloadSource.log",
+        "sha256": "067e4366066602c01d69a3288c7ba3a58026599c9a3ed47b0bddc08a5847f8c2",
+        "summaries": [
+          "3 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "EditorTestBattle"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-editor-test-battle-487/focused1-EditorTestBattle.log",
+        "sha256": "88feabc2cc023a5911b3478f60a3677ba63baadb4ac86726928920f6e596055a",
+        "summaries": [
+          "3 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "FortSelection"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-editor-test-battle-487/focused1-FortSelection.log",
+        "sha256": "831cc15264aa3743e4db3e72c855f7f3b718884f90ccec6aa25d849643bee098",
+        "summaries": [
+          "5 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "GuideTransitions"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-editor-test-battle-487/focused1-GuideTransitions.log",
+        "sha256": "fc634be4a85847815c96e6244b702aa1cfa7f46bce70cd0e770e9b9b5351c13b",
+        "summaries": [
+          "2 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "IslandQueries"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-editor-test-battle-487/focused1-IslandQueries.log",
+        "sha256": "4721e0f03fa50161b7a1888cd4a753bc3ed7aa05b37457e49378518b5c9b4ee4",
+        "summaries": [
+          "3 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "TutorialInit"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-editor-test-battle-487/focused1-TutorialInit.log",
+        "sha256": "08eb74725aeec2d83af8b026ef9c2317f9ee8dd7e7344741a6901d98189779e5",
+        "summaries": [
+          "4 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      }
+    ]
+  },
+  "registered": {
+    "before": 3276,
+    "after": 3276,
+    "removed": [],
+    "added": []
+  },
+  "protection": {
+    "files": 3196,
+    "changed": [],
+    "agentsUnchanged": true
+  },
+  "finalSourceFiles": 2848,
+  "exes": {
+    "NetstormCpp.exe": "b241bc7b2a5c7ac2690d03591552fc043fdb85509ef059357603b881e58b3cca",
+    "netstorm_tests.exe": "4ebf5d9bdf9f679476859991c36ca2f6022371e1739a0af5b6437b9306149821"
+  },
+  "warRegression": {
+    "result": {
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-editor-test-battle-487\\live-data",
+        "--window",
+        "--no-audio",
+        "--frames",
+        "500",
+        "--set",
+        "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=1",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-editor-test-battle-487\\live-war1\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-editor-test-battle-487\\live-war1\\states.tsv",
+        "--mission",
+        "TheWarBegins"
+      ],
+      "binarySha256": "b241bc7b2a5c7ac2690d03591552fc043fdb85509ef059357603b881e58b3cca",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 14.330983300002117,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "988ae57ba0bb1171522a3f909f386bcceceab053830e1e2a63aebc1cf9ba5079"
+    },
+    "checks": {
+      "normalExit": true,
+      "originalsUnchanged": true,
+      "firstPlaying": true,
+      "restartBriefing": true,
+      "secondPlaying": true
+    },
+    "passed": true,
+    "observed": {
+      "briefing": {
+        "phase": [
+          "3"
+        ],
+        "page": [
+          "A."
+        ],
+        "paused": [
+          "1"
+        ],
+        "fort_names": [
+          "TheWarBegins",
+          "",
+          "2",
+          "fortSpec"
+        ],
+        "mission": [
+          "TheWarBegins",
+          "Tutorial",
+          "172"
+        ],
+        "mission_start": [
+          "1",
+          "4",
+          "0",
+          "0.347",
+          "0"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ]
+      },
+      "playing": {
+        "phase": [
+          "4"
+        ],
+        "page": [
+          "mission"
+        ],
+        "paused": [
+          "0"
+        ],
+        "fort_names": [
+          "TheWarBegins",
+          "",
+          "2",
+          "fortSpec"
+        ],
+        "mission": [
+          "TheWarBegins",
+          "Tutorial",
+          "172"
+        ],
+        "mission_start": [
+          "1",
+          "4",
+          "0",
+          "0.347",
+          "0"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ]
+      },
+      "before-restart": {
+        "phase": [
+          "4"
+        ],
+        "page": [
+          "mission"
+        ],
+        "paused": [
+          "0"
+        ],
+        "fort_names": [
+          "TheWarBegins",
+          "",
+          "2",
+          "fortSpec"
+        ],
+        "mission": [
+          "TheWarBegins",
+          "Tutorial",
+          "172"
+        ],
+        "mission_start": [
+          "1",
+          "4",
+          "0",
+          "0.347",
+          "0"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ]
+      },
+      "restarted": {
+        "phase": [
+          "3"
+        ],
+        "page": [
+          "A."
+        ],
+        "paused": [
+          "1"
+        ],
+        "fort_names": [
+          "TheWarBegins",
+          "",
+          "3",
+          "fortSpec"
+        ],
+        "mission": [
+          "TheWarBegins",
+          "Tutorial",
+          "172"
+        ],
+        "mission_start": [
+          "1",
+          "4",
+          "0",
+          "6.131",
+          "0"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ]
+      },
+      "after-restart": {
+        "phase": [
+          "4"
+        ],
+        "page": [
+          "mission"
+        ],
+        "paused": [
+          "0"
+        ],
+        "fort_names": [
+          "TheWarBegins",
+          "",
+          "3",
+          "fortSpec"
+        ],
+        "mission": [
+          "TheWarBegins",
+          "Tutorial",
+          "172"
+        ],
+        "mission_start": [
+          "1",
+          "4",
+          "0",
+          "6.131",
+          "0"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ]
+      }
+    }
+  },
+  "editorLive": {
+    "live-catalog1": {
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-editor-test-battle-487\\live-data",
+        "--window",
+        "--no-audio",
+        "--frames",
+        "20",
+        "--set",
+        "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=1;currentLanguage=english",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-editor-test-battle-487\\live-catalog1\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-editor-test-battle-487\\live-catalog1\\states.tsv"
+      ],
+      "binarySha256": "b241bc7b2a5c7ac2690d03591552fc043fdb85509ef059357603b881e58b3cca",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 23.27731969999877,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "cb76758e176fb9498de489bf084e9844f54d645d0fb4457c2c91e00a6a78d515",
+      "originalsUnchanged": true
+    },
+    "live-briefing1": {
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-editor-test-battle-487\\live-data",
+        "--window",
+        "--no-audio",
+        "--frames",
+        "110",
+        "--set",
+        "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=1;currentLanguage=english",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-editor-test-battle-487\\live-briefing1\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-editor-test-battle-487\\live-briefing1\\states.tsv"
+      ],
+      "binarySha256": "b241bc7b2a5c7ac2690d03591552fc043fdb85509ef059357603b881e58b3cca",
+      "returnCode": 1,
+      "timedOut": false,
+      "seconds": 2.210629000001063,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "31903fd4b5a821d0ed0527b6b1d8c23f94bfd3753c2d2002aea7d1c0b501bb16",
+      "originalsUnchanged": true
+    },
+    "live-briefing2": {
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-editor-test-battle-487\\test01-data",
+        "--window",
+        "--no-audio",
+        "--frames",
+        "110",
+        "--set",
+        "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=1;currentLanguage=english",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-editor-test-battle-487\\live-briefing2\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-editor-test-battle-487\\live-briefing2\\states.tsv"
+      ],
+      "binarySha256": "b241bc7b2a5c7ac2690d03591552fc043fdb85509ef059357603b881e58b3cca",
+      "returnCode": 1,
+      "timedOut": false,
+      "seconds": 4.28967399999965,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "f3981eef76062c3a7c35bf8a59e7e574ebb94d4924487e93834c76073dcef966",
+      "originalsUnchanged": true
+    }
+  },
+  "result": "c2 일반 입력과 실제 RequestFortEdit 장치를 연결했다. 실제 TEST01은 로그인/State14까지 진행한 뒤 TYPE129 stage5의 기존 미복원 경계에서 중단했다. 왕복 완료는 아직 아니다.",
+  "limits": [
+    "전체 느슨한 맵 구성의 원문50칸 상한에 TEST01이 없어 별도 TEST01 맵 구성으로 검사했다. fort/english 바이트는 수정하지 않았다.",
+    "이번 단위는 전체 검사를 반복하지 않았다. 직전486 전체C++3276/실패0 기록과 구별한다.",
+    ".english 부재 문제 개선은 사용자 지시로 나중에 한다.",
+    "스테이지 완주/사용자 개입 검증은 계속 뒤로 미룬다."
+  ],
+  "pushed": false
+}

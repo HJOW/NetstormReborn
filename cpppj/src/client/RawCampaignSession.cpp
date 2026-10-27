@@ -1,6 +1,7 @@
 // 기존 원본 몸체의 단일 저장소 조립을 실제 클라이언트 세션이 소유한다.
 #include "client/RawCampaignSession.h"
 #include "o/RawIslandAdd.h"
+#include "o/RawIslandQueries.h"
 #include "client/EditorIslandBitmap.h"
 #include "o/RawFortRandomPlacement.h"
 #include "o/RawBridgeEditor.h" //Editor의 전체 품질 명령도 현재 월드와 같은 풀/코드/난수를 사용한다.
@@ -3473,6 +3474,10 @@ std::uint32_t RawCampaignSession::CurrentTechnologyParent() const { return impl_
 void RawCampaignSession::SynchronizeProductionContents() { if (!impl_->loaded && !impl_->editorUiInstalling && !impl_->editorPrefixUiInstalling) throw std::logic_error("설치 전 생산 패널 갱신");impl_->productionSync->Synchronize(); } //같은 State1 prefix/후반 UI의 동기 범위만 실제 Deck 본체에 접근한다. 일반 입력/저장은 계속 닫는다.
 // 구식 배치용 IslandList 벡터 대신 실제 섬 목록 첫DWORD를 현재 시점에 읽는다.
 std::uint32_t RawCampaignSession::IslandCount() const { return impl_->islands->Count(); }
+//별도 owner 집계를 만들지 않고 실제 Native 검색 몸체와 같은 목록/현재 모드를 사용한다.
+std::uint32_t RawCampaignSession::OwnedIslandCount(std::uint32_t owner) const { return RawIslandQueries(*impl_->islands,impl_->finishState).CountOwned(owner); }
+//RequestFortEdit의 각 원문 store가 현재 manager/State를 다시 선택하고 같은 mutable 할당에 쓰게 한다.
+std::span<std::uint8_t> RawCampaignSession::MutableFortState(std::uint32_t slot) { return impl_->templateState->Get(slot); }
 const ContainedFinderState& RawCampaignSession::ProductionFinder() const { return impl_->contentFinder; }
 // 별도 값 버퍼나 가짜 Session 없이 현재 실제 생성 자료를 빌린다.
 ProductionControlContext RawCampaignSession::ProductionContext() const { return {impl_->world.Storage(),impl_->gameplayGlobals,impl_->playerRecords,impl_->battleOptions,impl_->services.spGlobals}; }

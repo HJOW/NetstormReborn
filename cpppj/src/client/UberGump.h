@@ -27,6 +27,7 @@ class GameWorld;
 class UserInput;
 class WarningMessages;
 struct GameMenuBarState; // 현재Session의기존검산참조와메뉴serial만빌린다.
+struct FortSelectionHooks; //편집 선택과 Test Battle 복귀가 같은 실제 파일/State/섬/Notify 장치를 사용한다.
 class CampaignObjectMenuClient; // 같은 실제 원본 객체 메뉴와 현재 명령 큐를 연결한다.
 struct MissionFortLoadRequest; // Init부터 실제 Session 설치까지 같은 요청과 Zone 이미지를 소유한다.
 class CampaignTemplateStorage; // 원본 명시 Init/State 정리까지 같은9개 manager의 수명을 소유한다.
@@ -98,6 +99,7 @@ private:
     void Execute(const DialogAction& action);
     bool FortSelectionEvent(const InputEvent& event); // 실제 AskEditFort/ReadFort를 같은 pending 이름·목록·숫자 nextState에 분배한다.
     void SelectCurrentFortName(std::string_view name); // 원문 MissionFortRequest.selectFort 위치에서 전체 현재 이름 부모를 실제 Client/Template에 연결한다.
+    FortSelectionHooks FortEditEffects(); //실제 선택된 Battle14의 파일/State 보존 경계도 같은 현재 World와 작업 파일에 연결한다.
     void EnsureHudFactories(); //현재 Client 장기 전역·물리로 네 공장만 준비하며 새 월드/Session을 생성하지 않는다.
     void RetireWorldForState(); //실제 State 자식 정리 뒤 같은 Runtime의 호스트 참조만 반납한다. 게임 전역·기한·정지를 다시 쓰지 않는다.
     void InstallHud(); // 현재 실제 월드와 같은 공통 전체 Uber/자식 공장·도킹을 연결한다.

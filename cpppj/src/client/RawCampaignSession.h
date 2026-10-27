@@ -319,6 +319,8 @@ public:
     std::uint32_t BattleActive() const; // 원문00594fbc의 현재 실제 자산 Battle 관문을 읽는다. Editor/표시phase로 대체하지 않는다.
     std::uint32_t CurrentTechnologyParent() const; // 현재48fc60의 실제 기술 부모다.
     std::uint32_t IslandCount() const; // 설치중 Add Island 관문도 현재3204BYTE IslandList의 countDWORD를 직접 읽는다.
+    std::uint32_t OwnedIslandCount(std::uint32_t owner) const; //0046f430의 같은 현재 섬 목록에서 지정 owner의 실제 개수를 읽는다. owner0도 원문대로 비교한다.
+    std::span<std::uint8_t> MutableFortState(std::uint32_t slot); //004bd550의 실제 현재 State/최소28BYTE를 빌린다. 다른 callback 뒤에는 다시 조회해야 한다.
     void SynchronizeProductionContents(); // 실제43ec00(first1)의43df80 직접 호출이다.
     const o::ContainedFinderState& ProductionFinder() const; // 같은 현재 내용물 검색 전역이다.
     ProductionControlContext ProductionContext() const; // 실제 같은 물리/현재 전역/Player/옵션을 초기 HUD 생성자에 빌린다.
