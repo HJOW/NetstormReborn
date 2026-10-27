@@ -1,0 +1,937 @@
+{
+  "unit": 499,
+  "date": "2026-10-27",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23",
+    "changed": false
+  },
+  "native": {
+    "host": "HJOW-Athlon",
+    "cases": 106,
+    "runs": 212,
+    "differences": 0,
+    "originalExecutions": 0,
+    "executedBodies": [
+      "497960",
+      "497490",
+      "4834c0"
+    ],
+    "boundaries": [
+      "446a10/446a40 현재 커서 잠금/해제",
+      "4660f0 현재 Gump redraw",
+      "4a1ad0/4a1e00 화면/배경 이동",
+      "497580/4977f0 기존 dirty 추가",
+      "4a41c0 현재 마우스 장치"
+    ],
+    "sha256": {
+      "originals\\Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "tools\\decomp_camera_commit.py": "fb41b9dab7643ef69417c2ad74a22060e670cad790f6368bfd10daad19c89b7c",
+      "cpppj\\tests\\fixtures\\camera-commit-x86.tsv": "1f9ef98a49949eea0a3d2ad13ab8e1d49406c9da3dbe5e9c8b30aeef3c051756"
+    }
+  },
+  "supplementNative": {
+    "host": "HJOW-Athlon",
+    "cases": 4,
+    "runs": 8,
+    "normalReturns": 6,
+    "expectedIdIvExceptions": 2,
+    "differences": 0,
+    "originalExecutions": 0,
+    "rows": [
+      {
+        "label": "current-target",
+        "input": {
+          "x": 100,
+          "y": 200,
+          "targetX": 317,
+          "targetY": 419,
+          "zoom": 65536,
+          "targetZoom": 65536,
+          "snapshotZoom": 65536,
+          "baseX": 16,
+          "baseY": 11,
+          "snapshotBaseX": 32,
+          "snapshotBaseY": 22,
+          "flags": 0,
+          "denominator": 15,
+          "viewX": 128,
+          "viewY": 0,
+          "viewWidth": 896,
+          "viewHeight": 700,
+          "width": 1024,
+          "height": 768,
+          "mouseX": 99,
+          "mouseY": 88,
+          "redraw": 17,
+          "worldRedraw": 19,
+          "dirtyProfile": 1,
+          "mutation": 3,
+          "afterX": 701,
+          "afterY": 905,
+          "afterZoom": 32768
+        },
+        "outputs": [
+          {
+            "control": 639,
+            "normal": true,
+            "result": {
+              "renderer": [
+                1110392832,
+                1118079907,
+                16,
+                11,
+                16,
+                11,
+                65536,
+                701,
+                905,
+                1098907648,
+                1093664768,
+                1098907648,
+                1093664768,
+                1065353216,
+                1143947264,
+                1147289600
+              ],
+              "snapshot": [
+                1110392832,
+                1118079907,
+                32,
+                22,
+                32,
+                22,
+                65536,
+                701,
+                905,
+                1107296256,
+                1102053376,
+                1098907648,
+                1093664768,
+                1065353216,
+                1143947264,
+                1147289600
+              ],
+              "target": [
+                480,
+                490,
+                701,
+                905,
+                32768,
+                1
+              ],
+              "dirty": [
+                [
+                  4294967089,
+                  4294967097,
+                  4294967109,
+                  4294967117,
+                  0
+                ],
+                [
+                  11,
+                  21,
+                  31,
+                  41,
+                  1
+                ],
+                [
+                  4294967091,
+                  4294967099,
+                  32,
+                  42,
+                  2
+                ],
+                [
+                  13,
+                  23,
+                  33,
+                  43,
+                  3
+                ]
+              ],
+              "globals": [
+                0,
+                15,
+                128,
+                0,
+                896,
+                700,
+                1024,
+                768,
+                99,
+                88,
+                19
+              ],
+              "events": "L:0;R:65536:100:200:65536:75:85:17:19;S:128:0:896:700:217:219;S:0:0:128:768:0:0;S:128:700:896:68:0:0;M:99:88;D:807:0:1024:700:0;D:128:481:1024:700:0;U;R:65536:701:905:65536:701:905:17:19",
+              "instructions": 348
+            }
+          },
+          {
+            "control": 895,
+            "normal": true,
+            "result": {
+              "renderer": [
+                1110392832,
+                1118079907,
+                16,
+                11,
+                16,
+                11,
+                65536,
+                701,
+                905,
+                1098907648,
+                1093664768,
+                1098907648,
+                1093664768,
+                1065353216,
+                1143947264,
+                1147289600
+              ],
+              "snapshot": [
+                1110392832,
+                1118079907,
+                32,
+                22,
+                32,
+                22,
+                65536,
+                701,
+                905,
+                1107296256,
+                1102053376,
+                1098907648,
+                1093664768,
+                1065353216,
+                1143947264,
+                1147289600
+              ],
+              "target": [
+                480,
+                490,
+                701,
+                905,
+                32768,
+                1
+              ],
+              "dirty": [
+                [
+                  4294967089,
+                  4294967097,
+                  4294967109,
+                  4294967117,
+                  0
+                ],
+                [
+                  11,
+                  21,
+                  31,
+                  41,
+                  1
+                ],
+                [
+                  4294967091,
+                  4294967099,
+                  32,
+                  42,
+                  2
+                ],
+                [
+                  13,
+                  23,
+                  33,
+                  43,
+                  3
+                ]
+              ],
+              "globals": [
+                0,
+                15,
+                128,
+                0,
+                896,
+                700,
+                1024,
+                768,
+                99,
+                88,
+                19
+              ],
+              "events": "L:0;R:65536:100:200:65536:75:85:17:19;S:128:0:896:700:217:219;S:0:0:128:768:0:0;S:128:700:896:68:0:0;M:99:88;D:807:0:1024:700:0;D:128:481:1024:700:0;U;R:65536:701:905:65536:701:905:17:19",
+              "instructions": 348
+            }
+          }
+        ]
+      },
+      {
+        "label": "divide-zero-flags-0",
+        "input": {
+          "x": 100,
+          "y": 200,
+          "targetX": 100,
+          "targetY": 200,
+          "zoom": 65536,
+          "targetZoom": 65536,
+          "snapshotZoom": 65536,
+          "baseX": 16,
+          "baseY": 11,
+          "snapshotBaseX": 32,
+          "snapshotBaseY": 22,
+          "flags": 0,
+          "denominator": 0,
+          "viewX": 128,
+          "viewY": 0,
+          "viewWidth": 896,
+          "viewHeight": 700,
+          "width": 1024,
+          "height": 768,
+          "mouseX": 99,
+          "mouseY": 88,
+          "redraw": 17,
+          "worldRedraw": 19,
+          "dirtyProfile": 1,
+          "mutation": 0,
+          "afterX": 317,
+          "afterY": 419,
+          "afterZoom": 32768
+        },
+        "outputs": [
+          {
+            "control": 639,
+            "normal": true,
+            "result": {
+              "renderer": [
+                1086849024,
+                1100051549,
+                16,
+                11,
+                16,
+                11,
+                65536,
+                100,
+                200,
+                1098907648,
+                1093664768,
+                1098907648,
+                1093664768,
+                1065353216,
+                1120403456,
+                1128792064
+              ],
+              "snapshot": [
+                1086849024,
+                1100051549,
+                32,
+                22,
+                32,
+                22,
+                65536,
+                100,
+                200,
+                1107296256,
+                1102053376,
+                1098907648,
+                1093664768,
+                1065353216,
+                1120403456,
+                1128792064
+              ],
+              "target": [
+                480,
+                490,
+                100,
+                200,
+                65536,
+                17
+              ],
+              "dirty": [
+                [
+                  10,
+                  20,
+                  30,
+                  40,
+                  0
+                ],
+                [
+                  11,
+                  21,
+                  31,
+                  41,
+                  1
+                ],
+                [
+                  12,
+                  22,
+                  32,
+                  42,
+                  2
+                ],
+                [
+                  13,
+                  23,
+                  33,
+                  43,
+                  3
+                ]
+              ],
+              "globals": [
+                0,
+                0,
+                128,
+                0,
+                896,
+                700,
+                1024,
+                768,
+                99,
+                88,
+                19
+              ],
+              "events": "S:128:0:896:700:0:0;S:0:0:128:768:0:0;S:128:700:896:68:0:0",
+              "instructions": 156
+            }
+          },
+          {
+            "control": 895,
+            "normal": true,
+            "result": {
+              "renderer": [
+                1086849024,
+                1100051549,
+                16,
+                11,
+                16,
+                11,
+                65536,
+                100,
+                200,
+                1098907648,
+                1093664768,
+                1098907648,
+                1093664768,
+                1065353216,
+                1120403456,
+                1128792064
+              ],
+              "snapshot": [
+                1086849024,
+                1100051549,
+                32,
+                22,
+                32,
+                22,
+                65536,
+                100,
+                200,
+                1107296256,
+                1102053376,
+                1098907648,
+                1093664768,
+                1065353216,
+                1120403456,
+                1128792064
+              ],
+              "target": [
+                480,
+                490,
+                100,
+                200,
+                65536,
+                17
+              ],
+              "dirty": [
+                [
+                  10,
+                  20,
+                  30,
+                  40,
+                  0
+                ],
+                [
+                  11,
+                  21,
+                  31,
+                  41,
+                  1
+                ],
+                [
+                  12,
+                  22,
+                  32,
+                  42,
+                  2
+                ],
+                [
+                  13,
+                  23,
+                  33,
+                  43,
+                  3
+                ]
+              ],
+              "globals": [
+                0,
+                0,
+                128,
+                0,
+                896,
+                700,
+                1024,
+                768,
+                99,
+                88,
+                19
+              ],
+              "events": "S:128:0:896:700:0:0;S:0:0:128:768:0:0;S:128:700:896:68:0:0",
+              "instructions": 156
+            }
+          }
+        ]
+      },
+      {
+        "label": "divide-zero-flags-18",
+        "input": {
+          "x": 100,
+          "y": 200,
+          "targetX": 100,
+          "targetY": 200,
+          "zoom": 65536,
+          "targetZoom": 65536,
+          "snapshotZoom": 65536,
+          "baseX": 16,
+          "baseY": 11,
+          "snapshotBaseX": 32,
+          "snapshotBaseY": 22,
+          "flags": 18,
+          "denominator": 0,
+          "viewX": 128,
+          "viewY": 0,
+          "viewWidth": 896,
+          "viewHeight": 700,
+          "width": 1024,
+          "height": 768,
+          "mouseX": 99,
+          "mouseY": 88,
+          "redraw": 17,
+          "worldRedraw": 19,
+          "dirtyProfile": 1,
+          "mutation": 0,
+          "afterX": 317,
+          "afterY": 419,
+          "afterZoom": 32768
+        },
+        "outputs": [
+          {
+            "control": 639,
+            "normal": true,
+            "result": {
+              "renderer": [
+                1086849024,
+                1100051549,
+                16,
+                11,
+                16,
+                11,
+                65536,
+                100,
+                200,
+                1098907648,
+                1093664768,
+                1098907648,
+                1093664768,
+                1065353216,
+                1120403456,
+                1128792064
+              ],
+              "snapshot": [
+                1086849024,
+                1100051549,
+                32,
+                22,
+                32,
+                22,
+                65536,
+                100,
+                200,
+                1107296256,
+                1102053376,
+                1098907648,
+                1093664768,
+                1065353216,
+                1120403456,
+                1128792064
+              ],
+              "target": [
+                480,
+                490,
+                100,
+                200,
+                65536,
+                17
+              ],
+              "dirty": [
+                [
+                  10,
+                  20,
+                  30,
+                  40,
+                  0
+                ],
+                [
+                  11,
+                  21,
+                  31,
+                  41,
+                  1
+                ],
+                [
+                  12,
+                  22,
+                  32,
+                  42,
+                  2
+                ],
+                [
+                  13,
+                  23,
+                  33,
+                  43,
+                  3
+                ]
+              ],
+              "globals": [
+                18,
+                0,
+                128,
+                0,
+                896,
+                700,
+                1024,
+                768,
+                99,
+                88,
+                19
+              ],
+              "events": "S:128:0:896:700:0:0;S:0:0:128:768:0:0;S:128:700:896:68:0:0",
+              "instructions": 162
+            }
+          },
+          {
+            "control": 895,
+            "normal": true,
+            "result": {
+              "renderer": [
+                1086849024,
+                1100051549,
+                16,
+                11,
+                16,
+                11,
+                65536,
+                100,
+                200,
+                1098907648,
+                1093664768,
+                1098907648,
+                1093664768,
+                1065353216,
+                1120403456,
+                1128792064
+              ],
+              "snapshot": [
+                1086849024,
+                1100051549,
+                32,
+                22,
+                32,
+                22,
+                65536,
+                100,
+                200,
+                1107296256,
+                1102053376,
+                1098907648,
+                1093664768,
+                1065353216,
+                1120403456,
+                1128792064
+              ],
+              "target": [
+                480,
+                490,
+                100,
+                200,
+                65536,
+                17
+              ],
+              "dirty": [
+                [
+                  10,
+                  20,
+                  30,
+                  40,
+                  0
+                ],
+                [
+                  11,
+                  21,
+                  31,
+                  41,
+                  1
+                ],
+                [
+                  12,
+                  22,
+                  32,
+                  42,
+                  2
+                ],
+                [
+                  13,
+                  23,
+                  33,
+                  43,
+                  3
+                ]
+              ],
+              "globals": [
+                18,
+                0,
+                128,
+                0,
+                896,
+                700,
+                1024,
+                768,
+                99,
+                88,
+                19
+              ],
+              "events": "S:128:0:896:700:0:0;S:0:0:128:768:0:0;S:128:700:896:68:0:0",
+              "instructions": 162
+            }
+          }
+        ]
+      },
+      {
+        "label": "divide-zero-flags-16",
+        "input": {
+          "x": 100,
+          "y": 200,
+          "targetX": 100,
+          "targetY": 200,
+          "zoom": 65536,
+          "targetZoom": 65536,
+          "snapshotZoom": 65536,
+          "baseX": 16,
+          "baseY": 11,
+          "snapshotBaseX": 32,
+          "snapshotBaseY": 22,
+          "flags": 16,
+          "denominator": 0,
+          "viewX": 128,
+          "viewY": 0,
+          "viewWidth": 896,
+          "viewHeight": 700,
+          "width": 1024,
+          "height": 768,
+          "mouseX": 99,
+          "mouseY": 88,
+          "redraw": 17,
+          "worldRedraw": 19,
+          "dirtyProfile": 1,
+          "mutation": 0,
+          "afterX": 317,
+          "afterY": 419,
+          "afterZoom": 32768
+        },
+        "outputs": [
+          {
+            "control": 639,
+            "normal": false,
+            "error": 21,
+            "events": [
+              "S:128:0:896:700:0:0",
+              "S:0:0:128:768:0:0",
+              "S:128:700:896:68:0:0"
+            ]
+          },
+          {
+            "control": 895,
+            "normal": false,
+            "error": 21,
+            "events": [
+              "S:128:0:896:700:0:0",
+              "S:0:0:128:768:0:0",
+              "S:128:700:896:68:0:0"
+            ]
+          }
+        ]
+      }
+    ],
+    "sha256": {
+      "originals\\Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "tools\\decomp_camera_commit.py": "fb41b9dab7643ef69417c2ad74a22060e670cad790f6368bfd10daad19c89b7c",
+      "extracted\\cpp-camera-commit-499\\supplement.py": "55228a15db0f6c201afc9b11b635051413161f5dafc775cdae873a9d61d72aa6"
+    }
+  },
+  "final": {
+    "NetstormCpp.exe": "582ea2aa2ec3a0dec2ae33289819d6dc65100a04d880f23b7cefc0fc8dd8f17a",
+    "netstorm_tests.exe": "1bc40ec374aac0b2ec7d7713d5b7693b74226f98fe7b399bc2645d41857b6bd6"
+  },
+  "sourceFiles": 2885,
+  "protected": {
+    "files": 3215,
+    "unchangedFiles": 3214,
+    "cmakePrefixes": {
+      "cpppj/tests/CMakeLists.txt": 165814,
+      "cpppj/src/CMakeLists.txt": 16467
+    },
+    "agentsUnchanged": true,
+    "oldSourceAndTestBodiesUnchanged": true
+  },
+  "build": {
+    "command": [
+      "cmake",
+      "--build",
+      "cpppj/build",
+      "--config",
+      "Release",
+      "--parallel",
+      "4",
+      "--",
+      "/p:UseMultiToolTask=true",
+      "/p:MultiProcMaxCount=4",
+      "/p:EnforceProcessCountAcrossBuilds=true"
+    ],
+    "exit": 0,
+    "log": "extracted/cpp-camera-commit-499/build1.log",
+    "sha256": "334f3faaed7452573785909cb56e4a7d6e89537c49a70dce30a0f93a8fa332f1",
+    "summaries": [],
+    "diagnostics": []
+  },
+  "tests": {
+    "registered": 3323,
+    "preservedRegistered": 3319,
+    "new": [
+      "CameraCommit_CurrentTargetAfterScreenEffect",
+      "CameraCommit_MatchesNativeViewsDirtyAndEffects",
+      "CameraCommit_OnlySelectedParallaxDivisionCanFail",
+      "CameraCommit_SelectedHooksAndSeparateZoomBranch"
+    ],
+    "focusedUnique": 31,
+    "focusedObservations": 36,
+    "focusedFailed": 0,
+    "groups": [
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "CameraCommit"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-camera-commit-499/focused1-CameraCommit.log",
+        "sha256": "638909e7afc51e87e9d9320e666b9127dbaea65c3cb4fcd505cad6f37a110f83",
+        "summaries": [
+          "4 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "Camera"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-camera-commit-499/focused1-Camera.log",
+        "sha256": "7403087a863d5278c7173cfadb81f64db3e354d071a24830e4a7384e99711c4b",
+        "summaries": [
+          "27 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "EdgeScroll"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-camera-commit-499/focused1-EdgeScroll.log",
+        "sha256": "212a23cb4049a0df7e0fe87c4b8ad4f8428e6e4561a4bd73d346b63c72144f99",
+        "summaries": [
+          "3 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "CampaignSharedDiagnostic"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-camera-commit-499/focused1-CampaignSharedDiagnostic.log",
+        "sha256": "12831e149e51a52203597468181a9433060c5c9145686d99e3f547d6275d1687",
+        "summaries": [
+          "2 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      }
+    ],
+    "wholeRepeated": false,
+    "lastWholeUnit": 498,
+    "lastWholeCpp": 3319,
+    "lastWholeFailed": 0
+  },
+  "runtime": {
+    "originalExecutions": 0,
+    "cloneExecutions": 0,
+    "edgeConnected": false,
+    "cameraFrameConnected": false
+  },
+  "fidelity": [
+    "일반 이동의 현재 cursor lock/redraw→화면/시차→두 setter→mouse→dirty→unlock/redraw 순서",
+    "dirty1 보존/dirty2 이전·이동 후 합집합/나머지 좌표 이동과32비트 감김",
+    "노출 띠의 원문 끝 좌표 NEG 순서와현재 viewport 재조회",
+    "별도 zoom 분기의 signed Q16·하위32비트 곱/SAR16·서로 다른 Renderer/snapshot base·float 저장과worldRedraw1",
+    "외부 효과 뒤 현재 목표·viewport·표 재조회",
+    "장치/기존 dirty 추가는 명시 경계이며 실제 Frame 연결 완료가 아님"
+  ],
+  "firstFailures": [
+    "집계기가 끝 등록 대상 src/CMake도 기존 본문 전체 해시와 비교해 거부. 두 CMake의 기존 접두부를 별도로 대조하도록 집계만 교정했고 최초 실패/원시/제품/검사를 보존"
+  ],
+  "next": [
+    "00531928 공유 세계 크기와 실제 renderer dirty 저장소 경계",
+    "같은 Client 커서/Gump/화면 장치를 연결하고 Present 뒤/snapshot 복사 전 실제 Frame 적용",
+    "Guide 뒤 실제 가장자리 입력/타이머와 카메라 목표를 연결",
+    "같은 최종 게임의 짧은 실제 가장자리·버튼·메뉴·재진입 검사"
+  ],
+  "deferred": [
+    "스테이지 완주/사용자 개입 검증",
+    "Test Battle english 부재 개선",
+    "멀티플레이어는 이후 디컴파일만 참고해 테스트 없이 사전 구현"
+  ],
+  "git": {
+    "pull": {
+      "command": [
+        "git",
+        "-c",
+        "core.autocrlf=false",
+        "pull",
+        "--no-rebase",
+        "--no-commit"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-camera-commit-499/git-pull1.log",
+      "sha256": "e5d6c99aec87ec07a2d1b5c1222d8b690d0a61c3548a55c795fff56db9450d0d",
+      "summaries": [],
+      "diagnostics": []
+    },
+    "push": false
+  },
+  "raw": "extracted/cpp-camera-commit-499"
+}

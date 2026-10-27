@@ -2309,3 +2309,7 @@ set_source_files_properties(EdgeScrollTests.cpp PROPERTIES COMPILE_DEFINITIONS "
 # 보호 원문 Present 말미/실제 FTOL의 독립 결과를 파일 전용 정의로 재생한다.
 target_sources(netstorm_tests PRIVATE CameraPresentTests.cpp)
 set_source_files_properties(CameraPresentTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_CAMERA_PRESENT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/camera-present-x86.tsv\"")
+
+# 실제 카메라 적용의 두64BYTE·표·효과를 파일 전용 정의로 대조한다.
+target_sources(netstorm_tests PRIVATE CameraCommitTests.cpp)
+set_source_files_properties(CameraCommitTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_CAMERA_COMMIT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/camera-commit-x86.tsv\"")

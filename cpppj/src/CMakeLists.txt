@@ -231,3 +231,6 @@ target_sources(netstorm PRIVATE o/RawStateBridgeReset.cpp o/RawStateBridgeReset.
 
 # 실제 Present 말미의 진단·목표 제한을 장치 및 현재 view 적용과 구별한다.
 target_sources(netstorm PRIVATE client/RawCameraPresent.cpp client/RawCameraPresent.h)
+
+# 원문 현재 view/snapshot·dirty/배율 적용 본체를 외부 장치와 구별한다.
+target_sources(netstorm PRIVATE client/RawCameraCommit.cpp client/RawCameraCommit.h)

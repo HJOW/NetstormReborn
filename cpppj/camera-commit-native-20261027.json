@@ -1,0 +1,24 @@
+{
+  "host": "HJOW-Athlon",
+  "cases": 106,
+  "runs": 212,
+  "differences": 0,
+  "originalExecutions": 0,
+  "executedBodies": [
+    "497960",
+    "497490",
+    "4834c0"
+  ],
+  "boundaries": [
+    "446a10/446a40 현재 커서 잠금/해제",
+    "4660f0 현재 Gump redraw",
+    "4a1ad0/4a1e00 화면/배경 이동",
+    "497580/4977f0 기존 dirty 추가",
+    "4a41c0 현재 마우스 장치"
+  ],
+  "sha256": {
+    "originals\\Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools\\decomp_camera_commit.py": "fb41b9dab7643ef69417c2ad74a22060e670cad790f6368bfd10daad19c89b7c",
+    "cpppj\\tests\\fixtures\\camera-commit-x86.tsv": "1f9ef98a49949eea0a3d2ad13ab8e1d49406c9da3dbe5e9c8b30aeef3c051756"
+  }
+}
