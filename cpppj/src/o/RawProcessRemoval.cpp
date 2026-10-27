@@ -17,8 +17,8 @@ void RemoveAttachedProcesses(SquidProcessHost& host,Sid parent,std::uint32_t typ
     while (current.value) {
         if (current.value>=pool.Capacity() || !visited.insert(current.value).second) throw std::logic_error("프로세스 제거 종속 체인 손상");
         const auto raw=pool.Slot(current);const auto next=Link(raw,4);const auto candidate=raw[10];
-        if (candidate<70) {
-            if (candidate<10) throw std::logic_error("ProcessFinder의 isProcess assert 경계");
+        // Finder의 Form 상한 뒤 가상425e80→4b1bf0 조건(10 이상·현재 ProcessTypeEnd 미만)을 적용한다.
+        if (candidate<70 && candidate>=10 && candidate<host.ProcessTypeEnd()) {
             auto* process=host.FromForm(current);if (!process) throw std::logic_error("실제 제거할 프로세스 부재");
             if (!type || pool.Slot(process->Form())[10]==type) host.Kill(*process,0x40);
         }

@@ -295,3 +295,63 @@ TEST_CASE(rawProcessRemoval_saved_next_and_original_flags) {
     RemoveAttachedProcesses(scene.host,scene.parent,61);CHECK(scene.kernel.Get(probeId)!=nullptr);
     RemoveAttachedProcesses(scene.host,scene.parent,0);CHECK(flags==std::vector<std::uint32_t>{0x40});CHECK(scene.kernel.Get(probeId)==nullptr);CHECK(scene.kernel.Get(oldRegularId)==nullptr);CHECK(scene.kernel.Get(oldPath)==nullptr);CHECK(scene.kernel.Get(added)!=nullptr);
 }
+
+// 실제4b27a0의 가상 ProcessFinder 조건과 선택 순서를 혼합 Form 목록64개 입력에 대조한다.
+TEST_CASE(rawProcessRemoval_native_mixed_form_filter) {
+    const auto fixture=LoadFixture(NETSTORM_PROCESS_REMOVAL_FILTER_FIXTURE);
+    std::size_t count=0; // 독립 원문과 대조한 목록/요청 조합 수다.
+    // 각 목록은 실제 Host/Kernel을 새로 준비하며 원문 가상 삭제 관측을 순번으로 정규화한다.
+    for (const auto& row:fixture.rows) {
+        std::vector<std::string> trace; // Scene 정리 때도 유효하도록 먼저 생성한 삭제 관측 목록이다.
+        PathScene scene(OriginalEdition::Patch1078,false);
+        scene.host.Kill(*scene.process,0x40); // 기존 Path를 제거하고 fixture 목록만 연결한다.
+        // 선택된 Form의 실제 Host 삭제가 전달하는 flags를 관측한다.
+        struct Probe final:SquidProcess {
+            std::function<void(std::uint32_t)> effect; // 현재 입력 순번과 삭제 flags를 기록하는 효과다.
+            // 실제 생성/부착/삭제는 같은 Host가 담당하고 관측 함수만 보관한다.
+            explicit Probe(std::function<void(std::uint32_t)> value):effect(std::move(value)) {}
+            // 원본 가상 Form 삭제 경계와 같은 시점의 flags를 읽는다.
+            void OnFormDestroy(std::uint32_t value) override { effect(value); }
+        };
+        const auto types=row[0]=="-" ? std::vector<std::string>{} : Split(row[0],',');
+        std::vector<Sid> nodes; // 실제 할당 번호를 입력의 순서대로 보관한다.
+        // 프로세스 타입은 실제 Kernel에 부착하고 그 밖의 타입은 명시적인 raw Form 입력이다.
+        for (std::size_t index=0;index<types.size();++index) {
+            const auto type=Number(types[index]);
+            if (type>=10 && type<63) {
+                auto* process=scene.host.Attach(std::make_unique<Probe>([&,index](std::uint32_t flags) {
+                    trace.push_back(std::to_string(index)+':'+std::to_string(flags));
+                }),type,scene.parent,0x10);
+                CHECK(process!=nullptr);nodes.push_back(process->Form());
+            } else {
+                const auto form=scene.pool.Allocate(2);scene.pool.AllocatedBytes(form)[10]=static_cast<std::uint8_t>(type);nodes.push_back(form);
+            }
+        }
+        Put(scene.pool.AllocatedBytes(scene.parent),6,nodes.empty() ? 0 : nodes.front().value,2);
+        // 부착 순서와 무관하게 원문과 같은 목록 순서/판본별 Form·asset 링크를 제공한다.
+        for (std::size_t index=0;index<nodes.size();++index) {
+            const auto raw=scene.pool.AllocatedBytes(nodes[index]);
+            Put(raw,4,index+1<nodes.size() ? nodes[index+1].value : 0,2);raw[11]|=8;
+            Put(raw,raw[10]<70 ? 14 : 16,index ? nodes[index-1].value : 0,2);
+            Put(raw,raw[10]<70 ? 16 : 14,scene.parent.value,2);
+        }
+        RemoveAttachedProcesses(scene.host,scene.parent,Number(row[1]));
+        std::string observed; // 원문 fixture의 index:flags 형식으로 이어 붙인 실제 삭제 관측이다.
+        // 원문 반환 순서를 정렬하거나 타입별로 묶지 않고 그대로 비교한다.
+        for (const auto& event:trace) { if (!observed.empty()) observed+=';';observed+=event; }
+        CHECK((observed.empty() ? "-" : observed)==row[2]);++count;
+    }
+    CHECK(count==64);
+}
+
+// 유효한 프로세스 타입의 PID가 없는 손상 입력은 필터 복원 뒤에도 명시적으로 거부한다.
+TEST_CASE(rawProcessRemoval_missing_process_guard) {
+    PathScene scene(OriginalEdition::Patch1078,false);scene.host.Kill(*scene.process,0x40);
+    const auto form=scene.pool.Allocate(2);const auto raw=scene.pool.AllocatedBytes(form);
+    raw[10]=39;raw[11]|=8;Put(raw,4,0,2);Put(raw,14,0,2);Put(raw,16,scene.parent.value,2);Put(raw,18,0);
+    Put(scene.pool.AllocatedBytes(scene.parent),6,form.value,2);
+    bool rejected=false; // 기존 실제 프로세스 부재 오류가 유지되는지를 기록한다.
+    try { RemoveAttachedProcesses(scene.host,scene.parent,0); }
+    catch (const std::logic_error& error) { rejected=std::string(error.what())=="실제 제거할 프로세스 부재"; }
+    CHECK(rejected);
+}

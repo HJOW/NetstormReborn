@@ -2320,3 +2320,7 @@ set_source_files_properties(ScreenScrollTests.cpp PROPERTIES COMPILE_DEFINITIONS
 # 기존 Burning gold를 유지하고 투명 모서리의 두 판본 읽기 순서만 별도 관측에 대조한다.
 target_sources(netstorm_tests PRIVATE BurningSourcesCornerTests.cpp)
 set_source_files_properties(BurningSourcesCornerTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_BURNING_CORNER_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/burning-sources-corner-x86.tsv\"")
+
+# 기존 Path/FlyPath 정의를 유지하고 가상 ProcessFinder의 독립 관측만 추가한다.
+set_property(SOURCE RawPathRuntimeTests.cpp APPEND PROPERTY COMPILE_DEFINITIONS
+    "NETSTORM_PROCESS_REMOVAL_FILTER_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/process-removal-filter-x86.tsv\"")

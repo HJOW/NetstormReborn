@@ -1,0 +1,46 @@
+{
+  "host": "HJOW-Athlon",
+  "cases": 64,
+  "runs": 128,
+  "normalReturns": 128,
+  "precisionDifferences": 0,
+  "processTypeEnd": 63,
+  "predicate": "503ac4→425e80→4b1bf0",
+  "executedBodies": [
+    "0x4b27a0",
+    "0x4b22d0",
+    "0x4b1b80",
+    "0x4b1bf0",
+    "0x4ae2d0",
+    "0x4ae340",
+    "0x41bff0",
+    "0x41bf10",
+    "0x471aa0",
+    "0x425e80"
+  ],
+  "boundaries": [
+    "현재 가상 Form 삭제의 순번/flags 관측. 실제 파괴·Kernel 반납/목록 변이는 이 관측에서 실행하지 않는다."
+  ],
+  "originalGameExecutions": 0,
+  "recoveredExistingFixture": true,
+  "calls": {
+    "0x4b27a0": 128,
+    "0x4b22d0": 128,
+    "0x4b1b80": 480,
+    "0x425e80": 832,
+    "0x4b1bf0": 832,
+    "0x4ae2d0": 72,
+    "0x471aa0": 380,
+    "0x41bf10": 72,
+    "0x4ae340": 308,
+    "0x41bff0": 308
+  },
+  "instructions": 57544,
+  "sha256": {
+    "tools/decomp_process_removal_filter.py": "f97bf42070aa50a74058049d72bc622261987dfb30fe3c7c5fd17b9576c57f4a",
+    "tools/decomp_owner_oracle.py": "5a837ad7fd233d9d75c7241d52fbf2e5a508e24dc158d091f243a13ab698e7fb",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "cpppj/tests/fixtures/process-removal-filter-x86.tsv": "240d9b62a101c6f160bbf0b8f1f77fc0a9262dd9f867d824935fc00d74454c85"
+  }
+}

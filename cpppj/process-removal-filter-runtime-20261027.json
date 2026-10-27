@@ -1,0 +1,168 @@
+{
+  "unit": 504,
+  "date": "2026-10-27",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23",
+    "changed": false
+  },
+  "native": {
+    "host": "HJOW-Athlon",
+    "cases": 64,
+    "runs": 128,
+    "normalReturns": 128,
+    "precisionDifferences": 0,
+    "processTypeEnd": 63,
+    "predicate": "503ac4→425e80→4b1bf0",
+    "executedBodies": [
+      "0x4b27a0",
+      "0x4b22d0",
+      "0x4b1b80",
+      "0x4b1bf0",
+      "0x4ae2d0",
+      "0x4ae340",
+      "0x41bff0",
+      "0x41bf10",
+      "0x471aa0",
+      "0x425e80"
+    ],
+    "boundaries": [
+      "현재 가상 Form 삭제의 순번/flags 관측. 실제 파괴·Kernel 반납/목록 변이는 이 관측에서 실행하지 않는다."
+    ],
+    "originalGameExecutions": 0,
+    "recoveredExistingFixture": true,
+    "calls": {
+      "0x4b27a0": 128,
+      "0x4b22d0": 128,
+      "0x4b1b80": 480,
+      "0x425e80": 832,
+      "0x4b1bf0": 832,
+      "0x4ae2d0": 72,
+      "0x471aa0": 380,
+      "0x41bf10": 72,
+      "0x4ae340": 308,
+      "0x41bff0": 308
+    },
+    "instructions": 57544,
+    "sha256": {
+      "tools/decomp_process_removal_filter.py": "f97bf42070aa50a74058049d72bc622261987dfb30fe3c7c5fd17b9576c57f4a",
+      "tools/decomp_owner_oracle.py": "5a837ad7fd233d9d75c7241d52fbf2e5a508e24dc158d091f243a13ab698e7fb",
+      "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+      "cpppj/tests/fixtures/process-removal-filter-x86.tsv": "240d9b62a101c6f160bbf0b8f1f77fc0a9262dd9f867d824935fc00d74454c85"
+    }
+  },
+  "protectedFiles": 3221,
+  "fullyUnchangedProtectedFiles": 3219,
+  "testPrefixBytes": {
+    "cpppj/tests/CMakeLists.txt": 166918,
+    "cpppj/tests/RawPathRuntimeTests.cpp": 23366
+  },
+  "sourceFiles": 2892,
+  "sourceChanged": [
+    "cpppj/src/o/RawProcessRemoval.cpp",
+    "cpppj/tests/CMakeLists.txt",
+    "cpppj/tests/RawPathRuntimeTests.cpp"
+  ],
+  "sourceAdded": [
+    "cpppj/tests/fixtures/process-removal-filter-x86.tsv"
+  ],
+  "exes": {
+    "NetstormCpp.exe": "a284cb011db23dc04697bed8315e2df885d1bb913b726b0b4d77938e03095683",
+    "netstorm_tests.exe": "ab49b9f7155e034685a755db3268ed594bb2343117e69d103bab8a4971f77b81"
+  },
+  "before": {
+    "gameSha256": "180f3d89be49c0c92337fa2d63e5a9ce7dbbcb4f3f879b7f35705499a66eee51",
+    "regressionTests": 3,
+    "failedChecks": 1,
+    "expectedFailure": true
+  },
+  "focused": {
+    "unique": 37,
+    "observations": 37,
+    "failedChecks": 0
+  },
+  "registered": 3334,
+  "newTests": [
+    "rawProcessRemoval_missing_process_guard",
+    "rawProcessRemoval_native_mixed_form_filter"
+  ],
+  "whole": {
+    "cppTests": 3334,
+    "failedChecks": 0,
+    "ctestTests": 1,
+    "ctestFailed": 0,
+    "seconds": 361.99,
+    "lastTestSha256": "0ca3262c44bb9a60de0b31677cd4d6f32a63bad8c6aae5dfc1e1ef9e14211dbc"
+  },
+  "gui": {
+    "mission": "bc8fury76",
+    "returnCode": 0,
+    "gameSeconds": "24.012",
+    "lastFrame": 179,
+    "diagnostic": 6,
+    "directory": "extracted/cpp-process-filter-504/live2-bc8/bc8fury76"
+  },
+  "analysisFailure": {
+    "log": "native1.log",
+    "cause": "최초 원문 실행/fixture 생성 뒤 보고서 Path import 누락",
+    "fixturePreserved": true,
+    "recovery": "동일 원문128회 재관측과 최초 fixture 바이트 동일성 확인 뒤 최초 보고서 생성"
+  },
+  "remaining": [
+    "현재 게임의 전체34경로 재검증은 다음 재개 단위",
+    "DD 조정/UI·미니맵/덱/QWASZX/ESC·편집/시나리오·Windows11 실기",
+    "자연완주/사용자개입·english누락개선보류",
+    "앞목표뒤멀티플레이어는디컴파일만참고·신규테스트없이사전구현"
+  ],
+  "git": {
+    "pull": "Already up to date.",
+    "pushed": false
+  },
+  "pauseAfterCommitRequested": true,
+  "stageClearAttempted": false,
+  "rawDirectory": "extracted/cpp-process-filter-504",
+  "evidenceSha256": {
+    "extracted/cpp-process-filter-504/before-fix.json": "f0540797b2ea4fce795cbf5bb6a1638bfab863c2d42ecf033917152a43021ce8",
+    "extracted/cpp-process-filter-504/before-fix.log": "ee486d868a58cdd10c7c9be7a4e3ad59990135054e0666e3990706722211b509",
+    "extracted/cpp-process-filter-504/before.json": "7e545cf7fcb71b676db838b02d41e425846b6190554024af0b24c11d9639f474",
+    "extracted/cpp-process-filter-504/build1.json": "4f449f4244ca3072d51eec60bc33da74d1420af93fdcfc5c15dd1d57654dbcbf",
+    "extracted/cpp-process-filter-504/build1.log": "d2909a035f9ca1aa07a30ff54c8b9c48140e681fe1330878c4a5f1404b9d098f",
+    "extracted/cpp-process-filter-504/build2.json": "c1e0758436ca186dfb938120d98607490552ce060c580f1d694417e9cae80774",
+    "extracted/cpp-process-filter-504/build2.log": "772150f88ba7849a680ac1b5a7d0cbe10241b1ec68dcabe74d5c7a8413599f04",
+    "extracted/cpp-process-filter-504/fetch1.json": "04aaad4035aaed52d90aeae903b8fb3688d87d9d238169e6e1e724d76e459bdd",
+    "extracted/cpp-process-filter-504/fetch1.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-process-filter-504/focused-path.json": "14a7a56b49f7c715c041166f1af73f5989eeb616a89f6e68b6a1f69945fe0b89",
+    "extracted/cpp-process-filter-504/focused-path.log": "547f077ae5375e881ac6daf3cfcb0dd392e5e0572fa4e13fb1d6b430a0735256",
+    "extracted/cpp-process-filter-504/focused-removal.json": "6a355c84e030414e7ad95afdd55a5e12414e486014502fd8c45dac98ffd380c9",
+    "extracted/cpp-process-filter-504/focused-removal.log": "e47a2aeb2a9320d30abe147679e04e2fc9592cd54edf4a5b4da89d9dcdbe5c06",
+    "extracted/cpp-process-filter-504/focused-selection.json": "e7eccb8a8545600a8f8eb1730836b1f2cf90e092ed2459e431490c7beeb42785",
+    "extracted/cpp-process-filter-504/focused-selection.log": "27a5c898b18ceb2c6bd562da0104f5f3a30ea998301a48ed777b3e0eaeca0b8b",
+    "extracted/cpp-process-filter-504/freeze-after-build2.json": "76684b688c59e2f304ceb936e6481253f8e83b799becda5407ad2a35a97f33b8",
+    "extracted/cpp-process-filter-504/freeze-baseline.json": "e5163719021bfffed88853b7912c91e5524e9f4d58269fae1538d7655f18662e",
+    "extracted/cpp-process-filter-504/freeze-source1.json": "fdea1dadbf5c197886a8942ece6fefb1340412e590a1d98fbb44a300ec95a261",
+    "extracted/cpp-process-filter-504/freeze-source2.json": "667797742f6536717a47f9f5167737cddeb08d25ce7c0194506eaa2c333ccff7",
+    "extracted/cpp-process-filter-504/LastTest-whole1.log": "0ca3262c44bb9a60de0b31677cd4d6f32a63bad8c6aae5dfc1e1ef9e14211dbc",
+    "extracted/cpp-process-filter-504/live-bc8.json": "0e38c2d7f97082ebdfb5de7a1ad26b964915430115b9f7ef5243e11e8bbe945f",
+    "extracted/cpp-process-filter-504/live-bc8.log": "b92c33d9fc871e4130ef83470ba28e51aa5bca128cf0329da68ff2932e31fa43",
+    "extracted/cpp-process-filter-504/live2-bc8/bc8fury76/final.bmp": "3bdba829690a06aa9380028721dee793a6fd1f3e31658ec289ee9a4e01cd0c66",
+    "extracted/cpp-process-filter-504/live2-bc8/bc8fury76/result.json": "20c0e6d356cabf8c737897989ade3ca8cc9f98f866f9c8b32e42c163b3ff8463",
+    "extracted/cpp-process-filter-504/live2-bc8/bc8fury76/running.json": "9d7262fb42196f0514519f6c599ab35713b254698711c8480c60199d401f891e",
+    "extracted/cpp-process-filter-504/live2-bc8/bc8fury76/states.tsv": "df91043c34e16e13dc2aa90a6e1e81e89f8fe4a25d413016f2bf7a51f0401c18",
+    "extracted/cpp-process-filter-504/live2-bc8/bc8fury76/stderr.log": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2",
+    "extracted/cpp-process-filter-504/live2-bc8/bc8fury76/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-process-filter-504/live2-bc8/bc8fury76/steps.tsv": "8526d59e31d4c87c47016e1a89ec97b27ed4e3805e1b655a9cdfa536ad350848",
+    "extracted/cpp-process-filter-504/live2-bc8/results.json": "f9b43a3661a13cbcc002c90186d38a6c8efe9917bb38e7e87917fadebda0dcc6",
+    "extracted/cpp-process-filter-504/native1.json": "f21caa97c35ee2bed4d58b395cbd541cc17b1b0ede3910d6b3f062677bd6f367",
+    "extracted/cpp-process-filter-504/native1.log": "50c8b27d7b5e7fa7a005419d86ece50beefe8b908bbf47bfa92c4b988bab222c",
+    "extracted/cpp-process-filter-504/native2.json": "799f1ff4e11443b078d4990140648dc64ae0e524134b992ba0c87ee478e21d24",
+    "extracted/cpp-process-filter-504/native2.log": "cb3e668d399b9144160b6670a1593823c4bd63fb225fdf81d70ae253a1d19912",
+    "extracted/cpp-process-filter-504/pull1.json": "46029bc9e06f91d2ebe8cb1d5b47ab15258dd5f1cfeaaa4766e48e8348153995",
+    "extracted/cpp-process-filter-504/pull1.log": "e5d6c99aec87ec07a2d1b5c1222d8b690d0a61c3548a55c795fff56db9450d0d",
+    "extracted/cpp-process-filter-504/registered.json": "0c013dd4c815b693f2f6d3628b4b4d859165b2ac74f349b7e9ad5f952396a64b",
+    "extracted/cpp-process-filter-504/registered.log": "dfa1aa4331a2fee24698dac6b53fd6a9a83a1311ca4fbf8ccb0be26f847dbb50",
+    "extracted/cpp-process-filter-504/whole1.json": "0b8405635718278ff6dee924a2e1dfa575fa2fed7c0b49720152051c8f67beba",
+    "extracted/cpp-process-filter-504/whole1.log": "6c5176343d7975e9d010673f99ccfac31f0f9cdf5ec81dc7c1c64043ad5791ac"
+  }
+}
