@@ -9,16 +9,20 @@ namespace netstorm::client {
 namespace {
 // 원본이 조회하는 키의 접두어. 설정 객체 이름 "mission"에 구분자 '.'을 붙인 것이다.
 constexpr std::string_view kMissionPrefix = "mission.";
-//최초 설치와 로그인 재로드 모두 같은 선택 source와 현재 fortSpec을 사용하며 부재/예외를 우회하지 않는다.
+//이미 선택한 같은 경로의 명시 부재/예외를 다른 자산 reader로 우회하지 않는다.
+std::vector<std::uint8_t> ReadFortPath(const o::ConfigInterface::FileReader& source,std::string_view path) {
+    auto bytes=source ? source(path) : std::nullopt;
+    if (!bytes) throw std::runtime_error("Game file not found: "+std::string(path));return std::move(*bytes);
+}
+//최초 설치와 기존 로그인 reader도 같은 현재 fortSpec을 한 번 선택한다.
 std::vector<std::uint8_t> ReadFortSource(o::ConfigInterface& configuration,const o::ConfigInterface::FileReader& source,std::string_view selectedFort) {
-    const auto path=configuration.PathSpec("fortSpec",selectedFort);auto bytes=source ? source(path) : std::nullopt;
-    if (!bytes) throw std::runtime_error("Game file not found: "+path);return std::move(*bytes);
+    return ReadFortPath(source,configuration.PathSpec("fortSpec",selectedFort));
 }
 }
 
 // 원본 순서: 객체 생성 → 추가 설정(FUN_00440410) → `missionSpec` 경로의 파일(FUN_00440380).
 MissionScript::MissionScript(o::ConfigInterface& configuration, std::string_view name, std::string_view extraSettings,o::ConfigInterface::FileReader source)
-    : configuration_(configuration), name_(name),source_(source ? std::move(source) : configuration.Reader()), script_(configuration.Registry(), "mission") {
+    : configuration_(configuration), name_(name),explicitSource_(static_cast<bool>(source)),source_(source ? std::move(source) : configuration.Reader()), script_(configuration.Registry(), "mission") {
     script_.AppendArguments(extraSettings, source_);
     scriptPath_ = configuration_.PathSpec("missionSpec", name_);
     if (source_) if (const auto bytes = source_(scriptPath_)) script_.LoadBytes(*bytes);
@@ -49,6 +53,15 @@ std::vector<std::uint8_t> MissionScript::ReadFortImage(std::string_view selected
 std::function<std::vector<std::uint8_t>(std::string_view)> MissionScript::FortReader() const {
     return [configuration=&configuration_,source=source_](auto selectedFort) { return ReadFortSource(*configuration,source,selectedFort); };
 }
+//I/O 경계가 Config를 바꾸더라도 이미 선택한 경로와 그 파일의 바이트를 같은 결과에 유지한다.
+MissionFortFileReader MissionScript::FortFileReader(std::function<std::string(std::string_view)> fileName) const {
+    return [configuration=&configuration_,source=source_,fileName=std::move(fileName)](auto selectedFort) {
+        const auto path=configuration->PathSpec("fortSpec",selectedFort);auto bytes=ReadFortPath(source,path);
+        return MissionFortSourceImage{std::move(bytes),fileName ? fileName(path) : path};
+    };
+}
+//Guide 교체는 명시 작업 namespace를 유지하고 기본 자산 경계는 새 미션의 현재 Config에 맡긴다.
+o::ConfigInterface::FileReader MissionScript::FileSource() const { return explicitSource_ ? source_ : o::ConfigInterface::FileReader{}; }
 // 없으면 빈 문자열이다.
 std::string MissionScript::MissionType() { return Get("missionType").value_or(std::string()); }
 // Section은 등록 객체의 접두어를 붙이지 않는 원본 본문 조회다.

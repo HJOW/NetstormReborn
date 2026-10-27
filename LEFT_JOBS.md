@@ -10,6 +10,8 @@
 - 2026-10-26의 문서 정리는 HJOW-X3D에서 인수인계 문서만 고친 것이다. 디컴파일 결과·제품 코드·검사 코드는 바꾸지 않았으므로 위 디컴파일 기록은 그대로 유효하다. 사용자는 HJOW-Athlon에서 작업을 재개할 예정이다.
 - **실제 게임 실행 확인:** HJOW-Athlon, VM-W11-Codex, vm-debian-codex는 AGENTS.md의 예외 시스템이다. 그 밖의 PC에서는 게임이나 별도 창을 띄우기 전에 목적을 설명하고 사용자 확인을 받는다.
 - **목표 상태 — 재개/485 완료:** 2026-10-27 사용자의 새 `/goal`로 전체 목표를 재개했다.484의 Guide/World 분리·새 요청/Zone 보존에 이어485에서 War 진입의 미니맵 중간 crop을 Refresh 전에 읽던 호스트 표시 순서를 수정했다. Release build2 경고/오류0·집중59고유/65관측·실패0·등록3,274, 게임 `3786327a…`다. 실제 메인 메뉴·War 메뉴 진입·War CLI 진입/Restart·Early1 메뉴 진입/Restart의 짧은4실행이 종료0이다. 기존 검사/fixture·원본/CD3,195파일/AGENTS와 최종 소스/검사2,846파일을 보존했다. c2/전체 Editor 왕복·AddIsland/저장 재진입·전체미션 자연완주/전체동일성은 남는다. 짧은 실제 실행은 허용되며 스테이지 클리어와 사용자 개입 검증은 계속 뒤로 미룬다.
+- **486 완료 / 최신 통합:** 논리 요새 이름과 manager의 실제 파일 경로를 분리하고 같은 읽기의 바이트/경로를 최초 설치·Login에 전달했다. 명시 source는 Guide Begin/Restart/Fork에서 소유 복사하며 기본 자산 경계는 유지한다. Release build2 경고/오류0·집중19/신규2/실패0·전체C++3,276/실패0·CTest1/실패0, 게임 `ac6d445e…`다. 실제 War 짧은 진입/Restart는500프레임/약13.18초 종료0이다. 기존3,274등록·원본/CD/기존 검사3,195파일/AGENTS(기존2파일 끝 등록만 추가)와 최종 소스/검사2,848파일을 보존했다. 최초 지역 이름 shadow 경고1건은 이름만 수정해 없앴고 첫 로그를 유지했다. [문서](docs/exe/cpp-mission-fort-path-20261027.md), [보고서](cpppj/mission-fort-path-20261027.json), 원시 extracted/cpp-mission-fort-path-486/. c2 일반 입력과 Battle14 RequestFortEdit/State1 실제 편집 복귀는 후속이다.
+- **현행 목표 확장(2026-10-27):** 사용자 수정 `/goal`에 따라 Windows 10/11 호환성·전체화면 DirectDraw 오류 해결도 지금 목표에 포함된다. 원본과 다른 호환성 처리는 반드시 코드 주석에 명시한다. 아래 옛 기록의 “2차/이번 목표 밖”으로 이 작업을 미루지 않는다. 기존 스테이지·Edit·비멀티 메뉴·덱/미니맵/QWASZX/ESC 목표도 그대로 유지한다.
 - **원시 증거 위치:** 빌드·검사·GUI 원시 로그와 통합 드라이버는 `extracted/`(Git 제외)에 있으며, 작업한 PC(주로 HJOW-Athlon)에만 있다. 커밋되는 결과 보고서는 `cpppj/*.json`, 작업 문서는 `docs/exe/cpp-*.md`다.
 - **471 추가 수정 완료:** 사용자 신고의 공통 메뉴 토글 표시를 원본 J02(60번)로 고쳤다. 타입+154는 I.count가 아니라 J.first다. 메인 Options/ESC 메뉴가 같은 렌더러를 사용하며, 양판본 원본 픽셀·공통 메뉴 체크 on/off를 포함한 집중120개/실패0·신규2개, Release 경고/오류0이다. 게임 `76c257c5…`, 등록3,230개이며 전체CTest/게임/GUI는 실행하지 않았다. [문서](docs/exe/cpp-menu-toggle-marker-20261027.md), [보고서](cpppj/menu-toggle-marker-20261027.json). 기존 검사/원본/CD/AGENTS3,160파일 바이트동일, 마지막 전체 디컴파일 HJOW-Athlon/2026-10-23 유지. NewFort 이후 잔여 목표는 계속 진행한다.
 - **다음 재개점:** [485 HUD 표시](docs/exe/cpp-mission-entry-hud-20261027.md), [484 수명](docs/exe/cpp-editor-guide-world-lifetime-20261027.md), [483 로그인](docs/exe/cpp-mission-reload-source-runtime-20261027.md), [482 파일 source](docs/exe/cpp-mission-file-source-runtime-20261027.md), [481 c2 부모](docs/exe/cpp-editor-test-battle-parent-20261027.md)를 확인한다. 미니맵 bitmap 실패는485에서 해결했고 원시도 보존했다. 다음은 c2 일반 입력/작업본 namespace·Battle14의 실제 RequestFortEdit·State1 편집 복귀다. War/Early1의 실제 짧은 진입/Restart는 통과했으며 TestBattle 전체 왕복/전체미션 자연완주 증거는 아니다. 다른PC면 AGENTS에 따라 전체정밀디컴파일부터 다시 한다.
@@ -19,6 +21,8 @@
 - 원격 저장소에 push하지 않는다. 커밋 메시지는 `YYYYMMDD-NN CP 요약` 형식이며, NN은 `git log`로 그날의 마지막 번호를 확인해 정한다.
 
 ## 1. 현행 목표 ([TODO.md](TODO.md))
+
+- **486 완료 — 같은 미션 파일의 바이트/실제 경로:** 최초 설치와 실제 Login이 `MissionFortSourceImage`의 같은 fortSpec 선택을 사용하고 Session은 논리 이름을 별도로 소유한다. 현재 경로 변경/읽기 도중 Config 변경/Script와 외부 namespace 반납 뒤 수명·실제 manager+c 파일 이름을 신규2검사로 확인했다. Release build2 경고/오류0·집중19/실패0·전체C++3,276/실패0·CTest1/실패0, 같은 게임 `ac6d445e…`의 War 짧은 진입/Restart 종료0이다. 기존 등록/검사·fixture/보호3,195파일과 최종 소스/검사2,848파일을 보존했다. 최초 shadow 경고1건은 새 지역 이름만 수정해 없앴다. [문서](docs/exe/cpp-mission-fort-path-20261027.md), [보고서](cpppj/mission-fort-path-20261027.json). 마지막 전체 정밀 디컴파일 HJOW-Athlon/2026-10-23 유지. c2/전체 Editor 왕복 및 확대된 Windows 10/11 호환성 목표를 계속 진행한다.
 
 - **485 완료 — 미션 첫 표시의 미니맵 crop 오류:** War 메뉴/CLI 진입의 주소-30080/할당16384BYTE 실패를 재현했다. 원문 Refresh 전 호스트 브리핑 배경 합성의 HUD Draw를 기존 Renderer Overlay로 옮겼고 원문 기하/guard를 유지했다. Release build2 경고/오류0·집중59고유/65관측·실패0·기존3,274등록/검사·fixture/원본/CD/AGENTS3,195파일 바이트동일, 소스/검사2,846파일 동결이다. 같은 게임 `3786327a…`의 실제 메뉴/War 메뉴진입/War CLI 진입·Restart/Early1 메뉴진입·Restart4실행을 종료0으로 확인했다.6개 재실행 중복의 첫 집계기 가정 오류는 집계만 정정했고 첫 실패/진단을 보존했다. 원격 pull은 최신 상태이며 로컬 커밋만 수행한다. [문서](docs/exe/cpp-mission-entry-hud-20261027.md), [보고서](cpppj/mission-entry-hud-20261027.json), 원시 extracted/cpp-mission-entry-hud-485/. 마지막 전체 정밀 디컴파일 HJOW-Athlon/2026-10-23 유지. c2/전체 목표는 계속 진행한다.
 
@@ -260,9 +264,14 @@
 - [ ] 최신 소스 PC에서 `cpppj/package-cpppj.ps1`을 `-NoBuild` 없이 실행해 빌드 → 묶기가 이어지는지, `BUILD_INFO.txt`의 실행 파일 시각·SHA가 새 산출물인지 확인한다.
 - [x] 국·영 README의 cpppj 진행 상태 갱신: `1eddb0e8 / 20261026-07 CM`에서 완료됐다.
 
+### 8. Windows 10/11 호환성과 전체화면 — 현행 목표에 포함
+
+- [ ] Windows 10/11에서 오류 없는 실행, 전체화면 DirectDraw 오류, 전체화면 종료 후 재실행 오류를 해결하고 실제 전환/종료/재실행을 검증한다. 실제 검증한 OS와 미검증 OS를 구별한다.
+- [ ] 전체화면·4:3/16:9/16:10·가장자리 스크롤의 AGENTS 의무를 함께 확인한다. 창 모드 진입이나 완주만으로 전체화면 의무를 완료 처리하지 않는다.
+- [ ] 원본 10.78과 다른 호환성 처리를 추가/수정한 코드에는 해당 차이와 이유를 반드시 한국어 주석으로 명시한다.
+
 ### 이번 목표 밖 (AGENTS.md의 후순위 단계)
 
-- 2차: Windows 10/11 안정 구동, 전체화면 DirectDraw 오류 수정, 4:3·16:9·16:10, 전체화면 가장자리 스크롤. 창 모드 완주만으로 이 의무를 완료 처리하지 않는다.
 - 3차: TCP/IP 로컬 멀티플레이, Outpust, 멀티플레이 전용 분기.
 - 4차 이후: 한국어, MCP, 60/120프레임, CD 10.72 전체 복원(10.72의 Windows 10 구동 불가 해결책도 그때 문서화한다).
 
@@ -271,6 +280,7 @@
 - **긴 검사 묶음(2026-10-25 사용자 결정):** 작업 단위마다 34경로 진입, 긴 Early 완주, 전체 CTest를 반복하지 않는다. 단위별로는 원문 근거와 변경 부위 집중 검사, 필요한 증분 빌드, 인계, 커밋을 한다. 전체 CTest와 긴 실제 플레이는 기능 묶음 완성 또는 3~5개 단위 뒤 같은 최종 제품으로 통합 실행한다. 실제 입력·타이머·저장처럼 즉시 확인이 필요한 변경은 해당 장면만 짧게 먼저 실행한다.
 - **기록 원칙:** 컴파일만 한 검사를 실행 통과로 적지 않는다. 명시 입력·정적 대조·컴파일·C++ 검사·GUI 관측을 구별한다. 최초 실패와 교정 과정의 원시 로그를 지우지 않으며, 검사 기대값을 제품에 맞춰 약화하지 않는다. 단위 검사 통과나 미션 진입만으로 완주·동일성을 선언하지 않는다.
 - **실제 실행 범위(2026-10-27 사용자 구체화):** 메인 메뉴 표시, 스테이지 진입, 진입 후 몇 초간 오류 없는지처럼 스테이지 클리어까지 볼 필요가 없는 부분은 실제 게임을 실행해 검증해도 된다. 스테이지 클리어와 사용자 개입이 필요한 검증은 계속 뒤로 미룬다. 위의 옛 문구에서 실제 실행을 전부 보류한 부분은 이 결정으로 대체한다.
+- **Test Battle의 언어 파일 부재(2026-10-27 사용자 설명):** 원본도 커스텀 맵에 대응하는 `.english`가 없으면 Test Battle 진입 시 종료된다. 클론에서의 개선은 나중에 하기로 했으므로 현재 단계에서는 참고만 하고 수정하지 않는다. 현재 연결 검증은 대응 언어 파일이 있는 TEST01 등으로 진행하며, 없는 파일을 다른 원본/임의 기본 시나리오로 대체하지 않는다.
 - **테스트 전용 조작:** `--test-bridge-patterns` 같은 임시 조작은 원본 분석 결과가 아님을 주석·기록에 표시하고 기본 게임·적 AI·저장 프로필에 섞지 않는다. 우리 편만 AI 활성화·행동 빈도 증가·시작 SP 추가는 [가능성 검토](docs/exe/cpp-test-local-ai-and-sp-feasibility-20261021.md)만 했고 구현하지 않았다. 이 중 로컬 owner AI 옵션은 TEST02 포획·희생 테스트에 쓰기로 했다(3절 3번).
 - **보호 파일:** `originals/`, `originalCD/`의 파일을 수정·삭제하지 않는다(options.cfg, fullscreenStateFile.dat 제외). 게임 실행 전후 `originals/` 전체 해시를 비교하고 허용 설정 파일을 복원한다. AGENTS.md도 수정하지 않는다.
 - **빌드:** HJOW-Athlon은 Visual Studio 18(2026) 생성기·MSBuild 18.x를 쓴다. 최근 사용한 명령은 `cmake --build cpppj/build --config Release --parallel 4 -- /p:UseMultiToolTask=true /p:MultiProcMaxCount=4 /p:EnforceProcessCountAcrossBuilds=true`이며, 이전 컴파일러·CMake 자식 프로세스가 모두 끝난 뒤 시작한다. 상세는 [C++ 빌드](docs/cpp-build.md)를 본다.

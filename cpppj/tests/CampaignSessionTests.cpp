@@ -5027,3 +5027,4 @@ TEST_CASE(StateRuntimeCoordinator_RejectsForeignStorageKernelAndStaleGeneration)
 
 #include "CampaignMissionReloadSourceTests.inc"
 #include "CampaignGuideWorldLifetimeTests.inc"
+#include "CampaignMissionFortPathTests.inc"

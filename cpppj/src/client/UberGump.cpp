@@ -509,7 +509,7 @@ void UberGump::RefreshWindowTitle() {
 }
 // 원본 Begin의 현재 finish/release 뒤 새 빈 미션을 만든다. StartDemo의 직접 지정값도 설치 전에 공급한다.
 void UberGump::BeginMission(std::string name,std::uint32_t demo,std::uint32_t mode) {
-    auto effects=MissionTransitionEffects();effects.create=[this,demo,mode](std::string_view target) { CreateMission(std::string(target),demo,mode); };
+    auto source=mission_ ? mission_->FileSource() : o::ConfigInterface::FileReader{};auto effects=MissionTransitionEffects();effects.create=[this,demo,mode,source=std::move(source)](std::string_view target) { CreateMission(std::string(target),demo,mode,source); }; //기존 Guide를 해제하기 전에 명시 namespace를 소유 복사하며 다음 공장이 같은 source를 사용한다.
     BeginGuideMission(name,effects);
 }
 // Guide 공장의 현재 Client 소비자다. 이전 미션 해제는 호출자가 원본 순서로 마친 상태여야 한다.
@@ -533,7 +533,7 @@ GuideMissionTransitionHooks UberGump::MissionTransitionEffects() {
         if (missionRuntime_->guided) RunTutorialMissionStage(missionRuntime_->state,6,{}); // 실제 Tutorial+1c의 빈 종료다. 다른 형식은 기존 teardown 어댑터를 유지한다.
     };
     hooks.release=[this] { ReleaseCurrentGuideMission(); }; //원문 Guide 해제는 Mission만 닫는다. World/Player/Kernel/HUD 반납은 뒤 State1/7의 전체 부모가 수행한다.
-    hooks.create=[this](std::string_view name) { CreateMission(std::string(name)); };
+    hooks.create=[this,source=mission_ ? mission_->FileSource() : o::ConfigInterface::FileReader{}](std::string_view name) { CreateMission(std::string(name),0,0,source); }; //Restart/Fork도 해제 뒤 기본 자산 경계로 돌아가지 않도록 현재 명시 source의 수명을 보유한다.
     hooks.get=[this](std::string_view key) { if (!mission_) throw std::logic_error("현재 설정 없는 Guide Fork");return mission_->Get(key).value_or(""); };
     hooks.mode=[this](std::uint32_t value) { if (!missionRuntime_) throw std::logic_error("재시작 공장 뒤 모드 수신 누락");missionRuntime_->mode64=value; };
     hooks.demo=[this](std::uint32_t value) { if (!missionRuntime_) throw std::logic_error("재시작 공장 뒤 데모 수신 누락");missionRuntime_->gate.demo=value; };
@@ -594,7 +594,10 @@ void UberGump::LoadMissionWorld(std::optional<std::string> requestedFort) {
     const auto type=o::AsciiLower(mission_->MissionType()); // 현재 미션의 실제 가상 형식에 맞는 기존 설치 경로다.
     if (!missionRuntime_->guided) { missionRuntime_->gate.tutorialNumber=std::bit_cast<std::uint32_t>(o::ConfigParseLong(mission_->Get("tutorialNumber").value_or("")));ApplyMissionDemo(mission_->Get("demo").value_or(""),missionRuntime_->gate.demo);o::ResetMissionBattleOptions(o::OriginalEdition::Patch1078,*missionOptions_);o::SetTotalMadeAllowAll(*missionRestrictions_,1);initLoginSubscriber_=1; }
     const auto selectedFort=requestedFort ? *requestedFort : mission_->FortName(); // Init의 지역256BYTE에서 캡처한 값을 이후 설정 재조회로 바꾸지 않는다.
-    const auto fortImage=std::make_shared<const std::vector<std::uint8_t>>(mission_->ReadFortImage(selectedFort));auto fort = o::FortTemplate::Parse(*fortImage, client_.Assets().TypeTable()); //실제 설치도 script/추가 설정과 같은 미션 source를 사용한다. 편집 모드0이나 Editor Runtime 반납으로 reader를 자산 폴더에 되돌리지 않는다.
+    auto fortFileRead=mission_->FortFileReader([workspace=editorCatalog_,root=client_.GameDirectory(),working=static_cast<bool>(mission_->FileSource())](std::string_view configured) {
+        if (working) return workspace->Resolve(configured).string();const std::filesystem::path path(configured);return (path.is_absolute() ? path : root/path).lexically_normal().string(); //같은 선택 namespace의 실제 파일 이름을 반환하며 mapper에서 Fort를 다시 읽지 않는다.
+    });
+    auto fortFile=fortFileRead(selectedFort);const auto fortImage=std::make_shared<const std::vector<std::uint8_t>>(std::move(fortFile.image));auto fort = o::FortTemplate::Parse(*fortImage, client_.Assets().TypeTable()); //최초 설치도 같은 fortSpec 선택의 파일 이름/이미지를 함께 보유한다.
     // 전체 요새 레코드를 세어 자동 검사에서 미션 선택과 파일 로드를 함께 확인한다.
     const auto count = [this](const o::FortChunkSection& section) { for (const auto& chunk : section.chunks) fortObjects_ += chunk.objects.size(); };
     fortObjects_ = 0; count(fort.chaff);
@@ -610,6 +613,7 @@ void UberGump::LoadMissionWorld(std::optional<std::string> requestedFort) {
     services.factoryHelp=[this](std::string_view section,std::uint32_t mode) { const auto token=scriptStrings_.Store(section);if (token>0x0fffffffU) throw std::overflow_error("Factory 도움말 문자열 별칭 토큰 소진");rawButtons_->Menus()->OpenHelp(0x70000000U|token,static_cast<std::int32_t>(mode),0); }; //기존Help와같은문자열고리/별칭과실제전용창을사용한다.
     services.missionOutcome.demo=[this] { return missionRuntime_ ? missionRuntime_->gate.demo : 0U; };
     services.missionOptions=missionOptions_;services.missionRestrictions=missionRestrictions_;services.missionFortRequest=missionFortRequest_;services.templateStorage=templateStorage_;services.missionFortImage=fortImage;services.missionFortRead=mission_->FortReader(); //같은 Init/요청/Template와 최초 원문 및 로그인 재로드 reader를 함께 전달한다. reader는 현재 Mission 포인터를 나중에 다시 읽지 않는다.
+    services.missionFortFileName=std::move(fortFile.fileName);services.missionFortFileRead=std::move(fortFileRead); //실제 manager 파일 이름은 최초/재로드 모두 같은 읽기의 경로이며 논리 요새 이름은 Session이 따로 소유한다.
     services.fortBadges=client_.FortBadges();services.fortMission=FortMissionSaveEffects(); // 실제 Client 단일 장부와 현재 Runtime getter를 같은 Session에 빌린다.
     services.fortTypeConversion=client_.FortTypeConversion(); // 같은 Client의 현재 타입 변환표 소유자를 전달한다.
     services.missionOutcome.tellBlocked=[this] { return state_.phase==ClientPhase::Dialog || state_.phase==ClientPhase::Briefing ? 1U : 0U; };

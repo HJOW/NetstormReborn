@@ -56,6 +56,10 @@ struct RawCampaignSession::Impl::Login {
     //현재 파일을 실제 VFS로 다시 읽어 같은Template/State/territory cursor를 교체한다.
     void Reload(std::uint32_t owner) {
         const auto name=s.templateStorage->Name(owner);if (owner!=1 || name.empty()) throw std::logic_error("로컬 미션 이외 Template 파일 선택 미연결");
+        if (s.services.missionFortFileRead) {
+            auto fortFile=s.services.missionFortFileRead(s.missionFortName);if (fortFile.fileName.empty()) throw std::runtime_error("미션 파일 reader의 실제 파일 이름 누락"); //명시 파일 source의 실패를 기존 byte reader나 자산 fallback으로 바꾸지 않는다.
+            auto fort=FortTemplate::Parse(fortFile.image,s.assets.game.TypeTable());s.templateStorage->InstallFile(owner,std::move(fort),fortFile.image,std::move(fortFile.fileName));return; //읽기에 쓴 논리 이름은 보존하고 같은 파일의 물리 경로만 새 manager에 설치한다.
+        }
         const auto bytes=s.services.missionFortRead ? s.services.missionFortRead(name) : s.assets.files.Read("d/"+name+".fort");s.templateStorage->InstallFile(owner,FortTemplate::Parse(bytes,s.assets.game.TypeTable()),bytes,name); //명시 Client reader는 같은 현재 작업 파일을 다시 읽으며 독립 Session만 기존 d/ 자산 경계를 사용한다.
     }
     //현재20BYTE zlocal주소에서 실제클라이언트의포트와주소를 제공한다.

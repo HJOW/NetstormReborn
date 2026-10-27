@@ -1,0 +1,395 @@
+{
+  "unit": 486,
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": "HJOW-Athlon / 2026-10-23",
+  "builds": [
+    {
+      "command": [
+        "cmake",
+        "--build",
+        "cpppj/build",
+        "--config",
+        "Release",
+        "--parallel",
+        "4",
+        "--",
+        "/p:UseMultiToolTask=true",
+        "/p:MultiProcMaxCount=4",
+        "/p:EnforceProcessCountAcrossBuilds=true"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-mission-fort-path-486/build1.log",
+      "sha256": "8dcb7f486cd955fa7ae44cc59ddcc2a2a4e4f5945f05ea115c7fb55f022cde5b",
+      "summaries": [],
+      "diagnostics": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\src\\client\\RawCampaignSessionLogin.inc(60,18): warning C4458: 'source' 선언은 클래스 멤버를 숨깁니다. [H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\src\\netstorm.vcxproj]"
+      ]
+    },
+    {
+      "command": [
+        "cmake",
+        "--build",
+        "cpppj/build",
+        "--config",
+        "Release",
+        "--parallel",
+        "4",
+        "--",
+        "/p:UseMultiToolTask=true",
+        "/p:MultiProcMaxCount=4",
+        "/p:EnforceProcessCountAcrossBuilds=true"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-mission-fort-path-486/build2.log",
+      "sha256": "5f081b61d8cd48c1051240f5b003d70526174e85b1ef9b83d7355727ee1a9d44",
+      "summaries": [],
+      "diagnostics": []
+    }
+  ],
+  "focused": {
+    "unique": 19,
+    "observations": 19,
+    "failedChecks": 0,
+    "addedTests": [
+      "CampaignMissionFortPath_ActualLoginKeepsLogicalSelectionAndSamePhysicalFile",
+      "CampaignMissionFortPath_ConfigMutationDuringReadCannotRenameThatImage"
+    ],
+    "runs": [
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "CampaignGuideWorldLifetime"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-mission-fort-path-486/focused2-CampaignGuideWorldLifetime.log",
+        "sha256": "22fbeccdcc8f829a3d3f340ac3432ea007e943b5131652da19150fce74aa53dd",
+        "summaries": [
+          "3 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "CampaignMissionFortPath"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-mission-fort-path-486/focused2-CampaignMissionFortPath.log",
+        "sha256": "99770507f4d3dec1e0551206e5db1031616a514a90ba2955e0d1d7875f9d542e",
+        "summaries": [
+          "2 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "CampaignMissionReloadSource"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-mission-fort-path-486/focused2-CampaignMissionReloadSource.log",
+        "sha256": "067e4366066602c01d69a3288c7ba3a58026599c9a3ed47b0bddc08a5847f8c2",
+        "summaries": [
+          "3 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "GuideTransitions"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-mission-fort-path-486/focused2-GuideTransitions.log",
+        "sha256": "fc634be4a85847815c96e6244b702aa1cfa7f46bce70cd0e770e9b9b5351c13b",
+        "summaries": [
+          "2 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "MissionFileSource"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-mission-fort-path-486/focused2-MissionFileSource.log",
+        "sha256": "4a3e6ede9eccdac282e514c7aea9f7bea1557261155eb3bd7ccce2a5a9fcc247",
+        "summaries": [
+          "5 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "TutorialInit"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-mission-fort-path-486/focused2-TutorialInit.log",
+        "sha256": "08eb74725aeec2d83af8b026ef9c2317f9ee8dd7e7344741a6901d98189779e5",
+        "summaries": [
+          "4 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      }
+    ]
+  },
+  "whole": {
+    "cppCases": 3276,
+    "cppFailedChecks": 0,
+    "ctestCases": 1,
+    "ctestFailed": 0,
+    "execution": {
+      "command": [
+        "ctest",
+        "--test-dir",
+        "cpppj/build",
+        "-C",
+        "Release",
+        "-V"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-mission-fort-path-486/whole1.log",
+      "sha256": "ce0375f9911351ee6feffaf0e04cf88b8f7e75f2324e3cf85f164530187a894f",
+      "summaries": [
+        "3276 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    }
+  },
+  "registered": {
+    "before": 3274,
+    "after": 3276,
+    "removed": []
+  },
+  "protection": {
+    "files": 3195,
+    "changedProtectedOrExistingTests": [],
+    "agentsUnchanged": true,
+    "appendOnlyPrefixBytes": {
+      "cpppj/tests/CampaignSessionTests.cpp": 759426,
+      "cpppj/tests/CMakeLists.txt": 162631
+    }
+  },
+  "finalSourceFiles": 2848,
+  "exes": {
+    "NetstormCpp.exe": "ac6d445ebd0a283b156a0b140d3ccdd2dab473cc36feea141a623ceb8a06002a",
+    "netstorm_tests.exe": "c44cc8b0fcabab5cab3fde64241738023a1c4e187cccc0256d2b3cf88501a195"
+  },
+  "live": {
+    "result": {
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-mission-fort-path-486\\live-data",
+        "--window",
+        "--no-audio",
+        "--frames",
+        "500",
+        "--set",
+        "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=1",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-mission-fort-path-486\\live-stage1\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-mission-fort-path-486\\live-stage1\\states.tsv",
+        "--mission",
+        "TheWarBegins"
+      ],
+      "binarySha256": "ac6d445ebd0a283b156a0b140d3ccdd2dab473cc36feea141a623ceb8a06002a",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 13.178906900000584,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "988ae57ba0bb1171522a3f909f386bcceceab053830e1e2a63aebc1cf9ba5079"
+    },
+    "checks": {
+      "normalExit": true,
+      "originalsUnchanged": true,
+      "firstPlaying": true,
+      "restartBriefing": true,
+      "secondPlaying": true
+    },
+    "passed": true,
+    "observed": {
+      "briefing": {
+        "phase": [
+          "3"
+        ],
+        "page": [
+          "A."
+        ],
+        "paused": [
+          "1"
+        ],
+        "fort_names": [
+          "TheWarBegins",
+          "",
+          "2",
+          "fortSpec"
+        ],
+        "mission": [
+          "TheWarBegins",
+          "Tutorial",
+          "172"
+        ],
+        "mission_start": [
+          "1",
+          "4",
+          "0",
+          "0.402",
+          "0"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ]
+      },
+      "playing": {
+        "phase": [
+          "4"
+        ],
+        "page": [
+          "mission"
+        ],
+        "paused": [
+          "0"
+        ],
+        "fort_names": [
+          "TheWarBegins",
+          "",
+          "2",
+          "fortSpec"
+        ],
+        "mission": [
+          "TheWarBegins",
+          "Tutorial",
+          "172"
+        ],
+        "mission_start": [
+          "1",
+          "4",
+          "0",
+          "0.402",
+          "0"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ]
+      },
+      "before-restart": {
+        "phase": [
+          "4"
+        ],
+        "page": [
+          "mission"
+        ],
+        "paused": [
+          "0"
+        ],
+        "fort_names": [
+          "TheWarBegins",
+          "",
+          "2",
+          "fortSpec"
+        ],
+        "mission": [
+          "TheWarBegins",
+          "Tutorial",
+          "172"
+        ],
+        "mission_start": [
+          "1",
+          "4",
+          "0",
+          "0.402",
+          "0"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ]
+      },
+      "restarted": {
+        "phase": [
+          "3"
+        ],
+        "page": [
+          "A."
+        ],
+        "paused": [
+          "1"
+        ],
+        "fort_names": [
+          "TheWarBegins",
+          "",
+          "3",
+          "fortSpec"
+        ],
+        "mission": [
+          "TheWarBegins",
+          "Tutorial",
+          "172"
+        ],
+        "mission_start": [
+          "1",
+          "4",
+          "0",
+          "5.467",
+          "0"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ]
+      },
+      "after-restart": {
+        "phase": [
+          "4"
+        ],
+        "page": [
+          "mission"
+        ],
+        "paused": [
+          "0"
+        ],
+        "fort_names": [
+          "TheWarBegins",
+          "",
+          "3",
+          "fortSpec"
+        ],
+        "mission": [
+          "TheWarBegins",
+          "Tutorial",
+          "172"
+        ],
+        "mission_start": [
+          "1",
+          "4",
+          "0",
+          "5.467",
+          "0"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ]
+      }
+    }
+  },
+  "newGoalScope": "Windows 10/11 호환성과 전체화면 DirectDraw 오류 수정도 현재 목표이며 원본과 다른 처리에는 코드 주석을 명시한다.",
+  "limits": [
+    "c2 일반 입력/전체 RequestFortEdit·State1 편집 복귀는 아직 후속이다.",
+    "대응 .english 부재 시 종료되는 원본 문제 개선은 사용자 지시로 나중에 한다.",
+    "실제 실행은 짧은 진입/Restart이며 전체 미션 완주/픽셀·음향 전체 동일성 증거가 아니다."
+  ],
+  "pushed": false
+}

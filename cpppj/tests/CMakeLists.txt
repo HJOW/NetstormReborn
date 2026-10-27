@@ -2272,3 +2272,6 @@ target_sources(netstorm_tests PRIVATE CampaignMissionReloadSourceTests.inc)
 
 # 실제 Init/State의 이전 Session 반납과 새 Guide 요청 보존을 검사한다.
 target_sources(netstorm_tests PRIVATE CampaignGuideWorldLifetimeTests.inc)
+
+# 실제 미션 파일의 바이트/경로와 논리 이름을 같은 로그인에 전달하는지 검사한다.
+target_sources(netstorm_tests PRIVATE CampaignMissionFortPathTests.inc)
