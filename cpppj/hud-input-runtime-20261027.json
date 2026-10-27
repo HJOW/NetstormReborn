@@ -1,0 +1,505 @@
+{
+  "unit": 509,
+  "date": "2026-10-27",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23",
+    "changed": false
+  },
+  "productCommit": "e06a971f",
+  "exes": {
+    "NetstormCpp.exe": "26401d6fcd36c21c0045065cce574154d4945e33544c91c68947868d53327cf1",
+    "netstorm_tests.exe": "584b27637f16443b6e728ce5ec5a5105d9ed0664674b07cab097692709359380"
+  },
+  "sourceFiles": 2892,
+  "productUnchanged": true,
+  "newBuilds": 0,
+  "newCppTests": 0,
+  "newNativeOriginalExecutions": 0,
+  "gameExecutions": {
+    "total": 10,
+    "normalExits": 10,
+    "acceptedVisibleActiveCases": 3,
+    "preservedHarnessFailures": 5,
+    "intermediateHiddenPasses": 2,
+    "productFailures": 0
+  },
+  "accepted": [
+    {
+      "name": "minimap-1024-visible",
+      "passed": true,
+      "active": true,
+      "visible": true,
+      "seconds": 5.196875199995702,
+      "summary": {
+        "held": {
+          "crop": [
+            8,
+            16
+          ],
+          "requestedCamera": [
+            1024,
+            782
+          ],
+          "camera": [
+            1024,
+            782
+          ],
+          "bitmap": 4274939947,
+          "frames": 28
+        },
+        "rightDrag": {
+          "crop": [
+            48,
+            16
+          ],
+          "requestedCamera": [
+            3904,
+            782
+          ],
+          "camera": [
+            3072,
+            782
+          ],
+          "bitmap": 4274939947,
+          "frames": 46
+        },
+        "topDrag": {
+          "crop": [
+            48,
+            0
+          ],
+          "requestedCamera": [
+            2304,
+            -494
+          ],
+          "camera": [
+            2304,
+            0
+          ],
+          "bitmap": 4274939947,
+          "frames": 76
+        },
+        "passed": true,
+        "viewport": [
+          1024,
+          768
+        ],
+        "originalsUnchanged": true,
+        "dataUnchanged": true,
+        "dataRoot": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-stage-entry-502-data",
+        "limitations": [
+          "실제기본HUD의crop/카메라/큐경로이며전체dock드래그와원본viewport배치는후속이다.",
+          "모드2/5유닛이동및미션전체완주는이검사에포함하지않는다."
+        ]
+      }
+    },
+    {
+      "name": "minimap-1280-visible",
+      "passed": true,
+      "active": true,
+      "visible": true,
+      "seconds": 5.3131577000021935,
+      "summary": {
+        "held": {
+          "crop": [
+            8,
+            16
+          ],
+          "requestedCamera": [
+            896,
+            806
+          ],
+          "camera": [
+            896,
+            806
+          ],
+          "bitmap": 4274939947,
+          "frames": 28
+        },
+        "rightDrag": {
+          "crop": [
+            48,
+            16
+          ],
+          "requestedCamera": [
+            3776,
+            806
+          ],
+          "camera": [
+            2816,
+            806
+          ],
+          "bitmap": 4274939947,
+          "frames": 46
+        },
+        "topDrag": {
+          "crop": [
+            48,
+            0
+          ],
+          "requestedCamera": [
+            2176,
+            -470
+          ],
+          "camera": [
+            2176,
+            0
+          ],
+          "bitmap": 4274939947,
+          "frames": 76
+        },
+        "passed": true,
+        "viewport": [
+          1280,
+          720
+        ],
+        "originalsUnchanged": true,
+        "dataUnchanged": true,
+        "dataRoot": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-stage-entry-502-data",
+        "limitations": [
+          "실제기본HUD의crop/카메라/큐경로이며전체dock드래그와원본viewport배치는후속이다.",
+          "모드2/5유닛이동및미션전체완주는이검사에포함하지않는다."
+        ]
+      }
+    },
+    {
+      "name": "production-keys-visible",
+      "passed": true,
+      "active": true,
+      "visible": true,
+      "seconds": 60.02536709999549,
+      "summary": {
+        "passed": true,
+        "earlyMissingSlot": 5,
+        "earlySlots": [
+          0
+        ],
+        "slots": {
+          "0": 73,
+          "1": 88,
+          "2": 91,
+          "3": 92,
+          "4": 93,
+          "5": 94
+        },
+        "selections": [
+          {
+            "key": "q",
+            "requestedSlot": 0,
+            "actualSource": 73,
+            "slotPresent": true
+          },
+          {
+            "key": "W",
+            "requestedSlot": 1,
+            "actualSource": 88,
+            "slotPresent": true
+          },
+          {
+            "key": "a",
+            "requestedSlot": 2,
+            "actualSource": 91,
+            "slotPresent": true
+          },
+          {
+            "key": "S",
+            "requestedSlot": 3,
+            "actualSource": 92,
+            "slotPresent": true
+          },
+          {
+            "key": "z",
+            "requestedSlot": 4,
+            "actualSource": 93,
+            "slotPresent": true
+          },
+          {
+            "key": "X",
+            "requestedSlot": 5,
+            "actualSource": 94,
+            "slotPresent": true
+          },
+          {
+            "key": "y",
+            "requestedSlot": 4,
+            "actualSource": 93,
+            "slotPresent": true
+          },
+          {
+            "key": "E",
+            "requestedSlot": null,
+            "actualSource": 94,
+            "slotPresent": true
+          }
+        ],
+        "rotated": [
+          "0",
+          "2"
+        ],
+        "prepared": [
+          "0",
+          "1",
+          "82",
+          "73",
+          "108",
+          "96",
+          "64",
+          "512",
+          "1",
+          "1",
+          "1"
+        ],
+        "newServerBridges": [
+          15203
+        ],
+        "refilled": [
+          [
+            "162",
+            "21",
+            "2",
+            "466",
+            "64"
+          ],
+          [
+            "88",
+            "1",
+            "2",
+            "72",
+            "64"
+          ],
+          [
+            "91",
+            "21",
+            "2",
+            "82",
+            "64"
+          ],
+          [
+            "92",
+            "1",
+            "2",
+            "92",
+            "64"
+          ],
+          [
+            "93",
+            "6",
+            "2",
+            "102",
+            "64"
+          ],
+          [
+            "94",
+            "8",
+            "2",
+            "112",
+            "64"
+          ]
+        ],
+        "originalsUnchanged": true,
+        "limitations": [
+          "WM_CHAR 이후의 실제 큐/프레임 경로이며 OS 키 메시지 발생 자체는 주입한다.",
+          "회전과 반대 회전 후 원래 방향으로 배치했다.",
+          "현재 실제 공급 슬롯과 없는 슬롯을 검증하며 전체 미션 완주 증거는 별도다."
+        ]
+      }
+    }
+  ],
+  "parserFramesChecked": 45,
+  "preservedFailedAttempts": [
+    "minimap-first",
+    "minimap-1024",
+    "minimap-1280",
+    "production-keys",
+    "production-keys-final"
+  ],
+  "harnessCorrections": [
+    "현재카메라를497f20요청과499fe0월드경계제한뒤적용으로구별",
+    "NativeABORT의raw_html_button확인",
+    "반복행분리는줄시작frame에만적용",
+    "STARTF_USESHOWWINDOW/SW_HIDE대신CREATE_NO_WINDOW로콘솔만숨김",
+    "미니맵에별도data-root와원본/사본각각해시·설정복원"
+  ],
+  "hiddenWindowEvidence": {
+    "styleBefore": 80674816,
+    "styleAfter": 349110272,
+    "activeBefore": 0,
+    "activeAfter": 1,
+    "note": "게임의비활성커서Tick중단은유지했다."
+  },
+  "protectedUnchanged": true,
+  "agentsUnchanged": true,
+  "existingTestsAndFixturesUnchanged": true,
+  "naturalClearAttempted": false,
+  "windows11Live": false,
+  "limitations": [
+    "키/마우스사건은검사스크립트가실제입력큐에전달한다.사람의수동입력검증은아니다.",
+    "이번HUD실행은창모드이며전체화면/전체UI동일성과도킹드래그는별도다.",
+    "연녹색직사각형분석은사용자지시로계속보류한다."
+  ],
+  "lastWholeSuite": {
+    "unit": 506,
+    "cppTests": 3335,
+    "failedChecks": 0
+  },
+  "lastFocused": {
+    "unit": 508,
+    "unique": 169,
+    "failedChecks": 0
+  },
+  "rawDirectory": "extracted/cpp-hud-runtime-509",
+  "pushed": false,
+  "evidenceSha256": {
+    "extracted/cpp-hud-runtime-509/before.json": "c16dcae72907cd119d3663f9b7d52abf1ea1117974e59459469e4388a710a544",
+    "extracted/cpp-hud-runtime-509/freeze-baseline.json": "f57521037ced70eeabfa4e3e4301634745d0c427ee618103b6f2d66861a8f33a",
+    "extracted/cpp-hud-runtime-509/minimap-first.log": "f86ec6496ff8a861da3cd9bc6e8491ad48e13f7113ecc4f32d532a5a200287a5",
+    "extracted/cpp-hud-runtime-509/minimap-first.json": "5a246c82daeda693301dc615692fd90c45d1b44bfc286e927a6f093fe74d5423",
+    "extracted/cpp-hud-runtime-509/minimap-1024.log": "156554be3ba828cb9768c5ef9396130858eda575994768bed8da2ef3df4e2a86",
+    "extracted/cpp-hud-runtime-509/minimap-1024.json": "839845ae4e77050aca8b87a4017c02a7b03aa97c61b692a055df8d1d50d9d2d1",
+    "extracted/cpp-hud-runtime-509/minimap-1280.log": "864ce8868f6cb6195e2af0823c4ed8a7544d817badb39ec6050015b26234e53d",
+    "extracted/cpp-hud-runtime-509/minimap-1280.json": "9f95e5135337a0f1771ea6d16208955f831cbef71401994d78099f17c05ed173",
+    "extracted/cpp-hud-runtime-509/production-keys.log": "3d1f3c53d94cca8236273afe17f6fd3bc6a3f9c212be3d0c9b0d1897f6aa8958",
+    "extracted/cpp-hud-runtime-509/production-keys.json": "e5655e3ff6cfd0c1d2a499c90620c18c75ecff2fca102fdccdfb94aab0d96855",
+    "extracted/cpp-hud-runtime-509/minimap-1024-final.log": "c0cd9be1e10040d80da24d42c73d823e3b0dfb7c59466504e5d9f81ebe7500ea",
+    "extracted/cpp-hud-runtime-509/minimap-1024-final.json": "1e6400a4f316020ece46317489fa9d7f1def9ea172e77c4ecf79c17e0298a967",
+    "extracted/cpp-hud-runtime-509/minimap-1280-final.log": "82005e0330b3adcc19258c013d3b760722b4a6e7f0ded91c5b54fef7881a1786",
+    "extracted/cpp-hud-runtime-509/minimap-1280-final.json": "2cc807b71eee133883e5d4ab241d1b3bb7e7b2472a61761f1e013a944624e433",
+    "extracted/cpp-hud-runtime-509/production-keys-final.log": "545d4dc5c3ce67b4ded0697f528b19cc39e16dc760081cd5a6c72eb53283a719",
+    "extracted/cpp-hud-runtime-509/production-keys-final.json": "dd6d7a077934c18cdb88745ad545e08663c797afc9d1975a63d6d159252ac544",
+    "extracted/cpp-hud-runtime-509/production-keys-visible.log": "2ea775ff634a6bf31e419e45dda6705f45f60933d2245eada86b400985ddd7a3",
+    "extracted/cpp-hud-runtime-509/production-keys-visible.json": "1cdddd1efa4a84781ac608458873b0a606f0d3e6ff33a649f9c1bcb394ef69bd",
+    "extracted/cpp-hud-runtime-509/minimap-1024-visible.log": "8a3380ea99c359297801d61b7fc760dc94eb4fda3420c5eaf5210400e512a677",
+    "extracted/cpp-hud-runtime-509/minimap-1024-visible.json": "3866fda2bbf71fe07fd635ff6675bda75b0c537e9c61dddde1e86f13a8c66d8c",
+    "extracted/cpp-hud-runtime-509/minimap-1280-visible.log": "2fbacb2dbcc0f50470a4f289e5e96f84aa33cb84c7412831cae66a0805e18e73",
+    "extracted/cpp-hud-runtime-509/minimap-1280-visible.json": "2359be6d48d8b68d2c2b045ae71ada628f4c960a66bba7aee7b4eeb638acdc09",
+    "extracted/cpp-hud-runtime-509/minimap-first/steps.tsv": "f2cfd3157eba7dd28b81208bfa5dd9e166d426f3e257f896cc22728b0d99cc85",
+    "extracted/cpp-hud-runtime-509/minimap-first/originals-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-hud-runtime-509/minimap-first/data-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-hud-runtime-509/minimap-first/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-hud-runtime-509/minimap-first/stderr.log": "110c8ffc5dff493b166f45c895b87111c10df0e56113491c410333a7c7784511",
+    "extracted/cpp-hud-runtime-509/minimap-first/running.json": "d6c13d5f7dd0c0785fa56d14aa905ec1255fe77530a4830fc5c15688bc542742",
+    "extracted/cpp-hud-runtime-509/minimap-first/states.tsv": "0ec8f056812a7c44e1b1001a40d84ffcda27a25da40684d74467ad061d62dffd",
+    "extracted/cpp-hud-runtime-509/minimap-first/initial.bmp": "71f040e3647274500967588079f26cfe85730d85b716cbb29cf956943f35c6e3",
+    "extracted/cpp-hud-runtime-509/minimap-first/right-drag.bmp": "6bceea86afcb4fd7751ad6ab629eb4722ade53015889cb2f788f7fb02d325452",
+    "extracted/cpp-hud-runtime-509/minimap-first/top-released.bmp": "cf23e2eeb71976a1f4615fcad307ce8df881902c4170a81baf3c456eeae2f469",
+    "extracted/cpp-hud-runtime-509/minimap-first/main-menu.bmp": "78508b37669a9706f508a4b89b25b3d2a7d3c0e0cf914cf93d64dccd7177925e",
+    "extracted/cpp-hud-runtime-509/minimap-first/run.json": "55e0c48ad86be17d61b1e49f62625b8eaa938ab2e367a495ab496d8eca369c03",
+    "extracted/cpp-hud-runtime-509/minimap-1024/steps.tsv": "8daf5452bce87361471d9232b342c4b349e613d9a3e555a222dcac4dc47dcbde",
+    "extracted/cpp-hud-runtime-509/minimap-1024/originals-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-hud-runtime-509/minimap-1024/data-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-hud-runtime-509/minimap-1024/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-hud-runtime-509/minimap-1024/stderr.log": "110c8ffc5dff493b166f45c895b87111c10df0e56113491c410333a7c7784511",
+    "extracted/cpp-hud-runtime-509/minimap-1024/running.json": "3ddb9c686f524ea3c064eebc7f521a6201bd6a3869abe807e363043780b21e56",
+    "extracted/cpp-hud-runtime-509/minimap-1024/states.tsv": "f21a59744e2a47fb5430267e6ed733b2a10256e732f59f80d20400d94bead524",
+    "extracted/cpp-hud-runtime-509/minimap-1024/initial.bmp": "9712c57903b58db6287e774d499d1c765c6f2296b1b6230f11090bb9a67e0de0",
+    "extracted/cpp-hud-runtime-509/minimap-1024/right-drag.bmp": "7fee8707c48b784789f8cc92391015eadd9a6c34bf3f6c41f711f9081317cd7a",
+    "extracted/cpp-hud-runtime-509/minimap-1024/top-released.bmp": "d878c75c395ba815d79c06dce8347292a1bd7594747cc5679fde136fe84f81a4",
+    "extracted/cpp-hud-runtime-509/minimap-1024/main-menu.bmp": "78508b37669a9706f508a4b89b25b3d2a7d3c0e0cf914cf93d64dccd7177925e",
+    "extracted/cpp-hud-runtime-509/minimap-1024/run.json": "9b116b2c0894ec7591867c6d26854716f9b38537b43d7dab55c154483028ffec",
+    "extracted/cpp-hud-runtime-509/minimap-1280/steps.tsv": "77bf8e1a07b5b48b3ac36d9d2ddac52e054d1d3d04142efa8acf8a7b5137f94b",
+    "extracted/cpp-hud-runtime-509/minimap-1280/originals-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-hud-runtime-509/minimap-1280/data-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-hud-runtime-509/minimap-1280/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-hud-runtime-509/minimap-1280/stderr.log": "110c8ffc5dff493b166f45c895b87111c10df0e56113491c410333a7c7784511",
+    "extracted/cpp-hud-runtime-509/minimap-1280/running.json": "2f83d9618f5d1d6185c1df7116d7f96f1fca5eeeaf87923c88e75ec2434c7bd7",
+    "extracted/cpp-hud-runtime-509/minimap-1280/states.tsv": "4748180e47e2de1027bc3f520298fdbf223a96a0ff9d0a5485339aec9f603e66",
+    "extracted/cpp-hud-runtime-509/minimap-1280/initial.bmp": "cc485b308e334902e209297a347d3edaf5cdb0e051ed2099ff49f03fc09d3d0b",
+    "extracted/cpp-hud-runtime-509/minimap-1280/right-drag.bmp": "407efb94c61891a68b5fdda514ef1efa3c84726281511a23933515ff130767e8",
+    "extracted/cpp-hud-runtime-509/minimap-1280/top-released.bmp": "ae1b451dc3816094737e5c7614a8d9bace7ca62c80c2919582fd688accc2e364",
+    "extracted/cpp-hud-runtime-509/minimap-1280/main-menu.bmp": "af9c412ec69661be4c18cc20b8d56b548df72c5aa14de182c0780313d4504215",
+    "extracted/cpp-hud-runtime-509/minimap-1280/run.json": "c00feffeff3c49470876b166ae6edb47b4829bc5ca7c65fbefee0d317997de38",
+    "extracted/cpp-hud-runtime-509/production-keys/steps.tsv": "84b0191dd80b6101045297b66702185bddbdbc8d86f05b38c0e29a34a6a40203",
+    "extracted/cpp-hud-runtime-509/production-keys/originals-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-hud-runtime-509/production-keys/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-hud-runtime-509/production-keys/stderr.log": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2",
+    "extracted/cpp-hud-runtime-509/production-keys/running.json": "62ddf6fc5c3998e13b193553635fc34850cf3678e0272cf9acbe5fcd66080f73",
+    "extracted/cpp-hud-runtime-509/production-keys/states.tsv": "11a12847d84e48eb1be3dbb0b5c678490d99901e8f9f2d178c3fe1084244c7c5",
+    "extracted/cpp-hud-runtime-509/production-keys/mature.bmp": "b4fdc9cc14f17d9347c571081c35eebed922ef8e4506ea8140bfabb49bb5ff42",
+    "extracted/cpp-hud-runtime-509/production-keys/rotated.bmp": "1f88ad28c05fbeb5c56ea4b5dce06db7ffb1ea19b832cecec208268ed20d2bd9",
+    "extracted/cpp-hud-runtime-509/production-keys/placed.bmp": "b36daec507d06ad2e9f8ae0162f069729a07f1cec4fcce8200586cad8798d20d",
+    "extracted/cpp-hud-runtime-509/production-keys/refilled.bmp": "6b5196ecfc17bccb992b639be2274ecefe8c4f9448fa6df2a10db0b61c3262f5",
+    "extracted/cpp-hud-runtime-509/production-keys/run.json": "ad1f3a1e794f86880336403527d9d5a539cafe20bed78f55c89d9fd57e476b86",
+    "extracted/cpp-hud-runtime-509/minimap-1024-final/steps.tsv": "4585fb5648494131282e6997a49bb0e666327f8832e8be119b01e8ae8c9f6548",
+    "extracted/cpp-hud-runtime-509/minimap-1024-final/originals-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-hud-runtime-509/minimap-1024-final/data-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-hud-runtime-509/minimap-1024-final/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-hud-runtime-509/minimap-1024-final/stderr.log": "110c8ffc5dff493b166f45c895b87111c10df0e56113491c410333a7c7784511",
+    "extracted/cpp-hud-runtime-509/minimap-1024-final/running.json": "6bc906dc11ce67c89350506d47726635661152c7ee3030973fa727f49ba6a273",
+    "extracted/cpp-hud-runtime-509/minimap-1024-final/states.tsv": "089cb394a04694c7da8f1bd9be4ad98fc0f48637e117b7b7f8a845f3aefb934d",
+    "extracted/cpp-hud-runtime-509/minimap-1024-final/initial.bmp": "df410318f4afc0ba3133938fe719dc43fed1597e9750507010b36badccac51b8",
+    "extracted/cpp-hud-runtime-509/minimap-1024-final/right-drag.bmp": "d51f6bdc157ddbebf22babfa2e156c2952a2745d58d2333441a899c3d76eeff3",
+    "extracted/cpp-hud-runtime-509/minimap-1024-final/top-released.bmp": "e8f53e31a61684f29b1ba355c756ceff03121f2ed6b20bf7f4bcb4be088e234f",
+    "extracted/cpp-hud-runtime-509/minimap-1024-final/main-menu.bmp": "78508b37669a9706f508a4b89b25b3d2a7d3c0e0cf914cf93d64dccd7177925e",
+    "extracted/cpp-hud-runtime-509/minimap-1024-final/run.json": "6f72d059227c16ea47fb8fabdbeaf20aed0886301462715cdcc03f41cf3cf032",
+    "extracted/cpp-hud-runtime-509/minimap-1024-final/summary.json": "337f8968de0be84efba7e789f48168d06f71d4aedb41128c3e0c69fe32e4bbc2",
+    "extracted/cpp-hud-runtime-509/minimap-1280-final/steps.tsv": "99b764ee53dde2a10ecf9fb486f38b848023fdd80263aa88e1c99ae3b746c51b",
+    "extracted/cpp-hud-runtime-509/minimap-1280-final/originals-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-hud-runtime-509/minimap-1280-final/data-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-hud-runtime-509/minimap-1280-final/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-hud-runtime-509/minimap-1280-final/stderr.log": "110c8ffc5dff493b166f45c895b87111c10df0e56113491c410333a7c7784511",
+    "extracted/cpp-hud-runtime-509/minimap-1280-final/running.json": "afd7502b28917dd6d840c33733a82e6409179ddc4653dc61b3bec8eb4002200e",
+    "extracted/cpp-hud-runtime-509/minimap-1280-final/states.tsv": "5f9f46696a8b77f187fa89c9a94172cb8dc4640b15a61e0ae46d618ce92b9b6d",
+    "extracted/cpp-hud-runtime-509/minimap-1280-final/initial.bmp": "482e469d072a2a15afd2dde22b2a055e3c0d061f84e4a1ef116cbd894306fe01",
+    "extracted/cpp-hud-runtime-509/minimap-1280-final/right-drag.bmp": "407efb94c61891a68b5fdda514ef1efa3c84726281511a23933515ff130767e8",
+    "extracted/cpp-hud-runtime-509/minimap-1280-final/top-released.bmp": "8c730099dbf855013b2cfe4a5bb37e56ba909e0f4419b0c554c6ed010a615d58",
+    "extracted/cpp-hud-runtime-509/minimap-1280-final/main-menu.bmp": "af9c412ec69661be4c18cc20b8d56b548df72c5aa14de182c0780313d4504215",
+    "extracted/cpp-hud-runtime-509/minimap-1280-final/run.json": "596ad2242ac6356fa8d602bf7701d37d8fe43642b47615b3eceb7ff80d4506bc",
+    "extracted/cpp-hud-runtime-509/minimap-1280-final/summary.json": "0701292f819f1214c2da3a7c23fffc87f93b9de34b329c48ff1eb01f2cd3ee6d",
+    "extracted/cpp-hud-runtime-509/production-keys-final/steps.tsv": "fe44c2d939ffc70bfe74ce15bd79c6610f36f5b35ec7190529450b3dd0fd1331",
+    "extracted/cpp-hud-runtime-509/production-keys-final/originals-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-hud-runtime-509/production-keys-final/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-hud-runtime-509/production-keys-final/stderr.log": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2",
+    "extracted/cpp-hud-runtime-509/production-keys-final/running.json": "6c0160f0f226a20b4dab07297b0c9a983d86f660331c15fba6f13f7c5acea063",
+    "extracted/cpp-hud-runtime-509/production-keys-final/states.tsv": "b763c3efe3ad583f97557b057c074179c41abbdf5fbecadacfc235fea096ecf4",
+    "extracted/cpp-hud-runtime-509/production-keys-final/mature.bmp": "8c073beb3893b4451a8c7313c9b22271c5bbe5483b50cb75aa75714a5aee5464",
+    "extracted/cpp-hud-runtime-509/production-keys-final/rotated.bmp": "b82778a5ecf177f789044d7a945106edf5ccb2cceedf34a52e719b13b7489de8",
+    "extracted/cpp-hud-runtime-509/production-keys-final/placed.bmp": "9f9bc491f38a48fca37296cdf6db36cb15cba95d975a7af74bdd033257d08d97",
+    "extracted/cpp-hud-runtime-509/production-keys-final/refilled.bmp": "6aba5efe4d47775aafd827bb0ad39759b4c7a97fce040add198e009768e76c3c",
+    "extracted/cpp-hud-runtime-509/production-keys-final/run.json": "927e8f90867b7349171ea240d926d9b9ba6a61d6e7817111fe28dd0abbc90b78",
+    "extracted/cpp-hud-runtime-509/production-keys-visible/steps.tsv": "37c84f507e843ff0a061b673b537302cab384a34cad69dd69a9fb3007592fe70",
+    "extracted/cpp-hud-runtime-509/production-keys-visible/originals-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-hud-runtime-509/production-keys-visible/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-hud-runtime-509/production-keys-visible/stderr.log": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2",
+    "extracted/cpp-hud-runtime-509/production-keys-visible/running.json": "0a95053fc2fb43f5a684a69410006ff4c0ae4d38c9a718f501028d7020448f22",
+    "extracted/cpp-hud-runtime-509/production-keys-visible/states.tsv": "658549c628f8af4d10af6406ac43e33f6f25a2c8826b875f671a35b79b6c3951",
+    "extracted/cpp-hud-runtime-509/production-keys-visible/mature.bmp": "0a4f0aa4266a4f45b4ddfbb84ad3d5a000762137f73010b86e69933f18c10df0",
+    "extracted/cpp-hud-runtime-509/production-keys-visible/rotated.bmp": "4bfa0d4d1a175ce73efd428b6b18f6c74dd0809a09d33f71e16bc41f1b32b6a1",
+    "extracted/cpp-hud-runtime-509/production-keys-visible/placed.bmp": "89db4cfb2995a0d8b572008e99aae0ef1376ca4a5dff8d45ae845661a51d0497",
+    "extracted/cpp-hud-runtime-509/production-keys-visible/refilled.bmp": "a2ad68deb443b12487dbe55bfcc0e1e015b5030a953e7fda59106637e9f7833c",
+    "extracted/cpp-hud-runtime-509/production-keys-visible/run.json": "92a408b96b6d3e3f9ca717f7651b081b5c48d48af56db9de69c735fc96ed4856",
+    "extracted/cpp-hud-runtime-509/production-keys-visible/summary.json": "4088c2ef66e9eb4ad9267b57eb36bf2a17fd6bbbbe6d8ed0a9e0d2dbf4eb5855",
+    "extracted/cpp-hud-runtime-509/minimap-1024-visible/steps.tsv": "c500cfd3d2c86bd6632862fcbdfcc5214d0421936b1defe7ec8aad823720b202",
+    "extracted/cpp-hud-runtime-509/minimap-1024-visible/originals-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-hud-runtime-509/minimap-1024-visible/data-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-hud-runtime-509/minimap-1024-visible/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-hud-runtime-509/minimap-1024-visible/stderr.log": "110c8ffc5dff493b166f45c895b87111c10df0e56113491c410333a7c7784511",
+    "extracted/cpp-hud-runtime-509/minimap-1024-visible/running.json": "401e9f841d47ebc4428f9b08088154345ac020fa4785847f864499cc01f0e3a1",
+    "extracted/cpp-hud-runtime-509/minimap-1024-visible/states.tsv": "f8c118dd43969c41432517042fedb96b504221cb4338c87bd2188c36bb465068",
+    "extracted/cpp-hud-runtime-509/minimap-1024-visible/initial.bmp": "15cd59c4466e9e6b6b80676930a3c58c11a8c0d786ea04f5af326d845069107b",
+    "extracted/cpp-hud-runtime-509/minimap-1024-visible/right-drag.bmp": "7fee8707c48b784789f8cc92391015eadd9a6c34bf3f6c41f711f9081317cd7a",
+    "extracted/cpp-hud-runtime-509/minimap-1024-visible/top-released.bmp": "9155cfb1e3c30a416a6119cd6b6116746f0cc26375518d13938fce01ca395461",
+    "extracted/cpp-hud-runtime-509/minimap-1024-visible/main-menu.bmp": "78508b37669a9706f508a4b89b25b3d2a7d3c0e0cf914cf93d64dccd7177925e",
+    "extracted/cpp-hud-runtime-509/minimap-1024-visible/run.json": "463becfdf674a002e0dbdfb964ca4159d722e331971753f91394952fe03c2f1e",
+    "extracted/cpp-hud-runtime-509/minimap-1024-visible/summary.json": "337f8968de0be84efba7e789f48168d06f71d4aedb41128c3e0c69fe32e4bbc2",
+    "extracted/cpp-hud-runtime-509/minimap-1280-visible/steps.tsv": "ba3d81fa9ec6219209364ff74ffe9ca79ce176715831b4c272e0294a5bb4d5c4",
+    "extracted/cpp-hud-runtime-509/minimap-1280-visible/originals-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-hud-runtime-509/minimap-1280-visible/data-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-hud-runtime-509/minimap-1280-visible/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-hud-runtime-509/minimap-1280-visible/stderr.log": "110c8ffc5dff493b166f45c895b87111c10df0e56113491c410333a7c7784511",
+    "extracted/cpp-hud-runtime-509/minimap-1280-visible/running.json": "3b868d7b63cf6603202678138a5c53c6b405194a4b9fa997458e980118176441",
+    "extracted/cpp-hud-runtime-509/minimap-1280-visible/states.tsv": "6a8f113d4c864410208fb0af7fb44642a76f641dcd0235d7b9a70662d34df1c9",
+    "extracted/cpp-hud-runtime-509/minimap-1280-visible/initial.bmp": "7a464eb291c88b1d33fb81c6d9614bcbae5bd62a25c191dad996d7eee389aacf",
+    "extracted/cpp-hud-runtime-509/minimap-1280-visible/right-drag.bmp": "4f5c10b794ab960d67ae4d6cadf32a761d64c7138c4ce4273a03777256f6f195",
+    "extracted/cpp-hud-runtime-509/minimap-1280-visible/top-released.bmp": "29252ea6ea3a6353a691ee5ca522d050c42bdf6f08b28dc97c31edd23e26134b",
+    "extracted/cpp-hud-runtime-509/minimap-1280-visible/main-menu.bmp": "af9c412ec69661be4c18cc20b8d56b548df72c5aa14de182c0780313d4504215",
+    "extracted/cpp-hud-runtime-509/minimap-1280-visible/run.json": "895ec68f5b5a7f7056e98c4dd2cc296743f5db65e193c193a4a6eb2047a156e1",
+    "extracted/cpp-hud-runtime-509/minimap-1280-visible/summary.json": "0701292f819f1214c2da3a7c23fffc87f93b9de34b329c48ff1eb01f2cd3ee6d"
+  },
+  "toolSha256": {
+    "tools/cpp_minimap_smoke.py": "953c22d2f96f63f81b8ed6046a5d81c8744872c77e588ba23e032548d85485d4",
+    "tools/cpp_production_panel_smoke.py": "fdeb78b63bbe97a12c56defd75b37d4f32be2908ed0c3f5e0146185315d8c732",
+    "tools/cpp_bridge_ritual_runtime.py": "6d3973c496a13dbdca2d7d47aacc5ae58bae69d345f8eaf5e6baa677d174d95e"
+  }
+}

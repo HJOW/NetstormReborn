@@ -30,8 +30,8 @@ def execute(command, directory, binary, timeout):
     """실제 프로세스/PID·종료·원시 로그를 기록하며 타임아웃도 실패로 보존한다."""
     start = time.monotonic();identity = sha(binary)
     with (directory/'stdout.log').open('wb') as stdout, (directory/'stderr.log').open('wb') as stderr:
-        startup = subprocess.STARTUPINFO();startup.dwFlags |= subprocess.STARTF_USESHOWWINDOW;startup.wShowWindow = 0  # 보조 콘솔은 숨기고 게임은 자체 창 생성 경로를 따른다.
-        process = subprocess.Popen(command, cwd=ROOT, stdout=stdout, stderr=stderr, startupinfo=startup)
+        # 보조 콘솔만 숨긴다. STARTF_USESHOWWINDOW/SW_HIDE는 게임의 첫 ShowWindow까지 숨겨 실제 커서 Tick을 비활성화하므로 사용하지 않는다.
+        process = subprocess.Popen(command, cwd=ROOT, stdout=stdout, stderr=stderr, creationflags=subprocess.CREATE_NO_WINDOW)
         save(directory/'running.json', dict(pid=process.pid, command=command, binarySha256=identity))
         print(json.dumps(dict(pid=process.pid, output=str(directory)), ensure_ascii=False), flush=True)
         try:

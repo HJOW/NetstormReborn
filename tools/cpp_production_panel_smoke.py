@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """실제1-1 건설/연구 뒤 원본 생산 항목의 클릭/Take/배치를 같은 UI로 관측한다."""
-import argparse,json,subprocess
+import argparse,json,re,subprocess
 from pathlib import Path
 from cpp_campaign_entry_smoke import ROOT,EXE
 from cpp_smoke_files import preserve_game_settings
@@ -9,10 +9,10 @@ from cpp_renderer_smoke import snapshots
 from cpp_world_smoke import states
 from cpp_priest_construction_smoke import asset_fields
 
-# 실제 반복 행을 덮어쓰지 않고 보고 지점별로 읽는다.
+# 실제 보고 경계인 줄 시작 frame만 분리한다. raw_camera_frame 같은 관측 필드 안에서 보고를 끊지 않는다.
 def repeated(report,key):
     result={}
-    for block in report.read_text('utf-8').split('frame\t')[1:]:
+    for block in re.split(r'(?m)^frame\t',report.read_text('utf-8'))[1:]:
         header,body=block.split('\n',1);_,label=header.split('\t',1)
         result[label]=[line.split('\t')[1:] for line in body.splitlines() if line.startswith(key+'\t')]
     return result
