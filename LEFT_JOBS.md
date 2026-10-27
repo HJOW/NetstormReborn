@@ -1,8 +1,34 @@
 # LEFT_JOBS — cpppj 및 공통 인수인계
 
-이 문서는 cpppj와 공통 사항의 **현재 상태, 앞으로 할 작업, 유효한 사용자 결정**을 담는다. 2026-10-28 단위522 선택 우선순위 복원·편집 상태 오독 정정·실제 우클릭 왕복 기준으로 갱신했다. 완료된 단위별 상세·옛 재개 지시·중복 검증 기록은 [과거 이력](LEFT_JOBS.old.md), 이번 정리 직전 원문은 [단위504까지 추가 보관](LEFT_JOBS.old.md#archive-20261027-through-504)을 본다. dotnetpj는 [LEFT_JOBS.dotnetpj.md](LEFT_JOBS.dotnetpj.md), webpj는 [LEFT_JOBS.webpj.md](LEFT_JOBS.webpj.md)를 따른다.
+이 문서는 cpppj와 공통 사항의 **현재 상태, 앞으로 할 작업, 유효한 사용자 결정**을 담는다. 2026-10-28 단위523 사용자 요청 일시 중지 인계 기준이다. 제품의 마지막 완료 단위는522다. 완료된 단위별 상세·옛 재개 지시·중복 검증 기록은 [과거 이력](LEFT_JOBS.old.md), 이번 정리 직전 원문은 [단위504까지 추가 보관](LEFT_JOBS.old.md#archive-20261027-through-504)을 본다. dotnetpj는 [LEFT_JOBS.dotnetpj.md](LEFT_JOBS.dotnetpj.md), webpj는 [LEFT_JOBS.webpj.md](LEFT_JOBS.webpj.md)를 따른다.
 
 ## 0. 재개 전 확인 사항
+
+- **523 / 사용자 요청으로 일시 중지 — 2026-10-28 06:38 KST, HJOW-Athlon:** 사용자가 “지금 하려는 것 인수인계 문서만 작성하고 일단 목표 일시 중지”를 요청했다. ChatGPT 앱 업데이트 후 재개할 예정이다. **이번에는 이 인계 문서만 변경한다.** 522 커밋 `b5503bac` 뒤의 제품 코드/검사/fixture/디컴파일 산출물 변경은 없다. 이 후속 분석에서 빌드·단위 검사·실제 게임 창·새 oracle 실행은 하지 않았다. `--dump-types originals`는 읽기 전용 CLI 조회였다. 중지 시점에 NetstormCpp/netstorm_tests/MSBuild/cmake 실행 프로세스가 없음을 확인했다. 업데이트 후에도 사용자 재개 지시 전에는 작업을 재개하지 않는다.
+- **재개할 작업은 498000 픽셀 hit 복원이며 아직 구현 전이다.** 522의 `GameWorld::Pick` → `RawUserPick` 후보 순위는 완료 상태를 유지한다. `GameWorld.cpp`의 `hooks.hit`은 아직 `Object/visible/Bounds/모바일4픽셀` 근사다. 이것을 원본 가상+b0의 실제 픽셀 판정으로 바꾸는 구체적인 연결을 분석하던 중 중지했다. 원래 작업 전체 목표와 일반 건물형/신전·제단·워크샾의 상태별 메뉴 잔여도 유지한다.
+- **마지막 완료 제품/검증:** 게임 SHA256 `24a2752fd088c9dec1a64ca2bde5eb482c7222afb757f3ff316dc9b1f565da55`, 검사 SHA256 `8f05e9268c9d7886a5188537d9282e4c7bfe8253bd5dc53316e49231c71508b7`. 등록3354·관련53고유/실패0·Release 경고/오류0·원문1092조건/재실행차이0과 두 화면비의 실제 우클릭/편집 왕복은522의 증거다. 이번에 반복 실행한 결과가 아니다. 근거는 [522 문서](docs/exe/cpp-user-pick-20261028.md), [보고서](cpppj/user-pick-runtime-20261028.json), `extracted/cpp-user-pick-522/`의 원시 로그·캡처·실패·`freeze-final.json`이다. 521의 Editor1은 PlayerKnown 열 오독이며522에서 정정했으므로 다시 결함으로 조사하지 않는다.
+
+### 0.1 업데이트 후 재개할 픽셀 hit 분석 메모 — 구현/검증 완료로 세지 않음
+
+마지막 전체 정밀 디컴파일은 **HJOW-Athlon / 2026-10-23**이며 현재 PC와 일치한다. 이번에도 `extracted/refined/originals/Netstorm.c`·`functions.tsv`와 보호PE를 읽기만 했다. PC가 달라지면 AGENTS.md의 재디컴파일 규칙을 먼저 적용한다.
+
+원본 `498000`은 TYPE와 가상+78을 조회해 헤더를 고른다. 첫+78이−1이면 현재 raw frame, 그 외에는+78을 다시 호출한 결과다. raw X/Y를16/11·0.5·ftol로 투영한 뒤 현재 카메라 픽셀·TYPE hotspot·헤더 hotspot을 빼 상대점을 만든다. 음수 상대점이면 바로 거부한다. `flags1&0x800000`(opaqueCollide)이면 헤더의 signed 폭/높이 사각형으로 끝낸다. 이때 현재 애니메이션 픽셀을 검사하지 않는다.
+
+비opaque는 **4a2b10으로 200×200을255로 지우고 원래 출력 문맥을 보관**한다. `extra&2==0`이면 현재 raw frame을 plain4daa70으로 헤더 hotspot에 그린다. `extra&2`이면+78을 다시 조회해−1이 아닐 때 그 기본 그림을 plain으로 그린 뒤, 같은 캡처 문맥에 가상+a4를 호출한다. **상대점의200 미만 검사보다 그림/추가Draw가 먼저다.** 마지막 해당 픽셀 값이255가 아니면hit이며4a2c70으로 문맥을 복원한다. opaque 색255를 별도 opacity만으로hit 처리하면 원문과 달라진다. 템플 추가Draw의 조건부 음향도 있으므로 순서를 바꾸거나 미도달 경계를 앞당겨 호출하지 않는다.
+
+`SelectionVtables.inc`의83개 실제 VT를 보호PE에서 정적으로 다시 읽었다. **모두+b0=498000**이다. +78은78개가`4acfe0(TYPE+128 baseFrame)`, 다리`5034c8→4222f0(raw frame)`, Factory두 표`509148/509210→454cd0`, 훨리베이스`509930→45b530`, 썬더 캐논`50bad0→46ae10`이다. 이는 정적 슬롯 대조이며83종의 실제 생성/게임/추가 원문 실행 검증이 아니다. 기존 `RawFactoryDraw`·`RawSunAviaryCapture`·`RawThunderCannonCapture`와 같은 처리기를 재사용할 수 있는지 확인한다.
+
+**+a0와+78을 혼동하지 말 것:** `RawCampaignFactoryDisplay::Impl::Draw`의 `rules.virtualFrame`은 일반 화면의+a0 용도여서 일부 주문에−1을 반환한다. 이를 hit의+78로 그대로 쓰면 틀린다. 또한 `RawShapeToBuffer`의4a7db0은 현재 프레임 헤더·배율·소유자색·가변 버퍼를 쓰므로498000의고정200/plain 캡처 전체를 대신할 수 없다. 기존 실제RLE `VFXDraw::DrawShape`, `SquidRenderer::Shapes`의물리헤더, `RawCameraView::ProjectCameraCoordinates`는 각각 재사용 후보이나 이번에 새hit으로 연결하지 않았다.
+
+추가Draw 연결 후보는 `RawCampaignFactoryDisplay.cpp`의 `hooks.virtualDraw` 본체와 `RawCampaignSession.cpp`의 `buildingCaptureState.mainFrame/additional`이다. 중복 분배를 더 만들기 전에 실제+a4 몸체를 공용화할 수 있는지 검토한다. 기존 표시의현재소유자/추상/로컬관문·다이스165의별도169TYPE·템플전용Draw·Factory단계별본체/추가그림을 보존한다. Session의실제`bridgeDrawState`도 별도0 사본으로 대체하지 않는다. **리팩터링·새 RawObjectHit/VT표/검사는 아직 어떤 파일에도 작성하지 않았다.**
+
+정적+a4 표는빈`41c100`50개, 주문`41e3d0`16개와16종의다른함수(Factory두VT가같은함수를써서나머지17VT)로갈린다. 남은특수함수중`509810→45ac40`은manabolt105, `509b98→45bcd0`은sunFlyerBomb163, `50c3b0→473710`은mana103, `50db78→485f90`은geyserBrightener99다. 이네TYPE는현재TYPE표에서genus`02000000`이므로일반force0선택기의거부대상이다. playerIsland108/battleIsland109는`50c9f0→478d10`, challengeIsland161은`50cc08→479340`이며109/161에는opaqueCollide가있다. 이런메타/추가그림을 일반 자산의빈+a4로 임의 대체하지 않는다. 이 매핑 역시 정적조회만 했고 전용관측자료를 새로 만들지 않았다.
+
+재개 후에는 실제 VT/현재 풀/TYPE/SHP/카메라와 같은 수명을 쓰는 hit 처리기와 추가Draw 경계를 구현하고, 공중3종을 제외한 일반 유닛·건물/다리·주문의 투명/불투명/extra 분기를 원문과 대조한다. 추가 원문 관측은 기존fixture를 덮어쓰지 않고 명시 경계를 기록한다. 단계별로빌드/집중검사·필요한짧은실제입력을순차실행하고문서/커밋을잇는다. 522의53검사와두GUI를새구현의검증으로재사용하지않는다.
+
+**유효한 제한:** 훨리기그·맨오워·더스트 데빌은 디컴파일 근거의정적분석/코드만, 실제생산/생성/우클릭재현·추가실행관측/전용검사는금지한다. 연녹색직사각형분석·자연완주/사용자개입검증·영문파일부재개선은보류다. 멀티플레이 사전구현은후순위이며새네트워크/멀티플레이시험을하지않는다. 원본/CD·AGENTS.md 불변과push금지, 한국어주석/UTF-8·단위문서/커밋 규칙도유지한다.
+
+### 0.2 직전 완료 단위
 
 - **522 완료 / 선택 우선순위·Editor 기록 정정:** 원문4d5840의 현재 소유/이동/깊이/YX 순위·거부·마지막1.6 근접 대체를 실제 GameWorld의 현재 카메라/거의 올림/일반 해시/중심에 연결했다. 원문1,092고유/재실행차이0·진단0, 최종Release경고/오류0·등록3354·관련53고유/실패0이다. 같은 최종게임SHA `24a2752f…`로 두 화면비의 사제/윈드 타워/워크샾 우클릭과 Test Battle→Return to Editing **2실행/종료0**을 확인했다. 실제Editor/missionPost는1/1→0/1→1/1이다. **521의Editor1은 raw_session 두 번째열PlayerKnown 오독으로 정정**했으며 원시로그를 보존했다. 초기 검사Pool크기/미등록필터/GUI ESC중복 실패도 별도 보존했다. [문서](docs/exe/cpp-user-pick-20261028.md)·[보고서](cpppj/user-pick-runtime-20261028.json). **다음:** 가상+b0=498000의200×200 투명픽셀 캡처·+78/extra&2/추가Draw를 복원한다. 현재hit은기존Bounds/표시/모바일4픽셀 경계이며 전체선택동일성 완료가 아니다. Blank Spell frame0을 강제1로 바꾸지 않았다. DigUp special/재적재frame2·일반건물전체/신전·제단·워크샾 상태별메뉴를 잇는다. 공중3종정적제한/직사각형·자연완주·영문부재개선보류유지.
 - **521 완료 / Detonate 원문 종료와 클론 예외 경로:** Detonate는 성장 아이스 타워가 아니라16개 주문VT의420b30/03000074다. 원문 일반 입력4d6eca..4da477과41e400→4ae010→4ac9b0를 실행해 **768조건에서 시전 요청/월드 쓰기 없이 부모0을 무시하고 끝남**을 확인했다. 따라서5c 활성화를 새로 만들지 않고 같은 실제6c 뒤 일반 명령을 소비해 클론의 미연결 예외 경로를 제거했다. 원문 재실행768차이0/진단0, Release 경고/오류0·등록3352·관련37고유/실패0이다. 실제Session의 명시114 생성→Gump 메뉴 클릭→큐→명령에서도 요청0/돈·raw·예약 보존을 통과했다. **별도 창 수락0:** 원래 제품의 탐색2회는 브리핑 버튼 가정/주문 좌표 미탐색으로 모두종료1이며 실제Detonate 클릭 미도달이다. 이를 기존 예외 재현/새 제품의 실제 플레이 성공으로 세지 않는다. [문서](docs/exe/cpp-detonate-input-20261028.md)·[보고서](cpppj/detonate-input-runtime-20261028.json). 현재게임SHA `89dd05d4…`. **522 정정:** raw_session 두 번째열은PlayerKnown이며 Editor1 판단은 오독이었다. 실제Editor왕복은522에서확인했고 저장Spell frame0/선택 가능 여부는 강제 상태 변경 없이 별도 대조한다. DigUp special·기존재적재 frame2·일반 건물형 전체/신전·제단·워크샾의 상태별 메뉴·선택기 잔여를 잇는다. 공중3종 정적 제한/직사각형 분석 보류 유지.
