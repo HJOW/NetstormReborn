@@ -1,6 +1,7 @@
 // 원본10.78 Game/Edit/View/Options/Players 부모를 같은 controlled 메뉴에 작성한다.
 #pragma once
 #include "client/RawGameMenuBar.h"
+#include <array>
 #include <span>
 #include <variant>
 
@@ -31,6 +32,7 @@ struct GameMenusHooks {
     std::function<void(std::string_view,std::uint32_t,std::uint32_t,std::uint32_t)> submenu; //label/token/enabled/checked다.
     std::function<const GumpCreateNode*(std::uint32_t)> node; // fancy배치의현재기본폭/높이를읽는다.
     std::function<void(std::int32_t,std::int32_t,std::uint32_t)> attachCurrent; // 실제가운데좌표/현재루트로controlled메뉴를부착한다.
+    std::span<const std::array<std::uint32_t,2>> compatibilityResolutions; // Windows10/11 호환 Client만 원문 세 행 뒤에 추가한다. 기본 빈 목록은 원문 동작/조회 순서를 유지한다.
 };
 // 큰 게임helper는 명시경계이고 메뉴부모의조건·조회순서·문구·명령은원본몸체다.
 class RawGameMenus {

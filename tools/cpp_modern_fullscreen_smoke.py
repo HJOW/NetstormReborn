@@ -29,7 +29,7 @@ def main():
     if args.case=='menu':
         extra=['--window'];setting+=';SCREENW=1024;SCREENH=768;startInFullScreen=1;workingFullScreenFlags=111'
         steps += [(12,'click','Options'),(16,'click','Direct Draw / Full Screen'),(25,'report','full'),(25,'snapshot',str(directory/'logical-full.bmp')),(25,'snapshot-output',str(directory/'output-full.bmp')),
-            (30,'click','Options'),(34,'click','Resolution >'),(38,'click','800 by 600'),(48,'report','full-resized'),(48,'snapshot-output',str(directory/'output-resized.bmp')),
+            (30,'click','Options'),(34,'click','Resolution >'),(38,'click','800 by 600'),(42,'click','No'),(48,'report','resolution-cancelled'),(48,'snapshot-output',str(directory/'output-cancelled.bmp')), # 원본 확인에서 취소하여 같은 프로세스의 모드 전환을 이어간다. 승인/종료/새 해상도는 전용 해상도 도구로 검사한다.
             (54,'click','Options'),(58,'click','Window Mode'),(68,'report','window'),(68,'snapshot-output',str(directory/'output-window.bmp')),
             (74,'click','Options'),(78,'click','Direct Draw / Full Screen'),(88,'report','full-again'),(100,'click','Quit')];frames=120
     elif args.case=='restart':

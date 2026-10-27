@@ -1,5 +1,6 @@
 // 원본 Game/Edit/View/Options/Players 메뉴부모를현재게임과공통Gump에연결한다.
 #include "client/RawGameMenus.h"
+#include "client/ScreenResolutions.h" // 원문 세 행과 명시적으로 추가한 호환 화면비를 구별한다.
 #include <bit>
 #include <cmath>
 #include <stdexcept>
@@ -108,7 +109,11 @@ std::uint32_t RawGameMenus::Options() const {
     else { Item("Adjust Direct Draw",0x542948,std::string("AdjustDirectDraw"));Item("Window Mode",0x5427b8,10U); }
     Need(hooks_.vertical)();
     // 원본의해상도세행은현재폭을먼저읽고같으면높이를추가조회한다.
-    for (const auto& size:std::array<std::array<std::uint32_t,2>,3>{{{640,480},{800,600},{1024,768}}}) {
+    for (const auto& size:kOriginalScreenResolutions) {
+        const auto check=Global(0x531860)==size[0] && Global(0x531864)==size[1];const auto label=Text(std::to_string(size[0])+" by "+std::to_string(size[1]));
+        Check(check,label,0x542948,std::string("SETSIZE(")+std::to_string(size[0])+','+std::to_string(size[1])+')');
+    }
+    for (const auto& size:hooks_.compatibilityResolutions) { // 원본에 없던 화면비는 같은 현재 폭/높이 체크와 원본 확인·저장·종료 Tell을 사용한다.
         const auto check=Global(0x531860)==size[0] && Global(0x531864)==size[1];const auto label=Text(std::to_string(size[0])+" by "+std::to_string(size[1]));
         Check(check,label,0x542948,std::string("SETSIZE(")+std::to_string(size[0])+','+std::to_string(size[1])+')');
     }

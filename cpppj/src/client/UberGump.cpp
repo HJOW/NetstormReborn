@@ -10,6 +10,7 @@
 #include "client/RawMenuControls.h"
 #include "client/RawHtmlWindowContext.h"
 #include "client/RawGameMenus.h"
+#include "client/ScreenResolutions.h" // 메인/ESC가 같은 원본 확인 흐름과 호환 화면비 선택을 사용한다.
 #include "client/GameMenuCommands.h"
 #include "client/GameMenuActions.h"
 #include "client/TellParameters.h"
@@ -761,6 +762,7 @@ void UberGump::OpenGameMenu() {
         BindGameMenusControls(hooks,widgets,controls,menu,[this](auto text) { return scriptStrings_.Store(text); });
         hooks.node=[this](auto token) { return rawButtons_->Menus()->Node(token); };
         hooks=session.BindGameMenus(std::move(hooks));const auto globals=hooks.global;const auto translate=hooks.translate; // 바인더가교체한같은현재소유자의getter를빌린다.
+        hooks.compatibilityResolutions=kCompatibilityScreenResolutions; // 원본과 다른Windows10/11 DIB 호환 화면비만 명시 추가하며 기본 원문 검사는 빈 목록을 유지한다.
         RawGameMenus children(std::move(hooks));GameMenuBarHooks bar;
         bar.prepare=[&session] { session.PrepareGameMenus(); };bar.translate=translate;
         bar.read=[this,globals](GameMenuBarValue value) {
@@ -877,9 +879,10 @@ void UberGump::OpenMenu(std::string name) {
         add("Tell Tips at Startup", "Toggle", "tellTips", config.GetInt("tellTips") != 0);
         add("Pass Server Diagnostic", "", "", false, false);
     } else if (popup_ == "resolution") {
-        add("640 by 480", "Resolution", "640", client_.GetScreen().Width() == 640);
-        add("800 by 600", "Resolution", "800", client_.GetScreen().Width() == 800);
-        add("1024 by 768", "Resolution", "1024", client_.GetScreen().Width() == 1024);
+        for (const auto& size:kScreenResolutionChoices) { // 두1280폭도 높이까지 대조하고 ESC와 같은 원본 경고→Yes/No→저장/종료 흐름을 사용한다.
+            const auto width=std::to_string(size[0]),height=std::to_string(size[1]);
+            add(width+" by "+height,"Tell","SETSIZE("+width+','+height+')',client_.GetScreen().Width()==static_cast<int>(size[0]) && client_.GetScreen().Height()==static_cast<int>(size[1]));
+        }
     } else if (popup_ == "soundvolume" || popup_ == "musicvolume") {
         const std::string key = popup_ == "soundvolume" ? "soundVolume" : "musicVolume";
         // 원본 음량 단계는 1~5다. 장치 연결 전에 설정 저장을 검사할 수 있다.
