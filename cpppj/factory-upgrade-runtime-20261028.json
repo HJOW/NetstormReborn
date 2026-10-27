@@ -1,0 +1,625 @@
+{
+  "unit": 528,
+  "date": "2026-10-28",
+  "host": "HJOW-Athlon",
+  "headBeforeCommit": "adc5774a28aa3bedff8e41002c0407f5c8d87881",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23",
+    "outputsModified": false
+  },
+  "product": {
+    "NetstormCpp.exe": "25e0b83abd91a8a62fd2c8b4e9da59f9db9ff9abbd946305d466112e8e021d81",
+    "netstorm_tests.exe": "cc35e13bbfe8e08723c599fad0235a9fe3e328592d073fad11ebe930dd94fa61"
+  },
+  "changedSource": [
+    "cpppj/src/client/RawCampaignSession.cpp",
+    "cpppj/src/client/UberGump.cpp"
+  ],
+  "existingTestsAndFixturesUnchanged": true,
+  "originalCommand": {
+    "originalSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "row": "00542e70",
+    "nameAddress": "00518ab0",
+    "name": "Salvage",
+    "commandAddress": "0054286c",
+    "command": "0200005d",
+    "gameExecuted": false,
+    "decompileOutputsModified": false
+  },
+  "builds": [
+    {
+      "log": "extracted/cpp-factory-upgrade-runtime-528/build-fix.log",
+      "sha256": "48a15a4db525b6436bedf2b626abdfeafaab1f3ed9fffbd18ee4e68e2a9f6f53",
+      "warnings": 0,
+      "errors": 0
+    },
+    {
+      "log": "extracted/cpp-factory-upgrade-runtime-528/build-capture.log",
+      "sha256": "95d85b004bb1cf318da0ae54d74f4b6b15a66c2cdbc6cca2a68a2a8b8f8b84ca",
+      "warnings": 0,
+      "errors": 0
+    },
+    {
+      "log": "extracted/cpp-factory-upgrade-runtime-528/build-final.log",
+      "sha256": "95d85b004bb1cf318da0ae54d74f4b6b15a66c2cdbc6cca2a68a2a8b8f8b84ca",
+      "warnings": 0,
+      "errors": 0
+    }
+  ],
+  "originalFactoryVtables": [
+    {
+      "vtable": "00509148",
+      "78": "00454cd0",
+      "80": "004ad0f0",
+      "a0": "0041c0f0",
+      "a4": "00454cf0"
+    },
+    {
+      "vtable": "00509210",
+      "78": "00454cd0",
+      "80": "004ad0f0",
+      "a0": "0041c0f0",
+      "a4": "00454cf0"
+    }
+  ],
+  "initialObservations": [
+    {
+      "name": "probe",
+      "run": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-upgrade-runtime-528\\data",
+          "--mission",
+          "dissolvedalliance",
+          "--window",
+          "--mute-audio",
+          "--frames",
+          "880",
+          "--set",
+          "SCREENW=1280;SCREENH=720;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-upgrade-runtime-528\\probe\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-upgrade-runtime-528\\probe\\states.tsv",
+          "--audio-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-upgrade-runtime-528\\probe\\audio.tsv"
+        ],
+        "binarySha256": "092a0d66af7729bb03c87ed61fa5f7cec41c02d02224c450eb5a65cecc0158ca",
+        "scriptSha256": "69e70d4ed5e7bfd8dce1db01b918fad3a74014342dc2ac5f7c7f198901e69345",
+        "returnCode": 1,
+        "timedOut": false,
+        "seconds": 29.327348200022243,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "d3ad08485b6029206493106f813e996945f594507fb081e820d29d9879554398",
+        "originalsUnchanged": true,
+        "dataUnchanged": true,
+        "dataRoot": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-upgrade-runtime-528\\data"
+      },
+      "reason": "워크샾회수금을기본250으로가정해실제레벨2의750라벨을찾지못했다. 원본레벨/HP환불식으로도구를수정했다."
+    },
+    {
+      "name": "final-first/1280x720",
+      "run": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-upgrade-runtime-528\\final-first\\data",
+          "--mission",
+          "dissolvedalliance",
+          "--window",
+          "--mute-audio",
+          "--frames",
+          "880",
+          "--set",
+          "SCREENW=1280;SCREENH=720;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-upgrade-runtime-528\\final-first\\1280x720\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-upgrade-runtime-528\\final-first\\1280x720\\states.tsv",
+          "--audio-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-upgrade-runtime-528\\final-first\\1280x720\\audio.tsv"
+        ],
+        "binarySha256": "092a0d66af7729bb03c87ed61fa5f7cec41c02d02224c450eb5a65cecc0158ca",
+        "scriptSha256": "915ef49274ea7040ca3c08199691888b0dc72e87b051a01e576ca0f3e3d940be",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 34.877801499998895,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "f0897e4ab61f8c2f86b568404bba5e7af303c0933f7c1fa3ee631c464ffcc509",
+        "originalsUnchanged": true,
+        "dataUnchanged": true,
+        "dataRoot": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-upgrade-runtime-528\\final-first\\data"
+      },
+      "buttons": [
+        [
+          "1006",
+          "0",
+          "1007",
+          "4294967295",
+          "15002",
+          "956",
+          "606",
+          "410",
+          "675",
+          "430",
+          "1",
+          "Salvage It!"
+        ],
+        [
+          "1006",
+          "1",
+          "1009",
+          "33554569",
+          "0",
+          "958",
+          "690",
+          "410",
+          "759",
+          "430",
+          "1",
+          "Cancel"
+        ]
+      ],
+      "reason": "게임종료0이나검사에서일반Tell의Pause를잘못기대했다. 원문482e20→cf960→cf730의추가Pause없음을확인해정정했다. 별도로Salvage미등록ffffffff/확정클릭뒤대상존재·SP3000을관측해실제연결누락을확정했다."
+    },
+    {
+      "name": "final-fixed/1280x720",
+      "run": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-upgrade-runtime-528\\final-fixed\\data",
+          "--mission",
+          "dissolvedalliance",
+          "--window",
+          "--mute-audio",
+          "--frames",
+          "880",
+          "--set",
+          "SCREENW=1280;SCREENH=720;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-upgrade-runtime-528\\final-fixed\\1280x720\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-upgrade-runtime-528\\final-fixed\\1280x720\\states.tsv",
+          "--audio-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-upgrade-runtime-528\\final-fixed\\1280x720\\audio.tsv"
+        ],
+        "binarySha256": "07c6f19d960a906c687497e471f97cfc0d5e3c86eb08db1e9b94f159ca278389",
+        "scriptSha256": "ec59fc3389961e15733ed86cabdda6365091886f5ad9f4b9717a2e0667ef8dd8",
+        "returnCode": 1,
+        "timedOut": false,
+        "seconds": 32.39046550000785,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "2fb75faf3ad6fbcc5efde8aefbc03122a313fb4d7c97c7d2a1b2a170ba91c71c",
+        "originalsUnchanged": true,
+        "dataUnchanged": true,
+        "dataRoot": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-upgrade-runtime-528\\final-fixed\\data"
+      },
+      "reason": "Salvage이름연결뒤실제회수붕괴에서TYPE86파편캡처미연결종료1을재현했다. 두FactoryVT만이미원문대조된기존Factory캡처에연결했다."
+    }
+  ],
+  "offlineSummaryEnhancement": "같은최종TSV에서회수직전HP/환불뒤SP열만추가했다. 기존관측값/GUI를바꾸지않고summary-checked.json으로따로보존했다.",
+  "final": [
+    {
+      "size": [
+        1280,
+        720
+      ],
+      "sid": 15002,
+      "target": [
+        "86",
+        "1",
+        "1",
+        "126",
+        "120"
+      ],
+      "predictedSid": 329,
+      "levelBefore": 1,
+      "levelAfter": 2,
+      "hpAtMenu": 3814,
+      "hpCompleted": 4000,
+      "hpAtSalvage": 3916,
+      "refund": 734,
+      "spAfter": 3734,
+      "salvage": [
+        {
+          "token": 950,
+          "index": 4,
+          "flags": 66689,
+          "command": 33554581,
+          "parameter": 1610612738,
+          "visible": true,
+          "label": "Salvage gains 734"
+        }
+      ],
+      "warnings": [
+        {
+          "label": "salvageWarning",
+          "buttons": [
+            [
+              "937",
+              "0",
+              "938",
+              "33554525",
+              "15002",
+              "892",
+              "606",
+              "410",
+              "675",
+              "430",
+              "1",
+              "Salvage It!"
+            ],
+            [
+              "937",
+              "1",
+              "940",
+              "33554569",
+              "0",
+              "894",
+              "690",
+              "410",
+              "759",
+              "430",
+              "1",
+              "Cancel"
+            ]
+          ]
+        },
+        {
+          "label": "salvageAgain",
+          "buttons": [
+            [
+              "990",
+              "0",
+              "991",
+              "33554525",
+              "15002",
+              "940",
+              "606",
+              "410",
+              "675",
+              "430",
+              "1",
+              "Salvage It!"
+            ],
+            [
+              "990",
+              "1",
+              "993",
+              "33554569",
+              "0",
+              "942",
+              "690",
+              "410",
+              "759",
+              "430",
+              "1",
+              "Cancel"
+            ]
+          ]
+        }
+      ],
+      "run": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-upgrade-runtime-528\\final-capture\\data",
+          "--mission",
+          "dissolvedalliance",
+          "--window",
+          "--mute-audio",
+          "--frames",
+          "880",
+          "--set",
+          "SCREENW=1280;SCREENH=720;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-upgrade-runtime-528\\final-capture\\1280x720\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-upgrade-runtime-528\\final-capture\\1280x720\\states.tsv",
+          "--audio-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-upgrade-runtime-528\\final-capture\\1280x720\\audio.tsv"
+        ],
+        "binarySha256": "25e0b83abd91a8a62fd2c8b4e9da59f9db9ff9abbd946305d466112e8e021d81",
+        "scriptSha256": "7395cd02f91d2c8763ab658564ee8bc5a857ccc150d2d868502b9704bfeb7eb4",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 42.357522200007224,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "f0897e4ab61f8c2f86b568404bba5e7af303c0933f7c1fa3ee631c464ffcc509",
+        "originalsUnchanged": true,
+        "dataUnchanged": true,
+        "dataRoot": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-upgrade-runtime-528\\final-capture\\data"
+      }
+    },
+    {
+      "size": [
+        1024,
+        768
+      ],
+      "sid": 15002,
+      "target": [
+        "86",
+        "1",
+        "1",
+        "126",
+        "120"
+      ],
+      "predictedSid": 277,
+      "levelBefore": 1,
+      "levelAfter": 2,
+      "hpAtMenu": 3916,
+      "hpCompleted": 4000,
+      "hpAtSalvage": 3916,
+      "refund": 734,
+      "spAfter": 3734,
+      "salvage": [
+        {
+          "token": 940,
+          "index": 4,
+          "flags": 66689,
+          "command": 33554581,
+          "parameter": 1610612738,
+          "visible": true,
+          "label": "Salvage gains 734"
+        }
+      ],
+      "warnings": [
+        {
+          "label": "salvageWarning",
+          "buttons": [
+            [
+              "927",
+              "0",
+              "928",
+              "33554525",
+              "15002",
+              "882",
+              "478",
+              "434",
+              "547",
+              "454",
+              "1",
+              "Salvage It!"
+            ],
+            [
+              "927",
+              "1",
+              "930",
+              "33554569",
+              "0",
+              "884",
+              "562",
+              "434",
+              "631",
+              "454",
+              "1",
+              "Cancel"
+            ]
+          ]
+        },
+        {
+          "label": "salvageAgain",
+          "buttons": [
+            [
+              "980",
+              "0",
+              "981",
+              "33554525",
+              "15002",
+              "930",
+              "478",
+              "434",
+              "547",
+              "454",
+              "1",
+              "Salvage It!"
+            ],
+            [
+              "980",
+              "1",
+              "983",
+              "33554569",
+              "0",
+              "932",
+              "562",
+              "434",
+              "631",
+              "454",
+              "1",
+              "Cancel"
+            ]
+          ]
+        }
+      ],
+      "run": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-upgrade-runtime-528\\final-capture\\data",
+          "--mission",
+          "dissolvedalliance",
+          "--window",
+          "--mute-audio",
+          "--frames",
+          "880",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-upgrade-runtime-528\\final-capture\\1024x768\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-upgrade-runtime-528\\final-capture\\1024x768\\states.tsv",
+          "--audio-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-upgrade-runtime-528\\final-capture\\1024x768\\audio.tsv"
+        ],
+        "binarySha256": "25e0b83abd91a8a62fd2c8b4e9da59f9db9ff9abbd946305d466112e8e021d81",
+        "scriptSha256": "9a25d9cc8cbf2218189aec71c9e66058fc69c987b6c4b4e00840769c52768c8e",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 34.12675940000918,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "f0897e4ab61f8c2f86b568404bba5e7af303c0933f7c1fa3ee631c464ffcc509",
+        "originalsUnchanged": true,
+        "dataUnchanged": true,
+        "dataRoot": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-upgrade-runtime-528\\final-capture\\data"
+      }
+    }
+  ],
+  "acceptedGames": 2,
+  "allGames": 5,
+  "gameExitCodes": {
+    "zero": 3,
+    "one": 2
+  },
+  "tests": {
+    "registered": 3358,
+    "unique": 9,
+    "failed": 0,
+    "binarySha256": "cc35e13bbfe8e08723c599fad0235a9fe3e328592d073fad11ebe930dd94fa61",
+    "runs": [
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "FactoryUpgrade_BeginUsesActualRawOrder"
+        ],
+        "exit": 0,
+        "names": [
+          "FactoryUpgrade_BeginUsesActualRawOrder"
+        ],
+        "log": "extracted/cpp-factory-upgrade-runtime-528/focus-capture/01.log",
+        "sha256": "5b63a7a06feee796e0062e31781196541c216cf80fd4d22a5df50173d321dbe0"
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "FactoryUpgrade_NextLevelRereadsAndCaps"
+        ],
+        "exit": 0,
+        "names": [
+          "FactoryUpgrade_NextLevelRereadsAndCaps"
+        ],
+        "log": "extracted/cpp-factory-upgrade-runtime-528/focus-capture/02.log",
+        "sha256": "1a808b44d6c8826e08c3504182ce087666241342d4a7dd926e1935266856de8e"
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "FactoryUpgrade_FinishOrderAndCurrentOwner"
+        ],
+        "exit": 0,
+        "names": [
+          "FactoryUpgrade_FinishOrderAndCurrentOwner"
+        ],
+        "log": "extracted/cpp-factory-upgrade-runtime-528/focus-capture/03.log",
+        "sha256": "a9a3924c30e4147c8bd25858ef158d9b8b98a655e13f860ad039de2031828800"
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "FactoryUpgrade_CompleteRemovesActualTimers"
+        ],
+        "exit": 0,
+        "names": [
+          "FactoryUpgrade_CompleteRemovesActualTimers"
+        ],
+        "log": "extracted/cpp-factory-upgrade-runtime-528/focus-capture/04.log",
+        "sha256": "a8bf8cd0207cf134c7ebe8c7f13e78b466aaebc246d35ffeaae3896cae41140a"
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "FactoryUpgrade_PictureFiltersAndSavedNext"
+        ],
+        "exit": 0,
+        "names": [
+          "FactoryUpgrade_PictureFiltersAndSavedNext"
+        ],
+        "log": "extracted/cpp-factory-upgrade-runtime-528/focus-capture/05.log",
+        "sha256": "4dda8840efe0012cabe44c3c391f9d502b0ca72de7420848e3f51a68b6e0cabf"
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "FactoryUpgradeCommand_RequestWaitAndPacketDeadline"
+        ],
+        "exit": 0,
+        "names": [
+          "FactoryUpgradeCommand_RequestWaitAndPacketDeadline"
+        ],
+        "log": "extracted/cpp-factory-upgrade-runtime-528/focus-capture/06.log",
+        "sha256": "7d25f31db3d32005dcab3624ecf9555e7c90f4fea8b9fc26c6b93bedda59c70d"
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "FactoryUpgradeCommand_ReceiveCostTimerAndExactBroadcast"
+        ],
+        "exit": 0,
+        "names": [
+          "FactoryUpgradeCommand_ReceiveCostTimerAndExactBroadcast"
+        ],
+        "log": "extracted/cpp-factory-upgrade-runtime-528/focus-capture/07.log",
+        "sha256": "f73ab93c23f831489ea10c10527468237f7e4ec2a225bb7bad9f322c0a3621d1"
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "SalvageCommand_NativeRequestSendReceive"
+        ],
+        "exit": 0,
+        "names": [
+          "SalvageCommand_NativeRequestSendReceive"
+        ],
+        "log": "extracted/cpp-factory-upgrade-runtime-528/focus-capture/08.log",
+        "sha256": "20af533676787b340fca00b8f5864be27756ed40d5bd49a52ba59eb1f1cc0ba8"
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "ShapeToBuffer_FactoryNative200Pixels"
+        ],
+        "exit": 0,
+        "names": [
+          "ShapeToBuffer_FactoryNative200Pixels"
+        ],
+        "log": "extracted/cpp-factory-upgrade-runtime-528/focus-capture/09.log",
+        "sha256": "10e34851bc85bb5c0d72380f7179fd414bfbde718deec465c0cea4297cffd129"
+      }
+    ]
+  },
+  "protected": {
+    "files": 1819,
+    "unchanged": true,
+    "agentsUnchanged": true,
+    "baseline": "extracted/cpp-object-hit-524/protected-before.json"
+  },
+  "visualChecks": [
+    "final-capture/1280x720/requested.bmp",
+    "final-capture/1280x720/again.bmp",
+    "final-capture/1024x768/upgraded.bmp",
+    "final-capture/1024x768/warning.bmp",
+    "final-capture/1024x768/salvaged.bmp"
+  ],
+  "tool": {
+    "path": "tools/cpp_factory_upgrade_smoke.py",
+    "sha256": "c32cb159a391c9f3c54355425aab87c46c2265df9e12b79a0219e5127b639f72"
+  },
+  "rawEvidence": "extracted/cpp-factory-upgrade-runtime-528",
+  "limitations": [
+    "원래DissolvedAlliance의윈드워크샾LevelII→III/자금4000조건이다. 다른원소/레벨·최종상한·업그레이드도중삭제/포획은별도다.",
+    "실제예측그림/완료/확인창취소와회수확정을확인했다. 모든타입의회수/신전경고/내용물연쇄삭제와캠페인전체완주는별도다.",
+    "집중검사는기존예약/예측그림/요청·수신과54h의격리모듈이며실제네트워크/멀티플레이시험이아니다.",
+    "공중공격3종전용생산·생성·우클릭·추가원문관측/검사, 전체CTest/34경로/자연완주는실행하지않았다."
+  ]
+}

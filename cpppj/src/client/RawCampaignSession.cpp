@@ -1140,7 +1140,7 @@ struct RawCampaignSession::Impl {
         shrapnel.lifetime.capture=[this](Sid sid) {
             const auto raw=core.pool.Slot(sid);
             // 독립 전체 캡처/가상Draw/RLE를 대조한 정확한 가상 표만 같은 실제 일반색 캡처에 연결한다.
-            if (IsPatchTemple(raw) || IsPatchDais(raw) || IsBurningArcherCapture(raw) || IsPlainBuildingCapture(raw) || IsPlainUnitCapture(raw) || IsThunderCannonCapture(raw) || IsSunAviaryCapture(raw) || IsGeyserCapture(raw)) { if (!buildingCapture) throw std::logic_error("실제 건물/유닛 캡처 설치 전 호출");return buildingCapture->Capture(sid); }
+            if (IsPatchTemple(raw) || IsPatchDais(raw) || IsBurningArcherCapture(raw) || IsPlainBuildingCapture(raw) || IsPlainUnitCapture(raw) || IsThunderCannonCapture(raw) || IsSunAviaryCapture(raw) || IsGeyserCapture(raw) || (factoryDraw && factoryDraw->Handles(sid))) { if (!buildingCapture) throw std::logic_error("실제 건물/유닛 캡처 설치 전 호출");return buildingCapture->Capture(sid); } // 두FactoryVT는이미원문대조한같은+78/+a4·색표캡처를회수붕괴에도사용한다.
             if (!Flyer(sid) && !BridgeLifetime(sid) && !ConnectedBombTable(Read(raw,0))) throw std::logic_error("다른 실제 파편 source의 전용 색표/추가 그림 미복원 TYPE"+std::to_string(raw[10]));return shrapnelCapture->Capture(sid);
         };
         shrapnel.destroyUnpaired=[this](Sid sid) { world.Destroy(sid,0); };
