@@ -91,19 +91,20 @@ def saved_screen_size(options_path):
     return result
 
 
-def protected_run(directory,width,height,steps,frames,capture_saved_options=False):
+def protected_run(directory,width,height,steps,frames,capture_saved_options=False,data_root=None):
     """기존execute의PID/SHA/종료관측을쓰고실패에도보호설정을복원한다."""
     directory.mkdir(parents=True,exist_ok=False)
+    data_root=(data_root or ROOT/'originals').resolve()  # 기본 원본 경로와 명시 실행 사본을 같은 실제 메뉴 입력으로 검증한다.
     script,report=directory/'steps.tsv',directory/'states.tsv'  # 이번실행의별도입력/현재상태다.
     script.write_text(''.join(f'{frame}\t{operation}\t{argument}\n' for frame,operation,argument in steps),encoding='utf-8',newline='\n')
-    command=[str(GAME),'--run',str(ROOT/'originals'),'--mission','thewarbegins','--window','--mute-audio','--frames',str(frames),
+    command=[str(GAME),'--run',str(data_root),'--mission','thewarbegins','--window','--mute-audio','--frames',str(frames),
              '--set',f'SCREENW={width};SCREENH={height};maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3',
              '--ui-script',str(script),'--ui-report',str(report),'--audio-report',str(directory/'audio.tsv')]
-    before=snapshots(ROOT/'originals')  # 허용설정도포함한전체이름/바이트목록이다.
-    save(directory/'originals-before.json',before)
+    before=snapshots(data_root);original_before=before if data_root==(ROOT/'originals').resolve() else snapshots(ROOT/'originals')  # 실행 사본과 보호 원본의 전체 바이트를 따로 보존한다.
+    save(directory/'originals-before.json',original_before);save(directory/'data-before.json',before)
     result=dict(command=command,binarySha256=sha(GAME),scriptSha256=sha(script))  # 실행전실패도검토가능하게남긴다.
     try:
-        with preserve_game_settings(ROOT/'originals','d',directory/'settings-backup') as options_path,muted_device_environment():
+        with preserve_game_settings(data_root,'d',directory/'settings-backup') as options_path,muted_device_environment():
             result.update(execute(command,directory,GAME,max(90,frames/60*4+30)))
             if capture_saved_options:
                 result['savedScreenSize']=saved_screen_size(options_path)  # execute완료뒤허용설정복원전에두키만읽는다.
@@ -111,9 +112,9 @@ def protected_run(directory,width,height,steps,frames,capture_saved_options=Fals
         result['exception']=repr(error)
         raise
     finally:
-        result['originalsUnchanged']=snapshots(ROOT/'originals')==before
+        result.update(originalsUnchanged=snapshots(ROOT/'originals')==original_before,dataUnchanged=snapshots(data_root)==before,dataRoot=str(data_root))
         save(directory/'run.json',result)
-    if result['returnCode'] or result['timedOut'] or not result['originalsUnchanged']:
+    if result['returnCode'] or result['timedOut'] or not result['originalsUnchanged'] or not result['dataUnchanged']:
         raise RuntimeError(result)
     return report,result
 
@@ -179,6 +180,12 @@ def check_bar(row,opened):
         assert int(row['game_menu_bar'][0])!=0,row['game_menu_bar']
 
 
+# 실제 Native HTML 버튼과 기존 브리핑 조작부의 표시 라벨을 합쳐 현재 입력 가능한 버튼만 읽는다.
+def visible_button_labels(report,label,observed):
+    rows=repeated(report,'raw_html_button').get(label,[])  # 첫 열은 토큰이며 마지막 두 열은 표시 여부/원본 라벨이다.
+    return set(observed[label]['controls'])|{row[11] for row in rows if len(row)>=12 and row[10]=='1'}
+
+
 def check_core(report,width,height):
     """두비율공통의실제ESC/명령/확인취소/재시작결과를판정한다."""
     observed=states(report)  # 최종보고값을입력이나예상상태로주입하지않는다.
@@ -189,10 +196,10 @@ def check_core(report,width,height):
     check_bar(observed['closed'],False)
     assert observed['review']['page'][0].casefold()=='a.',observed['review']
     assert observed['leaveConfirm']['page'][0].casefold()=='abort',observed['leaveConfirm']
-    assert {'Main Menu','Replay Mission','Continue Mission'}<=set(observed['leaveConfirm']['controls']),observed['leaveConfirm']['controls']
+    assert {'Main Menu','Replay Mission','Continue Mission'}<=visible_button_labels(report,'leaveConfirm',observed),visible_button_labels(report,'leaveConfirm',observed)
     assert observed['leaveCancelled']['phase']==['4'],observed['leaveCancelled']
-    assert observed['version']['page'][0].casefold()=='about' and 'OK' in observed['version']['controls'],observed['version']
-    assert observed['restarted']['phase']==['3'] and 'Play Mission' in observed['restarted']['controls'],observed['restarted']
+    assert observed['version']['page'][0].casefold()=='about' and 'OK' in visible_button_labels(report,'version',observed),observed['version']
+    assert observed['restarted']['phase']==['3'] and 'Play Mission' in visible_button_labels(report,'restarted',observed),observed['restarted']
     assert observed['restartPlayed']['mission'][0].casefold()=='thewarbegins' and observed['restartPlayed']['mission_start'][0]=='1',observed['restartPlayed']
     contents=repeated(report,'raw_production_content')  # 실제동일공급장부에서아직없는슬롯을확인한다.
     early={int(row[4]) for row in contents['missingSlot'] if int(row[2])&0x40}
@@ -215,7 +222,7 @@ def check_extended(report,observed,width,height,volumes_available):
     else:
         summary['volumeUnverifiedReason']='실제 음향 장치가 준비되지 않아 원문 음량 하위가 비활성화됨'
     assert observed['resolutionConfirm']['page'][0].casefold()=='setsize',observed['resolutionConfirm']
-    assert {'Yes','No'}<=set(observed['resolutionConfirm']['controls']),observed['resolutionConfirm']['controls']
+    assert {'Yes','No'}<=visible_button_labels(report,'resolutionConfirm',observed),visible_button_labels(report,'resolutionConfirm',observed)
     assert observed['resolutionCancelled']['phase']==['4'] and observed['resolutionCancelled']['size']==[str(width),str(height)],observed['resolutionCancelled']
     target=choose(menu_items(report,'resolutionSubmenu'),command=COMMANDS['tell'],text='800 by 600')
     assert target['visible'] and target['parameter']!=0,target
@@ -245,12 +252,12 @@ def check_extended(report,observed,width,height,volumes_available):
     return summary
 
 
-def one_size(out,width,height,extended):
+def one_size(out,width,height,extended,data_root=None):
     """한비율의probe와실제계획을각각독립프로세스/PID/설정보존으로실행한다."""
     directory=out/f'{width}x{height}'
     directory.mkdir(parents=True,exist_ok=False)
     probe=directory/'probe'
-    report,probe_result=protected_run(probe,width,height,probe_steps(probe),44)
+    report,probe_result=protected_run(probe,width,height,probe_steps(probe),44,data_root=data_root)
     observed=states(report)
     check_bar(observed['bar'],True)
     check_bar(observed['closed'],False)
@@ -260,7 +267,7 @@ def one_size(out,width,height,extended):
     run_dir=directory/'scenario'
     steps,frames,labels=plan(run_dir,items,extended,available,help_word(report,'bar',items))
     save(directory/'selected-actual-labels.json',labels)
-    report,result=protected_run(run_dir,width,height,steps,frames)
+    report,result=protected_run(run_dir,width,height,steps,frames,data_root=data_root)
     observed,summary=check_core(report,width,height)
     if extended:
         summary.update(check_extended(report,observed,width,height,available))
@@ -282,6 +289,7 @@ def main():
     parser.add_argument('--output',type=Path,required=True)
     parser.add_argument('--only',choices=('1024x768','1280x720'))
     parser.add_argument('--prepare-only',action='store_true',help='GUI없이probe입력계획과범위기록만작성')
+    parser.add_argument('--data-root',type=Path,default=ROOT/'originals',help='실제 실행 자료 사본 경로. 생략하면 기존 originals를 사용한다.')
     args=parser.parse_args()
     out=args.output.resolve();out.mkdir(parents=True,exist_ok=False)
     sizes=[size for size in SIZES if args.only is None or f'{size[0]}x{size[1]}'==args.only]  # 지정비율만재검증할수있다.
@@ -296,7 +304,7 @@ def main():
     try:
         for width,height in sizes:  # core의성공요약이저장된뒤에만wide확장에진입한다.
             result['executed']=True
-            result['runs'].append(one_size(out,width,height,width==1280))
+            result['runs'].append(one_size(out,width,height,width==1280,args.data_root))
             save(out/'summary.json',result)
     except Exception as error:
         result['failed']=repr(error)

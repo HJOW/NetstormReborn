@@ -15,10 +15,11 @@ def main():
     """실제 관측한 행 라벨을 클릭하며 정지 깊이나 상태 메시지를 직접 변경하지 않는다."""
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output',type=Path,required=True)
+    parser.add_argument('--data-root',type=Path,help='별도 실행 자료 사본. 생략하면 기존 originals를 사용한다.')
     args=parser.parse_args()
     out=args.output.resolve();out.mkdir(parents=True,exist_ok=False)
     probe=out/'probe'  # 실제 같은 바이너리의 메뉴 원문을 먼저 읽는 실행이다.
-    report,first=protected_run(probe,1024,768,probe_steps(probe),44)
+    report,first=protected_run(probe,1024,768,probe_steps(probe),44,data_root=args.data_root)
     items=menu_items(report,'bar')  # 숨긴 Options 하위의 실제 원문 라벨/명령을 그대로 읽는다.
     options=choose(items,text='Options')['label']
     pause=choose(items,command=0x020000cf)['label']  # 보호 명령 표의 Pause ID다.
@@ -29,7 +30,7 @@ def main():
            (58,'esc',''),(64,'click',options),(70,'report','pausedBar'),
            (70,'snapshot',str(run/'paused-bar.bmp')),(76,'click',pause),
            (84,'report','resumed'),(84,'snapshot',str(run/'resumed.bmp'))]
-    report,result=protected_run(run,1024,768,steps,96)
+    report,result=protected_run(run,1024,768,steps,96,data_root=args.data_root)
     observed=states(report)
     assert observed['initial']['paused']==['0'],observed['initial']['paused']
     assert observed['paused']['paused']==['1'] and observed['pausedBar']['paused']==['1'],observed['pausedBar']['paused']

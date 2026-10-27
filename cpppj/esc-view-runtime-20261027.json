@@ -1,0 +1,353 @@
+{
+  "unit": 510,
+  "date": "2026-10-27",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23",
+    "changed": false
+  },
+  "exes": {
+    "NetstormCpp.exe": "26401d6fcd36c21c0045065cce574154d4945e33544c91c68947868d53327cf1",
+    "netstorm_tests.exe": "584b27637f16443b6e728ce5ec5a5105d9ed0664674b07cab097692709359380"
+  },
+  "sourceFiles": 2892,
+  "productUnchanged": true,
+  "newBuilds": 0,
+  "newCppTests": 0,
+  "newNativeOriginalExecutions": 0,
+  "ctest": {
+    "wrappers": 1,
+    "cppTests": 3337,
+    "failedChecks": 0,
+    "seconds": 399.04
+  },
+  "gameExecutions": 6,
+  "productFailures": 0,
+  "harnessFailures": 0,
+  "runs": [
+    {
+      "directory": "extracted/cpp-esc-view-runtime-510/esc-first/1024x768/probe",
+      "seconds": 3.3221517999918433,
+      "active": true,
+      "visible": true,
+      "returnCode": 0
+    },
+    {
+      "directory": "extracted/cpp-esc-view-runtime-510/esc-first/1024x768/scenario",
+      "seconds": 10.45746489999874,
+      "active": true,
+      "visible": true,
+      "returnCode": 0
+    },
+    {
+      "directory": "extracted/cpp-esc-view-runtime-510/esc-first/1280x720/probe",
+      "seconds": 3.3042696000047727,
+      "active": true,
+      "visible": true,
+      "returnCode": 0
+    },
+    {
+      "directory": "extracted/cpp-esc-view-runtime-510/esc-first/1280x720/scenario",
+      "seconds": 54.420557300007204,
+      "active": true,
+      "visible": true,
+      "returnCode": 0
+    },
+    {
+      "directory": "extracted/cpp-esc-view-runtime-510/pause-first/probe",
+      "seconds": 3.2491439000004902,
+      "active": true,
+      "visible": true,
+      "returnCode": 0
+    },
+    {
+      "directory": "extracted/cpp-esc-view-runtime-510/pause-first/scenario",
+      "seconds": 5.354704400000628,
+      "active": true,
+      "visible": true,
+      "returnCode": 0
+    }
+  ],
+  "esc": {
+    "prepared": true,
+    "executed": true,
+    "viewports": [
+      [
+        1024,
+        768
+      ],
+      [
+        1280,
+        720
+      ]
+    ],
+    "toolSha256": "3574cdaffd37c8695eeba2eef9263c7c7ba20d9d206992aced67ec785c0cb26c",
+    "runs": [
+      {
+        "corePassed": true,
+        "viewport": [
+          1024,
+          768
+        ],
+        "earlyMissingSlot": 5,
+        "earlySlots": [
+          0,
+          1
+        ],
+        "visibleGameLabels": [
+          "Game",
+          "View",
+          "Options",
+          "Players",
+          "About",
+          "Review Mission Objectives - F8",
+          "",
+          "Restart Mission",
+          "Leave Mission",
+          "",
+          "Quit Game"
+        ],
+        "viewLabels": [
+          "Game",
+          "View",
+          "Options",
+          "Players",
+          "About",
+          "Hide buildings - F2",
+          "Hide/Show Island Themes - Shift F3",
+          "View Home Temple - F4",
+          "View Your Priest - F5",
+          "View Netstorm Knowledge - F6",
+          "Hide Island Ownership - F7",
+          "Review Mission Objectives - F8",
+          "View Player List - F9"
+        ],
+        "originalsUnchanged": true,
+        "audioDeviceReady": "1",
+        "audioMuteDepth": "1",
+        "binarySha256": "26401d6fcd36c21c0045065cce574154d4945e33544c91c68947868d53327cf1",
+        "labelsFromActualRawMenuItems": true,
+        "limitations": [
+          "현재 fixed HUD의 viewport를 사용하며 원본left85 전체dock/픽셀정밀동일성을판정하지않는다.",
+          "WM_CHAR/마우스사건은실제큐에주입한다. OS키메시지발생자체와전체미션완주는범위밖이다.",
+          "View하위는실제열림/현재행을관측한다. 모든View명령/Players/NSInfo/전체Editor완성을주장하지않는다."
+        ]
+      },
+      {
+        "corePassed": true,
+        "viewport": [
+          1280,
+          720
+        ],
+        "earlyMissingSlot": 5,
+        "earlySlots": [
+          0,
+          1
+        ],
+        "visibleGameLabels": [
+          "Game",
+          "View",
+          "Options",
+          "Players",
+          "About",
+          "Review Mission Objectives - F8",
+          "",
+          "Restart Mission",
+          "Leave Mission",
+          "",
+          "Quit Game"
+        ],
+        "viewLabels": [
+          "Game",
+          "View",
+          "Options",
+          "Players",
+          "About",
+          "Hide buildings - F2",
+          "Hide/Show Island Themes - Shift F3",
+          "View Home Temple - F4",
+          "View Your Priest - F5",
+          "View Netstorm Knowledge - F6",
+          "Hide Island Ownership - F7",
+          "Review Mission Objectives - F8",
+          "View Player List - F9"
+        ],
+        "volumeVerified": true,
+        "resolutionTellParameterToken": 266,
+        "resolutionTellParameterVerified": false,
+        "resolutionTellParameterLimitation": "현재 보고서는 토큰만 제공하여 원문 문자열 인자 자체는 미관측; SETSIZE 페이지/No/기존 크기 보존만 검증",
+        "extendedPassed": true,
+        "resolutionNoPreservedSize": true,
+        "selections": [
+          {
+            "key": "Q",
+            "slot": 0,
+            "sid": 73
+          },
+          {
+            "key": "W",
+            "slot": 1,
+            "sid": 87
+          },
+          {
+            "key": "A",
+            "slot": 2,
+            "sid": 89
+          },
+          {
+            "key": "S",
+            "slot": 3,
+            "sid": 92
+          },
+          {
+            "key": "Z",
+            "slot": 4,
+            "sid": 94
+          },
+          {
+            "key": "X",
+            "slot": 5,
+            "sid": 95
+          }
+        ],
+        "outsideWorldSelection": [
+          "15000"
+        ],
+        "originalsUnchanged": true,
+        "audioDeviceReady": "1",
+        "audioMuteDepth": "1",
+        "binarySha256": "26401d6fcd36c21c0045065cce574154d4945e33544c91c68947868d53327cf1",
+        "labelsFromActualRawMenuItems": true,
+        "limitations": [
+          "현재 fixed HUD의 viewport를 사용하며 원본left85 전체dock/픽셀정밀동일성을판정하지않는다.",
+          "WM_CHAR/마우스사건은실제큐에주입한다. OS키메시지발생자체와전체미션완주는범위밖이다.",
+          "View하위는실제열림/현재행을관측한다. 모든View명령/Players/NSInfo/전체Editor완성을주장하지않는다."
+        ]
+      }
+    ],
+    "passed": true
+  },
+  "pause": {
+    "passed": true,
+    "originalsUnchanged": true,
+    "binarySha256": "26401d6fcd36c21c0045065cce574154d4945e33544c91c68947868d53327cf1",
+    "toolSha256": "b6583f93bc4be61deae3974e697b22d797ebd204566605cbf772c79bcc3cfa97",
+    "pausedMenuReopened": true,
+    "permanentMessageRemoved": true,
+    "audioMuteDepth": "1"
+  },
+  "protectedUnchanged": true,
+  "agentsUnchanged": true,
+  "existingTestsAndFixturesUnchanged": true,
+  "nextGap": {
+    "command": "0x020000f0",
+    "original": "004cbf10 Players(fancy)",
+    "status": "원본과현재일반명령분배를정적으로대조해실제창생성미연결을발견했다.실제오류재현과수정은다음단위다."
+  },
+  "limitations": [
+    "View하위의열림만포함하며모든View명령의완료증거는아니다.",
+    "해상도원문문자열인자는현재보고서에없어미검증이며SETSIZE/No/기존크기보존은확인했다.",
+    "입력큐에스크립트사건을전달한활성창검증이며사람의수동완주가아니다.",
+    "연녹색직사각형분석과자연완주/사용자개입검증은보류유지한다."
+  ],
+  "rawDirectory": "extracted/cpp-esc-view-runtime-510",
+  "pushed": false,
+  "evidenceSha256": {
+    "extracted/cpp-esc-view-runtime-510/before.json": "27c57ef2f9ddf533873c2f72f31bd7aa99f080da0fa18643bed90201bc7f6e36",
+    "extracted/cpp-esc-view-runtime-510/freeze-baseline.json": "f57521037ced70eeabfa4e3e4301634745d0c427ee618103b6f2d66861a8f33a",
+    "extracted/cpp-esc-view-runtime-510/ctest.log": "de1c2ae6a7606936c96359619fefdd4e184dfe5cf27d35968754339eed874e9f",
+    "extracted/cpp-esc-view-runtime-510/esc-first.log": "7109fc7dbd4377ef21bfc60af1e0af89937a592b352398c6d58f181cec0fc84e",
+    "extracted/cpp-esc-view-runtime-510/esc-first.json": "1303cd783fea80d099c9ea8b1a24d31db567a15014d43c49f3f9f92d898ed228",
+    "extracted/cpp-esc-view-runtime-510/pause-first.log": "7175db40e767e5f87f7869845556929261956af74502be9b3727b75034555a19",
+    "extracted/cpp-esc-view-runtime-510/pause-first.json": "dbf0c918f497269e1e90a066dd9523b02ad27a1c7bcd14d715f956e424d83167",
+    "extracted/cpp-esc-view-runtime-510/ctest.json": "cd83d1c537f1e1e6afffda9c5839cff9ffd1b5dacc58b2f2113ca36d3f9afeba",
+    "extracted/cpp-esc-view-runtime-510/ctest-last-test.log": "3810d35d7abce70624fbc724a6f6e834034fd169532521bad00a4c56f0d62c03",
+    "extracted/cpp-esc-view-runtime-510/esc-first/summary.json": "3d1eb6b3feca8a522b138d43122b54ada76d30a585a61dc4c408f5cab2a23e8b",
+    "extracted/cpp-esc-view-runtime-510/pause-first/summary.json": "a2fb33b1158cb6136d589416cf2315c88c612cb6823a189288bc0b073711e5b6",
+    "extracted/cpp-esc-view-runtime-510/pause-first/probe/steps.tsv": "d31f9b5973de25a62d2374cfcac1b654ef5b705d7aaf95c9aad7ce8c5b8c0eed",
+    "extracted/cpp-esc-view-runtime-510/pause-first/probe/originals-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-esc-view-runtime-510/pause-first/probe/data-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-esc-view-runtime-510/pause-first/probe/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-esc-view-runtime-510/pause-first/probe/stderr.log": "9fba4f7e2bb0be090e62265ef1203d93a429672f7ce307b7cf3aa08e3bfebbbb",
+    "extracted/cpp-esc-view-runtime-510/pause-first/probe/running.json": "8661aa277508dc120dde0f090ad669ed5bec9a9bf4894f2bcccb9c9a6cb20a43",
+    "extracted/cpp-esc-view-runtime-510/pause-first/probe/states.tsv": "a975a5c002ca3a83ae694ec59fbcb07535198593ddb10ed24bcd1ddac401df8f",
+    "extracted/cpp-esc-view-runtime-510/pause-first/probe/bar.bmp": "62993c8e1f738402c0f8c6f98c9ab6f0153d75d59fb9acac9ea474113ec5ad7d",
+    "extracted/cpp-esc-view-runtime-510/pause-first/probe/audio.tsv": "65cc5b5c6bfa50f84f4552a40342d17b65c55b1bcdae3f80c5dbc1f4e915653d",
+    "extracted/cpp-esc-view-runtime-510/pause-first/probe/run.json": "a7f72ec9a63b1bdc78ee7fe389a0dca7ef122463726e78e0d3ed9819e54ad7d5",
+    "extracted/cpp-esc-view-runtime-510/pause-first/scenario/steps.tsv": "0b2a103a0809388662fe2f1b2ee604e1512e8071d2fda06333f34b240f39f603",
+    "extracted/cpp-esc-view-runtime-510/pause-first/scenario/originals-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-esc-view-runtime-510/pause-first/scenario/data-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-esc-view-runtime-510/pause-first/scenario/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-esc-view-runtime-510/pause-first/scenario/stderr.log": "9fba4f7e2bb0be090e62265ef1203d93a429672f7ce307b7cf3aa08e3bfebbbb",
+    "extracted/cpp-esc-view-runtime-510/pause-first/scenario/running.json": "3e57eeacff37e1b7843c9d5d41d29ba1e79d46df991fbb28c87f954eba07dc6c",
+    "extracted/cpp-esc-view-runtime-510/pause-first/scenario/states.tsv": "ad2cb3fbd778705b4d73adc43b428021534a739d40d49843da83a7a7714bfb76",
+    "extracted/cpp-esc-view-runtime-510/pause-first/scenario/paused.bmp": "846d597c4681fd2248f9ea10ab15932968b036fa24a510dad4e11355c9a60cc2",
+    "extracted/cpp-esc-view-runtime-510/pause-first/scenario/paused-bar.bmp": "1df8a61a37df629da871bd872b1253fc5b9a38602e9a67f96c303a683f65d009",
+    "extracted/cpp-esc-view-runtime-510/pause-first/scenario/resumed.bmp": "d87ed80b20b1ff6ced5be7c199b459b08be986905709a26ff95af24ded17b775",
+    "extracted/cpp-esc-view-runtime-510/pause-first/scenario/audio.tsv": "5f8d47f3cb4c91e851a87a36fe247a53915ef6a14437cc57816475a64882145d",
+    "extracted/cpp-esc-view-runtime-510/pause-first/scenario/run.json": "70fab2d2aa659a977d1b425771834af295db07f25aa7dfaf2bf79e546ab42f3d",
+    "extracted/cpp-esc-view-runtime-510/esc-first/1024x768/actual-menu-items.json": "2bfdbf14d4df49fc720df1d20fa1363401a7df2c15e6765fb63f72d74c802ae5",
+    "extracted/cpp-esc-view-runtime-510/esc-first/1024x768/selected-actual-labels.json": "f51ed03008af157e009fae906d90b8a677ac57f8e5d32a1bbc625afcc3dc49d2",
+    "extracted/cpp-esc-view-runtime-510/esc-first/1024x768/summary.json": "7abb65355d63eb58dc9c66c31503a53d04318650010fb243559fcd24b5cc67ad",
+    "extracted/cpp-esc-view-runtime-510/esc-first/1280x720/actual-menu-items.json": "7344c8ecf89160edfdcdcba1553eb9dc50ffbea11e2dadf7c51ecb1ccd555213",
+    "extracted/cpp-esc-view-runtime-510/esc-first/1280x720/selected-actual-labels.json": "711ce77790b8f0b91b92ed10421ff52897b2f0a3fff7888887ec8a5683a7fced",
+    "extracted/cpp-esc-view-runtime-510/esc-first/1280x720/summary.json": "ce2954ed007c640f4ea514e53598e9b5b05176d2fc5e33e338e92f6695f09ed0",
+    "extracted/cpp-esc-view-runtime-510/esc-first/1280x720/probe/steps.tsv": "d9f35e1c2cc85c563007cd2b7d022783aa915dd7c5b6979623c36d1bb392d969",
+    "extracted/cpp-esc-view-runtime-510/esc-first/1280x720/probe/originals-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-esc-view-runtime-510/esc-first/1280x720/probe/data-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-esc-view-runtime-510/esc-first/1280x720/probe/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-esc-view-runtime-510/esc-first/1280x720/probe/stderr.log": "9fba4f7e2bb0be090e62265ef1203d93a429672f7ce307b7cf3aa08e3bfebbbb",
+    "extracted/cpp-esc-view-runtime-510/esc-first/1280x720/probe/running.json": "5eac35b5b2bcfa95d520ec14dbde9a7c1d416e247d2fa0b36e69191dce75cea6",
+    "extracted/cpp-esc-view-runtime-510/esc-first/1280x720/probe/states.tsv": "633eb2c020de8ed3108739cbb883b067f7b0568f5ee5861ab8e78ae67a0aff94",
+    "extracted/cpp-esc-view-runtime-510/esc-first/1280x720/probe/bar.bmp": "6bb1d45d5e04932be4f23d6a6c1b56039c4367cca020c5144eb5abaff7f0e06b",
+    "extracted/cpp-esc-view-runtime-510/esc-first/1280x720/probe/audio.tsv": "001e0b856be88d79e7c85df5d8236d370134e1c59b066ef6a0c58403f675638e",
+    "extracted/cpp-esc-view-runtime-510/esc-first/1280x720/probe/run.json": "8402a30098f6da15436635588a7d6b55df556c83764d7be89bf7585d2436458f",
+    "extracted/cpp-esc-view-runtime-510/esc-first/1280x720/scenario/steps.tsv": "33dc3ac659bef28e1c804b0861e4a0dbb9ffe41155fda337effac7ff67db6923",
+    "extracted/cpp-esc-view-runtime-510/esc-first/1280x720/scenario/originals-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-esc-view-runtime-510/esc-first/1280x720/scenario/data-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-esc-view-runtime-510/esc-first/1280x720/scenario/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-esc-view-runtime-510/esc-first/1280x720/scenario/stderr.log": "d8686b8874710a69bb56d0460a0999a13367533639243e0ed2b39d8c7c440935",
+    "extracted/cpp-esc-view-runtime-510/esc-first/1280x720/scenario/running.json": "e2a3f28377b7f490947e39f02ec655448576d67c7ab960eba0138a9ba71022a7",
+    "extracted/cpp-esc-view-runtime-510/esc-first/1280x720/scenario/states.tsv": "8421bbb4f45848cfb329ec39a6f11f09f50d550f4a912de90316304a6a5612c5",
+    "extracted/cpp-esc-view-runtime-510/esc-first/1280x720/scenario/initial.bmp": "40db165a7b14c495e48de0f943ab47ee1687d898d6d7c4bbb43a47bf42a4c8a4",
+    "extracted/cpp-esc-view-runtime-510/esc-first/1280x720/scenario/opened.bmp": "d7f0f6bc403d3b7d384de4dc43a324e5e970bd7cd8469dd8552c529c5cbd5015",
+    "extracted/cpp-esc-view-runtime-510/esc-first/1280x720/scenario/review.bmp": "f49cc32cb461964233a46de19bea23f49d819efac220ec2f20aac77f0d82cc6b",
+    "extracted/cpp-esc-view-runtime-510/esc-first/1280x720/scenario/leave-confirm.bmp": "036ddefff0e8a2fafb8d0c254a05cc6d2b2df02601e9ea6715387d1d1e80cc10",
+    "extracted/cpp-esc-view-runtime-510/esc-first/1280x720/scenario/view.bmp": "73cb82338a0828aad9f5e348b5fe690614db878b9b76430883e09ad1bef54913",
+    "extracted/cpp-esc-view-runtime-510/esc-first/1280x720/scenario/version.bmp": "bcbdeab32c07dd507b582f1c5eaf69a45d448e1144bdbfd72a40928a3db92b72",
+    "extracted/cpp-esc-view-runtime-510/esc-first/1280x720/scenario/restarted.bmp": "2935b70e4820c39c4f695df2419331d04a638f63ca7a6d7d8501a141b5c1190e",
+    "extracted/cpp-esc-view-runtime-510/esc-first/1280x720/scenario/options.bmp": "d4a8af62e6105634a95bf6c684f1bd92f513fcca2250b262d3c59edfbc638993",
+    "extracted/cpp-esc-view-runtime-510/esc-first/1280x720/scenario/resolution-confirm.bmp": "601deed545e1e2e5b6c9da5a8d950b362af4dd12984cbf6db7f2c96a9ae154c9",
+    "extracted/cpp-esc-view-runtime-510/esc-first/1280x720/scenario/mature.bmp": "8049e3b48f3475abf1baad16462fb530707413fb41451d29b7f9fe4e9b536669",
+    "extracted/cpp-esc-view-runtime-510/esc-first/1280x720/scenario/outside-after.bmp": "ad428ecad9ae113a61efbf0fc27a5d8542088a868e928fc022e8a6c14bdb485c",
+    "extracted/cpp-esc-view-runtime-510/esc-first/1280x720/scenario/audio.tsv": "9349267166f8dd4bbb46d9151af7413f186a30aad8591eaec6cc9eca3f2c18d3",
+    "extracted/cpp-esc-view-runtime-510/esc-first/1280x720/scenario/run.json": "01278b7b5f764146285767554b265e17733610d5aef72b7a3c637cd6c9dc62e0",
+    "extracted/cpp-esc-view-runtime-510/esc-first/1024x768/probe/steps.tsv": "a6397b760fa24fbd56256170ffda0611b04a801c9eb4e9d105582d90ec5c6f3d",
+    "extracted/cpp-esc-view-runtime-510/esc-first/1024x768/probe/originals-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-esc-view-runtime-510/esc-first/1024x768/probe/data-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-esc-view-runtime-510/esc-first/1024x768/probe/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-esc-view-runtime-510/esc-first/1024x768/probe/stderr.log": "9fba4f7e2bb0be090e62265ef1203d93a429672f7ce307b7cf3aa08e3bfebbbb",
+    "extracted/cpp-esc-view-runtime-510/esc-first/1024x768/probe/running.json": "ac53dcb30006cdfe10350f40fa3ebd7060cfb930ea4c3b75e3c57ca1b563f3ce",
+    "extracted/cpp-esc-view-runtime-510/esc-first/1024x768/probe/states.tsv": "0fe06cdaf0157ba740f40be805145e565fd2e7f2b4f8d462db2335f6af91ffae",
+    "extracted/cpp-esc-view-runtime-510/esc-first/1024x768/probe/bar.bmp": "cdca55381deb98fe54bd600c6e422b63c26aa7577e027a4abd820f8ef81a5a76",
+    "extracted/cpp-esc-view-runtime-510/esc-first/1024x768/probe/audio.tsv": "e124ce8119fd50579c4c097b90e785bd30ac6f85f0da2d7a732dc3ebfa591496",
+    "extracted/cpp-esc-view-runtime-510/esc-first/1024x768/probe/run.json": "b3748369de56150af051d87aa3eac915d5b6ebd7473bd49c4352c718f063eb75",
+    "extracted/cpp-esc-view-runtime-510/esc-first/1024x768/scenario/steps.tsv": "fccd79dffee953c6262c8316ee976a3468e4316ed6ac7e35e737d8d4d6216d2f",
+    "extracted/cpp-esc-view-runtime-510/esc-first/1024x768/scenario/originals-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-esc-view-runtime-510/esc-first/1024x768/scenario/data-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-esc-view-runtime-510/esc-first/1024x768/scenario/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-esc-view-runtime-510/esc-first/1024x768/scenario/stderr.log": "84302a97b3de926de9eea5be60674a827f408ce731e5ee26b64d8d9d48cd55e2",
+    "extracted/cpp-esc-view-runtime-510/esc-first/1024x768/scenario/running.json": "f14d63ab278759e73a77c6d2fa1103fab4956610f463589ed8a94c7b0be09599",
+    "extracted/cpp-esc-view-runtime-510/esc-first/1024x768/scenario/states.tsv": "61b4234e476939c99f69cedbbee897a6300c40f1f1e4ff23975b487ccd2283af",
+    "extracted/cpp-esc-view-runtime-510/esc-first/1024x768/scenario/initial.bmp": "46b2b0b366b8c05f8254e4d4d342ee419508e3348ff34fac8a2f8bfb17371c95",
+    "extracted/cpp-esc-view-runtime-510/esc-first/1024x768/scenario/opened.bmp": "78a5d69dbb3bd034bbb8a7ebd96b6b2adda47778e6499ba4b712fcbe1f29a57d",
+    "extracted/cpp-esc-view-runtime-510/esc-first/1024x768/scenario/review.bmp": "d18a81ea18121b5464a6e11f3ebba750cc90f6143e993028626803a964f71e5e",
+    "extracted/cpp-esc-view-runtime-510/esc-first/1024x768/scenario/leave-confirm.bmp": "6e77e7be68612f647c56bd4f006705a1f281cfb7327cce27e14a91cc562c9257",
+    "extracted/cpp-esc-view-runtime-510/esc-first/1024x768/scenario/view.bmp": "a95c8cc63fc49338f53a128d401e1f82745b53caafac65d95c2c38cbbf762ec6",
+    "extracted/cpp-esc-view-runtime-510/esc-first/1024x768/scenario/version.bmp": "5554f4cfb8787c5976406700647bed405ec997ca5abdb64c1116e4292eb5cc95",
+    "extracted/cpp-esc-view-runtime-510/esc-first/1024x768/scenario/restarted.bmp": "d9bc3475d38a72ac28e81000cb50b1c3a84ef8a347dda12c5066f3064af2b535",
+    "extracted/cpp-esc-view-runtime-510/esc-first/1024x768/scenario/audio.tsv": "228ceb3ee956c81ec34e440f913a5b956526f3a51668bf0ff1295a3ab4a0ce80",
+    "extracted/cpp-esc-view-runtime-510/esc-first/1024x768/scenario/run.json": "1158449541c0dbfabccb49870ba6fe8300650002e4255fe2d92cad28513819e2"
+  }
+}
