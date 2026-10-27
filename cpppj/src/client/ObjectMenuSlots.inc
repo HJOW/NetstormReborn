@@ -50,6 +50,8 @@ constexpr std::array<ObjectMenuSlot,83> kObjectMenuSlots{{
     {0x005099e8U,0x0044cbd0U,0x004adb30U},
     {0x00509aa0U,0x0044cbd0U,0x004adb30U},
     {0x00509b98U,0x004b1270U,0x004adb30U},
+    // 더스트 데빌/훨리기그/맨오워 자체의 공통 Damageable→Object 메뉴다. 모체 Factory 메뉴와 구분한다.
+    // 2026-10-28: 사용자 지시로 세 타입은 기존 디컴파일만 대조했으며 생산/우클릭 실행 검증은 하지 않았다.
     {0x0050a050U,0x0044cbd0U,0x004adb30U},
     {0x0050a1e8U,0x0044cbd0U,0x004adb30U},
     {0x0050a388U,0x0044cbd0U,0x004adb30U},
