@@ -1195,8 +1195,7 @@ void UberGump::Compose() {
                 regions=rawButtons_->Menus()->Controls();
                 // 먼저 기존 바탕 글자를 실제 픽셀로 합성하고 그 위에 같은 원본 메뉴 Draw를 실행한다.
                 RasterMenuBackdropText(*canvas,text);text.clear();
-                rawButtons_->Menus()->Draw(canvas->indices,width,height,client_.GetScreen().Colors(),client_.GetScreen().ShadeMaps());
-                commonDrawSubmitted=true;
+                if (!nativeHud) { rawButtons_->Menus()->Draw(canvas->indices,width,height,client_.GetScreen().Colors(),client_.GetScreen().ShadeMaps());commonDrawSubmitted=true; } //실제 HUD는 원문 미니맵 Refresh 뒤 Renderer의 공통 Overlay에서 그린다. 중간 모드의 음수 crop을 호스트 배경 합성에서 먼저 읽지 않는다.
             }
         } else if (state_.phase == ClientPhase::Dialog || state_.phase == ClientPhase::Briefing) {
             const auto background=std::string(HtmlBackgroundName(htmlGlobals_));
@@ -1209,8 +1208,8 @@ void UberGump::Compose() {
                 }
                 if (it != decorations_.end()) Paste(*canvas, it->second, (width - static_cast<int>(it->second.width)) / 2, (height - static_cast<int>(it->second.height)) / 2, all);
             }
-            if (!controls) { rawButtons_->Menus()->Draw(canvas->indices,width,height,client_.GetScreen().Colors(),client_.GetScreen().ShadeMaps());commonDrawSubmitted=true; }
-        } else if (state_.phase == ClientPhase::LoadingMission && !controls) {
+            if (!controls && !nativeHud) { rawButtons_->Menus()->Draw(canvas->indices,width,height,client_.GetScreen().Colors(),client_.GetScreen().ShadeMaps());commonDrawSubmitted=true; } //브리핑도 현재 전체 HUD는 아래 공통 Overlay로 제출하여 같은 프레임의 Refresh 결과를 사용한다.
+        } else if (state_.phase == ClientPhase::LoadingMission && !controls && !nativeHud) {
             rawButtons_->Menus()->Draw(canvas->indices,width,height,client_.GetScreen().Colors(),client_.GetScreen().ShadeMaps());
             commonDrawSubmitted=true;
         }

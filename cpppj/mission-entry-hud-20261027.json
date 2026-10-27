@@ -1,0 +1,226 @@
+{
+  "unit": 485,
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": "HJOW-Athlon / 2026-10-23",
+  "problem": {
+    "sourceBase": -30080,
+    "sourceBytes": 16384,
+    "copySize": [
+      80,
+      75
+    ],
+    "destination": [
+      0,
+      693
+    ],
+    "cropY": -235,
+    "cause": "원문 미니맵 Refresh 전에 호스트 브리핑/팝업 배경 합성에서 중간 HUD crop을 읽었다.",
+    "correction": "실제 HUD의 공통 Draw를 Renderer Overlay로 제출하여 원문 Refresh 이후 현재 기하/픽셀을 읽는다."
+  },
+  "builds": [
+    {
+      "command": [
+        "cmake",
+        "--build",
+        "cpppj/build",
+        "--config",
+        "Release",
+        "--target",
+        "NetstormCpp",
+        "--parallel",
+        "4",
+        "--",
+        "/p:UseMultiToolTask=true",
+        "/p:MultiProcMaxCount=4",
+        "/p:EnforceProcessCountAcrossBuilds=true"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-mission-entry-hud-485/build1-diagnostic.log",
+      "sha256": "bba6b8d4bcc32efd5ede98a6593e9585849ac12703def2624875f153dc383490",
+      "summaries": [],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cmake",
+        "--build",
+        "cpppj/build",
+        "--config",
+        "Release",
+        "--parallel",
+        "4",
+        "--",
+        "/p:UseMultiToolTask=true",
+        "/p:MultiProcMaxCount=4",
+        "/p:EnforceProcessCountAcrossBuilds=true"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-mission-entry-hud-485/build2.log",
+      "sha256": "1204119aec18bb3fdc95bf335ca6d429ef53d9d82eabc54991fe777560eac438",
+      "summaries": [],
+      "diagnostics": []
+    }
+  ],
+  "focused": {
+    "unique": 59,
+    "observations": 65,
+    "failedChecks": 0,
+    "runs": [
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "CampaignGuideWorldLifetime"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-mission-entry-hud-485/focused1-CampaignGuideWorldLifetime.log",
+        "sha256": "22fbeccdcc8f829a3d3f340ac3432ea007e943b5131652da19150fce74aa53dd",
+        "summaries": [
+          "3 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "ClientStateWorldCleanup"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-mission-entry-hud-485/focused1-ClientStateWorldCleanup.log",
+        "sha256": "b9fab8b0911e3e908e2ae85b66a568795cf83d6d49eddd43d89a9140aa0c862c",
+        "summaries": [
+          "5 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "GumpDraw"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-mission-entry-hud-485/focused1-GumpDraw.log",
+        "sha256": "a7fdfe882d2d3435caf8800199de03e976b85c7ee19550ce604ba104df234b3f",
+        "summaries": [
+          "11 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "Minimap"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-mission-entry-hud-485/focused1-Minimap.log",
+        "sha256": "c972de95e36ce329ee242d8668ed25a0e03c63c647931667b4a6d1d0b2db8627",
+        "summaries": [
+          "10 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "ProductionInitialContext"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-mission-entry-hud-485/focused1-ProductionInitialContext.log",
+        "sha256": "e5d41600aa9179b7b8700bd11f80cbe041f0f198314db2872db5bab840702be2",
+        "summaries": [
+          "20 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "RawMenuControls"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-mission-entry-hud-485/focused1-RawMenuControls.log",
+        "sha256": "72e485c814ab8a1456410ce8591105388e15f7a54d55c02e2dc9ed1f4e0a6581",
+        "summaries": [
+          "14 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "RawMenuEditorIslandWindow"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-mission-entry-hud-485/focused1-RawMenuEditorIslandWindow.log",
+        "sha256": "48e2202586e40fcbe0df9376beabbd950cc54bd02ec9c16182ba9046196a63c6",
+        "summaries": [
+          "2 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      }
+    ]
+  },
+  "livePassed": [
+    {
+      "label": "live-menu1",
+      "resultFile": "extracted/cpp-mission-entry-hud-485/live-menu1/result.json",
+      "sha256": "89e317e365428664c03aa8dbfdda0e293765de7249b9b50d72363c57f844799a",
+      "seconds": 1.3841707999963546,
+      "exit": 0
+    },
+    {
+      "label": "live-stage1",
+      "resultFile": "extracted/cpp-mission-entry-hud-485/live-stage1/result.json",
+      "sha256": "01292b77390491cf8fe379581b2231ee2b848eedc25651ea95e11148db8ddc7e",
+      "seconds": 12.907496800005902,
+      "exit": 0
+    },
+    {
+      "label": "live-menu-entry1",
+      "resultFile": "extracted/cpp-mission-entry-hud-485/live-menu-entry1/result.json",
+      "sha256": "09299532c72ff563ba6a30e8915151e73198606e6d31892ba8ad6aca12e64254",
+      "seconds": 11.926954300004581,
+      "exit": 0
+    },
+    {
+      "label": "fixed-menu-war",
+      "resultFile": "extracted/cpp-mission-entry-hud-485/fixed-menu-war/result.json",
+      "sha256": "13fd2ee630247b82de728b51eb173bd16ace81518ca2c9dfc7652f92844dbafe",
+      "seconds": 5.991308199998457,
+      "exit": 0
+    }
+  ],
+  "firstFailures": [
+    "extracted/cpp-mission-entry-hud-485/baseline-menu-war",
+    "extracted/cpp-mission-entry-hud-485/diagnostic-menu-war"
+  ],
+  "protection": {
+    "files": 3195,
+    "agentsUnchanged": true,
+    "changedProtectedOrExistingTests": []
+  },
+  "registeredCases": 3274,
+  "newTests": 0,
+  "finalSourceFiles": 2846,
+  "exes": {
+    "NetstormCpp.exe": "3786327ad5cd5b93e4b890eb1da181caa09c169d2cb41647d8b59c566b10b924",
+    "netstorm_tests.exe": "d871a8da23a61a2b75159b90f7291d86951cded66dd06c4090a0cda77a87ade5"
+  },
+  "fullSuite": {
+    "executed": false,
+    "previousUnit": 483,
+    "cases": 3271,
+    "failedChecks": 0
+  },
+  "limits": [
+    "실제 게임은 격리 복사본/무음의 짧은 진입·Restart이며 스테이지 클리어/원본 전체 픽셀·음향 동일성 증거가 아니다.",
+    "c2 일반 입력·전체 Editor 왕복·전체 자연 완주는 후속이다."
+  ],
+  "pushed": false
+}

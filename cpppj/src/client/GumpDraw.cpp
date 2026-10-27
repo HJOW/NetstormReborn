@@ -6,6 +6,7 @@
 #include <bit>
 #include <limits>
 #include <stdexcept>
+#include <string>
 
 namespace netstorm::client {
 namespace {
@@ -96,7 +97,7 @@ void GumpPixelTarget::RawBitmap(std::span<const std::uint8_t> source,std::int32_
             const auto offset=sourceBase+delta;std::uint8_t value{};
             if (offset>=0 && static_cast<std::uint64_t>(offset)<source.size()) value=source[static_cast<std::size_t>(offset)];
             else {
-                if (!outside) throw std::out_of_range("원시 bitmap의 보이는 할당 밖 BYTE 공급 필요");
+                if (!outside) throw std::out_of_range("원시 bitmap의 보이는 할당 밖 BYTE 공급 필요: 주소="+std::to_string(offset)+", 할당="+std::to_string(source.size())+", 시작="+std::to_string(sourceBase)+", 크기="+std::to_string(size.x)+"x"+std::to_string(size.y)+", 목적="+std::to_string(destination.x)+","+std::to_string(destination.y)); //실제 실패한 평면 주소와 기하를 남기며 할당 밖 값을 만들어 대체하지 않는다.
                 value=outside(offset);
             }
             pixels_[static_cast<std::size_t>(y)*pitch_+static_cast<std::size_t>(x)]=value;
