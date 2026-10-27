@@ -5072,3 +5072,37 @@ TEST_CASE(CampaignSharedCamera_GameMenuUsesActualSharedSpTracking) {
         session->PrepareGameMenus();checksum+=3;if (checksum>9600) checksum-=9600;CHECK(store.OffsetCurrent()==static_cast<std::uint32_t>(checksum));
     }
 }
+
+// 실제 썬 바리케이드 포스 필드의 J/K 그림이 현재 소유자 색표를 사용하고 중립/색0은 원래 픽셀을 유지하는지 확인한다.
+TEST_CASE(CampaignSession_FenceShieldUsesCurrentOwnerColorPixels) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());auto services=external.Services();services.install.resetCamera={};
+    GameWorld world(assets.game,assets.files,std::move(fort),MissionPlayers{},"thewarbegins",std::move(services),{1024,768});world.Resize(1024,768);
+    auto& session=world.Session();const auto core=session.Core();const auto origin=EmptySessionSupport(core);const float x=static_cast<float>(origin.x),y=static_cast<float>(origin.y);
+    const auto shield=session.World().Create(170,2);core.owner.Set(shield,1);session.World().Pop(shield,x,y,0x40);
+    CHECK(Get(core.pool.Slot(shield),0)==0x509388U);RawCampaignFactoryDisplay display(core,assets.game);CHECK(display.Handles(shield));
+    const auto palette=WorkshopDisplayPalette(assets.game);world.SetPalette(palette);world.Scroll(-4096,-4096);world.Scroll(static_cast<int>(x*16)-512,static_cast<int>(y*11)-384);
+    const auto maps=BuildStandardOwnerColorMaps(170,82);std::size_t cases{},coloredPixels{}; // 색표 본체는 기존 독립 원본 fixture가 검증하며 여기서는 실제 장면의 연결을 대조한다.
+    constexpr std::array<std::pair<int,int>,10> variants{{{0,7},{1,0},{1,1},{1,2},{1,3},{1,4},{1,5},{1,6},{1,7},{1,8}}}; // 중립/색0과 초기 MissionPlayers와 다른 현재8색을 포함한다.
+    for (std::uint32_t frame=0;frame<2;++frame) { // 실제 fenceShield의 수직J와 수평K 두 프레임을 같은 등록 객체에 적용한다.
+        Put(core.pool.AllocatedBytes(shield),36,frame);const auto image=assets.game.Shapes().Decode(100,frame);const auto rect=assets.game.Shapes().Blocks()[100].frames[frame].rect;
+        for (const auto [owner,color]:variants) { // 소유자색 전역을 매 장면마다 재조회하며 이전 변환표를 고정하지 않는다.
+            core.pool.AllocatedBytes(shield)[34]=static_cast<std::uint8_t>(owner);core.bridgeState.ownerColors[owner]=color;
+            std::vector<RenderSprite> body; // 같은 SID의 본체만 출력하며 지면/다른 효과의 가림을 섞지 않는다.
+            for (const auto& sprite:world.Sprites()) { // 수정 전 fallback도 포함하여 그림 누락과 색 변환 누락을 따로 검출한다.
+                if (sprite.shadow) continue;
+                if (sprite.sourceSid==shield.value || (sprite.database && sprite.block==100 && sprite.order.x==x && sprite.order.y==y)) body.push_back(sprite);
+            }
+            CHECK(body.size()==1);if (body.size()!=1) return;
+            Renderer renderer(1024,768);renderer.SetScene(body);std::vector<std::uint8_t> actual(1024*768,199),expected(1024*768,199);renderer.Draw(actual,1024,199);
+            const auto point=world.ToScreen(x,y);const auto& type=core.types[170];const ColorMap* map=owner?&maps[static_cast<std::size_t>(color)]:nullptr;
+            DrawIndexedImage(expected,1024,768,image,point.x-type.hotspotX+rect.left,point.y-type.hotspotY+rect.top,{0,28,1024,768},map);
+            CHECK(actual==expected);
+            if (owner && color) { // 회귀가 실제 소유자색 띠를 포함한 보호 그림을 검사했는지도 확인한다.
+                for (std::size_t index=0;index<image.indices.size();++index) if (image.opacity[index] && maps[static_cast<std::size_t>(color)][image.indices[index]]!=image.indices[index]) ++coloredPixels;
+            }
+            ++cases;
+        }
+    }
+    CHECK(cases==20 && coloredPixels>0);
+}

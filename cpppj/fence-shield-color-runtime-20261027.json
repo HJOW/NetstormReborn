@@ -1,0 +1,147 @@
+{
+  "unit": 508,
+  "date": "2026-10-27",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23",
+    "changed": false
+  },
+  "exes": {
+    "NetstormCpp.exe": "26401d6fcd36c21c0045065cce574154d4945e33544c91c68947868d53327cf1",
+    "netstorm_tests.exe": "584b27637f16443b6e728ce5ec5a5105d9ed0664674b07cab097692709359380"
+  },
+  "sourceFiles": 2892,
+  "newTests": 1,
+  "newExpectedRegistered": 3337,
+  "focusedUnique": 169,
+  "focusedObservations": 170,
+  "failedChecks": 0,
+  "pixelRegression": {
+    "frames": 2,
+    "ownerVariants": 10,
+    "conditions": 20,
+    "neutralAndColorZero": true,
+    "currentColors": 8,
+    "redFailedChecks": 17
+  },
+  "originalStatic": {
+    "type": 170,
+    "vtable": "0x509388",
+    "slots": {
+      "0x78": "0x4acfe0",
+      "0xa0": "0x41c0f0",
+      "0xa4": "0x41c100"
+    },
+    "baseFrameCode": "0fb6410a50e856d8feff8b802801000083c404c3",
+    "peSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236"
+  },
+  "build": {
+    "command": [
+      "cmake",
+      "--build",
+      "cpppj/build",
+      "--config",
+      "Release",
+      "--parallel",
+      "4",
+      "--",
+      "/p:UseMultiToolTask=true",
+      "/p:MultiProcMaxCount=4",
+      "/p:EnforceProcessCountAcrossBuilds=true"
+    ],
+    "exit": 0,
+    "log": "extracted/cpp-fence-shield-color-508/build-green.log",
+    "sha256": "0dcbc6437f149b4a02244ce2ba450d98c96d7441ba9a14ce24da47c5dd40e444",
+    "summaries": [],
+    "diagnostics": []
+  },
+  "red": {
+    "command": [
+      "cpppj/build/bin/Release/netstorm_tests.exe",
+      "--filter",
+      "CampaignSession_FenceShieldUsesCurrentOwnerColorPixels"
+    ],
+    "exit": 1,
+    "log": "extracted/cpp-fence-shield-color-508/regression-red.log",
+    "sha256": "7aa33085b675600a762d551fe737aff19224e71a042feaabce71d936ca41fc2f",
+    "summaries": [
+      "1 test(s), 17 failed check(s)"
+    ],
+    "diagnostics": []
+  },
+  "initialTestWarning": "수정 전 검사의 pair<uint8_t,int> 리터럴에서 C4244가 발생했다. int 입력과 명시 BYTE 저장으로 고쳐 최종 빌드 경고0이다.",
+  "live": {
+    "mission": "bc9ssun_bars76",
+    "executions": 1,
+    "passed": true,
+    "returnCode": 0,
+    "shieldObjects": 18,
+    "framesObserved": [
+      0
+    ],
+    "ownerObserved": 1,
+    "checks": {
+      "normalExit": true,
+      "playing": true,
+      "correctMission": true,
+      "world": true,
+      "guide": true,
+      "loadingReleased": true
+    },
+    "captureSha256": "2ac243bcda71d32e491f47bd2adb7e851a9b1dfbdc788e5b6095701f521f470c"
+  },
+  "visualComparison": {
+    "previousProduct": "506",
+    "region": [
+      786,
+      489,
+      798,
+      537
+    ],
+    "changedPixels": 219,
+    "note": "같은 방어막 구역의 회색 계열이 소유자색으로 바뀐 캡처를 육안 확인했다. 전체 화면 픽셀 동일성의 판정은 아니다."
+  },
+  "protectedUnchanged": true,
+  "agentsUnchanged": true,
+  "existingFixturesUnchanged": true,
+  "changedExistingTests": [
+    "cpppj/tests/CampaignSessionTests.cpp"
+  ],
+  "newOriginalGameExecutionsByAgent": 0,
+  "wholeSuiteNotRepeated": true,
+  "lastWholeSuite": {
+    "unit": 506,
+    "cppTests": 3335,
+    "failedChecks": 0
+  },
+  "greenRectanglesAnalysis": "사용자 지시로 보류 유지",
+  "rawDirectory": "extracted/cpp-fence-shield-color-508",
+  "pushed": false,
+  "evidenceSha256": {
+    "extracted/cpp-fence-shield-color-508/before.json": "bd331c73dc5d8ae1354826f410bfe898e00d1804fdac848ca1dbb367c559f513",
+    "extracted/cpp-fence-shield-color-508/build-red.log": "ffa9fbfecb774a5e14575f5fc8cb556f38d09fbdd279c45b30b215bbbffc3640",
+    "extracted/cpp-fence-shield-color-508/build-red.json": "42d45f18ec29e46563247bfeeb848fec38163e8231276aefabef051753104cc1",
+    "extracted/cpp-fence-shield-color-508/regression-red.log": "7aa33085b675600a762d551fe737aff19224e71a042feaabce71d936ca41fc2f",
+    "extracted/cpp-fence-shield-color-508/regression-red.json": "6666177c0a948e237ffe020e776818c2449cade05b20ef720728ddf29b949a45",
+    "extracted/cpp-fence-shield-color-508/build-green.log": "0dcbc6437f149b4a02244ce2ba450d98c96d7441ba9a14ce24da47c5dd40e444",
+    "extracted/cpp-fence-shield-color-508/build-green.json": "029e9f0d9c84e98d1fa52fcdd57aa1e542ed92625fdc038be1a7e003e2f27a04",
+    "extracted/cpp-fence-shield-color-508/regression-green.log": "3ba9e23572345afe761fc601f6dab1baa7d18c01f3b36f4ccffb2d166bfdab52",
+    "extracted/cpp-fence-shield-color-508/regression-green.json": "89667f0059072d9bc18705894a16818c155c122fb45447d98a1a66ae4fe5d1bd",
+    "extracted/cpp-fence-shield-color-508/focused-sprite.log": "0e2190278689b2a44851ba04c42dc01b43bd3305c84b5594b7ff505919edcf1c",
+    "extracted/cpp-fence-shield-color-508/focused-sprite.json": "ee99be6104239312a2cc1215b64a491cf000d74803e26261982ff8a54062b7ed",
+    "extracted/cpp-fence-shield-color-508/focused-owner.log": "0aff8fe76a0a7788785377c9d1bb929501bb2acda35c7c2dcaa21a835f44263a",
+    "extracted/cpp-fence-shield-color-508/focused-owner.json": "c58abd7f2dc6d43bd8b22212610a9c0e495929d981c61cccd0cc69e7099e943a",
+    "extracted/cpp-fence-shield-color-508/freeze-final.json": "f57521037ced70eeabfa4e3e4301634745d0c427ee618103b6f2d66861a8f33a",
+    "extracted/cpp-fence-shield-color-508/live-training.log": "4d17b4aadce918cfcf7f19ad6d946f7606d324505e06d403edb508257da8ac33",
+    "extracted/cpp-fence-shield-color-508/live-training.json": "ca0b0b19b3b0ad6c5b0bef1fa3121f77b744215280a4f4c4cd32756fe6b3e6cd",
+    "extracted/cpp-fence-shield-color-508/live-training/results.json": "50b2998d729bc1f7525e7e51b3b4038797aabe9a684b4ddb3c959d52731e8a8d",
+    "extracted/cpp-fence-shield-color-508/live-training/bc9ssun_bars76/steps.tsv": "2fa79547567aab70851cb525d58aa14d044a8e6b496afd973adb7b42ffd957ab",
+    "extracted/cpp-fence-shield-color-508/live-training/bc9ssun_bars76/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-fence-shield-color-508/live-training/bc9ssun_bars76/stderr.log": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2",
+    "extracted/cpp-fence-shield-color-508/live-training/bc9ssun_bars76/running.json": "db71ee33d973c0bdbf9b56fae07875205c614fcdb8e52310746ab5eb2164c3ac",
+    "extracted/cpp-fence-shield-color-508/live-training/bc9ssun_bars76/states.tsv": "9c7c1cc58b1114943b3fab5efc92316be4e7193983e083a6c6d954cda05aee5b",
+    "extracted/cpp-fence-shield-color-508/live-training/bc9ssun_bars76/final.bmp": "2ac243bcda71d32e491f47bd2adb7e851a9b1dfbdc788e5b6095701f521f470c",
+    "extracted/cpp-fence-shield-color-508/live-training/bc9ssun_bars76/result.json": "fb3e95b12b447153c6e6f3af798e22df65eec2227812d0accba41666cda8ba79"
+  }
+}

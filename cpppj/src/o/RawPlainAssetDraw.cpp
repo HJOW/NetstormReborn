@@ -7,9 +7,10 @@
 
 namespace netstorm::o {
 namespace {
-constexpr std::array<std::pair<std::uint32_t,std::uint32_t>,7> kPlainBuildings{{
-    {78,0x50e940},{79,0x50ea08},{139,0x509aa0},{142,0x50ead0},{147,0x50e940},{149,0x50e668},{150,0x50e888}
-}}; // 세 블로커/데빌메이커/아크 스파이어/성장형의 +78=4acfe0/+a4=41c100이다.
+constexpr std::array<std::pair<std::uint32_t,std::uint32_t>,8> kPlainBuildings{{
+    {78,0x50e940},{79,0x50ea08},{139,0x509aa0},{142,0x50ead0},{147,0x50e940},{149,0x50e668},{150,0x50e888},{170,0x509388}
+}}; // 세 블로커/데빌메이커/아크 스파이어/성장형/포스 필드의 +78=4acfe0/+a4=41c100이다.
+// 이력: 2026-10-27 — 포스 필드170/509388도 원본 공통Draw를 사용해 현재 소유자 색표가 적용되게 했다.
 }
 // 같은 주소만 가진 다른 TYPE과 타입만 같은 미복원 가상 표는 거부한다.
 bool IsPlainAssetDraw(std::span<const std::uint8_t> raw) {
