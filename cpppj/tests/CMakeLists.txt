@@ -2316,3 +2316,7 @@ set_source_files_properties(CameraCommitTests.cpp PROPERTIES COMPILE_DEFINITIONS
 
 target_sources(netstorm_tests PRIVATE ScreenScrollTests.cpp) # 실제 DIB 겹침/행/padding과 Renderer 후처리 저장소를 검사한다.
 set_source_files_properties(ScreenScrollTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_SCREEN_SCROLL_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/screen-scroll-x86.tsv\"") # 실제357회 원문 픽셀을 파일 전용 정의로 읽는다.
+
+# 기존 Burning gold를 유지하고 투명 모서리의 두 판본 읽기 순서만 별도 관측에 대조한다.
+target_sources(netstorm_tests PRIVATE BurningSourcesCornerTests.cpp)
+set_source_files_properties(BurningSourcesCornerTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_BURNING_CORNER_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/burning-sources-corner-x86.tsv\"")

@@ -73,8 +73,9 @@ void RawBurningSources::Select(BurningVisualFields& fields) const {
             const auto before=attempts--;
             if (!before) break;
             const auto x=Random(0,xMaximum),y=Random(2,fields.image.height-1),row=(x+y)/kRowWidth;
+            if (patch && !Opaque(fields,x,y+1)) continue; // 10.78은 아래 픽셀이 투명하면 rowTaken에 도달하지 않는다. 작은 캡처의 끝 후보도 이 순서로 단락한다.
             if (row<0 || static_cast<std::size_t>(row)>=fields.rows.size()) throw std::out_of_range("Burning sources 새 행 인덱스 오류");
-            if (!Opaque(fields,x,y+1) || fields.rows[row]) continue;
+            if (fields.rows[row] || (!patch && !Opaque(fields,x,y+1))) continue; // CD는 행 표식을 먼저 읽고 비어 있을 때만 픽셀을 읽는다. 실제 선택된 잘못된 행의 보호는 유지한다.
             const auto count=Random(6,10);std::int32_t accepted=0;
             // 같은 대각선의 각 점은 Append 실패와 무관하게 rowTaken을 표식한다.
             for (std::int32_t index=0;index<count;++index) {
