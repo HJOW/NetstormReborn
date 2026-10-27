@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""제단·윈드 타워의 Edit 우클릭 선택/Core·SetOwner 대화와 취소/변경을 검사한다."""
+"""제단·윈드 타워·워크샾·신전의 Edit 선택/Core·SetOwner 대화와 취소/변경을 검사한다."""
 import argparse
 import shutil
 from pathlib import Path
@@ -15,7 +15,8 @@ from cpp_world_smoke import states
 # 원래 BreakingThrough의 제단 외곽이며 겹친 사제를 선택하지 않는 위치다.
 POINT = 'cell:163,123'
 # 다른 일반 건물형도 원래 맵의 본체 안쪽을 클릭한다. 사제의0번 owner 진단 규칙과 합치지 않는다.
-POINTS = {'altar': POINT, 'windBlocker': 'cell:170,123'}
+POINTS = {'altar': POINT, 'windBlocker': 'cell:170,123',
+          'windFactory': 'cell:180,118', 'windVortex': 'cell:180,125'}
 # 같은 원문 객체를 서로 다른 화면비에서 조작한다.
 SIZES = ((1280, 720), (1024, 768))
 
@@ -80,6 +81,15 @@ def one(output, source, size, kind='altar'):
         assert observed[label]['selected'] == [str(sid)] and observed[label]['mouse_cursor'][1] == '1'
     final_items = [row for row in menu_items(report, 'menu-final') if row['visible']]
     assert [row['label'] for row in final_items] == ['Destroy', 'About', 'CHEAT Set Owner'], final_items
+    if kind in ('windFactory', 'windVortex'):
+        for label in ('menu', 'menu-human', 'menu-computer', 'menu-neutral'):
+            # 편집 우클릭은 비영 소유자의 현재 Core를 선택하므로 소유 전용 메뉴도 같은 현재 자료를 읽는다.
+            labels = [row['label'] for row in menu_items(report, label) if row['visible']]
+            assert not any(text.startswith('Salvage') for text in labels), (kind, label, labels)
+            if kind == 'windFactory':
+                assert 'View Current Production' in labels and 'Put Knowledge into Production' in labels, (label, labels)
+            else:
+                assert 'View Netstorm Knowledge' in labels, (label, labels)
     result = dict(kind=kind, size=size, selectedSid=sid, root=roots[0], transitions=transitions,
                   neutralMenu=final_items, run=run, attackFlyersNotReproduced=True)
     save(output / 'summary.json', result)
