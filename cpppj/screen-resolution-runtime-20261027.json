@@ -410,6 +410,15 @@
     "extracted/cpp-edge-runtime-501/pull1.log": "e5d6c99aec87ec07a2d1b5c1222d8b690d0a61c3548a55c795fff56db9450d0d",
     "extracted/cpp-edge-runtime-501/registered1.json": "c0bcb9deaf46cd3ab6e9cd3ec8e4380e70e98fe27e57e4b18ee0d3379fe8c6c1",
     "extracted/cpp-edge-runtime-501/registered1.log": "bf8ed39e4509f297bc5f459480863be4096493fed02b2be8689874093c26e36c",
-    "extracted/cpp-edge-runtime-501/validate-final.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
-  }
+    "extracted/cpp-edge-runtime-501/validate-final.log": "02618f6ec36c9b2cc647603b19f5a6c1dfd0e1cf7244ad53304571ba5095c21a"
+  },
+  "evidenceCorrections": [
+    {
+      "unit": 502,
+      "path": "extracted/cpp-edge-runtime-501/validate-final.log",
+      "previousSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sha256": "02618f6ec36c9b2cc647603b19f5a6c1dfd0e1cf7244ad53304571ba5095c21a",
+      "reason": "검증기가 자신의 표준출력 완료 전에 읽은 빈 파일 해시를 완료된 최초 원시 로그의 해시로 정정했다. 게임/검사 재실행과 원시 로그 변경은 없다."
+    }
+  ]
 }

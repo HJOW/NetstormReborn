@@ -406,11 +406,20 @@
     "extracted/cpp-edge-runtime-500/registered3.json": "c3f860fd0d0eefdbb2a26d35c8982f5cd539377dfb2588d5c87cdd4194942211",
     "extracted/cpp-edge-runtime-500/registered3.log": "bf8ed39e4509f297bc5f459480863be4096493fed02b2be8689874093c26e36c",
     "extracted/cpp-edge-runtime-500/screen-scroll-x86.tsv": "07302c86eebc0e4a5cccb7c1d2a6b7bcff86a3983ff66391b107fa79cfb25375",
-    "extracted/cpp-edge-runtime-500/validate-final.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-edge-runtime-500/validate-final.log": "fd8bd3d6b022d699e39ad72e6b42ada5da7e944c59b568e1993a4826ad640f63",
     "extracted/cpp-edge-runtime-500/validate-pre.json": "e70261c7d74e730a15154ad1333285aa0e18fe3bed4281b81723cc0e2ddc604f",
     "extracted/cpp-edge-runtime-500/validate-pre.log": "9974b57960afaecb335fb881bfb793c81b3205cae2617775d115975e4d1ffc31",
     "extracted/cpp-edge-runtime-500/validation-pre.json": "51212d58d9df18e7dfbd748aa61ff0b3f4b99d9cf8ad7db3bf6179e9c1e7820c",
     "extracted/cpp-edge-runtime-500/whole1.json": "494acf443d846c0d6a8f1c2154288da00c021b8330114159770c419bfe88e386",
     "extracted/cpp-edge-runtime-500/whole1.log": "e4a3fab599588a048c6dff164275ea3fde6585594655a4f7077fd85ce921f3d9"
-  }
+  },
+  "evidenceCorrections": [
+    {
+      "unit": 502,
+      "path": "extracted/cpp-edge-runtime-500/validate-final.log",
+      "previousSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sha256": "fd8bd3d6b022d699e39ad72e6b42ada5da7e944c59b568e1993a4826ad640f63",
+      "reason": "검증기가 자신의 표준출력 완료 전에 읽은 빈 파일 해시를 완료된 최초 원시 로그의 해시로 정정했다. 게임/검사 재실행과 원시 로그 변경은 없다."
+    }
+  ]
 }

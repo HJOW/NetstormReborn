@@ -26,13 +26,14 @@ def catalog(archive, scope):
     return result
 
 
-def run(directory, mission, demo_label=None):
+def run(directory, mission, demo_label=None, game_root=None, fullscreen=False, frame_limit=98, fps=60):
     """현재 브리핑의 관측 조건을 만족하는 버튼 입력과 자연 프레임만 사용한다."""
     directory.mkdir(parents=True, exist_ok=False)
-    frames = 602 if demo_label else 98  # 데모는 최소18초 벽시계를 확보해 원본15초 timeout 뒤 진입까지 관측한다.
+    game_root=game_root or ROOT/'originals' # 새 검사는 원본 사본을 지정할 수 있으며 기존 호출의 기본 경로는 유지한다.
+    frames = 602 if demo_label else frame_limit  # 데모는 최소18초 벽시계를 확보해 원본15초 timeout 뒤 진입까지 관측한다.
     steps = []  # 검사 전용 상태 쓰기 없이 같은 입력 큐를 통과시키는 계획이다.
     if demo_label:
-        steps.extend(((3, 'click', 'Demo'), (5, 'click', demo_label)))
+        steps.extend(((3,'click-if','OK'),(5,'click-if','OK'),(10,'report','menu-before-demo'),(12,'click','Demo'),(16,'report','demo-choices'),(18,'click',demo_label))) # 현재 원본 State3/4 초기화가 메인 표시를 마친 뒤 실제 Demo를 누른다.
     for frame in range(12, frames-2, 8):  # Guide의 일곱 프레임 재개 관문을 지난 다음 상태를 관측한다.
         if not demo_label:
             for label in BUTTONS:  # 현재 표시된 정확한 라벨만 선택하고 없는 버튼 입력은 만들지 않는다.
@@ -44,10 +45,12 @@ def run(directory, mission, demo_label=None):
     plan = directory / 'steps.tsv'  # 실패 후에도 실제 입력 계획을 다시 재생할 수 있다.
     plan.write_text(''.join(f'{frame}\t{operation}\t{argument}\n' for frame, operation, argument in steps),
                     encoding='utf-8', newline='\n')
-    command = [str(GAME), '--run', str(ROOT / 'originals'), '--window', '--no-audio',
+    command = [str(GAME), '--run', str(game_root), '--no-audio',
                '--frames', str(frames), '--set',
-               'SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop='+('30' if demo_label else '1'),
+               f'SCREENW=1024;SCREENH=768;maxFPS={fps};autoDemo=0;tellTips=0;startInFullScreen=1;sleepPerLoop='+('30' if demo_label else '1'),
                '--ui-script', str(plan), '--ui-report', str(directory / 'states.tsv')]
+    if not fullscreen:
+        command.append('--window')
     if not demo_label:
         command.extend(('--mission', mission))
     result = execute(command, directory, GAME, 180 if demo_label else 65)  # 실제15초 안내 뒤 렌더링을 포함한 데모 관측의 상한이다.
@@ -77,6 +80,10 @@ def main():
     parser.add_argument('--scope', choices=tuple(GROUPS), default='all')
     parser.add_argument('--mission', action='append', help='원본 목록 안에서 실행할 미션을 제한한다')
     parser.add_argument('--demos', action='store_true', help='일반 미션 대신 실제 Demo 메뉴 세 항목을 실행한다')
+    parser.add_argument('--game-dir',type=Path,default=ROOT/'originals',help='실제 게임 자료 경로. 원본을 보호하려면 별도 사본을 지정한다')
+    parser.add_argument('--fullscreen',action='store_true',help='현재 전체화면 호환 장치에서 실행한다')
+    parser.add_argument('--frames',type=int,default=98,help='일반 미션의 짧은 관측 프레임 수')
+    parser.add_argument('--fps',type=int,default=60,help='실제 프레임 상한. 데모는 기존 최소15초 안내를 유지한다')
     args = parser.parse_args()
     output = args.output.resolve()  # 기존 결과를 덮어쓰지 않는 이번 검사 경로다.
     output.mkdir(parents=True, exist_ok=False)
@@ -88,25 +95,27 @@ def main():
         if {name.casefold() for name, _ in names} != wanted:
             raise RuntimeError('원본 목록에 없는 미션 이름')
     selected = [name for name, _ in names]  # 중단 시에도 남길 전체 선택 목록이며 게임 상태를 변경하지 않는다.
-    before = snapshots(ROOT / 'originals')  # 허용 설정까지 포함한 전체 파일의 실행 전 해시다.
+    game_root=args.game_dir.resolve();before = snapshots(game_root)  # 선택한 사본/원본의 허용 설정까지 포함한 실행 전 해시다.
+    original_root=(ROOT/'originals').resolve();original_before=before if game_root==original_root else snapshots(original_root) # 사본 상태와 보호 원본의 증거를 구별한다.
     records = []  # 실패가 뒤 스테이지의 관측을 생략하지 않게 한다.
     try:
-        with preserve_game_settings(ROOT / 'originals', 'd', output / 'settings-backup'):
+        with preserve_game_settings(game_root, 'd', output / 'settings-backup'):
             for mission, label in names:  # 같은 옵션 파일을 사용하는 실제 창은 한 번에 하나만 실행한다.
                 try:
-                    record = run(output / mission, mission, label)
+                    record = run(output / mission, mission, label,game_root,args.fullscreen,args.frames,args.fps)
                 except Exception as error:
                     record = dict(mission=mission, passed=False, error=repr(error))
                 records.append(record)
                 save(output / 'results.json', dict(runs=records, complete=False, selectedMissions=selected))
                 print(mission, 'PASS' if record['passed'] else 'FAIL', record.get('checks', record.get('error')), flush=True)
     finally:
-        unchanged = before == snapshots(ROOT / 'originals')  # 예외가 나도 원본 파일의 최종 바이트를 검사한다.
-        summary = dict(runs=records, complete=len(records) == len(names), originalsUnchanged=unchanged,
+        unchanged = before == snapshots(game_root)  # 예외가 나도 선택한 자료의 최종 바이트를 검사한다.
+        original_unchanged=unchanged if game_root==original_root else original_before==snapshots(original_root)
+        summary = dict(runs=records, complete=len(records) == len(names), originalsUnchanged=original_unchanged,gameDataUnchanged=unchanged,gameDirectory=str(game_root),
                        selectedMissions=selected,
                        scope='실제 안내 버튼/자연 timeout 뒤 플레이 장면 진입이며 사용자 완주·승패·전체 동일성 검사가 아니다.')
         save(output / 'results.json', summary)
-    if not names or not unchanged or any(not record['passed'] for record in records):
+    if not names or not unchanged or not original_unchanged or any(not record['passed'] for record in records):
         raise SystemExit(1)
 
 
