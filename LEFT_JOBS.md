@@ -145,7 +145,7 @@
 - **options.cfg 저장·복구 실패:** 1280×720 GUI 검사의 음량 변경 구간에서 SaveOptions의 fopen이 errno 22 / doserrno 1224로 실패하거나(단위393), 검사 도구의 설정 열기·복구에서 OSError22가 간헐적으로 난다(단위369·386). 격리한 데이터 복사본 경로에서는 통과했다. 원본 폴더가 있는 H 볼륨은 exFAT다. 원인은 확정하지 않았다.
 - **오래된 스모크 6개:** `cpp_menu_smoke`, `cpp_rawbuttons_smoke`, `cpp_thunder_smoke`, `cpp_weather_smoke`, `cpp_audio_smoke`, `check_dialog_controls.check_mission`은 제거된 임시 Game 버튼을 전제로 한다. 다시 쓸 때 ESC → 실제 메뉴 입력으로 바꾼다.
 - **PlayerNoMake 경고 표:** 453에서 같은 ClientLocalStateGlobals의255DWORD와 실제 정리004328a0을 연결했다. 패킷 수신 부모00433c30의 실제 writer는 후속이다. CD 자동 대응00487900은 실제 spot 정리이므로 같은 함수로 취급하지 않는다.
-- **README 갱신 완료:** 별도 문서 커밋 `1eddb0e8 / 20261026-07 CM`에서 국·영 README를 현재 범위와 세 프로젝트의 플레이/동일성 구분에 맞게 갱신했다.
+- **README 갱신 완료:** 별도 문서 커밋 `1eddb0e8 / 20261026-07 CM`에서 국·영 README를 현재 범위와 세 프로젝트의 플레이/동일성 구분에 맞게 갱신했다. 2026-10-27 `20261027-18 CM`에서 단위483까지의 cpppj Edit 진행(기존 맵 편집·Save as·섬 추가 창 통합)과 전체 검사 3,271개, webpj의 Edit 제외 목표 변경을 국·영 README에 다시 반영했다(문서만 수정, 코드·디컴파일 변경 없음).
 
 ## 3. 앞으로 할 작업 (권장 순서)
 
