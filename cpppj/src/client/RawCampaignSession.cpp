@@ -96,6 +96,7 @@
 #include "zacket/LocalMissionTransport.h"
 
 #include "o/RawGemReward.h"
+#include "o/RawObjectConversion.h"
 #include "o/RawNuggetReplenish.h"
 #include "o/RawBalloonBody.h"
 #include "o/RawBombPreDestroy.h"
@@ -3768,8 +3769,19 @@ void RawCampaignSession::RequestCarrierMove(Sid parent,RawPathPoint destination,
 void RawCampaignSession::RequestCarrierDrop(Sid parent,Sid content) { if (!impl_->loaded) throw std::logic_error("설치 전 Cast/Drop 요청");impl_->PrepareCarrierDrop();impl_->carrierDrop->Request(parent,content); }
 // 메뉴의검색부모와실제요청부모를원본처럼별개인자로유지한다.
 std::uint32_t RawCampaignSession::CommandCarrierDrop(Sid parent,std::uint32_t command,Sid listParent) { if (!impl_->loaded) throw std::logic_error("설치 전 Cast/Drop 메뉴");impl_->PrepareCarrierDrop();return impl_->carrierDrop->Command(parent,command,listParent); }
-// 비캐리어 메뉴도 동일한 공통 객체/현재 가상 효과로 명령을 처리한다.
-std::uint32_t RawCampaignSession::CommandObject(Sid parent,std::uint32_t command) { if (!impl_->loaded || !impl_->objectCommand) throw std::logic_error("설치 전 공통 객체 명령");return impl_->objectCommand->Command(parent,command); }
+// 실제 가상6c가 비석/주문 전환이면 같은 SID를 재사용하고 나머지는 공통 객체 부모에 위임한다.
+std::uint32_t RawCampaignSession::CommandObject(Sid parent,std::uint32_t command) {
+    if (!impl_->loaded || !impl_->objectCommand) throw std::logic_error("설치 전 공통 객체 명령");auto& current=*impl_;
+    const auto body=ObjectConversionBody(Read(current.core.pool.Slot(parent),0));
+    if (!body) return current.objectCommand->Command(parent,command);
+    ObjectConversionHooks hooks;hooks.unpop=[&current](Sid sid,auto flags) { current.world.Unpop(sid,flags); };hooks.repop=[&current](Sid sid,auto flags) { current.world.Repop(sid,flags); };
+    hooks.retype=[&current](Sid sid,auto type) { current.core.factory.Retype(sid,type,[](auto line) { throw std::logic_error("원본Squid.cpp 타입 변경 진단 "+std::to_string(line)); }); };
+    hooks.defaultFrame=[&current](auto type) { if (type<70 || type>=current.core.types.size()) throw std::out_of_range("전환 뒤 현재 기본 프레임 TYPE 범위");return std::bit_cast<std::uint32_t>(current.assets.game.Types()[type-70].definition.specialFrames.defaultFrame); };
+    hooks.frame=[&current](Sid sid,auto frame) { auto raw=current.core.pool.AllocatedBytes(sid);for (std::size_t byte=0;byte<4;++byte) raw[36+byte]=static_cast<std::uint8_t>(frame>>(8*byte)); }; // 원문의 직접 DWORD 쓰기이며 SquidFrame.Set을 대신 호출하지 않는다.
+    hooks.qa=[&current](Sid sid,auto type) { auto raw=current.core.pool.AllocatedBytes(sid);raw[12]=static_cast<std::uint8_t>(type);raw[13]=static_cast<std::uint8_t>(type>>8); };
+    hooks.base=[&current](Sid sid,auto code) { return current.objectCommand->Command(sid,code); };
+    return RawObjectConversion(current.core.pool,current.gemRewardState.buriedType,std::move(hooks)).Command(parent,command,body);
+}
 // 메뉴가 선택한현재사제와사건y의종류WORD를실제6d 요청으로전달한다.
 std::uint32_t RawCampaignSession::CommandPriest(Sid parent,std::uint32_t command,std::uint32_t parameter) { if (!impl_->loaded || !impl_->priestPrayer || impl_->core.pool.Slot(parent)[10]!=158 || Read(impl_->core.pool.Slot(parent),0)!=kPatchPriestVtable) throw std::logic_error("기도명령의현재사제/설치계약오류");return impl_->priestPrayer->Command(parent,command,parameter); }
 // 사용자 회수 명령은 같은 서버 요청을 보내며 결과/환불/삭제를 직접 만들지 않는다.

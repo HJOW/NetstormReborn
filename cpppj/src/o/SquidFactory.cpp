@@ -115,6 +115,16 @@ Sid SquidFactory::Construct(std::uint32_t type,Sid sid) {
     if (sid.value<5 || (bytes[kState]&(kFree|kContained))) throw std::logic_error("생성자 슬롯 상태 오류");
     ApplyConstructor(bytes,record); return sid;
 }
+// 10.78의 타입 변경은 진단 복귀 뒤에도 계속하며 free/dead/예약 SID를 추가로 제외하지 않는다.
+void SquidFactory::Retype(Sid sid,std::uint32_t type,const std::function<void(std::uint32_t)>& assertion) {
+    if (pool_.Edition()!=OriginalEdition::Patch1078) throw std::invalid_argument("타입 변경4b1620은10.78만 복원했습니다");
+    const auto diagnose=[&](std::uint32_t line) { if (!assertion) throw std::logic_error("타입 변경의 실제 원문 진단 미연결");assertion(line); }; // 원문 세 진단을 선택된 위치에서만 요구한다.
+    if (!(pool_.Slot(sid)[kState]&kVoid)) diagnose(0x22d);
+    if (Type(pool_.Slot(sid)[kType],false).footX!=Type(type,false).footX) diagnose(0x22e);
+    if (Type(pool_.Slot(sid)[kType],false).footY!=Type(type,false).footY) diagnose(0x22f);
+    const auto offset=pool_.Offset(sid);auto bytes=std::span(pool_.bytes_).subspan(offset,pool_.layout_.stride);
+    bytes[kType]=static_cast<std::uint8_t>(type);ApplyConstructor(bytes,Type(bytes[kType],true)); // 원본4af720은 BYTE 쓰기 뒤 현재 TYPE의 실제 생성자를 다시 조회한다.
+}
 // 기존 SID 할당→파생/base 생성자→type→공통 postCreate를 원본 순서로 적용한다.
 Sid SquidFactory::Create(std::uint32_t type,std::uint32_t flags) {
     const auto& record=Type(type,true);

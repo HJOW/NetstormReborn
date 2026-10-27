@@ -183,7 +183,7 @@ bool CampaignObjectMenuClient::Active() const {
 // 메뉴가이미닫히도록예약했어도같은세계의현재Factory입력/건설/회수요청을실행한다.
 bool CampaignObjectMenuClient::Command(const InputEvent& event) {
     const auto command=event.code&0x03ffffffU;
-    const bool common=command==0x030000afU || command==0x030000e2U || command==0x03000015U; // 공통 메뉴가 실제로 작성하는 소유자/피해/삭제 명령이다.
+    const bool common=command==0x030000afU || command==0x030000e2U || command==0x03000015U || command==0x030000ceU; // 공통 소유자/피해/삭제와 비석·주문 전환을 실제 현재6c 분배에 전달한다.
     if (!common && command!=0x02000060U && command!=0x03000080U && command!=0x03000032U && command!=0x03000063U && command!=0x0200005dU && command!=0x0300011aU && command!=0x03000076U && command!=0x030000deU) return false;
     auto& s=*impl_;if (!s.world || !s.chain) throw std::logic_error("실제 사제 건설 메뉴의 현재 월드 수명 없음");
     const auto parameter=std::bit_cast<std::uint32_t>(event.y);

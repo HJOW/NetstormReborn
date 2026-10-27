@@ -2329,3 +2329,8 @@ set_source_files_properties(BurningSourcesCornerTests.cpp PROPERTIES COMPILE_DEF
 # 기존 Path/FlyPath 정의를 유지하고 가상 ProcessFinder의 독립 관측만 추가한다.
 set_property(SOURCE RawPathRuntimeTests.cpp APPEND PROPERTY COMPILE_DEFINITIONS
     "NETSTORM_PROCESS_REMOVAL_FILTER_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/process-removal-filter-x86.tsv\"")
+
+# 실제 타입 변경/비석·주문 입력의 독립 원문 전체바이트를 재생한다.
+target_sources(netstorm_tests PRIVATE ObjectConversionTests.cpp)
+set_source_files_properties(ObjectConversionTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_SQUID_RETYPE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/squid-retype-x86.tsv\";NETSTORM_OBJECT_CONVERSION_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/object-conversion-x86.tsv\"")

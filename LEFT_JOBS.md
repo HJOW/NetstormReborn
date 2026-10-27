@@ -1,9 +1,10 @@
 # LEFT_JOBS — cpppj 및 공통 인수인계
 
-이 문서는 cpppj와 공통 사항의 **현재 상태, 앞으로 할 작업, 유효한 사용자 결정**을 담는다. 2026-10-28 단위516 개별 다리 품질 명령과 실제 저장/재진입 및 직사각형 분석 보류 결정 기준으로 갱신했다. 완료된 단위별 상세·옛 재개 지시·중복 검증 기록은 [과거 이력](LEFT_JOBS.old.md), 이번 정리 직전 원문은 [단위504까지 추가 보관](LEFT_JOBS.old.md#archive-20261027-through-504)을 본다. dotnetpj는 [LEFT_JOBS.dotnetpj.md](LEFT_JOBS.dotnetpj.md), webpj는 [LEFT_JOBS.webpj.md](LEFT_JOBS.webpj.md)를 따른다.
+이 문서는 cpppj와 공통 사항의 **현재 상태, 앞으로 할 작업, 유효한 사용자 결정**을 담는다. 2026-10-28 단위517 비석/주문 전환·저장 재적재 검증과 전체 검사 재빌드 대기 기준으로 갱신했다. 완료된 단위별 상세·옛 재개 지시·중복 검증 기록은 [과거 이력](LEFT_JOBS.old.md), 이번 정리 직전 원문은 [단위504까지 추가 보관](LEFT_JOBS.old.md#archive-20261027-through-504)을 본다. dotnetpj는 [LEFT_JOBS.dotnetpj.md](LEFT_JOBS.dotnetpj.md), webpj는 [LEFT_JOBS.webpj.md](LEFT_JOBS.webpj.md)를 따른다.
 
 ## 0. 재개 전 확인 사항
 
+- **517 구현/현재 제품 검증 완료 / 전체 검사 재빌드 대기:** 동일SID 타입 변경4b1620/4af720와 비석/주문6c 전환을 연결했다. 원문128+36 고유164입력·재현164차이0, 현재 lib 독립링크 신규3/기존GemReward1의4검사 통과다. 실제 두 화면비에서 덱배치→주문/비석 왕복3회→저장→재적재→Devastation 복원과3351개 다른 객체 필드 보존, 원래 중립 비석 전환도 확인했다. 비석 owner는 원문 Fort 저장마스크에 없어 재적재시0이다. DigUp 일반 입력은 기존GemReward로 연결했으나 special 메뉴 실제 클릭은 미검증. [문서](docs/exe/cpp-object-conversion-20261028.md)·[보고서](cpppj/object-conversion-runtime-20261028.json). 게임SHA `a618d083…`. **다음 최우선:** 기존 CMake build1 exec72073(실제 wrapper PID14416/MSBuild10768) 진행 중이므로 같은 핸들로 대기하고 완료 후 신규3+관련회귀/등록3342+3을 확인한다. 라이브 핸들/프로세스 확인 없이 재시작하지 않는다. 뒤에는 재적재 Spell frame2 후속 표시의 원본 Regular/Animation 비교, Meltdown/Detonate·제단/일반 건물형·선택기 잔여를 이어간다. 공중3종 정적 제한·직사각형 분석 보류 유지.
 - **516 완료 / 개별 다리3명령:** 기존제품의 실제 Set as Cracked 미연결 종료1을 재현하고 일반 입력→Session→421f20 Editor/TYPE 관문→기존 품질 하위를 연결했다. 원문 고유240입력·집중51고유/52관측(필터1중복)·실패0, Release 경고/오류0이다. 같은 최종제품 두 화면비의3품질37→35→40·다른660다리 프레임 보존·Yes저장·재진입 Hard40과 일반 모드 편집3항목 제외를 통과했다. 최종 수락3실행, 전체6실행 중5종료0/기존제품1종료1·도구 열혼동 실패 별도 보존. [문서](docs/exe/cpp-bridge-quality-menu-20261028.md)·[보고서](cpppj/bridge-quality-menu-runtime-20261028.json). 게임SHA `7cc3b2eb…`, 등록3342/이번 전체검사 미반복. **다음:** Dig Up·Spell/Obelisk 전환·Meltdown/Detonate 실행과 제단/일반 건물형 전체·소유자/상태·원본전체선택기 잔여다. 공중3종 정적 제한·직사각형 분석 보류 유지.
 - **515 완료 / 크리스탈·비석 실제 우클릭:** 같은513제품으로 두 화면비1024×768/1280×720의 두 대상→About→해당Help→바깥클릭 반납 **최종4사례 통과**다. 크리스탈은 TEST02 사본의 명시 geyser/nugget 해시 교환·복구, 비석은 원래 dissolvedalliance의 buried SID15026이다. 메뉴 대상/Form/TYPE·일반 모드 항목·활성1/비정지·Help본문/반납을 확인했다. 전체8게임실행 종료0 중 도구 가정/카메라 입력 중간 관측은 최종 수락과 구별했다. 코드/제품/검사/fixture 동일·빌드/C++검사 없음. [문서](docs/exe/cpp-special-object-menus-20261028.md)·[보고서](cpppj/special-object-menus-runtime-20261028.json). 비석 학습·전용 명령/전체 상태/전체화면 완료는 아니다. 공중3종 정적 제한과 직사각형 분석 보류 유지. **다음:** 다리3상태·Dig Up·Spell/Obelisk·Meltdown/Detonate 실행, 제단/일반 건물형·소유자별 우클릭 잔여다.
 - **514 완료 / 공격형 공중3종 정적 대조:** 훨리기그73/VT50a1e8·맨오워144/50a388·더스트 데빌138/50a050의 생성자→공통Open4adb30→Damageable44cbd0→Object4b1270 체인을 기존 디컴파일과 현재 Session/Client에 대조했다. 공통 회수/소유자/모드/위치 조건 연결을 확인했고 슬롯 표에 대상·실행 미검증 주석을 추가했다. 모체 메뉴와 구분한다. **생산/생성/우클릭 재현·새 원문 실행·단위 검사·게임 실행 없음.** [정적 문서](docs/exe/cpp-attack-flyer-menu-static-20261028.md). 동작 수정/전체 동일성 완료로 세지 않는다. 마지막 전체 정밀 디컴파일 HJOW-Athlon/2026-10-23·산출물 변경 없음. 다음은 크리스탈/비석 실제 우클릭과 파생 신규 명령·일반 건물/제단 잔여다.
@@ -45,12 +46,13 @@
 
 일반31경로(Early6 + Training9 + 캠페인16)와 데모3개를 합쳐34경로다. 같은 자원을 쓰는 GuardMyBack·DissolvedAlliance도 일반/데모를 따로 검증한다([대응 근거](docs/gameplay/demo-campaign-map.md)).
 
-## 2. 현재 상태 (2026-10-28 / 단위516 기준)
+## 2. 현재 상태 (2026-10-28 / 단위517 구현 checkpoint 기준)
 
 ### 2.1 마지막 통합 검증 기준
 
 | 근거 | 확인한 범위와 결과 | 현재 판정의 한계 |
 | --- | --- | --- |
+| **517 / 비석·주문 전환** | 원문164고유/재현일치, 현재lib 독립4검사 통과. 실제 두 화면비 왕복/저장QA 재적재·다른3351객체 필드 보존과 원래 비석 전환 | 전체 CMake 검사 재빌드 exec72073 진행 중. DigUp special 실제 클릭/후속 frame2 표시 동일성·나머지 명령/전체 타입은 잔여. [문서](docs/exe/cpp-object-conversion-20261028.md) |
 | **516 / 개별 다리3품질 명령** | 원문240입력, 집중51고유/52관측·실패0, Release 경고/오류0. 실제 두 화면비3품질/660다리 보존/저장·재진입 Hard40과 일반 모드 제외 | 등록3342/전체 반복 없음. 다른 파생 명령·전체 타입/소유자/상태/선택기·전체화면 동일성은 잔여. [문서](docs/exe/cpp-bridge-quality-menu-20261028.md)·[보고서](cpppj/bridge-quality-menu-runtime-20261028.json) |
 | **513 / 파생 우클릭 작성·다리** | 여덟 파생 원문1024/정밀도차이0, 집중39/실패0, 두 Release 경고/오류0. 같은 최종제품10종류·최종11실행/종료0, 지식 진입/가로막대 복귀/반납 | 신규 명령 실행·전체 타입/소유자/상태·원본 선택기 전체는 잔여. 공중 공격3종은 사용자 지시로 정적 분석만. [문서](docs/exe/cpp-object-menu-variants-20261028.md)·[보고서](cpppj/object-menu-variants-runtime-20261028.json) |
 | **512 / 대상 커서 기본 점검** | 이동8종×간헐천/크리스탈 실제16실행/종료0·모드5/활성1. 실제 Session 포획 대상16조건·집중19/실패0. Release 경고/오류0. 게임SHA `ba9d2a28…` | 명시 자산 타입 교환을 포함한다. 포획 가능 사제는 세션 입력이며 자연 UI 포획은 미검증. 전체3339 미반복/우클릭 전용 누락은 다음. [문서](docs/exe/cpp-carrier-hover-runtime-20261028.md)·[보고서](cpppj/carrier-hover-runtime-20261028.json) |

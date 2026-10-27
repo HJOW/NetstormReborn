@@ -30,6 +30,7 @@
 #include "client/GuideMissionTransitions.h"
 #include "client/MissionTechnology.h"
 #include "o/RawMissionBattleOptions.h"
+#include "o/RawGemReward.h"
 #include "client/MissionFortRequest.h"
 #include "client/CampaignTemplateStorage.h"
 #include "client/TellMapMenus.h"
@@ -976,6 +977,13 @@ void UberGump::Event(InputEvent event) {
     if (transitionCode>=0x02000125U && transitionCode<=0x02000127U) {
         if (!(event.code&InputCode::kRelease) && world_) world_->Session().SetBridgeQuality(std::bit_cast<std::uint32_t>(event.y),transitionCode-0x02000125U);
         rebuild_=true;return; // 원본00542b5c/60/64의 y=SID와 고정 품질0/1/2다. 현재 팝업 수명과 무관한 일반 입력에서 소비한다.
+    }
+    if (transitionCode==0x0200002dU) {
+        if (!(event.code&InputCode::kRelease) && world_) {
+            const auto sid=std::bit_cast<std::uint32_t>(event.y);if (sid>=world_->Session().Core().pool.Capacity()) throw std::out_of_range("Dig Up의 실제 SID 범위");
+            static_cast<void>(world_->Session().GemReward().Reveal(o::Sid{static_cast<std::uint16_t>(sid)}));
+        }
+        rebuild_=true;return; // 원본005427ac의 일반 입력은 메뉴의 special 노출 조건을 실행 관문으로 다시 추가하지 않는다.
     }
     if (transitionCode==kStartDemo) {
         if (!(event.code&InputCode::kRelease)) BeginMission(std::string(scriptStrings_.Resolve(std::bit_cast<std::uint32_t>(event.y))),1);

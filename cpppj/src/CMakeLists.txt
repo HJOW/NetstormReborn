@@ -237,3 +237,6 @@ target_sources(netstorm PRIVATE client/RawCameraCommit.cpp client/RawCameraCommi
 
 # 실제 Guide 뒤 입력과 Present 말미에 같은 카메라/현재 Client 장치를 연결한다.
 target_sources(netstorm PRIVATE client/UberGumpCamera.cpp)
+
+# 같은 SID의 비석·주문 가상 입력과 원문 타입 변경을 연결한다.
+target_sources(netstorm PRIVATE o/RawObjectConversion.cpp o/RawObjectConversion.h)

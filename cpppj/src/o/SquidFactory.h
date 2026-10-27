@@ -1,6 +1,7 @@
 // 원본 Squid.cpp의 자산 생성/void Take와 공통 가상 초기화를 raw SID 풀에 연결한다.
 #pragma once
 #include "o/SidPool.h"
+#include <functional>
 
 namespace netstorm::o {
 class SquidUnpop;
@@ -24,6 +25,7 @@ public:
     void BindWeakenedMana(const bool&&)=delete; // const 임시 bool도 같은 장기 참조 계약을 적용한다.
     // 이미 확보된 슬롯에 생성자 쓰기만 적용한다. type/상태/풀 목록은 덮지 않는다.
     Sid Construct(std::uint32_t type,Sid sid);
+    void Retype(Sid sid,std::uint32_t type,const std::function<void(std::uint32_t)>& assertion={}); //004b1620의 void/foot 진단→TYPE BYTE→생성자만 실행한다. HP/소유자/할당은 보존한다.
     // 004af610 ↔ CD 004ab440의 지원 자산 수신 경로다. free list/freeCount는 변경하지 않는다.
     // free/void와 선택적인 SquidUnpop 연결의 non-void 공간 경로를 처리한다.
     Sid Take(std::uint32_t type,Sid sid);
