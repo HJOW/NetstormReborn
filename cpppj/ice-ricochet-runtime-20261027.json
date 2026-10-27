@@ -1,0 +1,283 @@
+{
+  "unit": 490,
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": "HJOW-Athlon / 2026-10-23",
+  "native": {
+    "report": "cpppj/ice-ricochet-native-20261027.json",
+    "uniqueInputs": 1182,
+    "normalReturns": 2364,
+    "precisionDifferences": 0
+  },
+  "builds": [
+    {
+      "command": [
+        "cmake",
+        "--build",
+        "cpppj/build",
+        "--config",
+        "Release",
+        "--parallel",
+        "4",
+        "--",
+        "/p:UseMultiToolTask=true",
+        "/p:MultiProcMaxCount=4",
+        "/p:EnforceProcessCountAcrossBuilds=true"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-ice-ricochet-490/build1.log",
+      "sha256": "d6ec746147d3fbbf65beb701d26eb368bda421a3e59fd9cdeb64cf72b8aecaf5",
+      "summaries": [],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cmake",
+        "--build",
+        "cpppj/build",
+        "--config",
+        "Release",
+        "--parallel",
+        "4",
+        "--",
+        "/p:UseMultiToolTask=true",
+        "/p:MultiProcMaxCount=4",
+        "/p:EnforceProcessCountAcrossBuilds=true"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-ice-ricochet-490/build2.log",
+      "sha256": "78fc73895d6d67b11e7851b6cec94e5bc94b05520611fc4fd3370fd8db6de2a0",
+      "summaries": [],
+      "diagnostics": []
+    }
+  ],
+  "focused": {
+    "unique": 63,
+    "observations": 63,
+    "failedChecks": 0,
+    "addedTests": [
+      "IceRicochet_ActualWorldFinderAndRewardShareNativeRequest",
+      "IceRicochet_ReplaysNativeChanceAndCandidateSelection",
+      "IceRicochet_ReplaysNativeCurrentFieldsAfterFinder",
+      "IceRicochet_ReplaysNativePointAndSharedRandom",
+      "IceRicochet_ReplaysNativeZeroDisplacementPreservesOutput",
+      "IceRicochet_SelectedMissingLifetimeIsRejected"
+    ],
+    "runs": [
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "CampaignFire"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-ice-ricochet-490/focused2-CampaignFire.log",
+        "sha256": "21bae3981b26941bc848216ad9fa4f6094f6bc646d63bb830791657e94bd55c1",
+        "summaries": [
+          "5 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "EditorTestBattle"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-ice-ricochet-490/focused2-EditorTestBattle.log",
+        "sha256": "88feabc2cc023a5911b3478f60a3677ba63baadb4ac86726928920f6e596055a",
+        "summaries": [
+          "3 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "GunGroundTarget"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-ice-ricochet-490/focused2-GunGroundTarget.log",
+        "sha256": "4d634a75e2a2b9700a19bbb07052d50f829df5c8c17bb2e1ad9ccf202c214c1c",
+        "summaries": [
+          "10 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "IceRicochet"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-ice-ricochet-490/focused2-IceRicochet.log",
+        "sha256": "b7f92e4974df358f7a3acab0254b97cd9602c472f224d3fb594c720e6076bd3e",
+        "summaries": [
+          "6 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "Missile"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-ice-ricochet-490/focused2-Missile.log",
+        "sha256": "d7b3d5f4a9503624829d92bbec873fd03570a6f43123f73e4a6a14b513971413",
+        "summaries": [
+          "24 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "RawFinder"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-ice-ricochet-490/focused2-RawFinder.log",
+        "sha256": "d8e61a646b9eb2c41a11991b4b9702581bd4eee02931545a00b6c6b22f37676a",
+        "summaries": [
+          "6 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "reward_"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-ice-ricochet-490/focused2-reward.log",
+        "sha256": "b74226b7552ec6720cacb596c7b85fff225bed018315f844f2468df88d403220",
+        "summaries": [
+          "9 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      }
+    ]
+  },
+  "registered": {
+    "before": 3285,
+    "after": 3291,
+    "removed": []
+  },
+  "protection": {
+    "files": 3200,
+    "changed": [],
+    "agentsUnchanged": true,
+    "appendOnlyPrefixBytes": {
+      "cpppj/tests/CMakeLists.txt": 163496
+    }
+  },
+  "finalSourceFiles": 2858,
+  "exes": {
+    "NetstormCpp.exe": "d64c6feb366533b137990e944e60a360f854bb654c09e3601336d037819dd608",
+    "netstorm_tests.exe": "36fd72a329adae490c755f7c6ab1351fbbf9ec9e39c756412119d0319e479870"
+  },
+  "liveRuns": 0,
+  "pull": {
+    "command": [
+      "git",
+      "pull",
+      "--no-rebase",
+      "--no-commit"
+    ],
+    "exit": 0,
+    "log": "extracted/cpp-ice-ricochet-490/git-pull1.log",
+    "sha256": "e5d6c99aec87ec07a2d1b5c1222d8b690d0a61c3548a55c795fff56db9450d0d",
+    "summaries": [],
+    "diagnostics": []
+  },
+  "formatOnlyNativeReplay": {
+    "command": [
+      "python",
+      "-X",
+      "utf8",
+      "extracted/cpp-ice-ricochet-490-replay.py"
+    ],
+    "exit": 0,
+    "log": "extracted/cpp-ice-ricochet-490/native3-replay.log",
+    "sha256": "c9b2cc5e618eca216a6dc936ef61872e6804465bea43da8381d0213758f0e85e",
+    "summaries": [],
+    "diagnostics": []
+  },
+  "firstEvidence": {
+    "smokeFailures": [
+      {
+        "command": [
+          "python",
+          "-X",
+          "utf8",
+          "tools/decomp_ice_ricochet.py",
+          "--smoke"
+        ],
+        "exit": 1,
+        "log": "extracted/cpp-ice-ricochet-490/native-smoke1.log",
+        "sha256": "c3663d972c5e40d68af7eb70aacea9ffc14673c4c47e42d7a0cbe9521ede4839",
+        "summaries": [],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "python",
+          "-X",
+          "utf8",
+          "tools/decomp_ice_ricochet.py",
+          "--smoke"
+        ],
+        "exit": 1,
+        "log": "extracted/cpp-ice-ricochet-490/native-smoke2.log",
+        "sha256": "008fa3bec0540d4f6eff78abec192ad3c04a3c4cd3a0cf43eee15a254536285c",
+        "summaries": [],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "python",
+          "-X",
+          "utf8",
+          "tools/decomp_ice_ricochet.py",
+          "--smoke"
+        ],
+        "exit": 1,
+        "log": "extracted/cpp-ice-ricochet-490/native-smoke3.log",
+        "sha256": "7895c07e64be84b9848134a6106dac621a5d0ca1f578611fc68fa9078709ed37",
+        "summaries": [],
+        "diagnostics": []
+      }
+    ],
+    "smokeSuccess": {
+      "command": [
+        "python",
+        "-X",
+        "utf8",
+        "tools/decomp_ice_ricochet.py",
+        "--smoke"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-ice-ricochet-490/native-smoke4.log",
+      "sha256": "0d52bccf27965946f40129c3adf4440a5e6f89560e277a9508043a2c2ccf85aa",
+      "summaries": [],
+      "diagnostics": []
+    },
+    "preInitializationFixture": "extracted/cpp-ice-ricochet-490/native1-fixture.tsv",
+    "preInitializationReport": "extracted/cpp-ice-ricochet-490/native1-report.json",
+    "correction": "초기 BSS 대신 실제 게임 초기화004af170 뒤 invalid 점(-10000,-10000)을 명시 입력으로 설치했다."
+  },
+  "limits": [
+    "실제 반사점/확률/선택/후속 생성 인자 및 일반 Finder/HP 조립까지다. RawCampaignSession의 ricochet은 아직 연결하지 않았다.",
+    "반사탄 ctor/frame·피해/삭제/사운드, 냉각 표시004a8770과 실제 TEST01 몇 초 진행은 후속이다. 이전489의 반사 미연결 실패를 해결 완료로 쓰지 않는다.",
+    "Point의 변위0은 출력/난수 보존을 대조했다. Generate의 변위0 미초기화 지역점은 임의 성공 좌표 대신 명시 미연결 오류다.",
+    "원문 일반 Finder 후보 공급과 비NULL 할당/후속 Missile ctor는 관찰 경계이며 할당 실패/반사탄 전체 수명 증거가 아니다.",
+    "이번은 새 모듈 집중 검사이며 전체 CTest/실제 게임을 반복하지 않았다. 마지막 전체488의3281/실패0과 현재 등록3291을 구별한다.",
+    "스테이지 완주/사용자 개입 검증과 .english 부재 개선은 계속 보류한다. Windows10/11·전체화면은 현행 목표다."
+  ],
+  "pushed": false
+}

@@ -2283,3 +2283,7 @@ target_compile_definitions(netstorm_tests PRIVATE NETSTORM_ICE_CANNON_FIRE_FIXTU
 # 초기 아이스 투사체의 실제128BYTE/세 슬롯/포구·사정선과 파생 충돌 호출을 대조한다.
 target_sources(netstorm_tests PRIVATE IceMissileInitialTests.cpp)
 set_source_files_properties(IceMissileInitialTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_ICE_MISSILE_INITIAL_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/ice-missile-initial-x86.tsv\"")
+
+# 원문 반사점/난수/선택/후속 인자를 파일 전용 정의로 대조한다.
+target_sources(netstorm_tests PRIVATE IceRicochetTests.cpp)
+set_source_files_properties(IceRicochetTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_ICE_RICOCHET_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/ice-ricochet-x86.tsv\"")
