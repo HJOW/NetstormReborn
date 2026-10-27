@@ -706,10 +706,16 @@ int RunClient(std::vector<std::string> arguments) {
                 const std::string_view operation=step.operation=="click-if" ? "click" : step.operation=="up-if" ? "up" : std::string_view(step.operation); // 기존 입력 주입 순서는 그대로 보존한다.
                 ScreenPoint point{};
                 if (operation == "click" || operation == "down" || operation == "up" || operation == "right") {
+                    // 검사 스크립트의 화면 좌표도 일반 InputQueue에만 보낸다. 전용 창 상태나 월드 배치를 직접 바꾸지 않는다.
+                    if (step.argument.starts_with("screen:")) {
+                        std::istringstream fields(step.argument.substr(7));char comma{};
+                        if (!(fields>>point.x>>comma>>point.y) || comma!=',' || !(fields>>std::ws).eof() || point.x<0 || point.y<0 || point.x>=c.GetScreen().Width() || point.y>=c.GetScreen().Height()) throw std::invalid_argument("UI 화면 좌표는 현재 화면 안의 screen:x,y여야 함");
+                    } else {
                     const auto found = c.Menu()->ControlPoint(step.argument);
                     if (!found && optional) continue; // 결과나 게임 상태를 바꾸지 않고 없는 조작만 생략한다.
                     if (!found) throw std::runtime_error("UI control not found: " + step.argument);
                     point = *found;
+                    }
                 } else if (operation == "outside") point = {0, 0};
                 else throw std::invalid_argument("Unknown UI operation: " + step.operation);
                 // down 이후 프레임에서도 같은 위치를 폴링해 누름 캡처가 실제 바탕 화면 커서 때문에 취소되지 않게 한다.

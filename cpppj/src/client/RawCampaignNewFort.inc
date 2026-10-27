@@ -36,7 +36,8 @@ void CreateEditorFortData(const std::function<void(std::uint32_t)>& coreWrite) {
         if (!services.editorPlayerUi.translate) throw std::logic_error("신규 Fort Unnamed 실제 번역 장치 누락");const auto text=services.editorPlayerUi.translate(key);
         return {reinterpret_cast<const char*>(text.data()),text.size()}; // 실제 반환 버퍼를 빌리며 복사/NUL 검색은 원문 부모가 그 뒤 수행한다.
     };
-    hooks.configure=[this](auto key,auto value) { if (!services.install.setConfig) throw std::logic_error("신규 Fort 실제 설정 장치 누락");services.install.setConfig(key,{reinterpret_cast<const std::uint8_t*>(value.data()),value.size()}); };
+    // RawNewFort의 CString은 같은 handle에서 NUL을 확인한 view다. 실제 strcpy 장치에는 그 종료 BYTE도 전달한다.
+    hooks.configure=[this](auto key,auto value) { if (!services.install.setConfig) throw std::logic_error("신규 Fort 실제 설정 장치 누락");services.install.setConfig(key,{reinterpret_cast<const std::uint8_t*>(value.data()),value.size()+1}); };
     hooks.title=services.install.refreshWindowTitle;hooks.registerSubscriber=[this] { FinishFortSubscriberRegistration({globals.mySubscriber},SubscriberRegistrationHooks()); };
     hooks.sp=[this](auto owner) { return std::bit_cast<float>(sp.Get(owner)); };hooks.addSp=[this](auto value) { hp.AddSp(playerState.battleOwner,value); };
     hooks.coreData=[this] { const std::uint32_t metamap=core.ownerMode.challenge ? 1U : 0U;return coreDataGlobals->Read(playerState,metamap,{SessionMissing<void,std::uint32_t>()}); };

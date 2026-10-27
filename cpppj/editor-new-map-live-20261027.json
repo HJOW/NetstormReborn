@@ -1,0 +1,730 @@
+{
+  "unit": 493,
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": "HJOW-Athlon / 2026-10-23",
+  "builds": [
+    {
+      "command": [
+        "cmake",
+        "--build",
+        "cpppj/build",
+        "--config",
+        "Release",
+        "--parallel",
+        "4",
+        "--",
+        "/p:UseMultiToolTask=true",
+        "/p:MultiProcMaxCount=4",
+        "/p:EnforceProcessCountAcrossBuilds=true"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-editor-island-live-493/build1.log",
+      "sha256": "4f9bc736b6a2c107453a7561f3b12c7ba7a31c7dce260b9494dd8832c17079fb",
+      "summaries": [],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cmake",
+        "--build",
+        "cpppj/build",
+        "--config",
+        "Release",
+        "--parallel",
+        "4",
+        "--",
+        "/p:UseMultiToolTask=true",
+        "/p:MultiProcMaxCount=4",
+        "/p:EnforceProcessCountAcrossBuilds=true"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-editor-island-live-493/build2.log",
+      "sha256": "6b58e7c6e73bff817fe509eb7b4080c073846a293b078ab59cd999ff3f738ccf",
+      "summaries": [],
+      "diagnostics": []
+    }
+  ],
+  "focused": {
+    "command": [
+      "cpppj/build/bin/Release/netstorm_tests.exe",
+      "--filter",
+      "CampaignNewFort"
+    ],
+    "exit": 0,
+    "log": "extracted/cpp-editor-island-live-493/focused1-CampaignNewFort.log",
+    "sha256": "f6904015f1877e9888f380b8bfabaa0a7de677596969f811aa53f9a1ab589d1e",
+    "summaries": [
+      "4 test(s), 0 failed check(s)"
+    ],
+    "diagnostics": []
+  },
+  "whole": {
+    "cppTests": 3301,
+    "failedChecks": 0,
+    "ctest": {
+      "command": [
+        "ctest",
+        "--test-dir",
+        "cpppj/build",
+        "-C",
+        "Release",
+        "--output-on-failure"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-editor-island-live-493/all-ctest.log",
+      "sha256": "d4c5993070b1d9ad2896f2ff0842ff323c6e834d8753466b0423aceed2ed4087",
+      "summaries": [],
+      "diagnostics": []
+    },
+    "rawLog": "extracted/cpp-editor-island-live-493/all-netstorm-tests.log",
+    "interleavedNames": [
+      "Ca실제 Kernel400프레임 완료: FragileFortune",
+      "EditorLocalTransport_QueuedRequest실제 미션 Start 검사: Tutorial1",
+      "HtmlWindowFactoryClient_ActualChat 원문 진단:2474"
+    ],
+    "missingNames": [
+      "CampaignKernelFrames_SaveTheIsland",
+      "EditorLocalTransport_QueuedRequestReplyAndPendingPollOrder",
+      "HtmlWindowFactoryClient_ActualTellParamLifetimeZeroSizeAndSuppressedModes"
+    ],
+    "separateOutputSupplement": [
+      {
+        "name": "CampaignKernelFrames_SaveTheIsland",
+        "exit": 0,
+        "stdout": "extracted/cpp-editor-island-live-493/supplement-1.stdout",
+        "stderr": "extracted/cpp-editor-island-live-493/supplement-1.stderr"
+      },
+      {
+        "name": "EditorLocalTransport_QueuedRequestReplyAndPendingPollOrder",
+        "exit": 0,
+        "stdout": "extracted/cpp-editor-island-live-493/supplement-2.stdout",
+        "stderr": "extracted/cpp-editor-island-live-493/supplement-2.stderr"
+      },
+      {
+        "name": "HtmlWindowFactoryClient_ActualTellParamLifetimeZeroSizeAndSuppressedModes",
+        "exit": 0,
+        "stdout": "extracted/cpp-editor-island-live-493/supplement-3.stdout",
+        "stderr": "extracted/cpp-editor-island-live-493/supplement-3.stderr"
+      }
+    ]
+  },
+  "registered": {
+    "before": 3300,
+    "after": 3301,
+    "source": "extracted/cpp-ice-cooling-492/registered-after2.log",
+    "sourceBinaryMatched": true,
+    "added": [
+      "CampaignNewFort_ConfigReceivesTerminatedOriginalHandle"
+    ],
+    "removed": []
+  },
+  "protection": {
+    "files": 3207,
+    "changed": [],
+    "agentsUnchanged": true,
+    "oldTestBytesAfterRemovingSingleNewInclude": 117336,
+    "originalCmakeUnchanged": true
+  },
+  "finalSourceFiles": 2868,
+  "exes": {
+    "NetstormCpp.exe": "597c990cc8641bd6958d6534185eabdb0854421c5ebccea746f5249a18ce4382",
+    "netstorm_tests.exe": "59d70cd75929d06d85d06f86c6ab4d0938f0d6a6632755d4c1a27184b2790e2d"
+  },
+  "live": {
+    "live-catalog1": {
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-editor-island-live-493\\game-data",
+        "--window",
+        "--no-audio",
+        "--frames",
+        "25",
+        "--set",
+        "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=1;currentLanguage=english",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-editor-island-live-493\\live-catalog1\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-editor-island-live-493\\live-catalog1\\states.tsv"
+      ],
+      "binarySha256": "51d6926af6f4a007ed96bb755e2382a05e0a5b5a6182d49bafc5761216717a0b",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 21.273191000000224,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "cb76758e176fb9498de489bf084e9844f54d645d0fb4457c2c91e00a6a78d515",
+      "originalsUnchanged": true
+    },
+    "live-new1": {
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-editor-island-live-493\\game-data",
+        "--window",
+        "--no-audio",
+        "--frames",
+        "95",
+        "--set",
+        "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=1;currentLanguage=english",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-editor-island-live-493\\live-new1\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-editor-island-live-493\\live-new1\\states.tsv"
+      ],
+      "binarySha256": "51d6926af6f4a007ed96bb755e2382a05e0a5b5a6182d49bafc5761216717a0b",
+      "returnCode": 1,
+      "timedOut": false,
+      "seconds": 2.9225912999972934,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "2e6845d56a01d6fe0f66bf88db2a63a82f66ef926d707e6f9c656d8bfe20fc03",
+      "originalsUnchanged": true
+    },
+    "live-new2": {
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-editor-island-live-493\\game-data",
+        "--window",
+        "--no-audio",
+        "--frames",
+        "95",
+        "--set",
+        "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=1;currentLanguage=english",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-editor-island-live-493\\live-new2\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-editor-island-live-493\\live-new2\\states.tsv"
+      ],
+      "binarySha256": "f675d15abc304b1e581ea793d8060d723305ed770e56a67eddaf0e01d57724ab",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 4.636129200007417,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "5071e7a599b44be9a429a5e9a186532d25b6e9a17b381114c160adf8371b2df0",
+      "originalsUnchanged": true
+    },
+    "live-new-place1": {
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-editor-island-live-493\\game-data",
+        "--window",
+        "--no-audio",
+        "--frames",
+        "300",
+        "--set",
+        "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=1;currentLanguage=english",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-editor-island-live-493\\live-new-place1\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-editor-island-live-493\\live-new-place1\\states.tsv"
+      ],
+      "binarySha256": "597c990cc8641bd6958d6534185eabdb0854421c5ebccea746f5249a18ce4382",
+      "returnCode": 1,
+      "timedOut": false,
+      "seconds": 9.645375899999635,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "a19db043767c991822d10335282849829a64c50862b75265191184d2b3fe3024",
+      "originalsUnchanged": true
+    },
+    "live-new-place2": {
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-editor-island-live-493\\new-map-data",
+        "--window",
+        "--no-audio",
+        "--frames",
+        "300",
+        "--set",
+        "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=1;currentLanguage=english",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-editor-island-live-493\\live-new-place2\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-editor-island-live-493\\live-new-place2\\states.tsv"
+      ],
+      "binarySha256": "597c990cc8641bd6958d6534185eabdb0854421c5ebccea746f5249a18ce4382",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 9.88963999999396,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "7f88e39aa65b729437ea3434bfef65e4f1d776cc758deb47fd21d8fcb9d5d651",
+      "originalsUnchanged": true
+    },
+    "live-restart1": {
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-editor-island-live-493\\new-map-data",
+        "--window",
+        "--no-audio",
+        "--frames",
+        "75",
+        "--set",
+        "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=1;currentLanguage=english",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-editor-island-live-493\\live-restart1\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-editor-island-live-493\\live-restart1\\states.tsv"
+      ],
+      "binarySha256": "597c990cc8641bd6958d6534185eabdb0854421c5ebccea746f5249a18ce4382",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 3.0195292999997037,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "5071e7a599b44be9a429a5e9a186532d25b6e9a17b381114c160adf8371b2df0",
+      "originalsUnchanged": true,
+      "savedFortBefore": "6e6766a812fb441b657a0db98a424ca495551af092b8a1964cc59d5bf556396a",
+      "savedFortAfter": "58e406773dd9033b0b9d24ab160f6da866ae023c0f6b9298abb4189b7a1e796a"
+    },
+    "live-restart2": {
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-editor-island-live-493\\new-map-data",
+        "--window",
+        "--no-audio",
+        "--frames",
+        "75",
+        "--set",
+        "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=1;currentLanguage=english",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-editor-island-live-493\\live-restart2\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-editor-island-live-493\\live-restart2\\states.tsv"
+      ],
+      "binarySha256": "597c990cc8641bd6958d6534185eabdb0854421c5ebccea746f5249a18ce4382",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 3.0813905999966664,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "5071e7a599b44be9a429a5e9a186532d25b6e9a17b381114c160adf8371b2df0",
+      "originalsUnchanged": true,
+      "savedFortBefore": "58e406773dd9033b0b9d24ab160f6da866ae023c0f6b9298abb4189b7a1e796a",
+      "savedFortAfter": "3729935c2f1b222916fc9e53a0ce796d12ef2ad22a425aaaf460a0e212fa9652"
+    }
+  },
+  "observed": {
+    "catalog": {
+      "page": [
+        "LoadEditable"
+      ],
+      "frame": 20,
+      "fort_names": [
+        "",
+        "",
+        "1",
+        "fortSpec"
+      ],
+      "raw_modal_globals": [
+        "1",
+        "227",
+        "0",
+        "0"
+      ]
+    },
+    "new-dialog": {
+      "page": [
+        "LoadEditable"
+      ],
+      "frame": 28,
+      "fort_names": [
+        "",
+        "",
+        "1",
+        "fortSpec"
+      ],
+      "raw_modal_globals": [
+        "2",
+        "264",
+        "-83",
+        "253"
+      ]
+    },
+    "new-editor": {
+      "page": [
+        "editor"
+      ],
+      "frame": 85,
+      "fort_names": [
+        "A493D",
+        "A493D",
+        "2",
+        "fortSpec"
+      ],
+      "raw_session": [
+        "1",
+        "1"
+      ],
+      "raw_modal_globals": [
+        "1",
+        "3394",
+        "-83",
+        "253"
+      ],
+      "raw_world": [
+        "3",
+        "85",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0"
+      ]
+    },
+    "selected": {
+      "page": [
+        "editor"
+      ],
+      "frame": 105,
+      "fort_names": [
+        "A493D",
+        "A493D",
+        "2",
+        "fortSpec"
+      ],
+      "raw_session": [
+        "1",
+        "1"
+      ],
+      "raw_modal_globals": [
+        "1",
+        "3394",
+        "-83",
+        "253"
+      ],
+      "raw_world": [
+        "3.51",
+        "105",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0"
+      ]
+    },
+    "cancelled": {
+      "page": [
+        "editor"
+      ],
+      "frame": 115,
+      "fort_names": [
+        "A493D",
+        "A493D",
+        "2",
+        "fortSpec"
+      ],
+      "raw_session": [
+        "1",
+        "1"
+      ],
+      "raw_modal_globals": [
+        "1",
+        "3394",
+        "-83",
+        "253"
+      ],
+      "raw_world": [
+        "3.802",
+        "115",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0"
+      ]
+    },
+    "rejected": {
+      "page": [
+        "editor"
+      ],
+      "frame": 130,
+      "fort_names": [
+        "A493D",
+        "A493D",
+        "2",
+        "fortSpec"
+      ],
+      "raw_session": [
+        "1",
+        "1"
+      ],
+      "raw_modal_globals": [
+        "1",
+        "3394",
+        "-83",
+        "253"
+      ],
+      "raw_world": [
+        "4.162",
+        "130",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0"
+      ]
+    },
+    "placed": {
+      "page": [
+        "editor"
+      ],
+      "frame": 150,
+      "fort_names": [
+        "A493D",
+        "A493D",
+        "2",
+        "fortSpec"
+      ],
+      "raw_session": [
+        "1",
+        "1"
+      ],
+      "raw_modal_globals": [
+        "1",
+        "3394",
+        "-83",
+        "253"
+      ],
+      "raw_world": [
+        "4.703",
+        "150",
+        "4",
+        "689",
+        "1",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0"
+      ]
+    },
+    "closed": {
+      "page": [
+        "editor"
+      ],
+      "frame": 170,
+      "fort_names": [
+        "A493D",
+        "A493D",
+        "2",
+        "fortSpec"
+      ],
+      "raw_session": [
+        "1",
+        "1"
+      ],
+      "raw_modal_globals": [
+        "0",
+        "0",
+        "-83",
+        "253"
+      ],
+      "raw_world": [
+        "5.243",
+        "170",
+        "4",
+        "689",
+        "1",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0"
+      ]
+    },
+    "save-question": {
+      "page": [
+        "LeaveEditMode"
+      ],
+      "frame": 194,
+      "fort_names": [
+        "A493D",
+        "A493D",
+        "2",
+        "fortSpec"
+      ],
+      "raw_session": [
+        "1",
+        "1"
+      ],
+      "raw_modal_globals": [
+        "1",
+        "3658",
+        "-83",
+        "253"
+      ],
+      "raw_world": [
+        "5.911",
+        "194",
+        "4",
+        "689",
+        "1",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0"
+      ]
+    },
+    "main": {
+      "page": [
+        "main"
+      ],
+      "frame": 225,
+      "fort_names": [
+        "",
+        "",
+        "2",
+        "fortSpec"
+      ],
+      "raw_modal_globals": [
+        "0",
+        "0",
+        "-83",
+        "253"
+      ]
+    },
+    "saved-catalog": {
+      "page": [
+        "LoadEditable"
+      ],
+      "frame": 242,
+      "fort_names": [
+        "",
+        "A493D",
+        "1",
+        "fortSpec"
+      ],
+      "raw_modal_globals": [
+        "1",
+        "3895",
+        "-83",
+        "253"
+      ]
+    },
+    "reopened": {
+      "page": [
+        "editor"
+      ],
+      "frame": 290,
+      "fort_names": [
+        "A493D",
+        "A493D",
+        "2",
+        "fortSpec"
+      ],
+      "raw_session": [
+        "1",
+        "1"
+      ],
+      "raw_modal_globals": [
+        "0",
+        "0",
+        "-83",
+        "253"
+      ],
+      "raw_world": [
+        "8.739",
+        "290",
+        "4",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0"
+      ]
+    }
+  },
+  "savedFort": {
+    "path": "extracted/cpp-editor-island-live-493/new-map-data-editor/d/A493D.fort",
+    "bytes": 1994,
+    "sha256": "3729935c2f1b222916fc9e53a0ce796d12ef2ad22a425aaaf460a0e212fa9652",
+    "sectionCount": 35,
+    "territoryBytes": 120,
+    "placedRecords": [
+      [
+        8,
+        9,
+        85,
+        106,
+        0,
+        0
+      ]
+    ],
+    "englishCreated": false
+  },
+  "pull": {
+    "command": [
+      "git",
+      "-c",
+      "core.autocrlf=false",
+      "pull",
+      "--no-rebase"
+    ],
+    "exit": 0,
+    "log": "extracted/cpp-editor-island-live-493/git-pull1.log",
+    "sha256": "e5d6c99aec87ec07a2d1b5c1222d8b690d0a61c3548a55c795fff56db9450d0d",
+    "summaries": [],
+    "diagnostics": []
+  },
+  "limits": [
+    "최초 새 맵의 NUL 종료 누락은 어댑터에서 수정했다. RawNewFort 원문 본체/fixture와 기존 검사 기대값은 바꾸지 않았다. 신규1검사는 실제 초기화/파일 저장과 엄격한 설정 장치 계약을 함께 검사한다.",
+    "screen:x,y는 검사 CLI에서 현재 화면 안의 일반 마우스 사건만 InputQueue에 보낸다. 전용 창/배치 함수를 직접 호출하거나 게임 상태를 합성하지 않는다.",
+    "전체433맵 복사에서는 원문50개 상한 밖의 A493C 재선택이 실패했다. 별도 복사에는 TEST01만 남겨 새 A493D의 저장/재진입/다른 실제 프로세스 재진입을 확인했으며 기존 복사/부분 파일은 지우지 않았다.",
+    "선택/거부는 미리보기 스크린샷, 취소는 같은 목록 클릭/월드 무변화로 관측했다. GUI 보고서에 드래그 필드 자체를 덤프한 증거는 아니다. 새 배치의 Graph1/표면689와 재로드 Graph0/표면0은 구별해 기록하며 원본 동일성의 결론을 내리지 않았다.",
+    "내장 설명 앞의 {Text} 표기를 관측했다. 원문 파서/조회와 추가 대조할 대상으로 남기고 추정으로 제거하지 않았다. 전체 편집 도구/기존 맵의 실제 섬 추가·픽셀/음향 동일성 완료가 아니다.",
+    "실제 실행은1024×768 창 모드·무음·짧은 편집이며 .english는 생성하지 않았다. Test Battle의 .english 부재 개선과 스테이지 완주/사용자 개입 검증은 계속 보류한다. Windows10/11·전체화면은 현행 목표다."
+  ],
+  "pushed": false,
+  "restartByteComparison": {
+    "raw": "extracted/cpp-editor-island-live-493/live-restart2/section-changes.json",
+    "beforeBytes": 1994,
+    "afterBytes": 1994,
+    "changedSections": [
+      "Territory",
+      "Money",
+      "Deck"
+    ],
+    "unchangedSections": 32,
+    "placedRecordUnchanged": true,
+    "unplacedTerritoryOnlySeedChanged": true,
+    "deckTypesCountsAndLastBytesUnchanged": true,
+    "deckQualityRange": [
+      0,
+      4
+    ],
+    "moneyBeforeAfter": [
+      815.0,
+      1260.0
+    ],
+    "sourceEvidence": [
+      "cpppj/src/o/RawFortTerritorySave.cpp:SnapshotFortTerritory의 special/없는섬 seed",
+      "cpppj/src/o/RawFortMoneySave.cpp:SaveFortMoney의 Next(1010)+333",
+      "cpppj/src/o/RawDeckRestore.cpp:LoadFullDeck의 Next(5)"
+    ],
+    "conclusion": "배치 레코드/객체 섹션은 유지되고 미배치 seed·Money·fullDeck 품질만 바뀐다. 현재 원문 대조된 저장/전체 덱 경로에 대응하며 파일 전체 SHA 동일성으로 판단하지 않는다."
+  }
+}
