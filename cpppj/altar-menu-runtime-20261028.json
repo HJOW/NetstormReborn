@@ -1,0 +1,922 @@
+{
+  "unit": 518,
+  "date": "2026-10-28",
+  "host": "HJOW-Athlon",
+  "status": "completed",
+  "goalComplete": false,
+  "lastCompletedDecompile": "HJOW-Athlon / 2026-10-23",
+  "decompileChanged": false,
+  "scope": "제단·다이스 메뉴의 실제 가상80 연결과 원래 제단의 두 모드·두 화면비 메뉴/Help/편집 삭제",
+  "baselineHead": "7198298b7d0cec5ffab55394758290509bce2824",
+  "sourceChanged": [
+    "cpppj/src/client/RawCampaignSession.cpp"
+  ],
+  "sourceAdded": [],
+  "testsOrFixturesChanged": false,
+  "protectedChanges": [],
+  "originalsCdAndAgentsUnchanged": true,
+  "gameSha256": "c49ba864eb49bc63d63906bc6ade755859be531ba8766b53ad9d2123044fc28c",
+  "testsSha256": "e6a721afe3a5ef107150d387efb61733133eab794d14b77135d32771bd02aa2f",
+  "registered": 3345,
+  "builds": [
+    {
+      "command": [
+        "cmake",
+        "--build",
+        "cpppj/build",
+        "--config",
+        "Release",
+        "-j",
+        "3"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-object-conversion-517/build1.log",
+      "sha256": "46951afb6f4e565582b21f528e5e20963a0b9c1f10cf225e4f1406f55e10db7e",
+      "summaries": [],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cmake",
+        "--build",
+        "cpppj/build",
+        "--config",
+        "Release",
+        "--target",
+        "NetstormCpp",
+        "-j",
+        "1"
+      ],
+      "exit": 1,
+      "log": "extracted/cpp-building-menus-518/build-game.log",
+      "sha256": "b4b9aae4f698dc94905c90f81a58a8f68f1eaa4deedf4b97516931f0e4c13d7b",
+      "summaries": [],
+      "diagnostics": [
+        "LINK : fatal error LNK1104: 'H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\lib\\Release\\netstorm.lib' 파일을 열 수 없습니다. [H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\src\\netstorm.vcxproj]"
+      ]
+    },
+    {
+      "command": [
+        "cmake",
+        "--build",
+        "cpppj/build",
+        "--config",
+        "Release",
+        "-j",
+        "3"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-building-menus-518/build-current.log",
+      "sha256": "4bacbbffa8b238f75e76a2c428ba42beb754d87ac891dcc70b32154defcb8ff0",
+      "summaries": [],
+      "diagnostics": []
+    }
+  ],
+  "buildCollision": "기존 검사 링크와 별도 게임 라이브러리 갱신을 겹친 순서 오류로 LNK1104. 두 종료 확인 뒤 순차 전체 증분 빌드로 정상 재링크.",
+  "focused": [
+    {
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+        "--filter",
+        "AltarSacrifice"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-building-menus-518/tests-current-altar-sacrifice.log",
+      "sha256": "3182e1a70ced824bc48f7ffd6894e7deca3860b76fbb025a481a42ac6221e1b5",
+      "summaries": [
+        "1 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+        "--filter",
+        "ObjectConversion"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-building-menus-518/tests-current-conversion.log",
+      "sha256": "d8f22d702a06b0f49725c71b08b933b4d1c883b407fe318939d1eedeb74db15f",
+      "summaries": [
+        "2 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+        "--filter",
+        "EditorTestBattle"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-building-menus-518/tests-current-editor-battle.log",
+      "sha256": "88feabc2cc023a5911b3478f60a3677ba63baadb4ac86726928920f6e596055a",
+      "summaries": [
+        "3 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+        "--filter",
+        "EditorSaveGoMain"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-building-menus-518/tests-current-editor-save.log",
+      "sha256": "137e215108e9dd9ae0d185895a9a36dfa5081ea35210996fb83e004a6928b862",
+      "summaries": [
+        "2 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+        "--filter",
+        "GemReward"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-building-menus-518/tests-current-gem.log",
+      "sha256": "a8b4fef18489b192a71d1dd12deb520ca00769193b2c9320de6257808a375b85",
+      "summaries": [
+        "2 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+        "--filter",
+        "ObjectCommand"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-building-menus-518/tests-current-object-command.log",
+      "sha256": "376fe357bce15a18cd6356fc8165cc0ead2b5e29f5cdf75a012464300d58f4e5",
+      "summaries": [
+        "3 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+        "--filter",
+        "ObjectMenu"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-building-menus-518/tests-current-object-menu.log",
+      "sha256": "8a8af06d96d90f20f0d15e2bb2f1f5e27ac8d59367fd70a1d1ecd2c207f2a977",
+      "summaries": [
+        "20 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+        "--filter",
+        "SquidRetype"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-building-menus-518/tests-current-retype.log",
+      "sha256": "977d4af343443bb7328b655f015cebf4c348f662e2e933f16b83efb0d4aa91a9",
+      "summaries": [
+        "1 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+        "--filter",
+        "TempleRitual"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-building-menus-518/tests-current-temple-ritual.log",
+      "sha256": "23cb0451efd222be787e186a5cf69299a28c9aed8a38328125ac7db7c8ce3c38",
+      "summaries": [
+        "2 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    }
+  ],
+  "uniqueFocusedPassed": 36,
+  "focusedObservations": 36,
+  "wholeSuiteExecuted": false,
+  "earlier517Checks": 5,
+  "earlier517ChecksOverlapCurrent": true,
+  "actualAccepted": [
+    {
+      "size": [
+        1280,
+        720
+      ],
+      "selectedSid": 15017,
+      "target": [
+        "altar",
+        "2",
+        "-1",
+        "168",
+        "125",
+        "168",
+        "125",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "1500",
+        "0"
+      ],
+      "root": [
+        "633",
+        "15017",
+        "204",
+        "600"
+      ],
+      "headings": [
+        "Altar Level I",
+        "Enemy: Prince of Wind",
+        "Alignment: None",
+        "Class: Altar"
+      ],
+      "items": [
+        {
+          "token": 633,
+          "index": 0,
+          "flags": 66697,
+          "command": 33554455,
+          "parameter": 164,
+          "visible": true,
+          "label": "About"
+        },
+        {
+          "token": 633,
+          "index": 1,
+          "flags": 66592,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": "Player"
+        }
+      ],
+      "helpReturned": true,
+      "run": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-stage-entry-502-data",
+          "--mission",
+          "breakingthrough",
+          "--window",
+          "--mute-audio",
+          "--frames",
+          "165",
+          "--set",
+          "SCREENW=1280;SCREENH=720;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-building-menus-518\\altar-final\\1280x720\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-building-menus-518\\altar-final\\1280x720\\states.tsv",
+          "--audio-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-building-menus-518\\altar-final\\1280x720\\audio.tsv"
+        ],
+        "binarySha256": "c49ba864eb49bc63d63906bc6ade755859be531ba8766b53ad9d2123044fc28c",
+        "scriptSha256": "e879bcf685115179fe14cff50ebc01e4ab28c914f4145ae118677c6df7d45ccc",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 10.911215900006937,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2",
+        "originalsUnchanged": true,
+        "dataUnchanged": true,
+        "dataRoot": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-stage-entry-502-data"
+      }
+    },
+    {
+      "size": [
+        1024,
+        768
+      ],
+      "selectedSid": 15017,
+      "target": [
+        "altar",
+        "2",
+        "-1",
+        "168",
+        "125",
+        "168",
+        "125",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "1500",
+        "0"
+      ],
+      "root": [
+        "639",
+        "15017",
+        "204",
+        "606"
+      ],
+      "headings": [
+        "Altar Level I",
+        "Enemy: Prince of Wind",
+        "Alignment: None",
+        "Class: Altar"
+      ],
+      "items": [
+        {
+          "token": 639,
+          "index": 0,
+          "flags": 66697,
+          "command": 33554455,
+          "parameter": 164,
+          "visible": true,
+          "label": "About"
+        },
+        {
+          "token": 639,
+          "index": 1,
+          "flags": 66592,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": "Player"
+        }
+      ],
+      "helpReturned": true,
+      "run": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-stage-entry-502-data",
+          "--mission",
+          "breakingthrough",
+          "--window",
+          "--mute-audio",
+          "--frames",
+          "165",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-building-menus-518\\altar-final\\1024x768\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-building-menus-518\\altar-final\\1024x768\\states.tsv",
+          "--audio-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-building-menus-518\\altar-final\\1024x768\\audio.tsv"
+        ],
+        "binarySha256": "c49ba864eb49bc63d63906bc6ade755859be531ba8766b53ad9d2123044fc28c",
+        "scriptSha256": "d8ab452fa738ec119648d1b504986c5fdcb2c111e9641bdff8d0f91bd90428d7",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 10.76597930000571,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2",
+        "originalsUnchanged": true,
+        "dataUnchanged": true,
+        "dataRoot": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-stage-entry-502-data"
+      }
+    },
+    {
+      "mode": "editor",
+      "size": [
+        1280,
+        720
+      ],
+      "selectedSid": 15014,
+      "daisSid": 15013,
+      "root": [
+        "3484",
+        "15014",
+        "407",
+        "3454"
+      ],
+      "items": [
+        {
+          "token": 3484,
+          "index": 0,
+          "flags": 66697,
+          "command": 50331669,
+          "parameter": 15014,
+          "visible": true,
+          "label": "Destroy"
+        },
+        {
+          "token": 3484,
+          "index": 1,
+          "flags": 66689,
+          "command": 33554455,
+          "parameter": 164,
+          "visible": true,
+          "label": "About"
+        },
+        {
+          "token": 3484,
+          "index": 2,
+          "flags": 66689,
+          "command": 33554581,
+          "parameter": 1610612737,
+          "visible": true,
+          "label": "CHEAT Set Owner"
+        },
+        {
+          "token": 3484,
+          "index": 3,
+          "flags": 66592,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": "Player"
+        }
+      ],
+      "helpReturned": true,
+      "altarAndDaisDestroyed": true,
+      "run": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-building-menus-518\\editor-fresh\\1280x720\\data",
+          "--window",
+          "--no-audio",
+          "--frames",
+          "170",
+          "--set",
+          "SCREENW=1280;SCREENH=720;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-building-menus-518\\editor-fresh\\1280x720\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-building-menus-518\\editor-fresh\\1280x720\\states.tsv"
+        ],
+        "binarySha256": "c49ba864eb49bc63d63906bc6ade755859be531ba8766b53ad9d2123044fc28c",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 7.454470199998468,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "5071e7a599b44be9a429a5e9a186532d25b6e9a17b381114c160adf8371b2df0",
+        "dataUnchanged": true,
+        "originalsUnchanged": true
+      }
+    },
+    {
+      "mode": "editor",
+      "size": [
+        1024,
+        768
+      ],
+      "selectedSid": 15014,
+      "daisSid": 15013,
+      "root": [
+        "3485",
+        "15014",
+        "407",
+        "3455"
+      ],
+      "items": [
+        {
+          "token": 3485,
+          "index": 0,
+          "flags": 66697,
+          "command": 50331669,
+          "parameter": 15014,
+          "visible": true,
+          "label": "Destroy"
+        },
+        {
+          "token": 3485,
+          "index": 1,
+          "flags": 66689,
+          "command": 33554455,
+          "parameter": 164,
+          "visible": true,
+          "label": "About"
+        },
+        {
+          "token": 3485,
+          "index": 2,
+          "flags": 66689,
+          "command": 33554581,
+          "parameter": 1610612737,
+          "visible": true,
+          "label": "CHEAT Set Owner"
+        },
+        {
+          "token": 3485,
+          "index": 3,
+          "flags": 66592,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": "Player"
+        }
+      ],
+      "helpReturned": true,
+      "altarAndDaisDestroyed": true,
+      "run": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-building-menus-518\\editor-fresh\\1024x768\\data",
+          "--window",
+          "--no-audio",
+          "--frames",
+          "170",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-building-menus-518\\editor-fresh\\1024x768\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-building-menus-518\\editor-fresh\\1024x768\\states.tsv"
+        ],
+        "binarySha256": "c49ba864eb49bc63d63906bc6ade755859be531ba8766b53ad9d2123044fc28c",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 7.383664599998156,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "5071e7a599b44be9a429a5e9a186532d25b6e9a17b381114c160adf8371b2df0",
+        "dataUnchanged": true,
+        "originalsUnchanged": true
+      }
+    }
+  ],
+  "actualAllRuns": [
+    {
+      "path": "extracted/cpp-building-menus-518/altar-editor-position/run.json",
+      "result": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-building-menus-518\\editor-data",
+          "--window",
+          "--no-audio",
+          "--frames",
+          "62",
+          "--set",
+          "SCREENW=1280;SCREENH=720;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-building-menus-518\\altar-editor-position\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-building-menus-518\\altar-editor-position\\states.tsv"
+        ],
+        "binarySha256": "c49ba864eb49bc63d63906bc6ade755859be531ba8766b53ad9d2123044fc28c",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 3.310513799995533,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "5071e7a599b44be9a429a5e9a186532d25b6e9a17b381114c160adf8371b2df0"
+      }
+    },
+    {
+      "path": "extracted/cpp-building-menus-518/altar-editor-probe/run.json",
+      "result": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-object-conversion-517\\obelisk-data",
+          "--window",
+          "--no-audio",
+          "--frames",
+          "165",
+          "--set",
+          "SCREENW=1280;SCREENH=720;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;currentLanguage=english",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-building-menus-518\\altar-editor-probe\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-building-menus-518\\altar-editor-probe\\states.tsv"
+        ],
+        "binarySha256": "a618d083805f6b8b2473d65d8b0442dc9ce242bbf753239e5a80aa5d55d3ef9e",
+        "returnCode": 1,
+        "timedOut": false,
+        "seconds": 3.131374499993399,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "7f4b88ba6ebc6f1bea3e2dd9d94c86c885e1a649def3b740bdc298343034235d",
+        "originalsUnchanged": true
+      }
+    },
+    {
+      "path": "extracted/cpp-building-menus-518/altar-enemy-probe/run.json",
+      "result": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-stage-entry-502-data",
+          "--mission",
+          "breakingthrough",
+          "--window",
+          "--mute-audio",
+          "--frames",
+          "165",
+          "--set",
+          "SCREENW=1280;SCREENH=720;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-building-menus-518\\altar-enemy-probe\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-building-menus-518\\altar-enemy-probe\\states.tsv",
+          "--audio-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-building-menus-518\\altar-enemy-probe\\audio.tsv"
+        ],
+        "binarySha256": "a618d083805f6b8b2473d65d8b0442dc9ce242bbf753239e5a80aa5d55d3ef9e",
+        "scriptSha256": "f71f89b6ceec110d315dd026c480eccc7551061a3f3315c7e5bae1f1556f61bb",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 13.485902300002635,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "e7b011869e94e53a682da878426189f2dcd8b9a0f660f702273591e2e935e9e0",
+        "originalsUnchanged": true,
+        "dataUnchanged": true,
+        "dataRoot": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-stage-entry-502-data"
+      }
+    },
+    {
+      "path": "extracted/cpp-building-menus-518/altar-enemy-target/run.json",
+      "result": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-stage-entry-502-data",
+          "--mission",
+          "breakingthrough",
+          "--window",
+          "--mute-audio",
+          "--frames",
+          "165",
+          "--set",
+          "SCREENW=1280;SCREENH=720;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-building-menus-518\\altar-enemy-target\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-building-menus-518\\altar-enemy-target\\states.tsv",
+          "--audio-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-building-menus-518\\altar-enemy-target\\audio.tsv"
+        ],
+        "binarySha256": "a618d083805f6b8b2473d65d8b0442dc9ce242bbf753239e5a80aa5d55d3ef9e",
+        "scriptSha256": "92b2e2675118cc13a4f6816f0155cd8107551e345eb63b3f34aa34cca46ac104",
+        "returnCode": 1,
+        "timedOut": false,
+        "seconds": 8.365210400006617,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "898a0f9bbc1b138b0cb09ef4213856622c4ccc39495a033e438b795829456765",
+        "originalsUnchanged": true,
+        "dataUnchanged": true,
+        "dataRoot": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-stage-entry-502-data"
+      }
+    },
+    {
+      "path": "extracted/cpp-building-menus-518/altar-final/1024x768/run.json",
+      "result": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-stage-entry-502-data",
+          "--mission",
+          "breakingthrough",
+          "--window",
+          "--mute-audio",
+          "--frames",
+          "165",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-building-menus-518\\altar-final\\1024x768\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-building-menus-518\\altar-final\\1024x768\\states.tsv",
+          "--audio-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-building-menus-518\\altar-final\\1024x768\\audio.tsv"
+        ],
+        "binarySha256": "c49ba864eb49bc63d63906bc6ade755859be531ba8766b53ad9d2123044fc28c",
+        "scriptSha256": "d8ab452fa738ec119648d1b504986c5fdcb2c111e9641bdff8d0f91bd90428d7",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 10.76597930000571,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2",
+        "originalsUnchanged": true,
+        "dataUnchanged": true,
+        "dataRoot": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-stage-entry-502-data"
+      }
+    },
+    {
+      "path": "extracted/cpp-building-menus-518/altar-final/1280x720/run.json",
+      "result": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-stage-entry-502-data",
+          "--mission",
+          "breakingthrough",
+          "--window",
+          "--mute-audio",
+          "--frames",
+          "165",
+          "--set",
+          "SCREENW=1280;SCREENH=720;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-building-menus-518\\altar-final\\1280x720\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-building-menus-518\\altar-final\\1280x720\\states.tsv",
+          "--audio-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-building-menus-518\\altar-final\\1280x720\\audio.tsv"
+        ],
+        "binarySha256": "c49ba864eb49bc63d63906bc6ade755859be531ba8766b53ad9d2123044fc28c",
+        "scriptSha256": "e879bcf685115179fe14cff50ebc01e4ab28c914f4145ae118677c6df7d45ccc",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 10.911215900006937,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2",
+        "originalsUnchanged": true,
+        "dataUnchanged": true,
+        "dataRoot": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-stage-entry-502-data"
+      }
+    },
+    {
+      "path": "extracted/cpp-building-menus-518/breakingthrough-probe/run.json",
+      "result": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-stage-entry-502-data",
+          "--mission",
+          "breakingthrough",
+          "--window",
+          "--mute-audio",
+          "--frames",
+          "32",
+          "--set",
+          "SCREENW=1280;SCREENH=720;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-building-menus-518\\breakingthrough-probe\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-building-menus-518\\breakingthrough-probe\\states.tsv",
+          "--audio-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-building-menus-518\\breakingthrough-probe\\audio.tsv"
+        ],
+        "binarySha256": "a618d083805f6b8b2473d65d8b0442dc9ce242bbf753239e5a80aa5d55d3ef9e",
+        "scriptSha256": "8da8e5a712392b56ec9b1c3729b615bf66d57c73a7efaab5cd1b2bbff80e4b7f",
+        "returnCode": 1,
+        "timedOut": false,
+        "seconds": 4.136212700002943,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "5a1a7594ecf353f93d1223c47f94676d3541a35b79da7be2e0dc99c1eebd767f",
+        "originalsUnchanged": true,
+        "dataUnchanged": true,
+        "dataRoot": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-stage-entry-502-data"
+      }
+    },
+    {
+      "path": "extracted/cpp-building-menus-518/breakingthrough-probe2/run.json",
+      "result": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-stage-entry-502-data",
+          "--mission",
+          "breakingthrough",
+          "--window",
+          "--mute-audio",
+          "--frames",
+          "32",
+          "--set",
+          "SCREENW=1280;SCREENH=720;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-building-menus-518\\breakingthrough-probe2\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-building-menus-518\\breakingthrough-probe2\\states.tsv",
+          "--audio-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-building-menus-518\\breakingthrough-probe2\\audio.tsv"
+        ],
+        "binarySha256": "a618d083805f6b8b2473d65d8b0442dc9ce242bbf753239e5a80aa5d55d3ef9e",
+        "scriptSha256": "55f5767405fe957782897cea0cede902fc66742f744fc0fc29cf83e0f6e99c7b",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 2.750912599993171,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "9fba4f7e2bb0be090e62265ef1203d93a429672f7ce307b7cf3aa08e3bfebbbb",
+        "originalsUnchanged": true,
+        "dataUnchanged": true,
+        "dataRoot": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-stage-entry-502-data"
+      }
+    },
+    {
+      "path": "extracted/cpp-building-menus-518/editor-final/1280x720/run.json",
+      "result": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-building-menus-518\\editor-data",
+          "--window",
+          "--no-audio",
+          "--frames",
+          "170",
+          "--set",
+          "SCREENW=1280;SCREENH=720;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-building-menus-518\\editor-final\\1280x720\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-building-menus-518\\editor-final\\1280x720\\states.tsv"
+        ],
+        "binarySha256": "c49ba864eb49bc63d63906bc6ade755859be531ba8766b53ad9d2123044fc28c",
+        "returnCode": 1,
+        "timedOut": false,
+        "seconds": 4.323264599996037,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "c53863879f32773bff8dd03e21a260db7b29d9b52a6857b7547c4ac096f5a171",
+        "dataUnchanged": true,
+        "originalsUnchanged": true
+      }
+    },
+    {
+      "path": "extracted/cpp-building-menus-518/editor-fresh/1024x768/run.json",
+      "result": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-building-menus-518\\editor-fresh\\1024x768\\data",
+          "--window",
+          "--no-audio",
+          "--frames",
+          "170",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-building-menus-518\\editor-fresh\\1024x768\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-building-menus-518\\editor-fresh\\1024x768\\states.tsv"
+        ],
+        "binarySha256": "c49ba864eb49bc63d63906bc6ade755859be531ba8766b53ad9d2123044fc28c",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 7.383664599998156,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "5071e7a599b44be9a429a5e9a186532d25b6e9a17b381114c160adf8371b2df0",
+        "dataUnchanged": true,
+        "originalsUnchanged": true
+      }
+    },
+    {
+      "path": "extracted/cpp-building-menus-518/editor-fresh/1280x720/run.json",
+      "result": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-building-menus-518\\editor-fresh\\1280x720\\data",
+          "--window",
+          "--no-audio",
+          "--frames",
+          "170",
+          "--set",
+          "SCREENW=1280;SCREENH=720;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-building-menus-518\\editor-fresh\\1280x720\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-building-menus-518\\editor-fresh\\1280x720\\states.tsv"
+        ],
+        "binarySha256": "c49ba864eb49bc63d63906bc6ade755859be531ba8766b53ad9d2123044fc28c",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 7.454470199998468,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "5071e7a599b44be9a429a5e9a186532d25b6e9a17b381114c160adf8371b2df0",
+        "dataUnchanged": true,
+        "originalsUnchanged": true
+      }
+    }
+  ],
+  "actualRuns": 11,
+  "actualExitZero": 7,
+  "actualExitOne": 4,
+  "nativeBodies": {
+    "altar": {
+      "vtable": "5076b8",
+      "count": "44a480",
+      "implementation": "RawAltarSacrifice::Count"
+    },
+    "dais": {
+      "vtable": "507950",
+      "count": "4478f0",
+      "implementation": "RawTempleRitual::Count"
+    }
+  },
+  "nativeExecutionAdded": false,
+  "editorMap": {
+    "archive": "originals/netstorm.tarc",
+    "entry": "\\d\\breakingthrough.fort",
+    "sha256": "cff7def3cde57387e2ba1dbff582a86a3e2f3db539fa3b0db0ec81f21313c098",
+    "size": 3355,
+    "originalLooseFilesChanged": false
+  },
+  "files": {
+    "cpppj/src/client/RawCampaignSession.cpp": "0760c33c7145961fbe27dcf66affbdcdfb0f13fcd3d9ccb98f437434932757b5",
+    "tools/cpp_altar_menu_smoke.py": "3457afd4205082c42a00067657fa65dece0f3ae4ff5f43b83804306f08b4caff"
+  },
+  "limitations": [
+    "자기 소유 제단 회수/소유자 변경과 다른 레벨·포획 상태는 실제 미검증이다.",
+    "전체 일반 건물형과 원본 전체 선택기·나머지 신규 명령은 잔여다.",
+    "공격형 공중3종을 위한 생산·생성·우클릭 재현 없이 정적 제한을 유지했다.",
+    "직사각형 분석·자연 완주·english 부재 개선 보류와 후순위 LAN의 새 검사 금지를 유지한다.",
+    "전체 등록3345개를 전부 실행한 결과가 아니며 전체화면/호환성/동일성 완료가 아니다."
+  ]
+}

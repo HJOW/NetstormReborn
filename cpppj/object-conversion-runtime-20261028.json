@@ -2,7 +2,7 @@
   "unit": 517,
   "host": "HJOW-Athlon",
   "date": "2026-10-28",
-  "status": "implementation_and_focused_probe_verified_full_test_rebuild_running",
+  "status": "implementation_and_actual_roundtrip_verified_full_build_completed_in_unit518",
   "goalComplete": false,
   "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
   "decompileChanged": false,
@@ -73,9 +73,27 @@
       "-j",
       "3"
     ],
-    "completed": false,
+    "completed": true,
     "previousRegistered": 3342,
-    "addedSourceTests": 3
+    "addedSourceTests": 3,
+    "exit": 0,
+    "registered": 3345,
+    "result": {
+      "command": [
+        "cmake",
+        "--build",
+        "cpppj/build",
+        "--config",
+        "Release",
+        "-j",
+        "3"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-object-conversion-517/build1.log",
+      "sha256": "46951afb6f4e565582b21f528e5e20963a0b9c1f10cf225e4f1406f55e10db7e",
+      "summaries": [],
+      "diagnostics": []
+    }
   },
   "nativeUniqueInputs": 164,
   "nativeObservationsIncludingVerify": 328,
@@ -285,5 +303,97 @@
     "DigUp은 일반 입력/기존 백엔드를 연결했으며 special 한정 실제 메뉴 클릭은 미검증이다.",
     "재적재 뒤 Devastation frame2 표시의 원본 동일성은 미확정이다.",
     "전체화면·Windows11·자연 완주·전체 메뉴/전체 타입 동일성은 미완료다."
-  ]
+  ],
+  "fullBuildFollowup518": {
+    "registry": {
+      "exit": 0,
+      "registered": 3345,
+      "sha256": "161b31320976222c3a87a2190f0ac93c8aa19e2a7a6cb2317f17dcf0f4015f47",
+      "selected": [
+        "ObjectCommand_Native160Inputs",
+        "ObjectCommand_CurrentModeAndLazyBoundaries",
+        "CampaignSession_GemRewardActualSelectionPopAndDestroy",
+        "CampaignObjectCommand_ActualCarrierParentAndPriestOwner",
+        "rawTempleRitual_native_stage_positions_queries_and_effects",
+        "rawTempleRitual_real_frame_and_307_shared_consumer",
+        "rawAltarSacrifice_native_events_release_and_predestroy_prefix",
+        "RawMenuControls_ObjectMenuCommandsAndCurrentConfig",
+        "RawMenuControls_CarrierAndObjectMenuChain",
+        "ObjectMenu_NativeBase478",
+        "ObjectMenu_NativeDamageable478",
+        "ObjectMenu_NativeSalvage478",
+        "ObjectMenu_RequiresReachedDependencies",
+        "PlayerIdentity_NativeObjectMenuDword48",
+        "CampaignObjectMenus_ActualChainAndBuildSelection",
+        "CampaignObjectMenus_ActualRefundAndUninstalledGuard",
+        "CampaignObjectMenus_CurrentPeerPlayerMenuUsesActualInput",
+        "CampaignObjectMenus_ActualCommonOpenUsesCurrentWorld",
+        "CampaignObjectMenus_ActualObjectFormBindingAndClose",
+        "CampaignObjectMenus_ActualParentDeletionAndDeferredUiCleanup",
+        "CampaignObjectMenus_ActualSummaryUsesCurrentIdentityAndAlliance",
+        "ObjectMenuOpen_NativeWholeParentsAndCurrentReads",
+        "ObjectMenuOpen_LazyBoundariesAndNoSyntheticSuccess",
+        "ObjectMenuOpen_EditionAndTypeContract",
+        "ObjectMenuInfo_NativeWholeParentsAndStringHelpers",
+        "ObjectMenuInfo_SelectedBoundariesAndEditionContract",
+        "ObjectMenuVariants_Native1024",
+        "GemReward_NativeBodies",
+        "EditorSaveGoMain_ReplaysNative166CurrentReadsAndPartialStops",
+        "EditorSaveGoMain_NoReleaseAndMissingSelectedEffects",
+        "EditorTestBattle_ReplaysNative174LateNamesReentryAndPartialStops",
+        "EditorTestBattle_RequiresOnlySelectedEffectsAtOriginalFailurePosition",
+        "EditorTestBattle_UsesActualGameMenuNumbersAndInputQueue",
+        "SquidRetype_ReplaysNative128AndPreservesOtherSlots",
+        "ObjectConversion_ReplaysNative36CommandsAndLateReads",
+        "ObjectConversion_RejectsSelectedMissingEffectsAndKeepsWrittenPrefix"
+      ]
+    },
+    "focused": [
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "ObjectConversion"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-building-menus-518/tests-517-conversion.log",
+        "sha256": "d8f22d702a06b0f49725c71b08b933b4d1c883b407fe318939d1eedeb74db15f",
+        "summaries": [
+          "2 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "SquidRetype"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-building-menus-518/tests-517-retype.log",
+        "sha256": "977d4af343443bb7328b655f015cebf4c348f662e2e933f16b83efb0d4aa91a9",
+        "summaries": [
+          "1 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "GemReward"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-building-menus-518/tests-517-gem.log",
+        "sha256": "a8b4fef18489b192a71d1dd12deb520ca00769193b2c9320de6257808a375b85",
+        "summaries": [
+          "2 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      }
+    ],
+    "uniquePassed": 5,
+    "wholeSuiteExecuted": false,
+    "details": "docs/exe/cpp-altar-menu-20261028.md"
+  }
 }
