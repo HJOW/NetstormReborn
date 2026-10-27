@@ -1,0 +1,25 @@
+{
+  "host": "HJOW-Athlon",
+  "cases": 135,
+  "runs": 270,
+  "differences": 0,
+  "originalExecutions": 0,
+  "entry": 5072300,
+  "end": 5072813,
+  "deviceBoundaries": [
+    "452e00 OS 폴링",
+    "464020 실제 메뉴 serial 조회",
+    "4641d0 실제4000h 팝업 조회",
+    "466710 실제 팝업 Kill 요청"
+  ],
+  "executedBodies": [
+    "4d65ac..4d67ad",
+    "4e49c0",
+    "497e00"
+  ],
+  "sha256": {
+    "originals\\Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools\\decomp_edge_scroll.py": "4b977a8004c9181e70ed88a8b33303cf45b18be022984372eb283d5a0af24780",
+    "cpppj\\tests\\fixtures\\edge-scroll-x86.tsv": "68863380289c1ea91ec7218f3509e138288b09c74325deb161624867a81ca78a"
+  }
+}

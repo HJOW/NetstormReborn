@@ -1,0 +1,173 @@
+{
+  "unit": 496,
+  "date": "2026-10-27",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23",
+    "changed": false
+  },
+  "native": {
+    "host": "HJOW-Athlon",
+    "cases": 135,
+    "runs": 270,
+    "differences": 0,
+    "originalExecutions": 0,
+    "entry": 5072300,
+    "end": 5072813,
+    "deviceBoundaries": [
+      "452e00 OS 폴링",
+      "464020 실제 메뉴 serial 조회",
+      "4641d0 실제4000h 팝업 조회",
+      "466710 실제 팝업 Kill 요청"
+    ],
+    "executedBodies": [
+      "4d65ac..4d67ad",
+      "4e49c0",
+      "497e00"
+    ],
+    "sha256": {
+      "originals\\Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "tools\\decomp_edge_scroll.py": "4b977a8004c9181e70ed88a8b33303cf45b18be022984372eb283d5a0af24780",
+      "cpppj\\tests\\fixtures\\edge-scroll-x86.tsv": "68863380289c1ea91ec7218f3509e138288b09c74325deb161624867a81ca78a"
+    }
+  },
+  "final": {
+    "NetstormCpp.exe": "e5bb8de60ce6226c71db3824b899a4f212f0b5ac2d515da20321208c5bd8fdb3",
+    "netstorm_tests.exe": "6f38cc7b8c8e76b7b3eeb58e57591e315d3ce76289db4121a6e256ce8d4e346d"
+  },
+  "sourceFiles": 2877,
+  "protected": {
+    "files": 3211,
+    "unchanged": true,
+    "agentsUnchanged": true,
+    "cmakePrefix": {
+      "cpppj/tests/CMakeLists.txt": 165168
+    }
+  },
+  "builds": [
+    {
+      "command": [
+        "cmake",
+        "--build",
+        "cpppj/build",
+        "--config",
+        "Release",
+        "--parallel",
+        "4",
+        "--",
+        "/p:UseMultiToolTask=true",
+        "/p:MultiProcMaxCount=4",
+        "/p:EnforceProcessCountAcrossBuilds=true"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-edge-scroll-496/build1.log",
+      "sha256": "3ced9c2814d1a3bdb9970aee92730668701accabb8e3d707f424ca946765feec",
+      "summaries": [],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cmake",
+        "--build",
+        "cpppj/build",
+        "--config",
+        "Release",
+        "--parallel",
+        "4",
+        "--",
+        "/p:UseMultiToolTask=true",
+        "/p:MultiProcMaxCount=4",
+        "/p:EnforceProcessCountAcrossBuilds=true"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-edge-scroll-496/build2.log",
+      "sha256": "acbc6a0779fa7da7fe3c2352e8a0589af9e9dc27c2a021d135f238bcaf032e09",
+      "summaries": [],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cmake",
+        "--build",
+        "cpppj/build",
+        "--config",
+        "Release",
+        "--parallel",
+        "4",
+        "--",
+        "/p:UseMultiToolTask=true",
+        "/p:MultiProcMaxCount=4",
+        "/p:EnforceProcessCountAcrossBuilds=true"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-edge-scroll-496/build3.log",
+      "sha256": "acbc6a0779fa7da7fe3c2352e8a0589af9e9dc27c2a021d135f238bcaf032e09",
+      "summaries": [],
+      "diagnostics": []
+    }
+  ],
+  "tests": {
+    "registered": 3311,
+    "preservedRegistered": 3308,
+    "new": [
+      "EdgeScroll_ContinuousHoverKeepsTimeAndRestartsAfterCenter",
+      "EdgeScroll_MatchesNativeInputAndCameraTarget",
+      "EdgeScroll_RequestOnlyChangesTargetAndWrapsCounter"
+    ],
+    "unique": 27,
+    "observations": 28,
+    "failed": 0,
+    "wholeRepeated": false,
+    "lastWholeUnit": 495,
+    "lastWholeCount": 3308,
+    "lastWholeFailed": 0
+  },
+  "runtime": {
+    "originalExecutions": 0,
+    "cloneExecutions": 0,
+    "edgeConnected": false,
+    "cameraFrameConnected": false
+  },
+  "fidelity": [
+    "공유005cafe8의 bit4와 별도005cafc8",
+    "왼쪽/위2픽셀·오른쪽/아래width/height-1 우선순위",
+    "좌버튼 release/모달/테두리·현재 메뉴 serial/직계4000h 팝업",
+    "min(edgeScrollSpeed,ftol(30*(wall-since)+2))와float 저장",
+    "Shift의 대각선 tie에서 X 제거",
+    "현재 view1c/20 기준 목표50/54와005c85dc++·현재 snapshot 보존"
+  ],
+  "firstFailures": [
+    "Native 도구 Path import 누락",
+    "모달의 실제 별도 종료004d67e4를 미등록 명령으로 진단: 동일 입력으로 실행 구간 밖 종료를 구별한 뒤 첫 fixture 생성",
+    "집중 실행에 Python을 잘못 붙인 CLI 실패",
+    "새 검사 행 수424 가정: 원문 실제135행에 맞춘 준비 수정. 모든 결과 비교는 이미 통과했고 fixture 유지",
+    "연속0.25초의 가속을7로 잘못 적은 새 기대: 별도 실제 원문D:9:0 확인 뒤9로 정정.135행 fixture 유지"
+  ],
+  "next": [
+    "실제 같은 pointerBoundary.initializationFlags와 장기 since 수명에 연결",
+    "Guide004d65a7 뒤/Overlay·일반 큐 앞에 현재 RawButtonControls modal/menu/popup 장치 연결",
+    "원문4994b0/497960의 카메라 목표 제한/반영·현재 view/snapshot·커서/dirty/시차 프레임 부모 연결",
+    "실제 짧은 전체화면 가장자리 이동과 메뉴/모달/버튼/재진입 확인"
+  ],
+  "objectiveUpdate": "기존 싱글플레이·UI·호환성 뒤 멀티플레이어도 디컴파일만 참고해 사전 구현한다. 이 멀티플레이어 단계는 테스트 없이 진행하고 미검증으로 표기한다.",
+  "git": {
+    "pull": {
+      "command": [
+        "git",
+        "-c",
+        "core.autocrlf=false",
+        "pull",
+        "--no-rebase",
+        "--no-commit"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-edge-scroll-496/git-pull1.log",
+      "sha256": "e5d6c99aec87ec07a2d1b5c1222d8b690d0a61c3548a55c795fff56db9450d0d",
+      "summaries": [],
+      "diagnostics": []
+    },
+    "push": false
+  },
+  "raw": "extracted\\cpp-edge-scroll-496"
+}

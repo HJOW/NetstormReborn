@@ -2302,3 +2302,6 @@ target_sources(netstorm_tests PRIVATE EmbeddedIslandTextTests.cpp)
 set_source_files_properties(EmbeddedIslandTextTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_EMBEDDED_ISLAND_TEXT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/embedded-island-text-x86.tsv\"")
 
 target_sources(netstorm_tests PRIVATE ScreenPresentationTests.cpp) # Windows10/11 호환 화면비/실제 DIB 행과 입력 변환이다.
+
+target_sources(netstorm_tests PRIVATE EdgeScrollTests.cpp) # 실제 원문 입력/FTOL/목표의 독립 관찰을 대조한다.
+set_source_files_properties(EdgeScrollTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_EDGE_SCROLL_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/edge-scroll-x86.tsv\"")
