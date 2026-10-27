@@ -1,0 +1,193 @@
+{
+  "unit": 498,
+  "date": "2026-10-27",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23",
+    "changed": false
+  },
+  "native": {
+    "host": "HJOW-Athlon",
+    "cases": 178,
+    "runs": 356,
+    "differences": 0,
+    "originalExecutions": 0,
+    "entry": 4825217,
+    "end": 4825546,
+    "executedBodies": [
+      "49a081..49a1c9",
+      "4e49c0"
+    ],
+    "boundaries": [
+      "4a16d0 화면 flip/명시 현재 데이터 변경",
+      "497960 적용 호출만 기록, 본체 실행 제외"
+    ],
+    "sha256": {
+      "originals\\Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "tools\\decomp_camera_present.py": "401c4cc460bf6c43b378a8758423bd12e2fe0725bd7aba04398e498295be1d1b",
+      "cpppj\\tests\\fixtures\\camera-present-x86.tsv": "b1b21b3df5b25482a5dc2e395f9111016667a5709cf218367d32662f4dd8a684"
+    }
+  },
+  "final": {
+    "NetstormCpp.exe": "73443437563faf59621bb6ff6f4c9f62daa54ec65e01fb0a64eac8bcc9b0f315",
+    "netstorm_tests.exe": "fc639e8d21c3b90de0b6fe4fda30822503e65ad16b8d9ea811f5df76573f72bb"
+  },
+  "sourceFiles": 2881,
+  "protected": {
+    "files": 3213,
+    "unchangedFiles": 3212,
+    "cmakePrefixes": {
+      "cpppj/tests/CMakeLists.txt": 165469,
+      "cpppj/src/CMakeLists.txt": 16280
+    },
+    "agentsUnchanged": true
+  },
+  "build": {
+    "command": [
+      "cmake",
+      "--build",
+      "cpppj/build",
+      "--config",
+      "Release",
+      "--parallel",
+      "4",
+      "--",
+      "/p:UseMultiToolTask=true",
+      "/p:MultiProcMaxCount=4",
+      "/p:EnforceProcessCountAcrossBuilds=true"
+    ],
+    "exit": 0,
+    "log": "extracted/cpp-camera-present-498/build1.log",
+    "sha256": "81e9ef16267c0b8b4568592af643e84be408854c1d51f29a8e055d3d126a2798",
+    "summaries": [],
+    "diagnostics": []
+  },
+  "tests": {
+    "registered": 3319,
+    "preservedRegistered": 3316,
+    "new": [
+      "CameraPresent_DiagnosticAndSelectedDeviceGuards",
+      "CameraPresent_MatchesNativeLimitsAndCalls",
+      "CameraPresent_SharedDiagnosticAndDeferredCurrentView"
+    ],
+    "focusedUnique": 27,
+    "focusedObservations": 28,
+    "focusedFailed": 0,
+    "groups": [
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "Camera"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-camera-present-498/focused1-Camera.log",
+        "sha256": "04bb059bdf0d75ff899ba260b86a0458bd07101a89015fa9a9db14eeb1acc17d",
+        "summaries": [
+          "23 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "EdgeScroll"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-camera-present-498/focused1-EdgeScroll.log",
+        "sha256": "212a23cb4049a0df7e0fe87c4b8ad4f8428e6e4561a4bd73d346b63c72144f99",
+        "summaries": [
+          "3 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "CampaignSharedDiagnostic"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-camera-present-498/focused1-CampaignSharedDiagnostic.log",
+        "sha256": "12831e149e51a52203597468181a9433060c5c9145686d99e3f547d6275d1687",
+        "summaries": [
+          "2 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      }
+    ],
+    "wholeCpp": 3319,
+    "wholeFailed": 0,
+    "ctestPassed": 1,
+    "ctestFailed": 0,
+    "ctestSeconds": 336.72,
+    "ctest": {
+      "command": [
+        "ctest",
+        "--test-dir",
+        "cpppj/build",
+        "-C",
+        "Release",
+        "--output-on-failure"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-camera-present-498/whole1.log",
+      "sha256": "f95eb3f3a356029db6611203b4c61410270620830179bfb04bf968d4f24df853",
+      "summaries": [],
+      "diagnostics": []
+    },
+    "cppLog": {
+      "path": "extracted/cpp-camera-present-498/ctest-last1.log",
+      "sha256": "0a92e1ec0f8abf8b9bd06b2380ab4e0a3431f8801fb1c28d2a3fb83aa2044896"
+    }
+  },
+  "runtime": {
+    "originalExecutions": 0,
+    "cloneExecutions": 0,
+    "edgeConnected": false,
+    "cameraFrameConnected": false
+  },
+  "fidelity": [
+    "현재 진단DWORD 정확1의 조기 반환",
+    "flip→현재 한계/목표 재조회→첫 X/Y 제한",
+    "별도 세계 크기×16/11−화면 크기의32비트 감김→둘째 X/Y 제한",
+    "실제 FTOL 네 저장 경계",
+    "뒤497960은 호출 경계이며 이 단위에서 현재 view를 대신 이동하지 않음"
+  ],
+  "firstFailures": [
+    "집계기만 CTest LastTest.log의 로컬 날짜 헤더를 UTF-8로 읽어 실패. 원시 바이트/검사/제품을 보존하고 ASCII 요약을 바이트로 직접 대조하도록 교정",
+    "집계기가 CTest 성공 요약의 생략형 문구를 거부. 같은 1/1 Passed와 전체 C++3319/실패0 및 실제 요약 형식을 직접 검사하도록 교정. 원시/제품/검사 재실행 없음"
+  ],
+  "next": [
+    "00531928 장기 owner와 실제 상태prefix/소비자 연결",
+    "497960의 현재 view/snapshot·커서·dirty·시차 본체",
+    "Present 뒤·snapshot 복사 전의 실제 프레임 적용",
+    "Guide 뒤 실제 가장자리 장치/타이머 연결 및 짧은 실제 이동 검사"
+  ],
+  "deferred": [
+    "스테이지 완주/사용자 개입 검증",
+    "Test Battle english 부재 개선",
+    "멀티플레이어는 이후 디컴파일만 참고해 테스트 없이 사전 구현"
+  ],
+  "git": {
+    "pull": {
+      "command": [
+        "git",
+        "-c",
+        "core.autocrlf=false",
+        "pull",
+        "--no-rebase",
+        "--no-commit"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-camera-present-498/git-pull1.log",
+      "sha256": "e5d6c99aec87ec07a2d1b5c1222d8b690d0a61c3548a55c795fff56db9450d0d",
+      "summaries": [],
+      "diagnostics": []
+    },
+    "push": false
+  },
+  "raw": "extracted/cpp-camera-present-498"
+}

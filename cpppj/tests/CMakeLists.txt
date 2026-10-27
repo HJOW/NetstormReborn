@@ -2305,3 +2305,7 @@ target_sources(netstorm_tests PRIVATE ScreenPresentationTests.cpp) # Windows10/1
 
 target_sources(netstorm_tests PRIVATE EdgeScrollTests.cpp) # 실제 원문 입력/FTOL/목표의 독립 관찰을 대조한다.
 set_source_files_properties(EdgeScrollTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_EDGE_SCROLL_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/edge-scroll-x86.tsv\"")
+
+# 보호 원문 Present 말미/실제 FTOL의 독립 결과를 파일 전용 정의로 재생한다.
+target_sources(netstorm_tests PRIVATE CameraPresentTests.cpp)
+set_source_files_properties(CameraPresentTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_CAMERA_PRESENT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/camera-present-x86.tsv\"")

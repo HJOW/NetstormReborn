@@ -1,0 +1,22 @@
+{
+  "host": "HJOW-Athlon",
+  "cases": 178,
+  "runs": 356,
+  "differences": 0,
+  "originalExecutions": 0,
+  "entry": 4825217,
+  "end": 4825546,
+  "executedBodies": [
+    "49a081..49a1c9",
+    "4e49c0"
+  ],
+  "boundaries": [
+    "4a16d0 화면 flip/명시 현재 데이터 변경",
+    "497960 적용 호출만 기록, 본체 실행 제외"
+  ],
+  "sha256": {
+    "originals\\Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools\\decomp_camera_present.py": "401c4cc460bf6c43b378a8758423bd12e2fe0725bd7aba04398e498295be1d1b",
+    "cpppj\\tests\\fixtures\\camera-present-x86.tsv": "b1b21b3df5b25482a5dc2e395f9111016667a5709cf218367d32662f4dd8a684"
+  }
+}

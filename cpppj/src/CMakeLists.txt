@@ -228,3 +228,6 @@ target_sources(netstorm PRIVATE client/RawStormPowerRefresh.cpp client/RawStormP
 
 # State의 현재 소유자 색과 장기 다리 스캔 초기화다.
 target_sources(netstorm PRIVATE o/RawStateBridgeReset.cpp o/RawStateBridgeReset.h)
+
+# 실제 Present 말미의 진단·목표 제한을 장치 및 현재 view 적용과 구별한다.
+target_sources(netstorm PRIVATE client/RawCameraPresent.cpp client/RawCameraPresent.h)
