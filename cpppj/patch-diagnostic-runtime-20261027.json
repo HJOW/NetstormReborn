@@ -1,0 +1,383 @@
+{
+  "unit": 497,
+  "date": "2026-10-27",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23",
+    "changed": false
+  },
+  "native": {
+    "host": "HJOW-Athlon",
+    "address": "005318ec",
+    "initial": 6,
+    "method": "정적 PE 데이터·명령 읽기, 원문 실행0",
+    "bodies": [
+      {
+        "entry": "00494580",
+        "name": "사제 회복",
+        "references": [
+          {
+            "address": "004946e8",
+            "bytes": "a3ec185300",
+            "mnemonic": "mov",
+            "operands": "dword ptr [0x5318ec], eax",
+            "writes": true
+          },
+          {
+            "address": "0049470e",
+            "bytes": "a3ec185300",
+            "mnemonic": "mov",
+            "operands": "dword ptr [0x5318ec], eax",
+            "writes": true
+          },
+          {
+            "address": "00494723",
+            "bytes": "a3ec185300",
+            "mnemonic": "mov",
+            "operands": "dword ptr [0x5318ec], eax",
+            "writes": true
+          },
+          {
+            "address": "00494732",
+            "bytes": "a3ec185300",
+            "mnemonic": "mov",
+            "operands": "dword ptr [0x5318ec], eax",
+            "writes": true
+          }
+        ]
+      },
+      {
+        "entry": "004d55e0",
+        "name": "Player 내용물 통지",
+        "references": [
+          {
+            "address": "004d5607",
+            "bytes": "a3ec185300",
+            "mnemonic": "mov",
+            "operands": "dword ptr [0x5318ec], eax",
+            "writes": true
+          },
+          {
+            "address": "004d564a",
+            "bytes": "a3ec185300",
+            "mnemonic": "mov",
+            "operands": "dword ptr [0x5318ec], eax",
+            "writes": true
+          },
+          {
+            "address": "004d565f",
+            "bytes": "a3ec185300",
+            "mnemonic": "mov",
+            "operands": "dword ptr [0x5318ec], eax",
+            "writes": true
+          },
+          {
+            "address": "004d566e",
+            "bytes": "a3ec185300",
+            "mnemonic": "mov",
+            "operands": "dword ptr [0x5318ec], eax",
+            "writes": true
+          }
+        ]
+      },
+      {
+        "entry": "00488370",
+        "name": "BFS",
+        "references": [
+          {
+            "address": "004883ba",
+            "bytes": "8b0dec185300",
+            "mnemonic": "mov",
+            "operands": "ecx, dword ptr [0x5318ec]",
+            "writes": false
+          }
+        ]
+      },
+      {
+        "entry": "00498220",
+        "name": "일반 그림자",
+        "references": [
+          {
+            "address": "00498398",
+            "bytes": "a1ec185300",
+            "mnemonic": "mov",
+            "operands": "eax, dword ptr [0x5318ec]",
+            "writes": false
+          }
+        ]
+      },
+      {
+        "entry": "00499fe0",
+        "name": "Present 후 카메라",
+        "references": [
+          {
+            "address": "0049a081",
+            "bytes": "833dec18530001",
+            "mnemonic": "cmp",
+            "operands": "dword ptr [0x5318ec], 1",
+            "writes": false
+          }
+        ]
+      }
+    ],
+    "sha256": {
+      "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+      "tools/analyze_patch_diagnostic.py": "1431904dd8ea463d831ed6a2200972a9177a33282e300f8d4b7d4d0555365497"
+    }
+  },
+  "final": {
+    "NetstormCpp.exe": "5094a879dbfed609b7c5a5f7d2961dd37e908951bcf65ef8d198542e7b622e61",
+    "netstorm_tests.exe": "fc8796133af8eecb1e596774cf76392fda982328b7b97ea61819d413e3a5312a"
+  },
+  "sourceFiles": 2877,
+  "protected": {
+    "files": 3213,
+    "unchangedFiles": 3209,
+    "appendedTestPrefixes": {
+      "cpppj/tests/PriestRegenTests.cpp": 20510,
+      "cpppj/tests/RawPathSearchTests.cpp": 17809,
+      "cpppj/tests/SpriteDrawTests.cpp": 17995,
+      "cpppj/tests/CampaignSessionTests.cpp": 759470
+    },
+    "agentsUnchanged": true,
+    "cmakeUnchanged": true
+  },
+  "build": {
+    "command": [
+      "cmake",
+      "--build",
+      "cpppj/build",
+      "--config",
+      "Release",
+      "--parallel",
+      "4",
+      "--",
+      "/p:UseMultiToolTask=true",
+      "/p:MultiProcMaxCount=4",
+      "/p:EnforceProcessCountAcrossBuilds=true"
+    ],
+    "exit": 0,
+    "log": "extracted/cpp-camera-frame-497/build1.log",
+    "sha256": "38b8f79f3fb87da7f7b037029b5181093f29a53e686e1a34c513bf32ca33200f",
+    "summaries": [],
+    "diagnostics": []
+  },
+  "tests": {
+    "registered": 3316,
+    "preservedRegistered": 3311,
+    "new": [
+      "CampaignSharedDiagnostic_ActualContentAndPriestWriters",
+      "CampaignSharedDiagnostic_ClientLifetimeAndInitialValue",
+      "SpriteDraw_SharedDiagnosticControlsCurrentShadowAlias",
+      "priest_regen_shared_diagnostic_writes_at_each_native_condition",
+      "rawPathSearch_shared_diagnostic_current_value_and_edition"
+    ],
+    "unique": 41,
+    "observations": 41,
+    "failed": 0,
+    "groups": [
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "priest_regen"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-camera-frame-497/focused1-priest_regen.log",
+        "sha256": "8088a1a245f1e8c033313bc4a859277931a928314db44196c9b40243a5be222a",
+        "summaries": [
+          "10 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "rawPathSearch"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-camera-frame-497/focused1-rawPathSearch.log",
+        "sha256": "a87a59ba52026c706189db0e19adff346ad68d3d648da7677c96d4e5d98dd55f",
+        "summaries": [
+          "6 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "SpriteDraw"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-camera-frame-497/focused1-SpriteDraw.log",
+        "sha256": "0e2190278689b2a44851ba04c42dc01b43bd3305c84b5594b7ff505919edcf1c",
+        "summaries": [
+          "13 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "CampaignSharedDiagnostic"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-camera-frame-497/focused1-CampaignSharedDiagnostic.log",
+        "sha256": "12831e149e51a52203597468181a9433060c5c9145686d99e3f547d6275d1687",
+        "summaries": [
+          "2 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "CampaignSharedGameplay"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-camera-frame-497/focused1-CampaignSharedGameplay.log",
+        "sha256": "1105e68d7473761ee98e18778e807261fde39e0f8bba29a7cfabfb0ecf93628f",
+        "summaries": [
+          "2 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "SpStoreNotice"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-camera-frame-497/focused1-SpStoreNotice.log",
+        "sha256": "976cc6f9b26c057070411ea8a8ddacbc5ba87bc899d4be956decab1009049185",
+        "summaries": [
+          "4 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "CampaignSession_TechnologyUsesCurrentLifetime"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-camera-frame-497/focused1-CampaignSession_TechnologyUsesCurrentLifetime.log",
+        "sha256": "bbdba10f04af492e5894e70554f11867847ecab730bf42eb4f4b9b142928d945",
+        "summaries": [
+          "1 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "CampaignSession_ActualWarBeginsClickMovesSamePriest"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-camera-frame-497/focused1-CampaignSession_ActualWarBeginsClickMovesSamePriest.log",
+        "sha256": "50b1085b3092a43efbc6c7cfb9fa6e3e6fbe83be3a466be66cc1ae6181b67175",
+        "summaries": [
+          "1 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "CampaignSession_ActualSingleplayerBroadcastAndPath"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-camera-frame-497/focused1-CampaignSession_ActualSingleplayerBroadcastAndPath.log",
+        "sha256": "a11441b0939869b06425a2470866e9327279599d45f143047c63f5c33e3e3f53",
+        "summaries": [
+          "1 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "CampaignPriestPanic_NeutralRegenAndRepeatedArrival"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-camera-frame-497/focused1-CampaignPriestPanic_NeutralRegenAndRepeatedArrival.log",
+        "sha256": "61f2b80582d11d059940c2d15f0468ae36c35ea955223906cdf4bb6f5f8f4cbe",
+        "summaries": [
+          "1 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      }
+    ],
+    "wholeRepeated": false,
+    "lastWholeUnit": 495,
+    "lastWholeCount": 3308,
+    "lastWholeFailed": 0
+  },
+  "runtime": {
+    "originalExecutions": 0,
+    "cloneExecutions": 0,
+    "newX86Executions": 0,
+    "edgeConnected": false,
+    "cameraFrameConnected": false
+  },
+  "scope": [
+    "Client 장기005318ec 초기6/주소 유지",
+    "실제 사제 회복·Player 내용물 writer 공유",
+    "BFS와 그림자의 현재 DWORD 재조회"
+  ],
+  "firstFailures": [],
+  "next": [
+    "00531928 현재 세계 크기 소유권",
+    "499fe0 Present 말미의49a081 관문/두 제한과497960 적용",
+    "Guide 뒤 실제 가장자리 장치 연결/장기 타이머",
+    "최종 같은 게임으로 짧은 전체화면 실제 이동·메뉴·버튼 검사"
+  ],
+  "limits": [
+    "Fiery Tail 및 나머지 진단 reader/writer 전체 복원 아님",
+    "이웃 sample/remaining 장기 소유권 전체 복원 아님",
+    "자연 완주/사용자 개입 검증·english 부재 개선 보류",
+    "멀티플레이어는 이후 디컴파일만 참고해 테스트 없이 사전 구현"
+  ],
+  "git": {
+    "fetch": {
+      "command": [
+        "git",
+        "fetch",
+        "origin"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-camera-frame-497/fetch1.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "summaries": [],
+      "diagnostics": []
+    },
+    "pull": {
+      "command": [
+        "git",
+        "-c",
+        "core.autocrlf=false",
+        "pull",
+        "--no-rebase",
+        "--no-commit"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-camera-frame-497/git-pull1.log",
+      "sha256": "e5d6c99aec87ec07a2d1b5c1222d8b690d0a61c3548a55c795fff56db9450d0d",
+      "summaries": [],
+      "diagnostics": []
+    },
+    "push": false
+  },
+  "raw": "extracted/cpp-camera-frame-497"
+}

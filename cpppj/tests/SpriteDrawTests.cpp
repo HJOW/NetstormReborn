@@ -185,3 +185,14 @@ TEST_CASE(SpriteDraw_CurrentFilterAfterVirtualFrame) {
     SpriteDraw draw(scene.pool,scene.types,scene.views,scene.s,hooks,kSpriteRaw-250);draw.Draw({0,0,kSpriteRaw,0,0,0});
     CHECK(drawn.size()==1);if (drawn.size()==1) { CHECK(drawn[0].frame==7);CHECK(drawn[0].mode==SpriteShapeMode::Abstract); }
 }
+
+// 그림자0 조건은 생성 때 복사한 bool 대신 동일 Draw 호출마다 현재 Client DWORD를 읽는다.
+TEST_CASE(SpriteDraw_SharedDiagnosticControlsCurrentShadowAlias) {
+    SpriteScene scene;std::uint32_t diagnostic=6;scene.s.sharedPatchDiagnostic=&diagnostic;scene.s.shadowAliasPinned=true;
+    SpriteDrawHooks hooks;std::size_t shapes{};hooks.shape=[&](auto) { ++shapes; };SpriteDraw draw(scene.pool,scene.types,scene.views,scene.s,hooks,kSpriteRaw-250);
+    for (const auto value:{6U,0U,1U,0xffffffffU,0U}) { // 동작 중 변경과 원본의 정확0 비교를 같은 실행기로 확인한다.
+        diagnostic=value;scene.s.shadowShapeType.reset();draw.Draw({0,0,kSpriteRaw,0,0,4});CHECK(scene.s.shadowShapeType.has_value()==(value==0));
+        if (value==0) CHECK(scene.s.shadowShapeType==70U);
+    }
+    CHECK(shapes==5 && scene.s.shadowAliasPinned);
+}

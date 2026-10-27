@@ -14,6 +14,8 @@ struct PriestRegenPatchState {
     std::uint32_t remaining{}; // 005c89c4: 0이 아니면 측정 후 하나 줄인다.
     std::uint32_t gate{}; // 독립 fixture의 00594fd0 입력이다. 실제 세션은 첫 분산배열 주소를 직접 읽는다.
     std::int16_t sentinel{}; // 독립 fixture의 00531890 signed WORD 입력이다. 실제 세션은 같은 순열 배열을 읽는다.
+    std::uint32_t* sharedChangedSample{}; // 실제 Client의 장기005318ec 주소다. 독립 원문 검사의 NULL만 기존 changedSample을 쓴다.
+    std::uint32_t& ChangedSample() { return sharedChangedSample ? *sharedChangedSample : changedSample; } // 각 원문 store 위치에서 현재 연결된 진단 DWORD를 선택한다.
 };
 // 사제 회복 처리 중 조회·갱신하는 상태 묶음이다.
 struct PriestRegenState {

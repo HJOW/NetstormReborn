@@ -1,0 +1,120 @@
+{
+  "host": "HJOW-Athlon",
+  "address": "005318ec",
+  "initial": 6,
+  "method": "정적 PE 데이터·명령 읽기, 원문 실행0",
+  "bodies": [
+    {
+      "entry": "00494580",
+      "name": "사제 회복",
+      "references": [
+        {
+          "address": "004946e8",
+          "bytes": "a3ec185300",
+          "mnemonic": "mov",
+          "operands": "dword ptr [0x5318ec], eax",
+          "writes": true
+        },
+        {
+          "address": "0049470e",
+          "bytes": "a3ec185300",
+          "mnemonic": "mov",
+          "operands": "dword ptr [0x5318ec], eax",
+          "writes": true
+        },
+        {
+          "address": "00494723",
+          "bytes": "a3ec185300",
+          "mnemonic": "mov",
+          "operands": "dword ptr [0x5318ec], eax",
+          "writes": true
+        },
+        {
+          "address": "00494732",
+          "bytes": "a3ec185300",
+          "mnemonic": "mov",
+          "operands": "dword ptr [0x5318ec], eax",
+          "writes": true
+        }
+      ]
+    },
+    {
+      "entry": "004d55e0",
+      "name": "Player 내용물 통지",
+      "references": [
+        {
+          "address": "004d5607",
+          "bytes": "a3ec185300",
+          "mnemonic": "mov",
+          "operands": "dword ptr [0x5318ec], eax",
+          "writes": true
+        },
+        {
+          "address": "004d564a",
+          "bytes": "a3ec185300",
+          "mnemonic": "mov",
+          "operands": "dword ptr [0x5318ec], eax",
+          "writes": true
+        },
+        {
+          "address": "004d565f",
+          "bytes": "a3ec185300",
+          "mnemonic": "mov",
+          "operands": "dword ptr [0x5318ec], eax",
+          "writes": true
+        },
+        {
+          "address": "004d566e",
+          "bytes": "a3ec185300",
+          "mnemonic": "mov",
+          "operands": "dword ptr [0x5318ec], eax",
+          "writes": true
+        }
+      ]
+    },
+    {
+      "entry": "00488370",
+      "name": "BFS",
+      "references": [
+        {
+          "address": "004883ba",
+          "bytes": "8b0dec185300",
+          "mnemonic": "mov",
+          "operands": "ecx, dword ptr [0x5318ec]",
+          "writes": false
+        }
+      ]
+    },
+    {
+      "entry": "00498220",
+      "name": "일반 그림자",
+      "references": [
+        {
+          "address": "00498398",
+          "bytes": "a1ec185300",
+          "mnemonic": "mov",
+          "operands": "eax, dword ptr [0x5318ec]",
+          "writes": false
+        }
+      ]
+    },
+    {
+      "entry": "00499fe0",
+      "name": "Present 후 카메라",
+      "references": [
+        {
+          "address": "0049a081",
+          "bytes": "833dec18530001",
+          "mnemonic": "cmp",
+          "operands": "dword ptr [0x5318ec], 1",
+          "writes": false
+        }
+      ]
+    }
+  ],
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/analyze_patch_diagnostic.py": "1431904dd8ea463d831ed6a2200972a9177a33282e300f8d4b7d4d0555365497"
+  }
+}

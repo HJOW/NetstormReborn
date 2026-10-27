@@ -66,7 +66,7 @@ void SpriteDraw::Draw(const o::RenderCollectionEntry& entry) const {
     const auto shape=[&](std::uint32_t key,std::uint32_t index,ScreenPoint p,SpriteShapeMode mode) { RequiredSprite(hooks_.shape)({key,index,p,mode}); };
     if (entry.tail&4U) {
         if (extra&0x10U) return;
-        if (patch && !s.shadowAliasPinned) s.shadowShapeType=type;
+        if (patch && (s.sharedPatchDiagnostic ? *s.sharedPatchDiagnostic==0U : !s.shadowAliasPinned)) s.shadowShapeType=type;
         // 그림자 레이어로의 보정은 반복 modulo가 아니라 한 번의 signed 비교/뺄셈이다.
         auto index=frame;if (view.shape.frameCount<=std::bit_cast<std::int32_t>(index)) index-=static_cast<std::uint32_t>(view.shape.frameCount);
         if (s.specialMode || (extra&1U)) return;

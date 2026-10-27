@@ -9,7 +9,7 @@ class GameAssets; // 현재 TYPE/SHP/파일 팔레트를 소유하는 실제 자
 class RawCampaignFactoryDisplay {
 public:
     using TempleDraw=std::function<void(o::Sid,const std::function<void(std::int32_t)>&)>; // 같은 Session의 실제+a4와 조건부 음향 경계다.
-    RawCampaignFactoryDisplay(RawWorldCore core,const GameAssets& assets,TempleDraw templeDraw={}); // 같은 현재 TYPE/SHP/풀과 템플 전용Draw를 빌린다.
+    RawCampaignFactoryDisplay(RawWorldCore core,const GameAssets& assets,TempleDraw templeDraw={},const std::uint32_t* patchDiagnostic=nullptr); // 실제 GameWorld는 장기005318ec도 빌린다. 독립 표시 검사는 PE 초기값6을 유지한다.
     ~RawCampaignFactoryDisplay(); // 현재 장면의 procedure보다 오래 살아야 한다.
     bool Handles(o::Sid sid) const; // 실제 가상 표가 확인된 건물·간헐천·다이스인가.
     void SetPalette(std::span<const ScreenColor> palette,std::span<const std::uint32_t> colorSortLogical={}); //실제Client는같은고정초기RGB를별도전달하며기존독립검사는명시fallback이다. // 파일 팔레트의 원본 색 표를 갱신한다.

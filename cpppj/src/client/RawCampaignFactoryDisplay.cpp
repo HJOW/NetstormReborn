@@ -185,7 +185,7 @@ struct RawCampaignFactoryDisplay::Impl {
     }
 };
 // 같은 Session의 수명이 끝나기 전에 표시기를 해제한다.
-RawCampaignFactoryDisplay::RawCampaignFactoryDisplay(RawWorldCore core,const GameAssets& assets,TempleDraw templeDraw):impl_(std::make_unique<Impl>(core,assets,std::move(templeDraw))) {}
+RawCampaignFactoryDisplay::RawCampaignFactoryDisplay(RawWorldCore core,const GameAssets& assets,TempleDraw templeDraw,const std::uint32_t* patchDiagnostic):impl_(std::make_unique<Impl>(core,assets,std::move(templeDraw))) { impl_->state.sharedPatchDiagnostic=patchDiagnostic; }
 RawCampaignFactoryDisplay::~RawCampaignFactoryDisplay()=default; // procedure가 더 이상 호출되지 않을 때 반납한다.
 bool RawCampaignFactoryDisplay::Handles(o::Sid sid) const { return impl_->Handles(sid); } // 별도 TYPE 이름 휴리스틱을 쓰지 않는다.
 // 장치 BGRX와 별개로 원본 R/G/B/예약 DWORD를 만들어 실제 파일 색 표를 계산한다.

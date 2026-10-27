@@ -19,6 +19,7 @@ struct RawPathSearchState {
     std::array<std::uint32_t,8> directionPrerequisite{0,5,0,20,0,80,0,65}; // 대각선은 양옆 직선 방향의 허용 비트가 필요하다.
     std::array<std::int32_t,8> directionOrder{0,2,4,6,1,3,5,7}; // 원본 방문/동률 선택 우선순위다.
     std::uint32_t fenceMarkType{90},windArcherType{140}; // surface가 아닌 예외 Graph BYTE getter의 현재 타입 번호다.
+    const std::uint32_t* sharedPolicySelector{}; // 실제 Client의005318ec 주소다. 독립 fixture는 NULL로 기존 signed 입력을 유지한다.
 };
 // 원본 signed WORD 거리표와 두 BYTE 큐의 미사용 흔적까지 보존한다.
 struct RawPathSearchWork {

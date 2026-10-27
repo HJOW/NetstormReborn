@@ -5028,3 +5028,25 @@ TEST_CASE(StateRuntimeCoordinator_RejectsForeignStorageKernelAndStaleGeneration)
 #include "CampaignMissionReloadSourceTests.inc"
 #include "CampaignGuideWorldLifetimeTests.inc"
 #include "CampaignMissionFortPathTests.inc"
+
+// 보호 PE의 초기값과 주소는 일반/준비 대여·반납 동안 유지하며 다른 Client와 공유하지 않는다.
+TEST_CASE(CampaignSharedDiagnostic_ClientLifetimeAndInitialValue) {
+    ClientGameplayGlobals globals,other;auto* address=&globals.PatchDiagnostic();CHECK(*address==6 && other.PatchDiagnostic()==6);
+    for (const bool prepared:{false,true}) { // Session 초기화 정책에 관계없이 이 장기 DWORD를 다시 쓰지 않는다.
+        globals.PatchDiagnostic()=0xabcdef01U;{ auto use=prepared ? globals.AcquirePrepared() : globals.Acquire();CHECK(&globals.PatchDiagnostic()==address && *address==0xabcdef01U);*address=5; }
+        CHECK(&globals.PatchDiagnostic()==address && *address==5 && other.PatchDiagnostic()==6);
+    }
+}
+
+// 실제 기술 내용물 통지와 사제25a의 서로 다른 writer가 동일 Client 진단 저장소에 도달한다.
+TEST_CASE(CampaignSharedDiagnostic_ActualContentAndPriestWriters) {
+    Client client(SessionLinksOptions());SessionServicesFixture external;auto globals=client.GameplayGlobals();auto* address=&globals->PatchDiagnostic();
+    for (int generation=0;generation<2;++generation) { // 첫 실제 Session 반납 뒤에도 같은 Client 주소에 다시 연결한다.
+        auto services=SharedKernelServices(client,external);services.gameplayGlobals=globals;services.subscriberGlobals=client.SubscriberGlobals();auto session=SharedKernelSession(std::move(services));session->Load();
+        CHECK(&session->ProductionContext().gameplay->PatchDiagnostic()==address);++session->GameMenuTrackingOffset();globals->PatchDiagnostic()=0x13579bdfU;
+        session->AddTechnology(1,"sunCannon");CHECK(*address<=8U); // 실제 Player +24의 SP 추적 불일치를 입력하여 현재 sample 쓰기를 관찰한다.
+        const Sid priest{static_cast<std::uint16_t>(session->FindPriestParticipation(1))};CHECK(priest.value);if (!priest.value) return;
+        globals->PatchDiagnostic()=0x2468ace0U;CHECK(session->Priests().RegularHandler()(priest,kPriestRegenEvent,0,8.25F)==8.25F);CHECK(*address<=8U);
+        session.reset();CHECK(&globals->PatchDiagnostic()==address && !globals->Borrowed());
+    }
+}

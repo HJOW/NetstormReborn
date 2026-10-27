@@ -245,3 +245,18 @@ TEST_CASE(priest_regen_store_binding_and_independent_word_read) {
     regen.Handle(kSource,kPriestRegenEvent,0,8.25F);CHECK(order=="OPS");
     CHECK(scene.state.patch.changedSample==scene.state.patch.sample);
 }
+
+// 네 추적 조건은 지역 fixture 사본을 건드리지 않고 같은 장기 진단 주소에 쓰며 정상 입력은 보존한다.
+TEST_CASE(priest_regen_shared_diagnostic_writes_at_each_native_condition) {
+    for (int condition=0;condition<5;++condition) { // 불일치·측정·NULL 배열·signed WORD와 조건 없는 입력을 각각 분리한다.
+        RegenScene scene(OriginalEdition::Patch1078);auto row=Fixture().front();row[1]="200";row[3]="200";row[4]="0";row[16]="0";row[17]="3";row[18]="12345";row[19]="0";row[20]="1";row[21]="0";scene.Prepare(row);
+        std::uint32_t diagnostic=0x13579bdfU;scene.state.patch.sharedChangedSample=&diagnostic;auto hooks=scene.Hooks();hooks.patchAudit=[] {}; // 추적 관문만 독립 입력으로 공급한다.
+        if (condition==0) scene.state.patch.observedSequence=4;
+        if (condition==1) { scene.state.patch.remaining=1;hooks.measurement=[] { return 7001.0; }; }
+        if (condition==2) scene.state.patch.gate=0;
+        if (condition==3) scene.state.patch.sentinel=-1;
+        RawPriestRegen regen(scene.pool,*scene.hp,*scene.priest,scene.mode,scene.Space(),scene.random,scene.state,std::move(hooks));regen.Handle(kSource,kPriestRegenEvent,0,8.25F);
+        CHECK(scene.state.patch.changedSample==12345U && &scene.state.patch.ChangedSample()==&diagnostic);
+        CHECK(diagnostic==(condition==4 ? 0x13579bdfU : scene.state.patch.sample));CHECK(scene.state.patch.sample<=8U);
+    }
+}

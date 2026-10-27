@@ -77,7 +77,7 @@ void RawPathSearch::Append(std::vector<RawPathPoint>& points,std::vector<std::in
 bool RawPathSearch::SearchCells(RawPathRuntime& output,int sx,int sy,int dx,int dy,bool cardinalOnly) {
     if (!Inside(sx,sy) || !Inside(dx,dy)) throw std::out_of_range("BFS 시작/끝 칸");
     std::fill(work_->distance.begin(),work_->distance.end(),std::int16_t{});
-    if (pool_.Edition()==OriginalEdition::Patch1078 && state_.policySelector==5) state_.directionPrerequisite[3]=5;
+    if (pool_.Edition()==OriginalEdition::Patch1078 && (state_.sharedPolicySelector ? *state_.sharedPolicySelector==5U : state_.policySelector==5)) state_.directionPrerequisite[3]=5;
     work_->queue[0]={static_cast<std::uint8_t>(sx),static_cast<std::uint8_t>(sy)};work_->distance[sy*256+sx]=1;
     std::uint32_t tail=1,head=0,layerEnd=1;std::int16_t distance=2;
     // 원본은 cardinal 네 방향만 BFS 확장하며 대각선은 역추적 축약에서 선택한다.

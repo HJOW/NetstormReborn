@@ -92,7 +92,7 @@ GameWorld::GameWorld(const GameAssets& assets,const o::BaseFileSystem& files,o::
     services.gameplayGlobals=gameplayGlobals_; // 독립 호출자도 GameWorld와 Session이 서로 다른 선택 전역을 만들지 않는다.
     campaign_=std::make_unique<RawCampaignSession>(assets,files,std::move(fort),std::move(mission),std::move(services));
     if (assets_.Edition()==o::OriginalEdition::Patch1078) {
-        factoryDisplay_=std::make_unique<RawCampaignFactoryDisplay>(campaign_->Core(),assets_,[this](o::Sid sid,const auto& frame) { campaign_->DrawTemple(sid,frame); });std::array<ScreenColor,256> palette{};
+        factoryDisplay_=std::make_unique<RawCampaignFactoryDisplay>(campaign_->Core(),assets_,[this](o::Sid sid,const auto& frame) { campaign_->DrawTemple(sid,frame); },&gameplayGlobals_->PatchDiagnostic());std::array<ScreenColor,256> palette{};
         // Client가 파일 팔레트를 설치하기 전에도 실제 자산의 동일256색을 사용한다.
         for (std::size_t i=0;i<palette.size();++i) { const auto color=assets_.Palette().Color(static_cast<std::uint8_t>(i));palette[i]={color.blue,color.green,color.red,0}; }
         factoryDisplay_->SetPalette(palette);

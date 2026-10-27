@@ -73,6 +73,7 @@ struct SpriteDrawState {
     double now{};
     // processes: 공유 커널에 연결한 객체 프로세스 호스트.
     std::span<const SpriteStatusProcess> processes;
+    const std::uint32_t* sharedPatchDiagnostic{}; // 실제005318ec을 그림자 분기에서 읽는다. 독립 fixture의 NULL만 shadowAliasPinned 입력을 쓴다.
 };
 // 한 그림 요청은 색 문맥 변경과 분리되어 전달된다. 그림자는 명시 소스 치환을 사용한다.
 struct SpriteShapeRequest { /* type: 타입 표에서 객체 종류를 찾는 번호. */ /* frame: 타입에서 사용할 그림 프레임 번호. */ std::uint32_t type{},frame{};/* position: 현재 좌표 또는 저장소의 읽기 위치. */ ScreenPoint position;/* mode: 동작 분기를 선택하는 모드. */ SpriteShapeMode mode{}; };

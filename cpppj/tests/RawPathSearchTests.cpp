@@ -206,3 +206,15 @@ TEST_CASE(rawPathSearch_native_initialization_pipeline) {
     }
     CHECK(count==64);
 }
+
+// 동일 검색기의 다음 호출이 현재 공유 진단값을 다시 읽고 CD에는 패치 전용 분기를 적용하지 않는다.
+TEST_CASE(rawPathSearch_shared_diagnostic_current_value_and_edition) {
+    for (const bool patch:{false,true}) { // 같은 현재 주소를 양판본 검색에 연결해 읽기 관문을 구별한다.
+        SearchScene scene(patch);scene.Setup(0,2,true,5,false,0);std::uint32_t diagnostic=6;scene.state.sharedPolicySelector=&diagnostic;
+        RawPathSearch search(scene.pool,scene.hash,scene.spots,scene.types,scene.frames,scene.state);
+        for (const auto value:{6U,5U,1U,0U,0xffffffffU}) { // 초기6·변경5·카메라 관문1·그림자0·비영 전체 비트를 그대로 공급한다.
+            diagnostic=value;scene.state.directionPrerequisite[3]=20;search.SearchCells(scene.path,10,10,14,14,false);
+            CHECK(scene.state.directionPrerequisite[3]==(patch && value==5 ? 5U : 20U));CHECK(scene.state.policySelector==5);
+        }
+    }
+}
