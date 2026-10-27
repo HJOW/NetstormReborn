@@ -1,0 +1,155 @@
+{
+  "unit": 505,
+  "date": "2026-10-27",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23",
+    "changed": false
+  },
+  "build": {
+    "command": [
+      "cmake",
+      "--build",
+      "cpppj/build",
+      "--config",
+      "Release",
+      "--parallel",
+      "4",
+      "--",
+      "/p:UseMultiToolTask=true",
+      "/p:MultiProcMaxCount=4",
+      "/p:EnforceProcessCountAcrossBuilds=true"
+    ],
+    "exit": 0,
+    "log": "extracted/cpp-subscriber-binding-505/build1.log",
+    "sha256": "a1166f5128dda339ca24489b177c0ca41a229c78d6ec4ac00890402110de3477",
+    "summaries": [],
+    "diagnostics": []
+  },
+  "exes": {
+    "NetstormCpp.exe": "db5b2456d2233c09b2ebc2730d275c099bd670fd62d0bf3cc8aafeaac9907d35",
+    "netstorm_tests.exe": "1ab1a6a6bb97df1ae956559536978bcd5eec6a55b584b7300e49803401df10ae"
+  },
+  "focusedUnique": 15,
+  "focusedFailedChecks": 0,
+  "crossCompilerObservations": 10,
+  "crossCompilerFailedChecks": 0,
+  "crossCompilerScope": "문제 구간 ClientGameplayGlobals.cpp와 공용 Subscriber 검사2파일 및 runner는 v143으로 컴파일하고 나머지 netstorm.lib와 최종 link/STL은 v145를 사용했다. 전체 제품의 v143 빌드는 아니다.",
+  "protectedFiles": 3220,
+  "protectedUnchanged": true,
+  "agentsUnchanged": true,
+  "changedExistingTests": [
+    "cpppj/tests/ClientSubscriberGlobalsTests.cpp",
+    "cpppj/tests/SubscriberGlobalsTests.cpp"
+  ],
+  "changedFixtures": 0,
+  "sourceFiles": 2892,
+  "originalGameExecutions": 0,
+  "gameExecutions": 1,
+  "campaignEntry": {
+    "mission": "TheWarBegins",
+    "passed": true,
+    "gameTimeDelta": 10.612,
+    "firstFrame": 20,
+    "lastFrame": 179,
+    "checks": {
+      "normalExit": true,
+      "playing": true,
+      "correctMission": true,
+      "world": true,
+      "guide": true,
+      "loadingReleased": true
+    }
+  },
+  "compilerProbes": {
+    "compiler-before-v143-retry": {
+      "command": [
+        "cmd",
+        "/c",
+        "extracted\\subscriber-binding-505-v143.cmd"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-subscriber-binding-505/compiler-before-v143-retry.log",
+      "sha256": "f439ed2c996c7155b037915a4b491aacf0422bd34132756d17fef945fa622ea3",
+      "summaries": [],
+      "diagnostics": []
+    },
+    "compiler-before-v145-retry": {
+      "command": [
+        "cmd",
+        "/c",
+        "extracted\\subscriber-binding-505-v145.cmd"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-subscriber-binding-505/compiler-before-v145-retry.log",
+      "sha256": "3f179af4a15581aa972b4da5c58dcd248033d69a444aecf552ebe3752b75c3df",
+      "summaries": [],
+      "diagnostics": []
+    },
+    "compiler-after-v143": {
+      "command": [
+        "cmd",
+        "/c",
+        "extracted\\subscriber-binding-505-v143-after.cmd"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-subscriber-binding-505/compiler-after-v143.log",
+      "sha256": "80aaf39bacad151702bd5f9ea994711dee9a9cf6f3d5d2c9d1b5e559130e9e20",
+      "summaries": [],
+      "diagnostics": []
+    },
+    "compiler-after-v145": {
+      "command": [
+        "cmd",
+        "/c",
+        "extracted\\subscriber-binding-505-v145-after.cmd"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-subscriber-binding-505/compiler-after-v145.log",
+      "sha256": "17960da932535ea159191d5e50527ad43188adf75f10fa5641765ab95498dcfa",
+      "summaries": [],
+      "diagnostics": []
+    }
+  },
+  "preservedFailedAttempts": [
+    "compiler-before-v143",
+    "compiler-before-v145",
+    "actual-constructors-v143"
+  ],
+  "failedLinkReason": "v145 STL을 참조하는 netstorm.lib에 v143 STL을 섞어11개 기호를 찾지 못했다. v143 object는 바꾸지 않고 v145 link/STL로 다시 연결해10검사가 성공했다.",
+  "wholeSuite": "진행 중인 CTest는 다음 단위506에 기록하며 이번 완료 수에 포함하지 않는다.",
+  "all34Paths": "같은 게임의 단위506 통합 검증 진행 중",
+  "naturalClearAttempted": false,
+  "windows11Live": false,
+  "rawDirectory": "extracted/cpp-subscriber-binding-505",
+  "pushed": false,
+  "evidenceSha256": {
+    "extracted/cpp-subscriber-binding-505/build1.json": "8793b787829286b674ca8b16f94c9b5702425c1d93d57cd19d563668311fbbaf",
+    "extracted/cpp-subscriber-binding-505/build1.log": "a1166f5128dda339ca24489b177c0ca41a229c78d6ec4ac00890402110de3477",
+    "extracted/cpp-subscriber-binding-505/compiler-before-v143-retry.json": "97d80cd8b179515ee5780607e5b3c9e2718a397e1c5cc2b8d807148218ada923",
+    "extracted/cpp-subscriber-binding-505/compiler-before-v143-retry.log": "f439ed2c996c7155b037915a4b491aacf0422bd34132756d17fef945fa622ea3",
+    "extracted/cpp-subscriber-binding-505/compiler-before-v145-retry.json": "b531468ad7a778c1940e4d882b8b2f1c9e0c659ed5b5ab97e7e986838b85c1ca",
+    "extracted/cpp-subscriber-binding-505/compiler-before-v145-retry.log": "3f179af4a15581aa972b4da5c58dcd248033d69a444aecf552ebe3752b75c3df",
+    "extracted/cpp-subscriber-binding-505/compiler-after-v143.json": "98ec25d0842c679b0500ef26aab50607b4d3aca515d4915b2297c38b5936bdcb",
+    "extracted/cpp-subscriber-binding-505/compiler-after-v143.log": "80aaf39bacad151702bd5f9ea994711dee9a9cf6f3d5d2c9d1b5e559130e9e20",
+    "extracted/cpp-subscriber-binding-505/compiler-after-v145.json": "7ce557b28f906d97fe7a95fd9be5e17cdf5bd52dc59f6a1103fa7bd6a8033b9f",
+    "extracted/cpp-subscriber-binding-505/compiler-after-v145.log": "17960da932535ea159191d5e50527ad43188adf75f10fa5641765ab95498dcfa",
+    "extracted/cpp-subscriber-binding-505/actual-constructors-v143-relinked.json": "211f206356932ec48e46f746a2a16769e50fcf56776436bc1acc3ba74ceb92f6",
+    "extracted/cpp-subscriber-binding-505/actual-constructors-v143-relinked.log": "90b66c2e71d04b8bdb7e8de283e9d6868d72a8415db165f62098062ce6c5dbd2",
+    "extracted/cpp-subscriber-binding-505/focused-subscriber.json": "85433bfa8b1b92d90e7fad9932ec6acf81fc85dccf3cfb2d861b81511a437f2f",
+    "extracted/cpp-subscriber-binding-505/focused-subscriber.log": "90b66c2e71d04b8bdb7e8de283e9d6868d72a8415db165f62098062ce6c5dbd2",
+    "extracted/cpp-subscriber-binding-505/focused-login.json": "3bf244d3959916eeac44e196026f7d2bdec0f3d7b973ad37d37128b18f8ded22",
+    "extracted/cpp-subscriber-binding-505/focused-login.log": "0a61be7c6725e24c7a1f1aa6e316e921c6362386f15c8f819a9f4e3df1dfa243",
+    "extracted/cpp-subscriber-binding-505/focused-world.json": "b4cb7d01a5b4c4c283f34c68eee18fa9cbdd26292a93ea74ce8560b7b5782295",
+    "extracted/cpp-subscriber-binding-505/focused-world.log": "2f1c1ed1b0da1bbe34cefcf9b691cbf782ff93c7c63e9487aa06dca0ca56e08d",
+    "extracted/cpp-subscriber-binding-505/live-campaign.json": "77f014f23a3fb2aba3f27a626e541fb438f860540868efcff018245de27cfb59",
+    "extracted/cpp-subscriber-binding-505/live-campaign.log": "0e75ce2c88799da807181d306ac462ec2c862d2e548fa12561847313e0b5cd42",
+    "extracted/cpp-subscriber-binding-505/compiler-before-v143.json": "b6e18d89522d4a9022132ad4e7e4a5da2409223b90a5a964281cc4a1dadad2df",
+    "extracted/cpp-subscriber-binding-505/compiler-before-v143.log": "6a6978af211e7fee271c1d75ecd57ce0cef91032a2234598be641875c122b437",
+    "extracted/cpp-subscriber-binding-505/compiler-before-v145.json": "3d880f5021a3f59a524beebdfda2ac2bf09fd6ab0711159b7bd6cff87b9b7c19",
+    "extracted/cpp-subscriber-binding-505/compiler-before-v145.log": "6a6978af211e7fee271c1d75ecd57ce0cef91032a2234598be641875c122b437",
+    "extracted/cpp-subscriber-binding-505/actual-constructors-v143.json": "668c7a6352a139c02842906670210999ac88b8f29d350e270984df64ccf7b213",
+    "extracted/cpp-subscriber-binding-505/actual-constructors-v143.log": "1c725c2630f44a76dc8ae56ac94c88d6228ab9721d5a08a26d92079c9a4a1373"
+  }
+}

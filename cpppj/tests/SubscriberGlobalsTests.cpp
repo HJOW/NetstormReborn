@@ -59,11 +59,29 @@ TEST_CASE(SubscriberGlobals_IndependentDefaultsAndValueConstruction) {
 TEST_CASE(SubscriberGlobals_BoundConstructionDoesNotResetOrShareModes) {
     ClientSubscriberGlobals owner;owner.MySubscriber()=0x12345678U;owner.LoginSubscriber()=0xfedcba98U; // 이미 Init/이전 Session이 남긴 현재 입력이다.
     auto first=CampaignWorldGlobals::BorrowSubscribers(owner.MySubscriber(),owner.LoginSubscriber());
-    auto second=true?CampaignWorldGlobals::BorrowSubscribers(owner.MySubscriber(),owner.LoginSubscriber()):CampaignWorldGlobals{}; // Session 필드와 같은 prvalue 조건식이다.
+    CampaignWorldGlobals second(CampaignWorldGlobals::SubscriberBinding{&owner.MySubscriber(),&owner.LoginSubscriber()}); // 실제 Session과 같은 직접 구성으로 두 컴파일러에서 주소를 보존한다.
     CHECK(owner.MySubscriber()==0x12345678U && owner.LoginSubscriber()==0xfedcba98U);
     CHECK(&first.mySubscriber==&owner.MySubscriber() && &second.mySubscriber==&owner.MySubscriber() && &second.loginSubscriber==&owner.LoginSubscriber());
     first.editor=1;first.missionPost=false;first.mySubscriber=25;
     CHECK(second.editor==0 && second.missionPost && second.mySubscriber==25 && owner.MySubscriber()==25);
+}
+
+// owner 생략과 일부 주소 생략은 각 view의 독립0 저장소를 사용하며 직접 구성 뒤 값 복사의 독립성도 유지한다.
+TEST_CASE(SubscriberGlobals_DirectBindingFallbackAndValueCopy) {
+    ClientSubscriberGlobals owner;owner.MySubscriber()=17;owner.LoginSubscriber()=29; // 외부 저장소의 현재값은 구성으로 재설정하지 않는다.
+    CampaignWorldGlobals empty(CampaignWorldGlobals::SubscriberBinding{}),other(CampaignWorldGlobals::SubscriberBinding{});
+    CampaignWorldGlobals myOnly(CampaignWorldGlobals::SubscriberBinding{&owner.MySubscriber(),nullptr});
+    CampaignWorldGlobals loginOnly(CampaignWorldGlobals::SubscriberBinding{nullptr,&owner.LoginSubscriber()});
+    CHECK(empty.mySubscriber==0 && empty.loginSubscriber==0 && empty.editor==0 && empty.missionPost);
+    empty.mySubscriber=71;empty.loginSubscriber=81;
+    CHECK(other.mySubscriber==0 && other.loginSubscriber==0 && owner.MySubscriber()==17 && owner.LoginSubscriber()==29);
+    CHECK(&myOnly.mySubscriber==&owner.MySubscriber() && myOnly.loginSubscriber==0);
+    CHECK(&loginOnly.loginSubscriber==&owner.LoginSubscriber() && loginOnly.mySubscriber==0);
+    myOnly.loginSubscriber=91;loginOnly.mySubscriber=101;
+    CampaignWorldGlobals copy(myOnly),moved(std::move(loginOnly)); // 값 복사/이동은 직접 binding 구성 뒤에도 외부 주소를 암묵 전파하지 않는다.
+    owner.MySubscriber()=37;owner.LoginSubscriber()=49;
+    CHECK(copy.mySubscriber==17 && copy.loginSubscriber==91 && moved.mySubscriber==101 && moved.loginSubscriber==29);
+    CHECK(myOnly.mySubscriber==37 && loginOnly.loginSubscriber==49 && other.mySubscriber==0 && other.loginSubscriber==0);
 }
 
 // 값 복사/이동은 alias를 암묵 전파하지 않고 대입은 목적지의 기존 binding을 유지한다.

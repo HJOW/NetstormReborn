@@ -6,9 +6,11 @@
 #include <utility>
 
 namespace netstorm::client {
-// prvalue 직접 구성으로 CampaignWorldGlobals의 값 복사/이동을 거치지 않고 실제 두 DWORD에 연결한다.
+// 장기 owner의 두 DWORD 주소를 직접 넘겨 실제 Init/World/Session이 같은 현재값을 읽고 쓰게 한다.
+// 원본: Init004c3290/World004b5300의00540c74←0054265c. 독립 장치는 기존0/0 fallback을 유지한다.
+// 이력: 2026-10-27 — MSVC19.44에서 조건식 임시값의 이동이 참조를 값 사본으로 끊는 문제를 피한다.
 ClientGameplayGlobals::ClientGameplayGlobals(std::shared_ptr<ClientSubscriberGlobals> subscribers,std::shared_ptr<o::RawAuthorityState> authority,std::shared_ptr<o::RawGameAuxState> gameAux)
-    :authority_(authority ? std::move(authority) : std::make_shared<o::RawAuthorityState>()),gameAux_(gameAux ? std::move(gameAux) : std::make_shared<o::RawGameAuxState>()),subscribers_(std::move(subscribers)),world(subscribers_ ? o::CampaignWorldGlobals::BorrowSubscribers(subscribers_->MySubscriber(),subscribers_->LoginSubscriber()) : o::CampaignWorldGlobals{}),terrainBitmaps_(std::make_shared<o::TerrainBitmapState>()) { finder.sharedBoss=&authority_->boss; } //World 이전 SID0 finder도 같은 실제 권한을 재조회한다.
+    :authority_(authority ? std::move(authority) : std::make_shared<o::RawAuthorityState>()),gameAux_(gameAux ? std::move(gameAux) : std::make_shared<o::RawGameAuxState>()),subscribers_(std::move(subscribers)),world(o::CampaignWorldGlobals::SubscriberBinding{subscribers_?&subscribers_->MySubscriber():nullptr,subscribers_?&subscribers_->LoginSubscriber():nullptr}),terrainBitmaps_(std::make_shared<o::TerrainBitmapState>()) { finder.sharedBoss=&authority_->boss; } //World 이전 SID0 finder도 같은 실제 권한을 재조회한다.
 // Session 모듈보다 먼저 대여하여 아직 살아 있는 전역을 초기화하지 않는다.
 ClientGameplayGlobals::Use::Use(ClientGameplayGlobals& globals,bool prepared):globals_(globals),prepared_(prepared) {
     if (globals_.borrowed_) throw std::logic_error("현재 게임 전역 중복 대여");

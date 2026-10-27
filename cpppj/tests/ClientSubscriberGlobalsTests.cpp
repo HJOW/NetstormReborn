@@ -1,6 +1,7 @@
 // 실제 Client/Session의 두 Subscriber alias를 검사한다. Run/창/음향 시작을 호출하지 않는다.
 #include "DudeSpawnSupport.h"
 #include "client/ClientMain.h"
+#include "client/ClientGameplayGlobals.h"
 #include "client/ClientSubscriberGlobals.h"
 #include "client/RawCampaignSession.h"
 #include "o/RawChatManagerPrefix.h"
@@ -55,8 +56,10 @@ TEST_CASE(ClientSubscriberGlobals_ActualClientAndChatReferenceLifetime) {
         Client client(SubscriberClientOptions());retained=client.SubscriberGlobals();lifetime=retained;
         CHECK(retained && client.CurrentSubscriber()==0xffffffffU && retained->LoginSubscriber()==1);
         CHECK(&client.CurrentSubscriber()==&retained->MySubscriber());
+        CHECK(&client.GameplayGlobals()->world.mySubscriber==&retained->MySubscriber() && &client.GameplayGlobals()->world.loginSubscriber==&retained->LoginSubscriber());
         std::uint32_t manager{},active{};netstorm::o::ChatManagerPrefixGlobals chat{manager,client.CurrentSubscriber(),active}; // 실제 Chat 전역의 참조형에 직접 연결한다.
         retained->MySubscriber()=0x12345678U;retained->LoginSubscriber()=77;
+        CHECK(client.GameplayGlobals()->world.mySubscriber==0x12345678U && client.GameplayGlobals()->world.loginSubscriber==77);
         client.Configuration().Configuration().AppendSection("END");client.Configuration().SetInt("readOnlyForts",1);
         CHECK(&chat.subscriber==&client.CurrentSubscriber() && chat.subscriber==0x12345678U && retained->LoginSubscriber()==77);
     }

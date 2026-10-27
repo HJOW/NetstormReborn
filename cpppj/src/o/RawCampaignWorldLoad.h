@@ -13,11 +13,21 @@ private:
     // 실제 두 DWORD 참조만 연결하며 외부 owner에 초기화 쓰기를 하지 않는다.
     CampaignWorldGlobals(BorrowTag,std::uint32_t& my,std::uint32_t& login):mySubscriber(my),loginSubscriber(login) {}
 public:
+    // 외부 DWORD 주소만 전달하는 새 C++ 구성 입력이다. null인 슬롯은 해당 view의 독립0 저장소를 쓴다.
+    // 사용: 조건식으로 CampaignWorldGlobals 값을 만들지 말고 이 입력으로 필드를 직접 구성한다.
+    struct SubscriberBinding {
+        std::uint32_t* my{}; // 원본00540c74의 장기 주소이며 view보다 오래 살아야 한다.
+        std::uint32_t* login{}; // 원본0054265c의 장기 주소이며 생략하면 자기 localLogin_을 쓴다.
+    };
     std::uint32_t& mySubscriber; // PATCH540c74/CD50f6cc: 명시 외부 owner 또는 자기 fallback의 같은 DWORD다.
     std::uint32_t& loginSubscriber; // PATCH54265c/CD511c7c: 명시 외부 owner 또는 자기 fallback의 같은 DWORD다.
     std::uint32_t editor{}; // PATCH5c85a4/CD518904: 현재 Player의 residence/island DWORD를0으로 쓴다.
     bool missionPost{true}; // PATCH594fa4/CD52e170: 후처리923e0/40daf0의 두큰분기를 모두 생략하는 실제 미션 전역이다.
     CampaignWorldGlobals():mySubscriber(localMy_),loginSubscriber(localLogin_) {} // 기존 독립 기본값0/0/0/true를 보존한다.
+    // 같은 두 주소를 직접 빌리며 외부 값에 쓰지 않는다. 원본 Init004c3290/World004b5300의 공유 전역을 유지한다.
+    // 이력: 2026-10-27 — MSVC19.44의 조건식 임시값 이동으로 참조가 독립 사본이 되는 경로를 피한다.
+    explicit CampaignWorldGlobals(SubscriberBinding binding)
+        :mySubscriber(binding.my?*binding.my:localMy_),loginSubscriber(binding.login?*binding.login:localLogin_) {}
     // 기존 {my,login,editor,post}와 부분 값 초기화는 자기 fallback을 소유하는 값 생성이다.
     CampaignWorldGlobals(std::uint32_t my,std::uint32_t login=0,std::uint32_t selectedEditor=0,bool post=true)
         :localMy_(my),localLogin_(login),mySubscriber(localMy_),loginSubscriber(localLogin_),editor(selectedEditor),missionPost(post) {}
