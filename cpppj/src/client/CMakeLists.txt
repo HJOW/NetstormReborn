@@ -2,6 +2,7 @@
 # (ClientMain·UserInput·Gump 계열·Screen·Renderer·Sound·State·Mission 등)
 # 다시 만든 파일을 아래 목록에 더한다. 파일 이름은 SOURCE_MAP.md 의 "cpppj 경로"를 따른다.
 target_sources(netstorm PRIVATE
+    ObjectOwnerCommands.cpp ObjectOwnerCommands.h # 일반 SetOwner와 편집 우클릭의 실제 Player Core 선택이다.
     # 모든 Template reader와 새 맵 초기화가 같은 Client 수명의 이름표를 빌린다.
     ClientTemplateSectionNames.cpp ClientTemplateSectionNames.h
     # 신규 manager의 실제 할당/생성/작업 파일/소멸/초기화 장치를 연결한다.

@@ -1,0 +1,11 @@
+{
+  "host": "HJOW-Athlon",
+  "date": "2026-10-28",
+  "lastCompletedDecompile": "HJOW-Athlon / 2026-10-23",
+  "decompileChanged": false,
+  "uniqueInputs": 256,
+  "verify": true,
+  "scope": "4d8176..4d81cb 원문 기본블록과4d5290. 가상74/Core 선택은 명시 외부 경계. 일반 입력 전체와 게임 실행 증거가 아니다.",
+  "fixtureSha256": "93f78ffb15c3624dd9229790a2dc7437ba43de6882a06980f86d987f7c7b24ab",
+  "originalSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236"
+}

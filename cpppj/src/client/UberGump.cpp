@@ -97,6 +97,7 @@
 #define NOMINMAX //Win32 파일 속성 장치의 min/max 매크로가 기존 표준 호출을 바꾸지 않게 한다.
 #endif
 #include <windows.h> //원문004dd560의 GetFileAttributesA 부재/디렉터리 판정을 실제 Windows 장치에 연결한다.
+#include "client/ObjectOwnerCommands.h"
 
 namespace netstorm::client {
 // 테스트 전용 임시 조작이며 원본 분석 결과가 아니다. 미션 진행/적 상태/기술은 바꾸지 않는다.
@@ -111,6 +112,7 @@ std::uint32_t DialogScriptCode(std::string_view name) {
     if (lower=="startdemo") return kStartDemo;
     if (lower=="config") return kScriptConfig;
     if (lower=="warning") return kScriptWarning;
+    if (lower=="setowner") return kSetObjectOwnerCommand; // 원본 Tell.SetOwner의 일반 입력 명령이다.
     const auto fort=FortSelectionScriptCode(name);if (fort!=0xffffffffU) return fort; // 실제 맵 행도 같은 원문 번호와 문자열 고리를 사용한다.
     if (mission!=0xffffffffU) return mission;
     const auto knowledge=KnowledgeScriptCode(name); // 기술 창/지급도 동일 입력 큐를 사용한다.
@@ -119,7 +121,7 @@ std::uint32_t DialogScriptCode(std::string_view name) {
 // 실제 HTML 메뉴가 선택하는 현재 복원 명령도 같은 원본 메뉴 큐를 사용할 수 있다.
 bool IsTellMenuCommand(std::uint32_t command) {
     if (command==kAskEditFortCommand || command==kReadFortCommand) return true; // HTML 맵 행을 임시 DialogAction 번호로 바꾸지 않는다.
-    static constexpr std::array<std::string_view,11> names{"Tell","DoNothing","StartDemo","Config","Warning","MissionBegin","MissionRestart","MissionAbort","LeaveBattle","MissionFork","MissionEnd"}; // 같은 실제 이름 조회와 숫자 코드를 공유한다.
+    static constexpr std::array<std::string_view,12> names{"Tell","DoNothing","StartDemo","Config","Warning","MissionBegin","MissionRestart","MissionAbort","LeaveBattle","MissionFork","MissionEnd","SetOwner"}; // 같은 실제 이름 조회와 숫자 코드를 공유한다.
     for (const auto name:names) if (command==DialogScriptCode(name)) return true; // 별도 호스트 Action 번호로 바꾸지 않는다.
     return false;
 }
@@ -941,7 +943,20 @@ void UberGump::Event(InputEvent event) {
         if (!(event.code&InputCode::kRelease)) rawButtons_->Menus()->OpenHelp(std::bit_cast<std::uint32_t>(event.y ? event.y : event.x),transitionCode==0x02000057U ? 0 : 1,0);
         rebuild_=true;return; // Tutorial 소비 뒤 원본 Help/요청의 현재 주제/TYPE 인자를 보존한다.
     }
-    if (transitionCode==0x02000095U) { if (!(event.code&InputCode::kRelease)) { const auto name=std::string(scriptStrings_.Resolve(std::bit_cast<std::uint32_t>(event.y)));static_cast<void>(TryTell(name)); }return; } // Help Back의 스크립트 복귀다.
+    if (transitionCode==0x02000095U) { if (!(event.code&InputCode::kRelease)) {
+        const auto token=std::bit_cast<std::uint32_t>(event.y);const auto literal=objectMenus_ ? objectMenus_->StaticText(token) : std::nullopt; // 정적 원문 포인터와 Script 고리 토큰을 서로의 저장소로 잘못 해석하지 않는다.
+        const auto name=std::string(literal ? *literal : scriptStrings_.Resolve(token));static_cast<void>(TryTell(name));
+    }return; } // Help Back과 객체 메뉴 Tell도 같은 실제 HTML 경로로 돌아간다.
+    if (transitionCode==kSetObjectOwnerCommand) {
+        const auto gameplay=client_.GameplayGlobals(); // release/미허용 모드/선택0은 원문처럼 Runtime을 요구하지 않는다.
+        ObjectOwnerCommandHooks hooks;hooks.editor=[gameplay] { return gameplay->world.editor; };hooks.missionPost=[gameplay] { return gameplay->world.missionPost; };hooks.selected=[gameplay] { return gameplay->selection.selected; };
+        hooks.owner=[this](auto sid,auto owner) { if (!world_) throw std::logic_error("선택된 실제 소유자 효과의 월드 미설치");if (sid>65535U) throw std::out_of_range("소유자 명령의 물리 SID WORD 범위");world_->Session().SetObjectOwner(o::Sid{static_cast<std::uint16_t>(sid)},owner); };
+        hooks.follow=[this](auto sid) { FollowEditorObjectOwner(world_->Session().Core().pool,sid,client_.GameplayGlobals()->MapRevision(),[this](auto owner,auto slot) {
+            const std::uint32_t metamap=world_->Session().Core().ownerMode.challenge ? 1U : 0U; // 같은 Player/현재 Core alias를 실제 원문 순서로 바꾼다.
+            world_->Session().PlayerCoreGlobals()->Select(client_.GameplayGlobals()->player,metamap,owner,slot);
+        }); };
+        static_cast<void>(DispatchObjectOwner(event,client_.GameplayGlobals()->MapRevision(),hooks));rebuild_=true;return;
+    }
     if (transitionCode==kDialogDoNothing) return; // 원본 명령 자체는 효과가 없으며 HTML 부모는 발화 시 이미 Kill되었다.
     if (transitionCode==kEditorTestBattleCommand) {
         EditorTestBattleHooks hooks;hooks.snapshot=[this] { if (!world_) throw std::logic_error("Test Battle의 실제 Editor Session 없음");world_->Session().SaveCurrentMap(); };

@@ -3782,6 +3782,8 @@ std::uint32_t RawCampaignSession::CommandObject(Sid parent,std::uint32_t command
     hooks.base=[&current](Sid sid,auto code) { return current.objectCommand->Command(sid,code); };
     return RawObjectConversion(current.core.pool,current.gemRewardState.buriedType,std::move(hooks)).Command(parent,command,body);
 }
+// 일반 입력의 전체 owner 인자를 실제 신전/사제/공통 소유자 몸체에 전달한다.
+void RawCampaignSession::SetObjectOwner(Sid parent,std::uint32_t owner) { if (!impl_->loaded) throw std::logic_error("설치 전 실제 가상 소유자 변경");impl_->ownership->SetOwner(parent,owner); }
 // 메뉴가 선택한현재사제와사건y의종류WORD를실제6d 요청으로전달한다.
 std::uint32_t RawCampaignSession::CommandPriest(Sid parent,std::uint32_t command,std::uint32_t parameter) { if (!impl_->loaded || !impl_->priestPrayer || impl_->core.pool.Slot(parent)[10]!=158 || Read(impl_->core.pool.Slot(parent),0)!=kPatchPriestVtable) throw std::logic_error("기도명령의현재사제/설치계약오류");return impl_->priestPrayer->Command(parent,command,parameter); }
 // 사용자 회수 명령은 같은 서버 요청을 보내며 결과/환불/삭제를 직접 만들지 않는다.

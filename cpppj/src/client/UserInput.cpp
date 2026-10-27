@@ -36,7 +36,7 @@ std::optional<o::SquidId> UserInput::Event(InputEvent event) {
     if (release) return {};
     const ScreenPoint point{event.x,event.y};
     const auto mouse=event.code & 0x00ffffffu;
-    if (mouse==InputCode::kRightButton) return world_.Pick(point);
+    if (mouse==InputCode::kRightButton) { const auto picked=world_.Pick(point);if (picked && world_.Session().Editor()) world_.PrepareEditorObjectMenu(picked);return picked; } // 원본 편집 우클릭의 선행 선택/Core 전환 뒤에만 객체 메뉴를 연다.
     if (mouse==InputCode::kLeftButton) {
         if (world_.InputMode()==2 || world_.InputMode()==5) world_.MoveSelected(point);
         else world_.Select(world_.Pick(point));

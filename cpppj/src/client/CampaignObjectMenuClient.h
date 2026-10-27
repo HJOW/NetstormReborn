@@ -5,6 +5,7 @@
 #include "o/SidPool.h"
 #include <functional>
 #include <memory>
+#include <optional>
 #include <string>
 #include <string_view>
 
@@ -24,6 +25,7 @@ public:
     std::uint32_t BuildPlayerMenu(GameWorld& world,std::uint32_t subscriber,const MenuGumpWidgets& widgets,const MenuGumpControls& controls,const MenuGump& menu); // 같은 작성 스택 안에서 기존 전체 Player 하위를 작성한다.
     void Clear(); // 팝업→메뉴 체인→현재 월드 순서로 참조를 해제한다.
     bool Active() const; // 마지막 실제 루트의 현재 visible/dead를 읽는다.
+    std::optional<std::string_view> StaticText(std::uint32_t token) const; // 객체 메뉴가 소유한 정적 Tell 인자를 현재 저장소에서만 조회한다.
     bool Command(const InputEvent& event); //원본Factory입력/사제건설/회수/공통객체선택을처리하며다른명령은false다.
 private:
     struct Impl; // 실제 UI 경계/메뉴 체인/정적 문자열의 고정 주소 소유자다.

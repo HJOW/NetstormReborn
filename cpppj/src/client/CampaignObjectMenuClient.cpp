@@ -180,6 +180,10 @@ bool CampaignObjectMenuClient::Active() const {
     const auto& s=*impl_;const auto* node=s.root ? s.buttons.Menus()->Node(s.root) : nullptr;
     return node && (node->flags&1) && !(node->flags&0x10000);
 }
+// 닫힌 메뉴의 정적 인자도 Client 수명의 같은 문자열 저장소에 남아 있다.
+std::optional<std::string_view> CampaignObjectMenuClient::StaticText(std::uint32_t token) const {
+    const auto found=impl_->staticStrings.find(token);if (found==impl_->staticStrings.end()) return {};return found->second;
+}
 // 메뉴가이미닫히도록예약했어도같은세계의현재Factory입력/건설/회수요청을실행한다.
 bool CampaignObjectMenuClient::Command(const InputEvent& event) {
     const auto command=event.code&0x03ffffffU;

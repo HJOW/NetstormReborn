@@ -71,6 +71,7 @@ public:
     o::SquidId Pick(ScreenPoint point) const;
     // 선택 번호를 현재 월드에서 검증하고 표시를 갱신한다.
     void Select(o::SquidId id);
+    void PrepareEditorObjectMenu(o::SquidId id); // 편집 우클릭의4d5c90(id,0,0) 뒤 같은 클릭 객체로4d5290을 실행한다.
     o::SquidId Selected() const { return selected_; } // 004d5430의 현재 단일SID 조회이며 선택을 바꾸거나 캐시하지 않는다.
     ClientUserSelectionGlobals& SelectionGlobals();const ClientUserSelectionGlobals& SelectionGlobals() const; // 같은 장기 raw DWORD/배열이며 실제 SID 변환은 소비자가 검증한다.
     void ResetSelection(); // 미션이 요구한 실제004d5c90(0,0,0)을 셋째1인 일반 Select와 구별한다.

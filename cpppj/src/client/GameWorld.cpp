@@ -21,6 +21,8 @@
 #include <sstream>
 #include <stdexcept>
 #include <utility>
+#include "client/ObjectOwnerCommands.h"
+#include "client/ClientCoreDataGlobals.h"
 
 namespace netstorm::client {
 namespace {
@@ -464,6 +466,17 @@ o::SquidId GameWorld::Pick(ScreenPoint point) const {
 void GameWorld::Select(o::SquidId id) {
     if (campaign_) { if (!input_) throw std::logic_error("실제 선택 장치 미설치");static_cast<void>(input_->selection->Select(id,0,1));changed_=true;return; }
     const auto* object=Object(id);selected_=object && object->selectable ? id : 0;changed_=true;
+}
+// 편집 우클릭은 선택 결과와 무관하게 같은 원래 클릭 객체의 owner를 후속으로 읽는다.
+void GameWorld::PrepareEditorObjectMenu(o::SquidId id) {
+    if (!campaign_ || !input_) throw std::logic_error("편집 우클릭의 실제 월드/선택 장치 미설치");
+    if (!campaign_->Editor()) return;
+    static_cast<void>(input_->selection->Select(id,0,0));
+    if (campaign_->Editor()) FollowEditorObjectOwner(campaign_->Core().pool,id,gameplayGlobals_->MapRevision(),[this](auto owner,auto slot) {
+        const std::uint32_t metamap=campaign_->Core().ownerMode.challenge ? 1U : 0U; // 현재 Core 선택은 같은 장기 Player 상태/물리를 사용한다.
+        campaign_->PlayerCoreGlobals()->Select(gameplayGlobals_->player,metamap,owner,slot);
+    });
+    changed_=true;
 }
 // 처리기 수명 동안 같은 선택/마우스 전역을 공유하며 선택 번호를 복사하지 않는다.
 UserHighlightState GameWorld::HighlightSettings() { return {highlightMode_,selected_,mouseType_,mousePoint_.x,mousePoint_.y}; }
