@@ -370,7 +370,8 @@ std::string RawSurfaceWorld::Report() const {
         const auto& seed=snapshot.object;out<<"raw_object\t"<<snapshot.sid.value<<'\t'<<seed.type<<'\t'<<seed.owner<<'\t'<<seed.frame<<'\t'<<seed.x<<'\t'<<seed.y<<'\n';
         const auto raw=impl_->pool.Slot(snapshot.sid);const bool patch=impl_->edition==o::OriginalEdition::Patch1078; // 같은 실제 슬롯의 상태/extra/HP 저장 비트다.
         out<<"raw_asset_fields\t"<<snapshot.sid.value<<'\t'<<static_cast<std::uint32_t>(raw[11])<<'\t'<<static_cast<std::uint32_t>(raw[patch ? 40 : 35])<<'\t'<<Read(raw,26,patch ? 4 : 2)<<'\n';
-        if (raw[10]==85 || raw[10]==126) {
+        const auto table=Read(raw,0,4); // 원본 두FactoryVT의현재내용물을모든원소워크샾에서같은방식으로관측한다.
+        if (patch ? (table==0x509148U || table==0x509210U) : (raw[10]==85 || raw[10]==126)) { // 10.78의두생성자표를사용하며10.72의기존진단조건은보존한다.
             std::size_t visited{};
             // 같은 실제 Form 체인 전체를 읽고 저장 종류/flags와 client/server SID를 기록한다.
             for (o::Sid form{static_cast<std::uint16_t>(Read(raw,6,2))};form.value;) {

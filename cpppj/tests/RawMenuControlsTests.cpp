@@ -174,6 +174,19 @@ TEST_CASE(RawMenuControls_CommonTreeInputAndDisabledItem) {
     client.menus->Close();CHECK(!client.menus->HasMenus() && client.buttons.RegisteredGump(0)==root);
     client.buttons.Event({InputCode::kLeftButton,30,20});const auto activated=client.buttons.Event({InputCode::kLeftButton|InputCode::kRelease,30,20});CHECK(activated && *activated==0);
 }
+TEST_CASE(RawMenuControls_CommandPointChoosesVisibleSameLabelChild) { // 같은About의기본TYPE와정적문자열주제를구별하고원래실제클릭을통과시킨다.
+    MenuClient client;client.menus->Open({100,100},[](const auto& widgets,const auto& controls,const auto& menus) {
+        widgets.BeginVertical();controls.AddText("About",0x02000017U,87);
+        widgets.BeginVertical();controls.AddText("About",0x02000017U,0x60000001U);const auto child=menus.TakeCurrent();controls.AddSubmenu("Production",child);
+    });
+    const auto plain=client.menus->Point("About"),base=client.menus->Point("menu-command:02000017,57");CHECK(plain && base);if (plain && base) CHECK(plain->x==base->x && plain->y==base->y);
+    CHECK(!client.menus->Point("menu-command:02000017,60000001")); // 숨긴하위메뉴를검사전용조회로노출시키지않는다.
+    const auto open=client.menus->Point("Production");CHECK(open);if (!open) return;client.Click(*open);
+    for (int frame=0;frame<2;++frame) client.buttons.Poll({InputCode::kRelease,open->x,open->y}); // 실제확장프레임을통과한뒤에만하위항목을조회한다.
+    const auto child=client.menus->Point("menu-command:02000017,60000001");CHECK(child);if (child) client.Click(*child);
+    CHECK(client.commands.size()==1);if (!client.commands.empty()) CHECK(client.commands[0][0]==0x02000017U && client.commands[0][2]==0x60000001U);
+    client.menus->Close();CHECK(!client.menus->Point("menu-command:02000017,60000001"));CHECK(Throws([&] { static_cast<void>(client.menus->Point("menu-command:invalid")); }));
+}
 // 실제 fancy 생성/제목/숨긴 Slider·하위 확장/픽셀/공통 삭제를 한 수명에서 검사한다.
 // 실제 가로 메뉴의 열 중심·클릭·루트 부착의 원본 지연 교체를 같은 등록표에서 확인한다.
 TEST_CASE(RawMenuControls_HorizontalPointAndDeferredReplace) {

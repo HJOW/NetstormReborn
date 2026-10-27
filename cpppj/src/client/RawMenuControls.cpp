@@ -799,6 +799,13 @@ void RawMenuControls::Draw(std::span<std::uint8_t> pixels,int pitch,int height,c
 // 실제 입력/출력과 같은 현재 배치에서 자동 입력 지점을 읽는다.
 std::optional<ScreenPoint> RawMenuControls::Point(std::string_view label) const {
     auto& s=*impl_;
+    constexpr std::string_view kMenuCommandPrefix="menu-command:"; // 검사전용명령/인자쌍으로동명이항목의실제누를곳을조회한다.
+    std::optional<std::array<std::uint32_t,2>> requested; // 실제항목의두DWORD이며명령을직접실행하거나숨긴항목을열지않는다.
+    if (label.starts_with(kMenuCommandPrefix)) {
+        std::istringstream fields(std::string(label.substr(kMenuCommandPrefix.size())));std::array<std::uint32_t,2> values{};char comma{}; // 두값은보고서원문과같은16진수다.
+        if (!(fields>>std::hex>>values[0]>>comma>>values[1]) || comma!=',' || !(fields>>std::ws).eof()) throw std::invalid_argument("메뉴 항목 조회는 menu-command:명령16진수,인자16진수여야 함");
+        requested=values;
+    }
     if (const auto* root=s.common.life.dialogCount ? Find(s.saveFortRoots,s.common.life.dialogs[s.common.life.dialogCount-1]) : nullptr) {
         for (const auto token:{root->ok,root->cancel}) { const auto* node=Find(s.helpButtons,token);if (node && std::string_view(node->label.data())==label) { const auto rect=s.common.collection.Bounds(token);return ScreenPoint{(rect.left+rect.right)/2,(rect.top+rect.bottom)/2}; } } // 실제 최상위 모달의 두 버튼만 현재 공통 경계로 읽는다.
     }
@@ -819,7 +826,7 @@ std::optional<ScreenPoint> RawMenuControls::Point(std::string_view label) const 
             // 실제 소유 체인의 모든 일반 문자열 조각을 순서대로 읽는다.
             for (auto part=item.styled;part;part=s.fragments.fragments.at(part).next) { const auto& bytes=s.fragments.fragments.at(part).text;value.append(bytes.begin(),std::find(bytes.begin(),bytes.end(),'\0')); }
         } else value=std::string(item.label.data(),std::find(item.label.begin(),item.label.end(),'\0')-item.label.begin());
-        if (value==label && (node->flags&1)) {
+        if ((requested ? item.command==(*requested)[0] && item.parameter==(*requested)[1] : value==label) && (node->flags&1)) {
             const auto p=s.common.collection.Position(token);
             // 가로 ItemPosition의 Y는 하위 메뉴 부착점이므로 실제 행 높이와 열 너비로 누를 곳을 구한다.
             if (node->menuFlags&0x40000U) return ScreenPoint{p.x+static_cast<int>((index+0.5F)*node->itemWidth),p.y+static_cast<int>(node->height/2)};
