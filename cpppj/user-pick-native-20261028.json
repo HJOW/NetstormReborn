@@ -1,0 +1,21 @@
+{
+  "unit": 522,
+  "host": "HJOW-Athlon",
+  "date": "2026-10-28",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23",
+    "outputsModified": false
+  },
+  "uniqueInputs": 1092,
+  "instructions": 553770,
+  "assertions": 0,
+  "boundaries": "원문4d5840/4ac200/4ac1e0/4ac550/49a840/49a900/4adea0/41cfc0. 460de0/4971e0/422230/4b1810와 가상+b0는 명시 입력 경계. 합성TYPE80..87만 사용하며 실제3공중 유닛 생성/게임/OS/통신은 실행하지 않음.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_oracle.py": "227b9a8b703cfd81d05ac4a7c72a42eaecf9c804fc028680466a19a591f2335d",
+    "tools/decomp_user_pick.py": "c7dab5ae73eb96ee031d5e72fbf7a8ff4a7a0920cb3add21a1618d566a130277",
+    "cpppj/tests/fixtures/user-pick-x86.tsv": "7dba986f39c8a964c8cca84b88cd8199fbf8f32000e275ef01a09f87df576e97"
+  }
+}

@@ -244,3 +244,5 @@ target_sources(netstorm PRIVATE o/RawObjectConversion.cpp o/RawObjectConversion.
 
 # 원본 Detonate의 실제 가상 입력과 반환 무시를 일반 부모에 연결한다.
 target_sources(netstorm PRIVATE client/DetonateInput.cpp client/DetonateInput.h)
+# 원본4d5840 후보 순위는 실제 GameWorld의 해시/우클릭/커서가 공유한다.
+target_sources(netstorm PRIVATE client/RawUserPick.cpp client/RawUserPick.h)

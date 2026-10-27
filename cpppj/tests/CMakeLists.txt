@@ -2345,3 +2345,6 @@ set_source_files_properties(MeltdownTests.cpp PROPERTIES COMPILE_DEFINITIONS "NE
 # 실제 일반 입력의 Detonate 미시전 경로와 부모0반환을 대조한다.
 target_sources(netstorm_tests PRIVATE DetonateInputTests.cpp)
 set_source_files_properties(DetonateInputTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_DETONATE_INPUT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/detonate-input-x86.tsv\"")
+# 합성 후보의 원문1092조건과 가상 hit 호출 순서를 보존한다.
+target_sources(netstorm_tests PRIVATE UserPickTests.cpp)
+set_source_files_properties(UserPickTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_USER_PICK_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/user-pick-x86.tsv\"")

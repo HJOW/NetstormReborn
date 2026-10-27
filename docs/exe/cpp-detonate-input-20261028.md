@@ -24,10 +24,10 @@ Release 빌드 경고/오류0. 등록3,352개 중 관련37개/실패0을 확인�
 
 - 독립 기계어768조건의 가상 호출/0반환·raw를 실제 RawObjectConversion/RawObjectCommand 부모와 비교했다. 누락 하위·알 수 없는 명령·release·y의낮은WORD도 별도 확인했다.
 - 보호 자산의 실제Session에114 주문을 명시 생성하고, 실제Gump 메뉴 클릭→InputQueue→새 일반 입력→Session.CommandObject를 연결했다. Detonate 토큰과대상SID·부모0반환을 확인했고, 요청0·raw/돈 보존·event0 예약 부재를 확인했다. 이는 단위 장면이며 사용자가 자연 플레이로 주문을 얻은 증거나 별도 창 전체 경로 검증이 아니다.
-- 별도 창 탐색2회는 모두 수락에서 제외했다. 첫 회는 브리핑의 실제 Play Mission 대신Go!를 가정했다. 두 번째는 Test Battle 전환 후 주문이 존재하지만frame0/Editor1인 상태에서 world:bombExplodeMedium 좌표 장치를 찾지 못했다. 두 실행은종료1이며 실제Detonate 클릭까지 도달하지 않았다. 새 코드의 별도 창 수락 사례는 없다. 원시 로그와 시작PID/실행SHA는 `extracted/cpp-detonate-521`에 보존한다.
+- 별도 창 탐색2회는 모두 수락에서 제외했다. 첫 회는 브리핑의 실제 Play Mission 대신Go!를 가정했다. 두 번째는 Test Battle 전환 후 주문이 존재하지만frame0인 상태에서 world:bombExplodeMedium 좌표 장치를 찾지 못했다. 두 실행은종료1이며 실제Detonate 클릭까지 도달하지 않았다. 새 코드의 별도 창 수락 사례는 없다. 원시 로그와 시작PID/실행SHA는 `extracted/cpp-detonate-521`에 보존한다.
 
 ## 다음 대조
 
-Test Battle 뒤Editor1과저장 주문의frame0/선택 가능 여부를 원본 상태 전환·저장/기본 프레임·선택기와 대조해야 한다. 오류로 확정하거나 강제로 상태를0/프레임1로 바꾼 것은 아니다. 기존517의재적재 Spell frame2 관측과도 구별한다. 이 부분을 실제Detonate 클릭/폭발 성공으로 세지 않는다.
+**단위522 정정:** raw_session의 두 번째 열은PlayerKnown이며 Editor가 아니다. 앞선 Editor1 판정은 보고 열 오독이었다. 실제 실행 원시는 보존했다. 저장 주문의frame0/선택 가능 여부를 원본 상태 전환·저장/기본 프레임·선택기와 대조해야 한다. 오류로 확정하거나 강제로 상태를0/프레임1로 바꾼 것은 아니다. 기존517의재적재 Spell frame2 관측과도 구별한다. 이 부분을 실제Detonate 클릭/폭발 성공으로 세지 않는다.
 
 DigUp special 실제 입력, 일반 건물형 전체·신전/제단/워크샾의 소유자/레벨/포획 상태별 메뉴와 남은 편집 도구를 계속 점검한다. 공중3종은 새 생산/생성/우클릭 재현이나 전용 검사 없이 정적 제한을 유지했다. 연녹색 직사각형 분석·자연 완주/영문 부재 개선 보류도 유지한다. 원본/CD·AGENTS.md·기존fixture는 변경하지 않았고 원격push는 하지 않는다.

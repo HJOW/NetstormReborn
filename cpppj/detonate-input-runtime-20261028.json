@@ -225,7 +225,7 @@
     "원문의Guide/Gump 소비 뒤·초기 명령ID·비활성 커서 조건의 일반 입력768조건이다.",
     "실제 Session/Gump 클릭/큐는 명시 생성한114 주문의 단위 장면이다. 자연 획득/별도 창의 끝까지 진행한 증거가 아니다.",
     "별도 창2회는 Play Mission 버튼 가정과 Test Battle 뒤 대상 좌표 미탐색으로 모두 종료1이며 Detonate 클릭 미도달이다. 기존 미연결 예외의 실제 재현으로 세지 않는다.",
-    "Test Battle 뒤Editor1/Spell frame0·선택 가능 여부는 원본과 추가 대조할 잔여다.",
+    "단위522 정정: raw_session의 두 번째 열은 PlayerKnown이며 Editor가 아니다. 과거 Editor1 판정은 관측 열 오독이었다. 저장 Spell frame0/선택 여부는 별도 대조 대상이다.",
     "공중3종은 정적 제한 유지. 직사각형 분석·자연 완주/영문 부재 개선은 보류."
   ],
   "sourceSha256": {
@@ -239,5 +239,16 @@
     "cpppj/tests/DetonateInputTests.cpp": "3311e8e02f91ad2d7466b16603178f09e17b38ba6be1f8c1f32cf3b1d932d932",
     "cpppj/tests/fixtures/detonate-input-x86.tsv": "1d4188dcad5180c1167817600d3a67c282126ebcb321de8086ee78a841f3df03",
     "tools/decomp_detonate_input.py": "8f112ce4f68042634bcdd11b2b111fca5fe5887a54c7538545540c09b4bcc49f"
-  }
+  },
+  "corrections": [
+    {
+      "unit": 522,
+      "reason": "보고서 raw_session 열의 의미를 GameWorld::Report 원문으로 재확인함. 원시 실행/프레임 기록은 변경하지 않음.",
+      "incorrectInference": "Editor1",
+      "actualColumns": [
+        "LocalOwner",
+        "PlayerKnown"
+      ]
+    }
+  ]
 }

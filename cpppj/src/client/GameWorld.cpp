@@ -3,6 +3,9 @@
 #include "client/RawCampaignFactoryDisplay.h"
 #include "client/RawCampaignCursor.h"
 #include "client/RawCursorPosition.h"
+#include "client/RawUserPick.h"
+#include "client/RawCarrierDropPoint.h"
+#include "o/RawSquidFinder.h"
 #include <bit>
 #include "client/SquidRenderer.h"
 #include "client/OwnerColorMaps.h"
@@ -447,6 +450,21 @@ ScreenRect GameWorld::Bounds(const o::Squid& object) const {
 // 가장 앞에 가까운 실제 그림을 선택한다. 모바일 그림에는 녹화 기반 4픽셀 여유가 있다.
 o::SquidId GameWorld::Pick(ScreenPoint point) const {
     const auto view=MapView();if (point.y<view.top || point.x<view.left || point.y>=view.bottom || point.x>=view.right) return 0;
+    if (campaign_ && assets_.Edition()==o::OriginalEdition::Patch1078) {
+        const auto core=campaign_->Core();o::RawSquidFinder finder(core.pool,core.hash,core.types);UserPickHooks hooks; //같은 실제 해시/현재 풀에서 원본 순서로 검색한다.
+        hooks.paused=[this] { return paused && paused() ? 1U : 0U; };hooks.localOwner=[this] { return campaign_->LocalOwner(); };
+        hooks.metamap=[&core] { return core.ownerMode.challenge ? 1U : 0U; };hooks.hideBuildings=[this] { return hideBuildings_(); };
+        hooks.project=[this](auto x,auto y) { return RawCursorPosition::ScreenToWorld(x,y,CameraGlobals().Snapshot().worldBits); };
+        hooks.begin=[&finder](auto at,int radiusX,int radiusY) { //422230의 거의 올림41d7a0 뒤 정수 사각형을 기존 원본 finder에 전달한다.
+            const auto snapped=RawCarrierDropPoint::Snap(at);const int x=static_cast<int>(snapped[0]),y=static_cast<int>(snapped[1]);return finder.Begin({x-radiusX,y-radiusY,x+radiusX,y+radiusY},0).value;
+        };
+        hooks.next=[&finder] { return finder.Next().value; };hooks.center=[&core](auto sid) { return core.neighbors.Center(sid); };
+        hooks.hit=[this](auto sid,auto x,auto y) { //가상+b0의 픽셀 캡처 전체 복원 전까지 기존 그림 사각형 경계를 명시적으로 유지한다.
+            const auto* object=Object(sid.value);if (!object || !object->visible) return false;const auto rect=Bounds(*object);const int margin=object->mobile ? 4 : 0;
+            return x>=rect.left-margin && x<rect.right+margin && y>=rect.top-margin && y<rect.bottom+margin;
+        };
+        return RawUserPick(core.pool,core.types,std::move(hooks)).Pick(point.x,point.y).value;
+    }
     o::SquidId picked=0; double best=std::numeric_limits<double>::max();
     // 겹친 그림은 클릭과 중심점의 거리가 가장 가까운 객체를 고른다.
     for (const auto& object:objects_) if (object.selectable) {
@@ -769,7 +787,8 @@ std::string GameWorld::Report(bool mask) const {
         out<<"raw_input\t"<<selected_<<'\t'<<highlightMode_<<'\t'<<campaign_->LocalConnectionPhase()<<'\t'<<campaign_->LocalConnectionPackets().size()<<"\nraw_packets";
         // 실제 소비된 종류만 진단하며 별도 명령 성공 플래그를 만들지 않는다.
         for (const auto kind:campaign_->LocalConnectionPackets()) out<<'\t'<<std::uint32_t(kind);out<<'\n';
-        out<<"raw_session\t"<<campaign_->LocalOwner()<<'\t'<<campaign_->PlayerKnown();
+        out<<"raw_session\t"<<campaign_->LocalOwner()<<'\t'<<campaign_->PlayerKnown(); //기존 두 열은LocalOwner/PlayerKnown이며 Editor가 아니다.
+        out<<"\nraw_world_modes\t"<<campaign_->Editor()<<'\t'<<gameplayGlobals_->world.missionPost; //실제 Editor/missionPost를 별도 관측하며 상태나 프레임은 바꾸지 않는다.
         const auto& drop=campaign_->CursorDropSettings();const auto& placement=campaign_->Cursor().Placement(); // 실제 배치/원본 입력과 같은 저장소다.
         out<<"\nraw_piece\t"<<drop.argument<<'\t'<<drop.direction; // 실제 무작위 조각 번호/현재 회전을 관찰하며 취득 상태를 변경하지 않는다.
         out<<"\nraw_cursor\t"<<drop.lockDepth<<'\t'<<drop.legal<<'\t'<<drop.type<<'\t'<<drop.preview<<'\t'<<drop.x<<'\t'<<drop.y<<'\t'<<drop.inputFlags<<'\t'<<drop.costFlags<<'\t'<<placement.placementAllowed<<'\t'<<placement.spaceAllowed<<'\t'<<placement.sourceAllowed<<"\nraw_sp";
