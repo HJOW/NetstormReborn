@@ -2296,3 +2296,7 @@ set_source_files_properties(IceReflectedTests.cpp PROPERTIES COMPILE_DEFINITIONS
 target_sources(netstorm_tests PRIVATE SmokeEffectTests.cpp)
 set_source_files_properties(SmokeEffectTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_SMOKE_EFFECT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/smoke-effect-x86.tsv\"")
 target_sources(netstorm_tests PRIVATE SmokeVisualSystemTests.cpp) # 실제21 Host/공통 목록·자기 삭제·생성 실패 정리를 검증한다.
+
+# 실제 두 판본의 섬 설명 자료와 원문 섹션/HTML을 파일 전용 정의로 대조한다.
+target_sources(netstorm_tests PRIVATE EmbeddedIslandTextTests.cpp)
+set_source_files_properties(EmbeddedIslandTextTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_EMBEDDED_ISLAND_TEXT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/embedded-island-text-x86.tsv\"")

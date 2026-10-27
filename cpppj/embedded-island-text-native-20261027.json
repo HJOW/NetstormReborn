@@ -1,0 +1,42 @@
+{
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": "HJOW-Athlon / 2026-10-23",
+  "uniqueInputs": 2,
+  "normalSections": 4,
+  "normalHtmlParses": 4,
+  "precisionDifferences": [],
+  "facts": [
+    {
+      "edition": "originals",
+      "resourceBytes": 68635,
+      "resourceSha256": "0c275987c5a576c5d838831cf47ff4d58822559f83b0fca566f5a169cc1ce02b",
+      "excerptOffset": 15748,
+      "excerptBytes": 382,
+      "sectionOffset": 18,
+      "sectionBytes": 301,
+      "outputPrefix": "{Text} To the left is an overview of thi"
+    },
+    {
+      "edition": "originalCD",
+      "resourceBytes": 55160,
+      "resourceSha256": "b14f639eb76ed6d1621b860898887bcd7e95e5ef9b08a3c786d3813833d14142",
+      "excerptOffset": 9832,
+      "excerptBytes": 374,
+      "sectionOffset": 18,
+      "sectionBytes": 293,
+      "outputPrefix": "To the left is an overview of this map. "
+    }
+  ],
+  "limits": "원래 연속 섹션/다음 머리글 발췌를 원본 Section에 공급한 뒤 실제 기본 HTML로 출력한다. 전체 파일 검색/원본 창·OS·다중 줄 픽셀은 실행하지 않는다. 후행004ba8f0/004b9790/004b93c0의 리터럴 복사는 정적 연결 근거로 별도 기록한다.",
+  "sha256": {
+    "tools/decomp_embedded_island_text.py": "c32816610d21e35fa5c61fc69d1977505f3ce1479bc4b2e09aba50111d45aaa7",
+    "tools/decomp_config_oracle.py": "045539ff9f6bfc90ddb87b3dcc4322495d9b66c640b2a558ae662b188d718ba4",
+    "tools/decomp_htmltext_oracle.py": "577cd2e9e96ea6ce039fbc05baa37142437cce1f4d3f33160c71f92c4c4b8ef7",
+    "tools/decomp_oracle.py": "227b9a8b703cfd81d05ac4a7c72a42eaecf9c804fc028680466a19a591f2335d",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originalCD/NETSTORM.TARC": "e7e8868553ec2ef40cc1cd97ea452c37454e9a147f21a67a1298945de9b637ff",
+    "cpppj/tests/fixtures/embedded-island-text-x86.tsv": "09c112cb99f501d721443eb1ae320fd41486d7659ec3c3b6618cb1d5e36c71f1"
+  }
+}
