@@ -1,0 +1,202 @@
+{
+  "unit": 507,
+  "date": "2026-10-27",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23",
+    "changed": false
+  },
+  "exes": {
+    "NetstormCpp.exe": "30748f4c2b13d4453f689f70650195f9dd9f5fbf31de7107cf5a53ceabc67fc0",
+    "netstorm_tests.exe": "f351da47645af8f41ba4bb06640b3dfbcf4f7a65a398765a9491ce19c1006424"
+  },
+  "focusedUnique": 17,
+  "failedChecks": 0,
+  "sharedTempleNativeRowsReplayed": 1054,
+  "originalNativeFixtureUnchanged": true,
+  "newTests": 1,
+  "newExpectedRegistered": 3336,
+  "red": {
+    "command": [
+      "cpppj/build/bin/Release/netstorm_tests.exe",
+      "--filter",
+      "AssetRegular_SharedTemples"
+    ],
+    "exit": 1,
+    "log": "extracted/cpp-residence-theme-507/regression-red.log",
+    "sha256": "5faf121ff3b4e28e3e1cd228e92541aadfbc89ed9a840e0ad1e09ee04324b524",
+    "summaries": [
+      "1 test(s), 2 failed check(s)"
+    ],
+    "diagnostics": []
+  },
+  "green": {
+    "command": [
+      "cpppj/build/bin/Release/netstorm_tests.exe",
+      "--filter",
+      "AssetRegular_"
+    ],
+    "exit": 0,
+    "log": "extracted/cpp-residence-theme-507/regression-green.log",
+    "sha256": "86c4a3e12ec49289f7f1c85da581eecf48f309d7e1a1f1506ca95f32b8e4cd7a",
+    "summaries": [
+      "9 test(s), 0 failed check(s)"
+    ],
+    "diagnostics": []
+  },
+  "owner": {
+    "command": [
+      "cpppj/build/bin/Release/netstorm_tests.exe",
+      "--filter",
+      "IslandRuntime_"
+    ],
+    "exit": 0,
+    "log": "extracted/cpp-residence-theme-507/focused-owner.log",
+    "sha256": "60dc730f093c3d451a15b89a2144cc1cd92b2ef0d44724171d81a3cd9c96f876",
+    "summaries": [
+      "8 test(s), 0 failed check(s)"
+    ],
+    "diagnostics": []
+  },
+  "build": {
+    "command": [
+      "cmake",
+      "--build",
+      "cpppj/build",
+      "--config",
+      "Release",
+      "--parallel",
+      "4",
+      "--",
+      "/p:UseMultiToolTask=true",
+      "/p:MultiProcMaxCount=4",
+      "/p:EnforceProcessCountAcrossBuilds=true"
+    ],
+    "exit": 0,
+    "log": "extracted/cpp-residence-theme-507/build-green.log",
+    "sha256": "3307b39d47d099ffdb53be789225489788710f28517717031869b4e762c576c7",
+    "summaries": [],
+    "diagnostics": []
+  },
+  "liveExecutions": 1,
+  "liveResidenceFrames": [
+    {
+      "label": "30",
+      "localResidence": [
+        "89",
+        "1",
+        "23",
+        "117",
+        "142"
+      ],
+      "enemyResidence": [
+        "89",
+        "2",
+        "17",
+        "149",
+        "137"
+      ]
+    },
+    {
+      "label": "70",
+      "localResidence": [
+        "89",
+        "1",
+        "23",
+        "117",
+        "142"
+      ],
+      "enemyResidence": [
+        "89",
+        "2",
+        "17",
+        "149",
+        "137"
+      ]
+    },
+    {
+      "label": "120",
+      "localResidence": [
+        "89",
+        "1",
+        "23",
+        "117",
+        "142"
+      ],
+      "enemyResidence": [
+        "89",
+        "2",
+        "17",
+        "149",
+        "137"
+      ]
+    },
+    {
+      "label": "175",
+      "localResidence": [
+        "89",
+        "1",
+        "23",
+        "117",
+        "142"
+      ],
+      "enemyResidence": [
+        "89",
+        "2",
+        "17",
+        "149",
+        "137"
+      ]
+    }
+  ],
+  "protectedUnchangedExceptUserAllowedSettings": true,
+  "externalAllowedSettingsChanges": [],
+  "externalSettingsPreserved": true,
+  "changedExistingTests": [
+    "cpppj/tests/AssetRegularTests.cpp"
+  ],
+  "agentsUnchanged": true,
+  "sourceFiles": 2892,
+  "newOriginalGameExecutionsByAgent": 0,
+  "wholeSuiteNotRepeated": true,
+  "lastWholeSuite": {
+    "unit": 506,
+    "cppTests": 3335,
+    "failedChecks": 0
+  },
+  "greenRectangles": "사용자 요청으로 분석 보류. 원본에서도 관찰됐으며 원격 데스크톱 영향 가능성은 미확정이다.",
+  "remaining": "썬 바리케이드 방어막 색 수정 및 기존 목표 계속",
+  "rawDirectory": "extracted/cpp-residence-theme-507",
+  "pushed": false,
+  "evidenceSha256": {
+    "extracted/cpp-residence-theme-507/before.json": "aa5527246f7ad831c7f10703cadc32ea38cec730729c37da9972de934fa1fac0",
+    "extracted/cpp-residence-theme-507/build-red.log": "cadab27d6866eccc44f7308c901d6c667ea69065f47fd0f9fb136d1a5b94440f",
+    "extracted/cpp-residence-theme-507/build-red.json": "ce1c192237bec16a139e477a3a1fca8fdf8f880042af68fa514aa0c5c45573a2",
+    "extracted/cpp-residence-theme-507/regression-red.log": "5faf121ff3b4e28e3e1cd228e92541aadfbc89ed9a840e0ad1e09ee04324b524",
+    "extracted/cpp-residence-theme-507/regression-red.json": "a69c609699cf1e30b229f712499bf312539d29956c2c8fbae341cbbf426a3176",
+    "extracted/cpp-residence-theme-507/build-green.log": "3307b39d47d099ffdb53be789225489788710f28517717031869b4e762c576c7",
+    "extracted/cpp-residence-theme-507/build-green.json": "c66e35140d52fda86fa17d17da34bb2c502739bc75ed7e228b1193496f0a01da",
+    "extracted/cpp-residence-theme-507/regression-green.log": "86c4a3e12ec49289f7f1c85da581eecf48f309d7e1a1f1506ca95f32b8e4cd7a",
+    "extracted/cpp-residence-theme-507/regression-green.json": "98cdb3a70cdb7092872f102dd427d49be5bf18567d050530ca27ab80ff1e84ad",
+    "extracted/cpp-residence-theme-507/focused-owner.log": "60dc730f093c3d451a15b89a2144cc1cd92b2ef0d44724171d81a3cd9c96f876",
+    "extracted/cpp-residence-theme-507/focused-owner.json": "81e9a68965272e6e24f37cd5412256c33134a188c8f72efc15c57e50ac4bf9e1",
+    "extracted/cpp-residence-theme-507/freeze-final.json": "9f0384cc3f5e8a2b5777761f3a5fcf5b1d499d119a3907d7cf68f17a527cf458",
+    "extracted/cpp-residence-theme-507/live-rain.log": "4abf1ed8d36c173e1adb02255ed786f597984c0359f8a8f83401eed88fb22c8f",
+    "extracted/cpp-residence-theme-507/live-rain.json": "232b1bfe53647f5adfed5ad6abd16f5e2bced74b5af8aabe90fe601b5a37795d",
+    "extracted/cpp-residence-theme-507/live-rain/steps.tsv": "4a567df3b0f670d90762761b1df2e526ac2ae4b2362e0dc4f6b2e8970bf76b0b",
+    "extracted/cpp-residence-theme-507/live-rain/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-residence-theme-507/live-rain/stderr.log": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2",
+    "extracted/cpp-residence-theme-507/live-rain/running.json": "9eca42ea593903bbb7f4c0cb3964612ffda758ca4adfd33698396ae022e3147a",
+    "extracted/cpp-residence-theme-507/live-rain/states.tsv": "aa43ac7d2c2403a0a7be64d0600133067c1c0e139d3c81ef4a73aef8539ebcf0",
+    "extracted/cpp-residence-theme-507/live-rain/logical-30.bmp": "ebcbfb3c9ad560011d46170ae010f4fba1caf4416024cca97ca22fe11a912d16",
+    "extracted/cpp-residence-theme-507/live-rain/output-30.bmp": "7e73deee9f5dda6621c44399408ac289ea9958fe6670d1d6ca29dd01be0cc327",
+    "extracted/cpp-residence-theme-507/live-rain/logical-70.bmp": "6c6f7f4fbeae3b7b33ed0cdade74a978d32200625628bbeaa9df179f1138be94",
+    "extracted/cpp-residence-theme-507/live-rain/output-70.bmp": "2765a88aec22cc924c85a9759aad88abda613020c177fda4e3f5d3e9fb7a26d9",
+    "extracted/cpp-residence-theme-507/live-rain/logical-120.bmp": "a9dd5e5f8cfc54dd8ee097c5280bf521f93fe10593dfea755ae5d5273925b8ea",
+    "extracted/cpp-residence-theme-507/live-rain/output-120.bmp": "03b91fb2cafd6a75626286630b434836c0a64409facbb326a71fb2faa678ea63",
+    "extracted/cpp-residence-theme-507/live-rain/logical-175.bmp": "ae526c8a9745374b94ce92ada91f3d16c07d6a931a35d666a47837f562934aef",
+    "extracted/cpp-residence-theme-507/live-rain/output-175.bmp": "7bb29b3ba21984b8711e04dd0915fdd8949a3f9c44ac76d86d4f926074577477",
+    "extracted/cpp-residence-theme-507/live-rain/run.json": "666f76e6b569707a5f415f61363375d66307686cc1fb3bf90992fd6bc753bfc7"
+  }
+}

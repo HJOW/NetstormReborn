@@ -155,8 +155,9 @@ float RawAssetRegular::Residence(Sid sid,std::uint32_t event,std::uint32_t,float
         const auto raw=pool_.Slot(sid);const auto support=hooks_.surface(std::bit_cast<float>(Read(raw,14)),std::bit_cast<float>(Read(raw,18)));
         if (support.value) hooks_.setOwner(sid,pool_.Slot(support)[34]);
         auto theme=0;
-        // 같은 postPop 신전 목록의 첫 소유자 일치를 현재 raw 상태로 읽는다.
-        for (const auto value:assets_.temples.Items()) {
+        // 원본0049a4e0의005e189c/005e18a4와 같은 현재 공유 신전 목록에서 첫 소유자 일치를 읽는다.
+        // 이력: 2026-10-27 — Session이 장기 목록을 빌릴 때 비어 있는 fallback을 읽어 기본 초록 프레임만 선택하던 오류를 수정했다.
+        for (const auto value:assets_.Temples().Items()) {
             const auto temple=pool_.Slot(Sid{static_cast<std::uint16_t>(value)});
             if (temple[34]!=pool_.Slot(sid)[34]) continue;
             const auto type=temple[10];if (type>=elements_.size()) throw std::out_of_range("거주 구역 신전 원소 오류");

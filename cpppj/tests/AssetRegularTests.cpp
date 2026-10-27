@@ -113,14 +113,15 @@ struct AssetRegularScene {
     }
 };
 // 한 판본의 독립 실제 반환/raw/난수/최대 조사·효과 순서를 production 모듈로 재생한다.
-void Replay(const char* edition,bool sharedAuthority=false) {
-    RawAuthorityState authority;AssetRegularScene scene(std::string_view(edition)=="originals" ? OriginalEdition::Patch1078 : OriginalEdition::Cd1072); // 행 사이에도 실제 Regular가 빌린 owner 주소를 살려 둔다.
+void Replay(const char* edition,bool sharedAuthority=false,bool sharedTemples=false) {
+    RawAuthorityState authority;SquidPostPopList temples;AssetRegularScene scene(std::string_view(edition)=="originals" ? OriginalEdition::Patch1078 : OriginalEdition::Cd1072); // 행 사이에도 실제 Regular가 빌린 권한/신전 목록 주소를 살려 둔다.
     std::size_t count=0;
     // 각 행의 결과는 원본이 정했으며 테스트가 재계산하지 않는다.
     for (const auto& row:Rows()) {
         if (row[0]!=edition) continue;CHECK(row.size()==8);scene.Prepare(row);
         authority={true,scene.state.boss}; // 이 행의 Native 권한값만 제공한다.
         if (sharedAuthority) { scene.state.sharedAuthority=&authority;scene.state.boss=!authority.boss; } // 이미 구성한 모듈도 다음 실제 Handle에서 현재 owner를 읽는다.
+        if (sharedTemples) { temples=scene.assets.temples;scene.assets.sharedTemples=&temples;scene.assets.temples={}; } // 실제 Session처럼 신전은 공유 목록에만 존재한다. 원본 기대값은 바꾸지 않는다.
         const auto& in=scene.input;
         const auto result=in[0]==3 ? scene.regular->DamageableHandle(kSource,in[1],in[2],std::bit_cast<float>(in[3])) :
             scene.regular->Handle(kSource,in[1],in[2],std::bit_cast<float>(in[3]));
@@ -215,3 +216,6 @@ TEST_CASE(AssetRegular_ResidenceCoordinatesCd) { ReplayResidenceCoordinates("ori
 
 // 기존 두 PE 반환/효과/raw 기대값을 바꾸지 않고 현재 shared 권한을 소비한다.
 TEST_CASE(AssetRegular_SharedAuthorityReplaysBothNativeBodies) { Replay("originals",true);Replay("originalCD",true); }
+
+// 같은 원본 반환/효과/raw/프레임을 공유 신전 목록에서 재생하여 실제 Session의 원소별 Residence 그림 선택을 확인한다.
+TEST_CASE(AssetRegular_SharedTemplesReplaysNativeBody) { Replay("originals",false,true); }
