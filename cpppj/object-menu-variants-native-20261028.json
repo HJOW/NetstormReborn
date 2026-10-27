@@ -1,0 +1,22 @@
+{
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon / 2026-10-23",
+  "observations": 1024,
+  "precisionDifferences": 0,
+  "instructions": {
+    "0041c210": 6018,
+    "00422000": 8576,
+    "00462390": 8448,
+    "00462550": 3072,
+    "00485600": 5120,
+    "0048eca0": 6656,
+    "004dcca0": 7800,
+    "00420b30": 9588
+  },
+  "boundaries": "공통 객체/Damageable/회수/HP/프로세스/큰 AI 디버그와 GUI/번역은 명시 경계다. 실제40f100과 여덟 파생의 분기/인자/순서를 실행했다.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_object_menu_variants.py": "3ff53a6b6bc66d36ce0f434e06190593639d86d3f1e02e1e5283b144570211cd",
+    "cpppj/tests/fixtures/object-menu-variants-x86.tsv": "1cb47ffb8dda67f6effff3ab91c5bce1cdf8ad026ad58affdb09e4970e9198d1"
+  }
+}

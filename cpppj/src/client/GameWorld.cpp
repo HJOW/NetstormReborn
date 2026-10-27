@@ -134,7 +134,7 @@ void GameWorld::RefreshCampaignObjects() {
         view.initialFrame=view.frame;view.mobile=(core.types[rawObject.type].flags2&o::TypeFlag2::kWalker)!=0;
         const auto& pictures=assets_.Shapes().Blocks()[type.block].frames;
         view.visible=o::AsciiLower(type.assetName)!="noisland" && view.frame<pictures.size() && !pictures[view.frame].IsSpecial();
-        view.selectable=view.visible && !Has(type,"not_selectable") && !Has(type,"bridge");
+        view.selectable=view.visible && !Has(type,"not_selectable"); // 원본004d5840은 bridge 부류를 일괄 제외하지 않는다. 다리의 실제+a8 메뉴도 같은 선택 경로를 쓴다.
         if (campaign_->HitPoints().HasHitPoints(snapshot.sid)) {
             view.maxHitPoints=campaign_->HitPoints().MaxHitPoints(snapshot.sid);
             view.hitPoints=static_cast<std::int32_t>(static_cast<std::uint32_t>(slot[26])|(std::uint32_t(slot[27])<<8)|(std::uint32_t(slot[28])<<16)|(std::uint32_t(slot[29])<<24));
@@ -167,7 +167,7 @@ void GameWorld::Place(const o::FortChunkSection& section,std::span<const o::Chun
             object.quantity=stored.quantityWord.value_or(stored.quantityByte.value_or(0)); object.factoryState=stored.factoryState;
             if (stored.contents) object.contents=*stored.contents;
             object.mobile=(record.flags2 & o::TypeFlag2::kWalker)!=0; object.speed=type.definition.Number("speed").value_or(0);
-            object.visible=o::AsciiLower(type.assetName)!="noisland"; object.selectable=object.visible && !Has(type,"not_selectable") && !Has(type,"bridge");
+            object.visible=o::AsciiLower(type.assetName)!="noisland"; object.selectable=object.visible && !Has(type,"not_selectable"); // 값형 조회도 실제 타입의 비선택 플래그를 따르며 다리만 숨기지 않는다.
             if (object.owner>0 && object.owner<=o::kPlayerCount) players_.players[static_cast<std::size_t>(object.owner)].active=true;
             if (territory>=0 && Has(type,"vortex")) { regionOwners_[static_cast<std::size_t>(territory)]=object.owner; regionThemes_[static_cast<std::size_t>(territory)]=Theme(type.definition.String("theme").value_or("sun")); }
             objects_.push_back(std::move(object));

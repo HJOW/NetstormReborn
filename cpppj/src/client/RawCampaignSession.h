@@ -38,6 +38,7 @@
 #include "client/RawCarrierMenu.h"
 #include "client/RawObjectMenuOpen.h"
 #include "client/RawObjectMenuInfo.h"
+#include "client/RawObjectMenuVariants.h"
 #include "client/RawUserSelection.h"
 #include "client/RawCarrierInput.h"
 #include "client/RawPlayerMenu.h"
@@ -92,6 +93,7 @@ struct CampaignObjectMenuUi {
     ObjectMenuHooks object; // 실제 GUI/서식/설정/문자열 토큰이다. 두 미복원 파생 가상80만 count 경계를 사용한다.
     PlayerMenuHooks player; // 실제 Chat 상태/통신/허용 전역/GUI다. 현재 미션·요새·SP는 세션이 공급한다.
     ObjectMenuInfoHooks info; // 실제제목/머리·번역·순수서식·Config치환이다. 게임/Identity조회는같은Session이교체한다.
+    ObjectMenuVariantHooks variants; // 여덟 파생+a8의 실제 번역/항목/설명/구분선이며 게임 조회는 같은 Session에 연결한다.
 };
 // 사제→Carrier→Damageable→공통 객체→Player의 실제 몸체를 한 수명으로 소유한다.
 // 같은 세션/Client/Gump 트리는 이 객체보다 오래 살아야 하며 다음 메뉴 생성 전 이전 메뉴를 닫아야 한다.
@@ -105,6 +107,7 @@ public:
     void OpenCarrier(o::Sid sid) const; // 원본 가상 메뉴가 Carrier일 때만 같은 전체 부모 체인을 작성한다.
     void OpenDamageable(o::Sid sid) const; // 원본 가상 메뉴가 Damageable일 때 실제 회수/공통 체인을 작성한다.
     void OpenObject(o::Sid sid) const; // 원본 기본 객체 메뉴를 작성한다. 파생 메뉴를 임의로 이 함수로 대체하지 않는다.
+    void OpenVariant(o::Sid sid,std::uint32_t originalBody) const; // 제네레이터/다리/풀숲/간헐천/신전 등 실제 파생+a8만 분배한다.
     std::uint32_t OpenPlayer(std::uint32_t subscriber) const; // 실제상단Players목록도같은현재RawPlayerMenu부모를사용한다.
     void Summary(o::Sid sid) const; // 현재객체의실제4인자정보/extra/포획표시를같은메뉴에작성한다.
     void Describe(std::uint32_t type,std::uint32_t count,std::uint32_t owner,std::uint32_t sid) const; // 원본4ad780의4인자를직접보존한다.

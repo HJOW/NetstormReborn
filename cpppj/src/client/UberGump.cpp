@@ -240,7 +240,7 @@ UberGump::UberGump(Client& client) : client_(client),initLoginSubscriber_(client
             state_.Post(actions_[parameter-1]); // 기존 DialogAction의 임시 호스트 번호이며 원본 게임 명령 토큰과 구별한다.
         } else {
             // 실제 메뉴 항목이 선택한 미연결 명령은 여기서 거부한다. 돌 버튼의 별도 기본 클릭 통지와 구별한다.
-            if (command!=0x02000060U && command!=0x03000080U && command!=0x03000032U && command!=0x03000063U && command!=0x0200005dU && command!=0x02000017U && command!=0x030000afU && command!=0x030000e2U && command!=0x03000015U && command!=0x0300011aU && command!=0x03000076U && !IsGameMenuCommand(command) && !IsTellMenuCommand(command)) throw std::logic_error("현재 Client 원본 메뉴 항목 명령 미연결: "+std::to_string(command));
+            if (command!=0x02000060U && command!=0x03000080U && command!=0x03000032U && command!=0x03000063U && command!=0x0200005dU && command!=0x02000017U && command!=0x030000afU && command!=0x030000e2U && command!=0x03000015U && command!=0x0300011aU && command!=0x03000076U && !IsGameMenuCommand(command) && !IsTellMenuCommand(command) && !IsObjectMenuVariantCommand(command)) throw std::logic_error("현재 Client 원본 메뉴 항목 명령 미연결: "+std::to_string(command));
             client_.Input().PushCommand(command,std::bit_cast<std::int32_t>(id),std::bit_cast<std::int32_t>(parameter));
         }
     };
@@ -1010,6 +1010,7 @@ void UberGump::Event(InputEvent event) {
     }
     if (GameMenuCommand(event)) return;
     if (IsGameMenuCommand(commandCode)) throw std::logic_error("현재 메뉴 선택 명령의 실제 장치 미연결: "+std::to_string(commandCode));
+    if (IsObjectMenuVariantCommand(commandCode)) throw std::logic_error("현재 파생 객체 메뉴 선택의 실행 미연결: "+std::to_string(commandCode)); // 미복원 개발자/편집 실행을 입력에서 조용히 버리지 않는다.
     // 원본 ESC 글자 사건. 초기 브리핑은 확인 버튼으로만 닫는다.
     if ((event.code & 0xffffu) == 0x1b && (event.code & InputCode::kRelease) == 0) {
         if (state_.phase == ClientPhase::Briefing || state_.phase == ClientPhase::LoadingMission) return;

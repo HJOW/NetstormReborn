@@ -210,6 +210,7 @@ target_sources(netstorm PRIVATE RawObjectMenuInfo.h RawObjectMenuInfo.cpp)
 
 # 실제 객체 메뉴의 원본 VT 슬롯과 Client/Session/입력 연결을 사용한다.
 target_sources(netstorm PRIVATE RawObjectMenuSlots.h RawObjectMenuSlots.cpp ObjectMenuSlots.inc CampaignObjectMenuClient.h CampaignObjectMenuClient.cpp)
+target_sources(netstorm PRIVATE RawObjectMenuVariants.h RawObjectMenuVariants.cpp) # 실제 여덟 파생 우클릭 작성기다.
 
 # 원본 비용 표시를 같은 TextGump/게임 시계/등록표에 연결한다.
 target_sources(netstorm PRIVATE FloatingSpGump.h FloatingSpGump.cpp)

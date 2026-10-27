@@ -98,6 +98,10 @@ struct CampaignObjectMenuClient::Impl {
         BindPriestMenuControls(ui.priest,widgets,controls,raw);BindCarrierMenuControls(ui.carrier,controls);BindPlayerMenuControls(ui.player,widgets,controls,raw);BindObjectMenuInfoControls(ui.info,controls);
         BindFactoryMenuControls(ui.factory,widgets,controls,raw,[this](std::string_view text) { return Static(text); });
         BindObjectMenuControls(ui.object,controls,raw,client.Configuration(),[this](std::string_view text) { return Static(text); });
+        ui.variants.translate=ui.player.translate;ui.variants.helpWord=[this] { std::string text;if (!client.Configuration().ReadString("helpWord",text)) throw std::logic_error("풀숲 메뉴 실제 helpWord 없음");const auto bytes=o::EncodeOriginalText(text);return std::string(bytes.begin(),bytes.end()); };
+        ui.variants.format=[](std::string_view pattern,std::int32_t value) { const std::array<PriestMenuArgument,1> arguments{value};return PrintMenu(pattern,arguments); };
+        ui.variants.item=[&controls](auto label,auto command,auto parameter,auto include,auto enabled) { controls.AddText(label,command,parameter,include!=0,enabled!=0,false); };
+        ui.variants.header=[&controls](auto text) { controls.AddHeader(text); };ui.variants.separator=[&controls] { controls.AddSeparator(); }; // 기존 실제 controlled 수명과 조건부 구분선을 공유한다.
         return ui;
     }
     // 같은 원본+a8 주소에 이미 복원된 실제 부모 체인만 분배한다. 나머지 파생은 명시 거부한다.
@@ -111,7 +115,7 @@ struct CampaignObjectMenuClient::Impl {
         case 0x4288f0:chain->OpenCarrier(sid);break;
         case 0x44cbd0:chain->OpenDamageable(sid);break;
         case 0x4b1270:chain->OpenObject(sid);break;
-        default:throw std::logic_error("현재 객체 메뉴의 실제 파생+a8 미연결");
+        default:chain->OpenVariant(sid,ObjectMenuSlots(vt).populate);break;
         }
     }
     // 같은 실제 선택을 먼저 실행하는 운반체/사제/아처와 공통+ac를 구분한다.

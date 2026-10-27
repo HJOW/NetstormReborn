@@ -1585,6 +1585,11 @@ target_sources(netstorm_tests PRIVATE ObjectMenuOpenTests.cpp)
 # 객체메뉴의4인자제목/현재경고와실제원본문자열helper를재생한다.
 target_sources(netstorm_tests PRIVATE ObjectMenuInfoTests.cpp)
 
+# 여덟 파생 우클릭 작성기의 실제 원문1024입력과 재진입 효과 순서를 대조한다.
+target_sources(netstorm_tests PRIVATE ObjectMenuVariantsTests.cpp)
+set_source_files_properties(ObjectMenuVariantsTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_OBJECT_MENU_VARIANTS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/object-menu-variants-x86.tsv\"")
+
 # 세 인자 선택과 짧은 메뉴 입구의 독립 PE 관찰을 대조한다.
 target_sources(netstorm_tests PRIVATE UserSelectionTests.cpp)
 set_source_files_properties(UserSelectionTests.cpp PROPERTIES COMPILE_DEFINITIONS

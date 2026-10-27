@@ -1,0 +1,1243 @@
+{
+  "unit": 513,
+  "date": "2026-10-28",
+  "host": "HJOW-Athlon",
+  "lastCompletedDecompileHost": "HJOW-Athlon / 2026-10-23",
+  "baselineHead": "71165f33f6ba7a51f1612a29362efd98f3db5402",
+  "scope": "여덟 파생 우클릭 작성기·실제 Session/controlled 연결과 다리 선택 제외 수정",
+  "sourceChanges": [
+    "cpppj/src/client/CMakeLists.txt",
+    "cpppj/src/client/CampaignObjectMenuClient.cpp",
+    "cpppj/src/client/GameWorld.cpp",
+    "cpppj/src/client/RawCampaignSession.cpp",
+    "cpppj/src/client/RawCampaignSession.h",
+    "cpppj/src/client/UberGump.cpp",
+    "cpppj/tests/CMakeLists.txt"
+  ],
+  "sourceAdded": [
+    "cpppj/src/client/RawObjectMenuVariants.cpp",
+    "cpppj/src/client/RawObjectMenuVariants.h",
+    "cpppj/tests/ObjectMenuVariantsTests.cpp",
+    "cpppj/tests/fixtures/object-menu-variants-x86.tsv"
+  ],
+  "gameSha256": "74548abb1600396188d4365464a808d555418a3bb080211b97e78f8cdfb2c362",
+  "testsSha256": "995c41d3abc70ba8be1f3c838c08a22249cea0539380c8a47cf3658587a5a146",
+  "builds": [
+    {
+      "command": [
+        "cmake",
+        "--build",
+        "cpppj/build",
+        "--config",
+        "Release",
+        "--parallel",
+        "4"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-object-menus-513/build.log",
+      "sha256": "c4e75b33406bc509b334a4c1598f5dd0ebda461caddcb3573732a92d7326030a",
+      "summaries": [],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cmake",
+        "--build",
+        "cpppj/build",
+        "--config",
+        "Release",
+        "--parallel",
+        "4"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-object-menus-513/build-bridge.log",
+      "sha256": "b21d6b03fa8302b3c790d43e29d0a43fc8f8599e0fc1f4d7e052b7d352c9d909",
+      "summaries": [],
+      "diagnostics": []
+    }
+  ],
+  "native": {
+    "host": "HJOW-Athlon",
+    "lastDecompileHost": "HJOW-Athlon / 2026-10-23",
+    "observations": 1024,
+    "precisionDifferences": 0,
+    "instructions": {
+      "0041c210": 6018,
+      "00422000": 8576,
+      "00462390": 8448,
+      "00462550": 3072,
+      "00485600": 5120,
+      "0048eca0": 6656,
+      "004dcca0": 7800,
+      "00420b30": 9588
+    },
+    "boundaries": "공통 객체/Damageable/회수/HP/프로세스/큰 AI 디버그와 GUI/번역은 명시 경계다. 실제40f100과 여덟 파생의 분기/인자/순서를 실행했다.",
+    "sha256": {
+      "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "tools/decomp_object_menu_variants.py": "3ff53a6b6bc66d36ce0f434e06190593639d86d3f1e02e1e5283b144570211cd",
+      "cpppj/tests/fixtures/object-menu-variants-x86.tsv": "1cb47ffb8dda67f6effff3ab91c5bce1cdf8ad026ad58affdb09e4970e9198d1"
+    }
+  },
+  "nativeLimits": "큰 공통/Damageable/회수/AI 디버그/HP/프로세스/GUI는 명시 경계다. 40f100과 여덟 파생의 실제 명령 분기·인자·순서를 실행했다. 462550은 기존 함수 표에 없어서 실제 PE 명령 범위를 읽었다. 디컴파일 산출물은 수정하지 않았다.",
+  "finalFocusedTests": {
+    "unique": 39,
+    "failedChecks": 0,
+    "runs": [
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "ObjectMenu"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-object-menus-513/test-objects.log",
+        "sha256": "8a8af06d96d90f20f0d15e2bb2f1f5e27ac8d59367fd70a1d1ecd2c207f2a977",
+        "summaries": [
+          "20 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "CarrierMenu"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-object-menus-513/test-carriers.log",
+        "sha256": "218a22d5822e689bad2a977aa4148c6b7cd470e2708bee0662ac5739af6ceb94",
+        "summaries": [
+          "2 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "FactoryMenu"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-object-menus-513/test-factories.log",
+        "sha256": "b9d21d71353b5ffd3da6f70186f8ae3fe7856d18a1466e328d002f0699c7b441",
+        "summaries": [
+          "2 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "UserSelection"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-object-menus-513/test-selection.log",
+        "sha256": "27a5c898b18ceb2c6bd562da0104f5f3a30ea998301a48ed777b3e0eaeca0b8b",
+        "summaries": [
+          "13 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      },
+      {
+        "command": [
+          "cpppj/build/bin/Release/netstorm_tests.exe",
+          "--filter",
+          "Golem"
+        ],
+        "exit": 0,
+        "log": "extracted/cpp-object-menus-513/test-golems.log",
+        "sha256": "3fff6da2955a58d2ebf5ce0783f57ffbef3b4303a3c438b46fda6edf1b06f630",
+        "summaries": [
+          "2 test(s), 0 failed check(s)"
+        ],
+        "diagnostics": []
+      }
+    ]
+  },
+  "earlierFocusedNative": {
+    "command": [
+      "cpppj/build/bin/Release/netstorm_tests.exe",
+      "--filter",
+      "ObjectMenuVariants"
+    ],
+    "exit": 0,
+    "log": "extracted/cpp-object-menus-513/test-native.log",
+    "sha256": "a468dceadb6b25cf627f2f5878bb3a37a09b5467d28be816d59d75319b9b8bd0",
+    "summaries": [
+      "1 test(s), 0 failed check(s)"
+    ],
+    "diagnostics": []
+  },
+  "currentRegistered": 3340,
+  "fullSuiteRerun": false,
+  "actualInput": {
+    "finalTenCases": {
+      "results": [
+        {
+          "name": "generator",
+          "kind": "windBattery",
+          "selectedSid": 15002,
+          "labels": [
+            "Salvage gains 100",
+            "About",
+            "Player"
+          ],
+          "root": [
+            "432",
+            "15002",
+            "282",
+            "400"
+          ],
+          "menusAfterEscape": [
+            "0",
+            "0",
+            "0"
+          ],
+          "run": {
+            "command": [
+              "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+              "--run",
+              "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-stage-entry-502-data",
+              "--mission",
+              "TEST02",
+              "--window",
+              "--mute-audio",
+              "--frames",
+              "62",
+              "--set",
+              "SCREENW=1280;SCREENH=720;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3",
+              "--ui-script",
+              "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-object-menus-513\\actual-final\\generator\\steps.tsv",
+              "--ui-report",
+              "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-object-menus-513\\actual-final\\generator\\states.tsv",
+              "--audio-report",
+              "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-object-menus-513\\actual-final\\generator\\audio.tsv"
+            ],
+            "binarySha256": "74548abb1600396188d4365464a808d555418a3bb080211b97e78f8cdfb2c362",
+            "scriptSha256": "f7932e2f26233485787a0b13dc762051a2cdc12c852d8ddb202baddd78a29e98",
+            "returnCode": 0,
+            "timedOut": false,
+            "seconds": 4.489819599999464,
+            "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderrSha256": "9fba4f7e2bb0be090e62265ef1203d93a429672f7ce307b7cf3aa08e3bfebbbb",
+            "originalsUnchanged": true,
+            "dataUnchanged": true,
+            "dataRoot": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-stage-entry-502-data"
+          }
+        },
+        {
+          "name": "temple",
+          "kind": "thunderVortex",
+          "selectedSid": 15019,
+          "labels": [
+            "View Netstorm Knowledge",
+            "",
+            "Salvage gains 1250",
+            "About",
+            "Player"
+          ],
+          "root": [
+            "432",
+            "15019",
+            "289",
+            "400"
+          ],
+          "menusAfterEscape": [
+            "14",
+            "0",
+            "14"
+          ],
+          "run": {
+            "command": [
+              "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+              "--run",
+              "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-stage-entry-502-data",
+              "--mission",
+              "TEST02",
+              "--window",
+              "--mute-audio",
+              "--frames",
+              "62",
+              "--set",
+              "SCREENW=1280;SCREENH=720;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3",
+              "--ui-script",
+              "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-object-menus-513\\actual-final\\temple\\steps.tsv",
+              "--ui-report",
+              "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-object-menus-513\\actual-final\\temple\\states.tsv",
+              "--audio-report",
+              "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-object-menus-513\\actual-final\\temple\\audio.tsv"
+            ],
+            "binarySha256": "74548abb1600396188d4365464a808d555418a3bb080211b97e78f8cdfb2c362",
+            "scriptSha256": "661f1ad0afbac1a61fb4b4d6258d616111eb3db5154d597f9ccc020c7efc6026",
+            "returnCode": 0,
+            "timedOut": false,
+            "seconds": 4.041498599995975,
+            "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderrSha256": "9fba4f7e2bb0be090e62265ef1203d93a429672f7ce307b7cf3aa08e3bfebbbb",
+            "originalsUnchanged": true,
+            "dataUnchanged": true,
+            "dataRoot": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-stage-entry-502-data"
+          }
+        },
+        {
+          "name": "geyser",
+          "kind": "geyser",
+          "selectedSid": 15023,
+          "labels": [
+            "About"
+          ],
+          "root": [
+            "432",
+            "15023",
+            "289",
+            "400"
+          ],
+          "menusAfterEscape": [
+            "0",
+            "0",
+            "0"
+          ],
+          "run": {
+            "command": [
+              "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+              "--run",
+              "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-stage-entry-502-data",
+              "--mission",
+              "TEST02",
+              "--window",
+              "--mute-audio",
+              "--frames",
+              "62",
+              "--set",
+              "SCREENW=1280;SCREENH=720;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3",
+              "--ui-script",
+              "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-object-menus-513\\actual-final\\geyser\\steps.tsv",
+              "--ui-report",
+              "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-object-menus-513\\actual-final\\geyser\\states.tsv",
+              "--audio-report",
+              "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-object-menus-513\\actual-final\\geyser\\audio.tsv"
+            ],
+            "binarySha256": "74548abb1600396188d4365464a808d555418a3bb080211b97e78f8cdfb2c362",
+            "scriptSha256": "6902222e0f720ef02656ba188d61888e796f4b9f09635ce328cf3da385598cfd",
+            "returnCode": 0,
+            "timedOut": false,
+            "seconds": 3.952373699998134,
+            "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderrSha256": "9fba4f7e2bb0be090e62265ef1203d93a429672f7ce307b7cf3aa08e3bfebbbb",
+            "originalsUnchanged": true,
+            "dataUnchanged": true,
+            "dataRoot": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-stage-entry-502-data"
+          }
+        },
+        {
+          "name": "bridge",
+          "kind": "bridge",
+          "selectedSid": 15959,
+          "labels": [
+            "About",
+            "Player"
+          ],
+          "root": [
+            "432",
+            "15959",
+            "282",
+            "400"
+          ],
+          "menusAfterEscape": [
+            "0",
+            "0",
+            "0"
+          ],
+          "run": {
+            "command": [
+              "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+              "--run",
+              "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-stage-entry-502-data",
+              "--mission",
+              "TEST02",
+              "--window",
+              "--mute-audio",
+              "--frames",
+              "62",
+              "--set",
+              "SCREENW=1280;SCREENH=720;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3",
+              "--ui-script",
+              "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-object-menus-513\\actual-final\\bridge\\steps.tsv",
+              "--ui-report",
+              "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-object-menus-513\\actual-final\\bridge\\states.tsv",
+              "--audio-report",
+              "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-object-menus-513\\actual-final\\bridge\\audio.tsv"
+            ],
+            "binarySha256": "74548abb1600396188d4365464a808d555418a3bb080211b97e78f8cdfb2c362",
+            "scriptSha256": "7590140aa1726b8b5e93be52c5be5ad1b6c508dc5b843ce71b1ddc7a66708c46",
+            "returnCode": 0,
+            "timedOut": false,
+            "seconds": 5.344545100000687,
+            "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderrSha256": "9fba4f7e2bb0be090e62265ef1203d93a429672f7ce307b7cf3aa08e3bfebbbb",
+            "originalsUnchanged": true,
+            "dataUnchanged": true,
+            "dataRoot": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-stage-entry-502-data"
+          }
+        },
+        {
+          "name": "foliage",
+          "kind": "edgeFarm",
+          "selectedSid": 24967,
+          "labels": [
+            "About"
+          ],
+          "root": [
+            "432",
+            "24967",
+            "289",
+            "400"
+          ],
+          "menusAfterEscape": [
+            "0",
+            "0",
+            "0"
+          ],
+          "run": {
+            "command": [
+              "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+              "--run",
+              "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-stage-entry-502-data",
+              "--mission",
+              "TEST02",
+              "--window",
+              "--mute-audio",
+              "--frames",
+              "62",
+              "--set",
+              "SCREENW=1280;SCREENH=720;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3",
+              "--ui-script",
+              "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-object-menus-513\\actual-final\\foliage\\steps.tsv",
+              "--ui-report",
+              "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-object-menus-513\\actual-final\\foliage\\states.tsv",
+              "--audio-report",
+              "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-object-menus-513\\actual-final\\foliage\\audio.tsv"
+            ],
+            "binarySha256": "74548abb1600396188d4365464a808d555418a3bb080211b97e78f8cdfb2c362",
+            "scriptSha256": "ddb7d81a391ef2b4d4ed6163408567a6fcac08349f134ead8daaf3ab541aded1",
+            "returnCode": 0,
+            "timedOut": false,
+            "seconds": 4.096186499999021,
+            "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderrSha256": "9fba4f7e2bb0be090e62265ef1203d93a429672f7ce307b7cf3aa08e3bfebbbb",
+            "originalsUnchanged": true,
+            "dataUnchanged": true,
+            "dataRoot": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-stage-entry-502-data"
+          }
+        },
+        {
+          "name": "workshop",
+          "kind": "windFactory",
+          "selectedSid": 15006,
+          "labels": [
+            "View Current Production",
+            "Put Knowledge into Production",
+            "Upgrade costs 1000",
+            "",
+            "Salvage gains 750",
+            "About",
+            "Player"
+          ],
+          "root": [
+            "432",
+            "15006",
+            "289",
+            "400"
+          ],
+          "menusAfterEscape": [
+            "0",
+            "0",
+            "0"
+          ],
+          "run": {
+            "command": [
+              "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+              "--run",
+              "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-stage-entry-502-data",
+              "--mission",
+              "TEST02",
+              "--window",
+              "--mute-audio",
+              "--frames",
+              "62",
+              "--set",
+              "SCREENW=1280;SCREENH=720;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3",
+              "--ui-script",
+              "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-object-menus-513\\actual-final\\workshop\\steps.tsv",
+              "--ui-report",
+              "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-object-menus-513\\actual-final\\workshop\\states.tsv",
+              "--audio-report",
+              "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-object-menus-513\\actual-final\\workshop\\audio.tsv"
+            ],
+            "binarySha256": "74548abb1600396188d4365464a808d555418a3bb080211b97e78f8cdfb2c362",
+            "scriptSha256": "cb268ff40f6be7c5ef01c1552131584e4d19673f8f6564318d109cb2597d906b",
+            "returnCode": 0,
+            "timedOut": false,
+            "seconds": 3.8615158000029624,
+            "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderrSha256": "9fba4f7e2bb0be090e62265ef1203d93a429672f7ce307b7cf3aa08e3bfebbbb",
+            "originalsUnchanged": true,
+            "dataUnchanged": true,
+            "dataRoot": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-stage-entry-502-data"
+          }
+        },
+        {
+          "name": "priest",
+          "kind": "priest",
+          "selectedSid": 15007,
+          "labels": [
+            "Construct",
+            "View Netstorm Knowledge",
+            "",
+            "About",
+            "Player"
+          ],
+          "root": [
+            "432",
+            "15007",
+            "290",
+            "400"
+          ],
+          "menusAfterEscape": [
+            "0",
+            "0",
+            "0"
+          ],
+          "run": {
+            "command": [
+              "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+              "--run",
+              "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-stage-entry-502-data",
+              "--mission",
+              "TEST02",
+              "--window",
+              "--mute-audio",
+              "--frames",
+              "62",
+              "--set",
+              "SCREENW=1280;SCREENH=720;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3",
+              "--ui-script",
+              "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-object-menus-513\\actual-final\\priest\\steps.tsv",
+              "--ui-report",
+              "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-object-menus-513\\actual-final\\priest\\states.tsv",
+              "--audio-report",
+              "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-object-menus-513\\actual-final\\priest\\audio.tsv"
+            ],
+            "binarySha256": "74548abb1600396188d4365464a808d555418a3bb080211b97e78f8cdfb2c362",
+            "scriptSha256": "909253fa6551b67b906ccef5a81bbc27fa2b0af8a5d4eddb1f5f7a600c30757b",
+            "returnCode": 0,
+            "timedOut": false,
+            "seconds": 3.828102999992552,
+            "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderrSha256": "77b6613c9b128828df9acb70d4dd94f84a1f8e769c15b8907d0f4c3e032f7592",
+            "originalsUnchanged": true,
+            "dataUnchanged": true,
+            "dataRoot": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-stage-entry-502-data"
+          }
+        },
+        {
+          "name": "walker",
+          "kind": "windWalker",
+          "selectedSid": 15000,
+          "labels": [
+            "Salvage gains 150",
+            "About",
+            "Player"
+          ],
+          "root": [
+            "432",
+            "15000",
+            "290",
+            "400"
+          ],
+          "menusAfterEscape": [
+            "0",
+            "0",
+            "0"
+          ],
+          "run": {
+            "command": [
+              "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+              "--run",
+              "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-stage-entry-502-data",
+              "--mission",
+              "TEST02",
+              "--window",
+              "--mute-audio",
+              "--frames",
+              "62",
+              "--set",
+              "SCREENW=1280;SCREENH=720;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3",
+              "--ui-script",
+              "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-object-menus-513\\actual-final\\walker\\steps.tsv",
+              "--ui-report",
+              "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-object-menus-513\\actual-final\\walker\\states.tsv",
+              "--audio-report",
+              "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-object-menus-513\\actual-final\\walker\\audio.tsv"
+            ],
+            "binarySha256": "74548abb1600396188d4365464a808d555418a3bb080211b97e78f8cdfb2c362",
+            "scriptSha256": "9df2bf4c205ed56a95453222951aadd7b24418e156f038ad8702e2f2c5fb2a72",
+            "returnCode": 0,
+            "timedOut": false,
+            "seconds": 4.180726099992171,
+            "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderrSha256": "8a0d584e07a9ffc42e32f419067731a0b88e6308c89e7906910b52b1a0a4c04d",
+            "originalsUnchanged": true,
+            "dataUnchanged": true,
+            "dataRoot": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-stage-entry-502-data"
+          }
+        },
+        {
+          "name": "airship",
+          "kind": "windBalloon",
+          "selectedSid": 15001,
+          "labels": [
+            "Salvage gains 300",
+            "About",
+            "Player"
+          ],
+          "root": [
+            "432",
+            "15001",
+            "290",
+            "400"
+          ],
+          "menusAfterEscape": [
+            "0",
+            "0",
+            "0"
+          ],
+          "run": {
+            "command": [
+              "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+              "--run",
+              "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-stage-entry-502-data",
+              "--mission",
+              "TEST02",
+              "--window",
+              "--mute-audio",
+              "--frames",
+              "62",
+              "--set",
+              "SCREENW=1280;SCREENH=720;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3",
+              "--ui-script",
+              "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-object-menus-513\\actual-final\\airship\\steps.tsv",
+              "--ui-report",
+              "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-object-menus-513\\actual-final\\airship\\states.tsv",
+              "--audio-report",
+              "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-object-menus-513\\actual-final\\airship\\audio.tsv"
+            ],
+            "binarySha256": "74548abb1600396188d4365464a808d555418a3bb080211b97e78f8cdfb2c362",
+            "scriptSha256": "1d254a1e8e810a4d92ab7442263513673b4b22728aaf03f79c1876c3eec01e71",
+            "returnCode": 0,
+            "timedOut": false,
+            "seconds": 3.973583699989831,
+            "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderrSha256": "56e8919dadcc57a517b7239f872528da63b8dd87a359b63dbc58c37ac7db4245",
+            "originalsUnchanged": true,
+            "dataUnchanged": true,
+            "dataRoot": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-stage-entry-502-data"
+          }
+        },
+        {
+          "name": "whirlibase",
+          "kind": "sunAviary",
+          "selectedSid": 15026,
+          "labels": [
+            "About",
+            "Player"
+          ],
+          "root": [
+            "432",
+            "15026",
+            "282",
+            "400"
+          ],
+          "menusAfterEscape": [
+            "0",
+            "0",
+            "0"
+          ],
+          "run": {
+            "command": [
+              "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+              "--run",
+              "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-stage-entry-502-data",
+              "--mission",
+              "TEST02",
+              "--window",
+              "--mute-audio",
+              "--frames",
+              "62",
+              "--set",
+              "SCREENW=1280;SCREENH=720;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3",
+              "--ui-script",
+              "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-object-menus-513\\actual-final\\whirlibase\\steps.tsv",
+              "--ui-report",
+              "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-object-menus-513\\actual-final\\whirlibase\\states.tsv",
+              "--audio-report",
+              "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-object-menus-513\\actual-final\\whirlibase\\audio.tsv"
+            ],
+            "binarySha256": "74548abb1600396188d4365464a808d555418a3bb080211b97e78f8cdfb2c362",
+            "scriptSha256": "a7077d4fe6767bc0c8b0e669a0bd3eb43aabb960d273c7cfbc7d692809d79e36",
+            "returnCode": 0,
+            "timedOut": false,
+            "seconds": 4.545931200002087,
+            "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderrSha256": "9fba4f7e2bb0be090e62265ef1203d93a429672f7ce307b7cf3aa08e3bfebbbb",
+            "originalsUnchanged": true,
+            "dataUnchanged": true,
+            "dataRoot": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-stage-entry-502-data"
+          }
+        }
+      ]
+    },
+    "extraTempleCleanup": {
+      "results": [
+        {
+          "name": "temple",
+          "kind": "thunderVortex",
+          "selectedSid": 15019,
+          "labels": [
+            "View Netstorm Knowledge",
+            "",
+            "Salvage gains 1250",
+            "About",
+            "Player"
+          ],
+          "root": [
+            "432",
+            "15019",
+            "289",
+            "400"
+          ],
+          "menusAfterEscape": [
+            "0",
+            "0",
+            "0"
+          ],
+          "run": {
+            "command": [
+              "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+              "--run",
+              "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-stage-entry-502-data",
+              "--mission",
+              "TEST02",
+              "--window",
+              "--mute-audio",
+              "--frames",
+              "72",
+              "--set",
+              "SCREENW=1280;SCREENH=720;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3",
+              "--ui-script",
+              "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-object-menus-513\\temple-cleanup\\temple\\steps.tsv",
+              "--ui-report",
+              "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-object-menus-513\\temple-cleanup\\temple\\states.tsv",
+              "--audio-report",
+              "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-object-menus-513\\temple-cleanup\\temple\\audio.tsv"
+            ],
+            "binarySha256": "74548abb1600396188d4365464a808d555418a3bb080211b97e78f8cdfb2c362",
+            "scriptSha256": "b7bec5c473ae5c3863d22c0a75862861ef81febb26cf6bb48b187256b8bf4c97",
+            "returnCode": 0,
+            "timedOut": false,
+            "seconds": 4.995834999994258,
+            "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderrSha256": "9fba4f7e2bb0be090e62265ef1203d93a429672f7ce307b7cf3aa08e3bfebbbb",
+            "originalsUnchanged": true,
+            "dataUnchanged": true,
+            "dataRoot": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-stage-entry-502-data"
+          }
+        }
+      ]
+    },
+    "finalAcceptedProcesses": 11,
+    "uniqueKinds": 10,
+    "totalProcesses": 23,
+    "normalExitProcesses": 21,
+    "failedExitProcesses": 2,
+    "runs": [
+      {
+        "path": "extracted/cpp-object-menus-513/actual-final/airship/run.json",
+        "exit": 0,
+        "gameSha256": "74548abb1600396188d4365464a808d555418a3bb080211b97e78f8cdfb2c362"
+      },
+      {
+        "path": "extracted/cpp-object-menus-513/actual-final/bridge/run.json",
+        "exit": 0,
+        "gameSha256": "74548abb1600396188d4365464a808d555418a3bb080211b97e78f8cdfb2c362"
+      },
+      {
+        "path": "extracted/cpp-object-menus-513/actual-final/foliage/run.json",
+        "exit": 0,
+        "gameSha256": "74548abb1600396188d4365464a808d555418a3bb080211b97e78f8cdfb2c362"
+      },
+      {
+        "path": "extracted/cpp-object-menus-513/actual-final/generator/run.json",
+        "exit": 0,
+        "gameSha256": "74548abb1600396188d4365464a808d555418a3bb080211b97e78f8cdfb2c362"
+      },
+      {
+        "path": "extracted/cpp-object-menus-513/actual-final/geyser/run.json",
+        "exit": 0,
+        "gameSha256": "74548abb1600396188d4365464a808d555418a3bb080211b97e78f8cdfb2c362"
+      },
+      {
+        "path": "extracted/cpp-object-menus-513/actual-final/priest/run.json",
+        "exit": 0,
+        "gameSha256": "74548abb1600396188d4365464a808d555418a3bb080211b97e78f8cdfb2c362"
+      },
+      {
+        "path": "extracted/cpp-object-menus-513/actual-final/temple/run.json",
+        "exit": 0,
+        "gameSha256": "74548abb1600396188d4365464a808d555418a3bb080211b97e78f8cdfb2c362"
+      },
+      {
+        "path": "extracted/cpp-object-menus-513/actual-final/walker/run.json",
+        "exit": 0,
+        "gameSha256": "74548abb1600396188d4365464a808d555418a3bb080211b97e78f8cdfb2c362"
+      },
+      {
+        "path": "extracted/cpp-object-menus-513/actual-final/whirlibase/run.json",
+        "exit": 0,
+        "gameSha256": "74548abb1600396188d4365464a808d555418a3bb080211b97e78f8cdfb2c362"
+      },
+      {
+        "path": "extracted/cpp-object-menus-513/actual-final/workshop/run.json",
+        "exit": 0,
+        "gameSha256": "74548abb1600396188d4365464a808d555418a3bb080211b97e78f8cdfb2c362"
+      },
+      {
+        "path": "extracted/cpp-object-menus-513/actual-first/bridge/run.json",
+        "exit": 0,
+        "gameSha256": "19a6ef35f116f949d59c12fec102079b72f12b17832ea9860cd1689b7ca0d8be"
+      },
+      {
+        "path": "extracted/cpp-object-menus-513/actual-first/generator/run.json",
+        "exit": 0,
+        "gameSha256": "19a6ef35f116f949d59c12fec102079b72f12b17832ea9860cd1689b7ca0d8be"
+      },
+      {
+        "path": "extracted/cpp-object-menus-513/actual-first/geyser/run.json",
+        "exit": 0,
+        "gameSha256": "19a6ef35f116f949d59c12fec102079b72f12b17832ea9860cd1689b7ca0d8be"
+      },
+      {
+        "path": "extracted/cpp-object-menus-513/actual-first/temple/run.json",
+        "exit": 0,
+        "gameSha256": "19a6ef35f116f949d59c12fec102079b72f12b17832ea9860cd1689b7ca0d8be"
+      },
+      {
+        "path": "extracted/cpp-object-menus-513/actual-other/airship/run.json",
+        "exit": 0,
+        "gameSha256": "19a6ef35f116f949d59c12fec102079b72f12b17832ea9860cd1689b7ca0d8be"
+      },
+      {
+        "path": "extracted/cpp-object-menus-513/actual-other/foliage/run.json",
+        "exit": 0,
+        "gameSha256": "19a6ef35f116f949d59c12fec102079b72f12b17832ea9860cd1689b7ca0d8be"
+      },
+      {
+        "path": "extracted/cpp-object-menus-513/actual-other/priest/run.json",
+        "exit": 0,
+        "gameSha256": "19a6ef35f116f949d59c12fec102079b72f12b17832ea9860cd1689b7ca0d8be"
+      },
+      {
+        "path": "extracted/cpp-object-menus-513/actual-other/walker/run.json",
+        "exit": 0,
+        "gameSha256": "19a6ef35f116f949d59c12fec102079b72f12b17832ea9860cd1689b7ca0d8be"
+      },
+      {
+        "path": "extracted/cpp-object-menus-513/actual-other/whirlibase/run.json",
+        "exit": 0,
+        "gameSha256": "19a6ef35f116f949d59c12fec102079b72f12b17832ea9860cd1689b7ca0d8be"
+      },
+      {
+        "path": "extracted/cpp-object-menus-513/actual-other/workshop/run.json",
+        "exit": 0,
+        "gameSha256": "19a6ef35f116f949d59c12fec102079b72f12b17832ea9860cd1689b7ca0d8be"
+      },
+      {
+        "path": "extracted/cpp-object-menus-513/repro-thunderVortex/run.json",
+        "exit": 1,
+        "gameSha256": "ba9d2a28efe04765a8b36d83e0af11d145947f0fcb1a9d99d8fd840db3c36ccb"
+      },
+      {
+        "path": "extracted/cpp-object-menus-513/repro-windBattery/run.json",
+        "exit": 1,
+        "gameSha256": "ba9d2a28efe04765a8b36d83e0af11d145947f0fcb1a9d99d8fd840db3c36ccb"
+      },
+      {
+        "path": "extracted/cpp-object-menus-513/temple-cleanup/temple/run.json",
+        "exit": 0,
+        "gameSha256": "74548abb1600396188d4365464a808d555418a3bb080211b97e78f8cdfb2c362"
+      }
+    ],
+    "failures": [
+      "수정 전 제네레이터/신전 실제 우클릭은 +a8 미연결로 각각 종료1.",
+      "첫 파생 작성기 제품에서 다리 클릭은 게임 종료0이나 실제 메뉴 부재로 검사 assertion 실패. 원본에 없는 bridge 선택 제외를 찾아 제거한 후 최종 다리 사례 통과."
+    ],
+    "templeEscape": "지식29카드→ESC에서 카드 반납/가로막대14메뉴→두 번째ESC에서 instance/index/menu0을 별도 실행으로 확인했다."
+  },
+  "protection": {
+    "originalAndCDAndAgentsUnchanged": true,
+    "existingFixturesUnchanged": true,
+    "existingTestImplementationsUnchanged": true,
+    "executionCopyUnchanged": true
+  },
+  "remaining": [
+    "새 파생 명령의 실제 실행: 다리 편집3상태·Dig Up·Turn To Spell/Obelisk·Meltdown/Detonate. 연결되지 않은 실행을 조용히 버리지 않고 현재 명시 오류로 유지했다.",
+    "개발자 checking 모드의 큰 AI 디버그 작성00413dd0. 일반 checking0의 원본 즉시 반환은 유지한다.",
+    "전체 일반 건물형/이동형·제단·소유자/상태 조합과 원본4d5840의 전체 픽셀/우선순위 선택. 이번에는 잘못된 bridge 일괄 제외만 제거했다.",
+    "스톰 크리스탈/비석 실제 우클릭. 크리스탈은512의 대상 커서, 비석은 이번 파생 작성 원문 비교까지만 확인했다."
+  ],
+  "userPolicy": {
+    "attackFlyers": "훨리기그·맨오워·더스트 데빌은 사용자의 최신 지시로 디컴파일 결과의 정적 분석/코드 작업만 진행한다. 실제 생산/생성/우클릭 재현과 이 세 타입의 추가 실행 관측은 진행하지 않는다.",
+    "greenRectangles": "분석/추가 재현 보류 유지",
+    "naturalCompletion": "자연 완주/사용자 개입 보류 유지",
+    "missingEnglish": "언어 파일 부재 개선 보류 유지"
+  },
+  "limits": [
+    "전체3340개는 이번에 실행하지 않았다. 마지막 전체3337/실패0은510의 이전508제품이다.",
+    "이번 실제 입력은 TEST02의16:9 창 모드다. 전체화면/16:10/Windows11/자연 완주/전체픽셀 동일성의 증거가 아니다.",
+    "메뉴 작성 복원을 새 명령 실행/전종류 우클릭 완료로 합산하지 않는다."
+  ],
+  "rawEvidenceHashes": {
+    "extracted/cpp-object-menus-513/actual-final/airship/audio.tsv": "e9cb0f9232be785fe16271257a5e8a4b6565ea4de7e93c957abc395ecbd0d433",
+    "extracted/cpp-object-menus-513/actual-final/airship/data-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-object-menus-513/actual-final/airship/menu.bmp": "2e8329b8554aa32457601cfa58bdfcd09995d5c715ca64ee790e80db847d5567",
+    "extracted/cpp-object-menus-513/actual-final/airship/originals-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-object-menus-513/actual-final/airship/run.json": "9a528e25b50a3623e734fcdd5b4fa3f2d9ff7070ec67679078e852775b75d236",
+    "extracted/cpp-object-menus-513/actual-final/airship/running.json": "eaa2c51f461746a292ae796dad62514e1120ecb67822cf14c834c24aac9e498e",
+    "extracted/cpp-object-menus-513/actual-final/airship/settings-backup/fullscreenStateFile.dat": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-object-menus-513/actual-final/airship/settings-backup/options.cfg": "7c986d379a533456fb34d19f7937d1a028812c4560389d43cb663f1bd10cd7d4",
+    "extracted/cpp-object-menus-513/actual-final/airship/states.tsv": "62a4c98a41ba8a8ae8918bfb3a4c38dea6af470a76efd876b030145614651338",
+    "extracted/cpp-object-menus-513/actual-final/airship/stderr.log": "56e8919dadcc57a517b7239f872528da63b8dd87a359b63dbc58c37ac7db4245",
+    "extracted/cpp-object-menus-513/actual-final/airship/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-object-menus-513/actual-final/airship/steps.tsv": "1d254a1e8e810a4d92ab7442263513673b4b22728aaf03f79c1876c3eec01e71",
+    "extracted/cpp-object-menus-513/actual-final/airship/summary.json": "18340f5f2312398a0b54139412caf71520643fad16ff7f25718078c466af6e3f",
+    "extracted/cpp-object-menus-513/actual-final/bridge/audio.tsv": "33c1feedbb5c2d768f4b665aed0823d19e7c71d59a7dabfa6e29c409e37278b7",
+    "extracted/cpp-object-menus-513/actual-final/bridge/data-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-object-menus-513/actual-final/bridge/menu.bmp": "cd3c5de7f76129e94361df9a43c9220e2f48424b0bda375debd84a69085b036e",
+    "extracted/cpp-object-menus-513/actual-final/bridge/originals-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-object-menus-513/actual-final/bridge/run.json": "c4755cd55d1eb68302bd5d72280b63029f636ec536b76fdbeb5c2a94a06d55d0",
+    "extracted/cpp-object-menus-513/actual-final/bridge/running.json": "d29daa4a945a9567837b87571e2e3f46ab2cbc88ed33f8b3db5e75ec4ef1a65a",
+    "extracted/cpp-object-menus-513/actual-final/bridge/settings-backup/fullscreenStateFile.dat": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-object-menus-513/actual-final/bridge/settings-backup/options.cfg": "7c986d379a533456fb34d19f7937d1a028812c4560389d43cb663f1bd10cd7d4",
+    "extracted/cpp-object-menus-513/actual-final/bridge/states.tsv": "34ac576e3291bd0932f432fc367e3fd91f96b73118946a7e4bacf677ff35d825",
+    "extracted/cpp-object-menus-513/actual-final/bridge/stderr.log": "9fba4f7e2bb0be090e62265ef1203d93a429672f7ce307b7cf3aa08e3bfebbbb",
+    "extracted/cpp-object-menus-513/actual-final/bridge/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-object-menus-513/actual-final/bridge/steps.tsv": "7590140aa1726b8b5e93be52c5be5ad1b6c508dc5b843ce71b1ddc7a66708c46",
+    "extracted/cpp-object-menus-513/actual-final/bridge/summary.json": "1688a56a0463bebcd620ad1ee74a8cfb44e218a9b0095cf633ade65210270204",
+    "extracted/cpp-object-menus-513/actual-final/foliage/audio.tsv": "78d86c571e556c5e75433a765629f01a37c61233b1c62fab9f5940688aaa8353",
+    "extracted/cpp-object-menus-513/actual-final/foliage/data-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-object-menus-513/actual-final/foliage/menu.bmp": "7a328018797fda23921e63525fdbb25f9ae8718473a69d4609eed9388c77ff67",
+    "extracted/cpp-object-menus-513/actual-final/foliage/originals-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-object-menus-513/actual-final/foliage/run.json": "80cac056a03658b29b73e28d37ade3918c6a453676fdf810e9765b7370c27717",
+    "extracted/cpp-object-menus-513/actual-final/foliage/running.json": "004970bc877a7ae1f8a05f345713eafa5ac5fcb5d4ca93fda0f9a6335681dc55",
+    "extracted/cpp-object-menus-513/actual-final/foliage/settings-backup/fullscreenStateFile.dat": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-object-menus-513/actual-final/foliage/settings-backup/options.cfg": "7c986d379a533456fb34d19f7937d1a028812c4560389d43cb663f1bd10cd7d4",
+    "extracted/cpp-object-menus-513/actual-final/foliage/states.tsv": "493517233addeda89c4b13239d018b94edbfb3e8f05216dd2246f349e1eae8ad",
+    "extracted/cpp-object-menus-513/actual-final/foliage/stderr.log": "9fba4f7e2bb0be090e62265ef1203d93a429672f7ce307b7cf3aa08e3bfebbbb",
+    "extracted/cpp-object-menus-513/actual-final/foliage/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-object-menus-513/actual-final/foliage/steps.tsv": "ddb7d81a391ef2b4d4ed6163408567a6fcac08349f134ead8daaf3ab541aded1",
+    "extracted/cpp-object-menus-513/actual-final/foliage/summary.json": "b20aa212ccc93990b1e6a46e49d05a840e0e6732ea10dff2f75d08cbc37e245a",
+    "extracted/cpp-object-menus-513/actual-final/generator/audio.tsv": "ada5350c17ab3038ac8ad9a19977a06c8ad6fefe9bd7712a66bfb6b210ff383f",
+    "extracted/cpp-object-menus-513/actual-final/generator/data-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-object-menus-513/actual-final/generator/menu.bmp": "79c57d8c23765ee022aba55341f36dd1411862586e47c48f30d65d8f5c0d0547",
+    "extracted/cpp-object-menus-513/actual-final/generator/originals-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-object-menus-513/actual-final/generator/run.json": "f177a09b1ba67a370fe9a36ed36ed0badbfa9d7105806f077125a966e69d9cda",
+    "extracted/cpp-object-menus-513/actual-final/generator/running.json": "35c8c92af06c2ba1350e1178139d8e7684ef23365ade7cd7f6b18d41c87aabc3",
+    "extracted/cpp-object-menus-513/actual-final/generator/settings-backup/fullscreenStateFile.dat": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-object-menus-513/actual-final/generator/settings-backup/options.cfg": "7c986d379a533456fb34d19f7937d1a028812c4560389d43cb663f1bd10cd7d4",
+    "extracted/cpp-object-menus-513/actual-final/generator/states.tsv": "d94a345726f4e0b66d75b6913d616cfb93863fc526c475014f7f942bac8e591b",
+    "extracted/cpp-object-menus-513/actual-final/generator/stderr.log": "9fba4f7e2bb0be090e62265ef1203d93a429672f7ce307b7cf3aa08e3bfebbbb",
+    "extracted/cpp-object-menus-513/actual-final/generator/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-object-menus-513/actual-final/generator/steps.tsv": "f7932e2f26233485787a0b13dc762051a2cdc12c852d8ddb202baddd78a29e98",
+    "extracted/cpp-object-menus-513/actual-final/generator/summary.json": "4ec72f2211b29a2dc3b0ff23d4b6fa6ce85f42878cddbb35e61c03ae2ce7c09a",
+    "extracted/cpp-object-menus-513/actual-final/geyser/audio.tsv": "03aefe6c30724bb853a4fa0c797faa1d76b63c8e7b0270e8b8d90bcc6864c60c",
+    "extracted/cpp-object-menus-513/actual-final/geyser/data-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-object-menus-513/actual-final/geyser/menu.bmp": "a3e8274b5b7c671bd63d013f2b196a00654d7783f98d79e3132e772623dba621",
+    "extracted/cpp-object-menus-513/actual-final/geyser/originals-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-object-menus-513/actual-final/geyser/run.json": "7796ec21b14a0e17fa336fb4875f6d245a85e30c4f2a9f258b8cf8c7d47857e7",
+    "extracted/cpp-object-menus-513/actual-final/geyser/running.json": "97e019163b817fdb0ce59021d61bfe34fd35750cd5089b7614abe18a6009f693",
+    "extracted/cpp-object-menus-513/actual-final/geyser/settings-backup/fullscreenStateFile.dat": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-object-menus-513/actual-final/geyser/settings-backup/options.cfg": "7c986d379a533456fb34d19f7937d1a028812c4560389d43cb663f1bd10cd7d4",
+    "extracted/cpp-object-menus-513/actual-final/geyser/states.tsv": "1d97d74029a689ebece08deb69be15e195ec68c7c61a3b45d053b3934d887e7d",
+    "extracted/cpp-object-menus-513/actual-final/geyser/stderr.log": "9fba4f7e2bb0be090e62265ef1203d93a429672f7ce307b7cf3aa08e3bfebbbb",
+    "extracted/cpp-object-menus-513/actual-final/geyser/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-object-menus-513/actual-final/geyser/steps.tsv": "6902222e0f720ef02656ba188d61888e796f4b9f09635ce328cf3da385598cfd",
+    "extracted/cpp-object-menus-513/actual-final/geyser/summary.json": "a1e9e0c07a8063de4d5a3394458052851bf445ce354e3f7034017b95bf9678ad",
+    "extracted/cpp-object-menus-513/actual-final/priest/audio.tsv": "2dcb349366a9b54b8ddd98fd02d3752da46bbba47f15d3aa1035c4f189224e7b",
+    "extracted/cpp-object-menus-513/actual-final/priest/data-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-object-menus-513/actual-final/priest/menu.bmp": "6a5809dab0a532c9809dc4120c6ae03ccd6b3772cc0dd4067620b116cc74d1df",
+    "extracted/cpp-object-menus-513/actual-final/priest/originals-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-object-menus-513/actual-final/priest/run.json": "84583e273fd49c61a8a7947f1b993f066a9d490393512cd6cce0e93d1adb997c",
+    "extracted/cpp-object-menus-513/actual-final/priest/running.json": "106152940e072ed37237f294079d7d5a9105c37cbb1179020f2123d63c961679",
+    "extracted/cpp-object-menus-513/actual-final/priest/settings-backup/fullscreenStateFile.dat": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-object-menus-513/actual-final/priest/settings-backup/options.cfg": "7c986d379a533456fb34d19f7937d1a028812c4560389d43cb663f1bd10cd7d4",
+    "extracted/cpp-object-menus-513/actual-final/priest/states.tsv": "c1e339507422babdc436f85104a05987614957d7c077475233541082f50b8ddf",
+    "extracted/cpp-object-menus-513/actual-final/priest/stderr.log": "77b6613c9b128828df9acb70d4dd94f84a1f8e769c15b8907d0f4c3e032f7592",
+    "extracted/cpp-object-menus-513/actual-final/priest/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-object-menus-513/actual-final/priest/steps.tsv": "909253fa6551b67b906ccef5a81bbc27fa2b0af8a5d4eddb1f5f7a600c30757b",
+    "extracted/cpp-object-menus-513/actual-final/priest/summary.json": "8c8b60785e08ac879b3d66f40f1ab00c3ab9285c47f4b26564e153e888bb7696",
+    "extracted/cpp-object-menus-513/actual-final/summary.json": "dbfbe8b79219ae5dbec5ae9d3504e0317c3b6f86ca437b3b60e3138212418945",
+    "extracted/cpp-object-menus-513/actual-final/temple/audio.tsv": "bf8b1c8d0659018761814134f1c4e7a5d1b545700b0d1ffe50ae2d9fb8e76715",
+    "extracted/cpp-object-menus-513/actual-final/temple/data-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-object-menus-513/actual-final/temple/knowledge.bmp": "f5b97a16b83a3928f14412044a45abb2e336600303ff535a8609e48f0e20d0bf",
+    "extracted/cpp-object-menus-513/actual-final/temple/menu.bmp": "a456a408cf923e2969204fd7b4dba166175e7722ccf4a5bc06c2011fe9cd9b92",
+    "extracted/cpp-object-menus-513/actual-final/temple/originals-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-object-menus-513/actual-final/temple/run.json": "715267401a23fdf1197f1c0519d1f099c3c3d042c67e938eca4e6fe4b8af6ddb",
+    "extracted/cpp-object-menus-513/actual-final/temple/running.json": "4821fb22cb702ebc3d1a7fe429a41c58483fb3b20ef2acaef1c60254c9a37186",
+    "extracted/cpp-object-menus-513/actual-final/temple/settings-backup/fullscreenStateFile.dat": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-object-menus-513/actual-final/temple/settings-backup/options.cfg": "7c986d379a533456fb34d19f7937d1a028812c4560389d43cb663f1bd10cd7d4",
+    "extracted/cpp-object-menus-513/actual-final/temple/states.tsv": "0363efbbd6c090e7c1ca0031c7778ecad1da6017e7f33b470b56d66315553203",
+    "extracted/cpp-object-menus-513/actual-final/temple/stderr.log": "9fba4f7e2bb0be090e62265ef1203d93a429672f7ce307b7cf3aa08e3bfebbbb",
+    "extracted/cpp-object-menus-513/actual-final/temple/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-object-menus-513/actual-final/temple/steps.tsv": "661f1ad0afbac1a61fb4b4d6258d616111eb3db5154d597f9ccc020c7efc6026",
+    "extracted/cpp-object-menus-513/actual-final/temple/summary.json": "c67136d984553bbdfc425c3fdfe982d7951cb309d96019222fbc6022e69f5fba",
+    "extracted/cpp-object-menus-513/actual-final/walker/audio.tsv": "677ef4ac3b8e99ac51e0662ba74cb9e9e028364fc3a70655de479c6fd1337944",
+    "extracted/cpp-object-menus-513/actual-final/walker/data-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-object-menus-513/actual-final/walker/menu.bmp": "cc4c8c2ec25db09ea2bb460a07e977e2ee930223cb35296ae21ca71c1135ade3",
+    "extracted/cpp-object-menus-513/actual-final/walker/originals-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-object-menus-513/actual-final/walker/run.json": "7ec60ebb8effd182a20e3f926ca8b7bddf36dcf2b256d05e132b690b26ab178d",
+    "extracted/cpp-object-menus-513/actual-final/walker/running.json": "4af3065386b736dfaedb59e3e45b319a645871e47241054a84be891d44c434db",
+    "extracted/cpp-object-menus-513/actual-final/walker/settings-backup/fullscreenStateFile.dat": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-object-menus-513/actual-final/walker/settings-backup/options.cfg": "7c986d379a533456fb34d19f7937d1a028812c4560389d43cb663f1bd10cd7d4",
+    "extracted/cpp-object-menus-513/actual-final/walker/states.tsv": "4aaf0568d88473f45cef867ed4b45f43ab059d3d4a70e9f095fbc7e5bf89b86e",
+    "extracted/cpp-object-menus-513/actual-final/walker/stderr.log": "8a0d584e07a9ffc42e32f419067731a0b88e6308c89e7906910b52b1a0a4c04d",
+    "extracted/cpp-object-menus-513/actual-final/walker/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-object-menus-513/actual-final/walker/steps.tsv": "9df2bf4c205ed56a95453222951aadd7b24418e156f038ad8702e2f2c5fb2a72",
+    "extracted/cpp-object-menus-513/actual-final/walker/summary.json": "6cf8d914a21d19a3f64d2cb3778fded71329700530f529da2961850ff39faff1",
+    "extracted/cpp-object-menus-513/actual-final/whirlibase/audio.tsv": "eccc539ddf705598bffdbd9c2b722ddcc892d5c5cfca81f8bc1335096ddcbfed",
+    "extracted/cpp-object-menus-513/actual-final/whirlibase/data-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-object-menus-513/actual-final/whirlibase/menu.bmp": "3bf4593a09d97bd4e6a434aac1a1c1301bcdadae661ab571ed48e53d84b28019",
+    "extracted/cpp-object-menus-513/actual-final/whirlibase/originals-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-object-menus-513/actual-final/whirlibase/run.json": "c149089a03dba4837dd9eeb39d52ed336ef4cb36b67e2d682140e4559c892334",
+    "extracted/cpp-object-menus-513/actual-final/whirlibase/running.json": "6d68b97c734107f4ae3f016cd3fcf77ec512c37899b0e516ccfbb1935eb6cff7",
+    "extracted/cpp-object-menus-513/actual-final/whirlibase/settings-backup/fullscreenStateFile.dat": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-object-menus-513/actual-final/whirlibase/settings-backup/options.cfg": "7c986d379a533456fb34d19f7937d1a028812c4560389d43cb663f1bd10cd7d4",
+    "extracted/cpp-object-menus-513/actual-final/whirlibase/states.tsv": "68512a1e4c165735c0e1ac10b07d57c58d85b7e3571644359b9bff32a789a418",
+    "extracted/cpp-object-menus-513/actual-final/whirlibase/stderr.log": "9fba4f7e2bb0be090e62265ef1203d93a429672f7ce307b7cf3aa08e3bfebbbb",
+    "extracted/cpp-object-menus-513/actual-final/whirlibase/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-object-menus-513/actual-final/whirlibase/steps.tsv": "a7077d4fe6767bc0c8b0e669a0bd3eb43aabb960d273c7cfbc7d692809d79e36",
+    "extracted/cpp-object-menus-513/actual-final/whirlibase/summary.json": "9c360063b84a53a4a03910c4e6f68c5670240062c9a3ce0370065e1d3d29409b",
+    "extracted/cpp-object-menus-513/actual-final/workshop/audio.tsv": "65eb10d5d0dd985eb0538d3ee9e053703a23ec2a8684d78f1083b3c7d2b264b2",
+    "extracted/cpp-object-menus-513/actual-final/workshop/data-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-object-menus-513/actual-final/workshop/menu.bmp": "cb1c3fd6f7a20fdc6dac31f12026e48d622a6a2cc6ee5bfb4f8d2cafc9ecb67f",
+    "extracted/cpp-object-menus-513/actual-final/workshop/originals-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-object-menus-513/actual-final/workshop/run.json": "522fabeb7c7a3c0cfb08489c27c6c1b5c12394003952a1f7b9a1dca72c83700a",
+    "extracted/cpp-object-menus-513/actual-final/workshop/running.json": "1a2d29b931d2551f0890a537d07458c920035640da4f468d4e7903f545f652b8",
+    "extracted/cpp-object-menus-513/actual-final/workshop/settings-backup/fullscreenStateFile.dat": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-object-menus-513/actual-final/workshop/settings-backup/options.cfg": "7c986d379a533456fb34d19f7937d1a028812c4560389d43cb663f1bd10cd7d4",
+    "extracted/cpp-object-menus-513/actual-final/workshop/states.tsv": "9623f0718f13a84993caee003dce0145a9f5fba07fc1f0d7585afc1cda10225d",
+    "extracted/cpp-object-menus-513/actual-final/workshop/stderr.log": "9fba4f7e2bb0be090e62265ef1203d93a429672f7ce307b7cf3aa08e3bfebbbb",
+    "extracted/cpp-object-menus-513/actual-final/workshop/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-object-menus-513/actual-final/workshop/steps.tsv": "cb268ff40f6be7c5ef01c1552131584e4d19673f8f6564318d109cb2597d906b",
+    "extracted/cpp-object-menus-513/actual-final/workshop/summary.json": "259e74690c91853c1b821476c24336d3e8f2f750b1e75d703c0419cd9b1e6841",
+    "extracted/cpp-object-menus-513/actual-final.json": "8c9cd16173006ac9e856dd983bc1b26f8a62d1a9d4abfb95fbabe7a34e095222",
+    "extracted/cpp-object-menus-513/actual-final.log": "ca9006e9e9f108bbd1bf3428f31f3276ff0fc062a3b6978730b558589acbb353",
+    "extracted/cpp-object-menus-513/actual-first/bridge/audio.tsv": "eed66d568262cd774bbc2a862cfe056ad5c14c7aceb437fd9d61bee536826dd4",
+    "extracted/cpp-object-menus-513/actual-first/bridge/data-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-object-menus-513/actual-first/bridge/menu.bmp": "38b76e55fc60de83ee5d12202db3de6a8b128b1a19835c460a7dbca12d6b3679",
+    "extracted/cpp-object-menus-513/actual-first/bridge/originals-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-object-menus-513/actual-first/bridge/run.json": "7f855c279c8fdf43095da5e175a17fafd573aa9cc1cf821d4831ecf6f557fdfb",
+    "extracted/cpp-object-menus-513/actual-first/bridge/running.json": "47124e16c94fe729442fd146f65d0b763c4188615ec30748af9b45f446fa5e07",
+    "extracted/cpp-object-menus-513/actual-first/bridge/settings-backup/fullscreenStateFile.dat": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-object-menus-513/actual-first/bridge/settings-backup/options.cfg": "7c986d379a533456fb34d19f7937d1a028812c4560389d43cb663f1bd10cd7d4",
+    "extracted/cpp-object-menus-513/actual-first/bridge/states.tsv": "967a3016e27faa4e5d00dec3114bc19e5764c0d456bb0fb14cfaeef5a1e99615",
+    "extracted/cpp-object-menus-513/actual-first/bridge/stderr.log": "9fba4f7e2bb0be090e62265ef1203d93a429672f7ce307b7cf3aa08e3bfebbbb",
+    "extracted/cpp-object-menus-513/actual-first/bridge/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-object-menus-513/actual-first/bridge/steps.tsv": "b95f010e0237ba14175f1c7628229c46c51a70d50bbada0336a4decb70f77728",
+    "extracted/cpp-object-menus-513/actual-first/generator/audio.tsv": "e723f33a858ecdff9330abeca9b70ec0a86a0e4a65d87799ed257b282989c6f4",
+    "extracted/cpp-object-menus-513/actual-first/generator/data-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-object-menus-513/actual-first/generator/menu.bmp": "73f09a2781c2abdba2605f1bb37ec9197a07b0c6db296178d83348d0c81cd57f",
+    "extracted/cpp-object-menus-513/actual-first/generator/originals-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-object-menus-513/actual-first/generator/run.json": "fd6da10994a2c003a9ccdba955464d47770fe5dc6093d440fe1f90430a50d635",
+    "extracted/cpp-object-menus-513/actual-first/generator/running.json": "5e40561d936fb78ffe8926eb6862f7489c325051c7aec8615e5211b754a01c25",
+    "extracted/cpp-object-menus-513/actual-first/generator/settings-backup/fullscreenStateFile.dat": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-object-menus-513/actual-first/generator/settings-backup/options.cfg": "7c986d379a533456fb34d19f7937d1a028812c4560389d43cb663f1bd10cd7d4",
+    "extracted/cpp-object-menus-513/actual-first/generator/states.tsv": "ed6aa9d1a8c66606acbad430a1431db5a66db01b9cf7003d825ff72474b6bfda",
+    "extracted/cpp-object-menus-513/actual-first/generator/stderr.log": "9fba4f7e2bb0be090e62265ef1203d93a429672f7ce307b7cf3aa08e3bfebbbb",
+    "extracted/cpp-object-menus-513/actual-first/generator/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-object-menus-513/actual-first/generator/steps.tsv": "6236deace2463447bec9fbbca2905ba65b766f0ec2d5bf9298ca366a914d0b97",
+    "extracted/cpp-object-menus-513/actual-first/generator/summary.json": "5a544528b792017b79466fd69e48f0567a5d78bf972be0557854b22b9392ca44",
+    "extracted/cpp-object-menus-513/actual-first/geyser/audio.tsv": "37248cbd11e749835068dd11fd1d4f9f18fb894b1b310fa859b0bf8ae96897a7",
+    "extracted/cpp-object-menus-513/actual-first/geyser/data-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-object-menus-513/actual-first/geyser/menu.bmp": "af18f2be7ccfc88bd8dc9c781b82e916fedf83205831cb4dca0275bbecab64e3",
+    "extracted/cpp-object-menus-513/actual-first/geyser/originals-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-object-menus-513/actual-first/geyser/run.json": "66678a33f1f4774ff6cb3d8b9cddc45e906692088e8f6f39152e4bf80d63f7af",
+    "extracted/cpp-object-menus-513/actual-first/geyser/running.json": "8758520d5459aa15715cf3458fe2615516f25ec1c61e27780e003fee8e3e07a3",
+    "extracted/cpp-object-menus-513/actual-first/geyser/settings-backup/fullscreenStateFile.dat": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-object-menus-513/actual-first/geyser/settings-backup/options.cfg": "7c986d379a533456fb34d19f7937d1a028812c4560389d43cb663f1bd10cd7d4",
+    "extracted/cpp-object-menus-513/actual-first/geyser/states.tsv": "420ad9813dd328a1898678566624091154a89a2dfd19c3b159f49e5eeed7f660",
+    "extracted/cpp-object-menus-513/actual-first/geyser/stderr.log": "9fba4f7e2bb0be090e62265ef1203d93a429672f7ce307b7cf3aa08e3bfebbbb",
+    "extracted/cpp-object-menus-513/actual-first/geyser/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-object-menus-513/actual-first/geyser/steps.tsv": "b5e502a8445536edc110e1ff0666cd1313e3614f7d7952b565706f360928c00f",
+    "extracted/cpp-object-menus-513/actual-first/geyser/summary.json": "bba7d4246a796210ede663ce3ba6a46bbcd61200b7fb8a8f41a5330feb29a0ae",
+    "extracted/cpp-object-menus-513/actual-first/temple/audio.tsv": "1692109765e930a074aef1af1b2deebe8145c9ec0b016b92c718ce69ac1c7911",
+    "extracted/cpp-object-menus-513/actual-first/temple/data-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-object-menus-513/actual-first/temple/knowledge.bmp": "e620ccc16b448b3ba918eb3ba60efdc152de28be6074f1e19768d4c1f530a919",
+    "extracted/cpp-object-menus-513/actual-first/temple/menu.bmp": "e1820854b182566cbef3db541390e54d8c002df8c5404024995954dcfa54ba22",
+    "extracted/cpp-object-menus-513/actual-first/temple/originals-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-object-menus-513/actual-first/temple/run.json": "b5942ea31adf79fc29284f39141156d1d74dd760190c22d961b1a3f438c0a75c",
+    "extracted/cpp-object-menus-513/actual-first/temple/running.json": "b78892ca3fa495778b38ec970e661475f9b967eaa8cab77ec5593e052f68ff51",
+    "extracted/cpp-object-menus-513/actual-first/temple/settings-backup/fullscreenStateFile.dat": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-object-menus-513/actual-first/temple/settings-backup/options.cfg": "7c986d379a533456fb34d19f7937d1a028812c4560389d43cb663f1bd10cd7d4",
+    "extracted/cpp-object-menus-513/actual-first/temple/states.tsv": "3309329efeb1fe2f73bdb873d3681801151e18ac147da7c156a8e605c8ed08f4",
+    "extracted/cpp-object-menus-513/actual-first/temple/stderr.log": "9fba4f7e2bb0be090e62265ef1203d93a429672f7ce307b7cf3aa08e3bfebbbb",
+    "extracted/cpp-object-menus-513/actual-first/temple/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-object-menus-513/actual-first/temple/steps.tsv": "2296d87e022d9398e23c8a8b5b1941753d51700d4a9e6cdb090796153964ff33",
+    "extracted/cpp-object-menus-513/actual-first/temple/summary.json": "300ae120c12447e531b695f401a795f29c0236c37b4d43d66c702eee5feb29f9",
+    "extracted/cpp-object-menus-513/actual-first.json": "758114ab47a79f5cc7a7205b02b744e4aa569137ca114515eea324b2b0ef21a5",
+    "extracted/cpp-object-menus-513/actual-first.log": "19ebe05f37652b2838b9cfff8746ecd144cacbe0953b73b975b74ce9aa5aebbd",
+    "extracted/cpp-object-menus-513/actual-other/airship/audio.tsv": "2648d3e8919dd25f08ef32a0e6eeb62858872e278457a67982f6516b52ee13eb",
+    "extracted/cpp-object-menus-513/actual-other/airship/data-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-object-menus-513/actual-other/airship/menu.bmp": "8bed0693597d6dca15640b0bb3492c0cececa659ec59a8d663758b2d69d5b0aa",
+    "extracted/cpp-object-menus-513/actual-other/airship/originals-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-object-menus-513/actual-other/airship/run.json": "485057b75fb94ec21cc46581b302ed1eb8f0c629b833f75975f42515c502b9f1",
+    "extracted/cpp-object-menus-513/actual-other/airship/running.json": "66bb116cf890fb6d779d7e4ef6eeeb71c5e2d3efe5af770afa7ab70f612e4c42",
+    "extracted/cpp-object-menus-513/actual-other/airship/settings-backup/fullscreenStateFile.dat": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-object-menus-513/actual-other/airship/settings-backup/options.cfg": "7c986d379a533456fb34d19f7937d1a028812c4560389d43cb663f1bd10cd7d4",
+    "extracted/cpp-object-menus-513/actual-other/airship/states.tsv": "3100ef068a36d6f6d9bee1eca83a8e1e86096e7c68dbe033ad003e5c5286bc86",
+    "extracted/cpp-object-menus-513/actual-other/airship/stderr.log": "56e8919dadcc57a517b7239f872528da63b8dd87a359b63dbc58c37ac7db4245",
+    "extracted/cpp-object-menus-513/actual-other/airship/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-object-menus-513/actual-other/airship/steps.tsv": "c4db147303ce3e84e17a56a6b59bc905fa6dc5bff1e94b5023fdd45fb409b243",
+    "extracted/cpp-object-menus-513/actual-other/airship/summary.json": "a2f081477be34ccfc6cca7cbe4ee09232218c86328523113e48d6d3d4d7313a9",
+    "extracted/cpp-object-menus-513/actual-other/foliage/audio.tsv": "c5535e0b9212eedfb97a300f8699ef2f3cccbfbf692c2b2ae86949e6642c4845",
+    "extracted/cpp-object-menus-513/actual-other/foliage/data-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-object-menus-513/actual-other/foliage/menu.bmp": "c1b9c26bcf8d9b2b5f74aa96a716388f33f3a94657c1c8f7c7d521b7413523c2",
+    "extracted/cpp-object-menus-513/actual-other/foliage/originals-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-object-menus-513/actual-other/foliage/run.json": "3d69398fb2c2c3a64a9732e76f2565a2cf0a303bd2dca1cf1dbb37342698ff16",
+    "extracted/cpp-object-menus-513/actual-other/foliage/running.json": "124311870b9586148b5265140d657b1b9330b7b98b3aa00e9437dd6d54e1ec09",
+    "extracted/cpp-object-menus-513/actual-other/foliage/settings-backup/fullscreenStateFile.dat": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-object-menus-513/actual-other/foliage/settings-backup/options.cfg": "7c986d379a533456fb34d19f7937d1a028812c4560389d43cb663f1bd10cd7d4",
+    "extracted/cpp-object-menus-513/actual-other/foliage/states.tsv": "ad36722a7cdfcf5e5e509459d7f1b5e428f89a7abf8f29534ca0d4f8d6915e3d",
+    "extracted/cpp-object-menus-513/actual-other/foliage/stderr.log": "9fba4f7e2bb0be090e62265ef1203d93a429672f7ce307b7cf3aa08e3bfebbbb",
+    "extracted/cpp-object-menus-513/actual-other/foliage/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-object-menus-513/actual-other/foliage/steps.tsv": "8a465fd217b556f05b2193bf0de02c4ca370d05274096f2e1576d2a94f024133",
+    "extracted/cpp-object-menus-513/actual-other/foliage/summary.json": "1f8a2b4d4e5165639b02aab19ee80d4d98df25fb8838177b501f4498d24ca31e",
+    "extracted/cpp-object-menus-513/actual-other/priest/audio.tsv": "dff04e0851d5dc45f9ea44dce54cbcf3a84be2570bef6588faf1d3c257f7e1b6",
+    "extracted/cpp-object-menus-513/actual-other/priest/data-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-object-menus-513/actual-other/priest/menu.bmp": "d9a13c924e62ebe25f66ec6cd75eeb4ddc09a44b9c517ead0584e0d184b7863c",
+    "extracted/cpp-object-menus-513/actual-other/priest/originals-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-object-menus-513/actual-other/priest/run.json": "49c916be31a4028062d4058e8f92f0113f302cd4c55d3334589767a8a6eab300",
+    "extracted/cpp-object-menus-513/actual-other/priest/running.json": "fde9ee5eaf4317b765791f1586026a823f5f5e98d22ca68517f90496dbeee238",
+    "extracted/cpp-object-menus-513/actual-other/priest/settings-backup/fullscreenStateFile.dat": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-object-menus-513/actual-other/priest/settings-backup/options.cfg": "7c986d379a533456fb34d19f7937d1a028812c4560389d43cb663f1bd10cd7d4",
+    "extracted/cpp-object-menus-513/actual-other/priest/states.tsv": "88d46064a7f30c8b323a2f8d65e70fa6a75bbfcdfab7f58fe3625bad80ab2b66",
+    "extracted/cpp-object-menus-513/actual-other/priest/stderr.log": "77b6613c9b128828df9acb70d4dd94f84a1f8e769c15b8907d0f4c3e032f7592",
+    "extracted/cpp-object-menus-513/actual-other/priest/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-object-menus-513/actual-other/priest/steps.tsv": "9445b601ae4b4b0509e0cc7debfefb43394575a94eba78ac5baff569b35cc825",
+    "extracted/cpp-object-menus-513/actual-other/priest/summary.json": "4adb2699595a998ee6c93002150ec899fb9b7c60c4d308dd748a70e981bb5951",
+    "extracted/cpp-object-menus-513/actual-other/summary.json": "aca0c53ead3441eb43a8f694dddc139117f5c53367d7523051bc85bb76f31547",
+    "extracted/cpp-object-menus-513/actual-other/walker/audio.tsv": "2b7b5c1b711de5112b9596fb1194806155f765c2a318aa47853a3835b6fac4ef",
+    "extracted/cpp-object-menus-513/actual-other/walker/data-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-object-menus-513/actual-other/walker/menu.bmp": "aafbd90fd3cc5a23b6ad657e9902438b76c303aebe352ca2a6ee9fc7a6712479",
+    "extracted/cpp-object-menus-513/actual-other/walker/originals-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-object-menus-513/actual-other/walker/run.json": "fe643cd807fec79f2e02160ba1ea1662c9a874f7a1ea69c610a67ba2368e058a",
+    "extracted/cpp-object-menus-513/actual-other/walker/running.json": "d75deb4ec9dbaf5cb8f84930e2567e2ef56eeb365b2526ef970c3c4fb6c77c8e",
+    "extracted/cpp-object-menus-513/actual-other/walker/settings-backup/fullscreenStateFile.dat": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-object-menus-513/actual-other/walker/settings-backup/options.cfg": "7c986d379a533456fb34d19f7937d1a028812c4560389d43cb663f1bd10cd7d4",
+    "extracted/cpp-object-menus-513/actual-other/walker/states.tsv": "3b2b7419693b7626526ed65f3f1b44e278ee22317e45fb4bed126d62bf4f311b",
+    "extracted/cpp-object-menus-513/actual-other/walker/stderr.log": "8a0d584e07a9ffc42e32f419067731a0b88e6308c89e7906910b52b1a0a4c04d",
+    "extracted/cpp-object-menus-513/actual-other/walker/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-object-menus-513/actual-other/walker/steps.tsv": "bfbb0ed422a1bcb5ed1857dccddc529e86e43ed2d63441ca9fd5d1601d918573",
+    "extracted/cpp-object-menus-513/actual-other/walker/summary.json": "d7a8838b9d7ff23bdbaff6a9b7aa9bb36caba7ea55414d70f99bb1d8ae1def45",
+    "extracted/cpp-object-menus-513/actual-other/whirlibase/audio.tsv": "a0b6ae5347833351da145ed6d8f84c8d57a09f97af93e89fe0d2ee7d373210cb",
+    "extracted/cpp-object-menus-513/actual-other/whirlibase/data-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-object-menus-513/actual-other/whirlibase/menu.bmp": "49b80ee098db92864fef9c729d2b0e943ad74a48c4dac564373543d3e483ff43",
+    "extracted/cpp-object-menus-513/actual-other/whirlibase/originals-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-object-menus-513/actual-other/whirlibase/run.json": "9b26d1bed839f97203a01af831a17a18c36077caa14fc6109d9ef4059080adb1",
+    "extracted/cpp-object-menus-513/actual-other/whirlibase/running.json": "0999e796f1a067651626dc8425f9e9aed317edcae050f7ef91b786dd8f315f8b",
+    "extracted/cpp-object-menus-513/actual-other/whirlibase/settings-backup/fullscreenStateFile.dat": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-object-menus-513/actual-other/whirlibase/settings-backup/options.cfg": "7c986d379a533456fb34d19f7937d1a028812c4560389d43cb663f1bd10cd7d4",
+    "extracted/cpp-object-menus-513/actual-other/whirlibase/states.tsv": "95a99d986a55b5fcd70e2aaf93c8e42386c0b1d436ea170689404822f3193ea5",
+    "extracted/cpp-object-menus-513/actual-other/whirlibase/stderr.log": "9fba4f7e2bb0be090e62265ef1203d93a429672f7ce307b7cf3aa08e3bfebbbb",
+    "extracted/cpp-object-menus-513/actual-other/whirlibase/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-object-menus-513/actual-other/whirlibase/steps.tsv": "3ab666e94638ea243441f843fb491857bb0f7142377b50da1e039cca3a3158a4",
+    "extracted/cpp-object-menus-513/actual-other/whirlibase/summary.json": "19d9f6ddd45ce4791f955b00bab97faf2c96bb13d3d24b340190c0b1ba415d86",
+    "extracted/cpp-object-menus-513/actual-other/workshop/audio.tsv": "45fe39edd76d1bd1430511120412ac6cb2baac8fbbcfd00ff1fce3989787dc1f",
+    "extracted/cpp-object-menus-513/actual-other/workshop/data-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-object-menus-513/actual-other/workshop/menu.bmp": "df0fde0b23bf2e65aaf28fecc89e266972141f8e3598d3fd89bbd512dd67e13d",
+    "extracted/cpp-object-menus-513/actual-other/workshop/originals-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-object-menus-513/actual-other/workshop/run.json": "223f0e5cf3c2f154975c730681eb99bd78b2e298df6893f03bbf1f92a998ad6f",
+    "extracted/cpp-object-menus-513/actual-other/workshop/running.json": "8c4775ca6e9af6f39f6bf57507b8d31967d6fb28e309d189529a6ddbdd4fb35f",
+    "extracted/cpp-object-menus-513/actual-other/workshop/settings-backup/fullscreenStateFile.dat": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-object-menus-513/actual-other/workshop/settings-backup/options.cfg": "7c986d379a533456fb34d19f7937d1a028812c4560389d43cb663f1bd10cd7d4",
+    "extracted/cpp-object-menus-513/actual-other/workshop/states.tsv": "73dd7bc14f4f1105469d0c806e86e93215e47568bebbc5544d7d8dc1b1635570",
+    "extracted/cpp-object-menus-513/actual-other/workshop/stderr.log": "9fba4f7e2bb0be090e62265ef1203d93a429672f7ce307b7cf3aa08e3bfebbbb",
+    "extracted/cpp-object-menus-513/actual-other/workshop/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-object-menus-513/actual-other/workshop/steps.tsv": "28d69b81246522416ec5c2ff73b5c7a0cc405f8c7faba241bcd0bc02b75e3481",
+    "extracted/cpp-object-menus-513/actual-other/workshop/summary.json": "0618f9268f167eb90f49b8fec40baf1764b22028d5be5470930fc05f3816e427",
+    "extracted/cpp-object-menus-513/actual-other.json": "91aae01379ce8b84bab9f3d18306df8a241420a5bbcb9b297e4b74c0ef9f5cc1",
+    "extracted/cpp-object-menus-513/actual-other.log": "fbd5c2c83b2781c7e1d64e6571472635cf1f8bbbcc07149ff97341543dc9f816",
+    "extracted/cpp-object-menus-513/before.json": "de7e33bdf2f23f9506dddd72a392cdb78ade7d86d22c7eddd803752e4d78f8ed",
+    "extracted/cpp-object-menus-513/build-bridge.json": "1473cb4b16bed6524f0ac247c3c3aa9e58d938f7b53571eee3fe3c38ac0896dd",
+    "extracted/cpp-object-menus-513/build-bridge.log": "b21d6b03fa8302b3c790d43e29d0a43fc8f8599e0fc1f4d7e052b7d352c9d909",
+    "extracted/cpp-object-menus-513/build.json": "256c4a4a4690dff3f64e91c10bb0969fbe4a09cc47bb9970971eca185134a8d2",
+    "extracted/cpp-object-menus-513/build.log": "c4e75b33406bc509b334a4c1598f5dd0ebda461caddcb3573732a92d7326030a",
+    "extracted/cpp-object-menus-513/freeze-baseline.json": "dbc758a262467f7e5ef19935959027f37500bba8384f05835cf52b6d73a3f05a",
+    "extracted/cpp-object-menus-513/freeze-final.json": "46b7ec7be60cfdfae3df5aef397d039c1e4368a2ad00a8031ece9ebe78238726",
+    "extracted/cpp-object-menus-513/native-corrected.json": "937b898f77acc7eb334a7c9c667e3dce4fd998d3ab8614902cf02986c677c4eb",
+    "extracted/cpp-object-menus-513/native-corrected.log": "1bd9d33198201be8480115634db698836871deb9dfd06a4b9c05e41e0c7e7b89",
+    "extracted/cpp-object-menus-513/native.json": "067988b55fe924463a8518415b9c9f361f141bc62e83d6471ef6f9e442186cb7",
+    "extracted/cpp-object-menus-513/native.log": "d9edd162bcc8055cdff59e83c8be58cc5481def5e117bef8ee5b492266e0de59",
+    "extracted/cpp-object-menus-513/repro-thunderVortex/data-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-object-menus-513/repro-thunderVortex/originals-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-object-menus-513/repro-thunderVortex/run.json": "141bb5b6b170b8fc4a4e11ee2770d4a7543c80ea263bd0bbfa41e101c70f223a",
+    "extracted/cpp-object-menus-513/repro-thunderVortex/running.json": "1737896a3879ea29c2c3e01b8b0a05dc1bfeb35a0aa45841cee37c2f64334cce",
+    "extracted/cpp-object-menus-513/repro-thunderVortex/settings-backup/fullscreenStateFile.dat": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-object-menus-513/repro-thunderVortex/settings-backup/options.cfg": "7c986d379a533456fb34d19f7937d1a028812c4560389d43cb663f1bd10cd7d4",
+    "extracted/cpp-object-menus-513/repro-thunderVortex/states.tsv": "923caa7fe9dafc6bfb4b6fba917281db9eb9a4ec207ed4d37c6ba6195f42950d",
+    "extracted/cpp-object-menus-513/repro-thunderVortex/stderr.log": "f790a83878433d5417ed1dc5954a30dfb18ea959a822beb69cd81cf14faaa86d",
+    "extracted/cpp-object-menus-513/repro-thunderVortex/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-object-menus-513/repro-thunderVortex/steps.tsv": "97b644e98d9930dce44e397c46b31eafb8ce2b76adfc66bf55092ea5879ee21b",
+    "extracted/cpp-object-menus-513/repro-windBattery/data-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-object-menus-513/repro-windBattery/originals-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-object-menus-513/repro-windBattery/run.json": "d2c4d734c1ab1cbae46869f1fbceac436cbbc6ecb06567dc38b21a4435acb42f",
+    "extracted/cpp-object-menus-513/repro-windBattery/running.json": "f15ee9036408268b424b0a800fe0f9e0d79e7548cfa3123ed5e6ca20c535a482",
+    "extracted/cpp-object-menus-513/repro-windBattery/settings-backup/fullscreenStateFile.dat": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-object-menus-513/repro-windBattery/settings-backup/options.cfg": "7c986d379a533456fb34d19f7937d1a028812c4560389d43cb663f1bd10cd7d4",
+    "extracted/cpp-object-menus-513/repro-windBattery/states.tsv": "761ec4ddec0da55c8a93fef7d853a67df614aa4d466a154b0cb5473a6527f3c3",
+    "extracted/cpp-object-menus-513/repro-windBattery/stderr.log": "f790a83878433d5417ed1dc5954a30dfb18ea959a822beb69cd81cf14faaa86d",
+    "extracted/cpp-object-menus-513/repro-windBattery/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-object-menus-513/repro-windBattery/steps.tsv": "6acaa2a5140fcefb243445e770c20cf2ca7ec79eb6ae4ca210bca397dc64bf86",
+    "extracted/cpp-object-menus-513/repro.json": "efcf67799c36e7635bce2b026075e65c474238384e889d69c98c67d0c9cf60d4",
+    "extracted/cpp-object-menus-513/repro.log": "ac4cfbd9f42d2191a8bd18db4520f186a5cf534b28d772dd2e438c09c6621a4a",
+    "extracted/cpp-object-menus-513/temple-cleanup/summary.json": "1a5e791e941e166ec86bcc0351a54667973a320374916c8dc8388452883ff9ac",
+    "extracted/cpp-object-menus-513/temple-cleanup/temple/audio.tsv": "7bc1b36adb970e8ec045a3930383718848bba480a637356eaf94e476e8454297",
+    "extracted/cpp-object-menus-513/temple-cleanup/temple/data-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-object-menus-513/temple-cleanup/temple/knowledge.bmp": "01263c94c3dbe20d02c5c52f5de83c561cd7d3b20249ba1ecdd76ae46ba8a52e",
+    "extracted/cpp-object-menus-513/temple-cleanup/temple/menu.bmp": "e86d3a6bdb164d2479c7fbf427852d1cd598f7a96b9b012f582692483150963e",
+    "extracted/cpp-object-menus-513/temple-cleanup/temple/originals-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-object-menus-513/temple-cleanup/temple/run.json": "aacda690ab9e7629b8423165478a3e73be020c4ff599656ff01ca340d5295ee4",
+    "extracted/cpp-object-menus-513/temple-cleanup/temple/running.json": "858f9d9e6e1474f32580f32c7bdefea3a9311ca274f7c5de0636343fe9b66fd4",
+    "extracted/cpp-object-menus-513/temple-cleanup/temple/settings-backup/fullscreenStateFile.dat": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-object-menus-513/temple-cleanup/temple/settings-backup/options.cfg": "7c986d379a533456fb34d19f7937d1a028812c4560389d43cb663f1bd10cd7d4",
+    "extracted/cpp-object-menus-513/temple-cleanup/temple/states.tsv": "f2649637fda7430e2931d1363cbb0ae524d39e8cd62419ccaa5d4258ebbda152",
+    "extracted/cpp-object-menus-513/temple-cleanup/temple/stderr.log": "9fba4f7e2bb0be090e62265ef1203d93a429672f7ce307b7cf3aa08e3bfebbbb",
+    "extracted/cpp-object-menus-513/temple-cleanup/temple/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-object-menus-513/temple-cleanup/temple/steps.tsv": "b7bec5c473ae5c3863d22c0a75862861ef81febb26cf6bb48b187256b8bf4c97",
+    "extracted/cpp-object-menus-513/temple-cleanup/temple/summary.json": "b5784ba5e091282c163055a7857f345cd56058d37672a5136bf08012d185df56",
+    "extracted/cpp-object-menus-513/temple-cleanup.json": "a9ef02cca032afa07eb8b7a77bce3d288bfaaabc1cb518beb15c92905c867986",
+    "extracted/cpp-object-menus-513/temple-cleanup.log": "cf4691238fc83599522ea22f00f248e7abf0971d7310e0dc79cd7352eeb3256c",
+    "extracted/cpp-object-menus-513/test-carriers.json": "725b3b3973d79818bc05556cd34e9f7fb1938ecb29fc1f202aea19273186b03f",
+    "extracted/cpp-object-menus-513/test-carriers.log": "218a22d5822e689bad2a977aa4148c6b7cd470e2708bee0662ac5739af6ceb94",
+    "extracted/cpp-object-menus-513/test-factories.json": "86de1795f88f0ec4edb7aef05febf2e0bfacb67914340807a2d2fb70063ff1b9",
+    "extracted/cpp-object-menus-513/test-factories.log": "b9d21d71353b5ffd3da6f70186f8ae3fe7856d18a1466e328d002f0699c7b441",
+    "extracted/cpp-object-menus-513/test-golems.json": "cf1d7ba92fba3999a839a9a0ce38a3f9aa2b2cc871f1bd96440441c5df720547",
+    "extracted/cpp-object-menus-513/test-golems.log": "3fff6da2955a58d2ebf5ce0783f57ffbef3b4303a3c438b46fda6edf1b06f630",
+    "extracted/cpp-object-menus-513/test-native.json": "1d632c56925ba4c4575135a27af73d21ac5c849318b8b88558b79b9f9f7e8fed",
+    "extracted/cpp-object-menus-513/test-native.log": "a468dceadb6b25cf627f2f5878bb3a37a09b5467d28be816d59d75319b9b8bd0",
+    "extracted/cpp-object-menus-513/test-objects.json": "057d12dba200a0f8c24e7d3d1c09358a75aa4410639f8ced41c61c6e5e76e778",
+    "extracted/cpp-object-menus-513/test-objects.log": "8a8af06d96d90f20f0d15e2bb2f1f5e27ac8d59367fd70a1d1ecd2c207f2a977",
+    "extracted/cpp-object-menus-513/test-selection.json": "c944f9480c165f6ab00a28a4cd7d7b8a1bcad0b38decfedc8e3d9068cbe08882",
+    "extracted/cpp-object-menus-513/test-selection.log": "27a5c898b18ceb2c6bd562da0104f5f3a30ea998301a48ed777b3e0eaeca0b8b"
+  }
+}

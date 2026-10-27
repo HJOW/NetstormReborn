@@ -311,6 +311,7 @@ struct RawCampaignObjectMenus::Impl {
     FactoryMenuState factoryState; // 원본 Factory 메뉴의 현재 타입/명령 전역이다.
     std::unique_ptr<RawFactoryMenu> factoryMenu; // 같은 생산 Deck/기술/메뉴를 빌리는 실제 Factory +a8다.
     std::unique_ptr<RawPriestMenu> priest; // 같은 기술/SP/커서 취득과 위 전체 부모 체인을 사용한다.
+    std::unique_ptr<RawObjectMenuVariants> variants; // 같은 공통 메뉴/가상 개수/현재 Session을 빌리는 여덟 파생 작성기다.
     // 같은 현재 전역의 참조를 먼저 구성한다. 생성 중 메뉴/게임 효과를 실행하지 않는다.
     Impl(CampaignObjectMenuUi input,float& cdSp):ui(std::move(input)),carrierState{ui.objectState.localOwner,ui.objectState.editor,dropState.mapLimit,cdSp,ui.objectState.helpCommand} {}
 };
@@ -323,6 +324,8 @@ void RawCampaignObjectMenus::OpenPriest(Sid sid) const { impl_->priest->Open(sid
 void RawCampaignObjectMenus::OpenCarrier(Sid sid) const { impl_->carrier->Open(sid); } // 실제 가상 메뉴가 Carrier인 caller가 선택한다.
 void RawCampaignObjectMenus::OpenDamageable(Sid sid) const { impl_->object->OpenDamageable(sid); } // 실제 Damageable 회수 관문을 보존한다.
 void RawCampaignObjectMenus::OpenObject(Sid sid) const { impl_->object->Open(sid); } // 기본 메뉴를 파생 기능의 대체 성공으로 쓰지 않는다.
+// 원본 가상 주소를 타입 이름이나 공통 회수 메뉴로 바꾸지 않는다.
+void RawCampaignObjectMenus::OpenVariant(Sid sid,std::uint32_t originalBody) const { impl_->variants->Open(sid,originalBody); }
 // 상단Players목록과객체의Player하위는같은Identity/Player/동맹/정적문자열몸체를사용한다.
 std::uint32_t RawCampaignObjectMenus::OpenPlayer(std::uint32_t subscriber) const { return impl_->player->Open(subscriber); }
 // 임의제목입력대신같은현재객체와원본정보작성몸체를사용한다.
@@ -4155,6 +4158,18 @@ std::unique_ptr<RawCampaignObjectMenus> RawCampaignSession::MakeObjectMenus(Camp
     factory.mana=BindAiTypeRequiredEnergy(current->assets.game,current->core.types); // 공장도 원본 TYPE 후처리 뒤 실제 요구 에너지를 사용한다.
     factory.baseMenu=[chain](Sid sid) { chain->object->OpenDamageable(sid); };
     chain->factoryMenu=std::make_unique<RawFactoryMenu>(current->core.pool,current->core.types,current->contentFinder,current->constructionExcludedTypes,chain->factoryState,std::move(factory));
+    auto variants=inputs.variants; // UI의 실제 작성기는 보존하고 게임 값만 현재 소유자에 연결한다.
+    variants.global=[current](std::uint32_t address)->std::uint32_t {
+        if (const auto code=ObjectMenuVariantCommandValue(address)) return *code;
+        switch (address) { case 0x594fa4:return current->globals.missionPost;case 0x5c85a4:return current->globals.editor;case 0x55a480:return current->playerState.special;case 0x540c70:return current->playerState.battleOwner;default:throw std::logic_error("파생 객체 메뉴 현재 전역 미연결"); }
+    };
+    variants.localOwner=[current] { return current->playerState.battleOwner; };variants.maximumHp=[current](Sid sid) { return current->hp.MaxHitPoints(sid); };
+    variants.eventZero=[current](Sid sid) { return current->core.processes.FindEvent(sid,0)!=nullptr; };
+    variants.hasBrain=[current](Sid sid) { const auto owner=current->core.pool.Slot(sid)[34];if (owner>=9) throw std::out_of_range("신전 메뉴 Player 범위");return owner && Read(current->players,owner*180+0xb0)!=0; };
+    variants.aiMenu=[current](std::uint32_t owner) { if (!current->gunState.checking || !owner) return;if (owner>=9) throw std::out_of_range("AI 디버그 메뉴 Player 범위");if (Read(current->players,owner*180+0xb0)) throw std::logic_error("개발자 checking 모드 AI 디버그 메뉴00413dd0 미연결"); }; // 원본 일반 checking0의 즉시 반환을 유지하며 큰 개발자 전용 본체는 성공으로 대체하지 않는다.
+    variants.count=actualCount;variants.object=[chain](Sid sid) { chain->object->Open(sid); };variants.damageable=[chain](Sid sid) { chain->object->OpenDamageable(sid); };
+    variants.salvage=[chain](Sid sid,std::uint32_t type,std::uint32_t count) { chain->object->AddSalvage(sid,type,count); };
+    chain->variants=std::make_unique<RawObjectMenuVariants>(current->core.pool,std::move(variants));
     return std::unique_ptr<RawCampaignObjectMenus>(new RawCampaignObjectMenus(std::move(menus)));
 }
 // 공통Open의게임조회만현재Session으로교체한다. GUI몸체/가상+a8/+ac의대체성공은추가하지않는다.
