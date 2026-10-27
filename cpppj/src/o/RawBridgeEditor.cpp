@@ -27,6 +27,13 @@ void RawBridgeEditor::SetAll(std::uint32_t quality) const {
         while (index<end && index<pool_.Capacity() && (pool_.Slot(Sid{static_cast<std::uint16_t>(index)})[11]&1U)) ++index; //보관한 end 뒤에는 free 건너뛰기를 실행하지 않는 원문 iterator의 의미를 유지한다.
     }
 }
+// 원문421f20은 Editor가 아니면 SID를 읽지 않는다. free/dead·소유자 관문은 추가하지 않는다.
+void RawBridgeEditor::SetOne(std::uint32_t editor,std::uint32_t sid,std::uint32_t quality) const {
+    if (!editor) return;
+    if (sid>=pool_.Capacity()) throw std::out_of_range("개별 편집 다리의 원문 물리 SID 범위");
+    const Sid object{static_cast<std::uint16_t>(sid)}; // 범위를 확인한 현재 실제 슬롯만 빌린다.
+    if (Bytes(object)[10]==bridgeType_) Change(object,quality);
+}
 // 원문의 주소 산술처럼 예약 SID도 물리 범위 안이면 직접 접근하며 벡터 재확보 뒤 매번 다시 빌린다.
 std::span<std::uint8_t> RawBridgeEditor::Bytes(Sid sid) const {
     const auto offset=pool_.Offset(sid);return std::span<std::uint8_t>(pool_.bytes_).subspan(offset,pool_.Layout().stride);

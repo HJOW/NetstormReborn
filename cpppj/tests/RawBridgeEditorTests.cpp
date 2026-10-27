@@ -67,3 +67,37 @@ TEST_CASE(RawBridgeEditor_PreservesPartialWriteAndUnsupportedNoop) {
     editor.SetAll(0xffffffffU);CHECK(std::equal(before.begin(),before.end(),pool.Bytes().begin()));CHECK(random.State()==1);
     CHECK(Throws([&] { editor.SetAll(0); }));CHECK(Get(pool.Slot(Sid{5}),12,2)==0xa5a7U);CHECK(Get(pool.Slot(Sid{5}),36)==0);CHECK(Get(pool.Slot(Sid{1}),12,2)==0xa5ffU);
 }
+// 원문421f20의240개 독립 입력에서 비선택 슬롯 전체와 가상 갱신/난수까지 비교한다.
+TEST_CASE(RawBridgeEditor_OneReplaysNative240AndPreservesOtherSlots) {
+    const auto fixture=LoadFixture(NETSTORM_EDITOR_BRIDGE_ONE_FIXTURE);std::size_t checked=0;
+    for (const auto& row:fixture.rows) { // Editor/품질/SID/seed를 원문 관측과 같은 순서로 재생한다.
+        if (row[0]=="editor") continue;CHECK(row.size()==7);
+        SidPool pool(OriginalEdition::Patch1078,24000);PrepareEditorBridgePool(pool,0);
+        auto input=std::span<std::uint8_t>(const_cast<std::uint8_t*>(pool.Bytes().data()),pool.Bytes().size()); // 원문 입력의 free 슬롯11만 명시 설치한다.
+        Put(input,11U*50U,0x5034c8U);input[11U*50U+10]=82;input[11U*50U+11]=1;Put(input,11U*50U+12,0xa5ffU,2);
+        const std::uint32_t bridge=82;const std::int32_t crack=5;GameRandom random(Number(row[3]));const auto frames=EditorBridgeFrames();
+        auto expected=std::vector<std::uint8_t>(pool.Bytes().begin(),pool.Bytes().end());std::string trace;std::uint32_t notified=0;
+        const auto freeCount=pool.FreeCount();BridgeEditorHooks hooks;
+        hooks.frames=[&](auto type)->const RiftTypeFrames& { CHECK(type==82);return frames; };
+        hooks.notifySurface=[&](Sid sid) { CHECK(sid.value==Number(row[2]));++notified; };
+        hooks.refresh=[&](Sid sid) { if (!trace.empty()) trace+=';';const auto raw=pool.Slot(sid);trace+=std::to_string(sid.value)+':'+std::to_string(Get(raw,12,2))+':'+std::to_string(Get(raw,36)); };
+        const auto selected=Number(row[2]);const auto originalType=pool.Bytes()[selected*50U+10]; // 호출 전에 원문 선택 TYPE를 보관한다.
+        RawBridgeEditor(pool,bridge,crack,random,std::move(hooks)).SetOne(Number(row[0]),selected,Number(row[1]));
+        for (const auto& item:Split(row[4],';')) { // 원시9슬롯 외 나머지23991슬롯도 초기 바이트 그대로 비교한다.
+            const auto fields=Split(item,':');CHECK(fields.size()==2);const auto sid=Number(fields[0]);const auto bytes=EditorBridgeHex(fields[1]);CHECK(bytes.size()==50);
+            std::copy(bytes.begin(),bytes.end(),expected.begin()+static_cast<std::ptrdiff_t>(sid*50U));
+        }
+        const bool same=std::equal(expected.begin(),expected.end(),pool.Bytes().begin()) && trace==row[5] && random.State()==Number(row[6]);CHECK(same);
+        if (!same) { std::fprintf(stderr,"OneBridge editor=%s quality=%s sid=%s seed=%s trace=%s/%s\n",row[0].c_str(),row[1].c_str(),row[2].c_str(),row[3].c_str(),trace.c_str(),row[5].c_str());break; }
+        CHECK(notified==((Number(row[0]) && originalType==82 && Number(row[1])<=2) ? 1U : 0U));CHECK(pool.FreeCount()==freeCount);++checked;
+    }
+    CHECK(checked==240);
+}
+// Editor 거부가 물리 SID 검사보다 먼저이며 잘못된 host 범위를 조용히 잘라 다른 SID로 바꾸지 않는다.
+TEST_CASE(RawBridgeEditor_OneRejectsNonEditorBeforeSidAndPreservesPartialWrite) {
+    SidPool pool(OriginalEdition::Patch1078,24000);PrepareEditorBridgePool(pool,0);const std::uint32_t bridge=82;const std::int32_t crack=5;GameRandom random(1);
+    RawBridgeEditor editor(pool,bridge,crack,random,{});const auto before=std::vector<std::uint8_t>(pool.Bytes().begin(),pool.Bytes().end());
+    editor.SetOne(0,0xffffffffU,0);editor.SetOne(1,10,0);editor.SetOne(1,5,3);
+    CHECK(std::equal(before.begin(),before.end(),pool.Bytes().begin()));CHECK(Throws([&] { editor.SetOne(1,0xffffffffU,0); }));
+    CHECK(Throws([&] { editor.SetOne(1,5,0); }));CHECK(Get(pool.Slot(Sid{5}),12,2)==0xa5a7U);CHECK(Get(pool.Slot(Sid{5}),36)==0);CHECK(random.State()==1);
+}

@@ -16,6 +16,7 @@ class RawBridgeEditor {
 public:
     RawBridgeEditor(SidPool& pool,const std::uint32_t& bridgeType,const std::int32_t& crackLife,GameRandom& random,BridgeEditorHooks hooks); //모든 참조는 처리기보다 오래 살아야 한다.
     void SetAll(std::uint32_t quality) const; //0=Cracked,1=Normal,2=Hard다. 그 밖의 정수는 원문처럼 변경하지 않는다.
+    void SetOne(std::uint32_t editor,std::uint32_t sid,std::uint32_t quality) const; //00421f20의 Editor→현재 TYPE 관문 뒤 지정 슬롯 하나만 바꾼다. SID는 원문의 DWORD를 유지한다.
 private:
     std::span<std::uint8_t> Bytes(Sid sid) const; //예약 슬롯을 포함한 원문 물리 범위만 검사하며 원문에 없는 할당/상태 관문을 추가하지 않는다.
     void Change(Sid sid,std::uint32_t quality) const; //각 방문의 현재 WORD를 먼저 쓰고 진단→프레임 선택→직접 쓰기→표시 순서를 지킨다.

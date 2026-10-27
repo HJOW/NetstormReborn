@@ -3601,6 +3601,15 @@ void RawCampaignSession::SetAllBridgeQuality(std::uint32_t quality) {
     const std::int32_t crackLife=kBridgeCrackLife; //현재 복원된0052f960은 기존 다리 규칙과 같은 불변5다. 호출 범위 동안만 참조를 빌린다.
     RawBridgeEditor(current.core.pool,current.core.bridgeState.bridgeType,crackLife,current.random,std::move(hooks)).SetAll(quality);
 }
+// 개별 우클릭은 같은 전체 변경 하위를 쓰지만421f20의 추가 Editor 관문으로 missionPost 단독 실행을 막는다.
+void RawCampaignSession::SetBridgeQuality(std::uint32_t sid,std::uint32_t quality) {
+    if (!impl_->loaded) throw std::logic_error("설치 전 개별 다리 품질 명령");auto& current=*impl_;
+    if (!current.globals.editor && !current.globals.missionPost) return;
+    BridgeEditorHooks hooks;hooks.frames=[&current](auto type)->const RiftTypeFrames& { if (type>=current.core.frames.size()) throw std::out_of_range("개별 편집 다리의 실제 TYPE 범위");return current.core.frames[type]; };
+    hooks.notifySurface=[&current](Sid object) { current.core.building.NotifySurface(object); };hooks.refresh=[&current](Sid object) { current.core.display.Update(current.core.pool.Slot(object)); };
+    const std::int32_t crackLife=kBridgeCrackLife; // 원본0052f960과 기존 다리의 같은 불변5다.
+    RawBridgeEditor(current.core.pool,current.core.bridgeState.bridgeType,crackLife,current.random,std::move(hooks)).SetOne(current.globals.editor,sid,quality);
+}
 // 원본 로그인/AI 초기화와 승패 판정은 같은9 Player 바이트를 공유한다.
 std::span<std::uint8_t> RawCampaignSession::PlayerRecords() { return impl_->players; }
 // 명시 State 호출은 선택된 free 실패를 전파하며 앞선 Player 쓰기와 나머지 월드 수명을 보존한다.

@@ -1,0 +1,359 @@
+{
+  "unit": 516,
+  "host": "HJOW-Athlon",
+  "date": "2026-10-28",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "decompileChanged": false,
+  "originalsAndCdUnchanged": true,
+  "agentsUnchanged": true,
+  "protectedChanges": [
+    "cpppj/tests/RawBridgeEditorTests.cpp",
+    "cpppj/tests/CMakeLists.txt"
+  ],
+  "sourceChanged": [
+    "cpppj/src/o/RawBridgeEditor.h",
+    "cpppj/src/o/RawBridgeEditor.cpp",
+    "cpppj/src/client/RawCampaignSession.cpp",
+    "cpppj/src/client/RawCampaignSession.h",
+    "cpppj/src/client/UberGump.cpp",
+    "cpppj/tests/RawBridgeEditorTests.cpp",
+    "cpppj/tests/CMakeLists.txt"
+  ],
+  "sourceAdded": [
+    "cpppj/tests/fixtures/editor-bridge-one-x86.tsv"
+  ],
+  "exes": {
+    "NetstormCpp.exe": "7cc3b2eb5dd6d1b1f043fe82c6a70b3503c8aec9da1b1219628846cb01bea100",
+    "netstorm_tests.exe": "952f5e1a29d78a72ed0119ebc9f90424b62e8b3628417295b83bbde904aba6bb"
+  },
+  "build": {
+    "command": [
+      "cmake",
+      "--build",
+      "cpppj/build",
+      "--config",
+      "Release",
+      "-j",
+      "3"
+    ],
+    "exit": 0,
+    "log": "extracted/cpp-bridge-menu-516/build1.log",
+    "sha256": "4f3b433029b37ed652863ec6b8ea4ea8adb9e13fd41d796d6d71118a037ec51a",
+    "summaries": [],
+    "diagnostics": []
+  },
+  "tests": [
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "RawBridgeEditor"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-bridge-menu-516/test-RawBridgeEditor.log",
+      "sha256": "dc9a3a3787ed06382b781adca8f2e81d99504adc3dd77b92d9c633233f484d46",
+      "summaries": [
+        "4 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "ObjectMenu"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-bridge-menu-516/test-ObjectMenu.log",
+      "sha256": "8a8af06d96d90f20f0d15e2bb2f1f5e27ac8d59367fd70a1d1ecd2c207f2a977",
+      "summaries": [
+        "20 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "UserSelection"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-bridge-menu-516/test-UserSelection.log",
+      "sha256": "27a5c898b18ceb2c6bd562da0104f5f3a30ea998301a48ed777b3e0eaeca0b8b",
+      "summaries": [
+        "13 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "EditorSaveGoMain"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-bridge-menu-516/test-EditorSaveGoMain.log",
+      "sha256": "137e215108e9dd9ae0d185895a9a36dfa5081ea35210996fb83e004a6928b862",
+      "summaries": [
+        "2 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "EditorTestBattle"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-bridge-menu-516/test-EditorTestBattle.log",
+      "sha256": "88feabc2cc023a5911b3478f60a3677ba63baadb4ac86726928920f6e596055a",
+      "summaries": [
+        "3 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    },
+    {
+      "command": [
+        "cpppj/build/bin/Release/netstorm_tests.exe",
+        "--filter",
+        "GameMenu"
+      ],
+      "exit": 0,
+      "log": "extracted/cpp-bridge-menu-516/test-GameMenu.log",
+      "sha256": "ae73af70d1cbb91d73899e402dcc39c75141ba99cb665c6c87ca43edfecf9101",
+      "summaries": [
+        "10 test(s), 0 failed check(s)"
+      ],
+      "diagnostics": []
+    }
+  ],
+  "uniqueFocusedPassed": 51,
+  "focusedObservations": 52,
+  "overlap": "EditorTestBattle_UsesActualGameMenuNumbersAndInputQueue",
+  "registered": 3342,
+  "wholeSuiteExecuted": false,
+  "nativeRows": 240,
+  "nativeFixtureSha": "606401a4c4a5bc9e005e32fdb921e5625d91f5e848f32b4beff4460f9840aa8b",
+  "actualFinal": {
+    "results": [
+      {
+        "size": [
+          1280,
+          720
+        ],
+        "changes": [
+          {
+            "quality": "cracked",
+            "sid": 15954,
+            "frame": 37,
+            "code": "J11",
+            "flags": "cracked",
+            "unchangedOtherBridges": 660
+          },
+          {
+            "quality": "normal",
+            "sid": 15954,
+            "frame": 35,
+            "code": "J01",
+            "flags": "",
+            "unchangedOtherBridges": 660
+          },
+          {
+            "quality": "hard",
+            "sid": 15954,
+            "frame": 40,
+            "code": "J20",
+            "flags": "hard",
+            "unchangedOtherBridges": 660
+          }
+        ],
+        "savedHardFrame": 40,
+        "actualMenuSaveReload": true,
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+            "--run",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-bridge-menu-516\\test02-data",
+            "--window",
+            "--no-audio",
+            "--frames",
+            "270",
+            "--set",
+            "SCREENW=1280;SCREENH=720;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;currentLanguage=english",
+            "--ui-script",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-bridge-menu-516\\actual-final\\1280x720\\steps.tsv",
+            "--ui-report",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-bridge-menu-516\\actual-final\\1280x720\\states.tsv"
+          ],
+          "binarySha256": "7cc3b2eb5dd6d1b1f043fe82c6a70b3503c8aec9da1b1219628846cb01bea100",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 11.302733000004082,
+          "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderrSha256": "7f88e39aa65b729437ea3434bfef65e4f1d776cc758deb47fd21d8fcb9d5d651",
+          "originalsUnchanged": true,
+          "dataUnchanged": true
+        }
+      },
+      {
+        "size": [
+          1024,
+          768
+        ],
+        "changes": [
+          {
+            "quality": "cracked",
+            "sid": 15954,
+            "frame": 37,
+            "code": "J11",
+            "flags": "cracked",
+            "unchangedOtherBridges": 660
+          },
+          {
+            "quality": "normal",
+            "sid": 15954,
+            "frame": 35,
+            "code": "J01",
+            "flags": "",
+            "unchangedOtherBridges": 660
+          },
+          {
+            "quality": "hard",
+            "sid": 15954,
+            "frame": 40,
+            "code": "J20",
+            "flags": "hard",
+            "unchangedOtherBridges": 660
+          }
+        ],
+        "savedHardFrame": 40,
+        "actualMenuSaveReload": true,
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+            "--run",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-bridge-menu-516\\test02-data",
+            "--window",
+            "--no-audio",
+            "--frames",
+            "270",
+            "--set",
+            "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;currentLanguage=english",
+            "--ui-script",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-bridge-menu-516\\actual-final\\1024x768\\steps.tsv",
+            "--ui-report",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-bridge-menu-516\\actual-final\\1024x768\\states.tsv"
+          ],
+          "binarySha256": "7cc3b2eb5dd6d1b1f043fe82c6a70b3503c8aec9da1b1219628846cb01bea100",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 10.901327200001106,
+          "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderrSha256": "7f88e39aa65b729437ea3434bfef65e4f1d776cc758deb47fd21d8fcb9d5d651",
+          "originalsUnchanged": true,
+          "dataUnchanged": true
+        }
+      }
+    ],
+    "targetInput": "원본 TEST02의 다리119,146",
+    "onlyWorkingEditorCopySaved": true,
+    "attackFlyersNotTested": true
+  },
+  "normalBridge": {
+    "results": [
+      {
+        "name": "bridge",
+        "kind": "bridge",
+        "selectedSid": 15959,
+        "labels": [
+          "About",
+          "Player"
+        ],
+        "root": [
+          "432",
+          "15959",
+          "289",
+          "400"
+        ],
+        "menusAfterEscape": [
+          "0",
+          "0",
+          "0"
+        ],
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+            "--run",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-stage-entry-502-data",
+            "--mission",
+            "TEST02",
+            "--window",
+            "--mute-audio",
+            "--frames",
+            "62",
+            "--set",
+            "SCREENW=1280;SCREENH=720;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3",
+            "--ui-script",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-bridge-menu-516\\normal-bridge\\bridge\\steps.tsv",
+            "--ui-report",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-bridge-menu-516\\normal-bridge\\bridge\\states.tsv",
+            "--audio-report",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-bridge-menu-516\\normal-bridge\\bridge\\audio.tsv"
+          ],
+          "binarySha256": "7cc3b2eb5dd6d1b1f043fe82c6a70b3503c8aec9da1b1219628846cb01bea100",
+          "scriptSha256": "9d9f3c6cb4ad4ac70d1122f6122fb1a23aaeef0f1fb1850c6ccdf5ca6e9e7598",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 7.3675866999983555,
+          "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderrSha256": "9fba4f7e2bb0be090e62265ef1203d93a429672f7ce307b7cf3aa08e3bfebbbb",
+          "originalsUnchanged": true,
+          "dataUnchanged": true,
+          "dataRoot": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-stage-entry-502-data"
+        }
+      }
+    ]
+  },
+  "allActualRuns": [
+    {
+      "path": "extracted/cpp-bridge-menu-516/actual-final/1024x768/run.json",
+      "exit": 0,
+      "gameSha": "7cc3b2eb5dd6d1b1f043fe82c6a70b3503c8aec9da1b1219628846cb01bea100"
+    },
+    {
+      "path": "extracted/cpp-bridge-menu-516/actual-final/1280x720/run.json",
+      "exit": 0,
+      "gameSha": "7cc3b2eb5dd6d1b1f043fe82c6a70b3503c8aec9da1b1219628846cb01bea100"
+    },
+    {
+      "path": "extracted/cpp-bridge-menu-516/actual-first/1280x720/run.json",
+      "exit": 0,
+      "gameSha": "7cc3b2eb5dd6d1b1f043fe82c6a70b3503c8aec9da1b1219628846cb01bea100"
+    },
+    {
+      "path": "extracted/cpp-bridge-menu-516/baseline-command/run.json",
+      "exit": 1,
+      "gameSha": "74548abb1600396188d4365464a808d555418a3bb080211b97e78f8cdfb2c362"
+    },
+    {
+      "path": "extracted/cpp-bridge-menu-516/baseline-editor/run.json",
+      "exit": 0,
+      "gameSha": "74548abb1600396188d4365464a808d555418a3bb080211b97e78f8cdfb2c362"
+    },
+    {
+      "path": "extracted/cpp-bridge-menu-516/normal-bridge/bridge/run.json",
+      "exit": 0,
+      "gameSha": "7cc3b2eb5dd6d1b1f043fe82c6a70b3503c8aec9da1b1219628846cb01bea100"
+    }
+  ],
+  "goalComplete": false,
+  "attackFlyersStaticOnly": true,
+  "greenRectanglesDeferred": true,
+  "limitations": [
+    "최종 수락은 Editor 두 화면비의3품질/저장/재진입과 일반 모드1사례다.",
+    "이전 제품의34경로/전체3337과 현재 제품의집중51고유/52관측을 구별한다.",
+    "추가 전용 명령·전체 일반 건물/제단·원본전체선택기·전체화면/Windows11/자연완주는 잔여다."
+  ]
+}

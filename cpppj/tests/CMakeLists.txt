@@ -2204,7 +2204,7 @@ set_source_files_properties(IslandPlacementTests.cpp PROPERTIES COMPILE_DEFINITI
 
 # 독립 원문30행과 전체 풀·공유 난수·현재 실제 Session 소비자를 대조한다.
 target_sources(netstorm_tests PRIVATE RawBridgeEditorTests.cpp)
-set_source_files_properties(RawBridgeEditorTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_EDITOR_BRIDGES_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/editor-bridges-x86.tsv\"")
+set_source_files_properties(RawBridgeEditorTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_EDITOR_BRIDGES_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/editor-bridges-x86.tsv\";NETSTORM_EDITOR_BRIDGE_ONE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/editor-bridge-one-x86.tsv\"")
 
 # 원본 State3 분기와 실제 설정·편집 저장·모달 입력·장기 덱 경계를 같은 제품에 검증한다.
 target_sources(netstorm_tests PRIVATE NativeMainMenuStateTests.cpp NativeMainMenuStateNativeTests.cpp ClientMainMenuGlobalsTests.cpp

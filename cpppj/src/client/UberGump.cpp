@@ -973,6 +973,10 @@ void UberGump::Event(InputEvent event) {
         if (!(event.code&InputCode::kRelease) && world_) world_->Session().SetAllBridgeQuality(std::bit_cast<std::uint32_t>(event.y));
         rebuild_=true;return; //원문 SetAllBridge는 일반 입력의 뗌 거부 뒤 숫자 인자를 그대로 현재 월드에 전달한다.
     }
+    if (transitionCode>=0x02000125U && transitionCode<=0x02000127U) {
+        if (!(event.code&InputCode::kRelease) && world_) world_->Session().SetBridgeQuality(std::bit_cast<std::uint32_t>(event.y),transitionCode-0x02000125U);
+        rebuild_=true;return; // 원본00542b5c/60/64의 y=SID와 고정 품질0/1/2다. 현재 팝업 수명과 무관한 일반 입력에서 소비한다.
+    }
     if (transitionCode==kStartDemo) {
         if (!(event.code&InputCode::kRelease)) BeginMission(std::string(scriptStrings_.Resolve(std::bit_cast<std::uint32_t>(event.y))),1);
         return; // 원본005429f4의 실제 세 번째 인자를 동일 공장으로 전달한다.
