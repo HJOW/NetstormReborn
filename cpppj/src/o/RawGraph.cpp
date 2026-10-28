@@ -189,10 +189,13 @@ std::vector<std::uint16_t> RawGraph::DetachConnections(const SurfaceObject& sour
                         intersects(a[0]-1,a[1],a[2]+1,a[3])==intersects(a[0],a[1]-1,a[2],a[3]+1)) continue;
                     // 00441e40은 다리/폭탄→육지 연결의 두 번째 코드를 A로 덮어쓴다.
                     // 실제157 H=8을162의 한 프레임 표로 바꿀 때 그 무효 코드 바이트를 해석하지 않는다.
-                    if (!sourceFrameValid && !((object.flags2&0x104U) && (source.flags2&0x1044202U)) &&
-                        !(source.flags2&TypeFlag2::kEmplacement))
-                        throw std::out_of_range("raw 그래프 삭제 치환 방향 코드가 필요합니다");
-                    if (!SurfaceFinder::Connects(object,source)) continue;
+                    bool connected{}; // 원문첫마스크의거부/두번째코드보정을실행한뒤필요한치환방향만요구한다.
+                    try { connected=SurfaceFinder::Connects(object,source); }
+                    catch (const std::out_of_range&) {
+                        if (sourceFrameValid) throw;
+                        throw std::out_of_range("raw 그래프 삭제 치환 방향 코드가 필요합니다 source="+std::to_string(source.id)+","+std::to_string(source.x)+","+std::to_string(source.y)+","+std::to_string(source.width)+","+std::to_string(source.height)+","+std::to_string(source.flags2)+" candidate="+std::to_string(candidate)+","+std::to_string(object.x)+","+std::to_string(object.y)+","+std::to_string(object.width)+","+std::to_string(object.height)+","+std::to_string(object.flags2)+","+std::to_string(object.frame.side)+","+std::to_string(object.frame.variant)); // 실제두번째조회가필요한실패만같은후보/치환정보와함께거부한다.
+                    }
+                    if (!connected) continue;
                     if (std::find(result.begin(),result.end(),candidate)!=result.end()) throw std::logic_error("그래프 삭제 중복 해시 후보");
                     result.push_back(candidate);
                 }
