@@ -1,0 +1,466 @@
+{
+  "unit": 534,
+  "date": "2026-10-28",
+  "host": "HJOW-Athlon",
+  "headBeforeCommit": "2662c639732c34d1abae97d72abc46c46d021ddb",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23",
+    "outputsModified": false
+  },
+  "product": {
+    "NetstormCpp.exe": "03a8915301e389260fac48a02b6340fce3fc45f67fc2d74382c5b161b345412d",
+    "netstorm_tests.exe": "933fd0f732f07d2d15642e15595b914d4cc9c5be8934052fd9e18744f6cfa02c"
+  },
+  "builds": 0,
+  "cppTestExecutions": 0,
+  "changedProductSource": [],
+  "accepted": {
+    "results": [
+      {
+        "size": [
+          1280,
+          720
+        ],
+        "buildings": [
+          {
+            "type": 75,
+            "asset": "windBattery",
+            "sid": 15005,
+            "position": [
+              "137",
+              "166"
+            ],
+            "hp": 700,
+            "refund": 100,
+            "spAfter": 500100,
+            "menu": [
+              {
+                "token": 4253,
+                "index": 0,
+                "flags": 66697,
+                "command": 33554525,
+                "parameter": 15005,
+                "visible": true,
+                "label": "Salvage gains 100"
+              },
+              {
+                "token": 4253,
+                "index": 1,
+                "flags": 66689,
+                "command": 33554455,
+                "parameter": 75,
+                "visible": true,
+                "label": "About"
+              },
+              {
+                "token": 4253,
+                "index": 2,
+                "flags": 66592,
+                "command": 0,
+                "parameter": 0,
+                "visible": true,
+                "label": "Player"
+              }
+            ]
+          },
+          {
+            "type": 76,
+            "asset": "rainBattery",
+            "sid": 15006,
+            "position": [
+              "140",
+              "166"
+            ],
+            "hp": 700,
+            "refund": 100,
+            "spAfter": 500200,
+            "menu": [
+              {
+                "token": 4464,
+                "index": 0,
+                "flags": 66697,
+                "command": 33554525,
+                "parameter": 15006,
+                "visible": true,
+                "label": "Salvage gains 100"
+              },
+              {
+                "token": 4464,
+                "index": 1,
+                "flags": 66689,
+                "command": 33554455,
+                "parameter": 76,
+                "visible": true,
+                "label": "About"
+              },
+              {
+                "token": 4464,
+                "index": 2,
+                "flags": 66592,
+                "command": 0,
+                "parameter": 0,
+                "visible": true,
+                "label": "Player"
+              }
+            ]
+          },
+          {
+            "type": 77,
+            "asset": "thunderBattery",
+            "sid": 15012,
+            "position": [
+              "134",
+              "164"
+            ],
+            "hp": 700,
+            "refund": 100,
+            "spAfter": 500300,
+            "menu": [
+              {
+                "token": 4615,
+                "index": 0,
+                "flags": 66697,
+                "command": 33554525,
+                "parameter": 15012,
+                "visible": true,
+                "label": "Salvage gains 100"
+              },
+              {
+                "token": 4615,
+                "index": 1,
+                "flags": 66689,
+                "command": 33554455,
+                "parameter": 77,
+                "visible": true,
+                "label": "About"
+              },
+              {
+                "token": 4615,
+                "index": 2,
+                "flags": 66592,
+                "command": 0,
+                "parameter": 0,
+                "visible": true,
+                "label": "Player"
+              }
+            ]
+          },
+          {
+            "type": 147,
+            "asset": "rainBlocker",
+            "sid": 15041,
+            "position": [
+              "148",
+              "177"
+            ],
+            "hp": 1060,
+            "refund": 200,
+            "spAfter": 500500,
+            "menu": [
+              {
+                "token": 4738,
+                "index": 0,
+                "flags": 66697,
+                "command": 33554525,
+                "parameter": 15041,
+                "visible": true,
+                "label": "Salvage gains 200"
+              },
+              {
+                "token": 4738,
+                "index": 1,
+                "flags": 66689,
+                "command": 33554455,
+                "parameter": 147,
+                "visible": true,
+                "label": "About"
+              },
+              {
+                "token": 4738,
+                "index": 2,
+                "flags": 66592,
+                "command": 0,
+                "parameter": 0,
+                "visible": true,
+                "label": "Player"
+              }
+            ]
+          }
+        ],
+        "finalSp": 500500,
+        "noRegrowthAfterSalvage": true,
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+            "--run",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-support-buildings-534\\final\\data",
+            "--window",
+            "--no-audio",
+            "--frames",
+            "450",
+            "--set",
+            "SCREENW=1280;SCREENH=720;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0",
+            "--ui-script",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-support-buildings-534\\final\\1280x720\\steps.tsv",
+            "--ui-report",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-support-buildings-534\\final\\1280x720\\states.tsv"
+          ],
+          "binarySha256": "03a8915301e389260fac48a02b6340fce3fc45f67fc2d74382c5b161b345412d",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 19.819338200002676,
+          "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderrSha256": "f6f524aabb476c049642be4205805f05666d99a73b8f0c27af7426a5ee290463",
+          "originalsUnchanged": true,
+          "dataUnchanged": true
+        }
+      },
+      {
+        "size": [
+          1024,
+          768
+        ],
+        "buildings": [
+          {
+            "type": 75,
+            "asset": "windBattery",
+            "sid": 15005,
+            "position": [
+              "137",
+              "166"
+            ],
+            "hp": 700,
+            "refund": 100,
+            "spAfter": 500100,
+            "menu": [
+              {
+                "token": 448,
+                "index": 0,
+                "flags": 66697,
+                "command": 33554525,
+                "parameter": 15005,
+                "visible": true,
+                "label": "Salvage gains 100"
+              },
+              {
+                "token": 448,
+                "index": 1,
+                "flags": 66689,
+                "command": 33554455,
+                "parameter": 75,
+                "visible": true,
+                "label": "About"
+              },
+              {
+                "token": 448,
+                "index": 2,
+                "flags": 66592,
+                "command": 0,
+                "parameter": 0,
+                "visible": true,
+                "label": "Player"
+              }
+            ]
+          },
+          {
+            "type": 76,
+            "asset": "rainBattery",
+            "sid": 15006,
+            "position": [
+              "140",
+              "166"
+            ],
+            "hp": 700,
+            "refund": 100,
+            "spAfter": 500200,
+            "menu": [
+              {
+                "token": 583,
+                "index": 0,
+                "flags": 66697,
+                "command": 33554525,
+                "parameter": 15006,
+                "visible": true,
+                "label": "Salvage gains 100"
+              },
+              {
+                "token": 583,
+                "index": 1,
+                "flags": 66689,
+                "command": 33554455,
+                "parameter": 76,
+                "visible": true,
+                "label": "About"
+              },
+              {
+                "token": 583,
+                "index": 2,
+                "flags": 66592,
+                "command": 0,
+                "parameter": 0,
+                "visible": true,
+                "label": "Player"
+              }
+            ]
+          },
+          {
+            "type": 77,
+            "asset": "thunderBattery",
+            "sid": 15012,
+            "position": [
+              "134",
+              "164"
+            ],
+            "hp": 700,
+            "refund": 100,
+            "spAfter": 500300,
+            "menu": [
+              {
+                "token": 798,
+                "index": 0,
+                "flags": 66697,
+                "command": 33554525,
+                "parameter": 15012,
+                "visible": true,
+                "label": "Salvage gains 100"
+              },
+              {
+                "token": 798,
+                "index": 1,
+                "flags": 66689,
+                "command": 33554455,
+                "parameter": 77,
+                "visible": true,
+                "label": "About"
+              },
+              {
+                "token": 798,
+                "index": 2,
+                "flags": 66592,
+                "command": 0,
+                "parameter": 0,
+                "visible": true,
+                "label": "Player"
+              }
+            ]
+          },
+          {
+            "type": 147,
+            "asset": "rainBlocker",
+            "sid": 15041,
+            "position": [
+              "148",
+              "177"
+            ],
+            "hp": 1060,
+            "refund": 200,
+            "spAfter": 500500,
+            "menu": [
+              {
+                "token": 961,
+                "index": 0,
+                "flags": 66697,
+                "command": 33554525,
+                "parameter": 15041,
+                "visible": true,
+                "label": "Salvage gains 200"
+              },
+              {
+                "token": 961,
+                "index": 1,
+                "flags": 66689,
+                "command": 33554455,
+                "parameter": 147,
+                "visible": true,
+                "label": "About"
+              },
+              {
+                "token": 961,
+                "index": 2,
+                "flags": 66592,
+                "command": 0,
+                "parameter": 0,
+                "visible": true,
+                "label": "Player"
+              }
+            ]
+          }
+        ],
+        "finalSp": 500500,
+        "noRegrowthAfterSalvage": true,
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+            "--run",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-support-buildings-534\\final\\data",
+            "--window",
+            "--no-audio",
+            "--frames",
+            "310",
+            "--set",
+            "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0",
+            "--ui-script",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-support-buildings-534\\final\\1024x768\\steps.tsv",
+            "--ui-report",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-support-buildings-534\\final\\1024x768\\states.tsv",
+            "--mission",
+            "TEST02"
+          ],
+          "binarySha256": "03a8915301e389260fac48a02b6340fce3fc45f67fc2d74382c5b161b345412d",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 14.239460899989353,
+          "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderrSha256": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2",
+          "originalsUnchanged": true,
+          "dataUnchanged": true
+        }
+      }
+    ],
+    "binarySha256": "03a8915301e389260fac48a02b6340fce3fc45f67fc2d74382c5b161b345412d",
+    "savedFortSha256": "77a366c647c0f2c4d05ba5ee7bcb7f387d275b24b59a4a57636e2b7306261c23",
+    "growthLifecycleTested": false,
+    "attackFlyersNotTested": true
+  },
+  "runs": [
+    {
+      "path": "extracted/cpp-support-buildings-534/final/1024x768/run.json",
+      "sha256": "e1ce6c07029f39337e52c1734bcc1b53b0ecebffd8a3452aaddd011e4fc13dd9",
+      "returnCode": 0,
+      "timedOut": false
+    },
+    {
+      "path": "extracted/cpp-support-buildings-534/final/1280x720/run.json",
+      "sha256": "23a48895564ffec5a23e730639212e7e507fed18b94264bba7e044fb5937ec44",
+      "returnCode": 0,
+      "timedOut": false
+    },
+    {
+      "path": "extracted/cpp-support-buildings-534/placement-probe/run.json",
+      "sha256": "c92ca0d7cc2984f851df6c0f119591b5462fb274df5c075ee0488837889c1b55",
+      "returnCode": 1,
+      "timedOut": false
+    }
+  ],
+  "preservation": {
+    "sourceFiles": 2927,
+    "sourceChanged": [],
+    "protectedFiles": 1819,
+    "protectedChanged": [],
+    "agentsUnchanged": true
+  },
+  "limits": {
+    "growthLifecycleTested": false,
+    "damagedOrOtherOwners": false,
+    "attackFlyersTested": false,
+    "multiplayerTested": false
+  },
+  "nextPriority": "Golem production SP cost and TheWarBegins enemy starting SP/AI affordability",
+  "rawDirectory": "extracted/cpp-support-buildings-534",
+  "evidenceSha256": {
+    "extracted/cpp-support-buildings-534/final/summary.json": "bc6f6c248becfd031798539eb92f3ba395f4cf460b604dd77c1fbdda2fe976fc",
+    "extracted/cpp-support-buildings-534/freeze-final.json": "25a3a2d4882691c4ad2f40461e4990e0373452070946e99d632e706644bea77f",
+    "tools/cpp_support_buildings_smoke.py": "73b9921a31e7ff1c110c0797300e6b5ced92a0c483e4b19c88b197269b9c7a68"
+  }
+}
