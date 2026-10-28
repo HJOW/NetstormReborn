@@ -175,7 +175,7 @@
 - [x] **R0-3 (2026-10-28 완료):** `cpp_sync.py --ports`·`--ports-init`·`--ports-reflect`와 [PORT_MAP.tsv](dotnetpj/PORT_MAP.tsv)(68행)·[PORT_MAP.md](dotnetpj/PORT_MAP.md), 형식·경로 검사 `CppPortMapTests`(2개, 오류 행을 넣으면 실패함을 확인)를 만들었다. 검사 수는 1,351개가 됐다.
 - [x] **R0-4 — 새 fixture로 뒤처진 C#을 고친다 (2026-10-28 완료):** 영향표 A의 여섯 묶음을 `sp-add-bits`·`sp-initialization`·`fort-sp-write` → `squid-retype`·`object-conversion` → `squid-pool-reset`·`state-sid-lists` → `priestregen`·`priest-panic`·`priest-prayer` → `RawGraph` 비표면 좌표 → `RawAssetPostPop` 4종 순으로 처리한다. 묶음마다 fixture `Link`+`cpp_sync.py --update --add`, C# 수정, `--ports-reflect`를 하고 단위 기록을 남긴다. 기대값을 C# 결과로 바꾸지 않는다. `sp-add-bits`·`sp-initialization`은 [0.14](#014-단위-기록--r0-4-sp-묶음-가산-비트와-초기화-명시-할당-2026-10-28-hjow-athlon)에서, `fort-sp-write`는 [0.15](#015-단위-기록--r0-4-sp-묶음-fort-sp-writer-신규-이식-2026-10-28-hjow-athlon)에서, `squid-retype`·`object-conversion`은 [0.16](#016-단위-기록--r0-4-두-번째-묶음-타입-변경과-비석주문-전환-2026-10-28-hjow-athlon)에서, `squid-pool-reset`·`state-sid-lists`는 [0.17](#017-단위-기록--r0-4-세-번째-묶음-풀-정리와-sid-목록-2026-10-28-hjow-athlon)에서, `priest-panic`·`priest-prayer`와 회복 허용 공유 판정은 [0.18](#018-단위-기록--r0-4-네-번째-묶음-사제-panic기도와-회복-허용-2026-10-28-hjow-athlon)에서, `priest-regen` 재생과 기록 정정은 [0.19](#019-단위-기록--r0-4-네-번째-묶음-후속-사제-회복-재생과-기록-정정-2026-10-28-hjow-athlon)에서, `RawGraph` 비표면 좌표는 [0.20](#020-단위-기록--r0-4-다섯-번째-묶음-그래프-비표면-좌표-2026-10-28-hjow-athlon)에서, `RawAssetPostPop` 4종은 [0.21](#021-단위-기록--r0-4-마지막-묶음-자산-후처리-4종-2026-10-28-hjow-athlon)에서 완료했다. R0-4는 끝났다.
 - [x] **R1-1 (2026-10-28 완료, 라이브러리 부분):** `Netstorm.Client` 프로젝트와 `Netstorm.Client.Tests`를 만들고 `Screen`(8비트 버퍼·팔레트·잠금·자르기)·`GamePalette`·`PaletteSearch`·`ScreenGeometry`·`ScreenPresentation`·`ScreenResolutions`·`ScreenPaletteApply`·`InputQueue`를 이식했다. 원본 fixture 3개(786·357·166행)가 L1로 일치하고 전체 1,384개 통과·경고 0. [문서](docs/dotnet-client-screen-20261028.md). 이 단위는 규칙의 이식이며 실제 화면 픽셀 비교가 아니다.
-- [ ] **R1-2a:** MonoGame 출력 호스트: `IScreenOutput` 구현(인덱스→RGBA 텍스처, 정수 최근접 확대·검정 여백), 전체화면 borderless 창과 창 전환, 마우스 좌표 역변환·커서 제한, 키·글자·버튼 → `InputQueue`, 프레임 루프 골격. 기존 `NetstormGame`/`DisplayManager`는 동결하고 새 호스트를 `--client` 같은 별도 진입으로 둔다(결정 5).
+- [x] **R1-2a (2026-10-28 완료):** MonoGame 출력 호스트(`Netstorm.Client.Host` 실행 + `Netstorm.Client/Host` 순수 부분): `IScreenOutput` 구현(변경 사각형만 RGBA 부분 업로드), 정수 최근접 확대·검정 여백, 전체화면 borderless 창과 F11 전환, 마우스 역변환·전체화면 커서 제한, 키·글자·버튼 → `InputQueue`, 프레임 루프 골격(`--frames`·`--ui-script`·`--ui-report`·`--set`). 기존 `NetstormGame`/`DisplayManager`는 동결하고 별도 진입으로 둔다(결정 5). [문서 6절](docs/dotnet-client-screen-20261028.md#6-r1-2a-monogame-출력-호스트-같은-날-hjow-athlon). **남은 것:** 그리기 내용·세션·소리(R2·R3·R4 이후), 라벨 클릭·report·kernel-tell(R3 이후).
 - [x] **R1-2b (2026-10-28 완료, 호스트 없이 가능한 부분):** `ScreenCapture`(cpppj와 byte 동일한 BMP)·`UiScript`/`UiScriptRunner`(esc·key·keyup·pointer·좌표/라벨 클릭·snapshot)·`dotnetpj/tools/cpp_frame_compare.py`(파일·폴더 비교, 종료 코드 0/1/2). 오라클 캡처(메인 메뉴 프레임 30)가 이 PC에서 결정적으로 만들어짐을 확인했다. [문서 5절](docs/dotnet-client-screen-20261028.md#5-r1-2-부분-캡처스크립트-도구와-오라클-확인-같은-날). **남은 것:** `--ui-script`/`--mission`/`--frames`/`--set` 실행 인자를 받는 dotnetpj 실행 진입과 그 안에서 두 도구를 부르는 프레임 루프는 R1-2a의 호스트가 있어야 하며, 라벨 클릭·report·kernel-tell 등은 R3 이후다.
 - [ ] 이후 R2 → R3(D1) → R4(M1) → R5(D2) → R6 → R7 → R8 순서로 진행하고, 단위마다 이 절의 체크와 [0.4](#04-기존-dotnetpj-소스의-재수정-판정) 판정표를 갱신한다.
 
@@ -354,6 +354,24 @@
   R4 세션 조립에서 새 모듈 단위로 이식한다. `island-population`과 같은 판정(0.20)이다.
 - **다음:** R0-4 완료. 다음 DN 커밋은 `git log`로 당일 마지막 번호를 확인해 이어 쓴다.
 
+### 0.22 단위 기록 — R1-2a MonoGame 출력 호스트 (2026-10-28, HJOW-Athlon)
+
+- **착수 상태:** 사용자 요청 "dotnetpj 다음 작업 진행해 줘". 시작 HEAD는 `a73d43d2`(DN `20261028-47`)이며
+  dotnetpj 작업 트리는 깨끗했다(병렬 세션의 cpppj 변경·신규 파일은 건드리지 않았다). 원본 게임·디컴파일은 실행하지 않았다.
+  새 호스트 창의 실행은 이 PC(HJOW-Athlon, AGENTS.md 확인 면제 시스템)에서만 --frames 제한으로 짧게 했다.
+- **변경:** `Netstorm.Client/Host/`(신규 5개: `HostOptions`·`ScreenTextureConverter`·`HostPresentation`·`HostInputMapper`·`HostFrameDriver`),
+  `Netstorm.Client.Host/`(신규 프로젝트: `ClientHostGame`·`MonoGameScreenOutput`·`Program`), `Netstorm.sln`(등록),
+  `Netstorm.Client.Tests/ClientHostTests.cs`(신규 11개), `PORT_MAP.tsv`(99행: `port` 8개 추가),
+  `PORT_MAP.md`(수치), `docs/dotnet-client-screen-20261028.md`(6절), 이 문서.
+  cpppj·원본·AGENTS.md·`Netstorm.Game`(동결)은 바꾸지 않았다.
+- **검증:** Release 경고·오류 0, 전체 **1,441개(Assets 363 + Core 1022 + Client 56) 통과**.
+  변환 R/B 뒤바꿈 변이에 기대값 실패를 확인하고 원복했다.
+  실행: `--window 320×200 --frames 5` + 3프레임 snapshot 스크립트 → 종료 0, BMP 256,122바이트, 빈 보고서. 인자 오류·없는 스크립트는 종료 2.
+  실행 중 찾은 결함(따라잡기 Update 뒤 중간 프레임 관측 건너뜀)은 `EndFrame` draining 으로 고치고 검사로 고정했다.
+- **알아 둘 것:** `port` 8행은 fixture 대조가 없는 이식이라 L1이 아니다. 그리기 내용·세션·소리·라벨 클릭은 R2·R3·R4 몫이다.
+  `Screen.ToLogicalPoint`(비율 맞춤)와 호스트 정수 맞춤은 다른 사각형을 쓰므로 호스트는 자체 사각표로 마우스를 되돌린다.
+- **다음:** R2(그리기 원시·팔레트·글꼴). 다음 DN 커밋은 `git log`로 당일 마지막 번호를 확인해 이어 쓴다.
+
 ## 1. 지금까지의 완료 범위 — 이관 기록 색인
 
 단위별 상세는 [LEFT_JOBS.dotnetpj.old.md](LEFT_JOBS.dotnetpj.old.md)와 아래 문서에 있다. 마지막 판정 열은 0절 계획에서 그 결과를 어떻게 다루는지다([0.4](#04-기존-dotnetpj-소스의-재수정-판정)).
@@ -372,7 +390,7 @@
 | R0 (10-28) | cpppj 오라클 확정, 재대조 영향표, 포트 맵(`PORT_MAP.tsv`)·`cpp_sync.py --ports*` | [영향표](docs/dotnet-cpp-resync-20261028.md), [PORT_MAP.md](dotnetpj/PORT_MAP.md) | 유지. R0-4 완료(0.14~0.21) |
 | R1-1 (10-28) | `Netstorm.Client`: 8비트 `Screen`·팔레트·색 검색·화면 스크롤·전체화면 출력 계산·입력 큐 | [R1-1 문서](docs/dotnet-client-screen-20261028.md) | 새 경로(`port`) |
 
-마지막 전체 빌드·검사는 2026-10-28의 Release 경고·오류 0, 1,430개 통과(Assets 363 + Core 1022 + Client 45)다. Assets·Core는 기존 경로 기준이며 0절 새 경로의 진행도가 아니다. 새 경로의 진행도는 Client 검사와 0.5절의 단계 완료 기준으로 본다.
+마지막 전체 빌드·검사는 2026-10-28의 Release 경고·오류 0, 1,441개 통과(Assets 363 + Core 1022 + Client 56)다. Assets·Core는 기존 경로 기준이며 0절 새 경로의 진행도가 아니다. 새 경로의 진행도는 Client 검사와 0.5절의 단계 완료 기준으로 본다.
 
 ---
 

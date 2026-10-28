@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- MonoGame 출력 호스트: Netstorm.Client 논리 화면의 인덱스를 텍스처로 올려 창·전체화면에 낸다.
+       기존 Netstorm.Game(관찰·팬게임 기반)은 동결하고 새 진입으로만 실행한다 (2026-10-28 R1-2a, LEFT_JOBS.dotnetpj.md 0절 결정 5) -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>Netstorm.Client.Host</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="MonoGame.Framework.DesktopGL" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Netstorm.Client\Netstorm.Client.csproj" />
+  </ItemGroup>
+</Project>

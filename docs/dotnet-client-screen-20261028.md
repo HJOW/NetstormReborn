@@ -73,3 +73,28 @@ NetstormCpp.exe --run extracted\dotnet-oracle-data --window --no-audio --frames 
 - 이 PC의 PowerShell 5.1에서 `Start-Process -PassThru -NoNewWindow`는 종료 코드를 비워 두므로 `& exe args; $LASTEXITCODE`로 읽는다.
 
 **검증:** Client 검사 45개(R1-1의 33개 + 캡처·스크립트 12개), `cpp_frame_compare.py`를 일치/차이/입력 오류/폴더 모드로 직접 실행해 종료 코드와 보고를 확인했다. 스크립트 단계는 cpppj 소스에서 옮긴 계약이며 cpppj의 같은 스크립트 결과와 직접 비교한 것은 아니다(호스트가 없다). 검사 작성 중 최초 실패 1건은 `AfterFrame` 없이 프레임을 건너뛴 테스트 오류였고, 앞 단계가 남으면 뒤 단계가 막히는 cpppj 동작을 `RunnerRejectsUnsupportedAndBlockedSteps`가 따로 검증한다.
+
+## 6. R1-2a: MonoGame 출력 호스트 (같은 날, HJOW-Athlon)
+
+`--run` 진입·창·입력 펌프·프레임 고리의 호스트 몫을 옮겼다. 기존 `Netstorm.Game`은 동결하고 별도 실행(`NetstormClientHost`)으로만 돈다.
+
+| 파일 | cpppj 근거 | 내용 |
+| --- | --- | --- |
+| `Netstorm.Client/Host/HostOptions.cs` | `src/app/main.cpp` (--run 인자) | --window/--fullscreen, --width/--height/--fps, --frames, --ui-script/--ui-report, --set 뭉치 해석. `SCREENW`·`SCREENH`·`maxFPS`는 바로 반영하고 나머지는 세션용으로 보관한다 |
+| `Netstorm.Client/Host/ScreenTextureConverter.cs` | `src/client/Screen.cpp` (004a1800) | 변경 사각형의 인덱스를 현재 팔레트 RGBA로 푼다 |
+| `Netstorm.Client/Host/HostPresentation.cs` | `ScreenPresentation.cpp` | 정수 최근접 맞춤 사각형(비율 유지, 1배율 이상, 가운데). 마우스 역변환과 그리기가 같은 값을 쓴다 |
+| `Netstorm.Client/Host/HostInputMapper.cs` | `src/client/InputEvent.cpp` (창 프로시저) | 키(가상 키 위로 밈·수식·뗌 비트, F11 제외)·글자(아래 코드)·버튼 비트, 전체화면 커서 제한 판정 |
+| `Netstorm.Client/Host/HostFrameDriver.cs` | `src/app/main.cpp` (--run 고리) | 화면·큐 소유, 프레임 번호, 스크립트 Before/After 호출. 따라잡기 Update 뒤에도 밀린 프레임 관측을 한 프레임씩 처리한다 |
+| `Netstorm.Client.Host/ClientHostGame.cs` | `Screen.cpp`·`InputEvent.cpp` | Game 골격: F11 전환(borderless, 장치 모드 유지), 정수 배율 그리기(PointClamp), 마우스 역변환·제한, 키·글자·버튼 펌프, 프레임 제한 종료 |
+| `Netstorm.Client.Host/MonoGameScreenOutput.cs` | `Screen.cpp` (004a1800) | `IScreenOutput` 구현: 변경 사각형만 텍스처에 부분 업로드 |
+| `Netstorm.Client.Host/Program.cs` | `src/app/main.cpp` (--run 진입) | 별도 진입. 종료 코드 0(정상)·1(실행 오류)·2(인자 오류). 보고서는 실패해도 쓴다 |
+
+- 창 모드는 논리 크기 1:1, 전체화면은 디스플레이 크기의 borderless(장치 모드를 바꾸지 않는다). 모드 전환은 저장 팔레트를 다시 적용한다(원본과 같은 순서).
+- `Screen.ToLogicalPoint`가 쓰는 비율 맞춤 대신 호스트 정수 맞춤으로 마우스를 되돌린다. 그린 위치와 같은 사각형이므로 어긋나지 않는다. 창 모드에서는 커서를 가두지 않는다.
+- `PORT_MAP.tsv`에 `port` 8개 행을 새로 추가했다(기대값을 C# 결과로 바꾸지 않는 이식이며 fixture 대조가 아니라 L1이 아니다).
+
+**검증:** Release 경고·오류 0. Client 검사 56개(R1-2b까지 45개 + 호스트 11개) 통과, 전체 **1,441개(Assets 363 + Core 1022 + Client 56) 통과**.
+검사 작성 중 변이 1건(변환 R/B 뒤바꿈)에 기대값 실패를 확인하고 원복했다.
+실행 확인(HJOW-Athlon, 예외 시스템이라 별도 창 확인 없이 진행): `NetstormClientHost.dll --window --width 320 --height 200 --frames 5 --ui-script steps.tsv(3프레임 snapshot) --ui-report report.tsv` →
+종료 0, BMP 256,122바이트(= 122 + 320×200×4), 빈 보고서. 인자 오류·없는 스크립트는 종료 2.
+실행 중 찾은 결함 1건: 고정 시간 따라잡기로 Update가 몰리면 중간 프레임 snapshot이 건너뛰어졌다. `HostFrameDriver.EndFrame`이 밀린 프레임을 한 프레임씩 처리하도록 고치고 `FrameDriverDrainsSkippedFrames`로 고정했다.
