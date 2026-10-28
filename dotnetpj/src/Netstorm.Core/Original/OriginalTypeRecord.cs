@@ -52,6 +52,9 @@ public sealed class OriginalTypeRecord
     /// <summary>타입 그룹 번호(원본 타입 구조체 +0x9c). 기본값은 "그룹 없음"(10)이고, 삭제 수명주기의 잃어버린 소리 판정이 이 값을 본다. 추가: W03 삭제·수명 셋째 조각(2026-10-21).</summary>
     public int Group { get; set; } = 10;
 
+    /// <summary>기술 비트 번호(원본 타입 구조체 PATCH +0x1ec·CD +0x1cc). 실제 초기값-1 뒤 techBit 숫자 속성을 그대로 두며, 없으면 -1이다. 추가: R0-4 마지막 묶음(2026-10-28).</summary>
+    public int TechBitIndex { get; set; } = -1;
+
     /// <summary>현재 값의 복사본을 만든다. 삭제 수명주기가 타입 입력을 고정할 때 쓴다(추가: W03 삭제·수명 셋째 조각, 2026-10-21).</summary>
     public OriginalTypeRecord Clone()
     {
@@ -68,6 +71,7 @@ public sealed class OriginalTypeRecord
             FootX = FootX,
             FootY = FootY,
             Group = Group,
+            TechBitIndex = TechBitIndex,
         };
     }
 }

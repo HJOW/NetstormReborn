@@ -31,7 +31,9 @@ cpppj/src/o/Graph.cpp	Netstorm.Core/Bridges/SurfaceGraph.cs	f95a8db28ceae6c036fa
 cpppj/src/o/GumpFormHost.cpp	Netstorm.Core/Original/RawGumpFormHost.cs	9eb899e43b02660479342f0f4d709760e38ebda3	L1
 cpppj/src/o/Player.cpp	Netstorm.Core/Rules/MissionStart.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
 cpppj/src/o/Player.cpp	Netstorm.Core/Simulation/BattleSession.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
-cpppj/src/o/RawAssetPostPop.cpp	Netstorm.Core/Original/RawAssetPostPop.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
+cpppj/src/o/RawAcidFence.cpp	Netstorm.Core/Original/RawAcidFence.cs	9ed8bc636cac9d100dbddafa8b6b2d6efda971e6	L1
+cpppj/src/o/RawArcSpire.cpp	Netstorm.Core/Original/RawArcSpire.cs	9ed8bc636cac9d100dbddafa8b6b2d6efda971e6	L1
+cpppj/src/o/RawAssetPostPop.cpp	Netstorm.Core/Original/RawAssetPostPop.cs	9ed8bc636cac9d100dbddafa8b6b2d6efda971e6	L1
 cpppj/src/o/RawBombPreDestroy.cpp	Netstorm.Core/Original/RawBombPreDestroy.cs	0e66d91ba40ac55542ec2e2747b68e406c27de43	L1
 cpppj/src/o/RawBridgeEvents.cpp	Netstorm.Core/Original/RawBridgeEvent.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
 cpppj/src/o/RawBridgeLifecycle.cpp	Netstorm.Core/Original/RawBridgeLifecycle.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
@@ -68,7 +70,7 @@ cpppj/src/o/RawSquidNeighbors.cpp	Netstorm.Core/Original/RawNeighbor.cs	c7459e61
 cpppj/src/o/RawSquidPoolReset.cpp	Netstorm.Core/Original/RawSquidPoolReset.cs	1ddc4ba021c0fadcf75c0a681cc18d937b798219	L1
 cpppj/src/o/RawStateSidLists.cpp	Netstorm.Core/Original/RawStateSidLists.cs	1ddc4ba021c0fadcf75c0a681cc18d937b798219	L1
 cpppj/src/o/RawVortexPreDestroy.cpp	Netstorm.Core/Original/RawVortexPreDestroy.cs	3b88f86ab4789fdcbf11d2529b976c4d666a7167	L1
-cpppj/src/o/RiftType.h	Netstorm.Core/Original/OriginalTypeRecord.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
+cpppj/src/o/RiftType.h	Netstorm.Core/Original/OriginalTypeRecord.cs	9ed8bc636cac9d100dbddafa8b6b2d6efda971e6	L1
 cpppj/src/o/SidPool.cpp	Netstorm.Core/Original/RawSidPool.cs	1ddc4ba021c0fadcf75c0a681cc18d937b798219	L1
 cpppj/src/o/SidPool.cpp	Netstorm.Core/Simulation/SidPool.cs	1ddc4ba021c0fadcf75c0a681cc18d937b798219	L1
 cpppj/src/o/SpStore.cpp	Netstorm.Core/Original/RawSpStore.cs	3d038e510444a9c7448b6d4c88cc84f78446d395	L1

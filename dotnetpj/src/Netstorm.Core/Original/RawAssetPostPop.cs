@@ -97,6 +97,9 @@ public sealed class AssetPostPopHooks
     /// <summary>실제 0045ed10 의 편집 관문·타입 60 생성·부착·Damageable 전체 몸체다(맨 오 워 풀).</summary>
     public Action<int, uint>? RainAviaryPostPop { get; set; }
 
+    /// <summary>실제 0045edf0 의 데빌메이커 80바이트 생산기 생성·부착·공통 후처리다.</summary>
+    public Action<int, uint>? WindAviaryPostPop { get; set; }
+
     /// <summary>썬 디스크 발사기의 현재 애니메이션을 제거한다.</summary>
     public Action<int>? RemoveAnimation { get; set; }
 
@@ -172,6 +175,9 @@ public sealed class AssetPostPopHooks
     /// <summary>실제 00457560 의 이웃·연결선·Regular·Damageable 전체 몸체다(썬 바리케이드).</summary>
     public Action<int, uint>? SunFencePostPop { get; set; }
 
+    /// <summary>실제 0048ead0 의 150번 성장형 아이스 타워 전체 후처리다(추가 9와 편집 관문은 두지 않는다).</summary>
+    public Action<int, uint>? GrowingIcePostPop { get; set; }
+
     /// <summary>실제 00484f90 의 조회·두 할당·게임 난수·Regular·Damageable 전체 몸체다(너겟).</summary>
     public Action<int, uint>? NuggetPostPop { get; set; }
 }
@@ -232,6 +238,18 @@ public sealed class RawAssetPostPop
     /// <summary>너겟 전용 몸체 부류.</summary>
     private const uint NuggetKind = 16;
 
+    /// <summary>데빌메이커 전용 몸체 부류. 전용 80바이트 생산기를 요구한다.</summary>
+    private const uint WindAviaryKind = 17;
+
+    /// <summary>아크 스파이어 전용 몸체 부류. 최초 관문만 예약을 요구한다.</summary>
+    private const uint ArcSpireKind = 18;
+
+    /// <summary>애시드 바리케이드 전용 몸체 부류. 최초 관문만 예약을 요구한다.</summary>
+    private const uint AcidFenceKind = 19;
+
+    /// <summary>성장형 아이스 타워 전용 몸체 부류.</summary>
+    private const uint GrowingIceKind = 20;
+
     /// <summary>추가 비트 바이트의 위치(10.78).</summary>
     private const int ExtraOffset = 40;
 
@@ -269,9 +287,11 @@ public sealed class RawAssetPostPop
         (0x0050b9b8, GunSunKind), (0x0050bad0, GunSunKind), (0x0050b888, GunArcherKind),
         (0x0050b570, GunDecorationKind), (0x0050f540, ResidenceKind), (0x0050e940, BlockerKind),
         (0x0050ea08, BlockerKind), (0x0050ead0, BlockerKind), (0x0050da88, GeyserKind),
+        (0x0050e888, GrowingIceKind),
         (0x005196f0, VortexRainKind), (0x00519860, VortexWindKind), (0x005197a8, VortexWindKind),
         (0x00519918, VortexThunderKind), (0x00509930, SunAviaryKind), (0x00509470, SunFenceKind),
-        (0x005099e8, RainAviaryKind), (0x0050dc30, NuggetKind),
+        (0x005099e8, RainAviaryKind), (0x0050dc30, NuggetKind), (0x00509aa0, WindAviaryKind),
+        (0x0050e668, ArcSpireKind), (0x0050e738, AcidFenceKind),
     ];
 
     /// <summary>슬롯을 읽고 쓸 풀.</summary>
@@ -382,6 +402,14 @@ public sealed class RawAssetPostPop
             }
             return;
         }
+        if (kind == WindAviaryKind)
+        {
+            if (_hooks.WindAviaryPostPop is null)
+            {
+                throw new InvalidOperationException("데빌메이커 실제 전체 후처리 미연결");
+            }
+            return;
+        }
         if (kind == SunFenceKind)
         {
             if (_hooks.SunFencePostPop is null)
@@ -390,8 +418,26 @@ public sealed class RawAssetPostPop
             }
             return;
         }
+        if (kind == ArcSpireKind || kind == AcidFenceKind)
+        {
+            // 최초 관문(추가·매립 비트가 모두 꺼진 최초 호출)만 Regular 예약을 요구한다
+            if ((flags & 1) != 0 && (raw[ExtraOffset] & 9) == 0
+                && (_hooks.ReserveRegular is null || _hooks.AddRegular is null))
+            {
+                throw new ArgumentException("스파이어/애시드 최초 Regular 미연결", nameof(sid));
+            }
+            return;
+        }
         if (kind == GeneratorKind)
         {
+            return;
+        }
+        if (kind == GrowingIceKind)
+        {
+            if (_hooks.GrowingIcePostPop is null)
+            {
+                throw new ArgumentException("성장형 아이스 전체 후처리 미연결", nameof(sid));
+            }
             return;
         }
         if (kind == BlockerKind)
@@ -470,9 +516,27 @@ public sealed class RawAssetPostPop
         {
             _hooks.RainAviaryPostPop!(sid, flags);
         }
+        else if (kind == WindAviaryKind)
+        {
+            _hooks.WindAviaryPostPop!(sid, flags);
+        }
         else if (kind == SunFenceKind)
         {
             _hooks.SunFencePostPop!(sid, flags);
+        }
+        else if (kind == ArcSpireKind)
+        {
+            RawArcSpirePostPop.PostPop(_pool, sid, flags, _hooks.ReserveRegular, _hooks.AddRegular,
+                (parent, mode) => _damageable.DamageablePostPop(parent, mode));
+        }
+        else if (kind == AcidFenceKind)
+        {
+            RawAcidFencePostPop.PostPop(_pool, sid, flags, _hooks.ReserveRegular, _hooks.AddRegular,
+                (parent, mode) => _damageable.DamageablePostPop(parent, mode));
+        }
+        else if (kind == GrowingIceKind)
+        {
+            _hooks.GrowingIcePostPop!(sid, flags);
         }
         else if (kind == GeneratorKind)
         {
@@ -529,6 +593,21 @@ public sealed class RawAssetPostPop
         }
         _playerRecords = records;
         _localOwner = currentLocalOwner;
+    }
+
+    /// <summary>
+    /// 외부 효과 뒤에도 같은 현재 타입을 다시 읽는다. 슬롯의 타입 번호가 표를 벗어나면 명시적으로 거부한다.
+    /// 원본 004ac550처럼 호출 시점의 타입 번호와 현재 속성을 조회한다.
+    /// </summary>
+    /// <param name="sid">오브젝트 슬롯 번호.</param>
+    private OriginalTypeRecord Type(int sid)
+    {
+        byte number = _pool.Slot(sid)[RawSidPool.TypeOffset];
+        if (number >= _types.Count)
+        {
+            throw new ArgumentOutOfRangeException(nameof(sid), number, "자산 postPop 현재 TYPE 범위 오류");
+        }
+        return _types[number];
     }
 
     /// <summary>두 가상 주소를 실제 몸체 부류로 분류한다. 표에 없으면 0이다.</summary>
@@ -590,13 +669,13 @@ public sealed class RawAssetPostPop
                 }
             }
             // 로딩 중 최초 캐논의 타입 0x1000 은 현재 HP 워드를 추가 위치에 복사한다
-            if (kind == GunSunKind && _state.LoadingDepth != 0 && (_types[_pool.Slot(sid)[RawSidPool.TypeOffset]].Flags1 & 0x1000) != 0)
+            if (kind == GunSunKind && _state.LoadingDepth != 0 && (Type(sid).Flags1 & 0x1000) != 0)
             {
                 Write(_pool.AllocatedBytes(sid), WordOffset, Read(_pool.Slot(sid), 12, 2));
             }
         }
         // 썬 캐논의 타입 0x1000 은 현재 추가 위치 값을 HP 워드로 쓴다
-        if (kind == GunSunKind && (_types[_pool.Slot(sid)[RawSidPool.TypeOffset]].Flags1 & 0x1000) != 0)
+        if (kind == GunSunKind && (Type(sid).Flags1 & 0x1000) != 0)
         {
             Write(_pool.AllocatedBytes(sid), 12, Read(_pool.Slot(sid), WordOffset), 2);
         }
@@ -650,7 +729,7 @@ public sealed class RawAssetPostPop
         {
             Add(_state.Geysers, sid, false);
             _hooks.GeyserRegistration!(sid, 1);
-            Write(_pool.AllocatedBytes(sid), 12, Truncate(_types[_pool.Slot(sid)[RawSidPool.TypeOffset]].Cost), 2);
+            Write(_pool.AllocatedBytes(sid), 12, Truncate(Type(sid).Cost), 2);
             Regular(sid, 0, 0.1f);
             ReadOnlySpan<byte> raw = _pool.Slot(sid);
             int[] neighbors = _hooks.AtPosition!(X(raw, XOffset), X(raw, YOffset));

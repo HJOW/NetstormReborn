@@ -292,4 +292,158 @@ public sealed class RawAssetPostPopTests
             Assert.Equal(region == 3, (pool.Slot(61)[RawSidPool.StateOffset] & 2) != 0);
         }
     }
+
+    /// <summary>
+    /// 새 전용 몸체 2종(데빌메이커·성장형 아이스)은 각자 효과로 분배한다.
+    /// fixture 에 없는 경로라 단위 검사로 분기·필수 효과를 고정한다.
+    /// 근거: cpppj/src/o/RawAssetPostPop.cpp Validate·PostPop (R0-4 재대조, 2026-10-28).
+    /// </summary>
+    [Fact]
+    public void NewHookBodiesDispatchToDedicatedEffects()
+    {
+        (uint vtable, Action<AssetPostPopHooks> clear, bool logicError)[] cases =
+        [
+            (0x00509aa0, hooks => hooks.WindAviaryPostPop = null, true),
+            (0x0050e888, hooks => hooks.GrowingIcePostPop = null, false),
+        ];
+        // 자산 후처리 가상 표 경우를 하나씩 꺼내, 경우마다 새 풀과 타입 표를 만든다
+        foreach ((uint vtable, Action<AssetPostPopHooks> clear, bool logicError) in cases)
+        {
+            var pool = Pool();
+            var types = Types();
+            var book = new RawPostPopState { Suppressed = true };
+            var carrierState = new CarrierPostPopState();
+            var (@base, damageable, state) = Hub(pool, types, book, carrierState);
+            Fill(pool, vtable);
+            var calls = new List<string>();
+            var hooks = new AssetPostPopHooks
+            {
+                WindAviaryPostPop = (sid, flags) => calls.Add($"W:{sid}:{flags}"),
+                GrowingIcePostPop = (sid, flags) => calls.Add($"G:{sid}:{flags}"),
+            };
+            var assets = new RawAssetPostPop(pool, types, @base, damageable, state, hooks);
+            // 각자 효과로 분배한다
+            Assert.True(assets.Handles(Source));
+            assets.PostPop(Source, 1);
+            Assert.Single(calls);
+            // 필수 효과가 없으면 쓰기 전에 거부한다
+            clear(hooks);
+            string before = Convert.ToHexStringLower(pool.Slot(Source));
+            if (logicError)
+            {
+                Assert.Throws<InvalidOperationException>(() => assets.PostPop(Source, 1));
+            }
+            else
+            {
+                Assert.Throws<ArgumentException>(() => assets.PostPop(Source, 1));
+            }
+            Assert.Equal(before, Convert.ToHexStringLower(pool.Slot(Source)));
+        }
+    }
+
+    /// <summary>
+    /// 스파이어 2종(아크·애시드)은 최초에만 사건 0을 예약하고 항상 같은 Damageable 로 이어진다.
+    /// 아크는 1초, 애시드는 0.3초 뒤로 예약한다.
+    /// 근거: cpppj/src/o/RawArcSpire.cpp·RawAcidFence.cpp PostPop (R0-4 재대조, 2026-10-28).
+    /// </summary>
+    [Fact]
+    public void SpireBodiesReserveFirstEventThenDamageable()
+    {
+        (uint vtable, float delay)[] cases = [(0x0050e668, 1.0f), (0x0050e738, 0.3f)];
+        // 스파이어 가상 표 경우를 하나씩 꺼내, 경우마다 새 풀과 타입 표를 만든다
+        foreach ((uint vtable, float delay) in cases)
+        {
+            var pool = Pool();
+            var types = Types();
+            var book = new RawPostPopState { Suppressed = true };
+            var carrierState = new CarrierPostPopState();
+            var (@base, damageable, state) = Hub(pool, types, book, carrierState);
+            Fill(pool, vtable);
+            var calls = new List<string>();
+            var hooks = new AssetPostPopHooks
+            {
+                ReserveRegular = () => { calls.Add("R"); return true; },
+                AddRegular = (sid, @event, value) => calls.Add($"A:{sid}:{@event}:{value}"),
+            };
+            var assets = new RawAssetPostPop(pool, types, @base, damageable, state, hooks);
+            // 최초 호출은 예약 뒤 Damageable 까지 간다
+            Assert.True(assets.Handles(Source));
+            assets.PostPop(Source, 1);
+            Assert.Equal(new[] { "R", $"A:{Source}:0:{delay}" }, calls);
+            // 비최초 호출은 예약 없이 Damageable 로 간다
+            calls.Clear();
+            assets.PostPop(Source, 0);
+            Assert.Empty(calls);
+        }
+    }
+
+    /// <summary>
+    /// 스파이어 2종은 추가·매립 비트가 모두 꺼진 최초 호출에서만 Regular 예약을 요구한다.
+    /// 비트가 켜지거나 비최초이면 예약 없이 통과한다.
+    /// </summary>
+    [Fact]
+    public void SpireBodiesRequireRegularOnlyOnFirstPostPop()
+    {
+        // 스파이어 가상 표 경우를 하나씩 꺼내, 경우마다 새 풀과 타입 표를 만든다
+        foreach (uint vtable in new[] { 0x0050e668u, 0x0050e738u })
+        {
+            var pool = Pool();
+            var types = Types();
+            var book = new RawPostPopState { Suppressed = true };
+            var carrierState = new CarrierPostPopState();
+            var (@base, damageable, state) = Hub(pool, types, book, carrierState);
+            Fill(pool, vtable);
+            var assets = new RawAssetPostPop(pool, types, @base, damageable, state, new AssetPostPopHooks());
+            // 최초 호출인데 예약이 없으면 쓰기 전에 거부한다
+            string before = Convert.ToHexStringLower(pool.Slot(Source));
+            Assert.Throws<ArgumentException>(() => assets.PostPop(Source, 1));
+            Assert.Equal(before, Convert.ToHexStringLower(pool.Slot(Source)));
+            // 추가 비트가 켜지면 예약 없이 통과한다
+            Fill(pool, vtable, extra: 8);
+            assets.PostPop(Source, 1);
+            // 비최초 호출도 예약 없이 통과한다
+            Fill(pool, vtable);
+            assets.PostPop(Source, 0);
+        }
+    }
+
+    /// <summary>
+    /// 외부 효과가 슬롯 타입을 바꾼 뒤에도 호출 시점의 현재 타입을 다시 읽는다.
+    /// 표를 벗어난 타입은 명시적으로 거부한다.
+    /// 근거: cpppj/src/o/RawAssetPostPop.cpp Type(sid) (R0-4 재대조, 2026-10-28).
+    /// </summary>
+    [Fact]
+    public void GunRereadsCurrentSlotTypeAfterExternalEffects()
+    {
+        var pool = Pool();
+        var types = Types();
+        var book = new RawPostPopState { Suppressed = true };
+        var carrierState = new CarrierPostPopState();
+        var (@base, damageable, state) = Hub(pool, types, book, carrierState);
+        state.InBattle = true;
+        state.LoadingDepth = 1;
+        Fill(pool, 0x0050b9b8);
+        var hooks = new AssetPostPopHooks
+        {
+            // 외부 효과가 슬롯 타입을 표 밖으로 바꾼다
+            CreateGunProcess = sid => pool.AllocatedBytes(sid)[RawSidPool.TypeOffset] = 200,
+        };
+        var assets = new RawAssetPostPop(pool, types, @base, damageable, state, hooks);
+        // 옛 코드는 표 직접 색인이라 IndexOutOfRange 였으나 이제 명시적 범위로 거부한다
+        Assert.Throws<ArgumentOutOfRangeException>(() => assets.PostPop(Source, 1));
+    }
+
+    /// <summary>
+    /// 기술 비트 번호는 없으면 -1이며 복사본에 보존된다.
+    /// 원본 타입 구조체 PATCH +0x1ec·CD +0x1cc 의 techBitIndex 다.
+    /// 근거: cpppj/src/o/RiftType.h (R0-4 재대조, 2026-10-28).
+    /// </summary>
+    [Fact]
+    public void TechBitIndexDefaultsToMinusOneAndClonePreserves()
+    {
+        var record = new OriginalTypeRecord();
+        Assert.Equal(-1, record.TechBitIndex);
+        record.TechBitIndex = 5;
+        Assert.Equal(5, record.Clone().TechBitIndex);
+    }
 }
