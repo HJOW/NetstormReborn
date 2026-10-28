@@ -24,6 +24,7 @@ target_sources(netstorm PRIVATE
     RawGameMenuBar.cpp RawGameMenuBar.h RawGameMenus.cpp RawGameMenus.h
     GameMenuCommands.cpp GameMenuCommands.h TellParameters.cpp TellParameters.h
     GameMenuActions.cpp GameMenuActions.h MessageGump.cpp MessageGump.h
+    ViewKeyInput.cpp ViewKeyInput.h # 원본 F2/F3의 정지 전후 표시 효과와 실제 큐다.
     DialogExitCommand.cpp DialogExitCommand.h
     # 원본 창 경계의 Alt/Ctrl 폴링과 재진입 좌우 release 보정을 같은 입력 큐에 연결한다.
     GumpPointerBoundary.cpp GumpPointerBoundary.h

@@ -2,6 +2,7 @@
 #include "DudeSpawnSupport.h"
 #include "client/GameWorld.h"
 #include <stdexcept>
+#include <iostream>
 using namespace netstorm::client;
 namespace {
 // 실제현재게임설치에필요한외부장치만명시하며그림/선택/팔레트는기존모듈을쓴다.
@@ -30,8 +31,6 @@ TEST_CASE(HideBuildings_CurrentGetterChangesPixelsAndPick) {
     std::uint32_t hide{},reads{};world.BindHideBuildings([&] { ++reads;return hide; }); // 메뉴와같은현재DWORD를한번만바인딩한다.
     constexpr std::uint32_t temple=15002; // 보호thewarbegins의실제RainTemple SID다.
     const auto* object=world.Object(temple);CHECK(object!=nullptr);if (!object) return;
-    const auto p=world.ToScreen(object->x,object->y);const ScreenPoint hit{p.x-112,p.y-80}; // 기존캠페인검사와같은실제본체내부점이다.
-    CHECK(world.Pick(hit)==temple && reads>0);
     const auto draw=[&] {
         std::vector<std::uint8_t> result(1024*768,255);std::size_t count{}; // 실제공통Draw만출력할명시대상표면이다.
         for (const auto& sprite:world.Sprites()) if (sprite.sourceSid==temple && !sprite.shadow && sprite.procedure) { // 같은신원의본체와그림자복제를구별한다.
@@ -40,6 +39,11 @@ TEST_CASE(HideBuildings_CurrentGetterChangesPixelsAndPick) {
         CHECK(count==1);return result;
     };
     const auto normal=draw();CHECK(std::any_of(normal.begin(),normal.end(),[](auto value) { return value!=255; }));
+    std::vector<std::size_t> ink; // 선택기 대신 독립된 실제 SHP 공통 출력에서 불투명 클릭 입력을 얻는다.
+    for (std::size_t index=0;index<normal.size();++index) if (normal[index]!=255) ink.push_back(index); // 524의 원본 픽셀hit 이후 사각형 안 빈 점을 본체로 간주하지 않는다.
+    CHECK(!ink.empty());if (ink.empty()) return;const auto middle=ink[ink.size()/2];const ScreenPoint hit{static_cast<int>(middle%1024),static_cast<int>(middle/1024)}; // 실제 잉크의 중간 픽셀이고 Pick 반환으로 고르지 않는다.
+    const auto p=world.ToScreen(object->x,object->y);const ScreenPoint previous{p.x-112,p.y-80};const auto beforePick=reads; // 과거 사각형 입력과 현재 getter 조회를 별도로 관측한다.
+    CHECK(world.Pick(hit)==temple && reads>beforePick);std::cout<<"건물숨김 실제잉크 "<<hit.x<<','<<hit.y<<" 이전점 "<<previous.x<<','<<previous.y<<" 이전선택 "<<world.Pick(previous)<<'\n';
     hide=0x80000000U;const auto before=reads;CHECK(world.Pick(hit)!=temple && reads>before);const auto hidden=draw();CHECK(hidden!=normal);
     auto raw=world.Session().Core().pool.AllocatedBytes(Sid{temple});const auto originalType=raw[10]; // 캐시된표시TYPE와다르게한현재물리슬롯입력이다.
     for (const auto type:{84U,164U}) { raw[10]=static_cast<std::uint8_t>(type);CHECK(world.Pick(hit)!=temple); } // 원문의두예외TYPE도현재슬롯에서제외한다.

@@ -1,0 +1,2265 @@
+{
+  "unit": 544,
+  "date": "2026-10-28",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23",
+    "outputsModified": false
+  },
+  "currentIndependentObservation": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-28",
+    "gameProcessExecuted": false
+  },
+  "product": {
+    "gameSha256": "9fe4977df769a202a952902f8dad9fc733c5c540e0a65cfdc61c213bcd90e6ad",
+    "testsSha256": "693611c5d7d8d4fc777a70728b85ad59bca4af6446c852dd48bf89154785ada0",
+    "newModule": "ViewKeyInput",
+    "sameClientVisibilityDwords": true,
+    "nativeF3Queue": [
+      33554568,
+      0,
+      2
+    ],
+    "shiftF3TellBeforePauseRead": true,
+    "missionViewChatGatePreserved": true,
+    "inspectionAndQaAliasesOnly": [
+      "raw_view_keys",
+      "F1..F9 alias",
+      "ctrl/shift/alt prefixes"
+    ]
+  },
+  "native": {
+    "host": "HJOW-Athlon",
+    "peSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "inputs": 310,
+    "nativeObservations": 620,
+    "precisionDifferences": 0,
+    "fixture": "cpppj/tests/fixtures/view-key-input-x86.tsv",
+    "fixtureSha256": "280bec80c5f2f5717da8bb8922a27b5eaa6acb555bedfc38e9fff9847cc6a900",
+    "ranges": [
+      [
+        "0x4d6e61",
+        "0x4da477"
+      ],
+      [
+        "0x463e40",
+        "0x463f62"
+      ],
+      [
+        "0x460de0",
+        "0x460def"
+      ],
+      [
+        "0x445330",
+        "0x44533e"
+      ],
+      [
+        "0x452fe0",
+        "0x45303c"
+      ],
+      [
+        "0x4e63d0",
+        "0x4e63d5"
+      ],
+      [
+        "0x4e63e0",
+        "0x4e649e"
+      ]
+    ],
+    "externalDevices": [
+      "Guide virtual+24",
+      "Gump Route",
+      "general input cleanup",
+      "ReadInt",
+      "Tell"
+    ],
+    "nativeBodiesUnchanged": true,
+    "totals": {
+      "27f": {
+        "runs": 310,
+        "instructions": 95113
+      },
+      "37f": {
+        "runs": 310,
+        "instructions": 95113
+      }
+    },
+    "boundaries": {
+      "guide": 764,
+      "mission": 764,
+      "gump": 740,
+      "general": 400,
+      "paused": 394,
+      "cursor": 394,
+      "queue": 54,
+      "readInt": 58,
+      "tell": 58
+    },
+    "writes": {
+      "stack": 10436,
+      "visibility": 276,
+      "queue": 228
+    },
+    "scope": "개발자 flags55a480/55a484=0인 F2/F3 일반 입력. F7 배너/스크린샷은 후속"
+  },
+  "nativeInputUniqueness": {
+    "caseRows": 310,
+    "uniqueInputTuples": 307,
+    "duplicateRows": [
+      {
+        "case": "gates-710000-0-0-0",
+        "sameInputAs": "flags-710000-0-0-0"
+      },
+      {
+        "case": "gates-720000-0-0-0",
+        "sameInputAs": "flags-720000-0-0-0"
+      },
+      {
+        "case": "gates-20720000-0-0-0",
+        "sameInputAs": "flags-720000-8-0-0"
+      }
+    ],
+    "nativeExecutionsPerRow": 2,
+    "fixtureSha256": "280bec80c5f2f5717da8bb8922a27b5eaa6acb555bedfc38e9fff9847cc6a900"
+  },
+  "builds": [
+    {
+      "command": [
+        "cmake",
+        "--build",
+        "cpppj/build",
+        "--config",
+        "Release",
+        "--target",
+        "NetstormCpp",
+        "netstorm_tests",
+        "--parallel",
+        "4",
+        "--",
+        "/p:UseMultiToolTask=true",
+        "/p:MultiProcMaxCount=4",
+        "/p:EnforceProcessCountAcrossBuilds=true"
+      ],
+      "exitCode": 0,
+      "seconds": 146.69483757019043,
+      "workFilesUnchanged": true
+    },
+    {
+      "command": [
+        "cmake",
+        "--build",
+        "cpppj/build",
+        "--config",
+        "Release",
+        "--target",
+        "netstorm_tests",
+        "--parallel",
+        "4",
+        "--",
+        "/p:UseMultiToolTask=true",
+        "/p:MultiProcMaxCount=4",
+        "/p:EnforceProcessCountAcrossBuilds=true"
+      ],
+      "exitCode": 0,
+      "seconds": 69.9421694278717
+    }
+  ],
+  "finalReleaseWarnings": 0,
+  "finalReleaseErrors": 0,
+  "focusedTests": {
+    "registered": 3373,
+    "uniqueExecuted": 42,
+    "results": [
+      {
+        "filter": "ViewKeyInput_",
+        "count": 2,
+        "failedChecks": 0,
+        "exitCode": 0
+      },
+      {
+        "filter": "HideBuildings_",
+        "count": 1,
+        "failedChecks": 0,
+        "exitCode": 0
+      },
+      {
+        "filter": "GameMenuActions_",
+        "count": 2,
+        "failedChecks": 0,
+        "exitCode": 0
+      },
+      {
+        "filter": "GameMenus_",
+        "count": 4,
+        "failedChecks": 0,
+        "exitCode": 0
+      },
+      {
+        "filter": "HudDock_",
+        "count": 1,
+        "failedChecks": 0,
+        "exitCode": 0
+      },
+      {
+        "filter": "MissionGuideInput_",
+        "count": 3,
+        "failedChecks": 0,
+        "exitCode": 0
+      },
+      {
+        "filter": "ProductionShortcuts_",
+        "count": 2,
+        "failedChecks": 0,
+        "exitCode": 0
+      },
+      {
+        "filter": "ProductionInitialContext_",
+        "count": 22,
+        "failedChecks": 0,
+        "exitCode": 0
+      },
+      {
+        "filter": "ObjectHit_",
+        "count": 2,
+        "failedChecks": 0,
+        "exitCode": 0
+      },
+      {
+        "filter": "CampaignSession_ActualWarBeginsGameWorld",
+        "count": 1,
+        "failedChecks": 0,
+        "exitCode": 0
+      },
+      {
+        "filter": "CampaignSession_ActualMasterGameWorld",
+        "count": 1,
+        "failedChecks": 0,
+        "exitCode": 0
+      },
+      {
+        "filter": "CampaignSession_ObjectHitUsesCurrentRawPhysicalShapeAndCamera",
+        "count": 1,
+        "failedChecks": 0,
+        "exitCode": 0
+      }
+    ],
+    "binarySha256": "693611c5d7d8d4fc777a70728b85ad59bca4af6446c852dd48bf89154785ada0"
+  },
+  "keyRuntime": {
+    "results": [
+      {
+        "size": [
+          1024,
+          768
+        ],
+        "fullscreen": false,
+        "nativeF2F3": true,
+        "releaseAndModifiers": true,
+        "pausedKeysBlocked": true,
+        "themeTellWhilePaused": true,
+        "f8ActualReview": true,
+        "modalKeysBlocked": true,
+        "missionViewChatHidden": true,
+        "sameHudAndSession": true,
+        "mainMenuReturned": true,
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+            "--run",
+            "H:\\T5Workspace\\NetstormReborn\\originals",
+            "--mission",
+            "thewarbegins",
+            "--mute-audio",
+            "--frames",
+            "315",
+            "--set",
+            "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3",
+            "--ui-script",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-view-keys-544\\preflight\\1024x768\\run\\steps.tsv",
+            "--ui-report",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-view-keys-544\\preflight\\1024x768\\run\\states.tsv",
+            "--audio-report",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-view-keys-544\\preflight\\1024x768\\run\\audio.tsv",
+            "--window"
+          ],
+          "binarySha256": "9fe4977df769a202a952902f8dad9fc733c5c540e0a65cfdc61c213bcd90e6ad",
+          "scriptSha256": "40ee41b00e437387cdb1ff189c40d26a69c1b7ac887b46990490824569cc3bef",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 11.760005100019043,
+          "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderrSha256": "4b73c96b25066ec2370644eda8a463570fec390203035f3612e15ad85ff68be9",
+          "originalsUnchanged": true,
+          "dataUnchanged": true,
+          "dataRoot": "H:\\T5Workspace\\NetstormReborn\\originals"
+        }
+      },
+      {
+        "size": [
+          1280,
+          720
+        ],
+        "fullscreen": true,
+        "nativeF2F3": true,
+        "releaseAndModifiers": true,
+        "pausedKeysBlocked": true,
+        "themeTellWhilePaused": true,
+        "f8ActualReview": true,
+        "modalKeysBlocked": true,
+        "missionViewChatHidden": true,
+        "sameHudAndSession": true,
+        "mainMenuReturned": true,
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+            "--run",
+            "H:\\T5Workspace\\NetstormReborn\\originals",
+            "--mission",
+            "thewarbegins",
+            "--mute-audio",
+            "--frames",
+            "315",
+            "--set",
+            "SCREENW=1280;SCREENH=720;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3;startInFullScreen=1",
+            "--ui-script",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-view-keys-544\\final\\1280x720\\run\\steps.tsv",
+            "--ui-report",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-view-keys-544\\final\\1280x720\\run\\states.tsv",
+            "--audio-report",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-view-keys-544\\final\\1280x720\\run\\audio.tsv"
+          ],
+          "binarySha256": "9fe4977df769a202a952902f8dad9fc733c5c540e0a65cfdc61c213bcd90e6ad",
+          "scriptSha256": "9ee21cc7dc5209f7b015eac172f7ad2d3064667e2bddef4a8d9ce2f35fdc96fa",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 13.88630819998798,
+          "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderrSha256": "4b73c96b25066ec2370644eda8a463570fec390203035f3612e15ad85ff68be9",
+          "originalsUnchanged": true,
+          "dataUnchanged": true,
+          "dataRoot": "H:\\T5Workspace\\NetstormReborn\\originals"
+        }
+      },
+      {
+        "size": [
+          1280,
+          800
+        ],
+        "fullscreen": false,
+        "nativeF2F3": true,
+        "releaseAndModifiers": true,
+        "pausedKeysBlocked": true,
+        "themeTellWhilePaused": true,
+        "f8ActualReview": true,
+        "modalKeysBlocked": true,
+        "missionViewChatHidden": true,
+        "sameHudAndSession": true,
+        "mainMenuReturned": true,
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+            "--run",
+            "H:\\T5Workspace\\NetstormReborn\\originals",
+            "--mission",
+            "thewarbegins",
+            "--mute-audio",
+            "--frames",
+            "315",
+            "--set",
+            "SCREENW=1280;SCREENH=800;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3",
+            "--ui-script",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-view-keys-544\\final\\1280x800\\run\\steps.tsv",
+            "--ui-report",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-view-keys-544\\final\\1280x800\\run\\states.tsv",
+            "--audio-report",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-view-keys-544\\final\\1280x800\\run\\audio.tsv",
+            "--window"
+          ],
+          "binarySha256": "9fe4977df769a202a952902f8dad9fc733c5c540e0a65cfdc61c213bcd90e6ad",
+          "scriptSha256": "480f074f38c9fe2987be067e67912a5ae9fca0edf776006fc259f36634ffa9bd",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 11.537676099978853,
+          "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderrSha256": "4b73c96b25066ec2370644eda8a463570fec390203035f3612e15ad85ff68be9",
+          "originalsUnchanged": true,
+          "dataUnchanged": true,
+          "dataRoot": "H:\\T5Workspace\\NetstormReborn\\originals"
+        }
+      }
+    ],
+    "binarySha256": "9fe4977df769a202a952902f8dad9fc733c5c540e0a65cfdc61c213bcd90e6ad",
+    "acceptedGames": 3,
+    "gameSourceChangesAfterFirstRun": false,
+    "directWorldMutation": false,
+    "naturalCompletionGames": 0
+  },
+  "canonicalEntry": {
+    "normal": 31,
+    "demos": 3,
+    "passed": 34,
+    "productFailures": 0,
+    "harnessFailures": 0,
+    "binarySha256": "9fe4977df769a202a952902f8dad9fc733c5c540e0a65cfdc61c213bcd90e6ad",
+    "minimumActiveGameTimeDelta": 6.390000000000001,
+    "minimumNormalGameTimeDelta": 6.390000000000001,
+    "runs": [
+      {
+        "mission": "Tutorial1",
+        "demo": false,
+        "passed": true,
+        "returnCode": 0,
+        "activeGameTimeDelta": 6.82,
+        "playingObservations": 20,
+        "fullscreen": true,
+        "resultPath": "extracted/cpp-view-keys-544/integration-normal/Tutorial1/result.json"
+      },
+      {
+        "mission": "Tutorial2",
+        "demo": false,
+        "passed": true,
+        "returnCode": 0,
+        "activeGameTimeDelta": 6.390000000000001,
+        "playingObservations": 19,
+        "fullscreen": true,
+        "resultPath": "extracted/cpp-view-keys-544/integration-normal/Tutorial2/result.json"
+      },
+      {
+        "mission": "Tutorial3",
+        "demo": false,
+        "passed": true,
+        "returnCode": 0,
+        "activeGameTimeDelta": 9.600999999999999,
+        "playingObservations": 20,
+        "fullscreen": true,
+        "resultPath": "extracted/cpp-view-keys-544/integration-normal/Tutorial3/result.json"
+      },
+      {
+        "mission": "Tutorial4",
+        "demo": false,
+        "passed": true,
+        "returnCode": 0,
+        "activeGameTimeDelta": 9.93,
+        "playingObservations": 20,
+        "fullscreen": true,
+        "resultPath": "extracted/cpp-view-keys-544/integration-normal/Tutorial4/result.json"
+      },
+      {
+        "mission": "Tutorial5",
+        "demo": false,
+        "passed": true,
+        "returnCode": 0,
+        "activeGameTimeDelta": 11.895,
+        "playingObservations": 20,
+        "fullscreen": true,
+        "resultPath": "extracted/cpp-view-keys-544/integration-normal/Tutorial5/result.json"
+      },
+      {
+        "mission": "Tutorial6",
+        "demo": false,
+        "passed": true,
+        "returnCode": 0,
+        "activeGameTimeDelta": 9.863,
+        "playingObservations": 18,
+        "fullscreen": true,
+        "resultPath": "extracted/cpp-view-keys-544/integration-normal/Tutorial6/result.json"
+      },
+      {
+        "mission": "bc1menu76",
+        "demo": false,
+        "passed": true,
+        "returnCode": 0,
+        "activeGameTimeDelta": 7.5169999999999995,
+        "playingObservations": 21,
+        "fullscreen": true,
+        "resultPath": "extracted/cpp-view-keys-544/integration-normal/bc1menu76/result.json"
+      },
+      {
+        "mission": "bc2bridging76",
+        "demo": false,
+        "passed": true,
+        "returnCode": 0,
+        "activeGameTimeDelta": 16.703,
+        "playingObservations": 21,
+        "fullscreen": true,
+        "resultPath": "extracted/cpp-view-keys-544/integration-normal/bc2bridging76/result.json"
+      },
+      {
+        "mission": "bc3acid_bar76",
+        "demo": false,
+        "passed": true,
+        "returnCode": 0,
+        "activeGameTimeDelta": 13.857999999999999,
+        "playingObservations": 20,
+        "fullscreen": true,
+        "resultPath": "extracted/cpp-view-keys-544/integration-normal/bc3acid_bar76/result.json"
+      },
+      {
+        "mission": "bc4bow_rush76",
+        "demo": false,
+        "passed": true,
+        "returnCode": 0,
+        "activeGameTimeDelta": 14.13,
+        "playingObservations": 21,
+        "fullscreen": true,
+        "resultPath": "extracted/cpp-view-keys-544/integration-normal/bc4bow_rush76/result.json"
+      },
+      {
+        "mission": "bc5walkers76",
+        "demo": false,
+        "passed": true,
+        "returnCode": 0,
+        "activeGameTimeDelta": 11.594999999999999,
+        "playingObservations": 21,
+        "fullscreen": true,
+        "resultPath": "extracted/cpp-view-keys-544/integration-normal/bc5walkers76/result.json"
+      },
+      {
+        "mission": "bc6mows76",
+        "demo": false,
+        "passed": true,
+        "returnCode": 0,
+        "activeGameTimeDelta": 27.066000000000003,
+        "playingObservations": 21,
+        "fullscreen": true,
+        "resultPath": "extracted/cpp-view-keys-544/integration-normal/bc6mows76/result.json"
+      },
+      {
+        "mission": "bc7sun_bars76",
+        "demo": false,
+        "passed": true,
+        "returnCode": 0,
+        "activeGameTimeDelta": 26.119,
+        "playingObservations": 21,
+        "fullscreen": true,
+        "resultPath": "extracted/cpp-view-keys-544/integration-normal/bc7sun_bars76/result.json"
+      },
+      {
+        "mission": "bc8fury76",
+        "demo": false,
+        "passed": true,
+        "returnCode": 0,
+        "activeGameTimeDelta": 23.238999999999997,
+        "playingObservations": 20,
+        "fullscreen": true,
+        "resultPath": "extracted/cpp-view-keys-544/integration-normal/bc8fury76/result.json"
+      },
+      {
+        "mission": "bc9ssun_bars76",
+        "demo": false,
+        "passed": true,
+        "returnCode": 0,
+        "activeGameTimeDelta": 16.167,
+        "playingObservations": 21,
+        "fullscreen": true,
+        "resultPath": "extracted/cpp-view-keys-544/integration-normal/bc9ssun_bars76/result.json"
+      },
+      {
+        "mission": "TheWarBegins",
+        "demo": false,
+        "passed": true,
+        "returnCode": 0,
+        "activeGameTimeDelta": 11.216000000000001,
+        "playingObservations": 21,
+        "fullscreen": true,
+        "resultPath": "extracted/cpp-view-keys-544/integration-normal/TheWarBegins/result.json"
+      },
+      {
+        "mission": "MasterOfWhirligigs",
+        "demo": false,
+        "passed": true,
+        "returnCode": 0,
+        "activeGameTimeDelta": 9.837,
+        "playingObservations": 21,
+        "fullscreen": true,
+        "resultPath": "extracted/cpp-view-keys-544/integration-normal/MasterOfWhirligigs/result.json"
+      },
+      {
+        "mission": "SaveTheIsland",
+        "demo": false,
+        "passed": true,
+        "returnCode": 0,
+        "activeGameTimeDelta": 12.892000000000001,
+        "playingObservations": 21,
+        "fullscreen": true,
+        "resultPath": "extracted/cpp-view-keys-544/integration-normal/SaveTheIsland/result.json"
+      },
+      {
+        "mission": "FragileFortune",
+        "demo": false,
+        "passed": true,
+        "returnCode": 0,
+        "activeGameTimeDelta": 12.791,
+        "playingObservations": 21,
+        "fullscreen": true,
+        "resultPath": "extracted/cpp-view-keys-544/integration-normal/FragileFortune/result.json"
+      },
+      {
+        "mission": "ThunderingPower",
+        "demo": false,
+        "passed": true,
+        "returnCode": 0,
+        "activeGameTimeDelta": 11.629000000000001,
+        "playingObservations": 20,
+        "fullscreen": true,
+        "resultPath": "extracted/cpp-view-keys-544/integration-normal/ThunderingPower/result.json"
+      },
+      {
+        "mission": "DissolvedAlliance",
+        "demo": false,
+        "passed": true,
+        "returnCode": 0,
+        "activeGameTimeDelta": 15.803,
+        "playingObservations": 21,
+        "fullscreen": true,
+        "resultPath": "extracted/cpp-view-keys-544/integration-normal/DissolvedAlliance/result.json"
+      },
+      {
+        "mission": "TheNoose",
+        "demo": false,
+        "passed": true,
+        "returnCode": 0,
+        "activeGameTimeDelta": 12.027999999999999,
+        "playingObservations": 20,
+        "fullscreen": true,
+        "resultPath": "extracted/cpp-view-keys-544/integration-normal/TheNoose/result.json"
+      },
+      {
+        "mission": "RainVsRain",
+        "demo": false,
+        "passed": true,
+        "returnCode": 0,
+        "activeGameTimeDelta": 10.514000000000001,
+        "playingObservations": 21,
+        "fullscreen": true,
+        "resultPath": "extracted/cpp-view-keys-544/integration-normal/RainVsRain/result.json"
+      },
+      {
+        "mission": "RunForIt",
+        "demo": false,
+        "passed": true,
+        "returnCode": 0,
+        "activeGameTimeDelta": 10.365,
+        "playingObservations": 20,
+        "fullscreen": true,
+        "resultPath": "extracted/cpp-view-keys-544/integration-normal/RunForIt/result.json"
+      },
+      {
+        "mission": "GuardMyBack",
+        "demo": false,
+        "passed": true,
+        "returnCode": 0,
+        "activeGameTimeDelta": 16.188,
+        "playingObservations": 21,
+        "fullscreen": true,
+        "resultPath": "extracted/cpp-view-keys-544/integration-normal/GuardMyBack/result.json"
+      },
+      {
+        "mission": "Surrounded",
+        "demo": false,
+        "passed": true,
+        "returnCode": 0,
+        "activeGameTimeDelta": 23.042,
+        "playingObservations": 21,
+        "fullscreen": true,
+        "resultPath": "extracted/cpp-view-keys-544/integration-normal/Surrounded/result.json"
+      },
+      {
+        "mission": "BreakingThrough",
+        "demo": false,
+        "passed": true,
+        "returnCode": 0,
+        "activeGameTimeDelta": 13.591,
+        "playingObservations": 20,
+        "fullscreen": true,
+        "resultPath": "extracted/cpp-view-keys-544/integration-normal/BreakingThrough/result.json"
+      },
+      {
+        "mission": "ToTheRescue",
+        "demo": false,
+        "passed": true,
+        "returnCode": 0,
+        "activeGameTimeDelta": 16.903,
+        "playingObservations": 20,
+        "fullscreen": true,
+        "resultPath": "extracted/cpp-view-keys-544/integration-normal/ToTheRescue/result.json"
+      },
+      {
+        "mission": "Vicious",
+        "demo": false,
+        "passed": true,
+        "returnCode": 0,
+        "activeGameTimeDelta": 10.166,
+        "playingObservations": 20,
+        "fullscreen": true,
+        "resultPath": "extracted/cpp-view-keys-544/integration-normal/Vicious/result.json"
+      },
+      {
+        "mission": "EnemyTerritory",
+        "demo": false,
+        "passed": true,
+        "returnCode": 0,
+        "activeGameTimeDelta": 22.740000000000002,
+        "playingObservations": 21,
+        "fullscreen": true,
+        "resultPath": "extracted/cpp-view-keys-544/integration-normal/EnemyTerritory/result.json"
+      },
+      {
+        "mission": "FinalConfrontation",
+        "demo": false,
+        "passed": true,
+        "returnCode": 0,
+        "activeGameTimeDelta": 20.97,
+        "playingObservations": 21,
+        "fullscreen": true,
+        "resultPath": "extracted/cpp-view-keys-544/integration-normal/FinalConfrontation/result.json"
+      },
+      {
+        "mission": "DemoStormRages",
+        "demo": true,
+        "passed": true,
+        "returnCode": 0,
+        "activeGameTimeDelta": 20.247,
+        "playingObservations": 37,
+        "fullscreen": true,
+        "resultPath": "extracted/cpp-view-keys-544/integration-demos/DemoStormRages/result.json"
+      },
+      {
+        "mission": "GuardMyBack",
+        "demo": true,
+        "passed": true,
+        "returnCode": 0,
+        "activeGameTimeDelta": 22.208,
+        "playingObservations": 38,
+        "fullscreen": true,
+        "resultPath": "extracted/cpp-view-keys-544/integration-demos/GuardMyBack/result.json"
+      },
+      {
+        "mission": "DissolvedAlliance",
+        "demo": true,
+        "passed": true,
+        "returnCode": 0,
+        "activeGameTimeDelta": 38.03,
+        "playingObservations": 73,
+        "fullscreen": true,
+        "resultPath": "extracted/cpp-view-keys-544/integration-demos/DissolvedAlliance/result.json"
+      }
+    ],
+    "batches": [
+      {
+        "name": "normal",
+        "count": 31,
+        "originalsUnchanged": true,
+        "gameDataUnchanged": true
+      },
+      {
+        "name": "demos",
+        "count": 3,
+        "originalsUnchanged": true,
+        "gameDataUnchanged": true
+      }
+    ],
+    "naturalCompletionVerified": false,
+    "allGameFidelityVerified": false
+  },
+  "gameExecutions": {
+    "accepted": 37,
+    "total": 37,
+    "exitZero": 37,
+    "exitNonzero": 0,
+    "naturalStageCompletion": 0,
+    "originalGame": 0
+  },
+  "intermediate": {
+    "firstFocusedUniqueCases": 37,
+    "firstFailedChecks": 2,
+    "reason": "기존 숨김 검사 고정 사각형 좌표는 현재 픽셀hit에서0. 실제 독립 SHP 출력의 불투명 입력으로 두 기존 검사를 교정",
+    "oldPoint": [
+      336,
+      403
+    ],
+    "oldPick": 0,
+    "actualInkPoint": [
+      403,
+      434
+    ],
+    "exactSidStillRequired": 15002,
+    "pickerProductModified": false,
+    "firstStaticDisassemblyUnalignedPrefixExcludedFromAuthoritativeAddresses": true
+  },
+  "preservation": {
+    "baseline": "2efb39ae / unit543",
+    "sourceCount": 2934,
+    "changedExisting": [
+      "cpppj/src/app/main.cpp",
+      "cpppj/src/client/CMakeLists.txt",
+      "cpppj/src/client/UberGump.cpp",
+      "cpppj/tests/CMakeLists.txt",
+      "cpppj/tests/CampaignSessionTests.cpp",
+      "cpppj/tests/HideBuildingsTests.cpp"
+    ],
+    "addedSourceAndFixture": [
+      "cpppj/src/client/ViewKeyInput.cpp",
+      "cpppj/src/client/ViewKeyInput.h",
+      "cpppj/tests/ViewKeyInputTests.cpp",
+      "cpppj/tests/fixtures/view-key-input-x86.tsv"
+    ],
+    "oldFixturesUnchanged": true,
+    "protectedCount": 1819,
+    "protectedUnchanged": true,
+    "agentsUnchanged": true,
+    "exeSha256": {
+      "NetstormCpp.exe": "9fe4977df769a202a952902f8dad9fc733c5c540e0a65cfdc61c213bcd90e6ad",
+      "netstorm_tests.exe": "693611c5d7d8d4fc777a70728b85ad59bca4af6446c852dd48bf89154785ada0"
+    },
+    "finalReleaseWarnings": 0,
+    "finalReleaseErrors": 0,
+    "dotnetFilesModified": false,
+    "postIntegrationSourceAndExeUnchanged": true,
+    "postIntegrationProtectedAndAgentsUnchanged": true,
+    "workCopiesUnchanged": 12
+  },
+  "next": [
+    "F8 QueueMissionFirstKey의Guide/Gump/console 순서·ShiftF8/Editor 경계 재대조",
+    "F7의5319c0/557938·43bc40 색표/marker/받침캐시와ShiftF7 GIF/Tell",
+    "잔여 건물/제단 상태별메뉴·Edit/비멀티 UI·Windows11실기",
+    "자연완주/스펠추가분석 등 사용자보류·공중3종정적제한·MP후순위/신규시험금지 유지"
+  ],
+  "goalComplete": false,
+  "toolsSha256": {
+    "tools/decomp_view_key_input.py": "4e548aff3c03a7e04b3c827c1644e4b82c50bd02ed6ec1e83545e1cb199a57b7",
+    "tools/cpp_view_key_smoke.py": "2f9dcc5294fc3eb1c16e65b72084ca160f5aabae0f80709753b64dc738285916"
+  },
+  "rawEvidence": [
+    {
+      "path": "extracted/cpp-view-keys-544/before-build/cpppj/src/app/main.cpp",
+      "sha256": "e0fe538b4c2f5d968f7ddc79aff95dac47fa92636023db989145308f12e504c3"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/before-build/cpppj/src/client/CMakeLists.txt",
+      "sha256": "7b8afa16336da47b964c380c6a34c707f976a0c7bc41c88392ee133eab74118c"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/before-build/cpppj/src/client/UberGump.cpp",
+      "sha256": "00be7b4c8de123f7f44b0129059acfad617a8c2bf2b5ffe32d21b746d8298fd4"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/before-build/cpppj/src/client/ViewKeyInput.cpp",
+      "sha256": "edc5c8a5896cb6e97dac1f68cbdf7fc8ece4b58aa52d722ba90ca8aa081638fd"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/before-build/cpppj/src/client/ViewKeyInput.h",
+      "sha256": "911ab12edf22cde9ee4692ca6e3eb60077557c40830e5f2c99ee89dd245f0f5a"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/before-build/cpppj/tests/CMakeLists.txt",
+      "sha256": "2b79ae6c888ea32b92e6838fa28ab79f9275d52bd7d5de8a06e2974a4f778ca6"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/before-build/cpppj/tests/fixtures/view-key-input-x86.tsv",
+      "sha256": "280bec80c5f2f5717da8bb8922a27b5eaa6acb555bedfc38e9fff9847cc6a900"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/before-build/cpppj/tests/ViewKeyInputTests.cpp",
+      "sha256": "61448956b808d43c8419528795f1db61818d9457c0d52106eec9d61a859fb9e1"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/before-build.json",
+      "sha256": "be8f1fce63fdfa4aedf689dcf590b0cd523f8ca63a0737a8d7ef8c1f2d7f1607"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/before-integration/cpppj/src/app/main.cpp",
+      "sha256": "e0fe538b4c2f5d968f7ddc79aff95dac47fa92636023db989145308f12e504c3"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/before-integration/cpppj/src/client/CMakeLists.txt",
+      "sha256": "7b8afa16336da47b964c380c6a34c707f976a0c7bc41c88392ee133eab74118c"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/before-integration/cpppj/src/client/UberGump.cpp",
+      "sha256": "00be7b4c8de123f7f44b0129059acfad617a8c2bf2b5ffe32d21b746d8298fd4"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/before-integration/cpppj/src/client/ViewKeyInput.cpp",
+      "sha256": "edc5c8a5896cb6e97dac1f68cbdf7fc8ece4b58aa52d722ba90ca8aa081638fd"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/before-integration/cpppj/src/client/ViewKeyInput.h",
+      "sha256": "911ab12edf22cde9ee4692ca6e3eb60077557c40830e5f2c99ee89dd245f0f5a"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/before-integration/cpppj/tests/CampaignSessionTests.cpp",
+      "sha256": "5f5df05012a534adeb5abf0b5d704f22be28ed5fe36fae8769cadb0e7aed2715"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/before-integration/cpppj/tests/CMakeLists.txt",
+      "sha256": "2b79ae6c888ea32b92e6838fa28ab79f9275d52bd7d5de8a06e2974a4f778ca6"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/before-integration/cpppj/tests/fixtures/view-key-input-x86.tsv",
+      "sha256": "280bec80c5f2f5717da8bb8922a27b5eaa6acb555bedfc38e9fff9847cc6a900"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/before-integration/cpppj/tests/HideBuildingsTests.cpp",
+      "sha256": "1a6e18977b2ff525f685589b4ae4c8b01da986166ea0cae657d3fcb14412e5b1"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/before-integration/cpppj/tests/ViewKeyInputTests.cpp",
+      "sha256": "61448956b808d43c8419528795f1db61818d9457c0d52106eec9d61a859fb9e1"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/before-integration/tools/cpp_view_key_smoke.py",
+      "sha256": "2f9dcc5294fc3eb1c16e65b72084ca160f5aabae0f80709753b64dc738285916"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/before-integration/tools/decomp_view_key_input.py",
+      "sha256": "4e548aff3c03a7e04b3c827c1644e4b82c50bd02ed6ec1e83545e1cb199a57b7"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/before-integration.json",
+      "sha256": "545218f7cb02a45fd9d462c9c9a80b3d7406ed4909d9cd3d5b8b7841b67c2d5d"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/build-tests-pixels.json",
+      "sha256": "2cbba13c010d3d46bb8f2cc93eac3a6fadb026097e046e5b57ee23c370cb3a0f"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/build-tests-pixels.log",
+      "sha256": "66ffaf085b3362f88590a66a7adcff6bb35fa5b9daae1e14dff7416e8de6e825"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/build.json",
+      "sha256": "c4613ca8960bdca828f81582cf07ce9b2d97e2574c3dc52f855b684d5bbec27c"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/build.log",
+      "sha256": "28ed5b7fc2c18d542d6f4b92b9fee1884373520942efc2edc9552c11149bc6a0"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/canonical-audit.json",
+      "sha256": "14f168d463bc79c995789d88ec9468070c71e5372e6ce675477a7d94d90097f5"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/f7-next-analysis.json",
+      "sha256": "ea7f12fbedcba1f6c4fe70dca6d811d956c4dd63480b652b34588d53b152f5b9"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/f8-next-analysis.json",
+      "sha256": "ab51e018ed6428f29a8a75c5178d43da9fffc6644e30470c182ba55438708b50"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/final/1280x720/hidden.bmp",
+      "sha256": "7a6925a5b7bb7cff072e1579aaf150a23be4afff4a5ddc8b4e38dd43b9ad39f3"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/final/1280x720/main.bmp",
+      "sha256": "af9c412ec69661be4c18cc20b8d56b548df72c5aa14de182c0780313d4504215"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/final/1280x720/review.bmp",
+      "sha256": "9fd14de3b43dabb91e589b836a619a643207efc94ed8371b8fb14572fb23750a"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/final/1280x720/run/audio.tsv",
+      "sha256": "b627548f0972e10195532861fb617523b09b1a7ada233d81769f731eb4c265b6"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/final/1280x720/run/data-before.json",
+      "sha256": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/final/1280x720/run/originals-before.json",
+      "sha256": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/final/1280x720/run/run.json",
+      "sha256": "80703669a0450329ae31ebafdd921369b6c446de097a10ddad385f6e4ac70c61"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/final/1280x720/run/running.json",
+      "sha256": "6445d79a1d021cfe56961397aca73bfcc1132d52b6190e21e71235df32f688e3"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/final/1280x720/run/states.tsv",
+      "sha256": "7b2f517ba30004b2829d0619a8555cc401749e051428d9456a99159b89831501"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/final/1280x720/run/stderr.log",
+      "sha256": "4b73c96b25066ec2370644eda8a463570fec390203035f3612e15ad85ff68be9"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/final/1280x720/run/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/final/1280x720/run/steps.tsv",
+      "sha256": "9ee21cc7dc5209f7b015eac172f7ad2d3064667e2bddef4a8d9ce2f35fdc96fa"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/final/1280x720/shown.bmp",
+      "sha256": "995db0fe0d641818900daa0729cde7aad38032969d20b85dba133168ebd27364"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/final/1280x720/summary.json",
+      "sha256": "a8f06c598d1c10071d6c6458009190ef1016c4f9a1d7d98af5b70e1031ab75a1"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/final/1280x800/hidden.bmp",
+      "sha256": "816dfa14e76fea2a8c841e626842c7d7655bf91f91a9218cc5a50160b0b0ebca"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/final/1280x800/main.bmp",
+      "sha256": "0c0ca6fa113e12fa9a201be1ed0a349c6806d826f7a6338364f0641c0d338e22"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/final/1280x800/review.bmp",
+      "sha256": "2aecac9e824b06b6355f396c18653fb7e0df7ebbe59e57787da9fbcd30be434d"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/final/1280x800/run/audio.tsv",
+      "sha256": "eb331ee6dcc6bdb063a07d20fdf25e05a31ffd77140677d03ab70e2d44b42d40"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/final/1280x800/run/data-before.json",
+      "sha256": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/final/1280x800/run/originals-before.json",
+      "sha256": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/final/1280x800/run/run.json",
+      "sha256": "8e70beca278ab21ad9d1447a51474b04a3e3088724fb196ebec14e569f7260cb"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/final/1280x800/run/running.json",
+      "sha256": "380597c008d051ad1ad0789ddbe92136f0b20a8287cccc0d47540b5bb40989f3"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/final/1280x800/run/states.tsv",
+      "sha256": "576ab92a1c6e2e54fab9d288f819c9a9041ade125c8d6015ea0213b9245f3318"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/final/1280x800/run/stderr.log",
+      "sha256": "4b73c96b25066ec2370644eda8a463570fec390203035f3612e15ad85ff68be9"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/final/1280x800/run/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/final/1280x800/run/steps.tsv",
+      "sha256": "480f074f38c9fe2987be067e67912a5ae9fca0edf776006fc259f36634ffa9bd"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/final/1280x800/shown.bmp",
+      "sha256": "c9a7be7991e5d40fea276c22983dc72cc792b5d2095ef8e4d424b07400e2d149"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/final/1280x800/summary.json",
+      "sha256": "ff3211b9214663be53c30b27a3ac8d47d066be509cd66f6f6d59e1eeb888717c"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/final/summary.json",
+      "sha256": "0c0a2a6529effa60fbed2a916b2e51443549439b1fdcf9bb91476e4064be3764"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/final-runtime.log",
+      "sha256": "e49feb5e98d33e731b6c0748e00fca32ccb57b540a9bcb84e231b4d3d2027897"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/freeze-final.json",
+      "sha256": "b4dbc2625af330991e95d5d69767779c8c14a2e51c9b3dd341e61233c273de03"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-batch.json",
+      "sha256": "a4b9d76286d7e8eedb51676b898e40f87c6a98feb10042856f7cc1cbcf497399"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-demos/DemoStormRages/final.bmp",
+      "sha256": "8dab80b8660d6ce66b75944340927e45dfc65caaaaf311a5d1f9614c80277af8"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-demos/DemoStormRages/result.json",
+      "sha256": "8f4b231c0e5c9cb34b53e7e828eb7a896c43a417dd27963a67f037873ce3302b"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-demos/DemoStormRages/running.json",
+      "sha256": "55fcd92818345d637babf57d2a88f029b69e2e2029b6b7eab10b41308d8f4f83"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-demos/DemoStormRages/states.tsv",
+      "sha256": "696e98d8aa361a5528ec1925f2b0376d658ff206211e3fadbf866db81bb9ad75"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-demos/DemoStormRages/stderr.log",
+      "sha256": "7013897daa266583ef2410ac777d9f0b7c11b5116e66a3f004273c19b2553618"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-demos/DemoStormRages/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-demos/DemoStormRages/steps.tsv",
+      "sha256": "160ece3c497d24c2f3e5fdbacfdccd260ba1abdcf6eb374fb804297310da1164"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-demos/DissolvedAlliance/final.bmp",
+      "sha256": "80d8649a7a5dcf3e67aad484bdaa08516b5a80d37437f2366ae8790b8703584e"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-demos/DissolvedAlliance/result.json",
+      "sha256": "377482f64d3b9537aa160c817c03c4e97606db0c9690fedbabbb3ae95236ae15"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-demos/DissolvedAlliance/running.json",
+      "sha256": "6150b9bcd174108d645868049a638a09250f65944b8361f0fda1e134b5ef129c"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-demos/DissolvedAlliance/states.tsv",
+      "sha256": "156eb5ac97cb854b3c735103088b8b7a2b246726b003c7b61d69355491116c4a"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-demos/DissolvedAlliance/stderr.log",
+      "sha256": "f0897e4ab61f8c2f86b568404bba5e7af303c0933f7c1fa3ee631c464ffcc509"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-demos/DissolvedAlliance/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-demos/DissolvedAlliance/steps.tsv",
+      "sha256": "0eeb5585ee7896b71d1da844b0752c3f05083cd82b9366d97a0c462a1478eeca"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-demos/GuardMyBack/final.bmp",
+      "sha256": "65babe9087a1ee9f54beacc98cb9d74a73ebed4d99bddd1e0ebf49700ecc7eff"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-demos/GuardMyBack/result.json",
+      "sha256": "19e2e004a1cbbda26b288eaf1c33be066316244ad94356c5e20e58b7d0561c05"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-demos/GuardMyBack/running.json",
+      "sha256": "b65bbc1cce4b79eea92e17e9fb21d68b32023b5cbe344fc610e54db87c952da9"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-demos/GuardMyBack/states.tsv",
+      "sha256": "c0828f2cf7895409027ccf4f3b1e02295aea7e029d6c4489922a3c61df97b8d0"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-demos/GuardMyBack/stderr.log",
+      "sha256": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-demos/GuardMyBack/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-demos/GuardMyBack/steps.tsv",
+      "sha256": "f894bd404889184bf968a4b63d432773b03441cc9a3402976647840e0cf7cc64"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-demos/results.json",
+      "sha256": "f4196c0e934264b8168f201b3ebd3061fbf6adb9b5850f4bc31286048e1bbdb8"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-demos.log",
+      "sha256": "adaa39ea4b33d63d2ffd259192ffe122555f7795b1b08ad8501a47dc7d7f5903"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/bc1menu76/final.bmp",
+      "sha256": "8bbb4f0398d2d6e9c16d0d244077c4e4a531cd99a5e2b9912d241b174ca29db7"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/bc1menu76/result.json",
+      "sha256": "400f051af1f76a9913022999ba36c9f09b23706677bb3106f59124089fea6c81"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/bc1menu76/running.json",
+      "sha256": "c59436e3423aaff245f429eb0c81978e32b0d0f8c089e44faae25d5548942151"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/bc1menu76/states.tsv",
+      "sha256": "4b88445175af39be6c5724e68a34ddad9a1ef21f6fde8378ae6b1f479ebce518"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/bc1menu76/stderr.log",
+      "sha256": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/bc1menu76/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/bc1menu76/steps.tsv",
+      "sha256": "cc9e45497f20b8a9b762dd1b79e09c1d08a719f0c80e15fb594f8ac6cd29dd98"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/bc2bridging76/final.bmp",
+      "sha256": "597ec7978f12eb661bde686ae697190e6b904ba2023e99158d71400d51890125"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/bc2bridging76/result.json",
+      "sha256": "4d293db5b482487d3697a1f6963bb064b08de92f1ef4248d10f0324767646975"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/bc2bridging76/running.json",
+      "sha256": "b3580d5f12d51aa9a4861c368e155a3ccd61651bcead01e1952f663701cd027a"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/bc2bridging76/states.tsv",
+      "sha256": "00e434585cc6475ae0a5d626db1e5e1b18957d1a97d1e8b08597405c18eae72b"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/bc2bridging76/stderr.log",
+      "sha256": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/bc2bridging76/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/bc2bridging76/steps.tsv",
+      "sha256": "f82c10f4e64968e92e3702b47869f59b68112cc6a342c1c7a81959fc590ba552"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/bc3acid_bar76/final.bmp",
+      "sha256": "91cc6cf005e1aad9d1d2a6187b73b6d58e762fb0951731808e2c61f0ddf27468"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/bc3acid_bar76/result.json",
+      "sha256": "9a88394060f3c083600c1717477cc9e44a5f51206cc5916ce9e2a6c31be5c39a"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/bc3acid_bar76/running.json",
+      "sha256": "f456498106491d6dd24f07d5656245235ea1468f43e67824af4d5e61a7a73ff0"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/bc3acid_bar76/states.tsv",
+      "sha256": "8a983d26199bc74fedbf073f29e57289642d3dd70a316a98e0d714f526c93b8c"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/bc3acid_bar76/stderr.log",
+      "sha256": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/bc3acid_bar76/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/bc3acid_bar76/steps.tsv",
+      "sha256": "7d38c1a805d62f296fb60c4f3fdeed1601d1521d0191042b9f85a0bdf2378d96"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/bc4bow_rush76/final.bmp",
+      "sha256": "672c896767cfb2a3d9e8508b19370633966af1a04e937dde68a45ef924c5e83a"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/bc4bow_rush76/result.json",
+      "sha256": "11dbf7fba0260a5a875a90d0f62cf592b36c203c3672cde7712b126653a0268a"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/bc4bow_rush76/running.json",
+      "sha256": "cea063a73ec8f9c288637390d62e6a11891114de91163cfd03ddae923a3ba7fd"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/bc4bow_rush76/states.tsv",
+      "sha256": "ab1e96b4724ae6842922f4f5419ef8be4e923e969d61d08abbe6e04bb126de95"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/bc4bow_rush76/stderr.log",
+      "sha256": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/bc4bow_rush76/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/bc4bow_rush76/steps.tsv",
+      "sha256": "29f32f6421330741378fed486dcdf3022047b3471eae806e94b87bd563e5daa5"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/bc5walkers76/final.bmp",
+      "sha256": "72cd239532491874201aefde33fb9e7bb5b44836df375baba1004c3ed8d4accd"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/bc5walkers76/result.json",
+      "sha256": "73f8c6b44c7faf6bd6d6f74badb4b609237b4ca40e9aad2fcf36a32decaa54dc"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/bc5walkers76/running.json",
+      "sha256": "6816514dd94f4c23ac35906c052284f8cb8dab0961566ba3479113bdef355014"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/bc5walkers76/states.tsv",
+      "sha256": "ec33aed2e9b82f8224bd5c91cb523d5acf73b8019ec0af3433fb50cb53f567eb"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/bc5walkers76/stderr.log",
+      "sha256": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/bc5walkers76/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/bc5walkers76/steps.tsv",
+      "sha256": "f43641d91790e4cc268035b94620ee43955556bec38689792c59c5beed93bfd1"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/bc6mows76/final.bmp",
+      "sha256": "3aa442595c299987ecd71e266fd75765a7a1e13e8b2af2c848476eee82ae5eb3"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/bc6mows76/result.json",
+      "sha256": "3d9999a468cc69d1198e6636c5e068f5c44e6a82d2bf4a7f9407de305ddf8012"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/bc6mows76/running.json",
+      "sha256": "23ae5f1d6ea08bf701fb9bf2a1325ff0041d6163e351be13e2efd29a9a128617"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/bc6mows76/states.tsv",
+      "sha256": "95850c1247b4e9bdf7fd7554112a9b44829680ad727947644e070ff18bfd882c"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/bc6mows76/stderr.log",
+      "sha256": "e0feebb3c7aaa15588f3a42ee4a01cb547ca08c811185c5b1d92bdba25b67522"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/bc6mows76/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/bc6mows76/steps.tsv",
+      "sha256": "3a4bef22120b6acb8285f69e4eb21b102f5b7472e0ab9fa179f9216df5252466"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/bc7sun_bars76/final.bmp",
+      "sha256": "f08fb187487c2afa3d1fb5b94869999637f1b5d6a9e5d8268d7f9cec5d8ddc0a"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/bc7sun_bars76/result.json",
+      "sha256": "3c6d59a4722cc2de943d99de8cb970299412a9b51e0797f5377e85f020cc3d05"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/bc7sun_bars76/running.json",
+      "sha256": "79cdce24c4509fc24bba94b135a91da148cce5b462578a3fcc62e1fc3203f004"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/bc7sun_bars76/states.tsv",
+      "sha256": "8a61d9f522e331becfb89a9f3724004f2b694360821ada2c66356dba1c1dfe02"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/bc7sun_bars76/stderr.log",
+      "sha256": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/bc7sun_bars76/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/bc7sun_bars76/steps.tsv",
+      "sha256": "b2c70fb84176290cf095132b934e394ad2c096d75a9ee1bdf0cddfdc597da75d"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/bc8fury76/final.bmp",
+      "sha256": "05f19f91cd3d2b45138343f6d5df76e04bb52935c7cd98f1dfc4c9d047d4e012"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/bc8fury76/result.json",
+      "sha256": "14eb5998f6204c077814ea3103c27293fc8b0f726d4c67cfaa70e70b2bfc282b"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/bc8fury76/running.json",
+      "sha256": "85026f3eff2be526b14ec992308dd2903652fe293c838ce3bf183cae512bc6c3"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/bc8fury76/states.tsv",
+      "sha256": "a6cdc1c76da0479d2d07e84a1acdd7cc568e08ef2a50d6bbb180af7dea9b0cd0"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/bc8fury76/stderr.log",
+      "sha256": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/bc8fury76/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/bc8fury76/steps.tsv",
+      "sha256": "4bcd0ae2cfc3b74a9a5a44a156312a31aea0d9aab2c9dc3c2cad68da47cdfae4"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/bc9ssun_bars76/final.bmp",
+      "sha256": "2f92934185aa9534b05aa28cf67a731e298b83c48bf225adb206bcb7bb09a493"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/bc9ssun_bars76/result.json",
+      "sha256": "3ea1bd986131af173569594575bc9b1bcf26646357c0a50df43aeb9f97823eea"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/bc9ssun_bars76/running.json",
+      "sha256": "93019c1791f73fb424366cc185b7f0aca0528c5ec803534f10c79aa37960b8f2"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/bc9ssun_bars76/states.tsv",
+      "sha256": "815890a3a266cc116c11cd267a0bb9c4c26385f559f759c55b476fa7fa4d4ce3"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/bc9ssun_bars76/stderr.log",
+      "sha256": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/bc9ssun_bars76/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/bc9ssun_bars76/steps.tsv",
+      "sha256": "0e2f512257eb895a7d02f98836e5b67ec7a4b4eeae447657a4f031ca9fa295a8"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/BreakingThrough/final.bmp",
+      "sha256": "7c2f4e01997512c1a69f0199c2f626b0832adcbab4758d4b198e987a8cfd9819"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/BreakingThrough/result.json",
+      "sha256": "84ca116b0769f52dbde427fb8e4af27d3d3608e3760f39932ebcc4d57abd8b04"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/BreakingThrough/running.json",
+      "sha256": "07f6e0ccdb274d5278ac2ec09083f9aabd58068eaf557dafd3685cd24fd11fe5"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/BreakingThrough/states.tsv",
+      "sha256": "90c80b54f8774f3ff8870e4f3cb88dd86a203003f88a17ff2e7dad13b6962e35"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/BreakingThrough/stderr.log",
+      "sha256": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/BreakingThrough/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/BreakingThrough/steps.tsv",
+      "sha256": "27f4b9079c59ddda610bdc34956ac29ce3ccc00c451429e90a26d58f3b8a8456"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/DissolvedAlliance/final.bmp",
+      "sha256": "0e6eeaa0ccb830b8d98860e40992448ba74e2f9849940476143be0ea48a7f1e0"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/DissolvedAlliance/result.json",
+      "sha256": "4d11d6957c28a073bd33d36527f61550e734f54b972dc3755d87d8d19c57a29b"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/DissolvedAlliance/running.json",
+      "sha256": "c2632cffd290704bf30cb206ecdef0c9e7a12182985fb46e1442b17bc5f2e018"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/DissolvedAlliance/states.tsv",
+      "sha256": "e582f3c5fe2b88cf57785c6e95e9370048f2bf2ba68a479a143ef49acf38a6bc"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/DissolvedAlliance/stderr.log",
+      "sha256": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/DissolvedAlliance/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/DissolvedAlliance/steps.tsv",
+      "sha256": "787e825b3e3e141c82c30e5b445fd62839224e2a7f75e44a6d900acf9a02ece8"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/EnemyTerritory/final.bmp",
+      "sha256": "60b16875f52f89d0bc313c334f3bba393a38edcc1ec03bb0f9809b7c9c050d45"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/EnemyTerritory/result.json",
+      "sha256": "7f5956a8ad1bd3511a9f01309aaae49c7cced66c25584db24f5a0c79d96ce526"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/EnemyTerritory/running.json",
+      "sha256": "2b5e42cddc8a554334caceddde40afbd7484d041e54fe39d1f3eff66958628d2"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/EnemyTerritory/states.tsv",
+      "sha256": "55880a2a2dc8a4b559109783a87acbfe342b2b9f2028139705e173f3df177f2d"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/EnemyTerritory/stderr.log",
+      "sha256": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/EnemyTerritory/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/EnemyTerritory/steps.tsv",
+      "sha256": "c081ea1a8e4464c52303ace51718c71feaf6e513b6bc168973d27547bb069141"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/FinalConfrontation/final.bmp",
+      "sha256": "c8c055127f7bffe7f50509c84c1ed145fc5d3370c32c3755464b53af5f4b0b91"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/FinalConfrontation/result.json",
+      "sha256": "def313cddfe3b5dda88c91a50b76135d4c350de5646c49f0a2a47935f925d491"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/FinalConfrontation/running.json",
+      "sha256": "7f223d854dc44be034785ac72fc5cdbcba670f1ea1f3ac0b6fb22f46721d83f7"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/FinalConfrontation/states.tsv",
+      "sha256": "559eb9eecc9b439ab4228ea1b0fe86245829c54984c5ee3da7b04d451f7ec79f"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/FinalConfrontation/stderr.log",
+      "sha256": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/FinalConfrontation/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/FinalConfrontation/steps.tsv",
+      "sha256": "4651be818eaba7dde7e1edb38e73cc3d6b34f54d84ae9dcce753c0d0bfaaa60e"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/FragileFortune/final.bmp",
+      "sha256": "3b39c52e0ffe8fe943613bc2aa10652169616f8ff4e73dedf4d8f06f2ca8f19a"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/FragileFortune/result.json",
+      "sha256": "1fe20d30bcf2632945ab7bc452c4b7f55c7a1086ed2ffb0e93dc297caf131a5d"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/FragileFortune/running.json",
+      "sha256": "08a04340fc4079fe223c71d6e62c0fb30b7678e4a87d332b23c0ae2a87cd33f9"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/FragileFortune/states.tsv",
+      "sha256": "d9f1af075d6bebb2127a60882a2732a69377b584a4adcc722015b3c1e477e1dc"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/FragileFortune/stderr.log",
+      "sha256": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/FragileFortune/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/FragileFortune/steps.tsv",
+      "sha256": "6238d3862d93952bb7c027e9da36b55602e3db6511e289ec4baaa2b9c6abbebe"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/GuardMyBack/final.bmp",
+      "sha256": "ae280ac191428cfdea9a60e8172a516c17be9bdb1757bb4401e7efe4fb0f89ec"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/GuardMyBack/result.json",
+      "sha256": "126258c3016faa8e7287abe443857e9ddb03a041a1256d7cefc4b2aa594734b3"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/GuardMyBack/running.json",
+      "sha256": "8ce006a3c34ca441f1a0d89ddeb484029ceba0d040ee042f007a77958f377cf7"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/GuardMyBack/states.tsv",
+      "sha256": "e87c8d592bf8b8b56e5f0d97c0f3a4144988b918a49c9eb8e1afaf23945aaa36"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/GuardMyBack/stderr.log",
+      "sha256": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/GuardMyBack/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/GuardMyBack/steps.tsv",
+      "sha256": "a98e46106140ff6b617508134d16f1e60bc0ed6722992116303c29b6bd5bdf52"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/MasterOfWhirligigs/final.bmp",
+      "sha256": "b544f69a844b4835c05d1fa7b2d8fca0d55e1a185866028518b773d61776935e"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/MasterOfWhirligigs/result.json",
+      "sha256": "6905c9be272fdd039c3b049950cb5c493020391129022da59fa8f91a97e4e81b"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/MasterOfWhirligigs/running.json",
+      "sha256": "d3806d38622d432873eee12893f3c4532dbfba32e6393784f6ff28b0d7c79166"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/MasterOfWhirligigs/states.tsv",
+      "sha256": "e0834e99c4977ffa7c3773dcb15d9c6fe2c36395bab320a0e03b5c4fca145f7b"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/MasterOfWhirligigs/stderr.log",
+      "sha256": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/MasterOfWhirligigs/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/MasterOfWhirligigs/steps.tsv",
+      "sha256": "eaca6989d1f37c36cecafe97539d2fd4aa734afbf7c10bf0e3ba8d488e3fb5fc"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/RainVsRain/final.bmp",
+      "sha256": "b4224168d805d41b127d6035d8faec9891d09cdfa9d53c01747d9089213bf4b8"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/RainVsRain/result.json",
+      "sha256": "84ff5e58cdb384fdfb69f07e3ba7d51d038c69a4cf5265ed343fbea479dcabb9"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/RainVsRain/running.json",
+      "sha256": "ee04d352080acfbe5d9f5921fba2c818c698a0713663f558b3ef3e86ee06a13b"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/RainVsRain/states.tsv",
+      "sha256": "68fec5934cb4092df5320a675e495dbdbc1d0c3d2aa879296e1fa1aa28b2cc14"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/RainVsRain/stderr.log",
+      "sha256": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/RainVsRain/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/RainVsRain/steps.tsv",
+      "sha256": "3fa6ecd675867d5e0e332cfa19a0e1a5d905d6aebdda610d6790c6f49605ec1d"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/results.json",
+      "sha256": "fab71fb4408b9c52c5448c0a5170deda5b2a051be1096718db0a9997502e96ef"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/RunForIt/final.bmp",
+      "sha256": "dc5ed2556107b30bbad18b1cb083a57667e8ec3235673a151c46b3233477a1db"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/RunForIt/result.json",
+      "sha256": "2b3c0a217988dfbfc83c024e2a598aa32a4b01577ca68f01119dec65ac007861"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/RunForIt/running.json",
+      "sha256": "25108c862050599bfcaafa5c579b1ce4399f4991ef149c4a763b92a7e69b4532"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/RunForIt/states.tsv",
+      "sha256": "63dad7f177b6110dc83b83f20c4f2acd7b81642470ba4152243683851b41a51a"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/RunForIt/stderr.log",
+      "sha256": "383d7aca9b17e11a68428397e1834c7515797345ef2b938d506f1d5f8ae5fb79"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/RunForIt/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/RunForIt/steps.tsv",
+      "sha256": "9617b21f96aa32f6c11ff0f06ce4ef450111130a3ac4f66ce97a80bd4d52bb89"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/SaveTheIsland/final.bmp",
+      "sha256": "d9a3d204e3b350d81e4911d6ab6a790135892babf7780218c5180c65d71e0718"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/SaveTheIsland/result.json",
+      "sha256": "d95f90a82875123d6876e7c97246acca0db8b890e1fe91bc948766baf5e8c95d"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/SaveTheIsland/running.json",
+      "sha256": "1930b86f75e1d15fe2fce8c16ebc8b811661b2c86cbd2072cce3e10a8f3045ad"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/SaveTheIsland/states.tsv",
+      "sha256": "49dd71ff1fc8fb6a47c65333f7598be190fc4746eeff42fed7e681b4aaefc092"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/SaveTheIsland/stderr.log",
+      "sha256": "e0feebb3c7aaa15588f3a42ee4a01cb547ca08c811185c5b1d92bdba25b67522"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/SaveTheIsland/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/SaveTheIsland/steps.tsv",
+      "sha256": "71246f4a6a1460f276c2189dc4c94219af70497c46fb92d450ce710f7f231101"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/Surrounded/final.bmp",
+      "sha256": "03a85801dbbad1da1a8a220c387c0b800b316a21859c0661421df6663f15b3f4"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/Surrounded/result.json",
+      "sha256": "f721b52a78fe1b75b5499f2c04849ee5796d665c79e356f45652d299fbfcb05d"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/Surrounded/running.json",
+      "sha256": "9d153ef472886cc02f4a287b0c860ed125551d707c6ee45b611258c48db0fb46"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/Surrounded/states.tsv",
+      "sha256": "ca2eb2cc8eefa59d121baac4fcf04fe58ddd2016a0eb70b151340d3ebb977bec"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/Surrounded/stderr.log",
+      "sha256": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/Surrounded/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/Surrounded/steps.tsv",
+      "sha256": "e0940afeafc8a79abe927cb37a2f1391b78db91d2beff773b14442e05edf9194"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/TheNoose/final.bmp",
+      "sha256": "fd0c068d447289f96efaf676cfe4a5ccddd68fed8ad1286d04edbcf26279db37"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/TheNoose/result.json",
+      "sha256": "705ff49067a8b213878f12788cf607b767cafef00ca8c0f69069f20dd481b9a4"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/TheNoose/running.json",
+      "sha256": "db536b0d55d2bcd604315a16bf0e5f83312e159dc4dde4077bcaaf79adb483cf"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/TheNoose/states.tsv",
+      "sha256": "9debbbdbf3ff716a9811ea1adb2e3ba1b9e91455a13ef0b7bfddf89960c6b9be"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/TheNoose/stderr.log",
+      "sha256": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/TheNoose/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/TheNoose/steps.tsv",
+      "sha256": "821741d67d71c545eb4ef04f27994940251d6cbad8445332d5d35dcea702c2a4"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/TheWarBegins/final.bmp",
+      "sha256": "84dfb2f4c4cae3590da47bb2e6a89b29838eb7788a3dd50311634a5983390d9a"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/TheWarBegins/result.json",
+      "sha256": "0aa6eb5f90f1c0fa8257c96762af3269800ba7fcd502c2912a088ec21e3a60b4"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/TheWarBegins/running.json",
+      "sha256": "a058c4a7b37f387e91ed6395bc475f80def52e156a705aa075530742117dde33"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/TheWarBegins/states.tsv",
+      "sha256": "ad47eb335dce6aad9413f21ef30c8d4a5ae073b7854783471e93991044e601a8"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/TheWarBegins/stderr.log",
+      "sha256": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/TheWarBegins/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/TheWarBegins/steps.tsv",
+      "sha256": "287e8d24b09c85888a332cf458bca07af9ac80422c2f314d6583844667b6783a"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/ThunderingPower/final.bmp",
+      "sha256": "c0969a5971cdcb6c297ebcee00b41a9ca32f21d8e93c084f52e5a9e2bbf3a20c"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/ThunderingPower/result.json",
+      "sha256": "81a268d1930d75cb7a34d616435b46106dcbe28ecdf47c5f7873cdcc3c2e55ab"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/ThunderingPower/running.json",
+      "sha256": "7393f8d9b35dda4170ab7edf43a05111a16f33df73531afdbd140f93ce1fb2b2"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/ThunderingPower/states.tsv",
+      "sha256": "13eb5cf8fcf5c79a491f9cce2f5cca472463b3e6301bf4fc28fa8b67ef1c8621"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/ThunderingPower/stderr.log",
+      "sha256": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/ThunderingPower/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/ThunderingPower/steps.tsv",
+      "sha256": "ff291e1cc4ac4b29dfa6f898bc0332c003b30043d9ac241928ab70ae26290b5c"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/ToTheRescue/final.bmp",
+      "sha256": "f2fe4d9ed12ed3eeb217da38c759e1a43f9fdee354389c55696f2ee4868eab2b"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/ToTheRescue/result.json",
+      "sha256": "266944e334aed99ff0648cebac4570431915fc851997da80ecf32a3a323578a0"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/ToTheRescue/running.json",
+      "sha256": "cc61f5106e6a560c7947f4295ac1d83866008bb1b19b831d011736809076019a"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/ToTheRescue/states.tsv",
+      "sha256": "89fcbf856be3c34090a5f846b47aa7e7e8df6387994c9d33fedf4837681a455d"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/ToTheRescue/stderr.log",
+      "sha256": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/ToTheRescue/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/ToTheRescue/steps.tsv",
+      "sha256": "e4f42760d3a9d8e5e313c7c203a888ac95a4bc9c096859a2b72183de55e759ef"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/Tutorial1/final.bmp",
+      "sha256": "18998e82525a19b50b488e1f3f4537e42284d651a268a8aefff4314da33a693f"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/Tutorial1/result.json",
+      "sha256": "7a79726670eabd1d2f822441ff4225773ae17fcbb83026348a1eb0a5a6f2ac6b"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/Tutorial1/running.json",
+      "sha256": "9246fdc9e23baad4dae86ff07e6f4f8e1f80a59d13127489a9d4c7fde59c0e67"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/Tutorial1/states.tsv",
+      "sha256": "82a158fad45f05582c5fad81a242a4dba97e08cd2713637848e7be851b75fa4f"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/Tutorial1/stderr.log",
+      "sha256": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/Tutorial1/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/Tutorial1/steps.tsv",
+      "sha256": "698bd545e4a0da5b97eea316cf32abbcd883c289dcda8c0241b7fbcfa8dad579"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/Tutorial2/final.bmp",
+      "sha256": "938460dee300a42d699c4b1be3bda9260243c2c6340f1d1ba13839f08203955f"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/Tutorial2/result.json",
+      "sha256": "c81dd4034e7c71adf28cb660e8780002eac1c4be9c28a6010f5319a84aef32e6"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/Tutorial2/running.json",
+      "sha256": "376aca4aeaa23c527cb272ba681ab99ece45e1b9e93de1815be6a8f5f64234fa"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/Tutorial2/states.tsv",
+      "sha256": "023670300ea2b09fd4d5689938f44882920ceb1f91f43d27ae4c8d149d09e6cd"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/Tutorial2/stderr.log",
+      "sha256": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/Tutorial2/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/Tutorial2/steps.tsv",
+      "sha256": "2f5b5a3300be3b4bd12945cc8dad710030d97915c44dbd83bf3627128ee3bebe"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/Tutorial3/final.bmp",
+      "sha256": "8aaa54d5b960c5d76315ade636b2a3aaa13112cea89ab20acb53ab54d9bd5eee"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/Tutorial3/result.json",
+      "sha256": "7809aec6fc3f0fc04741b14af9a24280a3dcad808f8b952e61c8a17605e9f110"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/Tutorial3/running.json",
+      "sha256": "4992133cca5090ed7d79d5d65da8a449b6ff252327612e4f53dee401393b4e5a"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/Tutorial3/states.tsv",
+      "sha256": "af26ead8b79e0a72e29e31fbb2ba0e75941d9f9d80a046ae0da0256cbb2b2016"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/Tutorial3/stderr.log",
+      "sha256": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/Tutorial3/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/Tutorial3/steps.tsv",
+      "sha256": "86be3c5cbe1608d1c8386c4629be43141146f2d439e1bd89b644b49f4ae1deff"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/Tutorial4/final.bmp",
+      "sha256": "38e236b2963020187bd832bc9c082b666eb6fc1ff8b31abe54579a4081494712"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/Tutorial4/result.json",
+      "sha256": "7cb784696c507849e99c738d2d576867a99d82c35f941b9b33ee00b51946b184"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/Tutorial4/running.json",
+      "sha256": "604c235e71b560052d68223a803318ba47aa684c223f7ba35f0e95a8fe594ecc"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/Tutorial4/states.tsv",
+      "sha256": "7947f0f15110cfdf42382364e9f0d779c20883c41ed6c6b875f241eaa50b5f63"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/Tutorial4/stderr.log",
+      "sha256": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/Tutorial4/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/Tutorial4/steps.tsv",
+      "sha256": "63499f7e9ef07eb790533086773bda20d6fdd0cb15589c0137dd7bcdb00cdcfc"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/Tutorial5/final.bmp",
+      "sha256": "3e5e06eed285a03fb07c2151696fbedd293a002cdb9bcaf84ba2d60a406c3324"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/Tutorial5/result.json",
+      "sha256": "311cfb0e76b290f90d69420927e7f4c925617fa3cdac701cd4dbeb799e23a686"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/Tutorial5/running.json",
+      "sha256": "ddf8e3f785d43a5de30e8d94daf36d71eb7405c69ee8781882927465ea543c59"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/Tutorial5/states.tsv",
+      "sha256": "419ca1bb1b9013fe1fbae55f3225245fc5f7d2f73db551f68722153e62eedd70"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/Tutorial5/stderr.log",
+      "sha256": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/Tutorial5/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/Tutorial5/steps.tsv",
+      "sha256": "3c50ff3a73f4ace038e76aecf3fab1419033a7a5815a158fae0d6ee11f02f4cf"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/Tutorial6/final.bmp",
+      "sha256": "dfa788fc8f14120e1f1ab811362f1049e92c36aa92bf98835c8cbbb0afbf5c85"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/Tutorial6/result.json",
+      "sha256": "d798f37d67fc1cf7d0a34cbb115a81f49f88c2316902411ce38af3a3da956958"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/Tutorial6/running.json",
+      "sha256": "2b0ef725ffb929efda18d654a7fcaea4c6ae60975ba2fd6daf13d2af52b974fd"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/Tutorial6/states.tsv",
+      "sha256": "e499d34a54a5c056811ac6c1945b9852f40f61408caf663dab228e1b79d57c91"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/Tutorial6/stderr.log",
+      "sha256": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/Tutorial6/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/Tutorial6/steps.tsv",
+      "sha256": "791767ab741aa7d3d69c0d228c639b56a070352d989bcc2a0ded686fd3add947"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/Vicious/final.bmp",
+      "sha256": "da5c7702f02a698dfb46dbc3ab78030d91f56ad45aac34ce063b13b00c411d66"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/Vicious/result.json",
+      "sha256": "95217b7adaf6f3759d87b9eeac0ec940c36dc4d93a34936dba80c76c481b87a1"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/Vicious/running.json",
+      "sha256": "f9ef8d6faa1a6d5a80dec1071dd180421d46a89c895877beacad00c532a2fead"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/Vicious/states.tsv",
+      "sha256": "476ac3091829cacaa5a6cf4a619035f487b952f71d23eb526d36482c132e0258"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/Vicious/stderr.log",
+      "sha256": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/Vicious/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal/Vicious/steps.tsv",
+      "sha256": "17e460d64899770e39a5025e424706e55f10a76e5b571a3be27e974c6e8b16df"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integration-normal.log",
+      "sha256": "be155bc7b91e5daffd42940da2cdb9c601aa5bb09b0be36edf2e84136f20df67"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/integrity-final.json",
+      "sha256": "5daf776ca355ff75e4c261e27a1358b17137d7d444bcc14740da2d665dbc2df7"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/native-disassembly-aligned.txt",
+      "sha256": "684018e532b3a17e217746ded609e47b97b2c2b9f973a38eaffb48ed3e5cbe86"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/native-disassembly.txt",
+      "sha256": "b433c083148a706723a89a24e5e330338c94d5387b04d295816fea8c8119e494"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/native-input-uniqueness.json",
+      "sha256": "690a87e0f691430ab9ffc0011bb3ae5ad83a37f41cd07b68443a966797abbe5c"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/native-input.json",
+      "sha256": "a58b240839f46b4725a03a512a32e0e88bd638337e2da98ce3c42e6ba83fe87c"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/native-run.log",
+      "sha256": "894db24cba8ac4983cadfe6e3d0485c6792d6184fb5ab66aad750ad235db7b86"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/native.json",
+      "sha256": "730a20cf75c273a60bb6878b751ecef598177d9b64d1689e703b2e8124975da2"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/normal-time-audit.json",
+      "sha256": "1f79cc40be7fd3bb8f1ef088c71a6ca513a3ed90a07a6a5ba645dde09d0e4e8f"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/preflight/1024x768/hidden.bmp",
+      "sha256": "031b341f1adaf190b0cd190ff8017c210e6d1750e523e374e976079b790d8b49"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/preflight/1024x768/main.bmp",
+      "sha256": "78508b37669a9706f508a4b89b25b3d2a7d3c0e0cf914cf93d64dccd7177925e"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/preflight/1024x768/review.bmp",
+      "sha256": "ed462cd3f69eaa451141b7c5d7ec31b91a45847e12da4b9045f5ab2146c763c3"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/preflight/1024x768/run/audio.tsv",
+      "sha256": "ae7e50ccf3eafe0626c5ed5a65e2f61d3dc57ed6c7851826e1529d7167bb514f"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/preflight/1024x768/run/data-before.json",
+      "sha256": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/preflight/1024x768/run/originals-before.json",
+      "sha256": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/preflight/1024x768/run/run.json",
+      "sha256": "07cd8534e10b878473f489eddae3ef8d44ed5edafa174d7a84440c0deb3237b6"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/preflight/1024x768/run/running.json",
+      "sha256": "f91a6025b8e8eca5c2f021b1cb2a04218d2e6d077befa695a04c0c2e95e40de3"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/preflight/1024x768/run/states.tsv",
+      "sha256": "2a965865e01f2d1f0f753b3c56eaaba47675af35f3d9e6b87f2be0e49d9fa924"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/preflight/1024x768/run/stderr.log",
+      "sha256": "4b73c96b25066ec2370644eda8a463570fec390203035f3612e15ad85ff68be9"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/preflight/1024x768/run/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/preflight/1024x768/run/steps.tsv",
+      "sha256": "40ee41b00e437387cdb1ff189c40d26a69c1b7ac887b46990490824569cc3bef"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/preflight/1024x768/shown.bmp",
+      "sha256": "f182a15ad141ba3ad343d890195dbf53315504c2082ffd05e58280b69c8f5159"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/preflight/1024x768/summary.json",
+      "sha256": "f7685723f347cf466d466604e33860c1c1b0bb6884082c5c1c662a0c435e191b"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/preflight/summary.json",
+      "sha256": "566a9bbba05489060d7516cdc475dabd7ce6c5d45b57d5c707c3aa4db03da7ca"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/preflight.log",
+      "sha256": "0533d3672d289b26afe63cf0ec1bb9c70ed084cea96166096d4c876a16a683ad"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/registered-final.txt",
+      "sha256": "9e40146aae2eea590ed36af16583a05dc683136a4a940bace2d4149be38129b5"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/registered.txt",
+      "sha256": "9e40146aae2eea590ed36af16583a05dc683136a4a940bace2d4149be38129b5"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/runtime-final.json",
+      "sha256": "3618172e702cab6445211164dec947baf7f699ed6aba667a4f5f21fbc057ba23"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/tell-set-islands.txt",
+      "sha256": "fabc6a4af74ef12e45b45b4f889671b533d10288d905b0d16ea01f63cc5b2ebc"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/tests-final-CampaignSession_ActualMasterGameWorld.log",
+      "sha256": "13fc707345957f5f6bc8462c819ffa998a8c6bf3edd20a5237781b30f660d1c2"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/tests-final-CampaignSession_ActualWarBeginsGameWorld.log",
+      "sha256": "c64eb87b489705497c7ddbdd3a3cdf1b6b9effc7ef6dd9723e6cdf4bd81459b8"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/tests-final-CampaignSession_ObjectHitUsesCurrentRawPhysicalShapeAndCamera.log",
+      "sha256": "99c873ecfd9fdb2e5c496b6d8778f2f20bde35697e7e3809dfbbe9af68846ac9"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/tests-final-GameMenuActions.log",
+      "sha256": "103ff7a83c83e9da1caf7b1bdd8c7327f254d5b3cb322b4d910f8d7f8e209994"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/tests-final-GameMenus.log",
+      "sha256": "76f8bf418dc19f64930cbf37401e61c8ed63984eebc4d06c22b81cc1b1792c7d"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/tests-final-HideBuildings.log",
+      "sha256": "9878b0788fd2f9cc6a5efcb965f95b2216290c928846ed650aaf1e495d6c04d6"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/tests-final-HudDock.log",
+      "sha256": "5ca5531774b5f13fc82081a254cff97b0cd8481d48e9e41e2ed8aa3bdb8503e5"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/tests-final-MissionGuideInput.log",
+      "sha256": "f94676fd8de1126c9bfb04a5ad9f39ccdf6afd890c8f2981348822c916d29961"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/tests-final-ObjectHit.log",
+      "sha256": "7afbf05dfa923bb96080adca5844f9b176fb71f164007daa4d79e91ba43e6318"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/tests-final-ProductionInitialContext.log",
+      "sha256": "4a0f8392b45a3287e0b1875d407107ac5a96969e87709bbd6b473eed4117a1ba"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/tests-final-ProductionShortcuts.log",
+      "sha256": "3b98130fa6ffd277b4729a5abcc9886e4cdbe60d148d853bc475a69ebc30a979"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/tests-final-ViewKeyInput.log",
+      "sha256": "248e4ca00a7793279524cdae9efd083800e48c603a4a120e5bc21c5146d21306"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/tests-final.json",
+      "sha256": "aa5abe6c85870e84bdb5ab5931eaa939f9f39f968cacef433fde07152e956228"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/tests-GameMenuActions.log",
+      "sha256": "103ff7a83c83e9da1caf7b1bdd8c7327f254d5b3cb322b4d910f8d7f8e209994"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/tests-GameMenus.log",
+      "sha256": "76f8bf418dc19f64930cbf37401e61c8ed63984eebc4d06c22b81cc1b1792c7d"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/tests-HideBuildings.log",
+      "sha256": "d7e763aa8b91266d3826cb42fc00b612e14f2e352a0c0f41d60f5521e263c6ac"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/tests-HudDock.log",
+      "sha256": "5ca5531774b5f13fc82081a254cff97b0cd8481d48e9e41e2ed8aa3bdb8503e5"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/tests-MissionGuideInput.log",
+      "sha256": "f94676fd8de1126c9bfb04a5ad9f39ccdf6afd890c8f2981348822c916d29961"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/tests-pixels-CampaignSession_ActualMasterGameWorld.log",
+      "sha256": "13fc707345957f5f6bc8462c819ffa998a8c6bf3edd20a5237781b30f660d1c2"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/tests-pixels-CampaignSession_ActualWarBeginsGameWorld.log",
+      "sha256": "c64eb87b489705497c7ddbdd3a3cdf1b6b9effc7ef6dd9723e6cdf4bd81459b8"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/tests-pixels-HideBuildings.log",
+      "sha256": "9878b0788fd2f9cc6a5efcb965f95b2216290c928846ed650aaf1e495d6c04d6"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/tests-pixels.json",
+      "sha256": "df49f4cab515a354a32b373efa89e61de6c698aa7be4205044bcf6c7dc90480a"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/tests-ProductionInitialContext.log",
+      "sha256": "4a0f8392b45a3287e0b1875d407107ac5a96969e87709bbd6b473eed4117a1ba"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/tests-ProductionShortcuts.log",
+      "sha256": "3b98130fa6ffd277b4729a5abcc9886e4cdbe60d148d853bc475a69ebc30a979"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/tests-ViewKeyInput.log",
+      "sha256": "248e4ca00a7793279524cdae9efd083800e48c603a4a120e5bc21c5146d21306"
+    },
+    {
+      "path": "extracted/cpp-view-keys-544/tests.json",
+      "sha256": "0def7a45c6670df096826fc31734ed3eab75a95bb5b97f59e018935af8361bc1"
+    }
+  ]
+}

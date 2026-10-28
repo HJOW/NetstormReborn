@@ -942,10 +942,12 @@ void CheckSessionWorld(std::string_view mission) {
     // 실제 캠페인의 레인 신전은 원본 수집/일반Draw procedure에서 본체·물결을 합성한다.
     if (mission=="thewarbegins") {
         bool found=false;
-        // 실제 본체 procedure와 전체 몸체 클릭 범위를 확인한다. 픽셀 순서는 별도264원문 검사로 대조한다.
-        for (const auto& sprite:world.Sprites()) if (sprite.procedure && sprite.order.x==89 && sprite.order.y==116) {
-            found=true;
-            const auto point=world.ToScreen(89,116);CHECK(world.Pick({point.x-112,point.y-80})==15002);
+        // 실제 본체 procedure의 불투명 픽셀을 입력으로 삼는다. 픽셀 순서는 별도264원문 검사로 대조한다.
+        for (const auto& sprite:world.Sprites()) if (sprite.procedure && !sprite.shadow && sprite.order.x==89 && sprite.order.y==116) {
+            found=true;std::vector<std::uint8_t> pixels(1024*768,255);std::vector<std::size_t> ink; // 원본 공통Draw와 선택기의 정합을 비교할 명시 표면이다.
+            sprite.procedure->draw(pixels,1024,768,{0,0,1024,768});
+            for (std::size_t index=0;index<pixels.size();++index) if (pixels[index]!=255) ink.push_back(index); // 선택기 반환으로 입력점을 고르지 않는다.
+            CHECK(!ink.empty());if (!ink.empty()) { const auto middle=ink[ink.size()/2];CHECK(world.Pick({static_cast<int>(middle%1024),static_cast<int>(middle/1024)})==15002); } // 사각형 내 빈 점 대신 원본498000의 실제 그림 입력이다.
         }
         CHECK(found);
     }

@@ -13,6 +13,7 @@
 #include "client/ScreenResolutions.h" // 메인/ESC가 같은 원본 확인 흐름과 호환 화면비 선택을 사용한다.
 #include "client/GameMenuCommands.h"
 #include "client/GameMenuActions.h"
+#include "client/ViewKeyInput.h"
 #include "client/TellParameters.h"
 #include "client/TellSection.h"
 #include "client/TellFileMenus.h"
@@ -1023,6 +1024,15 @@ void UberGump::Event(InputEvent event) {
     }
     if (!(event.code&InputCode::kRelease) && transitionCode==(0x70U<<InputCode::kVirtualKeyShift)) { client_.Input().PushCommand(0x02000017U,0,0x61000003);return; } // 원본4d8c47의 F1Help 문자열이며 Control/Shift를 별도 거부하지 않는다.
     if (rawButtons_->Menus()->HelpOpen()) { if (!worldUiRouted) static_cast<void>(rawButtons_->Event(event));rebuild_=true;return; } // 현재 공통 모달/스크롤/태그/돌 버튼을 실제 GumpInput에 전달한다.
+    if (transitionCode==0x710000U || transitionCode==0x720000U) {
+        if (rawButtons_->CurrentDialog()) return; // 원문565dd4 모달 관문은 일반 F2/F3보다 앞이다.
+        ViewKeyInputHooks hooks; // 같은 Client 표시 전역과 현재 설정/Tell/큐를 사용한다.
+        hooks.paused=[this] { return client_.Paused(); };
+        hooks.readInt=[this](auto key,auto& value) { return client_.Configuration().ReadInt(key,value); };
+        hooks.tell=[this](auto section) { Tell(std::string(section)); };
+        hooks.queue=[this](auto command,auto first,auto second) { client_.Input().PushCommand(command,first,second); };
+        if (DispatchViewKeyInput(event,{hideBuildings_,worldRedraw_},hooks)) rebuild_=true;return;
+    }
     if (transitionCode==kProductionBridgeCommand) {
         if (!worldUiRouted) static_cast<void>(rawButtons_->Event(event));rebuild_=true;return; // Guide/현재 모달 뒤 같은 Gump 트리로 전달한다. 정지/활성 커서 관문을 추가하지 않는다.
     }
@@ -1386,6 +1396,7 @@ std::string UberGump::Report(bool cameraOnly) const {
     const auto& camera=client_.GameplayGlobals()->Camera();out<<"raw_camera_frame\t"<<camera.RendererView().pixels[0]<<'\t'<<camera.RendererView().pixels[1]<<'\t'<<camera.Target().pixels[0]<<'\t'<<camera.Target().pixels[1]<<'\t'<<client_.GameplayGlobals()->PatchDiagnostic()<<'\t'<<client_.LocalStateGlobals()->MetaRebuild()<<'\t'<<pointerBoundary_.initializationFlags<<'\t'<<edgeScrollSince_<<'\n'; //실제 적용/요청·공유 전역만 관측한다.
     out << "phase\t" << static_cast<int>(state_.phase) << "\npage\t" << Field(pageName_) << "\npopup\t" << Field(popup_) << "\n";
     out << "size\t" << client_.GetScreen().Width() << '\t' << client_.GetScreen().Height() << "\n";
+    std::int32_t themeMode{};client_.Configuration().ReadInt("theammode",themeMode);out<<"raw_view_keys\t"<<hideBuildings_<<'\t'<<worldRedraw_<<'\t'<<themeMode<<'\n'; // 실제 표시 DWORD 둘과 현재 설정만 읽고 입력 효과를 만들지 않는다.
     out << "paused\t" << client_.Paused() << "\nsound\t" << client_.Configuration().GetInt("sound") << "\n";
     out<<"mouse_cursor\t"<<client_.GetCursor().Index()<<'\t'<<client_.Active()<<'\n'; // 검사 보고서는 실제 표시 장치의 커서 번호와 창 활성을 읽기만 한다. 선택/대상 판정은 바꾸지 않는다.
     if (cameraOnly) { out<<"current_dialog\t"<<rawButtons_->CurrentDialog()<<"\ngame_menu_bar\t"<<(gameMenuState_ ? gameMenuState_->menuSerial : 0U)<<'\t'<<GameMenuOpen()<<"\ncamera_runtime\t"<<(world_!=nullptr)<<'\t'<<client_.Time().game<<'\t'<<client_.Time().number<<'\t'<<client_.GetKernel().Size()<<'\n';return out.str(); } //실제 같은 프레임/장치 값만 읽어 Win32 입력 관측의 큰 파일 재쓰기를 줄인다.

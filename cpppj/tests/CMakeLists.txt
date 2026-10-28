@@ -202,6 +202,7 @@ add_executable(netstorm_tests
     CampaignFortObjectsSnapshotTests.cpp
     GameMenuBarTests.cpp GameMenusTests.cpp CampaignGameMenuTests.cpp TellParametersTests.cpp
     GameMenuActionsTests.cpp MessageGumpTests.cpp
+    ViewKeyInputTests.cpp
     HideBuildingsTests.cpp
     CameraViewCommandsTests.cpp CampaignViewCommandsTests.cpp
     DialogExitCommandTests.cpp
@@ -2356,3 +2357,7 @@ set_source_files_properties(ObjectHitTests.cpp PROPERTIES COMPILE_DEFINITIONS "N
 # 비용 생략/0의 실제 두 판본 후처리를 기존 원문과 분리해 검증한다.
 target_sources(netstorm_tests PRIVATE TypeDefaultCostTests.cpp)
 set_source_files_properties(TypeDefaultCostTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_TYPE_DEFAULT_COST_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/type-default-cost-x86.tsv\"")
+
+# 일반 F2/F3 표시 키의 독립310입력과 실제 큐 관측을 해당 검사에만 공급한다.
+set_source_files_properties(ViewKeyInputTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_VIEW_KEY_INPUT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/view-key-input-x86.tsv\"")
