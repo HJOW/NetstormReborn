@@ -61,6 +61,12 @@ public sealed class Screen
     /// <summary>팔레트 읽음 DWORD(00555e08). 실제 Client가 소유하게 되면 R4에서 그 전역을 빌린다.</summary>
     private uint _paletteLoaded;
 
+    /// <summary>파일 팔레트에서 계산한 기본·날씨 색 번호 표. 일시 팔레트 효과에는 갱신하지 않는다.</summary>
+    private PaletteColorTable _colors = new();
+
+    /// <summary>파일 팔레트에서 계산한 밝음·어두움 색 번호 변환표.</summary>
+    private GumpShadeMaps _shadeMaps = new();
+
     /// <summary>논리 화면을 만든다. 모든 픽셀은 0번 색, 팔레트는 검정이며 모드는 아직 정해지지 않았다(flags 0).</summary>
     /// <param name="width">논리 폭(양수).</param>
     /// <param name="height">논리 높이(양수).</param>
@@ -163,11 +169,12 @@ public sealed class Screen
     /// <summary>
     /// 파일 팔레트의 256색을 저장 팔레트에 RGBQUAD 순서로 넣고 적용한다(원본 004a4850). clear가 0이 아니면 적용 전에 화면을 검정으로 지우고
     /// 표시한 뒤 수직 동기를 기다린다(<see cref="ScreenPaletteApply.ApplyScreenPaletteClear"/>). RGB COL은 예약 바이트를 읽지 않으므로 기존 저장값을 유지한다.
-    /// 원본 기본·표시·날씨 색 표(PaletteColors)와 돌 배경 명암 표(PaletteShade)의 계산은 R2에서 연결한다.
+    /// 파일 로더에서만 기본·날씨 색 표(<see cref="PaletteColors"/>)와 밝음·어두움 변환표(<see cref="PaletteShade"/>)를 다시 계산한다.
     /// </summary>
     /// <param name="palette">읽은 팔레트 파일.</param>
     /// <param name="clear">지우기 요청(0이면 지우지 않는다).</param>
-    public void LoadPalette(GamePalette palette, uint clear = 0)
+    /// <param name="patch1078">10.78이면 참이다. 거짓이면 CD판처럼 12~19번 추가 색을 빼고 색 표를 계산한다.</param>
+    public void LoadPalette(GamePalette palette, uint clear = 0, bool patch1078 = true)
     {
         // 색 번호를 그대로 유지한다.
         for (int i = 0; i < _saved.Length; i++)
@@ -199,6 +206,9 @@ public sealed class Screen
         };
         ScreenPaletteApply.ApplyScreenPaletteClear(clear, _flags, ref _paletteLoaded, devices);
         SetPalette(0, PaletteSize, null, true);
+        // 파일 로더에서만 색 표를 다시 계산한다. 일시 팔레트 효과(SetPalette·번개)는 표를 바꾸지 않는다
+        _colors = PaletteColors.BuildPaletteColorTable(_logical, patch1078);
+        _shadeMaps = PaletteShade.BuildGumpShadeMaps(_logical);
     }
 
     /// <summary>현재 논리 팔레트에서 RGB와 가장 가까운 색 번호를 찾는다. <see cref="SetPalette"/>(apply=false)로 준비한 논리 팔레트도 반영한다.</summary>
@@ -206,6 +216,12 @@ public sealed class Screen
     /// <param name="green">초록.</param>
     /// <param name="blue">파랑.</param>
     public uint FindColor(int red, int green, int blue) => PaletteSearch.FindPaletteColor(_logical, red, green, blue);
+
+    /// <summary>파일 팔레트에서 계산한 기본·날씨 색 번호 표. 일시 팔레트 효과에는 바뀌지 않는다.</summary>
+    public PaletteColorTable Colors() => _colors;
+
+    /// <summary>파일 팔레트에서 계산한 밝음·어두움 색 번호 변환표.</summary>
+    public GumpShadeMaps ShadeMaps() => _shadeMaps;
 
     /// <summary>현재 논리 팔레트에서 날씨 RGB 네 색(바람·비·천둥·해)에 가장 가까운 번호를 찾는다. 팔레트 로더의 저장 별칭이 아니라 계산 도우미다.</summary>
     public uint[] WeatherTints()

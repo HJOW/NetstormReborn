@@ -177,7 +177,8 @@
 - [x] **R1-1 (2026-10-28 완료, 라이브러리 부분):** `Netstorm.Client` 프로젝트와 `Netstorm.Client.Tests`를 만들고 `Screen`(8비트 버퍼·팔레트·잠금·자르기)·`GamePalette`·`PaletteSearch`·`ScreenGeometry`·`ScreenPresentation`·`ScreenResolutions`·`ScreenPaletteApply`·`InputQueue`를 이식했다. 원본 fixture 3개(786·357·166행)가 L1로 일치하고 전체 1,384개 통과·경고 0. [문서](docs/dotnet-client-screen-20261028.md). 이 단위는 규칙의 이식이며 실제 화면 픽셀 비교가 아니다.
 - [x] **R1-2a (2026-10-28 완료):** MonoGame 출력 호스트(`Netstorm.Client.Host` 실행 + `Netstorm.Client/Host` 순수 부분): `IScreenOutput` 구현(변경 사각형만 RGBA 부분 업로드), 정수 최근접 확대·검정 여백, 전체화면 borderless 창과 F11 전환, 마우스 역변환·전체화면 커서 제한, 키·글자·버튼 → `InputQueue`, 프레임 루프 골격(`--frames`·`--ui-script`·`--ui-report`·`--set`). 기존 `NetstormGame`/`DisplayManager`는 동결하고 별도 진입으로 둔다(결정 5). [문서 6절](docs/dotnet-client-screen-20261028.md#6-r1-2a-monogame-출력-호스트-같은-날-hjow-athlon). **남은 것:** 그리기 내용·세션·소리(R2·R3·R4 이후), 라벨 클릭·report·kernel-tell(R3 이후).
 - [x] **R1-2b (2026-10-28 완료, 호스트 없이 가능한 부분):** `ScreenCapture`(cpppj와 byte 동일한 BMP)·`UiScript`/`UiScriptRunner`(esc·key·keyup·pointer·좌표/라벨 클릭·snapshot)·`dotnetpj/tools/cpp_frame_compare.py`(파일·폴더 비교, 종료 코드 0/1/2). 오라클 캡처(메인 메뉴 프레임 30)가 이 PC에서 결정적으로 만들어짐을 확인했다. [문서 5절](docs/dotnet-client-screen-20261028.md#5-r1-2-부분-캡처스크립트-도구와-오라클-확인-같은-날). **남은 것:** `--ui-script`/`--mission`/`--frames`/`--set` 실행 인자를 받는 dotnetpj 실행 진입과 그 안에서 두 도구를 부르는 프레임 루프는 R1-2a의 호스트가 있어야 하며, 라벨 클릭·report·kernel-tell 등은 R3 이후다.
-- [ ] 이후 R2 → R3(D1) → R4(M1) → R5(D2) → R6 → R7 → R8 순서로 진행하고, 단위마다 이 절의 체크와 [0.4](#04-기존-dotnetpj-소스의-재수정-판정) 판정표를 갱신한다.
+- [ ] **R2 — 그리기 원시·팔레트·글꼴 (진행 중: R2a 팔레트 완료):** `VFXDraw`·`VFXMappedDraw`·`VFXLine`·`VFXTransform`, `RawShapeToBuffer`, `SpriteDraw`, `*ColorMaps`, `Palette*`, `RawColorSort*`, `BitmapFont`, `GifImage`, `RawImage`를 `Netstorm.Client/Display`로 옮긴다. 이때 `Screen.LoadPalette`의 색 표 계산(`BuildPaletteColorTable`·`BuildGumpShadeMaps`)을 연결한다(R2a에서 완료). 묶음마다 fixture 연결·C# 수정·`--ports-reflect`·단위 기록을 남긴다. R2a는 [0.23](#023-단위-기록--r2a-팔레트-3종과-loadpalette-연결-2026-10-28-hjow-athlon)에서 완료했다.
+- [ ] 이후 R3(D1) → R4(M1) → R5(D2) → R6 → R7 → R8 순서로 진행하고, 단위마다 이 절의 체크와 [0.4](#04-기존-dotnetpj-소스의-재수정-판정) 판정표를 갱신한다.
 
 ### 0.10 이번 문서 작업 기록
 
@@ -372,6 +373,25 @@
   `Screen.ToLogicalPoint`(비율 맞춤)와 호스트 정수 맞춤은 다른 사각형을 쓰므로 호스트는 자체 사각표로 마우스를 되돌린다.
 - **다음:** R2(그리기 원시·팔레트·글꼴). 다음 DN 커밋은 `git log`로 당일 마지막 번호를 확인해 이어 쓴다.
 
+### 0.23 단위 기록 — R2a 팔레트 3종과 LoadPalette 연결 (2026-10-28, HJOW-Athlon)
+
+- **착수 상태:** 사용자 요청 "dotnetpj 다음 작업 진행해 줘". 시작 HEAD는 `58622e15`(DN `20261028-49`)이며
+  dotnetpj 작업 트리는 깨끗했다(병렬 세션의 cpppj 변경은 건드리지 않았다). 게임·창 실행과 디컴파일은 하지 않았다.
+- **변경:** `Netstorm.Client/Display/`(신규 `PaletteColors`·`PaletteShade`·`PaletteFlash`),
+  `Screen.cs`(`LoadPalette` 판본 인자·색 표/명암 표 계산·`Colors()`/`ShadeMaps()`),
+  `Netstorm.Client.Tests/`(신규 `X86PaletteColorsTests`·`PaletteColorsTests`·`X86PaletteFlashTests`·`PaletteFlashTests`·`ShadeMapsTests`),
+  `Netstorm.Client.Tests.csproj`(fixture Link 2개), `cpp-fixture-manifest.tsv`(2개 등록),
+  `PORT_MAP.tsv`(105행: `L1` 6개 추가·`Screen.cs` base 갱신), `PORT_MAP.md`(수치),
+  `docs/dotnet-client-screen-20261028.md`(7절), 이 문서.
+  cpppj·원본·AGENTS.md는 바꾸지 않았다.
+- **검증:** Release 경고·오류 0, 전체 **1,451개(Assets 363 + Core 1022 + Client 66) 통과**.
+  `palettecolors` 24행·`paletteflash` 768행을 원본 기대값과 바이트·비트 단위로 대조해 통과했다.
+  검사 작성 중 실패 3건은 모두 테스트의 오류였고(부분 팔레트 +start 채우기·열 번호·리틀 엔디언 double), 소스 수정 없이 고쳤다.
+  명암 표는 대조 fixture가 없어 별도 Python 참조 구현의 세 무작위 팔레트(768값)와 회색 경우로 고정했다(L1 아님, R3에서 끝까지 대조).
+  밝음 제외 시작 229→230 변이에 참조 기대값 실패를 확인하고 원복했다.
+- **알아 둘 것:** `Screen.LoadPalette`는 판본 인자(`patch1078`, 기본 참)를 받는다. 일시 효과(SetPalette·번개)는 표를 바꾸지 않는다.
+- **다음:** R2b(그리기 원시 묶음). 다음 DN 커밋은 `git log`로 당일 마지막 번호를 확인해 이어 쓴다.
+
 ## 1. 지금까지의 완료 범위 — 이관 기록 색인
 
 단위별 상세는 [LEFT_JOBS.dotnetpj.old.md](LEFT_JOBS.dotnetpj.old.md)와 아래 문서에 있다. 마지막 판정 열은 0절 계획에서 그 결과를 어떻게 다루는지다([0.4](#04-기존-dotnetpj-소스의-재수정-판정)).
@@ -390,7 +410,7 @@
 | R0 (10-28) | cpppj 오라클 확정, 재대조 영향표, 포트 맵(`PORT_MAP.tsv`)·`cpp_sync.py --ports*` | [영향표](docs/dotnet-cpp-resync-20261028.md), [PORT_MAP.md](dotnetpj/PORT_MAP.md) | 유지. R0-4 완료(0.14~0.21) |
 | R1-1 (10-28) | `Netstorm.Client`: 8비트 `Screen`·팔레트·색 검색·화면 스크롤·전체화면 출력 계산·입력 큐 | [R1-1 문서](docs/dotnet-client-screen-20261028.md) | 새 경로(`port`) |
 
-마지막 전체 빌드·검사는 2026-10-28의 Release 경고·오류 0, 1,441개 통과(Assets 363 + Core 1022 + Client 56)다. Assets·Core는 기존 경로 기준이며 0절 새 경로의 진행도가 아니다. 새 경로의 진행도는 Client 검사와 0.5절의 단계 완료 기준으로 본다.
+마지막 전체 빌드·검사는 2026-10-28의 Release 경고·오류 0, 1,451개 통과(Assets 363 + Core 1022 + Client 66)다. Assets·Core는 기존 경로 기준이며 0절 새 경로의 진행도가 아니다. 새 경로의 진행도는 Client 검사와 0.5절의 단계 완료 기준으로 본다.
 
 ---
 

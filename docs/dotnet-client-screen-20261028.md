@@ -98,3 +98,21 @@ NetstormCpp.exe --run extracted\dotnet-oracle-data --window --no-audio --frames 
 실행 확인(HJOW-Athlon, 예외 시스템이라 별도 창 확인 없이 진행): `NetstormClientHost.dll --window --width 320 --height 200 --frames 5 --ui-script steps.tsv(3프레임 snapshot) --ui-report report.tsv` →
 종료 0, BMP 256,122바이트(= 122 + 320×200×4), 빈 보고서. 인자 오류·없는 스크립트는 종료 2.
 실행 중 찾은 결함 1건: 고정 시간 따라잡기로 Update가 몰리면 중간 프레임 snapshot이 건너뛰어졌다. `HostFrameDriver.EndFrame`이 밀린 프레임을 한 프레임씩 처리하도록 고치고 `FrameDriverDrainsSkippedFrames`로 고정했다.
+
+## 7. R2a: 팔레트 3종과 LoadPalette 연결 (같은 날, HJOW-Athlon)
+
+그리기 원시·팔레트·글꼴(R2)의 첫 묶음이다. R1에서 미룬 색 표 계산과 번개·날씨 일시 팔레트를 옮겼다.
+
+| 파일 | cpppj 근거 | 내용 |
+| --- | --- | --- |
+| `Display/PaletteColors.cs` | `PaletteColors.cpp/.h` (원본 004a4850) | 58개 검색 인자·기본 9색·날씨 별칭·호출 순서 색 표. CD판은 12~19번을 빼고 50개로 계산한다 |
+| `Display/PaletteShade.cs` | `PaletteShade.cpp/.h` (원본 0043c010) | 밝음(229~245 제외)·어두움 목표 색의 번호 변환표. double 비교·float 최솟값 저장을 유지한다 |
+| `Display/PaletteFlash.cs` | `PaletteFlash.cpp/.h` (원본 00470d40~00471820) | 번개 팔레트 프로세스. Init(읽기 2회·밝히기/목표 채우기)→Frame(시간 경과분 1씩 복구)→Cancel(저장 복구). 창 모드에서는 화면을 바꾸지 않는다 |
+| `Display/Screen.cs` | `Screen.cpp` | `LoadPalette`에 판본 인자를 받고 파일 로더에서만 색 표·명암 표를 다시 계산한다. 일시 효과(SetPalette·번개)는 표를 바꾸지 않는다 |
+
+- `PORT_MAP.tsv`에 `L1` 6개 행을 새로 추가하고 `Screen.cs` 행의 base를 올렸다. fixture 2개(`palettecolors` 24행·`paletteflash` 768행)를 연결했다.
+- 명암 표는 대조 fixture가 없어 L1이 아니다. 기대값은 같은 알고리즘의 별도 Python 참조 구현으로 계산한 세 무작위 팔레트(768값)와 회색 자명 경우로 고정했다. Gump 그리기 L1(R3)에서 끝까지 대조한다.
+
+**검증:** Release 경고·오류 0. Client 검사 66개(+10) 통과, 전체 **1,451개(Assets 363 + Core 1022 + Client 66) 통과**.
+검사 작성 중 실패 3건은 모두 테스트의 오류였다(부분 팔레트 +start 채우기 누락·열 번호 밀림·리틀 엔디언 double 해석). hex는 리틀 엔디언 바이트 덤프이며 선행 0 바이트 위치가 낮은 자리다.
+변이 1건(밝음 제외 시작 229→230)에 참조 기대값 실패를 확인하고 원복했다.

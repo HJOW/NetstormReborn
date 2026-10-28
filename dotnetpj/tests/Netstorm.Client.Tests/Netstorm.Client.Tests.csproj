@@ -19,6 +19,8 @@
   <ItemGroup>
     <!-- 원본 exe 없이 cpppj와 동일한 기계어 결과를 검사한다. 링크로 공유해 사본이 어긋나지 않게 한다. -->
     <None Include="../../../cpppj/tests/fixtures/palettecolor-x86.tsv" Link="X86/palettecolor-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/palettecolors-x86.tsv" Link="X86/palettecolors-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/paletteflash-x86.tsv" Link="X86/paletteflash-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/screen-scroll-x86.tsv" Link="X86/screen-scroll-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/screen-palette-clear-x86.tsv" Link="X86/screen-palette-clear-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <Compile Include="../Shared/X86Fixture.cs" Link="Shared/X86Fixture.cs" />
