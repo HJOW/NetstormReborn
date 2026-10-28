@@ -1,0 +1,1132 @@
+{
+  "unit": 549,
+  "date": "2026-10-29",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23",
+    "outputsChanged": false
+  },
+  "baseProductCommit": "559cf9ac",
+  "gameProductSourceChanged": false,
+  "initialFullCTest": {
+    "wrapperExit": 8,
+    "wrapperFailed": 1,
+    "seconds": 910.84,
+    "cppTests": 3389,
+    "failedChecks": 580,
+    "failedTests": [
+      "CampaignCarrierChoice_ActualListsBfsHomeAndCurrentAi",
+      "CampaignSession_GeneratorBodyShadowAndPicking",
+      "CampaignSession_ThunderCannonBodyNative37Frames",
+      "CampaignSession_GolemNative64WalkingFrames",
+      "CampaignSession_GeyserBodyNative51Frames",
+      "CampaignCombatDraw_BodiesAndSixFlyingShadows",
+      "CampaignForwardBattle_NaturalTempleAssault"
+    ],
+    "testSha256": "e4291442d6709518a3dabddebfbbcee0b08c4a9f91669135e796fca9c67ddd94"
+  },
+  "finalFocused": {
+    "rows": [
+      {
+        "filter": "CampaignCarrierChoice_ActualListsBfsHomeAndCurrentAi",
+        "exit": 0,
+        "tests": 1,
+        "failed": 0
+      },
+      {
+        "filter": "CampaignSession_GeneratorBodyShadowAndPicking",
+        "exit": 0,
+        "tests": 1,
+        "failed": 0
+      },
+      {
+        "filter": "CampaignSession_ThunderCannonBodyNative37Frames",
+        "exit": 0,
+        "tests": 1,
+        "failed": 0
+      },
+      {
+        "filter": "CampaignSession_GolemNative64WalkingFrames",
+        "exit": 0,
+        "tests": 1,
+        "failed": 0
+      },
+      {
+        "filter": "CampaignSession_GeyserBodyNative51Frames",
+        "exit": 0,
+        "tests": 1,
+        "failed": 0
+      },
+      {
+        "filter": "CampaignCombatDraw_BodiesAndSixFlyingShadows",
+        "exit": 0,
+        "tests": 1,
+        "failed": 0
+      },
+      {
+        "filter": "GifScreenshot",
+        "exit": 0,
+        "tests": 5,
+        "failed": 0
+      },
+      {
+        "filter": "ViewKeyInput",
+        "exit": 0,
+        "tests": 2,
+        "failed": 0
+      },
+      {
+        "filter": "F8KeyInput",
+        "exit": 0,
+        "tests": 2,
+        "failed": 0
+      },
+      {
+        "filter": "BannerOption",
+        "exit": 0,
+        "tests": 1,
+        "failed": 0
+      },
+      {
+        "filter": "BannerKey",
+        "exit": 0,
+        "tests": 1,
+        "failed": 0
+      },
+      {
+        "filter": "OwnerColorTableState",
+        "exit": 0,
+        "tests": 1,
+        "failed": 0
+      },
+      {
+        "filter": "BackgroundGif",
+        "exit": 0,
+        "tests": 8,
+        "failed": 0
+      },
+      {
+        "filter": "ScreenPresentation",
+        "exit": 0,
+        "tests": 5,
+        "failed": 0
+      },
+      {
+        "filter": "ScreenMode",
+        "exit": 0,
+        "tests": 1,
+        "failed": 0
+      }
+    ],
+    "uniqueTests": 32,
+    "registered": 3389,
+    "testSha256": "1c8b22800240d43ee851fbd8759987b397efed6ac1b86d94d86ee7525a11eb06"
+  },
+  "entries": {
+    "paths": 34,
+    "minimumSecondsAdvanced": 6.656,
+    "gameSha256": "f271c2df0586ee6c2a9df08cc13c3078084656e54ebb74b581f9d5960aea72b5",
+    "dataFilesUnchanged": 1394,
+    "originalsUnchanged": true,
+    "rows": [
+      {
+        "group": "normal",
+        "mission": "Tutorial1",
+        "secondsAdvanced": 6.982,
+        "finalTime": [
+          "7.549",
+          "8.267"
+        ],
+        "guide": [
+          "1",
+          "4",
+          "0",
+          "0.418",
+          "0"
+        ],
+        "session": [
+          "1",
+          "1"
+        ],
+        "screenMode": [
+          "139",
+          "1024",
+          "768",
+          "1024",
+          "1"
+        ],
+        "exit": 0
+      },
+      {
+        "group": "normal",
+        "mission": "Tutorial2",
+        "secondsAdvanced": 6.656,
+        "finalTime": [
+          "7.258",
+          "8.559"
+        ],
+        "guide": [
+          "1",
+          "4",
+          "0",
+          "0.434",
+          "0"
+        ],
+        "session": [
+          "1",
+          "1"
+        ],
+        "screenMode": [
+          "139",
+          "1024",
+          "768",
+          "1024",
+          "1"
+        ],
+        "exit": 0
+      },
+      {
+        "group": "normal",
+        "mission": "Tutorial3",
+        "secondsAdvanced": 10.078,
+        "finalTime": [
+          "10.825",
+          "12.2"
+        ],
+        "guide": [
+          "1",
+          "4",
+          "0",
+          "0.43",
+          "0"
+        ],
+        "session": [
+          "1",
+          "1"
+        ],
+        "screenMode": [
+          "139",
+          "1024",
+          "768",
+          "1024",
+          "1"
+        ],
+        "exit": 0
+      },
+      {
+        "group": "normal",
+        "mission": "Tutorial4",
+        "secondsAdvanced": 10.225000000000001,
+        "finalTime": [
+          "11.101",
+          "12.606"
+        ],
+        "guide": [
+          "1",
+          "4",
+          "0",
+          "0.386",
+          "0"
+        ],
+        "session": [
+          "1",
+          "1"
+        ],
+        "screenMode": [
+          "139",
+          "1024",
+          "768",
+          "1024",
+          "1"
+        ],
+        "exit": 0
+      },
+      {
+        "group": "normal",
+        "mission": "Tutorial5",
+        "secondsAdvanced": 12.213999999999999,
+        "finalTime": [
+          "13.107",
+          "14.562"
+        ],
+        "guide": [
+          "1",
+          "4",
+          "0",
+          "0.421",
+          "0"
+        ],
+        "session": [
+          "1",
+          "1"
+        ],
+        "screenMode": [
+          "139",
+          "1024",
+          "768",
+          "1024",
+          "1"
+        ],
+        "exit": 0
+      },
+      {
+        "group": "normal",
+        "mission": "Tutorial6",
+        "secondsAdvanced": 9.86,
+        "finalTime": [
+          "10.687",
+          "13.281"
+        ],
+        "guide": [
+          "1",
+          "4",
+          "0",
+          "0.437",
+          "0"
+        ],
+        "session": [
+          "1",
+          "1"
+        ],
+        "screenMode": [
+          "139",
+          "1024",
+          "768",
+          "1024",
+          "1"
+        ],
+        "exit": 0
+      },
+      {
+        "group": "normal",
+        "mission": "bc1menu76",
+        "secondsAdvanced": 8.104000000000001,
+        "finalTime": [
+          "8.852",
+          "9.383"
+        ],
+        "guide": [
+          "1",
+          "4",
+          "0",
+          "0.415",
+          "0"
+        ],
+        "session": [
+          "1",
+          "1"
+        ],
+        "screenMode": [
+          "139",
+          "1024",
+          "768",
+          "1024",
+          "1"
+        ],
+        "exit": 0
+      },
+      {
+        "group": "normal",
+        "mission": "bc2bridging76",
+        "secondsAdvanced": 17.157,
+        "finalTime": [
+          "17.746",
+          "18.762"
+        ],
+        "guide": [
+          "1",
+          "4",
+          "0",
+          "0.402",
+          "0"
+        ],
+        "session": [
+          "1",
+          "1"
+        ],
+        "screenMode": [
+          "139",
+          "1024",
+          "768",
+          "1024",
+          "1"
+        ],
+        "exit": 0
+      },
+      {
+        "group": "normal",
+        "mission": "bc3acid_bar76",
+        "secondsAdvanced": 13.786000000000001,
+        "finalTime": [
+          "19.385",
+          "20.921"
+        ],
+        "guide": [
+          "1",
+          "4",
+          "0",
+          "0.39",
+          "0"
+        ],
+        "session": [
+          "1",
+          "1"
+        ],
+        "screenMode": [
+          "139",
+          "1024",
+          "768",
+          "1024",
+          "1"
+        ],
+        "exit": 0
+      },
+      {
+        "group": "normal",
+        "mission": "bc4bow_rush76",
+        "secondsAdvanced": 17.032,
+        "finalTime": [
+          "19.043",
+          "19.839"
+        ],
+        "guide": [
+          "1",
+          "4",
+          "0",
+          "0.426",
+          "0"
+        ],
+        "session": [
+          "1",
+          "1"
+        ],
+        "screenMode": [
+          "139",
+          "1024",
+          "768",
+          "1024",
+          "1"
+        ],
+        "exit": 0
+      },
+      {
+        "group": "normal",
+        "mission": "bc5walkers76",
+        "secondsAdvanced": 11.904,
+        "finalTime": [
+          "14.072",
+          "14.718"
+        ],
+        "guide": [
+          "1",
+          "4",
+          "0",
+          "0.403",
+          "0"
+        ],
+        "session": [
+          "1",
+          "1"
+        ],
+        "screenMode": [
+          "139",
+          "1024",
+          "768",
+          "1024",
+          "1"
+        ],
+        "exit": 0
+      },
+      {
+        "group": "normal",
+        "mission": "bc6mows76",
+        "secondsAdvanced": 26.793999999999997,
+        "finalTime": [
+          "39.065",
+          "40.612"
+        ],
+        "guide": [
+          "1",
+          "4",
+          "0",
+          "0.401",
+          "0"
+        ],
+        "session": [
+          "1",
+          "1"
+        ],
+        "screenMode": [
+          "139",
+          "1024",
+          "768",
+          "1024",
+          "1"
+        ],
+        "exit": 0
+      },
+      {
+        "group": "normal",
+        "mission": "bc7sun_bars76",
+        "secondsAdvanced": 31.139,
+        "finalTime": [
+          "31.749",
+          "33.14"
+        ],
+        "guide": [
+          "1",
+          "4",
+          "0",
+          "0.386",
+          "0"
+        ],
+        "session": [
+          "1",
+          "1"
+        ],
+        "screenMode": [
+          "139",
+          "1024",
+          "768",
+          "1024",
+          "1"
+        ],
+        "exit": 0
+      },
+      {
+        "group": "normal",
+        "mission": "bc8fury76",
+        "secondsAdvanced": 24.265,
+        "finalTime": [
+          "31.083",
+          "33.644"
+        ],
+        "guide": [
+          "1",
+          "4",
+          "0",
+          "0.441",
+          "0"
+        ],
+        "session": [
+          "1",
+          "1"
+        ],
+        "screenMode": [
+          "139",
+          "1024",
+          "768",
+          "1024",
+          "1"
+        ],
+        "exit": 0
+      },
+      {
+        "group": "normal",
+        "mission": "bc9ssun_bars76",
+        "secondsAdvanced": 16.796,
+        "finalTime": [
+          "24.671",
+          "25.842"
+        ],
+        "guide": [
+          "1",
+          "4",
+          "0",
+          "0.39",
+          "0"
+        ],
+        "session": [
+          "1",
+          "1"
+        ],
+        "screenMode": [
+          "139",
+          "1024",
+          "768",
+          "1024",
+          "1"
+        ],
+        "exit": 0
+      },
+      {
+        "group": "normal",
+        "mission": "TheWarBegins",
+        "secondsAdvanced": 10.626,
+        "finalTime": [
+          "11.918",
+          "12.615"
+        ],
+        "guide": [
+          "1",
+          "4",
+          "0",
+          "0.427",
+          "0"
+        ],
+        "session": [
+          "1",
+          "1"
+        ],
+        "screenMode": [
+          "139",
+          "1024",
+          "768",
+          "1024",
+          "1"
+        ],
+        "exit": 0
+      },
+      {
+        "group": "normal",
+        "mission": "MasterOfWhirligigs",
+        "secondsAdvanced": 10.341,
+        "finalTime": [
+          "11.328",
+          "11.984"
+        ],
+        "guide": [
+          "1",
+          "4",
+          "0",
+          "0.391",
+          "0"
+        ],
+        "session": [
+          "1",
+          "1"
+        ],
+        "screenMode": [
+          "139",
+          "1024",
+          "768",
+          "1024",
+          "1"
+        ],
+        "exit": 0
+      },
+      {
+        "group": "normal",
+        "mission": "SaveTheIsland",
+        "secondsAdvanced": 14.032,
+        "finalTime": [
+          "17.248",
+          "18.047"
+        ],
+        "guide": [
+          "1",
+          "4",
+          "0",
+          "0.406",
+          "0"
+        ],
+        "session": [
+          "1",
+          "1"
+        ],
+        "screenMode": [
+          "139",
+          "1024",
+          "768",
+          "1024",
+          "1"
+        ],
+        "exit": 0
+      },
+      {
+        "group": "normal",
+        "mission": "FragileFortune",
+        "secondsAdvanced": 13.905999999999999,
+        "finalTime": [
+          "17.988",
+          "18.816"
+        ],
+        "guide": [
+          "1",
+          "4",
+          "0",
+          "0.379",
+          "0"
+        ],
+        "session": [
+          "1",
+          "1"
+        ],
+        "screenMode": [
+          "139",
+          "1024",
+          "768",
+          "1024",
+          "1"
+        ],
+        "exit": 0
+      },
+      {
+        "group": "normal",
+        "mission": "ThunderingPower",
+        "secondsAdvanced": 14.299000000000001,
+        "finalTime": [
+          "16.082",
+          "17.516"
+        ],
+        "guide": [
+          "1",
+          "4",
+          "0",
+          "0.421",
+          "0"
+        ],
+        "session": [
+          "1",
+          "1"
+        ],
+        "screenMode": [
+          "139",
+          "1024",
+          "768",
+          "1024",
+          "1"
+        ],
+        "exit": 0
+      },
+      {
+        "group": "normal",
+        "mission": "DissolvedAlliance",
+        "secondsAdvanced": 19.797,
+        "finalTime": [
+          "23.857",
+          "25.748"
+        ],
+        "guide": [
+          "1",
+          "4",
+          "0",
+          "0.435",
+          "360.435"
+        ],
+        "session": [
+          "1",
+          "1"
+        ],
+        "screenMode": [
+          "139",
+          "1024",
+          "768",
+          "1024",
+          "1"
+        ],
+        "exit": 0
+      },
+      {
+        "group": "normal",
+        "mission": "TheNoose",
+        "secondsAdvanced": 13.204999999999998,
+        "finalTime": [
+          "19.839",
+          "21.495"
+        ],
+        "guide": [
+          "1",
+          "4",
+          "0",
+          "0.432",
+          "0"
+        ],
+        "session": [
+          "1",
+          "1"
+        ],
+        "screenMode": [
+          "139",
+          "1024",
+          "768",
+          "1024",
+          "1"
+        ],
+        "exit": 0
+      },
+      {
+        "group": "normal",
+        "mission": "RainVsRain",
+        "secondsAdvanced": 11.214,
+        "finalTime": [
+          "12.666",
+          "13.398"
+        ],
+        "guide": [
+          "1",
+          "4",
+          "0",
+          "0.429",
+          "0"
+        ],
+        "session": [
+          "1",
+          "1"
+        ],
+        "screenMode": [
+          "139",
+          "1024",
+          "768",
+          "1024",
+          "1"
+        ],
+        "exit": 0
+      },
+      {
+        "group": "normal",
+        "mission": "RunForIt",
+        "secondsAdvanced": 11.057,
+        "finalTime": [
+          "12.698",
+          "14.016"
+        ],
+        "guide": [
+          "1",
+          "4",
+          "0",
+          "0.421",
+          "0"
+        ],
+        "session": [
+          "1",
+          "1"
+        ],
+        "screenMode": [
+          "139",
+          "1024",
+          "768",
+          "1024",
+          "1"
+        ],
+        "exit": 0
+      },
+      {
+        "group": "normal",
+        "mission": "GuardMyBack",
+        "secondsAdvanced": 16.625,
+        "finalTime": [
+          "20.412",
+          "21.406"
+        ],
+        "guide": [
+          "1",
+          "4",
+          "0",
+          "0.437",
+          "360.437"
+        ],
+        "session": [
+          "1",
+          "1"
+        ],
+        "screenMode": [
+          "139",
+          "1024",
+          "768",
+          "1024",
+          "1"
+        ],
+        "exit": 0
+      },
+      {
+        "group": "normal",
+        "mission": "Surrounded",
+        "secondsAdvanced": 25.208,
+        "finalTime": [
+          "31.723",
+          "33.186"
+        ],
+        "guide": [
+          "1",
+          "4",
+          "0",
+          "0.39",
+          "0"
+        ],
+        "session": [
+          "1",
+          "1"
+        ],
+        "screenMode": [
+          "139",
+          "1024",
+          "768",
+          "1024",
+          "1"
+        ],
+        "exit": 0
+      },
+      {
+        "group": "normal",
+        "mission": "BreakingThrough",
+        "secondsAdvanced": 13.703999999999999,
+        "finalTime": [
+          "17.912",
+          "19.466"
+        ],
+        "guide": [
+          "1",
+          "4",
+          "0",
+          "0.384",
+          "0"
+        ],
+        "session": [
+          "1",
+          "1"
+        ],
+        "screenMode": [
+          "139",
+          "1024",
+          "768",
+          "1024",
+          "1"
+        ],
+        "exit": 0
+      },
+      {
+        "group": "normal",
+        "mission": "ToTheRescue",
+        "secondsAdvanced": 16.94,
+        "finalTime": [
+          "24.157",
+          "26.14"
+        ],
+        "guide": [
+          "1",
+          "4",
+          "0",
+          "0.481",
+          "0"
+        ],
+        "session": [
+          "1",
+          "1"
+        ],
+        "screenMode": [
+          "139",
+          "1024",
+          "768",
+          "1024",
+          "1"
+        ],
+        "exit": 0
+      },
+      {
+        "group": "normal",
+        "mission": "Vicious",
+        "secondsAdvanced": 10.395999999999999,
+        "finalTime": [
+          "12.168",
+          "13.371"
+        ],
+        "guide": [
+          "1",
+          "4",
+          "0",
+          "0.414",
+          "0"
+        ],
+        "session": [
+          "1",
+          "1"
+        ],
+        "screenMode": [
+          "139",
+          "1024",
+          "768",
+          "1024",
+          "1"
+        ],
+        "exit": 0
+      },
+      {
+        "group": "normal",
+        "mission": "EnemyTerritory",
+        "secondsAdvanced": 26.014999999999997,
+        "finalTime": [
+          "36.285",
+          "37.598"
+        ],
+        "guide": [
+          "1",
+          "4",
+          "0",
+          "0.41",
+          "0"
+        ],
+        "session": [
+          "1",
+          "1"
+        ],
+        "screenMode": [
+          "139",
+          "1024",
+          "768",
+          "1024",
+          "1"
+        ],
+        "exit": 0
+      },
+      {
+        "group": "normal",
+        "mission": "FinalConfrontation",
+        "secondsAdvanced": 21.281000000000002,
+        "finalTime": [
+          "31.359",
+          "32.53"
+        ],
+        "guide": [
+          "1",
+          "4",
+          "0",
+          "0.458",
+          "0"
+        ],
+        "session": [
+          "1",
+          "1"
+        ],
+        "screenMode": [
+          "139",
+          "1024",
+          "768",
+          "1024",
+          "1"
+        ],
+        "exit": 0
+      },
+      {
+        "group": "demos",
+        "mission": "DemoStormRages",
+        "secondsAdvanced": 24.858999999999998,
+        "finalTime": [
+          "26.796",
+          "42.437"
+        ],
+        "guide": [
+          "1",
+          "4",
+          "1",
+          "1.281",
+          "361.281"
+        ],
+        "session": [
+          "1",
+          "1"
+        ],
+        "screenMode": [
+          "139",
+          "1024",
+          "768",
+          "1024",
+          "1"
+        ],
+        "exit": 0
+      },
+      {
+        "group": "demos",
+        "mission": "GuardMyBack",
+        "secondsAdvanced": 26.5,
+        "finalTime": [
+          "31.248",
+          "46.7"
+        ],
+        "guide": [
+          "1",
+          "4",
+          "1",
+          "1.403",
+          "361.403"
+        ],
+        "session": [
+          "1",
+          "1"
+        ],
+        "screenMode": [
+          "139",
+          "1024",
+          "768",
+          "1024",
+          "1"
+        ],
+        "exit": 0
+      },
+      {
+        "group": "demos",
+        "mission": "DissolvedAlliance",
+        "secondsAdvanced": 42.704,
+        "finalTime": [
+          "47.85",
+          "48.11"
+        ],
+        "guide": [
+          "1",
+          "4",
+          "1",
+          "1.249",
+          "361.249"
+        ],
+        "session": [
+          "1",
+          "1"
+        ],
+        "screenMode": [
+          "139",
+          "1024",
+          "768",
+          "1024",
+          "1"
+        ],
+        "exit": 0
+      }
+    ],
+    "originalGameRuns": 0,
+    "naturalClears": 0,
+    "newMultiplayerTests": 0
+  },
+  "captureDeviceInputs": [
+    {
+      "harness": "thunderCannon",
+      "address": "00594fbc",
+      "value": 0,
+      "nativeFrameExecuted": false
+    },
+    {
+      "harness": "geyser",
+      "address": "00594fbc",
+      "value": 0,
+      "nativeFrameExecuted": false
+    },
+    {
+      "harness": "sunAviary",
+      "address": "00594fbc",
+      "value": 0,
+      "nativeFrameExecuted": false
+    }
+  ],
+  "sourceCount": 2950,
+  "changedSource": [
+    "cpppj/tests/CampaignSessionTests.cpp"
+  ],
+  "existingFixtureFilesPreserved": 710,
+  "originalAndCdFilesUnchanged": 1819,
+  "agentsUnchanged": true,
+  "gameSha256": "f271c2df0586ee6c2a9df08cc13c3078084656e54ebb74b581f9d5960aea72b5",
+  "testSha256": "1c8b22800240d43ee851fbd8759987b397efed6ac1b86d94d86ee7525a11eb06",
+  "finalFullSuiteRerun": false,
+  "remainingScenario": "CampaignForwardBattle_NaturalTempleAssault",
+  "remainingScenarioAssertionAndStrategyUnchanged": true,
+  "experimentalStrategyApplied": false,
+  "experimentalAttempt1Failed": true,
+  "experimentalAttempt2Executed": false,
+  "fullCppPassingClaim": false,
+  "originalGameRuns": 0,
+  "newMultiplayerTests": 0,
+  "userNaturalClearRuns": 0,
+  "freezeSha256": "0240fce980fa569087393ef43cdb981b25989cd5cc7308078c6cd16b49baf46b",
+  "finalExperimentalStrategyApplied": false,
+  "experimentalStrategyTemporarilyTested": true
+}

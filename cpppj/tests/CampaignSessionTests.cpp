@@ -221,8 +221,9 @@ TEST_CASE(CampaignCarrierChoice_ActualListsBfsHomeAndCurrentAi) {
     const Sid home{static_cast<std::uint16_t>(Get(session.PlayerRecords(),0xb4+0x7c))};CHECK(home.value);const auto chosen=session.CarrierChoice().ChooseReturn(golem);CHECK(chosen==home);CHECK(core.processes.FromForm(form)==initial && external.packets.size()==packets);
     const auto returning=session.CarrierTarget().GoHome(golem);CHECK(returning);if (!returning) return;auto* path=reinterpret_cast<RawPathProcess*>(returning);CHECK(path->Parent()==golem && path->MovementType()==40 && path->Runtime().Count()>0);CHECK(external.packets.size()==packets+1);
     const auto selected=session.CarrierChoice().ChooseGeyser(golem);CHECK(selected.value && core.pool.Slot(selected)[10]==122);CHECK(core.processes.FromForm(path->Form())==path && external.packets.size()==packets+1);
-    const auto beforeFailure=external.packets.size();CHECK(!session.CarrierTarget().GoGeyser(golem,selected));
-    RawContainedLookup lookup(core.pool,[](Sid,std::uint32_t) { throw std::logic_error("후보 검사 조회에서 삭제 금지"); });CHECK(!lookup.Find(golem,40).value && external.packets.size()==beforeFailure); // 초기 지도의 끊긴 접근은 원본처럼 기존40을 지우고 새 경로를 만들지 않는다.
+    const auto beforeGeyser=external.packets.size();const auto geyserPath=session.CarrierTarget().GoGeyser(golem,selected);CHECK(geyserPath); //536의 원문 적재 Graph 활성화 뒤 첫 간헐천도 실제 연결 경로를 가진다.
+    RawContainedLookup lookup(core.pool,[](Sid,std::uint32_t) { throw std::logic_error("후보 검사 조회에서 삭제 금지"); });const auto geyserForm=lookup.Find(golem,40);CHECK(geyserForm.value && external.packets.size()==beforeGeyser+1);
+    if (geyserPath) { const auto* process=reinterpret_cast<const RawPathProcess*>(geyserPath);CHECK(process->Parent()==golem && process->MovementType()==40 && process->Runtime().Count()>0 && process->Form()==geyserForm); } // 기존 경로 교체·실제40/Form·패킷을 함께 검증한다.
     const auto rectangle=core.neighbors.Footprint(selected);const auto collector=session.World().Create(133,2);session.World().Pop(collector,rectangle.right,rectangle.bottom,0);core.owner.Set(collector,1); // 간헐천 섬의 모서리를 초기 위치로 사용한다. 결과 경로는 실제 BFS가 계산한다.
     const auto mining=session.CarrierTarget().GoGeyser(collector,selected);
     if (!mining) {
@@ -964,6 +965,17 @@ TEST_CASE(CampaignSession_ActualWarBeginsGameWorld) { CheckSessionWorld("thewarb
 TEST_CASE(CampaignSession_ActualMasterGameWorld) { CheckSessionWorld("masterofwhirligigs"); }
 
 // 세 제네레이터의 원본 기준점과 본체/그림자 및 클릭 영역을 실제 GameWorld에서 확인한다.
+namespace { // 픽셀 선택 입력은 제품 선택기의 반환값과 독립적으로 만든다.
+ScreenPoint IndependentOpaquePickPoint(const IndexedImage& image,ScreenPoint origin,ScreenRect clip) { // 원본 SHP의 가장 왼쪽 불투명 잉크에서 화면 안 입력점을 선택한다.
+    for (std::size_t x=0;x<image.width;++x) { // 왼쪽부터 방문해 기존 잘못된8픽셀 보정도 검출한다.
+        for (std::size_t y=0;y<image.height;++y) { // 같은 열의 실제 RLE 잉크만 검사한다.
+            const auto index=y*image.width+x;const ScreenPoint point{origin.x+static_cast<int>(x),origin.y+static_cast<int>(y)}; // 원본 이미지와 기준점으로만 계산한 입력이다.
+            if (image.opacity[index] && image.indices[index]!=255 && point.x>=clip.left && point.x<clip.right && point.y>=clip.top && point.y<clip.bottom) return point;
+        }
+    }
+    throw std::logic_error("독립 SHP 픽셀 선택 입력의 화면 안 불투명 잉크 없음");
+}
+}
 TEST_CASE(CampaignSession_GeneratorBodyShadowAndPicking) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);
     std::array<std::uint32_t,256> logical{}; // 실제 파일 팔레트로 원본 그림자 색표를 준비한다.
@@ -995,7 +1007,8 @@ TEST_CASE(CampaignSession_GeneratorBodyShadowAndPicking) {
                 CHECK(actual==expected);CHECK(std::any_of(actual.begin(),actual.end(),[](auto value) { return value!=199; }));
             }
             const auto& shape=assets.game.Shapes().Blocks()[number-70].frames[0];
-            CHECK(world.Pick({point.x-8+shape.rect.left+1,std::max(28,point.y-4+(shape.rect.top+shape.rect.bottom)/2)})==sid.value);
+            const auto image=assets.game.Shapes().Decode(number-70,0);const auto ink=IndependentOpaquePickPoint(image,{point.x-8+shape.rect.left,point.y-4+shape.rect.top},{0,28,1024,768});CHECK(world.Pick(ink)==0); //522의 원문 첫 관문은 정지 중 선택을 거부한다.524의 픽셀 입력은 원본 잉크만 사용한다.
+            world.paused=[] { return false; };CHECK(world.Pick(ink)==sid.value);world.paused=[] { return true; }; // 표시 프레임을 진행시키지 않고 선택 관문만 원래 비정지 입력으로 바꾼다.
             auto raw=core.pool.AllocatedBytes(sid);raw[40]|=4; // 선택 괄호와 HP/자원 조회가 추가된 실제 일반 Draw 경로도 실행한다.
             Renderer selected(1024,768);selected.SetScene(pair);std::vector<std::uint8_t> selectedPixels(1024*768,199);selected.Draw(selectedPixels,1024,199);
             CHECK(std::any_of(selectedPixels.begin(),selectedPixels.end(),[](auto value) { return value!=199; }));raw[40]&=static_cast<std::uint8_t>(~4U);
@@ -1009,7 +1022,7 @@ TEST_CASE(CampaignSession_ThunderCannonBodyNative37Frames) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;
     auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());auto services=external.Services();services.install.resetCamera={};
     GameWorld world(assets.game,assets.files,std::move(fort),MissionPlayers{},"thewarbegins",std::move(services),{1024,768});world.Resize(1024,768);
-    const auto core=world.Session().Core();const Sid target{15002};auto raw=core.pool.AllocatedBytes(target);CHECK(raw[10]==124);
+    const auto core=world.Session().Core();core.ownerMode.battle=false;const Sid target{15002};auto raw=core.pool.AllocatedBytes(target);CHECK(raw[10]==124); // 동결 캡처의 외부 전투 배너 전역594fbc=0과 같은 표시 입력이다. 실제 캠페인의 기본값은 바꾸지 않는다.
     raw[10]=131;Put(raw,0,0x50bad0U);raw[34]=1;raw[40]=2; // 같은 표시 슬롯에 명시한 원본 썬더 캐논 상태이며 자연 건설/전투 입력으로 세지 않는다.
     const float x=std::bit_cast<float>(Get(raw,14)),y=std::bit_cast<float>(Get(raw,18));
     world.frameTime=[] { return FrameTime{0,1,0,1}; };world.paused=[] { return true; };
@@ -1084,8 +1097,9 @@ TEST_CASE(CampaignSession_GolemNative64WalkingFrames) {
     CHECK(cases==128 && pixels>50000 && mismatches==0);std::cout<<"골렘64보행프레임/두 카메라 원본 대조 픽셀="<<pixels<<" 차이="<<mismatches<<'\n';
     Put(raw,36,5);world.frameTime=[] { return FrameTime{0,1,0,1}; };world.paused=[] { return true; };world.RunFrame();const auto* object=world.Object(sid.value);CHECK(object);if (!object) return;
     const auto point=world.ToScreen(object->x,object->y);const auto& rect=assets.game.Shapes().Blocks()[133-70].frames[object->frame].rect;
-    const ScreenPoint leftEdge{point.x-8+rect.left,point.y-2+(rect.top+rect.bottom)/2}; // 수정 전8픽셀 오른쪽 클릭 영역의 여유4픽셀 밖에 있는 실제 본체 왼쪽 끝이다.
-    const auto picked=world.Pick(leftEdge);if (picked!=sid.value) std::cout<<"골렘 클릭 대상="<<sid.value<<" 실제="<<picked<<" 화면="<<point.x<<','<<point.y<<" 왼쪽="<<leftEdge.x<<','<<leftEdge.y<<" frame="<<object->frame<<" selectable="<<object->selectable<<" TYPE="<<object->type<<" VT="<<Get(raw,0)<<'\n';
+    const auto image=assets.game.Shapes().Decode(133-70,5);CHECK(object->frame==5);const auto leftEdge=IndependentOpaquePickPoint(image,{point.x-8+rect.left,point.y-2+rect.top},{0,28,1024,768}); // 원문 SHP 왼쪽 잉크를 사용하고 투명 사각형 경계는 선택하지 않는다.
+    CHECK(world.Pick(leftEdge)==0);world.paused=[] { return false; };const auto picked=world.Pick(leftEdge);world.paused=[] { return true; }; // 같은 고정 표시의 정지 거부/비정지 픽셀 선택을 각각 확인한다.
+    if (picked!=sid.value) std::cout<<"골렘 클릭 대상="<<sid.value<<" 실제="<<picked<<" 화면="<<point.x<<','<<point.y<<" 왼쪽="<<leftEdge.x<<','<<leftEdge.y<<" frame="<<object->frame<<" selectable="<<object->selectable<<" TYPE="<<object->type<<" VT="<<Get(raw,0)<<'\n';
     CHECK(picked==sid.value);
 }
 
@@ -1094,7 +1108,7 @@ TEST_CASE(CampaignSession_GeyserBodyNative51Frames) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;
     auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());auto services=external.Services();services.install.resetCamera={};
     GameWorld world(assets.game,assets.files,std::move(fort),MissionPlayers{},"thewarbegins",std::move(services),{1024,768});world.Resize(1024,768);
-    const auto core=world.Session().Core();auto raw=core.pool.AllocatedBytes(Sid{15002});CHECK(raw[10]==124);raw[10]=122;Put(raw,0,0x50da88U);raw[34]=1;raw[40]=2; // 기존 표시 슬롯에 주는 명시 입력이며 자연 채집/건설 관측이 아니다.
+    const auto core=world.Session().Core();core.ownerMode.battle=false;auto raw=core.pool.AllocatedBytes(Sid{15002});CHECK(raw[10]==124);raw[10]=122;Put(raw,0,0x50da88U);raw[34]=1;raw[40]=2; // 동결 원문 캡처의594fbc=0을 명시한 표시 입력이며 자연 채집/건설 관측이 아니다.
     const float x=std::bit_cast<float>(Get(raw,14)),y=std::bit_cast<float>(Get(raw,18));std::size_t cases{},pixels{};
     const auto path=(std::filesystem::path(__FILE__).parent_path()/"fixtures/geyser-capture-x86.tsv").string();
     // 원본 alive 추가 그림/owner1의51행을 선택하고 기대값은 새로 계산하지 않는다.
@@ -3101,7 +3115,7 @@ TEST_CASE(CampaignTempleDraw_Native264BodyPixels) {
 TEST_CASE(CampaignCombatDraw_BodiesAndSixFlyingShadows) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external; // 동일한 실제 자산/장치 경계다.
     auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"TheWarBegins",external.Services());session.Load();auto core=session.Core();const Sid object{15002}; // 기존 슬롯을 표시 입력으로만 바꾼다.
-    RawCampaignFactoryDisplay display(core,assets.game);std::array<ScreenColor,256> palette{};std::array<std::uint32_t,256> logical{}; // 파일 팔레트와 원본 그림자 치환 표 입력이다.
+    core.ownerMode.battle=false;RawCampaignFactoryDisplay display(core,assets.game);std::array<ScreenColor,256> palette{};std::array<std::uint32_t,256> logical{}; // 기존 동결 캡처의594fbc=0과 파일 팔레트/원본 그림자 치환 입력이다. 배너 양성은546의 별도 원문/실제 관측으로 검증한다.
     // 장치 BGR과 원본 R/G/B DWORD를 같은 팔레트에서 만든다.
     for (std::size_t i=0;i<palette.size();++i) { const auto color=assets.game.Palette().Color(static_cast<std::uint8_t>(i));palette[i]={color.blue,color.green,color.red,0};logical[i]=std::uint32_t(color.red)|(std::uint32_t(color.green)<<8)|(std::uint32_t(color.blue)<<16); }
     display.SetPalette(palette);const auto colors=BuildSpriteColorMaps(logical);std::size_t compared{},cases{}; // 전체 배경 대신 실제 원본의 불투명 픽셀을 비교한다.
