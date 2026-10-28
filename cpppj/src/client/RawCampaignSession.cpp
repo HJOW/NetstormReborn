@@ -781,6 +781,22 @@ struct RawCampaignSession::Impl {
     std::array<std::uint32_t,9> playerDirections{16448,4,0,6,2,7,3,5,1}; // 실제0053181c의 Player0까지 보존한 초기9DWORD다.
     std::unique_ptr<RawCampaignConstructionBindings> construction; // 같은 실제 HP/SP/장부/Player/지도에 첫 객체 전 설치한다.
 
+    // 보상0044c2f0의 가상80은 다이스의 현재 프레임 기반 Count도 읽는다. 기본 레벨 바이트로 대신하면 제단 회수 환불이0이 된다.
+    std::int32_t RewardCount(Sid sid) const {
+        if (!sid.value || sid.value>=core.pool.Capacity()) throw std::out_of_range("보상 SID 범위 오류");
+        const auto raw=core.pool.Slot(sid); // 같은 Pool의 현재 TYPE·가상 표·상태만 읽고 보상 계산 시각을 바꾸지 않는다.
+        if (raw[10]>=core.types.size()) throw std::out_of_range("보상 타입 번호 범위 오류");
+        const auto table=Read(raw,0); // 원본의 두 파생 가상80만 선택하며 나머지는 기존 base004ad0f0을 유지한다.
+        if (table==0x5076b8U) {
+            if (!altarSacrifice) throw std::logic_error("제단 보상의 실제 가상80 설치 전 호출");
+            return std::bit_cast<std::int32_t>(altarSacrifice->Count(sid));
+        }
+        if (table==0x507950U) {
+            if (!templeRitual) throw std::logic_error("다이스 보상의 실제 가상80 설치 전 호출");
+            return std::bit_cast<std::int32_t>(templeRitual->Count(sid));
+        }
+        return static_cast<std::int32_t>(raw[11]>>5);
+    }
     // 보호 자료를 읽기 전용으로 사용하며 모든 필수 후처리를 첫 생성 전에 등록한다.
     Impl(const GameAssets& game,const BaseFileSystem& files,FortTemplate fort,std::string mission,RawCampaignSessionServices input):
         gameplayGlobals(SessionGameplayGlobals(input)),gameplayUse(input.adoptPreparedWorld ? gameplayGlobals->AcquirePrepared() : gameplayGlobals->Acquire()),
@@ -789,7 +805,7 @@ struct RawCampaignSession::Impl {
         services(std::move(input)),missionFortName(mission),templateStorage(services.templateStorage ? services.templateStorage : std::make_shared<CampaignTemplateStorage>()),headers(templateStorage->Headers()),assets(game,files),metadata(assets.game),
         world(OriginalEdition::Patch1078,assets.types,assets.frames,metadata.shapes,CampaignLinks(),terrainType,services.processKernel,SessionSurfaceStorage(services,game),services.adoptPreparedWorld,&localStateGlobals->SavedGame(),gameplayGlobals->Authority(),gameplayGlobals->GameAux()),core(world.Core()),
         localSp(services.spGlobals ? nullptr : std::make_unique<ScrambledSpStore>(random,[this] { return seed.Reseed(); })),
-        sp(services.spGlobals ? services.spGlobals->Store() : *localSp),hp(core.pool,core.types,core.bookkeeping,rewardState,&sp,SquidRewardHooks{{},services.refreshSp}),
+        sp(services.spGlobals ? services.spGlobals->Store() : *localSp),hp(core.pool,core.types,core.bookkeeping,rewardState,&sp,SquidRewardHooks{[this](Sid sid) { return RewardCount(sid); },services.refreshSp}),
         battleOptions(services.missionOptions ? *services.missionOptions : localBattleOptions),
         aiMemory(0x20000000,[this](std::span<std::uint8_t> bytes) {
             if (!services.ai.allocationBytes) throw std::logic_error("실제 Session AI 할당 입력 바이트 미연결");services.ai.allocationBytes(bytes);

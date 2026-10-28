@@ -1,0 +1,746 @@
+{
+  "unit": 531,
+  "date": "2026-10-28",
+  "host": "HJOW-Athlon",
+  "headBeforeCommit": "2dadf3c3f1fe4bd473f08bd2e3ab6835a21407e8",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23",
+    "outputsModified": false
+  },
+  "product": {
+    "NetstormCpp.exe": "03a8915301e389260fac48a02b6340fce3fc45f67fc2d74382c5b161b345412d",
+    "netstorm_tests.exe": "933fd0f732f07d2d15642e15595b914d4cc9c5be8934052fd9e18744f6cfa02c"
+  },
+  "changedSource": [
+    "cpppj/src/client/RawCampaignSession.cpp"
+  ],
+  "defect": "사제로 실제 건설한 LevelI 제단 메뉴는125획득을 표시했으나 회수 후 SP가 증가하지 않았다. Session SquidReward의 virtualCount가 비어 다이스를 base 상태0으로 계산했다.",
+  "originalChain": [
+    "44c420 제단→448bb0 현재 다이스→54h 요청",
+    "4436f0 수신의44c2f0 보상→현재 가상80 재조회",
+    "다이스507950+80=4478f0의현재frame3 반환1",
+    "44b220/44c240 비용500·회수125·샘 풀375"
+  ],
+  "nativeReward": {
+    "raw": "extracted/cpp-altar-salvage-531/native-reward.json",
+    "sha256": "87ec8d25d603e4ce2c05a7257ab8022a6311f09a21859bcf109e9902d6b2f582",
+    "evidence": {
+      "binarySha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "controls": [
+        639,
+        895
+      ],
+      "uniqueInputs": 2,
+      "executions": 4,
+      "rows": [
+        {
+          "count": 0,
+          "input": {
+            "type": 165,
+            "t": [
+              1140457472,
+              0,
+              36,
+              4194304
+            ],
+            "silent": [
+              1132068864,
+              255,
+              2064,
+              16384
+            ],
+            "altar": [
+              1140457472,
+              1500,
+              16,
+              2147483648
+            ],
+            "state": 0,
+            "extra": 128,
+            "hp": 1500,
+            "recipient": 1,
+            "local": 1,
+            "salvage": 1,
+            "percent": 25,
+            "geyser": 0,
+            "flags": 0,
+            "ai_mask": 0,
+            "wallets": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "sp": [
+              1223943552,
+              1223943552,
+              1223943552,
+              1223943552,
+              1223943552,
+              1223943552,
+              1223943552,
+              1223943552,
+              1223943552
+            ],
+            "seed": 1,
+            "fill": 0,
+            "script_mode": "stub",
+            "script": [
+              0,
+              0,
+              0
+            ]
+          },
+          "result": {
+            "geyser": 0,
+            "wallets": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "sp": [
+              1223943552,
+              1223943552,
+              1223943552,
+              1223943552,
+              1223943552,
+              1223943552,
+              1223943552,
+              1223943552,
+              1223943552
+            ],
+            "init": [
+              2038225542,
+              2877076986
+            ],
+            "ui": 0,
+            "vcalls": 1,
+            "leftover": 2,
+            "asserts": 0,
+            "rng": 2038225542,
+            "offset": 1,
+            "pools": 2877076986
+          }
+        },
+        {
+          "count": 1,
+          "input": {
+            "type": 165,
+            "t": [
+              1140457472,
+              0,
+              36,
+              4194304
+            ],
+            "silent": [
+              1132068864,
+              255,
+              2064,
+              16384
+            ],
+            "altar": [
+              1140457472,
+              1500,
+              16,
+              2147483648
+            ],
+            "state": 0,
+            "extra": 128,
+            "hp": 1500,
+            "recipient": 1,
+            "local": 1,
+            "salvage": 1,
+            "percent": 25,
+            "geyser": 0,
+            "flags": 0,
+            "ai_mask": 0,
+            "wallets": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "sp": [
+              1223943552,
+              1223943552,
+              1223943552,
+              1223943552,
+              1223943552,
+              1223943552,
+              1223943552,
+              1223943552,
+              1223943552
+            ],
+            "seed": 1,
+            "fill": 0,
+            "script_mode": "stub",
+            "script": [
+              1,
+              1,
+              1
+            ]
+          },
+          "result": {
+            "geyser": 375,
+            "wallets": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "sp": [
+              1223943552,
+              1223947552,
+              1223943552,
+              1223943552,
+              1223943552,
+              1223943552,
+              1223943552,
+              1223943552,
+              1223943552
+            ],
+            "init": [
+              2038225542,
+              2877076986
+            ],
+            "ui": 1,
+            "vcalls": 2,
+            "leftover": 1,
+            "asserts": 0,
+            "rng": 1365049926,
+            "offset": 1,
+            "pools": 3010774728
+          }
+        }
+      ],
+      "limit": "가상80은 명시 입력0/1로 대체한다. 실제4478f0의 반환1은 원본 현재 frame3 분기·기존 TempleRitual 근거로 별도 확인했다. 게임/OS/창 실행은 없다."
+    },
+    "spValues": [
+      499500.0,
+      499625.0
+    ],
+    "limit": "보상 원문 실행의 가상80은 명시0/1 입력이다. 실제 다이스 Count는 기존 원문4478f0/TempleRitual fixture와 분리해 확인했다."
+  },
+  "implementation": "보상 callback을 연결해 실제5076b8 제단/507950 다이스의 기존 Count를 호출한다. 나머지는 기존 base 상태 상위3비트를 유지하며 SID/TYPE·미설치 하위 진단도 유지한다. 각 호출은 현재 슬롯을 다시 읽는다.",
+  "finalGui": {
+    "results": [
+      {
+        "size": [
+          1280,
+          720
+        ],
+        "altarSid": 16119,
+        "daisSid": 16062,
+        "position": [
+          "151",
+          "181"
+        ],
+        "cost": 500,
+        "refund": 125,
+        "initialSp": 500000,
+        "finalSp": 499625,
+        "altarHp": 1500,
+        "menu": [
+          {
+            "token": 847,
+            "index": 0,
+            "flags": 66697,
+            "command": 33554525,
+            "parameter": 16119,
+            "visible": true,
+            "label": "Salvage gains 125"
+          },
+          {
+            "token": 847,
+            "index": 1,
+            "flags": 66689,
+            "command": 33554455,
+            "parameter": 164,
+            "visible": true,
+            "label": "About"
+          },
+          {
+            "token": 847,
+            "index": 2,
+            "flags": 66592,
+            "command": 0,
+            "parameter": 0,
+            "visible": true,
+            "label": "Player"
+          }
+        ],
+        "helpReturned": true,
+        "pairAndRunesRemoved": true,
+        "buildMenuEnabledAgain": true,
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+            "--run",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-altar-salvage-531\\final-fixed\\1280x720\\data",
+            "--mission",
+            "TEST02",
+            "--window",
+            "--mute-audio",
+            "--frames",
+            "780",
+            "--set",
+            "SCREENW=1280;SCREENH=720;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3",
+            "--ui-script",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-altar-salvage-531\\final-fixed\\1280x720\\run\\steps.tsv",
+            "--ui-report",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-altar-salvage-531\\final-fixed\\1280x720\\run\\states.tsv",
+            "--audio-report",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-altar-salvage-531\\final-fixed\\1280x720\\run\\audio.tsv"
+          ],
+          "binarySha256": "03a8915301e389260fac48a02b6340fce3fc45f67fc2d74382c5b161b345412d",
+          "scriptSha256": "6b445a3def9f18d474e9a5974c67373688d8fbb4938789d2d7359aa6a7c319f0",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 32.34008530000574,
+          "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderrSha256": "3b8a8f5c219c6b0053b121ef78bda051fa4086c8525228b499654d5c47ef7ed2",
+          "originalsUnchanged": true,
+          "dataUnchanged": true,
+          "dataRoot": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-altar-salvage-531\\final-fixed\\1280x720\\data"
+        }
+      },
+      {
+        "size": [
+          1024,
+          768
+        ],
+        "altarSid": 16117,
+        "daisSid": 16062,
+        "position": [
+          "151",
+          "181"
+        ],
+        "cost": 500,
+        "refund": 125,
+        "initialSp": 500000,
+        "finalSp": 499625,
+        "altarHp": 1500,
+        "menu": [
+          {
+            "token": 839,
+            "index": 0,
+            "flags": 66697,
+            "command": 33554525,
+            "parameter": 16117,
+            "visible": true,
+            "label": "Salvage gains 125"
+          },
+          {
+            "token": 839,
+            "index": 1,
+            "flags": 66689,
+            "command": 33554455,
+            "parameter": 164,
+            "visible": true,
+            "label": "About"
+          },
+          {
+            "token": 839,
+            "index": 2,
+            "flags": 66592,
+            "command": 0,
+            "parameter": 0,
+            "visible": true,
+            "label": "Player"
+          }
+        ],
+        "helpReturned": true,
+        "pairAndRunesRemoved": true,
+        "buildMenuEnabledAgain": true,
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+            "--run",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-altar-salvage-531\\final-fixed\\1024x768\\data",
+            "--mission",
+            "TEST02",
+            "--window",
+            "--mute-audio",
+            "--frames",
+            "780",
+            "--set",
+            "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3",
+            "--ui-script",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-altar-salvage-531\\final-fixed\\1024x768\\run\\steps.tsv",
+            "--ui-report",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-altar-salvage-531\\final-fixed\\1024x768\\run\\states.tsv",
+            "--audio-report",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-altar-salvage-531\\final-fixed\\1024x768\\run\\audio.tsv"
+          ],
+          "binarySha256": "03a8915301e389260fac48a02b6340fce3fc45f67fc2d74382c5b161b345412d",
+          "scriptSha256": "73bbfa8da933b7e4c7943dbcf07b8783ff79ff0c8c83999f36c78dfdea5513c0",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 30.09714209998492,
+          "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderrSha256": "3b8a8f5c219c6b0053b121ef78bda051fa4086c8525228b499654d5c47ef7ed2",
+          "originalsUnchanged": true,
+          "dataUnchanged": true,
+          "dataRoot": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-altar-salvage-531\\final-fixed\\1024x768\\data"
+        }
+      }
+    ],
+    "binarySha256": "03a8915301e389260fac48a02b6340fce3fc45f67fc2d74382c5b161b345412d",
+    "rawObjectMutation": false,
+    "attackFlyersNotTested": true
+  },
+  "existingAltarRegression": {
+    "size": [
+      1280,
+      720
+    ],
+    "selectedSid": 15017,
+    "target": [
+      "altar",
+      "2",
+      "-1",
+      "168",
+      "125",
+      "168",
+      "125",
+      "0",
+      "0",
+      "0",
+      "0",
+      "0",
+      "1500",
+      "0"
+    ],
+    "root": [
+      "627",
+      "15017",
+      "204",
+      "594"
+    ],
+    "headings": [
+      "Altar Level I",
+      "Enemy: Prince of Wind",
+      "Alignment: None",
+      "Class: Altar"
+    ],
+    "items": [
+      {
+        "token": 627,
+        "index": 0,
+        "flags": 66697,
+        "command": 33554455,
+        "parameter": 164,
+        "visible": true,
+        "label": "About"
+      },
+      {
+        "token": 627,
+        "index": 1,
+        "flags": 66592,
+        "command": 0,
+        "parameter": 0,
+        "visible": true,
+        "label": "Player"
+      }
+    ],
+    "helpReturned": true,
+    "run": {
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-object-owner-519\\final-altar\\1280x720\\data",
+        "--mission",
+        "breakingthrough",
+        "--window",
+        "--mute-audio",
+        "--frames",
+        "165",
+        "--set",
+        "SCREENW=1280;SCREENH=720;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-altar-salvage-531\\enemy-regression\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-altar-salvage-531\\enemy-regression\\states.tsv",
+        "--audio-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-altar-salvage-531\\enemy-regression\\audio.tsv"
+      ],
+      "binarySha256": "03a8915301e389260fac48a02b6340fce3fc45f67fc2d74382c5b161b345412d",
+      "scriptSha256": "f769bc70f10397bd7c5d7984bd5612af6e31308e6807fadd593633e0cea67e21",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 11.861491599993315,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2",
+      "originalsUnchanged": true,
+      "dataUnchanged": true,
+      "dataRoot": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-object-owner-519\\final-altar\\1280x720\\data"
+    },
+    "binarySha256": "03a8915301e389260fac48a02b6340fce3fc45f67fc2d74382c5b161b345412d"
+  },
+  "initialObservations": [
+    {
+      "path": "initial",
+      "run": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-altar-salvage-531\\initial\\data",
+          "--window",
+          "--no-audio",
+          "--frames",
+          "300",
+          "--set",
+          "SCREENW=1280;SCREENH=720;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-altar-salvage-531\\initial\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-altar-salvage-531\\initial\\states.tsv"
+        ],
+        "binarySha256": "fc743230a9e86013fb64a8436c06fabe89f348379e3b2d015a7032b76d8d5300",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 16.611836900003254,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "b1318b2bd10a52942fde7e542a1bf16e1aaec3e1f3637b48ca69eb754674ff60",
+        "dataUnchanged": true,
+        "originalsUnchanged": true
+      },
+      "note": "Edit 본체 소유자 변경은 dontSave 제단에만 적용돼 다이스 owner2로 재적재됐다. 자기 제단 회수 성공으로 세지 않는다."
+    },
+    {
+      "path": "construct/run",
+      "run": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-altar-salvage-531\\construct\\data",
+          "--mission",
+          "TEST02",
+          "--window",
+          "--mute-audio",
+          "--frames",
+          "55",
+          "--set",
+          "SCREENW=1280;SCREENH=720;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-altar-salvage-531\\construct\\run\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-altar-salvage-531\\construct\\run\\states.tsv",
+          "--audio-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-altar-salvage-531\\construct\\run\\audio.tsv"
+        ],
+        "binarySha256": "fc743230a9e86013fb64a8436c06fabe89f348379e3b2d015a7032b76d8d5300",
+        "scriptSha256": "2107ab15484551078f8f6b4fefd64e0a720433b9198dc2dfa9a2bd549f526c0a",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 4.047632800007705,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "77b6613c9b128828df9acb70d4dd94f84a1f8e769c15b8907d0f4c3e032f7592",
+        "originalsUnchanged": true,
+        "dataUnchanged": true,
+        "dataRoot": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-altar-salvage-531\\construct\\data"
+      },
+      "note": "원래 TEST02의 실제 사제 건설 메뉴와500비용을 확인했다."
+    },
+    {
+      "path": "build-first",
+      "run": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-altar-salvage-531\\construct\\data",
+          "--mission",
+          "TEST02",
+          "--window",
+          "--mute-audio",
+          "--frames",
+          "630",
+          "--set",
+          "SCREENW=1280;SCREENH=720;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-altar-salvage-531\\build-first\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-altar-salvage-531\\build-first\\states.tsv",
+          "--audio-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-altar-salvage-531\\build-first\\audio.tsv"
+        ],
+        "binarySha256": "fc743230a9e86013fb64a8436c06fabe89f348379e3b2d015a7032b76d8d5300",
+        "scriptSha256": "175559f7812ca82dda11a0ae02b74c06b2fb8cb40e9e2d2f9974fa57d59bc197",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 23.96943579998333,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "8d172029f73752562b6ae28f3c9b16b81cca69174c3ad415a7a5c0536fbe8fad",
+        "originalsUnchanged": true,
+        "dataUnchanged": true,
+        "dataRoot": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-altar-salvage-531\\construct\\data"
+      },
+      "note": "원래 사제로 제단 건설·자기 소유 메뉴125를 확인했으며 회수는 클릭하지 않았다."
+    },
+    {
+      "path": "final-first/1280x720/run",
+      "run": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-altar-salvage-531\\final-first\\1280x720\\data",
+          "--mission",
+          "TEST02",
+          "--window",
+          "--mute-audio",
+          "--frames",
+          "780",
+          "--set",
+          "SCREENW=1280;SCREENH=720;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-altar-salvage-531\\final-first\\1280x720\\run\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-altar-salvage-531\\final-first\\1280x720\\run\\states.tsv",
+          "--audio-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-altar-salvage-531\\final-first\\1280x720\\run\\audio.tsv"
+        ],
+        "binarySha256": "fc743230a9e86013fb64a8436c06fabe89f348379e3b2d015a7032b76d8d5300",
+        "scriptSha256": "7ade418d054cd1cd0240214364ce7cada930c32df881af0659020b4e89834956",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 29.92746380000608,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "3b8a8f5c219c6b0053b121ef78bda051fa4086c8525228b499654d5c47ef7ed2",
+        "originalsUnchanged": true,
+        "dataUnchanged": true,
+        "dataRoot": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-altar-salvage-531\\final-first\\1280x720\\data"
+      },
+      "note": "실제 회수로 제단/다이스는 삭제됐으나 SP499500에 머물러 환불125 검사가 실패했다. 제품 오류 관측으로 보존한다."
+    }
+  ],
+  "gameCounts": {
+    "total": 7,
+    "exitZero": 7,
+    "exitOne": 0,
+    "finalAccepted": 3,
+    "initialNotCountedAsFinal": 4
+  },
+  "focused": {
+    "rows": [
+      {
+        "filter": "reward_",
+        "count": 9,
+        "returnCode": 0,
+        "logSha256": "b74226b7552ec6720cacb596c7b85fff225bed018315f844f2468df88d403220"
+      },
+      {
+        "filter": "RewardSpBits_",
+        "count": 1,
+        "returnCode": 0,
+        "logSha256": "4d9684269a04250c9551d5d11adbab4b37c3689db7431924f10f23dac6fcd163"
+      },
+      {
+        "filter": "rawTempleRitual_",
+        "count": 2,
+        "returnCode": 0,
+        "logSha256": "23cb0451efd222be787e186a5cf69299a28c9aed8a38328125ac7db7c8ce3c38"
+      },
+      {
+        "filter": "rawAltarSacrifice_",
+        "count": 1,
+        "returnCode": 0,
+        "logSha256": "3182e1a70ced824bc48f7ffd6894e7deca3860b76fbb025a481a42ac6221e1b5"
+      },
+      {
+        "filter": "rawDaisLifecycle_",
+        "count": 2,
+        "returnCode": 0,
+        "logSha256": "97c1cb01fe458df50d6d2d7f6dacfc113b83c7d6c48e535efa5ea0e88a99414e"
+      },
+      {
+        "filter": "SalvageCommand_",
+        "count": 1,
+        "returnCode": 0,
+        "logSha256": "20af533676787b340fca00b8f5864be27756ed40d5bd49a52ba59eb1f1cc0ba8"
+      },
+      {
+        "filter": "ObjectMenuInfo_",
+        "count": 2,
+        "returnCode": 0,
+        "logSha256": "9b872302f19bfb329db503c9d61303e32b17bef72009aebd1385a7b68ac9ef52"
+      }
+    ],
+    "unique": 18,
+    "names": [
+      "reward_patch_x86_fixture",
+      "reward_cd_x86_fixture",
+      "reward_1037_x86_fixture",
+      "reward_game_random_matches_terrain_generator",
+      "reward_sp_store_roundtrip_and_guards",
+      "reward_rejects_bad_inputs_before_writing",
+      "reward_lifecycle_pays_recipient_and_updates_geyser_pool",
+      "reward_lifecycle_flags_gate_refund",
+      "reward_lifecycle_rejects_mismatched_or_bad_recipient",
+      "RewardSpBits_ReplaysNativeLocalAndOtherOwnerIncludingZero",
+      "rawTempleRitual_native_stage_positions_queries_and_effects",
+      "rawTempleRitual_real_frame_and_307_shared_consumer",
+      "rawAltarSacrifice_native_events_release_and_predestroy_prefix",
+      "rawDaisLifecycle_native_initial_pop_player_pairs_and_delete_prefix",
+      "rawDaisLifecycle_native_bound_player_records",
+      "SalvageCommand_NativeRequestSendReceive",
+      "ObjectMenuInfo_NativeWholeParentsAndStringHelpers",
+      "ObjectMenuInfo_SelectedBoundariesAndEditionContract"
+    ],
+    "failed": 0,
+    "registered": 3359,
+    "binarySha256": "933fd0f732f07d2d15642e15595b914d4cc9c5be8934052fd9e18744f6cfa02c"
+  },
+  "builds": [
+    {
+      "path": "extracted\\cpp-altar-salvage-531\\build.log",
+      "sha256": "780b78465d42358c4e8757b4970dfaa9713414685cafa2aecfdcdbafc974c2af",
+      "kind": "소스 적용의 줄바꿈 검사 실패 뒤 변경 없는 증분 빌드",
+      "warnings": 0,
+      "errors": 0
+    },
+    {
+      "path": "extracted\\cpp-altar-salvage-531\\build-fixed.log",
+      "sha256": "95d85b004bb1cf318da0ae54d74f4b6b15a66c2cdbc6cca2a68a2a8b8f8b84ca",
+      "kind": "실제 RewardCount 연결 후 재컴파일/링크",
+      "warnings": 0,
+      "errors": 0
+    }
+  ],
+  "preserved": {
+    "protectedFiles": 1819,
+    "originalAndCdUnchanged": true,
+    "agentsUnchanged": true,
+    "existingTestsAndFixturesUnchanged": true,
+    "otherCppSourceUnchanged": true
+  },
+  "raw": "extracted/cpp-altar-salvage-531",
+  "limits": [
+    "최종 실제 회수는 원본 TEST02의 LevelI/포로 없는 제단 두 화면비다. 다른 레벨·포획/희생 중 회수는 남는다.",
+    "기존 BreakingThrough 적 제단의 메뉴/Help/진입/종료도 같은 제품으로 확인했으나 자연 완주가 아니다.",
+    "전체 CTest/34경로와 공중3종 전용 실행·멀티플레이 시험은 하지 않았다.",
+    "스펠 도움말 그림 임시 제외·추가 분석 보류와 기존 사용자 보류/정적 제한을 유지한다.",
+    "동시에 진행 중인 dotnetpj/그 인계 문서의 작업 파일은 이 CP 커밋에 포함하지 않는다."
+  ]
+}
