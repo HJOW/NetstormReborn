@@ -1,0 +1,937 @@
+{
+  "unit": 538,
+  "date": "2026-10-28",
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "decompileOutputsModified": false,
+  "productCodeChanged": false,
+  "newBuild": false,
+  "productBuildUnit": 537,
+  "newCppTests": false,
+  "registeredTests": 3364,
+  "focus": {
+    "results": [
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "ObjectMenuOpen_"
+        ],
+        "binarySha256": "ee46a6f13c13cf518fe995eda6bba11f58490a8b7e459acfe3735fa7a63c69e8",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 0.5364760000084061,
+        "stdoutSha256": "2cb347d45def3a925736b0ce83525f40cbfd69333150ffc51bde401c16b372cc",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "ObjectMenuOpen_",
+        "names": [
+          "ObjectMenuOpen_EditionAndTypeContract",
+          "ObjectMenuOpen_LazyBoundariesAndNoSyntheticSuccess",
+          "ObjectMenuOpen_NativeWholeParentsAndCurrentReads"
+        ],
+        "tests": 3,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "PriestMenu_"
+        ],
+        "binarySha256": "ee46a6f13c13cf518fe995eda6bba11f58490a8b7e459acfe3735fa7a63c69e8",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 1.0334030000085477,
+        "stdoutSha256": "dd1e1a113a4181ce18d4a7d58e7c819aa8b81e7b4237bfbb1c9e036c9c83811b",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "PriestMenu_",
+        "names": [
+          "PriestMenu_NativeOpen329",
+          "PriestMenu_NativeSelect64",
+          "PriestMenu_NativeThemeAndFrame512",
+          "PriestMenu_SharedTechnologyAndSignedFrame"
+        ],
+        "tests": 4,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "ConstructionProcess_"
+        ],
+        "binarySha256": "ee46a6f13c13cf518fe995eda6bba11f58490a8b7e459acfe3735fa7a63c69e8",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 0.6406461999868043,
+        "stdoutSha256": "e4a3ab36c852c5fff3a1fa4c3c41a922b0b31d7c7720d57a8f7b1bdc974bac38",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "ConstructionProcess_",
+        "names": [
+          "ConstructionProcess_ActualHostQuickBuildAndNonBossKeepsProcess",
+          "ConstructionProcess_ActualHostRunsToCompletion",
+          "ConstructionProcess_ActualHostSkipsSecondKillAfterRemoval",
+          "ConstructionProcess_AllocationFailuresKeepOriginalEffects",
+          "ConstructionProcess_CompleteRequiresVoidBeforeClearingAbstract",
+          "ConstructionProcess_DeadParentAndForeignPoolAdapters",
+          "ConstructionProcess_DurationSelectsDefaultTimeAndSound",
+          "ConstructionProcess_NoticeAdapterStartsDefaultConstruction",
+          "ConstructionProcess_RejectsMissingHooksAndForeignHost",
+          "ConstructionProcess_ReplaysCd",
+          "ConstructionProcess_ReplaysExtra1037",
+          "ConstructionProcess_ReplaysOriginals",
+          "ConstructionProcess_SharedBossRecheckedDuringActualCompletion"
+        ],
+        "tests": 13,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "rawDaisLifecycle_"
+        ],
+        "binarySha256": "ee46a6f13c13cf518fe995eda6bba11f58490a8b7e459acfe3735fa7a63c69e8",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 3.6436518999980763,
+        "stdoutSha256": "97c1cb01fe458df50d6d2d7f6dacfc113b83c7d6c48e535efa5ea0e88a99414e",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "rawDaisLifecycle_",
+        "names": [
+          "rawDaisLifecycle_native_bound_player_records",
+          "rawDaisLifecycle_native_initial_pop_player_pairs_and_delete_prefix"
+        ],
+        "tests": 2,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "rawTempleRitual_"
+        ],
+        "binarySha256": "ee46a6f13c13cf518fe995eda6bba11f58490a8b7e459acfe3735fa7a63c69e8",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 4.836554299981799,
+        "stdoutSha256": "23cb0451efd222be787e186a5cf69299a28c9aed8a38328125ac7db7c8ce3c38",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "rawTempleRitual_",
+        "names": [
+          "rawTempleRitual_native_stage_positions_queries_and_effects",
+          "rawTempleRitual_real_frame_and_307_shared_consumer"
+        ],
+        "tests": 2,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "reward_"
+        ],
+        "binarySha256": "ee46a6f13c13cf518fe995eda6bba11f58490a8b7e459acfe3735fa7a63c69e8",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 6.269816300016828,
+        "stdoutSha256": "b74226b7552ec6720cacb596c7b85fff225bed018315f844f2468df88d403220",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "reward_",
+        "names": [
+          "reward_1037_x86_fixture",
+          "reward_cd_x86_fixture",
+          "reward_game_random_matches_terrain_generator",
+          "reward_lifecycle_flags_gate_refund",
+          "reward_lifecycle_pays_recipient_and_updates_geyser_pool",
+          "reward_lifecycle_rejects_mismatched_or_bad_recipient",
+          "reward_patch_x86_fixture",
+          "reward_rejects_bad_inputs_before_writing",
+          "reward_sp_store_roundtrip_and_guards"
+        ],
+        "tests": 9,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "GameAux_Reward"
+        ],
+        "binarySha256": "ee46a6f13c13cf518fe995eda6bba11f58490a8b7e459acfe3735fa7a63c69e8",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 0.5668062999902759,
+        "stdoutSha256": "0444c9ecdbffbc89b6be1554f3e77be7dc8c685bde5eaa1320ce20387303c6ce",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "GameAux_Reward",
+        "names": [
+          "GameAux_RewardPriestMaximumUsesCurrentQuarterHp",
+          "GameAux_RewardUsesCurrentPercentAndResourceAfterSpEffect"
+        ],
+        "tests": 2,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "SalvageCommand_"
+        ],
+        "binarySha256": "ee46a6f13c13cf518fe995eda6bba11f58490a8b7e459acfe3735fa7a63c69e8",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 0.6298778000054881,
+        "stdoutSha256": "20af533676787b340fca00b8f5864be27756ed40d5bd49a52ba59eb1f1cc0ba8",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "SalvageCommand_",
+        "names": [
+          "SalvageCommand_NativeRequestSendReceive"
+        ],
+        "tests": 1,
+        "failed": 0
+      }
+    ],
+    "names": [
+      "ConstructionProcess_ActualHostQuickBuildAndNonBossKeepsProcess",
+      "ConstructionProcess_ActualHostRunsToCompletion",
+      "ConstructionProcess_ActualHostSkipsSecondKillAfterRemoval",
+      "ConstructionProcess_AllocationFailuresKeepOriginalEffects",
+      "ConstructionProcess_CompleteRequiresVoidBeforeClearingAbstract",
+      "ConstructionProcess_DeadParentAndForeignPoolAdapters",
+      "ConstructionProcess_DurationSelectsDefaultTimeAndSound",
+      "ConstructionProcess_NoticeAdapterStartsDefaultConstruction",
+      "ConstructionProcess_RejectsMissingHooksAndForeignHost",
+      "ConstructionProcess_ReplaysCd",
+      "ConstructionProcess_ReplaysExtra1037",
+      "ConstructionProcess_ReplaysOriginals",
+      "ConstructionProcess_SharedBossRecheckedDuringActualCompletion",
+      "GameAux_RewardPriestMaximumUsesCurrentQuarterHp",
+      "GameAux_RewardUsesCurrentPercentAndResourceAfterSpEffect",
+      "ObjectMenuOpen_EditionAndTypeContract",
+      "ObjectMenuOpen_LazyBoundariesAndNoSyntheticSuccess",
+      "ObjectMenuOpen_NativeWholeParentsAndCurrentReads",
+      "PriestMenu_NativeOpen329",
+      "PriestMenu_NativeSelect64",
+      "PriestMenu_NativeThemeAndFrame512",
+      "PriestMenu_SharedTechnologyAndSignedFrame",
+      "SalvageCommand_NativeRequestSendReceive",
+      "rawDaisLifecycle_native_bound_player_records",
+      "rawDaisLifecycle_native_initial_pop_player_pairs_and_delete_prefix",
+      "rawTempleRitual_native_stage_positions_queries_and_effects",
+      "rawTempleRitual_real_frame_and_307_shared_consumer",
+      "reward_1037_x86_fixture",
+      "reward_cd_x86_fixture",
+      "reward_game_random_matches_terrain_generator",
+      "reward_lifecycle_flags_gate_refund",
+      "reward_lifecycle_pays_recipient_and_updates_geyser_pool",
+      "reward_lifecycle_rejects_mismatched_or_bad_recipient",
+      "reward_patch_x86_fixture",
+      "reward_rejects_bad_inputs_before_writing",
+      "reward_sp_store_roundtrip_and_guards"
+    ],
+    "unique": 36,
+    "failed": 0,
+    "binarySha256": "ee46a6f13c13cf518fe995eda6bba11f58490a8b7e459acfe3735fa7a63c69e8"
+  },
+  "accepted": {
+    "results": [
+      {
+        "size": [
+          1280,
+          720
+        ],
+        "altarSid": 16124,
+        "daisSid": 16071,
+        "position": [
+          "151",
+          "181"
+        ],
+        "cost": 500,
+        "refund": 125,
+        "initialSp": 500000,
+        "finalSp": 499625,
+        "altarHp": 1500,
+        "menu": [
+          {
+            "token": 821,
+            "index": 0,
+            "flags": 66697,
+            "command": 33554525,
+            "parameter": 16124,
+            "visible": true,
+            "label": "Salvage gains 125"
+          },
+          {
+            "token": 821,
+            "index": 1,
+            "flags": 66689,
+            "command": 33554455,
+            "parameter": 164,
+            "visible": true,
+            "label": "About"
+          },
+          {
+            "token": 821,
+            "index": 2,
+            "flags": 66592,
+            "command": 0,
+            "parameter": 0,
+            "visible": true,
+            "label": "Player"
+          }
+        ],
+        "helpReturned": true,
+        "pairAndRunesRemoved": true,
+        "buildMenuEnabledAgain": true,
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+            "--run",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-altar-construction-538\\final\\1280x720\\data",
+            "--mission",
+            "TEST02",
+            "--window",
+            "--mute-audio",
+            "--frames",
+            "830",
+            "--set",
+            "SCREENW=1280;SCREENH=720;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3",
+            "--ui-script",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-altar-construction-538\\final\\1280x720\\run\\steps.tsv",
+            "--ui-report",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-altar-construction-538\\final\\1280x720\\run\\states.tsv",
+            "--audio-report",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-altar-construction-538\\final\\1280x720\\run\\audio.tsv"
+          ],
+          "binarySha256": "a2bfb516df23d8facee10d085f817b41699fb8b77af664800807200c5346d082",
+          "scriptSha256": "f10ea4ae7855aba7f9f387b9e76de0b6f2f9781ddfbc8709578c0d3a99d8e87c",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 45.60791829999653,
+          "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderrSha256": "60f1c033a9238e20480a18f1f1a51745418eb42945e908fd4417a52f60941eac",
+          "originalsUnchanged": true,
+          "dataUnchanged": true,
+          "dataRoot": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-altar-construction-538\\final\\1280x720\\data"
+        },
+        "constructionTransition": {
+          "daisSid": 16071,
+          "constructionMenuBlocked": true,
+          "idlePriestConstructAvailable": true,
+          "pendingAltarBuildBlocked": true,
+          "constructAvailableAfterCompletion": true,
+          "duplicateAltarBlocked": true,
+          "altarBuildEnabledAfterSalvage": true
+        }
+      },
+      {
+        "size": [
+          1024,
+          768
+        ],
+        "altarSid": 16121,
+        "daisSid": 16071,
+        "position": [
+          "151",
+          "181"
+        ],
+        "cost": 500,
+        "refund": 125,
+        "initialSp": 500000,
+        "finalSp": 499625,
+        "altarHp": 1500,
+        "menu": [
+          {
+            "token": 831,
+            "index": 0,
+            "flags": 66697,
+            "command": 33554525,
+            "parameter": 16121,
+            "visible": true,
+            "label": "Salvage gains 125"
+          },
+          {
+            "token": 831,
+            "index": 1,
+            "flags": 66689,
+            "command": 33554455,
+            "parameter": 164,
+            "visible": true,
+            "label": "About"
+          },
+          {
+            "token": 831,
+            "index": 2,
+            "flags": 66592,
+            "command": 0,
+            "parameter": 0,
+            "visible": true,
+            "label": "Player"
+          }
+        ],
+        "helpReturned": true,
+        "pairAndRunesRemoved": true,
+        "buildMenuEnabledAgain": true,
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+            "--run",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-altar-construction-538\\final\\1024x768\\data",
+            "--mission",
+            "TEST02",
+            "--window",
+            "--mute-audio",
+            "--frames",
+            "830",
+            "--set",
+            "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3",
+            "--ui-script",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-altar-construction-538\\final\\1024x768\\run\\steps.tsv",
+            "--ui-report",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-altar-construction-538\\final\\1024x768\\run\\states.tsv",
+            "--audio-report",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-altar-construction-538\\final\\1024x768\\run\\audio.tsv"
+          ],
+          "binarySha256": "a2bfb516df23d8facee10d085f817b41699fb8b77af664800807200c5346d082",
+          "scriptSha256": "d65b9a0ecd43115d79bb152f8c72705826c5c2cb63edac68829532d1df1eac26",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 44.56263130001025,
+          "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderrSha256": "60f1c033a9238e20480a18f1f1a51745418eb42945e908fd4417a52f60941eac",
+          "originalsUnchanged": true,
+          "dataUnchanged": true,
+          "dataRoot": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-altar-construction-538\\final\\1024x768\\data"
+        },
+        "constructionTransition": {
+          "daisSid": 16071,
+          "constructionMenuBlocked": true,
+          "idlePriestConstructAvailable": true,
+          "pendingAltarBuildBlocked": true,
+          "constructAvailableAfterCompletion": true,
+          "duplicateAltarBlocked": true,
+          "altarBuildEnabledAfterSalvage": true
+        }
+      }
+    ],
+    "binarySha256": "a2bfb516df23d8facee10d085f817b41699fb8b77af664800807200c5346d082",
+    "sourceToolSha256": "37841c60c3d330ac03f9a2745aa99346d6d641ad8040b37a16d4830b55519f35",
+    "rawObjectMutation": false,
+    "attackFlyersNotTested": true
+  },
+  "transitions": [
+    {
+      "size": [
+        1280,
+        720
+      ],
+      "states": [
+        {
+          "label": "placed",
+          "time": "16.889",
+          "sp": "499500",
+          "dais": [
+            [
+              "16071",
+              "0",
+              "129",
+              "5"
+            ]
+          ],
+          "menus": [
+            "0",
+            "0",
+            "0"
+          ],
+          "active": "1"
+        },
+        {
+          "label": "constructionDenied",
+          "time": "17.649",
+          "sp": "499500",
+          "dais": [
+            [
+              "16071",
+              "0",
+              "129",
+              "119"
+            ]
+          ],
+          "menus": [
+            "0",
+            "0",
+            "0"
+          ],
+          "active": "1"
+        },
+        {
+          "label": "priestBuilding",
+          "time": "18.522",
+          "sp": "499500",
+          "dais": [
+            [
+              "16071",
+              "0",
+              "129",
+              "250"
+            ]
+          ],
+          "menus": [
+            "5",
+            "0",
+            "5"
+          ],
+          "active": "1"
+        },
+        {
+          "label": "pendingBuildMenu",
+          "time": "18.861",
+          "sp": "499500",
+          "dais": [
+            [
+              "16071",
+              "0",
+              "129",
+              "301"
+            ]
+          ],
+          "menus": [
+            "5",
+            "0",
+            "5"
+          ],
+          "active": "1"
+        },
+        {
+          "label": "built",
+          "time": "34.415",
+          "sp": "499500",
+          "dais": [
+            [
+              "16071",
+              "0",
+              "128",
+              "1500"
+            ]
+          ],
+          "menus": [
+            "0",
+            "0",
+            "0"
+          ],
+          "active": "1"
+        },
+        {
+          "label": "duplicateMenu",
+          "time": "36.03",
+          "sp": "499500",
+          "dais": [
+            [
+              "16071",
+              "0",
+              "128",
+              "1500"
+            ]
+          ],
+          "menus": [
+            "5",
+            "0",
+            "5"
+          ],
+          "active": "1"
+        },
+        {
+          "label": "salvaged",
+          "time": "40.828",
+          "sp": "499625",
+          "dais": [],
+          "menus": [
+            "0",
+            "0",
+            "0"
+          ],
+          "active": "1"
+        },
+        {
+          "label": "rebuildMenu",
+          "time": "42.825",
+          "sp": "499625",
+          "dais": [],
+          "menus": [
+            "5",
+            "0",
+            "5"
+          ],
+          "active": "1"
+        },
+        {
+          "label": "closed",
+          "time": "43.705",
+          "sp": "499625",
+          "dais": [],
+          "menus": [
+            "0",
+            "0",
+            "0"
+          ],
+          "active": "1"
+        }
+      ]
+    },
+    {
+      "size": [
+        1024,
+        768
+      ],
+      "states": [
+        {
+          "label": "placed",
+          "time": "16.546",
+          "sp": "499500",
+          "dais": [
+            [
+              "16071",
+              "0",
+              "129",
+              "0"
+            ]
+          ],
+          "menus": [
+            "0",
+            "0",
+            "0"
+          ],
+          "active": "1"
+        },
+        {
+          "label": "constructionDenied",
+          "time": "17.306",
+          "sp": "499500",
+          "dais": [
+            [
+              "16071",
+              "0",
+              "129",
+              "93"
+            ]
+          ],
+          "menus": [
+            "0",
+            "0",
+            "0"
+          ],
+          "active": "1"
+        },
+        {
+          "label": "priestBuilding",
+          "time": "18.137",
+          "sp": "499500",
+          "dais": [
+            [
+              "16071",
+              "0",
+              "129",
+              "218"
+            ]
+          ],
+          "menus": [
+            "5",
+            "0",
+            "5"
+          ],
+          "active": "1"
+        },
+        {
+          "label": "pendingBuildMenu",
+          "time": "18.487",
+          "sp": "499500",
+          "dais": [
+            [
+              "16071",
+              "0",
+              "129",
+              "270"
+            ]
+          ],
+          "menus": [
+            "5",
+            "0",
+            "5"
+          ],
+          "active": "1"
+        },
+        {
+          "label": "built",
+          "time": "33.783",
+          "sp": "499500",
+          "dais": [
+            [
+              "16071",
+              "0",
+              "128",
+              "1500"
+            ]
+          ],
+          "menus": [
+            "0",
+            "0",
+            "0"
+          ],
+          "active": "1"
+        },
+        {
+          "label": "duplicateMenu",
+          "time": "35.296",
+          "sp": "499500",
+          "dais": [
+            [
+              "16071",
+              "0",
+              "128",
+              "1500"
+            ]
+          ],
+          "menus": [
+            "5",
+            "0",
+            "5"
+          ],
+          "active": "1"
+        },
+        {
+          "label": "salvaged",
+          "time": "40.086",
+          "sp": "499625",
+          "dais": [],
+          "menus": [
+            "0",
+            "0",
+            "0"
+          ],
+          "active": "1"
+        },
+        {
+          "label": "rebuildMenu",
+          "time": "41.958",
+          "sp": "499625",
+          "dais": [],
+          "menus": [
+            "5",
+            "0",
+            "5"
+          ],
+          "active": "1"
+        },
+        {
+          "label": "closed",
+          "time": "42.849",
+          "sp": "499625",
+          "dais": [],
+          "menus": [
+            "0",
+            "0",
+            "0"
+          ],
+          "active": "1"
+        }
+      ]
+    }
+  ],
+  "executions": [
+    {
+      "directory": "first/1280x720",
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-altar-construction-538\\first\\1280x720\\data",
+        "--mission",
+        "TEST02",
+        "--window",
+        "--mute-audio",
+        "--frames",
+        "830",
+        "--set",
+        "SCREENW=1280;SCREENH=720;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-altar-construction-538\\first\\1280x720\\run\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-altar-construction-538\\first\\1280x720\\run\\states.tsv",
+        "--audio-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-altar-construction-538\\first\\1280x720\\run\\audio.tsv"
+      ],
+      "binarySha256": "a2bfb516df23d8facee10d085f817b41699fb8b77af664800807200c5346d082",
+      "scriptSha256": "96e0e28a29c7b8c39c120b89162f612ef372e82726acce25e54d7b84eee77d23",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 45.71997619999456,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "60f1c033a9238e20480a18f1f1a51745418eb42945e908fd4417a52f60941eac",
+      "originalsUnchanged": true,
+      "dataUnchanged": true,
+      "dataRoot": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-altar-construction-538\\first\\1280x720\\data"
+    },
+    {
+      "directory": "final/1280x720",
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-altar-construction-538\\final\\1280x720\\data",
+        "--mission",
+        "TEST02",
+        "--window",
+        "--mute-audio",
+        "--frames",
+        "830",
+        "--set",
+        "SCREENW=1280;SCREENH=720;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-altar-construction-538\\final\\1280x720\\run\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-altar-construction-538\\final\\1280x720\\run\\states.tsv",
+        "--audio-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-altar-construction-538\\final\\1280x720\\run\\audio.tsv"
+      ],
+      "binarySha256": "a2bfb516df23d8facee10d085f817b41699fb8b77af664800807200c5346d082",
+      "scriptSha256": "f10ea4ae7855aba7f9f387b9e76de0b6f2f9781ddfbc8709578c0d3a99d8e87c",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 45.60791829999653,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "60f1c033a9238e20480a18f1f1a51745418eb42945e908fd4417a52f60941eac",
+      "originalsUnchanged": true,
+      "dataUnchanged": true,
+      "dataRoot": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-altar-construction-538\\final\\1280x720\\data"
+    },
+    {
+      "directory": "final/1024x768",
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-altar-construction-538\\final\\1024x768\\data",
+        "--mission",
+        "TEST02",
+        "--window",
+        "--mute-audio",
+        "--frames",
+        "830",
+        "--set",
+        "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-altar-construction-538\\final\\1024x768\\run\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-altar-construction-538\\final\\1024x768\\run\\states.tsv",
+        "--audio-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-altar-construction-538\\final\\1024x768\\run\\audio.tsv"
+      ],
+      "binarySha256": "a2bfb516df23d8facee10d085f817b41699fb8b77af664800807200c5346d082",
+      "scriptSha256": "d65b9a0ecd43115d79bb152f8c72705826c5c2cb63edac68829532d1df1eac26",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 44.56263130001025,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "60f1c033a9238e20480a18f1f1a51745418eb42945e908fd4417a52f60941eac",
+      "originalsUnchanged": true,
+      "dataUnchanged": true,
+      "dataRoot": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-altar-construction-538\\final\\1024x768\\data"
+    }
+  ],
+  "allGames": {
+    "count": 3,
+    "exit0": 3,
+    "exit1": 0
+  },
+  "acceptedGames": 2,
+  "originalLiveGames": 0,
+  "rawObjectMutation": false,
+  "evidence": {
+    "extracted/cpp-altar-construction-538/first/1280x720/construction-denied.bmp": "72237ca6566d303ba1f2e86a0ca88b07d5639b2a9a287a0c9fc0ef3c6d60b66c",
+    "extracted/cpp-altar-construction-538/first/1280x720/priest-building.bmp": "456a146f6db0fc37e1d0e69c3407828e73e2852d7ed29e529753dd0a667043f4",
+    "extracted/cpp-altar-construction-538/first/1280x720/duplicate.bmp": "a99adb8a24c3cddeaeadcdca0d412ef70272fa3b973a55eeb644e5d9fad8df87",
+    "extracted/cpp-altar-construction-538/first/1280x720/menu.bmp": "6c7af6d54888b06ab09222e5c2d989fef28bee3b6c87b33501d4531820c887c4",
+    "extracted/cpp-altar-construction-538/first/1280x720/help.bmp": "b19b0aa12265481f477852f6362b58e6c05a4c87d3900655d7e0188e13d99998",
+    "extracted/cpp-altar-construction-538/first/1280x720/salvaged.bmp": "7b858d646331c1e03fa0c4c558f17c866c17d93c3f64565195f43900a4009c4e",
+    "extracted/cpp-altar-construction-538/first/1280x720/rebuild.bmp": "3a3054374570742ce15a80dbd51c27aac17bd7778d2e2d60339cf6b49c39d91b",
+    "extracted/cpp-altar-construction-538/first/1280x720/run/steps.tsv": "96e0e28a29c7b8c39c120b89162f612ef372e82726acce25e54d7b84eee77d23",
+    "extracted/cpp-altar-construction-538/first/1280x720/run/originals-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-altar-construction-538/first/1280x720/run/data-before.json": "57573a0bc2539f9e70e1127a82d26698efe0c8a97bd91630ae4fab66981179a1",
+    "extracted/cpp-altar-construction-538/first/1280x720/run/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-altar-construction-538/first/1280x720/run/stderr.log": "60f1c033a9238e20480a18f1f1a51745418eb42945e908fd4417a52f60941eac",
+    "extracted/cpp-altar-construction-538/first/1280x720/run/running.json": "ac705143ff478efa5b78fa5d9932450473c4ae6afd8bb38a9f367748bf8d9d51",
+    "extracted/cpp-altar-construction-538/first/1280x720/run/states.tsv": "801f7e343f5292774f3308e268041971d99c69ef0d291d921fbea5d787ac361d",
+    "extracted/cpp-altar-construction-538/first/1280x720/run/audio.tsv": "ca0752ba9521f18d621a369c6b9d6f94c6048eb89d36ee2ecda4490595cd5434",
+    "extracted/cpp-altar-construction-538/first/1280x720/run/run.json": "4d2be55ab7ac4c0a55264744018fc0b0f4a89587097cf041f56eec6f8d97ef71",
+    "extracted/cpp-altar-construction-538/first/1280x720/run/settings-backup/options.cfg": "7c986d379a533456fb34d19f7937d1a028812c4560389d43cb663f1bd10cd7d4",
+    "extracted/cpp-altar-construction-538/first/1280x720/run/settings-backup/fullscreenStateFile.dat": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-altar-construction-538/final/1280x720/construction-denied.bmp": "16c0bd7abf72385ae5776225bca466d6b15c365642ba2766c151067c00bad21c",
+    "extracted/cpp-altar-construction-538/final/1280x720/priest-building.bmp": "153e0e3b5ed5005c8750a281d613774e56d49c1c1373c30f7604ca4bc1c6ad11",
+    "extracted/cpp-altar-construction-538/final/1280x720/pending-build.bmp": "f822b4405871796f20fca64a74949f5a468c7b150b02620322d3bd9d1fa486ee",
+    "extracted/cpp-altar-construction-538/final/1280x720/duplicate.bmp": "e2c0e6bae9a4143e246d041174a960e73910664b918954b8dc4c8304bb9bf620",
+    "extracted/cpp-altar-construction-538/final/1280x720/menu.bmp": "9c3eebe29eac7afb416df6c6db7aa3c9131e2c7d4194f49b399256611f8e3085",
+    "extracted/cpp-altar-construction-538/final/1280x720/help.bmp": "8adce5fdee0cd9fcf0f14ada0260a934052421372d50b95fbfd6672293cec9b2",
+    "extracted/cpp-altar-construction-538/final/1280x720/salvaged.bmp": "f837d385cadaf9d5ec28fb4de94fb75e996e7bde3965c3da02413d1f56bc464b",
+    "extracted/cpp-altar-construction-538/final/1280x720/rebuild.bmp": "3e11ed6a8c187733f89b4202355f8ccde016c9bd2a8ebcdee280c316f3f52992",
+    "extracted/cpp-altar-construction-538/final/1280x720/summary.json": "a270bfc8ba40310312ca2d830cfaed5ea5711c3b3fa5e25382e22d7966d748e0",
+    "extracted/cpp-altar-construction-538/final/1280x720/run/steps.tsv": "f10ea4ae7855aba7f9f387b9e76de0b6f2f9781ddfbc8709578c0d3a99d8e87c",
+    "extracted/cpp-altar-construction-538/final/1280x720/run/originals-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-altar-construction-538/final/1280x720/run/data-before.json": "57573a0bc2539f9e70e1127a82d26698efe0c8a97bd91630ae4fab66981179a1",
+    "extracted/cpp-altar-construction-538/final/1280x720/run/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-altar-construction-538/final/1280x720/run/stderr.log": "60f1c033a9238e20480a18f1f1a51745418eb42945e908fd4417a52f60941eac",
+    "extracted/cpp-altar-construction-538/final/1280x720/run/running.json": "c7a0b937f1e6b819a8f1ac1c7598e3227398b4682c8f88c3fb07d318d2d7ee1e",
+    "extracted/cpp-altar-construction-538/final/1280x720/run/states.tsv": "1d333da1678cc5e8245f80d252f58a56134df142c2543413158a965f8746591f",
+    "extracted/cpp-altar-construction-538/final/1280x720/run/audio.tsv": "ee7a89676a23b35d177b755935168c69016ef0dad421a0d9c3d74d479e277b89",
+    "extracted/cpp-altar-construction-538/final/1280x720/run/run.json": "314890c537ef57c738e6094c834b2474fb0ceb75d5d0a39d63e0e1b6d049c071",
+    "extracted/cpp-altar-construction-538/final/1280x720/run/settings-backup/options.cfg": "7c986d379a533456fb34d19f7937d1a028812c4560389d43cb663f1bd10cd7d4",
+    "extracted/cpp-altar-construction-538/final/1280x720/run/settings-backup/fullscreenStateFile.dat": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-altar-construction-538/final/1024x768/construction-denied.bmp": "d8fe31bb014bc05b37bdaab9ba35d44b6c689683248914fbd30cfef8568b6859",
+    "extracted/cpp-altar-construction-538/final/1024x768/priest-building.bmp": "a0cfce3a609900e4f7b6d7dd5f924ae88e210027a2dfafa1a35b0be833ba3f2e",
+    "extracted/cpp-altar-construction-538/final/1024x768/pending-build.bmp": "27ddbdec9bd35b436a83c32167030ede9f59052344fc90b2e3dbf6d6961ca2c8",
+    "extracted/cpp-altar-construction-538/final/1024x768/duplicate.bmp": "880c2fce03b9dfde59545828285b01c9240969382c7566e87ad294aab4908ce5",
+    "extracted/cpp-altar-construction-538/final/1024x768/menu.bmp": "9d73310aba81dc522cdbe9d787bc87eb366ef185e8377915f4c7a380c9437462",
+    "extracted/cpp-altar-construction-538/final/1024x768/help.bmp": "484b1fca2ab45e00902e7f3fdf352ea736081f8d27e3c1305378e6126a51522d",
+    "extracted/cpp-altar-construction-538/final/1024x768/salvaged.bmp": "9faa89531af60138b8c13811ce14641cf1854336139a7d5420af66e696c604dc",
+    "extracted/cpp-altar-construction-538/final/1024x768/rebuild.bmp": "d75db24a1c37f881ef03ee140159b71472af47f3783a9310e5067d37e6146d8e",
+    "extracted/cpp-altar-construction-538/final/1024x768/run/steps.tsv": "d65b9a0ecd43115d79bb152f8c72705826c5c2cb63edac68829532d1df1eac26",
+    "extracted/cpp-altar-construction-538/final/1024x768/run/originals-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-altar-construction-538/final/1024x768/run/data-before.json": "57573a0bc2539f9e70e1127a82d26698efe0c8a97bd91630ae4fab66981179a1",
+    "extracted/cpp-altar-construction-538/final/1024x768/run/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-altar-construction-538/final/1024x768/run/stderr.log": "60f1c033a9238e20480a18f1f1a51745418eb42945e908fd4417a52f60941eac",
+    "extracted/cpp-altar-construction-538/final/1024x768/run/running.json": "49f3f1eb9dd8cf4593bde0d018de4ada8ce564a56fbd6d5fb404f18aad7d6bf6",
+    "extracted/cpp-altar-construction-538/final/1024x768/run/states.tsv": "91ce857bfae41679e24b9a92e8a241ff14d7be995be61a2b0c42fc76ad56029b",
+    "extracted/cpp-altar-construction-538/final/1024x768/run/audio.tsv": "4f771b8be9dc92490907fa29560e3acea3ede8501e7ba5824462fe0fa52103fa",
+    "extracted/cpp-altar-construction-538/final/1024x768/run/run.json": "379c5a1d4a1df9742e3bdad996ccbb8a1b023047dee4588bab4d0faeb51ac610",
+    "extracted/cpp-altar-construction-538/final/1024x768/run/settings-backup/options.cfg": "7c986d379a533456fb34d19f7937d1a028812c4560389d43cb663f1bd10cd7d4",
+    "extracted/cpp-altar-construction-538/final/1024x768/run/settings-backup/fullscreenStateFile.dat": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-altar-construction-538/native-open.txt": "1b7603e4ef5734871d2e76865e4982bfbd066d6757403d50943729ad68be66a5",
+    "extracted/cpp-altar-construction-538/native-priest-menu.txt": "0fd68b8799ccc9b9fc83faec40aae22383f224bd9bb7158606bcd6c42580aa48",
+    "extracted/cpp-altar-construction-538/contact.png": "575a5d1befcb7b610ea0b2a824e12894c9ef611d7c902c7d7089b3bb931aef87",
+    "extracted/cpp-altar-construction-538/final/accepted.json": "01b9846c3c3bca1c1a6d3f0088943b1130835e82cef8b3f52e81f276e8d0db4c",
+    "extracted/cpp-altar-construction-538/focus-v2/summary.json": "8290a21d1aae5c8cdcc2425324d36be89f87e6238f5151452ca46f0696a232bb",
+    "extracted/cpp-altar-construction-538/preservation.json": "fe677d61bdeb61d2bfe50ced6579d5081ead348190ec72236ab7fdd4b379db16"
+  },
+  "toolSha256": "37841c60c3d330ac03f9a2745aa99346d6d641ad8040b37a16d4830b55519f35",
+  "preservation": {
+    "protectedFiles": 1819,
+    "protectedMatch": true,
+    "agentsSha256": "4e32580d21f62036e99ebac6b26641f58e7e7143328f67f396a12f960ccdaa4c",
+    "sourceFiles": 2929,
+    "sourceTestsFixturesMatch537": true,
+    "executablesMatch537": true,
+    "exes": {
+      "NetstormCpp.exe": "a2bfb516df23d8facee10d085f817b41699fb8b77af664800807200c5346d082",
+      "netstorm_tests.exe": "ee46a6f13c13cf518fe995eda6bba11f58490a8b7e459acfe3735fa7a63c69e8"
+    }
+  },
+  "validationCorrections": [
+    "첫1280 실행의 Construct 비활성 가정은 원문 조건과 달랐다. 건설 중 다이스와 별도로 자유로운 사제의 Construct는 활성이다. 제품 수정 없이 도구를 정정했다.",
+    "최종1024 실행의 초기 HP는0이었다. 원본 생성·건설 과정은 초기0을 허용하므로 검사 경계만0이상으로 정정하고 저장된 두 보고서를 재검증했다. 추가 게임 실행 없이 두 최종 실행을 수락했다.",
+    "처음 집중 실행의 출력 파서가 [pass]를 기대했지만 실제 [ OK ]였다. 해당 C++3개는 실패0/종료0이며, 별도 focus-v2의36고유 검사에 중복 합산하지 않았다."
+  ],
+  "limits": [
+    "실제 건설은 LevelI·포로 없는 제단이다. 다른 레벨·손상·점유/희생 중 상태와 일반 Factory 건설 진행 중 메뉴는 잔여다.",
+    "자연 완주·TEST02 포획/희생·스펠 도움말 추가 분석·언어파일 부재 개선·연녹색 직사각형 분석은 기존 보류를 유지한다.",
+    "공중3종 전용 생성/생산/우클릭 및 멀티플레이 검사는 하지 않았다.",
+    "34경로 통합·Release 빌드는 단위537 제품의 기존 결과이며 이번에 반복하지 않았다."
+  ]
+}
