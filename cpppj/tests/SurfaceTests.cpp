@@ -3,6 +3,7 @@
 #include "o/Bridge.h"
 #include "o/SquidFinder.h"
 #include <fstream>
+#include <filesystem> // 기존fixture와같은폴더의독립단락평가관측을읽는다.
 #include <functional>
 #include <sstream>
 #include <stdexcept>
@@ -112,6 +113,16 @@ TEST_CASE(Surface_X86TypeAndFrameConnections) {
         ++count;
     }
     CHECK(count==3016);
+}
+// 첫표면이거부하면두번째방향표가필요없다는원본128반환을재생하고필요한코드는계속검사한다.
+TEST_CASE(Surface_X86FirstMaskSkipsUnusedSecondCode) {
+    std::ifstream input(std::filesystem::path(NETSTORM_SURFACE_FIXTURE).parent_path()/"surface-connect-lazy-x86.tsv");CHECK(input.good());std::string line;std::size_t count{};
+    while (std::getline(input,line)) { // 원문입력과반환만읽으며기대값을C++계산으로만들지않는다.
+        if (!line.empty() && line.back()=='\r') line.pop_back();if (line.empty() || line.front()=='#') continue;const auto row=Split(line,'\t');CHECK(row.size()==8);if (row.size()!=8) return;
+        const FrameCode first{static_cast<std::uint8_t>(std::stoul(row[0])),static_cast<std::uint8_t>(std::stoul(row[1])),1,0},second{static_cast<std::uint8_t>(std::stoul(row[3])),static_cast<std::uint8_t>(std::stoul(row[4])),1,0}; // 실제두TYPE의현재프레임문자다.
+        CHECK(Bridge::Connects(first,static_cast<std::uint32_t>(std::stoul(row[2])),second,static_cast<std::uint32_t>(std::stoul(row[5])),std::stoi(row[6]))==(row[7]=="1"));++count;
+    }
+    CHECK(count==128);CHECK(Throws([&] { Bridge::Connects({'A','A',1,0},2,{0,0,1,0},0x1000002U,6); })); // 첫마스크가허용하면미지원두번째코드의기존실패를보존한다.
 }
 // 생성자/가상 필터/다음 함수 전체가 반환한 이웃 순서와 C++ 출력을 비교한다.
 TEST_CASE(Surface_X86OrderedNeighborsAndFilters) {

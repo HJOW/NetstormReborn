@@ -1,0 +1,969 @@
+{
+  "unit": 529,
+  "date": "2026-10-28",
+  "host": "HJOW-Athlon",
+  "headBeforeCommit": "0cc1d33db1fc3df2752c0f34740807580e8dbb83",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23",
+    "outputsModified": false
+  },
+  "product": {
+    "NetstormCpp.exe": "ffbba0dd52f93e3867f197102e7ef8f376075ae97d1f2d589b11e66bc4a3dc93",
+    "netstorm_tests.exe": "06156043688d5123d7081e17f8d22712bd2476b87316f16a6eb620ea7b84a47b"
+  },
+  "changedSource": [
+    "cpppj/src/o/RawGraph.cpp",
+    "cpppj/src/o/Bridge.cpp",
+    "cpppj/src/client/RawSurfaceWorld.cpp",
+    "cpppj/tests/SurfaceTests.cpp"
+  ],
+  "newFixture": "cpppj/tests/fixtures/surface-connect-lazy-x86.tsv",
+  "existingFixturesUnchanged": true,
+  "originalConnection": {
+    "host": "HJOW-Athlon",
+    "lastPreciseDecompile": {
+      "host": "HJOW-Athlon",
+      "date": "2026-10-23",
+      "outputsModified": false
+    },
+    "entry": "00441e40",
+    "cases": 128,
+    "normalReturns": 128,
+    "gameExecutions": 0,
+    "sha256": {
+      "tools/decomp_surface_connect_lazy.py": "ad8d66dfa83bcbe054837d77d749e1310b4e26bf6c03aca8d26a5002c56c4e1f",
+      "cpppj/tests/fixtures/surface-connect-lazy-x86.tsv": "1c1e4a77e711049ac1aa7622f94adb53e15eae2abbaf2f19ce418b876e53c92c",
+      "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "tools/decomp_surface_oracle.py": "5a01b681c51fe9c59e25573a66bea0c31f3a20fa16e6d46f7e399124312067d5",
+      "tools/decomp_bridge_oracle.py": "cee394dff509d66027b90ae940c0f57c65d7f35847820f3a3737dafd9f265c87",
+      "tools/decomp_oracle.py": "227b9a8b703cfd81d05ac4a7c72a42eaecf9c804fc028680466a19a591f2335d",
+      "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658"
+    },
+    "limits": [
+      "첫마스크가0인표면/표면의직각연결이다. 두번째마스크가필요한미지원코드를허용하는증거가아니다.",
+      "기존코드/스택/ret/x87·쓰기검사를유지하며게임/창/OS호출과공중3종을실행하지않았다."
+    ]
+  },
+  "actualCandidate": {
+    "cases": 4,
+    "entry": "00441e40",
+    "source": [
+      15233,
+      111,
+      117,
+      3,
+      3,
+      16777218
+    ],
+    "candidate": [
+      23474,
+      112,
+      116,
+      1,
+      1,
+      2,
+      70,
+      76
+    ],
+    "inputAndResult": [
+      [
+        70,
+        76,
+        2,
+        0,
+        0,
+        16777218,
+        6,
+        0
+      ],
+      [
+        70,
+        76,
+        2,
+        128,
+        128,
+        16777218,
+        6,
+        0
+      ],
+      [
+        70,
+        76,
+        2,
+        204,
+        204,
+        16777218,
+        6,
+        0
+      ],
+      [
+        70,
+        76,
+        2,
+        255,
+        255,
+        16777218,
+        6,
+        0
+      ]
+    ],
+    "gameExecuted": false
+  },
+  "builds": [
+    {
+      "path": "extracted/cpp-spell-lifetime-529/build.log",
+      "sha256": "110fd191f21f549796185160381499b95ac188324d0cef557ec356e00370e825",
+      "errors": 0,
+      "warnings": 0
+    },
+    {
+      "path": "extracted/cpp-spell-lifetime-529/build-graph-diagnostic.log",
+      "sha256": "9c6242e77de779bf6287857bf772f4b1058501fa0de43e53a37dd1db30bef0c0",
+      "errors": 0,
+      "warnings": 0
+    },
+    {
+      "path": "extracted/cpp-spell-lifetime-529/build-fix.log",
+      "sha256": "4bef7fe38640e7a9fbca77a91339ad086a5c633d98c299777297e931ef725a36",
+      "errors": 0,
+      "warnings": 0
+    },
+    {
+      "path": "extracted/cpp-spell-lifetime-529/build-final.log",
+      "sha256": "fb86514063c18057f924f7d01f2daea89c86299e3e1437ec032b72e3e7a8a73f",
+      "errors": 0,
+      "warnings": 0
+    }
+  ],
+  "final": [
+    {
+      "case": "converted",
+      "size": [
+        1280,
+        720
+      ],
+      "freshSid": 15432,
+      "reloadedSid": 15000,
+      "regularsBefore": [
+        [
+          "15000",
+          "7",
+          "46",
+          "1",
+          "53",
+          "1008981770",
+          "19.8319999998"
+        ],
+        [
+          "15000",
+          "6",
+          "46",
+          "0",
+          "2",
+          "1088421888",
+          "25.359"
+        ]
+      ],
+      "regularsAfter": [
+        [
+          "15000",
+          "7",
+          "46",
+          "1",
+          "70",
+          "1008981770",
+          "21.0349999998"
+        ],
+        [
+          "15000",
+          "6",
+          "46",
+          "0",
+          "2",
+          "1088421888",
+          "25.359"
+        ]
+      ],
+      "late": [
+        {
+          "frame": 360,
+          "time": "22.355",
+          "object": [
+            "114",
+            "0",
+            "2",
+            "112",
+            "118"
+          ],
+          "regulars": [
+            [
+              "15000",
+              "7",
+              "46",
+              "1",
+              "90",
+              "1008981770",
+              "22.3649999998"
+            ],
+            [
+              "15000",
+              "6",
+              "46",
+              "0",
+              "2",
+              "1088421888",
+              "25.359"
+            ]
+          ]
+        },
+        {
+          "frame": 400,
+          "time": "24.858",
+          "object": [
+            "114",
+            "0",
+            "2",
+            "112",
+            "118"
+          ],
+          "regulars": [
+            [
+              "15000",
+              "7",
+              "46",
+              "1",
+              "130",
+              "1008981770",
+              "24.8679999998"
+            ],
+            [
+              "15000",
+              "6",
+              "46",
+              "0",
+              "2",
+              "1088421888",
+              "25.359"
+            ]
+          ]
+        },
+        {
+          "frame": 450,
+          "time": "26.867",
+          "object": null,
+          "regulars": []
+        },
+        {
+          "frame": 500,
+          "time": "28.643",
+          "object": null,
+          "regulars": []
+        },
+        {
+          "frame": 550,
+          "time": "30.356",
+          "object": null,
+          "regulars": []
+        },
+        {
+          "frame": 600,
+          "time": "31.985",
+          "object": null,
+          "regulars": []
+        },
+        {
+          "frame": 650,
+          "time": "33.589",
+          "object": null,
+          "regulars": []
+        },
+        {
+          "frame": 700,
+          "time": "35.149",
+          "object": null,
+          "regulars": []
+        },
+        {
+          "frame": 750,
+          "time": "36.662",
+          "object": null,
+          "regulars": []
+        },
+        {
+          "frame": 800,
+          "time": "38.276",
+          "object": null,
+          "regulars": []
+        }
+      ],
+      "run": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-spell-lifetime-529\\final-first\\converted-1280x720-data",
+          "--window",
+          "--no-audio",
+          "--frames",
+          "810",
+          "--set",
+          "SCREENW=1280;SCREENH=720;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;currentLanguage=english",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-spell-lifetime-529\\final-first\\converted-1280x720\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-spell-lifetime-529\\final-first\\converted-1280x720\\states.tsv"
+        ],
+        "binarySha256": "ffbba0dd52f93e3867f197102e7ef8f376075ae97d1f2d589b11e66bc4a3dc93",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 39.56953429998248,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "7f50b5cb8e913726052be5772fed6feeb4507cda95c6133cc86a8460fa985bfb",
+        "originalsUnchanged": true,
+        "dataUnchanged": true
+      }
+    },
+    {
+      "case": "stored",
+      "size": [
+        1280,
+        720
+      ],
+      "sid": 15000,
+      "target": [
+        "114",
+        "1",
+        "0",
+        "112",
+        "118"
+      ],
+      "noRegulars": true,
+      "blankSpellNotSelected": true,
+      "run": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-spell-lifetime-529\\final-first\\stored-1280x720-data",
+          "--window",
+          "--mute-audio",
+          "--frames",
+          "400",
+          "--set",
+          "SCREENW=1280;SCREENH=720;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-spell-lifetime-529\\final-first\\stored-1280x720\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-spell-lifetime-529\\final-first\\stored-1280x720\\states.tsv"
+        ],
+        "binarySha256": "ffbba0dd52f93e3867f197102e7ef8f376075ae97d1f2d589b11e66bc4a3dc93",
+        "scriptSha256": "f420fbf406e97d475464766c700975937b0f5f5abd322c01c237b3ffc16cc9f9",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 20.194220100005623,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "f6f524aabb476c049642be4205805f05666d99a73b8f0c27af7426a5ee290463",
+        "dataUnchanged": true,
+        "originalsUnchanged": true
+      }
+    },
+    {
+      "case": "converted",
+      "size": [
+        1024,
+        768
+      ],
+      "freshSid": 15432,
+      "reloadedSid": 15000,
+      "regularsBefore": [
+        [
+          "15000",
+          "7",
+          "46",
+          "1",
+          "53",
+          "1008981770",
+          "11.6449999998"
+        ],
+        [
+          "15000",
+          "6",
+          "46",
+          "0",
+          "2",
+          "1088421888",
+          "18.586"
+        ]
+      ],
+      "regularsAfter": [
+        [
+          "15000",
+          "7",
+          "46",
+          "1",
+          "70",
+          "1008981770",
+          "12.5959999998"
+        ],
+        [
+          "15000",
+          "6",
+          "46",
+          "0",
+          "2",
+          "1088421888",
+          "18.586"
+        ]
+      ],
+      "late": [
+        {
+          "frame": 360,
+          "time": "13.537",
+          "object": [
+            "114",
+            "0",
+            "2",
+            "112",
+            "118"
+          ],
+          "regulars": [
+            [
+              "15000",
+              "7",
+              "46",
+              "1",
+              "90",
+              "1008981770",
+              "13.5469999998"
+            ],
+            [
+              "15000",
+              "6",
+              "46",
+              "0",
+              "2",
+              "1088421888",
+              "18.586"
+            ]
+          ]
+        },
+        {
+          "frame": 400,
+          "time": "15",
+          "object": [
+            "114",
+            "0",
+            "2",
+            "112",
+            "118"
+          ],
+          "regulars": [
+            [
+              "15000",
+              "7",
+              "46",
+              "1",
+              "130",
+              "1008981770",
+              "15.0099999998"
+            ],
+            [
+              "15000",
+              "6",
+              "46",
+              "0",
+              "2",
+              "1088421888",
+              "18.586"
+            ]
+          ]
+        },
+        {
+          "frame": 450,
+          "time": "16.701",
+          "object": [
+            "114",
+            "0",
+            "2",
+            "112",
+            "118"
+          ],
+          "regulars": [
+            [
+              "15000",
+              "7",
+              "46",
+              "1",
+              "180",
+              "1008981770",
+              "16.7109999998"
+            ],
+            [
+              "15000",
+              "6",
+              "46",
+              "0",
+              "2",
+              "1088421888",
+              "18.586"
+            ]
+          ]
+        },
+        {
+          "frame": 500,
+          "time": "18.307",
+          "object": [
+            "114",
+            "0",
+            "2",
+            "112",
+            "118"
+          ],
+          "regulars": [
+            [
+              "15000",
+              "7",
+              "46",
+              "1",
+              "230",
+              "1008981770",
+              "18.3169999998"
+            ],
+            [
+              "15000",
+              "6",
+              "46",
+              "0",
+              "2",
+              "1088421888",
+              "18.586"
+            ]
+          ]
+        },
+        {
+          "frame": 550,
+          "time": "19.889",
+          "object": null,
+          "regulars": []
+        },
+        {
+          "frame": 600,
+          "time": "21.397",
+          "object": null,
+          "regulars": []
+        },
+        {
+          "frame": 650,
+          "time": "23",
+          "object": null,
+          "regulars": []
+        },
+        {
+          "frame": 700,
+          "time": "24.632",
+          "object": null,
+          "regulars": []
+        },
+        {
+          "frame": 750,
+          "time": "26.138",
+          "object": null,
+          "regulars": []
+        },
+        {
+          "frame": 800,
+          "time": "27.592",
+          "object": null,
+          "regulars": []
+        }
+      ],
+      "run": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-spell-lifetime-529\\final-first\\converted-1024x768-data",
+          "--window",
+          "--no-audio",
+          "--frames",
+          "810",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;currentLanguage=english",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-spell-lifetime-529\\final-first\\converted-1024x768\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-spell-lifetime-529\\final-first\\converted-1024x768\\states.tsv"
+        ],
+        "binarySha256": "ffbba0dd52f93e3867f197102e7ef8f376075ae97d1f2d589b11e66bc4a3dc93",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 28.77449909999268,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "7f50b5cb8e913726052be5772fed6feeb4507cda95c6133cc86a8460fa985bfb",
+        "originalsUnchanged": true,
+        "dataUnchanged": true
+      }
+    },
+    {
+      "case": "stored",
+      "size": [
+        1024,
+        768
+      ],
+      "sid": 15000,
+      "target": [
+        "114",
+        "1",
+        "0",
+        "112",
+        "118"
+      ],
+      "noRegulars": true,
+      "blankSpellNotSelected": true,
+      "run": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-spell-lifetime-529\\final-first\\stored-1024x768-data",
+          "--window",
+          "--mute-audio",
+          "--frames",
+          "400",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-spell-lifetime-529\\final-first\\stored-1024x768\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-spell-lifetime-529\\final-first\\stored-1024x768\\states.tsv"
+        ],
+        "binarySha256": "ffbba0dd52f93e3867f197102e7ef8f376075ae97d1f2d589b11e66bc4a3dc93",
+        "scriptSha256": "34629e8922a7722c2772e352eecdbfc350591df89cac25ff56a93aed79e75a96",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 19.390977200004272,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "f6f524aabb476c049642be4205805f05666d99a73b8f0c27af7426a5ee290463",
+        "dataUnchanged": true,
+        "originalsUnchanged": true
+      }
+    }
+  ],
+  "initialObservations": [
+    {
+      "name": "converted-first/1280x720",
+      "run": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-spell-lifetime-529\\converted-first\\data-1280x720",
+          "--window",
+          "--no-audio",
+          "--frames",
+          "350",
+          "--set",
+          "SCREENW=1280;SCREENH=720;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;currentLanguage=english",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-spell-lifetime-529\\converted-first\\1280x720\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-spell-lifetime-529\\converted-first\\1280x720\\states.tsv"
+        ],
+        "binarySha256": "6d56b0cd8841d287199488b44eac0711293969a446dd0ba149f62d8cd19fc2ff",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 13.89265819999855,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "7f50b5cb8e913726052be5772fed6feeb4507cda95c6133cc86a8460fa985bfb",
+        "originalsUnchanged": true,
+        "dataUnchanged": true
+      },
+      "reason": "읽기전용예약진단을추가한수정전제품의350프레임전환/저장/재진입관측이다. 후속삭제까지진행하지않았다."
+    },
+    {
+      "name": "converted-first/1024x768",
+      "run": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-spell-lifetime-529\\converted-first\\data-1024x768",
+          "--window",
+          "--no-audio",
+          "--frames",
+          "350",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;currentLanguage=english",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-spell-lifetime-529\\converted-first\\1024x768\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-spell-lifetime-529\\converted-first\\1024x768\\states.tsv"
+        ],
+        "binarySha256": "6d56b0cd8841d287199488b44eac0711293969a446dd0ba149f62d8cd19fc2ff",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 13.664583599980688,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "7f50b5cb8e913726052be5772fed6feeb4507cda95c6133cc86a8460fa985bfb",
+        "originalsUnchanged": true,
+        "dataUnchanged": true
+      },
+      "reason": "읽기전용예약진단을추가한수정전제품의350프레임전환/저장/재진입관측이다. 후속삭제까지진행하지않았다."
+    },
+    {
+      "name": "converted-late",
+      "run": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-spell-lifetime-529\\converted-late\\data",
+          "--window",
+          "--mute-audio",
+          "--frames",
+          "810",
+          "--set",
+          "SCREENW=1280;SCREENH=720;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-spell-lifetime-529\\converted-late\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-spell-lifetime-529\\converted-late\\states.tsv"
+        ],
+        "binarySha256": "6d56b0cd8841d287199488b44eac0711293969a446dd0ba149f62d8cd19fc2ff",
+        "scriptSha256": "eaad31e4635ccd578c96884e693f481a27eff056249d75e0d220c5366ea94a59",
+        "returnCode": 1,
+        "timedOut": false,
+        "seconds": 17.00770359998569,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "6adbccb90dde975ee2cdeac309a836dad7a7142dcc7e4374e77ba0a69f065702",
+        "originalsUnchanged": true,
+        "dataUnchanged": true
+      },
+      "error": [
+        "실제 Regular 실패 SID15000 TYPE114 event0 count1 payload40c00000",
+        "raw 그래프 삭제 치환 방향 코드가 필요합니다"
+      ],
+      "reason": "원래event0/count1/payload6의효과/삭제중치환방향을너무일찍검사해종료1했다."
+    },
+    {
+      "name": "converted-detail",
+      "run": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-spell-lifetime-529\\converted-detail\\data",
+          "--window",
+          "--mute-audio",
+          "--frames",
+          "810",
+          "--set",
+          "SCREENW=1280;SCREENH=720;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-spell-lifetime-529\\converted-detail\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-spell-lifetime-529\\converted-detail\\states.tsv"
+        ],
+        "binarySha256": "4d1f9c8b7fc3fad786bb8482d83fa593db64b98c2b8a1e7988cc958c09e84170",
+        "scriptSha256": "3ffe5b9e516df40a5bf31289f4712b9bc69aef3b48511d0cc9245067d1ffece6",
+        "returnCode": 1,
+        "timedOut": false,
+        "seconds": 16.72246700001415,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "cac8ae7015d2ed171e3f7171f4c4cb7df13d479cff5ba35bd66f3653ecb224ee",
+        "originalsUnchanged": true,
+        "dataUnchanged": true
+      },
+      "error": [
+        "실제 Regular 실패 SID15000 TYPE114 event0 count1 payload40c00000",
+        "raw 그래프 삭제 치환 방향 코드가 필요합니다 source=15233,111,117,3,3,16777218 candidate=23474,112,116,1,1,2,70,76"
+      ],
+      "reason": "원래event0/count1/payload6의효과/삭제중치환방향을너무일찍검사해종료1했다."
+    }
+  ],
+  "acceptedGames": 4,
+  "allGames": 8,
+  "gameExitCodes": {
+    "zero": 6,
+    "one": 2
+  },
+  "tests": {
+    "registered": 3359,
+    "unique": 41,
+    "failed": 0,
+    "binarySha256": "06156043688d5123d7081e17f8d22712bd2476b87316f16a6eb620ea7b84a47b",
+    "runs": [
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "Surface_"
+        ],
+        "exit": 0,
+        "names": [
+          "Surface_X86TypeAndFrameConnections",
+          "Surface_X86FirstMaskSkipsUnusedSecondCode",
+          "Surface_X86OrderedNeighborsAndFilters",
+          "Surface_MultiCellNeighborSnapshotLifetime",
+          "Surface_RejectsInvalidMapsObjectsAndDecayInputs"
+        ],
+        "log": "extracted/cpp-spell-lifetime-529/focus/01.log",
+        "sha256": "1962d41167c89a41b2caa69d9d9f3899779103b52c041b48e0b87cb9dd9b9ea0"
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "RawGraph_"
+        ],
+        "exit": 0,
+        "names": [
+          "RawGraph_X86_AllocatedSidPostPopAndProjectedPop",
+          "RawGraph_X86_DetachGeneralIslandBridgeUnpopAndRelease",
+          "RawGraph_X86_DetachUsesPositionHeadGraphAndSourceFrame",
+          "RawGraph_X86_GlobalRebuildAndExhaustedAllocation",
+          "RawGraph_X86_RecoveryInsideAddDetachPopAndPostPop",
+          "RawGraph_RecoveryPreflightRejectsOtherVoidAndOutOfRangeTypeBeforePop",
+          "RawGraph_RebuildRejectsDamageAndFastAllocateDoesNotReadPool",
+          "RawGraph_PositionHeadEarlyReturnAndPreflightPreserveSource",
+          "RawGraph_RegionX86_ThreeBinariesAndNormalBridgeIslandPop",
+          "RawGraph_ProjectedPopRejectsExhaustionAndFractionalBeforeMutation",
+          "RawGraph_RegionThenAddExhaustionRejectsBeforeAnyPopMutation",
+          "RawGraph_RefreshesFramesMapAndRawMembershipBetweenCalls",
+          "RawGraph_DetachPreflightRejectsBeforePoolSpaceOrGraphMutation",
+          "RawGraph_NonSurfaceFractionalRegionPreservesPositionAndNeighbor",
+          "RawGraph_CorruptCandidatesAndMismatchedConnectionsRejectBeforeMutation",
+          "RawGraph_SharedStorageAndExplicitSnapshotHaveSeparateOwnership",
+          "RawGraph_SharedPostDestroyValidationKeepsCloneAndCommitSeparate"
+        ],
+        "log": "extracted/cpp-spell-lifetime-529/focus/02.log",
+        "sha256": "ee45eae536598999bf66f2b147f769e2a4f216f41948a4da5588cd7ba175bd6e"
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "DestroyGraph_"
+        ],
+        "exit": 0,
+        "names": [
+          "DestroyGraph_ActualPreDetachFreeAndSpecialFrame",
+          "DestroyGraph_ActualPostFootprintFinderAndSequentialAdd",
+          "DestroyGraph_ActualDestroyUnpopGraphAndRelease",
+          "DestroyGraph_ActualIslandH8AndSingleFrameReplacement",
+          "DestroyGraph_FreeGuardsAndUntouchedPayload",
+          "DestroyGraph_SpecialReplacementValidationBeforeWrites",
+          "DestroyGraph_PostRejectsInvalidCandidateBeforeAnyWrites",
+          "DestroyGraph_RejectsMismatchedRawSpaceAndTypes"
+        ],
+        "log": "extracted/cpp-spell-lifetime-529/focus/03.log",
+        "sha256": "7cf44a69b70fa369d8cedd30ab14e15ed94496c824559bab21eac65d1477b405"
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "BuriedPostPop_"
+        ],
+        "exit": 0,
+        "names": [
+          "BuriedPostPop_Native580",
+          "BuriedPostPop_RequiredBoundariesAndPartialWrites"
+        ],
+        "log": "extracted/cpp-spell-lifetime-529/focus/04.log",
+        "sha256": "c51517b518aa18743c974a2e24e6b15f5f1406406f86afe0cb0f4c4947c56aac"
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "BuriedRegular_"
+        ],
+        "exit": 0,
+        "names": [
+          "BuriedRegular_NativeAnimation288",
+          "BuriedRegular_NativeBase96",
+          "BuriedRegular_RejectsForeignBindingsAndMissingParent"
+        ],
+        "log": "extracted/cpp-spell-lifetime-529/focus/05.log",
+        "sha256": "001e7a770fe5d6d24e609e56f17e83c746149daf2d2a0a111ac1be03f0022b6b"
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "BombRegular_"
+        ],
+        "exit": 0,
+        "names": [
+          "BombRegular_Native741Inputs",
+          "BombRegular_LazyBoundariesAndCleanup"
+        ],
+        "log": "extracted/cpp-spell-lifetime-529/focus/06.log",
+        "sha256": "dc4d91f9ab5f4a8bcc4d0b5679c05c5b9caddd23b9eab60c17593b814660d060"
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "ObjectConversion_"
+        ],
+        "exit": 0,
+        "names": [
+          "ObjectConversion_ReplaysNative36CommandsAndLateReads",
+          "ObjectConversion_RejectsSelectedMissingEffectsAndKeepsWrittenPrefix"
+        ],
+        "log": "extracted/cpp-spell-lifetime-529/focus/07.log",
+        "sha256": "d8f22d702a06b0f49725c71b08b933b4d1c883b407fe318939d1eedeb74db15f"
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "SquidRetype_"
+        ],
+        "exit": 0,
+        "names": [
+          "SquidRetype_ReplaysNative128AndPreservesOtherSlots"
+        ],
+        "log": "extracted/cpp-spell-lifetime-529/focus/08.log",
+        "sha256": "977d4af343443bb7328b655f015cebf4c348f662e2e933f16b83efb0d4aa91a9"
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "FortObjectLoad_ReplaysPatch"
+        ],
+        "exit": 0,
+        "names": [
+          "FortObjectLoad_ReplaysPatch"
+        ],
+        "log": "extracted/cpp-spell-lifetime-529/focus/09.log",
+        "sha256": "d593b27b8bd0446399797b841813f56fb5237d2fa621b471b3eb2ddca72a7e54"
+      }
+    ]
+  },
+  "protected": {
+    "files": 1819,
+    "unchanged": true,
+    "agentsUnchanged": true,
+    "baseline": "extracted/cpp-object-hit-524/protected-before.json"
+  },
+  "visualChecks": [
+    "final-first/converted-1280x720/restored-spell.bmp",
+    "final-first/converted-1024x768/late.bmp",
+    "final-first/stored-1024x768/loaded.bmp"
+  ],
+  "tools": {
+    "tools/decomp_surface_connect_lazy.py": "ad8d66dfa83bcbe054837d77d749e1310b4e26bf6c03aca8d26a5002c56c4e1f",
+    "tools/cpp_spell_lifetime_smoke.py": "d2a3f1462330cad73f913eb425bbe95ddb492c9e5b17d2cb7ceea168f7cc426a",
+    "tools/cpp_object_conversion_smoke.py": "203f5ebd5b8fa1c10f47d2cf5c9a58c59d06b6b7285573fc0436f9b17e18130b"
+  },
+  "rawEvidence": "extracted/cpp-spell-lifetime-529",
+  "openGraphicsReport": {
+    "userConfirmedEditorConversion": true,
+    "observedHelpImageAtFrame2": true,
+    "originalGraphicsFidelityProven": false,
+    "next": "Edit에서적재비석을주문으로전환한후도움말이미지가깜빡이는사용자제보를우선대조한다. 현재관측을정상/완료로확정하지않는다."
+  },
+  "limitations": [
+    "이번수정은그래프연결의첫마스크단락평가와실제후속삭제종료오류다. frame2도움말이미지의원본동일성/수정은별도미완료다.",
+    "새주문/전환/적재비석/직접저장주문의예약·프레임차이를관측했다. 전체주문/사제자연시전/드롭/전체시각연출과캠페인완주검증은아니다.",
+    "두번째방향이필요한미지원코드는계속오류로거부한다. 임의메모리의방향값을성공으로대체하지않았다.",
+    "공중3종전용재현/생산/생성/추가원문관측/검사, 전체CTest/34경로/자연완주, 새네트워크/멀티플레이시험은실행하지않았다."
+  ]
+}

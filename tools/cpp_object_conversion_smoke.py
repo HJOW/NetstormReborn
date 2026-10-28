@@ -16,13 +16,14 @@ from cpp_world_smoke import states
 CONVERT = 0x030000ce
 
 
-def one(output, data, width, height):
+def one(output, data, width, height, observation_frames=()):
     """새 주문 하나의 같은 SID/위치/소유자와 저장 뒤 실제 역전환을 일반 입력으로 검사한다."""
     output.mkdir(parents=True, exist_ok=False)
     steps = [(3, 'click-if', 'OK'), (5, 'click-if', 'OK'), (10, 'click', 'Edit'),
              (18, 'click', 'dissolvedalliance'), (55, 'report', 'editor'),
              (60, 'click', 'production:114'), (70, 'up', 'placement:112,118'),
              (80, 'report', 'cursor'), (85, 'click', 'placement:112,118'), (95, 'report', 'created'),
+             (95, 'snapshot', str(output / 'created.bmp')),
              (110, 'right', 'world:bombExplodeMedium'), (118, 'report', 'menu-spell'),
              (125, 'click', 'Turn To Obelisk!'), (135, 'report', 'buried'),
              (140, 'right', 'world:buried'), (148, 'report', 'menu-buried'),
@@ -36,9 +37,13 @@ def one(output, data, width, height):
              (315, 'right', 'cell:112,118'), (323, 'report', 'menu-reopened'),
              (330, 'click', 'Turn To Spell!'), (340, 'report', 'restored-spell'),
              (340, 'snapshot', str(output / 'restored-spell.bmp'))]
+    for frame in observation_frames:  # 같은변환뒤원래예약이처리되는과정만추가관측하며입력/게임시각은바꾸지않는다.
+        steps.append((frame,'report',f'late{frame}'))
+    if observation_frames: steps.append((observation_frames[-1],'snapshot',str(output/'late.bmp')))
+    steps.sort(key=lambda row:row[0]);frames=max(350,max(observation_frames,default=340)+10) # 기존호출의350프레임을유지하고추가관측을끝낼범위만확장한다.
     plan, report = output / 'steps.tsv', output / 'states.tsv'
     plan.write_text(''.join(f'{frame}\t{operation}\t{argument}\n' for frame, operation, argument in steps), encoding='utf-8')
-    command = [str(GAME), '--run', str(data), '--window', '--no-audio', '--frames', '350', '--set',
+    command = [str(GAME), '--run', str(data), '--window', '--no-audio', '--frames', str(frames), '--set',
                f'SCREENW={width};SCREENH={height};maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;currentLanguage=english',
                '--ui-script', str(plan), '--ui-report', str(report)]
     original, before, run = snapshots(ROOT / 'originals'), snapshots(data), {}

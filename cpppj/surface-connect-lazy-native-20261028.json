@@ -1,0 +1,25 @@
+{
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23",
+    "outputsModified": false
+  },
+  "entry": "00441e40",
+  "cases": 128,
+  "normalReturns": 128,
+  "gameExecutions": 0,
+  "sha256": {
+    "tools/decomp_surface_connect_lazy.py": "ad8d66dfa83bcbe054837d77d749e1310b4e26bf6c03aca8d26a5002c56c4e1f",
+    "cpppj/tests/fixtures/surface-connect-lazy-x86.tsv": "1c1e4a77e711049ac1aa7622f94adb53e15eae2abbaf2f19ce418b876e53c92c",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_surface_oracle.py": "5a01b681c51fe9c59e25573a66bea0c31f3a20fa16e6d46f7e399124312067d5",
+    "tools/decomp_bridge_oracle.py": "cee394dff509d66027b90ae940c0f57c65d7f35847820f3a3737dafd9f265c87",
+    "tools/decomp_oracle.py": "227b9a8b703cfd81d05ac4a7c72a42eaecf9c804fc028680466a19a591f2335d",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658"
+  },
+  "limits": [
+    "첫마스크가0인표면/표면의직각연결이다. 두번째마스크가필요한미지원코드를허용하는증거가아니다.",
+    "기존코드/스택/ret/x87·쓰기검사를유지하며게임/창/OS호출과공중3종을실행하지않았다."
+  ]
+}

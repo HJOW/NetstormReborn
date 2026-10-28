@@ -2,6 +2,7 @@
 #include "client/ClientColorSortInput.h"
 #include "client/RawCampaignFactoryDisplay.h"
 #include "client/RawObjectHit.h"
+#include "client/SpellFrameVisibility.h"
 #include "client/ObjectCollection.h"
 #include "client/SpriteDraw.h"
 #include "client/SpriteColorMaps.h"
@@ -104,7 +105,7 @@ struct RawCampaignFactoryDisplay::Impl {
             const auto& dispatch=HitVtable(composite); // 같은 실제+a4 분배를 일반화면과선택캡처가공유한다.
             if (dispatch.additional==0x41c100U) return; // 실제빈ret8만정상반환한다.
             if (dispatch.additional==0x4223c0U) { if (!bridgeDraw) throw std::logic_error("선택용 다리의 실제 추가Draw 미연결");bridgeDraw(object,point.x,point.y);return; }
-            if (dispatch.additional==0x41e3d0U) { const auto frame=std::uint32_t(composite[36])|(std::uint32_t(composite[37])<<8)|(std::uint32_t(composite[38])<<16)|(std::uint32_t(composite[39])<<24);if (!(composite[40]&0x10U)) shape({composite[10],frame,point,SpriteShapeMode::Plain});else if (composite[34]==state.localPlayer) shape({composite[10],frame,point,SpriteShapeMode::Abstract});return; } // 같은 현재497280 상태색/로컬 관문으로 추가 그림을 그린다.
+            if (dispatch.additional==0x41e3d0U) { const auto frame=std::uint32_t(composite[36])|(std::uint32_t(composite[37])<<8)|(std::uint32_t(composite[38])<<16)|(std::uint32_t(composite[39])<<24);if (SuppressSpellHelpFrame(assets.Edition(),core.types[composite[10]],assets.Types()[composite[10]-o::kFirstAssetTypeNumber].definition.specialFrames,frame)) return;if (!(composite[40]&0x10U)) shape({composite[10],frame,point,SpriteShapeMode::Plain});else if (composite[34]==state.localPlayer) shape({composite[10],frame,point,SpriteShapeMode::Abstract});return; } // 같은 현재497280 상태색/로컬 관문으로 추가 그림을 그린다.
             if (o::IsPlainAssetDraw(composite)) return; // 검증한 일반 자산의+a4=41c100은 원본처럼 빈ret8이다.
             if (o::IsSunAviaryCapture(composite) || o::IsBurningArcherCapture(composite)) {
                 const auto draw=[this,object,&shape](auto type,auto frame,auto x,auto y) { // 실제497280과 같은 현재 추상/로컬 소유자 관문으로 추가 그림을 출력한다.

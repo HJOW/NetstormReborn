@@ -9,6 +9,7 @@
 #include "o/SquidFrameBinding.h"
 #include "o/SquidOwner.h"
 #include "o/SquidFormDispatch.h"
+#include "o/RawObjectConversion.h" // 비석/주문의정확한가상표만읽기전용예약진단대상으로구별한다.
 #include "o/RawBuildingSpace.h"
 #include <algorithm>
 #include <bit>
@@ -371,6 +372,19 @@ std::string RawSurfaceWorld::Report() const {
         const auto raw=impl_->pool.Slot(snapshot.sid);const bool patch=impl_->edition==o::OriginalEdition::Patch1078; // 같은 실제 슬롯의 상태/extra/HP 저장 비트다.
         out<<"raw_asset_fields\t"<<snapshot.sid.value<<'\t'<<static_cast<std::uint32_t>(raw[11])<<'\t'<<static_cast<std::uint32_t>(raw[patch ? 40 : 35])<<'\t'<<Read(raw,26,patch ? 4 : 2)<<'\n';
         const auto table=Read(raw,0,4); // 원본 두FactoryVT의현재내용물을모든원소워크샾에서같은방식으로관측한다.
+        if (patch && o::ObjectConversionBody(table)) { // 타입전환/저장재적재전후에같은실제Form과현재Regular예약을관측한다.
+            std::size_t visited{},regulars{}; // 순환검사와실제등록된예약수이며상태/시각을변경하지않는다.
+            for (o::Sid form{static_cast<std::uint16_t>(Read(raw,6,2))};form.value;) { // 현재부모의실제종속체인만따라가며임의프로세스를찾아붙이지않는다.
+                if (++visited>impl_->pool.Capacity()) throw std::logic_error("비석/주문 진단의 Form 체인 순환");const auto content=impl_->pool.Slot(form); // 같은50BYTE물리의종류와다음링크다.
+                if (content[10]==46 || content[10]==61) {
+                    const auto* process=dynamic_cast<const o::RegularProcess*>(impl_->host->FromForm(form)); // 현재Kernel번호로기존Regular/SharedRegular객체만조회한다.
+                    if (!process || process->Form()!=form || process->Parent()!=snapshot.sid) throw std::logic_error("비석/주문 진단의 실제 Regular 등록 불일치");
+                    out<<"raw_object_regular\t"<<snapshot.sid.value<<'\t'<<form.value<<'\t'<<static_cast<std::uint32_t>(content[10])<<'\t'<<process->Event()<<'\t'<<process->Count()<<'\t'<<std::bit_cast<std::uint32_t>(process->Payload())<<'\t'<<process->Time()<<'\n';++regulars;
+                }
+                form={static_cast<std::uint16_t>(Read(content,4,2))};
+            }
+            out<<"raw_object_regular_count\t"<<snapshot.sid.value<<'\t'<<regulars<<'\n';
+        }
         if (patch ? (table==0x509148U || table==0x509210U) : (raw[10]==85 || raw[10]==126)) { // 10.78의두생성자표를사용하며10.72의기존진단조건은보존한다.
             std::size_t visited{};
             // 같은 실제 Form 체인 전체를 읽고 저장 종류/flags와 client/server SID를 기록한다.

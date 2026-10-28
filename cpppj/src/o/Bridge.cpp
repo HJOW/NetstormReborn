@@ -41,9 +41,10 @@ bool Bridge::Connects(FrameCode first, std::uint32_t firstFlags2,
     if ((secondFlags2 & TypeFlag2::kEmplacement)!=0) b='P';
     if ((firstFlags2 & kBridgeOrBombMask)!=0 && (secondFlags2 & kLandObjectMask)!=0) b='A';
     else if ((secondFlags2 & kBridgeOrBombMask)!=0 && (firstFlags2 & kLandObjectMask)!=0) a='A';
-    if (a<'A' || a>'P' || b<'A' || b>'P') throw std::out_of_range("Surface connection code");
-    return (TerrainBuilder::Connection(static_cast<char>(a)) & kDirectionBits[direction])!=0 &&
-        (TerrainBuilder::Connection(static_cast<char>(b)) & kDirectionBits[(direction+4)%8])!=0;
+    if (a<'A' || a>'P') throw std::out_of_range("Surface connection code");
+    if (!(TerrainBuilder::Connection(static_cast<char>(a)) & kDirectionBits[direction])) return false; // 원문441e40의첫마스크가0이면두번째방향표를조회하지않는다.
+    if (b<'A' || b>'P') throw std::out_of_range("Surface connection code"); // 두번째코드가실제로필요할때는기존미지원입력진단을유지한다.
+    return (TerrainBuilder::Connection(static_cast<char>(b)) & kDirectionBits[(direction+4)%8])!=0;
 }
 // 재귀 목록은 전체 방문 집합이 아니다. 부모만 제외하고 경계에서는 같은 번호를 모두 지운다.
 BridgeDecayWalk Bridge::CollectDecay(const SurfaceFinder& surfaces, std::uint16_t root, std::size_t capacity) {
