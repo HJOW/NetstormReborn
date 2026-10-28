@@ -129,6 +129,7 @@ public:
     int LanguageNumber() const { return languageNumber_; }
     // 검사 전용으로 이미 그려진 화면을 지정 파일에 저장한다.
     void Capture(const std::filesystem::path& path);
+    void SaveGifScreenshot(); //4db140의 같은 누적 번호/설정·논리 화면을 써서 GIF를 저장한다.
     void CapturePresentation(const std::filesystem::path& path); // 검사 전용 실제 클라이언트 RGB 출력을 저장하며 논리 버퍼 캡처와 구별한다.
 
     // 독립 검사 화면의 입력 연결점. 기본 실행은 부분 UserInput/UberGump를 사용한다. 참이면 종료한다.
@@ -357,6 +358,7 @@ private:
     bool closing_{};                   // DAT_0054dee8
     // frames_: 타입별 프레임 자료.
     std::uint64_t frames_{};
+    std::uint32_t screenshotNumber_{}; //005e1830의 프로세스 전체 누적 번호이며 미션/화면 전환 때 초기화하지 않는다.
 };
 
 }  // namespace netstorm::client

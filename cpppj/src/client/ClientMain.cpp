@@ -5,6 +5,8 @@
 // 범위: 창 만들기, 설정 읽기, 화면 장치, 메시지·입력 큐, 프레임 제한과 내보내기까지.
 //       Renderer·원본 글꼴/커서·메뉴와 저장 미션의 기본 지형/객체·선택/이동을 연결했다. 건설/전투는 후속이다.
 #include "client/ClientMain.h"
+#include "client/GifScreenshot.h"
+#include "o/RawColorSortPrimary.h"
 #include "client/ClientAudio.h"
 #include "client/PaletteFlash.h"
 #include "client/RawChatChannels.h"
@@ -678,6 +680,22 @@ void Client::PresentScene() {
 }
 void Client::SaveScreenshot() {
     Capture(options_.screenshot);
+}
+void Client::SaveGifScreenshot() { // 원문이 저장하는 고정 primary 색과 현재8비트 화면을 같은 잠금 안에서 읽는다.
+    const std::uint8_t* pixels{};ScreenshotSaveHooks hooks; // 잠금에서 빌린 현재 DIB 포인터와 파일 장치다.
+    hooks.set=[this](auto key,auto value) { configuration_.Set(key,value); };
+    hooks.read=[this](auto key,auto& value) { return configuration_.ReadString(key,value); };
+    hooks.exists=[this](auto path) { return files_.TryRead(path).has_value(); }; //41ab10처럼 기본 디스크/아카이브/보조 디스크의 같은 존재 순서를 사용한다.
+    hooks.lock=[this,&pixels] { pixels=screen_->Lock(); };
+    hooks.gif=[this,&pixels](auto path) {
+        const auto rgb=ScreenshotPrimaryPalette(colorSortInput_->Primary()->Bytes()); // 현재flash 팔레트가 아닌555d88의같은 기록이다.
+        const auto bytes=EncodeScreenshotGif(static_cast<std::uint32_t>(screenWidth_),static_cast<std::uint32_t>(screenHeight_),static_cast<std::uint32_t>(screen_->Pitch()),{pixels,static_cast<std::size_t>(screen_->Pitch())*screenHeight_},rgb); // 패딩을 보존한 현재 논리 버퍼다.
+        std::ofstream output(ResolveScreenshotDiskPath(options_.gameDirectory,path),std::ios::binary|std::ios::trunc); //41b4c0의 기본 디스크 경로다. 원문 fopen처럼 없는 상위 폴더는 생성하지 않는다.
+        if (!output || !output.write(reinterpret_cast<const char*>(bytes.data()),static_cast<std::streamsize>(bytes.size())) || !output.flush()) throw std::runtime_error("스크린샷 GIF 파일 저장 실패");
+    };
+    hooks.unlock=[this] { screen_->Unlock(); };
+    hooks.log=[](auto path) { std::fprintf(stderr,"Screen shot written to %.*s\n",static_cast<int>(path.size()),path.data()); };
+    static_cast<void>(SaveNumberedScreenshot(screenshotNumber_,hooks));
 }
 // 프레임 관찰 도구도 종료 화면과 같은 팔레트 변환을 쓴다.
 void Client::Capture(const std::filesystem::path& path) {

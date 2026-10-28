@@ -21,6 +21,6 @@ struct ViewKeyInputHooks { // 원문에서 실제 도달한 외부 장치만 요
     std::function<std::uint32_t()> useBanners; //005319c0의 현재 DWORD이며 Config 문자열을 대신 읽지 않는다.
     std::function<void(std::uint32_t)> writeBanners; //F7의 useBanners=0/1 Config 쓰기이며 실제 onChanged가43bc40을 호출한다.
 };
-// 뗌/다른 키에는 장치를 호출하지 않는다. F7은 Shift 없는 배너 전환만 담당하며 Shift의 파일/진단은 별도다.
+// 뗌/다른 키에는 장치를 호출하지 않는다. Shift F7도 저장/Tell 뒤 현재 정지를 읽고 배너를 처리한다. Ctrl Shift 진단은 별도다.
 bool DispatchViewKeyInput(InputEvent event,ViewKeyInputGlobals globals,const ViewKeyInputHooks& hooks);
 }

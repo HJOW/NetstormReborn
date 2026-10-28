@@ -15,6 +15,7 @@
 #include "client/GameMenuCommands.h"
 #include "client/GameMenuActions.h"
 #include "client/ViewKeyInput.h"
+#include "client/GifScreenshot.h"
 #include "client/RawUserHighlight.h" // Editor F8도 같은 Client 선택 전역의 원본 강조 몸체를 사용한다.
 #include "client/TellParameters.h"
 #include "client/TellSection.h"
@@ -952,6 +953,7 @@ void UberGump::Event(InputEvent event) {
         if (routed.consumed) { rebuild_=true;return; }
         if (!(event.code&InputCode::kRelease) && (transitionCode==InputCode::kLeftButton || transitionCode==InputCode::kRightButton)) rawButtons_->RequestClosePopups(); // UI밖누름은팝업Kill뒤같은사건으로월드에진행한다.
     }
+    if (DispatchScreenshotKey(event,[this] { client_.SaveGifScreenshot(); },[this](auto name) { Tell(std::string(name)); })) rebuild_=true; // Guide/Gump 뒤,console·정지와 일반 F7 배너 처리보다 앞이다. Tell이 연 정지를 아래에서 다시 읽는다.
     if (transitionCode==0x02000037U) {
         if (!(event.code&InputCode::kRelease)) { EnsureHudFactories();rawButtons_->ToggleMinimap(hud_->createMinimap); }
         rebuild_=true;return; //원본 일반 입력의5427d4→480810을 동일 공장/지연Kill에 연결하며 뗌은 전환하지 않는다.
@@ -1036,7 +1038,7 @@ void UberGump::Event(InputEvent event) {
     }
     if (!(event.code&InputCode::kRelease) && transitionCode==(0x70U<<InputCode::kVirtualKeyShift)) { client_.Input().PushCommand(0x02000017U,0,0x61000003);return; } // 원본4d8c47의 F1Help 문자열이며 Control/Shift를 별도 거부하지 않는다.
     if (rawButtons_->Menus()->HelpOpen()) { if (!worldUiRouted) static_cast<void>(rawButtons_->Event(event));rebuild_=true;return; } // 현재 공통 모달/스크롤/태그/돌 버튼을 실제 GumpInput에 전달한다.
-    if (transitionCode==0x710000U || transitionCode==0x720000U || transitionCode==0x770000U || (transitionCode==0x760000U && !(event.code&InputCode::kShift))) {
+    if (transitionCode==0x710000U || transitionCode==0x720000U || transitionCode==0x770000U || (transitionCode==0x760000U && (event.code&(InputCode::kShift|InputCode::kControl))!=(InputCode::kShift|InputCode::kControl))) {
         if (rawButtons_->CurrentDialog()) return; // 원문565dd4 모달 관문은 일반 F2/F3/F8보다 앞이다. Guide 뒤 조기 F8 예약을 하지 않는다.
         ViewKeyInputHooks hooks; // 같은 Client 표시 전역과 현재 설정/Tell/큐를 사용한다.
         hooks.paused=[this] { return client_.Paused(); };

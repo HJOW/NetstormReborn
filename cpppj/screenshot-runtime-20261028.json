@@ -1,0 +1,415 @@
+{
+  "unit": 548,
+  "startedDate": "2026-10-28",
+  "completedDate": "2026-10-29",
+  "host": "HJOW-Athlon",
+  "os": "Windows 10 Pro 10.0.19045",
+  "lastFullDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23",
+    "outputsChanged": false
+  },
+  "nativeKey": {
+    "host": "HJOW-Athlon",
+    "inputs": 167,
+    "observations": 334,
+    "precisionDifferences": 0,
+    "peSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "fixtureSha256": "53d3be0bd4eaead5dd9813cb54aef6a45e1a777b74f3dc1c800b7922c2c2b5e7",
+    "nativeBodiesUnchanged": true,
+    "externalDevices": [
+      "Config",
+      "sprintf",
+      "file exists",
+      "screen lock/unlock",
+      "GIF encoder",
+      "log",
+      "Tell",
+      "CtrlShift diagnostic calls"
+    ]
+  },
+  "nativePalette": {
+    "host": "HJOW-Athlon",
+    "inputs": 256,
+    "nativeObservations": 512,
+    "precisionDifferences": 236,
+    "productPrecision": "53 bits, original default",
+    "externalDevices": [
+      "gdImageColorAllocate"
+    ],
+    "fixtureSha256": "1d882cc237941e185a39d31882800034f5db0ccba0aa67ee1a5602e00341f2ae"
+  },
+  "focused": {
+    "results": [
+      {
+        "filter": "GifScreenshot",
+        "exit": 0,
+        "tests": 5,
+        "failed": 0
+      },
+      {
+        "filter": "ViewKeyInput",
+        "exit": 0,
+        "tests": 2,
+        "failed": 0
+      },
+      {
+        "filter": "F8KeyInput",
+        "exit": 0,
+        "tests": 2,
+        "failed": 0
+      },
+      {
+        "filter": "BannerOption",
+        "exit": 0,
+        "tests": 1,
+        "failed": 0
+      },
+      {
+        "filter": "BannerKey",
+        "exit": 0,
+        "tests": 1,
+        "failed": 0
+      },
+      {
+        "filter": "OwnerColorTableState",
+        "exit": 0,
+        "tests": 1,
+        "failed": 0
+      },
+      {
+        "filter": "BackgroundGif",
+        "exit": 0,
+        "tests": 8,
+        "failed": 0
+      },
+      {
+        "filter": "ScreenPresentation",
+        "exit": 0,
+        "tests": 5,
+        "failed": 0
+      },
+      {
+        "filter": "ScreenMode",
+        "exit": 0,
+        "tests": 1,
+        "failed": 0
+      }
+    ],
+    "registered": 3389,
+    "uniqueTests": 26,
+    "testSha256": "e4291442d6709518a3dabddebfbbcee0b08c4a9f91669135e796fca9c67ddd94"
+  },
+  "finalGames": [
+    {
+      "size": [
+        1024,
+        768
+      ],
+      "fullscreen": false,
+      "run": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-screenshot-key-548\\gui-final-v3\\1024x768\\data",
+          "--mute-audio",
+          "--frames",
+          "285",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;useBanners=1;music=0;playWind=0",
+          "--mission",
+          "thewarbegins",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-screenshot-key-548\\gui-final-v3\\1024x768\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-screenshot-key-548\\gui-final-v3\\1024x768\\states.tsv",
+          "--window"
+        ],
+        "binarySha256": "f271c2df0586ee6c2a9df08cc13c3078084656e54ebb74b581f9d5960aea72b5",
+        "scriptSha256": "8f52f71925623577e5c09e56d3060d3b715704b4d73b72c69a5d1fda094097d7",
+        "screenshotDirectory": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-screenshot-key-548\\gui-final-v3\\1024x768\\data\\ScreenShot",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 13.876261699999986,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "d832a18be3dedb2ac235db56e8294cf11ac6bea5d4c46edef158bcf9f5e4aae9",
+        "originalsUnchanged": true,
+        "dataUnchanged": true,
+        "createdFiles": [
+          "ScreenShot\\pic0.gif",
+          "ScreenShot\\pic2.gif",
+          "ScreenShot\\pic3.gif",
+          "ScreenShot\\pic4.gif",
+          "ScreenShot\\pic5.gif",
+          "ScreenShot\\pic6.gif"
+        ]
+      },
+      "files": [
+        {
+          "name": "pic0.gif",
+          "sha256": "4926661d0b1ba1e88a11bfb04aafb544c4ac5a9c99f0f7f32871e36eb328398d",
+          "bytes": 320519,
+          "colors": 224
+        },
+        {
+          "name": "pic2.gif",
+          "sha256": "f69b65659fae16ca305a4f48ee7bbae2fe3605c56d90661408e0a6e9fef63933",
+          "bytes": 314437,
+          "colors": 220
+        },
+        {
+          "name": "pic3.gif",
+          "sha256": "e40b7a00008636255616df0e2d16a1b0e67d0dda2a1766a550bc714dea568790",
+          "bytes": 318757,
+          "colors": 224
+        },
+        {
+          "name": "pic4.gif",
+          "sha256": "0766965effd8f5a10f41a66e049db3af2dd4ff989784e64897b159bd3c76dbec",
+          "bytes": 315302,
+          "colors": 221
+        },
+        {
+          "name": "pic5.gif",
+          "sha256": "e299b0d36e47d3fef5a3528bbe256d72046c76eb2647abfdc2772f56cb95a269",
+          "bytes": 315453,
+          "colors": 222
+        },
+        {
+          "name": "pic6.gif",
+          "sha256": "a398517987b4622c9aef1bdcd1e7f8508f22d72d0c6774713a4b0af80f5e1b51",
+          "bytes": 303661,
+          "colors": 204
+        }
+      ],
+      "collisionPreserved": true,
+      "nestedModalRestored": true,
+      "manualPausePreserved": true,
+      "mainMenuCounterPreserved": true,
+      "originalGameRuns": 0,
+      "naturalClears": 0,
+      "multiplayerTests": 0
+    },
+    {
+      "size": [
+        1280,
+        720
+      ],
+      "fullscreen": true,
+      "run": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-screenshot-key-548\\gui-final-v3\\1280x720\\data",
+          "--mute-audio",
+          "--frames",
+          "285",
+          "--set",
+          "SCREENW=1280;SCREENH=720;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;useBanners=1;music=0;playWind=0;startInFullScreen=1",
+          "--mission",
+          "thewarbegins",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-screenshot-key-548\\gui-final-v3\\1280x720\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-screenshot-key-548\\gui-final-v3\\1280x720\\states.tsv"
+        ],
+        "binarySha256": "f271c2df0586ee6c2a9df08cc13c3078084656e54ebb74b581f9d5960aea72b5",
+        "scriptSha256": "4df76fe6434fb1ef0da420ed2c456cc470adfc8883e1d4a3da05963f1db7e978",
+        "screenshotDirectory": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-screenshot-key-548\\gui-final-v3\\1280x720\\data\\ScreenShot",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 15.284390799999983,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "d832a18be3dedb2ac235db56e8294cf11ac6bea5d4c46edef158bcf9f5e4aae9",
+        "originalsUnchanged": true,
+        "dataUnchanged": true,
+        "createdFiles": [
+          "ScreenShot\\pic0.gif",
+          "ScreenShot\\pic2.gif",
+          "ScreenShot\\pic3.gif",
+          "ScreenShot\\pic4.gif",
+          "ScreenShot\\pic5.gif",
+          "ScreenShot\\pic6.gif"
+        ]
+      },
+      "files": [
+        {
+          "name": "pic0.gif",
+          "sha256": "f41d5b472ba4426f58578d36d0fadb1093423f187ba9098d79a55d7226230805",
+          "bytes": 374472,
+          "colors": 227
+        },
+        {
+          "name": "pic2.gif",
+          "sha256": "0a26c4060dca7aa4ad43d9de9edd161b1c1a66495bf8d525db5809fa712287ad",
+          "bytes": 367460,
+          "colors": 224
+        },
+        {
+          "name": "pic3.gif",
+          "sha256": "cdfec74e3e97ee8eb48ee436bc4963a3f5395ca5868bcd205eab665d1c0103c3",
+          "bytes": 372720,
+          "colors": 229
+        },
+        {
+          "name": "pic4.gif",
+          "sha256": "ce8bedc974a336022aa37fd6690a416c800d3d9e45b9b0a01c59da6a2614ed3d",
+          "bytes": 368594,
+          "colors": 225
+        },
+        {
+          "name": "pic5.gif",
+          "sha256": "7b9d87a51e28c816237b72461754791fdafc7c7ac744f881cd3f86ccd4e5784b",
+          "bytes": 368291,
+          "colors": 224
+        },
+        {
+          "name": "pic6.gif",
+          "sha256": "42a6536c9bed7bfdc086334908467339f522f55ad3bba42e06e85b7c77caae9c",
+          "bytes": 349138,
+          "colors": 203
+        }
+      ],
+      "collisionPreserved": true,
+      "nestedModalRestored": true,
+      "manualPausePreserved": true,
+      "mainMenuCounterPreserved": true,
+      "originalGameRuns": 0,
+      "naturalClears": 0,
+      "multiplayerTests": 0
+    },
+    {
+      "size": [
+        1280,
+        800
+      ],
+      "fullscreen": false,
+      "run": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-screenshot-key-548\\gui-final-v3\\1280x800\\data",
+          "--mute-audio",
+          "--frames",
+          "285",
+          "--set",
+          "SCREENW=1280;SCREENH=800;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;useBanners=1;music=0;playWind=0",
+          "--mission",
+          "thewarbegins",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-screenshot-key-548\\gui-final-v3\\1280x800\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-screenshot-key-548\\gui-final-v3\\1280x800\\states.tsv",
+          "--window"
+        ],
+        "binarySha256": "f271c2df0586ee6c2a9df08cc13c3078084656e54ebb74b581f9d5960aea72b5",
+        "scriptSha256": "e5b5f94c9f81880978e1da81891b697e32d91bb73ee302c1273cbe8d38b52b27",
+        "screenshotDirectory": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-screenshot-key-548\\gui-final-v3\\1280x800\\data\\ScreenShot",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 12.135757300000023,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "d832a18be3dedb2ac235db56e8294cf11ac6bea5d4c46edef158bcf9f5e4aae9",
+        "originalsUnchanged": true,
+        "dataUnchanged": true,
+        "createdFiles": [
+          "ScreenShot\\pic0.gif",
+          "ScreenShot\\pic2.gif",
+          "ScreenShot\\pic3.gif",
+          "ScreenShot\\pic4.gif",
+          "ScreenShot\\pic5.gif",
+          "ScreenShot\\pic6.gif"
+        ]
+      },
+      "files": [
+        {
+          "name": "pic0.gif",
+          "sha256": "0f347b23ccc8bf9bbf833bd1950fa10551a0776cc0bcf1ff965e485aca1c9a47",
+          "bytes": 413366,
+          "colors": 232
+        },
+        {
+          "name": "pic2.gif",
+          "sha256": "439b198875d38685208e38a2b95a9bde7ed76062d57e2f8cb0fd546ce31754d2",
+          "bytes": 405780,
+          "colors": 228
+        },
+        {
+          "name": "pic3.gif",
+          "sha256": "8b41e55e29130c6c65b71f1774f851ef5088db6b2d96cc86c18efd7b2d54aaf1",
+          "bytes": 410505,
+          "colors": 230
+        },
+        {
+          "name": "pic4.gif",
+          "sha256": "7c41be5aba8725deaf51047a40a7afb20e92450a87f25206420524a46560ec58",
+          "bytes": 406827,
+          "colors": 229
+        },
+        {
+          "name": "pic5.gif",
+          "sha256": "67bdfdfbc81a66999bfc6e5c7e51b4763dea3a595b55b15fb3465e841b6a367b",
+          "bytes": 406649,
+          "colors": 228
+        },
+        {
+          "name": "pic6.gif",
+          "sha256": "a12b855f9adb308db78eb98746d22a4735c0f0fd07480383298a9f6710916882",
+          "bytes": 380988,
+          "colors": 203
+        }
+      ],
+      "collisionPreserved": true,
+      "nestedModalRestored": true,
+      "manualPausePreserved": true,
+      "mainMenuCounterPreserved": true,
+      "originalGameRuns": 0,
+      "naturalClears": 0,
+      "multiplayerTests": 0
+    }
+  ],
+  "totalActualGames": 7,
+  "totalExit0": 6,
+  "totalExit1": 1,
+  "finalAcceptedGames": 3,
+  "finalDecodedGifs": 18,
+  "protectedFilesUnchanged": 1820,
+  "existingFixturesUnchanged": 708,
+  "sourceCount": 2950,
+  "changedExistingSource": [
+    "cpppj/src/client/CMakeLists.txt",
+    "cpppj/src/client/ClientMain.cpp",
+    "cpppj/src/client/ClientMain.h",
+    "cpppj/src/client/UberGump.cpp",
+    "cpppj/src/client/ViewKeyInput.h",
+    "cpppj/src/client/ViewKeyInput.cpp",
+    "cpppj/tests/CMakeLists.txt"
+  ],
+  "addedSource": [
+    "cpppj/src/client/GifScreenshot.h",
+    "cpppj/src/client/GifScreenshot.cpp",
+    "cpppj/tests/GifScreenshotTests.cpp",
+    "cpppj/tests/fixtures/screenshot-key-x86.tsv",
+    "cpppj/tests/fixtures/screenshot-palette-x86.tsv"
+  ],
+  "gameSha256": "f271c2df0586ee6c2a9df08cc13c3078084656e54ebb74b581f9d5960aea72b5",
+  "testSha256": "e4291442d6709518a3dabddebfbbcee0b08c4a9f91669135e796fca9c67ddd94",
+  "freezeSha256": "fd59a50c0c09c22c91199181cf6f555c01fba438a4aad4c0b23713d21a0f46b7",
+  "failures": [
+    "초기 로그 문자열 개행의 TSV framing만 교정하고 교정 전 바이트/SHA 보존",
+    "초기 C++ 집계135/32를151/16으로 적은 단언1 실패와 파일 정규형 대소문자 기대2 실패를 보존/교정",
+    "최초 GUI는 브리핑 촬영이 차단된다고 가정해 Play Mission 부재로 종료1",
+    "후속 GUI는 정상종료0 뒤 메인 메뉴의 정지를 잘못 기대한 도구 단언 실패; 원시 재판독으로 교정"
+  ],
+  "boundaries": [
+    "Ctrl Shift32입력은 세 외부 CALL 경계만 관측; 실제 진단 파일 미구현",
+    "GIF 압축 파일 바이트 전체 동일성 미검증",
+    "촬영 안내의 Br 치환/긴 경로 외관의 원본 대조 미검증",
+    "기본 ScreenShot 상위 폴더는 원본 fopen처럼 자동 생성하지 않음; 실제 검사는 사본에 설치 폴더 준비",
+    "전체34경로 마지막통합544; 자연완주/Win11실기/사용자 후속플레이 잔여",
+    "멀티플레이 신규시험0, 원본 실제게임0, 자연완주0"
+  ],
+  "originalAndCdFilesUnchanged": 1819,
+  "agentsUnchanged": true,
+  "existingTsvFixturesUnchanged": 705
+}

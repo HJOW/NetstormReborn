@@ -13,7 +13,7 @@ template<class T> const T& Required(const T& value) { // 실제 선택된 장치
 bool DispatchViewKeyInput(InputEvent event,ViewKeyInputGlobals globals,const ViewKeyInputHooks& hooks) {
     const auto code=event.code&0x03ffffffU; // 원본 사건의 상위 입력 표시는 키 비교에서만 제외한다.
     if ((event.code&InputCode::kRelease) || (code!=kF2 && code!=kF3 && code!=kF7 && code!=kF8)) return false;
-    if (code==kF7 && (event.code&InputCode::kShift)) return false; // Shift F7은 앞선 파일/안내 경계 전체 복원 뒤 연결한다. 배너만 바꾸는 별칭으로 만들지 않는다.
+    if (code==kF7 && (event.code&(InputCode::kShift|InputCode::kControl))==(InputCode::kShift|InputCode::kControl)) return false; // Ctrl Shift 진단 파일은 별도 복원 범위다. 일반 Shift 저장/Tell은 앞선 입력 단계에서 실행한다.
     if (code==kF8 && !(event.code&(InputCode::kControl|InputCode::kShift))) {
         if (Required(hooks.fort)()) Required(hooks.queue)(kFirst,0,0);
         else if (Required(hooks.metamap)()) Required(hooks.tell)("ChalIntro"); // 원문 메타맵 분기는 정적 연결이며 이번 새 실행/검사 범위에서 제외한다.

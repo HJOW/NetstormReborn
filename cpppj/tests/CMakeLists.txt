@@ -203,6 +203,7 @@ add_executable(netstorm_tests
     GameMenuBarTests.cpp GameMenusTests.cpp CampaignGameMenuTests.cpp TellParametersTests.cpp
     GameMenuActionsTests.cpp MessageGumpTests.cpp
     ViewKeyInputTests.cpp
+    GifScreenshotTests.cpp
     F8KeyInputTests.cpp
     BannerOptionTests.cpp
     SendMoneyInputTests.cpp
@@ -2376,3 +2377,6 @@ set_source_files_properties(BannerOptionTests.cpp PROPERTIES COMPILE_DEFINITIONS
 # 원본 송금 분기의 금액/현재 대상/AI 및 연결 플래그를 독립 관측한 입력이다.
 set_source_files_properties(SendMoneyInputTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_SEND_MONEY_INPUT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/send-money-input-x86.tsv\"")
+# Shift F7 원문167관측 중 제품에 연결한135입력의 독립 fixture다.
+set_source_files_properties(GifScreenshotTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_SCREENSHOT_KEY_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/screenshot-key-x86.tsv\"")
