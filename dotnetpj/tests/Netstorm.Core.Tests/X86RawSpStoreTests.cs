@@ -154,4 +154,79 @@ public sealed class X86RawSpStoreTests
         // 9600 경계를 넘으면 offset 이 되돌아간다
         Assert.True(store.Offset < 9600);
     }
+
+    /// <summary>
+    /// SP 초기화의 명시 할당 입력·부분 중단(RawSpStore)을 원본 x86 기대값에 대조한다.
+    /// 장면은 cpppj/tests/ClientSpGlobalsTests.cpp 의 ClientSpGlobals_ReplaysNativeInitializationAllocations48 과 같다:
+    /// 행마다 시드·사전 초기화 횟수·중단 위치로 저장소를 세우고 Initialize 를 반복한다.
+    /// 중단 여부·할당 수·초기화 여부·offset·추적 offset·난수 상태·첫 배열 여부·1152바이트 전체를 대조한다.
+    /// 기준 판본은 10.78 이며 행 48개를 모두 재생한다 (R0-4 재대조, 2026-10-28).
+    /// </summary>
+    [Fact]
+    public void SpInitializationMatchNative()
+    {
+        string[][] rows = X86Fixture.Read("sp-initialization");
+        int count = 0;
+        X86Fixture.CheckRows(rows, row =>
+        {
+            if (row[0] == "seed")
+            {
+                return true;
+            }
+            Assert.Equal(12, row.Length);
+            uint seed = X86Fixture.UInt(row[0]);
+            uint before = X86Fixture.UInt(row[1]);
+            uint stop = X86Fixture.UInt(row[2]);
+            uint allocations = 0;
+            int tracking = 0;
+            bool stopped = false;
+            var rng = new NetstormRandom(0);
+            // 원본 operator_new 에 주던 같은 36바이트 명시 입력을 행마다 만든다
+            var store = new RawSpStore(rng, () => seed, (Span<byte> bytes) =>
+            {
+                Assert.Equal(36, bytes.Length);
+                allocations++;
+                for (int i = 0; i < bytes.Length; i++)
+                {
+                    bytes[i] = (byte)(allocations * 13 + i * 7);
+                }
+                if (stop != 0 && allocations == before * 32 + stop)
+                {
+                    throw new SpInitStopException();
+                }
+            });
+            store.BindTrackingOffset(value => tracking = value);
+            // 부분 실패를 늦은 재실행이나 되돌리기로 숨기지 않고 그대로 둔다
+            try
+            {
+                for (uint pass = 0; pass <= before; pass++)
+                {
+                    store.Initialize();
+                }
+            }
+            catch (SpInitStopException)
+            {
+                stopped = true;
+            }
+            Assert.Equal(row[4] == "stop", stopped);
+            Assert.Equal(X86Fixture.UInt(row[5]), allocations);
+            Assert.Equal(X86Fixture.UInt(row[6]) != 0, store.Initialized);
+            Assert.Equal(X86Fixture.UInt(row[7]), store.Offset);
+            Assert.Equal(X86Fixture.UInt(row[8]), unchecked((uint)tracking));
+            Assert.Equal(X86Fixture.UInt(row[9]), rng.State);
+            Assert.Equal(X86Fixture.UInt(row[10]) != 0, store.FirstPool);
+            Assert.Equal(2304, row[11].Length);
+            Assert.Equal(row[11], Dump(store.Pools));
+            count++;
+            return true;
+        });
+        Assert.Equal(48, count);
+    }
+
+    /// <summary>
+    /// SP 초기화 명시 중단 표시. 원본 operator_new 정상 반환 전 중단을 흉내낸 검사 입력이며 게임 규칙과 무관하다.
+    /// </summary>
+    private sealed class SpInitStopException : Exception
+    {
+    }
 }

@@ -311,10 +311,14 @@ public sealed class X86RawSquidRewardTests
         Assert.Throws<ArgumentOutOfRangeException>(() => reward.Refund(0, 1, false));
         Assert.False(store.Initialized);
         Assert.Equal(0, state.GeyserPool);
-        // 비유한 SP 시작값은 Set 전에 거부한다
+        // 비유한 SP 저장값도 원본처럼 허용한다. 지갑에는 delta 의 SpMirrorFtol 변환값이 들어가고 저장값은 float 합이 된다
+        // (SpMirrorFtol 도입 R0-4 재대조, 2026-10-28. 이전에는 여기서 예외를 던졌다).
+        bookkeeping.AiAttached[1] = true;
         store.Set(1, 0x7fc00000u);
-        var finite = new RawSquidReward(pool, types, bookkeeping, state, store);
-        Assert.Throws<InvalidOperationException>(() => finite.AddSp(1, 1f));
+        var nanStored = new RawSquidReward(pool, types, bookkeeping, state, store);
+        nanStored.AddSp(1, 1f);
+        Assert.True(float.IsNaN(BitConverter.UInt32BitsToSingle(store.Get(1))));
+        Assert.Equal(1, state.AiWallet[1]);
     }
 
     /// <summary>
@@ -419,5 +423,61 @@ public sealed class X86RawSquidRewardTests
         // 디버그 assert 는 HP 없는 타입의 HP 조회를 거부한다
         state.DebugAsserts = true;
         Assert.Throws<InvalidOperationException>(() => reward.TypeHitPoints(82));
+    }
+
+    /// <summary>
+    /// SP 가산 비트(RawSquidReward.AddSp)를 원본 x86 기대값에 대조한다.
+    /// 장면은 cpppj/tests/RewardSpBitsTests.cpp 의 RewardSpBits_ReplaysNativeLocalAndOtherOwnerIncludingZero 와 같다:
+    /// 행마다 소유자·고정 모드·시작 SP 비트·증감 float 비트로 저장소를 세우고 AddSp 한 번을 실행한다.
+    /// 끝 저장값·지갑 정수·표시 갱신 순서를 대조한다. 비유한·범위 밖 증감은 지갑에 0 이 들어간다(SpMirrorFtol).
+    /// 기준 판본은 10.78 이며 행 504개를 모두 재생한다 (R0-4 재대조, 2026-10-28).
+    /// </summary>
+    [Fact]
+    public void SpAddBitsMatchNative()
+    {
+        string[][] rows = X86Fixture.Read("sp-add-bits");
+        int count = 0;
+        X86Fixture.CheckRows(rows, row =>
+        {
+            if (row[0] == "entry")
+            {
+                return true;
+            }
+            Assert.Equal(9, row.Length);
+            uint owner = X86Fixture.UInt(row[1]);
+            uint fixedFlags = X86Fixture.UInt(row[2]);
+            var pool = new RawSidPool(24000, true);
+            var types = Enumerable.Range(0, OriginalConstructors.TypeCount)
+                .Select(_ => new OriginalTypeRecord()).ToArray();
+            var bookkeeping = new RawPostPopState();
+            var state = new SquidRewardState
+            {
+                FixedSpA = (fixedFlags & 1) != 0,
+                FixedSpB = (fixedFlags & 2) != 0,
+            };
+            // 원본 재생과 같은 출발 난수·재시드로 저장소를 세운다
+            var rng = new NetstormRandom(1);
+            var store = new RawSpStore(rng, () => 77u);
+            store.Set(owner, X86Fixture.UInt(row[3]));
+            float delta = BitConverter.UInt32BitsToSingle(X86Fixture.UInt(row[4]));
+            uint mirror = 0;
+            uint refreshCalls = 0;
+            var reward = new RawSquidReward(pool, types, bookkeeping, state, store,
+                new SquidRewardHooks { RefreshSp = () => refreshCalls++ });
+            // 실제 세션의 지갑 처리기를 빌려 부착 여부와 무관하게 정수 지급을 관측한다
+            reward.BindPatchWallet((selected, amount) =>
+            {
+                Assert.Equal(owner, selected);
+                mirror = unchecked((uint)amount);
+            });
+            reward.AddSp(owner, delta);
+            Assert.Equal(X86Fixture.UInt(row[6]), store.Get(owner));
+            Assert.Equal(X86Fixture.UInt(row[7]), mirror);
+            Assert.Equal(1u, refreshCalls);
+            Assert.Equal("get;set;wallet;refresh", row[8]);
+            count++;
+            return true;
+        });
+        Assert.Equal(504, count);
     }
 }

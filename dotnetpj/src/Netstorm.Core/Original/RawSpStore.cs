@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices;
 using Netstorm.Core.Simulation;
 
 namespace Netstorm.Core.Original;
@@ -8,7 +9,7 @@ namespace Netstorm.Core.Original;
 /// 값의 k번째 비트는 배열 k 의 (offset+k)&amp;31 번째 비트이며, 같은 칸의 다른 비트는 난수 잡음으로 채운다.
 /// 초기화는 재시드 콜백 → offset 추첨 → 32번 순열 교환 → 항등 순열 복원 → 배열 채우기 순서다.
 /// 이 클래스는 10.78 패치판 SP 저장소만 옮겼다(CD 판은 지역 float SP 를 쓴다).
-/// 근거: cpppj/src/o/SpStore.cpp (W05 선행 조각, 2026-10-22).
+/// 근거: cpppj/src/o/SpStore.cpp (W05 선행 조각, 2026-10-22; 명시 할당 공급자는 R0-4 재대조, 2026-10-28).
 /// </summary>
 public sealed class RawSpStore
 {
@@ -39,8 +40,11 @@ public sealed class RawSpStore
     /// <summary>초기화 때 난수 상태를 주입하는 콜백. 원본 시각 기반 재시드를 대신한다.</summary>
     private readonly Func<uint>? _reseed;
 
-    /// <summary>초기화가 배열을 채우는 값(원본 fill).</summary>
+    /// <summary>초기화가 배열을 채우는 값(원본 fill). 명시 할당 공급자가 있으면 쓰지 않는다.</summary>
     private readonly uint _fill;
+
+    /// <summary>초기화가 32개 행마다 한 번씩 부르는 실제 할당 입력 공급자. 36바이트(9 DWORD)를 채우며, 던지면 그 행부터 초기화가 중단된다.</summary>
+    private readonly Action<Span<byte>>? _allocation;
 
     /// <summary>추적 offset 의 외부 기록자. 원본이 기존 전역 주소를 빌리는 자리다.</summary>
     private Action<int>? _trackingWrite;
@@ -57,7 +61,7 @@ public sealed class RawSpStore
     /// <summary>실제 비트를 흩뿌려 보관하는 32×9 DWORD 배열. 배열 k 의 owner 번째가 k*9+owner 다.</summary>
     private readonly uint[] _pools = new uint[Bits * Owners];
 
-    /// <summary>실제 배열 준비 여부(원본 00594fd0 의 NULL 조건).</summary>
+    /// <summary>실제 배열 준비 여부(원본 00594fd0 의 NULL 조건). 첫 행 할당이 끝나면 참이 되며 전체 초기화 완료보다 앞설 수 있다.</summary>
     private bool _firstPool;
 
     /// <summary>
@@ -72,6 +76,27 @@ public sealed class RawSpStore
         _rng = rng;
         _reseed = reseed;
         _fill = fill;
+        for (int index = 0; index < Bits; index++)
+        {
+            _permutation[index] = (short)index;
+        }
+    }
+
+    /// <summary>
+    /// SP 저장소를 만든다. 초기화 32개 행의 실제 할당 입력을 공급자로 받으며, 공급자가 던지면 그 행부터 초기화가 중단되고 앞선 행은 유지된다.
+    /// 난수는 이 객체보다 오래 살아야 하며 초기화 전에는 배열을 쓰지 않는다.
+    /// 근거: cpppj/src/o/SpStore.cpp 명시 공급자 생성자 (R0-4 재대조, 2026-10-28).
+    /// </summary>
+    /// <param name="rng">원본 전역 난수.</param>
+    /// <param name="reseed">초기화 때 난수 상태를 만드는 콜백. null 이면 Get/Set/Rotate 가 초기화에서 예외다.</param>
+    /// <param name="allocation">32개 행마다 36바이트 입력을 채우는 공급자. null 이면 거부한다.</param>
+    public RawSpStore(NetstormRandom rng, Func<uint>? reseed, Action<Span<byte>> allocation)
+    {
+        ArgumentNullException.ThrowIfNull(rng);
+        ArgumentNullException.ThrowIfNull(allocation);
+        _rng = rng;
+        _reseed = reseed;
+        _allocation = allocation;
         for (int index = 0; index < Bits; index++)
         {
             _permutation[index] = (short)index;
@@ -119,6 +144,8 @@ public sealed class RawSpStore
 
     /// <summary>
     /// 원본 0040eba0: 재시드 → offset 추첨 → 추적 offset 기록 → 32번 순열 교환 → 항등 순열 복원 → 배열 채우기.
+    /// 배열 채우기는 행마다 공급자 입력(또는 fill 값)으로 같은 현재 행을 발행하며, 공급자가 던지면 앞선 행을 되돌리지 않고 중단한다.
+    /// 추적 offset 쓰기와 첫 배열 준비 표시는 R4 세션 조립 때 장기 주소 공유로 바꾸며, 이 단위는 기록 콜백으로 L1을 대조한다.
     /// </summary>
     public void Initialize()
     {
@@ -145,8 +172,28 @@ public sealed class RawSpStore
         {
             _permutation[index] = (short)index;
         }
-        Array.Fill(_pools, _fill);
-        _firstPool = true;
+        // 각 행의 정상 복귀 뒤에만 같은 현재 행을 발행한다. 뒤의 실패가 앞선 행을 되돌리지 않는다
+        Span<uint> input = stackalloc uint[Owners];
+        for (int index = 0; index < Bits; index++)
+        {
+            if (_allocation is not null)
+            {
+                Span<byte> bytes = MemoryMarshal.AsBytes(input);
+                _allocation(bytes);
+            }
+            else
+            {
+                input.Fill(_fill);
+            }
+            for (int owner = 0; owner < Owners; owner++)
+            {
+                _pools[index * Owners + owner] = input[owner];
+            }
+            if (index == 0)
+            {
+                _firstPool = true;
+            }
+        }
         _initialized = true;
     }
 

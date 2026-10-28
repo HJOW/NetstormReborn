@@ -68,5 +68,5 @@ cpppj의 파일·클래스·함수 경계와 이름을 따른다. 이름이 같�
 
 ## 5. 현재 상태 (2026-10-28)
 
-- 행 82개: `L1` 68개(초판), `port` 14개(`Netstorm.Client`의 화면·입력 계층 11개와 캡처·스크립트 3개). `--ports` 기준 cpppj 소스가 바뀐 쌍은 35개이며 모두 `L1` 행이다. 변경의 성격은 [재대조 영향표](../docs/dotnet-cpp-resync-20261028.md)에 정리했다.
+- 행 82개: `L1` 68개(초판), `port` 14개(`Netstorm.Client`의 화면·입력 계층 11개와 캡처·스크립트 3개). `--ports` 기준 cpppj 소스가 바뀐 쌍은 33개이며 모두 `L1` 행이다. 변경의 성격은 [재대조 영향표](../docs/dotnet-cpp-resync-20261028.md)에 정리했다. R0-4 SP 묶음에서 `RawSquidReward.cs`·`RawSpStore.cs` 2개 행의 base를 HEAD로 올렸다(35→33개, [단위 문서](../docs/dotnet-r04-sp-bits-20261028.md)).
 - `Netstorm.Client`의 `port` 행은 [R1-1 문서](../docs/dotnet-client-screen-20261028.md)가 만들었다. 새 이식 쌍은 `python dotnetpj/tools/cpp_sync.py --ports-add CPP:CSHARP[:STATUS]`로 추가한다(`--ports-init`은 초판 전용).

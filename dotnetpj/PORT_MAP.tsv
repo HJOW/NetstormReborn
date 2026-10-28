@@ -64,7 +64,7 @@ cpppj/src/o/RawVortexPreDestroy.cpp	Netstorm.Core/Original/RawVortexPreDestroy.c
 cpppj/src/o/RiftType.h	Netstorm.Core/Original/OriginalTypeRecord.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
 cpppj/src/o/SidPool.cpp	Netstorm.Core/Original/RawSidPool.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
 cpppj/src/o/SidPool.cpp	Netstorm.Core/Simulation/SidPool.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
-cpppj/src/o/SpStore.cpp	Netstorm.Core/Original/RawSpStore.cs	5d34fc2dbabe34e06d8e86e6b4eb3a3aa33803f3	L1
+cpppj/src/o/SpStore.cpp	Netstorm.Core/Original/RawSpStore.cs	3d038e510444a9c7448b6d4c88cc84f78446d395	L1
 cpppj/src/o/Squid.cpp	Netstorm.Core/Rules/SpotRules.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
 cpppj/src/o/SquidDestroyLifecycle.cpp	Netstorm.Core/Original/RawSquidDestroyLifecycle.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
 cpppj/src/o/SquidDisplay.cpp	Netstorm.Core/Display/DisplayBounds.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
@@ -80,7 +80,7 @@ cpppj/src/o/SquidPop.cpp	Netstorm.Core/Original/OriginalPopDisplay.cs	f95a8db28c
 cpppj/src/o/SquidPop.cpp	Netstorm.Core/Original/RawPop.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
 cpppj/src/o/SquidPostPop.cpp	Netstorm.Core/Original/RawPostPop.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
 cpppj/src/o/SquidReward.cpp	Netstorm.Core/Original/RawHitPoints.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
-cpppj/src/o/SquidReward.cpp	Netstorm.Core/Original/RawSquidReward.cs	5d34fc2dbabe34e06d8e86e6b4eb3a3aa33803f3	L1
+cpppj/src/o/SquidReward.cpp	Netstorm.Core/Original/RawSquidReward.cs	3d038e510444a9c7448b6d4c88cc84f78446d395	L1
 cpppj/src/o/SquidSpatial.cpp	Netstorm.Core/Rules/SpotMap.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
 cpppj/src/o/SquidUnpop.cpp	Netstorm.Core/Original/OriginalUnpopDisplay.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
 cpppj/src/o/SquidUnpop.cpp	Netstorm.Core/Original/RawUnpop.cs	c7459e61da4d3b6a97c5266bb3ec676f38be1d5e	L1

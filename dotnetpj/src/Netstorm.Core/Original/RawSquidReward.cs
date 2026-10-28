@@ -27,6 +27,7 @@ public sealed class SquidRewardTypes
 
 /// <summary>
 /// 보상 계산이 읽거나 갱신하는 판본별 전역과 AI 지갑(원본 SquidRewardState, 10.78 패치판).
+/// 실제 세션의 공유 전역(Percent·GeyserPool·PriestQuarterHp 장기 주소 빌리기)은 R4 세션 조립 때 연결하며, 이 단위는 값형 전역으로 L1을 대조한다.
 /// </summary>
 public sealed class SquidRewardState
 {
@@ -149,6 +150,9 @@ public sealed class RawSquidReward
     /// <summary>외부 표시·개수 조회 훅.</summary>
     private readonly SquidRewardHooks _hooks;
 
+    /// <summary>실제 패치 세션의 AI 지갑 가산 처리기. 연결되면 모든 지갑 가산이 이 몸체를 쓰며 값형 부착·지갑 배열과 동기화하지 않는다.</summary>
+    private Action<uint, int>? _patchWallet;
+
     /// <summary>가상 +0x80 을 물은 횟수(진단용).</summary>
     private uint _virtualCalls;
 
@@ -232,6 +236,22 @@ public sealed class RawSquidReward
             throw new ArgumentOutOfRangeException(nameof(value), value, "보상 정수 변환 범위 오류");
         }
         return unchecked((int)(uint)(long)value);
+    }
+
+    /// <summary>
+    /// SP 가산의 원본 CRT 변환(SpMirrorFtol): float 를 double 로 정확히 옮긴 뒤 0 방향으로 절삭해 하위 32비트만 남긴다.
+    /// 비유한 값이거나 64비트 범위를 벗어나면 예외 대신 0 을 돌려준다. 보상 곡선 등의 <see cref="Ftol"/>으로 바꾸지 않는다.
+    /// 근거: cpppj/src/o/SquidReward.cpp (R0-4 재대조, 2026-10-28).
+    /// </summary>
+    /// <param name="value">변환할 SP 증감(float).</param>
+    private static int SpMirrorFtol(float value)
+    {
+        double exact = value;
+        if (!double.IsFinite(exact) || exact >= 9223372036854775808.0 || exact < -9223372036854775808.0)
+        {
+            return 0;
+        }
+        return unchecked((int)(uint)(long)exact);
     }
 
     /// <summary>32비트로 감기는 정수 변환.</summary>
@@ -445,12 +465,18 @@ public sealed class RawSquidReward
 
     /// <summary>
     /// 원본 00413bb0: SP 를 바꾸기 전에 AI 가 붙은 소유자의 지갑에 정수 금액을 더한다.
+    /// 실제 지갑 처리기가 연결되면 부착·비활성·최솟값 규칙을 따지지 않고 그 처리기에 그대로 넘긴다.
     /// 지갑 비활성·미부착·최솟값·32비트 감김 규칙을 쓴다.
     /// </summary>
     /// <param name="owner">소유자 번호.</param>
     /// <param name="amount">더할 정수 금액(음수면 차감).</param>
     private void AddWallet(uint owner, int amount)
     {
+        if (_patchWallet is not null)
+        {
+            _patchWallet(owner, amount);
+            return;
+        }
         if (_state.AiMirrorDisabled || owner < 1 || owner > RawPostPopState.OwnerCount - 1 || !_bookkeeping.AiAttached[owner])
         {
             return;
@@ -469,25 +495,35 @@ public sealed class RawSquidReward
     public void CreditWallet(uint owner, int amount) => AddWallet(owner, amount);
 
     /// <summary>
+    /// 실제 패치 세션의 AI 지갑 가산 처리기를 연결한다. 연결 뒤의 모든 지갑 가산은 값형 부착·지갑 배열 대신 이 처리기를 쓴다.
+    /// 패치판 SP 저장소 범위에서만 쓰므로 null 은 거부한다.
+    /// 근거: cpppj/src/o/SquidReward.h BindPatchWallet (R0-4 재대조, 2026-10-28).
+    /// </summary>
+    /// <param name="credit">소유자와 금액을 받는 실제 지갑 가산 처리기.</param>
+    public void BindPatchWallet(Action<uint, int> credit)
+    {
+        ArgumentNullException.ThrowIfNull(credit);
+        _patchWallet = credit;
+    }
+
+    /// <summary>
     /// 원본 패치 0040eec0/0041df80: 소유자의 SP 에 delta 를 더하고 AI 지갑과 SP 표시를 갱신한다.
     /// SP 고정 모드에서는 delta 대신 고정값과의 차이가 쓰인다.
+    /// 저장된 SP 가 비유한 값이거나 delta 가 비유한·64비트 범위 밖이어도 거부하지 않으며, 지갑에는 <see cref="SpMirrorFtol"/>의 0 을 넣는다.
+    /// 근거: cpppj/src/o/SquidReward.cpp SpMirrorFtol (R0-4 재대조, 2026-10-28).
     /// </summary>
     /// <param name="owner">소유자 번호.</param>
     /// <param name="delta">더할 SP(음수면 차감).</param>
     public void AddSp(uint owner, float delta)
     {
         float sp = BitConverter.UInt32BitsToSingle(_store.Get(owner));
-        if (!float.IsFinite(sp))
-        {
-            throw new InvalidOperationException("보상 SP 시작값이 유한하지 않습니다");
-        }
         bool fixedMode = _state.FixedSpA || _state.FixedSpB;
         if (fixedMode)
         {
             delta = (float)(PatchFixedSp - (double)sp);
         }
         float sum = (float)((double)sp + (double)delta);
-        int mirror = Ftol((double)delta);
+        int mirror = SpMirrorFtol(delta);
         _store.Set(owner, BitConverter.SingleToUInt32Bits(sum));
         AddWallet(owner, mirror);
         _hooks.RefreshSp?.Invoke();

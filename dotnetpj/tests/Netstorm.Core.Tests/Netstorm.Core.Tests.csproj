@@ -106,8 +106,12 @@
     <None Include="../../../cpppj/tests/fixtures/form-packet-x86.tsv" Link="X86/form-packet-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <!-- W05 선행 조각: 패치판 SP 저장소 회전·쓰기·초기화 61행. -->
     <None Include="../../../cpppj/tests/fixtures/sprotate-x86.tsv" Link="X86/sprotate-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <!-- R0-4 재대조: SP 초기화의 명시 할당 36바이트 입력·부분 중단 48행. -->
+    <None Include="../../../cpppj/tests/fixtures/sp-initialization-x86.tsv" Link="X86/sp-initialization-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <!-- W05 선행 조각: 삭제·해체 보상 7,200행 중 10.78 몫 2,400행. -->
     <None Include="../../../cpppj/tests/fixtures/reward-x86.tsv" Link="X86/reward-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <!-- R0-4 재대조: SP 가산의 큰 유한·무한대·NaN·서브노멀 비트와 정수 지급 504행. -->
+    <None Include="../../../cpppj/tests/fixtures/sp-add-bits-x86.tsv" Link="X86/sp-add-bits-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <!-- W03 내용물 수명 조각: 삭제·연결 검사·부착 396행 중 10.78 몫 198행과 전체 풀 체크섬 -->
     <None Include="../../../cpppj/tests/fixtures/contentlifetime-x86.tsv" Link="X86/contentlifetime-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <!-- W03 신전 삭제 조각: 신전 사전 파괴 102행의 목록·섬·지역·공통·Player 정리 -->
