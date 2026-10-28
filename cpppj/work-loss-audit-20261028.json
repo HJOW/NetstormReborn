@@ -1,0 +1,151 @@
+{
+  "scope": "cpppj 완료541/542와 진행543 소실 점검",
+  "head": "981063304c9ca860aaa32ed2aeb9231d6abef709",
+  "statusAtStart": " M cpppj/src/client/GameMenuCommands.cpp\n M cpppj/src/client/UberGump.cpp\n M cpppj/tests/ProductionInitialContextTests.cpp\n M dotnetpj/tests/Netstorm.Core.Tests/Netstorm.Core.Tests.csproj\n?? dotnetpj/src/Netstorm.Core/Original/RawPriestRegen.cs\n?? dotnetpj/tests/Netstorm.Core.Tests/X86RawPriestRegenTests.cs\n?? tools/cpp_chat_divider_smoke.py\n?? tools/cpp_work_loss_audit.py\n",
+  "tracked": {
+    "count": 18593,
+    "missing": [],
+    "unexpectedEmpty": []
+  },
+  "source542": {
+    "count": 2930,
+    "missing": [],
+    "changed": [
+      "cpppj/src/client/GameMenuCommands.cpp",
+      "cpppj/src/client/UberGump.cpp",
+      "cpppj/tests/ProductionInitialContextTests.cpp"
+    ],
+    "expectedWorkChanges": [
+      "cpppj/src/client/GameMenuCommands.cpp",
+      "cpppj/src/client/UberGump.cpp",
+      "cpppj/tests/ProductionInitialContextTests.cpp"
+    ],
+    "unexpectedChanges": []
+  },
+  "protected": {
+    "count": 1819,
+    "missing": [],
+    "changed": [],
+    "agentsUnchanged": true
+  },
+  "completedEvidence": [
+    {
+      "report": "cpppj/priest-display-20261028.json",
+      "count": 28,
+      "missing": [],
+      "changed": []
+    },
+    {
+      "report": "cpppj/construction-mana-20261028.json",
+      "count": 34,
+      "missing": [],
+      "changed": []
+    }
+  ],
+  "preservedWork": [
+    {
+      "path": "cpppj/src/client/GameMenuCommands.cpp",
+      "bytes": 4208,
+      "sha256": "892329457f5ca74dcd5df295c26034f811ec964f5afc7e36173c5d89d843391e",
+      "currentMatches": true,
+      "copyMatches": true
+    },
+    {
+      "path": "cpppj/src/client/UberGump.cpp",
+      "bytes": 157846,
+      "sha256": "82cefd9f426af2d6a5b5053f25f13cdef6ec17236b1adf595789ce93e81b071f",
+      "currentMatches": true,
+      "copyMatches": true
+    },
+    {
+      "path": "cpppj/tests/ProductionInitialContextTests.cpp",
+      "bytes": 54811,
+      "sha256": "fd7217516b32969262d5744c300c17ad4ff514321511cdc924ac7cca1639ab9c",
+      "currentMatches": true,
+      "copyMatches": true
+    },
+    {
+      "path": "tools/cpp_chat_divider_smoke.py",
+      "bytes": 7355,
+      "sha256": "43ff9567297186a535e36a111f3c6ef2a41d5f4579001d34e0c20339dd88b382",
+      "currentMatches": true,
+      "copyMatches": true
+    }
+  ],
+  "recoveryPatch": {
+    "path": "docs/exe/recovery/cpp-chat-divider-543-20261028.patch",
+    "sha256": "37df01e91dad42f785406ad55d96ae88df7eaca7fdfa7e9b76dc681a9ac19a25",
+    "reverseCheckExitCode": 0,
+    "containsOnlyThisSessionFiles": [
+      "cpppj/src/client/GameMenuCommands.cpp",
+      "cpppj/src/client/UberGump.cpp",
+      "cpppj/tests/ProductionInitialContextTests.cpp",
+      "tools/cpp_chat_divider_smoke.py"
+    ]
+  },
+  "executables": {
+    "NetstormCpp.exe": {
+      "current": "2de030bb3f9e837d77c9277cf4cb8ee9a96771e9cf5395d113420d1b95139708",
+      "completed542": "17876e8c57120592510d4b7d8d91da4e85c812cc74955ec65f01a5151fb374c2"
+    },
+    "netstorm_tests.exe": {
+      "current": "027ad3ef8c3635a58032f185cd044c71946fc8c0fd59a63ac51cf86334f1e566",
+      "completed542": "83603b9dc15649fac4729f9d102c5a1a4d1ee2cc253e8219bae2df4fc38a89ca"
+    }
+  },
+  "binaryStatus": "현재 실행파일은 진행543 빌드이며 완료542 해시와 다름. 파일 삭제와 구별",
+  "sourceMutationsDuringAudit": false,
+  "dotnetFilesModifiedByAudit": false,
+  "previousReversion": "이전 미커밋2파일 변경의 HEAD 원복은 관측됐으며 현재 복구됨. 모델 용량 오류가 직접 원인인지는 미확정",
+  "failures": [],
+  "completedCommitAncestry": {
+    "1ddc4ba0": true,
+    "55520f78": true
+  },
+  "gitConnectivity": {
+    "command": "git fsck --connectivity-only --no-dangling",
+    "exitCode": 0,
+    "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "current543Validation": {
+    "cppFailedChecks": 3,
+    "guiProcessExitCode": 0,
+    "guiCoordinateAssertionPassed": false,
+    "acceptedAsComplete": false
+  },
+  "rawEvidence": [
+    {
+      "path": "extracted/cpp-work-loss-audit-20261028/audit.json",
+      "sha256": "0982eb29e3aa0668f99704cc0b301f19b971fa0c6f013db124169ceb6178d683"
+    },
+    {
+      "path": "extracted/cpp-work-loss-audit-20261028/audit.log",
+      "sha256": "1d722c09039f3487f21bedf3178d3015a00196515c460da2f76220c70cb3d3fa"
+    },
+    {
+      "path": "extracted/cpp-work-loss-audit-20261028/current-work/cpppj/src/client/GameMenuCommands.cpp",
+      "sha256": "892329457f5ca74dcd5df295c26034f811ec964f5afc7e36173c5d89d843391e"
+    },
+    {
+      "path": "extracted/cpp-work-loss-audit-20261028/current-work/cpppj/src/client/UberGump.cpp",
+      "sha256": "82cefd9f426af2d6a5b5053f25f13cdef6ec17236b1adf595789ce93e81b071f"
+    },
+    {
+      "path": "extracted/cpp-work-loss-audit-20261028/current-work/cpppj/tests/ProductionInitialContextTests.cpp",
+      "sha256": "fd7217516b32969262d5744c300c17ad4ff514321511cdc924ac7cca1639ab9c"
+    },
+    {
+      "path": "extracted/cpp-work-loss-audit-20261028/current-work/tools/cpp_chat_divider_smoke.py",
+      "sha256": "43ff9567297186a535e36a111f3c6ef2a41d5f4579001d34e0c20339dd88b382"
+    },
+    {
+      "path": "extracted/cpp-work-loss-audit-20261028/current-work.json",
+      "sha256": "082f561f36b18a084d790e98ecb8999d1a2d9ca8433281b22bf34e9174897141"
+    },
+    {
+      "path": "extracted/cpp-work-loss-audit-20261028/git-fsck.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "toolSha256": "392d37976cdba7cab9368b8b0ab387f5e0b80c6f4ac64d811bd2350db725ac8e"
+}

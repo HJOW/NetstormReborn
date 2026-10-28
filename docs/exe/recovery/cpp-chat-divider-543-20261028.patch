@@ -1,0 +1,181 @@
+diff --git a/cpppj/src/client/GameMenuCommands.cpp b/cpppj/src/client/GameMenuCommands.cpp
+index 3bb71827..6cbcd8df 100644
+--- a/cpppj/src/client/GameMenuCommands.cpp
++++ b/cpppj/src/client/GameMenuCommands.cpp
+@@ -53,6 +53,7 @@ std::uint32_t GameMenuScriptCode(std::string_view name) {
+     if (key=="pause") return 0x020000cfU;
+     if (key=="getfulldeck") return 0x020000cdU;
+     if (key=="toggleminimap") return 0x02000037U; //원본542d40 이름표→5427d4의 독립 미니맵 전환 명령이다.
++    if (key=="togglebottomgump") return 0x02000088U; // 원본542fc8 이름표→542914의 하단 채팅 전환이며0/1/2 인자는 기존 도킹 경로가 해석한다.
+     if (key=="addisland") return 0x02000022U; // 00542780의 실제 Editor 섬 추가 명령이다.
+     if (key=="savegomain") return 0x020000cbU;
+     if (key=="telltip") return 0x020000ebU;
+diff --git a/cpppj/src/client/UberGump.cpp b/cpppj/src/client/UberGump.cpp
+index 966648d5..5a5558c9 100644
+--- a/cpppj/src/client/UberGump.cpp
++++ b/cpppj/src/client/UberGump.cpp
+@@ -1026,6 +1026,9 @@ void UberGump::Event(InputEvent event) {
+     if (transitionCode==kProductionBridgeCommand) {
+         if (!worldUiRouted) static_cast<void>(rawButtons_->Event(event));rebuild_=true;return; // Guide/현재 모달 뒤 같은 Gump 트리로 전달한다. 정지/활성 커서 관문을 추가하지 않는다.
+     }
++    if (transitionCode==0x02000088U) {
++        if (!worldUiRouted) static_cast<void>(rawButtons_->Event(event));rebuild_=true;return; // 원본 하단 전환은 HUD 효과 뒤 기본 반환0이다. 이미 실행한 Route를 반복하거나 미구현 메뉴 오류로 바꾸지 않는다.
++    }
+     if (transitionCode==kShowTechnologyCommand) {
+         if (!(event.code&InputCode::kRelease) && world_) rawButtons_->Menus()->OpenKnowledge(world_->Session(),[this](std::string_view key) { return FontBytes(client_.Translate(key)); },static_cast<std::uint32_t>(client_.LanguageNumber()));
+         rebuild_=true;return; // 원본 일반 입력의 뗌 거부와 PlayerKnown/메타맵 관문은 실제 메뉴 연결에서 유지한다.
+diff --git a/cpppj/tests/ProductionInitialContextTests.cpp b/cpppj/tests/ProductionInitialContextTests.cpp
+index d5711c62..ea54b087 100644
+--- a/cpppj/tests/ProductionInitialContextTests.cpp
++++ b/cpppj/tests/ProductionInitialContextTests.cpp
+@@ -1,6 +1,8 @@
+ // 실제 Client 전역과 공통 UI로 Session 이전의 생산 전체 생성/자식/문자열/정리를 검사한다.
+ #include "DudeSpawnSupport.h"
+ #include "client/ClientMain.h"
++#include "client/ScriptCommand.h"
++#include <iostream>
+ #include "client/ClientLocalStateGlobals.h"
+ #include "client/ClientStateWorldCleanup.h"
+ #include "client/ClientCursorStateCleanup.h"
+@@ -401,3 +403,22 @@ TEST_CASE(ProductionInitialContext_ToggleMinimapKeepsDockAndRetiresOldOwner) {
+         CHECK(scene.buttons.MapViewRect().left==view.left && scene.buttons.MapViewRect().bottom==view.bottom);
+     }
+ }
++
++// 실제 시나리오 이름→큐→HUD와 포인터 캡처/방송이 같은 채팅 구분선·지도 영역을 갱신해야 한다.
++TEST_CASE(ProductionInitialContext_ToggleBottomScriptKeepsDraggedChatGeometry) {
++    InitialUberGlobals globals;InitialProductionScene scene;auto context=InitialUberContext(scene,globals);InputEvent pointer{InputCode::kRelease,300,200}; // 현재 좌클릭 폴링의 외부 입력이다.
++    context.poll=[&pointer](auto) { return pointer; };auto& uber=scene.buttons.EnableUberRoot(std::move(context));uber.Replace();const auto root=scene.buttons.RootToken();
++    scene.buttons.HandleGump(root,0x0200003dU,3,0);const auto* parent=static_cast<UberRootNode*>(uber.Node(root));CHECK(parent);if (!parent) return;
++    const auto token=parent->chatDivider,chat=parent->chat,production=parent->production;const auto count=scene.Count();auto* divider=uber.Node(token);CHECK(divider);if (!divider) return;
++    scene.buttons.HandleGump(root,0x02000088U,0,0);CHECK(divider->y==480 && scene.buttons.MapViewRect().bottom==480);
++    const auto toggle=[&] { // 실제 스크립트 파서와40칸 큐를 거쳐 원래 숫자 인자를 같은 Route에 보낸다.
++        InputQueue queue;ScriptStringRing strings;QueueScriptCommand("ToggleBottomGump,2",queue,strings,{GameMenuScriptCode,[](std::string_view) { CHECK(false); }});
++        const auto event=queue.Pop(false);CHECK(event.code==0x02000088U && event.x==2 && event.y==2 && queue.Empty());CHECK(!scene.buttons.RouteInput(event).consumed); // 원본 HUD 효과 뒤 기본 반환0을 성공1로 바꾸지 않는다.
++    };
++    CHECK(GameMenuScriptCode("TOGGLEBOTTOMGUMP")==0x02000088U);toggle();CHECK(divider->y==globals.chatY && divider->y<480);
++    const auto point=uber.Point("hud:chat-divider");CHECK(point);if (!point) return;pointer={InputCode::kLeftButton,point->x,point->y};CHECK(scene.buttons.RouteInput(pointer).consumed);CHECK(divider->flags&0x100U);
++    pointer.y=220;scene.buttons.NotifyPointer(pointer,0,false);std::cout<<"채팅 구분선 관측 "<<divider->y<<'/'<<scene.buttons.MapViewRect().bottom<<" 메뉴 "<<scene.menus->MenuInstances()<<'\n';CHECK(divider->y==218 && scene.buttons.MapViewRect().bottom==218);
++    pointer.code|=InputCode::kRelease;scene.buttons.NotifyPointer(pointer,0,false);CHECK(!(divider->flags&0x100U));CHECK(scene.buttons.RouteInput(pointer).consumed);
++    toggle();CHECK(divider->y==480 && globals.chatY==218);toggle();CHECK(divider->y==218 && scene.buttons.MapViewRect().bottom==218);
++    CHECK(uber.Current() && scene.buttons.RootToken()==root && parent->chat==chat && parent->production==production && scene.Count()==count); // 숨김/드래그 뒤에도 같은 자식과 저장소 수명을 유지한다.
++}
+diff --git a/tools/cpp_chat_divider_smoke.py b/tools/cpp_chat_divider_smoke.py
+new file mode 100644
+--- /dev/null
++++ b/tools/cpp_chat_divider_smoke.py
+@@ -0,0 +1,114 @@
++#!/usr/bin/env python3
++# -*- coding: utf-8 -*-
++"""원본 시나리오 명령 버튼으로 하단 채팅을 열고 실제 구분선 드래그·반납을 확인한다."""
++import argparse
++import shutil
++from pathlib import Path
++from cpp_bridge_ritual_runtime import ROOT, GAME, save, sha
++from cpp_game_menu_smoke import protected_run, menu_items
++from cpp_production_panel_smoke import repeated
++from cpp_world_smoke import states
++
++# 원본4:3 창·확장16:9 전체화면·확장16:10 창을 동시에 실행하지 않는다.
++SIZES={'1024x768':(1024,768,False),'1280x720':(1280,720,True),'1280x800':(1280,800,False)}
++
++
++def verify(report,run,width,height,fullscreen):
++    """같은 실제 구분선·루트·지도·캡처를 읽고 원문25/화면높이-25 제한을 대조한다."""
++    observed=states(report)
++    dividers=repeated(report,'raw_hud_divider')
++    rows={}
++    for label in ('initial','shown','middleHeld','middleReleased','lowerHeld','lowerReleased','upperHeld','upperReleased','hiddenAgain','restored'):
++        # 세 구분선 중 세로 이동축2를 가진 실제 채팅 구분선만 선택한다.
++        selected=[row for row in dividers[label] if int(row[6])&2]
++        assert len(selected)==1,(label,selected)
++        rows[label]=selected[0]
++        state=observed[label]
++        assert state['phase']==['4'] and state['size']==[str(width),str(height)]
++        assert bool(int(state['screen_mode'][0])&1)==fullscreen
++        assert state['raw_world_modes']==['0','1'] and state['raw_session']==['1','1']
++        assert state['mouse_cursor'][1]=='1' and float(state['raw_sp'][1])==500000
++        assert state['raw_uber'][:6]==observed['initial']['raw_uber'][:6]
++        assert state['raw_hud_owners']==observed['initial']['raw_hud_owners']
++        assert selected[0][:3]==rows['initial'][:3] and int(selected[0][6])==26
++        assert list(map(int,selected[0][9:11]))==[25,height-25]
++    expected={'initial':height,'shown':height-96,'middleHeld':height//2-2,'middleReleased':height//2-2,
++              'lowerHeld':height-25,'lowerReleased':height-25,'upperHeld':25,'upperReleased':25,
++              'hiddenAgain':height,'restored':25}
++    for label,y in expected.items():
++        # 원래 도킹 방송이 같은 지도 하단도 바꿔야 하며 검사에서 직접 치수를 쓰지 않는다.
++        assert float(rows[label][3])==y,(label,rows[label])
++        assert int(observed[label]['raw_uber'][6])==y,(label,observed[label]['raw_uber'])
++        if label not in ('initial',):assert observed[label]['paused']==['0']
++    for label in ('middleHeld','lowerHeld','upperHeld'):
++        # 눌러 드래그하는 동안 실제100h 통지와 공통 캡처가 같은 토큰을 가리켜야 한다.
++        assert int(rows[label][11])&0x100
++        assert int(observed[label]['RawButtons'][3])!=0
++    for label in ('middleReleased','lowerReleased','upperReleased','hiddenAgain','restored'):
++        # 뗌 뒤 notify와 공통 캡처가 함께 해제되고 이전 좌표가 되살아나지 않아야 한다.
++        assert not int(rows[label][11])&0x100
++        assert observed[label]['RawButtons'][3]=='0'
++    for label in ('review','reviewAgain'):
++        assert any(row[-1]=='Toggle Bottom Window' and int(row[3])==0x02000088 for row in repeated(report,'raw_html_button')[label])
++        assert not any('CHEAT' in row['label'].upper() for row in menu_items(report,label) if row['visible'])
++    assert observed['leave']['page'][0].casefold()=='abort'
++    assert observed['main']['phase']==['0'] and observed['main']['state_hud'][0]=='0'
++    return {'size':[width,height],'fullscreen':fullscreen,'root':observed['initial']['raw_uber'][0],
++            'chatDivider':rows['initial'][0],'positions':expected,'captureReleased':True,
++            'sameHudAndSp':True,'mainMenuReturned':True,'run':run}
++
++
++def one(source,output,width,height,fullscreen):
++    """원본과 별개인 새 사본의 안내에 원문 명령 버튼 한 줄만 추가한다."""
++    output.mkdir(parents=True,exist_ok=False)
++    data=output/'data'
++    shutil.copytree(source,data)
++    english=data/'d/TEST02.english'
++    original=english.read_bytes()
++    needle=b'$Button=Go!,DoNothing,0'
++    assert original.count(needle)==1
++    english.write_bytes(original.replace(needle,b'$Button=Toggle Bottom Window,ToggleBottomGump,2\r\n'+needle))
++    save(output/'scenario-variant.json',{'sourceEnglishSha256':sha(source/'d/TEST02.english'),'englishSha256':sha(english),
++         'fortSha256':sha(data/'d/TEST02.fort'),'sourceFortSha256':sha(source/'d/TEST02.fort'),
++         'onlyChange':'A. Go! 앞 원문 ToggleBottomGump 인자2 버튼 한 줄'})
++    x=width//2
++    steps=[(5,'report','initial'),(10,'click','Toggle Bottom Window'),(20,'report','shown'),(20,'snapshot',str(output/'shown.bmp')),
++           (25,'down','hud:chat-divider'),(30,'down',f'screen:{x},{height//2}'),(35,'report','middleHeld'),
++           (40,'up',f'screen:{x},{height//2}'),(45,'report','middleReleased'),(50,'down','hud:chat-divider'),
++           (55,'down',f'screen:{x},{height-1}'),(60,'report','lowerHeld'),(65,'up',f'screen:{x},{height-1}'),
++           (70,'report','lowerReleased'),(75,'down','hud:chat-divider'),(80,'down',f'screen:{x},10'),(85,'report','upperHeld'),
++           (90,'up',f'screen:{x},10'),(95,'report','upperReleased'),(95,'snapshot',str(output/'upper.bmp')),
++           (100,'esc',''),(105,'click','Game'),(110,'click','menu-command:02000091,0'),(115,'report','review'),
++           (120,'click','Toggle Bottom Window'),(130,'report','hiddenAgain'),(135,'esc',''),(140,'click','Game'),
++           (145,'click','menu-command:02000091,0'),(148,'report','reviewAgain'),(150,'click','Toggle Bottom Window'),
++           (160,'report','restored'),(160,'snapshot',str(output/'restored.bmp')),(165,'esc',''),(170,'click','Game'),
++           (175,'click','Leave Mission'),(185,'report','leave'),(195,'click','Main Menu'),(210,'report','main'),
++           (210,'snapshot',str(output/'main.bmp'))]
++    report,run=protected_run(output/'run',width,height,steps,220,data_root=data,mission='TEST02',fullscreen=fullscreen)
++    result=verify(report,run,width,height,fullscreen)
++    save(output/'summary.json',result)
++    return result
++
++
++def main():
++    """보호 원본을 실행 사본으로 거부하고 지정 화면비를 같은 실행파일로 순차 관측한다."""
++    parser=argparse.ArgumentParser(description=__doc__)
++    parser.add_argument('--data-root',type=Path,required=True)
++    parser.add_argument('--output',type=Path,required=True)
++    parser.add_argument('--case',choices=SIZES,action='append')
++    args=parser.parse_args()
++    source,output=args.data_root.resolve(),args.output.resolve()
++    assert all(source!=(ROOT/name).resolve() and (ROOT/name).resolve() not in source.parents for name in ('originals','originalCD'))
++    output.mkdir(parents=True,exist_ok=False)
++    binary=sha(GAME)
++    results=[]
++    for name in args.case or SIZES:
++        # 실제 창은 동시에 실행하지 않으며 각 게임 뒤 같은 바이너리인지 확인한다.
++        results.append(one(source,output/name,*SIZES[name]))
++        assert sha(GAME)==binary
++    save(output/'summary.json',{'results':results,'binarySha256':binary,'directWorldMutation':False})
++    print('하단 표시·채팅 구분선 드래그/반납:',len(results),'개 통과')
++
++
++if __name__=='__main__':
++    main()
