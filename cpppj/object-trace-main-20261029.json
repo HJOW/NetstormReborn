@@ -1,0 +1,46 @@
+{
+  "unit": 556,
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": "HJOW-Athlon / 2026-10-23",
+  "native": {
+    "host": "HJOW-Athlon",
+    "lastFullDecompilation": "HJOW-Athlon / 2026-10-23",
+    "uniqueInputs": 373,
+    "nativeObservations": 746,
+    "entries": {
+      "Main": 4919216,
+      "Task": 4525408,
+      "Graph": 4903824,
+      "Island": 4902304
+    },
+    "binarySha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "fixtureSha256": "751c817bf2a0ea73f9f24bd6890336eae3c3e34fe2308814facfc370eed5b1c1",
+    "vtableFixtureSha256": "eb3f8535e446351a37677d5d2a117d238296f21d63159904b6aa3518ed966968",
+    "crtEntry": "004e58e9",
+    "crtFloatDispatch": "004e3de3",
+    "crtInstructions": 1453,
+    "boundary": "Main/Task/TYPE/parent/previous/graph/island와원본sprintf/실수변환실제코드. 로그출력만장치기록. OS/게임실행0.",
+    "coordinates": {
+      "uniqueInputs": 887,
+      "nativeObservations": 1774,
+      "fixtureSha256": "8adbba5746ea90cd5f42c1579c110b818eaa6e148ff187952f99a89984980ed9"
+    }
+  },
+  "nativeVtableCount": 87,
+  "focusedUniquePassed": 30,
+  "focusedFailures": 0,
+  "registeredTests": 3408,
+  "protectedAndPriorFixturesChecked": 2535,
+  "changedProtectedFiles": [],
+  "gameSha256": "b6d6fc4c4f7309de0ec5f4779e074ec2130eacbe579f72336aa07da80002b22e",
+  "gameStill552": true,
+  "testExeSha256": "897f98db46d296be8a504caf97d70289b2ba5d76cf9bfabd1eeedd01b4448e68",
+  "newGameRuns": 0,
+  "newOriginalRuns": 0,
+  "newNetworkTests": 0,
+  "fullSuiteRerun": false,
+  "actualClientConnected": false,
+  "originalCrtBeforeFixFailedChecks": 2,
+  "initialSyntheticSceneFailedChecks": 2,
+  "next": "Actual logging globals/devices, dump parent/files, Kernel/ThunderProcess Forms, Ctrl Shift F7."
+}

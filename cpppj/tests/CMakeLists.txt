@@ -2396,3 +2396,7 @@ set_source_files_properties(ObjectTraceTests.cpp PROPERTIES COMPILE_DEFINITIONS 
 # 객체 공통/내장Form의 서식 바이트와 파생 필드 재조회 시점을 원문으로 대조한다.
 target_sources(netstorm_tests PRIVATE ObjectTraceFieldsTests.cpp)
 set_source_files_properties(ObjectTraceFieldsTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_OBJECT_TRACE_FIELDS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/object-trace-fields-x86.tsv\"")
+
+# Main/Task의 원문 현재 필드/숫자 인자와87개 실제 가상 분배표를 대조한다.
+target_sources(netstorm_tests PRIVATE ObjectTraceMainTests.cpp)
+set_source_files_properties(ObjectTraceMainTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_OBJECT_TRACE_MAIN_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/object-trace-main-x86.tsv\";NETSTORM_OBJECT_TRACE_VTABLE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/object-trace-vtables-x86.tsv\";NETSTORM_OBJECT_TRACE_COORDINATE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/object-trace-coordinate-x86.tsv\"")

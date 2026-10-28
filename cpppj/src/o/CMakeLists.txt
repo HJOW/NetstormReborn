@@ -534,3 +534,6 @@ target_sources(netstorm PRIVATE RawObjectTrace.h RawObjectTrace.cpp)
 
 # Base/내장Form의 TYPE·현재필드·원래서식을 실제 진단에 제공한다.
 target_sources(netstorm PRIVATE RawObjectTraceFields.h RawObjectTraceFields.cpp)
+
+# 83개 실제 자산의 Main/Task와 네 내장Form 진단을 원래 가상 표로 분배한다.
+target_sources(netstorm PRIVATE RawObjectTraceMain.h RawObjectTraceMain.cpp)
