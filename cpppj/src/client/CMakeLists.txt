@@ -290,3 +290,9 @@ target_sources(netstorm PRIVATE SendMoneyInput.cpp SendMoneyInput.h)
 
 # 같은실제로그버퍼/스트림을출력콜백뒤다시조회하는원문몸체다.
 target_sources(netstorm PRIVATE RawTraceLog.cpp RawTraceLog.h)
+
+# 객체덤프의같은현재trace/슬롯과두파일단계의정상/typed복귀순서다.
+target_sources(netstorm PRIVATE RawObjectDump.cpp RawObjectDump.h)
+
+# 같은파일의wt출력→바이너리재쓰기와실제CRT로그장치를제공한다.
+target_sources(netstorm PRIVATE ObjectDumpDisk.cpp ObjectDumpDisk.h)

@@ -1,0 +1,48 @@
+{
+  "unit": 558,
+  "host": "HJOW-Athlon",
+  "os": "Windows-10-10.0.19045-SP0",
+  "lastFullDecompilation": "HJOW-Athlon / 2026-10-23",
+  "native": {
+    "host": "HJOW-Athlon",
+    "lastFullDecompilation": "HJOW-Athlon / 2026-10-23",
+    "uniqueInputs": 56,
+    "nativeObservations": 112,
+    "binarySha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "fixtureSha256": "f62b70e603fb9f236e18c659626d62a345faee8a1bf20eff3808df412b2e3033",
+    "catchType": ".?AVEX_UNABLE_TO_OPEN_FILE@@",
+    "catchEntry": "004d62a8",
+    "catchResume": "004d6275",
+    "catchRegion": [
+      1,
+      1
+    ],
+    "fileUnwind": "004fc160",
+    "boundary": "004d6020/전체trace/로그/CRT실제실행; 기본C locale thread입력. 경로/파일/할당/console는장치기록. EH는정적metadata대조이며실제OS예외실행0."
+  },
+  "focusedUniquePassed": 38,
+  "focusedFailures": 0,
+  "registeredTests": 3416,
+  "protectedAndPriorFixturesChecked": 2539,
+  "changedProtectedFiles": [],
+  "gameSha256": "b6d6fc4c4f7309de0ec5f4779e074ec2130eacbe579f72336aa07da80002b22e",
+  "gameStill552": true,
+  "testExeSha256": "524b5a99acc845498120e9a1eb92c4b559a97af0fb8c579fb51fd86a836cfc03",
+  "actualDiskSha256": {
+    "disk": "e79f02af9bc63c0fa292adba33d5fafc29927571b672c0ca245bb47b23a7ebd5",
+    "disk-한글": "e79f02af9bc63c0fa292adba33d5fafc29927571b672c0ca245bb47b23a7ebd5"
+  },
+  "nativeExpectedDiskSha256": "e79f02af9bc63c0fa292adba33d5fafc29927571b672c0ca245bb47b23a7ebd5",
+  "nativeExpectedDiskBytes": 250,
+  "realOpenFailureNoParentCreated": true,
+  "typedHostExceptionProbes": 12,
+  "nativeOsExceptionsExecuted": 0,
+  "nestedBeforeFixFailedChecks": 2,
+  "nestedBeforeFixByteMismatches": 1,
+  "newGameRuns": 0,
+  "newOriginalRuns": 0,
+  "newNetworkTests": 0,
+  "fullSuiteRerun": false,
+  "actualClientConnected": false,
+  "next": "Actual Client logging/trace globals, Kernel Form/parent and ThunderProcess, Ctrl Shift F7."
+}
