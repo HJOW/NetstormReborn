@@ -1,0 +1,36 @@
+{
+  "unit": 554,
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": "HJOW-Athlon / 2026-10-23",
+  "native": {
+    "host": "HJOW-Athlon",
+    "lastFullDecompilation": "HJOW-Athlon / 2026-10-23",
+    "uniqueInputs": 103,
+    "nativeObservations": 206,
+    "binarySha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "entries": [
+      "0044dab0",
+      "004b22d0",
+      "004b1b80",
+      "004c2600",
+      "0044daa0"
+    ],
+    "fixtureSha256": "8a6ce033d1662ce0c528c0b7eaa40bdbdbf83749dcc60def530151f9ab7abc7f",
+    "boundary": "0044dab0/004b22d0/004b1b80/004c2600/기본true 실제 실행; 가상+70·로그·assert만 명시 출력 경계. 게임/OS 실행0."
+  },
+  "focusedUniquePassed": 24,
+  "focusedFailures": 0,
+  "registeredTests": 3402,
+  "protectedAndPriorFixturesChecked": 2533,
+  "changedProtectedFiles": [],
+  "gameSha256": "b6d6fc4c4f7309de0ec5f4779e074ec2130eacbe579f72336aa07da80002b22e",
+  "gameStill552": true,
+  "testExeSha256": "3f6b86706c15b16f61d46531399d3261974545379cd773ecc744d9dc0fabc315",
+  "newGameRuns": 0,
+  "newOriginalRuns": 0,
+  "newNetworkTests": 0,
+  "fullSuiteRerun": false,
+  "actualRuntimeConnected": false,
+  "initialHostTestFailure": "Root TYPE82 was excluded by native Form filter; test input corrected to TYPE69 only.",
+  "next": "Virtual +70 formatters, dump parent/file devices, current Kernel adapter, Ctrl Shift F7."
+}

@@ -528,3 +528,6 @@ target_sources(netstorm PRIVATE RawBridgeEditor.h RawBridgeEditor.cpp)
 
 # 원본 아이스 캐논의80BYTE 발사와4초/6초 전환을 같은 공통 Fire에 연결한다.
 target_sources(netstorm PRIVATE RawIceCannonFire.h RawIceCannonFire.cpp)
+
+# 객체별 가상 진단과 모든 Form의 재귀 출력 순서를 같은 물리 풀에서 처리한다.
+target_sources(netstorm PRIVATE RawObjectTrace.h RawObjectTrace.cpp)
