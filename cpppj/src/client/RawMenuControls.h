@@ -113,6 +113,7 @@ public:
     RawTextEntryControls& EnableTextEntry(RawTextEntryContext context); // 실제 편집 노드의 생성/입력/Draw를 같은 공통 장치에 연결한다.
     RawTextEntryControls* TextEntryControls() const; // 설치된 실제 처리기만 조회한다.
     std::uint32_t ShowSaveFortNameDialog(SaveFortNameDialogContext context,std::uint32_t fortMode=1,std::uint32_t canCancel=1,std::optional<std::string_view> initial={}); // 실제 공통 모달/문자 입력/두 버튼을 생성한다.
+    std::uint32_t ShowSendMoneyDialog(SaveFortNameDialogContext context,std::uint32_t target); // 현재 숫자 창의 확정 장치와 대상은 모달 수명 동안 유지한다.
     const SaveFortNameDialogNode* SaveFortNameNode(std::uint32_t token) const; // 검사도 실제 파생/자식 필드를 그대로 읽는다.
     void CloseSaveFortNameDialogs(); // Session 장치 반납 전에 현재 부모와 부분 생성 자식을 공통 수명으로 정리한다.
     void CloseTextEntries(); // 화면 교체에서 미부착/부분 생성도 같은 공통 수명으로 반납한다.

@@ -73,6 +73,20 @@ std::uint32_t SaveFortNameDialog::Show(std::uint32_t fortMode,std::uint32_t canC
     hooks_.attach(token,(static_cast<float>(state_.screenWidth)-root.baseWidth)*0.5F,(static_cast<float>(state_.screenHeight)-root.baseHeight)*0.5F,state_.entries[0],0);
     Need(hooks_.depth)(token,std::bit_cast<std::int32_t>(root.depth)-76);Need(hooks_.modal)(token);return token;
 }
+// 숫자 창은 같은 장식/입력/두 버튼 몸체를 사용하고 원래0xd8 크기와 대상+d4를 보존한다.
+std::uint32_t SaveFortNameDialog::ShowMoney(std::uint32_t target) const {
+    const auto token=Need(hooks_.allocate)(0xd8);Need(hooks_.decoration)(token,200.0F,100.0F);auto& root=Node(token);root.vtable=0x00517ca0U;root.command=68;root.fortMode=target;root.canCancel=1;
+    root.entry=hooks_.allocate(0x110);Need(hooks_.textEntry)(root.entry,Size(root.baseWidth*0.8F),18,"0");
+    auto* entry=Need(hooks_.entry)(root.entry);if (!entry) throw std::logic_error("송금 숫자 창의 편집 자식 없음");entry->maxLength=10;entry->multiline=0;
+    std::string excluded; // 원문1..255 중 ASCII 숫자 외 모든 문자를 입력 금지 문자열에 넣는다.
+    for (std::uint32_t value=1;value<256;++value) if (value<'0' || value>'9') excluded.push_back(static_cast<char>(value)); // 숫자의 범위와 원본 순서를 유지한다.
+    Need(hooks_.excluded)(root.entry,excluded);Need(hooks_.attach)(root.entry,(root.baseWidth-Base(root.entry).baseWidth)*0.5F,45.0F,token,0);
+    const auto border=hooks_.allocate(0xb8);Need(hooks_.background)(border,Base(root.entry).baseWidth+8.0F,Base(root.entry).baseHeight+4.0F);hooks_.attach(border,Base(root.entry).x-4.0F,Base(root.entry).y-2.0F,token,0);
+    const auto title=Need(hooks_.translate)("Send X Storm Power");root.title=hooks_.allocate(0xa4);Need(hooks_.title)(root.title,title);hooks_.attach(root.title,Base(root.entry).x,10.0F,token,0);Need(hooks_.fitTitle)(root.title);Need(hooks_.push)(root.title);Base(root.title).alignFlags=4U;hooks_.attach(root.title,Base(root.title).x,Base(root.title).y,token,2); // 원문+8은 정렬 필드다. 가상+18로 먼저 분리한 뒤 가운데 정렬로 재부착한다.
+    Buttons(token,Base(root.entry).y+Base(root.entry).baseHeight+15.0F);root.baseHeight+=4.0F;root.height=root.baseHeight*root.scale;
+    root.baseWidth=std::max(root.baseWidth,Base(root.title).baseWidth+32.0F);root.width=root.baseWidth*root.scale;
+    hooks_.attach(token,(static_cast<float>(state_.screenWidth)-root.baseWidth)*0.5F,(static_cast<float>(state_.screenHeight)-root.baseHeight)*0.5F,state_.entries[0],0);Need(hooks_.depth)(token,std::bit_cast<std::int32_t>(root.depth)-76);Need(hooks_.modal)(token);return token;
+}
 // 실제 버튼 serial(+2c)과 Enter를 판정하고 callback 비영 복귀에서만 지연 Kill한다.
 std::uint32_t SaveFortNameDialog::Handle(std::uint32_t token,std::uint32_t event,std::uint32_t first,std::uint32_t second) const {
     const auto code=event&0x03ffffffU;auto& root=Node(token);

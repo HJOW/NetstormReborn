@@ -4,6 +4,7 @@
 // 원본 004d0120·004cebf0·004cf270·004ce580의 메뉴/명령 흐름을 표시 기반과 연결한다.
 // 전체 Gump/StyleText와 게임 규칙은 후속이다. 저장 미션 월드는 GameWorld에 연결한다.
 #include "client/UberGump.h"
+#include "client/SendMoneyInput.h"
 #include "client/DialogCommandLifetime.h"
 #include "client/ThemeTechnologyCommand.h"
 #include "client/ProductionShortcuts.h"
@@ -118,6 +119,7 @@ std::uint32_t DialogScriptCode(std::string_view name) {
     if (lower=="warning") return kScriptWarning;
     if (lower=="setowner") return kSetObjectOwnerCommand; // 원본 Tell.SetOwner의 일반 입력 명령이다.
     if (lower=="salvage") return 0x0200005dU; // 원본542e70의이름→54286c명령을HTML확인버튼에서도같은회수입력으로연결한다.
+    const auto money=SendMoneyScriptCode(name);if (money!=0xffffffffU) return money; // asksend의 Yes가 원본 SendAllBucks를 같은 입력 큐로 보낸다.
     const auto fort=FortSelectionScriptCode(name);if (fort!=0xffffffffU) return fort; // 실제 맵 행도 같은 원문 번호와 문자열 고리를 사용한다.
     if (mission!=0xffffffffU) return mission;
     const auto knowledge=KnowledgeScriptCode(name); // 기술 창/지급도 동일 입력 큐를 사용한다.
@@ -248,7 +250,7 @@ UberGump::UberGump(Client& client) : client_(client),initLoginSubscriber_(client
             state_.Post(actions_[parameter-1]); // 기존 DialogAction의 임시 호스트 번호이며 원본 게임 명령 토큰과 구별한다.
         } else {
             // 실제 메뉴 항목이 선택한 미연결 명령은 여기서 거부한다. 돌 버튼의 별도 기본 클릭 통지와 구별한다.
-            if (command!=0x02000060U && command!=0x03000080U && command!=0x03000032U && command!=0x03000063U && command!=0x0200005dU && command!=0x02000017U && command!=0x030000afU && command!=0x030000e2U && command!=0x03000015U && command!=0x0300011aU && command!=0x03000076U && !IsGameMenuCommand(command) && !IsTellMenuCommand(command) && !IsObjectMenuVariantCommand(command)) throw std::logic_error("현재 Client 원본 메뉴 항목 명령 미연결: "+std::to_string(command));
+            if (command!=0x02000060U && command!=0x03000080U && command!=0x03000032U && command!=0x03000063U && command!=0x0200005dU && command!=0x02000017U && command!=0x030000afU && command!=0x030000e2U && command!=0x03000015U && command!=0x0300011aU && command!=0x03000076U && !IsGameMenuCommand(command) && !IsTellMenuCommand(command) && !IsObjectMenuVariantCommand(command) && !IsSendMoneyCommand(command)) throw std::logic_error("현재 Client 원본 메뉴 항목 명령 미연결: "+std::to_string(command));
             client_.Input().PushCommand(command,std::bit_cast<std::int32_t>(id),std::bit_cast<std::int32_t>(parameter));
         }
     };
@@ -345,6 +347,7 @@ void UberGump::ReleaseCurrentGuideMission() {
 }
 // 입력 참조를 먼저 없애고 월드의 실제 소유권을 해제한다. 위치 효과음은 카메라 0의 전체 메뉴 영역으로 되돌린다.
 void UberGump::ClearWorld() {
+    if (rawButtons_ && rawButtons_->Menus()) rawButtons_->Menus()->CloseSaveFortNameDialogs(); // 숫자 창도 현재 Session의 확정 장치를 반납한 뒤 월드를 해제한다.
     ClearPage(); // 현재 부모의 OnExit를 월드/미션 수명보다 먼저 같은 큐에 반납한다.
     if (rawButtons_ && rawButtons_->Menus()) rawButtons_->Menus()->CloseEditorIslandWindows(); // 창/루트 드래그의 실제 Session 대여를 월드보다 먼저 반납한다.
     if (world_) client_.LocalStateGlobals()->CaptureEnd()=0.0; // 현재 월드 정리 어댑터에서004b2df0의005c8618 +0쓰기를 Session/UI/Kernel 반납 전에 실행한다. 전체 State7 cleanup 연결은 후속이다.
@@ -376,6 +379,7 @@ bool UberGump::HasWorld() const { return world_!=nullptr; }
 // Native 부모가 실제 AI/링크/Kernel을 정리하고 Core0을 선택한 뒤 호출하는 호스트 소비자 반납이다.
 void UberGump::RetireWorldForState() {
     if (!world_) throw std::logic_error("State Runtime 반납의 현재 GameWorld 소유자 누락");
+    if (rawButtons_ && rawButtons_->Menus()) rawButtons_->Menus()->CloseSaveFortNameDialogs(); // State 전환도 같은 숫자/이름 모달의 장치를 먼저 닫는다.
     mapUserName_=world_->Session().CurrentHandle(); //State7은 새 Guide의 Init이 작성한 요청/Zone을 사용한다. 이전 Session 반납으로 그 owner를 지우지 않는다.
     gameMenuState_.reset();if (objectMenus_) objectMenus_->Clear(); //현재 Runtime에 대한 메뉴/Form 비소유 참조만 반납한다.
     client_.GetRenderer().SetExtraCollection({});client_.GetRenderer().SetOverlayProcedure({}); //새 HUD를 지우지 않고 이전 월드 Draw callback만 닫는다.
@@ -960,6 +964,12 @@ void UberGump::Event(InputEvent event) {
         const auto token=std::bit_cast<std::uint32_t>(event.y);const auto literal=objectMenus_ ? objectMenus_->StaticText(token) : std::nullopt; // 정적 원문 포인터와 Script 고리 토큰을 서로의 저장소로 잘못 해석하지 않는다.
         const auto name=std::string(literal ? *literal : scriptStrings_.Resolve(token));static_cast<void>(TryTell(name));
     }return; } // Help Back과 객체 메뉴 Tell도 같은 실제 HTML 경로로 돌아간다.
+    if (IsSendMoneyCommand(transitionCode)) {
+        if (event.code&InputCode::kRelease) return; // 원문 공통 뗌 관문은 현재 월드/하위 장치 조회보다 먼저다.
+        if (!world_) throw std::logic_error("송금 일반 입력의 실제 월드 없음");auto hooks=world_->Session().MoneyInputHooks();
+        hooks.numberDialog=[this](auto target) { OpenSendMoneyDialog(target); };hooks.askAll=[this](auto target) { Tell("asksend("+std::to_string(target)+")"); };
+        static_cast<void>(DispatchSendMoneyInput(event,hooks));rebuild_=true;return;
+    }
     if (transitionCode==kSetObjectOwnerCommand) {
         const auto gameplay=client_.GameplayGlobals(); // release/미허용 모드/선택0은 원문처럼 Runtime을 요구하지 않는다.
         ObjectOwnerCommandHooks hooks;hooks.editor=[gameplay] { return gameplay->world.editor; };hooks.missionPost=[gameplay] { return gameplay->world.missionPost; };hooks.selected=[gameplay] { return gameplay->selection.selected; };

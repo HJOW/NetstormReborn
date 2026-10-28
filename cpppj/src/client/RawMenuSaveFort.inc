@@ -5,7 +5,7 @@ std::uint32_t AllocateSaveFort(std::size_t bytes) {
     else if (bytes==0x170) token=AllocateHelp(bytes);
     else {
         token=common.token();
-        if (bytes==0xdc) { saveFortRoots.emplace(token,std::make_unique<SaveFortNameDialogNode>());if (!saveFortBuilding) throw std::logic_error("Save as 실제 생성 문맥 없음");saveFortContexts.emplace(token,*saveFortBuilding); }
+        if (bytes==0xdc || bytes==0xd8) { saveFortRoots.emplace(token,std::make_unique<SaveFortNameDialogNode>());if (!saveFortBuilding) throw std::logic_error("입력 창의 실제 생성 문맥 없음");saveFortContexts.emplace(token,*saveFortBuilding); } // 숫자 창은 같은 공통 자식과+d4의 송금 대상을 사용한다.
         else if (bytes==0xa4) plainTexts.emplace(token,std::make_unique<TextGumpNode>());
         else if (bytes==0xb8) backgrounds.emplace(token,std::make_unique<GumpBackgroundNode>());
         else throw std::logic_error("Save as 실제 파생 할당 크기 오류");
@@ -15,6 +15,7 @@ std::uint32_t AllocateSaveFort(std::size_t bytes) {
 // 현재 창의 실제 편집 버퍼와 동일 작업본 경로/헤더/전체 이름 부모를 묶는다.
 std::uint32_t AcceptSaveFort(std::uint32_t token) {
     const auto& context=saveFortContexts.at(token);auto& root=*saveFortRoots.at(token);SaveFortNameConfirmHooks effects;
+    if (context.sendMoney) { std::array<char,256> text{};static_cast<void>(textEntries->Backend().CopyText(root.entry,text));text.back()=0;return context.sendMoney(root.fortMode,std::string_view(text.data())); } //004c9350은 현재 편집 문자열을 읽은 뒤 송금하고1을 반환한다.
     effects.copyText=[this,&root](auto output) { static_cast<void>(textEntries->Backend().CopyText(root.entry,output)); };
     effects.alnum=[](auto value) { return std::isalnum(value); };effects.path=context.fortPath;
     effects.exists=[&context](auto path) { const auto relative=std::filesystem::path(path).is_absolute() ? std::string(path) : o::NormalizeGamePath(path);std::error_code error;return std::filesystem::exists(context.work->ResolvePath(relative),error) ? 1 : 0; }; // 원문 GetFileAttributesA처럼 디렉터리도 비영이며 작업본 경계는 동일하게 검사한다.

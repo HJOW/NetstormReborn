@@ -100,3 +100,23 @@ TEST_CASE(SaveFortNameDialog_ActualMouseUsesSerialAfterPriorGumpRetirement) {
 }
 
 #include "SaveFortNameClipboardTests.inc" //같은 비공개 SaveNameScene으로 최초 TextEntry 문맥의 clipboard/저장/모달 수명을 추가 검증한다.
+
+// 같은 실제 숫자 창의 입력 필터·Enter·확정 뒤 모달/문자 수명을 확인한다.
+TEST_CASE(SendMoneyDialog_ActualDigitsAndEnter) {
+    SaveNameScene scene;SaveFortNameDialogContext context;context.editor.now=[] { return 0.0; };context.translate=[](auto text) { return std::string(text); };std::string entered;std::uint32_t calls{}; // 파일/Editor 장치가 없는 송금 전용 문맥이다.
+    context.sendMoney=[&](auto owner,auto text) { CHECK(owner==2);entered=text;++calls;return 1U; };
+    const auto token=scene.menus->ShowSendMoneyDialog(std::move(context),2);const auto* root=scene.menus->SaveFortNameNode(token);CHECK(root && root->vtable==0x00517ca0U && root->command==68 && root->fortMode==2 && scene.buttons.CurrentDialog()==token);
+    CHECK(scene.menus->Node(root->title)->alignFlags==4 && (scene.menus->Node(root->title)->flags&1)); // 원문+8 정렬과+4 표시 플래그를 혼동하지 않는다.
+    const auto entry=root->entry;auto* editor=scene.menus->TextEntryControls()->Node(entry);CHECK(editor && editor->maxLength==10 && editor->multiline==0);CHECK(scene.menus->TextEntryControls()->Storage().Find(editor->buffer)->Text()=="0");
+    for (const auto ch:std::string("500")) scene.buttons.RouteInput({static_cast<std::uint32_t>(ch),0,0}); // 생성 시 선택된0을 실제 문자 사건으로 바꾼다.
+    scene.buttons.RouteInput({'q',0,0});CHECK(scene.menus->TextEntryControls()->Storage().Find(editor->buffer)->Text()=="500");CHECK(scene.menus->Point("OK") && scene.menus->Point("Cancel"));
+    const auto pixels=scene.Draw();CHECK(std::any_of(pixels.begin(),pixels.end(),[](auto value) { return value!=0x5a; }));scene.buttons.RouteInput({13,0,0});CHECK(calls==1 && entered=="500" && (root->flags&0x10000U));
+    scene.buttons.CleanupGumps();CHECK(!scene.buttons.CurrentDialog() && !scene.menus->SaveFortNameNode(token) && !scene.menus->TextEntryControls()->Node(entry));
+}
+// 취소는 확정/송금을 실행하지 않으며 원문 length+1<10의 아홉 문자 제한을 유지한다.
+TEST_CASE(SendMoneyDialog_ActualLimitAndCancel) {
+    SaveNameScene scene;SaveFortNameDialogContext context;context.editor.now=[] { return 0.0; };context.translate=[](auto text) { return std::string(text); };std::uint32_t sends{};context.sendMoney=[&](auto,auto) { ++sends;return 1U; }; // 취소가 이 장치에 도달하면 실패다.
+    const auto token=scene.menus->ShowSendMoneyDialog(std::move(context),8);const auto* root=scene.menus->SaveFortNameNode(token);const auto* editor=scene.menus->TextEntryControls()->Node(root->entry);
+    for (const auto ch:std::string("123456789012345")) scene.buttons.RouteInput({static_cast<std::uint32_t>(ch),0,0}); // 원래 상한 필드는10이며 현재길이+1의 strict 비교를 한다.
+    CHECK(scene.menus->TextEntryControls()->Storage().Find(editor->buffer)->Text()=="123456789");scene.buttons.HandleGump(token,0x0200002cU,scene.menus->Node(root->cancel)->serial,0);CHECK(!sends && (root->flags&0x10000U));scene.buttons.CleanupGumps();CHECK(!scene.buttons.CurrentDialog());
+}

@@ -21,6 +21,13 @@ struct UberGump::EditorRuntime {
         return hooks;
     }
 };
+// 원본 송금 숫자 창은 같은 문자 입력과 현재 Session의 경제 장치를 빌린다.
+void UberGump::OpenSendMoneyDialog(std::uint32_t target) {
+    if (!world_) throw std::logic_error("송금 숫자 창의 현재 월드 없음");SaveFortNameDialogContext context;context.editor.now=[this] { return client_.WallSeconds(); };BindTextClipboard(context.editor,textClipboard_);
+    context.translate=[this](auto text) { return FontBytes(client_.Translate(text)); };
+    context.sendMoney=[this](auto owner,auto text) { if (!world_) throw std::logic_error("송금 확정의 현재 월드 없음");return ConfirmSendMoney(owner,text,world_->Session().MoneyInputHooks()); };
+    rawButtons_->Menus()->ShowSendMoneyDialog(std::move(context),target);
+}
 // 원문 이름 대화창은 현재 작업본과 Template 헤더를 동기 호출 동안 그대로 빌린다.
 void UberGump::OpenSaveFortNameDialog(std::uint32_t fortMode) {
     if (fortMode && (!world_ || !client_.GameplayGlobals()->world.editor)) throw std::logic_error("실제 Editor 밖의 Save as 파일 장치 미연결");

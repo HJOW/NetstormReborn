@@ -1,0 +1,1815 @@
+{
+  "unit": 547,
+  "date": "2026-10-28",
+  "host": "HJOW-Athlon",
+  "baseProductCommit": "0dbfd0c8",
+  "priorAuditCommit": "91d494c3",
+  "lastFullDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23",
+    "outputsChanged": false
+  },
+  "problem": "ESC/Players/상대/Send Money 금액 명령 전달 미연결과 All 정적 문자열 토큰 오해석으로 종료했다.",
+  "product": {
+    "gameSha256": "50001e953ff37f5bcc299c28fd8ebe52f8703dfce6a4c22f582ea8ac67fbc105",
+    "testsSha256": "5f08618f83c8314c0ccd0a3c6d93587ada8533fc1d74821a583100c26fbeb5fd",
+    "finalBuild": "extracted/cpp-send-money-547/build8.json",
+    "freeze": "extracted/cpp-send-money-547/freeze-final.json"
+  },
+  "native": {
+    "host": "HJOW-Athlon",
+    "peSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "uniqueInputs": 888,
+    "nativeObservations": 1776,
+    "precisionDifferences": 0,
+    "nativeBodiesUnchanged": true,
+    "fixtureSha256": "e167cd639a77489163e5959799fdb4ff259745abed1f12d9e42f13b696f93d08",
+    "ranges": [
+      [
+        5074529,
+        5088375
+      ],
+      [
+        4603456,
+        4603746
+      ],
+      [
+        4591072,
+        4591087
+      ],
+      [
+        4477744,
+        4477758
+      ],
+      [
+        4534240,
+        4534332
+      ],
+      [
+        5137360,
+        5137365
+      ],
+      [
+        5137376,
+        5137566
+      ],
+      [
+        4239248,
+        4239311
+      ]
+    ],
+    "externalDevices": [
+      "CanAfford",
+      "AddSp",
+      "AI wallet",
+      "packet length",
+      "send",
+      "assert",
+      "Guide/Gump"
+    ],
+    "scope": "일반 로컬 미션의 고정 송금 입력. 실제 네트워크/멀티플레이 실행 없음"
+  },
+  "nativeStaticAnalysis": {
+    "host": "HJOW-Athlon",
+    "lastFullDecompile": {
+      "host": "HJOW-Athlon",
+      "date": "2026-10-23",
+      "outputsChanged": false
+    },
+    "functions": {
+      "004c9350": "130fc14bc1cfd7810d444f83215b612d1d67acf75d349ef2bbb3a4a17fcb5f03",
+      "004d3860": "0688fe01c86cc5d4c989a1e2e77353907c0bf1031c73e229391641df1f818893",
+      "004d3b60": "c3f15644c4fece201fd4bad4429d5b49affeae5cf69dd9f2ef78fe90ec5954b4",
+      "004d56f0": "23eebe0bdb7019399f607fbe5e60d2b47c584a87f7c295ba3702cc020bafb034",
+      "0040af90": "d84713d8fd5463da5b01e701da983e10f99f3f3bd01eea07856165b401365569",
+      "0040ee90": "be558800a3adfbe11ac77ec47f08b50bdabfd695ca64e944554f77453df65d31",
+      "0040eec0": "52044d34e9ed6d5bd6a2868cf5d1e66001d4b88f9e8299ba5d0e47e71f7f35f6",
+      "0041df80": "a69703e2cc124474e51e7424f1d213f3a40d7a224b36e500fe01af7acf5fa02c",
+      "0041dff0": "0c6eb7ae604377111b42889e7fe397beeb36ab85d02fdaab93cecc94033f7cc2",
+      "00425e90": "13a081c534caaf96ff50480b205e31c00224cd75d090301d69fd3b787e050472"
+    },
+    "commandGlobals": {
+      "300": [
+        "00542b48",
+        "02000120"
+      ],
+      "700": [
+        "00542b14",
+        "02000108"
+      ],
+      "1000": [
+        "00542aa4",
+        "020000ec"
+      ],
+      "X": [
+        "00542af4",
+        "02000100"
+      ],
+      "AskAll": [
+        "00542b74",
+        "0200012b"
+      ],
+      "SendAllBucks": [
+        "00542b30",
+        "02000118"
+      ]
+    },
+    "normalAI": "flags20: 로컬 AddSp(-금액) 뒤 실제 AI 지갑 Credit(target,금액). 대상 분산SP를 별도 가산하지 않는다.",
+    "connectedPlayer": "flags1: 로컬 AddSp 차감 후 대상9로11BYTE 016c0b00/recipient/source/kind0/amount를 송신한다.",
+    "numericWindow": {
+      "constructor": "004d3860",
+      "factory": "004d3b60",
+      "accept": "004c9350",
+      "vtable": "00517ca0",
+      "kind": 68,
+      "initial": "0",
+      "maxLength": 10,
+      "allowed": "ASCII digits only",
+      "title": "Send X Storm Power",
+      "result": "잘못된 금액에도1을 반환해 창을 닫는다.",
+      "maxLengthMeaning": "원문 현재length+1<10의 strict 비교로 실제 최대9문자",
+      "titleReattach": "원문 제목 Fit 뒤 가상+18 Push로 분리한 뒤 +8 alignFlags=4/Attach mode2. +4 flags의 표시 비트는 보존한다."
+    },
+    "allConfirmation": "원래 tell.english asksend의 Yes=SendAllBucks, No=DoNothing. All은 확인 시 SP를 다시 읽고 _ftol 정수 부분을 보내며 소수는 남긴다.",
+    "moneyReceive": "004d56f0: kind0의 원래 송신자별 차감/검증, 대상 가산 뒤 서버 방송. kind1은 대상 가산.",
+    "scopeLimits": [
+      "도박kind2의 현재 내기 상태와 원본 부정 자금 제재/Message4 전체 UI는 별도 잔여로 남긴다.",
+      "새 네트워크/멀티플레이 실행 및 검사를 하지 않는다."
+    ]
+  },
+  "builds": {
+    "firstFailure": {
+      "exitCode": 1,
+      "errors": 2,
+      "reason": "RawCampaignSession.cpp의 std::clog 선언 누락. 기존 fprintf 장치로 보완. 원시 build.log 보존."
+    },
+    "firstSuccessful": {
+      "command": [
+        "cmake",
+        "--build",
+        "cpppj/build",
+        "--config",
+        "Release",
+        "--target",
+        "NetstormCpp",
+        "netstorm_tests",
+        "--parallel",
+        "4",
+        "--",
+        "/p:UseMultiToolTask=true",
+        "/p:MultiProcMaxCount=4",
+        "/p:EnforceProcessCountAcrossBuilds=true"
+      ],
+      "exitCode": 0,
+      "seconds": 521.468778599985
+    },
+    "afterTitlePush": {
+      "command": [
+        "cmake",
+        "--build",
+        "cpppj/build",
+        "--config",
+        "Release",
+        "--target",
+        "NetstormCpp",
+        "netstorm_tests",
+        "--parallel",
+        "4",
+        "--",
+        "/p:UseMultiToolTask=true",
+        "/p:MultiProcMaxCount=4",
+        "/p:EnforceProcessCountAcrossBuilds=true"
+      ],
+      "exitCode": 0,
+      "seconds": 108.7404067000025
+    },
+    "beforeVisualCorrection": {
+      "command": [
+        "cmake",
+        "--build",
+        "cpppj/build",
+        "--config",
+        "Release",
+        "--target",
+        "NetstormCpp",
+        "netstorm_tests",
+        "--parallel",
+        "4",
+        "--",
+        "/p:UseMultiToolTask=true",
+        "/p:MultiProcMaxCount=4",
+        "/p:EnforceProcessCountAcrossBuilds=true"
+      ],
+      "exitCode": 0,
+      "seconds": 67.51311890000943
+    },
+    "final": {
+      "command": [
+        "cmake",
+        "--build",
+        "cpppj/build",
+        "--config",
+        "Release",
+        "--target",
+        "NetstormCpp",
+        "netstorm_tests",
+        "--parallel",
+        "4",
+        "--",
+        "/p:UseMultiToolTask=true",
+        "/p:MultiProcMaxCount=4",
+        "/p:EnforceProcessCountAcrossBuilds=true"
+      ],
+      "exitCode": 0,
+      "seconds": 75.3977550000127
+    },
+    "finalWarnings": 0,
+    "finalErrors": 0,
+    "testOnlyLogs": [
+      "build-tests3.log",
+      "build-tests4.log",
+      "build-tests6.log"
+    ]
+  },
+  "tests": {
+    "registered": 3384,
+    "uniqueExecuted": 83,
+    "results": [
+      {
+        "filter": "SendMoney",
+        "count": 5,
+        "failedChecks": 0,
+        "exitCode": 0
+      },
+      {
+        "filter": "SaveFortName",
+        "count": 6,
+        "failedChecks": 0,
+        "exitCode": 0
+      },
+      {
+        "filter": "PlayerMenu_",
+        "count": 2,
+        "failedChecks": 0,
+        "exitCode": 0
+      },
+      {
+        "filter": "TextEntryGump_",
+        "count": 1,
+        "failedChecks": 0,
+        "exitCode": 0
+      },
+      {
+        "filter": "CampaignPriestDisplay_",
+        "count": 2,
+        "failedChecks": 0,
+        "exitCode": 0
+      },
+      {
+        "filter": "CampaignConstructionMana_",
+        "count": 2,
+        "failedChecks": 0,
+        "exitCode": 0
+      },
+      {
+        "filter": "CampaignObjectMenus_",
+        "count": 7,
+        "failedChecks": 0,
+        "exitCode": 0
+      },
+      {
+        "filter": "ExistingEditor",
+        "count": 58,
+        "failedChecks": 0,
+        "exitCode": 0
+      }
+    ],
+    "binarySha256": "5f08618f83c8314c0ccd0a3c6d93587ada8533fc1d74821a583100c26fbeb5fd"
+  },
+  "runtime": {
+    "results": [
+      {
+        "size": [
+          1024,
+          768
+        ],
+        "fullscreen": false,
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+            "--run",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-send-money-547\\final-v2\\1024x768\\data",
+            "--mute-audio",
+            "--frames",
+            "670",
+            "--set",
+            "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;useBanners=1;music=0;playWind=0",
+            "--ui-script",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-send-money-547\\final-v2\\1024x768\\run\\steps.tsv",
+            "--ui-report",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-send-money-547\\final-v2\\1024x768\\run\\states.tsv",
+            "--mission",
+            "thewarbegins",
+            "--window"
+          ],
+          "binarySha256": "50001e953ff37f5bcc299c28fd8ebe52f8703dfce6a4c22f582ea8ac67fbc105",
+          "scriptSha256": "725755c63b9786a0e71586bee8fdbe81e1b223b00f3135476c25c5fa27b4876c",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 21.877430900000036,
+          "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderrSha256": "110c8ffc5dff493b166f45c895b87111c10df0e56113491c410333a7c7784511",
+          "originalsUnchanged": true,
+          "dataUnchanged": true
+        },
+        "initial": [
+          3000.0,
+          0
+        ],
+        "transfers": {
+          "after300": [
+            2700.0,
+            300
+          ],
+          "after700": [
+            2000.0,
+            1000
+          ],
+          "after1000": [
+            1000.0,
+            2000
+          ],
+          "afterX": [
+            775.0,
+            2225
+          ],
+          "afterCancel": [
+            775.0,
+            2225
+          ],
+          "afterTooMuch": [
+            775.0,
+            2225
+          ],
+          "afterZero": [
+            775.0,
+            2225
+          ],
+          "afterShort": [
+            775.0,
+            2225
+          ],
+          "afterNo": [
+            775.0,
+            2225
+          ],
+          "afterAll": [
+            0.0,
+            3000
+          ],
+          "afterEmpty": [
+            0.0,
+            3000
+          ]
+        },
+        "realAiWallet": true,
+        "cancelledAndInsufficientPreserved": true,
+        "noDirectMutation": true
+      },
+      {
+        "size": [
+          1280,
+          720
+        ],
+        "fullscreen": true,
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+            "--run",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-send-money-547\\final-v2\\1280x720\\data",
+            "--mute-audio",
+            "--frames",
+            "670",
+            "--set",
+            "SCREENW=1280;SCREENH=720;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;useBanners=1;music=0;playWind=0;startInFullScreen=1",
+            "--ui-script",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-send-money-547\\final-v2\\1280x720\\run\\steps.tsv",
+            "--ui-report",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-send-money-547\\final-v2\\1280x720\\run\\states.tsv",
+            "--mission",
+            "thewarbegins"
+          ],
+          "binarySha256": "50001e953ff37f5bcc299c28fd8ebe52f8703dfce6a4c22f582ea8ac67fbc105",
+          "scriptSha256": "00c93b01ba9c3b49b9ab7b8a875f86355cc04058be64c86619a5b374cb3061cd",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 23.43106419997639,
+          "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderrSha256": "110c8ffc5dff493b166f45c895b87111c10df0e56113491c410333a7c7784511",
+          "originalsUnchanged": true,
+          "dataUnchanged": true
+        },
+        "initial": [
+          3000.0,
+          0
+        ],
+        "transfers": {
+          "after300": [
+            2700.0,
+            300
+          ],
+          "after700": [
+            2000.0,
+            1000
+          ],
+          "after1000": [
+            1000.0,
+            2000
+          ],
+          "afterX": [
+            775.0,
+            2225
+          ],
+          "afterCancel": [
+            775.0,
+            2225
+          ],
+          "afterTooMuch": [
+            775.0,
+            2225
+          ],
+          "afterZero": [
+            775.0,
+            2225
+          ],
+          "afterShort": [
+            775.0,
+            2225
+          ],
+          "afterNo": [
+            775.0,
+            2225
+          ],
+          "afterAll": [
+            0.0,
+            3000
+          ],
+          "afterEmpty": [
+            0.0,
+            3000
+          ]
+        },
+        "realAiWallet": true,
+        "cancelledAndInsufficientPreserved": true,
+        "noDirectMutation": true
+      },
+      {
+        "size": [
+          1280,
+          800
+        ],
+        "fullscreen": false,
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+            "--run",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-send-money-547\\final-v2\\1280x800\\data",
+            "--mute-audio",
+            "--frames",
+            "670",
+            "--set",
+            "SCREENW=1280;SCREENH=800;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;useBanners=1;music=0;playWind=0",
+            "--ui-script",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-send-money-547\\final-v2\\1280x800\\run\\steps.tsv",
+            "--ui-report",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-send-money-547\\final-v2\\1280x800\\run\\states.tsv",
+            "--mission",
+            "thewarbegins",
+            "--window"
+          ],
+          "binarySha256": "50001e953ff37f5bcc299c28fd8ebe52f8703dfce6a4c22f582ea8ac67fbc105",
+          "scriptSha256": "c12dbbadb4897c8cffe28496d52b5efae4396b7049118212298a7ff4abcfefbc",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 31.92318460001843,
+          "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderrSha256": "110c8ffc5dff493b166f45c895b87111c10df0e56113491c410333a7c7784511",
+          "originalsUnchanged": true,
+          "dataUnchanged": true
+        },
+        "initial": [
+          3000.0,
+          0
+        ],
+        "transfers": {
+          "after300": [
+            2700.0,
+            300
+          ],
+          "after700": [
+            2000.0,
+            1000
+          ],
+          "after1000": [
+            1000.0,
+            2000
+          ],
+          "afterX": [
+            775.0,
+            2225
+          ],
+          "afterCancel": [
+            775.0,
+            2225
+          ],
+          "afterTooMuch": [
+            775.0,
+            2225
+          ],
+          "afterZero": [
+            775.0,
+            2225
+          ],
+          "afterShort": [
+            775.0,
+            2225
+          ],
+          "afterNo": [
+            775.0,
+            2225
+          ],
+          "afterAll": [
+            0.0,
+            3000
+          ],
+          "afterEmpty": [
+            0.0,
+            3000
+          ]
+        },
+        "realAiWallet": true,
+        "cancelledAndInsufficientPreserved": true,
+        "noDirectMutation": true
+      }
+    ],
+    "binarySha256": "50001e953ff37f5bcc299c28fd8ebe52f8703dfce6a4c22f582ea8ac67fbc105",
+    "originalGameRuns": 0,
+    "newMultiplayerTests": 0,
+    "naturalClears": 0
+  },
+  "allActualGameRuns": [
+    {
+      "path": "extracted/cpp-send-money-547/final/1024x768/run/run.json",
+      "returnCode": 0,
+      "binarySha256": "e2693a1bbef4064e8b44d728c406720059929564bc03d2baf9b3a106c0300f6f",
+      "originalsUnchanged": true,
+      "dataUnchanged": true
+    },
+    {
+      "path": "extracted/cpp-send-money-547/final/1280x720/run/run.json",
+      "returnCode": 0,
+      "binarySha256": "e2693a1bbef4064e8b44d728c406720059929564bc03d2baf9b3a106c0300f6f",
+      "originalsUnchanged": true,
+      "dataUnchanged": true
+    },
+    {
+      "path": "extracted/cpp-send-money-547/final/1280x800/run/run.json",
+      "returnCode": 0,
+      "binarySha256": "e2693a1bbef4064e8b44d728c406720059929564bc03d2baf9b3a106c0300f6f",
+      "originalsUnchanged": true,
+      "dataUnchanged": true
+    },
+    {
+      "path": "extracted/cpp-send-money-547/final-v2/1024x768/run/run.json",
+      "returnCode": 0,
+      "binarySha256": "50001e953ff37f5bcc299c28fd8ebe52f8703dfce6a4c22f582ea8ac67fbc105",
+      "originalsUnchanged": true,
+      "dataUnchanged": true
+    },
+    {
+      "path": "extracted/cpp-send-money-547/final-v2/1280x720/run/run.json",
+      "returnCode": 0,
+      "binarySha256": "50001e953ff37f5bcc299c28fd8ebe52f8703dfce6a4c22f582ea8ac67fbc105",
+      "originalsUnchanged": true,
+      "dataUnchanged": true
+    },
+    {
+      "path": "extracted/cpp-send-money-547/final-v2/1280x800/run/run.json",
+      "returnCode": 0,
+      "binarySha256": "50001e953ff37f5bcc299c28fd8ebe52f8703dfce6a4c22f582ea8ac67fbc105",
+      "originalsUnchanged": true,
+      "dataUnchanged": true
+    },
+    {
+      "path": "extracted/cpp-send-money-547/preflight/1024x768/run/run.json",
+      "returnCode": 1,
+      "binarySha256": "c9b912c7d5531b8fe8bd53dce97d0065abc3e8f6fcce6c7a92fb521bb48d3cba",
+      "originalsUnchanged": true,
+      "dataUnchanged": true
+    },
+    {
+      "path": "extracted/cpp-send-money-547/reproduce-300/run/run.json",
+      "returnCode": 1,
+      "binarySha256": "d7b34b717765c487c5351b5c6c648e68a4ef8eb1d4e7396fccdfa382d31dd06e",
+      "originalsUnchanged": true,
+      "dataUnchanged": true
+    }
+  ],
+  "gameRunCounts": {
+    "all": 8,
+    "exit0": 6,
+    "exit1": 2,
+    "finalSameBuildAccepted": 3,
+    "previousVersionSuccessful": 3
+  },
+  "failedValidationPreserved": [
+    {
+      "path": "reproduce-300/run/",
+      "reason": "미수정546 제품의300 선택 미연결 명령 종료1"
+    },
+    {
+      "path": "preflight/1024x768/run/",
+      "reason": "수정 중 제품의All 선택 정적 토큰 종료1"
+    },
+    {
+      "path": "tests-send-money.log",
+      "reason": "초기console 선행관문 기대3실패 및 숫자창 생성 종료"
+    },
+    {
+      "path": "tests-native-initial.log",
+      "reason": "원문 일반 송금 명령이console 검사보다 앞인 점을 검사기에 교정"
+    },
+    {
+      "path": "tests-dialog-initial.log",
+      "reason": "원문 제목 Push 재부착 순서 누락으로 생성 중 종료"
+    },
+    {
+      "path": "tests-dialog-trace.log",
+      "reason": "같은 생성 실패 위치 보존"
+    },
+    {
+      "path": "tests-money5.log",
+      "reason": "원래 length+1<10의9문자 경계로 검사 기대 교정"
+    },
+    {
+      "path": "final/",
+      "reason": "v7의 정상3게임 뒤 캡처에서 제목의+8 정렬 필드 오연결을 추가 발견해v8로 정정"
+    }
+  ],
+  "preservation": {
+    "host": "HJOW-Athlon",
+    "sourceCount": 2945,
+    "baselineSourceCount": 2941,
+    "changedExisting": [
+      "cpppj/src/client/CMakeLists.txt",
+      "cpppj/src/client/CampaignObjectMenuClient.cpp",
+      "cpppj/src/client/RawMenuControls.cpp",
+      "cpppj/src/client/RawMenuControls.h",
+      "cpppj/src/client/GameWorld.cpp",
+      "cpppj/src/client/RawCampaignSession.cpp",
+      "cpppj/src/client/RawCampaignSession.h",
+      "cpppj/src/client/SaveFortNameDialog.h",
+      "cpppj/src/client/SaveFortNameDialog.cpp",
+      "cpppj/src/client/RawMenuSaveFort.inc",
+      "cpppj/src/client/UberEditor.inc",
+      "cpppj/src/client/UberGump.cpp",
+      "cpppj/src/client/UberGump.h",
+      "cpppj/tests/SaveFortNameDialogTests.cpp",
+      "cpppj/tests/CMakeLists.txt"
+    ],
+    "added": [
+      "cpppj/src/client/SendMoneyInput.cpp",
+      "cpppj/src/client/SendMoneyInput.h",
+      "cpppj/tests/SendMoneyInputTests.cpp",
+      "cpppj/tests/fixtures/send-money-input-x86.tsv"
+    ],
+    "protected": {
+      "count": 1819,
+      "missing": [],
+      "changed": []
+    },
+    "agentsUnchanged": true,
+    "oldFixtures": {
+      "count": 707,
+      "missing": [],
+      "changed": []
+    },
+    "matchesFinalBuildSource": {
+      "count": 15,
+      "missing": [],
+      "changed": []
+    },
+    "exes": {
+      "NetstormCpp.exe": "50001e953ff37f5bcc299c28fd8ebe52f8703dfce6a4c22f582ea8ac67fbc105",
+      "netstorm_tests.exe": "5f08618f83c8314c0ccd0a3c6d93587ada8533fc1d74821a583100c26fbeb5fd"
+    },
+    "visualInspection": {
+      "path": "final-v2/1024x768/x-dialog.bmp",
+      "titleVisible": "Send X Storm Power",
+      "approved": true
+    }
+  },
+  "toolSha256": {
+    "tools/decomp_send_money.py": "29c8a6282f40b6319f92537d953364344b931294b1bb2c1f16dcc153aa8da4c5",
+    "tools/cpp_send_money_smoke.py": "4314b87571e1cba5c99eb0343031ca572a8dffb16e5eb52516897fb1fba066f7"
+  },
+  "goalComplete": false,
+  "pauseRequested": {
+    "quote": "이번 작업 완료 후 문서 작성 및 git 커밋까지 하고 잠시 목표 일시 정지해 줘",
+    "after": "단위547 문서·커밋 완료",
+    "resumeRequiresUserRequest": true,
+    "recordedLocalTime": "2026-10-28T23:03:34"
+  },
+  "lastFull34PathUnit": 544,
+  "newOriginalGameRuns": 0,
+  "newMultiplayerOrNetworkTests": 0,
+  "naturalClears": 0,
+  "pending": [
+    "재개 후548 ShiftF7 GIF/안내·CtrlShift 진단",
+    "6c 도박kind2의 현재 내기 상태·원본 부정 자금 제재·Message4 전체 UI",
+    "잔여 UI/Edit·건물/제단 상태·Win11실기·사용자 후속 장기 플레이"
+  ],
+  "limits": "현재 검증은 캠페인1-1의 적 AI 실제 생산 지갑 이전이다. 원격 플레이 검증이 아니며 기존 사용자 보류·공중3종 정적 제한·MP 신규시험 금지를 유지한다.",
+  "rawEvidence": [
+    {
+      "path": "extracted/cpp-send-money-547/archive-list.txt",
+      "sha256": "a1a6646b415f1bd5287867cee019a861cf15f2b5e1e3afa5fe72c32cae51bc15"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build/cpppj/src/client/CMakeLists.txt",
+      "sha256": "925bc95999b975645dd11fea1a5d328b916611773249b69ef045f55a5b03fa08"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build/cpppj/src/client/GameWorld.cpp",
+      "sha256": "9c4b911255cf1232cbe95cc52d0801d5d27c4dcb46c3060912583fee15682f0e"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build/cpppj/src/client/RawCampaignSession.cpp",
+      "sha256": "c286bba3abccb2286146d387469c9fe48b59b45f5f1575db4593c948ec2108ea"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build/cpppj/src/client/RawCampaignSession.h",
+      "sha256": "3f70e2cbb663524b29a9b1a0b779b30c846b1304f4ec4961aa644d984fb06328"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build/cpppj/src/client/RawMenuControls.cpp",
+      "sha256": "621d82a870f5f18922867f80f38a7e9b89c65cda570f6f9883be9425fdf91f50"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build/cpppj/src/client/RawMenuControls.h",
+      "sha256": "657e857b1725b07719285a0686882be40a30ef5d2eb4bb111d5fc33879a0a11a"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build/cpppj/src/client/RawMenuSaveFort.inc",
+      "sha256": "20d36f6667755123c95fe11c13a928cd06222c8f25cf633f8b97bfae36cc1f0d"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build/cpppj/src/client/SaveFortNameDialog.cpp",
+      "sha256": "b132b2519ec2b49f2a78cfe01dd3cdf107018fa0d104eb48d03fe298c80c654d"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build/cpppj/src/client/SaveFortNameDialog.h",
+      "sha256": "ed5ae1c8c09d37a17e52e94add40dab3d26115ce5a02dfaac5727161d9b490d8"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build/cpppj/src/client/SendMoneyInput.cpp",
+      "sha256": "e9e7c493efb7eb69f8a93dba2af2cb63c7c556584aaa15d78581e334c11f2fa5"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build/cpppj/src/client/SendMoneyInput.h",
+      "sha256": "8d4ea94f02a9f195e6a190579e86f68f0ea9cec741d6e056ae6afca45acf7bbd"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build/cpppj/src/client/UberEditor.inc",
+      "sha256": "a9c4853907a36101ceb392a286163295988fa9a87ba763d9b8bac9f839565e0e"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build/cpppj/src/client/UberGump.cpp",
+      "sha256": "d6ac1deb34420429f94fb26515c2b333e0145e7a1d6f286153fa3b4beb76dcce"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build/cpppj/src/client/UberGump.h",
+      "sha256": "38c9ee6a2c48df9dadf4b7bc87d797c1d2b7ab8edef8a9ebbf403ba2a9cf7548"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build/cpppj/tests/CMakeLists.txt",
+      "sha256": "33c2d755da5cae85f21cef28275ca6d1dbe04f7d2950e05cce272498b675533d"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build/cpppj/tests/fixtures/send-money-input-x86.tsv",
+      "sha256": "e167cd639a77489163e5959799fdb4ff259745abed1f12d9e42f13b696f93d08"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build/cpppj/tests/SaveFortNameDialogTests.cpp",
+      "sha256": "88d6162f24a1193bc49113ef8c5202bf080e530d1a96f606c0f7d26dfceba3c2"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build/cpppj/tests/SendMoneyInputTests.cpp",
+      "sha256": "cd5ff01efb34edf38790ec24991d064845c0894f44f07691958798e582532109"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build/LEFT_JOBS.md",
+      "sha256": "256295cddca7ceaf6f821a2af4dd634db06fb8ebc7280613c003db1db4e0878c"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build/tools/decomp_send_money.py",
+      "sha256": "29c8a6282f40b6319f92537d953364344b931294b1bb2c1f16dcc153aa8da4c5"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build.json",
+      "sha256": "209139ecdab56039b76549170cb985c87119cfdfb3357ac987693e78466a7869"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build2/cpppj/src/client/CMakeLists.txt",
+      "sha256": "925bc95999b975645dd11fea1a5d328b916611773249b69ef045f55a5b03fa08"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build2/cpppj/src/client/GameWorld.cpp",
+      "sha256": "9c4b911255cf1232cbe95cc52d0801d5d27c4dcb46c3060912583fee15682f0e"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build2/cpppj/src/client/RawCampaignSession.cpp",
+      "sha256": "61d052f8362eb87a85dc719b621628f2311f4b3428bd6e535ca9e6c4b32a1483"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build2/cpppj/src/client/RawCampaignSession.h",
+      "sha256": "3f70e2cbb663524b29a9b1a0b779b30c846b1304f4ec4961aa644d984fb06328"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build2/cpppj/src/client/RawMenuControls.cpp",
+      "sha256": "621d82a870f5f18922867f80f38a7e9b89c65cda570f6f9883be9425fdf91f50"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build2/cpppj/src/client/RawMenuControls.h",
+      "sha256": "657e857b1725b07719285a0686882be40a30ef5d2eb4bb111d5fc33879a0a11a"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build2/cpppj/src/client/RawMenuSaveFort.inc",
+      "sha256": "20d36f6667755123c95fe11c13a928cd06222c8f25cf633f8b97bfae36cc1f0d"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build2/cpppj/src/client/SaveFortNameDialog.cpp",
+      "sha256": "b132b2519ec2b49f2a78cfe01dd3cdf107018fa0d104eb48d03fe298c80c654d"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build2/cpppj/src/client/SaveFortNameDialog.h",
+      "sha256": "ed5ae1c8c09d37a17e52e94add40dab3d26115ce5a02dfaac5727161d9b490d8"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build2/cpppj/src/client/SendMoneyInput.cpp",
+      "sha256": "e9e7c493efb7eb69f8a93dba2af2cb63c7c556584aaa15d78581e334c11f2fa5"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build2/cpppj/src/client/SendMoneyInput.h",
+      "sha256": "8d4ea94f02a9f195e6a190579e86f68f0ea9cec741d6e056ae6afca45acf7bbd"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build2/cpppj/src/client/UberEditor.inc",
+      "sha256": "a9c4853907a36101ceb392a286163295988fa9a87ba763d9b8bac9f839565e0e"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build2/cpppj/src/client/UberGump.cpp",
+      "sha256": "d6ac1deb34420429f94fb26515c2b333e0145e7a1d6f286153fa3b4beb76dcce"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build2/cpppj/src/client/UberGump.h",
+      "sha256": "38c9ee6a2c48df9dadf4b7bc87d797c1d2b7ab8edef8a9ebbf403ba2a9cf7548"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build2/cpppj/tests/CMakeLists.txt",
+      "sha256": "33c2d755da5cae85f21cef28275ca6d1dbe04f7d2950e05cce272498b675533d"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build2/cpppj/tests/fixtures/send-money-input-x86.tsv",
+      "sha256": "e167cd639a77489163e5959799fdb4ff259745abed1f12d9e42f13b696f93d08"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build2/cpppj/tests/SaveFortNameDialogTests.cpp",
+      "sha256": "88d6162f24a1193bc49113ef8c5202bf080e530d1a96f606c0f7d26dfceba3c2"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build2/cpppj/tests/SendMoneyInputTests.cpp",
+      "sha256": "cd5ff01efb34edf38790ec24991d064845c0894f44f07691958798e582532109"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build2/LEFT_JOBS.md",
+      "sha256": "256295cddca7ceaf6f821a2af4dd634db06fb8ebc7280613c003db1db4e0878c"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build2/tools/decomp_send_money.py",
+      "sha256": "29c8a6282f40b6319f92537d953364344b931294b1bb2c1f16dcc153aa8da4c5"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build2.json",
+      "sha256": "c2d214ad74267a16f5131dd1a005096fa2aff07224093595208ef26163a1d7ef"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build5/cpppj/src/client/CMakeLists.txt",
+      "sha256": "925bc95999b975645dd11fea1a5d328b916611773249b69ef045f55a5b03fa08"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build5/cpppj/src/client/GameWorld.cpp",
+      "sha256": "9c4b911255cf1232cbe95cc52d0801d5d27c4dcb46c3060912583fee15682f0e"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build5/cpppj/src/client/RawCampaignSession.cpp",
+      "sha256": "61d052f8362eb87a85dc719b621628f2311f4b3428bd6e535ca9e6c4b32a1483"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build5/cpppj/src/client/RawCampaignSession.h",
+      "sha256": "3f70e2cbb663524b29a9b1a0b779b30c846b1304f4ec4961aa644d984fb06328"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build5/cpppj/src/client/RawMenuControls.cpp",
+      "sha256": "621d82a870f5f18922867f80f38a7e9b89c65cda570f6f9883be9425fdf91f50"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build5/cpppj/src/client/RawMenuControls.h",
+      "sha256": "657e857b1725b07719285a0686882be40a30ef5d2eb4bb111d5fc33879a0a11a"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build5/cpppj/src/client/RawMenuSaveFort.inc",
+      "sha256": "20d36f6667755123c95fe11c13a928cd06222c8f25cf633f8b97bfae36cc1f0d"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build5/cpppj/src/client/SaveFortNameDialog.cpp",
+      "sha256": "e0067cb9e13f902023a3eca69ddb5b6d3cb547d4000a65133325587242a774d9"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build5/cpppj/src/client/SaveFortNameDialog.h",
+      "sha256": "ed5ae1c8c09d37a17e52e94add40dab3d26115ce5a02dfaac5727161d9b490d8"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build5/cpppj/src/client/SendMoneyInput.cpp",
+      "sha256": "e9e7c493efb7eb69f8a93dba2af2cb63c7c556584aaa15d78581e334c11f2fa5"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build5/cpppj/src/client/SendMoneyInput.h",
+      "sha256": "8d4ea94f02a9f195e6a190579e86f68f0ea9cec741d6e056ae6afca45acf7bbd"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build5/cpppj/src/client/UberEditor.inc",
+      "sha256": "a9c4853907a36101ceb392a286163295988fa9a87ba763d9b8bac9f839565e0e"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build5/cpppj/src/client/UberGump.cpp",
+      "sha256": "d6ac1deb34420429f94fb26515c2b333e0145e7a1d6f286153fa3b4beb76dcce"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build5/cpppj/src/client/UberGump.h",
+      "sha256": "38c9ee6a2c48df9dadf4b7bc87d797c1d2b7ab8edef8a9ebbf403ba2a9cf7548"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build5/cpppj/tests/CMakeLists.txt",
+      "sha256": "33c2d755da5cae85f21cef28275ca6d1dbe04f7d2950e05cce272498b675533d"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build5/cpppj/tests/fixtures/send-money-input-x86.tsv",
+      "sha256": "e167cd639a77489163e5959799fdb4ff259745abed1f12d9e42f13b696f93d08"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build5/cpppj/tests/SaveFortNameDialogTests.cpp",
+      "sha256": "88d6162f24a1193bc49113ef8c5202bf080e530d1a96f606c0f7d26dfceba3c2"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build5/cpppj/tests/SendMoneyInputTests.cpp",
+      "sha256": "79c1eb7e385680bd03dd4f0e125e7e6d37f912f728466754ee1996a181d23498"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build5/LEFT_JOBS.md",
+      "sha256": "6a52bce38badbee073c59da11cb60c08e1bf6f277d89881d20d0c7b0f7d54430"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build5/tools/decomp_send_money.py",
+      "sha256": "29c8a6282f40b6319f92537d953364344b931294b1bb2c1f16dcc153aa8da4c5"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build5.json",
+      "sha256": "481e3896917a0b5d5f2a5ccb44c88433b583c58770f9e797105559904618aefc"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build7/cpppj/src/client/CampaignObjectMenuClient.cpp",
+      "sha256": "b72bbd1106fabcdcd1eb0f59332c662141ff645360361dc931e733b09c3dca02"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build7/cpppj/src/client/CMakeLists.txt",
+      "sha256": "925bc95999b975645dd11fea1a5d328b916611773249b69ef045f55a5b03fa08"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build7/cpppj/src/client/GameWorld.cpp",
+      "sha256": "9c4b911255cf1232cbe95cc52d0801d5d27c4dcb46c3060912583fee15682f0e"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build7/cpppj/src/client/RawCampaignSession.cpp",
+      "sha256": "61d052f8362eb87a85dc719b621628f2311f4b3428bd6e535ca9e6c4b32a1483"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build7/cpppj/src/client/RawCampaignSession.h",
+      "sha256": "3f70e2cbb663524b29a9b1a0b779b30c846b1304f4ec4961aa644d984fb06328"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build7/cpppj/src/client/RawMenuControls.cpp",
+      "sha256": "621d82a870f5f18922867f80f38a7e9b89c65cda570f6f9883be9425fdf91f50"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build7/cpppj/src/client/RawMenuControls.h",
+      "sha256": "657e857b1725b07719285a0686882be40a30ef5d2eb4bb111d5fc33879a0a11a"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build7/cpppj/src/client/RawMenuSaveFort.inc",
+      "sha256": "20d36f6667755123c95fe11c13a928cd06222c8f25cf633f8b97bfae36cc1f0d"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build7/cpppj/src/client/SaveFortNameDialog.cpp",
+      "sha256": "e0067cb9e13f902023a3eca69ddb5b6d3cb547d4000a65133325587242a774d9"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build7/cpppj/src/client/SaveFortNameDialog.h",
+      "sha256": "ed5ae1c8c09d37a17e52e94add40dab3d26115ce5a02dfaac5727161d9b490d8"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build7/cpppj/src/client/SendMoneyInput.cpp",
+      "sha256": "e9e7c493efb7eb69f8a93dba2af2cb63c7c556584aaa15d78581e334c11f2fa5"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build7/cpppj/src/client/SendMoneyInput.h",
+      "sha256": "8d4ea94f02a9f195e6a190579e86f68f0ea9cec741d6e056ae6afca45acf7bbd"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build7/cpppj/src/client/UberEditor.inc",
+      "sha256": "a9c4853907a36101ceb392a286163295988fa9a87ba763d9b8bac9f839565e0e"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build7/cpppj/src/client/UberGump.cpp",
+      "sha256": "d6ac1deb34420429f94fb26515c2b333e0145e7a1d6f286153fa3b4beb76dcce"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build7/cpppj/src/client/UberGump.h",
+      "sha256": "38c9ee6a2c48df9dadf4b7bc87d797c1d2b7ab8edef8a9ebbf403ba2a9cf7548"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build7/cpppj/tests/CMakeLists.txt",
+      "sha256": "33c2d755da5cae85f21cef28275ca6d1dbe04f7d2950e05cce272498b675533d"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build7/cpppj/tests/fixtures/send-money-input-x86.tsv",
+      "sha256": "e167cd639a77489163e5959799fdb4ff259745abed1f12d9e42f13b696f93d08"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build7/cpppj/tests/SaveFortNameDialogTests.cpp",
+      "sha256": "64299c7a8dcd821166243f871f63b5974ac5a4568f62dcff54b296c5a20b2695"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build7/cpppj/tests/SendMoneyInputTests.cpp",
+      "sha256": "79c1eb7e385680bd03dd4f0e125e7e6d37f912f728466754ee1996a181d23498"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build7/LEFT_JOBS.md",
+      "sha256": "6a52bce38badbee073c59da11cb60c08e1bf6f277d89881d20d0c7b0f7d54430"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build7/tools/cpp_send_money_smoke.py",
+      "sha256": "4314b87571e1cba5c99eb0343031ca572a8dffb16e5eb52516897fb1fba066f7"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build7/tools/decomp_send_money.py",
+      "sha256": "29c8a6282f40b6319f92537d953364344b931294b1bb2c1f16dcc153aa8da4c5"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build7.json",
+      "sha256": "600ddf3fc5f21e406ba84db49f996598589c7eb2d289f0b76a16d692a58e3a51"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build8/cpppj/src/client/CampaignObjectMenuClient.cpp",
+      "sha256": "b72bbd1106fabcdcd1eb0f59332c662141ff645360361dc931e733b09c3dca02"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build8/cpppj/src/client/CMakeLists.txt",
+      "sha256": "925bc95999b975645dd11fea1a5d328b916611773249b69ef045f55a5b03fa08"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build8/cpppj/src/client/GameWorld.cpp",
+      "sha256": "9c4b911255cf1232cbe95cc52d0801d5d27c4dcb46c3060912583fee15682f0e"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build8/cpppj/src/client/RawCampaignSession.cpp",
+      "sha256": "61d052f8362eb87a85dc719b621628f2311f4b3428bd6e535ca9e6c4b32a1483"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build8/cpppj/src/client/RawCampaignSession.h",
+      "sha256": "3f70e2cbb663524b29a9b1a0b779b30c846b1304f4ec4961aa644d984fb06328"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build8/cpppj/src/client/RawMenuControls.cpp",
+      "sha256": "621d82a870f5f18922867f80f38a7e9b89c65cda570f6f9883be9425fdf91f50"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build8/cpppj/src/client/RawMenuControls.h",
+      "sha256": "657e857b1725b07719285a0686882be40a30ef5d2eb4bb111d5fc33879a0a11a"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build8/cpppj/src/client/RawMenuSaveFort.inc",
+      "sha256": "20d36f6667755123c95fe11c13a928cd06222c8f25cf633f8b97bfae36cc1f0d"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build8/cpppj/src/client/SaveFortNameDialog.cpp",
+      "sha256": "d75280e517514c505de4daf5c9c9779bbc4c93d4454a6742717e3f24acbd2869"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build8/cpppj/src/client/SaveFortNameDialog.h",
+      "sha256": "ed5ae1c8c09d37a17e52e94add40dab3d26115ce5a02dfaac5727161d9b490d8"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build8/cpppj/src/client/SendMoneyInput.cpp",
+      "sha256": "e9e7c493efb7eb69f8a93dba2af2cb63c7c556584aaa15d78581e334c11f2fa5"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build8/cpppj/src/client/SendMoneyInput.h",
+      "sha256": "8d4ea94f02a9f195e6a190579e86f68f0ea9cec741d6e056ae6afca45acf7bbd"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build8/cpppj/src/client/UberEditor.inc",
+      "sha256": "a9c4853907a36101ceb392a286163295988fa9a87ba763d9b8bac9f839565e0e"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build8/cpppj/src/client/UberGump.cpp",
+      "sha256": "d6ac1deb34420429f94fb26515c2b333e0145e7a1d6f286153fa3b4beb76dcce"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build8/cpppj/src/client/UberGump.h",
+      "sha256": "38c9ee6a2c48df9dadf4b7bc87d797c1d2b7ab8edef8a9ebbf403ba2a9cf7548"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build8/cpppj/tests/CMakeLists.txt",
+      "sha256": "33c2d755da5cae85f21cef28275ca6d1dbe04f7d2950e05cce272498b675533d"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build8/cpppj/tests/fixtures/send-money-input-x86.tsv",
+      "sha256": "e167cd639a77489163e5959799fdb4ff259745abed1f12d9e42f13b696f93d08"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build8/cpppj/tests/SaveFortNameDialogTests.cpp",
+      "sha256": "b4cc56fed2b91ea43049957e05f1a314854ac5b34fb59626078054a89c9188d2"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build8/cpppj/tests/SendMoneyInputTests.cpp",
+      "sha256": "79c1eb7e385680bd03dd4f0e125e7e6d37f912f728466754ee1996a181d23498"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build8/LEFT_JOBS.md",
+      "sha256": "6a52bce38badbee073c59da11cb60c08e1bf6f277d89881d20d0c7b0f7d54430"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build8/tools/cpp_send_money_smoke.py",
+      "sha256": "4314b87571e1cba5c99eb0343031ca572a8dffb16e5eb52516897fb1fba066f7"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build8/tools/decomp_send_money.py",
+      "sha256": "29c8a6282f40b6319f92537d953364344b931294b1bb2c1f16dcc153aa8da4c5"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/before-build8.json",
+      "sha256": "1cac3267ad77f1e473ddc639f8bc111abde7dedd9f9421289e555a72686aa449"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/build-tests3.log",
+      "sha256": "fa514732195737cbbdf5fb88d1c2d4a116227b82ed4ead2b302bdcb1fc298e0b"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/build-tests4.log",
+      "sha256": "8bc169a1cbad717e0f36b091b81893fcd6f9736eec00ea0409951854433a8fe8"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/build-tests6.log",
+      "sha256": "8bc169a1cbad717e0f36b091b81893fcd6f9736eec00ea0409951854433a8fe8"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/build.json",
+      "sha256": "eaad9f2c5142836abf52993f18fcd69ad86998c257bf8456c677f2acb46517e5"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/build.log",
+      "sha256": "09e04d42380d2fd8a42f0c5407ded402b36d3b569d6b7b5a838df16cdb17a39d"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/build2.json",
+      "sha256": "d005ea902279d895df499ccdcbc94737235b8e39907efc0d9ccda41907ec0e15"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/build2.log",
+      "sha256": "035df8299a124eb87609e8ffdcbad76f835544ebd88c03043e573cbcd0df3933"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/build5.json",
+      "sha256": "1b03d5fa22104a887307f71aca138d85c9f34b0dd428bd1ed221053ff505b963"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/build5.log",
+      "sha256": "b86f366876f5ba1fc4836d0715f1452740aa85c4becb5a2df9ca7c7d7b5ccd4a"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/build7.json",
+      "sha256": "6c43bee2ec1f56b4864cc49c3d00de15f4e9083170623acf8c242d745ec46838"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/build7.log",
+      "sha256": "77edbd6e75193048ec8347c24bf3db687c4b5fb90b26a714188e77b1a307c0e5"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/build8.json",
+      "sha256": "e99b153bfc41cc8ec9ea5a204e6d647df9b40cad8929418c33ae7ae7c1f81fdc"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/build8.log",
+      "sha256": "b86f366876f5ba1fc4836d0715f1452740aa85c4becb5a2df9ca7c7d7b5ccd4a"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/final/1024x768/all-confirm.bmp",
+      "sha256": "a79325079a840dd63851b1ba1864de48ea0bae24f3c2f8e36119ac28bbce310c"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/final/1024x768/run/data-before.json",
+      "sha256": "4399a90324a0f64699d3dadbb46f4d6fbcde2d0f2c62a21d5c31e4413cd0d3af"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/final/1024x768/run/originals-before.json",
+      "sha256": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/final/1024x768/run/run.json",
+      "sha256": "5ef2583c1786a9d9962142be32a5cbd21a6abfadb1f332b919b457f522bb0505"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/final/1024x768/run/running.json",
+      "sha256": "82b7db5205348934fad3300f29e531c49f65e79685dd0ada33c38736a7bccd6c"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/final/1024x768/run/states.tsv",
+      "sha256": "6a44a724b606710bee5e305609a88f9ed444d6c2dfe17ee40bda69d9f8e61a09"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/final/1024x768/run/stderr.log",
+      "sha256": "110c8ffc5dff493b166f45c895b87111c10df0e56113491c410333a7c7784511"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/final/1024x768/run/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/final/1024x768/run/steps.tsv",
+      "sha256": "25f442e0f7f2aa6d2a9caab51dafbfd325ee98d55c8d42e07593c5f6b2fe5b04"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/final/1024x768/summary.json",
+      "sha256": "15c03f18a8820dd3d24fd6865edcf4123fa67d78a1d8d08fadba7fd3de8cbf1f"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/final/1024x768/x-dialog.bmp",
+      "sha256": "ab23a6bf4e0aace8b5cb97e7acedfd0c01e028fa64b6ae1b11364a192f67e8ba"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/final/1280x720/all-confirm.bmp",
+      "sha256": "5ef81b6864260bca79b79130bef72c15f5a6c2aeccf63a4a6a2978db90cf8d48"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/final/1280x720/run/data-before.json",
+      "sha256": "4399a90324a0f64699d3dadbb46f4d6fbcde2d0f2c62a21d5c31e4413cd0d3af"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/final/1280x720/run/originals-before.json",
+      "sha256": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/final/1280x720/run/run.json",
+      "sha256": "889689ebb3e118b4cc495c0bf1c68c69fc920eed5a89fe0f1c50560a1f3497ab"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/final/1280x720/run/running.json",
+      "sha256": "cdee93ddbf1aabb655933a235ad1179362f7d8c8dd5033ab13c605ed1c7144a1"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/final/1280x720/run/states.tsv",
+      "sha256": "3d8d9448a970a2f6dc9303848f732cabd5b43fd4909e8aa075509901c9a6ed80"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/final/1280x720/run/stderr.log",
+      "sha256": "110c8ffc5dff493b166f45c895b87111c10df0e56113491c410333a7c7784511"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/final/1280x720/run/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/final/1280x720/run/steps.tsv",
+      "sha256": "6f1b28a8427af6e89880143fe4f0cf10f5b58edf51c0edc5d9b4cbaec8fb4759"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/final/1280x720/summary.json",
+      "sha256": "b0eddf77bf61e9c5fba94ad387c4adc7989b897683c289a67b08d0fe71f8898c"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/final/1280x720/x-dialog.bmp",
+      "sha256": "41b95d3bad3a0881222bd5817c4c5b2ac39a6ccec46bceab781d0c4787268450"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/final/1280x800/all-confirm.bmp",
+      "sha256": "301f46eb5418aba5ac9803bcb65aaf0457843d3fbeee2968a7cefc635d59e845"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/final/1280x800/run/data-before.json",
+      "sha256": "4399a90324a0f64699d3dadbb46f4d6fbcde2d0f2c62a21d5c31e4413cd0d3af"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/final/1280x800/run/originals-before.json",
+      "sha256": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/final/1280x800/run/run.json",
+      "sha256": "a7f5569f286263144e9a9da584ca6d1df286c08a2d01ecdea668deeadbb76e26"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/final/1280x800/run/running.json",
+      "sha256": "19d0758de09ada05ccc0999ed24d15a7ae04ab89caa55792ef57c25e9411fe08"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/final/1280x800/run/states.tsv",
+      "sha256": "b08edb944f86245eff95b8e573fb57b46752fdd6e87499cd6808f1e486e72a2e"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/final/1280x800/run/stderr.log",
+      "sha256": "110c8ffc5dff493b166f45c895b87111c10df0e56113491c410333a7c7784511"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/final/1280x800/run/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/final/1280x800/run/steps.tsv",
+      "sha256": "34ddbdc3fac5f6f600b467ecaa6dcb92cd995e7506f5066c1b7c296169a3d311"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/final/1280x800/summary.json",
+      "sha256": "9967e1e23360d44b1a02a1399fccc995d64803e85c7c81dac9933ba71e9f8cb3"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/final/1280x800/x-dialog.bmp",
+      "sha256": "c1e281669bcf7b4e171833c77af32bcffdc85bb6deeebe76ac72ebaef685115e"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/final/summary.json",
+      "sha256": "c5466cdaccd439e14781f8ef1b0c1c4af141a1c4919eadda65d60ed66ef23e9f"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/final-driver.log",
+      "sha256": "e1fc365084d8dc414d647cd58074e99c720e63ee6b9c67be24e176c62f9e3bd8"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/final-preservation.json",
+      "sha256": "253ebd1d2d735209ebb3a27509bc6b5abf6b3b899001b0f224b201d9045b9bdd"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/final-v2/1024x768/all-confirm.bmp",
+      "sha256": "c7d1fa69d1d7638dc6d22e2cd78ed86260b83b5bcaa4b489a443017ed3f596a3"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/final-v2/1024x768/run/data-before.json",
+      "sha256": "4399a90324a0f64699d3dadbb46f4d6fbcde2d0f2c62a21d5c31e4413cd0d3af"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/final-v2/1024x768/run/originals-before.json",
+      "sha256": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/final-v2/1024x768/run/run.json",
+      "sha256": "5fce2ca76cd24c3dc04ccad47a59db31cf4e46d526f21fc8142c2280d07eb2e1"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/final-v2/1024x768/run/running.json",
+      "sha256": "125a3e7635f564ec2c13485abb343bc8c0e0b8cadf559f768cab13f11e414a06"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/final-v2/1024x768/run/states.tsv",
+      "sha256": "674abd0ec78ff8cd09fae55156f012ae9e3837f5399fa743427d920ff19630e2"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/final-v2/1024x768/run/stderr.log",
+      "sha256": "110c8ffc5dff493b166f45c895b87111c10df0e56113491c410333a7c7784511"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/final-v2/1024x768/run/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/final-v2/1024x768/run/steps.tsv",
+      "sha256": "725755c63b9786a0e71586bee8fdbe81e1b223b00f3135476c25c5fa27b4876c"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/final-v2/1024x768/summary.json",
+      "sha256": "a0184a4d3b1ca0d9ce163ef46c81b97e640cd1c960b722ae2a3410c6e584d2b5"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/final-v2/1024x768/x-dialog.bmp",
+      "sha256": "23c9d4aab320e529d2eda2a2b4c37867e37116e43955ffbba7f6e4d7c3884e23"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/final-v2/1280x720/all-confirm.bmp",
+      "sha256": "4f5d657f7b6a3e5b288be6f402f9f350b500f3b16b93476311adefa7c65c8584"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/final-v2/1280x720/run/data-before.json",
+      "sha256": "4399a90324a0f64699d3dadbb46f4d6fbcde2d0f2c62a21d5c31e4413cd0d3af"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/final-v2/1280x720/run/originals-before.json",
+      "sha256": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/final-v2/1280x720/run/run.json",
+      "sha256": "38e7602bfc520cbbd5eb3678b1efdabde95e5d552783236618b122b632f06cbf"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/final-v2/1280x720/run/running.json",
+      "sha256": "9f724b6d0ac22cd23ce38b5ae8b31016d5799616f9708670b9284251527b7c5b"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/final-v2/1280x720/run/states.tsv",
+      "sha256": "51b37cc4020ea7b1899bc0a0b0bc6220ccaa076e3f41f2454a83a59ebe7a4654"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/final-v2/1280x720/run/stderr.log",
+      "sha256": "110c8ffc5dff493b166f45c895b87111c10df0e56113491c410333a7c7784511"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/final-v2/1280x720/run/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/final-v2/1280x720/run/steps.tsv",
+      "sha256": "00c93b01ba9c3b49b9ab7b8a875f86355cc04058be64c86619a5b374cb3061cd"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/final-v2/1280x720/summary.json",
+      "sha256": "ac647c55d3f9664a76d0b00befbb8dbe8d840cb4540354cccf597527c4924bb6"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/final-v2/1280x720/x-dialog.bmp",
+      "sha256": "713ddf69f8a899369d9271ba2044734f4c63436b2ba058bd4c33dd1ffe7f3c83"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/final-v2/1280x800/all-confirm.bmp",
+      "sha256": "d4b58b5f3505115d681d3c98db7f943efab73f5f99ec6e71931a203e82d4c962"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/final-v2/1280x800/run/data-before.json",
+      "sha256": "4399a90324a0f64699d3dadbb46f4d6fbcde2d0f2c62a21d5c31e4413cd0d3af"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/final-v2/1280x800/run/originals-before.json",
+      "sha256": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/final-v2/1280x800/run/run.json",
+      "sha256": "c5a2491a6df43f7632a6d183ce8c2f14cc8f61c25b623e4bbe2337bfaabac5ee"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/final-v2/1280x800/run/running.json",
+      "sha256": "957eb6aa3f6191903ac73e40a0a79baff7dea09de8ecb166d1bc225bb97cce9a"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/final-v2/1280x800/run/states.tsv",
+      "sha256": "bfde09586d2d95675e2ac5aef03a983eb0fec245745845359f2c4424f23543d3"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/final-v2/1280x800/run/stderr.log",
+      "sha256": "110c8ffc5dff493b166f45c895b87111c10df0e56113491c410333a7c7784511"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/final-v2/1280x800/run/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/final-v2/1280x800/run/steps.tsv",
+      "sha256": "c12dbbadb4897c8cffe28496d52b5efae4396b7049118212298a7ff4abcfefbc"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/final-v2/1280x800/summary.json",
+      "sha256": "77da1bc3563a5fd4baf2e39ade9c2e0ceb2d729d71bb1290901bbc042e0f0ef5"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/final-v2/1280x800/x-dialog.bmp",
+      "sha256": "6764841a0abd298af346c12631a658d56615f8357d3897422b56c5fba31b89c1"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/final-v2/summary.json",
+      "sha256": "78f1df047f8c8438a8b30ddfb3c19d9ae38c93ab4cf62d26b7acbd85c9376677"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/final-v2-driver.log",
+      "sha256": "3020cd645b7eac492737e23eccf2a044bd851c42a27080d100622773606b7c65"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/final-work/cpppj/src/client/CampaignObjectMenuClient.cpp",
+      "sha256": "b72bbd1106fabcdcd1eb0f59332c662141ff645360361dc931e733b09c3dca02"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/final-work/cpppj/src/client/CMakeLists.txt",
+      "sha256": "925bc95999b975645dd11fea1a5d328b916611773249b69ef045f55a5b03fa08"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/final-work/cpppj/src/client/GameWorld.cpp",
+      "sha256": "9c4b911255cf1232cbe95cc52d0801d5d27c4dcb46c3060912583fee15682f0e"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/final-work/cpppj/src/client/RawCampaignSession.cpp",
+      "sha256": "61d052f8362eb87a85dc719b621628f2311f4b3428bd6e535ca9e6c4b32a1483"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/final-work/cpppj/src/client/RawCampaignSession.h",
+      "sha256": "3f70e2cbb663524b29a9b1a0b779b30c846b1304f4ec4961aa644d984fb06328"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/final-work/cpppj/src/client/RawMenuControls.cpp",
+      "sha256": "621d82a870f5f18922867f80f38a7e9b89c65cda570f6f9883be9425fdf91f50"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/final-work/cpppj/src/client/RawMenuControls.h",
+      "sha256": "657e857b1725b07719285a0686882be40a30ef5d2eb4bb111d5fc33879a0a11a"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/final-work/cpppj/src/client/RawMenuSaveFort.inc",
+      "sha256": "20d36f6667755123c95fe11c13a928cd06222c8f25cf633f8b97bfae36cc1f0d"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/final-work/cpppj/src/client/SaveFortNameDialog.cpp",
+      "sha256": "d75280e517514c505de4daf5c9c9779bbc4c93d4454a6742717e3f24acbd2869"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/final-work/cpppj/src/client/SaveFortNameDialog.h",
+      "sha256": "ed5ae1c8c09d37a17e52e94add40dab3d26115ce5a02dfaac5727161d9b490d8"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/final-work/cpppj/src/client/SendMoneyInput.cpp",
+      "sha256": "e9e7c493efb7eb69f8a93dba2af2cb63c7c556584aaa15d78581e334c11f2fa5"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/final-work/cpppj/src/client/SendMoneyInput.h",
+      "sha256": "8d4ea94f02a9f195e6a190579e86f68f0ea9cec741d6e056ae6afca45acf7bbd"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/final-work/cpppj/src/client/UberEditor.inc",
+      "sha256": "a9c4853907a36101ceb392a286163295988fa9a87ba763d9b8bac9f839565e0e"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/final-work/cpppj/src/client/UberGump.cpp",
+      "sha256": "d6ac1deb34420429f94fb26515c2b333e0145e7a1d6f286153fa3b4beb76dcce"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/final-work/cpppj/src/client/UberGump.h",
+      "sha256": "38c9ee6a2c48df9dadf4b7bc87d797c1d2b7ab8edef8a9ebbf403ba2a9cf7548"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/final-work/cpppj/tests/CMakeLists.txt",
+      "sha256": "33c2d755da5cae85f21cef28275ca6d1dbe04f7d2950e05cce272498b675533d"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/final-work/cpppj/tests/fixtures/send-money-input-x86.tsv",
+      "sha256": "e167cd639a77489163e5959799fdb4ff259745abed1f12d9e42f13b696f93d08"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/final-work/cpppj/tests/SaveFortNameDialogTests.cpp",
+      "sha256": "b4cc56fed2b91ea43049957e05f1a314854ac5b34fb59626078054a89c9188d2"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/final-work/cpppj/tests/SendMoneyInputTests.cpp",
+      "sha256": "79c1eb7e385680bd03dd4f0e125e7e6d37f912f728466754ee1996a181d23498"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/final-work/LEFT_JOBS.md",
+      "sha256": "be0b33643ab8e367ac470cd6a1e51a3f574c753429b428354e41f8244336b872"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/final-work/tools/cpp_send_money_smoke.py",
+      "sha256": "4314b87571e1cba5c99eb0343031ca572a8dffb16e5eb52516897fb1fba066f7"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/final-work/tools/decomp_send_money.py",
+      "sha256": "29c8a6282f40b6319f92537d953364344b931294b1bb2c1f16dcc153aa8da4c5"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/final-work.json",
+      "sha256": "8d78a650c157215d0c0ecdc8e1220233e313efb5c27305b6c9604b312c1b08cd"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/first-input-capture/decomp_send_money.py",
+      "sha256": "29c8a6282f40b6319f92537d953364344b931294b1bb2c1f16dcc153aa8da4c5"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/first-input-capture/native-input.json",
+      "sha256": "58c6f0c1d1dc3edda23eed1ae2fb6cd3be37167083a7a604b9266fcbc6be6780"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/first-input-capture/send-money-input-x86.tsv",
+      "sha256": "e167cd639a77489163e5959799fdb4ff259745abed1f12d9e42f13b696f93d08"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/freeze-final.json",
+      "sha256": "02731a8572da5aa422ebe24021265e0ffb3937eefff3961fdd7ea5e009988389"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/native-analysis.json",
+      "sha256": "c3aebbf4f7a318d6c4f796704bca6ec087641faaf974af6b15f3da29591e02b6"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/native-input.json",
+      "sha256": "58c6f0c1d1dc3edda23eed1ae2fb6cd3be37167083a7a604b9266fcbc6be6780"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/preflight/1024x768/run/data-before.json",
+      "sha256": "4399a90324a0f64699d3dadbb46f4d6fbcde2d0f2c62a21d5c31e4413cd0d3af"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/preflight/1024x768/run/originals-before.json",
+      "sha256": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/preflight/1024x768/run/run.json",
+      "sha256": "24e670024eec895eb3d7ac8ef2c287b3f2535e84c4bd47d34503486219229ed9"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/preflight/1024x768/run/running.json",
+      "sha256": "61c59c2a5217d3b3a0ac65429646ad09333cabb85ea2fcc02005ee589702de7a"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/preflight/1024x768/run/states.tsv",
+      "sha256": "db89d5f65ae252d2bc855aeabec3b4bf2ae85001c4d78e0260c29a468862d826"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/preflight/1024x768/run/stderr.log",
+      "sha256": "3ca83bcf878f75587507056b74f063a998c83e27798b3019443aa999db40a7c7"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/preflight/1024x768/run/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/preflight/1024x768/run/steps.tsv",
+      "sha256": "89ffc6e13a8764f47529c18bc7ea5f77f67196d6f460ab99f5c9689cd8d9c62f"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/preflight/1024x768/x-dialog.bmp",
+      "sha256": "56e78152344bcace8aa048714c19268aa269b1cff1ba8c5ff4177bc0700a4d52"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/preflight-driver.log",
+      "sha256": "9fe659aa4a2d47c8c27aad2645b3e21cdcb70b589c94f77c3d863c22a9975854"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/registered-final-v2.txt",
+      "sha256": "84e15802fdf29998920793ff796e2918a1b4cfc659a3b663d19708d7ed198b81"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/registered-final.txt",
+      "sha256": "84e15802fdf29998920793ff796e2918a1b4cfc659a3b663d19708d7ed198b81"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/reproduce-300/run/data-before.json",
+      "sha256": "4399a90324a0f64699d3dadbb46f4d6fbcde2d0f2c62a21d5c31e4413cd0d3af"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/reproduce-300/run/originals-before.json",
+      "sha256": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/reproduce-300/run/run.json",
+      "sha256": "909aeb838711d7af9976ff2e523c1028591f3b071d0f28f7565947845db283dc"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/reproduce-300/run/running.json",
+      "sha256": "f671be2833fe4ce6b954beb216ca580b33d986186715bcda648fc35c1e265e55"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/reproduce-300/run/states.tsv",
+      "sha256": "8638faf77a4821180c20f9788dc0d6d43555cf3ce9c7fc8552ba3a99c8f82c27"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/reproduce-300/run/stderr.log",
+      "sha256": "1dec2949cb37c8daf9e0cf36c37d8e7f136720350227b011cb46d44506104c70"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/reproduce-300/run/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/reproduce-300/run/steps.tsv",
+      "sha256": "85c4e31627519b1dcc71b827ed00fb2584dfcfecef9c39d5204b732961e8bdba"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/tell.english",
+      "sha256": "0c275987c5a576c5d838831cf47ff4d58822559f83b0fca566f5a169cc1ce02b"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/tests-dialog-initial.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/tests-dialog-trace.log",
+      "sha256": "261cc837805ef50f04b353425230750a31e621aa31557e3be96d80ba6af3d544"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/tests-existing-dialog.log",
+      "sha256": "742855dbe81b8da82e9a80bc3d84d963938f453177c07d745c408c876a5a70f8"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/tests-final-00.log",
+      "sha256": "2f78928cff1b5a8483c7be4b87c10b2ad6dfa55872c4127a20e3441995801d67"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/tests-final-01.log",
+      "sha256": "c49617a9f843fc78604bdd05ad700b470be22436c0f033324d8c6d0f843a7a11"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/tests-final-02.log",
+      "sha256": "4fdc861cb1e3fa870302c48a61e457ae3f58cf5ae9d917686cf4cbcdb4016b4e"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/tests-final-03.log",
+      "sha256": "efcc36a0a5066bc84c1e108c84a6faed984ff7f0aa75887756f9e543b589f5a5"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/tests-final-04.log",
+      "sha256": "ef87b1a20b9861663a776c66f9b5cd26cfa4597a39dac34bc86a428d63f521d6"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/tests-final-05.log",
+      "sha256": "14cc4f5372fbd7774a06dc466df32e375d14b8aaa4fe7d37774ec1d592489240"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/tests-final-06.log",
+      "sha256": "a5e8708b32e6fe8db1aa3735b58e4576114c387228dd88975fd41291c47ccc6d"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/tests-final-07.log",
+      "sha256": "e1f1b9a026b8ee6f493beeb6d593c1e12b556d781d1235d73c8bb52e40809183"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/tests-final-v2-00.log",
+      "sha256": "2f78928cff1b5a8483c7be4b87c10b2ad6dfa55872c4127a20e3441995801d67"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/tests-final-v2-01.log",
+      "sha256": "c49617a9f843fc78604bdd05ad700b470be22436c0f033324d8c6d0f843a7a11"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/tests-final-v2-02.log",
+      "sha256": "4fdc861cb1e3fa870302c48a61e457ae3f58cf5ae9d917686cf4cbcdb4016b4e"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/tests-final-v2-03.log",
+      "sha256": "efcc36a0a5066bc84c1e108c84a6faed984ff7f0aa75887756f9e543b589f5a5"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/tests-final-v2-04.log",
+      "sha256": "ef87b1a20b9861663a776c66f9b5cd26cfa4597a39dac34bc86a428d63f521d6"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/tests-final-v2-05.log",
+      "sha256": "14cc4f5372fbd7774a06dc466df32e375d14b8aaa4fe7d37774ec1d592489240"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/tests-final-v2-06.log",
+      "sha256": "a5e8708b32e6fe8db1aa3735b58e4576114c387228dd88975fd41291c47ccc6d"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/tests-final-v2-07.log",
+      "sha256": "e1f1b9a026b8ee6f493beeb6d593c1e12b556d781d1235d73c8bb52e40809183"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/tests-final-v2.json",
+      "sha256": "45c8798feaa00cd109d70ca922ee6f9e1c2018ac99f30401f7bb647c7c0d85ed"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/tests-final.json",
+      "sha256": "9c168b85b073108291fe7bb675dd5988a97cb335dc775afd193683b980cb956e"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/tests-input-current.log",
+      "sha256": "244fab7b30f9c7a1e246d2ba85119f7aa4e6eac212a392b1d7b8399b3d6d6975"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/tests-money5.log",
+      "sha256": "e878a29e93028a35e7953c49176c30e24d13d0d21f5bad915ca841ee5ff70ce2"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/tests-money6.log",
+      "sha256": "2f78928cff1b5a8483c7be4b87c10b2ad6dfa55872c4127a20e3441995801d67"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/tests-native-initial.log",
+      "sha256": "12ab97c6567688fe519d03dda1032b65152bd8fabb1c8c07888649269fbc30b9"
+    },
+    {
+      "path": "extracted/cpp-send-money-547/tests-send-money.log",
+      "sha256": "e3c345d00e8e95ab565eda779d9c469cb31d35d2701bd7e71d27e3fb6a32635c"
+    }
+  ]
+}

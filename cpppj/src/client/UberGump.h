@@ -106,6 +106,7 @@ private:
     void InstallHud(); // 현재 실제 월드와 같은 공통 전체 Uber/자식 공장·도킹을 연결한다.
     void PollEditorState(); //메인 Edit의 next1과 SaveGoMain의 next3 및 뒤따르는 next4를 같은 Native State 분배기로 소비한다.
     void OpenSaveFortNameDialog(std::uint32_t fortMode); //현재 Editor의 실제 파일/헤더/이름 부모를 원문 fortMode 인자의 TextEntry 모달에 연결한다.
+    void OpenSendMoneyDialog(std::uint32_t target); // 원본 숫자 창의 대상·현재 입력·확정이 같은 월드를 빌린다.
     o::LocalMissionParentResult InstallExistingEditorState(std::uint32_t selected); //State1의 정리/prefix/현재 파일/UI tail을 실행하며 공통 확정은 분배기에 맡긴다.
     void PrepareNativeFortState(bool editor); //State1/3의 같은 실제 cleanup/Chat/listener/Fort/Core/Renderer/Chunk/options 준비를 실행한다. HUD는 각 원문 위치의 별도 호출이다.
     o::LocalMissionParentResult InstallMainMenuNativeState(std::uint32_t selected); //State3의 실제 전체 부모를 실행하며 호스트 메뉴 표시는 Native 공통 확정 뒤에만 공개한다.

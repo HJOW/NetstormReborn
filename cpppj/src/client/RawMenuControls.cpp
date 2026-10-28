@@ -652,6 +652,13 @@ std::uint32_t RawMenuControls::ShowSaveFortNameDialog(SaveFortNameDialogContext 
     struct Reset { Impl& state;~Reset() { state.saveFortBuilding=nullptr; } }; // 정상/예외 반환에서 생성 지역 문맥 별칭만 반납한다.
     Reset reset{s};return s.saveFortDialog->Show(fortMode,canCancel,context.currentName,initial);
 }
+// 송금 숫자 창은 파일 장치를 요구하지 않고 같은 문자/Gump 수명에 전용 확정을 설치한다.
+std::uint32_t RawMenuControls::ShowSendMoneyDialog(SaveFortNameDialogContext context,std::uint32_t target) {
+    auto& s=*impl_;if (!context.sendMoney || !context.editor.now || !context.translate) throw std::invalid_argument("송금 숫자 창의 실제 장치 누락");
+    EnableTextEntry(context.editor);s.BindSaveFortDialog();if (s.saveFortBuilding) throw std::logic_error("숫자 창 생성 안의 재귀 생성 미지원");s.saveFortBuilding=&context;
+    struct Reset { Impl& state;~Reset() { state.saveFortBuilding=nullptr; } }; // 생성 성공/실패와 무관하게 지역 문맥 별칭만 반납한다.
+    Reset reset{s};return s.saveFortDialog->ShowMoney(target);
+}
 // 실제 반납 전까지 같은 root/자식 필드를 읽으며 등록 또는 별도 복사본으로 대체하지 않는다.
 const SaveFortNameDialogNode* RawMenuControls::SaveFortNameNode(std::uint32_t token) const { return Find(impl_->saveFortRoots,token); }
 // Session 장치가 사라지기 전에 부분 생성도 같은 등록표·지연 Kill·자식 우선 소멸로 반납한다.

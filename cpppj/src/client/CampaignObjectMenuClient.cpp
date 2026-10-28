@@ -182,7 +182,9 @@ bool CampaignObjectMenuClient::Active() const {
 }
 // 닫힌 메뉴의 정적 인자도 Client 수명의 같은 문자열 저장소에 남아 있다.
 std::optional<std::string_view> CampaignObjectMenuClient::StaticText(std::uint32_t token) const {
-    const auto found=impl_->staticStrings.find(token);if (found==impl_->staticStrings.end()) return {};return found->second;
+    const auto found=impl_->staticStrings.find(token);if (found!=impl_->staticStrings.end()) return found->second;
+    if (impl_->chain && (token==0x005cad98U || token==0x005cae00U)) return impl_->chain->TextParameter(token); // Player 메뉴의 실제 두 정적 asksend 버퍼는 같은 살아 있는 체인에서 현재 문자열을 읽는다.
+    return {};
 }
 // 메뉴가이미닫히도록예약했어도같은세계의현재Factory입력/건설/회수요청을실행한다.
 bool CampaignObjectMenuClient::Command(const InputEvent& event) {

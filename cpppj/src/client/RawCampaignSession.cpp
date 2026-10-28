@@ -1,5 +1,6 @@
 // 기존 원본 몸체의 단일 저장소 조립을 실제 클라이언트 세션이 소유한다.
 #include "client/RawCampaignSession.h"
+#include "client/SendMoneyInput.h"
 #include "o/RawIceRicochet.h" // 실제 아이스 반사점/선택도 같은 풀·HP·해시·게임 난수를 사용한다.
 #include "o/RawIslandAdd.h"
 #include "o/RawIslandQueries.h"
@@ -268,7 +269,7 @@ std::shared_ptr<ClientGameplayGlobals> SessionGameplayGlobals(const RawCampaignS
     if (services.gameplayGlobals && services.surfaceStorage && services.gameplayGlobals->GameAux()!=services.surfaceStorage->GameAux()) throw std::invalid_argument("Session의 실제 게임 보조 owner 불일치"); // 초기화/대여 전에 다른 owner를 거부한다.
     return services.gameplayGlobals ? services.gameplayGlobals : std::make_shared<ClientGameplayGlobals>(services.subscriberGlobals,services.surfaceStorage ? services.surfaceStorage->Authority() : nullptr,services.surfaceStorage ? services.surfaceStorage->GameAux() : nullptr);
 }
-constexpr std::array<std::uint32_t,15> kEditorGameplayMessages{0x5b,0x40,0x4f,0x50,0x60,0x61,0x5c,0x5f,0x7d,0x6d,0x75,0x76,0x3e,0x54,0x58}; // Carrier→Construction→Factory의 실제15종이며 Meltdown75/76도 같은 해제 수명을 따른다.
+constexpr std::array<std::uint32_t,16> kEditorGameplayMessages{0x5b,0x40,0x4f,0x50,0x60,0x61,0x5c,0x5f,0x7d,0x6d,0x75,0x76,0x3e,0x54,0x58,0x6c}; // 송금6c도 같은 Session의 등록과 해제 수명을 따른다.
 constexpr std::uint32_t kAiSearchTypeBase=0x6b000000U; //같은실제188TYPE의opaque32포인터기준이다.원본가상주소가아니며500stride대응만보존한다.
 // 실제83개 VT에서+10/+14/+18이4af780/44b4b0/44b9e0인14개만 일반 Damageable 수명으로 연결한다.
 constexpr std::array<std::uint32_t,14> kPlainDamageableTables{0x501ea0,0x509148,0x509930,0x5099e8,0x509aa0,0x50a820,0x50a8e8,0x50b6e8,0x50b7c0,0x50b888,0x50b9b8,0x50bad0,0x50e668,0x50e738};
@@ -3565,6 +3566,19 @@ std::uint32_t RawCampaignSession::Editor() const { return impl_->globals.editor;
 float RawCampaignSession::Sp(std::uint32_t owner) const { return std::bit_cast<float>(impl_->sp.Get(owner)); }
 // Set의 실제 난수 잡음 쓰기도 같은 저장소/게임 난수를 사용한다.
 void RawCampaignSession::SetSp(std::uint32_t owner,float value) { impl_->sp.Set(owner,std::bit_cast<std::uint32_t>(value)); }
+// 원문 같은 현재 경제 처리기를 전달하며 AI에게 주는 돈을 새 분산 SP 사본으로 만들지 않는다.
+SendMoneyHooks RawCampaignSession::MoneyInputHooks() {
+    auto* s=impl_.get();if (!s->loaded) throw std::logic_error("송금의 현재 세션 미설치");SendMoneyHooks h;
+    h.local=[s] { return s->playerState.battleOwner; };h.known=[s] { return s->playerState.playerKnown; };h.editor=[s] { return s->globals.editor; };h.mission=[s] { return s->globals.missionPost; };h.single=[] { return 1U; }; // 이 바인딩은 기존 단일 로컬 미션/Editor 어댑터이며 실제 MP 수명은 후속이다.
+    h.money=[s] { return s->playerState.playerKnown ? std::bit_cast<float>(s->sp.Get(s->playerState.battleOwner)) : 0.0F; };
+    h.canAfford=[s](float amount) { const auto current=std::bit_cast<float>(s->sp.Get(s->playerState.battleOwner));return s->globals.editor || amount<=current; };
+    h.flags=[s](auto owner) { if (owner>=9) throw std::out_of_range("송금 대상 Player 범위");return Read(s->players,owner*180U+0x50U); };
+    h.addOwner=[s](auto owner,float amount) { s->rewardState.fixedSpA=s->core.ownerMode.fort;s->rewardState.fixedSpB=s->globals.editor!=0;s->rewardState.aiMirrorDisabled=s->core.ownerMode.challenge;s->hp.AddSp(owner,amount); };
+    h.addLocal=[s,add=h.addOwner](float amount) { add(s->playerState.battleOwner,amount); };h.wallet=[s](auto owner,auto amount) { s->hp.CreditWallet(owner,amount); };
+    h.send=[this](auto packet) { SendLocalPacket(9,packet); };h.assertion=[] { std::fprintf(stderr,"송금 원본 진단: inSingle\n"); };return h;
+}
+// 현재 실제 AI 지갑의 값만 읽어 사용자 송금과 분산 SP를 별도로 관측한다.
+std::int32_t RawCampaignSession::AiMoney(std::uint32_t owner) const { if (!impl_->loaded || !impl_->aiWallet) throw std::logic_error("송금 관측의 실제 AI 지갑 미설치");return impl_->aiWallet->Balance(owner); }
 // 회수/승천/포획 등의 후속 소비자가 Start의 실제 쓰기를 복사 없이 읽는다.
 MissionStartGlobals& RawCampaignSession::MissionStartSettings() { return impl_->missionStart; }
 // 별도 임시 기본값을 만들지 않고 같은 세션의 AI 설정 전역을 빌린다.
@@ -3776,6 +3790,18 @@ void RawCampaignSession::RegisterConstructionCommands(RawPacketDispatch& dispatc
     // 원본 등록 표의54h 버전1/정책0/8바이트/빈 observer와 같은 수신이다.
     dispatch.Observe(0x54,{});dispatch.Version(0x54,1,0);dispatch.RequireLength(0x54,8);
     dispatch.Register(0x54,[this](std::uint32_t sender,PacketConnection&,std::span<const std::uint8_t> packet) { impl_->salvageCommand->Receive(sender,packet); });
+    dispatch.Observe(0x6c,{});dispatch.Version(0x6c,1,0);dispatch.RequireLength(0x6c,11); //40af90/4d56f0의 원래 송금/보상 메시지다.
+    dispatch.Register(0x6c,[this](std::uint32_t,PacketConnection&,std::span<const std::uint8_t> packet) {
+        if (packet.size()<11) throw std::out_of_range("SP 통지11BYTE 부족");auto& s=*impl_;const auto recipient=packet[4],source=packet[5],kind=packet[6];const auto amount=std::bit_cast<std::int32_t>(Read(packet,7));const auto local=s.playerState.battleOwner;auto h=MoneyInputHooks();
+        if (!kind) {
+            if (s.core.processState.Server() && source!=local && Sp(source)<static_cast<float>(amount)) throw std::logic_error("원본 송금 부정 자금 진단/제재 경로는 후속 구현"); // 정상 UI의 지불 검사와 별개의 원본 서버 검증이며 성공으로 숨기지 않는다.
+            if (source!=local) h.addOwner(source,static_cast<float>(std::bit_cast<std::int32_t>(0U-std::bit_cast<std::uint32_t>(amount))));
+        }
+        if (kind==2) throw std::logic_error("원본 도박 SP 통지의 현재 내기 상태 연결은 후속 구현"); // 송금 메뉴의kind0·건설 환불kind1과 구별한다.
+        h.addOwner(recipient,static_cast<float>(amount));
+        if (recipient==local && !kind && s.services.player.log) s.services.player.log(4,"Storm Power received\n"); // 일반 단일 미션의 현재 수신 표시 경계다. 원본 Message4 전체 표시는 후속이다.
+        if (s.core.processState.Server()) s.broadcast->Send(packet);
+    });
 }
 // 실제 초기 등록과 같은 버전/정책/빈 observer이며 수신 시점의 현재 권한/타입을 읽는다.
 void RawCampaignSession::RegisterCarrierCommands(RawPacketDispatch& dispatch) {

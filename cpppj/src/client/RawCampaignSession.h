@@ -58,6 +58,7 @@
 namespace netstorm::o { class RawCarrierSteal; class RawCarrierPickup; class RawCarrierMove; class RawGemReward; class RawDudeBehavior; struct MissionStartGlobals; struct MissionAiSettingsState; struct FortObjectLoadState; class RawFortBadgesGlobals; } // 포획/Dude 몸체와 미션 시작 전역의 고정 참조만 공개한다.
 namespace netstorm::o { class RawConnectionRegistry; } //실제 Client와 로컬 양끝이 빌리는 같은 연결표다.
 namespace netstorm::client {
+struct SendMoneyHooks; // 같은 실제 세션의 경제 상태를 일반 입력과 숫자 창에 빌린다.
 class CampaignTemplateStorage; // Client보다 짧은 Session이 빌리는 같은 실제 Template9 수명이다.
 class EditorFiles; // 실제 작업본 파일 장치이며 연결한 Session보다 오래 살아야 한다.
 class FortTypeConversionStorage; // 같은 Client의 현재 conversion DWORD와 실제 할당 소유자다.
@@ -339,6 +340,8 @@ public:
     float Sp(std::uint32_t owner) const;
     // 원본0040edb0처럼 직접 float비트만 쓴다. AddSp의 지갑/화면 갱신을 대신 호출하지 않는다.
     void SetSp(std::uint32_t owner,float value);
+    SendMoneyHooks MoneyInputHooks(); // 메뉴·숫자 창이 같은 실제 SP/Player/AI 지갑/로컬 송신을 사용한다.
+    std::int32_t AiMoney(std::uint32_t owner) const; // 현재 AI 본체 지갑의 읽기 전용 관측이며 분산 SP와 구별한다.
     // 같은 미션의 회수·승천·포획·간헐천 설정을 Start와 후속 게임 명령이 직접 공유한다.
     o::MissionStartGlobals& MissionStartSettings();
     // 원본 AI 설정 기본 전역(3/2500)과 진단 상태를 같은 세션의 Start에서 사용한다.

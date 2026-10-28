@@ -283,3 +283,6 @@ target_sources(netstorm PRIVATE EditorMapCatalogFiles.cpp EditorMapCatalogFiles.
 
 # 원본 편집 테스트의 저장/Guide 교체/복귀 예약 순서를 같은 미션 수명 하위와 조립한다.
 target_sources(netstorm PRIVATE EditorTestBattle.cpp EditorTestBattle.h)
+
+# 송금 메뉴와 원본 숫자 창이 같은 현재 SP/AI 지갑/입력 순서를 사용한다.
+target_sources(netstorm PRIVATE SendMoneyInput.cpp SendMoneyInput.h)

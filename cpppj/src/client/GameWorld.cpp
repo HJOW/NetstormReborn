@@ -807,6 +807,8 @@ std::string GameWorld::Report(bool mask) const {
         out<<"\nraw_brains";
         // 실제 Player9에 부착된 AI 포인터만 기록하며 aiName에서 추정하지 않는다.
         for (std::uint32_t owner=0;owner<9;++owner) out<<'\t'<<campaign_->Participation().Brain(owner);
+        out<<"\nraw_ai_money";
+        for (std::uint32_t owner=0;owner<9;++owner) out<<'\t'<<campaign_->AiMoney(owner); // 실제 본체+2d8의 읽기만 하며 SP 사본/생산 예약을 만들지 않는다.
         out<<"\nraw_technology";
         // 실제 로컬 Player의 같은 기술 내용물 체인을 원본 타입 번호 순서로 조회한다.
         for (std::size_t index=0;index<assets_.Types().size();++index) {
