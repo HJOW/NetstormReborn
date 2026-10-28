@@ -1,0 +1,1188 @@
+{
+  "unit": 532,
+  "date": "2026-10-28",
+  "host": "HJOW-Athlon",
+  "headBeforeCommit": "0fbf1d1de1ef92384b32963d66af2d5399a68222",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23",
+    "outputsModified": false
+  },
+  "product": {
+    "NetstormCpp.exe": "03a8915301e389260fac48a02b6340fce3fc45f67fc2d74382c5b161b345412d",
+    "netstorm_tests.exe": "933fd0f732f07d2d15642e15595b914d4cc9c5be8934052fd9e18744f6cfa02c"
+  },
+  "changedProductSource": [],
+  "builds": 0,
+  "cppTestExecutions": 0,
+  "registeredTestsFromPreviousUnit": 3359,
+  "accepted": {
+    "results": [
+      {
+        "size": [
+          1280,
+          720
+        ],
+        "buildings": [
+          {
+            "type": 71,
+            "asset": "sunArcher",
+            "sid": 16013,
+            "position": [
+              "120",
+              "154"
+            ],
+            "description": "Sun Disc Thrower",
+            "hp": 300,
+            "refund": 75,
+            "items": [
+              [
+                "14011",
+                "0",
+                "66697",
+                "33554525",
+                "16013",
+                "1",
+                "Salvage gains 75"
+              ],
+              [
+                "14011",
+                "1",
+                "66689",
+                "33554455",
+                "71",
+                "1",
+                "About"
+              ],
+              [
+                "14011",
+                "2",
+                "66592",
+                "0",
+                "0",
+                "1",
+                "Player"
+              ]
+            ],
+            "helpReturned": true
+          },
+          {
+            "type": 78,
+            "asset": "sunBlocker",
+            "sid": 15003,
+            "position": [
+              "127",
+              "163"
+            ],
+            "description": "Stone Tower",
+            "hp": 2000,
+            "refund": 100,
+            "items": [
+              [
+                "14058",
+                "0",
+                "66697",
+                "33554525",
+                "15003",
+                "1",
+                "Salvage gains 100"
+              ],
+              [
+                "14058",
+                "1",
+                "66689",
+                "33554455",
+                "78",
+                "1",
+                "About"
+              ],
+              [
+                "14058",
+                "2",
+                "66592",
+                "0",
+                "0",
+                "1",
+                "Player"
+              ]
+            ],
+            "helpReturned": true
+          },
+          {
+            "type": 79,
+            "asset": "thunderBlocker",
+            "sid": 16087,
+            "position": [
+              "159",
+              "157"
+            ],
+            "description": "Bulwark",
+            "hp": 3900,
+            "refund": 200,
+            "items": [
+              [
+                "14105",
+                "0",
+                "66697",
+                "33554525",
+                "16087",
+                "1",
+                "Salvage gains 200"
+              ],
+              [
+                "14105",
+                "1",
+                "66689",
+                "33554455",
+                "79",
+                "1",
+                "About"
+              ],
+              [
+                "14105",
+                "2",
+                "66592",
+                "0",
+                "0",
+                "1",
+                "Player"
+              ]
+            ],
+            "helpReturned": true
+          },
+          {
+            "type": 128,
+            "asset": "sunCannon",
+            "sid": 16118,
+            "position": [
+              "159",
+              "160"
+            ],
+            "description": "Sun Cannon",
+            "hp": 600,
+            "refund": 100,
+            "items": [
+              [
+                "14212",
+                "0",
+                "66697",
+                "33554525",
+                "16118",
+                "1",
+                "Salvage gains 100"
+              ],
+              [
+                "14212",
+                "1",
+                "66689",
+                "33554455",
+                "128",
+                "1",
+                "About"
+              ],
+              [
+                "14212",
+                "2",
+                "66592",
+                "0",
+                "0",
+                "1",
+                "Player"
+              ]
+            ],
+            "helpReturned": true
+          },
+          {
+            "type": 129,
+            "asset": "rainCannon",
+            "sid": 15001,
+            "position": [
+              "124",
+              "163"
+            ],
+            "description": "Ice Cannon",
+            "hp": 600,
+            "refund": 150,
+            "items": [
+              [
+                "14259",
+                "0",
+                "66697",
+                "33554525",
+                "15001",
+                "1",
+                "Salvage gains 150"
+              ],
+              [
+                "14259",
+                "1",
+                "66689",
+                "33554455",
+                "129",
+                "1",
+                "About"
+              ],
+              [
+                "14259",
+                "2",
+                "66592",
+                "0",
+                "0",
+                "1",
+                "Player"
+              ]
+            ],
+            "helpReturned": true
+          },
+          {
+            "type": 131,
+            "asset": "thunderCannon",
+            "sid": 15006,
+            "position": [
+              "128",
+              "166"
+            ],
+            "description": "Thunder Cannon",
+            "hp": 1000,
+            "refund": 300,
+            "items": [
+              [
+                "14306",
+                "0",
+                "66697",
+                "33554525",
+                "15006",
+                "1",
+                "Salvage gains 300"
+              ],
+              [
+                "14306",
+                "1",
+                "66689",
+                "33554455",
+                "131",
+                "1",
+                "About"
+              ],
+              [
+                "14306",
+                "2",
+                "66592",
+                "0",
+                "0",
+                "1",
+                "Player"
+              ]
+            ],
+            "helpReturned": true
+          },
+          {
+            "type": 136,
+            "asset": "sunFence",
+            "sid": 15024,
+            "position": [
+              "153",
+              "165"
+            ],
+            "description": "Sun Barricade",
+            "hp": 700,
+            "refund": 75,
+            "items": [
+              [
+                "14353",
+                "0",
+                "66697",
+                "33554525",
+                "15024",
+                "1",
+                "Salvage gains 75"
+              ],
+              [
+                "14353",
+                "1",
+                "66689",
+                "33554455",
+                "136",
+                "1",
+                "About"
+              ],
+              [
+                "14353",
+                "2",
+                "66592",
+                "0",
+                "0",
+                "1",
+                "Player"
+              ]
+            ],
+            "helpReturned": true
+          },
+          {
+            "type": 140,
+            "asset": "windArcher",
+            "sid": 15018,
+            "position": [
+              "156",
+              "165"
+            ],
+            "description": "Crossbow",
+            "hp": 490,
+            "refund": 137,
+            "items": [
+              [
+                "14400",
+                "0",
+                "66697",
+                "33554525",
+                "15018",
+                "1",
+                "Salvage gains 137"
+              ],
+              [
+                "14400",
+                "1",
+                "66689",
+                "33554455",
+                "140",
+                "1",
+                "About"
+              ],
+              [
+                "14400",
+                "2",
+                "66592",
+                "0",
+                "0",
+                "1",
+                "Player"
+              ]
+            ],
+            "helpReturned": true
+          },
+          {
+            "type": 142,
+            "asset": "windBlocker",
+            "sid": 15000,
+            "position": [
+              "125",
+              "166"
+            ],
+            "description": "Wind Tower",
+            "hp": 600,
+            "refund": 200,
+            "items": [
+              [
+                "14447",
+                "0",
+                "66697",
+                "33554525",
+                "15000",
+                "1",
+                "Salvage gains 200"
+              ],
+              [
+                "14447",
+                "1",
+                "66689",
+                "33554455",
+                "142",
+                "1",
+                "About"
+              ],
+              [
+                "14447",
+                "2",
+                "66592",
+                "0",
+                "0",
+                "1",
+                "Player"
+              ]
+            ],
+            "helpReturned": true
+          },
+          {
+            "type": 145,
+            "asset": "rainFence",
+            "sid": 15004,
+            "position": [
+              "132",
+              "168"
+            ],
+            "description": "Acid Barricade",
+            "hp": 700,
+            "refund": 100,
+            "items": [
+              [
+                "14494",
+                "0",
+                "66697",
+                "33554525",
+                "15004",
+                "1",
+                "Salvage gains 100"
+              ],
+              [
+                "14494",
+                "1",
+                "66689",
+                "33554455",
+                "145",
+                "1",
+                "About"
+              ],
+              [
+                "14494",
+                "2",
+                "66592",
+                "0",
+                "0",
+                "1",
+                "Player"
+              ]
+            ],
+            "helpReturned": true
+          },
+          {
+            "type": 148,
+            "asset": "thunderArcher",
+            "sid": 15022,
+            "position": [
+              "151",
+              "169"
+            ],
+            "description": "Vander Tower",
+            "hp": 600,
+            "refund": 150,
+            "items": [
+              [
+                "14541",
+                "0",
+                "66697",
+                "33554525",
+                "15022",
+                "1",
+                "Salvage gains 150"
+              ],
+              [
+                "14541",
+                "1",
+                "66689",
+                "33554455",
+                "148",
+                "1",
+                "About"
+              ],
+              [
+                "14541",
+                "2",
+                "66592",
+                "0",
+                "0",
+                "1",
+                "Player"
+              ]
+            ],
+            "helpReturned": true
+          },
+          {
+            "type": 149,
+            "asset": "thunderFence",
+            "sid": 15021,
+            "position": [
+              "154",
+              "168"
+            ],
+            "description": "Arc Spire",
+            "hp": 1000,
+            "refund": 100,
+            "items": [
+              [
+                "14588",
+                "0",
+                "66697",
+                "33554525",
+                "15021",
+                "1",
+                "Salvage gains 100"
+              ],
+              [
+                "14588",
+                "1",
+                "66689",
+                "33554455",
+                "149",
+                "1",
+                "About"
+              ],
+              [
+                "14588",
+                "2",
+                "66592",
+                "0",
+                "0",
+                "1",
+                "Player"
+              ]
+            ],
+            "helpReturned": true
+          }
+        ],
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+            "--run",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-building-menus-532\\final\\data-1280x720",
+            "--window",
+            "--no-audio",
+            "--frames",
+            "1040",
+            "--set",
+            "SCREENW=1280;SCREENH=720;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0",
+            "--ui-script",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-building-menus-532\\final\\1280x720\\steps.tsv",
+            "--ui-report",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-building-menus-532\\final\\1280x720\\states.tsv"
+          ],
+          "binarySha256": "03a8915301e389260fac48a02b6340fce3fc45f67fc2d74382c5b161b345412d",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 55.05768459997489,
+          "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderrSha256": "f6f524aabb476c049642be4205805f05666d99a73b8f0c27af7426a5ee290463",
+          "originalsUnchanged": true,
+          "dataUnchanged": true
+        },
+        "binarySha256": "03a8915301e389260fac48a02b6340fce3fc45f67fc2d74382c5b161b345412d"
+      },
+      {
+        "size": [
+          1024,
+          768
+        ],
+        "buildings": [
+          {
+            "type": 71,
+            "asset": "sunArcher",
+            "sid": 16013,
+            "position": [
+              "120",
+              "154"
+            ],
+            "description": "Sun Disc Thrower",
+            "hp": 300,
+            "refund": 75,
+            "items": [
+              [
+                "476",
+                "0",
+                "66697",
+                "33554525",
+                "16013",
+                "1",
+                "Salvage gains 75"
+              ],
+              [
+                "476",
+                "1",
+                "66689",
+                "33554455",
+                "71",
+                "1",
+                "About"
+              ],
+              [
+                "476",
+                "2",
+                "66592",
+                "0",
+                "0",
+                "1",
+                "Player"
+              ]
+            ],
+            "helpReturned": true
+          },
+          {
+            "type": 78,
+            "asset": "sunBlocker",
+            "sid": 15003,
+            "position": [
+              "127",
+              "163"
+            ],
+            "description": "Stone Tower",
+            "hp": 2000,
+            "refund": 100,
+            "items": [
+              [
+                "561",
+                "0",
+                "66697",
+                "33554525",
+                "15003",
+                "1",
+                "Salvage gains 100"
+              ],
+              [
+                "561",
+                "1",
+                "66689",
+                "33554455",
+                "78",
+                "1",
+                "About"
+              ],
+              [
+                "561",
+                "2",
+                "66592",
+                "0",
+                "0",
+                "1",
+                "Player"
+              ]
+            ],
+            "helpReturned": true
+          },
+          {
+            "type": 79,
+            "asset": "thunderBlocker",
+            "sid": 16087,
+            "position": [
+              "159",
+              "157"
+            ],
+            "description": "Bulwark",
+            "hp": 3900,
+            "refund": 200,
+            "items": [
+              [
+                "708",
+                "0",
+                "66697",
+                "33554525",
+                "16087",
+                "1",
+                "Salvage gains 200"
+              ],
+              [
+                "708",
+                "1",
+                "66689",
+                "33554455",
+                "79",
+                "1",
+                "About"
+              ],
+              [
+                "708",
+                "2",
+                "66592",
+                "0",
+                "0",
+                "1",
+                "Player"
+              ]
+            ],
+            "helpReturned": true
+          },
+          {
+            "type": 128,
+            "asset": "sunCannon",
+            "sid": 16118,
+            "position": [
+              "159",
+              "160"
+            ],
+            "description": "Sun Cannon",
+            "hp": 600,
+            "refund": 100,
+            "items": [
+              [
+                "809",
+                "0",
+                "66697",
+                "33554525",
+                "16118",
+                "1",
+                "Salvage gains 100"
+              ],
+              [
+                "809",
+                "1",
+                "66689",
+                "33554455",
+                "128",
+                "1",
+                "About"
+              ],
+              [
+                "809",
+                "2",
+                "66592",
+                "0",
+                "0",
+                "1",
+                "Player"
+              ]
+            ],
+            "helpReturned": true
+          },
+          {
+            "type": 129,
+            "asset": "rainCannon",
+            "sid": 15001,
+            "position": [
+              "124",
+              "163"
+            ],
+            "description": "Ice Cannon",
+            "hp": 600,
+            "refund": 150,
+            "items": [
+              [
+                "883",
+                "0",
+                "66697",
+                "33554525",
+                "15001",
+                "1",
+                "Salvage gains 150"
+              ],
+              [
+                "883",
+                "1",
+                "66689",
+                "33554455",
+                "129",
+                "1",
+                "About"
+              ],
+              [
+                "883",
+                "2",
+                "66592",
+                "0",
+                "0",
+                "1",
+                "Player"
+              ]
+            ],
+            "helpReturned": true
+          },
+          {
+            "type": 131,
+            "asset": "thunderCannon",
+            "sid": 15006,
+            "position": [
+              "128",
+              "166"
+            ],
+            "description": "Thunder Cannon",
+            "hp": 1000,
+            "refund": 300,
+            "items": [
+              [
+                "984",
+                "0",
+                "66697",
+                "33554525",
+                "15006",
+                "1",
+                "Salvage gains 300"
+              ],
+              [
+                "984",
+                "1",
+                "66689",
+                "33554455",
+                "131",
+                "1",
+                "About"
+              ],
+              [
+                "984",
+                "2",
+                "66592",
+                "0",
+                "0",
+                "1",
+                "Player"
+              ]
+            ],
+            "helpReturned": true
+          },
+          {
+            "type": 136,
+            "asset": "sunFence",
+            "sid": 15024,
+            "position": [
+              "153",
+              "165"
+            ],
+            "description": "Sun Barricade",
+            "hp": 700,
+            "refund": 75,
+            "items": [
+              [
+                "1058",
+                "0",
+                "66697",
+                "33554525",
+                "15024",
+                "1",
+                "Salvage gains 75"
+              ],
+              [
+                "1058",
+                "1",
+                "66689",
+                "33554455",
+                "136",
+                "1",
+                "About"
+              ],
+              [
+                "1058",
+                "2",
+                "66592",
+                "0",
+                "0",
+                "1",
+                "Player"
+              ]
+            ],
+            "helpReturned": true
+          },
+          {
+            "type": 140,
+            "asset": "windArcher",
+            "sid": 15018,
+            "position": [
+              "156",
+              "165"
+            ],
+            "description": "Crossbow",
+            "hp": 490,
+            "refund": 137,
+            "items": [
+              [
+                "1105",
+                "0",
+                "66697",
+                "33554525",
+                "15018",
+                "1",
+                "Salvage gains 137"
+              ],
+              [
+                "1105",
+                "1",
+                "66689",
+                "33554455",
+                "140",
+                "1",
+                "About"
+              ],
+              [
+                "1105",
+                "2",
+                "66592",
+                "0",
+                "0",
+                "1",
+                "Player"
+              ]
+            ],
+            "helpReturned": true
+          },
+          {
+            "type": 142,
+            "asset": "windBlocker",
+            "sid": 15000,
+            "position": [
+              "125",
+              "166"
+            ],
+            "description": "Wind Tower",
+            "hp": 600,
+            "refund": 200,
+            "items": [
+              [
+                "1152",
+                "0",
+                "66697",
+                "33554525",
+                "15000",
+                "1",
+                "Salvage gains 200"
+              ],
+              [
+                "1152",
+                "1",
+                "66689",
+                "33554455",
+                "142",
+                "1",
+                "About"
+              ],
+              [
+                "1152",
+                "2",
+                "66592",
+                "0",
+                "0",
+                "1",
+                "Player"
+              ]
+            ],
+            "helpReturned": true
+          },
+          {
+            "type": 145,
+            "asset": "rainFence",
+            "sid": 15004,
+            "position": [
+              "132",
+              "168"
+            ],
+            "description": "Acid Barricade",
+            "hp": 700,
+            "refund": 100,
+            "items": [
+              [
+                "1199",
+                "0",
+                "66697",
+                "33554525",
+                "15004",
+                "1",
+                "Salvage gains 100"
+              ],
+              [
+                "1199",
+                "1",
+                "66689",
+                "33554455",
+                "145",
+                "1",
+                "About"
+              ],
+              [
+                "1199",
+                "2",
+                "66592",
+                "0",
+                "0",
+                "1",
+                "Player"
+              ]
+            ],
+            "helpReturned": true
+          },
+          {
+            "type": 148,
+            "asset": "thunderArcher",
+            "sid": 15022,
+            "position": [
+              "151",
+              "169"
+            ],
+            "description": "Vander Tower",
+            "hp": 600,
+            "refund": 150,
+            "items": [
+              [
+                "1246",
+                "0",
+                "66697",
+                "33554525",
+                "15022",
+                "1",
+                "Salvage gains 150"
+              ],
+              [
+                "1246",
+                "1",
+                "66689",
+                "33554455",
+                "148",
+                "1",
+                "About"
+              ],
+              [
+                "1246",
+                "2",
+                "66592",
+                "0",
+                "0",
+                "1",
+                "Player"
+              ]
+            ],
+            "helpReturned": true
+          },
+          {
+            "type": 149,
+            "asset": "thunderFence",
+            "sid": 15021,
+            "position": [
+              "154",
+              "168"
+            ],
+            "description": "Arc Spire",
+            "hp": 1000,
+            "refund": 100,
+            "items": [
+              [
+                "1293",
+                "0",
+                "66697",
+                "33554525",
+                "15021",
+                "1",
+                "Salvage gains 100"
+              ],
+              [
+                "1293",
+                "1",
+                "66689",
+                "33554455",
+                "149",
+                "1",
+                "About"
+              ],
+              [
+                "1293",
+                "2",
+                "66592",
+                "0",
+                "0",
+                "1",
+                "Player"
+              ]
+            ],
+            "helpReturned": true
+          }
+        ],
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+            "--run",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-building-menus-532\\final\\data-1024x768",
+            "--window",
+            "--no-audio",
+            "--frames",
+            "500",
+            "--set",
+            "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0",
+            "--ui-script",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-building-menus-532\\final\\1024x768\\steps.tsv",
+            "--ui-report",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-building-menus-532\\final\\1024x768\\states.tsv",
+            "--mission",
+            "TEST02"
+          ],
+          "binarySha256": "03a8915301e389260fac48a02b6340fce3fc45f67fc2d74382c5b161b345412d",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 23.886993499996606,
+          "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderrSha256": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2",
+          "originalsUnchanged": true,
+          "dataUnchanged": true
+        },
+        "binarySha256": "03a8915301e389260fac48a02b6340fce3fc45f67fc2d74382c5b161b345412d"
+      }
+    ],
+    "savedFortSha256": "51eaafd40e7e4f6445fcc36757fa87a0e7c61b5dddf32f3a1f929221ab731e61",
+    "binarySha256": "03a8915301e389260fac48a02b6340fce3fc45f67fc2d74382c5b161b345412d",
+    "attackFlyersNotTested": true
+  },
+  "runs": [
+    {
+      "path": "extracted/cpp-building-menus-532/final/1024x768/run.json",
+      "sha256": "38cd3eb2af8fd3bf7034a9c319d82da5e7bc397c38da94f0d547dc4843a67867",
+      "returnCode": 0,
+      "timedOut": false,
+      "binarySha256": "03a8915301e389260fac48a02b6340fce3fc45f67fc2d74382c5b161b345412d"
+    },
+    {
+      "path": "extracted/cpp-building-menus-532/final/1280x720/run.json",
+      "sha256": "59797ce0f1e9b6ac495ad4e64fd4af1d7afd540f11fb5f30bd109ed454da4b3c",
+      "returnCode": 0,
+      "timedOut": false,
+      "binarySha256": "03a8915301e389260fac48a02b6340fce3fc45f67fc2d74382c5b161b345412d"
+    },
+    {
+      "path": "extracted/cpp-building-menus-532/matrix-briefing-fixed/1280x720/run.json",
+      "sha256": "49e01dcaee454ba50bb589fe702c63837119c5d3dfbf6a36d30c1a2863cceaee",
+      "returnCode": 0,
+      "timedOut": false,
+      "binarySha256": "03a8915301e389260fac48a02b6340fce3fc45f67fc2d74382c5b161b345412d"
+    },
+    {
+      "path": "extracted/cpp-building-menus-532/matrix-first/1280x720/run.json",
+      "sha256": "a048af7713748b2bac2bbdc4d20289af61b0365f994248f2f7ff5c77068022e6",
+      "returnCode": 1,
+      "timedOut": false,
+      "binarySha256": "03a8915301e389260fac48a02b6340fce3fc45f67fc2d74382c5b161b345412d"
+    },
+    {
+      "path": "extracted/cpp-building-menus-532/pixel-points/run.json",
+      "sha256": "f2718ef9ab102f23a5ef30978ebe6acef5f86a6d9f29657f017f15bba16c905f",
+      "returnCode": 0,
+      "timedOut": false,
+      "binarySha256": "03a8915301e389260fac48a02b6340fce3fc45f67fc2d74382c5b161b345412d"
+    },
+    {
+      "path": "extracted/cpp-building-menus-532/placement-probe/run.json",
+      "sha256": "96d438ba22931ae82c1ff15487f2b5b4153430a7fddd272efd2c3f06d7af5f55",
+      "returnCode": 0,
+      "timedOut": false,
+      "binarySha256": "03a8915301e389260fac48a02b6340fce3fc45f67fc2d74382c5b161b345412d"
+    },
+    {
+      "path": "extracted/cpp-building-menus-532/powered-probe/run.json",
+      "sha256": "97ff3cd757c9c376978d40eb0005ca3cf33021228da1a2156c18aecf0ee27fe7",
+      "returnCode": 0,
+      "timedOut": false,
+      "binarySha256": "03a8915301e389260fac48a02b6340fce3fc45f67fc2d74382c5b161b345412d"
+    }
+  ],
+  "preservation": {
+    "sourceBaseline": "extracted/cpp-altar-salvage-531/freeze-final.json",
+    "sourceFiles": 2927,
+    "sourceChanged": [],
+    "exes": {
+      "NetstormCpp.exe": "03a8915301e389260fac48a02b6340fce3fc45f67fc2d74382c5b161b345412d",
+      "netstorm_tests.exe": "933fd0f732f07d2d15642e15595b914d4cc9c5be8934052fd9e18744f6cfa02c"
+    },
+    "protectedBaseline": "extracted/cpp-object-hit-524/protected-before.json",
+    "protectedFiles": 1819,
+    "protectedChanged": [],
+    "agentsSha256": "4e32580d21f62036e99ebac6b26641f58e7e7143328f67f396a12f960ccdaa4c",
+    "agentsUnchanged": true
+  },
+  "sourceFreeze": {
+    "path": "extracted/cpp-building-menus-532/freeze-final.json",
+    "sha256": "2a0a1038aed8fe9a4b9cc16c7355cf6380e596fd879b1edb99cfc7473724f98c"
+  },
+  "observedLimits": {
+    "salvageCommandExecuted": false,
+    "allBuildingTypes": false,
+    "allOwnersAndStates": false,
+    "naturalMissionCompletion": false,
+    "multiplayerTested": false,
+    "attackFlyersTested": false,
+    "spellHelpInvestigationContinued": false
+  },
+  "rawDirectory": "extracted/cpp-building-menus-532",
+  "evidenceSha256": {
+    "extracted/cpp-building-menus-532/final/summary.json": "79b2f2c0a47e3b59dce1d3f2b1eae8e8518e9565784ca8ddc5faf3aa04256d15",
+    "extracted/cpp-building-menus-532/pixel-points/run.json": "f2718ef9ab102f23a5ef30978ebe6acef5f86a6d9f29657f017f15bba16c905f",
+    "tools/cpp_building_matrix_smoke.py": "78826be5a50a9ed916ae404c2c5d55d1d2df89a9c7b0a6bdf2f4cb4ed5fb632a"
+  }
+}
