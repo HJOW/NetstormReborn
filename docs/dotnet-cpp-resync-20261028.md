@@ -53,6 +53,10 @@ R4(세션 조립)에서 필요하고 fixture 연결만 하면 L1을 마칠 수 �
 
 `OriginalPopDisplay`·`OriginalUnpopDisplay`·`RawPop`·`RawUnpop`(각 +2줄, 미니맵 대여 해제), `RawOwner`(리스트 위임), `RawSquidHash`(+2줄 접근자), `RawContainedFinder`·`RawContentLifetime`·`RawCarrierPostPop`·`RawCarrierPreDestroy`·`RawDamageable{Pre,Post}Destroy`·`RawDamageableRelease`·`RawMetadisplayDirty`·`RawPriestPreDestroy`·`RawPostPop`·`RawSquidDestroyLifecycle`(위 C의 접근자/대여 변경), `CampaignMenu`(`DialogScript.cpp` 4커밋, R3에서 교체), `GifImage`(`GifImage.cpp` 1커밋, R2에서 재대조). 이 파일들의 diff는 줄 수가 작고 fixture가 같으므로 L1 결과가 바뀐다는 증거는 없다. 단 각 파일을 `--ports-reflect`로 올리기 전에 해당 diff를 한 번 읽는다.
 
+### 2.1 작업 중 추가로 들어온 변경 (HEAD `0cc1d33d` → `ac9ea916`)
+
+이 문서의 영향표를 만든 뒤에도 원격 병합으로 cpppj 커밋(`20261028-20`·`-21` CP)이 들어왔다. 바뀐 소스는 `Bridge.cpp`·`RawGraph.cpp`·`GameWorld.cpp`·`RawCampaignFactoryDisplay.cpp`·`RawCampaignSession.cpp`·`RawSurfaceWorld.cpp`·`SpellFrameVisibility.h`이고 새 fixture는 `surface-connect-lazy-x86.tsv` 1개다. 연결 fixture는 이번에도 바뀌지 않았다. `Bridge.cpp`는 `BridgeDecayRules`·`BridgeSurfaceRules`·`BridgeFrameSearch`의 근거이고 `RawGraph.cpp`는 `RawGraph`의 근거이므로 `--ports`의 변경 쌍이 32 → 35개가 됐다. 같은 R0-4에서 함께 재대조한다. 오라클 실행 파일(`0cc1d33d`로 빌드)은 이 병합보다 오래됐으므로 화면 캡처 비교에 쓰기 전 다시 빌드한다. 화면·입력 계층(`Screen*`, `InputEvent`)은 병합에서 바뀌지 않았다.
+
 ## 3. 바뀌지 않은 모듈 (35개)
 
 `BridgeFrameSearch`, `RawBombPreDestroy`, `RawBridgeEvent`, `RawBridgeLifecycle`, `RawBuildingSpace`, `RawContainedCreate`, `RawContainedLookup` 등 `PORT_MAP.tsv`에 있고 `--ports` 보고에 나오지 않는 파일이다. `cpp_sync.py --ports`로 언제든 다시 확인한다.

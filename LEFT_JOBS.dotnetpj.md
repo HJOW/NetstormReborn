@@ -174,8 +174,9 @@
 - [x] **R0-2 (2026-10-28 완료):** [재대조 영향표](docs/dotnet-cpp-resync-20261028.md). 연결 fixture 61개는 모두 일치(반영 이후 fixture 추가 215·수정 0·삭제 0)하지만 근거 소스가 바뀐 C# 파일이 30개이고, 그중 6개 묶음은 현재 C#이 이전 cpppj 동작에 머물러 있음을 소스로 확인했다.
 - [x] **R0-3 (2026-10-28 완료):** `cpp_sync.py --ports`·`--ports-init`·`--ports-reflect`와 [PORT_MAP.tsv](dotnetpj/PORT_MAP.tsv)(68행)·[PORT_MAP.md](dotnetpj/PORT_MAP.md), 형식·경로 검사 `CppPortMapTests`(2개, 오류 행을 넣으면 실패함을 확인)를 만들었다. 검사 수는 1,351개가 됐다.
 - [ ] **R0-4 — 새 fixture로 뒤처진 C#을 고친다:** 영향표 A의 여섯 묶음을 `sp-add-bits`·`sp-initialization`·`fort-sp-write` → `squid-retype`·`object-conversion` → `squid-pool-reset`·`state-sid-lists` → `priestregen`·`priest-panic`·`priest-prayer` → `RawGraph` 비표면 좌표 → `RawAssetPostPop` 4종 순으로 처리한다. 묶음마다 fixture `Link`+`cpp_sync.py --update --add`, C# 수정, `--ports-reflect`를 하고 단위 기록을 남긴다. 기대값을 C# 결과로 바꾸지 않는다.
-- [ ] **R1-1:** `Netstorm.Client` 생성, `Screen`·팔레트·입력 큐 이식과 MonoGame 출력 호스트.
-- [ ] **R1-2:** `--ui-script`·`snapshot`·`cpp_frame_compare.py`. 첫 비교는 R3 전이므로 시험 패턴과 출력 변환 경계로 한다.
+- [x] **R1-1 (2026-10-28 완료, 라이브러리 부분):** `Netstorm.Client` 프로젝트와 `Netstorm.Client.Tests`를 만들고 `Screen`(8비트 버퍼·팔레트·잠금·자르기)·`GamePalette`·`PaletteSearch`·`ScreenGeometry`·`ScreenPresentation`·`ScreenResolutions`·`ScreenPaletteApply`·`InputQueue`를 이식했다. 원본 fixture 3개(786·357·166행)가 L1로 일치하고 전체 1,384개 통과·경고 0. [문서](docs/dotnet-client-screen-20261028.md). 이 단위는 규칙의 이식이며 실제 화면 픽셀 비교가 아니다.
+- [ ] **R1-2a:** MonoGame 출력 호스트: `IScreenOutput` 구현(인덱스→RGBA 텍스처, 정수 최근접 확대·검정 여백), 전체화면 borderless 창과 창 전환, 마우스 좌표 역변환·커서 제한, 키·글자·버튼 → `InputQueue`, 프레임 루프 골격. 기존 `NetstormGame`/`DisplayManager`는 동결하고 새 호스트를 `--client` 같은 별도 진입으로 둔다(결정 5).
+- [ ] **R1-2b:** `--ui-script`·`snapshot` 논리 캡처(BMP)·`cpp_frame_compare.py`. 첫 비교는 R3 전이므로 시험 패턴과 출력 변환 경계로 한다.
 - [ ] 이후 R2 → R3(D1) → R4(M1) → R5(D2) → R6 → R7 → R8 순서로 진행하고, 단위마다 이 절의 체크와 [0.4](#04-기존-dotnetpj-소스의-재수정-판정) 판정표를 갱신한다.
 
 ### 0.10 이번 문서 작업 기록
@@ -196,6 +197,13 @@
   - 처음 커밋에서 `-c core.autocrlf=false`를 써서 LF 저장 문서가 CRLF로 들어갔던 일을 `git add --renormalize`로 정정했다. 이 저장소의 `dotnetpj`·`docs`는 LF로 저장된다. 기본 `autocrlf`로 add 한다.
 - **원시 자료(Git 제외, 이 PC):** `extracted/dotnet-r0-baseline/` — `dotnet-test.log`, `cpp-sync.txt`, `cpp-build.log`, `impact.md`, `dump-types.tsv`, `dump-world-thewarbegins.tsv`, `new-fixtures.txt`, `cpp-changed-files.txt`, `PORT_MAP.backup.tsv`.
 
+### 0.12 단위 기록 — R1-1 Netstorm.Client 화면·입력 계층 (2026-10-28, VM-W11-Codex)
+
+- **변경:** 새 프로젝트 `dotnetpj/src/Netstorm.Client`(9개 C# 파일)와 `dotnetpj/tests/Netstorm.Client.Tests`(3개 파일), `Netstorm.sln` 갱신, `cpp_sync.py`(`Client` 사용 프로젝트 허용, `--ports-add`), `CppFixtureManifestTests`(Client 허용), `cpp-fixture-manifest.tsv`(3개 등록), `PORT_MAP.tsv`(11행 추가), `PORT_MAP.md`·`docs/dotnet-client-screen-20261028.md`·`docs/dotnet-cpp-resync-20261028.md`. cpppj·원본·AGENTS.md·reflected-commit은 바꾸지 않았다.
+- **검증:** [문서 3절](docs/dotnet-client-screen-20261028.md#3-검증). 전체 1,384개 통과, Release 경고·오류 0. fixture 검사의 판별력을 변이 2건으로 확인했고 최초 실패 1건은 테스트의 잘못된 기대값이었다.
+- **동시 작업 주의:** 다른 PC·세션이 같은 저장소에 cpppj 커밋을 계속 병합하고 있다(`0cc1d33d`→`ac9ea916`: CP `20261028-20`·`-21`). 그 결과 커밋 번호 `20261028-19`·`-20`은 CP와 DN이 각각 하나씩 썼다. 번호는 구분용이므로 그대로 두고, 다음 DN 커밋은 `git log`로 당일 마지막 번호를 확인해 이어 쓴다. 병합 때문에 R0의 오라클 실행 파일(`0cc1d33d` 빌드)은 이미 HEAD보다 오래됐다. 화면 캡처 비교(R1-2b) 전에 다시 빌드한다. 변경 쌍은 35개로 늘었다([영향표 2.1](docs/dotnet-cpp-resync-20261028.md)).
+- **다음:** R1-2a(MonoGame 출력 호스트) → R1-2b(캡처·비교 도구) → R2. R0-4(뒤처진 C# 수정)는 `Original` 모듈이 세션에 연결되는 R4 전에 끝내면 되므로 R1~R2와 번갈아 진행할 수 있다.
+
 ## 1. 지금까지의 완료 범위 — 이관 기록 색인
 
 단위별 상세는 [LEFT_JOBS.dotnetpj.old.md](LEFT_JOBS.dotnetpj.old.md)와 아래 문서에 있다. 마지막 판정 열은 0절 계획에서 그 결과를 어떻게 다루는지다([0.4](#04-기존-dotnetpj-소스의-재수정-판정)).
@@ -211,8 +219,10 @@
 | W03 1~17조각 (10-21~10-23) | 공통 삭제·다리 수명·삭제 수명주기·삭제 그래프·Damageable 사전/해방/사후/피해·사제 피격·종속 조회·Form 수명·Form 패킷·내용물 수명·contained 생성·신전 삭제·Form 파생 분배·GumpForm 호스트·가상 삭제 재정의 | `docs/dotnet-original-core-*.md`(destroy·destroylifecycle·destroygraph·damageable*·priestdamage·containedlookup·formlifecycle·formpacket·contentlifetime·vortexpre·formdispatch·destroydispatch·assetpredestroy) | 유지. R0 재대조, R4 세션 조립 |
 | W05 선행 (10-23) | `RawSpStore`·`RawSquidReward`·AI 지갑·난수 상태 | [SP 저장소·보상](docs/dotnet-original-core-spstore-reward-20261023.md) | 유지. R0 재대조, R4 세션 조립 |
 | 배포 (10-23) | `package-dotnetpj.ps1` | 이관 파일의 2026-10-23 배포 절 | 유지. 구성이 바뀔 때마다 갱신 |
+| R0 (10-28) | cpppj 오라클 확정, 재대조 영향표, 포트 맵(`PORT_MAP.tsv`)·`cpp_sync.py --ports*` | [영향표](docs/dotnet-cpp-resync-20261028.md), [PORT_MAP.md](dotnetpj/PORT_MAP.md) | 유지. R0-4 수정 대기 |
+| R1-1 (10-28) | `Netstorm.Client`: 8비트 `Screen`·팔레트·색 검색·화면 스크롤·전체화면 출력 계산·입력 큐 | [R1-1 문서](docs/dotnet-client-screen-20261028.md) | 새 경로(`port`) |
 
-마지막 전체 빌드·검사는 2026-10-23의 Release 경고·오류 0, 1,349개 통과(Assets 363 + Core 986)다. 이 수치는 기존 경로 기준이며 0절 새 경로의 진행도가 아니다.
+마지막 전체 빌드·검사는 2026-10-28의 Release 경고·오류 0, 1,384개 통과(Assets 363 + Core 988 + Client 33)다. Assets·Core는 기존 경로 기준이며 0절 새 경로의 진행도가 아니다. 새 경로의 진행도는 Client 검사와 0.5절의 단계 완료 기준으로 본다.
 
 ---
 

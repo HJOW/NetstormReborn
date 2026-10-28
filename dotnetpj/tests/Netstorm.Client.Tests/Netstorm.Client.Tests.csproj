@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Netstorm.Client(8비트 논리 화면·팔레트·입력 큐 등 cpppj src/client 이식분) 테스트 (xUnit v3). MonoGame 없이 헤드리스로 실행한다. 2026-10-28 R1에서 추가 -->
+  <PropertyGroup>
+    <!-- xUnit v3 테스트 프로젝트는 실행 파일로 빌드한다 -->
+    <OutputType>Exe</OutputType>
+    <RootNamespace>Netstorm.Client.Tests</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="xunit.v3" />
+    <PackageReference Include="xunit.runner.visualstudio" />
+  </ItemGroup>
+  <ItemGroup>
+    <Using Include="Xunit" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Netstorm.Client\Netstorm.Client.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- 원본 exe 없이 cpppj와 동일한 기계어 결과를 검사한다. 링크로 공유해 사본이 어긋나지 않게 한다. -->
+    <None Include="../../../cpppj/tests/fixtures/palettecolor-x86.tsv" Link="X86/palettecolor-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/screen-scroll-x86.tsv" Link="X86/screen-scroll-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/screen-palette-clear-x86.tsv" Link="X86/screen-palette-clear-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <Compile Include="../Shared/X86Fixture.cs" Link="Shared/X86Fixture.cs" />
+    <!-- 연결한 fixture 의 SHA-256 목록과 그 검사. cpppj 가 fixture 를 다시 만들면 실패해 재대조를 요구한다. 갱신: dotnetpj/tools/cpp_sync.py -->
+    <None Include="../Shared/cpp-fixture-manifest.tsv" Link="X86/cpp-fixture-manifest.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <Compile Include="../Shared/CppFixtureManifest.cs" Link="Shared/CppFixtureManifest.cs" />
+    <Compile Include="../Shared/CppFixtureManifestTests.cs" Link="Shared/CppFixtureManifestTests.cs" />
+  </ItemGroup>
+</Project>

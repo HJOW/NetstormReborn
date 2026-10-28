@@ -1,0 +1,9 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- cpppj src/client 의 플랫폼 독립 부분(화면 버퍼·팔레트·입력 큐·Gump·세션). MonoGame 과 Win32 에 의존하지 않는다 (2026-10-28 R1, LEFT_JOBS.dotnetpj.md 0절 결정 2·3) -->
+  <PropertyGroup>
+    <RootNamespace>Netstorm.Client</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Netstorm.Core\Netstorm.Core.csproj" />
+  </ItemGroup>
+</Project>

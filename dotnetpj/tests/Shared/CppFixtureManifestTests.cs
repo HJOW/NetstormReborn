@@ -5,7 +5,7 @@ namespace Netstorm.Tests;
 /// <summary>
 /// 연결한 원본 기계어 fixture 가 목록에 기록된 SHA-256·행 수와 같은지 검사한다 (W01 동기화 장치, 2026-10-16).
 /// 실패하면 cpppj 가 fixture 를 다시 만들었거나 연결/등록이 어긋난 것이므로 해당 C# 검사를 재대조해야 한다.
-/// 두 테스트 프로젝트가 같은 소스를 링크해 각자 자기 사용 프로젝트(Core/Assets)의 항목만 확인한다.
+/// 두 테스트 프로젝트가 같은 소스를 링크해 각자 자기 사용 프로젝트(Core/Assets/Client)의 항목만 확인한다.
 /// </summary>
 public sealed class CppFixtureManifestTests
 {
@@ -25,7 +25,7 @@ public sealed class CppFixtureManifestTests
             Assert.Matches("^[0-9a-f]{64}$", entry.Sha256);
             Assert.True(entry.Rows > 0, $"{entry.File}: 행 수가 0 이하");
             Assert.Contains(entry.Origin, new[] { "cpppj", "dotnetpj" });
-            Assert.Contains(entry.Consumer, new[] { "Core", "Assets" });
+            Assert.Contains(entry.Consumer, new[] { "Core", "Assets", "Client" });
         }
         Assert.Equal(CppFixtureManifest.Entries.Count, CppFixtureManifest.Entries.Select(entry => entry.File).Distinct().Count());
     }

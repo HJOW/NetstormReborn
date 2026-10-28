@@ -9,6 +9,7 @@
   python dotnetpj/tools/cpp_sync.py --ports                 포트 맵(dotnetpj/PORT_MAP.tsv) 보고: 이식 뒤 cpppj 소스가 바뀐 대응 쌍과 사라진 파일. 읽기 전용
   python dotnetpj/tools/cpp_sync.py --ports-init            C# 주석의 cpppj 소스 경로로 포트 맵을 처음 만든다 (이미 있으면 거부)
   python dotnetpj/tools/cpp_sync.py --ports-reflect HEAD --ports-file RawSidPool.cs   지정한 C# 파일의 기준 커밋을 올린다 (재대조를 마친 뒤에만)
+  python dotnetpj/tools/cpp_sync.py --ports-add cpppj/src/client/Screen.cpp:Netstorm.Client/Display/Screen.cs:port   새 이식 쌍을 포트 맵에 추가한다 (기준 커밋은 현재 HEAD)
 
 목록 파일은 dotnetpj/tests/Shared/cpp-fixture-manifest.tsv 이며 두 테스트 프로젝트가 같은 SHA-256 계산으로 검사한다.
 게임·창을 실행하지 않고 cpppj·원본 파일을 수정하지 않는다 (읽기 전용 git 명령과 목록 파일 쓰기만 한다).
@@ -36,7 +37,7 @@ LOCAL_FIXTURES = ROOT / "dotnetpj" / "tests" / "Netstorm.Core.Tests" / "Fixtures
 # 목록 파일에서 '반영한 cpppj 커밋'을 적는 주석 머리말.
 REFLECT_KEY = "# reflected-commit:"
 # 목록의 사용 프로젝트 이름. 테스트 어셈블리 Netstorm.<이름>.Tests 와 일치해야 한다.
-CONSUMERS = ("Core", "Assets")
+CONSUMERS = ("Core", "Assets", "Client")
 # 목록의 출처 이름. cpppj 는 읽기 전용, dotnetpj 는 이 저장소의 dotnetpj 폴더가 소유한다.
 ORIGINS = ("cpppj", "dotnetpj")
 # 보고서에 펼쳐 보여 주는 커밋·파일 목록의 최대 길이.
@@ -49,6 +50,8 @@ PORT_SCAN_DIRS = ("Netstorm.Core", "Netstorm.Assets", "Netstorm.Client")
 PORT_PATTERN = re.compile(r"cpppj/src/(o|client)/([A-Za-z0-9_]+\.(?:cpp|h|inc))")
 # 포트 맵의 기본 기준 커밋. 이 커밋까지는 cpppj 변경을 이미 검토했다고 본다(W01 반영 커밋과 같다).
 PORT_FLOOR_KEY = "# floor-commit:"
+# 포트 맵의 status 로 허용하는 값. L1 원본 fixture 대조, session 세션 연결, port 새 경로 직역 이식, retire 대체 예정.
+PORT_STATUSES = ("L1", "session", "port", "retire")
 # cpppj 의 원본 목록(.inc 등)에서 C# 자료를 만드는 생성 도구들. 각 도구의 --check 가 현재 C# 자료와 cpppj 원본의 일치를 확인한다.
 GENERATORS = (
     "gen_original_constructors.py",
@@ -388,6 +391,37 @@ def ports_report() -> int:
     return 1 if bad else 0
 
 
+def ports_add(items: list[str]) -> int:
+    """새 이식 쌍(cpp:csharp[:status])을 포트 맵에 추가한다. 기준 커밋은 현재 HEAD이며, 이미 있는 쌍이거나 파일이 없으면 거부한다. 새 파일을 이식할 때마다 쓴다."""
+    head = (git("rev-parse", "HEAD") or "").strip()
+    floor, rows = load_ports()
+    if not head or not floor:
+        print("포트 맵이 없거나 git HEAD 를 읽지 못했다. --ports-init 를 먼저 실행한다.")
+        return 2
+    known = {(r.cpp, r.csharp) for r in rows}
+    # 인자마다 cpp, C#, 상태(생략하면 port)를 나눠 검사한 뒤 행을 더한다.
+    for item in items:
+        parts = item.split(":")
+        if len(parts) not in (2, 3):
+            print(f"--ports-add {item}: cpp:csharp[:status] 형식이어야 한다.")
+            return 2
+        cpp, cs, status = parts[0], parts[1], parts[2] if len(parts) == 3 else "port"
+        if status not in PORT_STATUSES:
+            print(f"--ports-add {item}: status 는 {'/'.join(PORT_STATUSES)} 중 하나여야 한다.")
+            return 2
+        if not (ROOT / cpp).exists() or not (ROOT / "dotnetpj" / "src" / cs).exists():
+            print(f"--ports-add {item}: cpp 파일 또는 C# 파일이 없다.")
+            return 2
+        if (cpp, cs) in known:
+            print(f"--ports-add {item}: 이미 등록된 쌍이다.")
+            return 2
+        rows.append(PortRow(cpp, cs, head, status))
+        known.add((cpp, cs))
+    save_ports(floor, rows)
+    print(f"{len(items)}개 쌍을 추가했다 (기준 커밋 {head[:12]}).")
+    return 0
+
+
 def ports_reflect(rev: str, files: list[str]) -> int:
     """지정한 C# 파일(이름 또는 dotnetpj/src 기준 경로 끝부분)에 해당하는 행의 기준 커밋을 rev 로 올린다. 재대조를 마친 뒤에만 쓴다."""
     full = (git("rev-parse", rev) or "").strip()
@@ -424,8 +458,11 @@ def main() -> int:
     parser.add_argument("--ports", action="store_true", help="포트 맵(dotnetpj/PORT_MAP.tsv) 기준으로 이식 뒤 바뀐 cpppj 소스를 보고한다")
     parser.add_argument("--ports-init", action="store_true", help="C# 주석의 cpppj 소스 경로로 포트 맵을 처음 만든다")
     parser.add_argument("--ports-reflect", metavar="REV", help="--ports-file 로 지정한 C# 파일의 기준 커밋을 올린다 (재대조를 마친 뒤)")
+    parser.add_argument("--ports-add", metavar="CPP:CSHARP[:STATUS]", action="append", default=[], help="새 이식 쌍을 포트 맵에 추가한다 (기준 커밋은 현재 HEAD)")
     parser.add_argument("--ports-file", metavar="CSHARP", action="append", default=[], help="--ports-reflect 의 대상 C# 파일 이름 또는 경로 끝부분")
     args = parser.parse_args()
+    if args.ports_add:
+        return ports_add(args.ports_add)
     if args.ports_init:
         return ports_init()
     if args.ports_reflect:

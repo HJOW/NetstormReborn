@@ -7,6 +7,17 @@ cpppj/src/client/BitmapFont.cpp	Netstorm.Assets/BitmapFont.cs	f95a8db28ceae6c036
 cpppj/src/client/Cursor.h	Netstorm.Core/Rules/GameCursor.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
 cpppj/src/client/DialogScript.cpp	Netstorm.Assets/CampaignMenu.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
 cpppj/src/client/GifImage.cpp	Netstorm.Assets/GifImage.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
+cpppj/src/client/InputEvent.cpp	Netstorm.Client/Input/InputEvent.cs	ac9ea9162ba0c580cd53505c8c3782c0b2a27172	port
+cpppj/src/client/InputEvent.h	Netstorm.Client/Input/InputEvent.cs	ac9ea9162ba0c580cd53505c8c3782c0b2a27172	port
+cpppj/src/client/Screen.cpp	Netstorm.Client/Display/GamePalette.cs	ac9ea9162ba0c580cd53505c8c3782c0b2a27172	port
+cpppj/src/client/Screen.cpp	Netstorm.Client/Display/Screen.cs	ac9ea9162ba0c580cd53505c8c3782c0b2a27172	port
+cpppj/src/client/Screen.cpp	Netstorm.Client/Display/ScreenGeometry.cs	ac9ea9162ba0c580cd53505c8c3782c0b2a27172	port
+cpppj/src/client/Screen.h	Netstorm.Client/Display/Screen.cs	ac9ea9162ba0c580cd53505c8c3782c0b2a27172	port
+cpppj/src/client/Screen.h	Netstorm.Client/Display/ScreenTypes.cs	ac9ea9162ba0c580cd53505c8c3782c0b2a27172	port
+cpppj/src/client/ScreenPaletteApply.h	Netstorm.Client/Display/ScreenPaletteApply.cs	ac9ea9162ba0c580cd53505c8c3782c0b2a27172	port
+cpppj/src/client/ScreenPresentation.cpp	Netstorm.Client/Display/ScreenPresentation.cs	ac9ea9162ba0c580cd53505c8c3782c0b2a27172	port
+cpppj/src/client/ScreenPresentation.h	Netstorm.Client/Display/ScreenPresentation.cs	ac9ea9162ba0c580cd53505c8c3782c0b2a27172	port
+cpppj/src/client/ScreenResolutions.h	Netstorm.Client/Display/ScreenResolutions.cs	ac9ea9162ba0c580cd53505c8c3782c0b2a27172	port
 cpppj/src/o/Bridge.cpp	Netstorm.Core/Bridges/BridgeDecayRules.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
 cpppj/src/o/Bridge.cpp	Netstorm.Core/Bridges/BridgeSurfaceRules.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
 cpppj/src/o/Bridge.cpp	Netstorm.Core/Original/BridgeFrameSearch.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
