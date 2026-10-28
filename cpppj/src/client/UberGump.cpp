@@ -114,6 +114,7 @@ std::uint32_t DialogScriptCode(std::string_view name) {
     if (lower=="config") return kScriptConfig;
     if (lower=="warning") return kScriptWarning;
     if (lower=="setowner") return kSetObjectOwnerCommand; // 원본 Tell.SetOwner의 일반 입력 명령이다.
+    if (lower=="salvage") return 0x0200005dU; // 원본542e70의이름→54286c명령을HTML확인버튼에서도같은회수입력으로연결한다.
     const auto fort=FortSelectionScriptCode(name);if (fort!=0xffffffffU) return fort; // 실제 맵 행도 같은 원문 번호와 문자열 고리를 사용한다.
     if (mission!=0xffffffffU) return mission;
     const auto knowledge=KnowledgeScriptCode(name); // 기술 창/지급도 동일 입력 큐를 사용한다.
