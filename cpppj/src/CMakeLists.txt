@@ -250,3 +250,6 @@ target_sources(netstorm PRIVATE o/RawObjectConversion.cpp o/RawObjectConversion.
 target_sources(netstorm PRIVATE client/DetonateInput.cpp client/DetonateInput.h)
 # 원본4d5840 후보 순위는 실제 GameWorld의 해시/우클릭/커서가 공유한다.
 target_sources(netstorm PRIVATE client/RawUserPick.cpp client/RawUserPick.h)
+
+# 원본 프로세스 진단의 현재 슬롯/이름/부모 순회와 바이트 서식이다.
+target_sources(netstorm PRIVATE o/RawProcessSummary.cpp o/RawProcessSummary.h)

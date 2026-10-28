@@ -1,0 +1,103 @@
+{
+  "unit": 553,
+  "date": "2026-10-29",
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": "HJOW-Athlon / 2026-10-23",
+  "parentCommit": "29dbc48c",
+  "goalComplete": false,
+  "pushed": false,
+  "native": {
+    "host": "HJOW-Athlon",
+    "lastFullDecompilation": "HJOW-Athlon / 2026-10-23",
+    "uniqueInputs": 20,
+    "nativeObservations": 40,
+    "precisionDifferences": [],
+    "binarySha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "fixtureSha256": "4407d481a0c672c430cfb4105f62dd5f53021978bce99d43000d51e30a11b127",
+    "boundary": "00471890/0041bff0/0049a830/0049a840 원문 실행; fopen/fprintf/fclose만 명시 CRT경계. 실제 OS파일/게임 실행 없음."
+  },
+  "build": {
+    "target": "netstorm_tests / Release",
+    "warnings": [],
+    "errors": []
+  },
+  "focused": {
+    "runs": [
+      {
+        "log": "test-summary-v1.log",
+        "tests": 2,
+        "failed": 0
+      },
+      {
+        "log": "test-Kernel_.log",
+        "tests": 5,
+        "failed": 0
+      },
+      {
+        "log": "test-process_.log",
+        "tests": 18,
+        "failed": 0
+      }
+    ],
+    "uniquePassed": 25,
+    "failed": 0,
+    "registered": 3400
+  },
+  "newTests": 2,
+  "newGameExecutions": 0,
+  "newOriginalGameProcesses": 0,
+  "newNetworkTests": 0,
+  "product": {
+    "gameSha256": "b6d6fc4c4f7309de0ec5f4779e074ec2130eacbe579f72336aa07da80002b22e",
+    "gameUnchanged": true,
+    "testsSha256": "1045ce38a88a6c01c88601d9e5dee3187a98b06bd15a02f0960dcbb96c7c0a86",
+    "lastActualGameVerification": "552: 34/34짧은 진입+메뉴/배치2,36게임종료0"
+  },
+  "protected": {
+    "files": 1820,
+    "changed": [],
+    "existingFixtures": 712,
+    "fixtureChanges": []
+  },
+  "scope": "00471890의 원문 슬롯/현재 Form·부모·이름/CRT 인자 바이트 부품. 실제 Ctrl Shift F7/객체 trace/OS 파일 장치 연결 완료가 아니다.",
+  "remaining": [
+    "004d6020 객체 덤프와0044dab0/가상+70 trace·contained 순회·로그 상태 복원",
+    "현재 Kernel의 실제 Form/부모 어댑터와 ThunderProcess의 원본55 등록/필드 근거",
+    "Guide/Gump 뒤·console/정지 앞 Ctrl Shift F7의4437f0→4d6020→471890 실제 연결",
+    "CD004ed400의3999슬롯/별도이름표와 파일 경계는 비교 기록이며 이번PATCH 구현 범위 밖"
+  ],
+  "limitations": [
+    "fopen/fprintf/fclose는 원문 호출 인자만 제공한 명시 CRT경계다. NULL 토큰의 실제 CRT 오류/OS 파일 실패 동작을 검증한 것이 아니다.",
+    "물리 SID/이름 표 밖 접근은 호스트 예외로 거부한다. 원본의 잘못된 주소 접근을 정상 결과로 바꾸지 않는다.",
+    "전체 C++/CTest·사용자 완주/전체 동일성·Win11 실기 미검증과 기존 보류/공중3종/MP 제한을 유지한다."
+  ],
+  "rawDirectory": "extracted/cpp-process-summary-553-20261029",
+  "userRequestedAction": "작업 파일 확인·인수인계·이번 단위 커밋 뒤 목표 일시 정지. 명시적 재개 요청 전에는 목표 작업을 진행하지 않는다.",
+  "sourceSha256": {
+    "cpppj/src/CMakeLists.txt": "5026f22892489e10c3c39cc4622bd38fc6d5fa4a02a8d1add4661489d2acee5a",
+    "cpppj/tests/CMakeLists.txt": "2b809b4e23872cd3b0f99aabf4bbe6a487867562127532fddba6b53e71b9ab27",
+    "cpppj/src/o/RawProcessSummary.cpp": "b6c6210dc728af535fc7b0d687a612a1ffc9b335fd9d0b69416706a0382779e5",
+    "cpppj/src/o/RawProcessSummary.h": "d45a9e446430550e5fe979ec16141bfa8027c64286d98b7bc51f4a83188ac0a2",
+    "cpppj/tests/ProcessSummaryTests.cpp": "d53847c6db4590d176c4cdddbfa999ef7d26a3e1cd0a1e01020be28222624ec6",
+    "cpppj/tests/fixtures/process-summary-x86.tsv": "4407d481a0c672c430cfb4105f62dd5f53021978bce99d43000d51e30a11b127",
+    "tools/decomp_process_summary.py": "15f614f84ecfe1e7eb89e809602dab2a98fa855910150d883852be12553c3811"
+  },
+  "handoffSha256": {
+    "LEFT_JOBS.md": "8278b04e271ceda8eba2460429a628383724edf48971dbfffeff46464f570684",
+    "docs/exe/cpp-process-summary-20261029.md": "2c17cdb449d3dfe1b1f11174064cd25416c57b534c0e110eb6290b055e2176f1"
+  },
+  "evidenceSha256": {
+    "extracted/cpp-process-summary-553-20261029/before.json": "c6b47810223d6fc12d08e5591c4f845d4e9720206d22380a9348534664c6a099",
+    "extracted/cpp-process-summary-553-20261029/native-v1.log": "c3b1e6db237732c3e181d06e592e513bac329f0d81f310f6c4a7f4f1428dc0ba",
+    "extracted/cpp-process-summary-553-20261029/native.json": "125744964067323e616bf4ab88d1caa3b7434c177b53bd73303070c533f97874",
+    "extracted/cpp-process-summary-553-20261029/build-v1.log": "29ea3d21e43673394f8123ac2ff8685716af1bf531aac0ea280df17c74a30622",
+    "extracted/cpp-process-summary-553-20261029/test-summary-v1.log": "c49d619572d7fa34b30c6038a09a025f4626f91b19a3d77401728db0e68fb658",
+    "extracted/cpp-process-summary-553-20261029/test-Kernel_.log": "b1bb398c5547abfd96c28022aea5087021f1eccd977c479dffd573bb4893a714",
+    "extracted/cpp-process-summary-553-20261029/test-process_.log": "29719555c9226a7b494900ac62a04df9f979b62d7badfb114aa85cbf9a980788"
+  },
+  "existingBeforeFilesChanged": [
+    "cpppj/src/CMakeLists.txt",
+    "cpppj/tests/CMakeLists.txt",
+    "cpppj/build/bin/Release/netstorm_tests.exe"
+  ]
+}

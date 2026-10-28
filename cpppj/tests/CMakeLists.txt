@@ -2384,3 +2384,7 @@ set_source_files_properties(SendMoneyInputTests.cpp PROPERTIES COMPILE_DEFINITIO
 # Shift F7 원문167관측 중 제품에 연결한135입력의 독립 fixture다.
 set_source_files_properties(GifScreenshotTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_SCREENSHOT_KEY_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/screenshot-key-x86.tsv\"")
+
+# 독립 원문 프로세스 진단 바이트와 현재 슬롯/부모 재조회를 검증한다.
+target_sources(netstorm_tests PRIVATE ProcessSummaryTests.cpp)
+set_source_files_properties(ProcessSummaryTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_PROCESS_SUMMARY_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/process-summary-x86.tsv\"")
