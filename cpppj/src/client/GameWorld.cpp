@@ -1,6 +1,7 @@
 #include "client/GameWorld.h"
 #include "client/ClientColorSortInput.h"
 #include "client/RawCampaignFactoryDisplay.h"
+#include "client/SpellFrameVisibility.h"
 #include "client/RawCampaignCursor.h"
 #include "client/RawCursorPosition.h"
 #include "client/RawUserPick.h"
@@ -535,6 +536,7 @@ std::vector<RenderSprite> GameWorld::Sprites() const {
     std::vector<RenderSprite> result;const auto clip=MapView(); // 실제 표면/모바일/입자 수집도 같은 현재 지도 경계를 사용한다.
     // 현재 프레임을 화면 범위와 소유자 색에 맞춰 장면에 추가한다.
     const auto add=[&](const TypeAsset& type,std::size_t frame,double x,double y,int owner,std::int16_t depth,bool shadow,std::vector<std::size_t> following=std::vector<std::size_t>{},ScreenPoint hotspot=ScreenPoint{}) {
+        if (SuppressSpellHelpFrame(assets_.Edition(),assets_.TypeTable().Types()[type.block+o::kFirstAssetTypeNumber],type.definition.specialFrames,static_cast<std::int64_t>(frame))) return;
         const auto& frames=assets_.Shapes().Blocks()[type.block].frames; if (frame>=frames.size() || frames[frame].IsSpecial()) return;
         const auto projected=ToScreen(x,y);const ScreenPoint p{projected.x-hotspot.x,projected.y-hotspot.y};auto r=frames[frame].rect; // 화면 위치만 보정하고 원본 정렬용 월드 좌표는 유지한다.
         // 같은 객체 내부의 후속 그림까지 포함해 화면 밖 판정을 한다.

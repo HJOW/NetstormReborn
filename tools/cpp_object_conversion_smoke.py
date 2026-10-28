@@ -23,6 +23,7 @@ def one(output, data, width, height, observation_frames=()):
              (18, 'click', 'dissolvedalliance'), (55, 'report', 'editor'),
              (60, 'click', 'production:114'), (70, 'up', 'placement:112,118'),
              (80, 'report', 'cursor'), (85, 'click', 'placement:112,118'), (95, 'report', 'created'),
+             (95, 'snapshot', str(output / 'created.bmp')),
              (110, 'right', 'world:bombExplodeMedium'), (118, 'report', 'menu-spell'),
              (125, 'click', 'Turn To Obelisk!'), (135, 'report', 'buried'),
              (140, 'right', 'world:buried'), (148, 'report', 'menu-buried'),

@@ -109,6 +109,7 @@
 #include "o/RawCarrierDrop.h"
 #include "o/RawObjectCommand.h"
 #include "client/RawBombBlastBindings.h"
+#include "client/SpellFrameVisibility.h"
 #include "o/RawPacketDispatch.h"
 #include "client/AiTypeRequiredEnergy.h"
 #include "client/QuickHelpHtml.h"
@@ -1129,7 +1130,7 @@ struct RawCampaignSession::Impl {
         shrapnelCaptureState.mainFrame=[this](Sid sid) { if (ConnectedBombTable(Read(core.pool.Slot(sid),0))) return -1;return bridgeDraw->MainFrame(sid); }; // Devastation의+a0=41c0f0은 빈 그림이며+a4만 현재 프레임을 그린다.
         shrapnelCaptureState.additional=[this](Sid sid,ConstructionVisualImage& image,std::int32_t x,std::int32_t y) {
             if (ConnectedBombTable(Read(core.pool.Slot(sid),0))) {
-                DrawDevastationAdditional(core.pool,sid,x,y,[this,&image](std::uint32_t type,std::int32_t frame,std::int32_t px,std::int32_t py) { if (type<70 || frame<0) throw std::out_of_range("Devastation 캡처 TYPE/프레임 범위");static_cast<void>(DrawShape(image.pixels,image.width,image.height,assets.game.Shapes(),type-70,static_cast<std::size_t>(frame),px,py,{0,0,image.width-1,image.height-1})); });return;
+                DrawDevastationAdditional(core.pool,sid,x,y,[this,&image](std::uint32_t type,std::int32_t frame,std::int32_t px,std::int32_t py) { if (type<70 || frame<0) throw std::out_of_range("Devastation 캡처 TYPE/프레임 범위");if (SuppressSpellHelpFrame(assets.game.Edition(),core.types[type],assets.game.Types()[type-o::kFirstAssetTypeNumber].definition.specialFrames,frame)) return;static_cast<void>(DrawShape(image.pixels,image.width,image.height,assets.game.Shapes(),type-70,static_cast<std::size_t>(frame),px,py,{0,0,image.width-1,image.height-1})); });return;
             }
             bridgeDraw->Additional(sid,x,y);
         }; // 기존 다리의 실제 기본0 분기는 그대로 사용한다.

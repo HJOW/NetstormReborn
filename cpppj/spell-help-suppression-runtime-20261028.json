@@ -1,0 +1,676 @@
+{
+  "unit": 530,
+  "date": "2026-10-28",
+  "host": "HJOW-Athlon",
+  "headBeforeCommit": "11b04c8e06f280b1e9c06b604cef339343342c3a",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23",
+    "outputsModified": false
+  },
+  "userDecision": "Edit의 비석→스펠 효과에서 도움말 그림을 표시하지 않도록 임시 구현하고 추가 분석은 보류한다. 원본10.78과 다르게 표시하는 것을 명시적으로 요청했다.",
+  "product": {
+    "NetstormCpp.exe": "fc743230a9e86013fb64a8436c06fabe89f348379e3b2d015a7032b76d8d5300",
+    "netstorm_tests.exe": "bc42973d4926df3bcb9b8d1c09d84ec3acc56537c211d77fca846d5b7e56249a"
+  },
+  "changedSource": [
+    "cpppj/src/client/GameWorld.cpp",
+    "cpppj/src/client/RawCampaignFactoryDisplay.cpp",
+    "cpppj/src/client/RawCampaignSession.cpp"
+  ],
+  "newSource": "cpppj/src/client/SpellFrameVisibility.h",
+  "implementation": {
+    "predicate": "Patch1078 && flags2.bomb && helpFrame>=0 && currentFrame==helpFrame",
+    "boundaries": [
+      "GameWorld 월드 스프라이트",
+      "현재 +a4 추가 그림/공유 픽셀 캡처",
+      "Devastation 파편 소스 캡처"
+    ],
+    "frameAndTimersChanged": false,
+    "originalAssetOrHelpDialogChanged": false
+  },
+  "originalObservation": {
+    "binarySha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "session": "20261028T002241762Z-204eeb12f0c0",
+    "firstCopy": "extracted/cpp-spell-original-530/original-copy",
+    "firstCopyCaptureFailures": [
+      "FrameArrived timed out: timed out waiting on channel",
+      "window capture timed out: timed out waiting on channel"
+    ],
+    "fallback": "computer-use 캡처 재시도 실패 뒤 기존 analyzeManager/ns_driver의 게임 전용 캡처/입력으로 전환했다.",
+    "processStarts": 2,
+    "firstProcessStopped": true,
+    "analyzerEditorLoads": 2,
+    "analyzerNormalCloseConfirmed": true,
+    "savedFortSource": "extracted/cpp-spell-lifetime-529/final-first/converted-1280x720-data-editor/D/dissolvedalliance.fort",
+    "savedFortSha256": "4614ae25440c3c218cfc5d510ac33d5c10a50bbd74bda13cfb09223994b58c1a",
+    "selectedObject": {
+      "sid": 15000,
+      "type": "buried",
+      "position": [
+        112,
+        118
+      ],
+      "owner": 0
+    },
+    "selectedMenu": {
+      "path": "extracted/cpp-spell-original-530/driver/shots/fast-obelisk-menu.png",
+      "sha256": "2068df6e6f68a8ee5956b30226fc363b6567ccee104cc103f316d3633f7b46ec"
+    },
+    "initialLongDelay": "첫 적재에서는 오래 기다린 뒤 전환해 즉시 폭발했고 도움말 미표시의 근거로 쓰지 않았다.",
+    "fastConversion": "두 번째 적재의 실제 Turn To Spell 클릭 뒤 도움말 그림의 표시·비표시·재표시를 확보했다.",
+    "comparison": {
+      "clone": {
+        "path": "extracted\\cpp-spell-lifetime-529\\final-first\\converted-1024x768\\restored-spell.bmp",
+        "sha256": "e6894fbbb9e589f9dbfc005d3fab57ec3d58279c6781f65405974b2c5079b56b"
+      },
+      "helpRect": [
+        336,
+        329,
+        490,
+        453
+      ],
+      "interiorRect": [
+        340,
+        335,
+        420,
+        445
+      ],
+      "interiorPixels": 8800,
+      "originalSamples": [
+        {
+          "path": "extracted\\cpp-spell-original-530\\driver\\shots\\fast-turned.png",
+          "sha256": "f116f964ed9ac564c91eed49b2ff439e716143b8fe23418c5f3b2070d8c53421",
+          "helpInteriorMatches": true,
+          "interiorDifferentRgbBytes": 0,
+          "wholeRectDifferentRgbBytes": 1985
+        },
+        {
+          "path": "extracted\\cpp-spell-original-530\\driver\\shots\\fast-turned-1.png",
+          "sha256": "7fb472c4f70971231280bafa75d2dc309626399847b8a918fb4974bb410cdda2",
+          "helpInteriorMatches": true,
+          "interiorDifferentRgbBytes": 0,
+          "wholeRectDifferentRgbBytes": 2009
+        },
+        {
+          "path": "extracted\\cpp-spell-original-530\\driver\\shots\\fast-turned-2.png",
+          "sha256": "87687d509bd804db8e01382150078abde987c0cf31ad62610a24c2d549f07603",
+          "helpInteriorMatches": true,
+          "interiorDifferentRgbBytes": 0,
+          "wholeRectDifferentRgbBytes": 1990
+        },
+        {
+          "path": "extracted\\cpp-spell-original-530\\driver\\shots\\fast-turned-3.png",
+          "sha256": "054b74bd43df17786d402a25d256c5f6aee4508202f289ab19a5b26bd9358227",
+          "helpInteriorMatches": true,
+          "interiorDifferentRgbBytes": 0,
+          "wholeRectDifferentRgbBytes": 1996
+        },
+        {
+          "path": "extracted\\cpp-spell-original-530\\driver\\shots\\fast-turned-4.png",
+          "sha256": "f7d4ec25ab96889d12900b0ad9930e40b74d48fdd71cddfd066d37e6f0019509",
+          "helpInteriorMatches": false,
+          "interiorDifferentRgbBytes": 26322,
+          "wholeRectDifferentRgbBytes": 54707
+        },
+        {
+          "path": "extracted\\cpp-spell-original-530\\driver\\shots\\fast-turned-5.png",
+          "sha256": "c197a59c62bcc972045da4c545cab24bef7f0ab48aa39fe533ce3a92dcba8256",
+          "helpInteriorMatches": false,
+          "interiorDifferentRgbBytes": 26322,
+          "wholeRectDifferentRgbBytes": 54708
+        },
+        {
+          "path": "extracted\\cpp-spell-original-530\\driver\\shots\\fast-turned-6.png",
+          "sha256": "1ab460c1bc0a0144e28899b614a6c10f06f706b22be655ab700c0f1a11823181",
+          "helpInteriorMatches": false,
+          "interiorDifferentRgbBytes": 26322,
+          "wholeRectDifferentRgbBytes": 54110
+        },
+        {
+          "path": "extracted\\cpp-spell-original-530\\driver\\shots\\fast-turned-7.png",
+          "sha256": "4c4b06347e67a003daceca22138268ca23bb61b70cafe147318feaa301151037",
+          "helpInteriorMatches": true,
+          "interiorDifferentRgbBytes": 0,
+          "wholeRectDifferentRgbBytes": 5081
+        },
+        {
+          "path": "extracted\\cpp-spell-original-530\\driver\\shots\\fast-turned-8.png",
+          "sha256": "70b9210cb6c4d93ba49a1284ec6ec9183cd2548a39c27644ae0db2a0de2ded62",
+          "helpInteriorMatches": false,
+          "interiorDifferentRgbBytes": 26322,
+          "wholeRectDifferentRgbBytes": 54711
+        },
+        {
+          "path": "extracted\\cpp-spell-original-530\\driver\\shots\\fast-turned-9.png",
+          "sha256": "66b66d996d4decca6a41ef7b8dd87ae8e4a08e9a53ce99bcfee6036cd8bd42ba",
+          "helpInteriorMatches": true,
+          "interiorDifferentRgbBytes": 0,
+          "wholeRectDifferentRgbBytes": 5081
+        }
+      ],
+      "originalHelpOnOffOnObserved": true,
+      "matchingSamples": 6,
+      "nonmatchingSamples": 4,
+      "wholeScreenEqualityClaimed": false,
+      "gamesLaunched": 0
+    },
+    "automaticRecording": {
+      "sessionId": "20261028T002241762Z-204eeb12f0c0",
+      "runId": "40a00fdcc9f1497a90673ec0860e2ddd",
+      "fps": 30,
+      "processId": 18712,
+      "processStartedUtcTicks": 639287437946795770,
+      "processPath": "H:\\T5Workspace\\NetstormReborn\\analyzeManager\\bin\\Release\\net10.0-windows\\Netstorm.AnalyzeManager.exe",
+      "state": "failed",
+      "frames": 0,
+      "elapsedMs": 0,
+      "error": "시스템 출력 오디오 캡처 시작 실패: 요소가 없습니다. (0x80070490)",
+      "updatedUtc": "2026-10-28T00:23:16.6522314+00:00"
+    },
+    "raw": "extracted/cpp-spell-original-530/driver",
+    "analyzerRaw": "extracted/analyzeManager/20261028T002241762Z-204eeb12f0c0"
+  },
+  "finalGui": {
+    "results": [
+      {
+        "case": "converted",
+        "size": [
+          1280,
+          720
+        ],
+        "freshSid": 15432,
+        "reloadedSid": 15000,
+        "regularsBefore": [
+          [
+            "15000",
+            "7",
+            "46",
+            "1",
+            "53",
+            "1008981770",
+            "11.7699999998"
+          ],
+          [
+            "15000",
+            "6",
+            "46",
+            "0",
+            "1",
+            "1088421888",
+            "16.822"
+          ]
+        ],
+        "regularsAfter": [
+          [
+            "15000",
+            "7",
+            "46",
+            "1",
+            "70",
+            "1008981770",
+            "12.4519999998"
+          ],
+          [
+            "15000",
+            "6",
+            "46",
+            "0",
+            "1",
+            "1088421888",
+            "16.822"
+          ]
+        ],
+        "late": [
+          {
+            "frame": 360,
+            "time": "13.215",
+            "object": [
+              "114",
+              "0",
+              "2",
+              "112",
+              "118"
+            ],
+            "regulars": [
+              [
+                "15000",
+                "7",
+                "46",
+                "1",
+                "90",
+                "1008981770",
+                "13.2249999998"
+              ],
+              [
+                "15000",
+                "6",
+                "46",
+                "0",
+                "1",
+                "1088421888",
+                "16.822"
+              ]
+            ]
+          },
+          {
+            "frame": 400,
+            "time": "14.662",
+            "object": [
+              "114",
+              "0",
+              "2",
+              "112",
+              "118"
+            ],
+            "regulars": [
+              [
+                "15000",
+                "7",
+                "46",
+                "1",
+                "130",
+                "1008981770",
+                "14.6719999998"
+              ],
+              [
+                "15000",
+                "6",
+                "46",
+                "0",
+                "1",
+                "1088421888",
+                "16.822"
+              ]
+            ]
+          },
+          {
+            "frame": 450,
+            "time": "16.379",
+            "object": [
+              "114",
+              "0",
+              "2",
+              "112",
+              "118"
+            ],
+            "regulars": [
+              [
+                "15000",
+                "7",
+                "46",
+                "1",
+                "180",
+                "1008981770",
+                "16.3889999998"
+              ],
+              [
+                "15000",
+                "6",
+                "46",
+                "0",
+                "1",
+                "1088421888",
+                "16.822"
+              ]
+            ]
+          },
+          {
+            "frame": 500,
+            "time": "18.057",
+            "object": null,
+            "regulars": []
+          },
+          {
+            "frame": 550,
+            "time": "19.669",
+            "object": null,
+            "regulars": []
+          },
+          {
+            "frame": 600,
+            "time": "21.241",
+            "object": null,
+            "regulars": []
+          },
+          {
+            "frame": 650,
+            "time": "22.762",
+            "object": null,
+            "regulars": []
+          },
+          {
+            "frame": 700,
+            "time": "24.406",
+            "object": null,
+            "regulars": []
+          },
+          {
+            "frame": 750,
+            "time": "26.082",
+            "object": null,
+            "regulars": []
+          },
+          {
+            "frame": 800,
+            "time": "27.574",
+            "object": null,
+            "regulars": []
+          }
+        ],
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+            "--run",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-spell-original-530\\clone-final\\data-1280x720",
+            "--window",
+            "--no-audio",
+            "--frames",
+            "810",
+            "--set",
+            "SCREENW=1280;SCREENH=720;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;currentLanguage=english",
+            "--ui-script",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-spell-original-530\\clone-final\\1280x720\\steps.tsv",
+            "--ui-report",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-spell-original-530\\clone-final\\1280x720\\states.tsv"
+          ],
+          "binarySha256": "fc743230a9e86013fb64a8436c06fabe89f348379e3b2d015a7032b76d8d5300",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 29.05841870000586,
+          "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderrSha256": "7f50b5cb8e913726052be5772fed6feeb4507cda95c6133cc86a8460fa985bfb",
+          "originalsUnchanged": true,
+          "dataUnchanged": true
+        },
+        "binarySha256": "fc743230a9e86013fb64a8436c06fabe89f348379e3b2d015a7032b76d8d5300",
+        "nativePictureSha256": "f116f964ed9ac564c91eed49b2ff439e716143b8fe23418c5f3b2070d8c53421",
+        "helpInteriorRect": [
+          468,
+          311,
+          548,
+          421
+        ],
+        "helpPictureAbsent": true,
+        "differentRgbBytes": 26309,
+        "currentFrameStillTwo": true,
+        "inheritedRegularsPreserved": true
+      },
+      {
+        "case": "converted",
+        "size": [
+          1024,
+          768
+        ],
+        "freshSid": 15432,
+        "reloadedSid": 15000,
+        "regularsBefore": [
+          [
+            "15000",
+            "7",
+            "46",
+            "1",
+            "53",
+            "1008981770",
+            "11.1049999998"
+          ],
+          [
+            "15000",
+            "6",
+            "46",
+            "0",
+            "1",
+            "1077936128",
+            "12.379"
+          ]
+        ],
+        "regularsAfter": [
+          [
+            "15000",
+            "7",
+            "46",
+            "1",
+            "70",
+            "1008981770",
+            "11.7189999998"
+          ],
+          [
+            "15000",
+            "6",
+            "46",
+            "0",
+            "1",
+            "1077936128",
+            "12.379"
+          ]
+        ],
+        "late": [
+          {
+            "frame": 360,
+            "time": "12.483",
+            "object": [
+              "114",
+              "0",
+              "1",
+              "112",
+              "118"
+            ],
+            "regulars": [
+              [
+                "15000",
+                "7",
+                "46",
+                "1",
+                "90",
+                "1008981770",
+                "12.4929999998"
+              ],
+              [
+                "15000",
+                "6",
+                "46",
+                "0",
+                "2",
+                "1077936128",
+                "15.38"
+              ]
+            ]
+          },
+          {
+            "frame": 400,
+            "time": "13.803",
+            "object": [
+              "114",
+              "0",
+              "1",
+              "112",
+              "118"
+            ],
+            "regulars": [
+              [
+                "15000",
+                "7",
+                "46",
+                "1",
+                "130",
+                "1008981770",
+                "13.8129999998"
+              ],
+              [
+                "15000",
+                "6",
+                "46",
+                "0",
+                "2",
+                "1077936128",
+                "15.38"
+              ]
+            ]
+          },
+          {
+            "frame": 450,
+            "time": "15.393",
+            "object": null,
+            "regulars": []
+          },
+          {
+            "frame": 500,
+            "time": "17.028",
+            "object": null,
+            "regulars": []
+          },
+          {
+            "frame": 550,
+            "time": "18.646",
+            "object": null,
+            "regulars": []
+          },
+          {
+            "frame": 600,
+            "time": "20.173",
+            "object": null,
+            "regulars": []
+          },
+          {
+            "frame": 650,
+            "time": "21.799",
+            "object": null,
+            "regulars": []
+          },
+          {
+            "frame": 700,
+            "time": "23.347",
+            "object": null,
+            "regulars": []
+          },
+          {
+            "frame": 750,
+            "time": "24.899",
+            "object": null,
+            "regulars": []
+          },
+          {
+            "frame": 800,
+            "time": "26.354",
+            "object": null,
+            "regulars": []
+          }
+        ],
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+            "--run",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-spell-original-530\\clone-final\\data-1024x768",
+            "--window",
+            "--no-audio",
+            "--frames",
+            "810",
+            "--set",
+            "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;currentLanguage=english",
+            "--ui-script",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-spell-original-530\\clone-final\\1024x768\\steps.tsv",
+            "--ui-report",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-spell-original-530\\clone-final\\1024x768\\states.tsv"
+          ],
+          "binarySha256": "fc743230a9e86013fb64a8436c06fabe89f348379e3b2d015a7032b76d8d5300",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 27.491354099998716,
+          "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderrSha256": "7f50b5cb8e913726052be5772fed6feeb4507cda95c6133cc86a8460fa985bfb",
+          "originalsUnchanged": true,
+          "dataUnchanged": true
+        },
+        "binarySha256": "fc743230a9e86013fb64a8436c06fabe89f348379e3b2d015a7032b76d8d5300",
+        "nativePictureSha256": "f116f964ed9ac564c91eed49b2ff439e716143b8fe23418c5f3b2070d8c53421",
+        "helpInteriorRect": [
+          340,
+          335,
+          420,
+          445
+        ],
+        "helpPictureAbsent": true,
+        "differentRgbBytes": 26317,
+        "currentFrameStillTwo": true,
+        "inheritedRegularsPreserved": true
+      }
+    ],
+    "binarySha256": "fc743230a9e86013fb64a8436c06fabe89f348379e3b2d015a7032b76d8d5300",
+    "helpPictureSuppressed": true,
+    "originalFrameAndRegularsPreserved": true,
+    "attackFlyersNotTested": true
+  },
+  "focused": {
+    "rows": [
+      {
+        "filter": "BombRegular_",
+        "count": 2,
+        "returnCode": 0,
+        "logSha256": "dc4d91f9ab5f4a8bcc4d0b5679c05c5b9caddd23b9eab60c17593b814660d060"
+      },
+      {
+        "filter": "ObjectConversion_",
+        "count": 2,
+        "returnCode": 0,
+        "logSha256": "d8f22d702a06b0f49725c71b08b933b4d1c883b407fe318939d1eedeb74db15f"
+      },
+      {
+        "filter": "FrameAdvance_",
+        "count": 6,
+        "returnCode": 0,
+        "logSha256": "3e0185d2358e23ac3efa707506bf137317b726beb57c845d5af3a7e4bc72b2db"
+      },
+      {
+        "filter": "ObjectHit_",
+        "count": 2,
+        "returnCode": 0,
+        "logSha256": "7afbf05dfa923bb96080adca5844f9b176fb71f164007daa4d79e91ba43e6318"
+      },
+      {
+        "filter": "SquidRetype_",
+        "count": 1,
+        "returnCode": 0,
+        "logSha256": "977d4af343443bb7328b655f015cebf4c348f662e2e933f16b83efb0d4aa91a9"
+      }
+    ],
+    "unique": 13,
+    "names": [
+      "BombRegular_Native741Inputs",
+      "BombRegular_LazyBoundariesAndCleanup",
+      "ObjectConversion_ReplaysNative36CommandsAndLateReads",
+      "ObjectConversion_RejectsSelectedMissingEffectsAndKeepsWrittenPrefix",
+      "FrameAdvance_ReplaysOriginals",
+      "FrameAdvance_ReplaysCd",
+      "FrameAdvance_ReplaysExtra1037",
+      "FrameAdvance_ComposesRealDisplayAndSpace",
+      "FrameAdvance_ComposesPriestFallSchedulingAndLanding",
+      "FrameAdvance_RejectsInvalidBindingsAndReadsCurrentFrames",
+      "ObjectHit_ReplaysNative608PixelBranchesAndCallOrder",
+      "ObjectHit_RequiresOnlyReachedDrawingAndRejectsInvalidHeader",
+      "SquidRetype_ReplaysNative128AndPreservesOtherSlots"
+    ],
+    "failed": 0,
+    "registered": 3359,
+    "binarySha256": "bc42973d4926df3bcb9b8d1c09d84ec3acc56537c211d77fca846d5b7e56249a"
+  },
+  "build": {
+    "path": "extracted\\cpp-spell-original-530\\build.log",
+    "sha256": "e8db59692d66dca8ae8add03beff19ec817d8ac0c0337ce5273e963b1fd716bd",
+    "errors": 0,
+    "warnings": 0
+  },
+  "preserved": {
+    "originalAndCdFiles": 1819,
+    "protectedFilesUnchanged": true,
+    "agentsUnchanged": true,
+    "existingTestsAndFixturesUnchanged": true
+  },
+  "limits": [
+    "원본 관측은 같은 Edit 비석 전환 경로다. 일반 시전 전체와 모든 주문 연출을 동일성 완료로 세지 않는다.",
+    "도움말 그림 내부 8800픽셀의 일치와 깜빡임을 확인했다. 전체 화면 픽셀/타이밍 동일성은 판정하지 않았다.",
+    "자동 녹화는 출력 오디오 장치 부재(0x80070490)로 실패했다. 개별 PNG/입력/UTC 기록만 증거로 쓴다.",
+    "최종 실제 클론 검증은 Devastation 두 화면비다. 다른 주문은 공통 표시 규칙을 정적으로 연결했다.",
+    "사용자 요청에 따라 이 항목의 추가 원인 분석을 보류하고 다른 목표를 이어간다.",
+    "전체 CTest/34경로/자연 완주·공중3종 전용 실행·멀티플레이 시험은 하지 않았다."
+  ]
+}
