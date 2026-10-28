@@ -1,5 +1,7 @@
 # cpppj 복원 결과를 dotnetpj로 이식하는 계획
 
+> **2026-10-28 갱신 안내:** 현행 순서와 구조 결정(8비트 논리 화면 이식, cpppj 구조 보존 직역, cpppj 실행 파일 오라클, 기존 경로 동결·교체)은 [LEFT_JOBS.dotnetpj.md 0절](../LEFT_JOBS.dotnetpj.md#dotnet-current-plan-20261028)이 이 문서보다 우선한다. 이 문서의 W01~W20 번호와 fixture 목록은 근거 목록으로 계속 쓴다.
+
 2026-10-16, 작업 PC **DESKTOP-HJOW**. 기준 커밋은 **`53113b66`**(cpppj `20261016-12`까지)이다(W01 이후의 현재 반영 커밋은 [7절](#7-cpppj-진행을-따라가는-절차-다른-ai가-cpppj를-계속-진행-중)이 가리키는 목록 파일이 소유한다). 사용자 요청은 "현재까지 진행된 cpppj 소스를 dotnetpj에 적용해 dotnetpj 게임 플레이가 기존 게임과 거의 동일한 수준이 되게 하는 계획"이다. 이 문서는 그 **실행 계획**이며 게임 코드는 바꾸지 않았다. 진행 체크리스트와 인수인계는 [dotnetpj 인수인계](../LEFT_JOBS.dotnetpj.md) 맨 위 절이 소유한다.
 
 읽은 자료는 AGENTS.md, 양쪽 인수인계, [D01~D16 반영 점검](dotnet-cpp-audit-20261015.md), [cpppj 플레이 복원 계획](cpp-playable-plan.md), cpppj의 `src/o`·`src/client` 모듈 목록과 [RawCampaignSession.h](../cpppj/src/client/RawCampaignSession.h)·[RawSurfaceWorld.h](../cpppj/src/client/RawSurfaceWorld.h), `cpppj/tests/fixtures` 전체 목록과 행 수, dotnetpj 소스·검사 구성이다. **디컴파일 산출물은 읽지 않았다.** 이 PC는 마지막 전체 정밀 디컴파일 PC(VM-W11-Codex, 2026-10-16)와 다르다. 이식 근거는 커밋된 cpppj 소스·문서·원본 기계어 fixture로 충분하다. 원본·클론 게임과 창은 실행하지 않았다.
