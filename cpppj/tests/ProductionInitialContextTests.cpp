@@ -1,6 +1,7 @@
 // 실제 Client 전역과 공통 UI로 Session 이전의 생산 전체 생성/자식/문자열/정리를 검사한다.
 #include "DudeSpawnSupport.h"
 #include "client/ClientMain.h"
+#include "client/ScriptCommand.h"
 #include "client/ClientLocalStateGlobals.h"
 #include "client/ClientStateWorldCleanup.h"
 #include "client/ClientCursorStateCleanup.h"
@@ -400,4 +401,24 @@ TEST_CASE(ProductionInitialContext_ToggleMinimapKeepsDockAndRetiresOldOwner) {
         CHECK(scene.Count()==count && uber.Current() && scene.buttons.RootToken()==root && scene.buttons.Production()->RootToken()==production);
         CHECK(scene.buttons.MapViewRect().left==view.left && scene.buttons.MapViewRect().bottom==view.bottom);
     }
+}
+
+// 실제 시나리오 이름→큐→HUD와 포인터 캡처/방송이 같은 채팅 구분선·지도 영역을 갱신해야 한다.
+TEST_CASE(ProductionInitialContext_ToggleBottomScriptKeepsDraggedChatGeometry) {
+    InitialUberGlobals globals;InitialProductionScene scene;auto context=InitialUberContext(scene,globals);InputEvent pointer{InputCode::kRelease,300,200}; // 현재 좌클릭 폴링의 외부 입력이다.
+    context.poll=[&pointer](auto) { return pointer; };auto& uber=scene.buttons.EnableUberRoot(std::move(context));uber.Replace();const auto root=scene.buttons.RootToken();
+    scene.buttons.HandleGump(root,0x0200003dU,3,0);const auto* parent=static_cast<UberRootNode*>(uber.Node(root));CHECK(parent);if (!parent) return;
+    const auto token=parent->chatDivider,chat=parent->chat,production=parent->production;const auto count=scene.Count();auto* divider=uber.Node(token);CHECK(divider);if (!divider) return;
+    scene.buttons.HandleGump(root,0x02000088U,0,0);CHECK(divider->y==480 && scene.buttons.MapViewRect().bottom==480);
+    const auto toggle=[&] { // 실제 스크립트 파서와40칸 큐를 거쳐 원래 숫자 인자를 같은 Route에 보낸다.
+        InputQueue queue;ScriptStringRing strings;QueueScriptCommand("ToggleBottomGump,2",queue,strings,{GameMenuScriptCode,[](std::string_view) { CHECK(false); }});
+        const auto event=queue.Pop(false);CHECK(event.code==0x02000088U && event.x==2 && event.y==2 && queue.Empty());CHECK(!scene.buttons.RouteInput(event).consumed); // 원본 HUD 효과 뒤 기본 반환0을 성공1로 바꾸지 않는다.
+    };
+    CHECK(GameMenuScriptCode("TOGGLEBOTTOMGUMP")==0x02000088U);toggle();CHECK(divider->y==globals.chatY && divider->y<480);
+    const auto point=uber.Point("hud:chat-divider");CHECK(point);if (!point) return;pointer={InputCode::kLeftButton,point->x,point->y};CHECK(scene.buttons.RouteInput(pointer).consumed);CHECK(divider->flags&0x100U);
+    CHECK(scene.buttons.HasCapture());CHECK(point->y-divider->y==2); // 5픽셀 구분선 중앙을 눌러 얻는 원본 로컬 anchor2다.
+    pointer.y=220;scene.buttons.NotifyPointer(pointer,0,false);CHECK(divider->y==216 && scene.buttons.MapViewRect().bottom==216);CHECK(scene.buttons.HasCapture()); // 원본 방송의220-2 뒤 공통Move가 anchor2를 다시 뺀다.
+    pointer.code|=InputCode::kRelease;scene.buttons.NotifyPointer(pointer,0,false);CHECK(!(divider->flags&0x100U));CHECK(scene.buttons.RouteInput(pointer).consumed);CHECK(!scene.buttons.HasCapture());
+    toggle();CHECK(divider->y==480 && globals.chatY==216);toggle();CHECK(divider->y==216 && scene.buttons.MapViewRect().bottom==216);
+    CHECK(uber.Current() && scene.buttons.RootToken()==root && parent->chat==chat && parent->production==production && scene.Count()==count); // 숨김/드래그 뒤에도 같은 자식과 저장소 수명을 유지한다.
 }

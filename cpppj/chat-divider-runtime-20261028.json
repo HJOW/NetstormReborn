@@ -1,0 +1,834 @@
+{
+  "unit": 543,
+  "date": "2026-10-28",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23",
+    "outputsModified": false
+  },
+  "problem": "시나리오 ToggleBottomGump 이름 누락과 원본 효과 뒤 반환0을 호스트가 미구현 명령으로 오인",
+  "native": {
+    "nameTable": "0x542fc8",
+    "nameAddress": "0x51884c",
+    "commandGlobal": "0x542914",
+    "command": "0x02000088",
+    "baseReturnAfterEffect": 0,
+    "missionViewChatGatePreserved": true,
+    "dividerHandle": "0x4c49f0",
+    "dividerBroadcast": "0x4c4b00",
+    "commonMove": "0x464d10",
+    "grabY": 2,
+    "pointerOffsetY": 2,
+    "clampBeforeGrab": [
+      25,
+      "height-25"
+    ],
+    "finalVerticalBounds": [
+      23,
+      "height-27"
+    ],
+    "nativeAlgorithmsChanged": false,
+    "existingDividerFixtureObservations": 13398
+  },
+  "validation": {
+    "build": {
+      "command": [
+        "cmake",
+        "--build",
+        "cpppj/build",
+        "--config",
+        "Release",
+        "--target",
+        "NetstormCpp",
+        "netstorm_tests",
+        "--parallel",
+        "4",
+        "--",
+        "/p:UseMultiToolTask=true",
+        "/p:MultiProcMaxCount=4",
+        "/p:EnforceProcessCountAcrossBuilds=true"
+      ],
+      "exitCode": 0,
+      "seconds": 101.26391696929932,
+      "workFilesUnchanged": true
+    },
+    "tests": {
+      "registered": 3371,
+      "uniqueExecuted": 58,
+      "results": [
+        {
+          "filter": "ProductionInitialContext_",
+          "count": 22,
+          "failedChecks": 0,
+          "exitCode": 0
+        },
+        {
+          "filter": "HudDividerInput_",
+          "count": 1,
+          "failedChecks": 0,
+          "exitCode": 0
+        },
+        {
+          "filter": "GumpTree_",
+          "count": 8,
+          "failedChecks": 0,
+          "exitCode": 0
+        },
+        {
+          "filter": "GumpInput_",
+          "count": 9,
+          "failedChecks": 0,
+          "exitCode": 0
+        },
+        {
+          "filter": "HudDock_",
+          "count": 1,
+          "failedChecks": 0,
+          "exitCode": 0
+        },
+        {
+          "filter": "ScriptCommand_",
+          "count": 2,
+          "failedChecks": 0,
+          "exitCode": 0
+        },
+        {
+          "filter": "UberRoot_",
+          "count": 6,
+          "failedChecks": 0,
+          "exitCode": 0
+        },
+        {
+          "filter": "HudChatGeometry_",
+          "count": 1,
+          "failedChecks": 0,
+          "exitCode": 0
+        },
+        {
+          "filter": "GameMenus_",
+          "count": 4,
+          "failedChecks": 0,
+          "exitCode": 0
+        },
+        {
+          "filter": "GameMenuBar_",
+          "count": 2,
+          "failedChecks": 0,
+          "exitCode": 0
+        },
+        {
+          "filter": "GameMenuActions_",
+          "count": 2,
+          "failedChecks": 0,
+          "exitCode": 0
+        }
+      ],
+      "binarySha256": "882815f3d86f6e56a854d7bc452ba06edac9c5e3259c35dda1c14d7323371e83"
+    },
+    "finalRuntime": {
+      "results": [
+        {
+          "size": [
+            1024,
+            768
+          ],
+          "fullscreen": false,
+          "root": "232",
+          "chatDivider": "235",
+          "positions": {
+            "initial": 768,
+            "shown": 672,
+            "middleHeld": 380,
+            "middleReleased": 380,
+            "lowerHeld": 741,
+            "lowerReleased": 741,
+            "upperHeld": 23,
+            "upperReleased": 23,
+            "hiddenAgain": 768,
+            "restored": 23
+          },
+          "captureReleased": true,
+          "sameHudAndSp": true,
+          "mainMenuReturned": true,
+          "run": {
+            "command": [
+              "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+              "--run",
+              "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-chat-divider-543\\final\\1024x768\\data",
+              "--mission",
+              "TEST02",
+              "--mute-audio",
+              "--frames",
+              "220",
+              "--set",
+              "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3",
+              "--ui-script",
+              "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-chat-divider-543\\final\\1024x768\\run\\steps.tsv",
+              "--ui-report",
+              "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-chat-divider-543\\final\\1024x768\\run\\states.tsv",
+              "--audio-report",
+              "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-chat-divider-543\\final\\1024x768\\run\\audio.tsv",
+              "--window"
+            ],
+            "binarySha256": "2de030bb3f9e837d77c9277cf4cb8ee9a96771e9cf5395d113420d1b95139708",
+            "scriptSha256": "a711665a72d651ff7c627e6150a0483346416fb33d3ee9d39ee81acf06b88150",
+            "returnCode": 0,
+            "timedOut": false,
+            "seconds": 25.38113580000936,
+            "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderrSha256": "4b73c96b25066ec2370644eda8a463570fec390203035f3612e15ad85ff68be9",
+            "originalsUnchanged": true,
+            "dataUnchanged": true,
+            "dataRoot": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-chat-divider-543\\final\\1024x768\\data"
+          }
+        },
+        {
+          "size": [
+            1280,
+            720
+          ],
+          "fullscreen": true,
+          "root": "232",
+          "chatDivider": "235",
+          "positions": {
+            "initial": 720,
+            "shown": 624,
+            "middleHeld": 356,
+            "middleReleased": 356,
+            "lowerHeld": 693,
+            "lowerReleased": 693,
+            "upperHeld": 23,
+            "upperReleased": 23,
+            "hiddenAgain": 720,
+            "restored": 23
+          },
+          "captureReleased": true,
+          "sameHudAndSp": true,
+          "mainMenuReturned": true,
+          "run": {
+            "command": [
+              "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+              "--run",
+              "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-chat-divider-543\\final\\1280x720\\data",
+              "--mission",
+              "TEST02",
+              "--mute-audio",
+              "--frames",
+              "220",
+              "--set",
+              "SCREENW=1280;SCREENH=720;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3;startInFullScreen=1",
+              "--ui-script",
+              "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-chat-divider-543\\final\\1280x720\\run\\steps.tsv",
+              "--ui-report",
+              "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-chat-divider-543\\final\\1280x720\\run\\states.tsv",
+              "--audio-report",
+              "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-chat-divider-543\\final\\1280x720\\run\\audio.tsv"
+            ],
+            "binarySha256": "2de030bb3f9e837d77c9277cf4cb8ee9a96771e9cf5395d113420d1b95139708",
+            "scriptSha256": "60285c4df397df6567167a45ecfbb41ca0e9d6872440a218e540dc70d2787b47",
+            "returnCode": 0,
+            "timedOut": false,
+            "seconds": 25.400702499988256,
+            "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderrSha256": "4b73c96b25066ec2370644eda8a463570fec390203035f3612e15ad85ff68be9",
+            "originalsUnchanged": true,
+            "dataUnchanged": true,
+            "dataRoot": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-chat-divider-543\\final\\1280x720\\data"
+          }
+        },
+        {
+          "size": [
+            1280,
+            800
+          ],
+          "fullscreen": false,
+          "root": "232",
+          "chatDivider": "235",
+          "positions": {
+            "initial": 800,
+            "shown": 704,
+            "middleHeld": 396,
+            "middleReleased": 396,
+            "lowerHeld": 773,
+            "lowerReleased": 773,
+            "upperHeld": 23,
+            "upperReleased": 23,
+            "hiddenAgain": 800,
+            "restored": 23
+          },
+          "captureReleased": true,
+          "sameHudAndSp": true,
+          "mainMenuReturned": true,
+          "run": {
+            "command": [
+              "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+              "--run",
+              "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-chat-divider-543\\final\\1280x800\\data",
+              "--mission",
+              "TEST02",
+              "--mute-audio",
+              "--frames",
+              "220",
+              "--set",
+              "SCREENW=1280;SCREENH=800;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3",
+              "--ui-script",
+              "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-chat-divider-543\\final\\1280x800\\run\\steps.tsv",
+              "--ui-report",
+              "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-chat-divider-543\\final\\1280x800\\run\\states.tsv",
+              "--audio-report",
+              "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-chat-divider-543\\final\\1280x800\\run\\audio.tsv",
+              "--window"
+            ],
+            "binarySha256": "2de030bb3f9e837d77c9277cf4cb8ee9a96771e9cf5395d113420d1b95139708",
+            "scriptSha256": "6b40b7704b4d5388a58204e8e9afb49b30e472dbac45514f06b5fb332a183240",
+            "returnCode": 0,
+            "timedOut": false,
+            "seconds": 26.74781709999661,
+            "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stderrSha256": "4b73c96b25066ec2370644eda8a463570fec390203035f3612e15ad85ff68be9",
+            "originalsUnchanged": true,
+            "dataUnchanged": true,
+            "dataRoot": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-chat-divider-543\\final\\1280x800\\data"
+          }
+        }
+      ],
+      "binarySha256": "2de030bb3f9e837d77c9277cf4cb8ee9a96771e9cf5395d113420d1b95139708",
+      "directWorldMutation": false,
+      "defaultCampaign": {
+        "mission": "thewarbegins",
+        "defaultChatHidden": true,
+        "nativeViewConditionPreserved": true,
+        "mainMenuReturned": true,
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+            "--run",
+            "H:\\T5Workspace\\NetstormReborn\\originals",
+            "--mission",
+            "thewarbegins",
+            "--mute-audio",
+            "--frames",
+            "85",
+            "--set",
+            "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3",
+            "--ui-script",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-chat-divider-543\\final\\default-campaign\\steps.tsv",
+            "--ui-report",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-chat-divider-543\\final\\default-campaign\\states.tsv",
+            "--audio-report",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-chat-divider-543\\final\\default-campaign\\audio.tsv",
+            "--window"
+          ],
+          "binarySha256": "2de030bb3f9e837d77c9277cf4cb8ee9a96771e9cf5395d113420d1b95139708",
+          "scriptSha256": "1bce6458f62cd537a0f6163af5def5ed3a8ae5c4d10d86d6e4f1b485f65bfb89",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 4.822163400007412,
+          "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderrSha256": "110c8ffc5dff493b166f45c895b87111c10df0e56113491c410333a7c7784511",
+          "originalsUnchanged": true,
+          "dataUnchanged": true,
+          "dataRoot": "H:\\T5Workspace\\NetstormReborn\\originals"
+        }
+      }
+    },
+    "acceptedGames": 4,
+    "current543TotalGames": 5,
+    "current543ProcessExitZero": 5,
+    "initialCoordinateAssertionFailures": 1,
+    "prior542ViewProbeGames": 1,
+    "naturalStageCompletionGames": 0,
+    "originalGameExecutions": 0,
+    "windowsVersion": "Windows 10 Pro 10.0.19045",
+    "windows11DeviceVerified": false,
+    "noGameOrCompilerProcessesAfterValidation": true
+  },
+  "earlierFailures": {
+    "initialRegressionFailedChecks": 6,
+    "correctNativeReturnRegressionFailedChecks": 3,
+    "intermediateBuildRouteExit": 1,
+    "intermediateBuildRouteReason": "검사 iostream 누락. 제품 target은 종료0, 검사 빌드만 실패 후 진단 빌드에서 보완",
+    "priorSourceReversionRecovered": true,
+    "modelCapacityDirectCauseConfirmed": false,
+    "auditCommit": "37dbf68b",
+    "finalCoordinatesAndCapturePassed": true
+  },
+  "integrity": {
+    "sourceCount": 2930,
+    "expectedChangedFiles": [
+      "cpppj/src/client/GameMenuCommands.cpp",
+      "cpppj/src/client/UberGump.cpp",
+      "cpppj/tests/ProductionInitialContextTests.cpp"
+    ],
+    "existingFixturesUnchanged": true,
+    "protectedCount": 1819,
+    "agentsUnchanged": true,
+    "protectedUnchanged": true,
+    "exeSha256": {
+      "NetstormCpp.exe": "2de030bb3f9e837d77c9277cf4cb8ee9a96771e9cf5395d113420d1b95139708",
+      "netstorm_tests.exe": "882815f3d86f6e56a854d7bc452ba06edac9c5e3259c35dda1c14d7323371e83"
+    },
+    "releaseWarnings": 0,
+    "releaseErrors": 0,
+    "lastFullDecompileHost": "HJOW-Athlon",
+    "lastFullDecompileDate": "2026-10-23",
+    "decompileOutputsModified": false,
+    "productFilesStableSinceResumeBuild": true
+  },
+  "toolSha256": "eb41b938556f5b28c9fc608bcd342c67613629bdbb2406fb670f0572cd007592",
+  "productFiles": [
+    "cpppj/src/client/GameMenuCommands.cpp",
+    "cpppj/src/client/UberGump.cpp"
+  ],
+  "newRegression": "ProductionInitialContext_ToggleBottomScriptKeepsDraggedChatGeometry",
+  "dotnetFilesModified": false,
+  "rawEvidence": [
+    {
+      "path": "extracted/cpp-chat-divider-543/build-diagnostics.log",
+      "sha256": "28995771d7a05b213a2e07807d791bce42f755c6802d989ea5f01534b4174951"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/build-final.json",
+      "sha256": "e7c85f337cef3291a72dd2f01330c863023b3ad436a18274dac392171882548d"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/build-final.log",
+      "sha256": "b98224db26ff0293fe93b28760242dac8cc8faaf54b5e368eb96eee93d4da989"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/build-route.log",
+      "sha256": "e0399b79760b0d76ffff0f1494a50fdc75987f6af2c29188c9c32979fbd5675c"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/build.log",
+      "sha256": "7afc22654d1c99e182acd4f292fe76bc8251a4b5820b77a0600fc4ace870aefb"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/diagnostics.log",
+      "sha256": "125717cea70db7e085e7d7e31ea95303b5bd62410feb471470f2c2c8925faf37"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/final/1024x768/main.bmp",
+      "sha256": "78508b37669a9706f508a4b89b25b3d2a7d3c0e0cf914cf93d64dccd7177925e"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/final/1024x768/restored.bmp",
+      "sha256": "385d2d4dbfbd02d31731c62acd7911ca2967f453948198f64a8b7fe12222a30a"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/final/1024x768/run/audio.tsv",
+      "sha256": "48810fb496931ef82a9611ddfc07bfbae9f3d73648da52f93b851ae94eb6d587"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/final/1024x768/run/data-before.json",
+      "sha256": "ee8ba197fab27f2221aaff0a337094e80f872884351c0112e344c6b6402076b7"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/final/1024x768/run/originals-before.json",
+      "sha256": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/final/1024x768/run/run.json",
+      "sha256": "dcb1b38deb411c425f766cb37391e106484e0f07c758d5e6aa7a8526f54e6d3c"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/final/1024x768/run/running.json",
+      "sha256": "cd2558cf2ecde9ae91a6348622a07e8cf96e01284bf8e8734af0cdc7bd67c95c"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/final/1024x768/run/states.tsv",
+      "sha256": "90011391465853bd6a97da1c17852627a29ed564f1def7b7e1a414e00a135650"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/final/1024x768/run/stderr.log",
+      "sha256": "4b73c96b25066ec2370644eda8a463570fec390203035f3612e15ad85ff68be9"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/final/1024x768/run/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/final/1024x768/run/steps.tsv",
+      "sha256": "a711665a72d651ff7c627e6150a0483346416fb33d3ee9d39ee81acf06b88150"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/final/1024x768/scenario-variant.json",
+      "sha256": "77c6624a41a7f9bea84a736ce64891a6c776acb07b7a094365ae57719fef6089"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/final/1024x768/shown.bmp",
+      "sha256": "d0c12e90bee9f7b0059ad95945e8f85b75d1412ee1124deb4a6b55a105fccb4c"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/final/1024x768/summary.json",
+      "sha256": "499ed71b82342c032ae44186a480581d3a60781331be4c274e2d3fc91ea1b0cf"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/final/1024x768/upper.bmp",
+      "sha256": "5b957fc49a635c3f61dc4ddbae43ba72db6bbc41646f286afe7c54b3f67dc378"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/final/1280x720/main.bmp",
+      "sha256": "af9c412ec69661be4c18cc20b8d56b548df72c5aa14de182c0780313d4504215"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/final/1280x720/restored.bmp",
+      "sha256": "0b06cd305b875638a35b5dbb0ee5c98e880e0838bee8e92f336745fe300b0220"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/final/1280x720/run/audio.tsv",
+      "sha256": "170cae7f58eb4a284550a56bf11e4c5404fbcafbf39ca58c56c7e87bde47dd42"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/final/1280x720/run/data-before.json",
+      "sha256": "ee8ba197fab27f2221aaff0a337094e80f872884351c0112e344c6b6402076b7"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/final/1280x720/run/originals-before.json",
+      "sha256": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/final/1280x720/run/run.json",
+      "sha256": "a42cfd83af83966135e833a8d8f58cab4edf623727f17902ea9b3c7df3e4ce69"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/final/1280x720/run/running.json",
+      "sha256": "f792b1eebeb57395462d869a2727a6bc7eb61e6de575950647a618f50f7c4956"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/final/1280x720/run/states.tsv",
+      "sha256": "d5df760642151f705a814f691b77dad0420ebee430418f1043641846ca36d3e3"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/final/1280x720/run/stderr.log",
+      "sha256": "4b73c96b25066ec2370644eda8a463570fec390203035f3612e15ad85ff68be9"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/final/1280x720/run/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/final/1280x720/run/steps.tsv",
+      "sha256": "60285c4df397df6567167a45ecfbb41ca0e9d6872440a218e540dc70d2787b47"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/final/1280x720/scenario-variant.json",
+      "sha256": "77c6624a41a7f9bea84a736ce64891a6c776acb07b7a094365ae57719fef6089"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/final/1280x720/shown.bmp",
+      "sha256": "f711c3773370763183e834a34b9fa2d3a6b0c4505344adc54bf2c3dd0b4efdfe"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/final/1280x720/summary.json",
+      "sha256": "8958732b26e505c251e75176942e98b04ef40e6e8e220d28f3bdf6c2e3cd079f"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/final/1280x720/upper.bmp",
+      "sha256": "be7c4bcd533f55205e3c2fbd2b764988226b8ea064dacb1ce45d74deea4a8ffd"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/final/1280x800/main.bmp",
+      "sha256": "0c0ca6fa113e12fa9a201be1ed0a349c6806d826f7a6338364f0641c0d338e22"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/final/1280x800/restored.bmp",
+      "sha256": "60f19f566289f030e6989fec817c3a777408c687027d444d1a88fd980bbc0891"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/final/1280x800/run/audio.tsv",
+      "sha256": "2a55cc7d636078e73ecc4fb3a974af7f97fbf3baffb57d15866b95c38469f410"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/final/1280x800/run/data-before.json",
+      "sha256": "ee8ba197fab27f2221aaff0a337094e80f872884351c0112e344c6b6402076b7"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/final/1280x800/run/originals-before.json",
+      "sha256": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/final/1280x800/run/run.json",
+      "sha256": "21c4086a93b53892e429f14171907a7168e7b5c74d09d96eeb9bc5d23ed8d469"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/final/1280x800/run/running.json",
+      "sha256": "cec9af0e5fa03c2cfdec25464ae6d64b8aadae0750006bd5f34f7fa769869fcf"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/final/1280x800/run/states.tsv",
+      "sha256": "82fc01b21100bc776e6ab7d07b379992578417ec176ef792d3095678c78ca9b8"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/final/1280x800/run/stderr.log",
+      "sha256": "4b73c96b25066ec2370644eda8a463570fec390203035f3612e15ad85ff68be9"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/final/1280x800/run/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/final/1280x800/run/steps.tsv",
+      "sha256": "6b40b7704b4d5388a58204e8e9afb49b30e472dbac45514f06b5fb332a183240"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/final/1280x800/scenario-variant.json",
+      "sha256": "77c6624a41a7f9bea84a736ce64891a6c776acb07b7a094365ae57719fef6089"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/final/1280x800/shown.bmp",
+      "sha256": "77a70f420a80023eb0e1d9b01d2a89660765233a8e6b607e1bdedd8303b89420"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/final/1280x800/summary.json",
+      "sha256": "79d1487f85ab0cdc492272b20c59c805384eede8dde7b6274dc6fd5a70cade1d"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/final/1280x800/upper.bmp",
+      "sha256": "98d749bb86e3a41954ce1e2fb933bb361bf547eef9645877b1d5a46a026af028"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/final/default-campaign/audio.tsv",
+      "sha256": "e8fc369d0c190303db306856b986f243e54a8542c35b15c4ee13c1c5ddccb7db"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/final/default-campaign/data-before.json",
+      "sha256": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/final/default-campaign/originals-before.json",
+      "sha256": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/final/default-campaign/run.json",
+      "sha256": "8902aaf69f93a0f5ffa5e808dfaf9c3a90843e390538954f72d4358ca4179618"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/final/default-campaign/running.json",
+      "sha256": "d268e6fee42e1a09425aebb94fcc0615cf4770044696da21587a53542236428f"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/final/default-campaign/states.tsv",
+      "sha256": "28a18a6402863f7b4ad54785c7ba3cd57c7d2ffcc5e8236a5545ef10744f535b"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/final/default-campaign/stderr.log",
+      "sha256": "110c8ffc5dff493b166f45c895b87111c10df0e56113491c410333a7c7784511"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/final/default-campaign/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/final/default-campaign/steps.tsv",
+      "sha256": "1bce6458f62cd537a0f6163af5def5ed3a8ae5c4d10d86d6e4f1b485f65bfb89"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/final/default-campaign/summary.json",
+      "sha256": "cf894e6b5eb3462c68d662e3859b5b6337d4c4ec530b9aef65f4ad212ebe8a9a"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/final/default-campaign/view.bmp",
+      "sha256": "e44eab7e3497784f8e4cba3941ecd4c7d8840eb63e2e519125ed15652ead34f6"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/final/summary.json",
+      "sha256": "a34315b47b6befd114976df017dddca2a96b97a536d1e2ca0f4d5ec3a8ebcec1"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/final-runtime.log",
+      "sha256": "3d7c24e2539eb71f6bbc0d5d0a16dd4266fa6501c400c219ef1b0022ed2fda38"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/freeze-final.json",
+      "sha256": "010faf228244e3daddaf00d11e9c21dd05484d5892716d21a900aad7e71d45b7"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/integrity-final.json",
+      "sha256": "8610b927318ab60abc8501002b2a48dac43594ef5212594a4507a2956ba83184"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/native-name.json",
+      "sha256": "27da86f679edba9d92dc8a7d6cb92ae9158bee9313a794886dd16dcc15e0c5a2"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/new-regression.log",
+      "sha256": "4367c0e2e63f261ef99a38e6d65b34667a84db4f3469f4fd7839d5240ca7a9f4"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/preflight/1024x768/main.bmp",
+      "sha256": "78508b37669a9706f508a4b89b25b3d2a7d3c0e0cf914cf93d64dccd7177925e"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/preflight/1024x768/restored.bmp",
+      "sha256": "388800afd62abf6169f61e702518cf6a230c1406d0fa16520149cfc11c646866"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/preflight/1024x768/run/audio.tsv",
+      "sha256": "06b784d6fdb0349ccd3d795664fb60982c50e687884bb6d624a2a1e41c2fd03c"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/preflight/1024x768/run/data-before.json",
+      "sha256": "ee8ba197fab27f2221aaff0a337094e80f872884351c0112e344c6b6402076b7"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/preflight/1024x768/run/originals-before.json",
+      "sha256": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/preflight/1024x768/run/run.json",
+      "sha256": "df2bbba964cd901a4885869f056fb6347dbc3425fa99e14d710a30731346a1a4"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/preflight/1024x768/run/running.json",
+      "sha256": "13ce59a3922607ea86cce9f9a2efe3edc627b03261c3072fc7f485ef86e1f7f9"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/preflight/1024x768/run/states.tsv",
+      "sha256": "db041586c938d31659b2a834d2dba29975190f32b77b018b934c6c9a5b9663ab"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/preflight/1024x768/run/stderr.log",
+      "sha256": "4b73c96b25066ec2370644eda8a463570fec390203035f3612e15ad85ff68be9"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/preflight/1024x768/run/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/preflight/1024x768/run/steps.tsv",
+      "sha256": "858e4d48a52fa5427f6b42e09a1ba88b5009e1be4bce378389ebd315d905b4dd"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/preflight/1024x768/scenario-variant.json",
+      "sha256": "77c6624a41a7f9bea84a736ce64891a6c776acb07b7a094365ae57719fef6089"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/preflight/1024x768/shown.bmp",
+      "sha256": "31cae2abb1d3a0db04255bea6293fef387130f36143a7b5540dbccdbc32ae2b1"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/preflight/1024x768/upper.bmp",
+      "sha256": "96ee75620326eed87b41cd9807b6103e4c88ccb20399b54cc8d9683a8d873f1f"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/preflight.log",
+      "sha256": "a013fa3e8939a82829cd5865e937df24a6d88cebc4084e4d96a14325e4027ae0"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/probe/audio.tsv",
+      "sha256": "b19b9628e23cac8d74926f460697ddbcb09508af256489c47a10616154210018"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/probe/data-before.json",
+      "sha256": "57573a0bc2539f9e70e1127a82d26698efe0c8a97bd91630ae4fab66981179a1"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/probe/initial.bmp",
+      "sha256": "29c9e6fdaad5fb4f407490955c15d12df6423c64654788e3055739becbceac35"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/probe/originals-before.json",
+      "sha256": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/probe/run.json",
+      "sha256": "4f8ab60ce3113a6a7b4a5ef7764625d279fe2c4280dd4bb379708283a8ecfd59"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/probe/running.json",
+      "sha256": "b148690bbeb96fb3a5c0362ba99de4a31233d85a1c2fc86a8a34b0830b695667"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/probe/states.tsv",
+      "sha256": "fbc1c8f5720c584687ca6a772a9fe3e3c16efd3e581472c54939cf29a964dc63"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/probe/stderr.log",
+      "sha256": "110c8ffc5dff493b166f45c895b87111c10df0e56113491c410333a7c7784511"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/probe/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/probe/steps.tsv",
+      "sha256": "77847d5bbcfb76dea96066189e17211c7aade99549ec7affbce8108dd8c672bb"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/probe/view.bmp",
+      "sha256": "5255227c8c061b3c445a0b74bf5d746bed239fb7181712b4c6b837531ec05164"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/registered-final.txt",
+      "sha256": "50de1d7c8b9b3ebf378e63fe3f06895f0f1d915150deb373020010f11312af1e"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/resume-before-build.json",
+      "sha256": "0fb94db1b7b6f5477b5d1ad7e8a2555d78ca92927ae38e324284d038dcd6cd91"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/source-origin.json",
+      "sha256": "2f0e20f77c519d9614d209bf6d9d36256f598baef6a8b377e8ab285568772782"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/tests-final-GameMenuActions.log",
+      "sha256": "103ff7a83c83e9da1caf7b1bdd8c7327f254d5b3cb322b4d910f8d7f8e209994"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/tests-final-GameMenuBar.log",
+      "sha256": "b9f012292145442f13d5956c1c6c599de208764d70396a56153d0df6fa4391f3"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/tests-final-GameMenus.log",
+      "sha256": "76f8bf418dc19f64930cbf37401e61c8ed63984eebc4d06c22b81cc1b1792c7d"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/tests-final-GumpInput.log",
+      "sha256": "5cb6f3cb1b6bdd62ef1d41345d897757c626f075b9e5e9090ce843bb678c7b93"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/tests-final-GumpTree.log",
+      "sha256": "37662ace27eaf63e1be50f42fc617583edb59705d89880df8993c63dafa37a5e"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/tests-final-HudChatGeometry.log",
+      "sha256": "5075e076baeae15ccd1747c2c8ca3c8c4b90595549f2e2df8725079e1494c286"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/tests-final-HudDividerInput.log",
+      "sha256": "4e0cde1d19c18e8335926b907de08279c605765a208e161f4ed7ff8843838387"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/tests-final-HudDock.log",
+      "sha256": "5ca5531774b5f13fc82081a254cff97b0cd8481d48e9e41e2ed8aa3bdb8503e5"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/tests-final-ProductionInitialContext.log",
+      "sha256": "4a0f8392b45a3287e0b1875d407107ac5a96969e87709bbd6b473eed4117a1ba"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/tests-final-ScriptCommand.log",
+      "sha256": "b35f1207f9e962b1fec5d28df1c7d0e2be05aaedb395f8f1df0cd29a8d9ce910"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/tests-final-UberRoot.log",
+      "sha256": "688dd03368db1e8e3668a88d62baabfaf41891dc28e61379dfeb1a07ec4e18c0"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/tests-final.json",
+      "sha256": "6a0a89fa67c3028bf41afe278a8aca6083c75bc7cb347c0f191fddbfc8424fe5"
+    },
+    {
+      "path": "extracted/cpp-chat-divider-543/worktree-observation.json",
+      "sha256": "1c2c627d123797c5e37fa94e2830be384c5df464a17224cd964d4dec086a9dd4"
+    }
+  ],
+  "remaining": [
+    "F2/F3/F7/F8 일반 키 분배의 원본 대조",
+    "잔여 건물/제단의 상태별 메뉴·Edit 및 비멀티 메뉴",
+    "전체34경로/자연완주/사용자 실제 수정 후 플레이와 Windows11 실기",
+    "멀티플레이 사전 구현은 후순위이며 신규 검사/실행/통신 시험 금지"
+  ]
+}
