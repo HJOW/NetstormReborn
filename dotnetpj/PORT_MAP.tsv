@@ -34,6 +34,12 @@ cpppj/src/client/ScreenPresentation.cpp	Netstorm.Client/Display/ScreenPresentati
 cpppj/src/client/ScreenPresentation.cpp	Netstorm.Client/Host/HostPresentation.cs	91d494c3b2814f00d2cae81a0f4b247e91e81922	port
 cpppj/src/client/ScreenPresentation.h	Netstorm.Client/Display/ScreenPresentation.cs	ac9ea9162ba0c580cd53505c8c3782c0b2a27172	port
 cpppj/src/client/ScreenResolutions.h	Netstorm.Client/Display/ScreenResolutions.cs	ac9ea9162ba0c580cd53505c8c3782c0b2a27172	port
+cpppj/src/client/VFXDraw.cpp	Netstorm.Client/Display/VfxDraw.cs	cb56907c0aae1f0f02410dbda12860051a7f2e4d	L1
+cpppj/src/client/VFXDraw.h	Netstorm.Client/Display/VfxDraw.cs	cb56907c0aae1f0f02410dbda12860051a7f2e4d	L1
+cpppj/src/client/VFXLine.cpp	Netstorm.Client/Display/VfxLine.cs	cb56907c0aae1f0f02410dbda12860051a7f2e4d	port
+cpppj/src/client/VFXLine.h	Netstorm.Client/Display/VfxLine.cs	cb56907c0aae1f0f02410dbda12860051a7f2e4d	port
+cpppj/src/client/VFXMappedDraw.cpp	Netstorm.Client/Display/VfxMappedDraw.cs	cb56907c0aae1f0f02410dbda12860051a7f2e4d	port
+cpppj/src/client/VFXMappedDraw.h	Netstorm.Client/Display/VfxMappedDraw.cs	cb56907c0aae1f0f02410dbda12860051a7f2e4d	port
 cpppj/src/o/Bridge.cpp	Netstorm.Core/Bridges/BridgeDecayRules.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
 cpppj/src/o/Bridge.cpp	Netstorm.Core/Bridges/BridgeSurfaceRules.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
 cpppj/src/o/Bridge.cpp	Netstorm.Core/Original/BridgeFrameSearch.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1

@@ -116,3 +116,23 @@ NetstormCpp.exe --run extracted\dotnet-oracle-data --window --no-audio --frames 
 **검증:** Release 경고·오류 0. Client 검사 66개(+10) 통과, 전체 **1,451개(Assets 363 + Core 1022 + Client 66) 통과**.
 검사 작성 중 실패 3건은 모두 테스트의 오류였다(부분 팔레트 +start 채우기 누락·열 번호 밀림·리틀 엔디언 double 해석). hex는 리틀 엔디언 바이트 덤프이며 선행 0 바이트 위치가 낮은 자리다.
 변이 1건(밝음 제외 시작 229→230)에 참조 기대값 실패를 확인하고 원복했다.
+
+## 8. R2b: VFX 그리기 원시 (같은 날, HJOW-Athlon)
+
+그리기 원시·팔레트·글꼴(R2)의 두 번째 묶음이다. VFX 셰이프 저장소·기본/mapped 그리기·일반 선을 옮겼다.
+
+| 파일 | cpppj 근거 | 내용 |
+| --- | --- | --- |
+| `Display/VfxDraw.cs` | `VFXDraw.cpp/.h` (원본 00401d92) | 셰이프 저장소(블록·프레임·RLE 풀기·Squid 전용 헤더)와 8비트 합성. 반환 0/-1/-2/-3/-4를 유지한다 |
+| `Display/VfxMappedDraw.cs` | `VFXMappedDraw.cpp/.h` (원본 0040229f) | 불투명 픽셀만 256바이트 치환표로 바꾸는 그리기. 배경은 바꾸지 않는다 |
+| `Display/VfxLine.cs` | `VFXLine.cpp/.h` (원본 004011f1, mode 0) | 단색 8비트 선. 클립·양 끝 포함·0.32 분수 위상·DIV 역산을 유지한다 |
+
+- `PORT_MAP.tsv`에 6개 행을 새로 추가했다(`VfxDraw.cs` 2행은 L1, `VfxMappedDraw.cs`·`VfxLine.cs` 4행은 대조 fixture가 없어 port). fixture `graphics` 709행을 연결했다.
+- `VfxLine`의 기대 픽셀은 같은 알고리즘의 별도 Python 참조 구현으로 계산한 10가지 경우이며 L1이 아니다.
+  mapped 그리기는 기본 그리기와의 관계(불투명만 치환·배경 유지)로 고정했다.
+- `VFXTransform`(회전 없는 16.16 확대·축소)은 `Renderer`·`ColorMap`을 빌려야 하므로 색 표 묶음(R2c)에서 잇는다.
+- `fence-line` fixture는 `o/RawFenceLine` 월드 모듈 대조용이라 이번에 연결하지 않았다(R4·R6 몫).
+
+**검증:** Release 경고·오류 0. Client 검사 72개(+6) 통과, 전체 **1,457개(Assets 363 + Core 1022 + Client 72) 통과**.
+검사 작성 중 실패 1건은 테스트의 오류였고(거리 상한의 등호 착각, C++ 조건 `ax > INT32_MAX`에 맞게 수정) 소스 수정은 없었다.
+변이 1건(투명 마스크 무시)에 L1 기대값 실패를 확인하고 원복했다.
