@@ -16,12 +16,15 @@ import {
     MENU_BUNDLE,
     MENU_MUSIC_BUNDLE,
     MENU_MUSIC_NAME,
+    MENU_SOUND_NAME,
+    MENU_SOUND_PATH,
     buildMenuResources,
 } from './assets/menu-assets.js';
 import { AudioSystem, createAudioContext } from './audio/audio-system.js';
 import { IndexedSurface } from './render/indexed-surface.js';
 import { IndexedPresenter, normalizeScaling } from './render/presenter.js';
 import { MainMenuScreen } from './ui/main-menu.js';
+import { createTellWindow } from './ui/tell-window.js';
 import { applyCursorStyle, buildCursorCss } from './ui/cursor.js';
 
 // ---------------------------------------------------------------------------------------------
@@ -395,6 +398,10 @@ export class Netstorm {
         this._gameData = null;
         // 버튼 효과음 파일 바이트다. 오디오 문맥이 생기면 해독한다.
         this._buttonSoundBytes = null;
+        // 대화상자 목록 행 효과음(openSubGump.wav) 바이트이다. 자산 적재 전에는 null 이다. (2026-10-28 WB03-D)
+        this._menuSoundBytes = null;
+        // 가장 최근 프레임의 시각(초)이다. 대화상자의 Timeout 기한 계산에 쓴다. (2026-10-28 WB03-D)
+        this._frameSeconds = 0;
         // 메뉴 음악 파일 바이트다. 뒤에서 받으며 다 받기 전에는 null 이다.
         this._musicBytes = null;
         // 메뉴 음악 상태 문자열이다. none | loading | loaded | decoding | ready | playing | failed.
@@ -614,6 +621,7 @@ export class Netstorm {
                     options: { soundVolume: this.options.soundVolume, musicVolume: this.options.musicVolume },
                 });
                 this._buttonSoundBytes = files.get(MENU_ASSET_PATHS.buttonSound) ?? null;
+                this._menuSoundBytes = files.get(MENU_SOUND_PATH) ?? null;
                 this._presenter?.setPalette(this._resources.palette.rgb);
                 this._applyCursor();
                 this._startMusicDownload(loader);
@@ -696,9 +704,51 @@ export class Netstorm {
         } catch (error) {
             console.error('Netstorm: onMenuCommand 훅에서 예외가 발생했습니다.', error);
         }
-        const section = command.type === 'tell' ? this._gameData?.tellSection(command.target) : undefined;
-        const found = section === undefined ? '' : section === null ? ' [Tell 섹션 없음]' : ` [Tell 섹션 ${command.target}: ${section.split(/\r?\n/).filter((line) => line.length > 0).length}줄]`;
-        console.info(`Netstorm: 메인 메뉴 '${label}' 실행(다음 화면은 아직 구현되지 않음)${found}`, command);
+        // Tell 명령(Campaign·Demo·Credits)은 대화상자를 연다. 펼침 메뉴(Help·Options)는 아직 구현되지 않았다.
+        if (command.type === 'tell') {
+            this._openTell(command.target);
+            return;
+        }
+        console.info(`Netstorm: 메인 메뉴 '${label}' 실행(다음 화면은 아직 구현되지 않음)`, command);
+    }
+
+    // Tell 섹션 이름으로 대화상자를 열어 메인 메뉴 위에 올린다(원본 Tell 명령 004cf730). 섹션이 없으면 원본처럼 오류 로그만 남기고 아무것도 열지 않는다.
+    // 본문이 영숫자 없는 빈 내용이어도 열지 않는다. 열린 대화상자의 명령은 _onDialogCommand 가 받는다. 열었으면 true 를 돌려준다. (2026-10-28 WB03-D)
+    _openTell(name) {
+        if (!this._mainMenu || !this._gameData || !this._resources) return false;
+        const result = createTellWindow({
+            gameData: this._gameData,
+            resources: this._resources,
+            name,
+            screen: { width: this._mainMenu.width, height: this._mainMenu.height },
+            nowSeconds: this._frameSeconds,
+            onCommand: (command) => this._onDialogCommand(command),
+            onSound: (kind) => this._audio?.playSound(kind === 'menu' ? MENU_SOUND_NAME : BUTTON_SOUND_NAME),
+            onUnsupported: (what, text) => console.warn(`Netstorm: Tell '${name}' 의 ${what} 은(는) 아직 지원하지 않습니다.`, text),
+        });
+        if (result.missing) console.warn(`Netstorm: TELL cannot find "${name}".`);
+        if (!result.window) return false;
+        this._mainMenu.setDialog(result.window);
+        this._displayDirty = true;
+        return true;
+    }
+
+    // 대화상자에서 실행된 명령(버튼·목록 행·Timeout)을 처리한다. 원본처럼 먼저 대화상자를 닫고(OnExit 명령 실행) 명령을 실행한다.
+    // `Tell,이름` 은 다음 대화상자를 열고, `DoNothing` 은 닫기만 한다. 그 밖의 명령(StartDemo·MissionBegin 등)은 아직 구현되지 않아 닫고 안내만 남긴다. (2026-10-28 WB03-D)
+    _onDialogCommand(command) {
+        const dialog = this._mainMenu?.dialog ?? null;
+        const onExit = dialog ? dialog.close() : null;
+        this._mainMenu?.setDialog(null);
+        this._displayDirty = true;
+        this._runDialogCommand(command);
+        if (onExit) this._runDialogCommand(onExit);
+    }
+
+    // 닫힌 뒤 실행할 대화상자 명령 하나를 처리한다. (2026-10-28 WB03-D)
+    _runDialogCommand(command) {
+        const name = String(command.name).toLowerCase();
+        if (name === 'tell') this._openTell(command.argument);
+        else if (name !== 'donothing') console.info(`Netstorm: 대화상자 명령 '${command.name}' 은(는) 아직 구현되지 않았습니다.`, command);
     }
 
     // 논리 화면 크기의 8비트 표면을 준비한다. 크기가 바뀌면 새로 만들고 메인 메뉴를 다시 배치한다. (2026-10-23 WB03-M1)
@@ -765,10 +815,17 @@ export class Netstorm {
     // 받은 버튼 효과음을 현재 재생기에 해독해 등록한다. 실패하면 소리 없이 계속한다. (2026-10-23 WB03-M1)
     _prepareSounds() {
         const audio = this._audio;
-        if (!audio || !this._buttonSoundBytes) return;
-        audio.loadSound(BUTTON_SOUND_NAME, this._buttonSoundBytes).catch((error) => {
-            console.warn('Netstorm: 버튼 효과음을 해독하지 못했습니다.', error);
-        });
+        if (!audio) return;
+        if (this._buttonSoundBytes) {
+            audio.loadSound(BUTTON_SOUND_NAME, this._buttonSoundBytes).catch((error) => {
+                console.warn('Netstorm: 버튼 효과음을 해독하지 못했습니다.', error);
+            });
+        }
+        if (this._menuSoundBytes) {
+            audio.loadSound(MENU_SOUND_NAME, this._menuSoundBytes).catch((error) => {
+                console.warn('Netstorm: 대화상자 목록 효과음을 해독하지 못했습니다.', error);
+            });
+        }
     }
 
     // 받은 메뉴 음악을 현재 재생기에 해독한다. 재생기와 음악 바이트가 모두 있을 때만 진행하며, 끝나면 메인 메뉴에서 재생한다.
@@ -1081,6 +1138,8 @@ export class Netstorm {
         this._frameHandle = 0;
         if (!this._canvas) return;
         this._clock.tick(now);
+        this._frameSeconds = now / 1000;
+        if (this._state === AppState.MAIN_MENU) this._mainMenu?.update(this._frameSeconds);
         this._render(now);
         this._startFrameLoop();
     }

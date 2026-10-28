@@ -1,5 +1,14 @@
 # LEFT_JOBS.webpj — HTML + JavaScript 개발 계획 및 인수인계
 
+## 2026-10-28 WB03-D 완료(적당한 수준에서 마무리): Tell 대화상자 복원 — Credits·Demo·Campaign 목록
+
+- [x] **범위:** 사용자 요청("webpj 다음 작업 진행, 이 PC 의 디컴파일 결과물 참고, 다른 AI 가 cpppj 동시 작업 중이니 cpppj 파일 수정 금지", 중간에 "적당한 수준에서 마무리하고 문서·커밋 후 중단")에 따라 메인 메뉴 버튼이 여는 **Tell 대화상자(원본 HtmlWindowGump)** 를 복원했다. 상세 근거·검증·불일치는 [webpj Tell 대화상자 기록](docs/webpj-tell-dialog-20261028.md). `cpppj/`·`dotnetpj/`·`originals/`·`originalCD/`·AGENTS.md 는 수정하지 않았고 cpppj 는 읽기만 했다. 원본 게임·analyzeManager 는 실행하지 않았다(브라우저는 Edge 헤드리스).
+- [x] **호스트·디컴파일:** 현재 PC **HJOW-Athlon** = 공통 인계의 마지막 전체 정밀 디컴파일(**HJOW-Athlon / 2026-10-23**) 호스트라 재디컴파일 없이 `extracted/refined/originals/Netstorm.c` 를 읽었다(`004cf270`·`004c7d40`·`00465d10`·`004c7aa0`·`004bc060`). 이전 절의 "PC 불일치 확인" 선행 조건은 이번 PC 에서는 해당 없음.
+- [x] **구현:** `www/assets/font-set.js`(글꼴 슬롯·스타일 → `.chfnt`), `www/ui/style-text.js`(StyleText 조각 체인), `scroll-text.js`(다중 줄 본문 줄 나눔·크기 맞춤), `html-text.js`(HTML 변환·지시문 9종 추출·두 번 변환), `menu-list.js`(세로 메뉴), `tell-lists.js`(`@` 파일 목록), `tell-window.js`(Fit 이식·장식 패널·입력·Timeout), `main-menu.js`(대화상자 모달·버튼 숨김), `netstorm.js`(`Tell`→다음 창, `DoNothing`→닫기). 자산: 글꼴 18개·`openSubGump.wav` 를 `menu` 묶음에 추가(변환 없는 복사).
+- [x] **cpppj 와 다르게 원본 기준으로 고친 점(cpppj 미수정, 공통 인계에 알릴 사항):** 본문 기본 글꼴은 슬롯 0·흰색(cpppj 는 슬롯 5·설명 색), 폭을 되돌린 본문은 그리기 전에 다시 줄 나눔, 대화상자가 열리면 메인 메뉴 버튼이 사라짐, `<background>` 는 이름만 저장.
+- [x] **검증(HJOW-Athlon, Node v24.21.0, Edge 헤드리스):** `npm --prefix webpj test` **34개 통과**(신규 9, 변이 검사 포함). Credits 패널 234×159·Demo 높이 232·Campaign 높이 301 이 문서 범위와 같고, 세 스크린샷에서 목록·본문·버튼 위치가 한 픽셀 단위로 정렬된다. 패널 질감 일부는 스크린샷 캡처 노이즈라 질감 전체 픽셀 일치는 주장하지 않는다. 실제 브라우저에서 Credits(→다음 쪽→Cancel)·Campaign(8행→Early Missions 목록)·Demo 열기·행 누름·닫기를 확인했다. 확인하지 않은 것: 실제 소리 출력·Chrome/Firefox·16:9 화면 클릭.
+- [ ] **다음(이어서):** (1) Early Missions 목록(`$Checked` 체크 표시·잠금·`MissionBegin`)을 `screenShots/mainMenu - Campaign - Early Missions.png` 등과 대조, 두 열 메뉴·`%{userSpec}`. (2) 본문 스크롤바(Slider)·링크·조건·그림(Help 에 필요). (3) Tell 지역 인자 `Name(arg1,arg2)`(cpppj fixture `tell-parameters-x86.tsv`)·현재 미션 조회. (4) MenuGump 펼침 메뉴(Help·Options)·시작 팁 창·설정 저장. (5) 한국어(D2Coding·`.korean`)·`<background>` 그림. 그 뒤 정적 맵 화면(M2). 이 단위는 로컬 커밋하며 원격 push 는 하지 않는다.
+
 ## 2026-10-28 WB02-D 완료: Edit 버튼 제거 + TAFF·설정·Tell 섹션 데이터층
 
 - [x] **범위:** 사용자 요청("AGENTS.md·LEFT_JOBS.webpj.md 를 읽고 webpj 다음 단계 진행, 다른 세션이 cpppj 를 진행 중이니 cpppj 쪽 파일은 수정하지 말 것")에 따라 (1) 2026-10-27 절의 코드 후속(메인 메뉴 Edit 제거)과 (2) WB02 나머지 중 메뉴 대화상자 본문을 읽는 데이터층을 했다. 상세 근거·검증은 [webpj 데이터층 기록](docs/webpj-data-layer-20261028.md). `cpppj/`·`dotnetpj/`·`originals/`·`originalCD/`·AGENTS.md 는 수정하지 않았고 cpppj 소스·fixture 는 읽기만 했다. 원본 게임·analyzeManager 는 실행하지 않았다(브라우저 검사는 Edge 헤드리스, 창 없음).
@@ -7,8 +16,8 @@
 - [x] **데이터층(WB02-D):** `www/assets/taff.js`(TAFF 판독·XOR·와일드카드), `config.js`(원본 설정 조회·값 해석·치환·섹션·객체 층, cpppj `Config.cpp` 와 같은 규칙), `game-files.js`(느슨한 파일 → TAFF 조회), `game-data.js`(설정 구성·`pathSpec`·언어 파일 영어 대체·`tellSection`), `text-encoding.js`(Windows-1252/UTF-8 해독). `netstorm.tarc`·`d/setup.cfg` 를 `menu` 묶음에 추가했고(준비 도구, 변환 없는 복사) 앱이 적재 뒤 `app.gameData` 를 만든다. 메뉴 Tell 버튼은 섹션을 실제로 찾아 콘솔에 줄 수를 알리지만 **화면은 아직 없다.**
 - [x] **검증(VM-W11-Codex, Node v24.19.0, Edge 헤드리스):** `npm --prefix webpj test` **25개 통과**(신규 8). 설정 계층이 원본 x86 기대값(`cpppj/tests/fixtures/config-x86.tsv`) Get·Subst·FindSection·Section **2,025행**과 같고(변이 검사로 비공허 확인), TAFF 246개가 Python 독립 구현의 크기·SHA-256(`webpj/tests/fixtures/taff-entries.tsv`)과 전부 같다. 실제 브라우저에서 1024×768·1920×1080 모두 5버튼 좌표와 Credits·UCampaign·Demoville 섹션 조회를 확인했다. **의존 주의:** 설정 검사는 cpppj 의 fixture 를 읽기 전용으로 쓰며 행 수(77/495/1045/408)를 고정했다. cpppj 쪽이 이 파일을 다시 만들면 이 검사가 실패하므로 그때 의도된 변경인지 확인하고 `config.test.mjs` 의 `EXPECTED_ROWS` 를 갱신한다.
 - [x] **새로 확인:** `\d\offical*.english` 는 8개다(`offical2sep`·`offical5sep` 은 캠페인 목록의 구분선 행, 스크린샷의 구분선 2개와 일치). 한국어 요청 시 아직 없는 `.korean` 자료는 영어 파일로 대체한다(웹 적응, 원본은 대체하지 않음).
-- [ ] **디컴파일 호스트 주의(다음 단위 선행):** 이번 단위는 디컴파일 소스를 읽지 않아 재디컴파일을 하지 않았다. 현재 PC 는 **VM-W11-Codex**, 공통 인계의 마지막 전체 정밀 디컴파일은 **HJOW-Athlon / 2026-10-23**(21:16)이라 불일치한다. 이 PC 의 `extracted/refined/originals/` 는 같은 날 오전 VM-W11-Codex 산출물이며 [재실행 기록](docs/exe/cpp-decompilation-20261023.md)은 텍스트 산출물이 이전 결과와 동일하다고 남겼다. 다음 단위(대화상자 그림)는 디컴파일 소스를 읽으므로 **착수 전에 AGENTS.md 의 PC 불일치 규칙(`tools/ghidra/refine_all.ps1` 재디컴파일)을 적용할지 사용자에게 확인한다.** 이전 cpppj 세션은 사용자 지시로 생략한 선례가 있다(공통 인계 197행 부근). 재디컴파일을 하면 `extracted/` 를 덮어쓰므로 다른 PC 의 cpppj 세션과 별개로 이 PC 에서만 한다.
-- [ ] **다음:** Tell 대화상자 그리기 — 본문 파서(`<background>`·`<h2>`·`<p>`·`<br>`·`$Menu=`·`$Button=`·`$Timeout=`), StyleText(`~w`·`~i`·`~B~E`·`~[C.84]` 등), 돌 패널(모서리 장식·질감)·목록 행·버튼, 크기 맞춤·가운데 배치·입력. 먼저 정적 5줄인 Credits 를 `screenShots/mainMenu - Credits.png` 와 대조하고 Campaign(`@{guideSpec}` 8행·구분선)으로 넓힌다. 그 뒤 MenuGump 펼침 메뉴(Help·Options), 시작 팁 창, Tell 지역 인자 `Name(arg1,arg2)`(cpppj fixture `tell-parameters-x86.tsv` 로 대조 가능), 한국어 라벨·D2Coding, 설정 저장. 이 단위는 로컬 커밋하며 원격 push 는 하지 않는다.
+- [x] **디컴파일 호스트 주의(2026-10-28 WB03-D 에서 HJOW-Athlon 이 마지막 디컴파일 호스트와 일치함을 확인, 재디컴파일 불필요. 아래는 당시 기록):** 이번 단위는 디컴파일 소스를 읽지 않아 재디컴파일을 하지 않았다. 현재 PC 는 **VM-W11-Codex**, 공통 인계의 마지막 전체 정밀 디컴파일은 **HJOW-Athlon / 2026-10-23**(21:16)이라 불일치한다. 이 PC 의 `extracted/refined/originals/` 는 같은 날 오전 VM-W11-Codex 산출물이며 [재실행 기록](docs/exe/cpp-decompilation-20261023.md)은 텍스트 산출물이 이전 결과와 동일하다고 남겼다. 다음 단위(대화상자 그림)는 디컴파일 소스를 읽으므로 **착수 전에 AGENTS.md 의 PC 불일치 규칙(`tools/ghidra/refine_all.ps1` 재디컴파일)을 적용할지 사용자에게 확인한다.** 이전 cpppj 세션은 사용자 지시로 생략한 선례가 있다(공통 인계 197행 부근). 재디컴파일을 하면 `extracted/` 를 덮어쓰므로 다른 PC 의 cpppj 세션과 별개로 이 PC 에서만 한다.
+- [x] **다음(→ 2026-10-28 WB03-D 에서 Credits·Demo·Campaign 목록까지 완료, 맨 위 절. 남은 부분은 맨 위 절의 '다음'):** Tell 대화상자 그리기 — 본문 파서(`<background>`·`<h2>`·`<p>`·`<br>`·`$Menu=`·`$Button=`·`$Timeout=`), StyleText(`~w`·`~i`·`~B~E`·`~[C.84]` 등), 돌 패널(모서리 장식·질감)·목록 행·버튼, 크기 맞춤·가운데 배치·입력. 먼저 정적 5줄인 Credits 를 `screenShots/mainMenu - Credits.png` 와 대조하고 Campaign(`@{guideSpec}` 8행·구분선)으로 넓힌다. 그 뒤 MenuGump 펼침 메뉴(Help·Options), 시작 팁 창, Tell 지역 인자 `Name(arg1,arg2)`(cpppj fixture `tell-parameters-x86.tsv` 로 대조 가능), 한국어 라벨·D2Coding, 설정 저장. 이 단위는 로컬 커밋하며 원격 push 는 하지 않는다.
 
 ## 2026-10-27 AGENTS.md webpj 목표 변경 반영: 커스텀 맵 Edit 기능 제외
 
@@ -206,7 +215,7 @@ npm --prefix webpj test
 - [x] **WB01 구현 (2026-10-23 완료):** `index.html`의 `Netstorm` 참조를 모듈 import로 정리하고 `init/destroy` 수명·루트/Canvas/스타일·클릭 대기/로딩/실패 화면·입력을 `netstorm.js`에 구현했다. `.css` 파일은 만들지 않았다.
 - [x] **WB01 검증 (2026-10-23 완료):** 클릭 전 메뉴·소리 없음, 클릭 뒤 전환, 로딩 실패 재시도, init/destroy 반복과 중복 이벤트/프레임 없음, 게임 루트 포커스/크기 변경을 확인했다. 자산이 없으므로 메인 메뉴는 임시 화면이며 원본 메뉴 완료가 아니다. 결과와 확인하지 않은 범위는 맨 위 WB01 절에 있다.
 - [x] **WB03-M1 메인 메뉴 (2026-10-23 완료):** 메뉴 자산 묶음·manifest·준비 도구, 팔레트/명암·GIF·VFX 셰이프·원본 영어 글꼴 판독, 8비트 합성·표시기, 원본 메인 메뉴(배치·돌 버튼·입력·소리·커서·창 제목)를 구현·검증했다. 맨 위 WB03-M1 절과 [상세 기록](docs/webpj-main-menu-20261023.md).
-- [ ] **다음 시작점(WB02 나머지 → WB03 M2):** (2026-10-28: Edit 버튼 제거·배치 재계산과 TAFF/설정/Tell 섹션 데이터층은 완료, 맨 위 절.) 이제 Tell 대화상자 그리기(본문 파서·StyleText·돌 패널·목록 행, Credits → Campaign)·MenuGump 펼침 메뉴·시작 팁 창(Edit 목록은 2026-10-27 목표 변경으로 제외), D2Coding·언어표(한국어 라벨), 설정 저장을 잇는다. 디컴파일 호스트 불일치 확인이 선행이다(맨 위 절). 그 뒤 정적 맵 화면(M2)을 원본 자료로 그리고 WB04 공유 코어와 수치/fixture 검증으로 진행한다.
+- [ ] **다음 시작점(WB03 나머지 → WB03 M2):** (2026-10-28: Edit 버튼 제거·데이터층·**Tell 대화상자 Credits·Demo·Campaign 목록(WB03-D)** 완료, 맨 위 두 절.) 이제 Early Missions 목록(`$Checked`)·본문 스크롤바·링크/조건/그림(Help)·Tell 지역 인자, MenuGump 펼침 메뉴(Help·Options)·시작 팁 창(Edit 목록은 2026-10-27 목표 변경으로 제외), D2Coding·언어표(한국어 라벨), 설정 저장을 잇는다. 디컴파일 호스트는 HJOW-Athlon 에서 일치했으나 다른 PC 에서 이어 읽을 때는 PC 일치 여부를 다시 확인한다. 그 뒤 정적 맵 화면(M2)을 원본 자료로 그리고 WB04 공유 코어와 수치/fixture 검증으로 진행한다.
 - [ ] **착수 때 갱신:** cpppj 최신 복원/실패·자산 복사본·원본 소스와 현재 호스트·Git 변경을 확인한다. 이번에 보존한 사용자 미추적 골격은 실제 구현 단위에서 관련 변경과 함께 관리한다.
 
 ## 10. 참고 자료와 이번 작업 기록
@@ -220,6 +229,7 @@ npm --prefix webpj test
 | 명칭·타입 대응 | [한국어 명칭 규칙](docs/korean-unit-names.md), [공유 명칭 JSON](assets/unit-names.korean.json), [표시 이름/타입 대응](docs/unit-source-name-map.md) |
 | 시간·유닛 복원 경계 | [원본 메인 루프](docs/exe/main-loop.md), [25종 복원 점검](docs/exe/cpp-unit-restoration-20261022.md) |
 | 시각·청각 비교 자료 | [스크린샷 안내](docs/screens/README.md), [녹화 안내](docs/videos/README.md), [애니메이션 시간](docs/videos/animation-timing.md) |
+| webpj Tell 대화상자(WB03-D) 근거·검증·cpppj 와 다른 점 | [webpj Tell 대화상자 기록](docs/webpj-tell-dialog-20261028.md), [데이터층 기록](docs/webpj-data-layer-20261028.md) |
 | webpj 메인 메뉴(WB03-M1) 근거·검증 | [webpj 메인 메뉴 복원 기록](docs/webpj-main-menu-20261023.md), [원본 메인 메뉴 관측](docs/screens/main-menu.md), [원본 버튼 동작](docs/videos/menu-buttons-20261003.md) |
 
 - [x] 문서의 UTF-8·로컬 링크/앵커 27개·표/체크 목록·충돌 표식·공백을 검사하고 기존 webpj 파일 4개의 SHA-256 보존을 확인했다. 게임 코드 검사·브라우저/서버 실행 결과는 없다.

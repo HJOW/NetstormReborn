@@ -116,6 +116,30 @@ export class MainMenuScreen {
         this.height = 0;
         // 화면을 다시 합성해야 하는지 여부다. 그림이 바뀔 때 켜고 render 가 끈다.
         this.dirty = true;
+        // 열려 있는 Tell 대화상자(TellWindow)다. 없으면 null. 대화상자가 열려 있는 동안에는 메인 메뉴 돌 버튼을 숨기고 입력을 대화상자가 독점한다.
+        // (원본 스크린샷: Credits·Campaign·Demo 창이 열리면 메인 메뉴 버튼 두 줄이 보이지 않는다.) (2026-10-28 WB03-D)
+        this.dialog = null;
+    }
+
+    // 대화상자를 열거나(TellWindow) 닫는다(null). 바뀌는 순간 진행 중인 돌 버튼 누름은 실행 없이 취소하고 현재 화면 크기에 맞춰 대화상자를 다시 맞춘다. (2026-10-28 WB03-D)
+    setDialog(dialog) {
+        this.cancel();
+        this.dialog = dialog;
+        if (dialog) this._fitDialog();
+        this.dirty = true;
+    }
+
+    // 대화상자를 현재 논리 화면 크기에 맞춰 다시 배치한다(화면 크기가 바뀌었거나 방금 열린 경우). (2026-10-28 WB03-D)
+    _fitDialog() {
+        if (!this.dialog || this.width === 0) return;
+        this.dialog.screen = { width: this.width, height: this.height };
+        this.dialog.fit();
+        this.dialog.place();
+    }
+
+    // 시간 경과를 알린다(초). 대화상자의 Timeout 기한을 확인한다. 명령이 실행되어 그림이 바뀔 수 있다. (2026-10-28 WB03-D)
+    update(nowSeconds) {
+        if (this.dialog?.update(nowSeconds)) this.dirty = true;
     }
 
     // 실제로 만들어진 버튼 목록(빈 칸 제외)이다.
@@ -129,6 +153,7 @@ export class MainMenuScreen {
         this.width = width;
         this.height = height;
         layoutMainMenuButtons(this.slots, this.resources.font, width, height);
+        this._fitDialog();
         this.dirty = true;
     }
 
@@ -140,13 +165,20 @@ export class MainMenuScreen {
         else surface.fill(0);
         const position = titlePosition(surface.width, surface.height, title);
         surface.drawImage(title, position.x, position.y);
-        // 모든 버튼을 칸 순서대로 그린다.
-        for (const button of this.buttons) button.draw(surface, this.resources);
+        // 대화상자가 없을 때만 모든 버튼을 칸 순서대로 그린다(대화상자가 열리면 버튼이 사라진다).
+        if (!this.dialog) for (const button of this.buttons) button.draw(surface, this.resources);
+        else this.dialog.draw(surface);
         this.dirty = false;
     }
 
     // 왼쪽 버튼 누름을 처리한다. 버튼이 받으면 눌린 모양으로 바꾸고 button.wav 를 낸다. 처리했으면 true.
     pointerDown(x, y) {
+        // 대화상자가 열려 있으면 입력을 모두 대화상자가 받는다(모달).
+        if (this.dialog) {
+            const handled = this.dialog.pointerDown(x, y);
+            this.dirty = true;
+            return handled;
+        }
         // 정수 화면 사각형이 누름 위치를 포함하는 첫 버튼에 누름을 전달한다(버튼끼리는 겹치지 않는다).
         for (const button of this.buttons) {
             if (button.pointerDown(x, y)) {
@@ -160,12 +192,22 @@ export class MainMenuScreen {
 
     // 포인터 이동을 처리한다. 붙잡힌 버튼은 포인터가 안에 있을 때만 눌린 모양을 보인다.
     pointerMove(x, y) {
+        if (this.dialog) {
+            if (this.dialog.pointerMove(x, y)) this.dirty = true;
+            return;
+        }
         // 붙잡힌 버튼의 눌린 모양을 현재 위치로 갱신한다.
         for (const button of this.buttons) if (button.broadcast(x, y)) this.dirty = true;
     }
 
     // 왼쪽 버튼 뗌을 처리한다. 붙잡힌 버튼 안에서 뗐으면 그 버튼의 명령을 실행(onCommand)하고 true 를 돌려준다.
     pointerUp(x, y) {
+        if (this.dialog) {
+            // 명령이 대화상자를 닫거나 바꿀 수 있으므로 뗌 처리 뒤에는 항상 다시 그린다.
+            this.dialog.pointerUp(x, y);
+            this.dirty = true;
+            return false;
+        }
         let activated = null;
         // 붙잡힌 버튼을 찾아 붙잡기를 풀고 실행 여부를 받는다.
         for (const button of this.buttons) {
@@ -181,5 +223,6 @@ export class MainMenuScreen {
     cancel() {
         // 모든 버튼의 붙잡기와 눌린 모양을 푼다.
         for (const button of this.buttons) if (button.cancel()) this.dirty = true;
+        if (this.dialog?.cancel()) this.dirty = true;
     }
 }

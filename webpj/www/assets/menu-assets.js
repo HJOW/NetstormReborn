@@ -10,7 +10,9 @@ import { GamePalette, buildButtonPalette, buildScreenPalette, buildShadeMaps } f
 import { decodeGif } from './gif.js';
 import { ShapeDatabase } from './shapes.js';
 import { BitmapFont, DEFAULT_FONT_PATH } from './bitmap-font.js';
+import { FontSet } from './font-set.js';
 import { buttonTextContexts } from '../render/gump-visual.js';
+import { StyleColors } from '../ui/style-text.js';
 import { DEFAULT_CURSOR_PATH, decodeCursorResource } from '../ui/cursor.js';
 
 // 메인 메뉴 화면 표시 전에 반드시 받아야 하는 자산 묶음 이름이다(매니페스트 bundle 값). (2026-10-23 WB03-M1)
@@ -45,6 +47,19 @@ export const STONE_BUTTON_TEXTURE_FRAME = 1;
 // 원본 구름 파일이 받아들여지는 크기(가로·세로 0x200)이다. 다르면 원본은 구름 그림을 쓰지 않는다. (2026-10-23 WB03-M1)
 export const CLOUD_IMAGE_SIZE = 512;
 
+// 대화상자 패널 배경 질감의 fortGump 프레임 번호이다(클러스터 A00 "Marble pattern texture", 원본 장식 배경 전역 backgroundFrame = 0). (2026-10-28 WB03-D)
+export const PANEL_TEXTURE_FRAME = 0;
+
+// 대화상자 패널 네 모서리 금장식의 fortGump 프레임 번호이다(클러스터 I00~I03: 왼쪽 위·오른쪽 위·오른쪽 아래·왼쪽 아래, 타입 정의 순서 54~57). (2026-10-28 WB03-D)
+export const PANEL_CORNER_FRAMES = Object.freeze([54, 55, 56, 57]);
+
+// 목록 항목의 체크 표시 fortGump 프레임 번호이다(클러스터 J02, 타입 정의 순서 60: J00 = 58 + 2). (2026-10-28 WB03-D)
+export const CHECK_MARKER_FRAME = 60;
+
+// 목록 행을 눌러 명령을 실행할 때 내는 효과음의 원본 이름과 데이터 폴더 경로이다(원본 MenuGumpInput 의 Sound("openSubGump.wav")). (2026-10-28 WB03-D)
+export const MENU_SOUND_NAME = 'openSubGump.wav';
+export const MENU_SOUND_PATH = 'sound/openSubGump.wav';
+
 // 경로로 파일 바이트를 꺼낸다. 없으면 어떤 파일이 빠졌는지 알리는 오류를 던진다. (2026-10-23 WB03-M1)
 function requireFile(files, path) {
     const bytes = files.get(path);
@@ -67,6 +82,16 @@ export function buildMenuResources(files) {
         buttonPalette,
         textContexts: buttonTextContexts(buttonPalette),
         font: BitmapFont.parse(requireFile(files, MENU_ASSET_PATHS.font)),
+        // 대화상자 글자 그리기용 글꼴 묶음(슬롯·스타일별 지연 해독)과 글자색 번호 표이다.
+        fonts: new FontSet(files),
+        colors: new StyleColors(palette.logical),
+        // 대화상자 패널(질감 프레임 0 + 네 모서리 금장식)이다. 목록 상자·돌 버튼은 위의 texture(프레임 1)를 쓴다.
+        panel: Object.freeze({
+            texture: shapes.decode(FORT_GUMP_BLOCK, PANEL_TEXTURE_FRAME),
+            textureMetrics: shapes.squidMetrics(FORT_GUMP_BLOCK, PANEL_TEXTURE_FRAME),
+            corners: Object.freeze(PANEL_CORNER_FRAMES.map((frame) => shapes.decode(FORT_GUMP_BLOCK, frame))),
+        }),
+        marker: shapes.decode(FORT_GUMP_BLOCK, CHECK_MARKER_FRAME),
         clouds: clouds.width === CLOUD_IMAGE_SIZE && clouds.height === CLOUD_IMAGE_SIZE ? clouds : null,
         title: decodeGif(requireFile(files, MENU_ASSET_PATHS.title)),
         texture: shapes.decode(FORT_GUMP_BLOCK, STONE_BUTTON_TEXTURE_FRAME),

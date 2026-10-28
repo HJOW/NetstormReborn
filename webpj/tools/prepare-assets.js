@@ -36,15 +36,29 @@ const BUNDLES = Object.freeze({
     'menu-music': '메인 메뉴 음악(크기가 커서 화면 표시를 막지 않고 뒤에서 받음)',
 });
 
+// 원본 글꼴 캐시 파일 목록(슬롯 0~6 × 스타일 중 원본에 존재하는 조합, 파일 이름 규칙은 www/assets/font-set.js 와 같다)이다.
+// 대화상자의 제목(슬롯 3)·본문(슬롯 5)·굵게/기울임 글자와 코드 글꼴(슬롯 1) 등을 그리는 데 쓴다. 검사(tests/dialog.test.mjs)가 font-set.js 의 목록과 같은지 확인한다. (2026-10-28 WB03-D)
+const FONT_FILES = Object.freeze(
+    [
+        '!Arial.normal.14.700.chfnt', '!Arial.italic.14.700.chfnt', '!Arial.bold.14.700.chfnt', '!Arial.strikeout.14.700.chfnt', '!Arial.underline.14.700.chfnt',
+        '!Courier New.normal.13.0.chfnt',
+        '!Arial.normal.20.700.chfnt',
+        '!Arial.normal.48.0.chfnt',
+        '!Arial.normal.14.0.chfnt', '!Arial.italic.14.0.chfnt', '!Arial.bold.14.0.chfnt', '!Arial.strikeout.14.0.chfnt', '!Arial.underline.14.0.chfnt',
+        '!Arial.normal.12.0.chfnt', '!Arial.italic.12.0.chfnt', '!Arial.bold.12.0.chfnt', '!Arial.strikeout.12.0.chfnt', '!Arial.underline.12.0.chfnt',
+    ].map((name) => `d/${name}`),
+);
+
 // 복사할 자산 목록이다. path 는 assets/game-data 와 www/data 양쪽의 같은 상대 경로, use 는 원본 근거와 용도다. (2026-10-23 WB03-M1)
 const ASSET_FILES = Object.freeze([
     { path: 'd/GIFCLOUD.COL', bundle: 'menu', use: '기본 게임 팔레트(setup.cfg fortPal="gifcloud", GamePalSpec)' },
     { path: 'd/Gifcloud.gif', bundle: 'menu', use: '메인 메뉴 구름 배경(setup.cfg CloudFileSpec, 512x512)' },
     { path: 'd/titleMenu.gif', bundle: 'menu', use: '메인 메뉴 타이틀 그림(backgroundGifSpec + titleMenu)' },
     { path: 'd/_shapes.shp', bundle: 'menu', use: '셰이프 데이터베이스(fortGump 블록 22 프레임 1 = 돌 버튼 질감)' },
-    { path: 'd/!Arial.normal.14.700.chfnt', bundle: 'menu', use: '원본 글꼴 슬롯 0(Arial 굵게 14) 캐시, 버튼 라벨' },
+    ...FONT_FILES.map((fontPath) => ({ path: fontPath, bundle: 'menu', use: '원본 비트맵 글꼴 캐시(슬롯·스타일별, 슬롯 0 보통 = 돌 버튼 라벨, 그 밖 = 대화상자 제목·본문·목록 글자)' })),
     { path: 'cursors/RT_CURSOR_8.bin', bundle: 'menu', use: '원본 기본 커서 번호 1(흰 화살표, 핫스폿 10,6)' },
     { path: 'sound/button.wav', bundle: 'menu', use: '돌 버튼을 누르는 순간의 효과음' },
+    { path: 'sound/openSubGump.wav', bundle: 'menu', use: '대화상자 목록 행을 눌러 명령을 실행할 때의 효과음(원본 MenuGumpInput Sound("openSubGump.wav"))' },
     { path: 'netstorm.tarc', bundle: 'menu', use: '데이터 아카이브 TAFF(메뉴 대화상자 본문 tell.english·용어표 config.english·미션 스크립트·타입 정의, 246개 엔트리)' },
     { path: 'd/setup.cfg', bundle: 'menu', use: '게임 기본 설정(스타일 코드 H2·Text·CText, 경로 지정값 missionSpec·guideSpec, 인코딩된 원본 파일)' },
     { path: 'music/ser22.mus', bundle: 'menu-music', use: '메인 메뉴(전투 밖) 음악, RIFF WAV PCM' },

@@ -1,0 +1,66 @@
+// Tell 대화상자의 파일 목록 메뉴(`$Menu=@패턴,명령,인자` · `$Menu=#패턴,명령,인자`)를 복원하는 모듈이다.
+// 패턴과 맞는 파일(예: `\D\offical*.english` = 캠페인 묶음 파일 8개)마다 파일 이름(첫 점 앞)으로 설정 객체를 등록하고(본문 키 `title`·섹션 `[Overview]` 조회용),
+// 객체 순서를 이름순으로 정렬해 목록 행을 만든다. 제목은 `{<이름>.title}` 로 읽으며 `--` 로 시작하는 제목은 구분선이다.
+// 원본 주소: `@` 목록 004ce1b0, `#` 목록 004ce580. 복원 기준: cpppj TellFileMenus.cpp(10.78 경로), docs/exe/cpp-tell-file-menus-client-20261025.md.
+// `%` 인라인 목록(`%{userSpec}` 등 사용자 캠페인 목록)과 `*SOLOLIST*` 같은 특수 목록은 아직 지원하지 않는다.
+// (2026-10-28 WB03-D: Campaign 대화상자의 캠페인 묶음 목록을 만들기 위해 추가)
+import { Config } from '../assets/config.js';
+import { decodeOriginalText } from '../assets/text-encoding.js';
+
+// 경로에서 목록 객체 이름(마지막 경로 구분자 뒤 파일 이름의 첫 점 앞)을 구한다. 예: `\d\offical2sep.english` → `offical2sep`. (2026-10-28 WB03-D)
+function listObjectName(path) {
+    const base = path.slice(Math.max(path.lastIndexOf('\\'), path.lastIndexOf('/')) + 1);
+    const dot = base.indexOf('.');
+    return { fileName: base, name: dot < 0 ? base : base.slice(0, dot) };
+}
+
+// 파일 목록 메뉴 항목을 만든다. label 은 `@패턴` 또는 `#패턴`, command·argument 는 지시문의 명령 이름·인자(`{cur.file}` 포함 가능)이다.
+// 파일마다 설정 객체를 등록부에 올려 두고(이미 같은 이름의 객체가 있으면 그대로 쓴다) 나중에 Tell 이 `이름.overview` 같은 섹션을 찾을 수 있게 한다.
+// 반환: [{ kind: 'text'|'separator', label, command }] 이며 표시 순서는 이름(대소문자 무시) 오름차순이다. `@` 는 제목이 비면 파일 이름을, `#` 는 빈 제목을 그대로 쓴다.
+// 사용: expandFileList(gameData, '@\\D\\offical*.english', 'Tell', '{cur.file}.overview'). (2026-10-28 WB03-D)
+export function expandFileList(gameData, label, command, argument) {
+    const emptyTitleUsesName = label[0] === '@';
+    const pattern = label.slice(1);
+    const found = [];
+    const seen = new Set();
+    // 패턴과 맞는 파일에서 같은 객체 이름(대소문자 무시)을 한 번씩만 모은다. 등록 index 는 모은 순서이다.
+    for (const path of gameData.files.find(pattern)) {
+        const { fileName, name } = listObjectName(path);
+        const key = name.toLowerCase();
+        if (seen.has(key)) continue;
+        seen.add(key);
+        found.push({ path, fileName, name, index: found.length });
+    }
+    // 이름(대소문자 무시) 오름차순으로 정렬한다.
+    found.sort((a, b) => (a.name.toLowerCase() < b.name.toLowerCase() ? -1 : a.name.toLowerCase() > b.name.toLowerCase() ? 1 : 0));
+    const items = [];
+    // 정렬된 순서대로 객체를 등록하고 행을 만든다.
+    for (const entry of found) {
+        if (!gameData.registry.findByName(entry.name)) {
+            const object = new Config(gameData.registry, entry.name);
+            object.append(`path="${entry.path}"`);
+            object.append(`fileName="${entry.fileName}"`);
+            object.append(`index=${entry.index}`);
+            const bytes = gameData.files.read(entry.path);
+            if (bytes) object.loadBytes(bytes, decodeOriginalText);
+        }
+        let title = gameData.get(`${entry.name}.title`) ?? '';
+        if (title === '' && emptyTitleUsesName) title = entry.name;
+        // `--` 로 시작하는 제목은 구분선이다(인자 치환을 하지 않는다).
+        if (title.startsWith('--')) {
+            items.push({ kind: 'separator', label: '', command: null });
+            continue;
+        }
+        // 인자의 `{cur.file}` 을 현재 객체 이름으로 치환한다(임시 `cur` 객체를 올렸다 내린다).
+        const cur = new Config(gameData.registry, 'cur');
+        let resolved;
+        try {
+            cur.append(`file="${entry.name}"`);
+            resolved = gameData.substitute(argument);
+        } finally {
+            cur.dispose();
+        }
+        items.push({ kind: 'text', label: title, command: Object.freeze({ name: command, argument: resolved }) });
+    }
+    return items;
+}

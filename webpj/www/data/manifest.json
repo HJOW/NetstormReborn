@@ -46,7 +46,143 @@
       "bundle": "menu",
       "size": 24278,
       "sha256": "ec1e2b485d296824990dba444d8fdc8b27d0d6d2b44466574bc88b875fadd74d",
-      "use": "원본 글꼴 슬롯 0(Arial 굵게 14) 캐시, 버튼 라벨"
+      "use": "원본 비트맵 글꼴 캐시(슬롯·스타일별, 슬롯 0 보통 = 돌 버튼 라벨, 그 밖 = 대화상자 제목·본문·목록 글자)"
+    },
+    {
+      "path": "d/!Arial.italic.14.700.chfnt",
+      "source": "assets/game-data/d/!Arial.italic.14.700.chfnt",
+      "bundle": "menu",
+      "size": 24731,
+      "sha256": "77af8c8e594bd5d0f61e162fd123efb8d27eacf53d051ef40f5cedd00573e1d9",
+      "use": "원본 비트맵 글꼴 캐시(슬롯·스타일별, 슬롯 0 보통 = 돌 버튼 라벨, 그 밖 = 대화상자 제목·본문·목록 글자)"
+    },
+    {
+      "path": "d/!Arial.bold.14.700.chfnt",
+      "source": "assets/game-data/d/!Arial.bold.14.700.chfnt",
+      "bundle": "menu",
+      "size": 24278,
+      "sha256": "ec1e2b485d296824990dba444d8fdc8b27d0d6d2b44466574bc88b875fadd74d",
+      "use": "원본 비트맵 글꼴 캐시(슬롯·스타일별, 슬롯 0 보통 = 돌 버튼 라벨, 그 밖 = 대화상자 제목·본문·목록 글자)"
+    },
+    {
+      "path": "d/!Arial.strikeout.14.700.chfnt",
+      "source": "assets/game-data/d/!Arial.strikeout.14.700.chfnt",
+      "bundle": "menu",
+      "size": 24022,
+      "sha256": "9bb276410311ece320825fb2ba6bcd6002319b92809c99c7c7f3b7241a75e8d3",
+      "use": "원본 비트맵 글꼴 캐시(슬롯·스타일별, 슬롯 0 보통 = 돌 버튼 라벨, 그 밖 = 대화상자 제목·본문·목록 글자)"
+    },
+    {
+      "path": "d/!Arial.underline.14.700.chfnt",
+      "source": "assets/game-data/d/!Arial.underline.14.700.chfnt",
+      "bundle": "menu",
+      "size": 25292,
+      "sha256": "370a8c4198e3f6d28206c1e8dbd71ab2075054334ce070ab182f30fcab4a52d3",
+      "use": "원본 비트맵 글꼴 캐시(슬롯·스타일별, 슬롯 0 보통 = 돌 버튼 라벨, 그 밖 = 대화상자 제목·본문·목록 글자)"
+    },
+    {
+      "path": "d/!Courier New.normal.13.0.chfnt",
+      "source": "assets/game-data/d/!Courier New.normal.13.0.chfnt",
+      "bundle": "menu",
+      "size": 21746,
+      "sha256": "9f71c3dd57fbdcf5b1f5ba53d5307657fcd75b7e217cbfce26410721a093d26d",
+      "use": "원본 비트맵 글꼴 캐시(슬롯·스타일별, 슬롯 0 보통 = 돌 버튼 라벨, 그 밖 = 대화상자 제목·본문·목록 글자)"
+    },
+    {
+      "path": "d/!Arial.normal.20.700.chfnt",
+      "source": "assets/game-data/d/!Arial.normal.20.700.chfnt",
+      "bundle": "menu",
+      "size": 29135,
+      "sha256": "db48d946183f1333b54bc7721362895303de09fb7f5eb80d981501e994698aa3",
+      "use": "원본 비트맵 글꼴 캐시(슬롯·스타일별, 슬롯 0 보통 = 돌 버튼 라벨, 그 밖 = 대화상자 제목·본문·목록 글자)"
+    },
+    {
+      "path": "d/!Arial.normal.48.0.chfnt",
+      "source": "assets/game-data/d/!Arial.normal.48.0.chfnt",
+      "bundle": "menu",
+      "size": 54741,
+      "sha256": "616d9a59cd2e5ae4d1f7925ef465507395dd2d98201c5263ec6d626ec126ec13",
+      "use": "원본 비트맵 글꼴 캐시(슬롯·스타일별, 슬롯 0 보통 = 돌 버튼 라벨, 그 밖 = 대화상자 제목·본문·목록 글자)"
+    },
+    {
+      "path": "d/!Arial.normal.14.0.chfnt",
+      "source": "assets/game-data/d/!Arial.normal.14.0.chfnt",
+      "bundle": "menu",
+      "size": 24719,
+      "sha256": "b521bb8040970c4b540d3313649d5e56fe51f1b83ec3b4876f66a9fb7a36beeb",
+      "use": "원본 비트맵 글꼴 캐시(슬롯·스타일별, 슬롯 0 보통 = 돌 버튼 라벨, 그 밖 = 대화상자 제목·본문·목록 글자)"
+    },
+    {
+      "path": "d/!Arial.italic.14.0.chfnt",
+      "source": "assets/game-data/d/!Arial.italic.14.0.chfnt",
+      "bundle": "menu",
+      "size": 25253,
+      "sha256": "a24a80b0e30ad4f65bf9d908d57858c061bd0bc1f219e9a6ed82fa1cb854de76",
+      "use": "원본 비트맵 글꼴 캐시(슬롯·스타일별, 슬롯 0 보통 = 돌 버튼 라벨, 그 밖 = 대화상자 제목·본문·목록 글자)"
+    },
+    {
+      "path": "d/!Arial.bold.14.0.chfnt",
+      "source": "assets/game-data/d/!Arial.bold.14.0.chfnt",
+      "bundle": "menu",
+      "size": 24278,
+      "sha256": "ec1e2b485d296824990dba444d8fdc8b27d0d6d2b44466574bc88b875fadd74d",
+      "use": "원본 비트맵 글꼴 캐시(슬롯·스타일별, 슬롯 0 보통 = 돌 버튼 라벨, 그 밖 = 대화상자 제목·본문·목록 글자)"
+    },
+    {
+      "path": "d/!Arial.strikeout.14.0.chfnt",
+      "source": "assets/game-data/d/!Arial.strikeout.14.0.chfnt",
+      "bundle": "menu",
+      "size": 24375,
+      "sha256": "047b234afce4167864eac8de8d5e3bb4e6fef451a3fea53b0fcfc27d60e5ce5b",
+      "use": "원본 비트맵 글꼴 캐시(슬롯·스타일별, 슬롯 0 보통 = 돌 버튼 라벨, 그 밖 = 대화상자 제목·본문·목록 글자)"
+    },
+    {
+      "path": "d/!Arial.underline.14.0.chfnt",
+      "source": "assets/game-data/d/!Arial.underline.14.0.chfnt",
+      "bundle": "menu",
+      "size": 25733,
+      "sha256": "89297d28bc1df7d06a53b49be7836e8a7eacb7459e4995383562b4d4c79d82bf",
+      "use": "원본 비트맵 글꼴 캐시(슬롯·스타일별, 슬롯 0 보통 = 돌 버튼 라벨, 그 밖 = 대화상자 제목·본문·목록 글자)"
+    },
+    {
+      "path": "d/!Arial.normal.12.0.chfnt",
+      "source": "assets/game-data/d/!Arial.normal.12.0.chfnt",
+      "bundle": "menu",
+      "size": 22641,
+      "sha256": "0f9bce3852eebaea0717d19bf160d4cc251c129e0923a17aca6d813e9a71cbdb",
+      "use": "원본 비트맵 글꼴 캐시(슬롯·스타일별, 슬롯 0 보통 = 돌 버튼 라벨, 그 밖 = 대화상자 제목·본문·목록 글자)"
+    },
+    {
+      "path": "d/!Arial.italic.12.0.chfnt",
+      "source": "assets/game-data/d/!Arial.italic.12.0.chfnt",
+      "bundle": "menu",
+      "size": 23089,
+      "sha256": "61472763dfce2f02505f35d4899cd99220646a8c9b247224140fc42176930704",
+      "use": "원본 비트맵 글꼴 캐시(슬롯·스타일별, 슬롯 0 보통 = 돌 버튼 라벨, 그 밖 = 대화상자 제목·본문·목록 글자)"
+    },
+    {
+      "path": "d/!Arial.bold.12.0.chfnt",
+      "source": "assets/game-data/d/!Arial.bold.12.0.chfnt",
+      "bundle": "menu",
+      "size": 22900,
+      "sha256": "462fcd2f9429ee9380d31de738deecf4028c790c01a407dead416dfd8f977ae6",
+      "use": "원본 비트맵 글꼴 캐시(슬롯·스타일별, 슬롯 0 보통 = 돌 버튼 라벨, 그 밖 = 대화상자 제목·본문·목록 글자)"
+    },
+    {
+      "path": "d/!Arial.strikeout.12.0.chfnt",
+      "source": "assets/game-data/d/!Arial.strikeout.12.0.chfnt",
+      "bundle": "menu",
+      "size": 22290,
+      "sha256": "ad581f4405ffcd71bfcd402d6d837fe3f25c42cc943d59d037f95f7847612c3d",
+      "use": "원본 비트맵 글꼴 캐시(슬롯·스타일별, 슬롯 0 보통 = 돌 버튼 라벨, 그 밖 = 대화상자 제목·본문·목록 글자)"
+    },
+    {
+      "path": "d/!Arial.underline.12.0.chfnt",
+      "source": "assets/game-data/d/!Arial.underline.12.0.chfnt",
+      "bundle": "menu",
+      "size": 23603,
+      "sha256": "ec7ecb58021426c243c5d0d31f3003dd73851559f7a94aa59cb99a5a1d841441",
+      "use": "원본 비트맵 글꼴 캐시(슬롯·스타일별, 슬롯 0 보통 = 돌 버튼 라벨, 그 밖 = 대화상자 제목·본문·목록 글자)"
     },
     {
       "path": "cursors/RT_CURSOR_8.bin",
@@ -63,6 +199,14 @@
       "size": 3435,
       "sha256": "9c1e7a93cca643e57029a7989fab52d2abd3b43d43bca968f60bc28e22638c3a",
       "use": "돌 버튼을 누르는 순간의 효과음"
+    },
+    {
+      "path": "sound/openSubGump.wav",
+      "source": "assets/game-data/sound/openSubGump.wav",
+      "bundle": "menu",
+      "size": 5076,
+      "sha256": "dae23b054aa9b02555f859dc4ec5019e551e7f514734914d1d8b378e6d443c7a",
+      "use": "대화상자 목록 행을 눌러 명령을 실행할 때의 효과음(원본 MenuGumpInput Sound(\"openSubGump.wav\"))"
     },
     {
       "path": "netstorm.tarc",
