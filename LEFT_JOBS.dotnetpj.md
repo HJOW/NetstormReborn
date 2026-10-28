@@ -16,7 +16,7 @@
 | 화면 | 원본의 8비트 논리 화면·256색 팔레트·Renderer dirty 갱신·RLE 셰이프·소유자/생산/미리보기 색표를 그대로 두고 **마지막 출력만** 현대 borderless DIB로 바꿨다(단위495). 4:3/16:9/16:10 해상도 메뉴, 가장자리 스크롤을 갖췄다. Gump UI 전체·HUD·미니맵·덱·QWASZX·ESC·커서·픽셀 선택(524)·우클릭 메뉴까지 실제 연결했다 | MonoGame `SpriteBatch`가 RGBA 텍스처를 합성한다. 그림자는 실수 알파, 확대는 `RenderTarget2D`다. 영어 글자는 `.chfnt` 아틀라스, 그 밖은 FontStashSharp로 그린다. UI는 `OriginalUiSkin`의 근사 배치다. 같은 입력에서 cpppj와 화면을 비교하는 수단이 없다 |
 | 규칙·세션 | `RawCampaignSession`이 Fort 적재·월드·Player·SP·Kernel/Process·건설·전투·의식·공통 전략 AI(`RawAi*` 33개 모듈)·승패·Edit를 소유한다. 34경로 짧은 진입을 통과했다(506) | `BattleSession`(엔티티 목록·`FixedTimestep`·정수 SP·관찰/팬게임 기반 근사)이 실제 플레이를 소유한다. `Original` 코어(W02 18조각·W03 17조각·W05 선행)는 L1 검증만 마쳤고 세션에 연결하지 않았다 |
 | 플레이 | Early6·Training9·캠페인16·데모3·Edit 진입. 자연 완주 검증은 사용자 결정으로 보류 | 1-1·1-2 근사 플레이만 가능하고 나머지는 잠겨 있다 |
-| 동기화 | — | 반영 커밋 `f95a8db2` 이후 cpppj 관련 커밋 **243개**. 연결 fixture는 669개 중 61개(10-23 기록) |
+| 동기화 | — | 반영 커밋 `f95a8db2` 이후 cpppj 관련 커밋 **265개**(`cpp_sync.py` 기준: cpppj·docs/exe·LEFT_JOBS.md를 바꾼 커밋). 연결 fixture는 669개 중 61개(10-23 기록) |
 | 디컴파일 | 공통 기록의 마지막 전체 정밀 디컴파일은 **HJOW-Athlon / 2026-10-23**(LEFT_JOBS.md 0절)이며 현재 PC VM-W11-Codex와 다르다. 10-22 계획의 "현재 PC와 마지막 PC가 모두 VM-W11-Codex"는 공통 기록과 어긋나므로 공통 기록을 따른다 | 이식 근거는 cpppj 소스·fixture·문서이므로 디컴파일이 필요 없다. 산출물을 직접 읽어야 할 때만 AGENTS.md대로 재디컴파일한 뒤 진행한다 |
 
 ### 0.2 진단 — 기존 구현이 원본과 달라진 구조적 원인
@@ -24,7 +24,7 @@
 1. **화면 모델이 다르다.** 원본과 cpppj는 팔레트 인덱스 버퍼에 RLE 셰이프를 색표로 찍는다. 그림자·반투명·번쩍임·날씨도 팔레트와 색표 연산으로 만든다. dotnetpj는 RGBA 텍스처를 합성하고 그림자를 실수 알파로 그린다. 이 구조로는 색 섞기·디더·팔레트 번쩍임·가림 순서를 픽셀 단위로 맞출 수 없다. 9-1의 "지금 구조로 같게 만들 수 없으면 구조를 바꾼다"에 해당한다.
 2. **UI가 원본 Gump 트리가 아니다.** `MainMenuView`·`OriginalUiSkin`·`HelpWindow`·`FortMapViewer.*`의 메뉴와 창은 치수와 그림만 맞춘 자체 배치다. 따라서 Gump 생성·사건·입력·수명·Draw 순서가 다르다. 메뉴 항목의 조건(소유자·모드·CHEAT 관문 등)도 다르다.
 3. **규칙이 근사 세션에 있다.** `BattleSession`의 24Hz 고정 틱·정수 SP·일률 건설 시간·범용 공격 처리는 cpppj가 복원한 Kernel/Regular·SP 난수 소비·건설 Process·타입별 처리와 다르다. 옮겨 둔 `Original` 모듈은 세션에 연결되지 않아 플레이를 바꾸지 못했다.
-4. **이식 방식이 cpppj 진척을 따라가지 못한다.** 모듈마다 fixture를 하나씩 붙이는 L1 조각 이식(10-16~10-23, 35조각)은 cpppj의 243커밋 진척보다 느리다. 세션을 조립하기 전에는 플레이에도 반영되지 않는다.
+4. **이식 방식이 cpppj 진척을 따라가지 못한다.** 모듈마다 fixture를 하나씩 붙이는 L1 조각 이식(10-16~10-23, 35조각)은 cpppj의 265커밋 진척보다 느리다. 세션을 조립하기 전에는 플레이에도 반영되지 않는다.
 5. **판정이 단위 통과 중심이다.** 같은 입력에서 cpppj와 화면·상태를 직접 비교하는 수단이 없다. 그래서 "검사는 통과하지만 다르게 보이는" 상태를 잡지 못했다.
 
 ### 0.3 구조 결정 (이번 재수립의 기본값)
@@ -67,7 +67,7 @@
 | `Core/Rules/*`(25파일: `BattleMap`·`SpotMap`·`Footprint`·`IslandOwnership`·`Energy*`·`StormPower`·`ProductionDeck`·`KnowledgeCatalog`·`PlacementCursor`·`RangeIndicator`·`SelectionMarks`·`GameCursor`·`MiniMapLayout`·`PlayerColors`·`MissionStart` 등) | 교체 후 삭제. `SpotRules`의 L1 대조는 새 해시 모듈 검사로 흡수 | `SquidHash`·`SquidSpatial`, `CanonDecoder`·`RawCanonPlacement*`, `RawEnergySupply`, `SpStore`, `RawProductionDeck`, `RawPlayerTechnology`, `RawCursor*`, `MinimapGeometry`, `RawPlayerColor`, `RawMissionStart` 등 | R4~R6 |
 | `Core/Bridges/*`(13파일) | L1 대조된 `BridgeDecayRules`·`SurfaceFinder`·`BridgeSurfaceRules`·`SurfaceGraph`는 `Original` 쪽 대응 모듈로 합친다. 나머지는 교체 후 삭제 | `Bridge`, `Graph`·`RawGraph`, `SquidFinder`, `RawBridge*`, `CanonDecoder` | R4 |
 | `Simulation/MissionFrameGate`·`PlayerParticipation`·`MissionParticipation`·`TotalMade`·`TutorialOne`·`NetstormRandom`·`MsvcRandom`·`SidPool` | 유지 후 재대조(L1 검증 있음). 세션 조립 때 cpppj와 같은 소유 위치로 재배선. `SidPool`은 `RawSidPool`과 하나로 정리 | `RawMissionFrameGate`, `RawPlayerParticipation`, `RawTotalMade`, `RawTutorialOne`, `CrtRandom`, `SidPool` | R0·R4 |
-| `Core/Original/*`(55파일) | 유지. 243커밋의 영향을 재대조한 뒤 세션 조립에 쓴다 | 대응 `o/*` | R0·R4 |
+| `Core/Original/*`(55파일) | 유지. 265커밋의 영향을 재대조한 뒤 세션 조립에 쓴다 | 대응 `o/*` | R0·R4 |
 | `Core/Audio/*`, `Game/AudioPlayer`, `FortMapViewer.Audio` | 교체. 장치 계층만 MonoGame | `Sound`·`SoundProcess`·`SoundMusic*`·`SoundSceneMusic`·`SoundDevice`·`ClientAudio` | R6 |
 | `Game/FortMapViewer*.cs`(26파일) | 교체 후 삭제 | `Renderer`·HUD·커서·선택·메뉴, `RawCampaignSession`의 입력 | R5·R6 |
 | `Game/SpriteBrowser` | 개발 도구로 유지하되 게임 경로와 분리 | — | 필요 시 |
@@ -80,7 +80,7 @@
 **R0 — 기준선과 동기화 재정비 (W01 확장)**
 
 - 현재 PC에서 cpppj HEAD를 Release로 빌드해 오라클 실행 파일의 SHA를 기록한다. 로컬 `cpppj/build/bin/Release/NetstormCpp.exe`가 HEAD 빌드라고 가정하지 않는다. dotnetpj도 Release 빌드·전체 검사로 기준선을 다시 잡는다.
-- `cpp_sync.py`로 `f95a8db2..HEAD` 243커밋의 영향을 본다. 이미 옮긴 `Original` 55파일과 0.4의 "유지 후 재대조" 대상에 대해, 대응 cpppj 소스·fixture가 바뀌었는지 확인하고 수정 필요 / 영향 없음 / 교체 예정으로 나눈다. 연결 fixture가 바뀌었으면 해당 검사를 다시 대조한다.
+- `cpp_sync.py`로 `f95a8db2..HEAD` 265커밋의 영향을 본다. 이미 옮긴 `Original` 55파일과 0.4의 "유지 후 재대조" 대상에 대해, 대응 cpppj 소스·fixture가 바뀌었는지 확인하고 수정 필요 / 영향 없음 / 교체 예정으로 나눈다. 연결 fixture가 바뀌었으면 해당 검사를 다시 대조한다.
 - `cpp_sync.py`에 **이식한 cpppj 소스 파일의 해시 추적**을 더한다. `PORT_MAP.md`의 기준 커밋과 HEAD를 비교해 fixture뿐 아니라 소스 변경도 경고하게 한다.
 - `PORT_MAP.md` 초판을 만든다.
 - **완료 기준:** 기준선 수치·오라클 SHA·영향 목록·`PORT_MAP.md`가 커밋된다. 반영 커밋은 영향 검토를 마친 범위까지만 올린다.
@@ -170,9 +170,10 @@
 
 ### 0.9 바로 다음 작업
 
-- [ ] **R0-1:** cpppj HEAD Release 빌드와 오라클 SHA 기록, dotnetpj Release 빌드·전체 검사 기준선.
-- [ ] **R0-2:** `f95a8db2..HEAD` 영향표 작성(`docs/dotnet-cpp-resync-<날짜>.md`). 옮긴 `Original` 55파일과 0.4의 재대조 대상부터 본다.
-- [ ] **R0-3:** `cpp_sync.py`의 소스 해시 추적과 `PORT_MAP.md` 초판.
+- [x] **R0-1 (2026-10-28 완료):** cpppj를 HEAD `0cc1d33d`로 증분 재빌드해 오라클을 확정했다. 기존 `NetstormCpp.exe`(09:00 빌드)는 09:15 병합 소스보다 오래돼 쓰지 않았다. 새 SHA-256은 `63DF9A10DD9569FDF7DBE8B6D977D8287BFE898632E0CCC7499B0A0BAD27B8FE`(09:30:52 링크)이고 `--dump-types originals` 188행·`--dump-world originals thewarbegins` 3,509행·종료 0을 확인했다. dotnetpj는 Release 경고·오류 0, 검사 **1,349개(Assets 363 + Core 986) 통과**로 10-23 기록과 같다.
+- [x] **R0-2 (2026-10-28 완료):** [재대조 영향표](docs/dotnet-cpp-resync-20261028.md). 연결 fixture 61개는 모두 일치(반영 이후 fixture 추가 215·수정 0·삭제 0)하지만 근거 소스가 바뀐 C# 파일이 30개이고, 그중 6개 묶음은 현재 C#이 이전 cpppj 동작에 머물러 있음을 소스로 확인했다.
+- [x] **R0-3 (2026-10-28 완료):** `cpp_sync.py --ports`·`--ports-init`·`--ports-reflect`와 [PORT_MAP.tsv](dotnetpj/PORT_MAP.tsv)(68행)·[PORT_MAP.md](dotnetpj/PORT_MAP.md), 형식·경로 검사 `CppPortMapTests`(2개, 오류 행을 넣으면 실패함을 확인)를 만들었다. 검사 수는 1,351개가 됐다.
+- [ ] **R0-4 — 새 fixture로 뒤처진 C#을 고친다:** 영향표 A의 여섯 묶음을 `sp-add-bits`·`sp-initialization`·`fort-sp-write` → `squid-retype`·`object-conversion` → `squid-pool-reset`·`state-sid-lists` → `priestregen`·`priest-panic`·`priest-prayer` → `RawGraph` 비표면 좌표 → `RawAssetPostPop` 4종 순으로 처리한다. 묶음마다 fixture `Link`+`cpp_sync.py --update --add`, C# 수정, `--ports-reflect`를 하고 단위 기록을 남긴다. 기대값을 C# 결과로 바꾸지 않는다.
 - [ ] **R1-1:** `Netstorm.Client` 생성, `Screen`·팔레트·입력 큐 이식과 MonoGame 출력 호스트.
 - [ ] **R1-2:** `--ui-script`·`snapshot`·`cpp_frame_compare.py`. 첫 비교는 R3 전이므로 시험 패턴과 출력 변환 경계로 한다.
 - [ ] 이후 R2 → R3(D1) → R4(M1) → R5(D2) → R6 → R7 → R8 순서로 진행하고, 단위마다 이 절의 체크와 [0.4](#04-기존-dotnetpj-소스의-재수정-판정) 판정표를 갱신한다.
@@ -182,7 +183,18 @@
 - 확인한 것: AGENTS.md, LEFT_JOBS.md 전체, 이 문서의 현행 계획·9~13절·구 개요, [이식 계획](docs/dotnet-cpp-port-plan-20261016.md), [현대 전체화면](docs/exe/cpp-modern-fullscreen-20261027.md), cpppj `src/o`·`src/client` 모듈 목록과 영역별 줄 수, `app/main.cpp`의 `--run`·`--ui-script`·`snapshot` 처리, `Client::Capture`, dotnetpj 프로젝트·파일·줄 수·MonoGame 그리기 경로, `cpp-fixture-manifest.tsv`의 반영 커밋, cpppj fixture 목록. 현재 호스트는 `VM-W11-Codex`다.
 - 실행하지 않은 것: 빌드·검사·cpppj/클론/원본 게임·창·디컴파일. 위 수치 중 검사 수 1,349는 10-23 기록이고, 243커밋·669 fixture는 이번에 `git`과 파일 목록으로 센 값이다.
 - 사용자 추가 요청("더 이상 의미가 없어진 내용은 LEFT_JOBS.dotnetpj.old.md를 만들어 옮기고, 최하단에 링크와 이관 사실을 명시")에 따라 문서를 나눴다. 원문 3,721줄의 비어 있지 않은 줄이 모두 두 파일 중 하나에 있는지 대조했다. 원문과 다른 줄은 의도적으로 바꾼 제목 4개와 문서 구성 안내 1줄뿐이다. 파일을 넘나드는 링크 12개의 대상 파일을 고쳤다. 세 변경 파일의 로컬 링크 690개를 검사했으며, 남은 오류는 HEAD 원문에 이미 있던 1개(`docs/map-viewer.md`의 바뀐 옛 제목 앵커)뿐이다. 원문 보존을 위해 이관 파일에서도 그대로 두었다.
-- 변경 파일은 이 문서, 새 `LEFT_JOBS.dotnetpj.old.md`, 이식 계획 문서(머리 안내 1줄)다. `20261028-19 DN cpppj 그래픽 기준 dotnetpj 재구성 계획과 인계 문서 이관`으로 로컬 커밋한다. push는 하지 않는다.
+- 변경 파일은 이 문서, 새 `LEFT_JOBS.dotnetpj.old.md`, 이식 계획 문서(머리 안내 1줄)다. `20261028-19 DN cpppj 그래픽 기준 dotnetpj 재구성 계획과 인계 문서 이관`으로 로컬 커밋했다(`11774e6f`). push는 하지 않는다.
+
+### 0.11 단위 기록 — R0 기준선·영향 목록·포트 맵 (2026-10-28, VM-W11-Codex)
+
+- **착수 상태:** 사용자 요청 "dotnetpj 작업 진행해 줘". 시작 HEAD는 `0cc1d33d`(원격 병합으로 `a3ad9431 20261028-19 CP`가 들어와 있었다). 작업 트리는 깨끗했고 게임·창은 실행하지 않았다. 빌드·검사·헤드리스 오라클 명령만 실행했다.
+- **변경 파일:** `dotnetpj/tools/cpp_sync.py`(포트 맵 3개 명령), `dotnetpj/PORT_MAP.tsv`·`PORT_MAP.md`(신규), `dotnetpj/tests/Netstorm.Core.Tests/CppPortMapTests.cs`(신규), `docs/dotnet-cpp-resync-20261028.md`(신규), 이 문서. cpppj·원본·CD·AGENTS.md·`cpp-fixture-manifest.tsv`의 reflected-commit(`f95a8db2`)은 바꾸지 않았다. 영향 검토가 끝나지 않았으므로 올리지 않는다.
+- **기록해 둘 것:**
+  - Git Bash에서 `cmake --build … -- /p:…`를 실행하면 `/p:`가 경로로 바뀌어 MSBuild가 즉시 실패한다(소스·산출물 변화 없음). 이 PC에서는 PowerShell로 실행한다. 첫 시도 로그는 덮어썼다.
+  - `cpp_sync.py`의 보고는 이 PC 콘솔에서 cp949로 출력되어 한글이 깨진다. `PYTHONUTF8=1`을 설정하거나 `python -X utf8`로 실행한다.
+  - cpppj 전체 빌드에는 `netstorm_tests`(3,358개 등록)가 포함되어 오래 걸린다. 오라클은 `NetstormCpp.exe`만 필요하며 이번에 cpppj 검사를 실행하지 않았다. cpppj 쪽 검사 결과를 이 단위의 근거로 합산하지 않는다.
+  - 처음 커밋에서 `-c core.autocrlf=false`를 써서 LF 저장 문서가 CRLF로 들어갔던 일을 `git add --renormalize`로 정정했다. 이 저장소의 `dotnetpj`·`docs`는 LF로 저장된다. 기본 `autocrlf`로 add 한다.
+- **원시 자료(Git 제외, 이 PC):** `extracted/dotnet-r0-baseline/` — `dotnet-test.log`, `cpp-sync.txt`, `cpp-build.log`, `impact.md`, `dump-types.tsv`, `dump-world-thewarbegins.tsv`, `new-fixtures.txt`, `cpp-changed-files.txt`, `PORT_MAP.backup.tsv`.
 
 ## 1. 지금까지의 완료 범위 — 이관 기록 색인
 

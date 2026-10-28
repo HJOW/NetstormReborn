@@ -6,17 +6,22 @@
   python dotnetpj/tools/cpp_sync.py --update --reflect HEAD 갱신하면서 '반영한 cpppj 커밋'도 함께 기록
   python dotnetpj/tools/cpp_sync.py --update --add sid:Core 새 fixture(sid-x86.tsv)를 목록에 등록 (사용 프로젝트 Core 또는 Assets)
   (dotnetpj 가 직접 소유한 fixture 는 --add clockkernel:Core:dotnetpj 처럼 출처를 셋째 칸에 쓴다)
+  python dotnetpj/tools/cpp_sync.py --ports                 포트 맵(dotnetpj/PORT_MAP.tsv) 보고: 이식 뒤 cpppj 소스가 바뀐 대응 쌍과 사라진 파일. 읽기 전용
+  python dotnetpj/tools/cpp_sync.py --ports-init            C# 주석의 cpppj 소스 경로로 포트 맵을 처음 만든다 (이미 있으면 거부)
+  python dotnetpj/tools/cpp_sync.py --ports-reflect HEAD --ports-file RawSidPool.cs   지정한 C# 파일의 기준 커밋을 올린다 (재대조를 마친 뒤에만)
 
 목록 파일은 dotnetpj/tests/Shared/cpp-fixture-manifest.tsv 이며 두 테스트 프로젝트가 같은 SHA-256 계산으로 검사한다.
 게임·창을 실행하지 않고 cpppj·원본 파일을 수정하지 않는다 (읽기 전용 git 명령과 목록 파일 쓰기만 한다).
 --update 는 반드시 해당 fixture 를 쓰는 C# 검사를 다시 대조한 뒤에 실행한다. 기대값을 C# 결과로 덮어쓰지 않는다.
 (2026-10-16 W01 동기화 장치로 추가, 계획: docs/dotnet-cpp-port-plan-20261016.md 7절)
+(2026-10-28 R0-3 포트 맵 추적 추가: fixture 가 아니라 cpppj 소스 변경도 경고한다. 계획: LEFT_JOBS.dotnetpj.md 0절)
 """
 
 from dataclasses import dataclass
 from pathlib import Path
 import argparse
 import hashlib
+import re
 import subprocess
 import sys
 
@@ -36,6 +41,14 @@ CONSUMERS = ("Core", "Assets")
 ORIGINS = ("cpppj", "dotnetpj")
 # 보고서에 펼쳐 보여 주는 커밋·파일 목록의 최대 길이.
 LIST_LIMIT = 40
+# 포트 맵 파일. cpppj 소스 ↔ C# 파일 ↔ 이식 기준 커밋을 한 줄씩 적는다 (2026-10-28 R0-3).
+PORT_MAP = ROOT / "dotnetpj" / "PORT_MAP.tsv"
+# 포트 맵을 처음 만들 때 C# 주석에서 cpppj 소스 경로를 찾는 폴더들 (dotnetpj/src 기준).
+PORT_SCAN_DIRS = ("Netstorm.Core", "Netstorm.Assets", "Netstorm.Client")
+# C# 주석에 적힌 cpppj 소스 경로. 폴더는 o(원본 월드 코어) 또는 client(클라이언트)다.
+PORT_PATTERN = re.compile(r"cpppj/src/(o|client)/([A-Za-z0-9_]+\.(?:cpp|h|inc))")
+# 포트 맵의 기본 기준 커밋. 이 커밋까지는 cpppj 변경을 이미 검토했다고 본다(W01 반영 커밋과 같다).
+PORT_FLOOR_KEY = "# floor-commit:"
 # cpppj 의 원본 목록(.inc 등)에서 C# 자료를 만드는 생성 도구들. 각 도구의 --check 가 현재 C# 자료와 cpppj 원본의 일치를 확인한다.
 GENERATORS = (
     "gen_original_constructors.py",
@@ -255,6 +268,151 @@ def update(reflect: str | None, adds: list[str]) -> int:
     return 0
 
 
+@dataclass
+class PortRow:
+    """포트 맵의 한 줄. cpppj 소스·C# 파일(dotnetpj/src 기준)·이식 기준 커밋·상태를 담는다."""
+
+    cpp: str
+    csharp: str
+    base: str
+    status: str
+
+
+def is_ancestor(older: str, newer: str) -> bool:
+    """older 가 newer 의 조상(또는 같은 커밋)이면 참이다. git 을 쓸 수 없으면 거짓이다."""
+    done = subprocess.run(["git", "-C", str(ROOT), "merge-base", "--is-ancestor", older, newer], capture_output=True)
+    return done.returncode == 0
+
+
+def load_ports() -> tuple[str, list[PortRow]]:
+    """포트 맵을 읽는다. 첫 값은 기본 기준 커밋(floor-commit)이다. 파일이 없으면 빈 목록이다."""
+    floor, rows = "", []
+    if not PORT_MAP.exists():
+        return floor, rows
+    # 줄마다 머리말 주석이나 데이터 행을 읽는다.
+    for line in PORT_MAP.read_text(encoding="utf-8").splitlines():
+        if line.startswith(PORT_FLOOR_KEY):
+            floor = line[len(PORT_FLOOR_KEY):].strip()
+        if not line or line.startswith("#"):
+            continue
+        parts = line.split("\t")
+        if len(parts) >= 4:
+            rows.append(PortRow(parts[0], parts[1], parts[2], parts[3]))
+    return floor, rows
+
+
+def save_ports(floor: str, rows: list[PortRow]) -> None:
+    """포트 맵을 저장한다. 머리말 설명 뒤에 cpp 경로 순으로 정렬한 행을 쓴다(LF, UTF-8)."""
+    lines = [
+        "# cpppj 소스 -> dotnetpj C# 파일 포트 맵 (dotnetpj R0-3, 2026-10-28). cpp_sync.py --ports 가 읽는다.",
+        "# 열: cpp(저장소 기준 경로)	csharp(dotnetpj/src 기준 경로)	base(이식·재대조를 마친 cpppj 커밋)	status",
+        "# status: L1(원본 fixture 대조, 세션 미연결) / session(세션 연결) / port(새 경로 직역 이식) / retire(대체 예정)",
+        "# base 이후 cpp 파일이 바뀌면 --ports 가 경고한다. 재대조를 마친 뒤 --ports-reflect 로 base 를 올린다. 기대값을 C# 결과로 바꾸지 않는다.",
+        f"{PORT_FLOOR_KEY} {floor}",
+    ]
+    # 정렬한 행마다 한 줄을 쓴다.
+    for r in sorted(rows, key=lambda x: (x.cpp, x.csharp)):
+        lines.append(f"{r.cpp}\t{r.csharp}\t{r.base}\t{r.status}")
+    PORT_MAP.write_text("\n".join(lines) + "\n", encoding="utf-8", newline="\n")
+
+
+def ports_init() -> int:
+    """C# 주석의 cpppj 소스 경로를 모아 포트 맵을 처음 만든다. 기준 커밋은 C# 파일을 마지막으로 고친 시점의 cpppj 커밋과 W01 반영 커밋 중 늦은 쪽이다."""
+    if PORT_MAP.exists():
+        print("PORT_MAP.tsv 가 이미 있다. 지우고 다시 만들지 않는다. 행을 직접 고치거나 --ports-reflect 를 쓴다.")
+        return 2
+    floor_rev, _ = load_manifest()
+    floor = (git("rev-parse", floor_rev) or "").strip() if floor_rev else ""
+    if not floor:
+        print("목록(cpp-fixture-manifest.tsv)의 reflected-commit 을 찾지 못했다.")
+        return 2
+    rows = []
+    # 설정한 폴더마다 C# 파일을 훑는다.
+    for name in PORT_SCAN_DIRS:
+        folder = ROOT / "dotnetpj" / "src" / name
+        if not folder.exists():
+            continue
+        # 폴더 안의 C# 파일마다 주석에서 cpppj 경로를 찾는다. 빌드 산출물 폴더는 건너뛴다.
+        for cs in sorted(folder.rglob("*.cs")):
+            if "/obj/" in cs.as_posix() or "/bin/" in cs.as_posix():
+                continue
+            refs = sorted(set(PORT_PATTERN.findall(cs.read_text(encoding="utf-8", errors="replace"))))
+            if not refs:
+                continue
+            rel = cs.relative_to(ROOT / "dotnetpj" / "src").as_posix()
+            # C# 파일을 마지막으로 고친 커밋을 찾고, 그 시점까지의 마지막 cpppj 소스 커밋을 이식 시점으로 본다.
+            last_cs = (git("log", "-1", "--format=%H", "--", f"dotnetpj/src/{rel}") or "").strip()
+            at_port = (git("log", "-1", "--format=%H", last_cs, "--", "cpppj/src") or "").strip() if last_cs else ""
+            base = floor if (not at_port or is_ancestor(at_port, floor)) else at_port
+            # 주석에 적힌 cpppj 경로마다 한 행을 만든다. 실제로 있는 파일만 적는다.
+            for folder_name, file in refs:
+                cpp = f"cpppj/src/{folder_name}/{file}"
+                if (ROOT / cpp).exists():
+                    rows.append(PortRow(cpp, rel, base, "L1" if name != "Netstorm.Client" else "port"))
+    save_ports(floor, rows)
+    print(f"포트 맵을 만들었다: {PORT_MAP.relative_to(ROOT)} (행 {len(rows)}개, 기본 기준 커밋 {floor[:12]})")
+    return 0
+
+
+def ports_report() -> int:
+    """포트 맵을 읽어 이식 뒤 cpppj 소스가 바뀐 쌍과 사라진 파일을 보고한다. 파일이 사라졌거나 C# 이 없으면 1 을 돌려준다."""
+    floor, rows = load_ports()
+    if not rows:
+        print("포트 맵이 없거나 비어 있다. --ports-init 로 만든다.")
+        return 2
+    head = (git("rev-parse", "HEAD") or "").strip()
+    print("== 포트 맵 상태 ==")
+    print(f"기본 기준 커밋 : {floor[:12]}   저장소 HEAD : {head[:12]}   행 {len(rows)}개")
+    bad, stale = 0, []
+    # 행마다 파일 존재와 기준 커밋 이후의 변경 커밋 수를 확인한다.
+    for r in rows:
+        problems = []
+        if not (ROOT / r.cpp).exists():
+            problems.append("cpp 파일 없음")
+        if not (ROOT / "dotnetpj" / "src" / r.csharp).exists():
+            problems.append("C# 파일 없음")
+        if problems:
+            bad += 1
+            print(f"  오류 {r.cpp} -> {r.csharp}: {', '.join(problems)}")
+            continue
+        log = git("log", "--oneline", "--no-decorate", f"{r.base}..HEAD", "--", r.cpp)
+        count = len([x for x in (log or "").splitlines() if x])
+        if count:
+            stale.append((r, count))
+    print(f"\n[기준 이후 cpppj 소스가 바뀐 쌍 {len(stale)}개 / 전체 {len(rows)}개] (재대조 필요 신호이며 불일치의 증거는 아니다)")
+    # 변경 커밋이 많은 쌍부터 제한 개수만 보여 준다.
+    for r, count in sorted(stale, key=lambda x: (-x[1], x[0].csharp))[:LIST_LIMIT * 2]:
+        print(f"  {count:>3}커밋 {r.csharp:<48} <- {r.cpp.removeprefix('cpppj/src/')}  [{r.status}]")
+    if len(stale) > LIST_LIMIT * 2:
+        print(f"  … 외 {len(stale) - LIST_LIMIT * 2}개")
+    return 1 if bad else 0
+
+
+def ports_reflect(rev: str, files: list[str]) -> int:
+    """지정한 C# 파일(이름 또는 dotnetpj/src 기준 경로 끝부분)에 해당하는 행의 기준 커밋을 rev 로 올린다. 재대조를 마친 뒤에만 쓴다."""
+    full = (git("rev-parse", rev) or "").strip()
+    if not full:
+        print(f"--ports-reflect {rev}: git 에서 커밋을 찾지 못했다.")
+        return 2
+    if not files:
+        print("--ports-file 로 대상 C# 파일을 하나 이상 지정한다. 전체를 한 번에 올리지 않는다.")
+        return 2
+    floor, rows = load_ports()
+    touched = set()
+    # 행마다 지정한 C# 파일과 경로 끝이 맞으면 기준 커밋을 올린다.
+    for r in rows:
+        if any(r.csharp == f or r.csharp.endswith("/" + f) for f in files):
+            r.base = full
+            touched.add(r.csharp)
+    missing = [f for f in files if not any(t == f or t.endswith("/" + f) for t in touched)]
+    if missing:
+        print(f"포트 맵에 없는 C# 파일: {', '.join(missing)}")
+        return 2
+    save_ports(floor, rows)
+    print(f"기준 커밋을 {full[:12]} 로 올렸다: {', '.join(sorted(touched))}")
+    return 0
+
+
 def main() -> int:
     """명령줄 인자를 읽어 보고 또는 갱신을 실행한다."""
     # 콘솔 인코딩이 한국어 문자를 표현하지 못해도 출력 때문에 죽지 않게 한다.
@@ -263,7 +421,17 @@ def main() -> int:
     parser.add_argument("--update", action="store_true", help="목록의 SHA-256·행 수를 현재 파일 기준으로 갱신한다")
     parser.add_argument("--reflect", metavar="REV", help="--update 와 함께: 반영한 cpppj 커밋을 기록한다 (예: HEAD)")
     parser.add_argument("--add", metavar="NAME:CONSUMER[:ORIGIN]", action="append", default=[], help="--update 와 함께: 새 fixture 를 등록한다")
+    parser.add_argument("--ports", action="store_true", help="포트 맵(dotnetpj/PORT_MAP.tsv) 기준으로 이식 뒤 바뀐 cpppj 소스를 보고한다")
+    parser.add_argument("--ports-init", action="store_true", help="C# 주석의 cpppj 소스 경로로 포트 맵을 처음 만든다")
+    parser.add_argument("--ports-reflect", metavar="REV", help="--ports-file 로 지정한 C# 파일의 기준 커밋을 올린다 (재대조를 마친 뒤)")
+    parser.add_argument("--ports-file", metavar="CSHARP", action="append", default=[], help="--ports-reflect 의 대상 C# 파일 이름 또는 경로 끝부분")
     args = parser.parse_args()
+    if args.ports_init:
+        return ports_init()
+    if args.ports_reflect:
+        return ports_reflect(args.ports_reflect, args.ports_file)
+    if args.ports:
+        return ports_report()
     if args.update:
         return update(args.reflect, args.add)
     if args.reflect or args.add:
