@@ -1,0 +1,664 @@
+{
+  "scope": "사용자 우선 요청: 완료545 및 진행546 소실 점검",
+  "head": "a73d43d2bd343f7662f679d29e11d6b3df0369f2",
+  "host": "HJOW-ATHLON",
+  "statusAtStart": " M LEFT_JOBS.md\n M cpppj/src/client/CMakeLists.txt\n M cpppj/src/client/CampaignClientServices.cpp\n M cpppj/src/client/ClientColorSortInput.cpp\n M cpppj/src/client/ClientColorSortInput.h\n M cpppj/src/client/ClientMain.cpp\n M cpppj/src/client/ClientMain.h\n M cpppj/src/client/GameWorld.cpp\n M cpppj/src/client/GameWorld.h\n M cpppj/src/client/OwnerColorMaps.cpp\n M cpppj/src/client/OwnerColorMaps.h\n M cpppj/src/client/PreviewDraw.cpp\n M cpppj/src/client/PreviewDraw.h\n M cpppj/src/client/ProductionControlContext.h\n M cpppj/src/client/RawCampaignCursorDisplay.cpp\n M cpppj/src/client/RawCampaignCursorDisplay.h\n M cpppj/src/client/RawCampaignFactoryDisplay.cpp\n M cpppj/src/client/RawCampaignFactoryDisplay.h\n M cpppj/src/client/RawCampaignSession.cpp\n M cpppj/src/client/RawCampaignSession.h\n M cpppj/src/client/RawProductionControls.cpp\n M cpppj/src/client/SpriteDraw.cpp\n M cpppj/src/client/SpriteDraw.h\n M cpppj/src/client/UberGump.cpp\n M cpppj/src/client/UberHud.inc\n M cpppj/src/client/ViewKeyInput.cpp\n M cpppj/src/client/ViewKeyInput.h\n M cpppj/tests/CMakeLists.txt\n M cpppj/tests/SpriteDrawTests.cpp\n M dotnetpj/Netstorm.sln\n?? cpppj/src/client/OwnerColorTableState.cpp\n?? cpppj/src/client/OwnerColorTableState.h\n?? cpppj/tests/BannerOptionTests.cpp\n?? cpppj/tests/fixtures/banner-key-x86.tsv\n?? cpppj/tests/fixtures/banner-option-x86.tsv\n?? dotnetpj/src/Netstorm.Client.Host/\n?? dotnetpj/src/Netstorm.Client/Host/\n?? dotnetpj/tests/Netstorm.Client.Tests/ClientHostTests.cs\n?? tools/cpp_banner_smoke.py\n?? tools/cpp_work_loss_audit_546.py\n?? tools/decomp_banner_key.py\n?? tools/decomp_banner_option.py\n",
+  "tracked": {
+    "count": 18624,
+    "missing": [],
+    "unexpectedEmpty": []
+  },
+  "source545": {
+    "count": 2936,
+    "missing": [],
+    "unexpectedEmpty": [],
+    "changed": [
+      "cpppj/src/client/SpriteDraw.cpp",
+      "cpppj/src/client/PreviewDraw.h",
+      "cpppj/src/client/SpriteDraw.h",
+      "cpppj/src/client/CMakeLists.txt",
+      "cpppj/src/client/RawCampaignFactoryDisplay.h",
+      "cpppj/src/client/RawCampaignCursorDisplay.h",
+      "cpppj/src/client/ClientColorSortInput.h",
+      "cpppj/src/client/ClientColorSortInput.cpp",
+      "cpppj/src/client/OwnerColorMaps.h",
+      "cpppj/src/client/OwnerColorMaps.cpp",
+      "cpppj/src/client/ProductionControlContext.h",
+      "cpppj/src/client/UberHud.inc",
+      "cpppj/src/client/CampaignClientServices.cpp",
+      "cpppj/src/client/ClientMain.cpp",
+      "cpppj/src/client/ClientMain.h",
+      "cpppj/src/client/GameWorld.cpp",
+      "cpppj/src/client/GameWorld.h",
+      "cpppj/src/client/PreviewDraw.cpp",
+      "cpppj/src/client/RawCampaignCursorDisplay.cpp",
+      "cpppj/src/client/RawCampaignFactoryDisplay.cpp",
+      "cpppj/src/client/RawCampaignSession.cpp",
+      "cpppj/src/client/RawCampaignSession.h",
+      "cpppj/src/client/RawProductionControls.cpp",
+      "cpppj/src/client/UberGump.cpp",
+      "cpppj/src/client/ViewKeyInput.h",
+      "cpppj/src/client/ViewKeyInput.cpp",
+      "cpppj/tests/SpriteDrawTests.cpp",
+      "cpppj/tests/CMakeLists.txt"
+    ],
+    "expectedChanges": [
+      "cpppj/src/client/CMakeLists.txt",
+      "cpppj/src/client/CampaignClientServices.cpp",
+      "cpppj/src/client/ClientColorSortInput.cpp",
+      "cpppj/src/client/ClientColorSortInput.h",
+      "cpppj/src/client/ClientMain.cpp",
+      "cpppj/src/client/ClientMain.h",
+      "cpppj/src/client/GameWorld.cpp",
+      "cpppj/src/client/GameWorld.h",
+      "cpppj/src/client/OwnerColorMaps.cpp",
+      "cpppj/src/client/OwnerColorMaps.h",
+      "cpppj/src/client/PreviewDraw.cpp",
+      "cpppj/src/client/PreviewDraw.h",
+      "cpppj/src/client/ProductionControlContext.h",
+      "cpppj/src/client/RawCampaignCursorDisplay.cpp",
+      "cpppj/src/client/RawCampaignCursorDisplay.h",
+      "cpppj/src/client/RawCampaignFactoryDisplay.cpp",
+      "cpppj/src/client/RawCampaignFactoryDisplay.h",
+      "cpppj/src/client/RawCampaignSession.cpp",
+      "cpppj/src/client/RawCampaignSession.h",
+      "cpppj/src/client/RawProductionControls.cpp",
+      "cpppj/src/client/SpriteDraw.cpp",
+      "cpppj/src/client/SpriteDraw.h",
+      "cpppj/src/client/UberGump.cpp",
+      "cpppj/src/client/UberHud.inc",
+      "cpppj/src/client/ViewKeyInput.cpp",
+      "cpppj/src/client/ViewKeyInput.h",
+      "cpppj/tests/CMakeLists.txt",
+      "cpppj/tests/SpriteDrawTests.cpp"
+    ],
+    "unexpectedChanges": []
+  },
+  "checks": {
+    "finalSource2941": {
+      "count": 2941,
+      "missing": [],
+      "unexpectedEmpty": [],
+      "changed": []
+    },
+    "productionMatchesSuccessfulBuild": {
+      "count": 28,
+      "missing": [],
+      "unexpectedEmpty": [],
+      "changed": []
+    },
+    "successfulBuildCopies": {
+      "count": 35,
+      "missing": [],
+      "unexpectedEmpty": [],
+      "changed": []
+    },
+    "previousSnapshotCopies": {
+      "count": 37,
+      "missing": [],
+      "unexpectedEmpty": [],
+      "changed": []
+    },
+    "protected": {
+      "count": 1819,
+      "missing": [],
+      "unexpectedEmpty": [],
+      "changed": [],
+      "agentsUnchanged": true
+    },
+    "currentCopies": {
+      "count": 37,
+      "missing": [],
+      "unexpectedEmpty": [],
+      "changed": []
+    },
+    "stableDuringAudit": {
+      "count": 37,
+      "missing": [],
+      "unexpectedEmpty": [],
+      "changed": []
+    }
+  },
+  "previousSnapshotCurrent": {
+    "count": 37,
+    "missing": [],
+    "unexpectedEmpty": [],
+    "changed": [
+      "tools/cpp_banner_smoke.py"
+    ],
+    "expectedLaterChanges": [
+      "tools/cpp_banner_smoke.py",
+      "tools/decomp_banner_key.py"
+    ],
+    "unexpectedChanges": []
+  },
+  "completedEvidence": [
+    {
+      "report": "cpppj/priest-display-20261028.json",
+      "count": 28,
+      "missing": [],
+      "unexpectedEmpty": [],
+      "changed": []
+    },
+    {
+      "report": "cpppj/construction-mana-20261028.json",
+      "count": 34,
+      "missing": [],
+      "unexpectedEmpty": [],
+      "changed": []
+    },
+    {
+      "report": "cpppj/chat-divider-runtime-20261028.json",
+      "count": 110,
+      "missing": [],
+      "unexpectedEmpty": [],
+      "changed": []
+    },
+    {
+      "report": "cpppj/view-key-runtime-20261028.json",
+      "count": 357,
+      "missing": [],
+      "unexpectedEmpty": [],
+      "changed": []
+    },
+    {
+      "report": "cpppj/f8-key-runtime-20261028.json",
+      "count": 251,
+      "missing": [],
+      "unexpectedEmpty": [],
+      "changed": []
+    },
+    {
+      "report": "cpppj/work-loss-audit-20261028.json",
+      "count": 8,
+      "missing": [],
+      "unexpectedEmpty": [],
+      "changed": []
+    },
+    {
+      "report": "cpppj/work-loss-audit-545-20261028.json",
+      "count": 166,
+      "missing": [],
+      "unexpectedEmpty": [],
+      "changed": []
+    }
+  ],
+  "work546RawEvidence": {
+    "count": 293,
+    "manifest": "extracted/cpp-work-loss-audit-546-20261028/work-evidence.json"
+  },
+  "binaries": {
+    "NetstormCpp.exe": {
+      "sha256": "d7b34b717765c487c5351b5c6c648e68a4ef8eb1d4e7396fccdfa382d31dd06e",
+      "recorded": "d7b34b717765c487c5351b5c6c648e68a4ef8eb1d4e7396fccdfa382d31dd06e"
+    },
+    "netstorm_tests.exe": {
+      "sha256": "7cda911feee2305da7007f1bfd13c46363606bef039f1b835b345ded59d07fbc",
+      "recorded": "7cda911feee2305da7007f1bfd13c46363606bef039f1b835b345ded59d07fbc"
+    }
+  },
+  "completedCommitAncestry": {
+    "1ddc4ba0": 0,
+    "55520f78": 0,
+    "2efb39ae": 0,
+    "485ec285": 0,
+    "e114d77b": 0,
+    "73506bcb": 0
+  },
+  "gitConnectivityExitCode": 0,
+  "recoveryPatch": {
+    "path": "docs/exe/recovery/cpp-banner-546-20261028.patch",
+    "sha256": "0a66f67dc9b4e89d809141662ad4451e69534a8d639dd83bc98b1ca50b77b6f7",
+    "reverseCheckExitCode": 0,
+    "files": [
+      "cpppj/src/client/CMakeLists.txt",
+      "cpppj/src/client/CampaignClientServices.cpp",
+      "cpppj/src/client/ClientColorSortInput.cpp",
+      "cpppj/src/client/ClientColorSortInput.h",
+      "cpppj/src/client/ClientMain.cpp",
+      "cpppj/src/client/ClientMain.h",
+      "cpppj/src/client/GameWorld.cpp",
+      "cpppj/src/client/GameWorld.h",
+      "cpppj/src/client/OwnerColorMaps.cpp",
+      "cpppj/src/client/OwnerColorMaps.h",
+      "cpppj/src/client/OwnerColorTableState.cpp",
+      "cpppj/src/client/OwnerColorTableState.h",
+      "cpppj/src/client/PreviewDraw.cpp",
+      "cpppj/src/client/PreviewDraw.h",
+      "cpppj/src/client/ProductionControlContext.h",
+      "cpppj/src/client/RawCampaignCursorDisplay.cpp",
+      "cpppj/src/client/RawCampaignCursorDisplay.h",
+      "cpppj/src/client/RawCampaignFactoryDisplay.cpp",
+      "cpppj/src/client/RawCampaignFactoryDisplay.h",
+      "cpppj/src/client/RawCampaignSession.cpp",
+      "cpppj/src/client/RawCampaignSession.h",
+      "cpppj/src/client/RawProductionControls.cpp",
+      "cpppj/src/client/SpriteDraw.cpp",
+      "cpppj/src/client/SpriteDraw.h",
+      "cpppj/src/client/UberGump.cpp",
+      "cpppj/src/client/UberHud.inc",
+      "cpppj/src/client/ViewKeyInput.cpp",
+      "cpppj/src/client/ViewKeyInput.h",
+      "cpppj/tests/BannerOptionTests.cpp",
+      "cpppj/tests/CMakeLists.txt",
+      "cpppj/tests/SpriteDrawTests.cpp",
+      "cpppj/tests/fixtures/banner-key-x86.tsv",
+      "cpppj/tests/fixtures/banner-option-x86.tsv",
+      "tools/cpp_banner_smoke.py",
+      "tools/decomp_banner_key.py",
+      "tools/decomp_banner_option.py"
+    ]
+  },
+  "existingValidation546": {
+    "build": {
+      "command": [
+        "cmake",
+        "--build",
+        "cpppj/build",
+        "--config",
+        "Release",
+        "--target",
+        "NetstormCpp",
+        "netstorm_tests",
+        "--parallel",
+        "4",
+        "--",
+        "/p:UseMultiToolTask=true",
+        "/p:MultiProcMaxCount=4",
+        "/p:EnforceProcessCountAcrossBuilds=true"
+      ],
+      "exitCode": 0,
+      "seconds": 604.5571658999834
+    },
+    "tests": {
+      "registered": 3379,
+      "uniqueExecuted": 82,
+      "results": [
+        {
+          "filter": "BannerOption_",
+          "count": 1,
+          "failedChecks": 0,
+          "exitCode": 0
+        },
+        {
+          "filter": "BannerKey_",
+          "count": 1,
+          "failedChecks": 0,
+          "exitCode": 0
+        },
+        {
+          "filter": "OwnerColorTableState_",
+          "count": 1,
+          "failedChecks": 0,
+          "exitCode": 0
+        },
+        {
+          "filter": "OwnerColorMaps_",
+          "count": 1,
+          "failedChecks": 0,
+          "exitCode": 0
+        },
+        {
+          "filter": "PreviewColorMaps_SpecialOwner",
+          "count": 1,
+          "failedChecks": 0,
+          "exitCode": 0
+        },
+        {
+          "filter": "ClientColorSortPrimary_",
+          "count": 3,
+          "failedChecks": 0,
+          "exitCode": 0
+        },
+        {
+          "filter": "SessionCursorColorInput_",
+          "count": 3,
+          "failedChecks": 0,
+          "exitCode": 0
+        },
+        {
+          "filter": "ColorSortFixedInput_",
+          "count": 2,
+          "failedChecks": 0,
+          "exitCode": 0
+        },
+        {
+          "filter": "SpriteDraw_",
+          "count": 14,
+          "failedChecks": 0,
+          "exitCode": 0
+        },
+        {
+          "filter": "PreviewDraw_",
+          "count": 11,
+          "failedChecks": 0,
+          "exitCode": 0
+        },
+        {
+          "filter": "ShapeToBuffer_",
+          "count": 9,
+          "failedChecks": 0,
+          "exitCode": 0
+        },
+        {
+          "filter": "ImageGump_",
+          "count": 3,
+          "failedChecks": 0,
+          "exitCode": 0
+        },
+        {
+          "filter": "ProductionInitialContext_",
+          "count": 22,
+          "failedChecks": 0,
+          "exitCode": 0
+        },
+        {
+          "filter": "ViewKeyInput_",
+          "count": 2,
+          "failedChecks": 0,
+          "exitCode": 0
+        },
+        {
+          "filter": "F8KeyInput_",
+          "count": 2,
+          "failedChecks": 0,
+          "exitCode": 0
+        },
+        {
+          "filter": "HideBuildings_",
+          "count": 1,
+          "failedChecks": 0,
+          "exitCode": 0
+        },
+        {
+          "filter": "CampaignSession_FenceShieldUsesCurrentOwnerColorPixels",
+          "count": 1,
+          "failedChecks": 0,
+          "exitCode": 0
+        },
+        {
+          "filter": "CampaignPriestDisplay_",
+          "count": 2,
+          "failedChecks": 0,
+          "exitCode": 0
+        },
+        {
+          "filter": "CampaignConstructionMana_",
+          "count": 2,
+          "failedChecks": 0,
+          "exitCode": 0
+        }
+      ],
+      "binarySha256": "7cda911feee2305da7007f1bfd13c46363606bef039f1b835b345ded59d07fbc"
+    },
+    "gameRuns": [
+      {
+        "path": "extracted/cpp-banner-option-546/owned-banner/run/run.json",
+        "returnCode": 0,
+        "binarySha256": "d7b34b717765c487c5351b5c6c648e68a4ef8eb1d4e7396fccdfa382d31dd06e",
+        "originalsUnchanged": true,
+        "dataUnchanged": true
+      },
+      {
+        "path": "extracted/cpp-banner-option-546/preflight/1024x768/run/run.json",
+        "returnCode": 1,
+        "binarySha256": "d7b34b717765c487c5351b5c6c648e68a4ef8eb1d4e7396fccdfa382d31dd06e",
+        "originalsUnchanged": true,
+        "dataUnchanged": true
+      },
+      {
+        "path": "extracted/cpp-banner-option-546/preflight2/1024x768/run/run.json",
+        "returnCode": 1,
+        "binarySha256": "d7b34b717765c487c5351b5c6c648e68a4ef8eb1d4e7396fccdfa382d31dd06e",
+        "originalsUnchanged": true,
+        "dataUnchanged": true
+      },
+      {
+        "path": "extracted/cpp-banner-option-546/preflight3/1024x768/run/run.json",
+        "returnCode": 1,
+        "binarySha256": "d7b34b717765c487c5351b5c6c648e68a4ef8eb1d4e7396fccdfa382d31dd06e",
+        "originalsUnchanged": true,
+        "dataUnchanged": true
+      },
+      {
+        "path": "extracted/cpp-banner-option-546/preflight4/1024x768/run/run.json",
+        "returnCode": 0,
+        "binarySha256": "d7b34b717765c487c5351b5c6c648e68a4ef8eb1d4e7396fccdfa382d31dd06e",
+        "originalsUnchanged": true,
+        "dataUnchanged": true
+      },
+      {
+        "path": "extracted/cpp-banner-option-546/preflight4/editor-1024x768/run/run.json",
+        "returnCode": 1,
+        "binarySha256": "d7b34b717765c487c5351b5c6c648e68a4ef8eb1d4e7396fccdfa382d31dd06e",
+        "originalsUnchanged": true,
+        "dataUnchanged": true
+      },
+      {
+        "path": "extracted/cpp-banner-option-546/preflight5/editor-1024x768/run/run.json",
+        "returnCode": 0,
+        "binarySha256": "d7b34b717765c487c5351b5c6c648e68a4ef8eb1d4e7396fccdfa382d31dd06e",
+        "originalsUnchanged": true,
+        "dataUnchanged": true
+      },
+      {
+        "path": "extracted/cpp-banner-option-546/remaining/1280x720/run/run.json",
+        "returnCode": 0,
+        "binarySha256": "d7b34b717765c487c5351b5c6c648e68a4ef8eb1d4e7396fccdfa382d31dd06e",
+        "originalsUnchanged": true,
+        "dataUnchanged": true
+      },
+      {
+        "path": "extracted/cpp-banner-option-546/remaining/1280x800/run/run.json",
+        "returnCode": 0,
+        "binarySha256": "d7b34b717765c487c5351b5c6c648e68a4ef8eb1d4e7396fccdfa382d31dd06e",
+        "originalsUnchanged": true,
+        "dataUnchanged": true
+      },
+      {
+        "path": "extracted/cpp-banner-option-546/remaining/editor-1280x720/run/run.json",
+        "returnCode": 0,
+        "binarySha256": "d7b34b717765c487c5351b5c6c648e68a4ef8eb1d4e7396fccdfa382d31dd06e",
+        "originalsUnchanged": true,
+        "dataUnchanged": true
+      },
+      {
+        "path": "extracted/cpp-banner-option-546/remaining/editor-1280x800/run/run.json",
+        "returnCode": 0,
+        "binarySha256": "d7b34b717765c487c5351b5c6c648e68a4ef8eb1d4e7396fccdfa382d31dd06e",
+        "originalsUnchanged": true,
+        "dataUnchanged": true
+      }
+    ],
+    "gameRunCounts": {
+      "all": 11,
+      "exit0": 7,
+      "exit1": 4
+    }
+  },
+  "sourceModified": false,
+  "dotnetModified": false,
+  "gameBuildTestLaunched": false,
+  "capacityErrorDirectCause": "미확정: 서비스 용량 오류와 파일 원복의 인과를 파일 상태만으로 판정할 수 없음",
+  "limits": "저장되거나 기록된 기준이 전혀 없는 변경의 과거 존재 여부는 판단할 수 없음",
+  "failures": [],
+  "date": "2026-10-28",
+  "toolSha256": "7e35b563747be0001da524bc1b646b05130141d327930c4c77a9bddb45910467",
+  "lastFullDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23",
+    "changedDuringAudit": false
+  },
+  "completedEvidenceUniquePaths": 802,
+  "rawEvidence": [
+    {
+      "path": "extracted/cpp-work-loss-audit-546-20261028/audit.json",
+      "sha256": "fb6808cbe13fa4f3a4650f3d1b03300e1ade20dcba4757da7c62ee797a463f2c"
+    },
+    {
+      "path": "extracted/cpp-work-loss-audit-546-20261028/current-work/cpppj/src/client/CampaignClientServices.cpp",
+      "sha256": "c20749e0684a3b9cfef6367f5b3cf8f87128c01cbbeea8986d2691bf87076c6f"
+    },
+    {
+      "path": "extracted/cpp-work-loss-audit-546-20261028/current-work/cpppj/src/client/ClientColorSortInput.cpp",
+      "sha256": "67d4b5eafd3922eda2272178d45a890c9125839d40b667ed50e3a6a343bd6ef3"
+    },
+    {
+      "path": "extracted/cpp-work-loss-audit-546-20261028/current-work/cpppj/src/client/ClientColorSortInput.h",
+      "sha256": "2407b39c872bbaaa6c6299269f700a40f3f87396d42d60d371485214fbb2ac66"
+    },
+    {
+      "path": "extracted/cpp-work-loss-audit-546-20261028/current-work/cpppj/src/client/ClientMain.cpp",
+      "sha256": "2437ab63aca1ee5cb8660f78be58a6b90dea2ede93af8019c5571b7d8aa52082"
+    },
+    {
+      "path": "extracted/cpp-work-loss-audit-546-20261028/current-work/cpppj/src/client/ClientMain.h",
+      "sha256": "486f3f58a358e657b0d2e90a657dd467281f9a1ab808f6d45e76368253dc29b6"
+    },
+    {
+      "path": "extracted/cpp-work-loss-audit-546-20261028/current-work/cpppj/src/client/CMakeLists.txt",
+      "sha256": "242c001276a376ee05c5d755429269e6402133a74045c0ad55dc016d36a036af"
+    },
+    {
+      "path": "extracted/cpp-work-loss-audit-546-20261028/current-work/cpppj/src/client/GameWorld.cpp",
+      "sha256": "0d46ae5cf0a6c11f64b3302ed3002750ae9dd5f383ace51750b7085e980db81d"
+    },
+    {
+      "path": "extracted/cpp-work-loss-audit-546-20261028/current-work/cpppj/src/client/GameWorld.h",
+      "sha256": "d280a8dfd099359d7d31adec1d3151cf90ce050f501310750cc349f3b19d11bc"
+    },
+    {
+      "path": "extracted/cpp-work-loss-audit-546-20261028/current-work/cpppj/src/client/OwnerColorMaps.cpp",
+      "sha256": "57a72edae865e632a593885d75c4297fc9d878c24079f41baef4e32c220df674"
+    },
+    {
+      "path": "extracted/cpp-work-loss-audit-546-20261028/current-work/cpppj/src/client/OwnerColorMaps.h",
+      "sha256": "5ba3e1f63ae64e6f4759eb70128d1dd206ff85aed536853f2cd9cf8faef777d5"
+    },
+    {
+      "path": "extracted/cpp-work-loss-audit-546-20261028/current-work/cpppj/src/client/OwnerColorTableState.cpp",
+      "sha256": "27e38ccbf10b7fe1a6cf31a11bfb709a16be7f1f376d56f622521785fc23e8bd"
+    },
+    {
+      "path": "extracted/cpp-work-loss-audit-546-20261028/current-work/cpppj/src/client/OwnerColorTableState.h",
+      "sha256": "6128be7282ea8f252b92b87fa134d3c55f06b6602d5bc99846d084a7d81fff44"
+    },
+    {
+      "path": "extracted/cpp-work-loss-audit-546-20261028/current-work/cpppj/src/client/PreviewDraw.cpp",
+      "sha256": "0d0de4d2ae132daa8a55d4c27c5cf47ddeb61f039873bb1f403f81544209ec5b"
+    },
+    {
+      "path": "extracted/cpp-work-loss-audit-546-20261028/current-work/cpppj/src/client/PreviewDraw.h",
+      "sha256": "1a43f5ba2035904236ae983dab6b31d609871377a195b9806a2e0a126eaf9002"
+    },
+    {
+      "path": "extracted/cpp-work-loss-audit-546-20261028/current-work/cpppj/src/client/ProductionControlContext.h",
+      "sha256": "82b168f3f2c8155559022974598bf896a6bbddcf422c46dc15e5b508f2e8dff1"
+    },
+    {
+      "path": "extracted/cpp-work-loss-audit-546-20261028/current-work/cpppj/src/client/RawCampaignCursorDisplay.cpp",
+      "sha256": "c36c0300ecb6a6dbfa8c75c40f79455ed9790ceb91673afac5c4f88f7fea62e9"
+    },
+    {
+      "path": "extracted/cpp-work-loss-audit-546-20261028/current-work/cpppj/src/client/RawCampaignCursorDisplay.h",
+      "sha256": "725e9947f3a7af9c53ea19726da677fa45427e8f90b83a12e49d92749c2951e3"
+    },
+    {
+      "path": "extracted/cpp-work-loss-audit-546-20261028/current-work/cpppj/src/client/RawCampaignFactoryDisplay.cpp",
+      "sha256": "1dc5d6d85d14e19eed2e7ca9da2614fd067b0bb854c475c3f1c9578531550981"
+    },
+    {
+      "path": "extracted/cpp-work-loss-audit-546-20261028/current-work/cpppj/src/client/RawCampaignFactoryDisplay.h",
+      "sha256": "2647eed697ef220f816022d71260c2dbc3ff85b27e026e3252028787c58247fd"
+    },
+    {
+      "path": "extracted/cpp-work-loss-audit-546-20261028/current-work/cpppj/src/client/RawCampaignSession.cpp",
+      "sha256": "d5fb75936892c0a4f7e4ccbf5d54f456eedfef73e171a5fa14b3cbe3f15bf03c"
+    },
+    {
+      "path": "extracted/cpp-work-loss-audit-546-20261028/current-work/cpppj/src/client/RawCampaignSession.h",
+      "sha256": "c4949f3838baead62a187f3210aee240c6744ea389442abe0b69e2a8ab67f230"
+    },
+    {
+      "path": "extracted/cpp-work-loss-audit-546-20261028/current-work/cpppj/src/client/RawProductionControls.cpp",
+      "sha256": "d98ec1f885c370f5800128dc178a0236427393faca12588860c551a48578e1b0"
+    },
+    {
+      "path": "extracted/cpp-work-loss-audit-546-20261028/current-work/cpppj/src/client/SpriteDraw.cpp",
+      "sha256": "ce4719de5ee90722819c61719262d1a63494e499002eb6486e86d59940937680"
+    },
+    {
+      "path": "extracted/cpp-work-loss-audit-546-20261028/current-work/cpppj/src/client/SpriteDraw.h",
+      "sha256": "24d8083b4c5aaca76e08729d813dc918e6ba37611946ad31cdfa6b9b8211e7a4"
+    },
+    {
+      "path": "extracted/cpp-work-loss-audit-546-20261028/current-work/cpppj/src/client/UberGump.cpp",
+      "sha256": "ee8003282e7cc7265838d9412b30a8f70d6fd3db13506135623b827519d87560"
+    },
+    {
+      "path": "extracted/cpp-work-loss-audit-546-20261028/current-work/cpppj/src/client/UberHud.inc",
+      "sha256": "2c90ff36568cb85cb87a3d5b334fbaa8a001cd03de3d3b7ce518f3f5621d1aa0"
+    },
+    {
+      "path": "extracted/cpp-work-loss-audit-546-20261028/current-work/cpppj/src/client/ViewKeyInput.cpp",
+      "sha256": "cc780ac4b0da12340150cb92eeefb74e16992d88482a704a006a255ce97effd5"
+    },
+    {
+      "path": "extracted/cpp-work-loss-audit-546-20261028/current-work/cpppj/src/client/ViewKeyInput.h",
+      "sha256": "ab7edaa68898b7061d17c18b2486b703f7ebe8b7a52fc3f71a3e5a14b50949e5"
+    },
+    {
+      "path": "extracted/cpp-work-loss-audit-546-20261028/current-work/cpppj/tests/BannerOptionTests.cpp",
+      "sha256": "487fccf37cbe9b22ce91e3c8bb723c160d06f39e6bed1e7b1ffb0d7a8191807d"
+    },
+    {
+      "path": "extracted/cpp-work-loss-audit-546-20261028/current-work/cpppj/tests/CMakeLists.txt",
+      "sha256": "fd0c6ba6a5005fc333f94d52f9a5755250ec451d30e035a0e05b8721d9c71987"
+    },
+    {
+      "path": "extracted/cpp-work-loss-audit-546-20261028/current-work/cpppj/tests/fixtures/banner-key-x86.tsv",
+      "sha256": "a17ecb9ef8b2ffec81714c3ce452490f0faadf885272896e9fc8957fd338ed8c"
+    },
+    {
+      "path": "extracted/cpp-work-loss-audit-546-20261028/current-work/cpppj/tests/fixtures/banner-option-x86.tsv",
+      "sha256": "152b5c01100c57dae91241577d483ca140e1fe83cb1a1b0c2708a2697458839b"
+    },
+    {
+      "path": "extracted/cpp-work-loss-audit-546-20261028/current-work/cpppj/tests/SpriteDrawTests.cpp",
+      "sha256": "f3899d647278faa742f28124176a20bd9c31f4d732ad3fdcc7e7e5ff2326ad2f"
+    },
+    {
+      "path": "extracted/cpp-work-loss-audit-546-20261028/current-work/LEFT_JOBS.md",
+      "sha256": "fb97ed7b64a3dcb953bc21faf6bbc7e91275a483fa275fbc2e69306245098691"
+    },
+    {
+      "path": "extracted/cpp-work-loss-audit-546-20261028/current-work/tools/cpp_banner_smoke.py",
+      "sha256": "c3bf007fa77ef8642c5754ce0c9a2000d6063a0a35315736f40cf9161c36dd75"
+    },
+    {
+      "path": "extracted/cpp-work-loss-audit-546-20261028/current-work/tools/decomp_banner_key.py",
+      "sha256": "eb9dcb5568b85712bac681289f96c65e812b480f2d265e954c5cb196f28086ce"
+    },
+    {
+      "path": "extracted/cpp-work-loss-audit-546-20261028/current-work/tools/decomp_banner_option.py",
+      "sha256": "242256951a36337c63c7d9c525f2a0aec60e38bea6531a35dbb9e7004f3e8f6e"
+    },
+    {
+      "path": "extracted/cpp-work-loss-audit-546-20261028/current-work.json",
+      "sha256": "4438a419614993a09ca4bac92320bff2e2d1c5dfc1fe4865e32eac1612dedf9c"
+    },
+    {
+      "path": "extracted/cpp-work-loss-audit-546-20261028/git-connectivity.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "extracted/cpp-work-loss-audit-546-20261028/patch-check.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "extracted/cpp-work-loss-audit-546-20261028/work-evidence.json",
+      "sha256": "fa8740cac9784ebc25dc9efb7d626713260c633040d4ce1fe751988e8faf38b0"
+    }
+  ],
+  "productUnit546Finalization": "pending: 저장된 배너 on/off 그림 최종 육안 대조, 종합 문서·보고서·인계 및 제품 커밋. 점검에서 제품 코드와 실행파일은 변경하지 않음."
+}
