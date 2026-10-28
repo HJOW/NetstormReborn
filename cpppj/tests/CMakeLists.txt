@@ -2352,3 +2352,7 @@ set_source_files_properties(UserPickTests.cpp PROPERTIES COMPILE_DEFINITIONS "NE
 # 독립498000원문의고정캡처/실제슬롯호출순서를재생한다.
 target_sources(netstorm_tests PRIVATE ObjectHitTests.cpp)
 set_source_files_properties(ObjectHitTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_OBJECT_HIT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/object-hit-x86.tsv\"")
+
+# 비용 생략/0의 실제 두 판본 후처리를 기존 원문과 분리해 검증한다.
+target_sources(netstorm_tests PRIVATE TypeDefaultCostTests.cpp)
+set_source_files_properties(TypeDefaultCostTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_TYPE_DEFAULT_COST_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/type-default-cost-x86.tsv\"")

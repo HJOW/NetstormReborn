@@ -1,0 +1,446 @@
+{
+  "unit": 535,
+  "date": "2026-10-28",
+  "host": "HJOW-Athlon",
+  "headBeforeCommit": "3d038e510444a9c7448b6d4c88cc84f78446d395",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23",
+    "outputsModified": false
+  },
+  "product": {
+    "NetstormCpp.exe": "8597e05e3b662aa9301ded5656106f3f6b7bba0ac21634c0b5b08453eadf4c88",
+    "netstorm_tests.exe": "a7605e2ebb01c71d0f49907c0b3f2a03604af952d0eac358b6154b23cd525b10"
+  },
+  "changedProductSource": [
+    "cpppj/src/o/RiftTypeTable.cpp"
+  ],
+  "cause": "Missing native TYPE postprocess default cost: transport 400 times (internal level+1), ordinary grouped type 200 times (internal level+1), then priest/guy zero overrides.",
+  "golemPrice": 400,
+  "nativeFacts": {
+    "path": "cpppj/type-default-cost-native-20261028.json",
+    "sha256": "c2fb9024f1c19deb2b6a974e0614529ea6ea64ee0a7e7447713dea90f9f8a0ee",
+    "observations": 3000,
+    "editions": {
+      "originals": {
+        "entry": "0049b0d0",
+        "inputs": 1500,
+        "normalReturns": 1500,
+        "boundaries": {
+          "00459c60": 1,
+          "0041ad10": 1,
+          "004dd580": 1,
+          "004e4391:94000": 1,
+          "004ea61d": 1655,
+          "004e4391:140": 1
+        },
+        "nativeCalls": {
+          "0049ebb0": 1,
+          "0049c3b0": 1,
+          "004e65ed": 154,
+          "004ef510": 154,
+          "004a8960": 1,
+          "004a87c0": 1,
+          "004e49c0": 35,
+          "0049c270": 1,
+          "0049b0d0": 1501,
+          "004e53dc": 1501,
+          "004e5314": 1501,
+          "0049b060": 1501
+        },
+        "assertions": 0
+      },
+      "originalCD": {
+        "entry": "00444e10",
+        "inputs": 1500,
+        "normalReturns": 1500,
+        "boundaries": {
+          "0049c1a0": 1,
+          "004bb6d0": 1,
+          "004be710": 1,
+          "004f1650:80028": 1,
+          "004f1650:140": 1
+        },
+        "nativeCalls": {
+          "004434d0": 1,
+          "00444230": 171,
+          "004460f0": 1,
+          "004f2980": 146,
+          "00420500": 1,
+          "004204a0": 1,
+          "004f161c": 35,
+          "00445ff0": 1,
+          "00444e10": 1501,
+          "004448c0": 4503,
+          "004448d0": 4503,
+          "004f2a30": 1501,
+          "00444da0": 1501
+        },
+        "assertions": 0
+      }
+    }
+  },
+  "accepted": {
+    "results": [
+      {
+        "size": [
+          1280,
+          720
+        ],
+        "initialSp": 3000,
+        "finalSp": 2600,
+        "paid": 400,
+        "golemSid": 15186,
+        "position": [
+          "94",
+          "110"
+        ],
+        "enemySp": 0,
+        "enemyGolems": 0,
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+            "--run",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-building-menus-532\\final\\data-1024x768",
+            "--mission",
+            "thewarbegins",
+            "--window",
+            "--no-audio",
+            "--frames",
+            "300",
+            "--set",
+            "SCREENW=1280;SCREENH=720;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=1",
+            "--ui-script",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-golem-cost-535\\final-v2\\3000-1280x720\\steps.tsv",
+            "--ui-report",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-golem-cost-535\\final-v2\\3000-1280x720\\states.tsv"
+          ],
+          "binarySha256": "8597e05e3b662aa9301ded5656106f3f6b7bba0ac21634c0b5b08453eadf4c88",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 11.694891699997243,
+          "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderrSha256": "275b3bc2381ffa2fad4da48c51b1cf0710b68bdb95a0875f559d96629a3b6149",
+          "originalsUnchanged": true,
+          "dataUnchanged": true
+        }
+      },
+      {
+        "size": [
+          1024,
+          768
+        ],
+        "initialSp": 3000,
+        "finalSp": 2600,
+        "paid": 400,
+        "golemSid": 15186,
+        "position": [
+          "94",
+          "110"
+        ],
+        "enemySp": 0,
+        "enemyGolems": 0,
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+            "--run",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-building-menus-532\\final\\data-1024x768",
+            "--mission",
+            "thewarbegins",
+            "--window",
+            "--no-audio",
+            "--frames",
+            "300",
+            "--set",
+            "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=1",
+            "--ui-script",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-golem-cost-535\\final-v2\\3000-1024x768\\steps.tsv",
+            "--ui-report",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-golem-cost-535\\final-v2\\3000-1024x768\\states.tsv"
+          ],
+          "binarySha256": "8597e05e3b662aa9301ded5656106f3f6b7bba0ac21634c0b5b08453eadf4c88",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 10.476419799990254,
+          "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderrSha256": "275b3bc2381ffa2fad4da48c51b1cf0710b68bdb95a0875f559d96629a3b6149",
+          "originalsUnchanged": true,
+          "dataUnchanged": true
+        }
+      },
+      {
+        "size": [
+          1280,
+          720
+        ],
+        "initialSp": 400,
+        "finalSp": 0,
+        "paid": 400,
+        "golemSid": 15187,
+        "position": [
+          "94",
+          "110"
+        ],
+        "enemySp": 0,
+        "enemyGolems": 0,
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+            "--run",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-golem-cost-535\\final-v2\\custom-data",
+            "--mission",
+            "thewarbegins",
+            "--window",
+            "--no-audio",
+            "--frames",
+            "300",
+            "--set",
+            "SCREENW=1280;SCREENH=720;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=1",
+            "--ui-script",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-golem-cost-535\\final-v2\\400-1280x720\\steps.tsv",
+            "--ui-report",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-golem-cost-535\\final-v2\\400-1280x720\\states.tsv"
+          ],
+          "binarySha256": "8597e05e3b662aa9301ded5656106f3f6b7bba0ac21634c0b5b08453eadf4c88",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 10.573941000009654,
+          "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderrSha256": "793519e757816622b40921f0d7be7c94c392a625e4c8550e34fe0499595eab2c",
+          "originalsUnchanged": true,
+          "dataUnchanged": true
+        }
+      },
+      {
+        "size": [
+          1024,
+          768
+        ],
+        "initialSp": 400,
+        "finalSp": 0,
+        "paid": 400,
+        "golemSid": 15185,
+        "position": [
+          "94",
+          "110"
+        ],
+        "enemySp": 0,
+        "enemyGolems": 0,
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+            "--run",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-golem-cost-535\\final-v2\\custom-data",
+            "--mission",
+            "thewarbegins",
+            "--window",
+            "--no-audio",
+            "--frames",
+            "300",
+            "--set",
+            "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=1",
+            "--ui-script",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-golem-cost-535\\final-v2\\400-1024x768\\steps.tsv",
+            "--ui-report",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-golem-cost-535\\final-v2\\400-1024x768\\states.tsv"
+          ],
+          "binarySha256": "8597e05e3b662aa9301ded5656106f3f6b7bba0ac21634c0b5b08453eadf4c88",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 10.428752500010887,
+          "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderrSha256": "76ac65a53282259e9831b4f192b77034b769f653c4dbeaf318894433a732d0a5",
+          "originalsUnchanged": true,
+          "dataUnchanged": true
+        }
+      },
+      {
+        "size": [
+          1280,
+          720
+        ],
+        "initialSp": 399,
+        "finalSp": 399,
+        "paid": 0,
+        "insufficientMoneyRejected": true,
+        "budgetFlashed": true,
+        "enemySp": 0,
+        "enemyGolems": 0,
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+            "--run",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-golem-cost-535\\final-v2\\custom-data",
+            "--mission",
+            "thewarbegins",
+            "--window",
+            "--no-audio",
+            "--frames",
+            "185",
+            "--set",
+            "SCREENW=1280;SCREENH=720;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=1",
+            "--ui-script",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-golem-cost-535\\final-v2\\399-1280x720\\steps.tsv",
+            "--ui-report",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-golem-cost-535\\final-v2\\399-1280x720\\states.tsv"
+          ],
+          "binarySha256": "8597e05e3b662aa9301ded5656106f3f6b7bba0ac21634c0b5b08453eadf4c88",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 6.811718399985693,
+          "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderrSha256": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2",
+          "originalsUnchanged": true,
+          "dataUnchanged": true
+        }
+      },
+      {
+        "size": [
+          1024,
+          768
+        ],
+        "initialSp": 399,
+        "finalSp": 399,
+        "paid": 0,
+        "insufficientMoneyRejected": true,
+        "budgetFlashed": true,
+        "enemySp": 0,
+        "enemyGolems": 0,
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+            "--run",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-golem-cost-535\\final-v2\\custom-data",
+            "--mission",
+            "thewarbegins",
+            "--window",
+            "--no-audio",
+            "--frames",
+            "185",
+            "--set",
+            "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=1",
+            "--ui-script",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-golem-cost-535\\final-v2\\399-1024x768\\steps.tsv",
+            "--ui-report",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-golem-cost-535\\final-v2\\399-1024x768\\states.tsv"
+          ],
+          "binarySha256": "8597e05e3b662aa9301ded5656106f3f6b7bba0ac21634c0b5b08453eadf4c88",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 6.9251801000209525,
+          "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderrSha256": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2",
+          "originalsUnchanged": true,
+          "dataUnchanged": true
+        }
+      }
+    ],
+    "binarySha256": "8597e05e3b662aa9301ded5656106f3f6b7bba0ac21634c0b5b08453eadf4c88",
+    "privateScenarioSha256": {
+      "400": "4dff1fcd43b5551cc9228b7e9ce0f4cd4e43558eeb481474a0a52aea79f787d8",
+      "399": "72e74537f7f93f868cb6ae353349432b00456eea375426ce00382bc4da848efb"
+    },
+    "attackFlyersNotTested": true,
+    "rawObjectMutation": false
+  },
+  "focusedTests": {
+    "unique": 55,
+    "existing": 52,
+    "new": 3,
+    "failed": 0,
+    "existingSummary": "extracted/cpp-golem-cost-535/focus/summary.json",
+    "newSummary": "extracted/cpp-golem-cost-535/green-final/run.json",
+    "registered": 3362
+  },
+  "games": [
+    {
+      "path": "extracted/cpp-golem-cost-535/after-probe/run/run.json",
+      "sha256": "54a2c039b49ae6890f7890bf9620b890fa492fb857882d960913b1933bf61869",
+      "returnCode": 0,
+      "binarySha256": "2d5d8d70d30d799f240d7fd61286e16f722e6d2c273ec604be973ceb87d91c73"
+    },
+    {
+      "path": "extracted/cpp-golem-cost-535/before/run/run.json",
+      "sha256": "e0d2fedc70d32633086c8bccb223c7ac3c61294858dd02c774b8d946d4d969d3",
+      "returnCode": 0,
+      "binarySha256": "03a8915301e389260fac48a02b6340fce3fc45f67fc2d74382c5b161b345412d"
+    },
+    {
+      "path": "extracted/cpp-golem-cost-535/final/3000-1280x720/run.json",
+      "sha256": "358a2c149158b4a864233ede4de869cb0abca3dd17faf6d6780b6cae23d625e1",
+      "returnCode": 1,
+      "binarySha256": "8597e05e3b662aa9301ded5656106f3f6b7bba0ac21634c0b5b08453eadf4c88"
+    },
+    {
+      "path": "extracted/cpp-golem-cost-535/final-v2/3000-1024x768/run.json",
+      "sha256": "f71f4247d004feb5ab31f78ee167d5821ece1283867971667c4eab3fd93e250d",
+      "returnCode": 0,
+      "binarySha256": "8597e05e3b662aa9301ded5656106f3f6b7bba0ac21634c0b5b08453eadf4c88"
+    },
+    {
+      "path": "extracted/cpp-golem-cost-535/final-v2/3000-1280x720/run.json",
+      "sha256": "c9c7b98bbf5796776ea22d5bef54d03b64f58872c720bcf21520f53c3a863de4",
+      "returnCode": 0,
+      "binarySha256": "8597e05e3b662aa9301ded5656106f3f6b7bba0ac21634c0b5b08453eadf4c88"
+    },
+    {
+      "path": "extracted/cpp-golem-cost-535/final-v2/399-1024x768/run.json",
+      "sha256": "e9db57f4e37db2f8036f8a6581b5db5da4d21e666d7d5b674c081b6dbd86e27d",
+      "returnCode": 0,
+      "binarySha256": "8597e05e3b662aa9301ded5656106f3f6b7bba0ac21634c0b5b08453eadf4c88"
+    },
+    {
+      "path": "extracted/cpp-golem-cost-535/final-v2/399-1280x720/run.json",
+      "sha256": "ce36b34b71b3e9c4902e700f629e54376bee471dcf506852dffde200fc33a104",
+      "returnCode": 0,
+      "binarySha256": "8597e05e3b662aa9301ded5656106f3f6b7bba0ac21634c0b5b08453eadf4c88"
+    },
+    {
+      "path": "extracted/cpp-golem-cost-535/final-v2/400-1024x768/run.json",
+      "sha256": "e60ca23614179cef3a51cab6d094a405b8485495ae90d97caaf0689f55b0bfcb",
+      "returnCode": 0,
+      "binarySha256": "8597e05e3b662aa9301ded5656106f3f6b7bba0ac21634c0b5b08453eadf4c88"
+    },
+    {
+      "path": "extracted/cpp-golem-cost-535/final-v2/400-1280x720/run.json",
+      "sha256": "1dbd715a3eb9fb1ca2f69bc13174d22d4bc91df8fdccaa2f066ae98c6be6a3c3",
+      "returnCode": 0,
+      "binarySha256": "8597e05e3b662aa9301ded5656106f3f6b7bba0ac21634c0b5b08453eadf4c88"
+    }
+  ],
+  "buildCommands": 4,
+  "preservation": {
+    "changed": [
+      "cpppj/src/o/RiftTypeTable.cpp",
+      "cpppj/tests/CMakeLists.txt"
+    ],
+    "newSource": [
+      "cpppj/tests/TypeDefaultCostTests.cpp",
+      "cpppj/tests/fixtures/type-default-cost-x86.tsv"
+    ],
+    "otherSourceAndFixturesUnchanged": true,
+    "protectedFiles": 1819,
+    "protectedChanged": [],
+    "agentsUnchanged": true,
+    "exes": {
+      "NetstormCpp.exe": "8597e05e3b662aa9301ded5656106f3f6b7bba0ac21634c0b5b08453eadf4c88",
+      "netstorm_tests.exe": "a7605e2ebb01c71d0f49907c0b3f2a03604af952d0eac358b6154b23cd525b10"
+    }
+  },
+  "limits": {
+    "fullCTestExecuted": false,
+    "longCampaignCompletion": false,
+    "attackFlyersTested": false,
+    "multiplayerTested": false
+  },
+  "nextPriority": "User report: newly produced selected Golem does not change cursor over geyser; reproduce TheWarBegins real selection and pointer target.",
+  "rawDirectory": "extracted/cpp-golem-cost-535",
+  "evidenceSha256": {
+    "extracted/cpp-golem-cost-535/final-v2/summary.json": "7f5985f17dc1ef275d97959900a5c198b29a99514e609b531292ed6cb49a6042",
+    "extracted/cpp-golem-cost-535/freeze-final.json": "cab45a241cb1e4fe229a932887ac954f57dd201c77007ff214c75999da6a85ba",
+    "extracted/cpp-golem-cost-535/before/run/run.json": "e0d2fedc70d32633086c8bccb223c7ac3c61294858dd02c774b8d946d4d969d3",
+    "extracted/cpp-golem-cost-535/focus/summary.json": "d0502f38240be2205f5e725e028bf4b220195bc093379b483dd902838565fa3e",
+    "extracted/cpp-golem-cost-535/green-final/run.json": "6533ddaf3d81efff25efe5dccc3c3f0a78a8dc99fb6ea071286961d3e01a2587",
+    "tools/cpp_golem_cost_smoke.py": "3ca21a9194154cd9141c38da18e1f9e675357fdb103b82f84ebe94606a79792b"
+  }
+}

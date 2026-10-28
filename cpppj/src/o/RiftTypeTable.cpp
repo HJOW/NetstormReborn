@@ -25,6 +25,8 @@ constexpr std::size_t kTypeNameBytes = 20;
 constexpr std::size_t kDescriptionBytes = 40;
 // 종류 단어 필드(+0xf0)에 strncpy로 복사하는 최대 글자 수.
 constexpr std::size_t kKindBytes = 8;
+// 두 판본의 원래 사제 TYPE 전역은158이며 후처리 마지막에 비용을0으로 되돌린다.
+constexpr std::size_t kCostExemptPriestType = 158;
 
 // 내장 프로세스 타입 이름(패치 00540fa0의 53개). CD판(0051c890)은 마지막 하나가 없는 앞 52개다.
 constexpr std::array<std::string_view, 53> kProcessTypeNames{
@@ -232,8 +234,8 @@ void ApplyDefinition(RiftTypeRecord& type, const RiftTypeDefinition& definition,
     type.kind.resize(type.kind.find('\0') == std::string::npos ? kind.size() : type.kind.find('\0'));
 }
 
-// 0049b0d0의 플래그 관련 후처리. 모든 타입(내장·빈 타입 포함)에 적용한다.
-void PostProcess(RiftTypeRecord& type) {
+// 0049b0d0/CD00444e10의 플래그·생략 비용 후처리다. 모든 타입(내장·빈 타입 포함)에 번호순 적용한다.
+void PostProcess(RiftTypeRecord& type,std::size_t number) {
     if (type.group == 5) type.flags2 |= TypeFlag2::kGroupBattery;
     if (type.group == 1 || type.group == 0) type.flags2 |= TypeFlag2::kGroupArcherOrCannon;
     if (type.group == 2) type.flags2 |= TypeFlag2::kGroupBlocker;
@@ -257,7 +259,16 @@ void PostProcess(RiftTypeRecord& type) {
         type.flags1 |= 6;
     if ((final2 & 0x408100) != 0) type.flags1 |= TypeFlag1::kMayDropOnIsle;
     if ((final2 & 0x70000) != 0 && (final2 & TypeFlag2::kFactory) == 0) type.flags1 |= 0x8000;
+    if (type.group!=kTypeNoGroup && type.cost==0.0F) {
+        // 내부 level은 자료 level−1이다. 원본 signed DWORD 증가와 x87 정수 곱 뒤 float32 저장을 보존한다.
+        const auto level=std::bit_cast<std::int32_t>(static_cast<std::uint32_t>(type.level)+1U);
+        // PATCH00510298/0051029c와 CD00501998/00501994의 일반200/운반400 기본 단가다.
+        const double unit=(final2&0x30000U) ? 400.0 : 200.0;
+        type.cost=static_cast<float>(static_cast<double>(level)*unit);
+    }
     if (type.footY == 6) type.footY = 8; // 원본: foot_y 6은 8로 바꾼다.
+    // 원본은 사제와 guy 부류의 명시 비용도 마지막에 지운다. 2026-10-28 기본 가격 누락을 복원했다.
+    if (number==kCostExemptPriestType || (final2&0x400U)) type.cost=0.0F;
 }
 }
 
@@ -297,7 +308,7 @@ RiftTypeTable::RiftTypeTable(OriginalEdition edition, std::span<const RiftTypeSo
     // 후처리가 이름을 채우는 내장 타입.
     for (const auto& builtin : kBuiltinNames) types_.at(builtin.number).name = std::string(builtin.name);
     // 후처리는 번호순으로 모든 타입에 적용된다.
-    for (auto& type : types_) PostProcess(type);
+    for (std::size_t number=0;number<types_.size();++number) PostProcess(types_[number],number);
     // 원본은 로딩/후처리 뒤 생성자 표를 대입한다. 주소는 미복원 파생 dispatch를 감지하는 메타데이터다.
     for (std::size_t i=0;i<types_.size();++i) types_[i].constructorAddress=TypeConstructorAddress(edition,i);
     // 원본은 타입 번호를 전역 변수로 갖는다(패치 DAT_005411a0 = 82, DAT_005411d0 = 94). 로딩 순서에서 찾는다.

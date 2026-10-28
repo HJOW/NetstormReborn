@@ -1,0 +1,91 @@
+{
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "observations": 3000,
+  "editions": {
+    "originals": {
+      "entry": "0049b0d0",
+      "inputs": 1500,
+      "normalReturns": 1500,
+      "boundaries": {
+        "00459c60": 1,
+        "0041ad10": 1,
+        "004dd580": 1,
+        "004e4391:94000": 1,
+        "004ea61d": 1655,
+        "004e4391:140": 1
+      },
+      "nativeCalls": {
+        "0049ebb0": 1,
+        "0049c3b0": 1,
+        "004e65ed": 154,
+        "004ef510": 154,
+        "004a8960": 1,
+        "004a87c0": 1,
+        "004e49c0": 35,
+        "0049c270": 1,
+        "0049b0d0": 1501,
+        "004e53dc": 1501,
+        "004e5314": 1501,
+        "0049b060": 1501
+      },
+      "assertions": 0
+    },
+    "originalCD": {
+      "entry": "00444e10",
+      "inputs": 1500,
+      "normalReturns": 1500,
+      "boundaries": {
+        "0049c1a0": 1,
+        "004bb6d0": 1,
+        "004be710": 1,
+        "004f1650:80028": 1,
+        "004f1650:140": 1
+      },
+      "nativeCalls": {
+        "004434d0": 1,
+        "00444230": 171,
+        "004460f0": 1,
+        "004f2980": 146,
+        "00420500": 1,
+        "004204a0": 1,
+        "004f161c": 35,
+        "00445ff0": 1,
+        "00444e10": 1501,
+        "004448c0": 4503,
+        "004448d0": 4503,
+        "004f2a30": 1501,
+        "00444da0": 1501
+      },
+      "assertions": 0
+    }
+  },
+  "gameExecuted": false,
+  "osCalls": 0,
+  "boundaries": "초기화 접두/보호35클러스터 callback과 전체 후처리는 실제 PE다. 비용 입력은 명시 raw 속성으로 주입하며 파일/힙/CRT 스레드만 기존 실행기 경계다. 전체 게임 실행은 아니다.",
+  "sha256": {
+    "cpppj/tests/fixtures/type-default-cost-x86.tsv": "caf8aa3f2956b2c420e14316c9b7a029c8638e6724f8309429c47d80d7720ff7",
+    "extracted/archer-type/originalCD/creation.c": "a18ccde03c398a6fc412ef5af580dd67d0497478091f4080cc2a1a617e1f6c8c",
+    "extracted/archer-type/originalCD/functions.tsv": "48d7bd103f58de7ee1d7a8cb007adf54fd606fb21ca3446102d136f1d2e727e8",
+    "extracted/archer-type/originals/creation.c": "f91f9bc1884c57a974c07f71904f42e35697a2210d76681d36c3f7145aee17bf",
+    "extracted/archer-type/originals/functions.tsv": "9c354b3c13b4da517b576e40bd100b41aa3c9e437b5395a7ef6373b82024a014",
+    "extracted/archer-type-helper/originalCD/creation.c": "f58cd4b2bd00d04212d28061338517e94265830bca38586dcc5614dfefbd0fa3",
+    "extracted/archer-type-helper/originalCD/functions.tsv": "8e88b6b9d3e7e7a427764a2ab9339430b011b6bbad24603ef404a58c70c579ce",
+    "extracted/archer-type-helper/originals/creation.c": "0c4d723a2b154e28f05d7700316b39ce8a6dc1269bac2f3a6126fbf1e27b05f3",
+    "extracted/archer-type-helper/originals/functions.tsv": "de852ac541cae8a79dfec1521200e7478a81ff228aa743e1a315a596ae38847a",
+    "extracted/owner/originalCD/creation.c": "115d3f4790315c3647e18c087579cf3aa08af06cdbaeca42adbac1e82725af62",
+    "extracted/owner/originalCD/functions.tsv": "4e184997f62c2622b26b3fa4f047a2580a609d2d919f0e414a75e8efd49d4439",
+    "extracted/owner/originals/creation.c": "f9919c046d5259526946f106b47b6259fe5e04971f743d6fa02d6a5361b9dc16",
+    "extracted/owner/originals/functions.tsv": "3ea66dace80a85999a8b2c2dbadb4d5f1bd18b0dcdb0768f9c41075206c7c72d",
+    "originalCD/d/_shapes.shp": "5bcd5b14ad30a22a28861bbbb91397879d933c474c1f5319e7bc42f563407f59",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originalCD/netstorm.tarc": "e7e8868553ec2ef40cc1cd97ea452c37454e9a147f21a67a1298945de9b637ff",
+    "originals/d/_shapes.shp": "c878353c8054208deef832e34c514b30fe670e175505b129333a5728ba70f68e",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6",
+    "tools/decomp_archertype_oracle.py": "2f02fdfc0e91fa1b112ccb34a53379ce6bb191dcecd4b0620deafaf25279f16a",
+    "tools/decomp_owner_oracle.py": "5a837ad7fd233d9d75c7241d52fbf2e5a508e24dc158d091f243a13ab698e7fb",
+    "tools/decomp_type_default_cost.py": "f1450c825e42f6502d24a81705e49fea395eb80cc20bc9830dd2881485158b1a"
+  }
+}
