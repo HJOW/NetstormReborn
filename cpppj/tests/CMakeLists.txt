@@ -204,6 +204,7 @@ add_executable(netstorm_tests
     GameMenuActionsTests.cpp MessageGumpTests.cpp
     ViewKeyInputTests.cpp
     F8KeyInputTests.cpp
+    BannerOptionTests.cpp
     HideBuildingsTests.cpp
     CameraViewCommandsTests.cpp CampaignViewCommandsTests.cpp
     DialogExitCommandTests.cpp
@@ -2366,3 +2367,7 @@ set_source_files_properties(ViewKeyInputTests.cpp PROPERTIES COMPILE_DEFINITIONS
 # F8의 Guide/Gump/console 뒤558개 독립 입력과 현재 모드 읽기를 비교한다.
 set_source_files_properties(F8KeyInputTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_F8_KEY_INPUT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/f8-key-input-x86.tsv\"")
+
+# 배너 설정/최초 표 등록2066입력과 Shift 없는 F7의208입력은 각 독립 원문 관측이다.
+set_source_files_properties(BannerOptionTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_BANNER_OPTION_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/banner-option-x86.tsv\";NETSTORM_BANNER_KEY_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/banner-key-x86.tsv\"")

@@ -1,0 +1,2348 @@
+{
+  "unit": 546,
+  "date": "2026-10-28",
+  "host": "HJOW-Athlon",
+  "baseProductCommit": "73506bcb",
+  "auditCommit": "91d494c3",
+  "lastFullDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23",
+    "outputsChanged": false
+  },
+  "problem": "소유자 색표가 표시기별 지역 상태와 테마에 묶여 일반 F7 및 View 옵션과 현재 화면이 함께 바뀌지 않았다.",
+  "product": {
+    "gameSha256": "d7b34b717765c487c5351b5c6c648e68a4ef8eb1d4e7396fccdfa382d31dd06e",
+    "testsSha256": "7cda911feee2305da7007f1bfd13c46363606bef039f1b835b345ded59d07fbc",
+    "sourceCount": 2941,
+    "changedExistingCount": 28,
+    "addedCount": 5,
+    "unchangedExistingFixtures": 705,
+    "freeze": "extracted/cpp-banner-option-546/freeze-final.json"
+  },
+  "native": {
+    "banner": {
+      "host": "HJOW-Athlon",
+      "peSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "inputs": 2066,
+      "uniqueInputs": 2066,
+      "nativeObservations": 4132,
+      "precisionDifferences": 0,
+      "ranges": [
+        [
+          "0x43bc40",
+          "0x43c010"
+        ]
+      ],
+      "nativeBodiesUnchanged": true,
+      "externalDevices": [
+        "43ba00 standard color map",
+        "43bbe0 special color map",
+        "CRT free"
+      ],
+      "fixtureSha256": "152b5c01100c57dae91241577d483ca140e1fe83cb1a1b0c2708a2697458839b",
+      "scope": "배너 설정/색표 최초 등록만 격리 실행. 게임/OS/멀티플레이/유닛 생성 실행 없음"
+    },
+    "key": {
+      "host": "HJOW-Athlon",
+      "peSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "inputs": 208,
+      "nativeObservations": 416,
+      "precisionDifferences": 0,
+      "fixtureSha256": "a17ecb9ef8b2ffec81714c3ce452490f0faadf885272896e9fc8957fd338ed8c",
+      "nativeBodiesUnchanged": true,
+      "externalDevices": [
+        "sprintf",
+        "Config application",
+        "Guide/Gump devices"
+      ],
+      "scope": "Shift 없는 일반/Control/Alt F7. Shift F7 GIF와 Ctrl Shift 진단 파일의 새 실행/검사 없음"
+    },
+    "uniqueInputsTotal": 2274,
+    "observationsTotal": 4548,
+    "precisionDifferences": 0,
+    "writerAnalysis": {
+      "host": "HJOW-Athlon",
+      "lastFullDecompile": {
+        "host": "HJOW-Athlon",
+        "date": "2026-10-23",
+        "outputsChanged": false
+      },
+      "pointerAllocation": "43b950만 타입 포인터를 새로 등록하며43ba00/43bbe0이 호출한다. 원문 직접 참조의419990/446270/498220/4a7db0은 읽기다.",
+      "bannerEnable": "43bc40의85/71/128/97/94 반납을 모두 보존한다. 끌 때 새로 만드는 것은97/94 두 표다. 85/71/128 생성을 추측해 추가하지 않는다.",
+      "startup": "43c4e0의 최초 표 초기화가43be30을 호출한다. 일반 팔레트 전환의43c010과 구별한다.",
+      "consumers": "실제 Campaign과Editor 모두MakeCampaignClientServices에서 같은 owner 표를 공급한다. 지역표는 명시 독립 검사 adapter에만 남긴다.",
+      "functions": {
+        "00419990": "383e84653921490ce1d87f401cccf83c8980a6dd7c404b2821667e12ef6a2582",
+        "0043b5a0": "c2efc8fc9852a7fa5a39ee290fc9911cb1d8766cb5f55d500be90dd1212ee067",
+        "0043b750": "9cdd0edd9378f2bcd14a4a3ab166ae082ec72d3e5d67045b9238332a7f7fa4f0",
+        "0043b950": "5fe695d0546d4c575cddcab410d8e3ce28afe442490f215e020ee377b5ca2871",
+        "0043ba00": "06609986cbf58ff04c0402232dfbfddaa26c125a1cf873c88e2acb34bc9c8aa6",
+        "0043bbe0": "b9fe2e95a49866823c54ed8fc9054952a4a449712f0259c0eed859aeabf5dcd0",
+        "0043bc40": "b7f9221b7a0ba52c0a8c862aaff8243b6f632b91c28a62d2fb483fe47c0e2dd3",
+        "0043be30": "e61cad21343d8858f37439debf94af046f7bc764f47e9c413b94d626e6b91cea",
+        "00446270": "5bf7b88ee4f30a7e67fd6d75d24e9cf59078cd70382d91850c33bfb2911534f9",
+        "00498220": "06a2760824465aac1c556cccdfb86837b89d449ac7edb37906acaf4801ff5fde",
+        "004a7db0": "169b25143f6b8f58aaff8546ca1da310efd49010a24133591df225b8d17caf93"
+      }
+    }
+  },
+  "builds": {
+    "initialFailure": {
+      "command": [
+        "cmake",
+        "--build",
+        "cpppj/build",
+        "--config",
+        "Release",
+        "--target",
+        "NetstormCpp",
+        "netstorm_tests",
+        "--parallel",
+        "4",
+        "--",
+        "/p:UseMultiToolTask=true",
+        "/p:MultiProcMaxCount=4",
+        "/p:EnforceProcessCountAcrossBuilds=true"
+      ],
+      "exitCode": 1,
+      "seconds": 145.99828780000098
+    },
+    "finalProductAndTests": {
+      "command": [
+        "cmake",
+        "--build",
+        "cpppj/build",
+        "--config",
+        "Release",
+        "--target",
+        "NetstormCpp",
+        "netstorm_tests",
+        "--parallel",
+        "4",
+        "--",
+        "/p:UseMultiToolTask=true",
+        "/p:MultiProcMaxCount=4",
+        "/p:EnforceProcessCountAcrossBuilds=true"
+      ],
+      "exitCode": 0,
+      "seconds": 604.5571658999834
+    },
+    "additionalTest": {
+      "command": [
+        "cmake",
+        "--build",
+        "cpppj/build",
+        "--config",
+        "Release",
+        "--target",
+        "netstorm_tests",
+        "--parallel",
+        "4",
+        "--",
+        "/p:UseMultiToolTask=true",
+        "/p:MultiProcMaxCount=4",
+        "/p:EnforceProcessCountAcrossBuilds=true"
+      ],
+      "exitCode": 0,
+      "seconds": 31.472069600014947
+    },
+    "finalWarnings": 0,
+    "finalErrors": 0,
+    "initialErrors": "CampaignClientServices에서 ClientColorSortInput 전체 선언 include 누락2오류; include 보완"
+  },
+  "tests": {
+    "registered": 3379,
+    "uniqueExecuted": 82,
+    "results": [
+      {
+        "filter": "BannerOption_",
+        "count": 1,
+        "failedChecks": 0,
+        "exitCode": 0
+      },
+      {
+        "filter": "BannerKey_",
+        "count": 1,
+        "failedChecks": 0,
+        "exitCode": 0
+      },
+      {
+        "filter": "OwnerColorTableState_",
+        "count": 1,
+        "failedChecks": 0,
+        "exitCode": 0
+      },
+      {
+        "filter": "OwnerColorMaps_",
+        "count": 1,
+        "failedChecks": 0,
+        "exitCode": 0
+      },
+      {
+        "filter": "PreviewColorMaps_SpecialOwner",
+        "count": 1,
+        "failedChecks": 0,
+        "exitCode": 0
+      },
+      {
+        "filter": "ClientColorSortPrimary_",
+        "count": 3,
+        "failedChecks": 0,
+        "exitCode": 0
+      },
+      {
+        "filter": "SessionCursorColorInput_",
+        "count": 3,
+        "failedChecks": 0,
+        "exitCode": 0
+      },
+      {
+        "filter": "ColorSortFixedInput_",
+        "count": 2,
+        "failedChecks": 0,
+        "exitCode": 0
+      },
+      {
+        "filter": "SpriteDraw_",
+        "count": 14,
+        "failedChecks": 0,
+        "exitCode": 0
+      },
+      {
+        "filter": "PreviewDraw_",
+        "count": 11,
+        "failedChecks": 0,
+        "exitCode": 0
+      },
+      {
+        "filter": "ShapeToBuffer_",
+        "count": 9,
+        "failedChecks": 0,
+        "exitCode": 0
+      },
+      {
+        "filter": "ImageGump_",
+        "count": 3,
+        "failedChecks": 0,
+        "exitCode": 0
+      },
+      {
+        "filter": "ProductionInitialContext_",
+        "count": 22,
+        "failedChecks": 0,
+        "exitCode": 0
+      },
+      {
+        "filter": "ViewKeyInput_",
+        "count": 2,
+        "failedChecks": 0,
+        "exitCode": 0
+      },
+      {
+        "filter": "F8KeyInput_",
+        "count": 2,
+        "failedChecks": 0,
+        "exitCode": 0
+      },
+      {
+        "filter": "HideBuildings_",
+        "count": 1,
+        "failedChecks": 0,
+        "exitCode": 0
+      },
+      {
+        "filter": "CampaignSession_FenceShieldUsesCurrentOwnerColorPixels",
+        "count": 1,
+        "failedChecks": 0,
+        "exitCode": 0
+      },
+      {
+        "filter": "CampaignPriestDisplay_",
+        "count": 2,
+        "failedChecks": 0,
+        "exitCode": 0
+      },
+      {
+        "filter": "CampaignConstructionMana_",
+        "count": 2,
+        "failedChecks": 0,
+        "exitCode": 0
+      }
+    ],
+    "binarySha256": "7cda911feee2305da7007f1bfd13c46363606bef039f1b835b345ded59d07fbc"
+  },
+  "runtime": {
+    "results": [
+      {
+        "size": [
+          1024,
+          768
+        ],
+        "fullscreen": false,
+        "normalControlAltF7": true,
+        "sameViewOption": true,
+        "pausedAndModalGates": true,
+        "currentSurfaceMaps": true,
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+            "--run",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-banner-option-546\\preflight4\\1024x768\\data",
+            "--mute-audio",
+            "--frames",
+            "330",
+            "--set",
+            "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;useBanners=1;music=0;playWind=0",
+            "--ui-script",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-banner-option-546\\preflight4\\1024x768\\run\\steps.tsv",
+            "--ui-report",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-banner-option-546\\preflight4\\1024x768\\run\\states.tsv",
+            "--mission",
+            "thewarbegins",
+            "--window"
+          ],
+          "binarySha256": "d7b34b717765c487c5351b5c6c648e68a4ef8eb1d4e7396fccdfa382d31dd06e",
+          "scriptSha256": "44909438acc165f8be4c7d3ece188dfdd7a17a033a2be2e3447b4ec689bb9751",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 14.293138600012753,
+          "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderrSha256": "4b73c96b25066ec2370644eda8a463570fec390203035f3612e15ad85ff68be9",
+          "originalsUnchanged": true,
+          "dataUnchanged": true
+        }
+      },
+      {
+        "size": [
+          1280,
+          720
+        ],
+        "fullscreen": true,
+        "normalControlAltF7": true,
+        "sameViewOption": true,
+        "pausedAndModalGates": true,
+        "currentSurfaceMaps": true,
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+            "--run",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-banner-option-546\\remaining\\1280x720\\data",
+            "--mute-audio",
+            "--frames",
+            "330",
+            "--set",
+            "SCREENW=1280;SCREENH=720;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;useBanners=1;music=0;playWind=0;startInFullScreen=1",
+            "--ui-script",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-banner-option-546\\remaining\\1280x720\\run\\steps.tsv",
+            "--ui-report",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-banner-option-546\\remaining\\1280x720\\run\\states.tsv",
+            "--mission",
+            "thewarbegins"
+          ],
+          "binarySha256": "d7b34b717765c487c5351b5c6c648e68a4ef8eb1d4e7396fccdfa382d31dd06e",
+          "scriptSha256": "3ed50b48d5f6ddddaf558b3e2b1cdd7de364f2fc11118ce9f25ca7ef5fbe73c3",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 16.41595540000708,
+          "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderrSha256": "4b73c96b25066ec2370644eda8a463570fec390203035f3612e15ad85ff68be9",
+          "originalsUnchanged": true,
+          "dataUnchanged": true
+        }
+      },
+      {
+        "size": [
+          1280,
+          800
+        ],
+        "fullscreen": false,
+        "normalControlAltF7": true,
+        "sameViewOption": true,
+        "pausedAndModalGates": true,
+        "currentSurfaceMaps": true,
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+            "--run",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-banner-option-546\\remaining\\1280x800\\data",
+            "--mute-audio",
+            "--frames",
+            "330",
+            "--set",
+            "SCREENW=1280;SCREENH=800;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;useBanners=1;music=0;playWind=0",
+            "--ui-script",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-banner-option-546\\remaining\\1280x800\\run\\steps.tsv",
+            "--ui-report",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-banner-option-546\\remaining\\1280x800\\run\\states.tsv",
+            "--mission",
+            "thewarbegins",
+            "--window"
+          ],
+          "binarySha256": "d7b34b717765c487c5351b5c6c648e68a4ef8eb1d4e7396fccdfa382d31dd06e",
+          "scriptSha256": "027dacd5aa69a85133e7b521e3a89e272e7ea429af1effca24da8681ffe00e28",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 14.656902899994748,
+          "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderrSha256": "4b73c96b25066ec2370644eda8a463570fec390203035f3612e15ad85ff68be9",
+          "originalsUnchanged": true,
+          "dataUnchanged": true
+        }
+      }
+    ],
+    "editors": [
+      {
+        "size": [
+          1024,
+          768
+        ],
+        "fullscreen": false,
+        "surfaceMapsToggle": true,
+        "sameEditorHudAndSession": true,
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+            "--run",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-banner-option-546\\preflight5\\editor-1024x768\\data",
+            "--mute-audio",
+            "--frames",
+            "115",
+            "--set",
+            "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;useBanners=1;music=0;playWind=0",
+            "--ui-script",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-banner-option-546\\preflight5\\editor-1024x768\\run\\steps.tsv",
+            "--ui-report",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-banner-option-546\\preflight5\\editor-1024x768\\run\\states.tsv",
+            "--window"
+          ],
+          "binarySha256": "d7b34b717765c487c5351b5c6c648e68a4ef8eb1d4e7396fccdfa382d31dd06e",
+          "scriptSha256": "c4659cb155a7c5d7e0778cea71784e89cfd43b7040eac482556f917c8f37418b",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 19.885741599980975,
+          "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderrSha256": "5071e7a599b44be9a429a5e9a186532d25b6e9a17b381114c160adf8371b2df0",
+          "originalsUnchanged": true,
+          "dataUnchanged": true
+        }
+      },
+      {
+        "size": [
+          1280,
+          720
+        ],
+        "fullscreen": true,
+        "surfaceMapsToggle": true,
+        "sameEditorHudAndSession": true,
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+            "--run",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-banner-option-546\\remaining\\editor-1280x720\\data",
+            "--mute-audio",
+            "--frames",
+            "115",
+            "--set",
+            "SCREENW=1280;SCREENH=720;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;useBanners=1;music=0;playWind=0;startInFullScreen=1",
+            "--ui-script",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-banner-option-546\\remaining\\editor-1280x720\\run\\steps.tsv",
+            "--ui-report",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-banner-option-546\\remaining\\editor-1280x720\\run\\states.tsv"
+          ],
+          "binarySha256": "d7b34b717765c487c5351b5c6c648e68a4ef8eb1d4e7396fccdfa382d31dd06e",
+          "scriptSha256": "b31e9e1fb783d0c6d85803de0173181b5da455e1bec7337d1d77c5ed8dbee184",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 24.742699199996423,
+          "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderrSha256": "5071e7a599b44be9a429a5e9a186532d25b6e9a17b381114c160adf8371b2df0",
+          "originalsUnchanged": true,
+          "dataUnchanged": true
+        }
+      },
+      {
+        "size": [
+          1280,
+          800
+        ],
+        "fullscreen": false,
+        "surfaceMapsToggle": true,
+        "sameEditorHudAndSession": true,
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+            "--run",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-banner-option-546\\remaining\\editor-1280x800\\data",
+            "--mute-audio",
+            "--frames",
+            "115",
+            "--set",
+            "SCREENW=1280;SCREENH=800;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;useBanners=1;music=0;playWind=0",
+            "--ui-script",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-banner-option-546\\remaining\\editor-1280x800\\run\\steps.tsv",
+            "--ui-report",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-banner-option-546\\remaining\\editor-1280x800\\run\\states.tsv",
+            "--window"
+          ],
+          "binarySha256": "d7b34b717765c487c5351b5c6c648e68a4ef8eb1d4e7396fccdfa382d31dd06e",
+          "scriptSha256": "f7f70fdf54335e2392dce877df315adda7cef4e3602bba514736ca316e34cdb8",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 29.774987699987832,
+          "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderrSha256": "5071e7a599b44be9a429a5e9a186532d25b6e9a17b381114c160adf8371b2df0",
+          "originalsUnchanged": true,
+          "dataUnchanged": true
+        }
+      }
+    ],
+    "ownedBanner": {
+      "mission": "TEST02",
+      "existingGenericFixture": true,
+      "newUnitProductionActions": false,
+      "bannerGateAndMaps": true,
+      "run": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-banner-option-546\\owned-banner\\data",
+          "--mute-audio",
+          "--frames",
+          "75",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;useBanners=1;music=0;playWind=0",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-banner-option-546\\owned-banner\\run\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-banner-option-546\\owned-banner\\run\\states.tsv",
+          "--mission",
+          "TEST02",
+          "--window"
+        ],
+        "binarySha256": "d7b34b717765c487c5351b5c6c648e68a4ef8eb1d4e7396fccdfa382d31dd06e",
+        "scriptSha256": "918079ef47752f7b382d13208b96e555f7a5dfdea1f631f08d31b575e10aa598",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 22.8747524000064,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2",
+        "originalsUnchanged": true,
+        "dataUnchanged": true
+      }
+    },
+    "acceptedRuns": 7,
+    "binarySha256": "d7b34b717765c487c5351b5c6c648e68a4ef8eb1d4e7396fccdfa382d31dd06e",
+    "pauseComparisons": [
+      {
+        "size": [
+          1024,
+          768
+        ],
+        "deltaSeconds": 0.0
+      },
+      {
+        "size": [
+          1280,
+          720
+        ],
+        "deltaSeconds": 0.0
+      },
+      {
+        "size": [
+          1280,
+          800
+        ],
+        "deltaSeconds": 0.0
+      }
+    ],
+    "eligibleOwnedTargets": [
+      {
+        "sid": 15000,
+        "type": 142,
+        "name": "windBlocker",
+        "owner": 1
+      },
+      {
+        "sid": 15001,
+        "type": 129,
+        "name": "rainCannon",
+        "owner": 1
+      },
+      {
+        "sid": 15003,
+        "type": 78,
+        "name": "sunBlocker",
+        "owner": 1
+      },
+      {
+        "sid": 15004,
+        "type": 145,
+        "name": "rainFence",
+        "owner": 1
+      },
+      {
+        "sid": 15006,
+        "type": 131,
+        "name": "thunderCannon",
+        "owner": 1
+      },
+      {
+        "sid": 15008,
+        "type": 77,
+        "name": "thunderBattery",
+        "owner": 1
+      },
+      {
+        "sid": 15009,
+        "type": 77,
+        "name": "thunderBattery",
+        "owner": 1
+      },
+      {
+        "sid": 15010,
+        "type": 76,
+        "name": "rainBattery",
+        "owner": 1
+      },
+      {
+        "sid": 15011,
+        "type": 76,
+        "name": "rainBattery",
+        "owner": 1
+      },
+      {
+        "sid": 15013,
+        "type": 75,
+        "name": "windBattery",
+        "owner": 1
+      },
+      {
+        "sid": 15014,
+        "type": 76,
+        "name": "rainBattery",
+        "owner": 1
+      },
+      {
+        "sid": 15015,
+        "type": 76,
+        "name": "rainBattery",
+        "owner": 1
+      },
+      {
+        "sid": 15016,
+        "type": 75,
+        "name": "windBattery",
+        "owner": 1
+      },
+      {
+        "sid": 15018,
+        "type": 140,
+        "name": "windArcher",
+        "owner": 1
+      },
+      {
+        "sid": 15021,
+        "type": 149,
+        "name": "thunderFence",
+        "owner": 1
+      },
+      {
+        "sid": 15022,
+        "type": 148,
+        "name": "thunderArcher",
+        "owner": 1
+      },
+      {
+        "sid": 15024,
+        "type": 136,
+        "name": "sunFence",
+        "owner": 1
+      },
+      {
+        "sid": 15025,
+        "type": 77,
+        "name": "thunderBattery",
+        "owner": 1
+      },
+      {
+        "sid": 15026,
+        "type": 76,
+        "name": "rainBattery",
+        "owner": 1
+      },
+      {
+        "sid": 15028,
+        "type": 139,
+        "name": "windAviary",
+        "owner": 1
+      },
+      {
+        "sid": 15030,
+        "type": 143,
+        "name": "rainAviary",
+        "owner": 1
+      },
+      {
+        "sid": 15032,
+        "type": 76,
+        "name": "rainBattery",
+        "owner": 1
+      },
+      {
+        "sid": 15033,
+        "type": 76,
+        "name": "rainBattery",
+        "owner": 1
+      },
+      {
+        "sid": 15034,
+        "type": 75,
+        "name": "windBattery",
+        "owner": 1
+      },
+      {
+        "sid": 15035,
+        "type": 75,
+        "name": "windBattery",
+        "owner": 1
+      },
+      {
+        "sid": 15045,
+        "type": 72,
+        "name": "sunAviary",
+        "owner": 1
+      },
+      {
+        "sid": 15075,
+        "type": 76,
+        "name": "rainBattery",
+        "owner": 1
+      },
+      {
+        "sid": 15094,
+        "type": 76,
+        "name": "rainBattery",
+        "owner": 1
+      },
+      {
+        "sid": 15095,
+        "type": 77,
+        "name": "thunderBattery",
+        "owner": 1
+      },
+      {
+        "sid": 15133,
+        "type": 75,
+        "name": "windBattery",
+        "owner": 1
+      },
+      {
+        "sid": 15181,
+        "type": 143,
+        "name": "rainAviary",
+        "owner": 1
+      },
+      {
+        "sid": 15183,
+        "type": 143,
+        "name": "rainAviary",
+        "owner": 1
+      },
+      {
+        "sid": 15185,
+        "type": 75,
+        "name": "windBattery",
+        "owner": 1
+      },
+      {
+        "sid": 15186,
+        "type": 75,
+        "name": "windBattery",
+        "owner": 1
+      },
+      {
+        "sid": 15212,
+        "type": 75,
+        "name": "windBattery",
+        "owner": 1
+      },
+      {
+        "sid": 15222,
+        "type": 77,
+        "name": "thunderBattery",
+        "owner": 1
+      },
+      {
+        "sid": 15302,
+        "type": 76,
+        "name": "rainBattery",
+        "owner": 1
+      },
+      {
+        "sid": 15303,
+        "type": 75,
+        "name": "windBattery",
+        "owner": 1
+      },
+      {
+        "sid": 15314,
+        "type": 77,
+        "name": "thunderBattery",
+        "owner": 1
+      },
+      {
+        "sid": 15369,
+        "type": 139,
+        "name": "windAviary",
+        "owner": 1
+      },
+      {
+        "sid": 15371,
+        "type": 76,
+        "name": "rainBattery",
+        "owner": 1
+      },
+      {
+        "sid": 15384,
+        "type": 75,
+        "name": "windBattery",
+        "owner": 1
+      },
+      {
+        "sid": 15433,
+        "type": 76,
+        "name": "rainBattery",
+        "owner": 1
+      },
+      {
+        "sid": 15528,
+        "type": 77,
+        "name": "thunderBattery",
+        "owner": 1
+      },
+      {
+        "sid": 15580,
+        "type": 75,
+        "name": "windBattery",
+        "owner": 1
+      },
+      {
+        "sid": 15581,
+        "type": 75,
+        "name": "windBattery",
+        "owner": 1
+      },
+      {
+        "sid": 15621,
+        "type": 76,
+        "name": "rainBattery",
+        "owner": 1
+      },
+      {
+        "sid": 15642,
+        "type": 77,
+        "name": "thunderBattery",
+        "owner": 1
+      },
+      {
+        "sid": 15643,
+        "type": 75,
+        "name": "windBattery",
+        "owner": 1
+      },
+      {
+        "sid": 15650,
+        "type": 77,
+        "name": "thunderBattery",
+        "owner": 1
+      },
+      {
+        "sid": 15695,
+        "type": 77,
+        "name": "thunderBattery",
+        "owner": 1
+      },
+      {
+        "sid": 15696,
+        "type": 76,
+        "name": "rainBattery",
+        "owner": 1
+      },
+      {
+        "sid": 15740,
+        "type": 75,
+        "name": "windBattery",
+        "owner": 1
+      },
+      {
+        "sid": 15825,
+        "type": 75,
+        "name": "windBattery",
+        "owner": 1
+      },
+      {
+        "sid": 15838,
+        "type": 76,
+        "name": "rainBattery",
+        "owner": 1
+      },
+      {
+        "sid": 15930,
+        "type": 75,
+        "name": "windBattery",
+        "owner": 1
+      },
+      {
+        "sid": 15967,
+        "type": 76,
+        "name": "rainBattery",
+        "owner": 1
+      },
+      {
+        "sid": 16013,
+        "type": 71,
+        "name": "sunArcher",
+        "owner": 1
+      },
+      {
+        "sid": 16015,
+        "type": 75,
+        "name": "windBattery",
+        "owner": 1
+      },
+      {
+        "sid": 16026,
+        "type": 75,
+        "name": "windBattery",
+        "owner": 1
+      },
+      {
+        "sid": 16087,
+        "type": 79,
+        "name": "thunderBlocker",
+        "owner": 1
+      },
+      {
+        "sid": 16088,
+        "type": 75,
+        "name": "windBattery",
+        "owner": 1
+      },
+      {
+        "sid": 16089,
+        "type": 75,
+        "name": "windBattery",
+        "owner": 1
+      },
+      {
+        "sid": 16090,
+        "type": 75,
+        "name": "windBattery",
+        "owner": 1
+      },
+      {
+        "sid": 16110,
+        "type": 147,
+        "name": "rainBlocker",
+        "owner": 3
+      },
+      {
+        "sid": 16118,
+        "type": 128,
+        "name": "sunCannon",
+        "owner": 1
+      },
+      {
+        "sid": 16130,
+        "type": 147,
+        "name": "rainBlocker",
+        "owner": 3
+      }
+    ],
+    "visualInspection": {
+      "path": "owned-banner/banner-inspection.png",
+      "left": "F7 켬: 파란 배너 표시",
+      "right": "F7 끔: 배너 미표시",
+      "wholeFramePixelEqualityClaimed": false
+    },
+    "allRunCounts": {
+      "total": 11,
+      "exit0": 7,
+      "exit1": 4
+    },
+    "newUnitProductionActions": false
+  },
+  "preparationFailures": [
+    {
+      "path": "preflight/1024x768/run/run.json",
+      "reason": "View 라벨 끝 마침표 가정"
+    },
+    {
+      "path": "preflight2/1024x768/run/run.json",
+      "reason": "메뉴 닫힘 뒤 ESC 재개 누락"
+    },
+    {
+      "path": "preflight3/1024x768/run/run.json",
+      "reason": "options.cfg errno22/doserrno1224; 점유 주체 미확정"
+    },
+    {
+      "path": "preflight4/editor-1024x768/run/run.json",
+      "reason": "초기 OK 처리와 Edit/TEST02 진입 순서"
+    }
+  ],
+  "protected": {
+    "originalAndCdFiles": 1819,
+    "agentsUnchanged": true,
+    "audit": "cpppj/work-loss-audit-546-20261028.json"
+  },
+  "toolSha256": {
+    "tools/decomp_banner_option.py": "242256951a36337c63c7d9c525f2a0aec60e38bea6531a35dbb9e7004f3e8f6e",
+    "tools/decomp_banner_key.py": "eb9dcb5568b85712bac681289f96c65e812b480f2d265e954c5cb196f28086ce",
+    "tools/cpp_banner_smoke.py": "c3bf007fa77ef8642c5754ce0c9a2000d6063a0a35315736f40cf9161c36dd75"
+  },
+  "goalComplete": false,
+  "lastFull34PathUnit": 544,
+  "newOriginalGameRuns": 0,
+  "newMultiplayerTests": 0,
+  "naturalClears": 0,
+  "pending": [
+    "사용자 제보 Send Money 금액 선택 종료547",
+    "ShiftF7 GIF/안내와 CtrlShift 진단",
+    "잔여 UI/Edit·건물/제단 상태·Win11실기·자연완주/사용자 후속 플레이"
+  ],
+  "limits": "기존 TEST02 재생은 공중3종 전용 검증이 아니다. 스펠 도움말 추가 분석 등 사용자 보류를 유지한다.",
+  "rawEvidence": [
+    {
+      "path": "extracted/cpp-banner-option-546/before-build/cpppj/src/client/CampaignClientServices.cpp",
+      "sha256": "ad95841a3f4fd0d39037db4e6a031d58ea8a3c5283301cebfa5c90860e12d5a0"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/before-build/cpppj/src/client/ClientColorSortInput.cpp",
+      "sha256": "67d4b5eafd3922eda2272178d45a890c9125839d40b667ed50e3a6a343bd6ef3"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/before-build/cpppj/src/client/ClientColorSortInput.h",
+      "sha256": "2407b39c872bbaaa6c6299269f700a40f3f87396d42d60d371485214fbb2ac66"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/before-build/cpppj/src/client/ClientMain.cpp",
+      "sha256": "2437ab63aca1ee5cb8660f78be58a6b90dea2ede93af8019c5571b7d8aa52082"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/before-build/cpppj/src/client/ClientMain.h",
+      "sha256": "486f3f58a358e657b0d2e90a657dd467281f9a1ab808f6d45e76368253dc29b6"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/before-build/cpppj/src/client/CMakeLists.txt",
+      "sha256": "242c001276a376ee05c5d755429269e6402133a74045c0ad55dc016d36a036af"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/before-build/cpppj/src/client/GameWorld.cpp",
+      "sha256": "0d46ae5cf0a6c11f64b3302ed3002750ae9dd5f383ace51750b7085e980db81d"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/before-build/cpppj/src/client/GameWorld.h",
+      "sha256": "d280a8dfd099359d7d31adec1d3151cf90ce050f501310750cc349f3b19d11bc"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/before-build/cpppj/src/client/OwnerColorMaps.cpp",
+      "sha256": "57a72edae865e632a593885d75c4297fc9d878c24079f41baef4e32c220df674"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/before-build/cpppj/src/client/OwnerColorMaps.h",
+      "sha256": "5ba3e1f63ae64e6f4759eb70128d1dd206ff85aed536853f2cd9cf8faef777d5"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/before-build/cpppj/src/client/OwnerColorTableState.cpp",
+      "sha256": "27e38ccbf10b7fe1a6cf31a11bfb709a16be7f1f376d56f622521785fc23e8bd"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/before-build/cpppj/src/client/OwnerColorTableState.h",
+      "sha256": "6128be7282ea8f252b92b87fa134d3c55f06b6602d5bc99846d084a7d81fff44"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/before-build/cpppj/src/client/PreviewDraw.cpp",
+      "sha256": "0d0de4d2ae132daa8a55d4c27c5cf47ddeb61f039873bb1f403f81544209ec5b"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/before-build/cpppj/src/client/PreviewDraw.h",
+      "sha256": "1a43f5ba2035904236ae983dab6b31d609871377a195b9806a2e0a126eaf9002"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/before-build/cpppj/src/client/ProductionControlContext.h",
+      "sha256": "82b168f3f2c8155559022974598bf896a6bbddcf422c46dc15e5b508f2e8dff1"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/before-build/cpppj/src/client/RawCampaignCursorDisplay.cpp",
+      "sha256": "c36c0300ecb6a6dbfa8c75c40f79455ed9790ceb91673afac5c4f88f7fea62e9"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/before-build/cpppj/src/client/RawCampaignCursorDisplay.h",
+      "sha256": "725e9947f3a7af9c53ea19726da677fa45427e8f90b83a12e49d92749c2951e3"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/before-build/cpppj/src/client/RawCampaignFactoryDisplay.cpp",
+      "sha256": "1dc5d6d85d14e19eed2e7ca9da2614fd067b0bb854c475c3f1c9578531550981"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/before-build/cpppj/src/client/RawCampaignFactoryDisplay.h",
+      "sha256": "2647eed697ef220f816022d71260c2dbc3ff85b27e026e3252028787c58247fd"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/before-build/cpppj/src/client/RawCampaignSession.cpp",
+      "sha256": "d5fb75936892c0a4f7e4ccbf5d54f456eedfef73e171a5fa14b3cbe3f15bf03c"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/before-build/cpppj/src/client/RawCampaignSession.h",
+      "sha256": "c4949f3838baead62a187f3210aee240c6744ea389442abe0b69e2a8ab67f230"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/before-build/cpppj/src/client/RawProductionControls.cpp",
+      "sha256": "d98ec1f885c370f5800128dc178a0236427393faca12588860c551a48578e1b0"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/before-build/cpppj/src/client/SpriteDraw.cpp",
+      "sha256": "ce4719de5ee90722819c61719262d1a63494e499002eb6486e86d59940937680"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/before-build/cpppj/src/client/SpriteDraw.h",
+      "sha256": "24d8083b4c5aaca76e08729d813dc918e6ba37611946ad31cdfa6b9b8211e7a4"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/before-build/cpppj/src/client/UberGump.cpp",
+      "sha256": "ee8003282e7cc7265838d9412b30a8f70d6fd3db13506135623b827519d87560"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/before-build/cpppj/src/client/UberHud.inc",
+      "sha256": "2c90ff36568cb85cb87a3d5b334fbaa8a001cd03de3d3b7ce518f3f5621d1aa0"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/before-build/cpppj/src/client/ViewKeyInput.cpp",
+      "sha256": "cc780ac4b0da12340150cb92eeefb74e16992d88482a704a006a255ce97effd5"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/before-build/cpppj/src/client/ViewKeyInput.h",
+      "sha256": "ab7edaa68898b7061d17c18b2486b703f7ebe8b7a52fc3f71a3e5a14b50949e5"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/before-build/cpppj/tests/BannerOptionTests.cpp",
+      "sha256": "487fccf37cbe9b22ce91e3c8bb723c160d06f39e6bed1e7b1ffb0d7a8191807d"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/before-build/cpppj/tests/CMakeLists.txt",
+      "sha256": "fd0c6ba6a5005fc333f94d52f9a5755250ec451d30e035a0e05b8721d9c71987"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/before-build/cpppj/tests/fixtures/banner-key-x86.tsv",
+      "sha256": "a17ecb9ef8b2ffec81714c3ce452490f0faadf885272896e9fc8957fd338ed8c"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/before-build/cpppj/tests/fixtures/banner-option-x86.tsv",
+      "sha256": "152b5c01100c57dae91241577d483ca140e1fe83cb1a1b0c2708a2697458839b"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/before-build/LEFT_JOBS.md",
+      "sha256": "fb97ed7b64a3dcb953bc21faf6bbc7e91275a483fa275fbc2e69306245098691"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/before-build/tools/decomp_banner_key.py",
+      "sha256": "ddb21d6661996fa8bda4552dc0aff73ad4ecf15caccc70fd8c9eeda86be2db60"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/before-build/tools/decomp_banner_option.py",
+      "sha256": "242256951a36337c63c7d9c525f2a0aec60e38bea6531a35dbb9e7004f3e8f6e"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/before-build.json",
+      "sha256": "d4df36f17be3a32fb85880186fb77eb3850369020bff87507d8218936346150a"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/before-build2/cpppj/src/client/CampaignClientServices.cpp",
+      "sha256": "c20749e0684a3b9cfef6367f5b3cf8f87128c01cbbeea8986d2691bf87076c6f"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/before-build2/cpppj/src/client/ClientColorSortInput.cpp",
+      "sha256": "67d4b5eafd3922eda2272178d45a890c9125839d40b667ed50e3a6a343bd6ef3"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/before-build2/cpppj/src/client/ClientColorSortInput.h",
+      "sha256": "2407b39c872bbaaa6c6299269f700a40f3f87396d42d60d371485214fbb2ac66"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/before-build2/cpppj/src/client/ClientMain.cpp",
+      "sha256": "2437ab63aca1ee5cb8660f78be58a6b90dea2ede93af8019c5571b7d8aa52082"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/before-build2/cpppj/src/client/ClientMain.h",
+      "sha256": "486f3f58a358e657b0d2e90a657dd467281f9a1ab808f6d45e76368253dc29b6"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/before-build2/cpppj/src/client/CMakeLists.txt",
+      "sha256": "242c001276a376ee05c5d755429269e6402133a74045c0ad55dc016d36a036af"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/before-build2/cpppj/src/client/GameWorld.cpp",
+      "sha256": "0d46ae5cf0a6c11f64b3302ed3002750ae9dd5f383ace51750b7085e980db81d"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/before-build2/cpppj/src/client/GameWorld.h",
+      "sha256": "d280a8dfd099359d7d31adec1d3151cf90ce050f501310750cc349f3b19d11bc"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/before-build2/cpppj/src/client/OwnerColorMaps.cpp",
+      "sha256": "57a72edae865e632a593885d75c4297fc9d878c24079f41baef4e32c220df674"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/before-build2/cpppj/src/client/OwnerColorMaps.h",
+      "sha256": "5ba3e1f63ae64e6f4759eb70128d1dd206ff85aed536853f2cd9cf8faef777d5"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/before-build2/cpppj/src/client/OwnerColorTableState.cpp",
+      "sha256": "27e38ccbf10b7fe1a6cf31a11bfb709a16be7f1f376d56f622521785fc23e8bd"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/before-build2/cpppj/src/client/OwnerColorTableState.h",
+      "sha256": "6128be7282ea8f252b92b87fa134d3c55f06b6602d5bc99846d084a7d81fff44"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/before-build2/cpppj/src/client/PreviewDraw.cpp",
+      "sha256": "0d0de4d2ae132daa8a55d4c27c5cf47ddeb61f039873bb1f403f81544209ec5b"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/before-build2/cpppj/src/client/PreviewDraw.h",
+      "sha256": "1a43f5ba2035904236ae983dab6b31d609871377a195b9806a2e0a126eaf9002"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/before-build2/cpppj/src/client/ProductionControlContext.h",
+      "sha256": "82b168f3f2c8155559022974598bf896a6bbddcf422c46dc15e5b508f2e8dff1"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/before-build2/cpppj/src/client/RawCampaignCursorDisplay.cpp",
+      "sha256": "c36c0300ecb6a6dbfa8c75c40f79455ed9790ceb91673afac5c4f88f7fea62e9"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/before-build2/cpppj/src/client/RawCampaignCursorDisplay.h",
+      "sha256": "725e9947f3a7af9c53ea19726da677fa45427e8f90b83a12e49d92749c2951e3"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/before-build2/cpppj/src/client/RawCampaignFactoryDisplay.cpp",
+      "sha256": "1dc5d6d85d14e19eed2e7ca9da2614fd067b0bb854c475c3f1c9578531550981"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/before-build2/cpppj/src/client/RawCampaignFactoryDisplay.h",
+      "sha256": "2647eed697ef220f816022d71260c2dbc3ff85b27e026e3252028787c58247fd"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/before-build2/cpppj/src/client/RawCampaignSession.cpp",
+      "sha256": "d5fb75936892c0a4f7e4ccbf5d54f456eedfef73e171a5fa14b3cbe3f15bf03c"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/before-build2/cpppj/src/client/RawCampaignSession.h",
+      "sha256": "c4949f3838baead62a187f3210aee240c6744ea389442abe0b69e2a8ab67f230"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/before-build2/cpppj/src/client/RawProductionControls.cpp",
+      "sha256": "d98ec1f885c370f5800128dc178a0236427393faca12588860c551a48578e1b0"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/before-build2/cpppj/src/client/SpriteDraw.cpp",
+      "sha256": "ce4719de5ee90722819c61719262d1a63494e499002eb6486e86d59940937680"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/before-build2/cpppj/src/client/SpriteDraw.h",
+      "sha256": "24d8083b4c5aaca76e08729d813dc918e6ba37611946ad31cdfa6b9b8211e7a4"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/before-build2/cpppj/src/client/UberGump.cpp",
+      "sha256": "ee8003282e7cc7265838d9412b30a8f70d6fd3db13506135623b827519d87560"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/before-build2/cpppj/src/client/UberHud.inc",
+      "sha256": "2c90ff36568cb85cb87a3d5b334fbaa8a001cd03de3d3b7ce518f3f5621d1aa0"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/before-build2/cpppj/src/client/ViewKeyInput.cpp",
+      "sha256": "cc780ac4b0da12340150cb92eeefb74e16992d88482a704a006a255ce97effd5"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/before-build2/cpppj/src/client/ViewKeyInput.h",
+      "sha256": "ab7edaa68898b7061d17c18b2486b703f7ebe8b7a52fc3f71a3e5a14b50949e5"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/before-build2/cpppj/tests/BannerOptionTests.cpp",
+      "sha256": "487fccf37cbe9b22ce91e3c8bb723c160d06f39e6bed1e7b1ffb0d7a8191807d"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/before-build2/cpppj/tests/CMakeLists.txt",
+      "sha256": "fd0c6ba6a5005fc333f94d52f9a5755250ec451d30e035a0e05b8721d9c71987"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/before-build2/cpppj/tests/fixtures/banner-key-x86.tsv",
+      "sha256": "a17ecb9ef8b2ffec81714c3ce452490f0faadf885272896e9fc8957fd338ed8c"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/before-build2/cpppj/tests/fixtures/banner-option-x86.tsv",
+      "sha256": "152b5c01100c57dae91241577d483ca140e1fe83cb1a1b0c2708a2697458839b"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/before-build2/LEFT_JOBS.md",
+      "sha256": "fb97ed7b64a3dcb953bc21faf6bbc7e91275a483fa275fbc2e69306245098691"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/before-build2/tools/decomp_banner_key.py",
+      "sha256": "ddb21d6661996fa8bda4552dc0aff73ad4ecf15caccc70fd8c9eeda86be2db60"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/before-build2/tools/decomp_banner_option.py",
+      "sha256": "242256951a36337c63c7d9c525f2a0aec60e38bea6531a35dbb9e7004f3e8f6e"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/before-build2.json",
+      "sha256": "79fa358b445dc7e81b3abb2d31bc988d7f5ec71f0159d6b7222f03b356ab37d5"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/build-tests3.json",
+      "sha256": "40d42c63d9fea3fd5e690e01ddc3e1138800ca53bcbd9d1c2886a6ea4cb36103"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/build-tests3.log",
+      "sha256": "9468302e007c1d9260daeae3a53f684fc8380ff12b9a23492c8f6bc73b7319d9"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/build.json",
+      "sha256": "3f8305dc7dd08007ecd50caf7d35ad87947d5e31ad754f19c656bade3d23d518"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/build.log",
+      "sha256": "b50e960ce387f8701137a97df563a9a75976d697d9d9be5224824a897ceecb72"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/build2.json",
+      "sha256": "3878d3d80c90f9e83b0a0b7632be91150de77f20e955ef605ae4a5b484daa006"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/build2.log",
+      "sha256": "b85bce4b791d19eaf22abbb87d33da07aa26e6c72814859882f993dbca91760e"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/current-final/cpppj/src/client/CampaignClientServices.cpp",
+      "sha256": "c20749e0684a3b9cfef6367f5b3cf8f87128c01cbbeea8986d2691bf87076c6f"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/current-final/cpppj/src/client/ClientColorSortInput.cpp",
+      "sha256": "67d4b5eafd3922eda2272178d45a890c9125839d40b667ed50e3a6a343bd6ef3"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/current-final/cpppj/src/client/ClientColorSortInput.h",
+      "sha256": "2407b39c872bbaaa6c6299269f700a40f3f87396d42d60d371485214fbb2ac66"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/current-final/cpppj/src/client/ClientMain.cpp",
+      "sha256": "2437ab63aca1ee5cb8660f78be58a6b90dea2ede93af8019c5571b7d8aa52082"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/current-final/cpppj/src/client/ClientMain.h",
+      "sha256": "486f3f58a358e657b0d2e90a657dd467281f9a1ab808f6d45e76368253dc29b6"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/current-final/cpppj/src/client/CMakeLists.txt",
+      "sha256": "242c001276a376ee05c5d755429269e6402133a74045c0ad55dc016d36a036af"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/current-final/cpppj/src/client/GameWorld.cpp",
+      "sha256": "0d46ae5cf0a6c11f64b3302ed3002750ae9dd5f383ace51750b7085e980db81d"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/current-final/cpppj/src/client/GameWorld.h",
+      "sha256": "d280a8dfd099359d7d31adec1d3151cf90ce050f501310750cc349f3b19d11bc"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/current-final/cpppj/src/client/OwnerColorMaps.cpp",
+      "sha256": "57a72edae865e632a593885d75c4297fc9d878c24079f41baef4e32c220df674"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/current-final/cpppj/src/client/OwnerColorMaps.h",
+      "sha256": "5ba3e1f63ae64e6f4759eb70128d1dd206ff85aed536853f2cd9cf8faef777d5"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/current-final/cpppj/src/client/OwnerColorTableState.cpp",
+      "sha256": "27e38ccbf10b7fe1a6cf31a11bfb709a16be7f1f376d56f622521785fc23e8bd"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/current-final/cpppj/src/client/OwnerColorTableState.h",
+      "sha256": "6128be7282ea8f252b92b87fa134d3c55f06b6602d5bc99846d084a7d81fff44"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/current-final/cpppj/src/client/PreviewDraw.cpp",
+      "sha256": "0d0de4d2ae132daa8a55d4c27c5cf47ddeb61f039873bb1f403f81544209ec5b"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/current-final/cpppj/src/client/PreviewDraw.h",
+      "sha256": "1a43f5ba2035904236ae983dab6b31d609871377a195b9806a2e0a126eaf9002"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/current-final/cpppj/src/client/ProductionControlContext.h",
+      "sha256": "82b168f3f2c8155559022974598bf896a6bbddcf422c46dc15e5b508f2e8dff1"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/current-final/cpppj/src/client/RawCampaignCursorDisplay.cpp",
+      "sha256": "c36c0300ecb6a6dbfa8c75c40f79455ed9790ceb91673afac5c4f88f7fea62e9"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/current-final/cpppj/src/client/RawCampaignCursorDisplay.h",
+      "sha256": "725e9947f3a7af9c53ea19726da677fa45427e8f90b83a12e49d92749c2951e3"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/current-final/cpppj/src/client/RawCampaignFactoryDisplay.cpp",
+      "sha256": "1dc5d6d85d14e19eed2e7ca9da2614fd067b0bb854c475c3f1c9578531550981"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/current-final/cpppj/src/client/RawCampaignFactoryDisplay.h",
+      "sha256": "2647eed697ef220f816022d71260c2dbc3ff85b27e026e3252028787c58247fd"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/current-final/cpppj/src/client/RawCampaignSession.cpp",
+      "sha256": "d5fb75936892c0a4f7e4ccbf5d54f456eedfef73e171a5fa14b3cbe3f15bf03c"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/current-final/cpppj/src/client/RawCampaignSession.h",
+      "sha256": "c4949f3838baead62a187f3210aee240c6744ea389442abe0b69e2a8ab67f230"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/current-final/cpppj/src/client/RawProductionControls.cpp",
+      "sha256": "d98ec1f885c370f5800128dc178a0236427393faca12588860c551a48578e1b0"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/current-final/cpppj/src/client/SpriteDraw.cpp",
+      "sha256": "ce4719de5ee90722819c61719262d1a63494e499002eb6486e86d59940937680"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/current-final/cpppj/src/client/SpriteDraw.h",
+      "sha256": "24d8083b4c5aaca76e08729d813dc918e6ba37611946ad31cdfa6b9b8211e7a4"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/current-final/cpppj/src/client/UberGump.cpp",
+      "sha256": "ee8003282e7cc7265838d9412b30a8f70d6fd3db13506135623b827519d87560"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/current-final/cpppj/src/client/UberHud.inc",
+      "sha256": "2c90ff36568cb85cb87a3d5b334fbaa8a001cd03de3d3b7ce518f3f5621d1aa0"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/current-final/cpppj/src/client/ViewKeyInput.cpp",
+      "sha256": "cc780ac4b0da12340150cb92eeefb74e16992d88482a704a006a255ce97effd5"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/current-final/cpppj/src/client/ViewKeyInput.h",
+      "sha256": "ab7edaa68898b7061d17c18b2486b703f7ebe8b7a52fc3f71a3e5a14b50949e5"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/current-final/cpppj/tests/BannerOptionTests.cpp",
+      "sha256": "487fccf37cbe9b22ce91e3c8bb723c160d06f39e6bed1e7b1ffb0d7a8191807d"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/current-final/cpppj/tests/CMakeLists.txt",
+      "sha256": "fd0c6ba6a5005fc333f94d52f9a5755250ec451d30e035a0e05b8721d9c71987"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/current-final/cpppj/tests/fixtures/banner-key-x86.tsv",
+      "sha256": "a17ecb9ef8b2ffec81714c3ce452490f0faadf885272896e9fc8957fd338ed8c"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/current-final/cpppj/tests/fixtures/banner-option-x86.tsv",
+      "sha256": "152b5c01100c57dae91241577d483ca140e1fe83cb1a1b0c2708a2697458839b"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/current-final/cpppj/tests/SpriteDrawTests.cpp",
+      "sha256": "f3899d647278faa742f28124176a20bd9c31f4d732ad3fdcc7e7e5ff2326ad2f"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/current-final/LEFT_JOBS.md",
+      "sha256": "fb97ed7b64a3dcb953bc21faf6bbc7e91275a483fa275fbc2e69306245098691"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/current-final/tools/cpp_banner_smoke.py",
+      "sha256": "c21dd3dac216115535331748ba6ff1f0ac0a0082383737706c0773653645b7ed"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/current-final/tools/decomp_banner_key.py",
+      "sha256": "eb9dcb5568b85712bac681289f96c65e812b480f2d265e954c5cb196f28086ce"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/current-final/tools/decomp_banner_option.py",
+      "sha256": "242256951a36337c63c7d9c525f2a0aec60e38bea6531a35dbb9e7004f3e8f6e"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/current-final.json",
+      "sha256": "8bb2d12eddbeac93357ac7af57b8cad6c491edbaa374610a7fa3bcb9666d1eb3"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/final-summary.json",
+      "sha256": "74c9a292fa2884f42ca810157a47884239a75cc602c6163f04446038c771c5f0"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/final-work/cpppj/src/client/CampaignClientServices.cpp",
+      "sha256": "c20749e0684a3b9cfef6367f5b3cf8f87128c01cbbeea8986d2691bf87076c6f"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/final-work/cpppj/src/client/ClientColorSortInput.cpp",
+      "sha256": "67d4b5eafd3922eda2272178d45a890c9125839d40b667ed50e3a6a343bd6ef3"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/final-work/cpppj/src/client/ClientColorSortInput.h",
+      "sha256": "2407b39c872bbaaa6c6299269f700a40f3f87396d42d60d371485214fbb2ac66"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/final-work/cpppj/src/client/ClientMain.cpp",
+      "sha256": "2437ab63aca1ee5cb8660f78be58a6b90dea2ede93af8019c5571b7d8aa52082"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/final-work/cpppj/src/client/ClientMain.h",
+      "sha256": "486f3f58a358e657b0d2e90a657dd467281f9a1ab808f6d45e76368253dc29b6"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/final-work/cpppj/src/client/CMakeLists.txt",
+      "sha256": "242c001276a376ee05c5d755429269e6402133a74045c0ad55dc016d36a036af"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/final-work/cpppj/src/client/GameWorld.cpp",
+      "sha256": "0d46ae5cf0a6c11f64b3302ed3002750ae9dd5f383ace51750b7085e980db81d"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/final-work/cpppj/src/client/GameWorld.h",
+      "sha256": "d280a8dfd099359d7d31adec1d3151cf90ce050f501310750cc349f3b19d11bc"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/final-work/cpppj/src/client/OwnerColorMaps.cpp",
+      "sha256": "57a72edae865e632a593885d75c4297fc9d878c24079f41baef4e32c220df674"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/final-work/cpppj/src/client/OwnerColorMaps.h",
+      "sha256": "5ba3e1f63ae64e6f4759eb70128d1dd206ff85aed536853f2cd9cf8faef777d5"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/final-work/cpppj/src/client/OwnerColorTableState.cpp",
+      "sha256": "27e38ccbf10b7fe1a6cf31a11bfb709a16be7f1f376d56f622521785fc23e8bd"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/final-work/cpppj/src/client/OwnerColorTableState.h",
+      "sha256": "6128be7282ea8f252b92b87fa134d3c55f06b6602d5bc99846d084a7d81fff44"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/final-work/cpppj/src/client/PreviewDraw.cpp",
+      "sha256": "0d0de4d2ae132daa8a55d4c27c5cf47ddeb61f039873bb1f403f81544209ec5b"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/final-work/cpppj/src/client/PreviewDraw.h",
+      "sha256": "1a43f5ba2035904236ae983dab6b31d609871377a195b9806a2e0a126eaf9002"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/final-work/cpppj/src/client/ProductionControlContext.h",
+      "sha256": "82b168f3f2c8155559022974598bf896a6bbddcf422c46dc15e5b508f2e8dff1"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/final-work/cpppj/src/client/RawCampaignCursorDisplay.cpp",
+      "sha256": "c36c0300ecb6a6dbfa8c75c40f79455ed9790ceb91673afac5c4f88f7fea62e9"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/final-work/cpppj/src/client/RawCampaignCursorDisplay.h",
+      "sha256": "725e9947f3a7af9c53ea19726da677fa45427e8f90b83a12e49d92749c2951e3"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/final-work/cpppj/src/client/RawCampaignFactoryDisplay.cpp",
+      "sha256": "1dc5d6d85d14e19eed2e7ca9da2614fd067b0bb854c475c3f1c9578531550981"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/final-work/cpppj/src/client/RawCampaignFactoryDisplay.h",
+      "sha256": "2647eed697ef220f816022d71260c2dbc3ff85b27e026e3252028787c58247fd"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/final-work/cpppj/src/client/RawCampaignSession.cpp",
+      "sha256": "d5fb75936892c0a4f7e4ccbf5d54f456eedfef73e171a5fa14b3cbe3f15bf03c"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/final-work/cpppj/src/client/RawCampaignSession.h",
+      "sha256": "c4949f3838baead62a187f3210aee240c6744ea389442abe0b69e2a8ab67f230"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/final-work/cpppj/src/client/RawProductionControls.cpp",
+      "sha256": "d98ec1f885c370f5800128dc178a0236427393faca12588860c551a48578e1b0"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/final-work/cpppj/src/client/SpriteDraw.cpp",
+      "sha256": "ce4719de5ee90722819c61719262d1a63494e499002eb6486e86d59940937680"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/final-work/cpppj/src/client/SpriteDraw.h",
+      "sha256": "24d8083b4c5aaca76e08729d813dc918e6ba37611946ad31cdfa6b9b8211e7a4"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/final-work/cpppj/src/client/UberGump.cpp",
+      "sha256": "ee8003282e7cc7265838d9412b30a8f70d6fd3db13506135623b827519d87560"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/final-work/cpppj/src/client/UberHud.inc",
+      "sha256": "2c90ff36568cb85cb87a3d5b334fbaa8a001cd03de3d3b7ce518f3f5621d1aa0"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/final-work/cpppj/src/client/ViewKeyInput.cpp",
+      "sha256": "cc780ac4b0da12340150cb92eeefb74e16992d88482a704a006a255ce97effd5"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/final-work/cpppj/src/client/ViewKeyInput.h",
+      "sha256": "ab7edaa68898b7061d17c18b2486b703f7ebe8b7a52fc3f71a3e5a14b50949e5"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/final-work/cpppj/tests/BannerOptionTests.cpp",
+      "sha256": "487fccf37cbe9b22ce91e3c8bb723c160d06f39e6bed1e7b1ffb0d7a8191807d"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/final-work/cpppj/tests/CMakeLists.txt",
+      "sha256": "fd0c6ba6a5005fc333f94d52f9a5755250ec451d30e035a0e05b8721d9c71987"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/final-work/cpppj/tests/fixtures/banner-key-x86.tsv",
+      "sha256": "a17ecb9ef8b2ffec81714c3ce452490f0faadf885272896e9fc8957fd338ed8c"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/final-work/cpppj/tests/fixtures/banner-option-x86.tsv",
+      "sha256": "152b5c01100c57dae91241577d483ca140e1fe83cb1a1b0c2708a2697458839b"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/final-work/cpppj/tests/SpriteDrawTests.cpp",
+      "sha256": "f3899d647278faa742f28124176a20bd9c31f4d732ad3fdcc7e7e5ff2326ad2f"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/final-work/LEFT_JOBS.md",
+      "sha256": "bfc777db378ae794c0d1e223f43e9b139bf2148b456359e51feb2d0db852ff69"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/final-work/tools/cpp_banner_smoke.py",
+      "sha256": "c3bf007fa77ef8642c5754ce0c9a2000d6063a0a35315736f40cf9161c36dd75"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/final-work/tools/decomp_banner_key.py",
+      "sha256": "eb9dcb5568b85712bac681289f96c65e812b480f2d265e954c5cb196f28086ce"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/final-work/tools/decomp_banner_option.py",
+      "sha256": "242256951a36337c63c7d9c525f2a0aec60e38bea6531a35dbb9e7004f3e8f6e"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/final-work.json",
+      "sha256": "60cd328372ea7d30d444eb7ef4359523659bde18d12260789e66a3fd37fc5c7e"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/first-capture/banner-option-x86.tsv",
+      "sha256": "152b5c01100c57dae91241577d483ca140e1fe83cb1a1b0c2708a2697458839b"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/first-capture/decomp_banner_option.py",
+      "sha256": "242256951a36337c63c7d9c525f2a0aec60e38bea6531a35dbb9e7004f3e8f6e"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/first-capture/manifest.json",
+      "sha256": "54db16077887ba44fdafae9382680d0a50df38aea119befde9d028bfdf0b2d2f"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/first-capture/native.json",
+      "sha256": "7c097c071029b9ea842e479c94c5ee52a8136c2dcf0744ca9e4fdde2d31bcc0c"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/first-key-capture/banner-key-x86.tsv",
+      "sha256": "a17ecb9ef8b2ffec81714c3ce452490f0faadf885272896e9fc8957fd338ed8c"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/first-key-capture/decomp_banner_key.py",
+      "sha256": "ddb21d6661996fa8bda4552dc0aff73ad4ecf15caccc70fd8c9eeda86be2db60"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/first-key-capture/key-native.json",
+      "sha256": "e72ca71053b854bb9b2fcdc30dac5d29de8662f3f62096e5526223d48c1f8998"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/freeze-final.json",
+      "sha256": "9f716a0e3240bfe04dad904e2c0d8f9143833a937a1281f6a548b130af442f2a"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/key-native.json",
+      "sha256": "28571f8ddeb78ff7f8f86fa8b161c7b3e0267731ffb3b8150c0237c2ac4ee585"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/native-writers-analysis.json",
+      "sha256": "2e0bf2d71a137fe827f52f92c80b4410d943a3022f05df570652b2a0ec8095f4"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/native.json",
+      "sha256": "7c097c071029b9ea842e479c94c5ee52a8136c2dcf0744ca9e4fdde2d31bcc0c"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/owned-banner/banner-inspection.png",
+      "sha256": "a6440c03c441994695b2c46e1dd77ef1ddff822ddd602d488a66492378708995"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/owned-banner/off.bmp",
+      "sha256": "3564d703d045d791020fe94db99e4e3ba874de80a5635da7c75eec7c13dfb15b"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/owned-banner/on.bmp",
+      "sha256": "190c0489f4bda59e4efd2b92bd9cf4da10f090b076fc844edc7da9bd6ffd5f59"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/owned-banner/run/data-before.json",
+      "sha256": "4399a90324a0f64699d3dadbb46f4d6fbcde2d0f2c62a21d5c31e4413cd0d3af"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/owned-banner/run/originals-before.json",
+      "sha256": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/owned-banner/run/run.json",
+      "sha256": "17b9012666d12b0942728f50b3cee0bcc8ba081da7cef325fcc5a445be8c94a9"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/owned-banner/run/running.json",
+      "sha256": "43f6e43ff033f925899c7cd3a398abe65df4653ee89f963bce02f75a10b19326"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/owned-banner/run/states.tsv",
+      "sha256": "4dd9a274896c76b43a97f3458fb8124f59bfa4657219480090fe821bac4c7c74"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/owned-banner/run/stderr.log",
+      "sha256": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/owned-banner/run/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/owned-banner/run/steps.tsv",
+      "sha256": "918079ef47752f7b382d13208b96e555f7a5dfdea1f631f08d31b575e10aa598"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/owned-banner/summary.json",
+      "sha256": "b5e3fb733b8d481aea509e7a4cd7db88d242f0e4f0a3da1abc42c7c93740b33c"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/preflight/1024x768/off.bmp",
+      "sha256": "06e95eb0535cbbe5312ddfe7d25376c6d1ed191b92c614c09f84287fa696fbc8"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/preflight/1024x768/on.bmp",
+      "sha256": "0a0caa2c97acfa5f404c7d77fafecd109d042ad59334016f0d6a1319697606a5"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/preflight/1024x768/run/data-before.json",
+      "sha256": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/preflight/1024x768/run/originals-before.json",
+      "sha256": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/preflight/1024x768/run/run.json",
+      "sha256": "07c9c72cc126ad56d22bf147aeb54d578388c881d5f2adc76b1b8b3c9922a2c8"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/preflight/1024x768/run/running.json",
+      "sha256": "14b6413e07b5a005e448a690e8d24871f4bb6a149b9bbd862e1a3733989b4487"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/preflight/1024x768/run/states.tsv",
+      "sha256": "1d9855d77c9ed0012f501aaeb7324836e5584c7589559953dd2d4afc0f3568c6"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/preflight/1024x768/run/stderr.log",
+      "sha256": "e0b20e43ae96b79a5aa1d1d22a2ce249227a492e74f505991f7ddfd59fe01517"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/preflight/1024x768/run/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/preflight/1024x768/run/steps.tsv",
+      "sha256": "aae003ee2ea5770860bf0e005b4894f85b0c4d6cfe204641a7994a151b068ccd"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/preflight-wrapper.json",
+      "sha256": "6b567a83a93978e7fbe509472bb820194a98a951cb359c6a4155cc1f46698472"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/preflight.log",
+      "sha256": "b9ee174851ccfd0acbda0072a2059fbfab2b3c3c7c38c5db8670c3382065e3ac"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/preflight2/1024x768/off.bmp",
+      "sha256": "5802b6748f36a99dbbc96cb858b70e6f5df7e233cc676060da181c8d392482af"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/preflight2/1024x768/on.bmp",
+      "sha256": "99eab7e8dee3d93e8811fd8e6ff7459b0d2751176da4777b79382a88a20be1f3"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/preflight2/1024x768/run/data-before.json",
+      "sha256": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/preflight2/1024x768/run/originals-before.json",
+      "sha256": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/preflight2/1024x768/run/run.json",
+      "sha256": "40cd5f7b2eb8225b247d31ba6df8ad09f7681c123103fe6c2d1639dcf7402b96"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/preflight2/1024x768/run/running.json",
+      "sha256": "de2f3736ad48c7fd494fc871e46ebf5274ddb7c6cac6e31fa085006e98dbed0d"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/preflight2/1024x768/run/states.tsv",
+      "sha256": "8e5d86f321eca7642e4f541c48d4f811b763892f191497a6f2f01e4af38d9442"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/preflight2/1024x768/run/stderr.log",
+      "sha256": "50c6de1a0dcfe780aa20bc9d0a1d9b16fff6fe7f2a037c99fd24ee80b19163b4"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/preflight2/1024x768/run/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/preflight2/1024x768/run/steps.tsv",
+      "sha256": "f6f18113e5e9cccc4cf3085b31787d6d81cd134a1d5fdea19524a3073574be04"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/preflight2-wrapper.json",
+      "sha256": "be7c43a6ef58236703ac1463bba251b198ab36383eb740eedc58f33596d7cc76"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/preflight2.log",
+      "sha256": "18809461e4c10b75e19d64e28b06c29a2359c724efe922fb48f35adb2e3a9530"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/preflight3/1024x768/off.bmp",
+      "sha256": "2ca4ec914b9fb14cab53f547beda18ac76847c3dfe856cc8e2ff1366e9b09169"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/preflight3/1024x768/on.bmp",
+      "sha256": "3e48a013c04edacacb1a38a17b3bac02dba87f25b7474c0a9ae8b3683d0bc4fd"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/preflight3/1024x768/run/data-before.json",
+      "sha256": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/preflight3/1024x768/run/originals-before.json",
+      "sha256": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/preflight3/1024x768/run/run.json",
+      "sha256": "4db735e224ff32fd685bb73953414819ad19ed6ec899b839ac0c153cc48aa603"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/preflight3/1024x768/run/running.json",
+      "sha256": "9a4cfd1e478c061e01be614e182895ef1305dcf5f1195a37d5944f7ad0d872f2"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/preflight3/1024x768/run/states.tsv",
+      "sha256": "6c2e3133a6c422dcc89a950da6081f79b1a46277104522f284a63cd79828c243"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/preflight3/1024x768/run/stderr.log",
+      "sha256": "3f5d758a0e00872999e1882e32eee4e3a9a36e7fe896cae87db616fe539b8d38"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/preflight3/1024x768/run/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/preflight3/1024x768/run/steps.tsv",
+      "sha256": "7c73e39708e1ac4e504d07b5a88bde41bbb8a18ef5c44b24911c1ec96bebd45f"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/preflight3-wrapper.json",
+      "sha256": "f8dce8882582805e9431e274908a3f2e9aff7b5ed97304aeb58dee1a3c18711f"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/preflight3.log",
+      "sha256": "7efb9c7cb678fbbdf404f5afca62c418cc57d98cfd47c1b3128e0cc8bf22dd08"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/preflight4/1024x768/off.bmp",
+      "sha256": "ef74b306fa3cfbea27aa090f35395c8c32d2ec24341ebc7840ed5edfcd643700"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/preflight4/1024x768/on.bmp",
+      "sha256": "ece8a4c1062e265740d283b2c866e3143ec83d3d7f8715a84412f7857826bdbc"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/preflight4/1024x768/run/data-before.json",
+      "sha256": "4399a90324a0f64699d3dadbb46f4d6fbcde2d0f2c62a21d5c31e4413cd0d3af"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/preflight4/1024x768/run/originals-before.json",
+      "sha256": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/preflight4/1024x768/run/run.json",
+      "sha256": "07ff36e44f49e5be3b00b1f71c784b160c8e063e2999b30cf184703dfdf36c8e"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/preflight4/1024x768/run/running.json",
+      "sha256": "df66c532e75c84e58116387191684fa32df61f34c880694df35c3f2c5541f0d1"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/preflight4/1024x768/run/states.tsv",
+      "sha256": "b29e46f5d02105fda1fc4bd64602864664689a088baf7a192e2f89c574e558a2"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/preflight4/1024x768/run/stderr.log",
+      "sha256": "4b73c96b25066ec2370644eda8a463570fec390203035f3612e15ad85ff68be9"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/preflight4/1024x768/run/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/preflight4/1024x768/run/steps.tsv",
+      "sha256": "44909438acc165f8be4c7d3ece188dfdd7a17a033a2be2e3447b4ec689bb9751"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/preflight4/1024x768/summary.json",
+      "sha256": "e1fce26ba68575e34e28ccebb5762cf004e8e84e0b58fda40158e2ca69c90775"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/preflight4/editor-1024x768/run/data-before.json",
+      "sha256": "4399a90324a0f64699d3dadbb46f4d6fbcde2d0f2c62a21d5c31e4413cd0d3af"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/preflight4/editor-1024x768/run/originals-before.json",
+      "sha256": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/preflight4/editor-1024x768/run/run.json",
+      "sha256": "0ed5bad14601c3d2698e565261daedc4fed988ac2e14621230b5b9c8836ca20f"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/preflight4/editor-1024x768/run/running.json",
+      "sha256": "265aa8953d06b7da809661e36caa113086f4505b7a3eb75055b4d9fcec80d319"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/preflight4/editor-1024x768/run/states.tsv",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/preflight4/editor-1024x768/run/stderr.log",
+      "sha256": "9c6750e8fc6622d767c9e191f4498c724e9cfa7f670396ef1d515c3d0981ff74"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/preflight4/editor-1024x768/run/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/preflight4/editor-1024x768/run/steps.tsv",
+      "sha256": "dc53125c05ff403b2a8ab4393ff7924dbb48a94cf7a3ec57132045424d7357dc"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/preflight4-wrapper.json",
+      "sha256": "77d25e3d6e798bc0c3a17051434b81255b97eece95bc9465210775c3e996b3c0"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/preflight4.log",
+      "sha256": "22155e9528ac08453602e41a552bd827d1c5ea5bd2a21f0350f3360d3055a032"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/preflight5/editor-1024x768/data-editor/D/breakingthrough.fort",
+      "sha256": "cff7def3cde57387e2ba1dbff582a86a3e2f3db539fa3b0db0ec81f21313c098"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/preflight5/editor-1024x768/data-editor/D/TEST02.fort",
+      "sha256": "3eded6523cdce08cb960b0699f0b1704ee5b49bf4d5c749800a175821d569229"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/preflight5/editor-1024x768/data-editor-state/catalog-v1.dat",
+      "sha256": "9ed35cdebe32c127385fb1384434381c8aa8025d6dfafaccbe16bc38f0c1a80c"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/preflight5/editor-1024x768/data-editor-state/catalog.lock",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/preflight5/editor-1024x768/editor-off.bmp",
+      "sha256": "f64f0f6e7bac4602a0efd7c6fada1a9a60d1bbdeb4472f49d0fb121958014927"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/preflight5/editor-1024x768/editor-on.bmp",
+      "sha256": "e0ba1a037aa9974ac00c26d260d501bc54ac1ef5ea4931989705a672de98f742"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/preflight5/editor-1024x768/run/data-before.json",
+      "sha256": "4399a90324a0f64699d3dadbb46f4d6fbcde2d0f2c62a21d5c31e4413cd0d3af"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/preflight5/editor-1024x768/run/originals-before.json",
+      "sha256": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/preflight5/editor-1024x768/run/run.json",
+      "sha256": "93702062e2adfede5dd18ba275028af9cb0b5a288e726376874a7aecfd19a3dc"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/preflight5/editor-1024x768/run/running.json",
+      "sha256": "587e873f8d4aa604e37f7fed7d7e278309397578051262a1d0cfbfcc74387fef"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/preflight5/editor-1024x768/run/states.tsv",
+      "sha256": "3f3fbe6247bb3d69abea9bedd0b7027c71366eea48acf2191fbc87add49b29e7"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/preflight5/editor-1024x768/run/stderr.log",
+      "sha256": "5071e7a599b44be9a429a5e9a186532d25b6e9a17b381114c160adf8371b2df0"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/preflight5/editor-1024x768/run/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/preflight5/editor-1024x768/run/steps.tsv",
+      "sha256": "c4659cb155a7c5d7e0778cea71784e89cfd43b7040eac482556f917c8f37418b"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/preflight5/editor-1024x768/summary.json",
+      "sha256": "46415ab4cda57feaaeaef857061399275bd25cd34dc8e9cc500697cb3d566cff"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/preflight5/summary.json",
+      "sha256": "2c5eaae9a7aba7e8da144c12640f0b938d85cffe334b13b80cdcd57b5e034a57"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/preflight5-wrapper.json",
+      "sha256": "ef4ac3b65a2ac9ee46d60d7d9817ad6996c3225cf29c0f70ee713bbe91f4301d"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/preflight5.log",
+      "sha256": "82e73fcb8ee1a30fe4a4d32d49fa35a167b373bed8d90671c797c60662e25ada"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/registered-final.txt",
+      "sha256": "d8c4ccbad0e25aa44e091444231cbd60a16ae50227287c1c91e73f17a2950dea"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/registered.txt",
+      "sha256": "db174d1afcbd6764bd8c5aaac7ebe4c57dcccbe8cf0cef9cd1c64bd3fa2d527a"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/remaining/1280x720/off.bmp",
+      "sha256": "888ca1189cdf343dbbfac091dc524e532661279dd0b4452822012c260c7924f6"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/remaining/1280x720/on.bmp",
+      "sha256": "2534b2a041f6759a2507f93849ddf678973310c32255c3a038c073c49ecfb805"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/remaining/1280x720/run/data-before.json",
+      "sha256": "4399a90324a0f64699d3dadbb46f4d6fbcde2d0f2c62a21d5c31e4413cd0d3af"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/remaining/1280x720/run/originals-before.json",
+      "sha256": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/remaining/1280x720/run/run.json",
+      "sha256": "3477ef0021633be35769eba7b2e9d2e3aa9fc18e60a6bab0ca16d314884d9961"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/remaining/1280x720/run/running.json",
+      "sha256": "b57b558b48e6e8ea332488eb8325669be9e2c63b65d8137c85a372dd2aaa2b7a"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/remaining/1280x720/run/states.tsv",
+      "sha256": "0c98e814a105b8259bdb09a3f32290ae520c32db4c87850ad772154c83b4f9c4"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/remaining/1280x720/run/stderr.log",
+      "sha256": "4b73c96b25066ec2370644eda8a463570fec390203035f3612e15ad85ff68be9"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/remaining/1280x720/run/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/remaining/1280x720/run/steps.tsv",
+      "sha256": "3ed50b48d5f6ddddaf558b3e2b1cdd7de364f2fc11118ce9f25ca7ef5fbe73c3"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/remaining/1280x720/summary.json",
+      "sha256": "e845097591917cef255e50de58a219f35c84a4b6f2b12a6b3f9d525e3b44899c"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/remaining/1280x800/off.bmp",
+      "sha256": "c5cf0dfd5cc98fbe621156eadcedc30afccfe00649621f639279d77f35fd0897"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/remaining/1280x800/on.bmp",
+      "sha256": "2c2cec4801e646001075163b424794a5b63afa85f2c0b070bd6fb898856e68f8"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/remaining/1280x800/run/data-before.json",
+      "sha256": "4399a90324a0f64699d3dadbb46f4d6fbcde2d0f2c62a21d5c31e4413cd0d3af"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/remaining/1280x800/run/originals-before.json",
+      "sha256": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/remaining/1280x800/run/run.json",
+      "sha256": "415978f8bb87614554bf21b9f296fffe2433803f1d30e5a5693c1694a757be71"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/remaining/1280x800/run/running.json",
+      "sha256": "0c8e4e0eff7918738810be21557e2ccb506aafa26676a3845a8411f31c14f9d4"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/remaining/1280x800/run/states.tsv",
+      "sha256": "304d840485b13a2536dc3d54d1c5c588aafcdb245af8242d5dcf0b189bf94598"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/remaining/1280x800/run/stderr.log",
+      "sha256": "4b73c96b25066ec2370644eda8a463570fec390203035f3612e15ad85ff68be9"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/remaining/1280x800/run/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/remaining/1280x800/run/steps.tsv",
+      "sha256": "027dacd5aa69a85133e7b521e3a89e272e7ea429af1effca24da8681ffe00e28"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/remaining/1280x800/summary.json",
+      "sha256": "cf6866ec7a6a186e9aa85131774c8b68ebe2f6f5c1c7c2d4b81e7c02d4314d50"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/remaining/editor-1280x720/data-editor/D/breakingthrough.fort",
+      "sha256": "cff7def3cde57387e2ba1dbff582a86a3e2f3db539fa3b0db0ec81f21313c098"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/remaining/editor-1280x720/data-editor/D/TEST02.fort",
+      "sha256": "2a7844256597444b7c4033ebcff8ed96147bf65d179a9e3abc1fc07171d0e362"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/remaining/editor-1280x720/data-editor-state/catalog-v1.dat",
+      "sha256": "cc2ff58b87ae1f1d6a2bc96af8e0298119f05fc9614186f300f2ca7ad387bb33"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/remaining/editor-1280x720/data-editor-state/catalog.lock",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/remaining/editor-1280x720/editor-off.bmp",
+      "sha256": "d8d3354ecd8b4e5d3294dadfdaaee1e5fecf2e0592fa3eadb46f15c6c1cd3ded"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/remaining/editor-1280x720/editor-on.bmp",
+      "sha256": "dacbe33b1e0264127be3b61f21d1c4553c44282d4ad05dc52acfecdf5392c088"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/remaining/editor-1280x720/run/data-before.json",
+      "sha256": "4399a90324a0f64699d3dadbb46f4d6fbcde2d0f2c62a21d5c31e4413cd0d3af"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/remaining/editor-1280x720/run/originals-before.json",
+      "sha256": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/remaining/editor-1280x720/run/run.json",
+      "sha256": "6e9da8901699eda326c0d8cc25f4d57e207242733e27aec19b3f20a303166d8a"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/remaining/editor-1280x720/run/running.json",
+      "sha256": "e30ad487eedede94499e9395e30f29f48bb02a3b6233c036c209d379e0f31f30"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/remaining/editor-1280x720/run/states.tsv",
+      "sha256": "b7766bba2449bbdb23d94f9941e1822c7775546b4b93650dcedc31dc81647f0f"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/remaining/editor-1280x720/run/stderr.log",
+      "sha256": "5071e7a599b44be9a429a5e9a186532d25b6e9a17b381114c160adf8371b2df0"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/remaining/editor-1280x720/run/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/remaining/editor-1280x720/run/steps.tsv",
+      "sha256": "b31e9e1fb783d0c6d85803de0173181b5da455e1bec7337d1d77c5ed8dbee184"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/remaining/editor-1280x720/summary.json",
+      "sha256": "8ee42003e42f59e6b0957b298f3514226558a166735a2d8476e80bd5645b6748"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/remaining/editor-1280x800/data-editor/D/breakingthrough.fort",
+      "sha256": "cff7def3cde57387e2ba1dbff582a86a3e2f3db539fa3b0db0ec81f21313c098"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/remaining/editor-1280x800/data-editor/D/TEST02.fort",
+      "sha256": "df6fa43f472e9d878f01b5f7981fb2b5771e17e4a4cdf44e240ea15d09da0e80"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/remaining/editor-1280x800/data-editor-state/catalog-v1.dat",
+      "sha256": "ca964e77906c2de6b45b56c68e3f8a5d94b61184726a4763e8b52ca6d98fd117"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/remaining/editor-1280x800/data-editor-state/catalog.lock",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/remaining/editor-1280x800/editor-off.bmp",
+      "sha256": "e02ba20c398b3cced9968c99b0602ac605e36d770af4ee49e8ac0b1586cd1875"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/remaining/editor-1280x800/editor-on.bmp",
+      "sha256": "59bcaa6351eb5845e14344aad03d5fef19783a382b9d98f40adf1f2fcf44d460"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/remaining/editor-1280x800/run/data-before.json",
+      "sha256": "4399a90324a0f64699d3dadbb46f4d6fbcde2d0f2c62a21d5c31e4413cd0d3af"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/remaining/editor-1280x800/run/originals-before.json",
+      "sha256": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/remaining/editor-1280x800/run/run.json",
+      "sha256": "b0d3fc9bd6db7b084315c3d71e5f8d649e02a92c0823ff3160381978e8fe60c9"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/remaining/editor-1280x800/run/running.json",
+      "sha256": "9efb160cb8b12873502b65225dda5305bf860c8e80de08d18c69babbda13e8bd"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/remaining/editor-1280x800/run/states.tsv",
+      "sha256": "53338e79da895b7a1587c65d44e5e45850114af20d4ae9f0fb54c747c0f8c9b5"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/remaining/editor-1280x800/run/stderr.log",
+      "sha256": "5071e7a599b44be9a429a5e9a186532d25b6e9a17b381114c160adf8371b2df0"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/remaining/editor-1280x800/run/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/remaining/editor-1280x800/run/steps.tsv",
+      "sha256": "f7f70fdf54335e2392dce877df315adda7cef4e3602bba514736ca316e34cdb8"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/remaining/editor-1280x800/summary.json",
+      "sha256": "e6e8fcb4bd6f37031252f7c2ab46062228449eb7ff34c7e290a0c47b2ed27c08"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/remaining/summary.json",
+      "sha256": "0e2efae5fa6139bd833740956ca5b168ba9715c0b5a75fc6236ca7cdddc3b88b"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/remaining-wrapper.json",
+      "sha256": "d451d1e6c8052d1f1506608724fa008b09b8bf5908478bae9f11d08b3933710a"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/remaining.log",
+      "sha256": "9d1ae1311d5e0e2abb6f291c6bcb023bf13c7602d618e0a42de3aa697d94531b"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/source-check.json",
+      "sha256": "c53c0653039eb785d6cf3c6e51e7ffb7af1c8be867debce2422f4e467c24c3a5"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/tests-BannerKey.log",
+      "sha256": "e4c638fc8e8e379859222bb2bba54dd582f6c86735662695cd6bf74f660d64e8"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/tests-BannerOption.log",
+      "sha256": "1612a23438fef00907b63ce4fb6b28d2ba6ac33bc8baea97f41f0148322f22b8"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/tests-CampaignConstructionMana.log",
+      "sha256": "14cc4f5372fbd7774a06dc466df32e375d14b8aaa4fe7d37774ec1d592489240"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/tests-CampaignPriestDisplay.log",
+      "sha256": "ef87b1a20b9861663a776c66f9b5cd26cfa4597a39dac34bc86a428d63f521d6"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/tests-CampaignSession_FenceShieldUsesCurrentOwnerColorPixels.log",
+      "sha256": "3ba9e23572345afe761fc601f6dab1baa7d18c01f3b36f4ccffb2d166bfdab52"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/tests-ClientColorSortPrimary.log",
+      "sha256": "a6a5581f3dda2f3f3f29b98ff525fe3e835994265579e9a6a76475acfa5abfeb"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/tests-ColorSortFixedInput.log",
+      "sha256": "54e86011551692a9833744252db4b42c0702ee618ba09afb654b99d2447cf469"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/tests-F8KeyInput.log",
+      "sha256": "71e10c040060d92546a3bd58a5b58aca40bd3e99cd77351bac891adc58ef8ef1"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/tests-final.json",
+      "sha256": "6fd7a8fc516efa147535e1782e5650dc7d3993cc71d9d2a8b4bcfea9e3fa0cec"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/tests-HideBuildings.log",
+      "sha256": "9878b0788fd2f9cc6a5efcb965f95b2216290c928846ed650aaf1e495d6c04d6"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/tests-ImageGump.log",
+      "sha256": "59420ab222db81dde1c3db70e4b716f375fe5c3556a93eba256342ba913bcfb1"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/tests-OwnerColorMaps.log",
+      "sha256": "48c028cf621c5f3be55842bbc03da0ee56c354b8a57c45d79556e36f6a98c6e4"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/tests-OwnerColorTableState.log",
+      "sha256": "8997b6d8d1798f5777d243db8e5ee0bb5ace4f9742753f133437322bd8509532"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/tests-PreviewColorMaps_SpecialOwner.log",
+      "sha256": "ad14f73e6414b01b7d7d3e5624df34d63a7596be08730440e8d344ca8fe743a0"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/tests-PreviewDraw.log",
+      "sha256": "b379611c7b11f022303fd977e0c21a7bd1d85b5f6ec0a7861cf2dd330c2fb208"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/tests-ProductionInitialContext.log",
+      "sha256": "4a0f8392b45a3287e0b1875d407107ac5a96969e87709bbd6b473eed4117a1ba"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/tests-SessionCursorColorInput.log",
+      "sha256": "d25b5b2f064d8ba191d08521f5277fbe460da78d4892b28ff8944987cc2f03d0"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/tests-ShapeToBuffer.log",
+      "sha256": "5b3fa2cb537b45fecfd39a2a5044570dab7fecc03ebc591d381d1371fa56844c"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/tests-SpriteDraw.log",
+      "sha256": "2d37158cee4e8849b98cfe372c40fc733fef86baf45f0957a0d78b699d276085"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/tests-ViewKeyInput.log",
+      "sha256": "248e4ca00a7793279524cdae9efd083800e48c603a4a120e5bc21c5146d21306"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/tests.json",
+      "sha256": "40dfa88c24888453623b504eb10aa7819ef8834c1778c6ab1e2d600b09f53211"
+    },
+    {
+      "path": "extracted/cpp-banner-option-546/types.tsv",
+      "sha256": "3f1eeb0a3d613d629a12fcf2406181694101841f30ed9eca9200e1b673c3a43b"
+    }
+  ]
+}

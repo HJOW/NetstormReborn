@@ -6,6 +6,7 @@
 #include "o/SpStore.h"
 #include <memory>
 namespace netstorm::client {
+class OwnerColorTableState; // 현재557940은 커서 표시기보다 오래 살아야 한다.
 // 장기 게임 저장소는 참조만 빌리고 표시 옵션/피드백만 내부에서 소유한다.
 class RawCampaignCursorDisplay {
 public:
@@ -17,7 +18,7 @@ public:
     // 파일 팔레트를 교체할 때만 세 색표/기본 색을 다시 만든다. 일시 번개 팔레트와 구별한다.
     void SetPalette(std::span<const ScreenColor> palette,std::span<const std::uint32_t> colorSortLogical={}); //실제Client는같은고정초기RGB를별도전달하며기존독립검사는명시fallback이다.
     void SetView(SoundView view); // 현재 월드 viewport를 마지막 dirty와 별도로 보존한다.
-    void SetThemeMode(std::uint32_t mode); // 원본43bc40의 받침/지면 owner 표 활성화를 반영한다.
+    void BindOwnerColors(std::shared_ptr<OwnerColorTableState> owner); // 배너 옵션의 현재 표를 빌리며 테마 설정과 구별한다.
     // 원본 문자열 번역/실제 FontStore를 장기 출력기에 연결한다. 문자열은 원본 좁은 바이트다.
     void SetText(FontStore& fonts,std::function<std::string(std::string_view)> translate);
     // 부모 Gump 깊이와 기본17종 외 확장 소유자 색표의 실제 공급자를 연결한다.

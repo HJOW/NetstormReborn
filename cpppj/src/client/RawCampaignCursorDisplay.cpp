@@ -4,6 +4,7 @@
 #include "client/RawCursorPlacement.h"
 #include "client/PreviewColorMaps.h"
 #include "client/OwnerColorMaps.h"
+#include "client/OwnerColorTableState.h"
 #include "client/PaletteColors.h"
 #include "client/GumpTextDraw.h"
 #include "o/RawBridgeConnect.h"
@@ -31,6 +32,7 @@ struct RawCampaignCursorDisplay::Impl {
     bool paletteReady{}; // 실제 파일 팔레트 없이 초기화되지 않은 색을 사용하지 않는다.
     PreviewColorMaps colors; // 현재 파일 팔레트의 파괴/불법/문자 그림자 표다.
     std::map<std::uint32_t,OwnerColorMaps> ownerColors; // 일반/전용 타입의 실제9색 표를 타입별로 캐시한다.
+    std::shared_ptr<OwnerColorTableState> sharedOwnerColors; // 실제 Client의 현재557940이다. 지역 색표는 기존 독립 입력에만 사용한다.
     std::function<std::uint32_t(std::uint32_t)> depth; // 실제 Gump 부모 깊이다.
     std::function<ColorMap(std::uint32_t,std::uint32_t)> specializedOwner; // 기본17종 외 확장 소유자 색표의 실제 공급자다.
     FontStore* fonts{}; // 실제 Client의 장기 원본 비트맵 글꼴 저장소다.
@@ -57,6 +59,10 @@ struct RawCampaignCursorDisplay::Impl {
     // 같은 현재 TYPE/owner 색 번호의 원본 표 또는 연결한 확장 표만 반환한다.
     ColorMap Color(PreviewColorRequest request) {
         if (request.colors==PreviewColors::Destroy) return colors.destroy;if (request.colors==PreviewColors::Illegal) return colors.illegal;if (request.colors==PreviewColors::LabelShadow) return colors.labelShadow;
+        if (sharedOwnerColors) { // 현재 Player 색을 같은 원본 번호로 바꾼 뒤 실제 공통 표를 읽는다.
+            if (request.owner>=source.surfaces.ownerColors.size()) throw std::out_of_range("커서 현재 owner 색 번호 범위");
+            const auto color=source.surfaces.ownerColors[request.owner];if (color<0 || color>8) throw std::out_of_range("커서 현재 owner 색표 범위");return sharedOwnerColors->Color(request.type,static_cast<std::uint32_t>(color));
+        }
         const auto found=ownerColors.find(request.type);
         if (found==ownerColors.end()) { if (!specializedOwner) throw std::logic_error("커서 확장 소유자 색표 미연결 TYPE"+std::to_string(request.type));return specializedOwner(request.type,request.owner); }
         if (request.owner>=source.surfaces.ownerColors.size()) throw std::out_of_range("커서 현재 owner 색 번호 범위");
@@ -88,12 +94,15 @@ void RawCampaignCursorDisplay::SetPalette(std::span<const ScreenColor> palette,s
     for (std::size_t index=0;index<logical.size();++index) logical[index]=std::uint32_t(palette[index].red)|(std::uint32_t(palette[index].green)<<8)|(std::uint32_t(palette[index].blue)<<16)|(std::uint32_t(palette[index].reserved)<<24);
     const auto named=BuildPaletteColorTable(logical,impl_->assets.Edition());impl_->textColors={named.basic[7],named.basic[5]};impl_->colors=BuildPreviewColorMaps(ColorSortLogicalInput(colorSortLogical,logical),named.basic[1]);impl_->settings.goodColor=static_cast<std::uint8_t>(named.basic[7]);impl_->settings.badColor=static_cast<std::uint8_t>(named.basic[1]);
     // 실제 전용5종의 현재 파일 명도 표도 함께 다시 만든다.
-    for (const auto type:kSpecial) impl_->ownerColors[type]=BuildSpecialOwnerColorMaps(ColorSortLogicalInput(colorSortLogical,logical),type);
+    if (!impl_->sharedOwnerColors) for (const auto type:kSpecial) impl_->ownerColors[type]=BuildSpecialOwnerColorMaps(ColorSortLogicalInput(colorSortLogical,logical),type); // 독립 입력만 지역 표를 갱신한다.
     impl_->paletteReady=true;
 }
-// 실제 월드 clip과 원본 ThemeMode의 두 표 활성화를 현재 표시 상태에 반영한다.
+// 실제 월드 clip은 마지막 dirty 영역과 별도로 유지한다.
 void RawCampaignCursorDisplay::SetView(SoundView view) { impl_->viewport={view.left,view.top,view.right,view.bottom}; }
-void RawCampaignCursorDisplay::SetThemeMode(std::uint32_t mode) { impl_->settings.ownerMaps[94]=impl_->settings.ownerMaps[97]=mode==0; } //43bc40의 등록/해제 결과다.
+void RawCampaignCursorDisplay::BindOwnerColors(std::shared_ptr<OwnerColorTableState> owner) { // 테마와 무관한 실제 현재 배너 표를 빌린다.
+    if (!owner || !owner->Ready()) throw std::invalid_argument("커서 공통 소유자 색표 최초 등록 누락");
+    impl_->sharedOwnerColors=std::move(owner);impl_->ownerColors.clear();impl_->settings.sharedOwnerMaps=impl_->sharedOwnerColors->Tokens();
+}
 // 같은 장기 실제 글꼴/번역기를 다음 Draw부터 사용한다.
 void RawCampaignCursorDisplay::SetText(FontStore& fonts,std::function<std::string(std::string_view)> translate) { impl_->fonts=&fonts;impl_->translate=std::move(translate); }
 // 실제 부모 Gump 및 확장 색표 처리를 같은 표시기에 연결한다.

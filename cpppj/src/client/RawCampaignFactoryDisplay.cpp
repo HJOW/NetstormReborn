@@ -8,6 +8,7 @@
 #include "client/SpriteColorMaps.h"
 #include "client/PaletteColors.h"
 #include "client/OwnerColorMaps.h"
+#include "client/OwnerColorTableState.h"
 #include "o/RawFactoryDraw.h"
 #include "o/RawDaisDraw.h"
 #include "o/RawTempleDraw.h"
@@ -52,6 +53,7 @@ struct RawCampaignFactoryDisplay::Impl {
     std::vector<SpriteStatusProcess> statusSlots; // 첫0번과 현재Kernel 순서를 유지하는 선택용 읽기 전용 뷰다.
     SpriteColorMaps colors; // 실제 파일 팔레트의 세 소스 치환 표다.
     std::map<std::uint32_t,OwnerColorMaps> ownerColors; // 원본 일반12종/전용5종의 실제9색표이며 현재 팔레트로 갱신한다.
+    std::shared_ptr<OwnerColorTableState> sharedOwnerColors; // 실제 Client의 현재 표와 배너 DWORD이며 Session 반납으로 초기화하지 않는다.
     TempleDraw templeDraw; // 같은 Session의 현재 전용Draw/상승음이며 그리기 시점에만 호출한다.
     std::vector<std::int32_t> templeBaseFrames; // 같은TYPE+128의 고정 본체 번호이며 썬더의-1을 보존한다.
     bool ready{}; // 파일 팔레트가 설치되기 전에 출력하지 않는다.
@@ -97,8 +99,9 @@ struct RawCampaignFactoryDisplay::Impl {
     ColorMap Color(SpriteShapeMode mode,std::uint32_t type,std::uint32_t owner) const {
         if (mode==SpriteShapeMode::Abstract) return colors.bright;if (mode==SpriteShapeMode::Dead) return colors.dead;if (mode==SpriteShapeMode::Shadow) return colors.shadow;
         if (mode!=SpriteShapeMode::Owner || owner>=core.bridgeState.ownerColors.size()) throw std::logic_error("실제 자산 소유자 색표 분기 오류");
-        const auto found=ownerColors.find(type);if (found==ownerColors.end()) throw std::logic_error("실제 자산 현재 소유자 색표 미연결");
-        const auto index=core.bridgeState.ownerColors[owner];if (index<0 || index>8) throw std::out_of_range("실제 자산 현재 소유자 색 번호");return found->second[static_cast<std::size_t>(index)];
+        const auto index=core.bridgeState.ownerColors[owner];if (index<0 || index>8) throw std::out_of_range("실제 자산 현재 소유자 색 번호");
+        if (sharedOwnerColors) return sharedOwnerColors->Color(type,static_cast<std::uint32_t>(index));
+        const auto found=ownerColors.find(type);if (found==ownerColors.end()) throw std::logic_error("실제 자산 현재 소유자 색표 미연결");return found->second[static_cast<std::size_t>(index)];
     }
     // 같은+a4 본체를화면과픽셀선택에서호출한다. 선택만의새로운파생분배를만들지않는다.
     void Additional(o::Sid object,ScreenPoint point,const std::function<void(SpriteShapeRequest)>& shape,const std::function<void(o::Sid,int,int)>& bridgeDraw={}) {
@@ -188,7 +191,7 @@ struct RawCampaignFactoryDisplay::Impl {
     // 원본 현재 슬롯과 실제 dirty clip을 읽고 일반 Draw의 모든 픽셀을 같은 표면에 쓴다.
     void Draw(o::RenderCollectionEntry entry,std::span<std::uint8_t> pixels,int pitch,int height,ScreenRect clip) {
         const auto sid=collection.Object(entry.token);if (!Handles(sid)) return;if (!ready) throw std::logic_error("Factory 파일 팔레트 미설치");
-        state.now=core.processState.Now();state.ownerPalettes.assign(core.bridgeState.ownerColors.begin(),core.bridgeState.ownerColors.end());
+        state.now=core.processState.Now();state.ownerPalettes.assign(core.bridgeState.ownerColors.begin(),core.bridgeState.ownerColors.end());state.markerVisible=core.ownerMode.battle; // 원문594fbc의 현재 전투 관문이며 Editor의 fort 모드와 구별한다.
         SpritePixelTarget target(pixels,pitch,height,clip,MakeSpriteAssetShapes(assets,state),[this](auto mode,auto type,auto owner) { return Color(mode,type,owner); });
         SpriteDrawHooks rules;rules.virtualFrame=[this](o::Sid object) {
             if (Bomb(object) || ManaBolt(object)) return -1; // 원본 공통 주문/마나볼트의+a0는 빈 본체다.
@@ -238,13 +241,17 @@ RawCampaignFactoryDisplay::RawCampaignFactoryDisplay(RawWorldCore core,const Gam
 RawCampaignFactoryDisplay::~RawCampaignFactoryDisplay()=default; // procedure가 더 이상 호출되지 않을 때 반납한다.
 bool RawCampaignFactoryDisplay::Hit(o::Sid sid,int x,int y,const std::array<std::int32_t,2>& camera,std::uint32_t localPlayer,const std::function<void(o::Sid,int,int)>& bridgeDraw) const { return impl_->Hit(sid,x,y,camera,localPlayer,bridgeDraw); } // 선택의현재raw와실제추가그림을공유한다.
 bool RawCampaignFactoryDisplay::Handles(o::Sid sid) const { return impl_->Handles(sid); } // 별도 TYPE 이름 휴리스틱을 쓰지 않는다.
+void RawCampaignFactoryDisplay::BindOwnerColors(std::shared_ptr<OwnerColorTableState> owner) { // 실제 현재557940/5319c0의 주소를 같은 Draw 상태에 빌린다.
+    if (!owner || !owner->Ready()) throw std::invalid_argument("월드 공통 소유자 색표 최초 등록 누락");
+    impl_->sharedOwnerColors=std::move(owner);impl_->ownerColors.clear();impl_->state.sharedOwnerMaps=impl_->sharedOwnerColors->Tokens();impl_->state.sharedUseBanners=&impl_->sharedOwnerColors->Enabled();
+}
 // 장치 BGRX와 별개로 원본 R/G/B/예약 DWORD를 만들어 실제 파일 색 표를 계산한다.
 void RawCampaignFactoryDisplay::SetPalette(std::span<const ScreenColor> palette,std::span<const std::uint32_t> colorSortLogical) {
     if (palette.size()!=256) throw std::invalid_argument("Factory 파일 팔레트256색 계약");std::array<std::uint32_t,256> logical{};
     // 실제 현재 파일 팔레트의 모든 번호를 보존한다.
     for (std::size_t i=0;i<logical.size();++i) logical[i]=std::uint32_t(palette[i].red)|(std::uint32_t(palette[i].green)<<8)|(std::uint32_t(palette[i].blue)<<16)|(std::uint32_t(palette[i].reserved)<<24);
     const auto named=BuildPaletteColorTable(logical,impl_->assets.Edition());impl_->colors=BuildSpriteColorMaps(ColorSortLogicalInput(colorSortLogical,logical));impl_->state.barBackground=named.basic[0];
-    for (const auto type:kSpecialOwnerTypes) impl_->ownerColors.insert_or_assign(type,BuildSpecialOwnerColorMaps(ColorSortLogicalInput(colorSortLogical,logical),type)); // 파일 팔레트 변경 때 전용 명도 표도 같은 시점에 갱신한다.
+    if (!impl_->sharedOwnerColors) for (const auto type:kSpecialOwnerTypes) impl_->ownerColors.insert_or_assign(type,BuildSpecialOwnerColorMaps(ColorSortLogicalInput(colorSortLogical,logical),type)); // 명시 독립 표시 입력만 지역 표를 갱신한다. 실제 Client 표는 최초 primary와 현재 옵션을 유지한다.
     impl_->state.hitPointColors={named.named.at(10).index,named.basic[5],named.basic[1]};impl_->ready=true;
 }
 // 원본 수집기의 전체 순서/한 번의 그림자 보정/해시2단계 반환을 유지한다.

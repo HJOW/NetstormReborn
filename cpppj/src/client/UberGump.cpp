@@ -51,6 +51,7 @@
 #include "client/RawCampaignCursor.h"
 #include "client/RawCampaignCursorDisplay.h"
 #include "client/ClientColorSortInput.h"
+#include "client/OwnerColorTableState.h"
 #include "client/CampaignCursorClientEffects.h"
 #include "client/UserInput.h"
 #include "client/WindowTitle.h"
@@ -1025,13 +1026,15 @@ void UberGump::Event(InputEvent event) {
     }
     if (!(event.code&InputCode::kRelease) && transitionCode==(0x70U<<InputCode::kVirtualKeyShift)) { client_.Input().PushCommand(0x02000017U,0,0x61000003);return; } // 원본4d8c47의 F1Help 문자열이며 Control/Shift를 별도 거부하지 않는다.
     if (rawButtons_->Menus()->HelpOpen()) { if (!worldUiRouted) static_cast<void>(rawButtons_->Event(event));rebuild_=true;return; } // 현재 공통 모달/스크롤/태그/돌 버튼을 실제 GumpInput에 전달한다.
-    if (transitionCode==0x710000U || transitionCode==0x720000U || transitionCode==0x770000U) {
+    if (transitionCode==0x710000U || transitionCode==0x720000U || transitionCode==0x770000U || (transitionCode==0x760000U && !(event.code&InputCode::kShift))) {
         if (rawButtons_->CurrentDialog()) return; // 원문565dd4 모달 관문은 일반 F2/F3/F8보다 앞이다. Guide 뒤 조기 F8 예약을 하지 않는다.
         ViewKeyInputHooks hooks; // 같은 Client 표시 전역과 현재 설정/Tell/큐를 사용한다.
         hooks.paused=[this] { return client_.Paused(); };
         hooks.readInt=[this](auto key,auto& value) { return client_.Configuration().ReadInt(key,value); };
         hooks.tell=[this](auto section) { Tell(std::string(section)); };
         hooks.queue=[this](auto command,auto first,auto second) { client_.Input().PushCommand(command,first,second); };
+        hooks.useBanners=[this] { return client_.ColorSortInput()->OwnerTables()->Enabled(); };
+        hooks.writeBanners=[this](auto value) { client_.Configuration().SetInt("useBanners",static_cast<std::int32_t>(value)); }; // 같은 원본 Config 쓰기 경계에서 현재 모든 색표를 동기 변경한다.
         hooks.fort=[this] { return client_.SurfaceStorage()->links.mission ? 1U : 0U; };
         hooks.metamap=[this] { return client_.SurfaceStorage()->ownerMode.challenge ? 1U : 0U; };
         hooks.editor=[this] { return client_.GameplayGlobals()->world.editor; };
@@ -1243,8 +1246,6 @@ void UberGump::Compose() {
     if (world_ && state_.phase!=ClientPhase::LoadingMission) {
         world_->Resize(width,height);worldSprites=world_->Sprites();
         auto& cursorDisplay=world_->Session().Cursor().Display();cursorDisplay.Settings().gridOption=client_.GetScreen().Flags();
-        std::int32_t themeMode=1; // 원본 설정 철자와 누락 기본값을 같은 소유자 변경 경계와 맞춘다.
-        client_.Configuration().ReadInt("theammode",themeMode);cursorDisplay.SetThemeMode(static_cast<std::uint32_t>(themeMode));
         cursorDisplay.SetText(client_.Fonts(),[this](std::string_view key) { const auto bytes=o::EncodeOriginalText(client_.Translate(key));return std::string(bytes.begin(),bytes.end()); });
         if (!client_.GetRenderer().HasExtraCollection()) client_.GetRenderer().SetExtraCollection([this](ScreenRect clip,std::uint32_t flags) {
             if (!world_ || state_.phase!=ClientPhase::Mission || !popup_.empty()) return std::vector<RenderSprite>{};
@@ -1405,6 +1406,9 @@ std::string UberGump::Report(bool cameraOnly) const {
     out << "phase\t" << static_cast<int>(state_.phase) << "\npage\t" << Field(pageName_) << "\npopup\t" << Field(popup_) << "\n";
     out << "size\t" << client_.GetScreen().Width() << '\t' << client_.GetScreen().Height() << "\n";
     std::int32_t themeMode{};client_.Configuration().ReadInt("theammode",themeMode);out<<"raw_view_keys\t"<<hideBuildings_<<'\t'<<worldRedraw_<<'\t'<<themeMode<<'\n'; // 실제 표시 DWORD 둘과 현재 설정만 읽고 입력 효과를 만들지 않는다.
+    const auto& ownerTables=client_.ColorSortInput()->OwnerTables();out<<"raw_owner_tables\t"<<ownerTables->Enabled()<<'\t'<<(ownerTables->Ready() ? 1 : 0);
+    if (ownerTables->Ready()) for (const auto type:std::array<std::uint32_t,8>{85,71,128,97,94,111,141,137}) out<<'\t'<<ownerTables->Tokens()[type]; // 같은 현재 포인터 표의 읽기 전용 관측이다.
+    out<<'\n';
     out << "paused\t" << client_.Paused() << "\nsound\t" << client_.Configuration().GetInt("sound") << "\n";
     out<<"mouse_cursor\t"<<client_.GetCursor().Index()<<'\t'<<client_.Active()<<'\n'; // 검사 보고서는 실제 표시 장치의 커서 번호와 창 활성을 읽기만 한다. 선택/대상 판정은 바꾸지 않는다.
     if (cameraOnly) { out<<"current_dialog\t"<<rawButtons_->CurrentDialog()<<"\ngame_menu_bar\t"<<(gameMenuState_ ? gameMenuState_->menuSerial : 0U)<<'\t'<<GameMenuOpen()<<"\ncamera_runtime\t"<<(world_!=nullptr)<<'\t'<<client_.Time().game<<'\t'<<client_.Time().number<<'\t'<<client_.GetKernel().Size()<<'\n';return out.str(); } //실제 같은 프레임/장치 값만 읽어 Win32 입력 관측의 큰 파일 재쓰기를 줄인다.

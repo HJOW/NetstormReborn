@@ -4,7 +4,7 @@
 #include "client/Renderer.h"
 #include <functional>
 namespace netstorm::client {
-class GameAssets; // 현재 TYPE/SHP/파일 팔레트를 소유하는 실제 자산 저장소다.
+class GameAssets;class OwnerColorTableState; // 실제 자산과 장기 현재 소유자 색표를 따로 빌린다.
 // 실제 건물의 본체/추가 그림과 비행/벌룬 그림자를 같은 원본 수집/일반Draw에 분배한다.
 class RawCampaignFactoryDisplay {
 public:
@@ -12,6 +12,7 @@ public:
     RawCampaignFactoryDisplay(RawWorldCore core,const GameAssets& assets,TempleDraw templeDraw={},const std::uint32_t* patchDiagnostic=nullptr); // 실제 GameWorld는 장기005318ec도 빌린다. 독립 표시 검사는 PE 초기값6을 유지한다.
     ~RawCampaignFactoryDisplay(); // 현재 장면의 procedure보다 오래 살아야 한다.
     bool Handles(o::Sid sid) const; // 실제 가상 표가 확인된 건물·간헐천·다이스인가.
+    void BindOwnerColors(std::shared_ptr<OwnerColorTableState> owner); // 실제 Client의 같은 현재 표/배너 DWORD를 Draw와 Hit에 빌린다.
     bool Hit(o::Sid sid,int x,int y,const std::array<std::int32_t,2>& camera,std::uint32_t localPlayer,const std::function<void(o::Sid,int,int)>& bridgeDraw) const; // 같은현재+78/+a4와200×200 선택용 버퍼를 사용한다. 다리는Session의실제전역을공유한다.
     void SetPalette(std::span<const ScreenColor> palette,std::span<const std::uint32_t> colorSortLogical={}); //실제Client는같은고정초기RGB를별도전달하며기존독립검사는명시fallback이다. // 파일 팔레트의 원본 색 표를 갱신한다.
     // 실제 화면 영역을 월드 영역으로 바꿔 본체·그림자를 별도 정렬 항목으로 수집한다.

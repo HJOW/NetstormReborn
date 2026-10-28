@@ -14,6 +14,7 @@
 #include "client/ClientKencloudGlobals.h"
 #include "client/ClientSubscriberGlobals.h"
 #include "client/ClientColorSortInput.h"
+#include "client/OwnerColorTableState.h"
 #include "client/ClientLocalStateGlobals.h"
 #include "client/ClientConnectionActivityGlobals.h"
 #include "client/ClientConnectionGlobals.h"
@@ -209,7 +210,7 @@ Client::Client(ClientOptions options)
     configuration_.Registry().environment = Environment;
     if (g_client) throw std::logic_error("Only one client may exist");
     // 원본00558dd0의 Set 직후 동기 시점에 현재 복원된 설정 전역을 갱신한다.
-    configuration_.onChanged = [this] { InterpretFortFileOptions();InterpretScriptMenuOptions();kencloudGlobals_->ReadOptions(configuration_);InterpretMainMenuOptions(); }; //같은 설정 변경에서 저장/메뉴/구름과 현재 tellTips DWORD를 동기 반영하며 새 장치를 만들지 않는다.
+    configuration_.onChanged = [this] { InterpretFortFileOptions();InterpretScriptMenuOptions();kencloudGlobals_->ReadOptions(configuration_);InterpretMainMenuOptions();InterpretOwnerColorOptions(); }; //같은 설정 변경에서 저장/메뉴/구름·tellTips·배너 현재값을 동기 반영하며 새 장치를 만들지 않는다.
     g_client = this;
 }
 // 월드/소리 프로세스→음악·음향→화면→GDI/창 순서로 참조 대상보다 사용자를 먼저 정리한다.
@@ -349,6 +350,7 @@ int Client::Run() {
     InvalidateRect(window,nullptr,FALSE);UpdateWindow(window);GdiFlush();DwmFlush(); // 유효한 WM_PAINT 갱신을 실행한 뒤 Windows 합성 화면의 다음 표시까지 완료하여 빠른 메뉴 교체가 로딩을 덮지 않게 한다.
     // "init types"(FUN_0049ebb0): 타입·그림·타입 표.
     assets_ = std::make_unique<GameAssets>(files_, options_.edition, palettePath);
+    if (options_.edition==o::OriginalEdition::Patch1078) colorSortInput_->OwnerTables()->Initialize(colorSortInput_->Primary(),assets_->TypeTable().Types().size(),static_cast<std::uint32_t>(assets_->Find("bridge").block+o::kFirstAssetTypeNumber),kencloudGlobals_->WorldRedraw()); // 원문43c4e0→43be30의 최초 등록이다. 호스트는 TYPE 크기가 확정된 직후, 첫 UI/World보다 먼저 수행한다.
     surfaceStorage_=MakeRawSurfaceStorage(*assets_,gameplayGlobals_->Authority(),gameplayGlobals_->GameAux()); // init squid/hash/spot의 실제 장기 물리를 메뉴보다 먼저 확보한다.
     surfaceStorage_->Processes().BindDevices(kernel_,time_); // 첫 메뉴/World보다 먼저 실제 같은 Kernel/현재 프레임을 장기 Host에 연결한다.
     const auto serverPath=configuration_.SubstituteLocal("{DataDir}/!rootservers.dat");const auto serverFile=files_.TryRead(serverPath); // 현재 보호 시작 목록을 읽으며 네트워크 갱신/저장 부모와 구별한다.
@@ -537,6 +539,9 @@ std::uint32_t Client::ScriptMenuGlobal(std::uint32_t address) const {
 void Client::InterpretMainMenuOptions() {
     auto value=std::bit_cast<std::int32_t>(localStateGlobals_->TellTips());configuration_.ReadInt("tellTips",value);localStateGlobals_->TellTips()=std::bit_cast<std::uint32_t>(value);
     value=std::bit_cast<std::int32_t>(localStateGlobals_->TipNumber());configuration_.ReadInt("tipNumber",value);localStateGlobals_->TipNumber()=std::bit_cast<std::uint32_t>(value); //원문435220처럼 tellTips 바로 뒤에 현재 순번을 읽고 누락/상위 비트를 보존한다.
+}
+void Client::InterpretOwnerColorOptions() { // 준비 전의 원문 무시와 현재 DWORD·같은 전체 dirty 증가를 보존한다.
+    colorSortInput_->OwnerTables()->SetEnabled(std::bit_cast<std::uint32_t>(configuration_.GetInt("useBanners")),kencloudGlobals_->WorldRedraw());
 }
 // 원본 00435220에서 지금 쓰는 설정만 읽는다. 나머지 키(네트워크 등)의 전체 부모 순서는 후속이다.
 void Client::InterpretOptions() {

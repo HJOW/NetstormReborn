@@ -17,6 +17,7 @@
 
 namespace netstorm::client {
 class RawCampaignFactoryDisplay; // 같은 실제 풀의 원본 Factory 화면 출력기다.
+class OwnerColorTableState; // 같은 Client의 현재557940과5319c0은 World보다 오래 산다.
 // 미션 Session과 표시/입력을 소유하는 호스트 어댑터다. 원문 Kernel에는 실제 게임 프로세스만 등록한다.
 class GameWorld {
 public:
@@ -143,6 +144,7 @@ private:
     // 원본 기본 색 띠 및 지면 명도 표 중 연결한 타입의 변환표.
     std::optional<ColorMap> Remap(const TypeAsset& type,int owner) const;
     std::shared_ptr<ClientGameplayGlobals> gameplayGlobals_; // 선택 ref와 Session/Input 모두보다 오래 같은 owner를 유지한다. 독립 어댑터만 자체 owner를 한 번 소유한다.
+    std::shared_ptr<OwnerColorTableState> ownerColorTables_; // 실제 Client 색표를 같은 현재 값으로 읽으며 지역 remaps_ 캐시로 가리지 않는다.
     // assets_: 타입·셰이프·팔레트 자산 또는 해당 자산의 처리 경계.
     const GameAssets& assets_;
     // chunks_: 월드를 청크 격자로 나누어 섬·영역 소속을 조회하는 지도 (o::ChunkMap).

@@ -72,8 +72,8 @@ void PreviewDraw::Draw(const o::RenderCollectionEntry& entry) const {
             const auto frame=ReadPreviewDraw(raw,pool_.Edition()==o::OriginalEdition::Patch1078 ? 36 : 34,pool_.Edition()==o::OriginalEdition::Patch1078 ? 4 : 1);
             const int sx=SubPreview(x,record.hotspotX),sy=SubPreview(y,record.hotspotY);
             if (c.legal) {
-                if (type>=s.ownerMaps.size()) throw std::out_of_range("Preview Draw owner maps");
-                if (s.ownerMaps[type] && std::bit_cast<std::int32_t>(c.localPlayer)>0) { colors(PreviewColors::Owner);shape(type,frame,sx,sy,PreviewShapeMode::CurrentColors); }
+                if (type>=(s.sharedOwnerMaps.empty() ? s.ownerMaps.size() : s.sharedOwnerMaps.size())) throw std::out_of_range("Preview Draw owner maps");
+                if ((s.sharedOwnerMaps.empty() ? s.ownerMaps[type] : s.sharedOwnerMaps[type]!=0) && std::bit_cast<std::int32_t>(c.localPlayer)>0) { colors(PreviewColors::Owner);shape(type,frame,sx,sy,PreviewShapeMode::CurrentColors); }
                 else shape(type,frame,sx,sy,PreviewShapeMode::Plain);
                 if (type==s.overlayTrigger) shape(s.overlayType,0,sx,sy,PreviewShapeMode::Plain);
             } else if (s.selectedType==s.destroyType) { colors(PreviewColors::Destroy);shape(type,frame,sx,sy,PreviewShapeMode::CurrentColors); }
@@ -149,6 +149,7 @@ void PreviewDraw::Draw(const o::RenderCollectionEntry& entry) const {
         const std::string& labels; // 현재 배치 설명이다.
         const std::array<std::int32_t,5> &messageWidths,&messageHeights; // Take에서 측정한 경고 문구 치수다.
         const std::vector<bool>& ownerMaps; // 타입별 소유자 변환표 존재 여부다.
+        const std::span<const std::uint32_t> sharedOwnerMaps; // 실제 Client의 현재 표 주소를 같은 호출 안에서 빌린다.
     };
     const auto& d=source.drop;const auto& l=source.lifecycle;const auto& p=source.placement;const auto& s=state_;
     draw(CollectionInput{l.currentGump,p.placementAllowed,d.localPlayer},DrawInput{
@@ -156,7 +157,7 @@ void PreviewDraw::Draw(const o::RenderCollectionEntry& entry) const {
         p.ScreenOriginX(),p.ScreenOriginY(),p.labelSpacing,p.bounds[0],p.bounds[1],p.bounds[2],p.bounds[3],
         d.cursorWidth,l.costTextWidth,l.costHotspotX,l.costHotspotY,s.gridOption,s.showLetters,d.costFlags,
         p.sourceAllowed,p.placementFlags,p.descriptionAllowed,p.spaceAllowed,s.goodColor,s.badColor,
-        source.grid,s.labelFrames,p.description,l.warningWidths,l.warningHeights,s.ownerMaps});
+        source.grid,s.labelFrames,p.description,l.warningWidths,l.warningHeights,s.ownerMaps,s.sharedOwnerMaps});
 }
 // 종류 분배가 tail을 잃지 않고 실제 Draw를 호출하도록 연결한다.
 void BindPreviewDraw(DrawDispatchHooks& hooks,const PreviewDraw& draw) { hooks.preview=[&draw](const auto& entry) { draw.Draw(entry); }; }

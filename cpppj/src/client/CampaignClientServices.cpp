@@ -7,6 +7,7 @@
 #include "client/UberGump.h"
 #include "client/ClientAudio.h"
 #include "client/ClientMain.h"
+#include "client/ClientColorSortInput.h" // 같은 Client의 공통 현재 색표 소유자를 빌린다.
 #include "client/ClientChatRuntime.h"
 #include "client/ClientStaticStrings.h"
 #include "client/ClientSpGlobals.h"
@@ -120,6 +121,7 @@ RawCampaignSessionServices MakeCampaignClientServices(Client& client,RawButtonCo
     services.surfaceStorage=client.SurfaceStorage(); // 현재 Core의 Pool/해시/TYPE/spot을 같은 실제 Client 물리에 연결한다.
     services.surfaceStorage->Processes().BindDevices(client.ProcessKernelOwner(),client.FrameClockOwner()); // 이미 pin한 같은 실제 장치만 확인하며 현재 시각을 복사하지 않는다.
     services.colorSortInput=client.ColorSortInput(); // 실제 Client의 같은 고정 초기입력 소유자를 반드시 전달한다.
+    services.ownerColorTables=client.ColorSortInput()->OwnerTables(); // 모든 표시/건설 캡처가 같은 현재 owner 표를 빌린다.
     services.screenPalette=[&client] { return client.GetScreen().Palette(); }; // Screen 재생성 뒤에도 그때의 현재 팔레트를 조회한다.
     services.randomGlobals=client.RandomGlobals(); // Session교체/Subscriber/파편/Seed/지형이같은Client의실제CRT를사용한다.
     services.localStateGlobals=client.LocalStateGlobals(); // 메뉴/Editor에서 사용한 같은 State와00544d58 기한을 로그인도 직접 빌린다.

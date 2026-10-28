@@ -1,5 +1,6 @@
 // 기존Sprite/Preview의동일계산을재사용하고아직노출되지않은1.6RGB/명도표만원문전체9표선관측에대조한다.
 #include "client/ClientColorSortInput.h"
+#include "client/OwnerColorTableState.h"
 #include "client/CurrentAllocationBytes.h"
 #include "o/RawColorSortPrimary.h"
 #include "client/SpriteColorMaps.h"
@@ -9,6 +10,8 @@
 #include <stdexcept>
 
 namespace netstorm::client {
+ClientColorSortInput::ClientColorSortInput():ownerTables_(std::make_shared<OwnerColorTableState>()) {} // 현재 표는 입력 캡처/Session 교체로 재생성하지 않는다.
+const std::shared_ptr<OwnerColorTableState>& ClientColorSortInput::OwnerTables() const { return ownerTables_; } // 같은 장기 owner의 정체성을 빌린다.
 // 기존 독립 adapter의 logical캡처는 실제primary가 있다고 가장하지않고 이전raw연결을끊는다.
 void ClientColorSortInput::Capture(std::span<const std::uint32_t,256> logical) { primary_.reset();std::copy(logical.begin(),logical.end(),logical_.begin());captured_=true;built_=false; }
 // 기존 장치와 같은 실제malloc 초기BYTE를 읽으며 임의0이나 별도Client소유자를 만들지않는다.

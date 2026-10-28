@@ -9,6 +9,7 @@
 #include "client/ProductionHintGump.h"
 #include "client/ImageGump.h"
 #include "client/OwnerColorMaps.h"
+#include "client/OwnerColorTableState.h"
 #include "client/ProductionColorMaps.h"
 #include "client/PaletteShade.h"
 #include "client/RawCampaignCursor.h"
@@ -68,12 +69,12 @@ struct RawProductionControls::Impl {
         if (!hooks.now || !hooks.sound || !hooks.tell || !hooks.configInt || assets.Edition()!=o::OriginalEdition::Patch1078) throw std::invalid_argument("실제 생산 패널 연결/판본 오류");
         backgroundType=static_cast<std::uint32_t>(assets.Find("fortGump").block+o::kFirstAssetTypeNumber);SetGumpDrawClip(hitClip,{0,0,200,200});
         // 원본의 일반 소유자 표만 즉시 만들고 전용 표는 파일 팔레트 설치 때 만든다.
-        for (const auto type:kStandard) { ownerMaps.at(type)=0x100000U+type*2304U;ownerColors.emplace(type,BuildStandardOwnerColorMaps(type,bridgeType)); }
+        if (!context.ownerColorTables) for (const auto type:kStandard) { ownerMaps.at(type)=0x100000U+type*2304U;ownerColors.emplace(type,BuildStandardOwnerColorMaps(type,bridgeType)); } // 독립 UI 입력만 지역 표를 소유한다.
         // 전용 표의 존재 여부도 실제 TYPE별 등록을 따른다.
-        for (const auto type:kSpecial) ownerMaps.at(type)=0x100000U+type*2304U;
+        if (!context.ownerColorTables) for (const auto type:kSpecial) ownerMaps.at(type)=0x100000U+type*2304U; // 실제 Client는 아래 같은 현재 표를 직접 빌린다.
         hitRaster=std::make_unique<ImageGumpPixelTarget>(hitTarget,assets,hitColors,[this](auto token) { return Color(token); });
         ImageGumpHooks ih;ih.node=[this](auto token) { return Find(images,token); };BindImageGumpAssets(ih,assets);ih.position=[this](auto token) { return common.collection.Position(token); };ih.attach=[this](auto token,float x,float y,auto parent,auto mode) { common.tree.Attach(token,x,y,parent,mode); };
-        ih.hit=hitRaster->Hooks({}).hit;ih.draw=[this](auto request) { activeImage.draw(request); };ih.color=[this](auto token) { activeImage.color(token); };image=std::make_unique<ImageGump>(common.create,common.factory,ImageGumpState{owner,ownerMaps,shadow},std::move(ih));
+        ih.hit=hitRaster->Hooks({}).hit;ih.draw=[this](auto request) { activeImage.draw(request); };ih.color=[this](auto token) { activeImage.color(token); };image=std::make_unique<ImageGump>(common.create,common.factory,ImageGumpState{owner,context.ownerColorTables ? context.ownerColorTables->Tokens() : std::span<const std::uint32_t>(ownerMaps),shadow},std::move(ih));
         InventoryGumpHooks gh;gh.grid=[this](auto token) { return Find(grids,token); };gh.item=[this](auto token) { return Find(items,token); };gh.clearChildren=[this](auto token) { ClearChildren(token); };gh.baseAttach=[this](auto token,float x,float y,auto parent,auto mode) { common.tree.Attach(token,x,y,parent,mode); };
         gh.allocateItem=[this](auto size) { if (size!=0xc0) throw std::logic_error("생산 항목 할당 크기 오류");const auto token=common.token();items.emplace(token,std::make_unique<InventoryItemNode>());return token; };gh.attach=common.attach;gh.push=[this](auto token) { common.tree.Push(token); };gh.bind=[this](auto token,auto object) { Bind(token,object); };
         gh.idle=[this](auto token,bool enabled) { common.lifetime.SetIdle(token,enabled); };gh.now=hooks.now;gh.contentParent=[this](auto sid) { return Word(context.storage->pool.Slot({static_cast<std::uint16_t>(sid)}),16); };
@@ -247,6 +248,7 @@ struct RawProductionControls::Impl {
     ColorMap Color(std::uint32_t token) {
         if (token==0x556038) return colors.disabled;if (token==0x556338) return colors.underlay;if (token==0x556438) return shades.dark;
         // 등록한 TYPE/owner의 실제 표만 허용한다.
+        if (context.ownerColorTables) return context.ownerColorTables->ColorToken(token); // ImageGump도 F7 직후의 같은 현재 표를 읽는다.
         for (const auto& [type,maps]:ownerColors) if (token>=ownerMaps[type] && token<ownerMaps[type]+2304U && (token-ownerMaps[type])%256==0) return maps[(token-ownerMaps[type])/256];
         throw std::logic_error("생산 아이콘 원본 색표 토큰 없음");
     }
@@ -304,7 +306,7 @@ void RawProductionControls::SetPalette(std::span<const ScreenColor> palette,std:
     for (std::size_t i=0;i<logical.size();++i) logical[i]=std::uint32_t(palette[i].red)|(std::uint32_t(palette[i].green)<<8)|(std::uint32_t(palette[i].blue)<<16)|(std::uint32_t(palette[i].reserved)<<24);
     auto& s=*impl_;s.colors=BuildProductionColorMaps(ColorSortLogicalInput(colorSortLogical,logical));s.shades=BuildGumpShadeMaps(ColorSortLogicalInput(colorSortLogical,logical));const auto paletteColors=BuildPaletteColorTable(logical);s.hintState.white=paletteColors.basic[7];s.hintState.black=paletteColors.basic[0];
     // 전용 HSL 표도 원본에 등록된 다섯 TYPE만 생성한다.
-    for (const auto type:kSpecial) s.ownerColors[type]=BuildSpecialOwnerColorMaps(ColorSortLogicalInput(colorSortLogical,logical),type);
+    if (!s.context.ownerColorTables) for (const auto type:kSpecial) s.ownerColors[type]=BuildSpecialOwnerColorMaps(ColorSortLogicalInput(colorSortLogical,logical),type); // 기존 독립 UI 입력만 지역 표를 만든다.
 }
 // 자동 입력도 실제 항목/내용물 SID/화면 경계를 읽는다.
 std::string RawProductionControls::Report() const {

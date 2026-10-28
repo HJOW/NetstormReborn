@@ -79,8 +79,8 @@ void SpriteDraw::Draw(const o::RenderCollectionEntry& entry) const {
     const auto filtered=[&] { return (s.filteredFlags&flags2) || type==s.wideOwnerType || type==s.unfilteredType; };
     // 소유자 표가 있는 양수 플레이어만 current map을 바꾸고 이어서 mapped 그림을 호출한다.
     const auto normal=[&](std::uint32_t index) {
-        if (type>=s.ownerMaps.size()) throw std::out_of_range("Sprite Draw owner maps");
-        if (s.ownerMaps[type] && owner) { RequiredSprite(hooks_.setOwnerColors)(type,owner);shape(type,index,point,SpriteShapeMode::Owner); }
+        if (type>=(s.sharedOwnerMaps.empty() ? s.ownerMaps.size() : s.sharedOwnerMaps.size())) throw std::out_of_range("Sprite Draw owner maps");
+        if ((s.sharedOwnerMaps.empty() ? s.ownerMaps[type] : s.sharedOwnerMaps[type]) && owner) { RequiredSprite(hooks_.setOwnerColors)(type,owner);shape(type,index,point,SpriteShapeMode::Owner); }
         else shape(type,index,point,SpriteShapeMode::Plain);
     };
     if (!(extra&2U)) {
@@ -104,7 +104,7 @@ void SpriteDraw::Draw(const o::RenderCollectionEntry& entry) const {
         else { if (custom!=-1) normal(static_cast<std::uint32_t>(custom));RequiredSprite(hooks_.virtualDraw)(sid,point); }
     }
     if (!abstract) {
-        if (s.markerEnabled && (record.flags1&0x400U) && s.markerVisible && owner) {
+        if ((s.sharedUseBanners ? *s.sharedUseBanners!=0 : s.markerEnabled) && (record.flags1&0x400U) && s.markerVisible && owner) {
             const auto surface=RequiredSprite(hooks_.surface)(entry.x,entry.y);
             if (surface.value && pool_.Slot(surface)[10]!=s.markerExcludeType) {
                 if (owner>=s.ownerPalettes.size()) throw std::out_of_range("Sprite Draw owner palette");

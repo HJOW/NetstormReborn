@@ -57,6 +57,7 @@ struct PreviewDrawState {
     std::array<std::int32_t,5> messageWidths{},messageHeights{};
     // ownerMaps: 플레이어별 미리보기 색 변환표.
     std::vector<bool> ownerMaps;
+    std::span<const std::uint32_t> sharedOwnerMaps; // 실제557940의 현재 포인터 표다. 지역 입력은 위 bool 표만 사용한다.
 };
 // 실제 SHP/색 표/장치 경계다. rectangle의 true는 체크 무늬, false는 윤곽이다.
 struct PreviewDrawHooks {

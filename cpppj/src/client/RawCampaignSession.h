@@ -69,7 +69,7 @@ class ClientPlayerRecords; // 실제 Player/factory와 로그인 카운터를 Cl
 class ClientCoreDataGlobals; // 현재 Core/active/cache를 같은 Client 수명에서 빌린다.
 class ClientGameplayGlobals;struct ProductionControlContext; // 실제 초기 HUD와 같은 현재 전역/물리를 공유한다.
 class ClientKencloudGlobals; // 같은0059a8b0 월드 다시 그리기 DWORD를 지형/섬도 직접 빌린다.
-class ClientColorSortInput; // 같은 Client 최초 고정RGB 소유자이며 raw primary 전체 복원과 구별한다.
+class ClientColorSortInput;class OwnerColorTableState; // 같은 Client 최초 RGB와 현재 전역 색표 소유자를 빌린다.
 class ClientLocalStateGlobals; // 실제 Client의 State 다섯 블록과 활동 기한의 장기 소유자다.
 struct ClientHtmlWindowGlobals; //같은 실제 HTML 배경80BYTE와 창/Tell/P 억제의 장기 owner다.
 class EditorLocalTransport; // 준비된 Editor가 생성한 같은 listener/client9/accepted(-1)와 단일 등록표를 빌린다.
@@ -223,6 +223,7 @@ struct RawCampaignSessionServices {
     std::function<void(std::int32_t,std::int32_t,std::int32_t,std::uint32_t)> carrierDropPopup; // 실제43dd20 비용 Gump의금액/화면x/y/참조SID다.
     o::BattlePacketPeers battlePeers; // 실제0..8 연결 객체 표다. 단독 캠페인은 NULL 연결이며 별도 송신 관찰 함수가 필요하지 않다.
     std::shared_ptr<ClientColorSortInput> colorSortInput; // 실제 Client가 최초 고정 lookup 입력을 수명째 빌린다. 독립 장치 없는 기존 검사만 두 색 서비스 모두 생략한다.
+    std::shared_ptr<OwnerColorTableState> ownerColorTables; // 실제 Client는 같은557940을 연결한다. 기존 독립 표시 입력의 지역 색표와 구별한다.
     std::function<std::span<const ScreenColor>()> screenPalette; // 연결 시점의 현재 화면 팔레트를 빌리며 Screen 교체 전 주소를 캐시하지 않는다.
     std::shared_ptr<ClientRandomGlobals> randomGlobals; // 생략된 독립 검사만 기존Session CRT0을 사용하고 실제Client는 같은장기소유자를 전달한다.
     std::shared_ptr<ClientSpGlobals> spGlobals; // 실제 Client는 같은 초기화 완료 SP를 제공한다. 독립 Session만 기존 지역 SP 초기화를 유지한다.

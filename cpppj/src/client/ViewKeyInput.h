@@ -18,7 +18,9 @@ struct ViewKeyInputHooks { // 원문에서 실제 도달한 외부 장치만 요
     std::function<std::uint32_t()> metamap; //00594fc8을 Fort0일 때만 조회한다. 해당 Tell 분기는 정적으로 연결한다.
     std::function<std::uint32_t()> editor; //005c85a4를 First 예약/Tell 뒤 다시 조회한다.
     std::function<void(std::uint32_t)> highlight; //004d5bb0의 원본 mode1 강조이며 선택 해제/건설 취소와 구별한다.
+    std::function<std::uint32_t()> useBanners; //005319c0의 현재 DWORD이며 Config 문자열을 대신 읽지 않는다.
+    std::function<void(std::uint32_t)> writeBanners; //F7의 useBanners=0/1 Config 쓰기이며 실제 onChanged가43bc40을 호출한다.
 };
-// 뗌/다른 키에는 장치를 호출하지 않는다. 반환true는 F2/F3/F8 처리 범위이며 효과 발생 여부와 구별한다.
+// 뗌/다른 키에는 장치를 호출하지 않는다. F7은 Shift 없는 배너 전환만 담당하며 Shift의 파일/진단은 별도다.
 bool DispatchViewKeyInput(InputEvent event,ViewKeyInputGlobals globals,const ViewKeyInputHooks& hooks);
 }

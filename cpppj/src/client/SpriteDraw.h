@@ -59,6 +59,8 @@ struct SpriteDrawState {
     std::array<std::uint32_t,3> timerTypes{}; // 20/60/60 최대값, 색 0xd9/9/0x6b 순서.
     // ownerMaps: 플레이어별 미리보기 색 변환표.
     std::vector<std::uint8_t> ownerMaps;
+    std::span<const std::uint32_t> sharedOwnerMaps; // 실제 Client의557940이며 기존 독립 입력만 위 지역 표를 사용한다.
+    const std::uint32_t* sharedUseBanners{}; // 실제5319c0을 표식 출력 순간에 다시 읽는다.
     // ownerPalettes: 소유자 팔레트.
     std::vector<int> ownerPalettes;
     // selectionColors: 선택 색.

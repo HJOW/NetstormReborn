@@ -1,5 +1,6 @@
 #include "client/GameWorld.h"
 #include "client/ClientColorSortInput.h"
+#include "client/OwnerColorTableState.h"
 #include "client/RawCampaignFactoryDisplay.h"
 #include "client/SpellFrameVisibility.h"
 #include "client/RawCampaignCursor.h"
@@ -78,7 +79,7 @@ GameWorld::GameWorld(const GameAssets& assets,const o::FortTemplate& fort,o::Mis
 }
 // 실제 캠페인에서는 이전 관찰기반 객체/지형 어댑터를 생성하지 않고 같은 raw 세션을 설치한다.
 GameWorld::GameWorld(const GameAssets& assets,const o::BaseFileSystem& files,o::FortTemplate fort,o::MissionPlayers players,
-    std::string mission,RawCampaignSessionServices services,ScreenPoint viewport,bool deferConnection):gameplayGlobals_(services.gameplayGlobals ? services.gameplayGlobals : std::make_shared<ClientGameplayGlobals>(services.subscriberGlobals,services.surfaceStorage ? services.surfaceStorage->Authority() : nullptr,services.surfaceStorage ? services.surfaceStorage->GameAux() : nullptr)),assets_(assets),players_(std::move(players)) {
+    std::string mission,RawCampaignSessionServices services,ScreenPoint viewport,bool deferConnection):gameplayGlobals_(services.gameplayGlobals ? services.gameplayGlobals : std::make_shared<ClientGameplayGlobals>(services.subscriberGlobals,services.surfaceStorage ? services.surfaceStorage->Authority() : nullptr,services.surfaceStorage ? services.surfaceStorage->GameAux() : nullptr)),ownerColorTables_(services.ownerColorTables),assets_(assets),players_(std::move(players)) {
     if (viewport.x<=0 || viewport.y<=0) throw std::invalid_argument("실제 캠페인 설치 전 화면 크기 누락");
     width_=viewport.x;height_=viewport.y;
     // 현재 보호 팔레트 번호만 UI 색 조회용으로 보관한다.
@@ -99,6 +100,7 @@ GameWorld::GameWorld(const GameAssets& assets,const o::BaseFileSystem& files,o::
     campaign_=std::make_unique<RawCampaignSession>(assets,files,std::move(fort),std::move(mission),std::move(services));
     if (assets_.Edition()==o::OriginalEdition::Patch1078) {
         factoryDisplay_=std::make_unique<RawCampaignFactoryDisplay>(campaign_->Core(),assets_,[this](o::Sid sid,const auto& frame) { campaign_->DrawTemple(sid,frame); },&gameplayGlobals_->PatchDiagnostic());std::array<ScreenColor,256> palette{};
+        if (ownerColorTables_) factoryDisplay_->BindOwnerColors(ownerColorTables_); // 같은 현재 표/배너를 표시·선택 경로에 빌린다.
         // Client가 파일 팔레트를 설치하기 전에도 실제 자산의 동일256색을 사용한다.
         for (std::size_t i=0;i<palette.size();++i) { const auto color=assets_.Palette().Color(static_cast<std::uint8_t>(i));palette[i]={color.blue,color.green,color.red,0}; }
         factoryDisplay_->SetPalette(palette);
@@ -624,6 +626,12 @@ std::shared_ptr<IndexedImage> GameWorld::SelectionImage() const {
 // 타입별 색 띠 중 실제 월드에서 필요한 지면·사제·다리·일부 유닛을 연결한다.
 std::optional<ColorMap> GameWorld::Remap(const TypeAsset& type,int owner) const {
     if (owner<=0 || owner>o::kPlayerCount) return {}; const auto name=o::AsciiLower(type.assetName);
+    if (ownerColorTables_) { // 원본 현재 표의 존재부터 읽고 지면94/97의 옛 지역 캐시를 사용하지 않는다.
+        const auto kind=static_cast<std::uint32_t>(type.block+o::kFirstAssetTypeNumber);const auto tables=ownerColorTables_->Tokens();
+        if (kind>=tables.size()) throw std::out_of_range("월드 공통 소유자 TYPE 범위");if (!tables[kind]) return {};
+        const auto color=campaign_ ? campaign_->Core().bridgeState.ownerColors[static_cast<std::size_t>(owner)] : players_.players[static_cast<std::size_t>(owner)].color;
+        if (color<0 || color>8) throw std::out_of_range("월드 공통 소유자 색 번호");return ownerColorTables_->Color(kind,static_cast<std::uint32_t>(color));
+    }
     const bool support=assets_.Edition()==o::OriginalEdition::Patch1078 && type.block+o::kFirstAssetTypeNumber==94; // 원본43bc40의 작은 섬 윗면이며 하단95는 전용 색표 대상이 아니다.
     const int color=campaign_ && (name=="bridge" || support) ? campaign_->Core().bridgeState.ownerColors[static_cast<std::size_t>(owner)] : players_.players[static_cast<std::size_t>(owner)].color; // 실제 다리와 받침은 초기 입력 사본 대신 현재 원본 소유자 색을 읽는다.
     if (color<=0 || color>8) return {};

@@ -196,3 +196,17 @@ TEST_CASE(SpriteDraw_SharedDiagnosticControlsCurrentShadowAlias) {
     }
     CHECK(shapes==5 && scene.s.shadowAliasPinned);
 }
+
+// 가상 프레임 효과 뒤의 실제557940/5319c0 읽기는 지역 초기값과 별도로 현재 값을 사용한다.
+TEST_CASE(SpriteDraw_SharedOwnerTablesAndBannerAfterVirtualFrame) {
+    SpriteScene scene;auto raw=InputRaw(scene.pool,{5});raw[34]=1;raw[40]=2;scene.types[70].flags1=0x400U;
+    InputRaw(scene.pool,{6})[10]=69;scene.s.markerType=96;scene.s.markerExcludeType=157;scene.s.markerVisible=true;scene.s.markerEnabled=true;scene.s.ownerPalettes={0,1};scene.s.ownerMaps[70]=1;
+    std::array<std::uint32_t,71> tables{};std::uint32_t banners{},requested{};scene.s.sharedOwnerMaps=tables;scene.s.sharedUseBanners=&banners;std::vector<SpriteShapeRequest> shapes;std::size_t ownerCalls{}; // 서로 반대인 지역/공통 시작값을 명시한다.
+    SpriteDrawHooks hooks;hooks.virtualFrame=[&](auto) { tables[70]=requested;banners=requested;return 0; };hooks.virtualDraw=[](auto,auto) {}; // 가상 효과가 현재 두 DWORD만 바꾸는 명시 장치다.
+    hooks.setOwnerColors=[&](auto type,auto owner) { CHECK(type==70 && owner==1);++ownerCalls; };hooks.surface=[](auto,auto) { return Sid{6}; };hooks.shape=[&](auto request) { shapes.push_back(request); };
+    SpriteDraw draw(scene.pool,scene.types,scene.views,scene.s,hooks,kSpriteRaw-250);
+    for (const auto value:{0U,1U,0U,1U}) { // 같은 실행기의 생존 중 옵션 전환과 가상 효과 뒤 재조회를 확인한다.
+        requested=value;tables[70]=banners=1U-value;shapes.clear();ownerCalls=0;draw.Draw({0,0,kSpriteRaw,0,0,0});
+        CHECK(shapes.size()==1U+value && ownerCalls==value);if (!shapes.empty()) CHECK(shapes[0].mode==(value ? SpriteShapeMode::Owner : SpriteShapeMode::Plain));if (value && shapes.size()==2) CHECK(shapes[1].type==96 && shapes[1].frame==0);
+    }
+}

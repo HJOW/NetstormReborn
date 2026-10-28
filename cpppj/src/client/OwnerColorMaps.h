@@ -10,6 +10,8 @@ namespace netstorm::client {
 using OwnerColorMaps=std::array<std::array<std::uint8_t,256>,9>;
 // 실제005319e8의9×8 DWORD 후보를 제공한다. 반환 저장소는 프로그램 전체 수명이다.
 std::span<const std::uint32_t,72> OriginalOwnerColorCandidates();
+// 43bc40/43be30이 넘기는 전용 소스 순서다. 종료 인자ff는 span에 포함하지 않는다.
+std::span<const std::uint32_t> SpecialOwnerColorSources(std::uint32_t type);
 // 0043b950/0043ba00: 항등 초기화 뒤228..245의 띠와 현재 다리 타입의 색2/7 특례를 적용한다.
 // candidates는 실제 DWORD 후보이며 원문처럼 lowBYTE만 변환표에 저장한다.
 OwnerColorMaps BuildStandardOwnerColorMaps(std::uint32_t type,std::uint32_t bridgeType,

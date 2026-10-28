@@ -222,6 +222,8 @@
 #include "o/RawFactoryInput.h"
 #include "client/RawShapeToBuffer.h"
 #include "client/OwnerColorMaps.h"
+#include "client/OwnerColorTableState.h"
+#include "client/RawCampaignCursorDisplay.h"
 #include <bit>
 #include <cstdio>
 #include <stdexcept>
@@ -1134,9 +1136,10 @@ struct RawCampaignSession::Impl {
         gunBlocker=std::make_unique<RawGunBlocker>(core.pool,core.hash,core.types,gunTypes,*gunTarget,gunState,gunBlockerState,std::move(blockerHooks));
         // 실제43be30은59ab28=0에서 다리·훨리기그·맨 오 워에 각각 일반 색표를 설치한다.
         for (const auto type:{core.bridgeState.bridgeType,73U,144U}) { shrapnelMapTokens.at(type)=1;shrapnelOwnerColors.emplace(type,BuildStandardOwnerColorMaps(type,core.bridgeState.bridgeType)); }
-        shrapnelCaptureState.ownerTypeMaps=shrapnelMapTokens;
+        shrapnelCaptureState.ownerTypeMaps=services.ownerColorTables ? services.ownerColorTables->Tokens() : std::span<const std::uint32_t>(shrapnelMapTokens); // 실제 Client의 파편 캡처도 같은 현재 표다.
         shrapnelCaptureState.addTypeHotspot=true; // 실제00542414의 PE 초기 DWORD는1이며 캡처 후 TYPE 기준점을 더한다.
         shrapnelCaptureState.ownerColors=[this](std::uint32_t type,std::uint32_t owner)->std::span<const std::uint8_t> {
+            if (services.ownerColorTables) { if (owner>=core.bridgeState.ownerColors.size()) throw std::out_of_range("공통 파편 캡처 owner 범위");const auto color=core.bridgeState.ownerColors[owner];if (color<0 || color>8) throw std::out_of_range("공통 파편 캡처 색 번호");return services.ownerColorTables->Color(type,static_cast<std::uint32_t>(color)); } // 현재 표를 픽셀 캡처에 직접 빌린다.
             if (!shrapnelOwnerColors.contains(type) || owner>=core.bridgeState.ownerColors.size()) throw std::out_of_range("파편 캡처 현재 타입/owner 색표 오류");
             const auto color=core.bridgeState.ownerColors[owner];if (color<0 || color>8) throw std::out_of_range("파편 캡처 현재 소유자 색 번호 오류");return shrapnelOwnerColors.at(type)[static_cast<std::size_t>(color)];
         };
@@ -2842,6 +2845,7 @@ struct RawCampaignSession::Impl {
         };
         game.moveBuilder=[this](std::uint32_t owner,Sid target,std::uint32_t low,std::uint32_t high) { static_cast<void>(buildingMover->Move(owner,target,low,high)); };
         cursor=std::make_unique<RawCampaignCursor>(CampaignCursorData{world,assets.game,gameplayPlacement.geometry,metadata.frames,*contentForms,*contained,hp,random,*construction,cursorDrop,gameplayPlacement.preview.blocked,sp,playerState.playerKnown,gunTargetState.windArcherType,cursorRangeGlobals.processType,contentCamera,&gameplayGlobals->Camera().Snapshot(),&gameplayGlobals->CursorGlobals()},std::move(game));
+        if (services.ownerColorTables) cursor->Display().BindOwnerColors(services.ownerColorTables); // 같은 현재 표를 파일 팔레트 설치보다 먼저 빌린다.
         if (services.colorSortInput || services.screenPalette) {
             // 실제 Client의 일부 색 장치가 빠진 경우 COL을 대신 써서 성공하지 않는다.
             if (!services.colorSortInput || !services.screenPalette) throw std::logic_error("캠페인 커서의 같은 ColorSort/현재 화면 색 서비스 미연결");
@@ -2879,10 +2883,11 @@ struct RawCampaignSession::Impl {
         for (const auto type:std::array<std::uint32_t,12>{82,155,158,164,135,133,156,73,170,146,144,126}) buildingMapTokens[type]=1;
         // 실제43be30/43bc40의 전용 색표 대상은 일반 색표로 대신하지 않는다.
         for (const auto type:std::array<std::uint32_t,7>{82,155,111,141,137,94,97}) buildingMapTokens[type]=2;
-        buildingCaptureState.ownerTypeMaps=buildingMapTokens;
+        buildingCaptureState.ownerTypeMaps=services.ownerColorTables ? services.ownerColorTables->Tokens() : std::span<const std::uint32_t>(buildingMapTokens); // 실제 Client 캡처는 같은 현재 포인터 표다.
         buildingCaptureState.ownerColors=[this](std::uint32_t type,std::uint32_t owner)->std::span<const std::uint8_t> {
             if (owner>=core.bridgeState.ownerColors.size()) throw std::out_of_range("실제 캡처 현재 소유자 번호 오류");
             const auto color=core.bridgeState.ownerColors[owner];if (color<0 || color>8) throw std::out_of_range("건설 현재 소유자 색 번호 오류");
+            if (services.ownerColorTables) return services.ownerColorTables->Color(type,static_cast<std::uint32_t>(color)); // 같은 원본 색표를 건설 캡처도 직접 빌린다.
             if (buildingMapTokens.at(type)==1) return buildingOwnerColors[static_cast<std::size_t>(color)];
             if (buildingMapTokens[type]!=2 || (type!=111 && type!=141 && type!=137 && type!=94 && type!=97)) throw std::logic_error("현재 캡처 전용 소유자 색표 미복원");
             if (!buildingSpecialOwnerColors.contains(type)) {
@@ -3518,7 +3523,7 @@ std::uint32_t RawCampaignSession::OwnedIslandCount(std::uint32_t owner) const { 
 std::span<std::uint8_t> RawCampaignSession::MutableFortState(std::uint32_t slot) { return impl_->templateState->Get(slot); }
 const ContainedFinderState& RawCampaignSession::ProductionFinder() const { return impl_->contentFinder; }
 // 별도 값 버퍼나 가짜 Session 없이 현재 실제 생성 자료를 빌린다.
-ProductionControlContext RawCampaignSession::ProductionContext() const { return {impl_->world.Storage(),impl_->gameplayGlobals,impl_->playerRecords,impl_->battleOptions,impl_->services.spGlobals}; }
+ProductionControlContext RawCampaignSession::ProductionContext() const { return {impl_->world.Storage(),impl_->gameplayGlobals,impl_->playerRecords,impl_->battleOptions,impl_->services.spGlobals,impl_->services.ownerColorTables}; }
 // 원본43ef10의 생산 단락만 현재 Gump idle 위치에서 실행한다. 나머지HUD/공급 주기는 별도 몸체다.
 bool RawCampaignSession::UpdateProductionContents() {
     auto& s=*impl_;if (!s.loaded || (!s.core.ownerMode.fort && !s.core.ownerMode.battle && !s.core.ownerMode.challenge)) return false;

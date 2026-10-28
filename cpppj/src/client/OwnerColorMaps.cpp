@@ -15,6 +15,15 @@ constexpr std::array<std::uint32_t,72> kCandidates{
 }
 // 원본 정적 DWORD 표의 읽기 전용 view다.
 std::span<const std::uint32_t,72> OriginalOwnerColorCandidates() { return kCandidates; }
+// 원본 가변 인자의 실제 DWORD 순서를 생성·수명 모듈이 함께 사용한다.
+std::span<const std::uint32_t> SpecialOwnerColorSources(std::uint32_t type) {
+    static constexpr std::array<std::uint32_t,33> surface{44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,3,177,200,203,224,220,221,222,223,114,201,226}; // 94/97의 지면 소스다.
+    static constexpr std::array<std::uint32_t,20> first{86,188,85,247,84,31,34,75,82,74,83,156,153,70,72,71,73,152,13,144}; // 111의 소스다.
+    static constexpr std::array<std::uint32_t,21> second{87,88,85,86,84,156,75,82,153,74,73,83,155,72,71,44,152,154,70,13,144}; // 141의 소스다.
+    static constexpr std::array<std::uint32_t,19> third{218,219,220,52,53,54,55,56,57,58,59,66,161,210,19,21,214,141,18}; // 137의 소스다.
+    if (type==111) return first;if (type==141) return second;if (type==137) return third;if (type==94 || type==97) return surface;
+    throw std::invalid_argument("전용 소유자 색표 TYPE 범위");
+}
 // 원문에서 색0 행은 변경하지 않고1..8행만 실제 띠를 바꾼다.
 OwnerColorMaps BuildStandardOwnerColorMaps(std::uint32_t type,std::uint32_t bridgeType,std::span<const std::uint32_t,72> candidates) {
     OwnerColorMaps result;
@@ -39,14 +48,9 @@ namespace {
 // 기존소스/후보/보정본문을공유하며명도읽기장치만실제raw와독립adapter로구별한다.
 template<class Lightness>
 OwnerColorMaps BuildSpecialOwnerFromLightness(const Lightness& light,std::uint32_t type,std::span<const std::uint32_t,72> candidates) {
-    constexpr std::array<std::uint8_t,33> surface{44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,3,177,200,203,224,220,221,222,223,114,201,226}; // 43bc40의 동일 받침/지면 소스다.
-    constexpr std::array<std::uint8_t,20> first{86,188,85,247,84,31,34,75,82,74,83,156,153,70,72,71,73,152,13,144}; // 111의 전용 소스다.
-    constexpr std::array<std::uint8_t,21> second{87,88,85,86,84,156,75,82,153,74,73,83,155,72,71,44,152,154,70,13,144}; // 141의 전용 소스다.
-    constexpr std::array<std::uint8_t,19> third{218,219,220,52,53,54,55,56,57,58,59,66,161,210,19,21,214,141,18}; // 137의 전용 소스다.
     constexpr std::array<double,8> offsets{-0.1,-0.17,0.15,0,0,0.05,-0.2,0}; // 실제43b750의 소유자별 double 명도 보정이다.
     constexpr double otherOffset=-0.15000000596046448; // 원본 ColorSort 정규화 및141의 저장 double 값이다.
-    std::span<const std::uint8_t> sources; // 같은 Native 호출자가 선택한 소스 목록만 빌린다.
-    if (type==111) sources=first;else if (type==141) sources=second;else if (type==137) sources=third;else if (type==94 || type==97) sources=surface;else throw std::invalid_argument("전용 소유자 색표 TYPE 범위");
+    const auto sources=SpecialOwnerColorSources(type); // 같은 Native 호출자가 선택한 DWORD 소스 순서다.
     OwnerColorMaps result; // 실제항등9표이며명도는현재읽기장치에서필요할때직접조회한다.
     // 중립을포함한9표를원본43b950처럼항등으로시작한다.
     for (std::size_t index=0;index<256;++index) { // 소스색순서를유지한다.
