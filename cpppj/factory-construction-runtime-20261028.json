@@ -1,0 +1,3328 @@
+{
+  "unit": 539,
+  "date": "2026-10-28",
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "decompileOutputsModified": false,
+  "originalLiveGames": 0,
+  "productCodeChanged": false,
+  "newCppTests": false,
+  "newBuild": false,
+  "productBuildUnit": 537,
+  "registeredTests": 3364,
+  "focus": {
+    "results": [
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "FactoryMenu_"
+        ],
+        "binarySha256": "ee46a6f13c13cf518fe995eda6bba11f58490a8b7e459acfe3735fa7a63c69e8",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 0.7358358999772463,
+        "stdoutSha256": "b9d21d71353b5ffd3da6f70186f8ae3fe7856d18a1466e328d002f0699c7b441",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "FactoryMenu_",
+        "names": [
+          "FactoryMenu_Native32Mana5Slots",
+          "FactoryMenu_Native39FullOpen"
+        ],
+        "tests": 2,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "FactoryInput_"
+        ],
+        "binarySha256": "ee46a6f13c13cf518fe995eda6bba11f58490a8b7e459acfe3735fa7a63c69e8",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 0.7169541000039317,
+        "stdoutSha256": "73e3e15f05d6a322a8fc1a71cd41559f14db0e61e4671991a9745d3ed5ae0a6b",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "FactoryInput_",
+        "names": [
+          "FactoryInput_AffordableBoundaryAndNoExtraGates",
+          "FactoryInput_CurrentOwnerAndEditorAfterChildren",
+          "FactoryInput_CyclePreservesSignedRemainder",
+          "FactoryInput_DelegatesOriginalCodeAndPackedArgument",
+          "FactoryInput_EditorReadsMoneyAndKeepsPendingGate",
+          "FactoryInput_MissingSelectedEffectsKeepPrefix",
+          "FactoryInput_NoBucksPrecedesExistingUpgrade",
+          "FactoryInput_UnorderedAndFloatCostRounding"
+        ],
+        "tests": 8,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "factoryPostPop_"
+        ],
+        "binarySha256": "ee46a6f13c13cf518fe995eda6bba11f58490a8b7e459acfe3735fa7a63c69e8",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 0.9229381999757607,
+        "stdoutSha256": "22cd58ec49be63f9355e9c8ecac57391551e8443df695d806e42f508b78e7d1d",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "factoryPostPop_",
+        "names": [
+          "factoryPostPop_actual_frame_effect_and_pool_contract",
+          "factoryPostPop_native_body_and_dynamic_finder",
+          "factoryPostPop_requires_effects_and_same_pool"
+        ],
+        "tests": 3,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "ObjectMenuOpen_"
+        ],
+        "binarySha256": "ee46a6f13c13cf518fe995eda6bba11f58490a8b7e459acfe3735fa7a63c69e8",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 0.9122304000193253,
+        "stdoutSha256": "2cb347d45def3a925736b0ce83525f40cbfd69333150ffc51bde401c16b372cc",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "ObjectMenuOpen_",
+        "names": [
+          "ObjectMenuOpen_EditionAndTypeContract",
+          "ObjectMenuOpen_LazyBoundariesAndNoSyntheticSuccess",
+          "ObjectMenuOpen_NativeWholeParentsAndCurrentReads"
+        ],
+        "tests": 3,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "SalvageCommand_"
+        ],
+        "binarySha256": "ee46a6f13c13cf518fe995eda6bba11f58490a8b7e459acfe3735fa7a63c69e8",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 0.7157499000022653,
+        "stdoutSha256": "20af533676787b340fca00b8f5864be27756ed40d5bd49a52ba59eb1f1cc0ba8",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "SalvageCommand_",
+        "names": [
+          "SalvageCommand_NativeRequestSendReceive"
+        ],
+        "tests": 1,
+        "failed": 0
+      }
+    ],
+    "names": [
+      "FactoryInput_AffordableBoundaryAndNoExtraGates",
+      "FactoryInput_CurrentOwnerAndEditorAfterChildren",
+      "FactoryInput_CyclePreservesSignedRemainder",
+      "FactoryInput_DelegatesOriginalCodeAndPackedArgument",
+      "FactoryInput_EditorReadsMoneyAndKeepsPendingGate",
+      "FactoryInput_MissingSelectedEffectsKeepPrefix",
+      "FactoryInput_NoBucksPrecedesExistingUpgrade",
+      "FactoryInput_UnorderedAndFloatCostRounding",
+      "FactoryMenu_Native32Mana5Slots",
+      "FactoryMenu_Native39FullOpen",
+      "ObjectMenuOpen_EditionAndTypeContract",
+      "ObjectMenuOpen_LazyBoundariesAndNoSyntheticSuccess",
+      "ObjectMenuOpen_NativeWholeParentsAndCurrentReads",
+      "SalvageCommand_NativeRequestSendReceive",
+      "factoryPostPop_actual_frame_effect_and_pool_contract",
+      "factoryPostPop_native_body_and_dynamic_finder",
+      "factoryPostPop_requires_effects_and_same_pool"
+    ],
+    "unique": 17,
+    "failed": 0,
+    "binarySha256": "ee46a6f13c13cf518fe995eda6bba11f58490a8b7e459acfe3735fa7a63c69e8"
+  },
+  "accepted": [
+    {
+      "size": [
+        1280,
+        720
+      ],
+      "type": 85,
+      "asset": "sunFactory",
+      "sid": 16071,
+      "target": [
+        "85",
+        "1",
+        "0",
+        "151",
+        "182"
+      ],
+      "cost": 800,
+      "maximumHp": 3000,
+      "refund": 200,
+      "finalSp": 499400,
+      "constructionMenuBlocked": true,
+      "helpReturned": true,
+      "emptyProduction": true,
+      "salvageCancelledThenConfirmed": true,
+      "originalFactoriesPreserved": [
+        15006,
+        15008,
+        15018,
+        15028,
+        15029
+      ],
+      "items": [
+        {
+          "token": 747,
+          "index": 0,
+          "flags": 66600,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": "View Current Production"
+        },
+        {
+          "token": 747,
+          "index": 1,
+          "flags": 66592,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": "Put Knowledge into Production"
+        },
+        {
+          "token": 747,
+          "index": 2,
+          "flags": 66689,
+          "command": 50331698,
+          "parameter": 16071,
+          "visible": true,
+          "label": "Upgrade costs 800"
+        },
+        {
+          "token": 747,
+          "index": 3,
+          "flags": 65552,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": ""
+        },
+        {
+          "token": 747,
+          "index": 4,
+          "flags": 66689,
+          "command": 33554581,
+          "parameter": 1610612738,
+          "visible": true,
+          "label": "Salvage gains 200"
+        },
+        {
+          "token": 747,
+          "index": 5,
+          "flags": 66689,
+          "command": 33554455,
+          "parameter": 85,
+          "visible": true,
+          "label": "About"
+        },
+        {
+          "token": 747,
+          "index": 6,
+          "flags": 66592,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": "Player"
+        }
+      ],
+      "production": [
+        {
+          "token": 814,
+          "index": 0,
+          "flags": 66600,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": "View Current Production"
+        },
+        {
+          "token": 814,
+          "index": 1,
+          "flags": 66592,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": "Put Knowledge into Production"
+        },
+        {
+          "token": 814,
+          "index": 2,
+          "flags": 66689,
+          "command": 50331698,
+          "parameter": 16071,
+          "visible": true,
+          "label": "Upgrade costs 800"
+        },
+        {
+          "token": 814,
+          "index": 3,
+          "flags": 65552,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": ""
+        },
+        {
+          "token": 814,
+          "index": 4,
+          "flags": 66689,
+          "command": 33554581,
+          "parameter": 1610612738,
+          "visible": true,
+          "label": "Salvage gains 200"
+        },
+        {
+          "token": 814,
+          "index": 5,
+          "flags": 66689,
+          "command": 33554455,
+          "parameter": 85,
+          "visible": true,
+          "label": "About"
+        },
+        {
+          "token": 814,
+          "index": 6,
+          "flags": 66592,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": "Player"
+        },
+        {
+          "token": 824,
+          "index": 0,
+          "flags": 66689,
+          "command": 33554455,
+          "parameter": 1610612737,
+          "visible": true,
+          "label": "About"
+        }
+      ],
+      "run": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-construction-539\\probe-v3\\sunFactory-1280x720\\data",
+          "--mission",
+          "TEST02",
+          "--window",
+          "--mute-audio",
+          "--frames",
+          "1020",
+          "--set",
+          "SCREENW=1280;SCREENH=720;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-construction-539\\probe-v3\\sunFactory-1280x720\\run\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-construction-539\\probe-v3\\sunFactory-1280x720\\run\\states.tsv",
+          "--audio-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-construction-539\\probe-v3\\sunFactory-1280x720\\run\\audio.tsv"
+        ],
+        "binarySha256": "a2bfb516df23d8facee10d085f817b41699fb8b77af664800807200c5346d082",
+        "scriptSha256": "ad25ddd4f399a4c133705c624868604753f93d4e1ab00caaee39a9d45881b93f",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 52.59056929999497,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "e994e9a97c87f8e4a1f32f1f748fbb548d8ad7a886ba430985a9fb846979afd0",
+        "originalsUnchanged": true,
+        "dataUnchanged": true,
+        "dataRoot": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-construction-539\\probe-v3\\sunFactory-1280x720\\data"
+      },
+      "directory": "probe-v3\\sunFactory-1280x720"
+    },
+    {
+      "size": [
+        1024,
+        768
+      ],
+      "type": 85,
+      "asset": "sunFactory",
+      "sid": 16071,
+      "target": [
+        "85",
+        "1",
+        "0",
+        "151",
+        "182"
+      ],
+      "cost": 800,
+      "maximumHp": 3000,
+      "refund": 200,
+      "finalSp": 499400,
+      "constructionMenuBlocked": true,
+      "helpReturned": true,
+      "emptyProduction": true,
+      "salvageCancelledThenConfirmed": true,
+      "originalFactoriesPreserved": [
+        15006,
+        15008,
+        15018,
+        15028,
+        15029
+      ],
+      "items": [
+        {
+          "token": 798,
+          "index": 0,
+          "flags": 66600,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": "View Current Production"
+        },
+        {
+          "token": 798,
+          "index": 1,
+          "flags": 66592,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": "Put Knowledge into Production"
+        },
+        {
+          "token": 798,
+          "index": 2,
+          "flags": 66689,
+          "command": 50331698,
+          "parameter": 16071,
+          "visible": true,
+          "label": "Upgrade costs 800"
+        },
+        {
+          "token": 798,
+          "index": 3,
+          "flags": 65552,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": ""
+        },
+        {
+          "token": 798,
+          "index": 4,
+          "flags": 66689,
+          "command": 33554581,
+          "parameter": 1610612738,
+          "visible": true,
+          "label": "Salvage gains 200"
+        },
+        {
+          "token": 798,
+          "index": 5,
+          "flags": 66689,
+          "command": 33554455,
+          "parameter": 85,
+          "visible": true,
+          "label": "About"
+        },
+        {
+          "token": 798,
+          "index": 6,
+          "flags": 66592,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": "Player"
+        }
+      ],
+      "production": [
+        {
+          "token": 865,
+          "index": 0,
+          "flags": 66600,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": "View Current Production"
+        },
+        {
+          "token": 865,
+          "index": 1,
+          "flags": 66592,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": "Put Knowledge into Production"
+        },
+        {
+          "token": 865,
+          "index": 2,
+          "flags": 66689,
+          "command": 50331698,
+          "parameter": 16071,
+          "visible": true,
+          "label": "Upgrade costs 800"
+        },
+        {
+          "token": 865,
+          "index": 3,
+          "flags": 65552,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": ""
+        },
+        {
+          "token": 865,
+          "index": 4,
+          "flags": 66689,
+          "command": 33554581,
+          "parameter": 1610612738,
+          "visible": true,
+          "label": "Salvage gains 200"
+        },
+        {
+          "token": 865,
+          "index": 5,
+          "flags": 66689,
+          "command": 33554455,
+          "parameter": 85,
+          "visible": true,
+          "label": "About"
+        },
+        {
+          "token": 865,
+          "index": 6,
+          "flags": 66592,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": "Player"
+        },
+        {
+          "token": 875,
+          "index": 0,
+          "flags": 66689,
+          "command": 33554455,
+          "parameter": 1610612737,
+          "visible": true,
+          "label": "About"
+        }
+      ],
+      "run": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-construction-539\\rest\\sunFactory-1024x768\\data",
+          "--mission",
+          "TEST02",
+          "--window",
+          "--mute-audio",
+          "--frames",
+          "1020",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-construction-539\\rest\\sunFactory-1024x768\\run\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-construction-539\\rest\\sunFactory-1024x768\\run\\states.tsv",
+          "--audio-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-construction-539\\rest\\sunFactory-1024x768\\run\\audio.tsv"
+        ],
+        "binarySha256": "a2bfb516df23d8facee10d085f817b41699fb8b77af664800807200c5346d082",
+        "scriptSha256": "d17a1c7545e8e391ce72502cade285c0507ee8d1a2d6b8ac041e5fe874684af8",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 52.510285500000464,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "e994e9a97c87f8e4a1f32f1f748fbb548d8ad7a886ba430985a9fb846979afd0",
+        "originalsUnchanged": true,
+        "dataUnchanged": true,
+        "dataRoot": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-construction-539\\rest\\sunFactory-1024x768\\data"
+      },
+      "directory": "rest\\sunFactory-1024x768"
+    },
+    {
+      "size": [
+        1280,
+        720
+      ],
+      "type": 86,
+      "asset": "windFactory",
+      "sid": 16071,
+      "target": [
+        "86",
+        "1",
+        "0",
+        "152",
+        "182"
+      ],
+      "cost": 1000,
+      "maximumHp": 4000,
+      "refund": 250,
+      "finalSp": 499250,
+      "constructionMenuBlocked": true,
+      "helpReturned": true,
+      "emptyProduction": true,
+      "salvageCancelledThenConfirmed": true,
+      "originalFactoriesPreserved": [
+        15006,
+        15008,
+        15018,
+        15028,
+        15029
+      ],
+      "items": [
+        {
+          "token": 833,
+          "index": 0,
+          "flags": 66600,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": "View Current Production"
+        },
+        {
+          "token": 833,
+          "index": 1,
+          "flags": 66592,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": "Put Knowledge into Production"
+        },
+        {
+          "token": 833,
+          "index": 2,
+          "flags": 66689,
+          "command": 50331698,
+          "parameter": 16071,
+          "visible": true,
+          "label": "Upgrade costs 1000"
+        },
+        {
+          "token": 833,
+          "index": 3,
+          "flags": 65552,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": ""
+        },
+        {
+          "token": 833,
+          "index": 4,
+          "flags": 66689,
+          "command": 33554581,
+          "parameter": 1610612738,
+          "visible": true,
+          "label": "Salvage gains 250"
+        },
+        {
+          "token": 833,
+          "index": 5,
+          "flags": 66689,
+          "command": 33554455,
+          "parameter": 86,
+          "visible": true,
+          "label": "About"
+        },
+        {
+          "token": 833,
+          "index": 6,
+          "flags": 66592,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": "Player"
+        }
+      ],
+      "production": [
+        {
+          "token": 900,
+          "index": 0,
+          "flags": 66600,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": "View Current Production"
+        },
+        {
+          "token": 900,
+          "index": 1,
+          "flags": 66592,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": "Put Knowledge into Production"
+        },
+        {
+          "token": 900,
+          "index": 2,
+          "flags": 66689,
+          "command": 50331698,
+          "parameter": 16071,
+          "visible": true,
+          "label": "Upgrade costs 1000"
+        },
+        {
+          "token": 900,
+          "index": 3,
+          "flags": 65552,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": ""
+        },
+        {
+          "token": 900,
+          "index": 4,
+          "flags": 66689,
+          "command": 33554581,
+          "parameter": 1610612738,
+          "visible": true,
+          "label": "Salvage gains 250"
+        },
+        {
+          "token": 900,
+          "index": 5,
+          "flags": 66689,
+          "command": 33554455,
+          "parameter": 86,
+          "visible": true,
+          "label": "About"
+        },
+        {
+          "token": 900,
+          "index": 6,
+          "flags": 66592,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": "Player"
+        },
+        {
+          "token": 910,
+          "index": 0,
+          "flags": 66689,
+          "command": 33554455,
+          "parameter": 1610612737,
+          "visible": true,
+          "label": "About"
+        }
+      ],
+      "run": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-construction-539\\rest\\windFactory-1280x720\\data",
+          "--mission",
+          "TEST02",
+          "--window",
+          "--mute-audio",
+          "--frames",
+          "1020",
+          "--set",
+          "SCREENW=1280;SCREENH=720;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-construction-539\\rest\\windFactory-1280x720\\run\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-construction-539\\rest\\windFactory-1280x720\\run\\states.tsv",
+          "--audio-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-construction-539\\rest\\windFactory-1280x720\\run\\audio.tsv"
+        ],
+        "binarySha256": "a2bfb516df23d8facee10d085f817b41699fb8b77af664800807200c5346d082",
+        "scriptSha256": "28d4feffba7a43f698c1207b5dfa0ff54064be1796ababa0411a7d981081b37c",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 54.52050600000075,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "e994e9a97c87f8e4a1f32f1f748fbb548d8ad7a886ba430985a9fb846979afd0",
+        "originalsUnchanged": true,
+        "dataUnchanged": true,
+        "dataRoot": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-construction-539\\rest\\windFactory-1280x720\\data"
+      },
+      "directory": "rest\\windFactory-1280x720"
+    },
+    {
+      "size": [
+        1024,
+        768
+      ],
+      "type": 86,
+      "asset": "windFactory",
+      "sid": 16071,
+      "target": [
+        "86",
+        "1",
+        "0",
+        "152",
+        "182"
+      ],
+      "cost": 1000,
+      "maximumHp": 4000,
+      "refund": 250,
+      "finalSp": 499250,
+      "constructionMenuBlocked": true,
+      "helpReturned": true,
+      "emptyProduction": true,
+      "salvageCancelledThenConfirmed": true,
+      "originalFactoriesPreserved": [
+        15006,
+        15008,
+        15018,
+        15028,
+        15029
+      ],
+      "items": [
+        {
+          "token": 790,
+          "index": 0,
+          "flags": 66600,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": "View Current Production"
+        },
+        {
+          "token": 790,
+          "index": 1,
+          "flags": 66592,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": "Put Knowledge into Production"
+        },
+        {
+          "token": 790,
+          "index": 2,
+          "flags": 66689,
+          "command": 50331698,
+          "parameter": 16071,
+          "visible": true,
+          "label": "Upgrade costs 1000"
+        },
+        {
+          "token": 790,
+          "index": 3,
+          "flags": 65552,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": ""
+        },
+        {
+          "token": 790,
+          "index": 4,
+          "flags": 66689,
+          "command": 33554581,
+          "parameter": 1610612738,
+          "visible": true,
+          "label": "Salvage gains 250"
+        },
+        {
+          "token": 790,
+          "index": 5,
+          "flags": 66689,
+          "command": 33554455,
+          "parameter": 86,
+          "visible": true,
+          "label": "About"
+        },
+        {
+          "token": 790,
+          "index": 6,
+          "flags": 66592,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": "Player"
+        }
+      ],
+      "production": [
+        {
+          "token": 857,
+          "index": 0,
+          "flags": 66600,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": "View Current Production"
+        },
+        {
+          "token": 857,
+          "index": 1,
+          "flags": 66592,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": "Put Knowledge into Production"
+        },
+        {
+          "token": 857,
+          "index": 2,
+          "flags": 66689,
+          "command": 50331698,
+          "parameter": 16071,
+          "visible": true,
+          "label": "Upgrade costs 1000"
+        },
+        {
+          "token": 857,
+          "index": 3,
+          "flags": 65552,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": ""
+        },
+        {
+          "token": 857,
+          "index": 4,
+          "flags": 66689,
+          "command": 33554581,
+          "parameter": 1610612738,
+          "visible": true,
+          "label": "Salvage gains 250"
+        },
+        {
+          "token": 857,
+          "index": 5,
+          "flags": 66689,
+          "command": 33554455,
+          "parameter": 86,
+          "visible": true,
+          "label": "About"
+        },
+        {
+          "token": 857,
+          "index": 6,
+          "flags": 66592,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": "Player"
+        },
+        {
+          "token": 867,
+          "index": 0,
+          "flags": 66689,
+          "command": 33554455,
+          "parameter": 1610612737,
+          "visible": true,
+          "label": "About"
+        }
+      ],
+      "run": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-construction-539\\rest\\windFactory-1024x768\\data",
+          "--mission",
+          "TEST02",
+          "--window",
+          "--mute-audio",
+          "--frames",
+          "1020",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-construction-539\\rest\\windFactory-1024x768\\run\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-construction-539\\rest\\windFactory-1024x768\\run\\states.tsv",
+          "--audio-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-construction-539\\rest\\windFactory-1024x768\\run\\audio.tsv"
+        ],
+        "binarySha256": "a2bfb516df23d8facee10d085f817b41699fb8b77af664800807200c5346d082",
+        "scriptSha256": "1593bd05cca3a850ffb0675ba38fb91ed55705542c1b83d51bc8843813608140",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 54.108147899998585,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "e994e9a97c87f8e4a1f32f1f748fbb548d8ad7a886ba430985a9fb846979afd0",
+        "originalsUnchanged": true,
+        "dataUnchanged": true,
+        "dataRoot": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-construction-539\\rest\\windFactory-1024x768\\data"
+      },
+      "directory": "rest\\windFactory-1024x768"
+    },
+    {
+      "size": [
+        1280,
+        720
+      ],
+      "type": 87,
+      "asset": "rainFactory",
+      "sid": 16071,
+      "target": [
+        "87",
+        "1",
+        "0",
+        "152",
+        "182"
+      ],
+      "cost": 1000,
+      "maximumHp": 4000,
+      "refund": 250,
+      "finalSp": 499250,
+      "constructionMenuBlocked": true,
+      "helpReturned": true,
+      "emptyProduction": true,
+      "salvageCancelledThenConfirmed": true,
+      "originalFactoriesPreserved": [
+        15006,
+        15008,
+        15018,
+        15028,
+        15029
+      ],
+      "items": [
+        {
+          "token": 796,
+          "index": 0,
+          "flags": 66600,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": "View Current Production"
+        },
+        {
+          "token": 796,
+          "index": 1,
+          "flags": 66592,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": "Put Knowledge into Production"
+        },
+        {
+          "token": 796,
+          "index": 2,
+          "flags": 66689,
+          "command": 50331698,
+          "parameter": 16071,
+          "visible": true,
+          "label": "Upgrade costs 1000"
+        },
+        {
+          "token": 796,
+          "index": 3,
+          "flags": 65552,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": ""
+        },
+        {
+          "token": 796,
+          "index": 4,
+          "flags": 66689,
+          "command": 33554581,
+          "parameter": 1610612738,
+          "visible": true,
+          "label": "Salvage gains 250"
+        },
+        {
+          "token": 796,
+          "index": 5,
+          "flags": 66689,
+          "command": 33554455,
+          "parameter": 87,
+          "visible": true,
+          "label": "About"
+        },
+        {
+          "token": 796,
+          "index": 6,
+          "flags": 66592,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": "Player"
+        }
+      ],
+      "production": [
+        {
+          "token": 863,
+          "index": 0,
+          "flags": 66600,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": "View Current Production"
+        },
+        {
+          "token": 863,
+          "index": 1,
+          "flags": 66592,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": "Put Knowledge into Production"
+        },
+        {
+          "token": 863,
+          "index": 2,
+          "flags": 66689,
+          "command": 50331698,
+          "parameter": 16071,
+          "visible": true,
+          "label": "Upgrade costs 1000"
+        },
+        {
+          "token": 863,
+          "index": 3,
+          "flags": 65552,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": ""
+        },
+        {
+          "token": 863,
+          "index": 4,
+          "flags": 66689,
+          "command": 33554581,
+          "parameter": 1610612738,
+          "visible": true,
+          "label": "Salvage gains 250"
+        },
+        {
+          "token": 863,
+          "index": 5,
+          "flags": 66689,
+          "command": 33554455,
+          "parameter": 87,
+          "visible": true,
+          "label": "About"
+        },
+        {
+          "token": 863,
+          "index": 6,
+          "flags": 66592,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": "Player"
+        },
+        {
+          "token": 873,
+          "index": 0,
+          "flags": 66689,
+          "command": 33554455,
+          "parameter": 1610612737,
+          "visible": true,
+          "label": "About"
+        }
+      ],
+      "run": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-construction-539\\rest\\rainFactory-1280x720\\data",
+          "--mission",
+          "TEST02",
+          "--window",
+          "--mute-audio",
+          "--frames",
+          "1020",
+          "--set",
+          "SCREENW=1280;SCREENH=720;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-construction-539\\rest\\rainFactory-1280x720\\run\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-construction-539\\rest\\rainFactory-1280x720\\run\\states.tsv",
+          "--audio-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-construction-539\\rest\\rainFactory-1280x720\\run\\audio.tsv"
+        ],
+        "binarySha256": "a2bfb516df23d8facee10d085f817b41699fb8b77af664800807200c5346d082",
+        "scriptSha256": "b55296f2fe6686b6a1dc3e7c57a7cf2b14c2b5ae5396c21f1532deb4c732c806",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 53.965125799993984,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "e994e9a97c87f8e4a1f32f1f748fbb548d8ad7a886ba430985a9fb846979afd0",
+        "originalsUnchanged": true,
+        "dataUnchanged": true,
+        "dataRoot": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-construction-539\\rest\\rainFactory-1280x720\\data"
+      },
+      "directory": "rest\\rainFactory-1280x720"
+    },
+    {
+      "size": [
+        1024,
+        768
+      ],
+      "type": 87,
+      "asset": "rainFactory",
+      "sid": 16077,
+      "target": [
+        "87",
+        "1",
+        "0",
+        "152",
+        "182"
+      ],
+      "cost": 1000,
+      "maximumHp": 4000,
+      "refund": 250,
+      "finalSp": 499250,
+      "constructionMenuBlocked": true,
+      "helpReturned": true,
+      "emptyProduction": true,
+      "salvageCancelledThenConfirmed": true,
+      "originalFactoriesPreserved": [
+        15006,
+        15008,
+        15018,
+        15028,
+        15029
+      ],
+      "items": [
+        {
+          "token": 776,
+          "index": 0,
+          "flags": 66600,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": "View Current Production"
+        },
+        {
+          "token": 776,
+          "index": 1,
+          "flags": 66592,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": "Put Knowledge into Production"
+        },
+        {
+          "token": 776,
+          "index": 2,
+          "flags": 66689,
+          "command": 50331698,
+          "parameter": 16077,
+          "visible": true,
+          "label": "Upgrade costs 1000"
+        },
+        {
+          "token": 776,
+          "index": 3,
+          "flags": 65552,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": ""
+        },
+        {
+          "token": 776,
+          "index": 4,
+          "flags": 66689,
+          "command": 33554581,
+          "parameter": 1610612738,
+          "visible": true,
+          "label": "Salvage gains 250"
+        },
+        {
+          "token": 776,
+          "index": 5,
+          "flags": 66689,
+          "command": 33554455,
+          "parameter": 87,
+          "visible": true,
+          "label": "About"
+        },
+        {
+          "token": 776,
+          "index": 6,
+          "flags": 66592,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": "Player"
+        }
+      ],
+      "production": [
+        {
+          "token": 843,
+          "index": 0,
+          "flags": 66600,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": "View Current Production"
+        },
+        {
+          "token": 843,
+          "index": 1,
+          "flags": 66592,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": "Put Knowledge into Production"
+        },
+        {
+          "token": 843,
+          "index": 2,
+          "flags": 66689,
+          "command": 50331698,
+          "parameter": 16077,
+          "visible": true,
+          "label": "Upgrade costs 1000"
+        },
+        {
+          "token": 843,
+          "index": 3,
+          "flags": 65552,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": ""
+        },
+        {
+          "token": 843,
+          "index": 4,
+          "flags": 66689,
+          "command": 33554581,
+          "parameter": 1610612738,
+          "visible": true,
+          "label": "Salvage gains 250"
+        },
+        {
+          "token": 843,
+          "index": 5,
+          "flags": 66689,
+          "command": 33554455,
+          "parameter": 87,
+          "visible": true,
+          "label": "About"
+        },
+        {
+          "token": 843,
+          "index": 6,
+          "flags": 66592,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": "Player"
+        },
+        {
+          "token": 853,
+          "index": 0,
+          "flags": 66689,
+          "command": 33554455,
+          "parameter": 1610612737,
+          "visible": true,
+          "label": "About"
+        }
+      ],
+      "run": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-construction-539\\rest\\rainFactory-1024x768\\data",
+          "--mission",
+          "TEST02",
+          "--window",
+          "--mute-audio",
+          "--frames",
+          "1020",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-construction-539\\rest\\rainFactory-1024x768\\run\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-construction-539\\rest\\rainFactory-1024x768\\run\\states.tsv",
+          "--audio-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-construction-539\\rest\\rainFactory-1024x768\\run\\audio.tsv"
+        ],
+        "binarySha256": "a2bfb516df23d8facee10d085f817b41699fb8b77af664800807200c5346d082",
+        "scriptSha256": "0d14ac4f08ace11029dbbbe018f44a66bbc7b532dfe5469a984a7dc1b4ff5a86",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 50.88491090000025,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "e994e9a97c87f8e4a1f32f1f748fbb548d8ad7a886ba430985a9fb846979afd0",
+        "originalsUnchanged": true,
+        "dataUnchanged": true,
+        "dataRoot": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-construction-539\\rest\\rainFactory-1024x768\\data"
+      },
+      "directory": "rest\\rainFactory-1024x768"
+    },
+    {
+      "size": [
+        1280,
+        720
+      ],
+      "type": 88,
+      "asset": "thunderFactory",
+      "sid": 16071,
+      "target": [
+        "88",
+        "1",
+        "0",
+        "152",
+        "182"
+      ],
+      "cost": 1000,
+      "maximumHp": 4000,
+      "refund": 250,
+      "finalSp": 499250,
+      "constructionMenuBlocked": true,
+      "helpReturned": true,
+      "emptyProduction": true,
+      "salvageCancelledThenConfirmed": true,
+      "originalFactoriesPreserved": [
+        15006,
+        15008,
+        15018,
+        15028,
+        15029
+      ],
+      "items": [
+        {
+          "token": 748,
+          "index": 0,
+          "flags": 66600,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": "View Current Production"
+        },
+        {
+          "token": 748,
+          "index": 1,
+          "flags": 66592,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": "Put Knowledge into Production"
+        },
+        {
+          "token": 748,
+          "index": 2,
+          "flags": 66689,
+          "command": 50331698,
+          "parameter": 16071,
+          "visible": true,
+          "label": "Upgrade costs 1000"
+        },
+        {
+          "token": 748,
+          "index": 3,
+          "flags": 65552,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": ""
+        },
+        {
+          "token": 748,
+          "index": 4,
+          "flags": 66689,
+          "command": 33554581,
+          "parameter": 1610612738,
+          "visible": true,
+          "label": "Salvage gains 250"
+        },
+        {
+          "token": 748,
+          "index": 5,
+          "flags": 66689,
+          "command": 33554455,
+          "parameter": 88,
+          "visible": true,
+          "label": "About"
+        },
+        {
+          "token": 748,
+          "index": 6,
+          "flags": 66592,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": "Player"
+        }
+      ],
+      "production": [
+        {
+          "token": 815,
+          "index": 0,
+          "flags": 66600,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": "View Current Production"
+        },
+        {
+          "token": 815,
+          "index": 1,
+          "flags": 66592,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": "Put Knowledge into Production"
+        },
+        {
+          "token": 815,
+          "index": 2,
+          "flags": 66689,
+          "command": 50331698,
+          "parameter": 16071,
+          "visible": true,
+          "label": "Upgrade costs 1000"
+        },
+        {
+          "token": 815,
+          "index": 3,
+          "flags": 65552,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": ""
+        },
+        {
+          "token": 815,
+          "index": 4,
+          "flags": 66689,
+          "command": 33554581,
+          "parameter": 1610612738,
+          "visible": true,
+          "label": "Salvage gains 250"
+        },
+        {
+          "token": 815,
+          "index": 5,
+          "flags": 66689,
+          "command": 33554455,
+          "parameter": 88,
+          "visible": true,
+          "label": "About"
+        },
+        {
+          "token": 815,
+          "index": 6,
+          "flags": 66592,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": "Player"
+        },
+        {
+          "token": 825,
+          "index": 0,
+          "flags": 66689,
+          "command": 33554455,
+          "parameter": 1610612737,
+          "visible": true,
+          "label": "About"
+        }
+      ],
+      "run": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-construction-539\\rest\\thunderFactory-1280x720\\data",
+          "--mission",
+          "TEST02",
+          "--window",
+          "--mute-audio",
+          "--frames",
+          "1020",
+          "--set",
+          "SCREENW=1280;SCREENH=720;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-construction-539\\rest\\thunderFactory-1280x720\\run\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-construction-539\\rest\\thunderFactory-1280x720\\run\\states.tsv",
+          "--audio-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-construction-539\\rest\\thunderFactory-1280x720\\run\\audio.tsv"
+        ],
+        "binarySha256": "a2bfb516df23d8facee10d085f817b41699fb8b77af664800807200c5346d082",
+        "scriptSha256": "c618a304ed877ca21bc5d36de4bc7575ce02b0ede3db8d1491b207a5c1da984c",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 51.53832429999602,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "e994e9a97c87f8e4a1f32f1f748fbb548d8ad7a886ba430985a9fb846979afd0",
+        "originalsUnchanged": true,
+        "dataUnchanged": true,
+        "dataRoot": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-construction-539\\rest\\thunderFactory-1280x720\\data"
+      },
+      "directory": "rest\\thunderFactory-1280x720"
+    },
+    {
+      "size": [
+        1024,
+        768
+      ],
+      "type": 88,
+      "asset": "thunderFactory",
+      "sid": 16071,
+      "target": [
+        "88",
+        "1",
+        "0",
+        "152",
+        "182"
+      ],
+      "cost": 1000,
+      "maximumHp": 4000,
+      "refund": 250,
+      "finalSp": 499250,
+      "constructionMenuBlocked": true,
+      "helpReturned": true,
+      "emptyProduction": true,
+      "salvageCancelledThenConfirmed": true,
+      "originalFactoriesPreserved": [
+        15006,
+        15008,
+        15018,
+        15028,
+        15029
+      ],
+      "items": [
+        {
+          "token": 802,
+          "index": 0,
+          "flags": 66600,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": "View Current Production"
+        },
+        {
+          "token": 802,
+          "index": 1,
+          "flags": 66592,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": "Put Knowledge into Production"
+        },
+        {
+          "token": 802,
+          "index": 2,
+          "flags": 66689,
+          "command": 50331698,
+          "parameter": 16071,
+          "visible": true,
+          "label": "Upgrade costs 1000"
+        },
+        {
+          "token": 802,
+          "index": 3,
+          "flags": 65552,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": ""
+        },
+        {
+          "token": 802,
+          "index": 4,
+          "flags": 66689,
+          "command": 33554581,
+          "parameter": 1610612738,
+          "visible": true,
+          "label": "Salvage gains 250"
+        },
+        {
+          "token": 802,
+          "index": 5,
+          "flags": 66689,
+          "command": 33554455,
+          "parameter": 88,
+          "visible": true,
+          "label": "About"
+        },
+        {
+          "token": 802,
+          "index": 6,
+          "flags": 66592,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": "Player"
+        }
+      ],
+      "production": [
+        {
+          "token": 869,
+          "index": 0,
+          "flags": 66600,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": "View Current Production"
+        },
+        {
+          "token": 869,
+          "index": 1,
+          "flags": 66592,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": "Put Knowledge into Production"
+        },
+        {
+          "token": 869,
+          "index": 2,
+          "flags": 66689,
+          "command": 50331698,
+          "parameter": 16071,
+          "visible": true,
+          "label": "Upgrade costs 1000"
+        },
+        {
+          "token": 869,
+          "index": 3,
+          "flags": 65552,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": ""
+        },
+        {
+          "token": 869,
+          "index": 4,
+          "flags": 66689,
+          "command": 33554581,
+          "parameter": 1610612738,
+          "visible": true,
+          "label": "Salvage gains 250"
+        },
+        {
+          "token": 869,
+          "index": 5,
+          "flags": 66689,
+          "command": 33554455,
+          "parameter": 88,
+          "visible": true,
+          "label": "About"
+        },
+        {
+          "token": 869,
+          "index": 6,
+          "flags": 66592,
+          "command": 0,
+          "parameter": 0,
+          "visible": true,
+          "label": "Player"
+        },
+        {
+          "token": 879,
+          "index": 0,
+          "flags": 66689,
+          "command": 33554455,
+          "parameter": 1610612737,
+          "visible": true,
+          "label": "About"
+        }
+      ],
+      "run": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-construction-539\\rest\\thunderFactory-1024x768\\data",
+          "--mission",
+          "TEST02",
+          "--window",
+          "--mute-audio",
+          "--frames",
+          "1020",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-construction-539\\rest\\thunderFactory-1024x768\\run\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-construction-539\\rest\\thunderFactory-1024x768\\run\\states.tsv",
+          "--audio-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-construction-539\\rest\\thunderFactory-1024x768\\run\\audio.tsv"
+        ],
+        "binarySha256": "a2bfb516df23d8facee10d085f817b41699fb8b77af664800807200c5346d082",
+        "scriptSha256": "1ba4c102c3bc265858f7eefbe1e238f60f73b20757e5f20420a6df83070a121d",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 51.13927439998952,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "e994e9a97c87f8e4a1f32f1f748fbb548d8ad7a886ba430985a9fb846979afd0",
+        "originalsUnchanged": true,
+        "dataUnchanged": true,
+        "dataRoot": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-construction-539\\rest\\thunderFactory-1024x768\\data"
+      },
+      "directory": "rest\\thunderFactory-1024x768"
+    }
+  ],
+  "transitions": [
+    {
+      "asset": "sunFactory",
+      "size": [
+        1280,
+        720
+      ],
+      "states": [
+        {
+          "label": "placed",
+          "time": "17.143",
+          "sp": "499200",
+          "target": [
+            [
+              "16071",
+              "0",
+              "131",
+              "20"
+            ]
+          ],
+          "modes": [
+            "0",
+            "1"
+          ],
+          "active": "1"
+        },
+        {
+          "label": "constructionDenied",
+          "time": "17.908",
+          "sp": "499200",
+          "target": [
+            [
+              "16071",
+              "0",
+              "131",
+              "250"
+            ]
+          ],
+          "modes": [
+            "0",
+            "1"
+          ],
+          "active": "1"
+        },
+        {
+          "label": "built",
+          "time": "39.392",
+          "sp": "499200",
+          "target": [
+            [
+              "16071",
+              "0",
+              "130",
+              "3000"
+            ]
+          ],
+          "modes": [
+            "0",
+            "1"
+          ],
+          "active": "1"
+        },
+        {
+          "label": "menu",
+          "time": "40.176",
+          "sp": "499200",
+          "target": [
+            [
+              "16071",
+              "0",
+              "130",
+              "3000"
+            ]
+          ],
+          "modes": [
+            "0",
+            "1"
+          ],
+          "active": "1"
+        },
+        {
+          "label": "salvageCancelled",
+          "time": "45.947",
+          "sp": "499200",
+          "target": [
+            [
+              "16071",
+              "0",
+              "130",
+              "3000"
+            ]
+          ],
+          "modes": [
+            "0",
+            "1"
+          ],
+          "active": "1"
+        },
+        {
+          "label": "salvaged",
+          "time": "48.889",
+          "sp": "499400",
+          "target": [],
+          "modes": [
+            "0",
+            "1"
+          ],
+          "active": "1"
+        },
+        {
+          "label": "settled",
+          "time": "50.072",
+          "sp": "499400",
+          "target": [],
+          "modes": [
+            "0",
+            "1"
+          ],
+          "active": "1"
+        }
+      ]
+    },
+    {
+      "asset": "sunFactory",
+      "size": [
+        1024,
+        768
+      ],
+      "states": [
+        {
+          "label": "placed",
+          "time": "17.607",
+          "sp": "499200",
+          "target": [
+            [
+              "16071",
+              "0",
+              "131",
+              "40"
+            ]
+          ],
+          "modes": [
+            "0",
+            "1"
+          ],
+          "active": "1"
+        },
+        {
+          "label": "constructionDenied",
+          "time": "18.368",
+          "sp": "499200",
+          "target": [
+            [
+              "16071",
+              "0",
+              "131",
+              "268"
+            ]
+          ],
+          "modes": [
+            "0",
+            "1"
+          ],
+          "active": "1"
+        },
+        {
+          "label": "built",
+          "time": "39.662",
+          "sp": "499200",
+          "target": [
+            [
+              "16071",
+              "0",
+              "130",
+              "3000"
+            ]
+          ],
+          "modes": [
+            "0",
+            "1"
+          ],
+          "active": "1"
+        },
+        {
+          "label": "menu",
+          "time": "40.405",
+          "sp": "499200",
+          "target": [
+            [
+              "16071",
+              "0",
+              "130",
+              "3000"
+            ]
+          ],
+          "modes": [
+            "0",
+            "1"
+          ],
+          "active": "1"
+        },
+        {
+          "label": "salvageCancelled",
+          "time": "46.036",
+          "sp": "499200",
+          "target": [
+            [
+              "16071",
+              "0",
+              "130",
+              "3000"
+            ]
+          ],
+          "modes": [
+            "0",
+            "1"
+          ],
+          "active": "1"
+        },
+        {
+          "label": "salvaged",
+          "time": "48.762",
+          "sp": "499400",
+          "target": [],
+          "modes": [
+            "0",
+            "1"
+          ],
+          "active": "1"
+        },
+        {
+          "label": "settled",
+          "time": "49.84",
+          "sp": "499400",
+          "target": [],
+          "modes": [
+            "0",
+            "1"
+          ],
+          "active": "1"
+        }
+      ]
+    },
+    {
+      "asset": "windFactory",
+      "size": [
+        1280,
+        720
+      ],
+      "states": [
+        {
+          "label": "placed",
+          "time": "17.602",
+          "sp": "499000",
+          "target": [
+            [
+              "16071",
+              "0",
+              "131",
+              "25"
+            ]
+          ],
+          "modes": [
+            "0",
+            "1"
+          ],
+          "active": "1"
+        },
+        {
+          "label": "constructionDenied",
+          "time": "18.362",
+          "sp": "499000",
+          "target": [
+            [
+              "16071",
+              "0",
+              "131",
+              "329"
+            ]
+          ],
+          "modes": [
+            "0",
+            "1"
+          ],
+          "active": "1"
+        },
+        {
+          "label": "built",
+          "time": "40.276",
+          "sp": "499000",
+          "target": [
+            [
+              "16071",
+              "0",
+              "130",
+              "4000"
+            ]
+          ],
+          "modes": [
+            "0",
+            "1"
+          ],
+          "active": "1"
+        },
+        {
+          "label": "menu",
+          "time": "41.129",
+          "sp": "499000",
+          "target": [
+            [
+              "16071",
+              "0",
+              "130",
+              "4000"
+            ]
+          ],
+          "modes": [
+            "0",
+            "1"
+          ],
+          "active": "1"
+        },
+        {
+          "label": "salvageCancelled",
+          "time": "47.535",
+          "sp": "499000",
+          "target": [
+            [
+              "16071",
+              "0",
+              "130",
+              "4000"
+            ]
+          ],
+          "modes": [
+            "0",
+            "1"
+          ],
+          "active": "1"
+        },
+        {
+          "label": "salvaged",
+          "time": "50.536",
+          "sp": "499250",
+          "target": [],
+          "modes": [
+            "0",
+            "1"
+          ],
+          "active": "1"
+        },
+        {
+          "label": "settled",
+          "time": "51.756",
+          "sp": "499250",
+          "target": [],
+          "modes": [
+            "0",
+            "1"
+          ],
+          "active": "1"
+        }
+      ]
+    },
+    {
+      "asset": "windFactory",
+      "size": [
+        1024,
+        768
+      ],
+      "states": [
+        {
+          "label": "placed",
+          "time": "18.403",
+          "sp": "499000",
+          "target": [
+            [
+              "16071",
+              "0",
+              "131",
+              "25"
+            ]
+          ],
+          "modes": [
+            "0",
+            "1"
+          ],
+          "active": "1"
+        },
+        {
+          "label": "constructionDenied",
+          "time": "19.177",
+          "sp": "499000",
+          "target": [
+            [
+              "16071",
+              "0",
+              "131",
+              "334"
+            ]
+          ],
+          "modes": [
+            "0",
+            "1"
+          ],
+          "active": "1"
+        },
+        {
+          "label": "built",
+          "time": "40.73",
+          "sp": "499000",
+          "target": [
+            [
+              "16071",
+              "0",
+              "130",
+              "4000"
+            ]
+          ],
+          "modes": [
+            "0",
+            "1"
+          ],
+          "active": "1"
+        },
+        {
+          "label": "menu",
+          "time": "41.535",
+          "sp": "499000",
+          "target": [
+            [
+              "16071",
+              "0",
+              "130",
+              "4000"
+            ]
+          ],
+          "modes": [
+            "0",
+            "1"
+          ],
+          "active": "1"
+        },
+        {
+          "label": "salvageCancelled",
+          "time": "47.177",
+          "sp": "499000",
+          "target": [
+            [
+              "16071",
+              "0",
+              "130",
+              "4000"
+            ]
+          ],
+          "modes": [
+            "0",
+            "1"
+          ],
+          "active": "1"
+        },
+        {
+          "label": "salvaged",
+          "time": "50.079",
+          "sp": "499250",
+          "target": [],
+          "modes": [
+            "0",
+            "1"
+          ],
+          "active": "1"
+        },
+        {
+          "label": "settled",
+          "time": "51.302",
+          "sp": "499250",
+          "target": [],
+          "modes": [
+            "0",
+            "1"
+          ],
+          "active": "1"
+        }
+      ]
+    },
+    {
+      "asset": "rainFactory",
+      "size": [
+        1280,
+        720
+      ],
+      "states": [
+        {
+          "label": "placed",
+          "time": "17.676",
+          "sp": "499000",
+          "target": [
+            [
+              "16071",
+              "0",
+              "131",
+              "45"
+            ]
+          ],
+          "modes": [
+            "0",
+            "1"
+          ],
+          "active": "1"
+        },
+        {
+          "label": "constructionDenied",
+          "time": "18.46",
+          "sp": "499000",
+          "target": [
+            [
+              "16071",
+              "0",
+              "131",
+              "359"
+            ]
+          ],
+          "modes": [
+            "0",
+            "1"
+          ],
+          "active": "1"
+        },
+        {
+          "label": "built",
+          "time": "40.295",
+          "sp": "499000",
+          "target": [
+            [
+              "16071",
+              "0",
+              "130",
+              "4000"
+            ]
+          ],
+          "modes": [
+            "0",
+            "1"
+          ],
+          "active": "1"
+        },
+        {
+          "label": "menu",
+          "time": "41.203",
+          "sp": "499000",
+          "target": [
+            [
+              "16071",
+              "0",
+              "130",
+              "4000"
+            ]
+          ],
+          "modes": [
+            "0",
+            "1"
+          ],
+          "active": "1"
+        },
+        {
+          "label": "salvageCancelled",
+          "time": "46.967",
+          "sp": "499000",
+          "target": [
+            [
+              "16071",
+              "0",
+              "130",
+              "4000"
+            ]
+          ],
+          "modes": [
+            "0",
+            "1"
+          ],
+          "active": "1"
+        },
+        {
+          "label": "salvaged",
+          "time": "49.817",
+          "sp": "499250",
+          "target": [],
+          "modes": [
+            "0",
+            "1"
+          ],
+          "active": "1"
+        },
+        {
+          "label": "settled",
+          "time": "51.023",
+          "sp": "499250",
+          "target": [],
+          "modes": [
+            "0",
+            "1"
+          ],
+          "active": "1"
+        }
+      ]
+    },
+    {
+      "asset": "rainFactory",
+      "size": [
+        1024,
+        768
+      ],
+      "states": [
+        {
+          "label": "placed",
+          "time": "17.747",
+          "sp": "499000",
+          "target": [
+            [
+              "16077",
+              "0",
+              "131",
+              "25"
+            ]
+          ],
+          "modes": [
+            "0",
+            "1"
+          ],
+          "active": "1"
+        },
+        {
+          "label": "constructionDenied",
+          "time": "18.53",
+          "sp": "499000",
+          "target": [
+            [
+              "16077",
+              "0",
+              "131",
+              "338"
+            ]
+          ],
+          "modes": [
+            "0",
+            "1"
+          ],
+          "active": "1"
+        },
+        {
+          "label": "built",
+          "time": "38.937",
+          "sp": "499000",
+          "target": [
+            [
+              "16077",
+              "0",
+              "130",
+              "4000"
+            ]
+          ],
+          "modes": [
+            "0",
+            "1"
+          ],
+          "active": "1"
+        },
+        {
+          "label": "menu",
+          "time": "39.665",
+          "sp": "499000",
+          "target": [
+            [
+              "16077",
+              "0",
+              "130",
+              "4000"
+            ]
+          ],
+          "modes": [
+            "0",
+            "1"
+          ],
+          "active": "1"
+        },
+        {
+          "label": "salvageCancelled",
+          "time": "44.915",
+          "sp": "499000",
+          "target": [
+            [
+              "16077",
+              "0",
+              "130",
+              "4000"
+            ]
+          ],
+          "modes": [
+            "0",
+            "1"
+          ],
+          "active": "1"
+        },
+        {
+          "label": "salvaged",
+          "time": "47.504",
+          "sp": "499250",
+          "target": [],
+          "modes": [
+            "0",
+            "1"
+          ],
+          "active": "1"
+        },
+        {
+          "label": "settled",
+          "time": "48.563",
+          "sp": "499250",
+          "target": [],
+          "modes": [
+            "0",
+            "1"
+          ],
+          "active": "1"
+        }
+      ]
+    },
+    {
+      "asset": "thunderFactory",
+      "size": [
+        1280,
+        720
+      ],
+      "states": [
+        {
+          "label": "placed",
+          "time": "16.547",
+          "sp": "499000",
+          "target": [
+            [
+              "16071",
+              "0",
+              "131",
+              "22"
+            ]
+          ],
+          "modes": [
+            "0",
+            "1"
+          ],
+          "active": "1"
+        },
+        {
+          "label": "constructionDenied",
+          "time": "17.314",
+          "sp": "499000",
+          "target": [
+            [
+              "16071",
+              "0",
+              "131",
+              "329"
+            ]
+          ],
+          "modes": [
+            "0",
+            "1"
+          ],
+          "active": "1"
+        },
+        {
+          "label": "built",
+          "time": "38.783",
+          "sp": "499000",
+          "target": [
+            [
+              "16071",
+              "0",
+              "130",
+              "4000"
+            ]
+          ],
+          "modes": [
+            "0",
+            "1"
+          ],
+          "active": "1"
+        },
+        {
+          "label": "menu",
+          "time": "39.597",
+          "sp": "499000",
+          "target": [
+            [
+              "16071",
+              "0",
+              "130",
+              "4000"
+            ]
+          ],
+          "modes": [
+            "0",
+            "1"
+          ],
+          "active": "1"
+        },
+        {
+          "label": "salvageCancelled",
+          "time": "45.161",
+          "sp": "499000",
+          "target": [
+            [
+              "16071",
+              "0",
+              "130",
+              "4000"
+            ]
+          ],
+          "modes": [
+            "0",
+            "1"
+          ],
+          "active": "1"
+        },
+        {
+          "label": "salvaged",
+          "time": "47.966",
+          "sp": "499250",
+          "target": [],
+          "modes": [
+            "0",
+            "1"
+          ],
+          "active": "1"
+        },
+        {
+          "label": "settled",
+          "time": "49.167",
+          "sp": "499250",
+          "target": [],
+          "modes": [
+            "0",
+            "1"
+          ],
+          "active": "1"
+        }
+      ]
+    },
+    {
+      "asset": "thunderFactory",
+      "size": [
+        1024,
+        768
+      ],
+      "states": [
+        {
+          "label": "placed",
+          "time": "16.384",
+          "sp": "499000",
+          "target": [
+            [
+              "16071",
+              "0",
+              "131",
+              "63"
+            ]
+          ],
+          "modes": [
+            "0",
+            "1"
+          ],
+          "active": "1"
+        },
+        {
+          "label": "constructionDenied",
+          "time": "17.075",
+          "sp": "499000",
+          "target": [
+            [
+              "16071",
+              "0",
+              "131",
+              "339"
+            ]
+          ],
+          "modes": [
+            "0",
+            "1"
+          ],
+          "active": "1"
+        },
+        {
+          "label": "built",
+          "time": "37.829",
+          "sp": "499000",
+          "target": [
+            [
+              "16071",
+              "0",
+              "130",
+              "4000"
+            ]
+          ],
+          "modes": [
+            "0",
+            "1"
+          ],
+          "active": "1"
+        },
+        {
+          "label": "menu",
+          "time": "39.678",
+          "sp": "499000",
+          "target": [
+            [
+              "16071",
+              "0",
+              "130",
+              "4000"
+            ]
+          ],
+          "modes": [
+            "0",
+            "1"
+          ],
+          "active": "1"
+        },
+        {
+          "label": "salvageCancelled",
+          "time": "45.195",
+          "sp": "499000",
+          "target": [
+            [
+              "16071",
+              "0",
+              "130",
+              "4000"
+            ]
+          ],
+          "modes": [
+            "0",
+            "1"
+          ],
+          "active": "1"
+        },
+        {
+          "label": "salvaged",
+          "time": "47.932",
+          "sp": "499250",
+          "target": [],
+          "modes": [
+            "0",
+            "1"
+          ],
+          "active": "1"
+        },
+        {
+          "label": "settled",
+          "time": "48.962",
+          "sp": "499250",
+          "target": [],
+          "modes": [
+            "0",
+            "1"
+          ],
+          "active": "1"
+        }
+      ]
+    }
+  ],
+  "executions": [
+    {
+      "directory": "probe\\sunFactory-1280x720",
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-construction-539\\probe\\sunFactory-1280x720\\data",
+        "--mission",
+        "TEST02",
+        "--window",
+        "--mute-audio",
+        "--frames",
+        "1020",
+        "--set",
+        "SCREENW=1280;SCREENH=720;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-construction-539\\probe\\sunFactory-1280x720\\run\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-construction-539\\probe\\sunFactory-1280x720\\run\\states.tsv",
+        "--audio-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-construction-539\\probe\\sunFactory-1280x720\\run\\audio.tsv"
+      ],
+      "binarySha256": "a2bfb516df23d8facee10d085f817b41699fb8b77af664800807200c5346d082",
+      "scriptSha256": "25f448a167c75c7a02ac52c86e09a351522dd36cac04f61d6080f6e97ed0c6e3",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 52.9907865000132,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "e994e9a97c87f8e4a1f32f1f748fbb548d8ad7a886ba430985a9fb846979afd0",
+      "originalsUnchanged": true,
+      "dataUnchanged": true,
+      "dataRoot": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-construction-539\\probe\\sunFactory-1280x720\\data"
+    },
+    {
+      "directory": "probe-v2\\sunFactory-1280x720",
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-construction-539\\probe-v2\\sunFactory-1280x720\\data",
+        "--mission",
+        "TEST02",
+        "--window",
+        "--mute-audio",
+        "--frames",
+        "1020",
+        "--set",
+        "SCREENW=1280;SCREENH=720;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-construction-539\\probe-v2\\sunFactory-1280x720\\run\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-construction-539\\probe-v2\\sunFactory-1280x720\\run\\states.tsv",
+        "--audio-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-construction-539\\probe-v2\\sunFactory-1280x720\\run\\audio.tsv"
+      ],
+      "binarySha256": "a2bfb516df23d8facee10d085f817b41699fb8b77af664800807200c5346d082",
+      "scriptSha256": "36cbe43f04ee48bd8bfa2fbea4880ea96d7a84f2f2543dc2c8d430c4cf8ff548",
+      "returnCode": 1,
+      "timedOut": false,
+      "seconds": 45.47483560000546,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "f28a994aae03f0bf205f4718c44292452db2a521e83fd2f8b6b5041b117cff7e",
+      "originalsUnchanged": true,
+      "dataUnchanged": true,
+      "dataRoot": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-construction-539\\probe-v2\\sunFactory-1280x720\\data"
+    },
+    {
+      "directory": "probe-v3\\sunFactory-1280x720",
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-construction-539\\probe-v3\\sunFactory-1280x720\\data",
+        "--mission",
+        "TEST02",
+        "--window",
+        "--mute-audio",
+        "--frames",
+        "1020",
+        "--set",
+        "SCREENW=1280;SCREENH=720;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-construction-539\\probe-v3\\sunFactory-1280x720\\run\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-construction-539\\probe-v3\\sunFactory-1280x720\\run\\states.tsv",
+        "--audio-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-construction-539\\probe-v3\\sunFactory-1280x720\\run\\audio.tsv"
+      ],
+      "binarySha256": "a2bfb516df23d8facee10d085f817b41699fb8b77af664800807200c5346d082",
+      "scriptSha256": "ad25ddd4f399a4c133705c624868604753f93d4e1ab00caaee39a9d45881b93f",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 52.59056929999497,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "e994e9a97c87f8e4a1f32f1f748fbb548d8ad7a886ba430985a9fb846979afd0",
+      "originalsUnchanged": true,
+      "dataUnchanged": true,
+      "dataRoot": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-construction-539\\probe-v3\\sunFactory-1280x720\\data"
+    },
+    {
+      "directory": "rest\\rainFactory-1024x768",
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-construction-539\\rest\\rainFactory-1024x768\\data",
+        "--mission",
+        "TEST02",
+        "--window",
+        "--mute-audio",
+        "--frames",
+        "1020",
+        "--set",
+        "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-construction-539\\rest\\rainFactory-1024x768\\run\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-construction-539\\rest\\rainFactory-1024x768\\run\\states.tsv",
+        "--audio-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-construction-539\\rest\\rainFactory-1024x768\\run\\audio.tsv"
+      ],
+      "binarySha256": "a2bfb516df23d8facee10d085f817b41699fb8b77af664800807200c5346d082",
+      "scriptSha256": "0d14ac4f08ace11029dbbbe018f44a66bbc7b532dfe5469a984a7dc1b4ff5a86",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 50.88491090000025,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "e994e9a97c87f8e4a1f32f1f748fbb548d8ad7a886ba430985a9fb846979afd0",
+      "originalsUnchanged": true,
+      "dataUnchanged": true,
+      "dataRoot": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-construction-539\\rest\\rainFactory-1024x768\\data"
+    },
+    {
+      "directory": "rest\\rainFactory-1280x720",
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-construction-539\\rest\\rainFactory-1280x720\\data",
+        "--mission",
+        "TEST02",
+        "--window",
+        "--mute-audio",
+        "--frames",
+        "1020",
+        "--set",
+        "SCREENW=1280;SCREENH=720;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-construction-539\\rest\\rainFactory-1280x720\\run\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-construction-539\\rest\\rainFactory-1280x720\\run\\states.tsv",
+        "--audio-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-construction-539\\rest\\rainFactory-1280x720\\run\\audio.tsv"
+      ],
+      "binarySha256": "a2bfb516df23d8facee10d085f817b41699fb8b77af664800807200c5346d082",
+      "scriptSha256": "b55296f2fe6686b6a1dc3e7c57a7cf2b14c2b5ae5396c21f1532deb4c732c806",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 53.965125799993984,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "e994e9a97c87f8e4a1f32f1f748fbb548d8ad7a886ba430985a9fb846979afd0",
+      "originalsUnchanged": true,
+      "dataUnchanged": true,
+      "dataRoot": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-construction-539\\rest\\rainFactory-1280x720\\data"
+    },
+    {
+      "directory": "rest\\sunFactory-1024x768",
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-construction-539\\rest\\sunFactory-1024x768\\data",
+        "--mission",
+        "TEST02",
+        "--window",
+        "--mute-audio",
+        "--frames",
+        "1020",
+        "--set",
+        "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-construction-539\\rest\\sunFactory-1024x768\\run\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-construction-539\\rest\\sunFactory-1024x768\\run\\states.tsv",
+        "--audio-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-construction-539\\rest\\sunFactory-1024x768\\run\\audio.tsv"
+      ],
+      "binarySha256": "a2bfb516df23d8facee10d085f817b41699fb8b77af664800807200c5346d082",
+      "scriptSha256": "d17a1c7545e8e391ce72502cade285c0507ee8d1a2d6b8ac041e5fe874684af8",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 52.510285500000464,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "e994e9a97c87f8e4a1f32f1f748fbb548d8ad7a886ba430985a9fb846979afd0",
+      "originalsUnchanged": true,
+      "dataUnchanged": true,
+      "dataRoot": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-construction-539\\rest\\sunFactory-1024x768\\data"
+    },
+    {
+      "directory": "rest\\thunderFactory-1024x768",
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-construction-539\\rest\\thunderFactory-1024x768\\data",
+        "--mission",
+        "TEST02",
+        "--window",
+        "--mute-audio",
+        "--frames",
+        "1020",
+        "--set",
+        "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-construction-539\\rest\\thunderFactory-1024x768\\run\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-construction-539\\rest\\thunderFactory-1024x768\\run\\states.tsv",
+        "--audio-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-construction-539\\rest\\thunderFactory-1024x768\\run\\audio.tsv"
+      ],
+      "binarySha256": "a2bfb516df23d8facee10d085f817b41699fb8b77af664800807200c5346d082",
+      "scriptSha256": "1ba4c102c3bc265858f7eefbe1e238f60f73b20757e5f20420a6df83070a121d",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 51.13927439998952,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "e994e9a97c87f8e4a1f32f1f748fbb548d8ad7a886ba430985a9fb846979afd0",
+      "originalsUnchanged": true,
+      "dataUnchanged": true,
+      "dataRoot": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-construction-539\\rest\\thunderFactory-1024x768\\data"
+    },
+    {
+      "directory": "rest\\thunderFactory-1280x720",
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-construction-539\\rest\\thunderFactory-1280x720\\data",
+        "--mission",
+        "TEST02",
+        "--window",
+        "--mute-audio",
+        "--frames",
+        "1020",
+        "--set",
+        "SCREENW=1280;SCREENH=720;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-construction-539\\rest\\thunderFactory-1280x720\\run\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-construction-539\\rest\\thunderFactory-1280x720\\run\\states.tsv",
+        "--audio-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-construction-539\\rest\\thunderFactory-1280x720\\run\\audio.tsv"
+      ],
+      "binarySha256": "a2bfb516df23d8facee10d085f817b41699fb8b77af664800807200c5346d082",
+      "scriptSha256": "c618a304ed877ca21bc5d36de4bc7575ce02b0ede3db8d1491b207a5c1da984c",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 51.53832429999602,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "e994e9a97c87f8e4a1f32f1f748fbb548d8ad7a886ba430985a9fb846979afd0",
+      "originalsUnchanged": true,
+      "dataUnchanged": true,
+      "dataRoot": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-construction-539\\rest\\thunderFactory-1280x720\\data"
+    },
+    {
+      "directory": "rest\\windFactory-1024x768",
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-construction-539\\rest\\windFactory-1024x768\\data",
+        "--mission",
+        "TEST02",
+        "--window",
+        "--mute-audio",
+        "--frames",
+        "1020",
+        "--set",
+        "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-construction-539\\rest\\windFactory-1024x768\\run\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-construction-539\\rest\\windFactory-1024x768\\run\\states.tsv",
+        "--audio-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-construction-539\\rest\\windFactory-1024x768\\run\\audio.tsv"
+      ],
+      "binarySha256": "a2bfb516df23d8facee10d085f817b41699fb8b77af664800807200c5346d082",
+      "scriptSha256": "1593bd05cca3a850ffb0675ba38fb91ed55705542c1b83d51bc8843813608140",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 54.108147899998585,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "e994e9a97c87f8e4a1f32f1f748fbb548d8ad7a886ba430985a9fb846979afd0",
+      "originalsUnchanged": true,
+      "dataUnchanged": true,
+      "dataRoot": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-construction-539\\rest\\windFactory-1024x768\\data"
+    },
+    {
+      "directory": "rest\\windFactory-1280x720",
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-construction-539\\rest\\windFactory-1280x720\\data",
+        "--mission",
+        "TEST02",
+        "--window",
+        "--mute-audio",
+        "--frames",
+        "1020",
+        "--set",
+        "SCREENW=1280;SCREENH=720;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-construction-539\\rest\\windFactory-1280x720\\run\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-construction-539\\rest\\windFactory-1280x720\\run\\states.tsv",
+        "--audio-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-construction-539\\rest\\windFactory-1280x720\\run\\audio.tsv"
+      ],
+      "binarySha256": "a2bfb516df23d8facee10d085f817b41699fb8b77af664800807200c5346d082",
+      "scriptSha256": "28d4feffba7a43f698c1207b5dfa0ff54064be1796ababa0411a7d981081b37c",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 54.52050600000075,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "e994e9a97c87f8e4a1f32f1f748fbb548d8ad7a886ba430985a9fb846979afd0",
+      "originalsUnchanged": true,
+      "dataUnchanged": true,
+      "dataRoot": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-construction-539\\rest\\windFactory-1280x720\\data"
+    }
+  ],
+  "allGames": {
+    "count": 10,
+    "exit0": 9,
+    "exit1": 1
+  },
+  "acceptedGames": 8,
+  "native": {
+    "source": "extracted\\refined\\originals\\raw.c",
+    "rawCSha256": "0b5d53b15fdb2ef7afbccf61af666709726a96fb3b972b6818f4a42efcd31972",
+    "types": [
+      {
+        "type": 85,
+        "asset": "sunFactory",
+        "textSha256": "5fc503aaac0d4e860c0b842a11bfffb9ea8d30e78bba4a991750eab6f9a64426",
+        "description": "Sun Workshop",
+        "cost": 800,
+        "maximumHp": 3000
+      },
+      {
+        "type": 86,
+        "asset": "windFactory",
+        "textSha256": "cfa480705734b255bb153c5cd4216e04ac4f1111542079f6b2cf6c04ac83ea80",
+        "description": "Wind Workshop",
+        "cost": 1000,
+        "maximumHp": 4000
+      },
+      {
+        "type": 87,
+        "asset": "rainFactory",
+        "textSha256": "0accdfa1d9b251cb252172788784843d4970520e09d16fede29248b76337ee17",
+        "description": "Rain Workshop",
+        "cost": 1000,
+        "maximumHp": 4000
+      },
+      {
+        "type": 88,
+        "asset": "thunderFactory",
+        "textSha256": "cc4c58bfd5a6afcf2aeb244e593f7cb17259df26aefb2a206e1112912d05f751",
+        "description": "Thunder Workshop",
+        "cost": 1000,
+        "maximumHp": 4000
+      }
+    ]
+  },
+  "preservation": {
+    "protectedFiles": 1819,
+    "protectedMatch": true,
+    "agentsSha256": "4e32580d21f62036e99ebac6b26641f58e7e7143328f67f396a12f960ccdaa4c",
+    "sourceFiles": 2929,
+    "sourceTestsFixturesMatch538": true,
+    "executablesMatch538": true,
+    "exes": {
+      "NetstormCpp.exe": "a2bfb516df23d8facee10d085f817b41699fb8b77af664800807200c5346d082",
+      "netstorm_tests.exe": "ee46a6f13c13cf518fe995eda6bba11f58490a8b7e459acfe3735fa7a63c69e8"
+    }
+  },
+  "evidence": {
+    "extracted/cpp-factory-construction-539/native-factory-menu.txt": "bb852c55ddc203b7ba020a3b9ea12de478293fe6880f2208cec21843e7a6f31b",
+    "extracted/cpp-factory-construction-539/native-properties.json": "12cc54f7c0ccfa3649571a3f91e65dd2ce54edd02013d6c191fd3469762134a9",
+    "extracted/cpp-factory-construction-539/run-rest.py": "060e87d81fc3c649ef3fbc9a501bcc7c8e7ebcf9662c35cfecf0dac89703c58e",
+    "extracted/cpp-factory-construction-539/sun-contact.png": "eacc9ad77a9de0b0dc5cad938fb4ed7e025c0f5e30f7551f97da681eedcd9dba",
+    "extracted/cpp-factory-construction-539/four-factory-menus.png": "8ea88a5f984f15cf0fb56e977e292d73d52087735b63db3cd52633a8096f33e4",
+    "extracted/cpp-factory-construction-539/preservation.json": "b3fcf9ff8862671e1158a484dbe8f4ee98ece12ca2d85d267517e6fa4d7e37c8",
+    "extracted/cpp-factory-construction-539/focus/partial.json": "64cf3db11d84298bb3cb05ecae3919f48dff8aea4454dc39fec8aa5026f3bae8",
+    "extracted/cpp-factory-construction-539/focus/summary.json": "53afe478bf92c1cb553af31e4e0989d14309ab5cb2ed06752cf5a3579140553d",
+    "extracted/cpp-factory-construction-539/rest/partial.json": "68e64a4a6699fadca0544aa0a86558f79aeeda36821c813bffdac0e521eeecd6",
+    "extracted/cpp-factory-construction-539/rest/summary.json": "296670c214d941b478fbcd1b01700857ae43a6fe7a95fcce0841c2e3ea654db7",
+    "extracted/cpp-factory-construction-539/__pycache__/finalize.cpython-313.pyc": "080d3a784dbf3057a90463b5f46188c653a84a081ba498d1a348acd13bd2c28f",
+    "extracted/cpp-factory-construction-539/rest/sunFactory-1024x768/construction-denied.bmp": "e5ba8abc6cff0af8c4a92060d33856b4d0e192f9709fde6f9fac133beff19fb3",
+    "extracted/cpp-factory-construction-539/rest/sunFactory-1024x768/menu.bmp": "69ec3b2b6ecf3406d7f8e7c6a95e51d829b5d4eab2d0a61fd80b9762a0621db4",
+    "extracted/cpp-factory-construction-539/rest/sunFactory-1024x768/help.bmp": "4cddb897902b6812ca193cce85d2791f4990336010637ffa850b0709a6a09fae",
+    "extracted/cpp-factory-construction-539/rest/sunFactory-1024x768/production.bmp": "95a9ce2713f4993af6c56f72c922dde03e4e9b7c92951ff696b0d61f8c055543",
+    "extracted/cpp-factory-construction-539/rest/sunFactory-1024x768/salvaged.bmp": "bb7d203d29991491379321ef71f51d0e57d0ace78ff093cdc22de4342a303009",
+    "extracted/cpp-factory-construction-539/rest/sunFactory-1024x768/summary.json": "efe1c903584410211de5cc49af8a7d1fa28ada18d3912bfb76fb08f54d031075",
+    "extracted/cpp-factory-construction-539/rest/windFactory-1280x720/construction-denied.bmp": "c6d1c0c4232a29b6995dbf730aa73a2ba0c66ddca6c508e4904e56f5f8defa83",
+    "extracted/cpp-factory-construction-539/rest/windFactory-1280x720/menu.bmp": "56ea1427e8294d56fae27d6a95029a5aaea86b3a722025466dc42eab9d9e9b6a",
+    "extracted/cpp-factory-construction-539/rest/windFactory-1280x720/help.bmp": "5a137d2db6cd8f467c8dabfffb3bc369fbe036ab8d76492917fa9a347b892aa2",
+    "extracted/cpp-factory-construction-539/rest/windFactory-1280x720/production.bmp": "baaa64746aeefe8c6440473baae82eb61db1c3b1dd7c8138b04447c3de0c21a1",
+    "extracted/cpp-factory-construction-539/rest/windFactory-1280x720/salvaged.bmp": "77e490901bb0965e9c2205b2fb9f612edaddb687d8b252bd00bdde0bb4757c67",
+    "extracted/cpp-factory-construction-539/rest/windFactory-1280x720/summary.json": "76a9d8ce422a7e2ef3dbd946b98669f423283527ab33e3fd59934700a6e08125",
+    "extracted/cpp-factory-construction-539/rest/windFactory-1024x768/construction-denied.bmp": "55374982ab1ee28ed4eadea63ea89498e4800eee8f326eba7809efa63be93845",
+    "extracted/cpp-factory-construction-539/rest/windFactory-1024x768/menu.bmp": "f73c2c7e1c9a1b7995462033f35720fb49078171255dbb46552517b12d1f2fce",
+    "extracted/cpp-factory-construction-539/rest/windFactory-1024x768/help.bmp": "38d8599e27e4e8d588f65c203ff6665d18243f9d48c100c5cb9bd3846fc06a5a",
+    "extracted/cpp-factory-construction-539/rest/windFactory-1024x768/production.bmp": "943d5492d5c8f4cbde56467f7d186524102fbf61c263171684cf3da4d5a34602",
+    "extracted/cpp-factory-construction-539/rest/windFactory-1024x768/salvaged.bmp": "17e96bd7e8e1ae206bd9c2fbdcafa68e076020aa92299d2ae47b0fa973fb7f3c",
+    "extracted/cpp-factory-construction-539/rest/windFactory-1024x768/summary.json": "e8d332767d103d14c5db5847a3ae73aab9ce4c4a641ad1ff84717ca115dd18a2",
+    "extracted/cpp-factory-construction-539/rest/rainFactory-1280x720/construction-denied.bmp": "2303b13c49af4286e1838689cad8b5d7fe714b56bf09d7875a0af580dbb2856d",
+    "extracted/cpp-factory-construction-539/rest/rainFactory-1280x720/menu.bmp": "48a0db18cec0569c1f3722e7d9d052f24adc42a2c8574d6338973bd67b417796",
+    "extracted/cpp-factory-construction-539/rest/rainFactory-1280x720/help.bmp": "2c6fabe8e324384f1a84d895faeb185a81d3ec18b7bfb6cadb0fbe53c3f7a076",
+    "extracted/cpp-factory-construction-539/rest/rainFactory-1280x720/production.bmp": "25ad438797ae21c95ed0f7a786972ff5535b31e43af7a8b3803e0f39c5a055a5",
+    "extracted/cpp-factory-construction-539/rest/rainFactory-1280x720/salvaged.bmp": "f34e478f22da821da0db5ee5aa10d3cac0e42aeeac237a78adef1fa36499bc65",
+    "extracted/cpp-factory-construction-539/rest/rainFactory-1280x720/summary.json": "7fc043cf99b18c7f1d5f095505921100717b3b0ce998fe2135ab5c2be4cea505",
+    "extracted/cpp-factory-construction-539/rest/rainFactory-1024x768/construction-denied.bmp": "dcbe7bd7dff28a6ec3858fe7ba9b588203f384e44e6e26eff6750e6b888457c8",
+    "extracted/cpp-factory-construction-539/rest/rainFactory-1024x768/menu.bmp": "9d9504822d40f169c9a7b1c33cfe9359c22e166a59bd3615e159f9b2502e4c71",
+    "extracted/cpp-factory-construction-539/rest/rainFactory-1024x768/help.bmp": "c9c4dfd589bfe297c6e77255bddaaec41f81c1c0dee1716261335d9d580c801f",
+    "extracted/cpp-factory-construction-539/rest/rainFactory-1024x768/production.bmp": "d2c6ddad8a377ab1078bd0533e14864585704a3a8eabdc968ff5ea91333edde9",
+    "extracted/cpp-factory-construction-539/rest/rainFactory-1024x768/salvaged.bmp": "21034fce5cddc06513d7fe9ba21b5f6051ea8e32e6e0db4af63f6ea40439b4b9",
+    "extracted/cpp-factory-construction-539/rest/rainFactory-1024x768/summary.json": "8b6a01da704e700b11b4ffa5760b4144c5c2f96ec9ed9555d5fb542e2ef947ae",
+    "extracted/cpp-factory-construction-539/rest/thunderFactory-1280x720/construction-denied.bmp": "ed3bef0856888a0bf8172a7e264155c16c56c98d71220204ddf053d06a3667e5",
+    "extracted/cpp-factory-construction-539/rest/thunderFactory-1280x720/menu.bmp": "30418cacf731e4e1787600275d9c31ef92bac0065dd34317959e4c81e7f84628",
+    "extracted/cpp-factory-construction-539/rest/thunderFactory-1280x720/help.bmp": "3e355b457c59913b817e464d3b24aa9e0c6974468cefd573ac1578fb11cd850c",
+    "extracted/cpp-factory-construction-539/rest/thunderFactory-1280x720/production.bmp": "8e2cbca50e554ee79c122cfabbd3015ee0cc251f9a0940f4f84a56d64a414dda",
+    "extracted/cpp-factory-construction-539/rest/thunderFactory-1280x720/salvaged.bmp": "6093dadfd8c1cfb88e6b1416fc2825abc46eb37f569c6f99ebd753574c0b5b16",
+    "extracted/cpp-factory-construction-539/rest/thunderFactory-1280x720/summary.json": "975cc176cbe3e696520bcab96d9e475861bdb350360c34929de78fc49dd80933",
+    "extracted/cpp-factory-construction-539/rest/thunderFactory-1024x768/construction-denied.bmp": "7386c8b40d29fa480ba49ca5124f2d43188d398b3d79c5512f8f140527ee987c",
+    "extracted/cpp-factory-construction-539/rest/thunderFactory-1024x768/menu.bmp": "305f44e66196212079fb807a9dd99535a2a81a5c44e301b67d04dec9bcd4de7a",
+    "extracted/cpp-factory-construction-539/rest/thunderFactory-1024x768/help.bmp": "e4bb323eba32e7f7219c9e4fd873154bdb4582597907b5ed89bc400b0b27c39d",
+    "extracted/cpp-factory-construction-539/rest/thunderFactory-1024x768/production.bmp": "935bfdb354cb474dbb945c3d2b995cf1c48aae2c930ad28f42871d4a94afeeed",
+    "extracted/cpp-factory-construction-539/rest/thunderFactory-1024x768/salvaged.bmp": "396efff8392f77719296108efa6479211b9885d1629242efa148325fb5b2a6c0",
+    "extracted/cpp-factory-construction-539/rest/thunderFactory-1024x768/summary.json": "7f84db90b65c7df16495353b8e8b03dd27847e98647daa71d5a84b60b19488c5",
+    "extracted/cpp-factory-construction-539/rest/thunderFactory-1024x768/run/steps.tsv": "1ba4c102c3bc265858f7eefbe1e238f60f73b20757e5f20420a6df83070a121d",
+    "extracted/cpp-factory-construction-539/rest/thunderFactory-1024x768/run/originals-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-factory-construction-539/rest/thunderFactory-1024x768/run/data-before.json": "57573a0bc2539f9e70e1127a82d26698efe0c8a97bd91630ae4fab66981179a1",
+    "extracted/cpp-factory-construction-539/rest/thunderFactory-1024x768/run/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-factory-construction-539/rest/thunderFactory-1024x768/run/stderr.log": "e994e9a97c87f8e4a1f32f1f748fbb548d8ad7a886ba430985a9fb846979afd0",
+    "extracted/cpp-factory-construction-539/rest/thunderFactory-1024x768/run/running.json": "77cdadf3172777b3b83b54858e69bb368776ea34b4301c32eac553e95c66f794",
+    "extracted/cpp-factory-construction-539/rest/thunderFactory-1024x768/run/states.tsv": "c47e737bd5b6196e92a7a71cca183a51d0431bd9a080e3287b6cea67802b178e",
+    "extracted/cpp-factory-construction-539/rest/thunderFactory-1024x768/run/audio.tsv": "37dd28c12920474ad73c7e28fddd9e39df39002a4e54255b7a08348e5e8db203",
+    "extracted/cpp-factory-construction-539/rest/thunderFactory-1024x768/run/run.json": "b0759a559221537125f99d04c1b581eba6a4a69bbfec09b21dbc88e0b61e4050",
+    "extracted/cpp-factory-construction-539/rest/thunderFactory-1024x768/run/settings-backup/options.cfg": "7c986d379a533456fb34d19f7937d1a028812c4560389d43cb663f1bd10cd7d4",
+    "extracted/cpp-factory-construction-539/rest/thunderFactory-1024x768/run/settings-backup/fullscreenStateFile.dat": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-factory-construction-539/rest/thunderFactory-1280x720/run/steps.tsv": "c618a304ed877ca21bc5d36de4bc7575ce02b0ede3db8d1491b207a5c1da984c",
+    "extracted/cpp-factory-construction-539/rest/thunderFactory-1280x720/run/originals-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-factory-construction-539/rest/thunderFactory-1280x720/run/data-before.json": "57573a0bc2539f9e70e1127a82d26698efe0c8a97bd91630ae4fab66981179a1",
+    "extracted/cpp-factory-construction-539/rest/thunderFactory-1280x720/run/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-factory-construction-539/rest/thunderFactory-1280x720/run/stderr.log": "e994e9a97c87f8e4a1f32f1f748fbb548d8ad7a886ba430985a9fb846979afd0",
+    "extracted/cpp-factory-construction-539/rest/thunderFactory-1280x720/run/running.json": "0046bc17efdfec0cef9829937882fcf29a7ed4ad4a4d04dddb15b12496c322f2",
+    "extracted/cpp-factory-construction-539/rest/thunderFactory-1280x720/run/states.tsv": "55604945eca832e1cd4c6e14536e1410234a7d3502fe3c5b364db11dc69eb467",
+    "extracted/cpp-factory-construction-539/rest/thunderFactory-1280x720/run/audio.tsv": "0c9194d5222c20d035e8f927d3063315b22467d34b7c6852f205bb12d474f31a",
+    "extracted/cpp-factory-construction-539/rest/thunderFactory-1280x720/run/run.json": "9e3918e6cac3c402b5226fcf0534785b849d40a7690dd5df8b654deb1b84cbd7",
+    "extracted/cpp-factory-construction-539/rest/thunderFactory-1280x720/run/settings-backup/options.cfg": "7c986d379a533456fb34d19f7937d1a028812c4560389d43cb663f1bd10cd7d4",
+    "extracted/cpp-factory-construction-539/rest/thunderFactory-1280x720/run/settings-backup/fullscreenStateFile.dat": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-factory-construction-539/rest/rainFactory-1024x768/run/steps.tsv": "0d14ac4f08ace11029dbbbe018f44a66bbc7b532dfe5469a984a7dc1b4ff5a86",
+    "extracted/cpp-factory-construction-539/rest/rainFactory-1024x768/run/originals-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-factory-construction-539/rest/rainFactory-1024x768/run/data-before.json": "57573a0bc2539f9e70e1127a82d26698efe0c8a97bd91630ae4fab66981179a1",
+    "extracted/cpp-factory-construction-539/rest/rainFactory-1024x768/run/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-factory-construction-539/rest/rainFactory-1024x768/run/stderr.log": "e994e9a97c87f8e4a1f32f1f748fbb548d8ad7a886ba430985a9fb846979afd0",
+    "extracted/cpp-factory-construction-539/rest/rainFactory-1024x768/run/running.json": "4e215609bb1858b7c46e6d8d0068cbb1276dc8ee00c0f2f07538315f6e0a6697",
+    "extracted/cpp-factory-construction-539/rest/rainFactory-1024x768/run/states.tsv": "ba617891aba6d34f6aa76fac690fa320175f244ebb6529498996cb1b050bb05a",
+    "extracted/cpp-factory-construction-539/rest/rainFactory-1024x768/run/audio.tsv": "9d989a2d2902996eb889e26ffc3d83630ae8c34050915369b1a33e5b557bf742",
+    "extracted/cpp-factory-construction-539/rest/rainFactory-1024x768/run/run.json": "59a923039081c9357493cce2885653685ab17402d03bfd42128859618fd37a4d",
+    "extracted/cpp-factory-construction-539/rest/rainFactory-1024x768/run/settings-backup/options.cfg": "7c986d379a533456fb34d19f7937d1a028812c4560389d43cb663f1bd10cd7d4",
+    "extracted/cpp-factory-construction-539/rest/rainFactory-1024x768/run/settings-backup/fullscreenStateFile.dat": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-factory-construction-539/rest/rainFactory-1280x720/run/steps.tsv": "b55296f2fe6686b6a1dc3e7c57a7cf2b14c2b5ae5396c21f1532deb4c732c806",
+    "extracted/cpp-factory-construction-539/rest/rainFactory-1280x720/run/originals-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-factory-construction-539/rest/rainFactory-1280x720/run/data-before.json": "57573a0bc2539f9e70e1127a82d26698efe0c8a97bd91630ae4fab66981179a1",
+    "extracted/cpp-factory-construction-539/rest/rainFactory-1280x720/run/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-factory-construction-539/rest/rainFactory-1280x720/run/stderr.log": "e994e9a97c87f8e4a1f32f1f748fbb548d8ad7a886ba430985a9fb846979afd0",
+    "extracted/cpp-factory-construction-539/rest/rainFactory-1280x720/run/running.json": "a3d12caf0d874d55e2cdff357725711067eb27658fee7ae2855acb6ae523b5c4",
+    "extracted/cpp-factory-construction-539/rest/rainFactory-1280x720/run/states.tsv": "4450b4c994c751df3a84e44f6158cd06d4ce3159f4869ff7ee36a7929f500efd",
+    "extracted/cpp-factory-construction-539/rest/rainFactory-1280x720/run/audio.tsv": "7d75bd2e81c8e99663e40ce15aa0eec4ad1c5c66f484d2de1df7cfbff4fbb409",
+    "extracted/cpp-factory-construction-539/rest/rainFactory-1280x720/run/run.json": "229b92d677cacf63ce8749e60be6daf5be20ffb7f8093128cad103ac9bfda4a0",
+    "extracted/cpp-factory-construction-539/rest/rainFactory-1280x720/run/settings-backup/options.cfg": "7c986d379a533456fb34d19f7937d1a028812c4560389d43cb663f1bd10cd7d4",
+    "extracted/cpp-factory-construction-539/rest/rainFactory-1280x720/run/settings-backup/fullscreenStateFile.dat": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-factory-construction-539/rest/windFactory-1024x768/run/steps.tsv": "1593bd05cca3a850ffb0675ba38fb91ed55705542c1b83d51bc8843813608140",
+    "extracted/cpp-factory-construction-539/rest/windFactory-1024x768/run/originals-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-factory-construction-539/rest/windFactory-1024x768/run/data-before.json": "57573a0bc2539f9e70e1127a82d26698efe0c8a97bd91630ae4fab66981179a1",
+    "extracted/cpp-factory-construction-539/rest/windFactory-1024x768/run/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-factory-construction-539/rest/windFactory-1024x768/run/stderr.log": "e994e9a97c87f8e4a1f32f1f748fbb548d8ad7a886ba430985a9fb846979afd0",
+    "extracted/cpp-factory-construction-539/rest/windFactory-1024x768/run/running.json": "536d01c8883ca9c53a880ab3485128edf4d9878a12f0663699105f065a30f52b",
+    "extracted/cpp-factory-construction-539/rest/windFactory-1024x768/run/states.tsv": "a6ffcf92ec27597c778d5967d03e1b54d621a5cefa7cc9f2df1428c4d34e6411",
+    "extracted/cpp-factory-construction-539/rest/windFactory-1024x768/run/audio.tsv": "bbca5b6e145cb71ecffc9c25540492b7745cbaaf4a0c92f66d8dcda30e9b89b0",
+    "extracted/cpp-factory-construction-539/rest/windFactory-1024x768/run/run.json": "a6c7452072e0bb88a332ea939880bbb6ec4d532b124dc0b26cc58eb9def5b510",
+    "extracted/cpp-factory-construction-539/rest/windFactory-1024x768/run/settings-backup/options.cfg": "7c986d379a533456fb34d19f7937d1a028812c4560389d43cb663f1bd10cd7d4",
+    "extracted/cpp-factory-construction-539/rest/windFactory-1024x768/run/settings-backup/fullscreenStateFile.dat": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-factory-construction-539/rest/windFactory-1280x720/run/steps.tsv": "28d4feffba7a43f698c1207b5dfa0ff54064be1796ababa0411a7d981081b37c",
+    "extracted/cpp-factory-construction-539/rest/windFactory-1280x720/run/originals-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-factory-construction-539/rest/windFactory-1280x720/run/data-before.json": "57573a0bc2539f9e70e1127a82d26698efe0c8a97bd91630ae4fab66981179a1",
+    "extracted/cpp-factory-construction-539/rest/windFactory-1280x720/run/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-factory-construction-539/rest/windFactory-1280x720/run/stderr.log": "e994e9a97c87f8e4a1f32f1f748fbb548d8ad7a886ba430985a9fb846979afd0",
+    "extracted/cpp-factory-construction-539/rest/windFactory-1280x720/run/running.json": "711756f144d102971c29c9c33daf933019cd1891bf6b70c47ce74cfe90b221f9",
+    "extracted/cpp-factory-construction-539/rest/windFactory-1280x720/run/states.tsv": "e7dd9b193b5313457af83e7c561fe6cf7610b878a56dc2801d2c464106acbe8b",
+    "extracted/cpp-factory-construction-539/rest/windFactory-1280x720/run/audio.tsv": "cffa1f2c94c5b449ec1ded4c99ebdc0868420248e253eaf8506a601af7bcccd1",
+    "extracted/cpp-factory-construction-539/rest/windFactory-1280x720/run/run.json": "92ddfbaedc349dc6c5ae4a84fb04e9b03ab3b8debf9082e28304f67c107d46d3",
+    "extracted/cpp-factory-construction-539/rest/windFactory-1280x720/run/settings-backup/options.cfg": "7c986d379a533456fb34d19f7937d1a028812c4560389d43cb663f1bd10cd7d4",
+    "extracted/cpp-factory-construction-539/rest/windFactory-1280x720/run/settings-backup/fullscreenStateFile.dat": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-factory-construction-539/rest/sunFactory-1024x768/run/steps.tsv": "d17a1c7545e8e391ce72502cade285c0507ee8d1a2d6b8ac041e5fe874684af8",
+    "extracted/cpp-factory-construction-539/rest/sunFactory-1024x768/run/originals-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-factory-construction-539/rest/sunFactory-1024x768/run/data-before.json": "57573a0bc2539f9e70e1127a82d26698efe0c8a97bd91630ae4fab66981179a1",
+    "extracted/cpp-factory-construction-539/rest/sunFactory-1024x768/run/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-factory-construction-539/rest/sunFactory-1024x768/run/stderr.log": "e994e9a97c87f8e4a1f32f1f748fbb548d8ad7a886ba430985a9fb846979afd0",
+    "extracted/cpp-factory-construction-539/rest/sunFactory-1024x768/run/running.json": "b03a0c20f50827eb121a08010e3d0127c113f2856b08dd499626240f33ca4759",
+    "extracted/cpp-factory-construction-539/rest/sunFactory-1024x768/run/states.tsv": "2e8ac06bdb44ac04ab00f3ddc43d7bf04df393c116eb112fcb404167aba449b9",
+    "extracted/cpp-factory-construction-539/rest/sunFactory-1024x768/run/audio.tsv": "09713dd6e2194d6407b1d7e4ffb23aa60fbb48646adad5947242a5b96e4d74d7",
+    "extracted/cpp-factory-construction-539/rest/sunFactory-1024x768/run/run.json": "3b9d1379c1015919b67778ee591cd8c8131bfb20c18c25e6321c753d0342db82",
+    "extracted/cpp-factory-construction-539/rest/sunFactory-1024x768/run/settings-backup/options.cfg": "7c986d379a533456fb34d19f7937d1a028812c4560389d43cb663f1bd10cd7d4",
+    "extracted/cpp-factory-construction-539/rest/sunFactory-1024x768/run/settings-backup/fullscreenStateFile.dat": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-factory-construction-539/probe-v3/sunFactory-1280x720/construction-denied.bmp": "f1e83ac0f7449467485e0c6ce573250a75ff7c2e83f35b30ed7945dfb4b8fd23",
+    "extracted/cpp-factory-construction-539/probe-v3/sunFactory-1280x720/menu.bmp": "f6fedb29fff8b4548496e76cc9c6abbc6442b2557cf3a1eb62b9a4c9416ea1ce",
+    "extracted/cpp-factory-construction-539/probe-v3/sunFactory-1280x720/help.bmp": "053d9aed7fa3e0c3356de9f5733c0f719ed8ad3f0c73a368f7f6c2d63ada43bd",
+    "extracted/cpp-factory-construction-539/probe-v3/sunFactory-1280x720/production.bmp": "f20cdd57cf57ebdb211bea02230bd8e344de5e5686255ae1cbc6aa32371982fb",
+    "extracted/cpp-factory-construction-539/probe-v3/sunFactory-1280x720/salvaged.bmp": "cd9fc03d6eed739cfca746bb7163c22ca617f3cfd12e7a8d77edfe5086eaaff5",
+    "extracted/cpp-factory-construction-539/probe-v3/sunFactory-1280x720/accepted.json": "0279cd046317a80d3f3243e15ae646f16251e67c5c4153da2dd9193a260d9191",
+    "extracted/cpp-factory-construction-539/probe-v3/sunFactory-1280x720/run/steps.tsv": "ad25ddd4f399a4c133705c624868604753f93d4e1ab00caaee39a9d45881b93f",
+    "extracted/cpp-factory-construction-539/probe-v3/sunFactory-1280x720/run/originals-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-factory-construction-539/probe-v3/sunFactory-1280x720/run/data-before.json": "57573a0bc2539f9e70e1127a82d26698efe0c8a97bd91630ae4fab66981179a1",
+    "extracted/cpp-factory-construction-539/probe-v3/sunFactory-1280x720/run/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-factory-construction-539/probe-v3/sunFactory-1280x720/run/stderr.log": "e994e9a97c87f8e4a1f32f1f748fbb548d8ad7a886ba430985a9fb846979afd0",
+    "extracted/cpp-factory-construction-539/probe-v3/sunFactory-1280x720/run/running.json": "bc81779d35b234636ac34cb218cb8030eab5ea281796368e256c3ca4c9c058dc",
+    "extracted/cpp-factory-construction-539/probe-v3/sunFactory-1280x720/run/states.tsv": "db86679de9bd72d1a134e7f16f919dd974098e2ea5115e842ada230a727943f1",
+    "extracted/cpp-factory-construction-539/probe-v3/sunFactory-1280x720/run/audio.tsv": "e52eefdcad8e546f88084a6295b6d05baeb7a1520b7523da0fa4dcd89f3d9c95",
+    "extracted/cpp-factory-construction-539/probe-v3/sunFactory-1280x720/run/run.json": "0f5238b2ea82478d6326a20bf8f8ee9e1458ec9e892e3eadd41eaed70b15c2f9",
+    "extracted/cpp-factory-construction-539/probe-v3/sunFactory-1280x720/run/settings-backup/options.cfg": "7c986d379a533456fb34d19f7937d1a028812c4560389d43cb663f1bd10cd7d4",
+    "extracted/cpp-factory-construction-539/probe-v3/sunFactory-1280x720/run/settings-backup/fullscreenStateFile.dat": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-factory-construction-539/probe-v2/sunFactory-1280x720/construction-denied.bmp": "ec9dddcaaf6e0701123b2e6846c9c380139b34a1dd3bdbcf58883c86404cd3e3",
+    "extracted/cpp-factory-construction-539/probe-v2/sunFactory-1280x720/menu.bmp": "608ac1365801998c6125a663de8e76c999a35469093475b8e62f1c648705ddad",
+    "extracted/cpp-factory-construction-539/probe-v2/sunFactory-1280x720/help.bmp": "50412a5d550914a4e3538550e90d561f2a791d468092171f513ac70f682b7365",
+    "extracted/cpp-factory-construction-539/probe-v2/sunFactory-1280x720/production.bmp": "2cd6ceb28a1694481dc044d98bbfa222888f7ee234c367c432d220f1ab653017",
+    "extracted/cpp-factory-construction-539/probe-v2/sunFactory-1280x720/building-crop.png": "d85c08c86f19069333a8cb9e8656748c3849ba7dbf6c0299f64869df317abdd5",
+    "extracted/cpp-factory-construction-539/probe-v2/sunFactory-1280x720/run/steps.tsv": "36cbe43f04ee48bd8bfa2fbea4880ea96d7a84f2f2543dc2c8d430c4cf8ff548",
+    "extracted/cpp-factory-construction-539/probe-v2/sunFactory-1280x720/run/originals-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-factory-construction-539/probe-v2/sunFactory-1280x720/run/data-before.json": "57573a0bc2539f9e70e1127a82d26698efe0c8a97bd91630ae4fab66981179a1",
+    "extracted/cpp-factory-construction-539/probe-v2/sunFactory-1280x720/run/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-factory-construction-539/probe-v2/sunFactory-1280x720/run/stderr.log": "f28a994aae03f0bf205f4718c44292452db2a521e83fd2f8b6b5041b117cff7e",
+    "extracted/cpp-factory-construction-539/probe-v2/sunFactory-1280x720/run/running.json": "07069092940c0b51d482a7e7a7face4990aefcabac0f17e06f00ed39ca830288",
+    "extracted/cpp-factory-construction-539/probe-v2/sunFactory-1280x720/run/states.tsv": "5ce3da33cad34381a5b116e6dc9524d332841f05b69beca769f6ab809af4317d",
+    "extracted/cpp-factory-construction-539/probe-v2/sunFactory-1280x720/run/run.json": "3871d604db98da568005216dd02d312a7b1075dc8469efea3ab894882c9483fb",
+    "extracted/cpp-factory-construction-539/probe-v2/sunFactory-1280x720/run/settings-backup/options.cfg": "7c986d379a533456fb34d19f7937d1a028812c4560389d43cb663f1bd10cd7d4",
+    "extracted/cpp-factory-construction-539/probe-v2/sunFactory-1280x720/run/settings-backup/fullscreenStateFile.dat": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-factory-construction-539/focus/0/stdout.log": "b9d21d71353b5ffd3da6f70186f8ae3fe7856d18a1466e328d002f0699c7b441",
+    "extracted/cpp-factory-construction-539/focus/0/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-factory-construction-539/focus/0/running.json": "e927b2335248d932d3b7790001b4b5093d0721fc0f746d4477da1c52a1bf28a2",
+    "extracted/cpp-factory-construction-539/focus/0/run.json": "10efc2e86d57d95a1a223eb4994a2f3fb3a544ad94f8695c52253e556ecba7d4",
+    "extracted/cpp-factory-construction-539/focus/1/stdout.log": "73e3e15f05d6a322a8fc1a71cd41559f14db0e61e4671991a9745d3ed5ae0a6b",
+    "extracted/cpp-factory-construction-539/focus/1/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-factory-construction-539/focus/1/running.json": "e621ce4a5e12dddb82acc2a34d2f0419b28da5fa8e18ab1e2433999236137001",
+    "extracted/cpp-factory-construction-539/focus/1/run.json": "68befc290367a465d673f1c7f95cbcabb68424b347b0443cae2d065a2a689bd2",
+    "extracted/cpp-factory-construction-539/focus/2/stdout.log": "22cd58ec49be63f9355e9c8ecac57391551e8443df695d806e42f508b78e7d1d",
+    "extracted/cpp-factory-construction-539/focus/2/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-factory-construction-539/focus/2/running.json": "591809a3c90ad9e930f42f4f996e908107619b20f591dcb9e0f0a6dd2d6a4f7b",
+    "extracted/cpp-factory-construction-539/focus/2/run.json": "17302efee8599e5f5938c247364ee00ff9ef0c52c20409f0aba7f09cfd741067",
+    "extracted/cpp-factory-construction-539/focus/3/stdout.log": "2cb347d45def3a925736b0ce83525f40cbfd69333150ffc51bde401c16b372cc",
+    "extracted/cpp-factory-construction-539/focus/3/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-factory-construction-539/focus/3/running.json": "2373bf45a5879505a7d1a38507c0d765f04239574c54e4c54c9fad3965f31e05",
+    "extracted/cpp-factory-construction-539/focus/3/run.json": "d47fc5a5106db0541002a6de8cb4a18e9ddbe3de13a5d75d2f422c2060c2c24d",
+    "extracted/cpp-factory-construction-539/focus/4/stdout.log": "20af533676787b340fca00b8f5864be27756ed40d5bd49a52ba59eb1f1cc0ba8",
+    "extracted/cpp-factory-construction-539/focus/4/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-factory-construction-539/focus/4/running.json": "cbc6f34ce4ae7f22cc710109cb720411c23a7038618f4ec39add95d3c46c3bb0",
+    "extracted/cpp-factory-construction-539/focus/4/run.json": "752990f0b990044b3530b10bc5565e4fbc8cde6264149d5745577eb93896a0f4",
+    "extracted/cpp-factory-construction-539/probe/sunFactory-1280x720/construction-denied.bmp": "a8095ff9eb9b825b194ca98e51a4697dbe07e7e491f51c7a97748ac150ca895a",
+    "extracted/cpp-factory-construction-539/probe/sunFactory-1280x720/menu.bmp": "4e5bd0164f0f4c20ba7e105e10470bb98d13d4e7216e19f27ca6868b32240a7f",
+    "extracted/cpp-factory-construction-539/probe/sunFactory-1280x720/help.bmp": "afcce05d07edc7951e04ab64a712eb971410ff285ee5ac4efe1956b149f1fae3",
+    "extracted/cpp-factory-construction-539/probe/sunFactory-1280x720/production.bmp": "eebef060734a5a1992e866f7b40ab7ff71b666555995d7905f8d0c6c5f34b130",
+    "extracted/cpp-factory-construction-539/probe/sunFactory-1280x720/salvaged.bmp": "af2352255ff75c8f5239f9f2ea11b5fbc05f43ff5b82575dc879152a657c1175",
+    "extracted/cpp-factory-construction-539/probe/sunFactory-1280x720/construction-denied.png": "d5e25fdb8f151a0131586391a6fd973f180651cd7e93830e70d0c915c3f8bef4",
+    "extracted/cpp-factory-construction-539/probe/sunFactory-1280x720/run/steps.tsv": "25f448a167c75c7a02ac52c86e09a351522dd36cac04f61d6080f6e97ed0c6e3",
+    "extracted/cpp-factory-construction-539/probe/sunFactory-1280x720/run/originals-before.json": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2",
+    "extracted/cpp-factory-construction-539/probe/sunFactory-1280x720/run/data-before.json": "57573a0bc2539f9e70e1127a82d26698efe0c8a97bd91630ae4fab66981179a1",
+    "extracted/cpp-factory-construction-539/probe/sunFactory-1280x720/run/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-factory-construction-539/probe/sunFactory-1280x720/run/stderr.log": "e994e9a97c87f8e4a1f32f1f748fbb548d8ad7a886ba430985a9fb846979afd0",
+    "extracted/cpp-factory-construction-539/probe/sunFactory-1280x720/run/running.json": "2899ee6e23b72c4091b6e33f0b3de0e5b7f9ee0658586ce5d8aedf5266352974",
+    "extracted/cpp-factory-construction-539/probe/sunFactory-1280x720/run/states.tsv": "fb1611170f5340499280ac90ab4dba31960435b2a903ff8aefe48d0970040b6a",
+    "extracted/cpp-factory-construction-539/probe/sunFactory-1280x720/run/audio.tsv": "e4a7dee195dd4ee280c77f29705a0240a76dfc64f2b31c0ee9c0bcf07ccadb93",
+    "extracted/cpp-factory-construction-539/probe/sunFactory-1280x720/run/run.json": "540428968e380bd179fe8a15d89d104e323826af27bed14ee9f3f10ec7a34c2c",
+    "extracted/cpp-factory-construction-539/probe/sunFactory-1280x720/run/settings-backup/options.cfg": "7c986d379a533456fb34d19f7937d1a028812c4560389d43cb663f1bd10cd7d4",
+    "extracted/cpp-factory-construction-539/probe/sunFactory-1280x720/run/settings-backup/fullscreenStateFile.dat": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-factory-construction-539/production-headers.json": "019082473b5537a6ac24e8bc9d48c58a2ef3d4ad1111eb68a365241f221b6f1c"
+  },
+  "toolSha256": "d78d1792f94c0bb2e3d79ef27a63bd0dece9bd963484d3210e6f5976c36052e0",
+  "validationCorrections": [
+    "첫 실행의 이름 조회는 원래 LevelIII 썬 워크샾을 골라 회수600을 수행했다. 새 건물 전환 성공에 포함하지 않았다.",
+    "두 번째 실행은 새 건물을 골랐지만 후속 클릭 픽셀이 원래 스톰 크리스탈과 겹쳐 회수 항목 탐색 종료1이었다. 고정 불투명 몸체 칸으로 변경하고 이후 실제 대상 SID와 기존 다섯 워크샾 보존을 검증했다.",
+    "세 번째 실행은 실제 새 썬 건설/회수200·종료0이지만 공통 Workshop 도움말 본문에 Sun Workshop 전체 이름을 기대한 도구 검사만 실패했다. 원문 데이터의 공통 본문을 대조해 검사만 정정하고 저장된 관측을 재검증했다. 이후 나머지7실행은 같은 도구로 모두 통과했다."
+  ],
+  "limits": [
+    "이번 실제 건설은 네 원소의 LevelI 워크샾과 빈 생산 목록이다. 다른 레벨·생산 내용물·손상/포획 도중과 제단의 다른 레벨은 잔여다.",
+    "자연 완주·TEST02 포획/희생·스펠 도움말 추가 분석·언어파일 부재 개선·연녹색 직사각형 분석 보류를 유지한다.",
+    "공중3종 전용 생성/생산/우클릭과 멀티플레이 검사는 하지 않았다.",
+    "34경로·Release 빌드는 같은 제품을 만든537의 기존 결과이며 이번에 반복하지 않았다."
+  ],
+  "productionHeaderVerified": 8
+}
