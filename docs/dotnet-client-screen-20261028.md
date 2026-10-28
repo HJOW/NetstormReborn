@@ -174,3 +174,24 @@ NetstormCpp.exe --run extracted\dotnet-oracle-data --window --no-audio --frames 
 
 **검증:** Release 경고·오류 0. Client 검사 94개(+17)·Core 검사 1027개(+2) 통과, 전체 **1,484개(Assets 363 + Core 1027 + Client 94) 통과**.
 변이 2건(시작 개수 10→11에 L1 기대값 실패, 변환 시작점 `lastX > firstX ? 0 : sourceX` 반전에 계약 실패)에 실패를 확인하고 원복했다. 편향 상수(`TextureBias`) 1 증가 변이는 작은 계약 경우에 걸리지 않아 판별력 근거로 쓰지 않았다.
+
+## 11. R2d-2: 판본·표시자료·캡처 (같은 날, HJOW-Athlon)
+
+그리기 원시·팔레트·글꼴(R2)의 다섯 번째 묶음이다. `RawShapeToBuffer` 본체와 그 전제(판본·Squid 표시 자료·TYPE 기준점)를 옮겼다.
+
+| 파일 | cpppj 근거 | 내용 |
+| --- | --- | --- |
+| `Original/OriginalEdition.cs` | `o/RiftType.h`의 `OriginalEdition` | 10.78·CD 10.72 판본 구분. `RawSidPool` 생성 때 받는다(cpppj는 필수, 이 클론은 기존 호출 유지용 기본 10.78) |
+| `Original/SquidDisplayShape.cs` | `o/SquidDisplay.h`의 자료 부분 | 표시 프레임 치수·셰이프 목록. 표시 수집·카메라 본체는 R4 몫이다 |
+| `Original/ConstructionVisualImage.cs` | `o/RawConstructionVisual.h`의 자료 부분 | 캡처 픽셀·크기·기준점. 건설 표시 생성 본체는 R4 몫이다 |
+| `Display/RawShapeToBuffer.cs` | `RawShapeToBuffer.cpp/.h` | 현재 plain/mapped·파생 가상 그림 캡처. 고정소수점 감김·진단 표식·판본 오프셋·mapped 비대칭을 유지한다 |
+| `Original/RawSidPool.cs` | `o/SidPool.cpp`(base 갱신) | 판본 인자 추가(기본 10.78). 슬롯 동작은 그대로이며 기존 L1 전체가 통과한다 |
+| `Original/OriginalTypeRecord.cs` | `o/RiftType.h`(base 갱신) | 추가 기준점 `HotspotX`·`HotspotY`와 복사 보존. "모듈이 늘면 필요한 필드를 여기에 더한다"는 기존 주석의 절차를 따랐다 |
+
+- `PORT_MAP.tsv`에 `port` 5개 행을 새로 추가하고 `RawSidPool.cs`·`OriginalTypeRecord.cs` 2개 행의 base를 올렸다. 바뀐 쌍 26개는 그대로이며 모두 기존 `L1` 행이다.
+- `RawShapeToBuffer` 계약은 합성 SHP·TYPE·raw 슬롯으로 분기를 검증한다(RawImage→`ShapeDatabase` 합성 그림 사용). mapped 소유자 경로·가상 main 생략·TYPE 기준점·CD 8×8 fallback·진단 4종을 포함한다. 실자료(세션 자산) L1 대조는 `SquidRenderer::Shapes` 파이프라인과 함께 R4에서 잇는다.
+- 판본 분기는 `RawSidPool.Edition`으로 읽는다. CD 행은 1바이트 오프셋·8×8 fallback을, 패치 행은 4바이트 오프셋·진단을 탄다.
+- 검사 작성 중 실패 4건은 모두 테스트의 오류였고(0 풀·0 vtable·짧은 표 인덱스·풀 최소 용량, 소스 수정 없음) 원본과 대조해 고쳤다. `Set-Content` 대신 `edit` 도구로만 파일을 고친다(R2d-1 주의 유지).
+
+**검증:** Release 경고·오류 0. Client 검사 107개(+13)·Core 검사 1030개(+3) 통과, 전체 **1,500개(Assets 363 + Core 1030 + Client 107) 통과**.
+변이 2건(해제 표식 상수 변경에 계약 실패, 판본 기본값 변경에 판본 검사 실패)에 실패를 확인하고 원복했다.

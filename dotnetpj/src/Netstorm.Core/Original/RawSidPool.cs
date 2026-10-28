@@ -76,15 +76,20 @@ public sealed class RawSidPool
     /// <param name="capacity">슬롯 수(예측 머리보다 2 이상 커야 하며 <see cref="MaximumCapacity"/> 이하).</param>
     /// <param name="server">서버인지. 서버가 아니면 서버 영역을 할당할 수 없고 생성 시 소유자·HP 초기화도 하지 않는다.</param>
     /// <param name="sharedServer">서버 판정을 함께 읽는 장기 소유자. null이면 생성자 입력을 쓴다. R4 세션 조립 때 연결한다.</param>
-    public RawSidPool(int capacity, bool server = true, Func<bool>? sharedServer = null)
+    /// <param name="edition">원본 판본. cpppj는 생성 때 필수로 받으며, 이 클론은 기존 호출(L1 검증분)의 동작을 유지하려고 기본 10.78로 둔다. (R2d-2, 2026-10-29)</param>
+    public RawSidPool(int capacity, bool server = true, Func<bool>? sharedServer = null, OriginalEdition edition = OriginalEdition.Patch1078)
     {
         CheckCapacity(capacity);
         Capacity = capacity;
         _server = server;
         _sharedServer = sharedServer;
+        Edition = edition;
         _bytes = new byte[capacity * Stride];
         Reset();
     }
+
+    /// <summary>풀이 따르는 원본 판본. 슬롯 오프셋이 다른 모듈이 이 값으로 갈라진다. (R2d-2, 2026-10-29)</summary>
+    public OriginalEdition Edition { get; }
 
     /// <summary>확보한 슬롯 수.</summary>
     public int Capacity { get; private set; }

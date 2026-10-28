@@ -29,6 +29,8 @@ cpppj/src/client/ProductionColorMaps.cpp	Netstorm.Client/Display/ProductionColor
 cpppj/src/client/ProductionColorMaps.h	Netstorm.Client/Display/ProductionColorMaps.cs	e4b739b97f5316453de827b92ba6527a63f17637	L1
 cpppj/src/client/RawImage.cpp	Netstorm.Client/Display/RawImage.cs	ca0c01ebfceb9801ef1fcdb272deec4dc311a2db	port
 cpppj/src/client/RawImage.h	Netstorm.Client/Display/RawImage.cs	ca0c01ebfceb9801ef1fcdb272deec4dc311a2db	port
+cpppj/src/client/RawShapeToBuffer.cpp	Netstorm.Client/Display/RawShapeToBuffer.cs	4fab249c1190a4f3024baf7bccf152adfcc1859d	port
+cpppj/src/client/RawShapeToBuffer.h	Netstorm.Client/Display/RawShapeToBuffer.cs	4fab249c1190a4f3024baf7bccf152adfcc1859d	port
 cpppj/src/client/Renderer.cpp	Netstorm.Client/Display/RendererDraw.cs	ca0c01ebfceb9801ef1fcdb272deec4dc311a2db	port
 cpppj/src/client/Renderer.h	Netstorm.Client/Display/RendererDraw.cs	ca0c01ebfceb9801ef1fcdb272deec4dc311a2db	port
 cpppj/src/client/Screen.cpp	Netstorm.Client.Host/ClientHostGame.cs	91d494c3b2814f00d2cae81a0f4b247e91e81922	port
@@ -78,6 +80,7 @@ cpppj/src/o/RawColorSortPrimary.cpp	Netstorm.Core/Original/RawColorSortPrimary.c
 cpppj/src/o/RawColorSortPrimary.h	Netstorm.Core/Original/RawColorSortPrimary.cs	e4b739b97f5316453de827b92ba6527a63f17637	L1
 cpppj/src/o/RawColorSortStartup.cpp	Netstorm.Core/Original/RawColorSortStartup.cs	ca0c01ebfceb9801ef1fcdb272deec4dc311a2db	L1
 cpppj/src/o/RawColorSortStartup.h	Netstorm.Core/Original/RawColorSortStartup.cs	ca0c01ebfceb9801ef1fcdb272deec4dc311a2db	L1
+cpppj/src/o/RawConstructionVisual.h	Netstorm.Core/Original/ConstructionVisualImage.cs	4fab249c1190a4f3024baf7bccf152adfcc1859d	port
 cpppj/src/o/RawContainedCreate.cpp	Netstorm.Core/Original/RawContainedCreate.cs	ab3ef43d3685245aeaad8ecf53d55de4a1b92a97	L1
 cpppj/src/o/RawContainedFinder.cpp	Netstorm.Core/Original/RawContainedFinder.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
 cpppj/src/o/RawContainedFinder.h	Netstorm.Core/Original/RawContainedFinder.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
@@ -108,13 +111,15 @@ cpppj/src/o/RawSquidNeighbors.cpp	Netstorm.Core/Original/RawNeighbor.cs	c7459e61
 cpppj/src/o/RawSquidPoolReset.cpp	Netstorm.Core/Original/RawSquidPoolReset.cs	1ddc4ba021c0fadcf75c0a681cc18d937b798219	L1
 cpppj/src/o/RawStateSidLists.cpp	Netstorm.Core/Original/RawStateSidLists.cs	1ddc4ba021c0fadcf75c0a681cc18d937b798219	L1
 cpppj/src/o/RawVortexPreDestroy.cpp	Netstorm.Core/Original/RawVortexPreDestroy.cs	3b88f86ab4789fdcbf11d2529b976c4d666a7167	L1
-cpppj/src/o/RiftType.h	Netstorm.Core/Original/OriginalTypeRecord.cs	9ed8bc636cac9d100dbddafa8b6b2d6efda971e6	L1
-cpppj/src/o/SidPool.cpp	Netstorm.Core/Original/RawSidPool.cs	1ddc4ba021c0fadcf75c0a681cc18d937b798219	L1
+cpppj/src/o/RiftType.h	Netstorm.Core/Original/OriginalEdition.cs	4fab249c1190a4f3024baf7bccf152adfcc1859d	port
+cpppj/src/o/RiftType.h	Netstorm.Core/Original/OriginalTypeRecord.cs	4fab249c1190a4f3024baf7bccf152adfcc1859d	L1
+cpppj/src/o/SidPool.cpp	Netstorm.Core/Original/RawSidPool.cs	4fab249c1190a4f3024baf7bccf152adfcc1859d	L1
 cpppj/src/o/SidPool.cpp	Netstorm.Core/Simulation/SidPool.cs	1ddc4ba021c0fadcf75c0a681cc18d937b798219	L1
 cpppj/src/o/SpStore.cpp	Netstorm.Core/Original/RawSpStore.cs	3d038e510444a9c7448b6d4c88cc84f78446d395	L1
 cpppj/src/o/Squid.cpp	Netstorm.Core/Rules/SpotRules.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
 cpppj/src/o/SquidDestroyLifecycle.cpp	Netstorm.Core/Original/RawSquidDestroyLifecycle.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
 cpppj/src/o/SquidDisplay.cpp	Netstorm.Core/Display/DisplayBounds.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
+cpppj/src/o/SquidDisplay.h	Netstorm.Core/Original/SquidDisplayShape.cs	4fab249c1190a4f3024baf7bccf152adfcc1859d	port
 cpppj/src/o/SquidFactory.cpp	Netstorm.Core/Original/RawSquidFactory.cs	b126e9007a61bb7bc133a29fe3ac585043194a56	L1
 cpppj/src/o/SquidFinder.cpp	Netstorm.Core/Bridges/SurfaceFinder.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
 cpppj/src/o/SquidFinder.h	Netstorm.Core/Bridges/SurfaceFinder.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1

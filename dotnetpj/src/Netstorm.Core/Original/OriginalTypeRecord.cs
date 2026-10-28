@@ -55,6 +55,12 @@ public sealed class OriginalTypeRecord
     /// <summary>기술 비트 번호(원본 타입 구조체 PATCH +0x1ec·CD +0x1cc). 실제 초기값-1 뒤 techBit 숫자 속성을 그대로 두며, 없으면 -1이다. 추가: R0-4 마지막 묶음(2026-10-28).</summary>
     public int TechBitIndex { get; set; } = -1;
 
+    /// <summary>추가 기준점의 가로 오프셋(TYPE 정의 hotspotX). 캡처가 CapTypeHotspot 옵션 때 기준점에 더한다. 추가: R2d-2(2026-10-29).</summary>
+    public int HotspotX { get; set; }
+
+    /// <summary>추가 기준점의 세로 오프셋(TYPE 정의 hotspotY). 추가: R2d-2(2026-10-29).</summary>
+    public int HotspotY { get; set; }
+
     /// <summary>현재 값의 복사본을 만든다. 삭제 수명주기가 타입 입력을 고정할 때 쓴다(추가: W03 삭제·수명 셋째 조각, 2026-10-21).</summary>
     public OriginalTypeRecord Clone()
     {
@@ -72,6 +78,8 @@ public sealed class OriginalTypeRecord
             FootY = FootY,
             Group = Group,
             TechBitIndex = TechBitIndex,
+            HotspotX = HotspotX,
+            HotspotY = HotspotY,
         };
     }
 }
