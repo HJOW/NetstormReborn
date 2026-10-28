@@ -4,6 +4,9 @@
 import argparse
 import ctypes
 import hashlib
+import json
+import threading
+from ctypes import wintypes
 from pathlib import Path
 
 from PIL import Image
@@ -19,6 +22,57 @@ POINTS = (('geyser', 1611, 1148, 3), ('ground', 1611, 1115, 18),
           ('self', 1496, 1204, 6), ('geyser_again', 1611, 1148, 3))
 # 원본19항목 표 가운데 이번 경로에서 실제 관측하는 리소스다.
 RESOURCES = {1: 113, 3: 111, 6: 109, 18: 148}
+
+
+def position_hardware_pointer(output, stopped, result):
+    """자기 게임의 실제 활성 HWND 안에 OS 포인터를 두어 창 밖 기본 화살표를 검사하지 않는다."""
+    user = ctypes.WinDLL('user32')
+    callback_type = ctypes.WINFUNCTYPE(wintypes.BOOL, wintypes.HWND, wintypes.LPARAM)
+    user.EnumWindows.argtypes = [callback_type, wintypes.LPARAM]
+    user.GetWindowThreadProcessId.argtypes = [wintypes.HWND, ctypes.POINTER(wintypes.DWORD)]
+    user.IsWindowVisible.argtypes = [wintypes.HWND]
+    user.GetForegroundWindow.restype = wintypes.HWND
+    user.GetClientRect.argtypes = [wintypes.HWND, ctypes.POINTER(wintypes.RECT)]
+    user.ClientToScreen.argtypes = [wintypes.HWND, ctypes.POINTER(wintypes.POINT)]
+    user.GetCursorPos.argtypes = [ctypes.POINTER(wintypes.POINT)]
+    user.SetCursorPos.argtypes = [ctypes.c_int, ctypes.c_int]
+    original = wintypes.POINT()
+    assert user.GetCursorPos(ctypes.byref(original))
+    result['originalPosition'] = [original.x, original.y]
+    try:
+        while not stopped.wait(0.02):  # execute가 기록한 자기 PID와 실제 활성 게임 창이 생길 때까지만 기다린다.
+            running = output / 'run/running.json'
+            if not running.exists():
+                continue
+            try:
+                pid = json.loads(running.read_text('utf-8'))['pid']
+            except (ValueError, KeyError):
+                continue
+            found = []
+
+            def visit(window, _):
+                """다른 앱은 건드리지 않고 실행 중인 자기 PID의 보이는 활성 창만 고른다."""
+                owner = wintypes.DWORD()
+                user.GetWindowThreadProcessId(window, ctypes.byref(owner))
+                if owner.value == pid and user.IsWindowVisible(window) and user.GetForegroundWindow() == window:
+                    found.append(window)
+                    return False
+                return True
+
+            user.EnumWindows(callback_type(visit), 0)
+            if not found:
+                continue
+            bounds, point = wintypes.RECT(), wintypes.POINT()
+            assert user.GetClientRect(found[0], ctypes.byref(bounds))
+            point.x, point.y = (bounds.right - bounds.left) // 2, (bounds.bottom - bounds.top) // 2
+            if point.x < 1 or point.y < 1:
+                continue
+            assert user.ClientToScreen(found[0], ctypes.byref(point)) and user.SetCursorPos(point.x, point.y)
+            result.update(pid=pid, window=int(found[0]), positioned=[point.x, point.y])
+            stopped.wait()  # 같은 논리 포인터 입력을 유지하며 OS 포인터를 반복 이동하지 않는다.
+            break
+    finally:
+        result['restored'] = bool(user.SetCursorPos(original.x, original.y))
 
 
 def cursor_images(data, output):
@@ -58,12 +112,18 @@ def one(data, output, view, expected):
         steps += [(frame, 'pointer', f'0x80010000,{x-cx},{y-cy}'),
                   (frame + 15, 'report', label), (frame + 15, 'snapshot', str(output / f'{label}.bmp'))]
     logger = CursorLogger(output)
+    pointer = {}  # 실제 OS 포인터의 검사 전제와 복구를 게임 결과와 구별해 남긴다.
+    positioner = threading.Thread(target=position_hardware_pointer, args=(output, logger.stop_flag, pointer), daemon=True)
     logger.start()
+    positioner.start()
     try:
         report, run = protected_run(output / 'run', width, height, steps, 335,
                                     data_root=data, mission='thewarbegins')
     finally:
         logger.stop()
+        positioner.join(timeout=3)
+        save(output / 'hardware-pointer.json', pointer)
+    assert pointer.get('positioned') and pointer.get('restored'), pointer
     observed = states(report)
     assert observed['initial']['camera'] == [str(cx), str(cy)]
     made = [(sid, row) for sid, row in observed['built']['raw_objects'].items() if row[:2] == ['133', '1']]

@@ -876,9 +876,7 @@ struct RawCampaignSession::Impl {
         if (services.adoptPreparedWorld) {
             const auto current=coreDataGlobals->Current();if (current.size()!=10 || current.data()!=players.data()+180+0x6c || coreDataGlobals->Players().data()!=players.data()) throw std::logic_error("준비된 Editor의 실제 prefix Core1 선택 불일치"); // 원문 prefix가 선택한 같은 Player뷰를 검증하며 active/cache/owner를 다시 쓰지 않는다.
         } else if (services.coreDataGlobals) { const std::uint32_t metamap=core.ownerMode.challenge;coreDataGlobals->Select(playerState,metamap,1,1); } // 기존 독립/캠페인 어댑터는 종전 선택 순서를 보존한다.
-        if (services.adoptPreparedWorld && services.installMode==CampaignInstallMode::ExistingEditor) {
-            constructionState.command.chargeBlockedRead=constructionState.place.chargeBlockedRead=[this] { return globals.missionPost; }; // 명시 준비 Editor만 원문00594fa4를 각 실제 소비 위치에서 재조회한다. 일반 Campaign/battle의 값형 수명은 이번에 넓히지 않는다.
-        }
+        constructionState.command.chargeBlockedRead=constructionState.place.chargeBlockedRead=[this] { return globals.missionPost; }; // 원본00594fa4는 캠페인/편집/일반 전투 모두의 현재 미션 전역이다. 각 소비 위치에서 읽어 캠페인 배치 확정의 중복 비용 검사와 잘못된 부족 안내를 막는다. 생산 가격·AI 자금 판정은 별도 몸체가 유지한다.
         //BYTE호환값을DWORD const참조로넘기면임시값수명오류가나므로실제Player DWORD를빌린다.
         broadcast=std::make_unique<RawBattleBroadcast>(core.pool.Edition(),players,services.battlePeers,playerState.battleOwner,core.processState.Server());
         // 별도 관찰/장치 송신이 없으면 실제 분배기를 사용한다. NULL 연결은 원본 조건에서 자연스럽게 생략한다.
@@ -2171,7 +2169,7 @@ struct RawCampaignSession::Impl {
     }
     // 각 명시 요청의 소유자·모드·타입만 준비한다. server/boss는 원문 소비 위치에서 공유 주소를 읽는다.
     void PrepareConstruction() {
-        if (services.adoptPreparedWorld && services.installMode==CampaignInstallMode::ExistingEditor) constructionState.place.chargeBlocked=globals.missionPost; // 이번 한정 준비 Editor는 실제00594fa4를 공급한다. 기존 Campaign/battle의 값형 어댑터 수명은 별도 대조 대상으로 유지한다.
+        constructionState.place.chargeBlocked=globals.missionPost; // 값형 관측도 같은 현재00594fa4를 반영하고 실제 판정은 위 공유 조회기를 소비 시점에 읽는다.
         constructionState.place.localPlayer=constructionState.notice.localPlayer=playerState.battleOwner;
         constructionState.request.editor=core.ownerMode.fort;constructionState.request.localPlayer=playerState.battleOwner;
         constructionState.request.displaceGenus=buildingState.pushGenus;constructionState.request.patternTypes=constructionState.confirm.patternTypes;

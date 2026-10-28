@@ -2027,7 +2027,9 @@ TEST_CASE(CampaignSession_GeneralConfirmRequiresActualReadyFactory) {
 }
 // 다른 Player의 확정은 실제 비용 차감/서버 조각/134 이동/30 완료까지 같은 월드에서 이어진다.
 TEST_CASE(CampaignSession_GeneralConfirmBuildsForRemoteOwner) {
-    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();services.unitLost=[&](Sid) { ++external.notices; };auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());ReadyConstructionInput(fort,123);GameWorld world(assets.game,assets.files,std::move(fort),MissionPlayers{},"thewarbegins",std::move(services),{1024,768});auto& session=world.Session();auto core=session.Core();const auto point=GeneralConstructionPoint(core,2);const auto parent=session.CreatePlayer(2);CHECK(core.pool.Slot(parent)[10]==152 && core.pool.Slot(parent)[34]==2);session.AddTechnology(2,core.types[75].assetName);session.SetSp(2,10000);
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();const auto modes=services.gameplayGlobals=std::make_shared<ClientGameplayGlobals>(); // 추가 비용 검사를 선택할 일반 전투의 실제 미션 전역 입력이다.
+    services.unitLost=[&](Sid) { ++external.notices; };auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());ReadyConstructionInput(fort,123);GameWorld world(assets.game,assets.files,std::move(fort),MissionPlayers{},"thewarbegins",std::move(services),{1024,768});auto& session=world.Session();modes->world.missionPost=false; // 캠페인1의 저장 지형만 빌리며 미션 건설 비용 관문은 일반 전투0으로 명시한다.
+    auto core=session.Core();const auto point=GeneralConstructionPoint(core,2);const auto parent=session.CreatePlayer(2);CHECK(core.pool.Slot(parent)[10]==152 && core.pool.Slot(parent)[34]==2);session.AddTechnology(2,core.types[75].assetName);session.SetSp(2,10000);
     CHECK(session.ConfirmConstruction({75,static_cast<float>(point.x),static_cast<float>(point.y),2,0,0,0,0,0,0}));const auto packet=session.Construction().LastPacket();CHECK(packet.size()==29 && packet[0]==1 && packet[1]==0x3f && packet[26]==1);if (packet.size()!=29) return;const Sid target{static_cast<std::uint16_t>(packet[27]|(std::uint16_t(packet[28])<<8))};const auto raw=core.pool.Slot(target);
     CHECK(target.value>=core.pool.Layout().serverFirst && raw[10]==75 && raw[34]==2 && (raw[40]&1));CHECK(Get(raw,26)==0);CHECK(session.Sp(2)==10000-core.types[75].cost);const auto builders=ConstructionLive(core,134);CHECK(builders.size()==1);if (builders.size()!=1) return;CHECK(core.pool.Slot(builders.front())[34]==2);FinishGeneralConstruction(session,builders.front(),target);
 }
@@ -2039,11 +2041,13 @@ TEST_CASE(CampaignSession_GeneralConfirmReplacesLocalPredictionAndKeepsBuilder) 
 }
 // 비용 부족 보고가 실제 Player+54를 보존 갱신하고 이름/표시 비트의 외부 변경을 다음 요청에서 읽는다.
 TEST_CASE(CampaignSession_GeneralConfirmShortfallUsesCurrentPlayerRecords) {
-    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();std::vector<std::string> names;std::size_t others{},direct{},money{},rejects{}; // 외부 안내/송신만 관찰하며 비용 계산은 실제 Place가 수행한다.
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();const auto modes=services.gameplayGlobals=std::make_shared<ClientGameplayGlobals>(); // 추가 비용 검사를 선택할 일반 전투의 실제 미션 전역 입력이다.
+    std::vector<std::string> names;std::size_t others{},direct{},money{},rejects{}; // 외부 안내/송신만 관찰하며 비용 계산은 실제 Place가 수행한다.
     services.construction.presentation.format=[&](std::string_view key,std::string_view name) { CHECK(key=="ClientCheated(%s)");names.emplace_back(name);return std::string(name); };
     services.construction.presentation.tellOthers=[&](std::uint32_t owner,std::string_view) { CHECK(owner==2);++others; };services.construction.presentation.tellPlayer=[&](std::uint32_t owner,std::string_view text) { CHECK(owner==2 && text=="ServerThinksYouCheated");++direct; };
     services.construction.presentation.sendMoney=[&](std::uint32_t owner,const ConstructionMoneyNotice& value) { CHECK(owner==2 && value.player==2 && value.source==2 && value.kind==1 && value.amount>0);++money; };services.construction.presentation.sendReject=[&](std::uint32_t owner,const ConstructionRejectNotice& value) { CHECK(owner==2 && value.type==75);++rejects; };
-    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());GameWorld world(assets.game,assets.files,std::move(fort),MissionPlayers{},"thewarbegins",std::move(services),{1024,768});auto& session=world.Session();auto core=session.Core();auto records=session.PlayerRecords();Put(records,2*0xb4+0x54,0x123);const std::string first="Alice",last="ABCDEFGHIJKLMNOPQRSTUVWXYZ12345"; // 같은 실제 원문 이름 입력이다.
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());GameWorld world(assets.game,assets.files,std::move(fort),MissionPlayers{},"thewarbegins",std::move(services),{1024,768});auto& session=world.Session();modes->world.missionPost=false; // 캠페인1의 저장 지형만 빌리며 미션 건설 비용 관문은 일반 전투0으로 명시한다.
+    auto core=session.Core();auto records=session.PlayerRecords();Put(records,2*0xb4+0x54,0x123);const std::string first="Alice",last="ABCDEFGHIJKLMNOPQRSTUVWXYZ12345"; // 같은 실제 원문 이름 입력이다.
     std::copy(first.begin(),first.end(),records.begin()+2*0xb4+0xc);records[2*0xb4+0xc+first.size()]=0;
     // 같은 실제 필드의 외부 변경/유지를 세 요청에서 구별한다. flags1은 원본 즉시 배치 입력이다.
     for (int pass=0;pass<3;++pass) {
@@ -2079,7 +2083,9 @@ TEST_CASE(CampaignSession_ConstructionCommandUsesActualRequestAndLocalPrediction
 }
 // 다른 Player의 수신은 잔액 선검사 뒤 실제 Place에서 한 번만 차감하고 실제 Builder가 완성한다.
 TEST_CASE(CampaignSession_ConstructionCommandChargesRemoteOnce) {
-    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();services.unitLost=[&](Sid) { ++external.notices; };auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());ReadyConstructionInput(fort,123);GameWorld world(assets.game,assets.files,std::move(fort),MissionPlayers{},"thewarbegins",std::move(services),{1024,768});auto& session=world.Session();auto core=session.Core();session.CreatePlayer(2);session.AddTechnology(2,core.types[75].assetName);session.SetSp(2,10000);const auto point=CommandPlacementPoint(session,2);
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();const auto modes=services.gameplayGlobals=std::make_shared<ClientGameplayGlobals>(); // 일반 전투의 추가 비용 검사를 선택할 미션 전역이다.
+    services.unitLost=[&](Sid) { ++external.notices; };auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());ReadyConstructionInput(fort,123);GameWorld world(assets.game,assets.files,std::move(fort),MissionPlayers{},"thewarbegins",std::move(services),{1024,768});auto& session=world.Session();modes->world.missionPost=false; // 캠페인 저장 지형과 비용을 검사할 일반 전투 관문0을 구별한다.
+    auto core=session.Core();session.CreatePlayer(2);session.AddTechnology(2,core.types[75].assetName);session.SetSp(2,10000);const auto point=CommandPlacementPoint(session,2);
     ConstructionLocalMessage message;message.type=75;message.x=static_cast<float>(point.x);message.y=static_cast<float>(point.y);std::array<std::uint8_t,25> packet{};WriteConstructionCommand(message,packet);std::vector<std::vector<std::uint8_t>> received;RawPacketDispatch dispatch(OriginalEdition::Patch1078,CommandDevice(received));session.RegisterConstructionCommands(dispatch);PacketConnection connection;connection.sender=2;CHECK(dispatch.Dispatch(connection,packet));CHECK(session.Sp(2)==10000-core.types[75].cost);const auto notice=session.Construction().LastPacket();CHECK(notice.size()==29);if (notice.size()!=29) return;const Sid target{static_cast<std::uint16_t>(notice[27]|(std::uint16_t(notice[28])<<8))};const auto builders=ConstructionLive(core,134);CHECK(builders.size()==1);if (builders.size()==1) FinishGeneralConstruction(session,builders.front(),target);
 }
 // 클라이언트 예측이 다른 소유자면 전체 요청에서 거부하고 원본 수신은 환불/취소만 요청한다.
@@ -5176,4 +5182,17 @@ TEST_CASE(CampaignSession_GolemGeyserHoverTruncatesPollingBeforeHighlight) {
         }
     }
     CHECK(session.LocalConnectionPackets().size()==packets && std::equal(before.begin(),before.end(),core.pool.Slot(actor).begin()));
+}
+
+// 같은 Session에서 미션0/1을 바꿔 배치 확정의 추가 비용 관문이 현재00594fa4를 읽는지 검사한다.
+TEST_CASE(CampaignSession_ConstructionCostReadsCurrentMissionGuard) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();const auto modes=services.gameplayGlobals=std::make_shared<ClientGameplayGlobals>();std::size_t formats{},others{},direct{},money{},rejects{}; // 실제 비용/배치는 그대로 두고 안내·송신 장치만 관측한다.
+    services.construction.presentation.format=[&](std::string_view key,std::string_view name) { CHECK(key=="ClientCheated(%s)");++formats;return std::string(name); };
+    services.construction.presentation.tellOthers=[&](std::uint32_t owner,std::string_view) { CHECK(owner==2);++others; };services.construction.presentation.tellPlayer=[&](std::uint32_t owner,std::string_view text) { CHECK(owner==2 && text=="ServerThinksYouCheated");++direct; };
+    services.construction.presentation.sendMoney=[&](std::uint32_t owner,const ConstructionMoneyNotice& notice) { CHECK(owner==2 && notice.amount==400);++money; };services.construction.presentation.sendReject=[&](std::uint32_t owner,const ConstructionRejectNotice& notice) { CHECK(owner==2 && notice.type==75);++rejects; };
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());GameWorld world(assets.game,assets.files,std::move(fort),MissionPlayers{},"thewarbegins",std::move(services),{1024,768});auto& session=world.Session();const auto core=session.Core();auto records=session.PlayerRecords();std::size_t charged{}; // 실제 Player/SP와 건설 처리기를 공유한다.
+    for (const bool mission:{true,false,true,false}) { // 같은 고정 callback을 만든 뒤에도 현재 전역 변경을 매번 반영해야 한다.
+        modes->world.missionPost=mission;Put(records,2*0xb4+0x54,0);session.SetSp(2,0);const auto point=EmptySessionSupport(core);CHECK(session.ConfirmConstruction({75,static_cast<float>(point.x+2),static_cast<float>(point.y+2),2,0,0,1,0,0,0}));if (!mission) ++charged;
+        CHECK(formats==charged && others==charged && direct==charged && money==charged && rejects==charged);CHECK(Get(records,2*0xb4+0x54)==(mission?0U:0x400U));CHECK(session.Sp(2)==(mission?0.0F:400.0F));
+    }
 }
