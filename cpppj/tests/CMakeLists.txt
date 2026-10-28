@@ -2405,6 +2405,7 @@ target_sources(netstorm_tests PRIVATE TraceLogTests.cpp)
 
 # 실제객체덤프/파일후처리와typed EH범위 및격리디스크장치를대조한다.
 target_sources(netstorm_tests PRIVATE ObjectDumpTests.cpp)
+target_sources(netstorm_tests PRIVATE ThunderProcessTests.cpp) # 실제 번개 Form/부모/Kernel의 결합 수명을 검증한다.
 set_source_files_properties(ObjectDumpTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_OBJECT_DUMP_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/object-dump-x86.tsv\";NETSTORM_OBJECT_DUMP_WORK=\"${CMAKE_SOURCE_DIR}/../extracted/cpp-object-dump-558-20261029\"")
 set_source_files_properties(TraceLogTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_TRACE_LOG_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/trace-log-x86.tsv\"")
 set_source_files_properties(ObjectTraceMainTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_OBJECT_TRACE_MAIN_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/object-trace-main-x86.tsv\";NETSTORM_OBJECT_TRACE_VTABLE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/object-trace-vtables-x86.tsv\";NETSTORM_OBJECT_TRACE_COORDINATE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/object-trace-coordinate-x86.tsv\"")

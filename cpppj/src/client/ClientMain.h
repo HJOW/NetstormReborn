@@ -205,7 +205,7 @@ public:
     void InitializeNativeAudio();
     // 원본 Interpret Options(00435220)의 소리 부분: 설정을 다시 읽어 장치·음량·현재 곡을 맞춘다. 옵션 메뉴에서 소리 설정을 바꾼 뒤 부른다.
     void ApplyAudioOptions();
-    // 월드에 붙은 번개 프로세스를 화면/월드 해제 전에 제거한다. 부모 Squid 수명을 대신하는 현재 어댑터의 경계다.
+    // 화면/월드 해제 전에 실제 번개 Form을 공통 삭제 경로로 반납한다. 부모 종속 삭제도 같은 수명을 사용한다.
     void ClearThunderFlashes();
     // 같은 프레임의 검사 보고에 쓰는 현재 등록된 번개 프로세스 수다.
     std::size_t ThunderFlashCount() const;
@@ -222,7 +222,7 @@ public:
 private:
     // 날씨의 완전한 파일 이름을 DataDir 아래에서 읽어 화면에 적용하고 색 표·커서·월드/UI를 갱신한다.
     void LoadScenePalette(std::string_view name);
-    // 천둥 곡의 화면 효과를 현재 월드에 붙인다. 월드가 없으면 원본의 부모 조회 실패처럼 생성하지 않는다.
+    // 천둥 곡의 화면 효과를 현재 Player의 실제 기술 부모에 붙인다. PlayerKnown0/부모0이면 생성하지 않는다.
     void StartThunderFlash();
     // 원본 00441d10·00441de0: 게임 폴더의 d/options.cfg에 저장한다. 변경 검사 여부는 호출 위치가 정한다.
     void SaveOptions();

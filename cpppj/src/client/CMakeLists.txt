@@ -84,6 +84,7 @@ target_sources(netstorm PRIVATE
     Screen.cpp Screen.h
     PaletteColors.cpp PaletteColors.h
     PaletteFlash.cpp PaletteFlash.h
+    ThunderProcess.cpp ThunderProcess.h
     GameAssets.cpp GameAssets.h
     AiTypeRequiredEnergy.cpp AiTypeRequiredEnergy.h
     PriestPlacementAssets.cpp PriestPlacementAssets.h

@@ -10,6 +10,8 @@
 #include "o/RawColorSortPrimary.h"
 #include "client/ClientAudio.h"
 #include "client/PaletteFlash.h"
+#include "client/ThunderProcess.h"
+#include "client/RawProcessHostStorage.h"
 #include "client/RawChatChannels.h"
 #include "client/FortTypeConversionStorage.h"
 #include "client/ClientRandomGlobals.h"
@@ -59,40 +61,6 @@
 
 namespace netstorm::client {
 namespace {
-// 원본의 부모 Squid 등록 경계를 현재 월드/Kernel 어댑터에 잇는다. 화면 계산은 독립 복원한 PaletteFlash에 맡긴다.
-class ThunderProcess final:public o::BaseProcess {
-public:
-    // 생성 시의 표시 모드로 수명을 정하고, 현재 팔레트 두 배열을 준비한다. 시각은 프레임의 고정 실시간이다.
-    ThunderProcess(Client& client,std::function<void(o::ProcessId)> destroyed):client_(client),destroyed_(std::move(destroyed)),
-        flash_(state_,{
-            [&client]() { return client.Time().wall; },
-            [&client]() { return (client.GetScreen().Flags()&ScreenMode::kFullScreen)!=0; },
-            [&client](unsigned start,unsigned count,ScreenColor* destination) {
-                std::copy_n(client.GetScreen().Palette().data()+start,count,destination);
-            },
-            [&client](unsigned start,unsigned count,ScreenColor* colors) { client.GetScreen().SetPalette(start,count,colors,true); },
-            [&client]() { client.GetScreen().SetPalette(0,256,nullptr,true); }
-        }) {
-        state_.duration=ThunderDuration((client.GetScreen().Flags()&ScreenMode::kFullScreen)!=0);flash_.Init();
-    }
-    // 화면이 살아 있는 동안 취소/복구하고 번호 목록에서도 제거한다.
-    ~ThunderProcess() override { flash_.Cancel();destroyed_(id_); }
-    // Kernel 등록 직후 할당된 번호를 저장한다. 초기화 도중 예외가 나면 번호 0은 등록되지 않은 상태다.
-    void Registered(o::ProcessId id) { id_=id; }
-    // 원본처럼 종료 판정 뒤 즉시 자신을 제거한다. 삭제 뒤에는 멤버에 접근하지 않는다.
-    void RunFrame() override { if (!flash_.Frame()) client_.GetKernel().Remove(id_); }
-private:
-    // client_: 원본 전역 변수로 흩어져 있던 클라이언트 상태를 객체 하나로 묶는다. 한 프로세스에 하나만 만든다 (Client).
-    Client& client_;
-    // destroyed_: 프로세스가 삭제됐음을 호스트에 전달하는 콜백.
-    std::function<void(o::ProcessId)> destroyed_;
-    // state_: 원본 +0xc/+0x40c의 원래 색/변경 색과 +0x810 이후 진행 상태다. 색 배열은 부분 팔레트를 앞에서부터 담는다 (PaletteFlashState).
-    PaletteFlashState state_;
-    // flash_: 실제 팔레트 계산과 종료 판정을 맡는다. 소유자는 Init 뒤 Frame을 호출하고 중단/파괴 전에 Cancel을 호출한다 (PaletteFlash).
-    PaletteFlash flash_;
-    // id_: 대상을 구별하는 식별 번호.
-    o::ProcessId id_{};
-};
 // 원본 창 클래스 스타일 0x23: CS_VREDRAW | CS_HREDRAW | CS_OWNDC.
 constexpr UINT kWindowClassStyle = CS_VREDRAW | CS_HREDRAW | CS_OWNDC;
 // 원본이 CreateWindowExA에 넘기는 처음 창 크기(0x1c4 × 0x1d7). 곧 화면 크기에 맞춰 바뀐다.
@@ -786,17 +754,34 @@ void Client::RefreshPaletteConsumers() {
     if (cursor_ && (screen_->Flags()&ScreenMode::kSoftwareMouse)!=0) cursor_->BuildSoftware(screen_->Palette());
     if (menu_) menu_->PaletteChanged();else if (renderer_) renderer_->InvalidateAll();
 }
-// 날씨의 부모 조회는 현재 월드의 존재로 연결한다. raw Squid/SpStore의 원본 등록은 후속 단계다.
+// 00470d40처럼 현재 Player의 기술 부모가 있을 때만 실제 TYPE55/flags0x10으로 부착한다.
 void Client::StartThunderFlash() {
-    if (!menu_ || !menu_->HasWorld()) return;
-    auto process=std::make_unique<ThunderProcess>(*this,[this](o::ProcessId id) { std::erase(thunderProcesses_,id); });
-    auto* pointer=process.get();const auto id=kernel_->Add(std::move(process));pointer->Registered(id);
-    thunderProcesses_.push_back(id);
+    if (!gameplayGlobals_->player.playerKnown) return; // 원문595344가0이면 부모 조회조차 하지 않는다.
+    if (!surfaceStorage_) throw std::logic_error("번개 기술 부모의 실제 표면 저장소 없음");
+    if (surfaceStorage_->ownerMode.challenge) throw std::logic_error("번개 메타맵00479650의 실제 기록 조회 미복원"); // 멀티플레이 메타맵 기록을 일반 Player 행으로 대체하지 않는다.
+    const auto players=coreDataGlobals_->Players();const auto at=std::size_t(gameplayGlobals_->player.battleOwner)*180+0x9c; //0048fc60과 같은 현재 Player base/owner다.
+    if (at>players.size() || players.size()-at<4) throw std::out_of_range("번개 현재 Player 기술 DWORD 범위");
+    std::uint32_t parent=0;
+    for (std::size_t byte=0;byte<4;++byte) parent|=std::uint32_t(players[at+byte])<<(8*byte); // 실제 비정렬DWORD를 상위 비트까지 보존한다.
+    if (!parent) return;
+    if (parent>65535U || parent>=surfaceStorage_->pool.Capacity()) throw std::out_of_range("번개 기술 부모의 실제 SID 범위");
+    auto process=std::make_unique<ThunderProcess>((screen_->Flags()&ScreenMode::kFullScreen)!=0,PaletteFlashHooks{
+        [this] { return Time().wall; },[this] { return (screen_->Flags()&ScreenMode::kFullScreen)!=0; },
+        [this](unsigned start,unsigned count,ScreenColor* destination) { std::copy_n(screen_->Palette().data()+start,count,destination); },
+        [this](unsigned start,unsigned count,ScreenColor* colors) { screen_->SetPalette(start,count,colors,true); },
+        [this] { screen_->SetPalette(0,256,nullptr,true); }
+    },[this](o::ProcessId id) { std::erase(thunderProcesses_,id); });
+    auto& host=surfaceStorage_->Processes().Host();auto* attached=host.Attach(std::move(process),kThunderProcessType,o::Sid{static_cast<std::uint16_t>(parent)},0x10);
+    if (attached) thunderProcesses_.push_back(kernel_->Find(*attached)); // free/dead 부모의 원문 조용한 거부는 등록 목록에도 넣지 않는다.
 }
 // 종료 중 콜백이 번호를 지우므로 뒤 번호를 하나씩 읽어 제거한다. Screen이 사라지기 전에 호출한다.
 void Client::ClearThunderFlashes() {
     // 등록된 프로세스를 즉시 파괴하여 전체화면 복구와 목록 정리가 끝나도록 한다.
-    while (!thunderProcesses_.empty()) kernel_->Remove(thunderProcesses_.back());
+    while (!thunderProcesses_.empty()) { // 매 삭제 콜백이 바꾼 현재 뒤 번호를 다시 읽는다.
+        auto* process=dynamic_cast<ThunderProcess*>(kernel_->Get(thunderProcesses_.back()));
+        if (!process) throw std::logic_error("번개 등록 목록과 실제 Kernel 불일치");
+        surfaceStorage_->Processes().Host().Kill(*process,0x10); // Windows10/11 해상도/장치 교체 때도 원본과 달리 안전하게 먼저 효과와 Form을 함께 반납한다.
+    }
 }
 // 개별 효과의 종료/취소 콜백으로 유지되는 현재 등록 수다.
 std::size_t Client::ThunderFlashCount() const { return thunderProcesses_.size(); }
