@@ -11,7 +11,7 @@ namespace Netstorm.Core.Original;
 /// (docs/dotnet-cpp-port-plan-20261016.md 4절). 검증은 원본 기대값 sid-x86.tsv 의 10.78 행으로 풀 전체 바이트까지 한다.
 /// 번호 0~4 는 일반 할당에서 빠지고, 일반 클라이언트 5~14999, 일반 서버 15000~23000, 예측 머리 23001(첫 예측 번호 23002)이다.
 /// 0번 슬롯에는 클라이언트 목록 머리(+0)와 서버 목록 머리(+14)가 겹쳐 놓인다.
-/// 근거: docs/exe/cpp-sid-reconstruction.md, cpppj/src/o/SidPool.cpp (W02 첫 조각, 2026-10-16).
+/// 근거: docs/exe/cpp-sid-reconstruction.md, cpppj/src/o/SidPool.cpp (W02 첫 조각, 2026-10-16; ClearDeletionHistory·공유 서버 판정은 R0-4 재대조, 2026-10-28).
 /// </summary>
 public sealed class RawSidPool
 {
@@ -60,6 +60,12 @@ public sealed class RawSidPool
     /// <summary>풀 전체의 슬롯 바이트. 번호 N 의 슬롯은 N × 50 에서 시작한다.</summary>
     private byte[] _bytes;
 
+    /// <summary>생성자 입력의 서버 여부. 공유 판정이 연결되면 읽지 않는다.</summary>
+    private readonly bool _server;
+
+    /// <summary>Pool보다 오래 사는 실제 서버 판정. 미연결 독립 풀은 생성자 입력을 읽는다.</summary>
+    private readonly Func<bool>? _sharedServer;
+
     /// <summary>일반 목록의 예약 꼬리(클라이언트, 서버).</summary>
     private readonly ushort[] _tails = new ushort[2];
 
@@ -69,11 +75,13 @@ public sealed class RawSidPool
     /// <summary>풀을 만들고 원본 초기 상태로 만든다.</summary>
     /// <param name="capacity">슬롯 수(예측 머리보다 2 이상 커야 하며 <see cref="MaximumCapacity"/> 이하).</param>
     /// <param name="server">서버인지. 서버가 아니면 서버 영역을 할당할 수 없고 생성 시 소유자·HP 초기화도 하지 않는다.</param>
-    public RawSidPool(int capacity, bool server = true)
+    /// <param name="sharedServer">서버 판정을 함께 읽는 장기 소유자. null이면 생성자 입력을 쓴다. R4 세션 조립 때 연결한다.</param>
+    public RawSidPool(int capacity, bool server = true, Func<bool>? sharedServer = null)
     {
         CheckCapacity(capacity);
         Capacity = capacity;
-        IsServer = server;
+        _server = server;
+        _sharedServer = sharedServer;
         _bytes = new byte[capacity * Stride];
         Reset();
     }
@@ -81,8 +89,8 @@ public sealed class RawSidPool
     /// <summary>확보한 슬롯 수.</summary>
     public int Capacity { get; private set; }
 
-    /// <summary>서버인지.</summary>
-    public bool IsServer { get; }
+    /// <summary>서버인지. 공유 판정이 연결되면 그 값을 읽는다.</summary>
+    public bool IsServer => _sharedServer?.Invoke() ?? _server;
 
     /// <summary>빈 번호 카운터. 원본 값 그대로 재구성은 다시 세지 않고 더하며, 예측 번호의 반납은 늘리지 않는다.</summary>
     public uint FreeCount { get; private set; }
@@ -108,6 +116,18 @@ public sealed class RawSidPool
     /// <summary>영역의 최근 삭제 기록 20개(앞이 최신).</summary>
     /// <param name="client">클라이언트 영역이면 참.</param>
     public IReadOnlyList<SidDeletion> Deletions(bool client) => _deletions[client ? 0 : 1];
+
+    /// <summary>
+    /// 각 SID/type DWORD만 순서대로 지운다. 하위 Reset은 기존처럼 기록을 보존한다.
+    /// other(서버 목록) 기록 20쌍을 먼저, 다음 client 기록 20쌍을 지운다.
+    /// 근거: cpppj/src/o/SidPool.cpp ClearDeletionHistory (R0-4 재대조, 2026-10-28).
+    /// </summary>
+    public void ClearDeletionHistory()
+    {
+        // 원문 첫 40DWORD인 other 기록의 실제 20쌍, 다음 40DWORD인 client 기록의 실제 20쌍이다
+        Array.Clear(_deletions[1]);
+        Array.Clear(_deletions[0]);
+    }
 
     /// <summary>
     /// 전체를 지우고 세 영역의 빈 목록을 잇는다(원본 004abb10). 삭제 기록은 유지한다.

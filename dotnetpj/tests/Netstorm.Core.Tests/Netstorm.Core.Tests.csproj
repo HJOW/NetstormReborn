@@ -114,6 +114,10 @@
     <None Include="../../../cpppj/tests/fixtures/squid-retype-x86.tsv" Link="X86/squid-retype-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <!-- R0-4 재대조: 비석·주문 전환 명령과 Unpop 뒤 재조회 36행. -->
     <None Include="../../../cpppj/tests/fixtures/object-conversion-x86.tsv" Link="X86/object-conversion-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <!-- R0-4 재대조: SID 풀 정리 부모·기록·실패 좌표 12행 중 패치 6행. -->
+    <None Include="../../../cpppj/tests/fixtures/squid-pool-reset-x86.tsv" Link="X86/squid-pool-reset-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <!-- R0-4 재대조: State SID 목록 등록·정리 66행. -->
+    <None Include="../../../cpppj/tests/fixtures/state-sid-lists-x86.tsv" Link="X86/state-sid-lists-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <!-- W05 선행 조각: 삭제·해체 보상 7,200행 중 10.78 몫 2,400행. -->
     <None Include="../../../cpppj/tests/fixtures/reward-x86.tsv" Link="X86/reward-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <!-- R0-4 재대조: SP 가산의 큰 유한·무한대·NaN·서브노멀 비트와 정수 지급 504행. -->

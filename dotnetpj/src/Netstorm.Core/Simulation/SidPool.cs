@@ -27,6 +27,7 @@ public readonly record struct SidDeletion(uint Sid, uint Type);
 /// 다리 붕괴 스캔은 번호 15000~23001 을 차례로 훑으므로, 이 순서가 다리 칸의 처리 순서를 정한다.
 /// 원본의 50바이트 슬롯은 복제하지 않고 번호마다 다음 번호·타입·상태만 가진다. 싱글 플레이 세션의 저장 오브젝트·다리·건설·생산·비행체가 하나의 서버 풀을 공유한다.
 /// 검증은 원본 기계어 기대값 sid-x86.tsv 로 한다 (같은 값에서 원본 슬롯 바이트를 되살려 풀 전체의 체크섬까지 비교한다).
+/// ClearDeletionHistory·공유 서버 판정은 R0-4 재대조(2026-10-28)로 옮겼다.
 /// </summary>
 public sealed class SidPool
 {
@@ -81,6 +82,12 @@ public sealed class SidPool
     /// <summary>최근 삭제 기록 (클라이언트, 서버). 앞이 최신이다</summary>
     private readonly SidDeletion[][] _deletions = [new SidDeletion[DeletionHistory], new SidDeletion[DeletionHistory]];
 
+    /// <summary>서버인지. 생성자 입력이며 공유 판정이 연결되면 그 값을 읽는다.</summary>
+    private readonly bool _server;
+
+    /// <summary>Pool보다 오래 사는 실제 서버 판정. 미연결 독립 풀은 생성자 입력을 읽는다. R4 세션 조립 때 연결한다.</summary>
+    private readonly Func<bool>? _sharedServer;
+
     /// <summary>서버 목록의 머리 (원본 풀 +14 의 겹친 객체)</summary>
     private ushort _serverHead;
 
@@ -89,14 +96,16 @@ public sealed class SidPool
     /// <param name="server">서버인지 (싱글 플레이는 참)</param>
     /// <param name="serverFirst">서버 영역 첫 번호 (기본 10.78)</param>
     /// <param name="predictableFirst">예측 머리 번호 (기본 10.78)</param>
-    public SidPool(int capacity, bool server = true, int serverFirst = ServerFirst1078, int predictableFirst = PredictableFirst1078)
+    /// <param name="sharedServer">서버 판정을 함께 읽는 장기 소유자. null이면 생성자 입력을 쓴다. R4 세션 조립 때 연결한다.</param>
+    public SidPool(int capacity, bool server = true, int serverFirst = ServerFirst1078, int predictableFirst = PredictableFirst1078, Func<bool>? sharedServer = null)
     {
         if (serverFirst <= FirstOrdinary || predictableFirst <= serverFirst || capacity <= predictableFirst + 1 || capacity > MaximumCapacity)
         {
             throw new ArgumentOutOfRangeException(nameof(capacity), capacity, "번호 풀의 크기 또는 영역 경계가 잘못됐습니다");
         }
         Capacity = capacity;
-        IsServer = server;
+        _server = server;
+        _sharedServer = sharedServer;
         ServerFirst = serverFirst;
         PredictableFirst = predictableFirst;
         _next = new ushort[capacity];
@@ -108,8 +117,8 @@ public sealed class SidPool
     /// <summary>번호 개수</summary>
     public int Capacity { get; }
 
-    /// <summary>서버인지. 서버가 아니면 서버 영역을 할당할 수 없다</summary>
-    public bool IsServer { get; }
+    /// <summary>서버인지. 공유 판정이 연결되면 그 값을 읽는다. 싱글 플레이는 참이다.</summary>
+    public bool IsServer => _sharedServer?.Invoke() ?? _server;
 
     /// <summary>서버 영역 첫 번호</summary>
     public int ServerFirst { get; }
@@ -183,6 +192,17 @@ public sealed class SidPool
     /// <summary>번호의 상태 바이트</summary>
     /// <param name="sid">번호</param>
     public byte State(int sid) => _state[Checked(sid)];
+
+    /// <summary>
+    /// 각 SID/type DWORD만 순서대로 지운다. 하위 Reset은 기존처럼 기록을 보존한다.
+    /// 근거: cpppj/src/o/SidPool.cpp ClearDeletionHistory (R0-4 재대조, 2026-10-28).
+    /// </summary>
+    public void ClearDeletionHistory()
+    {
+        // 원문 첫 40DWORD인 other 기록을 먼저, 다음 40DWORD인 client 기록을 지운다
+        Array.Clear(_deletions[ServerList]);
+        Array.Clear(_deletions[ClientList]);
+    }
 
     /// <summary>
     /// 전체를 지우고 세 영역의 빈 목록을 잇는다 (원본 004abb10). 삭제 기록은 별도 계층이라 유지한다.

@@ -62,10 +62,12 @@ cpppj/src/o/RawSquidDestroyDispatch.cpp	Netstorm.Core/Original/RawSquidDestroyDi
 cpppj/src/o/RawSquidFinder.cpp	Netstorm.Core/Original/RawFinder.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
 cpppj/src/o/RawSquidHitPoints.cpp	Netstorm.Core/Original/RawSquidHitPoints.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
 cpppj/src/o/RawSquidNeighbors.cpp	Netstorm.Core/Original/RawNeighbor.cs	c7459e61da4d3b6a97c5266bb3ec676f38be1d5e	L1
+cpppj/src/o/RawSquidPoolReset.cpp	Netstorm.Core/Original/RawSquidPoolReset.cs	1ddc4ba021c0fadcf75c0a681cc18d937b798219	L1
+cpppj/src/o/RawStateSidLists.cpp	Netstorm.Core/Original/RawStateSidLists.cs	1ddc4ba021c0fadcf75c0a681cc18d937b798219	L1
 cpppj/src/o/RawVortexPreDestroy.cpp	Netstorm.Core/Original/RawVortexPreDestroy.cs	3b88f86ab4789fdcbf11d2529b976c4d666a7167	L1
 cpppj/src/o/RiftType.h	Netstorm.Core/Original/OriginalTypeRecord.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
-cpppj/src/o/SidPool.cpp	Netstorm.Core/Original/RawSidPool.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
-cpppj/src/o/SidPool.cpp	Netstorm.Core/Simulation/SidPool.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
+cpppj/src/o/SidPool.cpp	Netstorm.Core/Original/RawSidPool.cs	1ddc4ba021c0fadcf75c0a681cc18d937b798219	L1
+cpppj/src/o/SidPool.cpp	Netstorm.Core/Simulation/SidPool.cs	1ddc4ba021c0fadcf75c0a681cc18d937b798219	L1
 cpppj/src/o/SpStore.cpp	Netstorm.Core/Original/RawSpStore.cs	3d038e510444a9c7448b6d4c88cc84f78446d395	L1
 cpppj/src/o/Squid.cpp	Netstorm.Core/Rules/SpotRules.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
 cpppj/src/o/SquidDestroyLifecycle.cpp	Netstorm.Core/Original/RawSquidDestroyLifecycle.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
