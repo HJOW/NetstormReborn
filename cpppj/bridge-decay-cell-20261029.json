@@ -1,0 +1,53 @@
+{
+  "unit": 551,
+  "date": "2026-10-29",
+  "host": "HJOW-Athlon",
+  "last_full_decompilation": "HJOW-Athlon / 2026-10-23",
+  "scope": "실제 raw 한 칸/수명 처리; Client 프레임/이동체/장치 연결은552 잔여",
+  "native_fixture_rows": {
+    "cell": 4241,
+    "life": 3264,
+    "total": 7505,
+    "previously_guarded_wide_life": 400
+  },
+  "new_native_execution_observations": 0,
+  "focused": [
+    {
+      "log": "focused-decay.log",
+      "tests": 12,
+      "failed_checks": 0
+    },
+    {
+      "log": "focused-reset.log",
+      "tests": 5,
+      "failed_checks": 0
+    },
+    {
+      "log": "focused-surrounding.log",
+      "tests": 5,
+      "failed_checks": 0
+    }
+  ],
+  "focused_unique": 22,
+  "registered_tests": 3394,
+  "final_release_warnings": 0,
+  "final_release_errors": 0,
+  "protected_files_preserved": 1820,
+  "existing_fixtures_preserved": 711,
+  "changed_existing": [
+    "cpppj/src/CMakeLists.txt",
+    "cpppj/src/o/SidPool.h",
+    "cpppj/src/o/RawCanonPlacementSurrounding.cpp",
+    "cpppj/src/o/RawCanonPlacementSurrounding.h",
+    "cpppj/tests/BridgeDecayTests.cpp"
+  ],
+  "game_sha256": "f271c2df0586ee6c2a9df08cc13c3078084656e54ebb74b581f9d5960aea72b5",
+  "tests_sha256": "1a0da07c25b6fb67d1382ab9181e3d7e522f8ce5773393ab276d3c0a5000e120",
+  "limitations": [
+    "원문 기대값7505행을 재사용했으며 이번 단위의 새 PE 실행 관측은 없다",
+    "기본 삭제/표시/이동체/소리는 원본 동결 때와 동일한 외부 효과 경계다",
+    "실제 Client/메뉴 프레임과 이동체 대피는552 미연결",
+    "새 GUI/전체 C++ 반복/자연 완주 없음;549 자동 전술 실패/보류 유지"
+  ],
+  "raw": "extracted/cpp-bridge-decay-cell-551-20261029"
+}

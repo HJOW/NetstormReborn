@@ -18,12 +18,17 @@ public:
     RawCanonSurfaceWalk(const SidPool& pool,std::span<const RiftTypeRecord> types,
         std::span<const PriestPlainCanonType> frames,std::span<const std::uint16_t> islands,
         std::span<const std::uint8_t> spots,const CanonPlacementQuery& query,const CanonPlacementCell& cell);
+    RawCanonSurfaceWalk(const SidPool& pool,std::span<const RiftTypeRecord> types,
+        std::span<const RiftTypeFrames> frames,std::span<const std::uint16_t> islands,
+        std::span<const std::uint8_t> spots,Sid source); //실제 Squid 원천도 같은 flag8 커서/필터를 사용하며 float 좌표를 정수화하지 않는다.
     // 생성 직후 첫 결과와 이후 결과를 원본처럼 노출한다. 0 반환 뒤에는 종료 상태를 유지한다.
     Sid Current() const;
     Sid Next();
     // 기계어 관찰과 지도 변경 검증에 사용할 실제 커서다.
     const CanonSurfaceCursor& State() const;
 private:
+    void Initialize(const CanonPlacementCell& cell); //두 원천의 같은 발자국/중심/최초 방문을 구성한다.
+    std::span<const FrameCode> Codes(std::uint32_t type) const; //배치 표 또는 실제 TYPE의 현재 코드 span을 읽는다.
     // 표면 타입→접합→죽음/기준점 spot 순서로 flag 8 가상 필터를 적용한다.
     bool Accept(Sid candidate) const;
     // pool_: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀.
@@ -32,6 +37,7 @@ private:
     std::span<const RiftTypeRecord> types_;
     // frames_: 타입별 프레임 자료.
     std::span<const PriestPlainCanonType> frames_;
+    std::span<const RiftTypeFrames> rawFrames_; //실제 Squid 원천만 사용하는 코드 표이며 배치/실제 표 중 하나만 빌린다.
     // islands_: 현재 섬의 배치·소유권 자료.
     std::span<const std::uint16_t> islands_;
     // spots_: 칸별 점유·통행 비트를 읽는 spot 지도.

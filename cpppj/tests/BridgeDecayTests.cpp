@@ -1,6 +1,7 @@
 // 세 원본 PE의 실제 x86 결과로 다리 한 칸 붕괴 처리·수명 감소·프레임 전환·destroy 재정의·스캔 커서를 대조한다.
 #include "TestSupport.h"
 #include "o/Bridge.h"
+#include "o/RawBridgeDecay.h"
 #include "o/SquidFinder.h"
 #include <algorithm>
 #include <bit>
@@ -12,6 +13,21 @@
 #include <stdexcept>
 #include <string>
 #include <vector>
+
+namespace { //기존 동결 기대값을 새 raw 실행기에 그대로 입력하며 기대 결과는 다시 계산하지 않는다.
+//직접 fixture 설치는 non-const 소유자의 물리 바이트에만 한정한다.
+std::span<std::uint8_t> RawDecayFixtureSlot(netstorm::o::SidPool& pool,std::uint16_t number) {
+    const auto bytes=pool.Bytes();return std::span(const_cast<std::uint8_t*>(bytes.data()),bytes.size()).subspan(static_cast<std::size_t>(number)*50U,50U);
+}
+//비정렬 WORD/DWORD의 원문 폭만 조립한다.
+std::uint32_t RawDecayRead(std::span<const std::uint8_t> raw,std::size_t offset,std::size_t width=4) {
+    std::uint32_t value{};for (std::size_t index=0;index<width;++index) value|=std::uint32_t(raw[offset+index])<<(index*8);return value; //기록 비교용 바이트 읽기다.
+}
+//생산 코드의 쓰기 보조 함수를 기대 입력 구성에 사용하지 않는다.
+void RawDecayPut(std::span<std::uint8_t> raw,std::size_t offset,std::uint32_t value,std::size_t width=4) {
+    for (std::size_t index=0;index<width;++index) raw[offset+index]=static_cast<std::uint8_t>(value>>(index*8)); //명시 입력을 원문 폭으로 배치한다.
+}
+}
 
 using namespace netstorm::o;
 namespace {
@@ -422,4 +438,64 @@ TEST_CASE(BridgeDecay_GuardsInvalidGraphRingAndInputs) {
     CHECK(Throws([&] { Bridge::DecayCell(finder, frames, {}, 204); }));
     CHECK(Throws([&] { Bridge::CrackedFrame(frames, static_cast<int>(codes.size()), false); }));
     CHECK(Throws([&] { Bridge::NormalFrame(frames, -1); }));
+}
+
+namespace { //기존 실제 PE의 외부 효과 경계를 동일하게 유지한 raw 입력 장면이다.
+struct RawDecayScene {
+    SidPool pool{OriginalEdition::Patch1078,24000}; //실제 PATCH 풀의 물리 슬롯이다.
+    std::vector<RiftTypeRecord> types=std::vector<RiftTypeRecord>(188); //입력 순서대로70부터 TYPE를 설치한다.
+    std::vector<RiftTypeFrames> frames=std::vector<RiftTypeFrames>(188,RiftTypeFrames(std::vector<FrameCode>{})); //원문이 읽는 각 TYPE의 코드 표다.
+    std::vector<std::uint16_t> surface=std::vector<std::uint16_t>(65536); //원문 fixture의 동일 hash0 입력이다.
+    std::vector<std::uint8_t> spots=std::vector<std::uint8_t>(65536); //원문 fixture의 동일 현재 spot 입력이다.
+    std::array<GraphRecord,255> graphs{}; //한 칸 입구와 가상 삭제가 읽는 동일 표면 수다.
+    BridgeDecayMode mode; //원문 행의 server/권한/개발용 표시 조건이다.
+    std::string events; //실제 원문과 같은 외부 호출의 순서만 적는다.
+    //기대 상태를 계산하지 않고 원문 행의13정수 슬롯/프레임/표면/spot을 설치한다.
+    RawDecayScene(const std::vector<Input>& inputs,const RiftTypeFrames& codes,const std::string& recordText,const std::string& spotText,BridgeDecayMode selected):mode(selected) {
+        for (const auto& record:Tuples(recordText)) graphs[static_cast<std::size_t>(record[0])].surfaces=static_cast<std::int16_t>(record[1]); //원문에 지정한 Graph 레코드만 쓴다.
+        for (const auto& spot:Tuples(spotText)) spots[static_cast<std::size_t>(spot[1]*256+spot[0])]=static_cast<std::uint8_t>(spot[2]); //현재 bit 위치를 그대로 보존한다.
+        for (std::size_t index=0;index<inputs.size();++index) { //객체마다 원문처럼 다른 TYPE 번호를 사용한다.
+            const auto& entry=inputs[index];const auto type=70U+index;CHECK(type<types.size());types[type].flags1=entry.flags1;types[type].flags2=entry.flags2;types[type].footX=entry.width;types[type].footY=entry.height;
+            frames[type]=entry.kind==0 ? codes : RiftTypeFrames({FrameCode{'A','A',1,0}});auto raw=RawDecayFixtureSlot(pool,entry.id);RawDecayPut(raw,0,0x5034c8);raw[10]=static_cast<std::uint8_t>(type);raw[11]=entry.state;RawDecayPut(raw,12,entry.word,2);RawDecayPut(raw,14,std::bit_cast<std::uint32_t>(static_cast<float>(entry.x)));RawDecayPut(raw,18,std::bit_cast<std::uint32_t>(static_cast<float>(entry.y)));raw[30]=entry.graph;raw[40]=entry.extra;RawDecayPut(raw,36,static_cast<std::uint32_t>(entry.frame));
+            for (int y=entry.y-entry.height+1;y<=entry.y;++y) for (int x=entry.x-entry.width+1;x<=entry.x;++x) surface[static_cast<std::size_t>(y*256+x)]=entry.id; //명시 원문 지도는 각 발자국 전체를 번호로 채운 입력이다.
+        }
+    }
+    //사건만 구분자로 잇고 수명/프레임 결과는 이 기록기로 만들지 않는다.
+    void Event(std::string value) { if (!events.empty()) events+=' ';events+=value; }
+    //원문도 외부 기본 삭제/이동체/소리/표시만 stub했고 새 raw 실행기도 같은 경계를 공급한다.
+    RawBridgeDecayHooks Hooks() {
+        RawBridgeDecayHooks hooks;
+        hooks.destroy=[this](Sid sid,std::uint32_t flags) { const auto raw=pool.Slot(sid);const auto graph=raw[30];if (graph==254) throw std::logic_error("원문 삭제의 무효 Graph 입력");const auto code=frames[raw[10]].Codes()[RawDecayRead(raw,36)];if (!Bridge::DestroyProceeds(mode,raw[40],graphs[graph].surfaces,code.flags)) return;Event("D:"+std::to_string(sid.value)+":"+std::to_string(flags));RawDecayFixtureSlot(pool,sid.value)[11]|=2; };
+        hooks.notifySurface=[](Sid) {}; //원문004214a0도 정상 수명 진단 이외의 사건을 내지 않는다.
+        hooks.refresh=[this](Sid sid) { Event("R:"+std::to_string(sid.value)); };
+        hooks.carriers=[this](Sid sid) { const auto raw=pool.Slot(sid);Event("C:"+std::to_string(static_cast<int>(std::bit_cast<float>(RawDecayRead(raw,14))))+":"+std::to_string(static_cast<int>(std::bit_cast<float>(RawDecayRead(raw,18))))); };
+        hooks.crackSound=[this](Sid sid) { const auto raw=pool.Slot(sid);Event("S:"+std::to_string(RawDecayRead(raw,14))+":"+std::to_string(RawDecayRead(raw,18))); };return hooks;
+    }
+    //실제 변경된 네 필드를 입력 순서대로 직렬화하며 기대 열은 수정하지 않는다.
+    std::string After(const std::vector<Input>& inputs) const {
+        std::string result;for (const auto& entry:inputs) { const auto raw=pool.Slot(Sid{entry.id});if (!result.empty()) result+=';';result+=std::to_string(entry.id)+","+std::to_string(RawDecayRead(raw,12,2))+","+std::to_string(RawDecayRead(raw,36))+","+std::to_string(raw[11]); }return result; //모든 입력 객체를 생략 없이 비교한다.
+    }
+};
+}
+
+//독립 원문4241행의 한 칸 결과를 실제 raw float 이웃/WORD/프레임 쓰기로 재생한다.
+TEST_CASE(RawBridgeDecay_NativeCellEventsAndPhysicalState) {
+    const auto codes=Frames("0");std::size_t rows{};
+    for (const auto& row:Fixture()) { //원본 기대값의 모든 Cell 행을 사용하고 새 golden은 만들지 않는다.
+        if (row[0]!="Cell") continue;const auto inputs=Inputs(row[1]);RawDecayScene scene(inputs,codes,row[2],row[3],{row[4]=="1",true,false,row[5]=="1",row[6]=="1"});
+        RawBridgeDecay decay(scene.pool,scene.types,scene.frames,scene.surface,scene.spots,scene.graphs,scene.mode,scene.Hooks());decay.Cell(Sid{static_cast<std::uint16_t>(std::stoul(row[7]))});
+        const bool same=scene.events== (row[8]=="-" ? "" : row[8]) && scene.After(inputs)==row[9];CHECK(same);if (!same) { std::fprintf(stderr,"raw 다리 Cell 행%zu events=%s / %s after=%s / %s\n",rows,scene.events.c_str(),row[8].c_str(),scene.After(inputs).c_str(),row[9].c_str());break; }++rows;
+    }
+    CHECK(rows==kCellRows);
+}
+
+//논리 API가 보호했던 정상7 초과400행도 원문의 실제4비트 쓰기 그대로 대조한다.
+TEST_CASE(RawBridgeDecay_NativeLifeIncludingWideValues) {
+    const auto codes=Frames("0");std::size_t rows{};
+    for (const auto& row:Fixture()) { //모든3264 Life 관측을 수명 값의 크기로 생략하지 않는다.
+        if (row[0]!="Life") continue;const auto inputs=Inputs(row[1]);RawDecayScene scene(inputs,codes,row[2],"-",{row[3]=="1",true,false,row[4]=="1",row[5]=="1"});
+        RawBridgeDecay decay(scene.pool,scene.types,scene.frames,scene.surface,scene.spots,scene.graphs,scene.mode,scene.Hooks());decay.ApplyLife(Sid{inputs[0].id},std::stoi(row[6]));
+        const bool same=scene.events==(row[7]=="-" ? "" : row[7]) && scene.After(inputs)==row[8];CHECK(same);if (!same) { std::fprintf(stderr,"raw 다리 Life 행%zu events=%s / %s after=%s / %s\n",rows,scene.events.c_str(),row[7].c_str(),scene.After(inputs).c_str(),row[8].c_str());break; }++rows;
+    }
+    CHECK(rows==kLifeRows);
 }

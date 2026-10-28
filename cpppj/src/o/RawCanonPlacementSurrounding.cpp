@@ -31,10 +31,23 @@ RawCanonSurfaceWalk::RawCanonSurfaceWalk(const SidPool& pool,std::span<const Rif
     std::span<const PriestPlainCanonType> frames,std::span<const std::uint16_t> islands,
     std::span<const std::uint8_t> spots,const CanonPlacementQuery& query,const CanonPlacementCell& cell)
     :pool_(pool),types_(types),frames_(frames),islands_(islands),spots_(spots),sourceType_(query.type) {
-    if (types.size()!=(pool.Edition()==OriginalEdition::Patch1078 ? 188U : 171U) || frames.size()!=types.size() || islands.size()!=65536 || spots.size()!=65536)
+    Initialize(cell);
+}
+//실제004b23e0(sid,8)의 생성 시점 TYPE/프레임/float 기준점을 같은 기존 순회에 공급한다.
+RawCanonSurfaceWalk::RawCanonSurfaceWalk(const SidPool& pool,std::span<const RiftTypeRecord> types,
+    std::span<const RiftTypeFrames> frames,std::span<const std::uint16_t> islands,
+    std::span<const std::uint8_t> spots,Sid source)
+    :pool_(pool),types_(types),rawFrames_(frames),islands_(islands),spots_(spots) {
+    const auto raw=pool.Slot(source);sourceType_=raw[10];const bool patch=pool.Edition()==OriginalEdition::Patch1078;
+    CanonPlacementCell cell;cell.frame=std::bit_cast<std::int32_t>(Read(raw,patch ? 36 : 34,patch ? 4 : 1));cell.x=std::bit_cast<float>(Read(raw,14));cell.y=std::bit_cast<float>(Read(raw,18));Initialize(cell);
+}
+//원문 source를 생성 시 고정하되 후보/코드/지도는 이후 Next에서 현재값을 읽는다.
+void RawCanonSurfaceWalk::Initialize(const CanonPlacementCell& cell) {
+    const auto types=types_;const auto& pool=pool_; //공통 기존 발자국 계산의 입력 표기를 유지한다.
+    if (types.size()!=(pool.Edition()==OriginalEdition::Patch1078 ? 188U : 171U) || frames_.size()+rawFrames_.size()!=types.size() || islands_.size()!=65536 || spots_.size()!=65536)
         throw std::invalid_argument("주변 표면 자료 크기 오류");
     if (sourceType_>=types.size()) throw std::out_of_range("주변 표면 배치 타입 오류");
-    const auto& type=types[sourceType_];const auto codes=frames[sourceType_].frames.Codes();
+    const auto& type=types[sourceType_];const auto codes=Codes(sourceType_);
     if (type.footX<1 || type.footY<1 || type.footX>12 || type.footY>12 || cell.frame<0 || static_cast<std::size_t>(cell.frame)>=codes.size())
         throw std::out_of_range("주변 표면 발자국/프레임 오류");
     Cell(cell.x);Cell(cell.y);sourceFrame_=cell.frame;
@@ -53,6 +66,10 @@ RawCanonSurfaceWalk::RawCanonSurfaceWalk(const SidPool& pool,std::span<const Rif
     state_.right=static_cast<int>(right_+1.0F);state_.bottom=static_cast<int>(bottom_+1.0F);
     state_.x=state_.left;state_.y=state_.top;Next();
 }
+//실제 Squid 표와 배치 표는 복사/변환하지 않고 같은 TYPE 번호로 조회한다.
+std::span<const FrameCode> RawCanonSurfaceWalk::Codes(std::uint32_t type) const {
+    return rawFrames_.empty() ? frames_[type].frames.Codes() : rawFrames_[type].Codes();
+}
 // 필터는 원본처럼 후보 spot부터 읽고, 접합 계산 뒤 죽음/내부 비트를 검사한다.
 bool RawCanonSurfaceWalk::Accept(Sid candidate) const {
     const auto raw=pool_.Slot(candidate);const float x=std::bit_cast<float>(Read(raw,14)),y=std::bit_cast<float>(Read(raw,18));
@@ -61,11 +78,11 @@ bool RawCanonSurfaceWalk::Accept(Sid candidate) const {
     const auto bits=spots_[spot];if (raw[10]>=types_.size()) throw std::out_of_range("주변 표면 후보 타입 오류");
     const auto& type=types_[raw[10]];if (!(type.flags1&TypeFlag1::kSurface)) return false;
     const bool patch=pool_.Edition()==OriginalEdition::Patch1078;const auto frame=Read(raw,patch ? 36 : 34,patch ? 4 : 1);
-    const auto codes=frames_[raw[10]].frames.Codes();if (frame>=codes.size()) throw std::out_of_range("주변 표면 후보 프레임 오류");
+    const auto codes=Codes(raw[10]);if (frame>=codes.size()) throw std::out_of_range("주변 표면 후보 프레임 오류");
     const float cx=static_cast<float>(static_cast<double>(x)-static_cast<double>(type.footX)*0.5);
     const float cy=static_cast<float>(static_cast<double>(y)-static_cast<double>(type.footY)*0.5);
     const int direction=RawSquidNeighbors::Direction(cx,cy,centerX_,centerY_);
-    const auto sourceCodes=frames_[sourceType_].frames.Codes();
+    const auto sourceCodes=Codes(sourceType_);
     if (static_cast<std::size_t>(sourceFrame_)>=sourceCodes.size()) throw std::out_of_range("주변 표면 현재 배치 프레임 오류");
     if (!Bridge::Connects(codes[frame],type.flags2,sourceCodes[static_cast<std::size_t>(sourceFrame_)],types_[sourceType_].flags2,direction)) return false;
     return !(raw[11]&2) && !(bits&8);
