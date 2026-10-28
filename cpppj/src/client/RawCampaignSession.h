@@ -505,6 +505,8 @@ public:
     std::unique_ptr<RawUserSelection> MakeUserSelection(UserSelectionState state,UserSelectionHooks hooks);
     // 같은 현재 커서/실제 요청/포획/후보/음향 장부를 사용자입력 장치에 연결한다.
     std::unique_ptr<RawCarrierInput> MakeCarrierInput(CarrierInputHooks hooks);
+    // 자동 입력 보고에서 현재 선택/역투영 점의 실제 Graph·spot·간헐천 자격만 읽는다. 평가/명령은 실행하지 않는다.
+    std::string ReportCarrierHover(std::uint32_t selected,float x,float y) const;
     // 같은풀/공통삭제/혼합종속분배에등록한실제GumpFormHost다. UI는월드반납전에연결메뉴를닫아야한다.
     o::GumpFormHost& GumpForms();
     // 현재 타입/명령·특수 모드의 장기 저장소다. 알려진 공통 전역은 실제 getter로 연결한다.

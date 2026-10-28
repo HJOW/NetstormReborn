@@ -3739,6 +3739,19 @@ std::string RawCampaignSession::ObjectName(Sid parent) const { if (!impl_->loade
 void RawCampaignSession::RemoveAi(std::uint32_t owner) { impl_->participation->RemoveBrain(owner); }
 // 후속 실제 전략은 현재 Player 토큰으로 이 유일한 본체/목록 저장소를 조회해야 한다.
 const RawAiBrainMemory& RawCampaignSession::AiMemory() const { return impl_->aiMemory; }
+// 실제 강조와 같은 snap/Graph/spot/간헐천 조회를 보고하며 커서 상태·선택·경로를 바꾸지 않는다.
+std::string RawCampaignSession::ReportCarrierHover(std::uint32_t selected,float x,float y) const {
+    const auto& s=*impl_;if (!s.loaded || !selected || selected>=s.core.pool.Capacity()) return {};
+    const auto raw=s.core.pool.Slot(Sid{static_cast<std::uint16_t>(selected)}); // 현재 선택의 실제 원시 위치다.
+    const auto p=RawCarrierDropPoint::Snap({x,y});const auto cell=RawCursorPosition::TruncatePoint(p); // caller가 절삭한 실제 폴링 점을 강조와 같이 스냅한다.
+    const auto cx=static_cast<std::int32_t>(cell[0]),cy=static_cast<std::int32_t>(cell[1]);if (cx<0 || cx>=256 || cy<0 || cy>=256) return {};
+    const auto sx=std::bit_cast<float>(Read(raw,14)),sy=std::bit_cast<float>(Read(raw,18)); // 선택 당시 복제 좌표를 사용하지 않는다.
+    const auto from=s.anchor->GraphAt(sx,sy),to=s.anchor->GraphAt(p[0],p[1]); // 원본488340의 포인터 비교와 같은 두 현재 그래프 번호다.
+    const auto geyser=s.world.Find(p[0],p[1],s.motionState.carrier.GeyserType()); // 현재 원문4b1fa0과 같은 실제 공간 조회다.
+    const bool valid=geyser.value && s.motion->CarrierArrival().ValidGeyser(Sid{static_cast<std::uint16_t>(selected)},geyser); // 예약/이동을 실행하지 않는 자격 판정이다.
+    std::ostringstream out;out.precision(12); // 읽기 전용 진단 한 줄만 기존 자동 입력 보고에 추가한다.
+    out<<"raw_carrier_hover\t"<<selected<<'\t'<<p[0]<<'\t'<<p[1]<<'\t'<<from<<'\t'<<to<<'\t'<<std::uint32_t(s.core.spots[static_cast<std::size_t>(cy)*256+cx])<<'\t'<<geyser.value<<'\t'<<valid<<'\n';return out.str();
+}
 // 기존사제목록의현재owner/dead와같은풀의실제포획원소유자를명시조회한다.
 std::uint32_t RawCampaignSession::FindPriestParticipation(std::uint32_t owner) const { return impl_->priestParticipation->Find(owner); }
 // 원본로그인종료타이머소비자가선택한위치에서만기존ownerState1..8을갱신한다.

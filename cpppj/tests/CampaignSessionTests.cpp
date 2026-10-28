@@ -279,7 +279,10 @@ TEST_CASE(CampaignSession_CarrierMiningNaturalArrivalUsesSameWorld) {
     const auto content=session.Priests().Carrier().FindContained(golem,0x20,154,0);CHECK(content.value && Get(core.pool.Slot(content),18,2)==154);
     CHECK(mined.size()==1 && mined.front()==std::vector<std::uint8_t>({1,0x5b,6,0,static_cast<std::uint8_t>(geyser.value),static_cast<std::uint8_t>(geyser.value>>8)}));CHECK(quantityAtSend==initialQuantity && contentAtSend==content.value);CHECK(session.Sp(1)==sp);
     if (initialQuantity==400) CHECK(Get(core.pool.Slot(geyser),12,2)==200);else CHECK((core.pool.Slot(geyser)[11]&3)!=0 || core.pool.Slot(geyser)[10]!=122);
-    RawContainedLookup lookup(core.pool,[](Sid,std::uint32_t) { throw std::logic_error("채취 후 조회에서 삭제 금지"); });CHECK(!lookup.Find(golem,40).value);CHECK(core.destroy.PreDepth()==0 && core.destroy.PostDepth()==0);
+    RawContainedLookup lookup(core.pool,[](Sid,std::uint32_t) { throw std::logic_error("채취 후 조회에서 삭제 금지"); });const auto returning=lookup.Find(golem,40);CHECK(returning.value); // 원본Arrival은 사람 운반체의 너겟 생성 뒤 실제 귀환 경로로 교체한다. 적재 Graph가 꺼져 귀환 대상을 못 찾던 옛 무경로 기대를 사용하지 않는다.
+    const auto* returnPath=dynamic_cast<RawPathProcess*>(core.processes.FromForm(returning));CHECK(returnPath && returnPath->Runtime().Count()>0 && !returnPath->Runtime().Finished());
+    if (returnPath && returnPath->Runtime().Count()>0) { const auto home=Sid{static_cast<std::uint16_t>(Get(session.PlayerRecords(),0xb4+0x7c))};const auto bounds=core.neighbors.Footprint(home);const auto destination=returnPath->Runtime().Point(returnPath->Runtime().Count()-1);CHECK(destination.x>=bounds.left && destination.x<=bounds.right && destination.y>=bounds.top && destination.y<=bounds.bottom); } // 원래 Player의 신전 발자국으로 가는 현재 실제 끝점까지 확인한다.
+    CHECK(core.destroy.PreDepth()==0 && core.destroy.PostDepth()==0);
     }
 }
 // 실제회피가같은Host40/BFS/직렬화로기존경로를바꾸고현재깊이3의추가요청은보존한다.
@@ -510,7 +513,8 @@ TEST_CASE(CampaignSession_AiCollectorSelectionUsesActualDeployment) {
 // 원본 MasterOfWhirligigs의 빈 원격 워크샾에 같은 기술/생산 내용물과 Deck 통지를 연결한다.
 TEST_CASE(CampaignSession_AiFactoryProductionUsesOriginalWorkshops) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();services.ai.allocationBytes=[](auto bytes) { std::fill(bytes.begin(),bytes.end(),std::uint8_t{0x71}); };services.ai.participation.clearChat=[](auto) {};services.ai.participation.addChat=[](auto,auto,auto) {};services.ai.localTransport=[] { return true; };services.missionOutcome.demo=[] { return 0U; };services.ai.assertion=[](std::string_view text) { throw std::logic_error(std::string(text)); };services.production.allocationBytes=[](auto bytes) { std::fill(bytes.begin(),bytes.end(),std::uint8_t{0x71}); };services.production.effects.configInt=[](std::string_view) { return 0; };services.production.effects.modeAssertion=[] { throw std::logic_error("검사 외 생산 모드 진단"); };
-    auto fort=FortTemplate::Parse(assets.files.Read("d/masterofwhirligigs.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"masterofwhirligigs",std::move(services));CHECK(Throws([&] { session.ManageAiFactories(2); }));session.Load();CHECK(!session.ManageAiFactories(2));const auto token=session.CreateAi(2,SessionAiSettings("Factory AI","sunWalker;sunCannon"));CHECK(session.InitializeAi(2) && session.PrepareAi(2));const auto raw=session.AiMemory().Bytes(token);CHECK(Get(raw,0x314)==2);const auto list=session.AiMemory().Bytes(Get(raw,0x30c));const auto factory=Sid{static_cast<std::uint16_t>(Get(list,0))};std::uint32_t count{};
+    auto fort=FortTemplate::Parse(assets.files.Read("d/masterofwhirligigs.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"masterofwhirligigs",std::move(services));CHECK(Throws([&] { session.ManageAiFactories(2); }));session.Load();CHECK(!session.ManageAiFactories(2));session.SetSp(2,10000); // 생산을 검증하는 명시 AI 입력이다. 원본 골렘400SP 복원 뒤0SP 무료 생산을 검사 전제로 두지 않는다.
+    const auto token=session.CreateAi(2,SessionAiSettings("Factory AI","sunWalker;sunCannon"));CHECK(session.InitializeAi(2) && session.PrepareAi(2));const auto raw=session.AiMemory().Bytes(token);CHECK(Get(raw,0x314)==2);const auto list=session.AiMemory().Bytes(Get(raw,0x30c));const auto factory=Sid{static_cast<std::uint16_t>(Get(list,0))};std::uint32_t count{};
     // 전체AI의선행수집자행동도같은생각기한을사용하므로수동갱신을중복호출하지않고첫자연생산까지진행한다.
     for (std::uint64_t frame=0;frame<400 && !count;++frame) { const auto now=3.0+static_cast<double>(frame)*0.1;session.RunFrame({now,now,0.1,frame+1},false);count=static_cast<std::uint32_t>(CountContained(session.Core().pool,session.ProductionFinder(),factory,0x10,0)); }
     std::printf("자동AI 워크샾 첫생산%u 시각%g 수집자%u\n",count,session.Core().processState.now,Get(raw,0x2e4));CHECK(Get(raw,0x314)==2);
@@ -5156,4 +5160,20 @@ TEST_CASE(CampaignSession_CarrierHoverUsesRealNuggetAndCapturablePriest) {
             CHECK((core.pool.Slot(target)[11]&3U)==0 && !session.Priests().Carrier().FindContained(actor,0x20,0,0).value); // 호버가 포획/경제/내용물 변경을 실행하지 않는다.
         }
     }
+}
+
+// 실제1-1 간헐천의 막힌 칸과 옆 자유 칸을 구분해 폴링 절삭 누락에 의한 이동 커서 회귀를 잡는다.
+TEST_CASE(CampaignSession_GolemGeyserHoverTruncatesPollingBeforeHighlight) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();UseWorldTestLogin(services);services.install.resetCamera={}; // 장치만 기존 독립 경계이며 지형과 간헐천은 원래 Fort다.
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());GameWorld world(assets.game,assets.files,std::move(fort),MissionPlayers{},"thewarbegins",std::move(services),{1024,768});const auto cursors=BindWorldTestInput(world);auto& session=world.Session();auto core=session.Core();
+    CHECK(core.bookkeeping.graphsEnabled);const auto actor=session.World().Create(133,2);const bool battle=core.ownerMode.battle;core.ownerMode.battle=false;core.owner.Set(actor,1);core.ownerMode.battle=battle;session.World().Pop(actor,94,110,0); // 골렘만 명시 생성하며 공간/Graph와 선택·강조의 결과는 주입하지 않는다.
+    world.SetMousePoint(world.ToScreen(94,110));world.Select(actor.value);CHECK(world.InputMode()==5 && world.HighlightSettings().selectedSid==actor.value);
+    const auto before=std::vector<std::uint8_t>(core.pool.Slot(actor).begin(),core.pool.Slot(actor).end());const auto packets=session.LocalConnectionPackets().size(); // 호버가 이동 송신이나 현재 객체를 바꾸지 않는지도 확인한다.
+    for (const auto camera:std::array<std::array<int,2>,2>{{{976,793},{848,817}}}) { // 원본1024×768과1280×720의 같은 월드 지점을 다른 실제 카메라로 가리킨다.
+        session.CameraGlobals().ApplyPixelsToRendererAndSnapshot(camera[0],camera[1]);
+        for (const auto point:std::array<std::array<int,3>,3>{{{1611,1148,3},{1611,1115,18},{1496,1204,6}}}) { // 간헐천 그림의101/105·위쪽 자유101/102·자기94/110의 독립 화면 입력이다.
+            world.SetMousePoint({point[0]-camera[0],point[1]-camera[1]});world.UpdateMovementCursor();CHECK(!cursors->empty() && cursors->back()==static_cast<std::uint32_t>(point[2]));
+        }
+    }
+    CHECK(session.LocalConnectionPackets().size()==packets && std::equal(before.begin(),before.end(),core.pool.Slot(actor).begin()));
 }

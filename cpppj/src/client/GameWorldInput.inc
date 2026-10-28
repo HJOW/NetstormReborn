@@ -33,4 +33,9 @@ std::uint32_t GameWorld::OpenSelectionMenu(o::Sid sid,const InputEvent& event,bo
     return archer ? input_->selection->ArcherMenu(sid,event,common) : input_->selection->CarrierMenu(sid,event,common);
 }
 //취득한 건설 커서와 별개로 현재 이동 선택의 커서를 갱신한다.
-void GameWorld::UpdateMovementCursor() { if (input_ && (highlightMode_==2 || highlightMode_==5)) input_->carrier->Highlight(selected_,input_->Project(mousePoint_),0); }
+void GameWorld::UpdateMovementCursor() {
+    if (input_ && (highlightMode_==2 || highlightMode_==5)) {
+        const auto projected=input_->Project(mousePoint_);const auto point=RawCursorPosition::TruncatePoint({projected.x,projected.y}); // 원본4d691b/4d6927의4971e0→41d770 뒤4284a0 순서다. 모드 전환4d5bb0의 직접 역투영과 구별한다.
+        input_->carrier->Highlight(selected_,{point[0],point[1]},0);
+    }
+}

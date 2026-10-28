@@ -508,7 +508,7 @@ void GameWorld::SetMousePoint(ScreenPoint point) { mousePoint_=point; }
 // 선택한 유닛의 주인이 나일 때만 명령을 적용한다.
 bool GameWorld::MoveSelected(ScreenPoint point) {
     if (campaign_) {
-        if (!input_) throw std::logic_error("실제 클릭 명령 장치 미설치");const auto number=selected_;const auto projected=input_->Project(point);const auto truncated=RawCursorPosition::TruncatePoint({projected.x,projected.y}); //원본 Userinput.cpp는4971e0→41d770 뒤42a360을 호출한다. 호버의 거의 올림과 구별한다.
+        if (!input_) throw std::logic_error("실제 클릭 명령 장치 미설치");const auto number=selected_;const auto projected=input_->Project(point);const auto truncated=RawCursorPosition::TruncatePoint({projected.x,projected.y}); //원본 Userinput.cpp는4971e0→41d770 뒤42a360을 호출한다. 폴링 때도 같은 절삭을 적용하며 모드 전환 시의 직접 역투영과 구별한다.
         input_->carrier->Commit(number,{truncated[0],truncated[1]});changed_=true;return number!=0;
     }
     RefreshSurfaceGround();
@@ -833,6 +833,7 @@ std::string GameWorld::Report(bool mask) const {
         out<<"\n";
     }
     out<<(campaign_ ? campaign_->World() : *surfaces_).Report();
+    if (campaign_ && input_ && highlightMode_==5 && selected_) { const auto projected=input_->Project(mousePoint_);const auto point=RawCursorPosition::TruncatePoint({projected.x,projected.y});out<<campaign_->ReportCarrierHover(selected_,point[0],point[1]); } // 현재 실제 폴링의 점을 읽을 뿐 커서 평가를 다시 실행하지 않는다.
     return out.str();
 }
 }

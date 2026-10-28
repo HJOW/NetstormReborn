@@ -254,6 +254,7 @@ o::SquidDestroyLifecycle& RawSurfaceWorld::CommonDeletion() { return *impl_->com
 // Fort의 원본 객체 순서를 보존하는 외부 로더는 이 경계 사이에서 Create/Pop을 직접 호출한다.
 void RawSurfaceWorld::BeginLoad() {
     auto& s=*impl_;if (s.loaded || s.loading) throw std::logic_error("raw 월드 중복 로드 시작");
+    s.bookkeeping.graphsEnabled=true; // 원본00540414는PE초기값1이다. 적재 중에도 noGraph 표면의254 지정과 건물 점유 영역 무효화가 필요하며, 완료 뒤에만 켜면 간헐천 호버/경로가 일반 지면으로 판정된다.
     s.loading=true;SetLoadingDepth(1);
 }
 // 모든 실제 객체를 등록한 뒤 원본 Graph/장부를 활성화한다.
