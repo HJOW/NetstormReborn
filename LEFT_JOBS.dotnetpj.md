@@ -176,7 +176,7 @@
 - [ ] **R0-4 — 새 fixture로 뒤처진 C#을 고친다:** 영향표 A의 여섯 묶음을 `sp-add-bits`·`sp-initialization`·`fort-sp-write` → `squid-retype`·`object-conversion` → `squid-pool-reset`·`state-sid-lists` → `priestregen`·`priest-panic`·`priest-prayer` → `RawGraph` 비표면 좌표 → `RawAssetPostPop` 4종 순으로 처리한다. 묶음마다 fixture `Link`+`cpp_sync.py --update --add`, C# 수정, `--ports-reflect`를 하고 단위 기록을 남긴다. 기대값을 C# 결과로 바꾸지 않는다.
 - [x] **R1-1 (2026-10-28 완료, 라이브러리 부분):** `Netstorm.Client` 프로젝트와 `Netstorm.Client.Tests`를 만들고 `Screen`(8비트 버퍼·팔레트·잠금·자르기)·`GamePalette`·`PaletteSearch`·`ScreenGeometry`·`ScreenPresentation`·`ScreenResolutions`·`ScreenPaletteApply`·`InputQueue`를 이식했다. 원본 fixture 3개(786·357·166행)가 L1로 일치하고 전체 1,384개 통과·경고 0. [문서](docs/dotnet-client-screen-20261028.md). 이 단위는 규칙의 이식이며 실제 화면 픽셀 비교가 아니다.
 - [ ] **R1-2a:** MonoGame 출력 호스트: `IScreenOutput` 구현(인덱스→RGBA 텍스처, 정수 최근접 확대·검정 여백), 전체화면 borderless 창과 창 전환, 마우스 좌표 역변환·커서 제한, 키·글자·버튼 → `InputQueue`, 프레임 루프 골격. 기존 `NetstormGame`/`DisplayManager`는 동결하고 새 호스트를 `--client` 같은 별도 진입으로 둔다(결정 5).
-- [ ] **R1-2b:** `--ui-script`·`snapshot` 논리 캡처(BMP)·`cpp_frame_compare.py`. 첫 비교는 R3 전이므로 시험 패턴과 출력 변환 경계로 한다.
+- [x] **R1-2b (2026-10-28 완료, 호스트 없이 가능한 부분):** `ScreenCapture`(cpppj와 byte 동일한 BMP)·`UiScript`/`UiScriptRunner`(esc·key·keyup·pointer·좌표/라벨 클릭·snapshot)·`dotnetpj/tools/cpp_frame_compare.py`(파일·폴더 비교, 종료 코드 0/1/2). 오라클 캡처(메인 메뉴 프레임 30)가 이 PC에서 결정적으로 만들어짐을 확인했다. [문서 5절](docs/dotnet-client-screen-20261028.md#5-r1-2-부분-캡처스크립트-도구와-오라클-확인-같은-날). **남은 것:** `--ui-script`/`--mission`/`--frames`/`--set` 실행 인자를 받는 dotnetpj 실행 진입과 그 안에서 두 도구를 부르는 프레임 루프는 R1-2a의 호스트가 있어야 하며, 라벨 클릭·report·kernel-tell 등은 R3 이후다.
 - [ ] 이후 R2 → R3(D1) → R4(M1) → R5(D2) → R6 → R7 → R8 순서로 진행하고, 단위마다 이 절의 체크와 [0.4](#04-기존-dotnetpj-소스의-재수정-판정) 판정표를 갱신한다.
 
 ### 0.10 이번 문서 작업 기록
@@ -200,9 +200,22 @@
 ### 0.12 단위 기록 — R1-1 Netstorm.Client 화면·입력 계층 (2026-10-28, VM-W11-Codex)
 
 - **변경:** 새 프로젝트 `dotnetpj/src/Netstorm.Client`(9개 C# 파일)와 `dotnetpj/tests/Netstorm.Client.Tests`(3개 파일), `Netstorm.sln` 갱신, `cpp_sync.py`(`Client` 사용 프로젝트 허용, `--ports-add`), `CppFixtureManifestTests`(Client 허용), `cpp-fixture-manifest.tsv`(3개 등록), `PORT_MAP.tsv`(11행 추가), `PORT_MAP.md`·`docs/dotnet-client-screen-20261028.md`·`docs/dotnet-cpp-resync-20261028.md`. cpppj·원본·AGENTS.md·reflected-commit은 바꾸지 않았다.
-- **검증:** [문서 3절](docs/dotnet-client-screen-20261028.md#3-검증). 전체 1,384개 통과, Release 경고·오류 0. fixture 검사의 판별력을 변이 2건으로 확인했고 최초 실패 1건은 테스트의 잘못된 기대값이었다.
+- **검증:** [문서 3절](docs/dotnet-client-screen-20261028.md#3-검증). 전체 1,384개 통과(R1-1 시점), Release 경고·오류 0. fixture 검사의 판별력을 변이 2건으로 확인했고 최초 실패 1건은 테스트의 잘못된 기대값이었다.
 - **동시 작업 주의:** 다른 PC·세션이 같은 저장소에 cpppj 커밋을 계속 병합하고 있다(`0cc1d33d`→`ac9ea916`: CP `20261028-20`·`-21`). 그 결과 커밋 번호 `20261028-19`·`-20`은 CP와 DN이 각각 하나씩 썼다. 번호는 구분용이므로 그대로 두고, 다음 DN 커밋은 `git log`로 당일 마지막 번호를 확인해 이어 쓴다. 병합 때문에 R0의 오라클 실행 파일(`0cc1d33d` 빌드)은 이미 HEAD보다 오래됐다. 화면 캡처 비교(R1-2b) 전에 다시 빌드한다. 변경 쌍은 35개로 늘었다([영향표 2.1](docs/dotnet-cpp-resync-20261028.md)).
-- **다음:** R1-2a(MonoGame 출력 호스트) → R1-2b(캡처·비교 도구) → R2. R0-4(뒤처진 C# 수정)는 `Original` 모듈이 세션에 연결되는 R4 전에 끝내면 되므로 R1~R2와 번갈아 진행할 수 있다.
+- **다음:** R1-2a(MonoGame 출력 호스트) → R2. R0-4(뒤처진 C# 수정)는 `Original` 모듈이 세션에 연결되는 R4 전에 끝내면 되므로 R1~R2와 번갈아 진행할 수 있다.
+
+### 0.13 단위 기록 — R1-2 캡처·스크립트 도구와 오라클 확인, 작업 중지 인계 (2026-10-28, VM-W11-Codex)
+
+- **중지 사유:** 사용자가 "문서 갱신 및 커밋하고 그 이후 일단 작업 중지"를 요청했다. 이 단위까지 커밋하고 멈춘다. 중지 시점에 진행 중인 빌드·게임·검사 프로세스는 없다(`NetstormCpp.exe` 없음을 확인했고 마지막 cpppj 빌드는 종료 0으로 끝났다).
+- **변경:** `Netstorm.Client`에 `Display/ScreenCapture.cs`, `Automation/UiScript.cs`, 검사 `CaptureAndScriptTests`(12개), `dotnetpj/tools/cpp_frame_compare.py`, `PORT_MAP.tsv`(3행 추가, 82행), `docs/dotnet-client-screen-20261028.md` 5절. cpppj·원본·AGENTS.md·`cpp-fixture-manifest.tsv`의 reflected-commit은 바꾸지 않았다.
+- **검증:** Client 45개를 포함한 전체 1,396개 통과. 캡처 BMP의 머리 122바이트가 cpppj의 실제 캡처와 byte 동일함을 확인했다(화면 픽셀 일치는 아님). 도구는 일치·차이·입력 오류·폴더 모드를 직접 실행해 확인했다.
+- **오라클 사용 환경(재개 때 그대로 쓸 수 있다):** 데이터 사본 `extracted/dotnet-oracle-data/`(`originals/` 1,394파일 복사, 실행 중 설정은 사본에만 쓴다), 캡처·로그 `extracted/dotnet-oracle-captures/`, 기준선·영향 원시 `extracted/dotnet-r0-baseline/`. 모두 Git 제외이며 다른 PC에는 없다. 오라클 `NetstormCpp.exe`는 HEAD `0cc1d33d`로 빌드(SHA-256 `63DF9A10…`)했다. 그 뒤 병합된 cpppj 변경은 화면 계층과 무관하나 다음 캡처 비교 전에 `cmake --build`로 다시 빌드한다(Git Bash가 아니라 PowerShell에서, 26분 걸린 전체 빌드였고 증분은 더 짧다). 실행 전후 `originals/` 해시가 같음을 확인했다. 원본 해시 기준선은 `extracted/dotnet-r0-baseline/originals-hash-before.txt`다.
+- **재개 순서(권장):**
+  1. `git pull`로 새 cpppj 커밋을 받은 뒤 `python dotnetpj/tools/cpp_sync.py`·`--ports`를 실행해 변경 쌍 수(현재 35개)와 새 fixture를 확인한다.
+  2. **R1-2a:** `Netstorm.Game`에 새 MonoGame 호스트(기존 `NetstormGame`은 동결)를 만든다. `IScreenOutput` 구현(인덱스→RGBA, `ScreenPresentation.ScaleScreenPresentation`로 CPU 정수 확대 후 업로드), 마우스·키 → `InputQueue`, `UiScriptRunner`를 프레임 루프에 연결, `--run/--window/--frames/--set/--ui-script/--ui-report` 진입. 시험 패턴을 그려 cpppj 출력 변환 검사와 같은 경계(행 간격 1368, 4:3/16:9/16:10)를 실제 창에서 확인한다.
+  3. **R2:** 그리기 원시·팔레트·글꼴(`PORT_MAP.md` 4절). 이때 `Screen.LoadPalette`의 색 표 계산(`BuildPaletteColorTable`·`BuildGumpShadeMaps`)을 연결한다.
+  4. **R0-4:** 뒤처진 `Original` 모듈 수정은 R4 전에 끝내면 되며 R1~R2와 번갈아 할 수 있다. 영향표 A 목록을 따른다.
+- **알아 둘 것:** 이 저장소에는 다른 PC·세션이 cpppj 커밋을 계속 병합한다(커밋 번호 `-19`·`-20`은 CP와 DN이 각각 썼다). 다음 DN 커밋은 `git log`로 당일 마지막 번호를 확인한다. dotnetpj·docs 문서는 저장소에 LF로 저장되므로 `git -c core.autocrlf=false`를 쓰지 않는다.
 
 ## 1. 지금까지의 완료 범위 — 이관 기록 색인
 
@@ -222,7 +235,7 @@
 | R0 (10-28) | cpppj 오라클 확정, 재대조 영향표, 포트 맵(`PORT_MAP.tsv`)·`cpp_sync.py --ports*` | [영향표](docs/dotnet-cpp-resync-20261028.md), [PORT_MAP.md](dotnetpj/PORT_MAP.md) | 유지. R0-4 수정 대기 |
 | R1-1 (10-28) | `Netstorm.Client`: 8비트 `Screen`·팔레트·색 검색·화면 스크롤·전체화면 출력 계산·입력 큐 | [R1-1 문서](docs/dotnet-client-screen-20261028.md) | 새 경로(`port`) |
 
-마지막 전체 빌드·검사는 2026-10-28의 Release 경고·오류 0, 1,384개 통과(Assets 363 + Core 988 + Client 33)다. Assets·Core는 기존 경로 기준이며 0절 새 경로의 진행도가 아니다. 새 경로의 진행도는 Client 검사와 0.5절의 단계 완료 기준으로 본다.
+마지막 전체 빌드·검사는 2026-10-28의 Release 경고·오류 0, 1,396개 통과(Assets 363 + Core 988 + Client 45)다. Assets·Core는 기존 경로 기준이며 0절 새 경로의 진행도가 아니다. 새 경로의 진행도는 Client 검사와 0.5절의 단계 완료 기준으로 본다.
 
 ---
 
@@ -297,7 +310,9 @@ python dotnetpj/tools/cpp_sync.py --update --add 이름:Core           # 새 fix
 cpppj/build/bin/Release/NetstormCpp.exe --run <데이터 사본> --window --no-audio --frames 120 `
   --set "SCREENW=1024;SCREENH=768;maxFPS=40;sleepPerLoop=25;autoDemo=0;tellTips=0" `
   --ui-script steps.tsv --ui-report states.tsv            # 미션 직행은 --mission thewarbegins 등을 더한다
-# dotnetpj 쪽의 같은 실행 인자와 비교 도구(dotnetpj/tools/cpp_frame_compare.py)는 0절 R1에서 만든다(아직 없음).
+# 캡처 비교 도구: python dotnetpj/tools/cpp_frame_compare.py A.bmp B.bmp [--diff diff.png]  /  --dir 폴더A 폴더B (종료 코드 0 일치·1 차이·2 입력 오류)
+# dotnetpj 쪽의 같은 실행 인자(--run/--ui-script/--frames/--set)를 받는 진입은 R1-2a(MonoGame 호스트)에서 만든다(아직 없음).
+# PowerShell 5.1의 Start-Process -PassThru 는 종료 코드를 비우므로 `& exe 인자; $LASTEXITCODE` 로 읽는다.
 ```
 
 - 클론 창을 띄우는 검사(`tools/clone_*_smoke.ps1`, `dotnet run --project dotnetpj/src/Netstorm.Game`)는 `DESKTOP-HJOW` 가 아닌 PC 에서 한다.

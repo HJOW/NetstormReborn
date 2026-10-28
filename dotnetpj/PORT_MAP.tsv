@@ -3,7 +3,9 @@
 # status: L1(원본 fixture 대조, 세션 미연결) / session(세션 연결) / port(새 경로 직역 이식) / retire(대체 예정)
 # base 이후 cpp 파일이 바뀌면 --ports 가 경고한다. 재대조를 마친 뒤 --ports-reflect 로 base 를 올린다. 기대값을 C# 결과로 바꾸지 않는다.
 # floor-commit: f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3
+cpppj/src/app/main.cpp	Netstorm.Client/Automation/UiScript.cs	f0a08f08d86df0b44ca007c35dcb4eeb9fbf21a9	port
 cpppj/src/client/BitmapFont.cpp	Netstorm.Assets/BitmapFont.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
+cpppj/src/client/ClientMain.cpp	Netstorm.Client/Display/ScreenCapture.cs	f0a08f08d86df0b44ca007c35dcb4eeb9fbf21a9	port
 cpppj/src/client/Cursor.h	Netstorm.Core/Rules/GameCursor.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
 cpppj/src/client/DialogScript.cpp	Netstorm.Assets/CampaignMenu.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
 cpppj/src/client/GifImage.cpp	Netstorm.Assets/GifImage.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
@@ -82,3 +84,4 @@ cpppj/src/o/SquidReward.cpp	Netstorm.Core/Original/RawSquidReward.cs	5d34fc2dbab
 cpppj/src/o/SquidSpatial.cpp	Netstorm.Core/Rules/SpotMap.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
 cpppj/src/o/SquidUnpop.cpp	Netstorm.Core/Original/OriginalUnpopDisplay.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
 cpppj/src/o/SquidUnpop.cpp	Netstorm.Core/Original/RawUnpop.cs	c7459e61da4d3b6a97c5266bb3ec676f38be1d5e	L1
+cpppj/src/platform/Bitmap.cpp	Netstorm.Client/Display/ScreenCapture.cs	f0a08f08d86df0b44ca007c35dcb4eeb9fbf21a9	port

@@ -48,3 +48,28 @@ Netstorm.Client.Tests 33개(공통 매니페스트 검사 4개 포함), 전체 d
 - **R1-2:** MonoGame 출력 호스트(인덱스→RGBA 텍스처, 정수 확대·검정 여백, 전체화면 창, 마우스 좌표 역변환, 입력 → `InputQueue`), `--ui-script`·`snapshot`·`cpp_frame_compare.py`.
 - 이 단위는 화면 버퍼의 **규칙**을 옮긴 것이며 실제 화면에 나온 픽셀을 cpppj와 비교한 것이 아니다. 픽셀 비교는 R1-2의 캡처 도구가 생긴 뒤 한다.
 - `Screen`의 GDI 팔레트(번개·날씨의 일시 `SetPalette` 호출 순서)와 `PaletteColors`/`PaletteShade`는 R2다.
+
+## 5. R1-2 부분: 캡처·스크립트 도구와 오라클 확인 (같은 날)
+
+이 단위에서 MonoGame 호스트 없이 가능한 R1-2 도구를 옮겼다. 호스트(R1-2a)는 아직 없다.
+
+| 파일 | 내용 |
+| --- | --- |
+| `Display/ScreenCapture.cs` | 논리 화면 → RGBA → cpppj와 byte 동일한 32비트 BMP(122바이트 V4 머리, 위→아래, BGRA, sRGB). `Client::Capture`+`WriteBitmap`의 이식 |
+| `Automation/UiScript.cs` | `--ui-script` 파서(프레임 양수·오름차순, 탭 구분)와 실행기. esc·key·keyup·pointer·좌표/라벨 클릭·snapshot 지원, report·refresh는 건너뛰며 기록, 그 밖의 동작은 명시 예외 |
+| `dotnetpj/tools/cpp_frame_compare.py` | 두 BMP 비교(파일 바이트 → 다른 픽셀 수·영역·채널 최대 차이·목록·차이 PNG), `--dir`로 폴더 전체 비교. 종료 코드 0/1/2 |
+
+**오라클 캡처 확인(VM-W11-Codex, 예외 시스템 `10.0.0.17`).** `extracted/dotnet-oracle-data/`에 `originals/` 사본(1,394파일)을 만들고 HEAD `0cc1d33d`로 빌드한 `NetstormCpp.exe`(SHA-256 `63DF9A10…`)를 실행했다.
+
+```powershell
+NetstormCpp.exe --run extracted\dotnet-oracle-data --window --no-audio --frames 34 `
+  --set "SCREENW=1024;SCREENH=768;maxFPS=40;sleepPerLoop=25;autoDemo=0;tellTips=0" `
+  --ui-script main-menu.tsv --ui-report states.tsv      # main-menu.tsv: "30<TAB>snapshot<TAB>...main-menu-1024.bmp"
+```
+
+- 종료 코드 0, 두 번 실행한 `main-menu-1024.bmp`가 같은 SHA-256 `1229c3661d51f6d7…`(3,145,850바이트 = 122 + 1024×768×4). 프레임 30의 메인 메뉴는 원본의 "Not Validated" 시작 대화상자가 올라간 모습이며 R3의 픽셀 일치 목표 화면이다.
+- 그 BMP의 앞 122바이트는 `CaptureAndScriptTests`의 명세 기대값(필드 명세에서 직접 쓴 바이트)과 byte 단위로 같다. 따라서 C# 작성기는 같은 화면 내용이면 같은 파일을 만든다. **화면 내용(픽셀)의 일치는 R2·R3 이후 확인하며 지금 주장하지 않는다.**
+- 실행 전후 `originals/` 전체 파일의 SHA-256 집계가 같다(변경 0). 남은 프로세스 없음. 원시 파일은 `extracted/dotnet-oracle-captures/`(Git 제외)다.
+- 이 PC의 PowerShell 5.1에서 `Start-Process -PassThru -NoNewWindow`는 종료 코드를 비워 두므로 `& exe args; $LASTEXITCODE`로 읽는다.
+
+**검증:** Client 검사 45개(R1-1의 33개 + 캡처·스크립트 12개), `cpp_frame_compare.py`를 일치/차이/입력 오류/폴더 모드로 직접 실행해 종료 코드와 보고를 확인했다. 스크립트 단계는 cpppj 소스에서 옮긴 계약이며 cpppj의 같은 스크립트 결과와 직접 비교한 것은 아니다(호스트가 없다). 검사 작성 중 최초 실패 1건은 `AfterFrame` 없이 프레임을 건너뛴 테스트 오류였고, 앞 단계가 남으면 뒤 단계가 막히는 cpppj 동작을 `RunnerRejectsUnsupportedAndBlockedSteps`가 따로 검증한다.
