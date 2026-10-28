@@ -46,17 +46,24 @@ test('원본 8버튼 배치: 1024x768 에서 x 356/435/514/593, y 311/334, 75x20
     assert.equal(rects.Intro, undefined);
 });
 
-// 웹 판본(Multiplayer·Intro·Quit 빈 칸)이 원본 배치 규칙대로 3+3 가운데 배치·최대 폭(Campaign 55+12)이 되는지 확인한다.
-test('웹 6버튼 배치: 빈 칸을 건너뛰고 각 줄 가운데, 폭 67', () => {
+// 웹 판본(Multiplayer·Edit·Intro·Quit 빈 칸)이 원본 배치 규칙대로 3+2 가운데 배치·최대 폭(Campaign 55+12)이 되는지 확인한다.
+// (2026-10-28 WB: AGENTS.md webpj 목표 변경으로 Edit 칸을 빼 3+3 에서 3+2 가 되었다.)
+test('웹 5버튼 배치: 빈 칸을 건너뛰고 각 줄 가운데, 폭 67', () => {
     const { menu, rects } = layoutOf(1024, 768, false);
-    assert.deepEqual(menu.buttons.map((button) => button.label), ['Campaign', 'Demo', 'Help', 'Edit', 'Credits', 'Options']);
+    assert.deepEqual(menu.buttons.map((button) => button.label), ['Campaign', 'Demo', 'Help', 'Credits', 'Options']);
+    assert.equal(rects.Edit, undefined);
     assert.deepEqual(rects.Campaign, { left: 407, top: 311, right: 474, bottom: 331 });
     assert.deepEqual(rects.Demo, { left: 478, top: 311, right: 545, bottom: 331 });
     assert.deepEqual(rects.Help, { left: 549, top: 311, right: 616, bottom: 331 });
-    assert.deepEqual(rects.Edit, { left: 407, top: 334, right: 474, bottom: 354 });
+    // 아랫줄은 2개뿐이라 (1024 - (2*71 - 4)) * 0.5 = 443 에서 시작하고 반 픽셀이 없다.
+    assert.deepEqual(rects.Credits, { left: 443, top: 334, right: 510, bottom: 354 });
+    assert.deepEqual(rects.Options, { left: 514, top: 334, right: 581, bottom: 354 });
     assert.equal(menu.buttons[0].x, 407.5);
+    assert.equal(menu.buttons[3].x, 443);
     const wide = layoutOf(1366, 768, false).rects;
     assert.deepEqual(wide.Campaign, { left: 578, top: 311, right: 645, bottom: 331 });
+    assert.deepEqual(wide.Credits, { left: 614, top: 334, right: 681, bottom: 354 });
+    assert.deepEqual(wide.Options, { left: 685, top: 334, right: 752, bottom: 354 });
     const original800 = layoutOf(800, 600, true).rects;
     assert.deepEqual(original800.Campaign, { left: 244, top: 255, right: 319, bottom: 275 });
 });
@@ -108,7 +115,8 @@ test('돌 버튼 입력 규칙', () => {
 
 // 반 픽셀 위치에서 원본처럼 누름(정수 사각형)과 뗌(float 지역 좌표) 판정이 1픽셀 어긋나는지 확인한다.
 test('반 픽셀 위치의 누름/뗌 판정 차이', () => {
-    const button = new StoneButton({ label: 'Edit' });
+    // 웹 메뉴에서 실제로 반 픽셀 위치(407.5)에 놓이는 첫 버튼 Campaign 을 쓴다. (2026-10-28 WB: Edit 제거에 맞춰 라벨 변경)
+    const button = new StoneButton({ label: 'Campaign' });
     button.fitToText(resources.font);
     button.setBaseWidth(67);
     button.attach(407.5, 334);

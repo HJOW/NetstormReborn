@@ -3,11 +3,13 @@
 // Canvas 의 크기와 위치를 계산·적용하며, 포인터·키보드 입력을 게임 논리 좌표로 바꾸고,
 // "로딩(자산 적재) → 클릭하여 시작 → 메인 메뉴(원본 복원)" 장면 전환과 프레임 루프를 제공한다.
 // 메인 메뉴는 원본 자산(www/data)을 8비트 색 번호로 합성해 표시하고, 돌 버튼 입력·button.wav·메뉴 음악을 원본 규칙대로 처리한다.
-// 메인 메뉴 버튼이 여는 다음 화면(캠페인·데모·도움말·옵션 등)과 게임 규칙은 아직 없다(후속 단계).
+// 메인 메뉴 버튼이 여는 다음 화면(캠페인·데모·도움말·옵션 등)과 게임 규칙은 아직 없다(후속 단계). 그 화면들의 본문(Tell 섹션)은 GameData 로 조회할 수 있다.
 // 이 모듈은 import 시점에 DOM 을 건드리지 않으므로 Node 에서도 불러와 계산 함수를 검사할 수 있다.
 // (2026-10-23 WB01: 실행 골격 최초 작성)
 // (2026-10-23 WB03-M1: 원본 자산 적재·메인 메뉴·소리·원본 커서 연결)
+// (2026-10-28 WB02-D: 데이터 아카이브(TAFF)·설정·Tell 섹션 조회(GameData) 연결, 메인 메뉴의 Edit 버튼 제거)
 import { AssetLoader } from './assets/asset-loader.js';
+import { GameData } from './assets/game-data.js';
 import {
     BUTTON_SOUND_NAME,
     MENU_ASSET_PATHS,
@@ -389,6 +391,8 @@ export class Netstorm {
         this._input = { pointer: { x: -1, y: -1, inside: false, buttons: 0, type: 'mouse' }, keys: new Set() };
         // 메인 메뉴 그리기 자원 묶음(buildMenuResources 결과)이다. 자산 적재 전에는 null 이며, 재시작해도 다시 받지 않는다.
         this._resources = null;
+        // 게임 데이터 조회 객체(GameData: 파일 조회·설정 층·언어 용어표·Tell 섹션)다. 자산 적재 전에는 null 이며 재시작해도 다시 만들지 않는다.
+        this._gameData = null;
         // 버튼 효과음 파일 바이트다. 오디오 문맥이 생기면 해독한다.
         this._buttonSoundBytes = null;
         // 메뉴 음악 파일 바이트다. 뒤에서 받으며 다 받기 전에는 null 이다.
@@ -463,6 +467,11 @@ export class Netstorm {
     // 메인 메뉴 그리기 자원 묶음이다. 자산 적재 전에는 null 이다. (2026-10-23 WB03-M1)
     get resources() {
         return this._resources;
+    }
+
+    // 게임 데이터 조회 객체이다. 자산 적재 전에는 null 이다. 콘솔에서 window.netstorm.gameData.tellSection('Credits') 처럼 확인할 수 있다. (2026-10-28 WB02-D)
+    get gameData() {
+        return this._gameData;
     }
 
     // 메뉴 음악 상태 문자열이다. (2026-10-23 WB03-M1)
@@ -598,6 +607,12 @@ export class Netstorm {
                 });
                 if (generation !== this._loadGeneration) return;
                 this._resources = buildMenuResources(files);
+                // 설정 층에는 웹 사용자 설정(언어·음량)을 원본 options.cfg 자리에 넣는다. 해상도·전체화면 값은 넣지 않는다.
+                this._gameData = GameData.build({
+                    files,
+                    language: this.options.language,
+                    options: { soundVolume: this.options.soundVolume, musicVolume: this.options.musicVolume },
+                });
                 this._buttonSoundBytes = files.get(MENU_ASSET_PATHS.buttonSound) ?? null;
                 this._presenter?.setPalette(this._resources.palette.rgb);
                 this._applyCursor();
@@ -673,14 +688,17 @@ export class Netstorm {
     }
 
     // 메인 메뉴 버튼이 실행됐을 때 호출된다. 원본은 여기서 Tell 섹션(캠페인·데모·크레딧)이나 펼침 메뉴(도움말·옵션)를 연다.
-    // 그 화면들은 아직 복원하지 않았으므로 호스트 훅과 콘솔에만 알린다. (2026-10-23 WB03-M1)
+    // 그 화면들은 아직 복원하지 않았으므로 호스트 훅과 콘솔에만 알린다. Tell 명령이면 원본 데이터에서 섹션을 실제로 찾아 줄 수를 함께 알린다.
+    // (2026-10-23 WB03-M1, 2026-10-28 WB02-D: Tell 섹션 조회 확인 추가)
     _onMenuCommand(command, label) {
         try {
             this.options.onMenuCommand?.(command, label);
         } catch (error) {
             console.error('Netstorm: onMenuCommand 훅에서 예외가 발생했습니다.', error);
         }
-        console.info(`Netstorm: 메인 메뉴 '${label}' 실행(다음 화면은 아직 구현되지 않음)`, command);
+        const section = command.type === 'tell' ? this._gameData?.tellSection(command.target) : undefined;
+        const found = section === undefined ? '' : section === null ? ' [Tell 섹션 없음]' : ` [Tell 섹션 ${command.target}: ${section.split(/\r?\n/).filter((line) => line.length > 0).length}줄]`;
+        console.info(`Netstorm: 메인 메뉴 '${label}' 실행(다음 화면은 아직 구현되지 않음)${found}`, command);
     }
 
     // 논리 화면 크기의 8비트 표면을 준비한다. 크기가 바뀌면 새로 만들고 메인 메뉴를 다시 배치한다. (2026-10-23 WB03-M1)

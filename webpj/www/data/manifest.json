@@ -65,6 +65,22 @@
       "use": "돌 버튼을 누르는 순간의 효과음"
     },
     {
+      "path": "netstorm.tarc",
+      "source": "assets/game-data/netstorm.tarc",
+      "bundle": "menu",
+      "size": 1102126,
+      "sha256": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6",
+      "use": "데이터 아카이브 TAFF(메뉴 대화상자 본문 tell.english·용어표 config.english·미션 스크립트·타입 정의, 246개 엔트리)"
+    },
+    {
+      "path": "d/setup.cfg",
+      "source": "assets/game-data/d/setup.cfg",
+      "bundle": "menu",
+      "size": 17433,
+      "sha256": "bd79e34635ba284036638461d9f0532de99e38c48887c1791abfa08c6fd052b3",
+      "use": "게임 기본 설정(스타일 코드 H2·Text·CText, 경로 지정값 missionSpec·guideSpec, 인코딩된 원본 파일)"
+    },
+    {
       "path": "music/ser22.mus",
       "source": "assets/game-data/music/ser22.mus",
       "bundle": "menu-music",

@@ -5,7 +5,7 @@
 //   node webpj/tools/prepare-assets.js          복사 + 매니페스트 작성
 //   node webpj/tools/prepare-assets.js --check  복사본·매니페스트가 원본과 같은지 검사만 한다(다르면 종료 코드 1)
 // originals/·originalCD/ 는 읽지 않는다. 브라우저 실행 중에도 원본 설치 폴더를 찾지 않는다.
-// (2026-10-23 WB03-M1: 메인 메뉴 자산 묶음 준비를 위해 추가)
+// (2026-10-23 WB03-M1: 메인 메뉴 자산 묶음 준비를 위해 추가, 2026-10-28 WB02-D: 아카이브·기본 설정 추가)
 'use strict';
 
 const fs = require('fs');
@@ -45,6 +45,8 @@ const ASSET_FILES = Object.freeze([
     { path: 'd/!Arial.normal.14.700.chfnt', bundle: 'menu', use: '원본 글꼴 슬롯 0(Arial 굵게 14) 캐시, 버튼 라벨' },
     { path: 'cursors/RT_CURSOR_8.bin', bundle: 'menu', use: '원본 기본 커서 번호 1(흰 화살표, 핫스폿 10,6)' },
     { path: 'sound/button.wav', bundle: 'menu', use: '돌 버튼을 누르는 순간의 효과음' },
+    { path: 'netstorm.tarc', bundle: 'menu', use: '데이터 아카이브 TAFF(메뉴 대화상자 본문 tell.english·용어표 config.english·미션 스크립트·타입 정의, 246개 엔트리)' },
+    { path: 'd/setup.cfg', bundle: 'menu', use: '게임 기본 설정(스타일 코드 H2·Text·CText, 경로 지정값 missionSpec·guideSpec, 인코딩된 원본 파일)' },
     { path: 'music/ser22.mus', bundle: 'menu-music', use: '메인 메뉴(전투 밖) 음악, RIFF WAV PCM' },
 ]);
 

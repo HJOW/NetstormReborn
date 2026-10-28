@@ -5,8 +5,9 @@
 //  1) 모든 버튼을 글자에 맞춰 크기를 정한 뒤(폭=글자 폭+12) 가장 넓은 폭을 모든 버튼에 쓴다.
 //  2) 윗줄은 0~3번 칸, 아랫줄은 4번 이후 칸이며, 빈 칸(null)은 건너뛰고 각 줄을 화면 가로 가운데에 놓는다(간격 4).
 //  3) 윗줄 y = 화면높이/3 + 55, 아랫줄 y = 화면높이/3 + 78 이다(1024×768 에서 311 / 334).
-// 웹 판본은 원본이 CD 없을 때 Intro 칸을 비우는 것과 같은 방식으로 Multiplayer·Quit 칸을 비운다(웹에서 쓸 수 없는 기능).
-// (2026-10-23 WB03-M1: 메인 메뉴 화면 복원)
+// 웹 판본은 원본이 CD 없을 때 Intro 칸을 비우는 것과 같은 방식으로 Multiplayer·Edit·Quit 칸을 비운다(웹에서 쓸 수 없거나 구현하지 않는 기능).
+// 그 결과 윗줄은 Campaign·Demo·Help 3개, 아랫줄은 Credits·Options 2개이며 각 줄은 가로 가운데에 놓인다.
+// (2026-10-23 WB03-M1: 메인 메뉴 화면 복원, 2026-10-28 WB: Edit 칸을 웹 제외로 변경)
 import { StoneButton, ftol } from './stone-button.js';
 
 // 원본 메인 메뉴의 버튼 칸 9개(원본 004d0120 의 생성 순서)이다.
@@ -14,13 +15,13 @@ import { StoneButton, ftol } from './stone-button.js';
 //  - command: 실행 시 메뉴가 알리는 명령이다. type 은 원본 동작 종류, target 은 원본 Tell 섹션/메뉴 이름이다.
 //  - web: 웹 판본에서 버튼을 만드는지 여부다. false 인 칸은 원본의 빈 칸(null)처럼 배치에서 빠진다.
 //  - note: web=false 인 이유다.
-// 사용: createMainMenuButtons(MAIN_MENU_SLOTS) 로 칸 배열을 만든다. (2026-10-23 WB03-M1)
+// 사용: createMainMenuButtons(MAIN_MENU_SLOTS) 로 칸 배열을 만든다. (2026-10-23 WB03-M1, 2026-10-28 WB: Edit web=false)
 export const MAIN_MENU_SLOTS = Object.freeze([
     Object.freeze({ label: 'Campaign', command: Object.freeze({ type: 'tell', target: 'UCampaign' }), web: true }),
     Object.freeze({ label: 'Multiplayer', command: Object.freeze({ type: 'multiplayer' }), web: false, note: '웹 판본은 멀티플레이를 구현하지 않는다(AGENTS.md).' }),
     Object.freeze({ label: 'Demo', command: Object.freeze({ type: 'tell', target: 'Demoville' }), web: true }),
     Object.freeze({ label: 'Help', command: Object.freeze({ type: 'menu', target: 'help' }), web: true }),
-    Object.freeze({ label: 'Edit', command: Object.freeze({ type: 'edit' }), web: true }),
+    Object.freeze({ label: 'Edit', command: Object.freeze({ type: 'edit' }), web: false, note: '웹 판본은 커스텀 맵 Edit 을 구현하지 않는다(AGENTS.md webpj 목표, 2026-10-27 변경). 원본 8버튼 비교(includeAll)에서만 만든다.' }),
     Object.freeze({ label: 'Intro', command: Object.freeze({ type: 'intro' }), web: false, note: '원본도 게임 CD 가 있을 때만 만든다(DAT_0054db98).' }),
     Object.freeze({ label: 'Credits', command: Object.freeze({ type: 'tell', target: 'Credits' }), web: true }),
     Object.freeze({ label: 'Options', command: Object.freeze({ type: 'menu', target: 'options' }), web: true }),

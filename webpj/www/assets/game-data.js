@@ -1,0 +1,153 @@
+// 웹 판본의 게임 데이터 조회 모듈이다. 파일 조회(GameFiles)·설정 객체 층(Config)·언어 용어표·Tell 섹션 찾기를 한 객체로 묶는다.
+// 원본의 설정 구성(Configinterface, cpppj o/ConfigInterface.cpp 와 같은 순서)을 따른다:
+//  - 등록 순서: 언어 용어표(이름 없음) → 전역 설정(이름 없음) → `global.` → `fort.` 이며 조회는 마지막에 등록한 객체부터 하므로 전역 설정이 용어표보다 우선한다.
+//  - 전역 설정 버퍼: `[ARGS]` + 버전 줄 + `[options.cfg]`(웹 사용자 설정) + `[setup.cfg]`(원본 setup.cfg) + `[END]`. 같은 키는 먼저 나온 줄이 이긴다.
+//    웹 판본은 options.cfg 파일 대신 호스트가 넘긴 설정(언어·음량 등)을 같은 자리에 넣는다. 해상도·전체화면·설치 경로는 넣지 않는다.
+//  - 경로 지정값(`missionSpec`·`guideSpec` 등)은 임시 `local.1~3` 객체에 인자를 넣고 치환한다.
+//  - Tell 섹션은 tell 스크립트(`{missionSpec}` + local.1 = "tell" → `\D\tell.<언어>`)에서 `[이름]` 섹션을 찾는다(원본 004cf730 의 기본 스크립트 조회).
+// 언어 파일이 없으면(예: 아직 없는 .korean) 영어 파일로 대체한다. 원본은 대체하지 않으나 웹 판본은 한국어 자료가 갖춰질 때까지 영어 화면을 보이기 위한 웹 적응이다.
+// 이 모듈은 DOM 을 쓰지 않아 Node 에서도 불러와 검사할 수 있다.
+// (2026-10-28 WB02-D: 메뉴 대화상자 본문 조회를 위해 추가)
+import { Config, ConfigRegistry, sectionRange } from './config.js';
+import { GameFiles } from './game-files.js';
+import { decodeOriginalText } from './text-encoding.js';
+
+// 데이터 폴더 기준 TAFF 아카이브 경로이다. (2026-10-28 WB02-D)
+export const ARCHIVE_PATH = 'netstorm.tarc';
+
+// 데이터 폴더 기준 원본 기본 설정 파일 경로이다(인코딩된 파일). (2026-10-28 WB02-D)
+export const SETUP_PATH = 'd/setup.cfg';
+
+// 게임 버전이다(10.78 패치판). 전역 설정 앞머리의 MAJOR_VERSION·MINOR_VERSION·version 줄이 된다. (2026-10-28 WB02-D)
+const MAJOR_VERSION = 10;
+const MINOR_VERSION = 78;
+
+// 영어(대체 언어)의 이름이다. 모르는 언어와 없는 언어 파일은 영어로 대체한다. (2026-10-28 WB02-D)
+export const FALLBACK_LANGUAGE = 'english';
+
+// 게임 데이터 조회 객체이다.
+// 사용: const data = GameData.build({ files: 적재기가 준 경로 → 바이트 Map, language: 'english', options: { soundVolume: 3 } });
+//       data.tellSection('Credits') → 섹션 본문 문자열, data.substitute('{H2}'), data.pathSpec('missionSpec', 'tutorial1'). (2026-10-28 WB02-D)
+export class GameData {
+    // 파일 조회 계층과 언어를 받아 설정 객체 층을 구성한다. 직접 부르기보다 GameData.build 를 쓴다.
+    constructor({ files, language = FALLBACK_LANGUAGE, options = {} }) {
+        // 파일 조회 계층이다.
+        this.files = files;
+        // 현재 언어 이름이다(파일 확장자로 쓰임). 'english' 이외는 대응 파일이 없으면 영어 파일로 대체한다.
+        this.language = language;
+        // 설정 객체 등록부다.
+        this.registry = new ConfigRegistry();
+        // 언어 용어표 객체(config.<언어>)다. 가장 먼저 등록되어 우선순위가 가장 낮다.
+        this.terms = new Config(this.registry);
+        // 전역 설정 객체(원본 configuration)다.
+        this.configuration = new Config(this.registry);
+        // `global.` 객체(Tell 의 priorTell 등 실행 중 값)다.
+        this.global = new Config(this.registry, 'global');
+        // `fort.` 객체다.
+        this.fort = new Config(this.registry, 'fort');
+        // 언어별로 읽어 둔 tell 스크립트 텍스트 캐시다.
+        this._tellText = null;
+        this._loadConfiguration(options);
+        this._loadLanguage();
+    }
+
+    // 데이터 폴더 파일 Map(경로 → 바이트)으로 GameData 를 만든다. netstorm.tarc 는 아카이브로 등록하고 모든 파일은 느슨한 파일로도 등록한다.
+    // files 에 아카이브나 setup.cfg 가 없으면 어떤 파일이 빠졌는지 알리는 오류를 던진다.
+    static build({ files, language = FALLBACK_LANGUAGE, options = {} }) {
+        const archiveBytes = files.get(ARCHIVE_PATH);
+        if (!archiveBytes) throw new Error(`필수 자산이 없습니다: ${ARCHIVE_PATH}`);
+        if (!files.get(SETUP_PATH)) throw new Error(`필수 자산이 없습니다: ${SETUP_PATH}`);
+        const loose = new Map(files);
+        loose.delete(ARCHIVE_PATH);
+        const gameFiles = new GameFiles({ loose });
+        gameFiles.addArchive(archiveBytes);
+        return new GameData({ files: gameFiles, language, options });
+    }
+
+    // 전역 설정 버퍼를 원본 시작 순서(00441790 → 00440e00)대로 채운다. options 는 웹 사용자 설정(키 → 값)이며 setup.cfg 보다 앞에 놓여 우선한다.
+    // 언어는 options 에 없으면 currentLanguage 로 넣는다.
+    _loadConfiguration(options) {
+        const configuration = this.configuration;
+        configuration.environmentEnabled = true;
+        configuration.clear();
+        configuration.append('[ARGS]');
+        configuration.append(`MAJOR_VERSION=${MAJOR_VERSION}`);
+        configuration.append(`MINOR_VERSION=${MINOR_VERSION}`);
+        configuration.append(`version="v${MAJOR_VERSION}.${MINOR_VERSION}"`);
+        configuration.append('[options.cfg]');
+        const values = { currentLanguage: this.language, ...options };
+        // 웹 사용자 설정을 `키 = "값"` 줄로 넣는다.
+        for (const [key, value] of Object.entries(values)) configuration.append(`${key} = "${String(value)}"`);
+        configuration.append('[setup.cfg]');
+        configuration.loadBytes(this.files.read(SETUP_PATH), decodeOriginalText);
+        configuration.append('[END]');
+    }
+
+    // 현재 언어의 용어표(languageSpec = "{DataDir}\config.{local.1}")를 읽는다. 파일이 없으면 영어 용어표로 대체하고, 그것도 없으면 빈 채로 둔다.
+    _loadLanguage() {
+        this.terms.clear();
+        const bytes = this._readLanguageFile(this.pathSpec('languageSpec', this.language), this.language);
+        if (bytes) this.terms.loadBytes(bytes, decodeOriginalText);
+    }
+
+    // 언어 파일을 읽는다. 없고 언어가 영어가 아니면 경로의 `.언어` 또는 `config.언어` 를 영어로 바꿔 한 번 더 시도한다. (웹 적응)
+    _readLanguageFile(path, language) {
+        const bytes = this.files.read(path);
+        if (bytes || language === FALLBACK_LANGUAGE) return bytes;
+        const english = path.replace(new RegExp(`${language}$`, 'i'), FALLBACK_LANGUAGE);
+        return english === path ? null : this.files.read(english);
+    }
+
+    // 키의 값(치환까지 마친 문자열)을 조회한다. 없으면 null 이다.
+    get(key) {
+        return this.configuration.get(key);
+    }
+
+    // 문자열의 `{키}` 와 이스케이프를 푼다. 용어표(`{factory}` 등)와 전역 설정(`{H2}` 등)이 함께 쓰인다.
+    substitute(text) {
+        return this.configuration.substitute(text);
+    }
+
+    // 원본 004410f0(경로 지정값): 임시 `local` 객체에 인자(1~3번)를 넣고 키를 치환한 값을 돌려준다. 키가 없으면 빈 문자열이다.
+    // 사용: pathSpec('missionSpec', 'tell') → `\D\tell.english`. (2026-10-28 WB02-D)
+    pathSpec(key, argument1 = null, argument2 = null, argument3 = null) {
+        const local = new Config(this.registry, 'local');
+        try {
+            // 주어진 인자만 `번호="값"` 줄로 넣는다.
+            [argument1, argument2, argument3].forEach((argument, index) => {
+                if (argument !== null) local.append(`${index + 1}="${argument}"`);
+            });
+            return this.configuration.get(key) ?? '';
+        } finally {
+            local.dispose();
+        }
+    }
+
+    // 경로의 텍스트 파일을 문자열로 읽는다. 없으면 null 이다. 언어 파일은 영어로 대체한다.
+    readText(path) {
+        const bytes = this._readLanguageFile(path, this.language);
+        return bytes ? decodeOriginalText(bytes) : null;
+    }
+
+    // tell 스크립트 전체 텍스트이다(`{missionSpec}` + local.1 = "tell"). 처음 한 번 읽어 캐시한다. 파일이 없으면 null 이다.
+    get tellText() {
+        if (this._tellText === null) this._tellText = this.readText(this.pathSpec('missionSpec', 'tell'));
+        return this._tellText;
+    }
+
+    // Tell 섹션 본문을 찾는다. 이름에 점이 있으면 먼저 등록된 객체(접두어)의 섹션을, 이어 기본 tell 스크립트의 섹션을 조회한다(원본 004cf730 FindTellSection).
+    // 현재 미션 스크립트 조회는 미션 구현 때 연결한다. 없으면 null, 섹션이 있어도 본문이 비어 있으면 빈 문자열이다.
+    // 사용: tellSection('UCampaign'). (2026-10-28 WB02-D)
+    tellSection(name) {
+        const dot = name.indexOf('.');
+        if (dot >= 0) {
+            const object = this.registry.findByName(name.slice(0, dot));
+            const body = object?.section(name.slice(dot + 1)) ?? null;
+            if (body !== null) return body;
+        }
+        const text = this.tellText;
+        if (text === null) return null;
+        const range = sectionRange(text, name);
+        return range ? text.slice(range.start, range.start + range.length) : null;
+    }
+}
