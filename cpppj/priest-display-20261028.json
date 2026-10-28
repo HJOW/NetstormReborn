@@ -1,0 +1,421 @@
+{
+  "unit": 541,
+  "date": "2026-10-28",
+  "status": "표시 수정·격리 검사 완료, 실제 플레이는 사용자 추후 확인",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23",
+    "outputsModified": false
+  },
+  "userReport": {
+    "mission": "캠페인1-1",
+    "userCompletedOnAnotherPc": true,
+    "nextStageGuideShown": true,
+    "sourcePcCommitExeShaProvided": false,
+    "bugs": [
+      "HP50%미만 보호막 내 사제 왼쪽 치우침",
+      "제단에 넣은 포획 적 사제가 파랑 플레이어색으로 보임"
+    ]
+  },
+  "fix": {
+    "source": "cpppj/src/o/RawPlainAssetDraw.cpp",
+    "pairs": {
+      "164": "0x5076b8",
+      "167": "0x507770"
+    },
+    "shieldHotspot": [
+      8,
+      2
+    ],
+    "altarOwner": "WORD+12 원래 사제 소유자",
+    "existingRulesChanged": false
+  },
+  "static": {
+    "host": "HJOW-Athlon",
+    "lastFullDecompile": {
+      "host": "HJOW-Athlon",
+      "date": "2026-10-23",
+      "outputsModified": false
+    },
+    "gameExecutions": 0,
+    "types": [
+      {
+        "number": 158,
+        "name": "priest",
+        "sha256": "67e3566b9a4c7166937a218f931b94677ed0d0fc940189c16faba7dc7db3f6b0",
+        "footProperties": [
+          "\tfoot_x = 1;",
+          "\tfoot_y = 1;",
+          "\r\n\thotFootRatioX = 0.5;",
+          "\thotFootRatioY = 0.2;"
+        ],
+        "typename": "typename Priest"
+      },
+      {
+        "number": 164,
+        "name": "altar",
+        "sha256": "e17d67f36815fa7c0536ce696206580d8ffd101eb095f94319b1fd181a8acdfe",
+        "footProperties": [
+          "\tfoot_x = 7;",
+          "\tfoot_y = 7;"
+        ],
+        "typename": "typename Altar",
+        "actualVtable": "0x5076b8"
+      },
+      {
+        "number": 167,
+        "name": "forceField",
+        "sha256": "6eefabf18612d8d4955365e394d38cd8b0dcc19c68980c1a391e714ac09d43c1",
+        "footProperties": [
+          "\tfoot_x = 1;",
+          "\tfoot_y = 1;",
+          "\thotFootRatioX = 0.5;",
+          "\thotFootRatioY = 0.2;"
+        ],
+        "typename": "typename ForceField",
+        "actualVtable": "0x507770"
+      }
+    ],
+    "vtableSlots": {
+      "0x50f210": {
+        "0x78": "0x4acfe0",
+        "0xa4": "0x41c100",
+        "0xb0": "0x498000"
+      },
+      "0x5076b8": {
+        "0x78": "0x4acfe0",
+        "0xa4": "0x41c100",
+        "0xb0": "0x498000"
+      },
+      "0x501dd0": {
+        "0x78": "0x4acfe0",
+        "0xa4": "0x41c100",
+        "0xb0": "0x498000"
+      },
+      "0x507770": {
+        "0x78": "0x4acfe0",
+        "0xa4": "0x41c100",
+        "0xb0": "0x498000"
+      }
+    },
+    "constructors": {
+      "158": "0x4952a0",
+      "164": "0x44aae0",
+      "167": "0x44ab00"
+    },
+    "protectedPeSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "sharedDraw": {
+      "address": "0x498220",
+      "typeHotspotOffsets": [
+        "0x1dc",
+        "0x1e0"
+      ],
+      "wideOwnerGlobal": "0x5412e8",
+      "wideOwnerOffset": "WORD+12",
+      "otherOwnerOffset": "BYTE+34"
+    },
+    "baseVtableNotUsedForForceField": "0x501dd0"
+  },
+  "builds": [
+    {
+      "log": "build.log",
+      "exitCode": 0,
+      "warnings": 4
+    },
+    {
+      "log": "build-tests-fixed.log",
+      "exitCode": 0,
+      "warnings": 0
+    },
+    {
+      "log": "build-final.log",
+      "exitCode": 0,
+      "warnings": 0
+    }
+  ],
+  "tests": {
+    "exeSha256": "29b83df467907326d6f6f02e5e8da4ad6f3d1cd07b9678733ec66687d9e728f1",
+    "runs": [
+      {
+        "filter": "CampaignPriestDisplay_",
+        "exitCode": 0,
+        "log": "focus-00.log",
+        "cases": 2
+      },
+      {
+        "filter": "SpriteDraw_",
+        "exitCode": 0,
+        "log": "focus-01.log",
+        "cases": 13
+      },
+      {
+        "filter": "PriestShield_",
+        "exitCode": 0,
+        "log": "focus-02.log",
+        "cases": 5
+      },
+      {
+        "filter": "priest_forcefield_",
+        "exitCode": 0,
+        "log": "focus-03.log",
+        "cases": 4
+      },
+      {
+        "filter": "rawDaisContentNotice_",
+        "exitCode": 0,
+        "log": "focus-04.log",
+        "cases": 1
+      },
+      {
+        "filter": "CampaignAltar_",
+        "exitCode": 0,
+        "log": "focus-05.log",
+        "cases": 1
+      },
+      {
+        "filter": "CampaignDais_SavedRecord",
+        "exitCode": 0,
+        "log": "focus-06.log",
+        "cases": 1
+      },
+      {
+        "filter": "CampaignDais_AdditionalDisplay",
+        "exitCode": 0,
+        "log": "focus-07.log",
+        "cases": 1
+      },
+      {
+        "filter": "CampaignDais_ActualFactoryPop",
+        "exitCode": 0,
+        "log": "focus-08.log",
+        "cases": 1
+      },
+      {
+        "filter": "CampaignSession_FenceShieldUses",
+        "exitCode": 0,
+        "log": "focus-09.log",
+        "cases": 1
+      },
+      {
+        "filter": "type_hotspot_",
+        "exitCode": 0,
+        "log": "focus-10.log",
+        "cases": 5
+      },
+      {
+        "filter": "PreviewColorMaps_",
+        "exitCode": 0,
+        "log": "focus-11.log",
+        "cases": 2
+      },
+      {
+        "filter": "ProductionColorMaps_",
+        "exitCode": 0,
+        "log": "focus-12.log",
+        "cases": 1
+      }
+    ],
+    "uniqueCount": 38,
+    "failed": [],
+    "cases": {
+      "CampaignPriestDisplay_ShieldUsesSharedFootAnchor\r": "OK",
+      "CampaignPriestDisplay_AltarUsesContainedPriestOriginalOwner\r": "OK",
+      "SpriteDraw_PatchNative\r": "OK",
+      "SpriteDraw_CdNative\r": "OK",
+      "SpriteDraw_AdditionalNative\r": "OK",
+      "SpriteDraw_CommonGroupDispatch\r": "OK",
+      "SpriteDraw_PixelModesTransparencyClip\r": "OK",
+      "SpriteDraw_PixelLinesAndBars\r": "OK",
+      "SpriteDraw_ContractsAndEarlyReturns\r": "OK",
+      "SpriteDraw_CurrentRawAfterVirtualDraw\r": "OK",
+      "SpriteDraw_ObjectCollectionPixels\r": "OK",
+      "SpriteDraw_SurfaceLookupBoundaries\r": "OK",
+      "SpriteDraw_ShadowAliasCurrentShape\r": "OK",
+      "SpriteDraw_CurrentFilterAfterVirtualFrame\r": "OK",
+      "SpriteDraw_SharedDiagnosticControlsCurrentShadowAlias\r": "OK",
+      "PriestShield_ReplaysOriginals\r": "OK",
+      "PriestShield_ReplaysCd\r": "OK",
+      "PriestShield_ReplaysExtra1037\r": "OK",
+      "PriestShield_CreatesOnceAndCanBeFoundByPriestDeletion\r": "OK",
+      "PriestShield_RejectsMissingEffectsAndForeignPools\r": "OK",
+      "priest_forcefield_patch_x86_lookup_and_predestroy\r": "OK",
+      "priest_forcefield_cd_x86_lookup_and_predestroy\r": "OK",
+      "priest_forcefield_1037_x86_lookup_and_predestroy\r": "OK",
+      "priest_forcefield_guards_and_read_only_lookup\r": "OK",
+      "rawDaisContentNotice_native_attach_remove_plain_frame_word_and_current_cue\r": "OK",
+      "CampaignAltar_AlliedReleaseUsesVirtualPriestOwner\r": "OK",
+      "CampaignDais_SavedRecordFirstPopRegistersAltar\r": "OK",
+      "CampaignDais_AdditionalDisplayAndShrapnelCapture\r": "OK",
+      "CampaignDais_ActualFactoryPopAndCapturedNotice\r": "OK",
+      "CampaignSession_FenceShieldUsesCurrentOwnerColorPixels\r": "OK",
+      "type_hotspot_patch_x86\r": "OK",
+      "type_hotspot_cd_x86\r": "OK",
+      "type_hotspot_1037_x86\r": "OK",
+      "type_hotspot_loader_order_and_float32\r": "OK",
+      "type_hotspot_invalid_properties\r": "OK",
+      "PreviewColorMaps_ActualWholeNativeOutputs\r": "OK",
+      "PreviewColorMaps_SpecialOwnerMatchesActualDefaultPrecision\r": "OK",
+      "ProductionColorMaps_NativeAllEntries\r": "OK"
+    }
+  },
+  "pixelCoverage": {
+    "shieldFrames": 30,
+    "altarOFrames": 13,
+    "ownerColorPermutations": 2,
+    "altarCases": 26,
+    "counterfactualOldAnchorOrCaptorColorDiffersInAllCases": true
+  },
+  "initialFailures": [
+    {
+      "log": "regression-initial.log",
+      "failedChecks": 2,
+      "cause": "검사 권한/지도 위치 준비 오류"
+    },
+    {
+      "log": "regression-intermediate.log",
+      "failedChecks": 3,
+      "cause": "보호막 실제 파생VT507770 대신 기본VT501dd0 초기 가정. 제단26조건은 통과"
+    }
+  ],
+  "gameExecutions": {
+    "original": 0,
+    "clone": 0,
+    "stageCompletion": 0
+  },
+  "exes": {
+    "NetstormCpp.exe": "b4d883ab946efb968802ff7e6d946088103240221d495e122b073ce5e20f2666",
+    "netstorm_tests.exe": "29b83df467907326d6f6f02e5e8da4ad6f3d1cd07b9678733ec66687d9e728f1"
+  },
+  "preservation": {
+    "sourceCount": 2929,
+    "changed": [
+      "cpppj/src/o/RawPlainAssetDraw.cpp",
+      "cpppj/tests/CampaignSessionTests.cpp"
+    ],
+    "existingFixturesUnchanged": true,
+    "protectedCount": 1819,
+    "protectedDifferences": [],
+    "agentsUnchanged": true,
+    "decompileOutputsModified": false
+  },
+  "remaining": [
+    "사용자가 수정 후 실제 플레이 확인",
+    "542 건설 마나 출발지/이동/표시 및 마나·에너지 도착 관문"
+  ],
+  "rawEvidence": [
+    {
+      "path": "extracted/cpp-priest-display-541/altar.type",
+      "sha256": "e17d67f36815fa7c0536ce696206580d8ffd101eb095f94319b1fd181a8acdfe"
+    },
+    {
+      "path": "extracted/cpp-priest-display-541/build-final.log",
+      "sha256": "faaade9a176df4a989db6a061657fd8a7c6263080ce4b2c544832ce9d27d8e8c"
+    },
+    {
+      "path": "extracted/cpp-priest-display-541/build-tests-fixed.log",
+      "sha256": "d403e3b153820b4e245512038fe355cac98e184c886398f484b39a97fe82c7f8"
+    },
+    {
+      "path": "extracted/cpp-priest-display-541/build.log",
+      "sha256": "b282fdd45e2e158d376ded7b28878b3d807e9f5f12284ad8424d2a7ef3bd1b78"
+    },
+    {
+      "path": "extracted/cpp-priest-display-541/constructors-decompiled.txt",
+      "sha256": "b92cf0f58aabb2a32985e5214d4d0273889b29a373f187dcff2abeecf0b87511"
+    },
+    {
+      "path": "extracted/cpp-priest-display-541/focus-00.log",
+      "sha256": "cddeced85fbab3662fa5279af1a26babad3110f91ed7ca37666144a49a2cc41a"
+    },
+    {
+      "path": "extracted/cpp-priest-display-541/focus-01.log",
+      "sha256": "3176288eec1345af79c4442905e6bf2adf714b8457ee34165e31bc7a7ebfd11d"
+    },
+    {
+      "path": "extracted/cpp-priest-display-541/focus-02.log",
+      "sha256": "9d9b4fcec9cf86f2d5bb25b17e270b985ba4d0e429dc1a82ba2d582f3ab2c613"
+    },
+    {
+      "path": "extracted/cpp-priest-display-541/focus-03.log",
+      "sha256": "25c28916a414772a2d7cbd508df2525547d0f5ca71265ff2952cad382a145c6a"
+    },
+    {
+      "path": "extracted/cpp-priest-display-541/focus-04.log",
+      "sha256": "00ea1e557328f431e3251ab3c16148c7a1c0e7238a8be4566fc53f2b548da457"
+    },
+    {
+      "path": "extracted/cpp-priest-display-541/focus-05.log",
+      "sha256": "fb81960259bf658f0aae2028056ee545d1e68dee94958abf5ca525f2c075187a"
+    },
+    {
+      "path": "extracted/cpp-priest-display-541/focus-06.log",
+      "sha256": "8d401a845f0039f9f4a0f2063dd6ac318067fa999546692ea6400c856c3382a1"
+    },
+    {
+      "path": "extracted/cpp-priest-display-541/focus-07.log",
+      "sha256": "6bb96d899ae4005f612a996031e47e79abd8a16eb8b3560700c8b8cc6573f829"
+    },
+    {
+      "path": "extracted/cpp-priest-display-541/focus-08.log",
+      "sha256": "6b0673a14e823590c733ac8ab883791744fda9fbbc6fa13dcff91095a3e3372f"
+    },
+    {
+      "path": "extracted/cpp-priest-display-541/focus-09.log",
+      "sha256": "416e674b5293f1e4df211cdda415c8446d921911a2cdc96502ddca6024ee27a4"
+    },
+    {
+      "path": "extracted/cpp-priest-display-541/focus-10.log",
+      "sha256": "59ee235fbcdf300f7055f819b3c4dd46f3eb04161010d9ba1601ae557ad220cf"
+    },
+    {
+      "path": "extracted/cpp-priest-display-541/focus-11.log",
+      "sha256": "ccb8d3cdd5a42290c9e11ad225ad94a55c44ba1abd2c8d5a5839296ff8a10a63"
+    },
+    {
+      "path": "extracted/cpp-priest-display-541/focus-12.log",
+      "sha256": "ed55d7b3b6042f7d8656b5b3952b7e2f6664911d6a9f06f27a5bfc0033ad68df"
+    },
+    {
+      "path": "extracted/cpp-priest-display-541/focused-tests.json",
+      "sha256": "4d5dd77dd8fe7762c7864a6cc162ca95f356939e4bc39252b9d5412b4ec206fc"
+    },
+    {
+      "path": "extracted/cpp-priest-display-541/forceField.type",
+      "sha256": "6eefabf18612d8d4955365e394d38cd8b0dcc19c68980c1a391e714ac09d43c1"
+    },
+    {
+      "path": "extracted/cpp-priest-display-541/freeze-final.json",
+      "sha256": "2288b19ece72b8f1e426d3a34d9a01eacfa67045fca4f408de85710ce1ef8be6"
+    },
+    {
+      "path": "extracted/cpp-priest-display-541/native-static.json",
+      "sha256": "54a3469ee8b37c102fe2b086c2453084734e91045d4fb432bc439fee2193784d"
+    },
+    {
+      "path": "extracted/cpp-priest-display-541/preservation-preliminary.json",
+      "sha256": "1aa17d943b1518d844c0508e2daaa1c1d25a852b8173f0b8a96ac4b10c4b0509"
+    },
+    {
+      "path": "extracted/cpp-priest-display-541/preservation.json",
+      "sha256": "f320c11ad05c0defc3bd218bcef8aa1705d76069a67e483ecd69a56109f80160"
+    },
+    {
+      "path": "extracted/cpp-priest-display-541/priest.type",
+      "sha256": "67e3566b9a4c7166937a218f931b94677ed0d0fc940189c16faba7dc7db3f6b0"
+    },
+    {
+      "path": "extracted/cpp-priest-display-541/regression-initial.log",
+      "sha256": "5ddb2a497df87443c67f3dc0caa6178d67484b33b3516db2887237cadf2c6deb"
+    },
+    {
+      "path": "extracted/cpp-priest-display-541/regression-intermediate.log",
+      "sha256": "7a78eacfbe4a5b3b5a243ee9a3b207cb15f340141260f43dd07491172a1d007a"
+    },
+    {
+      "path": "extracted/cpp-priest-display-541/sprite-draw-decompiled.txt",
+      "sha256": "417694decadae6db42e8360c0e7d359f5f43dcd71fa5da88ce8815ed00d267ce"
+    }
+  ],
+  "noPush": true
+}

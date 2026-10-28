@@ -5116,6 +5116,79 @@ TEST_CASE(CampaignSession_FenceShieldUsesCurrentOwnerColorPixels) {
     }
     CHECK(cases==20 && coloredPixels>0);
 }
+
+// 실제 HP 전환으로 생성한 사제 보호막은 사제와 같은 발 기준점으로 원본 픽셀을 그려야 한다.
+TEST_CASE(CampaignPriestDisplay_ShieldUsesSharedFootAnchor) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());auto services=external.Services();UseWorldTestLogin(services);services.install.resetCamera={};
+    GameWorld world(assets.game,assets.files,std::move(fort),MissionPlayers{},"thewarbegins",std::move(services),{1024,768});
+    auto& session=world.Session();const auto core=session.Core();const auto point=WorkshopDisplaySupport(session); // 실제 받침 확정으로 지도 안쪽의 표시 입력을 준비한다.
+    const auto priest=session.World().Create(158,2);const bool battle=core.ownerMode.battle; // 원래 소유자는 전투 전 가상 setter로 기록한다.
+    core.ownerMode.battle=false;session.Priests().SetOwner(priest,2);core.ownerMode.battle=battle;session.World().Pop(priest,point[0],point[1],0);
+    const auto before=ConstructionLive(core,167);session.Priests().SetHitPoints(priest,session.HitPoints().MaxHitPoints(priest)/2-1);
+    Sid shield{}; // HP 전환이 이번에 실제로 생성한 원형 보호막이다.
+    for (const auto sid:ConstructionLive(core,167)) { // 이미 지도에 있던 다른 사제의 보호막은 제외한다.
+        if (std::find(before.begin(),before.end(),sid)==before.end()) { CHECK(!shield.value);shield=sid; }
+    }
+    CHECK(shield.value);if (!shield.value) return;
+    CHECK(Get(core.pool.Slot(shield),0)==0x507770U && core.pool.Slot(shield)[34]==2);
+    CHECK(Get(core.pool.Slot(shield),14)==Get(core.pool.Slot(priest),14) && Get(core.pool.Slot(shield),18)==Get(core.pool.Slot(priest),18));
+    CHECK(core.types[158].hotspotX==8 && core.types[158].hotspotY==2 && core.types[167].hotspotX==8 && core.types[167].hotspotY==2);
+    RawCampaignFactoryDisplay display(core,assets.game);CHECK(display.Handles(priest) && display.Handles(shield));
+    world.SetPalette(WorkshopDisplayPalette(assets.game));const auto initial=world.ToScreen(point[0],point[1]);world.Scroll(initial.x-512,initial.y-384);
+    const auto screen=world.ToScreen(point[0],point[1]);std::size_t cases{},sensitive{}; // 모든 실제 애니메이션 프레임을 검사한다.
+    for (std::size_t frame=0;frame<core.frames[167].Codes().size();++frame) { // 프레임 진행/게임 루프 없이 현재 그림 입력만 바꾼다.
+        Put(core.pool.AllocatedBytes(shield),36,static_cast<std::uint32_t>(frame));std::vector<RenderSprite> body;
+        for (const auto& sprite:world.Sprites()) { // 원본 공통 출력이 같은 SID의 본체를 정확히 한 번 제출해야 한다.
+            if (!sprite.shadow && sprite.sourceSid==shield.value) body.push_back(sprite);
+        }
+        CHECK(body.size()==1);if (body.size()!=1) return;
+        Renderer renderer(1024,768);renderer.SetScene(body);std::vector<std::uint8_t> actual(1024*768,199),expected(actual),oldAnchor(actual);
+        renderer.Draw(actual,1024,199);const auto image=assets.game.Shapes().Decode(97,frame);const auto rect=assets.game.Shapes().Blocks()[97].frames[frame].rect;
+        DrawIndexedImage(expected,1024,768,image,screen.x-8+rect.left,screen.y-2+rect.top,{0,28,1024,768});
+        DrawIndexedImage(oldAnchor,1024,768,image,screen.x+rect.left,screen.y+rect.top,{0,28,1024,768});
+        CHECK(actual==expected);if (expected!=oldAnchor) ++sensitive;++cases;
+    }
+    CHECK(cases>0 && sensitive==cases); // 기존 미보정 좌표와 실제로 다른 그림을 대조했음을 보장한다.
+    std::cout<<"사제 보호막 프레임 "<<cases<<"/이전 좌표 차이 "<<sensitive<<'\n';
+}
+
+// 제단에 적 사제를 넣은 실제 내용물 알림 뒤에는 포획자의 BYTE가 아닌 원래 사제의 WORD로 색을 고른다.
+TEST_CASE(CampaignPriestDisplay_AltarUsesContainedPriestOriginalOwner) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());auto services=external.Services();UseWorldTestLogin(services);services.install.resetCamera={};
+    GameWorld world(assets.game,assets.files,std::move(fort),MissionPlayers{},"thewarbegins",std::move(services),{1024,768});
+    auto& session=world.Session();const auto core=session.Core();const auto point=WorkshopDisplaySupport(session);const auto before=ConstructionLive(core,164);
+    const auto dais=session.World().Create(165);core.owner.Set(dais,1);session.World().Pop(dais,point[0],point[1],0);Sid altar{}; // 실제 다이스 Pop이 만든 제단만 선택한다.
+    for (const auto sid:ConstructionLive(core,164)) { // 지도에 이미 있던 적 제단은 이 검사에서 바꾸지 않는다.
+        if (std::find(before.begin(),before.end(),sid)==before.end()) { CHECK(!altar.value);altar=sid; }
+    }
+    CHECK(altar.value);if (!altar.value) return;const auto captured=session.CreateContained(dais,158,0x82,32,0,0); // 원래 적 소유자2와 포획 비트를 실제 내용물 경로에 전달한다.
+    CHECK(captured.value && Get(core.pool.Slot(altar),0)==0x5076b8U && core.pool.Slot(altar)[34]==1 && Get(core.pool.Slot(altar),12,2)==2);
+    const auto first=core.frames[164].Run('O').first;CHECK(first>=0 && Get(core.pool.Slot(altar),36)==static_cast<std::uint32_t>(first));
+    RawCampaignFactoryDisplay display(core,assets.game);CHECK(display.Handles(altar));world.SetPalette(WorkshopDisplayPalette(assets.game));
+    const auto initial=world.ToScreen(point[0],point[1]);world.Scroll(initial.x-512,initial.y-384);const auto screen=world.ToScreen(point[0],point[1]);
+    const auto maps=BuildStandardOwnerColorMaps(164,82);std::size_t cases{},sensitive{}; // 기존 독립 원본 fixture가 검증한 색표를 연결 경계의 예상값으로 사용한다.
+    for (const auto colors:std::array<std::array<int,2>,2>{{{1,2},{2,1}}}) { // 두 플레이어의 현재 색을 교환해 최초 표 캐시도 검출한다.
+        core.bridgeState.ownerColors[1]=colors[0];core.bridgeState.ownerColors[2]=colors[1];
+        for (std::size_t frame=0;frame<core.frames[164].Codes().size();++frame) { // 포획 사제가 보이는 원본 O 방향의 모든 프레임을 대조한다.
+            if (core.frames[164].Codes()[frame].side!='O') continue;
+            Put(core.pool.AllocatedBytes(altar),36,static_cast<std::uint32_t>(frame));std::vector<RenderSprite> body;
+            for (const auto& sprite:world.Sprites()) { // 제단 본체만 분리하여 다이스/룬과 색상 판정을 섞지 않는다.
+                if (!sprite.shadow && sprite.sourceSid==altar.value) body.push_back(sprite);
+            }
+            CHECK(body.size()==1);if (body.size()!=1) return;
+            Renderer renderer(1024,768);renderer.SetScene(body);std::vector<std::uint8_t> actual(1024*768,199),expected(actual),captorColor(actual);
+            renderer.Draw(actual,1024,199);const auto image=assets.game.Shapes().Decode(94,frame);const auto rect=assets.game.Shapes().Blocks()[94].frames[frame].rect;
+            const int x=screen.x-core.types[164].hotspotX+rect.left,y=screen.y-core.types[164].hotspotY+rect.top; // 원본 제단의 같은 발 기준점이다.
+            DrawIndexedImage(expected,1024,768,image,x,y,{0,28,1024,768},&maps[static_cast<std::size_t>(colors[1])]);
+            DrawIndexedImage(captorColor,1024,768,image,x,y,{0,28,1024,768},&maps[static_cast<std::size_t>(colors[0])]);
+            CHECK(actual==expected);if (expected!=captorColor) ++sensitive;++cases;
+        }
+    }
+    CHECK(cases>0 && sensitive==cases);CHECK(core.pool.Slot(altar)[34]==1 && Get(core.pool.Slot(altar),12,2)==2); // 표시 수정이 실제 제단 소유권을 바꾸지 않는다.
+    std::cout<<"포획 사제 제단 색상 조건 "<<cases<<"/포획자 색과 차이 "<<sensitive<<'\n';
+}
 // 원본 여덟 이동 타입과 실제 공간/사제 HP 조회를 묶어 스톰 크리스탈·포획 가능 사제의 커서를 대조한다.
 TEST_CASE(CampaignSession_ObjectHitUsesCurrentRawPhysicalShapeAndCamera) { // 실제RLE의투명구멍/현재raw프레임/카메라를픽셀선택기에연결한다.
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();UseWorldTestLogin(services);services.install.resetCamera={}; // 실제장치대신기존독립Session경계를쓴다.
