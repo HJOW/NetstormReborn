@@ -15,12 +15,18 @@ cpppj/src/client/GifImage.cpp	Netstorm.Assets/GifImage.cs	f95a8db28ceae6c036fa0d
 cpppj/src/client/InputEvent.cpp	Netstorm.Client/Host/HostInputMapper.cs	91d494c3b2814f00d2cae81a0f4b247e91e81922	port
 cpppj/src/client/InputEvent.cpp	Netstorm.Client/Input/InputEvent.cs	ac9ea9162ba0c580cd53505c8c3782c0b2a27172	port
 cpppj/src/client/InputEvent.h	Netstorm.Client/Input/InputEvent.cs	ac9ea9162ba0c580cd53505c8c3782c0b2a27172	port
+cpppj/src/client/OwnerColorMaps.cpp	Netstorm.Client/Display/OwnerColorMaps.cs	e4b739b97f5316453de827b92ba6527a63f17637	L1
+cpppj/src/client/OwnerColorMaps.h	Netstorm.Client/Display/OwnerColorMaps.cs	e4b739b97f5316453de827b92ba6527a63f17637	L1
 cpppj/src/client/PaletteColors.cpp	Netstorm.Client/Display/PaletteColors.cs	58622e15d401535bf09f216e9c75bbd8c3ea2037	L1
 cpppj/src/client/PaletteColors.h	Netstorm.Client/Display/PaletteColors.cs	58622e15d401535bf09f216e9c75bbd8c3ea2037	L1
 cpppj/src/client/PaletteFlash.cpp	Netstorm.Client/Display/PaletteFlash.cs	58622e15d401535bf09f216e9c75bbd8c3ea2037	L1
 cpppj/src/client/PaletteFlash.h	Netstorm.Client/Display/PaletteFlash.cs	58622e15d401535bf09f216e9c75bbd8c3ea2037	L1
 cpppj/src/client/PaletteShade.cpp	Netstorm.Client/Display/PaletteShade.cs	58622e15d401535bf09f216e9c75bbd8c3ea2037	L1
 cpppj/src/client/PaletteShade.h	Netstorm.Client/Display/PaletteShade.cs	58622e15d401535bf09f216e9c75bbd8c3ea2037	L1
+cpppj/src/client/PreviewColorMaps.cpp	Netstorm.Client/Display/PreviewColorMaps.cs	e4b739b97f5316453de827b92ba6527a63f17637	L1
+cpppj/src/client/PreviewColorMaps.h	Netstorm.Client/Display/PreviewColorMaps.cs	e4b739b97f5316453de827b92ba6527a63f17637	L1
+cpppj/src/client/ProductionColorMaps.cpp	Netstorm.Client/Display/ProductionColorMaps.cs	e4b739b97f5316453de827b92ba6527a63f17637	L1
+cpppj/src/client/ProductionColorMaps.h	Netstorm.Client/Display/ProductionColorMaps.cs	e4b739b97f5316453de827b92ba6527a63f17637	L1
 cpppj/src/client/Screen.cpp	Netstorm.Client.Host/ClientHostGame.cs	91d494c3b2814f00d2cae81a0f4b247e91e81922	port
 cpppj/src/client/Screen.cpp	Netstorm.Client.Host/MonoGameScreenOutput.cs	91d494c3b2814f00d2cae81a0f4b247e91e81922	port
 cpppj/src/client/Screen.cpp	Netstorm.Client/Display/GamePalette.cs	ac9ea9162ba0c580cd53505c8c3782c0b2a27172	port
@@ -34,6 +40,8 @@ cpppj/src/client/ScreenPresentation.cpp	Netstorm.Client/Display/ScreenPresentati
 cpppj/src/client/ScreenPresentation.cpp	Netstorm.Client/Host/HostPresentation.cs	91d494c3b2814f00d2cae81a0f4b247e91e81922	port
 cpppj/src/client/ScreenPresentation.h	Netstorm.Client/Display/ScreenPresentation.cs	ac9ea9162ba0c580cd53505c8c3782c0b2a27172	port
 cpppj/src/client/ScreenResolutions.h	Netstorm.Client/Display/ScreenResolutions.cs	ac9ea9162ba0c580cd53505c8c3782c0b2a27172	port
+cpppj/src/client/SpriteColorMaps.cpp	Netstorm.Client/Display/SpriteColorMaps.cs	e4b739b97f5316453de827b92ba6527a63f17637	L1
+cpppj/src/client/SpriteColorMaps.h	Netstorm.Client/Display/SpriteColorMaps.cs	e4b739b97f5316453de827b92ba6527a63f17637	L1
 cpppj/src/client/VFXDraw.cpp	Netstorm.Client/Display/VfxDraw.cs	cb56907c0aae1f0f02410dbda12860051a7f2e4d	L1
 cpppj/src/client/VFXDraw.h	Netstorm.Client/Display/VfxDraw.cs	cb56907c0aae1f0f02410dbda12860051a7f2e4d	L1
 cpppj/src/client/VFXLine.cpp	Netstorm.Client/Display/VfxLine.cs	cb56907c0aae1f0f02410dbda12860051a7f2e4d	port
@@ -60,6 +68,8 @@ cpppj/src/o/RawBridgeLifecycle.cpp	Netstorm.Core/Original/RawBridgeLifecycle.cs	
 cpppj/src/o/RawBuildingSpace.cpp	Netstorm.Core/Original/RawBuildingSpace.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
 cpppj/src/o/RawCarrierPostPop.cpp	Netstorm.Core/Original/RawCarrierPostPop.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
 cpppj/src/o/RawCarrierPreDestroy.cpp	Netstorm.Core/Original/RawCarrierPreDestroy.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
+cpppj/src/o/RawColorSortPrimary.cpp	Netstorm.Core/Original/RawColorSortPrimary.cs	e4b739b97f5316453de827b92ba6527a63f17637	L1
+cpppj/src/o/RawColorSortPrimary.h	Netstorm.Core/Original/RawColorSortPrimary.cs	e4b739b97f5316453de827b92ba6527a63f17637	L1
 cpppj/src/o/RawContainedCreate.cpp	Netstorm.Core/Original/RawContainedCreate.cs	ab3ef43d3685245aeaad8ecf53d55de4a1b92a97	L1
 cpppj/src/o/RawContainedFinder.cpp	Netstorm.Core/Original/RawContainedFinder.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
 cpppj/src/o/RawContainedFinder.h	Netstorm.Core/Original/RawContainedFinder.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1

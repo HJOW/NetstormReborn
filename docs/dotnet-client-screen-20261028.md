@@ -136,3 +136,22 @@ NetstormCpp.exe --run extracted\dotnet-oracle-data --window --no-audio --frames 
 **검증:** Release 경고·오류 0. Client 검사 72개(+6) 통과, 전체 **1,457개(Assets 363 + Core 1022 + Client 72) 통과**.
 검사 작성 중 실패 1건은 테스트의 오류였고(거리 상한의 등호 착각, C++ 조건 `ax > INT32_MAX`에 맞게 수정) 소스 수정은 없었다.
 변이 1건(투명 마스크 무시)에 L1 기대값 실패를 확인하고 원복했다.
+
+## 9. R2c: 색 표 (같은 날, HJOW-Athlon)
+
+그리기 원시·팔레트·글꼴(R2)의 세 번째 묶음이다. 스프라이트·커서·생산·소유자 색 표와 ColorSort primary를 옮겼다.
+
+| 파일 | cpppj 근거 | 내용 |
+| --- | --- | --- |
+| `Original/RawColorSortPrimary.cs` | `o/RawColorSortPrimary.cpp/.h` (원본 00439de0) | raw 56바이트 × 256 기록의 H/L/S 계산과 명도 읽기. 관측 경계(checkpoint)를 그대로 둔다 |
+| `Display/SpriteColorMaps.cs` | `SpriteColorMaps.cpp/.h` (원본 0043c010) | 밝음·건설(명암 재사용)과 제곱 거리 그림자 표. 228~245·254·255 항등 덮개를 유지한다 |
+| `Display/PreviewColorMaps.cs` | `PreviewColorMaps.cpp/.h` | 커서 파괴(빨강 채움)·불법(빨강 2.1배)·글자 그림자(0) 표 |
+| `Display/ProductionColorMaps.cs` | `ProductionColorMaps.cpp/.h` | 생산 아이콘 비활성(빨강 2.1배)·선행(0) 표 |
+| `Display/OwnerColorMaps.cs` | `OwnerColorMaps.cpp/.h` (원본 0043b950·0043ba00·0043b750) | 표준 9표(228~245 띠·다리 색 2·7 특례)와 전용 5종(111·141·137·94·97) 표. 명도 읽기는 논리 adapter와 primary 두 경로를 둔다 |
+
+- `PORT_MAP.tsv`에 `L1` 10개 행을 새로 추가했다. fixture 5개(`sprite-colors`·`preview-colors`·`production-colors` 각 3행, `owner-hsl-colors` 15행, `owner-capture` M행 18개)를 연결했다.
+- `owner-capture`의 C행 480개(세션 자산·SHP 필요)와 `SpriteDraw` 클래스·그림자 alias 세션 연결은 R4·R5에서 잇는다.
+- `owner-hsl` 대조는 논리 adapter와 primary 두 경로가 같은 기대값과 일치해야 하며, 64비트 별도 관측이 다른 행이 있어 검사가 헛돌지 않음을 확인한다.
+
+**검증:** Release 경고·오류 0. Client 검사 77개(+5)·Core 검사 1025개(+3) 통과, 전체 **1,465개(Assets 363 + Core 1025 + Client 77) 통과**.
+변이 1건(그림자 어두움 곱 0.6000000238418579→0.61)에 L1 기대값 실패를 확인하고 원복했다.
