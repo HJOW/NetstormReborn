@@ -1,0 +1,1168 @@
+{
+  "unit": 533,
+  "date": "2026-10-28",
+  "host": "HJOW-Athlon",
+  "headBeforeCommit": "11450894162742a201fd8fa9aad0e1a323bebca3",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23",
+    "outputsModified": false
+  },
+  "product": {
+    "NetstormCpp.exe": "03a8915301e389260fac48a02b6340fce3fc45f67fc2d74382c5b161b345412d",
+    "netstorm_tests.exe": "933fd0f732f07d2d15642e15595b914d4cc9c5be8934052fd9e18744f6cfa02c"
+  },
+  "changedProductSource": [],
+  "builds": 0,
+  "cppTestExecutions": 0,
+  "accepted": {
+    "results": [
+      {
+        "size": [
+          1280,
+          720
+        ],
+        "buildings": [
+          {
+            "type": 71,
+            "asset": "sunArcher",
+            "sid": 16013,
+            "position": [
+              "120",
+              "154"
+            ],
+            "hp": 300,
+            "refund": 75,
+            "spAfter": 500075,
+            "menu": [
+              {
+                "token": 448,
+                "index": 0,
+                "flags": 66697,
+                "command": 33554525,
+                "parameter": 16013,
+                "visible": true,
+                "label": "Salvage gains 75"
+              },
+              {
+                "token": 448,
+                "index": 1,
+                "flags": 66689,
+                "command": 33554455,
+                "parameter": 71,
+                "visible": true,
+                "label": "About"
+              },
+              {
+                "token": 448,
+                "index": 2,
+                "flags": 66592,
+                "command": 0,
+                "parameter": 0,
+                "visible": true,
+                "label": "Player"
+              }
+            ],
+            "removed": true,
+            "paidOnce": true
+          },
+          {
+            "type": 78,
+            "asset": "sunBlocker",
+            "sid": 15003,
+            "position": [
+              "127",
+              "163"
+            ],
+            "hp": 2000,
+            "refund": 100,
+            "spAfter": 500175,
+            "menu": [
+              {
+                "token": 530,
+                "index": 0,
+                "flags": 66697,
+                "command": 33554525,
+                "parameter": 15003,
+                "visible": true,
+                "label": "Salvage gains 100"
+              },
+              {
+                "token": 530,
+                "index": 1,
+                "flags": 66689,
+                "command": 33554455,
+                "parameter": 78,
+                "visible": true,
+                "label": "About"
+              },
+              {
+                "token": 530,
+                "index": 2,
+                "flags": 66592,
+                "command": 0,
+                "parameter": 0,
+                "visible": true,
+                "label": "Player"
+              }
+            ],
+            "removed": true,
+            "paidOnce": true
+          },
+          {
+            "type": 79,
+            "asset": "thunderBlocker",
+            "sid": 16087,
+            "position": [
+              "159",
+              "157"
+            ],
+            "hp": 3900,
+            "refund": 200,
+            "spAfter": 500375,
+            "menu": [
+              {
+                "token": 662,
+                "index": 0,
+                "flags": 66697,
+                "command": 33554525,
+                "parameter": 16087,
+                "visible": true,
+                "label": "Salvage gains 200"
+              },
+              {
+                "token": 662,
+                "index": 1,
+                "flags": 66689,
+                "command": 33554455,
+                "parameter": 79,
+                "visible": true,
+                "label": "About"
+              },
+              {
+                "token": 662,
+                "index": 2,
+                "flags": 66592,
+                "command": 0,
+                "parameter": 0,
+                "visible": true,
+                "label": "Player"
+              }
+            ],
+            "removed": true,
+            "paidOnce": true
+          },
+          {
+            "type": 128,
+            "asset": "sunCannon",
+            "sid": 16118,
+            "position": [
+              "159",
+              "160"
+            ],
+            "hp": 600,
+            "refund": 100,
+            "spAfter": 500475,
+            "menu": [
+              {
+                "token": 754,
+                "index": 0,
+                "flags": 66697,
+                "command": 33554525,
+                "parameter": 16118,
+                "visible": true,
+                "label": "Salvage gains 100"
+              },
+              {
+                "token": 754,
+                "index": 1,
+                "flags": 66689,
+                "command": 33554455,
+                "parameter": 128,
+                "visible": true,
+                "label": "About"
+              },
+              {
+                "token": 754,
+                "index": 2,
+                "flags": 66592,
+                "command": 0,
+                "parameter": 0,
+                "visible": true,
+                "label": "Player"
+              }
+            ],
+            "removed": true,
+            "paidOnce": true
+          },
+          {
+            "type": 129,
+            "asset": "rainCannon",
+            "sid": 15001,
+            "position": [
+              "124",
+              "163"
+            ],
+            "hp": 600,
+            "refund": 150,
+            "spAfter": 500625,
+            "menu": [
+              {
+                "token": 822,
+                "index": 0,
+                "flags": 66697,
+                "command": 33554525,
+                "parameter": 15001,
+                "visible": true,
+                "label": "Salvage gains 150"
+              },
+              {
+                "token": 822,
+                "index": 1,
+                "flags": 66689,
+                "command": 33554455,
+                "parameter": 129,
+                "visible": true,
+                "label": "About"
+              },
+              {
+                "token": 822,
+                "index": 2,
+                "flags": 66592,
+                "command": 0,
+                "parameter": 0,
+                "visible": true,
+                "label": "Player"
+              }
+            ],
+            "removed": true,
+            "paidOnce": true
+          },
+          {
+            "type": 131,
+            "asset": "thunderCannon",
+            "sid": 15006,
+            "position": [
+              "128",
+              "166"
+            ],
+            "hp": 1000,
+            "refund": 300,
+            "spAfter": 500925,
+            "menu": [
+              {
+                "token": 842,
+                "index": 0,
+                "flags": 66697,
+                "command": 33554525,
+                "parameter": 15006,
+                "visible": true,
+                "label": "Salvage gains 300"
+              },
+              {
+                "token": 842,
+                "index": 1,
+                "flags": 66689,
+                "command": 33554455,
+                "parameter": 131,
+                "visible": true,
+                "label": "About"
+              },
+              {
+                "token": 842,
+                "index": 2,
+                "flags": 66592,
+                "command": 0,
+                "parameter": 0,
+                "visible": true,
+                "label": "Player"
+              }
+            ],
+            "removed": true,
+            "paidOnce": true
+          },
+          {
+            "type": 136,
+            "asset": "sunFence",
+            "sid": 15024,
+            "position": [
+              "153",
+              "165"
+            ],
+            "hp": 700,
+            "refund": 75,
+            "spAfter": 501000,
+            "menu": [
+              {
+                "token": 862,
+                "index": 0,
+                "flags": 66697,
+                "command": 33554525,
+                "parameter": 15024,
+                "visible": true,
+                "label": "Salvage gains 75"
+              },
+              {
+                "token": 862,
+                "index": 1,
+                "flags": 66689,
+                "command": 33554455,
+                "parameter": 136,
+                "visible": true,
+                "label": "About"
+              },
+              {
+                "token": 862,
+                "index": 2,
+                "flags": 66592,
+                "command": 0,
+                "parameter": 0,
+                "visible": true,
+                "label": "Player"
+              }
+            ],
+            "removed": true,
+            "paidOnce": true
+          },
+          {
+            "type": 140,
+            "asset": "windArcher",
+            "sid": 15018,
+            "position": [
+              "156",
+              "165"
+            ],
+            "hp": 490,
+            "refund": 137,
+            "spAfter": 501137,
+            "menu": [
+              {
+                "token": 882,
+                "index": 0,
+                "flags": 66697,
+                "command": 33554525,
+                "parameter": 15018,
+                "visible": true,
+                "label": "Salvage gains 137"
+              },
+              {
+                "token": 882,
+                "index": 1,
+                "flags": 66689,
+                "command": 33554455,
+                "parameter": 140,
+                "visible": true,
+                "label": "About"
+              },
+              {
+                "token": 882,
+                "index": 2,
+                "flags": 66592,
+                "command": 0,
+                "parameter": 0,
+                "visible": true,
+                "label": "Player"
+              }
+            ],
+            "removed": true,
+            "paidOnce": true
+          },
+          {
+            "type": 142,
+            "asset": "windBlocker",
+            "sid": 15000,
+            "position": [
+              "125",
+              "166"
+            ],
+            "hp": 600,
+            "refund": 200,
+            "spAfter": 501337,
+            "menu": [
+              {
+                "token": 902,
+                "index": 0,
+                "flags": 66697,
+                "command": 33554525,
+                "parameter": 15000,
+                "visible": true,
+                "label": "Salvage gains 200"
+              },
+              {
+                "token": 902,
+                "index": 1,
+                "flags": 66689,
+                "command": 33554455,
+                "parameter": 142,
+                "visible": true,
+                "label": "About"
+              },
+              {
+                "token": 902,
+                "index": 2,
+                "flags": 66592,
+                "command": 0,
+                "parameter": 0,
+                "visible": true,
+                "label": "Player"
+              }
+            ],
+            "removed": true,
+            "paidOnce": true
+          },
+          {
+            "type": 145,
+            "asset": "rainFence",
+            "sid": 15004,
+            "position": [
+              "132",
+              "168"
+            ],
+            "hp": 700,
+            "refund": 100,
+            "spAfter": 501437,
+            "menu": [
+              {
+                "token": 922,
+                "index": 0,
+                "flags": 66697,
+                "command": 33554525,
+                "parameter": 15004,
+                "visible": true,
+                "label": "Salvage gains 100"
+              },
+              {
+                "token": 922,
+                "index": 1,
+                "flags": 66689,
+                "command": 33554455,
+                "parameter": 145,
+                "visible": true,
+                "label": "About"
+              },
+              {
+                "token": 922,
+                "index": 2,
+                "flags": 66592,
+                "command": 0,
+                "parameter": 0,
+                "visible": true,
+                "label": "Player"
+              }
+            ],
+            "removed": true,
+            "paidOnce": true
+          },
+          {
+            "type": 148,
+            "asset": "thunderArcher",
+            "sid": 15022,
+            "position": [
+              "151",
+              "169"
+            ],
+            "hp": 600,
+            "refund": 150,
+            "spAfter": 501587,
+            "menu": [
+              {
+                "token": 942,
+                "index": 0,
+                "flags": 66697,
+                "command": 33554525,
+                "parameter": 15022,
+                "visible": true,
+                "label": "Salvage gains 150"
+              },
+              {
+                "token": 942,
+                "index": 1,
+                "flags": 66689,
+                "command": 33554455,
+                "parameter": 148,
+                "visible": true,
+                "label": "About"
+              },
+              {
+                "token": 942,
+                "index": 2,
+                "flags": 66592,
+                "command": 0,
+                "parameter": 0,
+                "visible": true,
+                "label": "Player"
+              }
+            ],
+            "removed": true,
+            "paidOnce": true
+          },
+          {
+            "type": 149,
+            "asset": "thunderFence",
+            "sid": 15021,
+            "position": [
+              "154",
+              "168"
+            ],
+            "hp": 1000,
+            "refund": 100,
+            "spAfter": 501687,
+            "menu": [
+              {
+                "token": 962,
+                "index": 0,
+                "flags": 66697,
+                "command": 33554525,
+                "parameter": 15021,
+                "visible": true,
+                "label": "Salvage gains 100"
+              },
+              {
+                "token": 962,
+                "index": 1,
+                "flags": 66689,
+                "command": 33554455,
+                "parameter": 149,
+                "visible": true,
+                "label": "About"
+              },
+              {
+                "token": 962,
+                "index": 2,
+                "flags": 66592,
+                "command": 0,
+                "parameter": 0,
+                "visible": true,
+                "label": "Player"
+              }
+            ],
+            "removed": true,
+            "paidOnce": true
+          }
+        ],
+        "initialSp": 500000,
+        "finalSp": 501687,
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+            "--run",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-building-menus-532\\final\\data-1024x768",
+            "--mission",
+            "TEST02",
+            "--window",
+            "--mute-audio",
+            "--frames",
+            "820",
+            "--set",
+            "SCREENW=1280;SCREENH=720;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3",
+            "--ui-script",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-building-salvage-533\\first\\1280x720\\run\\steps.tsv",
+            "--ui-report",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-building-salvage-533\\first\\1280x720\\run\\states.tsv",
+            "--audio-report",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-building-salvage-533\\first\\1280x720\\run\\audio.tsv"
+          ],
+          "binarySha256": "03a8915301e389260fac48a02b6340fce3fc45f67fc2d74382c5b161b345412d",
+          "scriptSha256": "d81534defc6e6457b69dde1d18fe3b867cf410d849770ba2ae8e5cbce9c14937",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 38.97181200000341,
+          "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderrSha256": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2",
+          "originalsUnchanged": true,
+          "dataUnchanged": true,
+          "dataRoot": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-building-menus-532\\final\\data-1024x768"
+        }
+      },
+      {
+        "size": [
+          1024,
+          768
+        ],
+        "buildings": [
+          {
+            "type": 71,
+            "asset": "sunArcher",
+            "sid": 16013,
+            "position": [
+              "120",
+              "154"
+            ],
+            "hp": 300,
+            "refund": 75,
+            "spAfter": 500075,
+            "menu": [
+              {
+                "token": 448,
+                "index": 0,
+                "flags": 66697,
+                "command": 33554525,
+                "parameter": 16013,
+                "visible": true,
+                "label": "Salvage gains 75"
+              },
+              {
+                "token": 448,
+                "index": 1,
+                "flags": 66689,
+                "command": 33554455,
+                "parameter": 71,
+                "visible": true,
+                "label": "About"
+              },
+              {
+                "token": 448,
+                "index": 2,
+                "flags": 66592,
+                "command": 0,
+                "parameter": 0,
+                "visible": true,
+                "label": "Player"
+              }
+            ],
+            "removed": true,
+            "paidOnce": true
+          },
+          {
+            "type": 78,
+            "asset": "sunBlocker",
+            "sid": 15003,
+            "position": [
+              "127",
+              "163"
+            ],
+            "hp": 2000,
+            "refund": 100,
+            "spAfter": 500175,
+            "menu": [
+              {
+                "token": 534,
+                "index": 0,
+                "flags": 66697,
+                "command": 33554525,
+                "parameter": 15003,
+                "visible": true,
+                "label": "Salvage gains 100"
+              },
+              {
+                "token": 534,
+                "index": 1,
+                "flags": 66689,
+                "command": 33554455,
+                "parameter": 78,
+                "visible": true,
+                "label": "About"
+              },
+              {
+                "token": 534,
+                "index": 2,
+                "flags": 66592,
+                "command": 0,
+                "parameter": 0,
+                "visible": true,
+                "label": "Player"
+              }
+            ],
+            "removed": true,
+            "paidOnce": true
+          },
+          {
+            "type": 79,
+            "asset": "thunderBlocker",
+            "sid": 16087,
+            "position": [
+              "159",
+              "157"
+            ],
+            "hp": 3900,
+            "refund": 200,
+            "spAfter": 500375,
+            "menu": [
+              {
+                "token": 683,
+                "index": 0,
+                "flags": 66697,
+                "command": 33554525,
+                "parameter": 16087,
+                "visible": true,
+                "label": "Salvage gains 200"
+              },
+              {
+                "token": 683,
+                "index": 1,
+                "flags": 66689,
+                "command": 33554455,
+                "parameter": 79,
+                "visible": true,
+                "label": "About"
+              },
+              {
+                "token": 683,
+                "index": 2,
+                "flags": 66592,
+                "command": 0,
+                "parameter": 0,
+                "visible": true,
+                "label": "Player"
+              }
+            ],
+            "removed": true,
+            "paidOnce": true
+          },
+          {
+            "type": 128,
+            "asset": "sunCannon",
+            "sid": 16118,
+            "position": [
+              "159",
+              "160"
+            ],
+            "hp": 600,
+            "refund": 100,
+            "spAfter": 500475,
+            "menu": [
+              {
+                "token": 757,
+                "index": 0,
+                "flags": 66697,
+                "command": 33554525,
+                "parameter": 16118,
+                "visible": true,
+                "label": "Salvage gains 100"
+              },
+              {
+                "token": 757,
+                "index": 1,
+                "flags": 66689,
+                "command": 33554455,
+                "parameter": 128,
+                "visible": true,
+                "label": "About"
+              },
+              {
+                "token": 757,
+                "index": 2,
+                "flags": 66592,
+                "command": 0,
+                "parameter": 0,
+                "visible": true,
+                "label": "Player"
+              }
+            ],
+            "removed": true,
+            "paidOnce": true
+          },
+          {
+            "type": 129,
+            "asset": "rainCannon",
+            "sid": 15001,
+            "position": [
+              "124",
+              "163"
+            ],
+            "hp": 600,
+            "refund": 150,
+            "spAfter": 500625,
+            "menu": [
+              {
+                "token": 858,
+                "index": 0,
+                "flags": 66697,
+                "command": 33554525,
+                "parameter": 15001,
+                "visible": true,
+                "label": "Salvage gains 150"
+              },
+              {
+                "token": 858,
+                "index": 1,
+                "flags": 66689,
+                "command": 33554455,
+                "parameter": 129,
+                "visible": true,
+                "label": "About"
+              },
+              {
+                "token": 858,
+                "index": 2,
+                "flags": 66592,
+                "command": 0,
+                "parameter": 0,
+                "visible": true,
+                "label": "Player"
+              }
+            ],
+            "removed": true,
+            "paidOnce": true
+          },
+          {
+            "type": 131,
+            "asset": "thunderCannon",
+            "sid": 15006,
+            "position": [
+              "128",
+              "166"
+            ],
+            "hp": 1000,
+            "refund": 300,
+            "spAfter": 500925,
+            "menu": [
+              {
+                "token": 878,
+                "index": 0,
+                "flags": 66697,
+                "command": 33554525,
+                "parameter": 15006,
+                "visible": true,
+                "label": "Salvage gains 300"
+              },
+              {
+                "token": 878,
+                "index": 1,
+                "flags": 66689,
+                "command": 33554455,
+                "parameter": 131,
+                "visible": true,
+                "label": "About"
+              },
+              {
+                "token": 878,
+                "index": 2,
+                "flags": 66592,
+                "command": 0,
+                "parameter": 0,
+                "visible": true,
+                "label": "Player"
+              }
+            ],
+            "removed": true,
+            "paidOnce": true
+          },
+          {
+            "type": 136,
+            "asset": "sunFence",
+            "sid": 15024,
+            "position": [
+              "153",
+              "165"
+            ],
+            "hp": 700,
+            "refund": 75,
+            "spAfter": 501000,
+            "menu": [
+              {
+                "token": 898,
+                "index": 0,
+                "flags": 66697,
+                "command": 33554525,
+                "parameter": 15024,
+                "visible": true,
+                "label": "Salvage gains 75"
+              },
+              {
+                "token": 898,
+                "index": 1,
+                "flags": 66689,
+                "command": 33554455,
+                "parameter": 136,
+                "visible": true,
+                "label": "About"
+              },
+              {
+                "token": 898,
+                "index": 2,
+                "flags": 66592,
+                "command": 0,
+                "parameter": 0,
+                "visible": true,
+                "label": "Player"
+              }
+            ],
+            "removed": true,
+            "paidOnce": true
+          },
+          {
+            "type": 140,
+            "asset": "windArcher",
+            "sid": 15018,
+            "position": [
+              "156",
+              "165"
+            ],
+            "hp": 490,
+            "refund": 137,
+            "spAfter": 501137,
+            "menu": [
+              {
+                "token": 918,
+                "index": 0,
+                "flags": 66697,
+                "command": 33554525,
+                "parameter": 15018,
+                "visible": true,
+                "label": "Salvage gains 137"
+              },
+              {
+                "token": 918,
+                "index": 1,
+                "flags": 66689,
+                "command": 33554455,
+                "parameter": 140,
+                "visible": true,
+                "label": "About"
+              },
+              {
+                "token": 918,
+                "index": 2,
+                "flags": 66592,
+                "command": 0,
+                "parameter": 0,
+                "visible": true,
+                "label": "Player"
+              }
+            ],
+            "removed": true,
+            "paidOnce": true
+          },
+          {
+            "type": 142,
+            "asset": "windBlocker",
+            "sid": 15000,
+            "position": [
+              "125",
+              "166"
+            ],
+            "hp": 600,
+            "refund": 200,
+            "spAfter": 501337,
+            "menu": [
+              {
+                "token": 938,
+                "index": 0,
+                "flags": 66697,
+                "command": 33554525,
+                "parameter": 15000,
+                "visible": true,
+                "label": "Salvage gains 200"
+              },
+              {
+                "token": 938,
+                "index": 1,
+                "flags": 66689,
+                "command": 33554455,
+                "parameter": 142,
+                "visible": true,
+                "label": "About"
+              },
+              {
+                "token": 938,
+                "index": 2,
+                "flags": 66592,
+                "command": 0,
+                "parameter": 0,
+                "visible": true,
+                "label": "Player"
+              }
+            ],
+            "removed": true,
+            "paidOnce": true
+          },
+          {
+            "type": 145,
+            "asset": "rainFence",
+            "sid": 15004,
+            "position": [
+              "132",
+              "168"
+            ],
+            "hp": 700,
+            "refund": 100,
+            "spAfter": 501437,
+            "menu": [
+              {
+                "token": 958,
+                "index": 0,
+                "flags": 66697,
+                "command": 33554525,
+                "parameter": 15004,
+                "visible": true,
+                "label": "Salvage gains 100"
+              },
+              {
+                "token": 958,
+                "index": 1,
+                "flags": 66689,
+                "command": 33554455,
+                "parameter": 145,
+                "visible": true,
+                "label": "About"
+              },
+              {
+                "token": 958,
+                "index": 2,
+                "flags": 66592,
+                "command": 0,
+                "parameter": 0,
+                "visible": true,
+                "label": "Player"
+              }
+            ],
+            "removed": true,
+            "paidOnce": true
+          },
+          {
+            "type": 148,
+            "asset": "thunderArcher",
+            "sid": 15022,
+            "position": [
+              "151",
+              "169"
+            ],
+            "hp": 600,
+            "refund": 150,
+            "spAfter": 501587,
+            "menu": [
+              {
+                "token": 978,
+                "index": 0,
+                "flags": 66697,
+                "command": 33554525,
+                "parameter": 15022,
+                "visible": true,
+                "label": "Salvage gains 150"
+              },
+              {
+                "token": 978,
+                "index": 1,
+                "flags": 66689,
+                "command": 33554455,
+                "parameter": 148,
+                "visible": true,
+                "label": "About"
+              },
+              {
+                "token": 978,
+                "index": 2,
+                "flags": 66592,
+                "command": 0,
+                "parameter": 0,
+                "visible": true,
+                "label": "Player"
+              }
+            ],
+            "removed": true,
+            "paidOnce": true
+          },
+          {
+            "type": 149,
+            "asset": "thunderFence",
+            "sid": 15021,
+            "position": [
+              "154",
+              "168"
+            ],
+            "hp": 1000,
+            "refund": 100,
+            "spAfter": 501687,
+            "menu": [
+              {
+                "token": 998,
+                "index": 0,
+                "flags": 66697,
+                "command": 33554525,
+                "parameter": 15021,
+                "visible": true,
+                "label": "Salvage gains 100"
+              },
+              {
+                "token": 998,
+                "index": 1,
+                "flags": 66689,
+                "command": 33554455,
+                "parameter": 149,
+                "visible": true,
+                "label": "About"
+              },
+              {
+                "token": 998,
+                "index": 2,
+                "flags": 66592,
+                "command": 0,
+                "parameter": 0,
+                "visible": true,
+                "label": "Player"
+              }
+            ],
+            "removed": true,
+            "paidOnce": true
+          }
+        ],
+        "initialSp": 500000,
+        "finalSp": 501687,
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+            "--run",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-building-menus-532\\final\\data-1024x768",
+            "--mission",
+            "TEST02",
+            "--window",
+            "--mute-audio",
+            "--frames",
+            "820",
+            "--set",
+            "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3",
+            "--ui-script",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-building-salvage-533\\first\\1024x768\\run\\steps.tsv",
+            "--ui-report",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-building-salvage-533\\first\\1024x768\\run\\states.tsv",
+            "--audio-report",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-building-salvage-533\\first\\1024x768\\run\\audio.tsv"
+          ],
+          "binarySha256": "03a8915301e389260fac48a02b6340fce3fc45f67fc2d74382c5b161b345412d",
+          "scriptSha256": "d4586593419973ab8a961bd4d5cabc840418c88f7e41768f8f14ea82a4cfdda2",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 35.56776929998887,
+          "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderrSha256": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2",
+          "originalsUnchanged": true,
+          "dataUnchanged": true,
+          "dataRoot": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-building-menus-532\\final\\data-1024x768"
+        }
+      }
+    ],
+    "binarySha256": "03a8915301e389260fac48a02b6340fce3fc45f67fc2d74382c5b161b345412d",
+    "fortSha256": "51eaafd40e7e4f6445fcc36757fa87a0e7c61b5dddf32f3a1f929221ab731e61",
+    "rawObjectMutation": false,
+    "attackFlyersNotTested": true
+  },
+  "preservation": {
+    "sourceFiles": 2927,
+    "sourceChanged": [],
+    "protectedFiles": 1819,
+    "protectedChanged": [],
+    "agentsUnchanged": true,
+    "sourceBaseline": "extracted/cpp-building-menus-532/freeze-final.json",
+    "protectedBaseline": "extracted/cpp-object-hit-524/protected-before.json"
+  },
+  "totalGames": 2,
+  "allReturnCodes": [
+    0,
+    0
+  ],
+  "limitations": {
+    "allBuildingTypes": false,
+    "otherOwners": false,
+    "damagedAndConstructingStates": false,
+    "attackFlyersTested": false,
+    "multiplayerTested": false,
+    "naturalMissionCompletion": false
+  },
+  "rawDirectory": "extracted/cpp-building-salvage-533",
+  "evidenceSha256": {
+    "extracted/cpp-building-salvage-533/first/summary.json": "4ce7983e33691a030ecd2bb46dc8205bac35c18c61f9a7fd2e9985bd4c570bfc",
+    "extracted/cpp-building-salvage-533/freeze-final.json": "2a0a1038aed8fe9a4b9cc16c7355cf6380e596fd879b1edb99cfc7473724f98c",
+    "tools/cpp_building_salvage_smoke.py": "2bb4d8b2debbad2f1b84b519bb4293dde4e3c1886561f0ac1a928b840b5b191c"
+  }
+}
