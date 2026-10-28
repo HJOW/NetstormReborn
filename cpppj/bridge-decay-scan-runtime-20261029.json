@@ -1,0 +1,38 @@
+{
+  "unit": 550,
+  "date": "2026-10-29",
+  "host": "HJOW-Athlon",
+  "last_full_decompilation": "HJOW-Athlon / 2026-10-23",
+  "scope": "현재 raw 다리 스캔 실행기; 실제 Client/칸 몸체 연결 전",
+  "native": {
+    "cases": 73,
+    "native_observations": 146,
+    "precision_differences": [],
+    "binary_sha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "fixture_sha256": "59bcfadb5850433e6601995d6a0d24378369d8a599e9065c99f68768ef15fa6f",
+    "boundary": "004227e0만 기록/명시 전역 변경으로 대체; 슬롯/주기/커서/기한은 원문 실행",
+    "host": "HJOW-Athlon",
+    "last_full_decompilation": "HJOW-Athlon / 2026-10-23"
+  },
+  "tests": {
+    "focused_unique": 15,
+    "failed_checks": 0,
+    "registered": 3392,
+    "release_warnings": 0,
+    "release_errors": 0
+  },
+  "limitations": [
+    "004227e0/00421c30 및 Client 실제 프레임은551 잔여",
+    "원문 catch 착지의 새 실행 검증 없음",
+    "새 GUI/전체 C++ 반복 없음;549 자동 전술1개 실패/원인미확정 보류"
+  ],
+  "protected_files_preserved": 1820,
+  "existing_fixtures_preserved": 710,
+  "existing_changed": [
+    "cpppj/src/CMakeLists.txt",
+    "cpppj/tests/CMakeLists.txt"
+  ],
+  "game_sha256": "f271c2df0586ee6c2a9df08cc13c3078084656e54ebb74b581f9d5960aea72b5",
+  "tests_sha256": "a3f5555c77ec05149261420b1225e6eb15a65d460ef178556b4c3ccd7ce99d0b",
+  "raw": "extracted/cpp-bridge-decay-runtime-550-20261029"
+}
