@@ -1,0 +1,854 @@
+{
+  "scope": "사용자 우선 요청에 따른 완료544 및 미커밋545 소실 점검",
+  "head": "485ec28526cfc6acd2135121bba01b98ec8b557b",
+  "statusAtStart": " M LEFT_JOBS.md\n M cpppj/src/client/UberGump.cpp\n M cpppj/src/client/ViewKeyInput.cpp\n M cpppj/src/client/ViewKeyInput.h\n M cpppj/tests/CMakeLists.txt\n?? cpppj/tests/F8KeyInputTests.cpp\n?? cpppj/tests/fixtures/f8-key-input-x86.tsv\n?? tools/cpp_f8_key_smoke.py\n?? tools/cpp_work_loss_audit_545.py\n?? tools/decomp_f8_key_input.py\n",
+  "tracked": {
+    "count": 18610,
+    "missing": [],
+    "unexpectedEmpty": []
+  },
+  "source544": {
+    "count": 2934,
+    "missing": [],
+    "unexpectedEmpty": [],
+    "changed": [
+      "cpppj/src/client/UberGump.cpp",
+      "cpppj/tests/CMakeLists.txt",
+      "cpppj/src/client/ViewKeyInput.cpp",
+      "cpppj/src/client/ViewKeyInput.h"
+    ],
+    "expectedChanges": [
+      "cpppj/src/client/UberGump.cpp",
+      "cpppj/src/client/ViewKeyInput.cpp",
+      "cpppj/src/client/ViewKeyInput.h",
+      "cpppj/tests/CMakeLists.txt"
+    ],
+    "unexpectedChanges": []
+  },
+  "work545MatchesFinalBuild": {
+    "count": 8,
+    "missing": [],
+    "unexpectedEmpty": [],
+    "changed": []
+  },
+  "work545FinalBuildCopies": {
+    "count": 8,
+    "missing": [],
+    "unexpectedEmpty": [],
+    "changed": []
+  },
+  "work545InitialBuildCopies": {
+    "count": 7,
+    "missing": [],
+    "unexpectedEmpty": [],
+    "changed": []
+  },
+  "protected": {
+    "count": 1819,
+    "missing": [],
+    "unexpectedEmpty": [],
+    "changed": [],
+    "agentsUnchanged": true
+  },
+  "completedEvidence": [
+    {
+      "report": "cpppj/priest-display-20261028.json",
+      "count": 28,
+      "missing": [],
+      "unexpectedEmpty": [],
+      "changed": []
+    },
+    {
+      "report": "cpppj/construction-mana-20261028.json",
+      "count": 34,
+      "missing": [],
+      "unexpectedEmpty": [],
+      "changed": []
+    },
+    {
+      "report": "cpppj/chat-divider-runtime-20261028.json",
+      "count": 110,
+      "missing": [],
+      "unexpectedEmpty": [],
+      "changed": []
+    },
+    {
+      "report": "cpppj/view-key-runtime-20261028.json",
+      "count": 357,
+      "missing": [],
+      "unexpectedEmpty": [],
+      "changed": []
+    },
+    {
+      "report": "cpppj/work-loss-audit-20261028.json",
+      "count": 8,
+      "missing": [],
+      "unexpectedEmpty": [],
+      "changed": []
+    }
+  ],
+  "currentCopies": {
+    "count": 9,
+    "missing": [],
+    "unexpectedEmpty": [],
+    "changed": []
+  },
+  "stableDuringAudit": {
+    "count": 9,
+    "missing": [],
+    "unexpectedEmpty": [],
+    "changed": []
+  },
+  "work545RawEvidence": {
+    "count": 152,
+    "manifest": "extracted/cpp-work-loss-audit-545-20261028/work-evidence.json"
+  },
+  "binaries": {
+    "game": {
+      "sha256": "c65d57fad1a5f78f4567a1ebc55e3012d16aeec9ab4f316b2d5163c291a6ece5",
+      "recorded": "c65d57fad1a5f78f4567a1ebc55e3012d16aeec9ab4f316b2d5163c291a6ece5"
+    },
+    "tests": {
+      "sha256": "d8b895779c05c74a8a56ddf604ff34f6facd7a88e346cad0903b3850d4894dee",
+      "recorded": "d8b895779c05c74a8a56ddf604ff34f6facd7a88e346cad0903b3850d4894dee"
+    }
+  },
+  "completedCommitAncestry": {
+    "1ddc4ba0": 0,
+    "55520f78": 0,
+    "37dbf68b": 0,
+    "2efb39ae": 0,
+    "485ec285": 0
+  },
+  "gitConnectivityExitCode": 0,
+  "recoveryPatch": {
+    "path": "docs/exe/recovery/cpp-f8-545-20261028.patch",
+    "sha256": "db19306c7199a774647b7950a36c22fbeb3da787625f433afc72b48c2fc8ef57",
+    "reverseCheckExitCode": 0,
+    "files": [
+      "cpppj/src/client/ViewKeyInput.cpp",
+      "cpppj/src/client/ViewKeyInput.h",
+      "cpppj/src/client/UberGump.cpp",
+      "cpppj/tests/CMakeLists.txt",
+      "cpppj/tests/F8KeyInputTests.cpp",
+      "cpppj/tests/fixtures/f8-key-input-x86.tsv",
+      "tools/decomp_f8_key_input.py",
+      "tools/cpp_f8_key_smoke.py"
+    ]
+  },
+  "existingValidation545": {
+    "build": {
+      "command": [
+        "cmake",
+        "--build",
+        "cpppj/build",
+        "--config",
+        "Release",
+        "--target",
+        "NetstormCpp",
+        "netstorm_tests",
+        "--parallel",
+        "4",
+        "--",
+        "/p:UseMultiToolTask=true",
+        "/p:MultiProcMaxCount=4",
+        "/p:EnforceProcessCountAcrossBuilds=true"
+      ],
+      "exitCode": 0,
+      "seconds": 64.9207501411438,
+      "workFilesUnchanged": true
+    },
+    "registeredTests": 3375,
+    "focusedTests": 45,
+    "finalGameRuns": 6,
+    "finalGameExitCodes": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  "sourceModified": false,
+  "dotnetModified": false,
+  "gameBuildTestLaunched": false,
+  "capacityErrorDirectCause": "미확정: 파일 상태 검사만으로 서비스 오류와 원복의 인과를 판단할 수 없음",
+  "limits": "저장되거나 기록된 기준이 전혀 없는 변경의 과거 존재 여부는 이 검사로 판단할 수 없음",
+  "failures": [],
+  "rawEvidence": [
+    {
+      "path": "extracted/cpp-f8-input-545/before-build.json",
+      "sha256": "a80dc52afaa022dd28d7e1b44a6a987f746be78f3f9cc7b1c6f455356768b139"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/before-build/cpppj/src/client/UberGump.cpp",
+      "sha256": "1bc9552949e3ad909f08bc86fdd484955b12e2290a522ba5c626d59fbe7346a8"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/before-build/cpppj/src/client/ViewKeyInput.cpp",
+      "sha256": "21684e6cf8fecb52ca4c59a263c297adcb5286df7dfd34e8562326b5c21b6c45"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/before-build/cpppj/src/client/ViewKeyInput.h",
+      "sha256": "85e0843fe99b396181cd41509b7b00c4513b31ee92b926ca0b2c727bb05952f1"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/before-build/cpppj/tests/CMakeLists.txt",
+      "sha256": "ee8aceb3dbcf1da3821d0359c8e1e0aa740cd1f2e62e3b56932d95da4bbd4163"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/before-build/cpppj/tests/F8KeyInputTests.cpp",
+      "sha256": "9d83d33c3fff5fc546b4d8438edc8a0c9e9586b1f577fe30ddd4f6802d0080e4"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/before-build/cpppj/tests/fixtures/f8-key-input-x86.tsv",
+      "sha256": "c9db627552881b0b4208a4a490f8c40fe6ed866ada663b05dfbb7e8292b1e414"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/before-build/tools/decomp_f8_key_input.py",
+      "sha256": "478a79ea14180ab7fea814ab99b6c081494b9d5fc87954a6f3dc9c3e2c292234"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/before-final-build.json",
+      "sha256": "d4f8606c0adc842df5c7bc20f7f03db27917b9d2e97722b3aea7dca5b8321f68"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/before-final-build/cpppj/src/client/UberGump.cpp",
+      "sha256": "335d96995acc4c986fa8c82a0aeb32a16677f3cca8f1f18b575458bdba27f75c"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/before-final-build/cpppj/src/client/ViewKeyInput.cpp",
+      "sha256": "21684e6cf8fecb52ca4c59a263c297adcb5286df7dfd34e8562326b5c21b6c45"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/before-final-build/cpppj/src/client/ViewKeyInput.h",
+      "sha256": "85e0843fe99b396181cd41509b7b00c4513b31ee92b926ca0b2c727bb05952f1"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/before-final-build/cpppj/tests/CMakeLists.txt",
+      "sha256": "ee8aceb3dbcf1da3821d0359c8e1e0aa740cd1f2e62e3b56932d95da4bbd4163"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/before-final-build/cpppj/tests/F8KeyInputTests.cpp",
+      "sha256": "9d83d33c3fff5fc546b4d8438edc8a0c9e9586b1f577fe30ddd4f6802d0080e4"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/before-final-build/cpppj/tests/fixtures/f8-key-input-x86.tsv",
+      "sha256": "c9db627552881b0b4208a4a490f8c40fe6ed866ada663b05dfbb7e8292b1e414"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/before-final-build/tools/cpp_f8_key_smoke.py",
+      "sha256": "de319d488167a64cf6467619ee80b3c24cf5de715daa7cc3870451435d96e087"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/before-final-build/tools/decomp_f8_key_input.py",
+      "sha256": "478a79ea14180ab7fea814ab99b6c081494b9d5fc87954a6f3dc9c3e2c292234"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/build-final.json",
+      "sha256": "c62ec03b6aabc65e04fba0e57ed97462dd7a329c57e61fcf1176740d30dfbd5f"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/build-final.log",
+      "sha256": "48a15a4db525b6436bedf2b626abdfeafaab1f3ed9fffbd18ee4e68e2a9f6f53"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/build.json",
+      "sha256": "7f02ac19d5f12ce083480149ce014536a535cd106d3d8ece4ef6c807829a0d15"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/build.log",
+      "sha256": "fa8f98ed6b4f6cbcd82aaf5bde5282ea6b7eda95b65136c89a79f25bc75ae7d7"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/editor-probe/data-editor-state/catalog-v1.dat",
+      "sha256": "62ab75ebbc94136e0540fc6f156cd662df11f951249d8257ac56180ec21d209f"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/editor-probe/data-editor-state/catalog.lock",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/editor-probe/data-editor/D/TEST02.fort",
+      "sha256": "49076ab086be48320915cc9ec12ae8380917ab248fc8f3b3ed978b7642f48232"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/editor-probe/data-editor/D/breakingthrough.fort",
+      "sha256": "cff7def3cde57387e2ba1dbff582a86a3e2f3db539fa3b0db0ec81f21313c098"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/editor-probe/editor.bmp",
+      "sha256": "a2ef91756221a58314070d88e3206d76312b09c3b6a2506286eb7872c842a67f"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/editor-probe/run.json",
+      "sha256": "4b04ee125a4bfc7da1308ac9606239d0ce295f1ed64e7dae8085bb36df9d52a7"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/editor-probe/running.json",
+      "sha256": "921c6e28ef94a98b8cab61b322983bf2aed347be29bb563b423be34677276d54"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/editor-probe/states.tsv",
+      "sha256": "79af51f002163f98a81fea396753374937b2d2607dc6e6e3bd8cac078324aa5f"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/editor-probe/stderr.log",
+      "sha256": "5071e7a599b44be9a429a5e9a186532d25b6e9a17b381114c160adf8371b2df0"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/editor-probe/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/editor-probe/steps.tsv",
+      "sha256": "9d1eb9aa5fc7cd4efaa19b3cdece35f72b131d8f8d48ac5834eba4cfbba827d2"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/editor-probe/summary.json",
+      "sha256": "cdc9e60b5015cfe3962dfaef52f0dcaf6c536f026ce95f69631c9ab4d9eaa37d"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/final-runtime.log",
+      "sha256": "77784366f19d15c7f79fe36848e130123d3e66c08f8891f522d54295526a8a99"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/final/1024x768/main.bmp",
+      "sha256": "78508b37669a9706f508a4b89b25b3d2a7d3c0e0cf914cf93d64dccd7177925e"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/final/1024x768/review.bmp",
+      "sha256": "37ac2f76fd7937907a5fca141e199cffdda79015235b153ee2c0375ef3e974ac"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/final/1024x768/run/audio.tsv",
+      "sha256": "8a8bcd606ec61c3df1efc4412322223d82da47d11c926e28d4d259e1b24f424e"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/final/1024x768/run/data-before.json",
+      "sha256": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/final/1024x768/run/originals-before.json",
+      "sha256": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/final/1024x768/run/run.json",
+      "sha256": "a9adece09fd67ec0f99ebd8b4957f3b3cb7ecf472e29be22c76bac0ceb03248c"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/final/1024x768/run/running.json",
+      "sha256": "d0212d16216e7c03dca170bfd4323041a6952e7c1831ca48c280c912780d93a3"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/final/1024x768/run/states.tsv",
+      "sha256": "524f884533a7b37e6858cd6718518a7ff81cbc4601241dfc79d6601bdc7f611e"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/final/1024x768/run/stderr.log",
+      "sha256": "4b73c96b25066ec2370644eda8a463570fec390203035f3612e15ad85ff68be9"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/final/1024x768/run/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/final/1024x768/run/steps.tsv",
+      "sha256": "a3c4f6656ecacffc7c78583d71491fcb00c1050280e866eb24dc15f01fe80fbc"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/final/1024x768/summary.json",
+      "sha256": "4ecf9fa4e672c530a869ba1e9ad8e7b590126833d8903b8b0312ca028db8dbe6"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/final/1280x720/main.bmp",
+      "sha256": "af9c412ec69661be4c18cc20b8d56b548df72c5aa14de182c0780313d4504215"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/final/1280x720/review.bmp",
+      "sha256": "55b5a953808dd9e147eec9629b11541b3cdf0aa86b22479383cc52a2b7d10a62"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/final/1280x720/run/audio.tsv",
+      "sha256": "bcba396a144596e2efb93790481d411c7f150a546c11df71946cfd027c7b300d"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/final/1280x720/run/data-before.json",
+      "sha256": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/final/1280x720/run/originals-before.json",
+      "sha256": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/final/1280x720/run/run.json",
+      "sha256": "3ac8a8829418219bacc8b14d29365fda52371f81cc827a65dd39234e77b9003d"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/final/1280x720/run/running.json",
+      "sha256": "f3e6d5bed4296c29c617bf37b19c174d2e2e066b25e77361f3192d106989e716"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/final/1280x720/run/states.tsv",
+      "sha256": "7ae5ec372541f79158d6bc3338b1f21308fafd91f888943e0af563e12a7016c7"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/final/1280x720/run/stderr.log",
+      "sha256": "4b73c96b25066ec2370644eda8a463570fec390203035f3612e15ad85ff68be9"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/final/1280x720/run/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/final/1280x720/run/steps.tsv",
+      "sha256": "26ba9b0d879a2337a5a8c2b5240bced1c433ade1975fcef0ea51bf6986042631"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/final/1280x720/summary.json",
+      "sha256": "e8f09b5973201543ad432acf0ea0b79c34ada30660a608be3f4c67398ce4e287"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/final/1280x800/main.bmp",
+      "sha256": "0c0ca6fa113e12fa9a201be1ed0a349c6806d826f7a6338364f0641c0d338e22"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/final/1280x800/review.bmp",
+      "sha256": "d49f6226a5d93ed84cc4a07e11cf800f54850c30799c722a513ce58b916e1399"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/final/1280x800/run/audio.tsv",
+      "sha256": "1dcb9c8831ae78d320421cfdc88a39870542162794c748ce52c14401be02d6e5"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/final/1280x800/run/data-before.json",
+      "sha256": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/final/1280x800/run/originals-before.json",
+      "sha256": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/final/1280x800/run/run.json",
+      "sha256": "8dca9cd24e22664d858c47ad75253daeac99467b09376278a4669b9fcb74dec4"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/final/1280x800/run/running.json",
+      "sha256": "54644af687753f9f108bd8e5dd9f5961bb8ee761c96a1c17d14de04146ef8498"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/final/1280x800/run/states.tsv",
+      "sha256": "5eefdf09ef63f698c72acf7aceee5d87b2511a0c9fdd598403b2e82d1440be99"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/final/1280x800/run/stderr.log",
+      "sha256": "4b73c96b25066ec2370644eda8a463570fec390203035f3612e15ad85ff68be9"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/final/1280x800/run/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/final/1280x800/run/steps.tsv",
+      "sha256": "92927b960cffbb85b67babd38bb86423fc77312372b4dddac9f28ac9c3ef9856"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/final/1280x800/summary.json",
+      "sha256": "3203c2bf8229e0c2a40c2b67186d3e5b88f3f00f4cddbb7a479ac275887c3445"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/final/editor-1024x768/data-editor-state/catalog-v1.dat",
+      "sha256": "9b92f5cfea9343af34a5575cd5a750639448bf567f7c6eb121593711babdea08"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/final/editor-1024x768/data-editor-state/catalog.lock",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/final/editor-1024x768/data-editor/D/TEST02.fort",
+      "sha256": "14b5e4cacee7080c0e146d9e908c5d0c5a5f27fcd8acf4d2ca872eb1b5a70027"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/final/editor-1024x768/data-editor/D/breakingthrough.fort",
+      "sha256": "cff7def3cde57387e2ba1dbff582a86a3e2f3db539fa3b0db0ec81f21313c098"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/final/editor-1024x768/editor.bmp",
+      "sha256": "186d19ef59cc3bf3e53b1f0d82abe0cd2b172e3c994b73279405c80da5132b03"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/final/editor-1024x768/run.json",
+      "sha256": "4ffe69d550cfce220cbd160eb85bece194aa3dd98d8d2afafb21361f40f3a3e6"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/final/editor-1024x768/running.json",
+      "sha256": "17209a260a1ecc825aeb1f9e9783bb4f6ff7d4f558145012876d0566eacb5cce"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/final/editor-1024x768/states.tsv",
+      "sha256": "1cb8c4492e4d79ffdc32082abdd9f27ba800a1c3a0229d09c947a4335f9a304b"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/final/editor-1024x768/stderr.log",
+      "sha256": "5071e7a599b44be9a429a5e9a186532d25b6e9a17b381114c160adf8371b2df0"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/final/editor-1024x768/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/final/editor-1024x768/steps.tsv",
+      "sha256": "14cbfd7589d749d15ce5f3d617066bbb84dc639d841da1a874649bfa8145b71b"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/final/editor-1024x768/summary.json",
+      "sha256": "1210faa0d853f262df319f1141eb48e4e124976a8f962583847b4804922585b6"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/final/editor-1280x720/data-editor-state/catalog-v1.dat",
+      "sha256": "7bf6b8f39b9c8c43c4ebb6987f2dc4cc82922488760771c39d3c53b1e1460dac"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/final/editor-1280x720/data-editor-state/catalog.lock",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/final/editor-1280x720/data-editor/D/TEST02.fort",
+      "sha256": "eb4bc1c8c4a1e94ad4e954cf134c9ee6fc1e1e7158e1e1f1cc97b5435ace841f"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/final/editor-1280x720/data-editor/D/breakingthrough.fort",
+      "sha256": "cff7def3cde57387e2ba1dbff582a86a3e2f3db539fa3b0db0ec81f21313c098"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/final/editor-1280x720/editor.bmp",
+      "sha256": "fd92e5751346ddfcb5915cfcd1e730db1ee01dd8436725f55e1ea7053850455b"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/final/editor-1280x720/run.json",
+      "sha256": "fe970887fe28024507572e600c36fc13f2fbcdd06867e4ef6b2081f6bc535846"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/final/editor-1280x720/running.json",
+      "sha256": "d5d4e4f6351940beb7610db1716c9052d1cee716ffca4fab23b4083ab9db3f5c"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/final/editor-1280x720/states.tsv",
+      "sha256": "6d769794aad1786abed0253cf79e7fb6324884ebf9db692553400f04f3a84c0d"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/final/editor-1280x720/stderr.log",
+      "sha256": "5071e7a599b44be9a429a5e9a186532d25b6e9a17b381114c160adf8371b2df0"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/final/editor-1280x720/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/final/editor-1280x720/steps.tsv",
+      "sha256": "4aa444750feaee8b68f39e709b29b14173d7c912f3a80912761d8778d96d3c9e"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/final/editor-1280x720/summary.json",
+      "sha256": "51632dbf22dd6c0ec7d9291bc21a38dc7e54b29de0bac8005243da32ff35e342"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/final/editor-1280x800/data-editor-state/catalog-v1.dat",
+      "sha256": "c387e81a3053e965b641ba04180bcede701e50f2537e55e7bf0809e2374f66cf"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/final/editor-1280x800/data-editor-state/catalog.lock",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/final/editor-1280x800/data-editor/D/TEST02.fort",
+      "sha256": "e1cb116008f5f708212777adb911ed58b39996a5abb377ed7a8d4988794010f5"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/final/editor-1280x800/data-editor/D/breakingthrough.fort",
+      "sha256": "cff7def3cde57387e2ba1dbff582a86a3e2f3db539fa3b0db0ec81f21313c098"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/final/editor-1280x800/editor.bmp",
+      "sha256": "39ca4deda61dc2b9bd40b9d7c137d21b84cf6da46c05264a30c3ef5fa0a2e775"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/final/editor-1280x800/run.json",
+      "sha256": "65381c5a094f723610245afc6b2d6258e94a3589d959d0ba53cc2701dc5a1721"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/final/editor-1280x800/running.json",
+      "sha256": "c8575ab734d305c81771207281669f390df4a0cc68a128e60bcb8e32f27cc8bb"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/final/editor-1280x800/states.tsv",
+      "sha256": "7d149b965c26d89bdf6964124650772ababae37a94b20dca7d589cddd25e603e"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/final/editor-1280x800/stderr.log",
+      "sha256": "5071e7a599b44be9a429a5e9a186532d25b6e9a17b381114c160adf8371b2df0"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/final/editor-1280x800/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/final/editor-1280x800/steps.tsv",
+      "sha256": "b922e00fd2df53b57f86655165cfdd6b3c857f0ffa53963ffcc3512674eac88d"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/final/editor-1280x800/summary.json",
+      "sha256": "a4455a83a0d0661b0a30530fca9275ebb3f5fb557ae93402fffde8cb89b88a4f"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/final/summary.json",
+      "sha256": "f25da837609e5cb49adfce81ae6eed24ac132b6e4b987a7d24a44b9027df5a96"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/native-run.log",
+      "sha256": "451e4d95d52168217d8ebbbef6b78b59d3dd7d375a05a6f46d5d838224909939"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/native.json",
+      "sha256": "fb7313053b3b2612edfc39ac7421081daff64a85aeb08635d5ddba98dd5f4341"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/preflight.log",
+      "sha256": "671e1b4b99fb9fb098029121103b660a2a78c898ef7c63fd0228cba5f4c6ba60"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/preflight/1024x768/main.bmp",
+      "sha256": "78508b37669a9706f508a4b89b25b3d2a7d3c0e0cf914cf93d64dccd7177925e"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/preflight/1024x768/review.bmp",
+      "sha256": "02f8331ab547a66581aa9da33a07cf0c01086aa1db7493a3288c7c812cad3994"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/preflight/1024x768/run/audio.tsv",
+      "sha256": "d71f5752b8cdefb6b53dca7c73cf3f2030d080aa85970cc7521a314e7a8b7114"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/preflight/1024x768/run/data-before.json",
+      "sha256": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/preflight/1024x768/run/originals-before.json",
+      "sha256": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/preflight/1024x768/run/run.json",
+      "sha256": "5a906caa55d2e2a0c3ad1e98c2fa00f1271bfba92daeb76302335f48e5c83a0d"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/preflight/1024x768/run/running.json",
+      "sha256": "da242046c18ba56afee67faf58d5c4adf129ad6f2aedeb9fd9974ee5d85deec0"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/preflight/1024x768/run/states.tsv",
+      "sha256": "e9890e770857879fa70db5ca628b611c4a9e6d4cec5af07b68e3fadefac9e70b"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/preflight/1024x768/run/stderr.log",
+      "sha256": "4b73c96b25066ec2370644eda8a463570fec390203035f3612e15ad85ff68be9"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/preflight/1024x768/run/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/preflight/1024x768/run/steps.tsv",
+      "sha256": "c896a357f9e221937f0d85f0b992f1d2289af19539bc6992fd5531102c5cfd78"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/preflight/1024x768/summary.json",
+      "sha256": "d3b87479e527fa79b7ff9276181b99c351d8c4c102b39ac71d6f89bece635d49"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/preflight/summary.json",
+      "sha256": "cff49e96684c01a78c925b679ead5a1fff9f57a2a38f4ba0caf7249068d1d1f7"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/probe-observed.json",
+      "sha256": "72c23052eee6d0bce817d3cffe13d2dfcccb3dc804512ba90b704acb37b559f1"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/probe/data-before.json",
+      "sha256": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/probe/originals-before.json",
+      "sha256": "4eb5d5dcb890711b8d14dcb00180112570a67854b5b79b852697f8c8b3182ba2"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/probe/run.json",
+      "sha256": "11d67ab1b542e7d8ce9bc354dc5b79d2f532e3ca83bf32d7ace5176705b68f40"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/probe/running.json",
+      "sha256": "2d5f7ff143544476c463c578e92d47c738a7419a0bd426ab56e3f2b672680570"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/probe/states.tsv",
+      "sha256": "e45f1ec6fe8dff65605696602ec144d88a3095f5134e60ddfd82ea611aa4b5ad"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/probe/stderr.log",
+      "sha256": "d015ecb4709b12d648b8ef5ea9859f8c2337cf606f450c773512c67d30beb713"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/probe/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/probe/steps.tsv",
+      "sha256": "874740f1738b8006a4438ec55c43999e9c5e9c49405492710f59bd594d240365"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/registered-final.txt",
+      "sha256": "b1ae53e4450d14636f76900e62b34139f88fbddcbcc06d684be60d323c2fc6d2"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/registered.txt",
+      "sha256": "b1ae53e4450d14636f76900e62b34139f88fbddcbcc06d684be60d323c2fc6d2"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/tests-F8KeyInput.log",
+      "sha256": "71e10c040060d92546a3bd58a5b58aca40bd3e99cd77351bac891adc58ef8ef1"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/tests-GameMenuActions.log",
+      "sha256": "103ff7a83c83e9da1caf7b1bdd8c7327f254d5b3cb322b4d910f8d7f8e209994"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/tests-GumpInput.log",
+      "sha256": "5cb6f3cb1b6bdd62ef1d41345d897757c626f075b9e5e9090ce843bb678c7b93"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/tests-MissionFrameGate.log",
+      "sha256": "18ec7db55a387cdd409dc096f302f74bb85f7708bca6bb736832f70fff6a91ff"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/tests-MissionGuideInput.log",
+      "sha256": "f94676fd8de1126c9bfb04a5ad9f39ccdf6afd890c8f2981348822c916d29961"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/tests-ProductionInitialContext.log",
+      "sha256": "4a0f8392b45a3287e0b1875d407107ac5a96969e87709bbd6b473eed4117a1ba"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/tests-UserHighlight.log",
+      "sha256": "2812a548741f32653242a8125daa2c27d439eba86b226039ed49cb8370db2398"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/tests-ViewKeyInput.log",
+      "sha256": "248e4ca00a7793279524cdae9efd083800e48c603a4a120e5bc21c5146d21306"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/tests-final-F8KeyInput.log",
+      "sha256": "71e10c040060d92546a3bd58a5b58aca40bd3e99cd77351bac891adc58ef8ef1"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/tests-final-GameMenuActions.log",
+      "sha256": "103ff7a83c83e9da1caf7b1bdd8c7327f254d5b3cb322b4d910f8d7f8e209994"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/tests-final-GumpInput.log",
+      "sha256": "5cb6f3cb1b6bdd62ef1d41345d897757c626f075b9e5e9090ce843bb678c7b93"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/tests-final-MissionFrameGate.log",
+      "sha256": "18ec7db55a387cdd409dc096f302f74bb85f7708bca6bb736832f70fff6a91ff"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/tests-final-MissionGuideInput.log",
+      "sha256": "f94676fd8de1126c9bfb04a5ad9f39ccdf6afd890c8f2981348822c916d29961"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/tests-final-ProductionInitialContext.log",
+      "sha256": "4a0f8392b45a3287e0b1875d407107ac5a96969e87709bbd6b473eed4117a1ba"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/tests-final-UserHighlight.log",
+      "sha256": "2812a548741f32653242a8125daa2c27d439eba86b226039ed49cb8370db2398"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/tests-final-ViewKeyInput.log",
+      "sha256": "248e4ca00a7793279524cdae9efd083800e48c603a4a120e5bc21c5146d21306"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/tests-final.json",
+      "sha256": "f7843968bfb63a75c9fb116001eb140df90b318a6a941bad66b0e3c01f161eba"
+    },
+    {
+      "path": "extracted/cpp-f8-input-545/tests.json",
+      "sha256": "df0a3da19fd4c7e5fcc7336c8ba091a7ea94119c44bec020aa41964534a5c26a"
+    },
+    {
+      "path": "extracted/cpp-work-loss-audit-545-20261028/audit.json",
+      "sha256": "e2d1cc68e69ba57215ba9f3d7b104f41037bd3ae8d14ffdf1d539985bf810389"
+    },
+    {
+      "path": "extracted/cpp-work-loss-audit-545-20261028/current-work.json",
+      "sha256": "5ad873d6c02676cff6706bf8c7da2d99ed27e280500e64f1000b0deb2a94f323"
+    },
+    {
+      "path": "extracted/cpp-work-loss-audit-545-20261028/current-work/LEFT_JOBS.md",
+      "sha256": "01768a67a48f717856660a03baf78a581d7bb53535fbb5cef42f164f22847d99"
+    },
+    {
+      "path": "extracted/cpp-work-loss-audit-545-20261028/current-work/cpppj/src/client/UberGump.cpp",
+      "sha256": "335d96995acc4c986fa8c82a0aeb32a16677f3cca8f1f18b575458bdba27f75c"
+    },
+    {
+      "path": "extracted/cpp-work-loss-audit-545-20261028/current-work/cpppj/src/client/ViewKeyInput.cpp",
+      "sha256": "21684e6cf8fecb52ca4c59a263c297adcb5286df7dfd34e8562326b5c21b6c45"
+    },
+    {
+      "path": "extracted/cpp-work-loss-audit-545-20261028/current-work/cpppj/src/client/ViewKeyInput.h",
+      "sha256": "85e0843fe99b396181cd41509b7b00c4513b31ee92b926ca0b2c727bb05952f1"
+    },
+    {
+      "path": "extracted/cpp-work-loss-audit-545-20261028/current-work/cpppj/tests/CMakeLists.txt",
+      "sha256": "ee8aceb3dbcf1da3821d0359c8e1e0aa740cd1f2e62e3b56932d95da4bbd4163"
+    },
+    {
+      "path": "extracted/cpp-work-loss-audit-545-20261028/current-work/cpppj/tests/F8KeyInputTests.cpp",
+      "sha256": "9d83d33c3fff5fc546b4d8438edc8a0c9e9586b1f577fe30ddd4f6802d0080e4"
+    },
+    {
+      "path": "extracted/cpp-work-loss-audit-545-20261028/current-work/cpppj/tests/fixtures/f8-key-input-x86.tsv",
+      "sha256": "c9db627552881b0b4208a4a490f8c40fe6ed866ada663b05dfbb7e8292b1e414"
+    },
+    {
+      "path": "extracted/cpp-work-loss-audit-545-20261028/current-work/tools/cpp_f8_key_smoke.py",
+      "sha256": "de319d488167a64cf6467619ee80b3c24cf5de715daa7cc3870451435d96e087"
+    },
+    {
+      "path": "extracted/cpp-work-loss-audit-545-20261028/current-work/tools/decomp_f8_key_input.py",
+      "sha256": "478a79ea14180ab7fea814ab99b6c081494b9d5fc87954a6f3dc9c3e2c292234"
+    },
+    {
+      "path": "extracted/cpp-work-loss-audit-545-20261028/git-connectivity.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "extracted/cpp-work-loss-audit-545-20261028/patch-check.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "extracted/cpp-work-loss-audit-545-20261028/work-evidence.json",
+      "sha256": "dbb580d8dc6a4407a188d9435f79656a4cfa968443b0633c8b7a89fe0369d512"
+    }
+  ],
+  "toolSha256": "18d90b09a33552180302a4587b4877207b65e26a1022832a7e327cd5c59e58bb",
+  "host": "HJOW-Athlon",
+  "date": "2026-10-28",
+  "lastFullDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23",
+    "changedDuringAudit": false
+  },
+  "productUnit545Finalization": "pending: Guide First scope review and product documentation/commit"
+}
