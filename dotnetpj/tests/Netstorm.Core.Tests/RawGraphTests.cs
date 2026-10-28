@@ -659,4 +659,79 @@ public sealed class RawGraphTests
         _ = spots;
         _ = hash;
     }
+
+    /// <summary>
+    /// 비표면의 영역 통지는 0쪽으로 절삭한 칸에서 수행한다. 표면은 정수 칸을 유지한다.
+    /// 원본 비표면 업그레이드 그림의 +0.001 위치도 원본 영역을 통지한다.
+    /// 근거: cpppj/src/o/RawGraph.cpp RegionCoordinate (R0-4 재대조, 2026-10-28).
+    /// </summary>
+    [Fact]
+    public void RegionTruncatesNonSurfaceFractionalCoordinates()
+    {
+        (RawSidPool pool, _, OriginalTypeRecord[] types, RawGraph graph) = SurfaceScene();
+        types[74].Flags1 = 0;
+        int sid = Surface(pool, 10.9f, 20.9f, 0);
+        byte[] before = pool.Bytes.ToArray();
+        // 옛 코드는 정수 검사를 거부했으나 이제 10,20 칸으로 절삭한다
+        graph.InvalidateRegion(sid);
+        Assert.Equal(before, pool.Bytes.ToArray());
+    }
+
+    /// <summary>표면은 소수 좌표를 그대로 거부한다.</summary>
+    [Fact]
+    public void RegionRejectsFractionalCoordinatesForSurface()
+    {
+        (RawSidPool pool, _, OriginalTypeRecord[] types, RawGraph graph) = SurfaceScene();
+        types[74].Flags1 = OriginalTypeRecord.Surface;
+        int sid = Surface(pool, 10.9f, 20.9f, 0);
+        Assert.Throws<ArgumentOutOfRangeException>(() => graph.InvalidateRegion(sid));
+    }
+
+    /// <summary>비표면도 지도 밖·음수·비유한 좌표는 거부한다.</summary>
+    [Fact]
+    public void RegionRejectsOutOfRangeAndNonFiniteForNonSurface()
+    {
+        (RawSidPool pool, _, OriginalTypeRecord[] types, RawGraph graph) = SurfaceScene();
+        types[74].Flags1 = 0;
+        // 256 이상·음수·NaN·무한대는 절삭 전에 거부한다
+        foreach (float x in new float[] { 256f, 300.5f, -1.5f, float.NaN, float.PositiveInfinity })
+        {
+            int sid = Surface(pool, x, 20f, 0);
+            Assert.Throws<ArgumentOutOfRangeException>(() => graph.InvalidateRegion(sid));
+        }
+    }
+
+    /// <summary>Pop 예측의 비표면 소수 위치도 영역 칸으로 절삭한다.</summary>
+    [Fact]
+    public void ValidatePostPopTruncatesNonSurfaceFractionalPrediction()
+    {
+        (RawSidPool pool, _, OriginalTypeRecord[] types, RawGraph graph) = SurfaceScene();
+        types[74].Flags1 = 0;
+        int sid = Surface(pool, 10, 20, 0);
+        var prediction = new PopProjection(10.9f, 20.9f, 0, types[74]);
+        // 옛 코드는 정수 검사를 거부했으나 이제 10,20 칸으로 절삭한다
+        graph.ValidatePostPop(sid, true, false, prediction);
+    }
+
+    /// <summary>Pop 예측의 표면 소수 위치는 거부한다.</summary>
+    [Fact]
+    public void ValidatePostPopRejectsFractionalPredictionForSurface()
+    {
+        (RawSidPool pool, _, OriginalTypeRecord[] types, RawGraph graph) = SurfaceScene();
+        types[74].Flags1 = OriginalTypeRecord.Surface;
+        int sid = Surface(pool, 10, 20, 0);
+        var prediction = new PopProjection(10.9f, 20.9f, 0, types[74]);
+        Assert.Throws<ArgumentOutOfRangeException>(() => graph.ValidatePostPop(sid, true, false, prediction));
+    }
+
+    /// <summary>삭제 후 재계산도 비표면 소수 위치를 절삭한다.</summary>
+    [Fact]
+    public void PostDestroyTruncatesNonSurfaceFractionalCoordinates()
+    {
+        (RawSidPool pool, _, OriginalTypeRecord[] types, RawGraph graph) = SurfaceScene();
+        types[74].Flags1 = 0;
+        int sid = Surface(pool, 10.9f, 20.25f, 0);
+        // 옛 코드는 정수 검사를 거부했으나 이제 10,20 칸으로 절삭한다
+        graph.ValidatePostDestroy(sid);
+    }
 }

@@ -571,9 +571,11 @@ public sealed class RawGraph : IRawPostPopGraph
         byte[] spots = (byte[])_spots.Clone();
         if (pop is { } prediction)
         {
-            int px = Coordinate(prediction.X);
-            int py = Coordinate(prediction.Y);
             OriginalTypeRecord type = _types[root[RawSidPool.TypeOffset]];
+            // 실제 Pop이 보존한 비표면 소수 위치만 영역 칸으로 절삭한다. 표면은 정수 칸을 유지한다
+            Func<float, int> cell = (type.Flags1 & OriginalTypeRecord.Surface) != 0 ? Coordinate : RegionCoordinate;
+            int px = cell(prediction.X);
+            int py = cell(prediction.Y);
             if (prediction.Level == 0)
             {
                 map[py * RawSquidHash.WorldCells + px] = (ushort)sid;
@@ -871,15 +873,26 @@ public sealed class RawGraph : IRawPostPopGraph
                         {
                             continue;
                         }
-                        // 치환 정보가 없으면 다리·폭탄→육지 연결의 두 번째 코드를 'A'로 덮어쓴 경우만 해석한다
-                        if (!sourceFrameValid
-                            && !(((item.Flags2 & BridgeOrBombMask) != 0) && ((source.Flags2 & LandObjectMask) != 0))
-                            && (source.Flags2 & EmplacementBit) == 0)
+                        // 원문 첫 마스크의 거부/두 번째 코드 보정을 실행한 뒤 필요한 치환 방향만 요구한다
+                        bool connected;
+                        try
                         {
-                            throw new ArgumentOutOfRangeException(nameof(source), "raw 그래프 삭제 치환 방향 코드가 필요합니다");
+                            connected = SurfaceFinder.Connects(item, source);
                         }
-                        // 프레임 글자로 이어지지 않으면 건너뛴다
-                        if (!SurfaceFinder.Connects(item, source))
+                        catch (ArgumentOutOfRangeException)
+                        {
+                            if (sourceFrameValid)
+                            {
+                                throw;
+                            }
+                            throw new ArgumentOutOfRangeException(nameof(source),
+                                "raw 그래프 삭제 치환 방향 코드가 필요합니다"
+                                + $" source={source.Id},{source.X},{source.Y},{source.Width},{source.Height},{source.Flags2}"
+                                + $" candidate={candidate}"
+                                + $" object={item.X},{item.Y},{item.Width},{item.Height},{item.Flags2},{item.Frame.Side},{item.Frame.Variant}"
+                                + $" frame={source.Frame.Side},{source.Frame.Variant}");
+                        }
+                        if (!connected)
                         {
                             continue;
                         }
@@ -909,8 +922,10 @@ public sealed class RawGraph : IRawPostPopGraph
     {
         ReadOnlySpan<byte> root = _pool.Slot(sid);
         OriginalTypeRecord source = _types[root[RawSidPool.TypeOffset]];
-        int x = Coordinate(pop is { } prediction ? prediction.X : BitConverter.UInt32BitsToSingle(Read(root, XOffset)));
-        int y = Coordinate(pop is not null ? pop.Value.Y : BitConverter.UInt32BitsToSingle(Read(root, YOffset)));
+        // 비표면 업그레이드 그림의 +0.001 위치도 원본 영역을 통지한다. 표면은 정수 칸을 유지한다
+        Func<float, int> cell = (source.Flags1 & OriginalTypeRecord.Surface) != 0 ? Coordinate : RegionCoordinate;
+        int x = cell(pop is { } prediction ? prediction.X : BitConverter.UInt32BitsToSingle(Read(root, XOffset)));
+        int y = cell(pop is not null ? pop.Value.Y : BitConverter.UInt32BitsToSingle(Read(root, YOffset)));
         if (source.FootX < 1 || source.FootY < 1 || source.FootX > RawSquidHash.WorldCells || source.FootY > RawSquidHash.WorldCells)
         {
             throw new ArgumentOutOfRangeException(nameof(sid), "그래프 영역 발자국 오류");
@@ -1088,8 +1103,10 @@ public sealed class RawGraph : IRawPostPopGraph
             throw new InvalidOperationException("raw 그래프 postDestroy 자산 오류");
         }
         OriginalTypeRecord type = _types[root[RawSidPool.TypeOffset]];
-        int x = Coordinate(BitConverter.UInt32BitsToSingle(Read(root, XOffset)));
-        int y = Coordinate(BitConverter.UInt32BitsToSingle(Read(root, YOffset)));
+        // 예측 그림 삭제 뒤의 표면 재연결도 같은 원본 발자국 칸을 쓴다. 비표면은 소수 위치를 절삭한다
+        Func<float, int> cell = (type.Flags1 & OriginalTypeRecord.Surface) != 0 ? Coordinate : RegionCoordinate;
+        int x = cell(BitConverter.UInt32BitsToSingle(Read(root, XOffset)));
+        int y = cell(BitConverter.UInt32BitsToSingle(Read(root, YOffset)));
         // 발자국이 비어 있거나 지도를 벗어나면 쓰기 전에 거부한다
         if (type.FootX < 1 || type.FootY < 1 || type.FootX > RawSquidHash.WorldCells || type.FootY > RawSquidHash.WorldCells)
         {
@@ -1139,17 +1156,31 @@ public sealed class RawGraph : IRawPostPopGraph
     }
 
     /// <summary>
-    /// 지도 안 정수 좌표만 받는다. 원본은 float 좌표를 그대로 비교하지만, 이 경로는 정상 입력만 받으므로
-    /// 유한하지 않거나 지도 밖이거나 소수부가 있으면 쓰기 전에 거부한다.
+    /// 비표면의 영역 통지 좌표. 원본 004ade90→0049ae80→00441def의 float 위치를 0쪽으로 절삭한 칸에서 탐색한다.
+    /// 범위를 벗어나거나 유한하지 않으면 거부한다.
+    /// 근거: cpppj/src/o/RawGraph.cpp RegionCoordinate (R0-4 재대조, 2026-10-28).
+    /// </summary>
+    /// <param name="value">월드 좌표.</param>
+    private static int RegionCoordinate(float value)
+    {
+        if (!float.IsFinite(value) || value < 0 || value >= RawSquidHash.WorldCells)
+        {
+            throw new ArgumentOutOfRangeException(nameof(value), value, "raw 그래프는 지도 안 유한 좌표가 필요합니다");
+        }
+        return (int)value;
+    }
+
+    /// <summary>
+    /// 지도 안 정수 좌표만 받는다. 소수부가 있으면 쓰기 전에 거부한다.
     /// </summary>
     /// <param name="value">월드 좌표.</param>
     private static int Coordinate(float value)
     {
-        if (!float.IsFinite(value) || value < 0 || value >= RawSquidHash.WorldCells || Math.Truncate(value) != value)
+        if (Math.Truncate(value) != value)
         {
             throw new ArgumentOutOfRangeException(nameof(value), value, "raw 그래프는 지도 안 정수 좌표가 필요합니다");
         }
-        return (int)value;
+        return RegionCoordinate(value);
     }
 
     /// <summary>슬롯 안의 정렬되지 않은 리틀 엔디언 값을 필요한 폭만큼 읽는다.</summary>
