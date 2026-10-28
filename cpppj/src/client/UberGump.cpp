@@ -14,6 +14,7 @@
 #include "client/GameMenuCommands.h"
 #include "client/GameMenuActions.h"
 #include "client/ViewKeyInput.h"
+#include "client/RawUserHighlight.h" // Editor F8도 같은 Client 선택 전역의 원본 강조 몸체를 사용한다.
 #include "client/TellParameters.h"
 #include "client/TellSection.h"
 #include "client/TellFileMenus.h"
@@ -929,11 +930,11 @@ void UberGump::Event(InputEvent event) {
         if (DispatchGuideMissionCommand(event,hooks)) return;
     }
     if (DispatchMissionAbort(event,client_.Input(),[this](std::string_view section) { Tell(std::string(section)); })) return;
+    if (!missionRuntime_ && DispatchMissionFirst(event,{})) return; // 원본 Guide는 현재 미션이 없어도 First를 소비한다. 실제 Runtime이 있는 비Tutorial 미션을 빈 Guide로 판정하지 않는다.
     if (missionRuntime_ && missionRuntime_->tutorial) {
         auto missionEvent=event; // 실제 카메라 F4 입력과 단계 판정이 같은 홈 명령을 보게 한다.
         if ((event.code&0x83ffffffU)==(0x73U<<InputCode::kVirtualKeyShift)) missionEvent.code=0x020000aeU;
         if (missionRuntime_->tutorial->Event(missionEvent)) return;
-        if (QueueMissionFirstKey(event,client_.Input(),true)) return; // 모든 연결된 Tutorial 형식은 큐 끝의 First가 현재 안내/자기 정지를 다시 사용한다.
     }
     bool worldUiRouted=false; // 실제 HTML 모달과 월드 사건은 같은 공통 Gump에서 먼저 한 번만 소비를 판정한다.
     if (popup_.empty() && ((world_ && state_.phase==ClientPhase::Mission) || rawButtons_->Menus()->HtmlWindowsOpen())) {
@@ -1024,13 +1025,20 @@ void UberGump::Event(InputEvent event) {
     }
     if (!(event.code&InputCode::kRelease) && transitionCode==(0x70U<<InputCode::kVirtualKeyShift)) { client_.Input().PushCommand(0x02000017U,0,0x61000003);return; } // 원본4d8c47의 F1Help 문자열이며 Control/Shift를 별도 거부하지 않는다.
     if (rawButtons_->Menus()->HelpOpen()) { if (!worldUiRouted) static_cast<void>(rawButtons_->Event(event));rebuild_=true;return; } // 현재 공통 모달/스크롤/태그/돌 버튼을 실제 GumpInput에 전달한다.
-    if (transitionCode==0x710000U || transitionCode==0x720000U) {
-        if (rawButtons_->CurrentDialog()) return; // 원문565dd4 모달 관문은 일반 F2/F3보다 앞이다.
+    if (transitionCode==0x710000U || transitionCode==0x720000U || transitionCode==0x770000U) {
+        if (rawButtons_->CurrentDialog()) return; // 원문565dd4 모달 관문은 일반 F2/F3/F8보다 앞이다. Guide 뒤 조기 F8 예약을 하지 않는다.
         ViewKeyInputHooks hooks; // 같은 Client 표시 전역과 현재 설정/Tell/큐를 사용한다.
         hooks.paused=[this] { return client_.Paused(); };
         hooks.readInt=[this](auto key,auto& value) { return client_.Configuration().ReadInt(key,value); };
         hooks.tell=[this](auto section) { Tell(std::string(section)); };
         hooks.queue=[this](auto command,auto first,auto second) { client_.Input().PushCommand(command,first,second); };
+        hooks.fort=[this] { return client_.SurfaceStorage()->links.mission ? 1U : 0U; };
+        hooks.metamap=[this] { return client_.SurfaceStorage()->ownerMode.challenge ? 1U : 0U; };
+        hooks.editor=[this] { return client_.GameplayGlobals()->world.editor; };
+        hooks.highlight=[this](auto mode) {
+            UserHighlightHooks effects;effects.selectCursor=[this](auto cursor) { client_.GetCursor().Set(cursor); }; // F8의1분기는 역투영/이동 장치를 요구하지 않는다.
+            RawUserHighlight(client_.GameplayGlobals()->selection.HighlightState(),std::move(effects)).Highlight(mode);
+        };
         if (DispatchViewKeyInput(event,{hideBuildings_,worldRedraw_},hooks)) rebuild_=true;return;
     }
     if (transitionCode==kProductionBridgeCommand) {

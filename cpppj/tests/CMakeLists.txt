@@ -203,6 +203,7 @@ add_executable(netstorm_tests
     GameMenuBarTests.cpp GameMenusTests.cpp CampaignGameMenuTests.cpp TellParametersTests.cpp
     GameMenuActionsTests.cpp MessageGumpTests.cpp
     ViewKeyInputTests.cpp
+    F8KeyInputTests.cpp
     HideBuildingsTests.cpp
     CameraViewCommandsTests.cpp CampaignViewCommandsTests.cpp
     DialogExitCommandTests.cpp
@@ -2361,3 +2362,7 @@ set_source_files_properties(TypeDefaultCostTests.cpp PROPERTIES COMPILE_DEFINITI
 # 일반 F2/F3 표시 키의 독립310입력과 실제 큐 관측을 해당 검사에만 공급한다.
 set_source_files_properties(ViewKeyInputTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_VIEW_KEY_INPUT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/view-key-input-x86.tsv\"")
+
+# F8의 Guide/Gump/console 뒤558개 독립 입력과 현재 모드 읽기를 비교한다.
+set_source_files_properties(F8KeyInputTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_F8_KEY_INPUT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/f8-key-input-x86.tsv\"")
