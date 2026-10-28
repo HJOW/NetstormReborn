@@ -173,7 +173,7 @@
 - [x] **R0-1 (2026-10-28 완료):** cpppj를 HEAD `0cc1d33d`로 증분 재빌드해 오라클을 확정했다. 기존 `NetstormCpp.exe`(09:00 빌드)는 09:15 병합 소스보다 오래돼 쓰지 않았다. 새 SHA-256은 `63DF9A10DD9569FDF7DBE8B6D977D8287BFE898632E0CCC7499B0A0BAD27B8FE`(09:30:52 링크)이고 `--dump-types originals` 188행·`--dump-world originals thewarbegins` 3,509행·종료 0을 확인했다. dotnetpj는 Release 경고·오류 0, 검사 **1,349개(Assets 363 + Core 986) 통과**로 10-23 기록과 같다.
 - [x] **R0-2 (2026-10-28 완료):** [재대조 영향표](docs/dotnet-cpp-resync-20261028.md). 연결 fixture 61개는 모두 일치(반영 이후 fixture 추가 215·수정 0·삭제 0)하지만 근거 소스가 바뀐 C# 파일이 30개이고, 그중 6개 묶음은 현재 C#이 이전 cpppj 동작에 머물러 있음을 소스로 확인했다.
 - [x] **R0-3 (2026-10-28 완료):** `cpp_sync.py --ports`·`--ports-init`·`--ports-reflect`와 [PORT_MAP.tsv](dotnetpj/PORT_MAP.tsv)(68행)·[PORT_MAP.md](dotnetpj/PORT_MAP.md), 형식·경로 검사 `CppPortMapTests`(2개, 오류 행을 넣으면 실패함을 확인)를 만들었다. 검사 수는 1,351개가 됐다.
-- [ ] **R0-4 — 새 fixture로 뒤처진 C#을 고친다 (진행 중: SP 묶음 3/3·다음 묶음 대기):** 영향표 A의 여섯 묶음을 `sp-add-bits`·`sp-initialization`·`fort-sp-write` → `squid-retype`·`object-conversion` → `squid-pool-reset`·`state-sid-lists` → `priestregen`·`priest-panic`·`priest-prayer` → `RawGraph` 비표면 좌표 → `RawAssetPostPop` 4종 순으로 처리한다. 묶음마다 fixture `Link`+`cpp_sync.py --update --add`, C# 수정, `--ports-reflect`를 하고 단위 기록을 남긴다. 기대값을 C# 결과로 바꾸지 않는다. `sp-add-bits`·`sp-initialization`은 [0.14](#014-단위-기록--r0-4-sp-묶음-가산-비트와-초기화-명시-할당-2026-10-28-hjow-athlon)에서, `fort-sp-write`는 [0.15](#015-단위-기록--r0-4-sp-묶음-fort-sp-writer-신규-이식-2026-10-28-hjow-athlon)에서 완료했다.
+- [ ] **R0-4 — 새 fixture로 뒤처진 C#을 고친다 (진행 중: 두 번째 묶음 완료):** 영향표 A의 여섯 묶음을 `sp-add-bits`·`sp-initialization`·`fort-sp-write` → `squid-retype`·`object-conversion` → `squid-pool-reset`·`state-sid-lists` → `priestregen`·`priest-panic`·`priest-prayer` → `RawGraph` 비표면 좌표 → `RawAssetPostPop` 4종 순으로 처리한다. 묶음마다 fixture `Link`+`cpp_sync.py --update --add`, C# 수정, `--ports-reflect`를 하고 단위 기록을 남긴다. 기대값을 C# 결과로 바꾸지 않는다. `sp-add-bits`·`sp-initialization`은 [0.14](#014-단위-기록--r0-4-sp-묶음-가산-비트와-초기화-명시-할당-2026-10-28-hjow-athlon)에서, `fort-sp-write`는 [0.15](#015-단위-기록--r0-4-sp-묶음-fort-sp-writer-신규-이식-2026-10-28-hjow-athlon)에서, `squid-retype`·`object-conversion`은 [0.16](#016-단위-기록--r0-4-두-번째-묶음-타입-변경과-비석주문-전환-2026-10-28-hjow-athlon)에서 완료했다.
 - [x] **R1-1 (2026-10-28 완료, 라이브러리 부분):** `Netstorm.Client` 프로젝트와 `Netstorm.Client.Tests`를 만들고 `Screen`(8비트 버퍼·팔레트·잠금·자르기)·`GamePalette`·`PaletteSearch`·`ScreenGeometry`·`ScreenPresentation`·`ScreenResolutions`·`ScreenPaletteApply`·`InputQueue`를 이식했다. 원본 fixture 3개(786·357·166행)가 L1로 일치하고 전체 1,384개 통과·경고 0. [문서](docs/dotnet-client-screen-20261028.md). 이 단위는 규칙의 이식이며 실제 화면 픽셀 비교가 아니다.
 - [ ] **R1-2a:** MonoGame 출력 호스트: `IScreenOutput` 구현(인덱스→RGBA 텍스처, 정수 최근접 확대·검정 여백), 전체화면 borderless 창과 창 전환, 마우스 좌표 역변환·커서 제한, 키·글자·버튼 → `InputQueue`, 프레임 루프 골격. 기존 `NetstormGame`/`DisplayManager`는 동결하고 새 호스트를 `--client` 같은 별도 진입으로 둔다(결정 5).
 - [x] **R1-2b (2026-10-28 완료, 호스트 없이 가능한 부분):** `ScreenCapture`(cpppj와 byte 동일한 BMP)·`UiScript`/`UiScriptRunner`(esc·key·keyup·pointer·좌표/라벨 클릭·snapshot)·`dotnetpj/tools/cpp_frame_compare.py`(파일·폴더 비교, 종료 코드 0/1/2). 오라클 캡처(메인 메뉴 프레임 30)가 이 PC에서 결정적으로 만들어짐을 확인했다. [문서 5절](docs/dotnet-client-screen-20261028.md#5-r1-2-부분-캡처스크립트-도구와-오라클-확인-같은-날). **남은 것:** `--ui-script`/`--mission`/`--frames`/`--set` 실행 인자를 받는 dotnetpj 실행 진입과 그 안에서 두 도구를 부르는 프레임 루프는 R1-2a의 호스트가 있어야 하며, 라벨 클릭·report·kernel-tell 등은 R3 이후다.
@@ -250,6 +250,22 @@
 - **다음:** 영향표 A의 다음 묶음 `squid-retype`·`object-conversion`(`RawSquidFactory` Retype)이다.
   다음 DN 커밋은 `git log`로 당일 마지막 번호를 확인해 이어 쓴다(작업 중 `20261028-31`을 CP가 썼으므로 이 단위는 32번으로 커밋한다).
 
+### 0.16 단위 기록 — R0-4 두 번째 묶음: 타입 변경과 비석·주문 전환 (2026-10-28, HJOW-Athlon)
+
+- **착수 상태:** 사용자 요청 "dotnetpj 다음 작업 진행해 줘". 시작 HEAD는 `b126e900`(직전 DN `20261028-32`)이며
+  작업 트리는 깨끗했다(병렬 cpppj 세션의 변경은 이 단위 착수 전에 정리됐다). 게임·창 실행과 디컴파일은 하지 않았다.
+- **변경:** `RawSquidFactory.cs`(`Retype` 신설·`ConstructorVtable` 명시 오류),
+  `Netstorm.Core/Original/RawObjectConversion.cs`(신규: `ObjectConversionHooks`·`RawObjectConversion`),
+  `X86RawObjectConversionTests.cs`(신규: 128·36행 재생 + 계약 1개),
+  `Netstorm.Core.Tests.csproj`(두 fixture `Link`), `cpp-fixture-manifest.tsv`(69개, reflected-commit 유지),
+  `PORT_MAP.tsv`(84번째 행 추가·`RawSquidFactory.cs` base 갱신), `PORT_MAP.md`(5절 수치 갱신),
+  `docs/dotnet-r04-retype-conversion-20261028.md`(신규), 이 문서.
+  cpppj·원본·AGENTS.md는 바꾸지 않았다. `SupportsConstructedVtable`·약화 전역 공유는 R4·R6에서 연결한다.
+- **검증:** Release 경고·오류 0, 전체 **1,405개(Assets 363 + Core 997 + Client 45) 통과**.
+  변별력은 [단위 문서](docs/dotnet-r04-retype-conversion-20261028.md#3-검증)에 기록했다.
+- **다음:** 영향표 A의 다음 묶음 `squid-pool-reset`·`state-sid-lists`(`RawSidPool`·`SidPool` 공유 판정·삭제 기록)이다.
+  다음 DN 커밋은 `git log`로 당일 마지막 번호를 확인해 이어 쓴다(33번이 비어 있어 이 단위는 33번으로 커밋한다).
+
 ## 1. 지금까지의 완료 범위 — 이관 기록 색인
 
 단위별 상세는 [LEFT_JOBS.dotnetpj.old.md](LEFT_JOBS.dotnetpj.old.md)와 아래 문서에 있다. 마지막 판정 열은 0절 계획에서 그 결과를 어떻게 다루는지다([0.4](#04-기존-dotnetpj-소스의-재수정-판정)).
@@ -265,10 +281,10 @@
 | W03 1~17조각 (10-21~10-23) | 공통 삭제·다리 수명·삭제 수명주기·삭제 그래프·Damageable 사전/해방/사후/피해·사제 피격·종속 조회·Form 수명·Form 패킷·내용물 수명·contained 생성·신전 삭제·Form 파생 분배·GumpForm 호스트·가상 삭제 재정의 | `docs/dotnet-original-core-*.md`(destroy·destroylifecycle·destroygraph·damageable*·priestdamage·containedlookup·formlifecycle·formpacket·contentlifetime·vortexpre·formdispatch·destroydispatch·assetpredestroy) | 유지. R0 재대조, R4 세션 조립 |
 | W05 선행 (10-23) | `RawSpStore`·`RawSquidReward`·AI 지갑·난수 상태 | [SP 저장소·보상](docs/dotnet-original-core-spstore-reward-20261023.md) | 유지. R0 재대조, R4 세션 조립 |
 | 배포 (10-23) | `package-dotnetpj.ps1` | 이관 파일의 2026-10-23 배포 절 | 유지. 구성이 바뀔 때마다 갱신 |
-| R0 (10-28) | cpppj 오라클 확정, 재대조 영향표, 포트 맵(`PORT_MAP.tsv`)·`cpp_sync.py --ports*` | [영향표](docs/dotnet-cpp-resync-20261028.md), [PORT_MAP.md](dotnetpj/PORT_MAP.md) | 유지. R0-4 SP 묶음 3/3 완료(0.14·0.15), 다음 묶음 대기 |
+| R0 (10-28) | cpppj 오라클 확정, 재대조 영향표, 포트 맵(`PORT_MAP.tsv`)·`cpp_sync.py --ports*` | [영향표](docs/dotnet-cpp-resync-20261028.md), [PORT_MAP.md](dotnetpj/PORT_MAP.md) | 유지. R0-4 두 번째 묶음까지 완료(0.14·0.15·0.16), 다음 묶음 대기 |
 | R1-1 (10-28) | `Netstorm.Client`: 8비트 `Screen`·팔레트·색 검색·화면 스크롤·전체화면 출력 계산·입력 큐 | [R1-1 문서](docs/dotnet-client-screen-20261028.md) | 새 경로(`port`) |
 
-마지막 전체 빌드·검사는 2026-10-28의 Release 경고·오류 0, 1,402개 통과(Assets 363 + Core 994 + Client 45)다. Assets·Core는 기존 경로 기준이며 0절 새 경로의 진행도가 아니다. 새 경로의 진행도는 Client 검사와 0.5절의 단계 완료 기준으로 본다.
+마지막 전체 빌드·검사는 2026-10-28의 Release 경고·오류 0, 1,405개 통과(Assets 363 + Core 997 + Client 45)다. Assets·Core는 기존 경로 기준이며 0절 새 경로의 진행도가 아니다. 새 경로의 진행도는 Client 검사와 0.5절의 단계 완료 기준으로 본다.
 
 ---
 

@@ -52,6 +52,7 @@ cpppj/src/o/RawFormPacket.cpp	Netstorm.Core/Original/RawFormPacket.cs	5d34fc2dba
 cpppj/src/o/RawFortSpWrite.cpp	Netstorm.Core/Original/RawFortSpWrite.cs	91a62e792661dfba55261308ebfb7d0ffae194e4	L1
 cpppj/src/o/RawGraph.cpp	Netstorm.Core/Original/RawGraph.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
 cpppj/src/o/RawMetadisplayDirty.cpp	Netstorm.Core/Original/RawMetadisplayDirty.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
+cpppj/src/o/RawObjectConversion.cpp	Netstorm.Core/Original/RawObjectConversion.cs	b126e9007a61bb7bc133a29fe3ac585043194a56	L1
 cpppj/src/o/RawPathAnimation.cpp	Netstorm.Core/Original/RawPathAnimation.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
 cpppj/src/o/RawPriestDamage.cpp	Netstorm.Core/Original/RawPriestDamage.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
 cpppj/src/o/RawPriestPreDestroy.cpp	Netstorm.Core/Original/RawPriestPreDestroy.cs	0e66d91ba40ac55542ec2e2747b68e406c27de43	L1
@@ -69,7 +70,7 @@ cpppj/src/o/SpStore.cpp	Netstorm.Core/Original/RawSpStore.cs	3d038e510444a9c7448
 cpppj/src/o/Squid.cpp	Netstorm.Core/Rules/SpotRules.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
 cpppj/src/o/SquidDestroyLifecycle.cpp	Netstorm.Core/Original/RawSquidDestroyLifecycle.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
 cpppj/src/o/SquidDisplay.cpp	Netstorm.Core/Display/DisplayBounds.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
-cpppj/src/o/SquidFactory.cpp	Netstorm.Core/Original/RawSquidFactory.cs	9eb899e43b02660479342f0f4d709760e38ebda3	L1
+cpppj/src/o/SquidFactory.cpp	Netstorm.Core/Original/RawSquidFactory.cs	b126e9007a61bb7bc133a29fe3ac585043194a56	L1
 cpppj/src/o/SquidFinder.cpp	Netstorm.Core/Bridges/SurfaceFinder.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
 cpppj/src/o/SquidFinder.h	Netstorm.Core/Bridges/SurfaceFinder.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
 cpppj/src/o/SquidFormDispatch.cpp	Netstorm.Core/Original/RawSquidFormDispatch.cs	9eb899e43b02660479342f0f4d709760e38ebda3	L1

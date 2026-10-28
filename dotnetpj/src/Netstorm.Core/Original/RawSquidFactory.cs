@@ -25,7 +25,8 @@ public interface IRawUnpop
 /// 기본 객체로 조용히 대신하지 않는다.
 /// 슬롯 필드 위치(10.78): 가상 표 +0, 섬 번호 +8, 타입 +10, 상태 +11, HP +26(4바이트), 소유자 +34, zOrder +35, 추가 비트 +40.
 /// 생산 칸 contained Form 과 GumpForm 의 생성은 Form 모듈(W03)에서 옮긴다.
-/// 근거: docs/exe/cpp-creation-reconstruction.md, docs/exe/cpp-derived-reconstruction.md, cpppj/src/o/SquidFactory.cpp (W02 첫 조각, 2026-10-16).
+/// 근거: docs/exe/cpp-creation-reconstruction.md, docs/exe/cpp-derived-reconstruction.md, cpppj/src/o/SquidFactory.cpp (W02 첫 조각, 2026-10-16; Retype·생성자 표 명시 오류는 R0-4 재대조, 2026-10-28).
+/// 최종 가상 표 판별(SupportsConstructedVtable)과 약화 전역 공유(BindWeakenedMana)는 판본·세션 소유 문제라 R4·R6에서 연결한다.
 /// </summary>
 public sealed class RawSquidFactory
 {
@@ -162,6 +163,46 @@ public sealed class RawSquidFactory
     }
 
     /// <summary>
+    /// 같은 SID의 타입을 바꾼다(원본 004b1620). void/foot 진단은 선택된 위치에서만 요구하고, 진단 복귀 뒤에도 계속한다.
+    /// free/dead/예약 SID를 추가로 제외하지 않으며 HP/소유자/할당은 보존한다. 타입 바이트 쓰기 뒤 현재 타입의 실제 생성자를 다시 조회한다.
+    /// 10.78만 복원했으며 C# 풀은 패치판 범위이므로 판본 검사는 생략한다.
+    /// 근거: cpppj/src/o/SquidFactory.cpp Retype (R0-4 재대조, 2026-10-28).
+    /// </summary>
+    /// <param name="sid">대상 슬롯 번호.</param>
+    /// <param name="type">바꿀 타입 번호.</param>
+    /// <param name="assertion">원문 진단(0x22d·0x22e·0x22f)을 받는 콜백. 진단이 필요한데 null이면 거부한다.</param>
+    public void Retype(int sid, uint type, Action<uint>? assertion = null)
+    {
+        Span<byte> bytes = _pool.RawSlot(sid);
+        if ((bytes[RawSidPool.StateOffset] & RawSidPool.VoidBit) == 0)
+        {
+            Diagnose(assertion, 0x22d);
+        }
+        if (Type(bytes[RawSidPool.TypeOffset], requireSupported: false).FootX != Type(type, requireSupported: false).FootX)
+        {
+            Diagnose(assertion, 0x22e);
+        }
+        if (Type(bytes[RawSidPool.TypeOffset], requireSupported: false).FootY != Type(type, requireSupported: false).FootY)
+        {
+            Diagnose(assertion, 0x22f);
+        }
+        bytes[RawSidPool.TypeOffset] = (byte)type;
+        ApplyConstructor(bytes, Type(bytes[RawSidPool.TypeOffset], requireSupported: true));
+    }
+
+    /// <summary>원문 진단을 선택된 위치에서만 요구한다. 콜백이 없으면 명시 경계 오류로 멈춘다.</summary>
+    /// <param name="assertion">원문 진단을 받는 콜백.</param>
+    /// <param name="line">원문 진단 줄 번호.</param>
+    private static void Diagnose(Action<uint>? assertion, uint line)
+    {
+        if (assertion is null)
+        {
+            throw new InvalidOperationException("타입 변경의 실제 원문 진단 미연결");
+        }
+        assertion(line);
+    }
+
+    /// <summary>
     /// 서버가 정한 번호의 슬롯을 받는다(원본 Take). 풀 목록·빈 번호 카운터는 바꾸지 않는다.
     /// 이미 쓰는 슬롯이면 같은 타입·같은 클래스(가상 표)여야 하고, void 가 아니면 공간 해제(<see cref="IRawUnpop"/>)를 먼저 한다.
     /// 그다음 free/dead 를 지우고 void 를 켠 뒤 생성자 필드와 타입 바이트를 쓰고 postTake 를 적용한다. 그 밖의 필드는 보존한다.
@@ -294,11 +335,25 @@ public sealed class RawSquidFactory
         return bytes;
     }
 
-    /// <summary>타입의 최종 가상 표 값. 생성자 주소가 0 이면 기본 Squid, 아니면 표의 파생 생성자가 마지막에 쓰는 값이다.</summary>
+    /// <summary>
+    /// 타입의 최종 가상 표 값. 생성자 주소가 0 이면 기본 Squid, 아니면 표의 파생 생성자가 마지막에 쓰는 값이다.
+    /// 표에 없는 생성자 주소는 원문처럼 명시 오류로 거부한다(호스트 역참조 전에 검사한다).
+    /// 근거: cpppj/src/o/SquidFactory.cpp ConstructorVtable (R0-4 재대조, 2026-10-28).
+    /// </summary>
     /// <param name="type">타입 레코드.</param>
-    private static uint ConstructorVtable(OriginalTypeRecord type) => type.ConstructorAddress != 0
-        ? OriginalConstructors.Recipe(type.ConstructorAddress)!.Vtable
-        : OriginalConstructors.BaseVtable;
+    private static uint ConstructorVtable(OriginalTypeRecord type)
+    {
+        if (type.ConstructorAddress == 0)
+        {
+            return OriginalConstructors.BaseVtable;
+        }
+        ConstructorRecipe? recipe = OriginalConstructors.Recipe(type.ConstructorAddress);
+        if (recipe is null)
+        {
+            throw new InvalidOperationException("현재 TYPE의 미등록 생성자 가상 표 조회");
+        }
+        return recipe.Vtable;
+    }
 
     /// <summary>
     /// 타입의 생성자 쓰기를 슬롯에 순서대로 적용한다. 주소가 0 이면 기본 가상 표 하나만 쓴다.
