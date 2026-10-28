@@ -1,0 +1,28 @@
+{
+  "unit": 557,
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": "HJOW-Athlon / 2026-10-23",
+  "native": {
+    "host": "HJOW-Athlon",
+    "lastFullDecompilation": "HJOW-Athlon / 2026-10-23",
+    "uniqueInputs": 81,
+    "nativeObservations": 162,
+    "fixtureSha256": "7a564a4a835f1236e36471c152303ef752f90e7c6dd7fb824c5d57804a3ac3f6",
+    "binarySha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "boundary": "004c2630/004de490/원본CRT실제실행. 기본C locale의CRT thread context입력, 434f40/CRT fprintf/fflush는외부출력기록. 게임/OS0."
+  },
+  "focusedUniquePassed": 34,
+  "focusedFailures": 0,
+  "registeredTests": 3412,
+  "protectedAndPriorFixturesChecked": 2538,
+  "changedProtectedFiles": [],
+  "gameSha256": "b6d6fc4c4f7309de0ec5f4779e074ec2130eacbe579f72336aa07da80002b22e",
+  "gameStill552": true,
+  "testExeSha256": "60fa5272d159d329013578b45ac0b91a9a50fdf21c0dda6c1759ee3e9b7b8015",
+  "newGameRuns": 0,
+  "newOriginalRuns": 0,
+  "newNetworkTests": 0,
+  "fullSuiteRerun": false,
+  "actualClientConnected": false,
+  "next": "Dump parent/file devices, actual Client logging globals, Kernel/ThunderProcess, Ctrl Shift F7."
+}

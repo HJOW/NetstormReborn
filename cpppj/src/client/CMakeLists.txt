@@ -287,3 +287,6 @@ target_sources(netstorm PRIVATE EditorTestBattle.cpp EditorTestBattle.h)
 
 # 송금 메뉴와 원본 숫자 창이 같은 현재 SP/AI 지갑/입력 순서를 사용한다.
 target_sources(netstorm PRIVATE SendMoneyInput.cpp SendMoneyInput.h)
+
+# 같은실제로그버퍼/스트림을출력콜백뒤다시조회하는원문몸체다.
+target_sources(netstorm PRIVATE RawTraceLog.cpp RawTraceLog.h)

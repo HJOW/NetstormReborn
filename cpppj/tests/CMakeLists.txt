@@ -2399,4 +2399,8 @@ set_source_files_properties(ObjectTraceFieldsTests.cpp PROPERTIES COMPILE_DEFINI
 
 # Main/Task의 원문 현재 필드/숫자 인자와87개 실제 가상 분배표를 대조한다.
 target_sources(netstorm_tests PRIVATE ObjectTraceMainTests.cpp)
+
+# 로그의필터/마크업/개행/현재공유상태와중첩호출을원문으로대조한다.
+target_sources(netstorm_tests PRIVATE TraceLogTests.cpp)
+set_source_files_properties(TraceLogTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_TRACE_LOG_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/trace-log-x86.tsv\"")
 set_source_files_properties(ObjectTraceMainTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_OBJECT_TRACE_MAIN_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/object-trace-main-x86.tsv\";NETSTORM_OBJECT_TRACE_VTABLE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/object-trace-vtables-x86.tsv\";NETSTORM_OBJECT_TRACE_COORDINATE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/object-trace-coordinate-x86.tsv\"")
