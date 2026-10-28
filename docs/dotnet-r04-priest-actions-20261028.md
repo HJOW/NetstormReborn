@@ -13,9 +13,9 @@ R0-4 영향표 A의 네 번째 묶음(`priestregen`·`priest-panic`·`priest-pra
 | `src/o/RawPriestPreDestroy.cpp` | `Netstorm.Core/Original/RawPriestPreDestroy.cs` | `PriestPostPopState`에 공유 사제 목록과 `GetPriests()`를 두고 목록 읽기 2곳을 바꿈 |
 | `src/o/RawPriestPanic.{h,cpp}` | `Netstorm.Core/Original/RawPriestPanic.cs`(신규) | `DudeNoticeTypeData`(향후 RawDudeNotice로 이동)·`PriestPanicHooks`(7종)·`Run`(신전→HP·최대·소유자→임시 속도 2배→경로, 실패 시 영역 랜덤 루프) |
 | `src/o/RawPriestPrayer.{h,cpp}` | `Netstorm.Core/Original/RawPriestPrayer.cs`(신규) | `PriestPrayerType`·`PriestPrayerHooks`(16종)·`Command`(6d 요청·panic 위임·부모 전달)·`Receive`(희망 쓰기→상태·방향·boss 제거·605·604)·`Tick`(count 쓰기→이동·praytime 일치→내용물·기본 프레임). boss는 호출 시점 값을 읽는다 |
-| `src/o/RawPriestRegen.{h,cpp}` | `Netstorm.Core/Original/RawPriestRegen.cs`(신규, 미검증) | `PriestRegenState`·`PriestRegenHooks`(spReads 제외)·`Handle`(0x25a만 처리). 분배기·저장소 읽기는 R4에서 연결한다 |
+| `src/o/RawPriestRegen.{h,cpp}` | `Netstorm.Core/Original/RawPriestRegen.cs`(신규) | `PriestRegenState`·`PriestRegenHooks`(spReads 제외)·`Handle`(0x25a만 처리). 분배기·저장소 읽기는 R4에서 연결한다 |
 
-미적용(연기): 사제 회복 0x25a 재생 — `priest-regen-x86.tsv`가 병렬 세션 작업 중 디스크에서 삭제됐고(미커밋·git 복원 불가) 재생 근거가 없어 `PriestRegenPatchX86`을 Skip으로 두었다. Regen 모듈·검사는 이식했으나 미검증이라 이번 커밋에 넣지 않고 작업 트리에 둔다. fixture 복원 후 Skip 해제·`Link`·`--update --add`·`--ports-add RawPriestRegen`·base 갱신을 0.19 단위로 잇는다. `SupportsConstructedVtable` 등 이전 단위 연기 항목과 CD 판본·세션 연결은 R4·R6에서 잇는다.
+미적용(연기): 분배기·저장소 읽기·세션·CD 연결은 R4에서 잇는다. `SupportsConstructedVtable` 등 이전 단위 연기 항목도 R4·R6에서 잇는다.
 
 ## 2. 연결한 fixture와 검사
 
@@ -23,17 +23,25 @@ R0-4 영향표 A의 네 번째 묶음(`priestregen`·`priest-panic`·`priest-pra
   같은 슬롯·속도 표·난수로 Run 1회를 재생하고 효과 순서·두 슬롯 전체·속도 비트·난수 상태를 대조한다.
 - `priest-prayer-x86.tsv` 1127행(머리 1 + 자료 1126) — `X86RawPriestPrayerTests.PriestPrayerIndependentNative1126`.
   명령·수신·진행 1126행을 재생하고 효과 순서·슬롯 60바이트·반환 비트·최종 권한을 대조한다.
+- `priestregen-x86.tsv` 4541행(머리 2 + 자료 4539) — `X86RawPriestRegenTests.PriestRegenPatchX86`.
+  패치 1513행을 재생하고 반환 float 비트·사건·전역 난수·추적·raw 슬롯 전체를 대조한다(CD·V12 행은 건너뛴다).
 - 계약 — `X86RawPriestStateTests` 3개(기록·폴백·폭 오류, 공유 권한·boss, 공유 목록).
 
-`Netstorm.Core.Tests.csproj`에 두 fixture를 `Link`로 연결하고
-`python dotnetpj/tools/cpp_sync.py --update --add priest-panic:Core --add priest-prayer:Core`로
-`cpp-fixture-manifest.tsv`에 등록했다(73개. reflected-commit은 영향 검토가 끝나지 않아 올린다).
-`--ports-add`로 87·88번째 행을 추가했다(Regen 행은 재생 검증 뒤에 둔다).
+`Netstorm.Core.Tests.csproj`에 세 fixture를 `Link`로 연결하고
+`python dotnetpj/tools/cpp_sync.py --update --add priest-panic:Core --add priest-prayer:Core --add priestregen:Core`로
+`cpp-fixture-manifest.tsv`에 등록했다(74개. reflected-commit은 영향 검토가 끝나지 않아 올린다).
+`--ports-add`로 87·88·89번째 행을 추가했다.
 `--ports-reflect HEAD --ports-file RawPriestState.cs --ports-file RawPriestDamage.cs --ports-file RawPriestPreDestroy.cs`로
 세 파일의 base를 올렸다(바뀐 쌍 27개).
 
 ## 3. 검증
 
 - `dotnet build dotnetpj/Netstorm.sln -c Release`: 경고 0·오류 0.
-- `dotnet test dotnetpj/Netstorm.sln -c Release`: **1,418개 통과 + 1개 건너뜀**(Assets 363 + Core 1010 + 1 skip + Client 45).
-- 변별력: panic 속도 2배 누락 변이에 204행 불일치, 검사 장치 오류 2건(신전 분기 반전·DWORD 오타)을 원본과 대조해 정정했다. Regen 모듈은 재생 없이 이식만 했으므로 변별력 확인을 fixture 복원 뒤로 미룬다.
+- `dotnet test dotnetpj/Netstorm.sln -c Release`: **1,419개(Assets 363 + Core 1011 + Client 45) 통과**, 건너뜀 0.
+- 연결 fixture: `priestregen-x86.tsv`(4541행 중 머리 2 + 자료 4539, 패치 1513행 재생)·`priest-panic`·`priest-prayer` 3개를
+  `cpp-fixture-manifest.tsv`에 등록했다(74개). `PORT_MAP.tsv`는 89번째 행(`RawPriestRegen.cs`)까지 추가했다.
+- 변별력: panic 속도 2배 누락 변이에 204행 불일치, regen 불일치 분기 제거 변이에 286행 불일치를 확인하고 원복했다.
+  검사 장치 오류 2건(신전 분기 반전·DWORD 오타)은 원본과 대조해 정정했고,
+  재생 9행 불일치는 감사 후크의 오독(`sample`→`sequence`, 생성 시점 원본·기대값·통과 중인 cpp 검사로 확정)을 정정한 것이다.
+- 정정 기록: 작업 중 "regen fixture 삭제"로 보고했으나 사실이 아니었다. 파일명(`priestregen`, 하이픈 없음)을 재확인하고,
+  삭제·복원 요청 없이 같은 단위에서 재생까지 마쳤다. 자세한 경위는 [0.18·0.19 단위 기록](../LEFT_JOBS.dotnetpj.md#018-단위-기록--r0-4-네-번째-묶음-사제-panic기도와-회복-허용-2026-10-28-hjow-athlon)이다.

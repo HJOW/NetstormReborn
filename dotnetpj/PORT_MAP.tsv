@@ -58,6 +58,7 @@ cpppj/src/o/RawPriestDamage.cpp	Netstorm.Core/Original/RawPriestDamage.cs	55520f
 cpppj/src/o/RawPriestPanic.cpp	Netstorm.Core/Original/RawPriestPanic.cs	55520f783fbcc11157fcc7fbfc5887407e788d67	L1
 cpppj/src/o/RawPriestPrayer.cpp	Netstorm.Core/Original/RawPriestPrayer.cs	55520f783fbcc11157fcc7fbfc5887407e788d67	L1
 cpppj/src/o/RawPriestPreDestroy.cpp	Netstorm.Core/Original/RawPriestPreDestroy.cs	55520f783fbcc11157fcc7fbfc5887407e788d67	L1
+cpppj/src/o/RawPriestRegen.cpp	Netstorm.Core/Original/RawPriestRegen.cs	37dbf68bfd44f3288348c9063681e7fce5d39ece	L1
 cpppj/src/o/RawPriestState.cpp	Netstorm.Core/Original/RawPriestState.cs	55520f783fbcc11157fcc7fbfc5887407e788d67	L1
 cpppj/src/o/RawSquidDestroy.cpp	Netstorm.Core/Original/RawSquidDestroy.cs	c7459e61da4d3b6a97c5266bb3ec676f38be1d5e	L1
 cpppj/src/o/RawSquidDestroyDispatch.cpp	Netstorm.Core/Original/RawSquidDestroyDispatch.cs	c7459e61da4d3b6a97c5266bb3ec676f38be1d5e	L1

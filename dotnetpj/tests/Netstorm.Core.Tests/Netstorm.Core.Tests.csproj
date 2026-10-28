@@ -122,8 +122,8 @@
     <None Include="../../../cpppj/tests/fixtures/priest-panic-x86.tsv" Link="X86/priest-panic-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <!-- R0-4 재대조: 사제 기도 명령·수신·진행 1126행. -->
     <None Include="../../../cpppj/tests/fixtures/priest-prayer-x86.tsv" Link="X86/priest-prayer-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
-    <!-- R0-4 재대조: 사제 회복 0x25a 패치 1513행. 병렬 세션 작업 중 fixture 삭제됨 — 복원 후 등록한다. -->
-    <!-- <None Include="../../../cpppj/tests/fixtures/priest-regen-x86.tsv" Link="X86/priest-regen-x86.tsv" CopyToOutputDirectory="PreserveNewest" /> -->
+    <!-- R0-4 재대조: 사제 회복 0x25a 패치 1513행. 파일명은 하이픈 없음(priestregen). -->
+    <None Include="../../../cpppj/tests/fixtures/priestregen-x86.tsv" Link="X86/priestregen-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <!-- W05 선행 조각: 삭제·해체 보상 7,200행 중 10.78 몫 2,400행. -->
     <None Include="../../../cpppj/tests/fixtures/reward-x86.tsv" Link="X86/reward-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <!-- R0-4 재대조: SP 가산의 큰 유한·무한대·NaN·서브노멀 비트와 정수 지급 504행. -->
