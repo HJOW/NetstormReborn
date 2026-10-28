@@ -945,6 +945,10 @@ void UberGump::Event(InputEvent event) {
         if (routed.consumed) { rebuild_=true;return; }
         if (!(event.code&InputCode::kRelease) && (transitionCode==InputCode::kLeftButton || transitionCode==InputCode::kRightButton)) rawButtons_->RequestClosePopups(); // UI밖누름은팝업Kill뒤같은사건으로월드에진행한다.
     }
+    if (transitionCode==0x02000037U) {
+        if (!(event.code&InputCode::kRelease)) { EnsureHudFactories();rawButtons_->ToggleMinimap(hud_->createMinimap); }
+        rebuild_=true;return; //원본 일반 입력의5427d4→480810을 동일 공장/지연Kill에 연결하며 뗌은 전환하지 않는다.
+    }
     if (transitionCode==0x02000017U || transitionCode==0x02000057U) {
         if (!(event.code&InputCode::kRelease)) rawButtons_->Menus()->OpenHelp(std::bit_cast<std::uint32_t>(event.y ? event.y : event.x),transitionCode==0x02000057U ? 0 : 1,0);
         rebuild_=true;return; // Tutorial 소비 뒤 원본 Help/요청의 현재 주제/TYPE 인자를 보존한다.

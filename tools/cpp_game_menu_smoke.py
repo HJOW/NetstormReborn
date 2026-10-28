@@ -91,15 +91,19 @@ def saved_screen_size(options_path):
     return result
 
 
-def protected_run(directory,width,height,steps,frames,capture_saved_options=False,data_root=None,mission='thewarbegins'):
+def protected_run(directory,width,height,steps,frames,capture_saved_options=False,data_root=None,mission='thewarbegins',fullscreen=False):
     """기존execute의PID/SHA/종료관측을쓰고실패에도보호설정을복원한다."""
     directory.mkdir(parents=True,exist_ok=False)
     data_root=(data_root or ROOT/'originals').resolve()  # 기본 원본 경로와 명시 실행 사본을 같은 실제 메뉴 입력으로 검증한다.
     script,report=directory/'steps.tsv',directory/'states.tsv'  # 이번실행의별도입력/현재상태다.
     script.write_text(''.join(f'{frame}\t{operation}\t{argument}\n' for frame,operation,argument in steps),encoding='utf-8',newline='\n')
-    command=[str(GAME),'--run',str(data_root),'--mission',mission,'--window','--mute-audio','--frames',str(frames),
+    command=[str(GAME),'--run',str(data_root),'--mission',mission,'--mute-audio','--frames',str(frames),
              '--set',f'SCREENW={width};SCREENH={height};maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3',
              '--ui-script',str(script),'--ui-report',str(report),'--audio-report',str(directory/'audio.tsv')]
+    if fullscreen:
+        command[command.index('--set')+1]+=';startInFullScreen=1'  # 실제 실행기는 전체화면 전용 옵션 대신 원본 시작 설정을 읽는다.
+    else:
+        command.append('--window')
     before=snapshots(data_root);original_before=before if data_root==(ROOT/'originals').resolve() else snapshots(ROOT/'originals')  # 실행 사본과 보호 원본의 전체 바이트를 따로 보존한다.
     save(directory/'originals-before.json',original_before);save(directory/'data-before.json',before)
     result=dict(command=command,binarySha256=sha(GAME),scriptSha256=sha(script))  # 실행전실패도검토가능하게남긴다.

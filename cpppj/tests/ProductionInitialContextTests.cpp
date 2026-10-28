@@ -14,6 +14,7 @@
 #include "client/RawProductionControls.h"
 #include "client/InventoryGump.h"
 #include "client/HudDock.h"
+#include "client/GameMenuCommands.h" //독립 미니맵의 원본 이름 명령도 실제 큐 값과 대조한다.
 #include "client/PaletteColors.h"
 #include "client/PaletteShade.h"
 #include "client/RawMinimapControls.h"
@@ -213,6 +214,7 @@ RawUberRootContext InitialUberContext(InitialProductionScene& scene,InitialUberG
     RawUberRootContext context{{state.width,state.height,sharedFullDeck ? *sharedFullDeck : state.shown,state.left,state.top,state.mapWidth,state.mapHeight,state.floats,scene.buttons.MapViewRect(),state.bottom,state.refresh,state.chatY},{},{},{},{},{}};
     context.poll=[](auto) { return InputEvent{InputCode::kRelease,300,200}; };context.cursor=[](auto) {};
     context.root.read=[&scene,&state](auto address) -> std::uint32_t {
+        if (address==0x5949d0U) return scene.buttons.Minimap() ? scene.buttons.Minimap()->RootToken() : 0U; //독립 전환 뒤의 실제 현재 표시를 빌린다.
         if (address==0x5411c8U) return static_cast<std::uint32_t>(scene.assets.game.Find("fortGump").block+netstorm::o::kFirstAssetTypeNumber);
         if (address==0x565e70U) return static_cast<std::uint8_t>(state.title[0]);throw std::out_of_range("초기 전체 HUD의 미선언 전역 조회");
     };
@@ -376,4 +378,26 @@ TEST_CASE(ClientStateWorldCleanup_NestedResumeReleasesUiPauseOwner) {
     WholeStateScene input;auto& client=input.scene.client;client.Pause(true);client.PushGamePause();client.WorldAudio().PushMute();client.WorldAudio().PushMute();CHECK(client.Paused());
     CleanupClientStateWorld(0,input.Context(),input.scene.storage,input.Devices());CHECK(!client.Paused() && client.WorldAudio().Describe().find("muteDepth\t0\n")!=std::string::npos);
     client.Pause(true);CHECK(client.Paused());client.Pause(false);CHECK(!client.Paused()); //새 UI 소유자가 실제 한 깊이를 취득·반납하며 전환 전의 stale bool로 정지를 건너뛰지 않는다.
+}
+
+// 원본480810의 지연Kill→현재0→100,100 재생성을 실제 전체HUD/등록표에서 반복한다.
+TEST_CASE(ProductionInitialContext_ToggleMinimapKeepsDockAndRetiresOldOwner) {
+    InitialUberGlobals globals;InitialProductionScene scene;auto context=InitialUberContext(scene,globals);
+    const auto create=context.root.createMinimap;auto& uber=scene.buttons.EnableUberRoot(std::move(context));uber.Replace();
+    const auto root=scene.buttons.RootToken(),production=scene.buttons.Production()->RootToken();
+    scene.buttons.HandleGump(root,0x0200003dU,3,0);
+    scene.buttons.Minimap()->SetPalette(globals.palette);scene.buttons.Minimap()->Refresh(); //실제 첫 표시처럼 공유 bitmap의128폭을 확보한 뒤 전환한다.
+    const auto count=scene.Count();const auto view=scene.buttons.MapViewRect();
+    CHECK(GameMenuScriptCode("ToggleMinimap")==0x02000037U && GameMenuScriptCode("TOGGLEMINIMAP")==0x02000037U);
+    for (int cycle=0;cycle<3;++cycle) { // 세 번의 실제 반납/재생성에 옛 소유자와 새 노드를 섞지 않는다.
+        auto* previous=scene.buttons.Minimap();const auto old=previous->RootToken();
+        scene.buttons.ToggleMinimap(create);
+        CHECK(!scene.buttons.Minimap() && previous->Node(old) && (previous->Node(old)->flags&0x10000U));
+        CHECK(uber.Current() && scene.buttons.RootToken()==root && scene.buttons.Production()->RootToken()==production);
+        scene.buttons.CleanupGumps();CHECK(scene.Count()==count-1 && uber.Current());
+        scene.buttons.ToggleMinimap(create);auto* current=scene.buttons.Minimap();CHECK(current && current->RootToken()!=old);
+        const auto* node=current->Node(current->RootToken());CHECK(node && node->x==100 && node->y==100 && node->baseWidth==128 && node->baseHeight==128 && node->parent==root);
+        CHECK(scene.Count()==count && uber.Current() && scene.buttons.RootToken()==root && scene.buttons.Production()->RootToken()==production);
+        CHECK(scene.buttons.MapViewRect().left==view.left && scene.buttons.MapViewRect().bottom==view.bottom);
+    }
 }

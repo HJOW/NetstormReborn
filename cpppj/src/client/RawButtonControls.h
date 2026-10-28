@@ -118,6 +118,7 @@ public:
     RawMinimapControls& EnableMinimap(std::shared_ptr<RawSurfaceStorage> storage,RawMinimapHooks hooks); // Session 이전에도 같은 실제 장기 물리에 미니맵을 설치한다.
     RawMinimapControls& ConstructMinimap(std::shared_ptr<RawSurfaceStorage> storage,RawMinimapHooks hooks); // 실제공장만호출하며이전표시가살아있어도새부모0노드를만든다.부착/도킹은원문Uber가담당한다.
     RawMinimapControls* Minimap() const; // 살아 있는 실제 미니맵 처리기다.
+    void ToggleMinimap(const std::function<std::uint32_t()>& create); //00480810: 현재 표시를 지연Kill/해제하거나 같은 공장으로 새100,100 표시와 전체갱신을 만든다.
     void DisableMinimap(); // 현재Session보다먼저통지/입력/표시참조를반납한다.
     void DisableProduction(); // Session 해제 전에 연결 노드/참조를 반납한다.
     // 실제현재등록표→가상+4의기본/메뉴Kill알림이다. 반환콜백은이UI보다먼저해제한다.

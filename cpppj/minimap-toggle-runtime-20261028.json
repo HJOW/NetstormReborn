@@ -1,0 +1,1577 @@
+{
+  "unit": 540,
+  "date": "2026-10-28",
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "decompileOutputsModified": false,
+  "originalLiveGames": 0,
+  "newCppTests": 1,
+  "registered": 3365,
+  "productChanges": [
+    "cpppj/src/client/GameMenuCommands.cpp",
+    "cpppj/src/client/RawButtonControls.cpp",
+    "cpppj/src/client/RawButtonControls.h",
+    "cpppj/src/client/RawUberRootControls.cpp",
+    "cpppj/src/client/UberGump.cpp",
+    "cpppj/src/client/UberHud.inc",
+    "cpppj/tests/ProductionInitialContextTests.cpp"
+  ],
+  "exes": {
+    "NetstormCpp.exe": "3309a609d5933d5d716911a7a2480e31d2b114a0bd7e43241c87799d5c05542f",
+    "netstorm_tests.exe": "d992014e911cd57dd759f2bfaabbab24645b302691a9179a698b7b2c59a76a31"
+  },
+  "focus": {
+    "results": [
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "ProductionInitialContext_"
+        ],
+        "binarySha256": "d992014e911cd57dd759f2bfaabbab24645b302691a9179a698b7b2c59a76a31",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 1.2709413999982644,
+        "stdoutSha256": "db90de2d90d84aa5ca53caf2710ad9ea2a86f9ba8389b171b1db5beb29c030c8",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "ProductionInitialContext_",
+        "names": [
+          "ProductionInitialContext_AtomicHudModeFinishesNative1024Layout",
+          "ProductionInitialContext_ConstructsAllNativeChildrenWithoutSession",
+          "ProductionInitialContext_FullDeckOwnerMovesActualHudDivider",
+          "ProductionInitialContext_FullDeckOwnerPreparedAndOrdinaryLifetime",
+          "ProductionInitialContext_FullUberReflowsExistingScreen",
+          "ProductionInitialContext_FullUberReplacementMovesOldChildren",
+          "ProductionInitialContext_FullUberUsesActualChildrenAndDock",
+          "ProductionInitialContext_GameplayGlobalsKeepRealAliasesAndRejectDuplicate",
+          "ProductionInitialContext_LatestKilledDoesNotSelectOlderParent",
+          "ProductionInitialContext_LatestMinimapKilledDoesNotSelectOlder",
+          "ProductionInitialContext_MinimapFactoryUsesCurrentWidthWithoutRefresh",
+          "ProductionInitialContext_MissingTranslationKeepsAndRetiresPartialEffects",
+          "ProductionInitialContext_OverlappingMinimapsKeepCurrentBitmapAndDraw",
+          "ProductionInitialContext_OverlappingParentsRetireOnlyOldDraw",
+          "ProductionInitialContext_PartialNewConstructorKeepsPreviousSerial",
+          "ProductionInitialContext_PreparedGameplayLeaseLeavesNativeValuesToCaller",
+          "ProductionInitialContext_RepeatedConstructionAndGlobalPageRetirement",
+          "ProductionInitialContext_StateCleanupReleasesOnlyFreedControlAliases",
+          "ProductionInitialContext_StormPowerParentPreservesActualBudgetAndDepth",
+          "ProductionInitialContext_StormPowerUsesLatestSerialAndDeadNoop",
+          "ProductionInitialContext_ToggleMinimapKeepsDockAndRetiresOldOwner"
+        ],
+        "tests": 21,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "RawMenuControls_Minimap"
+        ],
+        "binarySha256": "d992014e911cd57dd759f2bfaabbab24645b302691a9179a698b7b2c59a76a31",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 0.9752409000066109,
+        "stdoutSha256": "f47dccd217c26503da99d5ac76c4b86a115782a53f43e4e29342fb3ae092afdb",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "RawMenuControls_Minimap",
+        "names": [
+          "RawMenuControls_MinimapBeforeSessionAndAcrossWorldBindings",
+          "RawMenuControls_MinimapPaletteUsesSharedClientRevision",
+          "RawMenuControls_MinimapReplacementKeepsCurrentWorldNotifications"
+        ],
+        "tests": 3,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "HudDock_"
+        ],
+        "binarySha256": "d992014e911cd57dd759f2bfaabbab24645b302691a9179a698b7b2c59a76a31",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 1.470536800014088,
+        "stdoutSha256": "5ca5531774b5f13fc82081a254cff97b0cd8481d48e9e41e2ed8aa3bdb8503e5",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "HudDock_",
+        "names": [
+          "HudDock_IndependentNativeBodiesAndNestedViewport"
+        ],
+        "tests": 1,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "HudDividerInput_"
+        ],
+        "binarySha256": "d992014e911cd57dd759f2bfaabbab24645b302691a9179a698b7b2c59a76a31",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 0.8646145999955479,
+        "stdoutSha256": "4e0cde1d19c18e8335926b907de08279c605765a208e161f4ed7ff8843838387",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "HudDividerInput_",
+        "names": [
+          "HudDividerInput_Native13398StateAndCallbacks"
+        ],
+        "tests": 1,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "MinimapGeometry_"
+        ],
+        "binarySha256": "d992014e911cd57dd759f2bfaabbab24645b302691a9179a698b7b2c59a76a31",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 0.6264263000048231,
+        "stdoutSha256": "b835c6e27f4c2a24449deeb0adfeecc4603f6eaad1e14b1aa9ecb07fe0ed6f60",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "MinimapGeometry_",
+        "names": [
+          "MinimapGeometry_IndependentNativePureOperations"
+        ],
+        "tests": 1,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "MinimapBlit_"
+        ],
+        "binarySha256": "d992014e911cd57dd759f2bfaabbab24645b302691a9179a698b7b2c59a76a31",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 0.9001145999936853,
+        "stdoutSha256": "24961a8db251859de1aaac88a10551877a6a6b32cf2b993433a72e8ee6d129c0",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "MinimapBlit_",
+        "names": [
+          "MinimapBlit_ClippedGuardAndMissingDevice",
+          "MinimapBlit_IndependentNativeFullSurfaceAndGuardReads"
+        ],
+        "tests": 2,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "ClientStateWorldCleanup_"
+        ],
+        "binarySha256": "d992014e911cd57dd759f2bfaabbab24645b302691a9179a698b7b2c59a76a31",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 0.9002236999804154,
+        "stdoutSha256": "b9fab8b0911e3e908e2ae85b66a568795cf83d6d49eddd43d89a9140aa0c862c",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "ClientStateWorldCleanup_",
+        "names": [
+          "ClientStateWorldCleanup_ActualInitialClientAndAllHudFactories",
+          "ClientStateWorldCleanup_BudgetIdleUsesLongLivedSpWithoutRuntime",
+          "ClientStateWorldCleanup_MissingSelectedHudKeepsPriorNativeWrites",
+          "ClientStateWorldCleanup_NestedResumeReleasesUiPauseOwner",
+          "ClientStateWorldCleanup_SecondInitialPassUsesCurrentCoreAndNewHud"
+        ],
+        "tests": 5,
+        "failed": 0
+      }
+    ],
+    "names": [
+      "ClientStateWorldCleanup_ActualInitialClientAndAllHudFactories",
+      "ClientStateWorldCleanup_BudgetIdleUsesLongLivedSpWithoutRuntime",
+      "ClientStateWorldCleanup_MissingSelectedHudKeepsPriorNativeWrites",
+      "ClientStateWorldCleanup_NestedResumeReleasesUiPauseOwner",
+      "ClientStateWorldCleanup_SecondInitialPassUsesCurrentCoreAndNewHud",
+      "HudDividerInput_Native13398StateAndCallbacks",
+      "HudDock_IndependentNativeBodiesAndNestedViewport",
+      "MinimapBlit_ClippedGuardAndMissingDevice",
+      "MinimapBlit_IndependentNativeFullSurfaceAndGuardReads",
+      "MinimapGeometry_IndependentNativePureOperations",
+      "ProductionInitialContext_AtomicHudModeFinishesNative1024Layout",
+      "ProductionInitialContext_ConstructsAllNativeChildrenWithoutSession",
+      "ProductionInitialContext_FullDeckOwnerMovesActualHudDivider",
+      "ProductionInitialContext_FullDeckOwnerPreparedAndOrdinaryLifetime",
+      "ProductionInitialContext_FullUberReflowsExistingScreen",
+      "ProductionInitialContext_FullUberReplacementMovesOldChildren",
+      "ProductionInitialContext_FullUberUsesActualChildrenAndDock",
+      "ProductionInitialContext_GameplayGlobalsKeepRealAliasesAndRejectDuplicate",
+      "ProductionInitialContext_LatestKilledDoesNotSelectOlderParent",
+      "ProductionInitialContext_LatestMinimapKilledDoesNotSelectOlder",
+      "ProductionInitialContext_MinimapFactoryUsesCurrentWidthWithoutRefresh",
+      "ProductionInitialContext_MissingTranslationKeepsAndRetiresPartialEffects",
+      "ProductionInitialContext_OverlappingMinimapsKeepCurrentBitmapAndDraw",
+      "ProductionInitialContext_OverlappingParentsRetireOnlyOldDraw",
+      "ProductionInitialContext_PartialNewConstructorKeepsPreviousSerial",
+      "ProductionInitialContext_PreparedGameplayLeaseLeavesNativeValuesToCaller",
+      "ProductionInitialContext_RepeatedConstructionAndGlobalPageRetirement",
+      "ProductionInitialContext_StateCleanupReleasesOnlyFreedControlAliases",
+      "ProductionInitialContext_StormPowerParentPreservesActualBudgetAndDepth",
+      "ProductionInitialContext_StormPowerUsesLatestSerialAndDeadNoop",
+      "ProductionInitialContext_ToggleMinimapKeepsDockAndRetiresOldOwner",
+      "RawMenuControls_MinimapBeforeSessionAndAcrossWorldBindings",
+      "RawMenuControls_MinimapPaletteUsesSharedClientRevision",
+      "RawMenuControls_MinimapReplacementKeepsCurrentWorldNotifications"
+    ],
+    "unique": 34,
+    "failed": 0,
+    "registered": 3365,
+    "binarySha256": "d992014e911cd57dd759f2bfaabbab24645b302691a9179a698b7b2c59a76a31"
+  },
+  "native": {
+    "uniqueInputs": 12,
+    "executions": 24,
+    "originalLiveGames": 0,
+    "observations": [
+      {
+        "present": false,
+        "refreshBefore": 0,
+        "mutate": false,
+        "control": 639,
+        "currentAfter": 301990144,
+        "refreshAfter": 1,
+        "events": [
+          "new:172",
+          "construct:301990144",
+          "attach:301990144:1120403456:1120403456:301990912:0"
+        ],
+        "instructions": 40
+      },
+      {
+        "present": false,
+        "refreshBefore": 0,
+        "mutate": false,
+        "control": 895,
+        "currentAfter": 301990144,
+        "refreshAfter": 1,
+        "events": [
+          "new:172",
+          "construct:301990144",
+          "attach:301990144:1120403456:1120403456:301990912:0"
+        ],
+        "instructions": 40
+      },
+      {
+        "present": false,
+        "refreshBefore": 0,
+        "mutate": true,
+        "control": 639,
+        "currentAfter": 301990144,
+        "refreshAfter": 1,
+        "events": [
+          "new:172",
+          "construct:301990144",
+          "attach:301990144:1120403456:1120403456:301990656:0"
+        ],
+        "instructions": 40
+      },
+      {
+        "present": false,
+        "refreshBefore": 0,
+        "mutate": true,
+        "control": 895,
+        "currentAfter": 301990144,
+        "refreshAfter": 1,
+        "events": [
+          "new:172",
+          "construct:301990144",
+          "attach:301990144:1120403456:1120403456:301990656:0"
+        ],
+        "instructions": 40
+      },
+      {
+        "present": false,
+        "refreshBefore": 7,
+        "mutate": false,
+        "control": 639,
+        "currentAfter": 301990144,
+        "refreshAfter": 8,
+        "events": [
+          "new:172",
+          "construct:301990144",
+          "attach:301990144:1120403456:1120403456:301990912:0"
+        ],
+        "instructions": 40
+      },
+      {
+        "present": false,
+        "refreshBefore": 7,
+        "mutate": false,
+        "control": 895,
+        "currentAfter": 301990144,
+        "refreshAfter": 8,
+        "events": [
+          "new:172",
+          "construct:301990144",
+          "attach:301990144:1120403456:1120403456:301990912:0"
+        ],
+        "instructions": 40
+      },
+      {
+        "present": false,
+        "refreshBefore": 7,
+        "mutate": true,
+        "control": 639,
+        "currentAfter": 301990144,
+        "refreshAfter": 8,
+        "events": [
+          "new:172",
+          "construct:301990144",
+          "attach:301990144:1120403456:1120403456:301990656:0"
+        ],
+        "instructions": 40
+      },
+      {
+        "present": false,
+        "refreshBefore": 7,
+        "mutate": true,
+        "control": 895,
+        "currentAfter": 301990144,
+        "refreshAfter": 8,
+        "events": [
+          "new:172",
+          "construct:301990144",
+          "attach:301990144:1120403456:1120403456:301990656:0"
+        ],
+        "instructions": 40
+      },
+      {
+        "present": false,
+        "refreshBefore": 4294967295,
+        "mutate": false,
+        "control": 639,
+        "currentAfter": 301990144,
+        "refreshAfter": 0,
+        "events": [
+          "new:172",
+          "construct:301990144",
+          "attach:301990144:1120403456:1120403456:301990912:0"
+        ],
+        "instructions": 40
+      },
+      {
+        "present": false,
+        "refreshBefore": 4294967295,
+        "mutate": false,
+        "control": 895,
+        "currentAfter": 301990144,
+        "refreshAfter": 0,
+        "events": [
+          "new:172",
+          "construct:301990144",
+          "attach:301990144:1120403456:1120403456:301990912:0"
+        ],
+        "instructions": 40
+      },
+      {
+        "present": false,
+        "refreshBefore": 4294967295,
+        "mutate": true,
+        "control": 639,
+        "currentAfter": 301990144,
+        "refreshAfter": 0,
+        "events": [
+          "new:172",
+          "construct:301990144",
+          "attach:301990144:1120403456:1120403456:301990656:0"
+        ],
+        "instructions": 40
+      },
+      {
+        "present": false,
+        "refreshBefore": 4294967295,
+        "mutate": true,
+        "control": 895,
+        "currentAfter": 301990144,
+        "refreshAfter": 0,
+        "events": [
+          "new:172",
+          "construct:301990144",
+          "attach:301990144:1120403456:1120403456:301990656:0"
+        ],
+        "instructions": 40
+      },
+      {
+        "present": true,
+        "refreshBefore": 0,
+        "mutate": false,
+        "control": 639,
+        "currentAfter": 0,
+        "refreshAfter": 0,
+        "events": [
+          "kill:301989888"
+        ],
+        "instructions": 15
+      },
+      {
+        "present": true,
+        "refreshBefore": 0,
+        "mutate": false,
+        "control": 895,
+        "currentAfter": 0,
+        "refreshAfter": 0,
+        "events": [
+          "kill:301989888"
+        ],
+        "instructions": 15
+      },
+      {
+        "present": true,
+        "refreshBefore": 0,
+        "mutate": true,
+        "control": 639,
+        "currentAfter": 0,
+        "refreshAfter": 0,
+        "events": [
+          "kill:301989888"
+        ],
+        "instructions": 15
+      },
+      {
+        "present": true,
+        "refreshBefore": 0,
+        "mutate": true,
+        "control": 895,
+        "currentAfter": 0,
+        "refreshAfter": 0,
+        "events": [
+          "kill:301989888"
+        ],
+        "instructions": 15
+      },
+      {
+        "present": true,
+        "refreshBefore": 7,
+        "mutate": false,
+        "control": 639,
+        "currentAfter": 0,
+        "refreshAfter": 7,
+        "events": [
+          "kill:301989888"
+        ],
+        "instructions": 15
+      },
+      {
+        "present": true,
+        "refreshBefore": 7,
+        "mutate": false,
+        "control": 895,
+        "currentAfter": 0,
+        "refreshAfter": 7,
+        "events": [
+          "kill:301989888"
+        ],
+        "instructions": 15
+      },
+      {
+        "present": true,
+        "refreshBefore": 7,
+        "mutate": true,
+        "control": 639,
+        "currentAfter": 0,
+        "refreshAfter": 7,
+        "events": [
+          "kill:301989888"
+        ],
+        "instructions": 15
+      },
+      {
+        "present": true,
+        "refreshBefore": 7,
+        "mutate": true,
+        "control": 895,
+        "currentAfter": 0,
+        "refreshAfter": 7,
+        "events": [
+          "kill:301989888"
+        ],
+        "instructions": 15
+      },
+      {
+        "present": true,
+        "refreshBefore": 4294967295,
+        "mutate": false,
+        "control": 639,
+        "currentAfter": 0,
+        "refreshAfter": 4294967295,
+        "events": [
+          "kill:301989888"
+        ],
+        "instructions": 15
+      },
+      {
+        "present": true,
+        "refreshBefore": 4294967295,
+        "mutate": false,
+        "control": 895,
+        "currentAfter": 0,
+        "refreshAfter": 4294967295,
+        "events": [
+          "kill:301989888"
+        ],
+        "instructions": 15
+      },
+      {
+        "present": true,
+        "refreshBefore": 4294967295,
+        "mutate": true,
+        "control": 639,
+        "currentAfter": 0,
+        "refreshAfter": 4294967295,
+        "events": [
+          "kill:301989888"
+        ],
+        "instructions": 15
+      },
+      {
+        "present": true,
+        "refreshBefore": 4294967295,
+        "mutate": true,
+        "control": 895,
+        "currentAfter": 0,
+        "refreshAfter": 4294967295,
+        "events": [
+          "kill:301989888"
+        ],
+        "instructions": 15
+      }
+    ],
+    "boundaries": [
+      "466480 Kill",
+      "4e4391 new",
+      "4801b0 constructor",
+      "virtual+20 Attach"
+    ],
+    "sha256": {
+      "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "tools/decomp_minimap_toggle.py": "cc2eb05e882000c4f4a7f50f20368eb0ec47856ecc43fcd366935c1cf076eee6"
+    }
+  },
+  "toggle": {
+    "results": [
+      {
+        "size": [
+          1024,
+          768
+        ],
+        "root": "232",
+        "productionSerial": "220",
+        "minimapTokens": [
+          "236",
+          "504",
+          "719"
+        ],
+        "cameraBefore": [
+          "1792",
+          "1530"
+        ],
+        "cameraAfter": [
+          "768",
+          "496"
+        ],
+        "currentGoneWhileHidden": true,
+        "independentBounds": [
+          100,
+          100,
+          128,
+          128
+        ],
+        "captureReleased": true,
+        "hudAndSpPreserved": true,
+        "mainMenuReturned": true,
+        "initialPause": "1",
+        "fullscreen": false,
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+            "--run",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-minimap-toggle-540\\final\\1024x768\\data",
+            "--mission",
+            "TEST02",
+            "--window",
+            "--mute-audio",
+            "--frames",
+            "220",
+            "--set",
+            "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3",
+            "--ui-script",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-minimap-toggle-540\\final\\1024x768\\run\\steps.tsv",
+            "--ui-report",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-minimap-toggle-540\\final\\1024x768\\run\\states.tsv",
+            "--audio-report",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-minimap-toggle-540\\final\\1024x768\\run\\audio.tsv"
+          ],
+          "binarySha256": "3309a609d5933d5d716911a7a2480e31d2b114a0bd7e43241c87799d5c05542f",
+          "scriptSha256": "9a37afa41ba5b02228ca979804f602703c47c15cd515a2c8fda48047f5a7ed7f",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 22.05359130000579,
+          "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderrSha256": "4b73c96b25066ec2370644eda8a463570fec390203035f3612e15ad85ff68be9",
+          "originalsUnchanged": true,
+          "dataUnchanged": true,
+          "dataRoot": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-minimap-toggle-540\\final\\1024x768\\data"
+        }
+      },
+      {
+        "size": [
+          1280,
+          720
+        ],
+        "root": "232",
+        "productionSerial": "220",
+        "minimapTokens": [
+          "236",
+          "508",
+          "795"
+        ],
+        "cameraBefore": [
+          "1664",
+          "1554"
+        ],
+        "cameraAfter": [
+          "640",
+          "520"
+        ],
+        "currentGoneWhileHidden": true,
+        "independentBounds": [
+          100,
+          100,
+          128,
+          128
+        ],
+        "captureReleased": true,
+        "hudAndSpPreserved": true,
+        "mainMenuReturned": true,
+        "initialPause": "1",
+        "fullscreen": true,
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+            "--run",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-minimap-toggle-540\\final2\\1280x720\\data",
+            "--mission",
+            "TEST02",
+            "--mute-audio",
+            "--frames",
+            "220",
+            "--set",
+            "SCREENW=1280;SCREENH=720;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3;startInFullScreen=1",
+            "--ui-script",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-minimap-toggle-540\\final2\\1280x720\\run\\steps.tsv",
+            "--ui-report",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-minimap-toggle-540\\final2\\1280x720\\run\\states.tsv",
+            "--audio-report",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-minimap-toggle-540\\final2\\1280x720\\run\\audio.tsv"
+          ],
+          "binarySha256": "3309a609d5933d5d716911a7a2480e31d2b114a0bd7e43241c87799d5c05542f",
+          "scriptSha256": "b11ac45b71e1f0e5b63061b95a4b59871a834edc6b40fff6a670f8ed35ae26f7",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 21.81756480000331,
+          "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderrSha256": "4b73c96b25066ec2370644eda8a463570fec390203035f3612e15ad85ff68be9",
+          "originalsUnchanged": true,
+          "dataUnchanged": true,
+          "dataRoot": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-minimap-toggle-540\\final2\\1280x720\\data"
+        }
+      },
+      {
+        "size": [
+          1280,
+          800
+        ],
+        "root": "232",
+        "productionSerial": "220",
+        "minimapTokens": [
+          "236",
+          "510",
+          "779"
+        ],
+        "cameraBefore": [
+          "1664",
+          "1514"
+        ],
+        "cameraAfter": [
+          "640",
+          "480"
+        ],
+        "currentGoneWhileHidden": true,
+        "independentBounds": [
+          100,
+          100,
+          128,
+          128
+        ],
+        "captureReleased": true,
+        "hudAndSpPreserved": true,
+        "mainMenuReturned": true,
+        "initialPause": "1",
+        "fullscreen": false,
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+            "--run",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-minimap-toggle-540\\final2\\1280x800\\data",
+            "--mission",
+            "TEST02",
+            "--mute-audio",
+            "--frames",
+            "220",
+            "--set",
+            "SCREENW=1280;SCREENH=800;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3",
+            "--ui-script",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-minimap-toggle-540\\final2\\1280x800\\run\\steps.tsv",
+            "--ui-report",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-minimap-toggle-540\\final2\\1280x800\\run\\states.tsv",
+            "--audio-report",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-minimap-toggle-540\\final2\\1280x800\\run\\audio.tsv",
+            "--window"
+          ],
+          "binarySha256": "3309a609d5933d5d716911a7a2480e31d2b114a0bd7e43241c87799d5c05542f",
+          "scriptSha256": "37a56e882ff512b4098e7bbbf103e3fca76f5ae503f2fa4a2dcc6f28b31f14f4",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 22.84337879999657,
+          "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderrSha256": "4b73c96b25066ec2370644eda8a463570fec390203035f3612e15ad85ff68be9",
+          "originalsUnchanged": true,
+          "dataUnchanged": true,
+          "dataRoot": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-minimap-toggle-540\\final2\\1280x800\\data"
+        }
+      }
+    ],
+    "binarySha256": "3309a609d5933d5d716911a7a2480e31d2b114a0bd7e43241c87799d5c05542f",
+    "directWorldMutation": false
+  },
+  "golem": {
+    "results": [
+      {
+        "view": [
+          1280,
+          720,
+          848,
+          817
+        ],
+        "golemSid": 15187,
+        "paidSp": 400,
+        "enemySp": 0,
+        "enemyGolems": 0,
+        "cases": [
+          {
+            "label": "geyser",
+            "cursor": 3,
+            "hover": [
+              "15187",
+              "101",
+              "105",
+              "15",
+              "254",
+              "26",
+              "15001",
+              "1"
+            ]
+          },
+          {
+            "label": "ground",
+            "cursor": 18,
+            "hover": [
+              "15187",
+              "101",
+              "102",
+              "15",
+              "15",
+              "2",
+              "0",
+              "0"
+            ]
+          },
+          {
+            "label": "self",
+            "cursor": 6,
+            "hover": [
+              "15187",
+              "94",
+              "110",
+              "15",
+              "15",
+              "2",
+              "0",
+              "0"
+            ]
+          },
+          {
+            "label": "geyser_again",
+            "cursor": 3,
+            "hover": [
+              "15187",
+              "101",
+              "105",
+              "15",
+              "254",
+              "26",
+              "15001",
+              "1"
+            ]
+          }
+        ],
+        "hardwareCursorImages": {
+          "65539": [],
+          "386925801": [
+            1
+          ],
+          "73662539": [
+            3
+          ],
+          "72222667": [],
+          "23267443": [
+            18
+          ],
+          "185075179": [
+            6
+          ]
+        },
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+            "--run",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-altar-salvage-531\\final-fixed\\1024x768\\data",
+            "--mission",
+            "thewarbegins",
+            "--mute-audio",
+            "--frames",
+            "335",
+            "--set",
+            "SCREENW=1280;SCREENH=720;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3",
+            "--ui-script",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-minimap-toggle-540\\default-golem\\1280x720\\run\\steps.tsv",
+            "--ui-report",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-minimap-toggle-540\\default-golem\\1280x720\\run\\states.tsv",
+            "--audio-report",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-minimap-toggle-540\\default-golem\\1280x720\\run\\audio.tsv",
+            "--window"
+          ],
+          "binarySha256": "3309a609d5933d5d716911a7a2480e31d2b114a0bd7e43241c87799d5c05542f",
+          "scriptSha256": "8cd746703bc45a7f5c845e058c44acf45fab1a47dda4cedd37031bfd64c7fbca",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 12.41021269999328,
+          "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderrSha256": "793519e757816622b40921f0d7be7c94c392a625e4c8550e34fe0499595eab2c",
+          "originalsUnchanged": true,
+          "dataUnchanged": true,
+          "dataRoot": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-altar-salvage-531\\final-fixed\\1024x768\\data"
+        }
+      },
+      {
+        "view": [
+          1024,
+          768,
+          976,
+          793
+        ],
+        "golemSid": 15187,
+        "paidSp": 400,
+        "enemySp": 0,
+        "enemyGolems": 0,
+        "cases": [
+          {
+            "label": "geyser",
+            "cursor": 3,
+            "hover": [
+              "15187",
+              "101",
+              "105",
+              "15",
+              "254",
+              "26",
+              "15001",
+              "1"
+            ]
+          },
+          {
+            "label": "ground",
+            "cursor": 18,
+            "hover": [
+              "15187",
+              "101",
+              "102",
+              "15",
+              "15",
+              "2",
+              "0",
+              "0"
+            ]
+          },
+          {
+            "label": "self",
+            "cursor": 6,
+            "hover": [
+              "15187",
+              "94",
+              "110",
+              "15",
+              "15",
+              "2",
+              "0",
+              "0"
+            ]
+          },
+          {
+            "label": "geyser_again",
+            "cursor": 3,
+            "hover": [
+              "15187",
+              "101",
+              "105",
+              "15",
+              "254",
+              "26",
+              "15001",
+              "1"
+            ]
+          }
+        ],
+        "hardwareCursorImages": {
+          "65539": [],
+          "65543": [],
+          "9896095": [
+            1
+          ],
+          "78514211": [
+            3
+          ],
+          "168625879": [],
+          "150340269": [
+            18
+          ],
+          "73138931": [
+            6
+          ]
+        },
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+            "--run",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-altar-salvage-531\\final-fixed\\1024x768\\data",
+            "--mission",
+            "thewarbegins",
+            "--mute-audio",
+            "--frames",
+            "335",
+            "--set",
+            "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3",
+            "--ui-script",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-minimap-toggle-540\\default-golem\\1024x768\\run\\steps.tsv",
+            "--ui-report",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-minimap-toggle-540\\default-golem\\1024x768\\run\\states.tsv",
+            "--audio-report",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-minimap-toggle-540\\default-golem\\1024x768\\run\\audio.tsv",
+            "--window"
+          ],
+          "binarySha256": "3309a609d5933d5d716911a7a2480e31d2b114a0bd7e43241c87799d5c05542f",
+          "scriptSha256": "ea030bb84843d853d6ac916147020ff5b0fafe9e7edfa0334773f2dbaf5ffd47",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 11.890016899997136,
+          "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderrSha256": "793519e757816622b40921f0d7be7c94c392a625e4c8550e34fe0499595eab2c",
+          "originalsUnchanged": true,
+          "dataUnchanged": true,
+          "dataRoot": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-altar-salvage-531\\final-fixed\\1024x768\\data"
+        }
+      }
+    ],
+    "sourceExeSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "naturalMissionCompletionVerified": false
+  },
+  "editor": {
+    "results": [
+      {
+        "size": [
+          1024,
+          768
+        ],
+        "editorModes": [
+          "1",
+          "1"
+        ],
+        "battleModes": [
+          "0",
+          "1"
+        ],
+        "gameTimeDelta": 4.322000000000003,
+        "editorGraph": [
+          "3976",
+          "5"
+        ],
+        "battleGraph": [
+          "3985",
+          "5"
+        ],
+        "changedCopyFiles": [],
+        "addedCopyFiles": [],
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+            "--run",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-minimap-toggle-540\\default-editor\\1024x768\\data",
+            "--window",
+            "--no-audio",
+            "--frames",
+            "315",
+            "--set",
+            "SCREENW=1024;SCREENH=768;maxFPS=40;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=1",
+            "--ui-script",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-minimap-toggle-540\\default-editor\\1024x768\\steps.tsv",
+            "--ui-report",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-minimap-toggle-540\\default-editor\\1024x768\\states.tsv"
+          ],
+          "binarySha256": "3309a609d5933d5d716911a7a2480e31d2b114a0bd7e43241c87799d5c05542f",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 37.81599360000109,
+          "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderrSha256": "f6f524aabb476c049642be4205805f05666d99a73b8f0c27af7426a5ee290463"
+        }
+      },
+      {
+        "size": [
+          1280,
+          720
+        ],
+        "editorModes": [
+          "1",
+          "1"
+        ],
+        "battleModes": [
+          "0",
+          "1"
+        ],
+        "gameTimeDelta": 4.8409999999999975,
+        "editorGraph": [
+          "3976",
+          "5"
+        ],
+        "battleGraph": [
+          "3986",
+          "5"
+        ],
+        "changedCopyFiles": [],
+        "addedCopyFiles": [],
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+            "--run",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-minimap-toggle-540\\default-editor\\1280x720\\data",
+            "--window",
+            "--no-audio",
+            "--frames",
+            "315",
+            "--set",
+            "SCREENW=1280;SCREENH=720;maxFPS=40;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=1",
+            "--ui-script",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-minimap-toggle-540\\default-editor\\1280x720\\steps.tsv",
+            "--ui-report",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-minimap-toggle-540\\default-editor\\1280x720\\states.tsv"
+          ],
+          "binarySha256": "3309a609d5933d5d716911a7a2480e31d2b114a0bd7e43241c87799d5c05542f",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 38.37637870002072,
+          "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderrSha256": "f6f524aabb476c049642be4205805f05666d99a73b8f0c27af7426a5ee290463"
+        }
+      }
+    ],
+    "sourceUnchanged": true,
+    "originalsUnchanged": true,
+    "gameSha256": "3309a609d5933d5d716911a7a2480e31d2b114a0bd7e43241c87799d5c05542f",
+    "naturalCompletionVerified": false
+  },
+  "processExecutions": [
+    {
+      "directory": "default-editor\\1024x768",
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-minimap-toggle-540\\default-editor\\1024x768\\data",
+        "--window",
+        "--no-audio",
+        "--frames",
+        "315",
+        "--set",
+        "SCREENW=1024;SCREENH=768;maxFPS=40;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=1",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-minimap-toggle-540\\default-editor\\1024x768\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-minimap-toggle-540\\default-editor\\1024x768\\states.tsv"
+      ],
+      "binarySha256": "3309a609d5933d5d716911a7a2480e31d2b114a0bd7e43241c87799d5c05542f",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 37.81599360000109,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "f6f524aabb476c049642be4205805f05666d99a73b8f0c27af7426a5ee290463"
+    },
+    {
+      "directory": "default-editor\\1280x720",
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-minimap-toggle-540\\default-editor\\1280x720\\data",
+        "--window",
+        "--no-audio",
+        "--frames",
+        "315",
+        "--set",
+        "SCREENW=1280;SCREENH=720;maxFPS=40;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=1",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-minimap-toggle-540\\default-editor\\1280x720\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-minimap-toggle-540\\default-editor\\1280x720\\states.tsv"
+      ],
+      "binarySha256": "3309a609d5933d5d716911a7a2480e31d2b114a0bd7e43241c87799d5c05542f",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 38.37637870002072,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "f6f524aabb476c049642be4205805f05666d99a73b8f0c27af7426a5ee290463"
+    },
+    {
+      "directory": "default-golem\\1024x768\\run",
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-altar-salvage-531\\final-fixed\\1024x768\\data",
+        "--mission",
+        "thewarbegins",
+        "--mute-audio",
+        "--frames",
+        "335",
+        "--set",
+        "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-minimap-toggle-540\\default-golem\\1024x768\\run\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-minimap-toggle-540\\default-golem\\1024x768\\run\\states.tsv",
+        "--audio-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-minimap-toggle-540\\default-golem\\1024x768\\run\\audio.tsv",
+        "--window"
+      ],
+      "binarySha256": "3309a609d5933d5d716911a7a2480e31d2b114a0bd7e43241c87799d5c05542f",
+      "scriptSha256": "ea030bb84843d853d6ac916147020ff5b0fafe9e7edfa0334773f2dbaf5ffd47",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 11.890016899997136,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "793519e757816622b40921f0d7be7c94c392a625e4c8550e34fe0499595eab2c",
+      "originalsUnchanged": true,
+      "dataUnchanged": true,
+      "dataRoot": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-altar-salvage-531\\final-fixed\\1024x768\\data"
+    },
+    {
+      "directory": "default-golem\\1280x720\\run",
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-altar-salvage-531\\final-fixed\\1024x768\\data",
+        "--mission",
+        "thewarbegins",
+        "--mute-audio",
+        "--frames",
+        "335",
+        "--set",
+        "SCREENW=1280;SCREENH=720;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-minimap-toggle-540\\default-golem\\1280x720\\run\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-minimap-toggle-540\\default-golem\\1280x720\\run\\states.tsv",
+        "--audio-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-minimap-toggle-540\\default-golem\\1280x720\\run\\audio.tsv",
+        "--window"
+      ],
+      "binarySha256": "3309a609d5933d5d716911a7a2480e31d2b114a0bd7e43241c87799d5c05542f",
+      "scriptSha256": "8cd746703bc45a7f5c845e058c44acf45fab1a47dda4cedd37031bfd64c7fbca",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 12.41021269999328,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "793519e757816622b40921f0d7be7c94c392a625e4c8550e34fe0499595eab2c",
+      "originalsUnchanged": true,
+      "dataUnchanged": true,
+      "dataRoot": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-altar-salvage-531\\final-fixed\\1024x768\\data"
+    },
+    {
+      "directory": "final\\1024x768\\run",
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-minimap-toggle-540\\final\\1024x768\\data",
+        "--mission",
+        "TEST02",
+        "--window",
+        "--mute-audio",
+        "--frames",
+        "220",
+        "--set",
+        "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-minimap-toggle-540\\final\\1024x768\\run\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-minimap-toggle-540\\final\\1024x768\\run\\states.tsv",
+        "--audio-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-minimap-toggle-540\\final\\1024x768\\run\\audio.tsv"
+      ],
+      "binarySha256": "3309a609d5933d5d716911a7a2480e31d2b114a0bd7e43241c87799d5c05542f",
+      "scriptSha256": "9a37afa41ba5b02228ca979804f602703c47c15cd515a2c8fda48047f5a7ed7f",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 22.05359130000579,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "4b73c96b25066ec2370644eda8a463570fec390203035f3612e15ad85ff68be9",
+      "originalsUnchanged": true,
+      "dataUnchanged": true,
+      "dataRoot": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-minimap-toggle-540\\final\\1024x768\\data"
+    },
+    {
+      "directory": "final\\1280x720\\run",
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-minimap-toggle-540\\final\\1280x720\\data",
+        "--mission",
+        "TEST02",
+        "--fullscreen",
+        "--mute-audio",
+        "--frames",
+        "220",
+        "--set",
+        "SCREENW=1280;SCREENH=720;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-minimap-toggle-540\\final\\1280x720\\run\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-minimap-toggle-540\\final\\1280x720\\run\\states.tsv",
+        "--audio-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-minimap-toggle-540\\final\\1280x720\\run\\audio.tsv"
+      ],
+      "binarySha256": "3309a609d5933d5d716911a7a2480e31d2b114a0bd7e43241c87799d5c05542f",
+      "scriptSha256": "e990759b9934ed6f960c80d4fadf21958d5ba8e4262aa6fce8f23076dbfd6b73",
+      "returnCode": 1,
+      "timedOut": false,
+      "seconds": 0.49245310001424514,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "09fbe64ab08b100b442bed2f2aec48800ca3450d377bd818ff74f08ec343df4e",
+      "originalsUnchanged": true,
+      "dataUnchanged": true,
+      "dataRoot": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-minimap-toggle-540\\final\\1280x720\\data"
+    },
+    {
+      "directory": "final2\\1280x720\\run",
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-minimap-toggle-540\\final2\\1280x720\\data",
+        "--mission",
+        "TEST02",
+        "--mute-audio",
+        "--frames",
+        "220",
+        "--set",
+        "SCREENW=1280;SCREENH=720;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3;startInFullScreen=1",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-minimap-toggle-540\\final2\\1280x720\\run\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-minimap-toggle-540\\final2\\1280x720\\run\\states.tsv",
+        "--audio-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-minimap-toggle-540\\final2\\1280x720\\run\\audio.tsv"
+      ],
+      "binarySha256": "3309a609d5933d5d716911a7a2480e31d2b114a0bd7e43241c87799d5c05542f",
+      "scriptSha256": "b11ac45b71e1f0e5b63061b95a4b59871a834edc6b40fff6a670f8ed35ae26f7",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 21.81756480000331,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "4b73c96b25066ec2370644eda8a463570fec390203035f3612e15ad85ff68be9",
+      "originalsUnchanged": true,
+      "dataUnchanged": true,
+      "dataRoot": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-minimap-toggle-540\\final2\\1280x720\\data"
+    },
+    {
+      "directory": "final2\\1280x800\\run",
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-minimap-toggle-540\\final2\\1280x800\\data",
+        "--mission",
+        "TEST02",
+        "--mute-audio",
+        "--frames",
+        "220",
+        "--set",
+        "SCREENW=1280;SCREENH=800;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-minimap-toggle-540\\final2\\1280x800\\run\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-minimap-toggle-540\\final2\\1280x800\\run\\states.tsv",
+        "--audio-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-minimap-toggle-540\\final2\\1280x800\\run\\audio.tsv",
+        "--window"
+      ],
+      "binarySha256": "3309a609d5933d5d716911a7a2480e31d2b114a0bd7e43241c87799d5c05542f",
+      "scriptSha256": "37a56e882ff512b4098e7bbbf103e3fca76f5ae503f2fa4a2dcc6f28b31f14f4",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 22.84337879999657,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "4b73c96b25066ec2370644eda8a463570fec390203035f3612e15ad85ff68be9",
+      "originalsUnchanged": true,
+      "dataUnchanged": true,
+      "dataRoot": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-minimap-toggle-540\\final2\\1280x800\\data"
+    },
+    {
+      "directory": "probe\\run",
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-minimap-toggle-540\\probe\\data",
+        "--mission",
+        "TEST02",
+        "--window",
+        "--mute-audio",
+        "--frames",
+        "145",
+        "--set",
+        "SCREENW=1280;SCREENH=720;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-minimap-toggle-540\\probe\\run\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-minimap-toggle-540\\probe\\run\\states.tsv",
+        "--audio-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-minimap-toggle-540\\probe\\run\\audio.tsv"
+      ],
+      "binarySha256": "3309a609d5933d5d716911a7a2480e31d2b114a0bd7e43241c87799d5c05542f",
+      "scriptSha256": "53df92d38eda9b817b6adbbb7c64b34a0f187309671d7e3e8ed6df331cb173aa",
+      "returnCode": 1,
+      "timedOut": false,
+      "seconds": 15.24676239999826,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "674823aff55ee6d8fb9d32893287bba87566f1b14037d76739a0f221063ee567",
+      "originalsUnchanged": true,
+      "dataUnchanged": true,
+      "dataRoot": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-minimap-toggle-540\\probe\\data"
+    },
+    {
+      "directory": "probe2\\run",
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-minimap-toggle-540\\probe\\data",
+        "--mission",
+        "TEST02",
+        "--window",
+        "--mute-audio",
+        "--frames",
+        "145",
+        "--set",
+        "SCREENW=1280;SCREENH=720;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-minimap-toggle-540\\probe2\\run\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-minimap-toggle-540\\probe2\\run\\states.tsv",
+        "--audio-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-minimap-toggle-540\\probe2\\run\\audio.tsv"
+      ],
+      "binarySha256": "3309a609d5933d5d716911a7a2480e31d2b114a0bd7e43241c87799d5c05542f",
+      "scriptSha256": "1ed311cd9d77b0915817a9008a55cfc1f150c4836e8766bcf6782af060c828ff",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 19.98162959999172,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2",
+      "originalsUnchanged": true,
+      "dataUnchanged": true,
+      "dataRoot": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-minimap-toggle-540\\probe\\data"
+    }
+  ],
+  "allProcesses": {
+    "count": 10,
+    "exit0": 8,
+    "exit1": 2
+  },
+  "actualGames": {
+    "count": 9,
+    "exit0": 8,
+    "exit1": 1
+  },
+  "acceptedGames": 7,
+  "preservation": {
+    "protectedFiles": 1819,
+    "protectedMatch": true,
+    "agentsSha256": "4e32580d21f62036e99ebac6b26641f58e7e7143328f67f396a12f960ccdaa4c",
+    "sourceFiles": 2929,
+    "changed": [
+      "cpppj/src/client/GameMenuCommands.cpp",
+      "cpppj/src/client/RawButtonControls.cpp",
+      "cpppj/src/client/RawButtonControls.h",
+      "cpppj/src/client/RawUberRootControls.cpp",
+      "cpppj/src/client/UberGump.cpp",
+      "cpppj/src/client/UberHud.inc",
+      "cpppj/tests/ProductionInitialContextTests.cpp"
+    ],
+    "sourceSetUnchanged": true,
+    "existingFixturesUnchanged": true,
+    "exes": {
+      "NetstormCpp.exe": "3309a609d5933d5d716911a7a2480e31d2b114a0bd7e43241c87799d5c05542f",
+      "netstorm_tests.exe": "d992014e911cd57dd759f2bfaabbab24645b302691a9179a698b7b2c59a76a31"
+    }
+  },
+  "builds": {
+    "builds": [
+      {
+        "targets": [
+          "NetstormCpp",
+          "netstorm_tests"
+        ],
+        "exitCode": 0,
+        "source": "exec27931",
+        "fullConsoleCaptured": false
+      },
+      {
+        "targets": [
+          "netstorm_tests"
+        ],
+        "exitCode": 0,
+        "source": "exec42104",
+        "reason": "신규 검사에서 정상 첫 Refresh를 수행해 bitmap128 확보 입력 보완"
+      }
+    ],
+    "gameSha256": "3309a609d5933d5d716911a7a2480e31d2b114a0bd7e43241c87799d5c05542f",
+    "testsSha256": "d992014e911cd57dd759f2bfaabbab24645b302691a9179a698b7b2c59a76a31"
+  },
+  "evidence": {
+    "extracted/cpp-minimap-toggle-540/build-summary.json": "396612e66084c3ce8c3266d402c640197ace9e9bf78a6ccd00d22647d29f82d0",
+    "extracted/cpp-minimap-toggle-540/native-toggle.json": "7f7b4e4f6f31e7297ec639996d15acfefad0fa514fb7f96d6e414ef73dc97063",
+    "extracted/cpp-minimap-toggle-540/native-toggle.c.txt": "7bdd1a06d53e25cb0eadab2f39fa9833e7256fe28c3c5a824f844fd9062190a9",
+    "extracted/cpp-minimap-toggle-540/contact.png": "38f8349bea1d6f42352d78220d1cd3fd71c2dd54212f93733ceab91f50736a61",
+    "extracted/cpp-minimap-toggle-540/preservation.json": "27d4ababb7e158325c508d360cdc879b14adfb265f1d8b34e511d04ddda46df2",
+    "extracted/cpp-minimap-toggle-540/final2/summary.json": "e1cb5398d5988d267dd438bbec6498340190332d78c9d5b940886bce7813cc60",
+    "extracted/cpp-minimap-toggle-540/default-golem/summary.json": "f9df9945be2ec724c5203661350b6ed3c34f82fd566047315a31538de70a6f66",
+    "extracted/cpp-minimap-toggle-540/default-editor/summary.json": "c60051bddd534f9679a7434abb23c02dddac745e195cbd452878c15be6b82ad7",
+    "extracted/cpp-minimap-toggle-540/focus/summary.json": "25602d5afe2c024ffdaed7ce0757c2270426b8240911bf1b7f0266e67eca54e5",
+    "extracted/cpp-minimap-toggle-540/game-executions.json": "fa331f0127a1e4dbd4956d1e3b5bd3dbd506bf04340580010fdeda6c577b3e74",
+    "extracted/cpp-minimap-toggle-540/probe/scenario-variant.json": "4000ad3b190ec4619868d08af875ef3e80bb0f280eed712f456e02e40703d134",
+    "extracted/cpp-minimap-toggle-540/new-regression/stdout.log": "e87e04fb0b4ed509b5532f4548368bb54556323876d63437adfc1399065701a1",
+    "extracted/cpp-minimap-toggle-540/new-regression/stderr.log": "8c5d9e7e98d0f4fad6d497930d1b7a0598d655bd22e37ff0fdc659ae90fc2020",
+    "extracted/cpp-minimap-toggle-540/new-regression/run.json": "c569cf27b61c2b24155c1056c4630d6ebccdf313dc8df40915856e92e537af84",
+    "extracted/cpp-minimap-toggle-540/new-regression-fixed/stdout.log": "730d14603dd9d061398e018a374667e9e34f0e872e51d9c635e833dc8894654d",
+    "extracted/cpp-minimap-toggle-540/new-regression-fixed/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-minimap-toggle-540/new-regression-fixed/run.json": "9e1dc1a2d7a645240f5ce4da85a0cf0f81e3954e6139c1474bc07bc2e1b89539",
+    "extracted/cpp-minimap-toggle-540/default-editor/1024x768/steps.tsv": "50de8363bfcb5e52ebf99f4b01668815225b8a168c93b7f10e49eb5e7094a994",
+    "extracted/cpp-minimap-toggle-540/default-editor/1024x768/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-minimap-toggle-540/default-editor/1024x768/stderr.log": "f6f524aabb476c049642be4205805f05666d99a73b8f0c27af7426a5ee290463",
+    "extracted/cpp-minimap-toggle-540/default-editor/1024x768/states.tsv": "236496a64872f43849b05523414b7366568cb6608476676db8c0646ed40381a6",
+    "extracted/cpp-minimap-toggle-540/default-editor/1024x768/run.json": "c98576cdfaf0dfe35d14e5ab14a01391bae4cde230e8e4db65f7fd40ac7303fc",
+    "extracted/cpp-minimap-toggle-540/default-editor/1280x720/steps.tsv": "b81d20a6b8865b38b01f057c9322ea611e30e070d5fdcbd399b107e49ecf107b",
+    "extracted/cpp-minimap-toggle-540/default-editor/1280x720/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-minimap-toggle-540/default-editor/1280x720/stderr.log": "f6f524aabb476c049642be4205805f05666d99a73b8f0c27af7426a5ee290463",
+    "extracted/cpp-minimap-toggle-540/default-editor/1280x720/states.tsv": "9a98792c0aa272fef7057d1e11d2ef3d546a24f81789d7ab80add47d21f94eb3",
+    "extracted/cpp-minimap-toggle-540/default-editor/1280x720/run.json": "df80f4c2cc453c97f1647e8825669a11bf87b6b8770111732318ba8df06166eb",
+    "extracted/cpp-minimap-toggle-540/default-golem/1280x720/hardware-pointer.json": "27aa3a162e12710cf5a1baa54ab58c05d1c5656cdf138fa3f2f6fd6e638b708b",
+    "extracted/cpp-minimap-toggle-540/default-golem/1024x768/hardware-pointer.json": "75da064b075ffab887a1764dddc07a39b01d0064255073050035fd13d45df150",
+    "extracted/cpp-minimap-toggle-540/default-golem/1024x768/run/steps.tsv": "ea030bb84843d853d6ac916147020ff5b0fafe9e7edfa0334773f2dbaf5ffd47",
+    "extracted/cpp-minimap-toggle-540/default-golem/1024x768/run/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-minimap-toggle-540/default-golem/1024x768/run/stderr.log": "793519e757816622b40921f0d7be7c94c392a625e4c8550e34fe0499595eab2c",
+    "extracted/cpp-minimap-toggle-540/default-golem/1024x768/run/states.tsv": "4c5ef9249df9413c96f31679569cfcc68b1b0d98964753a85a3b876236ce84f9",
+    "extracted/cpp-minimap-toggle-540/default-golem/1024x768/run/run.json": "22c2ff8883b22d1f1cc0ce780ddc267462ccb4e67d85699e975480a810fe4093",
+    "extracted/cpp-minimap-toggle-540/default-golem/1280x720/run/steps.tsv": "8cd746703bc45a7f5c845e058c44acf45fab1a47dda4cedd37031bfd64c7fbca",
+    "extracted/cpp-minimap-toggle-540/default-golem/1280x720/run/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-minimap-toggle-540/default-golem/1280x720/run/stderr.log": "793519e757816622b40921f0d7be7c94c392a625e4c8550e34fe0499595eab2c",
+    "extracted/cpp-minimap-toggle-540/default-golem/1280x720/run/states.tsv": "054b1b06d1eaa0297c84bb733be9721438d2c8a2c1e8a17cc90796278d5d9089",
+    "extracted/cpp-minimap-toggle-540/default-golem/1280x720/run/run.json": "f8b5d8029846a74ec3de376eb8fb29d8b94693d976253ab276d136f66d641258",
+    "extracted/cpp-minimap-toggle-540/final2/1280x720/scenario-variant.json": "a8d5f580739838f7dc0c9d9642fc15443484b587093342845f26dc7880e9b08d",
+    "extracted/cpp-minimap-toggle-540/final2/1280x800/scenario-variant.json": "a8d5f580739838f7dc0c9d9642fc15443484b587093342845f26dc7880e9b08d",
+    "extracted/cpp-minimap-toggle-540/final2/1280x800/run/steps.tsv": "37a56e882ff512b4098e7bbbf103e3fca76f5ae503f2fa4a2dcc6f28b31f14f4",
+    "extracted/cpp-minimap-toggle-540/final2/1280x800/run/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-minimap-toggle-540/final2/1280x800/run/stderr.log": "4b73c96b25066ec2370644eda8a463570fec390203035f3612e15ad85ff68be9",
+    "extracted/cpp-minimap-toggle-540/final2/1280x800/run/states.tsv": "59fc2946033b20a5477adaa5a8640cee065f80996745585e872357f93f9a68f1",
+    "extracted/cpp-minimap-toggle-540/final2/1280x800/run/run.json": "ace08edd139b2fc678518274635e659dbc18af3154bc6f2aa8fa4b918dd2cec9",
+    "extracted/cpp-minimap-toggle-540/final2/1280x720/run/steps.tsv": "b11ac45b71e1f0e5b63061b95a4b59871a834edc6b40fff6a670f8ed35ae26f7",
+    "extracted/cpp-minimap-toggle-540/final2/1280x720/run/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-minimap-toggle-540/final2/1280x720/run/stderr.log": "4b73c96b25066ec2370644eda8a463570fec390203035f3612e15ad85ff68be9",
+    "extracted/cpp-minimap-toggle-540/final2/1280x720/run/states.tsv": "3a9367b839ec3cfafd5d4698fde6b0fd8d9518f89a0a2a395cac506175b125bb",
+    "extracted/cpp-minimap-toggle-540/final2/1280x720/run/run.json": "80bbefd847b0cacb2b936b005b3b926df455226d4c6afaa0c6a9517aedb11b1b",
+    "extracted/cpp-minimap-toggle-540/focus/0/stdout.log": "db90de2d90d84aa5ca53caf2710ad9ea2a86f9ba8389b171b1db5beb29c030c8",
+    "extracted/cpp-minimap-toggle-540/focus/0/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-minimap-toggle-540/focus/0/run.json": "68479050d6895846131ead4cc28218bb82062fc4f055e8b36e3f0149360d911f",
+    "extracted/cpp-minimap-toggle-540/focus/1/stdout.log": "f47dccd217c26503da99d5ac76c4b86a115782a53f43e4e29342fb3ae092afdb",
+    "extracted/cpp-minimap-toggle-540/focus/1/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-minimap-toggle-540/focus/1/run.json": "dcb725e0b39a20d6331bf9fece2d91497caa33885ebad9f2bcef9f15e1868b8e",
+    "extracted/cpp-minimap-toggle-540/focus/2/stdout.log": "5ca5531774b5f13fc82081a254cff97b0cd8481d48e9e41e2ed8aa3bdb8503e5",
+    "extracted/cpp-minimap-toggle-540/focus/2/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-minimap-toggle-540/focus/2/run.json": "a0814d83dd07bafcacafc1bf4b94b8f7a7fffad91efcf1796d78c623658d4a1e",
+    "extracted/cpp-minimap-toggle-540/focus/3/stdout.log": "4e0cde1d19c18e8335926b907de08279c605765a208e161f4ed7ff8843838387",
+    "extracted/cpp-minimap-toggle-540/focus/3/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-minimap-toggle-540/focus/3/run.json": "1c5eb9f5cdf1f0c5724853c6d07041819ac72fe1043472f492ad129e32a39b59",
+    "extracted/cpp-minimap-toggle-540/focus/4/stdout.log": "b835c6e27f4c2a24449deeb0adfeecc4603f6eaad1e14b1aa9ecb07fe0ed6f60",
+    "extracted/cpp-minimap-toggle-540/focus/4/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-minimap-toggle-540/focus/4/run.json": "6bf5ecb7d43902acaff18bff6217e89fd0ef7ea78fa7e3e63ec4f67ac01f3346",
+    "extracted/cpp-minimap-toggle-540/focus/5/stdout.log": "24961a8db251859de1aaac88a10551877a6a6b32cf2b993433a72e8ee6d129c0",
+    "extracted/cpp-minimap-toggle-540/focus/5/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-minimap-toggle-540/focus/5/run.json": "a238c4df1ec5d730d8f66035aebd8554d62ecc305a4b5996f1a64569d33e633f",
+    "extracted/cpp-minimap-toggle-540/focus/6/stdout.log": "b9fab8b0911e3e908e2ae85b66a568795cf83d6d49eddd43d89a9140aa0c862c",
+    "extracted/cpp-minimap-toggle-540/focus/6/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-minimap-toggle-540/focus/6/run.json": "60759236450ae3b1d11cab288857d5df384d6fa803c9d35ccebcf683293a85fa",
+    "extracted/cpp-minimap-toggle-540/final/1024x768/scenario-variant.json": "a8d5f580739838f7dc0c9d9642fc15443484b587093342845f26dc7880e9b08d",
+    "extracted/cpp-minimap-toggle-540/final/1280x720/scenario-variant.json": "a8d5f580739838f7dc0c9d9642fc15443484b587093342845f26dc7880e9b08d",
+    "extracted/cpp-minimap-toggle-540/final/1280x720/run/steps.tsv": "e990759b9934ed6f960c80d4fadf21958d5ba8e4262aa6fce8f23076dbfd6b73",
+    "extracted/cpp-minimap-toggle-540/final/1280x720/run/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-minimap-toggle-540/final/1280x720/run/stderr.log": "09fbe64ab08b100b442bed2f2aec48800ca3450d377bd818ff74f08ec343df4e",
+    "extracted/cpp-minimap-toggle-540/final/1280x720/run/run.json": "cd371934a5df5ecdb7b2900c5995e4eaa77a0551af24a798d59525bef76d729b",
+    "extracted/cpp-minimap-toggle-540/final/1024x768/run/steps.tsv": "9a37afa41ba5b02228ca979804f602703c47c15cd515a2c8fda48047f5a7ed7f",
+    "extracted/cpp-minimap-toggle-540/final/1024x768/run/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-minimap-toggle-540/final/1024x768/run/stderr.log": "4b73c96b25066ec2370644eda8a463570fec390203035f3612e15ad85ff68be9",
+    "extracted/cpp-minimap-toggle-540/final/1024x768/run/states.tsv": "2907b4c9c3ecefd29f92684c71e11ba3162d2336c76cb5cdc80506a1e8e538de",
+    "extracted/cpp-minimap-toggle-540/final/1024x768/run/run.json": "369b89568bb0352e8cf16c7eaffdca77ea7783163a3c861d7193bcac401bf87d",
+    "extracted/cpp-minimap-toggle-540/probe2/run/steps.tsv": "1ed311cd9d77b0915817a9008a55cfc1f150c4836e8766bcf6782af060c828ff",
+    "extracted/cpp-minimap-toggle-540/probe2/run/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-minimap-toggle-540/probe2/run/stderr.log": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2",
+    "extracted/cpp-minimap-toggle-540/probe2/run/states.tsv": "b9ce0f2cb98438e4c4cefbeb6e53aa974b7040b4ace45e4b5d5e501c6fb32f24",
+    "extracted/cpp-minimap-toggle-540/probe2/run/run.json": "4d79b8f49bdcf42c70a9f659c70f3882f043d78a262ce45467aa78944b3a14ee",
+    "extracted/cpp-minimap-toggle-540/probe/run/steps.tsv": "53df92d38eda9b817b6adbbb7c64b34a0f187309671d7e3e8ed6df331cb173aa",
+    "extracted/cpp-minimap-toggle-540/probe/run/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted/cpp-minimap-toggle-540/probe/run/stderr.log": "674823aff55ee6d8fb9d32893287bba87566f1b14037d76739a0f221063ee567",
+    "extracted/cpp-minimap-toggle-540/probe/run/states.tsv": "ef6c98cf9131760b7263600f5d747b93001a14d53964b00cb749d137ad30e49d",
+    "extracted/cpp-minimap-toggle-540/probe/run/run.json": "9fc4226632caa69cbbcca2796636c35a7a70d15e44611c057007e0bfeb81fcc4",
+    "extracted/cpp-minimap-toggle-540/os.json": "3174c20c2ba0526d6926113a42d3b24c3b5e7a2adee51fba516cc5be0e54dc6e"
+  },
+  "tools": {
+    "tools/decomp_minimap_toggle.py": "cc2eb05e882000c4f4a7f50f20368eb0ec47856ecc43fcd366935c1cf076eee6",
+    "tools/cpp_minimap_toggle_smoke.py": "995a20f0120fe3bf842f6f206b27658cdc10c15d3e2bd216e065691a48786969",
+    "tools/cpp_game_menu_smoke.py": "f5dc2e0d28bcc5b84516e1bbe9768481028bf0c936e9d2c77d7740ca4deb78ba"
+  },
+  "corrections": [
+    "최초 신규 C++검사의 bitmap128 기대는 첫Refresh 전의 원본폭0과 달랐다. 실제 첫표시 Refresh를 수행하도록 입력만 보완했고 기존128폭0 fixture는 보존했다. 최초1검사3실패와 수정뒤1/집중34실패0을 구별한다.",
+    "첫 실제 전환은 성공했지만 QA의 F8 별칭을 실행기가 지원하지 않아 종료1했다. 제품 키 동작의 증거로 해석하지 않고 실제 ESC Game→Review 클릭으로 바꿨다.",
+    "1024 실행의 초기 안내가 정지하고 버튼 메타데이터가 아직 없을 수 있었다. 초반 상태 검사를 보완하고 실제 Review의37명령 버튼 및 전환 뒤 비정지를 대조해 저장된 보고서를 재검증했다.",
+    "최초 전체화면 호출은 미지원 --fullscreen 인자로 창을 열기 전에 종료1했다. 실행기의 실제 startInFullScreen=1 설정을 사용하고 screen_mode 실제 비트1을 확인했다."
+  ],
+  "limits": [
+    "원본 기본 메뉴나 키에 새 ToggleMinimap 항목/단축키를 발명하지 않았다. 사본 TEST02 영어 A.에 원본 이름 명령 버튼 한 줄만 추가해 사용자 시나리오 경로로 검증했다.",
+    "세로 덱/미니맵 divider는 원본 생성자에서 축0이며 드래그를 임의 활성화하지 않았다. 채팅 divider 드래그·나머지 ESC/View와 키 경계는 잔여다.",
+    "전체34경로·자연 완주를 반복하지 않았다. 이번 실제 호환 검증 OS는 이 호스트의 Windows10이며 Windows11 실기는 별도다.",
+    "자연완주/TEST02포획·희생/영문부재개선/직사각형/스펠도움말추가분석 보류·공중3종정적제한·MP무시험을 유지한다."
+  ],
+  "os": {
+    "Caption": "Microsoft Windows 10 Pro",
+    "Version": "10.0.19045",
+    "BuildNumber": "19045"
+  }
+}

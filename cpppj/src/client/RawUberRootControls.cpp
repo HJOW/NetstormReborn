@@ -91,7 +91,11 @@ GumpBackgroundNode* RawUberRootControls::Background(std::uint32_t token) const {
 bool RawUberRootControls::Current() const {
     const auto& s=*impl_;const auto* node=s.Root(s.common.create.entries[0]);if (!node || (node->flags&0x10000U)) return false;
     for (const auto token:{node->vertical,node->minimapDivider,node->chatDivider,node->minimap,node->production,node->knowledge,node->chat}) { // 부분 생성/이미 반납된 자식을 완성한 HUD로 판정하지 않는다.
-        const auto* child=token ? s.common.node(token) : nullptr;if (!child || (child->flags&0x10000U)) return false;
+        const auto* child=token ? s.common.node(token) : nullptr;if (!child || (child->flags&0x10000U)) {
+            // 원본 ToggleMinimap은 옛 도킹 자식 필드를 바꾸지 않는다. 현재 표시가 따로 닫히거나 생성된 경우 전체 HUD를 다시 만들지 않는다.
+            if (token && token==node->minimap && s.context.root.read && s.context.root.read(0x5949d0U)!=token) continue;
+            return false;
+        }
     }return true;
 }
 void RawUberRootControls::Attach(std::uint32_t token,float x,float y,std::uint32_t parent,std::uint32_t mode) { auto& s=*impl_;if (s.Divider(token)) s.divider->Attach(token,x,y,parent,mode);else if (s.Root(token)) s.common.tree.Attach(token,x,y,parent,mode);else throw std::out_of_range("Uber 실제 부착 대상 없음"); } // 실제 가상 분배다.

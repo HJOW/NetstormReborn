@@ -52,6 +52,7 @@ std::uint32_t GameMenuScriptCode(std::string_view name) {
     if (key=="reloadtheams") return 0x02000123U;
     if (key=="pause") return 0x020000cfU;
     if (key=="getfulldeck") return 0x020000cdU;
+    if (key=="toggleminimap") return 0x02000037U; //원본542d40 이름표→5427d4의 독립 미니맵 전환 명령이다.
     if (key=="addisland") return 0x02000022U; // 00542780의 실제 Editor 섬 추가 명령이다.
     if (key=="savegomain") return 0x020000cbU;
     if (key=="telltip") return 0x020000ebU;

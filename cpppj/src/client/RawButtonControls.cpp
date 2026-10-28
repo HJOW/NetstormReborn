@@ -390,6 +390,18 @@ RawMinimapControls& RawButtonControls::EnableMinimap(std::shared_ptr<RawSurfaceS
 }
 // 같은 실제 미니맵의 안정된 처리기만 빌린다.
 RawMinimapControls* RawButtonControls::Minimap() const { return impl_->CurrentMinimap(); }
+// 원본00480810의 현재 포인터 분기와 생성 후 부착/전체갱신 순서를 유지한다.
+void RawButtonControls::ToggleMinimap(const std::function<std::uint32_t()>& create) {
+    auto& s=*impl_;
+    if (s.minimapGlobals.current) {
+        auto* current=s.CurrentMinimap();if (!current) throw std::logic_error("미니맵 전환의 현재 포인터 소유자 누락");
+        current->UnbindWorld();s.lifetime->Kill(s.minimapGlobals.current);s.minimapGlobals.current=0;s.minimapState.displayPresent=false;s.changed=true;return;
+    }
+    if (!create) throw std::logic_error("미니맵 전환의 실제 생성 공장 누락");
+    const auto token=create();auto* current=s.CurrentMinimap(); // 원문 공장 뒤 현재 포인터를 다시 조회한다.
+    if (!current || token!=s.minimapGlobals.current) throw std::logic_error("미니맵 전환의 생성/현재 포인터 불일치");
+    current->Attach(token,100,100,s.create.collection.root,0);++s.minimapState.FullRefresh();s.changed=true;
+}
 // 새Uber가이전표시를반납하기전에실제미부착새미니맵공장을실행한다.
 RawMinimapControls& RawButtonControls::ConstructMinimap(std::shared_ptr<RawSurfaceStorage> storage,RawMinimapHooks hooks) {
     auto& s=*impl_;if (!s.menus) throw std::logic_error("초기 미니맵 생성의 공통 메뉴 미연결");
