@@ -77,7 +77,8 @@ struct RawCampaignFactoryDisplay::Impl {
     bool Geyser(o::Sid sid) const {
         return o::IsGeyserCapture(core.pool.Slot(sid));
     }
-    bool Handles(o::Sid sid) const { return factory.Handles(sid) || Bomb(sid) || Flare(sid) || Generator(sid) || Temple(sid) || o::IsPatchDais(core.pool.Slot(sid)) || ThunderCannon(sid) || Geyser(sid) || o::IsBurningArcherCapture(core.pool.Slot(sid)) || o::IsSunAviaryCapture(core.pool.Slot(sid)) || o::IsPlainAssetDraw(core.pool.Slot(sid)) || FlyerShadow(sid); } // 일반 자산도 같은 원본 본체/상태색/기준점/그림자 경로에 포함한다.
+    bool ManaBolt(o::Sid sid) const { const auto raw=core.pool.Slot(sid);return raw[10]==105 && DisplayDword(raw,0)==0x509810U; } // 원본105의+a0는 빈 몸체이며+a4가 그림자와 실제 원소색 그림을 그린다.
+    bool Handles(o::Sid sid) const { return factory.Handles(sid) || Bomb(sid) || Flare(sid) || Generator(sid) || Temple(sid) || o::IsPatchDais(core.pool.Slot(sid)) || ThunderCannon(sid) || Geyser(sid) || ManaBolt(sid) || o::IsBurningArcherCapture(core.pool.Slot(sid)) || o::IsSunAviaryCapture(core.pool.Slot(sid)) || o::IsPlainAssetDraw(core.pool.Slot(sid)) || FlyerShadow(sid); } // 일반 자산도 같은 원본 본체/상태색/기준점/그림자 경로에 포함한다.
     // 원본 PE 초기값만 설치하고 각 수집에서 현재 게임 값으로 갱신한다.
     Impl(RawWorldCore world,const GameAssets& data,TempleDraw supplied):core(world),assets(data),factory(core.pool,core.frames),
         collection(core.hash,core.pool,core.types,core.shapes),views(MakeSpriteAssetViews(data)),templeDraw(std::move(supplied)),templeBaseFrames(core.types.size(),-1) {
@@ -104,6 +105,9 @@ struct RawCampaignFactoryDisplay::Impl {
             const auto composite=core.pool.Slot(object); // 같은 프레임의 현재 본체/추가 그림 분배에 사용한다.
             const auto& dispatch=HitVtable(composite); // 같은 실제+a4 분배를 일반화면과선택캡처가공유한다.
             if (dispatch.additional==0x41c100U) return; // 실제빈ret8만정상반환한다.
+            if (ManaBolt(object)) { // 원본45ac40은 현재 프레임을10/10 그림자 뒤 원래 위치의 일반색으로 그린다.
+                const auto frame=DisplayDword(composite,36);shape({105,frame,{point.x+10,point.y+10},SpriteShapeMode::Shadow});shape({105,frame,point,SpriteShapeMode::Plain});return;
+            }
             if (dispatch.additional==0x4223c0U) { if (!bridgeDraw) throw std::logic_error("선택용 다리의 실제 추가Draw 미연결");bridgeDraw(object,point.x,point.y);return; }
             if (dispatch.additional==0x41e3d0U) { const auto frame=std::uint32_t(composite[36])|(std::uint32_t(composite[37])<<8)|(std::uint32_t(composite[38])<<16)|(std::uint32_t(composite[39])<<24);if (SuppressSpellHelpFrame(assets.Edition(),core.types[composite[10]],assets.Types()[composite[10]-o::kFirstAssetTypeNumber].definition.specialFrames,frame)) return;if (!(composite[40]&0x10U)) shape({composite[10],frame,point,SpriteShapeMode::Plain});else if (composite[34]==state.localPlayer) shape({composite[10],frame,point,SpriteShapeMode::Abstract});return; } // 같은 현재497280 상태색/로컬 관문으로 추가 그림을 그린다.
             if (o::IsPlainAssetDraw(composite)) return; // 검증한 일반 자산의+a4=41c100은 원본처럼 빈ret8이다.
@@ -187,7 +191,7 @@ struct RawCampaignFactoryDisplay::Impl {
         state.now=core.processState.Now();state.ownerPalettes.assign(core.bridgeState.ownerColors.begin(),core.bridgeState.ownerColors.end());
         SpritePixelTarget target(pixels,pitch,height,clip,MakeSpriteAssetShapes(assets,state),[this](auto mode,auto type,auto owner) { return Color(mode,type,owner); });
         SpriteDrawHooks rules;rules.virtualFrame=[this](o::Sid object) {
-            if (Bomb(object)) return -1; // 원본 공통 주문의+a0는 빈 본체다.
+            if (Bomb(object) || ManaBolt(object)) return -1; // 원본 공통 주문/마나볼트의+a0는 빈 본체다.
             if (Temple(object)) return o::PatchTempleMainFrame(core.pool.Slot(object),templeBaseFrames);
             if (ThunderCannon(object)) return o::ThunderCannonCaptureMainFrame(core.pool.Slot(object),core.frames[core.pool.Slot(object)[10]]);
             if (o::IsSunAviaryCapture(core.pool.Slot(object))) return o::SunAviaryCaptureMainFrame(core.pool.Slot(object));

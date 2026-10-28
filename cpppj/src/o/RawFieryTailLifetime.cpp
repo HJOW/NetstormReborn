@@ -13,25 +13,27 @@ constexpr std::int32_t kDepth=-25,kMaximumLife=4;
 }
 // 다른 월드/판본과 메모리 경계 누락은 등록 전에 거부한다.
 RawFieryTailLifetime::RawFieryTailLifetime(const SidPool& pool,RawRenderRegistry& registry,
-    FieryTailLifetimeState& state,FieryTailLifetimeHooks hooks)
-    :registry_(registry),state_(state),hooks_(std::move(hooks)) {
+    FieryTailLifetimeState& state,FieryTailLifetimeHooks hooks,FieryTailVariant variant)
+    :registry_(registry),state_(state),hooks_(std::move(hooks)),variant_(variant) {
     if (pool.Edition()!=OriginalEdition::Patch1078 || &pool!=&registry.Pool() || !hooks_.reserve)
         throw std::invalid_argument("Fiery Tail 실제 생성 월드/확보 경계 오류");
 }
 // 공통 등록이 끝나야 System 필드를 초기화한다. 생성 중 프레임 재진입은 상위 호스트가 차단한다.
 void RawFieryTailLifetime::Initialize(FieryTailFrameFields& fields,std::uint32_t token,Sid parent) const {
-    registry_.Construct(fields.registration,token,parent,kProcessType);
+    const bool streak=variant_==FieryTailVariant::Streak; // 00458680은 공통 등록에 실제 process12를 전달한다.
+    registry_.Construct(fields.registration,token,parent,streak ? 12U : kProcessType);
     fields.particles.clear();fields.total=0;fields.lastTime=fields.elapsed=0;fields.first=false;
     fields.previousX=fields.previousY=0;
     if (!hooks_.reserve(kParticleCount*kParticleBytes)) throw std::bad_alloc();
     fields.particles.assign(kParticleCount,FieryTailParticle{});
-    if (!state_.palette) {
+    auto& palette=state_.CurrentPalette(); // 마나와 빔은 같은 현재 전역을 사용하고 복사본을 남기지 않는다.
+    if (!palette) {
         if (!hooks_.createPalette || !hooks_.buildPalette) throw std::logic_error("Fiery Tail 첫 공유 색 표 경계 누락");
         if (!hooks_.reserve(kPaletteBytes)) throw std::bad_alloc();
-        state_.palette=hooks_.createPalette();if (!state_.palette) throw std::bad_alloc();
-        hooks_.buildPalette(state_.palette);
+        palette=hooks_.createPalette();if (!palette) throw std::bad_alloc();
+        hooks_.buildPalette(palette);
     }
-    fields.maximumLife=kMaximumLife;fields.palette=state_.palette;fields.offset=0;fields.registration.zOrder=kDepth;
+    fields.maximumLife=streak ? 2 : kMaximumLife;fields.palette=palette;fields.offset=streak ? -8 : 0;fields.registration.zOrder=streak ? -20 : kDepth;
 }
 // 실제 free는 개수/포인터 필드를 다시 쓰지 않는다. 호스트 컨테이너의 저장소만 반납한다.
 void RawFieryTailLifetime::Destroy(FieryTailFrameFields& fields,std::uint32_t flags,

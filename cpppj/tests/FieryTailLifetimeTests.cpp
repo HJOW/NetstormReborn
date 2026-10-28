@@ -4,6 +4,7 @@
 #include "o/ParticleGradient.h"
 #include <bit>
 #include <fstream>
+#include <filesystem>
 #include <stdexcept>
 #include <string>
 #include <string_view>
@@ -18,6 +19,7 @@ std::vector<std::string> Split(std::string_view text,char delimiter) {
     // 마지막 열까지 한 번씩 추가한다.
     for (;;) { const auto end=text.find(delimiter,start);result.emplace_back(text.substr(start,end==std::string_view::npos ? end : end-start));if (end==std::string_view::npos) return result;start=end+1; }
 }
+
 // 두16진 문자를 바이트로 바꾸며 원본 비트열을 보존한다.
 std::vector<std::uint8_t> Hex(std::string_view text) {
     if (text.size()%2) throw std::invalid_argument("Fiery Tail 수명 hex 폭 오류");
@@ -116,4 +118,22 @@ TEST_CASE(FieryTailLifetime_Native027f) {
         CHECK(fields.particles.empty());CHECK(Fields(fields,allocated)==Hex(row[9]));CHECK(Slots(registry)==row[10]);CHECK(events==row[11]);CHECK(state.palette==1);++count;
     }
     CHECK(count==kLifetimeCases);CHECK(extended==kLifetimeCases);
+}
+
+// 원본458680의 두 x87/부모 변경 관측을 재생하고 빔 공유 owner와 불꽃 owner를 혼합하지 않는다.
+TEST_CASE(StreakLifetime_NativeConstructorAndSharedPalette) {
+    const auto path=std::filesystem::path(__FILE__).parent_path()/"fixtures/streak-lifetime-x86.tsv";std::ifstream input(path);CHECK(input.good());std::string line;std::size_t count{};
+    while (std::getline(input,line)) { // 격리 원문이 기록한8개 의미 필드를 그대로 대조한다.
+        if (line.empty() || line.front()=='#') continue;const auto row=Split(line,'\t');CHECK(row.size()==4);if (row.size()!=4) return;
+        const auto parent=static_cast<std::uint16_t>(std::stoul(row[0]));const bool mutate=std::stoul(row[1])!=0;SidPool pool(OriginalEdition::Patch1078,32768,false);
+        const_cast<std::uint8_t*>(pool.Slot(Sid{50}).data())[35]=255;const_cast<std::uint8_t*>(pool.Slot(Sid{51}).data())[35]=127;
+        std::vector<std::uint32_t> initial;for (std::uint32_t index=0;index<40;++index) initial.push_back(index==20 ? 0U : 100+index); // 원본과 같은 빈칸20만 입력한다.
+        RenderRegistryHooks registration;registration.reserve=[](std::uint32_t) { return true; };registration.releaseArray=[] {};
+        registration.attach=[&](RenderProcessFields& fields,std::uint32_t type,Sid target,std::uint32_t flags) { CHECK(type==12 && target.value==parent && flags==16);fields.form=7;fields.parent=mutate ? 51 : parent; }; // Host의 실제 변경 입력만 대체한다.
+        RawRenderRegistry registry(pool,std::move(registration),std::move(initial));std::uint32_t beamPalette=1;FieryTailLifetimeState state{999,&beamPalette}; // 불꽃 own999는 건드리지 않아야 한다.
+        FieryTailLifetimeHooks hooks;hooks.reserve=[](std::uint32_t bytes) { CHECK(bytes==2880);return true; };RawFieryTailLifetime lifetime(pool,registry,state,std::move(hooks),FieryTailVariant::Streak);
+        FieryTailFrameFields fields;fields.delta=fields.scaledDelta=std::bit_cast<float>(0xa5a5a5a5U);lifetime.Initialize(fields,1,Sid{parent});
+        CHECK(Fields(fields,fields.particles.size())==Hex(row[3]));CHECK(beamPalette==1 && state.palette==999 && fields.particles.size()==120);++count;
+    }
+    CHECK(count==8);
 }

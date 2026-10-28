@@ -1,0 +1,510 @@
+{
+  "unit": 542,
+  "date": "2026-10-28",
+  "status": "생성 접두·표시 복원 및 격리 검사 완료",
+  "sourceBaselineCommit": "1ddc4ba0",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23",
+    "outputsModified": false
+  },
+  "userRequest": "일반 유닛은 등록 워크샾·골렘은 템플에서 출발하는 건설 마나의 생성/이동/표시와 마나·에너지 도착 후 빠른 출현 점검",
+  "rootCause": "134 이동은 존재했지만 최초Pop4429f0의 빛꼬리12 생성 접두가 누락됨",
+  "changes": [
+    "원본12 생성자 설정과 빔 공유 팔레트를 기존 공통 불꽃 프레임/Draw에 연결",
+    "134 최초Pop에12 생성, 재Pop에서 중복 방지",
+    "105 에너지의45ac40 현재프레임/10·10 그림자를 화면/픽셀선택에 연결"
+  ],
+  "unchanged": [
+    "출발지 선택·등록/Graph 관문",
+    "에너지 공급원 선택",
+    "골렘400SP·적0SP 관문",
+    "도착 후0.6F 건설 처리와 HP 계산"
+  ],
+  "static": {
+    "host": "HJOW-Athlon",
+    "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+    "outputsModified": false,
+    "gameExecutions": 0,
+    "streakConstructor": {
+      "address": "00458680",
+      "process": 12,
+      "particles": 120,
+      "life": 2,
+      "offset": -8,
+      "depth": -20,
+      "paletteSharedWithLightning": "0055a758",
+      "frame": "004580f0",
+      "draw": "004583a0"
+    },
+    "vtableSlots": {
+      "0x5070c0": {
+        "0x20": "0x4429f0",
+        "0x78": "0x4acfe0",
+        "0x90": "0x4b02d0",
+        "0xa0": "0x41c0f0",
+        "0xa4": "0x41c100"
+      },
+      "0x509810": {
+        "0x20": "0x4b0d30",
+        "0x78": "0x4acfe0",
+        "0x90": "0x4b02d0",
+        "0xa0": "0x41c0f0",
+        "0xa4": "0x45ac40"
+      }
+    }
+  },
+  "nativeStreakConstructor": {
+    "inputCases": 4,
+    "controls": [
+      "0x027f",
+      "0x037f"
+    ],
+    "observations": 8,
+    "precisionDifferences": 0,
+    "scope": "warm 빔 공유 팔레트·부모0/50·부착 중 부모 변경",
+    "fixture": "cpppj/tests/fixtures/streak-lifetime-x86.tsv",
+    "sha256": "0bb4a0361ae204b9995b9c377f8d0a0159d8ce6c2afe2b757b11faed7c320b16"
+  },
+  "headlessSourceCases": [
+    {
+      "unit": 75,
+      "unitName": "Wind Generator",
+      "source": 86,
+      "sourceName": "Wind Workshop",
+      "visiblePixels": 35,
+      "arrivalTime": 1.1,
+      "energyArrived": 1,
+      "energyTotal": 1
+    },
+    {
+      "unit": 133,
+      "unitName": "Golem",
+      "source": 125,
+      "sourceName": "Thunder Temple",
+      "visiblePixels": 40,
+      "arrivalTime": 1.66,
+      "energyArrived": 1,
+      "energyTotal": 1
+    }
+  ],
+  "sourceCaseLimits": "원본TEST02요새·준비등록내용물의 명시 입력. 실제UI생산/자연플레이와 구별",
+  "arrivalChecks": {
+    "beforeArrivalNoConstruction": true,
+    "manaMoves": true,
+    "constructionDuration": "0.6F",
+    "repopKeepsSameEffect": true,
+    "streakReleasedOnArrival": true
+  },
+  "energyPixels": {
+    "allCurrentTypeFrames": true,
+    "shadowOffset": [
+      10,
+      10
+    ],
+    "independentShapeDecode": true
+  },
+  "builds": [
+    {
+      "targets": [
+        "NetstormCpp",
+        "netstorm_tests"
+      ],
+      "log": "build-initial.log",
+      "exitCode": 0,
+      "warnings": 0,
+      "fullConsoleCaptured": true
+    },
+    {
+      "targets": [
+        "NetstormCpp",
+        "netstorm_tests"
+      ],
+      "log": "build-fixed.log",
+      "exitCode": 0,
+      "warnings": 0,
+      "fullConsoleCaptured": true
+    }
+  ],
+  "tests": {
+    "exeSha256": "83603b9dc15649fac4729f9d102c5a1a4d1ee2cc253e8219bae2df4fc38a89ca",
+    "runs": [
+      {
+        "filter": "StreakLifetime_",
+        "exitCode": 0,
+        "log": "focus-00.log",
+        "cases": 1
+      },
+      {
+        "filter": "FieryTail",
+        "exitCode": 0,
+        "log": "focus-01.log",
+        "cases": 9
+      },
+      {
+        "filter": "Lightning",
+        "exitCode": 0,
+        "log": "focus-02.log",
+        "cases": 12
+      },
+      {
+        "filter": "ConstructionBuilder_",
+        "exitCode": 0,
+        "log": "focus-03.log",
+        "cases": 10
+      },
+      {
+        "filter": "ConstructionArrival_",
+        "exitCode": 0,
+        "log": "focus-04.log",
+        "cases": 3
+      },
+      {
+        "filter": "ManaBoltArrival_",
+        "exitCode": 0,
+        "log": "focus-05.log",
+        "cases": 1
+      },
+      {
+        "filter": "ManaBoltRegular_",
+        "exitCode": 0,
+        "log": "focus-06.log",
+        "cases": 1
+      },
+      {
+        "filter": "player_anchor_",
+        "exitCode": 0,
+        "log": "focus-07.log",
+        "cases": 7
+      },
+      {
+        "filter": "SpriteDraw_",
+        "exitCode": 0,
+        "log": "focus-08.log",
+        "cases": 13
+      },
+      {
+        "filter": "SpriteColorMaps_",
+        "exitCode": 0,
+        "log": "focus-09.log",
+        "cases": 1
+      },
+      {
+        "filter": "CampaignPriestDisplay_",
+        "exitCode": 0,
+        "log": "focus-10.log",
+        "cases": 2
+      },
+      {
+        "filter": "CampaignSession_ConstructionBuilder",
+        "exitCode": 0,
+        "log": "focus-11.log",
+        "cases": 2
+      },
+      {
+        "filter": "CampaignSession_ConstructionTeleport",
+        "exitCode": 0,
+        "log": "focus-12.log",
+        "cases": 1
+      },
+      {
+        "filter": "CampaignSession_ManaBolt",
+        "exitCode": 0,
+        "log": "focus-13.log",
+        "cases": 2
+      },
+      {
+        "filter": "CampaignSession_FenceShieldUses",
+        "exitCode": 0,
+        "log": "focus-14.log",
+        "cases": 1
+      },
+      {
+        "filter": "ConstructionProcess_",
+        "exitCode": 0,
+        "log": "focus-15.log",
+        "cases": 13
+      },
+      {
+        "filter": "CampaignConstructionMana_",
+        "exitCode": 0,
+        "log": "regression-fixed.log",
+        "cases": 2
+      }
+    ],
+    "uniqueCount": 81,
+    "failed": [],
+    "cases": {
+      "StreakLifetime_NativeConstructorAndSharedPalette\r": "OK",
+      "FieryTailPixels_Native027f\r": "OK",
+      "FieryTailVisualSystem_SharedConstructionRegistryAndKernel\r": "OK",
+      "FieryTailVisualSystem_FailureAndCreationReentry\r": "OK",
+      "FieryTailVisualSystem_ParentDeletionInvalidatesAndUnregisters\r": "OK",
+      "FieryTailVisualSystem_StaleTokenAndSharedScale\r": "OK",
+      "FieryTailLifetime_Native027f\r": "OK",
+      "FieryTailFrame_Native027f\r": "OK",
+      "FieryTailFrame_MissingAdjacentColorRejects\r": "OK",
+      "ParticleGradient_FieryTailPeConstants\r": "OK",
+      "LightningWrapper_NativeGateAndAllocation\r": "OK",
+      "LightningLifetime_Native027f\r": "OK",
+      "LightningVisualSystem_NaturalLifetimeAndSound\r": "OK",
+      "LightningVisualSystem_FailureAndCreationReentry\r": "OK",
+      "LightningVisualSystem_SharedRegistryAndParentDeletion\r": "OK",
+      "LightningFrame_NativeLifetime\r": "OK",
+      "LightningFrame_NativeDraw\r": "OK",
+      "LightningPath_NativeConstructor\r": "OK",
+      "LightningPath_NativeGeneration\r": "OK",
+      "CampaignSession_LightningScreenPickupThroughActualLocalTransport\r": "OK",
+      "LightningScreen_NativeBodies\r": "OK",
+      "LightningScreen_BombPreDestroyNative\r": "OK",
+      "ConstructionBuilder_ReplaysOriginals\r": "OK",
+      "ConstructionBuilder_ReplaysCd\r": "OK",
+      "ConstructionBuilder_ReplaysExtra1037\r": "OK",
+      "ConstructionBuilder_GuardsCurrentListsMetadataAndPaths\r": "OK",
+      "ConstructionBuilder_FailureKeepsEarlierEffectsAndTimerFailureStillMoves\r": "OK",
+      "ConstructionBuilder_LocalAndNoticeAdaptersRunCompleteMove\r": "OK",
+      "ConstructionBuilder_ActualAnchorFactoryOwnerAndRegularHost\r": "OK",
+      "ConstructionBuilder_AdaptersRejectForeignPools\r": "OK",
+      "ConstructionBuilder_ActualRegularConstructorFields\r": "OK",
+      "ConstructionBuilder_SharedEnergySelectSortAndCurrentClock\r": "OK",
+      "ConstructionArrival_ReplaysPatch\r": "OK",
+      "ConstructionArrival_ReplaysCd\r": "OK",
+      "ConstructionArrival_RequiresCurrentWorldAndEffects\r": "OK",
+      "ManaBoltArrival_ReplaysActualFinderAndArrival\r": "OK",
+      "ManaBoltRegular_Native196\r": "OK",
+      "player_anchor_patch_x86\r": "OK",
+      "player_anchor_cd_x86\r": "OK",
+      "player_anchor_1037_x86\r": "OK",
+      "player_anchor_owner_bookkeeping_permission_and_terrain\r": "OK",
+      "player_anchor_required_data_and_lazy_guards\r": "OK",
+      "player_anchor_shared_full_deck_current_candidates\r": "OK",
+      "canon_surrounding_actual_player_anchor_and_terrain\r": "OK",
+      "SpriteDraw_PatchNative\r": "OK",
+      "SpriteDraw_CdNative\r": "OK",
+      "SpriteDraw_AdditionalNative\r": "OK",
+      "SpriteDraw_CommonGroupDispatch\r": "OK",
+      "SpriteDraw_PixelModesTransparencyClip\r": "OK",
+      "SpriteDraw_PixelLinesAndBars\r": "OK",
+      "SpriteDraw_ContractsAndEarlyReturns\r": "OK",
+      "SpriteDraw_CurrentRawAfterVirtualDraw\r": "OK",
+      "SpriteDraw_ObjectCollectionPixels\r": "OK",
+      "SpriteDraw_SurfaceLookupBoundaries\r": "OK",
+      "SpriteDraw_ShadowAliasCurrentShape\r": "OK",
+      "SpriteDraw_CurrentFilterAfterVirtualFrame\r": "OK",
+      "SpriteDraw_SharedDiagnosticControlsCurrentShadowAlias\r": "OK",
+      "SpriteColorMaps_WholeNativeOutputs\r": "OK",
+      "CampaignPriestDisplay_ShieldUsesSharedFootAnchor\r": "OK",
+      "CampaignPriestDisplay_AltarUsesContainedPriestOriginalOwner\r": "OK",
+      "CampaignSession_ConstructionBuilderSharesActualEnergySources\r": "OK",
+      "CampaignSession_ConstructionBuilderUsesActualMovementAndTime\r": "OK",
+      "CampaignSession_ConstructionTeleportUsesActualSurfacePath\r": "OK",
+      "CampaignSession_ManaBoltUsesActualFlightAndLifetime\r": "OK",
+      "CampaignSession_ManaBoltRegularFollowsArrivalAndCurrentTarget\r": "OK",
+      "CampaignSession_FenceShieldUsesCurrentOwnerColorPixels\r": "OK",
+      "ConstructionProcess_ReplaysOriginals\r": "OK",
+      "ConstructionProcess_ReplaysCd\r": "OK",
+      "ConstructionProcess_ReplaysExtra1037\r": "OK",
+      "ConstructionProcess_RejectsMissingHooksAndForeignHost\r": "OK",
+      "ConstructionProcess_AllocationFailuresKeepOriginalEffects\r": "OK",
+      "ConstructionProcess_DurationSelectsDefaultTimeAndSound\r": "OK",
+      "ConstructionProcess_CompleteRequiresVoidBeforeClearingAbstract\r": "OK",
+      "ConstructionProcess_NoticeAdapterStartsDefaultConstruction\r": "OK",
+      "ConstructionProcess_ActualHostRunsToCompletion\r": "OK",
+      "ConstructionProcess_ActualHostSkipsSecondKillAfterRemoval\r": "OK",
+      "ConstructionProcess_ActualHostQuickBuildAndNonBossKeepsProcess\r": "OK",
+      "ConstructionProcess_DeadParentAndForeignPoolAdapters\r": "OK",
+      "ConstructionProcess_SharedBossRecheckedDuringActualCompletion\r": "OK",
+      "CampaignConstructionMana_RegisteredSourcesVisibleStreakAndArrival": "OK",
+      "CampaignConstructionMana_EnergyBoltDrawsCurrentFrameAndShadow": "OK"
+    }
+  },
+  "initialFailures": [
+    {
+      "log": "regression-initial.log",
+      "failedChecks": 1,
+      "cause": "TEST02 저장 생산 목록을 조회할 독립 검사 Deck 할당 경계 누락. 생산 외부 입력만 보완"
+    }
+  ],
+  "gameExecutions": {
+    "original": 0,
+    "clone": 0,
+    "stageCompletion": 0
+  },
+  "exes": {
+    "NetstormCpp.exe": "17876e8c57120592510d4b7d8d91da4e85c812cc74955ec65f01a5151fb374c2",
+    "netstorm_tests.exe": "83603b9dc15649fac4729f9d102c5a1a4d1ee2cc253e8219bae2df4fc38a89ca"
+  },
+  "preservation": {
+    "sourceBaseline": "541/freeze-final.json",
+    "sourceBaselineCount": 2929,
+    "sourceCount": 2930,
+    "changedExisting": [
+      "cpppj/src/o/SquidPostPop.h",
+      "cpppj/src/o/SquidPostPop.cpp",
+      "cpppj/src/o/SquidPop.cpp",
+      "cpppj/src/o/RawFieryTailLifetime.h",
+      "cpppj/src/o/RawFieryTailLifetime.cpp",
+      "cpppj/src/o/FieryTailVisualSystem.h",
+      "cpppj/src/o/FieryTailVisualSystem.cpp",
+      "cpppj/src/client/RawCampaignFactoryDisplay.cpp",
+      "cpppj/src/client/RawCampaignParticles.cpp",
+      "cpppj/src/client/RawCampaignParticles.h",
+      "cpppj/src/client/RawCampaignSession.cpp",
+      "cpppj/tests/FieryTailLifetimeTests.cpp",
+      "cpppj/tests/CampaignSessionTests.cpp"
+    ],
+    "added": [
+      "cpppj/tests/fixtures/streak-lifetime-x86.tsv"
+    ],
+    "existingFixturesUnchanged": true,
+    "protectedCount": 1819,
+    "protectedDifferences": [],
+    "agentsUnchanged": true,
+    "decompileOutputsModified": false
+  },
+  "remaining": [
+    "사용자 후속 실제 플레이 확인",
+    "UI/Edit·ESC/View·도킹·Windows11 실기 및 호환성 잔여",
+    "현재 제품의 전체34진입·자연완주 미반복"
+  ],
+  "rawEvidence": [
+    {
+      "path": "extracted/cpp-construction-mana-542/004429f0.txt",
+      "sha256": "13a3f9d95663ee9dd80e4fe438bcc57bdde0e7cd9ba6d249c97e6cdd7905b7fd"
+    },
+    {
+      "path": "extracted/cpp-construction-mana-542/00444080.txt",
+      "sha256": "a6d3e23a451ff2e9d7a1cc53a0a20c3ca36324653593c65c5e937eaa33d672ca"
+    },
+    {
+      "path": "extracted/cpp-construction-mana-542/004580f0.txt",
+      "sha256": "b833b4b18b22eda36c1ac09574c89762905167223b6354c53cd64303cd14f299"
+    },
+    {
+      "path": "extracted/cpp-construction-mana-542/004583a0.txt",
+      "sha256": "6cc969d9f3bf5921aa433976c89863a008ce1da62de7afe5a81eb72914f6da0b"
+    },
+    {
+      "path": "extracted/cpp-construction-mana-542/00458680.txt",
+      "sha256": "62f0be7624cbfd6b1b5026c567ad2defb3c96c163d3f40b7c05508505e394584"
+    },
+    {
+      "path": "extracted/cpp-construction-mana-542/0045ac40.txt",
+      "sha256": "7543b76d5500c36455b37f69d312b2012e09e1cb45226eeb520c2c6a887419e0"
+    },
+    {
+      "path": "extracted/cpp-construction-mana-542/build-fixed.log",
+      "sha256": "961079312a497459d9f46a3337c98d579d7b2c481db49fc2f12a68b46c9001aa"
+    },
+    {
+      "path": "extracted/cpp-construction-mana-542/build-initial.log",
+      "sha256": "10b0f80c0076ecb8476d6901d806a48cd063cfd1e0e9a6a4443f606f6515fc21"
+    },
+    {
+      "path": "extracted/cpp-construction-mana-542/focus-00.log",
+      "sha256": "85ee218a211b27a923a4fbedef9943aa45cde423e3d7f9c4f364647431ac6b81"
+    },
+    {
+      "path": "extracted/cpp-construction-mana-542/focus-01.log",
+      "sha256": "283a1372d915cb9a1b3ee459502d226302e8f71b8cfaed2e1eba368db3c3ed3c"
+    },
+    {
+      "path": "extracted/cpp-construction-mana-542/focus-02.log",
+      "sha256": "bbb5cf3735c30db9cfde1596cc237831155620e00ffbb5783af8708fc733a380"
+    },
+    {
+      "path": "extracted/cpp-construction-mana-542/focus-03.log",
+      "sha256": "0f1a05e5275573198f2fda63d9952863a22e07690d079ddb99876f0a537c0365"
+    },
+    {
+      "path": "extracted/cpp-construction-mana-542/focus-04.log",
+      "sha256": "fe6cdc26f75bfcc8882e056089a2cd11d8287571231dff5cf174021df24208f4"
+    },
+    {
+      "path": "extracted/cpp-construction-mana-542/focus-05.log",
+      "sha256": "64384b5c4c4d4589c77915c1d6fb22f7131b08fa8111e688957f55d5d6fdc983"
+    },
+    {
+      "path": "extracted/cpp-construction-mana-542/focus-06.log",
+      "sha256": "d29a93b03ed2722ba025e81eb1b408c58850d606a2f864f12c8580a4a43e6343"
+    },
+    {
+      "path": "extracted/cpp-construction-mana-542/focus-07.log",
+      "sha256": "7c37e318701d0ff4a64e5cdcca614292534f08632513dc6d1f746634e41a8e7b"
+    },
+    {
+      "path": "extracted/cpp-construction-mana-542/focus-08.log",
+      "sha256": "0e2190278689b2a44851ba04c42dc01b43bd3305c84b5594b7ff505919edcf1c"
+    },
+    {
+      "path": "extracted/cpp-construction-mana-542/focus-09.log",
+      "sha256": "c4bc459e4873bf572001ed42e366b4cdaa59f09d7c6c9f822e97c340e47121d0"
+    },
+    {
+      "path": "extracted/cpp-construction-mana-542/focus-10.log",
+      "sha256": "ef87b1a20b9861663a776c66f9b5cd26cfa4597a39dac34bc86a428d63f521d6"
+    },
+    {
+      "path": "extracted/cpp-construction-mana-542/focus-11.log",
+      "sha256": "6089b7ce5cfe74c9ffcac92b1db098407efdb29e1459b7e74ca280ecba24324f"
+    },
+    {
+      "path": "extracted/cpp-construction-mana-542/focus-12.log",
+      "sha256": "ffd4d303994bd690b13d62fa2854085698c13b4daf41b8d4733bb12eac631af0"
+    },
+    {
+      "path": "extracted/cpp-construction-mana-542/focus-13.log",
+      "sha256": "b53e8a6307f8381d6e8c0fa387ab9a27ab11a353759b597a0605718338aaba16"
+    },
+    {
+      "path": "extracted/cpp-construction-mana-542/focus-14.log",
+      "sha256": "3ba9e23572345afe761fc601f6dab1baa7d18c01f3b36f4ccffb2d166bfdab52"
+    },
+    {
+      "path": "extracted/cpp-construction-mana-542/focus-15.log",
+      "sha256": "e4a3ab36c852c5fff3a1fa4c3c41a922b0b31d7c7720d57a8f7b1bdc974bac38"
+    },
+    {
+      "path": "extracted/cpp-construction-mana-542/focused-tests.json",
+      "sha256": "86a6ccf218d918a4be72aaa1c9eb261c8061ad27b02867022cfa5fb6f86c0d44"
+    },
+    {
+      "path": "extracted/cpp-construction-mana-542/freeze-final.json",
+      "sha256": "4ac6f8daf3ba3af50c94d95a42f737cb1459fa98af6ae3ad24fb09179cab9cad"
+    },
+    {
+      "path": "extracted/cpp-construction-mana-542/manabolt.type",
+      "sha256": "6cb55a43269abe603ab4ea63416f8e7d324adc79e914bdb444191b81cf43be1e"
+    },
+    {
+      "path": "extracted/cpp-construction-mana-542/native-constructor-replay.log",
+      "sha256": "85ee218a211b27a923a4fbedef9943aa45cde423e3d7f9c4f364647431ac6b81"
+    },
+    {
+      "path": "extracted/cpp-construction-mana-542/native-static.json",
+      "sha256": "db3fdd01d28d492a10aa082c30fb5b1096795f07010fc92c492a29c481ebf94d"
+    },
+    {
+      "path": "extracted/cpp-construction-mana-542/native-streak.log",
+      "sha256": "8015e5174479c22e275fadd0eb0bebc9f1f45fdbc3e70b99e8fcc60ff94d3989"
+    },
+    {
+      "path": "extracted/cpp-construction-mana-542/preservation.json",
+      "sha256": "8a43f686fd72a38f2ec1f695e834be770a7c54df44f9f7b95b4aa06d436a0aa7"
+    },
+    {
+      "path": "extracted/cpp-construction-mana-542/regression-fixed.log",
+      "sha256": "14cc4f5372fbd7774a06dc466df32e375d14b8aaa4fe7d37774ec1d592489240"
+    },
+    {
+      "path": "extracted/cpp-construction-mana-542/regression-initial.log",
+      "sha256": "9d121038f12a07184d14f5a917ab138287868fad82a2176fec0a96d8c9f87f31"
+    },
+    {
+      "path": "extracted/cpp-construction-mana-542/teleportEffect.type",
+      "sha256": "67b3fd82a4c7d850c3760ddba5073fb249ebf5dbeda67ac2bbe6d34fe518a2f3"
+    }
+  ],
+  "noPush": true
+}

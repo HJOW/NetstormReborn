@@ -31,6 +31,7 @@ public:
     RawCampaignParticles& operator=(const RawCampaignParticles&)=delete; // 다른 캠페인에 상태를 복사하지 않는다.
     // 실제 생성한 투사체의 process11을 표시 Pop과 Missile 부착 사이에 붙인다.
     void Add(std::uint32_t type,o::Sid parent);
+    o::FieryTailVisualProcess* AddStreak(o::Sid parent); // 건설 마나134의 최초 Pop에서 실제 process12를 붙인다.
     // 실제 wrapper의 생존 검사 뒤 공유 빔을 같은 Host/표시 목록에 생성한다. NULL 파일명은 무음이다.
     o::LightningCreateResult AddBeam(o::Sid parent,o::Sid target,std::optional<std::string> sound);
     // 실제472770의화면좌표→현재카메라→직접좌표빔을같은Host/표시수명에생성한다.
@@ -102,6 +103,9 @@ private:
     o::RenderProcessSystem rendering_; // 모든 표시가 사용하는 공통 원본 목록이다.
     o::FieryTailVisualSystem fiery_; // 같은 Host/Kernel의 실제 process11 관리자다.
     o::LightningVisualSystem lightning_; // 같은 공통 목록/Host/Kernel의 실제 process19 관리자다.
+    o::FieryTailLifetimeState streakLifetime_; // 빔의0055a758 팔레트 owner를 직접 빌리는 실제12 생성 상태다.
+    o::FieryTailFramePalette streakColors_; // 같은 빔 팔레트의 현재11색과 실제 읽기 범위다.
+    std::unique_ptr<o::FieryTailVisualSystem> streak_; // 원본과 같은4580f0/4583a0을12 생성자 설정으로 실행한다.
     o::ConstructionFrameState constructionFrame_; // 같은 현재 게임 시각/정수 카메라를 쓰는 건설 표시 전역이다.
     o::ConstructionFramePalette constructionColors_; // 원본11색과 실제 읽을 수 있는 인접 DWORD의 현재 view다.
     ParticlePaletteMemory constructionMemory_; // 빔/비행과 별개인 건설 전용 공유 색 할당이다.

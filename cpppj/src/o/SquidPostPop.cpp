@@ -197,6 +197,8 @@ bool SquidPostPop::HandlesPriest(Sid sid) const {
 }
 // 순환하는 생성/Pop 연결을 인스턴스 구성 뒤에 공급한다.
 void SquidPostPop::SetSurfacePrefix(std::function<void(Sid,std::uint32_t)> prefix) { surfacePrefix_=std::move(prefix); }
+// 같은 풀을 가진 상위 Session만 실제12 생성자를 연결하며 빈 값은 해제한다.
+void SquidPostPop::SetTeleportPrefix(std::function<void(Sid,std::uint32_t)> prefix) { teleportPrefix_=std::move(prefix); }
 // 가상 표와 명시적 접두가 둘 다 있어야 noIsland 후처리를 허용한다.
 bool SquidPostPop::HandlesSurface(Sid sid) const {
     const auto expected=pool_.Edition()==OriginalEdition::Patch1078 ? kPatchNoIslandVtable : kCdNoIslandVtable;
@@ -349,6 +351,8 @@ void SquidPostPop::Activate(Sid sid,std::uint32_t flags) {
     else if (HandlesSurface(sid)) surfacePrefix_(sid,flags);
     // 보호막의 두 Regular 예약을 마친 뒤 자기 공통 장부/깊이를 한 번 처리한다.
     else if (HandlesForcefield(sid)) forcefieldPostPop_->Prefix(sid,flags);
+    // 원본4429f0은 flags bit0에서만12를 만들고 이어 공통4b0d30으로 내려간다.
+    else if (teleportPrefix_ && pool_.Edition()==OriginalEdition::Patch1078 && pool_.Slot(sid)[10]==134 && Vtable(pool_.Slot(sid))==0x5070c0U) teleportPrefix_(sid,flags);
     PostPop(sid,flags);
 }
 // 공통 후처리의 순서: 영역 무효화→그래프 생성/리셋→비용→공급/작업장 목록→소유자 조건 통계→깊이 감소다.

@@ -5189,6 +5189,80 @@ TEST_CASE(CampaignPriestDisplay_AltarUsesContainedPriestOriginalOwner) {
     CHECK(cases>0 && sensitive==cases);CHECK(core.pool.Slot(altar)[34]==1 && Get(core.pool.Slot(altar),12,2)==2); // 표시 수정이 실제 제단 소유권을 바꾸지 않는다.
     std::cout<<"포획 사제 제단 색상 조건 "<<cases<<"/포획자 색과 차이 "<<sensitive<<'\n';
 }
+// 실제 등록 워크샾/템플에서 시작한 건설 마나의12 표시·이동·도착 후0.6초 출현 예약을 확인한다.
+TEST_CASE(CampaignConstructionMana_RegisteredSourcesVisibleStreakAndArrival) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);
+    for (const auto unit:std::array<std::uint32_t,2>{75,133}) { // 윈드 제네레이터와 골렘이며 보류된 공중3종을 생성하지 않는다.
+        SessionServicesFixture external;auto services=external.Services();UseWorldTestLogin(services);
+        services.production.allocationBytes=[](auto bytes) { std::fill(bytes.begin(),bytes.end(),std::uint8_t{0x71}); }; // TEST02 저장 생산 목록의 원본 미정 힙 바이트 입력만 공급한다.
+        services.production.effects.configInt=[](std::string_view key) { CHECK(key=="getTeleportTechFree");return 0; };services.production.effects.modeAssertion=[] { throw std::logic_error("건설 마나 검사 생산 모드 진단"); }; // 실제 덱 조회의 외부 설정 경계다.
+        auto fort=FortTemplate::Parse(assets.files.Read("d/test02.fort"),assets.game.TypeTable());GameWorld world(assets.game,assets.files,std::move(fort),MissionPlayers{},"TEST02",std::move(services),{1024,768});
+        auto& session=world.Session();const auto core=session.Core();Sid source{}; // 현재 플레이어의 실제 등록 출발지를 찾는다.
+        for (const auto id:core.bookkeeping.ownerFactories[1].Items()) { // 일반 유닛은 윈드 워크샾, 골렘은 원래 템플을 사용한다.
+            const Sid sid{static_cast<std::uint16_t>(id)};const auto type=core.pool.Slot(sid)[10];if (unit==75 ? type==86 : type>=122 && type<=125) { source=sid;break; }
+        }
+        CHECK(source.value);if (!source.value) return;session.CreateContained(source,unit,0,0x10,0,0); // 원본 내용물 경로로 준비된 등록 항목을 입력한다.
+        const auto home=core.pool.Slot(source);const float sx=std::bit_cast<float>(Get(home,14)),sy=std::bit_cast<float>(Get(home,18));const auto surface=core.hash.Cell(0,static_cast<int>(sx),static_cast<int>(sy));CHECK(surface);if (!surface) return;
+        const auto graph=core.pool.Slot(Sid{surface})[30];CellPoint point{-1,-1}; // 같은 Graph의 실제 빈 지면을 목표로 선택한다.
+        for (int y=std::max(4,static_cast<int>(sy)-20);y<std::min(248,static_cast<int>(sy)+20) && point.x<0;++y) { // 현재 섬 밖이나 지도 가장자리를 피한다.
+            for (int x=std::max(4,static_cast<int>(sx)-20);x<std::min(248,static_cast<int>(sx)+20);++x) { // 출발지와 떨어진 실제3×3 지면만 쓴다.
+                if (std::abs(x-static_cast<int>(sx))+std::abs(y-static_cast<int>(sy))<8) continue;bool free=true;
+                for (int dy=0;dy<3 && free;++dy) { // 실제 점유/Graph를 행별로 읽는다.
+                    for (int dx=0;dx<3;++dx) { const auto sid=core.hash.Cell(0,x+dx,y+dy);const auto spot=core.spots[(y+dy)*256+x+dx];if (!sid || core.pool.Slot(Sid{sid})[30]!=graph || !(spot&6) || (spot&0x38)) { free=false;break; } } // 각 발자국 칸의 실제 표면을 검사한다.
+                }
+                if (free) { point={x+2,y+2};break; }
+            }
+        }
+        CHECK(point.x>=0);if (point.x<0) return;const auto old=ConstructionLive(core,134),oldBolts=ConstructionLive(core,105);
+        const auto target=session.World().Create(unit);core.owner.Set(target,1);core.pool.AllocatedBytes(target)[40]|=1;session.World().Pop(target,static_cast<float>(point.x),static_cast<float>(point.y),0);
+        ConstructionBuilderState state;auto builder=session.MakeConstructionBuilder(state,{});const auto arrival=builder->Move(1,target,0,0);CHECK(arrival>=0);Sid mana{};
+        for (const auto sid:ConstructionLive(core,134)) if (std::find(old.begin(),old.end(),sid)==old.end()) mana=sid; // 이번 요청의 실제 마나만 선택한다.
+        CHECK(mana.value);if (!mana.value) return;const auto raw=core.pool.Slot(mana);const float mx=std::bit_cast<float>(Get(raw,14)),my=std::bit_cast<float>(Get(raw,18));
+        CHECK(mx>=sx-core.types[home[10]].footX-1 && mx<=sx+1 && my>=sy-core.types[home[10]].footY-1 && my<=sy+1);
+        const auto form=FindAttachedProcess(core.pool,mana,12);auto* streak=form.value ? dynamic_cast<FieryTailVisualProcess*>(core.processes.FromForm(form)) : nullptr;CHECK(streak);if (!streak) return;
+        CHECK(streak->Fields().particles.size()==120 && streak->Fields().maximumLife==2 && streak->Fields().offset==-8 && streak->Fields().registration.zOrder==-20);
+        const auto token=streak->Fields().registration.token;const auto processCount=core.kernel.Size();session.World().Unpop(mana,0);session.World().Repop(mana,0); // 재등록은 최초 flags가 아니므로12를 중복 생성하지 않는다.
+        CHECK(FindAttachedProcess(core.pool,mana,12)==form && core.kernel.Size()==processCount);const_cast<RawCampaignParticles&>(session.Particles()).PrepareFrame(core.processState.Now());streak->RunFrame();CHECK(streak->Fields().total==10);
+        const auto initial=world.ToScreen(mx,my);world.Scroll(initial.x-512,initial.y-384);world.SetPalette(WorkshopDisplayPalette(assets.game));
+        Renderer renderer(1024,768);renderer.SetScene(session.ParticleSprites({0,28,1024,768}));std::vector<std::uint8_t> pixels(1024*768,199);renderer.Draw(pixels,1024,199);
+        const auto colored=std::count_if(pixels.begin(),pixels.end(),[](auto color) { return color!=199; });CHECK(colored>0);
+        std::vector<std::uint32_t> paths;std::vector<Sid> bolts; // 이번 마나와 에너지의 실제 경로만 진행한다.
+        const auto manaPathForm=FindAttachedProcess(core.pool,mana,23);auto* manaPath=manaPathForm.value ? core.processes.FromForm(manaPathForm) : nullptr;CHECK(manaPath);if (!manaPath) return;paths.push_back(core.kernel.Find(*manaPath));
+        for (const auto sid:ConstructionLive(core,105)) if (std::find(oldBolts.begin(),oldBolts.end(),sid)==oldBolts.end()) { // 생성된 에너지105의 출발지/프레임은 원본 Builder가 결정한다.
+            const auto energyPathForm=FindAttachedProcess(core.pool,sid,39);auto* energyPath=energyPathForm.value ? core.processes.FromForm(energyPathForm) : nullptr;CHECK(energyPath);if (!energyPath) return;bolts.push_back(sid);paths.push_back(core.kernel.Find(*energyPath));
+        }
+        CHECK(!FindAttachedProcess(core.pool,target,30).value && !bolts.empty());ConstructionProcess* construction{};double started{};bool moved{}; // 출현 예약 전에 마나의 실제 이동도 확인한다.
+        for (int step=1;step<3000 && !construction;++step) { // 전체 AI/게임 루프를 실행하지 않고 두 실제 경로만20ms씩 호출한다.
+            core.processState.now=step*.02;
+            for (const auto pid:paths) if (auto* path=dynamic_cast<RawPathProcess*>(core.kernel.Get(pid))) path->RunFrame(); // 이미 도착·삭제된 경로는 재호출하지 않는다.
+            const_cast<RawCampaignParticles&>(session.Particles()).PrepareFrame(core.processState.Now());
+            if (session.Particles().Rendering().Lookup(token)) { moved=moved || Get(core.pool.Slot(mana),14)!=std::bit_cast<std::uint32_t>(mx) || Get(core.pool.Slot(mana),18)!=std::bit_cast<std::uint32_t>(my);streak->RunFrame(); } // 살아 있는12만 현재 부모를 따라 갱신한다.
+            const auto current=FindAttachedProcess(core.pool,target,30);construction=current.value ? dynamic_cast<ConstructionProcess*>(core.processes.FromForm(current)) : nullptr;if (construction) started=core.processState.now;
+        }
+        CHECK(construction && moved);if (!construction) return;CHECK(std::abs(construction->Fields().end-construction->Fields().start-static_cast<double>(0.6F))<1e-9);
+        std::size_t arrived{};for (const auto sid:bolts) if (core.processes.FindEvent(sid,1)) ++arrived; // 출현 시작 시점의 실제 에너지 도착 상태를 기록한다.
+        CHECK(!session.Particles().Rendering().Lookup(token)); // 도착한 건설 마나와 종속12 표시도 함께 반납해야 한다.
+        std::cout<<"건설 마나 TYPE"<<unit<<"/출발TYPE"<<int(home[10])<<"/픽셀"<<colored<<"/도착"<<started<<"/에너지"<<arrived<<'/'<<bolts.size()<<'\n';
+    }
+}
+
+// 원본105의 네 원소 프레임과10/10 그림자+a4를 같은 GameWorld/픽셀 선택 경로로 대조한다.
+TEST_CASE(CampaignConstructionMana_EnergyBoltDrawsCurrentFrameAndShadow) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();UseWorldTestLogin(services);
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());GameWorld world(assets.game,assets.files,std::move(fort),MissionPlayers{},"thewarbegins",std::move(services),{1024,768});auto& session=world.Session();const auto core=session.Core();
+    const auto position=WorkshopDisplaySupport(session);const auto bolt=session.World().Create(105,2);core.owner.Set(bolt,1);session.World().Pop(bolt,position[0],position[1],0);RawCampaignFactoryDisplay display(core,assets.game);CHECK(display.Handles(bolt));
+    const auto palette=WorkshopDisplayPalette(assets.game);world.SetPalette(palette);const auto initial=world.ToScreen(position[0],position[1]);world.Scroll(initial.x-512,initial.y-384);const auto point=world.ToScreen(position[0],position[1]);std::array<std::uint32_t,256> logical{};
+    for (std::size_t index=0;index<256;++index) logical[index]=std::uint32_t(palette[index].red)|(std::uint32_t(palette[index].green)<<8)|(std::uint32_t(palette[index].blue)<<16); // 원본 그림자 표에 같은 RGBX를 공급한다.
+    const auto maps=BuildSpriteColorMaps(logical);
+    for (std::size_t frame=0;frame<core.frames[105].Codes().size();++frame) { // 실제 원소 프레임 전체를 현재 raw에서 읽어야 한다.
+        Put(core.pool.AllocatedBytes(bolt),36,static_cast<std::uint32_t>(frame));std::vector<RenderSprite> sprites;
+        for (const auto& sprite:world.Sprites()) if (sprite.sourceSid==bolt.value && !sprite.shadow) sprites.push_back(sprite); // 같은 본체 하나로 두 추가 그림을 제출한다.
+        CHECK(sprites.size()==1);Renderer renderer(1024,768);renderer.SetScene(sprites);std::vector<std::uint8_t> actual(1024*768,199),expected(actual);
+        renderer.Draw(actual,1024,199);const auto image=assets.game.Shapes().Decode(35,frame);const auto rect=assets.game.Shapes().Blocks()[35].frames[frame].rect;const int x=point.x-core.types[105].hotspotX+rect.left,y=point.y-core.types[105].hotspotY+rect.top;
+        DrawIndexedImage(expected,1024,768,image,x+10,y+10,{0,28,1024,768},&maps.shadow);DrawIndexedImage(expected,1024,768,image,x,y,{0,28,1024,768});CHECK(actual==expected);
+    }
+}
+
 // 원본 여덟 이동 타입과 실제 공간/사제 HP 조회를 묶어 스톰 크리스탈·포획 가능 사제의 커서를 대조한다.
 TEST_CASE(CampaignSession_ObjectHitUsesCurrentRawPhysicalShapeAndCamera) { // 실제RLE의투명구멍/현재raw프레임/카메라를픽셀선택기에연결한다.
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();UseWorldTestLogin(services);services.install.resetCamera={}; // 실제장치대신기존독립Session경계를쓴다.

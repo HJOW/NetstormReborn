@@ -107,6 +107,7 @@ public:
     // 완성한 사제 후처리를 명시 등록한다. 같은 풀이어야 하며 nullptr은 연결을 해제한다.
     // 후처리의 Carrier는 이 인스턴스의 PostPopBase에 연결해야 한다. 후처리가 공통 깊이를 한 번 감소시킨다.
     void SetPriestPostPop(const RawPriestPostPopTail* postPop);
+    void SetTeleportPrefix(std::function<void(Sid,std::uint32_t)> prefix); // PATCH134/5070c0의 최초 Pop에서12를 생성하는 원본4429f0 접두다.
     // 실제 사제 타입/가상 표이며 전체 후처리를 등록했는가.
     bool HandlesPriest(Sid sid) const;
     // 보호막의 최초 Regular 예약 접두를 같은 풀에 명시 등록한다. nullptr은 해제한다.
@@ -188,6 +189,7 @@ private:
     std::function<void(std::uint32_t,Sid,bool)> aiNotice_; // 생산 목록 뒤·통계 앞에서 같은 실제 AI의 생성 통지를 수행한다.
     std::function<void(Sid,std::uint32_t)> islandPrefix_; // 섬 받침 postPop의 접두. RawBridgeConnect::IslandPostPopPrefix를 잇는다.
     std::function<void(Sid,std::uint32_t)> surfacePrefix_; // noIsland 최초 등록의 프레임/받침/소유자 효과.
+    std::function<void(Sid,std::uint32_t)> teleportPrefix_; // 건설 마나의 원본 파생 접두이며 일반 공통 장부 전에 호출한다.
     const RawPriestPostPopTail* priestPostPop_{}; // 전체 wrapper다. 접두처럼 공통 장부를 추가 호출하지 않는다.
     const RawForcefieldPostPop* forcefieldPostPop_{}; // 예약 접두 뒤 공통 후처리는 이 인스턴스가 한 번 호출한다.
     const RawCarrierSteal* carrierStealPostPop_{}; // 크랩의 실제 파생 후처리이며 직접Carrier몸체와구별한다.

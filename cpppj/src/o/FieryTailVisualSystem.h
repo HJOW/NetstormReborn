@@ -39,7 +39,7 @@ class FieryTailVisualSystem {
 public:
     // 모든 참조와 hooks가 반환하는 색 span은 이 시스템보다 오래 살아야 한다.
     FieryTailVisualSystem(RenderProcessSystem& rendering,GameRandom& random,FieryTailLifetimeState& lifetime,
-        FieryTailFrameState& frame,FieryTailFramePalette& palette,FieryTailSystemHooks hooks);
+        FieryTailFrameState& frame,FieryTailFramePalette& palette,FieryTailSystemHooks hooks,FieryTailVariant variant=FieryTailVariant::Fiery);
     // 상위 월드가 아직 Host를 유지할 때 남은 effect Form을 실제 삭제한다.
     ~FieryTailVisualSystem();
     FieryTailVisualSystem(const FieryTailVisualSystem&)=delete; // 콜백의 고정 주소를 유지한다.

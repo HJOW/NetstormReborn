@@ -22,9 +22,9 @@ void FieryTailVisualProcess::Draw() { system_.Draw(*this); }
 const FieryTailFrameFields& FieryTailVisualProcess::Fields() const { return fields_; }
 // 출력 경계와 실제 같은 풀/판본은 객체를 생성하기 전에 검사한다.
 FieryTailVisualSystem::FieryTailVisualSystem(RenderProcessSystem& rendering,GameRandom& random,FieryTailLifetimeState& lifetime,
-    FieryTailFrameState& frame,FieryTailFramePalette& palette,FieryTailSystemHooks hooks)
+    FieryTailFrameState& frame,FieryTailFramePalette& palette,FieryTailSystemHooks hooks,FieryTailVariant variant)
     :rendering_(rendering),random_(random),frame_(frame),palette_(palette),hooks_(std::move(hooks)),
-     lifetime_(rendering.Pool(),rendering.Registry(),lifetime,hooks_.lifetime) {
+     lifetime_(rendering.Pool(),rendering.Registry(),lifetime,hooks_.lifetime,variant) {
     if (!hooks_.endpoint || !hooks_.release) throw std::invalid_argument("Fiery Tail 실제 끝점/반납 경계 누락");
     CheckScale();const RawFieryTailFrame checked(rendering_.Pool(),random_,frame_,palette_,hooks_.frame);
 }

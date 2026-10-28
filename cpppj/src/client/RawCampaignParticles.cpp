@@ -15,12 +15,22 @@ RawCampaignParticles::RawCampaignParticles(RawWorldCore core,o::GameRandom& rand
     std::function<void(float,float,std::string_view)> sound,std::optional<CampaignShrapnelHooks> shrapnel)
     :core_(core),random_(random),source_(palette),sound_(std::move(sound)),rendering_(core.pool,core.processes,renderState_,RegistryHooks()),
      fiery_(rendering_,random,lifetime_,frame_,colors_,FieryHooks()),lightning_(rendering_,random,lightningLifetime_,frame_,LightningHooks()) {
+    streakLifetime_.sharedPalette=&lightningLifetime_.palette; // 원본458680과 빔 생성자가 같은0055a758을 공유한다.
+    auto streakHooks=FieryHooks();const auto beamHooks=LightningHooks(); // 프레임/출력은 불꽃과 같고 첫 색 생성만 빔과 같다.
+    streakHooks.lifetime.reserve=beamHooks.lifetime.reserve;streakHooks.lifetime.createPalette=beamHooks.lifetime.createPalette;streakHooks.lifetime.buildPalette=beamHooks.lifetime.buildPalette;
+    streak_=std::make_unique<o::FieryTailVisualSystem>(rendering_,random_,streakLifetime_,frame_,streakColors_,std::move(streakHooks),o::FieryTailVariant::Streak);
     smoke_=std::make_unique<o::SmokeVisualSystem>(rendering_,random_,smokeLifetime_,frame_,smokeColors_,SmokeHooks());
     if (shrapnel) {
         if (!shrapnel->crt) throw std::invalid_argument("파편 실제 공유 CRT 상태 미연결");auto& crt=*shrapnel->crt;
         dissolve_=std::make_unique<o::DissolveVisualSystem>(rendering_,random_,frame_,DissolveHooks(*shrapnel));
         shrapnel_=std::make_unique<o::ShrapnelVisualSystem>(rendering_,random_,crt,frame_,ShrapnelHooks(std::move(*shrapnel)));
     }
+}
+// 원본12를 공통 표시 목록/Kernel에 부착하며 빔이 먼저 초기화한 색 메모리도 현재 상태로 읽는다.
+o::FieryTailVisualProcess* RawCampaignParticles::AddStreak(o::Sid parent) {
+    RefreshCamera();try {
+        auto* process=streak_->Add(parent);streakColors_.count=static_cast<std::int32_t>(lightningMemory_.Count());streakColors_.readable=lightningMemory_.Snapshot();return process;
+    } catch (const std::bad_alloc&) { return nullptr; }
 }
 // 실제 포인터 배열의 메모리는 RawRenderRegistry의 vector가 소유한다. 중복 외부 확보/반납을 하지 않는다.
 o::RenderRegistryHooks RawCampaignParticles::RegistryHooks() {
@@ -200,7 +210,7 @@ std::vector<RenderSprite> RawCampaignParticles::Sprites(ScreenRect clip) { Refre
 void RawCampaignParticles::Draw(std::uint32_t token,std::span<std::uint8_t> pixels,int pitch,int height,ScreenRect clip) { RefreshCamera();
     if (!rendering_.Lookup(token)) return;if (target_) throw std::logic_error("입자 표면 중첩 그리기 오류");
     target_=Target{pixels,pitch,height,clip};
-    try { if (memory_.Count()) colors_.readable=memory_.Snapshot();if (burningMemory_.Count()) burningColors_.readable=burningMemory_.Snapshot();if (smokeMemory_.Count()) smokeColors_.readable=smokeMemory_.Snapshot();rendering_.DrawToken(token); }
+    try { if (memory_.Count()) colors_.readable=memory_.Snapshot();if (lightningMemory_.Count()) streakColors_.readable=lightningMemory_.Snapshot();if (burningMemory_.Count()) burningColors_.readable=burningMemory_.Snapshot();if (smokeMemory_.Count()) smokeColors_.readable=smokeMemory_.Snapshot();rendering_.DrawToken(token); }
     catch (...) { target_.reset();throw; }
     target_.reset();
 }
