@@ -1,0 +1,36 @@
+{
+  "unit": 555,
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": "HJOW-Athlon / 2026-10-23",
+  "native": {
+    "host": "HJOW-Athlon",
+    "lastFullDecompilation": "HJOW-Athlon / 2026-10-23",
+    "uniqueInputs": 308,
+    "nativeObservations": 616,
+    "entries": {
+      "Base": 4899840,
+      "Form": 4907488,
+      "Process": 4908016,
+      "Depend": 4908336,
+      "Content": 4909712
+    },
+    "binarySha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "fixtureSha256": "a293da2272eda1d402ec8841d4cc48d148dcbae03e8c03441f29e6b1835cd1a5",
+    "boundary": "Base/내장Form 다섯 실제 몸체와 TYPE 조회 실행; CRT sprintf/로그만 외부 장치. 게임/OS실행0."
+  },
+  "focusedUniquePassed": 26,
+  "focusedFailures": 0,
+  "registeredTests": 3404,
+  "protectedAndPriorFixturesChecked": 2534,
+  "changedProtectedFiles": [],
+  "gameSha256": "b6d6fc4c4f7309de0ec5f4779e074ec2130eacbe579f72336aa07da80002b22e",
+  "gameStill552": true,
+  "testExeSha256": "d87b535f46cb0a632edf026a478db456a45057e2699b2b02239f92edfff0c163",
+  "newGameRuns": 0,
+  "newOriginalRuns": 0,
+  "newNetworkTests": 0,
+  "fullSuiteRerun": false,
+  "actualRuntimeConnected": false,
+  "initialTestFailures": 0,
+  "next": "Main/Task formatters, actual virtual dispatch/logging, dump parent/file devices, current Kernel adapter, Ctrl Shift F7."
+}

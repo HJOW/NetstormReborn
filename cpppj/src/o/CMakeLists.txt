@@ -531,3 +531,6 @@ target_sources(netstorm PRIVATE RawIceCannonFire.h RawIceCannonFire.cpp)
 
 # 객체별 가상 진단과 모든 Form의 재귀 출력 순서를 같은 물리 풀에서 처리한다.
 target_sources(netstorm PRIVATE RawObjectTrace.h RawObjectTrace.cpp)
+
+# Base/내장Form의 TYPE·현재필드·원래서식을 실제 진단에 제공한다.
+target_sources(netstorm PRIVATE RawObjectTraceFields.h RawObjectTraceFields.cpp)

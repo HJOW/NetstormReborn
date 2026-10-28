@@ -2392,3 +2392,7 @@ set_source_files_properties(ProcessSummaryTests.cpp PROPERTIES COMPILE_DEFINITIO
 # 객체 trace의 전체 순회/서식 기록은 원본 x86이 생성한 고정 기대값과 비교한다.
 target_sources(netstorm_tests PRIVATE ObjectTraceTests.cpp)
 set_source_files_properties(ObjectTraceTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_OBJECT_TRACE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/object-trace-x86.tsv\"")
+
+# 객체 공통/내장Form의 서식 바이트와 파생 필드 재조회 시점을 원문으로 대조한다.
+target_sources(netstorm_tests PRIVATE ObjectTraceFieldsTests.cpp)
+set_source_files_properties(ObjectTraceFieldsTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_OBJECT_TRACE_FIELDS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/object-trace-fields-x86.tsv\"")
