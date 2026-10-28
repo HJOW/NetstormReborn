@@ -2,6 +2,7 @@
 #include "o/RawSquidDestroyDispatch.h"
 #include "o/RawBridgeEvents.h"
 #include "o/RawGraph.h"
+#include "o/RawAuthorityState.h"
 #include <bit>
 #include <stdexcept>
 
@@ -24,14 +25,17 @@ RawSquidDestroyDispatch::RawSquidDestroyDispatch(RawSquidDestroy& base,const Raw
         base.ValidateGraph(*graph);graph->ValidateTypes(neighbors.Types());
     }
 }
+//현재 장기 전역만 빌리고 풀/Graph/모드를 초기화하지 않는다.
+void RawSquidDestroyDispatch::BindCurrentModes(const RawAuthorityState& authority,const std::uint32_t* editor) { authority_=&authority;editor_=editor; }
 // 타입 번호 대신 실제 raw 가상 표로 재정의를 고른다. 거부 시 dead·장부·표시·프로세스를 바꾸지 않는다.
 bool RawSquidDestroyDispatch::Destroy(Sid sid,std::uint32_t flags,const SquidDestroyHooks& hooks) const {
     const auto& pool=base_.Pool();const auto raw=pool.Slot(sid);
     const bool patch=pool.Edition()==OriginalEdition::Patch1078;
     if (Dword(raw,0)==(patch ? kPatchBridgeVtable : kCdBridgeVtable)) {
         const auto extra=raw[patch ? 40 : 35];
+        auto current=mode_;if (authority_) current.authority=authority_->boss;if (editor_) current.editor=*editor_!=0; //외부 효과 뒤 이 진입에 도달한 현재 두 전역을 읽는다.
         // editor/권한/abstract/buried 조건이 통과할 때만 그래프 번호와 현재 프레임을 읽는다.
-        if (!mode_.editor && mode_.authority && (extra&9)==0) {
+        if (!current.editor && current.authority && (extra&9)==0) {
             std::int16_t surfaces=0;
             if (graph_) {
                 const auto number=raw[patch ? 30 : 28];
@@ -44,7 +48,7 @@ bool RawSquidDestroyDispatch::Destroy(Sid sid,std::uint32_t flags,const SquidDes
                 const auto frame=patch ? std::bit_cast<std::int32_t>(Dword(raw,36)) : static_cast<std::int32_t>(raw[34]);
                 const auto codes=neighbors_.Frames(raw[10]).Codes();
                 if (frame<0 || static_cast<std::size_t>(frame)>=codes.size()) throw std::out_of_range("가상 다리 삭제 프레임 범위 오류");
-                if (!Bridge::DestroyProceeds(mode_,extra,surfaces,codes[static_cast<std::size_t>(frame)].flags)) return false;
+                if (!Bridge::DestroyProceeds(current,extra,surfaces,codes[static_cast<std::size_t>(frame)].flags)) return false;
             }
         }
     }

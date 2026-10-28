@@ -231,6 +231,8 @@ target_sources(netstorm PRIVATE client/RawStormPowerRefresh.cpp client/RawStormP
 target_sources(netstorm PRIVATE o/RawStateBridgeReset.cpp o/RawStateBridgeReset.h)
 target_sources(netstorm PRIVATE o/RawBridgeDecayScan.cpp o/RawBridgeDecayScan.h) #현재 슬롯 방문/칸별 예외 경계를 원문 프레임 순서로 실행한다.
 target_sources(netstorm PRIVATE o/RawBridgeDecay.cpp o/RawBridgeDecay.h) #실제 수명/금 간 프레임/방문 순서의 직접 효과를 실행한다.
+target_sources(netstorm PRIVATE o/RawBridgeCarriers.cpp o/RawBridgeCarriers.h) #실제 칸 위 이동 조회와 같은Graph의 안전한 표면 대피를 실행한다.
+target_sources(netstorm PRIVATE client/ClientBridgeDecay.cpp client/ClientBridgeDecay.h) #메뉴와 실제 World의 같은 스캔을469f60 앞에서 호출한다.
 
 # 실제 Present 말미의 진단·목표 제한을 장치 및 현재 view 적용과 구별한다.
 target_sources(netstorm PRIVATE client/RawCameraPresent.cpp client/RawCameraPresent.h)

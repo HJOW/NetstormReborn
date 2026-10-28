@@ -5,6 +5,7 @@
 // 범위: 창 만들기, 설정 읽기, 화면 장치, 메시지·입력 큐, 프레임 제한과 내보내기까지.
 //       Renderer·원본 글꼴/커서·메뉴와 저장 미션의 기본 지형/객체·선택/이동을 연결했다. 건설/전투는 후속이다.
 #include "client/ClientMain.h"
+#include "client/ClientBridgeDecay.h"
 #include "client/GifScreenshot.h"
 #include "o/RawColorSortPrimary.h"
 #include "client/ClientAudio.h"
@@ -401,6 +402,7 @@ int Client::Run() {
         if (movieUpdatePauseDepth_<=0) {
             // 원본439ad3의 설정 저장은439b13의 가상 소멸/OnExit 예약보다 먼저다.
             if (configuration_.Configuration().changed) SaveOptions();
+            RunClientBridgeDecay(*this); //00422bc0은 메뉴에서도 실행하며 위치 소리469f60보다 먼저 현재 다리 수명/파괴를 처리한다.
             if (audio_) audio_->SceneFrame(); //469f60은 미니맵/Gump/Kernel보다 앞이다.
             if (menu_) menu_->RefreshMinimap(); //481320은 게임 시계 정지와 무관하다.
             if (menu_) menu_->CleanupGumps(); //439b13→4662b0: 이 단계가 예약한 입력은 다음 Input에서만 소비한다.

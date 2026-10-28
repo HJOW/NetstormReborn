@@ -2203,6 +2203,8 @@ target_sources(netstorm_tests PRIVATE ConnectionRegistrationTests.cpp) #원문28
 target_sources(netstorm_tests PRIVATE MissionBackgroundLifetimeTests.cpp) #실제 같은 HTML 배경의 시작 첫BYTE와 연속 미션 보존을 검사한다.
 target_sources(netstorm_tests PRIVATE StateBridgeResetTests.cpp) #Native64관측과 실제 World 앞/뒤의 현재 색 표·스캔 초기화를 검사한다.
 target_sources(netstorm_tests PRIVATE RawBridgeDecayScanTests.cpp) #현재 주기/실제 슬롯/각 칸 catch를 독립 원문73행과 대조한다.
+target_sources(netstorm_tests PRIVATE BridgeCarrierRetreatTests.cpp) #실제 finder/Graph와 중첩 대피의 원문258입력을 검증한다.
+set_source_files_properties(BridgeCarrierRetreatTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_BRIDGE_CARRIER_RETREAT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/bridge-carrier-retreat-x86.tsv\"")
 set_source_files_properties(RawBridgeDecayScanTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_BRIDGE_DECAY_SCAN_RUNTIME_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/bridge-decay-scan-runtime-x86.tsv\"")
 
 # 원문 두 PE의 섬 배치 검사와 현재 임시 지도 불변을 독립 fixture로 재생한다.

@@ -4,6 +4,8 @@
 #include "o/RawIslandPostPop.h"
 #include "o/RawSurfaceLifecycle.h"
 #include "o/RawSquidDestroyDispatch.h"
+#include "o/RawBridgeDecay.h"
+#include "o/RawAuthorityState.h"
 #include "o/SquidDestroyLifecycle.h"
 #include "o/SquidFactory.h"
 #include "o/SquidFrameBinding.h"
@@ -97,6 +99,10 @@ struct RawSurfaceWorld::Impl final:o::SquidDisplaySink {
     std::unique_ptr<o::SquidFormDispatch> formDispatch;
     // dependencies: 같은 삭제 분배기에 영구 등록하는 실제 감시 Form 쌍 소유자다.
     std::unique_ptr<o::DependFormHost> dependencies;
+    std::unique_ptr<o::RawBridgeDecay> bridgeDecay; //실제 Graph/풀을 읽고 같은 World의 가상 삭제/표시를 호출한다.
+    const std::uint32_t* decayEditor{}; //실제 Client의 현재 Editor 주소이며 독립 World는 기존 mode를 사용한다.
+    std::function<void(o::Sid)> decayCarriers,decaySound; //현재 Session의 대피/위치 소리 장치이며 World 반납 전에 같이 소멸한다.
+    std::function<void(o::FrameTime)> decayTime; //Kernel 준비보다 먼저 현재 입자/소리의 순수 시각 필드만 공급한다.
     bool sharedProcessHost; // 명시 pin 장치 또는 Storage 독립 Kernel만 잔류 대여를 지원한다.
     o::Kernel& kernel; // 모든 Form/경로/Regular가 같은 실제 Client Kernel 또는 독립 소유자를 직접 빌린다.
     // 순환하는 콜백은 실제 호출 전에 모든 모듈을 구성한다. 생성 중에는 Pop하지 않는다.
@@ -139,6 +145,7 @@ struct RawSurfaceWorld::Impl final:o::SquidDisplaySink {
             [](bool,bool,bool) { throw std::logic_error("raw 표면 월드의 불완전한 받침 묶음"); }});
         baseDestroy=std::make_unique<o::RawSquidDestroy>(pool,*unpop,types);
         virtualDestroy=std::make_unique<o::RawSquidDestroyDispatch>(*baseDestroy,*neighbors,mode,graph.get());
+        virtualDestroy->BindCurrentModes(*storage->Authority()); //다른 효과에서 boss가 바뀌어도 다음 가상 삭제가 같은 현재 주소를 읽는다.
         // 이 기본값은 단독 표면 기하 검사용 관찰이다. 실제 세션은 BindDeletion으로 보상/실제 UI를 공급한다.
         common=std::make_unique<o::SquidDestroyLifecycle>(pool,types,bookkeeping,deletion,*baseDestroy,o::SquidDeletionHooks{
             [this](const o::SquidDeletionEvent&) { ++deletionRequests; },
@@ -174,6 +181,15 @@ struct RawSurfaceWorld::Impl final:o::SquidDisplaySink {
                 runtime.formTransmit(form,flags);
             });
         formDispatch->Bind(*dependencies);
+        if (edition==o::OriginalEdition::Patch1078) {
+            o::RawBridgeDecayHooks decay;
+            decay.destroy=[this](o::Sid sid,std::uint32_t flags) { static_cast<void>(Destroy(sid,flags)); };
+            decay.notifySurface=[this](o::Sid sid) { building->NotifySurface(sid); };
+            decay.refresh=[this](o::Sid sid) { changed=true;display->Update(pool.Slot(sid)); };
+            decay.carriers=[this](o::Sid sid) { if (decayCarriers) decayCarriers(sid);else if (runtimeBound) throw std::logic_error("실제 다리 붕괴 대피 장치 미연결");else ++effectRequests; }; //독립 기하 관찰과 실제 Session의 필수 효과를 구별한다.
+            decay.crackSound=[this](o::Sid sid) { if (decaySound) decaySound(sid);else if (runtimeBound) throw std::logic_error("실제 다리 균열 소리 장치 미연결");else ++effectRequests; };
+            bridgeDecay=std::make_unique<o::RawBridgeDecay>(pool,types,frames,hash.Entries(0),spots,graph->Records(),mode,std::move(decay),storage->Authority().get());
+        }
     }
     // proxy는후설치이전공통객체의주소를보존하지않아같은state/reward로교체한뒤에도현재몸체를호출한다.
     o::SquidDestroyHooks CommonDeletionHooks() {
@@ -336,7 +352,20 @@ void RawSurfaceWorld::PrepareFrame(o::FrameTime time) {
     impl_->time=time;
 }
 // 독립 호출자는 같은 준비 뒤 Kernel을 한 번 실행하며 기존 정지 계약을 유지한다.
-void RawSurfaceWorld::RunFrame(o::FrameTime time,bool paused) { PrepareFrame(time);if (!paused) impl_->kernel.RunFrame(); }
+void RawSurfaceWorld::RunFrame(o::FrameTime time,bool paused) { ScanBridgeDecay(time,paused);if (!paused) impl_->kernel.RunFrame(); }
+//초기 상태를 재설정하지 않고 같은 현재 전역/장치만 설치한다.
+void RawSurfaceWorld::BindBridgeDecay(const std::uint32_t& editor,std::function<void(o::Sid)> carriers,std::function<void(o::Sid)> sound,std::function<void(o::FrameTime)> time) {
+    auto& s=*impl_;if (s.decayEditor || !carriers || !sound) throw std::logic_error("실제 다리 붕괴 장치 중복/미완성 연결");
+    s.decayEditor=&editor;s.decayCarriers=std::move(carriers);s.decaySound=std::move(sound);s.decayTime=std::move(time);s.virtualDestroy->BindCurrentModes(*s.storage->Authority(),&editor);
+}
+//같은 시각을 먼저 공급한 호출자가 프레임의 원문 위치에서 한 칸을 요청한다.
+void RawSurfaceWorld::DecayBridgeCell(o::FrameTime time,o::Sid sid) { PrepareFrame(time);if (!impl_->bridgeDecay) throw std::logic_error("다리 붕괴의 현재 PATCH 몸체 미연결");if (impl_->decayTime) impl_->decayTime(impl_->time);impl_->bridgeDecay->Cell(sid); }
+//독립 World의 프레임은 Kernel 전에 같은 저장소 커서를 진행한다. Client는 전역 공통 입구에서 한 번 호출한다.
+void RawSurfaceWorld::ScanBridgeDecay(o::FrameTime time,bool paused) {
+    PrepareFrame(time);auto& s=*impl_;if (s.decayTime) s.decayTime(s.time);if (!s.bridgeDecay) return; //CD의 인라인 스캔은 후속 복원 대상이며 이 연결은10.78에 한정한다.
+    auto current=s.mode;current.server=s.storage->Authority()->server;current.authority=s.storage->Authority()->boss;if (s.decayEditor) current.editor=*s.decayEditor!=0;
+    o::RawBridgeDecayScan scan(s.pool,s.types,s.storage->bridgeDecayScan,s.storage->bridgeDecayPeriod,current,[&s](o::Sid sid) { s.bridgeDecay->Cell(sid); });scan.Frame(s.time,paused);
+}
 // 현재 카메라의 원본 픽셀 기준값과 GUI 변경 표를 연결한다.
 void RawSurfaceWorld::SetDisplay(o::SquidDisplayView view,SurfaceDisplayHooks hooks) { impl_->display->SetView(view);impl_->displayHooks=std::move(hooks); }
 // 일반 4단계 해시와 실제 타입 필터를 사용하는 조회다.
@@ -367,11 +396,13 @@ std::string RawSurfaceWorld::Report() const {
     // 예약 0번 다음의 실제 연결 성분을 센다.
     for (std::size_t i=1;i<o::Graph::kCount;++i) if (impl_->graph->Records()[i].inUse) { ++graphs;surfaces+=static_cast<std::uint16_t>(impl_->graph->Records()[i].surfaces); }
     out<<"raw_world\t"<<impl_->time.game<<'\t'<<impl_->time.number<<'\t'<<impl_->kernel.Size()<<'\t'<<surfaces<<'\t'<<graphs<<'\t'<<impl_->bookkeeping.TotalCost()<<'\t'<<impl_->bookkeeping.depth<<'\t'<<impl_->baseDestroy->PreDepth()<<'\t'<<impl_->baseDestroy->PostDepth()<<'\t'<<impl_->effectRequests<<'\t'<<impl_->deletionRequests<<'\n';
+    const auto& scan=impl_->storage->bridgeDecayScan;out<<"bridge_decay\t"<<scan.first<<'\t'<<scan.last<<'\t'<<scan.cursor<<'\t'<<scan.next<<'\t'<<impl_->storage->bridgeDecayPeriod<<'\n'; //CLI 관측은 실제 현재 전역만 읽고 스캔/초기화를 실행하지 않는다.
     // 렌더링과 같은 raw 조회 결과를 번호별로 제공한다.
     for (const auto& snapshot:Objects()) {
         const auto& seed=snapshot.object;out<<"raw_object\t"<<snapshot.sid.value<<'\t'<<seed.type<<'\t'<<seed.owner<<'\t'<<seed.frame<<'\t'<<seed.x<<'\t'<<seed.y<<'\n';
         const auto raw=impl_->pool.Slot(snapshot.sid);const bool patch=impl_->edition==o::OriginalEdition::Patch1078; // 같은 실제 슬롯의 상태/extra/HP 저장 비트다.
         out<<"raw_asset_fields\t"<<snapshot.sid.value<<'\t'<<static_cast<std::uint32_t>(raw[11])<<'\t'<<static_cast<std::uint32_t>(raw[patch ? 40 : 35])<<'\t'<<Read(raw,26,patch ? 4 : 2)<<'\n';
+        if (impl_->types[raw[10]].flags2&4U) { const auto codes=impl_->frames[raw[10]].Codes();if (seed.frame<0 || static_cast<std::size_t>(seed.frame)>=codes.size()) throw std::out_of_range("다리 현재 수명 보고의 프레임 범위");out<<"raw_bridge_fields\t"<<snapshot.sid.value<<'\t'<<Read(raw,12,2)<<'\t'<<static_cast<std::uint32_t>(codes[static_cast<std::size_t>(seed.frame)].flags)<<'\n'; } //CLI 읽기 전용 관측이며 실제 수명/Hard/Cracked 비트를 임의 주입하지 않는다.
         const auto table=Read(raw,0,4); // 원본 두FactoryVT의현재내용물을모든원소워크샾에서같은방식으로관측한다.
         if (patch && o::ObjectConversionBody(table)) { // 타입전환/저장재적재전후에같은실제Form과현재Regular예약을관측한다.
             std::size_t visited{},regulars{}; // 순환검사와실제등록된예약수이며상태/시각을변경하지않는다.

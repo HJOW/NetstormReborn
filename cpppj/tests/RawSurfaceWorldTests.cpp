@@ -1,6 +1,9 @@
 // GUI가 소유하는 raw 월드의 시각·정지·장치 교체·예약 수명을 원본 파일 없이 검사한다.
 #include "RawSceneSupport.h"
 #include "client/RawSurfaceWorld.h"
+#include "client/ClientBridgeDecay.h"
+#include "client/ClientGameplayGlobals.h"
+#include "o/RawStateBridgeReset.h"
 #include "o/SquidFactory.h"
 #include <limits>
 #include <cstring>
@@ -198,5 +201,44 @@ TEST_CASE(RawSurfaceWorld_CampaignFinishPreservesParentGraph) {
         CHECK(std::ranges::equal(stack,core.graph.FloodStack()) && std::ranges::equal(raw,core.pool.Slot(sid)));
         CHECK(std::ranges::equal(spots,core.spots) && std::ranges::equal(hash,core.hash.Entries(0)));
         CHECK(Throws([&] { world->FinishLoadAfterGraph(); }) && Throws([&] { world->BeginLoad(); }));
+    }
+}
+
+//World 없는 메뉴도 같은 현재 커서/기한을 진행하며 정지/Editor/권한은 상태를 보존한다.
+TEST_CASE(BridgeDecayRuntime_MenuStorageCurrentGatesAndIdentity) {
+    Inputs data(OriginalEdition::Patch1078);ClientGameplayGlobals globals;RawSurfaceStorage storage(OriginalEdition::Patch1078,data.types,data.frames,data.shapes,nullptr,globals.Authority(),globals.GameAux());
+    ResetStateBridgeDecayScan(storage.bridgeDecayScan,storage.bridgeDecayPeriod,0.0);std::size_t calls{};const auto cell=[&](Sid) { ++calls; }; //빈 실제 풀에서는 어떤 Session도 요구하지 않는다.
+    RunSurfaceBridgeDecay(storage,globals,{1.0,1.0,0.5,1},false,cell);CHECK(!calls && storage.bridgeDecayScan.cursor==15400 && storage.bridgeDecayScan.next==10.0 && !storage.Borrowed());
+    globals.Authority()->boss=false;RunSurfaceBridgeDecay(storage,globals,{2,2,1,2},false,cell);CHECK(storage.bridgeDecayScan.cursor==15400);
+    globals.Authority()->boss=true;globals.world.editor=1;RunSurfaceBridgeDecay(storage,globals,{3,3,1,3},false,cell);CHECK(storage.bridgeDecayScan.cursor==15400);
+    globals.world.editor=0;RunSurfaceBridgeDecay(storage,globals,{1,4,0,4},true,cell);CHECK(storage.bridgeDecayScan.cursor==15400 && storage.bridgeDecayScan.next==10.0 && !calls);
+    ClientGameplayGlobals foreign;CHECK(Throws([&] { RunSurfaceBridgeDecay(storage,foreign,{4,4,1,5},false,cell); }) && storage.bridgeDecayScan.cursor==15400);
+}
+
+//실제8천 슬롯 스캔→수명/금 간 그림→현재 server의0수명 판단→Graph/Unpop/반납을 연결한다.
+TEST_CASE(BridgeDecayRuntime_ActualWorldScanCrackAndDeletion) {
+    Inputs data(OriginalEdition::Patch1078);std::uint32_t editor{};std::size_t carriers{},sounds{};double effectTime{};auto world=data.Make(OriginalEdition::Patch1078);world->Load(Seeds());const auto core=world->Core();const auto outer=world->Find(32,29,kBridge);CHECK(outer.value);
+    world->BindBridgeDecay(editor,[&](Sid sid) { CHECK(sid==outer);++carriers; },[&](Sid sid) { CHECK(sid==outer && world->Core().processState.Now()>=30.0);++sounds; },[&](FrameTime time) { effectTime=time.game;CHECK(world->Core().processState.Now()==time.game); }); //장치가 읽는 시각은 같은 실제 PrepareFrame 뒤다.
+    auto& scan=world->Storage()->bridgeDecayScan;ResetStateBridgeDecayScan(scan,world->Storage()->bridgeDecayPeriod,0.0);
+    world->RunFrame({0.25,0.25,0.25,1},false);CHECK(((Get(core.pool.Slot(outer),12,2)&0x78U)>>3)==7);const auto cursor=scan.cursor;
+    world->RunFrame({0.25,4,0,2},true);CHECK(scan.cursor==cursor && ((Get(core.pool.Slot(outer),12,2)&0x78U)>>3)==7);
+    editor=1;world->RunFrame({0.5,4.25,0.25,3},false);CHECK(scan.cursor==cursor);editor=0;world->Storage()->Authority()->boss=false;world->RunFrame({0.75,4.5,0.25,4},false);CHECK(scan.cursor==cursor);world->Storage()->Authority()->boss=true;
+    for (std::uint64_t frame=4;frame<=123;++frame) { const auto now=static_cast<double>(frame)*0.25;world->RunFrame({now,now+4,0.25,frame+1},false); } //현재 주기10 안에서 실제 전체 슬롯을 나누어 훑는다.
+    CHECK(((Get(core.pool.Slot(outer),12,2)&0x78U)>>3)==4 && (data.frames[kBridge].Codes()[Get(core.pool.Slot(outer),36)].flags&0x20U));CHECK(carriers>=2 && sounds==1 && effectTime==30.75);
+    auto raw=core.pool.AllocatedBytes(outer);Put(raw,12,(Get(raw,12,2)&~0x78U)|8U,2);world->Storage()->Authority()->server=false;world->DecayBridgeCell({31,35,0.25,125},outer);
+    CHECK(world->Find(32,29,kBridge)==outer && (Get(core.pool.Slot(outer),12,2)&0x78U)==0);
+    const std::vector<GraphRecord> beforeGraph(core.graph.Records().begin(),core.graph.Records().end()); //원본421c30의 J/K 제거 flags02000000은 pre Graph 분할을 생략한다.
+    CHECK(data.frames[kBridge].Codes()[Get(core.pool.Slot(outer),36)].side=='K');
+    raw=core.pool.AllocatedBytes(outer);Put(raw,12,(Get(raw,12,2)&~0x78U)|8U,2);world->Storage()->Authority()->server=true;world->DecayBridgeCell({31.25,35.25,0.25,126},outer);
+    CHECK(!world->Find(32,29,kBridge).value && (core.pool.Slot(outer)[11]&1U) && Summary(*world)[4]=="11" && Summary(*world)[6]=="5");
+    CHECK(std::memcmp(beforeGraph.data(),core.graph.Records().data(),beforeGraph.size()*sizeof(GraphRecord))==0);
+}
+
+//Hard 보호는 같은 현재 boss/Editor 주소를 즉시 읽으며 다음 Frame 사본을 기다리지 않는다.
+TEST_CASE(BridgeDecayRuntime_ImmediateAuthorityAndEditorDestroyModes) {
+    for (const bool useEditor:{false,true}) { //각 관문을 독립된 실제 World/Graph에서 바꾼다.
+        Inputs data(OriginalEdition::Patch1078);std::uint32_t editor{};auto world=data.Make(OriginalEdition::Patch1078);world->Load(Seeds(true));const auto hard=world->Find(31,29,kBridge);world->BindBridgeDecay(editor,[](Sid) {},[](Sid) {});
+        CHECK(hard.value && !world->Destroy(hard));if (useEditor) editor=1;else world->Storage()->Authority()->boss=false;
+        CHECK(world->Destroy(hard) && !world->Find(31,29,kBridge).value);
     }
 }

@@ -4,6 +4,7 @@
 #include "o/Graph.h"
 
 namespace netstorm::o { //원문 슬롯/표면 지도는 호출 중에도 현재값을 읽는다.
+struct RawAuthorityState; //현재 Client 서버 전역의 주소만 빌리며 별도 사본을 만들지 않는다.
 //가상 삭제/표시·무상태 표면 진단·이동체 확인·위치 소리만 같은 현재 월드에서 공급한다.
 struct RawBridgeDecayHooks {
     std::function<void(Sid,std::uint32_t)> destroy; //004220f0의 실제 가상10이며 거부/재귀 삭제도 호출자가 처리한다.
@@ -17,7 +18,7 @@ class RawBridgeDecay {
 public:
     RawBridgeDecay(SidPool& pool,std::span<const RiftTypeRecord> types,std::span<const RiftTypeFrames> frames,
         std::span<const std::uint16_t> surface,std::span<const std::uint8_t> spots,std::span<const GraphRecord> graphs,
-        const BridgeDecayMode& mode,RawBridgeDecayHooks hooks); //모든 현재 자료와 효과 대상은 이 실행기보다 오래 살아야 한다.
+        const BridgeDecayMode& mode,RawBridgeDecayHooks hooks,const RawAuthorityState* authority=nullptr); //실제 Client는 같은 현재 서버 주소를 빌리며 기존 독립 입력만 mode fallback을 쓴다.
     void Cell(Sid root) const; //작은 Graph→Hard→이웃/열린 끝→방문 목록→현재 수명/삭제 순서다. 원문 예외는 바깥 스캔이 처리한다.
     void ApplyLife(Sid sid,std::int32_t reduction) const; //정상7 초과를 미리 거부하지 않고 원문의 signed 산술/4비트 쓰기를 보존한다.
 private:
@@ -33,5 +34,6 @@ private:
     std::span<const GraphRecord> graphs_; //Graph 분할/반납의 변경도 바로 보이는255행 배열이다.
     const BridgeDecayMode& mode_; //같은 현재 server/authority/editor/개발용 표시 상태다.
     RawBridgeDecayHooks hooks_; //필요한 효과는 도달 시점에 검사하며 앞선 실제 쓰기를 보존한다.
+    const RawAuthorityState* authority_{}; //수명0의 제거 관문은 효과 뒤에도 현재 server를 직접 읽는다.
 };
 }

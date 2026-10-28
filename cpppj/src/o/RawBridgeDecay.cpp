@@ -1,5 +1,6 @@
 //논리 스냅샷을 일괄 반영하지 않고 원문의 직접 쓰기와 재진입 효과를 같은 슬롯에 적용한다.
 #include "o/RawBridgeDecay.h"
+#include "o/RawAuthorityState.h"
 #include "o/RawCanonPlacementSurrounding.h"
 #include <algorithm>
 #include <bit>
@@ -23,8 +24,8 @@ void Put(std::span<std::uint8_t> raw,std::size_t offset,std::uint32_t value,std:
 //초기화/구성은 저장된 수명·스캔·Graph를 수정하지 않는다.
 RawBridgeDecay::RawBridgeDecay(SidPool& pool,std::span<const RiftTypeRecord> types,std::span<const RiftTypeFrames> frames,
     std::span<const std::uint16_t> surface,std::span<const std::uint8_t> spots,std::span<const GraphRecord> graphs,
-    const BridgeDecayMode& mode,RawBridgeDecayHooks hooks)
-    :pool_(pool),types_(types),frames_(frames),surface_(surface),spots_(spots),graphs_(graphs),mode_(mode),hooks_(std::move(hooks)) {
+    const BridgeDecayMode& mode,RawBridgeDecayHooks hooks,const RawAuthorityState* authority)
+    :pool_(pool),types_(types),frames_(frames),surface_(surface),spots_(spots),graphs_(graphs),mode_(mode),hooks_(std::move(hooks)),authority_(authority) {
     if (pool.Edition()!=OriginalEdition::Patch1078 || types.size()!=188 || frames.size()!=types.size() || surface.size()!=65536 || spots.size()!=surface.size() || graphs.size()!=255)
         throw std::invalid_argument("다리 붕괴의 PATCH 풀/현재 표면/Graph 표 오류");
 }
@@ -65,7 +66,7 @@ BridgeDecayWalk RawBridgeDecay::Collect(Sid root) const {
 void RawBridgeDecay::ApplyLife(Sid sid,std::int32_t reduction) const {
     const auto previous=static_cast<std::int32_t>((Read(pool_.Slot(sid),12,2)&0x78U)>>3);
     auto remaining=std::bit_cast<std::int32_t>(static_cast<std::uint32_t>(previous)-std::bit_cast<std::uint32_t>(reduction));if (remaining<0) remaining=0;
-    if (!remaining && mode_.server) { const auto side=Code(sid).side;Need(hooks_.destroy)(sid,side=='J' || side=='K' ? kBridgePlankRemoval : 0U);return; }
+    if (!remaining && (authority_ ? authority_->server : mode_.server)) { const auto side=Code(sid).side;Need(hooks_.destroy)(sid,side=='J' || side=='K' ? kBridgePlankRemoval : 0U);return; }
     auto raw=Bytes(sid);Put(raw,12,(Read(raw,12,2)&~0x78U)|((static_cast<std::uint32_t>(remaining)*8U)&0x78U),2);Need(hooks_.notifySurface)(sid);
     if (remaining<kBridgeCrackLife && previous>=kBridgeCrackLife) {
         const auto current=pool_.Slot(sid);if (current[10]>=frames_.size()) throw std::out_of_range("다리 수명 통지 뒤의 현재 TYPE 범위");

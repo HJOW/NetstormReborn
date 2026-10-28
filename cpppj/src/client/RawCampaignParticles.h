@@ -48,6 +48,7 @@ public:
     o::SmokeVisualProcess* AddCooling(o::Sid parent,std::array<std::int32_t,2> hotspot); // 현재 SHP 포인트에서 실제21/10회/간격3 연기를 만든다.
     // 같은 전체 Kernel 실행 직전 현재 게임 시각을 공급한다.
     void PrepareFrame(double now,std::uint32_t frameNumber=0,bool weakenedMana=false); // 원본 현재DWORD frame과 약화 마나도 같은 월드에서 공급한다.
+    void PrepareBridgeClock(double now,std::uint32_t frameNumber); //이른 원문 스캔의 삭제/파편도 현재 시각을 읽도록 시간 필드만 쓰며 카메라/색표를 갱신하지 않는다.
     // 현재 실제 카메라/표시 영역과 장치 재생성에도 유효한 dirty 경계를 갱신한다.
     void BindCameraView(const RawCameraViewState& view); // 참조한 Client snapshot은 모든 입자보다 오래 살아야 한다.
     void BindWeakenedMana(const bool& current); // 같은 Client005ca8f0을 연소점 선택에 빌리며 다른 주소 재연결은 거부한다.

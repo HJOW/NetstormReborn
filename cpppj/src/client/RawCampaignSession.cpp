@@ -1,6 +1,7 @@
 // 기존 원본 몸체의 단일 저장소 조립을 실제 클라이언트 세션이 소유한다.
 #include "client/RawCampaignSession.h"
 #include "client/SendMoneyInput.h"
+#include "o/RawBridgeCarriers.h"
 #include "o/RawIceRicochet.h" // 실제 아이스 반사점/선택도 같은 풀·HP·해시·게임 난수를 사용한다.
 #include "o/RawIslandAdd.h"
 #include "o/RawIslandQueries.h"
@@ -569,6 +570,8 @@ struct RawCampaignSession::Impl {
     std::array<std::uint32_t,188> shrapnelMapTokens{}; // 원본 일반 소유자 색표가 복원된 다리/73/144의 실제 토큰이다.
     std::map<std::uint32_t,OwnerColorMaps> shrapnelOwnerColors; // 현재 원본 후보로 만든 TYPE별9×256 색표이며 실제 소유자 색을 매번 선택한다.
     BridgeDrawState bridgeDrawState;std::unique_ptr<RawBridgeDraw> bridgeDraw; // 같은 기본0 수명 숫자 전역과 실제 다리 캡처 가상 몸체다.
+    std::int32_t bridgeAvoidLife{7}; //0052f964의 현재 signed 경계이며 대피 후보 수명 비교가 이 주소를 읽는다.
+    std::unique_ptr<RawBridgeCarriers> bridgeCarriers; //현재 사제/rainWalker의 실제 이동 Form과 안전한 같은Graph 표면 대피를 연결한다.
     ShapeToBufferState shrapnelCaptureState; // 원본 fixed16/추가 TYPE 기준점/현재 소유자 색 선택이다.
     std::unique_ptr<RawShapeToBuffer> shrapnelCapture; // 같은 raw/보호 SHP의 실제 캡처이며 표시보다 오래 산다.
     std::unique_ptr<RawCampaignParticles> particles; // 같은 Host/Kernel/Renderer의 실제11/19/16 표시다.
@@ -3167,6 +3170,18 @@ struct RawCampaignSession::Impl {
             services.pathPacket(std::span<const std::uint8_t>(pathBuffer).first(static_cast<std::size_t>(length)));
         });
         core.processes.SetFormTransmit(AviaryTransmission(assetBindings->Transmission(std::move(pathTx))));
+        BridgeCarrierHooks bridgeHooks;
+        bridgeHooks.graphFor=[this](Sid sid) { return anchor->GraphFor(sid.value); };
+        bridgeHooks.movementType=[this](std::uint32_t type) { return priests->MovementProcessType(type); };
+        bridgeHooks.movementForm=[this](Sid sid,std::uint32_t type) { RawContainedLookup lookup(core.pool,[this](Sid target,std::uint32_t flags) { static_cast<void>(world.Destroy(target,flags)); });return lookup.Find(sid,type,0,false); };
+        bridgeHooks.start=[this](Sid sid,RawPathPoint point) { return StartMotion({sid,point,0,0,0,0,0})!=0; };
+        bridgeHooks.valid=[this](RawPathPoint point) { return carrierFalling->ValidPoint(point.x,point.y); };
+        bridgeHooks.wontWalkOffEdge=[this](std::uint32_t type) { const auto& current=priestState.movement;return type==current.priest || type==current.windWalker || type==current.rainWalker || type==current.bulf || type==current.empty; };
+        bridgeHooks.assertion=[](std::uint32_t line) { throw std::logic_error("원본 다리/Carrier 대피 진단 "+std::to_string(line)); };
+        bridgeCarriers=std::make_unique<RawBridgeCarriers>(core.pool,core.hash,core.types,gameplayGlobals->Authority()->boss,gunState.checking,priestState.movement.priest,priestState.movement.rainWalker,bridgeAvoidLife,std::move(bridgeHooks));
+        world.BindBridgeDecay(globals.editor,[this](Sid sid) { bridgeCarriers->Check(sid); },[this](Sid sid) {
+            if (!services.sound.playOnceAt) throw std::logic_error("실제 다리 균열 위치 소리 미연결");const auto raw=core.pool.Slot(sid);services.sound.playOnceAt(std::bit_cast<float>(Read(raw,14)),std::bit_cast<float>(Read(raw,18)),soundNames.Lookup("bridgeCrack.wav"),0,0);
+        },[this](FrameTime time) { particles->PrepareBridgeClock(time.game,static_cast<std::uint32_t>(time.number));soundState.frame=static_cast<std::uint32_t>(time.number); }); //이른 원문 스캔도 같은 현재 시각/프레임을 읽고 카메라/AI 준비는 중첩하지 않는다.
     }
     // 카메라의005c89b8은 별도 UI 카운터가 아니라 실제 월드 로딩 전역과 같은 저장소다.
     CameraHome Camera(CameraHomeState& state,std::function<void(std::int32_t,std::int32_t)> apply) {
@@ -3482,7 +3497,7 @@ void RawCampaignSession::StartConstruction(Sid parent,float duration) {
 // 현재 같은 시각을 공격/소리/AI에 공급하되 Kernel은 호출자의 원문 위치에서 한 번만 실행한다.
 void RawCampaignSession::PrepareFrame(FrameTime time,bool paused) { impl_->flyerPaused=paused;if (impl_->core.processState.sharedNow) time.game=impl_->core.processState.Now();else impl_->core.processState.now=time.game;impl_->PrepareBuilding(time.game);impl_->assetBindings->PrepareFrame(time.game);impl_->combat->PrepareFrame(time);impl_->particles->PrepareFrame(time.game,static_cast<std::uint32_t>(time.number));impl_->soundState.frame=static_cast<std::uint32_t>(time.number);if (!paused) { if (!impl_->aiRuntime) throw std::logic_error("실제 Session 자동 AI 프레임 설치 전 호출");impl_->aiRuntime->Frame(); }impl_->world.PrepareFrame(time); }
 // 독립 검사/호출자는 기존 준비와 단일 Kernel 실행을 함께 요청한다. 실제 GUI는 두 단계를 분리한다.
-void RawCampaignSession::RunFrame(FrameTime time,bool paused) { PrepareFrame(time,paused);if (!paused) impl_->core.kernel.RunFrame(); }
+void RawCampaignSession::RunFrame(FrameTime time,bool paused) { impl_->world.ScanBridgeDecay(time,paused);PrepareFrame(time,paused);if (!paused) impl_->core.kernel.RunFrame(); }
 // 해상도/카메라 변경과 동일 위치 효과음의 view를 process11에도 전달한다.
 ClientCameraGlobals& RawCampaignSession::CameraGlobals() { return impl_->gameplayGlobals->Camera(); }
 // 같은 Client owner를 현재값으로 관측한다.

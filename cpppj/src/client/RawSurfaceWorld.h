@@ -223,6 +223,9 @@ public:
     // 원본 고정 게임 시각을 모든 Regular에 공급한다. 정지 중에는 커널을 실행하지 않는다.
     void RunFrame(o::FrameTime time,bool paused);
     void PrepareFrame(o::FrameTime time); // 같은 시각만 공급한다. 실제 Client는 이후 전역 Kernel을 정확히 한 번 실행한다.
+    void BindBridgeDecay(const std::uint32_t& editor,std::function<void(o::Sid)> carriers,std::function<void(o::Sid)> sound,std::function<void(o::FrameTime)> time={}); //현재 Editor/대피/소리/원문 현재 시각을 첫 Frame 전에 연결한다.
+    void DecayBridgeCell(o::FrameTime time,o::Sid sid); //같은 현재 시각에서 실제 수명/Graph/가상 삭제/표시를 실행한다.
+    void ScanBridgeDecay(o::FrameTime time,bool paused); //독립 World도 같은 현재 스캔 저장소와 정지/Editor/권한 관문을 사용한다.
     // 카메라/viewport와 현재 Renderer의 표시 전달 경로를 갱신한다.
     void SetDisplay(o::SquidDisplayView view,SurfaceDisplayHooks hooks);
     // 지정 위치의 실제 객체/받침을 조회한다. 없으면 SID 0이다.

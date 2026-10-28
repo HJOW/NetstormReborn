@@ -161,10 +161,11 @@ o::DissolveVisualProcess* RawCampaignParticles::AddDissolve(o::Sid source,o::Sid
 }
 // 원본 게임 시각을 별도 고정 틱이나 벽시각으로 대체하지 않는다.
 void RawCampaignParticles::PrepareFrame(double now,std::uint32_t frameNumber,bool weakenedMana) { RefreshCamera();
-    if (!std::isfinite(now)) throw std::invalid_argument("캠페인 입자 게임 시각 오류");frame_.now=now;constructionFrame_.now=now;
-    burningFrame_.now=now;burningFrameNumber_=frameNumber;burningSources_.weakenedMana=weakenedMana;
+    PrepareBridgeClock(now,frameNumber);burningSources_.weakenedMana=weakenedMana;
     if (constructionMemory_.Count()) constructionColors_.entries=constructionMemory_.Snapshot();
 }
+//원문55b4d0/55b4a8은 스캔보다 먼저 고정된다. 준비를 중첩 실행하지 않고 같은 필드에 현재값만 공급한다.
+void RawCampaignParticles::PrepareBridgeClock(double now,std::uint32_t frameNumber) { if (!std::isfinite(now)) throw std::invalid_argument("캠페인 입자 게임 시각 오류");frame_.now=now;constructionFrame_.now=now;burningFrame_.now=now;burningFrameNumber_=frameNumber; }
 // 카메라가 바뀌면 표시 영역을 함께 다시 그린다. 같은 view 호출도 대기 dirty를 장치에 전달한다.
 void RawCampaignParticles::SetView(SoundView view,SurfaceDisplayHooks display) {
     const auto pixels=cameraView_ ? cameraView_->pixels : std::array<std::int32_t,2>{view.cameraX,view.cameraY}; // 현재 소유자와 직전 통지 이력을 구별한다.

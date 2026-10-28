@@ -1,0 +1,9 @@
+{
+  "host": "HJOW-Athlon",
+  "last_full_decompilation": "HJOW-Athlon / 2026-10-23",
+  "unique_inputs": 258,
+  "native_observations": 516,
+  "precision_different": [],
+  "boundary": "실제 finder/Graph/원천 수명/대상 predicate/거리/선택; 이동 종류 선택/현재 Form/실제 이동 시작/진단 보고만 대체",
+  "binary_sha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236"
+}
