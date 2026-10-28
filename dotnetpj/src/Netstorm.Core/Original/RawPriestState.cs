@@ -2,14 +2,56 @@ namespace Netstorm.Core.Original;
 
 /// <summary>
 /// 사제·운반체 HP 변경의 권한과 회복 허용 상태(원본 PriestHitPointMode).
+/// 권한과 허용 표는 같은 Client의 장기 값을 빌릴 수 있으며, 미연결 독립 검사는 값형 입력을 쓴다.
 /// </summary>
 public sealed class PriestHitPointMode
 {
-    /// <summary>HP 변경을 마무리할 권한(원본 00540bc4).</summary>
+    /// <summary>HP 변경을 마무리할 권한(원본 00540bc4). 공유 권한이 연결되면 읽지 않는다.</summary>
     public bool Authority { get; set; } = true;
 
-    /// <summary>Player +0x7c 의 회복 허용 표. 모두 1 로 시작하고 0 이면 회복을 막는다.</summary>
+    /// <summary>실제 Client boss의 장기 권한. 연결되면 <see cref="GetAuthority"/>가 이 값을 읽는다.</summary>
+    public Func<bool>? SharedAuthority { get; set; }
+
+    /// <summary>Player +0x7c 의 회복 허용 표. 모두 1 로 시작하고 0 이면 회복을 막는다. 장기 기록이 연결되면 읽지 않는다.</summary>
     public bool[] RecoveryAllowed { get; set; } = new bool[10];
+
+    /// <summary>같은 Client의 실제 Player 9 기록. 사제 신전 DWORD의 0 아님을 허용 조건으로 읽으며, 허용 bool이나 SID 사본을 만들지 않는다.</summary>
+    public byte[]? PlayerRecords { get; set; }
+
+    /// <summary>HP·중립 회복의 원문 조회 위치에서 현재 권한을 읽는다.</summary>
+    public bool GetAuthority() => SharedAuthority?.Invoke() ?? Authority;
+
+    /// <summary>
+    /// 원문 회복 분기에서 현재 신전 DWORD의 0 아님을 읽는다. 장기 기록이 없으면 기존 배열을 쓴다.
+    /// 10.78 배치(stride 0xb4/offset 0x7c)만 복원했으며 판본 검사는 생략한다.
+    /// 근거: cpppj/src/o/RawPriestState.cpp RecoveryAllowed (R0-4 재대조, 2026-10-28).
+    /// </summary>
+    /// <param name="owner">소유자 번호(0~9).</param>
+    public bool GetRecoveryAllowed(uint owner)
+    {
+        if (owner > 9)
+        {
+            throw new ArgumentOutOfRangeException(nameof(owner), owner, "사제 HP 회복 Player 번호 오류");
+        }
+        if (PlayerRecords is null)
+        {
+            return RecoveryAllowed[owner];
+        }
+        const int stride = 0xb4;
+        const int field = 0x7c;
+        if (PlayerRecords.Length != 10 * stride)
+        {
+            throw new ArgumentException("사제 HP 회복 Player9 기록 폭 오류", nameof(PlayerRecords));
+        }
+        int offset = (int)owner * stride + field;
+        uint temple = 0;
+        // 리틀 엔디언 네 바이트만 읽으며 인접 Player 필드를 쓰지 않는다
+        for (int i = 0; i < 4; i++)
+        {
+            temple |= (uint)PlayerRecords[offset + i] << (8 * i);
+        }
+        return temple != 0;
+    }
 }
 
 /// <summary>
@@ -166,6 +208,7 @@ public sealed class RawPriestState
     /// <summary>
     /// HP 를 쓰고 절반 경계 전환이 있으면 공간 해제·등록을 수행한다.
     /// 권한이 없으면 경계값으로 되돌리고, 회복이 막혔으면 원래 HP 를 되살린다.
+    /// 회복 허용은 장기 Player 기록이 있으면 그 신전 DWORD를, 없으면 기존 배열을 읽는다.
     /// </summary>
     /// <param name="sid">대상 슬롯 번호.</param>
     /// <param name="value">쓸 HP 값.</param>
@@ -186,11 +229,11 @@ public sealed class RawPriestState
         bool transition = (value < half) != wasLow;
         byte owner = raw[34];
         // 실제로 참조하는 소유자 칸과 필요한 가상 효과만 쓰기 전에 검사한다.
-        if (transition && mode.Authority && wasLow && owner > 9)
+        if (transition && mode.GetAuthority() && wasLow && owner > 9)
         {
             throw new ArgumentOutOfRangeException(nameof(sid), owner, "사제 HP 회복 소유자 오류");
         }
-        bool space = transition && mode.Authority && (!wasLow || mode.RecoveryAllowed[owner]);
+        bool space = transition && mode.GetAuthority() && (!wasLow || mode.GetRecoveryAllowed(owner));
         if (space && (hooks.Unpop is null || hooks.Repop is null))
         {
             throw new ArgumentException("사제 HP 변경 공간 효과 누락", nameof(hooks));
@@ -209,12 +252,12 @@ public sealed class RawPriestState
         {
             return;
         }
-        if (!mode.Authority)
+        if (!mode.GetAuthority())
         {
             Write(half - (wasLow ? 1 : 0));
             return;
         }
-        if (wasLow && !mode.RecoveryAllowed[owner])
+        if (wasLow && !mode.GetRecoveryAllowed(owner))
         {
             Write(oldHp);
             return;

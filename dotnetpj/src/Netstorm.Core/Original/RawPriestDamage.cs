@@ -10,8 +10,14 @@ public sealed class PriestDamageState
     /// <summary>원본 NoDamage 전역. 참이면 피격량을 0 으로 만든다.</summary>
     public bool Invulnerable { get; set; }
 
-    /// <summary>HP 1 사제의 현재 의존 감시를 끊는 원본 권한이다.</summary>
+    /// <summary>HP 1 사제의 현재 의존 감시를 끊는 원본 권한이다. 공유 권한이 연결되면 읽지 않는다.</summary>
     public bool Boss { get; set; } = true;
+
+    /// <summary>실제 Client boss의 장기 권한. 연결되면 <see cref="GetBoss"/>가 이 값을 읽는다.</summary>
+    public Func<bool>? SharedBoss { get; set; }
+
+    /// <summary>피격·소유자·표시 효과 뒤 HP 1 감시 해제 관문에서 현재 권한을 읽는다.</summary>
+    public bool GetBoss() => SharedBoss?.Invoke() ?? Boss;
 
     /// <summary>원본 00594fa4 가 0 이 아니면 레벨 피해 보정을 생략한다.</summary>
     public bool LevelCorrectionDisabled { get; set; }
@@ -280,7 +286,7 @@ public sealed class RawPriestDamage
         _hooks.SetHitPoints(victim, next < 1 ? 1 : next);
         _hooks.OwnerDamageNotice(_pool.Slot(victim)[OwnerOffset], victim, attacker);
         _hooks.DamageableRefresh(victim);
-        if (_state.Boss && Health(victim) == 1)
+        if (_state.GetBoss() && Health(victim) == 1)
         {
             DropDependents(victim);
             return false;

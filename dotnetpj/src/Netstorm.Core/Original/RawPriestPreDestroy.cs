@@ -7,8 +7,14 @@ namespace Netstorm.Core.Original;
 /// </summary>
 public sealed class PriestPostPopState
 {
-    /// <summary>중복 없이 등록하는 사제 목록(원본 005954c4 / CD 00549188). 사전 파괴는 같은 목록을 앞방향으로 압축한다.</summary>
+    /// <summary>중복 없이 등록하는 사제 목록(원본 005954c4 / CD 00549188). 사전 파괴는 같은 목록을 앞방향으로 압축한다. 공유 목록이 연결되면 읽지 않는다.</summary>
     public RawPostPopList Priests { get; } = new();
+
+    /// <summary>실제 Session의 장기 사제 목록. 연결되면 <see cref="GetPriests"/>가 이 목록을 직접 쓴다.</summary>
+    public RawPostPopList? SharedPriests { get; set; }
+
+    /// <summary>Pop·삭제가 같은 현재 사제 목록에 직접 쓴다.</summary>
+    public RawPostPopList GetPriests() => SharedPriests ?? Priests;
 }
 
 /// <summary>
@@ -130,7 +136,7 @@ public sealed class RawPriestPreDestroy
         // 일반 경로는 목록을 쓰기 전에 활성 개수를 검사한다
         if (ordinary)
         {
-            _ = _state.Priests.Items();
+            _ = _state.GetPriests().Items();
         }
         // Carrier 사전 검사는 목록·보호막보다 먼저이며 일반·추상 모두 부른다
         _hooks.ValidateCarrier!(sid, flags);
@@ -157,7 +163,7 @@ public sealed class RawPriestPreDestroy
     /// <param name="sid">뺄 사제 번호.</param>
     private void Remove(int sid)
     {
-        RawPostPopList list = _state.Priests;
+        RawPostPopList list = _state.GetPriests();
         // 손상된 개수는 목록을 쓰기 전에 거부한다
         _ = list.Items().Length;
         uint removed = 0;
