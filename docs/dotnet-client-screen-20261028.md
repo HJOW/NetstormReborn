@@ -155,3 +155,22 @@ NetstormCpp.exe --run extracted\dotnet-oracle-data --window --no-audio --frames 
 
 **검증:** Release 경고·오류 0. Client 검사 77개(+5)·Core 검사 1025개(+3) 통과, 전체 **1,465개(Assets 363 + Core 1025 + Client 77) 통과**.
 변이 1건(그림자 어두움 곱 0.6000000238418579→0.61)에 L1 기대값 실패를 확인하고 원복했다.
+
+## 10. R2d-1: 변환·합성·이미지·시작 (같은 날, HJOW-Athlon)
+
+그리기 원시·팔레트·글꼴(R2)의 네 번째 묶음 중 자립 가능한 4종이다. `RawShapeToBuffer`·`SpriteDraw` 본체는 세션 자산(SID 풀·TYPE 표·SHP 수집)이 필요해 R2d-2에서 잇고, `GifImage` 적응·`BitmapFont` 적응은 플랫폼 대체 경계 정리와 함께 R2d-2에서 잇는다.
+
+| 파일 | cpppj 근거 | 내용 |
+| --- | --- | --- |
+| `Display/RendererDraw.cs` | `Renderer.cpp/.h`의 `DrawIndexedImage` | 불투명 픽셀만 합성하고 그림자는 대상 화면 색을 표에서 변환한다. VFXTransform·SpriteDraw가 같은 규칙을 쓰므로 R5 전체 Renderer보다 먼저 옮겼다 |
+| `Display/VfxTransform.cs` | `VFXTransform.cpp/.h` (원본 004028cb, CD 004662ab의 angle=0 분기) | 회전 없는 16.16 확대·축소. 단위 배율은 일반 출력으로 위임하고, WORD 경계·간격 상한·투명 255 유지·역전 축을 유지한다 |
+| `Display/RawImage.cs` | `RawImage.cpp/.h` (원본 0046d790·0046d900·0046d8a0) | 행 우선 비트맵 소비·오른쪽/아래 crop·VFX 인코딩·깊은 복사·소멸 수명. `TerrainBitmapImage` 입력은 R4 공용 지형 비트맵으로 재배선할 때까지 이 파일이 소유한다 |
+| `Original/RawColorSortStartup.cs` | `o/RawColorSortStartup.cpp/.h` (원본 43b430·43b300) | 시작 부모의 현재 슬롯·호출 순서. 하위 계산은 필수 경계(할당·생성·정렬·색띠)로 분리하고 451 진단·개수 10을 유지한다 |
+
+- `PORT_MAP.tsv`에 8개 행을 새로 추가했다(`L1` 2개·`port` 6개). fixture 1개(`colorsort-startup` 116행: 정상 100·부분중단 16)를 연결했다.
+- `colorsort-startup` 대조는 Device 하네스를 C#으로 옮겨 종류·슬롯·실패 무늬·변경·상태·물리·자취를 전부 비교한다. 원본 하네스의 경계 이름 규칙(하위 리터럴 `assert`·`sort`·`search`·`qsort`·`gradient`, 번호 포함 `free{N}`·`alloc{N}`)을 그대로 따르지 않으면 중단 무늬 행이 어긋나므로, 처음 실패한 16행으로 확인하고 고쳤다(테스트 오류이며 소스 수정 없음).
+- `VfxTransform`·`RendererDraw`·`RawImage`는 대조 fixture가 없어 `port`이며 R5·R4에서 끝까지 대조한다. `RawImage` 이중 변환은 원문대로 덮어쓰기이며 거부하지 않는다(변환 성공 뒤 `bits_`가 비어 있어 진단을 타지 않음). 이를 거부로 잘못 적은 테스트를 원본과 대조해 고쳤다(테스트 오류이며 소스 수정 없음).
+- `Renderer.h` 행은 `RendererDraw.cs`에 함께 대응시켰다. 전체 `Renderer`(정렬·변경 표·장면 합성)는 R5 몫이며 이 단위에서 옮기지 않았다.
+
+**검증:** Release 경고·오류 0. Client 검사 94개(+17)·Core 검사 1027개(+2) 통과, 전체 **1,484개(Assets 363 + Core 1027 + Client 94) 통과**.
+변이 2건(시작 개수 10→11에 L1 기대값 실패, 변환 시작점 `lastX > firstX ? 0 : sourceX` 반전에 계약 실패)에 실패를 확인하고 원복했다. 편향 상수(`TextureBias`) 1 증가 변이는 작은 계약 경우에 걸리지 않아 판별력 근거로 쓰지 않았다.

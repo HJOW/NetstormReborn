@@ -27,6 +27,10 @@ cpppj/src/client/PreviewColorMaps.cpp	Netstorm.Client/Display/PreviewColorMaps.c
 cpppj/src/client/PreviewColorMaps.h	Netstorm.Client/Display/PreviewColorMaps.cs	e4b739b97f5316453de827b92ba6527a63f17637	L1
 cpppj/src/client/ProductionColorMaps.cpp	Netstorm.Client/Display/ProductionColorMaps.cs	e4b739b97f5316453de827b92ba6527a63f17637	L1
 cpppj/src/client/ProductionColorMaps.h	Netstorm.Client/Display/ProductionColorMaps.cs	e4b739b97f5316453de827b92ba6527a63f17637	L1
+cpppj/src/client/RawImage.cpp	Netstorm.Client/Display/RawImage.cs	ca0c01ebfceb9801ef1fcdb272deec4dc311a2db	port
+cpppj/src/client/RawImage.h	Netstorm.Client/Display/RawImage.cs	ca0c01ebfceb9801ef1fcdb272deec4dc311a2db	port
+cpppj/src/client/Renderer.cpp	Netstorm.Client/Display/RendererDraw.cs	ca0c01ebfceb9801ef1fcdb272deec4dc311a2db	port
+cpppj/src/client/Renderer.h	Netstorm.Client/Display/RendererDraw.cs	ca0c01ebfceb9801ef1fcdb272deec4dc311a2db	port
 cpppj/src/client/Screen.cpp	Netstorm.Client.Host/ClientHostGame.cs	91d494c3b2814f00d2cae81a0f4b247e91e81922	port
 cpppj/src/client/Screen.cpp	Netstorm.Client.Host/MonoGameScreenOutput.cs	91d494c3b2814f00d2cae81a0f4b247e91e81922	port
 cpppj/src/client/Screen.cpp	Netstorm.Client/Display/GamePalette.cs	ac9ea9162ba0c580cd53505c8c3782c0b2a27172	port
@@ -48,6 +52,8 @@ cpppj/src/client/VFXLine.cpp	Netstorm.Client/Display/VfxLine.cs	cb56907c0aae1f0f
 cpppj/src/client/VFXLine.h	Netstorm.Client/Display/VfxLine.cs	cb56907c0aae1f0f02410dbda12860051a7f2e4d	port
 cpppj/src/client/VFXMappedDraw.cpp	Netstorm.Client/Display/VfxMappedDraw.cs	cb56907c0aae1f0f02410dbda12860051a7f2e4d	port
 cpppj/src/client/VFXMappedDraw.h	Netstorm.Client/Display/VfxMappedDraw.cs	cb56907c0aae1f0f02410dbda12860051a7f2e4d	port
+cpppj/src/client/VFXTransform.cpp	Netstorm.Client/Display/VfxTransform.cs	ca0c01ebfceb9801ef1fcdb272deec4dc311a2db	port
+cpppj/src/client/VFXTransform.h	Netstorm.Client/Display/VfxTransform.cs	ca0c01ebfceb9801ef1fcdb272deec4dc311a2db	port
 cpppj/src/o/Bridge.cpp	Netstorm.Core/Bridges/BridgeDecayRules.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
 cpppj/src/o/Bridge.cpp	Netstorm.Core/Bridges/BridgeSurfaceRules.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
 cpppj/src/o/Bridge.cpp	Netstorm.Core/Original/BridgeFrameSearch.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
@@ -70,6 +76,8 @@ cpppj/src/o/RawCarrierPostPop.cpp	Netstorm.Core/Original/RawCarrierPostPop.cs	f9
 cpppj/src/o/RawCarrierPreDestroy.cpp	Netstorm.Core/Original/RawCarrierPreDestroy.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
 cpppj/src/o/RawColorSortPrimary.cpp	Netstorm.Core/Original/RawColorSortPrimary.cs	e4b739b97f5316453de827b92ba6527a63f17637	L1
 cpppj/src/o/RawColorSortPrimary.h	Netstorm.Core/Original/RawColorSortPrimary.cs	e4b739b97f5316453de827b92ba6527a63f17637	L1
+cpppj/src/o/RawColorSortStartup.cpp	Netstorm.Core/Original/RawColorSortStartup.cs	ca0c01ebfceb9801ef1fcdb272deec4dc311a2db	L1
+cpppj/src/o/RawColorSortStartup.h	Netstorm.Core/Original/RawColorSortStartup.cs	ca0c01ebfceb9801ef1fcdb272deec4dc311a2db	L1
 cpppj/src/o/RawContainedCreate.cpp	Netstorm.Core/Original/RawContainedCreate.cs	ab3ef43d3685245aeaad8ecf53d55de4a1b92a97	L1
 cpppj/src/o/RawContainedFinder.cpp	Netstorm.Core/Original/RawContainedFinder.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
 cpppj/src/o/RawContainedFinder.h	Netstorm.Core/Original/RawContainedFinder.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1

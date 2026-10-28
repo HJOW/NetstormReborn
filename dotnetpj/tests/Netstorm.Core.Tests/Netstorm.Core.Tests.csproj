@@ -132,6 +132,8 @@
     <None Include="../../../cpppj/tests/fixtures/contentlifetime-x86.tsv" Link="X86/contentlifetime-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <!-- W03 신전 삭제 조각: 신전 사전 파괴 102행의 목록·섬·지역·공통·Player 정리 -->
     <None Include="../../../cpppj/tests/fixtures/vortex-pre-x86.tsv" Link="X86/vortex-pre-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <!-- R2d-1: ColorSort 시작 부모의 정상 100·부분중단 16 116행. -->
+    <None Include="../../../cpppj/tests/fixtures/colorsort-startup-x86.tsv" Link="X86/colorsort-startup-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <!-- W03 다리 밖 자산 삭제 재정의 조각: 사제 사전 파괴 6,552행 중 10.78 몫 2,184행. -->
     <None Include="../../../cpppj/tests/fixtures/priestdestroy-x86.tsv" Link="X86/priestdestroy-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <!-- W03 다리 밖 자산 삭제 재정의 조각: Point Blast Bomb 사전 파괴 96행(32/64비트 관찰 중복 포함). -->
