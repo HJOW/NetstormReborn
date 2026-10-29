@@ -5,6 +5,8 @@
 // 범위: 창 만들기, 설정 읽기, 화면 장치, 메시지·입력 큐, 프레임 제한과 내보내기까지.
 //       Renderer·원본 글꼴/커서·메뉴와 저장 미션의 기본 지형/객체·선택/이동을 연결했다. 건설/전투는 후속이다.
 #include "client/ClientMain.h"
+#include "client/ClientDiagnostics.h"
+#include "client/ClientOptionsFile.h"
 #include "client/ClientBridgeDecay.h"
 #include "client/GifScreenshot.h"
 #include "o/RawColorSortPrimary.h"
@@ -175,13 +177,13 @@ Client::Client(ClientOptions options)
       chatManagerGlobals_(std::make_shared<ClientChatManagerGlobals>()),
       staticStrings_(std::make_shared<ClientStaticStrings>()),
       dotCommandGlobals_(std::make_shared<ClientDotCommandGlobals>()),
-      chat_(std::make_unique<ChatState>(*this,options_.edition)) {
+      chat_(std::make_unique<ChatState>(*this,options_.edition)),trace_(std::make_unique<ClientTraceGlobals>()) {
     files_.RegisterArchive(options_.gameDirectory / "netstorm.tarc");
     playerRecords_->BindCoreData(coreDataGlobals_); // 같은 Native Player base가 바뀌면 실제 Core의 빌린 현재 Player 슬롯도 즉시 갱신한다.
     configuration_.Registry().environment = Environment;
     if (g_client) throw std::logic_error("Only one client may exist");
     // 원본00558dd0의 Set 직후 동기 시점에 현재 복원된 설정 전역을 갱신한다.
-    configuration_.onChanged = [this] { InterpretFortFileOptions();InterpretScriptMenuOptions();kencloudGlobals_->ReadOptions(configuration_);InterpretMainMenuOptions();InterpretOwnerColorOptions(); }; //같은 설정 변경에서 저장/메뉴/구름·tellTips·배너 현재값을 동기 반영하며 새 장치를 만들지 않는다.
+    configuration_.onChanged = [this] { InterpretFortFileOptions();configuration_.ReadInt("tracelevel",trace_->log.level);InterpretScriptMenuOptions();kencloudGlobals_->ReadOptions(configuration_);InterpretMainMenuOptions();InterpretOwnerColorOptions(); }; //같은 설정 변경에서 저장/진단/메뉴/구름·tellTips·배너 현재값을 동기 반영하며 새 장치를 만들지 않는다.
     g_client = this;
 }
 // 월드/소리 프로세스→음악·음향→화면→GDI/창 순서로 참조 대상보다 사용자를 먼저 정리한다.
@@ -262,7 +264,7 @@ int Client::Run() {
     auto identity = Environment("IDENTITY");
     if (!identity || identity->empty()) identity = Environment("USER");
     startup.identity = identity.value_or(std::string());
-    startup.installDir = std::filesystem::absolute(options_.gameDirectory).lexically_normal().string();
+    const auto installUtf8=std::filesystem::absolute(options_.gameDirectory).lexically_normal().u8string();startup.installDir.assign(installUtf8.begin(),installUtf8.end()); // 원본ANSI와 달리 Windows10/11의 한글 경로를 유효 UTF-8 설정 값으로 전달한다.
     configuration_.Startup(startup);
     SaveOptions(); // 원본 FUN_004359f0 → FUN_00441d10(0): 설정 해석 전에 한 번 저장한다.
     InterpretOptions();
@@ -457,10 +459,10 @@ void Client::ApplyAudioOptions() {
 // 원본 00441d10·00441de0의 경로 인자는 빈 문자열(00540cec)·"d"(00540cf8)·"options.cfg"다.
 // 원본은 게임 폴더를 작업 폴더로 바꾸고 d\options.cfg를 연다. cpppj는 같은 위치를 절대 경로로 연다.
 void Client::SaveOptions() {
-    configuration_.SaveFile("d\\options.cfg", [this](std::string_view, std::span<const std::uint8_t> bytes) {
+    SaveClientOptions(configuration_, [this](std::string_view, std::span<const std::uint8_t> bytes) {
         // 원본 0041b4c0 → 0041a5b0의 모드 2(w+b): 상위 폴더를 새로 만들지 않고 기존 내용을 잘라 쓴다.
-        const auto name = std::filesystem::absolute(options_.gameDirectory / "d" / "options.cfg").string();
-        FILE* file = std::fopen(name.c_str(), "w+b");
+        const auto path=std::filesystem::absolute(options_.gameDirectory / "d" / "options.cfg");const auto pathUtf8=path.u8string();const std::string name(pathUtf8.begin(),pathUtf8.end());
+        FILE* file = ::_wfopen(path.c_str(), L"w+b"); // 원본ANSI와 다른 Windows10/11의 유니코드 경로 호환 처리이며 파일 모드는 같다.
         if (!file) {
             // 다른 CRT 접근 전에 Win32 값을 보관한다. fopen 내부에서 갱신하지 않은 과거 값일 수도 있다.
             const DWORD openLastError = ::GetLastError();
@@ -484,7 +486,7 @@ void Client::SaveOptions() {
 
 // 원본 00436e40은 CRT remove를 부른다. UberGump 004cebf0의 버튼 사건에만 연결되는 함수다.
 void Client::ClearFullScreenState() {
-    std::remove((options_.gameDirectory / kFullScreenStateFile).string().c_str());
+    ::_wremove((options_.gameDirectory / kFullScreenStateFile).c_str()); // 원본ANSI remove와 달리 Windows10/11의 한글 설치 경로에서도 같은 표식을 제거한다.
 }
 
 // 현재 DWORD에서 시작하므로 누락 ReadInt는 이전 값을 보존하며 signed 전체 비트도 바꾸지 않는다.
@@ -517,6 +519,7 @@ void Client::InterpretOwnerColorOptions() { // 준비 전의 원문 무시와 �
 }
 // 원본 00435220에서 지금 쓰는 설정만 읽는다. 나머지 키(네트워크 등)의 전체 부모 순서는 후속이다.
 void Client::InterpretOptions() {
+    configuration_.ReadInt("tracelevel",trace_->log.level); // 원문00542658의 같은 장기 필터를 읽으며 덤프 부모의 임시30과 구별한다.
     std::string language;
     configuration_.ReadString("currentLanguage", language);
     // 언어 번호는 이름 표의 위치다. 1번(english)부터 찾는다.
@@ -664,7 +667,7 @@ void Client::SaveGifScreenshot() { // 원문이 저장하는 고정 primary 색�
         if (!output || !output.write(reinterpret_cast<const char*>(bytes.data()),static_cast<std::streamsize>(bytes.size())) || !output.flush()) throw std::runtime_error("스크린샷 GIF 파일 저장 실패");
     };
     hooks.unlock=[this] { screen_->Unlock(); };
-    hooks.log=[](auto path) { std::fprintf(stderr,"Screen shot written to %.*s\n",static_cast<int>(path.size()),path.data()); };
+    hooks.log=[this](auto path) { WriteDiagnosticLog(29,"Screen shot written to "+std::string(path)+"\n"); }; // 원문29번 로그도 선택/덤프와 같은 FILE/필터/들여쓰기를 쓴다.
     static_cast<void>(SaveNumberedScreenshot(screenshotNumber_,hooks));
 }
 // 프레임 관찰 도구도 종료 화면과 같은 팔레트 변환을 쓴다.

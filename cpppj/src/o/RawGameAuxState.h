@@ -42,6 +42,10 @@ public:
     const std::int32_t& DefaultSp() const { return defaultSp_; } // 미션 AI의 별도 시작SP와 합치지 않는다.
     std::uint32_t& GeyserType() { return geyserType_; } //00541240: 실제 현재 간헐천 TYPE이며 Host pollType도 이 주소를 pin한다.
     const std::uint32_t& GeyserType() const { return geyserType_; } // 옵션/생성/목록의 같은 현재 TYPE다.
+    std::uint32_t& TerrainType() { return terrainType_; } //005411dc의 같은 현재 지면 TYPE를 영역 조회/진단이 빌린다.
+    const std::uint32_t& TerrainType() const { return terrainType_; } // Session 교체로97의 새 사본을 만들지 않는다.
+    std::uint32_t& EdgeFarmType() { return edgeFarmType_; } //0054123c의 같은 현재 가장자리 농장 TYPE다.
+    const std::uint32_t& EdgeFarmType() const { return edgeFarmType_; } // 객체 덤프의 단순 좌표 행도 이 주소를 읽는다.
     std::uint32_t& SubscriberMarker() { return subscriberMarker_; } //005467bc: Subscriber의 별도 표시 DWORD다.
     const std::uint32_t& SubscriberMarker() const { return subscriberMarker_; } // 다른 Subscriber ID와 합치지 않는다.
     bool& PriestQuarterHp() { return priestQuarterHp_; } //005ca8f0의 같은 현재 0/1을 생성·HP·연소와 State 정리가 공유한다.
@@ -63,6 +67,7 @@ private:
     float lostX_{},lostY_{}; // 최초BSS+0이며 cleanup의-10000 입력과 구별한다.
     std::int32_t defaultSp_{2000}; // 보호 PE의 signed 기본SP다.
     std::uint32_t geyserType_{122},subscriberMarker_{}; // 보호 PE TYPE122와 별도BSS 표지다.
+    std::uint32_t terrainType_{97},edgeFarmType_{121}; // 보호 PE 두 TYPE 전역이며 현재 Runtime 대여/반납은 초기화하지 않는다.
 };
 static_assert(sizeof(std::uint32_t)==4 && sizeof(std::int32_t)==4 && sizeof(float)==4 && sizeof(double)==8); // 각 Native폭만 보증하며 클래스가17주소의 연속 image라는 주장은 아니다.
 }

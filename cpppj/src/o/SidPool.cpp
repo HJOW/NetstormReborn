@@ -142,6 +142,7 @@ bool SidPool::IsServer() const { return sharedServer_ ? *sharedServer_ : server_
 OriginalEdition SidPool::Edition() const { return layout_.stride==50 ? OriginalEdition::Patch1078 : OriginalEdition::Cd1072; }
 // 확보한 raw 슬롯 수를 반환한다.
 std::uint32_t SidPool::Capacity() const { return capacity_; }
+const std::uint32_t& SidPool::CapacityValue() const { return capacity_; } // Pool 소유권보다 오래 보관하지 않는다.
 // 원본 카운터를 반환한다. 재구성의 누적과 예측 반납의 비증가도 보존한다.
 std::uint32_t SidPool::FreeCount() const { return freeCount_; }
 // 다음 예측 번호에 더하는 원본 커서를 반환한다.

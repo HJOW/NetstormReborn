@@ -52,6 +52,7 @@ public:
     // 타입 표와 같은 판본의 생성자/가상 배치를 사용하도록 판본을 반환한다.
     OriginalEdition Edition() const;
     std::uint32_t Capacity() const;
+    const std::uint32_t& CapacityValue() const; //005c847c의 같은 현재 DWORD를 빌린다. Reset 뒤에도 값 사본을 유지하지 않는 진단용이다.
     std::uint32_t FreeCount() const;
     std::uint32_t PredictableCursor() const;
     Sid FirstFree(bool client) const;

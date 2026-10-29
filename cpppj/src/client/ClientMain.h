@@ -28,6 +28,7 @@
 namespace netstorm::o { class RawFortBadgesGlobals; } // Client 수명의 원본 Badges 장부를 고정 주소로 소유한다.
 namespace netstorm::client {
 class UberGump;
+struct ClientTraceGlobals;struct TraceLogHooks; // 같은 장기 진단 owner와 현재 출력 장치를 선언한다.
 class ClientAudio;
 class RawChatChannels;
 class FortTypeConversionStorage; // 원본 현재 변환표의 실제 할당을 Client 수명에 소유한다.
@@ -181,6 +182,11 @@ public:
     const std::filesystem::path& GameDirectory() const { return options_.gameDirectory; } //편집 작업본을 읽기 전용 게임 자산의 형제 디렉터리에 배치할 실제 입력 경로다.
     const GameAssets& Assets() const;
     o::Kernel& GetKernel();
+    ClientTraceGlobals& DiagnosticGlobals(); // 선택/덤프/설정이 같은 현재 로그 모드와 재귀 상태를 빌린다.
+    TraceLogHooks DiagnosticLogHooks(); // 원문 trace→Chat 관문과 실제 stdout/stderr/FILE 장치다.
+    void WriteDiagnosticLog(std::int32_t level,std::string_view text,std::size_t prefixBytes=0); // 서식 후 바이트를 같은 현재1024BYTE 로그에 전달한다.
+    void TraceObject(std::uint32_t sid); // 선택한 실제 SID의 가상+70/모든 Form 재귀를 실행한다.
+    void DumpDiagnostics(); // 객체 덤프가 끝난 뒤 현재 같은 Kernel의 프로세스 요약을 저장한다.
     const std::shared_ptr<o::Kernel>& ProcessKernelOwner() const; // 같은 실제 전역 Kernel 소유권만 전달한다.
     const std::shared_ptr<o::FrameTime>& FrameClockOwner() const; // 같은 Time().game 주소가 외부 Storage보다 먼저 사라지지 않게 한다.
     const std::shared_ptr<RawSurfaceStorage>& SurfaceStorage() const; // 자산 초기화 뒤 모든 Session과 초기 HUD가 같은 물리를 빌린다.
@@ -359,6 +365,7 @@ private:
     // frames_: 타입별 프레임 자료.
     std::uint64_t frames_{};
     std::uint32_t screenshotNumber_{}; //005e1830의 프로세스 전체 누적 번호이며 미션/화면 전환 때 초기화하지 않는다.
+    std::unique_ptr<ClientTraceGlobals> trace_; // 실제 로그/재귀 전역은 첫 메뉴부터 Client가 종료될 때까지 같은 주소다.
 };
 
 }  // namespace netstorm::client

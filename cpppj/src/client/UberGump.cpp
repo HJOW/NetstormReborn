@@ -4,6 +4,7 @@
 // 원본 004d0120·004cebf0·004cf270·004ce580의 메뉴/명령 흐름을 표시 기반과 연결한다.
 // 전체 Gump/StyleText와 게임 규칙은 후속이다. 저장 미션 월드는 GameWorld에 연결한다.
 #include "client/UberGump.h"
+#include "client/ClientDiagnostics.h"
 #include "client/SendMoneyInput.h"
 #include "client/ClientBridgeDecay.h"
 #include "client/DialogCommandLifetime.h"
@@ -955,6 +956,7 @@ void UberGump::Event(InputEvent event) {
         if (!(event.code&InputCode::kRelease) && (transitionCode==InputCode::kLeftButton || transitionCode==InputCode::kRightButton)) rawButtons_->RequestClosePopups(); // UI밖누름은팝업Kill뒤같은사건으로월드에진행한다.
     }
     if (DispatchScreenshotKey(event,[this] { client_.SaveGifScreenshot(); },[this](auto name) { Tell(std::string(name)); })) rebuild_=true; // Guide/Gump 뒤,console·정지와 일반 F7 배너 처리보다 앞이다. Tell이 연 정지를 아래에서 다시 읽는다.
+    static_cast<void>(DispatchDiagnosticKey(event,[this] { client_.DumpDiagnostics(); })); // 같은 원문 위치에서 객체→프로세스 순서로 출력하며 정지/console은 아래에서 다시 읽는다.
     if (transitionCode==0x02000037U) {
         if (!(event.code&InputCode::kRelease)) { EnsureHudFactories();rawButtons_->ToggleMinimap(hud_->createMinimap); }
         rebuild_=true;return; //원본 일반 입력의5427d4→480810을 동일 공장/지연Kill에 연결하며 뗌은 전환하지 않는다.
@@ -1444,6 +1446,7 @@ std::string UberGump::Report(bool cameraOnly) const {
     out<<"fort_catalog\t"<<mapCatalog_->Cached().count<<'\t'<<mapCatalog_->Cached().dirty<<'\t'<<client_.Configuration().GetInt("mayEditMissions")<<'\t'<<mapFileSpec_.Current()<<'\n'; // 실제50칸캐시와현재원문설정/키를읽고목록을다시열거하지않는다.
     out<<"current_dialog\t"<<rawButtons_->CurrentDialog()<<'\n'; // Guide4c8e90과 같은 실제565dd4다.
     out << "thunder_processes\t" << client_.ThunderFlashCount() << '\n';
+    const auto& trace=client_.DiagnosticGlobals();out<<"raw_trace\t"<<trace.log.level<<'\t'<<trace.depth<<'\t'<<trace.suppress<<'\t'<<trace.log.indent<<'\t'<<(trace.log.stream!=0)<<'\n'; // 같은 Client 전역만 관측하며 로그를 출력하거나 파일을 열지 않는다.
     out<<"game_menu_bar\t"<<(gameMenuState_ ? gameMenuState_->menuSerial : 0U)<<'\t'<<GameMenuOpen()<<'\t'<<(gameMenuState_ ? gameMenuState_->checksum : 0)<<'\n'; // 같은serial조회와기존SP검산을관찰한다.
     out<<"state_hud\t"<<(world_!=nullptr)<<'\t'<<(rawButtons_->UberRoot() && rawButtons_->UberRoot()->Current())<<'\t'<<(hud_?hud_->boundMinimap:0)<<'\t'<<(rawButtons_->Minimap()?rawButtons_->Minimap()->RootToken():0)<<'\t'<<client_.GameplayGlobals()->Borrowed()<<'\n'; //생성/현재 World 통지 대여를 분리 관측하며 State 설치 완료를 합성하지 않는다.
     const auto connections=client_.ConnectionGlobals()->Cleanup();std::size_t mainCount{},pendingCount{};for (const auto token:connections.transceivers) if (token) ++mainCount;for (const auto token:connections.pending) if (token) ++pendingCount; //같은 실제 고정표를 관측만 하며 포인터/개수/노드를 새로 만들지 않는다.

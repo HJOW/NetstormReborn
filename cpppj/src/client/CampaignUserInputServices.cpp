@@ -9,10 +9,7 @@ namespace netstorm::client {
 // 현재 Client/월드 수명 안에서만 호출하며 모든 callback은 같은 객체를 빌린다.
 void BindCampaignUserInputServices(Client& client,GameWorld& world,std::function<void(std::uint32_t)> selectCursor) {
     UserSelectionHooks selection;selection.paused=[&client] { return client.Paused() ? 1U : 0U; }; //원본460de0의 같은 현재 게임 시계다.
-    selection.dump=[&world](o::Sid sid) {
-        const auto raw=world.Session().Core().pool.Slot(sid); //현재 선택 진단의 실제 SID/TYPE를 로그에 전달한다. 재귀VT+70 전체서식은 후속 복원이다.
-        std::clog<<"선택 객체 SID "<<sid.value<<" TYPE "<<std::uint32_t(raw[10])<<'\n';
-    };
+    selection.dump=[&client](o::Sid sid) { client.TraceObject(sid.value); }; // 실제 현재 Pool/VT/재귀와 공유 trace FILE에 연결한다.
     selection.assertion=[] { throw std::logic_error("원본 Userinput.cpp selectedSid 진단"); };
     selection.previewAssertion=[] { throw std::logic_error("원본 Carrier.cpp !s.isForm 진단"); };
     UserHighlightHooks highlight;highlight.selectCursor=selectCursor;CarrierInputHooks carrier;carrier.selectCursor=std::move(selectCursor); //선택강조/폴링/건설커서가 동일한 실제 장치를 쓴다.

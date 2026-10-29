@@ -370,7 +370,7 @@ struct RawCampaignSession::Impl {
 
     SessionAssets assets; // 보호 archive의 현재 실제 자료다.
     PriestPlacementAssets metadata; // 실제 프레임/핫스폿/SHP이며 합성 그림 자료가 아니다.
-    std::uint32_t terrainType{97}; // 실제 월드 생성과 영역 소유자 getter가 함께 읽는 isle 타입 전역이다.
+    std::uint32_t& terrainType; // 실제 월드 생성/영역 조회/진단이 같은 장기005411dc를 빌린다.
     RawSurfaceWorld world; // 모든 생성/Pop/Graph가 사용하는 단일 raw 월드다.
     RawWorldCore core; // 같은 Pool/장부/해시의 참조만 유지한다.
     std::unique_ptr<RawCampaignCursor> cursor; // 같은 실제 Form/마나/위치/로컬 예측 몸체를 설치 뒤 소유한다.
@@ -809,7 +809,7 @@ struct RawCampaignSession::Impl {
         coreDataGlobals(input.coreDataGlobals ? input.coreDataGlobals : std::make_shared<ClientCoreDataGlobals>()),
         playerRecords(input.playerRecords ? input.playerRecords : std::make_shared<ClientPlayerRecords>()),playerUse(playerRecords->Acquire()),
         services(std::move(input)),missionFortName(mission),templateStorage(services.templateStorage ? services.templateStorage : std::make_shared<CampaignTemplateStorage>()),headers(templateStorage->Headers()),assets(game,files),metadata(assets.game),
-        world(OriginalEdition::Patch1078,assets.types,assets.frames,metadata.shapes,CampaignLinks(),terrainType,services.processKernel,SessionSurfaceStorage(services,game),services.adoptPreparedWorld,&localStateGlobals->SavedGame(),gameplayGlobals->Authority(),gameplayGlobals->GameAux()),core(world.Core()),
+        terrainType(gameplayGlobals->GameAux()->TerrainType()),world(OriginalEdition::Patch1078,assets.types,assets.frames,metadata.shapes,CampaignLinks(),terrainType,services.processKernel,SessionSurfaceStorage(services,game),services.adoptPreparedWorld,&localStateGlobals->SavedGame(),gameplayGlobals->Authority(),gameplayGlobals->GameAux()),core(world.Core()),
         localSp(services.spGlobals ? nullptr : std::make_unique<ScrambledSpStore>(random,[this] { return seed.Reseed(); })),
         sp(services.spGlobals ? services.spGlobals->Store() : *localSp),hp(core.pool,core.types,core.bookkeeping,rewardState,&sp,SquidRewardHooks{[this](Sid sid) { return RewardCount(sid); },services.refreshSp}),
         battleOptions(services.missionOptions ? *services.missionOptions : localBattleOptions),
@@ -980,7 +980,7 @@ struct RawCampaignSession::Impl {
         ownerEffects.otherOwner=[this](Sid sid,std::uint32_t owner) { priests->SetOwner(sid,owner); };
         FillMissing(ownerEffects.refreshProduction);FillMissing(ownerEffects.themeMode);
         ownerEffects.missingIsland=SessionMissing<void,Sid,std::int32_t,std::uint32_t>();
-        ownership=std::make_unique<RawCampaignOwnership>(world,*islands,assetState,players,metadata.frames,themes,random,paint,votes,revision,97,121,std::move(ownerEffects));
+        ownership=std::make_unique<RawCampaignOwnership>(world,*islands,assetState,players,metadata.frames,themes,random,paint,votes,revision,terrainType,gameplayGlobals->GameAux()->EdgeFarmType(),std::move(ownerEffects)); // 진단과 같은 현재 두 TYPE를 설치 시점에 읽는다.
         carrier=std::make_unique<RawCarrierPostPop>(core.pool,core.types,carrierState,
             MakeCarrierPostPopHooks(core.pool,core.postPop,[this](Sid sid) { static_cast<void>(priests->CheckCarrier(sid)); },[this](float x,float y,std::uint8_t owner) { world.SetSupportOwner(x,y,owner); }));
         BalloonBodyHooks balloon;balloon.frames=[this](std::uint32_t type) { return static_cast<std::int32_t>(core.frames[type].Codes().size()); };

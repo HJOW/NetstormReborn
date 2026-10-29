@@ -59,6 +59,7 @@ target_sources(netstorm PRIVATE app/InspectView.cpp app/InspectView.h)
 target_sources(netstorm PRIVATE app/FrameBindingInspect.cpp app/FrameBindingInspect.h)
 target_sources(netstorm PRIVATE app/CanonMayPlaceInspect.cpp)
 add_executable(NetstormCpp app/main.cpp)
+target_sources(NetstormCpp PRIVATE app/NetstormCpp.manifest) # 원본ANSI와 다른 Windows10/11의 프로세스 UTF-8 경로 호환 선언이다.
 netstorm_apply_compiler_options(NetstormCpp)
 target_link_libraries(NetstormCpp PRIVATE netstorm)
 

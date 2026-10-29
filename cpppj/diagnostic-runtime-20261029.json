@@ -1,0 +1,272 @@
+{
+  "unit": 560,
+  "date": "2026-10-29",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": "HJOW-Athlon / 2026-10-23",
+  "goalStatus": "active",
+  "gameSha256": "e779165698483c4cae6d3bf0a3e7e02410b3dfed86e30a9a7c60d3e28f94ade2",
+  "releaseBuildExit": 0,
+  "finalBuildWarnings": 0,
+  "finalBuildErrors": 0,
+  "focusedCases": 87,
+  "failedChecks": 0,
+  "registeredCases": 3425,
+  "protectedFiles": 1820,
+  "existingFixtures": 720,
+  "protectedAndFixtureFilesUnchanged": 2540,
+  "nativeEvidence": {
+    "binarySha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "nativeInitialTypes": {
+      "0x5411dc": 97,
+      "0x5411f0": 102,
+      "0x54123c": 121
+    },
+    "nativeTraceLevel": 29,
+    "originalKeyInputs": 167,
+    "originalObservations": 334,
+    "diagnosticInputs": 16,
+    "predicateDifferences": [],
+    "newNativeRuns": 0
+  },
+  "newOriginalGameRuns": 0,
+  "acceptedFinalCloneRuns": 3,
+  "acceptedStates": 25,
+  "gui": [
+    {
+      "returnCode": 0,
+      "seconds": 21.054949299999862,
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-trace-runtime-560-20261029\\gui-v4\\campaign-4x3\\data",
+        "--no-audio",
+        "--frames",
+        "530",
+        "--set",
+        "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=16;tracelevel=29;startInFullScreen=0",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-trace-runtime-560-20261029\\gui-v4\\campaign-4x3\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-trace-runtime-560-20261029\\gui-v4\\campaign-4x3\\states.tsv",
+        "--window",
+        "--mission",
+        "thewarbegins"
+      ],
+      "binarySha256": "e779165698483c4cae6d3bf0a3e7e02410b3dfed86e30a9a7c60d3e28f94ade2",
+      "files": {
+        "dump": {
+          "squids": {
+            "size": 72129,
+            "modifiedNs": 1793232094000000000,
+            "sha256": "6d3e675a374f97d8ab910c1a4c8bf3d938025e5214da88df8e6c926917647c70"
+          },
+          "processes": {
+            "size": 2036,
+            "modifiedNs": 1793232094000000000,
+            "sha256": "e289ae1c41efa804f80498462902a3c22708cb224fdc69f309541c13480a5bbb"
+          }
+        },
+        "released": {
+          "squids": {
+            "size": 72129,
+            "modifiedNs": 1793232094000000000,
+            "sha256": "6d3e675a374f97d8ab910c1a4c8bf3d938025e5214da88df8e6c926917647c70"
+          },
+          "processes": {
+            "size": 2036,
+            "modifiedNs": 1793232094000000000,
+            "sha256": "e289ae1c41efa804f80498462902a3c22708cb224fdc69f309541c13480a5bbb"
+          }
+        },
+        "alt": {
+          "squids": {
+            "size": 72394,
+            "modifiedNs": 1793232106000000000,
+            "sha256": "dc4f9681ff6be938aa391f397e00374bbe26469b51236de048854d323a13d00e"
+          },
+          "processes": {
+            "size": 2036,
+            "modifiedNs": 1793232106000000000,
+            "sha256": "e289ae1c41efa804f80498462902a3c22708cb224fdc69f309541c13480a5bbb"
+          }
+        },
+        "mainDump": {
+          "squids": {
+            "size": 0,
+            "modifiedNs": 1793232110000000000,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          "processes": {
+            "size": 0,
+            "modifiedNs": 1793232110000000000,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        }
+      },
+      "testOnlyMapAlias": null,
+      "states": 10,
+      "level": 29,
+      "editor": false,
+      "fullscreen": false,
+      "dataAssetsUnchanged": true
+    },
+    {
+      "returnCode": 0,
+      "seconds": 20.512869400001364,
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-trace-runtime-560-20261029\\gui-v4\\한글-16x9\\data",
+        "--no-audio",
+        "--frames",
+        "530",
+        "--set",
+        "SCREENW=1280;SCREENH=720;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=16;tracelevel=0;startInFullScreen=1",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-trace-runtime-560-20261029\\gui-v4\\한글-16x9\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-trace-runtime-560-20261029\\gui-v4\\한글-16x9\\states.tsv",
+        "--mission",
+        "thewarbegins"
+      ],
+      "binarySha256": "e779165698483c4cae6d3bf0a3e7e02410b3dfed86e30a9a7c60d3e28f94ade2",
+      "files": {
+        "dump": {
+          "squids": {
+            "size": 72127,
+            "modifiedNs": 1793232132000000000,
+            "sha256": "758b6b0fe9a2f9ffdbf2729279187ff5d86a225a1d9a18a5104505f624fa8def"
+          },
+          "processes": {
+            "size": 2036,
+            "modifiedNs": 1793232132000000000,
+            "sha256": "e289ae1c41efa804f80498462902a3c22708cb224fdc69f309541c13480a5bbb"
+          }
+        },
+        "released": {
+          "squids": {
+            "size": 72127,
+            "modifiedNs": 1793232132000000000,
+            "sha256": "758b6b0fe9a2f9ffdbf2729279187ff5d86a225a1d9a18a5104505f624fa8def"
+          },
+          "processes": {
+            "size": 2036,
+            "modifiedNs": 1793232132000000000,
+            "sha256": "e289ae1c41efa804f80498462902a3c22708cb224fdc69f309541c13480a5bbb"
+          }
+        },
+        "alt": {
+          "squids": {
+            "size": 72392,
+            "modifiedNs": 1793232144000000000,
+            "sha256": "f36c2b8e7d8409a9888a7477809df49fb42f2745433e3cfbd8f28b6aaee9108e"
+          },
+          "processes": {
+            "size": 2036,
+            "modifiedNs": 1793232144000000000,
+            "sha256": "e289ae1c41efa804f80498462902a3c22708cb224fdc69f309541c13480a5bbb"
+          }
+        },
+        "mainDump": {
+          "squids": {
+            "size": 0,
+            "modifiedNs": 1793232148000000000,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          "processes": {
+            "size": 0,
+            "modifiedNs": 1793232148000000000,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        }
+      },
+      "testOnlyMapAlias": null,
+      "states": 10,
+      "level": 0,
+      "editor": false,
+      "fullscreen": true,
+      "dataAssetsUnchanged": true
+    },
+    {
+      "returnCode": 0,
+      "seconds": 69.31733939999685,
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-trace-runtime-560-20261029\\gui-v5\\editor\\data",
+        "--no-audio",
+        "--frames",
+        "460",
+        "--set",
+        "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=16;tracelevel=29;startInFullScreen=0",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-trace-runtime-560-20261029\\gui-v5\\editor\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-trace-runtime-560-20261029\\gui-v5\\editor\\states.tsv",
+        "--window"
+      ],
+      "binarySha256": "e779165698483c4cae6d3bf0a3e7e02410b3dfed86e30a9a7c60d3e28f94ade2",
+      "files": {
+        "dump": {
+          "squids": {
+            "size": 379338,
+            "modifiedNs": 1793232802000000000,
+            "sha256": "3033f7aa55f9b695a3b570a5d35d1c149f4340b2fe79193365dfb1057c387f1e"
+          },
+          "processes": {
+            "size": 3042,
+            "modifiedNs": 1793232802000000000,
+            "sha256": "92d3585159ba1334efab74b7535e7c6cf96765e352270c8d823dc27c6ff6115a"
+          }
+        },
+        "released": {
+          "squids": {
+            "size": 379338,
+            "modifiedNs": 1793232802000000000,
+            "sha256": "3033f7aa55f9b695a3b570a5d35d1c149f4340b2fe79193365dfb1057c387f1e"
+          },
+          "processes": {
+            "size": 3042,
+            "modifiedNs": 1793232802000000000,
+            "sha256": "92d3585159ba1334efab74b7535e7c6cf96765e352270c8d823dc27c6ff6115a"
+          }
+        },
+        "alt": {
+          "squids": {
+            "size": 379604,
+            "modifiedNs": 1793232820000000000,
+            "sha256": "2a50812dec12cfa40054fdda45feb9f74ae132d64344513fa3be3f627c127c53"
+          },
+          "processes": {
+            "size": 3042,
+            "modifiedNs": 1793232820000000000,
+            "sha256": "92d3585159ba1334efab74b7535e7c6cf96765e352270c8d823dc27c6ff6115a"
+          }
+        }
+      },
+      "testOnlyMapAlias": {
+        "source": "TEST01",
+        "alias": "AAA560",
+        "fileSha256": {
+          "fort": "3c8a7d73be785f5b06f4c94aea633697b52d95129ed502ebc43f1efe326bad8f",
+          "english": "a15d0c4e068403882544b57410e644079f305dcb1d13a71763875dfa95355273"
+        },
+        "reason": "원문 첫50개 목록 상한을 유지하고 같은 TEST01 바이트를 기본 Edit 목록에서 선택하기 위한 검사 사본 이름"
+      },
+      "states": 5,
+      "level": 29,
+      "editor": true,
+      "fullscreen": false,
+      "dataAssetsUnchanged": true
+    }
+  ],
+  "review": "사용자 용량 오류 보고 후 이전 변경 파일·최종 빌드/검사/실행·UTF-8/XML/Python 문법·보호 파일 점검 완료",
+  "limits": [
+    "현재 최종 제품의 일반31/Demo3 전체34 짧은 진입은 커밋 후 다음 작업으로 남김; 직전 기준552",
+    "전체 C++ 최종 통과·자연 완주·Windows11 실기 미검증; 기존 자동 전술1개 실패/보류 유지",
+    "traceToChat 비영의 42f190 스타일 전달·번개 메타맵00479650 실제 기록 경로 미복원",
+    "사용자 보류·공중3종 전용 실기 제한·신규 멀티플레이/네트워크 검사 금지 유지"
+  ],
+  "compatibilitySource": "https://learn.microsoft.com/en-us/windows/win32/sbscs/application-manifests",
+  "rawRoot": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-trace-runtime-560-20261029"
+}

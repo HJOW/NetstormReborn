@@ -28,7 +28,7 @@ std::string Selected(std::string_view trace) { // 이 제품 단계에서 직접
     return output;
 }
 }
-TEST_CASE(GifScreenshot_Native135InputsAndCurrentPause) { // Ctrl Shift진단32입력은 아직제품구현이아니므로 수락135와 구별한다.
+TEST_CASE(GifScreenshot_Native135InputsAndCurrentPause) { // Ctrl Shift의32입력은 ClientDiagnostics의167원문대조가 담당하며 여기서는 저장135입력을 검사한다.
     std::ifstream input(NETSTORM_SCREENSHOT_KEY_FIXTURE);CHECK(input.good());if (!input) return;
     std::string line;std::size_t accepted{},diagnostic{}; // 실제읽은행과 선택/미선택범위다.
     while (std::getline(input,line)) { // 제품에연결한일반/Shift입력만 같은 장치순서로 대조한다.
