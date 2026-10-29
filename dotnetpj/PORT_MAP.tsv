@@ -20,8 +20,8 @@ cpppj/src/client/DialogScript.cpp	Netstorm.Assets/CampaignMenu.cs	f95a8db28ceae6
 cpppj/src/client/GifImage.cpp	Netstorm.Assets/GifImage.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
 cpppj/src/client/GumpBackground.cpp	Netstorm.Client/Gump/GumpBackground.cs	436deaf700d8574524e2bae684ccc2888bd94949	port
 cpppj/src/client/GumpBackground.h	Netstorm.Client/Gump/GumpBackground.cs	436deaf700d8574524e2bae684ccc2888bd94949	port
-cpppj/src/client/GumpBackgroundCreate.cpp	Netstorm.Client/Gump/GumpBackgroundCreate.cs	0a1a709127ad291d47289a9957e142feb04981a5	port
-cpppj/src/client/GumpBackgroundCreate.h	Netstorm.Client/Gump/GumpBackgroundCreate.cs	0a1a709127ad291d47289a9957e142feb04981a5	port
+cpppj/src/client/GumpBackgroundCreate.cpp	Netstorm.Client/Gump/GumpBackgroundCreate.cs	075b0c1424dbf4bca70ced2f41422957a8388772	port
+cpppj/src/client/GumpBackgroundCreate.h	Netstorm.Client/Gump/GumpBackgroundCreate.cs	075b0c1424dbf4bca70ced2f41422957a8388772	port
 cpppj/src/client/GumpBackgroundDraw.cpp	Netstorm.Client/Gump/GumpBackgroundDraw.cs	436deaf700d8574524e2bae684ccc2888bd94949	port
 cpppj/src/client/GumpBackgroundDraw.h	Netstorm.Client/Gump/GumpBackgroundDraw.cs	436deaf700d8574524e2bae684ccc2888bd94949	port
 cpppj/src/client/GumpCollection.cpp	Netstorm.Client/Gump/GumpCollection.cs	2155b0f0855c427a3c6655ed0a42d5e374f464dd	port
@@ -86,6 +86,10 @@ cpppj/src/client/ScreenPresentation.cpp	Netstorm.Client/Display/ScreenPresentati
 cpppj/src/client/ScreenPresentation.cpp	Netstorm.Client/Host/HostPresentation.cs	91d494c3b2814f00d2cae81a0f4b247e91e81922	port
 cpppj/src/client/ScreenPresentation.h	Netstorm.Client/Display/ScreenPresentation.cs	ac9ea9162ba0c580cd53505c8c3782c0b2a27172	port
 cpppj/src/client/ScreenResolutions.h	Netstorm.Client/Display/ScreenResolutions.cs	ac9ea9162ba0c580cd53505c8c3782c0b2a27172	port
+cpppj/src/client/ScrollGump.cpp	Netstorm.Client/Gump/ScrollGump.cs	075b0c1424dbf4bca70ced2f41422957a8388772	port
+cpppj/src/client/ScrollGump.h	Netstorm.Client/Gump/ScrollGump.cs	075b0c1424dbf4bca70ced2f41422957a8388772	port
+cpppj/src/client/ScrollGumpWidgets.cpp	Netstorm.Client/Gump/ScrollGumpWidgets.cs	075b0c1424dbf4bca70ced2f41422957a8388772	port
+cpppj/src/client/ScrollGumpWidgets.h	Netstorm.Client/Gump/ScrollGumpWidgets.cs	075b0c1424dbf4bca70ced2f41422957a8388772	port
 cpppj/src/client/ScrollingTextGumpMarkup.cpp	Netstorm.Client/Gump/ScrollingTextGumpMarkup.cs	f7e1748e8c9a093be0f118ec864df7e5581b9f0c	port
 cpppj/src/client/ScrollingTextGumpMarkup.h	Netstorm.Client/Gump/ScrollingTextGumpMarkup.cs	f7e1748e8c9a093be0f118ec864df7e5581b9f0c	port
 cpppj/src/client/ScrollingTextGumpWidgets.cpp	Netstorm.Client/Gump/StyleTextBufferStore.cs	f7e1748e8c9a093be0f118ec864df7e5581b9f0c	port

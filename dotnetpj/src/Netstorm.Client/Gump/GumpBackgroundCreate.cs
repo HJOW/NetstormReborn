@@ -4,7 +4,7 @@ namespace Netstorm.Client.Gump; // 기본 등록/트리와 같은 저장소를 �
 
 /// <summary>0xb8바이트 배경 Gump의 추가 필드다. 기반 위치/등록은 복제하지 않는다.
 /// 근거: cpppj/src/client/GumpBackgroundCreate.h.</summary>
-public sealed class GumpBackgroundNode : GumpCreateNode
+public class GumpBackgroundNode : GumpCreateNode
 {
     /// <summary>+a0 셰이프 토큰. 호스트 주소로 역참조하지 않는다.</summary>
     public uint Shape { get; set; }
