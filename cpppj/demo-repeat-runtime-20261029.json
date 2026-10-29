@@ -1,0 +1,560 @@
+{
+  "unit": 567,
+  "productUnit": 565,
+  "date": "2026-10-29",
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "decompileChanged": false,
+  "gameSha256": "601190571370eeca0781b2d17a27445d702b9faae281ff061d7a76928379a724",
+  "gameCppChanged": false,
+  "gameBuilt": false,
+  "cppTestsExecuted": false,
+  "registeredCppTestsLast565": 3431,
+  "acceptedNaturalFirstDemoCycles": 1,
+  "acceptedRun": {
+    "command": [
+      "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+      "--run",
+      "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-demo-repeat-567-20261029\\data",
+      "--window",
+      "--no-audio",
+      "--frames",
+      "13500",
+      "--set",
+      "SCREENW=1024;SCREENH=768;maxFPS=15;sleepPerLoop=1;autoDemo=0;tellTips=0",
+      "--ui-script",
+      "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-demo-repeat-567-20261029\\storm-v3\\steps.tsv",
+      "--ui-report",
+      "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-demo-repeat-567-20261029\\storm-v3\\states.tsv"
+    ],
+    "gameSha256": "601190571370eeca0781b2d17a27445d702b9faae281ff061d7a76928379a724",
+    "passed": true,
+    "toolSha256": "d12bcfc00994f8a64b6599c1dd79b4e02956e6034e6300ec7b4c7a5c53fa0d4b",
+    "returnCode": 0,
+    "timedOut": false,
+    "elapsedSeconds": 421.78716030000214,
+    "observations": 172,
+    "expiredObservations": [],
+    "restartDelaySeconds": 0.25200000000000955,
+    "reference": {
+      "mission": "DemoStormRages",
+      "seconds": 360,
+      "demoSection": true,
+      "englishSha256": "879f9aed148be6b6bcc71ee43743b6c6475a45201432d1577acdd21567cc6a0b"
+    },
+    "firstStart": [
+      "1.681",
+      "361.681",
+      "260"
+    ],
+    "repeatedStart": [
+      "361.933",
+      "721.933",
+      "4604"
+    ],
+    "guideObservations": [
+      11,
+      23
+    ],
+    "lastBeforeDeadline": {
+      "frame": 5490,
+      "label": "5490",
+      "phase": [
+        "4"
+      ],
+      "page": [
+        "mission"
+      ],
+      "paused": [
+        "0"
+      ],
+      "mouse_cursor": [
+        "1",
+        "1"
+      ],
+      "html_window_state": [
+        "0",
+        "0",
+        "0"
+      ],
+      "game_menu_bar": [
+        "0",
+        "0",
+        "0"
+      ],
+      "raw_uber": [
+        "260",
+        "1",
+        "3",
+        "85",
+        "0",
+        "1024",
+        "768"
+      ],
+      "raw_menus": [
+        "0",
+        "0",
+        "0",
+        "13",
+        "13"
+      ],
+      "time": [
+        "360.866",
+        "376.247"
+      ],
+      "mission": [
+        "DemoStormRages",
+        "Tutorial",
+        "72"
+      ],
+      "mission_start": [
+        "1",
+        "4",
+        "1",
+        "1.681",
+        "361.681"
+      ],
+      "mission_gate": [
+        "0",
+        "65",
+        "0",
+        "0",
+        "0",
+        "1",
+        "0",
+        "0"
+      ],
+      "shared_kernel": [
+        "1",
+        "60",
+        "60"
+      ],
+      "shared_surface_storage": [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      "shared_gameplay_globals": [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      "raw_session": [
+        "1",
+        "1"
+      ],
+      "raw_brains": [
+        "0",
+        "536870912",
+        "536892288",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0"
+      ]
+    },
+    "firstRepeatedPlaying": {
+      "frame": 5850,
+      "label": "5850",
+      "phase": [
+        "4"
+      ],
+      "page": [
+        "mission"
+      ],
+      "paused": [
+        "0"
+      ],
+      "mouse_cursor": [
+        "1",
+        "1"
+      ],
+      "html_window_state": [
+        "0",
+        "0",
+        "0"
+      ],
+      "game_menu_bar": [
+        "0",
+        "0",
+        "0"
+      ],
+      "raw_uber": [
+        "4604",
+        "1",
+        "3",
+        "85",
+        "0",
+        "1024",
+        "768"
+      ],
+      "raw_menus": [
+        "0",
+        "0",
+        "0",
+        "13",
+        "13"
+      ],
+      "time": [
+        "378.221",
+        "393.859"
+      ],
+      "mission": [
+        "DemoStormRages",
+        "Tutorial",
+        "72"
+      ],
+      "mission_start": [
+        "1",
+        "4",
+        "1",
+        "361.933",
+        "721.933"
+      ],
+      "mission_gate": [
+        "0",
+        "65",
+        "0",
+        "0",
+        "0",
+        "1",
+        "0",
+        "0"
+      ],
+      "shared_kernel": [
+        "1",
+        "26",
+        "26"
+      ],
+      "shared_surface_storage": [
+        "1",
+        "1",
+        "1",
+        "1",
+        "2",
+        "1"
+      ],
+      "shared_gameplay_globals": [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      "raw_session": [
+        "1",
+        "1"
+      ],
+      "raw_brains": [
+        "0",
+        "536870912",
+        "536892288",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0"
+      ]
+    },
+    "firstRepeatedObservation": {
+      "frame": 5505,
+      "label": "5505",
+      "phase": [
+        "3"
+      ],
+      "page": [
+        "Demo"
+      ],
+      "paused": [
+        "1"
+      ],
+      "mouse_cursor": [
+        "1",
+        "1"
+      ],
+      "html_window_state": [
+        "1",
+        "1",
+        "1"
+      ],
+      "game_menu_bar": [
+        "0",
+        "0",
+        "0"
+      ],
+      "raw_uber": [
+        "4604",
+        "1",
+        "3",
+        "85",
+        "0",
+        "1024",
+        "768"
+      ],
+      "raw_menus": [
+        "0",
+        "0",
+        "0",
+        "14",
+        "32"
+      ],
+      "time": [
+        "377.566",
+        "377.721"
+      ],
+      "mission": [
+        "DemoStormRages",
+        "Tutorial",
+        "72"
+      ],
+      "mission_start": [
+        "1",
+        "4",
+        "1",
+        "361.933",
+        "721.933"
+      ],
+      "mission_gate": [
+        "0",
+        "65",
+        "0",
+        "1",
+        "0",
+        "1",
+        "0",
+        "0"
+      ],
+      "shared_kernel": [
+        "1",
+        "26",
+        "26"
+      ],
+      "shared_surface_storage": [
+        "1",
+        "1",
+        "1",
+        "1",
+        "2",
+        "1"
+      ],
+      "shared_gameplay_globals": [
+        "1",
+        "1",
+        "1",
+        "1",
+        "1"
+      ],
+      "raw_session": [
+        "1",
+        "1"
+      ],
+      "raw_brains": [
+        "0",
+        "536870912",
+        "536892288",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0"
+      ]
+    },
+    "final": {
+      "frame": 6120,
+      "label": "6120",
+      "phase": [
+        "0"
+      ],
+      "page": [
+        "main"
+      ],
+      "paused": [
+        "0"
+      ],
+      "mouse_cursor": [
+        "1",
+        "1"
+      ],
+      "html_window_state": [
+        "0",
+        "0",
+        "0"
+      ],
+      "game_menu_bar": [
+        "0",
+        "0",
+        "0"
+      ],
+      "raw_uber": [
+        "5076",
+        "1",
+        "0",
+        "85",
+        "0",
+        "1024",
+        "672"
+      ],
+      "raw_menus": [
+        "0",
+        "0",
+        "0",
+        "0",
+        "0"
+      ],
+      "time": [
+        "403.498",
+        "419.136"
+      ]
+    }
+  },
+  "supportExitProbe": {
+    "command": [
+      "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+      "--run",
+      "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-demo-repeat-567-20261029\\data",
+      "--window",
+      "--no-audio",
+      "--frames",
+      "4000",
+      "--set",
+      "SCREENW=1024;SCREENH=768;maxFPS=15;sleepPerLoop=1;autoDemo=0;tellTips=0",
+      "--ui-script",
+      "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-demo-repeat-567-20261029\\exit-demo-probe-v2\\steps.tsv",
+      "--ui-report",
+      "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-demo-repeat-567-20261029\\exit-demo-probe-v2\\states.tsv"
+    ],
+    "binarySha256": "601190571370eeca0781b2d17a27445d702b9faae281ff061d7a76928379a724",
+    "returnCode": 0,
+    "timedOut": false,
+    "seconds": 28.312696999993932,
+    "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderrSha256": "f0bdb8fc4b4c347b1a57082e9f175144ed12f342e2086a1af8991a777b2bcc7f"
+  },
+  "attempts": [
+    {
+      "directory": "storm-v1",
+      "returnCode": 1,
+      "timedOut": true,
+      "elapsedSeconds": 600.5584940999979,
+      "scopeOrFailure": "600초 도구 상한으로 강제 종료"
+    },
+    {
+      "directory": "storm-v2",
+      "returnCode": 4294967295,
+      "timedOut": false,
+      "elapsedSeconds": 551.8114056999984,
+      "scopeOrFailure": "Leave Mission 라벨 오류·CUA 캡처2회 실패 뒤 명시 중단"
+    },
+    {
+      "directory": "exit-demo-probe",
+      "returnCode": 1,
+      "timedOut": false,
+      "elapsedSeconds": 12.807534300001862,
+      "scopeOrFailure": "프레임 번호가 안내 종료보다 빨라 Game 항목 없음"
+    },
+    {
+      "directory": "exit-demo-probe-v2",
+      "returnCode": 0,
+      "timedOut": false,
+      "elapsedSeconds": 28.312696999993932,
+      "scopeOrFailure": "실제 게임 시각/메뉴 조건의 짧은 Exit Demo/Quit 지원 검사"
+    },
+    {
+      "directory": "storm-v3",
+      "returnCode": 0,
+      "timedOut": false,
+      "elapsedSeconds": 421.78716030000214,
+      "scopeOrFailure": "최종 자연 첫360초→재시작/안내/재개→Exit Demo/Main/Quit"
+    }
+  ],
+  "verifierAudit": {
+    "cases": [
+      {
+        "case": "early-restart",
+        "rejected": true
+      },
+      {
+        "case": "same-hud",
+        "rejected": true
+      },
+      {
+        "case": "same-generation",
+        "rejected": true
+      },
+      {
+        "case": "wrong-mission",
+        "rejected": true
+      },
+      {
+        "case": "demo-cleared",
+        "rejected": true
+      },
+      {
+        "case": "second-paused",
+        "rejected": true
+      },
+      {
+        "case": "no-main-return",
+        "rejected": true
+      },
+      {
+        "case": "forced-timeout",
+        "rejected": true
+      }
+    ]
+  },
+  "toolAtLaunchSha256": "d12bcfc00994f8a64b6599c1dd79b4e02956e6034e6300ec7b4c7a5c53fa0d4b",
+  "committedToolSha256": "221888ed6e8f6d6892cdd3d32a3f19c0272e3099995b7438a80d983fc444f611",
+  "toolPostLaunchChange": "관측 간격/반복문 설명 주석만 정정·보강; 실행 AST 동일",
+  "sourceReferences": [
+    {
+      "mission": "DemoStormRages",
+      "seconds": 360,
+      "demoSection": true,
+      "englishSha256": "879f9aed148be6b6bcc71ee43743b6c6475a45201432d1577acdd21567cc6a0b"
+    },
+    {
+      "mission": "GuardMyBack",
+      "seconds": 360,
+      "demoSection": true,
+      "englishSha256": "5296e6b52312585f3beca8341b37fe26aedad60b19fca5dc21f6b464d452163e"
+    },
+    {
+      "mission": "DissolvedAlliance",
+      "seconds": 360,
+      "demoSection": false,
+      "englishSha256": "fcc7fbbef99515c4ad660a11da18318e48bd63b5467b6aeedb6c51a16d1a06e5"
+    }
+  ],
+  "remainingNaturalFirstDemoCycles": [
+    "GuardMyBack",
+    "DissolvedAlliance"
+  ],
+  "secondFullCycleVerified": false,
+  "crystalHandoffCorrected": "515의두화면비4사례기본우클릭/Help/반납은기존완료이며명시타입교환제한유지",
+  "protectedFiles": 2542,
+  "existingFixtures": 722,
+  "protectedDifferences": [],
+  "all34CurrentGameExecuted": false,
+  "fullCppSuiteExecuted": false,
+  "originalGameExecuted": false,
+  "audioExecuted": false,
+  "originalPixelComparison": false,
+  "naturalMissionVictoryExecuted": false,
+  "priestCaptureSacrificeCommandsExecuted": false,
+  "specificEnemyAttackCommandsExecuted": false,
+  "attackFlyerDedicatedTestsExecuted": false,
+  "multiplayerExecuted": false,
+  "win11Executed": false,
+  "rawDirectory": "extracted/cpp-demo-repeat-567-20261029"
+}
