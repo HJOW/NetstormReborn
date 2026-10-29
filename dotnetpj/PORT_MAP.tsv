@@ -127,6 +127,8 @@ cpppj/src/client/StyleTextMarkup.cpp	Netstorm.Client/Gump/StyleTextMarkup.cs	f7e
 cpppj/src/client/StyleTextMarkup.h	Netstorm.Client/Gump/StyleTextMarkup.cs	f7e1748e8c9a093be0f118ec864df7e5581b9f0c	port
 cpppj/src/client/TextEntryBuffer.cpp	Netstorm.Client/Gump/TextEntryBuffer.cs	a4b04553d78c5e2ae7f7b78aab7837ad3dbd3cac	L1
 cpppj/src/client/TextEntryBuffer.h	Netstorm.Client/Gump/TextEntryBuffer.cs	a4b04553d78c5e2ae7f7b78aab7837ad3dbd3cac	L1
+cpppj/src/client/TextEntryGump.cpp	Netstorm.Client/Gump/TextEntryGump.cs	39ec3a5a3ab13cc85c3251e2357e67c5426c81a9	L1
+cpppj/src/client/TextEntryGump.h	Netstorm.Client/Gump/TextEntryGump.cs	39ec3a5a3ab13cc85c3251e2357e67c5426c81a9	L1
 cpppj/src/client/TextEntryStorage.cpp	Netstorm.Client/Gump/TextEntryStorage.cs	a4b04553d78c5e2ae7f7b78aab7837ad3dbd3cac	port
 cpppj/src/client/TextEntryStorage.h	Netstorm.Client/Gump/TextEntryStorage.cs	a4b04553d78c5e2ae7f7b78aab7837ad3dbd3cac	port
 cpppj/src/client/TextGump.cpp	Netstorm.Client/Gump/ScrollingTextGump.cs	f7e1748e8c9a093be0f118ec864df7e5581b9f0c	port
