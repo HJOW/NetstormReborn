@@ -12,6 +12,12 @@ cpppj/src/client/ClientMain.cpp	Netstorm.Client/Display/ScreenCapture.cs	f0a08f0
 cpppj/src/client/Cursor.h	Netstorm.Core/Rules/GameCursor.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
 cpppj/src/client/DialogScript.cpp	Netstorm.Assets/CampaignMenu.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
 cpppj/src/client/GifImage.cpp	Netstorm.Assets/GifImage.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
+cpppj/src/client/GumpBackground.cpp	Netstorm.Client/Gump/GumpBackground.cs	436deaf700d8574524e2bae684ccc2888bd94949	port
+cpppj/src/client/GumpBackground.h	Netstorm.Client/Gump/GumpBackground.cs	436deaf700d8574524e2bae684ccc2888bd94949	port
+cpppj/src/client/GumpBackgroundCreate.cpp	Netstorm.Client/Gump/GumpBackgroundCreate.cs	436deaf700d8574524e2bae684ccc2888bd94949	port
+cpppj/src/client/GumpBackgroundCreate.h	Netstorm.Client/Gump/GumpBackgroundCreate.cs	436deaf700d8574524e2bae684ccc2888bd94949	port
+cpppj/src/client/GumpBackgroundDraw.cpp	Netstorm.Client/Gump/GumpBackgroundDraw.cs	436deaf700d8574524e2bae684ccc2888bd94949	port
+cpppj/src/client/GumpBackgroundDraw.h	Netstorm.Client/Gump/GumpBackgroundDraw.cs	436deaf700d8574524e2bae684ccc2888bd94949	port
 cpppj/src/client/GumpCollection.cpp	Netstorm.Client/Gump/GumpCollection.cs	2155b0f0855c427a3c6655ed0a42d5e374f464dd	port
 cpppj/src/client/GumpCollection.h	Netstorm.Client/Gump/GumpCollection.cs	2155b0f0855c427a3c6655ed0a42d5e374f464dd	port
 cpppj/src/client/GumpCreate.cpp	Netstorm.Client/Gump/GumpCreate.cs	2155b0f0855c427a3c6655ed0a42d5e374f464dd	port
