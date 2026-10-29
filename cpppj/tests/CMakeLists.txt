@@ -2436,6 +2436,8 @@ target_sources(netstorm_tests PRIVATE ChatMessageTests.cpp) # 일반 본문 조�
 target_sources(netstorm_tests PRIVATE ChatPacketTests.cpp) # 단독 송신/길이 observer 원문256행과 실제 수신자 확장/반납을 대조한다.
 target_sources(netstorm_tests PRIVATE ChatReceiveTests.cpp) # 일반 수신 원문238행과 wrapper/장치 누락의 부분효과를 대조한다.
 target_sources(netstorm_tests PRIVATE ChatRelayTests.cpp) # 단독 중계 원문132행의 전체 패킷/현재 마스크를 대조한다.
+target_sources(netstorm_tests PRIVATE BattleLeaveTests.cpp) # 원문16행과 실제 로컬52h 송수신/다음State3 예약을 대조한다.
+set_source_files_properties(BattleLeaveTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_BATTLE_LEAVE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/battle-leave-x86.tsv\";NETSTORM_BATTLE_ABORT_STATE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/battle-abort-state-x86.tsv\"")
 set_source_files_properties(ChatRelayTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_CHAT_RELAY_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/chat-relay-x86.tsv\"")
 set_source_files_properties(ChatReceiveTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_CHAT_RECEIVE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/chat-receive-x86.tsv\"")
 set_source_files_properties(ChatPacketTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_CHAT_PACKET_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/chat-packet-x86.tsv\"")

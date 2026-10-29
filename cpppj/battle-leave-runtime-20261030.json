@@ -1,0 +1,364 @@
+{
+  "unit": 588,
+  "date": "2026-10-30",
+  "host": "HJOW-Athlon",
+  "os": "Windows-10-10.0.19045-SP0",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "baseProductCommit": "b35e345b",
+  "adjacentRegressionCommit": "88d3640e",
+  "nativeRows": 24,
+  "nativeObservationRuns": 3,
+  "nativeObservations": 72,
+  "nativeRepeatDifferences": 0,
+  "nativeReports": [
+    {
+      "path": "cpppj/battle-leave-native-20261030.json",
+      "sha256": "ee72de2aae4794eeb1b5e52bf731bbf871a0ae7858261dcbd6ca17201bc93b0d"
+    },
+    {
+      "path": "cpppj/battle-abort-state-native-20261030.json",
+      "sha256": "62c6e76049621b5d7dcdc6590d2c21064d325b143571c1667d09fd44ffdb40fb"
+    }
+  ],
+  "initialOracleFailure": "디컴파일 이름 thunk_FUN_004e58ba의 실제 호출 주소004e58e4를 경계로 지정해 해결. 최초 실패 로그 보존/고정 fixture 변경 없음.",
+  "uniqueFocusedTests": 80,
+  "failedChecks": 0,
+  "registeredCppTests": 3475,
+  "focusedRuns": [
+    {
+      "filter": "BattleLeave",
+      "tests": 3,
+      "failedChecks": 0,
+      "logSha256": "2ac971a5cc1d152f3e1fac9642b54847e9a872ec5f06128f0c730720f5ca9ec1"
+    },
+    {
+      "filter": "NativeMainMenuState",
+      "tests": 6,
+      "failedChecks": 0,
+      "logSha256": "f25c4d675e868a656e05224bdc138787bd25bfb62c7b7701b53f8def4070a61d"
+    },
+    {
+      "filter": "StateWorldCleanup",
+      "tests": 7,
+      "failedChecks": 0,
+      "logSha256": "1430d69bf75abe60f28df6ac32dac88ae41c3e81be33a989c141b24302e9e820"
+    },
+    {
+      "filter": "StateRuntimeRetirement",
+      "tests": 3,
+      "failedChecks": 0,
+      "logSha256": "a81420e1ba6d3d22bcc751c447348119948f35dbced406a8c04c7301c3ac1549"
+    },
+    {
+      "filter": "MissionGuideInput",
+      "tests": 3,
+      "failedChecks": 0,
+      "logSha256": "f94676fd8de1126c9bfb04a5ad9f39ccdf6afd890c8f2981348822c916d29961"
+    },
+    {
+      "filter": "EditorLocalTransport",
+      "tests": 12,
+      "failedChecks": 0,
+      "logSha256": "3c15825e4f671f2cf0184c6412f563425e9e13598dc249675e6c803cbaddde54"
+    },
+    {
+      "filter": "LocalMissionTransport",
+      "tests": 4,
+      "failedChecks": 0,
+      "logSha256": "7dc638e76e21f620f0c23757047fc7c6387dce376d1419d417174e2aacf9fd2d"
+    },
+    {
+      "filter": "CampaignExistingEditorCheckpoint",
+      "tests": 42,
+      "failedChecks": 0,
+      "logSha256": "9f8c6064fd046501c65612c99e6699993d240c931e56361ae4f22fb408ebd157"
+    }
+  ],
+  "builds": [
+    {
+      "attempt": 1,
+      "returnCode": 1,
+      "errorDiagnostics": 13,
+      "warningDiagnostics": 0,
+      "reason": "빌드 진행 중 공통 종료 fixture 정의를 추가해 CMake 재생성 전 검사 컴파일이 실패했다. 최종 재생성 후 해결.",
+      "logSha256": "c47bdab2e569230dad925054a31ece8d2d38c512526596d210b3c2e5195a091b"
+    },
+    {
+      "attempt": 2,
+      "returnCode": 1,
+      "errorDiagnostics": 1,
+      "warningDiagnostics": 0,
+      "reason": "실제 Editor DWORD를 bool참조로 빌린 축소 변환 오류. uint32_t 참조로 수정.",
+      "logSha256": "4ba9d0a4f4eac6361f318a9b0a019221402f0d5467cf3e08501eb3e7b980c179"
+    },
+    {
+      "attempt": 3,
+      "returnCode": 0,
+      "errorDiagnostics": 0,
+      "warningDiagnostics": 0,
+      "reason": "검사/게임 빌드 최종 통과.",
+      "logSha256": "342f4a6a2ff29be55ea8f19e91d933fe3474439935fa967862f907b7dd6d2ec7"
+    }
+  ],
+  "package": {
+    "entries": 1365,
+    "bytes": 134146116,
+    "zipSha256": "45c8ffb9d99ddd12956d9100d620d566df74fd08cc172b813d84ecc5cf7e820f",
+    "gameSha256": "0e33558cbc3e947ccabd95460a158ec7bf591ed6626a96e7ab5dd059424723d9",
+    "originalResourceSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "runtimeDlls": [
+      "NetstormReborn-cpppj/msvcp140.dll",
+      "NetstormReborn-cpppj/vcruntime140.dll",
+      "NetstormReborn-cpppj/vcruntime140_1.dll"
+    ]
+  },
+  "packageBuildReturnCode": 0,
+  "packageBuildLogSha256": "c605130f15faa03967bcd45dede83da8fce05a90f3e8386e2bf9b02a63792d51",
+  "actualGui": [
+    {
+      "passed": true,
+      "gameSha256": "0e33558cbc3e947ccabd95460a158ec7bf591ed6626a96e7ab5dd059424723d9",
+      "mission": "TheWarBegins",
+      "fullscreen": false,
+      "run": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-battle-leave-588-20261030\\unpacked\\NetstormReborn-cpppj\\Netstorm.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-battle-leave-588-20261030\\unpacked\\NetstormReborn-cpppj\\game",
+          "--mission",
+          "TheWarBegins",
+          "--no-audio",
+          "--frames",
+          "76",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=60;sleepPerLoop=8;autoDemo=0;tellTips=0;startInFullScreen=0",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-battle-leave-588-20261030\\live\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-battle-leave-588-20261030\\live\\states.tsv",
+          "--window"
+        ],
+        "binarySha256": "0e33558cbc3e947ccabd95460a158ec7bf591ed6626a96e7ab5dd059424723d9",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 4.427828600000794,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "3ae1f8af7f668c7ffac1582da540a8f483d62283139c7a699b9514e1d6c037bd"
+      },
+      "playing": {
+        "phase": [
+          "4"
+        ],
+        "paused": [
+          "0"
+        ],
+        "mission": [
+          "TheWarBegins",
+          "Tutorial",
+          "172"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ]
+      },
+      "returned": {
+        "phase": [
+          "1"
+        ],
+        "page": [
+          "Welcome"
+        ],
+        "paused": [
+          "0"
+        ]
+      },
+      "final": {
+        "phase": [
+          "0"
+        ],
+        "page": [
+          "main"
+        ],
+        "paused": [
+          "0"
+        ]
+      },
+      "scope": "일반 중단 확인과 실제 Native 메인 복귀. 포획/희생/특정 공격/승리·원격 플레이 실행 없음."
+    },
+    {
+      "passed": true,
+      "gameSha256": "0e33558cbc3e947ccabd95460a158ec7bf591ed6626a96e7ab5dd059424723d9",
+      "mission": "TheWarBegins",
+      "fullscreen": true,
+      "run": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-battle-leave-588-20261030\\unpacked\\NetstormReborn-cpppj\\Netstorm.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-battle-leave-588-20261030\\unpacked\\NetstormReborn-cpppj\\game",
+          "--mission",
+          "TheWarBegins",
+          "--no-audio",
+          "--frames",
+          "76",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=60;sleepPerLoop=8;autoDemo=0;tellTips=0;startInFullScreen=1",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-battle-leave-588-20261030\\live-fullscreen\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-battle-leave-588-20261030\\live-fullscreen\\states.tsv"
+        ],
+        "binarySha256": "0e33558cbc3e947ccabd95460a158ec7bf591ed6626a96e7ab5dd059424723d9",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 4.2823229000005085,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "8136bceb24e01631862637b17f8d8fe8ce97d9248b2c74f3e606edfb044bd326"
+      },
+      "playing": {
+        "phase": [
+          "4"
+        ],
+        "paused": [
+          "0"
+        ],
+        "mission": [
+          "TheWarBegins",
+          "Tutorial",
+          "172"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ]
+      },
+      "returned": {
+        "phase": [
+          "0"
+        ],
+        "page": [
+          "main"
+        ],
+        "paused": [
+          "0"
+        ]
+      },
+      "final": {
+        "phase": [
+          "0"
+        ],
+        "page": [
+          "main"
+        ],
+        "paused": [
+          "0"
+        ]
+      },
+      "scope": "일반 중단 확인과 실제 Native 메인 복귀. 포획/희생/특정 공격/승리·원격 플레이 실행 없음."
+    }
+  ],
+  "windowSnapshotVisuallyInspected": true,
+  "protectedFiles": 2597,
+  "protectedExistingFixtures": 736,
+  "protectedChanged": [],
+  "currentFixtures": 738,
+  "sourceSha256": {
+    "cpppj/src/client/RawBattleLeave.h": "0739d60e292d007247b5c5b0c760def43b11c640b9ab143d90fe0fac3accb2be",
+    "cpppj/src/client/RawBattleLeave.cpp": "5bfc3dc328df15927683e93f190f292662d5fb14ec16a4f56eb59791bce5e29a",
+    "cpppj/src/client/RawCampaignSession.cpp": "220f481c82f275f36b9bb68de48618399401734a4b331c7f4912a3161ab5f2a9",
+    "cpppj/src/client/RawCampaignSessionLogin.inc": "7778236fa151e796a34a7047540ee4c8381826a6ac2adc26972bee0b3a0af392",
+    "cpppj/src/client/UberEditor.inc": "a749e85a04f68fdacc75b4c576c3ab1fc0d0d36029cb915dbdc28c6df60148d4",
+    "cpppj/src/client/UberGump.cpp": "a8e21f4e92e0e0945895e7d361ccdeeb77dc9def54c2be6a682d1bb3c4e0d8bb",
+    "cpppj/src/CMakeLists.txt": "db3ee8d054176cd879adc2109004a4fe6941e3408073b944aede714418c9ca0b",
+    "cpppj/tests/BattleLeaveTests.cpp": "26e016f629e337855574bae49599893fea81444f42a3f51849017cc809e75394",
+    "cpppj/tests/CMakeLists.txt": "88274ac368e5eb9aa0bf48d8d365443748fd2e6b444e29aafd2509d6136f77ba",
+    "tools/decomp_battle_leave.py": "8c492eb9befd691a41288cbef17b4f55dd19f3d18ec92a7f8b5dc7dd71190c1c",
+    "tools/decomp_battle_abort_state.py": "3ef1071d1722f91fd399be8f3e124be174324a9c528c558ecd543f971c0ceadb",
+    "tools/cpp_battle_leave_smoke.py": "1762a3609c577a9ed509fc039d5836d0ff8f37c8515699197ddb8d4877b622bf"
+  },
+  "currentFullCppSuiteExecuted": false,
+  "currentAll34PathsExecuted": false,
+  "lastAll34ProductUnit": 586,
+  "lastAll34EvidenceUnit": 587,
+  "win11Verified": false,
+  "newMultiplayerTestsExecuted": false,
+  "capturesSacrificesSpecificAttacksOrVictoriesReproduced": false,
+  "remaining": "이유0 이하 Tell/CD 전체·원격 페널티/State6/재접속·존재 startup 저장 reader·나머지 State3/Edit/시나리오·UI·후순위4~6차",
+  "goalComplete": false,
+  "storedFullscreenRestart": {
+    "passed": true,
+    "run": {
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-battle-leave-588-20261030\\unpacked\\NetstormReborn-cpppj\\Netstorm.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-battle-leave-588-20261030\\unpacked\\NetstormReborn-cpppj\\game",
+        "--no-audio",
+        "--frames",
+        "24",
+        "--set",
+        "autoDemo=0;tellTips=0",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-battle-leave-588-20261030\\restart-stored-fullscreen-retest\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-battle-leave-588-20261030\\restart-stored-fullscreen-retest\\states.tsv"
+      ],
+      "binarySha256": "0e33558cbc3e947ccabd95460a158ec7bf591ed6626a96e7ab5dd059424723d9",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 1.0936782000007952,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "cb76758e176fb9498de489bf084e9844f54d645d0fb4457c2c91e00a6a78d515"
+    },
+    "startInFullScreenOverridden": false,
+    "windowOverrideUsed": false,
+    "screenMode": [
+      "139",
+      "800",
+      "600",
+      "800",
+      "1"
+    ],
+    "screenWindow": [
+      "0",
+      "0",
+      "1920",
+      "1080",
+      "1920",
+      "1080",
+      "2483027968"
+    ],
+    "priorFullscreenMode": [
+      "139",
+      "1024",
+      "768",
+      "1024",
+      "1"
+    ],
+    "phase": [
+      "0"
+    ],
+    "page": [
+      "main"
+    ],
+    "firstAttempt": {
+      "productExitCode": 0,
+      "phase": [
+        "1"
+      ],
+      "page": [
+        "UserNotUpdated"
+      ],
+      "screenMode": [
+        "139",
+        "800",
+        "600",
+        "800",
+        "1"
+      ],
+      "helperAssumptionFailure": "UserNotUpdated의 실제 OK를 누르기 전 메인 메뉴와 이전 실행의 임시1024해상도를 요구함. 재검사는 실제 안내 버튼과 저장800해상도를 유지."
+    },
+    "scope": "Windows10의 실제 Native 메뉴 복귀 뒤 저장 전체화면 재실행. Windows11/모든 DirectDraw 오류 경로로 확대하지 않음."
+  },
+  "actualGuiExecutionsIncludingInitialHelperFailure": 4
+}

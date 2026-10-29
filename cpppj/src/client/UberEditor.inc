@@ -129,7 +129,7 @@ o::LocalMissionParentResult UberGump::InstallMainMenuNativeState(std::uint32_t s
         const auto types=client_.Assets().TypeTable().Types();if (type>=types.size()) throw std::out_of_range("State3 source TYPE 이름 범위");const auto name=types[type].name;
         if (!client_.Files().TryRead("d/"+name+".gif")) return std::nullopt;return name; //원문 고정 data 디렉터리의 .gif 존재만 판정하며 없는 파일을 생성하지 않는다.
     };
-    hooks.leaveBattle=[] { throw std::logic_error("State3의 이전 Battle14 종료 통지 장치 미연결"); };
+    hooks.leaveBattle=[this] { if (!world_) throw std::logic_error("State3의 이전 Battle14 실제 Session 없음");const auto packet=MakeBattleLeavePacket();world_->Session().SendLocalPacket(9,packet); }; // 원문처럼 전체 cleanup 전에 같은 로컬9에52h를 예약하며 수신/flush를 강제하지 않는다.
     hooks.prefix=[this] { PrepareNativeFortState(false); };hooks.hudPrefix=[this] { ApplyHudModeForState(1); };
     hooks.title=[this] { RefreshWindowTitle(); };hooks.closeGuide=[this] { ReleaseCurrentGuideMission(); };
     hooks.tell=[this](auto section) { Tell(std::string(section)); };hooks.startup=[this] { return o::CheckStartupState(EditorStartupStateHooks()); };

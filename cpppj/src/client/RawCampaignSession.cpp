@@ -2,6 +2,7 @@
 #include "client/RawCampaignSession.h"
 #include "client/ClientChatWindowGlobals.h"
 #include "client/RawChatRelay.h"
+#include "client/RawBattleLeave.h"
 #include "client/SendMoneyInput.h"
 #include "o/RawBridgeCarriers.h"
 #include "o/RawIceRicochet.h" // 실제 아이스 반사점/선택도 같은 풀·HP·해시·게임 난수를 사용한다.
@@ -3219,6 +3220,7 @@ struct RawCampaignSession::Impl {
         if (!editorRegisteredDispatch) return;
         for (const auto type:kEditorGameplayMessages) editorRegisteredDispatch->Register(type,{}); // 같은 Session을 빌리는 receive만 해제하고 실제 observer/프로토콜/정책/길이 표는 보존한다.
         editorRegisteredDispatch->Register(0x41,{}); // 같은 Session을 빌린 Chat 수신도 원본 observer/버전은 남기고 반납한다.
+        editorRegisteredDispatch->Register(0x52,{}); // 같은 Player span을 빌리는 종료 통지도 Session보다 먼저 해제한다.
         editorRegisteredDispatch=nullptr;editorRegisteringCommands=false;
     }
     // 외부 등록표가 현재 Session을 더는 호출할 수 없게 한 뒤 기존 모듈/Kernel 정리를 수행한다.
@@ -3405,9 +3407,9 @@ void RawCampaignSession::CommitExistingEditorInstall(ClientLocalStateGlobals& ow
     if (s.services.editorTransport) {
         auto& dispatch=s.services.editorTransport->Dispatch();if (s.login || s.editorRegisteredDispatch || s.editorActivityRegisteredDispatch) throw std::logic_error("Editor 실제 전송의 중복 Login/수신 등록");
         for (const auto type:kEditorGameplayMessages) if (dispatch.Registration(type).receive) throw std::logic_error("Editor 현재 수신 등록표의 다른 소유자 존재"); // 전체13종을 먼저 확인하여 기존 처리기를 부분 덮어쓰지 않는다.
-        if (dispatch.Registration(0x64).receive || dispatch.Registration(0x41).receive) throw std::logic_error("Editor 실제64h/41h 수신 등록표의 다른 소유자 존재"); // 모든 receive 충돌을 쓰기 전에 거부한다.
+        if (dispatch.Registration(0x64).receive || dispatch.Registration(0x41).receive || dispatch.Registration(0x52).receive) throw std::logic_error("Editor 실제64h/41h/52h 수신 등록표의 다른 소유자 존재"); // 모든 receive 충돌을 쓰기 전에 거부한다.
         s.editorRegisteredDispatch=&dispatch;s.editorActivityRegisteredDispatch=&dispatch;s.editorRegisteringCommands=true;
-        try { RegisterCarrierCommands(dispatch);RegisterConstructionCommands(dispatch);RegisterFactoryResearchCommands(dispatch);RegisterConnectionActivity(dispatch,*s.connectionActivity);RegisterChatPacket(dispatch,s.chatGlobals->receivedMask,s.ChatDevices());s.editorRegisteringCommands=false; }
+        try { RegisterCarrierCommands(dispatch);RegisterConstructionCommands(dispatch);RegisterFactoryResearchCommands(dispatch);RegisterConnectionActivity(dispatch,*s.connectionActivity);RegisterChatPacket(dispatch,s.chatGlobals->receivedMask,s.ChatDevices());RegisterBattleLeavePacket(dispatch,s.players);s.editorRegisteringCommands=false; }
         catch (...) { s.ReleaseEditorCommandReceivers();throw; } // 부분 등록 예외도 살아 있는 Session 포인터를 외부 표에 남기지 않는다.
     }
     s.loaded=true; // checkpoint나 UI scope가 아닌 실제 정상 State ret 확인 뒤 이 한 곳에서만 Editor 입력/공개 저장을 연다.

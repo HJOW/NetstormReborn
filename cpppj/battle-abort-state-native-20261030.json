@@ -1,0 +1,17 @@
+{
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "rows": 8,
+  "instructions": 114,
+  "scope": "단독/편집004b6350의 실제 직접 쓰기와 path/delete 경계만 관측. 파일 삭제/게임/창/네트워크/승패 실행 없음.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_battle_abort_state.py": "3ef1071d1722f91fd399be8f3e124be174324a9c528c558ecd543f971c0ceadb",
+    "tools/decomp_local_mission_transport.py": "db71da65079aa9a985a3a833edd224f089ba9a20137d92042551cb346937eb78",
+    "tools/decomp_native_main_menu_state.py": "f5ef26d3275036739d0a3022ba28ad62da43a8b25d958fe430dd32f25509a710",
+    "cpppj/tests/fixtures/battle-abort-state-x86.tsv": "7c296838727e5af350addc69660f0c89555b590cab1c6dcf3586f1c2afa46748"
+  }
+}
