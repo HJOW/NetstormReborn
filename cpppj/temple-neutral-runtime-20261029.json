@@ -1,0 +1,272 @@
+{
+  "unit": 575,
+  "baseCppCommit": "cf3babe1",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23",
+    "changed": false
+  },
+  "scope": "사용자제보:신전자연파괴후섬중립/기본테마복귀",
+  "cause": "455380의신전목록005e189c에일반생산목록0055a4d4를잘못전달했다.4dca50의신전목록제거와같은현재목록을연결했다.",
+  "baseline": {
+    "run": {
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-temple-neutral-575-20261029\\baseline-data",
+        "--mission",
+        "DissolvedAlliance",
+        "--mute-audio",
+        "--frames",
+        "2002",
+        "--set",
+        "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-temple-neutral-575-20261029\\baseline\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-temple-neutral-575-20261029\\baseline\\states.tsv",
+        "--audio-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-temple-neutral-575-20261029\\baseline\\audio.tsv",
+        "--window"
+      ],
+      "binarySha256": "c7da370346da4462d3dfb4760c3afa6d4fcb12ceb4066257d4d4e74fdfc10e1b",
+      "scriptSha256": "84816f729c6399581ea5f194dce3db7b96c829eb780437fa2dd54ce57bb61549",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 75.34713639999973,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2",
+      "originalsUnchanged": true,
+      "dataUnchanged": true,
+      "dataRoot": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-temple-neutral-575-20261029\\baseline-data"
+    },
+    "templeSid": 15008,
+    "firstAbsentLabel": "1700",
+    "firstAbsentGameSeconds": 63.576,
+    "landCells": 547,
+    "neutralCells": 0,
+    "initialElementCoreCells": 453,
+    "restoredNaturalCoreCells": 0,
+    "scope": "이전제품실제무입력플레이자료.이게임에는섬목록진단행이없어기록owner0의증거는별도수정전회귀검사다."
+  },
+  "fixedGui": {
+    "binarySha256": "e936607db88d33b1ae09f7c0af4de7540df986e2955a8784a1f34b9ac0776e36",
+    "observed": {
+      "templeSid": 15008,
+      "island": 0,
+      "terrainType": 97,
+      "firstAbsentLabel": "1400",
+      "firstAbsentGameSeconds": 53.976,
+      "hpObservations": [
+        [
+          "100",
+          5000
+        ],
+        [
+          "200",
+          5000
+        ],
+        [
+          "300",
+          4835
+        ],
+        [
+          "400",
+          4429
+        ],
+        [
+          "500",
+          4009
+        ],
+        [
+          "600",
+          3493
+        ],
+        [
+          "700",
+          3131
+        ],
+        [
+          "800",
+          2700
+        ],
+        [
+          "900",
+          2298
+        ],
+        [
+          "1000",
+          1744
+        ],
+        [
+          "1100",
+          1154
+        ],
+        [
+          "1200",
+          512
+        ],
+        [
+          "1300",
+          357
+        ]
+      ],
+      "landCells": 547,
+      "neutralCells": 547,
+      "initialElementCoreCells": 453,
+      "restoredNaturalCoreCells": 453,
+      "islandTempleCleared": true,
+      "islandOwnerNeutral": true,
+      "cameraUnchanged": true
+    },
+    "run": {
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-temple-neutral-575-20261029\\gui-after-v1\\data",
+        "--mission",
+        "DissolvedAlliance",
+        "--mute-audio",
+        "--frames",
+        "2402",
+        "--set",
+        "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-temple-neutral-575-20261029\\gui-after-v1\\run\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-temple-neutral-575-20261029\\gui-after-v1\\run\\states.tsv",
+        "--audio-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-temple-neutral-575-20261029\\gui-after-v1\\run\\audio.tsv",
+        "--window"
+      ],
+      "binarySha256": "e936607db88d33b1ae09f7c0af4de7540df986e2955a8784a1f34b9ac0776e36",
+      "scriptSha256": "adfc25d253928dda0782516ed99863a743604084e1ec696ebf59161f96bcc582",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 88.48370520000753,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2",
+      "originalsUnchanged": true,
+      "dataUnchanged": true,
+      "dataRoot": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-temple-neutral-575-20261029\\gui-after-v1\\data"
+    },
+    "playInputAfterBriefing": false,
+    "forcedDamageOrDeletion": false,
+    "capturesSacrificesOrVictoriesReproduced": false,
+    "networkExecuted": false,
+    "analysisCorrection": "첫검사기의J대표프레임개수와뒤본문144프레임혼동을수정하고같은완료자료만재분석함.실제게임재실행없음."
+  },
+  "focused": {
+    "uniqueFinalTests": 38,
+    "failedFinalChecks": 0,
+    "registered": 3448,
+    "preFixRegression": {
+      "tests": 1,
+      "failedChecks": 1,
+      "expectedFailure": true,
+      "neutralCells": 0,
+      "naturalCoreCells": 0
+    },
+    "postFixPreliminaryRegression": {
+      "tests": 1,
+      "failedChecks": 0
+    },
+    "logs": {
+      "final-CampaignSession_ActualClientPlayerOwnerAcrossSessions.log": {
+        "tests": 1,
+        "failedChecks": 0
+      },
+      "final-CampaignSession_ActualMasterGameWorld.log": {
+        "tests": 1,
+        "failedChecks": 0
+      },
+      "final-CampaignSession_ActualWarBeginsGameWorld.log": {
+        "tests": 1,
+        "failedChecks": 0
+      },
+      "final-CampaignSession_FortTerritorySaveCurrentWorld.log": {
+        "tests": 1,
+        "failedChecks": 0
+      },
+      "final-CampaignSession_GeyserSupportBridgeOwnershipAndColors.log": {
+        "tests": 1,
+        "failedChecks": 0
+      },
+      "final-CampaignSession_TempleDestructionRestoresNeutralIslandAndTerrain.log": {
+        "tests": 1,
+        "failedChecks": 0
+      },
+      "final-IslandRuntime_.log": {
+        "tests": 8,
+        "failedChecks": 0
+      },
+      "final-RegionOwnership_.log": {
+        "tests": 6,
+        "failedChecks": 0
+      },
+      "final-RegionPaint_.log": {
+        "tests": 3,
+        "failedChecks": 0
+      },
+      "final-StateSidLists_.log": {
+        "tests": 9,
+        "failedChecks": 0
+      },
+      "final-VortexOwner_.log": {
+        "tests": 4,
+        "failedChecks": 0
+      },
+      "final-VortexPreDestroy_.log": {
+        "tests": 2,
+        "failedChecks": 0
+      }
+    }
+  },
+  "builds": {
+    "tests-before": {
+      "warnings": 2,
+      "errors": 0,
+      "completed": true
+    },
+    "tests-after": {
+      "warnings": 0,
+      "errors": 0,
+      "completed": true
+    },
+    "game-after": {
+      "warnings": 0,
+      "errors": 0,
+      "completed": true
+    },
+    "tests-final": {
+      "warnings": 0,
+      "errors": 0,
+      "completed": true
+    }
+  },
+  "nativeEvidence": {
+    "newOracleFixtures": 0,
+    "sources": [
+      "004dca50removes005e189c",
+      "00455380votes/selectsthemesfrom005e189c",
+      "RawStateSidLists.templesversusfactories"
+    ],
+    "existingNativeFixturesPreserved": true
+  },
+  "protected": {
+    "files": 2590,
+    "changed": [],
+    "previousFixtureCount": 729,
+    "currentFixtureCount": 729
+  },
+  "actualTestException": "사용자가직접요청한1-6무입력자연피격/신전파괴만확인했다.포획/희생/승리/신규MP/공중3종전용검사는하지않았다.",
+  "nextUserPriority": "사제/골렘선택후간헐천/신전위를가리킬때커서가계속사용불가로나오는문제",
+  "deferred": [
+    "Chat제출/송신",
+    "남은UI/Edit/시나리오/수명/호환성",
+    "현재제품전체34경로/전체C++/Win11실기",
+    "자연완주및후순위MP무시험사전구현"
+  ],
+  "rawDirectory": "extracted/cpp-temple-neutral-575-20261029"
+}

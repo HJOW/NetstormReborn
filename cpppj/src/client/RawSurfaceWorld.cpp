@@ -397,6 +397,9 @@ std::string RawSurfaceWorld::Report() const {
     for (std::size_t i=1;i<o::Graph::kCount;++i) if (impl_->graph->Records()[i].inUse) { ++graphs;surfaces+=static_cast<std::uint16_t>(impl_->graph->Records()[i].surfaces); }
     out<<"raw_world\t"<<impl_->time.game<<'\t'<<impl_->time.number<<'\t'<<impl_->kernel.Size()<<'\t'<<surfaces<<'\t'<<graphs<<'\t'<<impl_->bookkeeping.TotalCost()<<'\t'<<impl_->bookkeeping.depth<<'\t'<<impl_->baseDestroy->PreDepth()<<'\t'<<impl_->baseDestroy->PostDepth()<<'\t'<<impl_->effectRequests<<'\t'<<impl_->deletionRequests<<'\n';
     const auto& scan=impl_->storage->bridgeDecayScan;out<<"bridge_decay\t"<<scan.first<<'\t'<<scan.last<<'\t'<<scan.cursor<<'\t'<<scan.next<<'\t'<<impl_->storage->bridgeDecayPeriod<<'\n'; //CLI 관측은 실제 현재 전역만 읽고 스캔/초기화를 실행하지 않는다.
+    const auto terrainFrames=impl_->frames[impl_->terrainType].Run('J');out<<"raw_terrain_type\t"<<impl_->terrainType<<'\t'<<terrainFrames.first<<'\t'<<terrainFrames.count<<'\n'; //실제지면의기본/원소프레임범위를읽기만한다.
+    const auto& islandRecords=impl_->storage->islands.records;out<<"raw_islands\t"<<Read(islandRecords,0,4)<<'\n';
+    for (std::uint32_t index=0;index<std::min(Read(islandRecords,0,4),100U);++index) { const auto at=4+index*32;out<<"raw_island\t"<<index<<'\t'<<Read(islandRecords,at,4)<<'\t'<<Read(islandRecords,at+4,1)<<'\t'<<Read(islandRecords,at+8,4)<<'\n'; } //실제신전참조/존재/소유자를관측하며목록이나테마를다시계산하지않는다.
     // 렌더링과 같은 raw 조회 결과를 번호별로 제공한다.
     for (const auto& snapshot:Objects()) {
         const auto& seed=snapshot.object;out<<"raw_object\t"<<snapshot.sid.value<<'\t'<<seed.type<<'\t'<<seed.owner<<'\t'<<seed.frame<<'\t'<<seed.x<<'\t'<<seed.y<<'\n';

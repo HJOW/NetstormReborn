@@ -34,14 +34,14 @@ struct RegionOwnershipHooks {
     std::function<std::uint32_t(float,float)> regionAt;
     // 00470900 / CD 004bd2d0의 flood/지형 도장은 필수 외부 경계다.
     std::function<void(const RegionOwnershipPaint&)> paint;
-    // 패치의 theammode 정수 조회다. 일치하는 작업장마다 새로 조회한다.
+    //패치의theammode정수조회다.같은소유자의신전마다새로조회한다.
     std::function<std::uint32_t()> themeMode;
 };
-// outpost·작업장 지역 투표와 판본별 도장 요청 순서를 복원한다.
+//outpost·신전지역투표와판본별도장요청순서를복원한다.
 class RawRegionOwnership {
 public:
-    // 작업장 목록은 factories/nearest와 구별한다. theme은 타입 raw +0x98의 별도 입력 표다.
-    RawRegionOwnership(const SidPool& pool,SquidPostPopList& additional,SquidPostPopList& workshops,
+    //패치신전005e189c목록은일반factories/nearest와구별한다.theme은타입raw+0x98의별도입력표다.
+    RawRegionOwnership(const SidPool& pool,SquidPostPopList& additional,SquidPostPopList& temples,
         std::span<const std::uint32_t> themes,RegionOwnershipState& state,RegionOwnershipHooks hooks);
     // 00455380 / CD 0047b3c0: 동률/중립과 패치 mode 10 누적 재투표를 처리한다.
     void Update(float x,float y,std::uint32_t mode=0) const;
@@ -55,8 +55,8 @@ private:
     const SidPool& pool_;
     // additional_: 추가.
     SquidPostPopList& additional_;
-    // workshops_: 워크샾.
-    SquidPostPopList& workshops_;
+    //temples_:원본신전목록이며파괴전처리가제거한동일한현재목록을읽는다.
+    SquidPostPopList& temples_;
     // themes_: 테마.
     std::span<const std::uint32_t> themes_;
     // state_: 처리 중 조회·갱신하는 상태 (RegionOwnershipState).

@@ -24,7 +24,7 @@ struct RawCampaignOwnership::Impl {
     o::CanonPlacementTerrainState getterState; // 지면 getter의 현재 sentinel이며 배치 순회와 별도다.
     std::unique_ptr<o::RawCanonPlacementTerrain> getter; // 기존 실제 RegionAt 몸체만 사용한다.
     std::unique_ptr<o::RawRegionPaint> paint; // 동일 원본 hash0의 실제 flood·경계 도장이다.
-    std::unique_ptr<o::RawRegionOwnership> ownership; // 같은 추가/워크샾 목록을 매순회 읽는 원본 투표다.
+    std::unique_ptr<o::RawRegionOwnership> ownership; //같은추가/신전목록을매순회읽는원본투표다.
     std::unique_ptr<o::RawVortexOwner> vortex; // 같은 Player/섬/도장/공통 Owner의 실제 신전 가상 몸체다.
     // 자료 동일성을 먼저 확인한 뒤 실제 하위 몸체를 구성한다.
     Impl(RawSurfaceWorld& input,o::RawIslandRuntime& list,o::AssetPostPopState& assets,
@@ -48,7 +48,8 @@ struct RawCampaignOwnership::Impl {
         o::RegionOwnershipHooks ownershipHooks;ownershipHooks.themeMode=effects.themeMode;
         ownershipHooks=o::MakeRegionPaintOwnershipHooks(core.pool,*paint,std::move(ownershipHooks));
         ownershipHooks=o::MakeTerrainRegionOwnershipHooks(core.pool,*getter,std::move(ownershipHooks));
-        ownership=std::make_unique<o::RawRegionOwnership>(core.pool,assets.Outposts(),core.bookkeeping.Factories(),themes,ownershipState,std::move(ownershipHooks));
+        //원본455380은0055a70c와005e189c(신전)를투표한다.0055a4d4의생산목록에는이시점의삭제중인신전/일반건물이남으므로섬색/테마가재점유된다.
+        ownership=std::make_unique<o::RawRegionOwnership>(core.pool,assets.Outposts(),assets.Temples(),themes,ownershipState,std::move(ownershipHooks));
         o::VortexOwnerHooks vortexHooks;
         vortexHooks.islandNumber=[this](float x,float y) { return IslandNumber(x,y); };
         vortexHooks.islandExists=[this](std::int32_t island) { return islands.Exists(island)!=0; };

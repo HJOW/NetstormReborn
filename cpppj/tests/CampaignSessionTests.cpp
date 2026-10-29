@@ -926,6 +926,24 @@ TEST_CASE(CampaignSession_EmptyGeyserUsesCurrentDeletion) {
     CHECK(core.pool.FreeCount()==free && (core.pool.Slot(empty)[11]&1U)!=0);
     CHECK(core.bookkeeping.depth==0 && core.destroy.PreDepth()==0 && core.destroy.PostDepth()==0);
 }
+//실제1-6의템플삭제후남은생산건물이섬소유/테마를유지하는회귀를검사한다.자연피격은별도게임창에서확인한다.
+TEST_CASE(CampaignSession_TempleDestructionRestoresNeutralIslandAndTerrain) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();services.ownership.themeMode=[] { return 1U; }; //원본기본원소지형표시를켜고외부UI/음향만검사장치로제공한다.
+    auto fort=FortTemplate::Parse(assets.files.Read("d/DissolvedAlliance.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"DissolvedAlliance",std::move(services));session.Load();auto core=session.Core();const auto storage=session.World().Storage();const auto terrain=static_cast<std::uint32_t>(assets.game.Find("isle").block+70);Sid temple{};
+    for (const auto& item:session.World().Objects()) if (item.object.type==123 && item.object.owner==1) { temple=item.sid;break; } //실제로로드된플레이어윈드신전을찾고임시객체를만들지않는다.
+    CHECK(temple.value);if (!temple.value) return;const auto raw=core.pool.Slot(temple);const auto x=std::bit_cast<float>(Get(raw,14)),y=std::bit_cast<float>(Get(raw,18));const auto surface=session.World().Find(x,y,terrain);CHECK(surface.value);if (!surface.value) return;const auto region=Get(core.pool.Slot(surface),8,2);const auto record=4+region*32;const auto& islands=storage->islands.records;
+    CHECK(Get(islands,record)==temple.value && Get(islands,record+8)==1);std::vector<Sid> land,windCore;std::vector<std::pair<Sid,std::uint8_t>> others;std::size_t themed{};const auto first=static_cast<std::uint32_t>(core.frames[terrain].Run('J').first);
+    for (const auto& item:session.World().Objects()) if (item.object.type==terrain) { //같은섬의실제모든지면과다른섬의현재소유자를보존한다.
+        const auto bytes=core.pool.Slot(item.sid);if (Get(bytes,8,2)==region) { land.push_back(item.sid);CHECK(bytes[34]==1);const auto frame=Get(bytes,36);if (frame>first && frame<=first+144U && (frame-first-1)/36U==2) { ++themed;windCore.push_back(item.sid); } }else others.emplace_back(item.sid,bytes[34]);
+    }
+    CHECK(!land.empty() && themed>0);CHECK(session.World().Destroy(temple,0));CHECK(Get(islands,record)==0 && Get(islands,record+8)==0);std::size_t neutral{},natural{},remainingFactories{};
+    for (const auto sid:land) { const auto bytes=core.pool.Slot(sid);if (bytes[34]==0) ++neutral;const auto frame=Get(bytes,36);if (frame>first && frame<=first+36U) ++natural; } //테두리색의실제owner와기본테마0의J프레임을별도로확인한다.
+    for (const auto [sid,owner]:others) CHECK(core.pool.Slot(sid)[34]==owner); //다른섬을중립화하는보정으로성공시키지않는다.
+    for (const auto sid:core.bookkeeping.Factories().Items()) if (core.pool.Slot(Sid{static_cast<std::uint16_t>(sid)})[34]==1) ++remainingFactories; //워크샾등이남아있어도신전목록투표에는들어가지않는다.
+    std::size_t restored{};for (const auto sid:windCore) { const auto frame=Get(core.pool.Slot(sid),36);if (frame>first && frame<=first+36U) ++restored; } //원래원소J지면전부가기본테마로돌아왔는지집계한다.
+    CHECK(remainingFactories>0 && neutral==land.size() && natural>0 && restored==windCore.size());CHECK(core.destroy.PreDepth()==0 && core.destroy.PostDepth()==0 && core.bookkeeping.depth==0);
+    std::cout<<"템플삭제지면="<<land.size()<<"/중립="<<neutral<<"/기본J="<<natural<<"/원소J="<<themed<<"/남은생산건물="<<remainingFactories<<'\n';
+}
 // 실제1-1/1-2를 production GameWorld에 설치하고 같은 SID/프레임 표시를 확인한다.
 void CheckSessionWorld(std::string_view mission) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;

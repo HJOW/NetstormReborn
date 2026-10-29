@@ -1,4 +1,4 @@
-// 원본의 반복 조회·중립 처리·마지막 작업장 테마·도장 후 재투표를 보존한다.
+//원본의반복조회·중립처리·마지막신전테마·도장후재투표를보존한다.
 #include "o/RawRegionOwnership.h"
 #include "o/RawCanonPlacementTerrain.h"
 #include <bit>
@@ -28,10 +28,10 @@ int Truncate(double value) {
 }
 }
 // 필수 경계와 서로 다른 전역 목록/테마 표를 먼저 확인한다.
-RawRegionOwnership::RawRegionOwnership(const SidPool& pool,SquidPostPopList& additional,SquidPostPopList& workshops,
+RawRegionOwnership::RawRegionOwnership(const SidPool& pool,SquidPostPopList& additional,SquidPostPopList& temples,
     std::span<const std::uint32_t> themes,RegionOwnershipState& state,RegionOwnershipHooks hooks)
-    :pool_(pool),additional_(additional),workshops_(workshops),themes_(themes),state_(state),hooks_(std::move(hooks)) {
-    if (&additional==&workshops || !hooks_.regionAt || !hooks_.paint ||
+    :pool_(pool),additional_(additional),temples_(temples),themes_(themes),state_(state),hooks_(std::move(hooks)) {
+    if (&additional==&temples || !hooks_.regionAt || !hooks_.paint ||
         (pool.Edition()==OriginalEdition::Patch1078 && (!hooks_.themeMode || themes.size()<188)))
         throw std::invalid_argument("지역 소유 목록/테마/필수 효과 연결 오류");
 }
@@ -58,11 +58,11 @@ void RawRegionOwnership::Update(float x,float y,std::uint32_t mode) const {
     if (special) {
         // 지역마다 표를 초기화하지 않으며 중복 지역도 다시 누적한다.
         for (std::size_t index=0;index<state_.affected.size();++index) {
-            Vote(additional_,x,y,votes,&index);Vote(workshops_,x,y,votes,&index);
+            Vote(additional_,x,y,votes,&index);Vote(temples_,x,y,votes,&index);
         }
         mode=0;
     } else {
-        if (patch) state_.affected.clear();Vote(additional_,x,y,votes,nullptr);Vote(workshops_,x,y,votes,nullptr);
+        if (patch) state_.affected.clear();Vote(additional_,x,y,votes,nullptr);Vote(temples_,x,y,votes,nullptr);
     }
     std::uint32_t owner=0;std::int32_t best=0;bool tied=false;
     // 소유자 0도 정상 투표 대상이며 더 큰 최대값이 나오면 앞선 동률을 해제한다.
@@ -75,9 +75,9 @@ void RawRegionOwnership::Update(float x,float y,std::uint32_t mode) const {
         hooks_.paint({paintX,paintY,1,0});state_.affected.clear();owner=0;
     } else {
         if (mode==0) {
-            // 지역과 무관하게 같은 소유자의 마지막 작업장 테마가 남는다.
-            for (std::size_t i=0;i<workshops_.Items().size();++i) {
-                const auto number=workshops_.Items()[i];if (number>65535) throw std::out_of_range("지역 테마 SID 범위 오류");
+            //지역과무관하게같은소유자의마지막신전테마가남는다.
+            for (std::size_t i=0;i<temples_.Items().size();++i) {
+                const auto number=temples_.Items()[i];if (number>65535) throw std::out_of_range("지역 테마 SID 범위 오류");
                 const auto raw=pool_.Slot(Sid{static_cast<std::uint16_t>(number)});if (raw[34]!=owner) continue;
                 if (raw[10]>=themes_.size()) throw std::out_of_range("지역 테마 타입 오류");
                 const auto kind=themes_[raw[10]];const auto enabled=hooks_.themeMode();
