@@ -48,6 +48,9 @@ cpppj/src/client/ScreenPresentation.h	Netstorm.Client/Display/ScreenPresentation
 cpppj/src/client/ScreenResolutions.h	Netstorm.Client/Display/ScreenResolutions.cs	ac9ea9162ba0c580cd53505c8c3782c0b2a27172	port
 cpppj/src/client/SpriteColorMaps.cpp	Netstorm.Client/Display/SpriteColorMaps.cs	e4b739b97f5316453de827b92ba6527a63f17637	L1
 cpppj/src/client/SpriteColorMaps.h	Netstorm.Client/Display/SpriteColorMaps.cs	e4b739b97f5316453de827b92ba6527a63f17637	L1
+cpppj/src/client/SpriteDraw.cpp	Netstorm.Client/Display/SpriteDraw.cs	8ca081a26b4b6bce8dbf63f72a37733dc95e25d4	port
+cpppj/src/client/SpriteDraw.cpp	Netstorm.Client/Display/SpritePixelTarget.cs	8ca081a26b4b6bce8dbf63f72a37733dc95e25d4	port
+cpppj/src/client/SpriteDraw.h	Netstorm.Client/Display/SpriteDraw.cs	8ca081a26b4b6bce8dbf63f72a37733dc95e25d4	port
 cpppj/src/client/VFXDraw.cpp	Netstorm.Client/Display/VfxDraw.cs	cb56907c0aae1f0f02410dbda12860051a7f2e4d	L1
 cpppj/src/client/VFXDraw.h	Netstorm.Client/Display/VfxDraw.cs	cb56907c0aae1f0f02410dbda12860051a7f2e4d	L1
 cpppj/src/client/VFXLine.cpp	Netstorm.Client/Display/VfxLine.cs	cb56907c0aae1f0f02410dbda12860051a7f2e4d	port
@@ -103,6 +106,7 @@ cpppj/src/o/RawPriestPrayer.cpp	Netstorm.Core/Original/RawPriestPrayer.cs	55520f
 cpppj/src/o/RawPriestPreDestroy.cpp	Netstorm.Core/Original/RawPriestPreDestroy.cs	55520f783fbcc11157fcc7fbfc5887407e788d67	L1
 cpppj/src/o/RawPriestRegen.cpp	Netstorm.Core/Original/RawPriestRegen.cs	37dbf68bfd44f3288348c9063681e7fce5d39ece	L1
 cpppj/src/o/RawPriestState.cpp	Netstorm.Core/Original/RawPriestState.cs	55520f783fbcc11157fcc7fbfc5887407e788d67	L1
+cpppj/src/o/RawRenderCollection.h	Netstorm.Core/Original/RenderCollectionEntry.cs	8ca081a26b4b6bce8dbf63f72a37733dc95e25d4	port
 cpppj/src/o/RawSquidDestroy.cpp	Netstorm.Core/Original/RawSquidDestroy.cs	c7459e61da4d3b6a97c5266bb3ec676f38be1d5e	L1
 cpppj/src/o/RawSquidDestroyDispatch.cpp	Netstorm.Core/Original/RawSquidDestroyDispatch.cs	c7459e61da4d3b6a97c5266bb3ec676f38be1d5e	L1
 cpppj/src/o/RawSquidFinder.cpp	Netstorm.Core/Original/RawFinder.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
