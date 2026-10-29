@@ -279,6 +279,7 @@ target_sources(netstorm PRIVATE TellFileMenus.cpp TellFileMenus.h) # 원문 @/# 
 target_sources(netstorm PRIVATE NativeMainMenuState.cpp NativeMainMenuState.h
     EditorSaveGoMain.cpp EditorSaveGoMain.h ClientProductionSync.cpp ClientProductionSync.h
     SaveFortNameDialog.cpp SaveFortNameDialog.h RawMenuSaveFort.inc TellTip.cpp TellTip.h)
+target_sources(netstorm PRIVATE SavedStateFiles.cpp SavedStateFiles.h ../o/Win32FileError.cpp ../o/Win32FileError.h) # 현재 설치의 저장파일 정리와 원문 CRT 오류 매핑이다.
 
 # 실제 편집 작업본의 목록/읽기와 공통 문자 UI의 원문 CF_TEXT 장치를 연결한다.
 target_sources(netstorm PRIVATE EditorMapCatalogFiles.cpp EditorMapCatalogFiles.h TextClipboard.cpp TextClipboard.h)

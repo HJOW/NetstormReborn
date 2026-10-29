@@ -94,6 +94,7 @@
 #include "o/RawStartupStateCheck.h" //State1과3의 startupStateCheck가 같은 저장 파일/시계를 빌린다.
 #include "o/RawDataManagerSelection.h"
 #include "o/RawSavedStateRead.h" //startupStateCheck의 실제 저장 파일 부재 관문도 원문 reader에서 판정한다.
+#include "client/SavedStateFiles.h" //State1/3의 같은 저장파일 이름/State3 정리를 실제 설치 경로에 연결한다.
 #include <algorithm>
 #include <sstream>
 #include <stdexcept>

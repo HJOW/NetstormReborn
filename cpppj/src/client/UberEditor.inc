@@ -108,9 +108,9 @@ o::StartupStateCheckHooks UberGump::EditorStartupStateHooks() {
     if (!editor_) throw std::logic_error("State1/3 startup 장기 장치 누락");auto& e=*editor_;o::StartupStateCheckHooks startup;
     startup.configInt=[this](auto name) { return client_.Configuration().GetInt(name); }; //선택된 saved-state reader의 누락을 옵션 강제0으로 숨기지 않는다.
     startup.readSavedState=[this,&e] {
-        e.savedPath=std::filesystem::absolute(client_.GameDirectory()/"d"/"!state.dat").string();o::SavedStateReadHooks reader;
+        const auto bytes=SavedStateFilePath(client_.GameDirectory()).u8string();e.savedPath.assign(bytes.begin(),bytes.end());o::SavedStateReadHooks reader; // 원본ANSI와 달리 Windows10/11의 한글 설치 이름을 UTF-8로 보존한다.
         reader.path=[&e] { return std::span<const std::uint8_t>(reinterpret_cast<const std::uint8_t*>(e.savedPath.c_str()),e.savedPath.size()+1); };
-        reader.exists=[](auto path) { const std::string actual(path);return GetFileAttributesA(actual.c_str())!=INVALID_FILE_ATTRIBUTES ? 1 : 0; }; //원문004dd560은 디렉터리도 비영이며 파일 내용을 미리 읽지 않는다.
+        reader.exists=[](auto path) { const std::filesystem::path actual(std::u8string(path.begin(),path.end()));return GetFileAttributesW(actual.c_str())!=INVALID_FILE_ATTRIBUTES ? 1 : 0; }; // 원본004dd560의 디렉터리 비영 판정은 같다. Windows10/11 한글 경로 때문에 ANSI 대신 W API를 쓴다.
         std::array<std::uint8_t,o::kSavedStateReadScratchBytes> scratch; //부재 경로는 실제 reader가 stack/복원 전역에 접근하지 않는다. 존재하면 아직 미연결인 open 경계에서 명시 중단한다.
         return o::ReadSavedState(scratch,{},reader);
     };
@@ -123,7 +123,7 @@ o::LocalMissionParentResult UberGump::InstallMainMenuNativeState(std::uint32_t s
     NativeMainMenuStateGlobals globals{local.State(),local.SourceType(),client_.WorldAudio().ResultState(),local.FirstMenuPending(),surface.ownerMode.battle,game.world.editor,htmlGlobals_.background,names.CurrentBytes(),names.PendingBytes(),[&local] { return local.UserUpdated(); },[&local] { return local.TellTips(); }};
     NativeMainMenuStateHooks hooks;hooks.configInt=[this](auto key) { return client_.Configuration().GetInt(key); };
     hooks.request=[this](auto state) { editor_->state->Request(state); }; //같은 실행 중인 Native 분배기의 immediate를 사용한다.
-    hooks.deleteSavedState=[] { throw std::logic_error("State3 승패/소스가 선택한 저장상태 삭제 장치 미연결"); }; //일반 Editor의 실제0 분기와 선택된 미복원 하위의 중단을 구별한다.
+    hooks.deleteSavedState=[this] { static_cast<void>(DeleteSavedStateFile(client_.GameDirectory())); }; // 원문 State3는 경로를 매번 계산하고 CRT 삭제 실패도 상태 전환을 중단시키지 않는다.
     hooks.requestMusic=[this](auto name) { client_.WorldAudio().RequestMusic(name); };
     hooks.sourceBackground=[this](auto type)->std::optional<std::string> {
         const auto types=client_.Assets().TypeTable().Types();if (type>=types.size()) throw std::out_of_range("State3 source TYPE 이름 범위");const auto name=types[type].name;

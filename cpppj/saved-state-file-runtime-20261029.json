@@ -1,0 +1,370 @@
+{
+  "unit": 568,
+  "date": "2026-10-29",
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "decompileChanged": false,
+  "gameSha256": "d45745a61e448a77674eec4248ee566070592afd60da5627c4d1ad2e33b9206e",
+  "testSha256": "b98c77ab34b5fa84e396b88db48bbe51e024cdf5be0325b9ca75c220582a1759",
+  "registeredTests": 3435,
+  "focusedTests": [
+    {
+      "log": "tests-files-v1.log",
+      "tests": 4,
+      "failed": 0
+    },
+    {
+      "log": "tests-main-menu.log",
+      "tests": 6,
+      "failed": 0
+    },
+    {
+      "log": "tests-startup.log",
+      "tests": 2,
+      "failed": 0
+    },
+    {
+      "log": "tests-reader.log",
+      "tests": 4,
+      "failed": 0
+    }
+  ],
+  "uniqueFocusedCount": 16,
+  "releaseCompileWarnings": 0,
+  "releaseCompileErrors": 0,
+  "nativeFixtureRows": 263,
+  "nativeExtraError1816": {
+    "all45PairsEqualOriginalPE": true,
+    "error1816Native": [
+      4294967295,
+      12,
+      1816,
+      [
+        "delete:645c2173746174652e646174",
+        "lastError",
+        "tls",
+        "tls"
+      ]
+    ],
+    "error1816ExpectedErrno": 12
+  },
+  "nativePathParents": 1,
+  "all45ErrorPairsMatchOriginal": true,
+  "nativeReobservationDifferences": 0,
+  "gui": {
+    "passed": true,
+    "run": {
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-saved-state-file-568-20261029\\gui-v2\\한글 설치 사본",
+        "--window",
+        "--no-audio",
+        "--frames",
+        "150",
+        "--set",
+        "SCREENW=1024;SCREENH=768;maxFPS=40;sleepPerLoop=8;autoDemo=0;tellTips=0;fortSpec=d/TEST02.fort;SOLOSpec=d/TEST02.fort;mayEditMissions=0",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-saved-state-file-568-20261029\\gui-v2\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-saved-state-file-568-20261029\\gui-v2\\states.tsv"
+      ],
+      "binarySha256": "d45745a61e448a77674eec4248ee566070592afd60da5627c4d1ad2e33b9206e",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 17.450274699993315,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "11e0282f9a6e53f4407ab80c3056378fdc2c918305240e1f8e05e809fcb5e56c"
+    },
+    "selector": [
+      "TEST02"
+    ],
+    "states": {
+      "main": {
+        "phase": [
+          "0"
+        ],
+        "page": [
+          "main"
+        ],
+        "time": [
+          "0.571",
+          "0.571"
+        ],
+        "raw_world_modes": null,
+        "raw_session": null,
+        "html_window_state": [
+          "0",
+          "0",
+          "0"
+        ],
+        "editor_runtime": [
+          "0",
+          "1",
+          "0",
+          "1078460418",
+          "0"
+        ],
+        "fort_selection": [
+          "0",
+          "4",
+          "0",
+          "0",
+          ""
+        ]
+      },
+      "selector": {
+        "phase": [
+          "1"
+        ],
+        "page": [
+          "LoadEditable"
+        ],
+        "time": [
+          "0.839",
+          "0.839"
+        ],
+        "raw_world_modes": null,
+        "raw_session": null,
+        "html_window_state": [
+          "1",
+          "1",
+          "1"
+        ],
+        "editor_runtime": [
+          "0",
+          "1",
+          "0",
+          "1078460418",
+          "0"
+        ],
+        "fort_selection": [
+          "2",
+          "4",
+          "0",
+          "0",
+          ""
+        ]
+      },
+      "editor": {
+        "phase": [
+          "4"
+        ],
+        "page": [
+          "editor"
+        ],
+        "time": [
+          "13.747",
+          "13.747"
+        ],
+        "raw_world_modes": [
+          "1",
+          "1"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ],
+        "html_window_state": [
+          "0",
+          "0",
+          "0"
+        ],
+        "editor_runtime": [
+          "1",
+          "1",
+          "1",
+          "4294967295",
+          "0"
+        ],
+        "fort_selection": [
+          "2",
+          "4",
+          "0",
+          "0",
+          "TEST02"
+        ]
+      },
+      "returned": {
+        "phase": [
+          "0"
+        ],
+        "page": [
+          "main"
+        ],
+        "time": [
+          "16.236",
+          "16.236"
+        ],
+        "raw_world_modes": null,
+        "raw_session": null,
+        "html_window_state": [
+          "0",
+          "0",
+          "0"
+        ],
+        "editor_runtime": [
+          "0",
+          "1",
+          "0",
+          "4294967295",
+          "0"
+        ],
+        "fort_selection": [
+          "2",
+          "4",
+          "0",
+          "0",
+          ""
+        ]
+      }
+    },
+    "missingSavedStateRemainedMissing": true,
+    "naturalVictoryNotRun": true
+  },
+  "initialGuiFailure": {
+    "command": [
+      "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+      "--run",
+      "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-saved-state-file-568-20261029\\gui\\한글 설치 사본",
+      "--window",
+      "--no-audio",
+      "--frames",
+      "150",
+      "--set",
+      "SCREENW=1024;SCREENH=768;maxFPS=40;sleepPerLoop=8;autoDemo=0;tellTips=0",
+      "--ui-script",
+      "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-saved-state-file-568-20261029\\gui\\steps.tsv",
+      "--ui-report",
+      "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-saved-state-file-568-20261029\\gui\\states.tsv"
+    ],
+    "binarySha256": "d45745a61e448a77674eec4248ee566070592afd60da5627c4d1ad2e33b9206e",
+    "returnCode": 1,
+    "timedOut": false,
+    "seconds": 21.001302100004978,
+    "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderrSha256": "7dbf60d2ba8b82e13777e0171ff0bece8e728c8dc1f954530d53a4afe133f5b1"
+  },
+  "original50MapLimitProbe": {
+    "run": {
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-saved-state-file-568-20261029\\gui\\한글 설치 사본",
+        "--window",
+        "--no-audio",
+        "--frames",
+        "55",
+        "--set",
+        "SCREENW=1024;SCREENH=768;maxFPS=40;sleepPerLoop=8;autoDemo=0;tellTips=0",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-saved-state-file-568-20261029\\selector-probe\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-saved-state-file-568-20261029\\selector-probe\\states.tsv"
+      ],
+      "binarySha256": "d45745a61e448a77674eec4248ee566070592afd60da5627c4d1ad2e33b9206e",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 2.8767384000020684,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "cb76758e176fb9498de489bf084e9844f54d645d0fb4457c2c91e00a6a78d515"
+    },
+    "labels": [
+      "Alerted",
+      "Alliance",
+      "Assassination",
+      "BC1Menu",
+      "BC2Bridging",
+      "BC3Acid_Bar",
+      "BC4Bow_Rush",
+      "BC5Walkers",
+      "BC8Mows",
+      "BC9Sun_Bars",
+      "BCFury",
+      "BCSSun_Bars",
+      "Battle1",
+      "Battle2",
+      "Beginning",
+      "Big_Brothers",
+      "Bofend",
+      "Bounty",
+      "Bro1",
+      "Bulflevel",
+      "CHEAT",
+      "CursedScen",
+      "DEMOFw",
+      "Dark1",
+      "Dark2",
+      "Dark3",
+      "Dark4",
+      "Dark5",
+      "Dark6",
+      "DarkLord",
+      "Death",
+      "Deathguard",
+      "DerfIsGod",
+      "Duel",
+      "EvilestsLair",
+      "FW1",
+      "FW1b",
+      "FW2",
+      "FW3",
+      "FW4",
+      "FW5",
+      "FW6",
+      "FW7",
+      "FW8",
+      "FW9",
+      "FWOS1",
+      "FWOS2",
+      "FWOS3",
+      "FWOS4",
+      "FWOS5"
+    ]
+  },
+  "protectedFiles": 2542,
+  "existingFixturesUnchanged": 722,
+  "currentFixtures": 723,
+  "protectedDifferences": [],
+  "originalGameExecuted": false,
+  "naturalVictoryExecuted": false,
+  "priestCaptureSacrificeExecuted": false,
+  "specificEnemyAttackExecuted": false,
+  "attackFlyerDedicatedTestsExecuted": false,
+  "newMultiplayerTestsExecuted": false,
+  "fullCppSuiteExecuted": false,
+  "all34CurrentGameExecuted": false,
+  "win11Executed": false,
+  "audioExecuted": false,
+  "originalPixelComparison": false,
+  "remaining": [
+    "존재하는startup파일의reader/open과재접속은미연결",
+    "나머지Native3분기/일반MainMenu전환전체",
+    "데모나머지2개/연속주기·UI/Edit·시나리오·호환성"
+  ],
+  "rawDirectory": "extracted/cpp-saved-state-file-568-20261029",
+  "interruptionReview": {
+    "date": "2026-10-29",
+    "userReportedMessage": "workspace routing discovery timed out",
+    "host": "HJOW-Athlon",
+    "workspace": "H:\\T5Workspace\\NetstormReborn",
+    "revalidatedSessions": [
+      {
+        "sessionId": 38102,
+        "exitCode": 0
+      },
+      {
+        "sessionId": 18650,
+        "exitCode": 0
+      }
+    ],
+    "activeGameTestBuildPythonProcesses": 0,
+    "gameAndTestHashesMatch": true,
+    "protectedFilesRechecked": 2542,
+    "protectedHashDifferences": 0,
+    "additionalBuildOrGameRun": false,
+    "pauseRequestedAfterCommit": true,
+    "codexErrorCauseKnown": false
+  }
+}
