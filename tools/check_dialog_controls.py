@@ -146,7 +146,7 @@ def check_mission(executable):
 def main():
     """허용된 설정 두 파일을 복원하고 보호 원본 전체의 파일명/해시가 같은지 확인한다."""
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--exe', type=Path, default=ROOT / 'cpppj/build/bin/Release/NetstormCpp.exe')
+    parser.add_argument('--exe', type=Path, default=ROOT / 'cpppj/build/bin/Release/Netstorm.exe')
     arguments = parser.parse_args()
     OUTPUT.mkdir(parents=True, exist_ok=True)
     root = ROOT / 'originals'

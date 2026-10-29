@@ -12,7 +12,7 @@ from cpp_renderer_smoke import snapshots
 from cpp_smoke_files import preserve_game_settings
 
 ROOT = Path(__file__).resolve().parents[1]  # 원본은 읽기 전용이고 새 관측은 별도 출력 경로에 둔다.
-GAME = ROOT / 'cpppj/build/bin/Release/NetstormCpp.exe'  # 현재 복원한 클론만 실행한다.
+GAME = ROOT / 'cpppj/build/bin/Release/Netstorm.exe'  # 현재 복원한 클론만 실행한다.
 TESTS = ROOT / 'cpppj/build/bin/Release/netstorm_tests.exe'  # 현재 빌드의 집중 검사다.
 
 

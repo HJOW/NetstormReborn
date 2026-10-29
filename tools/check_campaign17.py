@@ -82,7 +82,7 @@ def finalize():
         'cpppj/tests/VortexOwnerTests.cpp', 'tools/decomp_vortex_owner.py',
         'tools/ghidra/vortex-owner-functions.json', 'cpppj/vortex-owner.json',
         'cpppj/tests/fixtures/vortex-owner-x86.tsv', 'extracted/run17-build.log', 'extracted/run17-all.log',
-        'cpppj/build/bin/Release/NetstormCpp.exe', 'cpppj/build/bin/Release/netstorm_tests.exe',
+        'cpppj/build/bin/Release/Netstorm.exe', 'cpppj/build/bin/Release/netstorm_tests.exe',
         'extracted/run17-vortex.log', 'extracted/run17-islands.log', 'extracted/run17-finish.log',
         'cpppj/hist/run17-fail/cpppj/src/client/RawCampaignOwnership.h',
         'cpppj/hist/run17-fail/cpppj/src/client/RawCampaignOwnership.cpp',

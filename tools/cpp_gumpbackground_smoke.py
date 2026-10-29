@@ -105,7 +105,7 @@ def check(executable,root,name,sizes,disabled=False):
 
 def main():
     """원본 및 구별 가능한 두 사본을 순차 실행하고 설정/원본 해시를 항상 확인한다."""
-    parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--exe',type=Path,default=ROOT/'cpppj/build/bin/Release/NetstormCpp.exe');args=parser.parse_args()
+    parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--exe',type=Path,default=ROOT/'cpppj/build/bin/Release/Netstorm.exe');args=parser.parse_args()
     OUTPUT.mkdir(parents=True,exist_ok=True);source=ROOT/'originals';before=snapshots(source)
     result={'originals':check(args.exe,source,'originals',[(1024,768),(800,600)])}
     # RGB와 외곽선 번호를 바꾸는 것은 검사 사본에만 한정한다.

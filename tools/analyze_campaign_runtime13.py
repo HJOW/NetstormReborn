@@ -62,7 +62,7 @@ def generate():
     build=ROOT/'extracted/run13-build-final.log'
     content=read_log(build)
     assert not re.search(r'\b(?:warning|error)\s+[A-Z]+\d+\s*:',content,re.I)
-    assert 'netstorm_tests.exe' in content and 'NetstormCpp.exe' in content
+    assert 'netstorm_tests.exe' in content and 'Netstorm.exe' in content
     paths.extend([whole,build,ROOT/'cpppj/run12.json',ROOT/'cpppj/src/o/CMakeLists.txt',
                   ROOT/'cpppj/src/client/CMakeLists.txt',ROOT/'cpppj/tests/CMakeLists.txt'])
     # 최소 공유 분배/공간 변경과 새 실제 부모/생성 몸체의 전체 파일을 현재 바이너리에 연결한다.
@@ -74,7 +74,7 @@ def generate():
         paths.append(ROOT/f'cpppj/tests/{name}.cpp')
     paths.append(ROOT/'cpppj/tests/DudeSpawnSupport.h')
     # 실행한 두 Release 파일의 바이트를 실제 성공 로그에 연결한다.
-    for name in ('netstorm_tests.exe','NetstormCpp.exe'):paths.append(ROOT/f'cpppj/build/bin/Release/{name}')
+    for name in ('netstorm_tests.exe','Netstorm.exe'):paths.append(ROOT/f'cpppj/build/bin/Release/{name}')
     data=dict(schema=1,host='HJOW-Athlon',last_decompile_host='HJOW-Athlon',last_decompile_date='2026-10-14',
               date='2026-10-14',unit='20261014-05',new_normal_cases=sum(value[0] for value in MODULES.values()),
               new_assertion_cases=sum(value[1] for value in MODULES.values()),additional_existing_body_consumer_golden=2,

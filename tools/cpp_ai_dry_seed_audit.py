@@ -105,7 +105,7 @@ def collect():
                 edition='10.78', original_sha256=digest('originals/Netstorm.exe'), functions=functions,
                 branch_targets=[hex(address) for address in targets], constants=constants,
                 sources={name: digest(name) for name in SOURCES}, build=dict(result=result, log_sha256=digest(build_path)),
-                binaries={name: digest(name) for name in (binary_path,'cpppj/build/bin/Release/NetstormCpp.exe')},
+                binaries={name: digest(name) for name in (binary_path,'cpppj/build/bin/Release/Netstorm.exe')},
                 compiled_tests=list(TESTS), execution=dict(cpp_tests=0,ctest=0,game=0,original_native=0),
                 restored=['004133e0 전체 경계 좌표 선택/같은 공용 난수8/현재 fake TYPE와 실제 Dry Spot 등록'],
                 additional_read=dict(entries=['00415fe0','00415bb0','0041cfc0','0040e800','004adea0'], implemented_in_this_unit=False,

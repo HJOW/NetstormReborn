@@ -98,7 +98,7 @@ def render_text(image, font, text, x, y):
 def main():
     """원본 해시를 보존하며 콘솔 전수 대조와 선택적 cpppj 창 검사를 실행한다. 창 설정은 복구한다."""
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--exe', type=Path, default=ROOT / 'cpppj/build/bin/Release/NetstormCpp.exe')
+    parser.add_argument('--exe', type=Path, default=ROOT / 'cpppj/build/bin/Release/Netstorm.exe')
     parser.add_argument('--console-only', action='store_true', help='창/설정 변경 없이 원본 글꼴의 모든 표/픽셀과 커서 리소스만 대조한다')
     args = parser.parse_args()
     executable = args.exe.resolve()

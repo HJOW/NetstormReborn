@@ -103,7 +103,7 @@ def collect():
     return dict(hostname=socket.gethostname(), last_full_decompile_host='HJOW-Athlon', last_full_decompile_date='2026-10-21', edition='10.78',
                 original_sha256=digest('originals/Netstorm.exe'), functions=functions, name_entries=[(hex(address), hex(entry)) for address, entry in names],
                 sources={name: digest(name) for name in SOURCES}, build=dict(result=result, log_sha256=digest(build_path)),
-                binaries={name: digest(name) for name in (binary_path, 'cpppj/build/bin/Release/NetstormCpp.exe')},
+                binaries={name: digest(name) for name in (binary_path, 'cpppj/build/bin/Release/Netstorm.exe')},
                 compiled_tests=list(TESTS), execution=dict(cpp_tests=0, ctest=0, game=0, original_native=0),
                 restored=['00411630/00411680 조회·정지/004116d0·004117e0 대상·좌표명령/004118a0 복귀',
                           '0041d840 거리/공유40h writer/실제BFS·Host·의식 연결', '83개 실제+68/공통·Factory 이름/현재언어·설정·레벨문자표'],

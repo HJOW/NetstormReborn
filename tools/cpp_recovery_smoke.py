@@ -46,7 +46,7 @@ def parse_xlat(data):
 def main():
     """양쪽 아카이브 전체와 번역 키·디스크 우선 읽기·원본 파일 불변을 검사한다."""
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--exe', type=Path, default=ROOT / 'cpppj/build/bin/Release/NetstormCpp.exe')
+    parser.add_argument('--exe', type=Path, default=ROOT / 'cpppj/build/bin/Release/Netstorm.exe')
     args = parser.parse_args()
     report = {}
     # 두 판본 파일은 읽기만 한다. 코드 구현의 기대값은 기존 Python 추출기에서 얻는다.

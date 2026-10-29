@@ -119,7 +119,7 @@ def finalize():
     source_delta()
     names = set(BEFORE) | {  # 보존 원문과 새 실행 근거를 함께 기록한다.
         'tools/check_campaign16.py', 'cpppj/hist/run16-base/capture.json',
-        'cpppj/build/bin/Release/NetstormCpp.exe', 'cpppj/build/bin/Release/netstorm_tests.exe',
+        'cpppj/build/bin/Release/Netstorm.exe', 'cpppj/build/bin/Release/netstorm_tests.exe',
         'extracted/run16-build.log', 'extracted/run16-focused.log', 'extracted/run16-all.log',
         'tools/decomp_asset_players.py', 'cpppj/asset-player.json',
         'cpppj/tests/fixtures/asset-player-x86.tsv',

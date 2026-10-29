@@ -120,7 +120,7 @@ def main():
     write(output / 'work-evidence.json', raw)
     final_summary = read(WORK_ROOT / 'final/summary.json')
     final_tests = read(WORK_ROOT / 'tests-final.json')
-    game = ROOT / 'cpppj/build/bin/Release/NetstormCpp.exe'
+    game = ROOT / 'cpppj/build/bin/Release/Netstorm.exe'
     tests = ROOT / 'cpppj/build/bin/Release/netstorm_tests.exe'
     binaries = {'game': {'sha256': sha(game), 'recorded': final_summary['binarySha256']},
                 'tests': {'sha256': sha(tests), 'recorded': final_tests['binarySha256']}}

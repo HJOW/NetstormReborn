@@ -74,10 +74,10 @@ def main():
     assert json.loads(result.read_text(encoding='utf-8'))['exit_code'] == 0
     build = log.read_text(encoding='utf-8')
     assert not any(text in build for text in ('error C', 'error LNK', 'warning C', 'warning LNK'))
-    assert all(text in build for text in ('netstorm.lib', 'NetstormCpp.exe', 'netstorm_tests.exe'))
+    assert all(text in build for text in ('netstorm.lib', 'Netstorm.exe', 'netstorm_tests.exe'))
     paths = ['cpppj/src/o/RawPlayerTemplateState.cpp', 'cpppj/src/o/RawPlayerTemplateState.h', 'cpppj/src/client/CampaignTemplateStorage.cpp', 'cpppj/src/client/CampaignTemplateStorage.h', 'cpppj/src/client/RawCampaignSession.cpp', 'cpppj/src/client/RawCampaignSession.h', 'cpppj/src/client/CampaignClientServices.cpp', 'cpppj/tests/PlayerStateInitializationTests.cpp', 'cpppj/tests/CMakeLists.txt', 'cpppj/player-state-initialization-native.json', 'tools/cpp_player_state_initialization_audit.py', '.gitattributes', str(log.relative_to(ROOT)).replace('\\', '/'), str(result.relative_to(ROOT)).replace('\\', '/')]
     # 최종 라이브러리/게임/검사 실행 파일의 위치를 명확하게 고정한다.
-    for name in ('netstorm.lib', 'NetstormCpp.exe', 'netstorm_tests.exe'):
+    for name in ('netstorm.lib', 'Netstorm.exe', 'netstorm_tests.exe'):
         candidates = list((ROOT / 'cpppj/build').rglob(name));assert len(candidates) == 1, (name, candidates)
         paths.append(str(candidates[0].relative_to(ROOT)).replace('\\', '/'))
     compiled_tests = ['PlayerStateInitialization_Native2560', 'CampaignTemplates_EmptyStateRecreatedWithCurrentBytesAndOrder', 'CampaignTemplates_StateRecreationCompactsPreviousTerritoryTail', 'PlayerStateInitialization_RequiredEffectsAndEdition']

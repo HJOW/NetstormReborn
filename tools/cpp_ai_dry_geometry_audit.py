@@ -123,7 +123,7 @@ def collect():
                     second_build=dict(result=json.loads((ROOT / 'extracted/cpp-ai-dry-geometry-20261022-build2-result.json').read_text(encoding='utf-8-sig')),
                                       log_sha256=digest('extracted/cpp-ai-dry-geometry-20261022-build2.log'),
                                       rebuild_reason='실제kind WORD 쓰기의 다리 통지도 원본 전체DWORD 비교와 일치시킴')),
-                binaries={name:digest(name) for name in (binary_path,'cpppj/build/bin/Release/NetstormCpp.exe')},
+                binaries={name:digest(name) for name in (binary_path,'cpppj/build/bin/Release/Netstorm.exe')},
                 compiled_tests=list(TESTS),execution=dict(cpp_tests=0,ctest=0,game=0,original_native=0),
                 restored=['00415bb0 전체 양방향 탐색/0041cfc0 거리/00414d30 표식 삭제/00410540 실제 표식 생성·Pop'],
                 additional_read=dict(entry='00415fe0',implemented_in_this_unit=False),

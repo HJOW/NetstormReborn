@@ -184,10 +184,10 @@ cmake --build cpppj/build --config Release
 ctest --test-dir cpppj/build --build-config Release --output-on-failure
 ```
 
-CTest registers a single wrapper test and currently has 3,454 registered C++ tests. A full run takes several minutes; see the [handover](LEFT_JOBS.md) for the distinction between each unit's focused checks and full-suite results. With the Visual Studio generator, the executable is `cpppj/build/bin/Release/NetstormCpp.exe`. Open the reconstruction's main menu in windowed mode with:
+CTest registers a single wrapper test and currently has 3,454 registered C++ tests. A full run takes several minutes; see the [handover](LEFT_JOBS.md) for the distinction between each unit's focused checks and full-suite results. With the Visual Studio generator, the executable is `cpppj/build/bin/Release/Netstorm.exe`. Open the reconstruction's main menu in windowed mode with:
 
 ```powershell
-.\cpppj\build\bin\Release\NetstormCpp.exe --run originals --window
+.\cpppj\build\bin\Release\Netstorm.exe --run originals --window
 ```
 
 `--run <game-data folder>` runs the C++ reconstruction. Adding `--mission <mission key>` skips the menu and opens that mission's briefing (for example, `--mission Tutorial1`). `--view fonts`, `--view types`, and `--view TEST01` open font, type and mission inspection scenes. Running without arguments (or with `--help`) prints build information and the available options. Live construction, production, bridges, harvesting/transport, combat and automatic execution of the shared strategy AI are connected, while natural playthroughs of all target missions, remaining Edit tools, scenarios and lifetime transitions, and original-parity verification remain unfinished. See [C++ build](docs/cpp-build.md) for build instructions and the [handover](LEFT_JOBS.md) for current integration status.

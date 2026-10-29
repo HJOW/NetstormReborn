@@ -234,7 +234,7 @@ def check_view(executable, root):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument('--exe', type=Path, default=ROOT / 'cpppj/build/bin/Release/NetstormCpp.exe')
+    parser.add_argument('--exe', type=Path, default=ROOT / 'cpppj/build/bin/Release/Netstorm.exe')
     parser.add_argument('--root', type=Path, default=ROOT / 'originals')
     arguments = parser.parse_args()
     root = arguments.root

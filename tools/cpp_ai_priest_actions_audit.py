@@ -136,7 +136,7 @@ def collect():
     return dict(hostname=socket.gethostname(), last_full_decompile_host='HJOW-Athlon', last_full_decompile_date='2026-10-21',
                 edition='10.78', original_sha256=digest('originals/Netstorm.exe'), functions=functions, constants=constants,
                 sources={name: digest(name) for name in SOURCES}, build=dict(result=result, log_sha256=digest(build_path)),
-                binaries={name: digest(name) for name in (binary_path, 'cpppj/build/bin/Release/NetstormCpp.exe')},
+                binaries={name: digest(name) for name in (binary_path, 'cpppj/build/bin/Release/Netstorm.exe')},
                 compiled_tests=list(TESTS), execution=dict(cpp_tests=0, ctest=0, game=0, original_native=0),
                 restored=['00411cd0 전체 사제 행동/0041d7a0 보정/0040e800 유효 좌표',
                           '00491b30 실제 frame 의식/00448a90 실제 제단 argument 조회',

@@ -106,7 +106,7 @@ def check_restore_on_failure():
 def main():
     """두 판본의 설정 버퍼·경로 지정값·저장 왕복을 검사하고 보고서를 남긴다."""
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--exe', type=Path, default=ROOT / 'cpppj/build/bin/Release/NetstormCpp.exe')
+    parser.add_argument('--exe', type=Path, default=ROOT / 'cpppj/build/bin/Release/Netstorm.exe')
     args = parser.parse_args()
     OUTPUT.mkdir(parents=True, exist_ok=True)
     check_restore_on_failure()

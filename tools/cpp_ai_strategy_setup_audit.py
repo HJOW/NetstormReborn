@@ -88,7 +88,7 @@ def collect():
     return dict(hostname=socket.gethostname(), last_full_decompile_host='HJOW-Athlon', edition='10.78',
                 original_sha256=digest('originals/Netstorm.exe'), functions=functions,
                 sources={name: digest(name) for name in SOURCES}, build=dict(result=result, log_sha256=digest(build_path)),
-                binaries={name: digest(name) for name in (binary_path, 'cpppj/build/bin/Release/NetstormCpp.exe')},
+                binaries={name: digest(name) for name in (binary_path, 'cpppj/build/bin/Release/Netstorm.exe')},
                 compiled_tests=list(TESTS), execution=dict(cpp_tests=0, ctest=0, game=0, original_native=0),
                 remaining=['00417c70의 실제 행동 하위', '00417d30/00417de0 자동 프레임과 종료',
                            '15개 미션 자연 플레이/동일성 검증', 'Edit 커스텀 맵/시나리오/저장 수명'],

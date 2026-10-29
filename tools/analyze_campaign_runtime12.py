@@ -69,7 +69,7 @@ def generate():
     build=ROOT/'extracted/run12-build-final.log'
     content=read_log(build)
     assert not re.search(r'\b(?:warning|error)\s+[A-Z]+\d+\s*:',content,re.I)
-    assert 'netstorm_tests.exe' in content and 'NetstormCpp.exe' in content
+    assert 'netstorm_tests.exe' in content and 'Netstorm.exe' in content
     paths.extend([whole,build,ROOT/'cpppj/run11.json',ROOT/'cpppj/src/o/CMakeLists.txt',ROOT/'cpppj/tests/CMakeLists.txt'])
     # 생성/실행 전체를 보존한 공유 API와 새 생산 몸체를 현재 바이너리에 연결한다.
     for name in ('SquidProcess','SquidPostPop','RawDaisLifecycle','RawDamageablePostDestroy','RawBurningVisual','RawFortMetaLoad','RawDudeTask','RawDaisContentNotice'):
@@ -78,7 +78,7 @@ def generate():
     for name in ('DaisLifecycleTests','DaisProgressTests','DamageablePostDestroyTests','DamageablePostDestroyHostTests','BurningVisualTests','BurningParticleTests','FortMetaLoadTests','DudeTaskTests','DaisContentNoticeTests','DaisRitualConsumerTests'):
         paths.append(ROOT/f'cpppj/tests/{name}.cpp')
     # 실행한 두 Release 산출물의 전체 바이트를 성공 로그에 연결한다.
-    for name in ('netstorm_tests.exe','NetstormCpp.exe'):paths.append(ROOT/f'cpppj/build/bin/Release/{name}')
+    for name in ('netstorm_tests.exe','Netstorm.exe'):paths.append(ROOT/f'cpppj/build/bin/Release/{name}')
     data=dict(schema=1,host='HJOW-Athlon',last_decompile_host='HJOW-Athlon',last_decompile_date='2026-10-14',
               date='2026-10-14',unit='20261014-04',new_normal_cases=sum(value[0] for value in MODULES.values()),
               new_assertion_cases=sum(value[1] for value in MODULES.values()),new_prefix_cases=0,modules=modules,

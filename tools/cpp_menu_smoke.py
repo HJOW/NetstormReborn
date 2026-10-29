@@ -213,7 +213,7 @@ def check_window(executable, root):
 def main():
     """기준 판본의 탐색과 두 판본의 GIF 자료를 검사하고 원본 해시/설정을 복구한다."""
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--exe', type=Path, default=ROOT / 'cpppj/build/bin/Release/NetstormCpp.exe')
+    parser.add_argument('--exe', type=Path, default=ROOT / 'cpppj/build/bin/Release/Netstorm.exe')
     args = parser.parse_args()
     OUTPUT.mkdir(parents=True, exist_ok=True)
     report = {}

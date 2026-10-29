@@ -79,7 +79,7 @@ def finalize():
         'tools/check_campaign21.py','tools/decomp_gun_depend.py','tools/decomp_owner_oracle.py',
         'cpppj/gun-depend.json','docs/exe/cpp-run21-20261015.md','cpppj/tests/CampaignTargetTests.cpp',
         'cpppj/run20.json','originals/netstorm.tarc','originalCD/netstorm.tarc',
-        'cpppj/build/bin/Release/NetstormCpp.exe','cpppj/build/bin/Release/netstorm_tests.exe','cpppj/build/lib/Release/netstorm.lib',
+        'cpppj/build/bin/Release/Netstorm.exe','cpppj/build/bin/Release/netstorm_tests.exe','cpppj/build/lib/Release/netstorm.lib',
     }  # 이번 직접 근거와 현재 실행 파일이다.
     # 실제 현재 전체 C++/기존 fixture를 전체 SHA로 고정하고 복사하지 않는다.
     for folder in ('cpppj/src','cpppj/tests'):

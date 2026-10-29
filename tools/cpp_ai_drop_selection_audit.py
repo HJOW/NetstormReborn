@@ -120,7 +120,7 @@ def collect():
                     result=json.loads((ROOT / 'extracted/cpp-ai-drop-selection-20261022-build1-result.json').read_text(encoding='utf-8-sig')),
                     log_sha256=digest('extracted/cpp-ai-drop-selection-20261022-build1.log'),
                     rebuild_reason='직전목록개수의진입cache를정밀명령과일치시킴')),
-                binaries={name: digest(name) for name in (binary_path, 'cpppj/build/bin/Release/NetstormCpp.exe')},
+                binaries={name: digest(name) for name in (binary_path, 'cpppj/build/bin/Release/Netstorm.exe')},
                 compiled_tests=list(TESTS), execution=dict(cpp_tests=0, ctest=0, game=0, original_native=0),
                 restored=['00413100 전체 배치TYPE선택/00425830 현재 네 방향TYPE/0040e9d0 직전목록첫일치',
                           '004acac0은기존실제4ac9f0뒤현재TYPE WORD조회로공유/같은실제후보압축·배치·공용난수'],

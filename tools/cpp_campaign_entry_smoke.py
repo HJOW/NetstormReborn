@@ -10,7 +10,7 @@ from cpp_renderer_smoke import snapshots
 from cpp_world_smoke import states
 
 ROOT = Path(__file__).resolve().parents[1]  # 보호 자료와 이번 빌드의 기준 경로다.
-EXE = ROOT / 'cpppj/build/bin/Release/NetstormCpp.exe'  # 원본 실행 파일은 시작하지 않는다.
+EXE = ROOT / 'cpppj/build/bin/Release/Netstorm.exe'  # 원본 실행 파일은 시작하지 않는다.
 OUT = ROOT / 'extracted/run32-entry'  # 실제 창의 입력·로그·상태·이미지를 보관한다.
 
 

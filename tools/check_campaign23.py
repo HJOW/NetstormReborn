@@ -77,7 +77,7 @@ def finalize():
         'tools/decomp_prieststate_oracle.py','tools/decomp_gunhit_oracle.py','tools/decomp_owner_oracle.py',
         'cpppj/campaign-hit.json','cpppj/run22.json','cpppj/priestdamage.json','cpppj/gunhit.json','cpppj/gunimpact.json','cpppj/dudenotice.json',
         'docs/exe/cpp-run23-20261015.md','originals/netstorm.tarc','originalCD/netstorm.tarc',
-        'cpppj/build/bin/Release/NetstormCpp.exe','cpppj/build/bin/Release/netstorm_tests.exe','cpppj/build/lib/Release/netstorm.lib',
+        'cpppj/build/bin/Release/Netstorm.exe','cpppj/build/bin/Release/netstorm_tests.exe','cpppj/build/lib/Release/netstorm.lib',
     }  # 현재 직접 근거와 기존 원본 기록은 SHA로만 참조한다.
     # 실제 사용한 기존 정확 export 원문을 참조하며 새 관찰 수로 합산하지 않는다.
     for data in native['editions'].values():paths.update(data['exports'])

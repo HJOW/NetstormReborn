@@ -96,7 +96,7 @@ def finalize():
         'cpppj/campaign-frame.json','cpppj/vortex-display.json','docs/exe/cpp-run20-20261015.md',
         'cpppj/run19.json','cpppj/assetregular.json','cpppj/display.json','cpppj/squid-level.json',
         'originals/netstorm.tarc','originalCD/netstorm.tarc',
-        'cpppj/build/bin/Release/NetstormCpp.exe','cpppj/build/bin/Release/netstorm_tests.exe','cpppj/build/lib/Release/netstorm.lib',
+        'cpppj/build/bin/Release/Netstorm.exe','cpppj/build/bin/Release/netstorm_tests.exe','cpppj/build/lib/Release/netstorm.lib',
     }  # 직접 이전 근거/현재 실행 파일이다.
     # 이번 실행이 재사용한 독립 도구 원문도 전체 SHA로 고정한다.
     for path in (ROOT / 'tools').glob('decomp_*.py'):

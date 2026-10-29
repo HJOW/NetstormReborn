@@ -91,7 +91,7 @@ def collect():
     return dict(hostname=socket.gethostname(), last_full_decompile_host='HJOW-Athlon', last_full_decompile_date='2026-10-21', edition='10.78',
                 original_sha256=digest('originals/Netstorm.exe'), functions=functions, sources={name: digest(name) for name in SOURCES},
                 build=dict(result=result, log_sha256=digest(build_path)),
-                binaries={name: digest(name) for name in (binary_path, 'cpppj/build/bin/Release/NetstormCpp.exe')},
+                binaries={name: digest(name) for name in (binary_path, 'cpppj/build/bin/Release/Netstorm.exe')},
                 compiled_tests=list(TESTS), execution=dict(cpp_tests=0, ctest=0, game=0, original_native=0),
                 restored=['0040f1c0 등록/0040f260 압축/0040f2b0 한항목 에너지 재검사', '00417c70의해당하위로그/같은Session본체·실제에너지'],
                 remaining=['00415fe0 등 가짜 좌표 선정·다른 AI 실제 행동·원래 순서 자동 프레임/종료',

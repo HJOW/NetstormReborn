@@ -3,7 +3,7 @@
     cpppj(C++ 클론) 배포판 압축파일(zip)을 만든다.
 
 .DESCRIPTION
-    클론 실행 파일(NetstormCpp.exe), Visual C++ 런타임 DLL, 게임 데이터(원본 10.78),
+    클론 실행 파일(Netstorm.exe), Visual C++ 런타임 DLL, 게임 데이터(원본 10.78),
     실행용 배치 파일(Netstorm.bat), 안내문을 하나의 zip 으로 묶는다.
     받은 사람이 압축을 풀고 Netstorm.bat 를 실행하면 별도 설치 없이 클론이 시작되도록 구성한다.
     (2026-10-23 신규. AGENTS.md 의 "배포판 압축파일 생성용 스크립트" 요구사항을 따른다.)
@@ -23,7 +23,7 @@
     netstorm.tarc, Netstorm.exe, d, sound, music 이 들어 있어야 한다.
 
 .PARAMETER ExePath
-    묶을 클론 실행 파일. 기본값은 cpppj\build\bin\Release\NetstormCpp.exe 이다.
+    묶을 클론 실행 파일. 기본값은 cpppj\build\bin\Release\Netstorm.exe 이다.
     직접 지정하면 빌드와 오래됨 검사를 하지 않는다.
 
 .PARAMETER NoBuild
@@ -81,14 +81,14 @@ $RepoRoot = Split-Path -Parent $CppRoot
 # 압축파일 안에서 모든 항목을 감싸는 최상위 폴더 이름이다. 풀 때 현재 폴더가 어지러워지지 않게 한다. (2026-10-23 신규)
 $PackageRootName = 'NetstormReborn-cpppj'
 
-# 클론 실행 파일 이름이다. 압축파일 최상위에 이 이름으로 넣는다. (2026-10-23 신규)
-$ExeName = 'NetstormCpp.exe'
+# 압축파일 최상위의 클론 이름이다. game/Netstorm.exe는 원본 리소스 자료이며 서로 다른 경로다.
+$ExeName = 'Netstorm.exe'
 
 # 압축파일 안의 게임 데이터 폴더 이름이다. 실행 배치 파일이 `--run game` 으로 이 폴더를 가리킨다. (2026-10-23 신규)
 $GameFolderName = 'game'
 
 # 기본 실행 파일 위치다. `cmake --build cpppj/build --config Release` 의 산출물 경로이다. (2026-10-23 신규)
-$DefaultExePath = Join-Path $CppRoot 'build\bin\Release\NetstormCpp.exe'
+$DefaultExePath = Join-Path $CppRoot 'build\bin\Release\Netstorm.exe'
 
 # 폴더만 입력했을 때 쓰는 기본 압축파일 이름이다. 날짜를 붙여 이전 배포판을 덮어쓰지 않게 한다. (2026-10-23 신규)
 $DefaultZipName = 'NetstormReborn-cpppj-{0}.zip' -f (Get-Date -Format 'yyyyMMdd')
@@ -371,29 +371,29 @@ function Get-GitSummary {
 
 # 실행용 배치 파일(.bat)의 본문을 돌려준다. WindowMode 가 참이면 `--window` 로 창 모드를 강제한다.
 # cmd.exe 코드 페이지 문제를 피하려고 ASCII 문자만 쓴다. 게임 폴더(game)는 이 파일 기준 상대 경로로 지정한다.
-# (2026-10-23 신규. 실행 파일은 인자 없이 실행하면 빌드 정보만 출력하므로 `--run game` 을 대신 호출하는 런처가 필요하다)
+# 실행 파일은 인자 없이 빌드 정보를 출력하므로 --run game으로 시작한다. 최상위 클론을 명시해 같은 이름의 game/ 원본과 구별한다.
 function New-LauncherText {
     param([bool] $WindowMode)
-    $runLine = if ($WindowMode) { '"NetstormCpp.exe" --run game --window %*' } else { '"NetstormCpp.exe" --run game %*' }
+    $runLine = if ($WindowMode) { '"Netstorm.exe" --run game --window %*' } else { '"Netstorm.exe" --run game %*' }
     $title = if ($WindowMode) { 'starts the clone in window mode' } else { 'starts the clone with the saved screen mode settings' }
     $lines = @(
         '@echo off',
         ('rem NetStorm cpppj launcher - ' + $title + '.'),
         'setlocal',
         'pushd "%~dp0"',
-        'if not exist "NetstormCpp.exe" goto :missing',
+        'if not exist "Netstorm.exe" goto :missing',
         'if not exist "game\netstorm.tarc" goto :missing',
         $runLine,
         'set "RC=%ERRORLEVEL%"',
         'popd',
         'if "%RC%"=="0" exit /b 0',
         'echo.',
-        'echo NetstormCpp.exe exited with code %RC%.',
+        'echo Netstorm.exe exited with code %RC%.',
         'pause',
         'exit /b %RC%',
         ':missing',
         'popd',
-        'echo NetstormCpp.exe or game\netstorm.tarc was not found. Extract the whole archive first.',
+        'echo Netstorm.exe or game\netstorm.tarc was not found. Extract the whole archive first.',
         'pause',
         'exit /b 1')
     return (($lines -join "`r`n") + "`r`n")
@@ -417,7 +417,7 @@ function New-ReadmeText {
         '- Visual C++ 런타임(msvcp140.dll 등)은 이 폴더에 들어 있어 따로 설치하지 않아도 됩니다.',
         '',
         '[폴더 구성]',
-        '  NetstormCpp.exe     클론 실행 파일',
+        '  Netstorm.exe     클론 실행 파일',
         '  *.dll               Visual C++ 런타임',
         '  Netstorm.bat        창 모드 실행',
         '  Netstorm-SavedMode.bat  저장된 화면 모드로 실행',

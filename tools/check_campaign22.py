@@ -86,7 +86,7 @@ def finalize():
         'tools/check_campaign22.py','tools/decomp_projectile_geom.py','tools/decomp_disc_regular.py','tools/decomp_owner_oracle.py',
         'cpppj/projectile-geom.json','cpppj/disc-regular.json','docs/exe/cpp-run22-20261015.md',
         'cpppj/run21.json','originals/netstorm.tarc','originalCD/netstorm.tarc',
-        'cpppj/build/bin/Release/NetstormCpp.exe','cpppj/build/bin/Release/netstorm_tests.exe','cpppj/build/lib/Release/netstorm.lib',
+        'cpppj/build/bin/Release/Netstorm.exe','cpppj/build/bin/Release/netstorm_tests.exe','cpppj/build/lib/Release/netstorm.lib',
     }  # 직접 검증과 현재 실행 근거다.
     # 전체 현재 소스/fixture를 SHA로 참조하며 과거 전체 이력은 재귀 복사하지 않는다.
     for folder in ('cpppj/src','cpppj/tests'):

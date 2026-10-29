@@ -79,7 +79,7 @@ def check(executable,edition):
 
 def main():
     """두 판본의 실제 자산 검사를 실행하고 Git 제외 경로에 결과를 기록한다."""
-    parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--exe',type=Path,default=ROOT/'cpppj/build/bin/Release/NetstormCpp.exe')
+    parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--exe',type=Path,default=ROOT/'cpppj/build/bin/Release/Netstorm.exe')
     parser.add_argument('--out',type=Path,default=ROOT/'extracted/cpp-priestassets-report.json');args=parser.parse_args();results={}
     # C++ 실행 파일은 콘솔 자료 조회 모드만 호출한다.
     for edition in ('originals','originalCD'):

@@ -337,36 +337,36 @@ cmake --build cpppj/build --config Release
 ctest --test-dir cpppj/build --build-config Release --output-on-failure
 ```
 
-실행 파일은 `cpppj/build/bin/Release/NetstormCpp.exe` 에 생긴다.
+실행 파일은 `cpppj/build/bin/Release/Netstorm.exe` 에 생긴다.
 
 ```powershell
-cpppj/build/bin/Release/NetstormCpp.exe --inspect-data originals
-cpppj/build/bin/Release/NetstormCpp.exe --inspect-data originalCD
+cpppj/build/bin/Release/Netstorm.exe --inspect-data originals
+cpppj/build/bin/Release/Netstorm.exe --inspect-data originalCD
 python tools/cpp_recovery_smoke.py
-cpppj/build/bin/Release/NetstormCpp.exe --inspect-assets originals
-cpppj/build/bin/Release/NetstormCpp.exe --inspect-assets originalCD --cd
+cpppj/build/bin/Release/Netstorm.exe --inspect-assets originals
+cpppj/build/bin/Release/Netstorm.exe --inspect-assets originalCD --cd
 python tools/cpp_assets_smoke.py
-cpppj/build/bin/Release/NetstormCpp.exe --export-frame originals sunCannon N00 0 extracted/sunCannon.bmp
-cpppj/build/bin/Release/NetstormCpp.exe --config-spec originals missionSpec TEST01
+cpppj/build/bin/Release/Netstorm.exe --export-frame originals sunCannon N00 0 extracted/sunCannon.bmp
+cpppj/build/bin/Release/Netstorm.exe --config-spec originals missionSpec TEST01
 python tools/cpp_config_smoke.py
-cpppj/build/bin/Release/NetstormCpp.exe --inspect-mission originals TEST01
-cpppj/build/bin/Release/NetstormCpp.exe --inspect-fort originals thewarbegins
+cpppj/build/bin/Release/Netstorm.exe --inspect-mission originals TEST01
+cpppj/build/bin/Release/Netstorm.exe --inspect-fort originals thewarbegins
 python tools/cpp_fort_smoke.py
-cpppj/build/bin/Release/NetstormCpp.exe --dump-territories originals
-cpppj/build/bin/Release/NetstormCpp.exe --run originals --view types
-cpppj/build/bin/Release/NetstormCpp.exe --run originals --view TEST01
+cpppj/build/bin/Release/Netstorm.exe --dump-territories originals
+cpppj/build/bin/Release/Netstorm.exe --run originals --view types
+cpppj/build/bin/Release/Netstorm.exe --run originals --view TEST01
 python tools/cpp_window_smoke.py
-cpppj/build/bin/Release/NetstormCpp.exe --run originals --view fonts --window --render-stats
+cpppj/build/bin/Release/Netstorm.exe --run originals --view fonts --window --render-stats
 python tools/cpp_renderer_smoke.py
-cpppj/build/bin/Release/NetstormCpp.exe --run originals --window
+cpppj/build/bin/Release/Netstorm.exe --run originals --window
 python tools/cpp_menu_smoke.py
-cpppj/build/bin/Release/NetstormCpp.exe --run originals --window --mission TEST01
-cpppj/build/bin/Release/NetstormCpp.exe --dump-world originals thewarbegins
+cpppj/build/bin/Release/Netstorm.exe --run originals --window --mission TEST01
+cpppj/build/bin/Release/Netstorm.exe --dump-world originals thewarbegins
 python tools/cpp_world_smoke.py
 python tools/cpp_audio_smoke.py
 cpppj/build/bin/Release/netstorm_tests.exe --inspect-client-audio originals
-cpppj/build/bin/Release/NetstormCpp.exe --inspect-bridges originals
-cpppj/build/bin/Release/NetstormCpp.exe --inspect-bridges originalCD --cd
+cpppj/build/bin/Release/Netstorm.exe --inspect-bridges originals
+cpppj/build/bin/Release/Netstorm.exe --inspect-bridges originalCD --cd
 python tools/cpp_bridge_smoke.py
 ```
 

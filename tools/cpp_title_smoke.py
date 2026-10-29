@@ -10,7 +10,7 @@ import time
 from cpp_smoke_files import preserve_game_settings
 
 ROOT = Path(__file__).resolve().parent.parent  # 현재 저장소/실행 파일/검사 산출물의 기준이다.
-EXE = ROOT/'cpppj/build/bin/Release/NetstormCpp.exe'  # 이번 Release 빌드의 클론만 실행한다.
+EXE = ROOT/'cpppj/build/bin/Release/Netstorm.exe'  # 이번 Release 빌드의 클론만 실행한다.
 OUT = ROOT/'extracted/run27-title-ui.json'  # 실제 창 관찰과 종료 결과를 보관한다.
 USER = ctypes.WinDLL('user32', use_last_error=True)  # 현재 검사 프로세스와 같은 데스크톱의 창 조회/종료 경계다.
 ENUM = ctypes.WINFUNCTYPE(wintypes.BOOL, wintypes.HWND, wintypes.LPARAM)  # 보이지 않는 창도 포함하는 Win32 열거 콜백 형식이다.

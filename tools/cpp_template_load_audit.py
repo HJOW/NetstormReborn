@@ -72,7 +72,7 @@ def collect():
                 source_sha256={path: digest(path) for path in SOURCES}, native_sha256=digest('originals/Netstorm.exe'),
                 refined_sha256=digest('extracted/refined/originals/functions.tsv'), functions=functions,
                 build=dict(path=build_path, sha256=digest(build_path), exit_code=0, warnings=0, errors=0),
-                binary_sha256={path: digest(path) for path in ('cpppj/build/bin/Release/NetstormCpp.exe', binary_path)},
+                binary_sha256={path: digest(path) for path in ('cpppj/build/bin/Release/Netstorm.exe', binary_path)},
                 compiled_test_names=list(TESTS), executed_cpp_tests=0, executed_game_frames=0, executed_native_instructions=0,
                 limits=['바깥 Load는 원본 제어 몸체/명시 효과 경계 복원이며 실제 Session의 교체용 InstallFile에 연결하지 않았다.',
                         '실제 보관소는 생성자/manager 파일명 getter만 새 원본 몸체를 사용한다.',

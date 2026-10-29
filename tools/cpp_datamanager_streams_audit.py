@@ -79,13 +79,13 @@ def main():
     result = ROOT / 'extracted/cpp-datamanager-streams-20261021-build2-result.json'
     assert json.loads(result.read_text(encoding='utf-8'))['exit_code'] == 0
     build = log.read_text(encoding='utf-8');assert not any(value in build for value in ('error C', 'error LNK', 'warning C', 'warning LNK'))
-    assert all(value in build for value in ('netstorm.lib', 'NetstormCpp.exe', 'netstorm_tests.exe'))
+    assert all(value in build for value in ('netstorm.lib', 'Netstorm.exe', 'netstorm_tests.exe'))
     paths = ['cpppj/src/o/RawMemStream.cpp', 'cpppj/src/o/RawMemStream.h', 'cpppj/src/o/RawDataManagerList.cpp', 'cpppj/src/o/RawDataManagerList.h', 'cpppj/src/o/RawDataManagerLifetime.cpp', 'cpppj/src/o/RawDataManagerLifetime.h', 'cpppj/src/client/CampaignTemplateStorage.cpp', 'cpppj/src/o/CMakeLists.txt', 'cpppj/tests/DataManagerStreamsTests.cpp', 'cpppj/tests/CMakeLists.txt', 'cpppj/datamanager-streams-native.json', 'tools/decomp_datamanager_streams.py', 'tools/decomp_local_mission_transport.py', 'tools/cpp_datamanager_streams_audit.py', '.gitattributes', str(log.relative_to(ROOT)).replace('\\', '/'), str(result.relative_to(ROOT)).replace('\\', '/')]
     # 실행기 공용 기반은 작업 시작 커밋과 같은 소스임을 별도로 확인한다.
     common = 'tools/decomp_local_mission_transport.py';start = subprocess.check_output(['git', 'show', '0429e571:' + common], cwd=ROOT)
     assert start == (ROOT / common).read_bytes(), '공용 실행기 기반이 시작 소스와 달라짐'
     # 세 최종 빌드 산출물을 찾고 실제 새 검사 등록 문자열을 읽기 전용 확인한다.
-    for name in ('netstorm.lib', 'NetstormCpp.exe', 'netstorm_tests.exe'):
+    for name in ('netstorm.lib', 'Netstorm.exe', 'netstorm_tests.exe'):
         candidates = list((ROOT / 'cpppj/build').rglob(name));assert len(candidates) == 1, (name, candidates)
         paths.append(str(candidates[0].relative_to(ROOT)).replace('\\', '/'))
     compiled = ['DataManagerStreams_Native404', 'DataManagerStreams_PhysicalAndZeroContracts', 'DataManagerStreams_RemoveRequeriesRepairedPredecessor', 'CampaignTemplates_CommonStreamsRecreateAndReleaseEmptyTail']

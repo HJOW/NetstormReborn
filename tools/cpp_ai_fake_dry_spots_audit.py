@@ -117,7 +117,7 @@ def collect():
                     initial_build=dict(result=json.loads((ROOT / 'extracted/cpp-ai-fake-dry-spots-20261022-build1-result.json').read_text(encoding='utf-8-sig')),
                                        log_sha256=digest('extracted/cpp-ai-fake-dry-spots-20261022-build1.log'),
                                        rebuild_reason='현재 Dry pointer 검사에서 선택 전 index 유효성과 중심 뒤 count 축소를 명시함')),
-                binaries={name:digest(name) for name in (binary_path,'cpppj/build/bin/Release/NetstormCpp.exe')},
+                binaries={name:digest(name) for name in (binary_path,'cpppj/build/bin/Release/Netstorm.exe')},
                 compiled_tests=list(TESTS),execution=dict(cpp_tests=0,ctest=0,game=0,original_native=0),
                 restored=['00415fe0 전체 가짜 부족좌표 갱신/같은 실제 점수·중심·양방향 탐색/목록·공용 난수·표식/원래 로그'],
                 additional_read=dict(entry='004162e0',implemented_in_this_unit=False),

@@ -116,7 +116,7 @@ def collect():
                 next_priest_dependencies=dict(snap_bias_bits='0x3f7fff58', snap_bias=struct.unpack_from('<f', mapped, 0x502310-base)[0],
                                              timer_nonzero_nan=True, implemented_in_this_unit=False),
                 sources={name: digest(name) for name in SOURCES}, build=dict(result=result, log_sha256=digest(build_path)),
-                binaries={name: digest(name) for name in (binary_path, 'cpppj/build/bin/Release/NetstormCpp.exe')},
+                binaries={name: digest(name) for name in (binary_path, 'cpppj/build/bin/Release/Netstorm.exe')},
                 compiled_tests=list(TESTS), execution=dict(cpp_tests=0, ctest=0, game=0, original_native=0),
                 restored=['00411b40 다음 건설TYPE/00411a40 수집자 비용 여유/00411ad0 적 자금 조건',
                           '00413c20 실제 AI 지갑 조회/004709d0·00470a30 현재 테마TYPE', '같은 현재 SP/지갑/사제 상태·수량표/선호 목록 연결'],

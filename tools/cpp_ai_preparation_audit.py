@@ -96,7 +96,7 @@ def collect():
                 constants={'0x500ee4': dict(format='float', value=half)},
                 build=dict(path=build_path, sha256=digest(build_path), exit_code=0, warnings=0, errors=0),
                 failed_build=dict(path=failed_path, sha256=digest(failed_path), exit_code=1),
-                binary_sha256={path: digest(path) for path in ('cpppj/build/bin/Release/NetstormCpp.exe', binary_path)},
+                binary_sha256={path: digest(path) for path in ('cpppj/build/bin/Release/Netstorm.exe', binary_path)},
                 compiled_related_test_names=list(TESTS), new_tests_written=12, existing_tests_reworked=1,
                 executed_cpp_tests=0, executed_game_frames=0, executed_native_instructions=0,
                 limits=['같은 본체의 초기 자산 등록/준비이며14af0/139f0/17c70/전체 전략 프레임은 여전히 미복원이다.',

@@ -12,7 +12,7 @@ from cpp_smoke_files import preserve_game_settings
 from cpp_world_smoke import states
 
 ROOT = Path(__file__).resolve().parents[1]  # 원본과 검사 출력을 구분하는 저장소 기준이다.
-EXE = ROOT / 'cpppj/build/bin/Release/NetstormCpp.exe'  # 복원한 클론만 실행한다.
+EXE = ROOT / 'cpppj/build/bin/Release/Netstorm.exe'  # 복원한 클론만 실행한다.
 REPORT = ROOT / 'cpppj/early5-devastation-runtime.json'  # 실제 화면 진행과 명시 입력 통합 검사를 구분한 기록이다.
 
 

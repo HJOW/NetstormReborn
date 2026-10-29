@@ -26,7 +26,7 @@ from nscfg import decode_file, encode_text, set_value
 
 ROOT = Path(__file__).resolve().parents[1]  # 보호 원본과 새 extracted 출력의 공통 기준이다.
 SOURCE = ROOT / 'originals'  # 읽기·전체 복사·해시만 허용하는 보호 입력이다.
-CLONE = ROOT / 'cpppj/build/bin/Release/NetstormCpp.exe'  # 실행 전 별도 출력 폴더에 복사할 클론이다.
+CLONE = ROOT / 'cpppj/build/bin/Release/Netstorm.exe'  # 실행 전 별도 출력 폴더에 복사할 클론이다.
 WINDOW_CLASS = 'NetstormClient'  # 분석기나 다른 프로세스의 창을 배제하는 실제 게임 클래스다.
 BITMAP_ID = 147  # 보호 10.78의 RT_BITMAP 두루마리 번호다.
 REFERENCE_SIZE = (328, 464)  # 실제 리소스 크기를 확인하고 다른 그림으로 오인하지 않는다.
@@ -305,7 +305,7 @@ def prepare_copy(directory, original, before, clone):
     removed = fullscreen.exists()
     if removed:
         fullscreen.unlink()  # 이 경로는 새 copytree 하위의 사본이며 보호 원본은 지우지 않는다.
-    executable = game / 'Netstorm.exe' if original else directory / 'NetstormCpp.exe'
+    executable = game / 'Netstorm.exe' if original else directory / 'Netstorm.exe'
     if not original:
         shutil.copy2(clone, executable)
     command = [str(executable), 'window'] if original else [str(executable), '--run', str(game), '--window', '--no-audio']

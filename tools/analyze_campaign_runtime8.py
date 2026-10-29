@@ -96,7 +96,7 @@ def generate():
     content = read_log(build)
     if re.search(r'\b(?:warning|error)\s+[A-Z]+\d+\s*:', content, re.I):
         raise RuntimeError('최종 빌드 경고/오류 존재')
-    if 'netstorm_tests.exe' not in content or 'NetstormCpp.exe' not in content:
+    if 'netstorm_tests.exe' not in content or 'Netstorm.exe' not in content:
         raise RuntimeError('두 Release 타깃 빌드 요약 없음')
     paths.extend([whole, build, ROOT / 'cpppj/run7.json',
                   ROOT / 'cpppj/src/o/CMakeLists.txt', ROOT / 'cpppj/src/client/CMakeLists.txt',
@@ -117,7 +117,7 @@ def generate():
     for name in ('analyze_terraincontext_cpp_binding',):
         paths.append(ROOT / f'tools/{name}.py')
     # 전체 실행이 실제 이번 빌드의 검사/게임 실행 파일과 연결되게 한다.
-    for name in ('netstorm_tests.exe', 'NetstormCpp.exe'):
+    for name in ('netstorm_tests.exe', 'Netstorm.exe'):
         paths.append(ROOT / f'cpppj/build/bin/Release/{name}')
     data = {'schema': 1, 'host': 'HJOW-Athlon', 'date': '2026-10-13', 'unit': '20261013-08',
             'new_normal_cases': sum(item[0] for item in MODULES.values()),

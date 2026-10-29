@@ -51,7 +51,7 @@ def check(executable,root,name,silent=False):
 
 def main():
     """두 실제 클론 창 시나리오를 실행하고 원본 파일/설정 보호 결과를 기록한다."""
-    parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--exe',type=Path,default=ROOT/'cpppj/build/bin/Release/NetstormCpp.exe')
+    parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--exe',type=Path,default=ROOT/'cpppj/build/bin/Release/Netstorm.exe')
     parser.add_argument('--root',type=Path,default=ROOT/'originals');args=parser.parse_args()
     before=snapshots(args.root);report={}
     try:

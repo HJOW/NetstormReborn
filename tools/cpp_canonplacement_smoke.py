@@ -72,7 +72,7 @@ def check(executable,edition):
 
 def main():
     """클론 콘솔 조회만 호출하고 실제 파일 대조 결과를 Git 제외 경로에 저장한다."""
-    parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--exe',type=Path,default=ROOT/'cpppj/build/bin/Release/NetstormCpp.exe')
+    parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--exe',type=Path,default=ROOT/'cpppj/build/bin/Release/Netstorm.exe')
     parser.add_argument('--out',type=Path,default=ROOT/'extracted/cpp-canonplacement-assets-report.json');args=parser.parse_args();results={}
     # 두 원본 판본의 자산 전체를 별도로 확인한다.
     for edition in ('originals','originalCD'):

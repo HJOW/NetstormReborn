@@ -93,7 +93,7 @@ def check(executable,edition):
 
 def main():
     """두 원본 판본의 제한 대표 자산 검사를 창 없이 수행한다."""
-    parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--exe',type=Path,default=ROOT/'cpppj/build/bin/Release/NetstormCpp.exe')
+    parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--exe',type=Path,default=ROOT/'cpppj/build/bin/Release/Netstorm.exe')
     parser.add_argument('--out',type=Path,default=ROOT/'extracted/cpp-canonmayplace-assets-report.json');args=parser.parse_args();editions={}
     # 추가 PE의 자산은 별도 검증하지 않고 두 실제 자산 판본만 대조한다.
     for edition in ('originals','originalCD'):

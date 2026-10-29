@@ -16,7 +16,7 @@ OUTPUT = ROOT / 'extracted/cpp-rawbuttons-smoke'
 def main():
     """기존 입력 큐/폴링 경로를 사용하고 옵션 예외 두 파일은 성공·실패 모두 복구한다."""
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--exe', type=Path, default=ROOT / 'cpppj/build/bin/Release/NetstormCpp.exe')
+    parser.add_argument('--exe', type=Path, default=ROOT / 'cpppj/build/bin/Release/Netstorm.exe')
     args = parser.parse_args()
     OUTPUT.mkdir(parents=True, exist_ok=True)
     source = ROOT / 'originals'

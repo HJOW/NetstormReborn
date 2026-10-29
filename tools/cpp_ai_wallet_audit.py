@@ -69,7 +69,7 @@ def collect():
                 source_sha256={path: digest(path) for path in SOURCES}, native_sha256=digest('originals/Netstorm.exe'),
                 refined_sha256=digest('extracted/refined/originals/functions.tsv'), functions=functions,
                 build=dict(path=build_path, sha256=digest(build_path), exit_code=0, warnings=0, errors=0),
-                binary_sha256={path: digest(path) for path in ('cpppj/build/bin/Release/NetstormCpp.exe', binary_path)},
+                binary_sha256={path: digest(path) for path in ('cpppj/build/bin/Release/Netstorm.exe', binary_path)},
                 compiled_test_names=list(TESTS), executed_cpp_tests=0, executed_game_frames=0, executed_native_instructions=0,
                 limits=['현재 지갑 가산 연결이며 전략 AI/SP 테스트 옵션을 구현하거나 활성화하지 않았다.',
                         '생성/삭제의 별도 aiAttached와 전략 목록 통지는 여전히 미복원이며 이번 연결로 켜지 않는다.',

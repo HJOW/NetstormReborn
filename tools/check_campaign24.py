@@ -73,7 +73,7 @@ def finalize():
     for name,value in native['exports'].items():assert sha(ROOT/name)==value,name
     paths=set(saved['files'])|set(NEW_SOURCE)|{
         'tools/check_campaign24.py','tools/decomp_campaign_seed.py','tools/decomp_owner_oracle.py','cpppj/campaign-seed.json','cpppj/run23.json',
-        'docs/exe/cpp-run24-20261015.md','cpppj/build/bin/Release/NetstormCpp.exe','cpppj/build/bin/Release/netstorm_tests.exe','cpppj/build/lib/Release/netstorm.lib',
+        'docs/exe/cpp-run24-20261015.md','cpppj/build/bin/Release/Netstorm.exe','cpppj/build/bin/Release/netstorm_tests.exe','cpppj/build/lib/Release/netstorm.lib',
     }  # 준비 단위의 직접 근거다.
     # 현재 전체 C++/fixture를 고정하며 과거 전체 이력을 재귀 복사하지 않는다.
     for folder in ('cpppj/src','cpppj/tests'):

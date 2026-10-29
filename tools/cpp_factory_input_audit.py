@@ -108,7 +108,7 @@ def collect():
                 original_sha256=digest('originals/Netstorm.exe'), functions=functions,
                 command_globals={hex(key): hex(value) for key, value in COMMANDS.items()}, sources={name: digest(name) for name in SOURCES},
                 build=dict(result=result, log_sha256=digest(build_path), first_warning=dict(result=first_result, log_sha256=digest(first_path), cause='새 상태순환 검사의 signed/unsigned 비교를 uint32로 맞춤')),
-                binaries={name: digest(name) for name in (binary_path, 'cpppj/build/bin/Release/NetstormCpp.exe')},
+                binaries={name: digest(name) for name in (binary_path, 'cpppj/build/bin/Release/Netstorm.exe')},
                 compiled_tests=list(TESTS), execution=dict(cpp_tests=0, ctest=0, game=0, original_native=0),
                 remaining=['다른 AI 실제 행동·원래 순서 자동 프레임/종료', '15개 미션+Edit/custom Fort·시나리오 자연 입력/플레이·화면/음향 동일성',
                            'Template/State7·전환/저장 수명'],

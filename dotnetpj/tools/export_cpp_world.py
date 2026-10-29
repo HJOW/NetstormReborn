@@ -3,7 +3,7 @@
 사용법 (저장소 루트에서):
     cmake -S cpppj -B cpppj/build
     cmake --build cpppj/build --config Release --target NetstormCpp
-    python dotnetpj/tools/export_cpp_world.py [--exe <NetstormCpp.exe>] [--game-dir originals]
+    python dotnetpj/tools/export_cpp_world.py [--exe <Netstorm.exe>] [--game-dir originals]
 
 결과: dotnetpj/tests/Netstorm.Core.Tests/Fixtures/world-start-1078.tsv
     player <미션> <번호> <시작SP> <색 번호> <동맹 비트> <이름> <시작 지식> <저장 기술 수> <저장 덱 수>
@@ -52,7 +52,7 @@ def dump(exe: Path, game_dir: str, mission: str) -> list[str]:
 def main():
     """네 미션을 덤프해 fixture 를 다시 쓴다."""
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("--exe", default=str(ROOT / "cpppj/build/bin/Release/NetstormCpp.exe"))
+    parser.add_argument("--exe", default=str(ROOT / "cpppj/build/bin/Release/Netstorm.exe"))
     parser.add_argument("--game-dir", default="originals")
     args = parser.parse_args()
     exe = Path(args.exe)

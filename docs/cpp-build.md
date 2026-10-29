@@ -90,7 +90,7 @@
 | 만드는 방법 | 원본을 분석해 규칙·화면을 새로 구현한다 (클론 코딩) | **기존 게임을 디컴파일한 소스를 토대로 C++ 소스를 다시 만든다** |
 | 빌드 도구 | .NET 10 SDK (`dotnetpj/Netstorm.sln`) | CMake 3.21 이상 + C++20 컴파일러(MSVC), **Windows 전용** |
 | 플랫폼 | MonoGame (Windows·Linux) | **Win32 API 를 원본처럼 직접 호출** (외부 라이브러리 없음) |
-| 실행 파일 | `NetstormClone` | `NetstormCpp` |
+| 실행 파일 | `NetstormClone` | `Netstorm.exe` (CMake 대상 `NetstormCpp`) |
 | 상태 | 캠페인 1-1·1-2 플레이 가능 | 메뉴→브리핑→실제 지형/객체·선택/이동·정지/복귀. 건설·전투·미션 완주는 후속 |
 
 두 빌드가 함께 쓰는 것은 저장소 루트에 그대로 있다.
@@ -167,7 +167,7 @@ cmake --build cpppj/build --config Release
 ctest --test-dir cpppj/build --build-config Release --output-on-failure
 ```
 
-* Windows 에서는 CMake 가 설치된 Visual Studio 를 찾아 쓴다(개발자 명령 프롬프트가 아니어도 된다). 실행 파일은 `cpppj/build/bin/Release/NetstormCpp.exe` 에 생긴다.
+* Windows 에서는 CMake 가 설치된 Visual Studio 를 찾아 쓴다(개발자 명령 프롬프트가 아니어도 된다). 실행 파일은 `cpppj/build/bin/Release/Netstorm.exe` 에 생긴다.
 * **Windows 가 아니면 구성 단계에서 멈춘다**(`cpppj builds on Windows only`). 2026-10-05 이전에는 공용 코드를 Linux 에서도 컴파일해 보았지만, 클라이언트 코드가 Win32 를 직접 부르게 되면서 그만두었다.
 * 프리셋을 쓰려면 `cpppj/` 에서 실행한다: `cmake --preset vs2022 && cmake --build --preset vs2022 && ctest --preset vs2022`.
 * 필요한 도구는 `PREPARE.ps1` 의 "VS Build Tools 2022 (C++)"와 "CMake" 항목으로 설치한다.
@@ -176,7 +176,7 @@ ctest --test-dir cpppj/build --build-config Release --output-on-failure
 인자 없이 실행하면 빌드 정보·검사 명령을 표시한다. 원본 게임을 실행하지 않고 복원한 모듈을 사용한다.
 
 ```text
-NetstormCpp (menu and mission entry; playable world pending)
+Netstorm (menu and mission entry; playable world pending)
   reconstructed from: NetStorm 10.78 (decompiled)
   default maxFPS: 75 (frame interval 0.013333 s, 1ms clock: 14 ms)
 ```
@@ -184,21 +184,21 @@ NetstormCpp (menu and mission entry; playable world pending)
 단위 테스트는 외부 프레임워크 없이 `cpppj/tests/TestSupport.h` 의 `TEST_CASE`·`CHECK`·`CHECK_NEAR` 만 쓴다. 테스트 파일을 만들어 `cpppj/tests/CMakeLists.txt` 의 목록에 더하면 된다.
 
 ```powershell
-cpppj/build/bin/Release/NetstormCpp.exe --inspect-data originals
-cpppj/build/bin/Release/NetstormCpp.exe --inspect-data originalCD
+cpppj/build/bin/Release/Netstorm.exe --inspect-data originals
+cpppj/build/bin/Release/Netstorm.exe --inspect-data originalCD
 python tools/cpp_recovery_smoke.py
-cpppj/build/bin/Release/NetstormCpp.exe --inspect-assets originals
-cpppj/build/bin/Release/NetstormCpp.exe --inspect-assets originalCD --cd
+cpppj/build/bin/Release/Netstorm.exe --inspect-assets originals
+cpppj/build/bin/Release/Netstorm.exe --inspect-assets originalCD --cd
 python tools/cpp_assets_smoke.py
-cpppj/build/bin/Release/NetstormCpp.exe --config-spec originals missionSpec TEST01
+cpppj/build/bin/Release/Netstorm.exe --config-spec originals missionSpec TEST01
 python tools/cpp_config_smoke.py
-cpppj/build/bin/Release/NetstormCpp.exe --inspect-mission originals TEST01
+cpppj/build/bin/Release/Netstorm.exe --inspect-mission originals TEST01
 python tools/cpp_fort_smoke.py
-cpppj/build/bin/Release/NetstormCpp.exe --dump-territories originals
-cpppj/build/bin/Release/NetstormCpp.exe --run originals --view TEST01
+cpppj/build/bin/Release/Netstorm.exe --dump-territories originals
+cpppj/build/bin/Release/Netstorm.exe --run originals --view TEST01
 python tools/cpp_window_smoke.py
 python tools/cpp_renderer_smoke.py
-cpppj/build/bin/Release/NetstormCpp.exe --run originals --window
+cpppj/build/bin/Release/Netstorm.exe --run originals --window
 python tools/cpp_menu_smoke.py
 python tools/cpp_audio_smoke.py
 ```
@@ -289,10 +289,10 @@ powershell -NoProfile -ExecutionPolicy Bypass -File cpppj\package-cpppj.ps1 D:\d
 ```
 
 * **저장 위치.** 첫 매개변수다. 생략하면 실행 중에 입력받고, 빈 값을 입력하면 취소한다(종료 코드 0). 폴더만 주면 `NetstormReborn-cpppj-YYYYMMDD.zip` 으로 만들고, 확장자를 생략하면 `.zip` 을 붙인다.
-* **빌드.** 실행 파일(`cpppj/build/bin/Release/NetstormCpp.exe`)이 없거나 `cpppj/src` 보다 오래됐으면 `NetstormCpp` 대상만 Release 로 빌드한다. `-NoBuild` 로 끄고, `-ExePath` 로 미리 만든 실행 파일을 지정하며, `-DryRun` 은 압축 없이 계획만 보여 준다.
-* **구성.** 최상위에 `NetstormCpp.exe`, 실행 파일이 가져오는 `msvcp140.dll` 등 런타임 DLL, `Netstorm.bat`(창 모드)·`Netstorm-SavedMode.bat`(저장된 화면 모드), `README.txt`, `BUILD_INFO.txt`, `LICENSE.txt` 가 들어가고 `game\` 에 `netstorm.tarc`·`Netstorm.exe`·`d\`·`sound\`·`music\` 이 들어간다. 데이터는 `originals/` 에서 읽기만 한다(`-GameSource` 로 바꿀 수 있다).
+* **빌드.** 기본 실행은 `NetstormCpp` 대상을 Release 증분 빌드해 모든 CMake 입력을 확인하며 `cpppj/build/bin/Release/Netstorm.exe`를 만든다. `-NoBuild` 로 끄고, `-ExePath` 로 미리 만든 실행 파일을 지정하며, `-DryRun` 은 압축 없이 계획만 보여 준다.
+* **구성.** 최상위에 `Netstorm.exe`, 실행 파일이 가져오는 `msvcp140.dll` 등 런타임 DLL, `Netstorm.bat`(창 모드)·`Netstorm-SavedMode.bat`(저장된 화면 모드), `README.txt`, `BUILD_INFO.txt`, `LICENSE.txt` 가 들어가고 `game\` 에 `netstorm.tarc`·`Netstorm.exe`·`d\`·`sound\`·`music\` 이 들어간다. 데이터는 `originals/` 에서 읽기만 한다(`-GameSource` 로 바꿀 수 있다).
 * **원본 `Netstorm.exe` 를 넣는 이유.** 클라이언트가 아이콘·커서·로딩 그림 리소스를 이 파일에서 읽는다(`ClientMain.cpp`, `LOAD_LIBRARY_AS_DATAFILE`). 실행하지 않으며 없으면 기본 아이콘과 화살표 커서로 대체된다. `assets/game-data` 에는 이 파일이 없어 데이터 원천은 `originals/` 이다.
 * **제외.** 실행 중 만들어지는 `d\options.cfg`, 남아 있으면 창 모드로 강제되는 `fullscreenStateFile.dat`, 내려받은 지도 묶음의 잔재인 `d\request*.php`. 클론이 읽지 않는 `help\`·`movie\`·`w\`와 원본 DLL·도구도 넣지 않는다.
 * **쓰기 권한.** 클라이언트가 시작할 때 `game\d\options.cfg` 를 쓰므로 압축을 푸는 폴더는 쓰기 가능해야 한다.
 * **런타임 DLL.** UCRT 는 Windows 10/11 에 기본 포함되어 넣지 않는다. 실행 파일에서 발견한 `MSVCP140`·`VCRUNTIME140` 계열만 `VCToolsRedistDir` → Visual Studio 재배포 폴더 → System32 순으로 찾아 동봉한다. 필요한 DLL 을 못 찾으면 오류로 멈춘다(`-NoRuntime` 으로 생략 가능).
-* **확인 한계.** 자동 빌드 분기와 런타임이 없는 깨끗한 Windows 에서의 실행은 아직 확인하지 않았다([LEFT_JOBS.md](../LEFT_JOBS.md) 단위359).
+* **확인.** [단위580](exe/cpp-executable-name-20261030.md)에서 기본 증분 빌드·새 이름의 ZIP/두 런처·압축 해제본의 새 설치 안내→메인 메뉴 진입을 확인했다. 런타임이 없는 깨끗한 Windows 및 Windows11 실기 검증은 남아 있다.

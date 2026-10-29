@@ -10,7 +10,7 @@ from cpp_smoke_files import preserve_game_settings
 
 # 실제클론과이번검사전용출력경로다.
 ROOT=Path(__file__).resolve().parents[1]
-EXE=ROOT/'cpppj/build/bin/Release/NetstormCpp.exe'
+EXE=ROOT/'cpppj/build/bin/Release/Netstorm.exe'
 OUTPUT=ROOT/'extracted/script-commands-ui'
 
 

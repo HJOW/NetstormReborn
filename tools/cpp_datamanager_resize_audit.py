@@ -82,10 +82,10 @@ def main():
     log = ROOT / 'extracted/cpp-datamanager-resize-20261021-build2.log';result = ROOT / 'extracted/cpp-datamanager-resize-20261021-build2-result.json'
     assert json.loads(result.read_text(encoding='utf-8'))['exit_code'] == 0
     build = log.read_text(encoding='utf-8');assert not any(value in build for value in ('error C', 'error LNK', 'warning C', 'warning LNK'))
-    assert all(value in build for value in ('netstorm.lib', 'NetstormCpp.exe', 'netstorm_tests.exe'))
+    assert all(value in build for value in ('netstorm.lib', 'Netstorm.exe', 'netstorm_tests.exe'))
     paths = ['cpppj/src/o/RawDataManagerResize.cpp', 'cpppj/src/o/RawDataManagerResize.h', 'cpppj/src/o/RawPlayerTemplateState.cpp', 'cpppj/src/o/RawPlayerTemplateState.h', 'cpppj/src/client/CampaignTemplateStorage.cpp', 'cpppj/src/client/CampaignTemplateStorage.h', 'cpppj/src/client/RawCampaignSession.cpp', 'cpppj/src/o/CMakeLists.txt', 'cpppj/tests/CMakeLists.txt', 'cpppj/tests/DataManagerResizeTests.cpp', 'cpppj/datamanager-resize-native.json', 'tools/cpp_datamanager_resize_audit.py', '.gitattributes', str(log.relative_to(ROOT)).replace('\\', '/'), str(result.relative_to(ROOT)).replace('\\', '/')]
     # 빌드 산출물 위치를 명확하게 찾고 실제 새 검사 등록 문자열도 확인한다.
-    for name in ('netstorm.lib', 'NetstormCpp.exe', 'netstorm_tests.exe'):
+    for name in ('netstorm.lib', 'Netstorm.exe', 'netstorm_tests.exe'):
         candidates = list((ROOT / 'cpppj/build').rglob(name));assert len(candidates) == 1, (name, candidates)
         paths.append(str(candidates[0].relative_to(ROOT)).replace('\\', '/'))
     compiled = ['DataManagerResize_Native286', 'CampaignTemplates_MinimumStateUsesTemporarySectionAndSharedData', 'CampaignTemplates_MinimumStateTailCopiesBeforeCompaction', 'DataManagerResize_SufficientStateAndRequiredBinding']

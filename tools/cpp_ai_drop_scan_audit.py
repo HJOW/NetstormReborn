@@ -126,7 +126,7 @@ def collect():
                     result=json.loads((ROOT / 'extracted/cpp-ai-drop-scan-20261022-build1-result.json').read_text(encoding='utf-8-sig')),
                     log_sha256=digest('extracted/cpp-ai-drop-scan-20261022-build1.log'),
                     rebuild_reason='시설flags snapshot 검사 강화 후 최종 링크 재확인')),
-                binaries={name: digest(name) for name in (binary_path, 'cpppj/build/bin/Release/NetstormCpp.exe')},
+                binaries={name: digest(name) for name in (binary_path, 'cpppj/build/bin/Release/Netstorm.exe')},
                 compiled_tests=list(TESTS), execution=dict(cpp_tests=0, ctest=0, game=0, original_native=0),
                 restored=['00412ce0 다리 주변 후보/00412e10 예산 스캔/0040f390 현재 후보 압축',
                           '실제 유일 caller의 같은3e8 점수 직접조회/쓰기와 현재원본 지도·공용난수 연결'],

@@ -1,0 +1,50 @@
+{
+  "unit": 580,
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "changedPathCount": 103,
+  "pythonSyntaxChecks": 96,
+  "packageEntries": 1365,
+  "packageSha256": "ef90ad4adaa91bfea664aa22890cf41b0129c1762e05dff59a8876ff97f52c4b",
+  "gameSha256": "511baeb9adf8efe67ed62461ac2e8c952f4c3b8d14ee3964c7acfee4fd456a2f",
+  "executableName": "Netstorm.exe",
+  "cmakeTarget": "NetstormCpp",
+  "originalResourcesUnchanged": true,
+  "helpExitCode": 0,
+  "launcherMenu": {
+    "command": [
+      "cmd",
+      "/d",
+      "/c",
+      "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-executable-name-580-20261030\\unpacked-v2\\NetstormReborn-cpppj\\Netstorm.bat",
+      "--no-audio",
+      "--frames",
+      "90",
+      "--set",
+      "SCREENW=1024;SCREENH=768;maxFPS=40;sleepPerLoop=25;autoDemo=0;tellTips=0",
+      "--ui-script",
+      "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-executable-name-580-20261030\\launcher-menu-v2\\steps.tsv",
+      "--ui-report",
+      "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-executable-name-580-20261030\\launcher-menu-v2\\states.tsv"
+    ],
+    "binarySha256": "511baeb9adf8efe67ed62461ac2e8c952f4c3b8d14ee3964c7acfee4fd456a2f",
+    "returnCode": 0,
+    "timedOut": false,
+    "seconds": 4.092029700000012,
+    "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderrSha256": "c0d2e179a92ab1d02fcab1c6a86fc82f0ddf9089ae6a09b9cfbe19c7ef5e1ded"
+  },
+  "finalPhase": [
+    "0"
+  ],
+  "scope": "파일 이름/기본 배포 빌드와 압축 해제본 메뉴 진입만 확인. 전체 C++/34경로/자연 완주/Win11/신규MP 검사는 없음.",
+  "protected": {
+    "count": 1861,
+    "changed": []
+  },
+  "firstLauncherFailure": "첫 정상 종료 뒤 Main Menu 선택 누락으로 메뉴 도달 단언 실패; 새 압축 해제 경로에서32프레임 실제 버튼 입력을 추가해 성공",
+  "buildWarnings": 0,
+  "buildErrors": 0,
+  "registeredCppTests": 3454
+}

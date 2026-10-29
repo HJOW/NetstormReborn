@@ -110,7 +110,7 @@ def check(executable,root,name,setting,palettes,initial,resize=False):
 
 def main():
     """원본 10.78의 검사 사본으로 설정 1/0/2 및 소리/음악 끔의 창 검사를 순서대로 실행한다."""
-    parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--exe',type=Path,default=ROOT/'cpppj/build/bin/Release/NetstormCpp.exe')
+    parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--exe',type=Path,default=ROOT/'cpppj/build/bin/Release/Netstorm.exe')
     parser.add_argument('--root',type=Path,default=ROOT/'originals');args=parser.parse_args()
     source=args.root;before=snapshots(source);root=fixture_root(source);archive=TaffArchive(str(root/'netstorm.tarc'))
     palettes=[screen_palette(read_data(root,'d',archive,name)) for name in PALETTES]

@@ -71,10 +71,10 @@ def main():
     log = ROOT / 'extracted/cpp-datamanager-selection-20261021-build2.log'
     build = log.read_text(encoding='utf-8-sig')
     assert 'error C' not in build and 'error LNK' not in build and 'warning C' not in build and 'warning LNK' not in build
-    assert 'netstorm_tests.exe' in build and 'NetstormCpp.exe' in build and 'netstorm.lib' in build
+    assert 'netstorm_tests.exe' in build and 'Netstorm.exe' in build and 'netstorm.lib' in build
     paths = ['cpppj/src/o/RawDataManagerSelection.h', 'cpppj/src/o/RawDataManagerSelection.cpp', 'cpppj/src/client/CampaignTemplateStorage.h', 'cpppj/src/client/CampaignTemplateStorage.cpp', 'cpppj/src/client/RawCampaignSession.cpp', 'cpppj/src/o/CMakeLists.txt', 'cpppj/tests/CMakeLists.txt', 'cpppj/tests/DataManagerSelectionTests.cpp', 'cpppj/datamanager-selection-native.json', 'tools/cpp_datamanager_selection_audit.py', str(log.relative_to(ROOT)).replace('\\', '/')]
     # 현재 세 바이너리와 컴파일된 소스만 고정하며 과거 감사의 해시는 덮지 않는다.
-    for name in ('netstorm.lib', 'NetstormCpp.exe', 'netstorm_tests.exe'):
+    for name in ('netstorm.lib', 'Netstorm.exe', 'netstorm_tests.exe'):
         candidates = list((ROOT / 'cpppj/build').rglob(name))
         assert len(candidates) == 1, (name, candidates)
         paths.append(str(candidates[0].relative_to(ROOT)).replace('\\', '/'))

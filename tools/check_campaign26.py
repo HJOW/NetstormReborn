@@ -77,7 +77,7 @@ def finalize():
         for name,value in result['exports'].items():assert sha(ROOT/name)==value,name
     paths=set(saved['files'])|set(NEW_SOURCE)|{
         'tools/check_campaign26.py','tools/decomp_battle_bcast.py','tools/decomp_owner_oracle.py','cpppj/battle-bcast.json',
-        'docs/exe/cpp-run26-20261015.md','cpppj/build/bin/Release/NetstormCpp.exe',
+        'docs/exe/cpp-run26-20261015.md','cpppj/build/bin/Release/Netstorm.exe',
         'cpppj/build/bin/Release/netstorm_tests.exe','cpppj/build/lib/Release/netstorm.lib',
     }  # 이번 단위 직접 근거다.
     # 현재 전체 C++/fixture를 고정하며 과거 이력은 재귀 복사하지 않는다.

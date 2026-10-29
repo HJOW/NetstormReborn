@@ -252,7 +252,7 @@ def digest(paths):
 def main():
     """두 판본의 영역 배치와 창 화면을 검사하고 보고서를 남긴다."""
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--exe', type=Path, default=ROOT / 'cpppj/build/bin/Release/NetstormCpp.exe')
+    parser.add_argument('--exe', type=Path, default=ROOT / 'cpppj/build/bin/Release/Netstorm.exe')
     parser.add_argument('--no-window', action='store_true', help='창을 띄우는 검사를 건너뛴다')
     args = parser.parse_args()
     OUTPUT.mkdir(parents=True, exist_ok=True)

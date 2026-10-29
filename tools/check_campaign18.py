@@ -71,7 +71,7 @@ def finalize():
     assert '1105 test(s), 0 failed check(s)' in all_tests and '100% tests passed' in all_tests
     paths = set(BEFORE + NEW_SOURCES + ('tools/check_campaign18.py', 'docs/exe/cpp-run18-20261015.md',
                 'extracted/run18-build8.log', 'extracted/run18-focused6.log', 'extracted/run18-all.log',
-                'cpppj/build/bin/Release/NetstormCpp.exe', 'cpppj/build/bin/Release/netstorm_tests.exe',
+                'cpppj/build/bin/Release/Netstorm.exe', 'cpppj/build/bin/Release/netstorm_tests.exe',
                 'cpppj/build/lib/Release/netstorm.lib'))  # 직접 결과 파일이다.
     # 빌드에 사용한 전체 현재 프로젝트 소스의 SHA만 기록한다. 디렉터리를 복사하지 않는다.
     for folder in ('cpppj/src', 'cpppj/tests'):

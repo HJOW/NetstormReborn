@@ -66,7 +66,7 @@ def expected(edition):
 def main():
     """검사 CLI만 실행하고 두 판본의 전체 입력 보호와 모양·프레임 결과를 기록한다."""
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--exe',type=Path,default=ROOT/'cpppj/build/bin/Release/NetstormCpp.exe')
+    parser.add_argument('--exe',type=Path,default=ROOT/'cpppj/build/bin/Release/Netstorm.exe')
     args = parser.parse_args()
     protected = {}
     # 두 원본 폴더의 기존 파일을 모두 해시한다. 게임은 구동하지 않는다.

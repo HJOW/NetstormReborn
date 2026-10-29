@@ -51,7 +51,7 @@ def check(executable,edition):
 
 def main():
     """콘솔 조회만 호출하고 실제 자산 대조 결과를 Git 제외 경로에 저장한다."""
-    parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--exe',type=Path,default=ROOT/'cpppj/build/bin/Release/NetstormCpp.exe')
+    parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--exe',type=Path,default=ROOT/'cpppj/build/bin/Release/Netstorm.exe')
     parser.add_argument('--out',type=Path,default=ROOT/'extracted/cpp-canongeometry-assets-report.json');args=parser.parse_args();results={}
     # 실제 두 원본 자료를 각각 검사한다.
     for edition in ('originals','originalCD'):

@@ -13,7 +13,7 @@ from shp import TYPE_LOAD_ORDER,read_blocks,decode_frame
 from taff import TaffArchive
 
 ROOT=Path(__file__).resolve().parents[1] # 현재 보호 원본과 클론의 공통 기준이다.
-EXE=ROOT/'cpppj/build/bin/Release/NetstormCpp.exe' # 실제 제품 실행 파일이다.
+EXE=ROOT/'cpppj/build/bin/Release/Netstorm.exe' # 실제 제품 실행 파일이다.
 
 
 def compare(directory,name):

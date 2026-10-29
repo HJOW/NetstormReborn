@@ -66,7 +66,7 @@ def generate():
     build=ROOT/'extracted/run11-build-final.log'
     content=read_log(build)
     assert not re.search(r'\b(?:warning|error)\s+[A-Z]+\d+\s*:',content,re.I)
-    assert 'netstorm_tests.exe' in content and 'NetstormCpp.exe' in content
+    assert 'netstorm_tests.exe' in content and 'Netstorm.exe' in content
     paths.extend([whole,build,ROOT/'cpppj/run10.json',ROOT/'cpppj/src/o/CMakeLists.txt',ROOT/'cpppj/tests/CMakeLists.txt'])
     paths.extend(sorted((ROOT/'cpppj/hist/campaign-run-f239e').iterdir()))
     # 새몸체/공유API의전체파일을성공한바이너리에연결한다.
@@ -76,7 +76,7 @@ def generate():
     for name in ('ArcherTypeDataTests','DaisRegularTests','AltarSacrificeTests','IslandBuilderTests','FortMoneyLoadTests','DudeNoticeTests'):
         paths.append(ROOT/f'cpppj/tests/{name}.cpp')
     # Release 검사/게임 실행파일도이번성공결과의바이트로고정한다.
-    for name in ('netstorm_tests.exe','NetstormCpp.exe'):
+    for name in ('netstorm_tests.exe','Netstorm.exe'):
         paths.append(ROOT/f'cpppj/build/bin/Release/{name}')
     data=dict(schema=1,host='HJOW-Athlon',last_decompile_host='HJOW-Athlon',last_decompile_date='2026-10-14',
               date='2026-10-14',unit='20261014-03',new_normal_cases=sum(value[0] for value in MODULES.values()),

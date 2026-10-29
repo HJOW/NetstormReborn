@@ -124,7 +124,7 @@ def collect():
     return dict(hostname=socket.gethostname(),last_full_decompile_host='HJOW-Athlon',last_full_decompile_date='2026-10-21',
                 edition='10.78',original_sha256=digest('originals/Netstorm.exe'),functions=functions,initial_drop_log=drop_log,
                 sources={name:digest(name) for name in SOURCES},build=dict(result=result,log_sha256=digest(build_path)),
-                binaries={name:digest(name) for name in (binary_path,'cpppj/build/bin/Release/NetstormCpp.exe')},
+                binaries={name:digest(name) for name in (binary_path,'cpppj/build/bin/Release/Netstorm.exe')},
                 compiled_tests=list(TESTS),execution=dict(cpp_tests=0,ctest=0,game=0,original_native=0),
                 restored=['004162e0 전체 배치행동/00411a10 원래 전체 배치 query wrapper',
                           '같은 실제 기술/선택·스캔/비용·배치/부족좌표·압축·공용 난수/원래로그'],

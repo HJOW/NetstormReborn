@@ -54,11 +54,13 @@ add_subdirectory(client)
 add_subdirectory(zacket)
 add_subdirectory(platform)
 
-# 실행 파일. C# 빌드의 NetstormClone 과 구분되도록 이름을 달리한다.
+# 게임 실행 파일은 Netstorm.exe로 만들고 기존 빌드 명령의 NetstormCpp 대상 이름은 유지한다.
 target_sources(netstorm PRIVATE app/InspectView.cpp app/InspectView.h)
 target_sources(netstorm PRIVATE app/FrameBindingInspect.cpp app/FrameBindingInspect.h)
 target_sources(netstorm PRIVATE app/CanonMayPlaceInspect.cpp)
 add_executable(NetstormCpp app/main.cpp)
+# Windows 배포 파일 이름을 맞추되 정적 라이브러리는 lib/, 실행 파일과 PDB는 bin/에 둔다.
+set_target_properties(NetstormCpp PROPERTIES OUTPUT_NAME Netstorm)
 target_sources(NetstormCpp PRIVATE app/NetstormCpp.manifest) # 원본ANSI와 다른 Windows10/11의 프로세스 UTF-8 경로 호환 선언이다.
 netstorm_apply_compiler_options(NetstormCpp)
 target_link_libraries(NetstormCpp PRIVATE netstorm)

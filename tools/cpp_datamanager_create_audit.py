@@ -77,10 +77,10 @@ def main():
     log = ROOT / 'extracted/cpp-datamanager-create-20261021-build2.log';result = ROOT / 'extracted/cpp-datamanager-create-20261021-build2-result.json'
     assert json.loads(result.read_text(encoding='utf-8'))['exit_code'] == 0
     build = log.read_text(encoding='utf-8');assert not any(value in build for value in ('error C', 'error LNK', 'warning C', 'warning LNK'))
-    assert all(value in build for value in ('netstorm.lib', 'NetstormCpp.exe', 'netstorm_tests.exe'))
+    assert all(value in build for value in ('netstorm.lib', 'Netstorm.exe', 'netstorm_tests.exe'))
     paths = ['cpppj/src/o/RawDataManagerResize.cpp', 'cpppj/src/o/RawDataManagerResize.h', 'cpppj/src/o/RawMemStream.cpp', 'cpppj/src/o/RawMemStream.h', 'cpppj/src/client/CampaignTemplateStorage.cpp', 'cpppj/src/client/CampaignTemplateStorage.h', 'cpppj/src/client/RawCampaignSession.cpp', 'cpppj/src/o/RawPlayerTemplateState.cpp', 'cpppj/src/o/CMakeLists.txt', 'cpppj/tests/CMakeLists.txt', 'cpppj/tests/DataManagerCreateTests.cpp', 'cpppj/datamanager-create-native.json', 'tools/cpp_datamanager_create_audit.py', '.gitattributes', str(log.relative_to(ROOT)).replace('\\', '/'), str(result.relative_to(ROOT)).replace('\\', '/')]
     # 빌드 산출물을 실제로 찾고 새 검사가 등록된 바이너리를 읽기만 한다.
-    for name in ('netstorm.lib', 'NetstormCpp.exe', 'netstorm_tests.exe'):
+    for name in ('netstorm.lib', 'Netstorm.exe', 'netstorm_tests.exe'):
         candidates = list((ROOT / 'cpppj/build').rglob(name));assert len(candidates) == 1, (name, candidates);paths.append(str(candidates[0].relative_to(ROOT)).replace('\\', '/'))
     test_binary = (ROOT / paths[-1]).read_bytes();assert all(name.encode('ascii') in test_binary for name in COMPILED)
     report = {'start_commit': subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip(), 'host': native['host'], 'last_decompile_host': 'VM-W11-CODEX', 'last_decompile_date': '2026-10-21', 'original_rows': native['rows'], 'snapshot_bytes': 17380, 'build_exit_code': 0, 'tests_written_and_compiled': COMPILED, 'cpp_tests_executed': False, 'game_executed': False, 'limitations': ['열한 원본 본문을 직접 관측했다. CRT ASCII 비교/new/free/진단은 명시 경계이며 실제 CRT/힙/게임 실행은 아니다.', '실제 State 생성 소비자만 전체 생성 부모에 연결했다. 복제 공통 몸체는 별도 컴파일 검사이며 파일 읽기/전체 기본 섹션 생성 부모/전송 직렬화 연결은 남는다.', '실제 호스트는 완료한 같은 새 할당을 소유하지만 원본 힙 주소/미정 padding/외부 raw 노드 포인터 정체성 전체의 일치를 주장하지 않는다.', 'C++ 검사 실행과11미션 자연 완주는 미완료이며 기존 실행 이월 지시를 유지한다.'], 'hashes': {path: digest(ROOT / path) for path in paths}}

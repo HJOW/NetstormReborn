@@ -168,7 +168,7 @@ def static_facts():
 def main():
     """두 판본의 같은 출력만 UTF-8 소스에서 읽을 수 있는 16진수 기대값과 실행 근거로 남긴다."""
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--exe', type=Path, default=ROOT / 'cpppj/build/bin/Release/NetstormCpp.exe')
+    parser.add_argument('--exe', type=Path, default=ROOT / 'cpppj/build/bin/Release/Netstorm.exe')
     args = parser.parse_args()
     OUTPUT.mkdir(parents=True, exist_ok=True)
     oracles = {edition: OptionsOracle(edition) for edition in FUNCTIONS}

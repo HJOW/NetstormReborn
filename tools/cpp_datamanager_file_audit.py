@@ -77,7 +77,7 @@ def collect():
                 virtual_slots=list(map(hex, slots)), functions=functions,
                 rejection_import=dict(address='0x5000b0', name='DeleteFileA', thunk='0x4e58ba', wrapper='0x41aef0'),
                 build=dict(path=build_path, sha256=digest(build_path), exit_code=0, warnings=0, errors=0),
-                binary_sha256={path: digest(path) for path in ('cpppj/build/bin/Release/NetstormCpp.exe', binary_path)},
+                binary_sha256={path: digest(path) for path in ('cpppj/build/bin/Release/Netstorm.exe', binary_path)},
                 compiled_test_names=list(TESTS), executed_cpp_tests=0, executed_game_frames=0, executed_native_instructions=0,
                 limits=['파일 읽기는 기존 VFS 캡처 원문의 호스트 경계이며 CRT/VFS/OS 전체 복원이 아니다.',
                         '잘못된 서명은 실제 로더에서 보호 원문 삭제 대신 예외로 거부한다.',

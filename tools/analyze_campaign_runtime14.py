@@ -83,7 +83,7 @@ def generate():
     build = ROOT / 'extracted/run14-build-final.log'
     content = read_log(build)
     assert not re.search(r'\b(?:warning|error)\s+[A-Z]+\d+\s*:', content, re.I)
-    assert 'netstorm_tests.exe' in content and 'NetstormCpp.exe' in content
+    assert 'netstorm_tests.exe' in content and 'Netstorm.exe' in content
     paths.extend((whole, build, ROOT / 'cpppj/run13.json'))
     # 공유 분배/재사용 API 및 등록한 현재 실제 모듈의 전체 원문을 고정한다.
     for name in ('SquidPostPop', 'RawDamageablePostDestroy', 'RawBurningSources',
@@ -101,7 +101,7 @@ def generate():
         paths.append(ROOT / f'cpppj/tests/{name}.h')
     for name in ('src/o', 'src/client', 'tests'):
         paths.append(ROOT / f'cpppj/{name}/CMakeLists.txt')
-    for name in ('netstorm_tests.exe', 'NetstormCpp.exe'):
+    for name in ('netstorm_tests.exe', 'Netstorm.exe'):
         paths.append(ROOT / f'cpppj/build/bin/Release/{name}')
     data = dict(schema=1, host='HJOW-Athlon', last_decompile_host='HJOW-Athlon',
                 last_decompile_date='2026-10-14', date='2026-10-14', unit='20261014-06',

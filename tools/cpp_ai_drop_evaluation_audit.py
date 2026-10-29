@@ -156,7 +156,7 @@ def collect():
                 sources={name: digest(name) for name in SOURCES}, build=dict(result=result, log_sha256=digest(build_path), previous_failure=dict(
                     result=json.loads((ROOT / 'extracted/cpp-ai-drop-evaluation-20261022-build1-result.json').read_text(encoding='utf-8-sig')),
                     log_sha256=digest('extracted/cpp-ai-drop-evaluation-20261022-build1.log'))),
-                binaries={name: digest(name) for name in (binary_path, 'cpppj/build/bin/Release/NetstormCpp.exe')},
+                binaries={name: digest(name) for name in (binary_path, 'cpppj/build/bin/Release/Netstorm.exe')},
                 compiled_tests=list(TESTS), execution=dict(cpp_tests=0, ctest=0, game=0, original_native=0),
                 restored=['0046b540/0046b360 실제 지상검색과004b22d0/004b1b80/004b1bd0 현재Depend필터',
                           '00412a70/00412640/004126c0/00412ab0/00412b90 실제점수/마나/배치후보승인'],

@@ -13,7 +13,7 @@ from cpp_renderer_smoke import snapshots
 # 이번 검사 전용 출력은 이전 단위36 자료와 분리한다.
 dialog.OUTPUT=ROOT/'extracted/dialog-body-mission-tell'
 dialog.OUTPUT.mkdir(exist_ok=True)
-EXE=ROOT/'cpppj/build/bin/Release/NetstormCpp.exe'
+EXE=ROOT/'cpppj/build/bin/Release/Netstorm.exe'
 
 
 def check(name,more):

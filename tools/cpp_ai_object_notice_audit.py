@@ -88,7 +88,7 @@ def collect():
                 source_sha256={path: digest(path) for path in SOURCES}, native_sha256=digest('originals/Netstorm.exe'),
                 refined_sha256=digest('extracted/refined/originals/functions.tsv'), functions=functions, constants=constants,
                 build=dict(path=build_path, sha256=digest(build_path), exit_code=0, warnings=0, errors=0),
-                binary_sha256={path: digest(path) for path in ('cpppj/build/bin/Release/NetstormCpp.exe', binary_path)},
+                binary_sha256={path: digest(path) for path in ('cpppj/build/bin/Release/Netstorm.exe', binary_path)},
                 compiled_test_names=list(TESTS), executed_cpp_tests=0, executed_game_frames=0, executed_native_instructions=0,
                 limits=['현재 생성/삭제 사건의 같은 본체 갱신이며 초기 전체 월드 등록00415720/전략00416eb0은 여전히 미복원이다.',
                         '테스트용 AI/SP 옵션·상황 판단기를 구현하거나 활성화하지 않았다.',

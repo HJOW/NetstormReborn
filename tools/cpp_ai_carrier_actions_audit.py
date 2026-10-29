@@ -107,7 +107,7 @@ def collect():
     return dict(hostname=socket.gethostname(), last_full_decompile_host='HJOW-Athlon', last_full_decompile_date='2026-10-21',
                 edition='10.78', original_sha256=digest('originals/Netstorm.exe'), functions=functions,
                 sources={name: digest(name) for name in SOURCES}, build=dict(result=result, log_sha256=digest(build_path)),
-                binaries={name: digest(name) for name in (binary_path, 'cpppj/build/bin/Release/NetstormCpp.exe')},
+                binaries={name: digest(name) for name in (binary_path, 'cpppj/build/bin/Release/Netstorm.exe')},
                 compiled_tests=list(TESTS), execution=dict(cpp_tests=0, ctest=0, game=0, original_native=0),
                 restored=['00412130 전체 수집/포획/귀환/경로 유지·취소', '004acb80 내용물 genus/004487e0 다이스 접근점',
                           '같은 실제 내용물/권한/경로/삭제/요청/간헐천·포획 목록 연결', '현재 적 참여/경로 TargetA/B 공통 하위 공유'],

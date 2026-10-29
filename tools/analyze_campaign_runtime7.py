@@ -75,7 +75,7 @@ def generate():
     content = read_log(build)
     if re.search(r'\b(?:warning|error)\s+[A-Z]+\d+\s*:', content, re.I):
         raise RuntimeError('최종 빌드 경고/오류 존재')
-    if 'netstorm_tests.exe' not in content or 'NetstormCpp.exe' not in content:
+    if 'netstorm_tests.exe' not in content or 'Netstorm.exe' not in content:
         raise RuntimeError('두 Release 타깃 빌드 요약 없음')
     paths.extend([whole, build, ROOT / 'cpppj/run6.json',
                   ROOT / 'cpppj/src/o/CMakeLists.txt', ROOT / 'cpppj/tests/CMakeLists.txt'])
@@ -84,7 +84,7 @@ def generate():
         paths.extend([ROOT / f'cpppj/src/o/{name}.cpp', ROOT / f'cpppj/src/o/{name}.h'])
     for name in ('PathCleanupTests', 'TerrainStampTests', 'PriestRitualActionsTests', 'ArcherMissileTests', 'MissileTests'):
         paths.append(ROOT / f'cpppj/tests/{name}.cpp')
-    for name in ('netstorm_tests.exe', 'NetstormCpp.exe'):
+    for name in ('netstorm_tests.exe', 'Netstorm.exe'):
         paths.append(ROOT / f'cpppj/build/bin/Release/{name}')
     data = {'schema': 1, 'host': 'HJOW-Athlon', 'date': '2026-10-13', 'unit': '20261013-07',
             'new_normal_cases': 6916, 'new_assertion_cases': 16, 'modules': counts,

@@ -64,7 +64,7 @@ def finalize():
     assert not re.search(r'\b(?:warning|error) [A-Z]\d+',log('extracted/run25-build-final.log'),re.I)
     paths=set(saved['files'])|set(NEW_SOURCE)|{
         'tools/check_campaign25.py','docs/exe/cpp-run25-20261015.md',
-        'cpppj/build/bin/Release/NetstormCpp.exe','cpppj/build/bin/Release/netstorm_tests.exe',
+        'cpppj/build/bin/Release/Netstorm.exe','cpppj/build/bin/Release/netstorm_tests.exe',
         'cpppj/build/lib/Release/netstorm.lib',
     }  # 이번 단위의 직접 근거다.
     # 현재 전체 C++ 원문/fixture는 해시로 고정하며 이전 이력은 재귀 복사하지 않는다.

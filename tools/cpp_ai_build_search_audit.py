@@ -103,7 +103,7 @@ def collect():
                 constants=dict(budget_seconds=budget, state_offset='0x574', state_size=0x34,
                                opaque_type_base='0x6b000000', type_stride=500, native_virtual_address_claim=False),
                 sources={name: digest(name) for name in SOURCES}, build=dict(result=result, log_sha256=digest(build_path)),
-                binaries={name: digest(name) for name in (binary_path, 'cpppj/build/bin/Release/NetstormCpp.exe')},
+                binaries={name: digest(name) for name in (binary_path, 'cpppj/build/bin/Release/Netstorm.exe')},
                 compiled_tests=list(TESTS), execution=dict(cpp_tests=0, ctest=0, game=0, original_native=0),
                 restored=['0040f660 초기화/0040f700 행별 예산·가장 먼 합법 후보/0040f130 빈 footprint',
                           '같은 현재 TYPE/spot/전체 Canon 배치/현재 벽시각·원본574 상태 연결'],

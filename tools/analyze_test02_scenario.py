@@ -84,7 +84,7 @@ def inspect_map():
             # 객체의 qa와 owner를 서로 다른 원시 값으로 보존한다.
             for entry in entries:
                 objects.append(dict(territory=territory, chunkOrdinal=chunk, version=version, **asdict(entry)))
-    command = [str(ROOT / 'cpppj/build/bin/Release/NetstormCpp.exe'),
+    command = [str(ROOT / 'cpppj/build/bin/Release/Netstorm.exe'),
                '--inspect-mission', str(original), 'TEST02']
     result = subprocess.run(command, capture_output=True, check=True, timeout=60)
     text = result.stdout.decode('utf-8')

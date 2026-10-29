@@ -32,7 +32,7 @@ def generate():
     # 이번 단위가 포함한 실제 수명 검사 소스와 빌드 출력도 같은 스냅샷에 고정한다.
     for name in ('MissileTests','GunHitTests','VortexAscendTests'):
         paths.append(ROOT/f'cpppj/tests/{name}.cpp')
-    for name in ('netstorm_tests.exe','NetstormCpp.exe'):
+    for name in ('netstorm_tests.exe','Netstorm.exe'):
         paths.append(ROOT/f'cpppj/build/bin/Release/{name}')
     paths.extend([ROOT/'extracted/run5-build-final.log',ROOT/'cpppj/run4.json'])
     # 최종 바이너리에 포함된 후속 helper 접근 준비도 이전 전체 몸체 보존 lineage와 함께 고정한다.

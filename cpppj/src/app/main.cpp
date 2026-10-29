@@ -44,7 +44,7 @@ constexpr const char* kTargetOriginalVersion = "10.78";
 // 실행 가능한 공용 계층의 명령과 아직 구현하지 않은 범위를 출력한다.
 void PrintBuildInfo() {
     std::puts("  --run: --test-bridge-patterns 3,0,25 (test-only repeating sequence; off restores normal supply)");
-    std::printf("NetstormCpp (menu and mission entry; playable world pending)\n");
+    std::printf("Netstorm (menu and mission entry; playable world pending)\n");
     std::printf("  reconstructed from: NetStorm %s (decompiled)\n", kTargetOriginalVersion);
     std::printf("  default maxFPS: %d (frame interval %.6f s, 1ms clock: %u ms)\n",
         netstorm::client::kDefaultMaxFps, netstorm::client::FrameIntervalSeconds(netstorm::client::kDefaultMaxFps),

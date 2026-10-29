@@ -63,7 +63,7 @@ def generate():
     build = ROOT / 'extracted/run10-build-final.log'
     content = read_log(build)
     assert not re.search(r'\b(?:warning|error)\s+[A-Z]+\d+\s*:', content, re.I)
-    assert 'netstorm_tests.exe' in content and 'NetstormCpp.exe' in content
+    assert 'netstorm_tests.exe' in content and 'Netstorm.exe' in content
     paths.extend([whole, build, ROOT / 'cpppj/run9.json',
                   ROOT / 'cpppj/src/o/CMakeLists.txt', ROOT / 'cpppj/src/client/CMakeLists.txt', ROOT / 'cpppj/tests/CMakeLists.txt'])
     # 새구현과 공유API의 전체소스를 이번 Release에 연결한다.
@@ -74,7 +74,7 @@ def generate():
     for name in ('GunImpactTests', 'SquidDefenseTests', 'NormalTerrainWorldBindingTests', 'VortexIslandBindingTests'):
         paths.append(ROOT / f'cpppj/tests/{name}.cpp')
     # 이번에 성공한 검사/게임 실행파일의 전체바이트를 연결한다.
-    for name in ('netstorm_tests.exe', 'NetstormCpp.exe'):
+    for name in ('netstorm_tests.exe', 'Netstorm.exe'):
         paths.append(ROOT / f'cpppj/build/bin/Release/{name}')
     data = dict(schema=1, host='HJOW-Athlon', last_decompile_host='HJOW-Athlon', last_decompile_date='2026-10-14',
                 date='2026-10-14', unit='20261014-02', new_normal_cases=sum(MODULES.values()), new_assertion_cases=0,

@@ -16,7 +16,7 @@ from taff import TaffArchive
 
 # 보호 원본과 이번 클론 실행 파일의 기준 경로다.
 ROOT = Path(__file__).resolve().parents[1]
-EXE = ROOT / 'cpppj/build/bin/Release/NetstormCpp.exe'
+EXE = ROOT / 'cpppj/build/bin/Release/Netstorm.exe'
 
 
 def compare(directory):

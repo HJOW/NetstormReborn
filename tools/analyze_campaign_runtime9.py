@@ -83,7 +83,7 @@ def generate():
     content = read_log(build)
     if re.search(r'\b(?:warning|error)\s+[A-Z]+\d+\s*:', content, re.I):
         raise RuntimeError('최종 빌드 경고/오류 존재')
-    if 'netstorm_tests.exe' not in content or 'NetstormCpp.exe' not in content:
+    if 'netstorm_tests.exe' not in content or 'Netstorm.exe' not in content:
         raise RuntimeError('두 Release 타깃 빌드 요약 없음')
     paths.extend([whole, build, ROOT/'cpppj/run8.json',
                   ROOT/'cpppj/src/o/CMakeLists.txt', ROOT/'cpppj/tests/CMakeLists.txt'])
@@ -95,7 +95,7 @@ def generate():
     for name in ('IslandQueriesTests', 'DamageableHitTests', 'FarmClusterTests', 'TerrainGrowthTests'):
         paths.append(ROOT/f'cpppj/tests/{name}.cpp')
     # 검사와 실제 게임 실행 파일이 이번 성공 빌드의 결과인지 SHA로 고정한다.
-    for name in ('netstorm_tests.exe', 'NetstormCpp.exe'):
+    for name in ('netstorm_tests.exe', 'Netstorm.exe'):
         paths.append(ROOT/f'cpppj/build/bin/Release/{name}')
     data = {'schema': 1, 'host': 'HJOW-Athlon', 'date': '2026-10-14', 'unit': '20261014-01',
             'new_normal_cases': sum(value[0] for value in MODULES.values()),

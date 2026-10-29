@@ -120,7 +120,7 @@ def prepare_probes(root,index):
 
 def main():
     """보존 원본과 검사 사본 두 팔레트를 순차 실행한다. 성공/실패 모두 설정을 복구하고 원본 해시를 확인한다."""
-    parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--exe',type=Path,default=ROOT/'cpppj/build/bin/Release/NetstormCpp.exe');args=parser.parse_args()
+    parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--exe',type=Path,default=ROOT/'cpppj/build/bin/Release/Netstorm.exe');args=parser.parse_args()
     OUTPUT.mkdir(parents=True,exist_ok=True);source=ROOT/'originals';before=snapshots(source)
     result={'originals':check(args.exe,source,'originals')}
     # 검사 사본은 팔레트마다 새로 만들어 서로의 설정/스크립트가 섞이지 않게 한다.

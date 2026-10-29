@@ -99,7 +99,7 @@ def window(executable, root):
 def main():
     """자료 해시와 허용 설정 파일의 바이트/존재 상태를 보존하며 검사한다."""
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--exe', type=Path, default=ROOT / 'cpppj/build/bin/Release/NetstormCpp.exe')
+    parser.add_argument('--exe', type=Path, default=ROOT / 'cpppj/build/bin/Release/Netstorm.exe')
     args = parser.parse_args()
     OUTPUT.mkdir(parents=True, exist_ok=True)
     report = {}

@@ -204,7 +204,7 @@ def check_test01(executable, root):
 def main():
     """원본 전체 해시를 보존하며 읽기 전용 대조와 새 실행 파일의 조작 검사를 순차 실행한다."""
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--exe', type=Path, default=ROOT / 'cpppj/build/bin/Release/NetstormCpp.exe')
+    parser.add_argument('--exe', type=Path, default=ROOT / 'cpppj/build/bin/Release/Netstorm.exe')
     args = parser.parse_args()
     root = ROOT / 'originals'
     OUTPUT.mkdir(parents=True, exist_ok=True)

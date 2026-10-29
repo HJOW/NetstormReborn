@@ -15,7 +15,7 @@ from taff import TaffArchive
 
 # 실제 클론만 실행하며 검사 결과는 보호 폴더 밖에 둔다.
 ROOT = Path(__file__).resolve().parents[1]
-EXE = ROOT / 'cpppj/build/bin/Release/NetstormCpp.exe'
+EXE = ROOT / 'cpppj/build/bin/Release/Netstorm.exe'
 TEXT = 'Our Priest has been Immobilized'  # 보호 tell.english의 실제 Warning 인자 본문이다.
 
 

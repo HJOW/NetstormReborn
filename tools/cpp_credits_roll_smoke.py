@@ -12,7 +12,7 @@ from cpp_menu_smoke import source
 from taff import TaffArchive
 
 ROOT=Path(__file__).resolve().parents[1]  # 보호 자료/현재 제품을 찾는 저장소 기준이다.
-GAME=ROOT/'cpppj/build/bin/Release/NetstormCpp.exe'  # 원본 실행파일은 실행하지 않는다.
+GAME=ROOT/'cpppj/build/bin/Release/Netstorm.exe'  # 원본 실행파일은 실행하지 않는다.
 
 
 def digest(path):

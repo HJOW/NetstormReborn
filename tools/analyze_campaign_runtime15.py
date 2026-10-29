@@ -65,7 +65,7 @@ def generate():
     names.update(prepared['files'])
     # 실제 등록·실행한 자료와 이전 전체 보존 manifest를 함께 기록한다.
     names.update({'cpppj/src/o/CMakeLists.txt', 'cpppj/src/client/CMakeLists.txt', 'cpppj/tests/CMakeLists.txt',
-                  'cpppj/build/bin/Release/netstorm_tests.exe', 'cpppj/build/bin/Release/NetstormCpp.exe',
+                  'cpppj/build/bin/Release/netstorm_tests.exe', 'cpppj/build/bin/Release/Netstorm.exe',
                   'extracted/run15-build-final.log', 'extracted/run15-new-final.log',
                   'extracted/run15-all-final.log', (HISTORY / 'capture.json').relative_to(ROOT).as_posix(),
                   'tools/analyze_campaign_runtime15_corrections.py', 'cpppj/run15-corrections.json',

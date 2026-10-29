@@ -264,7 +264,7 @@ def technology_item_size(item):
 def main():
     """두 판본의 `.fort` 전체와 타입 표를 검사하고 보고서를 남긴다."""
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--exe', type=Path, default=ROOT / 'cpppj/build/bin/Release/NetstormCpp.exe')
+    parser.add_argument('--exe', type=Path, default=ROOT / 'cpppj/build/bin/Release/Netstorm.exe')
     args = parser.parse_args()
     OUTPUT.mkdir(parents=True, exist_ok=True)
     report = {}

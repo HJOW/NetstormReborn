@@ -49,11 +49,11 @@ def main():
     assert json.loads(result.read_text(encoding='utf-8'))['exit_code'] == 0
     build = log.read_text(encoding='utf-8')
     assert 'error C' not in build and 'error LNK' not in build and 'warning C' not in build and 'warning LNK' not in build
-    assert 'netstorm.lib' in build and 'NetstormCpp.exe' in build and 'netstorm_tests.exe' in build
+    assert 'netstorm.lib' in build and 'Netstorm.exe' in build and 'netstorm_tests.exe' in build
     paths = ['cpppj/src/client/CampaignTemplateStorage.cpp', 'cpppj/src/client/CampaignTemplateStorage.h', 'cpppj/src/client/RawCampaignSession.cpp', 'cpppj/src/o/RawDataManagerSelection.cpp', 'cpppj/src/o/RawDataManagerSelection.h', 'cpppj/tests/DataManagerSelectionTests.cpp', 'cpppj/datamanager-selection-native.json', 'cpppj/tests/fixtures/datamanager-selection-x86.tsv', 'tools/cpp_datamanager_selection_audit.py', 'tools/cpp_datamanager_territory_audit.py', '.gitattributes', str(log.relative_to(ROOT)).replace('\\', '/')]
     paths.append(str(result.relative_to(ROOT)).replace('\\', '/'))
     # 세 최종 빌드 산출물의 위치가 모호하면 기록하지 않는다.
-    for name in ('netstorm.lib', 'NetstormCpp.exe', 'netstorm_tests.exe'):
+    for name in ('netstorm.lib', 'Netstorm.exe', 'netstorm_tests.exe'):
         candidates = list((ROOT / 'cpppj/build').rglob(name))
         assert len(candidates) == 1, (name, candidates)
         paths.append(str(candidates[0].relative_to(ROOT)).replace('\\', '/'))

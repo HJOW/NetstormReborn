@@ -214,7 +214,7 @@ def check_edition(executable, edition, output):
 def main():
     """원본 파일의 해시를 유지하며 두 판본의 전체 자산 검사를 수행한다."""
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--exe', type=Path, default=ROOT / 'cpppj/build/bin/Release/NetstormCpp.exe')
+    parser.add_argument('--exe', type=Path, default=ROOT / 'cpppj/build/bin/Release/Netstorm.exe')
     args = parser.parse_args()
     output = ROOT / 'extracted/cpp-assets-smoke'
     output.mkdir(parents=True, exist_ok=True)

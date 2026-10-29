@@ -83,7 +83,7 @@ def finalize():
         'docs/exe/cpp-run19-20261015.md', 'cpppj/run18.json', 'tools/check_campaign18.py',
         'extracted/run19-build8.log', 'extracted/run19-focused9.log', 'extracted/run19-fort.log', 'extracted/run19-all.log',
         'extracted/run19-native2.log', 'extracted/run19-export.log', 'extracted/run19-export2.log', 'extracted/run19-export3.log',
-        'cpppj/build/bin/Release/NetstormCpp.exe', 'cpppj/build/bin/Release/netstorm_tests.exe', 'cpppj/build/lib/Release/netstorm.lib',
+        'cpppj/build/bin/Release/Netstorm.exe', 'cpppj/build/bin/Release/netstorm_tests.exe', 'cpppj/build/lib/Release/netstorm.lib',
     }  # 결과와 직접 의존 원문이다.
     # 현재 전체 C++ 소스 및 원본 입력을 복사하지 않고 SHA만 남긴다.
     for folder in ('cpppj/src', 'cpppj/tests'):

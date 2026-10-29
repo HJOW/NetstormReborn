@@ -100,7 +100,7 @@ def collect():
     return dict(hostname=socket.gethostname(), last_full_decompile_host='HJOW-Athlon', last_full_decompile_date='2026-10-21', edition='10.78',
                 original_sha256=digest('originals/Netstorm.exe'), functions=functions, sources={name: digest(name) for name in SOURCES},
                 build=dict(result=result, log_sha256=digest(build_path), first_failed=dict(result=first_result, log_sha256=digest(first_path), cause='통합 검사의 비공개 Host 메서드 호출을 공개 RegularProcess::RunFrame으로 수정')),
-                binaries={name: digest(name) for name in (binary_path, 'cpppj/build/bin/Release/NetstormCpp.exe')},
+                binaries={name: digest(name) for name in (binary_path, 'cpppj/build/bin/Release/Netstorm.exe')},
                 compiled_tests=list(TESTS), execution=dict(cpp_tests=0, ctest=0, game=0, original_native=0),
                 remaining=['입력03000032의 현재 자금/이미 진행 중 안내와 메뉴 입력 연결',
                            '다른 AI 실제 행동·원래 순서 자동 프레임/종료', '15개 미션+Edit 자연 입력·플레이·표시/음향 동일성',

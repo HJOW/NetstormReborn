@@ -54,7 +54,7 @@ def generate():
         paths.append(ROOT/f'cpppj/{name}-lineage.json')
     for name in ('RawPathStartTests','GunAnimationTests','AssetRegularTests','RegionPaintTests'):
         paths.append(ROOT/f'cpppj/tests/{name}.cpp')
-    for name in ('netstorm_tests.exe','NetstormCpp.exe'):
+    for name in ('netstorm_tests.exe','Netstorm.exe'):
         paths.append(ROOT/f'cpppj/build/bin/Release/{name}')
     paths.append(ROOT/'extracted/run4-build-final.log')
     data={'schema':1,'host':'HJOW-Athlon','date':'2026-10-13','unit':'20261013-04',
