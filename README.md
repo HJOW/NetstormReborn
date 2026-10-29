@@ -182,7 +182,7 @@ cmake --build cpppj/build --config Release
 ctest --test-dir cpppj/build --build-config Release --output-on-failure
 ```
 
-CTest는 래퍼 검사 하나로 등록되어 있으며, 현재 등록된 C++ 검사는 3,464개입니다. 전체 실행은 수 분이 걸리며, 각 단위의 집중 검사와 전체 검사 결과는 [인수인계](LEFT_JOBS.md)에서 구분해 확인할 수 있습니다. Visual Studio 생성기 기준 실행 파일은 `cpppj/build/bin/Release/Netstorm.exe`입니다. 다음 명령은 창 모드로 C++ 복원판의 메인 메뉴를 엽니다.
+CTest는 래퍼 검사 하나로 등록되어 있으며, 현재 등록된 C++ 검사는 3,467개입니다. 전체 실행은 수 분이 걸리며, 각 단위의 집중 검사와 전체 검사 결과는 [인수인계](LEFT_JOBS.md)에서 구분해 확인할 수 있습니다. Visual Studio 생성기 기준 실행 파일은 `cpppj/build/bin/Release/Netstorm.exe`입니다. 다음 명령은 창 모드로 C++ 복원판의 메인 메뉴를 엽니다.
 
 ```powershell
 .\cpppj\build\bin\Release\Netstorm.exe --run originals --window

@@ -1,5 +1,6 @@
 // 실제 미초기화 할당과 opaque 토큰을 연결하며 Chat 본체/설정/명령등록의 성공을 대신하지 않는다.
 #include "client/ClientChatManagerGlobals.h"
+#include "client/RawChatPacket.h"
 #include "client/RawChatSubmit.h"
 #include <new>
 #include <stdexcept>
@@ -62,6 +63,13 @@ ChatSubmitHooks MakeClientChatSubmitHooks(std::shared_ptr<ClientChatManagerGloba
     hooks.memory=[owner](auto token) { return owner->Bytes(token); };
     hooks.allocate=[owner](auto size) { return owner->AllocateRecipientBuffer(size); };
     hooks.release=[owner](auto token) { owner->ReleaseRecipientBuffer(token); };
+    return hooks;
+}
+// 송신에 의한 자기 추가도 기존32슬롯 확장 몸체를 사용하고 이전 배열을 실제 반납한다.
+ChatPacketHooks MakeClientChatPacketHooks(std::shared_ptr<ClientChatManagerGlobals> owner) {
+    if (!owner) throw std::invalid_argument("Chat 패킷의 실제 소유자 없음");ChatPacketHooks hooks;
+    hooks.memory=[owner](auto token) { return owner->Bytes(token); };
+    hooks.addRecipient=[owner](auto manager,auto subscriber) { AddChatRecipient(manager,subscriber,MakeClientChatSubmitHooks(owner)); };
     return hooks;
 }
 }

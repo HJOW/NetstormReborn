@@ -11,6 +11,7 @@
 
 namespace netstorm::client {
 struct ChatSubmitHooks; // 실제 제출의 메모리 장치만 같은 소유자에 연결하며 파서 헤더 결합을 줄인다.
+struct ChatPacketHooks; // 일반 송신 부모도 같은 manager/수신자 배열의 실제 소유자를 빌린다.
 // 원문42e050 재초기화는 이전 manager를free하지 않으므로 current와 할당 수명을 구별한다.
 class ClientChatManagerGlobals {
 public:
@@ -43,4 +44,5 @@ private:
 // 실제 같은 owner를 장기 캡처해 allocate/memory/순수CRTcopy만 연결한다. 나머지 하위는 필수 외부 경계다.
 o::ChatManagerPrefixHooks MakeClientChatManagerHooks(std::shared_ptr<ClientChatManagerGlobals> owner);
 ChatSubmitHooks MakeClientChatSubmitHooks(std::shared_ptr<ClientChatManagerGlobals> owner); // 같은 수명 소유자의 memory/allocate/release만 실제 제출에 연결한다.
+ChatPacketHooks MakeClientChatPacketHooks(std::shared_ptr<ClientChatManagerGlobals> owner); // 송신의 현재 물리와0042d1b0 추가/확장/반납을 같은 실제 소유자에 연결한다. 전역/전송/수신은 caller의 장치다.
 }

@@ -10,6 +10,7 @@
 # 게임 본체. 실행 파일과 테스트가 함께 쓰도록 정적 라이브러리로 묶는다.
 # 소스 목록은 각 폴더의 CMakeLists.txt 가 target_sources 로 더한다.
 add_library(netstorm STATIC)
+target_sources(netstorm PRIVATE client/RawChatPacket.cpp client/RawChatPacket.h) # 일반 채팅 패킷 작성과 송신 직전 길이 확정이다.
 target_sources(netstorm PRIVATE client/RawEdgeScroll.cpp client/RawEdgeScroll.h) # 원문 가장자리 시간/입력과 현재 카메라 목표 쓰기다.
 target_sources(netstorm PRIVATE client/ScreenPresentation.cpp) # 원본과 다른 Windows10/11 전체화면 비율/입력 계산이다.
 target_sources(netstorm PRIVATE o/RawSmokeEffect.cpp o/RawSmokeEffect.h) # 실제 냉각 연기 생성/프레임/색/소멸이다.

@@ -1,0 +1,92 @@
+{
+  "unit": 584,
+  "date": "2026-10-30",
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "nativeRows": 256,
+  "nativeSendRows": 202,
+  "nativeObserverRows": 54,
+  "nativeObservationRuns": 2,
+  "nativeObservations": 512,
+  "nativeRepeatDifferences": 0,
+  "fixtureSha256": "d5e0a3687937bdab1df599ef021135c744b151c04722793bd93bc3c6d3ebc5ef",
+  "focusedTests": 40,
+  "failedChecks": 0,
+  "registeredCppTests": 3467,
+  "focusedRuns": [
+    {
+      "filter": "ChatPacket",
+      "returnCode": 0,
+      "summary": "3 test(s), 0 failed check(s)"
+    },
+    {
+      "filter": "ChatMessage",
+      "returnCode": 0,
+      "summary": "1 test(s), 0 failed check(s)"
+    },
+    {
+      "filter": "ChatFormat",
+      "returnCode": 0,
+      "summary": "1 test(s), 0 failed check(s)"
+    },
+    {
+      "filter": "ClientChatRuntime",
+      "returnCode": 0,
+      "summary": "8 test(s), 0 failed check(s)"
+    },
+    {
+      "filter": "ChatWindowClient",
+      "returnCode": 0,
+      "summary": "18 test(s), 0 failed check(s)"
+    },
+    {
+      "filter": "ChatSubmit",
+      "returnCode": 0,
+      "summary": "3 test(s), 0 failed check(s)"
+    },
+    {
+      "filter": "DotCommandDispatch",
+      "returnCode": 0,
+      "summary": "3 test(s), 0 failed check(s)"
+    },
+    {
+      "filter": "ClientChatCoreOwners",
+      "returnCode": 0,
+      "summary": "3 test(s), 0 failed check(s)"
+    }
+  ],
+  "buildWarnings": 0,
+  "buildErrors": 0,
+  "buildLogSha256": "e6a8a14e36eea012584ec1a67c7859da9119ffb08bca59859769785e87d13c89",
+  "gameSha256": "77bda6509a4349722c75d2bfc932830c60223c87d069e9754115847cc2fb1247",
+  "testsSha256": "78f6cd46d17b04cd81cc6967fd65652f7cd2a7d033839aa1c1887d5cda97dc68",
+  "protected": {
+    "count": 2594,
+    "changed": []
+  },
+  "existingFixturesUnchanged": 733,
+  "currentFixtures": 734,
+  "actualGuiRuns": 0,
+  "packageCreated": false,
+  "fullCppTests": false,
+  "all34Routes": false,
+  "windows11Hardware": false,
+  "networkExecuted": false,
+  "multiplayerBranchesNewlyTested": false,
+  "capturesSacrificesSpecificEnemyAttacksOrVictoriesReproduced": false,
+  "initialObservationFailure": "FS[0] 예외 체인의 격리 메모리 누락으로 첫 입력 진입 중단. 0페이지 격리 매핑 뒤 최초256행을 신규 생성했다. fixture를 고친 실패는 없다.",
+  "actualOwnerIntegration": [
+    "RawChatMessage 실제 본문→SendChatPacket",
+    "기존 AddChatRecipient32→64 확장/이전 배열 반납/자기 중복",
+    "실제 ObserveChatPacket의 송신 직전 헤더 길이 확정",
+    "선택한 실제 송신 누락의 예외/선행 자기 추가 유지"
+  ],
+  "limits": [
+    "수신/서버 중계0042dc90·0042ed30과 실제 Console 일반 Enter는 미연결",
+    "일반 send 장치를 빈 성공으로 대체하지 않음",
+    "MP 채널1/11은 정적 분기만 구현하고 새 검사 없음",
+    "최종 게임 실행/배포·전체C++·34경로/Win11은 이번 단위에서 실행하지 않음"
+  ],
+  "rawDirectory": "extracted/cpp-chat-packet-584-20261030/"
+}

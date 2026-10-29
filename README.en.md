@@ -184,7 +184,7 @@ cmake --build cpppj/build --config Release
 ctest --test-dir cpppj/build --build-config Release --output-on-failure
 ```
 
-CTest registers a single wrapper test and currently has 3,464 registered C++ tests. A full run takes several minutes; see the [handover](LEFT_JOBS.md) for the distinction between each unit's focused checks and full-suite results. With the Visual Studio generator, the executable is `cpppj/build/bin/Release/Netstorm.exe`. Open the reconstruction's main menu in windowed mode with:
+CTest registers a single wrapper test and currently has 3,467 registered C++ tests. A full run takes several minutes; see the [handover](LEFT_JOBS.md) for the distinction between each unit's focused checks and full-suite results. With the Visual Studio generator, the executable is `cpppj/build/bin/Release/Netstorm.exe`. Open the reconstruction's main menu in windowed mode with:
 
 ```powershell
 .\cpppj\build\bin\Release\Netstorm.exe --run originals --window
