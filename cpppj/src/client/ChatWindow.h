@@ -42,6 +42,8 @@ struct ChatWindowHooks {
     std::function<std::int16_t(std::uint32_t,std::uint32_t)> frameHeight; //419850의 실제 프레임 헤더+1a다.
     std::function<void(std::uint32_t,std::int32_t)> requestScroll,relativeScroll; //4ba360/4ba380의 실제 요청이다.
     std::function<void(std::uint32_t)> requestBottom; //4ba3b0의 실제 맨 아래 요청이다.
+    std::function<bool(std::uint32_t)> atBottom; //4ba400의 로그 추가 전 현재 스크롤 위치 판정이다.
+    std::function<void(std::uint32_t,std::string_view)> appendLog; //4ba8f0의 같은 실제 StyleText/공유 버퍼 파서다.
     std::function<std::uint32_t(std::uint32_t,std::uint32_t,std::uint32_t,std::uint32_t)> baseHandle; //464990의 같은 Help 기본 입력이다.
     std::function<void(std::uint32_t,std::uint32_t,std::uint32_t,std::uint32_t)> bubble; //464e90의 현재 부모 사건이다.
     std::function<bool(std::string_view)> recipient; //42dc70의 실제 다중 수신 대상 유효성 검사다.
@@ -68,6 +70,7 @@ public:
     std::uint32_t Handle(std::uint32_t token,std::uint32_t event,std::uint32_t first,std::uint32_t second,std::optional<std::string_view> text={}) const; //42fab0의 동일 사건이며 문자열 pointer는 별도 현재 뷰로 전달한다.
     void NormalizePrefix(std::uint32_t token) const; //42ebc0의 두 번 입력 조회/접두 재작성이다.
     void ChangeRecipient(std::uint32_t token,std::optional<std::string_view> name,std::uint32_t operation) const; //42ea60의0추가/1제거다.
+    void AppendLog(std::uint32_t token,std::string_view text,std::span<const std::uint32_t> context={}) const; //42eca0의 자식 문맥 저장/부모 문맥 쓰기·복원/현재 자식 재조회 순서다.
     void Destruct(std::uint32_t token) const; //42e8d0의 현재 root0/공통 자식 우선 수명이다.
 private:
     HudChatNode& Node(std::uint32_t token) const; // 실제 root와 기본 주소가 같아야 한다.

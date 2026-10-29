@@ -300,3 +300,4 @@ target_sources(netstorm PRIVATE ObjectDumpDisk.cpp ObjectDumpDisk.h)
 target_sources(netstorm PRIVATE ClientDiagnostics.cpp ClientDiagnostics.h) # 실제 Client/선택/F7에 같은 진단 부품을 연결한다.
 target_sources(netstorm PRIVATE ClientOptionsFile.cpp ClientOptionsFile.h) # 원문 설정 바이트와 UTF-8 설치 경로의 호환 저장을 분리한다.
 target_sources(netstorm PRIVATE NativeIntroState.cpp NativeIntroState.h) # 새 설치도 원문 State39/40/41을 거쳐 메뉴에 도달한다.
+target_sources(netstorm PRIVATE TraceChat.cpp TraceChat.h) # 실제 공유 로그의 원문 Chat 전달 관문/문맥을 연결한다.

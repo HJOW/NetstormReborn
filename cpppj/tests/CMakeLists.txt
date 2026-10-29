@@ -2412,5 +2412,7 @@ set_source_files_properties(ClientDiagnosticsTests.cpp PROPERTIES COMPILE_DEFINI
 set_source_files_properties(ObjectDumpTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_OBJECT_DUMP_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/object-dump-x86.tsv\";NETSTORM_OBJECT_DUMP_WORK=\"${CMAKE_SOURCE_DIR}/../extracted/cpp-object-dump-558-20261029\"")
 set_source_files_properties(TraceLogTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_TRACE_LOG_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/trace-log-x86.tsv\"")
 target_sources(netstorm_tests PRIVATE NativeIntroStateTests.cpp) # 새 설치의 원문39~41/전체 상태 복사/메뉴 복귀를 검증한다.
+target_sources(netstorm_tests PRIVATE TraceChatTests.cpp) # 진단→Chat의 원문 전체 문맥/현재자식/부분효과를 대조한다.
+set_source_files_properties(TraceChatTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_TRACE_CHAT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/trace-chat-x86.tsv\"")
 set_source_files_properties(NativeIntroStateTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_NATIVE_INTRO_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/native-intro-state-x86.tsv\"")
 set_source_files_properties(ObjectTraceMainTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_OBJECT_TRACE_MAIN_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/object-trace-main-x86.tsv\";NETSTORM_OBJECT_TRACE_VTABLE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/object-trace-vtables-x86.tsv\";NETSTORM_OBJECT_TRACE_COORDINATE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/object-trace-coordinate-x86.tsv\"")

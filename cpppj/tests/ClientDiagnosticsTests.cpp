@@ -43,3 +43,11 @@ TEST_CASE(ClientDiagnostics_ConfigChangeUsesSameClientLogLevel) {
     client.Configuration().SetInt("tracelevel",7);CHECK(&client.DiagnosticGlobals()==state && state->log.level==7);
     state->log.level=30;client.Configuration().SetInt("tracelevel",11);CHECK(state->log.level==11); // 외부 효과 중 명시 설정 변경도 같은 현재 임시 모드 주소를 갱신한다.
 }
+
+// 실제 Client 로그 장치의0관문과 초기 NULL Chat 경계를 창/파일 없이 실행한다.
+TEST_CASE(ClientDiagnostics_TraceChatGateAndActualNullCurrentBeforeUi) {
+    ClientOptions options;options.gameDirectory=std::filesystem::path(__FILE__).parent_path().parent_path().parent_path()/"originals";Client client{options}; // Run 없이 BSS0인 같은 Client 전역만 만든다.
+    auto& globals=client.DiagnosticGlobals();auto hooks=client.DiagnosticLogHooks(); // 실제 제품의 CRT 로그/console 연결이며 console만 선택한다.
+    CHECK(globals.traceToChat==0 && globals.log.stream==0);hooks.console("%s");globals.traceToChat=1;hooks.console("100%% trace\n");CHECK(globals.log.stream==0 && globals.traceToChat==1);
+    bool rejected{};try { hooks.console("%s"); }catch (const std::logic_error&) { rejected=true; }CHECK(rejected); // NULL Chat에서도 서식 뒤 포인터 조회 순서를 유지한다.
+}

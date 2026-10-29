@@ -1,0 +1,13 @@
+{
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon / 2026-10-23",
+  "observations": 37,
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_local_mission_transport.py": "db71da65079aa9a985a3a833edd224f089ba9a20137d92042551cb346937eb78",
+    "tools/decomp_trace_chat.py": "8eb06245d3aec3e47f146c9cd4f51a4a955d5126ee46f3fc79d40a3597471bfa"
+  },
+  "fixtureSha256": "2e6df936cef3b895de5033fe6130db00065b5d4f933509b95a26e229d3c9a974",
+  "scope": "434f40/42f190/42eca0 전체 원문. formatter는 정의된 인자 없는 서식의 호스트 CRT 장치이며 UI atBottom/parse/requestBottom은 명시 관측/변경/중단 장치다. 원본 게임/GUI/네트워크 실행 없음."
+}

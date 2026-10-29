@@ -399,6 +399,8 @@ void UberGump::CleanupNativeStateWorld(std::uint32_t reason) {
 }
 // 별도 로그인 값 없이 현재 월드의 같은 Session 전역을 직접 조회한다.
 std::uint32_t UberGump::CurrentSubscriber() const { return client_.CurrentSubscriber(); }
+// 실제 공통 메뉴와 Client 전역을 사용하며 표시용 별도 로그/스타일을 만들지 않는다.
+void UberGump::ForwardDiagnosticChat(std::uint32_t enabled,std::string_view format) { rawButtons_->Menus()->ForwardDiagnosticChat(enabled,format); }
 // 기본 메뉴를 초기화한 다음 프레임에 미션을 시작한다.
 void UberGump::StartMission(std::string name) { state_.Post({"MissionBegin",std::move(name)}); }
 // 캠페인 이름의 설정 객체를 보존하여 officalN.title 같은 참조를 복원한다.

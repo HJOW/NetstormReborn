@@ -70,6 +70,17 @@ std::uint32_t ChatWindow::Create() const {
 }
 // 실제 표시 재부착의 수식/콜백 순서는 이미 동결한 기하 본체를 사용한다.
 void ChatWindow::Attach(std::uint32_t token,float x,float y,std::uint32_t parent,std::uint32_t mode) const { if (!hooks_.geometry) throw std::runtime_error("ChatWindow 실제 Attach 본체 없음");hooks_.geometry->Attach(token,x,y,parent,mode); }
+// 원문은 자식+a4의 문맥을 저장하지만 지정/복원은 부모+80에 쓴다. 자식 스타일을 고쳐 원문 동작을 바꾸지 않는다.
+void ChatWindow::AppendLog(std::uint32_t token,std::string_view text,std::span<const std::uint32_t> context) const {
+    const auto child=Node(token).text;const auto saved=Base(child).textContext; // 첫 자식과32BYTE를 하위 호출 전에 고정한다.
+    if (!context.empty()) {
+        if (context.size()!=8) throw std::invalid_argument("Chat 로그 문맥8DWORD 계약");
+        std::array<std::uint32_t,8> selected;std::copy(context.begin(),context.end(),selected.begin());Base(token).textContext=selected; // 부모/자식 문맥 alias도 원문 지역 사본을 거친다.
+    }
+    const auto bottom=Need(hooks_.atBottom)(child);Need(hooks_.appendLog)(Node(token).text,text);
+    if (bottom) Need(hooks_.requestBottom)(Node(token).text);
+    Base(token).textContext=saved; // 원문 정상 복귀에서만 복원한다. 하위 예외에서 앞선 부분효과를 취소하지 않는다.
+}
 // 이 목록은 색 번호를 의미 색 이름으로 재계산하지 않고 원문 문자열 그대로 만든다.
 void ChatWindow::Completions() const {
     for (std::uint32_t color=0;color<256;++color) { state_.colors.push_back("~[C."+std::to_string(color)+']');state_.backgrounds.push_back("~[B."+std::to_string(color)+']'); } // 두 실제256개 문자열 목록이다.

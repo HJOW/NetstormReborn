@@ -120,7 +120,8 @@ public:
     std::uint32_t CreateChatWindow(RawChatWindowContext context); // 실제 네 자식·편집/로그·공유128줄 버퍼와 명령 등록 공장이다.
     std::uint32_t ChatWindowRoot() const; // 원문 현재 전역의 실제 생존만 읽는다.
     const ChatWindow* ChatBackend() const;const HudChatGeometry* ChatGeometryBackend() const; // 같은 실제 본체를 빌린다.
-    void AppendChatLog(std::uint32_t token,std::string_view text); // 현재 실제 스크롤 노드에 원문 스타일 문자열을 추가한다.
+    void AppendChatLog(std::uint32_t token,std::string_view text,std::span<const std::uint32_t> context={}); // 원문42eca0의 현재 자식/스크롤과 부모 문맥 저장·복원으로 실제 로그를 추가한다.
+    void ForwardDiagnosticChat(std::uint32_t enabled,std::string_view format); // 원문434f40의 현재 색·Chat 전역/인자 없는 서식을 같은 실제 공장에 전달한다.
     std::uint32_t InvokeChatCommand(std::uint32_t callback); // 실제 clear/quit callback의 원문 효과다. 미지원 콜백은 거부한다.
     void CloseChatWindows(); // 부분 생성/미부착 자식과 모든 실제 Chat root를 공통 수명으로 반납한다.
     RawBackgroundGifControls& EnableBackgroundGifs(RawBackgroundGifContext context); // 실제 VFS/설정과 GIF 공장을 같은 UI에 설치한다.

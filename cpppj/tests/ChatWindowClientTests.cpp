@@ -12,6 +12,7 @@
 #include "client/TextEntryStorage.h"
 #include "client/ScriptCommand.h"
 #include "client/PaletteShade.h"
+#include "client/TraceChat.h" // 같은 실제 UI의 비영 진단 전달도 공유 로그/문맥/스크롤을 사용한다.
 #include "platform/Bitmap.h"
 #include <algorithm>
 #include <cstdlib>
@@ -101,6 +102,16 @@ TEST_CASE(ChatWindowClient_PartialCreationAndSelectedUnboundDevicesAreExplicit) 
     ChatScene scene;const auto before=scene.Count();scene.failTranslation=true;bool rejected{};try { scene.Create(); }catch (const std::runtime_error&) { rejected=true; }CHECK(rejected && scene.Count()>before && scene.client.ChatWindowGlobals()->window.current==0);scene.menus->CloseChatWindows();CHECK(scene.Count()==before);
     scene.failTranslation=false;const auto token=scene.Create();scene.menus->TextEntryControls()->Backend().SetText(scene.Root(token).console,std::span("hello",6));rejected=false;try { scene.buttons.HandleGump(token,0x02000038,scene.Console(token).serial,0); }catch (const std::logic_error&) { rejected=true; }CHECK(rejected && scene.Input(token).Text()=="hello\n");scene.Input(token).Select(6,6);
     rejected=false;try { scene.buttons.HandleGump(scene.Root(token).console,9,0,0); }catch (const std::logic_error&) { rejected=true; }CHECK(rejected);scene.menus->CloseChatWindows();CHECK(scene.Count()==before && scene.menus->TextEntryControls()->Storage().BufferCount()==0);
+}
+
+// 비영 진단 관문과 현재색/공유 로그/파서/스크롤·부모 문맥 복원을 실제 UI에 함께 실행한다.
+TEST_CASE(ChatWindowClient_TraceRouteActualLogContextAndScrollPreservation) {
+    ChatScene scene;const auto token=scene.Create();auto& root=scene.Root(token);auto& text=*static_cast<ScrollingTextGumpNode*>(scene.menus->Node(root.text));const auto saved=text.textContext; // 같은 실제 부모/자식 물리다.
+    root.textContext.fill(0x12345678);text.scroll=-1000000000;text.scrollRequest=12345;auto globals=scene.client.ChatWindowGlobals(); // 맨 아래가 아닌 명시 실제 스크롤 입력이다.
+    scene.menus->ForwardDiagnosticChat(0,"ignored\n");CHECK(globals->log.lineCount==0 && root.textContext[0]==0x12345678);
+    scene.menus->ForwardDiagnosticChat(1,"100%% trace\n");CHECK(globals->log.lineCount==1 && root.textContext==saved && text.textContext==saved && text.scrollRequest==12345);
+    text.scroll=1000000000;text.scrollRequest=7;scene.menus->ForwardDiagnosticChat(0xffffffffU,"second\n");CHECK(globals->log.lineCount==2 && text.scrollRequest==-2 && root.textContext==saved);
+    scene.client.ChatWindowGlobals()->window.current=0;scene.menus->ForwardDiagnosticChat(1,"no current\n");CHECK(globals->log.lineCount==2);scene.menus->CloseChatWindows();
 }
 
 // 원문 세 callback29행과 실제 Client/로그/자식/예약 장치를 같은 독립 입력에서 대조한다.

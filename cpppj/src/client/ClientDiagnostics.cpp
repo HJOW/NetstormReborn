@@ -2,6 +2,9 @@
 #include "client/ClientDiagnostics.h"
 #include "client/ClientMain.h"
 #include "client/ClientGameplayGlobals.h"
+#include "client/ClientChatWindowGlobals.h" // 초기/종료 경계도 같은 현재 Chat 포인터를 읽는다.
+#include "client/UberGump.h" // 진단 문자열을 실제 현재 공통 UI에 전달한다.
+#include "client/TraceChat.h"
 #include "client/RawSurfaceWorld.h"
 #include "client/ObjectDumpDisk.h"
 #include "o/RawTerrainBitmap.h"
@@ -23,8 +26,14 @@ bool DispatchDiagnosticKey(InputEvent event,const std::function<void()>& dump) {
     if (!dump) throw std::logic_error("개발자 F7 실제 덤프 미연결");dump();return true;
 }
 ClientTraceGlobals& Client::DiagnosticGlobals() { return *trace_; } // 같은 장기 owner를 빌리며 조회로 상태를 초기화하지 않는다.
-TraceLogHooks Client::DiagnosticLogHooks() { // 434f40은 시작에서0을 쓰는 같은 관문이며 현재 정상 제품에서는 전달을 생략한다.
-    return MakeObjectDumpDiskLogHooks([this](std::string_view) { if (trace_->traceToChat) throw std::logic_error("진단 traceToChat의 42f190 스타일 전달 미복원"); });
+TraceLogHooks Client::DiagnosticLogHooks() { //434f40의 현재 관문/색/포인터와 같은 실제 Chat 부모에 연결한다.
+    return MakeObjectDumpDiskLogHooks([this](std::string_view text) {
+        if (menu_) { menu_->ForwardDiagnosticChat(trace_->traceToChat,text);return; }
+        TraceChatHooks hooks;hooks.color=[this] { return screen_ ? screen_->Colors().named.at(9).index : 0U; }; // 원문 화면 초기화 전의 색 전역은 BSS0이다.
+        hooks.currentChat=[this] { return chatWindowGlobals_->window.current; };
+        hooks.append=[](auto,auto,auto) { throw std::logic_error("trace Chat 현재 포인터의 실제 UI 소유자 없음"); }; // 실제 포인터가 남아 있는데 UI가 없으면 가짜 성공으로 넘기지 않는다.
+        ForwardTraceToChat(trace_->traceToChat,text,hooks);
+    });
 }
 void Client::WriteDiagnosticLog(std::int32_t level,std::string_view text,std::size_t prefixBytes) { WriteRawTraceLog(trace_->log,level,text,prefixBytes,DiagnosticLogHooks()); } // 스크린샷과 선택 trace도 같은 현재 필터/FILE을 쓴다.
 void Client::TraceObject(std::uint32_t sid) { // 현재 물리 소유자를 고정하지만 count/검사/메타맵/권한은 같은 실제 주소를 빌린다.

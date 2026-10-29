@@ -1,5 +1,6 @@
 // 원본 메뉴 계층의 실제 처리기를 단일 Client 등록표·트리·입력·표면에 조립한다.
 #include "client/RawMenuControls.h"
+#include "client/TraceChat.h" // 원문 진단 전달도 같은 실제 Chat 공장을 빌린다.
 #include "client/TellFileMenus.h"
 #include "client/DrawSort.h"
 #include "client/GumpFormBinding.h"
@@ -701,7 +702,14 @@ std::uint32_t RawMenuControls::CreateChatWindow(RawChatWindowContext context) { 
 std::uint32_t RawMenuControls::ChatWindowRoot() const { const auto& s=*impl_;if (!s.chatContext) return 0;const auto token=s.chatContext->globals->window.current;const auto* node=Find(s.chatRoots,token);return node && !(node->flags&0x10000U) ? token : 0U; } // 현재 전역을 임의 복구하지 않는다.
 const ChatWindow* RawMenuControls::ChatBackend() const { return impl_->chatWindow.get(); } // 실제 설치한 본체다.
 const HudChatGeometry* RawMenuControls::ChatGeometryBackend() const { return impl_->chatGeometry.get(); } // 같은 현재 자식 기하다.
-void RawMenuControls::AppendChatLog(std::uint32_t token,std::string_view text) { auto& s=*impl_;const auto* root=Find(s.chatRoots,token);if (!root) throw std::logic_error("Chat 실제 로그 root 없음");s.titleMarkup->Parse(root->text,text); } // 같은 실제 공유 로그/스타일 파서다.
+void RawMenuControls::AppendChatLog(std::uint32_t token,std::string_view text,std::span<const std::uint32_t> context) { auto& s=*impl_;if (!s.chatWindow) throw std::logic_error("Chat 실제 로그 처리기 없음");s.chatWindow->AppendLog(token,text,context); } // 같은 실제 공유 로그/스타일 파서와 원문42eca0 부모를 사용한다.
+// 색을 읽은 뒤의 서식 처리와 현재 Chat 포인터 재조회를 공통 로그 부모에 공급한다.
+void RawMenuControls::ForwardDiagnosticChat(std::uint32_t enabled,std::string_view format) {
+    auto& s=*impl_;TraceChatHooks hooks;hooks.color=[&s] { return s.palette.named.at(9).index; };
+    hooks.currentChat=[&s] { return s.chatContext ? s.chatContext->globals->window.current : 0U; };
+    hooks.append=[this](auto token,auto text,auto context) { AppendChatLog(token,text,context); };
+    ForwardTraceToChat(enabled,format,hooks);
+}
 std::uint32_t RawMenuControls::InvokeChatCommand(std::uint32_t callback) {
     auto& s=*impl_;if (!s.chatContext) throw std::logic_error("Chat 실제 명령 문맥 없음");
     if (callback==0x42f680U) { if (const auto token=s.chatContext->globals->window.current) { const auto* node=Find(s.chatRoots,token);if (!node) throw std::logic_error("Chat clear 실제 현재 root 없음");s.title->ReplaceText(node->text,std::span("",1),0);s.title->RequestBottom(node->text); }return 0; } // 원문은 완료 입력 줄만 제거하며 미완료 끝 줄을 보존한다.
