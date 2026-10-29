@@ -178,6 +178,7 @@
 - [x] **R1-2a (2026-10-28 완료):** MonoGame 출력 호스트(`Netstorm.Client.Host` 실행 + `Netstorm.Client/Host` 순수 부분): `IScreenOutput` 구현(변경 사각형만 RGBA 부분 업로드), 정수 최근접 확대·검정 여백, 전체화면 borderless 창과 F11 전환, 마우스 역변환·전체화면 커서 제한, 키·글자·버튼 → `InputQueue`, 프레임 루프 골격(`--frames`·`--ui-script`·`--ui-report`·`--set`). 기존 `NetstormGame`/`DisplayManager`는 동결하고 별도 진입으로 둔다(결정 5). [문서 6절](docs/dotnet-client-screen-20261028.md#6-r1-2a-monogame-출력-호스트-같은-날-hjow-athlon). **남은 것:** 그리기 내용·세션·소리(R2·R3·R4 이후), 라벨 클릭·report·kernel-tell(R3 이후).
 - [x] **R1-2b (2026-10-28 완료, 호스트 없이 가능한 부분):** `ScreenCapture`(cpppj와 byte 동일한 BMP)·`UiScript`/`UiScriptRunner`(esc·key·keyup·pointer·좌표/라벨 클릭·snapshot)·`dotnetpj/tools/cpp_frame_compare.py`(파일·폴더 비교, 종료 코드 0/1/2). 오라클 캡처(메인 메뉴 프레임 30)가 이 PC에서 결정적으로 만들어짐을 확인했다. [문서 5절](docs/dotnet-client-screen-20261028.md#5-r1-2-부분-캡처스크립트-도구와-오라클-확인-같은-날). **남은 것:** `--ui-script`/`--mission`/`--frames`/`--set` 실행 인자를 받는 dotnetpj 실행 진입과 그 안에서 두 도구를 부르는 프레임 루프는 R1-2a의 호스트가 있어야 하며, 라벨 클릭·report·kernel-tell 등은 R3 이후다.
 - [ ] **R2 — 그리기 원시·팔레트·글꼴 (진행 중: R2d-3 일반 객체 그리기 완료):** `VFXDraw`·`VFXMappedDraw`·`VFXLine`·`VFXTransform`, `RawShapeToBuffer`, `SpriteDraw`, `*ColorMaps`, `Palette*`, `RawColorSort*`, `BitmapFont`, `GifImage`, `RawImage`를 `Netstorm.Client/Display`로 옮긴다. 이때 `Screen.LoadPalette`의 색 표 계산(`BuildPaletteColorTable`·`BuildGumpShadeMaps`)을 연결한다(R2a에서 완료). 묶음마다 fixture 연결·C# 수정·`--ports-reflect`·단위 기록을 남긴다. R2a는 [0.23](#023-단위-기록--r2a-팔레트-3종과-loadpalette-연결-2026-10-28-hjow-athlon)에서, R2b는 [0.24](#024-단위-기록--r2b-vfx-그리기-원시-2026-10-28-hjow-athlon)에서, R2c는 [0.25](#025-단위-기록--r2c-색-표-2026-10-28-hjow-athlon)에서, R2d-1은 [0.26](#026-단위-기록--r2d-1-변환합성이미지시작-2026-10-29-hjow-athlon)에서, R2d-2는 [0.27](#027-단위-기록--r2d-2-판본표시자료캡처-2026-10-29-hjow-athlon)에서 완료했다. R2d-3 본체와 원본 명령열 1,389행 대조는 0.28에서 완료했다. 실자산/세션 연결은 R4·R5에 남는다. `GifImage` 적응·`BitmapFont` 적응은 L1에 UI 인프라(메뉴·Gump·글꼴 저장소)가 필요해 R3 Gump 이식과 함께 다룬다.
+- [ ] **현재 R3h(2026-10-29):** 한 줄/다중 줄 조각·버퍼/그림/실제 글꼴·SHP 픽셀/스크롤 표시까지0.38~0.39에서 연결했다. 다음은 StyleTextMarkup·ScrollingTextGumpWidgets/Markup의 파서/생성/수명/입력, 이후 MenuGump 전체/실제 메뉴 조립이다. R3 전체 완료로 세지 않는다.
 - [ ] 이후 R3(D1) → R4(M1) → R5(D2) → R6 → R7 → R8 순서로 진행하고, 단위마다 이 절의 체크와 [0.4](#04-기존-dotnetpj-소스의-재수정-판정) 판정표를 갱신한다.
 
 ### 0.10 이번 문서 작업 기록
@@ -557,6 +558,13 @@
 - **완료:** StyleText의 값복사/실제 소유 체인·반납·두 번 측정/출력·판본별alias/head/next 조회·짧은 명령과 한 줄 TextGump의 실제 생성/라벨/맞춤/내부클립/수명을 같은 글꼴/팔레트/픽셀에 연결했다. [범위·근거·남은 연결](docs/dotnet-styletext-single-20261029.md).
 - **검증:** 집중19개가 통과했다. C++ styletext.json은 정적 보고서이며 독립 원본 실행 기대값이 없어 이 단위를 L1로 세지 않는다. 기존 fixture99/reflected-commit은 유지하고 포트 맵만182행으로 갱신했다. 최초 장면6개 실패는 필수Kill 훅 누락을 검사 배선에서 고쳐 통과했다. 두 번째head 스냅숏 변이는 고정 계약에서 실패한 뒤 원복했으며 실제 원본 대조를 대신하지 않는다. 이후 전체 **1,664개 통과(Assets363·Core1030·Client271), 실패/건너뜀0**, Release 전체 빌드 경고/오류0이다.
 - **다음:** R3h-2 StyleTextBuffer/다중 줄 ScrollingTextGump·Markup/StyleTextMarkup, 이후 MenuGump 레이아웃/컨트롤/위젯/입력/Draw와 실제 메뉴 조립이다. BindMenuLayoutStyleText와 다중 줄 포함Draw 분류는 해당 조립 때 연결한다. 실제 캡처0/기존 코드·검사 은퇴0, 전체 목표는 계속 진행 중이다. 보호 디렉터리/cpppj/공통 인계/AGENTS.md는 변경하지 않았고 게임/창·금지된 실제 재현·멀티플레이 검사도 하지 않았다. 외부 TODO.md는 커밋에서 제외한다.
+
+### 0.39 단위 기록 — R3h-2 버퍼·그림·다중 줄 표시 (2026-10-29, HJOW-Athlon)
+
+- **착수:** AGENTS.md·이 문서·공통 인계 제약을 다시 읽었다. 직전 턴은 스타일 조각/한 줄 텍스트의 구현·검증·커밋이 완료된 진행이며 시작 HEAD는 `b9be2a82a0f9`다. 현재/마지막 정밀 디컴파일 호스트는 모두 HJOW-Athlon이고 외부 TODO.md만 수정돼 있었다.
+- **완료:** 실제 StyleTextBuffer의 완료/미완료 입력과 표시 복제 소유·줄바꿈·반납, Markup 그림의 현재 자산/배율/수명/실제 SHP·색표 출력, ScrollingTextGump의 배치/맞춤/스크롤/선택/내부클립/가시 줄 출력과3인자Draw 분배를 같은 저장소에 연결했다. [상세 범위·검증·남은 연결](docs/dotnet-stylebuffer-scroll-20261029.md).
+- **검증 완료:** 집중31개와 전체 **1,695개 통과(Assets363·Core1030·Client302), 실패/건너뜀0**, Release 전체 빌드 경고/오류0이다. 독립 원본 실행 기대값이 없어 L1로 세지 않으며 fixture99/reflected-commit을 유지하고 포트 맵만188행으로 갱신했다(갱신 뒤 형식/경로2개도 통과). 글자·그림 혼합 체인의 실제 픽셀과 C++/C# 대입 평가 차이의 현재 노드 재조회도 검사했다. 변경12파일의 UTF-8·한국어와 보호 경로 변경0을 확인했다.
+- **다음:** R3h-3 StyleTextMarkup·ScrollingTextGumpWidgets/Markup의 파서/생성/버퍼 소유 수명/slider/입력, 이후 MenuGump 전체와 실제 메뉴/전체 GameAssets/GIF/호스트 조립이다. 실제 캡처0/기존 코드·검사 은퇴0이고 전체 목표는 계속 진행 중이다. 보호 경로/cpppj/공통 인계를 수정하지 않았으며 게임/창·금지된 실제 재현·멀티플레이 검사를 하지 않았다. 외부 TODO.md는 커밋에서 제외한다.
 
 ## 1. 지금까지의 완료 범위 — 이관 기록 색인
 

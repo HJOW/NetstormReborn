@@ -28,7 +28,7 @@ public sealed class TextGumpHooks
 
 /// <summary>원본 한 줄 TextGump의 생성/소유/맞춤/내부 클립과 scalar 소멸이다.
 /// 근거: cpppj/src/client/TextGump.h/.cpp, 004bb170·004bb240·004bb250·004bb310·004bb380·004bc910.
-/// 같은 C++ 파일의 다중 줄 ScrollingTextGump는 StyleTextBuffer 조립 단위에서 추가한다.</summary>
+/// 같은 C++ 파일의 다중 줄 부분은 ScrollingTextGump.cs에 있다.</summary>
 public sealed class TextGump
 {
     /// <summary>현재 등록/판본 전역.</summary>
@@ -89,10 +89,13 @@ public sealed class TextGump
     {
         Node(token).Vtable = _create.Collection.Edition == OriginalEdition.Patch1078 ? 0x5144d4U : 0x505dc0U; Clear(token); Clear(token); return _lifetime.DeleteScalar(token, flags);
     }
-    /// <summary>원본 가상Draw 분류 중 한 줄 처리기를 연결하고 기존 파생 분배를 보존한다. 다중 줄 조립 때3인자 원본 분류를 확장한다.</summary>
+    /// <summary>기존 한 줄 전용 호출을 같은 원본 Draw 분배에 연결한다.</summary>
     public static void BindTextGumpDraw(GumpDrawHooks hooks, Func<uint, TextGump?> single)
+        => BindTextGumpDraw(hooks, single, _ => null);
+    /// <summary>한 줄을 먼저, 다중 줄을 다음으로 조회하고 기존 다른 파생 분배를 보존한다.</summary>
+    public static void BindTextGumpDraw(GumpDrawHooks hooks, Func<uint, TextGump?> single, Func<uint, ScrollingTextGump?> scrolling)
     {
-        ArgumentNullException.ThrowIfNull(single); Action<uint>? previous = hooks.Draw; hooks.Draw = token => { if (single(token) is { } text) text.Draw(token); else if (previous is not null) previous(token); else throw new InvalidOperationException("Gump 가상 Draw 처리기 없음"); };
+        ArgumentNullException.ThrowIfNull(single); ArgumentNullException.ThrowIfNull(scrolling); Action<uint>? previous = hooks.Draw; hooks.Draw = token => { if (single(token) is { } text) text.Draw(token); else if (scrolling(token) is { } multi) multi.Draw(token); else if (previous is not null) previous(token); else throw new InvalidOperationException("Gump 가상 Draw 처리기 없음"); };
     }
     /// <summary>한 줄 scalar 소멸만 같은 실제 수명 처리기에 연결하며 기존 다른 파생 소멸자를 보존한다.</summary>
     public static void BindTextGumpLifetime(GumpLifetimeHooks hooks, Func<uint, TextGump?> resolve)
