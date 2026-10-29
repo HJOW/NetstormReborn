@@ -2076,3 +2076,19 @@ docs/exe/prepared/tutorial3-partial-468-20261027/** -text
 
 # Native 관측에 기록한 클립보드 생성기의 실행 바이트를 보존한다.
 tools/decomp_text_clipboard.py -text
+
+# 단위587~588의 최초 관측 CRLF/빈 마지막 TSV열과 보고서 SHA를 변환 없이 보존한다.
+cpppj/tests/fixtures/battle-leave-x86.tsv -text whitespace=-blank-at-eol
+cpppj/tests/fixtures/battle-abort-state-x86.tsv -text whitespace=-blank-at-eol
+cpppj/battle-leave-native-20261030.json -text
+cpppj/battle-abort-state-native-20261030.json -text
+cpppj/battle-leave-runtime-20261030.json -text
+cpppj/solo-entry-current-20261030.json -text
+# 현재 복원 소스의 기존 혼합 줄바꿈과 새 LF 소스도 재체크아웃 후 같은 바이트로 유지한다.
+cpppj/src/client/UberEditor.inc -text
+cpppj/src/client/RawBattleLeave.h text eol=lf
+cpppj/src/client/RawBattleLeave.cpp text eol=lf
+cpppj/tests/BattleLeaveTests.cpp text eol=lf
+tools/cpp_battle_leave_smoke.py text eol=lf
+tools/cpp_solo_entry_smoke.py text eol=lf
+cpppj/battle-evidence-pins-20261030.json text eol=lf

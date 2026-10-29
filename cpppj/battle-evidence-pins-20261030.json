@@ -1,0 +1,218 @@
+{
+  "unit": 589,
+  "date": "2026-10-30",
+  "host": "HJOW-Athlon",
+  "baseCommit": "64ca9886",
+  "scope": "원본 관측 바이트를 수정하지 않고 Git 저장/재체크아웃 속성만 고정한다.",
+  "pinnedPaths": 19,
+  "autocrlfVariants": [
+    "true",
+    "false"
+  ],
+  "checkoutFilterComparisons": 38,
+  "allIndexAndCheckoutBytesMatch": true,
+  "records": [
+    {
+      "path": "cpppj/src/client/RawBattleLeave.h",
+      "sha256": "0739d60e292d007247b5c5b0c760def43b11c640b9ab143d90fe0fac3accb2be",
+      "indexMatchesWorking": true,
+      "checkoutFilterSha256": {
+        "true": "0739d60e292d007247b5c5b0c760def43b11c640b9ab143d90fe0fac3accb2be",
+        "false": "0739d60e292d007247b5c5b0c760def43b11c640b9ab143d90fe0fac3accb2be"
+      }
+    },
+    {
+      "path": "cpppj/src/client/RawBattleLeave.cpp",
+      "sha256": "5bfc3dc328df15927683e93f190f292662d5fb14ec16a4f56eb59791bce5e29a",
+      "indexMatchesWorking": true,
+      "checkoutFilterSha256": {
+        "true": "5bfc3dc328df15927683e93f190f292662d5fb14ec16a4f56eb59791bce5e29a",
+        "false": "5bfc3dc328df15927683e93f190f292662d5fb14ec16a4f56eb59791bce5e29a"
+      }
+    },
+    {
+      "path": "cpppj/src/client/RawCampaignSession.cpp",
+      "sha256": "220f481c82f275f36b9bb68de48618399401734a4b331c7f4912a3161ab5f2a9",
+      "indexMatchesWorking": true,
+      "checkoutFilterSha256": {
+        "true": "220f481c82f275f36b9bb68de48618399401734a4b331c7f4912a3161ab5f2a9",
+        "false": "220f481c82f275f36b9bb68de48618399401734a4b331c7f4912a3161ab5f2a9"
+      }
+    },
+    {
+      "path": "cpppj/src/client/RawCampaignSessionLogin.inc",
+      "sha256": "7778236fa151e796a34a7047540ee4c8381826a6ac2adc26972bee0b3a0af392",
+      "indexMatchesWorking": true,
+      "checkoutFilterSha256": {
+        "true": "7778236fa151e796a34a7047540ee4c8381826a6ac2adc26972bee0b3a0af392",
+        "false": "7778236fa151e796a34a7047540ee4c8381826a6ac2adc26972bee0b3a0af392"
+      }
+    },
+    {
+      "path": "cpppj/src/client/UberEditor.inc",
+      "sha256": "a749e85a04f68fdacc75b4c576c3ab1fc0d0d36029cb915dbdc28c6df60148d4",
+      "indexMatchesWorking": true,
+      "checkoutFilterSha256": {
+        "true": "a749e85a04f68fdacc75b4c576c3ab1fc0d0d36029cb915dbdc28c6df60148d4",
+        "false": "a749e85a04f68fdacc75b4c576c3ab1fc0d0d36029cb915dbdc28c6df60148d4"
+      }
+    },
+    {
+      "path": "cpppj/src/client/UberGump.cpp",
+      "sha256": "a8e21f4e92e0e0945895e7d361ccdeeb77dc9def54c2be6a682d1bb3c4e0d8bb",
+      "indexMatchesWorking": true,
+      "checkoutFilterSha256": {
+        "true": "a8e21f4e92e0e0945895e7d361ccdeeb77dc9def54c2be6a682d1bb3c4e0d8bb",
+        "false": "a8e21f4e92e0e0945895e7d361ccdeeb77dc9def54c2be6a682d1bb3c4e0d8bb"
+      }
+    },
+    {
+      "path": "cpppj/src/CMakeLists.txt",
+      "sha256": "db3ee8d054176cd879adc2109004a4fe6941e3408073b944aede714418c9ca0b",
+      "indexMatchesWorking": true,
+      "checkoutFilterSha256": {
+        "true": "db3ee8d054176cd879adc2109004a4fe6941e3408073b944aede714418c9ca0b",
+        "false": "db3ee8d054176cd879adc2109004a4fe6941e3408073b944aede714418c9ca0b"
+      }
+    },
+    {
+      "path": "cpppj/tests/BattleLeaveTests.cpp",
+      "sha256": "26e016f629e337855574bae49599893fea81444f42a3f51849017cc809e75394",
+      "indexMatchesWorking": true,
+      "checkoutFilterSha256": {
+        "true": "26e016f629e337855574bae49599893fea81444f42a3f51849017cc809e75394",
+        "false": "26e016f629e337855574bae49599893fea81444f42a3f51849017cc809e75394"
+      }
+    },
+    {
+      "path": "cpppj/tests/CMakeLists.txt",
+      "sha256": "88274ac368e5eb9aa0bf48d8d365443748fd2e6b444e29aafd2509d6136f77ba",
+      "indexMatchesWorking": true,
+      "checkoutFilterSha256": {
+        "true": "88274ac368e5eb9aa0bf48d8d365443748fd2e6b444e29aafd2509d6136f77ba",
+        "false": "88274ac368e5eb9aa0bf48d8d365443748fd2e6b444e29aafd2509d6136f77ba"
+      }
+    },
+    {
+      "path": "tools/decomp_battle_leave.py",
+      "sha256": "8c492eb9befd691a41288cbef17b4f55dd19f3d18ec92a7f8b5dc7dd71190c1c",
+      "indexMatchesWorking": true,
+      "checkoutFilterSha256": {
+        "true": "8c492eb9befd691a41288cbef17b4f55dd19f3d18ec92a7f8b5dc7dd71190c1c",
+        "false": "8c492eb9befd691a41288cbef17b4f55dd19f3d18ec92a7f8b5dc7dd71190c1c"
+      }
+    },
+    {
+      "path": "tools/decomp_battle_abort_state.py",
+      "sha256": "3ef1071d1722f91fd399be8f3e124be174324a9c528c558ecd543f971c0ceadb",
+      "indexMatchesWorking": true,
+      "checkoutFilterSha256": {
+        "true": "3ef1071d1722f91fd399be8f3e124be174324a9c528c558ecd543f971c0ceadb",
+        "false": "3ef1071d1722f91fd399be8f3e124be174324a9c528c558ecd543f971c0ceadb"
+      }
+    },
+    {
+      "path": "tools/cpp_battle_leave_smoke.py",
+      "sha256": "1762a3609c577a9ed509fc039d5836d0ff8f37c8515699197ddb8d4877b622bf",
+      "indexMatchesWorking": true,
+      "checkoutFilterSha256": {
+        "true": "1762a3609c577a9ed509fc039d5836d0ff8f37c8515699197ddb8d4877b622bf",
+        "false": "1762a3609c577a9ed509fc039d5836d0ff8f37c8515699197ddb8d4877b622bf"
+      }
+    },
+    {
+      "path": "cpppj/tests/fixtures/battle-leave-x86.tsv",
+      "sha256": "6e9dc86d33269670b369531fd064727a925695fd741bd4343001a6b7254353a6",
+      "indexMatchesWorking": true,
+      "checkoutFilterSha256": {
+        "true": "6e9dc86d33269670b369531fd064727a925695fd741bd4343001a6b7254353a6",
+        "false": "6e9dc86d33269670b369531fd064727a925695fd741bd4343001a6b7254353a6"
+      }
+    },
+    {
+      "path": "cpppj/tests/fixtures/battle-abort-state-x86.tsv",
+      "sha256": "7c296838727e5af350addc69660f0c89555b590cab1c6dcf3586f1c2afa46748",
+      "indexMatchesWorking": true,
+      "checkoutFilterSha256": {
+        "true": "7c296838727e5af350addc69660f0c89555b590cab1c6dcf3586f1c2afa46748",
+        "false": "7c296838727e5af350addc69660f0c89555b590cab1c6dcf3586f1c2afa46748"
+      }
+    },
+    {
+      "path": "cpppj/battle-leave-native-20261030.json",
+      "sha256": "ee72de2aae4794eeb1b5e52bf731bbf871a0ae7858261dcbd6ca17201bc93b0d",
+      "indexMatchesWorking": true,
+      "checkoutFilterSha256": {
+        "true": "ee72de2aae4794eeb1b5e52bf731bbf871a0ae7858261dcbd6ca17201bc93b0d",
+        "false": "ee72de2aae4794eeb1b5e52bf731bbf871a0ae7858261dcbd6ca17201bc93b0d"
+      }
+    },
+    {
+      "path": "cpppj/battle-abort-state-native-20261030.json",
+      "sha256": "62c6e76049621b5d7dcdc6590d2c21064d325b143571c1667d09fd44ffdb40fb",
+      "indexMatchesWorking": true,
+      "checkoutFilterSha256": {
+        "true": "62c6e76049621b5d7dcdc6590d2c21064d325b143571c1667d09fd44ffdb40fb",
+        "false": "62c6e76049621b5d7dcdc6590d2c21064d325b143571c1667d09fd44ffdb40fb"
+      }
+    },
+    {
+      "path": "cpppj/battle-leave-runtime-20261030.json",
+      "sha256": "40bdc6c779da8bbc942019d9876293ade4476e49d267200ef404ea06bdcd4699",
+      "indexMatchesWorking": true,
+      "checkoutFilterSha256": {
+        "true": "40bdc6c779da8bbc942019d9876293ade4476e49d267200ef404ea06bdcd4699",
+        "false": "40bdc6c779da8bbc942019d9876293ade4476e49d267200ef404ea06bdcd4699"
+      }
+    },
+    {
+      "path": "cpppj/solo-entry-current-20261030.json",
+      "sha256": "0a61456d63b28e7764e1518429e84322f4b0085f42d6bbd0c4c4798dbf33592a",
+      "indexMatchesWorking": true,
+      "checkoutFilterSha256": {
+        "true": "0a61456d63b28e7764e1518429e84322f4b0085f42d6bbd0c4c4798dbf33592a",
+        "false": "0a61456d63b28e7764e1518429e84322f4b0085f42d6bbd0c4c4798dbf33592a"
+      }
+    },
+    {
+      "path": "tools/cpp_solo_entry_smoke.py",
+      "sha256": "a5599d24479211b8621aa6538f4f1b98c56c921f1ef46f0f97aa1d7ca1a40af3",
+      "indexMatchesWorking": true,
+      "checkoutFilterSha256": {
+        "true": "a5599d24479211b8621aa6538f4f1b98c56c921f1ef46f0f97aa1d7ca1a40af3",
+        "false": "a5599d24479211b8621aa6538f4f1b98c56c921f1ef46f0f97aa1d7ca1a40af3"
+      }
+    }
+  ],
+  "newFixtureStorageRepair": [
+    {
+      "path": "cpppj/tests/fixtures/battle-leave-x86.tsv",
+      "originalPinnedSha256": "6e9dc86d33269670b369531fd064727a925695fd741bd4343001a6b7254353a6",
+      "previousNormalizedBlobSha256": "69adc62de97eb9a14c09dc3f7cda009f0e488eb19dea7808e17a2fb174d87ec6",
+      "newIndexSha256": "6e9dc86d33269670b369531fd064727a925695fd741bd4343001a6b7254353a6",
+      "workingCaptureBytesChanged": false
+    },
+    {
+      "path": "cpppj/tests/fixtures/battle-abort-state-x86.tsv",
+      "originalPinnedSha256": "7c296838727e5af350addc69660f0c89555b590cab1c6dcf3586f1c2afa46748",
+      "previousNormalizedBlobSha256": "e63b6a4a287d4e334c50ed31e529ea14f0331cabc867ee83c714aefd5cfedda1",
+      "newIndexSha256": "7c296838727e5af350addc69660f0c89555b590cab1c6dcf3586f1c2afa46748",
+      "workingCaptureBytesChanged": false
+    }
+  ],
+  "indexRefresh": "일반 add는 기존 index 통계를 유지해 최초 비교가 실패했다. 두 fixture만 add --renormalize로 다시 저장해 최초 관측 바이트와 일치시켰다.",
+  "nativeReverificationRows": 24,
+  "nativeDifferences": 0,
+  "protectedFiles": 2599,
+  "protectedExistingFixtures": 738,
+  "protectedChanged": [],
+  "gameSourceBodiesChanged": false,
+  "gameRebuiltOrExecuted": false,
+  "cppTestsRepeated": false,
+  "gameSha256": "0e33558cbc3e947ccabd95460a158ec7bf591ed6626a96e7ab5dd059424723d9",
+  "zipSha256": "45c8ffb9d99ddd12956d9100d620d566df74fd08cc172b813d84ecc5cf7e820f",
+  "lastAll34ProductUnit": 586,
+  "lastAll34EvidenceUnit": 587,
+  "lastRuntimeProductUnit": 588,
+  "goalComplete": false
+}
