@@ -4,6 +4,8 @@
 #include "client/ClientChatWindowGlobals.h"
 #include "client/ClientChatManagerGlobals.h"
 #include "client/ClientChatRuntime.h"
+#include "client/RawChatMessage.h"
+#include "client/RawChatSubmit.h"
 #include "client/ClientCoreDataGlobals.h"
 #include "client/ClientGameplayGlobals.h"
 #include "client/ClientPlayerRecords.h"
@@ -277,4 +279,16 @@ TEST_CASE(ChatWindowClient_FormatCommandsUseActualConsoleAndConfig) {
         CHECK(std::string_view(reinterpret_cast<const char*>(manager.data()+offset))==expected);
     }
     CHECK(scene.quitCalls==0);scene.menus->CloseChatWindows();
+}
+
+// 같은 실제 Client/Identity/manager가 대상 이름과 현재 이름·모드 변경을 읽고 전달 장치에 조합 본문을 준다.
+TEST_CASE(ChatWindowClient_MessageCompositionActualIdentityAndUnknownName) {
+    ChatScene scene;ChatIdentityInputs(scene);scene.storage->ownerMode.battle=1;InitializeClientChatManager(scene.client);const auto owner=scene.client.ChatManagerGlobals();const auto manager=owner->Current();
+    auto recipients=MakeClientChatSubmitHooks(owner);AddChatRecipient(manager,100,recipients);AddChatRecipient(manager,200,recipients);ChatIdentityPut(owner->Bytes(manager),12,1);ChatIdentityPut(owner->Bytes(manager),16,0x20);
+    CHECK(ApplyClientChatFormat(scene.client,false,"~r")==0 && ApplyClientChatFormat(scene.client,true,"~g")==0);std::string name="LocalUser";auto hooks=MakeClientChatMessageHooks(scene.client,scene.storage,[&]() -> std::string_view { return name; });std::vector<std::string> messages;
+    hooks.deliver=[&](auto output,auto targets,auto bytes) { CHECK(output==manager && targets==manager && bytes.back()==0);messages.emplace_back(reinterpret_cast<const char*>(bytes.data()),bytes.size()-1);return 0x12345678U; };
+    const std::array<std::uint8_t,8> body{'p','a','y','l','o','a','d',0};std::array<std::uint8_t,256> local;local.fill(0xa5);const ChatMessageGlobals globals{owner->Current(),scene.client.CurrentSubscriber()};
+    CHECK(FormatChatInput(manager,body,local,globals,hooks)==0x12345678U && messages.back()=="~[Iicon.D41]~[Iicon.D40]~rLocalUser (to Alice)> payload");
+    scene.storage->ownerMode.battle=0;name="Renamed";CHECK(SayChatMessage(body,local,globals,hooks)==0 && messages.size()==2);
+    CHECK(messages.back()=="~[Iicon.D41]~[Iicon.D40]~rRenamed (to SOMEONE)> payload");
 }

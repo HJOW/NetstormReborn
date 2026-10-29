@@ -6,6 +6,7 @@
 #include "client/ChatRecipients.h"
 #include "client/RawChatSubmit.h"
 #include "client/RawChatFormat.h"
+#include "client/RawChatMessage.h"
 #include "client/RawMenuControls.h"
 #include "client/HudChatGeometry.h"
 #include "client/RawChatWindowContext.h"
@@ -80,6 +81,23 @@ std::uint32_t ApplyClientChatFormat(Client& client,bool front,std::string_view i
     hooks.writeConfig=[&client](auto key,auto value) { const std::span<const std::uint8_t> bytes{reinterpret_cast<const std::uint8_t*>(value.data()),value.size()};client.Configuration().Set(key,o::DecodeOriginalText(bytes)); }; // 같은 좁은 원문 바이트를 기존 UTF8 저장 경계에서만 변환한다.
     hooks.illegalFormat=[&client](auto value) { client.WriteDiagnosticLog(29,"Illegal format \""+std::string(value)+"\"\n"); };
     return ApplyChatFormat(front,{owner->Current(),client.CurrentSubscriber()},input,owner->FormatCapture(),hooks);
+}
+// 이름 getter의 반환은 조회 성공 여부가 아니라 비영 목적 포인터라는 원문 계약을 보존한다.
+ChatMessageHooks MakeClientChatMessageHooks(Client& client,std::shared_ptr<RawSurfaceStorage> surface,std::function<std::string_view()> currentName) {
+    if (!surface || !currentName) throw std::invalid_argument("Chat 일반 조합의 실제 표면/현재 이름 getter 필요");
+    ChatMessageHooks hooks;hooks.memory=[owner=client.ChatManagerGlobals()](auto token) { return owner->Bytes(token); };hooks.currentName=currentName;
+    hooks.nameForSubscriber=[&client,surface=std::move(surface),name=std::move(currentName)](auto output,auto subscriber) {
+        o::PlayerIdentityRecord record;o::RawPlayerIdentity::Initialize(record,0);
+        for (std::size_t index=0;index<4;++index) record[4+index]=static_cast<std::uint8_t>(subscriber>>(8*index)); // 실제 이름 getter의 subscriber DWORD만 입력한다.
+        std::string_view result="SOMEONE"; // 원문1078의 현재 기본 실패 이름이며 조회 실패에도 목적 버퍼에 복사한다.
+        if (ResolveClientChatIdentity(client,*surface,name(),record)) {
+            const auto bytes=std::span<const std::uint8_t>(record).subspan(8);const auto end=std::find(bytes.begin(),bytes.end(),0);if (end==bytes.end()) throw std::out_of_range("Chat 대상 이름 getter의 실제 NUL 없음");
+            result={reinterpret_cast<const char*>(bytes.data()),static_cast<std::size_t>(end-bytes.begin())};
+        }
+        if (output.size()<=result.size()) throw std::out_of_range("Chat 대상 이름 getter의 실제 목적 물리 부족");std::copy(result.begin(),result.end(),output.begin());output[result.size()]=0;
+        return 1U; // 실제 목적 포인터의 비영 별칭이며 실패 이름을 썼어도0을 반환하지 않는다.
+    };
+    return hooks;
 }
 // 제출 지역의 미작성 꼬리를 보존하고 같은 장기 명령표·현재 UI에 로컬 효과를 분배한다.
 void BindClientChatSubmit(RawChatWindowContext& context,Client& client,RawMenuControls& menus) {

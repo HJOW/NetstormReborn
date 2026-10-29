@@ -1,0 +1,80 @@
+{
+  "unit": 583,
+  "date": "2026-10-30",
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "nativeRows": 524,
+  "nativeObservationRuns": 3,
+  "nativeObservations": 1572,
+  "nativeRepeatDifferences": 0,
+  "fixtureSha256": "d88b87961594aef50555f59ff65558ef9871f0d8eb55d13bd8529e9eb0a487c8",
+  "focusedTests": 37,
+  "failedChecks": 0,
+  "registeredCppTests": 3464,
+  "focusedRuns": [
+    {
+      "filter": "ChatMessage",
+      "returnCode": 0,
+      "summary": "1 test(s), 0 failed check(s)"
+    },
+    {
+      "filter": "ChatFormat",
+      "returnCode": 0,
+      "summary": "1 test(s), 0 failed check(s)"
+    },
+    {
+      "filter": "ClientChatRuntime",
+      "returnCode": 0,
+      "summary": "8 test(s), 0 failed check(s)"
+    },
+    {
+      "filter": "ChatWindowClient",
+      "returnCode": 0,
+      "summary": "18 test(s), 0 failed check(s)"
+    },
+    {
+      "filter": "ChatSubmit",
+      "returnCode": 0,
+      "summary": "3 test(s), 0 failed check(s)"
+    },
+    {
+      "filter": "DotCommandDispatch",
+      "returnCode": 0,
+      "summary": "3 test(s), 0 failed check(s)"
+    },
+    {
+      "filter": "ClientChatCoreOwners",
+      "returnCode": 0,
+      "summary": "3 test(s), 0 failed check(s)"
+    }
+  ],
+  "buildWarnings": 0,
+  "buildErrors": 0,
+  "buildLogSha256": "be9dcec94e4a4ddaef54d8176aafcced1f8887d0124066e4fef068a910e63fa3",
+  "gameSha256": "dc2f2e49bd6135828402d7e419791f4b92db06366e774a77913ded129f3506fd",
+  "testsSha256": "9486c11bdeadab557d946fbde50a1d20a3bc6e08339f0cfe22df0324606a89f8",
+  "protected": {
+    "count": 2593,
+    "changed": []
+  },
+  "existingFixturesUnchanged": 732,
+  "currentFixtures": 733,
+  "actualGuiRuns": 0,
+  "packageCreated": false,
+  "fullCppTests": false,
+  "all34Routes": false,
+  "windows11Hardware": false,
+  "networkExecuted": false,
+  "capturesSacrificesSpecificEnemyAttacksOrVictoriesReproduced": false,
+  "limits": [
+    "0042d280 패킷 작성/전달과0042ed30 수신 미연결",
+    "실제 Console 일반 Enter는 여전히 명시 미연결이며 조합 부품/실제 Client getter까지만 연결",
+    "이름 CRT는 원문 세 고정 호출 서식만 지원",
+    "기능 묶음 완성 뒤 현재 제품의34경로/허용된 통합 검사를 진행한다"
+  ],
+  "nativeToolCommentOnlyChanges": true,
+  "nativeToolAstEqual": true,
+  "firstObservedToolSha256": "2260cd3eb65d2e4932e40348f5d1d8f5203d60cae8ed5a0e33d53b75fd8c74c8",
+  "finalObservedToolSha256": "80e8946a535032fb3b25f6a66897483b18a1354f096ba7eebf941ac01d1b6adf"
+}
