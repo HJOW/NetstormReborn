@@ -2092,3 +2092,6 @@ cpppj/tests/BattleLeaveTests.cpp text eol=lf
 tools/cpp_battle_leave_smoke.py text eol=lf
 tools/cpp_solo_entry_smoke.py text eol=lf
 cpppj/battle-evidence-pins-20261030.json text eol=lf
+# 실제 편집 시나리오 왕복의 입력 도구와 실행 증거를 같은 LF로 보존한다.
+tools/cpp_editor_scenario_smoke.py text eol=lf
+cpppj/editor-scenario-runtime-20261030.json text eol=lf

@@ -798,6 +798,18 @@ std::string GameWorld::Report(bool mask) const {
         // 실제 소비된 종류만 진단하며 별도 명령 성공 플래그를 만들지 않는다.
         for (const auto kind:campaign_->LocalConnectionPackets()) out<<'\t'<<std::uint32_t(kind);out<<'\n';
         out<<"raw_session\t"<<campaign_->LocalOwner()<<'\t'<<campaign_->PlayerKnown(); //기존 두 열은LocalOwner/PlayerKnown이며 Editor가 아니다.
+        const auto records=campaign_->PlayerRecords();constexpr std::string_view digits="0123456789abcdef"; // 실제 Player9 원문의 읽기 전용 16진 표이며 화면용 MissionPlayers와 구별한다.
+        for (std::size_t owner=0;owner<9;++owner) { // 이름/ID/flags/Core를 같은 실제180BYTE에서 기록하며 시나리오 값을 따로 계산하지 않는다.
+            out<<"\nraw_player_record\t"<<owner<<'\t';
+            for (std::size_t at=0;at<180;++at) { const auto byte=records[owner*180+at];out<<digits[byte>>4]<<digits[byte&15]; } // NUL 뒤와 인접 필드까지 읽어 실제 부분 쓰기를 보존한다.
+            const auto brain=campaign_->Participation().Brain(static_cast<std::uint32_t>(owner));
+            if (brain) {
+                const auto settings=campaign_->AiMemory().Bytes(brain);out<<"\nraw_ai_settings\t"<<owner<<'\t';
+                for (std::size_t at=0;at<0x258;++at) { const auto byte=settings[at];out<<digits[byte>>4]<<digits[byte&15]; } // 생성자에 복사된 실제 설정 접두만 읽어 현재 지갑 잔액과 구별한다.
+            }
+        }
+        out<<"\nraw_alliances";
+        for (const auto value:campaign_->Alliances()) out<<'\t'<<value; // 같은 승패/메뉴가 읽는 방향별81DWORD를 순서대로 관측한다.
         out<<"\nraw_world_modes\t"<<campaign_->Editor()<<'\t'<<gameplayGlobals_->world.missionPost; //실제 Editor/missionPost를 별도 관측하며 상태나 프레임은 바꾸지 않는다.
         const auto& drop=campaign_->CursorDropSettings();const auto& placement=campaign_->Cursor().Placement(); // 실제 배치/원본 입력과 같은 저장소다.
         out<<"\nraw_piece\t"<<drop.argument<<'\t'<<drop.direction; // 실제 무작위 조각 번호/현재 회전을 관찰하며 취득 상태를 변경하지 않는다.
