@@ -53,3 +53,24 @@ TEST_CASE(ChatRecipients_LazyDevicesAndExactSeparators) {
     CHECK(CheckChatRecipients(1," \r\n\t",scratch,{}));bool rejected{};try { static_cast<void>(CheckChatRecipients(1,"Alice",scratch,{})); }catch (const std::logic_error&) { rejected=true; }CHECK(rejected);
     ChatRecipientHooks hooks;hooks.resolve=[](auto&) { return true; };CHECK(CheckChatRecipients(1,"A\vB\fC",scratch,hooks));CHECK(std::string(reinterpret_cast<const char*>(scratch.data()+8))=="A\vB\fC");
 }
+
+// 이름 길이와모드가 다른48입력을 실제 RawPlayerIdentity/ChatRecipients 접합에 대조한다.
+TEST_CASE(ChatRecipients_ActualIdentityNative48) {
+    std::ifstream input(NETSTORM_CHAT_RECIPIENT_IDENTITY_FIXTURE);if (!input) throw std::runtime_error("채팅 실제Identity 관측 없음");std::string line;std::getline(input,line);std::size_t count{};
+    while (std::getline(input,line)) { // 원문과 같은 로컬/Player/채팅 입력만 구성하고 기대값은 마지막에 읽는다.
+        if (!line.empty() && line.back()=='\r') line.pop_back();const auto row=RecipientFields(line);if (row.size()!=6) throw std::runtime_error("채팅 실제Identity 관측 열수 오류");const auto scene=std::stoul(row[0]);const auto text=RecipientBytes(row[1]);
+        std::array<std::uint8_t,1620> players{};std::array<std::uint8_t,4800> chat{}; // 실제9Player/100Chat의 명시 입력 물리다.
+        const auto put=[](std::span<std::uint8_t> bytes,std::size_t at,std::uint32_t value) { // 원문 DWORD만 쓰고 인접 필드를 보존한다.
+            for (std::size_t index=0;index<4;++index) bytes[at+index]=static_cast<std::uint8_t>(value>>(index*8)); // 하위BYTE부터 네 칸만 쓴다.
+        };
+        const auto name=[](std::span<std::uint8_t> bytes,std::size_t at,std::string_view value) { std::copy(value.begin(),value.end(),bytes.begin()+at);bytes[at+value.size()]=0; }; // 원문 NUL 포함 입력만 쓴다.
+        name(players,180+12,"LocalUser");put(players,180+44,100);name(players,360+12,"Alice");put(players,360+44,200);name(chat,0,"Bob");put(chat,44,300);name(chat,48,std::string(40,'B'));put(chat,48+44,400);
+        netstorm::o::PlayerIdentityReads reads;reads.localOwner=[] { return 1U; };reads.subscriber=[] { return 100U; };reads.address=[] { return 0U; };reads.name=[] { return std::string_view("LocalUser"); }; // 실제 로컬 전역의 고정 관측 입력이다.
+        reads.battle=[scene] { return scene==1; };reads.editor=[scene] { return scene==2; };reads.metamap=[] { return false; }; // 이 관측은 메타맵/통신을 사용하지 않는다.
+        netstorm::o::RawPlayerIdentity identity(netstorm::o::OriginalEdition::Patch1078,players,{},chat,reads);netstorm::o::PlayerIdentityRecord scratch;scratch.fill(0xa5);std::string trace;ChatRecipientHooks hooks;
+        const auto event=[&](std::string_view label,std::string_view value) { if (!trace.empty()) trace+=';';trace+=label;trace+=RecipientHex(value); }; // 현재 외부 진입 이름/번역 키만 기록한다.
+        hooks.resolve=[&](auto& record) { event("R:",std::string_view(reinterpret_cast<const char*>(record.data()+8)));return identity.Resolve(record); }; // 이름 조회 자체는 실제 제품 PlayerFinder가 수행한다.
+        hooks.translate=[&](auto key) { event("T:",key);return std::string(key); }; // 원문 관측과 같은 현재 영어 번역 장치다.
+        const auto result=CheckChatRecipients(1,text,scratch,hooks);CHECK(std::to_string(result)==row[2]);CHECK(RecipientHex({reinterpret_cast<const char*>(scratch.data()),scratch.size()})==row[3]);CHECK((trace.empty() ? "-" : trace)==row[4]);++count;
+    }CHECK(count==48);
+}

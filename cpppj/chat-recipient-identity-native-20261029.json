@@ -1,0 +1,23 @@
+{
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "rows": 48,
+  "instructions": 130230,
+  "native": "채팅 두 부모·원본 Regexp 생성/검색/캡처·초기화/재초기화·실제004841c0",
+  "explicitDevices": [
+    "malloc",
+    "C locale CRT",
+    "번역"
+  ],
+  "sources": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/NETSTORM.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_chat_recipients.py": "e7a314c353125f55c52c5af82e5bb4124ca5fe2d07ee5d0b791f217d98408c6b",
+    "tools/decomp_chat_recipients_regex.py": "93d9ee0f61edb11405177b7f40d3cb4050967c2171f8fb46cc1661373387444e",
+    "tools/decomp_chat_recipient_identity.py": "9ecced5ad204037e98ad57cbbbb767967fe6addb1f51a54b3959b40f877c2872"
+  },
+  "gameOrNetworkExecuted": false,
+  "fixtureSha256": "3f2e56c9396b50e66dc932d1b23e620f9c1bc53de07f5366ca2aa6aab3aeab76"
+}

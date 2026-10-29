@@ -1,0 +1,79 @@
+{
+  "unit": 571,
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23",
+    "changed": false
+  },
+  "scope": "실제 채팅 부모/Regexp/PlayerFinder의40BYTE 이름과 인접NUL 접합. 실제 GUI callback 연결은 잔여",
+  "native": {
+    "newRows": 48,
+    "repeatDifferences": 0,
+    "realIdentity": true,
+    "realRegex": true
+  },
+  "baseline": {
+    "filter": "ChatRecipients_ActualIdentityNative48",
+    "tests": 1,
+    "failedChecks": 1,
+    "exitCode": 1,
+    "message": "Player 식별자 NUL 없는 문자열",
+    "logSha256": "04bbede94cf6ca3afca953142e8c73707c646aa6280af0da1fb280d117f239d5"
+  },
+  "build": {
+    "configuration": "Release",
+    "testsPasses": 2,
+    "gamePasses": 1,
+    "warnings": 0,
+    "errors": 0
+  },
+  "filters": {
+    "ChatRecipients": {
+      "cases": 3,
+      "failedChecks": 0,
+      "sha256": "86650b4fce400187831ac6afaa576799dc0e07f4a7741bdc1300f3df6d757232"
+    },
+    "ChatWindow": {
+      "cases": 9,
+      "failedChecks": 0,
+      "sha256": "ff7aab1a92623fcd793a9cf55c6582e3140c92db081cec514456e53a15fb070c"
+    },
+    "PlayerIdentity": {
+      "cases": 4,
+      "failedChecks": 0,
+      "sha256": "3f5e8c4c74a945c254a51d9c681491bd298f195c9b3788ed2838e5a61d9797c7"
+    },
+    "PlayerMenu": {
+      "cases": 3,
+      "failedChecks": 0,
+      "sha256": "2082f950017f66a53b34c6f272f82e780b9b66255c8c09e301b9003f4d4bd3c9"
+    },
+    "ObjectMenu": {
+      "cases": 20,
+      "failedChecks": 0,
+      "sha256": "8a8af06d96d90f20f0d15e2bb2f1f5e27ac8d59367fd70a1d1ecd2c207f2a977"
+    }
+  },
+  "uniqueTests": 37,
+  "testExecutions": 39,
+  "registered": 3438,
+  "protected": {
+    "files": 2584,
+    "differences": [],
+    "oldFixtures": 724,
+    "currentFixtures": 725
+  },
+  "gameSha256": "e1997146d2e1daf6cee326c6cb08a1ee8614a7659aa319ddfcc952b29e5cba02",
+  "testsSha256": "b28a51eae35b68138a73381ede1e676f31462957284b003a7cf909f75d762a08",
+  "sources": {
+    "cpppj/src/o/RawPlayerIdentity.cpp": "1ca13ccd6046b72be45d4494a9548614dc3b7d1698448a4d613f7189ad0e7d49",
+    "cpppj/tests/ChatRecipientsTests.cpp": "37a5868ff9e5f037693ad0c514932c711c7ed5b124d3e7eae5819d056b2a9bed",
+    "tools/decomp_chat_recipient_identity.py": "9ecced5ad204037e98ad57cbbbb767967fe6addb1f51a54b3959b40f877c2872"
+  },
+  "gameExecuted": false,
+  "networkExecuted": false,
+  "fullTestsExecuted": false,
+  "capturesSacrificesSpecificEnemyAttacksOrVictoriesReproduced": false,
+  "rawDirectory": "extracted/cpp-chat-recipient-571-20261029"
+}
