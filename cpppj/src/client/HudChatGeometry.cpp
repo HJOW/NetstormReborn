@@ -62,4 +62,26 @@ void HudChatGeometry::SetInputVisible(std::uint32_t token,std::uint32_t value) c
     const auto console=root.console;AttachVirtual(console,Node(console).x,Node(console).y,0);
     AttachVirtual(token,root.x,root.y,0);
 }
+// 원문은 root Push/전체 기하 갱신을 하지 않으며 Push 이후의 현재 root와 Console을 다시 읽는다.
+void HudChatGeometry::ToggleInputVisible() const {
+    if (!hooks_.current) throw std::logic_error("ChatWindow 현재 포인터 조회 필요");
+    const auto before=hooks_.current();if (!before) return;Push(Chat(before).console);
+    auto& root=Chat(hooks_.current());Node(root.console).flags^=kVisible;
+    const auto console=root.console;AttachVirtual(console,Node(console).x,Node(console).y,0);
+}
+// 현재 Chat이 없으면 자식/노드 장치를 조회하지 않는 원문 순서를 유지한다.
+std::uint32_t HudChatGeometry::InputVisible() const {
+    if (!hooks_.current) throw std::logic_error("ChatWindow 현재 포인터 조회 필요");
+    const auto current=hooks_.current();return current ? Node(Chat(current).console).flags&kVisible : 0U;
+}
+// 뗌은 일반 입력에서 먼저 거부되며 Ctrl/Shift/Alt 비트는 문자 Enter를 막지 않는다.
+bool DispatchChatInputKey(const InputEvent& event,const std::function<std::uint32_t()>& visible,const std::function<void()>& show,const std::function<void()>& open) {
+    if ((event.code&InputCode::kRelease) || (event.code&0x03ffffffU)!=13U) return false;
+    if (!visible) throw std::logic_error("Enter의 현재 입력줄 조회 필요");if (visible()) return false;
+    if (!show || !open) throw std::logic_error("Enter의 입력줄 표시/Chat 열기 필요");show();open();return true;
+}
+// 요청을 재조회하는 옵션 callback과 프레임 소비를 구별하며 원문처럼 호출 후0을 쓴다.
+void ConsumeChatInputToggle(std::int32_t& request,const std::function<void()>& toggle) {
+    if (!request) return;if (!toggle) throw std::logic_error("프레임말 Chat 전환 장치 필요");toggle();request=0;
+}
 }

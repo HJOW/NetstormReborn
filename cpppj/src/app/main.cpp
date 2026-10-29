@@ -698,6 +698,8 @@ int RunClient(std::vector<std::string> arguments) {
                         if (prefix=="shift") modifiers|=InputCode::kShift;else if (prefix=="ctrl") modifiers|=InputCode::kControl;else if (prefix=="alt") modifiers|=InputCode::kAlt;
                         else throw std::invalid_argument("Unknown UI key modifier: "+std::string(prefix));name.remove_prefix(split+1);
                     }
+                    const std::map<std::string,unsigned> characters{{"enter",13},{"tab",9},{"backspace",8}}; //제어문자도 실제 WM_CHAR 경로의 하위 코드이며 가상키<<16과 구별한다.
+                    if (const auto character=characters.find(std::string(name));character!=characters.end()) { c.Input().Push(character->second|modifiers|(step.operation=="keyup" ? InputCode::kRelease : 0),0,0);continue; }
                     const auto found=keys.find(std::string(name)); if (found==keys.end()) throw std::invalid_argument("Unknown UI key: "+step.argument);
                     c.Input().Push((found->second<<InputCode::kVirtualKeyShift)|modifiers|(step.operation=="keyup" ? InputCode::kRelease : 0),0,0); continue;
                 }

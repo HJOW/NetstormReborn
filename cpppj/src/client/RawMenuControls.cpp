@@ -702,6 +702,14 @@ std::uint32_t RawMenuControls::CreateChatWindow(RawChatWindowContext context) { 
 std::uint32_t RawMenuControls::ChatWindowRoot() const { const auto& s=*impl_;if (!s.chatContext) return 0;const auto token=s.chatContext->globals->window.current;const auto* node=Find(s.chatRoots,token);return node && !(node->flags&0x10000U) ? token : 0U; } // 현재 전역을 임의 복구하지 않는다.
 //이름/접두를따로캐시하지않고원문이사용한현재Chat과실제입력을호출위치에서읽는다.
 bool RawMenuControls::ChatContainsRecipient(std::string_view name) const { const auto& s=*impl_;if (!s.chatContext || !s.chatWindow) throw std::logic_error("현재Chat의대상포함검사장치없음");return s.chatWindow->ContainsRecipient(s.chatContext->globals->window.current,name); }
+// 원문0042e410은 현재 Chat을 다시 읽으며 입력 표시 자체와 별도 부모 사건이다.
+bool RawMenuControls::OpenChatInput(const InputEvent& event) {
+    auto& s=*impl_;return DispatchChatInputKey(event,[&s] { return s.chatGeometry ? s.chatGeometry->InputVisible() : 0U; },
+        [&s] { if (s.chatGeometry) s.chatGeometry->SetInputVisible(s.chatContext->globals->window.current,1); },
+        [&s] { if (s.chatContext && s.chatContext->globals->window.current) s.common.events.Bubble(s.chatContext->globals->window.current,0x02000088U,0,1); });
+}
+// Chat 생성 전/정리 후에는 원문 전역0처럼 효과가 없고 요청 소비는 호출자가 수행한다.
+void RawMenuControls::ToggleChatInput() { if (impl_->chatGeometry) impl_->chatGeometry->ToggleInputVisible(); }
 const ChatWindow* RawMenuControls::ChatBackend() const { return impl_->chatWindow.get(); } // 실제 설치한 본체다.
 const HudChatGeometry* RawMenuControls::ChatGeometryBackend() const { return impl_->chatGeometry.get(); } // 같은 현재 자식 기하다.
 void RawMenuControls::AppendChatLog(std::uint32_t token,std::string_view text,std::span<const std::uint32_t> context) { auto& s=*impl_;if (!s.chatWindow) throw std::logic_error("Chat 실제 로그 처리기 없음");s.chatWindow->AppendLog(token,text,context); } // 같은 실제 공유 로그/스타일 파서와 원문42eca0 부모를 사용한다.
@@ -903,6 +911,15 @@ bool RawMenuControls::Contains(ScreenPoint point) const {
 // 같은 실제 저장소의 개수/controlled 깊이를 진단 보고에 기록한다.
 std::string RawMenuControls::Report() const {
     auto& s=*impl_;std::ostringstream out;out<<"raw_menus\t"<<s.menuState.instances<<'\t'<<s.menuState.index<<'\t'<<s.menus.size()<<'\t'<<s.titles.size()<<'\t'<<s.fragments.fragments.size()<<'\n';
+    if (s.chatContext) { //실제 표시/편집 버퍼를 읽기만 하며 입력 검증/그리기를 호출하지 않는다.
+        out<<"raw_chat_globals\t"<<s.chatContext->globals->window.current<<'\t'<<s.chatContext->globals->inputLineOff<<'\n';
+        for (const auto& [token,node]:s.chatRoots) { //부분 생성은 있는 자식/버퍼만 관측한다.
+            const auto* console=s.textEntries ? s.textEntries->Console(node->console) : nullptr;out<<"raw_chat_window\t"<<token<<'\t'<<node->flags<<'\t'<<node->parent<<'\t'<<node->console<<'\t'<<(console ? console->flags : 0)<<'\t'<<std::uint32_t(node->helperVisible)<<'\n';
+            if (console) if (const auto* buffer=s.textEntries->Storage().Find(console->buffer)) { out<<"raw_chat_input\t"<<token<<'\t';for (const auto value:buffer->Text()) { //제어문자를 TSV 구분자와 혼동하지 않도록 실제 BYTE를16진수로 기록한다.
+                constexpr char digits[]="0123456789abcdef";const auto byte=static_cast<unsigned char>(value);out<<digits[byte>>4]<<digits[byte&15];
+            }out<<'\n'; }
+        }
+    }
     for (const auto& [token,node]:s.saveFortRoots) { out<<"raw_save_fort_name\t"<<token<<'\t'<<node->id<<'\t'<<node->serial<<'\t'<<node->flags<<'\t'<<node->entry<<'\t'<<node->ok<<'\t'<<node->cancel<<'\t'<<node->fortMode<<'\t'<<node->canCancel<<'\n'; } // 원문 실제 모달/필드만 자동 관측에 제공한다.
     out<<"raw_external_gumps\t"<<s.external.size()<<'\t'<<s.ownedExternal.size()<<'\n'; // 고정 슬롯과 실제 HUD 처리기 수명을 구별하는 읽기 관측이다.
     if (s.nsContext) out<<"raw_nsinfo\t"<<s.nsContext->globals->current<<'\t'<<s.nsRoots.size()<<'\t'<<s.nsPlayers.size()<<'\t'<<s.nsBattles.size()<<'\t'<<s.nsButtons.size()<<'\t'<<s.plainTexts.size()<<'\t'<<s.titles.size()<<'\n'; // 실제 현재 전역/등록 파생만 관측한다.

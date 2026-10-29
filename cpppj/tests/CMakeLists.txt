@@ -2105,6 +2105,9 @@ target_sources(netstorm_tests PRIVATE ChatWindowTests.cpp HudChatGeometryTests.c
 target_sources(netstorm_tests PRIVATE TextEntryClientTests.cpp)
 # 실제 Client 전역과 전체 Chat 공장/공유 로그/메뉴/픽셀/동시 수명을 검사한다.
 target_sources(netstorm_tests PRIVATE ChatWindowClientTests.cpp)
+target_sources(netstorm_tests PRIVATE ChatInputTests.cpp) #Enter/전환/프레임말 원문378행의독립관측을검사한다.
+set_source_files_properties(ChatInputTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_CHAT_INPUT_KEY_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/chat-input-key-x86.tsv\";NETSTORM_CHAT_INPUT_TOGGLE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/chat-input-toggle-x86.tsv\"")
 target_sources(netstorm_tests PRIVATE ChatRecipientsTests.cpp) # 원문 이름 검사 부모의 실제350관측을 독립 대조한다.
 set_source_files_properties(ChatRecipientsTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_CHAT_RECIPIENTS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/chat-recipients-x86.tsv\";NETSTORM_CHAT_RECIPIENT_IDENTITY_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/chat-recipient-identity-x86.tsv\"")

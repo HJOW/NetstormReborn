@@ -1,0 +1,24 @@
+{
+  "host": "HJOW-Athlon",
+  "peSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+  "key": {
+    "rows": 162,
+    "observations": 324,
+    "precisionDifferences": 0,
+    "fixtureSha256": "5ddb6ec2eca492480e8332fe500a24cc01bc22d98661d470d2e7a84f86c37d6f"
+  },
+  "toggle": {
+    "rows": 216,
+    "observations": 432,
+    "precisionDifferences": 0,
+    "fixtureSha256": "b9b05aaab72a35f82f2d856afbd6d8058ab4b2805bcb05c470e3e18f54ac832f"
+  },
+  "nativeBodiesUnchanged": true,
+  "externalDevices": [
+    "Guide virtual+24",
+    "Gump Route",
+    "key: visible/show/open calls",
+    "toggle: virtual Push with pointer replacement, Attach"
+  ],
+  "scope": "Enter의 조회/표시/열기는 외부 장치이며 원문 부모 관문을 실행한다. 별도 toggle/visible/frame은 실제 몸체와 현재 재조회까지 실행한다. 송신/통신 없음."
+}

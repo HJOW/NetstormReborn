@@ -1,0 +1,210 @@
+{
+  "unit": 573,
+  "baseCommit": "09fd1730",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23",
+    "changed": false
+  },
+  "scope": "Enter 입력줄 표시/현재 Console 전환/옵션 프레임말 소비와 실제 GUI 타이핑",
+  "native": {
+    "host": "HJOW-Athlon",
+    "peSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "key": {
+      "rows": 162,
+      "observations": 324,
+      "precisionDifferences": 0,
+      "fixtureSha256": "5ddb6ec2eca492480e8332fe500a24cc01bc22d98661d470d2e7a84f86c37d6f"
+    },
+    "toggle": {
+      "rows": 216,
+      "observations": 432,
+      "precisionDifferences": 0,
+      "fixtureSha256": "b9b05aaab72a35f82f2d856afbd6d8058ab4b2805bcb05c470e3e18f54ac832f"
+    },
+    "nativeBodiesUnchanged": true,
+    "externalDevices": [
+      "Guide virtual+24",
+      "Gump Route",
+      "key: visible/show/open calls",
+      "toggle: virtual Push with pointer replacement, Attach"
+    ],
+    "scope": "Enter의 조회/표시/열기는 외부 장치이며 원문 부모 관문을 실행한다. 별도 toggle/visible/frame은 실제 몸체와 현재 재조회까지 실행한다. 송신/통신 없음."
+  },
+  "focused": {
+    "uniqueTests": 49,
+    "executions": 49,
+    "failedChecks": 0,
+    "registered": 3444,
+    "logs": {
+      "tests-ChatRecipients.log": {
+        "tests": 3,
+        "failedChecks": 0
+      },
+      "tests-ChatWindow_.log": {
+        "tests": 1,
+        "failedChecks": 0
+      },
+      "tests-client-v1.log": {
+        "tests": 11,
+        "failedChecks": 0
+      },
+      "tests-ClientChatRuntime.log": {
+        "tests": 6,
+        "failedChecks": 0
+      },
+      "tests-ClientMainMenuGlobals.log": {
+        "tests": 4,
+        "failedChecks": 0
+      },
+      "tests-ClientStateWorldGlobals.log": {
+        "tests": 8,
+        "failedChecks": 0
+      },
+      "tests-HudChatGeometry.log": {
+        "tests": 1,
+        "failedChecks": 0
+      },
+      "tests-HudDock_.log": {
+        "tests": 1,
+        "failedChecks": 0
+      },
+      "tests-input-v1.log": {
+        "tests": 3,
+        "failedChecks": 0
+      },
+      "tests-TextEntry.log": {
+        "tests": 9,
+        "failedChecks": 0
+      },
+      "tests-ViewKeyInput.log": {
+        "tests": 2,
+        "failedChecks": 0
+      }
+    }
+  },
+  "builds": {
+    "tests": {
+      "log": "build-tests-v1.log",
+      "warnings": 0,
+      "errors": 0,
+      "completed": true
+    },
+    "game": {
+      "log": "build-game-v1.log",
+      "warnings": 0,
+      "errors": 0,
+      "completed": true
+    }
+  },
+  "gui": {
+    "binarySha256": "13ff234ac994c2e928345c10c45f825b8029a3b14d435e48ebb5ad71263980f4",
+    "runs": [
+      {
+        "size": [
+          1024,
+          768
+        ],
+        "fullscreen": false,
+        "characterEnterOpenedActualConsole": true,
+        "keyReleaseDidNotOpen": true,
+        "typedBytes": "45564552594f4e453a2068656c6c6f",
+        "backspaceEditedActualBuffer": true,
+        "f3HidThenEnterRestoredText": true,
+        "nativeMainMenuReturned": true,
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+            "--run",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-chat-input-573-20261029\\gui-v1\\1024x768\\data",
+            "--mission",
+            "TEST02",
+            "--mute-audio",
+            "--frames",
+            "160",
+            "--set",
+            "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3",
+            "--ui-script",
+            "extracted\\cpp-chat-input-573-20261029\\gui-v1\\1024x768\\run\\steps.tsv",
+            "--ui-report",
+            "extracted\\cpp-chat-input-573-20261029\\gui-v1\\1024x768\\run\\states.tsv",
+            "--audio-report",
+            "extracted\\cpp-chat-input-573-20261029\\gui-v1\\1024x768\\run\\audio.tsv",
+            "--window"
+          ],
+          "binarySha256": "13ff234ac994c2e928345c10c45f825b8029a3b14d435e48ebb5ad71263980f4",
+          "scriptSha256": "511da10d7a0b37da098c6db83888700b838c3bb5cc0dc56f16499587239ed86e",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 20.584723899999517,
+          "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderrSha256": "4b73c96b25066ec2370644eda8a463570fec390203035f3612e15ad85ff68be9",
+          "originalsUnchanged": true,
+          "dataUnchanged": true,
+          "dataRoot": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-chat-input-573-20261029\\gui-v1\\1024x768\\data"
+        }
+      },
+      {
+        "size": [
+          1280,
+          720
+        ],
+        "fullscreen": true,
+        "characterEnterOpenedActualConsole": true,
+        "keyReleaseDidNotOpen": true,
+        "typedBytes": "45564552594f4e453a2068656c6c6f",
+        "backspaceEditedActualBuffer": true,
+        "f3HidThenEnterRestoredText": true,
+        "nativeMainMenuReturned": true,
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+            "--run",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-chat-input-573-20261029\\gui-v1\\1280x720\\data",
+            "--mission",
+            "TEST02",
+            "--mute-audio",
+            "--frames",
+            "160",
+            "--set",
+            "SCREENW=1280;SCREENH=720;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3;startInFullScreen=1",
+            "--ui-script",
+            "extracted\\cpp-chat-input-573-20261029\\gui-v1\\1280x720\\run\\steps.tsv",
+            "--ui-report",
+            "extracted\\cpp-chat-input-573-20261029\\gui-v1\\1280x720\\run\\states.tsv",
+            "--audio-report",
+            "extracted\\cpp-chat-input-573-20261029\\gui-v1\\1280x720\\run\\audio.tsv"
+          ],
+          "binarySha256": "13ff234ac994c2e928345c10c45f825b8029a3b14d435e48ebb5ad71263980f4",
+          "scriptSha256": "5c19476db0a4135e4d9ec0ae45c64be2419e84ab763ef129c11cb1d4df900f0e",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 20.49511300001177,
+          "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderrSha256": "4b73c96b25066ec2370644eda8a463570fec390203035f3612e15ad85ff68be9",
+          "originalsUnchanged": true,
+          "dataUnchanged": true,
+          "dataRoot": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-chat-input-573-20261029\\gui-v1\\1280x720\\data"
+        }
+      }
+    ],
+    "capturesSacrificesSpecificEnemyAttacksOrVictoriesReproduced": false,
+    "networkExecuted": false,
+    "sentChat": false
+  },
+  "protected": {
+    "files": 2587,
+    "changed": [],
+    "previousFixtureCount": 726,
+    "currentFixtureCount": 728
+  },
+  "deferred": [
+    "자동완성/제출/송신",
+    "입력줄 옵션 전환의 실제 게임창 검사는 별도; 이번 실제 GUI는 Enter/F3/문자/Backspace",
+    "현재 전체34경로/전체 C++/자연 완주/Win11 실기",
+    "나머지 UI/Edit/시나리오/수명/호환성과 이후 MP 무시험 사전 구현"
+  ],
+  "prohibitedTestsExecuted": false,
+  "rawDirectory": "extracted/cpp-chat-input-573-20261029"
+}

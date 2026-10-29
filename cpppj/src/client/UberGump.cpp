@@ -402,6 +402,8 @@ void UberGump::CleanupNativeStateWorld(std::uint32_t reason) {
 std::uint32_t UberGump::CurrentSubscriber() const { return client_.CurrentSubscriber(); }
 // 실제 공통 메뉴와 Client 전역을 사용하며 표시용 별도 로그/스타일을 만들지 않는다.
 void UberGump::ForwardDiagnosticChat(std::uint32_t enabled,std::string_view format) { rawButtons_->Menus()->ForwardDiagnosticChat(enabled,format); }
+// 실제 현재 Console만 전환하며 root 열기/닫기와 옵션 소비는 각 원문 부모가 담당한다.
+void UberGump::ToggleChatInput() { rawButtons_->Menus()->ToggleChatInput(); }
 // 기본 메뉴를 초기화한 다음 프레임에 미션을 시작한다.
 void UberGump::StartMission(std::string name) { state_.Post({"MissionBegin",std::move(name)}); }
 // 캠페인 이름의 설정 객체를 보존하여 officalN.title 같은 참조를 복원한다.
@@ -1045,6 +1047,7 @@ void UberGump::Event(InputEvent event) {
     }
     if (!(event.code&InputCode::kRelease) && transitionCode==(0x70U<<InputCode::kVirtualKeyShift)) { client_.Input().PushCommand(0x02000017U,0,0x61000003);return; } // 원본4d8c47의 F1Help 문자열이며 Control/Shift를 별도 거부하지 않는다.
     if (rawButtons_->Menus()->HelpOpen()) { if (!worldUiRouted) static_cast<void>(rawButtons_->Event(event));rebuild_=true;return; } // 현재 공통 모달/스크롤/태그/돌 버튼을 실제 GumpInput에 전달한다.
+    if (!rawButtons_->CurrentDialog() && rawButtons_->Menus()->OpenChatInput(event)) { rebuild_=true;worldUiRouted=true; } //원문4d8c60의 모달 뒤/정지 앞 Enter다. 같은 사건을 새로 표시한 Console에 다시 보내지 않는다.
     if (transitionCode==0x710000U || transitionCode==0x720000U || transitionCode==0x770000U || (transitionCode==0x760000U && (event.code&(InputCode::kShift|InputCode::kControl))!=(InputCode::kShift|InputCode::kControl))) {
         if (rawButtons_->CurrentDialog()) return; // 원문565dd4 모달 관문은 일반 F2/F3/F8보다 앞이다. Guide 뒤 조기 F8 예약을 하지 않는다.
         ViewKeyInputHooks hooks; // 같은 Client 표시 전역과 현재 설정/Tell/큐를 사용한다.

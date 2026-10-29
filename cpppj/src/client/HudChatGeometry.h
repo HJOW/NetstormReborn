@@ -1,6 +1,7 @@
 // ChatWindow의 실제 자식 기하와 표시 전환만 복원한다. Console/TextEntry 생성·입력은 별도 필수 경계다.
 #pragma once
 #include "client/GumpCreate.h"
+#include "client/InputEvent.h"
 
 namespace netstorm::client {
 // 원본0x13cBYTE ChatWindow의 기본 Gump와 +a0..138 상태다.
@@ -21,6 +22,7 @@ struct HudChatGeometryHooks {
     std::function<std::uint32_t(std::uint32_t)> bottomIndex; //004bc2c0의 실제 표시 줄/scroll 조회이며 아직 공개 제품 API는 없다.
     std::function<void(std::uint32_t,std::uint32_t)> requestBottom; //004ba3d0의 ScrollingTextGump::RequestBottom과 같은 요청이다.
     std::function<std::uint32_t()> challenge; //0042f270 분기 시점의 현재00594fc8이다.
+    std::function<std::uint32_t()> current; //00548740을 가상 Push 뒤에도 다시 읽는 실제 현재 Chat 포인터다.
 };
 // 생성/Console/네트워크/Chat Helper Handle을 완료로 계산하지 않는 독립 기하 모듈이다.
 class HudChatGeometry {
@@ -29,6 +31,8 @@ public:
     void Attach(std::uint32_t token,float x,float y,std::uint32_t parent,std::uint32_t mode) const; //0042e6e0 전체 자식 재부착 순서다.
     void SetHelperVisible(std::uint32_t token,std::uint32_t value) const; //0042f250: 비영 값을 BYTE1로 바꾸며 재부착은 하지 않는다.
     void SetInputVisible(std::uint32_t token,std::uint32_t value) const; //0042f270: 현재 Console visible 변경 뒤 Console/root를 재부착한다.
+    void ToggleInputVisible() const; //0042f210: 현재 Console만 Push하고 표시 비트 반전 뒤 같은 자식만 재부착한다.
+    std::uint32_t InputVisible() const; //0042f310: 현재 Chat 부재는0, 있으면 Console의 표시 비트만 반환한다.
 private:
     HudChatNode& Chat(std::uint32_t token) const; // root와 기본 저장소가 같은 주소인지 확인한다.
     GumpCreateNode& Node(std::uint32_t token) const; // 실제 도달한 자식만 조회한다.
@@ -37,4 +41,8 @@ private:
     void AttachVirtual(std::uint32_t token,float x,float y,std::uint32_t parent) const; // 현재 가상 Attach의 mode0 호출이다.
     HudChatGeometryHooks hooks_; // 실제 공유 노드와 공통/텍스트 효과의 명시 경계다.
 };
+// 일반 입력의 Guide/Gump/모달 뒤에서 문자 Enter의 표시/부모 열기 순서만 실행한다.
+bool DispatchChatInputKey(const InputEvent& event,const std::function<std::uint32_t()>& visible,const std::function<void()>& show,const std::function<void()>& open);
+// 원본439b96의 프레임말 요청을 한 번 소비하며 callback 실패 시 요청을 지우지 않는다.
+void ConsumeChatInputToggle(std::int32_t& request,const std::function<void()>& toggle);
 }

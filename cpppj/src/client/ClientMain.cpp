@@ -35,6 +35,7 @@
 #include "client/ClientHtmlWindowGlobals.h"
 #include "client/ClientChatManagerGlobals.h"
 #include "client/ClientChatRuntime.h"
+#include "client/HudChatGeometry.h" //프레임말 입력줄 요청의 원문 소비 순서다.
 #include "client/ClientStaticStrings.h"
 #include "client/ClientDotCommandGlobals.h"
 #include "client/RawSurfaceWorld.h"
@@ -183,7 +184,7 @@ Client::Client(ClientOptions options)
     configuration_.Registry().environment = Environment;
     if (g_client) throw std::logic_error("Only one client may exist");
     // 원본00558dd0의 Set 직후 동기 시점에 현재 복원된 설정 전역을 갱신한다.
-    configuration_.onChanged = [this] { InterpretFortFileOptions();configuration_.ReadInt("tracelevel",trace_->log.level);InterpretScriptMenuOptions();kencloudGlobals_->ReadOptions(configuration_);InterpretMainMenuOptions();InterpretOwnerColorOptions(); }; //같은 설정 변경에서 저장/진단/메뉴/구름·tellTips·배너 현재값을 동기 반영하며 새 장치를 만들지 않는다.
+    configuration_.onChanged = [this] { configuration_.ReadInt("inputLineOff",chatWindowGlobals_->inputLineOff);InterpretFortFileOptions();configuration_.ReadInt("tracelevel",trace_->log.level);InterpretScriptMenuOptions();kencloudGlobals_->ReadOptions(configuration_);InterpretMainMenuOptions();InterpretOwnerColorOptions(); }; //같은 설정 변경에서 입력줄요청/저장/진단/메뉴/구름·tellTips·배너 현재값을 동기 반영하며 새 장치를 만들지 않는다.
     g_client = this;
 }
 // 월드/소리 프로세스→음악·음향→화면→GDI/창 순서로 참조 대상보다 사용자를 먼저 정리한다.
@@ -384,6 +385,7 @@ int Client::Run() {
         if (menu_) menu_->Frame(); // 합성/그리기 경계는 양쪽 가지 모두 유지하며 State Tick과 합치지 않는다.
         // 11. 프레임 제한 + 그리기.
         Frame();
+        ConsumeChatInputToggle(chatWindowGlobals_->inputLineOff,[this] { if (menu_) menu_->ToggleChatInput(); }); //원문439b96: 양쪽 갱신 가지의 그리기 뒤/커서·Sleep 앞에서 한 번 전환하고0을 쓴다.
         if (afterFrame) afterFrame(*this);
         // 12. 커서 위치를 읽어 같은 자리에 다시 놓고(원본 그대로, 목적 미확인), 설정한 만큼 쉰다.
         POINT cursor{};
@@ -546,6 +548,7 @@ void Client::InterpretOptions() {
     configuration_.ReadInt("highPriorityValue", highPriority_);
     configuration_.ReadInt("initWindowPos", initWindowPos_);
     static_cast<void>(ReadAudioOptions());InterpretMainMenuOptions(); //원문의 음질/음량/maxSimulSounds ReadInt 뒤 tellTips를 읽는다. 이 부분 부모는 음향 장치 적용이나 전체435220 완료를 대신하지 않는다.
+    configuration_.ReadInt("inputLineOff",chatWindowGlobals_->inputLineOff); //원문0054db18은 표시 여부 캐시가 아니라 프레임말 전환 요청이다. 설정 재해석마다 현재값을 읽는다.
     InterpretFortFileOptions(); // 원본처럼 sleepPerLoop/maxFPS보다 먼저 같은 저장 관문 DWORD를 읽는다.
     configuration_.ReadInt("sleepPerLoop", sleepPerLoop_);
     kencloudGlobals_->ReadOptions(configuration_); // 원문435220의 cloudiness/speed/fury/spacer/recenter/algorithm/kenCloud 위치다.

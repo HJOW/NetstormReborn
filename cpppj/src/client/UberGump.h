@@ -56,6 +56,7 @@ public:
     void Refresh();
     void RefreshStormPower(); //0043dad0의 실제 현재 예산 serial Push/Attach/깊이 복원이다.
     void ForwardDiagnosticChat(std::uint32_t enabled,std::string_view format); //434f40의 실제 로그를 같은 현재 Chat UI/팔레트에 전달한다.
+    void ToggleChatInput(); //그리기 뒤 프레임말의0042f210을 같은 현재 실제 Console에 전달한다.
     void KillGumpsForState(); //004666d0의 같은 공통 등록표 필터로 Kill만 예약한다.
     void CleanupGumpsForState(); //004662b0 실제 공통 정리와 호스트 페이지 캐시 반납이며 State 확정은 하지 않는다.
     void ApplyHudModeForState(std::uint32_t mode); //00466280의 현재 명령/원문 모드를 자식 우선·숨김 포함으로 분배하며 State/loaded는 쓰지 않는다.

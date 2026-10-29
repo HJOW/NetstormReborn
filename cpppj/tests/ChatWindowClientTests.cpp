@@ -67,6 +67,15 @@ TEST_CASE(ChatWindowClient_FullFactoryActualChildrenClientLogAndCommands) {
     const auto commands=scene.client.DotCommandGlobals()->Bytes();CHECK(ChatDword(commands,0xa04)==3 && ChatDword(commands,0x804)==0x42f680 && ChatDword(commands,0x808)==0x42e520);CHECK(std::string(reinterpret_cast<const char*>(commands.data()+32))=="clear" && std::string(reinterpret_cast<const char*>(commands.data()+64))=="quit");
     scene.menus->CloseChatWindows();CHECK(scene.Count()==before && globals->window.current==0 && globals->log.initialized && scene.menus->TextEntryControls()->Storage().BufferCount()==0);
 }
+//실제 옵션 DWORD·현재 Console·공통 입력 경로가 한 버퍼를 유지하며 표시만 전환하는지 검사한다.
+TEST_CASE(ChatWindowClient_EnterTypingToggleAndCurrentOptionRequest) {
+    ChatScene scene;auto globals=scene.client.ChatWindowGlobals();CHECK(!globals->inputLineOff);scene.client.Configuration().SetInt("inputLineOff",-1);CHECK(globals->inputLineOff==-1);
+    ConsumeChatInputToggle(globals->inputLineOff,[&] { scene.menus->ToggleChatInput(); });CHECK(!globals->inputLineOff);scene.client.Configuration().SetInt("tracelevel",4);CHECK(globals->inputLineOff==-1);ConsumeChatInputToggle(globals->inputLineOff,[&] { scene.menus->ToggleChatInput(); });scene.client.Configuration().SetInt("inputLineOff",0); //원문처럼 설정값은 남고 다른 옵션의 재해석 때 요청이 다시 읽힌다.
+    const auto token=scene.Create();scene.menus->Attach(token,10,200,scene.buttons.RootToken(),0);CHECK(!scene.menus->ChatGeometryBackend()->InputVisible());CHECK(!scene.menus->OpenChatInput({0x8000000dU,0,0}));CHECK(scene.menus->OpenChatInput({13,0,0}));CHECK(scene.menus->ChatGeometryBackend()->InputVisible()==1);
+    for (const auto byte:std::string_view("EVERYONE: hello")) static_cast<void>(scene.buttons.RouteInput({std::uint32_t(static_cast<unsigned char>(byte)),0,0})); //일반 Gump 큐의 문자 사건을 같은 실제 Console로 보낸다.
+    CHECK(scene.Input(token).Text()=="EVERYONE: hello");scene.menus->ToggleChatInput();CHECK(!scene.menus->ChatGeometryBackend()->InputVisible() && scene.Input(token).Text()=="EVERYONE: hello");CHECK(scene.menus->OpenChatInput({13,0,0}));CHECK(scene.Input(token).Text()=="EVERYONE: hello");
+    scene.menus->CloseChatWindows();CHECK(!globals->window.current);scene.menus->ToggleChatInput();
+}
 
 // 기존/새 창을 동시에 실제 생성한 뒤 원문 무조건 current0/공유 로그 보존/개별 반납 순서를 검사한다.
 TEST_CASE(ChatWindowClient_ConcurrentRootsSharedLogAndNativeCurrentRetirement) {
