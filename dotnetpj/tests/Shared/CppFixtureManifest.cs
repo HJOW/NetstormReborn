@@ -7,7 +7,7 @@ namespace Netstorm.Tests;
 /// <param name="File">fixture 파일 이름 (예: sid-x86.tsv).</param>
 /// <param name="Sha256">CRLF 를 LF 로 바꾼 바이트의 SHA-256 소문자 16진수.</param>
 /// <param name="Rows">주석('#')과 빈 줄을 뺀 행 수. X86Fixture.Read 가 돌려주는 행 수와 같다.</param>
-/// <param name="Origin">출처. cpppj 는 읽기 전용 기대값, dotnetpj 는 이 저장소가 직접 소유한 관찰 자료다.</param>
+/// <param name="Origin">출처.cpppj는 fixture,cpppj-root는 최상위 기존 관찰의 읽기 전용 원문,dotnetpj는 직접 소유 자료다.</param>
 /// <param name="Consumer">이 fixture 를 읽는 테스트 프로젝트 이름 (Core 또는 Assets).</param>
 internal sealed record CppFixtureEntry(string File, string Sha256, int Rows, string Origin, string Consumer);
 

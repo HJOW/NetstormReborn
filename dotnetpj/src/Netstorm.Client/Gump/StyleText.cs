@@ -275,4 +275,13 @@ public sealed class StyleText
             throw new ArgumentException("StyleText 팔레트 명령 범위 오류");
         };
     }
+    /// <summary>메뉴의 실제 항목 소유 필드를 Clear/Parse/두 번 측정에 ref로 연결한다.</summary>
+    public static void BindMenuLayoutStyleText(MenuGumpLayoutHooks hooks, StyleText text)
+    {
+        var lookup = hooks.Node ?? throw new ArgumentException("StyleText 메뉴 저장소 필요");
+        // 현재 실제 메뉴 항목의 주소를 반환한다.배열 원소 객체를 교체하지 않는다.
+        ref uint Head(uint token, int index)
+        { var n = lookup(token); if (n is null || index < 0 || index >= n.Items.Count) throw new ArgumentOutOfRangeException(nameof(index)); return ref n.Items[index].Styled; }
+        hooks.ClearStyle = (token, index) => text.Clear(ref Head(token, index)); hooks.ParseStyle = (uint token, int index, ReadOnlySpan<byte> source, uint[] context) => text.Parse(ref Head(token, index), source, context); hooks.Styled = (token, index) => { int width = 0, height = 0; text.Measure(in Head(token, index), ref width, ref height); return (width, height); };
+    }
 }

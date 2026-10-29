@@ -6,6 +6,7 @@
   python dotnetpj/tools/cpp_sync.py --update --reflect HEAD 갱신하면서 '반영한 cpppj 커밋'도 함께 기록
   python dotnetpj/tools/cpp_sync.py --update --add sid:Core 새 fixture(sid-x86.tsv)를 목록에 등록 (사용 프로젝트 Core 또는 Assets)
   (dotnetpj 가 직접 소유한 fixture 는 --add clockkernel:Core:dotnetpj 처럼 출처를 셋째 칸에 쓴다)
+  (cpppj 최상위 기존 관찰은 --add recovery-menulayout-observations.tsv:Client:cpppj-root 로 원문을 연결한다)
   python dotnetpj/tools/cpp_sync.py --ports                 포트 맵(dotnetpj/PORT_MAP.tsv) 보고: 이식 뒤 cpppj 소스가 바뀐 대응 쌍과 사라진 파일. 읽기 전용
   python dotnetpj/tools/cpp_sync.py --ports-init            C# 주석의 cpppj 소스 경로로 포트 맵을 처음 만든다 (이미 있으면 거부)
   python dotnetpj/tools/cpp_sync.py --ports-reflect HEAD --ports-file RawSidPool.cs   지정한 C# 파일의 기준 커밋을 올린다 (재대조를 마친 뒤에만)
@@ -32,6 +33,8 @@ ROOT = Path(__file__).resolve().parents[2]
 MANIFEST = ROOT / "dotnetpj" / "tests" / "Shared" / "cpp-fixture-manifest.tsv"
 # cpppj 가 소유한 fixture 폴더. 이 도구는 읽기만 한다.
 CPP_FIXTURES = ROOT / "cpppj" / "tests" / "fixtures"
+# 기존 복원 관찰 TSV가 있는 cpppj 최상위.사본 생성 없이 읽기 전용 Link로 연결한다.
+CPP_OBSERVATIONS = ROOT / "cpppj"
 # dotnetpj 가 직접 소유한 fixture 폴더 (벽/게임 시계 관찰 자료).
 LOCAL_FIXTURES = ROOT / "dotnetpj" / "tests" / "Netstorm.Core.Tests" / "Fixtures"
 # 목록 파일에서 '반영한 cpppj 커밋'을 적는 주석 머리말.
@@ -39,7 +42,7 @@ REFLECT_KEY = "# reflected-commit:"
 # 목록의 사용 프로젝트 이름. 테스트 어셈블리 Netstorm.<이름>.Tests 와 일치해야 한다.
 CONSUMERS = ("Core", "Assets", "Client")
 # 목록의 출처 이름. cpppj 는 읽기 전용, dotnetpj 는 이 저장소의 dotnetpj 폴더가 소유한다.
-ORIGINS = ("cpppj", "dotnetpj")
+ORIGINS = ("cpppj", "cpppj-root", "dotnetpj")
 # 보고서에 펼쳐 보여 주는 커밋·파일 목록의 최대 길이.
 LIST_LIMIT = 40
 # 포트 맵 파일. cpppj 소스 ↔ C# 파일 ↔ 이식 기준 커밋을 한 줄씩 적는다 (2026-10-28 R0-3).
@@ -88,8 +91,8 @@ def digest(path: Path) -> tuple[str, int]:
 
 
 def source_path(entry: Entry) -> Path:
-    """목록 항목이 가리키는 실제 파일 경로. 출처가 cpppj 이면 cpppj fixture 폴더, 아니면 dotnetpj 폴더다."""
-    return (CPP_FIXTURES if entry.origin == "cpppj" else LOCAL_FIXTURES) / entry.file
+    """목록 출처별 실제 기대값 경로.최상위 기존 관찰도 복사하거나 수정하지 않고 원문을 읽는다."""
+    return {"cpppj": CPP_FIXTURES, "cpppj-root": CPP_OBSERVATIONS, "dotnetpj": LOCAL_FIXTURES}[entry.origin] / entry.file
 
 
 def load_manifest() -> tuple[str, list[Entry]]:
@@ -161,6 +164,7 @@ def report() -> int:
     cpp_total = len(list(CPP_FIXTURES.glob("*-x86.tsv")))
     cpp_linked = sum(1 for e in entries if e.origin == "cpppj" and e.file.endswith("-x86.tsv"))
     print(f"  cpppj *-x86.tsv {cpp_total}개 중 {cpp_linked}개 연결")
+    print(f"  cpppj 최상위 기존 관찰 {sum(e.origin == 'cpppj-root' for e in entries)}개 읽기 전용 연결")
 
     # 생성한 C# 자료가 cpppj 원본 목록과 아직 같은지 각 생성기의 --check 로 확인한다.
     print(f"\n[생성 자료 {len(GENERATORS)}개]")

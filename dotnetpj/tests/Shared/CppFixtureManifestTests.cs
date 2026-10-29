@@ -24,7 +24,7 @@ public sealed class CppFixtureManifestTests
             Assert.EndsWith(".tsv", entry.File);
             Assert.Matches("^[0-9a-f]{64}$", entry.Sha256);
             Assert.True(entry.Rows > 0, $"{entry.File}: 행 수가 0 이하");
-            Assert.Contains(entry.Origin, new[] { "cpppj", "dotnetpj" });
+            Assert.Contains(entry.Origin, new[] { "cpppj", "cpppj-root", "dotnetpj" });
             Assert.Contains(entry.Consumer, new[] { "Core", "Assets", "Client" });
         }
         Assert.Equal(CppFixtureManifest.Entries.Count, CppFixtureManifest.Entries.Select(entry => entry.File).Distinct().Count());

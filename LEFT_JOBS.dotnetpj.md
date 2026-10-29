@@ -178,7 +178,7 @@
 - [x] **R1-2a (2026-10-28 완료):** MonoGame 출력 호스트(`Netstorm.Client.Host` 실행 + `Netstorm.Client/Host` 순수 부분): `IScreenOutput` 구현(변경 사각형만 RGBA 부분 업로드), 정수 최근접 확대·검정 여백, 전체화면 borderless 창과 F11 전환, 마우스 역변환·전체화면 커서 제한, 키·글자·버튼 → `InputQueue`, 프레임 루프 골격(`--frames`·`--ui-script`·`--ui-report`·`--set`). 기존 `NetstormGame`/`DisplayManager`는 동결하고 별도 진입으로 둔다(결정 5). [문서 6절](docs/dotnet-client-screen-20261028.md#6-r1-2a-monogame-출력-호스트-같은-날-hjow-athlon). **남은 것:** 그리기 내용·세션·소리(R2·R3·R4 이후), 라벨 클릭·report·kernel-tell(R3 이후).
 - [x] **R1-2b (2026-10-28 완료, 호스트 없이 가능한 부분):** `ScreenCapture`(cpppj와 byte 동일한 BMP)·`UiScript`/`UiScriptRunner`(esc·key·keyup·pointer·좌표/라벨 클릭·snapshot)·`dotnetpj/tools/cpp_frame_compare.py`(파일·폴더 비교, 종료 코드 0/1/2). 오라클 캡처(메인 메뉴 프레임 30)가 이 PC에서 결정적으로 만들어짐을 확인했다. [문서 5절](docs/dotnet-client-screen-20261028.md#5-r1-2-부분-캡처스크립트-도구와-오라클-확인-같은-날). **남은 것:** `--ui-script`/`--mission`/`--frames`/`--set` 실행 인자를 받는 dotnetpj 실행 진입과 그 안에서 두 도구를 부르는 프레임 루프는 R1-2a의 호스트가 있어야 하며, 라벨 클릭·report·kernel-tell 등은 R3 이후다.
 - [ ] **R2 — 그리기 원시·팔레트·글꼴 (진행 중: R2d-3 일반 객체 그리기 완료):** `VFXDraw`·`VFXMappedDraw`·`VFXLine`·`VFXTransform`, `RawShapeToBuffer`, `SpriteDraw`, `*ColorMaps`, `Palette*`, `RawColorSort*`, `BitmapFont`, `GifImage`, `RawImage`를 `Netstorm.Client/Display`로 옮긴다. 이때 `Screen.LoadPalette`의 색 표 계산(`BuildPaletteColorTable`·`BuildGumpShadeMaps`)을 연결한다(R2a에서 완료). 묶음마다 fixture 연결·C# 수정·`--ports-reflect`·단위 기록을 남긴다. R2a는 [0.23](#023-단위-기록--r2a-팔레트-3종과-loadpalette-연결-2026-10-28-hjow-athlon)에서, R2b는 [0.24](#024-단위-기록--r2b-vfx-그리기-원시-2026-10-28-hjow-athlon)에서, R2c는 [0.25](#025-단위-기록--r2c-색-표-2026-10-28-hjow-athlon)에서, R2d-1은 [0.26](#026-단위-기록--r2d-1-변환합성이미지시작-2026-10-29-hjow-athlon)에서, R2d-2는 [0.27](#027-단위-기록--r2d-2-판본표시자료캡처-2026-10-29-hjow-athlon)에서 완료했다. R2d-3 본체와 원본 명령열 1,389행 대조는 0.28에서 완료했다. 실자산/세션 연결은 R4·R5에 남는다. `GifImage` 적응·`BitmapFont` 적응은 L1에 UI 인프라(메뉴·Gump·글꼴 저장소)가 필요해 R3 Gump 이식과 함께 다룬다.
-- [ ] **현재 R3h(2026-10-29):** 한 줄/다중 줄 조각·버퍼/그림/실제 글꼴·SHP 픽셀/스크롤 표시는0.38~0.39, 대괄호/다중 줄 파서와 별도 버퍼 저장소 수명은0.40, 실제 Slider/돌 화살표/질감 손잡이는0.41, ScrollingTextGumpWidgets 생성/수명/입력은0.42에서 연결했다. 다음은 R3h-4 MenuGump 전체/실제 메뉴 조립이다. R3 전체 완료로 세지 않는다.
+- [ ] **현재 R3h(2026-10-29):** 한 줄/다중 줄 조각·버퍼/그림/실제 글꼴·SHP 픽셀/스크롤 표시는0.38~0.39, 대괄호/다중 줄 파서와 버퍼 수명은0.40, 실제 Slider/자식은0.41, 다중 줄 Widget은0.42에서 연결했다. 메뉴 기본/항목 소유/레이아웃은0.43에서 연결했으며 다음은 MenuGumpControls/Widgets/Input/Draw와 실제 메뉴 조립이다. R3 전체 완료로 세지 않는다.
 - [ ] 이후 R3(D1) → R4(M1) → R5(D2) → R6 → R7 → R8 순서로 진행하고, 단위마다 이 절의 체크와 [0.4](#04-기존-dotnetpj-소스의-재수정-판정) 판정표를 갱신한다.
 
 ### 0.10 이번 문서 작업 기록
@@ -586,6 +586,13 @@
 - **구현:** 실제128칸 소유 버퍼/overlay/숨긴 Slider·자식 생성·부착, 현재 폭/요청/설정 비트, 태그·커서·캡처·드래그/부모 통지, 소유·빌린 버퍼 교체/실제 자식 우선 반납과 가상 분배를 같은 저장소에 연결했다. [범위·검증·다음](docs/dotnet-scrolling-widget-20261029.md).
 - **검증 완료:** 신규17개/기존Slider21개 집중38개와 최종 전체 **1,783개 통과(Assets363·Core1030·Client390), 실패/건너뜀0**, Release 전체 빌드 경고/오류0이다. 최초NUL 입력 오류6건은 검사 도우미의 명시 길이로 보완했다. 추가NaN 검사/첫전체 CD1건은 원본 GumpTree의 재부착 전 Push 계약을 빠뜨린 검사 전제로, 검사에 Push를 추가한 뒤 최종 통과했다. 제품 코드/기대값은 바꾸지 않았고 실패 로그를 보존했다. 독립 원본 실행 대조/L1이 아니며 fixture99/reflected-commit을 유지하고 포트 맵만200행으로 갱신했다. 변경8파일의 UTF-8·한국어와 보호 경로 변경0을 확인했다.
 - **다음:** R3h-4 MenuGump 전체 레이아웃/컨트롤/위젯/입력/Draw·항목 소유 StyleText 바인딩, 실제 메뉴/전체 자산/음향/GIF/호스트를 조립한다. 실제 캡처0/기존 코드·검사 은퇴0이며 전체 목표는 계속 진행 중이다. 보호 경로/cpppj/공통 인계를 수정하지 않았고 게임/창·금지된 실제 재현·멀티플레이 검사를 하지 않았다.
+
+### 0.43 단위 기록 — R3h-4a 메뉴 기본·항목 소유·레이아웃 (2026-10-29, HJOW-Athlon)
+
+- **착수:** AGENTS.md·이 문서의 현행 계획/최신 인계·공통 제약을 다시 읽었다. 직전 턴은 Slider/다중 줄 Widget의2단위 구현·검증·커밋이 완료된 진행이며 시작 HEAD는 `6c0a1865fb35`다. 현재/마지막 정밀 디컴파일 호스트는 모두 HJOW-Athlon이고 외부 TODO.md만 수정돼 있었다.
+- **구현:** 실제 MenuGump의 크기/장식/확장/controlled 스택과 MenuGumpLayout의 조건부 항목 추가·strncpy40·스타일 소유/실제 글꼴/두 방향 전체 배치, BindMenuLayoutStyleText의 실제 항목 ref 필드를 연결했다. [근거·검증·다음](docs/dotnet-menu-layout-20261029.md).
+- **검증:** 원본 메뉴308행/레이아웃260행의 전체 바이트/상태·콜백/CRC·반환이 일치했고 집중14개가 통과했다. 기존 최상위 원문도 사본 없이 Link하려고 동기화 도구/목록에 읽기 전용 cpppj-root 출처를 추가했다(기존 보고서 SHA와의 차이는 CRLF/LF임을 확인). fixture101/reflected-commit 유지·포트204행(L1 101/port103)이며 원본 기대값 수정은 없다. 최초 검사 컴파일 네임스페이스1건을 검사에서 고쳤다. 전체 **1,797개(Assets363+Core1030+Client404) 통과**, 실패/건너뜀0이며 Release 전체 빌드는 경고/오류0이다.
+- **다음:** MenuGumpControls/Widgets/Input/Draw와 실제 메뉴 전체 자산/음향/GIF/호스트 조립이다. 실제 캡처0/기존 코드·검사 은퇴0이며 전체 목표는 계속 진행 중이다. 보호 경로/cpppj/공통 인계를 수정하지 않았고 게임/창·금지된 실제 재현·멀티플레이 검사를 하지 않았다. 외부 TODO.md는 커밋에서 제외한다.
 
 ## 1. 지금까지의 완료 범위 — 이관 기록 색인
 

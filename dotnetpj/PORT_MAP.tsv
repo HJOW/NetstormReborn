@@ -55,6 +55,10 @@ cpppj/src/client/InputEvent.cpp	Netstorm.Client/Input/InputEvent.cs	ac9ea9162ba0
 cpppj/src/client/InputEvent.h	Netstorm.Client/Input/InputEvent.cs	ac9ea9162ba0c580cd53505c8c3782c0b2a27172	port
 cpppj/src/client/Markup.cpp	Netstorm.Client/Gump/Markup.cs	b9be2a82a0f9f3848689ddcf9e1b05d0331be1a8	port
 cpppj/src/client/Markup.h	Netstorm.Client/Gump/Markup.cs	b9be2a82a0f9f3848689ddcf9e1b05d0331be1a8	port
+cpppj/src/client/MenuGump.cpp	Netstorm.Client/Gump/MenuGump.cs	6c0a1865fb3520c43b23e9d57a1625bb8baee98e	L1
+cpppj/src/client/MenuGump.h	Netstorm.Client/Gump/MenuGump.cs	6c0a1865fb3520c43b23e9d57a1625bb8baee98e	L1
+cpppj/src/client/MenuGumpLayout.cpp	Netstorm.Client/Gump/MenuGumpLayout.cs	6c0a1865fb3520c43b23e9d57a1625bb8baee98e	L1
+cpppj/src/client/MenuGumpLayout.h	Netstorm.Client/Gump/MenuGumpLayout.cs	6c0a1865fb3520c43b23e9d57a1625bb8baee98e	L1
 cpppj/src/client/OwnerColorMaps.cpp	Netstorm.Client/Display/OwnerColorMaps.cs	e4b739b97f5316453de827b92ba6527a63f17637	L1
 cpppj/src/client/OwnerColorMaps.h	Netstorm.Client/Display/OwnerColorMaps.cs	e4b739b97f5316453de827b92ba6527a63f17637	L1
 cpppj/src/client/PaletteColors.cpp	Netstorm.Client/Display/PaletteColors.cs	58622e15d401535bf09f216e9c75bbd8c3ea2037	L1
@@ -103,8 +107,8 @@ cpppj/src/client/SpriteDraw.cpp	Netstorm.Client/Display/SpritePixelTarget.cs	8ca
 cpppj/src/client/SpriteDraw.h	Netstorm.Client/Display/SpriteDraw.cs	8ca081a26b4b6bce8dbf63f72a37733dc95e25d4	port
 cpppj/src/client/StoneButtonGump.cpp	Netstorm.Client/Gump/StoneButtonGump.cs	0a1a709127ad291d47289a9957e142feb04981a5	port
 cpppj/src/client/StoneButtonGump.h	Netstorm.Client/Gump/StoneButtonGump.cs	0a1a709127ad291d47289a9957e142feb04981a5	port
-cpppj/src/client/StyleText.cpp	Netstorm.Client/Gump/StyleText.cs	702917dcf7d94ef7af0fefe029fffa695d4f850f	port
-cpppj/src/client/StyleText.h	Netstorm.Client/Gump/StyleText.cs	702917dcf7d94ef7af0fefe029fffa695d4f850f	port
+cpppj/src/client/StyleText.cpp	Netstorm.Client/Gump/StyleText.cs	6c0a1865fb3520c43b23e9d57a1625bb8baee98e	port
+cpppj/src/client/StyleText.h	Netstorm.Client/Gump/StyleText.cs	6c0a1865fb3520c43b23e9d57a1625bb8baee98e	port
 cpppj/src/client/StyleTextBuffer.cpp	Netstorm.Client/Gump/StyleTextBuffer.cs	b9be2a82a0f9f3848689ddcf9e1b05d0331be1a8	port
 cpppj/src/client/StyleTextBuffer.h	Netstorm.Client/Gump/StyleTextBuffer.cs	b9be2a82a0f9f3848689ddcf9e1b05d0331be1a8	port
 cpppj/src/client/StyleTextMarkup.cpp	Netstorm.Client/Gump/StyleTextMarkup.cs	f7e1748e8c9a093be0f118ec864df7e5581b9f0c	port
