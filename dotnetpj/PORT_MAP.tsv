@@ -103,8 +103,12 @@ cpppj/src/client/PreviewColorMaps.cpp	Netstorm.Client/Display/PreviewColorMaps.c
 cpppj/src/client/PreviewColorMaps.h	Netstorm.Client/Display/PreviewColorMaps.cs	e4b739b97f5316453de827b92ba6527a63f17637	L1
 cpppj/src/client/ProductionColorMaps.cpp	Netstorm.Client/Display/ProductionColorMaps.cs	e4b739b97f5316453de827b92ba6527a63f17637	L1
 cpppj/src/client/ProductionColorMaps.h	Netstorm.Client/Display/ProductionColorMaps.cs	e4b739b97f5316453de827b92ba6527a63f17637	L1
+cpppj/src/client/QuickHelpControl.cpp	Netstorm.Client/Gump/QuickHelpControl.cs	2aef224eb823c7fe91c431edd11f35b5e0ae0697	L1
+cpppj/src/client/QuickHelpControl.h	Netstorm.Client/Gump/QuickHelpControl.cs	2aef224eb823c7fe91c431edd11f35b5e0ae0697	L1
 cpppj/src/client/QuickHelpHtml.cpp	Netstorm.Client/Gump/QuickHelpHtml.cs	c58ddc1f7a2e1e9cc2e97500bc06a51bb36fc817	L1
 cpppj/src/client/QuickHelpHtml.h	Netstorm.Client/Gump/QuickHelpHtml.cs	c58ddc1f7a2e1e9cc2e97500bc06a51bb36fc817	L1
+cpppj/src/client/QuickHelpRequest.cpp	Netstorm.Client/Gump/QuickHelpRequest.cs	2aef224eb823c7fe91c431edd11f35b5e0ae0697	L1
+cpppj/src/client/QuickHelpRequest.h	Netstorm.Client/Gump/QuickHelpRequest.cs	2aef224eb823c7fe91c431edd11f35b5e0ae0697	L1
 cpppj/src/client/RawBackgroundGifControls.cpp	Netstorm.Client/Gump/BackgroundGifStorage.cs	a168082548e090f2f191e4b83106e7351fbc00ba	port
 cpppj/src/client/RawImage.cpp	Netstorm.Client/Display/RawImage.cs	ca0c01ebfceb9801ef1fcdb272deec4dc311a2db	port
 cpppj/src/client/RawImage.h	Netstorm.Client/Display/RawImage.cs	ca0c01ebfceb9801ef1fcdb272deec4dc311a2db	port
