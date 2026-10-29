@@ -73,6 +73,8 @@ cpppj/src/client/MenuGumpLayout.cpp	Netstorm.Client/Gump/MenuGumpLayout.cs	6c0a1
 cpppj/src/client/MenuGumpLayout.h	Netstorm.Client/Gump/MenuGumpLayout.cs	6c0a1865fb3520c43b23e9d57a1625bb8baee98e	L1
 cpppj/src/client/MenuGumpWidgets.cpp	Netstorm.Client/Gump/MenuGumpWidgets.cs	acc8f3dc02465165c8564d5ae792ddb50ca39c4e	port
 cpppj/src/client/MenuGumpWidgets.h	Netstorm.Client/Gump/MenuGumpWidgets.cs	acc8f3dc02465165c8564d5ae792ddb50ca39c4e	port
+cpppj/src/client/MetaImageGump.cpp	Netstorm.Client/Gump/MetaImageGump.cs	8eece422b34f1cb427900b1410f5c670a02c07c8	L1
+cpppj/src/client/MetaImageGump.h	Netstorm.Client/Gump/MetaImageGump.cs	8eece422b34f1cb427900b1410f5c670a02c07c8	L1
 cpppj/src/client/OwnerColorMaps.cpp	Netstorm.Client/Display/OwnerColorMaps.cs	e4b739b97f5316453de827b92ba6527a63f17637	L1
 cpppj/src/client/OwnerColorMaps.h	Netstorm.Client/Display/OwnerColorMaps.cs	e4b739b97f5316453de827b92ba6527a63f17637	L1
 cpppj/src/client/PaletteColors.cpp	Netstorm.Client/Display/PaletteColors.cs	58622e15d401535bf09f216e9c75bbd8c3ea2037	L1
