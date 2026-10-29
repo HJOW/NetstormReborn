@@ -1,0 +1,32 @@
+{
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "rows": 383,
+  "observations": 766,
+  "sources": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/NETSTORM.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_chat_submit.py": "c74c58efedb475f3514a2462e0a702c42fc8bd32387cdc3e06ec663513073e98",
+    "tools/decomp_chat_recipients_regex.py": "93d9ee0f61edb11405177b7f40d3cb4050967c2171f8fb46cc1661373387444e",
+    "tools/decomp_chat_recipients.py": "e7a314c353125f55c52c5af82e5bb4124ca5fe2d07ee5d0b791f217d98408c6b",
+    "tools/decomp_priestmenu.py": "8d1474792e7511fa777e7bd7bd369f2a2a0f9f5c35643e420d65a3fa4744bac9"
+  },
+  "fixtureSha256": "6081ea747ff3f51ff725877a896d870df618a757ed80c9d87ddecc8e91a1496f",
+  "native": [
+    "0042da00",
+    "0042d1b0",
+    "0042d120",
+    "00484190/1b0",
+    "00496c90/004964e0 및 실제 엔진/캡처",
+    "004e4a40"
+  ],
+  "explicitDevices": [
+    "Identity 응답/이름 변경",
+    "번역/CRT",
+    "할당/free/선택 중단",
+    "입력줄/로컬 명령 분배 진입"
+  ],
+  "gameOrNetworkExecuted": false
+}

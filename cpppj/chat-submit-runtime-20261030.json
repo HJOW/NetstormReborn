@@ -1,0 +1,67 @@
+{
+  "unit": 579,
+  "date": "2026-10-30",
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "nativeRows": 383,
+  "nativeIndependentObservations": 766,
+  "nativeRepeatDifferences": 0,
+  "nativeNormalRows": 376,
+  "nativeSelectedStops": {
+    "resolve": 1,
+    "assertion": 3,
+    "free": 3
+  },
+  "focusedTests": 33,
+  "totalTestExecutionsIncludingPreliminary": 36,
+  "failedChecks": 0,
+  "registered": 3454,
+  "builds": {
+    "build-tests-final.log": {
+      "sha256": "ba23acc8dbf7d8d3f39b5cc50311c0f2e2ce45fc01bf54d17f4dda0b10e12f57",
+      "warnings": 0,
+      "errors": 0
+    },
+    "build-game.log": {
+      "sha256": "62ddbcd2c38be6a9f78092b63530de0cb0d8c88a9c8cff56b577a6145bf97987",
+      "warnings": 0,
+      "errors": 0
+    }
+  },
+  "firstBuildWarnings": 1,
+  "firstTestLaunchStarted": false,
+  "testSha256": "2af7917550457b021355e93246d42a0d32a466cc0ed4e0ba229b7d14bcd1569e",
+  "gameSha256": "6f813ba2b12c32655296adbb0c3443785e25c82674be1b009d676f875b5d667e",
+  "protectedAtStart": 2591,
+  "unchangedProtectedData": 2590,
+  "agentModifiedProtectedData": [],
+  "externalInstructionUpdate": {
+    "path": "AGENTS.md",
+    "commit": "bfccadf5ce37a97566dd1d8765e2862f48c8c289",
+    "beforeSha256": "4e32580d21f62036e99ebac6b26641f58e7e7143328f67f396a12f960ccdaa4c",
+    "observedCurrentSha256": "69853921b4e48c55a3043d86edcc7993238d23d55b0559b12d079b5f724065c6",
+    "pendingExternalWorkingTreeEdit": true,
+    "readAgain": true,
+    "scope": "후순위4차MCP/5차사용자홈저장·CustomMaps·스크롤/6차한국어; 후속 CustomMaps 경로 명시 문구도 확인"
+  },
+  "oldFixtures": 730,
+  "currentFixtures": 731,
+  "actualEnterSubmitBound": false,
+  "gameOrNetworkExecuted": false,
+  "lastGameExecutionUnit": 578,
+  "lastExecutedGameSha256": "f203a47e40b38e53f3c516d375d13c332ce7a07b86b42e2f78fd71a2dbabb646",
+  "userRequestedPauseAfterCommit": true,
+  "remaining": "실제Console sendChat/입력줄/577분배/등록callback/서식·송신과기존전체목표; 재개요청후진행",
+  "sources": {
+    "cpppj/chat-submit-native-20261030.json": "1f73c27411a7ff078ea986e609abfa8d0dca66e6be014b1bf41449d18e47b176",
+    "cpppj/tests/fixtures/chat-submit-x86.tsv": "6081ea747ff3f51ff725877a896d870df618a757ed80c9d87ddecc8e91a1496f",
+    "tools/decomp_chat_submit.py": "c74c58efedb475f3514a2462e0a702c42fc8bd32387cdc3e06ec663513073e98",
+    "cpppj/src/client/RawChatSubmit.h": "6b7225c28353dd7c6b0a297d37a0838bf05b3ec87797708701bbd008e682b967",
+    "cpppj/src/client/RawChatSubmit.cpp": "edaef35bd30eee913ad8eb5e7e24fc0fe38659e244f9062dc7587816e9e862fc",
+    "cpppj/src/client/ClientChatManagerGlobals.h": "b2e0eb145768686a166d76c67d0a87ca17b58580d8325774c7c0b28d4f34bec2",
+    "cpppj/src/client/ClientChatManagerGlobals.cpp": "cd3d2d136e38b8ea6c9a9340183dd11f95d36f4846fa544c4c0a5305b83f9cac",
+    "cpppj/tests/ChatSubmitTests.cpp": "dfc2f4a753c2dd6147c61877da16e72c7d6f96ec85b41e1f80ba88819af3ff55",
+    "docs/exe/cpp-chat-submit-20261030.md": "e3c18df5f9bf7e8302eb44efa633d23740bb093d6cdfc92f1d7dcb1f923915d2"
+  }
+}

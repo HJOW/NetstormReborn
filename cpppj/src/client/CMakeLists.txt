@@ -306,3 +306,5 @@ target_sources(netstorm PRIVATE NativeIntroState.cpp NativeIntroState.h) # 새 �
 target_sources(netstorm PRIVATE TraceChat.cpp TraceChat.h) # 실제 공유 로그의 원문 Chat 전달 관문/문맥을 연결한다.
 
 target_sources(netstorm PRIVATE RawDotCommandDispatch.cpp RawDotCommandDispatch.h) # 로컬 점 명령의 고정 문법/현재 표/콜백 뒤 검색 상태를 복원한다.
+
+target_sources(netstorm PRIVATE RawChatSubmit.cpp RawChatSubmit.h) # 대상/본문 해석과 실제 수신자 배열의 중복·32슬롯 확장을 복원한다.
