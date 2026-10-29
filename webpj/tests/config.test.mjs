@@ -8,7 +8,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 import { REPO_ROOT, readData } from './helpers.mjs';
-import { Config, ConfigRegistry, asciiLower, findSection, sectionRange } from '../www/assets/config.js';
+import { Config, ConfigRegistry, asciiLower, configParseLong, findSection, sectionRange } from '../www/assets/config.js';
 import { TaffArchive } from '../www/assets/taff.js';
 import { decodeOriginalText } from '../www/assets/text-encoding.js';
 
@@ -132,4 +132,34 @@ test('원본 config.english 용어 치환과 설정 층 우선순위', () => {
     // 인코딩된 설정 파일의 첫 줄은 서명(mQdsT) 때문에 죽은 줄이다. setup.cfg 는 서명 뒤가 줄바꿈이라 영향이 없다.
     assert.equal(global.get('gamemaster'), '10');
     assert.equal(global.get('gameminor'), '78');
+});
+
+// 값 → 32비트 정수 변환: cpppj ConfigParseLong 과 같은 규칙(앞 공백 건너뜀·부호 하나·숫자에서 멈춤·부호 없는 32비트 감김)이다.
+// 활성 조건식 `{DoneA}{DoneB}` 처럼 값이 이어 붙은 문자열을 판정하는 데 쓰이므로 긴 숫자에서도 parseInt 와 달리 정밀도를 잃지 않아야 한다. (2026-10-29 WB03-E)
+test('ConfigParseLong: 공백·부호·멈춤·32비트 감김', () => {
+    assert.equal(configParseLong(''), 0);
+    assert.equal(configParseLong('1'), 1);
+    assert.equal(configParseLong('  \t\n\v\f\r 12'), 12);
+    assert.equal(configParseLong('-12x'), -12);
+    assert.equal(configParseLong('+7'), 7);
+    assert.equal(configParseLong('--7'), 0);
+    // 숫자가 아닌 글자에서 멈춘다. 16진수 접두는 인식하지 않는다.
+    assert.equal(configParseLong('5abc'), 5);
+    assert.equal(configParseLong('0x10'), 0);
+    assert.equal(configParseLong('abc'), 0);
+    // 앞 공백은 건너뛰지만 부호와 숫자 사이의 공백은 허용하지 않는다.
+    assert.equal(configParseLong('- 5'), 0);
+    // 32비트 감김: 2^32 → 0, 2^32 - 1 → -1, 2^31 → -2^31, 음수 감김.
+    assert.equal(configParseLong('4294967296'), 0);
+    assert.equal(configParseLong('4294967295'), -1);
+    assert.equal(configParseLong('2147483648'), -2147483648);
+    assert.equal(configParseLong('-2147483648'), -2147483648);
+    assert.equal(configParseLong('-4294967296'), 0);
+    // 20자리가 넘는 숫자는 parseInt(|0) 가 정밀도를 잃지만 이 함수는 정확히 감긴다: 111111111111111111111 mod 2^32.
+    const exact = Number(BigInt('111111111111111111111') % 4294967296n) | 0;
+    assert.equal(configParseLong('111111111111111111111'), exact);
+    assert.notEqual(Number.parseInt('111111111111111111111', 10) | 0, exact);
+    // 값이 비어 있는 `{키}` 를 이어 붙인 문자열(진행 값이 없는 상태)은 0 이고, 하나라도 완료 값이 있으면 0 이 아니다.
+    assert.equal(configParseLong('' + '' + ''), 0);
+    assert.notEqual(configParseLong('1' + '' + '1'), 0);
 });

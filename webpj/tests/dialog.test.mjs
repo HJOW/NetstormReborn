@@ -291,6 +291,113 @@ function regionDiff(rendered, shot, rect, originX, originY) {
     return sum / count / 3;
 }
 
+// 스크린샷을 찍은 시점의 저장된 진행 값이다(원본 options.cfg 의 Done* 항목, 값 1 = 완료). Early Missions 6개·Struggle For Freedom 6개·A Nation Rises 앞 3개가 완료이고
+// Priest Training·Complete Victory 는 하나도 없다. 이 값을 설정에 넣으면 스크린샷의 체크 표시·잠금 상태가 그대로 나온다. (2026-10-29 WB03-E)
+const CAMPAIGN_PROGRESS = Object.freeze({
+    DoneTutorial1: 1, DoneTutorial2: 1, DoneTutorial3: 1, DoneTutorial4: 1, DoneTutorial5: 1, DoneTutorial6: 1,
+    DoneThewarbegins: 1, DoneMasterofwhirligigs: 1, DoneSavetheisland: 1, DoneFragilefortune: 1, DoneThunderingpower: 1, DoneDissolvedalliance: 1,
+    DoneThenoose: 1, DoneRainvsrain: 1, DoneRunforit: 1,
+});
+
+// 진행 값을 설정에 넣은 새 게임 데이터로 캠페인 목록(UCampaign)을 먼저 펼쳐 묶음 객체를 등록한 뒤, 지정한 묶음의 개요 대화상자를 그려 돌려준다.
+// 앱에서도 Campaign 대화상자를 거쳐야 `offical1.overview` 같은 섹션이 등록되므로 같은 순서를 따른다. (2026-10-29 WB03-E)
+function renderOverview(name, progress, width = 1024, height = 768) {
+    const data = GameData.build({ files, language: 'english', options: { soundVolume: 3, musicVolume: 2, ...progress } });
+    const surface = new IndexedSurface(width, height);
+    surface.tile(resources.clouds);
+    const position = titlePosition(width, height, resources.title);
+    surface.drawImage(resources.title, position.x, position.y);
+    createTellWindow({ gameData: data, resources, name: 'UCampaign', screen: { width, height } });
+    const result = createTellWindow({ gameData: data, resources, name, screen: { width, height } });
+    assert.ok(result.window, `${name} 대화상자를 만들지 못했습니다`);
+    result.window.draw(surface);
+    const rgb = new Uint8Array(width * height * 3);
+    for (let index = 0; index < width * height; index += 1) rgb.set(resources.palette.rgb.subarray(surface.pixels[index] * 3, surface.pixels[index] * 3 + 3), index * 3);
+    return { data, window: result.window, rgb, width, height };
+}
+
+// 캠페인 하위 5개 목록의 기대값이다: 스크린샷 파일, 패널 크기, 행 상태(c = 활성, k = 체크 표시, x = 잠김). 크기는 스크린샷과 정렬됨을 확인한 값이다. (2026-10-29 WB03-E)
+const CAMPAIGN_SHOTS = Object.freeze({
+    'offical1.overview': { file: 'mainMenu - Campaign - Early Missions.png', size: [338, 311], rows: ['k', 'k', 'k', 'k', 'k', 'k'] },
+    'offical2.overview': { file: 'mainMenu - Campaign - Priest Training.png', size: [418, 404], rows: ['c', 'c', 'c', 'c', 'c', 'c', 'c', 'x', 'x'] },
+    'offical3.overview': { file: 'mainMenu - Campaign - Struggle For Freedom.png', size: [458, 353], rows: ['k', 'k', 'k', 'k', 'k', 'k'] },
+    'offical4.overview': { file: 'mainMenu - Campaign - A Nation Rises.png', size: [258, 251], rows: ['k', 'k', 'k', 'c', 'x'] },
+    'offical5.overview': { file: 'mainMenu - Campaign - Complete Victory.png', size: [258, 247], rows: ['x', 'x', 'x', 'x', 'x'] },
+});
+
+// 캠페인 하위 목록 5종: 저장된 진행 값에 따라 행이 [체크 표시 | 활성 | 잠김] 으로 나뉜다. 활성 조건은 `$Checked` 5번째 인자(ConfigParseLong ≠ 0)이며 값이 없으면 빈 문자열 → 0 → 잠김이다.
+// 처음 설치한 상태(진행 값 없음)에서는 각 묶음의 첫 행(고정 인자 1)만 활성이다. (2026-10-29 WB03-E)
+test('캠페인 하위 목록: 진행 값에 따른 체크 표시·잠금 상태', () => {
+    const state = (item) => (item.disabled ? 'x' : item.checked ? 'k' : 'c');
+    // 스크린샷 시점의 진행 값으로 다섯 묶음의 행 상태를 확인한다.
+    for (const [name, info] of Object.entries(CAMPAIGN_SHOTS)) {
+        const window = renderOverview(name, CAMPAIGN_PROGRESS).window;
+        assert.deepEqual(window.menu.items.map(state), info.rows, `${name} 행 상태`);
+        assert.deepEqual([window.baseWidth, window.baseHeight], info.size, `${name} 패널 크기`);
+    }
+    // 처음 설치한 상태: Early Missions 는 1번만 활성, Struggle For Freedom 도 1번만, Priest Training 은 앞 7개가 활성이고 마지막 2개는 잠긴다.
+    assert.deepEqual(renderOverview('offical1.overview', {}).window.menu.items.map(state), ['c', 'x', 'x', 'x', 'x', 'x']);
+    assert.deepEqual(renderOverview('offical3.overview', {}).window.menu.items.map(state), ['c', 'x', 'x', 'x', 'x', 'x']);
+    assert.deepEqual(renderOverview('offical2.overview', {}).window.menu.items.map(state), ['c', 'c', 'c', 'c', 'c', 'c', 'c', 'x', 'x']);
+    // 한 미션만 끝낸 상태: 1번에 체크 표시, 2번이 열린다. 진행 값은 대소문자를 가리지 않는다(저장 파일은 `DoneThewarbegins` 로 적히지만 목록은 `{DoneTheWarBegins}` 로 읽는다).
+    assert.deepEqual(renderOverview('offical1.overview', { DoneTutorial1: 1 }).window.menu.items.map(state), ['k', 'c', 'x', 'x', 'x', 'x']);
+    assert.deepEqual(renderOverview('offical3.overview', { DoneThewarbegins: 1 }).window.menu.items.map(state), ['k', 'c', 'x', 'x', 'x', 'x']);
+    // 잠긴 행은 누를 수 없고 활성 행의 명령은 MissionBegin 이다.
+    const early = renderOverview('offical1.overview', { DoneTutorial1: 1 }).window;
+    assert.deepEqual(early.menu.items[1].command, { name: 'MissionBegin', argument: 'Tutorial2' });
+    const second = early.menu.bounds();
+    const lockedRow = second.top + 3 * 17 + 3;
+    assert.equal(early.menu.hitIndex(second.left + 20, lockedRow), -1);
+    assert.equal(early.menu.hitIndex(second.left + 20, second.top + 17 + 3), 1);
+});
+
+// 캠페인 하위 목록의 원본 스크린샷 대조: 정렬(최적 원점이 이웃보다 3배 이상 좋음)과 클라이언트 원점 범위, 목록·본문·버튼 평균 차이, 목록의 흰 글자 마스크 일치율이다.
+// 평균 차이는 캡처의 디더링 노이즈(화면마다 다름)를 포함하므로 한계를 넉넉히 두고, 노이즈와 무관한 글자 위치 일치는 흰 글자(채널 최솟값 ≥ 215) 마스크의 교집합/합집합으로 확인한다. (2026-10-29 WB03-E)
+test('캠페인 하위 목록: 원본 스크린샷 5장과 위치·글자 일치', (t) => {
+    const isWhite = (buffer, offset) => Math.min(buffer[offset], buffer[offset + 1], buffer[offset + 2]) >= 215;
+    // 다섯 화면을 차례로 대조한다.
+    for (const [name, info] of Object.entries(CAMPAIGN_SHOTS)) {
+        const shotPath = path.join(REPO_ROOT, 'screenShots', info.file);
+        if (!fs.existsSync(shotPath)) {
+            t.diagnostic(`${info.file} 가 없는 환경이라 건너뜀`);
+            continue;
+        }
+        const shot = decodePng(shotPath);
+        const rendered = renderOverview(name, CAMPAIGN_PROGRESS);
+        const { window } = rendered;
+        const menu = window.menu.bounds();
+        const area = (rect) => [rect.left, rect.top, rect.right, rect.bottom];
+        const scores = [];
+        // 클라이언트 원점 후보를 훑어 목록 영역 차이가 가장 작은 원점을 찾는다.
+        for (let originY = 28; originY <= 40; originY += 1) {
+            for (let originX = 0; originX <= 10; originX += 1) scores.push({ originX, originY, score: regionDiff(rendered, shot, area(menu), originX, originY) });
+        }
+        scores.sort((a, b) => a.score - b.score);
+        const best = scores[0];
+        const neighbors = scores.filter((entry) => Math.abs(entry.originX - best.originX) + Math.abs(entry.originY - best.originY) === 1);
+        assert.ok(neighbors.every((entry) => entry.score > best.score * 3), `${name}: 정렬이 유일하지 않습니다`);
+        // 스크린샷의 창 테두리·제목 표시줄을 뺀 클라이언트 원점은 모든 캡처에서 x 2~7, y 33~35 안이다.
+        assert.ok(best.originX >= 2 && best.originX <= 7 && best.originY >= 33 && best.originY <= 35, `${name}: 원점 (${best.originX}, ${best.originY})`);
+        assert.ok(best.score <= 8, `${name} 목록 평균 차이 ${best.score.toFixed(2)}`);
+        assert.ok(regionDiff(rendered, shot, area(window.body.bounds()), best.originX, best.originY) <= 6.5, `${name} 본문 평균 차이`);
+        assert.ok(regionDiff(rendered, shot, area(window.buttons[0].bounds()), best.originX, best.originY) <= 8, `${name} 버튼 평균 차이`);
+        assert.ok(regionDiff(rendered, shot, area(window.bounds()), best.originX, best.originY) <= 6, `${name} 패널 평균 차이`);
+        // 목록 영역의 흰 글자 마스크가 같다(체크 표시·잠금과 무관하게 활성 행 글자 위치·모양 일치). 모든 행이 잠긴 화면은 흰 글자가 거의 없어 건너뛴다.
+        let both = 0;
+        let either = 0;
+        for (let y = menu.top; y < menu.bottom; y += 1) {
+            for (let x = menu.left; x < menu.right; x += 1) {
+                const inShot = isWhite(shot.rgb, ((y + best.originY) * shot.width + x + best.originX) * 3);
+                const inRendered = isWhite(rendered.rgb, (y * rendered.width + x) * 3);
+                if (inShot && inRendered) both += 1;
+                if (inShot || inRendered) either += 1;
+            }
+        }
+        if (either >= 200) assert.ok(both / either >= 0.98, `${name} 흰 글자 마스크 일치율 ${(both / either).toFixed(3)}`);
+        else t.diagnostic(`${name}: 흰 글자가 ${either}픽셀뿐이라 마스크 비교를 건너뜀(모든 행 잠김)`);
+    }
+});
+
 // 원본 스크린샷 대조: 목록·본문 영역이 한 픽셀도 어긋나지 않게 정렬되고(최적 원점이 이웃 원점보다 5배 이상 좋음), 목록·버튼 영역 평균 차이가 작다.
 test('원본 스크린샷 대조: Credits·Demo·Campaign 목록·본문·버튼 위치 일치', (t) => {
     // 비교 대상 스크린샷과 영역별 허용 평균 차이(채널당)이다. 팔레트 표시 오차(약 ±3)와 캡처 노이즈를 감안한 값이다.

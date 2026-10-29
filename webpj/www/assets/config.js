@@ -41,6 +41,25 @@ export function asciiLower(text) {
     return text.replace(/[A-Z]/g, (character) => String.fromCharCode(character.charCodeAt(0) + 32));
 }
 
+// 설정 값 문자열을 32비트 부호 있는 정수로 읽는다(cpppj o/ConfigInterface.cpp ConfigParseLong, 원본 ReadInt 가 쓰는 변환과 같다).
+// 앞의 공백류(공백·탭·LF·VT·FF·CR)를 건너뛰고 `+`/`-` 부호 하나를 읽은 뒤 십진 숫자를 모으며, 숫자가 아닌 글자에서 멈춘다(`0x10` → 0, `5abc` → 5, 빈 문자열 → 0).
+// 누적은 부호 없는 32비트로 감기므로 `4294967296` 은 0, `4294967295` 는 -1 이다. `parseInt` 와 달리 20자리 넘는 숫자에서도 정밀도를 잃지 않고 같은 감김 결과를 낸다.
+// 사용: configParseLong('  -12x') → -12. `$Checked` 의 완료·활성 값처럼 설정 값을 숫자로 판정하는 곳에 쓴다. (2026-10-29 WB03-E: 활성 조건식 `{A}{B}` 이어 붙인 숫자의 정확한 판정을 위해 추가)
+export function configParseLong(text) {
+    let position = 0;
+    // 앞의 공백류를 건너뛴다.
+    while (position < text.length && (text[position] === ' ' || (text[position] >= '\t' && text[position] <= '\r'))) position += 1;
+    let negative = false;
+    if (position < text.length && (text[position] === '-' || text[position] === '+')) {
+        negative = text[position] === '-';
+        position += 1;
+    }
+    let total = 0;
+    // 숫자가 아닌 글자에서 멈추며 합계는 부호 없는 32비트로 감는다.
+    for (; position < text.length && text[position] >= '0' && text[position] <= '9'; position += 1) total = (Math.imul(total, 10) + (text.charCodeAt(position) - 48)) >>> 0;
+    return (negative ? -total : total) | 0;
+}
+
 // ASCII 대소문자만 바꾸는 대문자 변환이다. 치환 키는 대문자로 모아 비교한다. (2026-10-28 WB02-D)
 function asciiUpper(text) {
     return text.replace(/[a-z]/g, (character) => String.fromCharCode(character.charCodeAt(0) - 32));

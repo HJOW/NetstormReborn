@@ -5,6 +5,7 @@
 //  - 준비 절차(원본 004cf270): 설정 치환 → 첫 변환 → 지시문 추출(버튼·메뉴가 없으면 기본 확인 버튼 `OkButton`) → 모든 LF 를 `<br>` 로 바꿔 두 번째 변환 → 끝 LF 추가.
 // 복원 기준: cpppj HtmlTextParser.cpp·HtmlWindowMetadata.cpp·HtmlWindowFactory.cpp(10.78 경로). 조건 태그 `<?`·그림 `<!`·링크 `<a>` 의 효과와 목록 메뉴 `@`·`#`·`%`·`*TECHLIST*` 등은 호출자가 훅으로 공급한다.
 // (2026-10-28 WB03-D: Tell 대화상자 본문을 처리하기 위해 추가)
+import { configParseLong } from '../assets/config.js';
 
 // 변환 결과 최대 길이(바이트)이다. 원본 출력 버퍼 8192바이트에서 NUL 자리를 뺀 한도로 쓴다. (2026-10-28 WB03-D)
 const OUTPUT_CAPACITY = 8192;
@@ -230,7 +231,9 @@ export function extractDirectives(source, hooks = {}) {
         let replacement = null;
         if (kind === 'checked') {
             result.menuStarted = true;
-            result.menuItems.push({ kind: 'checked', label, command: makeCommand(command, argument), checked: Number.parseInt(match[4], 10) | 0, enabled: Number.parseInt(match[5], 10) | 0 });
+            // 완료(체크 표시)·활성 값은 원본처럼 ConfigParseLong 으로 읽는다(32비트 감김). 원본은 활성 값이 0 이어도 전역 userCheat(설정 값이 0x845fed 일 때만 유효)나
+            // 특수 모드(0055a480, 항상 0)가 켜져 있으면 활성으로 보지만, 웹 판본에는 설정 파일 직접 편집 경로가 없어 이 두 전역을 지원하지 않는다. (2026-10-29 WB03-E)
+            result.menuItems.push({ kind: 'checked', label, command: makeCommand(command, argument), checked: configParseLong(match[4]), enabled: configParseLong(match[5]) });
         } else if (kind === 'menu') {
             result.menuStarted = true;
             const lower = label.toLowerCase();

@@ -1,5 +1,14 @@
 # LEFT_JOBS.webpj — HTML + JavaScript 개발 계획 및 인수인계
 
+## 2026-10-29 WB03-E 완료: 캠페인 하위 목록 5종 검증(Early Missions·Priest Training·Struggle For Freedom·A Nation Rises·Complete Victory)
+
+- [x] **범위:** 사용자 요청("AGENTS.md·LEFT_JOBS.webpj.md 를 읽고 webpj 다음 단계 진행")에 따라 아래 WB03-D '다음' 첫 항목(`$Checked` 체크 표시·잠금·`MissionBegin` 을 스크린샷과 대조)을 했다. 상세 근거·수치는 [webpj 캠페인 하위 목록 기록](docs/webpj-campaign-lists-20261029.md). `cpppj/`·`dotnetpj/`·`originals/`·`originalCD/`·AGENTS.md 와 공통 `LEFT_JOBS.md` 는 수정하지 않았다(다른 PC 의 세션이 cpppj 를 진행 중이라 cpppj 는 읽기만 함). 원본 게임·analyzeManager 는 실행하지 않았다.
+- [x] **호스트·디컴파일:** 현재 PC **HJOW-X3D**, 마지막 전체 정밀 디컴파일 **HJOW-Athlon / 2026-10-23** 으로 불일치하고 이 PC 의 `extracted/refined/originals/` 는 2026-10-27 중단된 재디컴파일 잔재다. 사용자가 **"cpppj 가 플레이 가능한 수준이니 디컴파일 산출물 대신 cpppj 소스를 참고하라"** 고 지시해 재디컴파일을 하지 않았고 디컴파일 소스도 읽지 않았다(마지막 디컴파일 호스트는 HJOW-Athlon 유지). 이 지시는 이번 단위에 한한 것으로 보고, 다음 단위에서 디컴파일이 꼭 필요해지면 다시 확인한다.
+- [x] **결과:** 구현(WB03-D)은 이미 맞았고 **대조가 빠져 있었다.** 저장된 진행 값(`originals/d/options.cfg` 의 `Done*`, 읽기 전용 해독)을 설정에 넣으면 다섯 스크린샷의 체크 표시·잠금 상태와 패널 크기·위치가 모두 일치한다(정렬 이웃 대비 3.5~19배, 흰 글자 마스크 일치율 0.994~1.000). 처음 설치한 상태에서는 묶음마다 첫 행만 활성이다.
+- [x] **코드 변경:** `www/assets/config.js` 에 `configParseLong`(cpppj `ConfigParseLong` 과 같은 32비트 감김 해석)을 추가하고 `www/ui/html-text.js` 의 `$Checked` 값에 적용했다(기존 `parseInt|0` 은 20자리 넘는 이어 붙임에서 정밀도 손실). 웹에서는 `userCheat`(설정 값 `0x845fed`)·특수 모드 활성 우회를 지원하지 않는다.
+- [x] **검증(HJOW-X3D, Node):** `npm --prefix webpj test` **37개 통과**(신규 3: 행 상태, 스크린샷 5장, ConfigParseLong). 변이 검사 3종(목록 여백·체크 표시 위치·잠금 반전)이 모두 검사에 걸렸다. 브라우저(Edge)는 이번에 실행하지 않았다.
+- [ ] **다음(이어서):** (1) **MenuGump 팝업 메뉴(Help·Options):** 스크린샷 `mainMenu - Help.png`·`Options*.png`. 항목·체크 표시·하위 메뉴(`>`)·구분선은 `MenuList` 를 확장해 만들 수 있고, 웹에서 뺄 항목은 Direct Draw/Full Screen·Resolution·Pass Server Diagnostic. **팝업이 놓이는 위치 규칙은 cpppj 에 없다**(cpppj `UberGump::OpenMenu` 는 호스트 어댑터로 `(너비/2+2, 높이/2-27)` 에 고정). 측정값만 있다: Help (634,314)~(756,365), Options (553,296)~(718,564)(1024×768 클라이언트, 8버튼 배치). Help 는 버튼 중앙 x 부근·버튼 윗줄 y, Options 는 x 가 버튼 중앙 부근이나 y 가 버튼보다 38 위여서 규칙이 정해지지 않았다 → **원본 근거(디컴파일 `004ce940` 계열의 팝업 Attach) 확인이 필요**하다. (2) 본문 스크롤바(Slider)·링크·조건·그림(General Help 에 필요). (3) Tell 지역 인자 `Name(arg1,arg2)`·현재 미션 조회. (4) 시작 팁 창·설정 저장(진행 값 `Done*`·음량 등 localStorage). (5) 한국어(D2Coding·`.korean`)·`<background>` 그림. (6) `User Made Campaigns` 항목을 웹에서 빼거나 빈 목록으로 둘지 결정. 그 뒤 정적 맵 화면(M2). 이 단위는 로컬 커밋하며 원격 push 는 하지 않는다.
+
 ## 2026-10-28 WB03-D 완료(적당한 수준에서 마무리): Tell 대화상자 복원 — Credits·Demo·Campaign 목록
 
 - [x] **범위:** 사용자 요청("webpj 다음 작업 진행, 이 PC 의 디컴파일 결과물 참고, 다른 AI 가 cpppj 동시 작업 중이니 cpppj 파일 수정 금지", 중간에 "적당한 수준에서 마무리하고 문서·커밋 후 중단")에 따라 메인 메뉴 버튼이 여는 **Tell 대화상자(원본 HtmlWindowGump)** 를 복원했다. 상세 근거·검증·불일치는 [webpj Tell 대화상자 기록](docs/webpj-tell-dialog-20261028.md). `cpppj/`·`dotnetpj/`·`originals/`·`originalCD/`·AGENTS.md 는 수정하지 않았고 cpppj 는 읽기만 했다. 원본 게임·analyzeManager 는 실행하지 않았다(브라우저는 Edge 헤드리스).
@@ -7,7 +16,7 @@
 - [x] **구현:** `www/assets/font-set.js`(글꼴 슬롯·스타일 → `.chfnt`), `www/ui/style-text.js`(StyleText 조각 체인), `scroll-text.js`(다중 줄 본문 줄 나눔·크기 맞춤), `html-text.js`(HTML 변환·지시문 9종 추출·두 번 변환), `menu-list.js`(세로 메뉴), `tell-lists.js`(`@` 파일 목록), `tell-window.js`(Fit 이식·장식 패널·입력·Timeout), `main-menu.js`(대화상자 모달·버튼 숨김), `netstorm.js`(`Tell`→다음 창, `DoNothing`→닫기). 자산: 글꼴 18개·`openSubGump.wav` 를 `menu` 묶음에 추가(변환 없는 복사).
 - [x] **cpppj 와 다르게 원본 기준으로 고친 점(cpppj 미수정, 공통 인계에 알릴 사항):** 본문 기본 글꼴은 슬롯 0·흰색(cpppj 는 슬롯 5·설명 색), 폭을 되돌린 본문은 그리기 전에 다시 줄 나눔, 대화상자가 열리면 메인 메뉴 버튼이 사라짐, `<background>` 는 이름만 저장.
 - [x] **검증(HJOW-Athlon, Node v24.21.0, Edge 헤드리스):** `npm --prefix webpj test` **34개 통과**(신규 9, 변이 검사 포함). Credits 패널 234×159·Demo 높이 232·Campaign 높이 301 이 문서 범위와 같고, 세 스크린샷에서 목록·본문·버튼 위치가 한 픽셀 단위로 정렬된다. 패널 질감 일부는 스크린샷 캡처 노이즈라 질감 전체 픽셀 일치는 주장하지 않는다. 실제 브라우저에서 Credits(→다음 쪽→Cancel)·Campaign(8행→Early Missions 목록)·Demo 열기·행 누름·닫기를 확인했다. 확인하지 않은 것: 실제 소리 출력·Chrome/Firefox·16:9 화면 클릭.
-- [ ] **다음(이어서):** (1) Early Missions 목록(`$Checked` 체크 표시·잠금·`MissionBegin`)을 `screenShots/mainMenu - Campaign - Early Missions.png` 등과 대조, 두 열 메뉴·`%{userSpec}`. (2) 본문 스크롤바(Slider)·링크·조건·그림(Help 에 필요). (3) Tell 지역 인자 `Name(arg1,arg2)`(cpppj fixture `tell-parameters-x86.tsv`)·현재 미션 조회. (4) MenuGump 펼침 메뉴(Help·Options)·시작 팁 창·설정 저장. (5) 한국어(D2Coding·`.korean`)·`<background>` 그림. 그 뒤 정적 맵 화면(M2). 이 단위는 로컬 커밋하며 원격 push 는 하지 않는다.
+- [ ] **다음(이어서):** (1) **[Early Missions 등 캠페인 하위 목록 대조는 2026-10-29 WB03-E 에서 완료(맨 위 절). 두 열 메뉴·`%{userSpec}` 만 남음]** Early Missions 목록(`$Checked` 체크 표시·잠금·`MissionBegin`)을 `screenShots/mainMenu - Campaign - Early Missions.png` 등과 대조, 두 열 메뉴·`%{userSpec}`. (2) 본문 스크롤바(Slider)·링크·조건·그림(Help 에 필요). (3) Tell 지역 인자 `Name(arg1,arg2)`(cpppj fixture `tell-parameters-x86.tsv`)·현재 미션 조회. (4) MenuGump 펼침 메뉴(Help·Options)·시작 팁 창·설정 저장. (5) 한국어(D2Coding·`.korean`)·`<background>` 그림. 그 뒤 정적 맵 화면(M2). 이 단위는 로컬 커밋하며 원격 push 는 하지 않는다.
 
 ## 2026-10-28 WB02-D 완료: Edit 버튼 제거 + TAFF·설정·Tell 섹션 데이터층
 
@@ -215,7 +224,7 @@ npm --prefix webpj test
 - [x] **WB01 구현 (2026-10-23 완료):** `index.html`의 `Netstorm` 참조를 모듈 import로 정리하고 `init/destroy` 수명·루트/Canvas/스타일·클릭 대기/로딩/실패 화면·입력을 `netstorm.js`에 구현했다. `.css` 파일은 만들지 않았다.
 - [x] **WB01 검증 (2026-10-23 완료):** 클릭 전 메뉴·소리 없음, 클릭 뒤 전환, 로딩 실패 재시도, init/destroy 반복과 중복 이벤트/프레임 없음, 게임 루트 포커스/크기 변경을 확인했다. 자산이 없으므로 메인 메뉴는 임시 화면이며 원본 메뉴 완료가 아니다. 결과와 확인하지 않은 범위는 맨 위 WB01 절에 있다.
 - [x] **WB03-M1 메인 메뉴 (2026-10-23 완료):** 메뉴 자산 묶음·manifest·준비 도구, 팔레트/명암·GIF·VFX 셰이프·원본 영어 글꼴 판독, 8비트 합성·표시기, 원본 메인 메뉴(배치·돌 버튼·입력·소리·커서·창 제목)를 구현·검증했다. 맨 위 WB03-M1 절과 [상세 기록](docs/webpj-main-menu-20261023.md).
-- [ ] **다음 시작점(WB03 나머지 → WB03 M2):** (2026-10-28: Edit 버튼 제거·데이터층·**Tell 대화상자 Credits·Demo·Campaign 목록(WB03-D)** 완료, 맨 위 두 절.) 이제 Early Missions 목록(`$Checked`)·본문 스크롤바·링크/조건/그림(Help)·Tell 지역 인자, MenuGump 펼침 메뉴(Help·Options)·시작 팁 창(Edit 목록은 2026-10-27 목표 변경으로 제외), D2Coding·언어표(한국어 라벨), 설정 저장을 잇는다. 디컴파일 호스트는 HJOW-Athlon 에서 일치했으나 다른 PC 에서 이어 읽을 때는 PC 일치 여부를 다시 확인한다. 그 뒤 정적 맵 화면(M2)을 원본 자료로 그리고 WB04 공유 코어와 수치/fixture 검증으로 진행한다.
+- [ ] **다음 시작점(WB03 나머지 → WB03 M2):** (2026-10-28: Edit 버튼 제거·데이터층·**Tell 대화상자 Credits·Demo·Campaign 목록(WB03-D)** 완료, 맨 위 두 절.) (2026-10-29 WB03-E: Early Missions 등 캠페인 하위 목록 5종 대조 완료.) 이제 본문 스크롤바·링크/조건/그림(Help)·Tell 지역 인자, MenuGump 펼침 메뉴(Help·Options)·시작 팁 창(Edit 목록은 2026-10-27 목표 변경으로 제외), D2Coding·언어표(한국어 라벨), 설정 저장을 잇는다. 디컴파일 호스트는 HJOW-Athlon 에서 일치했으나 다른 PC 에서 이어 읽을 때는 PC 일치 여부를 다시 확인한다. 그 뒤 정적 맵 화면(M2)을 원본 자료로 그리고 WB04 공유 코어와 수치/fixture 검증으로 진행한다.
 - [ ] **착수 때 갱신:** cpppj 최신 복원/실패·자산 복사본·원본 소스와 현재 호스트·Git 변경을 확인한다. 이번에 보존한 사용자 미추적 골격은 실제 구현 단위에서 관련 변경과 함께 관리한다.
 
 ## 10. 참고 자료와 이번 작업 기록
