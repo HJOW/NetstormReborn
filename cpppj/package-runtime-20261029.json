@@ -1,0 +1,135 @@
+{
+  "unit": 562,
+  "date": "2026-10-29",
+  "host": "HJOW-Athlon",
+  "os": "Windows-10-10.0.19045-SP0",
+  "parentCommit": "c68085f6",
+  "lastFullDecompilation": "HJOW-Athlon / 2026-10-23",
+  "goalComplete": false,
+  "pushed": false,
+  "gameSha256": "e779165698483c4cae6d3bf0a3e7e02410b3dfed86e30a9a7c60d3e28f94ade2",
+  "gameBinaryAndTimestampUnchanged": true,
+  "packageScriptSha256": "aa422d5e6b8b9fd66f7ae8ea249f269be985cff46ee7e1720cbc5c01d6d12e4f",
+  "defaultBuild": {
+    "returnCode": 0,
+    "target": "NetstormCpp",
+    "parallelLimit": 4,
+    "generator": "Visual Studio 18 2026",
+    "windowsPowerShell": "5.1",
+    "log": "package-v2.log",
+    "cppTestsRun": false
+  },
+  "archive": {
+    "path": "extracted/cpp-package-runtime-562-20261029/한글 배포/Netstorm-cpppj-562.zip",
+    "sha256": "e4019f8279263fa69985d1e7b8f189fbd94bc40ad058f1ac3a3f64ef2f2ee6a9",
+    "bytes": 133888976,
+    "entries": 1365,
+    "gameFiles": 1356,
+    "runtimeDlls": 3,
+    "allGameFilesIdentical": true,
+    "buildInfo": "NetStorm Reborn - cpppj distribution\r\nCreated      : 2026-10-29 10:33:12\r\nSource commit: c68085f6 (cpppj 에 커밋되지 않은 변경 있음)\r\nExecutable   : NetstormCpp.exe  8,880,640 bytes  built 2026-10-29 08:53:52\r\nExecutable SHA256: E779165698483C4CAE6D3BF0A3E7E02410B3DFED86E30A9A7C60D3E28F94ADE2\r\nGame data    : original 10.78 files from \"originals\"  (1356 files, 153,419,626 bytes, 5 excluded)\r\nRuntime      : msvcp140.dll  14.51.36247.0  (Visual Studio 14.51.36231)\r\nRuntime      : vcruntime140.dll  14.51.36247.0  (Visual Studio 14.51.36231)\r\nRuntime      : vcruntime140_1.dll  14.51.36247.0  (Visual Studio 14.51.36231)\r\n",
+    "imports": {
+      "NetstormCpp.exe": [
+        "USER32.dll",
+        "GDI32.dll",
+        "WINMM.dll",
+        "dwmapi.dll",
+        "KERNEL32.dll",
+        "MSVCP140.dll",
+        "VCRUNTIME140.dll",
+        "VCRUNTIME140_1.dll",
+        "api-ms-win-crt-stdio-l1-1-0.dll",
+        "api-ms-win-crt-filesystem-l1-1-0.dll",
+        "api-ms-win-crt-heap-l1-1-0.dll",
+        "api-ms-win-crt-runtime-l1-1-0.dll",
+        "api-ms-win-crt-convert-l1-1-0.dll",
+        "api-ms-win-crt-environment-l1-1-0.dll",
+        "api-ms-win-crt-string-l1-1-0.dll",
+        "api-ms-win-crt-math-l1-1-0.dll",
+        "api-ms-win-crt-time-l1-1-0.dll",
+        "api-ms-win-crt-locale-l1-1-0.dll"
+      ],
+      "msvcp140.dll": [
+        "VCRUNTIME140.dll",
+        "VCRUNTIME140_1.dll",
+        "api-ms-win-crt-heap-l1-1-0.dll",
+        "api-ms-win-crt-runtime-l1-1-0.dll",
+        "api-ms-win-crt-string-l1-1-0.dll",
+        "api-ms-win-crt-locale-l1-1-0.dll",
+        "api-ms-win-crt-stdio-l1-1-0.dll",
+        "api-ms-win-crt-filesystem-l1-1-0.dll",
+        "api-ms-win-crt-time-l1-1-0.dll",
+        "api-ms-win-crt-environment-l1-1-0.dll",
+        "api-ms-win-crt-math-l1-1-0.dll",
+        "api-ms-win-crt-convert-l1-1-0.dll",
+        "api-ms-win-crt-utility-l1-1-0.dll",
+        "KERNEL32.dll"
+      ],
+      "vcruntime140.dll": [
+        "api-ms-win-crt-runtime-l1-1-0.dll",
+        "api-ms-win-crt-heap-l1-1-0.dll",
+        "api-ms-win-crt-string-l1-1-0.dll",
+        "api-ms-win-crt-stdio-l1-1-0.dll",
+        "api-ms-win-crt-convert-l1-1-0.dll",
+        "KERNEL32.dll"
+      ],
+      "vcruntime140_1.dll": [
+        "api-ms-win-crt-runtime-l1-1-0.dll",
+        "api-ms-win-crt-heap-l1-1-0.dll",
+        "api-ms-win-crt-string-l1-1-0.dll",
+        "VCRUNTIME140.dll",
+        "KERNEL32.dll"
+      ]
+    },
+    "previousArchiveSha256": "b379f53a72db1363d94bbca77640e6b03acea877f2f6359afb5df326448bca53",
+    "onlyChangedEntry": [
+      "NetstormReborn-cpppj/BUILD_INFO.txt"
+    ]
+  },
+  "parameterChecks": [
+    {
+      "name": "cancel",
+      "returnCode": 0,
+      "noArchiveCreated": true
+    },
+    {
+      "name": "prompt-path",
+      "returnCode": 0,
+      "noArchiveCreated": true
+    },
+    {
+      "name": "no-build",
+      "returnCode": 0,
+      "noArchiveCreated": true
+    },
+    {
+      "name": "explicit-exe",
+      "returnCode": 0,
+      "noArchiveCreated": true
+    }
+  ],
+  "actualCloneExecutions": 1,
+  "actualCloneFailures": 1,
+  "runtimeModulesFromPackage": true,
+  "firstInstall": {
+    "passed": false,
+    "returnCode": 1,
+    "stateSequence": [
+      3,
+      39
+    ],
+    "error": "선택된 Native State 미연결:39",
+    "rawDirectory": "full-first",
+    "extraRestartAndWindowRunsPerformed": false
+  },
+  "readyForDistribution": false,
+  "originalGameExecutions": 0,
+  "newNetworkTests": 0,
+  "windows11Live": false,
+  "protection": {
+    "total": 2540,
+    "existingFixtures": 720,
+    "unchanged": true
+  },
+  "next": "새 설치의 intro0→Native39 시작 분기를 원본 순서대로 복원한다. 초기 설정/intro 플래그 우회는 하지 않는다."
+}

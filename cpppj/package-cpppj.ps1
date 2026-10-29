@@ -11,7 +11,7 @@
     - 저장 위치(파일명 포함)를 첫 번째 매개변수로 주면 그 위치를 쓴다.
     - 매개변수를 생략하면 실행 중에 입력을 받는다. 빈 값을 입력하면 취소로 보고 종료한다(종료 코드 0).
     - 폴더만 입력하면 그 폴더 안에 기본 파일명으로 만든다. 확장자를 생략하면 .zip 을 붙인다.
-    - 실행 파일이 없거나 소스보다 오래됐으면 NetstormCpp 대상만 Release 로 빌드한다(-NoBuild 로 끈다).
+    - 기본 실행은 NetstormCpp 대상만 Release 증분 빌드해 모든 CMake 입력을 확인한다(-NoBuild 로 끈다).
     - 게임 데이터는 기본적으로 저장소의 originals 폴더에서 읽기만 한다. 원본 파일은 수정하지 않는다.
     - 사용자별 상태 파일(d\options.cfg, fullscreenStateFile.dat)은 넣지 않는다. 받은 사람의 첫 실행에서 새로 만들어진다.
 
@@ -120,8 +120,9 @@ $RuntimeDllCandidates = @(
     'msvcp140.dll', 'msvcp140_1.dll', 'msvcp140_2.dll', 'msvcp140_atomic_wait.dll', 'msvcp140_codecvt_ids.dll',
     'vcruntime140.dll', 'vcruntime140_1.dll', 'vcruntime140_threads.dll', 'concrt140.dll')
 
-# 실행 파일이 소스보다 오래됐는지 비교할 때 보는 파일 확장자(소문자)다. (2026-10-23 신규)
-$SourceExtensions = @('.cpp', '.h', '.hpp', '.cmake', '.txt')
+# -NoBuild 경고에서 소스 시각을 비교하는 확장자다. Windows10/11용 UTF-8 manifest와 리소스도 누락하지 않는다.
+# 실제 기본 빌드의 최신 여부는 CMake 의존성으로 판정한다. 원본10.78과 다른 호환 manifest도 배포에 반영해야 한다.
+$SourceExtensions = @('.cpp', '.h', '.hpp', '.cmake', '.txt', '.manifest', '.rc')
 
 # ----------------------------------------------------------------------------------------------
 # 함수
@@ -131,6 +132,21 @@ $SourceExtensions = @('.cpp', '.h', '.hpp', '.cmake', '.txt')
 function Format-Size {
     param([long] $Bytes)
     return ('{0:N1} MB' -f ($Bytes / 1MB))
+}
+
+# 전체 파일의 SHA-256을 스트림으로 계산해 BUILD_INFO의 대문자16진 문자열로 반환한다.
+# 경로를 표준입력으로 받은 PowerShell5.1에서 Get-FileHash 함수 자동 적재가 실패한 사례가 있어 .NET 장치를 직접 사용한다.
+function Get-PackageFileHash {
+    param([string] $FilePath) # 메타데이터를 기록할 실제 실행 파일 경로다.
+    $algorithm = [System.Security.Cryptography.SHA256]::Create() # 기본 .NET SHA-256 장치다.
+    $stream = $null # 파일 열기에 실패해도 알고리즘 장치는 반드시 반납한다.
+    try {
+        $stream = [System.IO.File]::OpenRead($FilePath)
+        return [System.BitConverter]::ToString($algorithm.ComputeHash($stream)).Replace('-', '')
+    } finally {
+        if ($stream) { $stream.Dispose() }
+        $algorithm.Dispose()
+    }
 }
 
 # 사용자가 입력한 저장 위치를 완전한 .zip 파일 경로로 바꾼다.
@@ -239,7 +255,7 @@ function Get-NewestSourceTime {
     return $newest
 }
 
-# NetstormCpp 대상만 Release 로 빌드한다. 빌드 폴더가 아직 구성되지 않았으면 먼저 구성한다.
+# NetstormCpp 대상만 최대4개 병렬 작업의 Release 증분 빌드로 확인한다. 미구성 폴더는 먼저 구성한다.
 # 시험 프로그램까지 빌드하면 오래 걸려 실행 파일 대상만 지정한다. (2026-10-23 신규)
 function Invoke-ExeBuild {
     $cmake = Find-CMakeTool
@@ -252,8 +268,14 @@ function Invoke-ExeBuild {
         & $cmake -S $CppRoot -B $buildDir
         if ($LASTEXITCODE -ne 0) { throw "cmake 구성에 실패했습니다(종료 코드 ${LASTEXITCODE})." }
     }
-    Write-Host 'NetstormCpp 를 Release 로 빌드합니다(시간이 걸릴 수 있습니다)...'
-    & $cmake --build $buildDir --config Release --target NetstormCpp
+    Write-Host 'NetstormCpp 를 Release 증분 빌드합니다(최대 4개 병렬 작업)...'
+    # 생성기 공통 작업 상한이다. 최신 실행 파일도 CMake가 실제 포함 파일/리소스 의존성을 확인하게 한다.
+    $buildArguments = @('--build', $buildDir, '--config', 'Release', '--target', 'NetstormCpp', '--parallel', '4')
+    # Visual Studio의 내부 컴파일 작업도 제한한다. 다른 생성기에 MSBuild 전용 인자를 전달하지 않는다.
+    if (Select-String -LiteralPath (Join-Path $buildDir 'CMakeCache.txt') -Pattern '^CMAKE_GENERATOR:INTERNAL=Visual Studio ' -Quiet) {
+        $buildArguments += @('--', '/p:UseMultiToolTask=true', '/p:MultiProcMaxCount=4', '/p:EnforceProcessCountAcrossBuilds=true')
+    }
+    & $cmake @buildArguments
     if ($LASTEXITCODE -ne 0) { throw "빌드에 실패했습니다(종료 코드 ${LASTEXITCODE})." }
 }
 
@@ -650,7 +672,7 @@ try {
     $GameSource = [System.IO.Path]::GetFullPath($GameSource)
     $game = Get-GameItems -Source $GameSource
 
-    # 3) 실행 파일을 정한다. 직접 지정했으면 그대로 쓰고, 아니면 없음/오래됨을 검사해 필요하면 빌드한다.
+    # 3) 직접 지정한 실행 파일은 그대로 쓰고 기본 경로는 CMake 증분 빌드로 모든 입력을 확인한다.
     $exeExplicit = -not [string]::IsNullOrWhiteSpace($ExePath)
     if ($exeExplicit) {
         $ExePath = [System.IO.Path]::GetFullPath($ExePath)
@@ -671,6 +693,12 @@ try {
                 $buildNeeded = $true
                 $buildReason = ('실행 파일({0:yyyy-MM-dd HH:mm})이 가장 최근 소스({1:yyyy-MM-dd HH:mm})보다 오래됐습니다' -f $exeTime.ToLocalTime(), $newestSource.ToLocalTime())
             }
+        }
+        # 타임스탬프 비교만으로 manifest/생성 파일/되돌린 소스의 의존성을 판단하지 않는다.
+        # -NoBuild는 이전의 생략/경고 동작을 유지하며 기본 실행만 실제 CMake에 최신 여부를 맡긴다.
+        if (-not $NoBuild) {
+            $buildNeeded = $true
+            if ([string]::IsNullOrEmpty($buildReason)) { $buildReason = '배포 전에 CMake 의존성으로 실행 파일의 최신 여부를 확인합니다' }
         }
     }
     if ($buildNeeded) {
@@ -695,7 +723,7 @@ try {
     $exeHash = '(빌드 후 계산)'
     if ($exeExists) {
         Add-FileItem -Items $items -Entry ($PackageRootName + '/' + $ExeName) -Source $ExePath
-        $exeHash = (Get-FileHash -LiteralPath $ExePath -Algorithm SHA256).Hash
+        $exeHash = Get-PackageFileHash -FilePath $ExePath
         if (-not $NoRuntime) {
             $runtimePlan = @(Get-RuntimeDllPlan -ExeFile $ExePath)
             # 필요한 런타임 DLL 을 실행 파일 옆에 넣는다. 같은 폴더가 DLL 검색 순서의 첫 번째이다.
