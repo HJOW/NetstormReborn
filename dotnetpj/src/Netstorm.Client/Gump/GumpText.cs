@@ -59,4 +59,10 @@ public sealed class GumpText
         FontStyle style = legal ? (FontStyle)context.Style : FontStyle.Normal; bool cdEmpty = _edition != OriginalEdition.Patch1078 && slot == 6 && style == FontStyle.Bold;
         if (!FontStore.Available(slot, style) || cdEmpty) return default; BitmapFont font = _fonts.Get(slot, style); return (font.Height(), font.Ascent(), font.Descent());
     }
+
+    /// <summary>실제 라벨/기본 문맥 측정기를 돌 버튼의 같은 출력 주소에 연결한다. Draw용 세 문맥과 혼동하지 않는다.</summary>
+    public static void BindStoneButtonText(StoneButtonGumpHooks hooks, GumpText text)
+    {
+        hooks.Measure = (uint token, byte[] label, uint[] context, ref int width, ref int height, uint length) => text.Measure(label, DecodeGumpTextContext(context), ref width, ref height, unchecked((int)length));
+    }
 }

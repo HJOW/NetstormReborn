@@ -17,7 +17,7 @@ public sealed class GumpBackgroundNode : GumpCreateNode
     /// <summary>+b0 현재 논리/물리 프레임 번호.</summary>
     public uint Frame { get; set; }
     /// <summary>+b4 질감/단색/체크/테두리 플래그.</summary>
-    public uint BackgroundFlags { get; set; }
+    public uint BackgroundFlags; // 버튼이 원본 +b4 주소처럼 ref로 공유하므로 속성 대신 같은 저장 필드를 제공한다.
 }
 
 /// <summary>현재 타입 저장소의 안정된 토큰과 SHP 번호다. 프레임 콜백 중 바뀐 Shape도 다시 읽는다.</summary>
