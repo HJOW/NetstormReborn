@@ -60,6 +60,8 @@ cpppj/src/client/GumpVisual.cpp	Netstorm.Client/Gump/GumpVisual.cs	39bc55e914fa1
 cpppj/src/client/GumpVisual.h	Netstorm.Client/Gump/GumpVisual.cs	39bc55e914fa14eddeba3641b757ec689abb7a95	port
 cpppj/src/client/HtmlConditionEffect.cpp	Netstorm.Client/Gump/HtmlConditionEffect.cs	fb0f73782fb89fbbdf26c22ed3f91698abae1012	L1
 cpppj/src/client/HtmlConditionEffect.h	Netstorm.Client/Gump/HtmlConditionEffect.cs	fb0f73782fb89fbbdf26c22ed3f91698abae1012	L1
+cpppj/src/client/HtmlLinkText.cpp	Netstorm.Client/Gump/HtmlLinkText.cs	c58ddc1f7a2e1e9cc2e97500bc06a51bb36fc817	L1
+cpppj/src/client/HtmlLinkText.h	Netstorm.Client/Gump/HtmlLinkText.cs	c58ddc1f7a2e1e9cc2e97500bc06a51bb36fc817	L1
 cpppj/src/client/HtmlTextParser.cpp	Netstorm.Client/Gump/HtmlTextParser.cs	fb0f73782fb89fbbdf26c22ed3f91698abae1012	L1
 cpppj/src/client/HtmlTextParser.h	Netstorm.Client/Gump/HtmlTextParser.cs	fb0f73782fb89fbbdf26c22ed3f91698abae1012	L1
 cpppj/src/client/ImageGump.cpp	Netstorm.Client/Gump/ImageGump.cs	9813ecd5dfbbb30c4ca9d0ee6e3e8027b81e3d2f	L1
@@ -97,9 +99,12 @@ cpppj/src/client/PreviewColorMaps.cpp	Netstorm.Client/Display/PreviewColorMaps.c
 cpppj/src/client/PreviewColorMaps.h	Netstorm.Client/Display/PreviewColorMaps.cs	e4b739b97f5316453de827b92ba6527a63f17637	L1
 cpppj/src/client/ProductionColorMaps.cpp	Netstorm.Client/Display/ProductionColorMaps.cs	e4b739b97f5316453de827b92ba6527a63f17637	L1
 cpppj/src/client/ProductionColorMaps.h	Netstorm.Client/Display/ProductionColorMaps.cs	e4b739b97f5316453de827b92ba6527a63f17637	L1
+cpppj/src/client/QuickHelpHtml.cpp	Netstorm.Client/Gump/QuickHelpHtml.cs	c58ddc1f7a2e1e9cc2e97500bc06a51bb36fc817	L1
+cpppj/src/client/QuickHelpHtml.h	Netstorm.Client/Gump/QuickHelpHtml.cs	c58ddc1f7a2e1e9cc2e97500bc06a51bb36fc817	L1
 cpppj/src/client/RawBackgroundGifControls.cpp	Netstorm.Client/Gump/BackgroundGifStorage.cs	a168082548e090f2f191e4b83106e7351fbc00ba	port
 cpppj/src/client/RawImage.cpp	Netstorm.Client/Display/RawImage.cs	ca0c01ebfceb9801ef1fcdb272deec4dc311a2db	port
 cpppj/src/client/RawImage.h	Netstorm.Client/Display/RawImage.cs	ca0c01ebfceb9801ef1fcdb272deec4dc311a2db	port
+cpppj/src/client/RawPriestMenu.h	Netstorm.Client/Gump/QuickHelpHtml.cs	c58ddc1f7a2e1e9cc2e97500bc06a51bb36fc817	port
 cpppj/src/client/RawShapeToBuffer.cpp	Netstorm.Client/Display/RawShapeToBuffer.cs	4fab249c1190a4f3024baf7bccf152adfcc1859d	port
 cpppj/src/client/RawShapeToBuffer.h	Netstorm.Client/Display/RawShapeToBuffer.cs	4fab249c1190a4f3024baf7bccf152adfcc1859d	port
 cpppj/src/client/Renderer.cpp	Netstorm.Client/Display/RendererDraw.cs	ca0c01ebfceb9801ef1fcdb272deec4dc311a2db	port
