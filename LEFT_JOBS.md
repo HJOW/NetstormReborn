@@ -1,16 +1,18 @@
 # LEFT_JOBS — cpppj 및 공통 인수인계
 
-> **2026-10-30 목표 재개 / 최신580 완료:** 사용자 재개 요청으로 AGENTS.md와 공통·DN 인계를 다시 읽고 진행했다. cpppj 산출물·배포·실행 도구를 Netstorm.exe로 변경했고 기본 Release 증분 빌드/ZIP1365항목·Python96파일 구문·압축 해제본 도움말/실제 런처 메뉴 진입(4.092초/종료0)을 확인했다. 처음 안내의 Main Menu 입력 누락으로 실패한 관측도 보존했다. 전체 목표는 미완료이며 다음은579의 Chat 실제 제출·로컬 명령/서식/송신 연결과 기존 UI/Edit·수명·호환성 잔여다.
+> **2026-10-30 목표 재개 / 최신581 완료:** 실제 Console Enter를 대상 해석/점 명령/빈 입력·clear·quit에 연결했다. 고유집중31/최종실패0·등록3458, 최종 배포본의 실제 입력→clear→빈 Enter 숨김/재표시→quit 확인창/Quit 선택17.294초·종료0이다.580 이름 변경의 import library/netstorm.lib 충돌로 재링크가 누락되는 문제도 수정·증분 링크 검증했다. 최초 구제품 실행/검사 모드 누락/즉시 종료 기대 실패를 구별해 보존했다. 일반 본문 서식·송신과 format/back/front는 아직 미연결이며 전체 목표는 미완료다.
 
 > **2026-10-30 AGENTS.md 변경 반영(문서만):** 사용자 요청으로 AGENTS.md 최근 커밋 `bfccadf5`·`24959e75`(후순위 4~6차 재편)와 `ef0c6b91`(**cpppj·dotnetpj의 Windows 실행 파일 이름은 `Netstorm.exe`**)을 이 문서와 [LEFT_JOBS.dotnetpj.md](LEFT_JOBS.dotnetpj.md)에 반영했다. 당시에는 문서만 변경했으며 cpppj 이름 적용은 이후580에서 완료했다. dotnetpj 이름 변경은 별도 미완료다.
 
 > **직전 단위579:** Chat0042da00 대상/본문 해석과0042d1b0 수신자 중복/32슬롯 확장, 실제 Client 소유자의 배열 반납을 복원했다. 원문383행/독립766관측·재관측 차이0·집중33/실패0·등록3454, 최종 검사/게임 빌드 경고·오류0이다. 실제 Enter/서식·송신은 후속이며 이번 새 게임/GUI/MP 실행은 없다.
 
-이 문서는 cpppj와 공통 사항의 현재 상태·다음 작업·유효한 사용자 결정을 담는다. 전체 목표는 미완료이며 2026-10-30 새 목표 요청으로580부터 재개했다. 최신580은 Netstorm.exe 산출물·배포·실행 도구 이름을 적용하고 기본 Release 빌드/압축 해제본 메뉴 진입을 확인한 단위다. 게임 SHA511baeb9…/등록3454이며 원본/CD/정밀 자료/AGENTS1861파일 변경0이다. 첫 안내 Main Menu 입력 누락 실패와 교정 실행은580문서에 구별했다. 직전579은 Chat 제출 해석/수신자 확장 부품까지이고 실제 Enter sendChat/로컬 명령/서식·송신은 다음이다. 마지막 전체34경로는560제품/561이며 현재580 전체C++/34경로·자연 완주·Win11은 미검증이다. 포획/희생/특정 공격/승리·공중3종 전용/신규MP 검사 제한과 후순위MP 무시험 사전 구현을 유지한다. 현재 PC와 마지막 전체 정밀 디컴파일은 HJOW-Athlon/2026-10-23이다. 상세는0~3절과 단위별 문서를 따른다. 과거0절은 [549까지](LEFT_JOBS.old.md#archive-20261029-section0-through-549)·[504까지](LEFT_JOBS.old.md#archive-20261027-through-504), 지난3절은 [561까지](LEFT_JOBS.old.md#archive-20261029-section3-through-561)를 본다. dotnetpj는 [별도 인계](LEFT_JOBS.dotnetpj.md), webpj는 [별도 인계](LEFT_JOBS.webpj.md)를 따른다.
+이 문서는 cpppj와 공통 사항의 현재 상태·다음 작업·유효한 사용자 결정을 담는다. 전체 목표는 미완료이며 사용자 새 목표 요청으로580부터 재개했다. 최신581은 실제 Console 로컬 제출과 이름 변경의 증분 링크 수정을 마쳤다. 고유집중31/실패0·등록3458·최종게임SHA db33b483…/ZIP1365항목이며 최종 압축 해제본의17.294초 실제 입력/종료0을 확인했다. 원본/CD/정밀 자료/AGENTS1861파일은 불변이다. 일반 본문 서식/송신·format/back/front는 다음이며 Edit·시나리오·수명·호환성/전체 동일성도 남는다. 마지막 전체34경로는560제품/561이며 현재581 전체C++/34경로·자연 완주·Win11은 미검증이다. 포획/희생/특정 공격/승리·공중3종 전용/신규MP 검사 제한과 후순위MP 무시험 사전 구현을 유지한다. 현재 PC와 마지막 전체 정밀 디컴파일은 HJOW-Athlon/2026-10-23이다. 상세는0~3절과 단위별 문서를 따르며 과거0절은 [549까지](LEFT_JOBS.old.md#archive-20261029-section0-through-549)·[504까지](LEFT_JOBS.old.md#archive-20261027-through-504), 지난3절은 [561까지](LEFT_JOBS.old.md#archive-20261029-section3-through-561)를 본다. dotnetpj는 [별도 인계](LEFT_JOBS.dotnetpj.md), webpj는 [별도 인계](LEFT_JOBS.webpj.md)를 따른다.
 
 ## 0. 재개 전 확인 사항
 
-- **최신580 / Netstorm.exe 산출물·배포 완료.** 현재 PC/마지막 전체 정밀 디컴파일은 HJOW-Athlon/2026-10-23으로 일치한다. 새 게임 SHA511baeb9…의 배포본 메뉴와 원본1861파일 불변을 확인했다. 구현/검증·최초 실패는 [580 문서](docs/exe/cpp-executable-name-20261030.md)에 있고 다음 작업은579 실제 Chat 제출 연결이다. 등록3454와 마지막 전체560제품/561의34경로 근거는 유지한다.
+- **최신581 / 실제 로컬 제출·증분 링크 완료.** 실제 Console Enter→579 해석/577 분배→빈 입력·clear/quit와 장기 분배 상태를 연결했다. 집중31/최종실패0·등록3458, 최종 배포본 실제17.294초/종료0·원본1861불변·최종 빌드 경고/오류0이다.580의 import library와 정적netstorm.lib 경로 충돌을 ARCHIVE_OUTPUT_NAME NetstormCpp로 수정하고 내용 해시 불변의 라이브러리 시각 변경→게임 재링크를 확인했다. 처음 구제품 게임 종료1, 실제 월드 battle 미설정의 신규검사1실패, 즉시 종료를 기대한 도구 실패는 보존했다. 최종게임SHA db33b483…/ZIP1365항목이며 [581 문서](docs/exe/cpp-chat-local-submit-20261030.md)·[집계](cpppj/chat-local-submit-runtime-20261030.json), 원시 extracted/cpp-chat-local-submit-581-20261030/를 따른다. 마지막 전체 디컴파일은 HJOW-Athlon/2026-10-23이고 산출물 수정/새 원문 관측은 없다. 다음은 format/back/front의 원문 해석·manager/Config 저장과 일반 서식/전달이다. 새MP·금지된 실제 재현은 없다.
+
+- **580 / Netstorm.exe 산출물·배포 완료.** 현재 PC/마지막 전체 정밀 디컴파일은 HJOW-Athlon/2026-10-23으로 일치한다. 새 게임 SHA511baeb9…의 배포본 메뉴와 원본1861파일 불변을 확인했다. 구현/검증·최초 실패는 [580 문서](docs/exe/cpp-executable-name-20261030.md)에 있고 다음 작업은579 실제 Chat 제출 연결이다. 등록3454와 마지막 전체560제품/561의34경로 근거는 유지한다.
 
 - **2026-10-30 AGENTS.md 변경 반영(사용자 요청, 문서만).** 이 작업은 인수인계 문서 두 개만 고쳤고 코드·CMake·스크립트·빌드·게임 실행·디컴파일·테스트는 하지 않았다(호스트 HJOW-X3D. 마지막 전체 정밀 디컴파일은 HJOW-Athlon/2026-10-23 그대로이며 디컴파일 산출물을 읽지 않았다). 읽은 AGENTS.md 변경은 두 가지다. ① `bfccadf5`·`24959e75`: cpppj의 3차 뒤 후속을 **4~6차**로 나눴다. 4차 MCP(dotnetpj 개발을 위한 게임 분석용), 5차 설정·캠페인 진행 저장을 `%USERPROFILE%\Saved Games\Netstorm\Saves\`로 이동하고 커스텀 맵을 기존 폴더와 `%USERPROFILE%\Saved Games\Netstorm\CustomMaps\` 양쪽에서 불러오되 Edit의 신규 저장은 후자로 하며 Edit 맵 목록에 스크롤을 넣고 출력 개수 제한을 없앤다, 6차 한국어 지원이다. 이전에는 4차가 '한국어+MCP', 5차가 '추가 요구사항'이었다. 이 4~6차는 dotnetpj의 후순위 요구에도 포함된다. ② `ef0c6b91`: **cpppj·dotnetpj 모두 Windows 용 게임 실행 파일이 `Netstorm.exe`로 생성돼야 한다.** 문서 반영 당시 cpppj는 `NetstormCpp.exe`(580에서 `Netstorm.exe` 적용 완료), dotnetpj 기존 게임은 `NetstormClone.exe`다. 이는 후순위 단계에 묶이지 않은 산출물 요구이며 영향과 순서는 3절 8번의 첫 항목에 적었다. 현재 구현은 설정·진행 저장을 원본과 같은 게임 자료 폴더(`d/options.cfg`)에 두고 Edit 목록의 원문 50개 상한을 유지하므로 5차 요구는 해당 단계 전까지 구현 대상이 아니다. 당시 일시 중지는 사용자 새 목표 요청으로580에서 해제했다.
 
@@ -79,12 +81,13 @@
 
 일반31경로(Early6 + Training9 + 캠페인16)와 데모3개를 합쳐34경로다. 같은 자원을 쓰는 GuardMyBack·DissolvedAlliance도 일반/데모를 따로 검증한다([대응 근거](docs/gameplay/demo-campaign-map.md)).
 
-## 2. 현재 상태 (2026-10-30 / 제품580 Netstorm.exe·배포본 메뉴 확인, 전체 목표 재개·미완료)
+## 2. 현재 상태 (2026-10-30 / 제품581 실제 로컬 제출·증분 링크·최종 배포본 확인, 전체 목표 미완료)
 
 ### 2.1 마지막 통합 검증 기준
 
 | 근거 | 확인한 범위와 결과 | 현재 판정의 한계 |
 | --- | --- | --- |
+| **581 / 실제 로컬 제출·증분 링크** | 고유집중31/최종실패0·등록3458, 최종 배포본 clear/빈 Enter/quit 확인창17.294초·종료0, 라이브러리 시각 변경→EXE 재링크/보호1861불변 | 일반 서식·송신/format·back·front 미연결. 최초 세 종류 실패 보존. 전체C++·34경로·Win11·자연 완주/신규MP 없음. [문서](docs/exe/cpp-chat-local-submit-20261030.md) |
 | **580 / Netstorm.exe·배포** | 기본 Release 빌드/ZIP1365항목·Python96구문·도움말/실제 압축 해제본 런처 메뉴4.092초·종료0·보호1861불변 | 최초 안내 입력 누락 실패 보존/교정. 전체C++·34경로·Win11·자연완주/신규MP 없음. [문서](docs/exe/cpp-executable-name-20261030.md) |
 | **579 / Chat 제출·수신자 부품** | 원문383행/독립766관측·재관측 차이0·집중33/실패0·등록3454. 실제 소유자100수신자 확장/반납 성공·최종 빌드 경고·오류0 | Enter/등록 callback/서식·송신 미연결. 새 게임/GUI/MP 없음. 커밋 뒤 사용자 요청 일시 중지. [문서](docs/exe/cpp-chat-submit-20261030.md) |
 | **578 / 캠페인 완료 저장·초기 잠금** | 실제 새 설정1활성·1-1 저장/재실행1체크/2활성·기존 설정9체크/10활성. 메뉴3실행/종료0·16단계 저장/새 프로세스 읽기 성공 | 제품 코드/새 빌드 없음. 실제 미션 시작/승리 재현·전체34/Cpp/Win11은 별도. [문서](docs/exe/cpp-campaign-progress-20261030.md) |
@@ -236,9 +239,9 @@ cmake --build cpppj/build --config Release --parallel 4
 
 ## 3. 앞으로 할 작업 (권장 순서)
 
-**2026-10-30 / 단위580 파일 이름·배포본 메뉴 확인 기준.** 완료 근거가 있는 범위는 `[x]`, 미완료·보류는 `[ ]`로 표시한다. 좁은 검사 완료를 전체 기능·원본 동일성 완료로 확대하지 않는다. 지난 상세는 [단위561까지의 이전3절](LEFT_JOBS.old.md#archive-20261029-section3-through-561)에 보관했다.
+**2026-10-30 / 단위581 로컬 제출·증분 링크·최종 배포본 확인 기준.** 완료 근거가 있는 범위는 `[x]`, 미완료·보류는 `[ ]`로 표시한다. 좁은 검사 완료를 전체 기능·원본 동일성 완료로 확대하지 않는다. 지난 상세는 [단위561까지의 이전3절](LEFT_JOBS.old.md#archive-20261029-section3-through-561)에 보관했다.
 
-**2026-10-30 새 목표 요청으로 재개했다.** 580의 Netstorm.exe 빌드·배포 적용을 완료했다. 다음은 실제 Console sendChat/현재 Identity·Chat100행/입력줄·577분배·등록 callback/서식·송신 연결이다. 이후 남은 UI/Edit·시나리오·수명·호환성을 이어간다. 전체 커서 조합과 현재제품 전체34경로/전체C++/Win11은 잔여이며 기존 포획·희생·특정 공격/승리·공중3종 전용/신규MP 검사 제한은 유지한다.
+**2026-10-30 새 목표 요청으로 재개했다.**580 이름 변경 뒤581에서 실제 Console의 빈 제출/clear/quit와 증분 링크를 연결·검증했다. 다음은 format/back/front의 원문 해석·현재 manager/Config 저장과 일반 본문 서식/전달이다. 이후 남은 UI/Edit·시나리오·수명·호환성을 이어간다. 현재제품 전체34경로/전체C++/Win11 및 전체 커서 조합은 잔여이며 포획·희생·특정 공격/승리·공중3종 전용/신규MP 검사 제한을 유지한다.
 
 ### 1. 대상별 커서·오브젝트 우클릭·게임 UI
 
@@ -295,7 +298,8 @@ cmake --build cpppj/build --config Release --parallel 4
 - [x] **577 로컬 점 명령 분배 부품:** 0043f6f0의 고정 패턴·순차 이름 조회·127BYTE 인자·세미콜론 진행·미등록 기본 분배·콜백 뒤 현재 표/검색 상태를 복원했다. 원문512행/독립1024관측·집중12/실패0이다. 실제 제출 연결이나 MP 검사는 아니다.
 - [x] **578 캠페인 완료 저장/기본 잠금 점검:** 현재 originals/d/options.cfg의9캠페인 완료 표시와2-4까지 활성 상태를 확인했다. 실제 새 설정은1-1만 열리고, 사본의1-1 저장/재실행은 체크/1-2 해제가 정상이다.16단계 명시 키의 디스크 저장/새 프로세스 읽기와 원본 선행 조건을 확인했다. 원본 진행상황은 유지하며 실제 승리부터 자동 저장까지의 전체 재현은 사용자 확인 대상이다.
 - [x] **579 Chat 제출/수신자 부품:** 원본 대상/본문 해석·Unknown fallback·현재 Chat100행·중복/32슬롯 확장과 실제 소유자 반납을 복원했다. 원문383행/집중33/실패0이다. 실제 Enter/송신 성공은 아니다.
-- [ ] 재개 후 실제 Console sendChat에579의 현재 Identity/Chat100행/입력줄/실제 수신자와577의 분배를 조립하고 등록된 명령 callback/서식·송신을 연결한다. 현재 sendChat은 미연결이며 일반 Enter 제출 성공으로 간주하지 않는다. 게임창 inputLineOff 옵션 변경·GUI드래그, 전체 팔레트 전환·디렉터리 이름 formatter·PlayerNoMake writer도 남는다.
+- [x] **581 실제 로컬 제출:** 현재 Identity/Chat100행/입력줄과577의 장기 분배 상태를 Console Enter에 연결했다. 실제 clear/quit와 빈 입력을 공통 UI·최종 배포본에서 확인했다. 일반 서식/송신 완료는 아니다.
+- [ ] 등록 format/back/front의 원문 입력 해석·현재 manager 쓰기·Config 저장과0042dc30→0042d640 서식/0042d280 전달을 연결한다. 일반 Enter 송신 성공으로 간주하지 않는다. 게임창 inputLineOff 옵션 변경·GUI드래그, 전체 팔레트 전환·디렉터리 이름 formatter·PlayerNoMake writer도 남는다.
 - [ ] 플로터TYPE146 회피·반사 Generate 변위0의 미초기화 지역점 등 명시 미복원 경계를 확인한다. 원문 Point/난수 대조와 실제 전체 연결을 구별한다.
 - [ ] 연결활동 frame22/주기64·timeout/UI·endpoint/server/boss와 실제 리슨/수락·22칸 송신 writer는 멀티플레이 후순위의 무시험 사전 구현 범위로 잇는다.
 - 근거는 [월드 장기 소유](docs/exe/cpp-state-world-owner-plan-20261025.md)·[State Client 공백](docs/exe/cpp-state-cleanup-client-gap-20261025.md)·[직접 전역 소유/반납](docs/exe/cpp-state-cleanup-global-owners-20261025.md)을 따른다. 오래된 PLAY 목록의 완료 여부는 현행 코드/후속 단위와 대조한다.
@@ -326,7 +330,7 @@ cmake --build cpppj/build --config Release --parallel 4
 
 ### 8. 배포·문서·후속 단계
 
-- [x] **580 `Netstorm.exe` 이름 적용:** CMake 대상NetstormCpp를 유지하고 OUTPUT_NAME으로 Windows 산출물을 변경했다. 배포 스크립트·두 런처/BUILD_INFO·현재 실행 예시·직접 참조하는 Python96파일을 변경했다. 기본 Release 증분 빌드/ZIP1365항목/해시·두 경로의 EXE 구별·Python 구문/압축 해제본 도움말과 실제 창 모드 런처의 Main Menu 진입4.092초·종료0을 확인했다. 첫 자동 입력의 새 설치 안내 선택 누락은 실패 자료를 보존하고 교정했다. 원본/CD/정밀 자료/AGENTS1861파일 변경0이다. 전체C++·34경로·Win11·자연 완주·신규MP 검사는 하지 않았다. [문서](docs/exe/cpp-executable-name-20261030.md)·[집계](cpppj/executable-name-runtime-20261030.json), 원시 extracted/cpp-executable-name-580-20261030/를 따른다. 실행파일은 전체 경로/PID로 구별하고 과거 보고서·원시 기록은 당시 이름으로 유지한다.
+- [x] **580 `Netstorm.exe` 이름 적용:** CMake 대상NetstormCpp를 유지하고 OUTPUT_NAME으로 Windows 산출물을 변경했다. 배포 스크립트·두 런처/BUILD_INFO·현재 실행 예시·직접 참조하는 Python96파일을 변경했다. 기본 Release 증분 빌드/ZIP1365항목/해시·두 경로의 EXE 구별·Python 구문/압축 해제본 도움말과 실제 창 모드 런처의 Main Menu 진입4.092초·종료0을 확인했다. 첫 자동 입력의 새 설치 안내 선택 누락은 실패 자료를 보존하고 교정했다. 원본/CD/정밀 자료/AGENTS1861파일 변경0이다. 전체C++·34경로·Win11·자연 완주·신규MP 검사는 하지 않았다. [문서](docs/exe/cpp-executable-name-20261030.md)·[집계](cpppj/executable-name-runtime-20261030.json), 원시 extracted/cpp-executable-name-580-20261030/를 따른다. 실행파일은 전체 경로/PID로 구별하고 과거 보고서·원시 기록은 당시 이름으로 유지한다. **581 후속:** import library 경로가 정적netstorm.lib와 겹쳐 EXE 재링크가 생략되는 것을 발견·수정했다. 현재 CMake는 ARCHIVE_OUTPUT_NAME NetstormCpp로 import library를 분리하며 최종581 ZIP과 실제 압축 해제본 입력을 확인했다.580의 최초 ZIP/로그는 당시 증거로 보존한다.
 - [ ] **4~6차 후순위(사용자 AGENTS.md bfccadf5·24959e75):** 3차 멀티플레이 뒤에 4차 MCP(dotnetpj 개발을 위한 게임 분석), 5차 설정·진행 저장 위치 이동과 커스텀 맵 경로·Edit 목록 변경, 6차 한국어 지원을 진행한다. 5차 착수 전 확인점은 다음과 같다. 현재 저장 파일은 `<게임 자료>/d/options.cfg`와 `fullscreenStateFile.dat`이고(578), 배포 스크립트는 이 파일들을 압축에 넣지 않는다. Edit 목록은 원문 50개 상한이며 `originals/d`의 TEST01/TEST02 같은 사용자 맵은 읽기 참조로만 쓴다. 새 위치(`%USERPROFILE%\Saved Games\Netstorm\Saves\`·`...\CustomMaps\`)로 옮길 때 기존 위치의 `options.cfg`를 읽어 이어받을지, 두 위치의 우선순위를 어떻게 둘지는 착수 때 정하고 원본과 달라지는 이유를 한국어 주석에 남긴다. 저장 위치 이동은 '전체화면 전환 후 재실행 오류가 없어야 한다'는 요구와 함께 시험한다. 4~6차는 아직 미착수이며 싱글플레이·UI·호환성·멀티플레이 사전 구현 뒤의 순서를 유지한다.
 - [x] **562 기본 빌드→압축:** 현재 PC의 Windows PowerShell5.1에서 NoBuild 없이 실제 NetstormCpp 증분 빌드/ZIP 생성과 BUILD_INFO의 실행파일 시각/SHA를 대조했다. 최종1365항목/게임 자료1356파일/VC DLL3개·입력 취소/경로/생략4검사 통과다. [문서](docs/exe/cpp-package-runtime-20261029.md).
 - [x] **563 배포본 시작/런처:** 새 압축 해제본 첫 실행·환영창의 실제 메인 선택·저장된 전체화면 재실행·기본 창 런처를 같은563제품에서 확인했다. 최초562 실패는 보존하며 전체 게임/Win11 배포 검증은 남는다.

@@ -1,6 +1,7 @@
 // 원본 PE의 이름/콜백/표시/count 인접 표를 Client 수명에 같은 바이트로 소유한다.
 #pragma once
 #include "client/RawDotCommandRegister.h"
+#include "client/RawDotCommandDispatch.h"
 #include <array>
 #include <cstdint>
 #include <span>
@@ -16,8 +17,10 @@ public:
     ClientDotCommandGlobals& operator=(ClientDotCommandGlobals&&)=delete; // 살아 있는 참조를 이동 대입으로 끊지 않는다.
     std::span<std::uint8_t> Bytes(); // count를 따로 복사하지 않고 전체2568BYTE의 같은 가변 물리를 빌린다.
     std::span<const std::uint8_t> Bytes() const; // 같은 표를 읽는 뷰이며 별도 캐시를 생성하지 않는다.
+    DotCommandDispatchState& DispatchState(); // 같은 Client의 기본 슬롯/Regexp 캡처를 빌린다. 제출·재진입·미션 교체에서 복제하지 않는다.
     std::uint32_t Register(std::span<const std::uint8_t> name,std::uint32_t callback,std::uint32_t flag,const DotCommandRegisterHooks& hooks={}); // 실제0043f660 본체에 같은 표를 전달한다.
 private:
     std::array<std::uint8_t,kDotCommandStateBytes> bytes_{}; // PE의 영 초기화 영역과 비영 정적 슬롯을 함께 보관한다.
+    DotCommandDispatchState dispatch_; //00557db4와00557df0의 실제 장기 검색 상태이며 등록이나 Chat 재생성으로 초기화하지 않는다.
 };
 }

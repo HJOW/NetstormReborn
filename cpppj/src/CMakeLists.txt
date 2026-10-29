@@ -59,8 +59,8 @@ target_sources(netstorm PRIVATE app/InspectView.cpp app/InspectView.h)
 target_sources(netstorm PRIVATE app/FrameBindingInspect.cpp app/FrameBindingInspect.h)
 target_sources(netstorm PRIVATE app/CanonMayPlaceInspect.cpp)
 add_executable(NetstormCpp app/main.cpp)
-# Windows 배포 파일 이름을 맞추되 정적 라이브러리는 lib/, 실행 파일과 PDB는 bin/에 둔다.
-set_target_properties(NetstormCpp PROPERTIES OUTPUT_NAME Netstorm)
+# Windows 배포 이름을 맞추고 import library는 별도 이름으로 둔다. netstorm.lib와 겹치면 MSBuild가 입력을 출력으로 간주해 재링크를 생략한다.
+set_target_properties(NetstormCpp PROPERTIES OUTPUT_NAME Netstorm ARCHIVE_OUTPUT_NAME NetstormCpp)
 target_sources(NetstormCpp PRIVATE app/NetstormCpp.manifest) # 원본ANSI와 다른 Windows10/11의 프로세스 UTF-8 경로 호환 선언이다.
 netstorm_apply_compiler_options(NetstormCpp)
 target_link_libraries(NetstormCpp PRIVATE netstorm)

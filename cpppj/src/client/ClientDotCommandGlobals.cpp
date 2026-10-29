@@ -21,6 +21,8 @@ ClientDotCommandGlobals::ClientDotCommandGlobals() {
 std::span<std::uint8_t> ClientDotCommandGlobals::Bytes() { return bytes_; }
 // const 조회도 동일한 물리 배열을 반환한다.
 std::span<const std::uint8_t> ClientDotCommandGlobals::Bytes() const { return bytes_; }
+// 분배기의 중첩 callback도 같은 슬롯/검색 상태를 다시 읽는다.
+DotCommandDispatchState& ClientDotCommandGlobals::DispatchState() { return dispatch_; }
 // 복사 callback 뒤 단일 count 캡처와 부분효과는 검증된 원문 등록 부모 자체가 수행한다.
 std::uint32_t ClientDotCommandGlobals::Register(std::span<const std::uint8_t> name,std::uint32_t callback,std::uint32_t flag,const DotCommandRegisterHooks& hooks) {
     return RegisterDotCommand(bytes_,name,callback,flag,hooks);

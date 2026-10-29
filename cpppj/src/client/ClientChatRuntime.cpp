@@ -4,6 +4,9 @@
 #include "client/ClientChatManagerGlobals.h"
 #include "client/ClientChatWindowGlobals.h"
 #include "client/ChatRecipients.h"
+#include "client/RawChatSubmit.h"
+#include "client/RawMenuControls.h"
+#include "client/HudChatGeometry.h"
 #include "client/RawChatWindowContext.h"
 #include "client/ClientCoreDataGlobals.h"
 #include "client/ClientDotCommandGlobals.h"
@@ -66,6 +69,34 @@ void BindClientChatRecipients(RawChatWindowContext& context,Client& client,std::
     context.diagnostic=[&client](auto level,auto format,auto parameter) {
         if (format!="Could not lookup a name for subId == %d\n") throw std::logic_error("Chat 이름 조회 진단의 미지원 원문 서식");
         client.WriteDiagnosticLog(std::bit_cast<std::int32_t>(level),"Could not lookup a name for subId == "+std::to_string(std::bit_cast<std::int32_t>(parameter))+"\n"); //원문의first인자와signed%d를보존해현재공유trace에전달한다.
+    };
+}
+// 제출 지역의 미작성 꼬리를 보존하고 같은 장기 명령표·현재 UI에 로컬 효과를 분배한다.
+void BindClientChatSubmit(RawChatWindowContext& context,Client& client,RawMenuControls& menus) {
+    if (!context.resolve || !context.translate) throw std::invalid_argument("Chat 제출의 실제 Identity/번역 장치 필요");
+    context.sendChat=[&client,&menus,resolve=context.resolve,translate=context.translate](auto manager,auto input) {
+        auto hooks=MakeClientChatSubmitHooks(client.ChatManagerGlobals());hooks.assertion=ChatAssertion;hooks.resolve=resolve;hooks.translate=translate;hooks.records=[&client] { return client.ChatRecords(); };
+        hooks.inputVisible=[&client,&menus](auto visible) {
+            const auto current=client.ChatWindowGlobals()->window.current;if (!current) return;
+            const auto* geometry=menus.ChatGeometryBackend();if (!geometry) throw std::logic_error("Chat 제출의 현재 입력 표시 장치 없음");geometry->SetInputVisible(current,visible);
+        }; //0042f270은 현재 root0에서 하위 장치를 조회하지 않는다.
+        hooks.dispatch=[&client,&menus,inputVisible=hooks.inputVisible](auto body) {
+            DotCommandDispatchHooks commands;
+            commands.invoke=[&client,&menus,inputVisible](auto callback,auto argument) -> std::uint32_t {
+                if (callback==0x42f680U || callback==0x42e520U) return menus.InvokeChatCommand(callback);
+                if (callback==0x42f1e0U) {
+                    if (!client.ChatManagerGlobals()->Current()) return 0;
+                    if (argument.empty()) throw std::out_of_range("Chat say의 실제 인자 물리 없음");
+                    if (argument.front()==0) { inputVisible(0);return 0; }
+                    if (argument.front()==' ') return 0;
+                    throw std::logic_error("Chat 일반 본문의 실제 서식·송신 미연결");
+                } //0042f1e0의 현재 manager/공백/빈 본문 관문만 수행하며 나머지를 빈 성공으로 바꾸지 않는다.
+                throw std::logic_error("Chat 제출의 실제 명령 callback 미연결:"+std::to_string(callback));
+            };
+            const auto owner=client.DotCommandGlobals();static_cast<void>(DispatchDotCommand(owner->Bytes(),owner->DispatchState(),body,commands));
+        };
+        o::PlayerIdentityRecord identity;std::array<std::uint8_t,kChatSubmitWorkBytes> work; // 원문60BYTE와 인접4097BYTE이며 사용 전 본문이 작성하는 부분만 정의한다.
+        SubmitChatInput(manager,input,identity,work,hooks);
     };
 }
 }

@@ -213,3 +213,56 @@ TEST_CASE(ChatWindowClient_IndependentNativeCallbackMutationsAndCurrentReads) {
     }
     CHECK(rows==29);
 }
+
+namespace { // 원문 대상·제출·분배 부품을 실제 Client/Console에 연결하는 검사 구성이다.
+// 이름/Client/메뉴는 반환한 문맥보다 오래 유지하며 기존 초기화와 동일한 명령표를 쓴다.
+RawChatWindowContext ChatLocalSubmitContext(ChatScene& scene,std::string& currentName) {
+    InitializeClientChatManager(scene.client);auto context=scene.Context();
+    BindClientChatRecipients(context,scene.client,scene.storage,[&currentName]() -> std::string_view { return currentName; });
+    BindClientChatSubmit(context,scene.client,*scene.menus);return context;
+}
+}
+
+// 실제 문자 큐→Console Enter→대상 해석→등록 clear→공유 로그 정리와 접두 보존을 검사한다.
+TEST_CASE(ChatWindowClient_LocalSubmitConsoleClearKeepsRecipientPrefix) {
+    ChatScene scene;ChatIdentityInputs(scene);scene.storage->ownerMode.battle=1;std::string currentName="LocalUser";auto context=ChatLocalSubmitContext(scene,currentName);
+    const auto token=scene.menus->CreateChatWindow(std::move(context));scene.menus->Attach(token,10,200,scene.buttons.RootToken(),0);
+    scene.menus->AppendChatLog(token,"first\nsecond\n");CHECK(scene.client.ChatWindowGlobals()->log.lineCount==2);CHECK(scene.menus->OpenChatInput({13,0,0}));
+    for (const auto byte:std::string_view("Alice:.clear")) static_cast<void>(scene.buttons.RouteInput({std::uint32_t(static_cast<unsigned char>(byte)),0,0})); // 실제 편집 버퍼에 문자 사건을 순서대로 넣는다.
+    CHECK(scene.Input(token).Text()=="Alice:.clear");
+    static_cast<void>(scene.buttons.RouteInput({13,0,0}));
+    CHECK(scene.client.ChatWindowGlobals()->log.lineCount==0 && scene.Input(token).Text()=="Alice:" && (scene.Console(token).flags&1));
+    CHECK(scene.client.DotCommandGlobals()->DispatchState().separatorOffset>=0 && scene.quitCalls==0);scene.menus->CloseChatWindows();
+}
+
+// 한 제출의 세미콜론 명령들이 같은 표/상태를 쓰며 quit은 기존 실제 예약 장치에 한 번 전달한다.
+TEST_CASE(ChatWindowClient_LocalSubmitClearThenQuitUsesSameRegistry) {
+    ChatScene scene;ChatIdentityInputs(scene);std::string currentName="LocalUser";auto context=ChatLocalSubmitContext(scene,currentName);const auto submit=context.sendChat;
+    const auto token=scene.menus->CreateChatWindow(std::move(context));scene.menus->AppendChatLog(token,"kept until clear\n");
+    const auto* state=&scene.client.DotCommandGlobals()->DispatchState();submit(scene.client.ChatManagerGlobals()->Current(),"EVERYONE:.clear;.quit");
+    CHECK(scene.client.ChatWindowGlobals()->log.lineCount==0 && scene.quitCalls==1 && scene.menus->ChatWindowRoot()==token);
+    CHECK(&scene.client.DotCommandGlobals()->DispatchState()==state);scene.menus->CloseChatWindows();
+}
+
+// 빈 실제 Enter는 일반 모드에서 숨기고 challenge에서는 같은 원문 기하의 표시 관문을 유지한다.
+TEST_CASE(ChatWindowClient_LocalSubmitEmptyEnterUsesCurrentChallenge) {
+    for (const bool challenge:{false,true}) { // 같은 실제 UI에 두 원문 모드 입력을 따로 구성한다.
+        ChatScene scene;ChatIdentityInputs(scene);scene.storage->ownerMode.challenge=challenge;std::string currentName="LocalUser";
+        auto context=ChatLocalSubmitContext(scene,currentName);const auto token=scene.menus->CreateChatWindow(std::move(context));scene.menus->Attach(token,10,200,scene.buttons.RootToken(),0);
+        scene.menus->ChatGeometryBackend()->SetInputVisible(token,1);CHECK(scene.Console(token).flags&1);
+        static_cast<void>(scene.buttons.RouteInput({13,0,0}));CHECK(bool(scene.Console(token).flags&1)==challenge && scene.Input(token).Text().empty() && scene.quitCalls==0);
+        scene.menus->CloseChatWindows();
+    }
+}
+
+// 후속 서식/송신과 format/front를 성공으로 삼키지 않고 앞선 실제 제출 효과와 명시 경계를 남긴다.
+TEST_CASE(ChatWindowClient_LocalSubmitUnrestoredFormattingRemainsExplicit) {
+    ChatScene scene;ChatIdentityInputs(scene);std::string currentName="LocalUser";auto context=ChatLocalSubmitContext(scene,currentName);const auto submit=context.sendChat;
+    const auto token=scene.menus->CreateChatWindow(std::move(context));scene.menus->AppendChatLog(token,"preserved\n");
+    for (const auto text:{"hello",".front quoted"}) { // 미복원된 일반 본문/등록된 서식 callback을 각각 확인한다.
+        const std::string expected=std::string_view(text)=="hello" ? "Chat 일반 본문의 실제 서식·송신 미연결" : "Chat 제출의 실제 명령 callback 미연결:"+std::to_string(0x42def0U); // 두 선택 경계의 실제 원문 함수 식별자를 구별한다.
+        bool stopped{};try { submit(scene.client.ChatManagerGlobals()->Current(),text); }catch (const std::logic_error& error) { stopped=std::string_view(error.what())==expected; }
+        CHECK(stopped && scene.client.ChatWindowGlobals()->log.lineCount==1 && scene.quitCalls==0);
+    }
+    scene.menus->CloseChatWindows();
+}

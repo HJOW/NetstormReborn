@@ -15,7 +15,9 @@ cpppj의 Windows 산출물 이름을 `Netstorm.exe`로 변경했다. CMake 대�
 
 ## 검증
 
-기본 배포 스크립트를 `-NoBuild` 없이 실행했다. CMake 재구성, `NetstormCpp` Release 증분 빌드와 ZIP 생성이 종료0이었고 빌드 경고·오류는0이다. 정적 라이브러리와 실행 파일 이름 충돌은 없었다. ZIP은1365항목, 런타임 DLL3개를 포함하며 사용자 설정·진행 파일은 제외했다. 압축 안의 클론 해시는 빌드 산출물과, 원본 자료 해시는 `originals/Netstorm.exe`와 일치했다.
+기본 배포 스크립트를 `-NoBuild` 없이 실행했다. CMake 재구성, `NetstormCpp` Release 증분 빌드와 ZIP 생성이 종료0이었고 빌드 경고·오류는0이다. 실제 EXE와 정적 라이브러리는 별도 폴더에 생성됐다. ZIP은1365항목, 런타임 DLL3개를 포함하며 사용자 설정·진행 파일은 제외했다. 압축 안의 클론 해시는 빌드 산출물과, 원본 자료 해시는 `originals/Netstorm.exe`와 일치했다.
+
+**581 후속 정정:**580은 물리 산출물과 메뉴를 확인했지만 실행 파일의 **import library** 경로가 정적 `netstorm.lib`와 겹치는 것은 검출하지 못했다. 새 게임 코드를 반영하는581에서 MSBuild가 정적 라이브러리를 링커 입력 추적에서 제외해 기존 EXE를 유지하는 현상을 확인했다. `ARCHIVE_OUTPUT_NAME NetstormCpp`로 import library를 분리한 뒤 실제 입력 추적과 라이브러리 수정 시각 변경→게임 재링크를 검증했다. 현재 수정과 최종 배포본은 [581 문서](cpp-chat-local-submit-20261030.md)를 따른다.580의 최초 로그/ZIP/해시는 당시 증거로 보존한다.
 
 변경된 Python96파일은 AST 구문 검사를 통과했다. 압축 해제본의 `--help`는 종료0이고 새 이름을 표시한다. 두 런처의 실행 문자열과 BUILD_INFO의 파일 이름도 검사했다.
 

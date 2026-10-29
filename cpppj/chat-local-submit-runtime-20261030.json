@@ -1,0 +1,253 @@
+{
+  "unit": 581,
+  "date": "2026-10-30",
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "focusedUniqueTests": 31,
+  "focusedTestExecutions": 47,
+  "firstFocusedFailedChecks": 1,
+  "finalFocusedFailedChecks": 0,
+  "registeredCppTests": 3458,
+  "finalFocusedRuns": [
+    {
+      "filter": "ChatWindowClient",
+      "returnCode": 0,
+      "summary": "16 test(s), 0 failed check(s)",
+      "log": "ChatWindowClient-corrected.stdout.log"
+    },
+    {
+      "filter": "ChatSubmit",
+      "returnCode": 0,
+      "summary": "3 test(s), 0 failed check(s)"
+    },
+    {
+      "filter": "DotCommandDispatch",
+      "returnCode": 0,
+      "summary": "3 test(s), 0 failed check(s)"
+    },
+    {
+      "filter": "ClientDotCommandGlobals",
+      "returnCode": 0,
+      "summary": "3 test(s), 0 failed check(s)"
+    },
+    {
+      "filter": "ClientChatRuntime",
+      "returnCode": 0,
+      "summary": "6 test(s), 0 failed check(s)"
+    }
+  ],
+  "builds": {
+    "build.log": {
+      "warnings": 0,
+      "errors": 0,
+      "sha256": "1763d73386c6627d654ff69e6b45faa723269995eea550a772c90e14d8d9278f"
+    },
+    "build-tests-final.log": {
+      "warnings": 0,
+      "errors": 0,
+      "sha256": "417435f298539e2cd51f31fcdc2597ad6a942c07d274568d5b1aafdaf3ce8c0f"
+    },
+    "build-tests-corrected.log": {
+      "warnings": 0,
+      "errors": 0,
+      "sha256": "417435f298539e2cd51f31fcdc2597ad6a942c07d274568d5b1aafdaf3ce8c0f"
+    },
+    "build-game-import-fix.log": {
+      "warnings": 0,
+      "errors": 0,
+      "sha256": "fb79156cbb84897fa54fbc0860f01075cb5e678af39732d32b31bb83707434fc"
+    },
+    "build-game-incremental.log": {
+      "warnings": 0,
+      "errors": 0,
+      "sha256": "45e2accb0fc18b685a950f01702c7da49ca0ea499a1670a4baa5c89baf45599d"
+    },
+    "package-build.log": {
+      "warnings": 0,
+      "errors": 0,
+      "sha256": "c47f8bf34d317b76ebb14a909a6f41d440113d37acaad9c2edee8818e02a9e68"
+    }
+  },
+  "incrementalLink": {
+    "buildExit": 0,
+    "exeBeforeTicks": 639288884000000000,
+    "exeAfterTicks": 639288884360000000,
+    "linkedAfterLibraryTimestamp": true,
+    "libraryHashUnchanged": true,
+    "libraryTracked": true,
+    "gameSha256": "cb318db9dd02b12fd6debad8aa632ee1cd3bbf779627f1259c83a77cf46550ab"
+  },
+  "gameSha256": "db33b4833b726cf5c1002bff1edfbd34a136ef580254a50d3b90f0ffec301c5f",
+  "testsSha256": "bb58cee96695c7eb3f114e08efabf33926552691408637f818e3e31a4b2815f4",
+  "packageSha256": "1a7c2fcf20b8bdc02eb15a536adaab1d9eb574c3d9fde7fb5315a93658474efa",
+  "packageEntries": 1365,
+  "finalPackagedGame": {
+    "gameSha256": "db33b4833b726cf5c1002bff1edfbd34a136ef580254a50d3b90f0ffec301c5f",
+    "run": {
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-chat-local-submit-581-20261030\\unpacked-final\\NetstormReborn-cpppj\\Netstorm.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-chat-local-submit-581-20261030\\live-package-final\\data",
+        "--mission",
+        "TEST02",
+        "--window",
+        "--no-audio",
+        "--frames",
+        "120",
+        "--set",
+        "SCREENW=1024;SCREENH=768;maxFPS=60;sleepPerLoop=8;autoDemo=0;tellTips=0",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-chat-local-submit-581-20261030\\live-package-final\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-chat-local-submit-581-20261030\\live-package-final\\states.tsv"
+      ],
+      "binarySha256": "db33b4833b726cf5c1002bff1edfbd34a136ef580254a50d3b90f0ffec301c5f",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 17.294116900000063,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "504cb7e79667ca3565032cd3789c6988bba6ab7b9f064b33256c9a977fcc960f"
+    },
+    "clearSubmitted": true,
+    "emptyEnterHidInput": true,
+    "inputReopened": true,
+    "quitConfirmationShown": true,
+    "confirmedQuitBeforeFrameCap": true,
+    "networkExecuted": false,
+    "capturesSacrificesSpecificEnemyAttacksOrVictoriesReproduced": false
+  },
+  "protected": {
+    "count": 1861,
+    "changed": []
+  },
+  "newNativeObservations": false,
+  "newFixtures": false,
+  "fullCppTests": false,
+  "all34Routes": false,
+  "windows11Hardware": false,
+  "networkExecuted": false,
+  "capturesSacrificesSpecificEnemyAttacksOrVictoriesReproduced": false,
+  "limits": [
+    "일반 본문 서식/송신과 format/back/front callback은 명시 미연결",
+    "포획/희생/특정 공격/승리·공중3종 전용·신규MP 검사는 실행하지 않음"
+  ],
+  "gameRuns": [
+    {
+      "directory": "live-window",
+      "status": "580 제품 재링크 누락·종료1",
+      "run": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-chat-local-submit-581-20261030\\live-window\\data",
+          "--mission",
+          "TEST02",
+          "--window",
+          "--no-audio",
+          "--frames",
+          "110",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=60;sleepPerLoop=8;autoDemo=0;tellTips=0",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-chat-local-submit-581-20261030\\live-window\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-chat-local-submit-581-20261030\\live-window\\states.tsv"
+        ],
+        "binarySha256": "511baeb9adf8efe67ed62461ac2e8c952f4c3b8d14ee3964c7acfee4fd456a2f",
+        "returnCode": 1,
+        "timedOut": false,
+        "seconds": 15.753882700000077,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "d06dbbce26416dbd6d5484c00fecda0a1dea1a85c2a33fad488d2c87af6472bf"
+      }
+    },
+    {
+      "directory": "live-window-v2",
+      "status": "수정 제품·종료0/도구의 즉시 종료 기대 실패",
+      "run": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-chat-local-submit-581-20261030\\live-window-v2\\data",
+          "--mission",
+          "TEST02",
+          "--window",
+          "--no-audio",
+          "--frames",
+          "110",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=60;sleepPerLoop=8;autoDemo=0;tellTips=0",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-chat-local-submit-581-20261030\\live-window-v2\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-chat-local-submit-581-20261030\\live-window-v2\\states.tsv"
+        ],
+        "binarySha256": "cb318db9dd02b12fd6debad8aa632ee1cd3bbf779627f1259c83a77cf46550ab",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 17.52397099999962,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2"
+      }
+    },
+    {
+      "directory": "live-window-v3",
+      "status": "수정 제품·확인창 Quit 선택 후 종료0",
+      "run": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-chat-local-submit-581-20261030\\live-window-v3\\data",
+          "--mission",
+          "TEST02",
+          "--window",
+          "--no-audio",
+          "--frames",
+          "120",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=60;sleepPerLoop=8;autoDemo=0;tellTips=0",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-chat-local-submit-581-20261030\\live-window-v3\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-chat-local-submit-581-20261030\\live-window-v3\\states.tsv"
+        ],
+        "binarySha256": "cb318db9dd02b12fd6debad8aa632ee1cd3bbf779627f1259c83a77cf46550ab",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 17.263983800000005,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2"
+      }
+    },
+    {
+      "directory": "live-package-final",
+      "status": "최종 배포본·확인창 Quit 선택 후 종료0",
+      "run": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-chat-local-submit-581-20261030\\unpacked-final\\NetstormReborn-cpppj\\Netstorm.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-chat-local-submit-581-20261030\\live-package-final\\data",
+          "--mission",
+          "TEST02",
+          "--window",
+          "--no-audio",
+          "--frames",
+          "120",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=60;sleepPerLoop=8;autoDemo=0;tellTips=0",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-chat-local-submit-581-20261030\\live-package-final\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-chat-local-submit-581-20261030\\live-package-final\\states.tsv"
+        ],
+        "binarySha256": "db33b4833b726cf5c1002bff1edfbd34a136ef580254a50d3b90f0ffec301c5f",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 17.294116900000063,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "504cb7e79667ca3565032cd3789c6988bba6ab7b9f064b33256c9a977fcc960f"
+      }
+    }
+  ]
+}
