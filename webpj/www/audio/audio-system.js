@@ -71,6 +71,34 @@ export class AudioSystem {
         this.musicSource = null;
         // close 뒤인지 여부다. 닫힌 뒤에는 재생 요청을 무시한다.
         this.closed = false;
+        // 효과음을 낼지 여부다(옵션 메뉴 Sound On). 꺼져 있으면 playSound 가 아무 소리도 내지 않는다. (2026-10-29 WB03-F)
+        this.soundEnabled = true;
+        // 음악을 낼지 여부다(옵션 메뉴 Play Music). 꺼져 있어도 재생을 요청한 곡은 wantedMusic 에 남아 다시 켜면 이어서 재생된다. (2026-10-29 WB03-F)
+        this.musicEnabled = true;
+        // 재생하기로 요청받은 음악 이름(소문자)이다. 음악이 꺼진 동안에도 기억한다. 없으면 null. (2026-10-29 WB03-F)
+        this.wantedMusic = null;
+    }
+
+    // 효과음 음량 단계(1~5)를 바꾼다. 재생 중인 소리에도 바로 적용된다(원본 SetMasterVolume). (2026-10-29 WB03-F)
+    setSoundVolumeStep(step) {
+        this.soundGain.gain.value = centibelsToGain(volumeStepToCentibels(step));
+    }
+
+    // 음악 음량 단계(1~5)를 바꾼다. 재생 중인 음악에도 바로 적용된다. (2026-10-29 WB03-F)
+    setMusicVolumeStep(step) {
+        this.musicGain.gain.value = centibelsToGain(volumeStepToCentibels(step));
+    }
+
+    // 효과음을 켜거나 끈다. 끄면 이후 playSound 는 소리를 내지 않는다(이미 재생 중인 짧은 소리는 끝까지 난다). (2026-10-29 WB03-F)
+    setSoundEnabled(enabled) {
+        this.soundEnabled = Boolean(enabled);
+    }
+
+    // 음악을 켜거나 끈다. 끄면 재생 중인 곡을 멈추고, 다시 켜면 마지막으로 요청받은 곡을 처음부터 반복 재생한다(원본도 음악 장치를 다시 시작한다). (2026-10-29 WB03-F)
+    setMusicEnabled(enabled) {
+        this.musicEnabled = Boolean(enabled);
+        if (!this.musicEnabled) this._stopMusicSource();
+        else if (this.wantedMusic) this.playMusic(this.wantedMusic);
     }
 
     // 파일 바이트를 AudioBuffer 로 해독한다. decodeAudioData 는 입력 버퍼를 넘겨받으므로 복사본을 넘긴다.
@@ -89,7 +117,7 @@ export class AudioSystem {
     // 등록한 효과음을 한 번 재생한다. 등록되지 않았거나 닫혔으면 아무것도 하지 않고 false 를 돌려준다.
     playSound(name) {
         const buffer = this.sounds.get(String(name).toLowerCase());
-        if (!buffer || this.closed) return false;
+        if (!buffer || this.closed || !this.soundEnabled) return false;
         const source = this.context.createBufferSource();
         source.buffer = buffer;
         source.connect(this.soundGain);
@@ -105,13 +133,16 @@ export class AudioSystem {
     }
 
     // 음악을 반복 재생한다. 같은 곡이 이미 재생 중이면 다시 시작하지 않는다(원본 Request 의 같은 이름 무시). 시작했으면 true.
+    // 음악이 꺼져 있으면 곡 이름만 기억하고(다시 켜면 재생) false 를 돌려준다.
     playMusic(name) {
         const key = String(name).toLowerCase();
         if (this.closed) return false;
+        this.wantedMusic = key;
+        if (!this.musicEnabled) return false;
         if (this.currentMusic === key && this.musicSource) return true;
         const buffer = this.music.get(key);
         if (!buffer) return false;
-        this.stopMusic();
+        this._stopMusicSource();
         const source = this.context.createBufferSource();
         source.buffer = buffer;
         source.loop = true;
@@ -122,8 +153,14 @@ export class AudioSystem {
         return true;
     }
 
-    // 재생 중인 음악을 멈춘다.
+    // 재생 중인 음악을 멈추고 요청받은 곡도 잊는다(다시 켜도 재생하지 않음). (2026-10-29 WB03-F: 소스 정지는 _stopMusicSource 로 분리)
     stopMusic() {
+        this._stopMusicSource();
+        this.wantedMusic = null;
+    }
+
+    // 재생 중인 음악 소스만 멈춘다. 요청받은 곡(wantedMusic)은 그대로 둔다. (2026-10-29 WB03-F)
+    _stopMusicSource() {
         if (this.musicSource) {
             try {
                 this.musicSource.stop();

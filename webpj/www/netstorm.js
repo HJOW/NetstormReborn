@@ -23,7 +23,10 @@ import {
 import { AudioSystem, createAudioContext } from './audio/audio-system.js';
 import { IndexedSurface } from './render/indexed-surface.js';
 import { IndexedPresenter, normalizeScaling } from './render/presenter.js';
+import { Settings, getLocalStorage } from './platform/settings.js';
 import { MainMenuScreen } from './ui/main-menu.js';
+import { PopupMenu } from './ui/popup-menu.js';
+import { buildPopupItems } from './ui/option-menus.js';
 import { createTellWindow } from './ui/tell-window.js';
 import { applyCursorStyle, buildCursorCss } from './ui/cursor.js';
 
@@ -354,8 +357,9 @@ export class Netstorm {
             fetch: options.fetch ?? null,
             scaling: normalizeScaling(options.scaling ?? params.get('scaling')),
             audio: options.audio ?? !params.has('mute'),
-            soundVolume: options.soundVolume ?? 3,
-            musicVolume: options.musicVolume ?? 2,
+            // 호스트가 정한 음량 단계(1~5)이다. 없으면(null) 저장된 설정을 쓴다. 정하면 저장하지 않고 이번 실행에서만 우선한다. (2026-10-29 WB03-F)
+            soundVolume: options.soundVolume ?? null,
+            musicVolume: options.musicVolume ?? null,
             prepare: options.prepare ?? (async () => {}),
             onStateChange: options.onStateChange ?? null,
             onMenuCommand: options.onMenuCommand ?? null,
@@ -402,6 +406,8 @@ export class Netstorm {
         this._menuSoundBytes = null;
         // 가장 최근 프레임의 시각(초)이다. 대화상자의 Timeout 기한 계산에 쓴다. (2026-10-28 WB03-D)
         this._frameSeconds = 0;
+        // 사용자 설정(옵션 메뉴 값)이다. init 에서 만들고 destroy 에서 비운다. 값 변경은 _onSettingChange 로 소리에 반영된다. (2026-10-29 WB03-F)
+        this._settings = null;
         // 메뉴 음악 파일 바이트다. 뒤에서 받으며 다 받기 전에는 null 이다.
         this._musicBytes = null;
         // 메뉴 음악 상태 문자열이다. none | loading | loaded | decoding | ready | playing | failed.
@@ -507,6 +513,11 @@ export class Netstorm {
         this._clock = new FrameClock();
         this._input = { pointer: { x: -1, y: -1, inside: false, buttons: 0, type: 'mouse' }, keys: new Set() };
         this._audioStatus = 'none';
+        // 저장된 설정을 읽는다(저장소를 쓸 수 없으면 기본값으로 계속). 호스트가 음량을 정했으면 저장하지 않고 우선 적용한다. (2026-10-29 WB03-F)
+        this._settings = new Settings({ storage: getLocalStorage(doc.defaultView), onChange: (key) => this._onSettingChange(key) });
+        if (this._settings.loadProblem) console.warn(`Netstorm: ${this._settings.loadProblem}. 기본 설정으로 시작합니다.`);
+        if (this.options.soundVolume !== null) this._settings.set('soundVolume', this.options.soundVolume, { persist: false });
+        if (this.options.musicVolume !== null) this._settings.set('musicVolume', this.options.musicVolume, { persist: false });
         this._presenter = new IndexedPresenter(doc, this.options.scaling);
         // 이전 수명에서 이미 받은 자원이 있으면(재시작) 팔레트를 바로 설치한다.
         if (this._resources) this._presenter.setPalette(this._resources.palette.rgb);
@@ -544,6 +555,7 @@ export class Netstorm {
         this._resizeObserver = null;
         this._mainMenu?.cancel();
         this._mainMenu = null;
+        this._settings = null;
         if (this._audio) {
             // 음악을 멈추고 문맥을 닫는다. 닫기에 실패해도 정리를 막지 않는다.
             this._audio.close();
@@ -618,7 +630,7 @@ export class Netstorm {
                 this._gameData = GameData.build({
                     files,
                     language: this.options.language,
-                    options: { soundVolume: this.options.soundVolume, musicVolume: this.options.musicVolume },
+                    options: this._settings.snapshot(),
                 });
                 this._buttonSoundBytes = files.get(MENU_ASSET_PATHS.buttonSound) ?? null;
                 this._menuSoundBytes = files.get(MENU_SOUND_PATH) ?? null;
@@ -684,7 +696,7 @@ export class Netstorm {
         if (!this._mainMenu) {
             this._mainMenu = new MainMenuScreen({
                 resources: this._resources,
-                onCommand: (command, label) => this._onMenuCommand(command, label),
+                onCommand: (command, label, point) => this._onMenuCommand(command, label, point),
                 onButtonSound: () => this._audio?.playSound(BUTTON_SOUND_NAME),
             });
         }
@@ -698,18 +710,78 @@ export class Netstorm {
     // 메인 메뉴 버튼이 실행됐을 때 호출된다. 원본은 여기서 Tell 섹션(캠페인·데모·크레딧)이나 펼침 메뉴(도움말·옵션)를 연다.
     // 그 화면들은 아직 복원하지 않았으므로 호스트 훅과 콘솔에만 알린다. Tell 명령이면 원본 데이터에서 섹션을 실제로 찾아 줄 수를 함께 알린다.
     // (2026-10-23 WB03-M1, 2026-10-28 WB02-D: Tell 섹션 조회 확인 추가)
-    _onMenuCommand(command, label) {
+    // point 는 menu 명령이면 펼침 메뉴의 왼쪽 위 기준점(버튼 가운데 x, 버튼 위쪽 + 칸 정의의 popupDy)이다. (2026-10-29 WB03-F: 펼침 메뉴 연결)
+    _onMenuCommand(command, label, point = null) {
         try {
             this.options.onMenuCommand?.(command, label);
         } catch (error) {
             console.error('Netstorm: onMenuCommand 훅에서 예외가 발생했습니다.', error);
         }
-        // Tell 명령(Campaign·Demo·Credits)은 대화상자를 연다. 펼침 메뉴(Help·Options)는 아직 구현되지 않았다.
+        // Tell 명령(Campaign·Demo·Credits)은 대화상자를, menu 명령(Help·Options)은 펼침 메뉴를 연다.
         if (command.type === 'tell') {
             this._openTell(command.target);
             return;
         }
+        if (command.type === 'menu') {
+            this._openPopup(command.target, point);
+            return;
+        }
         console.info(`Netstorm: 메인 메뉴 '${label}' 실행(다음 화면은 아직 구현되지 않음)`, command);
+    }
+
+    // 메인 메뉴의 펼침 메뉴(Help·Options)를 point(왼쪽 위 기준점)에 연다. 모르는 대상이면 열지 않는다. 기준점은 원본 스크린샷 측정값과 같은 규칙으로 정해진다(ui/main-menu.js popupAnchor). 열었으면 true. (2026-10-29 WB03-F)
+    _openPopup(target, point) {
+        if (!this._mainMenu || !this._resources || !this._settings) return false;
+        const items = buildPopupItems(target, this._settings);
+        if (!items) {
+            console.warn(`Netstorm: 알 수 없는 펼침 메뉴 '${target}' 입니다.`);
+            return false;
+        }
+        const popup = new PopupMenu({
+            resources: this._resources,
+            screen: { width: this._mainMenu.width, height: this._mainMenu.height },
+            onCommand: (command) => this._onPopupCommand(command),
+            onSound: () => this._audio?.playSound(MENU_SOUND_NAME),
+        });
+        // 포인터 위치가 없으면(호스트가 직접 호출) 현재 포인터 위치를 쓴다.
+        popup.open(items, point ?? { x: Math.max(0, this._input.pointer.x), y: Math.max(0, this._input.pointer.y) });
+        this._mainMenu.setPopup(popup);
+        this._displayDirty = true;
+        return true;
+    }
+
+    // 펼침 메뉴 행의 명령을 실행한다(메뉴는 이미 닫혀 있다). Toggle 은 설정 키를 뒤집고, Volume 은 `키=단계` 로 음량을 정하며, Tell 은 대화상자를 연다.
+    // F1Help(도움말 창)는 아직 구현되지 않았다. (2026-10-29 WB03-F)
+    _onPopupCommand(command) {
+        const name = String(command.name).toLowerCase();
+        if (name === 'toggle') {
+            this._settings?.toggle(command.argument);
+        } else if (name === 'volume') {
+            const [key, value] = String(command.argument).split('=');
+            this._settings?.set(key, Number(value));
+        } else if (name === 'tell') {
+            this._openTell(command.argument);
+        } else {
+            console.info(`Netstorm: 펼침 메뉴 명령 '${command.name}' 은(는) 아직 구현되지 않았습니다.`, command);
+        }
+        this._displayDirty = true;
+    }
+
+    // 설정 값이 바뀌었을 때 소리에 반영한다. 소리·음악·음량은 바로 적용되고, 바람 소리·좌우 교환·가장자리 스크롤·자동 데모·시작 팁은 값만 저장되며 해당 기능이 생길 때 쓰인다. (2026-10-29 WB03-F)
+    _onSettingChange(key) {
+        if (key === 'sound' || key === 'music' || key === 'soundVolume' || key === 'musicVolume') this._applySettings();
+    }
+
+    // 현재 설정(소리 켜짐·음악 켜짐·음량 단계)을 재생기에 적용한다. 음악을 다시 켠 경우 메인 메뉴 곡을 이어 재생한다. (2026-10-29 WB03-F)
+    _applySettings() {
+        const settings = this._settings;
+        const audio = this._audio;
+        if (!settings || !audio) return;
+        audio.setSoundVolumeStep(settings.get('soundVolume'));
+        audio.setMusicVolumeStep(settings.get('musicVolume'));
+        audio.setSoundEnabled(settings.get('sound') === 1);
+        audio.setMusicEnabled(settings.get('music') === 1);
+        if (settings.get('music') === 1) this._playMenuMusic();
     }
 
     // Tell 섹션 이름으로 대화상자를 열어 메인 메뉴 위에 올린다(원본 Tell 명령 004cf730). 섹션이 없으면 원본처럼 오류 로그만 남기고 아무것도 열지 않는다.
@@ -791,7 +863,8 @@ export class Netstorm {
                     return;
                 }
                 this._audioContext = context;
-                this._audio = new AudioSystem(context, { soundVolumeStep: this.options.soundVolume, musicVolumeStep: this.options.musicVolume });
+                this._audio = new AudioSystem(context, { soundVolumeStep: this._settings.get('soundVolume'), musicVolumeStep: this._settings.get('musicVolume') });
+                this._applySettings();
                 this._prepareSounds();
                 this._prepareMusic();
             }
@@ -1066,6 +1139,8 @@ export class Netstorm {
     _onPointerLeave(event) {
         this._input.pointer.inside = false;
         this._input.pointer.buttons = event.buttons ?? 0;
+        // 펼침 메뉴의 행 강조는 포인터를 따라가므로 Canvas 밖으로 나가면 지운다. (2026-10-29 WB03-F)
+        if (this._mainMenu?.popup?.pointerLeave()) this._mainMenu.dirty = true;
     }
 
     // 왼쪽 클릭을 시작·재시도 입력으로 처리한다.
@@ -1078,6 +1153,8 @@ export class Netstorm {
         this._input.keys.add(event.code);
         if (PREVENTED_KEYS.has(event.code)) event.preventDefault();
         this._retryAudioOnGesture();
+        // Esc 는 열려 있는 펼침 메뉴를 닫는다(원본 입력 0x020000be: RequestClosePopups). (2026-10-29 WB03-F)
+        if (event.code === 'Escape' && this._state === AppState.MAIN_MENU && this._mainMenu?.closePopup()) this._displayDirty = true;
         if (!event.repeat && (event.code === 'Enter' || event.code === 'Space' || event.code === 'NumpadEnter')) this._activate();
     }
 

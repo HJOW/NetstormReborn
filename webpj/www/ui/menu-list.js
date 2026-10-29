@@ -3,7 +3,9 @@
 // 포인터가 행 위에 있으면 그 행이 어둡게 강조되고, 행을 누르는 즉시 명령이 실행된다(돌 버튼과 달리 뗄 때까지 기다리지 않음).
 // 원본 주소: 생성 MenuGumpWidgets::Construct(전역 배경 질감 프레임 1, 글자 문맥), 항목 추가 MenuGumpControls::AddText, 배치 MenuGumpLayout::Reflow,
 //            그리기 MenuGumpDraw::Draw, 입력 MenuGumpInput::Broadcast/Handle. 복원 기준: cpppj MenuGump*.cpp(10.78 경로).
-// 하위 메뉴(자식)·가로 메뉴·장식 제목은 이 단위에서 옮기지 않는다. (2026-10-28 WB03-D: Tell 대화상자 메뉴 목록을 그리기 위해 추가)
+// 가로 메뉴·장식 제목은 옮기지 않았다. (2026-10-28 WB03-D: Tell 대화상자 메뉴 목록을 그리기 위해 추가)
+// 하위 메뉴 항목(`>` 표시가 붙고 눌러서 자식 목록을 여는 행)과 튀어나온 모양(raised, 메인 메뉴 Help·Options 펼침 메뉴)을 지원한다. 자식 목록을 여는 일은 호출자(ui/popup-menu.js)가 맡는다.
+// (2026-10-29 WB03-F: 메인 메뉴 펼침 메뉴를 그리기 위해 하위 메뉴·raised 추가)
 import { createTextContext } from '../render/glyph-text.js';
 import { GumpBackgroundFlags, drawGumpBackground, planGumpBackground } from '../render/gump-visual.js';
 import { clipRect } from '../render/indexed-surface.js';
@@ -20,6 +22,13 @@ export const MENU_ITEM_CAPACITY = 40;
 
 // HTML 메뉴의 배경 플래그이다: 질감 + 네 테두리(0x03e00000) + 눌림(0x40000, 테두리 명암 반전 → 안쪽으로 눌린 상자). (2026-10-28 WB03-D)
 const MENU_BACKGROUND_FLAGS = GumpBackgroundFlags.BUTTON | GumpBackgroundFlags.PRESSED;
+
+// 펼침 메뉴(메인 메뉴 Help·Options)의 배경 플래그이다: 눌림 비트 없이 질감 + 네 테두리만 쓴다(원본 BeginVertical(0) 의 추가 배경 플래그 0).
+// 밝은 왼쪽·위 테두리와 어두운 오른쪽·아래 테두리가 되어 돌 버튼처럼 튀어나온 모양이다. (2026-10-29 WB03-F)
+const RAISED_BACKGROUND_FLAGS = GumpBackgroundFlags.BUTTON;
+
+// 하위 메뉴 항목 뒤에 붙는 표시 글자이다(원본 MenuGumpDraw 의 kChildMarker " >"). 항목 폭에 이 글자의 폭을 더하고 라벨 바로 뒤에 같은 글꼴로 그린다. (2026-10-29 WB03-F)
+const CHILD_MARKER_TEXT = ' >';
 
 // 선택 행 강조에 쓰는 배경 플래그이다: 질감 + 어둡게(0x2100000). (2026-10-28 WB03-D)
 const HIGHLIGHT_FLAGS = GumpBackgroundFlags.TEXTURE | GumpBackgroundFlags.DARK;
@@ -41,7 +50,10 @@ function ftol(value) {
 // 위치(x, y)는 화면 좌표이며 호출자가 정한다. 크기는 baseWidth/baseHeight(배율 전), width/height(배율 후)다. (2026-10-28 WB03-D)
 export class MenuList {
     // fonts 는 FontSet, colors 는 StyleColors 이다. 글자 문맥은 원본 메뉴 생성자처럼 흰 글자 + 그림자(어두운 갈색, 오른쪽 1)로 시작한다.
-    constructor({ fonts, colors }) {
+    // raised 가 참이면 눌린 상자가 아니라 튀어나온 상자(펼침 메뉴)로 그린다. (2026-10-29 WB03-F: raised 추가)
+    constructor({ fonts, colors, raised = false }) {
+        // 튀어나온 모양으로 그릴지 여부이다.
+        this.raised = raised;
         // 글꼴 묶음이다.
         this.fonts = fonts;
         // 색 번호 표다.
@@ -95,6 +107,13 @@ export class MenuList {
         this.reflow();
     }
 
+    // 하위 메뉴 항목을 추가한다(원본 AddSubmenu). 라벨 뒤에 ` >` 표시가 붙고, 눌렀을 때 child(자식 항목 정의)를 여는 일은 호출자가 한다. 이 항목 자체는 명령이 없다.
+    addSubmenu(label, child) {
+        if (this.items.length >= MENU_ITEM_CAPACITY) return;
+        this.items.push({ kind: 'submenu', label, fragments: this._styled(label, false), command: null, disabled: false, checked: false, selected: false, child });
+        this.reflow();
+    }
+
     // 구분선을 추가한다(원본 AddSeparator). 맨 앞이나 구분선 바로 뒤에는 추가하지 않는다. 구분선 행은 빈 글자 한 줄 높이를 가진다.
     addSeparator() {
         if (this.items.length >= MENU_ITEM_CAPACITY) return;
@@ -113,8 +132,10 @@ export class MenuList {
         // 각 항목의 크기를 재고 최대 폭과 높이 합을 구한다.
         for (const item of this.items) {
             const measured = item.fragments.length > 0 ? measureChain(this.fonts, item.fragments) : this.fonts.measure(new Uint8Array(0), this.textContext);
-            const itemWidth = ftol(measured.width + VERTICAL_MARGIN_X * 2);
-            const itemHeight = ftol(measured.height + MARGIN_Y * 2);
+            // 하위 메뉴 항목은 ` >` 표시의 폭을 더하고 높이는 더 큰 쪽을 쓴다(원본 Reflow 의 kChild 분기).
+            const marker = item.kind === 'submenu' ? this._markerMeasure() : { width: 0, height: 0 };
+            const itemWidth = ftol(measured.width + marker.width + VERTICAL_MARGIN_X * 2);
+            const itemHeight = ftol(Math.max(measured.height, marker.height) + MARGIN_Y * 2);
             width = Math.max(width, itemWidth);
             total = (total + itemHeight) | 0;
             this.heights.push(Math.fround(itemHeight));
@@ -130,6 +151,17 @@ export class MenuList {
             this.offsets.push(Math.fround(offset));
             offset = ftol(offset + this.heights[index]);
         }
+    }
+
+    // 하위 메뉴 표시(` >`)의 조각 목록이다. 라벨과 같은 글꼴·색·그림자로 그리며 한 번 만들어 둔다. (2026-10-29 WB03-F)
+    _markerFragments() {
+        if (!this._markerCache) this._markerCache = this._styled(CHILD_MARKER_TEXT, false);
+        return this._markerCache;
+    }
+
+    // 하위 메뉴 표시의 크기({ width, height })이다. (2026-10-29 WB03-F)
+    _markerMeasure() {
+        return measureChain(this.fonts, this._markerFragments());
     }
 
     // 화면 정수 경계(원본 GumpCollection::Bounds)다.
@@ -199,7 +231,7 @@ export class MenuList {
             const passes = planGumpBackground(rect, passClip, resources.textureMetrics.width, resources.textureMetrics.height, flags);
             drawGumpBackground(surface, resources.texture, passes, resources.shadeMaps);
         };
-        background(bounds, MENU_BACKGROUND_FLAGS, clip);
+        background(bounds, this.raised ? RAISED_BACKGROUND_FLAGS : MENU_BACKGROUND_FLAGS, clip);
         const point = { x: bounds.left, y: bounds.top };
         // 각 항목 행을 위에서 아래로 그린다.
         for (let index = 0; index < this.items.length; index += 1) {
@@ -217,6 +249,11 @@ export class MenuList {
                 surface.drawImage(image, (point.x + markerX + CHECK_MARKER_OFFSET.x + image.left) | 0, (point.y + markerY + CHECK_MARKER_OFFSET.y + image.top) | 0, clip);
             }
             drawChain(surface, this.fonts, item.fragments, ftol(point.x + VERTICAL_MARGIN_X), textY, clip);
+            // 하위 메뉴 항목은 라벨 폭만큼 오른쪽에 ` >` 표시를 같은 높이로 그린다(원본 markerX = 왼쪽 여백 + 라벨 폭).
+            if (item.kind === 'submenu') {
+                const labelWidth = measureChain(this.fonts, item.fragments).width;
+                drawChain(surface, this.fonts, this._markerFragments(), ftol(point.x + VERTICAL_MARGIN_X + labelWidth), textY, clip);
+            }
         }
     }
 

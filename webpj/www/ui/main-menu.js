@@ -14,17 +14,21 @@ import { StoneButton, ftol } from './stone-button.js';
 //  - label: 원본 라벨(번역 조회 전 원문, 영어 번역표는 원문 그대로)이다.
 //  - command: 실행 시 메뉴가 알리는 명령이다. type 은 원본 동작 종류, target 은 원본 Tell 섹션/메뉴 이름이다.
 //  - web: 웹 판본에서 버튼을 만드는지 여부다. false 인 칸은 원본의 빈 칸(null)처럼 배치에서 빠진다.
+//  - popupDy: menu 명령(펼침 메뉴)의 왼쪽 위 모서리 y 를 버튼 위쪽에서 얼마나 옮길지다. x 는 버튼 가로 가운데(절삭)이다.
+//    원본 스크린샷에서 타이틀 그림으로 구한 클라이언트 원점 기준 측정값(1024×768, 8버튼 배치): Help 팝업 (630,311) = 버튼 (593,311) + (37, 0),
+//    Options 팝업 (551,294) = 버튼 (514,334) + (37, -40). 두 값 모두 질감 위상까지 일치해(평균 차이 2.5~4.6, 이웃 위치는 20 이상) 확정이다.
+//    -40 이 어떤 규칙에서 나오는지는 알 수 없다(두 번째 줄 버튼의 팝업이 17px 행 두 개 반 위에서 시작함). 알려진 두 경우만 측정값을 쓴다.
 //  - note: web=false 인 이유다.
 // 사용: createMainMenuButtons(MAIN_MENU_SLOTS) 로 칸 배열을 만든다. (2026-10-23 WB03-M1, 2026-10-28 WB: Edit web=false)
 export const MAIN_MENU_SLOTS = Object.freeze([
     Object.freeze({ label: 'Campaign', command: Object.freeze({ type: 'tell', target: 'UCampaign' }), web: true }),
     Object.freeze({ label: 'Multiplayer', command: Object.freeze({ type: 'multiplayer' }), web: false, note: '웹 판본은 멀티플레이를 구현하지 않는다(AGENTS.md).' }),
     Object.freeze({ label: 'Demo', command: Object.freeze({ type: 'tell', target: 'Demoville' }), web: true }),
-    Object.freeze({ label: 'Help', command: Object.freeze({ type: 'menu', target: 'help' }), web: true }),
+    Object.freeze({ label: 'Help', command: Object.freeze({ type: 'menu', target: 'help' }), web: true, popupDy: 0 }),
     Object.freeze({ label: 'Edit', command: Object.freeze({ type: 'edit' }), web: false, note: '웹 판본은 커스텀 맵 Edit 을 구현하지 않는다(AGENTS.md webpj 목표, 2026-10-27 변경). 원본 8버튼 비교(includeAll)에서만 만든다.' }),
     Object.freeze({ label: 'Intro', command: Object.freeze({ type: 'intro' }), web: false, note: '원본도 게임 CD 가 있을 때만 만든다(DAT_0054db98).' }),
     Object.freeze({ label: 'Credits', command: Object.freeze({ type: 'tell', target: 'Credits' }), web: true }),
-    Object.freeze({ label: 'Options', command: Object.freeze({ type: 'menu', target: 'options' }), web: true }),
+    Object.freeze({ label: 'Options', command: Object.freeze({ type: 'menu', target: 'options' }), web: true, popupDy: -40 }),
     Object.freeze({ label: 'Quit', command: Object.freeze({ type: 'quit' }), web: false, note: '웹에서는 프로그램을 종료할 수 없다.' }),
 ]);
 
@@ -119,11 +123,31 @@ export class MainMenuScreen {
         // 열려 있는 Tell 대화상자(TellWindow)다. 없으면 null. 대화상자가 열려 있는 동안에는 메인 메뉴 돌 버튼을 숨기고 입력을 대화상자가 독점한다.
         // (원본 스크린샷: Credits·Campaign·Demo 창이 열리면 메인 메뉴 버튼 두 줄이 보이지 않는다.) (2026-10-28 WB03-D)
         this.dialog = null;
+        // 열려 있는 펼침 메뉴(PopupMenu: Help·Options)이다. 없으면 null. 열려 있는 동안 포인터 입력은 모두 펼침 메뉴가 받고(메뉴 밖 누름은 메뉴만 닫음),
+        // 메인 메뉴 돌 버튼은 그대로 보인다(원본 스크린샷: 버튼 위에 펼침 메뉴가 겹쳐 보임). (2026-10-29 WB03-F)
+        this.popup = null;
+    }
+
+    // 펼침 메뉴를 열거나(PopupMenu) 닫는다(null). 바뀌는 순간 진행 중인 돌 버튼 누름은 실행 없이 취소한다. (2026-10-29 WB03-F)
+    setPopup(popup) {
+        this.cancel();
+        this.popup = popup;
+        this.dirty = true;
+    }
+
+    // 열려 있는 펼침 메뉴를 닫는다(Esc). 열려 있었으면 true 이다. (2026-10-29 WB03-F)
+    closePopup() {
+        if (!this.popup) return false;
+        this.popup = null;
+        this.dirty = true;
+        return true;
     }
 
     // 대화상자를 열거나(TellWindow) 닫는다(null). 바뀌는 순간 진행 중인 돌 버튼 누름은 실행 없이 취소하고 현재 화면 크기에 맞춰 대화상자를 다시 맞춘다. (2026-10-28 WB03-D)
+    // 대화상자가 열리면 펼침 메뉴는 닫는다. (2026-10-29 WB03-F)
     setDialog(dialog) {
         this.cancel();
+        this.popup = null;
         this.dialog = dialog;
         if (dialog) this._fitDialog();
         this.dirty = true;
@@ -152,6 +176,9 @@ export class MainMenuScreen {
         this.cancel();
         this.width = width;
         this.height = height;
+        // 화면 크기가 바뀌면 펼침 메뉴의 위치 기준이 사라지므로 닫는다. (2026-10-29 WB03-F)
+        if (this.popup) this.popup.resize({ width, height });
+        this.popup = null;
         layoutMainMenuButtons(this.slots, this.resources.font, width, height);
         this._fitDialog();
         this.dirty = true;
@@ -168,11 +195,22 @@ export class MainMenuScreen {
         // 대화상자가 없을 때만 모든 버튼을 칸 순서대로 그린다(대화상자가 열리면 버튼이 사라진다).
         if (!this.dialog) for (const button of this.buttons) button.draw(surface, this.resources);
         else this.dialog.draw(surface);
+        // 펼침 메뉴는 버튼 위에 겹쳐 그린다. (2026-10-29 WB03-F)
+        this.popup?.draw(surface);
         this.dirty = false;
     }
 
     // 왼쪽 버튼 누름을 처리한다. 버튼이 받으면 눌린 모양으로 바꾸고 button.wav 를 낸다. 처리했으면 true.
     pointerDown(x, y) {
+        // 펼침 메뉴가 열려 있으면 누름을 모두 펼침 메뉴가 받는다(메뉴 밖 누름은 메뉴만 닫고 버튼에는 전달하지 않음). 행 명령은 누르는 즉시 실행된다. (2026-10-29 WB03-F)
+        if (this.popup) {
+            const popup = this.popup;
+            popup.pointerDown(x, y);
+            // 명령이 새 대화상자·펼침 메뉴를 열었을 수 있으므로 닫혀 있고 아직 같은 객체이면 비운다.
+            if (this.popup === popup && !popup.isOpen) this.popup = null;
+            this.dirty = true;
+            return true;
+        }
         // 대화상자가 열려 있으면 입력을 모두 대화상자가 받는다(모달).
         if (this.dialog) {
             const handled = this.dialog.pointerDown(x, y);
@@ -192,6 +230,10 @@ export class MainMenuScreen {
 
     // 포인터 이동을 처리한다. 붙잡힌 버튼은 포인터가 안에 있을 때만 눌린 모양을 보인다.
     pointerMove(x, y) {
+        if (this.popup) {
+            if (this.popup.pointerMove(x, y)) this.dirty = true;
+            return;
+        }
         if (this.dialog) {
             if (this.dialog.pointerMove(x, y)) this.dirty = true;
             return;
@@ -202,6 +244,8 @@ export class MainMenuScreen {
 
     // 왼쪽 버튼 뗌을 처리한다. 붙잡힌 버튼 안에서 뗐으면 그 버튼의 명령을 실행(onCommand)하고 true 를 돌려준다.
     pointerUp(x, y) {
+        // 펼침 메뉴는 누르는 순간 처리했으므로 뗌에는 할 일이 없다. (2026-10-29 WB03-F)
+        if (this.popup) return false;
         if (this.dialog) {
             // 명령이 대화상자를 닫거나 바꿀 수 있으므로 뗌 처리 뒤에는 항상 다시 그린다.
             this.dialog.pointerUp(x, y);
@@ -215,8 +259,17 @@ export class MainMenuScreen {
             if (button.pointerUp(x, y)) activated = button;
             if (wasCaptured) this.dirty = true;
         }
-        if (activated) this.onCommand?.(activated.command, activated.label);
+        // 세 번째 인자는 펼침 메뉴의 왼쪽 위 기준점이다(menu 명령일 때). 그 밖의 명령에서는 버튼을 뗀 위치이다. (2026-10-29 WB03-F)
+        if (activated) this.onCommand?.(activated.command, activated.label, activated.command.type === 'menu' ? this.popupAnchor(activated) : { x, y });
         return activated !== null;
+    }
+
+    // 버튼이 여는 펼침 메뉴의 왼쪽 위 기준점(논리 좌표)을 구한다: x = 버튼 왼쪽 + 폭의 절반(절삭), y = 버튼 위쪽 + 칸 정의의 popupDy.
+    // 원본 측정값(Help (630,311), Options (551,294))과 같은 규칙이다. 칸 정의에 없는 버튼은 popupDy 0 이다. (2026-10-29 WB03-F)
+    popupAnchor(button) {
+        const rect = button.bounds();
+        const slot = MAIN_MENU_SLOTS.find((entry) => entry.command === button.command);
+        return { x: rect.left + ftol(button.width * CENTER_FACTOR), y: rect.top + (slot?.popupDy ?? 0) };
     }
 
     // 진행 중인 누름을 실행 없이 취소한다(포커스 상실·탭 숨김·화면 크기 변경).
@@ -224,5 +277,7 @@ export class MainMenuScreen {
         // 모든 버튼의 붙잡기와 눌린 모양을 푼다.
         for (const button of this.buttons) if (button.cancel()) this.dirty = true;
         if (this.dialog?.cancel()) this.dirty = true;
+        // 펼침 메뉴는 열어 둔 채 강조만 지운다. (2026-10-29 WB03-F)
+        if (this.popup?.pointerLeave()) this.dirty = true;
     }
 }
