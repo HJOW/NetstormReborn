@@ -1,0 +1,605 @@
+{
+  "unit": 578,
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "binarySha256": "f203a47e40b38e53f3c516d375d13c332ce7a07b86b42e2f78fd71a2dbabb646",
+  "catalog": [
+    {
+      "chapter": 1,
+      "title": "Struggle For Freedom",
+      "label": "1 The War Begins!",
+      "mission": "TheWarBegins",
+      "done": "donethewarbegins",
+      "requires": "1"
+    },
+    {
+      "chapter": 1,
+      "title": "Struggle For Freedom",
+      "label": "2 Master of Whirligigs",
+      "mission": "MasterOfWhirligigs",
+      "done": "donemasterofwhirligigs",
+      "requires": "donethewarbegins"
+    },
+    {
+      "chapter": 1,
+      "title": "Struggle For Freedom",
+      "label": "3 Save the Island!",
+      "mission": "SaveTheIsland",
+      "done": "donesavetheisland",
+      "requires": "donemasterofwhirligigs"
+    },
+    {
+      "chapter": 1,
+      "title": "Struggle For Freedom",
+      "label": "4 Fragile Fortune",
+      "mission": "FragileFortune",
+      "done": "donefragilefortune",
+      "requires": "donesavetheisland"
+    },
+    {
+      "chapter": 1,
+      "title": "Struggle For Freedom",
+      "label": "5 Thundering Power!",
+      "mission": "ThunderingPower",
+      "done": "donethunderingpower",
+      "requires": "donefragilefortune"
+    },
+    {
+      "chapter": 1,
+      "title": "Struggle For Freedom",
+      "label": "6 Dissolved Alliance",
+      "mission": "DissolvedAlliance",
+      "done": "donedissolvedalliance",
+      "requires": "donethunderingpower"
+    },
+    {
+      "chapter": 2,
+      "title": "A Nation Rises",
+      "label": "1 The Noose",
+      "mission": "TheNoose",
+      "done": "donethenoose",
+      "requires": "donedissolvedalliance"
+    },
+    {
+      "chapter": 2,
+      "title": "A Nation Rises",
+      "label": "2 Rain Vs. Rain",
+      "mission": "RainVsRain",
+      "done": "donerainvsrain",
+      "requires": "donethenoose"
+    },
+    {
+      "chapter": 2,
+      "title": "A Nation Rises",
+      "label": "3 Run For It!",
+      "mission": "RunForIt",
+      "done": "donerunforit",
+      "requires": "donerainvsrain"
+    },
+    {
+      "chapter": 2,
+      "title": "A Nation Rises",
+      "label": "4 Guard My Back",
+      "mission": "GuardMyBack",
+      "done": "doneguardmyback",
+      "requires": "donerunforit"
+    },
+    {
+      "chapter": 2,
+      "title": "A Nation Rises",
+      "label": "5 Surrounded!",
+      "mission": "Surrounded",
+      "done": "donesurrounded",
+      "requires": "doneguardmyback"
+    },
+    {
+      "chapter": 3,
+      "title": "Complete Victory",
+      "label": "1 Breaking Through",
+      "mission": "BreakingThrough",
+      "done": "donebreakingthrough",
+      "requires": "donesurrounded"
+    },
+    {
+      "chapter": 3,
+      "title": "Complete Victory",
+      "label": "2 To The Rescue!",
+      "mission": "ToTheRescue",
+      "done": "donetotherescue",
+      "requires": "donebreakingthrough"
+    },
+    {
+      "chapter": 3,
+      "title": "Complete Victory",
+      "label": "3 Vicious",
+      "mission": "Vicious",
+      "done": "donevicious",
+      "requires": "donetotherescue"
+    },
+    {
+      "chapter": 3,
+      "title": "Complete Victory",
+      "label": "4 Enemy Territory",
+      "mission": "EnemyTerritory",
+      "done": "doneenemyterritory",
+      "requires": "donevicious"
+    },
+    {
+      "chapter": 3,
+      "title": "Complete Victory",
+      "label": "5 Final Confrontation",
+      "mission": "FinalConfrontation",
+      "done": "donefinalconfrontation",
+      "requires": "doneenemyterritory"
+    }
+  ],
+  "bundledDone": {
+    "donetutorial1": 1,
+    "donetutorial2": 1,
+    "donetutorial3": 1,
+    "donetutorial4": 1,
+    "donetutorial5": 1,
+    "donetutorial6": 1,
+    "donethewarbegins": 1,
+    "donemasterofwhirligigs": 1,
+    "donesavetheisland": 1,
+    "donefragilefortune": 1,
+    "donethunderingpower": 1,
+    "donedissolvedalliance": 1,
+    "donethenoose": 1,
+    "donerainvsrain": 1,
+    "donerunforit": 1
+  },
+  "fresh": {
+    "run": {
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-campaign-progress-578-20261030\\data",
+        "--window",
+        "--no-audio",
+        "--frames",
+        "183",
+        "--set",
+        "SCREENW=1024;SCREENH=768;maxFPS=60;sleepPerLoop=8;autoDemo=0;tellTips=0;WelcomeGiven=1;intro=1;music=0",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-campaign-progress-578-20261030\\fresh\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-campaign-progress-578-20261030\\fresh\\states.tsv"
+      ],
+      "binarySha256": "f203a47e40b38e53f3c516d375d13c332ce7a07b86b42e2f78fd71a2dbabb646",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 5.069808999993256,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "cb76758e176fb9498de489bf084e9844f54d645d0fb4457c2c91e00a6a78d515",
+      "dataUnchanged": true
+    },
+    "menu": [
+      {
+        "mission": "TheWarBegins",
+        "enabled": true,
+        "checked": false
+      },
+      {
+        "mission": "MasterOfWhirligigs",
+        "enabled": false,
+        "checked": false
+      },
+      {
+        "mission": "SaveTheIsland",
+        "enabled": false,
+        "checked": false
+      },
+      {
+        "mission": "FragileFortune",
+        "enabled": false,
+        "checked": false
+      },
+      {
+        "mission": "ThunderingPower",
+        "enabled": false,
+        "checked": false
+      },
+      {
+        "mission": "DissolvedAlliance",
+        "enabled": false,
+        "checked": false
+      },
+      {
+        "mission": "TheNoose",
+        "enabled": false,
+        "checked": false
+      },
+      {
+        "mission": "RainVsRain",
+        "enabled": false,
+        "checked": false
+      },
+      {
+        "mission": "RunForIt",
+        "enabled": false,
+        "checked": false
+      },
+      {
+        "mission": "GuardMyBack",
+        "enabled": false,
+        "checked": false
+      },
+      {
+        "mission": "Surrounded",
+        "enabled": false,
+        "checked": false
+      },
+      {
+        "mission": "BreakingThrough",
+        "enabled": false,
+        "checked": false
+      },
+      {
+        "mission": "ToTheRescue",
+        "enabled": false,
+        "checked": false
+      },
+      {
+        "mission": "Vicious",
+        "enabled": false,
+        "checked": false
+      },
+      {
+        "mission": "EnemyTerritory",
+        "enabled": false,
+        "checked": false
+      },
+      {
+        "mission": "FinalConfrontation",
+        "enabled": false,
+        "checked": false
+      }
+    ],
+    "generatedFlags": {}
+  },
+  "resumedFirst": {
+    "run": {
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-campaign-progress-578-20261030\\data",
+        "--window",
+        "--no-audio",
+        "--frames",
+        "183",
+        "--set",
+        "SCREENW=1024;SCREENH=768;maxFPS=60;sleepPerLoop=8;autoDemo=0;tellTips=0;WelcomeGiven=1;intro=1;music=0",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-campaign-progress-578-20261030\\resumed-first\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-campaign-progress-578-20261030\\resumed-first\\states.tsv"
+      ],
+      "binarySha256": "f203a47e40b38e53f3c516d375d13c332ce7a07b86b42e2f78fd71a2dbabb646",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 4.723686400000588,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "cb76758e176fb9498de489bf084e9844f54d645d0fb4457c2c91e00a6a78d515",
+      "dataUnchanged": true
+    },
+    "menu": [
+      {
+        "mission": "TheWarBegins",
+        "enabled": true,
+        "checked": true
+      },
+      {
+        "mission": "MasterOfWhirligigs",
+        "enabled": true,
+        "checked": false
+      },
+      {
+        "mission": "SaveTheIsland",
+        "enabled": false,
+        "checked": false
+      },
+      {
+        "mission": "FragileFortune",
+        "enabled": false,
+        "checked": false
+      },
+      {
+        "mission": "ThunderingPower",
+        "enabled": false,
+        "checked": false
+      },
+      {
+        "mission": "DissolvedAlliance",
+        "enabled": false,
+        "checked": false
+      },
+      {
+        "mission": "TheNoose",
+        "enabled": false,
+        "checked": false
+      },
+      {
+        "mission": "RainVsRain",
+        "enabled": false,
+        "checked": false
+      },
+      {
+        "mission": "RunForIt",
+        "enabled": false,
+        "checked": false
+      },
+      {
+        "mission": "GuardMyBack",
+        "enabled": false,
+        "checked": false
+      },
+      {
+        "mission": "Surrounded",
+        "enabled": false,
+        "checked": false
+      },
+      {
+        "mission": "BreakingThrough",
+        "enabled": false,
+        "checked": false
+      },
+      {
+        "mission": "ToTheRescue",
+        "enabled": false,
+        "checked": false
+      },
+      {
+        "mission": "Vicious",
+        "enabled": false,
+        "checked": false
+      },
+      {
+        "mission": "EnemyTerritory",
+        "enabled": false,
+        "checked": false
+      },
+      {
+        "mission": "FinalConfrontation",
+        "enabled": false,
+        "checked": false
+      }
+    ],
+    "generatedFlags": {
+      "donethewarbegins": 1
+    }
+  },
+  "included": {
+    "run": {
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-campaign-progress-578-20261030\\data",
+        "--window",
+        "--no-audio",
+        "--frames",
+        "183",
+        "--set",
+        "SCREENW=1024;SCREENH=768;maxFPS=60;sleepPerLoop=8;autoDemo=0;tellTips=0;WelcomeGiven=1;intro=1;music=0",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-campaign-progress-578-20261030\\bundled\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-campaign-progress-578-20261030\\bundled\\states.tsv"
+      ],
+      "binarySha256": "f203a47e40b38e53f3c516d375d13c332ce7a07b86b42e2f78fd71a2dbabb646",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 4.756115700001828,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "cb76758e176fb9498de489bf084e9844f54d645d0fb4457c2c91e00a6a78d515",
+      "dataUnchanged": true
+    },
+    "menu": [
+      {
+        "mission": "TheWarBegins",
+        "enabled": true,
+        "checked": true
+      },
+      {
+        "mission": "MasterOfWhirligigs",
+        "enabled": true,
+        "checked": true
+      },
+      {
+        "mission": "SaveTheIsland",
+        "enabled": true,
+        "checked": true
+      },
+      {
+        "mission": "FragileFortune",
+        "enabled": true,
+        "checked": true
+      },
+      {
+        "mission": "ThunderingPower",
+        "enabled": true,
+        "checked": true
+      },
+      {
+        "mission": "DissolvedAlliance",
+        "enabled": true,
+        "checked": true
+      },
+      {
+        "mission": "TheNoose",
+        "enabled": true,
+        "checked": true
+      },
+      {
+        "mission": "RainVsRain",
+        "enabled": true,
+        "checked": true
+      },
+      {
+        "mission": "RunForIt",
+        "enabled": true,
+        "checked": true
+      },
+      {
+        "mission": "GuardMyBack",
+        "enabled": true,
+        "checked": false
+      },
+      {
+        "mission": "Surrounded",
+        "enabled": false,
+        "checked": false
+      },
+      {
+        "mission": "BreakingThrough",
+        "enabled": false,
+        "checked": false
+      },
+      {
+        "mission": "ToTheRescue",
+        "enabled": false,
+        "checked": false
+      },
+      {
+        "mission": "Vicious",
+        "enabled": false,
+        "checked": false
+      },
+      {
+        "mission": "EnemyTerritory",
+        "enabled": false,
+        "checked": false
+      },
+      {
+        "mission": "FinalConfrontation",
+        "enabled": false,
+        "checked": false
+      }
+    ],
+    "generatedFlags": {
+      "donetutorial1": 1,
+      "donetutorial2": 1,
+      "donetutorial3": 1,
+      "donetutorial4": 1,
+      "donetutorial5": 1,
+      "donetutorial6": 1,
+      "donethewarbegins": 1,
+      "donemasterofwhirligigs": 1,
+      "donesavetheisland": 1,
+      "donefragilefortune": 1,
+      "donethunderingpower": 1,
+      "donedissolvedalliance": 1,
+      "donethenoose": 1,
+      "donerainvsrain": 1,
+      "donerunforit": 1
+    }
+  },
+  "saveReadbackStages": [
+    {
+      "completed": 1,
+      "fileSha256": "4ddc510128d894b702a947d5d19ce8dd7bfa48fdd8a79ff5d396f2962cd8b2de",
+      "enabled": 2
+    },
+    {
+      "completed": 2,
+      "fileSha256": "ea7bb66a4474f3837f5fee8934644d49d0bb9bac415c4c508d57b93def7806aa",
+      "enabled": 3
+    },
+    {
+      "completed": 3,
+      "fileSha256": "b5d908c893841a9bc7180a3a6b3cb38b17efd0f83e3dffdfdcd199f13bcd5efb",
+      "enabled": 4
+    },
+    {
+      "completed": 4,
+      "fileSha256": "f6adf26eee7f4b55efeb6a8f7ff408f2706e1305eaef6199958a616e7746f0bb",
+      "enabled": 5
+    },
+    {
+      "completed": 5,
+      "fileSha256": "ac6277e7b780fd9158d66d58c49d482afbd7ef625b437bf2ca5dee31c3b001d2",
+      "enabled": 6
+    },
+    {
+      "completed": 6,
+      "fileSha256": "59fc174172edfda3a17871d89bca7ae8d03968b68ecda723b4045f29ae1025e0",
+      "enabled": 7
+    },
+    {
+      "completed": 7,
+      "fileSha256": "ac209a21246ed18cc462733b287d11b9dce7e64e9452db2cd9c6a0f3209b2228",
+      "enabled": 8
+    },
+    {
+      "completed": 8,
+      "fileSha256": "e17c29fe079e6fb93e6e770ee3973b7974557168af616ff23ef88c1b4808a503",
+      "enabled": 9
+    },
+    {
+      "completed": 9,
+      "fileSha256": "37ac8750da8cb979519eb71be6ea15dbc8c153982fd8e4f41a53b399ec6bd70b",
+      "enabled": 10
+    },
+    {
+      "completed": 10,
+      "fileSha256": "186b4c86822939ab5463eaa9777f2d1db221da1ad2fb063caa00a94ce9c8b5d9",
+      "enabled": 11
+    },
+    {
+      "completed": 11,
+      "fileSha256": "39ad6a2e2df186a16ad996eb8d53e08f459235ca528d83fab5573323b70d338c",
+      "enabled": 12
+    },
+    {
+      "completed": 12,
+      "fileSha256": "f6720d56a65edbae9681097f87fb038bd1d2481a834c4d695a74cf0333aa9a2a",
+      "enabled": 13
+    },
+    {
+      "completed": 13,
+      "fileSha256": "de295f380ddecc7847e23316295a54bde3a1013a248d5bbff0fa69284f1f15d1",
+      "enabled": 14
+    },
+    {
+      "completed": 14,
+      "fileSha256": "c51510e9c7902f278eed1b8b8e26dd69d7d784cdc97a6c5c66cd5d621407e6f9",
+      "enabled": 15
+    },
+    {
+      "completed": 15,
+      "fileSha256": "2ff1ebd8e2988457c86fb5e6b58f0b5fc4e6209e5c0716b37783867e6614e515",
+      "enabled": 16
+    },
+    {
+      "completed": 16,
+      "fileSha256": "415466892ee18d5510d6db2cea08150304756c6f6ae807ef8ebfed35a13a66f7",
+      "enabled": 16
+    }
+  ],
+  "protected": 2591,
+  "protectedChanges": [],
+  "gameRuns": 3,
+  "missionStarted": false,
+  "victoryReproduced": false,
+  "networkExecuted": false,
+  "productCodeChanged": false,
+  "sources": {
+    "tools/cpp_campaign_progress_audit.py": "3e05d9290b13308e4914b64514449fde50755905fc679a09e74a176a80924a1f",
+    "originals/d/options.cfg": "7c986d379a533456fb34d19f7937d1a028812c4560389d43cb663f1bd10cd7d4",
+    "originals/d/setup.cfg": "bd79e34635ba284036638461d9f0532de99e38c48887c1791abfa08c6fd052b3",
+    "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6",
+    "cpppj/src/client/ClientMain.cpp": "878fa4047d90468f98ea10c6c9cfcf3b7e0e8a54021158bc2e45336f831d9c19",
+    "cpppj/src/client/ClientOptionsFile.cpp": "40d8bf6023c88ec5bb82d812b28026d11c7e12cd2283380675281e88c979df26",
+    "cpppj/src/o/ConfigInterface.cpp": "62852c460b740586da52b1ee727de96206198ba0a5e7ff4a18f6acf5086b308c",
+    "cpppj/package-cpppj.ps1": "aa422d5e6b8b9fd66f7ae8ea249f269be985cff46ee7e1720cbc5c01d6d12e4f"
+  },
+  "date": "2026-10-30",
+  "priorUnitClassification": "progress",
+  "newBuild": false,
+  "newUnitTests": false,
+  "existingFixtures": 730,
+  "firstPostAnalysisFailure": "실제10.78 raw_menu_item 대신 호스트 control 행을 기대한 검사기 오류; 동일 정상 종료 자료 재분석",
+  "manualSourceProgressReset": false
+}
