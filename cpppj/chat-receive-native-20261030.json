@@ -1,0 +1,32 @@
+{
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "rows": 238,
+  "sources": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_chat_receive.py": "f81e0569c1ea56c23516c5c386314ab0676387b0a7710cdc3d3c84e4b218b2d0",
+    "tools/decomp_chat_packet.py": "278e5c5dd4451f0c231808fe62c88e111e12f3413d8c354ca3a8c8dc1c5c6710"
+  },
+  "fixtureSha256": "f2b196e8a7e637e29e9178502aa0041fccd1da7fd65d491ba46bd65572e2ba92",
+  "actualNative": [
+    "0042ed30",
+    "0042f0e0",
+    "0040a960/70",
+    "004248a0",
+    "004e3090/3160/30b0/30a0/31c0/2f40/3590/3200/31a0",
+    "0046ee50"
+  ],
+  "explicitDevices": [
+    "CRT new/free/strncpy",
+    "무시 목록 조회/설정/소유자 조회",
+    "UI 알림·소리·로그 append·표시"
+  ],
+  "gameOrNetworkExecuted": false,
+  "limits": [
+    "시스템 뉴스/MP 중계는 관측하지 않음",
+    "실제 Console 일반 Enter와 수신 UI 연결은 후속"
+  ]
+}

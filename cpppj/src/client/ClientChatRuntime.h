@@ -19,4 +19,5 @@ void BindClientChatRecipients(RawChatWindowContext& context,Client& client,std::
 void BindClientChatSubmit(RawChatWindowContext& context,Client& client,RawMenuControls& menus); // 현재 대상 해석/명령표·빈 입력·clear/quit와 format/back/front를 같은 Console 제출에 잇는다. 일반 본문 서식·송신은 미연결이다.
 std::uint32_t ApplyClientChatFormat(Client& client,bool front,std::string_view input); // 동일 현재 manager/ID와 공통 캡처로 서식 명령을 실행하고 실제 Config 변경 알림·후속 저장에 연결한다.
 ChatMessageHooks MakeClientChatMessageHooks(Client& client,std::shared_ptr<RawSurfaceStorage> surface,std::function<std::string_view()> currentName); // 현재 원문 이름/Identity와 실제 manager 배열을 일반 조합 부모에 연결한다. deliver/inputVisible은 실제 호출자가 공급한다.
+std::uint32_t FindClientChatSenderOwner(Client& client,const RawSurfaceStorage& surface,std::string_view currentName,std::uint32_t subscriber); //00484550의 flags2 Identity로 현재 소유자를 조회한다. 실패 시 초기0을 유지한다.
 }

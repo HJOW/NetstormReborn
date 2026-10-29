@@ -82,6 +82,14 @@ std::uint32_t ApplyClientChatFormat(Client& client,bool front,std::string_view i
     hooks.illegalFormat=[&client](auto value) { client.WriteDiagnosticLog(29,"Illegal format \""+std::string(value)+"\"\n"); };
     return ApplyChatFormat(front,{owner->Current(),client.CurrentSubscriber()},input,owner->FormatCapture(),hooks);
 }
+// 원문의 flags2 지역 Identity와 같은 subscriber 입력으로 현재 Player 소유자를 조회한다.
+std::uint32_t FindClientChatSenderOwner(Client& client,const RawSurfaceStorage& surface,std::string_view currentName,std::uint32_t subscriber) {
+    o::PlayerIdentityRecord record;o::RawPlayerIdentity::Initialize(record,2);
+    for (std::size_t index=0;index<4;++index) record[4+index]=static_cast<std::uint8_t>(subscriber>>(8*index)); // 실제 subscriber DWORD만 입력한다.
+    static_cast<void>(ResolveClientChatIdentity(client,surface,currentName,record));std::uint32_t owner{};
+    for (std::size_t index=0;index<4;++index) owner|=std::uint32_t(record[index])<<(8*index); // 실패도 원문이 유지한 초기 owner0을 읽는다.
+    return owner;
+}
 // 이름 getter의 반환은 조회 성공 여부가 아니라 비영 목적 포인터라는 원문 계약을 보존한다.
 ChatMessageHooks MakeClientChatMessageHooks(Client& client,std::shared_ptr<RawSurfaceStorage> surface,std::function<std::string_view()> currentName) {
     if (!surface || !currentName) throw std::invalid_argument("Chat 일반 조합의 실제 표면/현재 이름 getter 필요");

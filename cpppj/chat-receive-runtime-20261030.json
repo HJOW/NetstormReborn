@@ -1,0 +1,106 @@
+{
+  "unit": 585,
+  "date": "2026-10-30",
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "nativeRows": 238,
+  "nativeObservationRuns": 2,
+  "nativeObservations": 476,
+  "nativeRepeatDifferences": 0,
+  "fixtureSha256": "f2b196e8a7e637e29e9178502aa0041fccd1da7fd65d491ba46bd65572e2ba92",
+  "focusedTests": 43,
+  "failedChecks": 0,
+  "registeredCppTests": 3470,
+  "focusedRuns": [
+    {
+      "filter": "ChatReceive",
+      "returnCode": 0,
+      "summary": "2 test(s), 0 failed check(s)"
+    },
+    {
+      "filter": "ChatPacket",
+      "returnCode": 0,
+      "summary": "3 test(s), 0 failed check(s)"
+    },
+    {
+      "filter": "ChatMessage",
+      "returnCode": 0,
+      "summary": "1 test(s), 0 failed check(s)"
+    },
+    {
+      "filter": "ChatFormat",
+      "returnCode": 0,
+      "summary": "1 test(s), 0 failed check(s)"
+    },
+    {
+      "filter": "ClientChatRuntime",
+      "returnCode": 0,
+      "summary": "8 test(s), 0 failed check(s)"
+    },
+    {
+      "filter": "ChatWindowClient",
+      "returnCode": 0,
+      "summary": "19 test(s), 0 failed check(s)"
+    },
+    {
+      "filter": "ChatSubmit",
+      "returnCode": 0,
+      "summary": "3 test(s), 0 failed check(s)"
+    },
+    {
+      "filter": "DotCommandDispatch",
+      "returnCode": 0,
+      "summary": "3 test(s), 0 failed check(s)"
+    },
+    {
+      "filter": "ClientChatCoreOwners",
+      "returnCode": 0,
+      "summary": "3 test(s), 0 failed check(s)"
+    }
+  ],
+  "buildWarnings": 0,
+  "buildErrors": 0,
+  "buildLogs": {
+    "build.log": "eda1ac5438c36e518cd0b1159d4b9c64878dd1fcf86602d90c8a47d4fe92a9c1",
+    "build-final.log": "47cc55ff43db1c74e7a0ae5316f77398b709a4ae7c0fa77e934bc33560aa3d13"
+  },
+  "gameSha256": "dcb03836ea11e1f3fd026b197ecee70435581117c29273c8f98004aa13c4c77f",
+  "testsSha256": "afa30d2faa0d9abc6647c76f6b1c934d789d625db7c832e1afecf41ce1c752b3",
+  "protected": {
+    "count": 2595,
+    "changed": []
+  },
+  "existingFixturesUnchanged": 734,
+  "currentFixtures": 735,
+  "actualGuiRuns": 0,
+  "packageCreated": false,
+  "fullCppTests": false,
+  "all34Routes": false,
+  "windows11Hardware": false,
+  "networkExecuted": false,
+  "multiplayerBranchesNewlyTested": false,
+  "capturesSacrificesSpecificEnemyAttacksOrVictoriesReproduced": false,
+  "observationOrFocusedFailures": 0,
+  "actualOwnerIntegration": [
+    "584 실제 송신/길이 확정의 BYTE→585 수신",
+    "실제 Client flags2 Identity 소유자2/실패0",
+    "공유128줄 로그/스타일 문맥 복원·기존 스크롤 보존",
+    "실제 현재 Chat 표시 부모 사건",
+    "자기 메시지 소리 억제·명시 무시 목록 관측"
+  ],
+  "limits": [
+    "중계0042dc90·실제 일반 Enter는 미연결",
+    "실제 수신 read/config/공유 무시 상태·알림/음향/전송을 실행중 Client에 연결하는 단계는 후속",
+    "시스템 뉴스 분기는 정적으로 작성했고 새로 검사하지 않음",
+    "새 실제 게임/GUI/ZIP·전체C++/34경로·Win11 검사는 없음"
+  ],
+  "nextIntegrationNotes": [
+    "수신 마스크00548710·뉴스548748·무시 목록548750의 동일 Client 장기 상태 필요",
+    "CampaignObjectMenuClient::Impl의 private ignored 벡터와 수신 무시 상태를 분리하지 않아야 함",
+    "ClientPlayerRecords::Alliances()가 현재595200의9x9 DWORD 소유자이고 RawCampaignSession의 hiddenPlayers가52f81e다",
+    "RawCampaignSession::SendLocalPacket과 Login의 같은 Dispatch에 종류0x41 observer/중계를 등록해야 함",
+    "RawMenuControls::ShowChatWindow/AppendChatLog와 실제419d50·ClientAudio를 연결해야 함"
+  ],
+  "rawDirectory": "extracted/cpp-chat-receive-585-20261030/"
+}

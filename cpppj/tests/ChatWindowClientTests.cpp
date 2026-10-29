@@ -5,6 +5,8 @@
 #include "client/ClientChatManagerGlobals.h"
 #include "client/ClientChatRuntime.h"
 #include "client/RawChatMessage.h"
+#include "client/RawChatPacket.h"
+#include "client/RawChatReceive.h"
 #include "client/RawChatSubmit.h"
 #include "client/ClientCoreDataGlobals.h"
 #include "client/ClientGameplayGlobals.h"
@@ -291,4 +293,25 @@ TEST_CASE(ChatWindowClient_MessageCompositionActualIdentityAndUnknownName) {
     CHECK(FormatChatInput(manager,body,local,globals,hooks)==0x12345678U && messages.back()=="~[Iicon.D41]~[Iicon.D40]~rLocalUser (to Alice)> payload");
     scene.storage->ownerMode.battle=0;name="Renamed";CHECK(SayChatMessage(body,local,globals,hooks)==0 && messages.size()==2);
     CHECK(messages.back()=="~[Iicon.D41]~[Iicon.D40]~rRenamed (to SOMEONE)> payload");
+}
+
+// 실제 송신 바이트·현재 Identity·공유 로그/문맥·표시 사건을 창 없는 같은 Client에 조립한다.
+TEST_CASE(ChatWindowClient_ReceiveActualIdentityLogContextAndShow) {
+    ChatScene scene;ChatIdentityInputs(scene);scene.storage->ownerMode.battle=1;InitializeClientChatManager(scene.client);const auto token=scene.Create();scene.menus->Attach(token,30,200,scene.buttons.RootToken(),0);
+    auto owner=scene.client.ChatManagerGlobals();const auto manager=owner->Current();ChatIdentityPut(owner->Bytes(manager),12,0);ChatIdentityPut(owner->Bytes(manager),16,32);
+    CHECK(FindClientChatSenderOwner(scene.client,*scene.storage,"LocalUser",200)==2);CHECK(FindClientChatSenderOwner(scene.client,*scene.storage,"LocalUser",999)==0);
+    auto sender=MakeClientChatPacketHooks(owner);const std::array<std::uint8_t,6> name{'A','l','i','c','e',0};std::vector<std::uint8_t> packet;
+    sender.currentName=[&]()->std::span<const std::uint8_t> { return name; };sender.read=[](auto at)->std::uint32_t { if (at==0x540c74) return 200;if (at==0x594fbc) return 1;if (at==0x52edf6) return 0x41;return 0; };
+    sender.send=[&](auto channel,auto bytes) { CHECK(channel==9);ObserveChatPacket(bytes,1,{});packet.assign(bytes.begin(),bytes.end()); };
+    constexpr std::string_view message="~rAlice> hello\n";std::vector<std::uint8_t> body(message.begin(),message.end());body.push_back(0);CHECK(SendChatPacket(manager,manager,body,sender)==1);
+    std::size_t wakes{},sounds{},shows{};ChatReceiveHooks receiver;receiver.read=[&](auto at)->std::uint32_t {
+        if (at==0x548740) return scene.client.ChatWindowGlobals()->window.current;if (at==0x594fbc) return 1;if (at==0x548710) return 32;if (at==0x540c74) return scene.client.CurrentSubscriber();if (at==0x540c70) return 1;if (at==0x5b5dd8) return 44;
+        if (at>=0x595200 && at<0x595200+9*9*4) return 1;if (at==0x594fc8 || at==0x5ca92c || (at>=0x52f81e && at<0x52f81e+9)) return 0;throw std::logic_error("실제 수신 접합 검사의 전역 없음");
+    };
+    bool ignored{};receiver.ignored=[&](auto subscriber) { CHECK(subscriber==200);return ignored; };receiver.config=[](auto) { return 1; };receiver.owner=[&](auto subscriber) { return FindClientChatSenderOwner(scene.client,*scene.storage,"LocalUser",subscriber); };
+    receiver.wake=[&](auto) { ++wakes; };receiver.sound=[&](auto file) { CHECK(file=="newChatMessage.wav");++sounds; };receiver.append=[&](auto chat,auto text,auto context) { scene.menus->AppendChatLog(chat,text,context); };receiver.show=[&] { ++shows;scene.menus->ShowChatWindow(); };
+    auto& root=scene.Root(token);auto& text=*static_cast<ScrollingTextGumpNode*>(scene.menus->Node(root.text));const auto saved=text.textContext;root.textContext.fill(0x12345678);text.scroll=-1000000000;text.scrollRequest=12345;
+    DispatchChatPacket(packet,receiver);CHECK(wakes==1 && sounds==1 && shows==1 && scene.client.ChatWindowGlobals()->log.lineCount==1 && root.textContext==saved && text.textContext==saved && text.scrollRequest==12345);
+    scene.client.GameplayGlobals()->world.mySubscriber=200;DispatchChatPacket(packet,receiver);CHECK(wakes==2 && sounds==1 && shows==2 && scene.client.ChatWindowGlobals()->log.lineCount==2);
+    ignored=true;DispatchChatPacket(packet,receiver);CHECK(wakes==2 && sounds==1 && shows==2 && scene.client.ChatWindowGlobals()->log.lineCount==2);scene.menus->CloseChatWindows();scene.menus->ShowChatWindow();
 }

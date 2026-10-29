@@ -710,6 +710,8 @@ bool RawMenuControls::OpenChatInput(const InputEvent& event) {
 }
 // Chat 생성 전/정리 후에는 원문 전역0처럼 효과가 없고 요청 소비는 호출자가 수행한다.
 void RawMenuControls::ToggleChatInput() { if (impl_->chatGeometry) impl_->chatGeometry->ToggleInputVisible(); }
+// 원문 수신 뒤의 표시도 현재 Chat을 재조회하고 같은 실제 부모 체인에 사건을 전달한다.
+void RawMenuControls::ShowChatWindow() { auto& s=*impl_;if (s.chatContext && s.chatContext->globals->window.current) s.common.events.Bubble(s.chatContext->globals->window.current,0x02000088U,0,1); }
 const ChatWindow* RawMenuControls::ChatBackend() const { return impl_->chatWindow.get(); } // 실제 설치한 본체다.
 const HudChatGeometry* RawMenuControls::ChatGeometryBackend() const { return impl_->chatGeometry.get(); } // 같은 현재 자식 기하다.
 void RawMenuControls::AppendChatLog(std::uint32_t token,std::string_view text,std::span<const std::uint32_t> context) { auto& s=*impl_;if (!s.chatWindow) throw std::logic_error("Chat 실제 로그 처리기 없음");s.chatWindow->AppendLog(token,text,context); } // 같은 실제 공유 로그/스타일 파서와 원문42eca0 부모를 사용한다.
