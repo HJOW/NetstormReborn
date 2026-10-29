@@ -124,3 +124,5 @@ cpppj의 파일·클래스·함수 경계와 이름을 따른다. 이름이 같�
 - R3j-3에서 MetaImageList.h/.cpp2행을 L1로 추가했다([구현과 검증](../docs/dotnet-meta-image-list-20261029.md)). 원본514행의 전체tail/실제MetaImage22개 기하·등록/효과/반환이 일치하며 실제21개 자식·공통트리/입력/선택픽셀/접두부삭제/지연수명도 연결했다. 전체 메뉴/창 상위 소유·호스트 조립은 후속이다.
 
 - R3k-1에서 BackgroundGifGump/GifImage4행을 L1, RawBackgroundGifControls.cpp의 부분 저장소1행을 port로 추가했다([구현과 검증](../docs/dotnet-background-gif-gump-20261029.md)). 원본308행/중단16행과 보호 GIF34개·변형4개의 소스/픽셀 해시가 일치하며 실제 원시 출력/입력/소유 수명도 연결했다. 기존 Assets/GifImage.cs1행만 재대조 기준을 갱신했다. 전체 노드/창 소유자·메뉴/호스트 조립과 전체 화면 판정은 후속이다.
+
+- R3k-2에서 HtmlTextParser/HtmlConditionEffect/공통 RawTextToken6행을 L1로 추가했다([구현과 검증](../docs/dotnet-html-text-parser-20261029.md)). 두 PE의 기본/그림/조건과 PATCH 배경 총2,494행의 출력/현재 상태·80BYTE/실제 Config 호출 trace가 일치했다. 실제 StyleText/그림 소유·글리프/Config/배경 GIF를 연결했으며 전체 ConfigInterface 임시local 소유·명령 큐/링크·HTML 창/메뉴·호스트 조립과 전체 화면 판정은 후속이다.

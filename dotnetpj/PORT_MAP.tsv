@@ -58,6 +58,10 @@ cpppj/src/client/GumpTree.cpp	Netstorm.Client/Gump/GumpTree.cs	a84c02c69ef027fd2
 cpppj/src/client/GumpTree.h	Netstorm.Client/Gump/GumpTree.cs	a84c02c69ef027fd2009f0ebe841761adc02ec4c	port
 cpppj/src/client/GumpVisual.cpp	Netstorm.Client/Gump/GumpVisual.cs	39bc55e914fa14eddeba3641b757ec689abb7a95	port
 cpppj/src/client/GumpVisual.h	Netstorm.Client/Gump/GumpVisual.cs	39bc55e914fa14eddeba3641b757ec689abb7a95	port
+cpppj/src/client/HtmlConditionEffect.cpp	Netstorm.Client/Gump/HtmlConditionEffect.cs	fb0f73782fb89fbbdf26c22ed3f91698abae1012	L1
+cpppj/src/client/HtmlConditionEffect.h	Netstorm.Client/Gump/HtmlConditionEffect.cs	fb0f73782fb89fbbdf26c22ed3f91698abae1012	L1
+cpppj/src/client/HtmlTextParser.cpp	Netstorm.Client/Gump/HtmlTextParser.cs	fb0f73782fb89fbbdf26c22ed3f91698abae1012	L1
+cpppj/src/client/HtmlTextParser.h	Netstorm.Client/Gump/HtmlTextParser.cs	fb0f73782fb89fbbdf26c22ed3f91698abae1012	L1
 cpppj/src/client/ImageGump.cpp	Netstorm.Client/Gump/ImageGump.cs	9813ecd5dfbbb30c4ca9d0ee6e3e8027b81e3d2f	L1
 cpppj/src/client/ImageGump.h	Netstorm.Client/Gump/ImageGump.cs	9813ecd5dfbbb30c4ca9d0ee6e3e8027b81e3d2f	L1
 cpppj/src/client/InputEvent.cpp	Netstorm.Client/Host/HostInputMapper.cs	91d494c3b2814f00d2cae81a0f4b247e91e81922	port
@@ -209,6 +213,8 @@ cpppj/src/o/RawSquidHitPoints.cpp	Netstorm.Core/Original/RawSquidHitPoints.cs	f9
 cpppj/src/o/RawSquidNeighbors.cpp	Netstorm.Core/Original/RawNeighbor.cs	c7459e61da4d3b6a97c5266bb3ec676f38be1d5e	L1
 cpppj/src/o/RawSquidPoolReset.cpp	Netstorm.Core/Original/RawSquidPoolReset.cs	1ddc4ba021c0fadcf75c0a681cc18d937b798219	L1
 cpppj/src/o/RawStateSidLists.cpp	Netstorm.Core/Original/RawStateSidLists.cs	1ddc4ba021c0fadcf75c0a681cc18d937b798219	L1
+cpppj/src/o/RawTextToken.cpp	Netstorm.Core/Original/RawTextToken.cs	fb0f73782fb89fbbdf26c22ed3f91698abae1012	L1
+cpppj/src/o/RawTextToken.h	Netstorm.Core/Original/RawTextToken.cs	fb0f73782fb89fbbdf26c22ed3f91698abae1012	L1
 cpppj/src/o/RawVortexPreDestroy.cpp	Netstorm.Core/Original/RawVortexPreDestroy.cs	3b88f86ab4789fdcbf11d2529b976c4d666a7167	L1
 cpppj/src/o/RiftType.h	Netstorm.Core/Original/OriginalEdition.cs	4fab249c1190a4f3024baf7bccf152adfcc1859d	port
 cpppj/src/o/RiftType.h	Netstorm.Core/Original/OriginalTypeRecord.cs	4fab249c1190a4f3024baf7bccf152adfcc1859d	L1
