@@ -12,6 +12,7 @@ public:
         std::function<std::uint32_t(std::size_t)> allocateSlider,RawTextEntryContext context); // 공통 장치는 이 조립 계층보다 오래 유지한다.
     ~RawTextEntryControls(); // 노드는 공통 수명에서 먼저 반납한다.
     void SetPalette(const PaletteColorTable& palette); // 현재 실제 파일 팔레트 색을 사용 지점에 공급한다.
+    void SetRecipientValidator(std::function<bool(std::string_view)> validator); //먼저만든이름입력창의같은Console처리기에도실제Chat대상검사를설치한다.버퍼/시계/clipboard는재생성하지않는다.
     std::uint32_t Allocate(bool console); // 기본 생성 전에도 정확한 파생 노드와 소유 토큰을 확보한다.
     std::uint32_t ConstructConsole(std::int32_t width,std::int32_t height,std::optional<std::string_view> text,
         std::uint32_t font,std::uint32_t background,std::uint32_t color); // 실제 기본 버퍼·Slider 생성과 Console 파생 초기화다.

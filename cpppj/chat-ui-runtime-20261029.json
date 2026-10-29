@@ -1,0 +1,234 @@
+{
+  "unit": 572,
+  "baseCommit": "16259484",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23",
+    "changed": false
+  },
+  "scope": "실제Client/Console/ChatWindow 대상검사/현재Identity/객체메뉴 현재입력연결",
+  "native": {
+    "newRows": 720,
+    "repeatDifferences": 0,
+    "realInputParentsRegexAndIdentity": true,
+    "explicitDevices": [
+      "CopyText128 결과",
+      "malloc/CRT/영어번역"
+    ]
+  },
+  "build": {
+    "configuration": "Release",
+    "tests": 1,
+    "game": 1,
+    "warnings": 0,
+    "errors": 0
+  },
+  "filters": {
+    "ChatWindow": {
+      "cases": 11,
+      "failedChecks": 0,
+      "sha256": "6aec9cfb4e8a8283b94946fcde7c5519dff2c946d9933ea6f28ffc52d3f0a277"
+    },
+    "ChatRecipients": {
+      "cases": 3,
+      "failedChecks": 0,
+      "sha256": "86650b4fce400187831ac6afaa576799dc0e07f4a7741bdc1300f3df6d757232"
+    },
+    "ClientChatRuntime": {
+      "cases": 6,
+      "failedChecks": 0,
+      "sha256": "a752bb521d664eef49d1c64e513642dea118db68993bdf981a5ba38370be2738"
+    },
+    "PlayerIdentity": {
+      "cases": 4,
+      "failedChecks": 0,
+      "sha256": "3f5e8c4c74a945c254a51d9c681491bd298f195c9b3788ed2838e5a61d9797c7"
+    },
+    "PlayerMenu": {
+      "cases": 3,
+      "failedChecks": 0,
+      "sha256": "2082f950017f66a53b34c6f272f82e780b9b66255c8c09e301b9003f4d4bd3c9"
+    },
+    "ObjectMenu": {
+      "cases": 20,
+      "failedChecks": 0,
+      "sha256": "8a8af06d96d90f20f0d15e2bb2f1f5e27ac8d59367fd70a1d1ecd2c207f2a977"
+    },
+    "TextEntry": {
+      "cases": 9,
+      "failedChecks": 0,
+      "sha256": "123cf9135eb6270d0ca2d569f65e8350c3374f42fb78b813c025aede8094ce56"
+    },
+    "SubscriberGlobals": {
+      "cases": 10,
+      "failedChecks": 0,
+      "sha256": "90b66c2e71d04b8bdb7e8de283e9d6868d72a8415db165f62098062ce6c5dbd2"
+    },
+    "CampaignSharedGameplay": {
+      "cases": 2,
+      "failedChecks": 0,
+      "sha256": "1105e68d7473761ee98e18778e807261fde39e0f8bba29a7cfabfb0ecf93628f"
+    },
+    "HudChatGeometry": {
+      "cases": 1,
+      "failedChecks": 0,
+      "sha256": "5075e076baeae15ccd1747c2c8ca3c8c4b90595549f2e2df8725079e1494c286"
+    },
+    "HudDock": {
+      "cases": 1,
+      "failedChecks": 0,
+      "sha256": "5ca5531774b5f13fc82081a254cff97b0cd8481d48e9e41e2ed8aa3bdb8503e5"
+    },
+    "ClientStateWorldGlobals": {
+      "cases": 8,
+      "failedChecks": 0,
+      "sha256": "c63c8f85a1f60fc2063f7b3569dd90285a00d6dcc39f138d4cd9234f253fafaa"
+    },
+    "ClientPlayerRecords": {
+      "cases": 4,
+      "failedChecks": 0,
+      "sha256": "3236bedd6e06de5805172de93fe3654e3c7f162463251b64304a4c08d2e1d6c1"
+    }
+  },
+  "uniqueTests": 80,
+  "finalGroupExecutions": 82,
+  "priorClientFilter": {
+    "cases": 10,
+    "failedChecks": 0,
+    "sha256": "ef04bff1e95a38561ca58c480332e364bf12605b64012cb2271c8de8f8bdbba7"
+  },
+  "registered": 3440,
+  "preservedFilterFailure": {
+    "name": "ClientGameplayGlobals",
+    "cases": 0,
+    "failedChecks": 1,
+    "cause": "등록명과일치하지않는필터.프레임워크/검사/제품실패가아님.실제CampaignSharedGameplay/ClientStateWorldGlobals로선택교정",
+    "sha256": "e68689bc187a3561805c293b587e9045b5622d6674c2cd83851a9a1774bfaa8a"
+  },
+  "runtime": {
+    "binarySha256": "ac8c9e12cc3f1e9cdf71fde6daa1a42ec38b1281353b9db64bc7dd8f2a325225",
+    "runs": [
+      {
+        "size": [
+          1024,
+          768
+        ],
+        "fullscreen": false,
+        "actualOwnPlayerMenu": true,
+        "actualCurrentChatQueried": true,
+        "inputPrefixScope": "입력줄표시/typing은별도후속.이번GUI는원문기본빈입력이다.",
+        "nativeMainMenuReturned": true,
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+            "--run",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-chat-ui-572-20261029\\gui-v1\\1024x768\\data",
+            "--mission",
+            "TEST02",
+            "--mute-audio",
+            "--frames",
+            "105",
+            "--set",
+            "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3",
+            "--ui-script",
+            "extracted\\cpp-chat-ui-572-20261029\\gui-v1\\1024x768\\run\\steps.tsv",
+            "--ui-report",
+            "extracted\\cpp-chat-ui-572-20261029\\gui-v1\\1024x768\\run\\states.tsv",
+            "--audio-report",
+            "extracted\\cpp-chat-ui-572-20261029\\gui-v1\\1024x768\\run\\audio.tsv",
+            "--window"
+          ],
+          "binarySha256": "ac8c9e12cc3f1e9cdf71fde6daa1a42ec38b1281353b9db64bc7dd8f2a325225",
+          "scriptSha256": "7990a5157e78eb7a9402b817a969a80393cbe90346fd24e721a5015b11dd9e65",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 17.3694586000056,
+          "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderrSha256": "4b73c96b25066ec2370644eda8a463570fec390203035f3612e15ad85ff68be9",
+          "originalsUnchanged": true,
+          "dataUnchanged": true,
+          "dataRoot": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-chat-ui-572-20261029\\gui-v1\\1024x768\\data"
+        }
+      },
+      {
+        "size": [
+          1280,
+          720
+        ],
+        "fullscreen": true,
+        "actualOwnPlayerMenu": true,
+        "actualCurrentChatQueried": true,
+        "inputPrefixScope": "입력줄표시/typing은별도후속.이번GUI는원문기본빈입력이다.",
+        "nativeMainMenuReturned": true,
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+            "--run",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-chat-ui-572-20261029\\gui-v1\\1280x720\\data",
+            "--mission",
+            "TEST02",
+            "--mute-audio",
+            "--frames",
+            "105",
+            "--set",
+            "SCREENW=1280;SCREENH=720;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3;startInFullScreen=1",
+            "--ui-script",
+            "extracted\\cpp-chat-ui-572-20261029\\gui-v1\\1280x720\\run\\steps.tsv",
+            "--ui-report",
+            "extracted\\cpp-chat-ui-572-20261029\\gui-v1\\1280x720\\run\\states.tsv",
+            "--audio-report",
+            "extracted\\cpp-chat-ui-572-20261029\\gui-v1\\1280x720\\run\\audio.tsv"
+          ],
+          "binarySha256": "ac8c9e12cc3f1e9cdf71fde6daa1a42ec38b1281353b9db64bc7dd8f2a325225",
+          "scriptSha256": "70f75fb09b7867246e694117270aac8fff91f9e53ac6e056552e19335476d8dd",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 17.670681499992497,
+          "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderrSha256": "4b73c96b25066ec2370644eda8a463570fec390203035f3612e15ad85ff68be9",
+          "originalsUnchanged": true,
+          "dataUnchanged": true,
+          "dataRoot": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-chat-ui-572-20261029\\gui-v1\\1280x720\\data"
+        }
+      }
+    ],
+    "capturesSacrificesSpecificEnemyAttacksOrVictoriesReproduced": false,
+    "networkExecuted": false
+  },
+  "protected": {
+    "files": 2585,
+    "differences": [],
+    "oldFixtures": 725,
+    "currentFixtures": 726
+  },
+  "gameSha256": "ac8c9e12cc3f1e9cdf71fde6daa1a42ec38b1281353b9db64bc7dd8f2a325225",
+  "testsSha256": "cd931512817e6db8d0d534bd8c3ffcd9e13a9bb067e7b0899637cf288845dc03",
+  "sources": {
+    "cpppj/src/client/CampaignObjectMenuClient.cpp": "89e45c60369c50905549cf2c3fea130cb43961a1cd747aef8652fe823bfeb54e",
+    "cpppj/src/client/ChatWindow.cpp": "5da39ab3a636e81fb93be86673e49c76729793f5a8af70fe5f6f0fc82347badd",
+    "cpppj/src/client/ChatWindow.h": "5abfb15752cf5b23476ca9938a198ab072ee0e39ea3f9ac731732b748e32d0c4",
+    "cpppj/src/client/ClientChatRuntime.cpp": "1c6b6358c6b8279d50577e063759b12851d4edec043e8c397a99e9000e1a53b5",
+    "cpppj/src/client/ClientChatRuntime.h": "faaddf69f98409e00c9088c21dc6b8c0d251902ad080802f09194d94a500edd0",
+    "cpppj/src/client/ClientGameplayGlobals.h": "37859a1627092ce03b5c1f65d470f914cc82836997b85dfc07fe20f96d9f525a",
+    "cpppj/src/client/ClientMain.h": "c772a9187c782f1e0c47e3c7f70315ecbdc9602178d67c5eaefca729d861defb",
+    "cpppj/src/client/RawMenuChat.inc": "01820435399a3bb45ccc577b3c8688c28d313121777a88dae7dc90b3beb205e1",
+    "cpppj/src/client/RawMenuControls.cpp": "9527efa2c857a1c680c159082ce7c76f7f0d47511bfbcdc39474222a87e6a1fe",
+    "cpppj/src/client/RawMenuControls.h": "2a6a4f598f22b73044c68b42818c7c084293e8904c3416d44650a17e3548dd9e",
+    "cpppj/src/client/RawTextEntryControls.cpp": "ec297d7dcaf92f7425eac7be045d5a371342c81fcaaa91219a48ccb8c329aa78",
+    "cpppj/src/client/RawTextEntryControls.h": "5305ee1df7aef317ac8c7fac81906797c57d534ab8a2d9bfdf30cab30c349ab3",
+    "cpppj/src/client/UberHud.inc": "c18384273d8333d18c3ff970d718c31c22a5a4182988f51e6d8c528d791ecb57",
+    "cpppj/tests/CMakeLists.txt": "caa135f3cba28323a1202992e56189cd64810320e9d1613a11cffcc8c52ed08a",
+    "cpppj/tests/ChatWindowClientTests.cpp": "04542a5bb032506e019fbe5380e2e8c7ee1834390dd8486524ac8608ae9f8179",
+    "tools/decomp_chat_input_recipients.py": "f369538244a629748efff63d6f1d3dbe48d990e1c492096c4ac3ceabf97bfe73",
+    "tools/cpp_chat_ui_smoke.py": "07f1f37007bead32571128330bdbaa2a77ab427a5247b08680f9d0c7ac6a387b"
+  },
+  "actualGuiTypedPrefixes": false,
+  "headlessActualUiPrefixRows": 720,
+  "actualOwnPlayerMenus": 2,
+  "capturesSacrificesSpecificEnemyAttacksOrVictoriesReproduced": false,
+  "newMultiplayerOrNetworkTests": false,
+  "fullTestsExecuted": false,
+  "all34EntriesExecuted": false,
+  "rawDirectory": "extracted/cpp-chat-ui-572-20261029"
+}

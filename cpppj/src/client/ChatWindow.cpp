@@ -106,6 +106,12 @@ void ChatWindow::ChangeRecipient(std::uint32_t token,std::optional<std::string_v
     if (!prefix.empty()) prefix+=':';auto body=CopyInput(token);const auto bodyColon=body.find(':');if (bodyColon!=body.npos && valid) body.erase(0,bodyColon+1);
     Entry().SetText(Node(token).console,Terminated(prefix));Entry().AppendText(Node(token).console,Terminated(body),false);Prefix(token,prefix);
 }
+//원문은실제입력을128BYTE지역으로복사하고유효접두만남긴뒤부분문자열을대소문자구분검색한다.
+bool ChatWindow::ContainsRecipient(std::uint32_t token,std::string_view name) const {
+    auto input=CopyInput(token);const auto colon=input.find(':');
+    if (colon==input.npos) input.clear();else { input.resize(colon);if (!Need(hooks_.recipient)(input)) input.clear(); }
+    return input.find(Z(name))!=input.npos; //빈이름은빈접두에서도strstr처럼일치하며이름경계를추가하지않는다.
+}
 // command 분기에는 일반 release 관문을 추가하지 않으며 기본 Help 위임 순서도 원문을 따른다.
 std::uint32_t ChatWindow::Handle(std::uint32_t token,std::uint32_t event,std::uint32_t first,std::uint32_t second,std::optional<std::string_view> text) const {
     auto& node=Node(token);const auto code=event&kCodeMask;const auto base=[&] { return Need(hooks_.baseHandle)(token,event,first,second); }; // 나머지는 현재 기본 Help 입력에 위임한다.

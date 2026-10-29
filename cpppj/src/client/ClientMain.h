@@ -122,6 +122,7 @@ public:
     UberGump* Menu();
     // 메뉴/월드 유무와 관계없이 같은 Client의 실제00540c74 const참조다.
     const std::uint32_t& CurrentSubscriber() const;
+    o::OriginalEdition Edition() const { return options_.edition; } //자산/창초기화전에도동일한실행판본을반환한다.실제자료가필요없는Client장치의필드배치선택에쓴다.
     // Client 전체 수명의 유일한 PATCH Chat 기록 처리기다. 미션 교체 때 새로 만들거나 지우지 않는다.
     RawChatChannels& ChatChannels();
     // 같은 실제 100기록을 읽기 전용으로 빌린다. UI/검사는 별도 채널 사본을 만들지 않는다.

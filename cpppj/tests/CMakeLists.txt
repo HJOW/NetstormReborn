@@ -2109,7 +2109,7 @@ target_sources(netstorm_tests PRIVATE ChatRecipientsTests.cpp) # 원문 이름 �
 set_source_files_properties(ChatRecipientsTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_CHAT_RECIPIENTS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/chat-recipients-x86.tsv\";NETSTORM_CHAT_RECIPIENT_IDENTITY_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/chat-recipient-identity-x86.tsv\"")
 set_source_files_properties(ChatWindowClientTests.cpp PROPERTIES COMPILE_DEFINITIONS
-    "NETSTORM_CHAT_CALLBACKS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/chat-callbacks-x86.tsv\"")
+    "NETSTORM_CHAT_CALLBACKS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/chat-callbacks-x86.tsv\";NETSTORM_CHAT_INPUT_RECIPIENTS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/chat-input-recipients-x86.tsv\"")
 set_source_files_properties(ChatWindowTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_CHAT_WINDOW_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/chat-window-x86.tsv\"")
 set_source_files_properties(HudChatGeometryTests.cpp PROPERTIES COMPILE_DEFINITIONS

@@ -3,6 +3,7 @@
 #include "client/InventoryAboutMenu.h"
 #include "client/ClientMain.h"
 #include "client/ClientAudio.h"
+#include "client/ClientGameplayGlobals.h"
 #include "client/GameWorld.h"
 #include "client/RawButtonControls.h"
 #include "client/RawMenuControls.h"
@@ -44,10 +45,9 @@ struct CampaignObjectMenuClient::Impl {
     GameWorld* world{}; // 메뉴 체인과 객체 부착 Form이 빌리는 현재 월드다.
     std::unique_ptr<RawCampaignObjectMenus> chain; // 실제 사제/캐리어/회수/Player/정보 몸체를 함께 소유한다.
     std::unique_ptr<RawObjectMenuOpen> opener; // 같은 현재 객체의 공통 열기와 위치 계산이다.
-    std::uint32_t root{},staticSerial{0x60000000U},localAddress{}; // 실제 루트/호스트 정적 문자열 범위/5953fc의 초기0 주소다.
+    std::uint32_t root{},staticSerial{0x60000000U}; //실제루트와호스트정적문자열범위다.주소DWORD는Client장기소유자에서읽는다.
     std::map<std::uint32_t,std::string> staticStrings; // 페이지/80칸 Script 고리와 독립인 정적 메뉴 문자열 수명이다.
     std::vector<std::uint32_t> ignored; // 원본548750/548754의 현재 subscriber 목록이다. 초기 빈 목록을 유지한다.
-    std::string chatInput; // 원본 Chat 입력 텍스트의 현재 초기 빈 바이트다. 편집 Gump 연결은 후속이다.
     // 현재 실제 UI 대상을 빌리기만 하며 메뉴를 만들거나 게임을 진행하지 않는다.
     Impl(Client& source,RawButtonControls& tree,std::function<void(std::string_view)> notify):client(source),buttons(tree),tell(std::move(notify)) {
         if (!tell || !buttons.Menus()) throw std::invalid_argument("실제 객체 메뉴 Client 경계 누락");
@@ -64,15 +64,13 @@ struct CampaignObjectMenuClient::Impl {
         if (staticSerial==0xffffffffU) throw std::overflow_error("실제 객체 메뉴 정적 문자열 토큰 소진");
         const auto token=++staticSerial;staticStrings.emplace(token,text);return token;
     }
-    // 원본42f640의 현재 Identity 조회와42e9e0의 콜론 없는 입력 경로를 사용한다.
+    //원본42f640은현재Identity를먼저조회하고성공한이름만현재Chat입력의42e9e0에전달한다.
     std::uint8_t Whispered(std::uint32_t subscriber) const {
         o::PlayerIdentityRecord record{};o::RawPlayerIdentity::Initialize(record,0);
         // 원본은 검색 전 subscriber DWORD만 기록한다.
         for (std::size_t index=0;index<4;++index) record[4+index]=static_cast<std::uint8_t>(subscriber>>(index*8));
         if (!chain->ResolveIdentity(record)) return 0;
-        if (chatInput.find(':')!=std::string::npos) throw std::logic_error("객체 메뉴의 현재 Chat 접두 이름 해석0042dc70 미연결");
-        // 콜론이 없으면42e9e0은 첫 바이트를NUL로 바꾼 뒤 strstr를 실행한다. 빈 이름만 일치한다.
-        return record[8]==0 ? 1U : 0U;
+        return buttons.Menus()->ChatContainsRecipient({reinterpret_cast<const char*>(record.data()+8)}); //실제편집버퍼의현재접두를사용하며별도빈입력사본을만들지않는다.
     }
     // 같은 실제 작성기/현재 게임/번역/정적 수명에 모든 UI 경계를 연결한다.
     CampaignObjectMenuUi Ui(const MenuGumpWidgets& widgets,const MenuGumpControls& controls,const MenuGump& raw) {
@@ -80,7 +78,7 @@ struct CampaignObjectMenuClient::Impl {
         std::string help; // NUL/빈 문자열의 차이를 실제 현재 설정에서 유지한다.
         if (client.Configuration().ReadString("helpWord",help)) { const auto bytes=o::EncodeOriginalText(help);ui.objectState.helpWord=std::string(bytes.begin(),bytes.end()); }
         ui.objectState.denySalvageRead=[this] { return std::bit_cast<std::uint32_t>(world->Session().MissionStartSettings().denySalvage); };
-        ui.identity.address=[this] { return localAddress; };ui.identity.unknownName=[] { return std::string_view("SOMEONE"); };
+        ui.identity.address=[this] { return client.GameplayGlobals()->LocalAddress(); };ui.identity.unknownName=[] { return std::string_view("SOMEONE"); };
         ui.priest.format=ui.carrier.format=ui.object.format=[this](std::string_view key,std::span<const PriestMenuArgument> arguments) { return PrintMenu(Translate(key),arguments); };
         ui.priest.description=ui.carrier.description=[this](std::uint32_t type) { const auto types=world->Session().Core().types;if (type>=types.size()) throw std::out_of_range("현재 객체 메뉴 설명 TYPE 범위");return Translate(types[type].description); };
         ui.priest.tell=[this](std::string_view key) { tell(key); };

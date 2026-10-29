@@ -2,6 +2,8 @@
 #include "client/ClientChatRuntime.h"
 #include "client/ClientMain.h"
 #include "client/ClientChatManagerGlobals.h"
+#include "client/ChatRecipients.h"
+#include "client/RawChatWindowContext.h"
 #include "client/ClientCoreDataGlobals.h"
 #include "client/ClientDotCommandGlobals.h"
 #include "client/ClientGameplayGlobals.h"
@@ -40,5 +42,26 @@ void RefreshClientChatRankPrefix(Client& client,const GameAssets& assets,const R
     hooks.maximumRank=[&assets,&surface] { const auto minor=static_cast<std::uint32_t>(IconCount(assets,surface,'B'));const auto major=static_cast<std::uint32_t>(IconCount(assets,surface,'C'));return std::bit_cast<std::int32_t>(major*minor-1U); }; //004c6c20의 두 현재TYPE 조회와32비트 곱/감김을 보존한다.
     std::array<std::uint8_t,o::kChatRankOutputBytes> output,temporary; // 원문 지역 두256BYTE이며 formatter가 실제로 쓰는 부분만 먼저 정의한다.
     o::RefreshChatManagerRankPrefix({client.ChatManagerGlobals()->Current(),client.CurrentSubscriber(),client.CoreDataGlobals()->Active()},hooks,output,temporary);
+}
+//매조회에서현재Playerbase를빌리며다른Session의고정뷰나이름사본을저장하지않는다.
+bool ResolveClientChatIdentity(Client& client,const RawSurfaceStorage& surface,std::string_view currentName,o::PlayerIdentityRecord& record) {
+    o::PlayerIdentityReads reads;reads.localOwner=[&client] { return client.GameplayGlobals()->player.battleOwner; };reads.subscriber=[&client] { return client.CurrentSubscriber(); };
+    reads.address=[&client] { return client.GameplayGlobals()->LocalAddress(); };reads.name=[currentName] { return currentName; }; //원문이읽는현재로컬정보를같은동기호출동안빌린다.
+    reads.battle=[&surface] { return surface.ownerMode.battle; };reads.editor=[&client] { return client.GameplayGlobals()->world.editor!=0; };reads.metamap=[&surface] { return surface.ownerMode.challenge; }; //모드에따른실제검색순서는기존원문본문에남긴다.
+    o::RawPlayerIdentity identity(client.Edition(),client.CoreDataGlobals()->Players(),{},client.ChatRecords(),std::move(reads));return identity.Resolve(record); //메타맵기록은선택시기존명시경계로남으며일반Player/Chat행으로대체하지않는다.
+}
+//현재이름getter는매Identity진입에서다시읽고두UI소비자가같은검사부모를사용한다.
+void BindClientChatRecipients(RawChatWindowContext& context,Client& client,std::shared_ptr<RawSurfaceStorage> surface,std::function<std::string_view()> currentName) {
+    if (!currentName || !context.translate || !surface) throw std::invalid_argument("Chat 대상 검사의 현재 이름/번역/표면 장치 필요");
+    context.resolve=[&client,surface=std::move(surface),name=std::move(currentName)](auto& record) { return ResolveClientChatIdentity(client,*surface,name(),record); };
+    context.recipient=[&client,resolve=context.resolve,translate=context.translate](auto text) {
+        o::PlayerIdentityRecord scratch; //원문지역의미작성꼬리를임의0으로만들지않으며본문이초기화하는필드만사용한다.
+        return CheckChatRecipients(client.ChatManagerGlobals()->Current(),text,scratch,{resolve,translate});
+    };
+    context.editor.recipient=context.recipient;
+    context.diagnostic=[&client](auto level,auto format,auto parameter) {
+        if (format!="Could not lookup a name for subId == %d\n") throw std::logic_error("Chat 이름 조회 진단의 미지원 원문 서식");
+        client.WriteDiagnosticLog(std::bit_cast<std::int32_t>(level),"Could not lookup a name for subId == "+std::to_string(std::bit_cast<std::int32_t>(parameter))+"\n"); //원문의first인자와signed%d를보존해현재공유trace에전달한다.
+    };
 }
 }

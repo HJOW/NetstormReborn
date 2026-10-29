@@ -700,6 +700,8 @@ void RawMenuControls::CloseBackgroundGifs() { if (impl_->gifWindows) impl_->gifW
 // 전체 실제 Chat 생성자는 네 자식과 공유 버퍼를 원문 순서대로 조립한다.
 std::uint32_t RawMenuControls::CreateChatWindow(RawChatWindowContext context) { auto& s=*impl_;s.BindChat(std::move(context),*this);return s.chatWindow->Create(); }
 std::uint32_t RawMenuControls::ChatWindowRoot() const { const auto& s=*impl_;if (!s.chatContext) return 0;const auto token=s.chatContext->globals->window.current;const auto* node=Find(s.chatRoots,token);return node && !(node->flags&0x10000U) ? token : 0U; } // 현재 전역을 임의 복구하지 않는다.
+//이름/접두를따로캐시하지않고원문이사용한현재Chat과실제입력을호출위치에서읽는다.
+bool RawMenuControls::ChatContainsRecipient(std::string_view name) const { const auto& s=*impl_;if (!s.chatContext || !s.chatWindow) throw std::logic_error("현재Chat의대상포함검사장치없음");return s.chatWindow->ContainsRecipient(s.chatContext->globals->window.current,name); }
 const ChatWindow* RawMenuControls::ChatBackend() const { return impl_->chatWindow.get(); } // 실제 설치한 본체다.
 const HudChatGeometry* RawMenuControls::ChatGeometryBackend() const { return impl_->chatGeometry.get(); } // 같은 현재 자식 기하다.
 void RawMenuControls::AppendChatLog(std::uint32_t token,std::string_view text,std::span<const std::uint32_t> context) { auto& s=*impl_;if (!s.chatWindow) throw std::logic_error("Chat 실제 로그 처리기 없음");s.chatWindow->AppendLog(token,text,context); } // 같은 실제 공유 로그/스타일 파서와 원문42eca0 부모를 사용한다.

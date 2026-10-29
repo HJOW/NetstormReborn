@@ -48,6 +48,7 @@ void UberGump::EnsureHudFactories() {
             BindTextClipboard(data.editor,textClipboard_); //공통 TextEntry가 처음 생성될 때 같은 장치를 설치하고 Console/벽시계 문맥은 보존한다.
             data.translate=[this](auto text) { return FontBytes(client_.Translate(text)); };data.storeText=[this](auto text) { return client_.ChatWindowGlobals()->Store(text); };
             data.text=[this](auto token) -> std::string_view { return client_.ChatWindowGlobals()->strings.at(token); };
+            BindClientChatRecipients(data,client_,client_.SurfaceStorage(),[this]() -> std::string_view { return world_ ? world_->Session().CurrentHandle() : std::string_view(mapUserName_); }); //목록과같은장기현재이름을매조회빌리고Session교체전주소를캡처하지않는다.
             data.read=[this](auto address) -> std::uint32_t { switch (address) {
                 case 0x594fc8:return client_.SurfaceStorage()->ownerMode.challenge;case 0x594fbc:return world_ ? world_->Session().BattleActive() : 0U;
                 case 0x548714:return client_.ChatManagerGlobals()->Current();case 0x563e38:return rawButtons_->RootToken();
@@ -55,7 +56,7 @@ void UberGump::EnsureHudFactories() {
                 case 0x542944:return 0x02000094U;default:throw std::logic_error("Chat 실제 Client 전역 미연결:"+std::to_string(address));
             } };
             data.config=[this](auto key) { return client_.Configuration().GetInt(key); };data.quit=[this](auto event,auto first,auto second) { client_.Input().Push(event,std::bit_cast<std::int32_t>(first),std::bit_cast<std::int32_t>(second)); };
-            return rawButtons_->Menus()->CreateChatWindow(std::move(data)); // 선택한 recipient/전송/clipboard 미연결은 기존 본체의 도달 위치에서 계속 명시 거부한다.
+            return rawButtons_->Menus()->CreateChatWindow(std::move(data)); //대상/Identity/clipboard는같은실제장치이며전송/자동완성은선택시기존명시경계다.
         };
         context.root.refreshTechnology=[this] { RefreshClientChatRankPrefix(client_,client_.Assets(),*client_.SurfaceStorage()); }; // Fort Technology와 같은 실제 현재 manager/Core/아이콘을 사용한다.
         context.root.translate=[this](auto text) { return client_.ChatWindowGlobals()->Store(FontBytes(client_.Translate(text))); };

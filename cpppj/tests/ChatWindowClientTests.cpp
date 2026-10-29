@@ -3,6 +3,10 @@
 #include "client/ClientMain.h"
 #include "client/ClientChatWindowGlobals.h"
 #include "client/ClientChatManagerGlobals.h"
+#include "client/ClientChatRuntime.h"
+#include "client/ClientCoreDataGlobals.h"
+#include "client/ClientGameplayGlobals.h"
+#include "client/ClientPlayerRecords.h"
 #include "client/ClientDotCommandGlobals.h"
 #include "client/RawChatWindowContext.h"
 #include "client/RawButtonControls.h"
@@ -95,6 +99,58 @@ TEST_CASE(ChatWindowClient_RealGeometryInputAndStyledPixels) {
     for (int y=0;y<480;++y) for (int x=0;x<647;++x) { const auto value=clipped[y*647+x];if (x>=clip.left && x<clip.right && y>=clip.top && y<clip.bottom) changed+=value!=0x5a;else CHECK(value==0x5a); } // 실제 현재 클립과 행 padding 밖은 보존한다.
     CHECK(changed>0);if (const auto* output=std::getenv("NETSTORM_CHAT_QA")) { std::vector<std::uint8_t> rgba(640*480*4);for (int y=0;y<480;++y) for (int x=0;x<640;++x) { const auto color=scene.assets.game.Palette().Color(pixels[y*647+x]);const auto at=(y*640+x)*4;rgba[at]=color.red;rgba[at+1]=color.green;rgba[at+2]=color.blue;rgba[at+3]=255; }netstorm::platform::WriteBitmap(output,640,480,rgba); } // 명시 검사 경로에만 같은 실제 표면을 기록한다.
     scene.menus->CloseChatWindows();
+}
+
+namespace { //실제Client장치를사용하는추가원문대조의입력준비만공유한다.
+//원문fixture의좁은바이트입력을그대로복원한다.
+std::string ChatInputBytes(std::string_view text) {
+    if (text=="-") return {};std::string result;
+    for (std::size_t index=0;index<text.size();index+=2) result+=static_cast<char>(std::stoul(std::string(text.substr(index,2)),nullptr,16)); //두hex문자를한BYTE로읽는다.
+    return result;
+}
+//실제필드의정확한DWORD입력만쓴다.
+void ChatIdentityPut(std::span<std::uint8_t> bytes,std::size_t at,std::uint32_t value) { std::memcpy(bytes.data()+at,&value,4); }
+//조회에사용하는이름영역과Subscriber만원문과같은명시입력으로만든다.
+void ChatIdentityInputs(ChatScene& scene) {
+    auto records=scene.client.PlayerRecords();records->Initialize([](auto,auto) {}); //동맹자식은이이름조회검사의명시외부장치이며조회/기대값을계산하지않는다.
+    auto bytes=records->Records();
+    for (std::size_t owner=0;owner<9;++owner) { //원문과같은9행의이름/Subscriber입력을쓰며factory/다른필드는보존한다.
+        std::fill_n(bytes.begin()+owner*180+12,32,std::uint8_t{});ChatIdentityPut(bytes,owner*180+44,0);
+    }
+    const auto text=[](std::span<std::uint8_t> target,std::size_t at,std::string_view value) { std::copy(value.begin(),value.end(),target.begin()+at);target[at+value.size()]=0; }; //입력의NUL까지만쓴다.
+    text(bytes,180+12,"LocalUser");ChatIdentityPut(bytes,180+44,100);text(bytes,360+12,"Alice");ChatIdentityPut(bytes,360+44,200);
+    const auto view=scene.client.ChatRecords();std::span<std::uint8_t> chat{const_cast<std::uint8_t*>(view.data()),view.size()}; //검사만실제mutable소유자의읽기뷰에원문과같은40BYTE/flags0경계입력을쓴다.제품은읽기전용API를유지한다.
+    std::fill(chat.begin(),chat.end(),std::uint8_t{});text(chat,0,"Bob");ChatIdentityPut(chat,44,300);text(chat,48,std::string(40,'B'));ChatIdentityPut(chat,48+44,400);
+    scene.client.GameplayGlobals()->player.battleOwner=1;scene.client.GameplayGlobals()->world.mySubscriber=100;scene.client.GameplayGlobals()->LocalAddress()=0;
+}
+//동일한실제ConsoleAPI로입력을교체하며별도현재입력사본을제품에주입하지않는다.
+void ChatSetInput(ChatScene& scene,std::uint32_t token,std::string_view text) {
+    std::vector<char> bytes(text.begin(),text.end());bytes.push_back(0);scene.menus->TextEntryControls()->Backend().SetText(scene.Root(token).console,bytes);
+}
+}
+
+//원문720행을실제Client의현재Identity/대상검사와공통ChatWindow/편집버퍼에대조한다.
+TEST_CASE(ChatWindowClient_ActualRecipientInputNative720) {
+    ChatScene scene;ChatIdentityInputs(scene);std::string currentName="LocalUser";auto context=scene.Context();BindClientChatRecipients(context,scene.client,scene.storage,[&]() -> std::string_view { return currentName; });const auto resolve=context.resolve;const auto token=scene.menus->CreateChatWindow(std::move(context));
+    std::ifstream input(NETSTORM_CHAT_INPUT_RECIPIENTS_FIXTURE);if (!input) throw std::runtime_error("실제Chat입력원문관측없음");std::string line;std::getline(input,line);std::size_t count{};
+    while (std::getline(input,line)) { //원문각행의입력만실제같은장치에공급하고최종반환을고정기대값과비교한다.
+        if (!line.empty() && line.back()=='\r') line.pop_back();std::vector<std::string> row;std::size_t start{};
+        for (;;) { const auto end=line.find('\t',start);row.push_back(line.substr(start,end==line.npos ? line.npos : end-start));if (end==line.npos) break;start=end+1; } //빈열도보존한다.
+        if (row.size()!=10) throw std::runtime_error("실제Chat입력관측열수오류");const auto mode=std::stoul(row[1]);scene.storage->ownerMode.battle=mode==1;scene.client.GameplayGlobals()->world.editor=mode==2;scene.client.ChatManagerGlobals()->Current()=static_cast<std::uint32_t>(std::stoul(row[2]));ChatSetInput(scene,token,ChatInputBytes(row[3]));const std::string before(scene.Input(token).Text());bool result{};
+        if (row[0]=="contains") result=scene.menus->ChatContainsRecipient(ChatInputBytes(row[4]));
+        else { netstorm::o::PlayerIdentityRecord record;record.fill(0xa5);netstorm::o::RawPlayerIdentity::Initialize(record,0);ChatIdentityPut(record,4,static_cast<std::uint32_t>(std::stoul(row[5])));result=resolve(record) && scene.menus->ChatContainsRecipient({reinterpret_cast<const char*>(record.data()+8)}); } //42f640의조회실패시입력복사를선행하지않는같은사슬이다.
+        CHECK(std::to_string(result)==row[6]);CHECK(scene.Input(token).Text()==before);++count;
+    }CHECK(count==720);scene.menus->CloseChatWindows();
+}
+
+//먼저만든Console의수명은유지하면서실제대상검사/현재이름·주소·Playerbase변경을따라야한다.
+TEST_CASE(ChatWindowClient_RecipientLateBindingCurrentNameAddressAndPlayers) {
+    ChatScene scene;ChatIdentityInputs(scene);std::string currentName="LocalUser";RawTextEntryContext early;early.now=[&] { return scene.seconds; };auto& entries=scene.menus->EnableTextEntry(early);const auto previous=entries.ConstructConsole(200,20,"kept",5,0,0);const auto buffer=entries.Console(previous)->buffer;
+    auto context=scene.Context();BindClientChatRecipients(context,scene.client,scene.storage,[&]() -> std::string_view { return currentName; });const auto valid=context.recipient;const auto resolve=context.resolve;const auto token=scene.menus->CreateChatWindow(std::move(context));scene.client.ChatManagerGlobals()->Current()=1;scene.storage->ownerMode.battle=false;scene.client.GameplayGlobals()->world.editor=0;
+    CHECK(scene.menus->TextEntryControls()==&entries && entries.Console(previous)->buffer==buffer && entries.Storage().Find(buffer)->Text()=="kept");CHECK(valid("LocalUser ALLIES Bob") && !valid("Alice") && !valid(std::string(40,'A')));
+    currentName="Renamed";CHECK(valid("Renamed") && !valid("LocalUser"));scene.client.GameplayGlobals()->LocalAddress()=0x81234567U;netstorm::o::PlayerIdentityRecord record{};netstorm::o::RawPlayerIdentity::Initialize(record,0);ChatIdentityPut(record,48,0x81234567U);CHECK(resolve(record) && ChatDword(record,48)==0x81234567U && std::string(reinterpret_cast<const char*>(record.data()+8))=="Renamed");
+    scene.menus->Attach(token,10,200,scene.buttons.RootToken(),0);scene.menus->ChatGeometryBackend()->SetInputVisible(token,1);ChatSetInput(scene,token,"Renamed: hello");CHECK(!scene.Draw().empty()); //실제Console Draw의recipientHighlight가먼저만든편집처리기의현재검사까지통과해야한다.
+    const auto oldBase=scene.client.PlayerRecords()->Base();scene.client.PlayerRecords()->Initialize([](auto,auto) {});const auto players=scene.client.CoreDataGlobals()->Players();CHECK(scene.client.PlayerRecords()->Base()!=oldBase);constexpr std::string_view changed="Changed";std::copy(changed.begin(),changed.end(),players.begin()+360+12);players[360+12+changed.size()]=0;ChatIdentityPut(players,360+44,222);scene.client.GameplayGlobals()->world.editor=1;CHECK(valid("Changed"));scene.menus->CloseChatWindows();scene.menus->CloseTextEntries();
 }
 
 // 번역 중단과 선택된 전송/자동완성 미연결은 부분 효과를 유지한 명시 실패이며 가짜 성공이 아니다.

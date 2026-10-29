@@ -45,6 +45,8 @@ RawTextEntryControls::RawTextEntryControls(RawMenuTree tree,FontStore& fonts,con
     const ScrollGump& slider,const ScrollGumpWidgets& widgets,std::function<ScrollGumpNode*(std::uint32_t)> nodes,std::function<std::uint32_t(std::size_t)> allocator,RawTextEntryContext context)
     :impl_(std::make_unique<Impl>(std::move(tree),fonts,bg,draw,slider,widgets,std::move(nodes),std::move(allocator),std::move(context))) {} // 고정 소유자를 만든다.
 RawTextEntryControls::~RawTextEntryControls()=default; // 노드 반납은 공통 수명에서 먼저 수행한다.
+//기존편집문맥의이선택장치만바꾸고실제노드/문자물리와다른콜백은유지한다.
+void RawTextEntryControls::SetRecipientValidator(std::function<bool(std::string_view)> validator) { if (!validator) throw std::invalid_argument("Console 실제 대상 검사 없음");impl_->context.recipient=std::move(validator); }
 void RawTextEntryControls::SetPalette(const PaletteColorTable& palette) { if (palette.named.size()<=9) throw std::invalid_argument("편집 UI 실제 갈색 팔레트 없음");impl_->state.brown=palette.named[9].index;impl_->state.black=palette.basic[0];impl_->state.yellow=palette.basic[5]; } // 파일 팔레트의 실제 색 전역이다.
 std::uint32_t RawTextEntryControls::Allocate(bool console) { auto& s=*impl_;const auto token=s.common.token();if (console) s.consoles.emplace(token,std::make_unique<ConsoleGumpNode>());else s.entries.emplace(token,std::make_unique<TextEntryGumpNode>());s.owned.insert(token);return token; } // 기본 생성 전 소유권을 확보한다.
 std::uint32_t RawTextEntryControls::ConstructConsole(std::int32_t width,std::int32_t height,std::optional<std::string_view> text,std::uint32_t font,std::uint32_t background,std::uint32_t color) { return impl_->backend->ConstructConsole(Allocate(true),width,height,text,font,background,color); } // 같은 실제 본체다.

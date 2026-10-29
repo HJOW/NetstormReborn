@@ -58,6 +58,8 @@ public:
     std::uint32_t& GeyserType() { return gameAux_->GeyserType(); } // Host/옵션/게임이 같은 TYPE DWORD를 직접 사용한다.
     const std::uint32_t& GeyserType() const { return gameAux_->GeyserType(); } // 현재 타입을 복사하지 않는다.
     const std::shared_ptr<o::RawAuthorityState>& Authority() const { return authority_; } // 같은 두 bool의 장기 소유자 정체성을 직접 제공한다.
+    std::uint32_t& LocalAddress() { return localAddress_; } //005953fc의 현재 주소DWORD를 PlayerFinder/객체메뉴가 같은 Client 수명에 빌린다.
+    const std::uint32_t& LocalAddress() const { return localAddress_; } //미션/메뉴 교체 뒤에도 같은 현재 주소를 읽는다.
     bool& Server() { return authority_->server; } // 실제 서버 관문/Zone 출력이 같은 현재 bool을 읽고 쓴다.
     const bool& Server() const { return authority_->server; } // 값 사본이나 Session의 fallback을 읽지 않는다.
     bool& Boss() { return authority_->boss; } // 실제 권한 관문/prefix 출력이 같은 현재 bool을 읽고 쓴다.
@@ -74,6 +76,7 @@ public:
     o::EnergySupplyState energy; // 공급 모듈과 메뉴가 같은5cab30을 빌린다. userCheat은 Runtime 교체로 지우지 않는다.
     std::uint32_t specialAuxiliary{}; // 원문55a484이며 설정 해석에서55a480과 함께0으로 쓴다. 별도 기능 해석은 후속이다.
 private:
+    std::uint32_t localAddress_{}; //보호PE005953fc의 최초BSS0이다. 이후 실제 네트워크 주소 writer는 후순위MP에서 연결한다.
     std::uint32_t fullDeck_{}; // 최초 PE BSS0이며 준비 대여/반납은 Native 부모가 쓴 현재 값을 보존한다.
     std::uint32_t fortKeepGenus_{0x40480002U},stateAuxFC4_{}; //보호 PE00542640의 초기 마스크와00594fc4의 별도 BSS0이다.
     std::uint32_t hideBuildings_{}; // 원문 최초 BSS0이며 명시 State store 외에 임의 초기화를 추가하지 않는다.
