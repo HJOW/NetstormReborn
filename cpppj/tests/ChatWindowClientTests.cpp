@@ -76,6 +76,14 @@ TEST_CASE(ChatWindowClient_EnterTypingToggleAndCurrentOptionRequest) {
     CHECK(scene.Input(token).Text()=="EVERYONE: hello");scene.menus->ToggleChatInput();CHECK(!scene.menus->ChatGeometryBackend()->InputVisible() && scene.Input(token).Text()=="EVERYONE: hello");CHECK(scene.menus->OpenChatInput({13,0,0}));CHECK(scene.Input(token).Text()=="EVERYONE: hello");
     scene.menus->CloseChatWindows();CHECK(!globals->window.current);scene.menus->ToggleChatInput();
 }
+//먼저만든TextEntry에도실제Client완성을연결하고Tab/Shift+Tab과단어경계를같은버퍼에서실행한다.
+TEST_CASE(ChatWindowClient_TabLateBindingRealCyclesAndPersistentClientState) {
+    ChatScene scene;RawTextEntryContext early;early.now=[&] { return scene.seconds; };early.complete=[](auto,auto,auto,bool)->std::optional<std::string> { throw std::logic_error("교체되어야할이전완성장치"); };auto* editor=&scene.menus->EnableTextEntry(std::move(early));auto context=scene.Context();BindClientChatRecipients(context,scene.client,scene.storage,[] { return std::string_view("Local"); });const auto callback=context.editor.complete;
+    const auto token=scene.menus->CreateChatWindow(std::move(context));scene.menus->Attach(token,10,200,scene.buttons.RootToken(),0);CHECK(scene.menus->TextEntryControls()==editor);CHECK(scene.menus->OpenChatInput({13,0,0}));
+    const auto key=[&](std::uint32_t code) { static_cast<void>(scene.buttons.RouteInput({code,0,0})); }; //공통Gump입력에서실제Console과선택/단어상태를거친다.
+    key(9);CHECK(scene.Input(token).Text()=="BATTLE");key(9);CHECK(scene.Input(token).Text()=="EVERYONE");key(9|InputCode::kShift);CHECK(scene.Input(token).Text()=="BATTLE");key(9|InputCode::kShift);CHECK(scene.Input(token).Text()=="OBSERVER");key(':');key(9);CHECK(scene.Input(token).Text()=="OBSERVER:BATTLE");key(' ');key('a');key('l');key(9);CHECK(scene.Input(token).Text()=="OBSERVER:BATTLE ALLIES");
+    const auto saved=scene.client.ChatWindowGlobals()->completion.bytes;scene.menus->CloseChatWindows();const auto replacement=scene.Create();CHECK(replacement!=token && scene.client.ChatWindowGlobals()->completion.bytes==saved);CHECK(callback(0x42e540,std::nullopt,999,false)=="ALLIES");scene.menus->CloseChatWindows();
+}
 
 // 기존/새 창을 동시에 실제 생성한 뒤 원문 무조건 current0/공유 로그 보존/개별 반납 순서를 검사한다.
 TEST_CASE(ChatWindowClient_ConcurrentRootsSharedLogAndNativeCurrentRetirement) {

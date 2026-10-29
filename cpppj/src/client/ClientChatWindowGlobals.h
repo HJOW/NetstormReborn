@@ -1,6 +1,7 @@
 // ChatWindow의 현재 전역과 공유 로그 상태를 Client 수명에 보관한다.
 #pragma once
 #include "client/ChatWindow.h"
+#include "client/ChatNameCompletion.h"
 #include <map>
 #include <stdexcept>
 namespace netstorm::client { // 실제 Client Chat UI 전역의 소유 계층이다.
@@ -9,6 +10,7 @@ struct ClientChatWindowGlobals { // 표시 노드가 교체되어도 로그/초�
     StyleTextBufferState log; //548758의 실제 공유128줄 로그이며 공통 StyleText 저장소에 직접 연결한다.
     std::uint32_t logFile{}; //54874c의 최초0이며 append callback은 비0일 때만 파일 장치를 요구한다.
     std::int32_t inputLineOff{}; //0054db18의 BSS0이다. 옵션 재해석 때 읽고 그리기 뒤 프레임말에 한 번 전환/0을 쓴다.
+    ChatNameCompletionState completion; //00548810..0054c89f의장기BSS이며Chat생성/미션교체로초기화하지않는다.
     const void* uiOwner{}; // Native 게임 값이 아닌 호스트 단일 조각/글꼴 저장소 대여 관문이다.
     std::map<std::uint32_t,std::string> strings;std::map<std::string,std::uint32_t> stringTokens; // 원문 정적/벡터 C문자열의 안정된 호스트 주소 별칭이다. 게임 값 캐시가 아니다.
     std::uint32_t nextString{0x71000000U}; // 입력70000000 고리/Help62000000..6fffffff와 구별하는 호스트 토큰 범위다.

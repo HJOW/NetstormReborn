@@ -2106,6 +2106,9 @@ target_sources(netstorm_tests PRIVATE TextEntryClientTests.cpp)
 # 실제 Client 전역과 전체 Chat 공장/공유 로그/메뉴/픽셀/동시 수명을 검사한다.
 target_sources(netstorm_tests PRIVATE ChatWindowClientTests.cpp)
 target_sources(netstorm_tests PRIVATE ChatInputTests.cpp) #Enter/전환/프레임말 원문378행의독립관측을검사한다.
+target_sources(netstorm_tests PRIVATE ChatNameCompletionTests.cpp) #원문자동완성189행의물리상태와순환을검사한다.
+set_source_files_properties(ChatNameCompletionTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_CHAT_NAME_COMPLETION_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/chat-completion-x86.tsv\"")
 set_source_files_properties(ChatInputTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_CHAT_INPUT_KEY_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/chat-input-key-x86.tsv\";NETSTORM_CHAT_INPUT_TOGGLE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/chat-input-toggle-x86.tsv\"")
 target_sources(netstorm_tests PRIVATE ChatRecipientsTests.cpp) # 원문 이름 검사 부모의 실제350관측을 독립 대조한다.

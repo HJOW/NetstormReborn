@@ -159,6 +159,7 @@ target_sources(netstorm PRIVATE
     ClientNsInfoGlobals.cpp ClientNsInfoGlobals.h RawNsInfoContext.h
     HudNsInfo.cpp HudNsInfo.h HudNsInfoCreate.cpp HudNsInfoCreate.h
     ChatWindow.cpp ChatWindow.h HudChatGeometry.cpp HudChatGeometry.h
+    ChatNameCompletion.cpp ChatNameCompletion.h
     TextEntryGump.cpp TextEntryGump.h TextEntryBuffer.cpp TextEntryBuffer.h
     RawTerrainWorldBinding.cpp RawTerrainWorldBinding.h
     RawNormalTerrainWorldBinding.cpp RawNormalTerrainWorldBinding.h

@@ -1,0 +1,18 @@
+{
+  "host": "HJOW-Athlon",
+  "rows": 189,
+  "independentObservations": 378,
+  "differences": 0,
+  "fixtureSha256": "1f3062fe838cfcd9d52b8c6366c5600742edf4cba370067317b31e090678e453",
+  "nativeBodies": [
+    "0042e540",
+    "004e51f0 strncpy",
+    "004ef5a0 ascii_strnicmp"
+  ],
+  "externalDevices": [
+    "Translate: declared input mapping",
+    "__strnicmp wrapper: C locale selection",
+    "assertion: record and continue"
+  ],
+  "scope": "실제전역상태/후보수집/순환/실제CRT복사·비교.게임/OS/통신/멀티플레이실행없음."
+}

@@ -2,6 +2,7 @@
 #include "client/ClientChatRuntime.h"
 #include "client/ClientMain.h"
 #include "client/ClientChatManagerGlobals.h"
+#include "client/ClientChatWindowGlobals.h"
 #include "client/ChatRecipients.h"
 #include "client/RawChatWindowContext.h"
 #include "client/ClientCoreDataGlobals.h"
@@ -59,6 +60,9 @@ void BindClientChatRecipients(RawChatWindowContext& context,Client& client,std::
         return CheckChatRecipients(client.ChatManagerGlobals()->Current(),text,scratch,{resolve,translate});
     };
     context.editor.recipient=context.recipient;
+    context.editor.complete=[&client,translate=context.translate](auto callback,auto word,auto length,bool backward) {
+        if (callback!=0x42e540U) throw std::logic_error("실제 Console의 미지원 자동완성 callback");ChatNameCompletionHooks hooks;hooks.translate=translate;hooks.records=[&client] { return client.ChatRecords(); };hooks.assertion=ChatAssertion;return CompleteChatName(client.ChatWindowGlobals()->completion,word,length,backward,hooks);
+    }; //같은Client의현재Chat100행을새단어때조회하고NULL순환은장기BSS만사용한다.
     context.diagnostic=[&client](auto level,auto format,auto parameter) {
         if (format!="Could not lookup a name for subId == %d\n") throw std::logic_error("Chat 이름 조회 진단의 미지원 원문 서식");
         client.WriteDiagnosticLog(std::bit_cast<std::int32_t>(level),"Could not lookup a name for subId == "+std::to_string(std::bit_cast<std::int32_t>(parameter))+"\n"); //원문의first인자와signed%d를보존해현재공유trace에전달한다.

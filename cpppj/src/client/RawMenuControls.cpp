@@ -913,6 +913,13 @@ std::string RawMenuControls::Report() const {
     auto& s=*impl_;std::ostringstream out;out<<"raw_menus\t"<<s.menuState.instances<<'\t'<<s.menuState.index<<'\t'<<s.menus.size()<<'\t'<<s.titles.size()<<'\t'<<s.fragments.fragments.size()<<'\n';
     if (s.chatContext) { //실제 표시/편집 버퍼를 읽기만 하며 입력 검증/그리기를 호출하지 않는다.
         out<<"raw_chat_globals\t"<<s.chatContext->globals->window.current<<'\t'<<s.chatContext->globals->inputLineOff<<'\n';
+        const auto& completion=s.chatContext->globals->completion.bytes;std::uint32_t completionIndex{},completionLength{},completionCount{}; //실제장기BSS의원시값을읽으며자동완성을실행하지않는다.
+        std::memcpy(&completionIndex,completion.data(),4);std::memcpy(&completionLength,completion.data()+4,4);std::memcpy(&completionCount,completion.data()+0x88,4);out<<"raw_chat_completion\t"<<completionIndex<<'\t'<<completionLength<<'\t'<<completionCount<<'\n';
+        for (std::uint32_t index=0;index<std::min(completionCount,128U);++index) { //보고는현재저장된후보만읽으며같은단어의순환상태를바꾸지않는다.
+            out<<"raw_chat_completion_candidate\t"<<index<<'\t';constexpr char digits[]="0123456789abcdef"; //후보의원본BYTE표시표다.
+            for (std::size_t at=0x90+std::size_t(index)*128;at<completion.size() && completion[at];++at) { const auto byte=completion[at];out<<digits[byte>>4]<<digits[byte&15]; } //번역복사로슬롯을넘는C문자열도실제NUL까지읽는다.
+            out<<'\n';
+        }
         for (const auto& [token,node]:s.chatRoots) { //부분 생성은 있는 자식/버퍼만 관측한다.
             const auto* console=s.textEntries ? s.textEntries->Console(node->console) : nullptr;out<<"raw_chat_window\t"<<token<<'\t'<<node->flags<<'\t'<<node->parent<<'\t'<<node->console<<'\t'<<(console ? console->flags : 0)<<'\t'<<std::uint32_t(node->helperVisible)<<'\n';
             if (console) if (const auto* buffer=s.textEntries->Storage().Find(console->buffer)) { out<<"raw_chat_input\t"<<token<<'\t';for (const auto value:buffer->Text()) { //제어문자를 TSV 구분자와 혼동하지 않도록 실제 BYTE를16진수로 기록한다.
