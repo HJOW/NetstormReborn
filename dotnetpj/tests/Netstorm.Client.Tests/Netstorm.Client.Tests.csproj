@@ -39,6 +39,9 @@
     <None Include="../../../cpppj/tests/fixtures/gumpglyph-x86.tsv" Link="X86/gumpglyph-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/gumptext-x86.tsv" Link="X86/gumptext-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/buttongump-x86.tsv" Link="X86/buttongump-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/background-gif-gump-x86.tsv" Link="X86/background-gif-gump-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/background-gif-assets-x86.tsv" Link="X86/background-gif-assets-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/background-gif-variants-x86.tsv" Link="X86/background-gif-variants-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/meta-image-list-x86.tsv" Link="X86/meta-image-list-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/meta-image-x86.tsv" Link="X86/meta-image-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/inventory-image-x86.tsv" Link="X86/inventory-image-x86.tsv" CopyToOutputDirectory="PreserveNewest" />

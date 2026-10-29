@@ -7,6 +7,8 @@ cpppj/src/app/main.cpp	Netstorm.Client.Host/Program.cs	91d494c3b2814f00d2cae81a0
 cpppj/src/app/main.cpp	Netstorm.Client/Automation/UiScript.cs	f0a08f08d86df0b44ca007c35dcb4eeb9fbf21a9	port
 cpppj/src/app/main.cpp	Netstorm.Client/Host/HostFrameDriver.cs	91d494c3b2814f00d2cae81a0f4b247e91e81922	port
 cpppj/src/app/main.cpp	Netstorm.Client/Host/HostOptions.cs	91d494c3b2814f00d2cae81a0f4b247e91e81922	port
+cpppj/src/client/BackgroundGifGump.cpp	Netstorm.Client/Gump/BackgroundGifGump.cs	a168082548e090f2f191e4b83106e7351fbc00ba	L1
+cpppj/src/client/BackgroundGifGump.h	Netstorm.Client/Gump/BackgroundGifGump.cs	a168082548e090f2f191e4b83106e7351fbc00ba	L1
 cpppj/src/client/BitmapFont.cpp	Netstorm.Assets/BitmapFont.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
 cpppj/src/client/BitmapFont.cpp	Netstorm.Client.Host/WindowsBitmapFont.cs	e074cad7f385caf5973f0ae4ee6ee824981e06f9	port
 cpppj/src/client/BitmapFont.cpp	Netstorm.Client/Display/BitmapFont.cs	e074cad7f385caf5973f0ae4ee6ee824981e06f9	port
@@ -17,7 +19,9 @@ cpppj/src/client/ButtonGump.h	Netstorm.Client/Gump/ButtonGump.cs	0a1a709127ad291
 cpppj/src/client/ClientMain.cpp	Netstorm.Client/Display/ScreenCapture.cs	f0a08f08d86df0b44ca007c35dcb4eeb9fbf21a9	port
 cpppj/src/client/Cursor.h	Netstorm.Core/Rules/GameCursor.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
 cpppj/src/client/DialogScript.cpp	Netstorm.Assets/CampaignMenu.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
-cpppj/src/client/GifImage.cpp	Netstorm.Assets/GifImage.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
+cpppj/src/client/GifImage.cpp	Netstorm.Assets/GifImage.cs	a168082548e090f2f191e4b83106e7351fbc00ba	L1
+cpppj/src/client/GifImage.cpp	Netstorm.Client/Display/GifImage.cs	a168082548e090f2f191e4b83106e7351fbc00ba	L1
+cpppj/src/client/GifImage.h	Netstorm.Client/Display/GifImage.cs	a168082548e090f2f191e4b83106e7351fbc00ba	L1
 cpppj/src/client/GumpBackground.cpp	Netstorm.Client/Gump/GumpBackground.cs	436deaf700d8574524e2bae684ccc2888bd94949	port
 cpppj/src/client/GumpBackground.h	Netstorm.Client/Gump/GumpBackground.cs	436deaf700d8574524e2bae684ccc2888bd94949	port
 cpppj/src/client/GumpBackgroundCreate.cpp	Netstorm.Client/Gump/GumpBackgroundCreate.cs	075b0c1424dbf4bca70ced2f41422957a8388772	port
@@ -89,6 +93,7 @@ cpppj/src/client/PreviewColorMaps.cpp	Netstorm.Client/Display/PreviewColorMaps.c
 cpppj/src/client/PreviewColorMaps.h	Netstorm.Client/Display/PreviewColorMaps.cs	e4b739b97f5316453de827b92ba6527a63f17637	L1
 cpppj/src/client/ProductionColorMaps.cpp	Netstorm.Client/Display/ProductionColorMaps.cs	e4b739b97f5316453de827b92ba6527a63f17637	L1
 cpppj/src/client/ProductionColorMaps.h	Netstorm.Client/Display/ProductionColorMaps.cs	e4b739b97f5316453de827b92ba6527a63f17637	L1
+cpppj/src/client/RawBackgroundGifControls.cpp	Netstorm.Client/Gump/BackgroundGifStorage.cs	a168082548e090f2f191e4b83106e7351fbc00ba	port
 cpppj/src/client/RawImage.cpp	Netstorm.Client/Display/RawImage.cs	ca0c01ebfceb9801ef1fcdb272deec4dc311a2db	port
 cpppj/src/client/RawImage.h	Netstorm.Client/Display/RawImage.cs	ca0c01ebfceb9801ef1fcdb272deec4dc311a2db	port
 cpppj/src/client/RawShapeToBuffer.cpp	Netstorm.Client/Display/RawShapeToBuffer.cs	4fab249c1190a4f3024baf7bccf152adfcc1859d	port

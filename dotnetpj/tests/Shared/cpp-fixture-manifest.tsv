@@ -6,6 +6,9 @@
 # 열: file	sha256	rows	origin	consumer
 asset-player-x86.tsv	9562745a755606ed0492e8a457d1c5f97822f073896882db282e04bbb992c3a4	576	cpppj	Core
 assetpostpop-x86.tsv	706afb7e0bd78de2527e97a1ec1bbe1f35a202aafbd2c81a0dc8d77d99198741	1636	cpppj	Core
+background-gif-assets-x86.tsv	6153a1ec5a7c6fa2f584f94753c67a2264b7f8d61dd8639f6bffbd14d0c7d083	35	cpppj	Client
+background-gif-gump-x86.tsv	93844c8848a17dda6b03c3d26f9b087a1056037859736213428ff30997bbb995	309	cpppj	Client
+background-gif-variants-x86.tsv	e3084fcfc65dd9312f2bc57dede50fbf5c2a5c9bc057b71df128cd59642a05cc	5	cpppj	Client
 bomb-predestroy-x86.tsv	e095dac1311425f16bc3ae3c76a8f8f8f48fdb86690d7ca6aff1b1453e44ecd3	96	cpppj	Core
 bridge-x86.tsv	35ce571886e24ea79839fdda354b2db8d93711733087b512e769f9286fac1988	18055	cpppj	Core
 bridgedecay-x86.tsv	1009c82b63b6b655bde417aeecf287fd43099b3a75295cd28ac6b474cdd4b638	14539	cpppj	Core
