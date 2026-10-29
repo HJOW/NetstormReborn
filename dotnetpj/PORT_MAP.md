@@ -128,3 +128,5 @@ cpppj의 파일·클래스·함수 경계와 이름을 따른다. 이름이 같�
 - R3k-2에서 HtmlTextParser/HtmlConditionEffect/공통 RawTextToken6행을 L1로 추가했다([구현과 검증](../docs/dotnet-html-text-parser-20261029.md)). 두 PE의 기본/그림/조건과 PATCH 배경 총2,494행의 출력/현재 상태·80BYTE/실제 Config 호출 trace가 일치했다. 실제 StyleText/그림 소유·글리프/Config/배경 GIF를 연결했으며 전체 ConfigInterface 임시local 소유·명령 큐/링크·HTML 창/메뉴·호스트 조립과 전체 화면 판정은 후속이다.
 
 - R3k-3에서 HtmlLinkText/QuickHelpHtml4행을 파서/표시 효과 범위의 L1, RawPriestMenu.h의 서식 인자 typedef1행만 port로 추가했다([구현과 검증](../docs/dotnet-quick-help-html-20261029.md)). 원본83/중첩3행과 실제 다중 줄/적중/글리프·현재 TYPE/중첩 모드를 대조했다. ReadAssetQuickHelpType의 전체 자산/요구 에너지 바인딩·창/메뉴/호스트 조립과 사제 메뉴 본체는 후속이다.
+
+- R3k-4에서 HtmlBodyGump/EmbeddedTell4행을 원본82행의 생성/설치/조회 관찰 범위 L1, RawMenuControls의 RenderEmbeddedTell 부분 게시기1행만 port로 추가했다([구현과 검증](../docs/dotnet-html-body-embedded-tell-20261029.md)). 실제8192BYTE/스크롤 자식/보호 글꼴/입력/지연 반납·현재 Config/부분 예외도 연결했다. 전체 ConfigInterface 등록부/RawMenuControls 소유자·상위 창/메뉴·호스트는 후속이다.

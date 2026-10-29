@@ -42,6 +42,7 @@
     <None Include="../../../cpppj/tests/fixtures/background-gif-gump-x86.tsv" Link="X86/background-gif-gump-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/htmltext-x86.tsv" Link="X86/htmltext-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/quick-help-html-x86.tsv" Link="X86/quick-help-html-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/embedded-tell-x86.tsv" Link="X86/embedded-tell-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/quick-help-html-nested-x86.tsv" Link="X86/quick-help-html-nested-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/htmlpicture-x86.tsv" Link="X86/htmlpicture-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/html-background-x86.tsv" Link="X86/html-background-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
