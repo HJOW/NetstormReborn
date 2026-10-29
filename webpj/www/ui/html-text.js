@@ -190,6 +190,154 @@ export function parseHtml(source, state, globals, hooks = {}, capacity = OUTPUT_
     return state.output;
 }
 
+// 링크 목적지 표이다(원본 HtmlLinkTextState 의 문자열 저장소). `<a href="...">` 를 만날 때마다 목적지를 등록하고 그 번호를 StyleText 태그 `~[T번호]` 로 본문에 넣는다.
+// 번호는 1부터이며 0 은 링크 아님(닫는 태그)이다. 사용: const links = new LinkTable(); parseHtml(text, state, globals, { link: (s, raw, closing) => links.text(raw, closing) });
+// 원본은 번호로 저장소 바이트 위치를 쓰지만 번호 값 자체에는 의미가 없다. (2026-10-30 WB03-G: 도움말 창 링크용으로 추가)
+export class LinkTable {
+    constructor() {
+        // 등록한 목적지 문자열이다. 번호 n 의 목적지는 destinations[n - 1] 이다.
+        this.destinations = [];
+    }
+
+    // `<a>` 태그 원문(`a href="#anchor">...` 처럼 태그 이름부터 시작하는 나머지 본문)에서 목적지를 뽑아 등록하고 StyleText 태그를 돌려준다(원본 HtmlLinkText, 0046bfc0).
+    // 닫는 태그이거나 첫 따옴표가 없으면 번호 0(`~[T0]`)이다. 목적지는 첫 따옴표 뒤(맨 앞 `#` 하나는 건너뜀)부터 다음 따옴표·`>`·끝 앞까지이며 대소문자·공백을 바꾸지 않는다.
+    text(raw, closing) {
+        let number = 0;
+        const source = raw.includes('\0') ? raw.slice(0, raw.indexOf('\0')) : raw;
+        const quote = source.indexOf('"');
+        const end = source.indexOf('>');
+        if (!closing && quote >= 0 && (end < 0 || quote < end)) {
+            let first = quote + 1;
+            if (source[first] === '#') first += 1;
+            let last = first;
+            // 목적지의 끝(다음 따옴표·꺾쇠·끝)을 찾는다.
+            while (last < source.length && source[last] !== '"' && source[last] !== '>') last += 1;
+            this.destinations.push(source.slice(first, last));
+            number = this.destinations.length;
+        }
+        return `~[T${number}]`;
+    }
+
+    // 번호의 목적지 문자열을 돌려준다. 없는 번호(0 포함)는 null 이다.
+    resolve(number) {
+        return number >= 1 && number <= this.destinations.length ? this.destinations[number - 1] : null;
+    }
+}
+
+// 그림 태그 `<!"이름.프레임">` 의 원문에서 StyleText 그림 명령 `~[I이름.프레임]` 을 만든다(원본 HtmlPictureText). 첫 따옴표 뒤부터 다음 따옴표·`>`·끝 앞까지를 그대로 옮기고 따옴표가 없으면 빈 `~[I]` 이다.
+// 사용: htmlPictureText('!"fortgump.3">') → '~[Ifortgump.3]'. (2026-10-30 WB03-G)
+export function htmlPictureText(raw) {
+    const source = raw.includes('\0') ? raw.slice(0, raw.indexOf('\0')) : raw;
+    let position = 0;
+    // 태그 이름 뒤 공백·속성을 해석하지 않고 첫 따옴표(또는 `>`)까지 간다.
+    while (position < source.length && source[position] !== '>' && source[position] !== '"') position += 1;
+    let result = '~[I';
+    if (position < source.length && source[position] === '"') {
+        position += 1;
+        // 따옴표 안은 다음 따옴표·`>` 에서 끝나며 이스케이프를 풀지 않는다.
+        while (position < source.length && source[position] !== '>' && source[position] !== '"') {
+            result += source[position];
+            position += 1;
+        }
+    }
+    return `${result}]`;
+}
+
+// 원본 토큰 읽기(공통 helper)이다. offset 부터 space·tab 만 건너뛴 뒤 delimiters 의 글자를 만나기 전까지(따옴표 안은 제외) 읽는다. 따옴표 글자는 출력하지 않고, 입력 한도는 78글자이며, 끝의 공백·탭은 첫 글자만 남기고 지운다.
+// 반환: { text, next }(next 는 읽은 뒤 구분자까지 건너뛴 위치). 사용: 조건 태그의 왼쪽·오른쪽 식을 읽는다. (2026-10-30 WB03-G)
+function readRawTextToken(source, start, delimiters) {
+    const input = source.includes('\0') ? source.slice(0, source.indexOf('\0')) : source;
+    let offset = start;
+    while (offset < input.length && (input[offset] === ' ' || input[offset] === '\t')) offset += 1;
+    let text = '';
+    let quoted = false;
+    let remaining = 78;
+    // 구분자·입력 한도에 닿을 때까지 한 글자씩 읽는다.
+    while (offset < input.length) {
+        const char = input[offset];
+        if (remaining === 0 || (!quoted && delimiters.includes(char))) {
+            // 멈춘 자리의 연속 구분자는 건너뛴다.
+            while (offset < input.length && delimiters.includes(input[offset])) offset += 1;
+            break;
+        }
+        if (char === '"') quoted = !quoted;
+        else text += char;
+        offset += 1;
+        remaining -= 1;
+    }
+    while (text.length > 1 && (text.endsWith(' ') || text.endsWith('\t'))) text = text.slice(0, -1);
+    return { text, next: offset };
+}
+
+// 조건 태그 `<?식>` ~ `</?>` 를 처리한다(원본 HtmlConditionEffect::Apply, 10.78 경로). raw 는 `?` 로 시작하는 태그 원문, closing 은 닫는 태그 여부, substitute 는 설정 치환 함수이다.
+// 식은 `{키}`(0 이 아니면 참), `??왼쪽=오른쪽`(문자열 같음), `g`·`ge`·`l`·`le` 비교(`>`·`>=`·`<`·`<=` 대신 쓰는 글자), 앞이나 연산자 뒤의 `!`(부정)이다.
+// 거짓이면 state.shown 을 끄고 hiddenDepth 를 올려 짝이 맞는 닫는 태그까지 본문을 숨긴다. 숨긴 중첩 조건은 평가하지 않고 깊이만 센다.
+// 사용: hooks.condition = (state, raw, closing) => applyHtmlCondition(state, raw, closing, (text) => data.substitute(text)). (2026-10-30 WB03-G)
+export function applyHtmlCondition(state, raw, closing, substitute) {
+    const text = raw.includes('\0') ? raw.slice(0, raw.indexOf('\0')) : raw;
+    if (text[0] !== '?') throw new Error('HTML 조건 원문은 ?에서 시작해야 합니다.');
+    if (!state.shown && !state.hiddenDepth) return;
+    if (closing) {
+        if (state.hiddenDepth) {
+            state.hiddenDepth -= 1;
+            if (!state.hiddenDepth) state.shown = 1;
+        }
+        return;
+    }
+    const byte = (index) => (index < text.length ? text[index] : '\0');
+    // 연산자 글자는 해당 영문자 한 글자의 대소문자만 허용한다.
+    const is = (char, lower) => char === lower || char === lower.toUpperCase();
+    let offset = 1;
+    const leadingNegation = byte(offset) === '!';
+    if (leadingNegation) offset += 1;
+    // 0 = 불리언, 1 = 문자열 같음, 2 = g, 3 = ge, 4 = l, 5 = le 이다.
+    let operation = 0;
+    if (byte(offset) === '?') {
+        offset += 1;
+        operation = 1;
+    }
+    if (is(byte(offset), 'g')) {
+        offset += 1;
+        operation = 2;
+        if (is(byte(offset), 'e')) {
+            offset += 1;
+            operation = 3;
+        }
+    }
+    if (is(byte(offset), 'l')) {
+        offset += 1;
+        operation = 4;
+        if (is(byte(offset), 'e')) {
+            offset += 1;
+            operation = 5;
+        }
+    }
+    // 10.78 은 연산자 뒤 `!` 도 앞 `!` 와 같은 부정으로 취급한다.
+    const operatorNegation = byte(offset) === '!';
+    if (operatorNegation) offset += 1;
+    if (!state.shown) return;
+    let predicate;
+    if (operation) {
+        const left = readRawTextToken(text, offset, '=');
+        const right = readRawTextToken(text, left.next, '>');
+        // 원본은 오른쪽을 먼저 치환하고 숫자로 읽은 뒤 왼쪽을 치환한다.
+        const rightValue = substitute(right.text);
+        if (operation === 1) {
+            predicate = substitute(left.text) === rightValue;
+        } else {
+            const rightNumber = configParseLong(rightValue);
+            const leftNumber = configParseLong(substitute(left.text));
+            predicate = operation === 2 ? rightNumber < leftNumber : operation === 3 ? rightNumber <= leftNumber : operation === 4 ? leftNumber < rightNumber : leftNumber <= rightNumber;
+        }
+    } else {
+        predicate = configParseLong(substitute(readRawTextToken(text, offset, '=>').text)) !== 0;
+    }
+    if (predicate !== (!leadingNegation && !operatorNegation)) {
+        state.shown = 0;
+        state.hiddenDepth += 1;
+    }
+}
+
 // 처리한 문자열에 영문·숫자가 하나라도 있는지 검사한다(원본 004c8d50 관문). 스타일 제어문자(`~w` 등)의 글자도 포함한다.
 // 없으면(참이 아니면) 대화상자를 만들지 않고 빈 본문 경로로 간다. (2026-10-28 WB03-D)
 export function hasAlphanumeric(text) {

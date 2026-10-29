@@ -28,6 +28,7 @@ import { MainMenuScreen } from './ui/main-menu.js';
 import { PopupMenu } from './ui/popup-menu.js';
 import { buildPopupItems } from './ui/option-menus.js';
 import { createTellWindow } from './ui/tell-window.js';
+import { HelpWindow, createHelpWindow } from './ui/help-window.js';
 import { applyCursorStyle, buildCursorCss } from './ui/cursor.js';
 
 // ---------------------------------------------------------------------------------------------
@@ -751,10 +752,12 @@ export class Netstorm {
     }
 
     // 펼침 메뉴 행의 명령을 실행한다(메뉴는 이미 닫혀 있다). Toggle 은 설정 키를 뒤집고, Volume 은 `키=단계` 로 음량을 정하며, Tell 은 대화상자를 연다.
-    // F1Help(도움말 창)는 아직 구현되지 않았다. (2026-10-29 WB03-F)
+    // F1Help 는 일반 도움말 창을 연다(2026-10-30 WB03-G).
     _onPopupCommand(command) {
         const name = String(command.name).toLowerCase();
-        if (name === 'toggle') {
+        if (name === 'f1help') {
+            this._openHelp('F1Help');
+        } else if (name === 'toggle') {
             this._settings?.toggle(command.argument);
         } else if (name === 'volume') {
             const [key, value] = String(command.argument).split('=');
@@ -799,6 +802,38 @@ export class Netstorm {
             onUnsupported: (what, text) => console.warn(`Netstorm: Tell '${name}' 의 ${what} 은(는) 아직 지원하지 않습니다.`, text),
         });
         if (result.missing) console.warn(`Netstorm: TELL cannot find "${name}".`);
+        if (!result.window) return false;
+        this._mainMenu.setDialog(result.window);
+        this._displayDirty = true;
+        return true;
+    }
+
+    // 일반 도움말 창을 열어 메인 메뉴 위에 올린다(원본 F1Help: 메인 메뉴 Help 목록의 General Help 행과 F1 키). 이미 열려 있으면 그 창에서 주제만 첫 주제로 되돌린다.
+    // 도움말 파일(`Quick Help Spec`)이 없으면 원본처럼 오류 로그만 남기고 열지 않는다. 바깥 주소 링크는 열지 않고 콘솔에 알린다(과거 도메인이라 접속하지 않음). 열었으면 true 를 돌려준다. (2026-10-30 WB03-G)
+    _openHelp(topic) {
+        if (!this._mainMenu || !this._gameData || !this._resources) return false;
+        const open = this._mainMenu.dialog;
+        if (open instanceof HelpWindow && !open.closed) {
+            open.open(topic);
+            this._mainMenu.dirty = true;
+            return true;
+        }
+        const result = createHelpWindow({
+            gameData: this._gameData,
+            resources: this._resources,
+            topic,
+            screen: { width: this._mainMenu.width, height: this._mainMenu.height },
+            now: () => this._frameSeconds,
+            onClose: () => {
+                if (this._mainMenu?.dialog === result.window) this._mainMenu.setDialog(null);
+                this._displayDirty = true;
+            },
+            onCommand: (command) => this._onDialogCommand(command),
+            onExternal: (address) => console.info(`Netstorm: 도움말의 바깥 주소 '${address}' 는 열지 않습니다(원본의 과거 주소).`),
+            onSound: () => this._audio?.playSound(BUTTON_SOUND_NAME),
+            onUnsupported: (what, text) => console.warn(`Netstorm: 도움말의 ${what} 은(는) 아직 지원하지 않습니다.`, text),
+        });
+        if (result.missing) console.warn(`Netstorm: 도움말 파일을 찾지 못했습니다: ${result.path}`);
         if (!result.window) return false;
         this._mainMenu.setDialog(result.window);
         this._displayDirty = true;
@@ -1046,6 +1081,8 @@ export class Netstorm {
         this._listen(canvas, 'contextmenu', (event) => event.preventDefault());
         this._listen(canvas, 'keydown', (event) => this._onKeyDown(event));
         this._listen(canvas, 'keyup', (event) => this._onKeyUp(event));
+        // 마우스 휠은 열린 도움말 창 본문을 스크롤한다(웹 적응). 도움말이 열려 있을 때만 페이지 스크롤을 막는다. (2026-10-30 WB03-G)
+        this._listen(canvas, 'wheel', (event) => this._onWheel(event), { passive: false });
         this._listen(canvas, 'blur', () => this._clearInput());
         this._listen(doc, 'visibilitychange', () => this._onVisibilityChange());
 
@@ -1155,7 +1192,24 @@ export class Netstorm {
         this._retryAudioOnGesture();
         // Esc 는 열려 있는 펼침 메뉴를 닫는다(원본 입력 0x020000be: RequestClosePopups). (2026-10-29 WB03-F)
         if (event.code === 'Escape' && this._state === AppState.MAIN_MENU && this._mainMenu?.closePopup()) this._displayDirty = true;
+        // F1 은 일반 도움말을 연다(원본 입력 0x70 → F1Help). 브라우저의 도움말 동작은 막는다. 열린 도움말 창은 PageUp·PageDown·위·아래 화살표로 본문을 스크롤한다. (2026-10-30 WB03-G)
+        if (this._state === AppState.MAIN_MENU && this._mainMenu) {
+            if (event.code === 'F1') {
+                event.preventDefault();
+                if (!event.repeat) this._openHelp('F1Help');
+            } else if (this._mainMenu.dialog instanceof HelpWindow && this._mainMenu.dialog.keyDown(event.code)) {
+                this._mainMenu.dirty = true;
+            }
+        }
         if (!event.repeat && (event.code === 'Enter' || event.code === 'Space' || event.code === 'NumpadEnter')) this._activate();
+    }
+
+    // 마우스 휠을 열린 도움말 창에 넘긴다. 처리했으면 페이지가 따라 스크롤되지 않게 막는다. (2026-10-30 WB03-G)
+    _onWheel(event) {
+        const dialog = this._mainMenu?.dialog;
+        if (this._state !== AppState.MAIN_MENU || !(dialog instanceof HelpWindow)) return;
+        event.preventDefault();
+        if (dialog.wheel(event.deltaY)) this._mainMenu.dirty = true;
     }
 
     // 키를 뗐을 때 눌린 키 집합에서 뺀다.

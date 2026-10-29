@@ -7,7 +7,7 @@
 // 웹 판본은 원본 항목 중 웹에서 의미가 없는 것을 뺀다(includeAll 이 참이면 모두 만든다. 원본 스크린샷 비교용):
 //  - Direct Draw / Full Screen·Resolution(해상도·전체화면 설정은 웹 제외, AGENTS.md), Pass Server Diagnostic(멀티플레이·방화벽 진단),
 //    Pause(메인 메뉴에는 멈출 게임이 없음), Technical Help(외부 help.exe 실행).
-// 명령은 { name, argument } 이며 Toggle(설정 키 뒤집기)·Volume(`키=단계`)·Tell(대화상자 열기)·F1Help(도움말 창, 아직 없음) 등이다. (2026-10-29 WB03-F)
+// 명령은 { name, argument } 이며 Toggle(설정 키 뒤집기)·Volume(`키=단계`)·Tell(대화상자 열기)·F1Help(일반 도움말 창, 2026-10-30 WB03-G 에서 구현) 등이다. (2026-10-29 WB03-F)
 
 // 메뉴 항목 정의 도우미들이다. (2026-10-29 WB03-F)
 const command = (name, argument) => Object.freeze({ name, argument });

@@ -2,7 +2,7 @@
 // 스타일 문자열은 `~` 로 시작하는 짧은 명령(`~w` 색, `~3` 글꼴 슬롯, `~B` 굵게, `~E` 그림자, `~.` 기본 문맥 복귀 등)과
 // 대괄호 명령(`~[T.5]` 태그, `~[C.3]` 색, `~[I...]` 그림)이 섞인 문자열이며, 명령마다 글자 문맥이 바뀐 조각들로 나뉜다.
 // 원본 주소: 파서 004bb430(StyleText::Parse), 짧은 명령 표, 측정 00475760, 그리기 004755e0, 조각 생성 004b93c0.
-// 복원 기준: cpppj StyleText.cpp·StyleTextMarkup.cpp(10.78 경로). 그림(`~[I...]`)과 소리(`~[S...]`)는 아직 지원하지 않고 소비만 한다.
+// 복원 기준: cpppj StyleText.cpp·StyleTextMarkup.cpp(10.78 경로). 그림(`~[I...]`)은 options.resolvePicture 가 해석해 주면 그림 조각이 되고(2026-10-30 WB03-G), 해석하지 못하거나 소리(`~[S...]`)는 소비만 한다.
 // 조각 체인은 원본의 연결 목록 대신 JS 배열로 표현한다(순회 순서와 문맥 값은 같다).
 // (2026-10-28 WB03-D: Tell 대화상자 본문·메뉴 항목의 스타일 글자를 그리기 위해 추가)
 import { createTextContext, drawGlyphText } from '../render/glyph-text.js';
@@ -116,6 +116,17 @@ export function createFragment(bytes, context, tag = 0) {
     return Object.freeze({ bytes, context: createTextContext(context), tag });
 }
 
+// 그림 조각 하나다(원본 StyleText 의 그림 외부 조각). picture 는 { image, width, height, hotspotX, hotspotY } 이며 글자 바이트는 비어 있다.
+// 측정은 (폭, 높이), 기준선 위쪽 높이는 기준점 y 이고 그릴 때는 기준점 + 그림의 상대 위치(image.left/top)에 그린다. (2026-10-30 WB03-G)
+export function createPictureFragment(picture, context, tag = 0) {
+    return Object.freeze({ bytes: new Uint8Array(0), context: createTextContext(context), tag, picture });
+}
+
+// 조각의 기준선 위쪽 높이와 높이를 돌려준다(글자는 글꼴 값, 그림은 기준점 y 와 높이). (2026-10-30 WB03-G)
+function fragmentMetrics(fonts, fragment) {
+    return fragment.picture ? { ascent: fragment.picture.hotspotY, height: fragment.picture.height } : fonts.metrics(fragment.context);
+}
+
 // 첫 NUL 앞까지의 문자열만 쓴다(원본 문자열 끝). JS 문자열에 NUL 이 있을 때만 의미가 있다. (2026-10-28 WB03-D)
 function cutAtNul(text) {
     const nul = text.indexOf('\0');
@@ -193,10 +204,11 @@ function parseInteger(text) {
 // 대괄호 명령 하나(`~[` 와 `]` 사이 문자열)를 해석한다(원본 StyleTextMarkup::Apply). 10.78 의 검사 순서는 I, S, T, C, B, E 이며
 // 처음 형식이 성립한 명령만 처리하고 나머지는 시도하지 않는다. 처리 결과는 { tag }(링크 태그가 바뀐 경우) 로 돌려준다.
 // 색(C)·배경색(B)·그림자 위치(E)는 설정(zonefgcolor 등)이 켜져 있을 때만 적용되며 기본은 꺼져 있어 소비만 한다(options 로 켤 수 있다).
-// 그림(I)과 소리(S)는 아직 지원하지 않고 소비만 한다. (2026-10-28 WB03-D)
+// 그림(I)은 options.resolvePicture(이름, 프레임식)가 그림 정보를 돌려주면 result.picture 로 알리고(호출자가 그림 조각을 만듦), 아니면 onUnsupported 로 알린다. 소리(S)는 소비만 한다.
+// (2026-10-28 WB03-D, 2026-10-30 WB03-G: 그림 해석 추가)
 function applyBracketCommand(inner, context, colors, options) {
     const text = cutAtNul(inner);
-    const result = { tag: null };
+    const result = { tag: null, picture: null };
     // 원본 검사 순서대로 형식이 성립하는 첫 명령을 처리한다.
     for (const code of ['I', 'S', 'T', 'C', 'B', 'E']) {
         const matched = matchBracket(text, code);
@@ -214,7 +226,11 @@ function applyBracketCommand(inner, context, colors, options) {
                 context.shadowX = x;
                 context.shadowY = y;
             }
-        } else if (code === 'I' && options.onUnsupported) options.onUnsupported('그림 `~[I...]`', text);
+        } else if (code === 'I') {
+            const picture = options.resolvePicture?.(matched.first, matched.second) ?? null;
+            if (picture) result.picture = picture;
+            else options.onUnsupported?.('그림 `~[I...]`', text);
+        }
         return result;
     }
     return result;
@@ -249,6 +265,7 @@ export function parseStyleText(source, initialContext, colors, options = {}, fra
             if (close >= 0) {
                 const bracket = applyBracketCommand(text.slice(next, close), context, colors, options);
                 if (bracket.tag !== null) tag = bracket.tag;
+                if (bracket.picture) fragments.push(createPictureFragment(bracket.picture, context, tag));
                 next = close + 1;
             }
         } else if (!applyShortCommand(command, context, original, colors)) {
@@ -262,6 +279,7 @@ export function parseStyleText(source, initialContext, colors, options = {}, fra
 
 // 조각 하나의 폭·높이를 잰다(원본 StyleText::MeasureFragment). (2026-10-28 WB03-D)
 export function measureFragment(fonts, fragment) {
+    if (fragment.picture) return { width: fragment.picture.width, height: fragment.picture.height };
     return fonts.measure(fragment.bytes, fragment.context);
 }
 
@@ -272,13 +290,13 @@ export function measureChain(fonts, fragments) {
     if (fragments.length === 0) return { width: 0, height: 0 };
     let ascent = 0;
     // 첫 순회: 가장 큰 기준선 위쪽 높이를 찾는다.
-    for (const fragment of fragments) ascent = Math.max(ascent, fonts.metrics(fragment.context).ascent);
+    for (const fragment of fragments) ascent = Math.max(ascent, fragmentMetrics(fonts, fragment).ascent);
     let width = 0;
     let height = 0;
     // 둘째 순회: 폭을 더하고 높이를 기준선에 맞춰 최댓값을 구한다.
     for (const fragment of fragments) {
         const size = measureFragment(fonts, fragment);
-        const baseline = fonts.metrics(fragment.context).ascent;
+        const baseline = fragmentMetrics(fonts, fragment).ascent;
         height = Math.max(height, (size.height - baseline + ascent) | 0);
         width = (width + size.width) | 0;
     }
@@ -288,6 +306,12 @@ export function measureChain(fonts, fragments) {
 // 조각 하나를 그린다(원본 DrawFragment). 글자 문맥의 글꼴을 고르고 8비트 표면에 그린다. 글꼴이 없는 조합은 그리지 않는다.
 // (2026-10-28 WB03-D)
 export function drawFragment(surface, fonts, fragment, x, y, clip) {
+    if (fragment.picture) {
+        // 그림은 기준점(x + 기준점 x, y + 기준점 y)에 그림의 상대 위치를 더한 곳에 그린다.
+        const { image, hotspotX, hotspotY } = fragment.picture;
+        surface.drawImage(image, (x + hotspotX + image.left) | 0, (y + hotspotY + image.top) | 0, clip);
+        return;
+    }
     const font = fonts.drawFont(fragment.context);
     if (font) drawGlyphText(surface, font, fragment.bytes, x, y, fragment.context, clip);
 }
@@ -301,14 +325,14 @@ export function drawChain(surface, fonts, fragments, x, y, clip) {
     let ascent = 0;
     // 첫 순회: 가장 큰 캐시 높이와 기준선 위쪽 높이를 구한다.
     for (const fragment of fragments) {
-        const metrics = fonts.metrics(fragment.context);
+        const metrics = fragmentMetrics(fonts, fragment);
         height = Math.max(height, metrics.height);
         ascent = Math.max(ascent, metrics.ascent);
     }
     let atX = x;
     // 둘째 순회: 기준선에 맞춰 조각을 그리고 측정 폭만큼 오른쪽으로 옮긴다.
     for (const fragment of fragments) {
-        const baseline = fonts.metrics(fragment.context).ascent;
+        const baseline = fragmentMetrics(fonts, fragment).ascent;
         const size = measureFragment(fonts, fragment);
         drawFragment(surface, fonts, fragment, atX, (y + ascent - baseline) | 0, clip);
         atX = (atX + size.width) | 0;

@@ -60,6 +60,24 @@ export const CHECK_MARKER_FRAME = 60;
 export const MENU_SOUND_NAME = 'openSubGump.wav';
 export const MENU_SOUND_PATH = 'sound/openSubGump.wav';
 
+// 본문 속 그림 명령 `~[I이름.프레임]` 을 해석하는 함수를 만든다. 반환 함수 (이름, 프레임식) → { image, width, height, hotspotX, hotspotY } 또는 null 이다.
+// 원본은 타입 이름으로 타입 표를 찾고 프레임 식(숫자·글자 + 숫자·`*`·`#`)을 타입별 프레임 표로 해석하지만, 타입 표(.type)가 아직 없어
+// 지금은 fortGump(저장 에너지 아이콘 등)의 숫자 프레임만 지원한다. 그 밖의 이름·글자 프레임은 null 이다(호출자가 그리지 않고 알림).
+// 크기·기준점은 Squid 추가 헤더(출력 크기·기준점)이며 그림은 기준점 기준 상대 위치(image.left/top)로 그린다. (2026-10-30 WB03-G)
+function createPictureResolver(shapes) {
+    return (name, expression) => {
+        if (String(name).toLowerCase() !== 'fortgump' || !/^[0-9]+$/.test(expression)) return null;
+        try {
+            const frame = Number(expression);
+            const metrics = shapes.squidMetrics(FORT_GUMP_BLOCK, frame);
+            return Object.freeze({ image: shapes.decode(FORT_GUMP_BLOCK, frame), width: metrics.width, height: metrics.height, hotspotX: metrics.hotspotX, hotspotY: metrics.hotspotY });
+        } catch (error) {
+            // 범위 밖 프레임이나 그림 없는 레코드는 지원하지 않는 그림으로 본다.
+            return null;
+        }
+    };
+}
+
 // 경로로 파일 바이트를 꺼낸다. 없으면 어떤 파일이 빠졌는지 알리는 오류를 던진다. (2026-10-23 WB03-M1)
 function requireFile(files, path) {
     const bytes = files.get(path);
@@ -92,6 +110,8 @@ export function buildMenuResources(files) {
             corners: Object.freeze(PANEL_CORNER_FRAMES.map((frame) => shapes.decode(FORT_GUMP_BLOCK, frame))),
         }),
         marker: shapes.decode(FORT_GUMP_BLOCK, CHECK_MARKER_FRAME),
+        // 본문 그림 명령(~[I…]) 해석기이다(2026-10-30 WB03-G: 도움말 본문의 저장 에너지 아이콘).
+        resolvePicture: createPictureResolver(shapes),
         clouds: clouds.width === CLOUD_IMAGE_SIZE && clouds.height === CLOUD_IMAGE_SIZE ? clouds : null,
         title: decodeGif(requireFile(files, MENU_ASSET_PATHS.title)),
         texture: shapes.decode(FORT_GUMP_BLOCK, STONE_BUTTON_TEXTURE_FRAME),
