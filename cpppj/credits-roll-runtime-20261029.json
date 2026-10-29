@@ -1,0 +1,385 @@
+{
+  "unit": 566,
+  "productUnit": 565,
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon / 2026-10-23",
+  "gameSha256": "601190571370eeca0781b2d17a27445d702b9faae281ff061d7a76928379a724",
+  "gameCppChanged": false,
+  "gameBuilt": false,
+  "cppTestsExecuted": false,
+  "nativeTimeoutSeconds": 360,
+  "finalNaturalPages": 18,
+  "finalObservations": 2755,
+  "finalDeadFrames": 18,
+  "runs": [
+    {
+      "branch": "patch",
+      "returncode": 0,
+      "elapsedSeconds": 139.9778382000004,
+      "gameSha256": "601190571370eeca0781b2d17a27445d702b9faae281ff061d7a76928379a724",
+      "observations": 962,
+      "passed": true,
+      "pages": [
+        "main",
+        "Credits",
+        "CreditsNew",
+        "CreditsNew1",
+        "CreditsNew2",
+        "CreditsNew3",
+        "main"
+      ],
+      "timings": [
+        {
+          "page": "CreditsNew",
+          "nativeSeconds": 20,
+          "observedSeconds": 19.756,
+          "firstFrame": 20,
+          "nextFrame": 172
+        },
+        {
+          "page": "CreditsNew1",
+          "nativeSeconds": 20,
+          "observedSeconds": 20.223,
+          "firstFrame": 172,
+          "nextFrame": 323
+        },
+        {
+          "page": "CreditsNew2",
+          "nativeSeconds": 20,
+          "observedSeconds": 20.303000000000004,
+          "firstFrame": 323,
+          "nextFrame": 468
+        },
+        {
+          "page": "CreditsNew3",
+          "nativeSeconds": 20,
+          "observedSeconds": 20.270000000000003,
+          "firstFrame": 468,
+          "nextFrame": 610
+        }
+      ],
+      "transientDeadFrames": [
+        {
+          "frame": 171,
+          "from": "CreditsNew",
+          "to": "CreditsNew1",
+          "deadRoot": 239
+        },
+        {
+          "frame": 322,
+          "from": "CreditsNew1",
+          "to": "CreditsNew2",
+          "deadRoot": 270
+        },
+        {
+          "frame": 467,
+          "from": "CreditsNew2",
+          "to": "CreditsNew3",
+          "deadRoot": 301
+        },
+        {
+          "frame": 609,
+          "from": "CreditsNew3",
+          "to": "main",
+          "deadRoot": 332
+        }
+      ],
+      "finalHtmlInstances": 0,
+      "fullNaturalTimeoutChain": true,
+      "audioExecuted": false,
+      "originalPixelComparison": false
+    },
+    {
+      "branch": "original",
+      "returncode": 0,
+      "elapsedSeconds": 286.301707300001,
+      "gameSha256": "601190571370eeca0781b2d17a27445d702b9faae281ff061d7a76928379a724",
+      "observations": 1793,
+      "passed": true,
+      "pages": [
+        "main",
+        "Credits",
+        "Creditsold",
+        "Credits1",
+        "Credits2",
+        "Credits3",
+        "Credits4",
+        "Credits5",
+        "Credits6",
+        "Credits7",
+        "Credits8",
+        "Credits9",
+        "Credits10",
+        "Credits11",
+        "Credits12",
+        "Credits13",
+        "main"
+      ],
+      "timings": [
+        {
+          "page": "Creditsold",
+          "nativeSeconds": 20,
+          "observedSeconds": 19.692999999999998,
+          "firstFrame": 20,
+          "nextFrame": 170
+        },
+        {
+          "page": "Credits1",
+          "nativeSeconds": 20,
+          "observedSeconds": 20.187,
+          "firstFrame": 170,
+          "nextFrame": 310
+        },
+        {
+          "page": "Credits2",
+          "nativeSeconds": 20,
+          "observedSeconds": 20.253,
+          "firstFrame": 310,
+          "nextFrame": 455
+        },
+        {
+          "page": "Credits3",
+          "nativeSeconds": 20,
+          "observedSeconds": 20.180999999999997,
+          "firstFrame": 455,
+          "nextFrame": 595
+        },
+        {
+          "page": "Credits4",
+          "nativeSeconds": 20,
+          "observedSeconds": 20.295,
+          "firstFrame": 595,
+          "nextFrame": 731
+        },
+        {
+          "page": "Credits5",
+          "nativeSeconds": 20,
+          "observedSeconds": 20.325000000000003,
+          "firstFrame": 731,
+          "nextFrame": 863
+        },
+        {
+          "page": "Credits6",
+          "nativeSeconds": 20,
+          "observedSeconds": 20.28500000000001,
+          "firstFrame": 863,
+          "nextFrame": 992
+        },
+        {
+          "page": "Credits7",
+          "nativeSeconds": 20,
+          "observedSeconds": 20.22,
+          "firstFrame": 992,
+          "nextFrame": 1117
+        },
+        {
+          "page": "Credits8",
+          "nativeSeconds": 20,
+          "observedSeconds": 20.284999999999997,
+          "firstFrame": 1117,
+          "nextFrame": 1239
+        },
+        {
+          "page": "Credits9",
+          "nativeSeconds": 20,
+          "observedSeconds": 20.20999999999998,
+          "firstFrame": 1239,
+          "nextFrame": 1358
+        },
+        {
+          "page": "Credits10",
+          "nativeSeconds": 20,
+          "observedSeconds": 20.207000000000022,
+          "firstFrame": 1358,
+          "nextFrame": 1475
+        },
+        {
+          "page": "Credits11",
+          "nativeSeconds": 20,
+          "observedSeconds": 20.212999999999994,
+          "firstFrame": 1475,
+          "nextFrame": 1589
+        },
+        {
+          "page": "Credits12",
+          "nativeSeconds": 20,
+          "observedSeconds": 20.35099999999997,
+          "firstFrame": 1589,
+          "nextFrame": 1701
+        },
+        {
+          "page": "Credits13",
+          "nativeSeconds": 20,
+          "observedSeconds": 20.277000000000044,
+          "firstFrame": 1701,
+          "nextFrame": 1810
+        }
+      ],
+      "transientDeadFrames": [
+        {
+          "frame": 169,
+          "from": "Creditsold",
+          "to": "Credits1",
+          "deadRoot": 239
+        },
+        {
+          "frame": 309,
+          "from": "Credits1",
+          "to": "Credits2",
+          "deadRoot": 270
+        },
+        {
+          "frame": 454,
+          "from": "Credits2",
+          "to": "Credits3",
+          "deadRoot": 301
+        },
+        {
+          "frame": 594,
+          "from": "Credits3",
+          "to": "Credits4",
+          "deadRoot": 332
+        },
+        {
+          "frame": 730,
+          "from": "Credits4",
+          "to": "Credits5",
+          "deadRoot": 363
+        },
+        {
+          "frame": 862,
+          "from": "Credits5",
+          "to": "Credits6",
+          "deadRoot": 394
+        },
+        {
+          "frame": 991,
+          "from": "Credits6",
+          "to": "Credits7",
+          "deadRoot": 425
+        },
+        {
+          "frame": 1116,
+          "from": "Credits7",
+          "to": "Credits8",
+          "deadRoot": 456
+        },
+        {
+          "frame": 1238,
+          "from": "Credits8",
+          "to": "Credits9",
+          "deadRoot": 487
+        },
+        {
+          "frame": 1357,
+          "from": "Credits9",
+          "to": "Credits10",
+          "deadRoot": 518
+        },
+        {
+          "frame": 1474,
+          "from": "Credits10",
+          "to": "Credits11",
+          "deadRoot": 549
+        },
+        {
+          "frame": 1588,
+          "from": "Credits11",
+          "to": "Credits12",
+          "deadRoot": 580
+        },
+        {
+          "frame": 1700,
+          "from": "Credits12",
+          "to": "Credits13",
+          "deadRoot": 611
+        },
+        {
+          "frame": 1809,
+          "from": "Credits13",
+          "to": "main",
+          "deadRoot": 642
+        }
+      ],
+      "finalHtmlInstances": 0,
+      "fullNaturalTimeoutChain": true,
+      "audioExecuted": false,
+      "originalPixelComparison": false
+    }
+  ],
+  "evidence": [
+    "rolls-v2/patch/revalidated.json",
+    "rolls-v4/original/result.json"
+  ],
+  "referenceTellSha256": "0c275987c5a576c5d838831cf47ff4d58822559f83b0fca566f5a169cc1ce02b",
+  "verifierSha256": "86f336e4c4118526ca500a709ed51c3c9910de5a5742e4382d33e44481819681",
+  "referenceBackgroundAvailability": {
+    "nsstart": false
+  },
+  "negativeVerifierChecks": [
+    {
+      "mutation": "missing-page",
+      "rejected": true,
+      "reason": "Credits 원문 한프레임 dead/다음입력 계약 불일치: 991"
+    },
+    {
+      "mutation": "wrong-time",
+      "rejected": true,
+      "reason": "Credits 기한 관측 불일치: ('Creditsold', 9996.514)"
+    },
+    {
+      "mutation": "missing-dead-bit",
+      "rejected": true,
+      "reason": "Credits 원문 한프레임 dead/다음입력 계약 불일치: 169"
+    },
+    {
+      "mutation": "unreleased-final",
+      "rejected": true,
+      "reason": "Credits 원문 한프레임 dead/다음입력 계약 불일치: 1810"
+    },
+    {
+      "mutation": "skipped-frame",
+      "rejected": true,
+      "reason": "Credits 원문 한프레임 dead/다음입력 계약 불일치: 169"
+    }
+  ],
+  "protectedFiles": 2542,
+  "existingFixtures": 722,
+  "protectedDifferences": [],
+  "all34CurrentGameExecuted": false,
+  "fullCppSuiteExecuted": false,
+  "originalGameExecuted": false,
+  "audioExecuted": false,
+  "originalPixelComparison": false,
+  "gameplayExecuted": false,
+  "naturalMissionCompletionExecuted": false,
+  "multiplayerExecuted": false,
+  "win11Executed": false,
+  "rawDirectory": "extracted/cpp-credits-roll-566-20261029",
+  "attempts": [
+    {
+      "directory": "rolls/patch",
+      "returncode": 0,
+      "initialVerdictPassed": false,
+      "elapsedSeconds": 111.85103429999435
+    },
+    {
+      "directory": "rolls-v2/patch",
+      "returncode": 0,
+      "initialVerdictPassed": false,
+      "elapsedSeconds": 139.9778382000004
+    },
+    {
+      "directory": "rolls-v3/original",
+      "returncode": 1,
+      "initialVerdictPassed": false,
+      "elapsedSeconds": 8.962417700000515
+    },
+    {
+      "directory": "rolls-v4/original",
+      "returncode": 0,
+      "initialVerdictPassed": true,
+      "elapsedSeconds": 286.301707300001
+    }
+  ]
+}
