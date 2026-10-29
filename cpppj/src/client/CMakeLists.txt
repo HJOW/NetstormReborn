@@ -58,6 +58,7 @@ target_sources(netstorm PRIVATE
     DialogCommandLifetime.cpp DialogCommandLifetime.h
     # 실제 Client 수명의 원본 100기록 채팅 채널을 공유한다.
     RawChatChannels.cpp RawChatChannels.h
+    ChatRecipients.cpp ChatRecipients.h # Console/Chat의 같은 원문 대상 이름 검사다. 송수신은 하지 않는다.
     DialogBodyLayout.cpp DialogBodyLayout.h
     RawCampaignLifetimeBindings.cpp RawCampaignLifetimeBindings.h
     HtmlTextParser.cpp HtmlTextParser.h

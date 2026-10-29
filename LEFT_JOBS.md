@@ -1,8 +1,12 @@
 # LEFT_JOBS — cpppj 및 공통 인수인계
 
+> **최신 단위570:** 채팅 대상 이름 검사 독립 부모를 원문350행·실제 원본 Regexp 보강350행 차이0으로 복원했다. 집중15/실패0·등록3437이며 실제 Client/Console/ChatWindow 연결은 후속이다. 게임568제품은 그대로다. 상세는0절/570문서를 따른다.
+
 이 문서는 cpppj와 공통 사항의 현재 상태·다음 작업·유효한 사용자 결정을 담는다. 전체 목표는 진행 중이다. **단위569에서 데모 나머지 2개(GuardMyBack·DissolvedAlliance)의 첫360초 재시작→(안내 있는 쪽) 두 번째 안내/재개→Exit Demo/메인/Quit을 같은568제품으로 실제 확인했다(추가 빌드/C++·도구 변경 없음, 거부 검사16건).** 직전 단위568에서 Native State3의 저장상태 파일 정리 미연결을 실제 d/!state.dat 장치와 원문 CRT 오류 매핑으로 복원했다. Release 게임/검사 경고·오류0, 고유 집중16개/실패0·등록3435이며 한글 사본의 Edit→메인/Quit은17.450초/종료0이다. 첫 GUI의 TEST02 누락은 원래50개 상한으로 확인했고 실패/선택기 관측/최종 실행을 분리했다. 보호2542/기존fixture722 차이0·현재fixture723이다. 현재 게임SHA는 `d45745a61e448a77674eec4248ee566070592afd60da5627c4d1ad2e33b9206e`다. 기존 저장파일 reader/open·재접속과 나머지 Native3/일반 메인 전환은 남으며 실제 승리·포획/희생·특정 공격은 재현하지 않았다. 현재568의 전체34경로/전체Cpp·자연완주/Win11은 미검증이다. 마지막34/34는560제품/561, 배포런처는563제품, Credits18기한/Storm첫360초는565제품/566~567의 근거다. 남은 UI/Edit·시나리오·수명·호환성 및 후순위MP 무시험 사전구현을 잇는다. 과거0절은 [549까지](LEFT_JOBS.old.md#archive-20261029-section0-through-549)·[504까지](LEFT_JOBS.old.md#archive-20261027-through-504), 지난3절은 [561까지](LEFT_JOBS.old.md#archive-20261029-section3-through-561)를 본다. dotnetpj는 [별도 인계](LEFT_JOBS.dotnetpj.md), webpj는 [별도 인계](LEFT_JOBS.webpj.md)를 따른다.
 
 ## 0. 재개 전 확인 사항
+
+- **최신570 / 채팅 대상 검사 독립 복원.** 같은 전체 goal 재개 뒤 AGENTS.md/공통·DN 인계와 현재 HJOW-Athlon/마지막 전체 디컴파일 HJOW-Athlon(2026-10-23)을 재확인했다. 원문0042dc70→0042d910의350관측/재관측 차이0과 실제 원본 Regexp 컴파일/검색의 보강350관측 차이0으로 `ChatRecipients`를 복원했다. Release 검사 target2회 경고·오류0·고유집중15/실패0·등록3437이다. 보호2583/기존fixture723 차이0·현재724이며 게임568/SHA d45745a6… 그대로다. [570 문서](docs/exe/cpp-chat-recipients-20261029.md)·[집계](cpppj/chat-recipients-runtime-20261029.json), 원시 `extracted/cpp-chat-recipient-570-20261029/`를 따른다. **실제 Client/Console/ChatWindow 대상 callback·현재 PlayerFinder/객체 메뉴 입력은 미연결**이며 다음 작업이다. 저장상태 재접속은 원문 전투 재접속 경계로 후순위 MP와 잇고 이번에는 수정/검사하지 않았다. 게임/GUI·34경로/전체Cpp·포획/희생/특정공격/승리·신규MP/통신은 실행하지 않았다. 최초 도구2오류를 보존했고 원본/CD/AGENTS/디컴파일 산출물은 불변이다.
 
 - **(해제됨) 2026-10-29 중단 복구 점검·사용자 일시정지 요청 — 이후 사용자가 cpppj 다음 작업 진행을 다시 요청해 569부터 재개했다.** 사용자가 `workspace routing discovery timed out`으로 정지됐다고 알려 현재 HJOW-Athlon/같은 작업 경로를 재확인했다. 대기 집계38102·인계갱신18650은 같은 핸들에서 모두 종료0, 잔류 게임/검사/빌드/Python 자식0이며 현재 게임/검사 SHA·집중16개/GUI 결과·보호2542 해시가 기록과 일치했다. 코드/CMake/문서/새 파일의 완결성과 공백을 점검했고 원래50개 목록 실패와 최종 성공도 구분했다. Codex 메시지 원인은 미확인이다. 사용자 요청대로 이 점검·568 변경의 로컬 커밋 후 목표를 일시정지하며, 재개 요청 전 다음 구현/검사를 시작하지 않는다. [점검 기록](docs/exe/cpp-saved-state-file-20261029.md).
 - **최신569 / 데모 나머지2개 첫360초.** 같은568제품(SHA d45745a6…)의 실제 Demo 메뉴에서 GuardMyBack(안내 있음)은 421.218초/145관측, DissolvedAlliance(`[Demo]` 섹션 없음)는 406.535초/107관측으로 각각 첫 기한 뒤 0.293/0.259초에 새 Start·새 HUD·월드 세대1→2, GuardMyBack은 재시작 뒤 두 번째 안내/자연 재개, 둘 다 실제 `Exit Demo(0200008c/1)`→메인/Quit 종료0이다. 최초 GuardMyBack(guard-v1)은 게임 종료0이었으나 검증기의 창 활성 단언이 4080프레임 한 관측(외부 포커스 손실 추정, 원인 미확인)에서 실패해 미수락·보존하고, 도구/제품/데이터 동일 재실행(guard-v2)을 수락했다. 두 수락 원시 각 8변이=16건 모두 거부·보호2542/기존fixture722 동일(현재723)·모든 자식 종료다. [569 문서](docs/exe/cpp-demo-repeat-two-20261029.md)·[집계](cpppj/demo-repeat-two-runtime-20261029.json), 원시 `extracted/cpp-demo-repeat-569-20261029/`를 따른다. 데모3개의 **두 번째 전체360초**·연속 주기와 UI/Edit·시나리오·수명·호환성은 남는다. 전체34경로/전체C++·자연완주/음향/원본픽셀/Win11은 실행하지 않았다.
@@ -192,7 +196,7 @@ cmake --build cpppj/build --config Release --parallel 4
 
 ## 3. 앞으로 할 작업 (권장 순서)
 
-**2026-10-29 / 단위569 기준.** 완료 근거가 있는 범위는 `[x]`, 미완료·보류는 `[ ]`로 표시한다. 좁은 검사 완료를 전체 기능·원본 동일성 완료로 확대하지 않는다. 지난 상세는 [단위561까지의 이전3절](LEFT_JOBS.old.md#archive-20261029-section3-through-561)에 보관했다.
+**2026-10-29 / 단위570 기준.** 완료 근거가 있는 범위는 `[x]`, 미완료·보류는 `[ ]`로 표시한다. 좁은 검사 완료를 전체 기능·원본 동일성 완료로 확대하지 않는다. 지난 상세는 [단위561까지의 이전3절](LEFT_JOBS.old.md#archive-20261029-section3-through-561)에 보관했다.
 
 **563에서 새 설치 State3→39 시작 실패와 배포 런처 검증을 완료했다.** 다음은 아래 남은 UI/Edit·시나리오·수명·호환성이다. 565에서 비영 진단 Chat을 연결했으며 561의34/34는560제품의 증거로 현재568의 전체34경로/전체 C++ 검증과 구별한다. 자연완주/사용자개입·공중3종/신규MP 검사 제한은 유지한다.
 
@@ -241,7 +245,8 @@ cmake --build cpppj/build --config Release --parallel 4
 - [x] **559~560 실제 번개/진단 수명:** TYPE55/flags10·일반 기술 부모·부착 초기화·자연 종료/중단/부모 삭제와 실제 Client 진단을 연결했다. 메타맵 getter는 잔여다.
 - [ ] 캠페인 이탈→Edit의 mission/모드 수명, 일반 전투saveBattle·metamap/비mission phase14 저장과 나머지 파생 프로세스 수명을 복원한다.
 - [ ] 카메라 전체 Frame/zoom·Renderer004994b0 flags/override/dirty/시차의 잔여 경계를 확인한다. 498~500의 Present 제한·현재 카메라·Guide 뒤 입력/가장자리 실제 연결은 완료다.
-- [ ] Chat manager/recipient·클립보드/전송·GUI 드래그, 전체 팔레트 전환·디렉터리 이름 formatter·PlayerNoMake writer를 확인한다. F3 기본 전환 완료와 구별한다.
+- [x] **570 recipient 독립 부모:** 원문350관측·실제 원본 Regexp 보강350행과 같은 반환/60BYTE/Identity·번역 순서·중단을 복원했다. 고유집중15/실패0이며 게임 제품은568 그대로다. 실제 UI 연결 완료가 아니다.
+- [ ] Chat manager/recipient의 실제 Client·Console·ChatWindow/현재PlayerFinder·객체 메뉴 편집 입력 연결과 클립보드/전송·GUI 드래그, 전체 팔레트 전환·디렉터리 이름 formatter·PlayerNoMake writer를 확인한다. F3 기본 전환 완료와 구별한다.
 - [ ] 플로터TYPE146 회피·반사 Generate 변위0의 미초기화 지역점 등 명시 미복원 경계를 확인한다. 원문 Point/난수 대조와 실제 전체 연결을 구별한다.
 - [ ] 연결활동 frame22/주기64·timeout/UI·endpoint/server/boss와 실제 리슨/수락·22칸 송신 writer는 멀티플레이 후순위의 무시험 사전 구현 범위로 잇는다.
 - 근거는 [월드 장기 소유](docs/exe/cpp-state-world-owner-plan-20261025.md)·[State Client 공백](docs/exe/cpp-state-cleanup-client-gap-20261025.md)·[직접 전역 소유/반납](docs/exe/cpp-state-cleanup-global-owners-20261025.md)을 따른다. 오래된 PLAY 목록의 완료 여부는 현행 코드/후속 단위와 대조한다.

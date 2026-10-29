@@ -1,0 +1,28 @@
+{
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "rows": 350,
+  "differences": [],
+  "compilerInstructions": 3111,
+  "runInstructions": 205345,
+  "allocations": [
+    152
+  ],
+  "native": "00496c90/00496b20 컴파일러와 실제004964e0 이하 엔진·상위 두 부모·캡처/초기화",
+  "explicitDevices": [
+    "malloc",
+    "C locale strchr/isalnum/strncmp/stricmp",
+    "Identity 응답/이름 변경",
+    "번역"
+  ],
+  "sources": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/NETSTORM.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_chat_recipients_regex.py": "93d9ee0f61edb11405177b7f40d3cb4050967c2171f8fb46cc1661373387444e",
+    "tools/decomp_chat_recipients.py": "e7a314c353125f55c52c5af82e5bb4124ca5fe2d07ee5d0b791f217d98408c6b",
+    "cpppj/tests/fixtures/chat-recipients-x86.tsv": "fb8b2c83a9e79ccc6c6801f820981fe30b395cb5d332f9c58229c1c5b5bd9a23"
+  },
+  "gameOrNetworkExecuted": false
+}

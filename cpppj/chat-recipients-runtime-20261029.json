@@ -1,0 +1,67 @@
+{
+  "unit": 570,
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23",
+    "changed": false
+  },
+  "scope": "채팅 대상 검사 독립 부모. 실제 Client/Console/ChatWindow 연결·송수신은 미완료",
+  "native": {
+    "rows": 350,
+    "repeatDifferences": 0,
+    "nativeRegexRows": 350,
+    "nativeRegexDifferences": 0
+  },
+  "build": {
+    "configuration": "Release",
+    "target": "netstorm_tests",
+    "passes": 2,
+    "warnings": 0,
+    "errors": 0,
+    "gameBuilt": false
+  },
+  "tests": {
+    "ChatRecipients": {
+      "cases": 2,
+      "failedChecks": 0,
+      "logSha256": "63c26ecaacd6cfa208032b703d57fd134e533a6eec02f9a8f6223b558c8275d8"
+    },
+    "ChatWindow": {
+      "cases": 9,
+      "failedChecks": 0,
+      "logSha256": "ff7aab1a92623fcd793a9cf55c6582e3140c92db081cec514456e53a15fb070c"
+    },
+    "PlayerIdentity": {
+      "cases": 4,
+      "failedChecks": 0,
+      "logSha256": "3f5e8c4c74a945c254a51d9c681491bd298f195c9b3788ed2838e5a61d9797c7"
+    }
+  },
+  "uniqueTests": 15,
+  "registered": 3437,
+  "protected": {
+    "files": 2583,
+    "differences": [],
+    "oldFixtures": 723,
+    "currentFixtures": 724
+  },
+  "gameSha256": "d45745a61e448a77674eec4248ee566070592afd60da5627c4d1ad2e33b9206e",
+  "testsSha256": "678b6f14bc04658bc4de6e5512b5b93a88301c77ef925073e2264bae122e86f6",
+  "sources": {
+    "cpppj/src/client/ChatRecipients.h": "c122a8db56e5fb6a8cf8ab29a8bbeba957bee5284c925c65538e0698bcaca668",
+    "cpppj/src/client/ChatRecipients.cpp": "a94d5656a823a334b86de2b36a294b40a9cb2a635b10175e4bb85133799d918c",
+    "cpppj/tests/ChatRecipientsTests.cpp": "f6817365396338a61f66f550d35e462cf0536a150d090de742997cd2921f3b56",
+    "tools/decomp_chat_recipients.py": "e7a314c353125f55c52c5af82e5bb4124ca5fe2d07ee5d0b791f217d98408c6b",
+    "tools/decomp_chat_recipients_regex.py": "93d9ee0f61edb11405177b7f40d3cb4050967c2171f8fb46cc1661373387444e"
+  },
+  "preservedFailures": [
+    "native-first.log: 고정 regex 바이트 비교의 raw literal 표기 오류",
+    "native-second.log: 도구 Path import 누락"
+  ],
+  "gameExecuted": false,
+  "networkExecuted": false,
+  "capturesSacrificesSpecificEnemyAttacksOrVictoriesReproduced": false,
+  "fullTestsExecuted": false,
+  "rawDirectory": "extracted/cpp-chat-recipient-570-20261029"
+}
