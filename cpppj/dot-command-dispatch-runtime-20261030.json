@@ -1,0 +1,59 @@
+{
+  "unit": 577,
+  "date": "2026-10-30",
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "nativeRows": 512,
+  "nativeIndependentObservations": 1024,
+  "nativeVerificationDifferences": 0,
+  "focusedTests": 12,
+  "failedChecks": 0,
+  "protected": 2590,
+  "protectedChanges": [],
+  "oldFixtures": 729,
+  "currentFixtures": 730,
+  "registered": 3451,
+  "dotCommandTests": [
+    "DotCommandRegister_All250IndependentPeObservations",
+    "DotCommandRegister_UpperLimitAndSelectedCopyContract",
+    "DotCommandRegister_V2CapturedCountPartialEffects",
+    "DotCommandRegister_NegativeCountIsExplicitPhysicalContract",
+    "ClientDotCommandGlobals_EntireStaticPeImageAndSameAddress",
+    "ClientDotCommandGlobals_SharedRegistrationsPreserveSayAndEarlierSlots",
+    "ClientDotCommandGlobals_CopyFailureKeepsActualPartialBytes",
+    "ClientDotCommandOwner_ActualClientKeepsSameTableAcrossConfiguration",
+    "ClientDotCommandOwner_RetainedTableAndFreshClientAreSeparate",
+    "DotCommandDispatch_IndependentNative512",
+    "DotCommandDispatch_LazyDevicesAndPhysicalBounds",
+    "DotCommandDispatch_ReentrantSharedCapture"
+  ],
+  "builds": {
+    "build-tests-v1.log": {
+      "sha256": "ef9b96d35890e9078e721f278995f4e0919a7dee37c3a5349e1ef73b94c37b18",
+      "warnings": 0,
+      "errors": 0
+    },
+    "build-game.log": {
+      "sha256": "62ddbcd2c38be6a9f78092b63530de0cb0d8c88a9c8cff56b577a6145bf97987",
+      "warnings": 0,
+      "errors": 0
+    }
+  },
+  "gameSha256": "f203a47e40b38e53f3c516d375d13c332ce7a07b86b42e2f78fd71a2dbabb646",
+  "testsSha256": "211e8f2fac25e6d68853e9746e973de1b26beeecb2ce0ed51e928c8cadeca008",
+  "lastGameExecutionUnit": 576,
+  "lastExecutedGameSha256": "e936607db88d33b1ae09f7c0af4de7540df986e2955a8784a1f34b9ac0776e36",
+  "actualChatSubmitBound": false,
+  "gameOrNetworkExecuted": false,
+  "scope": "0043f6f0 로컬 점 명령 분배·고정 패턴·현재 표·콜백 뒤 현재 전역·명시 물리 경계. 실제 Enter/송신은 후속.",
+  "sources": {
+    "cpppj/dot-command-dispatch-native-20261030.json": "c606afa104d0b9c149eb13f2d0d53b69b648ecf144950c87e49e6fe4d9c5e1ad",
+    "cpppj/tests/fixtures/dot-command-dispatch-x86.tsv": "89a1702e95e0fe51b6d7f100a244a755efb3292c5a6033897889325542f91190",
+    "tools/decomp_dot_command_dispatch.py": "f50e346f10806173934156e9ee766bcc93599e953273845bb95ca170b4b89f3d",
+    "cpppj/src/client/RawDotCommandDispatch.h": "c082eefcfcc84e9e0e98f2f72c9179e3479797557be5769561cf4d4724687901",
+    "cpppj/src/client/RawDotCommandDispatch.cpp": "e7cdba8ed12fbb0fbc3ba0e02a2e5f822f0ade82e67a8ebed662b9d06f915bbd",
+    "cpppj/tests/DotCommandDispatchTests.cpp": "ccc6506c9e859dbcb04aeb8972903826b15b95f0b90e2279a398afbf1b174ec6",
+    "docs/exe/cpp-dot-command-dispatch-20261030.md": "c84fd4f7b96942911500fa6885f7e43ebe61b641d0f48f757d0cf65691f06ec1"
+  }
+}

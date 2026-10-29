@@ -304,3 +304,5 @@ target_sources(netstorm PRIVATE ClientDiagnostics.cpp ClientDiagnostics.h) # 실
 target_sources(netstorm PRIVATE ClientOptionsFile.cpp ClientOptionsFile.h) # 원문 설정 바이트와 UTF-8 설치 경로의 호환 저장을 분리한다.
 target_sources(netstorm PRIVATE NativeIntroState.cpp NativeIntroState.h) # 새 설치도 원문 State39/40/41을 거쳐 메뉴에 도달한다.
 target_sources(netstorm PRIVATE TraceChat.cpp TraceChat.h) # 실제 공유 로그의 원문 Chat 전달 관문/문맥을 연결한다.
+
+target_sources(netstorm PRIVATE RawDotCommandDispatch.cpp RawDotCommandDispatch.h) # 로컬 점 명령의 고정 문법/현재 표/콜백 뒤 검색 상태를 복원한다.
