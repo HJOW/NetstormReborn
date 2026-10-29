@@ -1,0 +1,4795 @@
+{
+  "unit": 561,
+  "date": "2026-10-29",
+  "host": "HJOW-Athlon",
+  "os": "Windows-10-10.0.19045-SP0",
+  "lastFullDecompilation": "HJOW-Athlon / 2026-10-23",
+  "product": {
+    "commit": "6035f810",
+    "gameSha256": "e779165698483c4cae6d3bf0a3e7e02410b3dfed86e30a9a7c60d3e28f94ade2",
+    "goalStatus": "active"
+  },
+  "goalComplete": false,
+  "pushed": false,
+  "gameSourceChanged": false,
+  "gameRebuilt": false,
+  "gameExecutions": {
+    "total": 41,
+    "acceptedPaths": 34,
+    "passed": 34,
+    "normal": 31,
+    "demos": 3,
+    "initialFailures": 7,
+    "retries": 7
+  },
+  "initialFailures": [
+    {
+      "mission": "bc6mows76",
+      "result": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-ui-integration-549-20261029\\data",
+          "--no-audio",
+          "--frames",
+          "480",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;startInFullScreen=1;sleepPerLoop=1",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-current-561-20261029\\normal\\bc6mows76\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-current-561-20261029\\normal\\bc6mows76\\states.tsv",
+          "--mission",
+          "bc6mows76"
+        ],
+        "binarySha256": "e779165698483c4cae6d3bf0a3e7e02410b3dfed86e30a9a7c60d3e28f94ade2",
+        "returnCode": 1,
+        "timedOut": true,
+        "seconds": 65.51548840000032,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "cbfe600d0f8855f0d6814e583d867cc11f52cd0b6a17e72a344449ac1b9af7ee"
+      },
+      "checks": {
+        "normalExit": false,
+        "playing": false,
+        "correctMission": false,
+        "world": false,
+        "guide": false,
+        "loadingReleased": true
+      },
+      "partialPlaying": {
+        "count": 38,
+        "firstFrame": 20,
+        "lastFrame": 316,
+        "firstGameTime": 11.933,
+        "lastGameTime": 62.204,
+        "activeGameTimeDelta": 50.271
+      },
+      "reason": "도구65초 상한",
+      "directory": "extracted/cpp-solo-current-561-20261029/normal/bc6mows76"
+    },
+    {
+      "mission": "bc7sun_bars76",
+      "result": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-ui-integration-549-20261029\\data",
+          "--no-audio",
+          "--frames",
+          "480",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;startInFullScreen=1;sleepPerLoop=1",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-current-561-20261029\\normal\\bc7sun_bars76\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-current-561-20261029\\normal\\bc7sun_bars76\\states.tsv",
+          "--mission",
+          "bc7sun_bars76"
+        ],
+        "binarySha256": "e779165698483c4cae6d3bf0a3e7e02410b3dfed86e30a9a7c60d3e28f94ade2",
+        "returnCode": 1,
+        "timedOut": true,
+        "seconds": 65.65178239999659,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2"
+      },
+      "checks": {
+        "normalExit": false,
+        "playing": false,
+        "correctMission": false,
+        "world": false,
+        "guide": false,
+        "loadingReleased": true
+      },
+      "partialPlaying": {
+        "count": 41,
+        "firstFrame": 20,
+        "lastFrame": 340,
+        "firstGameTime": 0.588,
+        "lastGameTime": 61.117,
+        "activeGameTimeDelta": 60.529
+      },
+      "reason": "도구65초 상한",
+      "directory": "extracted/cpp-solo-current-561-20261029/normal/bc7sun_bars76"
+    },
+    {
+      "mission": "bc8fury76",
+      "result": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-ui-integration-549-20261029\\data",
+          "--no-audio",
+          "--frames",
+          "480",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;startInFullScreen=1;sleepPerLoop=1",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-current-561-20261029\\normal\\bc8fury76\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-current-561-20261029\\normal\\bc8fury76\\states.tsv",
+          "--mission",
+          "bc8fury76"
+        ],
+        "binarySha256": "e779165698483c4cae6d3bf0a3e7e02410b3dfed86e30a9a7c60d3e28f94ade2",
+        "returnCode": 1,
+        "timedOut": true,
+        "seconds": 65.59833870000148,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "0dfedfdcaf23609c871de9c41605c17ba6b07061fdf250a1a11c75b69aa35c02"
+      },
+      "checks": {
+        "normalExit": false,
+        "playing": false,
+        "correctMission": false,
+        "world": false,
+        "guide": false,
+        "loadingReleased": true
+      },
+      "partialPlaying": {
+        "count": 46,
+        "firstFrame": 28,
+        "lastFrame": 388,
+        "firstGameTime": 6.431,
+        "lastGameTime": 61.034,
+        "activeGameTimeDelta": 54.603
+      },
+      "reason": "도구65초 상한",
+      "directory": "extracted/cpp-solo-current-561-20261029/normal/bc8fury76"
+    },
+    {
+      "mission": "ThunderingPower",
+      "result": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-ui-integration-549-20261029\\data",
+          "--no-audio",
+          "--frames",
+          "480",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;startInFullScreen=1;sleepPerLoop=1",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-current-561-20261029\\normal\\ThunderingPower\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-current-561-20261029\\normal\\ThunderingPower\\states.tsv",
+          "--mission",
+          "ThunderingPower"
+        ],
+        "binarySha256": "e779165698483c4cae6d3bf0a3e7e02410b3dfed86e30a9a7c60d3e28f94ade2",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 36.578293299993675,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2"
+      },
+      "checks": {
+        "normalExit": true,
+        "playing": false,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true
+      },
+      "partialPlaying": {
+        "count": 31,
+        "firstFrame": 28,
+        "lastFrame": 268,
+        "firstGameTime": 1.458,
+        "lastGameTime": 20.021,
+        "activeGameTimeDelta": 18.563
+      },
+      "reason": "원문 @20 Fight On 입력 누락",
+      "directory": "extracted/cpp-solo-current-561-20261029/normal/ThunderingPower"
+    },
+    {
+      "mission": "Surrounded",
+      "result": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-ui-integration-549-20261029\\data",
+          "--no-audio",
+          "--frames",
+          "480",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;startInFullScreen=1;sleepPerLoop=1",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-current-561-20261029\\normal\\Surrounded\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-current-561-20261029\\normal\\Surrounded\\states.tsv",
+          "--mission",
+          "Surrounded"
+        ],
+        "binarySha256": "e779165698483c4cae6d3bf0a3e7e02410b3dfed86e30a9a7c60d3e28f94ade2",
+        "returnCode": 1,
+        "timedOut": true,
+        "seconds": 65.82762879999791,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2"
+      },
+      "checks": {
+        "normalExit": false,
+        "playing": false,
+        "correctMission": false,
+        "world": false,
+        "guide": false,
+        "loadingReleased": true
+      },
+      "partialPlaying": {
+        "count": 51,
+        "firstFrame": 20,
+        "lastFrame": 420,
+        "firstGameTime": 5.369,
+        "lastGameTime": 62.128,
+        "activeGameTimeDelta": 56.759
+      },
+      "reason": "도구65초 상한",
+      "directory": "extracted/cpp-solo-current-561-20261029/normal/Surrounded"
+    },
+    {
+      "mission": "EnemyTerritory",
+      "result": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-ui-integration-549-20261029\\data",
+          "--no-audio",
+          "--frames",
+          "480",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;startInFullScreen=1;sleepPerLoop=1",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-current-561-20261029\\normal\\EnemyTerritory\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-current-561-20261029\\normal\\EnemyTerritory\\states.tsv",
+          "--mission",
+          "EnemyTerritory"
+        ],
+        "binarySha256": "e779165698483c4cae6d3bf0a3e7e02410b3dfed86e30a9a7c60d3e28f94ade2",
+        "returnCode": 1,
+        "timedOut": true,
+        "seconds": 66.06796659999964,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "fd72c79ced0d709d7e914d75478194c9b5a9f722932e6261641d47b2b21c044c"
+      },
+      "checks": {
+        "normalExit": false,
+        "playing": false,
+        "correctMission": false,
+        "world": false,
+        "guide": false,
+        "loadingReleased": true
+      },
+      "partialPlaying": {
+        "count": 49,
+        "firstFrame": 20,
+        "lastFrame": 404,
+        "firstGameTime": 8.032,
+        "lastGameTime": 62.702,
+        "activeGameTimeDelta": 54.67
+      },
+      "reason": "도구65초 상한",
+      "directory": "extracted/cpp-solo-current-561-20261029/normal/EnemyTerritory"
+    },
+    {
+      "mission": "FinalConfrontation",
+      "result": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-ui-integration-549-20261029\\data",
+          "--no-audio",
+          "--frames",
+          "480",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;startInFullScreen=1;sleepPerLoop=1",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-current-561-20261029\\normal\\FinalConfrontation\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-current-561-20261029\\normal\\FinalConfrontation\\states.tsv",
+          "--mission",
+          "FinalConfrontation"
+        ],
+        "binarySha256": "e779165698483c4cae6d3bf0a3e7e02410b3dfed86e30a9a7c60d3e28f94ade2",
+        "returnCode": 1,
+        "timedOut": true,
+        "seconds": 66.1743187999964,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2"
+      },
+      "checks": {
+        "normalExit": false,
+        "playing": false,
+        "correctMission": false,
+        "world": false,
+        "guide": false,
+        "loadingReleased": true
+      },
+      "partialPlaying": {
+        "count": 55,
+        "firstFrame": 20,
+        "lastFrame": 452,
+        "firstGameTime": 8.316,
+        "lastGameTime": 63.089,
+        "activeGameTimeDelta": 54.773
+      },
+      "reason": "도구65초 상한",
+      "directory": "extracted/cpp-solo-current-561-20261029/normal/FinalConfrontation"
+    }
+  ],
+  "toolChanges": {
+    "explicitTimeoutSeconds": 180,
+    "defaultTimeoutUnchanged": true,
+    "onlyNewFightOnInputs": true,
+    "storyButton": {
+      "source": "originals/netstorm.tarc:d/ThunderingPower.english",
+      "sha256": "184b9a685cc38eb9c0a964b28201aadca2035bacb9a1109b39fb693dbe226f70",
+      "section": "@20",
+      "button": "Fight On",
+      "action": "DoNothing,0",
+      "liveFinalButton": "Fight On"
+    },
+    "argumentValidation": [
+      {
+        "value": "0",
+        "returnCode": 2,
+        "outputNotCreated": true
+      },
+      {
+        "value": "-1",
+        "returnCode": 2,
+        "outputNotCreated": true
+      },
+      {
+        "value": "nan",
+        "returnCode": 2,
+        "outputNotCreated": true
+      },
+      {
+        "value": "inf",
+        "returnCode": 2,
+        "outputNotCreated": true
+      }
+    ]
+  },
+  "minimumActiveGameTimeDelta": 18.242,
+  "protection": {
+    "total": 2540,
+    "existingFixtures": 720,
+    "changed": [],
+    "unchanged": true
+  },
+  "originalsUnchanged": true,
+  "gameDataUnchanged": true,
+  "stageClearAttempted": false,
+  "fullCppTestsRun": false,
+  "windows11Live": false,
+  "originalGameExecutions": 0,
+  "newNetworkTests": 0,
+  "scope": "같은560 제품의 짧은 진입·현재 플레이·정상 종료이며 자연 완주나 전체 동일성 검증이 아니다.",
+  "runs": [
+    {
+      "mission": "Tutorial1",
+      "demo": false,
+      "passed": true,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true
+      },
+      "final": {
+        "phase": [
+          "4"
+        ],
+        "page": [
+          "mission"
+        ],
+        "paused": [
+          "0"
+        ],
+        "mission": [
+          "Tutorial1",
+          "Tutorial",
+          "3"
+        ],
+        "mission_start": [
+          "1",
+          "4",
+          "0",
+          "0.397",
+          "0"
+        ],
+        "mission_gate": [
+          "1",
+          "65",
+          "0",
+          "0",
+          "0",
+          "1",
+          "0",
+          "0"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ],
+        "raw_sp": [
+          "1.14794370197e-40",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_technology": [],
+        "raw_brains": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "fort_names": [
+          "BridgeTheGap",
+          "",
+          "2",
+          "fortSpec"
+        ],
+        "raw_uber": [
+          "232",
+          "1",
+          "3",
+          "85",
+          "0",
+          "1024",
+          "768"
+        ],
+        "raw_hud_owners": [
+          "1",
+          "1",
+          "220",
+          "236",
+          "219"
+        ]
+      },
+      "returnCode": 0,
+      "seconds": 21.452003300000797,
+      "count": 58,
+      "firstFrame": 28,
+      "lastFrame": 479,
+      "firstGameTime": 0.557,
+      "lastGameTime": 19.877,
+      "activeGameTimeDelta": 19.32,
+      "directory": "extracted/cpp-solo-current-561-20261029/normal/Tutorial1",
+      "captureSha256": "667e92a404433e060fd0a5c6c590cc1bdd254cf6491f2eee9746c7008a511f7c",
+      "pid": 18164,
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-ui-integration-549-20261029\\data",
+        "--no-audio",
+        "--frames",
+        "480",
+        "--set",
+        "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;startInFullScreen=1;sleepPerLoop=1",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-current-561-20261029\\normal\\Tutorial1\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-current-561-20261029\\normal\\Tutorial1\\states.tsv",
+        "--mission",
+        "Tutorial1"
+      ],
+      "binarySha256": "e779165698483c4cae6d3bf0a3e7e02410b3dfed86e30a9a7c60d3e28f94ade2"
+    },
+    {
+      "mission": "Tutorial2",
+      "demo": false,
+      "passed": true,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true
+      },
+      "final": {
+        "phase": [
+          "4"
+        ],
+        "page": [
+          "mission"
+        ],
+        "paused": [
+          "0"
+        ],
+        "mission": [
+          "Tutorial2",
+          "Tutorial",
+          "2"
+        ],
+        "mission_start": [
+          "1",
+          "4",
+          "0",
+          "0.353",
+          "0"
+        ],
+        "mission_gate": [
+          "2",
+          "65",
+          "0",
+          "0",
+          "0",
+          "1",
+          "0",
+          "0"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ],
+        "raw_sp": [
+          "-2.0000038147",
+          "10000",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_technology": [
+          "sunArcher"
+        ],
+        "raw_brains": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "fort_names": [
+          "SecretWorkshop",
+          "",
+          "2",
+          "fortSpec"
+        ],
+        "raw_uber": [
+          "232",
+          "1",
+          "3",
+          "85",
+          "0",
+          "1024",
+          "768"
+        ],
+        "raw_hud_owners": [
+          "1",
+          "1",
+          "220",
+          "236",
+          "219"
+        ]
+      },
+      "returnCode": 0,
+      "seconds": 20.53903110000101,
+      "count": 57,
+      "firstFrame": 36,
+      "lastFrame": 479,
+      "firstGameTime": 0.495,
+      "lastGameTime": 18.737,
+      "activeGameTimeDelta": 18.242,
+      "directory": "extracted/cpp-solo-current-561-20261029/normal/Tutorial2",
+      "captureSha256": "48bf10a50ead68a4916cd2ce0a1214c85dedfd3a49988c4e2a1e0b698eda2629",
+      "pid": 4036,
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-ui-integration-549-20261029\\data",
+        "--no-audio",
+        "--frames",
+        "480",
+        "--set",
+        "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;startInFullScreen=1;sleepPerLoop=1",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-current-561-20261029\\normal\\Tutorial2\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-current-561-20261029\\normal\\Tutorial2\\states.tsv",
+        "--mission",
+        "Tutorial2"
+      ],
+      "binarySha256": "e779165698483c4cae6d3bf0a3e7e02410b3dfed86e30a9a7c60d3e28f94ade2"
+    },
+    {
+      "mission": "Tutorial3",
+      "demo": false,
+      "passed": true,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true
+      },
+      "final": {
+        "phase": [
+          "4"
+        ],
+        "page": [
+          "mission"
+        ],
+        "paused": [
+          "0"
+        ],
+        "mission": [
+          "Tutorial3",
+          "Tutorial",
+          "37"
+        ],
+        "mission_start": [
+          "1",
+          "4",
+          "0",
+          "0.34",
+          "0"
+        ],
+        "mission_gate": [
+          "3",
+          "65",
+          "0",
+          "0",
+          "0",
+          "1",
+          "0",
+          "0"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ],
+        "raw_sp": [
+          "4.3039291734e-23",
+          "2000",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_technology": [
+          "sunArcher",
+          "sunWalker"
+        ],
+        "raw_brains": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "fort_names": [
+          "CaptureThePriest",
+          "",
+          "2",
+          "fortSpec"
+        ],
+        "raw_uber": [
+          "232",
+          "1",
+          "3",
+          "85",
+          "0",
+          "1024",
+          "768"
+        ],
+        "raw_hud_owners": [
+          "1",
+          "1",
+          "220",
+          "236",
+          "219"
+        ]
+      },
+      "returnCode": 0,
+      "seconds": 31.872710099996766,
+      "count": 58,
+      "firstFrame": 28,
+      "lastFrame": 479,
+      "firstGameTime": 0.632,
+      "lastGameTime": 29.787,
+      "activeGameTimeDelta": 29.155,
+      "directory": "extracted/cpp-solo-current-561-20261029/normal/Tutorial3",
+      "captureSha256": "319f89b79acf08bc1a725b9d28a92c0612bba038e8982ffa129316ff5eb514c1",
+      "pid": 18268,
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-ui-integration-549-20261029\\data",
+        "--no-audio",
+        "--frames",
+        "480",
+        "--set",
+        "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;startInFullScreen=1;sleepPerLoop=1",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-current-561-20261029\\normal\\Tutorial3\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-current-561-20261029\\normal\\Tutorial3\\states.tsv",
+        "--mission",
+        "Tutorial3"
+      ],
+      "binarySha256": "e779165698483c4cae6d3bf0a3e7e02410b3dfed86e30a9a7c60d3e28f94ade2"
+    },
+    {
+      "mission": "Tutorial4",
+      "demo": false,
+      "passed": true,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true
+      },
+      "final": {
+        "phase": [
+          "4"
+        ],
+        "page": [
+          "mission"
+        ],
+        "paused": [
+          "0"
+        ],
+        "mission": [
+          "Tutorial4",
+          "Tutorial",
+          "65"
+        ],
+        "mission_start": [
+          "1",
+          "4",
+          "0",
+          "0.333",
+          "0"
+        ],
+        "mission_gate": [
+          "4",
+          "65",
+          "0",
+          "0",
+          "0",
+          "1",
+          "0",
+          "0"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ],
+        "raw_sp": [
+          "1.71842652157e-36",
+          "2000",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_technology": [
+          "sunArcher",
+          "windBattery",
+          "sunWalker"
+        ],
+        "raw_brains": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "fort_names": [
+          "TacticalCombat",
+          "",
+          "2",
+          "fortSpec"
+        ],
+        "raw_uber": [
+          "232",
+          "1",
+          "3",
+          "85",
+          "0",
+          "1024",
+          "768"
+        ],
+        "raw_hud_owners": [
+          "1",
+          "1",
+          "220",
+          "236",
+          "219"
+        ]
+      },
+      "returnCode": 0,
+      "seconds": 32.2244176000022,
+      "count": 58,
+      "firstFrame": 28,
+      "lastFrame": 479,
+      "firstGameTime": 0.756,
+      "lastGameTime": 30.103,
+      "activeGameTimeDelta": 29.347,
+      "directory": "extracted/cpp-solo-current-561-20261029/normal/Tutorial4",
+      "captureSha256": "9af35878270ed86f1d0f311559a2a4db53602d8bc886615406eb009b3e202648",
+      "pid": 2940,
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-ui-integration-549-20261029\\data",
+        "--no-audio",
+        "--frames",
+        "480",
+        "--set",
+        "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;startInFullScreen=1;sleepPerLoop=1",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-current-561-20261029\\normal\\Tutorial4\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-current-561-20261029\\normal\\Tutorial4\\states.tsv",
+        "--mission",
+        "Tutorial4"
+      ],
+      "binarySha256": "e779165698483c4cae6d3bf0a3e7e02410b3dfed86e30a9a7c60d3e28f94ade2"
+    },
+    {
+      "mission": "Tutorial5",
+      "demo": false,
+      "passed": true,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true
+      },
+      "final": {
+        "phase": [
+          "4"
+        ],
+        "page": [
+          "mission"
+        ],
+        "paused": [
+          "0"
+        ],
+        "mission": [
+          "Tutorial5",
+          "Tutorial",
+          "55"
+        ],
+        "mission_start": [
+          "1",
+          "4",
+          "0",
+          "0.348",
+          "0"
+        ],
+        "mission_gate": [
+          "5",
+          "65",
+          "0",
+          "0",
+          "0",
+          "1",
+          "0",
+          "0"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ],
+        "raw_sp": [
+          "-5.88035422505e-39",
+          "4000",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_technology": [
+          "sunArcher",
+          "windBattery",
+          "sunBlocker",
+          "sunCannon",
+          "sunWalker"
+        ],
+        "raw_brains": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "fort_names": [
+          "SubtleDefense",
+          "",
+          "2",
+          "fortSpec"
+        ],
+        "raw_uber": [
+          "232",
+          "1",
+          "3",
+          "85",
+          "0",
+          "1024",
+          "768"
+        ],
+        "raw_hud_owners": [
+          "1",
+          "1",
+          "220",
+          "236",
+          "219"
+        ]
+      },
+      "returnCode": 0,
+      "seconds": 38.278829199996835,
+      "count": 58,
+      "firstFrame": 28,
+      "lastFrame": 479,
+      "firstGameTime": 0.816,
+      "lastGameTime": 36.083,
+      "activeGameTimeDelta": 35.267,
+      "directory": "extracted/cpp-solo-current-561-20261029/normal/Tutorial5",
+      "captureSha256": "d64840d4a802a691824454d31f0aed8380055b08a5999d2cb929346056347aac",
+      "pid": 2900,
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-ui-integration-549-20261029\\data",
+        "--no-audio",
+        "--frames",
+        "480",
+        "--set",
+        "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;startInFullScreen=1;sleepPerLoop=1",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-current-561-20261029\\normal\\Tutorial5\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-current-561-20261029\\normal\\Tutorial5\\states.tsv",
+        "--mission",
+        "Tutorial5"
+      ],
+      "binarySha256": "e779165698483c4cae6d3bf0a3e7e02410b3dfed86e30a9a7c60d3e28f94ade2"
+    },
+    {
+      "mission": "Tutorial6",
+      "demo": false,
+      "passed": true,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true
+      },
+      "final": {
+        "phase": [
+          "4"
+        ],
+        "page": [
+          "mission"
+        ],
+        "paused": [
+          "0"
+        ],
+        "mission": [
+          "Tutorial6",
+          "Tutorial",
+          "60"
+        ],
+        "mission_start": [
+          "1",
+          "4",
+          "0",
+          "0.342",
+          "0"
+        ],
+        "mission_gate": [
+          "6",
+          "65",
+          "0",
+          "0",
+          "0",
+          "1",
+          "0",
+          "0"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ],
+        "raw_sp": [
+          "2.80259692865e-45",
+          "7500",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_technology": [
+          "windBattery",
+          "windBalloon"
+        ],
+        "raw_brains": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "fort_names": [
+          "RawPower",
+          "",
+          "2",
+          "fortSpec"
+        ],
+        "raw_uber": [
+          "232",
+          "1",
+          "3",
+          "85",
+          "0",
+          "1024",
+          "768"
+        ],
+        "raw_hud_owners": [
+          "1",
+          "1",
+          "220",
+          "236",
+          "219"
+        ]
+      },
+      "returnCode": 0,
+      "seconds": 35.13202399999864,
+      "count": 56,
+      "firstFrame": 44,
+      "lastFrame": 479,
+      "firstGameTime": 0.698,
+      "lastGameTime": 31.899,
+      "activeGameTimeDelta": 31.201,
+      "directory": "extracted/cpp-solo-current-561-20261029/normal/Tutorial6",
+      "captureSha256": "db0c688abaa0c72ab3e3d5c6d44324dcf3cea38b3de6494fe1157f7d110f9011",
+      "pid": 1992,
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-ui-integration-549-20261029\\data",
+        "--no-audio",
+        "--frames",
+        "480",
+        "--set",
+        "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;startInFullScreen=1;sleepPerLoop=1",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-current-561-20261029\\normal\\Tutorial6\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-current-561-20261029\\normal\\Tutorial6\\states.tsv",
+        "--mission",
+        "Tutorial6"
+      ],
+      "binarySha256": "e779165698483c4cae6d3bf0a3e7e02410b3dfed86e30a9a7c60d3e28f94ade2"
+    },
+    {
+      "mission": "bc1menu76",
+      "demo": false,
+      "passed": true,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true
+      },
+      "final": {
+        "phase": [
+          "4"
+        ],
+        "page": [
+          "mission"
+        ],
+        "paused": [
+          "0"
+        ],
+        "mission": [
+          "bc1menu76",
+          "tutorial",
+          "83"
+        ],
+        "mission_start": [
+          "1",
+          "4",
+          "0",
+          "0.365",
+          "0"
+        ],
+        "mission_gate": [
+          "0",
+          "65",
+          "0",
+          "0",
+          "0",
+          "1",
+          "0",
+          "0"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ],
+        "raw_sp": [
+          "0",
+          "0",
+          "6500",
+          "0",
+          "6500",
+          "6500",
+          "6500",
+          "6500",
+          "0"
+        ],
+        "raw_technology": [],
+        "raw_brains": [
+          "0",
+          "0",
+          "536870912",
+          "536892288",
+          "536913664",
+          "536935040",
+          "536956416",
+          "536977792",
+          "0"
+        ],
+        "fort_names": [
+          "bc1menu76",
+          "",
+          "2",
+          "fortSpec"
+        ],
+        "raw_uber": [
+          "232",
+          "1",
+          "3",
+          "85",
+          "0",
+          "1024",
+          "768"
+        ],
+        "raw_hud_owners": [
+          "1",
+          "1",
+          "220",
+          "236",
+          "219"
+        ]
+      },
+      "returnCode": 0,
+      "seconds": 23.66048569999839,
+      "count": 59,
+      "firstFrame": 20,
+      "lastFrame": 479,
+      "firstGameTime": 0.679,
+      "lastGameTime": 22.352,
+      "activeGameTimeDelta": 21.673,
+      "directory": "extracted/cpp-solo-current-561-20261029/normal/bc1menu76",
+      "captureSha256": "a7e827888b361dce312794fe0a346e317d43bdb525e6ecd200382e1e70ea0ea3",
+      "pid": 1508,
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-ui-integration-549-20261029\\data",
+        "--no-audio",
+        "--frames",
+        "480",
+        "--set",
+        "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;startInFullScreen=1;sleepPerLoop=1",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-current-561-20261029\\normal\\bc1menu76\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-current-561-20261029\\normal\\bc1menu76\\states.tsv",
+        "--mission",
+        "bc1menu76"
+      ],
+      "binarySha256": "e779165698483c4cae6d3bf0a3e7e02410b3dfed86e30a9a7c60d3e28f94ade2"
+    },
+    {
+      "mission": "bc2bridging76",
+      "demo": false,
+      "passed": true,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true
+      },
+      "final": {
+        "phase": [
+          "4"
+        ],
+        "page": [
+          "mission"
+        ],
+        "paused": [
+          "0"
+        ],
+        "mission": [
+          "bc2bridging76",
+          "tutorial",
+          "13"
+        ],
+        "mission_start": [
+          "1",
+          "4",
+          "0",
+          "0.401",
+          "0"
+        ],
+        "mission_gate": [
+          "0",
+          "65",
+          "0",
+          "0",
+          "0",
+          "1",
+          "0",
+          "120"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ],
+        "raw_sp": [
+          "7.19490449368e-28",
+          "3000",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_technology": [
+          "windBattery",
+          "outpost"
+        ],
+        "raw_brains": [
+          "0",
+          "0",
+          "536870912",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "fort_names": [
+          "bc2bridging76",
+          "",
+          "2",
+          "fortSpec"
+        ],
+        "raw_uber": [
+          "232",
+          "1",
+          "3",
+          "85",
+          "0",
+          "1024",
+          "768"
+        ],
+        "raw_hud_owners": [
+          "1",
+          "1",
+          "220",
+          "236",
+          "219"
+        ]
+      },
+      "returnCode": 0,
+      "seconds": 50.870995800003584,
+      "count": 59,
+      "firstFrame": 20,
+      "lastFrame": 479,
+      "firstGameTime": 0.593,
+      "lastGameTime": 48.891,
+      "activeGameTimeDelta": 48.298,
+      "directory": "extracted/cpp-solo-current-561-20261029/normal/bc2bridging76",
+      "captureSha256": "f3cb007d35c1cbea403ccdff4036e8a65c56d6a0cb4b7b469bfbd2861286cb63",
+      "pid": 3664,
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-ui-integration-549-20261029\\data",
+        "--no-audio",
+        "--frames",
+        "480",
+        "--set",
+        "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;startInFullScreen=1;sleepPerLoop=1",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-current-561-20261029\\normal\\bc2bridging76\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-current-561-20261029\\normal\\bc2bridging76\\states.tsv",
+        "--mission",
+        "bc2bridging76"
+      ],
+      "binarySha256": "e779165698483c4cae6d3bf0a3e7e02410b3dfed86e30a9a7c60d3e28f94ade2"
+    },
+    {
+      "mission": "bc3acid_bar76",
+      "demo": false,
+      "passed": true,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true
+      },
+      "final": {
+        "phase": [
+          "4"
+        ],
+        "page": [
+          "mission"
+        ],
+        "paused": [
+          "0"
+        ],
+        "mission": [
+          "bc3acid_bar76",
+          "tutorial",
+          "739"
+        ],
+        "mission_start": [
+          "1",
+          "4",
+          "0",
+          "0.334",
+          "0"
+        ],
+        "mission_gate": [
+          "0",
+          "65",
+          "0",
+          "0",
+          "0",
+          "1",
+          "0",
+          "0"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ],
+        "raw_sp": [
+          "-1.13602169439e-28",
+          "3000",
+          "3200",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_technology": [
+          "rainBattery",
+          "rainFence"
+        ],
+        "raw_brains": [
+          "0",
+          "0",
+          "536870912",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "fort_names": [
+          "bc3acid_bar76",
+          "",
+          "2",
+          "fortSpec"
+        ],
+        "raw_uber": [
+          "232",
+          "1",
+          "3",
+          "85",
+          "0",
+          "1024",
+          "768"
+        ],
+        "raw_hud_owners": [
+          "1",
+          "1",
+          "220",
+          "236",
+          "219"
+        ]
+      },
+      "returnCode": 0,
+      "seconds": 46.98044149999623,
+      "count": 58,
+      "firstFrame": 28,
+      "lastFrame": 479,
+      "firstGameTime": 4.821,
+      "lastGameTime": 44.659,
+      "activeGameTimeDelta": 39.838,
+      "directory": "extracted/cpp-solo-current-561-20261029/normal/bc3acid_bar76",
+      "captureSha256": "5bb96b8508ffbc393090e33caa20481c34b9be9db95b7d495bcbe5c0d3f0c331",
+      "pid": 9756,
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-ui-integration-549-20261029\\data",
+        "--no-audio",
+        "--frames",
+        "480",
+        "--set",
+        "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;startInFullScreen=1;sleepPerLoop=1",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-current-561-20261029\\normal\\bc3acid_bar76\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-current-561-20261029\\normal\\bc3acid_bar76\\states.tsv",
+        "--mission",
+        "bc3acid_bar76"
+      ],
+      "binarySha256": "e779165698483c4cae6d3bf0a3e7e02410b3dfed86e30a9a7c60d3e28f94ade2"
+    },
+    {
+      "mission": "bc4bow_rush76",
+      "demo": false,
+      "passed": true,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true
+      },
+      "final": {
+        "phase": [
+          "4"
+        ],
+        "page": [
+          "mission"
+        ],
+        "paused": [
+          "0"
+        ],
+        "mission": [
+          "bc4bow_rush76",
+          "tutorial",
+          "200"
+        ],
+        "mission_start": [
+          "1",
+          "4",
+          "0",
+          "0.351",
+          "0"
+        ],
+        "mission_gate": [
+          "0",
+          "65",
+          "0",
+          "0",
+          "0",
+          "1",
+          "0",
+          "0"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ],
+        "raw_sp": [
+          "2.42461180192e-38",
+          "3000",
+          "6200",
+          "9000",
+          "13000",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_technology": [
+          "windBattery",
+          "windArcher"
+        ],
+        "raw_brains": [
+          "0",
+          "0",
+          "536870912",
+          "536892288",
+          "536913664",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "fort_names": [
+          "bc4bow_rush76",
+          "",
+          "2",
+          "fortSpec"
+        ],
+        "raw_uber": [
+          "232",
+          "1",
+          "3",
+          "85",
+          "0",
+          "1024",
+          "768"
+        ],
+        "raw_hud_owners": [
+          "1",
+          "1",
+          "220",
+          "236",
+          "219"
+        ]
+      },
+      "returnCode": 0,
+      "seconds": 45.48990130000311,
+      "count": 59,
+      "firstFrame": 20,
+      "lastFrame": 479,
+      "firstGameTime": 1.779,
+      "lastGameTime": 43.803,
+      "activeGameTimeDelta": 42.024,
+      "directory": "extracted/cpp-solo-current-561-20261029/normal/bc4bow_rush76",
+      "captureSha256": "cac69229cdcc66eb2dfb6669855c6197ccb140070f80ca1f57c2447dfe3ff591",
+      "pid": 10224,
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-ui-integration-549-20261029\\data",
+        "--no-audio",
+        "--frames",
+        "480",
+        "--set",
+        "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;startInFullScreen=1;sleepPerLoop=1",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-current-561-20261029\\normal\\bc4bow_rush76\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-current-561-20261029\\normal\\bc4bow_rush76\\states.tsv",
+        "--mission",
+        "bc4bow_rush76"
+      ],
+      "binarySha256": "e779165698483c4cae6d3bf0a3e7e02410b3dfed86e30a9a7c60d3e28f94ade2"
+    },
+    {
+      "mission": "bc5walkers76",
+      "demo": false,
+      "passed": true,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true
+      },
+      "final": {
+        "phase": [
+          "4"
+        ],
+        "page": [
+          "mission"
+        ],
+        "paused": [
+          "0"
+        ],
+        "mission": [
+          "bc5walkers76",
+          "tutorial",
+          "303"
+        ],
+        "mission_start": [
+          "1",
+          "4",
+          "0",
+          "0.345",
+          "0"
+        ],
+        "mission_gate": [
+          "0",
+          "65",
+          "0",
+          "0",
+          "0",
+          "1",
+          "0",
+          "0"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ],
+        "raw_sp": [
+          "6.25629317576e-39",
+          "0",
+          "2100",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_technology": [],
+        "raw_brains": [
+          "0",
+          "0",
+          "536870912",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "fort_names": [
+          "bc5walkers76",
+          "",
+          "2",
+          "fortSpec"
+        ],
+        "raw_uber": [
+          "232",
+          "1",
+          "3",
+          "85",
+          "0",
+          "1024",
+          "768"
+        ],
+        "raw_hud_owners": [
+          "1",
+          "1",
+          "220",
+          "236",
+          "219"
+        ]
+      },
+      "returnCode": 0,
+      "seconds": 36.436001300004136,
+      "count": 59,
+      "firstFrame": 20,
+      "lastFrame": 479,
+      "firstGameTime": 1.815,
+      "lastGameTime": 34.951,
+      "activeGameTimeDelta": 33.136,
+      "directory": "extracted/cpp-solo-current-561-20261029/normal/bc5walkers76",
+      "captureSha256": "bae791e40df012a5653e0ad659d07e97f4ef0fe81c64d65ab44a665ca815c268",
+      "pid": 11028,
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-ui-integration-549-20261029\\data",
+        "--no-audio",
+        "--frames",
+        "480",
+        "--set",
+        "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;startInFullScreen=1;sleepPerLoop=1",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-current-561-20261029\\normal\\bc5walkers76\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-current-561-20261029\\normal\\bc5walkers76\\states.tsv",
+        "--mission",
+        "bc5walkers76"
+      ],
+      "binarySha256": "e779165698483c4cae6d3bf0a3e7e02410b3dfed86e30a9a7c60d3e28f94ade2"
+    },
+    {
+      "mission": "bc6mows76",
+      "demo": false,
+      "passed": true,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true
+      },
+      "final": {
+        "phase": [
+          "4"
+        ],
+        "page": [
+          "mission"
+        ],
+        "paused": [
+          "0"
+        ],
+        "mission": [
+          "bc6mows76",
+          "tutorial",
+          "687"
+        ],
+        "mission_start": [
+          "1",
+          "4",
+          "0",
+          "0.333",
+          "0"
+        ],
+        "mission_gate": [
+          "0",
+          "65",
+          "0",
+          "0",
+          "0",
+          "1",
+          "0",
+          "0"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ],
+        "raw_sp": [
+          "-5.73971850987e-42",
+          "3000",
+          "800",
+          "300",
+          "600",
+          "1200",
+          "3400",
+          "0",
+          "0"
+        ],
+        "raw_technology": [
+          "rainBattery",
+          "outpost",
+          "sunFence",
+          "rainAviary"
+        ],
+        "raw_brains": [
+          "0",
+          "0",
+          "536870912",
+          "536892288",
+          "536913664",
+          "536935040",
+          "536956416",
+          "0",
+          "0"
+        ],
+        "fort_names": [
+          "bc6mows76",
+          "",
+          "2",
+          "fortSpec"
+        ],
+        "raw_uber": [
+          "232",
+          "1",
+          "3",
+          "85",
+          "0",
+          "1024",
+          "768"
+        ],
+        "raw_hud_owners": [
+          "1",
+          "1",
+          "220",
+          "236",
+          "219"
+        ]
+      },
+      "returnCode": 0,
+      "seconds": 95.79675449999922,
+      "count": 59,
+      "firstFrame": 20,
+      "lastFrame": 479,
+      "firstGameTime": 10.108,
+      "lastGameTime": 92.951,
+      "activeGameTimeDelta": 82.843,
+      "directory": "extracted/cpp-solo-current-561-20261029/retry/bc6mows76",
+      "captureSha256": "53fc5d06ef96cdfdbf11c9f4ea5cd299bce394e1ccf8a949414f0d53e7cdaa55",
+      "pid": 18312,
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-ui-integration-549-20261029\\data",
+        "--no-audio",
+        "--frames",
+        "480",
+        "--set",
+        "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;startInFullScreen=1;sleepPerLoop=1",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-current-561-20261029\\retry\\bc6mows76\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-current-561-20261029\\retry\\bc6mows76\\states.tsv",
+        "--mission",
+        "bc6mows76"
+      ],
+      "binarySha256": "e779165698483c4cae6d3bf0a3e7e02410b3dfed86e30a9a7c60d3e28f94ade2"
+    },
+    {
+      "mission": "bc7sun_bars76",
+      "demo": false,
+      "passed": true,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true
+      },
+      "final": {
+        "phase": [
+          "4"
+        ],
+        "page": [
+          "mission"
+        ],
+        "paused": [
+          "0"
+        ],
+        "mission": [
+          "bc7sun_bars76",
+          "tutorial",
+          "28"
+        ],
+        "mission_start": [
+          "1",
+          "4",
+          "0",
+          "0.366",
+          "0"
+        ],
+        "mission_gate": [
+          "0",
+          "65",
+          "0",
+          "0",
+          "0",
+          "1",
+          "0",
+          "300"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ],
+        "raw_sp": [
+          "0",
+          "20000",
+          "999999",
+          "999999",
+          "999999",
+          "999999",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_technology": [
+          "windBattery",
+          "sunFence"
+        ],
+        "raw_brains": [
+          "0",
+          "0",
+          "536870912",
+          "536892288",
+          "536913664",
+          "536935040",
+          "0",
+          "0",
+          "0"
+        ],
+        "fort_names": [
+          "bc7sun_bars76",
+          "",
+          "2",
+          "fortSpec"
+        ],
+        "raw_uber": [
+          "232",
+          "1",
+          "3",
+          "85",
+          "0",
+          "1024",
+          "768"
+        ],
+        "raw_hud_owners": [
+          "1",
+          "1",
+          "220",
+          "236",
+          "219"
+        ]
+      },
+      "returnCode": 0,
+      "seconds": 79.050344700001,
+      "count": 59,
+      "firstFrame": 20,
+      "lastFrame": 479,
+      "firstGameTime": 0.584,
+      "lastGameTime": 76.344,
+      "activeGameTimeDelta": 75.76,
+      "directory": "extracted/cpp-solo-current-561-20261029/retry/bc7sun_bars76",
+      "captureSha256": "375bbc840a8abf43a1975cc154a54b39b126c6e3804f787d54a682435803e1cd",
+      "pid": 7376,
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-ui-integration-549-20261029\\data",
+        "--no-audio",
+        "--frames",
+        "480",
+        "--set",
+        "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;startInFullScreen=1;sleepPerLoop=1",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-current-561-20261029\\retry\\bc7sun_bars76\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-current-561-20261029\\retry\\bc7sun_bars76\\states.tsv",
+        "--mission",
+        "bc7sun_bars76"
+      ],
+      "binarySha256": "e779165698483c4cae6d3bf0a3e7e02410b3dfed86e30a9a7c60d3e28f94ade2"
+    },
+    {
+      "mission": "bc8fury76",
+      "demo": false,
+      "passed": true,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true
+      },
+      "final": {
+        "phase": [
+          "4"
+        ],
+        "page": [
+          "mission"
+        ],
+        "paused": [
+          "0"
+        ],
+        "mission": [
+          "bc8fury76",
+          "tutorial",
+          "423"
+        ],
+        "mission_start": [
+          "1",
+          "4",
+          "0",
+          "0.349",
+          "0"
+        ],
+        "mission_gate": [
+          "0",
+          "65",
+          "0",
+          "0",
+          "0",
+          "1",
+          "0",
+          "0"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ],
+        "raw_sp": [
+          "0",
+          "5000",
+          "1800",
+          "1600",
+          "2200",
+          "3800",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_technology": [
+          "sunArcher",
+          "sunAviary",
+          "windBattery",
+          "sunBlocker",
+          "sunBalloon",
+          "outpost",
+          "sunCannon",
+          "sunWalker",
+          "sunFence"
+        ],
+        "raw_brains": [
+          "0",
+          "0",
+          "536870912",
+          "536892288",
+          "536913664",
+          "536935040",
+          "0",
+          "0",
+          "0"
+        ],
+        "fort_names": [
+          "bc8fury76",
+          "",
+          "2",
+          "fortSpec"
+        ],
+        "raw_uber": [
+          "232",
+          "1",
+          "3",
+          "85",
+          "0",
+          "1024",
+          "768"
+        ],
+        "raw_hud_owners": [
+          "1",
+          "1",
+          "220",
+          "236",
+          "219"
+        ]
+      },
+      "returnCode": 0,
+      "seconds": 84.58089599999948,
+      "count": 58,
+      "firstFrame": 28,
+      "lastFrame": 479,
+      "firstGameTime": 6.072,
+      "lastGameTime": 80.828,
+      "activeGameTimeDelta": 74.756,
+      "directory": "extracted/cpp-solo-current-561-20261029/retry/bc8fury76",
+      "captureSha256": "af6bbaf4a3b4ffcd907d7dcc1f7f14f9c664db0f44e37cb08c0ffac7a66d522a",
+      "pid": 4312,
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-ui-integration-549-20261029\\data",
+        "--no-audio",
+        "--frames",
+        "480",
+        "--set",
+        "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;startInFullScreen=1;sleepPerLoop=1",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-current-561-20261029\\retry\\bc8fury76\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-current-561-20261029\\retry\\bc8fury76\\states.tsv",
+        "--mission",
+        "bc8fury76"
+      ],
+      "binarySha256": "e779165698483c4cae6d3bf0a3e7e02410b3dfed86e30a9a7c60d3e28f94ade2"
+    },
+    {
+      "mission": "bc9ssun_bars76",
+      "demo": false,
+      "passed": true,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true
+      },
+      "final": {
+        "phase": [
+          "4"
+        ],
+        "page": [
+          "mission"
+        ],
+        "paused": [
+          "0"
+        ],
+        "mission": [
+          "bc9ssun_bars76",
+          "tutorial",
+          "770"
+        ],
+        "mission_start": [
+          "1",
+          "4",
+          "0",
+          "0.335",
+          "0"
+        ],
+        "mission_gate": [
+          "0",
+          "65",
+          "0",
+          "0",
+          "0",
+          "1",
+          "0",
+          "0"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ],
+        "raw_sp": [
+          "4.3348284936e-32",
+          "10000",
+          "12000",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_technology": [
+          "sunArcher",
+          "windBattery",
+          "sunFence"
+        ],
+        "raw_brains": [
+          "0",
+          "0",
+          "536870912",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "fort_names": [
+          "bc9ssun_bars76",
+          "",
+          "2",
+          "fortSpec"
+        ],
+        "raw_uber": [
+          "232",
+          "1",
+          "3",
+          "85",
+          "0",
+          "1024",
+          "768"
+        ],
+        "raw_hud_owners": [
+          "1",
+          "1",
+          "220",
+          "236",
+          "219"
+        ]
+      },
+      "returnCode": 0,
+      "seconds": 58.32986230000097,
+      "count": 59,
+      "firstFrame": 20,
+      "lastFrame": 479,
+      "firstGameTime": 7.302,
+      "lastGameTime": 56.329,
+      "activeGameTimeDelta": 49.027,
+      "directory": "extracted/cpp-solo-current-561-20261029/normal/bc9ssun_bars76",
+      "captureSha256": "58841b9be8fc1d2c652618ca13b41bb91243ad86210356eb34aea0a8e965a6df",
+      "pid": 12368,
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-ui-integration-549-20261029\\data",
+        "--no-audio",
+        "--frames",
+        "480",
+        "--set",
+        "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;startInFullScreen=1;sleepPerLoop=1",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-current-561-20261029\\normal\\bc9ssun_bars76\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-current-561-20261029\\normal\\bc9ssun_bars76\\states.tsv",
+        "--mission",
+        "bc9ssun_bars76"
+      ],
+      "binarySha256": "e779165698483c4cae6d3bf0a3e7e02410b3dfed86e30a9a7c60d3e28f94ade2"
+    },
+    {
+      "mission": "TheWarBegins",
+      "demo": false,
+      "passed": true,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true
+      },
+      "final": {
+        "phase": [
+          "4"
+        ],
+        "page": [
+          "mission"
+        ],
+        "paused": [
+          "0"
+        ],
+        "mission": [
+          "TheWarBegins",
+          "Tutorial",
+          "172"
+        ],
+        "mission_start": [
+          "1",
+          "4",
+          "0",
+          "0.383",
+          "0"
+        ],
+        "mission_gate": [
+          "0",
+          "65",
+          "0",
+          "0",
+          "0",
+          "1",
+          "0",
+          "0"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ],
+        "raw_sp": [
+          "1.21976979569e-17",
+          "3000",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_technology": [
+          "sunAviary",
+          "rainBattery",
+          "sunCannon",
+          "sunWalker"
+        ],
+        "raw_brains": [
+          "0",
+          "0",
+          "536870912",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "fort_names": [
+          "TheWarBegins",
+          "",
+          "2",
+          "fortSpec"
+        ],
+        "raw_uber": [
+          "232",
+          "1",
+          "3",
+          "85",
+          "0",
+          "1024",
+          "768"
+        ],
+        "raw_hud_owners": [
+          "1",
+          "1",
+          "220",
+          "236",
+          "219"
+        ]
+      },
+      "returnCode": 0,
+      "seconds": 32.50100179999572,
+      "count": 59,
+      "firstFrame": 20,
+      "lastFrame": 479,
+      "firstGameTime": 1.246,
+      "lastGameTime": 30.411,
+      "activeGameTimeDelta": 29.165,
+      "directory": "extracted/cpp-solo-current-561-20261029/normal/TheWarBegins",
+      "captureSha256": "d2357b101a6bb6f3fd142a726568a691aaaf17a2efc5131595d484fc1044058f",
+      "pid": 13956,
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-ui-integration-549-20261029\\data",
+        "--no-audio",
+        "--frames",
+        "480",
+        "--set",
+        "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;startInFullScreen=1;sleepPerLoop=1",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-current-561-20261029\\normal\\TheWarBegins\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-current-561-20261029\\normal\\TheWarBegins\\states.tsv",
+        "--mission",
+        "TheWarBegins"
+      ],
+      "binarySha256": "e779165698483c4cae6d3bf0a3e7e02410b3dfed86e30a9a7c60d3e28f94ade2"
+    },
+    {
+      "mission": "MasterOfWhirligigs",
+      "demo": false,
+      "passed": true,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true
+      },
+      "final": {
+        "phase": [
+          "4"
+        ],
+        "page": [
+          "mission"
+        ],
+        "paused": [
+          "0"
+        ],
+        "mission": [
+          "MasterOfWhirligigs",
+          "Tutorial",
+          "115"
+        ],
+        "mission_start": [
+          "1",
+          "4",
+          "0",
+          "0.376",
+          "0"
+        ],
+        "mission_gate": [
+          "0",
+          "65",
+          "0",
+          "0",
+          "0",
+          "1",
+          "0",
+          "0"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ],
+        "raw_sp": [
+          "9.95015178317e-32",
+          "2000",
+          "2000",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_technology": [
+          "sunArcher",
+          "windBattery",
+          "sunCannon",
+          "sunWalker"
+        ],
+        "raw_brains": [
+          "0",
+          "0",
+          "536870912",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "fort_names": [
+          "MasterOfWhirligigs",
+          "",
+          "2",
+          "fortSpec"
+        ],
+        "raw_uber": [
+          "232",
+          "1",
+          "3",
+          "85",
+          "0",
+          "1024",
+          "768"
+        ],
+        "raw_hud_owners": [
+          "1",
+          "1",
+          "220",
+          "236",
+          "219"
+        ]
+      },
+      "returnCode": 0,
+      "seconds": 30.935836199998448,
+      "count": 59,
+      "firstFrame": 20,
+      "lastFrame": 479,
+      "firstGameTime": 0.923,
+      "lastGameTime": 28.788,
+      "activeGameTimeDelta": 27.865,
+      "directory": "extracted/cpp-solo-current-561-20261029/normal/MasterOfWhirligigs",
+      "captureSha256": "8e3e2f226479e3851160db931567ed63530809d2fbd77170160f728b491fb151",
+      "pid": 3412,
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-ui-integration-549-20261029\\data",
+        "--no-audio",
+        "--frames",
+        "480",
+        "--set",
+        "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;startInFullScreen=1;sleepPerLoop=1",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-current-561-20261029\\normal\\MasterOfWhirligigs\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-current-561-20261029\\normal\\MasterOfWhirligigs\\states.tsv",
+        "--mission",
+        "MasterOfWhirligigs"
+      ],
+      "binarySha256": "e779165698483c4cae6d3bf0a3e7e02410b3dfed86e30a9a7c60d3e28f94ade2"
+    },
+    {
+      "mission": "SaveTheIsland",
+      "demo": false,
+      "passed": true,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true
+      },
+      "final": {
+        "phase": [
+          "4"
+        ],
+        "page": [
+          "mission"
+        ],
+        "paused": [
+          "0"
+        ],
+        "mission": [
+          "SaveTheIsland",
+          "Tutorial",
+          "385"
+        ],
+        "mission_start": [
+          "1",
+          "4",
+          "0",
+          "0.369",
+          "0"
+        ],
+        "mission_gate": [
+          "0",
+          "65",
+          "0",
+          "0",
+          "0",
+          "1",
+          "0",
+          "0"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ],
+        "raw_sp": [
+          "135584.03125",
+          "2000",
+          "-800",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_technology": [
+          "sunArcher",
+          "sunAviary",
+          "rainBattery",
+          "sunBlocker",
+          "sunCannon",
+          "sunWalker"
+        ],
+        "raw_brains": [
+          "0",
+          "0",
+          "536870912",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "fort_names": [
+          "SaveTheIsland",
+          "",
+          "2",
+          "fortSpec"
+        ],
+        "raw_uber": [
+          "232",
+          "1",
+          "3",
+          "85",
+          "0",
+          "1024",
+          "768"
+        ],
+        "raw_hud_owners": [
+          "1",
+          "1",
+          "220",
+          "236",
+          "219"
+        ]
+      },
+      "returnCode": 0,
+      "seconds": 42.63306200000079,
+      "count": 59,
+      "firstFrame": 20,
+      "lastFrame": 479,
+      "firstGameTime": 2.873,
+      "lastGameTime": 40.345,
+      "activeGameTimeDelta": 37.472,
+      "directory": "extracted/cpp-solo-current-561-20261029/normal/SaveTheIsland",
+      "captureSha256": "7637c55768044417886be8cfb204e8b8ced1ef29c8d7e9b8b2e5b400a8f0b2c7",
+      "pid": 1900,
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-ui-integration-549-20261029\\data",
+        "--no-audio",
+        "--frames",
+        "480",
+        "--set",
+        "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;startInFullScreen=1;sleepPerLoop=1",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-current-561-20261029\\normal\\SaveTheIsland\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-current-561-20261029\\normal\\SaveTheIsland\\states.tsv",
+        "--mission",
+        "SaveTheIsland"
+      ],
+      "binarySha256": "e779165698483c4cae6d3bf0a3e7e02410b3dfed86e30a9a7c60d3e28f94ade2"
+    },
+    {
+      "mission": "FragileFortune",
+      "demo": false,
+      "passed": true,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true
+      },
+      "final": {
+        "phase": [
+          "4"
+        ],
+        "page": [
+          "mission"
+        ],
+        "paused": [
+          "0"
+        ],
+        "mission": [
+          "FragileFortune",
+          "Tutorial",
+          "557"
+        ],
+        "mission_start": [
+          "1",
+          "4",
+          "0",
+          "0.358",
+          "0"
+        ],
+        "mission_gate": [
+          "0",
+          "65",
+          "0",
+          "0",
+          "0",
+          "1",
+          "0",
+          "0"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ],
+        "raw_sp": [
+          "1.40129846432e-45",
+          "2000",
+          "200",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_technology": [
+          "rainBattery",
+          "sunBlocker",
+          "sunBalloon",
+          "sunCannon",
+          "sunWalker"
+        ],
+        "raw_brains": [
+          "0",
+          "0",
+          "536870912",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "fort_names": [
+          "FragileFortune",
+          "",
+          "2",
+          "fortSpec"
+        ],
+        "raw_uber": [
+          "232",
+          "1",
+          "3",
+          "85",
+          "0",
+          "1024",
+          "768"
+        ],
+        "raw_hud_owners": [
+          "1",
+          "1",
+          "220",
+          "236",
+          "219"
+        ]
+      },
+      "returnCode": 0,
+      "seconds": 42.82221120000031,
+      "count": 59,
+      "firstFrame": 20,
+      "lastFrame": 479,
+      "firstGameTime": 3.39,
+      "lastGameTime": 41.088,
+      "activeGameTimeDelta": 37.698,
+      "directory": "extracted/cpp-solo-current-561-20261029/normal/FragileFortune",
+      "captureSha256": "bc89af45656d8a4bf6b5882a1d4a7f664da5f4d149840e71070edf47100177a5",
+      "pid": 6304,
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-ui-integration-549-20261029\\data",
+        "--no-audio",
+        "--frames",
+        "480",
+        "--set",
+        "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;startInFullScreen=1;sleepPerLoop=1",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-current-561-20261029\\normal\\FragileFortune\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-current-561-20261029\\normal\\FragileFortune\\states.tsv",
+        "--mission",
+        "FragileFortune"
+      ],
+      "binarySha256": "e779165698483c4cae6d3bf0a3e7e02410b3dfed86e30a9a7c60d3e28f94ade2"
+    },
+    {
+      "mission": "ThunderingPower",
+      "demo": false,
+      "passed": true,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true
+      },
+      "final": {
+        "phase": [
+          "4"
+        ],
+        "page": [
+          "mission"
+        ],
+        "paused": [
+          "0"
+        ],
+        "mission": [
+          "ThunderingPower",
+          "Tutorial",
+          "205"
+        ],
+        "mission_start": [
+          "1",
+          "4",
+          "0",
+          "0.378",
+          "0"
+        ],
+        "mission_gate": [
+          "0",
+          "65",
+          "0",
+          "0",
+          "0",
+          "1",
+          "0",
+          "120"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ],
+        "raw_sp": [
+          "0",
+          "2400",
+          "2200",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_technology": [
+          "thunderBattery",
+          "thunderCannon",
+          "bulf",
+          "thunderArcher"
+        ],
+        "raw_brains": [
+          "0",
+          "0",
+          "536870912",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "fort_names": [
+          "ThunderingPower",
+          "",
+          "2",
+          "fortSpec"
+        ],
+        "raw_uber": [
+          "232",
+          "1",
+          "3",
+          "85",
+          "0",
+          "1024",
+          "768"
+        ],
+        "raw_hud_owners": [
+          "1",
+          "1",
+          "220",
+          "236",
+          "219"
+        ]
+      },
+      "returnCode": 0,
+      "seconds": 40.93000190000021,
+      "count": 57,
+      "firstFrame": 28,
+      "lastFrame": 479,
+      "firstGameTime": 1.493,
+      "lastGameTime": 37.415,
+      "activeGameTimeDelta": 35.922,
+      "directory": "extracted/cpp-solo-current-561-20261029/retry/ThunderingPower",
+      "captureSha256": "b7742b68cf8b6eac22ab3e31bf994efae2b76da92ff62ab6d47d7994a2db9b64",
+      "pid": 3744,
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-ui-integration-549-20261029\\data",
+        "--no-audio",
+        "--frames",
+        "480",
+        "--set",
+        "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;startInFullScreen=1;sleepPerLoop=1",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-current-561-20261029\\retry\\ThunderingPower\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-current-561-20261029\\retry\\ThunderingPower\\states.tsv",
+        "--mission",
+        "ThunderingPower"
+      ],
+      "binarySha256": "e779165698483c4cae6d3bf0a3e7e02410b3dfed86e30a9a7c60d3e28f94ade2"
+    },
+    {
+      "mission": "DissolvedAlliance",
+      "demo": false,
+      "passed": true,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true
+      },
+      "final": {
+        "phase": [
+          "4"
+        ],
+        "page": [
+          "mission"
+        ],
+        "paused": [
+          "0"
+        ],
+        "mission": [
+          "DissolvedAlliance",
+          "Tutorial",
+          "432"
+        ],
+        "mission_start": [
+          "1",
+          "4",
+          "0",
+          "0.336",
+          "360.336"
+        ],
+        "mission_gate": [
+          "0",
+          "65",
+          "0",
+          "0",
+          "0",
+          "1",
+          "0",
+          "0"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ],
+        "raw_sp": [
+          "3.85185988877e-34",
+          "4000",
+          "6000",
+          "3700",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_technology": [
+          "sunAviary",
+          "windBattery",
+          "sunBlocker",
+          "sunCannon",
+          "sunWalker",
+          "windWalker",
+          "windAviary",
+          "windArcher",
+          "windBalloon",
+          "windBlocker"
+        ],
+        "raw_brains": [
+          "0",
+          "0",
+          "536870912",
+          "536892288",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "fort_names": [
+          "DissolvedAlliance",
+          "",
+          "2",
+          "fortSpec"
+        ],
+        "raw_uber": [
+          "232",
+          "1",
+          "3",
+          "85",
+          "0",
+          "1024",
+          "768"
+        ],
+        "raw_hud_owners": [
+          "1",
+          "1",
+          "220",
+          "236",
+          "219"
+        ]
+      },
+      "returnCode": 0,
+      "seconds": 52.606730999999854,
+      "count": 59,
+      "firstFrame": 20,
+      "lastFrame": 479,
+      "firstGameTime": 3.503,
+      "lastGameTime": 49.68,
+      "activeGameTimeDelta": 46.177,
+      "directory": "extracted/cpp-solo-current-561-20261029/normal/DissolvedAlliance",
+      "captureSha256": "4692b64e4f7e4d7b8ec56294722a3a31f0d3ec1e1c27f901614e0803141b6c07",
+      "pid": 13416,
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-ui-integration-549-20261029\\data",
+        "--no-audio",
+        "--frames",
+        "480",
+        "--set",
+        "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;startInFullScreen=1;sleepPerLoop=1",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-current-561-20261029\\normal\\DissolvedAlliance\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-current-561-20261029\\normal\\DissolvedAlliance\\states.tsv",
+        "--mission",
+        "DissolvedAlliance"
+      ],
+      "binarySha256": "e779165698483c4cae6d3bf0a3e7e02410b3dfed86e30a9a7c60d3e28f94ade2"
+    },
+    {
+      "mission": "TheNoose",
+      "demo": false,
+      "passed": true,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true
+      },
+      "final": {
+        "phase": [
+          "4"
+        ],
+        "page": [
+          "mission"
+        ],
+        "paused": [
+          "0"
+        ],
+        "mission": [
+          "TheNoose",
+          "Tutorial",
+          "840"
+        ],
+        "mission_start": [
+          "1",
+          "4",
+          "0",
+          "0.335",
+          "0"
+        ],
+        "mission_gate": [
+          "0",
+          "65",
+          "0",
+          "0",
+          "0",
+          "1",
+          "0",
+          "0"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ],
+        "raw_sp": [
+          "2.80259692865e-44",
+          "10000",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_technology": [
+          "sunArcher",
+          "thunderBattery",
+          "sunBlocker",
+          "thunderBlocker",
+          "sunCannon",
+          "sunWalker",
+          "bulf",
+          "sunFence"
+        ],
+        "raw_brains": [
+          "0",
+          "0",
+          "536870912",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "fort_names": [
+          "TheNoose",
+          "",
+          "2",
+          "fortSpec"
+        ],
+        "raw_uber": [
+          "232",
+          "1",
+          "3",
+          "85",
+          "0",
+          "1024",
+          "768"
+        ],
+        "raw_hud_owners": [
+          "1",
+          "1",
+          "220",
+          "236",
+          "219"
+        ]
+      },
+      "returnCode": 0,
+      "seconds": 46.14675310000166,
+      "count": 58,
+      "firstFrame": 28,
+      "lastFrame": 479,
+      "firstGameTime": 4.974,
+      "lastGameTime": 43.692,
+      "activeGameTimeDelta": 38.718,
+      "directory": "extracted/cpp-solo-current-561-20261029/normal/TheNoose",
+      "captureSha256": "59520a66247513a66fb28b689b2874ce9de43660373c6f418e9c7449422605fc",
+      "pid": 3012,
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-ui-integration-549-20261029\\data",
+        "--no-audio",
+        "--frames",
+        "480",
+        "--set",
+        "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;startInFullScreen=1;sleepPerLoop=1",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-current-561-20261029\\normal\\TheNoose\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-current-561-20261029\\normal\\TheNoose\\states.tsv",
+        "--mission",
+        "TheNoose"
+      ],
+      "binarySha256": "e779165698483c4cae6d3bf0a3e7e02410b3dfed86e30a9a7c60d3e28f94ade2"
+    },
+    {
+      "mission": "RainVsRain",
+      "demo": false,
+      "passed": true,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true
+      },
+      "final": {
+        "phase": [
+          "4"
+        ],
+        "page": [
+          "mission"
+        ],
+        "paused": [
+          "0"
+        ],
+        "mission": [
+          "RainVsRain",
+          "Tutorial",
+          "147"
+        ],
+        "mission_start": [
+          "1",
+          "4",
+          "0",
+          "0.357",
+          "0"
+        ],
+        "mission_gate": [
+          "0",
+          "65",
+          "0",
+          "0",
+          "0",
+          "1",
+          "0",
+          "0"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ],
+        "raw_sp": [
+          "4.03573957726e-42",
+          "2000",
+          "4400",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_technology": [
+          "sunArcher",
+          "rainBattery",
+          "rainCannon",
+          "sunWalker",
+          "rainAviary",
+          "rainFence",
+          "rainBalloon",
+          "rainBlocker",
+          "rainWalker"
+        ],
+        "raw_brains": [
+          "0",
+          "0",
+          "536870912",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "fort_names": [
+          "RainVsRain",
+          "",
+          "2",
+          "fortSpec"
+        ],
+        "raw_uber": [
+          "232",
+          "1",
+          "3",
+          "85",
+          "0",
+          "1024",
+          "768"
+        ],
+        "raw_hud_owners": [
+          "1",
+          "1",
+          "220",
+          "236",
+          "219"
+        ]
+      },
+      "returnCode": 0,
+      "seconds": 33.199653500007116,
+      "count": 59,
+      "firstFrame": 20,
+      "lastFrame": 479,
+      "firstGameTime": 1.025,
+      "lastGameTime": 31.625,
+      "activeGameTimeDelta": 30.6,
+      "directory": "extracted/cpp-solo-current-561-20261029/normal/RainVsRain",
+      "captureSha256": "15072a69b73f2b87d5c09f8df26fe6c0006737c873210e086b207d1d82560d7f",
+      "pid": 1596,
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-ui-integration-549-20261029\\data",
+        "--no-audio",
+        "--frames",
+        "480",
+        "--set",
+        "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;startInFullScreen=1;sleepPerLoop=1",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-current-561-20261029\\normal\\RainVsRain\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-current-561-20261029\\normal\\RainVsRain\\states.tsv",
+        "--mission",
+        "RainVsRain"
+      ],
+      "binarySha256": "e779165698483c4cae6d3bf0a3e7e02410b3dfed86e30a9a7c60d3e28f94ade2"
+    },
+    {
+      "mission": "RunForIt",
+      "demo": false,
+      "passed": true,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true
+      },
+      "final": {
+        "phase": [
+          "4"
+        ],
+        "page": [
+          "mission"
+        ],
+        "paused": [
+          "0"
+        ],
+        "mission": [
+          "RunForIt",
+          "Tutorial",
+          "211"
+        ],
+        "mission_start": [
+          "1",
+          "4",
+          "0",
+          "0.355",
+          "0"
+        ],
+        "mission_gate": [
+          "0",
+          "65",
+          "0",
+          "0",
+          "0",
+          "1",
+          "0",
+          "0"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ],
+        "raw_sp": [
+          "1.14794370197e-41",
+          "350",
+          "300",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_technology": [
+          "windBattery",
+          "sunBlocker",
+          "sunCannon",
+          "windWalker",
+          "windAviary",
+          "windBlocker"
+        ],
+        "raw_brains": [
+          "0",
+          "0",
+          "536870912",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "fort_names": [
+          "RunForIt",
+          "",
+          "2",
+          "fortSpec"
+        ],
+        "raw_uber": [
+          "232",
+          "1",
+          "3",
+          "85",
+          "0",
+          "1024",
+          "768"
+        ],
+        "raw_hud_owners": [
+          "1",
+          "1",
+          "220",
+          "236",
+          "219"
+        ]
+      },
+      "returnCode": 0,
+      "seconds": 34.9211112999983,
+      "count": 58,
+      "firstFrame": 28,
+      "lastFrame": 479,
+      "firstGameTime": 1.417,
+      "lastGameTime": 32.213,
+      "activeGameTimeDelta": 30.796,
+      "directory": "extracted/cpp-solo-current-561-20261029/normal/RunForIt",
+      "captureSha256": "f7cb49ac86821898c524d5b746a2a13f9d725dcfb4c1dd45f03ecbffa3b20648",
+      "pid": 9272,
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-ui-integration-549-20261029\\data",
+        "--no-audio",
+        "--frames",
+        "480",
+        "--set",
+        "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;startInFullScreen=1;sleepPerLoop=1",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-current-561-20261029\\normal\\RunForIt\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-current-561-20261029\\normal\\RunForIt\\states.tsv",
+        "--mission",
+        "RunForIt"
+      ],
+      "binarySha256": "e779165698483c4cae6d3bf0a3e7e02410b3dfed86e30a9a7c60d3e28f94ade2"
+    },
+    {
+      "mission": "GuardMyBack",
+      "demo": false,
+      "passed": true,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true
+      },
+      "final": {
+        "phase": [
+          "4"
+        ],
+        "page": [
+          "mission"
+        ],
+        "paused": [
+          "0"
+        ],
+        "mission": [
+          "GuardMyBack",
+          "Tutorial",
+          "422"
+        ],
+        "mission_start": [
+          "1",
+          "4",
+          "0",
+          "0.362",
+          "360.362"
+        ],
+        "mission_gate": [
+          "0",
+          "65",
+          "0",
+          "0",
+          "0",
+          "1",
+          "0",
+          "0"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ],
+        "raw_sp": [
+          "5.6051938573e-45",
+          "1200",
+          "8000",
+          "6400",
+          "4000",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_technology": [
+          "sunArcher",
+          "sunAviary",
+          "windBattery",
+          "sunBlocker",
+          "sunBalloon",
+          "sunCannon",
+          "sunWalker"
+        ],
+        "raw_brains": [
+          "0",
+          "0",
+          "536870912",
+          "536892288",
+          "536913664",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "fort_names": [
+          "GuardMyBack",
+          "",
+          "2",
+          "fortSpec"
+        ],
+        "raw_uber": [
+          "232",
+          "1",
+          "3",
+          "85",
+          "0",
+          "1024",
+          "768"
+        ],
+        "raw_hud_owners": [
+          "1",
+          "1",
+          "220",
+          "236",
+          "219"
+        ]
+      },
+      "returnCode": 0,
+      "seconds": 50.97633599999972,
+      "count": 59,
+      "firstFrame": 20,
+      "lastFrame": 479,
+      "firstGameTime": 3.092,
+      "lastGameTime": 48.977,
+      "activeGameTimeDelta": 45.885,
+      "directory": "extracted/cpp-solo-current-561-20261029/normal/GuardMyBack",
+      "captureSha256": "449c81adc7e2f66a69baa1bd5265eaf3cfb15c8a7968418d44bc5d167c079809",
+      "pid": 4276,
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-ui-integration-549-20261029\\data",
+        "--no-audio",
+        "--frames",
+        "480",
+        "--set",
+        "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;startInFullScreen=1;sleepPerLoop=1",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-current-561-20261029\\normal\\GuardMyBack\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-current-561-20261029\\normal\\GuardMyBack\\states.tsv",
+        "--mission",
+        "GuardMyBack"
+      ],
+      "binarySha256": "e779165698483c4cae6d3bf0a3e7e02410b3dfed86e30a9a7c60d3e28f94ade2"
+    },
+    {
+      "mission": "Surrounded",
+      "demo": false,
+      "passed": true,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true
+      },
+      "final": {
+        "phase": [
+          "4"
+        ],
+        "page": [
+          "mission"
+        ],
+        "paused": [
+          "0"
+        ],
+        "mission": [
+          "Surrounded",
+          "Tutorial",
+          "409"
+        ],
+        "mission_start": [
+          "1",
+          "4",
+          "0",
+          "0.342",
+          "0"
+        ],
+        "mission_gate": [
+          "0",
+          "65",
+          "0",
+          "0",
+          "0",
+          "1",
+          "0",
+          "0"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ],
+        "raw_sp": [
+          "4.95050721477e-41",
+          "5000",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_technology": [
+          "sunArcher",
+          "sunAviary",
+          "windBattery",
+          "rainBattery",
+          "thunderBattery",
+          "sunBlocker",
+          "sunBalloon",
+          "sunCannon",
+          "sunWalker",
+          "sunFence"
+        ],
+        "raw_brains": [
+          "0",
+          "0",
+          "536870912",
+          "536892288",
+          "536913664",
+          "536935040",
+          "0",
+          "0",
+          "0"
+        ],
+        "fort_names": [
+          "Surrounded",
+          "",
+          "2",
+          "fortSpec"
+        ],
+        "raw_uber": [
+          "232",
+          "1",
+          "3",
+          "85",
+          "0",
+          "1024",
+          "768"
+        ],
+        "raw_hud_owners": [
+          "1",
+          "1",
+          "220",
+          "236",
+          "219"
+        ]
+      },
+      "returnCode": 0,
+      "seconds": 78.37922129999788,
+      "count": 59,
+      "firstFrame": 20,
+      "lastFrame": 479,
+      "firstGameTime": 5.507,
+      "lastGameTime": 75.674,
+      "activeGameTimeDelta": 70.167,
+      "directory": "extracted/cpp-solo-current-561-20261029/retry/Surrounded",
+      "captureSha256": "6ae127c16f2ddd579a1d1d7b973c8e481c4c1f4d425e34924a1d0e63896b11eb",
+      "pid": 17932,
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-ui-integration-549-20261029\\data",
+        "--no-audio",
+        "--frames",
+        "480",
+        "--set",
+        "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;startInFullScreen=1;sleepPerLoop=1",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-current-561-20261029\\retry\\Surrounded\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-current-561-20261029\\retry\\Surrounded\\states.tsv",
+        "--mission",
+        "Surrounded"
+      ],
+      "binarySha256": "e779165698483c4cae6d3bf0a3e7e02410b3dfed86e30a9a7c60d3e28f94ade2"
+    },
+    {
+      "mission": "BreakingThrough",
+      "demo": false,
+      "passed": true,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true
+      },
+      "final": {
+        "phase": [
+          "4"
+        ],
+        "page": [
+          "mission"
+        ],
+        "paused": [
+          "0"
+        ],
+        "mission": [
+          "BreakingThrough",
+          "Tutorial",
+          "449"
+        ],
+        "mission_start": [
+          "1",
+          "4",
+          "0",
+          "0.384",
+          "0"
+        ],
+        "mission_gate": [
+          "0",
+          "65",
+          "0",
+          "0",
+          "0",
+          "1",
+          "0",
+          "0"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ],
+        "raw_sp": [
+          "16392.2578125",
+          "0",
+          "4800",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_technology": [
+          "sunArcher",
+          "sunAviary",
+          "rainBattery",
+          "sunBlocker",
+          "rainCannon",
+          "sunWalker",
+          "rainBlocker",
+          "rainWalker"
+        ],
+        "raw_brains": [
+          "0",
+          "0",
+          "536870912",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "fort_names": [
+          "BreakingThrough",
+          "",
+          "2",
+          "fortSpec"
+        ],
+        "raw_uber": [
+          "232",
+          "1",
+          "3",
+          "85",
+          "0",
+          "1024",
+          "768"
+        ],
+        "raw_hud_owners": [
+          "1",
+          "1",
+          "220",
+          "236",
+          "219"
+        ]
+      },
+      "returnCode": 0,
+      "seconds": 47.37670359999902,
+      "count": 58,
+      "firstFrame": 28,
+      "lastFrame": 479,
+      "firstGameTime": 3.687,
+      "lastGameTime": 44.828,
+      "activeGameTimeDelta": 41.141,
+      "directory": "extracted/cpp-solo-current-561-20261029/normal/BreakingThrough",
+      "captureSha256": "53021320ee7fe4fa99c19dbbb7439106c5cdc11d83c11a8284ad9e0e17c4d50a",
+      "pid": 5632,
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-ui-integration-549-20261029\\data",
+        "--no-audio",
+        "--frames",
+        "480",
+        "--set",
+        "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;startInFullScreen=1;sleepPerLoop=1",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-current-561-20261029\\normal\\BreakingThrough\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-current-561-20261029\\normal\\BreakingThrough\\states.tsv",
+        "--mission",
+        "BreakingThrough"
+      ],
+      "binarySha256": "e779165698483c4cae6d3bf0a3e7e02410b3dfed86e30a9a7c60d3e28f94ade2"
+    },
+    {
+      "mission": "ToTheRescue",
+      "demo": false,
+      "passed": true,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true
+      },
+      "final": {
+        "phase": [
+          "4"
+        ],
+        "page": [
+          "mission"
+        ],
+        "paused": [
+          "0"
+        ],
+        "mission": [
+          "ToTheRescue",
+          "Tutorial",
+          "680"
+        ],
+        "mission_start": [
+          "1",
+          "4",
+          "0",
+          "0.352",
+          "0"
+        ],
+        "mission_gate": [
+          "0",
+          "65",
+          "0",
+          "0",
+          "0",
+          "1",
+          "0",
+          "120"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ],
+        "raw_sp": [
+          "2.24207754292e-44",
+          "4600",
+          "0",
+          "900",
+          "400",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_technology": [
+          "sunArcher",
+          "rainBattery",
+          "rainCannon",
+          "sunWalker",
+          "sunFence",
+          "rainWalker"
+        ],
+        "raw_brains": [
+          "0",
+          "0",
+          "536870912",
+          "536892288",
+          "536913664",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "fort_names": [
+          "ToTheRescue",
+          "",
+          "2",
+          "fortSpec"
+        ],
+        "raw_uber": [
+          "232",
+          "1",
+          "3",
+          "85",
+          "0",
+          "1024",
+          "768"
+        ],
+        "raw_hud_owners": [
+          "1",
+          "1",
+          "220",
+          "236",
+          "219"
+        ]
+      },
+      "returnCode": 0,
+      "seconds": 58.93735480000032,
+      "count": 58,
+      "firstFrame": 28,
+      "lastFrame": 479,
+      "firstGameTime": 6.199,
+      "lastGameTime": 56.031,
+      "activeGameTimeDelta": 49.832,
+      "directory": "extracted/cpp-solo-current-561-20261029/normal/ToTheRescue",
+      "captureSha256": "ebb7bb50ebc70db3780a1869409baa8a4b23bd1d8df509df20f108817e1f3a1d",
+      "pid": 16556,
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-ui-integration-549-20261029\\data",
+        "--no-audio",
+        "--frames",
+        "480",
+        "--set",
+        "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;startInFullScreen=1;sleepPerLoop=1",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-current-561-20261029\\normal\\ToTheRescue\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-current-561-20261029\\normal\\ToTheRescue\\states.tsv",
+        "--mission",
+        "ToTheRescue"
+      ],
+      "binarySha256": "e779165698483c4cae6d3bf0a3e7e02410b3dfed86e30a9a7c60d3e28f94ade2"
+    },
+    {
+      "mission": "Vicious",
+      "demo": false,
+      "passed": true,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true
+      },
+      "final": {
+        "phase": [
+          "4"
+        ],
+        "page": [
+          "mission"
+        ],
+        "paused": [
+          "0"
+        ],
+        "mission": [
+          "Vicious",
+          "Tutorial",
+          "242"
+        ],
+        "mission_start": [
+          "1",
+          "4",
+          "0",
+          "0.353",
+          "0"
+        ],
+        "mission_gate": [
+          "0",
+          "65",
+          "0",
+          "0",
+          "0",
+          "1",
+          "0",
+          "0"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ],
+        "raw_sp": [
+          "0",
+          "7000",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_technology": [
+          "rainBattery",
+          "thunderBattery",
+          "thunderBlocker",
+          "sunCannon",
+          "sunWalker",
+          "sunFence",
+          "rainFence",
+          "thunderArcher",
+          "thunderFence"
+        ],
+        "raw_brains": [
+          "0",
+          "0",
+          "536870912",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "fort_names": [
+          "Vicious",
+          "",
+          "2",
+          "fortSpec"
+        ],
+        "raw_uber": [
+          "232",
+          "1",
+          "3",
+          "85",
+          "0",
+          "1024",
+          "768"
+        ],
+        "raw_hud_owners": [
+          "1",
+          "1",
+          "220",
+          "236",
+          "219"
+        ]
+      },
+      "returnCode": 0,
+      "seconds": 33.59473810000054,
+      "count": 58,
+      "firstFrame": 28,
+      "lastFrame": 479,
+      "firstGameTime": 1.521,
+      "lastGameTime": 31.547,
+      "activeGameTimeDelta": 30.026,
+      "directory": "extracted/cpp-solo-current-561-20261029/normal/Vicious",
+      "captureSha256": "87179d80323c30540e82c6c22c61255386ff84d5e5fabf4adaacf4cc5e0510ba",
+      "pid": 13060,
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-ui-integration-549-20261029\\data",
+        "--no-audio",
+        "--frames",
+        "480",
+        "--set",
+        "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;startInFullScreen=1;sleepPerLoop=1",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-current-561-20261029\\normal\\Vicious\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-current-561-20261029\\normal\\Vicious\\states.tsv",
+        "--mission",
+        "Vicious"
+      ],
+      "binarySha256": "e779165698483c4cae6d3bf0a3e7e02410b3dfed86e30a9a7c60d3e28f94ade2"
+    },
+    {
+      "mission": "EnemyTerritory",
+      "demo": false,
+      "passed": true,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true
+      },
+      "final": {
+        "phase": [
+          "4"
+        ],
+        "page": [
+          "mission"
+        ],
+        "paused": [
+          "0"
+        ],
+        "mission": [
+          "EnemyTerritory",
+          "Tutorial",
+          "575"
+        ],
+        "mission_start": [
+          "1",
+          "4",
+          "0",
+          "0.34",
+          "0"
+        ],
+        "mission_gate": [
+          "0",
+          "65",
+          "0",
+          "0",
+          "0",
+          "1",
+          "0",
+          "0"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ],
+        "raw_sp": [
+          "8.60957776481e-42",
+          "10000",
+          "0",
+          "1600",
+          "1600",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_technology": [
+          "sunAviary",
+          "windBattery",
+          "sunBlocker",
+          "sunCannon",
+          "sunWalker",
+          "windWalker",
+          "windArcher"
+        ],
+        "raw_brains": [
+          "0",
+          "0",
+          "536870912",
+          "536892288",
+          "536913664",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "fort_names": [
+          "EnemyTerritory",
+          "",
+          "2",
+          "fortSpec"
+        ],
+        "raw_uber": [
+          "232",
+          "1",
+          "3",
+          "85",
+          "0",
+          "1024",
+          "768"
+        ],
+        "raw_hud_owners": [
+          "1",
+          "1",
+          "220",
+          "236",
+          "219"
+        ]
+      },
+      "returnCode": 0,
+      "seconds": 81.76774510000541,
+      "count": 59,
+      "firstFrame": 20,
+      "lastFrame": 479,
+      "firstGameTime": 8.295,
+      "lastGameTime": 79.225,
+      "activeGameTimeDelta": 70.93,
+      "directory": "extracted/cpp-solo-current-561-20261029/retry/EnemyTerritory",
+      "captureSha256": "161cadf6918f1ed112891a9f4b5cd031158b808ecb9e1260406ed80c14aa6d86",
+      "pid": 18336,
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-ui-integration-549-20261029\\data",
+        "--no-audio",
+        "--frames",
+        "480",
+        "--set",
+        "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;startInFullScreen=1;sleepPerLoop=1",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-current-561-20261029\\retry\\EnemyTerritory\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-current-561-20261029\\retry\\EnemyTerritory\\states.tsv",
+        "--mission",
+        "EnemyTerritory"
+      ],
+      "binarySha256": "e779165698483c4cae6d3bf0a3e7e02410b3dfed86e30a9a7c60d3e28f94ade2"
+    },
+    {
+      "mission": "FinalConfrontation",
+      "demo": false,
+      "passed": true,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true
+      },
+      "final": {
+        "phase": [
+          "4"
+        ],
+        "page": [
+          "mission"
+        ],
+        "paused": [
+          "0"
+        ],
+        "mission": [
+          "FinalConfrontation",
+          "Tutorial",
+          "815"
+        ],
+        "mission_start": [
+          "1",
+          "4",
+          "0",
+          "0.363",
+          "0"
+        ],
+        "mission_gate": [
+          "0",
+          "65",
+          "0",
+          "0",
+          "0",
+          "1",
+          "0",
+          "0"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ],
+        "raw_sp": [
+          "-3.68934925455e+19",
+          "1200",
+          "300",
+          "300",
+          "200",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_technology": [
+          "sunArcher",
+          "sunAviary",
+          "windBattery",
+          "rainBattery",
+          "thunderBattery",
+          "sunBlocker",
+          "thunderBlocker",
+          "sunBalloon",
+          "sunCannon",
+          "rainCannon",
+          "thunderCannon",
+          "sunWalker",
+          "bulf",
+          "sunFence",
+          "windWalker",
+          "windAviary",
+          "windArcher",
+          "windBalloon",
+          "windBlocker",
+          "rainAviary",
+          "rainFence",
+          "rainBalloon",
+          "rainBlocker",
+          "thunderArcher",
+          "thunderFence",
+          "rainWalker",
+          "priest"
+        ],
+        "raw_brains": [
+          "0",
+          "0",
+          "536870912",
+          "536892288",
+          "536913664",
+          "536935040",
+          "0",
+          "0",
+          "0"
+        ],
+        "fort_names": [
+          "FinalConfrontation",
+          "",
+          "2",
+          "fortSpec"
+        ],
+        "raw_uber": [
+          "232",
+          "1",
+          "3",
+          "85",
+          "0",
+          "1024",
+          "768"
+        ],
+        "raw_hud_owners": [
+          "1",
+          "1",
+          "220",
+          "236",
+          "219"
+        ]
+      },
+      "returnCode": 0,
+      "seconds": 74.09486709999328,
+      "count": 59,
+      "firstFrame": 20,
+      "lastFrame": 479,
+      "firstGameTime": 8.778,
+      "lastGameTime": 71.382,
+      "activeGameTimeDelta": 62.604,
+      "directory": "extracted/cpp-solo-current-561-20261029/retry/FinalConfrontation",
+      "captureSha256": "b1e4c0c07e7b8d158e5c0721789003d34f6adfd851a923b751a914a1f986025e",
+      "pid": 13220,
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-ui-integration-549-20261029\\data",
+        "--no-audio",
+        "--frames",
+        "480",
+        "--set",
+        "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;startInFullScreen=1;sleepPerLoop=1",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-current-561-20261029\\retry\\FinalConfrontation\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-current-561-20261029\\retry\\FinalConfrontation\\states.tsv",
+        "--mission",
+        "FinalConfrontation"
+      ],
+      "binarySha256": "e779165698483c4cae6d3bf0a3e7e02410b3dfed86e30a9a7c60d3e28f94ade2"
+    },
+    {
+      "mission": "DemoStormRages",
+      "demo": true,
+      "passed": true,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true,
+        "demo": true,
+        "localAI": true
+      },
+      "final": {
+        "phase": [
+          "4"
+        ],
+        "page": [
+          "mission"
+        ],
+        "paused": [
+          "0"
+        ],
+        "mission": [
+          "DemoStormRages",
+          "Tutorial",
+          "72"
+        ],
+        "mission_start": [
+          "1",
+          "4",
+          "1",
+          "1.144",
+          "361.144"
+        ],
+        "mission_gate": [
+          "0",
+          "65",
+          "0",
+          "0",
+          "0",
+          "1",
+          "0",
+          "0"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ],
+        "raw_sp": [
+          "0",
+          "56000",
+          "29000",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_technology": [
+          "thunderBattery",
+          "thunderCannon",
+          "bulf",
+          "thunderArcher"
+        ],
+        "raw_brains": [
+          "0",
+          "536870912",
+          "536892288",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "fort_names": [
+          "DemoStormRages",
+          "",
+          "2",
+          "fortSpec"
+        ],
+        "raw_uber": [
+          "260",
+          "1",
+          "3",
+          "85",
+          "0",
+          "1024",
+          "768"
+        ],
+        "raw_hud_owners": [
+          "1",
+          "1",
+          "247",
+          "264",
+          "246"
+        ]
+      },
+      "returnCode": 0,
+      "seconds": 41.761806200003775,
+      "count": 40,
+      "firstFrame": 292,
+      "lastFrame": 601,
+      "firstGameTime": 1.507,
+      "lastGameTime": 24.618,
+      "activeGameTimeDelta": 23.111,
+      "directory": "extracted/cpp-solo-current-561-20261029/demos/DemoStormRages",
+      "captureSha256": "21e63aaf62baa636e9bf455755fca2cdbf3599cb5a3a212762351e72f396cf06",
+      "pid": 17548,
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-ui-integration-549-20261029\\data",
+        "--no-audio",
+        "--frames",
+        "602",
+        "--set",
+        "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;startInFullScreen=1;sleepPerLoop=30",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-current-561-20261029\\demos\\DemoStormRages\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-current-561-20261029\\demos\\DemoStormRages\\states.tsv"
+      ],
+      "binarySha256": "e779165698483c4cae6d3bf0a3e7e02410b3dfed86e30a9a7c60d3e28f94ade2"
+    },
+    {
+      "mission": "GuardMyBack",
+      "demo": true,
+      "passed": true,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true,
+        "demo": true,
+        "localAI": true
+      },
+      "final": {
+        "phase": [
+          "4"
+        ],
+        "page": [
+          "mission"
+        ],
+        "paused": [
+          "0"
+        ],
+        "mission": [
+          "GuardMyBack",
+          "Tutorial",
+          "422"
+        ],
+        "mission_start": [
+          "1",
+          "4",
+          "1",
+          "1.166",
+          "361.166"
+        ],
+        "mission_gate": [
+          "0",
+          "65",
+          "0",
+          "0",
+          "0",
+          "1",
+          "0",
+          "0"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ],
+        "raw_sp": [
+          "0",
+          "11400",
+          "8000",
+          "8000",
+          "4000",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_technology": [
+          "sunArcher",
+          "sunAviary",
+          "windBattery",
+          "sunBlocker",
+          "sunBalloon",
+          "sunCannon",
+          "sunWalker"
+        ],
+        "raw_brains": [
+          "0",
+          "536870912",
+          "536892288",
+          "536913664",
+          "536935040",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "fort_names": [
+          "GuardMyBack",
+          "",
+          "2",
+          "fortSpec"
+        ],
+        "raw_uber": [
+          "260",
+          "1",
+          "3",
+          "85",
+          "0",
+          "1024",
+          "768"
+        ],
+        "raw_hud_owners": [
+          "1",
+          "1",
+          "247",
+          "264",
+          "246"
+        ]
+      },
+      "returnCode": 0,
+      "seconds": 45.673915500003204,
+      "count": 42,
+      "firstFrame": 276,
+      "lastFrame": 601,
+      "firstGameTime": 3.939,
+      "lastGameTime": 28.763,
+      "activeGameTimeDelta": 24.824,
+      "directory": "extracted/cpp-solo-current-561-20261029/demos/GuardMyBack",
+      "captureSha256": "deb3ab0507cf3fd569c72408ab5bc1ec939c46aa84bf59a727e133829ef8bf6b",
+      "pid": 1596,
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-ui-integration-549-20261029\\data",
+        "--no-audio",
+        "--frames",
+        "602",
+        "--set",
+        "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;startInFullScreen=1;sleepPerLoop=30",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-current-561-20261029\\demos\\GuardMyBack\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-current-561-20261029\\demos\\GuardMyBack\\states.tsv"
+      ],
+      "binarySha256": "e779165698483c4cae6d3bf0a3e7e02410b3dfed86e30a9a7c60d3e28f94ade2"
+    },
+    {
+      "mission": "DissolvedAlliance",
+      "demo": true,
+      "passed": true,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true,
+        "demo": true,
+        "localAI": true
+      },
+      "final": {
+        "phase": [
+          "4"
+        ],
+        "page": [
+          "mission"
+        ],
+        "paused": [
+          "0"
+        ],
+        "mission": [
+          "DissolvedAlliance",
+          "Tutorial",
+          "432"
+        ],
+        "mission_start": [
+          "1",
+          "4",
+          "1",
+          "1.14",
+          "361.14"
+        ],
+        "mission_gate": [
+          "0",
+          "65",
+          "0",
+          "0",
+          "0",
+          "1",
+          "0",
+          "0"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ],
+        "raw_sp": [
+          "0",
+          "5200",
+          "6000",
+          "2100",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_technology": [
+          "sunAviary",
+          "windBattery",
+          "sunBlocker",
+          "sunCannon",
+          "sunWalker",
+          "windWalker",
+          "windAviary",
+          "windArcher",
+          "windBalloon",
+          "windBlocker"
+        ],
+        "raw_brains": [
+          "0",
+          "536870912",
+          "536892288",
+          "536913664",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "fort_names": [
+          "DissolvedAlliance",
+          "",
+          "2",
+          "fortSpec"
+        ],
+        "raw_uber": [
+          "260",
+          "1",
+          "3",
+          "85",
+          "0",
+          "1024",
+          "768"
+        ],
+        "raw_hud_owners": [
+          "1",
+          "1",
+          "247",
+          "264",
+          "246"
+        ]
+      },
+      "returnCode": 0,
+      "seconds": 44.66350419999799,
+      "count": 73,
+      "firstFrame": 28,
+      "lastFrame": 601,
+      "firstGameTime": 4.285,
+      "lastGameTime": 42.933,
+      "activeGameTimeDelta": 38.648,
+      "directory": "extracted/cpp-solo-current-561-20261029/demos/DissolvedAlliance",
+      "captureSha256": "6dd7e7e5176f7a9a22f5d4ceb8a0fd97d761dc6cbd0e2b5ed83821e8372c6caa",
+      "pid": 10980,
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-ui-integration-549-20261029\\data",
+        "--no-audio",
+        "--frames",
+        "602",
+        "--set",
+        "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;startInFullScreen=1;sleepPerLoop=30",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-current-561-20261029\\demos\\DissolvedAlliance\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-current-561-20261029\\demos\\DissolvedAlliance\\states.tsv"
+      ],
+      "binarySha256": "e779165698483c4cae6d3bf0a3e7e02410b3dfed86e30a9a7c60d3e28f94ade2"
+    }
+  ]
+}

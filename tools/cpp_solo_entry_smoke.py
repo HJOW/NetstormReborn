@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 """원본 메뉴의 Early6·캠페인16·Priest Training9와 Demo3의 실제 브리핑/플레이 진입을 검사한다."""
 import argparse
+import math
 import re
 from pathlib import Path
 
@@ -13,7 +14,7 @@ from cpp_smoke_files import preserve_game_settings
 from cpp_world_smoke import states
 from taff import TaffArchive
 
-BUTTONS = ('MORE', 'More', 'OK', 'Ok', 'ok', 'Play Mission', 'Lets do this!', ' Sun', 'Sun')  # 실제 안내 종료 라벨과 훈련 Fury의 명시 Sun 선택이다.
+BUTTONS = ('MORE', 'More', 'OK', 'Ok', 'ok', 'Play Mission', 'Lets do this!', ' Sun', 'Sun', 'Fight On')  # 실제 안내 종료·훈련 Fury의 Sun·ThunderingPower 원문 @20의 계속 버튼이다.
 GROUPS = {'early': (1,), 'training': (2,), 'campaign': (3, 4, 5), 'all': (1, 2, 3, 4, 5)}  # 보호 officalN의 실제 분류다.
 
 
@@ -26,7 +27,7 @@ def catalog(archive, scope):
     return result
 
 
-def run(directory, mission, demo_label=None, game_root=None, fullscreen=False, frame_limit=98, fps=60):
+def run(directory, mission, demo_label=None, game_root=None, fullscreen=False, frame_limit=98, fps=60, timeout=None):
     """현재 브리핑의 관측 조건을 만족하는 버튼 입력과 자연 프레임만 사용한다."""
     directory.mkdir(parents=True, exist_ok=False)
     game_root=game_root or ROOT/'originals' # 새 검사는 원본 사본을 지정할 수 있으며 기존 호출의 기본 경로는 유지한다.
@@ -53,7 +54,7 @@ def run(directory, mission, demo_label=None, game_root=None, fullscreen=False, f
         command.append('--window')
     if not demo_label:
         command.extend(('--mission', mission))
-    result = execute(command, directory, GAME, 180 if demo_label else 65)  # 실제15초 안내 뒤 렌더링을 포함한 데모 관측의 상한이다.
+    result = execute(command, directory, GAME, timeout if timeout is not None else (180 if demo_label else 65))  # 명시 상한은 대기만 바꾸며 프레임/시계/판정은 유지한다. 생략 시 기존 일반65초/데모180초다.
     record = dict(mission=mission, demo=bool(demo_label), result=result, passed=False)  # 원시 실행 결과는 판정 전에 보존한다.
     save(directory / 'result.json', record)
     observed = states(directory / 'states.tsv') if (directory / 'states.tsv').exists() else {}
@@ -84,7 +85,10 @@ def main():
     parser.add_argument('--fullscreen',action='store_true',help='현재 전체화면 호환 장치에서 실행한다')
     parser.add_argument('--frames',type=int,default=98,help='일반 미션의 짧은 관측 프레임 수')
     parser.add_argument('--fps',type=int,default=60,help='실제 프레임 상한. 데모는 기존 최소15초 안내를 유지한다')
+    parser.add_argument('--timeout',type=float,help='프로세스 종료 대기 상한(초). 생략 시 일반65초/데모180초이며 게임 시각이나 프레임을 바꾸지 않는다')
     args = parser.parse_args()
+    if args.timeout is not None and (not math.isfinite(args.timeout) or args.timeout <= 0):
+        parser.error('--timeout은 양수여야 합니다')
     output = args.output.resolve()  # 기존 결과를 덮어쓰지 않는 이번 검사 경로다.
     output.mkdir(parents=True, exist_ok=False)
     archive = TaffArchive(ROOT / 'originals/netstorm.tarc')  # 읽기 전용 원본 메뉴 입력이다.
@@ -102,7 +106,7 @@ def main():
         with preserve_game_settings(game_root, 'd', output / 'settings-backup'):
             for mission, label in names:  # 같은 옵션 파일을 사용하는 실제 창은 한 번에 하나만 실행한다.
                 try:
-                    record = run(output / mission, mission, label,game_root,args.fullscreen,args.frames,args.fps)
+                    record = run(output / mission, mission, label,game_root,args.fullscreen,args.frames,args.fps,args.timeout)
                 except Exception as error:
                     record = dict(mission=mission, passed=False, error=repr(error))
                 records.append(record)
