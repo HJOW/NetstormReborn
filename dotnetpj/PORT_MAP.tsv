@@ -91,6 +91,10 @@ cpppj/src/client/SpriteDraw.cpp	Netstorm.Client/Display/SpritePixelTarget.cs	8ca
 cpppj/src/client/SpriteDraw.h	Netstorm.Client/Display/SpriteDraw.cs	8ca081a26b4b6bce8dbf63f72a37733dc95e25d4	port
 cpppj/src/client/StoneButtonGump.cpp	Netstorm.Client/Gump/StoneButtonGump.cs	0a1a709127ad291d47289a9957e142feb04981a5	port
 cpppj/src/client/StoneButtonGump.h	Netstorm.Client/Gump/StoneButtonGump.cs	0a1a709127ad291d47289a9957e142feb04981a5	port
+cpppj/src/client/StyleText.cpp	Netstorm.Client/Gump/StyleText.cs	702917dcf7d94ef7af0fefe029fffa695d4f850f	port
+cpppj/src/client/StyleText.h	Netstorm.Client/Gump/StyleText.cs	702917dcf7d94ef7af0fefe029fffa695d4f850f	port
+cpppj/src/client/TextGump.cpp	Netstorm.Client/Gump/TextGump.cs	702917dcf7d94ef7af0fefe029fffa695d4f850f	port
+cpppj/src/client/TextGump.h	Netstorm.Client/Gump/TextGump.cs	702917dcf7d94ef7af0fefe029fffa695d4f850f	port
 cpppj/src/client/VFXDraw.cpp	Netstorm.Client/Display/VfxDraw.cs	cb56907c0aae1f0f02410dbda12860051a7f2e4d	L1
 cpppj/src/client/VFXDraw.h	Netstorm.Client/Display/VfxDraw.cs	cb56907c0aae1f0f02410dbda12860051a7f2e4d	L1
 cpppj/src/client/VFXLine.cpp	Netstorm.Client/Display/VfxLine.cs	cb56907c0aae1f0f02410dbda12860051a7f2e4d	port
