@@ -1,0 +1,972 @@
+{
+  "unit": 569,
+  "productUnit": 568,
+  "date": "2026-10-29",
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "decompileChanged": false,
+  "gameSha256": "d45745a61e448a77674eec4248ee566070592afd60da5627c4d1ad2e33b9206e",
+  "gameCppChanged": false,
+  "gameBuilt": false,
+  "cppTestsExecuted": false,
+  "registeredCppTestsLast568": 3435,
+  "acceptedNaturalFirstDemoCycles": 2,
+  "acceptedRuns": {
+    "GuardMyBack": {
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-demo-repeat-569-20261029\\data",
+        "--window",
+        "--no-audio",
+        "--frames",
+        "13500",
+        "--set",
+        "SCREENW=1024;SCREENH=768;maxFPS=15;sleepPerLoop=1;autoDemo=0;tellTips=0",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-demo-repeat-569-20261029\\guard-v2\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-demo-repeat-569-20261029\\guard-v2\\states.tsv"
+      ],
+      "gameSha256": "d45745a61e448a77674eec4248ee566070592afd60da5627c4d1ad2e33b9206e",
+      "passed": true,
+      "toolSha256": "221888ed6e8f6d6892cdd3d32a3f19c0272e3099995b7438a80d983fc444f611",
+      "returnCode": 0,
+      "timedOut": false,
+      "elapsedSeconds": 421.21803940000245,
+      "observations": 145,
+      "expiredObservations": [],
+      "restartDelaySeconds": 0.29300000000000637,
+      "reference": {
+        "mission": "GuardMyBack",
+        "seconds": 360,
+        "demoSection": true,
+        "englishSha256": "5296e6b52312585f3beca8341b37fe26aedad60b19fca5dc21f6b464d452163e"
+      },
+      "firstStart": [
+        "1.703",
+        "361.703",
+        "260"
+      ],
+      "repeatedStart": [
+        "361.996",
+        "721.996",
+        "3555"
+      ],
+      "guideObservations": [
+        11,
+        18
+      ],
+      "lastBeforeDeadline": {
+        "frame": 5205,
+        "label": "5205",
+        "phase": [
+          "4"
+        ],
+        "page": [
+          "mission"
+        ],
+        "paused": [
+          "0"
+        ],
+        "mouse_cursor": [
+          "1",
+          "1"
+        ],
+        "html_window_state": [
+          "0",
+          "0",
+          "0"
+        ],
+        "game_menu_bar": [
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_uber": [
+          "260",
+          "1",
+          "3",
+          "85",
+          "0",
+          "1024",
+          "768"
+        ],
+        "raw_menus": [
+          "0",
+          "0",
+          "0",
+          "13",
+          "13"
+        ],
+        "time": [
+          "360.792",
+          "376.046"
+        ],
+        "mission": [
+          "GuardMyBack",
+          "Tutorial",
+          "422"
+        ],
+        "mission_start": [
+          "1",
+          "4",
+          "1",
+          "1.703",
+          "361.703"
+        ],
+        "mission_gate": [
+          "0",
+          "65",
+          "0",
+          "0",
+          "0",
+          "1",
+          "0",
+          "0"
+        ],
+        "shared_kernel": [
+          "1",
+          "181",
+          "181"
+        ],
+        "shared_surface_storage": [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        "shared_gameplay_globals": [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ],
+        "raw_brains": [
+          "0",
+          "536870912",
+          "536892288",
+          "536913664",
+          "536935040",
+          "0",
+          "0",
+          "0",
+          "0"
+        ]
+      },
+      "firstRepeatedPlaying": {
+        "frame": 5490,
+        "label": "5490",
+        "phase": [
+          "4"
+        ],
+        "page": [
+          "mission"
+        ],
+        "paused": [
+          "0"
+        ],
+        "mouse_cursor": [
+          "1",
+          "1"
+        ],
+        "html_window_state": [
+          "0",
+          "0",
+          "0"
+        ],
+        "game_menu_bar": [
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_uber": [
+          "3555",
+          "1",
+          "3",
+          "85",
+          "0",
+          "1024",
+          "768"
+        ],
+        "raw_menus": [
+          "0",
+          "0",
+          "0",
+          "13",
+          "13"
+        ],
+        "time": [
+          "380.735",
+          "395.968"
+        ],
+        "mission": [
+          "GuardMyBack",
+          "Tutorial",
+          "422"
+        ],
+        "mission_start": [
+          "1",
+          "4",
+          "1",
+          "361.996",
+          "721.996"
+        ],
+        "mission_gate": [
+          "0",
+          "65",
+          "0",
+          "0",
+          "0",
+          "1",
+          "0",
+          "0"
+        ],
+        "shared_kernel": [
+          "1",
+          "77",
+          "77"
+        ],
+        "shared_surface_storage": [
+          "1",
+          "1",
+          "1",
+          "1",
+          "2",
+          "1"
+        ],
+        "shared_gameplay_globals": [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ],
+        "raw_brains": [
+          "0",
+          "536870912",
+          "536892288",
+          "536913664",
+          "536935040",
+          "0",
+          "0",
+          "0",
+          "0"
+        ]
+      },
+      "firstRepeatedObservation": {
+        "frame": 5220,
+        "label": "5220",
+        "phase": [
+          "3"
+        ],
+        "page": [
+          "Demo"
+        ],
+        "paused": [
+          "1"
+        ],
+        "mouse_cursor": [
+          "1",
+          "1"
+        ],
+        "html_window_state": [
+          "1",
+          "1",
+          "1"
+        ],
+        "game_menu_bar": [
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_uber": [
+          "3555",
+          "1",
+          "3",
+          "85",
+          "0",
+          "1024",
+          "768"
+        ],
+        "raw_menus": [
+          "0",
+          "0",
+          "0",
+          "14",
+          "31"
+        ],
+        "time": [
+          "380.102",
+          "380.328"
+        ],
+        "mission": [
+          "GuardMyBack",
+          "Tutorial",
+          "422"
+        ],
+        "mission_start": [
+          "1",
+          "4",
+          "1",
+          "361.996",
+          "721.996"
+        ],
+        "mission_gate": [
+          "0",
+          "65",
+          "0",
+          "1",
+          "0",
+          "1",
+          "0",
+          "0"
+        ],
+        "shared_kernel": [
+          "1",
+          "72",
+          "72"
+        ],
+        "shared_surface_storage": [
+          "1",
+          "1",
+          "1",
+          "1",
+          "2",
+          "1"
+        ],
+        "shared_gameplay_globals": [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ],
+        "raw_brains": [
+          "0",
+          "536870912",
+          "536892288",
+          "536913664",
+          "536935040",
+          "0",
+          "0",
+          "0",
+          "0"
+        ]
+      },
+      "final": {
+        "frame": 5715,
+        "label": "5715",
+        "phase": [
+          "0"
+        ],
+        "page": [
+          "main"
+        ],
+        "paused": [
+          "0"
+        ],
+        "mouse_cursor": [
+          "1",
+          "1"
+        ],
+        "html_window_state": [
+          "0",
+          "0",
+          "0"
+        ],
+        "game_menu_bar": [
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_uber": [
+          "3959",
+          "1",
+          "0",
+          "85",
+          "0",
+          "1024",
+          "672"
+        ],
+        "raw_menus": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "time": [
+          "403.532",
+          "418.765"
+        ]
+      }
+    },
+    "DissolvedAlliance": {
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-demo-repeat-569-20261029\\data",
+        "--window",
+        "--no-audio",
+        "--frames",
+        "13500",
+        "--set",
+        "SCREENW=1024;SCREENH=768;maxFPS=15;sleepPerLoop=1;autoDemo=0;tellTips=0",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-demo-repeat-569-20261029\\dissolved-v1\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-demo-repeat-569-20261029\\dissolved-v1\\states.tsv"
+      ],
+      "gameSha256": "d45745a61e448a77674eec4248ee566070592afd60da5627c4d1ad2e33b9206e",
+      "passed": true,
+      "toolSha256": "221888ed6e8f6d6892cdd3d32a3f19c0272e3099995b7438a80d983fc444f611",
+      "returnCode": 0,
+      "timedOut": false,
+      "elapsedSeconds": 406.534762100011,
+      "observations": 107,
+      "expiredObservations": [],
+      "restartDelaySeconds": 0.25900000000001455,
+      "reference": {
+        "mission": "DissolvedAlliance",
+        "seconds": 360,
+        "demoSection": false,
+        "englishSha256": "fcc7fbbef99515c4ad660a11da18318e48bd63b5467b6aeedb6c51a16d1a06e5"
+      },
+      "firstStart": [
+        "1.703",
+        "361.703",
+        "260"
+      ],
+      "repeatedStart": [
+        "361.962",
+        "721.962",
+        "2601"
+      ],
+      "guideObservations": [
+        0,
+        0
+      ],
+      "lastBeforeDeadline": {
+        "frame": 4710,
+        "label": "4710",
+        "phase": [
+          "4"
+        ],
+        "page": [
+          "mission"
+        ],
+        "paused": [
+          "0"
+        ],
+        "mouse_cursor": [
+          "1",
+          "1"
+        ],
+        "html_window_state": [
+          "0",
+          "0",
+          "0"
+        ],
+        "game_menu_bar": [
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_uber": [
+          "260",
+          "1",
+          "3",
+          "85",
+          "0",
+          "1024",
+          "768"
+        ],
+        "raw_menus": [
+          "0",
+          "0",
+          "0",
+          "13",
+          "13"
+        ],
+        "time": [
+          "361.009",
+          "361.093"
+        ],
+        "mission": [
+          "DissolvedAlliance",
+          "Tutorial",
+          "432"
+        ],
+        "mission_start": [
+          "1",
+          "4",
+          "1",
+          "1.703",
+          "361.703"
+        ],
+        "mission_gate": [
+          "0",
+          "65",
+          "0",
+          "0",
+          "0",
+          "1",
+          "0",
+          "0"
+        ],
+        "shared_kernel": [
+          "1",
+          "90",
+          "90"
+        ],
+        "shared_surface_storage": [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        "shared_gameplay_globals": [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ],
+        "raw_brains": [
+          "0",
+          "536870912",
+          "536892288",
+          "536913664",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ]
+      },
+      "firstRepeatedPlaying": {
+        "frame": 4725,
+        "label": "4725",
+        "phase": [
+          "4"
+        ],
+        "page": [
+          "mission"
+        ],
+        "paused": [
+          "0"
+        ],
+        "mouse_cursor": [
+          "1",
+          "1"
+        ],
+        "html_window_state": [
+          "0",
+          "0",
+          "0"
+        ],
+        "game_menu_bar": [
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_uber": [
+          "2601",
+          "1",
+          "3",
+          "85",
+          "0",
+          "1024",
+          "768"
+        ],
+        "raw_menus": [
+          "0",
+          "0",
+          "0",
+          "13",
+          "13"
+        ],
+        "time": [
+          "365.071",
+          "365.157"
+        ],
+        "mission": [
+          "DissolvedAlliance",
+          "Tutorial",
+          "432"
+        ],
+        "mission_start": [
+          "1",
+          "4",
+          "1",
+          "361.962",
+          "721.962"
+        ],
+        "mission_gate": [
+          "0",
+          "65",
+          "0",
+          "0",
+          "0",
+          "1",
+          "0",
+          "0"
+        ],
+        "shared_kernel": [
+          "1",
+          "66",
+          "66"
+        ],
+        "shared_surface_storage": [
+          "1",
+          "1",
+          "1",
+          "1",
+          "2",
+          "1"
+        ],
+        "shared_gameplay_globals": [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ],
+        "raw_brains": [
+          "0",
+          "536870912",
+          "536892288",
+          "536913664",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ]
+      },
+      "firstRepeatedObservation": {
+        "frame": 4725,
+        "label": "4725",
+        "phase": [
+          "4"
+        ],
+        "page": [
+          "mission"
+        ],
+        "paused": [
+          "0"
+        ],
+        "mouse_cursor": [
+          "1",
+          "1"
+        ],
+        "html_window_state": [
+          "0",
+          "0",
+          "0"
+        ],
+        "game_menu_bar": [
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_uber": [
+          "2601",
+          "1",
+          "3",
+          "85",
+          "0",
+          "1024",
+          "768"
+        ],
+        "raw_menus": [
+          "0",
+          "0",
+          "0",
+          "13",
+          "13"
+        ],
+        "time": [
+          "365.071",
+          "365.157"
+        ],
+        "mission": [
+          "DissolvedAlliance",
+          "Tutorial",
+          "432"
+        ],
+        "mission_start": [
+          "1",
+          "4",
+          "1",
+          "361.962",
+          "721.962"
+        ],
+        "mission_gate": [
+          "0",
+          "65",
+          "0",
+          "0",
+          "0",
+          "1",
+          "0",
+          "0"
+        ],
+        "shared_kernel": [
+          "1",
+          "66",
+          "66"
+        ],
+        "shared_surface_storage": [
+          "1",
+          "1",
+          "1",
+          "1",
+          "2",
+          "1"
+        ],
+        "shared_gameplay_globals": [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ],
+        "raw_brains": [
+          "0",
+          "536870912",
+          "536892288",
+          "536913664",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ]
+      },
+      "final": {
+        "frame": 5145,
+        "label": "5145",
+        "phase": [
+          "0"
+        ],
+        "page": [
+          "main"
+        ],
+        "paused": [
+          "0"
+        ],
+        "mouse_cursor": [
+          "1",
+          "1"
+        ],
+        "html_window_state": [
+          "0",
+          "0",
+          "0"
+        ],
+        "game_menu_bar": [
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_uber": [
+          "3136",
+          "1",
+          "0",
+          "85",
+          "0",
+          "1024",
+          "672"
+        ],
+        "raw_menus": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "time": [
+          "404.132",
+          "404.218"
+        ]
+      }
+    }
+  },
+  "attempts": [
+    {
+      "directory": "guard-v1",
+      "returnCode": 0,
+      "timedOut": false,
+      "elapsedSeconds": 421.09008690000337,
+      "scopeOrFailure": "검증기의 창 활성 단언 실패: 4080프레임 한 관측만 비활성(재시작/최종 메인은 정상). 외부 포커스 손실로 보며 수락 제외"
+    },
+    {
+      "directory": "guard-v2",
+      "returnCode": 0,
+      "timedOut": false,
+      "elapsedSeconds": 421.21803940000245,
+      "scopeOrFailure": "같은 도구/제품의 재실행 수락"
+    },
+    {
+      "directory": "dissolved-v1",
+      "returnCode": 0,
+      "timedOut": false,
+      "elapsedSeconds": 406.534762100011,
+      "scopeOrFailure": "수락"
+    }
+  ],
+  "verifierAudit": {
+    "cases": [
+      {
+        "demo": "GuardMyBack",
+        "case": "early-restart",
+        "rejected": true
+      },
+      {
+        "demo": "GuardMyBack",
+        "case": "same-hud",
+        "rejected": true
+      },
+      {
+        "demo": "GuardMyBack",
+        "case": "same-generation",
+        "rejected": true
+      },
+      {
+        "demo": "GuardMyBack",
+        "case": "wrong-mission",
+        "rejected": true
+      },
+      {
+        "demo": "GuardMyBack",
+        "case": "demo-cleared",
+        "rejected": true
+      },
+      {
+        "demo": "GuardMyBack",
+        "case": "second-paused",
+        "rejected": true
+      },
+      {
+        "demo": "GuardMyBack",
+        "case": "no-main-return",
+        "rejected": true
+      },
+      {
+        "demo": "GuardMyBack",
+        "case": "forced-timeout",
+        "rejected": true
+      },
+      {
+        "demo": "DissolvedAlliance",
+        "case": "early-restart",
+        "rejected": true
+      },
+      {
+        "demo": "DissolvedAlliance",
+        "case": "same-hud",
+        "rejected": true
+      },
+      {
+        "demo": "DissolvedAlliance",
+        "case": "same-generation",
+        "rejected": true
+      },
+      {
+        "demo": "DissolvedAlliance",
+        "case": "wrong-mission",
+        "rejected": true
+      },
+      {
+        "demo": "DissolvedAlliance",
+        "case": "demo-cleared",
+        "rejected": true
+      },
+      {
+        "demo": "DissolvedAlliance",
+        "case": "second-paused",
+        "rejected": true
+      },
+      {
+        "demo": "DissolvedAlliance",
+        "case": "no-main-return",
+        "rejected": true
+      },
+      {
+        "demo": "DissolvedAlliance",
+        "case": "forced-timeout",
+        "rejected": true
+      }
+    ]
+  },
+  "committedToolSha256": "221888ed6e8f6d6892cdd3d32a3f19c0272e3099995b7438a80d983fc444f611",
+  "sourceReferences": [
+    {
+      "mission": "DemoStormRages",
+      "seconds": 360,
+      "demoSection": true,
+      "englishSha256": "879f9aed148be6b6bcc71ee43743b6c6475a45201432d1577acdd21567cc6a0b"
+    },
+    {
+      "mission": "GuardMyBack",
+      "seconds": 360,
+      "demoSection": true,
+      "englishSha256": "5296e6b52312585f3beca8341b37fe26aedad60b19fca5dc21f6b464d452163e"
+    },
+    {
+      "mission": "DissolvedAlliance",
+      "seconds": 360,
+      "demoSection": false,
+      "englishSha256": "fcc7fbbef99515c4ad660a11da18318e48bd63b5467b6aeedb6c51a16d1a06e5"
+    }
+  ],
+  "remainingNaturalFirstDemoCycles": [],
+  "secondFullCycleVerified": false,
+  "protectedFiles": 2542,
+  "existingFixtures": 722,
+  "protectedDifferences": [],
+  "all34CurrentGameExecuted": false,
+  "fullCppSuiteExecuted": false,
+  "originalGameExecuted": false,
+  "audioExecuted": false,
+  "originalPixelComparison": false,
+  "naturalMissionVictoryExecuted": false,
+  "priestCaptureSacrificeCommandsExecuted": false,
+  "specificEnemyAttackCommandsExecuted": false,
+  "attackFlyerDedicatedTestsExecuted": false,
+  "multiplayerExecuted": false,
+  "win11Executed": false,
+  "rawDirectory": "extracted/cpp-demo-repeat-569-20261029"
+}
