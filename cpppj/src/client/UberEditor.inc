@@ -142,6 +142,21 @@ o::LocalMissionParentResult UberGump::InstallMainMenuNativeState(std::uint32_t s
     };
     return netstorm::client::InstallNativeMainMenuState(std::move(globals),hooks);
 }
+// 실제 영상은 같은 Screen 팔레트/두 정지/ClientAudio를 원문 수명 순서로 빌린다.
+RawMovieContext UberGump::MovieDevices() {
+    RawMovieContext context;context.now=[this] { return client_.WallSeconds(); };context.audio=client_.MovieAudioEnabled();context.mute=client_.MovieAudioMuted();auto& h=context.devices;
+    h.capturePalette=[this](auto palette) { const auto current=client_.GetScreen().Palette();std::copy(current.begin(),current.end(),palette.begin()); };
+    h.applyPalette=[this](auto palette) { client_.GetScreen().SetPalette(0,256,palette.data(),true); }; // 파일 팔레트/색 표를 다시 계산하지 않는 원문 임시 팔레트다.
+    h.shutdownSound=[this] { client_.WorldAudio().Shutdown(); };h.muteSound=[this] { client_.WorldAudio().PushMute(); };h.unmuteSound=[this] { client_.WorldAudio().PopMute(); };
+    h.soundEnabled=[this] { return client_.WorldAudio().SoundEnabled(); };h.restoreSound=[this](auto quality) { client_.RestoreMovieSound(quality); };
+    h.pauseUpdates=[this](auto paused) { client_.PauseMovieUpdates(paused); };h.pauseGame=[this](auto paused) { if (paused) client_.PushGamePause();else client_.PopGamePause(); };
+    h.showCursor=[this](auto show) { client_.GetScreen().ShowCursor(show); };h.refreshCursor=[this] { client_.GetScreen().RestoreMovieCursor(); };
+    h.clear=[this](auto rect,auto color) { client_.GetScreen().Clear(rect,static_cast<std::uint8_t>(color)); };h.black=[this] { return client_.GetScreen().Colors().basic[0]; };
+    h.redraw=[this](auto) { Refresh(); };h.assertion=[](auto line) { std::clog<<"MovieGump 진단 "<<line<<'\n'; };
+    context.invalidate=[this](auto rect,auto flags) { client_.GetRenderer().Invalidate(rect,flags); };
+    context.clearAndPresent=[this] { auto& screen=client_.GetScreen();screen.Clear({0,0,screen.Width(),screen.Height()},0);screen.Update({0,0,screen.Width(),screen.Height()}); }; // Windows10/11의 호환 GDI 출력으로 원본 전체 검정/즉시 출력을 보존한다.
+    return context;
+}
 // 원문의 인트로 준비는 listener/Chunk/옵션 초기화를 하는 State3 prefix와 다른 순서다.
 o::LocalMissionParentResult UberGump::InstallIntroNativeState(std::uint32_t selected) {
     if (selected<39 || selected>41 || !editor_) throw std::logic_error("실제 인트로 State39/40/41 장기 부모 계약");
@@ -153,12 +168,10 @@ o::LocalMissionParentResult UberGump::InstallIntroNativeState(std::uint32_t sele
     hooks.renderer=[this] { client_.InitializeNativeRendererView(); };hooks.hud=[this] { ApplyHudModeForState(1); };
     hooks.moviePath=[this] { return client_.Configuration().PathSpec("introMovie"); };hooks.markIntro=[this] { client_.Configuration().Set("intro","1"); };
     hooks.openMovie=[this](auto name) {
-        // 원문 SmackOpen의 파일 부재 실패는 MovieGump를 만들지 않는다. 존재하는 SMK의 디코더/재생은 아직 명시 미복원이며 성공으로 위장하지 않는다.
-        const std::filesystem::path path(std::u8string(reinterpret_cast<const char8_t*>(name.data()),name.size()));const auto actual=path.is_absolute() ? path : client_.GameDirectory()/path; // Windows10/11의 한글 경로를 위해 원본 ANSI 이름 대신 UTF-8로 변환한다.
-        if (std::filesystem::exists(actual)) throw std::logic_error("존재하는 SMK 영상의 실제 MovieGump/디코더 미복원");
-        std::clog<<"인트로 영상 열기 실패: "<<name<<'\n';
+        const std::filesystem::path path(std::u8string(reinterpret_cast<const char8_t*>(name.data()),name.size()));const auto actual=path.is_absolute() ? path : client_.GameDirectory()/path; // Windows10/11의 한글 설치 경로는 원본 ANSI 대신 UTF-8/W 경로로 연다.
+        auto& movies=rawButtons_->Menus()->EnableMovies(MovieDevices());static_cast<void>(movies.Open(actual)); // 원문은 실제 열기 실패도 State40으로 진행한다.
     };
-    hooks.movieActive=[] { return false; }; // 실제 재생 객체는 파일 부재 경로에서 생성되지 않는다. 존재하는 파일은 위에서 명시 거부한다.
+    hooks.movieActive=[this] { const auto* movies=rawButtons_->Menus()->Movies();return movies && movies->Active(); }; // Kill 예약이 아니라 실제 scalar 반납이 singleton을 지운다.
     hooks.request=[this](auto next) { editor_->state->Request(next); };
     return netstorm::client::InstallNativeIntroState({client_.LocalStateGlobals()->State(),surface.ownerMode.fort,game.Server(),game.Boss(),client_.FortGlobals()->PendingBytes()},hooks);
 }

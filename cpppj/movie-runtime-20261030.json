@@ -1,0 +1,1007 @@
+{
+  "unit": 594,
+  "date": "2026-10-30",
+  "host": "HJOW-Athlon",
+  "os": "Windows-10-10.0.19045-SP0",
+  "baseCommit": "17fd1f7d",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "scope": "실제 MovieGump/모달·idle·수명/Native40 연결, 논리 영상·정지/완료 저장/재시작. 창 모드 실제 출력 검증. 전체 목표는 미완료.",
+  "nativeSdkObservations": 14,
+  "nativeSdkReobservations": 14,
+  "nativeSdkDifferences": 0,
+  "tests": {
+    "focused": 51,
+    "failed": 0,
+    "registeredActual": 3485,
+    "fullSuiteRun": false,
+    "logs": [
+      "tests-Movie-final.log",
+      "tests-NativeIntro-final.log",
+      "tests-SmackerDecoder-final.log",
+      "tests-RawMenuControls_-adjacent.log",
+      "tests-RawMenuEditor-adjacent.log",
+      "tests-GumpLifetime_-adjacent.log",
+      "tests-GumpInput_-adjacent.log",
+      "tests-ClientMainMenuGlobals_-adjacent.log"
+    ]
+  },
+  "build": {
+    "targets": [
+      "NetstormCpp",
+      "netstorm_tests"
+    ],
+    "configuration": "Release",
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "log": "build-pcm-clock-final.log",
+    "gameSha256": "eb9be0b06090bd9d2fac076f211ded48de549ce598703eb23a98b53520c7afc0",
+    "decoderDllSha256": "6afa14297064ac26e76765747a46f4b5b813fd29f5277d95758b8cf801c4ce1f"
+  },
+  "guiValidatedRuns": [
+    {
+      "label": "gui-esc-v2",
+      "passed": true,
+      "gameSha256": "eb9be0b06090bd9d2fac076f211ded48de549ce598703eb23a98b53520c7afc0",
+      "mediaSha256": "bd180bee684b72bd8b0c8bd1eabac05a893bba61ed9a2624c2054bc7b326ddb1",
+      "natural": false,
+      "skip": "esc",
+      "fullscreen": false,
+      "audioMute": false,
+      "dimensions": [
+        1024,
+        768
+      ],
+      "run": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-movie-runtime-594-20261030\\data",
+          "--frames",
+          "700",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=40;sleepPerLoop=25;autoDemo=0;tellTips=0;intro=0;introMovie=H:/T5Workspace/NetstormReborn/originalCD/MOVIE/englishintro2x.smk;WelcomeGiven=1;userUpdated=1;startInFullScreen=0",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-movie-runtime-594-20261030\\gui-esc-v2\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-movie-runtime-594-20261030\\gui-esc-v2\\states.tsv",
+          "--window",
+          "--no-audio"
+        ],
+        "binarySha256": "eb9be0b06090bd9d2fac076f211ded48de549ce598703eb23a98b53520c7afc0",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 28.10065570000006,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "574ed2ced9f94b50e4d2ccdf91f535d309d44962ee9fd10cd91e694a4970bc24"
+      },
+      "restart": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-movie-runtime-594-20261030\\data",
+          "--frames",
+          "55",
+          "--no-audio",
+          "--set",
+          "WelcomeGiven=1;userUpdated=1;autoDemo=0;tellTips=0;sleepPerLoop=25",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-movie-runtime-594-20261030\\gui-esc-v2\\restart\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-movie-runtime-594-20261030\\gui-esc-v2\\restart\\states.tsv"
+        ],
+        "binarySha256": "eb9be0b06090bd9d2fac076f211ded48de549ce598703eb23a98b53520c7afc0",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 2.5667923999999402,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "cb76758e176fb9498de489bf084e9844f54d645d0fb4457c2c91e00a6a78d515"
+      },
+      "playing": {
+        "movie_runtime": [
+          "199",
+          "1",
+          "0",
+          "0",
+          "0"
+        ],
+        "movie_stream": [
+          "199",
+          "249",
+          "249",
+          "1",
+          "0",
+          "0",
+          "525953"
+        ],
+        "movie_update_depth": [
+          "1"
+        ],
+        "paused": [
+          "1"
+        ]
+      },
+      "final": {
+        "movie_runtime": [
+          "0",
+          "0",
+          "1",
+          "279",
+          "0"
+        ],
+        "movie_update_depth": [
+          "0"
+        ],
+        "paused": [
+          "0"
+        ],
+        "phase": [
+          "0"
+        ],
+        "page": [
+          "main"
+        ]
+      },
+      "pixels": {
+        "frameIndex": 248,
+        "same": true,
+        "actualSha256": "c4000d71158095b5c2c09a228f7038b16e12deadd2f3bb1ac33314f92173e7fd",
+        "expectedSha256": "c4000d71158095b5c2c09a228f7038b16e12deadd2f3bb1ac33314f92173e7fd",
+        "command": [
+          "C:\\Users\\BUZZ\\AppData\\Local\\Microsoft\\WinGet\\Packages\\yt-dlp.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe\\ffmpeg-N-125875-g5d4d3bdc61-win64-gpl\\bin\\ffmpeg.EXE",
+          "-nostdin",
+          "-v",
+          "error",
+          "-i",
+          "H:\\T5Workspace\\NetstormReborn\\originalCD\\MOVIE\\englishintro2x.smk",
+          "-vf",
+          "select=eq(n\\,248)",
+          "-frames:v",
+          "1",
+          "-pix_fmt",
+          "pal8",
+          "-f",
+          "rawvideo",
+          "-"
+        ],
+        "videoRect": [
+          192,
+          224,
+          640,
+          320
+        ]
+      },
+      "scope": "실제 인트로/완료 저장/재시작만 실행. 포획/희생/공격/승리·멀티플레이 실행 없음.",
+      "supplementalPhysicalComparison": null
+    },
+    {
+      "label": "gui-space-no-device-nine",
+      "passed": true,
+      "gameSha256": "eb9be0b06090bd9d2fac076f211ded48de549ce598703eb23a98b53520c7afc0",
+      "mediaSha256": "bd180bee684b72bd8b0c8bd1eabac05a893bba61ed9a2624c2054bc7b326ddb1",
+      "natural": false,
+      "skip": "space",
+      "fullscreen": true,
+      "audioMute": true,
+      "audioDeviceCount": 0,
+      "audioFallbackVerified": true,
+      "pcmDevicePlaybackVerified": false,
+      "dimensions": [
+        1280,
+        720
+      ],
+      "run": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-movie-runtime-594-20261030\\data",
+          "--frames",
+          "700",
+          "--set",
+          "SCREENW=1280;SCREENH=720;maxFPS=40;sleepPerLoop=25;autoDemo=0;tellTips=0;intro=0;introMovie=H:/T5Workspace/NetstormReborn/originalCD/MOVIE/englishintro2x.smk;WelcomeGiven=1;userUpdated=1;startInFullScreen=1",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-movie-runtime-594-20261030\\gui-space-no-device-nine\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-movie-runtime-594-20261030\\gui-space-no-device-nine\\states.tsv",
+          "--mute-audio",
+          "--audio-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-movie-runtime-594-20261030\\gui-space-no-device-nine\\audio-final.tsv"
+        ],
+        "binarySha256": "eb9be0b06090bd9d2fac076f211ded48de549ce598703eb23a98b53520c7afc0",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 28.119986499999868,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "f57967371fe66ed0abe8a39a93c5fcafb634f249794bb16b65c6a2ca675b4d3a"
+      },
+      "restart": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-movie-runtime-594-20261030\\data",
+          "--frames",
+          "55",
+          "--no-audio",
+          "--set",
+          "WelcomeGiven=1;userUpdated=1;autoDemo=0;tellTips=0;sleepPerLoop=25",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-movie-runtime-594-20261030\\gui-space-no-device-nine\\restart\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-movie-runtime-594-20261030\\gui-space-no-device-nine\\restart\\states.tsv"
+        ],
+        "binarySha256": "eb9be0b06090bd9d2fac076f211ded48de549ce598703eb23a98b53520c7afc0",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 2.481582399999752,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "cb76758e176fb9498de489bf084e9844f54d645d0fb4457c2c91e00a6a78d515"
+      },
+      "playing": {
+        "movie_runtime": [
+          "199",
+          "1",
+          "0",
+          "0",
+          "0"
+        ],
+        "movie_stream": [
+          "199",
+          "255",
+          "255",
+          "1",
+          "0",
+          "0",
+          "525953"
+        ],
+        "movie_update_depth": [
+          "1"
+        ],
+        "paused": [
+          "1"
+        ]
+      },
+      "final": {
+        "movie_runtime": [
+          "0",
+          "0",
+          "1",
+          "285",
+          "0"
+        ],
+        "movie_update_depth": [
+          "0"
+        ],
+        "paused": [
+          "0"
+        ],
+        "phase": [
+          "0"
+        ],
+        "page": [
+          "main"
+        ]
+      },
+      "pixels": {
+        "frameIndex": 254,
+        "same": true,
+        "actualSha256": "0d41be85c0997d8390a624d3ed3966fbd1e8491edf6477441d232f3242c0e89a",
+        "expectedSha256": "0d41be85c0997d8390a624d3ed3966fbd1e8491edf6477441d232f3242c0e89a",
+        "command": [
+          "C:\\Users\\BUZZ\\AppData\\Local\\Microsoft\\WinGet\\Packages\\yt-dlp.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe\\ffmpeg-N-125875-g5d4d3bdc61-win64-gpl\\bin\\ffmpeg.EXE",
+          "-nostdin",
+          "-v",
+          "error",
+          "-i",
+          "H:\\T5Workspace\\NetstormReborn\\originalCD\\MOVIE\\englishintro2x.smk",
+          "-vf",
+          "select=eq(n\\,254)",
+          "-frames:v",
+          "1",
+          "-pix_fmt",
+          "pal8",
+          "-f",
+          "rawvideo",
+          "-"
+        ],
+        "videoRect": [
+          320,
+          200,
+          640,
+          320
+        ]
+      },
+      "scope": "실제 인트로/완료 저장/재시작만 실행. 포획/희생/공격/승리·멀티플레이 실행 없음.",
+      "supplementalPhysicalComparison": null
+    },
+    {
+      "label": "gui-left-german-ten",
+      "passed": true,
+      "gameSha256": "eb9be0b06090bd9d2fac076f211ded48de549ce598703eb23a98b53520c7afc0",
+      "mediaSha256": "df3c0ac5935c4c8d689909468d14063400ed3b1fed8340e03a88b4dcf3da8fef",
+      "natural": false,
+      "skip": "left",
+      "fullscreen": false,
+      "audioMute": false,
+      "audioDeviceCount": null,
+      "audioFallbackVerified": false,
+      "pcmDevicePlaybackVerified": false,
+      "dimensions": [
+        1280,
+        800
+      ],
+      "run": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-movie-runtime-594-20261030\\data",
+          "--frames",
+          "700",
+          "--set",
+          "SCREENW=1280;SCREENH=800;maxFPS=40;sleepPerLoop=25;autoDemo=0;tellTips=0;intro=0;introMovie=H:/T5Workspace/NetstormReborn/originalCD/MOVIE/germanintro2x.smk;WelcomeGiven=1;userUpdated=1;startInFullScreen=0",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-movie-runtime-594-20261030\\gui-left-german-ten\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-movie-runtime-594-20261030\\gui-left-german-ten\\states.tsv",
+          "--window",
+          "--no-audio"
+        ],
+        "binarySha256": "eb9be0b06090bd9d2fac076f211ded48de549ce598703eb23a98b53520c7afc0",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 28.0005756999999,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "574ed2ced9f94b50e4d2ccdf91f535d309d44962ee9fd10cd91e694a4970bc24"
+      },
+      "restart": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-movie-runtime-594-20261030\\data",
+          "--frames",
+          "55",
+          "--no-audio",
+          "--set",
+          "WelcomeGiven=1;userUpdated=1;autoDemo=0;tellTips=0;sleepPerLoop=25",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-movie-runtime-594-20261030\\gui-left-german-ten\\restart\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-movie-runtime-594-20261030\\gui-left-german-ten\\restart\\states.tsv"
+        ],
+        "binarySha256": "eb9be0b06090bd9d2fac076f211ded48de549ce598703eb23a98b53520c7afc0",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 2.482117200000175,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "cb76758e176fb9498de489bf084e9844f54d645d0fb4457c2c91e00a6a78d515"
+      },
+      "playing": {
+        "movie_runtime": [
+          "199",
+          "1",
+          "0",
+          "0",
+          "0"
+        ],
+        "movie_stream": [
+          "199",
+          "256",
+          "256",
+          "1",
+          "0",
+          "0",
+          "525953"
+        ],
+        "movie_update_depth": [
+          "1"
+        ],
+        "paused": [
+          "1"
+        ]
+      },
+      "final": {
+        "movie_runtime": [
+          "0",
+          "0",
+          "1",
+          "286",
+          "0"
+        ],
+        "movie_update_depth": [
+          "0"
+        ],
+        "paused": [
+          "0"
+        ],
+        "phase": [
+          "0"
+        ],
+        "page": [
+          "main"
+        ]
+      },
+      "pixels": {
+        "frameIndex": 255,
+        "same": true,
+        "actualSha256": "b948bcc5768f7aae3f62f72bc83f5621bb2eaa60766fd266ecb11e1baa613b30",
+        "expectedSha256": "b948bcc5768f7aae3f62f72bc83f5621bb2eaa60766fd266ecb11e1baa613b30",
+        "command": [
+          "C:\\Users\\BUZZ\\AppData\\Local\\Microsoft\\WinGet\\Packages\\yt-dlp.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe\\ffmpeg-N-125875-g5d4d3bdc61-win64-gpl\\bin\\ffmpeg.EXE",
+          "-nostdin",
+          "-v",
+          "error",
+          "-i",
+          "H:\\T5Workspace\\NetstormReborn\\originalCD\\MOVIE\\germanintro2x.smk",
+          "-vf",
+          "select=eq(n\\,255)",
+          "-frames:v",
+          "1",
+          "-pix_fmt",
+          "pal8",
+          "-f",
+          "rawvideo",
+          "-"
+        ],
+        "videoRect": [
+          320,
+          240,
+          640,
+          320
+        ]
+      },
+      "scope": "실제 인트로/완료 저장/재시작만 실행. 포획/희생/공격/승리·멀티플레이 실행 없음.",
+      "supplementalPhysicalComparison": {
+        "same": true,
+        "actualSha256": "42ddabfd4b18c54a6ce0534b7ab16158ad43a844e14205cd0b44c424039ff0f0",
+        "expectedSha256": "42ddabfd4b18c54a6ce0534b7ab16158ad43a844e14205cd0b44c424039ff0f0",
+        "dimensions": [
+          1280,
+          800
+        ],
+        "outputRect": [
+          0,
+          0,
+          1280,
+          800
+        ]
+      }
+    },
+    {
+      "label": "gui-right-fullscreen-four",
+      "passed": true,
+      "gameSha256": "eb9be0b06090bd9d2fac076f211ded48de549ce598703eb23a98b53520c7afc0",
+      "mediaSha256": "bd180bee684b72bd8b0c8bd1eabac05a893bba61ed9a2624c2054bc7b326ddb1",
+      "natural": false,
+      "skip": "right",
+      "fullscreen": true,
+      "audioMute": false,
+      "audioDeviceCount": null,
+      "audioFallbackVerified": false,
+      "pcmDevicePlaybackVerified": false,
+      "dimensions": [
+        1024,
+        768
+      ],
+      "run": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-movie-runtime-594-20261030\\data",
+          "--frames",
+          "700",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=40;sleepPerLoop=25;autoDemo=0;tellTips=0;intro=0;introMovie=H:/T5Workspace/NetstormReborn/originalCD/MOVIE/englishintro2x.smk;WelcomeGiven=1;userUpdated=1;startInFullScreen=1",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-movie-runtime-594-20261030\\gui-right-fullscreen-four\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-movie-runtime-594-20261030\\gui-right-fullscreen-four\\states.tsv",
+          "--no-audio"
+        ],
+        "binarySha256": "eb9be0b06090bd9d2fac076f211ded48de549ce598703eb23a98b53520c7afc0",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 27.20009779999964,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "574ed2ced9f94b50e4d2ccdf91f535d309d44962ee9fd10cd91e694a4970bc24"
+      },
+      "restart": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-movie-runtime-594-20261030\\data",
+          "--frames",
+          "55",
+          "--no-audio",
+          "--set",
+          "WelcomeGiven=1;userUpdated=1;autoDemo=0;tellTips=0;sleepPerLoop=25",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-movie-runtime-594-20261030\\gui-right-fullscreen-four\\restart\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-movie-runtime-594-20261030\\gui-right-fullscreen-four\\restart\\states.tsv"
+        ],
+        "binarySha256": "eb9be0b06090bd9d2fac076f211ded48de549ce598703eb23a98b53520c7afc0",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 2.417878400000518,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "cb76758e176fb9498de489bf084e9844f54d645d0fb4457c2c91e00a6a78d515"
+      },
+      "playing": {
+        "movie_runtime": [
+          "199",
+          "1",
+          "0",
+          "0",
+          "0"
+        ],
+        "movie_stream": [
+          "199",
+          "242",
+          "242",
+          "1",
+          "0",
+          "0",
+          "525953"
+        ],
+        "movie_update_depth": [
+          "1"
+        ],
+        "paused": [
+          "1"
+        ]
+      },
+      "final": {
+        "movie_runtime": [
+          "0",
+          "0",
+          "1",
+          "272",
+          "0"
+        ],
+        "movie_update_depth": [
+          "0"
+        ],
+        "paused": [
+          "0"
+        ],
+        "phase": [
+          "0"
+        ],
+        "page": [
+          "main"
+        ]
+      },
+      "pixels": {
+        "frameIndex": 241,
+        "same": true,
+        "actualSha256": "8f8956c7475b5a48e0411b724c5b1ddeee7048dc3e6d94decd9336aecd166230",
+        "expectedSha256": "8f8956c7475b5a48e0411b724c5b1ddeee7048dc3e6d94decd9336aecd166230",
+        "command": [
+          "C:\\Users\\BUZZ\\AppData\\Local\\Microsoft\\WinGet\\Packages\\yt-dlp.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe\\ffmpeg-N-125875-g5d4d3bdc61-win64-gpl\\bin\\ffmpeg.EXE",
+          "-nostdin",
+          "-v",
+          "error",
+          "-i",
+          "H:\\T5Workspace\\NetstormReborn\\originalCD\\MOVIE\\englishintro2x.smk",
+          "-vf",
+          "select=eq(n\\,241)",
+          "-frames:v",
+          "1",
+          "-pix_fmt",
+          "pal8",
+          "-f",
+          "rawvideo",
+          "-"
+        ],
+        "videoRect": [
+          192,
+          224,
+          640,
+          320
+        ]
+      },
+      "scope": "실제 인트로/완료 저장/재시작만 실행. 포획/희생/공격/승리·멀티플레이 실행 없음.",
+      "supplementalPhysicalComparison": {
+        "same": false,
+        "actualSha256": "a89aa16e88685393513dab397d7fd1a2796f182530a683982ed50365185230a6",
+        "expectedSha256": "58056a65ada3565387567924e1b7e58f21194081d5151b8edac586bc7c4f72af",
+        "dimensions": [
+          1920,
+          1080
+        ],
+        "outputRect": [
+          240,
+          0,
+          1680,
+          1080
+        ]
+      }
+    },
+    {
+      "label": "gui-natural-no-device-ten-v2",
+      "passed": true,
+      "logicalPlaybackAndLifecyclePassed": true,
+      "physicalOutputVerified": true,
+      "presentation": {
+        "same": true,
+        "actualSha256": "5203c4ccde280b0f79749c51c729a0b5a77591b8a75ff661026ed35298bf0f9e",
+        "expectedSha256": "5203c4ccde280b0f79749c51c729a0b5a77591b8a75ff661026ed35298bf0f9e",
+        "dimensions": [
+          1280,
+          800
+        ],
+        "outputRect": [
+          0,
+          0,
+          1280,
+          800
+        ]
+      },
+      "gameSha256": "eb9be0b06090bd9d2fac076f211ded48de549ce598703eb23a98b53520c7afc0",
+      "mediaSha256": "bd180bee684b72bd8b0c8bd1eabac05a893bba61ed9a2624c2054bc7b326ddb1",
+      "natural": true,
+      "skip": null,
+      "fullscreen": false,
+      "audioMute": true,
+      "audioDeviceCount": 0,
+      "audioFallbackVerified": true,
+      "pcmDevicePlaybackVerified": false,
+      "dimensions": [
+        1280,
+        800
+      ],
+      "run": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-movie-runtime-594-20261030\\data",
+          "--frames",
+          "4500",
+          "--set",
+          "SCREENW=1280;SCREENH=800;maxFPS=40;sleepPerLoop=25;autoDemo=0;tellTips=0;intro=0;introMovie=H:/T5Workspace/NetstormReborn/originalCD/MOVIE/englishintro2x.smk;WelcomeGiven=1;userUpdated=1;startInFullScreen=0",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-movie-runtime-594-20261030\\gui-natural-no-device-ten-v2\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-movie-runtime-594-20261030\\gui-natural-no-device-ten-v2\\states.tsv",
+          "--window",
+          "--mute-audio",
+          "--audio-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-movie-runtime-594-20261030\\gui-natural-no-device-ten-v2\\audio-final.tsv"
+        ],
+        "binarySha256": "eb9be0b06090bd9d2fac076f211ded48de549ce598703eb23a98b53520c7afc0",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 176.01879569999983,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "c32f46a563b70dcb329d273827e6e4d12569499117940e1194bbdf6112c08d16"
+      },
+      "restart": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-movie-runtime-594-20261030\\data",
+          "--frames",
+          "55",
+          "--no-audio",
+          "--set",
+          "WelcomeGiven=1;userUpdated=1;autoDemo=0;tellTips=0;sleepPerLoop=25",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-movie-runtime-594-20261030\\gui-natural-no-device-ten-v2\\restart\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-movie-runtime-594-20261030\\gui-natural-no-device-ten-v2\\restart\\states.tsv"
+        ],
+        "binarySha256": "eb9be0b06090bd9d2fac076f211ded48de549ce598703eb23a98b53520c7afc0",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 2.427373499999703,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "cb76758e176fb9498de489bf084e9844f54d645d0fb4457c2c91e00a6a78d515"
+      },
+      "playing": {
+        "movie_runtime": [
+          "199",
+          "1",
+          "0",
+          "0",
+          "0"
+        ],
+        "movie_stream": [
+          "199",
+          "258",
+          "258",
+          "1",
+          "0",
+          "0",
+          "525953"
+        ],
+        "movie_update_depth": [
+          "1"
+        ],
+        "paused": [
+          "1"
+        ]
+      },
+      "final": {
+        "movie_runtime": [
+          "0",
+          "0",
+          "1",
+          "1889",
+          "0"
+        ],
+        "movie_update_depth": [
+          "0"
+        ],
+        "paused": [
+          "0"
+        ],
+        "phase": [
+          "0"
+        ],
+        "page": [
+          "main"
+        ]
+      },
+      "pixels": {
+        "frameIndex": 257,
+        "same": true,
+        "actualSha256": "6661e332cd9136edfaca5479a6f6cd9c18b28614a8448be6cacfc3ec10315851",
+        "expectedSha256": "6661e332cd9136edfaca5479a6f6cd9c18b28614a8448be6cacfc3ec10315851",
+        "command": [
+          "C:\\Users\\BUZZ\\AppData\\Local\\Microsoft\\WinGet\\Packages\\yt-dlp.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe\\ffmpeg-N-125875-g5d4d3bdc61-win64-gpl\\bin\\ffmpeg.EXE",
+          "-nostdin",
+          "-v",
+          "error",
+          "-i",
+          "H:\\T5Workspace\\NetstormReborn\\originalCD\\MOVIE\\englishintro2x.smk",
+          "-vf",
+          "select=eq(n\\,257)",
+          "-frames:v",
+          "1",
+          "-pix_fmt",
+          "pal8",
+          "-f",
+          "rawvideo",
+          "-"
+        ],
+        "videoRect": [
+          320,
+          240,
+          640,
+          320
+        ]
+      },
+      "scope": "실제 인트로/완료 저장/재시작만 실행. 포획/희생/공격/승리·멀티플레이 실행 없음.",
+      "supplementalPhysicalComparison": {
+        "same": true,
+        "actualSha256": "5203c4ccde280b0f79749c51c729a0b5a77591b8a75ff661026ed35298bf0f9e",
+        "expectedSha256": "5203c4ccde280b0f79749c51c729a0b5a77591b8a75ff661026ed35298bf0f9e",
+        "dimensions": [
+          1280,
+          800
+        ],
+        "outputRect": [
+          0,
+          0,
+          1280,
+          800
+        ]
+      }
+    }
+  ],
+  "audioDevice": {
+    "waveOutDeviceCount": 0,
+    "waveOutError2": "시스템의 영역을 벗어난 장치 ID를 사용했습니다."
+  },
+  "sessionState": {
+    "foregroundWindow": null,
+    "waveOutDeviceCount": 0,
+    "scope": "자연 종료 실행 중 실제 세션 장치/전경 조회. 어떤 창도 활성화하거나 상태를 합성하지 않음."
+  },
+  "actualPcmDevicePlaybackVerified": false,
+  "activeFullscreenPhysicalOutputVerified": false,
+  "windowPhysicalOutputVerified": true,
+  "preservedFailedAttempts": {
+    "gui-esc-v1": "최초 재시작 UserNotUpdated 안내 미처리. 본 ESC/픽셀/저장은 통과했으나 전체 스크립트 실패.",
+    "gui-space-audio-nine": "검사 도구 인자 --audio-mute 오타. 프로그램은 즉시 종료1.",
+    "gui-space-audio-nine-v2": "공용 검사 환경의 noAudio=1 때문에 PCM0. 실제 장치 성공 아님.",
+    "gui-space-audio-nine-v3": "명시 음향 장치 시도. waveOut0개/실제 열기 오류2. PCM 성공 검사 실패.",
+    "gui-natural-no-device-ten": "자연 영상 끝/State4 이후에도8400프레임 대기.300초 제한으로 검사 실패.",
+    "build-pcm-clock.log": "잘못된 NetstormTests 대상명. 실제 두 대상의 후속 빌드 성공.",
+    "gui-right-fullscreen-four/presentation-comparison.json": "물리 출력은 논리 영상과 불일치. 별도 전경 조회NULL. 논리 검사 통과와 구별."
+  },
+  "protected": {
+    "total": 2561,
+    "originals": 1394,
+    "originalCD": 425,
+    "existingFixtures": 740,
+    "other": [
+      "AGENTS.md",
+      "extracted/refined/originals/functions.tsv"
+    ],
+    "changed": []
+  },
+  "newFixtureCount": 1,
+  "newZipCreated": false,
+  "lastPackagedUnit": 591,
+  "lastFull34ProductUnit": 586,
+  "lastFull34VerificationUnit": 587,
+  "forbiddenGameplayReproduced": false,
+  "newMultiplayerTestsRun": false,
+  "win11Run": false,
+  "remaining": [
+    "실제 PCM 장치 재생/장치 시계",
+    "활성 사용자 세션 전체화면 실제 출력",
+    "CD 탐색/언어별 경로/배포 영상 동봉",
+    "현재 제품 전체34/남은UI·Edit·시나리오/전체 동일성",
+    "싱글플레이 뒤 MP 무시험 사전 구현, 이후4~7차"
+  ],
+  "sourceSha256": {
+    "cpppj/src/CMakeLists.txt": "59a04c99ebf0ab255b6dc1c6eaacc6dd2d0cdaafcb04a32ca4f7a3bb32014e20",
+    "cpppj/src/client/ClientAudio.cpp": "f3557a9f06b8011ed00040dc6d5058de2161c3ae49c2253313ad88f437176a9c",
+    "cpppj/src/client/ClientAudio.h": "09c416e0c711c996c57466c4bbcbba4da3817d56376fa8425481d7eb4361810a",
+    "cpppj/src/client/ClientMain.cpp": "c1899250febce487deb07d0138d8151e21129f169cf8356b3730832861f4673c",
+    "cpppj/src/client/ClientMain.h": "55633df90699e0b034d1be5973b25948a85541c8423462cae4555d4e31d97159",
+    "cpppj/src/client/MoviePcmOutput.cpp": "035a4a4ca081570d5402e855bcb7c7266083a49fbab5e9425f100ae8c22c9616",
+    "cpppj/src/client/MoviePcmOutput.h": "b21629327e2bef179b487898489ee2ba06b8617f83ef29c13f41ec16718185be",
+    "cpppj/src/client/MovieTimer.cpp": "518a9abdae5493c6fac20be8a0f92de121d195ff367a88dd711a99eaba1b6335",
+    "cpppj/src/client/MovieTimer.h": "5f9f7fa74f533a230ecba86b0c67aee600094efde53b289e8dc0e09dcc4f3d6b",
+    "cpppj/src/client/RawButtonControls.cpp": "c03973b543bec22d68dfe02aee9baba7c67da2866ec940253588ef02f4e98bf9",
+    "cpppj/src/client/RawMenuControls.cpp": "7c9441c092be06f0148162f5141870318595ebdafe41329680e3eeda45d02b95",
+    "cpppj/src/client/RawMenuControls.h": "2cce308d6605270a2ecf07fbfa433f18f08699654671278385f03bc7b2896356",
+    "cpppj/src/client/RawMovieControls.cpp": "01dcbf8e21055af5f0dd32a1a45b3071985e695c4ce23d1f6a8ca9db60892863",
+    "cpppj/src/client/RawMovieControls.h": "f4f4e571a3bf467c09f82ab0cc1d8b4bb3a68701805f5a570b1ec4922ec109a8",
+    "cpppj/src/client/Screen.cpp": "a1add402d31c3e222cd8aeacd59be324d04a863ba60078cdf2b2dd486c80aa5d",
+    "cpppj/src/client/Screen.h": "3651601ccbade486d2f879452756ce070bde3b2ae83b27d97cb475d3ea67b756",
+    "cpppj/src/client/UberEditor.inc": "96269b0b98530ceaac2a5d81958bcacde3be77d1f6e67a70ceff87a11282e279",
+    "cpppj/src/client/UberGump.cpp": "7ccf17079988d355dcebf4057f356628361bbaba9d9fb5bde19660305a72422e",
+    "cpppj/src/client/UberGump.h": "eb64c865eb7bbcbf9b3c9bd0c5501ea95f8828d1236e312bb5d21967b1e1d2e4",
+    "cpppj/tests/CMakeLists.txt": "344926b673306f2a94966a0b91e5e345c8f02e339d5325ed890dd397f9628a10",
+    "cpppj/tests/MovieTimerTests.cpp": "45dc9fc5f2e460e0bbd2ebaca8f6d4462972ea8f01759306b42c435a539f42e6",
+    "cpppj/tests/RawMenuControlsTests.cpp": "57714e37fe119ceb76dc93cedb42d8f5bd30c36043012afa5d4c200c13eb937b",
+    "cpppj/tests/RawMenuMovieTests.inc": "19ade1d19e92e178c56e7815bb231dd959caf4eb5393b9c9560089a89aa6321b",
+    "cpppj/tests/fixtures/movie-timer-x86.tsv": "220fadc980edec11a2517f7c7a0feffc037a2b4f1d6c2f069220c769c3b04473",
+    "tools/cpp_movie_runtime_smoke.py": "3d1c1895174a332307f628e85235fc80a28a2b789e41be3af3d549c6ed91017e",
+    "tools/decomp_movie_timer.py": "a87d8b6b71771754a9083ed2e50779b8ae6c4832720cc5e390bba12aca168ef8"
+  },
+  "evidenceSha256": {
+    "audio-device.json": "417ca0a75851ce4756aa12dc5b2cf2652a8032c43da84654ba1d22968ec2b214",
+    "build-clean.log": "f8907c43505ca9f9f42d9e3606dddea2b54465f218d80caff31d085337176f1f",
+    "build-final.log": "f9feede759c735a59eb635e57062224125a5b8b6ff75c45120cc1764146fbb35",
+    "build-first.log": "0d9e049ea4709453f4684f03c9b97454afbb84212ce62e7a7aec5bd7ff35c3bd",
+    "build-pcm-clock-final.log": "d17b1ee0442dd51051fd7b19b7ce2d55718481b922f3f56c0dd7b067db63695f",
+    "build-pcm-clock.log": "531cd15d6c3492316461f5e22c69f8885c666fe2c377287b0f7c57c9301407d6",
+    "gui-esc-v1/pixel-comparison.json": "34aeb98c9ffda49d249f4f7a316c2ac76a6e537b9da2d0ce1b3b12193a777d57",
+    "gui-esc-v1/restart/run.json": "7df23703d1cb45730cedbcf3ad91b98311904449dc6450b0da3ccb2f76b8d32e",
+    "gui-esc-v1/restart/running.json": "05d096e58c75fb5ddabd4f3249c716a0f16570349c56e4787379a83bcc0c7ff5",
+    "gui-esc-v1/restart/states.tsv": "b0070ab8f2851edef39b96d5a830f00d530e5667b885b7f31b3c66905758c6fe",
+    "gui-esc-v1/restart/stderr.log": "cb76758e176fb9498de489bf084e9844f54d645d0fb4457c2c91e00a6a78d515",
+    "gui-esc-v1/restart/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "gui-esc-v1/restart/steps.tsv": "e2061a64ba19bcf19219c2f56ceb4cb6a471a78c23fd5bff44874ad3f0d28d8b",
+    "gui-esc-v1/run.json": "6e41f227611a4d505d050933ac730191f93048070a9e01bcf089b5c5712add36",
+    "gui-esc-v1/running.json": "f88d143914d7234ad92205b387b9556505095df4c55b181e3792d3388d2387ee",
+    "gui-esc-v1/states.tsv": "6778c97371b4999c8e4356cec1c309989fff2987396e050ab2ca1e226dfbf4f6",
+    "gui-esc-v1/stderr.log": "5a81205f18e75568ff02b3c80136f49b01d1676cbcda21ff0c25ae7264da49e6",
+    "gui-esc-v1/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "gui-esc-v1/steps.tsv": "127755d4da2056cd7eefb65feb308f92f65559030ac25615220d8b3a5b97e0c4",
+    "gui-esc-v1-driver.log": "619e108a1a7986011f49e205cba5684b153d2fb7d169e2ed9573208dc53acf79",
+    "gui-esc-v2/pixel-comparison.json": "399c6e2c446ceb484792375ee769ccb21dda2465da24332a56279e95cd4c7e79",
+    "gui-esc-v2/restart/run.json": "0bfb7aa2c8b5cb0f9ea0b8cda47971c89782ea10944364e7ff2485810e4ba5dd",
+    "gui-esc-v2/restart/running.json": "14a6bafa6218d6d1bdcd88ce6e99c57316be1488525904975a27898a7b3b59db",
+    "gui-esc-v2/restart/states.tsv": "27a05e3e1991c7aeb1a21fabaa9e08e01990e9743b538c6307b6389c74589629",
+    "gui-esc-v2/restart/stderr.log": "cb76758e176fb9498de489bf084e9844f54d645d0fb4457c2c91e00a6a78d515",
+    "gui-esc-v2/restart/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "gui-esc-v2/restart/steps.tsv": "27bd84d32a41882ad598232f4a1e56dc732d05e7c42b708f4e86473c1756c308",
+    "gui-esc-v2/run.json": "274165ea3b06649a8593f092ec9189a08dc17ffc5caabb2ab0525df396b6dbff",
+    "gui-esc-v2/running.json": "eeab58f0aea33f7a4a5bc2c6cd0f6adc002789d2817c438df6db60a9194c37ce",
+    "gui-esc-v2/states.tsv": "f61b6de2cd04122a82bb79212258e6e85477006e52c1cb14902d3531ed346de3",
+    "gui-esc-v2/stderr.log": "574ed2ced9f94b50e4d2ccdf91f535d309d44962ee9fd10cd91e694a4970bc24",
+    "gui-esc-v2/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "gui-esc-v2/steps.tsv": "b2ca69eb09e40ec4f0fe9f92bdfc18dc3d24ff5a0d65e79345bb23ebb39e08c4",
+    "gui-esc-v2/summary.json": "95431f8963a75f4b4260c43466b4ac45aa7d05f003ae38c1913e6e3ce3edc2bd",
+    "gui-left-german-ten/pixel-comparison.json": "c0d8cfa704a3ab765ea8b0454e17da796dd71a48ad171f4b8aaa9dccb22d4127",
+    "gui-left-german-ten/presentation-comparison.json": "78134727640eca5cb94eb84f81d163ba044c6c7f8c286d9f9a05d354bdc4c253",
+    "gui-left-german-ten/restart/run.json": "2ad3e6ad7028042d44191d3383a52e712c386dbd1e940ef81afaed5ec0edcc9e",
+    "gui-left-german-ten/restart/running.json": "b4c3d9f15c4e1c49e68f893082fca0e9f369d9b64fb1645d00241ab06d0e310c",
+    "gui-left-german-ten/restart/states.tsv": "35c2526c947746d2328e233b140303ce981f429adda41b399e1997528856859c",
+    "gui-left-german-ten/restart/stderr.log": "cb76758e176fb9498de489bf084e9844f54d645d0fb4457c2c91e00a6a78d515",
+    "gui-left-german-ten/restart/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "gui-left-german-ten/restart/steps.tsv": "27bd84d32a41882ad598232f4a1e56dc732d05e7c42b708f4e86473c1756c308",
+    "gui-left-german-ten/run.json": "a5eb6ad6c53558d1e5b7728ec7c354717aac27794bd620d5f525a0db2755d0a6",
+    "gui-left-german-ten/running.json": "cc3f7d93c542ffa8728e67c2f2b1dc0f8aecf63ff59b474ddf537ab67867cdac",
+    "gui-left-german-ten/states.tsv": "b8904109696c85d6140ac7a908e5ea48fe58422b5cb4f170cb926cc132173718",
+    "gui-left-german-ten/stderr.log": "574ed2ced9f94b50e4d2ccdf91f535d309d44962ee9fd10cd91e694a4970bc24",
+    "gui-left-german-ten/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "gui-left-german-ten/steps.tsv": "d4464dfaa8755236d00f5526df4112bc5e409ff507dccfc92b9a4d56bbb2db01",
+    "gui-left-german-ten/summary.json": "b4ec52410c7a31e44358056782618c981fde9e992d43d59cd24a44f69b54f953",
+    "gui-natural-no-device-ten/run.json": "8e8bd0fb8445b631e2e2bf09e78e85015b16b338a884504271c8056414a004a7",
+    "gui-natural-no-device-ten/running.json": "4ca51fb83423bf00c137a7875a16455e3e52f11b4ebc770b09ceefcb6da88499",
+    "gui-natural-no-device-ten/states.tsv": "2271ca4f690e98dc54c69fde11f15de3f71bea118e1546adb0d5b7a1ff2b6a25",
+    "gui-natural-no-device-ten/stderr.log": "dc1d9ec81d458c05ecb8e0b7b73f5a7a14051c66d2170784540f2599735e005b",
+    "gui-natural-no-device-ten/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "gui-natural-no-device-ten/steps.tsv": "9e2d938ada2afee0fe8d3f44254f705ec87d38b3eecac52720601ee7b93591fc",
+    "gui-natural-no-device-ten-v2/audio-final.tsv": "5c260dd73033c8d6bd490a3bdc9615cfac0673194407ba221a0017155bc0a187",
+    "gui-natural-no-device-ten-v2/pixel-comparison.json": "aa1473587f5b647629a31b43d493239654a127da96ebe5196e4d7a6c87bb05f8",
+    "gui-natural-no-device-ten-v2/presentation-comparison.json": "e5f24c4557d2c698bd74cdb00b2e8b05852197e3e17ac9fbb1624de1843a51c6",
+    "gui-natural-no-device-ten-v2/restart/run.json": "f4ad16b085fe26d1c79b4dc5c89b7c3a2642af191ba8a6053965259a44839628",
+    "gui-natural-no-device-ten-v2/restart/running.json": "897d8064a7d880eed5a8de2ff360f8db172c4d9fdab425dd9f12682ce53849d1",
+    "gui-natural-no-device-ten-v2/restart/states.tsv": "59cce05d59e754e83090992823e5ff68332b97edbeb2ec149282b05054c7afb6",
+    "gui-natural-no-device-ten-v2/restart/stderr.log": "cb76758e176fb9498de489bf084e9844f54d645d0fb4457c2c91e00a6a78d515",
+    "gui-natural-no-device-ten-v2/restart/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "gui-natural-no-device-ten-v2/restart/steps.tsv": "27bd84d32a41882ad598232f4a1e56dc732d05e7c42b708f4e86473c1756c308",
+    "gui-natural-no-device-ten-v2/run.json": "52df6de79f0946b7cde049199c2a2fd2dce12ffb1b036899f439e8bab1ceec49",
+    "gui-natural-no-device-ten-v2/running.json": "69ea260c51bf053dc246c2532bbcc20431bdb2c3bd0566ec3ac04dde2cef62f6",
+    "gui-natural-no-device-ten-v2/states.tsv": "eaf734c49d0440eefb62df3f557060f104e40ae26d7ff113f6ad034572f7ca2d",
+    "gui-natural-no-device-ten-v2/stderr.log": "c32f46a563b70dcb329d273827e6e4d12569499117940e1194bbdf6112c08d16",
+    "gui-natural-no-device-ten-v2/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "gui-natural-no-device-ten-v2/steps.tsv": "e0689d3d7dd66ed15299581d4468fb92a06d2a2444597d8d6e987373bf6752e1",
+    "gui-natural-no-device-ten-v2/summary.json": "fff032c3271a22db40aed8dd2becf03ff339ae86cb080415b107624482a2df8f",
+    "gui-right-fullscreen-four/pixel-comparison.json": "df8a11538d9d895f1942c8e0c33ca08f3a183b231e30a2b0d90d305de1a733db",
+    "gui-right-fullscreen-four/presentation-comparison.json": "59bd6719dc540c00dbefc271059ccefbad8cf6ec7f3538675eb7591c1bdf22f3",
+    "gui-right-fullscreen-four/restart/run.json": "c174591ee6e3b6c904e27108b25b21e1de88351f13a14e434e094439d3e254f2",
+    "gui-right-fullscreen-four/restart/running.json": "f2676d37a742c0b5805e04603988cb0fcd36c3363159d82d885160bfd132d123",
+    "gui-right-fullscreen-four/restart/states.tsv": "91e0e8ef3a2a5f15c195dccb87dba0a71f56019e62cbd85c8b649f577e26d71f",
+    "gui-right-fullscreen-four/restart/stderr.log": "cb76758e176fb9498de489bf084e9844f54d645d0fb4457c2c91e00a6a78d515",
+    "gui-right-fullscreen-four/restart/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "gui-right-fullscreen-four/restart/steps.tsv": "27bd84d32a41882ad598232f4a1e56dc732d05e7c42b708f4e86473c1756c308",
+    "gui-right-fullscreen-four/run.json": "faa9d5dc2be4c8be15ded84e66ed836e2e1d2cb349951eb9e49280cd65f4380b",
+    "gui-right-fullscreen-four/running.json": "2478dc4a756f3da6dcf53980b9ecae1102720b2832988ede19920c9a05990aba",
+    "gui-right-fullscreen-four/states.tsv": "60cc262b0c5e31c3eb8c47d0d88d396d38340ca599762c864e24b577c466c019",
+    "gui-right-fullscreen-four/stderr.log": "574ed2ced9f94b50e4d2ccdf91f535d309d44962ee9fd10cd91e694a4970bc24",
+    "gui-right-fullscreen-four/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "gui-right-fullscreen-four/steps.tsv": "ff87525162ab83abd594d66be3e4bca71513e8d9de07c5711b71b099678c8ac0",
+    "gui-right-fullscreen-four/summary.json": "c9caf1c4c38eb4be3953d0e79fe98046a84d44d005f4208fd7d3a5400f00c019",
+    "gui-space-audio-nine/run.json": "927194b4360fed6d568164fb9409165e49e1e06a84023465553c54ade36e86db",
+    "gui-space-audio-nine/running.json": "dd12983a5325b57bb2117af952e377a1fa175c95f9cd6b2ddd7af326288c9378",
+    "gui-space-audio-nine/stderr.log": "b8c7923d3fa0e631b8472e8e399cbd4e7e2b1aaaa3cd33f3aa8e86e7cc75fb83",
+    "gui-space-audio-nine/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "gui-space-audio-nine/steps.tsv": "b256032121dc9682a6058de6079e48a4693d85dea69c3cc8d7853d966be2c03c",
+    "gui-space-audio-nine-v2/run.json": "5a638463f4f4aa4b5a13a222f1a5b57a4962ccbb5fe3189af1e16a72f76e82dc",
+    "gui-space-audio-nine-v2/running.json": "cdaffc53d3f6bc56e064abff848ecd39ed4a55647983622ee86b1ea79fbf7253",
+    "gui-space-audio-nine-v2/states.tsv": "0614fc35cc9c18be62c4301a9a669493c9c6c88acd11a856392bd97a108f9555",
+    "gui-space-audio-nine-v2/stderr.log": "574ed2ced9f94b50e4d2ccdf91f535d309d44962ee9fd10cd91e694a4970bc24",
+    "gui-space-audio-nine-v2/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "gui-space-audio-nine-v2/steps.tsv": "b4a63d8656d3c35955a645344846c65dcb33aebe0780debf5d14390b4d2ee9e0",
+    "gui-space-audio-nine-v3/audio-final.tsv": "cbfee71e83517b4bfd07731b646a46971dbfb12a4322b247b2f23f2961b6f674",
+    "gui-space-audio-nine-v3/run.json": "7be40aef0b13bafbe85dd0390e8381102337deb512ffd6cd4992eae3b7967470",
+    "gui-space-audio-nine-v3/running.json": "dd6cf0867b9b7699ae7d1bd387d5f028795579384eaa36a2828d6390dd9de8f7",
+    "gui-space-audio-nine-v3/states.tsv": "ae5fac46e37825ab48d093a218fd9fb32cec5549d8422ab54f50eb1b40d9dba6",
+    "gui-space-audio-nine-v3/stderr.log": "f57967371fe66ed0abe8a39a93c5fcafb634f249794bb16b65c6a2ca675b4d3a",
+    "gui-space-audio-nine-v3/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "gui-space-audio-nine-v3/steps.tsv": "e8d97ce009fc1796e092cba0687c80e53b5e6b34cac9be501e2dec1cdff1f0b9",
+    "gui-space-no-device-nine/audio-final.tsv": "cbfee71e83517b4bfd07731b646a46971dbfb12a4322b247b2f23f2961b6f674",
+    "gui-space-no-device-nine/pixel-comparison.json": "f20f679e61d36e37ce1f6342cd0f6efbea91930e732f080d99effa00c61ed6ad",
+    "gui-space-no-device-nine/restart/run.json": "37b30004a3fb14beab5cc90559e61d9e8e8d64b06d049fe7a43ee08c2bc68ccf",
+    "gui-space-no-device-nine/restart/running.json": "9b42651164f8dd0ec456307c920bbad57c566e918139d0f2761d353e554a7807",
+    "gui-space-no-device-nine/restart/states.tsv": "fa18babac89b7b1ec308e2cc826851863719e967f271528e8091536f38c495f8",
+    "gui-space-no-device-nine/restart/stderr.log": "cb76758e176fb9498de489bf084e9844f54d645d0fb4457c2c91e00a6a78d515",
+    "gui-space-no-device-nine/restart/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "gui-space-no-device-nine/restart/steps.tsv": "27bd84d32a41882ad598232f4a1e56dc732d05e7c42b708f4e86473c1756c308",
+    "gui-space-no-device-nine/run.json": "333618ee962ca402e01ad9add08b2ec854afb5f59ee4c01aa06244c064a1e484",
+    "gui-space-no-device-nine/running.json": "f85b05cec333b5087a86db12ddccd52af28b51b4377afed32df7b43f42a09f51",
+    "gui-space-no-device-nine/states.tsv": "9da793e7ddf8de0d77b298f6a73b2028b49c777345540148cdc0acd5e27116e3",
+    "gui-space-no-device-nine/stderr.log": "f57967371fe66ed0abe8a39a93c5fcafb634f249794bb16b65c6a2ca675b4d3a",
+    "gui-space-no-device-nine/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "gui-space-no-device-nine/steps.tsv": "c4e680068f0d649cf591d355d19e61982908406f9f0a862c4285103a29f50d2f",
+    "gui-space-no-device-nine/summary.json": "646d74a0c10ccc0e07ccccb38c1cf4b2821c4a355c28d048b60dda04d40e8b46",
+    "native-timer-final-verify.log": "6c274575f1b18657be03af3e8d06292ca1de40cd886609820b15201faf366965",
+    "protected-after.json": "db27770a40a28cfeb07b9b3f2ba99a9d7f225df5d8a77ee3712f2c4b27ea1479",
+    "protected-before.json": "0920c09c90cc49242bf5522524219464870a17a63e71084bc618bac9900c2aa5",
+    "protected-final.json": "ddc4fc264892035e2a828ae7febf8e72fa0105ac29b3238db7a740935bfcbf6e",
+    "session-device-state.json": "c87549d42aa5957f709ac030626aa7a72b2fdc0639496f4e9914ea5dbb4d829a",
+    "tests-ClientMainMenuGlobals_-adjacent.log": "a524a9acc0656826c81bc6cb7a184c581b4db4cd6a862931791c2bad401c68ec",
+    "tests-decoder.log": "c0b1fae3320256f6774d6d117ec9e38e84ec63311823503fc2ef5c5c87b42035",
+    "tests-GumpInput_-adjacent.log": "5cb6f3cb1b6bdd62ef1d41345d897757c626f075b9e5e9090ce843bb678c7b93",
+    "tests-GumpLifetime_-adjacent.log": "426a3d77cc906c9a8caf6fe5c6c0c0e191465767a352e340c63ff7a8804e8c6a",
+    "tests-intro.log": "4279b673ca9163a218c68be225853c07a20ea9729a78e9c0b48a03a2e087769a",
+    "tests-Movie-final.log": "a8886f18a34104959133ee3990a32a48077138ccca337631b366f667971abd27",
+    "tests-movie-first.log": "a8886f18a34104959133ee3990a32a48077138ccca337631b366f667971abd27",
+    "tests-NativeIntro-final.log": "4279b673ca9163a218c68be225853c07a20ea9729a78e9c0b48a03a2e087769a",
+    "tests-RawMenuControls_-adjacent.log": "e16566e0999ad253a871920ffd263d06c8da6a22d0bd21a4981f49cbe857ba81",
+    "tests-RawMenuEditor-adjacent.log": "48e2202586e40fcbe0df9376beabbd950cc54bd02ec9c16182ba9046196a63c6",
+    "tests-SmackerDecoder-final.log": "c0b1fae3320256f6774d6d117ec9e38e84ec63311823503fc2ef5c5c87b42035",
+    "timer-first.log": "94176e79a21877043afe6e6aac527c55b288a8ce0649621988ec43cee6e73c0c",
+    "timer-verify.log": "6c274575f1b18657be03af3e8d06292ca1de40cd886609820b15201faf366965"
+  },
+  "rawDirectory": "extracted/cpp-movie-runtime-594-20261030"
+}

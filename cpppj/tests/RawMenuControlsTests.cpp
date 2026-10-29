@@ -408,3 +408,6 @@ TEST_CASE(RawMenuControls_MinimapReplacementKeepsCurrentWorldNotifications) {
 
 // 실제 기존/신규 Editor 월드의 전체 섬 추가 창과 입력/수명을 검증한다.
 #include "RawMenuEditorIslandWindowTests.inc"
+
+// 실제 CD 영상의 공통 Gump 수명/픽셀/스킵/자연 종료를 검사한다.
+#include "RawMenuMovieTests.inc"

@@ -165,6 +165,8 @@ public:
     void Update(ScreenRect rect);
     // 원본 FUN_004a40d0: 시스템 커서를 보이거나 숨긴다(숨김 횟수를 센다).
     void ShowCursor(bool show);
+    void RestoreMovieCursor(); //004a4fc0의 숨김깊이1→ShowCursor(true)를 같은 실제 Screen에 적용한다.
+    bool CursorVisible() const; // 소프트웨어 커서도 현재 원본 숨김 깊이를 따른다.
 
     // 현재 화면 모드 플래그.
     std::uint32_t Flags() const;

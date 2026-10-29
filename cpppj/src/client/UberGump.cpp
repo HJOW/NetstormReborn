@@ -11,6 +11,7 @@
 #include "client/ThemeTechnologyCommand.h"
 #include "client/ProductionShortcuts.h"
 #include "client/RawMenuControls.h"
+#include "client/RawMovieControls.h"
 #include "client/RawHtmlWindowContext.h"
 #include "client/RawGameMenus.h"
 #include "client/ScreenResolutions.h" // 메인/ESC가 같은 원본 확인 흐름과 호환 화면비 선택을 사용한다.
@@ -933,6 +934,7 @@ void UberGump::OpenObjectMenu(o::SquidId id,const InputEvent& event) {
 }
 // 같은 실제 큐의 원본 정수 명령과 물리 사건을 분배한다.
 void UberGump::Event(InputEvent event) {
+    if (const auto* movie=rawButtons_->Menus()->Movies();movie && movie->Active()) { const auto routed=rawButtons_->RouteInput(event);if (routed.consumed) { rebuild_=true;return; } } // 실제 MovieGump 모달을 일반 ESC/키 처리보다 먼저 같은 Gump Route에 전달한다.
     const auto transitionCode=event.code&0x03ffffffU; // 원본 Guide 제어 사건은 일반 입력/프레임보다 먼저 소비한다.
     if (transitionCode==kMissionBeginCommand || transitionCode==kMissionReloadCommand || transitionCode==kMissionForkCommand || transitionCode==kMissionEndCommand) {
         GuideMissionCommandHooks hooks;
@@ -1469,6 +1471,7 @@ std::string UberGump::Report(bool cameraOnly) const {
     out << "thunder_processes\t" << client_.ThunderFlashCount() << '\n';
     const auto& trace=client_.DiagnosticGlobals();out<<"raw_trace\t"<<trace.log.level<<'\t'<<trace.depth<<'\t'<<trace.suppress<<'\t'<<trace.log.indent<<'\t'<<(trace.log.stream!=0)<<'\n'; // 같은 Client 전역만 관측하며 로그를 출력하거나 파일을 열지 않는다.
     out<<"game_menu_bar\t"<<(gameMenuState_ ? gameMenuState_->menuSerial : 0U)<<'\t'<<GameMenuOpen()<<'\t'<<(gameMenuState_ ? gameMenuState_->checksum : 0)<<'\n'; // 같은serial조회와기존SP검산을관찰한다.
+    out<<"movie_update_depth\t"<<client_.MovieUpdatePauseDepth()<<'\n'; // 게임 시계 정지와 별개인 실제 현재 갱신 깊이다.
     out<<"state_hud\t"<<(world_!=nullptr)<<'\t'<<(rawButtons_->UberRoot() && rawButtons_->UberRoot()->Current())<<'\t'<<(hud_?hud_->boundMinimap:0)<<'\t'<<(rawButtons_->Minimap()?rawButtons_->Minimap()->RootToken():0)<<'\t'<<client_.GameplayGlobals()->Borrowed()<<'\n'; //생성/현재 World 통지 대여를 분리 관측하며 State 설치 완료를 합성하지 않는다.
     const auto connections=client_.ConnectionGlobals()->Cleanup();std::size_t mainCount{},pendingCount{};for (const auto token:connections.transceivers) if (token) ++mainCount;for (const auto token:connections.pending) if (token) ++pendingCount; //같은 실제 고정표를 관측만 하며 포인터/개수/노드를 새로 만들지 않는다.
     out<<"connection_table\t"<<mainCount<<'\t'<<pendingCount<<'\t'<<connections.pendingCount<<'\t'<<connections.transceivers[9]<<'\t'<<connections.synchronization<<'\n'; //Client 장기의 실제 토큰이 정상 미션 로그인에서도 사용되는지 확인한다.

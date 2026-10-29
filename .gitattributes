@@ -2120,3 +2120,24 @@ tools/decomp_movie_lifecycle.py text eol=lf
 cpppj/tests/fixtures/movie-lifecycle-x86.tsv -text
 cpppj/movie-lifecycle-native-20261030.json text eol=lf
 cpppj/movie-lifecycle-runtime-20261030.json text eol=lf
+
+# 실제 MovieGump/SDK 시계/PCM 연결의 소스·최초 관측과 실행 근거를 보존한다.
+cpppj/src/client/MoviePcmOutput.cpp text eol=lf
+cpppj/src/client/MoviePcmOutput.h text eol=lf
+cpppj/src/client/RawMovieControls.cpp text eol=lf
+cpppj/src/client/RawMovieControls.h text eol=lf
+cpppj/src/client/MovieTimer.cpp text eol=lf
+cpppj/src/client/MovieTimer.h text eol=lf
+cpppj/tests/MovieTimerTests.cpp text eol=lf
+cpppj/tests/RawMenuMovieTests.inc text eol=lf
+tools/cpp_movie_runtime_smoke.py text eol=lf
+tools/decomp_movie_timer.py text eol=lf
+cpppj/tests/fixtures/movie-timer-x86.tsv -text
+cpppj/movie-timer-native-20261030.json text eol=lf
+cpppj/movie-runtime-20261030.json text eol=lf
+cpppj/src/client/ClientAudio.cpp text eol=lf
+cpppj/src/client/ClientAudio.h text eol=lf
+cpppj/src/client/ClientMain.h text eol=lf
+docs/exe/cpp-movie-runtime-20261030.md text eol=lf
+cpppj/src/client/Screen.cpp text eol=lf
+cpppj/src/client/Screen.h text eol=lf

@@ -10,6 +10,7 @@
 #include "client/QuickHelpHtml.h"
 #include "o/GumpFormHost.h"
 #include <memory>
+#include <filesystem>
 
 namespace netstorm::o { class ConfigInterface; } // 내장 설명도 현재 Client의 같은 설정 등록부를 빌린다.
 namespace netstorm::client {
@@ -21,6 +22,7 @@ struct RawTextEntryContext;class RawTextEntryControls; // 같은 실제 편집 �
 struct RawChatWindowContext;class ChatWindow;class HudChatGeometry; // 전체 Chat 공장과 같은 실제 자식 기하다.
 struct RawHtmlWindowContext;class HtmlWindowGump; // 실제 HTML 부모의 전역/본문·수명 처리기다.
 struct SaveFortNameDialogContext;struct SaveFortNameDialogNode; // 원본 이름 입력 부모와 같은 편집 작업본 장치다.
+struct RawMovieContext;class RawMovieControls; // 실제 영상의 singleton/공통 수명 조립이다.
 struct RawBackgroundGifContext;class RawBackgroundGifControls; // 새 Uber의 실제 BackgroundGif 자식이다.
 struct EditorIslandWindowContext;struct EditorIslandWindowNode; // 실제 섬 추가 창의 현재 필드와 Session 대여다.
 // 같은 수집/정렬/클립 안에서 생산 패널의 원본 파생 Draw를 호출한다.
@@ -129,6 +131,9 @@ public:
     void ForwardDiagnosticChat(std::uint32_t enabled,std::string_view format); // 원문434f40의 현재 색·Chat 전역/인자 없는 서식을 같은 실제 공장에 전달한다.
     std::uint32_t InvokeChatCommand(std::uint32_t callback); // 실제 clear/quit callback의 원문 효과다. 미지원 콜백은 거부한다.
     void CloseChatWindows(); // 부분 생성/미부착 자식과 모든 실제 Chat root를 공통 수명으로 반납한다.
+    RawMovieControls& EnableMovies(RawMovieContext context); // 실제 디코더/PCM/현재 Client를 같은 공통 Gump 트리에 연결한다.
+    RawMovieControls* Movies() const; // 생성된 영상 소유자만 읽으며 파일/장치를 열지 않는다.
+    void CloseMovies(); // 실제 end 뒤 공통 Kill/Cleanup으로 singleton을 반납한다.
     RawBackgroundGifControls& EnableBackgroundGifs(RawBackgroundGifContext context); // 실제 VFS/설정과 GIF 공장을 같은 UI에 설치한다.
     RawBackgroundGifControls* BackgroundGifs() const; // 설치한 실제 GIF 처리기를 빌린다.
     std::uint32_t CreateHtmlWindow(RawHtmlWindowContext context,std::uint32_t width,std::uint32_t height); // 같은 Client/공통 등록표에 실제 전체 저장소를 생성한다.

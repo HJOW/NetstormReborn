@@ -369,7 +369,7 @@ int Client::Run() {
             SendMessageA(window, WM_CLOSE, 0, 0);
             continue;
         }
-        // 10. 원본439abe는54dc58의 양수만 검사한다. 현재 Moviegump 소유자는 미연결이므로 실제 BSS0 정상 가지이며 게임 Pause를 대신 읽지 않는다.
+        // 10. 원본439abe는 실제 Moviegump가 소유하는54dc58의 양수만 검사한다. 게임 시계 정지와 구별하며 영상 중에도 아래 idle은 실행한다.
         if (movieUpdatePauseDepth_<=0) {
             // 원본439ad3의 설정 저장은439b13의 가상 소멸/OnExit 예약보다 먼저다.
             if (configuration_.Configuration().changed) SaveOptions();
@@ -398,6 +398,15 @@ int Client::Run() {
 
 // 소리·음악 묶음이다. noAudio이거나 초기화 전이면 널이다.
 ClientAudio* Client::Audio() { return audio_.get(); }
+// 원문00435dc0의 같은 갱신 깊이를32비트로 가감하며 게임 시계와 합치지 않는다.
+void Client::PauseMovieUpdates(bool paused) { movieUpdatePauseDepth_=std::bit_cast<std::int32_t>(std::bit_cast<std::uint32_t>(movieUpdatePauseDepth_)+(paused ? 1U : 0xffffffffU)); }
+// 실제 현재 갱신 깊이를 관측하며 상태를 합성하지 않는다.
+std::int32_t Client::MovieUpdatePauseDepth() const { return movieUpdatePauseDepth_; }
+// 원문의 종료 음질3 재초기화도 같은 장기 음향/창/예약 음량으로 수행한다.
+void Client::RestoreMovieSound(std::uint32_t quality) { if (audio_) { auto values=ReadAudioOptions();values.quality=static_cast<int>(quality);audio_->Initialize(reinterpret_cast<std::uintptr_t>(window_),values); } }
+// 두 검사 옵션은 실제 영상 PCM에도 그대로 적용한다.
+bool Client::MovieAudioEnabled() const { return !options_.noAudio; }
+bool Client::MovieAudioMuted() const { return options_.audioMute; }
 
 // 원본 init sound 단계의 같은 Client 음향을 한 번만 만든다. noAudio는 창·장치 없이 같은 장기 owner를 준비한다.
 void Client::InitializeNativeAudio() {
@@ -638,7 +647,7 @@ void Client::PresentScene() {
         if (kencloudGlobals_->WorldRedraw()) renderer_->InvalidateAll(); // 원문 zoom/지형의 전체 갱신을 같은 현재 프레임의 Draw에 반영한다.
         if ((screen_->Flags() & ScreenMode::kSoftwareMouse) != 0) {
             const auto position = Poll(0); const auto hotspot = cursor_->Hotspot();
-            renderer_->SetSoftwareCursor(active_ && (position.code & InputCode::kOutside) == 0 ? cursor_->SoftwareImage() : nullptr,
+            renderer_->SetSoftwareCursor(active_ && screen_->CursorVisible() && (position.code & InputCode::kOutside) == 0 ? cursor_->SoftwareImage() : nullptr,
                 {position.x - hotspot.x, position.y - hotspot.y});
         } else renderer_->SetSoftwareCursor(nullptr,{}); // 호환 모드 복귀 때 이전 소프트웨어 커서 캐시를 지운다.
         screen_->SetClip(0, 0, screenWidth_, screenHeight_);

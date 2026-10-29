@@ -109,6 +109,7 @@ public:
     void WriteSongEndBits(std::uint64_t bits) noexcept;
     // 소리 장치가 열려 있으면 참이다.
     bool DeviceReady() const;
+    bool SoundEnabled() const; //0054daa0의 현재 실제 소리 옵션이다. 장치 실패가 끈 값도 그대로 읽는다.
     // 검사용 상태 보고다. 장치·옵션·음량·지금 곡·채널 활성·곡 길이·재생 커서·음악 스레드 오류를 줄마다 `이름\t값`으로 적는다.
     std::string Describe();
 private:

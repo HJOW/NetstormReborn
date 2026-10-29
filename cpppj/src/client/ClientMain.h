@@ -106,6 +106,10 @@ public:
     void PushGamePause();
     // 원본00460e30의 정지 한 깊이를 반납한다. 호출자가 자신이 보유한 깊이와 짝을 맞춘다.
     void PopGamePause();
+    void PauseMovieUpdates(bool paused); //00435dc0의0054dc58을 원문처럼 중첩 가감하며 게임 시계 정지와 구별한다.
+    std::int32_t MovieUpdatePauseDepth() const; // 실제 영상 갱신 정지 깊이를 읽는 관측이다.
+    void RestoreMovieSound(std::uint32_t quality); //004837f0의 현재 음향을 같은 Client 소유자/창에서 다시 연다. noAudio는 장치를 열지 않는다.
+    bool MovieAudioEnabled() const;bool MovieAudioMuted() const; // 실제 영상 PCM에도 동일한 두 검사 옵션을 적용한다.
     // 원본 게임 시계의 실제 정지 여부를 관찰한다.
     bool Paused() const;
     // 00460e70의 같은 시계 누적 정지 시간만0으로 쓴다. Native cleanup 호출 연결은 별도이며 현재 프레임/원점/정지 소유권은 보존한다.
@@ -325,7 +329,7 @@ private:
     // clock_: 프레임 판정에 현재 게임 시각을 공급하는 시계.
     o::GameClock clock_;
     bool uiPaused_{}; // 메뉴/브리핑의 단일 정지 소유 표식이다. 원본 미션 scriptPaused와 별도로 유지한다.
-    std::int32_t movieUpdatePauseDepth_{}; // 원본0054dc58의 BSS0 정상 경계다. Moviegump483680/4837f0의435dc0 소유 연결은 미복원이며 GameClock 깊이로 합성하지 않는다.
+    std::int32_t movieUpdatePauseDepth_{}; // 원본0054dc58이며 실제 Moviegump483680/4837f0이435dc0으로 보유/반납한다. GameClock 깊이와 별개다.
     // time_: 프레임의 게임 시각과 벽 시각 및 시간 차 (o::FrameTime).
     std::shared_ptr<o::FrameTime> time_{std::make_shared<o::FrameTime>()}; // 같은 실제 프레임 객체를 장기 Host도 pin하며 별도 시각 사본을 만들지 않는다.
     // kernel_: 프로세스 등록과 프레임 실행을 담당하는 커널.

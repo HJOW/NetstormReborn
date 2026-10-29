@@ -32,6 +32,7 @@ class CampaignObjectMenuClient; // 같은 실제 원본 객체 메뉴와 현재 
 struct MissionFortLoadRequest; // Init부터 실제 Session 설치까지 같은 요청과 Zone 이미지를 소유한다.
 class CampaignTemplateStorage; // 원본 명시 Init/State 정리까지 같은9개 manager의 수명을 소유한다.
 struct RawHtmlWindowContext; // 실제 전체 HTML에 현재 게임 소유자의 장치를 빌린다.
+struct RawMovieContext; // 실제 MovieGump의 화면/두 정지/음향 장치를 빌린다.
 class TellFileMenus; // 실제 파일 목록의 등록 Config를 부모/미션보다 오래 유지한다.
 class TextClipboard; //같은 Client UI의 모든 문자 입력이 공유하는 실제 CF_TEXT 부모다.
 class EditorCatalogWorkspace; //목록/직접 Edit/이름 변경이 공유하는 장기 단일 namespace와 이관 장부다.
@@ -94,6 +95,7 @@ private:
     // 원본 이름의 설정 객체를 보존해 캠페인 제목과 변수를 치환한다.
     o::Config& Script(std::string_view name);
     RawHtmlWindowContext LoadingHtmlContext(ScreenRect mapView); // 같은 Client/Config/큐와 매번 현재 뷰를 공급한다.
+    RawMovieContext MovieDevices(); // 영상 객체가 같은 실제 Client의 장기 Screen/시계/음향을 조회하도록 연결한다.
     // 표시 상태를 합성한다. 페이지 교체 예약이 있을 때만 입력 영역과 실제 돌 버튼을 함께 교체한다.
     void Compose();
     // 새 페이지/팝업/해상도의 입력 영역 교체를 다음 합성에 예약한다. 단순 픽셀 갱신에는 쓰지 않는다.

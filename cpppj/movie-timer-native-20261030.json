@@ -1,0 +1,13 @@
+{
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "observations": 14,
+  "sha256": {
+    "originals/Smackw32.dll": "da99a9e07ec6dcc3123ab7275adb4e38b3e9fa22e270a71397e89f37c2e409c9",
+    "tools/decomp_local_mission_transport.py": "db71da65079aa9a985a3a833edd224f089ba9a20137d92042551cb346937eb78",
+    "tools/decomp_movie_timer.py": "a87d8b6b71771754a9083ed2e50779b8ae6c4832720cc5e390bba12aca168ef8"
+  },
+  "fixtureSha256": "220fadc980edec11a2517f7c7a0feffc037a2b4f1d6c2f069220c769c3b04473",
+  "scope": "SDK00403000..00403137의 soundtrack=-1 fallback 실제CPU. timeGetTime/406160은 명시 장치. DLL/게임/창/오디오 장치 실제 로드/실행 없음."
+}

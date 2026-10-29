@@ -475,6 +475,10 @@ void Screen::ShowCursor(bool show) {
 }
 // 현재 화면 모드 플래그.
 std::uint32_t Screen::Flags() const { return flags_; }
+// 원문004a4fc0은 중첩 깊이를1로 둔 뒤 한 번 표시해0으로 맞춘다.
+void Screen::RestoreMovieCursor() { cursorHidden_=1;ShowCursor(true); }
+// 원문 숨김 깊이는 하드웨어 커서와 현재 소프트웨어 표시 양쪽에 같은 관문을 제공한다.
+bool Screen::CursorVisible() const { return cursorHidden_<1; }
 // 화면 폭.
 int Screen::Width() const { return width_; }
 // 화면 높이.
