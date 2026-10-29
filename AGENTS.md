@@ -61,7 +61,7 @@
              이후 추가 요구사항을 반영한다. (4~6차 목표.)
                  4차 - MCP 추가 작업 진행 (MCP 를 추가하는 이유는 dotnetpj 개발을 위해 게임 분석에 활용하기 위해서이다.)
                  5차 - 설정 및 캠페인 진행 상황 저장 디렉토리를 OS 사용자 홈 디렉토리 내부로 이동 (Windows 기준 %USERPROFILE%\Saved Games\Netstorm\Saves\ 에 저장)
-                       커스텀 맵 (Edit 기능으로 작성한 맵) 은 기존 디렉토리와 사용자 홈 디렉토리 내부 (Windows 기준 %USERPROFILE%\Saved Games\Netstorm\CustomMaps\ 에 저장) 둘 다 불러오되, Edit 메뉴에서 신규 작성한 맵은 사용자 홈 디렉토리 내부에 저장하도록 한다.
+                       커스텀 맵 (Edit 기능으로 작성한 맵) 은 기존 디렉토리와 사용자 홈 디렉토리 내부 (Windows 기준 %USERPROFILE%\Saved Games\Netstorm\CustomMaps\ ) 둘 다 불러오되, Edit 메뉴에서 신규 작성한 맵은 사용자 홈 디렉토리 내부 (Windows 기준 %USERPROFILE%\Saved Games\Netstorm\CustomMaps\ ) 에 저장하도록 한다.
                        추가로, 메인 메뉴에서 Edit 선택 시 나타나는 커스텀 맵 목록에 스크롤을 도입하고 출력 갯수 제한을 무제한으로 변경한다.
                  6차 - 한국어 지원 작업
              cpppj 는 윈도우용만 개발한다.
