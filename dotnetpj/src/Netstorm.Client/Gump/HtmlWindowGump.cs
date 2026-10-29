@@ -29,8 +29,8 @@ public class HtmlWindowGumpNode : GumpDecorationNode
     public uint RequestedWidth { get; set; }
     /// <summary>사용자가 요청한 원시 높이 DWORD.</summary>
     public uint RequestedHeight { get; set; }
-    /// <summary>배치 때 현재 메뉴 스택에서 꺼낼 열 수.</summary>
-    public uint MenuColumns { get; set; }
+    /// <summary>배치 때 현재 메뉴 스택에서 꺼낼 열 수.맵 메타가 원문 주소처럼 ref로 같은 필드를 빌린다.</summary>
+    public uint MenuColumns;
     /// <summary>본문 갱신/소멸 때 현재 등록표로 조회하는 보조창 serial.</summary>
     public uint AuxiliarySerial { get; set; }
     /// <summary>0은 비활성인 원본 벽 시각 기한.</summary>

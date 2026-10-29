@@ -136,3 +136,5 @@ cpppj의 파일·클래스·함수 경계와 이름을 따른다. 이름이 같�
 - R3k-6에서 QuickHelpWindow2행을 L1로 추가했다([구현과 검증](../docs/dotnet-quick-help-window-20261029.md)). 원본84/추가14행의12개 전체 기본 노드/창 tail·캐시/표식/효과와 실제 HTML 부모/본문/글꼴·현재 콜백/부분 상태를 확인했다. 전체 위젯/자산 동시 조립·RawMenuControls 상위 소유/메뉴/호스트와 전체 화면 판정은 후속이다.
 
 - R3k-7에서 HtmlWindowGump/Fit4행을 L1로 추가했다([구현과 검증](../docs/dotnet-html-window-20261029.md)). 원본250/Idle88/Fit160행의 전체상태/효과·현재메뉴/정수·float경계와 실제장식/20돌버튼/동적본문/Slider/보호글꼴·입력/큐/지연수명을 연결했다. 같은 기본 객체의 상속만 연 기존장식2행은 port를 유지하고 기준을 갱신했다. Metadata/Factory·대화창/상위소유·전체자산/호스트와 전체화면 판정은 후속이다.
+
+- R3k-8에서 DialogExitCommand/HtmlWindowMetadata/Factory6행을 L1, ScriptStringRing부분2행·RawMenuHtml의 파서/모달부분2행을 port로 추가했다([구현과 검증](../docs/dotnet-html-factory-20261029.md)). 원본204/메타124/전체생성106행과 실제Config/메뉴/본문/고리/모달·입력/링크/지연수명을 연결했다. 무시험결정에따라Zsend입력4행은제외했다. 메타의ref열수때문에기존HTML창2행만재대조기준을갱신했다. 전체ScriptCommand/ConfigInterface/목록owner·메시지/대화창/상위소유·전체자산/호스트와 전체화면 판정은 후속이다.
