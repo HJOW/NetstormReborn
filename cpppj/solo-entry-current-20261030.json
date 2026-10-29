@@ -1,0 +1,680 @@
+{
+  "unit": 587,
+  "date": "2026-10-30",
+  "host": "HJOW-Athlon",
+  "os": "Windows-10-10.0.19045-SP0",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "productUnit": 586,
+  "productCommit": "b35e345b",
+  "gameSha256": "e4fe47f4782f411ee9435c2a8c1a5e498546c4a9bad02c3cfecc36c19a729e52",
+  "zipSha256": "15c5a1660433de63f436427dbe63ee4ba25a17c9697db2f24216d1782ecd21ca",
+  "successfulPaths": 34,
+  "totalExecutions": 35,
+  "initialPassedPaths": 33,
+  "firstFailure": {
+    "mission": "DemoStormRages",
+    "returnCode": 1,
+    "seconds": 2.2692540000007284,
+    "reason": "새 프로필 Welcome2의 Main Menu 버튼을 누르기 전에 Demo를 찾은 검사 입력 누락",
+    "rawDirectory": "extracted/cpp-solo-current-587-20261030/demos/DemoStormRages"
+  },
+  "retest": {
+    "sameProduct": true,
+    "freshProfile": true,
+    "addedInput": "7프레임 click-if Main Menu",
+    "framesOrGameClockOrSuccessConditionsChanged": false
+  },
+  "groups": {
+    "Early Missions": {
+      "passed": 6,
+      "minimumGameClockIncrease": 19.015
+    },
+    "Priest Training": {
+      "passed": 9,
+      "minimumGameClockIncrease": 23.406
+    },
+    "Campaign": {
+      "passed": 16,
+      "minimumGameClockIncrease": 29.828
+    },
+    "Demo": {
+      "passed": 3,
+      "minimumGameClockIncrease": 30.665
+    }
+  },
+  "protectedFiles": 2597,
+  "protectedChanged": [],
+  "protectedExistingFixtures": 736,
+  "new588FixturesExcludedFrom587Baseline": 2,
+  "originalsAndCopiedGameDataUnchanged": true,
+  "smokeToolSha256": "a5599d24479211b8621aa6538f4f1b98c56c921f1ef46f0f97aa1d7ca1a40af3",
+  "initialSmokeToolSha256": "1ceccb63641027e433f19d1bc19a9953c12597eb8831d4393559ae547ccbba6a",
+  "runs": [
+    {
+      "mission": "Tutorial1",
+      "group": "Early Missions",
+      "rawDirectory": "extracted/cpp-solo-current-587-20261030/normal/Tutorial1",
+      "seconds": 21.583542,
+      "gameClockIncrease": 19.668,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true
+      },
+      "resultSha256": "b6dff4f019754cf794e3774720a0cd7e62e10afc039e8414b34d19a1eb6f23a8",
+      "stateReportSha256": "d22a2de6c29716b7f27a2da26841d7a4984d178739696e3786193a2f2a7be93e",
+      "finalSnapshotSha256": "341dbff7bae4a6f19ad4583e2e555cfa3e838e2aa29f3930ec57ceb1eb80fae8"
+    },
+    {
+      "mission": "Tutorial2",
+      "group": "Early Missions",
+      "rawDirectory": "extracted/cpp-solo-current-587-20261030/normal/Tutorial2",
+      "seconds": 21.265225,
+      "gameClockIncrease": 19.015,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true
+      },
+      "resultSha256": "2fc444f392d1d376be304c5809ad87931bfcbf5ac3a73f227a392527afcedcb3",
+      "stateReportSha256": "417b8d01fe29361ccec64f883633f36d8fe71717d5d21c01b938ee42aa6ae72f",
+      "finalSnapshotSha256": "bd6560d57504f75d5f773e9e885bc4a50c18cb2d8f6ebb09bc6f152c7e45c8e9"
+    },
+    {
+      "mission": "Tutorial3",
+      "group": "Early Missions",
+      "rawDirectory": "extracted/cpp-solo-current-587-20261030/normal/Tutorial3",
+      "seconds": 32.796763,
+      "gameClockIncrease": 30.082,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true
+      },
+      "resultSha256": "4b510788e35a6c230db98dd61b8709e912e523a5aa08ec0690e39caaa25c76a1",
+      "stateReportSha256": "801fcdf867a62feeb1ad3691740729f8af34e9e7117a0787118516b891d32650",
+      "finalSnapshotSha256": "220fbd85b5f27551dc0a3a66eb25f89a4bf3314e0873e260b75cd428734d0fa8"
+    },
+    {
+      "mission": "Tutorial4",
+      "group": "Early Missions",
+      "rawDirectory": "extracted/cpp-solo-current-587-20261030/normal/Tutorial4",
+      "seconds": 33.711999,
+      "gameClockIncrease": 30.89,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true
+      },
+      "resultSha256": "98eacdf09b0e2edd1ae0709f358bb86b5f707709c3a7dbab570a96ebdd849c37",
+      "stateReportSha256": "416c09dae7c9295f1cbccfac628412fca15f9f8fb36108f53ff2dd3323c94d1e",
+      "finalSnapshotSha256": "5b70e22575cf6cfc48ad72f4fbbba05bc4c5c240433cba6cd947a4c81edd6a7e"
+    },
+    {
+      "mission": "Tutorial5",
+      "group": "Early Missions",
+      "rawDirectory": "extracted/cpp-solo-current-587-20261030/normal/Tutorial5",
+      "seconds": 41.015145,
+      "gameClockIncrease": 37.922,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true
+      },
+      "resultSha256": "af374b52ae43ca87d3deae1fb7b0d9e56e0120bb5f979ad32b87e96bd91b5667",
+      "stateReportSha256": "d6db40bd634e55eb0a86ddcbbfc217aba8af1d1275f75aed734175e6898c0bc5",
+      "finalSnapshotSha256": "09c452d899319a1431febc117a480e03b15863f80e17789520c2509ea24e63cf"
+    },
+    {
+      "mission": "Tutorial6",
+      "group": "Early Missions",
+      "rawDirectory": "extracted/cpp-solo-current-587-20261030/normal/Tutorial6",
+      "seconds": 36.705953,
+      "gameClockIncrease": 32.716,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true
+      },
+      "resultSha256": "344d63d4377aa312f87e723fed9409867552899d7e40bffb126fba5da7999e23",
+      "stateReportSha256": "32b0448c5c574d21060ec8b34da40a806dc05969c6ad92f69f2cbfc5e51c8f46",
+      "finalSnapshotSha256": "aa9d80f01fef0d1b46763ec99186a0c5ca25944cf56ec4dcf3b3d879cb3e5df4"
+    },
+    {
+      "mission": "bc1menu76",
+      "group": "Priest Training",
+      "rawDirectory": "extracted/cpp-solo-current-587-20261030/normal/bc1menu76",
+      "seconds": 25.256227,
+      "gameClockIncrease": 23.406,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true
+      },
+      "resultSha256": "bc9fb1c8d11838be151849e070f9e60bb17e61fbfba0e3a2e14baa52e0f306fa",
+      "stateReportSha256": "b3b60f274e83a274784082151a1fc05c78d4a54bf6021f6fc952d8265350e621",
+      "finalSnapshotSha256": "b409214b05988b3dfd4c9d57db91e5bd44a6d2a66cf61d617992d1ae1842854b"
+    },
+    {
+      "mission": "bc2bridging76",
+      "group": "Priest Training",
+      "rawDirectory": "extracted/cpp-solo-current-587-20261030/normal/bc2bridging76",
+      "seconds": 54.21216,
+      "gameClockIncrease": 51.823,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true
+      },
+      "resultSha256": "bd7259aaaaf2b72eb788b0aeffc1a39f77b3d31bac162e72cca34557442a6ac0",
+      "stateReportSha256": "7e80c046b2e9dccf4f8c69399b2c7a06d49db7dda343e61da8afb72c1cc441f3",
+      "finalSnapshotSha256": "9e5fcd7f7ec1d4991360d01426171e76e3ab77c7fe966eeee1b992cf3e67b0ae"
+    },
+    {
+      "mission": "bc3acid_bar76",
+      "group": "Priest Training",
+      "rawDirectory": "extracted/cpp-solo-current-587-20261030/normal/bc3acid_bar76",
+      "seconds": 50.003885,
+      "gameClockIncrease": 42.325,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true
+      },
+      "resultSha256": "ac218571a2e46ab7bd8fe613ade5cecdfe87477fbf241bdfe56c2a9020b9d51e",
+      "stateReportSha256": "af01ad7ed91bdf533e71643077b8dc4cea166f6ece1dfadf6d36b3dfcadf34d4",
+      "finalSnapshotSha256": "de4b9fce9dee22fffea69e74f964d63d5d32fc8d92e548d67cd3bf8c314933b6"
+    },
+    {
+      "mission": "bc4bow_rush76",
+      "group": "Priest Training",
+      "rawDirectory": "extracted/cpp-solo-current-587-20261030/normal/bc4bow_rush76",
+      "seconds": 48.917062,
+      "gameClockIncrease": 45.266,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true
+      },
+      "resultSha256": "098171978052e552fd2ca877c7fe5139be24323c809942f8207069aea2e0a681",
+      "stateReportSha256": "6a40b6daa56af1a2b4a5f3c978f18e8105d402fec84867c2b0ec58d2c60e38f4",
+      "finalSnapshotSha256": "d6d204ca97b4ca622d8a6c7bba9d4c49c23ad20f890657325458a0c7106991b2"
+    },
+    {
+      "mission": "bc5walkers76",
+      "group": "Priest Training",
+      "rawDirectory": "extracted/cpp-solo-current-587-20261030/normal/bc5walkers76",
+      "seconds": 39.029726,
+      "gameClockIncrease": 35.749,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true
+      },
+      "resultSha256": "3079c5ada213de2921c8fb649916beb5cd76e4efcd7f314bd88a4e451144928f",
+      "stateReportSha256": "00c2dc08fb0787b5708d670dda5dea1235c8065052fdcef6c6cf3ea8db64b2b9",
+      "finalSnapshotSha256": "16bd593c74f373402b0b5fac68855907fe77f6d12b4b5fc404bbe8a6c28d022d"
+    },
+    {
+      "mission": "bc6mows76",
+      "group": "Priest Training",
+      "rawDirectory": "extracted/cpp-solo-current-587-20261030/normal/bc6mows76",
+      "seconds": 96.301467,
+      "gameClockIncrease": 82.672,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true
+      },
+      "resultSha256": "9d4d34670d6a06e95876a192ba988184acc5a1223c8617668e237319701f8a10",
+      "stateReportSha256": "ab17565bfb96a382e408119be14698ff69e210aa07a8d6d0254281e785e1786c",
+      "finalSnapshotSha256": "87c21869e84202ea721390f6ce1b2500c40e5479a0bc0d825572011dfbfe75c8"
+    },
+    {
+      "mission": "bc7sun_bars76",
+      "group": "Priest Training",
+      "rawDirectory": "extracted/cpp-solo-current-587-20261030/normal/bc7sun_bars76",
+      "seconds": 78.073048,
+      "gameClockIncrease": 75.218,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true
+      },
+      "resultSha256": "0cf90f657e052ebf0ca71753ddbf9041db27d3bf7ac62419ed430c79daea5e47",
+      "stateReportSha256": "0da56fc32d1fde1a3697312ce4e77fe0f28909a795e782b78a5248b66d403529",
+      "finalSnapshotSha256": "27c2ad6bdc06c2d2a149cb642fdb803f579b2a61acbc21ce7e57ccae8c07cdf1"
+    },
+    {
+      "mission": "bc8fury76",
+      "group": "Priest Training",
+      "rawDirectory": "extracted/cpp-solo-current-587-20261030/normal/bc8fury76",
+      "seconds": 85.928992,
+      "gameClockIncrease": 75.344,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true
+      },
+      "resultSha256": "d26b8bce606e96a777ad1c3d0232e910fde362b8f6371229613ad40ea753fa87",
+      "stateReportSha256": "0a78277b1fef139128ab16afc29cb7b9145f64d62d16da3bb2cf5e5ca5a1d524",
+      "finalSnapshotSha256": "23c78671e01a4878d1d4db2941c375286ed8b599100913a13de5052d9464d04d"
+    },
+    {
+      "mission": "bc9ssun_bars76",
+      "group": "Priest Training",
+      "rawDirectory": "extracted/cpp-solo-current-587-20261030/normal/bc9ssun_bars76",
+      "seconds": 59.171569,
+      "gameClockIncrease": 50.219,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true
+      },
+      "resultSha256": "f89395a65cf5bc3f1a1a8cf7cd5497f3fa6823ea490ebaef623d9d3184269b76",
+      "stateReportSha256": "16d18a8b3b16d7eb6feb9cb694852de4aca769af17ebfcdfbf34fae7ba9837b0",
+      "finalSnapshotSha256": "763b15e543d2d96b83326c0cc020ee2fe6095deab3766ba6a4ca2664fc567727"
+    },
+    {
+      "mission": "TheWarBegins",
+      "group": "Campaign",
+      "rawDirectory": "extracted/cpp-solo-current-587-20261030/normal/TheWarBegins",
+      "seconds": 33.69059,
+      "gameClockIncrease": 31.249,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true
+      },
+      "resultSha256": "97d722965f83d8b5e4d7d0b07fb7fa7b7b775d8a3ed47998b0ddfe3ec0e81ff7",
+      "stateReportSha256": "8b2b67b09ce0256afeff311c0620a039cd60588599868f5d73b3328c73d6f1a9",
+      "finalSnapshotSha256": "5e83a64c86816c11065d08575fc0764acd376743efc9851dddd4bc2379bcbe13"
+    },
+    {
+      "mission": "MasterOfWhirligigs",
+      "group": "Campaign",
+      "rawDirectory": "extracted/cpp-solo-current-587-20261030/normal/MasterOfWhirligigs",
+      "seconds": 32.056676,
+      "gameClockIncrease": 29.828,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true
+      },
+      "resultSha256": "0bc6742d736910e3322de39b99afb26cd971db35a3dbdd35718bccbfe31be6e5",
+      "stateReportSha256": "d1b2bb37b4d8760fda31aee48b98c94ca43d45e7559c4ce79e2abb4b399c63d8",
+      "finalSnapshotSha256": "20a23dba8e4ff5d4996488a481f84ce0ce9ab590c7036a5940485accde936f0d"
+    },
+    {
+      "mission": "SaveTheIsland",
+      "group": "Campaign",
+      "rawDirectory": "extracted/cpp-solo-current-587-20261030/normal/SaveTheIsland",
+      "seconds": 45.410528,
+      "gameClockIncrease": 41.158,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true
+      },
+      "resultSha256": "19c9731b7505ab5df7a955c8c0697dd914b12a198f048afaee66e6be006c9e9e",
+      "stateReportSha256": "e8bc5726b2ae5d8752824ed886bfb7abfee7dab02d8bbaa6b05842cf035cb478",
+      "finalSnapshotSha256": "3b4423422e4ea0604ad3300ac29af7a42be8ae70d8df3f6fadbc72d72b59bedb"
+    },
+    {
+      "mission": "FragileFortune",
+      "group": "Campaign",
+      "rawDirectory": "extracted/cpp-solo-current-587-20261030/normal/FragileFortune",
+      "seconds": 46.255579,
+      "gameClockIncrease": 41.089,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true
+      },
+      "resultSha256": "6cea330a41d1277a62e1dd7147d38c3bb620d788152f6f682feddcf818af54b3",
+      "stateReportSha256": "fb41b43aeee8abe8654f4e662be17f69c199ccd78fa7aed8f5eaeca647dcfedc",
+      "finalSnapshotSha256": "982f61b40f8d9e417daa90beec2fd730d3ccddc2eda9cf818c6af91636415c19"
+    },
+    {
+      "mission": "ThunderingPower",
+      "group": "Campaign",
+      "rawDirectory": "extracted/cpp-solo-current-587-20261030/normal/ThunderingPower",
+      "seconds": 43.483513,
+      "gameClockIncrease": 39.265,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true
+      },
+      "resultSha256": "28fc82c101dd7fc626cecd68922c47523752fd1773dd23ae788a1e74df5c74ea",
+      "stateReportSha256": "5ad6e0ac80b3f38ae390a4a604fff73110985e8b5c3b00bcc0c66df8b537f826",
+      "finalSnapshotSha256": "7f78fe58f00f5365b2389c622e3256bdc2c80c28e286c1c5faf47c02bc1d9eca"
+    },
+    {
+      "mission": "DissolvedAlliance",
+      "group": "Campaign",
+      "rawDirectory": "extracted/cpp-solo-current-587-20261030/normal/DissolvedAlliance",
+      "seconds": 53.72172,
+      "gameClockIncrease": 48.084,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true
+      },
+      "resultSha256": "a128a8f1c674a7904bc63d592e16dc3c6502b1bf2551b68688f80e89faef1f03",
+      "stateReportSha256": "f5dc8cd3e7491756699d11d7a799add0a02a7cefa20bf15cc7b4dca1ebc1bbf4",
+      "finalSnapshotSha256": "d4b278d98360f2cb17b04fe949818760f4e1f4df26f1f234e6d6c497fe9fa679"
+    },
+    {
+      "mission": "TheNoose",
+      "group": "Campaign",
+      "rawDirectory": "extracted/cpp-solo-current-587-20261030/normal/TheNoose",
+      "seconds": 48.43155,
+      "gameClockIncrease": 40.108,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true
+      },
+      "resultSha256": "6c444cf4d2e124f2cf879ac251c140437f79f00de272021eff3b075b0dda3250",
+      "stateReportSha256": "b633b082ff5c828db2d98a36cd166830e99ea8c1fd662f58c49be6ffcfe34623",
+      "finalSnapshotSha256": "d038c4fa54d3e5bc7a5221945094bb97a37f11479014f9f3476035adc84d0225"
+    },
+    {
+      "mission": "RainVsRain",
+      "group": "Campaign",
+      "rawDirectory": "extracted/cpp-solo-current-587-20261030/normal/RainVsRain",
+      "seconds": 34.97679,
+      "gameClockIncrease": 32.457,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true
+      },
+      "resultSha256": "cc06ba62485e8d082f192c779085828170c8a3989018d7be233dbed543430610",
+      "stateReportSha256": "6f49fe53534796bf39b53f7885169f7fde659bf1b79ea3ce45679df1a3857510",
+      "finalSnapshotSha256": "4ecadd58dc487954e3a2eedc77ee067909fb70b8055596bdb6b9bf3d3ccb28c2"
+    },
+    {
+      "mission": "RunForIt",
+      "group": "Campaign",
+      "rawDirectory": "extracted/cpp-solo-current-587-20261030/normal/RunForIt",
+      "seconds": 44.785751,
+      "gameClockIncrease": 40.851,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true
+      },
+      "resultSha256": "9cc522d89ccea55c1e2bf1a736bc2cba247a9e7f482df4750a7abc4f4575d48a",
+      "stateReportSha256": "65c50d74f145f08282c23208af356b81fd392ad53e3c4ccd0f029b750784ed4f",
+      "finalSnapshotSha256": "af2dd2de85703010f2c3701e1e972868cddef32786582631b4d4a90eb04a1503"
+    },
+    {
+      "mission": "GuardMyBack",
+      "group": "Campaign",
+      "rawDirectory": "extracted/cpp-solo-current-587-20261030/normal/GuardMyBack",
+      "seconds": 66.074375,
+      "gameClockIncrease": 59.407,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true
+      },
+      "resultSha256": "f75d405347deddd991a38a881c4fa76880d6e246de46ab344f3c1724e14ebd77",
+      "stateReportSha256": "ef905a1d0a75d948ae3ac3dc0cd1d048b397d9e3b8adbee8a746978debdc1cb7",
+      "finalSnapshotSha256": "c4ce05f3779d7138b876b735027b0059b9111e3eea2ed38a34505933eb1bdb05"
+    },
+    {
+      "mission": "Surrounded",
+      "group": "Campaign",
+      "rawDirectory": "extracted/cpp-solo-current-587-20261030/normal/Surrounded",
+      "seconds": 83.860405,
+      "gameClockIncrease": 73.751,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true
+      },
+      "resultSha256": "a299f6b07de7c2d70805d6fdc2cdd54e604640dd99c5c7f06ab75531a0c9ffd2",
+      "stateReportSha256": "00d601f0ab5d71fcfce3596a76c9c8f0868ccbf80e724fc35fa1b654dc8b925b",
+      "finalSnapshotSha256": "5f998dc461b8fbcf020b963a2510c1d43425e305361c3d5662774cf106790da2"
+    },
+    {
+      "mission": "BreakingThrough",
+      "group": "Campaign",
+      "rawDirectory": "extracted/cpp-solo-current-587-20261030/normal/BreakingThrough",
+      "seconds": 54.812082,
+      "gameClockIncrease": 46.411,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true
+      },
+      "resultSha256": "45df9632a85264e251254c081fcf37f91c35d086d823be90a13aade59e0764dc",
+      "stateReportSha256": "71647ab24707e01f4f496bc6703dc6b412ff52af63fcdf01431399a6fa55e191",
+      "finalSnapshotSha256": "dfe056e20495d060952308bf9e577388b049fc629694373ebabaee2603bad763"
+    },
+    {
+      "mission": "ToTheRescue",
+      "group": "Campaign",
+      "rawDirectory": "extracted/cpp-solo-current-587-20261030/normal/ToTheRescue",
+      "seconds": 68.003617,
+      "gameClockIncrease": 57.375,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true
+      },
+      "resultSha256": "0737f27dd4bd10be0e3b76f041e0d6dd61c08b1e1471ff9a85241ee3e66cb060",
+      "stateReportSha256": "3a9d4d86651569b4ce49a7c336faa31e709f307e1c9c17e9c19ad7558380e139",
+      "finalSnapshotSha256": "098be03ee81e47faf25572fb2197495a961d60604a2475bf2a6810c074ee779e"
+    },
+    {
+      "mission": "Vicious",
+      "group": "Campaign",
+      "rawDirectory": "extracted/cpp-solo-current-587-20261030/normal/Vicious",
+      "seconds": 34.922101,
+      "gameClockIncrease": 30.749,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true
+      },
+      "resultSha256": "992fd4aea6091e023a07ccadcbba11c2b80fa1cfd5160efca1d4142491e50602",
+      "stateReportSha256": "e08c13528bc79e8d85f14426ce78f836b26516c32a3f7e203bf37e41876d5a4d",
+      "finalSnapshotSha256": "3659610fac4ce136f9cc1a3f6833295d846acaa411a71e7a9fce6c8bc9084752"
+    },
+    {
+      "mission": "EnemyTerritory",
+      "group": "Campaign",
+      "rawDirectory": "extracted/cpp-solo-current-587-20261030/normal/EnemyTerritory",
+      "seconds": 94.380232,
+      "gameClockIncrease": 81.016,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true
+      },
+      "resultSha256": "c059190cdec0bc3aa0a087dc9bb604ed3e293b61d9a14fb04924c7730f5903e8",
+      "stateReportSha256": "b2de0ef5c869c5bfa954452e6b4841ae50dfd1a56f53a35fd6f6ab201e949487",
+      "finalSnapshotSha256": "9b3411cb8316d7cd961ef3cb5c6b101b2cad1c44ba38ec34970540c767bedfd6"
+    },
+    {
+      "mission": "FinalConfrontation",
+      "group": "Campaign",
+      "rawDirectory": "extracted/cpp-solo-current-587-20261030/normal/FinalConfrontation",
+      "seconds": 82.831482,
+      "gameClockIncrease": 70.201,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true
+      },
+      "resultSha256": "2e72dc161ea43a10e077a3c32bc41421ac82d2786a3b3e8e68899658aff1fde0",
+      "stateReportSha256": "9f6f0390513f87f5e5aa0d1fa146143a5707ab86d625b159b28deeff7d07029d",
+      "finalSnapshotSha256": "91ff8292c985c1508f60a4c8f7a7ad2e952982487404965a92d99c04793aeaa1"
+    },
+    {
+      "mission": "DemoStormRages",
+      "group": "Demo",
+      "rawDirectory": "extracted/cpp-solo-current-587-20261030/demo-retest/DemoStormRages",
+      "seconds": 50.667424,
+      "gameClockIncrease": 31.316,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true,
+        "demo": true,
+        "localAI": true
+      },
+      "resultSha256": "ea89e068617ea226e91eaee62800dcbb198632053f832074e154f5dcc8d038bd",
+      "stateReportSha256": "e4774672aec8b7a2b12519430c51330d34e3d39dd347b54fa90e7abb1ffa38fb",
+      "finalSnapshotSha256": "9ddb35d520333e368e45de471c22a82968fb37f27d29dd05b17fae83f306fe88"
+    },
+    {
+      "mission": "GuardMyBack",
+      "group": "Demo",
+      "rawDirectory": "extracted/cpp-solo-current-587-20261030/demos/GuardMyBack",
+      "seconds": 52.608464,
+      "gameClockIncrease": 30.665,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true,
+        "demo": true,
+        "localAI": true
+      },
+      "resultSha256": "65a58627a815d32a135a03ca1825b0c995fff2f5b60011218aec018871c8ae02",
+      "stateReportSha256": "6eaa773b91f0ebee528d5ae33036f79ce2dfa61b7d0a78e2b81b33132ffbbafe",
+      "finalSnapshotSha256": "037a1e53f5c6467eaa993f617d0036d5dbfd369a194d5fd60d3a08770b949b0e"
+    },
+    {
+      "mission": "DissolvedAlliance",
+      "group": "Demo",
+      "rawDirectory": "extracted/cpp-solo-current-587-20261030/demos/DissolvedAlliance",
+      "seconds": 48.583188,
+      "gameClockIncrease": 42.364,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true,
+        "demo": true,
+        "localAI": true
+      },
+      "resultSha256": "dbd2c21c6febece449756fad7775e53e8d6b2eae7be300f342e5489d5a406393",
+      "stateReportSha256": "2763ff12772d05e1fee6e2d6f82559efe5cc86f080af3b7efd3eddeb953e911c",
+      "finalSnapshotSha256": "cb9e6819502516fba4addd6015b51f51e2cee65d67127c4fdde9a9ce55164c47"
+    }
+  ],
+  "gameRebuiltInUnit587": false,
+  "concurrentUnit588SourceCovered": false,
+  "fullCppSuiteExecuted": false,
+  "naturalMissionCompletionsOrVictoriesVerified": false,
+  "win11Verified": false,
+  "newMultiplayerTestsExecuted": false,
+  "goalComplete": false
+}

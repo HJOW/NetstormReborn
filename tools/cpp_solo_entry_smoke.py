@@ -34,7 +34,7 @@ def run(directory, mission, demo_label=None, game_root=None, fullscreen=False, f
     frames = 602 if demo_label else frame_limit  # 데모는 최소18초 벽시계를 확보해 원본15초 timeout 뒤 진입까지 관측한다.
     steps = []  # 검사 전용 상태 쓰기 없이 같은 입력 큐를 통과시키는 계획이다.
     if demo_label:
-        steps.extend(((3,'click-if','OK'),(5,'click-if','OK'),(10,'report','menu-before-demo'),(12,'click','Demo'),(16,'report','demo-choices'),(18,'click',demo_label))) # 현재 원본 State3/4 초기화가 메인 표시를 마친 뒤 실제 Demo를 누른다.
+        steps.extend(((3,'click-if','OK'),(5,'click-if','OK'),(7,'click-if','Main Menu'),(10,'report','menu-before-demo'),(12,'click','Demo'),(16,'report','demo-choices'),(18,'click',demo_label))) # 새 설정의 실제 Welcome2 안내도 Main Menu 버튼으로 닫은 뒤 같은 Demo를 누른다. 프레임/시계/판정은 유지한다.
     for frame in range(12, frames-2, 8):  # Guide의 일곱 프레임 재개 관문을 지난 다음 상태를 관측한다.
         if not demo_label:
             for label in BUTTONS:  # 현재 표시된 정확한 라벨만 선택하고 없는 버튼 입력은 만들지 않는다.
