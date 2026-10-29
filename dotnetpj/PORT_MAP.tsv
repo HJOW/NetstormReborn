@@ -54,6 +54,8 @@ cpppj/src/client/GumpTree.cpp	Netstorm.Client/Gump/GumpTree.cs	a84c02c69ef027fd2
 cpppj/src/client/GumpTree.h	Netstorm.Client/Gump/GumpTree.cs	a84c02c69ef027fd2009f0ebe841761adc02ec4c	port
 cpppj/src/client/GumpVisual.cpp	Netstorm.Client/Gump/GumpVisual.cs	39bc55e914fa14eddeba3641b757ec689abb7a95	port
 cpppj/src/client/GumpVisual.h	Netstorm.Client/Gump/GumpVisual.cs	39bc55e914fa14eddeba3641b757ec689abb7a95	port
+cpppj/src/client/ImageGump.cpp	Netstorm.Client/Gump/ImageGump.cs	9813ecd5dfbbb30c4ca9d0ee6e3e8027b81e3d2f	L1
+cpppj/src/client/ImageGump.h	Netstorm.Client/Gump/ImageGump.cs	9813ecd5dfbbb30c4ca9d0ee6e3e8027b81e3d2f	L1
 cpppj/src/client/InputEvent.cpp	Netstorm.Client/Host/HostInputMapper.cs	91d494c3b2814f00d2cae81a0f4b247e91e81922	port
 cpppj/src/client/InputEvent.cpp	Netstorm.Client/Input/InputEvent.cs	ac9ea9162ba0c580cd53505c8c3782c0b2a27172	port
 cpppj/src/client/InputEvent.h	Netstorm.Client/Input/InputEvent.cs	ac9ea9162ba0c580cd53505c8c3782c0b2a27172	port
