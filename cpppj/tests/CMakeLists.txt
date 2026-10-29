@@ -2430,6 +2430,8 @@ set_source_files_properties(DotCommandDispatchTests.cpp PROPERTIES COMPILE_DEFIN
 
 target_sources(netstorm_tests PRIVATE ChatSubmitTests.cpp) # 실제 제출/수신자 추가의 원문 전체 물리와 실제 소유자의 확장·반납을 대조한다.
 set_source_files_properties(ChatSubmitTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_CHAT_SUBMIT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/chat-submit-x86.tsv\"")
+target_sources(netstorm_tests PRIVATE ChatFormatTests.cpp) # 서식 명령 원문372행의 전체 manager/공통 캡처와 부분 중단을 대조한다.
+set_source_files_properties(ChatFormatTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_CHAT_FORMAT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/chat-format-x86.tsv\"")
 set_source_files_properties(TraceChatTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_TRACE_CHAT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/trace-chat-x86.tsv\"")
 set_source_files_properties(NativeIntroStateTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_NATIVE_INTRO_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/native-intro-state-x86.tsv\"")
 set_source_files_properties(ObjectTraceMainTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_OBJECT_TRACE_MAIN_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/object-trace-main-x86.tsv\";NETSTORM_OBJECT_TRACE_VTABLE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/object-trace-vtables-x86.tsv\";NETSTORM_OBJECT_TRACE_COORDINATE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/object-trace-coordinate-x86.tsv\"")

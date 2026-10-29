@@ -255,14 +255,26 @@ TEST_CASE(ChatWindowClient_LocalSubmitEmptyEnterUsesCurrentChallenge) {
     }
 }
 
-// 후속 서식/송신과 format/front를 성공으로 삼키지 않고 앞선 실제 제출 효과와 명시 경계를 남긴다.
+// 일반 본문 서식/송신을 성공으로 삼키지 않고 앞선 실제 제출 효과와 명시 경계를 남긴다.
 TEST_CASE(ChatWindowClient_LocalSubmitUnrestoredFormattingRemainsExplicit) {
     ChatScene scene;ChatIdentityInputs(scene);std::string currentName="LocalUser";auto context=ChatLocalSubmitContext(scene,currentName);const auto submit=context.sendChat;
     const auto token=scene.menus->CreateChatWindow(std::move(context));scene.menus->AppendChatLog(token,"preserved\n");
-    for (const auto text:{"hello",".front quoted"}) { // 미복원된 일반 본문/등록된 서식 callback을 각각 확인한다.
-        const std::string expected=std::string_view(text)=="hello" ? "Chat 일반 본문의 실제 서식·송신 미연결" : "Chat 제출의 실제 명령 callback 미연결:"+std::to_string(0x42def0U); // 두 선택 경계의 실제 원문 함수 식별자를 구별한다.
-        bool stopped{};try { submit(scene.client.ChatManagerGlobals()->Current(),text); }catch (const std::logic_error& error) { stopped=std::string_view(error.what())==expected; }
-        CHECK(stopped && scene.client.ChatWindowGlobals()->log.lineCount==1 && scene.quitCalls==0);
-    }
+    bool stopped{};try { submit(scene.client.ChatManagerGlobals()->Current(),"hello"); }catch (const std::logic_error& error) { stopped=std::string_view(error.what())=="Chat 일반 본문의 실제 서식·송신 미연결"; }
+    CHECK(stopped && scene.client.ChatWindowGlobals()->log.lineCount==1 && scene.quitCalls==0);
     scene.menus->CloseChatWindows();
+}
+
+// 실제 문자/Console Enter가 front/back/format alias의 현재 manager와 같은 ID 설정 키에 도달한다.
+TEST_CASE(ChatWindowClient_FormatCommandsUseActualConsoleAndConfig) {
+    ChatScene scene;ChatIdentityInputs(scene);std::string currentName="LocalUser";auto context=ChatLocalSubmitContext(scene,currentName);const auto token=scene.menus->CreateChatWindow(std::move(context));
+    scene.menus->Attach(token,10,200,scene.buttons.RootToken(),0);CHECK(scene.menus->OpenChatInput({13,0,0}) && scene.client.CurrentSubscriber()==100);
+    for (const auto command:{".front ~0~g~B",".back ~r",".format ~b"}) { // 같은 실제 Console에서 세 등록 명령을 연속 제출한다.
+        for (const auto byte:std::string_view(command)) static_cast<void>(scene.buttons.RouteInput({std::uint32_t(static_cast<unsigned char>(byte)),0,0})); // 실제 Gump 문자 큐로 전체 명령을 입력한다.
+        CHECK(scene.Input(token).Text()==command);static_cast<void>(scene.buttons.RouteInput({13,0,0}));CHECK(scene.Input(token).Text().empty() && (scene.Console(token).flags&1));
+        const bool front=std::string_view(command).starts_with(".front");const auto expected=front ? "~g~B" : std::string_view(command).starts_with(".back") ? "~r" : "~b";
+        std::string value;scene.client.Configuration().ReadString(front ? "100chatFormat2" : "100chatFormat",value);CHECK(value==expected);
+        const auto manager=scene.client.ChatManagerGlobals()->Bytes(scene.client.ChatManagerGlobals()->Current());const auto offset=front ? 0x50U : 0x14U;
+        CHECK(std::string_view(reinterpret_cast<const char*>(manager.data()+offset))==expected);
+    }
+    CHECK(scene.quitCalls==0);scene.menus->CloseChatWindows();
 }

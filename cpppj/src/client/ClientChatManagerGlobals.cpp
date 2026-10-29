@@ -10,6 +10,8 @@ namespace netstorm::client {
 std::uint32_t& ClientChatManagerGlobals::Current() { return current_; }
 // 읽기 소비자도 같은 주소를 유지한다.
 const std::uint32_t& ClientChatManagerGlobals::Current() const { return current_; }
+// 동일 공통 캡처의 뒤쪽 미작성 바이트와 재제출 흔적을 유지한다.
+std::span<std::uint8_t> ClientChatManagerGlobals::FormatCapture() { return formatCapture_; }
 // 원문 두 크기만 할당하며 새 current 대입/이전 할당 해제를 임의로 수행하지 않는다.
 std::uint32_t ClientChatManagerGlobals::Allocate(std::uint32_t size) {
     if (size!=o::kChatManagerBytes && size!=o::kChatManagerBufferBytes) throw std::invalid_argument("실제 Chatmanager 할당 크기 오류");

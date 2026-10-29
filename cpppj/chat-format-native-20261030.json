@@ -1,0 +1,30 @@
+{
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "rows": 372,
+  "sources": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_chat_format.py": "a5b77f036d224eebb0a6948abc8b4fbcfb2a4119ef09817beb7d5e5b008385c2"
+  },
+  "fixtureSha256": "74e94cb19651a1db9f392ea24d0231b7ec1a75ba081874492c1713fdf12689ab",
+  "actualNative": [
+    "0042ddf0",
+    "0042def0",
+    "0042d160",
+    "00495a10",
+    "00496c90/004964e0 이하 엔진"
+  ],
+  "explicitDevices": [
+    "malloc/C locale CRT",
+    "strncpy/sprintf",
+    "Config.Set/진단",
+    "현재 manager/subscriber·공통 캡처 변경·선택 중단"
+  ],
+  "gameOrNetworkExecuted": false,
+  "limits": [
+    "두 서식 명령의 원문 부분효과이며 전체 채팅 송신/게임/GUI 검증이 아님"
+  ]
+}

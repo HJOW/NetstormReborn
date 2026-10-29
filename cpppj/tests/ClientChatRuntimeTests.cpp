@@ -71,3 +71,22 @@ TEST_CASE(ClientChatRuntime_CurrentTypeCountsAndNativeDivideFault) {
     surface->frames[kind]=RiftTypeFrames({{'B',0,1,0},{'B',0,2,0},{'B',0,3,0},{'C',0,1,0},{'C',0,2,0}});RefreshClientChatRankPrefix(client,assets.game,*surface);CHECK(ChatRuntimeText(client.ChatManagerGlobals()->Bytes(client.ChatManagerGlobals()->Current()),0x244)=="~[Iicon.C0]~[Iicon.B2]");
     surface->frames[kind]=RiftTypeFrames({{'C',0,1,0}});bool fault{};try { RefreshClientChatRankPrefix(client,assets.game,*surface); }catch (const std::domain_error&) { fault=true; }CHECK(fault && ChatRuntimeText(client.ChatManagerGlobals()->Bytes(client.ChatManagerGlobals()->Current()),0x244)=="~[Iicon.C0]~[Iicon.B2]");
 }
+
+// 실제 설정은 정리된 캡처 전체를 보존하고 back manager는59BYTE로 제한하며 재초기화도 같은 값을 읽는다.
+TEST_CASE(ClientChatRuntime_FormatLimitsConfigAndReinitialize) {
+    Client client(ChatRuntimeOptions());client.SubscriberGlobals()->MySubscriber()=7;InitializeClientChatManager(client);const auto owner=client.ChatManagerGlobals();const auto* capture=owner->FormatCapture().data();
+    const auto format="~0~r"+std::string(70,'X');CHECK(ApplyClientChatFormat(client,false,format)==0);std::string value;client.Configuration().ReadString("7chatFormat",value);
+    CHECK(value=="~r"+std::string(70,'X') && ChatRuntimeText(owner->Bytes(owner->Current()),0x14)=="~r"+std::string(57,'X'));
+    CHECK(ApplyClientChatFormat(client,true,"prefix~g~B suffix")==0);value.clear();client.Configuration().ReadString("7chatFormat2",value);CHECK(value=="~g~B" && ChatRuntimeText(owner->Bytes(owner->Current()),0x50)=="~g~B");
+    const auto previous=owner->Current();InitializeClientChatManager(client);CHECK(owner->Current()!=previous && owner->FormatCapture().data()==capture);
+    CHECK(ChatRuntimeText(owner->Bytes(owner->Current()),0x14)=="~r"+std::string(57,'X') && ChatRuntimeText(owner->Bytes(owner->Current()),0x50)=="~g~B");
+}
+
+// 실제 좁은 서식의 비ASCII는 Config 경계에서 UTF8로 바꾸고 실패한 검색은 현재 manager/공통 캡처를 보존한다.
+TEST_CASE(ClientChatRuntime_FormatEncodingAndIllegalInputPreserveMemory) {
+    Client client(ChatRuntimeOptions());InitializeClientChatManager(client);const auto owner=client.ChatManagerGlobals();const std::string original="~rCaf\xe9";CHECK(ApplyClientChatFormat(client,true,original)==0);
+    std::string value;client.Configuration().ReadString("-1chatFormat2",value);CHECK(value=="~rCafé" && ChatRuntimeText(owner->Bytes(owner->Current()),0x50)==original);
+    const auto before=owner->Bytes(owner->Current());const std::vector<std::uint8_t> manager(before.begin(),before.end()),capture(owner->FormatCapture().begin(),owner->FormatCapture().end());
+    CHECK(ApplyClientChatFormat(client,false,"plain without style")==0);
+    CHECK(std::equal(manager.begin(),manager.end(),owner->Bytes(owner->Current()).begin()) && std::equal(capture.begin(),capture.end(),owner->FormatCapture().begin()));
+}

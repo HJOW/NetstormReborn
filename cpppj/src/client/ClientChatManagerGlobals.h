@@ -1,6 +1,8 @@
 // Client 수명의 실제 Chatmanager 현재 토큰과 미초기화 객체/수신자 배열을 소유한다.
 #pragma once
 #include "o/RawChatManagerPrefix.h"
+#include "client/RawChatFormat.h"
+#include <array>
 #include <cstddef>
 #include <cstdint>
 #include <map>
@@ -19,6 +21,7 @@ public:
     ClientChatManagerGlobals& operator=(ClientChatManagerGlobals&&)=delete; // 소비자의 alias를 대입으로 끊지 않는다.
     std::uint32_t& Current(); //00548714의 실제 한 DWORD를 직접 빌린다.
     const std::uint32_t& Current() const; // 현재 토큰을 값 사본 없이 읽는다.
+    std::span<std::uint8_t> FormatCapture(); //0059a830 공통 Regexp 캡처 중 서식 명령이 접근하는 앞81BYTE를 같은 Client 수명으로 빌린다.
     std::uint32_t Allocate(std::uint32_t size); // 실제2712/128BYTE를 초기화 없이 확보하고 실패0/비영opaque토큰을 반환한다.
     std::uint32_t AllocateRecipientBuffer(std::uint32_t size); // 원문32슬롯 확장의 요청 BYTE를 별도 수신자 할당으로 확보한다.
     void ReleaseRecipientBuffer(std::uint32_t token); // 이전 수신자 배열을 반납하며 manager 객체 자체의 해제는 거부한다.
@@ -33,6 +36,7 @@ private:
     };
     std::uint32_t AllocateStorage(std::uint32_t size,bool recipientBuffer); // 값 초기화 없는 공통 할당과 비영 토큰 등록을 수행한다.
     std::uint32_t current_{}; // 원시00548714의 최초0이며 Allocate 자체는 이 슬롯을 변경하지 않는다.
+    std::array<std::uint8_t,kChatFormatCaptureBytes> formatCapture_{}; // BSS0인 공통 캡처의 현재 복원된 앞81BYTE다. 명령/manager 재초기화 때 지우지 않는다.
     std::uint32_t nextToken_{1}; // host 포인터를32비트로 자르지 않는 비영 수명 토큰이다.
     std::map<std::uint32_t,Allocation> allocations_; // current 교체 때 이전 manager를 유지하며 수신자 확장만 이전 배열을 명시 반납한다.
 };

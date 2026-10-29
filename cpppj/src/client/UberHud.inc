@@ -49,7 +49,7 @@ void UberGump::EnsureHudFactories() {
             data.translate=[this](auto text) { return FontBytes(client_.Translate(text)); };data.storeText=[this](auto text) { return client_.ChatWindowGlobals()->Store(text); };
             data.text=[this](auto token) -> std::string_view { return client_.ChatWindowGlobals()->strings.at(token); };
             BindClientChatRecipients(data,client_,client_.SurfaceStorage(),[this]() -> std::string_view { return world_ ? world_->Session().CurrentHandle() : std::string_view(mapUserName_); }); //목록과같은장기현재이름을매조회빌리고Session교체전주소를캡처하지않는다.
-            BindClientChatSubmit(data,client_,*rawButtons_->Menus()); // 같은 Console의 빈 제출/clear·quit를 실제 해석·명령표에 잇는다. 일반 서식·송신은 후속 복원 경계다.
+            BindClientChatSubmit(data,client_,*rawButtons_->Menus()); // 빈 제출/clear·quit/서식 명령을 실제 해석·명령표에 잇는다. 일반 본문 서식·송신은 후속 복원 경계다.
             data.read=[this](auto address) -> std::uint32_t { switch (address) {
                 case 0x594fc8:return client_.SurfaceStorage()->ownerMode.challenge;case 0x594fbc:return world_ ? world_->Session().BattleActive() : 0U;
                 case 0x548714:return client_.ChatManagerGlobals()->Current();case 0x563e38:return rawButtons_->RootToken();
@@ -57,7 +57,7 @@ void UberGump::EnsureHudFactories() {
                 case 0x542944:return 0x02000094U;default:throw std::logic_error("Chat 실제 Client 전역 미연결:"+std::to_string(address));
             } };
             data.config=[this](auto key) { return client_.Configuration().GetInt(key); };data.quit=[this](auto event,auto first,auto second) { client_.Input().Push(event,std::bit_cast<std::int32_t>(first),std::bit_cast<std::int32_t>(second)); };
-            return rawButtons_->Menus()->CreateChatWindow(std::move(data)); // 대상/완성/로컬 제출은 같은 실제 장치이며 일반 서식·송신과 format/front는 선택 시 명시 경계다.
+            return rawButtons_->Menus()->CreateChatWindow(std::move(data)); // 대상/완성/로컬 제출·서식 설정은 같은 실제 장치이며 일반 본문 서식·송신은 선택 시 명시 경계다.
         };
         context.root.refreshTechnology=[this] { RefreshClientChatRankPrefix(client_,client_.Assets(),*client_.SurfaceStorage()); }; // Fort Technology와 같은 실제 현재 manager/Core/아이콘을 사용한다.
         context.root.translate=[this](auto text) { return client_.ChatWindowGlobals()->Store(FontBytes(client_.Translate(text))); };

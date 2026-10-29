@@ -5,6 +5,7 @@
 #include "client/ClientChatWindowGlobals.h"
 #include "client/ChatRecipients.h"
 #include "client/RawChatSubmit.h"
+#include "client/RawChatFormat.h"
 #include "client/RawMenuControls.h"
 #include "client/HudChatGeometry.h"
 #include "client/RawChatWindowContext.h"
@@ -13,6 +14,7 @@
 #include "client/ClientGameplayGlobals.h"
 #include "client/RawSurfaceWorld.h"
 #include "o/OriginalText.h"
+#include <algorithm>
 #include <array>
 #include <bit>
 #include <iostream>
@@ -71,6 +73,14 @@ void BindClientChatRecipients(RawChatWindowContext& context,Client& client,std::
         client.WriteDiagnosticLog(std::bit_cast<std::int32_t>(level),"Could not lookup a name for subId == "+std::to_string(std::bit_cast<std::int32_t>(parameter))+"\n"); //원문의first인자와signed%d를보존해현재공유trace에전달한다.
     };
 }
+// 실제 strncpy/현재 캡처·UTF8 Config 값을 같은 원문 순서에 연결한다. 디스크 저장 시점은 기존 Client 프레임을 따른다.
+std::uint32_t ApplyClientChatFormat(Client& client,bool front,std::string_view input) {
+    const auto owner=client.ChatManagerGlobals();const auto memory=MakeClientChatManagerHooks(owner);ChatFormatHooks hooks;
+    hooks.memory=memory.memory;hooks.copyFormat=memory.copyFormat;hooks.assertion=ChatAssertion;
+    hooks.writeConfig=[&client](auto key,auto value) { const std::span<const std::uint8_t> bytes{reinterpret_cast<const std::uint8_t*>(value.data()),value.size()};client.Configuration().Set(key,o::DecodeOriginalText(bytes)); }; // 같은 좁은 원문 바이트를 기존 UTF8 저장 경계에서만 변환한다.
+    hooks.illegalFormat=[&client](auto value) { client.WriteDiagnosticLog(29,"Illegal format \""+std::string(value)+"\"\n"); };
+    return ApplyChatFormat(front,{owner->Current(),client.CurrentSubscriber()},input,owner->FormatCapture(),hooks);
+}
 // 제출 지역의 미작성 꼬리를 보존하고 같은 장기 명령표·현재 UI에 로컬 효과를 분배한다.
 void BindClientChatSubmit(RawChatWindowContext& context,Client& client,RawMenuControls& menus) {
     if (!context.resolve || !context.translate) throw std::invalid_argument("Chat 제출의 실제 Identity/번역 장치 필요");
@@ -84,6 +94,10 @@ void BindClientChatSubmit(RawChatWindowContext& context,Client& client,RawMenuCo
             DotCommandDispatchHooks commands;
             commands.invoke=[&client,&menus,inputVisible](auto callback,auto argument) -> std::uint32_t {
                 if (callback==0x42f680U || callback==0x42e520U) return menus.InvokeChatCommand(callback);
+                if (callback==0x42ddf0U || callback==0x42def0U) {
+                    const auto end=std::find(argument.begin(),argument.end(),0);if (end==argument.end()) throw std::out_of_range("Chat 서식 인자의 실제 NUL 없음");
+                    return ApplyClientChatFormat(client,callback==0x42def0U,{reinterpret_cast<const char*>(argument.data()),static_cast<std::size_t>(end-argument.begin())});
+                }
                 if (callback==0x42f1e0U) {
                     if (!client.ChatManagerGlobals()->Current()) return 0;
                     if (argument.empty()) throw std::out_of_range("Chat say의 실제 인자 물리 없음");

@@ -1,0 +1,181 @@
+{
+  "unit": 582,
+  "date": "2026-10-30",
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "nativeRows": 372,
+  "nativeObservationRuns": 3,
+  "nativeObservations": 1116,
+  "nativeRepeatDifferences": 0,
+  "firstObservedToolSha256": "a5b77f036d224eebb0a6948abc8b4fbcfb2a4119ef09817beb7d5e5b008385c2",
+  "finalObservedToolSha256": "54e8413c5fcb0e995de319f21cea2e1ed2bc7178397ddfe580e06ed59f66d49f",
+  "nativeToolCommentOnlyChanges": true,
+  "fixtureSha256": "74e94cb19651a1db9f392ea24d0231b7ec1a75ba081874492c1713fdf12689ab",
+  "focusedTests": 35,
+  "failedChecks": 0,
+  "registeredCppTests": 3462,
+  "focusedRuns": [
+    {
+      "filter": "ChatFormat",
+      "returnCode": 0,
+      "summary": "1 test(s), 0 failed check(s)"
+    },
+    {
+      "filter": "ClientChatRuntime",
+      "returnCode": 0,
+      "summary": "8 test(s), 0 failed check(s)"
+    },
+    {
+      "filter": "ChatWindowClient",
+      "returnCode": 0,
+      "summary": "17 test(s), 0 failed check(s)"
+    },
+    {
+      "filter": "ChatSubmit",
+      "returnCode": 0,
+      "summary": "3 test(s), 0 failed check(s)"
+    },
+    {
+      "filter": "DotCommandDispatch",
+      "returnCode": 0,
+      "summary": "3 test(s), 0 failed check(s)"
+    },
+    {
+      "filter": "ClientChatCoreOwners",
+      "returnCode": 0,
+      "summary": "3 test(s), 0 failed check(s)"
+    }
+  ],
+  "buildWarnings": 0,
+  "buildErrors": 0,
+  "buildLogSha256": "c5e92b814a18b8d60dff0bf26dd6504a8f2d8643f9c2a37f8d270870243e20ac",
+  "gameSha256": "73c2d8440d82cb9a9147e45a41dd5393f8c4f026e7e3f555dfa50956b7d20390",
+  "testsSha256": "c58fad7e66d3eaed68455af81b83fd82c5281160ee3f8870a1a67cde1afaccfd",
+  "actualGuiRuns": 3,
+  "live": {
+    "gameSha256": "73c2d8440d82cb9a9147e45a41dd5393f8c4f026e7e3f555dfa50956b7d20390",
+    "complete": true,
+    "runs": [
+      {
+        "command": ".front ~0~g~B",
+        "key": "1chatFormat2",
+        "expected": "~g~B",
+        "diskReadback": "~g~B",
+        "readbackExitCode": 0,
+        "optionsSha256": "73457f660a9078ddd981b20a04af1b4b05845e3b3456580aa95e5de01db7c0d8",
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+            "--run",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-chat-format-582-20261030\\live-data",
+            "--mission",
+            "TEST02",
+            "--window",
+            "--no-audio",
+            "--frames",
+            "68",
+            "--set",
+            "SCREENW=1024;SCREENH=768;maxFPS=60;sleepPerLoop=8;autoDemo=0;tellTips=0",
+            "--ui-script",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-chat-format-582-20261030\\live-front\\steps.tsv",
+            "--ui-report",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-chat-format-582-20261030\\live-front\\states.tsv"
+          ],
+          "binarySha256": "73c2d8440d82cb9a9147e45a41dd5393f8c4f026e7e3f555dfa50956b7d20390",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 15.793817200000376,
+          "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderrSha256": "22191140248ffeec7d3c582b7faf3c549c3d5bf151f336b44a1d6406284577f0"
+        }
+      },
+      {
+        "command": ".back ~2~r",
+        "key": "1chatFormat",
+        "expected": "~r",
+        "diskReadback": "~r",
+        "readbackExitCode": 0,
+        "optionsSha256": "16da4138e4060b1abae90a1e27af621365bbe0f43f948fbbf9a917dc9e6b81d3",
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+            "--run",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-chat-format-582-20261030\\live-data",
+            "--mission",
+            "TEST02",
+            "--window",
+            "--no-audio",
+            "--frames",
+            "65",
+            "--set",
+            "SCREENW=1024;SCREENH=768;maxFPS=60;sleepPerLoop=8;autoDemo=0;tellTips=0",
+            "--ui-script",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-chat-format-582-20261030\\live-back\\steps.tsv",
+            "--ui-report",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-chat-format-582-20261030\\live-back\\states.tsv"
+          ],
+          "binarySha256": "73c2d8440d82cb9a9147e45a41dd5393f8c4f026e7e3f555dfa50956b7d20390",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 14.778272600000037,
+          "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderrSha256": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2"
+        }
+      },
+      {
+        "command": ".format ~6~b",
+        "key": "1chatFormat",
+        "expected": "~b",
+        "diskReadback": "~b",
+        "readbackExitCode": 0,
+        "optionsSha256": "66889495937e239dc03bd2c6415d3b0e1ca7da553dda927d71d3c91ebc11b295",
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+            "--run",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-chat-format-582-20261030\\live-data",
+            "--mission",
+            "TEST02",
+            "--window",
+            "--no-audio",
+            "--frames",
+            "67",
+            "--set",
+            "SCREENW=1024;SCREENH=768;maxFPS=60;sleepPerLoop=8;autoDemo=0;tellTips=0",
+            "--ui-script",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-chat-format-582-20261030\\live-format\\steps.tsv",
+            "--ui-report",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-chat-format-582-20261030\\live-format\\states.tsv"
+          ],
+          "binarySha256": "73c2d8440d82cb9a9147e45a41dd5393f8c4f026e7e3f555dfa50956b7d20390",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 15.028925000000072,
+          "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderrSha256": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2"
+        }
+      }
+    ],
+    "networkExecuted": false,
+    "capturesSacrificesSpecificEnemyAttacksOrVictoriesReproduced": false
+  },
+  "protected": {
+    "count": 2592,
+    "changed": []
+  },
+  "existingFixturesUnchanged": 731,
+  "currentFixtures": 732,
+  "packageCreated": false,
+  "fullCppTests": false,
+  "all34Routes": false,
+  "windows11Hardware": false,
+  "networkExecuted": false,
+  "capturesSacrificesSpecificEnemyAttacksOrVictoriesReproduced": false,
+  "limits": [
+    "일반 채팅 본문 서식/0042dc30→0042d640과0042d280 전달은 미연결",
+    "실제 재실행의 화면 서식 반영은 이번 범위가 아니며 별도 프로세스의 디스크 설정 읽기만 확인",
+    "공통 Regexp 캡처는 이 명령이 실제 접근하는 앞81BYTE만 현재 소유자에 연결"
+  ],
+  "nativeToolAstEqual": true
+}
