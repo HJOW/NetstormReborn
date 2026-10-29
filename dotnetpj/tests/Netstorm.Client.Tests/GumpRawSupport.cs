@@ -74,6 +74,18 @@ internal static class GumpRawSupport
     /// <summary>현재 노드를 주소 순서로 직렬화한다. 기대 상태를 계산하지 않는다.</summary>
     public static string EncodeNodes(SortedDictionary<uint, GumpCreateNode> nodes) => string.Join(';', nodes.Select(pair => $"{pair.Key}={Encode(pair.Value)}"));
 
+    /// <summary>명시 응답의 DWORD 하나를 원본 offset에 쓴다. C++ 구조체 대입처럼 같은 노드 인스턴스에 필드만 복사한다.</summary>
+    public static void ApplyDword(GumpCreateNode node, int offset, uint value)
+    {
+        byte[] raw = X86Fixture.Bytes(Encode(node)); Put(raw, offset, value); GumpCreateNode changed = Decode(raw);
+        // 현재 필드의 값만 복사하고 처리기가 빌린 노드 참조는 교체하지 않는다.
+        foreach (System.Reflection.PropertyInfo property in typeof(GumpCreateNode).GetProperties())
+        {
+            if (property.CanWrite) property.SetValue(node, property.GetValue(changed));
+        }
+        changed.Positioning.CopyTo(node.Positioning, 0); changed.TextContext.CopyTo(node.TextContext, 0);
+    }
+
     /// <summary>원본 공통 draw entry의16바이트를 현재 값으로 쓴다. guard/미사용 영역도 같은 방법으로 대조한다.</summary>
     public static string EncodeEntries(ReadOnlySpan<RenderCollectionEntry> entries)
     {
