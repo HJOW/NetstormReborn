@@ -1,0 +1,144 @@
+{
+  "unit": 593,
+  "date": "2026-10-30",
+  "host": "HJOW-Athlon",
+  "os": "Windows-10-10.0.19045-SP0",
+  "baseCommit": "87c90efd",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "scope": "MovieGump 시작/종료/중앙 원시 표시 부품. 실제 공장/PCM/화면 연결은 후속.",
+  "nativeObservations": 59,
+  "nativeReobservations": 59,
+  "nativeDifferences": 0,
+  "actualCrtMachineCodeExecuted": "004e49c0",
+  "tests": {
+    "MoviePlayback": 2,
+    "MovieLifecycle": 1,
+    "NativeIntroState": 2,
+    "SmackerDecoder": 3,
+    "totalFocused": 8,
+    "failed": 0,
+    "registeredExpected": 3481,
+    "fullSuiteRun": false,
+    "finalLogs": [
+      "tests-movie-final.log",
+      "tests-intro-final.log",
+      "tests-decoder-final.log"
+    ]
+  },
+  "build": {
+    "targets": [
+      "netstorm_tests",
+      "NetstormCpp"
+    ],
+    "configuration": "Release",
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "finalLogs": [
+      "build-final.log",
+      "build-palette-mutable.log"
+    ]
+  },
+  "protected": {
+    "baselineSource": "단위592 검증2557파일＋592의새fixture1",
+    "originals": 1394,
+    "originalCD": 425,
+    "existingFixtures": 739,
+    "total": 2558,
+    "changed": []
+  },
+  "sha256": {
+    "cpppj/src/client/MovieLifecycle.cpp": "cc3e7472e6e4d4e3ed5f56faf08c85f569fa586fe805ab004034946ef7f2f262",
+    "cpppj/src/client/MovieLifecycle.h": "954ebd07452bc226418e5c0cdefec60a1e8a77d047eef4ecf1345c62a6f67804",
+    "cpppj/tests/MovieLifecycleTests.cpp": "441d95d865260229c85aaa992c145dc965890419f65f5f00d57f99b11bfac682",
+    "tools/decomp_movie_lifecycle.py": "552f8ded7d6a4a9966cb39670ef3983eaa480bdab3dd0d4dd1f9e27f1f484c2d",
+    "cpppj/tests/fixtures/movie-lifecycle-x86.tsv": "1159966073b48daed37f1b9cc96a0abba089e6a0c7540507dcab90bf057e6aee",
+    "cpppj/movie-lifecycle-native-20261030.json": "7c4c2c2b60ffade6c1e4aedd23f900f148651a15013cf2d1b3e8782d144ff081",
+    "cpppj/build/bin/Release/Netstorm.exe": "34a2132e90104f64b7dd08ff8a3af615e598b688e416d72b61ed42ce5646aa98"
+  },
+  "rawSha256": {
+    "lifecycle-disassembly.txt": "11da983a380608608caed2ccd3ac1f90f42e2ce9659e7f327a654a6894a7dbd8",
+    "native-first.log": "70bc70d9b124edb26ef1bc1c20b85cb53142cf6e3e4bb940154836475eacd4e1",
+    "build-first.log": "e83ddd4d70806b713e5f8fb6f3b16d551b66440c5587efa3f8fbdef7978eb697",
+    "native-verify.log": "f2d342fc48fda3476066d8ad0e6ecc655bbfd12f18468cbe4bbff0c321c96c62",
+    "protected-before.json": "e1f4995ec06b0b0b0ff1504425cacc442237075f5baef14dfac0fee5114d6da6",
+    "tests-movie.log": "6d654abc2117fb8c627dbd329ee771b867d25b7ffe58937d95a4a9b0582bfc4e",
+    "tests-intro.log": "4279b673ca9163a218c68be225853c07a20ea9729a78e9c0b48a03a2e087769a",
+    "tests-decoder.log": "c0b1fae3320256f6774d6d117ec9e38e84ec63311823503fc2ef5c5c87b42035",
+    "build-final.log": "d8058bee80da1268a847f62987a9899a02523537696e391cc8516cb462ce0c90",
+    "build-palette-mutable.log": "76d454c875e4dfe7d633d99eaa27408bf69f8ced84c66a16c9fffea0127a13a1",
+    "tests-movie-final.log": "6d654abc2117fb8c627dbd329ee771b867d25b7ffe58937d95a4a9b0582bfc4e",
+    "tests-intro-final.log": "4279b673ca9163a218c68be225853c07a20ea9729a78e9c0b48a03a2e087769a",
+    "tests-decoder-final.log": "c0b1fae3320256f6774d6d117ec9e38e84ec63311823503fc2ef5c5c87b42035"
+  },
+  "gameOrWindowOrAudioRun": false,
+  "newMultiplayerTestsRun": false,
+  "forbiddenGameplayTestsRun": false,
+  "goalComplete": false,
+  "next": "00483540/00483610 open/close와00484010 singleton 공장 및 실제 Gump/PCM/두 정지/State40 생존 연결. 존재SMK예외와 CD탐색/동봉은 잔여.",
+  "mutablePaletteSameArrayChecked": true,
+  "libraryPartsOnly": true,
+  "checkoutBytePins": [
+    {
+      "path": "cpppj/src/client/MovieLifecycle.cpp",
+      "autocrlf": "true",
+      "same": true
+    },
+    {
+      "path": "cpppj/src/client/MovieLifecycle.cpp",
+      "autocrlf": "false",
+      "same": true
+    },
+    {
+      "path": "cpppj/src/client/MovieLifecycle.h",
+      "autocrlf": "true",
+      "same": true
+    },
+    {
+      "path": "cpppj/src/client/MovieLifecycle.h",
+      "autocrlf": "false",
+      "same": true
+    },
+    {
+      "path": "cpppj/tests/MovieLifecycleTests.cpp",
+      "autocrlf": "true",
+      "same": true
+    },
+    {
+      "path": "cpppj/tests/MovieLifecycleTests.cpp",
+      "autocrlf": "false",
+      "same": true
+    },
+    {
+      "path": "tools/decomp_movie_lifecycle.py",
+      "autocrlf": "true",
+      "same": true
+    },
+    {
+      "path": "tools/decomp_movie_lifecycle.py",
+      "autocrlf": "false",
+      "same": true
+    },
+    {
+      "path": "cpppj/tests/fixtures/movie-lifecycle-x86.tsv",
+      "autocrlf": "true",
+      "same": true
+    },
+    {
+      "path": "cpppj/tests/fixtures/movie-lifecycle-x86.tsv",
+      "autocrlf": "false",
+      "same": true
+    },
+    {
+      "path": "cpppj/movie-lifecycle-native-20261030.json",
+      "autocrlf": "true",
+      "same": true
+    },
+    {
+      "path": "cpppj/movie-lifecycle-native-20261030.json",
+      "autocrlf": "false",
+      "same": true
+    }
+  ]
+}

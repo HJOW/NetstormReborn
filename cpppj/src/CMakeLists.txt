@@ -11,6 +11,7 @@
 # 소스 목록은 각 폴더의 CMakeLists.txt 가 target_sources 로 더한다.
 add_library(netstorm STATIC)
 target_sources(netstorm PRIVATE client/MoviePlayback.cpp client/MoviePlayback.h) # 원문 영상 옵션/입력/idle 판단이다.
+target_sources(netstorm PRIVATE client/MovieLifecycle.cpp client/MovieLifecycle.h) # 원문 영상 시작/종료/중앙 표시 수명이다.
 target_sources(netstorm PRIVATE client/SmackerDecoder.cpp client/SmackerDecoder.h) # 인트로용 실제 팔레트/PCM 디코더 장치다.
 add_dependencies(netstorm NetstormSmacker) # 실행 파일 옆의 별도 LGPL DLL을 게임 빌드와 함께 만든다.
 target_sources(netstorm PRIVATE client/RawChatPacket.cpp client/RawChatPacket.h) # 일반 채팅 패킷 작성과 송신 직전 길이 확정이다.

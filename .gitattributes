@@ -2112,3 +2112,11 @@ tools/decomp_movie_playback.py text eol=lf
 cpppj/tests/fixtures/movie-playback-x86.tsv -text
 cpppj/movie-playback-native-20261030.json text eol=lf
 cpppj/movie-playback-runtime-20261030.json text eol=lf
+# 영상 시작/종료/표시의 독립 관측과 연결 부품의 실제 바이트를 보존한다.
+cpppj/src/client/MovieLifecycle.cpp text eol=lf
+cpppj/src/client/MovieLifecycle.h text eol=lf
+cpppj/tests/MovieLifecycleTests.cpp text eol=lf
+tools/decomp_movie_lifecycle.py text eol=lf
+cpppj/tests/fixtures/movie-lifecycle-x86.tsv -text
+cpppj/movie-lifecycle-native-20261030.json text eol=lf
+cpppj/movie-lifecycle-runtime-20261030.json text eol=lf

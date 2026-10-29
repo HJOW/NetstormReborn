@@ -1,0 +1,14 @@
+{
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "observations": 59,
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_local_mission_transport.py": "db71da65079aa9a985a3a833edd224f089ba9a20137d92042551cb346937eb78",
+    "tools/decomp_movie_lifecycle.py": "552f8ded7d6a4a9966cb39670ef3983eaa480bdab3dd0d4dd1f9e27f1f484c2d"
+  },
+  "fixtureSha256": "1159966073b48daed37f1b9cc96a0abba089e6a0c7540507dcab90bf057e6aee",
+  "scope": "00483680/004837f0/00483bf0/004e49c0 실제CPU. 화면/음향/SDK/가상함수는 명시 장치. 게임/창/오디오/네트워크 실행 없음."
+}
