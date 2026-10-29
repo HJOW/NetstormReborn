@@ -28,8 +28,8 @@ public class ScrollingTextGumpNode : GumpCreateNode
     public float LayoutWidth { get; set; }
     /// <summary>이전 드래그 Y.</summary>
     public int DragY { get; set; }
-    /// <summary>현재 본문 태그.</summary>
-    public uint Metadata { get; set; }
+    /// <summary>현재 본문 태그.파서가 원본 주소처럼 ref로 갱신하는 실제 필드다.</summary>
+    public uint Metadata;
     /// <summary>본문 콜백 식별자.</summary>
     public uint Callback { get; set; }
 }
