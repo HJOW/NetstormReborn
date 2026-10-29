@@ -30,6 +30,8 @@
     <None Include="../../../cpppj/tests/fixtures/gumpevents-x86.tsv" Link="X86/gumpevents-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/gumpinput-x86.tsv" Link="X86/gumpinput-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/gumpframe-x86.tsv" Link="X86/gumpframe-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/gumpvisual-x86.tsv" Link="X86/gumpvisual-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/gumpdraw-x86.tsv" Link="X86/gumpdraw-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/preview-colors-x86.tsv" Link="X86/preview-colors-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/production-colors-x86.tsv" Link="X86/production-colors-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/owner-hsl-colors-x86.tsv" Link="X86/owner-hsl-colors-x86.tsv" CopyToOutputDirectory="PreserveNewest" />

@@ -16,6 +16,10 @@ cpppj/src/client/GumpCollection.cpp	Netstorm.Client/Gump/GumpCollection.cs	2155b
 cpppj/src/client/GumpCollection.h	Netstorm.Client/Gump/GumpCollection.cs	2155b0f0855c427a3c6655ed0a42d5e374f464dd	port
 cpppj/src/client/GumpCreate.cpp	Netstorm.Client/Gump/GumpCreate.cs	2155b0f0855c427a3c6655ed0a42d5e374f464dd	port
 cpppj/src/client/GumpCreate.h	Netstorm.Client/Gump/GumpCreate.cs	2155b0f0855c427a3c6655ed0a42d5e374f464dd	port
+cpppj/src/client/GumpDraw.cpp	Netstorm.Client/Gump/GumpDraw.cs	39bc55e914fa14eddeba3641b757ec689abb7a95	port
+cpppj/src/client/GumpDraw.cpp	Netstorm.Client/Gump/GumpPixelTarget.cs	39bc55e914fa14eddeba3641b757ec689abb7a95	port
+cpppj/src/client/GumpDraw.h	Netstorm.Client/Gump/GumpDraw.cs	39bc55e914fa14eddeba3641b757ec689abb7a95	port
+cpppj/src/client/GumpDraw.h	Netstorm.Client/Gump/GumpPixelTarget.cs	39bc55e914fa14eddeba3641b757ec689abb7a95	port
 cpppj/src/client/GumpEvents.cpp	Netstorm.Client/Gump/GumpEvents.cs	d9ddcc929d426cd4e6f32b1c78f9d35361e28ad1	port
 cpppj/src/client/GumpEvents.h	Netstorm.Client/Gump/GumpEvents.cs	d9ddcc929d426cd4e6f32b1c78f9d35361e28ad1	port
 cpppj/src/client/GumpFrame.cpp	Netstorm.Client/Gump/GumpFrame.cs	9fcc08d7153f19f0402b682d99c6dac7a87241a1	port
@@ -26,6 +30,8 @@ cpppj/src/client/GumpLifetime.cpp	Netstorm.Client/Gump/GumpLifetime.cs	6f2b5101b
 cpppj/src/client/GumpLifetime.h	Netstorm.Client/Gump/GumpLifetime.cs	6f2b5101bae0957a7a616a2f65325223961c62be	port
 cpppj/src/client/GumpTree.cpp	Netstorm.Client/Gump/GumpTree.cs	a84c02c69ef027fd2009f0ebe841761adc02ec4c	port
 cpppj/src/client/GumpTree.h	Netstorm.Client/Gump/GumpTree.cs	a84c02c69ef027fd2009f0ebe841761adc02ec4c	port
+cpppj/src/client/GumpVisual.cpp	Netstorm.Client/Gump/GumpVisual.cs	39bc55e914fa14eddeba3641b757ec689abb7a95	port
+cpppj/src/client/GumpVisual.h	Netstorm.Client/Gump/GumpVisual.cs	39bc55e914fa14eddeba3641b757ec689abb7a95	port
 cpppj/src/client/InputEvent.cpp	Netstorm.Client/Host/HostInputMapper.cs	91d494c3b2814f00d2cae81a0f4b247e91e81922	port
 cpppj/src/client/InputEvent.cpp	Netstorm.Client/Input/InputEvent.cs	ac9ea9162ba0c580cd53505c8c3782c0b2a27172	port
 cpppj/src/client/InputEvent.h	Netstorm.Client/Input/InputEvent.cs	ac9ea9162ba0c580cd53505c8c3782c0b2a27172	port
