@@ -8,6 +8,10 @@ cpppj/src/app/main.cpp	Netstorm.Client/Automation/UiScript.cs	f0a08f08d86df0b44c
 cpppj/src/app/main.cpp	Netstorm.Client/Host/HostFrameDriver.cs	91d494c3b2814f00d2cae81a0f4b247e91e81922	port
 cpppj/src/app/main.cpp	Netstorm.Client/Host/HostOptions.cs	91d494c3b2814f00d2cae81a0f4b247e91e81922	port
 cpppj/src/client/BitmapFont.cpp	Netstorm.Assets/BitmapFont.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
+cpppj/src/client/BitmapFont.cpp	Netstorm.Client.Host/WindowsBitmapFont.cs	e074cad7f385caf5973f0ae4ee6ee824981e06f9	port
+cpppj/src/client/BitmapFont.cpp	Netstorm.Client/Display/BitmapFont.cs	e074cad7f385caf5973f0ae4ee6ee824981e06f9	port
+cpppj/src/client/BitmapFont.h	Netstorm.Client.Host/WindowsBitmapFont.cs	e074cad7f385caf5973f0ae4ee6ee824981e06f9	port
+cpppj/src/client/BitmapFont.h	Netstorm.Client/Display/BitmapFont.cs	e074cad7f385caf5973f0ae4ee6ee824981e06f9	port
 cpppj/src/client/ClientMain.cpp	Netstorm.Client/Display/ScreenCapture.cs	f0a08f08d86df0b44ca007c35dcb4eeb9fbf21a9	port
 cpppj/src/client/Cursor.h	Netstorm.Core/Rules/GameCursor.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
 cpppj/src/client/DialogScript.cpp	Netstorm.Assets/CampaignMenu.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
@@ -34,6 +38,10 @@ cpppj/src/client/GumpInput.cpp	Netstorm.Client/Gump/GumpInput.cs	d9ddcc929d426cd
 cpppj/src/client/GumpInput.h	Netstorm.Client/Gump/GumpInput.cs	d9ddcc929d426cd4e6f32b1c78f9d35361e28ad1	port
 cpppj/src/client/GumpLifetime.cpp	Netstorm.Client/Gump/GumpLifetime.cs	6f2b5101bae0957a7a616a2f65325223961c62be	port
 cpppj/src/client/GumpLifetime.h	Netstorm.Client/Gump/GumpLifetime.cs	6f2b5101bae0957a7a616a2f65325223961c62be	port
+cpppj/src/client/GumpText.cpp	Netstorm.Client/Gump/GumpText.cs	e074cad7f385caf5973f0ae4ee6ee824981e06f9	port
+cpppj/src/client/GumpText.h	Netstorm.Client/Gump/GumpText.cs	e074cad7f385caf5973f0ae4ee6ee824981e06f9	port
+cpppj/src/client/GumpTextDraw.cpp	Netstorm.Client/Gump/GumpTextDraw.cs	e074cad7f385caf5973f0ae4ee6ee824981e06f9	port
+cpppj/src/client/GumpTextDraw.h	Netstorm.Client/Gump/GumpTextDraw.cs	e074cad7f385caf5973f0ae4ee6ee824981e06f9	port
 cpppj/src/client/GumpTree.cpp	Netstorm.Client/Gump/GumpTree.cs	a84c02c69ef027fd2009f0ebe841761adc02ec4c	port
 cpppj/src/client/GumpTree.h	Netstorm.Client/Gump/GumpTree.cs	a84c02c69ef027fd2009f0ebe841761adc02ec4c	port
 cpppj/src/client/GumpVisual.cpp	Netstorm.Client/Gump/GumpVisual.cs	39bc55e914fa14eddeba3641b757ec689abb7a95	port
