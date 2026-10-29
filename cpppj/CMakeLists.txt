@@ -6,7 +6,7 @@ cmake_minimum_required(VERSION 3.21)
 project(NetstormCpp
     VERSION 0.1.0
     DESCRIPTION "NetStorm: Islands at War - C++ build reconstructed from the decompiled original"
-    LANGUAGES CXX)
+    LANGUAGES C CXX)
 
 # cpppj는 Windows 전용이다(AGENTS.md). 원본과 같은 Win32 API를 직접 쓴다.
 if(NOT WIN32)
@@ -32,6 +32,8 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
 # 공통 컴파일 옵션 함수(netstorm_apply_compiler_options)
 include(cmake/CompilerOptions.cmake)
 
+# 원본32비트 Smackw32.dll 대신 Windows10/11의64비트 호스트에서 사용할 별도 C 디코더 DLL을 만든다.
+add_subdirectory(third_party/libsmacker)
 add_subdirectory(src)
 
 if(NETSTORM_BUILD_TESTS)

@@ -10,6 +10,8 @@
 # 게임 본체. 실행 파일과 테스트가 함께 쓰도록 정적 라이브러리로 묶는다.
 # 소스 목록은 각 폴더의 CMakeLists.txt 가 target_sources 로 더한다.
 add_library(netstorm STATIC)
+target_sources(netstorm PRIVATE client/SmackerDecoder.cpp client/SmackerDecoder.h) # 인트로용 실제 팔레트/PCM 디코더 장치다.
+add_dependencies(netstorm NetstormSmacker) # 실행 파일 옆의 별도 LGPL DLL을 게임 빌드와 함께 만든다.
 target_sources(netstorm PRIVATE client/RawChatPacket.cpp client/RawChatPacket.h) # 일반 채팅 패킷 작성과 송신 직전 길이 확정이다.
 target_sources(netstorm PRIVATE client/RawChatReceive.cpp client/RawChatReceive.h) # 일반 수신의 채널/관계 필터와 실제 텍스트 문맥이다.
 target_sources(netstorm PRIVATE client/RawChatRelay.cpp client/RawChatRelay.h) # 같은 패킷의 중계·수신 마스크와 실제 observer 등록이다.

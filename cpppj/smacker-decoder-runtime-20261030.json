@@ -1,0 +1,475 @@
+{
+  "unit": 591,
+  "date": "2026-10-30",
+  "host": "HJOW-Athlon",
+  "os": "Windows-10-10.0.19045-SP0",
+  "baseCommit": "756d5969",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "scope": "원본 SDK를 대체하는 별도64비트 SMK 디코더 DLL/소유 장치를 구현하고 실제 CD의 모든 RGB/PCM을 검증했다. MovieGump 재생 연결은 미완료다.",
+  "vendor": {
+    "repository": "https://github.com/greg-kennedy/libsmacker",
+    "commit": "76094fb9c8e98bd5fac982c504e8d9aeff3ece01",
+    "license": "LGPL-2.1",
+    "upstreamFilesUnmodified": true,
+    "files": {
+      "smacker.c": {
+        "url": "https://raw.githubusercontent.com/greg-kennedy/libsmacker/76094fb9c8e98bd5fac982c504e8d9aeff3ece01/smacker.c",
+        "sha256": "bcfc02e9f3b53685a9ca46f46399ecf8af1e73f88831f6cf788ecbda320b9e91",
+        "bytes": 47668
+      },
+      "smacker.h": {
+        "url": "https://raw.githubusercontent.com/greg-kennedy/libsmacker/76094fb9c8e98bd5fac982c504e8d9aeff3ece01/smacker.h",
+        "sha256": "4bcf855b32bc6a69ca2d6df65bcbf628d939ad89866313553eb5f2de598e29c8",
+        "bytes": 3531
+      },
+      "smk_malloc.h": {
+        "url": "https://raw.githubusercontent.com/greg-kennedy/libsmacker/76094fb9c8e98bd5fac982c504e8d9aeff3ece01/smk_malloc.h",
+        "sha256": "ccb52a95f587a9b7968433280c198ddadc726288d454102729d638f9d5d82353",
+        "bytes": 1280
+      },
+      "COPYING": {
+        "url": "https://raw.githubusercontent.com/greg-kennedy/libsmacker/76094fb9c8e98bd5fac982c504e8d9aeff3ece01/COPYING",
+        "sha256": "dc626520dcd53a22f727af3ee42c770e56c97a64fe3adb063799d8ab032fe551",
+        "bytes": 26530
+      },
+      "README": {
+        "url": "https://raw.githubusercontent.com/greg-kennedy/libsmacker/76094fb9c8e98bd5fac982c504e8d9aeff3ece01/README",
+        "sha256": "57669b49ffba7ccd20af27812033ca3d398738dc110a52d9d3feed6b180929a8",
+        "bytes": 1745
+      }
+    }
+  },
+  "comparisons": {
+    "english": {
+      "passed": true,
+      "checks": {
+        "frameCounts": true,
+        "allRgbFrameHashes": true,
+        "dimensions": true,
+        "audioBytes": true,
+        "audioSha256": true
+      },
+      "frames": 1890,
+      "frameDifferences": [],
+      "actualMetadata": {
+        "width": 640,
+        "height": 320,
+        "headerFrames": 1890,
+        "decodedFrames": 1890,
+        "microsecondsPerFrame": 66660,
+        "yScaleMode": 0,
+        "videoSha256": "0ceca2bc30b6fe3403d9cb123e801c82e321a12ddd9f544b25d2e0b0c793ec30",
+        "audio": [
+          {
+            "track": 0,
+            "exists": true,
+            "channels": 2,
+            "bits": 16,
+            "rate": 22050,
+            "bytes": 11112056,
+            "sha256": "d1f6ac7782ae2f1f5a8c3255ed8589ec6153c64761502c6da75fd31e8982f59a"
+          },
+          {
+            "track": 1,
+            "exists": false,
+            "channels": 0,
+            "bits": 0,
+            "rate": 0,
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "track": 2,
+            "exists": false,
+            "channels": 0,
+            "bits": 0,
+            "rate": 0,
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "track": 3,
+            "exists": false,
+            "channels": 0,
+            "bits": 0,
+            "rate": 0,
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "track": 4,
+            "exists": false,
+            "channels": 0,
+            "bits": 0,
+            "rate": 0,
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "track": 5,
+            "exists": false,
+            "channels": 0,
+            "bits": 0,
+            "rate": 0,
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "track": 6,
+            "exists": false,
+            "channels": 0,
+            "bits": 0,
+            "rate": 0,
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        ]
+      },
+      "expectedAudio": {
+        "bytes": 11112056,
+        "sha256": "d1f6ac7782ae2f1f5a8c3255ed8589ec6153c64761502c6da75fd31e8982f59a"
+      },
+      "mediaSha256": "bd180bee684b72bd8b0c8bd1eabac05a893bba61ed9a2624c2054bc7b326ddb1",
+      "ffmpegVersion": "ffmpeg version N-125875-g5d4d3bdc61-20260731 Copyright (c) 2000-2026 the FFmpeg developers",
+      "gameOrWindowExecuted": false
+    },
+    "german": {
+      "passed": true,
+      "checks": {
+        "frameCounts": true,
+        "allRgbFrameHashes": true,
+        "dimensions": true,
+        "audioBytes": true,
+        "audioSha256": true
+      },
+      "frames": 1890,
+      "frameDifferences": [],
+      "actualMetadata": {
+        "width": 640,
+        "height": 320,
+        "headerFrames": 1890,
+        "decodedFrames": 1890,
+        "microsecondsPerFrame": 66660,
+        "yScaleMode": 0,
+        "videoSha256": "0ceca2bc30b6fe3403d9cb123e801c82e321a12ddd9f544b25d2e0b0c793ec30",
+        "audio": [
+          {
+            "track": 0,
+            "exists": true,
+            "channels": 2,
+            "bits": 16,
+            "rate": 22050,
+            "bytes": 11112056,
+            "sha256": "05d3aa119317a8b801f259b0a2a06ca66a5c1ccd4410f9f3d6a6735c3c562d24"
+          },
+          {
+            "track": 1,
+            "exists": false,
+            "channels": 0,
+            "bits": 0,
+            "rate": 0,
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "track": 2,
+            "exists": false,
+            "channels": 0,
+            "bits": 0,
+            "rate": 0,
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "track": 3,
+            "exists": false,
+            "channels": 0,
+            "bits": 0,
+            "rate": 0,
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "track": 4,
+            "exists": false,
+            "channels": 0,
+            "bits": 0,
+            "rate": 0,
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "track": 5,
+            "exists": false,
+            "channels": 0,
+            "bits": 0,
+            "rate": 0,
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "track": 6,
+            "exists": false,
+            "channels": 0,
+            "bits": 0,
+            "rate": 0,
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        ]
+      },
+      "expectedAudio": {
+        "bytes": 11112056,
+        "sha256": "05d3aa119317a8b801f259b0a2a06ca66a5c1ccd4410f9f3d6a6735c3c562d24"
+      },
+      "mediaSha256": "df3c0ac5935c4c8d689909468d14063400ed3b1fed8340e03a88b4dcf3da8fef",
+      "ffmpegVersion": "ffmpeg version N-125875-g5d4d3bdc61-20260731 Copyright (c) 2000-2026 the FFmpeg developers",
+      "gameOrWindowExecuted": false
+    }
+  },
+  "distinctIndependentVerifiedFrames": 3780,
+  "independentPcmStreamsVerified": 2,
+  "packagedEnglishFramesMatched": 1890,
+  "rebuiltReplacementEnglishFramesMatched": 1890,
+  "focusedTests": 5,
+  "failedChecks": 0,
+  "registeredCppTests": 3478,
+  "firstBuildFailure": "Windows max 매크로가 numeric_limits::max를 가린 첫 빌드 실패. NOMINMAX로 수정하고 초기 로그 보존.",
+  "builds": [
+    {
+      "log": "build1.log",
+      "returnCode": 1,
+      "errors": 7,
+      "warnings": 2,
+      "sha256": "ad52a4e683a7a3a7584ef649fc2f30b339c627a5028f15bb499ee4be5187e80e"
+    },
+    {
+      "log": "build2.log",
+      "returnCode": 0,
+      "errors": 0,
+      "warnings": 0,
+      "sha256": "dafdc979f33437572d12ec57ecb2ef5a1b1a94950503b995c8f5a5e96952dc1e"
+    },
+    {
+      "log": "build3.log",
+      "returnCode": 0,
+      "errors": 0,
+      "warnings": 0,
+      "sha256": "e3904426be8a48688acfc7efe6a42505ab1420b5ec52904266bf94e40684e48c"
+    },
+    {
+      "log": "build4.log",
+      "returnCode": 0,
+      "errors": 0,
+      "warnings": 0,
+      "sha256": "ce34da647275d89150af4c8b0d11f06d50b3306dede527924489065ceda2ae6d"
+    },
+    {
+      "log": "package.log",
+      "returnCode": 0,
+      "errors": 0,
+      "warnings": 0,
+      "sha256": "3d0db307a2f0b2ec9111ef14acf0667d4c6f88dad98c831044b4b99b6edf1594"
+    },
+    {
+      "log": "rebuild-configure.log",
+      "returnCode": 0,
+      "errors": 0,
+      "warnings": 0,
+      "sha256": "26cc898a2402177b161bebef58ac1265b5d11e7ef2787c035affffdc794e1d56"
+    },
+    {
+      "log": "rebuild-dll.log",
+      "returnCode": 0,
+      "errors": 0,
+      "warnings": 0,
+      "sha256": "d9f242cf0ab833ca8f1958b61e3fe1dab127bffd9a4d782f220c6e3cd280b2e6"
+    }
+  ],
+  "package": {
+    "entries": 1374,
+    "bytes": 134190091,
+    "sha256": "05352db97ddfe62b0475cb5b1ad4b7d631287e8482831f4fe203554fb3d37c54",
+    "gameSha256": "ddcfffb12014dbbea76e8d64858050ffccf9d4a6a3e98d4d898133d21f3f8347",
+    "decoderDllSha256": "6afa14297064ac26e76765747a46f4b5b813fd29f5277d95758b8cf801c4ce1f",
+    "upstreamFilesMatch": 5,
+    "verificationHelperCopiedAfterExtraction": true
+  },
+  "replacementDllSha256": "8fbf699a6555a011458c6ff80a1840c35aad1ab1b900742d9bcfe2c959baab92",
+  "newMovieCpp": "ddcfffb12014dbbea76e8d64858050ffccf9d4a6a3e98d4d898133d21f3f8347",
+  "sourcePins": [
+    {
+      "path": "cpppj/CMakeLists.txt",
+      "checkoutSha256": "5f5b8027bd0e601a6c7fbf8eccfc82439963821272a46a68ed5b4b85436e26dc",
+      "gitBlobSha256": "5f5b8027bd0e601a6c7fbf8eccfc82439963821272a46a68ed5b4b85436e26dc",
+      "checkoutFilterSha256": {
+        "true": "5f5b8027bd0e601a6c7fbf8eccfc82439963821272a46a68ed5b4b85436e26dc",
+        "false": "5f5b8027bd0e601a6c7fbf8eccfc82439963821272a46a68ed5b4b85436e26dc"
+      }
+    },
+    {
+      "path": "cpppj/src/CMakeLists.txt",
+      "checkoutSha256": "19fd8d7325000d23e0f61571ad9323d5951809bb2fa8a37134470cd5098485cd",
+      "gitBlobSha256": "19fd8d7325000d23e0f61571ad9323d5951809bb2fa8a37134470cd5098485cd",
+      "checkoutFilterSha256": {
+        "true": "19fd8d7325000d23e0f61571ad9323d5951809bb2fa8a37134470cd5098485cd",
+        "false": "19fd8d7325000d23e0f61571ad9323d5951809bb2fa8a37134470cd5098485cd"
+      }
+    },
+    {
+      "path": "cpppj/tests/CMakeLists.txt",
+      "checkoutSha256": "af05b5a4ae9af315e66e09f812325599e1848be400a546a68243d5bc0f2bae06",
+      "gitBlobSha256": "af05b5a4ae9af315e66e09f812325599e1848be400a546a68243d5bc0f2bae06",
+      "checkoutFilterSha256": {
+        "true": "af05b5a4ae9af315e66e09f812325599e1848be400a546a68243d5bc0f2bae06",
+        "false": "af05b5a4ae9af315e66e09f812325599e1848be400a546a68243d5bc0f2bae06"
+      }
+    },
+    {
+      "path": "cpppj/package-cpppj.ps1",
+      "checkoutSha256": "b9b642ccecd256fd6c7555fa3ae6760587b467a780a53790ff4e7095588cfd89",
+      "gitBlobSha256": "a74c0cda8efab421d340b4d61033db717bfd58f62e6fe4ecb8dec198652659b1",
+      "checkoutFilterSha256": {
+        "true": "b9b642ccecd256fd6c7555fa3ae6760587b467a780a53790ff4e7095588cfd89",
+        "false": "b9b642ccecd256fd6c7555fa3ae6760587b467a780a53790ff4e7095588cfd89"
+      }
+    },
+    {
+      "path": "cpppj/src/client/SmackerDecoder.cpp",
+      "checkoutSha256": "3efe5fc2deefdd72e2249532d2756217c9b37b055c890a4895ae65a36d2d1cec",
+      "gitBlobSha256": "3efe5fc2deefdd72e2249532d2756217c9b37b055c890a4895ae65a36d2d1cec",
+      "checkoutFilterSha256": {
+        "true": "3efe5fc2deefdd72e2249532d2756217c9b37b055c890a4895ae65a36d2d1cec",
+        "false": "3efe5fc2deefdd72e2249532d2756217c9b37b055c890a4895ae65a36d2d1cec"
+      }
+    },
+    {
+      "path": "cpppj/src/client/SmackerDecoder.h",
+      "checkoutSha256": "caf2618ca19d89a26cf7a707837c61e1cee1e5f0727de5720d63d83b8e02378d",
+      "gitBlobSha256": "caf2618ca19d89a26cf7a707837c61e1cee1e5f0727de5720d63d83b8e02378d",
+      "checkoutFilterSha256": {
+        "true": "caf2618ca19d89a26cf7a707837c61e1cee1e5f0727de5720d63d83b8e02378d",
+        "false": "caf2618ca19d89a26cf7a707837c61e1cee1e5f0727de5720d63d83b8e02378d"
+      }
+    },
+    {
+      "path": "cpppj/tests/SmackerDecoderTests.cpp",
+      "checkoutSha256": "f1dc6c66d82f2a0c2d49726f173e0d23b17fcad066919bbc97ce773aaad4efb9",
+      "gitBlobSha256": "f1dc6c66d82f2a0c2d49726f173e0d23b17fcad066919bbc97ce773aaad4efb9",
+      "checkoutFilterSha256": {
+        "true": "f1dc6c66d82f2a0c2d49726f173e0d23b17fcad066919bbc97ce773aaad4efb9",
+        "false": "f1dc6c66d82f2a0c2d49726f173e0d23b17fcad066919bbc97ce773aaad4efb9"
+      }
+    },
+    {
+      "path": "cpppj/tests/SmackerDecoderDump.cpp",
+      "checkoutSha256": "a8fbc86002a14c5153bba8c830728a354884676ec423b77518c1458ecb2857ca",
+      "gitBlobSha256": "a8fbc86002a14c5153bba8c830728a354884676ec423b77518c1458ecb2857ca",
+      "checkoutFilterSha256": {
+        "true": "a8fbc86002a14c5153bba8c830728a354884676ec423b77518c1458ecb2857ca",
+        "false": "a8fbc86002a14c5153bba8c830728a354884676ec423b77518c1458ecb2857ca"
+      }
+    },
+    {
+      "path": "tools/verify_smacker_decoder.py",
+      "checkoutSha256": "14ac56c5c7388d72760260e497abcd2418a2fb92f84d75f2866577b48a55a6cf",
+      "gitBlobSha256": "14ac56c5c7388d72760260e497abcd2418a2fb92f84d75f2866577b48a55a6cf",
+      "checkoutFilterSha256": {
+        "true": "14ac56c5c7388d72760260e497abcd2418a2fb92f84d75f2866577b48a55a6cf",
+        "false": "14ac56c5c7388d72760260e497abcd2418a2fb92f84d75f2866577b48a55a6cf"
+      }
+    },
+    {
+      "path": "cpppj/third_party/libsmacker/smacker.c",
+      "checkoutSha256": "bcfc02e9f3b53685a9ca46f46399ecf8af1e73f88831f6cf788ecbda320b9e91",
+      "gitBlobSha256": "bcfc02e9f3b53685a9ca46f46399ecf8af1e73f88831f6cf788ecbda320b9e91",
+      "checkoutFilterSha256": {
+        "true": "bcfc02e9f3b53685a9ca46f46399ecf8af1e73f88831f6cf788ecbda320b9e91",
+        "false": "bcfc02e9f3b53685a9ca46f46399ecf8af1e73f88831f6cf788ecbda320b9e91"
+      }
+    },
+    {
+      "path": "cpppj/third_party/libsmacker/smacker.h",
+      "checkoutSha256": "4bcf855b32bc6a69ca2d6df65bcbf628d939ad89866313553eb5f2de598e29c8",
+      "gitBlobSha256": "4bcf855b32bc6a69ca2d6df65bcbf628d939ad89866313553eb5f2de598e29c8",
+      "checkoutFilterSha256": {
+        "true": "4bcf855b32bc6a69ca2d6df65bcbf628d939ad89866313553eb5f2de598e29c8",
+        "false": "4bcf855b32bc6a69ca2d6df65bcbf628d939ad89866313553eb5f2de598e29c8"
+      }
+    },
+    {
+      "path": "cpppj/third_party/libsmacker/smk_malloc.h",
+      "checkoutSha256": "ccb52a95f587a9b7968433280c198ddadc726288d454102729d638f9d5d82353",
+      "gitBlobSha256": "ccb52a95f587a9b7968433280c198ddadc726288d454102729d638f9d5d82353",
+      "checkoutFilterSha256": {
+        "true": "ccb52a95f587a9b7968433280c198ddadc726288d454102729d638f9d5d82353",
+        "false": "ccb52a95f587a9b7968433280c198ddadc726288d454102729d638f9d5d82353"
+      }
+    },
+    {
+      "path": "cpppj/third_party/libsmacker/COPYING",
+      "checkoutSha256": "dc626520dcd53a22f727af3ee42c770e56c97a64fe3adb063799d8ab032fe551",
+      "gitBlobSha256": "dc626520dcd53a22f727af3ee42c770e56c97a64fe3adb063799d8ab032fe551",
+      "checkoutFilterSha256": {
+        "true": "dc626520dcd53a22f727af3ee42c770e56c97a64fe3adb063799d8ab032fe551",
+        "false": "dc626520dcd53a22f727af3ee42c770e56c97a64fe3adb063799d8ab032fe551"
+      }
+    },
+    {
+      "path": "cpppj/third_party/libsmacker/README",
+      "checkoutSha256": "57669b49ffba7ccd20af27812033ca3d398738dc110a52d9d3feed6b180929a8",
+      "gitBlobSha256": "57669b49ffba7ccd20af27812033ca3d398738dc110a52d9d3feed6b180929a8",
+      "checkoutFilterSha256": {
+        "true": "57669b49ffba7ccd20af27812033ca3d398738dc110a52d9d3feed6b180929a8",
+        "false": "57669b49ffba7ccd20af27812033ca3d398738dc110a52d9d3feed6b180929a8"
+      }
+    },
+    {
+      "path": "cpppj/third_party/libsmacker/provenance.json",
+      "checkoutSha256": "568a08e31f0d35cd4a055cc0d57ccbbaebb39e0bbfc2a739226de15495bbd834",
+      "gitBlobSha256": "568a08e31f0d35cd4a055cc0d57ccbbaebb39e0bbfc2a739226de15495bbd834",
+      "checkoutFilterSha256": {
+        "true": "568a08e31f0d35cd4a055cc0d57ccbbaebb39e0bbfc2a739226de15495bbd834",
+        "false": "568a08e31f0d35cd4a055cc0d57ccbbaebb39e0bbfc2a739226de15495bbd834"
+      }
+    },
+    {
+      "path": "cpppj/third_party/libsmacker/CMakeLists.txt",
+      "checkoutSha256": "979d8395ed4bef79392b7c8f90829239b6382e64f0001c49046b6c1d77a4eb52",
+      "gitBlobSha256": "979d8395ed4bef79392b7c8f90829239b6382e64f0001c49046b6c1d77a4eb52",
+      "checkoutFilterSha256": {
+        "true": "979d8395ed4bef79392b7c8f90829239b6382e64f0001c49046b6c1d77a4eb52",
+        "false": "979d8395ed4bef79392b7c8f90829239b6382e64f0001c49046b6c1d77a4eb52"
+      }
+    },
+    {
+      "path": "cpppj/third_party/libsmacker/README.ko.md",
+      "checkoutSha256": "76b19fc0eb56f201868311315c37aab06f49a342f1901acbf92fa13251e11ac3",
+      "gitBlobSha256": "76b19fc0eb56f201868311315c37aab06f49a342f1901acbf92fa13251e11ac3",
+      "checkoutFilterSha256": {
+        "true": "76b19fc0eb56f201868311315c37aab06f49a342f1901acbf92fa13251e11ac3",
+        "false": "76b19fc0eb56f201868311315c37aab06f49a342f1901acbf92fa13251e11ac3"
+      }
+    }
+  ],
+  "sourceCheckoutComparisons": 34,
+  "protectedFiles": 2599,
+  "protectedExistingFixtures": 738,
+  "protectedChanged": [],
+  "newNativeCpuObservations": 0,
+  "originalGameOrSmackw32Executed": false,
+  "gameWindowOrAudioDeviceExecuted": false,
+  "movieGumpConnected": false,
+  "actualIntroPlaybackVerified": false,
+  "introMediaBundled": false,
+  "currentFullCppSuiteExecuted": false,
+  "currentAll34PathsExecuted": false,
+  "lastAll34ProductUnit": 586,
+  "lastAll34EvidenceUnit": 587,
+  "newMultiplayerTestsExecuted": false,
+  "capturesSacrificesSpecificAttacksOrVictoriesReproduced": false,
+  "goalComplete": false,
+  "requestedPauseAfterDocumentationAndCommit": true,
+  "next": "재개 후 Native MovieGump의 open/setup/palette/idle/end/input과 State39/40/41에 실제 표시/음향/수명을 연결하고 CD 영상 탐색/동봉을 완성한다."
+}

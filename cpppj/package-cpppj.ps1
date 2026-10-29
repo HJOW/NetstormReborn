@@ -418,7 +418,8 @@ function New-ReadmeText {
         '',
         '[폴더 구성]',
         '  Netstorm.exe     클론 실행 파일',
-        '  *.dll               Visual C++ 런타임',
+        '  *.dll               Visual C++ 런타임 및 인트로 디코더',
+        '  third-party\libsmacker\  디코더 라이선스와 대응 소스(동봉된 경우)',
         '  Netstorm.bat        창 모드 실행',
         '  Netstorm-SavedMode.bat  저장된 화면 모드로 실행',
         '  game\               게임 데이터 (원본 Netstorm 10.78)',
@@ -730,6 +731,15 @@ try {
             foreach ($dll in $runtimePlan) {
                 Add-FileItem -Items $items -Entry ($PackageRootName + '/' + $dll.Name) -Source $dll.Path
             }
+        }
+        # 원본32비트 DLL 대신 Windows10/11 x64용 별도 디코더와 LGPL 대응 소스를 함께 배포한다.
+        $smackerDll = Join-Path (Split-Path -Parent $ExePath) 'NetstormSmacker.dll'
+        if (Test-Path -LiteralPath $smackerDll -PathType Leaf) {
+            Add-FileItem -Items $items -Entry ($PackageRootName + '/NetstormSmacker.dll') -Source $smackerDll
+            $smackerSource = Join-Path $PSScriptRoot 'third_party/libsmacker'
+            foreach ($sourceName in @('smacker.c', 'smacker.h', 'smk_malloc.h', 'COPYING', 'README', 'CMakeLists.txt', 'README.ko.md', 'provenance.json')) {
+                Add-FileItem -Items $items -Entry ($PackageRootName + '/third-party/libsmacker/' + $sourceName) -Source (Join-Path $smackerSource $sourceName)
+            } # 상류 소스/라이선스와 독립 재빌드 자료를 빠짐없이 넣는다.
         }
     }
     Add-TextItem -Items $items -Entry ($PackageRootName + '/Netstorm.bat') -Text (New-LauncherText -WindowMode $true) -UseBom $false

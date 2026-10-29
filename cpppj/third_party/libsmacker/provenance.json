@@ -1,0 +1,33 @@
+{
+  "repository": "https://github.com/greg-kennedy/libsmacker",
+  "commit": "76094fb9c8e98bd5fac982c504e8d9aeff3ece01",
+  "license": "LGPL-2.1",
+  "upstreamFilesUnmodified": true,
+  "files": {
+    "smacker.c": {
+      "url": "https://raw.githubusercontent.com/greg-kennedy/libsmacker/76094fb9c8e98bd5fac982c504e8d9aeff3ece01/smacker.c",
+      "sha256": "bcfc02e9f3b53685a9ca46f46399ecf8af1e73f88831f6cf788ecbda320b9e91",
+      "bytes": 47668
+    },
+    "smacker.h": {
+      "url": "https://raw.githubusercontent.com/greg-kennedy/libsmacker/76094fb9c8e98bd5fac982c504e8d9aeff3ece01/smacker.h",
+      "sha256": "4bcf855b32bc6a69ca2d6df65bcbf628d939ad89866313553eb5f2de598e29c8",
+      "bytes": 3531
+    },
+    "smk_malloc.h": {
+      "url": "https://raw.githubusercontent.com/greg-kennedy/libsmacker/76094fb9c8e98bd5fac982c504e8d9aeff3ece01/smk_malloc.h",
+      "sha256": "ccb52a95f587a9b7968433280c198ddadc726288d454102729d638f9d5d82353",
+      "bytes": 1280
+    },
+    "COPYING": {
+      "url": "https://raw.githubusercontent.com/greg-kennedy/libsmacker/76094fb9c8e98bd5fac982c504e8d9aeff3ece01/COPYING",
+      "sha256": "dc626520dcd53a22f727af3ee42c770e56c97a64fe3adb063799d8ab032fe551",
+      "bytes": 26530
+    },
+    "README": {
+      "url": "https://raw.githubusercontent.com/greg-kennedy/libsmacker/76094fb9c8e98bd5fac982c504e8d9aeff3ece01/README",
+      "sha256": "57669b49ffba7ccd20af27812033ca3d398738dc110a52d9d3feed6b180929a8",
+      "bytes": 1745
+    }
+  }
+}
