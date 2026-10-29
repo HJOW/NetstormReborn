@@ -132,3 +132,5 @@ cpppj의 파일·클래스·함수 경계와 이름을 따른다. 이름이 같�
 - R3k-4에서 HtmlBodyGump/EmbeddedTell4행을 원본82행의 생성/설치/조회 관찰 범위 L1, RawMenuControls의 RenderEmbeddedTell 부분 게시기1행만 port로 추가했다([구현과 검증](../docs/dotnet-html-body-embedded-tell-20261029.md)). 실제8192BYTE/스크롤 자식/보호 글꼴/입력/지연 반납·현재 Config/부분 예외도 연결했다. 전체 ConfigInterface 등록부/RawMenuControls 소유자·상위 창/메뉴·호스트는 후속이다.
 
 - R3k-5에서 QuickHelpControl/QuickHelpRequest4행을 L1로 추가했다([구현과 검증](../docs/dotnet-quick-help-control-20261029.md)). 원본150/985행과 실제 등록/트리/입력/이력/현재 popup·같은 BYTE 인자/원시 큐/지연 반납을 연결했다. 전체 전용 창 생성/표시·RawMenuControls 모달/상위 소유·메뉴/호스트는 후속이다.
+
+- R3k-6에서 QuickHelpWindow2행을 L1로 추가했다([구현과 검증](../docs/dotnet-quick-help-window-20261029.md)). 원본84/추가14행의12개 전체 기본 노드/창 tail·캐시/표식/효과와 실제 HTML 부모/본문/글꼴·현재 콜백/부분 상태를 확인했다. 전체 위젯/자산 동시 조립·RawMenuControls 상위 소유/메뉴/호스트와 전체 화면 판정은 후속이다.
