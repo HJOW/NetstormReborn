@@ -3,8 +3,8 @@ using Netstorm.Core.Original;
 
 namespace Netstorm.Client.Gump; // 메뉴/대화창 장식의 배경·모서리·변경 영역과 실제 픽셀 영역이다.
 
-/// <summary>배경과 별개로 원본+b8/+bc/+c0의 캐시 SHP/모서리 타입/첫 프레임을 보관한다.</summary>
-public sealed class GumpDecorationNode : GumpBackgroundNode
+/// <summary>배경과 별개로 원본+b8/+bc/+c0의 캐시 SHP/모서리 타입/첫 프레임을 보관한다. HTML 창도 같은 기본 저장소를 상속한다.</summary>
+public class GumpDecorationNode : GumpBackgroundNode
 {
     /// <summary>생성 시 캐시한 SHP 식별자.</summary>
     public uint CornerShape { get; set; }

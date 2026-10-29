@@ -43,6 +43,9 @@
     <None Include="../../../cpppj/tests/fixtures/htmltext-x86.tsv" Link="X86/htmltext-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/quick-help-html-x86.tsv" Link="X86/quick-help-html-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/quick-help-control-x86.tsv" Link="X86/quick-help-control-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/html-window-gump-x86.tsv" Link="X86/html-window-gump-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/html-window-idle-v2-x86.tsv" Link="X86/html-window-idle-v2-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/html-window-fit-x86.tsv" Link="X86/html-window-fit-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/quick-help-window-x86.tsv" Link="X86/quick-help-window-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/quick-help-window-paths-x86.tsv" Link="X86/quick-help-window-paths-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/quick-help-request-x86.tsv" Link="X86/quick-help-request-x86.tsv" CopyToOutputDirectory="PreserveNewest" />

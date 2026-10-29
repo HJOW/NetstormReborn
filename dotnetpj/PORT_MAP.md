@@ -134,3 +134,5 @@ cpppj의 파일·클래스·함수 경계와 이름을 따른다. 이름이 같�
 - R3k-5에서 QuickHelpControl/QuickHelpRequest4행을 L1로 추가했다([구현과 검증](../docs/dotnet-quick-help-control-20261029.md)). 원본150/985행과 실제 등록/트리/입력/이력/현재 popup·같은 BYTE 인자/원시 큐/지연 반납을 연결했다. 전체 전용 창 생성/표시·RawMenuControls 모달/상위 소유·메뉴/호스트는 후속이다.
 
 - R3k-6에서 QuickHelpWindow2행을 L1로 추가했다([구현과 검증](../docs/dotnet-quick-help-window-20261029.md)). 원본84/추가14행의12개 전체 기본 노드/창 tail·캐시/표식/효과와 실제 HTML 부모/본문/글꼴·현재 콜백/부분 상태를 확인했다. 전체 위젯/자산 동시 조립·RawMenuControls 상위 소유/메뉴/호스트와 전체 화면 판정은 후속이다.
+
+- R3k-7에서 HtmlWindowGump/Fit4행을 L1로 추가했다([구현과 검증](../docs/dotnet-html-window-20261029.md)). 원본250/Idle88/Fit160행의 전체상태/효과·현재메뉴/정수·float경계와 실제장식/20돌버튼/동적본문/Slider/보호글꼴·입력/큐/지연수명을 연결했다. 같은 기본 객체의 상속만 연 기존장식2행은 port를 유지하고 기준을 갱신했다. Metadata/Factory·대화창/상위소유·전체자산/호스트와 전체화면 판정은 후속이다.

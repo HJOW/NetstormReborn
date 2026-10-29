@@ -34,8 +34,8 @@ cpppj/src/client/GumpCollection.cpp	Netstorm.Client/Gump/GumpCollection.cs	2155b
 cpppj/src/client/GumpCollection.h	Netstorm.Client/Gump/GumpCollection.cs	2155b0f0855c427a3c6655ed0a42d5e374f464dd	port
 cpppj/src/client/GumpCreate.cpp	Netstorm.Client/Gump/GumpCreate.cs	2155b0f0855c427a3c6655ed0a42d5e374f464dd	port
 cpppj/src/client/GumpCreate.h	Netstorm.Client/Gump/GumpCreate.cs	2155b0f0855c427a3c6655ed0a42d5e374f464dd	port
-cpppj/src/client/GumpDecoration.cpp	Netstorm.Client/Gump/GumpDecoration.cs	53c597b811c2b019165c883dce9c6ed20ae24c61	port
-cpppj/src/client/GumpDecoration.h	Netstorm.Client/Gump/GumpDecoration.cs	53c597b811c2b019165c883dce9c6ed20ae24c61	port
+cpppj/src/client/GumpDecoration.cpp	Netstorm.Client/Gump/GumpDecoration.cs	f9a8cfa54009d437fa2ba1630de5284b582bd5ac	port
+cpppj/src/client/GumpDecoration.h	Netstorm.Client/Gump/GumpDecoration.cs	f9a8cfa54009d437fa2ba1630de5284b582bd5ac	port
 cpppj/src/client/GumpDraw.cpp	Netstorm.Client/Gump/GumpDraw.cs	39bc55e914fa14eddeba3641b757ec689abb7a95	port
 cpppj/src/client/GumpDraw.cpp	Netstorm.Client/Gump/GumpPixelTarget.cs	39bc55e914fa14eddeba3641b757ec689abb7a95	port
 cpppj/src/client/GumpDraw.h	Netstorm.Client/Gump/GumpDraw.cs	39bc55e914fa14eddeba3641b757ec689abb7a95	port
@@ -68,6 +68,10 @@ cpppj/src/client/HtmlLinkText.cpp	Netstorm.Client/Gump/HtmlLinkText.cs	c58ddc1f7
 cpppj/src/client/HtmlLinkText.h	Netstorm.Client/Gump/HtmlLinkText.cs	c58ddc1f7a2e1e9cc2e97500bc06a51bb36fc817	L1
 cpppj/src/client/HtmlTextParser.cpp	Netstorm.Client/Gump/HtmlTextParser.cs	fb0f73782fb89fbbdf26c22ed3f91698abae1012	L1
 cpppj/src/client/HtmlTextParser.h	Netstorm.Client/Gump/HtmlTextParser.cs	fb0f73782fb89fbbdf26c22ed3f91698abae1012	L1
+cpppj/src/client/HtmlWindowFit.cpp	Netstorm.Client/Gump/HtmlWindowFit.cs	f9a8cfa54009d437fa2ba1630de5284b582bd5ac	L1
+cpppj/src/client/HtmlWindowFit.h	Netstorm.Client/Gump/HtmlWindowFit.cs	f9a8cfa54009d437fa2ba1630de5284b582bd5ac	L1
+cpppj/src/client/HtmlWindowGump.cpp	Netstorm.Client/Gump/HtmlWindowGump.cs	f9a8cfa54009d437fa2ba1630de5284b582bd5ac	L1
+cpppj/src/client/HtmlWindowGump.h	Netstorm.Client/Gump/HtmlWindowGump.cs	f9a8cfa54009d437fa2ba1630de5284b582bd5ac	L1
 cpppj/src/client/ImageGump.cpp	Netstorm.Client/Gump/ImageGump.cs	9813ecd5dfbbb30c4ca9d0ee6e3e8027b81e3d2f	L1
 cpppj/src/client/ImageGump.h	Netstorm.Client/Gump/ImageGump.cs	9813ecd5dfbbb30c4ca9d0ee6e3e8027b81e3d2f	L1
 cpppj/src/client/InputEvent.cpp	Netstorm.Client/Host/HostInputMapper.cs	91d494c3b2814f00d2cae81a0f4b247e91e81922	port
