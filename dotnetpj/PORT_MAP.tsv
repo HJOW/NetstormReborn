@@ -18,6 +18,8 @@ cpppj/src/client/GumpCreate.cpp	Netstorm.Client/Gump/GumpCreate.cs	2155b0f0855c4
 cpppj/src/client/GumpCreate.h	Netstorm.Client/Gump/GumpCreate.cs	2155b0f0855c427a3c6655ed0a42d5e374f464dd	port
 cpppj/src/client/GumpEvents.cpp	Netstorm.Client/Gump/GumpEvents.cs	d9ddcc929d426cd4e6f32b1c78f9d35361e28ad1	port
 cpppj/src/client/GumpEvents.h	Netstorm.Client/Gump/GumpEvents.cs	d9ddcc929d426cd4e6f32b1c78f9d35361e28ad1	port
+cpppj/src/client/GumpFrame.cpp	Netstorm.Client/Gump/GumpFrame.cs	9fcc08d7153f19f0402b682d99c6dac7a87241a1	port
+cpppj/src/client/GumpFrame.h	Netstorm.Client/Gump/GumpFrame.cs	9fcc08d7153f19f0402b682d99c6dac7a87241a1	port
 cpppj/src/client/GumpInput.cpp	Netstorm.Client/Gump/GumpInput.cs	d9ddcc929d426cd4e6f32b1c78f9d35361e28ad1	port
 cpppj/src/client/GumpInput.h	Netstorm.Client/Gump/GumpInput.cs	d9ddcc929d426cd4e6f32b1c78f9d35361e28ad1	port
 cpppj/src/client/GumpLifetime.cpp	Netstorm.Client/Gump/GumpLifetime.cs	6f2b5101bae0957a7a616a2f65325223961c62be	port
