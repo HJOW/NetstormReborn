@@ -1,0 +1,66 @@
+{
+  "unit": 592,
+  "date": "2026-10-30",
+  "host": "HJOW-Athlon",
+  "os": "Windows-10-10.0.19045-SP0",
+  "baseCommit": "9d501e29",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "scope": "MovieGump 옵션/입력/팔레트/idle 판단 부품. 실제 공장/표시/음향 연결은 후속.",
+  "nativeObservations": 59,
+  "nativeReobservations": 59,
+  "nativeDifferences": 0,
+  "tests": {
+    "MoviePlayback": 2,
+    "NativeIntroState": 2,
+    "SmackerDecoder": 3,
+    "totalFocused": 7,
+    "failed": 0,
+    "registeredExpected": 3480,
+    "fullSuiteRun": false
+  },
+  "build": {
+    "targets": [
+      "netstorm_tests",
+      "NetstormCpp"
+    ],
+    "configuration": "Release",
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0
+  },
+  "protected": {
+    "originals": 1394,
+    "originalCD": 425,
+    "existingFixtures": 738,
+    "total": 2557,
+    "changed": []
+  },
+  "sha256": {
+    "cpppj/src/client/MoviePlayback.cpp": "5a6e74ef122e1aec017c2af0934ada94d200bc9cd915296121881b457fdacc21",
+    "cpppj/src/client/MoviePlayback.h": "d364c46e0beda36cd53f3a9efee66daabcb8055b7ff0f2eeb0339b08838b930a",
+    "cpppj/tests/MoviePlaybackTests.cpp": "197ece8f0849c43eed01ce7e0b9841682e189c59dc05400c7d8c99ac3e18a19c",
+    "tools/decomp_movie_playback.py": "427d6375e8ccd34488b218ceb26cf0df9576132b9059b08d3e17551a9c984954",
+    "cpppj/tests/fixtures/movie-playback-x86.tsv": "4f138f68bf77fa26b8f18fe91436667ff39ad1fcfc276cd1f242a7436a0e8bf8",
+    "cpppj/movie-playback-native-20261030.json": "2790c9dfc0ca7ff53958a60bb469dc872c0e8a03f0d2930f7e6c26b84f5cb8f6",
+    "cpppj/build/bin/Release/Netstorm.exe": "6216ac18d891a0da2596c6a8df3aa4abdb1495e4d83ec252f1ba69a8da6c85e3"
+  },
+  "rawSha256": {
+    "protected-before.json": "777567cc612e466096f0ae73873fb396e463139041fc9a92f4a0ba8b2264812d",
+    "native-first.log": "aebe9b71ea7282e1c18b58c37bb2438ee0cc1bce732f078301fc1cf2d1ecd3bf",
+    "decomp-movie-final.py": "427d6375e8ccd34488b218ceb26cf0df9576132b9059b08d3e17551a9c984954",
+    "preliminary-log-argument.tsv": "485ca87a9417082f1b9a9267877f7e66d9941ae9f45b0563ec71fe85656dec32",
+    "preliminary-log-argument.json": "fb4d6bd9aeb417fb235aa4085a1767451c872ad669ec163171f681249c1719ce",
+    "native-final.log": "70bc70d9b124edb26ef1bc1c20b85cb53142cf6e3e4bb940154836475eacd4e1",
+    "build-first.log": "f64871f95e3fb857e9380cbca5c3200ac9b581671a8e5016a2f6ad1332901301",
+    "tests-intro.log": "4279b673ca9163a218c68be225853c07a20ea9729a78e9c0b48a03a2e087769a",
+    "tests-movie.log": "9cf8c2bcd0ce1781e77b07a4fd3a029e06df0d3ef20039905559434ed56663ae",
+    "tests-decoder.log": "c0b1fae3320256f6774d6d117ec9e38e84ec63311823503fc2ef5c5c87b42035"
+  },
+  "firstObserverIssue": "팔레트 로그의 없는 가변인자 표시를 잘못 읽은58사례는 예비 자료로 보존하고 원문 문자열을 구별한 정식59사례를 별도 생성했다.",
+  "gameOrWindowOrAudioRun": false,
+  "newMultiplayerTestsRun": false,
+  "forbiddenGameplayTestsRun": false,
+  "goalComplete": false,
+  "next": "실제 MovieGump 공장/open/setup/표시/음향/종료·State40 객체 생존 연결. 7차 AA/FSR3.1은 기본끔으로 후순위 진행."
+}

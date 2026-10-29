@@ -2104,3 +2104,11 @@ cpppj/tests/SmackerDecoderTests.cpp text eol=lf
 tools/verify_smacker_decoder.py text eol=lf
 cpppj/smacker-decoder-runtime-20261030.json text eol=lf
 cpppj/CMakeLists.txt -text
+# 영상 판단의 원시 관측/소스/보고서를 checkout 후에도 같은 바이트로 보존한다.
+cpppj/src/client/MoviePlayback.cpp text eol=lf
+cpppj/src/client/MoviePlayback.h text eol=lf
+cpppj/tests/MoviePlaybackTests.cpp text eol=lf
+tools/decomp_movie_playback.py text eol=lf
+cpppj/tests/fixtures/movie-playback-x86.tsv -text
+cpppj/movie-playback-native-20261030.json text eol=lf
+cpppj/movie-playback-runtime-20261030.json text eol=lf

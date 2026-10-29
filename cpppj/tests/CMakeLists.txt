@@ -1,4 +1,5 @@
 # 현재 작업본·설치 checkpoint와 독립 부모의 최초 관측을 공용 회귀에 포함한다.
+set_source_files_properties(MoviePlaybackTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_MOVIE_PLAYBACK_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/movie-playback-x86.tsv\"")
 # 영상 창 없이 실제 CD 프레임/오디오를 독립 해시와 대조할 진단 실행 파일이다.
 add_executable(netstorm_smacker_dump SmackerDecoderDump.cpp)
 target_link_libraries(netstorm_smacker_dump PRIVATE netstorm bcrypt)
@@ -2443,6 +2444,7 @@ target_sources(netstorm_tests PRIVATE ChatReceiveTests.cpp) # 일반 수신 원�
 target_sources(netstorm_tests PRIVATE ChatRelayTests.cpp) # 단독 중계 원문132행의 전체 패킷/현재 마스크를 대조한다.
 target_sources(netstorm_tests PRIVATE BattleLeaveTests.cpp) # 원문16행과 실제 로컬52h 송수신/다음State3 예약을 대조한다.
 target_sources(netstorm_tests PRIVATE SmackerDecoderTests.cpp) # 실제 CD 디코더의 규격/프레임/실패/한글 경로를 확인한다.
+target_sources(netstorm_tests PRIVATE MoviePlaybackTests.cpp) # 실제 원문 영상 입력/팔레트/idle의 최초 관측을 대조한다.
 set_source_files_properties(BattleLeaveTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_BATTLE_LEAVE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/battle-leave-x86.tsv\";NETSTORM_BATTLE_ABORT_STATE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/battle-abort-state-x86.tsv\"")
 set_source_files_properties(ChatRelayTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_CHAT_RELAY_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/chat-relay-x86.tsv\"")
 set_source_files_properties(ChatReceiveTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_CHAT_RECEIVE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/chat-receive-x86.tsv\"")

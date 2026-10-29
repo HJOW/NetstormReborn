@@ -1,0 +1,14 @@
+{
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "observations": 59,
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_local_mission_transport.py": "db71da65079aa9a985a3a833edd224f089ba9a20137d92042551cb346937eb78",
+    "tools/decomp_movie_playback.py": "427d6375e8ccd34488b218ceb26cf0df9576132b9059b08d3e17551a9c984954"
+  },
+  "fixtureSha256": "4f138f68bf77fa26b8f18fe91436667ff39ad1fcfc276cd1f242a7436a0e8bf8",
+  "scope": "00483970/004839c0/00483a30/00483a90 실제 CPU. SDK·가상end/atEnd·원점·dirty·kill·로그는 명시 장치. 게임/창/SMK/오디오/네트워크 실행 없음."
+}
