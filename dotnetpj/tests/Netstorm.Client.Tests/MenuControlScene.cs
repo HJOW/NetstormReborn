@@ -24,9 +24,9 @@ internal sealed class MenuControlScene
     /// <summary>실제 대괄호 적용 직후 문맥.뒤의 짧은~E가 다시 쓰기 전 상태를 관측한다.</summary>
     public List<(string Command, uint[] Context)> Brackets { get; } = [];
     /// <summary>기존 생성자/문맥/팔레트/설정/파서를 같은 실제 노드에 연결한다.</summary>
-    public MenuControlScene(OriginalEdition edition = OriginalEdition.Patch1078)
+    public MenuControlScene(OriginalEdition edition = OriginalEdition.Patch1078, ScrollingWidgetScene? title = null, bool construct = true)
     {
-        Title = new(edition, true); Title.Construct(40, 40); Menu = new(edition, Title); Title.Node.Metadata = 9;
+        Title = title ?? new(edition, true); if (construct) Title.Construct(40, 40); Menu = new(edition, Title, construct); Title.Node.Metadata = 9;
         var pictures = new Markup(Menu.Fragments, new(), new(), edition); Markup = new(Menu.Fragments, pictures, new(), new() { Black = () => Menu.Palette.Basic[0] }, edition); Markup.Hooks(Menu.StyleHooks);
         var bracket = Menu.StyleHooks.Bracket; Menu.StyleHooks.Bracket = (ReadOnlySpan<byte> command, uint[] context, ref uint head, ref uint metadata) => { bracket!(command, context, ref head, ref metadata); Brackets.Add((System.Text.Encoding.Latin1.GetString(command), (uint[])context.Clone())); };
         var parser = new ScrollingTextGumpMarkup(Title.Text, Menu.Style, pictures, Markup, new() { Node = t => Title.Scene.Nodes.GetValueOrDefault(t) as ScrollingTextGumpNode, Base = t => Title.Scene.Nodes.GetValueOrDefault(t) });

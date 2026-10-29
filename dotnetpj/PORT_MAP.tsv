@@ -36,6 +36,8 @@ cpppj/src/client/GumpDraw.h	Netstorm.Client/Gump/GumpDraw.cs	39bc55e914fa14eddeb
 cpppj/src/client/GumpDraw.h	Netstorm.Client/Gump/GumpPixelTarget.cs	39bc55e914fa14eddeba3641b757ec689abb7a95	port
 cpppj/src/client/GumpEvents.cpp	Netstorm.Client/Gump/GumpEvents.cs	d9ddcc929d426cd4e6f32b1c78f9d35361e28ad1	port
 cpppj/src/client/GumpEvents.h	Netstorm.Client/Gump/GumpEvents.cs	d9ddcc929d426cd4e6f32b1c78f9d35361e28ad1	port
+cpppj/src/client/GumpFormBinding.cpp	Netstorm.Client/Gump/GumpFormBinding.cs	acc8f3dc02465165c8564d5ae792ddb50ca39c4e	port
+cpppj/src/client/GumpFormBinding.h	Netstorm.Client/Gump/GumpFormBinding.cs	acc8f3dc02465165c8564d5ae792ddb50ca39c4e	port
 cpppj/src/client/GumpFrame.cpp	Netstorm.Client/Gump/GumpFrame.cs	9fcc08d7153f19f0402b682d99c6dac7a87241a1	port
 cpppj/src/client/GumpFrame.h	Netstorm.Client/Gump/GumpFrame.cs	9fcc08d7153f19f0402b682d99c6dac7a87241a1	port
 cpppj/src/client/GumpHelp.cpp	Netstorm.Client/Gump/GumpHelp.cs	0a1a709127ad291d47289a9957e142feb04981a5	port
@@ -63,6 +65,8 @@ cpppj/src/client/MenuGumpControls.cpp	Netstorm.Client/Gump/MenuGumpControls.cs	5
 cpppj/src/client/MenuGumpControls.h	Netstorm.Client/Gump/MenuGumpControls.cs	5f1ee0b7e8af663e5aaed85792b083bc9d0df7a4	port
 cpppj/src/client/MenuGumpLayout.cpp	Netstorm.Client/Gump/MenuGumpLayout.cs	6c0a1865fb3520c43b23e9d57a1625bb8baee98e	L1
 cpppj/src/client/MenuGumpLayout.h	Netstorm.Client/Gump/MenuGumpLayout.cs	6c0a1865fb3520c43b23e9d57a1625bb8baee98e	L1
+cpppj/src/client/MenuGumpWidgets.cpp	Netstorm.Client/Gump/MenuGumpWidgets.cs	acc8f3dc02465165c8564d5ae792ddb50ca39c4e	port
+cpppj/src/client/MenuGumpWidgets.h	Netstorm.Client/Gump/MenuGumpWidgets.cs	acc8f3dc02465165c8564d5ae792ddb50ca39c4e	port
 cpppj/src/client/OwnerColorMaps.cpp	Netstorm.Client/Display/OwnerColorMaps.cs	e4b739b97f5316453de827b92ba6527a63f17637	L1
 cpppj/src/client/OwnerColorMaps.h	Netstorm.Client/Display/OwnerColorMaps.cs	e4b739b97f5316453de827b92ba6527a63f17637	L1
 cpppj/src/client/PaletteColors.cpp	Netstorm.Client/Display/PaletteColors.cs	58622e15d401535bf09f216e9c75bbd8c3ea2037	L1
