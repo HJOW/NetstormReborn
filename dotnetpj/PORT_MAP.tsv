@@ -63,6 +63,8 @@ cpppj/src/client/MenuGump.cpp	Netstorm.Client/Gump/MenuGump.cs	6c0a1865fb3520c43
 cpppj/src/client/MenuGump.h	Netstorm.Client/Gump/MenuGump.cs	6c0a1865fb3520c43b23e9d57a1625bb8baee98e	L1
 cpppj/src/client/MenuGumpControls.cpp	Netstorm.Client/Gump/MenuGumpControls.cs	5f1ee0b7e8af663e5aaed85792b083bc9d0df7a4	port
 cpppj/src/client/MenuGumpControls.h	Netstorm.Client/Gump/MenuGumpControls.cs	5f1ee0b7e8af663e5aaed85792b083bc9d0df7a4	port
+cpppj/src/client/MenuGumpDraw.cpp	Netstorm.Client/Gump/MenuGumpDraw.cs	5c3306f9a3fbe53aed379f507c62d05a0f62392a	port
+cpppj/src/client/MenuGumpDraw.h	Netstorm.Client/Gump/MenuGumpDraw.cs	5c3306f9a3fbe53aed379f507c62d05a0f62392a	port
 cpppj/src/client/MenuGumpLayout.cpp	Netstorm.Client/Gump/MenuGumpLayout.cs	6c0a1865fb3520c43b23e9d57a1625bb8baee98e	L1
 cpppj/src/client/MenuGumpLayout.h	Netstorm.Client/Gump/MenuGumpLayout.cs	6c0a1865fb3520c43b23e9d57a1625bb8baee98e	L1
 cpppj/src/client/MenuGumpWidgets.cpp	Netstorm.Client/Gump/MenuGumpWidgets.cs	acc8f3dc02465165c8564d5ae792ddb50ca39c4e	port
