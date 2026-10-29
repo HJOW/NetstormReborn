@@ -1,0 +1,436 @@
+{
+  "unit": 576,
+  "host": "HJOW-Athlon",
+  "userReportedVersion": "cf3babe1a6b47c4b959eb44af38560e80f023095",
+  "currentCppCommit": "f0531b40",
+  "lastFullDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23",
+    "changed": false
+  },
+  "sourceFilesChecked": [
+    "cpppj/src/app/main.cpp",
+    "cpppj/src/client/ClientMain.cpp",
+    "cpppj/src/client/UserInput.cpp",
+    "cpppj/src/client/GameWorldInput.inc",
+    "cpppj/src/client/RawCarrierInput.cpp",
+    "cpppj/src/client/RawCampaignCarrierInput.inc",
+    "cpppj/src/client/Cursor.cpp",
+    "cpppj/src/client/Cursor.h"
+  ],
+  "cursorInputChangesSinceReportedVersion": [],
+  "gameSourceChanged": false,
+  "gameRebuilt": false,
+  "conclusion": "자동검증의--ui-script는마지막scriptPointer좌표를inspectPoll에서계속반환한다.실제포인터를옮겨도커서판정은스크립트위치에서이뤄질수있다.일반실행은GetCursorPos/ScreenToClient를사용한다.",
+  "probes": {
+    "priest": {
+      "run": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-cursor-hover-576-20261029\\priest-data",
+          "--mission",
+          "DissolvedAlliance",
+          "--mute-audio",
+          "--frames",
+          "63",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-cursor-hover-576-20261029\\probe-priest\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-cursor-hover-576-20261029\\probe-priest\\states.tsv",
+          "--audio-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-cursor-hover-576-20261029\\probe-priest\\audio.tsv",
+          "--window"
+        ],
+        "binarySha256": "e936607db88d33b1ae09f7c0af4de7540df986e2955a8784a1f34b9ac0776e36",
+        "scriptSha256": "fad703964d695095ebad04e5ddffad0ba5336b2031db722f2743ddb1726dbe55",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 7.554247599997325,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2",
+        "originalsUnchanged": true,
+        "dataUnchanged": true,
+        "dataRoot": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-cursor-hover-576-20261029\\priest-data"
+      },
+      "observed": {
+        "initial": {
+          "mouse_cursor": [
+            "1",
+            "1"
+          ],
+          "raw_input": [
+            "0",
+            "0",
+            "14",
+            "12"
+          ],
+          "raw_cursor": [
+            "1",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0"
+          ],
+          "camera": [
+            "1456",
+            "969"
+          ],
+          "paused": [
+            "0"
+          ]
+        },
+        "selected": {
+          "mouse_cursor": [
+            "6",
+            "1"
+          ],
+          "raw_input": [
+            "15001",
+            "5",
+            "14",
+            "12"
+          ],
+          "raw_cursor": [
+            "1",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0"
+          ],
+          "camera": [
+            "1456",
+            "969"
+          ],
+          "paused": [
+            "0"
+          ]
+        },
+        "geyser": {
+          "mouse_cursor": [
+            "3",
+            "1"
+          ],
+          "raw_input": [
+            "15001",
+            "5",
+            "14",
+            "12"
+          ],
+          "raw_cursor": [
+            "1",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0"
+          ],
+          "camera": [
+            "1456",
+            "969"
+          ],
+          "paused": [
+            "0"
+          ]
+        },
+        "temple": {
+          "mouse_cursor": [
+            "3",
+            "1"
+          ],
+          "raw_input": [
+            "15001",
+            "5",
+            "14",
+            "12"
+          ],
+          "raw_cursor": [
+            "1",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0"
+          ],
+          "camera": [
+            "1456",
+            "969"
+          ],
+          "paused": [
+            "0"
+          ]
+        },
+        "ground": {
+          "mouse_cursor": [
+            "18",
+            "1"
+          ],
+          "raw_input": [
+            "15001",
+            "5",
+            "14",
+            "12"
+          ],
+          "raw_cursor": [
+            "1",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0"
+          ],
+          "camera": [
+            "1456",
+            "969"
+          ],
+          "paused": [
+            "0"
+          ]
+        }
+      }
+    },
+    "sunWalker": {
+      "run": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\NetstormCpp.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-cursor-hover-576-20261029\\sunWalker-data",
+          "--mission",
+          "DissolvedAlliance",
+          "--mute-audio",
+          "--frames",
+          "63",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-cursor-hover-576-20261029\\probe-sunWalker\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-cursor-hover-576-20261029\\probe-sunWalker\\states.tsv",
+          "--audio-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-cursor-hover-576-20261029\\probe-sunWalker\\audio.tsv",
+          "--window"
+        ],
+        "binarySha256": "e936607db88d33b1ae09f7c0af4de7540df986e2955a8784a1f34b9ac0776e36",
+        "scriptSha256": "618334ea9203b07b8927da7e360e5959fb9f4094a3111ba22af97636e8a13903",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 7.648804500000551,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2",
+        "originalsUnchanged": true,
+        "dataUnchanged": true,
+        "dataRoot": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-cursor-hover-576-20261029\\sunWalker-data"
+      },
+      "observed": {
+        "initial": {
+          "mouse_cursor": [
+            "1",
+            "1"
+          ],
+          "raw_input": [
+            "0",
+            "0",
+            "14",
+            "12"
+          ],
+          "raw_cursor": [
+            "1",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0"
+          ],
+          "camera": [
+            "1456",
+            "969"
+          ],
+          "paused": [
+            "0"
+          ]
+        },
+        "selected": {
+          "mouse_cursor": [
+            "18",
+            "1"
+          ],
+          "raw_input": [
+            "15000",
+            "5",
+            "14",
+            "12"
+          ],
+          "raw_cursor": [
+            "1",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0"
+          ],
+          "camera": [
+            "1456",
+            "969"
+          ],
+          "paused": [
+            "0"
+          ]
+        },
+        "geyser": {
+          "mouse_cursor": [
+            "3",
+            "1"
+          ],
+          "raw_input": [
+            "15000",
+            "5",
+            "14",
+            "12"
+          ],
+          "raw_cursor": [
+            "1",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0"
+          ],
+          "camera": [
+            "1456",
+            "969"
+          ],
+          "paused": [
+            "0"
+          ]
+        },
+        "temple": {
+          "mouse_cursor": [
+            "3",
+            "1"
+          ],
+          "raw_input": [
+            "15000",
+            "5",
+            "14",
+            "12"
+          ],
+          "raw_cursor": [
+            "1",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0"
+          ],
+          "camera": [
+            "1456",
+            "969"
+          ],
+          "paused": [
+            "0"
+          ]
+        },
+        "ground": {
+          "mouse_cursor": [
+            "18",
+            "1"
+          ],
+          "raw_input": [
+            "15000",
+            "5",
+            "14",
+            "12"
+          ],
+          "raw_cursor": [
+            "1",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0"
+          ],
+          "camera": [
+            "1456",
+            "969"
+          ],
+          "paused": [
+            "0"
+          ]
+        }
+      }
+    }
+  },
+  "resourceShapes": {
+    "3": "group111 흰색대상십자",
+    "6": "group109 사용불가",
+    "18": "group148 이동십자"
+  },
+  "limitations": [
+    "교차된실제사용자입력/자동폴링상황을사람조작으로다시재현한검사는아니다.폴링고정기전은코드로확인했다.",
+    "OS GetCursorInfo 픽셀은샘플링하지않았다.실제게임의현재커서번호와원본리소스카탈로그를대조했다.",
+    "전체유닛/대상/소유자/상태의커서동일성은기존잔여범위다."
+  ],
+  "protected": {
+    "files": 2590,
+    "changed": [],
+    "fixtureCount": 729
+  },
+  "rawDirectory": "extracted/cpp-cursor-hover-576-20261029",
+  "newUnitTests": 0,
+  "newMultiplayerTests": 0,
+  "capturesSacrificesSpecificEnemyAttacksOrVictoriesReproduced": false
+}
