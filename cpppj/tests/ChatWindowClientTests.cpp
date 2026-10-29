@@ -7,9 +7,12 @@
 #include "client/RawChatMessage.h"
 #include "client/RawChatPacket.h"
 #include "client/RawChatReceive.h"
+#include "client/RawChatRelay.h"
+#include "client/EditorLocalTransport.h"
 #include "client/RawChatSubmit.h"
 #include "client/ClientCoreDataGlobals.h"
 #include "client/ClientGameplayGlobals.h"
+#include "client/ClientConnectionGlobals.h"
 #include "client/ClientPlayerRecords.h"
 #include "client/ClientDotCommandGlobals.h"
 #include "client/RawChatWindowContext.h"
@@ -23,6 +26,7 @@
 #include "client/TraceChat.h" // 같은 실제 UI의 비영 진단 전달도 공유 로그/문맥/스크롤을 사용한다.
 #include "platform/Bitmap.h"
 #include <algorithm>
+#include <bit>
 #include <cstdlib>
 #include <cstring>
 #include <fstream>
@@ -260,7 +264,7 @@ TEST_CASE(ChatWindowClient_LocalSubmitEmptyEnterUsesCurrentChallenge) {
 }
 
 // 일반 본문 서식/송신을 성공으로 삼키지 않고 앞선 실제 제출 효과와 명시 경계를 남긴다.
-TEST_CASE(ChatWindowClient_LocalSubmitUnrestoredFormattingRemainsExplicit) {
+TEST_CASE(ChatWindowClient_LocalSubmitMissingMessageDeviceRemainsExplicit) {
     ChatScene scene;ChatIdentityInputs(scene);std::string currentName="LocalUser";auto context=ChatLocalSubmitContext(scene,currentName);const auto submit=context.sendChat;
     const auto token=scene.menus->CreateChatWindow(std::move(context));scene.menus->AppendChatLog(token,"preserved\n");
     bool stopped{};try { submit(scene.client.ChatManagerGlobals()->Current(),"hello"); }catch (const std::logic_error& error) { stopped=std::string_view(error.what())=="Chat 일반 본문의 실제 서식·송신 미연결"; }
@@ -314,4 +318,20 @@ TEST_CASE(ChatWindowClient_ReceiveActualIdentityLogContextAndShow) {
     DispatchChatPacket(packet,receiver);CHECK(wakes==1 && sounds==1 && shows==1 && scene.client.ChatWindowGlobals()->log.lineCount==1 && root.textContext==saved && text.textContext==saved && text.scrollRequest==12345);
     scene.client.GameplayGlobals()->world.mySubscriber=200;DispatchChatPacket(packet,receiver);CHECK(wakes==2 && sounds==1 && shows==2 && scene.client.ChatWindowGlobals()->log.lineCount==2);
     ignored=true;DispatchChatPacket(packet,receiver);CHECK(wakes==2 && sounds==1 && shows==2 && scene.client.ChatWindowGlobals()->log.lineCount==2);scene.menus->CloseChatWindows();scene.menus->ShowChatWindow();
+}
+
+// 실제 Console Enter는 원시 패킷→observer→로컬 큐→중계→같은 로그 순서를 거치며 Poll 전에는 표시되지 않는다.
+TEST_CASE(ChatWindowClient_EnterActualPacketQueueRelayAndSharedLog) {
+    ChatScene scene;ChatIdentityInputs(scene);scene.storage->ownerMode.battle=1;InitializeClientChatManager(scene.client);auto context=scene.Context();BindClientChatRecipients(context,scene.client,scene.storage,[] { return std::string_view("LocalUser"); });
+    netstorm::o::PacketDispatchHooks devices;devices.now=[] { return 1U; };devices.record=[](auto&,auto,auto) {};devices.terminate=[](auto&) {};devices.close=[](auto&) {};devices.release=[](auto&) {};
+    const auto registry=scene.client.ConnectionGlobals();EditorLocalTransport wire(scene.client.PlayerRecords()->Records(),scene.client.GameplayGlobals()->Server(),devices,registry);wire.Open(6799);auto globals=scene.client.ChatWindowGlobals();
+    ChatReceiveHooks receive;receive.read=[&](auto at)->std::uint32_t { if (at==0x548740) return globals->window.current;if (at==0x594fbc) return 1;if (at==0x548710) return globals->receivedMask;if (at==0x540c74) return 100;if (at==0x540c70) return 1;if (at==0x5b5dd8) return scene.menus->ChatMessageColor();if (at>=0x595200 && at<0x595200+81*4) return 1;if (at==0x594fc8 || at==0x5ca92c || (at>=0x52f81e && at<0x52f827)) return 0;throw std::logic_error("Console 큐 수신 검사 전역 없음"); };
+    receive.ignored=[&](auto subscriber) { return std::find(globals->ignored.begin(),globals->ignored.end(),subscriber)!=globals->ignored.end(); };receive.config=[](auto) { return 1; };receive.owner=[&](auto subscriber) { return FindClientChatSenderOwner(scene.client,*scene.storage,"LocalUser",subscriber); };
+    receive.wake=[](auto) {};receive.sound=[](auto) { CHECK(false); };receive.append=[&](auto root,auto text,auto current) { scene.menus->AppendChatLog(root,text,current); };receive.show=[&] { scene.menus->ShowChatWindow(); };
+    ChatRelayHooks relay;relay.read=[](auto at)->std::uint32_t { if (at==0x594fbc || at==0x540bc0) return 1;if (at==0x540c74) return 100;throw std::logic_error("Console 큐 중계 검사 전역 없음"); };relay.address=[registry](auto sender) { return registry->Address(std::bit_cast<std::int32_t>(sender)); };relay.receive=[&](auto bytes,auto address) { CHECK(address.size()==20 && address[0]==20);DispatchChatPacket(bytes,receive); };RegisterChatPacket(wire.Dispatch(),globals->receivedMask,std::move(relay));
+    auto packet=MakeClientChatPacketHooks(scene.client.ChatManagerGlobals());const std::array<std::uint8_t,10> name{'L','o','c','a','l','U','s','e','r',0};packet.currentName=[&]()->std::span<const std::uint8_t> { return name; };packet.read=[](auto at)->std::uint32_t { if (at==0x540c74) return 100;if (at==0x594fbc) return 1;if (at==0x52edf6) return 0x41;return 0; };
+    packet.send=[&](auto target,auto bytes) { CHECK(target==9 && bytes[2]==4);CHECK(wire.SendMutable(target,bytes));CHECK((std::uint32_t(bytes[2])|(std::uint32_t(bytes[3])<<8))==bytes.size()); };
+    BindClientChatMessage(context,scene.client,scene.storage,[] { return std::string_view("LocalUser"); },std::move(packet));BindClientChatSubmit(context,scene.client,*scene.menus);const auto root=scene.menus->CreateChatWindow(std::move(context));scene.menus->Attach(root,30,200,scene.buttons.RootToken(),0);CHECK(scene.menus->OpenChatInput({13,0,0}));ChatSetInput(scene,root,"hello");scene.buttons.RouteInput({13,0,0});
+    CHECK(globals->log.lineCount==0 && wire.QueuedFrames()==1);CHECK(wire.Poll()>=1 && globals->receivedMask==32 && globals->log.lineCount==1);const auto report=scene.menus->Report();CHECK(report.find("raw_chat_fragment\t")!=report.npos && report.find("68656c6c6f")!=report.npos);
+    globals->ignored.push_back(100);scene.menus->OpenChatInput({13,0,0});ChatSetInput(scene,root,"hidden");scene.buttons.RouteInput({13,0,0});CHECK(wire.QueuedFrames()==1);wire.Poll();CHECK(globals->log.lineCount==1);globals->ignored.clear();scene.menus->OpenChatInput({13,0,0});ChatSetInput(scene,root,"!waves");scene.buttons.RouteInput({13,0,0});CHECK(globals->log.lineCount==1 && wire.QueuedFrames()==1);wire.Poll();CHECK(globals->log.lineCount==2);scene.menus->CloseChatWindows();
 }

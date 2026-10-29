@@ -128,6 +128,7 @@ void LocalMissionTransport::Open(std::uint32_t port,bool connectImmediately) {
     if (open_ || !port || port>65535 || !dispatch_.Registration(kLoginType).receive) throw std::logic_error("로컬 서버 포트/새 수명/실제 로그인 처리기 계약 오류");
     if (!registry_->CanAccept() || (connectImmediately && registry_->Cleanup().transceivers[9])) throw std::logic_error("현재 로컬 연결표의 새 수명/빈칸 관문");
     port_=port;client_={};server_={};client_.sender=9;server_.sender=std::bit_cast<std::uint32_t>(std::int32_t{-1});
+    client_.address[0]=20;client_.address[2]=static_cast<std::uint8_t>(port>>8);client_.address[3]=static_cast<std::uint8_t>(port);Put(client_.address,16,0x10d);server_.address=client_.address; // 기존 Login이 직렬화하는 같은 zlocal/설정 포트 주소다.
     if (connectImmediately) { client_.received=hooks_.now();client_.heartbeat=hooks_.now(); }
     server_.received=hooks_.now();server_.heartbeat=hooks_.now();
     client_.flags=connectImmediately ? 0x26U : 0U;server_.flags=0x24;open_=true;pending_=true;serverBuffered_=false;owner_=0;clientPresent_=connectImmediately;
@@ -148,11 +149,19 @@ void LocalMissionTransport::AssignConnection(std::int32_t pending,std::int32_t o
 }
 // packet observer가 확정한 WORD 바이트를 전송하며 없는 연결의 자연 생략과 실제 송신을 구분한다.
 bool LocalMissionTransport::Send(std::int32_t destination,std::span<const std::uint8_t> packet) {
+    return SendPacket(destination,packet,{});
+}
+// 원시 mutable 작성기는 연결이 실제 선택된 뒤 observer를 실행하고 그 현재 WORD로 큐에 복사한다.
+bool LocalMissionTransport::SendMutable(std::int32_t destination,std::span<std::uint8_t> packet) { return SendPacket(destination,packet,packet); }
+// 주소 조회와 송수신이 같은 실제 연결 표를 사용한다.
+const std::shared_ptr<o::RawConnectionRegistry>& LocalMissionTransport::Registry() const { return registry_; }
+// 기존 완성 패킷 writer는 이미 길이를 확정했다. 원시 작성기만 같은 등록 observer에 실제 this를 전달한다.
+bool LocalMissionTransport::SendPacket(std::int32_t destination,std::span<const std::uint8_t> packet,std::span<std::uint8_t> writable) {
     if (!open_) throw std::logic_error("로컬 전송 연결을 열기 전 송신");
     if (destination==9 && (!clientPresent_ || !(client_.flags&2U) || (client_.flags&0x40U) || clientPeerLost_)) return false; //현재 실제 Client9/반대 끝 수명을 사용한다.
     if (destination>=1 && destination<static_cast<std::int32_t>(kPlayers) && !(players_[std::size_t(destination)*kPlayerBytes+0x50]&1U)) return false;
     const bool client=destination==9,server=serverPresent_ && !serverPeerLost_ && !(server_.flags&0x40U) && ((destination==pendingId_ && pending_) || (destination>=1 && static_cast<std::uint32_t>(destination)==owner_));
-    if (!client && !server) return false;const auto length=Read(packet,2,2);if (length<4 || length>packet.size()) throw std::out_of_range("로컬 전송 패킷 실제 선언 바이트 부족");
+    if (!client && !server) return false;if (!writable.empty()) { if (packet.size()<4) throw std::out_of_range("로컬 mutable 송신 헤더 부족");const auto registration=dispatch_.Registration(packet[1]);registration.NotifyObserver(writable,1); }const auto length=Read(packet,2,2);if (length<4 || length>packet.size()) throw std::out_of_range("로컬 전송 패킷 실제 선언 바이트 부족");
     auto& output=client ? clientOutput_ : serverOutput_;const auto bytes=packet.first(length);
     if (!client && !serverBuffered_) toClient_.emplace_back(bytes.begin(),bytes.end());
     else { if (output.size()+length>65531U) throw std::out_of_range("로컬 buffered 전송65535바이트 범위 초과");output.insert(output.end(),bytes.begin(),bytes.end()); }
@@ -185,7 +194,7 @@ bool LocalMissionTransport::DispatchFrame(o::PacketConnection& connection,std::s
             const bool lower=incoming<registration.version;if (registration.mismatch&(lower ? 8U : 4U)) { hooks_.terminate(connection);return false; }
             if (registration.mismatch&(lower ? 2U : 1U)) continue;
         }
-        hooks_.record(connection,packet,static_cast<std::uint16_t>(length));const auto observer=dispatch_.Registration(type).observer;if (observer) observer(0);
+        hooks_.record(connection,packet,static_cast<std::uint16_t>(length));const auto observerEntry=dispatch_.Registration(type);observerEntry.NotifyObserver({const_cast<std::uint8_t*>(packet.data()),packet.size()},0); // 실제 수신 frame은 전송이 소유한 mutable vector이며 같은 this를 전달한다.
         const auto receive=dispatch_.Registration(type).receive;if (receive) {
             ++connection.depth;try { receive(connection.sender,connection,packet); } catch (...) { --connection.depth;throw; }--connection.depth;
         }

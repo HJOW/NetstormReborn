@@ -7,6 +7,7 @@
 #include "client/RawChatSubmit.h"
 #include "client/RawChatFormat.h"
 #include "client/RawChatMessage.h"
+#include "client/RawChatPacket.h"
 #include "client/RawMenuControls.h"
 #include "client/HudChatGeometry.h"
 #include "client/RawChatWindowContext.h"
@@ -107,18 +108,23 @@ ChatMessageHooks MakeClientChatMessageHooks(Client& client,std::shared_ptr<RawSu
     };
     return hooks;
 }
-// 제출 지역의 미작성 꼬리를 보존하고 같은 장기 명령표·현재 UI에 로컬 효과를 분배한다.
+// 같은 현재 manager/이름을 원문 say와 실제 패킷에 전달하며 지역 이름의 미작성 꼬리는 채우지 않는다.
+void BindClientChatMessage(RawChatWindowContext& context,Client& client,std::shared_ptr<RawSurfaceStorage> surface,std::function<std::string_view()> currentName,ChatPacketHooks packet) {
+    auto message=MakeClientChatMessageHooks(client,std::move(surface),std::move(currentName));message.deliver=[packet=std::move(packet)](auto manager,auto recipients,auto body) { return SendChatPacket(manager,recipients,body,packet); };
+    context.message=[&client,message=std::move(message)](auto input) { std::array<std::uint8_t,kChatMessageNameBytes> name;return SayChatMessage(input,name,{client.ChatManagerGlobals()->Current(),client.CurrentSubscriber()},message); };
+}
+// 제출 지역의 미작성 꼬리를 보존하고 같은 장기 명령표·현재 UI에 효과를 분배한다.
 void BindClientChatSubmit(RawChatWindowContext& context,Client& client,RawMenuControls& menus) {
     if (!context.resolve || !context.translate) throw std::invalid_argument("Chat 제출의 실제 Identity/번역 장치 필요");
-    context.sendChat=[&client,&menus,resolve=context.resolve,translate=context.translate](auto manager,auto input) {
+    context.sendChat=[&client,&menus,resolve=context.resolve,translate=context.translate,message=context.message](auto manager,auto input) {
         auto hooks=MakeClientChatSubmitHooks(client.ChatManagerGlobals());hooks.assertion=ChatAssertion;hooks.resolve=resolve;hooks.translate=translate;hooks.records=[&client] { return client.ChatRecords(); };
         hooks.inputVisible=[&client,&menus](auto visible) {
             const auto current=client.ChatWindowGlobals()->window.current;if (!current) return;
             const auto* geometry=menus.ChatGeometryBackend();if (!geometry) throw std::logic_error("Chat 제출의 현재 입력 표시 장치 없음");geometry->SetInputVisible(current,visible);
         }; //0042f270은 현재 root0에서 하위 장치를 조회하지 않는다.
-        hooks.dispatch=[&client,&menus,inputVisible=hooks.inputVisible](auto body) {
+        hooks.dispatch=[&client,&menus,inputVisible=hooks.inputVisible,message](auto body) {
             DotCommandDispatchHooks commands;
-            commands.invoke=[&client,&menus,inputVisible](auto callback,auto argument) -> std::uint32_t {
+            commands.invoke=[&client,&menus,inputVisible,message](auto callback,auto argument) -> std::uint32_t {
                 if (callback==0x42f680U || callback==0x42e520U) return menus.InvokeChatCommand(callback);
                 if (callback==0x42ddf0U || callback==0x42def0U) {
                     const auto end=std::find(argument.begin(),argument.end(),0);if (end==argument.end()) throw std::out_of_range("Chat 서식 인자의 실제 NUL 없음");
@@ -129,8 +135,8 @@ void BindClientChatSubmit(RawChatWindowContext& context,Client& client,RawMenuCo
                     if (argument.empty()) throw std::out_of_range("Chat say의 실제 인자 물리 없음");
                     if (argument.front()==0) { inputVisible(0);return 0; }
                     if (argument.front()==' ') return 0;
-                    throw std::logic_error("Chat 일반 본문의 실제 서식·송신 미연결");
-                } //0042f1e0의 현재 manager/공백/빈 본문 관문만 수행하며 나머지를 빈 성공으로 바꾸지 않는다.
+                    if (!message) throw std::logic_error("Chat 일반 본문의 실제 서식·송신 미연결");return message(argument);
+                } // 선행 관문은 장치를 요구하지 않으며 나머지는 같은 실제 say/조합/패킷에 넘긴다.
                 throw std::logic_error("Chat 제출의 실제 명령 callback 미연결:"+std::to_string(callback));
             };
             const auto owner=client.DotCommandGlobals();static_cast<void>(DispatchDotCommand(owner->Bytes(),owner->DispatchState(),body,commands));

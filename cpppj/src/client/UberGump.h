@@ -104,6 +104,8 @@ private:
     void SelectCurrentFortName(std::string_view name); // 원문 MissionFortRequest.selectFort 위치에서 전체 현재 이름 부모를 실제 Client/Template에 연결한다.
     FortSelectionHooks FortEditEffects(); //실제 선택된 Battle14의 파일/State 보존 경계도 같은 현재 World와 작업 파일에 연결한다.
     void EnsureHudFactories(); //현재 Client 장기 전역·물리로 네 공장만 준비하며 새 월드/Session을 생성하지 않는다.
+    std::uint32_t ReadChatGlobal(std::uint32_t address); // 현재 Client/실제 월드·팔레트에서 채팅이 읽는 전역만 조회한다.
+    void ReceiveChatMessage(std::span<std::uint8_t> packet); // 같은 실제 Chat 로그/설정·음향·표시 사건에 수신 부모를 연결한다.
     void RetireWorldForState(); //실제 State 자식 정리 뒤 같은 Runtime의 호스트 참조만 반납한다. 게임 전역·기한·정지를 다시 쓰지 않는다.
     void InstallHud(); // 현재 실제 월드와 같은 공통 전체 Uber/자식 공장·도킹을 연결한다.
     void PollEditorState(); //메인/Edit/인트로39~41과 후속4를 같은 Native State 분배기로 소비한다.

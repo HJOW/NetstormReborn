@@ -12,6 +12,7 @@
 add_library(netstorm STATIC)
 target_sources(netstorm PRIVATE client/RawChatPacket.cpp client/RawChatPacket.h) # 일반 채팅 패킷 작성과 송신 직전 길이 확정이다.
 target_sources(netstorm PRIVATE client/RawChatReceive.cpp client/RawChatReceive.h) # 일반 수신의 채널/관계 필터와 실제 텍스트 문맥이다.
+target_sources(netstorm PRIVATE client/RawChatRelay.cpp client/RawChatRelay.h) # 같은 패킷의 중계·수신 마스크와 실제 observer 등록이다.
 target_sources(netstorm PRIVATE client/RawEdgeScroll.cpp client/RawEdgeScroll.h) # 원문 가장자리 시간/입력과 현재 카메라 목표 쓰기다.
 target_sources(netstorm PRIVATE client/ScreenPresentation.cpp) # 원본과 다른 Windows10/11 전체화면 비율/입력 계산이다.
 target_sources(netstorm PRIVATE o/RawSmokeEffect.cpp o/RawSmokeEffect.h) # 실제 냉각 연기 생성/프레임/색/소멸이다.

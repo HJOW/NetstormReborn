@@ -238,6 +238,8 @@ std::uint32_t RawButtonControls::RootToken() const { return impl_->create.entrie
 // count/visible로 대체하지 않고 원문처럼 고정 등록칸과 현재 serial/dead만 읽는다.
 std::uint32_t RawButtonControls::SerialGump(std::uint32_t serial) const { return FindCurrentGumpSerial(impl_->create.entries,serial,[this](auto token) { return impl_->Node(token); }); }
 // 원문은 등록 ID를 읽으며 serial이나 명령으로 다시 검색하지 않는다.
+// 채팅/현재 HUD가 같은 원문 알림 등록 ID를 조회한다.
+std::uint32_t& RawButtonControls::ChatAlertSerial() { return impl_->productionGlobals.chatAlertSerial; }
 bool RawButtonControls::PulseRegisteredIfIdle(std::uint32_t id) {
     auto& s=*impl_;if (id>=s.create.entries.size()) throw std::out_of_range("점멸 대상의 원본 등록 ID 범위");const auto token=s.create.entries[id];if (!token) return false;
     if (const auto* node=s.Node(token);node && node->vtable==0x51503cU) { const auto& root=*static_cast<const UberRootNode*>(node);if (root.minimapDivider || root.vertical || (root.minimap&0x10U)) return false;throw std::logic_error("필수 자식 없는 Uber의 원문 버튼 점멸 가상 호출"); }

@@ -712,6 +712,8 @@ bool RawMenuControls::OpenChatInput(const InputEvent& event) {
 void RawMenuControls::ToggleChatInput() { if (impl_->chatGeometry) impl_->chatGeometry->ToggleInputVisible(); }
 // 원문 수신 뒤의 표시도 현재 Chat을 재조회하고 같은 실제 부모 체인에 사건을 전달한다.
 void RawMenuControls::ShowChatWindow() { auto& s=*impl_;if (s.chatContext && s.chatContext->globals->window.current) s.common.events.Bubble(s.chatContext->globals->window.current,0x02000088U,0,1); }
+// 팔레트 교체 전 값을 저장하지 않고 같은 현재 Chat 글자색을 읽는다.
+std::uint32_t RawMenuControls::ChatMessageColor() const { return impl_->palette.named.at(33).index; }
 const ChatWindow* RawMenuControls::ChatBackend() const { return impl_->chatWindow.get(); } // 실제 설치한 본체다.
 const HudChatGeometry* RawMenuControls::ChatGeometryBackend() const { return impl_->chatGeometry.get(); } // 같은 현재 자식 기하다.
 void RawMenuControls::AppendChatLog(std::uint32_t token,std::string_view text,std::span<const std::uint32_t> context) { auto& s=*impl_;if (!s.chatWindow) throw std::logic_error("Chat 실제 로그 처리기 없음");s.chatWindow->AppendLog(token,text,context); } // 같은 실제 공유 로그/스타일 파서와 원문42eca0 부모를 사용한다.
@@ -915,6 +917,16 @@ std::string RawMenuControls::Report() const {
     auto& s=*impl_;std::ostringstream out;out<<"raw_menus\t"<<s.menuState.instances<<'\t'<<s.menuState.index<<'\t'<<s.menus.size()<<'\t'<<s.titles.size()<<'\t'<<s.fragments.fragments.size()<<'\n';
     if (s.chatContext) { //실제 표시/편집 버퍼를 읽기만 하며 입력 검증/그리기를 호출하지 않는다.
         out<<"raw_chat_globals\t"<<s.chatContext->globals->window.current<<'\t'<<s.chatContext->globals->inputLineOff<<'\n';
+        const auto& chat=*s.chatContext->globals;out<<"raw_chat_log\t"<<chat.log.lineCount<<'\t'<<chat.receivedMask<<'\t'<<chat.ignored.size()<<'\n'; // 실제 공유 로그/마스크만 읽으며 수신이나 서식 파싱을 실행하지 않는다.
+        for (std::size_t line=0;line<chat.log.hardLines.size();++line) { // 현재 소유한 원문 명시 줄의 조각을 그대로 보고한다.
+            auto token=chat.log.hardLines[line];std::size_t visited{};
+            while (token && visited++<s.fragments.fragments.size()) { // 손상 순환이 보고를 멈추지 않게 실제 소유 조각 수로만 제한한다.
+                const auto found=s.fragments.fragments.find(token);if (found==s.fragments.fragments.end()) break;const auto& fragment=found->second;
+                out<<"raw_chat_fragment\t"<<line<<'\t'<<token<<'\t'<<static_cast<int>(fragment.kind)<<'\t';constexpr std::string_view digits="0123456789abcdef"; // 실제 좁은 문자와 NUL을 같은 원시 hex로 직렬화한다.
+                for (const auto value:fragment.text) { const auto byte=static_cast<unsigned char>(value);out<<digits[byte>>4]<<digits[byte&15]; } // 저장 문자열의 실제 전체 바이트만 읽는다.
+                for (const auto value:fragment.context) out<<'\t'<<value;out<<'\n';token=fragment.next; // 현재 문맥과 실제 다음 링크를 보존한다.
+            }
+        }
         const auto& completion=s.chatContext->globals->completion.bytes;std::uint32_t completionIndex{},completionLength{},completionCount{}; //실제장기BSS의원시값을읽으며자동완성을실행하지않는다.
         std::memcpy(&completionIndex,completion.data(),4);std::memcpy(&completionLength,completion.data()+4,4);std::memcpy(&completionCount,completion.data()+0x88,4);out<<"raw_chat_completion\t"<<completionIndex<<'\t'<<completionLength<<'\t'<<completionCount<<'\n';
         for (std::uint32_t index=0;index<std::min(completionCount,128U);++index) { //보고는현재저장된후보만읽으며같은단어의순환상태를바꾸지않는다.

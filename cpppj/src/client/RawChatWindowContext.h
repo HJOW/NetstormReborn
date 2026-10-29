@@ -13,6 +13,7 @@ struct RawChatWindowContext { // 조회/콜백은 생성한 UI의 모든 입력/
     std::function<std::uint32_t(std::string_view)> storeText;std::function<std::string_view(std::uint32_t)> text; // 같은80칸 ScriptStringRing이다.
     std::function<bool(std::string_view)> recipient; //42dc70의 실제 선택 경계다.
     std::function<void(std::uint32_t,std::string_view)> sendChat; //42da00의 같은 현재 manager와 실제 입력이다.
+    std::function<std::uint32_t(std::span<const std::uint8_t>)> message; //0042f1e0→조합→실제 패킷/큐에 전달하는 일반 본문 장치다.
     std::function<bool(o::PlayerIdentityRecord&)> resolve; // 실제 Subscriber/identity 조회다.
     std::function<void(std::uint32_t,std::string_view,std::uint32_t)> diagnostic; // 이름 실패 진단의 실제 장치다.
     std::function<std::int32_t(std::string_view)> config; // helper 체크의 현재 실제 설정이다.

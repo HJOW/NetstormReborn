@@ -1,0 +1,669 @@
+{
+  "unit": 586,
+  "date": "2026-10-30",
+  "host": "HJOW-Athlon",
+  "os": "Windows-10-10.0.19045-SP0",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "nativeRows": 132,
+  "nativeObservationRuns": 3,
+  "nativeObservations": 396,
+  "nativeRepeatDifferences": 0,
+  "fixtureSha256": "b7e122e07d9fdcb50b9a2f30200d5741e94cad70a0cf64c1150030cc00fda48a",
+  "focusedChatTests": 45,
+  "relatedRegressionTests": 76,
+  "uniqueFocusedTests": 121,
+  "failedChecks": 0,
+  "registeredCppTests": 3472,
+  "focusedRuns": [
+    {
+      "filter": "ChatRelay",
+      "returnCode": 0,
+      "summary": "1 test(s), 0 failed check(s)"
+    },
+    {
+      "filter": "ChatReceive",
+      "returnCode": 0,
+      "summary": "2 test(s), 0 failed check(s)"
+    },
+    {
+      "filter": "ChatPacket",
+      "returnCode": 0,
+      "summary": "3 test(s), 0 failed check(s)"
+    },
+    {
+      "filter": "ChatMessage",
+      "returnCode": 0,
+      "summary": "1 test(s), 0 failed check(s)"
+    },
+    {
+      "filter": "ChatFormat",
+      "returnCode": 0,
+      "summary": "1 test(s), 0 failed check(s)"
+    },
+    {
+      "filter": "ClientChatRuntime",
+      "returnCode": 0,
+      "summary": "8 test(s), 0 failed check(s)"
+    },
+    {
+      "filter": "ChatWindowClient",
+      "returnCode": 0,
+      "summary": "20 test(s), 0 failed check(s)"
+    },
+    {
+      "filter": "ChatSubmit",
+      "returnCode": 0,
+      "summary": "3 test(s), 0 failed check(s)"
+    },
+    {
+      "filter": "DotCommandDispatch",
+      "returnCode": 0,
+      "summary": "3 test(s), 0 failed check(s)"
+    },
+    {
+      "filter": "ClientChatCoreOwners",
+      "returnCode": 0,
+      "summary": "3 test(s), 0 failed check(s)"
+    },
+    {
+      "filter": "PacketDispatch",
+      "returnCode": 0,
+      "summary": "3 test(s), 0 failed check(s)"
+    },
+    {
+      "filter": "EditorLocalTransport",
+      "returnCode": 0,
+      "summary": "12 test(s), 0 failed check(s)"
+    },
+    {
+      "filter": "LocalMissionTransport",
+      "returnCode": 0,
+      "summary": "4 test(s), 0 failed check(s)"
+    },
+    {
+      "filter": "ConnectionActivity",
+      "returnCode": 0,
+      "summary": "15 test(s), 0 failed check(s)"
+    },
+    {
+      "filter": "CampaignExistingEditorCheckpoint",
+      "returnCode": 0,
+      "summary": "42 test(s), 0 failed check(s)"
+    }
+  ],
+  "buildWarningsFinal": 0,
+  "buildErrorsFinal": 0,
+  "buildLogs": {
+    "build.log": "4725a69a3971cd6a3561fc80b5a2b5cca545bbf49593fee32357d2dd95c37e7c",
+    "build-final.log": "9a25da77ff2e097324e0f78f3afc3989a9eaa482938af147959f730d0bcfb396",
+    "build-verified.log": "58bbe5a3cac6656c841091aa98f31fed6a9634307d43b9836f1d4c12ad525907",
+    "build-product.log": "787edfd029e4b5b6dfe32968fb28d331ff911ea1712e9ad673ce710b5ed2e57e",
+    "package.log": "7bd6d354ab6f174431364941e86e3c8c668ddd2dbf0801d76ca076d0dae92bdb"
+  },
+  "initialBuildFailures": [
+    "지역 registration 이름 충돌: 최초 빌드의 진단3개/원인1개",
+    "새 접합 검사의 ClientConnectionGlobals 정의 헤더 누락: 두 번째 빌드 실패"
+  ],
+  "gameSha256": "e4fe47f4782f411ee9435c2a8c1a5e498546c4a9bad02c3cfecc36c19a729e52",
+  "testsSha256": "92550e4c190a877b6c8d1d29cdb5dac99f83a1988a367866e46477a9e3054fe2",
+  "package": {
+    "entries": 1365,
+    "zipSha256": "15c5a1660433de63f436427dbe63ee4ba25a17c9697db2f24216d1782ecd21ca",
+    "gameSha256": "e4fe47f4782f411ee9435c2a8c1a5e498546c4a9bad02c3cfecc36c19a729e52",
+    "resourceExeSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "runtimeDlls": [
+      "msvcp140.dll",
+      "vcruntime140.dll",
+      "vcruntime140_1.dll"
+    ],
+    "profileIncluded": false,
+    "sourceOriginalsChanged": false
+  },
+  "live": {
+    "passed": true,
+    "gameSha256": "e4fe47f4782f411ee9435c2a8c1a5e498546c4a9bad02c3cfecc36c19a729e52",
+    "run": {
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-chat-live-message-586-20261030\\unpacked\\NetstormReborn-cpppj\\Netstorm.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-chat-live-message-586-20261030\\unpacked\\NetstormReborn-cpppj\\game",
+        "--mission",
+        "TEST02",
+        "--window",
+        "--no-audio",
+        "--frames",
+        "217",
+        "--set",
+        "SCREENW=1024;SCREENH=768;maxFPS=60;sleepPerLoop=8;autoDemo=0;tellTips=0",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-chat-live-message-586-20261030\\live\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-chat-live-message-586-20261030\\live\\states.tsv"
+      ],
+      "binarySha256": "e4fe47f4782f411ee9435c2a8c1a5e498546c4a9bad02c3cfecc36c19a729e52",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 22.074158800000077,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "3e6ec41031799378fccbd3d38d93f34f7e51e7f871f193674bce1576ffbc5247"
+    },
+    "commands": [
+      {
+        "label": "plain",
+        "input": "hello",
+        "log": [
+          [
+            "1",
+            "32",
+            "0"
+          ]
+        ],
+        "lines": {
+          "0": "You> hello"
+        },
+        "fragments": [
+          [
+            "0",
+            "474",
+            "1",
+            "",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "0",
+            "475",
+            "0",
+            "596f753e2068656c6c6f00",
+            "0",
+            "5",
+            "246",
+            "0",
+            "0",
+            "0",
+            "1",
+            "1"
+          ]
+        ]
+      },
+      {
+        "label": "action",
+        "input": "!waves",
+        "log": [
+          [
+            "2",
+            "32",
+            "0"
+          ]
+        ],
+        "lines": {
+          "0": "You> hello",
+          "1": "You waves"
+        },
+        "fragments": [
+          [
+            "0",
+            "474",
+            "1",
+            "",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "0",
+            "475",
+            "0",
+            "596f753e2068656c6c6f00",
+            "0",
+            "5",
+            "246",
+            "0",
+            "0",
+            "0",
+            "1",
+            "1"
+          ],
+          [
+            "1",
+            "586",
+            "1",
+            "",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "1",
+            "587",
+            "0",
+            "596f7520776176657300",
+            "0",
+            "5",
+            "246",
+            "0",
+            "0",
+            "0",
+            "1",
+            "1"
+          ]
+        ]
+      },
+      {
+        "label": "format",
+        "input": ".front ~g",
+        "log": [
+          [
+            "2",
+            "32",
+            "0"
+          ]
+        ],
+        "lines": {
+          "0": "You> hello",
+          "1": "You waves"
+        },
+        "fragments": [
+          [
+            "0",
+            "474",
+            "1",
+            "",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "0",
+            "475",
+            "0",
+            "596f753e2068656c6c6f00",
+            "0",
+            "5",
+            "246",
+            "0",
+            "0",
+            "0",
+            "1",
+            "1"
+          ],
+          [
+            "1",
+            "586",
+            "1",
+            "",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "1",
+            "587",
+            "0",
+            "596f7520776176657300",
+            "0",
+            "5",
+            "246",
+            "0",
+            "0",
+            "0",
+            "1",
+            "1"
+          ]
+        ]
+      },
+      {
+        "label": "styled",
+        "input": "styled",
+        "log": [
+          [
+            "3",
+            "32",
+            "0"
+          ]
+        ],
+        "lines": {
+          "0": "You> hello",
+          "1": "You waves",
+          "2": "You> styled"
+        },
+        "fragments": [
+          [
+            "0",
+            "474",
+            "1",
+            "",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "0",
+            "475",
+            "0",
+            "596f753e2068656c6c6f00",
+            "0",
+            "5",
+            "246",
+            "0",
+            "0",
+            "0",
+            "1",
+            "1"
+          ],
+          [
+            "1",
+            "586",
+            "1",
+            "",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "1",
+            "587",
+            "0",
+            "596f7520776176657300",
+            "0",
+            "5",
+            "246",
+            "0",
+            "0",
+            "0",
+            "1",
+            "1"
+          ],
+          [
+            "2",
+            "832",
+            "1",
+            "",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "2",
+            "833",
+            "0",
+            "596f753e2000",
+            "0",
+            "5",
+            "246",
+            "0",
+            "0",
+            "0",
+            "1",
+            "1"
+          ],
+          [
+            "2",
+            "834",
+            "0",
+            "7374796c656400",
+            "0",
+            "5",
+            "134",
+            "0",
+            "0",
+            "0",
+            "1",
+            "1"
+          ]
+        ]
+      },
+      {
+        "label": "channel",
+        "input": "EVERYONE: team",
+        "log": [
+          [
+            "4",
+            "32",
+            "0"
+          ]
+        ],
+        "lines": {
+          "0": "You> hello",
+          "1": "You waves",
+          "2": "You> styled",
+          "3": "You> team"
+        },
+        "fragments": [
+          [
+            "0",
+            "474",
+            "1",
+            "",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "0",
+            "475",
+            "0",
+            "596f753e2068656c6c6f00",
+            "0",
+            "5",
+            "246",
+            "0",
+            "0",
+            "0",
+            "1",
+            "1"
+          ],
+          [
+            "1",
+            "586",
+            "1",
+            "",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "1",
+            "587",
+            "0",
+            "596f7520776176657300",
+            "0",
+            "5",
+            "246",
+            "0",
+            "0",
+            "0",
+            "1",
+            "1"
+          ],
+          [
+            "2",
+            "832",
+            "1",
+            "",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "2",
+            "833",
+            "0",
+            "596f753e2000",
+            "0",
+            "5",
+            "246",
+            "0",
+            "0",
+            "0",
+            "1",
+            "1"
+          ],
+          [
+            "2",
+            "834",
+            "0",
+            "7374796c656400",
+            "0",
+            "5",
+            "134",
+            "0",
+            "0",
+            "0",
+            "1",
+            "1"
+          ],
+          [
+            "3",
+            "986",
+            "1",
+            "",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0"
+          ],
+          [
+            "3",
+            "987",
+            "0",
+            "596f753e2000",
+            "0",
+            "5",
+            "246",
+            "0",
+            "0",
+            "0",
+            "1",
+            "1"
+          ],
+          [
+            "3",
+            "988",
+            "0",
+            "7465616d00",
+            "0",
+            "5",
+            "134",
+            "0",
+            "0",
+            "0",
+            "1",
+            "1"
+          ]
+        ]
+      }
+    ],
+    "finalLines": {
+      "0": "You> hello",
+      "1": "You waves",
+      "2": "You> styled",
+      "3": "You> team"
+    },
+    "actualChatPackets": 4,
+    "plainColors": [
+      "246"
+    ],
+    "styledColors": [
+      "134"
+    ],
+    "networkExecuted": false,
+    "capturesSacrificesSpecificEnemyAttacksOrVictoriesReproduced": false
+  },
+  "configReadback": {
+    "key": "1chatFormat2",
+    "value": "~g",
+    "exitCode": 0,
+    "separateProcess": true,
+    "optionsSha256": "20492e1d705c21c2c6cec7e9468d7e2d2f7588820648ac912c70f0a693853238",
+    "optionsEncoding": "기존 native 암호화 options 형식; 원시 텍스트로 해석하지 않음"
+  },
+  "configDiscoveryNote": "암호화 options.cfg를 원시 텍스트로 찾으려던 보조 검사1회 AssertionError[]; 원문 reader의 별도 프로세스는~g를 정상 읽음",
+  "protected": {
+    "count": 2596,
+    "changed": []
+  },
+  "existingFixturesUnchanged": 735,
+  "currentFixtures": 736,
+  "actualGameGuiRuns": 1,
+  "all34RoutesCurrent": false,
+  "lastAll34ProductUnit": 560,
+  "lastAll34VerificationUnit": 561,
+  "fullCppTests": false,
+  "windows11Hardware": false,
+  "networkExecuted": false,
+  "capturesSacrificesSpecificEnemyAttacksOrVictoriesReproduced": false,
+  "limits": [
+    "원격 Player/연결·메타맵·시스템 뉴스 서비스/UI는 새로 검사하지 않음",
+    "기타 미복원 dot 명령은 명시 경계로 유지",
+    "전체34경로 통합은 다음587 단위",
+    "전체 원본 동일성과 사용자 전체 캠페인 플레이·후순위MP/4~6차는 미완료"
+  ],
+  "rawDirectory": "extracted/cpp-chat-live-message-586-20261030/",
+  "nativeToolClarification": {
+    "change": "클래스 설명의 CRT atol 경계를 명시 장치로 정정. 계산 AST 동일/마지막 재관측 차이0",
+    "firstSha256": "8b31bff8939a7414ca06238960e7dc8afeb8b3ed5f196302e8be9ae34394edb8",
+    "currentSha256": "167b7d8ee45f99737751353c6ce65f1f8843ee24d10a4d8c1b0991d16884e578"
+  }
+}

@@ -12,11 +12,14 @@ struct PacketConnection {
     std::uint32_t heartbeat{}; // +0x48: 타입 6 패킷의 별도 시각 기록이다.
     std::uint32_t depth{}; // +0x8c: 즉시 콜백 중 증가하고 정상/예외 종료에서 복구하는 중첩 깊이다.
     bool delayed{}; // +0x7c: 지연 분배 큐가 있으면 이 API에서는 거부한다.
+    std::array<std::uint8_t,20> address{}; // +0x4c..5f의 현재 주소20BYTE다. 실제 로컬 두 끝의 생성 값을 보관한다.
 };
 // 원본 세 등록 표를 호스트 함수/값으로 옮긴 한 항목이다.
 struct PacketRegistration {
     std::function<void(std::uint32_t,PacketConnection&,std::span<const std::uint8_t>)> receive; // 처리기(sender,연결,원본 버퍼)다.
     std::function<void(std::uint32_t)> observer; // 집합 패킷에서만 쓰이는 관찰기이며 단일 분배에서는 호출하지 않는다.
+    std::function<void(std::span<std::uint8_t>,std::uint32_t)> packetObserver; // 같은 원문 observer 슬롯의 mutable this를 쓰는 장치다. 기존 인자 전용 장치와 동시에 등록하지 않는다.
+    void NotifyObserver(std::span<std::uint8_t> packet,std::uint32_t sending) const; // 현재 등록된 한 종류의 observer만 실제 패킷/방향 인자로 호출한다.
     std::uint16_t length{0xffff}; // 0xffff는 가변 길이, 그 밖에는 헤더 WORD와 정확히 비교한다.
     std::uint8_t version{}; // 등록된 프로토콜 값이다. incoming의 bit 0x80만 가리고 비교한다.
     std::uint8_t mismatch{}; // 높은 버전: 4 종료/1 무시, 낮은 버전: 8 종료/2 무시. 0이면 계속 분배한다.
@@ -39,6 +42,7 @@ public:
     void Register(std::uint32_t type,decltype(PacketRegistration::receive) receive);
     // 해당 타입의 관찰기 표만 바꾼다. 단일 분배는 등록된 관찰기를 호출하지 않는다.
     void Observe(std::uint32_t type,decltype(PacketRegistration::observer) observer);
+    void ObservePacket(std::uint32_t type,decltype(PacketRegistration::packetObserver) observer); // 원본 thiscall observer에 실제 mutable packet을 전달하는 동일 슬롯 등록이다.
     // 해당 타입의 버전 BYTE와 불일치 정책 BYTE만 바꾼다.
     void Version(std::uint32_t type,std::uint8_t version,std::uint8_t mismatch);
     // 원본 길이 표의 caller 공급/검증용 변경이다. 0xffff이면 선언 길이로 제한하지 않는다.

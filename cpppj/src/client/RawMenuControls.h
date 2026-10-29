@@ -123,6 +123,7 @@ public:
     bool OpenChatInput(const InputEvent& event); //현재 입력줄이 숨겨진 문자 Enter에서 표시 뒤 ToggleBottomGump(0,1)을 같은 부모로 Bubble한다.
     void ToggleChatInput(); //프레임말0042f210을 실제 현재 Console과 공통 트리에 실행한다.
     void ShowChatWindow(); //0042e410의 현재 Chat→부모 표시 사건이다. 입력줄 자체는 바꾸지 않는다.
+    std::uint32_t ChatMessageColor() const; // 현재 팔레트005b5dd8 색을 문맥 생성 직전에 읽는다.
     const ChatWindow* ChatBackend() const;const HudChatGeometry* ChatGeometryBackend() const; // 같은 실제 본체를 빌린다.
     void AppendChatLog(std::uint32_t token,std::string_view text,std::span<const std::uint32_t> context={}); // 원문42eca0의 현재 자식/스크롤과 부모 문맥 저장·복원으로 실제 로그를 추가한다.
     void ForwardDiagnosticChat(std::uint32_t enabled,std::string_view format); // 원문434f40의 현재 색·Chat 전역/인자 없는 서식을 같은 실제 공장에 전달한다.

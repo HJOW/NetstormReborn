@@ -2,6 +2,7 @@
 #include "client/CampaignObjectMenuClient.h"
 #include "client/InventoryAboutMenu.h"
 #include "client/ClientMain.h"
+#include "client/ClientChatWindowGlobals.h"
 #include "client/ClientAudio.h"
 #include "client/ClientGameplayGlobals.h"
 #include "client/GameWorld.h"
@@ -47,7 +48,6 @@ struct CampaignObjectMenuClient::Impl {
     std::unique_ptr<RawObjectMenuOpen> opener; // 같은 현재 객체의 공통 열기와 위치 계산이다.
     std::uint32_t root{},staticSerial{0x60000000U}; //실제루트와호스트정적문자열범위다.주소DWORD는Client장기소유자에서읽는다.
     std::map<std::uint32_t,std::string> staticStrings; // 페이지/80칸 Script 고리와 독립인 정적 메뉴 문자열 수명이다.
-    std::vector<std::uint32_t> ignored; // 원본548750/548754의 현재 subscriber 목록이다. 초기 빈 목록을 유지한다.
     // 현재 실제 UI 대상을 빌리기만 하며 메뉴를 만들거나 게임을 진행하지 않는다.
     Impl(Client& source,RawButtonControls& tree,std::function<void(std::string_view)> notify):client(source),buttons(tree),tell(std::move(notify)) {
         if (!tell || !buttons.Menus()) throw std::invalid_argument("실제 객체 메뉴 Client 경계 누락");
@@ -86,7 +86,7 @@ struct CampaignObjectMenuClient::Impl {
         ui.factory.helpWord=[this] { std::string word;if (!client.Configuration().ReadString("helpWord",word)) throw std::logic_error("Factory 실제 도움말 원문 미설치");const auto bytes=o::EncodeOriginalText(word);return std::string(bytes.begin(),bytes.end()); };
         ui.player.translate=[this](std::string_view key) { return Translate(key); };ui.player.print=PrintMenu;
         ui.player.allowSend=[this] { return world->Session().BattleOption(13)!=0; };ui.player.allowOffer=[this] { return world->Session().BattleOption(11)!=0; };ui.player.allowBreak=[this] { return world->Session().BattleOption(12)!=0; };
-        ui.player.ignored=[this](std::uint32_t subscriber) { return std::find(ignored.begin(),ignored.end(),subscriber)!=ignored.end(); };
+        ui.player.ignored=[this](std::uint32_t subscriber) { const auto& ignored=client.ChatWindowGlobals()->ignored;return std::find(ignored.begin(),ignored.end(),subscriber)!=ignored.end(); }; // 수신과 같은 현재 Client 목록을 읽는다.
         ui.player.whispered=[this](std::uint32_t subscriber) { return Whispered(subscriber); };
         ui.player.parseAddress=[](std::string_view,std::uint32_t) { throw std::logic_error("원격 Player 메뉴 주소 해석 미연결"); };
         ui.player.reliability=[](std::uint32_t)->std::uint32_t { throw std::logic_error("메타맵 Player 메뉴 신뢰도 미연결"); };

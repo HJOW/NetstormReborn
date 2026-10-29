@@ -1,5 +1,7 @@
 // 기존 원본 몸체의 단일 저장소 조립을 실제 클라이언트 세션이 소유한다.
 #include "client/RawCampaignSession.h"
+#include "client/ClientChatWindowGlobals.h"
+#include "client/RawChatRelay.h"
 #include "client/SendMoneyInput.h"
 #include "o/RawBridgeCarriers.h"
 #include "o/RawIceRicochet.h" // 실제 아이스 반사점/선택도 같은 풀·HP·해시·게임 난수를 사용한다.
@@ -352,6 +354,9 @@ struct RawCampaignSession::Impl {
     std::shared_ptr<ClientPlayerRecords> playerRecords; // 모든 소비자보다 먼저 구성하고 마지막에 반납하는 실제 Client Player owner다.
     std::unique_ptr<ClientPlayerRecords::Use> playerUse; // Login과 서비스 callback까지 모두 소멸한 뒤 다음 Player 재할당을 허용한다.
     RawCampaignSessionServices services; // Login/장기 callback보다 먼저 만들고 나중에 반납하는 실제 클라이언트 장치다.
+    std::shared_ptr<ClientChatWindowGlobals> chatGlobals{services.chatGlobals ? services.chatGlobals : std::make_shared<ClientChatWindowGlobals>()}; // 실제 Client 또는 독립 Session의 같은 중계 마스크 수명이다.
+    ChatRelayHooks ChatDevices(); // 같은 현재 Player/연결 표와 UI를 중계 부모에 공급한다.
+    void SendChatMutable(std::int32_t target,std::span<std::uint8_t> packet); // 준비된 현재 로컬 전송의 observer와 큐에 원시 패킷을 넘긴다.
     const std::string missionFortName; //현재 Session 설치 요청의 논리 요새 이름이다. manager의 실제 파일 경로와 혼용하지 않는다.
     std::shared_ptr<ClientLocalStateGlobals> localStateGlobals{services.localStateGlobals ? services.localStateGlobals : std::make_shared<ClientLocalStateGlobals>()}; // 실제 Client는 같은 owner를 빌리고 독립 Session만 기존 BSS0 입력을 한 번 소유한다.
     std::shared_ptr<ClientConnectionActivityGlobals> connectionActivityGlobals{services.connectionActivityGlobals ? services.connectionActivityGlobals : std::make_shared<ClientConnectionActivityGlobals>()}; // 실제 Client의 표를 빌리며 독립 Session만 최초0 owner를 한 번 구성한다.
@@ -3213,6 +3218,7 @@ struct RawCampaignSession::Impl {
         if (editorActivityRegisteredDispatch) { editorActivityRegisteredDispatch->Register(0x64,{});editorActivityRegisteredDispatch=nullptr; } //64h receive만 지우고 실제 observer/version/정책/길이는 유지한다.
         if (!editorRegisteredDispatch) return;
         for (const auto type:kEditorGameplayMessages) editorRegisteredDispatch->Register(type,{}); // 같은 Session을 빌리는 receive만 해제하고 실제 observer/프로토콜/정책/길이 표는 보존한다.
+        editorRegisteredDispatch->Register(0x41,{}); // 같은 Session을 빌린 Chat 수신도 원본 observer/버전은 남기고 반납한다.
         editorRegisteredDispatch=nullptr;editorRegisteringCommands=false;
     }
     // 외부 등록표가 현재 Session을 더는 호출할 수 없게 한 뒤 기존 모듈/Kernel 정리를 수행한다.
@@ -3245,6 +3251,25 @@ struct RawCampaignSession::Impl {
 };
 #include "client/RawCampaignEditorIsland.inc" // 설치된 같은 Editor의 실제 Pool/지도에 섬 배치 부모를 연결한다.
 #include "client/RawCampaignSessionLogin.inc"
+// 로컬 주소/등록/Player를 같은 현재 전송에서 조회하며 이미 반납한 Session 포인터를 외부에 남기지 않는다.
+ChatRelayHooks RawCampaignSession::Impl::ChatDevices() {
+    ChatRelayHooks hooks;hooks.read=[this](auto at)->std::uint32_t { if (at==0x594fbc) return core.ownerMode.battle;if (at==0x540bc0) return core.processState.Server();if (at==0x540c74) return globals.mySubscriber;throw std::out_of_range("Chat 중계의 실제 Session 전역 없음"); };
+    const auto registry=[this] { if (login) return login->transport->Registry();if (services.editorTransport) return services.editorTransport->Registry();throw std::logic_error("Chat 중계의 실제 연결 표 없음"); }; // 매조회에서 현재 실제 로컬 표만 빌린다.
+    hooks.address=[registry](auto sender) { return registry()->Address(std::bit_cast<std::int32_t>(sender)); };
+    hooks.player=[this](auto subscriber)->std::uint32_t {
+        if (!subscriber) std::fprintf(stderr,"Chat 중계 Player 원본 진단: subId != INVALID_SUBSCRIBER_ID\n"); // 원문 진단이 복귀하면 같은 Player 검색을 계속한다.
+        for (std::uint32_t owner=1;owner<9;++owner) if (Read(players,owner*180U+44U)==subscriber) return owner;return 0; // 원문0048f430처럼 Player1..8의 같은 subscriber만 조회한다.
+    };
+    hooks.channel=[this](auto player)->std::int32_t { if (core.ownerMode.challenge) std::fprintf(stderr,"Chat 중계 Player 원본 진단: !inMetamapMode\n");if (player<1 || player>=9) throw std::out_of_range("Chat 중계 Player 토큰의 실제 물리 범위");return static_cast<std::int32_t>(player); };
+    hooks.connected=[registry](auto channel) { const auto current=registry();const auto globals=current->Cleanup();if (channel<0 || channel>=static_cast<std::int32_t>(globals.transceivers.size())) throw std::out_of_range("Chat 중계의 현재 원격 번호 범위");const auto token=globals.transceivers[channel];return token && !(current->Node(token).flags&0x40U); }; // 실제 열린 로컬 Player 연결만 선택하며 원격 socket 완성/검사는 후순위다.
+    hooks.send=[this](auto target,auto bytes) { SendChatMutable(target,bytes); };
+    hooks.receive=[this](auto bytes,auto) { if (!services.chatReceive) throw std::logic_error("Chat 중계의 실제 UI 수신 미연결");services.chatReceive(bytes); };
+    hooks.assertion=[](auto line) { std::fprintf(stderr,"Chat 패킷 원본 진단: %u\n",line); };return hooks;
+}
+// 같은 전송의 실제 연결 관문과 mutable observer만 실행하며 수신기를 동기로 우회하지 않는다.
+void RawCampaignSession::Impl::SendChatMutable(std::int32_t target,std::span<std::uint8_t> packet) {
+    if (!loaded) throw std::logic_error("실제 설치 전 mutable Chat 패킷 송신");if (login) static_cast<void>(login->transport->SendMutable(target,packet));else if (services.editorTransport) static_cast<void>(services.editorTransport->SendMutable(target,packet));else throw std::logic_error("실제 로컬 전송 없는 mutable Chat 송신");
+}
 #include "client/RawCampaignCarrierInput.inc"
 
 //같은원본처리기가참여성공/Ready/월드설치를수행한다.강제owner/flags쓰기를추가하지않는다.
@@ -3277,6 +3302,8 @@ void RawCampaignSession::SendLocalPacket(std::int32_t target,std::span<const std
     else if (impl_->services.editorTransport) static_cast<void>(impl_->services.editorTransport->Send(target,packet));
     else throw std::logic_error("실제 로컬 Login/Editor 전송 없는 원본 패킷 송신"); // sender/owner/protocol/선언길이를 바꾸거나 처리기를 동기 호출하지 않는다.
 }
+// 실제 원시 패킷의 길이 확정과 기존 로컬 큐 경계를 외부 UI에 제공한다.
+void RawCampaignSession::SendMutableLocalPacket(std::int32_t target,std::span<std::uint8_t> packet) { impl_->SendChatMutable(target,packet); }
 // 현재 실제 자산/Template/서비스를 보관하고 모든 하위 모듈을 구성한다.
 RawCampaignSession::RawCampaignSession(const GameAssets& assets,const BaseFileSystem& files,FortTemplate fort,std::string mission,RawCampaignSessionServices services)
     :impl_(std::make_unique<Impl>(assets,files,std::move(fort),std::move(mission),std::move(services))) { impl_->gameplayUse->Publish(*this); }
@@ -3378,9 +3405,9 @@ void RawCampaignSession::CommitExistingEditorInstall(ClientLocalStateGlobals& ow
     if (s.services.editorTransport) {
         auto& dispatch=s.services.editorTransport->Dispatch();if (s.login || s.editorRegisteredDispatch || s.editorActivityRegisteredDispatch) throw std::logic_error("Editor 실제 전송의 중복 Login/수신 등록");
         for (const auto type:kEditorGameplayMessages) if (dispatch.Registration(type).receive) throw std::logic_error("Editor 현재 수신 등록표의 다른 소유자 존재"); // 전체13종을 먼저 확인하여 기존 처리기를 부분 덮어쓰지 않는다.
-        if (dispatch.Registration(0x64).receive) throw std::logic_error("Editor 실제64h 수신 등록표의 다른 소유자 존재"); // 기존13종 검사와 별개로 모든 receive 충돌을 쓰기 전에 거부한다.
+        if (dispatch.Registration(0x64).receive || dispatch.Registration(0x41).receive) throw std::logic_error("Editor 실제64h/41h 수신 등록표의 다른 소유자 존재"); // 모든 receive 충돌을 쓰기 전에 거부한다.
         s.editorRegisteredDispatch=&dispatch;s.editorActivityRegisteredDispatch=&dispatch;s.editorRegisteringCommands=true;
-        try { RegisterCarrierCommands(dispatch);RegisterConstructionCommands(dispatch);RegisterFactoryResearchCommands(dispatch);RegisterConnectionActivity(dispatch,*s.connectionActivity);s.editorRegisteringCommands=false; }
+        try { RegisterCarrierCommands(dispatch);RegisterConstructionCommands(dispatch);RegisterFactoryResearchCommands(dispatch);RegisterConnectionActivity(dispatch,*s.connectionActivity);RegisterChatPacket(dispatch,s.chatGlobals->receivedMask,s.ChatDevices());s.editorRegisteringCommands=false; }
         catch (...) { s.ReleaseEditorCommandReceivers();throw; } // 부분 등록 예외도 살아 있는 Session 포인터를 외부 표에 남기지 않는다.
     }
     s.loaded=true; // checkpoint나 UI scope가 아닌 실제 정상 State ret 확인 뒤 이 한 곳에서만 Editor 입력/공개 저장을 연다.

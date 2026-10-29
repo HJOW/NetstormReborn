@@ -68,7 +68,7 @@ o::LocalMissionParentResult UberGump::InstallExistingEditorState(std::uint32_t s
     const auto bytes=client_.Files().TryRead(working.string());
     const auto image=bytes ? std::make_shared<const std::vector<std::uint8_t>>(*bytes) : std::shared_ptr<const std::vector<std::uint8_t>>{};
     o::FortTemplate fort;if (image) fort=o::FortTemplate::Parse(*image,client_.Assets().TypeTable()); // 파일 부재는 새 manager/자료 부모가 처리하며 가짜 빈 Fort 파일을 읽지 않는다.
-    auto services=MakeCampaignClientServices(client_,*rawButtons_,{[this] { RefreshWindowTitle(); },[this](auto name) { Tell(std::string(name)); },[this](auto kind,auto player,auto parameter) { warnings_->Remove(kind,player,parameter);rebuild_=true; }});
+    auto services=MakeCampaignClientServices(client_,*rawButtons_,{[this] { RefreshWindowTitle(); },[this](auto name) { Tell(std::string(name)); },[this](auto kind,auto player,auto parameter) { warnings_->Remove(kind,player,parameter);rebuild_=true; },[this](auto packet) { ReceiveChatMessage(packet); }});
     services.installMode=CampaignInstallMode::ExistingEditor;services.deferExistingEditorFile=true;services.adoptPreparedWorld=true;services.adoptInitializedPlayers=true;services.localLogin.reset();
     services.templateStorage=templateStorage_;services.missionFortImage=image;services.missionOptions=missionOptions_;services.missionRestrictions=missionRestrictions_;services.editorTransport=e.transport;services.fortMission=FortMissionSaveEffects();
     services.fortBadges=client_.FortBadges();services.fortTypeConversion=client_.FortTypeConversion(); //기존 파일의 실제 장부/변환표를 캠페인과 같은 Client owner에서 빌린다.

@@ -118,6 +118,7 @@ struct RawCampaignSession::Impl::Login {
         timer=std::make_unique<RawMissionLoginTimer>(OriginalEdition::Patch1078,MissionLoginTimerState{s.loginEnd,timeout,begin,scriptBreak,requestPhase,baseClock},counts,MissionLoginTimerReads{[this] { return saved; },[this] { return s.core.processState.Server(); },[this] { return s.objectState.mission; },[this] { return s.globals.missionPost; },[this] { return s.assetState.Boss(); },[this] { return s.gunState.checking; }},std::move(timing));
         RegisterMissionLogin(transport->Dispatch(),*server);RegisterMissionClientPackets(transport->Dispatch(),*client);RegisterMissionMetadata(transport->Dispatch(),*metadata);RegisterMissionSettingsPacket(transport->Dispatch(),*settings);
         RegisterConnectionActivity(transport->Dispatch(),*s.connectionActivity); // 실제64h/version1/정책0/빈 observer를 같은 일반 수신 분배기에 등록한다.
+        RegisterChatPacket(transport->Dispatch(),s.chatGlobals->receivedMask,s.ChatDevices()); // 같은 단독 양끝의41h mutable observer와 중계를 실제 UI 수신에 등록한다.
         // 원본3d 등록의 observer는0040b380의 빈 반환이고 version1/mismatch0이다.
         transport->Dispatch().Observe(0x3d,[](std::uint32_t) {});transport->Dispatch().Version(0x3d,1,0);
         transport->Dispatch().Register(0x3d,[this](std::uint32_t,PacketConnection&,std::span<const std::uint8_t> bytes) {

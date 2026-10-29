@@ -109,6 +109,7 @@ RawCampaignSessionServices MakeCampaignClientServices(Client& client,RawButtonCo
     auto& audio=client.WorldAudio(); // noAudio도 같은 실제 이름표/비활성 재생 계층을 사용한다.
     auto& player=audio.Sounds(); // 반환한 콜백이 빌리는 장기 실제 SoundPlayer다.
     RawCampaignSessionServices services; // 게임 규칙 경계는 실제 세션의 명시 누락 판정을 유지한다.
+    services.chatGlobals=client.ChatWindowGlobals();services.chatReceive=std::move(ui.receiveChat); // 수신 마스크/무시 상태와 실제 UI는 같은 Client/현재 게임을 빌린다.
     services.subscriberGlobals=client.SubscriberGlobals(); // Init/Chat/모든 Session이 같은 두 DWORD를 수명째 빌린다.
     services.playerRecords=client.PlayerRecords(); // 실제 Player/factory를 Client 수명에 소유하고 Session 대여 중 재할당하지 않는다.
     services.connectionRegistry=client.ConnectionGlobals(); //실제 로컬 연결도 State 정리와 같은 장기22/32칸을 사용한다.

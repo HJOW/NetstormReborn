@@ -15,6 +15,7 @@ struct CampaignClientUi {
     std::function<void()> refreshWindowTitle; // 현재 MissionScript의 설정 제목을 실제 창에 적용한다.
     std::function<void(std::string_view)> tell; // 현재 미션/Tell 설정의 안내 섹션을 연다.
     std::function<void(std::int32_t,std::int32_t,std::int32_t)> removeMessage; // 같은 MessageBoard에서 종류·플레이어·매개변수 검색으로 지연 삭제한다.
+    std::function<void(std::span<std::uint8_t>)> receiveChat; // 같은 현재 Chat/Console에 패킷 수신을 전달한다. 실제 게임 UI가 Session보다 오래 산다.
 };
 // 화면/음향없이같은Client의등록Config/CRT clock/진단을연결한다.Client는반환서비스보다오래살아야한다.
 CampaignSubscriberServices MakeCampaignSubscriberClientServices(Client& client);

@@ -49,7 +49,13 @@ void UberGump::EnsureHudFactories() {
             data.translate=[this](auto text) { return FontBytes(client_.Translate(text)); };data.storeText=[this](auto text) { return client_.ChatWindowGlobals()->Store(text); };
             data.text=[this](auto token) -> std::string_view { return client_.ChatWindowGlobals()->strings.at(token); };
             BindClientChatRecipients(data,client_,client_.SurfaceStorage(),[this]() -> std::string_view { return world_ ? world_->Session().CurrentHandle() : std::string_view(mapUserName_); }); //목록과같은장기현재이름을매조회빌리고Session교체전주소를캡처하지않는다.
-            BindClientChatSubmit(data,client_,*rawButtons_->Menus()); // 빈 제출/clear·quit/서식 명령을 실제 해석·명령표에 잇는다. 일반 본문 서식·송신은 후속 복원 경계다.
+            const auto name=[this]() -> std::string_view { return world_ ? world_->Session().CurrentHandle() : std::string_view(mapUserName_); }; // 현재 소유 이름의 실제 NUL 포함 물리를 송신 동안 빌린다.
+            auto packet=MakeClientChatPacketHooks(client_.ChatManagerGlobals());packet.currentName=[name]() -> std::span<const std::uint8_t> { const auto text=name();return {reinterpret_cast<const std::uint8_t*>(text.data()),text.size()+1}; };
+            packet.read=[this](auto address) { return ReadChatGlobal(address); };packet.send=[this](auto target,auto bytes) { if (!world_) throw std::logic_error("일반 Chat 송신의 현재 실제 월드 없음");world_->Session().SendMutableLocalPacket(target,bytes); };
+            packet.log=[this](auto level,auto text) { client_.WriteDiagnosticLog(std::bit_cast<std::int32_t>(level),text); };
+            const auto zero=std::make_shared<std::array<std::uint8_t,20>>();packet.zeroAddress=[zero] { zero->fill(0);(*zero)[0]=2; }; //004e0cd0("0.0.0.0",0)의 같은 IPv4 주소를 DNS/소켓 없이 구성한다.
+            packet.localReceive=[this,zero](auto bytes) { if ((*zero)[0]!=2) throw std::logic_error("Chat 로컬 fallback의 현재 zero 주소 없음");ReceiveChatMessage(bytes); };
+            BindClientChatMessage(data,client_,client_.SurfaceStorage(),name,std::move(packet));BindClientChatSubmit(data,client_,*rawButtons_->Menus()); // 실제 say/조합/원시 패킷→동일 로컬 큐와 clear/quit/서식을 함께 연결한다.
             data.read=[this](auto address) -> std::uint32_t { switch (address) {
                 case 0x594fc8:return client_.SurfaceStorage()->ownerMode.challenge;case 0x594fbc:return world_ ? world_->Session().BattleActive() : 0U;
                 case 0x548714:return client_.ChatManagerGlobals()->Current();case 0x563e38:return rawButtons_->RootToken();
@@ -57,7 +63,7 @@ void UberGump::EnsureHudFactories() {
                 case 0x542944:return 0x02000094U;default:throw std::logic_error("Chat 실제 Client 전역 미연결:"+std::to_string(address));
             } };
             data.config=[this](auto key) { return client_.Configuration().GetInt(key); };data.quit=[this](auto event,auto first,auto second) { client_.Input().Push(event,std::bit_cast<std::int32_t>(first),std::bit_cast<std::int32_t>(second)); };
-            return rawButtons_->Menus()->CreateChatWindow(std::move(data)); // 대상/완성/로컬 제출·서식 설정은 같은 실제 장치이며 일반 본문 서식·송신은 선택 시 명시 경계다.
+            return rawButtons_->Menus()->CreateChatWindow(std::move(data)); // 대상/완성/일반 제출과 서식 설정이 같은 실제 장치를 사용한다.
         };
         context.root.refreshTechnology=[this] { RefreshClientChatRankPrefix(client_,client_.Assets(),*client_.SurfaceStorage()); }; // Fort Technology와 같은 실제 현재 manager/Core/아이콘을 사용한다.
         context.root.translate=[this](auto text) { return client_.ChatWindowGlobals()->Store(FontBytes(client_.Translate(text))); };
@@ -99,6 +105,31 @@ void UberGump::ReplaceHudForState() {
 void UberGump::RefreshStormPower() { rawButtons_->RefreshStormPower(); }
 //00466280은 현재 루트에 원문 자식 우선 GumpInput/숨김포함1로 현재 HUD 명령을 보낸다.
 void UberGump::ApplyHudModeForState(std::uint32_t mode) { rawButtons_->NotifyHudMode(client_.LocalStateGlobals()->HudModeCommand(),mode); }
+// 현재 모드/ID/팔레트는 장치 호출 위치에서 읽고 미설치 월드를 임의 기본 관계표로 바꾸지 않는다.
+std::uint32_t UberGump::ReadChatGlobal(std::uint32_t address) {
+    if (address>=0x595200U && address<0x595200U+81U*4U && !(address&3U)) return client_.PlayerRecords()->Alliances()[(address-0x595200U)/4U];
+    if (address>=0x52f81eU && address<0x52f827U) { if (!world_) throw std::logic_error("Chat 관계 관전자의 현재 월드 없음");return world_->Session().HiddenPlayers()[address-0x52f81eU]; }
+    switch (address) {
+    case 0x540c74:return client_.CurrentSubscriber();case 0x540c70:return client_.GameplayGlobals()->player.battleOwner;
+    case 0x594fb8:return client_.SurfaceStorage()->ownerMode.fort;case 0x594fbc:return client_.SurfaceStorage()->ownerMode.battle;case 0x594fc8:return client_.SurfaceStorage()->ownerMode.challenge;
+    case 0x548740:return client_.ChatWindowGlobals()->window.current;case 0x548710:return client_.ChatWindowGlobals()->receivedMask;case 0x548748:return client_.ChatWindowGlobals()->newsTime;
+    case 0x5ca92c:return rawButtons_->ChatAlertSerial();case 0x5b5dd8:return rawButtons_->Menus()->ChatMessageColor();
+    case 0x52edf6:return 0x41;case 0x544c5c:return 0; // 보호 PE의 같은 초기 종류 BYTE와 store 없는 BSS 길이다. 실제 송신 observer가 최종 길이를 확정한다.
+    default:throw std::out_of_range("실제 Chat 전역 조회 미연결:"+std::to_string(address));
+    }
+}
+// 일반 수신은 실제 UI/장기 상태만 빌리며 packet을 새 문자열 로그로 우회하지 않는다.
+void UberGump::ReceiveChatMessage(std::span<std::uint8_t> packet) {
+    ChatReceiveHooks hooks;hooks.read=[this](auto at) { return ReadChatGlobal(at); };
+    hooks.ignored=[this](auto subscriber) { const auto& rows=client_.ChatWindowGlobals()->ignored;return std::find(rows.begin(),rows.end(),subscriber)!=rows.end(); };
+    hooks.config=[this](auto key) { std::int32_t value{};if (!client_.Configuration().ReadInt(key,value)) { // 실제 등록된 설정을 조회하되 ReadInt의 동일 값/반환0과 누락을 구별한다.
+        std::string text;if (!client_.Configuration().ReadString(key,text)) throw std::logic_error("Chat 수신의 실제 옵션 누락:"+std::string(key));
+    }return value; };
+    hooks.owner=[this](auto subscriber) { const auto name=world_ ? world_->Session().CurrentHandle() : std::string_view(mapUserName_);return FindClientChatSenderOwner(client_,*client_.SurfaceStorage(),name,subscriber); };
+    hooks.wake=[this](auto serial) { static_cast<void>(rawButtons_->PulseRegisteredIfIdle(serial)); };hooks.sound=[this](auto file) { client_.WorldAudio().Sounds().PlayByName(file,0,0,0,0,0); };
+    hooks.append=[this](auto chat,auto text,auto context) { rawButtons_->Menus()->AppendChatLog(chat,text,context); };hooks.show=[this] { rawButtons_->Menus()->ShowChatWindow(); };
+    hooks.log=[this](auto level,auto text) { client_.WriteDiagnosticLog(std::bit_cast<std::int32_t>(level),text); };DispatchChatPacket(packet,hooks); // 시스템 뉴스의 실제 서비스/UI는 후순위 네트워크 장치로 남기며 일반 수신을 빈 성공으로 대체하지 않는다.
+}
 // 현재 실제 World와 같은 초기 생성물을 연결하고 기존 미션 HUD mode3/팔레트·도킹을 유지한다.
 void UberGump::InstallHud() {
     if (!world_ || client_.Assets().Edition()!=o::OriginalEdition::Patch1078) return;EnsureHudFactories();

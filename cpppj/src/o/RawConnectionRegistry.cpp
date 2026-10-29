@@ -4,6 +4,11 @@
 #include <utility>
 
 namespace netstorm::o { //Client 저장소와 독립 검사의 새 저장소가 같은 본체를 사용한다.
+// 현재 ID를 실제 표에서 읽고 없는 연결은 DNS/소켓 없이 같은 zero IPv4 주소를 만든다.
+std::array<std::uint8_t,20> RawConnectionRegistry::Address(std::int32_t id) const {
+    if (id< -32 || id>21) throw std::out_of_range("Chat 현재 주소의 원본 전송 ID 범위");const auto token=id<0 ? pending_.at(static_cast<std::size_t>(-id)) : transceivers_.at(static_cast<std::size_t>(id));
+    if (token) return Node(token).address;std::array<std::uint8_t,20> address{};address[0]=2;return address;
+}
 void RawConnectionRegistry::BindSynchronization(std::uint32_t& value,std::shared_ptr<void> lifetime) { synchronization_=&value;synchronizationOwner_=std::move(lifetime); }
 ConnectionCleanupGlobals RawConnectionRegistry::Cleanup() { return Cleanup(*synchronization_); }
 ConnectionCleanupGlobals RawConnectionRegistry::Cleanup(std::uint32_t& synchronization) { return {transceivers_,buffers_,pending_,synchronization,pendingCount_}; }

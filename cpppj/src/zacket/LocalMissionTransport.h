@@ -71,6 +71,8 @@ public:
     void AssignConnection(std::int32_t pending,std::int32_t owner);
     //004e2dc0의 현재 flags1/NULL 연결 선택 후 선언 길이 바이트를 실제 다른 끝의 송신 큐에 쓴다.
     bool Send(std::int32_t destination,std::span<const std::uint8_t> packet);
+    bool SendMutable(std::int32_t destination,std::span<std::uint8_t> packet); // 실제 thiscall observer가 길이를 확정하는 원시 패킷을 같은 큐에 넣는다.
+    const std::shared_ptr<o::RawConnectionRegistry>& Registry() const; // 같은 현재 ID/주소/수명 표를 장치 getter에 빌린다.
     //004e2920/004e0150의 현재 연결 순서로 실제 type4 집합 프레임을 완성해 상대 수신 큐에 넣는다.
     void Flush();
     //004e28b0처럼 pending을 먼저 한 번, 등록된 연결을 번호순으로 읽고 같은 등록표에 분배한다.
@@ -90,6 +92,7 @@ public:
     std::uint32_t Owner() const;
     std::size_t QueuedFrames() const;
 private:
+    bool SendPacket(std::int32_t destination,std::span<const std::uint8_t> packet,std::span<std::uint8_t> writable); // 기존 완성 writer 계약과 새 mutable observer 경계를 같은 연결 관문/큐에 적용한다.
     o::PacketDispatchHooks WrappedHooks(); //실제 분배와 같은 Client 표의 소멸/free를 연결한다.
     std::uint32_t Track(o::PacketConnection& connection); //현재 실제 양끝의 수명과 큐 장치에 한 토큰을 발급한다.
     std::uint32_t Token(const o::PacketConnection& connection) const; //같은 실제 두 주소의 현재 토큰만 읽는다.

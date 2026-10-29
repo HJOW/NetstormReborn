@@ -37,6 +37,7 @@ o::PacketDispatchHooks EditorLocalTransport::WrappedHooks() {
 void EditorLocalTransport::Initialize(o::PacketConnection& connection,std::uint32_t sender) {
     connection={};connection.received=Need(hooks_.now)();connection.heartbeat=Need(hooks_.now)();
     connection.sender=sender;connection.flags=kInitialFlags;
+    connection.address[0]=20;connection.address[2]=static_cast<std::uint8_t>(port_>>8);connection.address[3]=static_cast<std::uint8_t>(port_);connection.address[16]=0x0d;connection.address[17]=1; // 같은 실제 포트/로컬 주소를 등록 ID 재배치 때도 보존한다.
 }
 void EditorLocalTransport::Open(std::uint32_t port) {
     if (!port || port>65535U || listenerAlive_ || clientAlive_ || pendingAlive_ || polling_)
@@ -66,13 +67,19 @@ std::vector<std::uint8_t>& EditorLocalTransport::ReceiveBuffer(o::PacketConnecti
     throw std::logic_error("Editor 로컬 전송의 다른 수신버퍼 조회");
 }
 bool EditorLocalTransport::Send(std::int32_t destination,std::span<const std::uint8_t> packet) {
+    return SendPacket(destination,packet,{});
+}
+// 원시 작성기의 observer는 복사 전 같은 mutable 패킷을 직접 변경한다.
+bool EditorLocalTransport::SendMutable(std::int32_t destination,std::span<std::uint8_t> packet) { return SendPacket(destination,packet,packet); }
+// 전송 가능 여부를 먼저 판정하며 observer와 peer 소멸/실제 복사의 원문 순서를 유지한다.
+bool EditorLocalTransport::SendPacket(std::int32_t destination,std::span<const std::uint8_t> packet,std::span<std::uint8_t> writable) {
     if (destination< -32 || destination>21) throw std::out_of_range("Editor 현재 transceiver 번호 범위");
     const bool client=destination==9,pending=destination<0 && pendingAlive_ && destination==std::bit_cast<std::int32_t>(pending_.sender); //현재 실제 pending 번호를 사용하며 항상-1로 가정하지 않는다.
     if ((!client && !pending) || !(client ? clientAlive_ : pendingAlive_)) return false;
     auto& connection=client ? client_ : pending_;if (connection.flags&kClosed) return false;
     if (packet.size()<4) throw std::invalid_argument("Editor 송신 실제 헤더4BYTE 부족");
     const auto& registration=dispatcher_.Dispatch().Registration(packet[1]); //가상송신+4는 observer1을 복사보다 먼저 실행한다.
-    const auto observer=registration.observer;if (observer) observer(1);
+    if (registration.packetObserver) { if (writable.empty()) throw std::logic_error("Editor 송신의 실제 mutable observer this 없음");registration.NotifyObserver(writable,1); }else { const auto observer=registration.observer;if (observer) observer(1); }
     if (PeerLost(connection)) { Terminated(connection);return false; } //004e1c00의실패뒤가상송신은004df9f0을통해상위종료를분배한다.
     const auto length=std::size_t(packet[2])|(std::size_t(packet[3])<<8); //observer가 변경한 현재 원문 선언 길이를 읽는다.
     if (length<4 || length>packet.size()) throw std::out_of_range("Editor 송신 선언 길이의 실제 버퍼 부족");
@@ -105,7 +112,7 @@ EditorLocalTransport::ReceiveResult EditorLocalTransport::Receive(bool pending) 
     auto& packet=ReceiveBuffer(connection);packet=std::move(queue.front());queue.pop_front(); //실제끝이현재수신원문을계속보유하여callback의BYTE수정과다음종료헤더가같은버퍼를본다.
     if (!dispatcher_.Dispatch().Validate(packet)) return {true,false}; //004dfc00의선행Validate실패는길이0sentinel을돌려주며같은끝반복을중단한다.
     if (packet[1]!=4) { //단일프레임의socket observer0과집합내observer0은서로다른원문호출위치다.
-        const auto observer=dispatcher_.Dispatch().Registration(packet[1]).observer;if (observer) observer(0);
+        const auto registration=dispatcher_.Dispatch().Registration(packet[1]);registration.NotifyObserver(packet,0);
     }
     const bool dispatched=dispatcher_.DispatchFrame(connection,packet);return {true,dispatched}; //분배실패도소비는했지만004dfc00의반환sentinel이그끝반복을중단한다.
 }

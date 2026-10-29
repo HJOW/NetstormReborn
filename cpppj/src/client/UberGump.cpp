@@ -71,6 +71,8 @@
 #include "client/ClientCoreDataGlobals.h"
 #include "client/ClientChatManagerGlobals.h"
 #include "client/ClientChatRuntime.h"
+#include "client/RawChatPacket.h"
+#include "client/RawChatReceive.h"
 #include "client/ClientDotCommandGlobals.h"
 #include "client/ClientStaticStrings.h"
 #include "client/ClientPlayerRecords.h"
@@ -649,7 +651,7 @@ void UberGump::LoadMissionWorld(std::optional<std::string> requestedFort) {
     // 1-1/1-2도 원본 missionType은 Tutorial이다. 지원 두 종류 모두 같은 실제 raw 월드를 생성한다.
     auto services=MakeCampaignClientServices(client_,*rawButtons_,{
         [this] { RefreshWindowTitle(); },[this](std::string_view key) { Tell(std::string(key)); },
-        [this](std::int32_t kind,std::int32_t player,std::int32_t parameter) { warnings_->Remove(kind,player,parameter);rebuild_=true; }}); // 현재 클라이언트의 설정·음향·입력·UI다.
+        [this](std::int32_t kind,std::int32_t player,std::int32_t parameter) { warnings_->Remove(kind,player,parameter);rebuild_=true; },[this](auto packet) { ReceiveChatMessage(packet); }}); // 현재 클라이언트의 설정·음향·입력·UI다.
     services.adoptInitializedPlayers=nativePlayers; //앞선 실제 cleanup의 같은9기록을 대여하며 생성자에서 두 번째로 재할당하지 않는다. 일반 World/로그인 어댑터의 나머지 기존 경계는 유지한다.
     services.factoryHelp=[this](std::string_view section,std::uint32_t mode) { const auto token=scriptStrings_.Store(section);if (token>0x0fffffffU) throw std::overflow_error("Factory 도움말 문자열 별칭 토큰 소진");rawButtons_->Menus()->OpenHelp(0x70000000U|token,static_cast<std::int32_t>(mode),0); }; //기존Help와같은문자열고리/별칭과실제전용창을사용한다.
     services.missionOutcome.demo=[this] { return missionRuntime_ ? missionRuntime_->gate.demo : 0U; };

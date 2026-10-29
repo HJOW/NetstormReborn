@@ -17,7 +17,11 @@ RawPacketDispatch::RawPacketDispatch(OriginalEdition edition,PacketDispatchHooks
 }
 void RawPacketDispatch::CheckType(std::uint32_t type) const { if (!type || type>lastType_) throw std::out_of_range("패킷 등록 타입 범위 오류"); }
 void RawPacketDispatch::Register(std::uint32_t type,decltype(PacketRegistration::receive) receive) { CheckType(type);entries_[type].receive=std::move(receive); }
-void RawPacketDispatch::Observe(std::uint32_t type,decltype(PacketRegistration::observer) observer) { CheckType(type);entries_[type].observer=std::move(observer); }
+void RawPacketDispatch::Observe(std::uint32_t type,decltype(PacketRegistration::observer) observer) { CheckType(type);entries_[type].observer=std::move(observer);entries_[type].packetObserver={}; }
+// 두 호스트 표현은 같은 원문 슬롯이므로 새 등록이 이전 장치를 완전히 교체한다.
+void RawPacketDispatch::ObservePacket(std::uint32_t type,decltype(PacketRegistration::packetObserver) observer) { CheckType(type);entries_[type].packetObserver=std::move(observer);entries_[type].observer={}; }
+// 실제 this를 사용하는 장치와 기존 방향 전용 장치를 중복 실행하지 않는다.
+void PacketRegistration::NotifyObserver(std::span<std::uint8_t> packet,std::uint32_t sending) const { const auto withPacket=packetObserver;if (withPacket) withPacket(packet,sending);else { const auto directionOnly=observer;if (directionOnly) directionOnly(sending); } } // callback이 같은 등록표를 교체해도 이미 읽은 함수의 수명을 유지한다.
 void RawPacketDispatch::Version(std::uint32_t type,std::uint8_t version,std::uint8_t mismatch) { CheckType(type);entries_[type].version=version;entries_[type].mismatch=mismatch; }
 void RawPacketDispatch::RequireLength(std::uint32_t type,std::uint16_t length) { CheckType(type);entries_[type].length=length; }
 const PacketRegistration& RawPacketDispatch::Registration(std::uint32_t type) const { CheckType(type);return entries_[type]; }

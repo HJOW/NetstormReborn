@@ -19,6 +19,7 @@ public:
     std::uint32_t Track(PacketConnection& connection,std::function<void()> destroy,std::function<void()> release); //현재 실제 노드와 두 실제 수명 장치를 단일 opaque 토큰에 연결한다.
     bool Owns(std::uint32_t token) const; //해제 후 노드를 다시 읽지 않는 순수 존재 조회다.
     PacketConnection& Node(std::uint32_t token) const; //같은 현재 생존 노드만 읽는다.
+    std::array<std::uint8_t,20> Address(std::int32_t id) const; //004e2a50의 현재 슬롯 주소 또는0.0.0.0:0을 읽는다.
     void Register(std::int32_t id,std::uint32_t token); //004e2870의 현재 슬롯/sender를 쓴다.
     std::int32_t Accept(std::uint32_t token); //현재 첫 빈 pending1..31에 같은 노드를 등록하고 개수를 증가한다.
     bool CanAccept() const; //004e02d0의 현재 개수<31 관문이며 슬롯을 새로 지우지 않는다.

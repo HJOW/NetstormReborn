@@ -1,0 +1,30 @@
+{
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "rows": 132,
+  "sources": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_chat_relay.py": "8b31bff8939a7414ca06238960e7dc8afeb8b3ed5f196302e8be9ae34394edb8",
+    "tools/decomp_chat_packet.py": "278e5c5dd4451f0c231808fe62c88e111e12f3413d8c354ca3a8c8dc1c5c6710"
+  },
+  "fixtureSha256": "b7e122e07d9fdcb50b9a2f30200d5741e94cad70a0cf64c1150030cc00fda48a",
+  "actualNative": [
+    "0042dc90",
+    "0040a970/80",
+    "004e3180/31c0/2f40/30b0/31a0",
+    "0046ee50"
+  ],
+  "explicitDevices": [
+    "CRT new/free/strncpy/atol",
+    "004e2a50 주소",
+    "0042f0e0 로컬 수신"
+  ],
+  "gameOrNetworkExecuted": false,
+  "limits": [
+    "원격 Player/다른 채널 송신 분기는 새로 검사하지 않음",
+    "실제 전송/UI 접합은 별도 검사"
+  ]
+}

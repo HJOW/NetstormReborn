@@ -65,6 +65,7 @@ class FortTypeConversionStorage; // 같은 Client의 현재 conversion DWORD와 
 class ClientRandomGlobals; // 실제 Client의 CRT 상태와 Subscriber ID 최초시드 DWORD를 함께 빌린다.
 class ClientSpGlobals; // 공통 시작에서 초기화한 같은 SP/추적 offset을 모든 실제 Session이 직접 빌린다.
 class ClientSubscriberGlobals; // 실제 Client의 my/login 두 Subscriber DWORD만 빌린다.
+struct ClientChatWindowGlobals; // 같은 현재 중계 마스크/무시·뉴스 상태의 Client 수명이다.
 class ClientConnectionActivityGlobals; // Session보다 오래 사는 두 활동 표와 실제 Zone 간극 owner다.
 class ClientPlayerRecords; // 실제 Player/factory와 로그인 카운터를 Client 수명에 보관한다.
 class ClientCoreDataGlobals; // 현재 Core/active/cache를 같은 Client 수명에서 빌린다.
@@ -165,6 +166,8 @@ struct CampaignExistingEditorCheckpointServices {
 };
 // 게임 계산을 대신하지 않고 실제 클라이언트 UI/음향/전송의 선택 경계를 공급한다.
 struct RawCampaignSessionServices {
+    std::shared_ptr<ClientChatWindowGlobals> chatGlobals; // 실제 Client는 같은 Chat 상태를 제공하며 독립 Session만 별도 BSS를 소유한다.
+    std::function<void(std::span<std::uint8_t>)> chatReceive; // 실제 현재 UI 수신이다. 중계 후 선택된 호출에서만 요구한다.
     CampaignInstallMode installMode{CampaignInstallMode::Campaign}; //기존모든호출은캠페인입력을보존한다.
     bool deferExistingEditorFile{}; //명시ExistingEditor만ctor파일설치를checkpoint의실제File.load까지지연한다.기존Campaign/LocalLogin/단계검사는false를유지한다.
     bool adoptPreparedWorld{}; // 실제 State cleanup/prefix가 준비한 같은 Client 전역·표면·Player를 초기화 없이 빌린다. 지연 ExistingEditor 설치에서만 사용한다.
@@ -278,6 +281,7 @@ public:
     std::span<const std::uint8_t> LocalConnectionPackets() const;
     // 커서가 작성한 원본 건설 요청도 같은 실제 로컬 로그인 전송에 보낸다.
     void SendLocalPacket(std::int32_t target,std::span<const std::uint8_t> packet);
+    void SendMutableLocalPacket(std::int32_t target,std::span<std::uint8_t> packet); // 실제 packet observer→같은 로컬 큐를 사용하는 원시 작성기 경계다.
     // 실제443fe0을 같은 시각/Host/표시/음향으로 실행한다. duration0은 원본 기본10초다.
     void StartConstruction(o::Sid parent,float duration);
     // 현재 같은 풀/TYPE/실제 로컬 소유자·모드로 원본 초기 시야를 계산하여 화면에 적용한다.

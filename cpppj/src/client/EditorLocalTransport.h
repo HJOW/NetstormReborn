@@ -14,6 +14,7 @@ public:
     EditorLocalTransport& operator=(const EditorLocalTransport&)=delete; // 생존 연결의 장치 참조를 교체하지 않는다.
     void Open(std::uint32_t port); // 로그인 등록 없이 listener→client9를 만들며 서버 모드·Player 성공 값은 쓰지 않는다.
     bool Send(std::int32_t destination,std::span<const std::uint8_t> packet); // 현재9/accepted -1 끝의 단일 바이트를 반대 큐에 쓰며 동기 수신하지 않는다.
+    bool SendMutable(std::int32_t destination,std::span<std::uint8_t> packet); // 길이를 쓰는 실제 observer에 같은 원시 packet this를 공급한다.
     std::size_t Poll(); // listener 수락→pending 한 패킷→client9 전체 패킷을 같은 등록표로 분배한다.
     void Disconnect(std::int32_t destination); // 현재 끝에 종료를 기록하고 가상 처리 중이면 실제 최외곽 복귀까지 반납을 미룬다.
     void CloseListener(); // 새 accepted를 만들던 listener만 실제close/release로반납한다. 양끝을 대신 종료하지 않는다.
@@ -28,6 +29,7 @@ public:
     std::uint32_t Port() const; // 이 로컬 수명이 사용한 실제 설정 포트다.
     std::size_t QueuedFrames() const; // 아직 폴링되지 않은 두 방향의 단일 프레임 수다.
 private:
+    bool SendPacket(std::int32_t destination,std::span<const std::uint8_t> packet,std::span<std::uint8_t> writable); // 같은 연결/observer/큐 몸체를 기존 방향 전용·실제 this 작성기가 함께 사용한다.
     o::PacketDispatchHooks WrappedHooks(); // 기존 분배의 close/release를 같은 연결 소유권 반납과 이어 준다.
     std::uint32_t Track(o::PacketConnection& connection); //같은 실제 노드의 close/free와 현재 Client 표를 연결한다.
     std::uint32_t Token(const o::PacketConnection& connection) const; //현재 양끝의 숫자 식별자를 순수 조회한다.
