@@ -2,6 +2,8 @@
 
 > **2026-10-29 사용자 요청으로 일시 정지:** “문서 작성 및 커밋 후 목표 일시 정지해 줘.” 0.61의 구현·검증·인계와 로컬 커밋을 마친 뒤 목표를 일시 정지한다. 다음 구현은 사용자가 재개한 뒤 진행한다. 남은 전체 범위와 재개 순서는0.61에 있다.
 
+> **2026-10-30 AGENTS.md 변경 반영(문서만, 사용자 요청):** 후순위 4~6차 재편(0.7의 'AGENTS.md 상위 요구')과 `Netstorm.exe` 실행 파일 이름 요구(0.8 5번·0.9 이름 적용 항목)를 반영했다. 공통 [LEFT_JOBS.md](LEFT_JOBS.md)도 같은 요청으로 함께 갱신했다(아래 0.7의 '수정하지 않는다'에 대한 사용자 지시 예외). 구현·빌드·실행은 하지 않았다.
+
 > **문서 구성(2026-10-28):** [0절 현행 계획](#dotnet-current-plan-20261028)이 이 문서와 [이식 계획 문서](docs/dotnet-cpp-port-plan-20261016.md)의 순서·구조 결정보다 우선한다. 1절은 지금까지의 완료 범위 색인, 2·3절은 계속 유효한 사용자 결정, 4·5절은 검증 명령과 참고 문서다. 더 이상 현행 의미가 없어진 옛 계획·날짜별 기록은 [LEFT_JOBS.dotnetpj.old.md](LEFT_JOBS.dotnetpj.old.md)로 옮겼다(6절). 이 문서는 [LEFT_JOBS.md](LEFT_JOBS.md) 끝의 분할 지침에 따라 dotnetpj의 진행과 인수인계만 담는다.
 
 <a id="dotnet-current-plan-20261028"></a>
@@ -132,14 +134,15 @@
 
 - 34경로 전체, 데모 3개의 반복, 진행 저장과 다음 미션 해제, Retry/Next/Abort를 옮긴다.
 - Edit(편집 메뉴·섬 추가·저장·Test Battle·SaveGoMain, `.english` 등 언어 파일)를 옮긴다. AGENTS.md상 Edit 제외는 webpj에만 해당한다.
-- `options.cfg`를 원본의 시점·형식으로 읽고 쓴다(9-1 C). 단 전체화면 전환 뒤 재실행 오류는 허용하지 않는다. 9-1 D·F를 판정하고 Windows 10/11 실기에서 확인한다.
-- 배포 스크립트를 갱신하고, 압축 해제한 사본에서 실행되는지 확인한다.
+- `options.cfg`를 원본의 시점·형식으로 읽고 쓴다(9-1 C). 단 전체화면 전환 뒤 재실행 오류는 허용하지 않는다. 9-1 D·F를 판정하고 Windows 10/11 실기에서 확인한다. 이 단계의 저장 위치는 원본과 같은 게임 폴더 `d/`이며, `%USERPROFILE%\Saved Games\Netstorm\Saves\`로의 이동은 AGENTS.md 5차 요구로 R8에서 한다. Edit 맵 목록의 원문 50개 상한도 5차까지 원본대로 둔다.
+- 배포 스크립트를 갱신하고(실행 파일 이름은 `Netstorm.exe`, 0.9), 압축 해제한 사본에서 실행되는지 확인한다.
 - **완료 기준:** 34경로 짧은 진입과 핵심 장면이 cpppj와 일치한다. 자연 완주 L5는 보류가 풀린 뒤 진행한다.
 
 **R8 — 요구사항 확장(① 완료 뒤, W20)**
 
 - 한국어: D2Coding 글리프를 8비트 화면에 그리는 방식(단색 또는 팔레트 단계)을 정해 구현한다. 기존 한국어 명칭 규칙은 그대로 따른다.
 - 60/120프레임, Linux(DesktopGL), 그 뒤 TCP/IP 로컬 멀티플레이·Outpost(최후순위)를 진행한다.
+- AGENTS.md 4~6차(2026-10-30 반영): 4차 MCP(해석은 0.8 6번), 5차 설정·캠페인 진행 저장을 `%USERPROFILE%\Saved Games\Netstorm\Saves\`로 옮기고 커스텀 맵을 기존 폴더와 `...\CustomMaps\` 양쪽에서 불러오며 Edit 신규 저장은 후자로 하고 Edit 맵 목록에 스크롤과 개수 무제한을 넣는다, 6차 한국어(위 첫 항목)다. 현재 기존 경로는 자체 `settings.json`(`DisplaySettings`)을 쓰고 새 경로는 R7에서 `options.cfg`로 옮기므로, 5차는 R7의 저장 구조 위에서 위치만 바꾸는 순서로 진행한다.
 
 ### 0.6 검증 단계와 기록 규칙
 
@@ -151,6 +154,7 @@
 ### 0.7 계속 유효한 결정·제약
 
 - **목표 순서:** ① 원본 10.78과 동일한 동작 → ② 요구사항(화면비·60/120프레임·다국어·재실행 오류 방지) → ③ Linux. 이미 들어간 요구사항 기능(한국어 선택·와이드·전체화면)은 버리지 않는다. 새 경로로 옮길 때 cpppj 방식(논리 해상도·호환 전체화면)으로 다시 만들고, 한국어는 R8에서 다시 만든다(0.8 2번).
+- **AGENTS.md 상위 요구(2026-10-30 갱신 반영):** ① `bfccadf5`·`24959e75`: cpppj의 후순위 4~6차(4차 MCP, 5차 설정·캠페인 진행 저장을 `%USERPROFILE%\Saved Games\Netstorm\Saves\`로 이동하고 커스텀 맵을 기존 폴더와 `%USERPROFILE%\Saved Games\Netstorm\CustomMaps\` 양쪽에서 불러오되 Edit 신규 저장은 후자로 하며 Edit 맵 목록에 스크롤을 넣고 출력 개수 제한을 없앤다, 6차 한국어 지원)가 **dotnetpj 후순위 요구에도 포함**된다. 원본과 같은 동작(목표 ①) 뒤에 R8에서 다룬다. ② `ef0c6b91`: cpppj·dotnetpj 모두 **Windows 용 게임 실행 파일 이름이 `Netstorm.exe`**여야 한다. 후순위가 아니라 배포물에 직접 보이는 요구이므로 0.8 5번과 0.9의 이름 적용 항목을 따른다. 현재 기존 게임의 실행 파일은 `NetstormClone.exe`다.
 - **9-1 의도적 차이(2026-10-10 사용자 결정)의 적용:** A(시간)는 R4의 Kernel/Regular, B(입력 큐)는 R1, C(`options.cfg`)는 R7, D(바쁜 대기)·F(창 동작)는 R7에서 판정, E(부분 다시 그리기)는 R1·R5에서 처리한다.
 - **글꼴·명칭·주석:** 영어는 원본 `.chfnt`, 한국어는 D2Coding(3절 2번). D2Coding은 1.3.2를 유지한다(3절 7번). 기존 주석은 대상을 고칠 때 정비한다(3절 8번). AGENTS.md의 한국어 명칭 규칙을 따른다.
 - **cpppj 공통 제약을 준용한다.**
@@ -169,6 +173,8 @@
 2. **한국어(0.7):** 새 경로는 R8 전까지 영어 원본 화면만 제공하고, 한국어 선택은 `--legacy`에서만 쓸 수 있다. 한국어가 계속 필요하면 D2Coding 단색 글리프 출력을 R3으로 앞당긴다.
 3. **cpppj 미복원 경로(결정 6):** 새 경로는 cpppj와 같은 명시 오류·경계를 쓴다. 이전 3절 9번의 "근사 유지" 기본값은 기존 경로에만 남는다.
 4. **프로젝트 배치(결정 3):** `Netstorm.Client`를 새로 만든다. 다른 이름이나 기존 Core 안의 이름공간을 원하면 R1 착수 전에 정한다.
+5. **`Netstorm.exe`를 어느 실행 파일이 갖는가(AGENTS.md ef0c6b91):** dotnetpj에는 실행 파일이 둘이다. 기존 게임 `Netstorm.Game`(`NetstormClone.exe`, 배포 대상)과 새 경로의 개발 호스트 `Netstorm.Client.Host`(`Netstorm.Client.Host.exe`, 아직 배포하지 않음)다. 한 배포 폴더에 `Netstorm.exe`는 하나뿐이다. **기본값:** 지금은 배포되는 `Netstorm.Game`의 `AssemblyName`만 `Netstorm`으로 바꾼다. 결정 5의 기본 실행 교체 때(R3 메뉴·R5 미션) `Netstorm.exe`가 새 경로로 진입하게 하는 방법은 둘이다. A) `Netstorm.Client.Host`가 `Netstorm.exe`를 이어받고 기존 Game은 `--legacy` 전용 이름(예: `NetstormLegacy`)으로 내리거나 새 호스트에 흡수한다. B) `Netstorm.Game`이 계속 `Netstorm.exe`이고 새 경로를 라이브러리로 호출한다. 어느 쪽이든 사용자가 보는 이름은 `Netstorm.exe` 하나다. 원하는 방식이 있으면 R3 착수 전에 알려 달라.
+6. **4차 MCP의 dotnetpj 해석(AGENTS.md bfccadf5):** AGENTS.md는 'cpppj의 4~6차 목표 내용이 dotnetpj 후순위 요구사항에도 포함된다'고만 적었다. 4차 MCP는 dotnetpj 개발을 위해 게임을 분석하는 용도라서, dotnetpj 클론에도 같은 MCP를 붙이라는 뜻인지 cpppj 쪽 MCP를 개발에 활용하라는 뜻인지 문장만으로는 정해지지 않는다. **기본값:** R8 전에는 구현하지 않고 cpppj의 MCP 결과가 나온 뒤 사용자에게 확인한다.
 
 ### 0.9 바로 다음 작업
 
@@ -182,6 +188,7 @@
 - [ ] **R2 — 그리기 원시·팔레트·글꼴 (진행 중: R2d-3 일반 객체 그리기 완료):** `VFXDraw`·`VFXMappedDraw`·`VFXLine`·`VFXTransform`, `RawShapeToBuffer`, `SpriteDraw`, `*ColorMaps`, `Palette*`, `RawColorSort*`, `BitmapFont`, `GifImage`, `RawImage`를 `Netstorm.Client/Display`로 옮긴다. 이때 `Screen.LoadPalette`의 색 표 계산(`BuildPaletteColorTable`·`BuildGumpShadeMaps`)을 연결한다(R2a에서 완료). 묶음마다 fixture 연결·C# 수정·`--ports-reflect`·단위 기록을 남긴다. R2a는 [0.23](#023-단위-기록--r2a-팔레트-3종과-loadpalette-연결-2026-10-28-hjow-athlon)에서, R2b는 [0.24](#024-단위-기록--r2b-vfx-그리기-원시-2026-10-28-hjow-athlon)에서, R2c는 [0.25](#025-단위-기록--r2c-색-표-2026-10-28-hjow-athlon)에서, R2d-1은 [0.26](#026-단위-기록--r2d-1-변환합성이미지시작-2026-10-29-hjow-athlon)에서, R2d-2는 [0.27](#027-단위-기록--r2d-2-판본표시자료캡처-2026-10-29-hjow-athlon)에서 완료했다. R2d-3 본체와 원본 명령열 1,389행 대조는 0.28에서 완료했다. 실자산/세션 연결은 R4·R5에 남는다. `GifImage` 적응·`BitmapFont` 적응은 L1에 UI 인프라(메뉴·Gump·글꼴 저장소)가 필요해 R3 Gump 이식과 함께 다룬다.
 - [ ] **현재 R3k(2026-10-29):** 한 줄/다중 줄 조각·버퍼/그림/실제 글꼴·SHP 픽셀/스크롤 표시는0.38~0.39, 대괄호/다중 줄 파서와 버퍼 수명은0.40, 실제 Slider/자식은0.41, 다중 줄 Widget은0.42에서 연결했다. 메뉴 기본/항목 소유/레이아웃은0.43, 제어부는0.44, 장식 배경은0.45, 실제 메뉴 생성/수명·공용 SID Form은0.46에서 연결했다. 출력은0.47, 실제 사건/캡처·선택/명령·하위 메뉴 입력은0.48에서 연결했다. 문자 편집 버퍼/실제 소유 저장소는0.49, 문자 입력창/Console과 실제 공통 트리·Slider/글꼴/수명 연결은0.50에서 작성했다. 이미지 UI의 SHP/색표/16.16/투명 적중은0.51에서 연결했다. 동적MetaImage의 생성/기하/실제출력은0.52에서 연결했다. 실제MetaImage 목록의 배치/선택/삭제는0.53에서 연결했다. 배경 GIF/실제 원시 버퍼와 자산은0.54에서 연결했다. HTML 본문/조건/그림/배경은0.55에서 연결했다. HTML 링크/QuickHelp 파생 본문은0.56에서 연결했다. HTML 부모/내장 Tell과 실제 스크롤 자식/링크 수명은0.57에서 연결했다. 도움말 열기/요청·이력/입력 제어는0.58에서 연결했다. 전용 도움말 창 생성/배치/본문·그림은0.59에서 연결했다. 일반 HTML 창의 수명/본문/전체 배치는0.60에서 연결했다. HTML 메타/전체 생성기·실제 링크/모달과 하위 UI는0.61에서 연결했다. 사용자 요청으로 이 단위 문서/커밋 뒤 목표를 일시 정지한다. 재개 후 명령/ConfigInterface/목록·메시지/대화창과 실제 메뉴 상위 소유/분배를 조립한다. R3 전체 완료로 세지 않는다.
 - [ ] 이후 R3(D1) → R4(M1) → R5(D2) → R6 → R7 → R8 순서로 진행하고, 단위마다 이 절의 체크와 [0.4](#04-기존-dotnetpj-소스의-재수정-판정) 판정표를 갱신한다.
+- [ ] **`Netstorm.exe` 이름 적용(사용자 AGENTS.md ef0c6b91, 2026-10-30 신규·미착수. 0.8 5번 확인 전에는 기본값으로 진행 가능):** 재개 뒤 다음 배포본을 만들기 전에 처리하는 것을 권장한다. 문서 작업 때 확인한 영향은 다음과 같다. (a) 정의: `dotnetpj/src/Netstorm.Game/Netstorm.Game.csproj` 6행 `<AssemblyName>NetstormClone</AssemblyName>`(WinExe)을 `Netstorm`으로 바꾸면 `Netstorm.exe`·`Netstorm.dll`·`Netstorm.deps.json`·`Netstorm.runtimeconfig.json`이 나온다. 같은 어셈블리 이름이 Linux 산출물(`NetstormClone` → `Netstorm`)에도 적용되나 이 이름 요구는 Windows 용에 대한 것이다. `src/*.cs`에서 어셈블리 이름 문자열을 쓰는 코드는 찾지 못했고 `AssemblyTitle`은 빌드가 자동 생성한다. 다른 어셈블리(`Netstorm.Core.dll` 등)와 파일 이름이 겹치지 않는다. (b) 배포: `dotnetpj/package-dotnetpj.ps1`의 `$ExeName`(80행)·필수 파일 목록(96행의 `NetstormClone.exe/.dll/.deps.json/.runtimeconfig.json`)·머리 설명(7행)·압축에 들어가는 안내문(388~404행의 실행 예시)을 새 이름으로 바꾸고, 새 ZIP 생성과 압축 해제본 실행으로 다시 검증한다. (c) 문서·도구: README.md/README.en.md의 빌드·실행 절(`NetstormClone.exe`·`dist/win-x64/` 폴더 구조·Linux `NetstormClone`), `docs/`의 4개 문서(`cpp-build.md` 93행 비교표 포함), `tools/`의 클론 스모크 스크립트 약 16개(`clone_*_smoke.ps1/py`)가 기존 이름을 참조한다. 과거 기록은 당시 이름으로 보존하고 계속 쓰는 도구만 바꾼다. (d) `Netstorm.Client.Host`는 `Netstorm.Client.Host.exe`(AssemblyName 미지정)라 이름이 달라 지금은 충돌하지 않는다. 기본 실행을 새 경로로 바꾸는 시점의 정리는 0.8 5번을 따른다. (e) 원본 `originals/Netstorm.exe`와 이름이 같다. 배포 폴더에는 원본 실행 파일을 넣지 않고, 프로세스 이름이 같아지므로 도구는 전체 경로로 구분하며 실행 확인 규칙에서도 어떤 실행 파일인지 경로로 밝힌다. (f) 검증: 이름 변경은 동작 변경이 아니므로 Release 빌드·전체 검사(`dotnet test`)와 압축 해제본의 짧은 실행이면 되고 게임 실행은 AGENTS.md의 실행 확인·예외 규칙을 따른다.
 
 ### 0.10 이번 문서 작업 기록
 

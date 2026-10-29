@@ -2,11 +2,15 @@
 
 > **2026-10-30 사용자 요청 일시 중지:** 이번579의 구현·검증·문서·로컬 커밋을 마친 뒤 목표를 일시 중지한다. 다음 구현/검사는 사용자가 재개한 뒤 진행한다. 전체 목표는 미완료이며 재개 지점은0절/3절과579문서다.
 
+> **2026-10-30 AGENTS.md 변경 반영(문서만):** 사용자 요청으로 AGENTS.md 최근 커밋 `bfccadf5`·`24959e75`(후순위 4~6차 재편)와 `ef0c6b91`(**cpppj·dotnetpj의 Windows 실행 파일 이름은 `Netstorm.exe`**)을 이 문서와 [LEFT_JOBS.dotnetpj.md](LEFT_JOBS.dotnetpj.md)에 반영했다. 이름 변경은 아직 구현하지 않았으며 3절 8번의 첫 항목이 착수 지점이다. 코드·빌드·게임 실행·디컴파일은 없다.
+
 > **최신 단위579:** Chat0042da00 대상/본문 해석과0042d1b0 수신자 중복/32슬롯 확장, 실제 Client 소유자의 배열 반납을 복원했다. 원문383행/독립766관측·재관측 차이0·집중33/실패0·등록3454, 최종 검사/게임 빌드 경고·오류0이다. 실제 Enter/서식·송신은 후속이며 이번 새 게임/GUI/MP 실행은 없다.
 
 이 문서는 cpppj와 공통 사항의 현재 상태·다음 작업·유효한 사용자 결정을 담는다. 전체 목표는 미완료이며 사용자 요청대로579 문서/로컬 커밋 뒤 일시 중지한다. 최신579은 Chat 제출 해석/수신자 배열 부품과 실제 소유자 확장·반납까지다. 원문383행/독립766관측·재관측 차이0·고유집중33/실패0·등록3454와 최종 Release 검사/게임 경고·오류0을 확인했다. 제품579 SHA는 `6f813ba2b12c32655296adbb0c3443785e25c82674be1b009d676f875b5d667e`이며 실제 Enter sendChat/577분배의 callback/서식·송신 연결은 아직 남는다. 이번 새 게임 실행은 없고 마지막 실제 메뉴 실행은578의577제품 f203a47e…다. 578에서 현재 originals/d/options.cfg의1-1~2-3 완료9개와2-4까지 활성, 실제 새 설정1-1만 활성/사본 저장·재실행1-2 활성,16단계 창 없는 저장/새 프로세스 읽기를 확인했다. 재개 후 Chat 실제 연결과 남은 UI/Edit·시나리오·수명·호환성 및 전체 커서 조합을 이어간다. 마지막 전체34경로는560제품/561이고 현재579 전체C++/34경로·자연 완주·Win11은 미검증이다. 사용자 요청의575 무입력 신전 파괴 외의 포획/희생/특정 공격/승리·공중3종 전용/신규MP 검사 제한과 후순위MP 무시험 사전 구현은 유지한다. 작업 중 외부 커밋bfccadf5가 AGENTS.md의 후순위4~6차 목표를 갱신했고 후속 작업트리의 CustomMaps 경로 문구도 다시 읽었다. 해당 문서를 에이전트가 수정/스테이징하지 않는다. 상세는0~3절과 단위별 문서를 따른다. 과거0절은 [549까지](LEFT_JOBS.old.md#archive-20261029-section0-through-549)·[504까지](LEFT_JOBS.old.md#archive-20261027-through-504), 지난3절은 [561까지](LEFT_JOBS.old.md#archive-20261029-section3-through-561)를 본다. dotnetpj는 [별도 인계](LEFT_JOBS.dotnetpj.md), webpj는 [별도 인계](LEFT_JOBS.webpj.md)를 따른다.
 
 ## 0. 재개 전 확인 사항
+
+- **2026-10-30 AGENTS.md 변경 반영(사용자 요청, 문서만).** 이 작업은 인수인계 문서 두 개만 고쳤고 코드·CMake·스크립트·빌드·게임 실행·디컴파일·테스트는 하지 않았다(호스트 HJOW-X3D. 마지막 전체 정밀 디컴파일은 HJOW-Athlon/2026-10-23 그대로이며 디컴파일 산출물을 읽지 않았다). 읽은 AGENTS.md 변경은 두 가지다. ① `bfccadf5`·`24959e75`: cpppj의 3차 뒤 후속을 **4~6차**로 나눴다. 4차 MCP(dotnetpj 개발을 위한 게임 분석용), 5차 설정·캠페인 진행 저장을 `%USERPROFILE%\Saved Games\Netstorm\Saves\`로 이동하고 커스텀 맵을 기존 폴더와 `%USERPROFILE%\Saved Games\Netstorm\CustomMaps\` 양쪽에서 불러오되 Edit의 신규 저장은 후자로 하며 Edit 맵 목록에 스크롤을 넣고 출력 개수 제한을 없앤다, 6차 한국어 지원이다. 이전에는 4차가 '한국어+MCP', 5차가 '추가 요구사항'이었다. 이 4~6차는 dotnetpj의 후순위 요구에도 포함된다. ② `ef0c6b91`: **cpppj·dotnetpj 모두 Windows 용 게임 실행 파일이 `Netstorm.exe`로 생성돼야 한다.** 현재 cpppj는 `NetstormCpp.exe`, dotnetpj 기존 게임은 `NetstormClone.exe`다. 이는 후순위 단계에 묶이지 않은 산출물 요구이며 영향과 순서는 3절 8번의 첫 항목에 적었다. 현재 구현은 설정·진행 저장을 원본과 같은 게임 자료 폴더(`d/options.cfg`)에 두고 Edit 목록의 원문 50개 상한을 유지하므로 5차 요구는 해당 단계 전까지 구현 대상이 아니다. 일시 중지 상태는 그대로이며 재개는 사용자가 요청한다.
 
 - **최신579 / Chat 제출 해석·실제 수신자 배열.** 같은 HJOW-Athlon/마지막 전체 디컴파일 HJOW-Athlon(2026-10-23)이다. 0042da00/0042d1b0/0042d120과 실제 Identity초기화/Regexp/스택 탐색의383행(제출369/추가14), 독립766관측과 재관측 차이0을 확인했다. C++ 전체 manager/이전·새 배열/Identity/4097BYTE 인접 지역/외부 순서가 일치했고 실제 소유자의100수신자 capacity32→64→96→128·이전 토큰 반납·재제출/옛manager 보존을 검사했다. 고유집중33/선행 포함36실행/실패0·등록3454, 검사2/게임1빌드 성공·최종 경고/오류0이다. 첫 fill의 BYTE 변환 경고1건과 빌드 완료 전의 프로그램 미실행 호출 오류는 구별해 기록했다. 게임SHA `6f813ba2b12c32655296adbb0c3443785e25c82674be1b009d676f875b5d667e`이며 새 게임/GUI/MP 실행은 없다. 시작 보호2591 중 AGENTS.md는 외부 사용자 커밋bfccadf5/후속 작업트리 편집을 다시 읽었고, 나머지 원본/CD/정밀 자료/기존fixture2590은 변경0이다. 기존fixture730 불변·현재731이다. [579 문서](docs/exe/cpp-chat-submit-20261030.md)·[집계](cpppj/chat-submit-runtime-20261030.json), 원시 `extracted/cpp-chat-submit-579-20261030/`를 따른다. **실제 Console sendChat/577분배·등록 callback/서식·송신은 미연결이다. 사용자 요청으로 이번 단위 문서/로컬 커밋 뒤 일시 중지하며 재개 요청 전 진행하지 않는다.**
 
@@ -56,7 +60,8 @@
 - Edit 메뉴의 커스텀 맵/시나리오, 메인 메뉴의 비멀티 항목, 좌측 덱·미니맵·다리 단축키 QWASZX·ESC 메뉴를 구현한다.
 - Windows 10/11 호환성·전체화면 DirectDraw 오류와 종료 후 재실행 오류 해결도 현재 목표다. 원본과 다른 호환성 처리와 이유는 한국어 코드 주석에 명시한다. 전체화면·4:3/16:9/16:10·가장자리 스크롤 요구도 유지한다.
 - 위 싱글플레이·UI·호환성 작업 뒤 **TCP/IP 로컬 멀티플레이·Outpust를 사전 구현**한다. 사용자 결정에 따라 이 단계는 기존 프로그램 디컴파일만 참고하고 신규 단위 검사·게임 실행·실제 통신 테스트 없이 작성한다. 사전 구현과 검증 완료를 구별한다.
-- **상위 프로젝트의 후순위 요구(사용자 AGENTS.md bfccadf5 갱신):** 3차MP 뒤4차MCP,5차 설정/진행상황을 `%USERPROFILE%\Saved Games\Netstorm\Saves\`로 이동한다. 커스텀 맵은 기존 경로와 `%USERPROFILE%\Saved Games\Netstorm\CustomMaps\` 양쪽에서 읽고 신규 Edit 저장은 후자에 둔다. Edit 목록은 스크롤/출력 개수 무제한으로 확장한다.6차 한국어 지원이며 dotnetpj에도 후순위 요구가 이어진다. 이번 일시 중지 전 구현 대상은 아니다.
+- **상위 프로젝트의 후순위 요구(사용자 AGENTS.md bfccadf5 갱신):** 3차MP 뒤4차MCP,5차 설정/진행상황을 `%USERPROFILE%\Saved Games\Netstorm\Saves\`로 이동한다. 커스텀 맵은 기존 경로와 `%USERPROFILE%\Saved Games\Netstorm\CustomMaps\` 양쪽에서 읽고 신규 Edit 저장은 후자에 둔다. Edit 목록은 스크롤/출력 개수 무제한으로 확장한다.6차 한국어 지원이며 dotnetpj에도 후순위 요구가 이어진다. 이번 일시 중지 전 구현 대상은 아니다. 5차 전까지 저장 위치는 게임 자료 폴더이고 Edit 목록의 원문 50개 상한은 유지한다. `24959e75`는 CustomMaps 경로 문구만 정리했고 요구 의미는 `bfccadf5`와 같다.
+- **Windows 실행 파일 이름(사용자 AGENTS.md ef0c6b91 신규):** cpppj·dotnetpj 모두 `Netstorm.exe`로 생성해야 한다. 후순위가 아니라 배포물에 직접 보이는 요구이므로 배포 압축파일 생성 스크립트에도 같은 이름이 들어가야 한다. 영향과 착수 순서는 3절 8번 첫 항목을 따른다. 원본 `originals/Netstorm.exe`와 이름이 같지만 경로가 다르며 원본 파일은 수정하지 않는다.
 - 개발 작업 단위마다 인수인계를 갱신하고 커밋한다. 커밋에 실패해도 작업은 이어 간다. 원격 push는 하지 않는다.
 
 대상은 원본 `d/offical1~5.english`의 MissionBegin 순서와 `tell.DEMOVILLE`의 데모 순서다.
@@ -250,7 +255,7 @@ cmake --build cpppj/build --config Release --parallel 4
 
 ### 2. Edit 메뉴·커스텀 맵/시나리오
 
-- [x] **492~494 편집 기본 흐름:** 기존 맵 설치·전체 저장/Save as·새 이름/목록·재시작 재진입, 신규 Fort/자동 섬 창·섬 추가와 Test Battle→짧은 전투→Return to Editing을 연결/관측했다. 원문 목록의 첫50개 상한은 유지한다.
+- [x] **492~494 편집 기본 흐름:** 기존 맵 설치·전체 저장/Save as·새 이름/목록·재시작 재진입, 신규 Fort/자동 섬 창·섬 추가와 Test Battle→짧은 전투→Return to Editing을 연결/관측했다. 원문 목록의 첫50개 상한은 유지한다. AGENTS.md 5차는 이 목록에 스크롤을 넣고 개수 제한을 없애라고 요구하므로, 5차 착수 때 원본과 달라지는 이유를 한국어 주석에 남기고 바꾼다.
 - [x] **516~534 편집 오브젝트 일부:** 다리 품질·비석/스펠 전환·Set Owner·시험한 공격/방어/생산·지원 건물의 편집 배치/저장·일반 전환을 확인했다. 전체 도구와 상태 완료는 아니다.
 - [ ] 남은 지형·오브젝트·소유자 도구와 LeaveEditMode/State1·비동기 State7의 전체 분기를 점검한다.
 - [ ] 섬 배치 직후와 재로드의 Graph 차이를 원본 전체 월드와 대조하고 전체 작업본 저장/재파싱·이름/목록·미션 전환 수명을 확인한다.
@@ -318,6 +323,8 @@ cmake --build cpppj/build --config Release --parallel 4
 
 ### 8. 배포·문서·후속 단계
 
+- [ ] **`Netstorm.exe` 이름 적용(사용자 AGENTS.md ef0c6b91, 신규·미착수):** cpppj의 Windows 실행 파일을 `NetstormCpp.exe`에서 `Netstorm.exe`로 생성한다. 재개 뒤 다음 배포본을 만들기 전에 처리하는 것을 권장한다. 문서 작업 때 확인한 영향은 다음과 같다. (a) 정의: `cpppj/src/CMakeLists.txt` 61~64행의 `add_executable(NetstormCpp app/main.cpp)`·`app/NetstormCpp.manifest` 연결·`netstorm_apply_compiler_options`·`target_link_libraries`, `cpppj/CMakeLists.txt` 6행의 project 이름. 권장은 CMake 대상 이름 `NetstormCpp`를 유지하고 `OUTPUT_NAME Netstorm`만 지정하는 것이다(`--target NetstormCpp` 호출과 기존 대상 참조가 그대로 유지된다). 단 정적 라이브러리 `netstorm`(`build/lib/Release/netstorm.lib`)과 대소문자를 구분하지 않는 Windows 파일명이 겹치지 않는지, PDB·중간 폴더 이름이 충돌하지 않는지 새 빌드로 확인한다. (b) 문자열: `src/app/main.cpp` 47행의 도움말 첫 줄 `NetstormCpp (menu and mission entry; ...)`은 프로그램 이름 표시이므로 함께 바꿀지 정한다(바꾸면 `docs/cpp-build.md` 179행의 예시 출력도 고친다). 테스트의 임시 폴더·창 이름(`NetstormCppClientAudio-` 등)은 실행 파일 이름이 아니므로 바꿀 필요가 없다. (c) 배포: `cpppj/package-cpppj.ps1`의 `$ExeName`·`$DefaultExePath`·`--target`·생성되는 실행 배치 파일(`"NetstormCpp.exe" --run game`)·안내문·BUILD_INFO 표기. 압축 안에는 원본 `Netstorm.exe`를 넣지 않고 게임 자료만 복사하므로 한 폴더에서 같은 이름이 겹치지 않는지만 확인하고, 새 ZIP 생성과 압축 해제본 실행으로 다시 검증한다. (d) 문서·도구: `docs/cpp-build.md`(14곳)와 README.md/README.en.md의 실행 예시, `tools/` 아래 약 96개 스크립트가 `cpppj\build\bin\Release\NetstormCpp.exe` 경로를 직접 쓴다(`extracted/` 드라이버는 확인하지 않았다). 과거 보고서·원시 기록은 당시 사실이므로 고쳐 쓰지 않고, 계속 쓰는 도구만 새 이름으로 바꾸거나 한 곳의 상수로 모은다. (e) 원본과의 구별: analyzeManager는 `originals/Netstorm.exe`와 세션 사본 `<세션>/game/Netstorm.exe`를 경로로 찾으므로 클론과 직접 충돌하지 않는다. `tools`·`analyzeManager`·배포 스크립트에서 프로세스 이름(`taskkill /IM`·`Get-Process` 등)으로 게임을 찾거나 종료하는 코드는 찾지 못했다. 그러나 이름이 같아지면 프로세스 이름만으로 원본과 클론을 구분할 수 없으므로 새 도구는 전체 경로로 구분하고, AGENTS.md의 '원본 게임 실행 확인' 규칙을 적용할 때도 어떤 실행 파일인지 경로로 밝힌다. (f) 검증: 이름 변경은 동작 변경이 아니므로 증분 빌드·`--help`·메인 메뉴 진입 정도의 짧은 실행과 배포 ZIP 확인이면 되며 34경로·전체 C++를 반복하지 않는다. Linux 실행 파일 이름은 요구 대상이 아니다(cpppj는 Windows 전용).
+- [ ] **4~6차 후순위(사용자 AGENTS.md bfccadf5·24959e75):** 3차 멀티플레이 뒤에 4차 MCP(dotnetpj 개발을 위한 게임 분석), 5차 설정·진행 저장 위치 이동과 커스텀 맵 경로·Edit 목록 변경, 6차 한국어 지원을 진행한다. 5차 착수 전 확인점은 다음과 같다. 현재 저장 파일은 `<게임 자료>/d/options.cfg`와 `fullscreenStateFile.dat`이고(578), 배포 스크립트는 이 파일들을 압축에 넣지 않는다. Edit 목록은 원문 50개 상한이며 `originals/d`의 TEST01/TEST02 같은 사용자 맵은 읽기 참조로만 쓴다. 새 위치(`%USERPROFILE%\Saved Games\Netstorm\Saves\`·`...\CustomMaps\`)로 옮길 때 기존 위치의 `options.cfg`를 읽어 이어받을지, 두 위치의 우선순위를 어떻게 둘지는 착수 때 정하고 원본과 달라지는 이유를 한국어 주석에 남긴다. 저장 위치 이동은 '전체화면 전환 후 재실행 오류가 없어야 한다'는 요구와 함께 시험한다. 4~6차는 현재 일시 중지 전 구현 대상이 아니며 싱글플레이·UI·호환성·멀티플레이 사전 구현 뒤의 순서를 유지한다.
 - [x] **562 기본 빌드→압축:** 현재 PC의 Windows PowerShell5.1에서 NoBuild 없이 실제 NetstormCpp 증분 빌드/ZIP 생성과 BUILD_INFO의 실행파일 시각/SHA를 대조했다. 최종1365항목/게임 자료1356파일/VC DLL3개·입력 취소/경로/생략4검사 통과다. [문서](docs/exe/cpp-package-runtime-20261029.md).
 - [x] **563 배포본 시작/런처:** 새 압축 해제본 첫 실행·환영창의 실제 메인 선택·저장된 전체화면 재실행·기본 창 런처를 같은563제품에서 확인했다. 최초562 실패는 보존하며 전체 게임/Win11 배포 검증은 남는다.
 - [ ] 2.4절의 미해결 이슈와 제거된 임시 Game 버튼을 전제한 옛 스모크 입력을 처리한다.
@@ -325,7 +332,7 @@ cmake --build cpppj/build --config Release --parallel 4
 - [ ] Credits의 원본 픽셀/음향 전체 동일성을 대조한다. 566은 no-audio/일부현재캡처이며 원본실행비교는 아니다.
 - [x] **564 README 갱신:** 국·영 README와 cpppj/README 안내를563의 현재 제품·집중/배포 및560제품/561의34경로 근거로 갱신했다. DN/WB의 별도 상태와 C# 안내·cpppj 과거 기록은 보존했다. 제품이 바뀌면 해당 근거로 다시 갱신한다.
 - [ ] 싱글플레이/UI/호환성 뒤 TCP/IP 로컬 멀티플레이·Outpust/전용 분기를 디컴파일 근거로만 사전 구현한다. 신규 단위/게임/실제 통신 검사는 하지 않고 동작·동일성·안정성 미검증을 기록한다. 공식 서버 복구는 가정하지 않는다. 메타맵 번개00479650의 실제 기록 owner/getter도 이 후순위에 포함한다.
-- 4차 이후는 한국어·MCP·60/120프레임·CD10.72 전체 복원이다. CD의 Windows10 구동 불가 해결책도 해당 작업 때 문서화한다.
+- 4차 이후는 4차 MCP, 5차 저장 위치·커스텀 맵 경로·Edit 목록 변경, 6차 한국어(위 두 항목)이고, 60/120프레임·CD10.72 전체 복원은 별도 후순위다. CD의 Windows10 구동 불가 해결책도 해당 작업 때 문서화한다.
 
 ## 4. 운영 규칙과 유효한 사용자 결정
 
@@ -335,6 +342,7 @@ cmake --build cpppj/build --config Release --parallel 4
 - **실제 실행(2026-10-27):** 메뉴/스테이지 진입·수초 진행의 짧은 검증은 가능하다. 스테이지 클리어/사용자 개입 검증은 뒤로 미룬다. 실행 전 확인 여부는 AGENTS.md의 해당 PC 예외·직접 요청 규칙을 따른다.
 - **Test Battle 언어파일(2026-10-27):** 대응 `.english` 부재 시 종료는 원본 동작이며 개선은 보류다. 임의 원본/기본 시나리오 fallback은 추가하지 않는다.
 - **테스트 조작:** `--test-bridge-patterns` 등은 원본 분석 결과와 구별해 주석/기록에 표시하고 기본 게임·적AI·저장 프로필에 섞지 않는다. 로컬AI/TEST02 방침은3절6번을 따른다.
+- **실행 파일 이름(2026-10-30 사용자 AGENTS.md):** Windows 용 게임 실행 파일은 `Netstorm.exe`다. 3절 8번의 이름 적용 단위를 마친 뒤 새로 만드는 빌드·배포·도구·문서는 이 이름을 쓰고, 이전 단위의 보고서·원시 로그에 남은 `NetstormCpp.exe`는 당시 이름으로 보존한다. 원본 `Netstorm.exe`와 구별할 때는 프로세스 이름이 아니라 전체 경로를 쓴다.
 - **보호:** AGENTS.md와 `originals/`·`originalCD/` 기존 파일은 수정/삭제하지 않는다. AGENTS.md가 허용한 `options.cfg`·`fullScreenStateFile.dat`는 예외다. 게임 실행 전후 원본 전체 해시를 비교하고 허용 설정을 복원한다.
 - **빌드:** HJOW-Athlon은 Visual Studio18(2026)/MSBuild18.x를 쓴다. 최근 명령은 `cmake --build cpppj/build --config Release --parallel 4 -- /p:UseMultiToolTask=true /p:MultiProcMaxCount=4 /p:EnforceProcessCountAcrossBuilds=true`이며 앞선 컴파일러/CMake 자식이 모두 끝난 뒤 시작한다([빌드 안내](docs/cpp-build.md)).
 - **UTF-8:** 새 문서/코드와 한국어 주석은 UTF-8이다. PowerShell5.1의 Python stdin은 `$env:PYTHONUTF8=1`만으로 부족하므로 한국어를 넘길 때 `$OutputEncoding = [System.Text.UTF8Encoding]::new($false)`도 설정하거나 UTF-8 파일을 사용한다. 원시 로그/Native fixture는 인코딩 정리로 덮어쓰지 않는다.
