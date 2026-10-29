@@ -85,6 +85,7 @@
 #include "client/EditorIslandDialog.h" // 실제 Add Island 명령의 release와 전용 창 생성 경계를 분리한다.
 #include "client/ExistingEditorAfterCheckpoint.h"
 #include "client/NativeMainMenuState.h" //State3의 원문 부모와 호스트 표시 확정은 다른 시점이다.
+#include "client/NativeIntroState.h" // 첫 설치의 영상 부재도 원문 39→40→41→3 순서를 사용한다.
 #include "client/EditorSaveGoMain.h" //Yes/No의 실제 저장과 next3 예약을 일반 입력 뒤에 실행한다.
 #include "client/EditorTestBattle.h" //c2의 snapshot/Guide 교체와 편집 복귀 순서를 실제 일반 입력에 연결한다.
 #include "client/SaveFortNameDialog.h" //실제 TextEntry/두 버튼/전체 Fort 이름 부모를 사용하는 모달이다.

@@ -80,7 +80,7 @@ bool RawLocalMissionState::Step() {
     case 10: if (!Need(hooks_.connectionOpen,"현재서버연결조회미연결")(9)) { Need(hooks_.progress,"실제연결실패창미연결")(LocalMissionProgress::ServerLost,0);globals_.sourceType=0;state_.next[0]=3; } else state_.next[0]=10;break;
     case 13: Connected();break;
     case 4: case 12: case 14: break; //004b874c의State4도004b86bd 공통확정으로 직행하며 다음Poll에서만 소비한다.
-    case 1: case 2: case 3: return Need(hooks_.parentState,"큰메뉴부모상태미연결")(state_.current[0])==LocalMissionParentResult::ReturnWithoutCommit;
+    case 1: case 2: case 3: case 39: case 40: case 41: return Need(hooks_.parentState,"큰메뉴부모상태미연결")(state_.current[0])==LocalMissionParentResult::ReturnWithoutCommit;
     default: Need(hooks_.invalidState,"미복원상태진단미연결")(state_.current[0]);break;
     }
     return false;

@@ -104,7 +104,8 @@ private:
     void EnsureHudFactories(); //현재 Client 장기 전역·물리로 네 공장만 준비하며 새 월드/Session을 생성하지 않는다.
     void RetireWorldForState(); //실제 State 자식 정리 뒤 같은 Runtime의 호스트 참조만 반납한다. 게임 전역·기한·정지를 다시 쓰지 않는다.
     void InstallHud(); // 현재 실제 월드와 같은 공통 전체 Uber/자식 공장·도킹을 연결한다.
-    void PollEditorState(); //메인 Edit의 next1과 SaveGoMain의 next3 및 뒤따르는 next4를 같은 Native State 분배기로 소비한다.
+    void PollEditorState(); //메인/Edit/인트로39~41과 후속4를 같은 Native State 분배기로 소비한다.
+    o::LocalMissionParentResult InstallIntroNativeState(std::uint32_t selected); // 실제 Client 준비/영상 경계와 Native39~41 부모를 연결한다.
     void OpenSaveFortNameDialog(std::uint32_t fortMode); //현재 Editor의 실제 파일/헤더/이름 부모를 원문 fortMode 인자의 TextEntry 모달에 연결한다.
     void OpenSendMoneyDialog(std::uint32_t target); // 원본 숫자 창의 대상·현재 입력·확정이 같은 월드를 빌린다.
     o::LocalMissionParentResult InstallExistingEditorState(std::uint32_t selected); //State1의 정리/prefix/현재 파일/UI tail을 실행하며 공통 확정은 분배기에 맡긴다.

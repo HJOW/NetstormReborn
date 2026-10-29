@@ -142,19 +142,42 @@ o::LocalMissionParentResult UberGump::InstallMainMenuNativeState(std::uint32_t s
     };
     return netstorm::client::InstallNativeMainMenuState(std::move(globals),hooks);
 }
-//미션 Login의 다른 요청은 그대로 두며 Edit1/메인3과 그 다음4만 같은 분배기로 처리한다.
+// 원문의 인트로 준비는 listener/Chunk/옵션 초기화를 하는 State3 prefix와 다른 순서다.
+o::LocalMissionParentResult UberGump::InstallIntroNativeState(std::uint32_t selected) {
+    if (selected<39 || selected>41 || !editor_) throw std::logic_error("실제 인트로 State39/40/41 장기 부모 계약");
+    auto& game=*client_.GameplayGlobals();auto& surface=*client_.SurfaceStorage();NativeIntroStateHooks hooks;
+    hooks.cleanup=[this] { CleanupNativeStateWorld(0); };
+    hooks.hideChatInput=[this] { const auto token=client_.ChatWindowGlobals()->window.current;if (token) rawButtons_->Menus()->ChatGeometryBackend()->SetInputVisible(token,0); };
+    hooks.hideChat=[this] { if (commandGump_) static_cast<void>(rawButtons_->BubbleGump(commandGump_,0x02000088U,0,0)); };
+    hooks.core=[this,&game] { game.player.fortMode=true;client_.CoreDataGlobals()->Select(game.player,0,1,1); };
+    hooks.renderer=[this] { client_.InitializeNativeRendererView(); };hooks.hud=[this] { ApplyHudModeForState(1); };
+    hooks.moviePath=[this] { return client_.Configuration().PathSpec("introMovie"); };hooks.markIntro=[this] { client_.Configuration().Set("intro","1"); };
+    hooks.openMovie=[this](auto name) {
+        // 원문 SmackOpen의 파일 부재 실패는 MovieGump를 만들지 않는다. 존재하는 SMK의 디코더/재생은 아직 명시 미복원이며 성공으로 위장하지 않는다.
+        const std::filesystem::path path(std::u8string(reinterpret_cast<const char8_t*>(name.data()),name.size()));const auto actual=path.is_absolute() ? path : client_.GameDirectory()/path; // Windows10/11의 한글 경로를 위해 원본 ANSI 이름 대신 UTF-8로 변환한다.
+        if (std::filesystem::exists(actual)) throw std::logic_error("존재하는 SMK 영상의 실제 MovieGump/디코더 미복원");
+        std::clog<<"인트로 영상 열기 실패: "<<name<<'\n';
+    };
+    hooks.movieActive=[] { return false; }; // 실제 재생 객체는 파일 부재 경로에서 생성되지 않는다. 존재하는 파일은 위에서 명시 거부한다.
+    hooks.request=[this](auto next) { editor_->state->Request(next); };
+    return netstorm::client::InstallNativeIntroState({client_.LocalStateGlobals()->State(),surface.ownerMode.fort,game.Server(),game.Boss(),client_.FortGlobals()->PendingBytes()},hooks);
+}
+// 미션 Login은 기존 분배기에 남기고 Edit1/메인3/인트로39~41과 다음4를 같은 분배기로 처리한다.
 void UberGump::PollEditorState() {
     auto& local=*client_.LocalStateGlobals();const auto next=local.State().next[0];
-    if (next!=1 && next!=3 && !(editor_ && next==4)) return;
+    if (next!=1 && next!=3 && !(editor_ && (next==4 || (next>=39 && next<=41)))) return;
     if (!editor_) editor_=std::make_unique<EditorRuntime>(client_);
     if (!editor_->state) { // 새 이름 창에서 먼저 확보한 파일 장치가 있어도 실제 State 분배기는 별도로 처음 한 번 구성한다.
         auto& game=*client_.GameplayGlobals();auto& surface=*client_.SurfaceStorage();
-        o::LocalMissionStateHooks hooks;hooks.logState=[](auto value) { std::clog<<"State "<<value<<'\n'; };hooks.parentState=[this](auto selected) { return selected==3 ? InstallMainMenuNativeState(selected) : InstallExistingEditorState(selected); };
+        o::LocalMissionStateHooks hooks;hooks.logState=[](auto value) { std::clog<<"State "<<value<<'\n'; };hooks.parentState=[this](auto selected) { if (selected>=39 && selected<=41) return InstallIntroNativeState(selected);return selected==3 ? InstallMainMenuNativeState(selected) : InstallExistingEditorState(selected); };
         hooks.invalidState=[](auto state) { throw std::logic_error("Editor/메인 분배기의 선택된 Native State 미연결:"+std::to_string(state)); };
         editor_->state=std::make_unique<o::RawLocalMissionState>(client_.Assets().Edition(),local.State(),o::LocalMissionStateGlobals{game.Server(),game.Boss(),surface.ownerMode.battle,game.world.missionPost,local.SavedGame(),surface.links.mission,local.Simulconnect(),surface.ownerMode.challenge,game.player,local.ZonePending(),local.GameTicks(),local.SourceType(),local.RandomSeed(),local.Blocks()[2][33],local.MetaRefresh(),local.MetaRebuild(),reinterpret_cast<std::uint8_t&>(htmlGlobals_.background[0]),local.BattleByte(),local.ConnectEnd(),local.ActivityEnd(),client_.Time().game,client_.Time().wall},std::move(hooks));
     }
     if (next==1 || next==3) editor_->committed=false;editor_->state->Poll();
-    if (next==3) { PublishNativeMainMenuState();return; } //같은 실제 공통 ret 뒤이며 이미 반납한 Session.Commit이나 입력 공장을 호출하지 않는다.
+    if (next==3 || (next>=39 && next<=41)) {
+        if (local.State().phase[0]==3 && local.State().next[0]==4) PublishNativeMainMenuState();
+        return; // 영상이 살아 있는 State40은 다음 Poll까지 유지하며 메인 메뉴를 먼저 공개하지 않는다.
+    }
     if (next==1 && !editor_->committed) {
         world_->Session().CommitExistingEditorInstall(local); //공통 확정 뒤 실제 loaded 공개가 끝나야 호스트 사용자 입력 몸체를 만들 수 있다.
         BindCampaignUserInputServices(client_,*world_,editor_->selectCursor);userInput_=std::make_unique<UserInput>(client_,*world_);

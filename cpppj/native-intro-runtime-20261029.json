@@ -1,0 +1,72 @@
+{
+  "packageEntries": 1365,
+  "gameFiles": 1356,
+  "gameSha256": "3f1c871a68ec5f6e7e5a4ef3721c7ae531fb3ff526d2953320d92de9329bc185",
+  "zipSha256": "0d779cc77b6f319c70af8e5924871e11eb595b73def9b066702220ada204a67d",
+  "buildInfo": "NetStorm Reborn - cpppj distribution\r\nCreated      : 2026-10-29 11:09:38\r\nSource commit: c2acaa0c (cpppj 에 커밋되지 않은 변경 있음)\r\nExecutable   : NetstormCpp.exe  8,891,904 bytes  built 2026-10-29 11:09:04\r\nExecutable SHA256: 3F1C871A68EC5F6E7E5A4EF3721C7AE531FB3FF526D2953320D92DE9329BC185\r\nGame data    : original 10.78 files from \"originals\"  (1356 files, 153,419,626 bytes, 5 excluded)\r\nRuntime      : msvcp140.dll  14.51.36247.0  (Visual Studio 14.51.36231)\r\nRuntime      : vcruntime140.dll  14.51.36247.0  (Visual Studio 14.51.36231)\r\nRuntime      : vcruntime140_1.dll  14.51.36247.0  (Visual Studio 14.51.36231)\r\n",
+  "runs": [
+    {
+      "label": "fresh",
+      "returncode": 0,
+      "configurationCreated": true,
+      "mainMenuReached": true,
+      "fullscreen": true,
+      "intro": "1"
+    },
+    {
+      "label": "saved-restart",
+      "returncode": 0,
+      "configurationCreated": true,
+      "mainMenuReached": true,
+      "fullscreen": true,
+      "intro": "1"
+    },
+    {
+      "label": "window-launcher",
+      "returncode": 0,
+      "configurationCreated": true,
+      "mainMenuReached": true,
+      "fullscreen": false,
+      "intro": "1"
+    }
+  ],
+  "unit": 563,
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon / 2026-10-23",
+  "cpuObservations": 17,
+  "cpuDifferences": 0,
+  "focusedTests": 15,
+  "failedChecks": 0,
+  "registeredTests": 3427,
+  "protectedFiles": 2540,
+  "protectedDifferences": [],
+  "existingFixtures": 720,
+  "earlierRuns": [
+    {
+      "label": "fresh",
+      "returncode": 0,
+      "configurationCreated": true
+    },
+    {
+      "label": "saved-restart",
+      "returncode": 0,
+      "configurationCreated": true
+    },
+    {
+      "label": "window-launcher",
+      "returncode": 0,
+      "configurationCreated": true
+    }
+  ],
+  "gameBuildExit": 0,
+  "testBuildExit": 0,
+  "finalBuildWarnings": 0,
+  "all34CurrentBuildExecuted": false,
+  "fullCppSuiteExecuted": false,
+  "naturalCompletionExecuted": false,
+  "multiplayerExecuted": false,
+  "win11Executed": false,
+  "cdMoviePlaybackImplemented": false,
+  "userMovieClarification": "인트로 영상은 CD에만 있었고 CD를 드라이브에 넣은 경우에만 재생됐다. 10.78 배포판에는 영상 자료가 없다.",
+  "rawDirectory": "extracted/cpp-native-intro-563-20261029"
+}

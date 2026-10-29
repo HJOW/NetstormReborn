@@ -1,0 +1,13 @@
+{
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon / 2026-10-23",
+  "observations": 17,
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_local_mission_transport.py": "db71da65079aa9a985a3a833edd224f089ba9a20137d92042551cb346937eb78",
+    "tools/decomp_native_intro_state.py": "badc9509cbd16457292b10f5114de7fdd84e03af8d36494daadf89bf235186ea"
+  },
+  "fixtureSha256": "8a98e71bcc943ee09966340ebf261a1fd97e381d60e9aed18fb9d19ee5f97698",
+  "scope": "State39~41/실제 요청/다섯144BYTE 공통ret. 큰 cleanup/Chat/Core/Renderer/HUD/Config/영상/pending/Guide는 명시 장치. State3 진입에서 중단. 실제 게임/OS/네트워크 실행 없음."
+}
