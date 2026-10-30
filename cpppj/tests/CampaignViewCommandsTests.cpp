@@ -1,6 +1,9 @@
 // 실제 GameWorld/Session의 Home·명시 SID/owner·Carrier Kernel 예약과 Reload 현재 목록을 검증한다.
 #include "DudeSpawnSupport.h"
 #include "client/GameWorld.h"
+#include "client/ClientLocalStateGlobals.h"
+#include "client/RawCameraCommit.h"
+#include <cstring>
 #include "o/RawFortObjectLoad.h"
 #include <stdexcept>
 
@@ -58,4 +61,21 @@ TEST_CASE(CampaignViewCommands_ReloadSecondUsesActualTempleRegistry) {
     const auto count=lists.temples.count,first=lists.temples.Items()[0],factoryCount=lists.factories.count;const auto factoryFirst=lists.factories.entries[0];lists.factories.count=0xffffffffU;lists.factories.entries[0]=0xfedcba98;
     CHECK(session.GameMenuReloadCount(true)==std::bit_cast<std::int32_t>(count) && session.GameMenuReloadSid(true,0)==first);lists.factories.count=factoryCount;lists.factories.entries[0]=factoryFirst;
     lists.temples.entries[0]=0x89abcdef;CHECK(session.GameMenuReloadSid(true,0)==0x89abcdef);lists.temples.entries[0]=first;
+}
+
+// 실제 World/Session의 목표 요청은 같은 Client 전역만 쓰고 표시/음향은 실제497960 뒤에 바뀐다.
+TEST_CASE(CampaignViewCommands_CenterRequestDefersCurrentViewsUntilNativeCommit) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);CameraCommandServices devices;auto services=devices.Make();
+    const auto gameplay=std::make_shared<ClientGameplayGlobals>();const auto local=std::make_shared<ClientLocalStateGlobals>(); // 실제 Client와 같이 World/Session 밖에서 두 별도 주소를 소유한다.
+    services.gameplayGlobals=gameplay;services.localStateGlobals=local;auto& camera=gameplay->Camera();std::uint32_t redraw{},worldRedraw{},initialRevision{};camera.InitializeNativeRenderer(640,480,256,worldRedraw,initialRevision);
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());GameWorld world(assets.game,assets.files,std::move(fort),{},"thewarbegins",std::move(services),{640,480});
+    const auto rendererBefore=camera.RendererView(),snapshotBefore=camera.Snapshot();const auto mapRevision=gameplay->MapRevision();std::uint32_t soundViews{};world.soundViewChanged=[&](auto) { ++soundViews; };world.TakeChanged();local->MetaRebuild()=0xffffffffU;
+    world.CenterCamera(100.25F,101.75F);CHECK((camera.Target().pixels==std::array<std::int32_t,2>{1284,879}) && local->MetaRebuild()==0);
+    CHECK(std::memcmp(&rendererBefore,&camera.RendererView(),64)==0 && std::memcmp(&snapshotBefore,&camera.Snapshot(),64)==0);CHECK(gameplay->MapRevision()==mapRevision && soundViews==0 && !world.TakeChanged());CHECK(world.MinimapView().camera==snapshotBefore.worldBits);
+    std::vector<DirtyRegion> dirty;std::uint32_t locks{},unlocks{},rootRedraws{},scrolls{};const std::uint32_t flags=2;const std::int32_t denominator=15,width=640,height=480;const auto clip=world.MapView();const RawCameraCommitViewport viewport{clip.left,clip.top,clip.right-clip.left,clip.bottom-clip.top};const ScreenPoint mouse{200,100}; // 실제 DIB/지도와 같은 장치 입력이며 currentview를 직접 설정하지 않는다.
+    RawCameraCommitHooks hooks;hooks.lockCursor=[&](auto skip) { CHECK(skip==0);++locks; };hooks.unlockCursor=[&] { ++unlocks; };hooks.redrawRoots=[&] { ++rootRedraws; };hooks.scroll=[&](auto,auto,auto,auto,auto,auto) { ++scrolls; };hooks.scrollBackground=[](auto,auto,auto,auto,auto,auto) { CHECK(false); };
+    hooks.addDirty=[&](auto rect,auto value) { dirty.push_back({rect,value}); };hooks.addBackgroundDirty=[](auto) { CHECK(false); };hooks.updateMouse=[](auto) {}; // OS 장치의 호출 경계만 제공하고 실제 commit/setter는 제품 본체를 쓴다.
+    CommitCameraTarget({camera.RendererView(),camera.Snapshot(),camera.Target(),redraw,worldRedraw,dirty},{flags,denominator,width,height,viewport,clip,mouse},hooks);
+    CHECK(camera.RendererView().pixels==camera.Target().pixels && camera.Snapshot().pixels==camera.Target().pixels && locks==1 && unlocks==1 && rootRedraws==2);CHECK(scrolls==2 && local->MetaRebuild()==0 && soundViews==0);
+    world.CameraApplied();CHECK(soundViews==1 && world.TakeChanged()); // 실제 프레임 말미의 적용 결과만 기존 표면/입자/음향에 공개한다.
 }

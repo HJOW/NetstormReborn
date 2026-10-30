@@ -61,7 +61,7 @@ public:
     void Scroll(int dx,int dy);
     void CameraApplied(); // 실제 Present 말미가 바꾼 같은 현재 카메라를 표면/입자/음향에 공개하고 다음 장면 합성을 예약한다.
     MinimapGeometryView MinimapView() const; // 같은 실제 카메라와 현재 월드 viewport를 미니맵에 빌린다.
-    void CenterCamera(float x,float y); // 미니맵도 초기 시야와 같은497f20/변경 전역을 사용한다.
+    void CenterCamera(float x,float y); //미니맵/사건의497f20 목표-only와 공유005c85dc이며 초기 시야의 추가 즉시commit과 구별한다.
     void MoveFromMinimap(float x,float y); // 실제 선택Carrier에월드좌표그대로명령한뒤강조0을적용한다.
     // F4/H·F5의 원본 홈 신전/사제 보기를 연결한다.
     void Home(bool priest);

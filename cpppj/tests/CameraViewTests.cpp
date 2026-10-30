@@ -71,3 +71,6 @@ TEST_CASE(CameraView_WorldSetterAssertionRequeriesCurrentFieldsAfterAllStores) {
         CHECK(message=="scrollPosPixX >= 0" && line==0x344 && calls++==0 && view.worldBits[0]==0x4d000001U && view.worldBits[1]==0x4d800001U && view.pixels[0]<0 && view.pixels[1]<0);CHECK(view.pixelFloatBits[0]==std::bit_cast<std::uint32_t>(static_cast<float>(view.pixels[0])) && view.pixelFloatBits[1]==std::bit_cast<std::uint32_t>(static_cast<float>(view.pixels[1])));view.worldBits[1]=0xbf800000U;
     });CHECK(calls==1 && view.worldBits[1]==0xbf800000U);
 }
+
+// 목표-only의 실제 전체 바이트와 현재 Client 저장소 경계를 독립 PE에 대조한다.
+#include "CameraCenterTests.inc"

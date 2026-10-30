@@ -3512,6 +3512,10 @@ void RawCampaignSession::InstallExistingEditorPlayers(EditorPlayersHooks ui) {
 void RawCampaignSession::ResetCamera(CameraHomeState& state,std::function<void(std::int32_t,std::int32_t)> apply) const {
     impl_->Camera(state,std::move(apply)).Reset();
 }
+// 같은 장기 Camera/LocalState owner에만 요청하며 현재 표면·위치 음향·snapshot을 변경하지 않는다.
+void RawCampaignSession::RequestCameraCenter(float x,float y,std::int32_t width,std::int32_t height) {
+    CameraGlobals().RequestCenter(x,y,width,height,impl_->localStateGlobals->MetaRebuild());
+}
 // DWORD SID를 검증한 뒤 WORD 물리 주소로 바꾸며0은 원문 CenterOn의 자연 반환이다.
 void RawCampaignSession::CenterCameraOn(std::uint32_t sid,CameraHomeState& state,std::function<void(std::int32_t,std::int32_t)> apply) const {
     if (!sid) return;

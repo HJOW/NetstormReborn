@@ -288,6 +288,7 @@ public:
     void StartConstruction(o::Sid parent,float duration);
     // 현재 같은 풀/TYPE/실제 로컬 소유자·모드로 원본 초기 시야를 계산하여 화면에 적용한다.
     void ResetCamera(CameraHomeState& state,std::function<void(std::int32_t,std::int32_t)> apply) const;
+    void RequestCameraCenter(float x,float y,std::int32_t width,std::int32_t height); //미니맵/사건의497f20 직접 호출만 실제 Client의 목표와005c85dc에 연결하며433aa0의 즉시commit과 구별한다.
     //00433ba0의 현재 SID 중심 이동과 Carrier 내용물 표시를 같은 실제 로딩 깊이/Kernel에 연결한다.
     void CenterCameraOn(std::uint32_t sid,CameraHomeState& state,std::function<void(std::int32_t,std::int32_t)> apply) const;
     //현재 localPlayer의 같은 Player +7c를 먼저 읽고0일 때만 +84로 직접 CenterOn한다. 외부 메뉴 모드 관문은 호출자가 처리한다.

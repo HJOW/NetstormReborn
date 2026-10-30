@@ -122,10 +122,10 @@ MinimapGeometryView GameWorld::MinimapView() const { return {CameraGlobals().Sna
 // 현재 mapRect의 같은 장기 소유자를 연결한 뒤 표시/음향에 즉시 공급한다.
 void GameWorld::BindMapView(std::function<ScreenRect()> current) { if (!current) throw std::invalid_argument("월드의 실제 지도 영역 조회 필요");mapView_=std::move(current);SurfaceView();changed_=true; }
 ScreenRect GameWorld::MapView() const { return mapView_ ? mapView_() : ScreenRect{0,std::min(kMenuHeight,height_),width_,height_}; } // 원문 dock 미설치의 독립 검사 계약을 보존한다.
-// 홈 선택과 미니맵 클릭은 동일한497f20을 사용하며 임의 월드 가장자리clamp를 추가하지 않는다.
+// 미니맵/사건의 직접497f20은 목표만 저장한다. Home/명시SID는433aa0의 즉시commit을 추가하는 별도 호출 경로다.
 void GameWorld::CenterCamera(float x,float y) {
-    if (!campaign_) throw std::logic_error("실제 미니맵 카메라의 Session 없음");cameraHome_.width=width_;cameraHome_.height=height_;const auto core=campaign_->Core(); // 현재 공유 풀/TYPE다.
-    CameraHome(core.pool,core.types,cameraHome_,[this](auto px,auto py) { ApplyCameraPixels(px,py);SurfaceView(); }).CenterPoint(x,y);
+    if (!campaign_) throw std::logic_error("실제 미니맵 카메라의 Session 없음");
+    campaign_->RequestCameraCenter(x,y,width_,height_); // 현재 view/표면/음향은 원문처럼 Present 뒤 ApplyCameraFrame에서 갱신한다.
 }
 // 원본 미니맵은 일반화면의4971e0/41d770 변환을 다시 거치지 않는다.
 void GameWorld::MoveFromMinimap(float x,float y) { if (!input_) throw std::logic_error("실제 미니맵 선택 장치 없음");input_->carrier->Commit(selected_,{x,y});input_->highlight->Highlight(0);changed_=true; }

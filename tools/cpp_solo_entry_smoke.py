@@ -42,7 +42,8 @@ def run(directory, mission, demo_label=None, game_root=None, fullscreen=False, f
                 condition = r'phase\t[13]\n&&(?:control\t'+re.escape(label)+r'\t|raw_html_button[^\n]*\t'+re.escape(label)+r'\n)'  # 실제 Tell 큐로 연 Dialog와 초기 Briefing의 표시된 버튼을 모두 허용한다.
                 steps.append((frame, 'when', condition+';;click;;'+label))
         steps.append((frame, 'report', str(frame)))
-    steps.extend(((frames-1, 'report', 'final'), (frames-1, 'snapshot', str(directory / 'final.bmp'))))
+    steps.extend(((frames-1, 'report', 'final'), (frames-1, 'snapshot-presented', str(directory / 'final.bmp')),
+                  (frames-1, 'snapshot', str(directory / 'final-after-camera.bmp'))))  # 원문 Present 뒤 카메라 Scroll은 다음 버퍼를 바꾸므로 창 비교는 표시 직후 원본에 없는 읽기 전용 관찰점을 쓴다. 기존 뒤 버퍼도 별도 보존한다.
     if capture_output: steps.append((frames-1,'snapshot-output',str(directory/'final-output.bmp')))  # 같은 완성 프레임의 실제 창 DC도 별도로 읽는다.
     steps.sort(key=lambda row: row[0])  # 같은 프레임에서 입력 뒤 보고하는 순서를 보존한다.
     plan = directory / 'steps.tsv'  # 실패 후에도 실제 입력 계획을 다시 재생할 수 있다.
