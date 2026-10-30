@@ -2277,3 +2277,7 @@ tools/cpp_world_geyser_smoke.py text eol=lf
 cpppj/world-geyser-native-20261030.json text eol=lf
 cpppj/world-geyser-runtime-20261030.json text eol=lf
 docs/exe/cpp-world-geyser-20261030.md text eol=lf
+
+# 같은609 배포본의 전체34 진입·시각·창 출력 검증 근거다.
+cpppj/solo-world-current-runtime-20261030.json text eol=lf
+docs/exe/cpp-solo-world-current-20261030.md text eol=lf
