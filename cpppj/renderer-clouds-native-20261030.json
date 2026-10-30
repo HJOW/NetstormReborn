@@ -1,0 +1,173 @@
+{
+  "unit": 619,
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "cases": 695,
+  "observations": 2085,
+  "differences": 0,
+  "faults": 24,
+  "allFaultsAreActualIdiv": true,
+  "scope": "실제 구름4칸 저장/반복·정수 나눗셈/배경 선택의 격리 x86이다. 진단과 실제 픽셀/구름 장치는 명시 경계이며 게임GUI/MP/공격/포획/희생/승리 실행은 없다.",
+  "independentCompleteProcesses": 3,
+  "totalObservations": 6255,
+  "allCompleteProcessBytesEqual": true,
+  "finalFaultLocations": [
+    [
+      58,
+      "0x49787e"
+    ],
+    [
+      59,
+      "0x49787e"
+    ],
+    [
+      60,
+      "0x49787e"
+    ],
+    [
+      61,
+      "0x49787e"
+    ],
+    [
+      72,
+      "0x497887"
+    ],
+    [
+      73,
+      "0x49787e"
+    ],
+    [
+      74,
+      "0x49787e"
+    ],
+    [
+      75,
+      "0x49787e"
+    ],
+    [
+      76,
+      "0x49787e"
+    ],
+    [
+      77,
+      "0x49787e"
+    ],
+    [
+      88,
+      "0x497887"
+    ],
+    [
+      89,
+      "0x49787e"
+    ],
+    [
+      90,
+      "0x49787e"
+    ],
+    [
+      91,
+      "0x49787e"
+    ],
+    [
+      92,
+      "0x49787e"
+    ],
+    [
+      93,
+      "0x49787e"
+    ],
+    [
+      104,
+      "0x497887"
+    ],
+    [
+      105,
+      "0x49787e"
+    ],
+    [
+      684,
+      "0x49787e"
+    ],
+    [
+      689,
+      "0x499c7a"
+    ],
+    [
+      690,
+      "0x499c7a"
+    ],
+    [
+      691,
+      "0x499c7a"
+    ],
+    [
+      692,
+      "0x499c83"
+    ],
+    [
+      693,
+      "0x499c7a"
+    ]
+  ],
+  "peInitial": {
+    "scan19": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "cloudRect16": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "count": 0,
+    "hideGroups": 0
+  },
+  "initialObserverFailures": [
+    {
+      "path": "extracted/cpp-renderer-clouds-619-native-20261030.log",
+      "sha256": "ead3ddfa977bd36710a11e9021fd75ef5cbb6425e9ab5afac35f1c1ee0dd67cd"
+    },
+    {
+      "path": "extracted/cpp-renderer-clouds-619-20261030/native-v2.log",
+      "sha256": "0b8494b90aad8b4e68744184be5de1b4a3496b7b9b9f4ac616b58cd48b1c7837"
+    }
+  ],
+  "fixtureSha256": "c0faee47e3196896684baa19d9aa54665222c373a224716ca1648cb64e4054ad",
+  "sourceSha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "tools/decomp_renderer_clouds.py": "605e9bf23028a9101588e9e3cef8154adb306216e295bf3bef7c56e6d3f80eae"
+  }
+}

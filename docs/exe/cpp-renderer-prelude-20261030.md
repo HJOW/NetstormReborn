@@ -4,6 +4,8 @@
 
 현재/마지막 전체 정밀 디컴파일 PC는 **HJOW-Athlon / 2026-10-23**으로 같다. 앞617에서 AGENTS.md·공통/DN 인계를 다시 읽고 사용자 새 목표 요청으로 재개했으며 이번에도 같은 작업본에서 계속했다. 디컴파일 산출물은 변경하지 않았다.
 
+**619 후속 정정:** 명시 하위였던 `4977f0`은 별도 구름 dirty4칸/count 저장이다. API 이름을 `queueCloudDirty`로 고쳤으며 일반 화면 dirty 표와 구별한다. [619 하위 복원](cpp-renderer-clouds-20261030.md)을 따르고, 실제 Client Frame/픽셀·정리 연결은620에서 진행한다. 아래618의 관측/회귀 수와 기존 fixture는 당시 근거로 유지한다.
+
 ## 원문 순서
 
 1. 현재 화면 flags가 이전값과 다르면 실제 구름 dirty→현재 전체 화면 invalidate→효과 뒤 flags 저장 순서다. 세계 redraw가 비영이면 별도로 구름 dirty/전체 invalidate를 다시 수행한다.

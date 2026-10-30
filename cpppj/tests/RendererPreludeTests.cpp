@@ -43,7 +43,7 @@ TEST_CASE(RendererPrelude_Original720AndCurrentEffects) {
         const auto rectangle=[](ScreenRect rect) { return std::to_string(static_cast<std::uint32_t>(rect.left))+','+std::to_string(static_cast<std::uint32_t>(rect.top))+','+std::to_string(static_cast<std::uint32_t>(rect.right))+','+std::to_string(static_cast<std::uint32_t>(rect.bottom)); }; //주소 대신 실제 네 DWORD 인수를 비교한다.
         RendererPreludeHooks hooks;
         hooks.markCloudDirty=[&] { append("M");effect('M');netstorm::o::MarkKencloudDirty(cloud); };
-        hooks.fullInvalidate=[&](auto rect) { append("F:"+rectangle(rect));effect('F'); };
+        hooks.queueCloudDirty=[&](auto rect) { append("F:"+rectangle(rect));effect('F'); };
         hooks.overrideActive=[&] { append("O");effect('O');return globals[2]; };
         hooks.updateClouds=[&] { append("U");effect('U'); };
         hooks.rowDirty=[&](auto y,auto cameraY) { ++queries;append("Q:"+std::to_string(static_cast<std::uint32_t>(y))+','+std::to_string(static_cast<std::uint32_t>(cameraY)));effect('Q');return queries==value(14) ? 1U : 0U; };

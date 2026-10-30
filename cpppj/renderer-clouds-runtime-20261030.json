@@ -1,0 +1,456 @@
+{
+  "unit": 619,
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "cppSourceBaseCommit": "d2300fea",
+  "native": {
+    "unit": 619,
+    "host": "HJOW-Athlon",
+    "lastFullDecompileHost": "HJOW-Athlon",
+    "lastFullDecompileDate": "2026-10-23",
+    "cases": 695,
+    "observations": 2085,
+    "differences": 0,
+    "faults": 24,
+    "allFaultsAreActualIdiv": true,
+    "scope": "실제 구름4칸 저장/반복·정수 나눗셈/배경 선택의 격리 x86이다. 진단과 실제 픽셀/구름 장치는 명시 경계이며 게임GUI/MP/공격/포획/희생/승리 실행은 없다.",
+    "independentCompleteProcesses": 3,
+    "totalObservations": 6255,
+    "allCompleteProcessBytesEqual": true,
+    "finalFaultLocations": [
+      [
+        58,
+        "0x49787e"
+      ],
+      [
+        59,
+        "0x49787e"
+      ],
+      [
+        60,
+        "0x49787e"
+      ],
+      [
+        61,
+        "0x49787e"
+      ],
+      [
+        72,
+        "0x497887"
+      ],
+      [
+        73,
+        "0x49787e"
+      ],
+      [
+        74,
+        "0x49787e"
+      ],
+      [
+        75,
+        "0x49787e"
+      ],
+      [
+        76,
+        "0x49787e"
+      ],
+      [
+        77,
+        "0x49787e"
+      ],
+      [
+        88,
+        "0x497887"
+      ],
+      [
+        89,
+        "0x49787e"
+      ],
+      [
+        90,
+        "0x49787e"
+      ],
+      [
+        91,
+        "0x49787e"
+      ],
+      [
+        92,
+        "0x49787e"
+      ],
+      [
+        93,
+        "0x49787e"
+      ],
+      [
+        104,
+        "0x497887"
+      ],
+      [
+        105,
+        "0x49787e"
+      ],
+      [
+        684,
+        "0x49787e"
+      ],
+      [
+        689,
+        "0x499c7a"
+      ],
+      [
+        690,
+        "0x499c7a"
+      ],
+      [
+        691,
+        "0x499c7a"
+      ],
+      [
+        692,
+        "0x499c83"
+      ],
+      [
+        693,
+        "0x499c7a"
+      ]
+    ],
+    "peInitial": {
+      "scan19": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "cloudRect16": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "count": 0,
+      "hideGroups": 0
+    },
+    "initialObserverFailures": [
+      {
+        "path": "extracted/cpp-renderer-clouds-619-native-20261030.log",
+        "sha256": "ead3ddfa977bd36710a11e9021fd75ef5cbb6425e9ab5afac35f1c1ee0dd67cd"
+      },
+      {
+        "path": "extracted/cpp-renderer-clouds-619-20261030/native-v2.log",
+        "sha256": "0b8494b90aad8b4e68744184be5de1b4a3496b7b9b9f4ac616b58cd48b1c7837"
+      }
+    ],
+    "fixtureSha256": "c0faee47e3196896684baa19d9aa54665222c373a224716ca1648cb64e4054ad",
+    "sourceSha256": {
+      "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+      "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+      "tools/decomp_renderer_clouds.py": "605e9bf23028a9101588e9e3cef8154adb306216e295bf3bef7c56e6d3f80eae"
+    }
+  },
+  "buildReturnCode": 0,
+  "buildWarningsAndErrors": [],
+  "focusedTests": 28,
+  "failed": 0,
+  "registered": 3527,
+  "runs": [
+    {
+      "filter": "RendererCloud",
+      "names": [
+        "RendererCloud_Original695AndCurrentEffects",
+        "RendererCloud_SelectedDevicesAndPhysicalBounds",
+        "RendererCloud_FrameGlobalsShareActualPreludeQueue"
+      ],
+      "run": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "RendererCloud"
+        ],
+        "binarySha256": "fb6a8434f7535ab12a494fddad9ca496164708fdda0c10348cba7d3ca9d01032",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 5.735330299999987,
+        "stdoutSha256": "2e161ca523d22040056a79597f36f09d1be3b3631c63bff2fb93be596481c67a",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "tests": 3,
+        "failed": 0,
+        "testOnlyBridgeManipulation": false
+      }
+    },
+    {
+      "filter": "RendererPrelude",
+      "names": [
+        "RendererPrelude_Original720AndCurrentEffects",
+        "RendererPrelude_SelectedDevicesAndPartialFailure"
+      ],
+      "run": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "RendererPrelude"
+        ],
+        "binarySha256": "fb6a8434f7535ab12a494fddad9ca496164708fdda0c10348cba7d3ca9d01032",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 4.460626900000079,
+        "stdoutSha256": "19d97720996aa0074a8e575cdbe57bace55d6dbac72ddbb530b99c0d5c0f7037",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "tests": 2,
+        "failed": 0,
+        "testOnlyBridgeManipulation": false
+      }
+    },
+    {
+      "filter": "KencloudRender",
+      "names": [
+        "KencloudRender_Original944Observations",
+        "KencloudRender_NaturalSkipAndPhysicalPrefixes"
+      ],
+      "run": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "KencloudRender"
+        ],
+        "binarySha256": "fb6a8434f7535ab12a494fddad9ca496164708fdda0c10348cba7d3ca9d01032",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 5.382885600000009,
+        "stdoutSha256": "8a6703ead8202b00b8ba17e83e5e72333be0be7eaf62f7353e182c269ca0515f",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "tests": 2,
+        "failed": 0,
+        "testOnlyBridgeManipulation": false
+      }
+    },
+    {
+      "filter": "ClientKencloudGlobals",
+      "names": [
+        "ClientKencloudGlobals_PhysicalGlobalsAndAddressLifetime",
+        "ClientKencloudGlobals_ActualFileAndNative400SeedRandom",
+        "ClientKencloudGlobals_MissingAndWrongSizeUseActualFallback",
+        "ClientKencloudGlobals_FallbackDivideFaultPreservesPrefix",
+        "ClientKencloudGlobals_ActualConfigCallbackAndPureOwner",
+        "ClientKencloudGlobals_ActualTransitionUsesSameGlobalsAndDeviceOrder",
+        "ClientKencloudGlobals_ActualUpdateAndDirtyUseSameMemory"
+      ],
+      "run": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "ClientKencloudGlobals"
+        ],
+        "binarySha256": "fb6a8434f7535ab12a494fddad9ca496164708fdda0c10348cba7d3ca9d01032",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 4.699989899999764,
+        "stdoutSha256": "4de093736e2be425428bf78fce1656f3c9933d4347505d884cb2a2536d3e0e8c",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "tests": 7,
+        "failed": 0,
+        "testOnlyBridgeManipulation": false
+      }
+    },
+    {
+      "filter": "DrawSubmission",
+      "names": [
+        "DrawSubmission_PatchNative",
+        "DrawSubmission_CdNative",
+        "DrawSubmission_AdditionalNative",
+        "DrawSubmission_RejectsInvalidCountsAndGroupOverflow",
+        "DrawSubmission_DispatchContractsAndUnknownKinds",
+        "DrawSubmission_CapacityAndEmptyBuffer",
+        "DrawSubmission_ActualConstructionMergesWithOtherKinds",
+        "DrawSubmission_ConstructionDeletionDuringMixedDispatch"
+      ],
+      "run": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "DrawSubmission"
+        ],
+        "binarySha256": "fb6a8434f7535ab12a494fddad9ca496164708fdda0c10348cba7d3ca9d01032",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 5.494217999999819,
+        "stdoutSha256": "d6229b56816b9571ee737933f3e1e4b736ebad5aaa40880db6469bdc7ab21303",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "tests": 8,
+        "failed": 0,
+        "testOnlyBridgeManipulation": false
+      }
+    },
+    {
+      "filter": "ScreenScroll",
+      "names": [
+        "ScreenScroll_MatchesNativeDibPixels",
+        "ScreenScroll_AllDirectionsPreserveSourceAndPadding",
+        "ScreenScroll_SelectedSurfaceBounds",
+        "ScreenScroll_CameraUsesActualRendererDirtyAndNextDraw"
+      ],
+      "run": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "ScreenScroll"
+        ],
+        "binarySha256": "fb6a8434f7535ab12a494fddad9ca496164708fdda0c10348cba7d3ca9d01032",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 4.293602700000065,
+        "stdoutSha256": "64faf6fc3fcc1ff18eb62fc27bd3ceb7626642f4e219ed9c535526a5a8c30be3",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "tests": 4,
+        "failed": 0,
+        "testOnlyBridgeManipulation": false
+      }
+    },
+    {
+      "filter": "CameraPan",
+      "names": [
+        "CameraPan_Original259AndCurrentCallbacks",
+        "CameraPan_OnlySelectedDevicesAndInactiveQueueSelection"
+      ],
+      "run": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "CameraPan"
+        ],
+        "binarySha256": "fb6a8434f7535ab12a494fddad9ca496164708fdda0c10348cba7d3ca9d01032",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 3.7652837999999065,
+        "stdoutSha256": "8c3eb47a63dcdfb85bb88e6fe66ceeea5cf6bc5f65a2a530add801f662b29666",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "tests": 2,
+        "failed": 0,
+        "testOnlyBridgeManipulation": false
+      }
+    }
+  ],
+  "gameSha256": "7b96fc9c4ac737147b6f4af77b72a8a9b7210fd3023a025dc66c5b3a63d0a8dd",
+  "testSha256": "fb6a8434f7535ab12a494fddad9ca496164708fdda0c10348cba7d3ca9d01032",
+  "protectedCount": 2619,
+  "protectedFixtureCount": 760,
+  "fixtureCount": 761,
+  "protectedDifferences": [],
+  "connectedToActualFrame": false,
+  "newGameExecutions": 0,
+  "newZip": false,
+  "lastGuiProductUnit": 617,
+  "lastFull34": {
+    "productUnit": 615,
+    "verificationUnit": 616
+  },
+  "corrected618BoundaryMeaning": "4977f0은 일반 Renderer 화면 dirty 추가가 아니라 별도 구름4칸/count 저장이다. 기존 stub fixture의F 사건과 실제 하위 본체를 구별하고 API 이름/주석을 queueCloudDirty로 바로잡았다.",
+  "sourceSha256": {
+    "cpppj/src/client/RawRendererClouds.cpp": "50e3b9e291cea6decc5b1472934bb9ccb134aedab735add49152a570cc174088",
+    "cpppj/src/client/RawRendererClouds.h": "92ee4ff8ba81f93291502190c8bc863ddab0fd9fb2203d1acacc5de3d876447b",
+    "cpppj/src/client/ClientRendererFrameGlobals.h": "ef6909f3ce6641eb35d650bef12549db4c073cd220f909cce652c834682f257b",
+    "cpppj/src/client/RawRendererPrelude.cpp": "d7c0f2908dbe27c726e5fe7fb041f2cac5135d3e629e568f1a1a755fb77424b8",
+    "cpppj/src/client/RawRendererPrelude.h": "c6c981177e8f6c6273f80a169836dda3abd417ee1a0e960b97a5fefa779435e1",
+    "cpppj/tests/RendererCloudTests.cpp": "a87e948ef221d2eab91804bb08f2d5cff39d7c0f3bffe9e39ab62f8056a312d6",
+    "cpppj/tests/RendererPreludeTests.cpp": "8cb7fc38151ffc9a773d9b548162b4ff097e8667339374abf5d23e3235a6304a",
+    "cpppj/tests/fixtures/renderer-clouds-x86.tsv": "c0faee47e3196896684baa19d9aa54665222c373a224716ca1648cb64e4054ad",
+    "cpppj/src/CMakeLists.txt": "c82b91e79cbd658790efa55c604df9092bdabcd464d76d5c6bb20881cb3dfb97",
+    "cpppj/tests/CMakeLists.txt": "21fc1ef617e63dd1470731dc956d80a4bd4a5b5582bce693433a0250bb8e9b8e",
+    "tools/decomp_renderer_clouds.py": "605e9bf23028a9101588e9e3cef8154adb306216e295bf3bef7c56e6d3f80eae"
+  },
+  "evidenceSha256": {
+    "native-v2.log": "0b8494b90aad8b4e68744184be5de1b4a3496b7b9b9f4ac616b58cd48b1c7837",
+    "native-v3.log": "b503e6beeb0f864030156e715839a44c71c2821166788a60d17a5a30cb13a920",
+    "protected-before.json": "61924435f989cc497fdce5f0817b42925ca527c01be83d8812b71efb104e9869",
+    "build.log": "f8e140106b3793bc70b4dd123ddd4d932f9c3a58e8253473626da54dbe099788",
+    "native-replay.log": "b503e6beeb0f864030156e715839a44c71c2821166788a60d17a5a30cb13a920",
+    "native-final.log": "9240f3a3ee6e3e5c4ade94c6591d563bd4393755118d82dd838d9d0eabb7e19a",
+    "checks-RendererCloud.log": "6e34424e8589193786672b00cc588c527f3007d368ab2825fcb08bd3c5f1bfec",
+    "checks-ClientKencloudGlobals.log": "0779c0e084546695675028364152c5f90596f8904218070413e1e61114bdcb9f",
+    "checks-KencloudRender.log": "c9bef4c70118d81c2ab3bbc36914a8c93b7dcbc2833d7cdd4c36c3ec030f4aa0",
+    "checks-DrawSubmission.log": "c55a9093b61c8031c51aae1e7bfc81ef48fd5b9872f48eb631ae92184c0ff219",
+    "checks-RendererPrelude.log": "d74997a9f56b6db5afcec036a58c51d9ee25d42322d37b579dbc82f94bae7061",
+    "checks-ScreenScroll.log": "5ce4ecbbd3e9fce496913c6dd6629f33c4177421b4dd66a7ddff0cfddcacc9d2",
+    "checks-CameraPan.log": "a6744b62877cc9243b03cd06a3efb0d215eee5b5fd9d80bc06a2c526b1c13965",
+    "protected-after.json": "676954039787280e2c3e8d8c5a0448ce51d28966831fd53d46d51359bf78b6be",
+    "pe-initial.json": "68bb36cf28f3a5ad4d16096a49eedf476b4bc0b792f05a977e81403a5908f4d3",
+    "registered-tests.txt": "e25a034d8cd7c1dfbf5b619e1140fd175890a7b186b49871d1528ac6d84deddc",
+    "native-v3/inputs.json": "5bd9f415036d30f1234a2613e9f0c03db40cb493df668486091bc733f074f33d",
+    "native-v3/first.json": "2d6ffd48b4f394f542023a9ab2d1dd73b758faece9344b3d915237079acc50b7",
+    "native-v3/replay.json": "2d6ffd48b4f394f542023a9ab2d1dd73b758faece9344b3d915237079acc50b7",
+    "native-v3/extended.json": "2d6ffd48b4f394f542023a9ab2d1dd73b758faece9344b3d915237079acc50b7",
+    "native-v3/renderer-clouds-x86.tsv": "c0faee47e3196896684baa19d9aa54665222c373a224716ca1648cb64e4054ad",
+    "native-v3/report.json": "eea7f982b473ddb47599abd14f4e01eea57745d9ba585f3b1a79d20df211f6fe",
+    "native-replay/inputs.json": "5bd9f415036d30f1234a2613e9f0c03db40cb493df668486091bc733f074f33d",
+    "native-replay/first.json": "2d6ffd48b4f394f542023a9ab2d1dd73b758faece9344b3d915237079acc50b7",
+    "native-replay/replay.json": "2d6ffd48b4f394f542023a9ab2d1dd73b758faece9344b3d915237079acc50b7",
+    "native-replay/extended.json": "2d6ffd48b4f394f542023a9ab2d1dd73b758faece9344b3d915237079acc50b7",
+    "native-replay/renderer-clouds-x86.tsv": "c0faee47e3196896684baa19d9aa54665222c373a224716ca1648cb64e4054ad",
+    "native-replay/report.json": "eea7f982b473ddb47599abd14f4e01eea57745d9ba585f3b1a79d20df211f6fe",
+    "native-final/inputs.json": "5bd9f415036d30f1234a2613e9f0c03db40cb493df668486091bc733f074f33d",
+    "native-final/first.json": "2d6ffd48b4f394f542023a9ab2d1dd73b758faece9344b3d915237079acc50b7",
+    "native-final/replay.json": "2d6ffd48b4f394f542023a9ab2d1dd73b758faece9344b3d915237079acc50b7",
+    "native-final/extended.json": "2d6ffd48b4f394f542023a9ab2d1dd73b758faece9344b3d915237079acc50b7",
+    "native-final/faults.json": "6dd4420880da7170428c550990aea147da85bfdde395abae56c6d66a8297490c",
+    "native-final/renderer-clouds-x86.tsv": "c0faee47e3196896684baa19d9aa54665222c373a224716ca1648cb64e4054ad",
+    "native-final/report.json": "213761380381bab7e194cff097022aef78f345680763ad75f8d5788e3e344f1e",
+    "checks-RendererCloud/stdout.log": "2e161ca523d22040056a79597f36f09d1be3b3631c63bff2fb93be596481c67a",
+    "checks-RendererCloud/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "checks-RendererCloud/running.json": "388bbd442fc3cabe9d00995394f45fbbaf34774c62ebba899d09adedb72391cd",
+    "checks-RendererCloud/run.json": "0a007b48f5fb85d1dcc28d617ae58fc048d8732db7663569603ecd584b04d3a2",
+    "checks-KencloudRender/stdout.log": "8a6703ead8202b00b8ba17e83e5e72333be0be7eaf62f7353e182c269ca0515f",
+    "checks-KencloudRender/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "checks-KencloudRender/running.json": "52fcdee2dd99253842fbae9c4fc09f001d12a11396d387935ec0577340361101",
+    "checks-KencloudRender/run.json": "4b948c0406190075a214e20df511f1f7c996d610e4d312bcaa6a1ce8fe7e9442",
+    "checks-DrawSubmission/stdout.log": "d6229b56816b9571ee737933f3e1e4b736ebad5aaa40880db6469bdc7ab21303",
+    "checks-DrawSubmission/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "checks-DrawSubmission/running.json": "5cbdf832c61be353c96cb8a6f5ce9727bfd30cefac91aa043dab975314161316",
+    "checks-DrawSubmission/run.json": "83096f6e1b88dc7f0e278d18af84840391985d36af4fde3937425a2c97508745",
+    "checks-ScreenScroll/stdout.log": "64faf6fc3fcc1ff18eb62fc27bd3ceb7626642f4e219ed9c535526a5a8c30be3",
+    "checks-ScreenScroll/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "checks-ScreenScroll/running.json": "46a6cca5a0585769c66d93d7e7c72923dfb17ffc64565026f803bdd3c3e51e6c",
+    "checks-ScreenScroll/run.json": "2408ed429c7750327707489dd2aeeec7e7bffc33e53a14796b0e76854749fbe0",
+    "checks-ClientKencloudGlobals/stdout.log": "4de093736e2be425428bf78fce1656f3c9933d4347505d884cb2a2536d3e0e8c",
+    "checks-ClientKencloudGlobals/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "checks-ClientKencloudGlobals/running.json": "c856d80dc5ee77be9183dd580a8f801fc4e7db990451f1edcf63ffa0340d308b",
+    "checks-ClientKencloudGlobals/run.json": "fc5920de42879b39ee89eaad872eaccde7e8defff20cb3b6f68db7193467e225",
+    "checks-RendererPrelude/stdout.log": "19d97720996aa0074a8e575cdbe57bace55d6dbac72ddbb530b99c0d5c0f7037",
+    "checks-RendererPrelude/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "checks-RendererPrelude/running.json": "615e5aabf7580adc4c59d67ecf9827bce8f94c808bae2114a9dbf2bb6b353a38",
+    "checks-RendererPrelude/run.json": "d42c312dd8fddec44e92a5847e583198cd36f4b635eee9af797982ce3d1d07bb",
+    "checks-CameraPan/stdout.log": "8c3eb47a63dcdfb85bb88e6fe66ceeea5cf6bc5f65a2a530add801f662b29666",
+    "checks-CameraPan/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "checks-CameraPan/running.json": "3b6399a8e05a99d54e6a49885edcd3d06733b8fc4e69ca2347f86ff8ab786415",
+    "checks-CameraPan/run.json": "4af9b1617c62f25677bc7c9bdea0d6ff4656592b8948278445d8482cdf4d571d"
+  },
+  "scope": "원문695입력·완결3프로세스6255관측과 실제 IDIV 오류24개/부분효과, 별도구름4칸·dirty별배경 선택 및 장기전역/앞단의 같은count 합성 검사다. 음수append의 앞선 미제공 물리 쓰기는 호스트 범위 오류로 구별한다. 실제 Client Frame/구름 픽셀 표시·정리 연결은620의 잔여다. 새게임GUI/원본실행/ZIP/현재전체34/전체C++/자연완주·Win11/PCM/물리키·포획/희생/특정 적 공격/승리·공중3종 전용/신규MP 검사는 없다. 전체 목표active·미완료 및612 스택 미정값 한계를 유지한다."
+}

@@ -2496,3 +2496,7 @@ set_source_files_properties(CameraPanTests.cpp PROPERTIES COMPILE_DEFINITIONS "N
 # Renderer 앞단의 원문720행과 선택된 장치/부분 실패를 검증한다.
 target_sources(netstorm_tests PRIVATE RendererPreludeTests.cpp)
 set_source_files_properties(RendererPreludeTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_RENDERER_PRELUDE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/renderer-prelude-x86.tsv\"")
+
+# 별도 구름4칸/dirty별 배경 선택의 원문695행과 장기 전역/앞단 공유를 검증한다.
+target_sources(netstorm_tests PRIVATE RendererCloudTests.cpp)
+set_source_files_properties(RendererCloudTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_RENDERER_CLOUDS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/renderer-clouds-x86.tsv\"")

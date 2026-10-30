@@ -28,9 +28,9 @@ void InitializeRows(RendererPreludeState state,std::uint32_t height) {
 // Draw의 수집/표시 전에 현재 화면 모드·세계 요청·override와 구름 행 스캔을 순서대로 처리한다.
 void PrepareRendererFrame(RendererPreludeState state,const RendererPreludeGlobals& g,const RendererPreludeHooks& h) {
     if (g.mode!=state.scan[kPreviousMode]) {
-        Need(h.markCloudDirty)();Need(h.fullInvalidate)(Full(g));state.scan[kPreviousMode]=g.mode;
+        Need(h.markCloudDirty)();Need(h.queueCloudDirty)(Full(g));state.scan[kPreviousMode]=g.mode;
     }
-    if (g.force) { Need(h.markCloudDirty)();Need(h.fullInvalidate)(Full(g)); }
+    if (g.force) { Need(h.markCloudDirty)();Need(h.queueCloudDirty)(Full(g)); }
     if ((g.mode&8U) && !Need(h.overrideActive)()) {
         auto flags=g.mode&255U; //override getter 효과 뒤 현재 하위 BYTE를 캡처한다.
         if (flags&32U) {

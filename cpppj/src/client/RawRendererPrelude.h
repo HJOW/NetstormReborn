@@ -11,7 +11,7 @@ struct RendererPreludeState {
     std::span<std::uint32_t,19> scan; //0059a984의 index·16행·초기화·이전 flags가 같은 인접 물리다. index-1/16/17의 인접 읽기도 보존한다.
     std::uint32_t& backgroundRedraw; //같은 Renderer+60이며 비DIB 전체화면 시차 분기만1을 쓴다.
     std::uint32_t& dirtyCount; //같은 Renderer+64이며 force redraw가 현재 표를 비운 뒤 새 전체 사각형을 요청한다.
-    std::uint32_t& drawCounter; //0059a8d4의 현재 DWORD이며 모든 정상 경로가 마지막에0을 쓴다.
+    std::uint32_t& drawCounter; //0059a8d4의 별도 구름 dirty 사각형 개수이며 모든 정상 경로가 마지막에0을 쓴다.
 };
 // 화면·카메라·지도 clip은 호출자가 소유하며 각 장치 효과 뒤에도 같은 참조로 읽는다.
 struct RendererPreludeGlobals {
@@ -25,7 +25,7 @@ struct RendererPreludeGlobals {
 // 실제 구름/dirty/override 장치는 선택된 위치에서만 요구하므로 생략 경로에 불필요한 의존을 만들지 않는다.
 struct RendererPreludeHooks {
     std::function<void()> markCloudDirty; //00470c80의 같은 실제 all/partial DWORD 쓰기다.
-    std::function<void(ScreenRect)> fullInvalidate; //004977f0의 현재 전체 화면 dirty 요청이며 rect는 효과 뒤 크기로 만든다.
+    std::function<void(ScreenRect)> queueCloudDirty; //004977f0의 별도 구름 dirty4칸 저장이며 일반 화면 dirty를 추가하지 않는다. rect는 효과 뒤 현재 크기로 만든다.
     std::function<std::uint32_t()> overrideActive; //00463fe0의 실제 overrideHead 조회다. 일반 모달 개수와 구별한다.
     std::function<void()> updateClouds; //00470c50의 같은 난수/캐시/옵션 갱신이며 선택한 경우에만 실행한다.
     std::function<std::uint32_t(std::int32_t,std::int32_t)> rowDirty; //00470ce0의 현재 행/현재 cameraY 조회다.

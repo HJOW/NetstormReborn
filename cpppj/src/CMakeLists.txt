@@ -283,3 +283,6 @@ target_sources(netstorm PRIVATE client/RawCameraPan.cpp client/RawCameraPan.h)
 
 # Renderer 앞단의 화면 옵션/override/구름 행 스캔·dirty 준비를 원문 순서로 복원한다.
 target_sources(netstorm PRIVATE client/RawRendererPrelude.cpp client/RawRendererPrelude.h)
+
+# Renderer의 별도 구름4칸/현재 전역과 dirty별 배경 선택을 원문 순서로 복원한다.
+target_sources(netstorm PRIVATE client/RawRendererClouds.cpp client/RawRendererClouds.h client/ClientRendererFrameGlobals.h)
