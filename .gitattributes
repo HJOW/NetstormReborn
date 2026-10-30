@@ -2234,3 +2234,14 @@ docs/exe/cpp-technical-help-20261030.md text eol=lf
 tools/cpp_help_menu_smoke.py text eol=lf
 cpppj/help-menus-runtime-20261030.json text eol=lf
 docs/exe/cpp-help-menus-20261030.md text eol=lf
+
+# 프레임말 Player 알림과 Core 기술 합계의 최초 원문/연결/인계를 보존한다.
+cpppj/src/o/RawPlayerNotification.h text eol=lf
+cpppj/src/o/RawPlayerNotification.cpp text eol=lf
+cpppj/tests/PlayerNotificationTests.cpp text eol=lf
+cpppj/tests/fixtures/player-notices-x86.tsv -text whitespace=-blank-at-eol
+cpppj/tests/fixtures/core-technology-weight-x86.tsv -text whitespace=-blank-at-eol
+tools/decomp_player_notices.py text eol=lf
+cpppj/player-notices-native-20261030.json text eol=lf
+cpppj/player-notices-runtime-20261030.json text eol=lf
+docs/exe/cpp-player-notices-20261030.md text eol=lf

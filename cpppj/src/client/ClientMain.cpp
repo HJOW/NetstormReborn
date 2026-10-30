@@ -5,6 +5,7 @@
 // 범위: 창 만들기, 설정 읽기, 화면 장치, 메시지·입력 큐, 프레임 제한과 내보내기까지.
 //       Renderer·원본 글꼴/커서·메뉴와 저장 미션의 기본 지형/객체·선택/이동을 연결했다. 건설/전투는 후속이다.
 #include "client/ClientMain.h"
+#include "client/RawCampaignSession.h" //Sleep 뒤의 실제 프레임말 Player 결과 소비에 장기 Session을 빌린다.
 #include "client/ClientDiagnostics.h"
 #include "client/ClientOptionsFile.h"
 #include "client/CdDirectory.h"
@@ -394,7 +395,8 @@ int Client::Run() {
         GetCursorPos(&cursor);
         SetCursorPos(cursor.x, cursor.y);
         if (sleepPerLoop_ != 0) Sleep(static_cast<DWORD>(sleepPerLoop_));
-        // 13. [원본] 플레이어별 알림(FUN_00490da0) — 옮기지 않았다.
+        // 13. 원문439c33의 Sleep 뒤 Player 결과 알림이다. known/battle이 아닌 메인 화면은 Session을 요구하지 않는다.
+        if (gameplayGlobals_->player.playerKnown && surfaceStorage_->ownerMode.battle) gameplayGlobals_->RequireSession().NotifyPlayerResults();
     }
 }
 

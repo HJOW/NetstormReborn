@@ -202,6 +202,7 @@
 #include "o/RawPriestLookup.h"
 #include "o/RawRunePostPop.h"
 #include "o/RawDaisRegular.h"
+#include "o/RawPlayerNotification.h" //프레임말 대기 결과도 같은 실제 Player/기술/기록을 사용한다.
 #include "o/RawDaisDraw.h"
 #include "o/RawPriestSacrificeRequest.h"
 #include "o/RawPriestRitualFrame.h"
@@ -3575,6 +3576,18 @@ std::uint32_t RawCampaignSession::TemplateOwner() const { return impl_->playerSt
 std::uint32_t RawCampaignSession::BattleActive() const { return impl_->assetState.inBattle ? 1U : 0U; } // 동일Session의 실제00594fbc 관문이며 새 표시 상태를 만들지 않는다.
 // 원본48fc60의 현재 기술 부모를 값 복사 없이 같은 Player 저장소에서 읽는다.
 std::uint32_t RawCampaignSession::CurrentTechnologyParent() const { return impl_->player->CurrentTechnology(); }
+// 별도 Player 사본/포획 실행 없이 기존 실제 기술/획득/현재 snapshot 자식을 재사용한다.
+void RawCampaignSession::NotifyPlayerResults() {
+    auto& s=*impl_;o::PlayerNotificationHooks hooks;
+    hooks.global=[&s](std::uint32_t address)->std::uint32_t { switch (address) { case 0x595344:return s.playerState.playerKnown;case 0x594fbc:return s.core.ownerMode.battle ? 1U : 0U;case 0x540c70:return s.playerState.battleOwner;case 0x5411cc:return s.daisState->noIslandType;case 0x5412c0:return s.daisState->nuggetType;default:throw std::out_of_range("Player 알림의 다른 전역 주소"); } };
+    hooks.players=[&s] { return s.players; };hooks.technology=[&s] { return s.player->CurrentTechnology(); };
+    hooks.weight=[&s](auto core) { o::CoreTechnologyWeightHooks weight;weight.count=[&s] { return static_cast<std::int32_t>(s.core.types.size()); };weight.type=[&s](std::int32_t index) { if (index<0 || static_cast<std::size_t>(index)>=s.core.types.size()) throw std::out_of_range("Core 기술 합계의 현재 TYPE 범위");const auto& type=s.core.types[static_cast<std::size_t>(index)];return o::CoreTechnologyWeightType{type.techBitIndex,type.level}; };return o::CoreTechnologyWeight(core,weight); };
+    hooks.contained=[&s](auto parent,auto mask,auto kind,auto index) { if (parent>65535 || parent>=s.core.pool.Capacity()) throw std::out_of_range("Player 알림의 현재 기술 부모 SID 범위");return s.priests->Carrier().FindContained(o::Sid{static_cast<std::uint16_t>(parent)},mask,kind,index).value; };
+    hooks.tell=[&s](auto key) { if (!s.services.priest.shield.tell) throw std::logic_error("Player 알림의 실제 Tell 장치 미연결");s.services.priest.shield.tell(key); };
+    hooks.grant=[&s](auto type,auto owner) { s.daisRegular->GrantCapturedType(type,owner); }; //기존 로컬 기술/SP/특수·비로컬 경계를 그대로 공유하며 미복원 분기를 상수 성공으로 바꾸지 않는다.
+    hooks.refresh=[&s] { if (!s.refreshLocalRitual) throw std::logic_error("Player 알림의 실제 Core/CoreData/snapshot 갱신 미연결");s.refreshLocalRitual(); };
+    o::NotifyPendingPlayerResult(s.core.pool.Edition(),hooks);
+}
 // 실제 생산 패널의 명시 갱신과 반복자는 같은 현재 장기 몸체를 사용한다.
 void RawCampaignSession::SynchronizeProductionContents() { if (!impl_->loaded && !impl_->editorUiInstalling && !impl_->editorPrefixUiInstalling) throw std::logic_error("설치 전 생산 패널 갱신");impl_->productionSync->Synchronize(); } //같은 State1 prefix/후반 UI의 동기 범위만 실제 Deck 본체에 접근한다. 일반 입력/저장은 계속 닫는다.
 // 구식 배치용 IslandList 벡터 대신 실제 섬 목록 첫DWORD를 현재 시점에 읽는다.

@@ -488,6 +488,7 @@ public:
     // 실제 시작 설정/AI와 같은 Player 기술 부모에 원본 목록 파서를 적용한다.
     void AddTechnology(std::int32_t owner,std::string_view list);
     void LearnNewTechnology(std::uint32_t type); //00492a30의 직접 현재 부모·중복/추가·전체 snapshot·이름/그림/NewTech를 실행한다. 포획/희생을 합성하지 않는다.
+    void NotifyPlayerResults(); //00490da0의 프레임말 대기 결과를 같은 Player/Core/내용물·기존 보상/기록 부모에 전달한다.
     // 실제 flags4 기술을 가상 삭제하여 부모 체인/등록/삭제 깊이를 함께 정리한다.
     void ClearTechnology(std::int32_t owner);
     // 현재 같은 Player 부모에서 지정한 실제 기술 ContentForm을 조회한다.
