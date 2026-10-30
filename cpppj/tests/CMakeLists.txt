@@ -1,4 +1,9 @@
 # 현재 작업본·설치 checkpoint와 독립 부모의 최초 관측을 공용 회귀에 포함한다.
+set_source_files_properties(HelpLinkPolicyTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_HELP_LINKS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/help-links-x86.tsv\"")
+# 창 없는 실제 로컬 GUI 도우미이며 게임/브라우저/외부 통신을 실행하지 않는다.
+add_executable(netstorm_help_probe WIN32 ExternalHelpProbe.cpp)
+netstorm_apply_compiler_options(netstorm_help_probe)
+set_source_files_properties(ExternalHelpClientTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_HELP_PROBE=\"$<TARGET_FILE:netstorm_help_probe>\"")
 set_source_files_properties(CheatMoneyTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_CHEAT_MONEY_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/cheat-money-x86.tsv\"")
 set_source_files_properties(RitualRefreshTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_RITUAL_REFRESH_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/ritual-refresh-x86.tsv\"")
 set_source_files_properties(NewTechnologyTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_NEW_TECHNOLOGY_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/new-technology-x86.tsv\"")
@@ -2470,3 +2475,6 @@ target_sources(netstorm_tests PRIVATE NewTechnologyTests.cpp)
 target_sources(netstorm_tests PRIVATE RitualRefreshTests.cpp)
 # 원문 SP 메뉴 명령의 관문/인수 변환144개를 비교한다.
 target_sources(netstorm_tests PRIVATE CheatMoneyTests.cpp)
+# 원문 링크 정책과 실제 Windows Unicode 프로세스 전달을 확인한다.
+target_sources(netstorm_tests PRIVATE HelpLinkPolicyTests.cpp ExternalHelpClientTests.cpp)
+add_dependencies(netstorm_tests netstorm_help_probe)

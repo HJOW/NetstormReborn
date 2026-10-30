@@ -1,5 +1,6 @@
 // 원본 메뉴 계층의 실제 처리기를 단일 Client 등록표·트리·입력·표면에 조립한다.
 #include "client/RawMenuControls.h"
+#include "client/HelpLinkPolicy.h" //원래 토큰/접두 비교를 Help와 전체 HTML 링크가 함께 사용한다.
 #include "client/TraceChat.h" // 원문 진단 전달도 같은 실제 Chat 공장을 빌린다.
 #include "client/TellFileMenus.h"
 #include "client/DrawSort.h"
@@ -491,9 +492,8 @@ struct RawMenuControls::Impl {
     }
     // 원본4a00c0의 내부 주제/cmd 분기다. 외부 OS 프로토콜은 현재 Client 경계로 명시 전달한다.
     void HelpLink(std::string_view value) {
-        value=value.substr(0,value.find('\0'));const auto colon=value.find(':');const auto prefix=colon==std::string_view::npos ? std::string_view{} : value.substr(0,colon+1);const auto rest=colon==std::string_view::npos ? value : value.substr(colon+1);
-        if (prefix.size()>=80 || rest.size()>=256) throw std::length_error("Help 원본 링크 버퍼 초과");
-        if (o::AsciiLower(prefix)=="cmd:") helpHooks.script(rest);else if (prefix.empty() || (!rest.empty() && rest.front()=='#')) OpenHelp(helpHooks.storeText(rest),1,0);else helpHooks.external(value);
+        HelpLinkHooks link;link.script=helpHooks.script;link.help=[this](auto topic,auto mode,auto learn) { OpenHelp(helpHooks.storeText(topic),static_cast<std::int32_t>(mode),learn); };
+        link.external=[this](auto original,auto,auto) { helpHooks.external(original); };DispatchHelpLink(assets.Edition(),value,link);
     }
     // 466600의 실제 dialog 등록/이전 창 깊이와 같은 목록을 사용한다.
     std::uint32_t OpenHelp(std::uint32_t topic,std::int32_t mode,std::uint32_t learnType) {

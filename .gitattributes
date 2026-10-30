@@ -2201,3 +2201,17 @@ tools/cpp_cheat_menu_smoke.py text eol=lf
 cpppj/cheat-money-native-20261030.json text eol=lf
 cpppj/cheat-menu-runtime-20261030.json text eol=lf
 docs/exe/cpp-cheat-menu-20261030.md text eol=lf
+
+# Help 링크의 최초 원문 기대값과 Windows 실행 연결 소스/관측을 보존한다.
+cpppj/src/client/HelpLinkPolicy.cpp text eol=lf
+cpppj/src/client/HelpLinkPolicy.h text eol=lf
+cpppj/src/client/ExternalHelpClient.cpp text eol=lf
+cpppj/src/client/ExternalHelpClient.h text eol=lf
+cpppj/tests/HelpLinkPolicyTests.cpp text eol=lf
+cpppj/tests/ExternalHelpClientTests.cpp text eol=lf
+cpppj/tests/ExternalHelpProbe.cpp text eol=lf
+cpppj/tests/fixtures/help-links-x86.tsv -text
+tools/decomp_help_links.py text eol=lf
+cpppj/help-links-native-20261030.json text eol=lf
+cpppj/help-links-runtime-20261030.json text eol=lf
+docs/exe/cpp-help-links-20261030.md text eol=lf

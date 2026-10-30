@@ -1,0 +1,286 @@
+{
+  "unit": 601,
+  "date": "2026-10-30",
+  "host": "HJOW-Athlon",
+  "ipv4": "192.168.0.94",
+  "os": "Windows-10-10.0.19045-SP0",
+  "baseCommit": "375ba026",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "native": {
+    "cases": 91,
+    "observations": 182,
+    "differences": [],
+    "scope": "부모/토큰·프로토콜 helper 실제 CPU. CRT 문자열/Config/Script·Help/Shell·실행은 명시 외부 경계. 실제 OS/외부 사이트/게임/MP 실행 없음.",
+    "reportSha256": "f5d362a58554c15cadafe0aec087a207cb6adde3199cb93b5c25886f106e9443"
+  },
+  "cpp": {
+    "distinctPassed": 37,
+    "registered": 3498,
+    "tests": [
+      {
+        "filter": "ExternalHelpClient",
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+            "--filter",
+            "ExternalHelpClient"
+          ],
+          "binarySha256": "60e59e19ee8882d0277ff3de50b3219cb6c8c2c2ea0b9b26098768bc95e623ab",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 1.3825586999992083,
+          "stdoutSha256": "07d687c5e25f3537ca1e3f7325580334544fc83e5d075937c305d0ada3287682",
+          "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "tests": 1,
+          "failed": 0,
+          "testOnlyBridgeManipulation": false
+        }
+      },
+      {
+        "filter": "HelpLinkPolicy",
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+            "--filter",
+            "HelpLinkPolicy"
+          ],
+          "binarySha256": "60e59e19ee8882d0277ff3de50b3219cb6c8c2c2ea0b9b26098768bc95e623ab",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 1.1649853000017174,
+          "stdoutSha256": "71fef1754a19412921ad6e199e386873a79b492e27fbb8722dd9cb5b22e7af2f",
+          "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "tests": 2,
+          "failed": 0,
+          "testOnlyBridgeManipulation": false
+        }
+      },
+      {
+        "filter": "HtmlWindowFactoryClient",
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+            "--filter",
+            "HtmlWindowFactoryClient"
+          ],
+          "binarySha256": "60e59e19ee8882d0277ff3de50b3219cb6c8c2c2ea0b9b26098768bc95e623ab",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 1.4576042000007874,
+          "stdoutSha256": "8681f9eb6d7a1ba6e4649047fc1c4820f340769bebc872f07388bf3b5ee3f15d",
+          "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "tests": 13,
+          "failed": 0,
+          "testOnlyBridgeManipulation": false
+        }
+      },
+      {
+        "filter": "QuickHelpControl",
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+            "--filter",
+            "QuickHelpControl"
+          ],
+          "binarySha256": "60e59e19ee8882d0277ff3de50b3219cb6c8c2c2ea0b9b26098768bc95e623ab",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 2.237429599997995,
+          "stdoutSha256": "63acfe243a58ca4dede0d3cae7b4903538b3ee9f5ba9ea2b3d090909c5ca4c34",
+          "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "tests": 2,
+          "failed": 0,
+          "testOnlyBridgeManipulation": false
+        }
+      },
+      {
+        "filter": "RawMenuControls",
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+            "--filter",
+            "RawMenuControls"
+          ],
+          "binarySha256": "60e59e19ee8882d0277ff3de50b3219cb6c8c2c2ea0b9b26098768bc95e623ab",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 3.6473713999985193,
+          "stdoutSha256": "402d49fa0a22eb911046bd16426666b10187d3a126134492cafcd5e47b3a9700",
+          "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "tests": 16,
+          "failed": 0,
+          "testOnlyBridgeManipulation": false
+        }
+      },
+      {
+        "filter": "ScriptCommand",
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+            "--filter",
+            "ScriptCommand"
+          ],
+          "binarySha256": "60e59e19ee8882d0277ff3de50b3219cb6c8c2c2ea0b9b26098768bc95e623ab",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 2.239672100000462,
+          "stdoutSha256": "d53a62b4a163d0f9ea3a91ef526f525e9e22d2f4201ca2bf652a1a2a2d9ceb12",
+          "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "tests": 3,
+          "failed": 0,
+          "testOnlyBridgeManipulation": false
+        }
+      }
+    ],
+    "allTestsExecuted": false
+  },
+  "builds": {
+    "build.log": {
+      "sha256": "a51c1bd94c9f989f7338ca08b18d81c6c619218f87a3b5f1155e2e09a5eb60a0",
+      "warnings": 0,
+      "errors": 0
+    },
+    "build-final.log": {
+      "sha256": "d46363d5e944ffd3b6e74328f62c46bd8a2fa599b56e3bf3ad25b712e8f8351f",
+      "warnings": 0,
+      "errors": 0
+    },
+    "build-final-v3.log": {
+      "sha256": "2c285b1b03279cfe73efffc135f49918f9f44074a50918afd470671326d3a00f",
+      "warnings": 0,
+      "errors": 0
+    }
+  },
+  "gameSha256": "7a47ef0432f2f655756deae9b4e09a14d10ad9b38ccf23d19e77145e597c6475",
+  "testsSha256": "60e59e19ee8882d0277ff3de50b3219cb6c8c2c2ea0b9b26098768bc95e623ab",
+  "helperSha256": "a8a254a7b37ba5c424329eb96170ed9c50dbdf72e7ded3a655201a2199eae50a",
+  "actualOsHelperProofs": [
+    {
+      "pid": 1152,
+      "path": "extracted/cpp-help-links-601-20261030/os-tests/26304454910500/한글 프로토콜 도우미/received.txt",
+      "sha256": "c53cbf991bd271b08f6597f79f29f91401a6169ec37ae624fe5c202190d927f7",
+      "utf8CommandBytes": 744,
+      "expectedCommandMatched": false,
+      "childExitCodeCaptured": false
+    },
+    {
+      "pid": 16712,
+      "path": "extracted/cpp-help-links-601-20261030/os-tests/26426677334100/한글 프로토콜 도우미/received.txt",
+      "sha256": "12e2093cffc1d0fccf95351526c0b4586fc382cc4a738826db264eb13ac483eb",
+      "utf8CommandBytes": 746,
+      "expectedCommandMatched": true,
+      "childExitCodeCaptured": false
+    }
+  ],
+  "initialFailedInvocations": [
+    {
+      "directory": "final-test-ExternalHelpClient",
+      "run": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "ExternalHelpClient"
+        ],
+        "binarySha256": "9c4fa4b5d6991226914283cf27593b1288048ca72c04c9e0e77314776058287d",
+        "returnCode": 3221225477,
+        "timedOut": false,
+        "seconds": 5.026624099999026,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "tests": null,
+        "failed": null,
+        "testOnlyBridgeManipulation": false
+      }
+    },
+    {
+      "directory": "final-test-RawTextToken",
+      "run": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "RawTextToken"
+        ],
+        "binarySha256": "9c4fa4b5d6991226914283cf27593b1288048ca72c04c9e0e77314776058287d",
+        "returnCode": 1,
+        "timedOut": false,
+        "seconds": 1.3148751000007906,
+        "stdoutSha256": "bf7c103e37568ba01029dcc5974d621282dfbfcf95f9c6c2c7d138f24ac88ee7",
+        "stderrSha256": "9eb5bd674fe9bb3c9a4de37de4e4bab37003c0e3be0801a8171d2f58589a5551",
+        "tests": 0,
+        "failed": 1,
+        "testOnlyBridgeManipulation": false
+      }
+    },
+    {
+      "directory": "final-v2-test-ExternalHelpClient",
+      "run": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "ExternalHelpClient"
+        ],
+        "binarySha256": "2627a0934c67d2e234dd037054e8ee07f0f3e01c37b86ac7bdcee75ea51b9e26",
+        "returnCode": 1,
+        "timedOut": false,
+        "seconds": 9.167542300001514,
+        "stdoutSha256": "3abd03448bcb6bd26e14568232cad335d1bccad905d6ea6d3a31228781d1f9d4",
+        "stderrSha256": "dcead807352cb605ef92d9968d964974e821414d5547c7bed9f2069372a1d0da",
+        "tests": 1,
+        "failed": 1,
+        "testOnlyBridgeManipulation": false
+      }
+    }
+  ],
+  "initialFailureReasons": [
+    "자산 초기화 전 Assets().Edition() 접근0xc0000005. 제품을 기존 Client.Edition()으로 수정.",
+    "존재하지 않는 RawTextToken 검사 필터. ScriptCommand로 교정.",
+    "원래 Config 인용 제거를 빠뜨린 검사 입력. 제품 규칙 유지, 검사에 백틱 이스케이프 추가."
+  ],
+  "noLiveTestOrProofProcessesObserved": true,
+  "childExitCodesCaptured": false,
+  "gameGuiRun": false,
+  "shellUrlRun": false,
+  "newZipCreated": false,
+  "latestActualGameProductUnit": 600,
+  "latestAll34ProductUnit": 595,
+  "latestAll34EvidenceUnit": 596,
+  "protected": {
+    "count": 2568,
+    "differences": [],
+    "beforeSha256": "8b149d5806b31953e954788434aa43ac15d7e0b2754cf2ba356231f9b51e0812",
+    "afterSha256": "5543415c78e688093398b6d10089d64a65d08bec94fcd6ffeea65924ca68d62b",
+    "currentFixtures": 746
+  },
+  "sourceSha256": {
+    ".gitattributes": "c1e588b74348b35947c79e6c985ec2b33f024a8abc22562137adf3a91be04b86",
+    "cpppj/src/CMakeLists.txt": "4cc4aea7a8536be12d2f556344a5f064e6d751eee63529504dee5869cffb2ecc",
+    "cpppj/tests/CMakeLists.txt": "a19bd8627b889990f157b374c2c4a95190a238f1037e73a436162c1187e19962",
+    "cpppj/src/client/HelpLinkPolicy.cpp": "a46bc06b9e4c40fc6d68e170acc557b4a1528523912a2ca7c2c3a738b1a5e994",
+    "cpppj/src/client/HelpLinkPolicy.h": "9dcaf5ba7ea96ffef72f00acf94e9bcc79d6baedac1584bcc1cde7f962eca86e",
+    "cpppj/src/client/ExternalHelpClient.cpp": "c77df04291134d2a03a480480011de3d4906a949ac95760ed1153d173b03a9f7",
+    "cpppj/src/client/ExternalHelpClient.h": "797e8d6bec2e2172177d7ca51c8324c40f9a9880d7a48f2e22856704eb93aa6f",
+    "cpppj/src/client/RawMenuControls.cpp": "6dca66ae228980f0bf157546f3248b0de089c1f5ac9412282487777a8ca40c18",
+    "cpppj/src/client/UberGump.cpp": "691dbd7f5015764f3dbad9c7e5ff75b605427f0fa5cce6759db76bb34a8bd7c2",
+    "cpppj/tests/HelpLinkPolicyTests.cpp": "f62a1202f234e48634b17fa80913fc2963fc4bcf41280d8ee30bbdada5db2a4b",
+    "cpppj/tests/ExternalHelpClientTests.cpp": "a8859a589ce847d7d789be99eeee237bcfefda4d084075b8b63d777f2c24cdc3",
+    "cpppj/tests/ExternalHelpProbe.cpp": "ff6064e5a6e95fc05762149df0150c7dd06f0a791c5560c7522bf1ea70494112",
+    "cpppj/tests/fixtures/help-links-x86.tsv": "6f2a6d142c01dd87a71bc63cfbfce0335a1ae7e9b20c9cf108bcc4dc89716f9e",
+    "tools/decomp_help_links.py": "d045aa72d4c9360ce53605e1af8e2ab1f019dd62f1271b163f62b540b9389dff",
+    "cpppj/help-links-native-20261030.json": "f5d362a58554c15cadafe0aec087a207cb6adde3199cb93b5c25886f106e9443",
+    "docs/exe/cpp-help-links-20261030.md": "5cd71dbe61e128d20bbbe4078586db5a56fed3413d8fda96c23aee5cb740a979"
+  },
+  "rawDirectory": "extracted/cpp-help-links-601-20261030",
+  "forbiddenGameplayReproduced": false,
+  "dedicatedThreeFlyerTestsRun": false,
+  "newMultiplayerTestsRun": false,
+  "win11Run": false,
+  "actualPcmRun": false,
+  "activeFullscreenRun": false,
+  "remaining": [
+    "Technical Help의00435ef0/00435e40/0041ad10 경로 해석",
+    "남은 UI/Edit·Native·시나리오 조건/전체 동일성",
+    "랭크/비로컬 보상·MP 재접속 저장",
+    "후순위MP 무시험과4~7차"
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "host": "HJOW-Athlon",
+  "date": "2026-10-30",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "cases": 91,
+  "observations": 182,
+  "differences": [],
+  "entries": [
+    "004a00c0",
+    "004a0030",
+    "00487710",
+    "00487620"
+  ],
+  "gameStarted": false,
+  "scope": "부모/토큰·프로토콜 helper 실제 CPU. CRT 문자열/Config/Script·Help/Shell·실행은 명시 외부 경계. 실제 OS/외부 사이트/게임/MP 실행 없음.",
+  "sourceSha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "tools/decomp_priestmenu.py": "8d1474792e7511fa777e7bd7bd369f2a2a0f9f5c35643e420d65a3fa4744bac9",
+    "tools/decomp_help_links.py": "d045aa72d4c9360ce53605e1af8e2ab1f019dd62f1271b163f62b540b9389dff",
+    "cpppj/tests/fixtures/help-links-x86.tsv": "6f2a6d142c01dd87a71bc63cfbfce0335a1ae7e9b20c9cf108bcc4dc89716f9e"
+  },
+  "evidenceSha256": {
+    "first.json": "f5abe1dca1d43655d97b860d35e0418ed8d1b07f376726e62f4b9bcc4ee98c70",
+    "replay.json": "f5abe1dca1d43655d97b860d35e0418ed8d1b07f376726e62f4b9bcc4ee98c70"
+  },
+  "verifiedExistingFixture": true
+}
