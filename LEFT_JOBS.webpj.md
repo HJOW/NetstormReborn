@@ -1,5 +1,17 @@
 # LEFT_JOBS.webpj — HTML + JavaScript 개발 계획 및 인수인계
 
+## 2026-10-30 사용자 결정 반영: Edit 메뉴·User Made Campaigns 는 제공하지 않고 목록에서 노출하지 않는다 (문서만, 코드 후속 있음)
+
+- [x] **범위:** 사용자 요청("webpj 에서 Edit 메뉴, 그리고 User Made Campaigns 는 제공하지 않으려고 해. (목록에서 미노출) 이 부분 webpj 쪽 문서에 반영해 줘")에 따라 **문서만** 갱신했다. 코드·테스트·자산·`www/data` 는 수정하지 않았다. 호스트 **HJOW-Athlon**, 디컴파일 소스·원본 게임·브라우저는 쓰지 않았고(웹 메뉴 자료는 `webpj/www/data` 의 TAFF 를 Node 로 읽기만 함) `cpppj/`·`dotnetpj/`·`originals/`·`originalCD/`·AGENTS.md·공통 `LEFT_JOBS.md` 는 수정하지 않았다. 이 결정은 AGENTS.md 에 아직 적혀 있지 않다(webpj 항목은 "커스텀 맵 (Edit), 멀티플레이 기능 구현은 제외"까지). 사용자 캠페인은 커스텀 맵 제외의 귀결이라 모순은 없으며, AGENTS.md 문구 수정은 개발자 몫이다.
+- [x] **결정 1 — Edit:** 웹 판본은 Edit 를 어떤 목록·메뉴에도 두지 않는다. 현재 상태를 확인했다: 메인 메뉴 Edit 버튼은 2026-10-28 WB02-D 에서 이미 `MAIN_MENU_SLOTS` 의 `web: false` 로 빠졌고, Options·Help 펼침 메뉴와 F1 도움말 본문에는 Edit 모드로 들어가는 항목이 없다(도움말의 `Edit Back Format`·`Edit Front Format` 은 채팅 서식 설명이라 무관). Tell 자료의 `Leave Edit Mode` 섹션(`tell.english`)은 Edit 모드 안에서만 열리므로 웹에서는 도달하지 않는다. 따라서 **Edit 에 대한 코드 후속은 없다.**
+- [x] **결정 2 — User Made Campaigns:** Campaign 대화상자(`UCampaign`)의 목록은 `offical*.english` 8개 파일로 만들어지며 현재 웹 판본도 8행이다: ① Early Missions ② Priest Training ③ 구분선 ④ Struggle For Freedom ⑤ A Nation Rises ⑥ Complete Victory ⑦ 구분선 ⑧ **User Made Campaigns**(`offical6.overview`, 본문 `$Menu=%{userSpec}` 사용자 캠페인 목록 + `Back → UCampaign`). 이 **⑧ 행과 그 앞 ⑦ 구분선을 목록에 노출하지 않는다.** 빈 목록으로 열어 두지도 않는다. 사용자 맵·캠페인 파일을 웹이 읽지 않으므로 `%{userSpec}` 인라인 목록은 **구현하지 않는다**(이전에 "미구현(경고만)" 이던 것이 "구현 대상 아님"으로 바뀜). 같은 객체를 가리키는 Tell 섹션 `Campaign`(`tell.english`: `<$tell,offical6.Overview>`)은 ⑧ 행과 `offical6` 의 시간 초과로만 열리므로 행을 숨기면 도달하지 않는다.
+- [ ] **코드 후속(미반영, 다음 WB 단위에서 처리):** 현재 코드는 여전히 8행을 만들고 ⑧ 행은 누르면 `%{userSpec}` 경고만 남기는 `offical6` 대화상자를 연다. 반영 방법 제안:
+  1. `www/ui/tell-lists.js` `expandFileList` 에 웹 제외 목록 객체 이름 상수(예: `WEB_EXCLUDED_LIST_OBJECTS = ['offical6']`, 대소문자 무시)를 두고 그 파일은 **행도 설정 객체 등록도 하지 않는다.** 제외한 뒤 목록의 맨 앞·맨 뒤·연속 구분선을 지운다(⑥ 뒤 ⑦ 구분선이 사라짐). 결과 6행: Early Missions · Priest Training · 구분선 · Struggle For Freedom · A Nation Rises · Complete Victory. 제외는 목록 층에서만 하고 `GameData.findFiles`·`files.find` 는 그대로 8개 파일을 센다(`data.test.mjs` 의 `guideSpec` 8개 기대는 유지).
+  2. 코드를 바꾸면 깨지는 기존 검사를 함께 고친다: `dialog.test.mjs` 의 Campaign 대화상자(8행·패널 높이 301·`mainMenu - Campaign.png` 대조), `progress.test.mjs` 의 한국어 Campaign 시험(`items.length === 8` → 6). 패널이 화면 가운데에 놓이므로 행이 줄면 패널 높이와 모든 요소의 위치가 바뀐다 — 스크린샷 대조는 정렬 원점을 다시 찾거나, 제외한 두 행의 높이만큼 뺀 기대 배치로 바꾸고 새 높이는 구현 때 계산한다.
+  3. 구현·검사가 끝나면 이 항목을 완료로 바꾸고 [캠페인 하위 목록 기록](docs/webpj-campaign-lists-20261029.md) §5 의 "코드 반영 전" 표시를 지운다.
+- [x] **동일성 평가에 미치는 영향:** 영어 4:3 Campaign 대화상자의 원본 동일성은 제외한 두 행(⑦ 구분선·⑧ User Made Campaigns)을 뺀 부분에만 적용한다. 원본 스크린샷 `mainMenu - Campaign.png` 는 8행이므로 코드 반영 뒤에는 패널 크기·행 수가 스크린샷과 달라지며, 이는 '웹 제외 칸' 근거로 기록한다(메인 메뉴 Edit·Quit·Multiplayer 칸을 뺀 것과 같은 처리).
+- [x] **고친 문서:** 이 절 / 아래 WB03-H '다음' (4) / 1절 표의 '최종 게임 범위'·'웹에서 제외' / 7절 WB14 행 / 9절 '다음 시작점' / [캠페인 하위 목록 기록](docs/webpj-campaign-lists-20261029.md) §5 / [Tell 대화상자 기록](docs/webpj-tell-dialog-20261028.md) 불일치 1번 / [진행 값 저장 기록](docs/webpj-progress-storage-20261030.md) §6. 이전 날짜 절의 계획 문구는 당시 기록이라 그대로 두었다. 이 단위는 문서만 로컬 커밋하며 원격 push 는 하지 않는다.
+
 ## 2026-10-30 WB03-H 완료: 캠페인 진행 값(`Done*`) 쓰기·저장과 설정 쓰기 층, 한국어 브라우저의 빈 Campaign 목록 수정
 
 - [x] **범위:** 사용자 요청("AGENTS.md·LEFT_JOBS.webpj.md 를 읽고 webpj 다음 작업 진행, 다른 세션이 cpppj 를 진행 중이니 cpppj 파일 수정 자제")에 따라 아래 WB03-G '다음(이어서)' 첫 항목인 **진행 값(`Done*`) 쓰기·저장과 `GameData` 설정 층의 쓰기(`Set`)** 를 했다. 상세 근거·검증·차이는 [webpj 진행 값 저장 기록](docs/webpj-progress-storage-20261030.md). `cpppj/`·`dotnetpj/`·`originals/`·`originalCD/`·AGENTS.md·공통 `LEFT_JOBS.md` 는 수정하지 않았다(cpppj 소스·fixture·문서는 읽기만 함, 같은 저장소에서 다른 세션이 cpppj 를 작업 중이라 내 파일만 커밋). 원본 게임·analyzeManager 는 실행하지 않았고 브라우저는 Edge 헤드리스다. 호스트 **HJOW-Athlon** = 마지막 전체 정밀 디컴파일 호스트(2026-10-23)와 같아 재디컴파일 없이 `extracted/refined/originals/Netstorm.c` 의 저장 지점(`00441d10`·`00441de0`)을 읽었다.
@@ -7,7 +19,7 @@
 - [x] **검증(HJOW-Athlon, Node v24.21.0, Edge 156 헤드리스):** `npm --prefix webpj test` **74개 통과**(신규 12). `config.test.mjs` 가 cpppj fixture `config-x86.tsv` 의 `Remove` 272행·`Set` 143행을 추가로 대조해 합계 **2,440행이 원본 기계어 결과와 같다.** 변이 검사 20종이 모두 걸렸다(브라우저에서 잡은 1건 포함). 실제 브라우저(마우스 클릭) 1024×768·1920×1080 각 19/19 + 저장소 차단 5/5 + 영어 로캘 19/19: 쓰기→즉시 저장→Campaign→Early Missions 체크 표시·잠금 해제→**새로고침 후 유지**→`destroy`/`init` 재시작에서 다른 탭 값 반영, 콘솔 오류 없음. 확인하지 않은 것: Chrome/Firefox·터치·소리 출력·`storage` 이벤트로 열린 다른 탭의 실시간 갱신·실제 저장소 용량 초과. 실제 미션 승리로 `Done*` 이 쓰이는 경로는 미션 플레이(WB05~)가 생긴 뒤 확인한다.
 - [x] **함께 고친 결함:** 브라우저 언어가 한국어(`ko`)면 앱이 `korean` 을 고르는데 `\D\offical*.korean` 파일이 없어 **Campaign 목록이 비고 Back 만 있는 대화상자**가 열렸다(이 PC 의 Edge 가 `ko`, 그동안 영어로만 확인). `GameData.findFiles` 가 현재 언어 파일이 없으면 영어로 대체해 찾고 `tell-lists.js` 가 쓴다. 원본은 대체하지 않는 웹 적응이며 `.korean` 자료가 생기면 한국어가 먼저 쓰인다.
 - [x] **cpppj 쪽에 알릴 사항(공통 인계용):** webpj 테스트가 cpppj fixture `config-x86.tsv` 를 읽기 전용으로 쓰고 행 수(Get 77·Subst 495·FindSection 1045·Section 408·**Remove 272·Set 143**)를 고정했다. cpppj 가 이 파일을 다시 만들면 `webpj/tests/config.test.mjs` 의 `EXPECTED_ROWS` 가 실패하며, 의도된 변경인지 확인하고 갱신한다.
-- [ ] **다음(이어서):** (1) Tell 지역 인자 `Name(arg1,arg2)`(cpppj fixture `tell-parameters-x86.tsv`)·현재 미션 조회. (2) 시작 팁 창(`tellTips`)·Auto-Demo(`autoDemo`) 연결. (3) 한국어(D2Coding·`.korean`·한국어 라벨)·`<background>` 그림 — 지금은 `.korean` 자료가 없어 영어로 대체한다. (4) `User Made Campaigns` 항목을 웹에서 빼거나 빈 목록으로 둘지 결정(사용자 맵은 웹 제외 범위, `%{userSpec}` 목록 미구현). (5) Options −40 규칙과 와이드 화면 위치(원본 근거 필요). (6) **도움말 후속:** Tell 본문의 링크 훅(`<a href>`+`{Link}` 가 도움말을 여는 경로)과 Tell 창 스크롤바(`TellWindow.fit` 의 `useSlider` 경로가 아직 알림만 함 — `slider.js` 를 연결하면 됨), 타입 표(.type)가 생기면 `<info>`·타입 그림, 스크롤/링크 커서(커서 15·16 리소스), cpppj 삼각형 색 해석 확인, 도움말을 Tell 에서 열었을 때 Back 이 Tell 을 다시 여는 동작. 그 뒤 정적 맵 화면(M2). 이 단위는 로컬 커밋하며 원격 push 는 하지 않는다.
+- [ ] **다음(이어서):** (1) Tell 지역 인자 `Name(arg1,arg2)`(cpppj fixture `tell-parameters-x86.tsv`)·현재 미션 조회. (2) 시작 팁 창(`tellTips`)·Auto-Demo(`autoDemo`) 연결. (3) 한국어(D2Coding·`.korean`·한국어 라벨)·`<background>` 그림 — 지금은 `.korean` 자료가 없어 영어로 대체한다. (4) **[결정 완료 2026-10-30: `User Made Campaigns` 와 Edit 는 제공하지 않고 목록에서 노출하지 않음 — 맨 위 절. 코드 반영(`tell-lists.js` 제외 목록·구분선 정리·검사 갱신)만 남음]** (5) Options −40 규칙과 와이드 화면 위치(원본 근거 필요). (6) **도움말 후속:** Tell 본문의 링크 훅(`<a href>`+`{Link}` 가 도움말을 여는 경로)과 Tell 창 스크롤바(`TellWindow.fit` 의 `useSlider` 경로가 아직 알림만 함 — `slider.js` 를 연결하면 됨), 타입 표(.type)가 생기면 `<info>`·타입 그림, 스크롤/링크 커서(커서 15·16 리소스), cpppj 삼각형 색 해석 확인, 도움말을 Tell 에서 열었을 때 Back 이 Tell 을 다시 여는 동작. 그 뒤 정적 맵 화면(M2). 이 단위는 로컬 커밋하며 원격 push 는 하지 않는다.
 
 ## 2026-10-30 WB03-G 완료: General Help - F1 도움말 창(본문 스크롤바·링크·조건·그림)
 
@@ -100,9 +112,9 @@
 
 | 구분 | 계획 |
 |---|---|
-| 최종 게임 범위 | Early Missions 전체·캠페인 전체·데모·도움말/지식과 언어별 시나리오(커스텀 맵 Edit·사용자 맵은 2026-10-27 목표 변경으로 제외). 각 기능은 cpppj의 복원·검증·실제 연결 범위를 확인한 뒤 이식한다. |
+| 최종 게임 범위 | Early Missions 전체·캠페인 전체·데모·도움말/지식과 언어별 시나리오(커스텀 맵 Edit·사용자 맵은 2026-10-27 목표 변경으로 제외, **User Made Campaigns 목록도 2026-10-30 사용자 결정으로 제외**). 각 기능은 cpppj의 복원·검증·실제 연결 범위를 확인한 뒤 이식한다. |
 | 초기 검증 범위 | 시작 화면→메인 메뉴→정적 맵 표시→캠페인 1-1→1-2 순으로 넓힌다. 초기 두 미션 완주를 전체 캠페인 완료로 세지 않는다. |
-| 웹에서 제외 | **커스텀 맵 Edit(편집기·사용자 맵 불러오기/저장, 2026-10-27 AGENTS.md 변경으로 추가)**·멀티플레이/LAN·공식 서버 접속·Outpost, 게임 종료 메뉴, 게임 옵션의 해상도 선택·전체화면 전환, 설치/CD 탐지·레지스트리 등 웹과 맞지 않는 운영체제 동작. 메뉴에서도 제외하거나 싱글플레이에 맞는 항목만 표시한다. |
+| 웹에서 제외 | **커스텀 맵 Edit(편집기·사용자 맵 불러오기/저장, 2026-10-27 AGENTS.md 변경으로 추가, 어떤 목록·메뉴에도 노출하지 않음)**·**User Made Campaigns(Campaign 목록의 사용자 캠페인 행과 `offical6`·`%{userSpec}` 목록, 2026-10-30 사용자 결정으로 목록에서 노출하지 않음)**·멀티플레이/LAN·공식 서버 접속·Outpost, 게임 종료 메뉴, 게임 옵션의 해상도 선택·전체화면 전환, 설치/CD 탐지·레지스트리 등 웹과 맞지 않는 운영체제 동작. 메뉴에서도 제외하거나 싱글플레이에 맞는 항목만 표시한다. |
 | 시작 절차 | 메인 메뉴보다 먼저 **‘클릭하여 시작’** 화면을 표시한다. 사용자 입력으로 오디오 사용을 준비하고 필수 자산 준비가 끝난 뒤 메인 메뉴로 진입한다. |
 | 화면 | 브라우저 내부의 게임 영역에 맞춰 4:3·16:9·16:10을 지원한다. 게임 내 해상도/전체화면 옵션을 추가한다는 의미가 아니다. 원본 동일성은 영어·4:3 경로에서 먼저 확인한다. |
 | 프레임 | 원본의 요소별 애니메이션·Regular·게임 시간부터 복원한다. 이후 60/120프레임 표시를 검토하며 표시 빈도가 이동·공격·생산 속도를 바꾸지 않게 한다. |
@@ -203,7 +215,7 @@
 | WB11 · P1 | 튜토리얼 게이트·안내/조건/명령·정지 소유권·지식/도움말/메뉴·진행 저장 | **M3: 1-1·1-2 자연 완주와 재실행/다음 미션 해제**. Early Missions 전체·캠페인·데모로 확장하되 AI 의존 미션은 WB12 이후 완주 판정. |
 | WB12 · P1 | cpppj 최신 AI 초기화/전체 행동·수집/생산/건설·다리 탐색/전략·종료 수명 | 임시 방어 AI로 대신하지 않고 같은 Player/기술/SP/난수/명령 경로에 연결. 초기 진행과 전체 자연 완주를 구분. |
 | WB13 · P1 | 소리·음악 Process/장면 전환·위치 소리·중첩/정지/해제 | WB01의 오디오 활성화 이후 실제 이벤트별 재생/반복/정지 시점과 메뉴/미션 재시작 수명을 확인. 기본 버튼/배경음은 WB03부터 연결 가능. |
-| WB14 · **제외(2026-10-27)** | ~~Edit/custom·Fort/언어 파일 가져오기·검증·내보내기·편집기/TEST01/TEST02~~ | AGENTS.md webpj 목표 변경(`8fafa298`)으로 구현하지 않음. 번호는 다른 단위와 맞추기 위해 유지. 메인 메뉴의 Edit 버튼은 코드에서 빼야 함(맨 위 2026-10-27 절). |
+| WB14 · **제외(2026-10-27)** | ~~Edit/custom·Fort/언어 파일 가져오기·검증·내보내기·편집기/TEST01/TEST02~~ | AGENTS.md webpj 목표 변경(`8fafa298`)으로 구현하지 않음. 번호는 다른 단위와 맞추기 위해 유지. 메인 메뉴의 Edit 버튼은 2026-10-28 에 코드에서 뺐다. 사용자 캠페인 목록(User Made Campaigns)도 같은 범위로 2026-10-30 에 제외를 확정했다(맨 위 2026-10-30 '사용자 결정' 절, 코드 반영은 후속). |
 | WB15 · P2 | 전체 미션의 표시/소리/조작·도움말·영어/한국어 문구/글꼴·저장 회귀 | **M4: 범위 내 싱글플레이 L1~L5 검증**. 준비한 언어 기반만으로 한국어 번역 완료 처리하지 않음. |
 | WB16 · 후순위 | 원본 프레임 동일성 이후 60/120프레임 표시·로딩/메모리/렌더링 최적화·브라우저/GUI Linux 검증·정적 배포 | 화면비/입력/오디오/저장/속도 유지. 개발 서버 없이 같은 정적 자료로 실행하며 배포 경로·새로고침·캐시/자료 버전도 확인. |
 
@@ -250,7 +262,7 @@ npm --prefix webpj test
 - [x] **WB01 구현 (2026-10-23 완료):** `index.html`의 `Netstorm` 참조를 모듈 import로 정리하고 `init/destroy` 수명·루트/Canvas/스타일·클릭 대기/로딩/실패 화면·입력을 `netstorm.js`에 구현했다. `.css` 파일은 만들지 않았다.
 - [x] **WB01 검증 (2026-10-23 완료):** 클릭 전 메뉴·소리 없음, 클릭 뒤 전환, 로딩 실패 재시도, init/destroy 반복과 중복 이벤트/프레임 없음, 게임 루트 포커스/크기 변경을 확인했다. 자산이 없으므로 메인 메뉴는 임시 화면이며 원본 메뉴 완료가 아니다. 결과와 확인하지 않은 범위는 맨 위 WB01 절에 있다.
 - [x] **WB03-M1 메인 메뉴 (2026-10-23 완료):** 메뉴 자산 묶음·manifest·준비 도구, 팔레트/명암·GIF·VFX 셰이프·원본 영어 글꼴 판독, 8비트 합성·표시기, 원본 메인 메뉴(배치·돌 버튼·입력·소리·커서·창 제목)를 구현·검증했다. 맨 위 WB03-M1 절과 [상세 기록](docs/webpj-main-menu-20261023.md).
-- [ ] **다음 시작점(WB03 나머지 → WB03 M2):** (2026-10-28: Edit 버튼 제거·데이터층·**Tell 대화상자 Credits·Demo·Campaign 목록(WB03-D)** 완료, 맨 위 두 절.) (2026-10-29 WB03-E: Early Missions 등 캠페인 하위 목록 5종 대조 완료.) (2026-10-29 WB03-F: MenuGump 펼침 메뉴 Help·Options 와 설정 저장 완료.) (2026-10-30 WB03-G: General Help - F1 도움말 창(본문 스크롤바·링크·조건·그림 일부) 완료.) (2026-10-30 WB03-H: 진행 값(`Done*`) 쓰기·저장과 `GameData` 쓰기 층 완료, 한국어 브라우저의 빈 Campaign 목록 수정.) 이제 Tell 지역 인자·시작 팁 창(Edit 목록은 2026-10-27 목표 변경으로 제외), D2Coding·언어표(한국어 라벨)를 잇는다(맨 위 WB03-H 절의 '다음'). 디컴파일 호스트는 HJOW-Athlon 에서 일치했으나 다른 PC 에서 이어 읽을 때는 PC 일치 여부를 다시 확인한다. 그 뒤 정적 맵 화면(M2)을 원본 자료로 그리고 WB04 공유 코어와 수치/fixture 검증으로 진행한다.
+- [ ] **다음 시작점(WB03 나머지 → WB03 M2):** (2026-10-28: Edit 버튼 제거·데이터층·**Tell 대화상자 Credits·Demo·Campaign 목록(WB03-D)** 완료, 맨 위 두 절.) (2026-10-29 WB03-E: Early Missions 등 캠페인 하위 목록 5종 대조 완료.) (2026-10-29 WB03-F: MenuGump 펼침 메뉴 Help·Options 와 설정 저장 완료.) (2026-10-30 WB03-G: General Help - F1 도움말 창(본문 스크롤바·링크·조건·그림 일부) 완료.) (2026-10-30 WB03-H: 진행 값(`Done*`) 쓰기·저장과 `GameData` 쓰기 층 완료, 한국어 브라우저의 빈 Campaign 목록 수정.) (2026-10-30 사용자 결정: Edit 와 User Made Campaigns 는 제공하지 않고 목록에서 노출하지 않음 — 맨 위 절, Campaign 목록의 해당 행 제거 코드는 후속.) 이제 Tell 지역 인자·시작 팁 창(Edit 목록은 2026-10-27 목표 변경으로 제외), D2Coding·언어표(한국어 라벨)를 잇는다(맨 위 WB03-H 절의 '다음'). 디컴파일 호스트는 HJOW-Athlon 에서 일치했으나 다른 PC 에서 이어 읽을 때는 PC 일치 여부를 다시 확인한다. 그 뒤 정적 맵 화면(M2)을 원본 자료로 그리고 WB04 공유 코어와 수치/fixture 검증으로 진행한다.
 - [ ] **착수 때 갱신:** cpppj 최신 복원/실패·자산 복사본·원본 소스와 현재 호스트·Git 변경을 확인한다. 이번에 보존한 사용자 미추적 골격은 실제 구현 단위에서 관련 변경과 함께 관리한다.
 
 ## 10. 참고 자료와 이번 작업 기록
