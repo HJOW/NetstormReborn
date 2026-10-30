@@ -64,10 +64,9 @@
                        커스텀 맵 (Edit 기능으로 작성한 맵) 은 기존 디렉토리와 사용자 홈 디렉토리 내부 (Windows 기준 %USERPROFILE%\Saved Games\Netstorm\CustomMaps\ ) 둘 다 불러오되, Edit 메뉴에서 신규 작성한 맵은 사용자 홈 디렉토리 내부 (Windows 기준 %USERPROFILE%\Saved Games\Netstorm\CustomMaps\ ) 에 저장하도록 한다.
                        추가로, 메인 메뉴에서 Edit 선택 시 나타나는 커스텀 맵 목록에 스크롤을 도입하고 출력 갯수 제한을 무제한으로 변경한다.
                  6차 - 한국어 지원 작업
-                 7차 - 안티앨리어싱 및 FSR 3.1 선택사항으로 추가
-                       메인 메뉴 - Options 에서 안티앨리어싱 및 FSR 3.1 을 선택적으로 켤 수 있도록 기능 추가 (기본값으로는 꺼져 있어야 함)
+                 7차 - 안티앨리어싱 선택사항으로 추가
+                       메인 메뉴 - Options 에서 안티앨리어싱을 선택적으로 켤 수 있도록 기능 추가 (기본값으로는 꺼져 있어야 함)
                        게임 내에 해당 옵션 적용
-                       (FSR 은 FidelityFX 의 Super Resolution 기능으로 https://github.com/GPUOpen-LibrariesAndSDKs/FidelityFX-SDK.git 참고)
              cpppj 는 윈도우용만 개발한다.
   dotnetpj - C# + MonoGame 기반으로 개발. cpppj 완성 후 이를 분석하여 개발.
              dotnetpj 또한 일단은 기존 게임과 완전히 동일하게 동작하는 것을 목표로 개발 후, 요구사항을 반영한다.
