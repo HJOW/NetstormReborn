@@ -48,6 +48,17 @@ void CurrentBridgeScratchBytes(std::span<std::uint8_t> bytes) {
     throw std::logic_error("AI 검색 현재 caller8BYTE의 Windows 경계 미설치");
 #endif
 }
+// 원본 반사점의 미기록8BYTE를 현재 스택에서 복사한다. 원본32비트 스택 주소/배치의 일치는 보장하지 않는다.
+// 자기 프로세스 읽기로 C++ 미정값 연산을 피하며 유효 좌표나0을 만들어 넣지 않는다.
+void CurrentRicochetScratchBytes(std::span<std::uint8_t> bytes) {
+    if (bytes.size()!=8) throw std::invalid_argument("아이스 반사 현재 지역점8BYTE 크기 오류");
+#ifdef _WIN32
+    std::array<std::uint8_t,8> current;SIZE_T read{};
+    if (!ReadProcessMemory(GetCurrentProcess(),current.data(),bytes.data(),bytes.size(),&read) || read!=bytes.size()) throw std::runtime_error("아이스 반사 현재 지역점8BYTE 조회 실패");
+#else
+    throw std::logic_error("아이스 반사 현재 지역점8BYTE의 Windows 경계 미설치");
+#endif
+}
 }
 // 같은 Client의 실제 타입 수/언어/미정 할당을 파일 목록에 제공한다.
 SoloMapCatalogEffects MakeSoloMapCatalogClientEffects(Client& client,std::function<std::string()> currentName) {
@@ -207,6 +218,7 @@ RawCampaignSessionServices MakeCampaignClientServices(Client& client,RawButtonCo
     // Missile ctor/충돌과 Path Step은 실제 위치 한 번 재생에 반복 0·우선 0을 넘긴다.
     services.archer.missile.firingSound=services.archer.missile.impactSound=
         [&player](float x,float y,std::uint32_t sound) { player.PlayOnceAt(x,y,sound,0,0); };
+    services.archer.ricochetPointBytes=CurrentRicochetScratchBytes; // 같은 Session의 변위0 반사에 현재 스택 바이트를 공급한다.
     services.motion.path.stepSound=[&player](o::Sid,float x,float y,std::uint32_t sound) {
         player.PlayOnceAt(x,y,sound,0,0);
     };

@@ -2291,3 +2291,13 @@ cpppj/tests/fixtures/missile-floater-x86.tsv -text
 cpppj/missile-floater-native-20261030.json text eol=lf
 cpppj/missile-floater-runtime-20261030.json text eol=lf
 docs/exe/cpp-missile-floater-20261030.md text eol=lf
+
+# 반사 변위0의 실제 입력8BYTE와 최초 관측을 보존한다.
+cpppj/src/o/RawIceRicochet.cpp text eol=lf
+cpppj/src/o/RawIceRicochet.h text eol=lf
+cpppj/tests/IceRicochetTests.cpp text eol=lf
+tools/decomp_ice_ricochet_scratch.py text eol=lf
+cpppj/tests/fixtures/ice-ricochet-scratch-x86.tsv -text
+cpppj/ice-ricochet-scratch-native-20261030.json text eol=lf
+cpppj/ice-ricochet-scratch-runtime-20261030.json text eol=lf
+docs/exe/cpp-ice-ricochet-scratch-20261030.md text eol=lf

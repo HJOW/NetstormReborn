@@ -12,6 +12,7 @@ struct IceRicochetHooks {
     std::function<Sid()> next; // 현재 Finder의 다음 후보를 반환한다. 후보 변경은 다음 조회에 반영된다.
     std::function<bool(Sid)> hasHitPoints; // 같은 SquidReward의004adc60 HP 보유 판정이다.
     std::function<void(const GunProjectileRequest&)> createProjectile; // 실제 반사 Missile의 생성·Pop·Host 부착을 수행해야 한다.
+    std::function<void(std::span<std::uint8_t>)> initialPointBytes; // 변위0에서 Point가 쓰지 않은 호출자 지역점8BYTE를 공급한다. 임의 성공 좌표로 대체하지 않는다.
 };
 // 전체 반사탄 수명과 분리한 원본 반사점/확률/표적 선택 몸체다.
 class RawIceRicochet {

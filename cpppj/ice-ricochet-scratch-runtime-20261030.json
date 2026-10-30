@@ -1,0 +1,343 @@
+{
+  "unit": 612,
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "native": {
+    "unit": 612,
+    "host": "HJOW-Athlon",
+    "lastFullDecompilation": "HJOW-Athlon / 2026-10-23",
+    "cases": 213,
+    "observations": 426,
+    "differences": [],
+    "fixtureWritten": false,
+    "verificationOnly": true,
+    "sourceSha256": {
+      "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+      "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+      "tools/decomp_ice_ricochet.py": "7ac9a7dceed017335547548e99b469706edc4b78c1c00aa0254409b9bc324904",
+      "tools/decomp_owner_oracle.py": "5a837ad7fd233d9d75c7241d52fbf2e5a508e24dc158d091f243a13ab698e7fb",
+      "tools/decomp_ice_ricochet_scratch.py": "a454a3fead5263984e7bc8a194f717ebfa31a98ccdadc17f648f498b6fabf3eb",
+      "cpppj/tests/fixtures/ice-ricochet-scratch-x86.tsv": "2f14707db8e06b817eb4043dc2268b1d136e0f307c33953994d8f3d4de1fe45e"
+    },
+    "scope": "00482190 입구ESP-0x5c의8BYTE만 호출 전 명시 입력으로 두고 실제Point/Valid/난수/후보 선택/생성 인자를 실행한다. 일반Finder 후보와 할당/후속ctor는 기존 경계다. 게임/GUI/특정적공격/포획/희생/승리/신규MP 없음."
+  },
+  "focusedTests": 48,
+  "testNames": [
+    "ArcherAnimation_MissingRealMissileRejected",
+    "ArcherMissile_CdNativeCtorAndFrames",
+    "ArcherMissile_PatchNativeCtorAndFrames",
+    "CampaignIceTower_ActualDeletionGates",
+    "CampaignIceTower_ActualKernelRegrowthAndRepeat",
+    "CampaignSession_MissileFringeDepthAndOverlap",
+    "CampaignThunderMissile_DissolvedAllianceNaturalShot",
+    "CannonFire_ActualHostNotifyAndLifetime",
+    "CannonFire_MissingMissileRejected",
+    "CannonFire_NativeConstructorsStepsAndLaunch",
+    "CannonFire_NativeSunFramesAndReentry",
+    "CannonFire_NativeThunderFramesAndReentry",
+    "CrossbowAnimation_MissingMissileRejected",
+    "CrossbowMissile_NativeCtorAndDirection",
+    "CrossbowMissile_NativeFramesAndImpact",
+    "CrossbowMissile_NativeVirtualMuzzle",
+    "GunAnimation_MissingMissileIsExplicit",
+    "IceCannonFire_ActualHostNotifyAndSelfDeletion",
+    "IceCannonFire_ReplaysNativeCommonFrame",
+    "IceCannonFire_ReplaysNativeConstructorPadding",
+    "IceCannonFire_ReplaysNativeLaunchGetters",
+    "IceCannonFire_ReplaysNativeStepCurrentFields",
+    "IceMissileInitial_NativeCtorAndDirection",
+    "IceMissileInitial_NativeFramesAndImpact",
+    "IceMissileInitial_NativeRayEnd",
+    "IceMissileInitial_NativeVirtualMuzzle",
+    "IceReflected_NativeConstructorTargetZeroAndPadding",
+    "IceReflected_NativeFrameDamageAndLifetime",
+    "IceRicochet_ActualWorldFinderAndRewardShareNativeRequest",
+    "IceRicochet_ReplaysNativeChanceAndCandidateSelection",
+    "IceRicochet_ReplaysNativeCurrentFieldsAfterFinder",
+    "IceRicochet_ReplaysNativePointAndSharedRandom",
+    "IceRicochet_ReplaysNativeScratch213",
+    "IceRicochet_ReplaysNativeZeroDisplacementPreservesOutput",
+    "IceRicochet_ScratchRequiredOnlyAfterChanceAndZeroPoint",
+    "IceRicochet_SelectedMissingLifetimeIsRejected",
+    "IceTower_IndependentNativeBodies1426",
+    "MissileFloater_IndependentNative481",
+    "MissileFloater_OncePerFlightAndSelectedRandom",
+    "Missile_ActualFactorySpaceKernelAndDelete",
+    "Missile_CdNativeCtorAndFrames",
+    "Missile_MissingRealFlightEffectRejected",
+    "Missile_PatchNativeCtorAndFrames",
+    "ThunderMissile_NativeCtorAndDirection",
+    "ThunderMissile_NativeFramesAndImpact",
+    "ThunderMissile_NativeHitEventAndStrictQueue",
+    "ThunderMissile_NativeRayEnd",
+    "ThunderMissile_NativeVirtualMuzzle"
+  ],
+  "tests": [
+    {
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+        "--filter",
+        "CannonFire"
+      ],
+      "binarySha256": "75c632b1391b4a8464adea945a55ccd68040fb3f7fad5f4c99b3364aa8df1dc5",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 3.799759699999413,
+      "stdoutSha256": "9ab30b702c44fb3370c2da63376e81f2ecd8e8d45233072d40ee899d05081910",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tests": 10,
+      "failed": 0,
+      "testOnlyBridgeManipulation": false
+    },
+    {
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+        "--filter",
+        "Ice"
+      ],
+      "binarySha256": "75c632b1391b4a8464adea945a55ccd68040fb3f7fad5f4c99b3364aa8df1dc5",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 12.394340200000443,
+      "stdoutSha256": "f8e874b65e07b09186e0588b0071e86a4e7de9a967f25faa067312cc291f3665",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tests": 22,
+      "failed": 0,
+      "testOnlyBridgeManipulation": false
+    },
+    {
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+        "--filter",
+        "IceRicochet"
+      ],
+      "binarySha256": "75c632b1391b4a8464adea945a55ccd68040fb3f7fad5f4c99b3364aa8df1dc5",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 3.474833199994464,
+      "stdoutSha256": "416cd748123c36dc29a6b4a01c662b4fae2be988d996bd37a3f3c6c2f931c57f",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tests": 8,
+      "failed": 0,
+      "testOnlyBridgeManipulation": false
+    },
+    {
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+        "--filter",
+        "Missile"
+      ],
+      "binarySha256": "75c632b1391b4a8464adea945a55ccd68040fb3f7fad5f4c99b3364aa8df1dc5",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 9.110186400001112,
+      "stdoutSha256": "8865ea35ecafa106d813eb6ba0d92c5f781b89921d1b64919eea77d8adf649df",
+      "stderrSha256": "35480ca66a96725294fd8ea70081f38546c61919694f0bb451a99c3f1f509501",
+      "tests": 26,
+      "failed": 0,
+      "testOnlyBridgeManipulation": false
+    }
+  ],
+  "registeredTests": 3518,
+  "buildExitCode": 0,
+  "gameSha256": "b9d06deb5219d2a279d905542ea8038c30a420ce75dc400c9b80546be0823450",
+  "testSha256": "75c632b1391b4a8464adea945a55ccd68040fb3f7fad5f4c99b3364aa8df1dc5",
+  "package": {
+    "entries": 1376,
+    "gameAssets": 1358,
+    "allEntryBytesMatch": true,
+    "allGameAssetsMatchSources": true,
+    "gameSha256": "b9d06deb5219d2a279d905542ea8038c30a420ce75dc400c9b80546be0823450",
+    "zipSha256": "af5fb68de436fc80a6cb49382624c212f1f40d0a6600f6c6b24c121a96e5ec1a",
+    "product": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-ice-ricochet-scratch-612-20261030\\한글 배포본\\NetstormReborn-cpppj"
+  },
+  "basic": {
+    "mission": "Tutorial1",
+    "demo": false,
+    "result": {
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-ice-ricochet-scratch-612-20261030\\한글 배포본\\NetstormReborn-cpppj\\Netstorm.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-ice-ricochet-scratch-612-20261030\\한글 배포본\\NetstormReborn-cpppj\\game",
+        "--no-audio",
+        "--frames",
+        "180",
+        "--set",
+        "SCREENW=1024;SCREENH=768;maxFPS=40;autoDemo=0;tellTips=0;startInFullScreen=1;sleepPerLoop=1",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-ice-ricochet-scratch-612-20261030\\basic\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-ice-ricochet-scratch-612-20261030\\basic\\states.tsv",
+        "--window",
+        "--mission",
+        "Tutorial1"
+      ],
+      "binarySha256": "b9d06deb5219d2a279d905542ea8038c30a420ce75dc400c9b80546be0823450",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 9.040260300003865,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2"
+    },
+    "passed": true,
+    "final": {
+      "phase": [
+        "4"
+      ],
+      "page": [
+        "mission"
+      ],
+      "paused": [
+        "0"
+      ],
+      "mission": [
+        "Tutorial1",
+        "Tutorial",
+        "3"
+      ],
+      "mission_start": [
+        "1",
+        "4",
+        "0",
+        "0.331",
+        "0"
+      ],
+      "mission_gate": [
+        "1",
+        "65",
+        "0",
+        "0",
+        "0",
+        "1",
+        "0",
+        "0"
+      ],
+      "raw_session": [
+        "1",
+        "1"
+      ],
+      "raw_sp": [
+        "-65.0092010498",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0"
+      ],
+      "raw_technology": [],
+      "raw_brains": [
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0"
+      ],
+      "fort_names": [
+        "BridgeTheGap",
+        "",
+        "2",
+        "fortSpec"
+      ],
+      "raw_uber": [
+        "232",
+        "1",
+        "3",
+        "85",
+        "0",
+        "1024",
+        "768"
+      ],
+      "raw_hud_owners": [
+        "1",
+        "1",
+        "220",
+        "236",
+        "219"
+      ],
+      "time": [
+        "7.414",
+        "8.104"
+      ],
+      "screen_mode": [
+        "138",
+        "1024",
+        "768",
+        "1024",
+        "1"
+      ],
+      "screen_output": [
+        "0",
+        "0",
+        "1024",
+        "768"
+      ],
+      "screen_window": [
+        "0",
+        "0",
+        "1040",
+        "807",
+        "1024",
+        "768",
+        "349110272"
+      ]
+    },
+    "gameClock": {
+      "samples": 20,
+      "first": 0.49,
+      "last": 7.414,
+      "increase": 6.9239999999999995
+    },
+    "checks": {
+      "normalExit": true,
+      "playing": true,
+      "correctMission": true,
+      "world": true,
+      "guide": true,
+      "loadingReleased": true,
+      "gameClockAdvanced": true,
+      "gameClockMonotonic": true,
+      "physicalOutput": true
+    },
+    "presentation": {
+      "same": true,
+      "actualSha256": "150ca13c7b8c2c4041b08a0d8d3f70103338522cb1c5e9ac89800cd0baa317e4",
+      "expectedSha256": "150ca13c7b8c2c4041b08a0d8d3f70103338522cb1c5e9ac89800cd0baa317e4",
+      "dimensions": [
+        1024,
+        768
+      ],
+      "outputRect": [
+        0,
+        0,
+        1024,
+        768
+      ]
+    }
+  },
+  "protectedCount": 2579,
+  "protectedFixtureCount": 756,
+  "protectedDifferences": [],
+  "fixtureCount": 757,
+  "sourceSha256": {
+    "cpppj/src/o/RawIceRicochet.h": "4c95a6b5846a1c21f116b832aef0a13c426646fd2d3762d0e214fe859b97dfa2",
+    "cpppj/src/o/RawIceRicochet.cpp": "ae6acfac41007103d0e1508682381a23dff690b87399f56b21cbd89dff7da599",
+    "cpppj/src/client/RawCampaignArcherBindings.h": "ddd15f8fa32146e16a987f143cbee7519f77514903514ff8c59cf07e263c2b84",
+    "cpppj/src/client/RawCampaignSession.cpp": "8f5fec1ea4a488df4addf8b2afddaab253a1349cd4b0ff5a0de6795d2fcc6dba",
+    "cpppj/src/client/CampaignClientServices.cpp": "37c22232459e9682a9844d7291795c8f85fdc51688443ce33a731ef39d371422",
+    "cpppj/tests/IceRicochetTests.cpp": "04bf41a56fb124cff7e95de4c66961b23bfd64c4ed62d0696753ccb4718ed4d3",
+    "cpppj/tests/CMakeLists.txt": "48b05137a55720db3e505e0e3cec580536ac07f33c51c3008953d7e7a57470a0",
+    "tools/decomp_ice_ricochet_scratch.py": "a454a3fead5263984e7bc8a194f717ebfa31a98ccdadc17f648f498b6fabf3eb"
+  },
+  "lastFull34ProductUnit": 609,
+  "lastFull34Unit": 610,
+  "scope": "반사 Generate 변위0에서 실제 지역점8BYTE로 판정을 계속하는 몸체와 현재 Client 장치 연결. 원본32비트/현재판 스택 배치와 미정값 자체의 일치는 보장하지 않는다. 새 ZIP 기본 진입이며 실제 특정 적 공격/포획/희생/승리·공중3종전용/신규MP/전체C++/612 전체34는 검사하지 않았다."
+}

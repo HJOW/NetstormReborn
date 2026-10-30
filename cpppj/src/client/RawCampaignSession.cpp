@@ -1227,7 +1227,8 @@ struct RawCampaignSession::Impl {
         };
         combatEffects.missile=hits->MissileHooks(*gunHit,missileState,std::move(combatEffects.missile));
         if (!combatEffects.missile.damage) combatEffects.missile.damage=hits->DamageHooks({}).damage; // 반사 가상98도 사제/신전/일반 자산의 실제 현재 분배를 사용한다.
-        IceRicochetHooks ricochetHooks;ricochetHooks.createProjectile=[this](const GunProjectileRequest& request) {
+        IceRicochetHooks ricochetHooks;ricochetHooks.initialPointBytes=combatEffects.ricochetPointBytes;
+        ricochetHooks.createProjectile=[this](const GunProjectileRequest& request) {
             if (!combat) throw std::logic_error("아이스 반사 실제 Missile 설치 전 생성");
             if (!CreateMissile(core.processes,combat->Missile(),request)) throw std::logic_error("아이스 반사 실제 Host 부착 실패");
         };

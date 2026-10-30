@@ -1,0 +1,20 @@
+{
+  "unit": 612,
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": "HJOW-Athlon / 2026-10-23",
+  "cases": 213,
+  "observations": 426,
+  "differences": [],
+  "fixtureWritten": false,
+  "verificationOnly": true,
+  "sourceSha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "tools/decomp_ice_ricochet.py": "7ac9a7dceed017335547548e99b469706edc4b78c1c00aa0254409b9bc324904",
+    "tools/decomp_owner_oracle.py": "5a837ad7fd233d9d75c7241d52fbf2e5a508e24dc158d091f243a13ab698e7fb",
+    "tools/decomp_ice_ricochet_scratch.py": "a454a3fead5263984e7bc8a194f717ebfa31a98ccdadc17f648f498b6fabf3eb",
+    "cpppj/tests/fixtures/ice-ricochet-scratch-x86.tsv": "2f14707db8e06b817eb4043dc2268b1d136e0f307c33953994d8f3d4de1fe45e"
+  },
+  "scope": "00482190 입구ESP-0x5c의8BYTE만 호출 전 명시 입력으로 두고 실제Point/Valid/난수/후보 선택/생성 인자를 실행한다. 일반Finder 후보와 할당/후속ctor는 기존 경계다. 게임/GUI/특정적공격/포획/희생/승리/신규MP 없음."
+}

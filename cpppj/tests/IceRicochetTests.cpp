@@ -24,6 +24,7 @@ struct IceRicochetScene {
     std::vector<std::uint16_t> candidates; // 원문 외부 Finder에 공급한 동일 후보 순서다.
     std::size_t index{}; // 현재 Finder 후보 위치다.
     const std::vector<std::string>* input{}; // 이번 독립 입력 행이다.
+    std::function<void(std::span<std::uint8_t>)> initialPointBytes; // 새 변위0 관측만 원문의 호출 전8BYTE를 공급한다.
     // free/저번호 후보의 물리 바이트까지 검사 입력으로 직접 구성한다.
     std::span<std::uint8_t> Slot(Sid sid) {
         const auto raw=pool.Slot(sid);return {const_cast<std::uint8_t*>(raw.data()),raw.size()};
@@ -70,6 +71,7 @@ struct IceRicochetScene {
         SquidPostPopState bookkeeping;SquidRewardState rewardState;ScrambledSpStore store(random,[] { return 1U; });SquidReward reward(pool,types,bookkeeping,rewardState,&store);IceRicochetHooks hooks;
         hooks.begin=[this](SquidSearchArea area,std::uint32_t flags) { CHECK(flags==0);index=0;events.push_back("B:"+std::to_string(area.left)+','+std::to_string(area.top)+','+std::to_string(area.right)+','+std::to_string(area.bottom)+":0:0");return Sid{candidates.empty() ? std::uint16_t{0} : candidates[0]}; };
         hooks.next=[this] { return Next(); };hooks.hasHitPoints=[&reward](Sid sid) { return reward.HasHitPoints(sid); };hooks.createProjectile=[this](const GunProjectileRequest& request) { Create(request); };
+        hooks.initialPointBytes=initialPointBytes;
         RawIceRicochet logic(pool,types,missileTypes,random,std::move(hooks));std::array<float,2> point{123.25F,124.5F};
         if (Number(input->at(Kind))==0) logic.Point(fields,point);else logic.Generate(fields);
         std::array<std::uint8_t,8> pointBytes{};Put(pointBytes,0,std::bit_cast<std::uint32_t>(point[0]));Put(pointBytes,4,std::bit_cast<std::uint32_t>(point[1]));std::string trace;
@@ -110,4 +112,26 @@ TEST_CASE(IceRicochet_ActualWorldFinderAndRewardShareNativeRequest) { // 실제 
     RawIceRicochet logic(scene.pool,scene.types,scene.missileTypes,scene.random,MakeIceRicochetWorldHooks(scene.pool,hash,scene.types,reward,std::move(hooks)));logic.Generate(scene.fields);
     CHECK(scene.events.size()==1);if (!scene.events.empty()) { const auto& expected=found->at(Output);const auto position=expected.rfind("J:");CHECK(position!=std::string::npos);if (position!=std::string::npos) CHECK(scene.events[0]==expected.substr(position)); }
     CHECK(Hex(scene.fields.bytes)==found->at(Output+2));CHECK(scene.random.State()==Number(found->at(Output+3)));CHECK(!store.Initialized());
+}
+
+TEST_CASE(IceRicochet_ReplaysNativeScratch213) { // 새 원문213행의 변위0/비영변위·NaN/경계·후보/현재 필드와 공유 난수를 대조한다.
+    const auto rows=LoadFixture(NETSTORM_ICE_RICOCHET_SCRATCH_FIXTURE).rows;CHECK(rows.size()==213);IceRicochetScene scene;
+    // 원문 입력11열과 독립 좌표8BYTE를 공급하고 최초 출력4열 전체를 비교한다.
+    for (std::size_t i=0;i<rows.size();++i) {
+        const auto& row=rows[i];CHECK(row.size()==20);std::vector<std::string> base(row.begin(),row.begin()+11);base.insert(base.end(),row.begin()+13,row.begin()+17);scene.Prepare(base);std::size_t fills{};
+        scene.initialPointBytes=[&row,&fills](std::span<std::uint8_t> bytes) { CHECK(bytes.size()==8);++fills;Put(bytes,0,Number(row[11]));Put(bytes,4,Number(row[12])); };
+        const auto actual=scene.Run();
+        // C++ 계산으로 기대값을 만들지 않고 원문 관찰 바이트/효과 순서만 비교한다.
+        for (std::size_t column=0;column<actual.size();++column) {
+            if (actual[column]!=row[13+column]) { std::fprintf(stderr,"반사 지역점 차이 row=%zu column=%zu actual=%s expected=%s\n",i,column,actual[column].c_str(),row[13+column].c_str());CHECK(false);return; }
+        }
+        CHECK(fills==((row[X]==row[OriginX] && row[Y]==row[OriginY]) ? Number(row[18]) : 0U));
+        if (fills) CHECK(row[19]=="1");
+    }
+}
+
+TEST_CASE(IceRicochet_ScratchRequiredOnlyAfterChanceAndZeroPoint) { // 선택된 변위0의 입력 누락만 거부하고 앞선 난수/필드를 보존한다.
+    IceRicochetScene scene;auto row=IceRows().front();row[Kind]="1";row[Seed]="20";row[OriginX]=row[X];row[OriginY]=row[Y];scene.Prepare(row);
+    CHECK(Throws([&] { static_cast<void>(scene.Run()); }));CHECK(scene.events.empty());CHECK(scene.random.State()==0x0014003fU);
+    row[Seed]="1";scene.Prepare(row);CHECK(!Throws([&] { static_cast<void>(scene.Run()); }));CHECK(scene.events.empty());CHECK(scene.random.State()==0x00010006U);
 }

@@ -58,9 +58,13 @@ bool RawIceRicochet::Point(const MissileFields& fields,std::array<float,2>& outp
 // 원본은 표적이 없어도 target0의 반사 Missile을 생성한다.
 void RawIceRicochet::Generate(const MissileFields& fields) const {
     if (random_.Next(99)<=19) return;
-    const auto display=Slot(fields.Parent());std::array<float,2> point;
-    // 원문의 미초기화 지역점에 임의 좌표를 넣어 성공시키지 않는다. 명시 Point 호출은 출력 보존을 지원한다.
-    if (!Point(fields,point)) throw std::logic_error("아이스 반사 변위0의 원본 미초기화 지역점 입력 미연결");
+    const auto display=Slot(fields.Parent());std::array<float,2> point{};
+    // 원문00482190은 변위0에서도 Point가 보존한 실제 지역8BYTE로 Valid를 계속한다.
+    // C++ 미정 float를 직접 읽지 않고 같은 호출의 외부 바이트 입력으로 옮긴 뒤 판정한다.
+    if (!Point(fields,point)) {
+        if (!hooks_.initialPointBytes) throw std::logic_error("아이스 반사 현재 지역점8BYTE 입력 미연결");
+        std::array<std::uint8_t,8> bytes{};hooks_.initialPointBytes(bytes);point=IcePoint(bytes,0);
+    }
     if (!ValidIce(point)) return;
     if (!hooks_.begin || !hooks_.next || !hooks_.hasHitPoints) throw std::logic_error("아이스 반사 실제 Finder/HP 미연결");
     const int x=IceCell(point[0]),y=IceCell(point[1]);float bestDistance=10000.0F;Sid best;

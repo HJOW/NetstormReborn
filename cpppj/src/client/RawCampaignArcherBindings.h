@@ -15,6 +15,7 @@ struct RawCampaignArcherEffects {
     o::MissileHooks missile; // 포구/SHP/피해/충돌의 실제 경계이며 기본 성공으로 대신하지 않는다.
     o::CannonBeamHooks beam; // 실제 반더 빔 생성·초기 source 시각/피해와 같은 게임 난수다.
     std::function<void(o::Sid)> iceCooling; //004a8770의 실제 아이스 냉각 표시이며 선택 시 누락을 거부한다.
+    std::function<void(std::span<std::uint8_t>)> ricochetPointBytes; // 반사 Generate 변위0에서 보존되는 현재 스택 좌표8BYTE의 실제 입력 장치다.
 };
 // 같은 풀의 실제 Archer/Missile 몸체를 고정 주소에 소유한다.
 class RawCampaignArcherBindings {
