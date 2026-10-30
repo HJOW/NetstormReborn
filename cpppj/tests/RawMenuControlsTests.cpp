@@ -174,6 +174,22 @@ TEST_CASE(RawMenuControls_CommonTreeInputAndDisabledItem) {
     client.menus->Close();CHECK(!client.menus->HasMenus() && client.buttons.RegisteredGump(0)==root);
     client.buttons.Event({InputCode::kLeftButton,30,20});const auto activated=client.buttons.Event({InputCode::kLeftButton|InputCode::kRelease,30,20});CHECK(activated && *activated==0);
 }
+// 실제 단일 명령 자식은 controlled 칸을 추가하지 않고 같은 메뉴 입력/삭제 수명을 사용한다.
+TEST_CASE(RawMenuControls_CheatDirectChildAndCommand) {
+    MenuClient client;std::uint32_t child{};std::string order;const auto before=client.menus->MenuInstances();
+    client.menus->OpenAttached([&](const auto& widgets,const auto& controls,const auto& menu) {
+        const auto root=widgets.BeginHorizontal();
+        child=client.menus->CreateCheatMenu([&](auto text) { order+='T';CHECK(text=="Get 10,000");return std::string(text); },[&] { order+='C';return 0x02000061U; });
+        controls.AddSubmenu("Cheat",child,true,false);menu.AttachCurrent(85,0,client.buttons.RootToken());return root;
+    });
+    CHECK(order=="TC" && client.menus->MenuInstances()==before+2);const auto* node=static_cast<const MenuGumpNode*>(client.menus->Node(child));CHECK(node);if (!node) return;
+    CHECK(node->itemCount==1 && (node->menuFlags&0x80000U));CHECK(node->items[0].flags==0x10181U && node->items[0].command==0x02000061U && node->items[0].parameter==10000U);
+    const auto cheat=client.menus->Point("Cheat");CHECK(cheat);if (!cheat) return;client.Click(*cheat);
+    for (int frame=0;frame<2;++frame) client.buttons.Poll({InputCode::kRelease,cheat->x,cheat->y}); //실제 두 확장 프레임을 마친 뒤 자식 입력이 활성화된다.
+    const auto get=client.menus->Point("Get 10,000");CHECK(get);if (!get) return;client.Click(*get);
+    CHECK(client.commands.size()==1);if (!client.commands.empty()) CHECK(client.commands[0][0]==0x02000061U && client.commands[0][2]==10000U);
+    client.menus->Close();client.menus->CleanupFrame();CHECK(!client.menus->HasMenus());
+}
 TEST_CASE(RawMenuControls_CommandPointChoosesVisibleSameLabelChild) { // 같은About의기본TYPE와정적문자열주제를구별하고원래실제클릭을통과시킨다.
     MenuClient client;client.menus->Open({100,100},[](const auto& widgets,const auto& controls,const auto& menus) {
         widgets.BeginVertical();controls.AddText("About",0x02000017U,87);

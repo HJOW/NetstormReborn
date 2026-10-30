@@ -6,7 +6,8 @@
 namespace netstorm::client {
 namespace {
 // 00542xxx는원문주소식별자다. 런타임호스트포인터로역참조하지않는다.
-constexpr std::array<std::pair<std::uint32_t,std::uint32_t>,29> kCommands{{
+constexpr std::array<std::pair<std::uint32_t,std::uint32_t>,30> kCommands{{
+    {0x0054287cU,0x02000061U}, //원문 Cheat의 같은 일반 SP 가산 명령이다.
     {0x00542780U,0x02000022U},
     {0x005427b8U,0x02000030U},
     {0x005428acU,0x0200006dU},

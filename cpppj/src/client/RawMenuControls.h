@@ -174,6 +174,7 @@ public:
     // builder가원본객체부착까지마치고루트메뉴토큰(거부시0)을반환한다. controlled스택은0칸이어야한다.
     // 원본Open/위치의계산을반복하거나마우스점에다시부착하지않는다.
     void OpenAttached(const std::function<std::uint32_t(const MenuGumpWidgets&,const MenuGumpControls&,const MenuGump&)>& builder,bool closeExisting=true);
+    std::uint32_t CreateCheatMenu(const std::function<std::string(std::string_view)>& translate,const std::function<std::uint32_t()>& command); //ESC의 직접 new0xb90→번역/명령조회→단일 항목 생성이다. controlled 칸을 추가하지 않는다.
     // 실제 루트 직계 sticky 팝업을 Kill하고 같은 삭제 큐를 정리한다.
     void Close();
     // 원본00466710처럼 현재 루트 팝업을 Kill만 한다. callback 반환 전에는 노드/등록을 해제하지 않는다.

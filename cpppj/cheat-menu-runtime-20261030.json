@@ -1,0 +1,357 @@
+{
+  "unit": 600,
+  "date": "2026-10-30",
+  "host": "HJOW-Athlon",
+  "ipv4": "192.168.0.94",
+  "os": "Windows-10-10.0.19045-SP0",
+  "baseCommit": "4e66a874",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "native": {
+    "cases": 144,
+    "observations": 288,
+    "differences": [],
+    "reportSha256": "bc1010a32e7cad534cd029d0f53e4169900d819eec629e04a3bf7ca189417419",
+    "scope": "동일 명령/상위 Guide·Gump·release 분배 뒤 SP 분기만 실제 CPU. 가산 자식은 명시 경계. 일반 모드도0 가산 호출. 포획/희생/공격/승리/MP 실행 없음."
+  },
+  "cpp": {
+    "distinctPassed": 26,
+    "invocationsPassed": 27,
+    "registered": 3495,
+    "tests": [
+      {
+        "filter": "Cheat",
+        "passed": 3,
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+            "--filter",
+            "Cheat"
+          ],
+          "binarySha256": "7c245a2024571c7136b495f7e2cd4d9989ea789d114438dcf23ac81bf471d1a5",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 1.5058910000007018,
+          "stdoutSha256": "002896c207977f15d8356ca6df990f080173b643364450cd7d6b046a752eda42",
+          "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      {
+        "filter": "GameMenuActions",
+        "passed": 2,
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+            "--filter",
+            "GameMenuActions"
+          ],
+          "binarySha256": "7c245a2024571c7136b495f7e2cd4d9989ea789d114438dcf23ac81bf471d1a5",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 0.668883199999982,
+          "stdoutSha256": "103ff7a83c83e9da1caf7b1bdd8c7327f254d5b3cb322b4d910f8d7f8e209994",
+          "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      {
+        "filter": "GameMenuBar",
+        "passed": 2,
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+            "--filter",
+            "GameMenuBar"
+          ],
+          "binarySha256": "7c245a2024571c7136b495f7e2cd4d9989ea789d114438dcf23ac81bf471d1a5",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 0.5034088000029442,
+          "stdoutSha256": "b9f012292145442f13d5956c1c6c599de208764d70396a56153d0df6fa4391f3",
+          "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      {
+        "filter": "GameMenus",
+        "passed": 4,
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+            "--filter",
+            "GameMenus"
+          ],
+          "binarySha256": "7c245a2024571c7136b495f7e2cd4d9989ea789d114438dcf23ac81bf471d1a5",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 3.6810575000017707,
+          "stdoutSha256": "76f8bf418dc19f64930cbf37401e61c8ed63984eebc4d06c22b81cc1b1792c7d",
+          "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      {
+        "filter": "RawMenuControls",
+        "passed": 16,
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+            "--filter",
+            "RawMenuControls"
+          ],
+          "binarySha256": "7c245a2024571c7136b495f7e2cd4d9989ea789d114438dcf23ac81bf471d1a5",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 2.5306103999973857,
+          "stdoutSha256": "402d49fa0a22eb911046bd16426666b10187d3a126134492cafcd5e47b3a9700",
+          "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    ],
+    "allTestsExecuted": false
+  },
+  "builds": {
+    "build.log": {
+      "sha256": "7f90b49f73de0b5c146c1c0724af6dfe053eda81a20d3fd7f2c01c38f76d3867",
+      "warnings": 0,
+      "errors": 0
+    },
+    "build-final.log": {
+      "sha256": "912200b049b339b2d4700b9801b34d0cade24c837a04d772f0706af4ab1f6da3",
+      "warnings": 0,
+      "errors": 0
+    },
+    "package.log": {
+      "sha256": "9015b2ca0885dfb4cda021c3ce1ada2932e75759a91ffba5b49633c06b043124",
+      "warnings": 0,
+      "errors": 0
+    }
+  },
+  "productUnit": 600,
+  "gameSha256": "55ca7fa3f451bce25317def9085a71bac36e66677507438d165132df3b1c113c",
+  "zipSha256": "c1f5d032b4451785b02362f8a2621efb20f28724a3767227c91381850d26543d",
+  "entries": 1376,
+  "gameFiles": 1358,
+  "packageAllBytesMatch": true,
+  "allGameAssetsMatchOriginalSources": true,
+  "runtimeSha256": {
+    "Netstorm.exe": "55ca7fa3f451bce25317def9085a71bac36e66677507438d165132df3b1c113c",
+    "msvcp140.dll": "7c26614e1d733892c2deac7e245ce115504b1d80592dd0a01b08e3e5a55f89ca",
+    "vcruntime140.dll": "d1f4225df2cd877dbf130d5668a021dce3f94118455ff5ec952061c30afc9ce7",
+    "vcruntime140_1.dll": "a7146c08f89fe5b04541ab507cdb59ff7b44534d4ba3c668a426c6450a03434e",
+    "NetstormSmacker.dll": "6afa14297064ac26e76765747a46f4b5b813fd29f5277d95758b8cf801c4ce1f"
+  },
+  "actualExecutions": 2,
+  "actualFailures": 0,
+  "runs": [
+    {
+      "passed": true,
+      "enabled": false,
+      "run": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-cheat-menu-600-20261030\\한글 배포본\\NetstormReborn-cpppj\\Netstorm.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-cheat-menu-600-20261030\\data-default\\game",
+          "--mission",
+          "Tutorial1",
+          "--window",
+          "--no-audio",
+          "--frames",
+          "182",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=40;sleepPerLoop=1;autoDemo=0;tellTips=0;intro=1",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-cheat-menu-600-20261030\\default\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-cheat-menu-600-20261030\\default\\states.tsv"
+        ],
+        "binarySha256": "55ca7fa3f451bce25317def9085a71bac36e66677507438d165132df3b1c113c",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 7.8828709999979765,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2"
+      },
+      "gameSha256": "55ca7fa3f451bce25317def9085a71bac36e66677507438d165132df3b1c113c",
+      "details": {
+        "ready": {
+          "money": 0.0,
+          "time": 2.258
+        },
+        "final": {
+          "money": 0.0,
+          "time": 6.093
+        }
+      },
+      "presentation": {
+        "same": true,
+        "actualSha256": "6dc1b87cdd04908301fe1ae566ea88efb3535648a63cdc734e062764b7b44b2a",
+        "expectedSha256": "6dc1b87cdd04908301fe1ae566ea88efb3535648a63cdc734e062764b7b44b2a",
+        "dimensions": [
+          1024,
+          768
+        ],
+        "outputRect": [
+          0,
+          0,
+          1024,
+          768
+        ]
+      },
+      "scope": "실제 초기 안내/ESC/Cheat 메뉴 두 번 클릭과 같은 로컬 분산 SP/창RGB. userCheat 원래 magic 설정이며 SP/의식/적 공격/승리 주입 없음.",
+      "missionBeforeAndAfter": [
+        "Tutorial1",
+        "Tutorial",
+        "3"
+      ]
+    },
+    {
+      "passed": true,
+      "enabled": true,
+      "run": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-cheat-menu-600-20261030\\한글 배포본\\NetstormReborn-cpppj\\Netstorm.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-cheat-menu-600-20261030\\data-enabled\\game",
+          "--mission",
+          "Tutorial1",
+          "--window",
+          "--no-audio",
+          "--frames",
+          "182",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=40;sleepPerLoop=1;autoDemo=0;tellTips=0;intro=1;userCheat=8675309",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-cheat-menu-600-20261030\\enabled\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-cheat-menu-600-20261030\\enabled\\states.tsv"
+        ],
+        "binarySha256": "55ca7fa3f451bce25317def9085a71bac36e66677507438d165132df3b1c113c",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 7.652488199997606,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2"
+      },
+      "gameSha256": "55ca7fa3f451bce25317def9085a71bac36e66677507438d165132df3b1c113c",
+      "details": {
+        "ready": {
+          "money": 0.0,
+          "time": 2.236
+        },
+        "final": {
+          "money": 20000.0,
+          "time": 6.103
+        },
+        "firstMoney": 10000.0,
+        "secondMoney": 20000.0
+      },
+      "presentation": {
+        "same": true,
+        "actualSha256": "d068d5fee844f2410135f860994a81ec4e2b93e8bf7afe4b4d138097184b2d91",
+        "expectedSha256": "d068d5fee844f2410135f860994a81ec4e2b93e8bf7afe4b4d138097184b2d91",
+        "dimensions": [
+          1024,
+          768
+        ],
+        "outputRect": [
+          0,
+          0,
+          1024,
+          768
+        ]
+      },
+      "scope": "실제 초기 안내/ESC/Cheat 메뉴 두 번 클릭과 같은 로컬 분산 SP/창RGB. userCheat 원래 magic 설정이며 SP/의식/적 공격/승리 주입 없음.",
+      "missionBeforeAndAfter": [
+        "Tutorial1",
+        "Tutorial",
+        "3"
+      ]
+    }
+  ],
+  "sourceMoneyInjected": false,
+  "actualMenuClicks": 2,
+  "actualSpAmounts": [
+    0,
+    10000,
+    20000
+  ],
+  "missionSequenceUnchanged": true,
+  "visibleBudgetAnimatorObserved": 9100,
+  "firstCppFailure": "자식 확장 애니메이션이 끝나기 전에 클릭한 새 검사 입력 오류. 두 필터에서 같은1체크 실패 보존. 실제 두 idle 프레임을 검사에 반영했고 제품 애니메이션/입력 관문은 바꾸지 않음.",
+  "protected": {
+    "count": 2567,
+    "differences": [],
+    "beforeSha256": "37ae150dbe1287c1c2bd819f457ad67420c19d555a72b8f714a1ab7eaf89d373",
+    "afterSha256": "2c04ab3e7fbc6472e4b89e585e8ec3a0411d7651215023f216ad251422b36a1f",
+    "currentFixtures": 745
+  },
+  "sourceSha256": {
+    ".gitattributes": "2edea4b00d304fef465fbea204135fa5d13a47a2897f433be043132ed397b95a",
+    "cpppj/src/client/GameMenuActions.cpp": "051a2879cbc0a53b897338f0c66a7fb87dded48597cb7f5df70a12b304e33b6e",
+    "cpppj/src/client/GameMenuActions.h": "e7abad7f319616605b1e20d094ae948aa46bfaf584e72baf9f81859e89d8e2fb",
+    "cpppj/src/client/GameMenuCommands.cpp": "d5547a319e1659b08ea12ff4c3bbfb038966dbef73c52cadde6fe1aa2777ed15",
+    "cpppj/src/client/RawMenuControls.cpp": "3ef1fb21d633ec9a1e44ce0a5bc27f816325317d478a18486630a057dc4b4215",
+    "cpppj/src/client/RawMenuControls.h": "6fda8c22d0785b8fd1ec71ad91db548f577c2f92fdf1f12e1ef141c0d4b633cc",
+    "cpppj/src/client/UberGump.cpp": "bba956d22fd9ee07f9df16cce3c5fb4b96784a370317c68c9430b2cbf9c50f16",
+    "cpppj/tests/CMakeLists.txt": "925190492cfdc6caa0cf715f37d5eb3a98858df394111342df514df5760e8c40",
+    "cpppj/tests/GameMenuActionsTests.cpp": "ce9d6fa2b990eae04801ad3b0c179b897d5945daa7b5edb8609c0a1191cdb87c",
+    "cpppj/tests/RawMenuControlsTests.cpp": "afbe4c75bd80265addab96d7a95283eba18dce443007ac09a88cad132cf5224a",
+    "cpppj/tests/CheatMoneyTests.cpp": "bd12af8f44edad6e19a6df3b368014fb51725859fae0d4e805c80da24d965e83",
+    "cpppj/tests/fixtures/cheat-money-x86.tsv": "213680a78703af02b0fa28a5386da91081473b0d72f85082853fb5ab5021311b",
+    "tools/decomp_cheat_money.py": "b1b40c47a4fb5d79fd4582fbd10c8ab5266658219b93b882d767190b1a3160c7",
+    "tools/cpp_cheat_menu_smoke.py": "8ad7cb8562a6ceae99979b7e1700bf0973f1a74396170e16c46b971294512c03",
+    "cpppj/cheat-money-native-20261030.json": "bc1010a32e7cad534cd029d0f53e4169900d819eec629e04a3bf7ca189417419",
+    "docs/exe/cpp-cheat-menu-20261030.md": "8600915c6216e10e94221575a92694cacd4231bd3f5e321a344fd6d2ace1d3a3"
+  },
+  "evidenceSha256": {
+    "protected-before.json": "37ae150dbe1287c1c2bd819f457ad67420c19d555a72b8f714a1ab7eaf89d373",
+    "rank-static-deferred.txt": "e94ec7f8053f8bc8b67e68608f24f6f1b41782373e8c34f80dbd325cec5d0565",
+    "native.log": "ccccd14261a35a768adf30062d68507accf522381ceee1391ebe6b0754dd70b3",
+    "build.log": "7f90b49f73de0b5c146c1c0724af6dfe053eda81a20d3fd7f2c01c38f76d3867",
+    "focused.json": "d15a9bc6dea87b930675505e83691e21d03a95dc0385c24a7e77995e0835875c",
+    "build-final.log": "912200b049b339b2d4700b9801b34d0cade24c837a04d772f0706af4ab1f6da3",
+    "package.log": "9015b2ca0885dfb4cda021c3ce1ada2932e75759a91ffba5b49633c06b043124",
+    "focused-final.json": "05db8334bb9ddd0caa31476fe3bd9d43f13286f482566454576218ef93700522",
+    "menu-parent-static.txt": "b50195087d7c92f3b10f901e9dfa1c6791f984813e5f61bf8baecdab473f870b",
+    "cd-menu-static.txt": "13bf98b5a98a2aef5a8c2ef22854f1f0c47bc5a554337d11213c92ad3f6149e3",
+    "menu-construction-disassembly.txt": "d1df9d2da80e480e076442a5c4ee1fe6f3e0be73583c7a34a85d1d71a2f4571f",
+    "summarize.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "protected-after.json": "2c04ab3e7fbc6472e4b89e585e8ec3a0411d7651215023f216ad251422b36a1f",
+    "git-byte-check.json": "d3c5ad7db2c86bb3e9fa79ba6d3f8a96ba0610da1c149472f20884591e3156bf"
+  },
+  "rawDirectory": "extracted/cpp-cheat-menu-600-20261030",
+  "currentProductAll34Run": false,
+  "latestAll34ProductUnit": 595,
+  "latestAll34EvidenceUnit": 596,
+  "actualRitualUiVerified": false,
+  "forbiddenGameplayReproduced": false,
+  "dedicatedThreeFlyerTestsRun": false,
+  "newMultiplayerTestsRun": false,
+  "win11Run": false,
+  "actualPcmRun": false,
+  "activeFullscreenRun": false,
+  "remaining": [
+    "랭크/비로컬 보상·MP 재접속 저장 경계",
+    "Help 외부 OS 프로토콜",
+    "남은 UI/Edit·Native 선택·시나리오 조건/전체 동일성",
+    "후순위 MP 무시험 사전 구현과4~7차"
+  ],
+  "sourceIndexSha256": {
+    ".gitattributes": "2edea4b00d304fef465fbea204135fa5d13a47a2897f433be043132ed397b95a",
+    "cpppj/src/client/GameMenuActions.cpp": "051a2879cbc0a53b897338f0c66a7fb87dded48597cb7f5df70a12b304e33b6e",
+    "cpppj/src/client/GameMenuActions.h": "e7abad7f319616605b1e20d094ae948aa46bfaf584e72baf9f81859e89d8e2fb",
+    "cpppj/src/client/GameMenuCommands.cpp": "d5547a319e1659b08ea12ff4c3bbfb038966dbef73c52cadde6fe1aa2777ed15",
+    "cpppj/src/client/RawMenuControls.cpp": "3ef1fb21d633ec9a1e44ce0a5bc27f816325317d478a18486630a057dc4b4215",
+    "cpppj/src/client/RawMenuControls.h": "6fda8c22d0785b8fd1ec71ad91db548f577c2f92fdf1f12e1ef141c0d4b633cc",
+    "cpppj/src/client/UberGump.cpp": "bba956d22fd9ee07f9df16cce3c5fb4b96784a370317c68c9430b2cbf9c50f16",
+    "cpppj/tests/CMakeLists.txt": "925190492cfdc6caa0cf715f37d5eb3a98858df394111342df514df5760e8c40",
+    "cpppj/tests/GameMenuActionsTests.cpp": "ce9d6fa2b990eae04801ad3b0c179b897d5945daa7b5edb8609c0a1191cdb87c",
+    "cpppj/tests/RawMenuControlsTests.cpp": "afbe4c75bd80265addab96d7a95283eba18dce443007ac09a88cad132cf5224a",
+    "cpppj/tests/CheatMoneyTests.cpp": "bd12af8f44edad6e19a6df3b368014fb51725859fae0d4e805c80da24d965e83",
+    "cpppj/tests/fixtures/cheat-money-x86.tsv": "213680a78703af02b0fa28a5386da91081473b0d72f85082853fb5ab5021311b",
+    "tools/decomp_cheat_money.py": "b1b40c47a4fb5d79fd4582fbd10c8ab5266658219b93b882d767190b1a3160c7",
+    "tools/cpp_cheat_menu_smoke.py": "8ad7cb8562a6ceae99979b7e1700bf0973f1a74396170e16c46b971294512c03",
+    "cpppj/cheat-money-native-20261030.json": "bc1010a32e7cad534cd029d0f53e4169900d819eec629e04a3bf7ca189417419",
+    "docs/exe/cpp-cheat-menu-20261030.md": "8600915c6216e10e94221575a92694cacd4231bd3f5e321a344fd6d2ace1d3a3"
+  },
+  "checkoutFiltersVerified": true,
+  "checkoutFilterComparisons": 32
+}

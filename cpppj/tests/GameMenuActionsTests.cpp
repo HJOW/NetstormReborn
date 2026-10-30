@@ -16,7 +16,8 @@ constexpr std::size_t kMenuRows=610,kMenuColumns=21; // 두제어어에서독립
 constexpr std::uint32_t kMenuArena=0x01010000; // 독립외부장치의고정주소다.
 constexpr std::array<std::uint32_t,16> kMenuGlobals{0x5c85a4,0x594fb8,0x594fc8,0x594fa4,0x595344,0x540c70,0x59a8ac,0x59a8b0,
     0x55b4b0,0x565dd4,0x55a714,0x5e18a4,0x59534c,0x5c8464,0x55a70c,0x5e189c}; // fixture의현재전역순서다.
-constexpr std::array<std::pair<GameMenuActionCommand,std::uint32_t>,10> kMenuCommands{{
+constexpr std::array<std::pair<GameMenuActionCommand,std::uint32_t>,11> kMenuCommands{{
+    {GameMenuActionCommand::AddSp,0x02000061}, // 원문54287c의 추가 명령이며 기존610행의 기대값은 바꾸지 않는다.
     {GameMenuActionCommand::QuitApp,0x02000001},{GameMenuActionCommand::RequestQuitApp,0x02000094},
     {GameMenuActionCommand::SoundVolume,0x020000e6},{GameMenuActionCommand::MusicVolume,0x020000e7},
     {GameMenuActionCommand::Pause,0x020000cf},{GameMenuActionCommand::ViewHome,0x020000ae},

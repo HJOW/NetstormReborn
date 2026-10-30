@@ -688,6 +688,13 @@ std::uint32_t RawMenuControls::ShowHtmlWindow(RawHtmlWindowContext context,std::
 std::string RawMenuControls::ResolveHtmlWindowLink(std::uint32_t token) const { return impl_->HtmlLink(token); } // 살아 있는 실제 소유 바이트를 복사해 반환한다.
 // 원문4a00c0과 같은 Help/명령/외부 링크 분배기를 현재 부모 바이트에 적용한다.
 void RawMenuControls::ActivateHtmlWindowLink(std::uint32_t token) { impl_->HelpLink(impl_->HtmlLink(token)); }
+// 원본004cc210의 Cheat 자식은 controlled 세로 메뉴가 아닌 직접 생성한 단일 명령 메뉴다.
+std::uint32_t RawMenuControls::CreateCheatMenu(const std::function<std::string(std::string_view)>& translate,const std::function<std::uint32_t()>& command) {
+    auto& s=*impl_;const auto token=s.Allocate(0xb90,0);if (!token) return 0;
+    if (!translate) throw std::logic_error("Cheat 메뉴의 현재 번역 미연결");const auto label=translate("Get 10,000");
+    if (!command) throw std::logic_error("Cheat 메뉴의 현재 명령 미연결");const MenuGumpConstructionEntry entry{label,0x10181U,command(),10000U,1U};
+    return s.widgets->Construct(token,std::span(&entry,1),0x80000U);
+}
 void RawMenuControls::CloseHtmlWindows() { impl_->CloseHtml(); } // 실제 공통 수명을 사용한다.
 // 현재 부착된 실제 부모만 사용자 선택을 받는 창으로 조회한다.
 bool RawMenuControls::HtmlWindowsOpen() const {

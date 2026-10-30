@@ -11,7 +11,8 @@ namespace netstorm::client {
 enum class GameMenuActionCommand : std::uint32_t {
     QuitApp=0x00542700,RequestQuitApp=0x00542944,SoundVolume=0x00542a8c,MusicVolume=0x00542a90,
     Pause=0x00542a30,ViewHome=0x005429ac,ViewYourPriest=0x005429d4,HideBuildings=0x00542ab8,ReloadTheams=0x00542b54,
-    GetFullDeck=0x00542a28 //Editor 또는 missionPost에서 선택되는 실제 전체 Deck 명령이다.
+    GetFullDeck=0x00542a28, //Editor 또는 missionPost에서 선택되는 실제 전체 Deck 명령이다.
+    AddSp=0x0054287c //Editor/missionPost의 signed 숫자를 실제 로컬 SP 가산에 전달한다.
 };
 // 두실제SID목록은원문0055a70c/714와005e189c/18a4다.
 enum class GameMenuReloadList { First,Second };
@@ -39,6 +40,7 @@ struct GameMenuActionHooks {
     std::function<void(std::uint32_t,std::uint32_t,std::uint32_t)> reloadAt; //455380의현재X/Y float비트와0이다.
     std::function<void(std::uint32_t)> assertion; // QuitApp line993/ViewHome line1895의실제진단이다.복귀시계속한다.
     std::function<void()> getFullDeck; //0044f9d0의실제현재Deck·공유난수부모이며선택된모드에서만필수다.
+    std::function<void(float)> addLocalSp; //0040eec0의 실제 지갑/분산 SP/표시 갱신이다. 일반 모드는0 가산도 호출한다.
 };
 // Guide/Gump가소비하지않은UserInput일반명령몸체에연결한다.전체4d62b0의OS/폴링대체가아니다.
 class GameMenuActions {

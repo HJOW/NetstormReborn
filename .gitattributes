@@ -2185,3 +2185,19 @@ tools/decomp_ritual_refresh.py text eol=lf
 cpppj/ritual-refresh-native-20261030.json text eol=lf
 cpppj/ritual-refresh-runtime-20261030.json text eol=lf
 docs/exe/cpp-ritual-refresh-20261030.md text eol=lf
+
+# ESC Cheat 직접 메뉴와 금액 명령의 최초 원문/현재 소스를 보존한다.
+cpppj/src/client/RawMenuControls.cpp text eol=lf
+cpppj/src/client/RawMenuControls.h text eol=lf
+cpppj/src/client/GameMenuActions.cpp text eol=lf
+cpppj/src/client/GameMenuActions.h text eol=lf
+cpppj/src/client/GameMenuCommands.cpp text eol=lf
+cpppj/tests/GameMenuActionsTests.cpp text eol=lf
+cpppj/tests/RawMenuControlsTests.cpp text eol=lf
+cpppj/tests/CheatMoneyTests.cpp text eol=lf
+cpppj/tests/fixtures/cheat-money-x86.tsv -text
+tools/decomp_cheat_money.py text eol=lf
+tools/cpp_cheat_menu_smoke.py text eol=lf
+cpppj/cheat-money-native-20261030.json text eol=lf
+cpppj/cheat-menu-runtime-20261030.json text eol=lf
+docs/exe/cpp-cheat-menu-20261030.md text eol=lf

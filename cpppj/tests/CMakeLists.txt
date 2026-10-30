@@ -1,4 +1,5 @@
 # 현재 작업본·설치 checkpoint와 독립 부모의 최초 관측을 공용 회귀에 포함한다.
+set_source_files_properties(CheatMoneyTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_CHEAT_MONEY_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/cheat-money-x86.tsv\"")
 set_source_files_properties(RitualRefreshTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_RITUAL_REFRESH_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/ritual-refresh-x86.tsv\"")
 set_source_files_properties(NewTechnologyTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_NEW_TECHNOLOGY_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/new-technology-x86.tsv\"")
 set_source_files_properties(MovieTimerTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_MOVIE_TIMER_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/movie-timer-x86.tsv\"")
@@ -2467,3 +2468,5 @@ set_source_files_properties(CdDirectoryTests.cpp PROPERTIES COMPILE_DEFINITIONS 
 target_sources(netstorm_tests PRIVATE NewTechnologyTests.cpp)
 # 로컬 의식 완료의 두 현재 owner 읽기와 실제 세 자식 순서를 비교한다.
 target_sources(netstorm_tests PRIVATE RitualRefreshTests.cpp)
+# 원문 SP 메뉴 명령의 관문/인수 변환144개를 비교한다.
+target_sources(netstorm_tests PRIVATE CheatMoneyTests.cpp)

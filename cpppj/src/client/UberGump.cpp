@@ -816,7 +816,7 @@ void UberGump::OpenGameMenu(bool playerList) {
             case GameMenuBarChild::Game:return children.Game();case GameMenuBarChild::Edit:return children.Edit();
             case GameMenuBarChild::View:return children.View();case GameMenuBarChild::Options:return children.Options();
             case GameMenuBarChild::Players:return children.Players();
-            case GameMenuBarChild::Cheat:throw std::logic_error("원본Cheat부모생성미연결");
+            case GameMenuBarChild::Cheat:return rawButtons_->Menus()->CreateCheatMenu(translate,[globals] { return globals(0x54287c); });
             }
             throw std::logic_error("게임메뉴하위종류오류");
         };
@@ -887,6 +887,7 @@ bool UberGump::GameMenuCommand(const InputEvent& event) {
     hooks.form=[session](auto sid)->std::span<const std::uint8_t> { if (sid>65535) throw std::out_of_range("메뉴 Form SID 폭");return session().Core().pool.Slot(o::Sid{static_cast<std::uint16_t>(sid)}); };
     hooks.reloadAt=[session](auto x,auto y,auto mode) { session().ReloadTheamAt(x,y,mode); };
     hooks.getFullDeck=[session] { session().GetFullDeck(); }; //선택된원문모드에서현재Session을다시조회한다.
+    hooks.addLocalSp=[session](float amount) { session().MoneyInputHooks().addLocal(amount); }; //송금 입력과 같은 실제 로컬 가산 몸체를 빌리며 송금 패킷은 보내지 않는다.
     hooks.assertion=[](auto line) { throw std::logic_error("원본 메뉴 입력 진단: "+std::to_string(line)); };
     const auto result=GameMenuActions({binding.global,hideBuildings_,worldRedraw_},std::move(hooks)).Handle(event.code,std::bit_cast<std::uint32_t>(event.x),std::bit_cast<std::uint32_t>(event.y));
     if (!result) return false;if (*result) quit_=true;Refresh();return true;
