@@ -1,0 +1,28 @@
+{
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "observations": 15,
+  "ranges": [
+    [
+      4459840,
+      4460028
+    ],
+    [
+      5100352,
+      5100895
+    ],
+    [
+      5103168,
+      5103420
+    ]
+  ],
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_local_mission_transport.py": "db71da65079aa9a985a3a833edd224f089ba9a20137d92042551cb346937eb78",
+    "tools/decomp_cd_directory.py": "3f34b9b2509431c7fc7766a6dc1cb57eb36055a80a3e55df4becae868d01af3b"
+  },
+  "fixtureSha256": "acd37693857ddf2a036b1a0ce25bc7d9cb5a418ee96f70870e661b82ae0ea3d0",
+  "scope": "00440d40/004dd340/004dde40 실제 CPU. Win32 열거/핸들과 ASCII stricmp/strncpy는 명시 장치. 게임/창/실제 CD 드라이브 실행 없음."
+}

@@ -2457,3 +2457,7 @@ set_source_files_properties(ChatMessageTests.cpp PROPERTIES COMPILE_DEFINITIONS 
 set_source_files_properties(TraceChatTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_TRACE_CHAT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/trace-chat-x86.tsv\"")
 set_source_files_properties(NativeIntroStateTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_NATIVE_INTRO_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/native-intro-state-x86.tsv\"")
 set_source_files_properties(ObjectTraceMainTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_OBJECT_TRACE_MAIN_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/object-trace-main-x86.tsv\";NETSTORM_OBJECT_TRACE_VTABLE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/object-trace-vtables-x86.tsv\";NETSTORM_OBJECT_TRACE_COORDINATE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/object-trace-coordinate-x86.tsv\"")
+
+# 실제 원본 CD 탐색15개와 긴 Unicode 경로를 비교한다.
+target_sources(netstorm_tests PRIVATE CdDirectoryTests.cpp)
+set_source_files_properties(CdDirectoryTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_CD_DIRECTORY_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/cd-directory-x86.tsv\"")

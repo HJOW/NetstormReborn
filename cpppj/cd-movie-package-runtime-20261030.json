@@ -1,0 +1,676 @@
+{
+  "unit": 595,
+  "date": "2026-10-30",
+  "host": "HJOW-Athlon",
+  "os": "Windows-10-10.0.19045-SP0",
+  "baseCommit": "f5b45f3d",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "scope": "CD-ROM/깊이2 표시 파일 탐색 복원과 영문/독문 영상 동봉. 원문 기본 경로/한글 배포본 실제 영상·물리 창 출력·메뉴·저장 재시작/영상 부재 복귀. 전체 목표는 미완료.",
+  "nativeObservations": 15,
+  "nativeReobservations": 30,
+  "nativeDifferences": 0,
+  "nativeReportSha256": "c1a3313812be6dcc38c6cc0c9f9f7e1e81a70f9d784bbc0135fd25159d55b245",
+  "tests": {
+    "tests": [
+      {
+        "filter": "CdDirectory",
+        "returnCode": 0,
+        "tests": 2,
+        "failed": 0
+      },
+      {
+        "filter": "ConfigInterface",
+        "returnCode": 0,
+        "tests": 10,
+        "failed": 0
+      },
+      {
+        "filter": "Movie",
+        "returnCode": 0,
+        "tests": 7,
+        "failed": 0
+      },
+      {
+        "filter": "NativeIntro",
+        "returnCode": 0,
+        "tests": 2,
+        "failed": 0
+      },
+      {
+        "filter": "ClientOptionsFile",
+        "returnCode": 0,
+        "tests": 3,
+        "failed": 0
+      }
+    ],
+    "total": 24,
+    "registered": 3487,
+    "binarySha256": "6737de0d2b8a5dcea3f81888f19935aa3b38db868655a87f991548a2fc67474d",
+    "fullSuiteRun": false
+  },
+  "quickTests": {
+    "tests": 2,
+    "failed": 0,
+    "productIntegrationVerified": false,
+    "scope": "정식 빌드 대기 중 같은 source의 분리 컴파일/진입점. 정식 Release24와 중복 합산하지 않음."
+  },
+  "finalBuild": {
+    "exitCode": 0,
+    "configuration": "Release",
+    "parallel": 4,
+    "msbuildProperties": [
+      "UseMultiToolTask=true",
+      "MultiProcMaxCount=4",
+      "EnforceProcessCountAcrossBuilds=true"
+    ],
+    "logs": {
+      "package-final.log": {
+        "warnings": 0,
+        "errors": 0,
+        "sha256": "808df84f08edb52d325fc6e9b998f394126b301aee6890d57ebec0cb98024159"
+      },
+      "build-tests-aligned.log": {
+        "warnings": 0,
+        "errors": 0,
+        "sha256": "5f67eff788df66739dfcf37da1100c8d65fab27ea1521008b364df4a2c2ed80a"
+      }
+    },
+    "firstBuildExitCode": 0,
+    "firstBuildWarning": "C4244 char fill 값 형을 수정. 최초 로그 보존.",
+    "testsBuiltAgainForAlignedTracking": true
+  },
+  "packageRun": {
+    "command": [
+      "powershell",
+      "-NoProfile",
+      "-ExecutionPolicy",
+      "Bypass",
+      "-File",
+      "cpppj/package-cpppj.ps1",
+      "extracted\\cpp-cd-movie-package-595-20261030\\NetstormReborn-cpppj-595.zip"
+    ],
+    "returnCode": 0,
+    "seconds": 361.4772617999988,
+    "gameBefore": "aad16e43c07fcea8e136cb200949db7003fa9128c2e2eb3e12cdf699fc981a31",
+    "gameAfter": "f3c9de83f85769a567292852ce35703b3d770da855d0c02b53fa07bb3aa45d14",
+    "zipSha256": "bdfbdfbe5347680fe093e7ac6f57df8094580c1572dd154d44a10969f733e47e"
+  },
+  "package": {
+    "entries": 1376,
+    "gameFiles": 1358,
+    "movieFiles": {
+      "NetstormReborn-cpppj/game/MOVIE/englishintro2x.smk": "bd180bee684b72bd8b0c8bd1eabac05a893bba61ed9a2624c2054bc7b326ddb1",
+      "NetstormReborn-cpppj/game/MOVIE/germanintro2x.smk": "df3c0ac5935c4c8d689909468d14063400ed3b1fed8340e03a88b4dcf3da8fef"
+    },
+    "runtimeDlls": [
+      "NetstormReborn-cpppj/msvcp140.dll",
+      "NetstormReborn-cpppj/vcruntime140.dll",
+      "NetstormReborn-cpppj/vcruntime140_1.dll",
+      "NetstormReborn-cpppj/NetstormSmacker.dll"
+    ],
+    "gameSha256": "f3c9de83f85769a567292852ce35703b3d770da855d0c02b53fa07bb3aa45d14",
+    "zipSha256": "bdfbdfbe5347680fe093e7ac6f57df8094580c1572dd154d44a10969f733e47e",
+    "outputs": [
+      "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-cd-movie-package-595-20261030\\한글 배포본\\NetstormReborn-cpppj",
+      "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-cd-movie-package-595-20261030\\독문 배포본\\NetstormReborn-cpppj"
+    ],
+    "allGameSourceBytesMatch": true,
+    "sourceAndLicenseBytesMatch": true,
+    "savedSettingsExcluded": true
+  },
+  "guiRuns": [
+    {
+      "label": "intro-english",
+      "passed": true,
+      "logicalPlaybackAndLifecyclePassed": true,
+      "physicalOutputVerified": true,
+      "presentation": {
+        "same": true,
+        "actualSha256": "28e77220d9fd6f64cca18d0b723dcf991b9865952926c2485f8e6211ceaf1124",
+        "expectedSha256": "28e77220d9fd6f64cca18d0b723dcf991b9865952926c2485f8e6211ceaf1124",
+        "dimensions": [
+          1024,
+          768
+        ],
+        "outputRect": [
+          0,
+          0,
+          1024,
+          768
+        ]
+      },
+      "freshInstall": true,
+      "language": null,
+      "gameSha256": "f3c9de83f85769a567292852ce35703b3d770da855d0c02b53fa07bb3aa45d14",
+      "mediaSha256": "bd180bee684b72bd8b0c8bd1eabac05a893bba61ed9a2624c2054bc7b326ddb1",
+      "natural": false,
+      "skip": "esc",
+      "fullscreen": false,
+      "audioMute": false,
+      "audioDeviceCount": null,
+      "audioFallbackVerified": false,
+      "pcmDevicePlaybackVerified": false,
+      "dimensions": [
+        1024,
+        768
+      ],
+      "run": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-cd-movie-package-595-20261030\\한글 배포본\\NetstormReborn-cpppj\\Netstorm.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-cd-movie-package-595-20261030\\한글 배포본\\NetstormReborn-cpppj\\game",
+          "--frames",
+          "700",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=40;sleepPerLoop=25;autoDemo=0;tellTips=0;WelcomeGiven=1;userUpdated=1;startInFullScreen=0",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-cd-movie-package-595-20261030\\intro-english\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-cd-movie-package-595-20261030\\intro-english\\states.tsv",
+          "--window",
+          "--no-audio"
+        ],
+        "binarySha256": "f3c9de83f85769a567292852ce35703b3d770da855d0c02b53fa07bb3aa45d14",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 27.879923000000417,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "5a81205f18e75568ff02b3c80136f49b01d1676cbcda21ff0c25ae7264da49e6"
+      },
+      "restart": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-cd-movie-package-595-20261030\\한글 배포본\\NetstormReborn-cpppj\\Netstorm.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-cd-movie-package-595-20261030\\한글 배포본\\NetstormReborn-cpppj\\game",
+          "--frames",
+          "55",
+          "--no-audio",
+          "--set",
+          "WelcomeGiven=1;userUpdated=1;autoDemo=0;tellTips=0;sleepPerLoop=25",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-cd-movie-package-595-20261030\\intro-english\\restart\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-cd-movie-package-595-20261030\\intro-english\\restart\\states.tsv"
+        ],
+        "binarySha256": "f3c9de83f85769a567292852ce35703b3d770da855d0c02b53fa07bb3aa45d14",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 2.618984699998691,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "cb76758e176fb9498de489bf084e9844f54d645d0fb4457c2c91e00a6a78d515"
+      },
+      "playing": {
+        "movie_runtime": [
+          "199",
+          "1",
+          "0",
+          "0",
+          "0"
+        ],
+        "movie_stream": [
+          "199",
+          "247",
+          "247",
+          "1",
+          "0",
+          "0",
+          "525953"
+        ],
+        "movie_update_depth": [
+          "1"
+        ],
+        "paused": [
+          "1"
+        ]
+      },
+      "final": {
+        "movie_runtime": [
+          "0",
+          "0",
+          "1",
+          "275",
+          "0"
+        ],
+        "movie_update_depth": [
+          "0"
+        ],
+        "paused": [
+          "0"
+        ],
+        "phase": [
+          "0"
+        ],
+        "page": [
+          "main"
+        ]
+      },
+      "pixels": {
+        "frameIndex": 246,
+        "same": true,
+        "actualSha256": "dd06d7c3fee7612374c8a8aa32210e42754778e00ba4a8a3944fcd39950d9c0f",
+        "expectedSha256": "dd06d7c3fee7612374c8a8aa32210e42754778e00ba4a8a3944fcd39950d9c0f",
+        "command": [
+          "C:\\Users\\BUZZ\\AppData\\Local\\Microsoft\\WinGet\\Packages\\yt-dlp.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe\\ffmpeg-N-125875-g5d4d3bdc61-win64-gpl\\bin\\ffmpeg.EXE",
+          "-nostdin",
+          "-v",
+          "error",
+          "-i",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-cd-movie-package-595-20261030\\한글 배포본\\NetstormReborn-cpppj\\game\\MOVIE\\englishintro2x.smk",
+          "-vf",
+          "select=eq(n\\,246)",
+          "-frames:v",
+          "1",
+          "-pix_fmt",
+          "pal8",
+          "-f",
+          "rawvideo",
+          "-"
+        ],
+        "videoRect": [
+          192,
+          224,
+          640,
+          320
+        ]
+      },
+      "scope": "실제 인트로/완료 저장/재시작만 실행. 포획/희생/공격/승리·멀티플레이 실행 없음.",
+      "actualMovieSource": [
+        "199",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-cd-movie-package-595-20261030\\한글 배포본\\NetstormReborn-cpppj\\game\\MOVIE\\englishintro2x.smk"
+      ]
+    },
+    {
+      "label": "intro-german",
+      "passed": true,
+      "logicalPlaybackAndLifecyclePassed": true,
+      "physicalOutputVerified": true,
+      "presentation": {
+        "same": true,
+        "actualSha256": "802f763010448197d0c41dd818799ceb05a52518e12e4ca8efcf7356bf5f34ed",
+        "expectedSha256": "802f763010448197d0c41dd818799ceb05a52518e12e4ca8efcf7356bf5f34ed",
+        "dimensions": [
+          1280,
+          800
+        ],
+        "outputRect": [
+          0,
+          0,
+          1280,
+          800
+        ]
+      },
+      "freshInstall": true,
+      "language": "german",
+      "gameSha256": "f3c9de83f85769a567292852ce35703b3d770da855d0c02b53fa07bb3aa45d14",
+      "mediaSha256": "df3c0ac5935c4c8d689909468d14063400ed3b1fed8340e03a88b4dcf3da8fef",
+      "natural": false,
+      "skip": "space",
+      "fullscreen": false,
+      "audioMute": false,
+      "audioDeviceCount": null,
+      "audioFallbackVerified": false,
+      "pcmDevicePlaybackVerified": false,
+      "dimensions": [
+        1280,
+        800
+      ],
+      "run": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-cd-movie-package-595-20261030\\독문 배포본\\NetstormReborn-cpppj\\Netstorm.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-cd-movie-package-595-20261030\\독문 배포본\\NetstormReborn-cpppj\\game",
+          "--frames",
+          "700",
+          "--set",
+          "SCREENW=1280;SCREENH=800;maxFPS=40;sleepPerLoop=25;autoDemo=0;tellTips=0;WelcomeGiven=1;userUpdated=1;startInFullScreen=0;currentLanguage=german",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-cd-movie-package-595-20261030\\intro-german\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-cd-movie-package-595-20261030\\intro-german\\states.tsv",
+          "--window",
+          "--no-audio"
+        ],
+        "binarySha256": "f3c9de83f85769a567292852ce35703b3d770da855d0c02b53fa07bb3aa45d14",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 27.96103690000018,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "f6d5513ad9a5dd2adc4f65414492395cd36fe05f199c62a2c2f7dc7a15330739"
+      },
+      "restart": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-cd-movie-package-595-20261030\\독문 배포본\\NetstormReborn-cpppj\\Netstorm.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-cd-movie-package-595-20261030\\독문 배포본\\NetstormReborn-cpppj\\game",
+          "--frames",
+          "55",
+          "--no-audio",
+          "--set",
+          "WelcomeGiven=1;userUpdated=1;autoDemo=0;tellTips=0;sleepPerLoop=25",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-cd-movie-package-595-20261030\\intro-german\\restart\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-cd-movie-package-595-20261030\\intro-german\\restart\\states.tsv"
+        ],
+        "binarySha256": "f3c9de83f85769a567292852ce35703b3d770da855d0c02b53fa07bb3aa45d14",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 2.628869100000884,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "cb76758e176fb9498de489bf084e9844f54d645d0fb4457c2c91e00a6a78d515"
+      },
+      "playing": {
+        "movie_runtime": [
+          "199",
+          "1",
+          "0",
+          "0",
+          "0"
+        ],
+        "movie_stream": [
+          "199",
+          "253",
+          "253",
+          "1",
+          "0",
+          "0",
+          "525953"
+        ],
+        "movie_update_depth": [
+          "1"
+        ],
+        "paused": [
+          "1"
+        ]
+      },
+      "final": {
+        "movie_runtime": [
+          "0",
+          "0",
+          "1",
+          "282",
+          "0"
+        ],
+        "movie_update_depth": [
+          "0"
+        ],
+        "paused": [
+          "0"
+        ],
+        "phase": [
+          "0"
+        ],
+        "page": [
+          "main"
+        ]
+      },
+      "pixels": {
+        "frameIndex": 252,
+        "same": true,
+        "actualSha256": "4c2346451da896632d22c82d2b0cd6cab023f218e7db5e9461061e99d3597dc1",
+        "expectedSha256": "4c2346451da896632d22c82d2b0cd6cab023f218e7db5e9461061e99d3597dc1",
+        "command": [
+          "C:\\Users\\BUZZ\\AppData\\Local\\Microsoft\\WinGet\\Packages\\yt-dlp.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe\\ffmpeg-N-125875-g5d4d3bdc61-win64-gpl\\bin\\ffmpeg.EXE",
+          "-nostdin",
+          "-v",
+          "error",
+          "-i",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-cd-movie-package-595-20261030\\독문 배포본\\NetstormReborn-cpppj\\game\\MOVIE\\germanintro2x.smk",
+          "-vf",
+          "select=eq(n\\,252)",
+          "-frames:v",
+          "1",
+          "-pix_fmt",
+          "pal8",
+          "-f",
+          "rawvideo",
+          "-"
+        ],
+        "videoRect": [
+          320,
+          240,
+          640,
+          320
+        ]
+      },
+      "scope": "실제 인트로/완료 저장/재시작만 실행. 포획/희생/공격/승리·멀티플레이 실행 없음.",
+      "actualMovieSource": [
+        "199",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-cd-movie-package-595-20261030\\독문 배포본\\NetstormReborn-cpppj\\game\\MOVIE\\germanintro2x.smk"
+      ]
+    }
+  ],
+  "noVideo": {
+    "passed": true,
+    "run": {
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-cd-movie-package-595-20261030\\한글 배포본\\NetstormReborn-cpppj\\Netstorm.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-cd-movie-package-595-20261030\\영상 없는 사본\\game",
+        "--window",
+        "--no-audio",
+        "--frames",
+        "90",
+        "--set",
+        "SCREENW=1024;SCREENH=768;maxFPS=40;sleepPerLoop=1;autoDemo=0;tellTips=0;WelcomeGiven=1",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-cd-movie-package-595-20261030\\no-video\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-cd-movie-package-595-20261030\\no-video\\states.tsv"
+      ],
+      "binarySha256": "f3c9de83f85769a567292852ce35703b3d770da855d0c02b53fa07bb3aa45d14",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 3.729565499999808,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "d5830dc47219354885725e312ca30ec58279c85cd3788069e89e4f5e8890c43c"
+    },
+    "final": {
+      "phase": [
+        "0"
+      ],
+      "page": [
+        "main"
+      ],
+      "paused": [
+        "0"
+      ],
+      "movie_runtime": [
+        "0",
+        "0",
+        "1",
+        "0",
+        "0"
+      ],
+      "movie_update_depth": [
+        "0"
+      ]
+    },
+    "introSaved": 1,
+    "scope": "영상 없는 새 자료의 원문 실패/지연 삭제/메뉴 복귀. intro/introMovie CLI override 없음."
+  },
+  "drives": {
+    "length": 8,
+    "roots": [
+      {
+        "root": "C:\\",
+        "type": 3
+      },
+      {
+        "root": "H:\\",
+        "type": 3
+      }
+    ]
+  },
+  "mediaHeaders": [
+    {
+      "file": "englishintro2x.smk",
+      "signature": "SMK2",
+      "width": 640,
+      "height": 320,
+      "frames": 1890,
+      "headerPeriod": -6666
+    },
+    {
+      "file": "germanintro2x.smk",
+      "signature": "SMK2",
+      "width": 640,
+      "height": 320,
+      "frames": 1890,
+      "headerPeriod": -6666
+    }
+  ],
+  "protected": {
+    "total": 2562,
+    "originals": 1394,
+    "originalCD": 425,
+    "existingFixtures": 741,
+    "other": [
+      "AGENTS.md",
+      "extracted/refined/originals/functions.tsv"
+    ],
+    "changed": []
+  },
+  "currentFixtures": 742,
+  "actualCdInsertedWBranchRun": false,
+  "actualPcmDevicePlaybackVerified": false,
+  "activeFullscreenPhysicalOutputVerified": false,
+  "windowPhysicalOutputVerified": true,
+  "fullSuiteRun": false,
+  "lastFull34ProductUnit": 586,
+  "lastFull34VerificationUnit": 587,
+  "win11Run": false,
+  "forbiddenGameplayReproduced": false,
+  "newMultiplayerTestsRun": false,
+  "preservedFailures": {
+    "quick-cd/build.log": "보조 cmd 인용 실패. 후속 분리 빌드/검사 성공.",
+    "package-invalid-source.log": "없는 명시 영상 원천은 의도한 종료1.",
+    "package-validation-first-failure.json": "BUILD_INFO는 대문자 SHA를 쓰므로 최초 검증기의 대소문자 비교가 실패. 실제 바이트/필드별 정규화 비교는 일치.",
+    "build-first.log": "처음 직렬/배포 병렬 추적 옵션을 맞추지 않아 추가 재컴파일. 최종 두 대상은 같은 옵션과 경고/오류0."
+  },
+  "germanUserNotUpdated": "보호 tell.german에 섹션이 없고 실제 TELL cannot find 로그 후 메뉴 복귀. 임의 영문 fallback을 추가하지 않음.",
+  "remaining": [
+    "실제 CD가 삽입된 W 장치 경로",
+    "PCM 실제 장치/시계와 활성 사용자 전체화면·Win11",
+    "현재 제품 전체34 짧은 진입/남은UI·Edit·시나리오·전체 동일성",
+    "싱글플레이 뒤 MP 무시험 사전 구현, 이후4~7차"
+  ],
+  "sourceSha256": {
+    "cpppj/package-cpppj.ps1": "1409267a51266c3260ee5180825c3867b268ae09f6f85ebb07fad5e5eb5a3866",
+    "cpppj/src/CMakeLists.txt": "c5a2dc16bd3c9de04dc73291e0120cf3fa66dd0e66c72fbf2a795840335c79ac",
+    "cpppj/src/client/CdDirectory.cpp": "c21d3ad3c6b26793f89f5ec6015803a96eea9ef8fc1e8d1f70e0737bb6eebf02",
+    "cpppj/src/client/CdDirectory.h": "9a45068eb73a2f58005a0540822203e286856b5d7932e4e0694582c207c860b9",
+    "cpppj/src/client/ClientMain.cpp": "9979b99a462a9476aad5ba09cab51acae4fb5344acd1ad55c75ff979444942ff",
+    "cpppj/src/client/RawMovieControls.cpp": "26eddd71a445ea39163c013c754dbd241983181fab442a0257038d15ebfd3846",
+    "cpppj/tests/CMakeLists.txt": "c81f70fa369fb04ecee9e2c01e8bc7dfa0b99ac88512a816ff42846f62c4c518",
+    "cpppj/tests/CdDirectoryTests.cpp": "180398a73be14c84d2bca2e5456301ec53b8c25e6b972c8dc64134c8f19a81bd",
+    "cpppj/tests/fixtures/cd-directory-x86.tsv": "acd37693857ddf2a036b1a0ce25bc7d9cb5a418ee96f70870e661b82ae0ea3d0",
+    "tools/cpp_movie_runtime_smoke.py": "dbdc880626491c6a7645b10a7f028985b57419eeca40d292d90210ec3f3f88a8",
+    "tools/decomp_cd_directory.py": "3f34b9b2509431c7fc7766a6dc1cb57eb36055a80a3e55df4becae868d01af3b"
+  },
+  "evidenceSha256": {
+    "build-first.log": "6c1a26f3f7e1024a6f26f99c18b6ba1ab7ee7642ac460da3791fb9279ce68f3c",
+    "build-progress.json": "bdebeb3a155b31fcd04d3c856c720faca3b67369bfafa53bd37472fe70bf1ef9",
+    "build-tests-aligned.log": "5f67eff788df66739dfcf37da1100c8d65fab27ea1521008b364df4a2c2ed80a",
+    "drives.json": "ab751f2a75f7bc3095ccf9dd557cb70dddd03bbd6430ad1aa0d7a1e7eb9d4cec",
+    "intro-english/pixel-comparison.json": "8718afd4ba26d0d2c673407a55d7fa2f96973651501e2619b95c569de6c34ce2",
+    "intro-english/presentation-comparison.json": "9556b11ccb14256302a385a85e5db0ce3fc79618ca249eedeca792c8ab3b1c13",
+    "intro-english/restart/run.json": "ab01589cefa895bc0bebcabc371fb998dac3afcc64ae598d6471f34247ab861f",
+    "intro-english/restart/running.json": "45ee1fadb57d48248790dca22b7f369118dd929ec016ff9c4ad85efab54523c4",
+    "intro-english/restart/states.tsv": "3986853a151113cf185e334661dabb5b95c89d2b1f59da21421dcfe6b9485dde",
+    "intro-english/restart/stderr.log": "cb76758e176fb9498de489bf084e9844f54d645d0fb4457c2c91e00a6a78d515",
+    "intro-english/restart/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "intro-english/restart/steps.tsv": "3dcf03957f9d9db1c25176561e28498491f9bca4ac9695217ed9883ee8d2b7d3",
+    "intro-english/run.json": "d2ce88c3853e3bdb92f80a6b3ba17892ac064fb60e94a1c594401fd3175eb0e0",
+    "intro-english/running.json": "49ce31c5dc54732679c75f6c1511f0328a05e208c9644a7e2fca7e3e72fe6d3c",
+    "intro-english/states.tsv": "ccaf94b073cf7760a91a4bc71d65a80466f257ba340ff67c5e7080c4be433268",
+    "intro-english/stderr.log": "5a81205f18e75568ff02b3c80136f49b01d1676cbcda21ff0c25ae7264da49e6",
+    "intro-english/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "intro-english/steps.tsv": "05cd70c669bddcc57b9dbd79a4d43408a9fb182dabff150b69eebfeb65155a18",
+    "intro-english/summary.json": "0c0a9987e9a455e59b25769c240fc32538ddf5afba03ca52acca3488c3d0de96",
+    "intro-german/pixel-comparison.json": "b9b1a3630f68d6ada9b4b15127e3c3e8948ca9433eac0c41d4c718fd86eee9ba",
+    "intro-german/presentation-comparison.json": "4e3f69e4c8a565487c3e047fbebe4080a59a0c74e198417ee963f34b4db39c26",
+    "intro-german/restart/run.json": "e556b91bbc3fbac626c464d6557dfb5de71c1fbad75daac149ded965080d51ed",
+    "intro-german/restart/running.json": "0df4ae82e1e12f1491d75b47154a59ac10351133de2488ac4328533fe8522f7f",
+    "intro-german/restart/states.tsv": "828ce82cd2254adb6b0ed505578940fc52f20e7357b6a5306ad161a5bdc4e9eb",
+    "intro-german/restart/stderr.log": "cb76758e176fb9498de489bf084e9844f54d645d0fb4457c2c91e00a6a78d515",
+    "intro-german/restart/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "intro-german/restart/steps.tsv": "3dcf03957f9d9db1c25176561e28498491f9bca4ac9695217ed9883ee8d2b7d3",
+    "intro-german/run.json": "9aba5cf616a011f1c94aa77dbae5943a000f44b8c1d59959ea656f22720c4959",
+    "intro-german/running.json": "fbff73330be791052a6c0185c17cff474cb065ebea51426ca27510d689c44f7f",
+    "intro-german/states.tsv": "d6c6ff6f0496a3c862c173fd57f0e7bce4e4ae35b8d5089f3fdc81a46f5485ef",
+    "intro-german/stderr.log": "f6d5513ad9a5dd2adc4f65414492395cd36fe05f199c62a2c2f7dc7a15330739",
+    "intro-german/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "intro-german/steps.tsv": "622b622a08045473ac2425d7f3dece0d8fd3c4f30388873923f53ddb6a226fe8",
+    "intro-german/summary.json": "fbd7ee42d3e4b9f72cd6bc561b84e5ffefac9f1b0c4279fcec252c68125525d7",
+    "language-archive.json": "e4e453b4a95da8901235ddfc828255de5e74d79c3d94cd6d0892f1d3b708552f",
+    "movie-headers.json": "72c94ccd722c92d7cbb1d4c28b6f279cd3aadc8e67dac578161ddf5e2d91f0c2",
+    "native-final-verify.log": "d6cdc2c3a549aa07862092e5443fe9c4506c70020c678d601fce49667ad2ba4f",
+    "native-first.log": "789d1aa9f06deb3e1b7ce30edcb7839b6c6df52e79450614b13bf4a57effdc0d",
+    "native-verify.log": "d6cdc2c3a549aa07862092e5443fe9c4506c70020c678d601fce49667ad2ba4f",
+    "no-video/run.json": "d5bc0e5e23ce46f97a69a721125b147d1c234c6ba52e8fbd8e54cc51a5fda41f",
+    "no-video/running.json": "a2948a11397d55de9656af6ace5d953fb1e4a015af9a37b56a1fd080700195ed",
+    "no-video/states.tsv": "9c088aefe3d9e35d191f794921b333f7fbef6250fc9f379d99c5061a7998ff2a",
+    "no-video/stderr.log": "d5830dc47219354885725e312ca30ec58279c85cd3788069e89e4f5e8890c43c",
+    "no-video/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "no-video/steps.tsv": "ce01d771e4ae0576987c0efb7bac458fe61d334442ee27af202aa3732fa1c06c",
+    "no-video/summary.json": "a0476e450d6cda7bedf8023324e760169718c787c9267523ce1b99a6f0c7a919",
+    "no-video-copy.json": "d9ce1dedb5c5e3cc03451ff0988d12d165147e3a70cde3df0478b279045290f2",
+    "package-dry-run.log": "70b3049f5dda6c5e7b3c3280e8d6b8a5155081bbe237ab5048f06448d332bc65",
+    "package-explicit-dry.log": "38d031dcd2d3b22beb2dcc7137ed0694ab909f6bd2eecffa14148d1ae66b814e",
+    "package-final.log": "808df84f08edb52d325fc6e9b998f394126b301aee6890d57ebec0cb98024159",
+    "package-invalid-source.log": "1dce8554921ac1f655477d930a1006d66ff0528af4e9d0cb176fe74514a02744",
+    "package-run.json": "9fdb004eec8a6d41752cc31b27205f6c8ad1e76badc4c84a1fa67cac9b33e665",
+    "package-validation-first-failure.json": "9b273e1b7c9819749c4dfa5f8c8809ae0c6877ebb608892ec234f419d72cfe32",
+    "package-validation.json": "caa3ae2f2255fa6b39e364a7fbf18dfb70d703fde07ec7aaa28001d01258a3c3",
+    "protected-before.json": "c1b7434cd876b02cf8fc663828325dacdbe752c4ab1e0f7f87fc9cf97dd5343f",
+    "protected-final.json": "7c133ddae20d89189a23af18eb95e77c84f080eb732d8dbabf5ba5e172f6865d",
+    "protected-pre-runtime.json": "6e308ddcc2535b89d0a94b97c8a2df27a598dd51309d555e06a50712bfe3e00e",
+    "quick-cd/build-final.log": "60ff73a8bccc94843413745d7cefa5c7ac126955e7e1a9262e67fdad1cc26161",
+    "quick-cd/build.log": "9280c55cb0051146ebe6684a5efc8f0215ed87fda4d688ac9d7c6230c713cbfa",
+    "quick-cd/tests.log": "335d2d30c558931c8dda9d6fcfdab5e3933c5c9836cf6024eedd59a8e810ad32",
+    "tests-CdDirectory-final.log": "e5bf7977be531685e24dea5ef161948077368488e82f38e4f0747813a0e076d8",
+    "tests-CdDirectory.log": "e5bf7977be531685e24dea5ef161948077368488e82f38e4f0747813a0e076d8",
+    "tests-ClientOptionsFile-final.log": "cd638fddf72f6022badbcabc691093eebeb7fe26c6395d799b0ce0bf94631715",
+    "tests-ClientOptionsFile.log": "cd638fddf72f6022badbcabc691093eebeb7fe26c6395d799b0ce0bf94631715",
+    "tests-ConfigInterface-final.log": "1f059d081f91e54c17773b35779fee06853efd0e436f40e08d47d3dcf4c1a360",
+    "tests-ConfigInterface.log": "1f059d081f91e54c17773b35779fee06853efd0e436f40e08d47d3dcf4c1a360",
+    "tests-final-summary.json": "c492d64c106e3f072c3cba4a45113fd85b8cd41ae08ce5036d91ebf47da93f48",
+    "tests-Movie-final.log": "a8886f18a34104959133ee3990a32a48077138ccca337631b366f667971abd27",
+    "tests-Movie.log": "a8886f18a34104959133ee3990a32a48077138ccca337631b366f667971abd27",
+    "tests-NativeIntro-final.log": "4279b673ca9163a218c68be225853c07a20ea9729a78e9c0b48a03a2e087769a",
+    "tests-NativeIntro.log": "4279b673ca9163a218c68be225853c07a20ea9729a78e9c0b48a03a2e087769a",
+    "tests-summary.json": "d884608f3e0dd7b75cd2c7565c22d9c746ffe4bd86a8c83ebb1883dd7bb8e9c1"
+  },
+  "rawDirectory": "extracted/cpp-cd-movie-package-595-20261030",
+  "sourceIndexSha256": {
+    "cpppj/package-cpppj.ps1": "04093f027b4014dd6392e4d1c3bae329cef770b97aa21cc1de8416771adefdcf",
+    "cpppj/src/CMakeLists.txt": "c5a2dc16bd3c9de04dc73291e0120cf3fa66dd0e66c72fbf2a795840335c79ac",
+    "cpppj/src/client/CdDirectory.cpp": "c21d3ad3c6b26793f89f5ec6015803a96eea9ef8fc1e8d1f70e0737bb6eebf02",
+    "cpppj/src/client/CdDirectory.h": "9a45068eb73a2f58005a0540822203e286856b5d7932e4e0694582c207c860b9",
+    "cpppj/src/client/ClientMain.cpp": "9979b99a462a9476aad5ba09cab51acae4fb5344acd1ad55c75ff979444942ff",
+    "cpppj/src/client/RawMovieControls.cpp": "26eddd71a445ea39163c013c754dbd241983181fab442a0257038d15ebfd3846",
+    "cpppj/tests/CMakeLists.txt": "c81f70fa369fb04ecee9e2c01e8bc7dfa0b99ac88512a816ff42846f62c4c518",
+    "cpppj/tests/CdDirectoryTests.cpp": "180398a73be14c84d2bca2e5456301ec53b8c25e6b972c8dc64134c8f19a81bd",
+    "cpppj/tests/fixtures/cd-directory-x86.tsv": "acd37693857ddf2a036b1a0ce25bc7d9cb5a418ee96f70870e661b82ae0ea3d0",
+    "tools/cpp_movie_runtime_smoke.py": "dbdc880626491c6a7645b10a7f028985b57419eeca40d292d90210ec3f3f88a8",
+    "tools/decomp_cd_directory.py": "3f34b9b2509431c7fc7766a6dc1cb57eb36055a80a3e55df4becae868d01af3b"
+  },
+  "sourceNormalization": {
+    "cpppj/package-cpppj.ps1": {
+      "policy": "기존 text eol=crlf: Git blob은 LF, 실행/checkout은 CRLF",
+      "onlyLineEndingDifference": true,
+      "executedSha256": "1409267a51266c3260ee5180825c3867b268ae09f6f85ebb07fad5e5eb5a3866",
+      "gitBlobSha256": "04093f027b4014dd6392e4d1c3bae329cef770b97aa21cc1de8416771adefdcf"
+    }
+  },
+  "checkoutFiltersVerified": {
+    "count": 22,
+    "modes": [
+      "true",
+      "input"
+    ],
+    "differences": []
+  }
+}

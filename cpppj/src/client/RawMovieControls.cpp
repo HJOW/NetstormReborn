@@ -20,6 +20,7 @@ namespace netstorm::client { // 같은 현재 노드/스트림/PCM을 원문 순
 struct RawMovieControls::Impl { // 실제 공통 저장소와 singleton/디코더/표시 시계를 고정 주소로 소유한다.
     struct Movie: GumpCreateNode { // 기본 노드 주소가 모든 공통 등록/입력/수명 처리기에서 같다.
         MovieLifecycleState movie;std::unique_ptr<SmackerDecoder> decoder;std::vector<std::uint8_t> buffer; // 원래 팔레트/압축 스트림과 표시용 원시 픽셀이다.
+        std::filesystem::path source; // 실제 OpenFile에 전달한 경로를 관측하며 디코더 선택/파일 내용을 바꾸지 않는다.
         std::unique_ptr<MoviePcmOutput> pcm;std::array<std::uint8_t,768> palette{}; // 현재 준비된 RGB와 비동기 PCM 소유자다.
         bool paletteChanged{},rectPending{},begun{},ended{};double epoch{};std::uint32_t displayed{}; // 현재 변경/시작·종료/벽시계 원점과 실제 표시 수다.
         MovieTimerState timer;std::uint32_t originTicks{}; // SDK fallback 시계와 같은 영상 구간의 시작 밀리초다.
@@ -70,7 +71,7 @@ RawMovieControls::~RawMovieControls()=default; // 공통 소유자가 먼저 Clo
 bool RawMovieControls::Open(const std::filesystem::path& path) {
     auto& s=*impl_;if (s.current) { if (!s.AtEnd(*s.Node(s.current))) return false;s.common.lifetime.Kill(s.current);s.current=0; }
     const auto token=s.common.token();auto owned=std::make_unique<Impl::Movie>();s.nodes.emplace(token,std::move(owned));auto& node=*s.Node(token);s.common.factory.Construct(token,0,0,0,1);node.vtable=0x50d8d8U;node.command=static_cast<std::uint32_t>(static_cast<std::int32_t>(s.context.type));node.flags|=0x600U;
-    node.decoder=SmackerDecoder::OpenFile(path);if (!node.decoder) { std::clog<<"인트로 영상 열기 실패: "<<path.string()<<'\n';s.common.lifetime.Kill(token);return false; }
+    node.source=path;node.decoder=SmackerDecoder::OpenFile(path);if (!node.decoder) { std::clog<<"인트로 영상 열기 실패: "<<path.string()<<'\n';s.common.lifetime.Kill(token);return false; }
     try {
         const auto& info=node.decoder->Info();if (!info.frameCount || info.width>static_cast<std::uint32_t>((std::numeric_limits<int>::max)()) || info.height>static_cast<std::uint32_t>((std::numeric_limits<int>::max)())) throw std::runtime_error("영상 실제 치수 범위");node.buffer.resize(static_cast<std::size_t>(info.width)*info.height);node.pcm=std::make_unique<MoviePcmOutput>(s.context.audio,s.context.mute);node.pcm->Prepare(info.audio);node.timer.interval=static_cast<std::uint32_t>(std::llround(info.microsecondsPerFrame/10.0));s.Prepare(node);
     }catch (...) { node.decoder.reset();s.common.lifetime.Kill(token);throw; } // 부분 실패 노드는 공통 scalar가 반납하며 영상 성공으로 가장하지 않는다.
@@ -101,6 +102,6 @@ std::string RawMovieControls::Report() const {
     const auto& s=*impl_;std::ostringstream out;out<<"movie_runtime\t"<<s.current<<'\t'<<s.nodes.size()<<'\t'<<s.closed<<'\t'<<s.displayed<<'\t'<<s.pcmSubmitted<<'\n';
     out<<"movie_timing\t"<<s.beganAt<<'\t'<<s.endedAt<<'\n'; // 실제 시계의 시작/end 진입 시각만 관측한다.
     // 살아 있는 실제 스트림/현재 표시 수와 PCM 수락을 각각 읽는다.
-    for (const auto& [token,node]:s.nodes) out<<"movie_stream\t"<<token<<'\t'<<(node->decoder ? node->decoder->FrameIndex() : 0)<<'\t'<<node->displayed<<'\t'<<node->begun<<'\t'<<node->ended<<'\t'<<(node->pcm ? node->pcm->SubmittedBytes() : 0)<<'\t'<<node->flags<<'\n';return out.str();
+    for (const auto& [token,node]:s.nodes) { const auto path=node->source.u8string();out<<"movie_source\t"<<token<<'\t'<<std::string(path.begin(),path.end())<<'\n';out<<"movie_stream\t"<<token<<'\t'<<(node->decoder ? node->decoder->FrameIndex() : 0)<<'\t'<<node->displayed<<'\t'<<node->begun<<'\t'<<node->ended<<'\t'<<(node->pcm ? node->pcm->SubmittedBytes() : 0)<<'\t'<<node->flags<<'\n'; }return out.str();
 }
 }

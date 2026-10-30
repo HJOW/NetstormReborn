@@ -7,6 +7,7 @@
 #include "client/ClientMain.h"
 #include "client/ClientDiagnostics.h"
 #include "client/ClientOptionsFile.h"
+#include "client/CdDirectory.h"
 #include "client/ClientBridgeDecay.h"
 #include "client/GifScreenshot.h"
 #include "o/RawColorSortPrimary.h"
@@ -266,6 +267,7 @@ int Client::Run() {
     if (!identity || identity->empty()) identity = Environment("USER");
     startup.identity = identity.value_or(std::string());
     const auto installUtf8=std::filesystem::absolute(options_.gameDirectory).lexically_normal().u8string();startup.installDir.assign(installUtf8.begin(),installUtf8.end()); // 원본ANSI와 달리 Windows10/11의 한글 경로를 유효 UTF-8 설정 값으로 전달한다.
+    startup.cdDir=FindWindowsCdDirectory(); // 원문00440d40의 CD-ROM/깊이2 탐색 결과다. 부재는 기존 InstallDir fallback이며 W API만 Windows10/11 호환 경계다.
     configuration_.Startup(startup);
     SaveOptions(); // 원본 FUN_004359f0 → FUN_00441d10(0): 설정 해석 전에 한 번 저장한다.
     InterpretOptions();

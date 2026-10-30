@@ -10,6 +10,7 @@
 # 게임 본체. 실행 파일과 테스트가 함께 쓰도록 정적 라이브러리로 묶는다.
 # 소스 목록은 각 폴더의 CMakeLists.txt 가 target_sources 로 더한다.
 add_library(netstorm STATIC)
+target_sources(netstorm PRIVATE client/CdDirectory.cpp client/CdDirectory.h) # 원문의 CD-ROM/깊이2 표시 파일 탐색과 실제 W API다.
 target_sources(netstorm PRIVATE client/MovieTimer.cpp client/MovieTimer.h) # 원본 SDK의 fallback 영상 대기 시계다.
 target_sources(netstorm PRIVATE client/MoviePlayback.cpp client/MoviePlayback.h) # 원문 영상 옵션/입력/idle 판단이다.
 target_sources(netstorm PRIVATE client/MovieLifecycle.cpp client/MovieLifecycle.h) # 원문 영상 시작/종료/중앙 표시 수명이다.

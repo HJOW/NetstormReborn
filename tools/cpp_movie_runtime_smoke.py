@@ -42,6 +42,7 @@ def verify_presentation(logical, physical, scene, output):
 def main():
     """실제 입력만 보내고 원시 보고·캡처·프로세스/PID·실패를 새 경로에 보존한다."""
     parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--output',type=Path,required=True);parser.add_argument('--game-dir',type=Path,required=True);parser.add_argument('--binary',type=Path,default=GAME);parser.add_argument('--intro',type=Path,default=ROOT/'originalCD/MOVIE/englishintro2x.smk');parser.add_argument('--natural',action='store_true');parser.add_argument('--skip',choices=('esc','space','left','right'),default='esc');parser.add_argument('--width',type=int,default=1024);parser.add_argument('--height',type=int,default=768);parser.add_argument('--fullscreen',action='store_true');parser.add_argument('--audio-mute',action='store_true')
+    parser.add_argument('--fresh-install',action='store_true',help='사용자 설정 파일이 없는 자료에서 intro/introMovie를 덮어쓰지 않고 시작');parser.add_argument('--language',choices=('english','french','german','spanish','japanese','portuguese'))
     parser.add_argument('--expect-audio-unavailable',action='store_true',help='실제 출력 장치0개인 환경에서 실패 후 영상/메뉴 복귀만 별도 검증');args=parser.parse_args()
     data=args.game_dir.resolve();binary=args.binary.resolve();media=args.intro.resolve();out=args.output.resolve();device_count=None
     if args.expect_audio_unavailable:
@@ -49,6 +50,7 @@ def main():
         if not args.audio_mute: parser.error('--expect-audio-unavailable은 --audio-mute와 함께 사용해야 합니다')
         device_count=ctypes.WinDLL('winmm').waveOutGetNumDevs()
         if device_count!=0: raise RuntimeError('실제 출력 장치가 존재하므로 장치 부재 기대값을 사용할 수 없습니다')
+    if args.fresh_install and (data/'d/options.cfg').exists(): raise ValueError('새 설치 검사는 기존 options.cfg가 없는 자료 사본이 필요합니다')
     for protected in (ROOT/'originals',ROOT/'originalCD'):  # 보호 트리와 그 아래를 실제 실행 데이터로 사용하지 않는다.
         if data.is_relative_to(protected.resolve()): raise ValueError('영상 실행 검사는 보호 자료와 분리한 사본이 필요합니다')
     out.mkdir(parents=True,exist_ok=False);last=4500 if args.natural else 700
@@ -56,8 +58,12 @@ def main():
     if not args.natural:
         operation,argument={'esc':('esc',''),'space':('key',' '),'left':('click','screen:700,600'),'right':('right','screen:700,600')}[args.skip];steps.append((580,operation,argument))
     steps += [(last-50,'click-if','OK'),(last-45,'click-if','Main Menu'),(last-20,'report','final'),(last-20,'snapshot',str(out/'final.bmp'))]
+    if args.language=='german': steps.append((last-40,'click-if','Hauptmenü'))  # 보호 tell.german의 실제 메인 복귀 라벨만 추가 입력한다.
+    steps.sort(key=lambda row:row[0])  # 같은 프레임 보고/캡처 순서는 유지하며 추가된 실제 라벨 입력을 기한순으로 보낸다.
     script=out/'steps.tsv';script.write_text(''.join(f'{frame}\t{operation}\t{argument}\n' for frame,operation,argument in steps),encoding='utf-8',newline='\n')
-    settings=f'SCREENW={args.width};SCREENH={args.height};maxFPS=40;sleepPerLoop=25;autoDemo=0;tellTips=0;intro=0;introMovie={media.as_posix()};WelcomeGiven=1;userUpdated=1;startInFullScreen='+('1' if args.fullscreen else '0')
+    settings=f'SCREENW={args.width};SCREENH={args.height};maxFPS=40;sleepPerLoop=25;autoDemo=0;tellTips=0;WelcomeGiven=1;userUpdated=1;startInFullScreen='+('1' if args.fullscreen else '0')
+    if not args.fresh_install: settings+=';intro=0;introMovie='+media.as_posix()  # 기존 명시 파일 검사는 유지하고 새 설치만 원문 기본 경로를 사용한다.
+    if args.language: settings+=';currentLanguage='+args.language
     command=[str(binary),'--run',str(data),'--frames',str(last),'--set',settings,'--ui-script',str(script),'--ui-report',str(out/'states.tsv')]
     if not args.fullscreen: command.append('--window')
     command.append('--mute-audio' if args.audio_mute else '--no-audio')
@@ -68,6 +74,7 @@ def main():
     observed=states(out/'states.tsv');playing=observed['playing'];final=observed['final'];stream=playing['movie_stream']
     assert int(playing['movie_runtime'][0])!=0 and int(stream[2])>0 and stream[3:5]==['1','0'],playing.get('movie_runtime')
     assert playing['movie_update_depth']==['1'] and playing['paused']==['1']
+    if args.fresh_install: assert Path(playing['movie_source'][1]).resolve()==media,'원문 기본 언어별 경로가 실제 OpenFile에 전달되지 않음'
     if args.audio_mute and not args.expect_audio_unavailable: assert int(stream[5])>0,'실제 영상 PCM 장치 수락 없음'
     else: assert stream[5]=='0'
     assert final['movie_runtime'][:3]==['0','0','1'] and final['movie_update_depth']==['0'] and final['paused']==['0'] and final['phase']==['0'] and final['page']==['main'],{key:final.get(key) for key in ('movie_runtime','movie_update_depth','paused','phase','page')}
@@ -80,10 +87,10 @@ def main():
         audio=dict(line.split('\t',1) for line in (out/'audio-final.tsv').read_text(encoding='utf-8').splitlines());ready='0' if args.expect_audio_unavailable else '1';assert audio['deviceReady']==ready and audio['soundEnabled']==ready and audio['musicRuntime']==ready and audio['muteDepth']=='1',audio
     intro=subprocess.check_output([str(binary),'--config-get',str(data),'intro'],cwd=ROOT,text=True,encoding='utf-8');assert intro.strip()=='1','인트로 완료 표식의 디스크 저장 실패'
     # userUpdated는 설정 키가 아닌 실제 사용자 상태다. 원문 첫 메뉴 안내를 실제 버튼 입력으로 닫는다.
-    restart=out/'restart';restart.mkdir();restart_plan=restart/'steps.tsv';restart_plan.write_text('3\tclick-if\tOK\n5\tclick-if\tOK\n40\treport\tmain\n',encoding='utf-8',newline='\n')
+    restart=out/'restart';restart.mkdir();restart_plan=restart/'steps.tsv';restart_plan.write_text('3\tclick-if\tOK\n5\tclick-if\tOK\n7\tclick-if\tMain Menu\n9\tclick-if\tHauptmenü\n40\treport\tmain\n',encoding='utf-8',newline='\n')
     restart_command=[str(binary),'--run',str(data),'--frames','55','--no-audio','--set','WelcomeGiven=1;userUpdated=1;autoDemo=0;tellTips=0;sleepPerLoop=25','--ui-script',str(restart_plan),'--ui-report',str(restart/'states.tsv')]
     restart_run=execute(restart_command,restart,binary,60);save(restart/'run.json',restart_run);assert restart_run['returnCode']==0 and not restart_run['timedOut'];main_state=states(restart/'states.tsv')['main'];assert main_state['phase']==['0'] and main_state['page']==['main'] and main_state['paused']==['0'] and 'movie_runtime' not in main_state,{key:main_state.get(key) for key in ('phase','page','paused','movie_runtime')}
-    summary={'passed':True,'logicalPlaybackAndLifecyclePassed':True,'physicalOutputVerified':presentation['same'],'presentation':presentation,'gameSha256':sha(binary),'mediaSha256':sha(media),'natural':args.natural,'skip':None if args.natural else args.skip,'fullscreen':args.fullscreen,'audioMute':args.audio_mute,'audioDeviceCount':device_count,'audioFallbackVerified':args.expect_audio_unavailable,'pcmDevicePlaybackVerified':args.audio_mute and not args.expect_audio_unavailable,'dimensions':[args.width,args.height],'run':run,'restart':restart_run,'playing':{k:playing.get(k) for k in ('movie_runtime','movie_stream','movie_update_depth','paused')},'final':{k:final.get(k) for k in ('movie_runtime','movie_update_depth','paused','phase','page')},'pixels':pixels,'scope':'실제 인트로/완료 저장/재시작만 실행. 포획/희생/공격/승리·멀티플레이 실행 없음.'};save(out/'summary.json',summary);print(json.dumps({'passed':True,'seconds':run['seconds'],'natural':args.natural,'audioMute':args.audio_mute,'pcmDevicePlaybackVerified':summary['pcmDevicePlaybackVerified'],'physicalOutputVerified':presentation['same']},ensure_ascii=False))
+    summary={'passed':True,'logicalPlaybackAndLifecyclePassed':True,'physicalOutputVerified':presentation['same'],'presentation':presentation,'freshInstall':args.fresh_install,'language':args.language,'gameSha256':sha(binary),'mediaSha256':sha(media),'natural':args.natural,'skip':None if args.natural else args.skip,'fullscreen':args.fullscreen,'audioMute':args.audio_mute,'audioDeviceCount':device_count,'audioFallbackVerified':args.expect_audio_unavailable,'pcmDevicePlaybackVerified':args.audio_mute and not args.expect_audio_unavailable,'dimensions':[args.width,args.height],'run':run,'restart':restart_run,'playing':{k:playing.get(k) for k in ('movie_runtime','movie_stream','movie_update_depth','paused')},'final':{k:final.get(k) for k in ('movie_runtime','movie_update_depth','paused','phase','page')},'pixels':pixels,'scope':'실제 인트로/완료 저장/재시작만 실행. 포획/희생/공격/승리·멀티플레이 실행 없음.'};save(out/'summary.json',summary);print(json.dumps({'passed':True,'seconds':run['seconds'],'natural':args.natural,'audioMute':args.audio_mute,'pcmDevicePlaybackVerified':summary['pcmDevicePlaybackVerified'],'physicalOutputVerified':presentation['same']},ensure_ascii=False))
 
 
 if __name__=='__main__': main()

@@ -4,7 +4,7 @@
 
 .DESCRIPTION
     클론 실행 파일(Netstorm.exe), Visual C++ 런타임 DLL, 게임 데이터(원본 10.78),
-    실행용 배치 파일(Netstorm.bat), 안내문을 하나의 zip 으로 묶는다.
+    원본 CD 인트로 SMK(원천이 있을 때), 실행용 배치 파일(Netstorm.bat), 안내문을 하나의 zip 으로 묶는다.
     받은 사람이 압축을 풀고 Netstorm.bat 를 실행하면 별도 설치 없이 클론이 시작되도록 구성한다.
     (2026-10-23 신규. AGENTS.md 의 "배포판 압축파일 생성용 스크립트" 요구사항을 따른다.)
 
@@ -25,6 +25,10 @@
 .PARAMETER ExePath
     묶을 클론 실행 파일. 기본값은 cpppj\build\bin\Release\Netstorm.exe 이다.
     직접 지정하면 빌드와 오래됨 검사를 하지 않는다.
+
+.PARAMETER MovieSource
+    인트로 SMK 원천 폴더다. 생략하면 게임 데이터의 MOVIE, 저장소 originalCD\MOVIE 순으로 찾는다.
+    원본은 CD 삽입 때만 읽었지만 배포본은 같은 영상을 game\MOVIE에 넣어 CD 없이 재생한다.
 
 .PARAMETER NoBuild
     실행 파일이 오래됐어도 빌드하지 않고 그대로 묶는다(경고만 표시). 파일이 없으면 오류로 멈춘다.
@@ -52,6 +56,9 @@ param(
 
     # 묶을 실행 파일 경로다. 비어 있으면 Release 빌드 산출물을 쓴다. (2026-10-23 미리 만든 실행 파일을 쓰게 하려고 추가)
     [string] $ExePath,
+
+    # 원본 CD 영상은 읽기만 하고 배포본의 MOVIE 경로에 넣는다. 명시한 경로가 잘못됐으면 오류로 멈춘다.
+    [string] $MovieSource,
 
     # 켜면 오래된 실행 파일도 다시 빌드하지 않는다. (2026-10-23 긴 빌드를 건너뛰는 용도로 추가)
     [switch] $NoBuild,
@@ -99,7 +106,7 @@ $DefaultZipName = 'NetstormReborn-cpppj-{0}.zip' -f (Get-Date -Format 'yyyyMMdd'
 $GameFiles = @('netstorm.tarc', 'Netstorm.exe')
 
 # 게임 데이터 원천에서 통째로 복사할 폴더다. d 는 셰이프·팔레트·지도·미션·글꼴, sound 는 효과음, music 은 음악이다.
-# (2026-10-23 클라이언트가 읽는 폴더를 소스에서 확인해 정함. help, movie, w 등은 클론이 읽지 않아 제외)
+# help/w는 별도이며 실제 인트로 MOVIE는 선택한 영상 원천에서 아래 Get-MovieItems가 추가한다.
 $GameDirs = @('d', 'sound', 'music')
 
 # 게임 데이터 폴더 기준으로 제외할 상대 경로다(대소문자 무시, 슬래시 구분).
@@ -423,7 +430,7 @@ function New-ReadmeText {
         '  Netstorm.bat        창 모드 실행',
         '  Netstorm-SavedMode.bat  저장된 화면 모드로 실행',
         '  game\               게임 데이터 (원본 Netstorm 10.78)',
-        '    netstorm.tarc, d\, sound\, music\',
+        '    netstorm.tarc, d\, sound\, music\, MOVIE\ (영상 원천이 있을 때)',
         '    Netstorm.exe      원본 실행 파일. 클론이 아이콘, 커서, 로딩 그림을 읽는 자료로만 쓰며',
         '                      직접 실행하지 않습니다.',
         '  BUILD_INFO.txt      이 배포판을 만든 소스와 실행 파일 정보',
@@ -433,6 +440,8 @@ function New-ReadmeText {
         'game\d\options.cfg 와 game\fullscreenStateFile.dat 를 지우면 기본 설정으로 돌아갑니다.',
         '',
         '[알림]',
+        '- 첫 실행의 인트로는 동봉된 원본 언어별 SMK를 사용합니다. ESC/Space/좌우 클릭으로 건너뜁니다.',
+        '- 원본의 CD 전용 영상은 이 배포본에서 game\MOVIE에 동봉됩니다. 영상 원천이 없으면 생략됩니다.',
         '- 개발 중인 클론이라 원본의 모든 기능이 구현된 것은 아닙니다. 멀티플레이는 포함되지 않습니다.',
         '',
         '[How to run]',
@@ -540,9 +549,37 @@ function Get-GameItems {
     return [pscustomobject]@{ Items = $items; Skipped = $skipped }
 }
 
-# 항목 목록을 zip 으로 쓴다. 항목 이름은 슬래시 구분 UTF-8 이며 압축 수준은 Optimal 이다.
-# 원본 파일을 읽는 중에 다른 프로그램이 열고 있어도 읽을 수 있게 공유 읽기로 연다.
-# 진행 상황은 PowerShell 진행 표시줄로 보여 준다. (2026-10-23 신규. Compress-Archive 는 5.1 에서 역슬래시 이름을 만들어 직접 구현)
+# 영상 원천을 명시값/게임 MOVIE/CD MOVIE 순으로 정하고 실제 SMK만 읽기 전용으로 등록한다.
+function Get-MovieItems {
+    param([string] $DataSource, [string] $ExplicitSource)
+    $selected = ''
+    $candidates = @((Join-Path $DataSource 'MOVIE'), (Join-Path $RepoRoot 'originalCD\MOVIE'))
+    if (-not [string]::IsNullOrWhiteSpace($ExplicitSource)) {
+        if (-not [System.IO.Path]::IsPathRooted($ExplicitSource)) { $ExplicitSource = Join-Path (Get-Location).ProviderPath $ExplicitSource } # PowerShell 현재 위치를 기준으로 명시 상대 경로를 해석한다.
+        $selected = [System.IO.Path]::GetFullPath($ExplicitSource)
+        if (-not (Test-Path -LiteralPath $selected -PathType Container)) { throw "인트로 영상 원천 폴더가 없습니다: ${selected}" }
+    } else {
+        # 게임 자료가 이미 영상을 동봉했다면 CD 저장소보다 그 원천을 우선한다.
+        foreach ($candidate in $candidates) {
+            if ((Test-Path -LiteralPath $candidate -PathType Container) -and @([System.IO.Directory]::EnumerateFiles($candidate, '*.smk')).Count -gt 0) { $selected = $candidate; break }
+        }
+    }
+    $items = New-Object System.Collections.Generic.List[object]
+    if ($selected) {
+        $files = New-Object System.Collections.Generic.List[string]
+        foreach ($file in [System.IO.Directory]::EnumerateFiles($selected, '*.smk')) { $files.Add($file) } # CD의 부수 ANG/실행 파일은 영상에 포함하지 않는다.
+        $files.Sort([System.StringComparer]::Ordinal)
+        foreach ($file in $files) { Add-FileItem -Items $items -Entry ($PackageRootName + '/' + $GameFolderName + '/MOVIE/' + [System.IO.Path]::GetFileName($file)) -Source $file } # 원문 SMK 바이트를 그대로 동봉한다.
+        if (-not $items.Count) { throw "인트로 영상 원천에 SMK가 없습니다: ${selected}" }
+    } else {
+        Write-Warning '인트로 SMK 원천이 없어 영상을 동봉하지 않습니다. 원본의 CD 부재처럼 영상 없이 시작합니다.'
+    }
+    return [pscustomobject]@{ Items = $items; Source = $selected }
+}
+
+# 앞서 모은 실행/런타임/게임/영상 목록을 실제 ZIP 스트림에 쓴다.
+# 항목 이름은 슬래시 구분 UTF-8/Optimal이며 원본은 공유 읽기만 한다.
+# Compress-Archive5.1의 역슬래시 항목 대신 실제 ZIP 스트림과 PowerShell 진행률을 사용한다.
 function Write-ZipPackage {
     param($Items, [string] $PartialPath)
     $totalBytes = [long]0
@@ -672,6 +709,7 @@ try {
     if ([string]::IsNullOrWhiteSpace($GameSource)) { $GameSource = Join-Path $RepoRoot 'originals' }
     $GameSource = [System.IO.Path]::GetFullPath($GameSource)
     $game = Get-GameItems -Source $GameSource
+    $movies = Get-MovieItems -DataSource $GameSource -ExplicitSource $MovieSource
 
     # 3) 직접 지정한 실행 파일은 그대로 쓰고 기본 경로는 CMake 증분 빌드로 모든 입력을 확인한다.
     $exeExplicit = -not [string]::IsNullOrWhiteSpace($ExePath)
@@ -757,6 +795,7 @@ try {
         $items.Add($item)
         $gameBytes += $item.Length
     }
+    foreach ($item in $movies.Items) { $items.Add($item) } # 원본 CD 전용 동작과 다른 배포 편의로 같은 영상을 설치 경로에 둔다.
     $sourceLabel = $GameSource
     if ($GameSource.StartsWith($RepoRoot, [System.StringComparison]::OrdinalIgnoreCase)) {
         $sourceLabel = $GameSource.Substring($RepoRoot.Length).TrimStart('\', '/')
@@ -771,6 +810,8 @@ try {
         $infoLines.Add('Executable SHA256: ' + $exeHash)
     }
     $infoLines.Add(('Game data    : original 10.78 files from "{0}"  ({1} files, {2:N0} bytes, {3} excluded)' -f $sourceLabel, $game.Items.Count, $gameBytes, $game.Skipped.Count))
+    $infoLines.Add(('인트로 영상  : "{0}" ({1} SMK), 원본 CD 파일을 game\MOVIE에 동봉' -f $movies.Source, $movies.Items.Count))
+    foreach ($item in $movies.Items) { $infoLines.Add(('영상 SHA256  : {0}  {1}' -f $item.Entry, (Get-PackageFileHash -FilePath $item.Source))) } # 동봉 파일의 출처/원문 바이트를 사용자가 확인할 수 있게 기록한다.
     # 동봉한 런타임 DLL 마다 버전과 출처를 적는다.
     foreach ($dll in $runtimePlan) {
         $infoLines.Add(('Runtime      : {0}  {1}  ({2})' -f $dll.Name, $dll.Version, $dll.Origin))

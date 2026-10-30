@@ -2141,3 +2141,14 @@ cpppj/src/client/ClientMain.h text eol=lf
 docs/exe/cpp-movie-runtime-20261030.md text eol=lf
 cpppj/src/client/Screen.cpp text eol=lf
 cpppj/src/client/Screen.h text eol=lf
+
+# CD 탐색의 원문 관측과 실제 장치/배포 경로 소스를 같은 바이트로 유지한다.
+cpppj/src/client/CdDirectory.cpp text eol=lf
+cpppj/src/client/CdDirectory.h text eol=lf
+cpppj/tests/CdDirectoryTests.cpp text eol=lf
+tools/decomp_cd_directory.py text eol=lf
+cpppj/tests/fixtures/cd-directory-x86.tsv -text
+cpppj/cd-directory-native-20261030.json text eol=lf
+cpppj/cd-movie-package-runtime-20261030.json text eol=lf
+docs/exe/cpp-cd-movie-package-20261030.md text eol=lf
+cpppj/src/client/ClientMain.cpp -text
