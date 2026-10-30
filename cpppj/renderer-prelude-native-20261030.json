@@ -1,0 +1,55 @@
+{
+  "unit": 618,
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "entry": "0x4994b0",
+  "end": "0x499758",
+  "cases": 720,
+  "observations": 2160,
+  "differences": 0,
+  "scope": "실제 상위 앞단·MarkDirty/getter/정수clip 명령의 격리 x86 관측이다. Update/RowDirty/dirty목록/배경장치는 명시 경계다. 게임GUI/원본실행/공격/포획/희생/승리/신규MP 검사가 아니다.",
+  "independentProcesses": 3,
+  "totalObservations": 6480,
+  "allProcessBytesEqual": true,
+  "peInitial": {
+    "scan19": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "mode": 0,
+    "force": 0,
+    "override": 0
+  },
+  "sha256": {
+    "inputs.json": "5b28de9a5156e9ff1b31c38c8776b8485b4c5637d9bad7135e6877edf45b7738",
+    "first.json": "35b4fdcb89d0c5aab3900920aa8894cdcabf9e6dbd95b0082da356d7904d86a7",
+    "replay.json": "35b4fdcb89d0c5aab3900920aa8894cdcabf9e6dbd95b0082da356d7904d86a7",
+    "extended.json": "35b4fdcb89d0c5aab3900920aa8894cdcabf9e6dbd95b0082da356d7904d86a7",
+    "renderer-prelude-x86.tsv": "545f83754fe09c83ae887ab29a66cb6a4db8f96b7c3a61fec5373328b7affa9c"
+  },
+  "sourceSha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_renderer_prelude.py": "b269433ea1c728e825510823024bdba126d408c8bbd3358f6b400575843f7ea9",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "cpppj/tests/fixtures/renderer-prelude-x86.tsv": "545f83754fe09c83ae887ab29a66cb6a4db8f96b7c3a61fec5373328b7affa9c"
+  }
+}

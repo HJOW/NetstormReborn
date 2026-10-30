@@ -280,3 +280,6 @@ target_sources(netstorm PRIVATE client/RawUserPick.cpp client/RawUserPick.h)
 target_sources(netstorm PRIVATE o/RawProcessSummary.cpp o/RawProcessSummary.h)
 # 원본 Alt/가운데 카메라 입력의 중심 거리·Shift 축·지연 목표를 연결한다.
 target_sources(netstorm PRIVATE client/RawCameraPan.cpp client/RawCameraPan.h)
+
+# Renderer 앞단의 화면 옵션/override/구름 행 스캔·dirty 준비를 원문 순서로 복원한다.
+target_sources(netstorm PRIVATE client/RawRendererPrelude.cpp client/RawRendererPrelude.h)

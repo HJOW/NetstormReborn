@@ -2492,3 +2492,7 @@ target_sources(netstorm_tests PRIVATE WorldGeyserTests.cpp) # 부모의 실제35
 # 원문 Alt/가운데 입력259개와 현재 callback/목표 지연을 비교한다.
 target_sources(netstorm_tests PRIVATE CameraPanTests.cpp)
 set_source_files_properties(CameraPanTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_CAMERA_PAN_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/camera-pan-x86.tsv\"")
+
+# Renderer 앞단의 원문720행과 선택된 장치/부분 실패를 검증한다.
+target_sources(netstorm_tests PRIVATE RendererPreludeTests.cpp)
+set_source_files_properties(RendererPreludeTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_RENDERER_PRELUDE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/renderer-prelude-x86.tsv\"")
