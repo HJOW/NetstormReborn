@@ -214,7 +214,10 @@ bool UberGump::PollCameraPan(const InputEvent& pointer) {
     client_.Configuration().ReadInt("scrollWhileMouseOut",scrollWhileMouseOut_);CameraPanHooks hooks;
     hooks.poll=[this](auto code) { return client_.Poll(code); };
     hooks.globals=[this] {
-        const auto size=client_.ClientPixelSize();const auto dialog=rawButtons_->CurrentDialog();
+        const auto& screen=client_.GetScreen();const auto dialog=rawButtons_->CurrentDialog();
+        // Windows10/11 호환 전체화면은 원본의 해상도 전환 대신 DIB를 확대한다. 이미 논리화된 포인터/지도와 같은 크기를 pan에 주어 물리 WM_SIZE에 따른 속도 변화를 막는다.
+        // 창 모드는 원본1:1 입력이므로 현재 WM_SIZE 값을 유지한다. 원문 FTOL/8 계산과 목표 요청 순서는 바꾸지 않는다.
+        const auto size=(screen.Flags()&ScreenMode::kFullScreen) ? ScreenPoint{screen.Width(),screen.Height()} : client_.ClientPixelSize();
         return CameraPanGlobals{scrollWhileMouseOut_,static_cast<std::int32_t>(dialog ? dialog : !popup_.empty()),client_.Active() ? 1 : 0,size.x,size.y,
             hud_ ? hud_->left : 0,hud_ ? hud_->top : 0,hud_ ? hud_->mapWidth : 0,hud_ ? hud_->mapHeight : 0};
     }; //호스트 popup도 원래 모달과 같은 관문이며 현재 지도 네 필드는 동일 HUD owner에서 조회한다.

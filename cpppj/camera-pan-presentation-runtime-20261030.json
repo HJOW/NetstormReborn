@@ -1,0 +1,1499 @@
+{
+  "unit": 617,
+  "host": "HJOW-Athlon",
+  "os": "Windows 10 Pro / 10.0.19045",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "productBaseCommit": "2d2f5a5b",
+  "buildReturnCode": 0,
+  "buildWarningsAndErrors": [],
+  "checks": {
+    "registered": 3522,
+    "uniqueTests": 38,
+    "failed": 0,
+    "runs": [
+      {
+        "filter": "CameraPan",
+        "tests": [
+          "CameraPan_Original259AndCurrentCallbacks",
+          "CameraPan_OnlySelectedDevicesAndInactiveQueueSelection"
+        ],
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+            "--filter",
+            "CameraPan"
+          ],
+          "binarySha256": "13311e16e5789d71d7739d2efe946247a089729c479dc9ad31a3d179434be392",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 0.5308937999998307,
+          "stdoutSha256": "8c3eb47a63dcdfb85bb88e6fe66ceeea5cf6bc5f65a2a530add801f662b29666",
+          "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      {
+        "filter": "CameraPresent",
+        "tests": [
+          "CameraPresent_MatchesNativeLimitsAndCalls",
+          "CameraPresent_DiagnosticAndSelectedDeviceGuards",
+          "CameraPresent_SharedDiagnosticAndDeferredCurrentView"
+        ],
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+            "--filter",
+            "CameraPresent"
+          ],
+          "binarySha256": "13311e16e5789d71d7739d2efe946247a089729c479dc9ad31a3d179434be392",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 0.4995512000000417,
+          "stdoutSha256": "af807b67f344c7e99911ba2552b42b69e18302b696f9cd4643ce08068b0338ab",
+          "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      {
+        "filter": "CameraCommit",
+        "tests": [
+          "CameraCommit_MatchesNativeViewsDirtyAndEffects",
+          "CameraCommit_CurrentTargetAfterScreenEffect",
+          "CameraCommit_SelectedHooksAndSeparateZoomBranch",
+          "CameraCommit_OnlySelectedParallaxDivisionCanFail"
+        ],
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+            "--filter",
+            "CameraCommit"
+          ],
+          "binarySha256": "13311e16e5789d71d7739d2efe946247a089729c479dc9ad31a3d179434be392",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 0.5277407999999468,
+          "stdoutSha256": "638909e7afc51e87e9d9320e666b9127dbaea65c3cb4fcd505cad6f37a110f83",
+          "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      {
+        "filter": "CameraView",
+        "tests": [
+          "CameraViewCommands_CurrentTypeAfterApplyAndActualPreview",
+          "CameraViewCommands_NullFreeDeadAndPreviewGuards",
+          "CameraViewCommands_ResetSharesCurrentLoadingDepth",
+          "CameraViewCommands_ResetFailureRestoresActualDepth",
+          "CameraView_ActualWorldProjectionAndResizePreserveFraction",
+          "CameraView_ActualClientSessionAliasesFractionAndCurrentCursorReads",
+          "CameraView_ActualClientFailedSessionKeepsCurrentOwner",
+          "CameraView_Native16WholeImageAndProjection",
+          "CameraView_BssExplicitInitializeTargetSnapshotAndDenominatorStayDistinct",
+          "CameraView_FirstMenuActualPrepareRequeriesSnapshotAndRenderer",
+          "CameraView_PlacementCostRequeriesSharedPixelsAfterDirtyEffect",
+          "CameraView_WorldSetterAssertionRequeriesCurrentFieldsAfterAllStores"
+        ],
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+            "--filter",
+            "CameraView"
+          ],
+          "binarySha256": "13311e16e5789d71d7739d2efe946247a089729c479dc9ad31a3d179434be392",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 8.876047900000003,
+          "stdoutSha256": "b15152d2dbce349542cbec3e63764e666f33a8bff97ca200249e25e6d8f95778",
+          "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      {
+        "filter": "EdgeScroll",
+        "tests": [
+          "EdgeScroll_MatchesNativeInputAndCameraTarget",
+          "EdgeScroll_RequestOnlyChangesTargetAndWrapsCounter",
+          "EdgeScroll_ContinuousHoverKeepsTimeAndRestartsAfterCenter"
+        ],
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+            "--filter",
+            "EdgeScroll"
+          ],
+          "binarySha256": "13311e16e5789d71d7739d2efe946247a089729c479dc9ad31a3d179434be392",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 0.5049428999998327,
+          "stdoutSha256": "212a23cb4049a0df7e0fe87c4b8ad4f8428e6e4561a4bd73d346b63c72144f99",
+          "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      {
+        "filter": "GumpPointerBoundary",
+        "tests": [
+          "GumpPointerBoundary_Native3878",
+          "GumpPointerBoundary_ReentryUsesCurrentRawQueue",
+          "GumpPointerBoundary_LanguageAndReachedCallbacks"
+        ],
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+            "--filter",
+            "GumpPointerBoundary"
+          ],
+          "binarySha256": "13311e16e5789d71d7739d2efe946247a089729c479dc9ad31a3d179434be392",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 0.559115600000041,
+          "stdoutSha256": "fa59fe4cba6da984a3e0e2f5a158828461846da1768d3b7ac1d5f8679e8447eb",
+          "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      {
+        "filter": "ViewKeyInput",
+        "tests": [
+          "ViewKeyInput_Native310InputsAndRealQueue",
+          "ViewKeyInput_LazyDevicesAndTellBeforePause"
+        ],
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+            "--filter",
+            "ViewKeyInput"
+          ],
+          "binarySha256": "13311e16e5789d71d7739d2efe946247a089729c479dc9ad31a3d179434be392",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 0.5219079999999394,
+          "stdoutSha256": "248e4ca00a7793279524cdae9efd083800e48c603a4a120e5bc21c5146d21306",
+          "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      {
+        "filter": "ScreenPresentation",
+        "tests": [
+          "ScreenPresentation_AspectFitAndLetterbox",
+          "ScreenPresentation_InversePointAndDirtyPhase",
+          "ScreenPresentation_CompatibilityFlagsAndNativeCommands",
+          "ScreenPresentation_WideDibUsesActualAlignedPitch",
+          "ScreenPresentation_IntegerNearestPixelsAndBounds"
+        ],
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+            "--filter",
+            "ScreenPresentation"
+          ],
+          "binarySha256": "13311e16e5789d71d7739d2efe946247a089729c479dc9ad31a3d179434be392",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 0.4945814000000155,
+          "stdoutSha256": "e7ac911238149e606812e5636707bbaa49a5433ce5c7081d7d7df57f29c85977",
+          "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      {
+        "filter": "ScreenScroll",
+        "tests": [
+          "ScreenScroll_MatchesNativeDibPixels",
+          "ScreenScroll_AllDirectionsPreserveSourceAndPadding",
+          "ScreenScroll_SelectedSurfaceBounds",
+          "ScreenScroll_CameraUsesActualRendererDirtyAndNextDraw"
+        ],
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+            "--filter",
+            "ScreenScroll"
+          ],
+          "binarySha256": "13311e16e5789d71d7739d2efe946247a089729c479dc9ad31a3d179434be392",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 0.5076787000000422,
+          "stdoutSha256": "64faf6fc3fcc1ff18eb62fc27bd3ceb7626642f4e219ed9c535526a5a8c30be3",
+          "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    ],
+    "testSha256": "13311e16e5789d71d7739d2efe946247a089729c479dc9ad31a3d179434be392"
+  },
+  "live": {
+    "passed": true,
+    "runs": 6,
+    "entries": 1376,
+    "gameAssets": 1358,
+    "binarySha256": "85c7b501470e16848fe37583d6fea7606b0687d489f8711b12f60b670f82f792",
+    "zipSha256": "e834f1596cbc491f3394342df471db1cea87275a3989b3e298f270206adb1644",
+    "results": [
+      {
+        "passed": true,
+        "logicalSize": [
+          1024,
+          768
+        ],
+        "fullscreen": false,
+        "changes": {
+          "alt": {
+            "delta": [
+              290,
+              0
+            ],
+            "requests": 10
+          },
+          "middle": {
+            "delta": [
+              -50,
+              -240
+            ],
+            "requests": 10
+          }
+        },
+        "cameraFrames": {
+          "briefing": [
+            976,
+            793,
+            976,
+            793,
+            6,
+            0,
+            7
+          ],
+          "baseline": [
+            976,
+            793,
+            976,
+            793,
+            6,
+            0,
+            7
+          ],
+          "alt1": [
+            1034,
+            793,
+            1034,
+            793,
+            6,
+            2,
+            7
+          ],
+          "alt2": [
+            1324,
+            793,
+            1324,
+            793,
+            6,
+            12,
+            7
+          ],
+          "released": [
+            1411,
+            793,
+            1411,
+            793,
+            6,
+            15,
+            7
+          ],
+          "idle": [
+            1411,
+            793,
+            1411,
+            793,
+            6,
+            15,
+            7
+          ],
+          "middle1": [
+            1401,
+            745,
+            1401,
+            745,
+            6,
+            17,
+            7
+          ],
+          "middle2": [
+            1351,
+            505,
+            1351,
+            505,
+            6,
+            27,
+            7
+          ],
+          "middle-stop": [
+            1336,
+            433,
+            1336,
+            433,
+            6,
+            30,
+            7
+          ],
+          "key-works": [
+            1336,
+            433,
+            1336,
+            433,
+            6,
+            30,
+            7
+          ],
+          "key-restored": [
+            1336,
+            433,
+            1336,
+            433,
+            6,
+            30,
+            7
+          ],
+          "final": [
+            1336,
+            433,
+            1336,
+            433,
+            6,
+            30,
+            7
+          ]
+        },
+        "window": [
+          "0",
+          "0",
+          "1040",
+          "807",
+          "1024",
+          "768",
+          "349110272"
+        ],
+        "output": [
+          "0",
+          "0",
+          "1024",
+          "768"
+        ],
+        "presentation": {
+          "same": true,
+          "actualSha256": "89945a573a2c86cc1b5fee1c6b1701824fafe2c45fd2a2e5eff8e6b6f2e893f9",
+          "expectedSha256": "89945a573a2c86cc1b5fee1c6b1701824fafe2c45fd2a2e5eff8e6b6f2e893f9",
+          "dimensions": [
+            1024,
+            768
+          ],
+          "outputRect": [
+            0,
+            0,
+            1024,
+            768
+          ]
+        },
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-camera-pan-units-617-20261030\\live\\한글 배포본\\NetstormReborn-cpppj\\Netstorm.exe",
+            "--run",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-camera-pan-units-617-20261030\\live\\한글 배포본\\NetstormReborn-cpppj\\game",
+            "--mission",
+            "TheWarBegins",
+            "--no-audio",
+            "--frames",
+            "82",
+            "--set",
+            "SCREENW=1024;SCREENH=768;maxFPS=40;sleepPerLoop=1;edgeScroll=0;scrollWhileMouseOut=0;autoDemo=0;tellTips=0;startInFullScreen=1;workingFullScreenFlags=11",
+            "--ui-script",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-camera-pan-units-617-20261030\\live\\1024x768-window\\steps.tsv",
+            "--ui-report",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-camera-pan-units-617-20261030\\live\\1024x768-window\\states.tsv",
+            "--window"
+          ],
+          "binarySha256": "85c7b501470e16848fe37583d6fea7606b0687d489f8711b12f60b670f82f792",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 4.979547500000081,
+          "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderrSha256": "9fba4f7e2bb0be090e62265ef1203d93a429672f7ce307b7cf3aa08e3bfebbbb"
+        },
+        "scope": "실제 클론 창/검사 폴링이다. 물리 Alt/가운데·실제 앱 포커스 전환·Win11/PCM·포획/희생/특정 공격/승리·신규MP 검사는 아니다."
+      },
+      {
+        "passed": true,
+        "logicalSize": [
+          1024,
+          768
+        ],
+        "fullscreen": true,
+        "changes": {
+          "alt": {
+            "delta": [
+              290,
+              0
+            ],
+            "requests": 10
+          },
+          "middle": {
+            "delta": [
+              -50,
+              -240
+            ],
+            "requests": 10
+          }
+        },
+        "cameraFrames": {
+          "briefing": [
+            976,
+            793,
+            976,
+            793,
+            6,
+            0,
+            7
+          ],
+          "baseline": [
+            976,
+            793,
+            976,
+            793,
+            6,
+            0,
+            7
+          ],
+          "alt1": [
+            1034,
+            793,
+            1034,
+            793,
+            6,
+            2,
+            7
+          ],
+          "alt2": [
+            1324,
+            793,
+            1324,
+            793,
+            6,
+            12,
+            7
+          ],
+          "released": [
+            1411,
+            793,
+            1411,
+            793,
+            6,
+            15,
+            7
+          ],
+          "idle": [
+            1411,
+            793,
+            1411,
+            793,
+            6,
+            15,
+            7
+          ],
+          "middle1": [
+            1401,
+            745,
+            1401,
+            745,
+            6,
+            17,
+            7
+          ],
+          "middle2": [
+            1351,
+            505,
+            1351,
+            505,
+            6,
+            27,
+            7
+          ],
+          "middle-stop": [
+            1336,
+            433,
+            1336,
+            433,
+            6,
+            30,
+            7
+          ],
+          "key-works": [
+            1336,
+            433,
+            1336,
+            433,
+            6,
+            30,
+            7
+          ],
+          "key-restored": [
+            1336,
+            433,
+            1336,
+            433,
+            6,
+            30,
+            7
+          ],
+          "final": [
+            1336,
+            433,
+            1336,
+            433,
+            6,
+            30,
+            7
+          ]
+        },
+        "window": [
+          "0",
+          "0",
+          "1920",
+          "1080",
+          "1920",
+          "1080",
+          "2483027968"
+        ],
+        "output": [
+          "240",
+          "0",
+          "1680",
+          "1080"
+        ],
+        "presentation": {
+          "same": true,
+          "actualSha256": "7e2950f7f6977bb36c130601c6435b76bebca459935b11cb7fbdfb5bfd5e8354",
+          "expectedSha256": "7e2950f7f6977bb36c130601c6435b76bebca459935b11cb7fbdfb5bfd5e8354",
+          "dimensions": [
+            1920,
+            1080
+          ],
+          "outputRect": [
+            240,
+            0,
+            1680,
+            1080
+          ]
+        },
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-camera-pan-units-617-20261030\\live\\한글 배포본\\NetstormReborn-cpppj\\Netstorm.exe",
+            "--run",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-camera-pan-units-617-20261030\\live\\한글 배포본\\NetstormReborn-cpppj\\game",
+            "--mission",
+            "TheWarBegins",
+            "--no-audio",
+            "--frames",
+            "82",
+            "--set",
+            "SCREENW=1024;SCREENH=768;maxFPS=40;sleepPerLoop=1;edgeScroll=0;scrollWhileMouseOut=0;autoDemo=0;tellTips=0;startInFullScreen=1;workingFullScreenFlags=11",
+            "--ui-script",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-camera-pan-units-617-20261030\\live\\1024x768-fullscreen\\steps.tsv",
+            "--ui-report",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-camera-pan-units-617-20261030\\live\\1024x768-fullscreen\\states.tsv"
+          ],
+          "binarySha256": "85c7b501470e16848fe37583d6fea7606b0687d489f8711b12f60b670f82f792",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 5.04606780000006,
+          "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderrSha256": "9fba4f7e2bb0be090e62265ef1203d93a429672f7ce307b7cf3aa08e3bfebbbb"
+        },
+        "scope": "실제 클론 창/검사 폴링이다. 물리 Alt/가운데·실제 앱 포커스 전환·Win11/PCM·포획/희생/특정 공격/승리·신규MP 검사는 아니다."
+      },
+      {
+        "passed": true,
+        "logicalSize": [
+          1280,
+          720
+        ],
+        "fullscreen": false,
+        "changes": {
+          "alt": {
+            "delta": [
+              370,
+              0
+            ],
+            "requests": 10
+          },
+          "middle": {
+            "delta": [
+              -50,
+              -220
+            ],
+            "requests": 10
+          }
+        },
+        "cameraFrames": {
+          "briefing": [
+            848,
+            817,
+            848,
+            817,
+            6,
+            0,
+            7
+          ],
+          "baseline": [
+            848,
+            817,
+            848,
+            817,
+            6,
+            0,
+            7
+          ],
+          "alt1": [
+            922,
+            817,
+            922,
+            817,
+            6,
+            2,
+            7
+          ],
+          "alt2": [
+            1292,
+            817,
+            1292,
+            817,
+            6,
+            12,
+            7
+          ],
+          "released": [
+            1403,
+            817,
+            1403,
+            817,
+            6,
+            15,
+            7
+          ],
+          "idle": [
+            1403,
+            817,
+            1403,
+            817,
+            6,
+            15,
+            7
+          ],
+          "middle1": [
+            1393,
+            773,
+            1393,
+            773,
+            6,
+            17,
+            7
+          ],
+          "middle2": [
+            1343,
+            553,
+            1343,
+            553,
+            6,
+            27,
+            7
+          ],
+          "middle-stop": [
+            1328,
+            487,
+            1328,
+            487,
+            6,
+            30,
+            7
+          ],
+          "key-works": [
+            1328,
+            487,
+            1328,
+            487,
+            6,
+            30,
+            7
+          ],
+          "key-restored": [
+            1328,
+            487,
+            1328,
+            487,
+            6,
+            30,
+            7
+          ],
+          "final": [
+            1328,
+            487,
+            1328,
+            487,
+            6,
+            30,
+            7
+          ]
+        },
+        "window": [
+          "0",
+          "0",
+          "1296",
+          "759",
+          "1280",
+          "720",
+          "349110272"
+        ],
+        "output": [
+          "0",
+          "0",
+          "1280",
+          "720"
+        ],
+        "presentation": {
+          "same": true,
+          "actualSha256": "95b0b036f5df34c00314456cd10997f34b2fb4f12ac0d4509179cf6f194372dc",
+          "expectedSha256": "95b0b036f5df34c00314456cd10997f34b2fb4f12ac0d4509179cf6f194372dc",
+          "dimensions": [
+            1280,
+            720
+          ],
+          "outputRect": [
+            0,
+            0,
+            1280,
+            720
+          ]
+        },
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-camera-pan-units-617-20261030\\live\\한글 배포본\\NetstormReborn-cpppj\\Netstorm.exe",
+            "--run",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-camera-pan-units-617-20261030\\live\\한글 배포본\\NetstormReborn-cpppj\\game",
+            "--mission",
+            "TheWarBegins",
+            "--no-audio",
+            "--frames",
+            "82",
+            "--set",
+            "SCREENW=1280;SCREENH=720;maxFPS=40;sleepPerLoop=1;edgeScroll=0;scrollWhileMouseOut=0;autoDemo=0;tellTips=0;startInFullScreen=1;workingFullScreenFlags=11",
+            "--ui-script",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-camera-pan-units-617-20261030\\live\\1280x720-window\\steps.tsv",
+            "--ui-report",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-camera-pan-units-617-20261030\\live\\1280x720-window\\states.tsv",
+            "--window"
+          ],
+          "binarySha256": "85c7b501470e16848fe37583d6fea7606b0687d489f8711b12f60b670f82f792",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 4.776113199999941,
+          "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderrSha256": "9fba4f7e2bb0be090e62265ef1203d93a429672f7ce307b7cf3aa08e3bfebbbb"
+        },
+        "scope": "실제 클론 창/검사 폴링이다. 물리 Alt/가운데·실제 앱 포커스 전환·Win11/PCM·포획/희생/특정 공격/승리·신규MP 검사는 아니다."
+      },
+      {
+        "passed": true,
+        "logicalSize": [
+          1280,
+          720
+        ],
+        "fullscreen": true,
+        "changes": {
+          "alt": {
+            "delta": [
+              370,
+              0
+            ],
+            "requests": 10
+          },
+          "middle": {
+            "delta": [
+              -50,
+              -220
+            ],
+            "requests": 10
+          }
+        },
+        "cameraFrames": {
+          "briefing": [
+            848,
+            817,
+            848,
+            817,
+            6,
+            0,
+            7
+          ],
+          "baseline": [
+            848,
+            817,
+            848,
+            817,
+            6,
+            0,
+            7
+          ],
+          "alt1": [
+            922,
+            817,
+            922,
+            817,
+            6,
+            2,
+            7
+          ],
+          "alt2": [
+            1292,
+            817,
+            1292,
+            817,
+            6,
+            12,
+            7
+          ],
+          "released": [
+            1403,
+            817,
+            1403,
+            817,
+            6,
+            15,
+            7
+          ],
+          "idle": [
+            1403,
+            817,
+            1403,
+            817,
+            6,
+            15,
+            7
+          ],
+          "middle1": [
+            1393,
+            773,
+            1393,
+            773,
+            6,
+            17,
+            7
+          ],
+          "middle2": [
+            1343,
+            553,
+            1343,
+            553,
+            6,
+            27,
+            7
+          ],
+          "middle-stop": [
+            1328,
+            487,
+            1328,
+            487,
+            6,
+            30,
+            7
+          ],
+          "key-works": [
+            1328,
+            487,
+            1328,
+            487,
+            6,
+            30,
+            7
+          ],
+          "key-restored": [
+            1328,
+            487,
+            1328,
+            487,
+            6,
+            30,
+            7
+          ],
+          "final": [
+            1328,
+            487,
+            1328,
+            487,
+            6,
+            30,
+            7
+          ]
+        },
+        "window": [
+          "0",
+          "0",
+          "1920",
+          "1080",
+          "1920",
+          "1080",
+          "2483027968"
+        ],
+        "output": [
+          "0",
+          "0",
+          "1920",
+          "1080"
+        ],
+        "presentation": {
+          "same": true,
+          "actualSha256": "3d3b67b4bbe08448d302f49281b937f96ebd8eb099bf13c3458387468f677267",
+          "expectedSha256": "3d3b67b4bbe08448d302f49281b937f96ebd8eb099bf13c3458387468f677267",
+          "dimensions": [
+            1920,
+            1080
+          ],
+          "outputRect": [
+            0,
+            0,
+            1920,
+            1080
+          ]
+        },
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-camera-pan-units-617-20261030\\live\\한글 배포본\\NetstormReborn-cpppj\\Netstorm.exe",
+            "--run",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-camera-pan-units-617-20261030\\live\\한글 배포본\\NetstormReborn-cpppj\\game",
+            "--mission",
+            "TheWarBegins",
+            "--no-audio",
+            "--frames",
+            "82",
+            "--set",
+            "SCREENW=1280;SCREENH=720;maxFPS=40;sleepPerLoop=1;edgeScroll=0;scrollWhileMouseOut=0;autoDemo=0;tellTips=0;startInFullScreen=1;workingFullScreenFlags=11",
+            "--ui-script",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-camera-pan-units-617-20261030\\live\\1280x720-fullscreen\\steps.tsv",
+            "--ui-report",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-camera-pan-units-617-20261030\\live\\1280x720-fullscreen\\states.tsv"
+          ],
+          "binarySha256": "85c7b501470e16848fe37583d6fea7606b0687d489f8711b12f60b670f82f792",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 5.002568900000028,
+          "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderrSha256": "9fba4f7e2bb0be090e62265ef1203d93a429672f7ce307b7cf3aa08e3bfebbbb"
+        },
+        "scope": "실제 클론 창/검사 폴링이다. 물리 Alt/가운데·실제 앱 포커스 전환·Win11/PCM·포획/희생/특정 공격/승리·신규MP 검사는 아니다."
+      },
+      {
+        "passed": true,
+        "logicalSize": [
+          1280,
+          800
+        ],
+        "fullscreen": false,
+        "changes": {
+          "alt": {
+            "delta": [
+              370,
+              0
+            ],
+            "requests": 10
+          },
+          "middle": {
+            "delta": [
+              -50,
+              -250
+            ],
+            "requests": 10
+          }
+        },
+        "cameraFrames": {
+          "briefing": [
+            848,
+            777,
+            848,
+            777,
+            6,
+            0,
+            7
+          ],
+          "baseline": [
+            848,
+            777,
+            848,
+            777,
+            6,
+            0,
+            7
+          ],
+          "alt1": [
+            922,
+            777,
+            922,
+            777,
+            6,
+            2,
+            7
+          ],
+          "alt2": [
+            1292,
+            777,
+            1292,
+            777,
+            6,
+            12,
+            7
+          ],
+          "released": [
+            1403,
+            777,
+            1403,
+            777,
+            6,
+            15,
+            7
+          ],
+          "idle": [
+            1403,
+            777,
+            1403,
+            777,
+            6,
+            15,
+            7
+          ],
+          "middle1": [
+            1393,
+            727,
+            1393,
+            727,
+            6,
+            17,
+            7
+          ],
+          "middle2": [
+            1343,
+            477,
+            1343,
+            477,
+            6,
+            27,
+            7
+          ],
+          "middle-stop": [
+            1328,
+            402,
+            1328,
+            402,
+            6,
+            30,
+            7
+          ],
+          "key-works": [
+            1328,
+            402,
+            1328,
+            402,
+            6,
+            30,
+            7
+          ],
+          "key-restored": [
+            1328,
+            402,
+            1328,
+            402,
+            6,
+            30,
+            7
+          ],
+          "final": [
+            1328,
+            402,
+            1328,
+            402,
+            6,
+            30,
+            7
+          ]
+        },
+        "window": [
+          "0",
+          "0",
+          "1296",
+          "839",
+          "1280",
+          "800",
+          "349110272"
+        ],
+        "output": [
+          "0",
+          "0",
+          "1280",
+          "800"
+        ],
+        "presentation": {
+          "same": true,
+          "actualSha256": "0b61f634ffc07270adedde4ba4e9e8f339769e7c500a6ade25b220f178395382",
+          "expectedSha256": "0b61f634ffc07270adedde4ba4e9e8f339769e7c500a6ade25b220f178395382",
+          "dimensions": [
+            1280,
+            800
+          ],
+          "outputRect": [
+            0,
+            0,
+            1280,
+            800
+          ]
+        },
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-camera-pan-units-617-20261030\\live\\한글 배포본\\NetstormReborn-cpppj\\Netstorm.exe",
+            "--run",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-camera-pan-units-617-20261030\\live\\한글 배포본\\NetstormReborn-cpppj\\game",
+            "--mission",
+            "TheWarBegins",
+            "--no-audio",
+            "--frames",
+            "82",
+            "--set",
+            "SCREENW=1280;SCREENH=800;maxFPS=40;sleepPerLoop=1;edgeScroll=0;scrollWhileMouseOut=0;autoDemo=0;tellTips=0;startInFullScreen=1;workingFullScreenFlags=11",
+            "--ui-script",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-camera-pan-units-617-20261030\\live\\1280x800-window\\steps.tsv",
+            "--ui-report",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-camera-pan-units-617-20261030\\live\\1280x800-window\\states.tsv",
+            "--window"
+          ],
+          "binarySha256": "85c7b501470e16848fe37583d6fea7606b0687d489f8711b12f60b670f82f792",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 4.841124599999944,
+          "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderrSha256": "9fba4f7e2bb0be090e62265ef1203d93a429672f7ce307b7cf3aa08e3bfebbbb"
+        },
+        "scope": "실제 클론 창/검사 폴링이다. 물리 Alt/가운데·실제 앱 포커스 전환·Win11/PCM·포획/희생/특정 공격/승리·신규MP 검사는 아니다."
+      },
+      {
+        "passed": true,
+        "logicalSize": [
+          1280,
+          800
+        ],
+        "fullscreen": true,
+        "changes": {
+          "alt": {
+            "delta": [
+              370,
+              0
+            ],
+            "requests": 10
+          },
+          "middle": {
+            "delta": [
+              -50,
+              -250
+            ],
+            "requests": 10
+          }
+        },
+        "cameraFrames": {
+          "briefing": [
+            848,
+            777,
+            848,
+            777,
+            6,
+            0,
+            7
+          ],
+          "baseline": [
+            848,
+            777,
+            848,
+            777,
+            6,
+            0,
+            7
+          ],
+          "alt1": [
+            922,
+            777,
+            922,
+            777,
+            6,
+            2,
+            7
+          ],
+          "alt2": [
+            1292,
+            777,
+            1292,
+            777,
+            6,
+            12,
+            7
+          ],
+          "released": [
+            1403,
+            777,
+            1403,
+            777,
+            6,
+            15,
+            7
+          ],
+          "idle": [
+            1403,
+            777,
+            1403,
+            777,
+            6,
+            15,
+            7
+          ],
+          "middle1": [
+            1393,
+            727,
+            1393,
+            727,
+            6,
+            17,
+            7
+          ],
+          "middle2": [
+            1343,
+            477,
+            1343,
+            477,
+            6,
+            27,
+            7
+          ],
+          "middle-stop": [
+            1328,
+            402,
+            1328,
+            402,
+            6,
+            30,
+            7
+          ],
+          "key-works": [
+            1328,
+            402,
+            1328,
+            402,
+            6,
+            30,
+            7
+          ],
+          "key-restored": [
+            1328,
+            402,
+            1328,
+            402,
+            6,
+            30,
+            7
+          ],
+          "final": [
+            1328,
+            402,
+            1328,
+            402,
+            6,
+            30,
+            7
+          ]
+        },
+        "window": [
+          "0",
+          "0",
+          "1920",
+          "1080",
+          "1920",
+          "1080",
+          "2483027968"
+        ],
+        "output": [
+          "96",
+          "0",
+          "1824",
+          "1080"
+        ],
+        "presentation": {
+          "same": true,
+          "actualSha256": "3e9f9018be423337491940b69fb7eacf04bcc34cefd3289faa780e360af60d8d",
+          "expectedSha256": "3e9f9018be423337491940b69fb7eacf04bcc34cefd3289faa780e360af60d8d",
+          "dimensions": [
+            1920,
+            1080
+          ],
+          "outputRect": [
+            96,
+            0,
+            1824,
+            1080
+          ]
+        },
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-camera-pan-units-617-20261030\\live\\한글 배포본\\NetstormReborn-cpppj\\Netstorm.exe",
+            "--run",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-camera-pan-units-617-20261030\\live\\한글 배포본\\NetstormReborn-cpppj\\game",
+            "--mission",
+            "TheWarBegins",
+            "--no-audio",
+            "--frames",
+            "82",
+            "--set",
+            "SCREENW=1280;SCREENH=800;maxFPS=40;sleepPerLoop=1;edgeScroll=0;scrollWhileMouseOut=0;autoDemo=0;tellTips=0;startInFullScreen=1;workingFullScreenFlags=11",
+            "--ui-script",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-camera-pan-units-617-20261030\\live\\1280x800-fullscreen\\steps.tsv",
+            "--ui-report",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-camera-pan-units-617-20261030\\live\\1280x800-fullscreen\\states.tsv"
+          ],
+          "binarySha256": "85c7b501470e16848fe37583d6fea7606b0687d489f8711b12f60b670f82f792",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 4.956945300000029,
+          "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderrSha256": "9fba4f7e2bb0be090e62265ef1203d93a429672f7ce307b7cf3aa08e3bfebbbb"
+        },
+        "scope": "실제 클론 창/검사 폴링이다. 물리 Alt/가운데·실제 앱 포커스 전환·Win11/PCM·포획/희생/특정 공격/승리·신규MP 검사는 아니다."
+      }
+    ],
+    "windowFullscreenPanEqual": true,
+    "allArchivedBytesUnchanged": true,
+    "protectedActionsReproduced": false,
+    "networkExecuted": false
+  },
+  "gameSha256": "85c7b501470e16848fe37583d6fea7606b0687d489f8711b12f60b670f82f792",
+  "testSha256": "13311e16e5789d71d7739d2efe946247a089729c479dc9ad31a3d179434be392",
+  "zipPath": "extracted/cpp-camera-pan-units-617-20261030/NetstormReborn-cpppj-617.zip",
+  "zipSha256": "e834f1596cbc491f3394342df471db1cea87275a3989b3e298f270206adb1644",
+  "protectedCount": 2618,
+  "protectedFixtureCount": 759,
+  "protectedDifferences": [],
+  "newFixture": false,
+  "newOriginalExecutions": 0,
+  "newMultiplayerTests": 0,
+  "exitCursorClip": [
+    0,
+    0,
+    1920,
+    1080
+  ],
+  "lastFull34": {
+    "productUnit": 615,
+    "verificationUnit": 616
+  },
+  "sourceSha256": {
+    "cpppj/src/client/UberGump.cpp": "25b01dc1ebd4a5cf62a36df94ecf9259eac944d823c7a8aef5a87c2d693084d0",
+    "cpppj/src/client/ClientMain.h": "9baa3f1c170a98afa077adc7890d14efc3bc8d11a5abcb37fa7c5395486afb9d",
+    "cpppj/src/client/RawCameraPan.cpp": "3f7cc4a128463bceb0ba2ec012e0fea22674647f32c6cb0aac2bf5520602271f",
+    "cpppj/src/client/RawCameraPan.h": "095881ce544307096816c4ebd50742f2cbc1febc9eb9ca17b4b99e9e5226669f",
+    "cpppj/tests/CameraPanTests.cpp": "93b8343328286eb8c6c18378756fc9774c00f0338995b3a740ee42934e901e89",
+    "cpppj/tests/fixtures/camera-pan-x86.tsv": "51fd14e039b2210f3a461eabf205ea5a7992c5396bbd98c73a013c130b929619",
+    "tools/cpp_camera_pan_presentation_smoke.py": "faba5ec55b116f6e5f58e4c2b9050f2113dd935076946f600dc268d103ecdd42"
+  },
+  "evidenceSha256": {
+    "build.log": "d7936d50c04d86738d533cda6699cb3f528a1ec0796aba190a2280a677811e17",
+    "protected-before.json": "f1bcf59f404db6434468d08876e4617609693cb0c89cfe1f2a19285d29e1fc3c",
+    "package.log": "67247ac4b8d4dd43535f0be9b2900df4f1748caf9a4e45925c26b9cb368c8fde",
+    "live.log": "83af76a283e3bdaf4fbddeed8bcd522eb9e0e9ac09d6c79861451283c1d6ff0c",
+    "run_checks.py": "cc1ac0137af87f7c5b8682d505ecf6e2f232d684199f5d4c7b7f1d21969a0a06",
+    "update_docs.py": "34fafdda4cdfd2ff798e810c61ccf14e30bc9ffc0f063ec9eca693c7390f68a4",
+    "checks.log": "eaa7bdfc48fbfe8069d1cea8fa7a3700d7eeeeb862b252d5d2c218beaca4c662",
+    "registered-tests.txt": "957edf05f5d378b06de59f75f1326fc916bc1d9fefb1fba333281041525bce27",
+    "checks-summary.json": "1cd7b29f8f60773ddfe1bef61c598bdc3466a1d6b91d56ec4dc550c9d5a740e8",
+    "protected-after.json": "5c446744e53889bd994b10826c39f59933c8724e6a8f5eb6ce68961837d51e4b",
+    "live/summary.json": "da64fbf7b0f2dab9712c6ff651ce5aaea285c2c8a8764a26e64e06d04c6f75dd",
+    "checks-CameraPan/stdout.log": "8c3eb47a63dcdfb85bb88e6fe66ceeea5cf6bc5f65a2a530add801f662b29666",
+    "checks-CameraPan/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "checks-CameraPan/running.json": "337c6ff2fb140fbf1085ef103624d8af0ed8b9c22bc161f9ea993649c94fbf00",
+    "checks-CameraPresent/stdout.log": "af807b67f344c7e99911ba2552b42b69e18302b696f9cd4643ce08068b0338ab",
+    "checks-CameraPresent/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "checks-CameraPresent/running.json": "f1df8c564458a0d5f307c12623906c069ec3320978463e4540d2cd1598792dcb",
+    "checks-CameraCommit/stdout.log": "638909e7afc51e87e9d9320e666b9127dbaea65c3cb4fcd505cad6f37a110f83",
+    "checks-CameraCommit/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "checks-CameraCommit/running.json": "e3b3829d6c9b34bf56de29b7ae2aa988e35cfeaa0b749a40c7a8ffd28350fc27",
+    "checks-CameraView/stdout.log": "b15152d2dbce349542cbec3e63764e666f33a8bff97ca200249e25e6d8f95778",
+    "checks-CameraView/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "checks-CameraView/running.json": "f572397cd0de1f817ec2b44101ac71a08634b75799c0e161f4e7f1f8b4c822c3",
+    "checks-EdgeScroll/stdout.log": "212a23cb4049a0df7e0fe87c4b8ad4f8428e6e4561a4bd73d346b63c72144f99",
+    "checks-EdgeScroll/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "checks-EdgeScroll/running.json": "48d47ba389d0664f0f7395e0b7260e7a2ec5d4a60ef8240fa0a72e874902bd1d",
+    "checks-GumpPointerBoundary/stdout.log": "fa59fe4cba6da984a3e0e2f5a158828461846da1768d3b7ac1d5f8679e8447eb",
+    "checks-GumpPointerBoundary/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "checks-GumpPointerBoundary/running.json": "337c82a7a8fb7d61e7bad303582bfd349ab869d02d21f2265b455ea29d2fe434",
+    "checks-ViewKeyInput/stdout.log": "248e4ca00a7793279524cdae9efd083800e48c603a4a120e5bc21c5146d21306",
+    "checks-ViewKeyInput/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "checks-ViewKeyInput/running.json": "8dbe47b15d7c5baf93998d49f44ac0c0949a08baec6349e840ca6e2bd0ad29b5",
+    "checks-ScreenPresentation/stdout.log": "e7ac911238149e606812e5636707bbaa49a5433ce5c7081d7d7df57f29c85977",
+    "checks-ScreenPresentation/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "checks-ScreenPresentation/running.json": "332e2cd7bd49ea04cc47045f6f1d06f296f54a4c68c9e4e59a91a5f71a0e1900",
+    "checks-ScreenScroll/stdout.log": "64faf6fc3fcc1ff18eb62fc27bd3ceb7626642f4e219ed9c535526a5a8c30be3",
+    "checks-ScreenScroll/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "checks-ScreenScroll/running.json": "5de57642a2d86443b69454a97ef4246bfb77a0797d3e803cfdfba0c2541e6941",
+    "live/1024x768-window/steps.tsv": "e30ea1ff2d35b26c9f63d02819bd48fff4be592ff767f7355f7f6b9e78085681",
+    "live/1024x768-window/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "live/1024x768-window/stderr.log": "9fba4f7e2bb0be090e62265ef1203d93a429672f7ce307b7cf3aa08e3bfebbbb",
+    "live/1024x768-window/running.json": "14751cd44e89714e38c9d34796b0f5384494557ff6d73a54f615b65d385aee5b",
+    "live/1024x768-window/states.tsv": "75a823ead45ad304bc14350bd4c18b09dbc73bf47de5d452898d1597aaf9822a",
+    "live/1024x768-window/run.json": "0905efeb4726a08229026172dc33079530702a409e0af414a0f0296495c932f9",
+    "live/1024x768-window/presentation-comparison.json": "98f911f275ac5d43f09bc4b9fb1e3dab9a43f545116668ded853a4e876ca6d98",
+    "live/1024x768-window/summary.json": "ea9ce5f0dec87bc4085c6d2b48f5370da3d3e250e3335c58e632101fb798bc8e",
+    "live/1024x768-fullscreen/steps.tsv": "2ddb3af84f920e1342d80834ca022f605da079c3eb7335add0dd7496eb011864",
+    "live/1024x768-fullscreen/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "live/1024x768-fullscreen/stderr.log": "9fba4f7e2bb0be090e62265ef1203d93a429672f7ce307b7cf3aa08e3bfebbbb",
+    "live/1024x768-fullscreen/running.json": "0db58efb2ef1e1026063aae63ab168e24785f03bbd746407393a0b18c21cf74b",
+    "live/1024x768-fullscreen/states.tsv": "a4b0d8a729b9ebe867d4db3db2d99cae0d8e346f16b092899198e1005ce8fd21",
+    "live/1024x768-fullscreen/run.json": "177be55af45ab97e72485c3175f91f317eaea8d46ad038b4caebac280973741b",
+    "live/1024x768-fullscreen/presentation-comparison.json": "31619c385253ba612d3b064f1741b1e914928e76e6eda9f3a82f805bbb1ae889",
+    "live/1024x768-fullscreen/summary.json": "3d5a98e91393b59442300a81fa03d8f9d17280e44a249edabcf69a88bfeca0c1",
+    "live/1280x720-window/steps.tsv": "1f8e85d2e9c95fd10414d31c208c8fcc4823c14b0f08de8f8a5e924a50b40806",
+    "live/1280x720-window/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "live/1280x720-window/stderr.log": "9fba4f7e2bb0be090e62265ef1203d93a429672f7ce307b7cf3aa08e3bfebbbb",
+    "live/1280x720-window/running.json": "d6da7ee620360e6a0bca6ca297e6b3c5ea89ec854712330b66efb1e0a9c6e425",
+    "live/1280x720-window/states.tsv": "6f32995d7739336053b05b247873c4e5c247ef76e27febc1a4e8b4a882193cc1",
+    "live/1280x720-window/run.json": "88409c5db7af85018d0c145619640838c470349214cdb41356c0f776697e0d05",
+    "live/1280x720-window/presentation-comparison.json": "3bbfc7443038d58bfa1e9f063e782f14ea26bbd54fb5cc425baabcb02cf4188d",
+    "live/1280x720-window/summary.json": "240c5a50444c79fe07073fe5574604f7d45ec29d23c4202d4fc0055297b832ac",
+    "live/1280x720-fullscreen/steps.tsv": "7becbd839024e12d2d90033ee6b89930ede036d56f34297f9962928aa5115e7d",
+    "live/1280x720-fullscreen/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "live/1280x720-fullscreen/stderr.log": "9fba4f7e2bb0be090e62265ef1203d93a429672f7ce307b7cf3aa08e3bfebbbb",
+    "live/1280x720-fullscreen/running.json": "8e6fb0ac0c4148a9295aaa10345abbf062015323ef0b8e926f4e7eb3db8db6b7",
+    "live/1280x720-fullscreen/states.tsv": "2abb469c32a14d15fb8e9afc873218db5183215643b124c21527c036087e0ce8",
+    "live/1280x720-fullscreen/run.json": "3ae5d9a25ff56faa7747fd9d0896e31808b600a5d489e97eeeb389c9a9d1edcb",
+    "live/1280x720-fullscreen/presentation-comparison.json": "0c9add43081839487272d982bb97dbe2c0656519d72cb568e2b9243e7e196b74",
+    "live/1280x720-fullscreen/summary.json": "117d4a88c3551434604564d231da3b96f271e56a37ed88f12884317d4375d6c8",
+    "live/1280x800-window/steps.tsv": "7eab6f4cb4eb94cd77feaa61e15e577fbaff23ccd52e61d7c542ea8c9431a77c",
+    "live/1280x800-window/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "live/1280x800-window/stderr.log": "9fba4f7e2bb0be090e62265ef1203d93a429672f7ce307b7cf3aa08e3bfebbbb",
+    "live/1280x800-window/running.json": "a5ae9eb85b26524c8c9ea7f60bf6864e573517253f2a305d643b042b4476262d",
+    "live/1280x800-window/states.tsv": "dbff695510c62b1f0890545d595e648da859148dc77b91d6b2d98834637648af",
+    "live/1280x800-window/run.json": "904db9c9d45802936d5b0ed3e860cf5cb2e0fd55c9e5d99b889f0082430b4cda",
+    "live/1280x800-window/presentation-comparison.json": "9862b7d403629054d2f995a5ba3acf256aa85a58b4a290357bbcc066ae9f984f",
+    "live/1280x800-window/summary.json": "b8ed3c0618b4a29e917f36cdebb6b7b323c7b8e39114b36dd8c48a21d9ced6b5",
+    "live/1280x800-fullscreen/steps.tsv": "7d2a3cdf36e3ae1d7ab714ab9eccc2f2a3699c1d6c9bdade9438346c00a47c7f",
+    "live/1280x800-fullscreen/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "live/1280x800-fullscreen/stderr.log": "9fba4f7e2bb0be090e62265ef1203d93a429672f7ce307b7cf3aa08e3bfebbbb",
+    "live/1280x800-fullscreen/running.json": "b78c1ef985935e31016be7b458b78920d3b312318b7704c3f1d8d252e26b684b",
+    "live/1280x800-fullscreen/states.tsv": "a3dddb78f6fee52f45530ba5000097d815903d3b93583c2e70337584ae64d768",
+    "live/1280x800-fullscreen/run.json": "12ef4104f99c091bc50753a28590d52f2e5e3c3c439f9cca6d54ed550b1f0227",
+    "live/1280x800-fullscreen/presentation-comparison.json": "c4a398b5ffb53989ffbc4635b8620a16ba60d0d9630db2b379b4af0788821818",
+    "live/1280x800-fullscreen/summary.json": "41dbf45c93e5954898e696ed32b3e8e147b2b5d580389720e5c28abef853930f",
+    "live/1280x800-fullscreen/settings-backup/options.cfg.absent": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "live/1280x800-fullscreen/settings-backup/fullscreenStateFile.dat.absent": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "live/1280x800-window/settings-backup/options.cfg.absent": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "live/1280x800-window/settings-backup/fullscreenStateFile.dat.absent": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "live/1280x720-fullscreen/settings-backup/options.cfg.absent": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "live/1280x720-fullscreen/settings-backup/fullscreenStateFile.dat.absent": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "live/1280x720-window/settings-backup/options.cfg.absent": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "live/1280x720-window/settings-backup/fullscreenStateFile.dat.absent": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "live/1024x768-fullscreen/settings-backup/options.cfg.absent": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "live/1024x768-fullscreen/settings-backup/fullscreenStateFile.dat.absent": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "live/1024x768-window/settings-backup/options.cfg.absent": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "live/1024x768-window/settings-backup/fullscreenStateFile.dat.absent": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "scope": "Windows10 실제 새 배포본의 세 화면비 창/확대 전체화면6회와 기존 카메라/입력/화면 회귀다. 원문 pan 계산/fixture는 그대로이며 호환 전체화면의 입력 크기만 논리 단위로 공급한다. 물리 키/실제 앱 포커스·다른 DPI/Win11/PCM·자연 완주/원본 전체 동일성·전체C++/현재 전체34·포획/희생/특정 적 공격/승리·공중3종 전용/신규MP 검사는 하지 않았다. 목표는 active로 계속하며612 스택 미정값 자체의 동일성 한계를 유지한다."
+}
