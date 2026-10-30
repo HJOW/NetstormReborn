@@ -2,6 +2,7 @@
 #include "TestSupport.h"
 #include "client/RawButtonControls.h"
 #include <array>
+#include <algorithm>
 #include <cstring>
 #include <fstream>
 #include <sstream>
@@ -22,6 +23,19 @@ std::vector<std::uint32_t> Fields(const RawButtonControls& controls) {
     for (std::uint32_t value;stream>>value;) result.push_back(value);
     return result;
 }
+}
+// 실제 돌 버튼 누름/해제는 같은 기본 사각형을 요청하며 새 페이지/팔레트 변경은 별도 경계를 유지한다.
+TEST_CASE(RawButtonControls_ActualDirtyRectAndStructuralBoundaries) {
+    std::vector<ScreenRect> rectangles;std::size_t full{};double now=1;RawButtonHooks hooks;
+    hooks.now=[&] { return now; };hooks.invalidate=[&](auto rectangle,auto flags) { CHECK(flags==0);rectangles.push_back(rectangle); };hooks.invalidateAll=[&] { ++full; };
+    RawButtonControls controls(netstorm::o::OriginalEdition::Patch1078,std::move(hooks));controls.SetControls(kControls,kLabels,640,480,kAssets);
+    CHECK(full>0);full=0;rectangles.clear();controls.Event({InputCode::kLeftButton,20,25});
+    CHECK(full==0 && !rectangles.empty());
+    CHECK(std::any_of(rectangles.begin(),rectangles.end(),[](auto r) { return r.left==10 && r.top==20 && r.right==85 && r.bottom==40; }));
+    rectangles.clear();controls.Poll({InputCode::kLeftButton,85,25});CHECK(full==0 && !rectangles.empty());
+    rectangles.clear();controls.Poll({InputCode::kLeftButton,20,25});CHECK(full==0 && !rectangles.empty());
+    rectangles.clear();controls.Event({InputCode::kLeftButton|InputCode::kRelease,20,25});CHECK(full==0 && !rectangles.empty());
+    controls.SetPalette({1,2,3});CHECK(full>0);full=0;controls.SetControls(kControls,kLabels,640,480,kAssets);CHECK(full>0);
 }
 // 두 판본에서 실제 캡처/부모 serial/이탈 복귀·release·비활성 경계를 검사한다.
 TEST_CASE(RawButtonControls_CaptureUsesRawTreeAndParentSerial) {

@@ -210,7 +210,7 @@ struct RawMenuControls::Impl {
             fh.allocate=[this](auto bytes) { return Allocate(bytes,3); };fh.constructText=[this](auto token) { costText->Construct(token,0,0,0,0); };
             fh.clearText=[this](auto token) { costText->Clear(token); };fh.fitText=[this](auto token) { costText->Fit(token); };
             fh.styledText=[this](auto token,std::string_view text) { auto& node=*Find(costs,token);style->Parse(node.head,text,node.textContext); };
-            fh.idle=[this](auto token,bool enabled) { common.lifetime.SetIdle(token,enabled); };fh.redraw=[this](auto,bool) { common.changed(); };
+            fh.idle=[this](auto token,bool enabled) { common.lifetime.SetIdle(token,enabled); };fh.redraw=[this](auto token,bool erase) { Redraw(token,erase); };
             fh.kill=[this](auto token) { common.lifetime.Kill(token); };fh.attach=common.attach;
             fh.reference=[](auto,auto) { throw std::logic_error("비용 표시00464540의 실제 객체 참조 미연결"); };
             fh.deleteText=[this](auto token,auto flags) { return costText->DeleteScalar(token,flags); };costGump=std::make_unique<FloatingSpGump>(common.create,std::move(fh));
@@ -223,19 +223,19 @@ struct RawMenuControls::Impl {
             list.redraw=[this](auto token,bool erase) { Redraw(token,erase); };list.notify=[this](auto token,auto event,auto first,auto second) { static_cast<void>(common.events.Bubble(token,event,first,second)); };
             list.green=[this] { return palette.basic[2]; };list.fill=[this](auto rect,auto color) { activeImageListFill(rect,color); };imageList=std::make_unique<MetaImageList>(common.create,common.factory,std::move(list));
         }
-        ScrollGumpHooks sl;sl.node=[this](auto token) { return Find(sliders,token); };sl.thumbNode=[this](auto token) { return Find(thumbs,token); };sl.baseNode=common.node;sl.push=[this](auto token) { common.tree.Push(token); };sl.attach=common.attach;sl.redraw=[this](auto,bool) { common.changed(); };sl.poll=hooks.poll;
+        ScrollGumpHooks sl;sl.node=[this](auto token) { return Find(sliders,token); };sl.thumbNode=[this](auto token) { return Find(thumbs,token); };sl.baseNode=common.node;sl.push=[this](auto token) { common.tree.Push(token); };sl.attach=common.attach;sl.redraw=[this](auto token,bool erase) { Redraw(token,erase); };sl.poll=hooks.poll;
         slider=std::make_unique<ScrollGump>(common.create,sliderState,common.tree,common.collection,common.events,common.input,std::move(sl));
         ScrollGumpWidgetHooks sw;sw.node=[this](auto token) { return Find(sliders,token); };sw.arrow=[this](auto token) { return Find(arrows,token); };sw.thumb=[this](auto token) { return Find(thumbs,token); };sw.base=common.node;
         sw.allocate=[this](auto bytes) { return Allocate(bytes,2); };sw.attach=common.attach;sliderWidgets=std::make_unique<ScrollGumpWidgets>(common.create,sliderWidgetState,common.factory,common.stones,*backgroundCreate,*slider,common.lifetime,std::move(sw));
-        ScrollingTextGumpHooks th;th.node=[this](auto token) { return Find(titles,token); };th.baseNode=common.node;th.redraw=[this](auto,bool) { common.changed(); };BindScrollingTextBuffers(th,*buffers);BindScrollingTextSlider(th,*slider);
+        ScrollingTextGumpHooks th;th.node=[this](auto token) { return Find(titles,token); };th.baseNode=common.node;th.redraw=[this](auto token,bool erase) { Redraw(token,erase); };BindScrollingTextBuffers(th,*buffers);BindScrollingTextSlider(th,*slider);
         title=std::make_unique<ScrollingTextGump>(common.create,common.collection,clip,fragments,*style,std::move(th));
         ScrollingTextGumpWidgetHooks tw;tw.node=[this](auto token) { return Find(titles,token); };tw.slider=[this](auto token) { return Find(sliders,token); };tw.base=common.node;
-        tw.allocate=[this](auto bytes) { return Allocate(bytes,1); };tw.push=[this](auto token) { common.tree.Push(token); };tw.attach=common.attach;tw.redraw=[this](auto,bool) { common.changed(); };tw.cursor=hooks.cursor;
+        tw.allocate=[this](auto bytes) { return Allocate(bytes,1); };tw.push=[this](auto token) { common.tree.Push(token); };tw.attach=common.attach;tw.redraw=[this](auto token,bool erase) { Redraw(token,erase); };tw.cursor=hooks.cursor;
         titleWidgets=std::make_unique<ScrollingTextGumpWidgets>(common.create,titleState,common.factory,common.tree,common.lifetime,common.events,common.input,fragments,*buffers,*title,*sliderWidgets,std::move(tw));
         titleMarkup=std::make_unique<ScrollingTextGumpMarkup>(*title,*style,*pictures,*markup,ScrollingTextGumpMarkupHooks{[this](auto token) { return Find(titles,token); },common.node});
         MenuGumpHooks gm;gm.node=[this](auto token) { return Find(menus,token); };gm.baseNode=common.node;gm.push=[this](auto token) { common.tree.Push(token); };gm.pop=[this](auto token) { const auto* node=common.node(token);common.attach(token,node->x,node->y,0,0); };gm.attach=common.attach;
         BindMenuGumpObjectAttach(gm,[this](std::uint32_t token) { return menus.contains(token) ? widgets.get() : nullptr; });
-        gm.redraw=[this](auto token,auto erase) { Redraw(token,erase); };gm.baseRedraw=[this](auto,bool) { common.changed(); };menu=std::make_unique<MenuGump>(common.create,menuState,common.lifetime,std::move(gm));
+        gm.redraw=[this](auto token,auto erase) { Redraw(token,erase); };gm.baseRedraw=[this](auto token,bool erase) { common.RedrawBase(token,erase); };menu=std::make_unique<MenuGump>(common.create,menuState,common.lifetime,std::move(gm));
         MenuGumpLayoutHooks lh;lh.node=[this](auto token) { return Find(menus,token); };lh.baseNode=common.node;lh.push=[this](auto token) { common.tree.Push(token); };lh.attach=common.attach;BindMenuLayoutText(lh,metrics);BindMenuLayoutStyleText(lh,*style);BindMenuTitleLayout(lh,*title);
         layout=std::make_unique<MenuGumpLayout>(common.create,*menu,std::move(lh));MenuGumpWidgetHooks mw;mw.node=[this](auto token) { return Find(menus,token); };mw.base=common.node;mw.allocate=[this](auto bytes) { return Allocate(bytes,0); };mw.attach=common.attach;
         mw.objectForm=[this](std::uint32_t type,std::uint32_t flags) { return FormHooks().objectForm(type,flags); };
@@ -385,7 +385,7 @@ struct RawMenuControls::Impl {
         else if (sliders.contains(token)) slider->Attach(token,x,y,parent,mode);else if (arrows.contains(token)) common.stones.Attach(token,x,y,parent,mode);else common.tree.Attach(token,x,y,parent,mode);
     }
     // 기존 표시 통지와 원본의 실제 메뉴 재그리기 요청을 유지한다.
-    void Redraw(std::uint32_t token,bool erase) const { if (menus.contains(token)) menu->Redraw(token,erase);else if (decorations.contains(token) || saveFortRoots.contains(token) || islandRoots.contains(token)) decoration->Redraw(token,erase);else common.changed(); }
+    void Redraw(std::uint32_t token,bool erase) const { if (menus.contains(token)) menu->Redraw(token,erase);else if (decorations.contains(token) || saveFortRoots.contains(token) || islandRoots.contains(token)) decoration->Redraw(token,erase);else common.RedrawBase(token,erase); }
     // 부모가 전달한 원본 사건을 대상 자신에게 분배한다.
     std::uint32_t Handle(std::uint32_t token,std::uint32_t event,std::uint32_t first,std::uint32_t second) const {
         lastInput={token,event,first,second};

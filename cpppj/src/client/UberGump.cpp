@@ -263,13 +263,18 @@ UberGump::UberGump(Client& client) : client_(client),initLoginSubscriber_(client
             buttonTextureOffset_={rect.left,rect.top};
         }
     }
-    rawButtons_=std::make_unique<RawButtonControls>(client_.Assets().Edition(),RawButtonHooks{
+    RawButtonHooks buttonHooks{
         [this] { return client_.WallSeconds(); },[this](auto code) { return client_.Poll(code); },
         [this] { if (client_.Audio()) client_.Audio()->Sounds().PlayByName("button.wav",0,0,0,0,0); },
         [this](std::uint32_t form,std::uint32_t flags) {
             if (!world_ || form>65535U) throw std::logic_error("현재Client UI Form삭제의월드/SID오류");
             world_->Session().GumpForms().Destroy(o::Sid{static_cast<std::uint16_t>(form)},flags);
-        }},&client_.GameplayGlobals()->MapRevision()); // 전체 HUD와 같은 현재 원본 DWORD를 첫 미니맵 생성 전부터 빌린다.
+        }};
+    if (client_.Assets().Edition()==o::OriginalEdition::Patch1078) {
+        buttonHooks.invalidate=[this](auto rectangle,auto flags) { client_.GetRenderer().Invalidate(rectangle,flags); }; //장치 교체 뒤에도 같은 현재 Renderer의 원문 dirty 저장소에 전달한다.
+        buttonHooks.invalidateAll=[this] { client_.GetRenderer().InvalidateAll(); }; //영역 정보가 없는 기존 적응 계층 요청은 각 소비자의 원문 영역 복원 전까지 이전 그림을 지운다.
+    }
+    rawButtons_=std::make_unique<RawButtonControls>(client_.Assets().Edition(),std::move(buttonHooks),&client_.GameplayGlobals()->MapRevision()); //전체 HUD와 같은 현재 원본 DWORD를 첫 미니맵 생성 전부터 빌린다.
     rawButtons_->ConfigureTestBridgePatterns(client_.TestBridgePatterns()); // 테스트 전용 임시 조작이며 원본 분석 결과가 아니다. 첫 조각 생성 전에 명시 CLI만 반영한다.
     if (!client_.TestBridgePatterns().empty()) std::clog<<"테스트 전용 다리 조각 순서: "<<client_.TestBridgePatterns()<<" (원본 분석 결과 아님)\n";
     RawMenuHooks menuHooks;
@@ -1307,7 +1312,8 @@ void UberGump::Compose() {
     warnings_->SetView(width,height,client_.GetScreen().Colors());
     std::vector<RenderSprite> worldSprites,dialogSprites; // 월드와본문그림은같은실제자산을읽으며UI본문목록은해당패널에만제출한다.
     bool commonDrawSubmitted=false; // 같은 raw 수집/정렬을 배경 또는 Overlay에 이미 제출했는지 기록한다.
-    client_.GetRenderer().SetOverlay(nullptr);client_.GetRenderer().SetOverlayProcedure({});
+    if (!nativeFrame) client_.GetRenderer().SetOverlay(nullptr); //10.78은 단일 목록으로 선택 표시를 그리며 매 합성의 전체 무효화를 만들지 않는다.
+    client_.GetRenderer().SetOverlayProcedure({});
     if (world_ && state_.phase!=ClientPhase::LoadingMission) {
         world_->Resize(width,height);if (!nativeFrame) worldSprites=world_->Sprites(); //10.78은 실제 공통 수집/Draw에서만 가상 표시를 호출하여 부수효과를 중복 실행하지 않는다.
         auto& cursorDisplay=world_->Session().Cursor().Display();cursorDisplay.Settings().gridOption=client_.GetScreen().Flags();
@@ -1354,7 +1360,7 @@ void UberGump::Compose() {
     }
     if (state_.phase == ClientPhase::Mission && popup_.empty()) {
         // 원본 HUD와 월드를 합성한다. 가로 메뉴는 기존 ESC 입력으로 연다.
-        client_.GetRenderer().SetBackground(nativeFrame ? nullptr : canvas);if (nativeFrame) text.clear();client_.GetRenderer().SetScene(std::move(worldSprites),std::move(text));
+        if (!nativeFrame) client_.GetRenderer().SetBackground(canvas);if (nativeFrame) text.clear();client_.GetRenderer().SetScene(std::move(worldSprites),std::move(text)); //실제 Native 배경은 dirty별 Frame 장치가 그린다.
         if (world_ && !nativeFrame) client_.GetRenderer().SetOverlay(world_->SelectionImage()); //10.78 선택 표시는 공통 SpriteDraw의 같은 실제 SID 경로다.
         if (!nativeFrame && rawButtons_->Menus()->HasOverlay()) {
             commonDrawSubmitted=true;
@@ -1390,7 +1396,7 @@ void UberGump::Compose() {
             rawButtons_->Menus()->Draw(canvas->indices,width,height,client_.GetScreen().Colors(),client_.GetScreen().ShadeMaps());
             commonDrawSubmitted=true;
         }
-        client_.GetRenderer().SetBackground(nativeFrame ? nullptr : canvas);
+        if (!nativeFrame) client_.GetRenderer().SetBackground(canvas); //10.78은 같은 nullptr 배경을 다시 설치해 dirty를 전체 갱신으로 바꾸지 않는다.
         if (nativeFrame) { text.clear();client_.GetRenderer().SetScene({}); } //브리핑/ESC 뒤의 월드와 선택 표시도 같은 실제 목록으로 한 번 출력한다.
         else client_.GetRenderer().SetScene(std::move(dialogSprites),std::move(text));
     }

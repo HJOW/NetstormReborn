@@ -38,6 +38,7 @@ private:
     int collectorHeight_{}; //작업 공간의 화면 높이다. 해상도 변경 때만 작업 공간을 다시 만든다.
     std::int32_t softAsserts_{}; //showSoftAsserts/005e4794의 Frame 입력이며 최초BSS0/누락 유지다.
     std::uint64_t prepared_{},collected_{},backgrounds_{},cloudCalls_{},cleared_{},finished_{}; //관측 전용 호출 수이며 Native 게임 카운터와 섞지 않는다.
+    std::uint64_t fullDirty_{},dirtyPixels_{}; //실제 dirty의 전체 화면 요청 수/누적 논리 픽셀 면적이며 부분 갱신 관측에만 사용한다.
     std::uint32_t lastCovered_{},lastOverride_{}; //마지막 실제 하위 반환을 검사 보고에만 보존한다.
     ScreenRect lastArea_{};std::int32_t lastOffsetX_{},lastOffsetY_{}; //마지막 구름 요청 좌표/시차이며 성공값을 주입하지 않는다.
 };

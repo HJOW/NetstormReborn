@@ -47,6 +47,8 @@ struct RawMenuTree {
     std::function<GumpCreateNode*(std::uint32_t)> node; // 모든 파생 종류의 동일 기본 노드다.
     std::function<void(std::uint32_t,float,float,std::uint32_t,std::uint32_t)> attach; // 현재 파생 가상 부착이다.
     std::function<void()> changed; // 같은 Client의 표시 변경을 요청한다.
+    std::function<void(std::uint32_t,bool)> baseRedraw; //같은 기본 Gump의 실제 token/인수를 전달한다. 파생 Redraw의 가상 분배는 호출자가 유지한다.
+    void RedrawBase(std::uint32_t nodeToken,bool erase) const { if (baseRedraw) baseRedraw(nodeToken,erase);else changed(); } //기본 요청 장치가 없는 독립 표시에서는 기존 변경 통지를 유지한다.
 };
 // 게임 명령/설정/음향/커서는 현재 Client가 공급한다. 메뉴 입력은 원본 토큰과 전체 DWORD를 보존한다.
 struct RawMenuHooks {

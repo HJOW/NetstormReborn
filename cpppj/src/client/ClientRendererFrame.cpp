@@ -87,6 +87,8 @@ RendererWorldDrawing ClientRendererFrame::Drawing() {
 // 같은 Pool/해시/공통 UI의 실제 항목을 원문5,000칸에 모은다. bit4도 UI 수집은 실행한다.
 std::uint32_t ClientRendererFrame::Collect(ScreenRect clip,std::uint32_t flags) {
     client_.screen_->SetClip(clip.left,clip.top,clip.right,clip.bottom);++collected_;
+    if (clip.left==0 && clip.top==0 && clip.right==client_.screen_->width_ && clip.bottom==client_.screen_->height_) ++fullDirty_;
+    dirtyPixels_+=static_cast<std::uint64_t>(static_cast<std::int64_t>(clip.right-clip.left)*(clip.bottom-clip.top)); //Renderer가 이미 화면 안의 양의 dirty로 제한한 실제 면적이다.
     const auto storage=client_.SurfaceStorage();
     if (storage_!=storage || collectorHeight_!=client_.screenHeight_) {
         objects_.reset();groups_.reset();storage_=storage;collectorHeight_=client_.screenHeight_;
@@ -150,6 +152,6 @@ std::string ClientRendererFrame::Diagnostics() const {
     out<<"raw_renderer_scene\t"<<entryCount_;
     for (auto count:collectedKinds_) out<<'\t'<<count; //실제 수집 종류별 누계다.
     for (auto count:submittedKinds_) out<<'\t'<<count; //같은 목록의 실제 분배 종류별 누계다.
-    out<<'\n';return out.str();
+    out<<'\n'<<"raw_renderer_dirty_area\t"<<fullDirty_<<'\t'<<dirtyPixels_<<'\n';return out.str();
 }
 }

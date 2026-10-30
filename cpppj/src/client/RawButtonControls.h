@@ -45,6 +45,8 @@ struct RawButtonHooks {
     // sound: 해당 동작의 소리를 재생하는 콜백.
     std::function<void()> sound;
     std::function<void(std::uint32_t,std::uint32_t)> deleteForm; // 현재Session의UI종속Form을같은공통삭제로반납한다.
+    std::function<void(ScreenRect,std::uint32_t)> invalidate; //같은 현재 Renderer에 기본 Gump의 원문 사각형/flags를 전달한다. 독립/기존 CD 경로는 비워 둔다.
+    std::function<void()> invalidateAll; //영역 없는 기존 호스트 구조 변경 요청의 표시 경계다. 개별 소비자의 정확한 영역 복원 전까지 이전 그림을 남기지 않는다.
 };
 // 같은 Gump Route의 소비 토큰과 부모 click 명령을 구별한다.
 struct RawButtonInputResult {
