@@ -2174,3 +2174,14 @@ tools/decomp_new_technology.py text eol=lf
 cpppj/new-technology-native-20261030.json text eol=lf
 cpppj/new-technology-runtime-20261030.json text eol=lf
 docs/exe/cpp-new-technology-20261030.md text eol=lf
+
+# 로컬 의식 완료 분기 내부의 최초 관측과 실제 연결을 보존한다.
+cpppj/src/o/RawRitualRefresh.cpp text eol=lf
+cpppj/src/o/RawRitualRefresh.h text eol=lf
+cpppj/src/o/RawDaisRegular.h text eol=lf
+cpppj/tests/RitualRefreshTests.cpp text eol=lf
+cpppj/tests/fixtures/ritual-refresh-x86.tsv -text
+tools/decomp_ritual_refresh.py text eol=lf
+cpppj/ritual-refresh-native-20261030.json text eol=lf
+cpppj/ritual-refresh-runtime-20261030.json text eol=lf
+docs/exe/cpp-ritual-refresh-20261030.md text eol=lf

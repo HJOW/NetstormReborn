@@ -56,7 +56,7 @@ struct DaisRegularHooks {
     std::function<void(std::uint32_t)> localSpecial; // noIsland 획득 시 로컬의 실제 특수 요청을 원본 인수0으로 호출한다.
     std::function<void(std::uint32_t)> localType; // 나머지 로컬 타입 획득의 실제 선택 초기화를 수행한다.
     std::function<void(std::uint32_t)> refreshOwner; // 희생 종료에서 현재1..8 플레이어의 실제 갱신을 순서대로 호출한다.
-    std::function<void()> refreshLocal; // 현재 로컬의 실제 메뉴/목록/표시 갱신이다.
+    std::function<void()> refreshLocal; // 현재 로컬의 Core 갱신→CoreData 기록→현재 맵 snapshot이며 단순 화면 갱신이 아니다.
     std::function<bool(std::uint32_t)> priestExists; // 희생 후 SP 안내가 현재 각 플레이어의 실제 사제 존재를 읽는다.
     std::function<std::uint32_t()> multiplayerStatus; // 원본의 희생 안내 상태 helper다. 패치/CD의 차이를 실제 caller가 연결한다.
     std::function<void(const DaisChat&)> chat; // 원본 문자열 key/판본별 인자의 실제 UI 소비자다.

@@ -113,7 +113,8 @@ void ConnectRitual() {
         if (!services.priest.shield.tell) throw std::logic_error("희생 완료의 실제 Tell 소비자 미연결");services.priest.shield.tell(notice.kind==DaisChat::Kind::Stormpower ? "SacrificeForStormpower" : "AltarUpgrade");
     }; // 원본4cf960은 같은Tell(key,0) wrapper다. 멀티플레이 이름/상태 인자 안내는 별도 경계로 남긴다.
     dais.localType=[this](auto type) { if (!learnNewTechnology) throw std::logic_error("로컬 기술 획득의 현재 Session 진입 미연결");learnNewTechnology(type); }; //Help와 같은 실제492a30을 사용하고 selectedType 쓰기는 원문 상위 부모에 남긴다.
-    FillMissing(dais.normalizeForeignSp);FillMissing(dais.grantForeignType);FillMissing(dais.localSpecial);FillMissing(dais.refreshLocal);FillMissing(dais.multiplayerStatus);
+    dais.refreshLocal=[this] { if (!refreshLocalRitual) throw std::logic_error("의식 뒤 현재 Session 갱신 진입 미연결");refreshLocalRitual(); }; //단순 화면 갱신이 아니라 원래 Core/CoreData/전체 snapshot 순서다.
+    FillMissing(dais.normalizeForeignSp);FillMissing(dais.grantForeignType);FillMissing(dais.localSpecial);FillMissing(dais.multiplayerStatus);
     daisRegular=std::make_unique<RawDaisRegular>(core.pool,core.hash,core.types,core.frames,*templeRitual,*runePostPop,priests->Carrier(),core.processes,*ritualLookup,motion->Paths().Starter(),*daisState,std::move(dais));
     PriestSacrificeRequestHooks request; // 두 wrapper는 실제 같은 Dais/내용물/음악을 호출한다.
     request.allowed=[this](Sid dais,Sid priest) { PrepareRitual();return daisRegular->CanBridge(dais,priest); };

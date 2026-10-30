@@ -1,5 +1,6 @@
 // 기존 원본 몸체의 단일 저장소 조립을 실제 클라이언트 세션이 소유한다.
 #include "client/RawCampaignSession.h"
+#include "o/RawRitualRefresh.h" //같은 현재 Session의 로컬 의식 완료 기록을 연결한다.
 #include "client/ClientChatWindowGlobals.h"
 #include "client/RawChatRelay.h"
 #include "client/RawBattleLeave.h"
@@ -498,6 +499,7 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawDaisRegular> daisRegular; // 기존 원본 자격/의식 이동/단계 진행이다.
     std::unique_ptr<RawPriestSacrificeRequest> sacrificeRequest; // 사용자 입력과 서버40h가 공유하는 wrapper다.
     std::function<void(std::uint32_t)> learnNewTechnology; //고정 Session 소유자가 Impl 생성 뒤 연결하는 같은492a30 진입이다. 실제 이벤트는 생성 완료 뒤 호출한다.
+    std::function<void()> refreshLocalRitual; //고정 Session의 실제 Core/CoreData/snapshot을 Impl 생성 뒤 묶는 완료 분기다.
     std::unique_ptr<void,void(*)(void*)> pendingRitualSound{nullptr,[](void* storage) { ::operator delete(storage); }}; // Dais 지연 소리의 new40 확보 한 번을 같은 Sound47 생성까지 보관한다.
     std::unique_ptr<RegularProcess> pendingRitualRegular; // 실제 확보 한 번을 예약/생성/부착까지 유지한다.
     PlayerWorldState& playerState{gameplayGlobals->player}; // 현재 두 owner/known을 초기 HUD와 같은 주소에서 읽고 쓴다.
@@ -3311,6 +3313,12 @@ void RawCampaignSession::SendMutableLocalPacket(std::int32_t target,std::span<st
 RawCampaignSession::RawCampaignSession(const GameAssets& assets,const BaseFileSystem& files,FortTemplate fort,std::string mission,RawCampaignSessionServices services)
     :impl_(std::make_unique<Impl>(assets,files,std::move(fort),std::move(mission),std::move(services))) {
     impl_->learnNewTechnology=[this](auto type) { LearnNewTechnology(type); }; //복사/이동되지 않는 Session 주소를 실제 로컬 획득과 Help가 공유한다.
+    impl_->refreshLocalRitual=[this] { //실제 호출 시점의 owner/모드를 빌리며 완료 전에 필드를 복사하지 않는다.
+        o::RitualRefreshHooks hooks;hooks.core=[this] { RefreshCurrentPlayerCore(); };hooks.templateOwner=[this] { return impl_->playerState.templateOwner; };
+        hooks.coreData=[this](auto owner) { WriteFortCoreDataBody(owner); };
+        hooks.snapshot=[this] { if (impl_->core.ownerMode.battle) SnapshotBattle(impl_->playerState.templateOwner);if (impl_->core.ownerMode.fort) SnapshotFort(impl_->playerState.templateOwner); };
+        o::RefreshLocalRitualData(impl_->core.pool.Edition(),hooks);
+    };
     impl_->gameplayUse->Publish(*this);
 }
 // Impl이 Kernel을 비운 뒤 실제 모듈을 해제한다.

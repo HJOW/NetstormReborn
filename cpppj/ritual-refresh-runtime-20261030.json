@@ -1,0 +1,196 @@
+{
+  "unit": 599,
+  "date": "2026-10-30",
+  "host": "HJOW-Athlon",
+  "ipv4": "192.168.0.94",
+  "os": "Windows-10-10.0.19045-SP0",
+  "baseCommit": "67cce492",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "native": {
+    "cases": 54,
+    "observations": 108,
+    "differences": [],
+    "reportSha256": "d550b74fc8431047ef96f059c989fd263577109deee5d9b7e097136039b23de0",
+    "range": [
+      "00449d98",
+      "00449dc5"
+    ],
+    "bytes": 45,
+    "instructions": 9,
+    "scope": "상위 missionPost/owner 조건 뒤 분기 내부만 실제 CPU. Core/CoreData/snapshot은 명시 외부 자식. 의식/포획/희생/공격/승리/MP 실행 없음."
+  },
+  "cpp": {
+    "distinctPassed": 20,
+    "registered": 3492,
+    "tests": [
+      {
+        "filter": "CampaignFortSnapshot",
+        "passed": 4,
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+            "--filter",
+            "CampaignFortSnapshot"
+          ],
+          "binarySha256": "7e346449d65e1d1afc2c542c11574177f82b2cedc78b9760054169f2668a3a63",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 8.332085399997595,
+          "stdoutSha256": "8deedef20773dd33aa626632e9b3327337838241d4ab45f93acb13686f73a985",
+          "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      {
+        "filter": "FortCoreWrite",
+        "passed": 5,
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+            "--filter",
+            "FortCoreWrite"
+          ],
+          "binarySha256": "7e346449d65e1d1afc2c542c11574177f82b2cedc78b9760054169f2668a3a63",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 0.4917935999983456,
+          "stdoutSha256": "c42bf4d45d70cbb628fbf2c785ed1c2ab826236ac8dad4dcd09b9893ba35946e",
+          "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      {
+        "filter": "FortSnapshotParent",
+        "passed": 2,
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+            "--filter",
+            "FortSnapshotParent"
+          ],
+          "binarySha256": "7e346449d65e1d1afc2c542c11574177f82b2cedc78b9760054169f2668a3a63",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 0.5441269000002649,
+          "stdoutSha256": "97b469a1d350e68b27f07f847f6a628cb59500629cce4001357f41de61b653ca",
+          "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      {
+        "filter": "PlayerCoreRefresh",
+        "passed": 7,
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+            "--filter",
+            "PlayerCoreRefresh"
+          ],
+          "binarySha256": "7e346449d65e1d1afc2c542c11574177f82b2cedc78b9760054169f2668a3a63",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 8.11571780000304,
+          "stdoutSha256": "2aa26eb9f7209bb79b7818d24ab8cd3e9af226ade24fd370489de2651ec4de18",
+          "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      {
+        "filter": "RitualRefresh",
+        "passed": 2,
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+            "--filter",
+            "RitualRefresh"
+          ],
+          "binarySha256": "7e346449d65e1d1afc2c542c11574177f82b2cedc78b9760054169f2668a3a63",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 1.1016331999999238,
+          "stdoutSha256": "bcfd1846fdc31c9929dab27eb7029e2c18087f6c8a8602a431570c353252909f",
+          "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    ],
+    "allTestsExecuted": false
+  },
+  "build": {
+    "warnings": 0,
+    "errors": 0,
+    "logSha256": "f100094575c8bbbd0718b8e245462460094bb595b8eefc457987b846061296af",
+    "gameSha256": "2430b97b18ccb4a5f0351ed472f1bc68c03d3f69efa9795c79bfb3784466a766",
+    "testsSha256": "7e346449d65e1d1afc2c542c11574177f82b2cedc78b9760054169f2668a3a63"
+  },
+  "protected": {
+    "count": 2566,
+    "differences": [],
+    "beforeSha256": "c4933de66b39107b2fee6c31cc994425bb730c941e301f5da881b67ecfd79fe3",
+    "afterSha256": "ad7fff1d58649c1032717ba56882e4e1e3a3696b6fd280d4dd9e4f309fe2d5d8",
+    "currentFixtures": 744
+  },
+  "sourceSha256": {
+    ".gitattributes": "9f851abbab4e21943cf088301d8ea6226ba2897d090970cb500df680e2164de0",
+    "cpppj/src/CMakeLists.txt": "fe41e92845389333e853bb276e3272dcf46db5870523a2494b9927dedc72c022",
+    "cpppj/src/client/RawCampaignSession.cpp": "cfedcdea7d239a152b93d3dc24f906644c35403c95fd8c8e9415f037cfd30b80",
+    "cpppj/src/client/RawCampaignRitual.inc": "15dd5a8be2b12bd0fdc3879bf83f17f168a42c6495e135ea51d23cbaa486d0ef",
+    "cpppj/src/o/RawDaisRegular.h": "aaddad4c232629d8c5af0f46d663c7ed1098b639f80d90ec061a6b6066c72e35",
+    "cpppj/src/o/RawRitualRefresh.cpp": "dde71f6017f6c364c263ec048487c9de28616687952179132fe8f2bdc8b4cad1",
+    "cpppj/src/o/RawRitualRefresh.h": "52ef39f520e364b1e62abe95f6bfb525658842b01f9133b08180093d1aa9a802",
+    "cpppj/tests/CMakeLists.txt": "6255ba2cef02612beca9f156fbe2afedeb65f597eadbc8ccee0ba552fb0c2130",
+    "cpppj/tests/RitualRefreshTests.cpp": "bf48fb34ec3a54e497d14a54509de20debc30d75118e558d8ab5d113c73c7288",
+    "cpppj/tests/fixtures/ritual-refresh-x86.tsv": "c2c7499fd73144f50ac90f2b02183f3cf4e7752cf006bf33a69274097e871126",
+    "tools/decomp_ritual_refresh.py": "bc03c516a294321a036c9e90c0c2f3f47cd6f46710ba35d0d8103d7d8ac51311",
+    "cpppj/ritual-refresh-native-20261030.json": "d550b74fc8431047ef96f059c989fd263577109deee5d9b7e097136039b23de0",
+    "docs/exe/cpp-ritual-refresh-20261030.md": "69952ad4c8cbf051ffa06dea1eb56f0b59366e324388940949363a339634e00d"
+  },
+  "evidenceSha256": {
+    "protected-before.json": "c4933de66b39107b2fee6c31cc994425bb730c941e301f5da881b67ecfd79fe3",
+    "initial-static.txt": "27885a544cb6179b88f665e0d74bd6a155511c86a19c21e689cb97973f26a9aa",
+    "reward-static.txt": "8bfedd92a142551edfc1649fd56eb5d3ba33fb5bdf587933afbd1b82581ea302",
+    "remaining-static.txt": "2d8678661fbd9ef50208c515742ade8448ae05d7c104fe655619ae0880cec5af",
+    "refresh-disassembly.txt": "72398161b65f527e9b5e7308d3382eceabd5c8899a54fcb6fdd0470c97b241f3",
+    "native-run.log": "3369d42a8786a0d49082a02c1a60edd2fb28dd0189f9a8762a71169214c13c4f",
+    "native-final.log": "a4a7a2ded66dad00461b933e1422e9bdb962b5881a6328f45a7d807056718d1d",
+    "build.log": "f100094575c8bbbd0718b8e245462460094bb595b8eefc457987b846061296af",
+    "cd-local-refresh-static.txt": "02557cdd2bf6cc447c3b12fcd9825180f91f75c9d156f76c255c920eb9e6f6fc",
+    "cd-local-refresh-wrapper.txt": "a4dcc6fe4e0e52398635bcf6ebc7561cf93c68f0c43cd28cbce14a35021e9a78",
+    "focused.json": "d530be70dbea2c2ea35c87b9ec157595972dab45cc6d5acd2889ea0a1562a326",
+    "summarize.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "protected-after.json": "ad7fff1d58649c1032717ba56882e4e1e3a3696b6fd280d4dd9e4f309fe2d5d8",
+    "git-byte-check.json": "fdc0a81cdfc0f4c326b705bb3213af096a482d99af760cda5bcf32388ff1e447"
+  },
+  "rawDirectory": "extracted/cpp-ritual-rewards-599-20261030",
+  "actualGameExecutions": 0,
+  "newPackage": false,
+  "latestActuallyTestedPackageUnit": 598,
+  "latestActuallyTestedPackageGameSha256": "13f35ef00c963c1a9b88a00e93fdf56d9aefecfe8c1e0b170b890d7be5499900",
+  "latestAll34ProductUnit": 595,
+  "latestAll34EvidenceUnit": 596,
+  "firstNativeFailure": "정밀 entry의 앞자리0 없는16진 문자열을00449b30과 직접 비교해 StopIteration. 숫자 비교로 고친 새 native-v2에서 최종 관측.",
+  "actualRitualUiVerified": false,
+  "forbiddenGameplayReproduced": false,
+  "dedicatedThreeFlyerTestsRun": false,
+  "newMultiplayerTestsRun": false,
+  "remaining": [
+    "로컬 랭크0044fa00",
+    "비로컬 SP 정책/별도 Core 장부 기술bit",
+    "MP 상태/사망 안내와 Help 외부 OS 프로토콜",
+    "남은 UI/Edit·Native·시나리오 조건/전체 동일성",
+    "후순위 MP 무시험 사전 구현과4~7차"
+  ],
+  "sourceIndexSha256": {
+    ".gitattributes": "9f851abbab4e21943cf088301d8ea6226ba2897d090970cb500df680e2164de0",
+    "cpppj/src/CMakeLists.txt": "fe41e92845389333e853bb276e3272dcf46db5870523a2494b9927dedc72c022",
+    "cpppj/src/client/RawCampaignSession.cpp": "cfedcdea7d239a152b93d3dc24f906644c35403c95fd8c8e9415f037cfd30b80",
+    "cpppj/src/client/RawCampaignRitual.inc": "15dd5a8be2b12bd0fdc3879bf83f17f168a42c6495e135ea51d23cbaa486d0ef",
+    "cpppj/src/o/RawDaisRegular.h": "aaddad4c232629d8c5af0f46d663c7ed1098b639f80d90ec061a6b6066c72e35",
+    "cpppj/src/o/RawRitualRefresh.cpp": "dde71f6017f6c364c263ec048487c9de28616687952179132fe8f2bdc8b4cad1",
+    "cpppj/src/o/RawRitualRefresh.h": "52ef39f520e364b1e62abe95f6bfb525658842b01f9133b08180093d1aa9a802",
+    "cpppj/tests/CMakeLists.txt": "6255ba2cef02612beca9f156fbe2afedeb65f597eadbc8ccee0ba552fb0c2130",
+    "cpppj/tests/RitualRefreshTests.cpp": "bf48fb34ec3a54e497d14a54509de20debc30d75118e558d8ab5d113c73c7288",
+    "cpppj/tests/fixtures/ritual-refresh-x86.tsv": "c2c7499fd73144f50ac90f2b02183f3cf4e7752cf006bf33a69274097e871126",
+    "tools/decomp_ritual_refresh.py": "bc03c516a294321a036c9e90c0c2f3f47cd6f46710ba35d0d8103d7d8ac51311",
+    "cpppj/ritual-refresh-native-20261030.json": "d550b74fc8431047ef96f059c989fd263577109deee5d9b7e097136039b23de0",
+    "docs/exe/cpp-ritual-refresh-20261030.md": "69952ad4c8cbf051ffa06dea1eb56f0b59366e324388940949363a339634e00d"
+  },
+  "checkoutFiltersVerified": true,
+  "checkoutFilterComparisons": 26
+}

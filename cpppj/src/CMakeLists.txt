@@ -11,6 +11,8 @@
 # 소스 목록은 각 폴더의 CMakeLists.txt 가 target_sources 로 더한다.
 add_library(netstorm STATIC)
 
+target_sources(netstorm PRIVATE o/RawRitualRefresh.cpp o/RawRitualRefresh.h) # 의식 뒤 Core/기록/현재 snapshot의 원문 순서다.
+
 target_sources(netstorm PRIVATE o/RawNewTechnology.cpp o/RawNewTechnology.h) # 기술 획득의 중복/저장/설정/안내 순서다.
 target_sources(netstorm PRIVATE client/CdDirectory.cpp client/CdDirectory.h) # 원문의 CD-ROM/깊이2 표시 파일 탐색과 실제 W API다.
 target_sources(netstorm PRIVATE client/MovieTimer.cpp client/MovieTimer.h) # 원본 SDK의 fallback 영상 대기 시계다.
