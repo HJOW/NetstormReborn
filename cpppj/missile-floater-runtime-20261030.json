@@ -1,0 +1,390 @@
+{
+  "unit": 611,
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "native": {
+    "unit": 611,
+    "host": "HJOW-Athlon",
+    "cases": 481,
+    "observations": 962,
+    "differences": [],
+    "fixtureWritten": false,
+    "verificationOnly": true,
+    "sourceSha256": {
+      "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+      "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+      "tools/decomp_thunder_missile.py": "b556de87937ff814794abccb6a4d392af7224a8556d6b827b0fe518e80b71122",
+      "tools/decomp_gunmissile_oracle.py": "4671a0a69ee91d6e0280a6c4af73d38e6ca6b096ee04161aeaef8d2d3e5c0fd1",
+      "tools/decomp_owner_oracle.py": "5a837ad7fd233d9d75c7241d52fbf2e5a508e24dc158d091f243a13ab698e7fb",
+      "tools/decomp_missile_floater.py": "db8709754ccd9428d9f48bf14287242431a1453c96420116946303af18143ad6",
+      "cpppj/tests/fixtures/missile-floater-x86.tsv": "38311964487ecf6bc83cfd62b1557b9b3ccebab44ebb3ec25c6fae9c8ed328d8"
+    },
+    "evidenceSha256": {
+      "first.json": "178e03676033ec973a69705732168200ed2dc2375c7328dd34f6bb4c96f7ed35",
+      "replay.json": "178e03676033ec973a69705732168200ed2dc2375c7328dd34f6bb4c96f7ed35"
+    },
+    "scope": "실제00482340 전체Frame/00455930 PRNG와 현재00540bbc signed절삭없는비교. 자산 이동/표적Bounds/피해/표시·음향/반사 생성은 기존 명시 경계. 새 게임/GUI/특정적공격/포획/희생/승리/신규MP 없음."
+  },
+  "focusedTests": 46,
+  "testNames": [
+    "ArcherAnimation_MissingRealMissileRejected",
+    "ArcherMissile_CdNativeCtorAndFrames",
+    "ArcherMissile_PatchNativeCtorAndFrames",
+    "CampaignIceTower_ActualDeletionGates",
+    "CampaignIceTower_ActualKernelRegrowthAndRepeat",
+    "CampaignSession_MissileFringeDepthAndOverlap",
+    "CampaignThunderMissile_DissolvedAllianceNaturalShot",
+    "CannonFire_ActualHostNotifyAndLifetime",
+    "CannonFire_MissingMissileRejected",
+    "CannonFire_NativeConstructorsStepsAndLaunch",
+    "CannonFire_NativeSunFramesAndReentry",
+    "CannonFire_NativeThunderFramesAndReentry",
+    "CrossbowAnimation_MissingMissileRejected",
+    "CrossbowMissile_NativeCtorAndDirection",
+    "CrossbowMissile_NativeFramesAndImpact",
+    "CrossbowMissile_NativeVirtualMuzzle",
+    "GunAnimation_MissingMissileIsExplicit",
+    "IceCannonFire_ActualHostNotifyAndSelfDeletion",
+    "IceCannonFire_ReplaysNativeCommonFrame",
+    "IceCannonFire_ReplaysNativeConstructorPadding",
+    "IceCannonFire_ReplaysNativeLaunchGetters",
+    "IceCannonFire_ReplaysNativeStepCurrentFields",
+    "IceMissileInitial_NativeCtorAndDirection",
+    "IceMissileInitial_NativeFramesAndImpact",
+    "IceMissileInitial_NativeRayEnd",
+    "IceMissileInitial_NativeVirtualMuzzle",
+    "IceReflected_NativeConstructorTargetZeroAndPadding",
+    "IceReflected_NativeFrameDamageAndLifetime",
+    "IceRicochet_ActualWorldFinderAndRewardShareNativeRequest",
+    "IceRicochet_ReplaysNativeChanceAndCandidateSelection",
+    "IceRicochet_ReplaysNativeCurrentFieldsAfterFinder",
+    "IceRicochet_ReplaysNativePointAndSharedRandom",
+    "IceRicochet_ReplaysNativeZeroDisplacementPreservesOutput",
+    "IceRicochet_SelectedMissingLifetimeIsRejected",
+    "IceTower_IndependentNativeBodies1426",
+    "MissileFloater_IndependentNative481",
+    "MissileFloater_OncePerFlightAndSelectedRandom",
+    "Missile_ActualFactorySpaceKernelAndDelete",
+    "Missile_CdNativeCtorAndFrames",
+    "Missile_MissingRealFlightEffectRejected",
+    "Missile_PatchNativeCtorAndFrames",
+    "ThunderMissile_NativeCtorAndDirection",
+    "ThunderMissile_NativeFramesAndImpact",
+    "ThunderMissile_NativeHitEventAndStrictQueue",
+    "ThunderMissile_NativeRayEnd",
+    "ThunderMissile_NativeVirtualMuzzle"
+  ],
+  "tests": [
+    {
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+        "--filter",
+        "CannonFire"
+      ],
+      "binarySha256": "5a99a51977dda7228c7f3182aaa617507b45aabe5411d6e0771de40107f79019",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 1.7721880999961286,
+      "stdoutSha256": "9ab30b702c44fb3370c2da63376e81f2ecd8e8d45233072d40ee899d05081910",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tests": 10,
+      "failed": 0,
+      "testOnlyBridgeManipulation": false
+    },
+    {
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+        "--filter",
+        "MissileFloater"
+      ],
+      "binarySha256": "5a99a51977dda7228c7f3182aaa617507b45aabe5411d6e0771de40107f79019",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 2.393059000001813,
+      "stdoutSha256": "10745203efa20ae132dc16e69a109cf8d861dd5743387e87688ae9ef9c60d2b8",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tests": 2,
+      "failed": 0,
+      "testOnlyBridgeManipulation": false
+    },
+    {
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+        "--filter",
+        "Ice"
+      ],
+      "binarySha256": "5a99a51977dda7228c7f3182aaa617507b45aabe5411d6e0771de40107f79019",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 9.173030000005383,
+      "stdoutSha256": "c987874850da8bd6b8f0ab95cf2b30096788dd9a5980433bf35c695ff65bb351",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tests": 20,
+      "failed": 0,
+      "testOnlyBridgeManipulation": false
+    },
+    {
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+        "--filter",
+        "Missile"
+      ],
+      "binarySha256": "5a99a51977dda7228c7f3182aaa617507b45aabe5411d6e0771de40107f79019",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 8.790951299997687,
+      "stdoutSha256": "8865ea35ecafa106d813eb6ba0d92c5f781b89921d1b64919eea77d8adf649df",
+      "stderrSha256": "35480ca66a96725294fd8ea70081f38546c61919694f0bb451a99c3f1f509501",
+      "tests": 26,
+      "failed": 0,
+      "testOnlyBridgeManipulation": false
+    }
+  ],
+  "registeredTests": 3516,
+  "buildExitCode": 0,
+  "gameSha256": "0f6ad13904fd9f8b8e2acfecf9805663dad810006d300346c322f8acc0c2c0f1",
+  "testSha256": "5a99a51977dda7228c7f3182aaa617507b45aabe5411d6e0771de40107f79019",
+  "package": {
+    "entries": 1376,
+    "gameAssets": 1358,
+    "allEntryBytesMatch": true,
+    "allGameAssetsMatchSources": true,
+    "gameSha256": "0f6ad13904fd9f8b8e2acfecf9805663dad810006d300346c322f8acc0c2c0f1",
+    "zipSha256": "14c5a1e0e31c00db38734846078b8224f75e3ef701488f8f422c08bc87f2101b",
+    "product": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-missile-floater-611-20261030\\한글 배포본\\NetstormReborn-cpppj"
+  },
+  "basic": {
+    "mission": "Tutorial1",
+    "demo": false,
+    "result": {
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-missile-floater-611-20261030\\한글 배포본\\NetstormReborn-cpppj\\Netstorm.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-missile-floater-611-20261030\\한글 배포본\\NetstormReborn-cpppj\\game",
+        "--no-audio",
+        "--frames",
+        "180",
+        "--set",
+        "SCREENW=1024;SCREENH=768;maxFPS=40;autoDemo=0;tellTips=0;startInFullScreen=1;sleepPerLoop=1",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-missile-floater-611-20261030\\basic\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-missile-floater-611-20261030\\basic\\states.tsv",
+        "--window",
+        "--mission",
+        "Tutorial1"
+      ],
+      "binarySha256": "0f6ad13904fd9f8b8e2acfecf9805663dad810006d300346c322f8acc0c2c0f1",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 9.137682799999311,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2"
+    },
+    "passed": true,
+    "final": {
+      "phase": [
+        "4"
+      ],
+      "page": [
+        "mission"
+      ],
+      "paused": [
+        "0"
+      ],
+      "mission": [
+        "Tutorial1",
+        "Tutorial",
+        "3"
+      ],
+      "mission_start": [
+        "1",
+        "4",
+        "0",
+        "0.349",
+        "0"
+      ],
+      "mission_gate": [
+        "1",
+        "65",
+        "0",
+        "0",
+        "0",
+        "1",
+        "0",
+        "0"
+      ],
+      "raw_session": [
+        "1",
+        "1"
+      ],
+      "raw_sp": [
+        "4.84908907919e-38",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0"
+      ],
+      "raw_technology": [],
+      "raw_brains": [
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0"
+      ],
+      "fort_names": [
+        "BridgeTheGap",
+        "",
+        "2",
+        "fortSpec"
+      ],
+      "raw_uber": [
+        "232",
+        "1",
+        "3",
+        "85",
+        "0",
+        "1024",
+        "768"
+      ],
+      "raw_hud_owners": [
+        "1",
+        "1",
+        "220",
+        "236",
+        "219"
+      ],
+      "time": [
+        "7.547",
+        "8.213"
+      ],
+      "screen_mode": [
+        "138",
+        "1024",
+        "768",
+        "1024",
+        "1"
+      ],
+      "screen_output": [
+        "0",
+        "0",
+        "1024",
+        "768"
+      ],
+      "screen_window": [
+        "0",
+        "0",
+        "1040",
+        "807",
+        "1024",
+        "768",
+        "349110272"
+      ]
+    },
+    "gameClock": {
+      "samples": 20,
+      "first": 0.528,
+      "last": 7.547,
+      "increase": 7.019
+    },
+    "checks": {
+      "normalExit": true,
+      "playing": true,
+      "correctMission": true,
+      "world": true,
+      "guide": true,
+      "loadingReleased": true,
+      "gameClockAdvanced": true,
+      "gameClockMonotonic": true,
+      "physicalOutput": true
+    },
+    "presentation": {
+      "same": true,
+      "actualSha256": "dafd04e409b9b7dda75194a990d70ebb5d965125ed1540cd6a15efd6712558ea",
+      "expectedSha256": "dafd04e409b9b7dda75194a990d70ebb5d965125ed1540cd6a15efd6712558ea",
+      "dimensions": [
+        1024,
+        768
+      ],
+      "outputRect": [
+        0,
+        0,
+        1024,
+        768
+      ]
+    }
+  },
+  "protectedCount": 2578,
+  "protectedFixtureCount": 755,
+  "protectedDifferences": [],
+  "fixtureCount": 756,
+  "sourceSha256": {
+    "cpppj/src/o/RawMissile.h": "1978585332570f2626fdb3c981f7d4cde06edb1a02ab8dd715230258244d1a71",
+    "cpppj/src/o/RawMissile.cpp": "8a9959bc2dc4b01b9c3e917d56eb418f88d2be84641dab53533e72979cccbab8",
+    "cpppj/src/client/RawCampaignArcherBindings.cpp": "b9bea9b9060f3f975f62896d57bb74b5ed76893e766e95e95bd355231eccfbb2",
+    "cpppj/tests/ThunderMissileTests.cpp": "1f4d0b26bc86b855ce0f451de69844bb82b362aec4dfe72ef5e467275f9d3e68",
+    "cpppj/tests/CMakeLists.txt": "d1a634656dc9ad9d310c724b26443b7a1c84f7ecd8cc19e82e5b106c5607dfba",
+    "tools/decomp_missile_floater.py": "db8709754ccd9428d9f48bf14287242431a1453c96420116946303af18143ad6"
+  },
+  "lastFull34ProductUnit": 609,
+  "lastFull34Unit": 610,
+  "scope": "Missile의 플로터 회피/같은게임PRNG·전체원문Frame 대조, 새611 ZIP 기본Tutorial1 진입/창RGB. 실제플로터공격/승패/포획/희생·신규MP/공중3종전용/전체C++/611제품전체34는 아님.",
+  "evidenceSha256": {
+    "protected-before.json": "8a47a514ce6a6c19b4becedb95d044a40726dfc1b0cdd865f6c2916aa943051e",
+    "observe.log": "b6034bbeafdcf060202a902226b8281b02a7c6c6ebc5ed580879e13c3f8ea293",
+    "native.log": "b6034bbeafdcf060202a902226b8281b02a7c6c6ebc5ed580879e13c3f8ea293",
+    "build.log": "1dabf32ab0819ecff51dd9f86b63a138bf991eed48fd4fe9336fe8edf2f93ac4",
+    "native-final.log": "b6034bbeafdcf060202a902226b8281b02a7c6c6ebc5ed580879e13c3f8ea293",
+    "package.log": "5543e03a9022479866a7189e6a101fd750236f57ced6e5690508762424d460ec",
+    "NetstormReborn-cpppj-611.zip": "14c5a1e0e31c00db38734846078b8224f75e3ef701488f8f422c08bc87f2101b",
+    "smoke.py": "93885ee9554bb50aeccc94336b7e56bac74aefd8fd90ee0b74b1f2e0bc7f7c33",
+    "smoke.log": "efcf1fbb6d4fdd0a0839d7de44bbc660bfc0ef512c45a7843ac94c27ef0d4a0c",
+    "package-summary.json": "fc154b54f95280185e20adecbd2499e9e22aa8cac5c3e4916fa57d99beb7fae0",
+    "basic-summary.json": "e38768ddc7073addc31765f760f10d187f9e370d3ddd6bd9aaea3f5124fdacc0",
+    "finish.py": "cf5741ff2018aa2c7e4b954bdc7ce57bc8e5efdcb77bea1d5d8571bfa562fcf4",
+    "protected-after.json": "2f5d17bafe77ef0a4e5f2732e07fd841ead65042c4662679e8654ed52cb44c9f",
+    "observe/first.json": "178e03676033ec973a69705732168200ed2dc2375c7328dd34f6bb4c96f7ed35",
+    "observe/replay.json": "178e03676033ec973a69705732168200ed2dc2375c7328dd34f6bb4c96f7ed35",
+    "observe/report.json": "b97ba258c3c17b8934a6234de956014419ce98bcc4aa62ebfee64b166a2a5963",
+    "native/first.json": "178e03676033ec973a69705732168200ed2dc2375c7328dd34f6bb4c96f7ed35",
+    "native/replay.json": "178e03676033ec973a69705732168200ed2dc2375c7328dd34f6bb4c96f7ed35",
+    "native-final/first.json": "178e03676033ec973a69705732168200ed2dc2375c7328dd34f6bb4c96f7ed35",
+    "native-final/replay.json": "178e03676033ec973a69705732168200ed2dc2375c7328dd34f6bb4c96f7ed35",
+    "test-floater/stdout.log": "10745203efa20ae132dc16e69a109cf8d861dd5743387e87688ae9ef9c60d2b8",
+    "test-floater/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "test-floater/running.json": "33d6ee7075a81a355bdf9b58bc713b9de16cdf42acf8c01e30a4031aa723dbb8",
+    "test-floater/run.json": "fcbc149f3dd913ffdbb42b42d5d9a667b8a139d176037c28c9b3654ddc42a7d6",
+    "test-cannon/stdout.log": "9ab30b702c44fb3370c2da63376e81f2ecd8e8d45233072d40ee899d05081910",
+    "test-cannon/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "test-cannon/running.json": "61f70864521ba1dda1a7c92d1d974c5e61a78eed8483bd06f8c0e187a0f7400d",
+    "test-cannon/run.json": "b779aa894b1d161df62979551e7bcdc788e0230b3eb75601fbf9572f3761c67e",
+    "test-missile/stdout.log": "8865ea35ecafa106d813eb6ba0d92c5f781b89921d1b64919eea77d8adf649df",
+    "test-missile/stderr.log": "35480ca66a96725294fd8ea70081f38546c61919694f0bb451a99c3f1f509501",
+    "test-missile/running.json": "b3fc8e4aa68f2a12f3de1afce0ff3089003b669eabee4ae80c70dbacf2335b61",
+    "test-missile/run.json": "39e71317a359f05d46e094e42bc79cf337f87f22cce7e8f3d87678d6d6b976db",
+    "test-ice/stdout.log": "c987874850da8bd6b8f0ab95cf2b30096788dd9a5980433bf35c695ff65bb351",
+    "test-ice/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "test-ice/running.json": "4dfc65681eaca3f6cd1a0eebcad24eb9112a188d651625b435e196a691a63bba",
+    "test-ice/run.json": "fbb58950dac28c6fd1a2e116f847256e901255738ef9ff88ed91382827dbd11d",
+    "basic/steps.tsv": "d54bfd6decc9370ac5f9469adb69fd878ebdd172fef51a8dc90ef544e4339f52",
+    "basic/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "basic/stderr.log": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2",
+    "basic/running.json": "aea746c55ee47097aad4129701f460ea8c13a41d440111ba5d62da4132aca2e5",
+    "basic/states.tsv": "5dc89074f099d1055bfd9357611c83b574a94887f20a851b8757d7edad94ea4c",
+    "basic/final.bmp": "af3ca5108584fac2390519731c206800e3ec1d74641c73b80607f58c6e93aa8d",
+    "basic/final-output.bmp": "af3ca5108584fac2390519731c206800e3ec1d74641c73b80607f58c6e93aa8d",
+    "basic/result.json": "e38768ddc7073addc31765f760f10d187f9e370d3ddd6bd9aaea3f5124fdacc0",
+    "basic/presentation-comparison.json": "7c6fec8f34ecc828a291365c0b312afc6e159f017e8b704b4e57e346b641f85f"
+  }
+}

@@ -51,6 +51,8 @@ struct MissileState {
     // scaleX/scaleY: 원본 BoardCoord.add가 읽는 현재 타일별 픽셀 배율이다.
     float scaleX{16.0f},scaleY{11.0f};
     std::uint32_t rainCannonType{129},iceMissileType{130}; //10.78의 초기 아이스 발사자와 충돌/반사 표시 TYPE다. 기존 값형 초기화 순서는 유지한다.
+    std::uint32_t floaterType{146}; //005412a0의 현재 클라우드 플로터 TYPE이며 충돌 뒤에만 비교한다.
+    std::int32_t avoidanceCutoff{800}; //00540bbc의 실제 signed DWORD이며 RandomFloat(0,1000)의 x87 반환과 비교한다.
 };
 // 실제 원본 월드 효과 경계다. 미복원 효과를 빈 성공으로 처리하지 않는다.
 struct MissileHooks {
@@ -97,6 +99,7 @@ struct MissileHooks {
     std::function<void(float,float,std::string_view)> impactName; //004a9d70의 실제 파일명 위치 음향이며 token 재생과 구별한다.
     std::function<void(const MissileFields&)> ricochet; //00482190의 현재 필드/표시를 사용하는 실제 반사 생성이다. 선택된 누락은 거부한다.
     std::function<void(Sid,std::int32_t,std::uint8_t,Sid)> damage; // 반사 경로의 실제 가상98이며 원문처럼 공격자0/현재 표시 소유자를 전달한다.
+    std::function<double(float,float)> randomFloat; //00455930의 원문 x87 반환이며 같은 게임 PRNG를 한 번만 소비한다.
 };
 // 초기 총 발사와10.78 아이스 반사의 실제 숫자 필드·표시 자산 수명/이동/충돌 사슬이다.
 class RawMissile {
@@ -107,7 +110,7 @@ public:
     // returned SID는 실제 Missile 표시 자산이다. 이어지는 Host 부착은 factory가 완료한다.
     Sid Construct(MissileFields& fields,const GunProjectileRequest& request) const;
     // 최초incomingCorner와 아이스 반사의 실제 이동·swept 충돌·범위 종료를 처리한다.
-    // 다른 미복원 총/클라우드 플로터 회피·원작debug 좌표이동은 별도 계약이다.
+    //클라우드 플로터 회피는 같은 게임 PRNG를 사용한다. 다른 미복원 총/원작debug 좌표이동은 별도 계약이다.
     void Frame(MissileFields& fields) const;
     // 동일한 월드인지 검증하는 adapter 자료다.
     const SidPool& Pool() const;

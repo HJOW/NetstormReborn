@@ -1,0 +1,24 @@
+{
+  "unit": 611,
+  "host": "HJOW-Athlon",
+  "cases": 481,
+  "observations": 962,
+  "differences": [],
+  "fixtureWritten": false,
+  "verificationOnly": true,
+  "sourceSha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "tools/decomp_thunder_missile.py": "b556de87937ff814794abccb6a4d392af7224a8556d6b827b0fe518e80b71122",
+    "tools/decomp_gunmissile_oracle.py": "4671a0a69ee91d6e0280a6c4af73d38e6ca6b096ee04161aeaef8d2d3e5c0fd1",
+    "tools/decomp_owner_oracle.py": "5a837ad7fd233d9d75c7241d52fbf2e5a508e24dc158d091f243a13ab698e7fb",
+    "tools/decomp_missile_floater.py": "db8709754ccd9428d9f48bf14287242431a1453c96420116946303af18143ad6",
+    "cpppj/tests/fixtures/missile-floater-x86.tsv": "38311964487ecf6bc83cfd62b1557b9b3ccebab44ebb3ec25c6fae9c8ed328d8"
+  },
+  "evidenceSha256": {
+    "first.json": "178e03676033ec973a69705732168200ed2dc2375c7328dd34f6bb4c96f7ed35",
+    "replay.json": "178e03676033ec973a69705732168200ed2dc2375c7328dd34f6bb4c96f7ed35"
+  },
+  "scope": "실제00482340 전체Frame/00455930 PRNG와 현재00540bbc signed절삭없는비교. 자산 이동/표적Bounds/피해/표시·음향/반사 생성은 기존 명시 경계. 새 게임/GUI/특정적공격/포획/희생/승리/신규MP 없음."
+}

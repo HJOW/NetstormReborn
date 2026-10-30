@@ -3,6 +3,7 @@
 #include "o/RawMissile.h"
 #include "o/RawProjectileGeometry.h"
 #include "o/RawGunMode.h"
+#include "o/SpStore.h" //플로터 회귀가 실제 게임 PRNG의 상태/소비를 직접 공유한다.
 #include <cstdio>
 
 using namespace netstorm::o;
@@ -184,4 +185,57 @@ TEST_CASE(ThunderMissile_NativeHitEventAndStrictQueue) {
     bool rejected=false; // 빈 성공으로 명령을 버리지 않는지 별도로 검사한다.
     if (event!=rows.end()) try { static_cast<void>(scene.RunEvent(*event,false)); } catch (const std::logic_error&) { rejected=true; }
     CHECK(rejected);
+}
+
+namespace { //기존 독립 Frame 장면에 현재 플로터 전역/같은 게임 난수 입력만 더한다.
+constexpr std::size_t kFloaterInput=Output+6,kFloaterCases=481; //기존23열 뒤 새6입력과 원문 고유 사례 수다.
+//실제 난수와 현재 필드의 다음 Frame까지 동일 저장소를 유지하는 회귀 장면이다.
+struct FloaterMissileScene : ThunderMissileScene {
+    GameRandom random; //원문00532710과 같은 현재 상태를 Frame 사이에 보존한다.
+    std::vector<std::string> currentInput; //기존 장면이 빌린 입력 행을 두 번째 Frame까지 유지한다.
+    //실제 투사체 Frame을 실행하며 같은 GameRandom을 어댑터와 공유한다.
+    void Frame(bool connectRandom=true) {
+        RawProjectileGeometry geometry(pool,types,geometryTypes,16.0F,11.0F,&gunMode);auto hooks=Hooks(geometry);
+        hooks.ricochet=[this](const MissileFields&) { events.push_back("R:90:60"); }; //반사 생성은 Native와 같은 명시 경계다.
+        if (connectRandom) hooks.randomFloat=[this](float low,float high) {
+            events.push_back("N:"+std::to_string(std::bit_cast<std::uint32_t>(low))+":"+std::to_string(std::bit_cast<std::uint32_t>(high)));
+            return static_cast<double>(low)+(random.Next(65536)*(1.0/65536.0))*std::fabs(static_cast<double>(high)-low);
+        }; //실제455930의 난수·배율·구간폭·시작점 순서를 기존 GameRandom에 연결한다.
+        RawMissile(pool,types,missileTypes,state,std::move(hooks)).Frame(fields);
+    }
+    //기대값은 원문 행에서 읽고 준비 단계는 동일 입력만 설치한다.
+    std::vector<std::string> RunFloater(const std::vector<std::string>& row,bool connectRandom=true) {
+        if (row.size()!=kFloaterInput+5) throw std::runtime_error("플로터 투사체 원문 열 수 오류");
+        currentInput.assign(row.begin(),row.begin()+Output);currentInput.insert(currentInput.end(),row.begin()+kFloaterInput,row.begin()+kFloaterInput+4);Prepare(currentInput);
+        const auto source=Number(row[Output+4]),display=Number(row[Output+5]);
+        types[source]=types[131];types[source].group=(source==71 || source==140) ? 0 : 1;missileTypes[source]=missileTypes[131];missileTypes[display]=missileTypes[132];
+        Slot(Sid{50})[10]=static_cast<std::uint8_t>(source);Slot(Sid{60})[10]=static_cast<std::uint8_t>(Number(row[Output]));Slot(Sid{90})[10]=static_cast<std::uint8_t>(display);
+        state.floaterType=Number(row[Output+1]);state.avoidanceCutoff=std::stoi(row[Output+2]);random.SetState(Number(row[Output+3]));Frame(connectRandom);
+        std::string actions,slots;
+        for (const auto& event:events) { if (!actions.empty()) actions+=';';actions+=event; } //모든 효과의 실제 순서를 보존한다.
+        for (const auto sid:{Sid{50},Sid{60},Sid{90}}) slots+=Hex(pool.Slot(sid)); //세 슬롯 전체를 원문과 대조한다.
+        return {actions,Hex(fields.bytes),slots,"0000000000000000",std::to_string(random.State())};
+    }
+};
+}
+
+//회피/일반 적중·코너·범위 종료·난수 미선택과 다섯 발사자의 전체 상태를 원문에 대조한다.
+TEST_CASE(MissileFloater_IndependentNative481) {
+    const auto rows=LoadFixture(NETSTORM_MISSILE_FLOATER_FIXTURE).rows;FloaterMissileScene scene;std::size_t count{};
+    for (const auto& row:rows) { //같은 독립 입력만 설치하며 원문 기대 필드를 변경하지 않는다.
+        const auto actual=scene.RunFloater(row);const std::vector<std::string> expected(row.begin()+kFloaterInput,row.end());
+        if (actual!=expected) throw std::runtime_error("플로터 투사체 원문 불일치 사례"+std::to_string(count+1)+" 실제="+actual.front()+" 원문="+expected.front());++count;
+    }
+    CHECK(count==kFloaterCases);
+}
+
+//회피 뒤 두 번째 Frame은 실제 passed DWORD로 난수를 생략하고 누락된 난수 경계는 선행 이동을 남긴다.
+TEST_CASE(MissileFloater_OncePerFlightAndSelectedRandom) {
+    const auto rows=LoadFixture(NETSTORM_MISSILE_FLOATER_FIXTURE).rows;
+    const auto selected=std::find_if(rows.begin(),rows.end(),[](const auto& row) { return Number(row[Output])==146 && Number(row[Output+1])==146 && row[Output+2]=="800" && Number(row[Output+3])==0xfed && Number(row[Output+4])==131 && Number(row[Fraction])==4 && !Number(row[TargetState]) && !Number(row[Corner]) && !Number(row[Passed]); }); //현재 기본 플로터의 실제 원문 입력 한 행이다.
+    CHECK(selected!=rows.end());if (selected==rows.end()) return;
+    FloaterMissileScene scene;static_cast<void>(scene.RunFloater(*selected));CHECK(Get(scene.fields.bytes,16)==1);const auto saved=scene.random.State();
+    scene.state.now+=0.01;scene.Frame();CHECK(scene.random.State()==saved);CHECK(std::count(scene.events.begin(),scene.events.end(),"N:0:1148846080")==1);
+    bool failed=false;try { static_cast<void>(scene.RunFloater(*selected,false)); } catch (const std::logic_error&) { failed=true; }
+    CHECK(failed);CHECK(Get(scene.fields.bytes,16)==0);CHECK(scene.random.State()==0xfed);CHECK(std::find(scene.events.begin(),scene.events.end(),"U:90:0")!=scene.events.end());
 }

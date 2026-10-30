@@ -149,9 +149,12 @@ void RawMissile::Frame(MissileFields& fields) const {
         exhausted=patch ? range+margin<currentDistance : range+margin<Distance(current,currentCenter);
     }
     auto last=current;
+    if (hit && patch && target[10]==state_.floaterType) {
+        if (!hooks_.randomFloat) throw std::logic_error("Missile 클라우드 플로터의 실제 공유 난수 미연결");
+        const auto roll=hooks_.randomFloat(0.0F,1000.0F); //원문은 현재 cutoff를 난수 반환 뒤 FILD로 읽으며 float로 줄이지 않는다.
+        if (roll<state_.avoidanceCutoff) { hit=false;Put(fields.bytes,kPassed,1); } //회피는 이후 충돌 검사를 막되 현재 위치/사거리 종료는 계속 처리한다.
+    }
     if (hit) {
-        // 실제146 클라우드 플로터의 확률 회피는 난수 몸체를 연결하기 전 성공으로 대신하지 않는다.
-        if (patch && target[10]==146) throw std::logic_error("Missile 클라우드 플로터 확률 회피 미복원");
         last={static_cast<float>((static_cast<double>(current[0])+previous[0])*0.5),static_cast<float>((static_cast<double>(current[1])+previous[1])*0.5)};
         if (fields.Target().value && !(target[11]&1)) {
             if (corner) { if (!hooks_.impact) throw std::logic_error("Missile 실제 배리어 충돌 효과 경계 누락");hooks_.impact(last[0],last[1],2,0.02f);const auto sound=missileTypes_[state_.cornerImpactType].impactSound;if (!hooks_.impactSound) throw std::logic_error("Missile 실제 충돌 사운드 경계 누락");hooks_.impactSound(last[0],last[1],sound); }

@@ -157,7 +157,7 @@ set_source_files_properties(ParticleRenderingTests.cpp PROPERTIES COMPILE_DEFINI
     "NETSTORM_FIERYTAIL_PIXELS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/fierytail-pixels-x86.tsv\"")
 # 썬더의 실제 포구/종점·Missile 생성/프레임 전체 원문을 새 검사에서만 읽는다.
 set_source_files_properties(ThunderMissileTests.cpp PROPERTIES COMPILE_DEFINITIONS
-    "NETSTORM_THUNDER_MISSILE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/thunder-missile-x86.tsv\";NETSTORM_THUNDER_HIT_EVENT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/thunder-hit-event-x86.tsv\"")
+    "NETSTORM_THUNDER_MISSILE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/thunder-missile-x86.tsv\";NETSTORM_THUNDER_HIT_EVENT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/thunder-hit-event-x86.tsv\";NETSTORM_MISSILE_FLOATER_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/missile-floater-x86.tsv\"")
 # 실제 장애물 후보 목록과 기존 Gun 통지의 독립 원본 입력이다.
 set_source_files_properties(GunBlockerTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_GUN_BLOCKER_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/gun-blocker-x86.tsv\"")

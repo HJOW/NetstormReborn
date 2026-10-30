@@ -2281,3 +2281,13 @@ docs/exe/cpp-world-geyser-20261030.md text eol=lf
 # 같은609 배포본의 전체34 진입·시각·창 출력 검증 근거다.
 cpppj/solo-world-current-runtime-20261030.json text eol=lf
 docs/exe/cpp-solo-world-current-20261030.md text eol=lf
+
+# 클라우드 플로터 회피의 최초 원문/공유 PRNG·전체 Frame 회귀 바이트를 보존한다.
+cpppj/src/o/RawMissile.h -text whitespace=cr-at-eol
+cpppj/src/o/RawMissile.cpp -text whitespace=cr-at-eol
+cpppj/tests/ThunderMissileTests.cpp text eol=lf
+tools/decomp_missile_floater.py text eol=lf
+cpppj/tests/fixtures/missile-floater-x86.tsv -text
+cpppj/missile-floater-native-20261030.json text eol=lf
+cpppj/missile-floater-runtime-20261030.json text eol=lf
+docs/exe/cpp-missile-floater-20261030.md text eol=lf
