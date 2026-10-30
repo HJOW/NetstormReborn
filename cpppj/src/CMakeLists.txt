@@ -10,6 +10,7 @@
 # 게임 본체. 실행 파일과 테스트가 함께 쓰도록 정적 라이브러리로 묶는다.
 # 소스 목록은 각 폴더의 CMakeLists.txt 가 target_sources 로 더한다.
 add_library(netstorm STATIC)
+target_sources(netstorm PRIVATE client/TechnicalHelp.h client/TechnicalHelp.cpp client/TechnicalHelpClient.cpp) # 가용성/별도 실행과 실제 Filespec 경로 해석이다.
 
 target_sources(netstorm PRIVATE client/HelpLinkPolicy.cpp client/HelpLinkPolicy.h client/ExternalHelpClient.cpp client/ExternalHelpClient.h) # 원문 Help 정책과 UTF-8 Windows 실행 경계다.
 target_link_libraries(netstorm PUBLIC shell32) # 원본 ShellExecuteA에 대응하는 Windows10/11 W API를 제공한다.

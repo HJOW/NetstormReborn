@@ -2215,3 +2215,17 @@ tools/decomp_help_links.py text eol=lf
 cpppj/help-links-native-20261030.json text eol=lf
 cpppj/help-links-runtime-20261030.json text eol=lf
 docs/exe/cpp-help-links-20261030.md text eol=lf
+
+# Technical Help의 최초 원문 가용성/파일 선택/조합과 실제 Windows 연결을 보존한다.
+cpppj/src/client/TechnicalHelp.h text eol=lf
+cpppj/src/client/TechnicalHelp.cpp text eol=lf
+cpppj/src/client/TechnicalHelpClient.cpp text eol=lf
+cpppj/tests/TechnicalHelpTests.cpp text eol=lf
+cpppj/tests/TechnicalHelpClientTests.cpp text eol=lf
+cpppj/tests/fixtures/technical-help-x86.tsv -text whitespace=-blank-at-eol
+cpppj/tests/fixtures/external-file-x86.tsv -text
+cpppj/tests/fixtures/external-file-join-x86.tsv -text
+tools/decomp_technical_help.py text eol=lf
+cpppj/technical-help-native-20261030.json text eol=lf
+cpppj/technical-help-runtime-20261030.json text eol=lf
+docs/exe/cpp-technical-help-20261030.md text eol=lf

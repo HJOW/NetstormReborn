@@ -5,6 +5,7 @@
 // 전체 Gump/StyleText와 게임 규칙은 후속이다. 저장 미션 월드는 GameWorld에 연결한다.
 #include "client/UberGump.h"
 #include "client/ExternalHelpClient.h" //원래 외부 Help 정책을 현재 Client/Windows 장치에 연결한다.
+#include "client/TechnicalHelp.h" //실제 파일 가용성 조회와 별도 Technical Help 명령을 연결한다.
 #include "client/ClientDiagnostics.h"
 #include "client/SendMoneyInput.h"
 #include "client/ClientBridgeDecay.h"
@@ -811,7 +812,7 @@ void UberGump::OpenGameMenu(bool playerList) {
             throw std::logic_error("게임메뉴조회종류오류");
         };
         bar.about=[this] { const auto value=client_.Configuration().Configuration().Get("helpWord");if (!value) throw std::logic_error("게임메뉴현재helpWord포인터없음");return FontBytes(*value); };
-        bar.technicalHelp=[this] { std::string exe,file;const auto first=client_.Configuration().ReadString("techHelpExe",exe),second=client_.Configuration().ReadString("techHelpFile",file);return first && second ? 1U : 0U; };
+        bar.technicalHelp=[this] { return ClientTechnicalHelpAvailable(client_) ? 1U : 0U; };
         bar.child=[&](GameMenuBarChild child) {
             switch (child) {
             case GameMenuBarChild::Game:return children.Game();case GameMenuBarChild::Edit:return children.Edit();
@@ -857,6 +858,7 @@ bool UberGump::GameMenuCommand(const InputEvent& event) {
         ++menuConfigRevision_;worldRedraw_=1;rawButtons_->RouteInput(event);Refresh();return true; // 원본 이 분기의 두 번째466200 호출을 보존한다.
     }
     if (!IsGameMenuCommand(code)) return false;
+    if (DispatchTechnicalHelpInput(event.code,[this] { static_cast<void>(LaunchClientTechnicalHelp(client_)); })) { Refresh();return true; } //원문 일반 명령은 현재 설정을 다시 해석하고435f10을 실행한다.
     auto binding=world_ ? world_->Session().BindGameMenus({}) : GameMenusHooks{}; // 종료/음량은 월드 설치 전후에도 같은 Client 명령이다.
     if (!world_) binding.global=[this](std::uint32_t address)->std::uint32_t {
         const auto& gameplay=*client_.GameplayGlobals();const auto& surface=*client_.SurfaceStorage(); // 월드 반납 뒤에도 같은 Client 소유자의 현재 모드/Player를 읽으며 초기0을 합성하지 않는다.

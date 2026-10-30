@@ -134,6 +134,11 @@ std::optional<std::vector<std::uint8_t>> BaseFileSystem::TryReadArchiveOnly(std:
     for (const auto& archive:archives_) if (archive.Find(name)) return archive.Read(name); //기존 등록 순서의 첫 일치만 읽고 어떤 디스크 경로도 호출하지 않는다.
     return std::nullopt;
 }
+// 외부 실행 경로의 존재 판정은 파일 내용 읽기와 독립이다.
+bool BaseFileSystem::ContainsArchiveOnly(std::string_view name) const {
+    for (const auto& archive:archives_) if (archive.Find(name)) return true; //등록 순서의 첫 이름 일치에서 끝난다.
+    return false;
+}
 // 찾지 못하면 호출자에게 예외로 알린다.
 std::vector<std::uint8_t> BaseFileSystem::Read(std::string_view name) const {
     auto bytes = TryRead(name);

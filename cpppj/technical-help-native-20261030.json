@@ -1,0 +1,29 @@
+{
+  "unit": 602,
+  "host": "HJOW-Athlon",
+  "date": "2026-10-30",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "technicalCases": 84,
+  "pathCases": 64,
+  "joinCases": 28,
+  "observations": 352,
+  "differences": [],
+  "gameStarted": false,
+  "scope": "435e40/435ef0/435f10/41ad10 및 별도459c60 실제 CPU. 부모 내 Config/경로/Filespec·조합/CRT파일/TAFF/실행은 명시 응답 경계. 파일 부모와 자식의 전체 통합/OS 동일성 증거는 아니다.",
+  "verifiedExistingFixtures": true,
+  "sourceSha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "tools/decomp_priestmenu.py": "8d1474792e7511fa777e7bd7bd369f2a2a0f9f5c35643e420d65a3fa4744bac9",
+    "tools/decomp_technical_help.py": "c9d15068721b3e16da49ac6162dccfb9d3f591e12e837e33a264ec488b94cb77",
+    "cpppj/tests/fixtures/technical-help-x86.tsv": "684efa66d13cd6834e18c5b72a373b06150017471ba343ad75d280c06a8bc031",
+    "cpppj/tests/fixtures/external-file-x86.tsv": "342836083c0fcb90a7320238f6b0bf2dcf3daf706400f35d68abb28cb0777812",
+    "cpppj/tests/fixtures/external-file-join-x86.tsv": "4bb6701434c2b8e3bffd4dcbfdca6f574f816248adc34c02710a747d5236c6cc"
+  },
+  "evidenceSha256": {
+    "0.json": "a4513674d6f142a888a19f8936324bde808d4a9b663d004e25c26c86951b50f4",
+    "1.json": "a4513674d6f142a888a19f8936324bde808d4a9b663d004e25c26c86951b50f4"
+  }
+}

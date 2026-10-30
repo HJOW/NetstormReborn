@@ -52,6 +52,7 @@ std::uint32_t GameMenuScriptCode(std::string_view name) {
     if (key=="menujustclosed") return 0x020000beU;
     if (key=="reloadtheams") return 0x02000123U;
     if (key=="pause") return 0x020000cfU;
+    if (key=="techhelp") return 0x02000049U; //원문 TechHelp 이름표와54281c의 현재 일반 명령이다.
     if (key=="getfulldeck") return 0x020000cdU;
     if (key=="toggleminimap") return 0x02000037U; //원본542d40 이름표→5427d4의 독립 미니맵 전환 명령이다.
     if (key=="togglebottomgump") return 0x02000088U; // 원본542fc8 이름표→542914의 하단 채팅 전환이며0/1/2 인자는 기존 도킹 경로가 해석한다.
