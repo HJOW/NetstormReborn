@@ -21,6 +21,7 @@
 #include "client/ClientRandomGlobals.h"
 #include "client/ClientSpGlobals.h"
 #include "client/ClientKencloudGlobals.h"
+#include "client/ClientRendererFrame.h"
 #include "client/ClientSubscriberGlobals.h"
 #include "client/ClientColorSortInput.h"
 #include "client/OwnerColorTableState.h"
@@ -182,17 +183,19 @@ Client::Client(ClientOptions options)
       dotCommandGlobals_(std::make_shared<ClientDotCommandGlobals>()),
       chat_(std::make_unique<ChatState>(*this,options_.edition)),trace_(std::make_unique<ClientTraceGlobals>()) {
     files_.RegisterArchive(options_.gameDirectory / "netstorm.tarc");
+    rendererFrame_=std::make_unique<ClientRendererFrame>(*this); //생성은 BSS0 owner/참조만 준비하며 아직 화면/파일/난수를 사용하지 않는다.
     playerRecords_->BindCoreData(coreDataGlobals_); // 같은 Native Player base가 바뀌면 실제 Core의 빌린 현재 Player 슬롯도 즉시 갱신한다.
     configuration_.Registry().environment = Environment;
     if (g_client) throw std::logic_error("Only one client may exist");
     // 원본00558dd0의 Set 직후 동기 시점에 현재 복원된 설정 전역을 갱신한다.
-    configuration_.onChanged = [this] { configuration_.ReadInt("inputLineOff",chatWindowGlobals_->inputLineOff);InterpretFortFileOptions();configuration_.ReadInt("tracelevel",trace_->log.level);InterpretScriptMenuOptions();kencloudGlobals_->ReadOptions(configuration_);InterpretMainMenuOptions();InterpretOwnerColorOptions(); }; //같은 설정 변경에서 입력줄요청/저장/진단/메뉴/구름·tellTips·배너 현재값을 동기 반영하며 새 장치를 만들지 않는다.
+    configuration_.onChanged = [this] { configuration_.ReadInt("inputLineOff",chatWindowGlobals_->inputLineOff);InterpretFortFileOptions();configuration_.ReadInt("tracelevel",trace_->log.level);InterpretScriptMenuOptions();kencloudGlobals_->ReadOptions(configuration_);rendererFrame_->ReadOptions();InterpretMainMenuOptions();InterpretOwnerColorOptions(); }; //같은 설정 변경에서 입력줄요청/저장/진단/메뉴/구름·tellTips·배너 현재값을 동기 반영하며 새 장치를 만들지 않는다.
     g_client = this;
 }
 // 월드/소리 프로세스→음악·음향→화면→GDI/창 순서로 참조 대상보다 사용자를 먼저 정리한다.
 Client::~Client() {
     configuration_.onChanged = {}; // 부분 반납 중인 Client를 콜백으로 다시 읽지 않게 먼저 해제한다.
     menu_.reset();
+    rendererFrame_.reset(); //현재 Frame의 표시 작업 배열/Pool 대여를 화면·원문 물리 소유자보다 먼저 반납한다.
     ClearThunderFlashes();
     audio_.reset(); // 월드의 반복 소리를 멈춘 뒤 음악 스레드를 합류하고 장치를 닫는다.
     disabledAudio_.reset(); // noAudio 이름표도 같은 월드 프로세스 해제 이후에 없앤다.
@@ -535,6 +538,7 @@ void Client::InterpretOwnerColorOptions() { // 준비 전의 원문 무시와 �
 // 원본 00435220에서 지금 쓰는 설정만 읽는다. 나머지 키(네트워크 등)의 전체 부모 순서는 후속이다.
 void Client::InterpretOptions() {
     configuration_.ReadInt("tracelevel",trace_->log.level); // 원문00542658의 같은 장기 필터를 읽으며 덤프 부모의 임시30과 구별한다.
+    rendererFrame_->ReadOptions(); //같은 원문 showSoftAsserts의 현재값을 실제 Renderer 진단 관문에 적용한다.
     std::string language;
     configuration_.ReadString("currentLanguage", language);
     // 언어 번호는 이름 표의 위치다. 1번(english)부터 찾는다.
@@ -648,18 +652,22 @@ void Client::Frame() {
 // 같은 실제 Draw/Lock/Present 경로를 장면 표시와 일반 프레임에서 공유한다. 프레임 대기는 호출자가 소유한다.
 void Client::PresentScene() {
     if (sceneVisible_) {
-        if (kencloudGlobals_->WorldRedraw()) renderer_->InvalidateAll(); // 원문 zoom/지형의 전체 갱신을 같은 현재 프레임의 Draw에 반영한다.
         if ((screen_->Flags() & ScreenMode::kSoftwareMouse) != 0) {
             const auto position = Poll(0); const auto hotspot = cursor_->Hotspot();
             renderer_->SetSoftwareCursor(active_ && screen_->CursorVisible() && (position.code & InputCode::kOutside) == 0 ? cursor_->SoftwareImage() : nullptr,
                 {position.x - hotspot.x, position.y - hotspot.y});
         } else renderer_->SetSoftwareCursor(nullptr,{}); // 호환 모드 복귀 때 이전 소프트웨어 커서 캐시를 지운다.
+        const bool nativeFrame=rendererFrame_->Prepare();
+        if (!nativeFrame && kencloudGlobals_->WorldRedraw()) renderer_->InvalidateAll(); //독립 표시/10.72는 기존 전체 갱신 경계를 유지한다.
+        const auto drawing=nativeFrame ? std::optional<RendererWorldDrawing>{rendererFrame_->Drawing()} : std::nullopt;
         screen_->SetClip(0, 0, screenWidth_, screenHeight_);
+        // Windows10/11 호환 DIB는 원본 DirectDraw 잠금 종류 대신 같은8비트 표면의 호스트 잠금을 쓴다. 구름 내부의 중첩 잠금/현재 clip은 원문 표시 부모가 유지한다.
         std::uint8_t* buffer = screen_->Lock();
         try {
-            renderer_->Draw(std::span<std::uint8_t>(buffer, static_cast<std::size_t>(screen_->Pitch()) * static_cast<std::size_t>(screenHeight_)), screen_->Pitch());
+            renderer_->Draw(std::span<std::uint8_t>(buffer, static_cast<std::size_t>(screen_->Pitch()) * static_cast<std::size_t>(screenHeight_)), screen_->Pitch(),0,drawing ? &*drawing : nullptr);
         } catch (...) { screen_->Unlock(); throw; }
         screen_->Unlock();
+        if (nativeFrame) rendererFrame_->Finish(); //정상 Draw/잠금 반납 뒤·Present 앞의 같은 원문470ca0이다.
         if (screen_->Flags()&ScreenMode::kFullScreen) {
             bool changed=false;renderer_->Present([&changed](ScreenRect) { changed=true; }); // 원본 dirty 소비/캐시는 그대로 진행한다.
             if (changed) screen_->Update({0,0,screenWidth_,screenHeight_}); // Windows10/11의 비정수 확대는 clip별 GDI 샘플 위상 차이를 피하도록 프레임당 전체 DIB를 한 번 출력한다.
@@ -1116,6 +1124,8 @@ Cursor& Client::GetCursor() { return *cursor_; }
 std::pair<std::uint64_t, std::uint64_t> Client::RenderCounts() const {
     return renderer_ ? std::make_pair(renderer_->DrawCount(), renderer_->PresentCount()) : std::make_pair(std::uint64_t{0}, std::uint64_t{0});
 }
+// 별도 성공 상태를 만들지 않고 실제 Frame/구름 owner의 현재 관측만 반환한다.
+std::string Client::RendererFrameDiagnostics() const { return rendererFrame_ ? rendererFrame_->Diagnostics() : std::string{}; }
 // 준비된 장면을 로딩 화면 대신 표시하고 남아 있는 창 영역도 검증한다.
 void Client::ShowScene() { sceneVisible_ = true; renderer_->InvalidateAll(); InvalidateRect(static_cast<HWND>(window_), nullptr, FALSE); }
 // 이번 프레임의 시각.

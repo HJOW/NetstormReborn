@@ -1,0 +1,15 @@
+{
+  "unit": 620,
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "cases": 90,
+  "observations": 270,
+  "differences": 0,
+  "scope": "499758 이후 실제 환산/두 clip과 첫 지형 수집 인자다. UI/건설/화면 장치는 명시 경계이며 지형 수집기 몸체/게임GUI/MP/공격/포획/희생/승리를 실행하지 않았다.",
+  "binary": "originals/Netstorm.exe",
+  "binarySha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+  "fixtureSha256": "df9d2b4b708e767466ee0ea6b9350c164708ac82b8db47f78ba6088abac4cc87",
+  "oracle": "tools/decomp_renderer_projection.py",
+  "independentCompleteProcesses": 1
+}

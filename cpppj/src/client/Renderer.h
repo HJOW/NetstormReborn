@@ -45,6 +45,11 @@ struct RenderProcedure {
     ScreenRect bounds; // 같은 시점의 현재 표시 영역이다. 실제 그리기 클립은 renderer의 dirty 사각형이다.
     std::function<void(std::span<std::uint8_t>,int,int,ScreenRect)> draw; // pixels/pitch/height/clip의 실제 표면 소비자다.
 };
+// 실제 프레임의 지형 수집/배경 처리를 같은 dirty 안에서 미리보기·월드·UI 순서와 연결한다.
+struct RendererWorldDrawing {
+    std::function<std::uint32_t(ScreenRect,std::uint32_t)> collect; //같은 raw 해시의 지형 수집/배경 덮임을 먼저 계산한다. UI 전용4도 caller가 원문대로 생략한다.
+    std::function<void(ScreenRect,std::uint32_t,std::uint32_t)> background; //지형 수집/미리보기 뒤 flags/덮임에 따라 실제 배경을 그린다.
+};
 // 출력할 스프라이트 프레임·좌표·클립·정렬·색 변환 정보이다.
 struct RenderSprite {
     // 자산과 글꼴·커서 이미지는 Renderer보다 오래 살아야 한다.
@@ -108,6 +113,7 @@ public:
     IndexedImage SceneImage();
     // 배경이나 WM_PAINT 등 화면 전체 변화.
     void InvalidateAll();
+    void ClearDirty(); //Native Renderer+64의0 쓰기를 현재 호스트의 같은 vector/전체 플래그에 반영한다.
     // 외부 오브젝트의 변화 범위를 원본 변경 표에 추가한다.
     void Invalidate(ScreenRect rect, std::uint32_t flags = 0);
     // raw Squid 표시가 원본 전체 갱신 전역처럼 변경 표 추가를 생략할지 확인한다.
@@ -115,9 +121,10 @@ public:
     // 소프트웨어 커서의 이전·새 범위를 모두 무효화한다. nullptr이면 표시를 지운다.
     void SetSoftwareCursor(const IndexedImage* image, ScreenPoint position,bool force=false); //force는4a41c0의 같은 위치에서도 이전/새 사각형을 추가하는 호출이다.
     std::uint32_t& CameraRedraw() { return cameraRedraw_; } // Native Renderer+5c의 같은 현재 DWORD다. 다음 Draw에서 소비한다.
+    std::uint32_t& BackgroundRedraw() { return backgroundRedraw_; } //Native Renderer+60의 별도 시차 표면 요청이며 +5c와 합치지 않는다.
     std::vector<DirtyRegion>& CameraDirtyEntries() { return dirty_.CameraEntries(); } // Present가 비운 뒤 커서가 추가한 같은 실제 표를 빌린다.
     // 변경 영역만 합성한다. 반환 사각형은 Present 이전까지 유효하다.
-    std::span<const ScreenRect> Draw(std::span<std::uint8_t> pixels, int pitch, std::uint8_t background = 0);
+    std::span<const ScreenRect> Draw(std::span<std::uint8_t> pixels, int pitch, std::uint8_t background = 0,const RendererWorldDrawing* world=nullptr); //실제 Native Frame만 world 장치를 주며 독립 표시/10.72 경로는 기존 장면 합성을 유지한다.
     // 00499fe0: 그린 사각형만 내보내고 변경 표를 비운다. 콜백은 Screen::Update에 연결한다.
     void Present(const std::function<void(ScreenRect)>& update);
     // 실제 그리기·출력 여부를 스모크에서 검사할 누적 횟수.
@@ -139,6 +146,7 @@ private:
     // dirty_: 부분 갱신 사각형을 수집하고 화면 경계로 제한하는 관리자 (DirtyRegions).
     DirtyRegions dirty_;
     std::uint32_t cameraRedraw_{}; //497960의 이동1을 다음4994b0 위치의 Draw가 전체 무효화로 소비한다.
+    std::uint32_t backgroundRedraw_{}; //같은 논리 Renderer+60의 최초0이며 Present 뒤 반납한다.
     // sprites_: 스프라이트.
     std::vector<RenderSprite> sprites_;
     std::vector<RenderSprite> sourceSprites_; // 추가 수집을 병합할 때 정렬 전의 원본 제출 순서를 유지한다.

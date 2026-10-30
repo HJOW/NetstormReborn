@@ -2500,3 +2500,7 @@ set_source_files_properties(RendererPreludeTests.cpp PROPERTIES COMPILE_DEFINITI
 # 별도 구름4칸/dirty별 배경 선택의 원문695행과 장기 전역/앞단 공유를 검증한다.
 target_sources(netstorm_tests PRIVATE RendererCloudTests.cpp)
 set_source_files_properties(RendererCloudTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_RENDERER_CLOUDS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/renderer-clouds-x86.tsv\"")
+
+# 실제 Native Frame 수집/배경/월드/UI 순서와 signed 현재 저장소/dirty reset을 검증한다.
+target_sources(netstorm_tests PRIVATE RendererFrameTests.cpp)
+set_source_files_properties(RendererFrameTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_RENDERER_PROJECTION_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/renderer-projection-x86.tsv\"")

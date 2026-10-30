@@ -105,6 +105,7 @@ public:
     RawUberRootControls& EnableUberRoot(RawUberRootContext context); // 실제 전체 루트/구분선의 가상 분배를 한 번 설치한다.
     RawUberRootControls* UberRoot() const; // 같은 실제 루트 처리기를 빌린다.
     ScreenRect& MapViewRect(); // GumpTree 정렬과 실제 dock가 같은 원문 정수 지도LTRB를 직접 공유한다.
+    std::uint32_t CurrentOverride() const; //00463fe0의 실제 overrideHead를 조회하며 dialog/Guide로 대신하지 않는다.
     std::uint32_t BubbleGump(std::uint32_t token,std::uint32_t event,std::uint32_t first,std::uint32_t second); // 원문00464e90의 현재 부모 체인에만 전달한다.
     std::uint32_t ConstructNsInfo(RawNsInfoContext context); // 같은 공통 Button/배경 전역으로 전체 NSInfo 생성만 한다.
     // 실제 공통 Gump/StyleText를 빌리는 안내 처리기를 한 번 설치한다. 별도 루트/등록표를 만들지 않는다.

@@ -36,6 +36,7 @@ class ClientColorSortInput; //최초논리RGB와43c010의같은표입력을Clien
 class ClientRandomGlobals; // 같은 Client의 CRT holdrand와 Subscriber ID 최초시드 전역을 소유한다.
 class ClientSpGlobals; // 공통 시작의 SP/추적 offset을 사제와 Session보다 오래 같은 주소에 소유한다.
 class ClientKencloudGlobals; // 같은 구름/팔레트 전역과 현재 메모리를 모든 메뉴/장치 교체에서 유지한다.
+class ClientRendererFrame; //같은 Renderer 전역과 실제 Frame의 구름/지형 장치를 조립한다.
 class ClientSubscriberGlobals; // 같은 Client의 실제 my/login 두 DWORD만 장기 소유한다.
 class ClientLocalStateGlobals; // 실제 메뉴/Editor/로그인이 같은 State 블록과 벽시각 기한을 빌린다.
 class ClientConnectionActivityGlobals; // 실제 두22DWORD 활동 표와 Zone 간극을 Client 수명으로 소유한다.
@@ -88,6 +89,7 @@ struct ClientOptions {
 
 // 원본 전역 변수로 흩어져 있던 클라이언트 상태를 객체 하나로 묶는다. 한 프로세스에 하나만 만든다.
 class Client {
+    friend class ClientRendererFrame; //실제 프레임은 현재 Screen/초기 크기/전역 장치를 사본 없이 빌린다.
 public:
     explicit Client(ClientOptions options);
     ~Client();
@@ -205,6 +207,7 @@ public:
     Cursor& GetCursor();
     // 그린 프레임·출력 사각형 횟수. 초기화 도중 창을 닫았으면 두 값 모두 0이다.
     std::pair<std::uint64_t, std::uint64_t> RenderCounts() const;
+    std::string RendererFrameDiagnostics() const; //검사 보고에서 실제 Frame owner/구름 호출을 읽으며 게임 값을 바꾸지 않는다.
     // 로딩 화면에서 실제 Renderer 장면으로 전환한다. 후속 메인 메뉴도 이 경로를 사용한다.
     void ShowScene();
     void PresentScene(); // 현재 장면만 즉시 출력한다. 미션 파일 적재 전 안내를 표시하며 루프/시계/검사 프레임은 진행하지 않는다.
@@ -313,6 +316,7 @@ private:
     // assets_: 타입·셰이프·팔레트 자산 또는 해당 자산의 처리 경계.
     std::unique_ptr<GameAssets> assets_;
     std::shared_ptr<RawSurfaceStorage> surfaceStorage_; // 자산 뒤·UI/Session 앞에 확보해 모든 물리 참조보다 오래 유지한다.
+    std::unique_ptr<ClientRendererFrame> rendererFrame_; //실제 Pool/해시보다 먼저 반납하고 Screen/미션 교체에도 같은 전역을 유지한다.
     // renderer_: 수집한 그림·텍스트를 화면에 그리는 렌더러.
     std::unique_ptr<Renderer> renderer_;
     // fonts_: 이름·크기로 찾아 재사용하는 글꼴 저장소.

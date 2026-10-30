@@ -116,6 +116,7 @@ private:
 
 // 원본 Screen.cpp의 전역 변수 묶음을 객체 하나로 둔다. 창과 창의 장치 문맥은 ClientMain이 만든다.
 class Screen {
+    friend class ClientRendererFrame; //실제 프레임은 현재 flags/논리 크기 저장소를 복사하지 않고 읽는다.
 public:
     // 창(DAT_0054dbf4), 창의 장치 문맥(DAT_0054d960), 화면 크기(DAT_00531860·DAT_00531864).
     Screen(NativeHandle window, NativeHandle windowDc, int width, int height,std::uint32_t* paletteLoaded=nullptr); //Client실제DWORD는Screen재생성을넘어유지하며독립화면만local을쓴다.

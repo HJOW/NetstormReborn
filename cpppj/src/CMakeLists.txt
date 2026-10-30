@@ -286,3 +286,6 @@ target_sources(netstorm PRIVATE client/RawRendererPrelude.cpp client/RawRenderer
 
 # Renderer의 별도 구름4칸/현재 전역과 dirty별 배경 선택을 원문 순서로 복원한다.
 target_sources(netstorm PRIVATE client/RawRendererClouds.cpp client/RawRendererClouds.h client/ClientRendererFrameGlobals.h)
+
+# 실제 Client Frame에 같은 원문 앞단/구름/지형/현재 UI 장치를 연결한다.
+target_sources(netstorm PRIVATE client/ClientRendererFrame.cpp client/ClientRendererFrame.h)

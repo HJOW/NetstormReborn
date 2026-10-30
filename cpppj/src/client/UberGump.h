@@ -38,6 +38,7 @@ class TextClipboard; //같은 Client UI의 모든 문자 입력이 공유하는 
 class EditorCatalogWorkspace; //목록/직접 Edit/이름 변경이 공유하는 장기 단일 namespace와 이관 장부다.
 // 메뉴·브리핑·미션 페이지와 해당 UI 동작을 관리하는 처리기이다.
 class UberGump {
+    friend class ClientRendererFrame; //같은 실제 Gump의 override/지도 clip만 현재 Frame에 빌린다.
 public:
     // 초기화 뒤 원본 타이틀·구름·메뉴 자료를 읽고 기본 메뉴를 연다.
     explicit UberGump(Client& client);

@@ -14,8 +14,8 @@ std::int32_t Row(RendererPreludeState state,std::int32_t index) {
     if (physical<0 || physical>=static_cast<std::int64_t>(state.scan.size())) throw std::out_of_range("Renderer 행 표의 현재 인접 물리 범위");
     return Signed(state.scan[static_cast<std::size_t>(physical)]);
 } //index-1/16/17의 실제 인접 alias는 허용하며 임의로16칸에 정규화하지 않는다.
-ScreenRect Full(const RendererPreludeGlobals& g) { return {0,0,Signed(g.width),Signed(g.height)}; } //호출 직전 현재 화면 크기다.
-ScreenRect View(const RendererPreludeGlobals& g) { return {Signed(g.left),Signed(g.top),Signed(g.right),Signed(g.bottom)}; } //행 조회 뒤 바뀐 현재 지도 clip도 반영한다.
+ScreenRect Full(const RendererPreludeGlobals& g) { return {0,0,g.width.Read(),g.height.Read()}; } //호출 직전 현재 화면 크기다.
+ScreenRect View(const RendererPreludeGlobals& g) { return {g.left.Read(),g.top.Read(),g.right.Read(),g.bottom.Read()}; } //행 조회 뒤 바뀐 현재 지도 clip도 반영한다.
 void InitializeRows(RendererPreludeState state,std::uint32_t height) {
     state.scan[kInitialized]|=1U;
     state.scan[2]=height-30U;state.scan[4]=height-150U;state.scan[6]=height-60U;state.scan[8]=height-180U;
@@ -36,14 +36,14 @@ void PrepareRendererFrame(RendererPreludeState state,const RendererPreludeGlobal
         if (flags&32U) {
             Need(h.updateClouds)();flags=g.mode&255U;
             if (!(flags&16U)) {
-                if (!(state.scan[kInitialized]&1U)) InitializeRows(state,g.initialHeight);
+                if (!(state.scan[kInitialized]&1U)) InitializeRows(state,static_cast<std::uint32_t>(g.initialHeight.Read()));
                 auto index=Signed(state.scan[0]);auto row=Row(state,index);
                 if (row<Add(row,30)) {
                     // 원문은 현재30행 구간의 첫 dirty에서 멈추고 매 callback 뒤 현재 index/상한을 재조회한다.
                     for (;;) {
-                        const auto dirty=Need(h.rowDirty)(row,Signed(g.cameraY));index=Signed(state.scan[0]);
+                        const auto dirty=Need(h.rowDirty)(row,g.cameraY.Read());index=Signed(state.scan[0]);
                         if (dirty) {
-                            const auto start=Row(state,index);const ScreenRect rect{0,start,Signed(g.width),Add(start,30)};
+                            const auto start=Row(state,index);const ScreenRect rect{0,start,g.width.Read(),Add(start,30)};
                             Need(h.invalidate)(ClipScreenRect(rect,View(g)),0);break;
                         }
                         row=Add(row,1);if (row>=Add(Row(state,index),30)) break;
@@ -57,6 +57,6 @@ void PrepareRendererFrame(RendererPreludeState state,const RendererPreludeGlobal
         if ((flags&16U) && (flags&1U) && !(flags&2U)) { Need(h.invalidateBackground)();state.backgroundRedraw=1; }
     }
     state.drawCounter=0;
-    if (g.force) { state.dirtyCount=0;Need(h.invalidate)(Full(g),0); }
+    if (g.force) { state.dirtyCount=0;if (h.clearDirty) h.clearDirty();Need(h.invalidate)(Full(g),0); }
 }
 }

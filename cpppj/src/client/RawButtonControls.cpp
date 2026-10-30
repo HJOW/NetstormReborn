@@ -335,6 +335,7 @@ RawUberRootControls& RawButtonControls::EnableUberRoot(RawUberRootContext contex
 }
 RawUberRootControls* RawButtonControls::UberRoot() const { return impl_->uber.get(); } // 같은 실제 파생 저장소의 고정 소유자다.
 ScreenRect& RawButtonControls::MapViewRect() { return impl_->treeState.mapView; } // 실제 정렬 처리기와 같은 저장소다.
+std::uint32_t RawButtonControls::CurrentOverride() const { return impl_->create.collection.overrideHead; } //현재 MovieGump 등 실제 override만 같은 프레임 관문에 공급한다.
 std::uint32_t RawButtonControls::BubbleGump(std::uint32_t token,std::uint32_t event,std::uint32_t first,std::uint32_t second) { return impl_->events->Bubble(token,event,first,second); } // 자신의 입력/필터와 부모 전달을 구별한다.
 // 같은 현재 배경 전역과 실제 기본 버튼을 전체 NSInfo 생성자에 연결한다.
 std::uint32_t RawButtonControls::ConstructNsInfo(RawNsInfoContext context) {

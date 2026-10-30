@@ -1297,9 +1297,10 @@ void UberGump::Compose() {
     const bool controls=controlsChanged_; // Tick/Input/Kernel 뒤 Frame 중 어느 합성이든 같은 교체 예약을 소비한다.
     const int width = client_.GetScreen().Width(), height = client_.GetScreen().Height();
     const ScreenRect all{0, 0, width, height};
+    const bool nativeFrame=client_.Assets().Edition()==o::OriginalEdition::Patch1078; //10.78은 실제 Frame/Gump 표시를 사용하고10.72의 기존 합성은 별도로 유지한다.
     auto canvas = std::make_shared<IndexedImage>(); canvas->width = width; canvas->height = height;
     canvas->indices.resize(static_cast<std::size_t>(width) * height); canvas->opacity.assign(canvas->indices.size(), 255);
-    Tile(*canvas, clouds_, all);
+    if (!nativeFrame) Tile(*canvas,clouds_,all); //10.78 구름은 실제 cache/카메라/dirty로 그리며 정적 GIF를 배경으로 대신하지 않는다.
     std::vector<RenderText> text; std::vector<GumpControl> regions;
     // 마지막 파일 로딩의 실제 버튼 색/문맥을 사용한다. 일시 번개 팔레트에서 색 번호를 다시 찾지 않는다.
     const auto buttonColors=ButtonColors(client_.GetScreen().Colors());
@@ -1316,7 +1317,7 @@ void UberGump::Compose() {
             return world_->Session().Cursor().Display().Sprites(clip,flags);
         });
         // 정지한 대화상자만 월드를 배경에 합성하고 실제 조작 화면은 살아 있는 스프라이트를 제출한다.
-        if (state_.phase!=ClientPhase::Mission || !popup_.empty()) {
+        if (!nativeFrame && (state_.phase!=ClientPhase::Mission || !popup_.empty())) {
             client_.GetRenderer().SetBackground(canvas); client_.GetRenderer().SetScene(worldSprites);
             canvas = std::make_shared<IndexedImage>(client_.GetRenderer().SceneImage());
         }
@@ -1353,7 +1354,7 @@ void UberGump::Compose() {
     }
     if (state_.phase == ClientPhase::Mission && popup_.empty()) {
         // 원본 HUD와 월드를 합성한다. 가로 메뉴는 기존 ESC 입력으로 연다.
-        client_.GetRenderer().SetBackground(canvas); client_.GetRenderer().SetScene(std::move(worldSprites), std::move(text));
+        client_.GetRenderer().SetBackground(nativeFrame ? nullptr : canvas);if (nativeFrame) text.clear();client_.GetRenderer().SetScene(std::move(worldSprites),std::move(text));
         if (world_) client_.GetRenderer().SetOverlay(world_->SelectionImage());
         if (rawButtons_->Menus()->HasOverlay()) {
             commonDrawSubmitted=true;
@@ -1389,7 +1390,9 @@ void UberGump::Compose() {
             rawButtons_->Menus()->Draw(canvas->indices,width,height,client_.GetScreen().Colors(),client_.GetScreen().ShadeMaps());
             commonDrawSubmitted=true;
         }
-        client_.GetRenderer().SetBackground(canvas); client_.GetRenderer().SetScene(std::move(dialogSprites), std::move(text));
+        client_.GetRenderer().SetBackground(nativeFrame ? nullptr : canvas);
+        if (nativeFrame) { text.clear();client_.GetRenderer().SetScene(std::move(worldSprites));if (world_) client_.GetRenderer().SetOverlay(world_->SelectionImage()); } //브리핑/ESC 뒤의 월드도 정적 배경 사본으로 굳히지 않는다.
+        else client_.GetRenderer().SetScene(std::move(dialogSprites),std::move(text));
     }
     if (controls) {
         if (state_.phase!=ClientPhase::LoadingMission) rawButtons_->Menus()->CloseMissionLoading();
@@ -1444,7 +1447,7 @@ void UberGump::Compose() {
         // 새 페이지는 같은 raw 노드로 한 번 다시 합성하며 중간 어댑터 그림은 화면에 제출하지 않는다.
         controlsChanged_=false;Compose();return;
     }
-    if (!commonDrawSubmitted && (state_.phase==ClientPhase::MainMenu || nativeHud || rawButtons_->Menus()->KnowledgeOpen() || rawButtons_->Menus()->HelpOpen() || warnings_->HasMessages())) client_.GetRenderer().SetOverlayProcedure(RenderProcedure{{0,0,width,height},[this](std::span<std::uint8_t> pixels,int pitch,int height,ScreenRect clip) {
+    if (nativeFrame || (!commonDrawSubmitted && (state_.phase==ClientPhase::MainMenu || nativeHud || rawButtons_->Menus()->KnowledgeOpen() || rawButtons_->Menus()->HelpOpen() || warnings_->HasMessages()))) client_.GetRenderer().SetOverlayProcedure(RenderProcedure{{0,0,width,height},[this](std::span<std::uint8_t> pixels,int pitch,int height,ScreenRect clip) {
         rawButtons_->Menus()->Draw(pixels,pitch,height,client_.GetScreen().Colors(),client_.GetScreen().ShadeMaps(),clip);
     }}); //World 생성 전 현재 전체 HUD와 브리핑 위 지식 카드도 같은 실제 공통 트리로 그린다.
     if (world_) world_->TakeChanged();
@@ -1466,6 +1469,7 @@ std::optional<ScreenPoint> UberGump::ControlPoint(std::string_view label) const 
 std::string UberGump::Report(bool cameraOnly) const {
     std::ostringstream out;
     out<<client_.ScreenDiagnostics(); // 실제 OS 창과 논리/확대 출력의 관찰만 추가한다.
+    out<<client_.RendererFrameDiagnostics(); //같은 실제 Frame/구름 요청·캐시·마지막 표시 인자만 관측한다.
     out<<ReportClientBridgeDecay(client_); //현재 메뉴/World가 공유하는 실제 스캔의 읽기 전용 CLI 관측이다.
     const auto& camera=client_.GameplayGlobals()->Camera();out<<"raw_camera_frame\t"<<camera.RendererView().pixels[0]<<'\t'<<camera.RendererView().pixels[1]<<'\t'<<camera.Target().pixels[0]<<'\t'<<camera.Target().pixels[1]<<'\t'<<client_.GameplayGlobals()->PatchDiagnostic()<<'\t'<<client_.LocalStateGlobals()->MetaRebuild()<<'\t'<<pointerBoundary_.initializationFlags<<'\t'<<edgeScrollSince_<<'\n'; //실제 적용/요청·공유 전역만 관측한다.
     out << "phase\t" << static_cast<int>(state_.phase) << "\npage\t" << Field(pageName_) << "\npopup\t" << Field(popup_) << "\n";

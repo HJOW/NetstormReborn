@@ -142,6 +142,8 @@ void Renderer::SetScene(std::vector<RenderSprite> sprites, std::vector<RenderTex
 }
 // 화면 모드 변경·전체 다시 그리기.
 void Renderer::InvalidateAll() { dirty_.InvalidateAll(); }
+// 원문 force redraw가 기존100칸을 비운 뒤 전체 사각형을 추가할 때 같은 표를 비운다.
+void Renderer::ClearDirty() { dirty_.Clear(); }
 // 수집기 교체/해제는 이전 캐시도 비워 반납된 월드 callback을 남기지 않는다.
 void Renderer::SetExtraCollection(std::function<std::vector<RenderSprite>(ScreenRect,std::uint32_t)> collect) { extraCollection_=std::move(collect);extraCache_.clear();dirty_.InvalidateAll(); }
 bool Renderer::HasExtraCollection() const { return static_cast<bool>(extraCollection_); } // 새 장치에 실제 수집기가 있는지 조회한다.
@@ -226,7 +228,7 @@ void Renderer::Text(std::span<std::uint8_t> pixels, int pitch, ScreenRect clip, 
     DrawBitmapGlyphText(text.bytes,text.font,{text.x,text.y},context,hooks,static_cast<std::int32_t>(text.bytes.size()));
 }
 // 변경 영역마다 배경→깊이 순 스프라이트→UI 글자 순으로 합성한다.
-std::span<const ScreenRect> Renderer::Draw(std::span<std::uint8_t> pixels, int pitch, std::uint8_t background) {
+std::span<const ScreenRect> Renderer::Draw(std::span<std::uint8_t> pixels, int pitch, std::uint8_t background,const RendererWorldDrawing* world) {
     if (!painted_.empty()) throw std::logic_error("Present must follow Draw");
     if (pitch < width_ || pixels.size() < static_cast<std::size_t>(pitch) * static_cast<std::size_t>(height_)) throw std::invalid_argument("Invalid renderer surface");
     if (cameraRedraw_) { dirty_.InvalidateAll();cameraRedraw_=0; } // 원문 카메라 적용은 현재 Present 뒤에1을 쓰고 다음 Draw에서 전체를 다시 구성한다.
@@ -241,18 +243,24 @@ std::span<const ScreenRect> Renderer::Draw(std::span<std::uint8_t> pixels, int p
     // 각 변경 영역을 같은 장면에서 다시 합성한다.
     for (std::size_t i = 0; i < painted_.size(); ++i) {
         const auto clip = painted_[i];
-        // 변경 영역의 배경 행만 지운다.
-        if ((paintFlags_[i] & kOpaque) == 0)
-            // 원본 플래그 4는 기존 배경을 보존한다.
-            for (int y = clip.top; y < clip.bottom; ++y) {
-                const auto row = static_cast<std::size_t>(y) * static_cast<std::size_t>(pitch);
-                std::fill(pixels.begin() + row + clip.left, pixels.begin() + row + clip.right, background);
+        if (world && (!world->collect || !world->background)) throw std::logic_error("Native Renderer의 현재 지형/배경 장치 누락");
+        const auto covered=world ? world->collect(clip,paintFlags_[i]) : 0U; //실제 지형 수집 뒤 커서 kind4 미리보기를 수집한다. 별도487f10 건설 표시와 구별한다.
+        if (!world) {
+            // 독립 표시/10.72의 기존 합성은 추가 수집보다 먼저 배경을 복원한다.
+            if ((paintFlags_[i]&kOpaque)==0) for (int y=clip.top;y<clip.bottom;++y) { //클립된 실제 행만 지운다.
+                const auto row=static_cast<std::size_t>(y)*static_cast<std::size_t>(pitch);
+                std::fill(pixels.begin()+row+clip.left,pixels.begin()+row+clip.right,background);
             }
-        if (background_) DrawIndexedImage(pixels, pitch, height_, *background_, 0, 0, clip);
+            if (background_) DrawIndexedImage(pixels,pitch,height_,*background_,0,0,clip);
+        }
         auto combined=extraCollection_ ? sourceSprites_ : sprites_; // 정적 월드와 dirty별 미리보기를 같은 원본 작업 순서로 병합한다.
         if (extraCollection_) {
             auto extra=extraCollection_(clip,paintFlags_[i]);if (!(paintFlags_[i]&4U)) extraCache_=extra;
             combined.insert(combined.end(),std::make_move_iterator(extra.begin()),std::make_move_iterator(extra.end()));SortRenderSprites(combined,edition_);
+        }
+        if (world) {
+            world->background(clip,paintFlags_[i],covered);
+            if (paintFlags_[i]&kOpaque) combined.clear(); //UI 전용4의 원문은 월드/미리보기 표시를 제출하지 않는다.
         }
         // 원본 깊이 키로 정렬한 모든 월드/미리보기 항목을 현재 dirty 안에서 출력한다.
         for (const auto& sprite : combined) {
@@ -260,7 +268,7 @@ std::span<const ScreenRect> Renderer::Draw(std::span<std::uint8_t> pixels, int p
             if (!Nonempty(ClipScreenRect(bounds, cut))) continue;
             DrawSprite(pixels,pitch,cut,sprite);
         }
-        if (overlay_) DrawIndexedImage(pixels,pitch,height_,*overlay_,0,0,clip);
+        if (overlay_ && (!world || !(paintFlags_[i]&kOpaque))) DrawIndexedImage(pixels,pitch,height_,*overlay_,0,0,clip);
         if (overlayProcedure_) {
             const auto cut=ClipScreenRect(clip,overlayProcedure_->bounds); // 현재 dirty 범위 밖의 세계 픽셀을 건드리지 않는다.
             if (Nonempty(cut)) overlayProcedure_->draw(pixels,pitch,height_,cut);
@@ -276,7 +284,7 @@ std::span<const ScreenRect> Renderer::Draw(std::span<std::uint8_t> pixels, int p
 void Renderer::Present(const std::function<void(ScreenRect)>& update) {
     // 원본과 같이 표의 순서로 내보낸다.
     for (const auto rect : painted_) { update(rect); ++presents_; }
-    painted_.clear(); paintFlags_.clear(); dirty_.Clear();
+    painted_.clear(); paintFlags_.clear(); dirty_.Clear();backgroundRedraw_=0;
 }
 // 변경 영역을 그린 프레임 수.
 std::uint64_t Renderer::DrawCount() const { return draws_; }
