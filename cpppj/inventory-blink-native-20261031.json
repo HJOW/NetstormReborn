@@ -1,0 +1,41 @@
+{
+  "unit": 630,
+  "complete": true,
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "cases": 110,
+  "independentProcesses": 2,
+  "observations": 660,
+  "differences": 0,
+  "fixtureSha256": "76de11e7031b1cffecd6ce2055905305665333f69418d3934aa4d6e76b55fe3d",
+  "processes": [
+    {
+      "cases": 110,
+      "observations": 330,
+      "differences": 0,
+      "sourceSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "toolSha256": "83a33dba0f82f61b12528ac5e1631d1d7656d37e827232e6f1cbc4e8bbc33071",
+      "fixtureSha256": "76de11e7031b1cffecd6ce2055905305665333f69418d3934aa4d6e76b55fe3d",
+      "dataSha256": "f81a53e0d9244ad7c10ab5eda4f3ce2e4f7fa0aa94cfc1792ad2cc2c5f329cde",
+      "host": "HJOW-Athlon",
+      "lastFullDecompileHost": "HJOW-Athlon",
+      "lastFullDecompileDate": "2026-10-23",
+      "scope": "점멸43d6e0/Idle465330/기본Redraw464a50/Position/CRT/XYWH가 실제 PE다. 벽시계와 마지막Renderer 저장소만 명시 경계다. 새 C++/실제 게임/GUI/MP/금지 재현/공중3종은 실행하지 않는다."
+    },
+    {
+      "cases": 110,
+      "observations": 330,
+      "differences": 0,
+      "sourceSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "toolSha256": "83a33dba0f82f61b12528ac5e1631d1d7656d37e827232e6f1cbc4e8bbc33071",
+      "fixtureSha256": "76de11e7031b1cffecd6ce2055905305665333f69418d3934aa4d6e76b55fe3d",
+      "dataSha256": "f81a53e0d9244ad7c10ab5eda4f3ce2e4f7fa0aa94cfc1792ad2cc2c5f329cde",
+      "host": "HJOW-Athlon",
+      "lastFullDecompileHost": "HJOW-Athlon",
+      "lastFullDecompileDate": "2026-10-23",
+      "scope": "점멸43d6e0/Idle465330/기본Redraw464a50/Position/CRT/XYWH가 실제 PE다. 벽시계와 마지막Renderer 저장소만 명시 경계다. 새 C++/실제 게임/GUI/MP/금지 재현/공중3종은 실행하지 않는다."
+    }
+  ],
+  "scope": "43d6e0/465330/464a50/Position/CRT/XYWH는 실제 PE이며 시각과 최종 Renderer 저장소만 명시 경계다.108개 가시성/기한/NaN 교차와 시각 반환 중 기한 변경2개다. 실제 게임/GUI/MP/금지 재현/공중3종 전용은 없다."
+}

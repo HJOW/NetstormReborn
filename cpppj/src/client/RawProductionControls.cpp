@@ -81,6 +81,8 @@ struct RawProductionControls::Impl {
         gh.forward=[this](auto token,auto event,auto first,auto second) { return common.events.Bubble(token,event,first,second); };gh.baseHandle=[this](auto token,auto event,auto first,auto second) { return menus.BaseHandle(token,event,first,second); }; // 원본 격자도 같은 실제 기본 도움말을 사용한다.
         gh.local=[this](auto token,auto,ScreenPoint p) { return common.collection.ScreenToLocal(token,p); };gh.inside=[this](auto token,auto p) { const auto& n=*common.node(token);return p[0]>=0 && p[1]>=0 && p[0]<n.width && p[1]<n.height; };
         gh.cancelCursor=[this] { Session().Cursor().Cancel(); };gh.assertion=[](auto text) { throw std::logic_error(std::string(text)); };
+        gh.redraw=[this](auto token,bool erase) { common.RedrawBase(token,erase); }; // 실제 항목VT의+8은 기본464a50이며 현재 visible 상태로 요청한다.
+        gh.clearBlink=[this](auto content) { if (content>=context.storage->pool.Capacity() || content>65535U) throw std::out_of_range("생산 점멸 내용물 SID 범위 오류");auto raw=context.storage->pool.AllocatedBytes({static_cast<std::uint16_t>(content)});raw[21]&=0xfd; }; // 종료 출력 뒤에 재조회한 같은 현재 내용물의bit2만 지운다.
         grid=std::make_unique<InventoryGump>(common.create,common.factory,context.storage->pool,context.gameplay->finder,InventoryGumpState{point,cursorFlags},std::move(gh));
         InventoryItemHooks h;h.node=[this](auto token) { return Find(items,token); };h.base=common.node;BindInventoryItemAssets(h,assets,geometry,measure);
         h.baseAttach=[this](auto token,float x,float y,auto parent,auto mode) { common.tree.Attach(token,x,y,parent,mode); };h.clearChildren=[this](auto token) { ClearChildren(token); };h.cleanup=[this] { common.lifetime.Cleanup(); };
@@ -239,10 +241,7 @@ struct RawProductionControls::Impl {
             // 원본은 실제 부모가 바뀐 격자만 Push/Bind/재부착한다.
             if (!editor) for (const auto current:{bridgeGrid,teleportGrid}) if (grids.at(current)->object!=parent) { common.tree.Push(current);Bind(current,parent);auto& n=*grids.at(current);grid->AttachGrid(current,n.x,n.y,0,0); }
             if (!maintenance) EnsureMaintenance();maintenance->Run();
-        } else if (auto* n=Find(items,token)) {
-            if (!n->blink) { common.lifetime.SetIdle(token,false);n->flags|=1;common.changed();auto raw=context.storage->pool.AllocatedBytes({static_cast<std::uint16_t>(n->content)});raw[21]&=0xfd; }
-            else if (n->blinkUntil<=hooks.now()) { --n->blink;n->blinkUntil=hooks.now()+0.1;n->flags^=1;common.changed(); }
-        }
+        } else if (Find(items,token)) grid->IdleItem(token); // 동일 노드/Idle표/Renderer에서 원문 점멸 몸체를 공유한다.
     }
     // 실제 원본 토큰을 현재 색표 바이트로만 해석한다.
     ColorMap Color(std::uint32_t token) {

@@ -56,6 +56,19 @@ std::uint32_t InventoryGump::ConstructItem(std::uint32_t token,float width,float
 void InventoryGump::BeginBlink(std::uint32_t token) const {
     auto& node=Item(token);node.blink=4;Need(hooks_.idle)(token,true);node.blinkUntil=Need(hooks_.now)()+0.1;
 }
+// 표시 상태를 바꾸는 앞/뒤의 실제 가상 갱신 순서와 별도 두 번의 시각 조회를 보존한다.
+void InventoryGump::IdleItem(std::uint32_t token) const {
+    auto& node=Item(token);
+    if (!node.blink) {
+        Need(hooks_.idle)(token,false);node.flags|=1U;Need(hooks_.redraw)(token,false);Need(hooks_.clearBlink)(node.content);return;
+    }
+    const auto now=Need(hooks_.now)(); // 원문은 시각 조회가 반환한 뒤 현재 기한을 읽는다.
+    if (node.blinkUntil<=now) {
+        --node.blink;node.blinkUntil=Need(hooks_.now)()+0.1;
+        if (node.flags&1U) { Need(hooks_.redraw)(token,false);node.flags&=~1U; }
+        else { node.flags|=1U;Need(hooks_.redraw)(token,false); }
+    }
+}
 // 원본은 기본 부착 뒤 현재 부모 SID/크기/내용물 목록을 읽는다.
 void InventoryGump::AttachGrid(std::uint32_t token,float x,float y,std::uint32_t parent,std::uint32_t mode) const {
     auto& node=Grid(token);Need(hooks_.clearChildren)(token);Need(hooks_.baseAttach)(token,x,y,parent,mode);

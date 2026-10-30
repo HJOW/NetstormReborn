@@ -2524,3 +2524,7 @@ set_source_files_properties(AuxiliaryDrawTests.cpp PROPERTIES COMPILE_DEFINITION
 # 실제 원본 전체 VFX/RLE의240개 독립 표면을 복원 픽셀과 대조한다.
 target_sources(netstorm_tests PRIVATE ScaledPixelsTests.cpp)
 set_source_files_properties(ScaledPixelsTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_SCALED_PIXELS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/scaled-pixels-x86.tsv\"")
+
+# 원문110개 점멸/Idle표/기본 dirty와 전체 파생 노드를 대조한다.
+target_sources(netstorm_tests PRIVATE InventoryBlinkTests.cpp)
+set_source_files_properties(InventoryBlinkTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_INVENTORY_BLINK_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/inventory-blink-x86.tsv\"")

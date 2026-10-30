@@ -45,6 +45,8 @@ struct InventoryGumpHooks {
     std::function<bool(std::uint32_t,std::array<float,2>)> inside; // 4248e0의 로컬 경계 포함 여부다.
     std::function<void()> cancelCursor; // unmodified 왼쪽 버튼의 실제 446e70다.
     std::function<void(std::string_view)> assertion; // 원본 진단 뒤에도 정상 몸체를 계속 실행한다.
+    std::function<void(std::uint32_t,bool)> redraw; // 항목의 현재 가상+8이며 숨길 때도 bit1을 지우기 전에 호출한다.
+    std::function<void(std::uint32_t)> clearBlink; // 종료 Redraw 뒤 현재 content+15의bit2만 해제한다.
 };
 // 내용물 조회는 같은 SidPool/검색기, 생성은 기존 GumpCreate를 사용한다. 별도 표를 만들지 않는다.
 class InventoryGump {
@@ -58,6 +60,7 @@ public:
     std::uint32_t ConstructItem(std::uint32_t token,float width,float height,std::uint32_t content) const;
     // 43d690: 단계4→실제 idle 등록→현재 시각+0.1을 보존한다.
     void BeginBlink(std::uint32_t token) const;
+    void IdleItem(std::uint32_t token) const; //43d6e0: 현재 두 시각/표시 전환 순서와 종료 시 Idle·내용물 정리를 유지한다.
     // 43e1e0: 자식 제거→기본 부착→두 번의 현재 목록 순회→실제 항목 생성·가상 부착이다.
     void AttachGrid(std::uint32_t token,float x,float y,std::uint32_t parent,std::uint32_t mode) const;
     // 43d850: 내용물 통지/커서 허용/목록mask/부모 전달/왼쪽 취소/기본 처리를 실행한다.

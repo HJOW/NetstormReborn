@@ -3700,9 +3700,11 @@ struct ProductionLifetimeScene {
     SessionServicesFixture external;double wall{100};FontStore fonts{assets.files,"Arial"}; // Session과 글꼴보다 UI를 먼저 반납한다.
     std::unique_ptr<RawCampaignSession> session;std::unique_ptr<RawButtonControls> controls;RawMenuControls* menus{}; // 실제 제품 처리기의 유일 소유자다.
     std::uint32_t baseCount{}; // 패널 설치 전 공통 등록 개수다.
-    // 보호 Tutorial2 로그인/영어 Start를 실행하며 SP나 내용물을 검사 setter로 만들지 않는다.
-    ProductionLifetimeScene() {
+    std::vector<std::pair<ScreenRect,std::uint32_t>> dirtyRectangles;std::uint32_t fullRequests{}; // 실제 기본 Redraw/구조 변경이 외부 Renderer에 전달한 서로 다른 요청이다.
+    // 기본 Tutorial2 또는 명시 Tutorial5 덱의 로그인/영어 Start를 실행하며 SP/내용물을 주입하지 않는다.
+    ProductionLifetimeScene(bool trainingDeck=false) {
         auto services=external.Services();UseWorldTestLogin(services);
+        if (trainingDeck) { services.ai.allocationBytes=[](auto bytes) { std::fill(bytes.begin(),bytes.end(),std::uint8_t{0xa7}); };services.ai.defaultName=[] { return std::string("AI"); }; } // Tutorial5의 실제 AI 생성자에 할당 입력/현재 영어 이름만 공급하며 UI 검사에서 게임 프레임은 진행하지 않는다.
         services.sound.wallSeconds=[this] { return wall; };
         services.production.allocationBytes=[](std::span<std::uint8_t> bytes) { CHECK(bytes.size()==kProductionDeckBytes);std::fill(bytes.begin(),bytes.end(),std::uint8_t{0xa7}); };
         services.production.effects.configInt=[](std::string_view key) { CHECK(key=="getTeleportTechFree");return 0; };
@@ -3711,13 +3713,14 @@ struct ProductionLifetimeScene {
         services.playerContent.handle=[this](auto token,auto event,auto first,auto second) { CHECK(controls);return controls->HandleGump(token,event,first,second); };
         ConfigInterface config([this](std::string_view path) { return assets.files.TryRead(path); });
         config.Configuration().Assign("DataDir=\"d\"\ncurrentLanguage=\"english\"\nmissionSpec=\"{DataDir}\\{local.1}.{currentLanguage}\"\nfortSpec=\"{DataDir}\\{local.1}.fort\"\n[END]\n");
-        MissionScript script(config,"Tutorial2");CHECK(script.Loaded());auto fort=FortTemplate::Parse(assets.files.Read(script.FortPath()),assets.game.TypeTable());
+        MissionScript script(config,trainingDeck ? "Tutorial5" : "Tutorial2");CHECK(script.Loaded());auto fort=FortTemplate::Parse(assets.files.Read(script.FortPath()),assets.game.TypeTable());
         session=std::make_unique<RawCampaignSession>(assets.game,assets.files,std::move(fort),script.FortName(),std::move(services));session->LoadLocalConnection();CHECK(session->LocalConnectionPhase()==14);
         MissionFrameGateState gate;MissionStartState startState;CampaignMissionStartEffects effects; // 실제 Start의 명시 외부 장치다.
-        effects.settingsBytes=[](std::uint32_t,std::span<std::uint8_t>) { throw std::logic_error("보호 Tutorial2 수명 검사에서 AI 생성 도달"); };effects.gameSeconds=[] { return 0.0; };
+        effects.settingsBytes=[trainingDeck](std::uint32_t,std::span<std::uint8_t> bytes) { if (!trainingDeck) throw std::logic_error("보호 Tutorial2 수명 검사에서 AI 생성 도달");std::fill(bytes.begin(),bytes.end(),std::uint8_t{0xa7}); }; // Tutorial5만 원문600BYTE 기본값/스크립트 적용 전의 할당 입력을 공급한다. AI의 진행/전투는 실행하지 않는다.
+        effects.gameSeconds=[] { return 0.0; };
         effects.refreshSp=[] {};effects.refreshCommandGump=[] {};effects.resetCamera=[] {};effects.randomGeysers=[] { throw std::logic_error("보호 Tutorial2 수명 검사에서 세계 간헐천 생성"); };
-        RawCampaignMissionStartBindings start(*session,script,gate,startState,session->MissionStartSettings(),session->MissionAiSettings(),std::move(effects));start.Start();CHECK(session->Sp(1)==10000 && session->PlayerKnown()==1);
-        controls=std::make_unique<RawButtonControls>(OriginalEdition::Patch1078,RawButtonHooks{[this] { return wall; },{},{},[this](auto form,auto flags) { session->GumpForms().Destroy({static_cast<std::uint16_t>(form)},flags); }});
+        RawCampaignMissionStartBindings start(*session,script,gate,startState,session->MissionStartSettings(),session->MissionAiSettings(),std::move(effects));start.Start();CHECK(session->Sp(1)==(trainingDeck ? 4000 : 10000) && session->PlayerKnown()==1);
+        controls=std::make_unique<RawButtonControls>(OriginalEdition::Patch1078,RawButtonHooks{[this] { return wall; },{},{},[this](auto form,auto flags) { session->GumpForms().Destroy({static_cast<std::uint16_t>(form)},flags); },[this](auto rect,auto flags) { dirtyRectangles.emplace_back(rect,flags); },[this] { ++fullRequests; }});
         RawMenuHooks hooks;hooks.command=[](auto,auto,auto) {};hooks.readInt=[](auto,std::int32_t&) {};hooks.sound=[](auto) {};hooks.poll=[](auto) { return InputEvent{InputCode::kRelease,500,350}; };hooks.cursor=[](auto) {};
         hooks.objectForms=[this]() -> GumpFormHost& { return session->GumpForms(); };hooks.gameSeconds=[] { return 0.0; };menus=&controls->EnableMenus(assets.game,fonts,std::move(hooks));
         const auto& texture=assets.game.Find("fortGump");const auto metrics=assets.game.Shapes().SquidMetrics(texture.block,0); // 같은 실제 버튼 자산이다.
@@ -5383,3 +5386,6 @@ TEST_CASE(CampaignSession_ConstructionCostReadsCurrentMissionGuard) {
 
 // 메타 배율/고정 추상색을 명시 VT와 실제 자산의 Native 픽셀로 확인한다.
 #include "CampaignAuxiliaryDrawTests.inc"
+
+// 실제 Tutorial5의 동일 생산 노드/자산과 부분 갱신 결과를 확인한다.
+#include "CampaignInventoryBlinkTests.inc"
