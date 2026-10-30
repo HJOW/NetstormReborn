@@ -1,6 +1,5 @@
 #include "client/CameraHome.h"
 #include <bit>
-#include <cmath>
 #include <limits>
 #include <stdexcept>
 #include <utility>
@@ -18,16 +17,11 @@ float Coordinate(std::span<const std::uint8_t> raw,std::size_t offset) {
     for (std::size_t index=0;index<4;++index) value|=std::uint32_t(raw[offset+index])<<(8*index);
     return std::bit_cast<float>(value);
 }
-// 원본 ftol의 signed64 절삭 결과 하위 DWORD다. NaN/범위 밖의 integer-indefinite 하위값은0이다.
-std::uint32_t TruncateLow(double value) {
-    if (!std::isfinite(value) || value<-9223372036854775808.0 || value>=9223372036854775808.0) return 0;
-    return static_cast<std::uint32_t>(static_cast<std::int64_t>(value));
-}
 }
 // 실제 현재 상태와 화면 소비자를 첫 풀 접근 전에 확인한다.
 CameraHome::CameraHome(const o::SidPool& pool,std::span<const o::RiftTypeRecord> types,CameraHomeState& state,
-    std::function<void(std::int32_t,std::int32_t)> apply,CameraHomeHooks hooks):pool_(pool),types_(types),state_(state),apply_(std::move(apply)),hooks_(std::move(hooks)) {
-    if (types.empty() || !apply_ || state.width<=0 || state.height<=0 || pool.Capacity()>65536 || bool(hooks_.suppressionDepth)!=bool(hooks_.setSuppressionDepth))
+    std::function<void(float,float)> center,CameraHomeHooks hooks):pool_(pool),types_(types),state_(state),center_(std::move(center)),hooks_(std::move(hooks)) {
+    if (types.empty() || !center_ || state.width<=0 || state.height<=0 || pool.Capacity()>65536 || bool(hooks_.suppressionDepth)!=bool(hooks_.setSuppressionDepth))
         throw std::invalid_argument("초기 카메라의 실제 풀/타입/화면 소비자 범위 오류");
 }
 // 외부 화면 효과가 로딩 깊이를 바꿨으면 예전 사본이 아니라 현재 실제 값을 읽는다.
@@ -38,12 +32,8 @@ std::uint32_t CameraHome::SuppressionDepth() const {
 void CameraHome::SetSuppressionDepth(std::uint32_t depth) const {
     if (hooks_.setSuppressionDepth) hooks_.setSuppressionDepth(depth);state_.suppressionDepth=depth;
 }
-// PATCH497f20/CD458990→458800은 좌표 반올림이나 월드 가장자리 clamp를 하지 않는다.
-void CameraHome::CenterPoint(float x,float y) const {
-    const auto px=std::bit_cast<std::int32_t>(0U-TruncateLow(-16.0*static_cast<double>(x))-static_cast<std::uint32_t>(state_.width/2)); // 원본 32BIT neg/sub와 가로 절반 차감이다.
-    const auto py=std::bit_cast<std::int32_t>(0U-TruncateLow(-11.0*static_cast<double>(y))-static_cast<std::uint32_t>(state_.height/2)); // 원본 세로 비율11과 세로 절반 차감이다.
-    ++state_.requests;++state_.revision;apply_(px,py);
-}
+// 원문433ba0/4340d0처럼 float 저장 뒤의 좌표만 부모에 넘기며 카운터/변환을 여기서 먼저 실행하지 않는다.
+void CameraHome::CenterPoint(float x,float y) const { center_(x,y); }
 // PATCH433ba0/CD488eb0은 dead를 고른 경우 다른 후보를 다시 찾지 않는다.
 void CameraHome::CenterOn(o::Sid sid) const {
     if (!sid.value) return;

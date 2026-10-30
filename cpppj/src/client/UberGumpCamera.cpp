@@ -29,10 +29,9 @@ void UberGump::PollEdgeScroll(const InputEvent& mouse) {
     ProcessEdgeScroll({pointerBoundary_.initializationFlags,edgeScrollSince_},{enabled,rawButtons_->CurrentDialog(),gameMenuState_ ? gameMenuState_->menuSerial : 0U,
         border.x,border.y,screen.Width(),screen.Height(),mouse.x,mouse.y,edgeScrollSpeed_,client_.Time().wall},hooks);
 }
-// 실제 화면 출력 뒤 목표 제한→현재 카메라 적용을 수행하고 다음 장면에만 새 원점을 사용한다.
-void UberGump::ApplyCameraFrame() {
+//497960의 실제 장치/dirty/두 setter를 같은 현재 Client에서 실행한다. 표시/음향 공개 시점은 호출자가 소유한다.
+void UberGump::CommitCameraNow() {
     auto& gameplay=*client_.GameplayGlobals();auto& camera=gameplay.Camera();auto& renderer=client_.GetRenderer();auto& screen=client_.GetScreen();
-    const auto beforePixels=camera.RendererView().pixels;const auto beforeZoom=camera.RendererView().zoom;
     const auto clip=world_ ? world_->MapView() : ScreenRect{0,0,screen.Width(),screen.Height()};
     const RawCameraCommitViewport viewport{clip.left,clip.top,clip.right-clip.left,clip.bottom-clip.top};const auto width=screen.Width(),height=screen.Height();const auto flags=screen.Flags();
     RawCameraCommitHooks apply;
@@ -53,9 +52,14 @@ void UberGump::ApplyCameraFrame() {
         if (!(screen.Flags()&ScreenMode::kSoftwareMouse)) return;const auto hotspot=client_.GetCursor().Hotspot(); //4a41c0도software64 비트가 없으면 자연 반환한다.
         renderer.SetSoftwareCursor(client_.Active() ? client_.GetCursor().SoftwareImage() : nullptr,{point.x-hotspot.x,point.y-hotspot.y},true);
     };
-    RawCameraPresentHooks present;present.flip=[&screen] { screen.Flip(); };
-    present.commit=[&] { CommitCameraTarget({camera.RendererView(),camera.Snapshot(),camera.Target(),renderer.CameraRedraw(),worldRedraw_,renderer.CameraDirtyEntries()},
-        {flags,camera.Denominator().current,width,height,viewport,clip,gameplay.selection.mouse},apply); };
+    CommitCameraTarget({camera.RendererView(),camera.Snapshot(),camera.Target(),renderer.CameraRedraw(),worldRedraw_,renderer.CameraDirtyEntries()},
+        {flags,camera.Denominator().current,width,height,viewport,clip,gameplay.selection.mouse},apply);
+}
+// 실제 화면 출력 뒤에만 flip/목표 제한을 수행하고 현재 카메라를 적용한다. Home의 직접 적용과 구별한다.
+void UberGump::ApplyCameraFrame() {
+    auto& gameplay=*client_.GameplayGlobals();auto& camera=gameplay.Camera();auto& screen=client_.GetScreen();
+    const auto beforePixels=camera.RendererView().pixels;const auto beforeZoom=camera.RendererView().zoom;const auto width=screen.Width(),height=screen.Height();
+    RawCameraPresentHooks present;present.flip=[&screen] { screen.Flip(); };present.commit=[this] { CommitCameraNow(); };
     PresentCameraTarget(camera.Target(),{gameplay.PatchDiagnostic(),width,height,gameplay.WorldCells()},present);
     if (camera.RendererView().pixels!=beforePixels || camera.RendererView().zoom!=beforeZoom) {
         if (world_) world_->CameraApplied();rebuild_=true; // 프레임 말미의 같은 원점으로 표면/입자/위치 음향을 갱신하고 다음 Compose를 예약한다.

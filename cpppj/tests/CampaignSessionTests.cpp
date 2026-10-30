@@ -1,4 +1,5 @@
 #include "o/RawFortObjectSave.h"
+#include "CameraTestDevices.h"
 #include "client/RawCampaignTutorialOneBindings.h"
 #include "client/MissionGuideInput.h"
 #include "client/CampaignTemplateStorage.h"
@@ -83,7 +84,7 @@ struct SessionServicesFixture {
     std::size_t constructionConfigReads{},constructionRefreshes{}; // 명시 건설 요청만 선택해야 하는 실제 설정/표시 외부 경계다.
     // 같은 fixture가 세션보다 오래 살아야 하며 모든 실제 선택 경계를 명시한다.
     RawCampaignSessionServices Services() {
-        names.Initialize();RawCampaignSessionServices s;s.unixSeconds=[] { return 946684800; };s.soundNames=&names;
+        names.Initialize();RawCampaignSessionServices s;s.unixSeconds=[] { return 946684800; };s.soundNames=&names;s.cameraCommit=netstorm::test::camera::CommitScreenless;
         s.ai.bridgeScratchBytes=[](auto bytes) { std::fill(bytes.begin(),bytes.end(),std::uint8_t{0x71}); }; //검사의명시caller초기입력이며본문진행/성공값을만들지않는다.
         s.ai.names.language=[] { return 1U; };s.ai.names.translate=s.ai.names.substitute=[](std::string_view text) { return std::string(text); }; //영어와치환변수없는명시장치입력으로실제객체이름몸체를실행한다.
         s.missionOutcome.demo=[] { return 0U; }; //공통Session검사는명시일반게임입력이며데모검사는자기게이트에연결한다.

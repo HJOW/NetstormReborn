@@ -196,6 +196,7 @@ private:
     std::int32_t CameraX() const { return CameraGlobals().Snapshot().pixels[0]; } // 현재 signed 픽셀X다.
     std::int32_t CameraY() const { return CameraGlobals().Snapshot().pixels[1]; } // 현재 signed 픽셀Y다.
     void ApplyCameraPixels(std::int32_t x,std::int32_t y); // 목표→두 실제setter만 적용하며 현재표시 통지는 상위 호출자가 원래 위치에서 수행한다.
+    void CommitCampaignCamera(); //Home/초기시야/명시SID의433aa0 뒤 실제497960을 적용하고 변경된 현재view만 표면/음향에 공개한다.
     // selected_: 현재 선택한 객체·컨트롤의 번호 또는 토큰.
     std::uint32_t& selected_{gameplayGlobals_->selection.selected}; // SquidId도uint32이며 Sid16bit로 alias하거나 잘라 저장하지 않는다.
     std::uint32_t& highlightMode_{gameplayGlobals_->selection.mode};std::uint32_t& mouseType_{gameplayGlobals_->selection.mouseType}; //5cae90/5caea4의 같은 현재 DWORD다.

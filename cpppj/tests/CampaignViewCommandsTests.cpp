@@ -1,7 +1,9 @@
 // 실제 GameWorld/Session의 Home·명시 SID/owner·Carrier Kernel 예약과 Reload 현재 목록을 검증한다.
 #include "DudeSpawnSupport.h"
+#include "CameraTestDevices.h"
 #include "client/GameWorld.h"
 #include "client/ClientLocalStateGlobals.h"
+#include "client/ClientKencloudGlobals.h"
 #include "client/RawCameraCommit.h"
 #include <cstring>
 #include "o/RawFortObjectLoad.h"
@@ -14,7 +16,7 @@ struct CameraCommandServices {
     SoundList names{OriginalEdition::Patch1078};std::array<std::uint8_t,4> you{'Y','o','u',0}; // 장기 소리 이름표와 명시 번역 입력이다.
     // 별도 창/장치 없이 같은 원본 Session을 설치하는 실제 외부 효과 계약이다.
     RawCampaignSessionServices Make() {
-        names.Initialize();RawCampaignSessionServices result;result.soundNames=&names;result.unixSeconds=[] { return 946684800; };
+        names.Initialize();RawCampaignSessionServices result;result.soundNames=&names;result.unixSeconds=[] { return 946684800; };result.cameraCommit=netstorm::test::camera::CommitScreenless;
         result.production.allocationBytes=[](auto bytes) { std::fill(bytes.begin(),bytes.end(),std::uint8_t{0x71}); };result.sound.wallSeconds=[] { return 100.0; };
         result.sound.play=[](SoundHandle sound,std::uint32_t,std::uint32_t,std::uint32_t,std::uint32_t,std::uint32_t) { return sound; };result.sound.playLoopAt=[](float,float,SoundHandle current,SoundHandle sound) { return current ? current : sound; };result.sound.playOnceAt=[](float,float,SoundHandle sound,std::uint32_t,std::uint32_t) { return sound; };result.sound.stop=[](SoundHandle) {};result.sound.isPlaying=[](SoundHandle) { return 0U; };
         result.install.translateYou=[this] { return std::span<const std::uint8_t>(you); };result.install.setConfig=[](std::string_view,std::span<const std::uint8_t>) {};result.install.refreshWindowTitle=[] {};result.install.resetCamera=[] {};
@@ -78,4 +80,22 @@ TEST_CASE(CampaignViewCommands_CenterRequestDefersCurrentViewsUntilNativeCommit)
     CommitCameraTarget({camera.RendererView(),camera.Snapshot(),camera.Target(),redraw,worldRedraw,dirty},{flags,denominator,width,height,viewport,clip,mouse},hooks);
     CHECK(camera.RendererView().pixels==camera.Target().pixels && camera.Snapshot().pixels==camera.Target().pixels && locks==1 && unlocks==1 && rootRedraws==2);CHECK(scrolls==2 && local->MetaRebuild()==0 && soundViews==0);
     world.CameraApplied();CHECK(soundViews==1 && world.TakeChanged()); // 실제 프레임 말미의 적용 결과만 기존 표면/입자/음향에 공개한다.
+}
+
+// 같은 Client의 두 카운터/현재 목표와 화면 장치 호출 위치를 실제 Home/무효 대상에서 확인한다.
+TEST_CASE(CampaignViewCommands_ImmediateHomeUsesSharedCountersAndFullCommit) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);CameraCommandServices devices;auto services=devices.Make();
+    const auto gameplay=std::make_shared<ClientGameplayGlobals>();const auto local=std::make_shared<ClientLocalStateGlobals>();const auto cloud=std::make_shared<ClientKencloudGlobals>();services.gameplayGlobals=gameplay;services.localStateGlobals=local;services.kencloudGlobals=cloud; // Session 바깥에서 같은 Client 수명의 세 owner를 유지한다.
+    auto& camera=gameplay->Camera();std::uint32_t initialization{};camera.InitializeNativeRenderer(640,480,256,cloud->WorldRedraw(),initialization);std::vector<std::array<std::uint32_t,6>> entered; // 현재 목표/이전 적용값과두 실제 공유 카운터다.
+    services.cameraCommit=[&](const CampaignCameraCommitContext& context) {
+        CHECK(&context.camera==&camera && &context.worldRedraw==&cloud->WorldRedraw() && context.width==640 && context.height==480);
+        entered.push_back({static_cast<std::uint32_t>(camera.Target().pixels[0]),static_cast<std::uint32_t>(camera.Target().pixels[1]),static_cast<std::uint32_t>(camera.RendererView().pixels[0]),static_cast<std::uint32_t>(camera.RendererView().pixels[1]),context.worldRedraw,local->MetaRebuild()});
+        netstorm::test::camera::CommitScreenless(context); // 현재 카메라를 임의setter로 바꾸지 않고 실제497960을 실행한다.
+    };
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());GameWorld world(assets.game,assets.files,std::move(fort),{},"thewarbegins",std::move(services),{640,480});auto& session=world.Session();CHECK(!entered.empty());
+    auto types=session.World().MutableTypes();types[70].footX=3;types[70].footY=2;types[70].flags2=0;const auto target=CameraCommandTarget(session,10,20);auto players=session.PlayerRecords();Put(players,session.LocalOwner()*180U+0x7c,target.value);const auto before=camera.RendererView().pixels;entered.clear();cloud->WorldRedraw()=0xffffffffU;local->MetaRebuild()=0xffffffffU;std::uint32_t sounds{};world.soundViewChanged=[&](auto) { ++sounds; };world.TakeChanged();
+    world.Home(false);CHECK(entered.size()==1 && sounds==1 && world.TakeChanged());if (entered.size()!=1) return;CHECK((entered[0]==std::array<std::uint32_t,6>{static_cast<std::uint32_t>(-208),static_cast<std::uint32_t>(-42),static_cast<std::uint32_t>(before[0]),static_cast<std::uint32_t>(before[1]),0,0}));
+    CHECK((camera.RendererView().pixels==std::array<std::int32_t,2>{-208,-42}) && camera.Snapshot().pixels==camera.RendererView().pixels); // 즉시 부모는 Present의 가장자리 제한을 거치지 않는다.
+    world.Home(false);CHECK(entered.size()==2 && cloud->WorldRedraw()==1 && local->MetaRebuild()==1 && sounds==1 && !world.TakeChanged()); // 같은 위치도 부모 카운터/실제commit은 호출하되 표면/음향을 중복 공개하지 않는다.
+    session.Core().pool.AllocatedBytes(target)[11]=2;world.Home(false);CHECK(entered.size()==2 && cloud->WorldRedraw()==1 && local->MetaRebuild()==1 && sounds==1); // 첫 Home SID가dead면 다른 대상이나 부모를 요청하지 않는다.
 }

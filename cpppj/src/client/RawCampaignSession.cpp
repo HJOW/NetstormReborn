@@ -3206,7 +3206,12 @@ struct RawCampaignSession::Impl {
         hooks.contentPreview=[this](Sid parent) {
             StartSelectionContentPreview(core.pool,parent,objectState.loadingDepth,[this](Sid sid,std::uint32_t event,float payload) { static_cast<void>(core.processes.AddRegular(sid,event,payload)); },SessionMissing<void>());
         };
-        return CameraHome(core.pool,core.types,state,std::move(apply),std::move(hooks));
+        return CameraHome(core.pool,core.types,state,[this,&state,apply=std::move(apply)](float x,float y) {
+            auto& camera=gameplayGlobals->Camera();camera.CenterImmediately(x,y,state.width,state.height,worldRedraw,localStateGlobals->MetaRebuild(),[&] {
+                if (!apply) throw std::logic_error("중심 이동의 명시497960 소비자 미연결");
+                apply(camera.Target().pixels[0],camera.Target().pixels[1]); // 같은 목표/두 공유 전역 쓰기가 끝난 뒤에만 실제 commit 경계를 호출한다.
+            });
+        },std::move(hooks));
     }
     #include "client/RawCampaignRitual.inc"
     // State 부모가 지정하는 같은 현재 Player와 같은 실제 Deck owner를 기존 원문 자식에 빌린다.
@@ -3515,6 +3520,11 @@ void RawCampaignSession::ResetCamera(CameraHomeState& state,std::function<void(s
 // 같은 장기 Camera/LocalState owner에만 요청하며 현재 표면·위치 음향·snapshot을 변경하지 않는다.
 void RawCampaignSession::RequestCameraCenter(float x,float y,std::int32_t width,std::int32_t height) {
     CameraGlobals().RequestCenter(x,y,width,height,impl_->localStateGlobals->MetaRebuild());
+}
+// 실제 Client나 명시 독립 화면 장치가 제공한 같은497960만 호출한다.
+void RawCampaignSession::CommitRequestedCamera(std::int32_t width,std::int32_t height) {
+    if (!impl_->services.cameraCommit) throw std::logic_error("Session의 실제 즉시 카메라 적용 장치 미연결");
+    impl_->services.cameraCommit({CameraGlobals(),impl_->worldRedraw,width,height});
 }
 // DWORD SID를 검증한 뒤 WORD 물리 주소로 바꾸며0은 원문 CenterOn의 자연 반환이다.
 void RawCampaignSession::CenterCameraOn(std::uint32_t sid,CameraHomeState& state,std::function<void(std::int32_t,std::int32_t)> apply) const {

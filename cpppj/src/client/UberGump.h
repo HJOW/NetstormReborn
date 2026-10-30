@@ -53,6 +53,7 @@ public:
     // 커널이 월드를 진행한 직후 변경된 실제 장면을 제출한다.
     void Frame();
     void ApplyCameraFrame(); //Present 말미의 실제 목표 제한/적용을 같은 Client·현재 월드·Gump/Screen 장치에서 수행한다.
+    void CommitCameraNow(); //497960의 실제 장치/dirty/Gump 적용만 수행한다. Home/초기시야는flip/Present 제한 없이 같은 본체를 호출한다.
     void RefreshMinimap(); // 원본00481320의커널앞위치에서실제같은HUD큐를소비한다.
     // 호스트 장면 합성을 예약한다. 원문0043dad0의 예산 재부착은 RefreshStormPower로 구별한다.
     void Refresh();

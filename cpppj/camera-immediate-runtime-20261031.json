@@ -1,0 +1,1810 @@
+{
+  "unit": 633,
+  "sourceBaseCommit": "72dda3ce",
+  "complete": true,
+  "goalComplete": false,
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "native": {
+    "inputs": 168,
+    "independentProcesses": 2,
+    "observations": 672,
+    "differences": 0,
+    "reports": [
+      {
+        "host": "HJOW-Athlon",
+        "lastFullDecompileHost": "HJOW-Athlon",
+        "lastFullDecompileDate": "2026-10-23",
+        "entry": "00433aa0",
+        "inputs": 168,
+        "observations": 336,
+        "differences": 0,
+        "originalGameExecutions": 0,
+        "executedBodies": [
+          "433aa0",
+          "497f20",
+          "4e49c0",
+          "497960",
+          "497490",
+          "4834c0"
+        ],
+        "boundaries": "기존 CommitOracle의 커서 잠금/해제·Gump redraw·Screen/배경 scroll·dirty 추가·마우스/진단만 외부 입력이다. 부모/목표/카운터/두 setter/dirty확장은 실제 원문이다.",
+        "scope": "격리10.78 함수/합성장치 입력이며 실제 게임·승패·MP 실행은 없다.10.72는 별도 부모/store순서 분석 전 공통 완료로 세지 않는다.",
+        "sha256": {
+          "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+          "tools/decomp_camera_immediate.py": "eea06c4319e4ad30a218fecf270eae172fdc43bc06aeca032cc48a674d43705a",
+          "tools/decomp_camera_commit.py": "fb41b9dab7643ef69417c2ad74a22060e670cad790f6368bfd10daad19c89b7c",
+          "tools/decomp_priestmenu.py": "8d1474792e7511fa777e7bd7bd369f2a2a0f9f5c35643e420d65a3fa4744bac9",
+          "extracted/cpp-camera-immediate-633-20261031/native-v4.tsv": "ec4fcc64884fb117046efbc27c0e6f58e045e787664c9c7038a032e02e97c6ca"
+        }
+      },
+      {
+        "host": "HJOW-Athlon",
+        "lastFullDecompileHost": "HJOW-Athlon",
+        "lastFullDecompileDate": "2026-10-23",
+        "entry": "00433aa0",
+        "inputs": 168,
+        "observations": 336,
+        "differences": 0,
+        "originalGameExecutions": 0,
+        "executedBodies": [
+          "433aa0",
+          "497f20",
+          "4e49c0",
+          "497960",
+          "497490",
+          "4834c0"
+        ],
+        "boundaries": "기존 CommitOracle의 커서 잠금/해제·Gump redraw·Screen/배경 scroll·dirty 추가·마우스/진단만 외부 입력이다. 부모/목표/카운터/두 setter/dirty확장은 실제 원문이다.",
+        "scope": "격리10.78 함수/합성장치 입력이며 실제 게임·승패·MP 실행은 없다.10.72는 별도 부모/store순서 분석 전 공통 완료로 세지 않는다.",
+        "sha256": {
+          "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+          "tools/decomp_camera_immediate.py": "eea06c4319e4ad30a218fecf270eae172fdc43bc06aeca032cc48a674d43705a",
+          "tools/decomp_camera_commit.py": "fb41b9dab7643ef69417c2ad74a22060e670cad790f6368bfd10daad19c89b7c",
+          "tools/decomp_priestmenu.py": "8d1474792e7511fa777e7bd7bd369f2a2a0f9f5c35643e420d65a3fa4744bac9",
+          "extracted/cpp-camera-immediate-633-20261031/native-v5.tsv": "ec4fcc64884fb117046efbc27c0e6f58e045e787664c9c7038a032e02e97c6ca"
+        }
+      }
+    ],
+    "fixtureSha256": "ec4fcc64884fb117046efbc27c0e6f58e045e787664c9c7038a032e02e97c6ca"
+  },
+  "preliminaryNative": {
+    "files": [
+      "native-v1.json",
+      "native-v2.json",
+      "native-v3.json"
+    ],
+    "scope": "초안/전체전역11개두정밀도대조보완전의준비이며최종v4/v5의672와합산하지않는다.다섯fixture바이트는모두같다."
+  },
+  "checks": {
+    "passed": true,
+    "tests": 70,
+    "filters": [
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "CameraImmediate_"
+        ],
+        "binarySha256": "6ad73280d970a024fdb6be5d6ef77a7a4405523f92dd6d7d670c53f41c9d83be",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 0.48825229999783915,
+        "stdoutSha256": "ec96b389aab95b4499284c09575a733f17ee4a8f3d27fa3589652683f0b43e98",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "CameraImmediate_",
+        "tests": 2,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "CampaignViewCommands_"
+        ],
+        "binarySha256": "6ad73280d970a024fdb6be5d6ef77a7a4405523f92dd6d7d670c53f41c9d83be",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 5.566569199996593,
+        "stdoutSha256": "ab48aa807e1c2d7506b58b56709b0f3a9dd4372d6937d12cfab1811173a03f89",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "CampaignViewCommands_",
+        "tests": 6,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "CameraHome_"
+        ],
+        "binarySha256": "6ad73280d970a024fdb6be5d6ef77a7a4405523f92dd6d7d670c53f41c9d83be",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 0.7413684999992256,
+        "stdoutSha256": "1f354eb8231b648a5621e1a5394242bc736634176edabfeb34ff27d5927fff41",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "CameraHome_",
+        "tests": 3,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "CameraViewCommands_"
+        ],
+        "binarySha256": "6ad73280d970a024fdb6be5d6ef77a7a4405523f92dd6d7d670c53f41c9d83be",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 0.5894507999983034,
+        "stdoutSha256": "36b1c9e2a55ca012f8e05e3c12fd95b277295681f5077113061ef1931348d39e",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "CameraViewCommands_",
+        "tests": 4,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "CameraCommit_"
+        ],
+        "binarySha256": "6ad73280d970a024fdb6be5d6ef77a7a4405523f92dd6d7d670c53f41c9d83be",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 0.5031842999960645,
+        "stdoutSha256": "638909e7afc51e87e9d9320e666b9127dbaea65c3cb4fcd505cad6f37a110f83",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "CameraCommit_",
+        "tests": 4,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "CameraPresent_"
+        ],
+        "binarySha256": "6ad73280d970a024fdb6be5d6ef77a7a4405523f92dd6d7d670c53f41c9d83be",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 0.48223699999653036,
+        "stdoutSha256": "af807b67f344c7e99911ba2552b42b69e18302b696f9cd4643ce08068b0338ab",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "CameraPresent_",
+        "tests": 3,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "CameraCenter_"
+        ],
+        "binarySha256": "6ad73280d970a024fdb6be5d6ef77a7a4405523f92dd6d7d670c53f41c9d83be",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 0.4975865000014892,
+        "stdoutSha256": "2f2b105d5f09f00b18e32599ccca78a7fe5029886ce93062d9aa9b5d182582e4",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "CameraCenter_",
+        "tests": 1,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "CameraView_"
+        ],
+        "binarySha256": "6ad73280d970a024fdb6be5d6ef77a7a4405523f92dd6d7d670c53f41c9d83be",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 8.404485499995644,
+        "stdoutSha256": "905ac5f79d7640bc5b4e9aeb0af090723f1aa011a217a2e834d9e2a93e883b62",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "CameraView_",
+        "tests": 8,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "SessionPlayerCoreRefresh_"
+        ],
+        "binarySha256": "6ad73280d970a024fdb6be5d6ef77a7a4405523f92dd6d7d670c53f41c9d83be",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 8.334798500000034,
+        "stdoutSha256": "f623d14370471c14adc41cbf96b22cf23a9edfdb0c1b5596d70a7b83e310ac76",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "SessionPlayerCoreRefresh_",
+        "tests": 3,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "GameWorldSelectionGlobals_"
+        ],
+        "binarySha256": "6ad73280d970a024fdb6be5d6ef77a7a4405523f92dd6d7d670c53f41c9d83be",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 12.926377099996898,
+        "stdoutSha256": "d62962a2b49fc805c998cec97a73043e73547aa4590c02d45b3fb1a13311bd6d",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "GameWorldSelectionGlobals_",
+        "tests": 1,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "HideBuildings_"
+        ],
+        "binarySha256": "6ad73280d970a024fdb6be5d6ef77a7a4405523f92dd6d7d670c53f41c9d83be",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 1.5169868000011775,
+        "stdoutSha256": "9878b0788fd2f9cc6a5efcb965f95b2216290c928846ed650aaf1e495d6c04d6",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "HideBuildings_",
+        "tests": 1,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "CampaignManaAdditional_"
+        ],
+        "binarySha256": "6ad73280d970a024fdb6be5d6ef77a7a4405523f92dd6d7d670c53f41c9d83be",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 1.6230999999970663,
+        "stdoutSha256": "3dc595ebbdb5e57df929bd79aba5809435fc3e35318cf3420e8254ed12533d71",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "CampaignManaAdditional_",
+        "tests": 1,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "CampaignAuxiliaryDraw_"
+        ],
+        "binarySha256": "6ad73280d970a024fdb6be5d6ef77a7a4405523f92dd6d7d670c53f41c9d83be",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 1.6072750000021188,
+        "stdoutSha256": "a626eb1bc9e4d777c55812d02a1429549514a13e6bf75954fd38651f27e5661e",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "CampaignAuxiliaryDraw_",
+        "tests": 1,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "CameraPan_"
+        ],
+        "binarySha256": "6ad73280d970a024fdb6be5d6ef77a7a4405523f92dd6d7d670c53f41c9d83be",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 0.7101043000002392,
+        "stdoutSha256": "8c3eb47a63dcdfb85bb88e6fe66ceeea5cf6bc5f65a2a530add801f662b29666",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "CameraPan_",
+        "tests": 2,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "EdgeScroll_"
+        ],
+        "binarySha256": "6ad73280d970a024fdb6be5d6ef77a7a4405523f92dd6d7d670c53f41c9d83be",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 0.5190830000065034,
+        "stdoutSha256": "212a23cb4049a0df7e0fe87c4b8ad4f8428e6e4561a4bd73d346b63c72144f99",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "EdgeScroll_",
+        "tests": 3,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "MinimapDirty_"
+        ],
+        "binarySha256": "6ad73280d970a024fdb6be5d6ef77a7a4405523f92dd6d7d670c53f41c9d83be",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 0.7068196999971406,
+        "stdoutSha256": "a2aa9710e1fb0416e8edcd5d9cea4b16600ebb1dcdab5450c02a5aa5e68862ff",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "MinimapDirty_",
+        "tests": 2,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "MinimapGeometry_"
+        ],
+        "binarySha256": "6ad73280d970a024fdb6be5d6ef77a7a4405523f92dd6d7d670c53f41c9d83be",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 0.4745935999962967,
+        "stdoutSha256": "b835c6e27f4c2a24449deeb0adfeecc4603f6eaad1e14b1aa9ecb07fe0ed6f60",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "MinimapGeometry_",
+        "tests": 1,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "MinimapBlit_"
+        ],
+        "binarySha256": "6ad73280d970a024fdb6be5d6ef77a7a4405523f92dd6d7d670c53f41c9d83be",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 0.6792067999995197,
+        "stdoutSha256": "24961a8db251859de1aaac88a10551877a6a6b32cf2b993433a72e8ee6d129c0",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "MinimapBlit_",
+        "tests": 2,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "MinimapRaster_"
+        ],
+        "binarySha256": "6ad73280d970a024fdb6be5d6ef77a7a4405523f92dd6d7d670c53f41c9d83be",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 2.9410130999967805,
+        "stdoutSha256": "340f5b3a2258c52a113838af52de5b96dacca2feb11ecd953d8c0c616c4a22e8",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "MinimapRaster_",
+        "tests": 1,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "metadisplayDirty_"
+        ],
+        "binarySha256": "6ad73280d970a024fdb6be5d6ef77a7a4405523f92dd6d7d670c53f41c9d83be",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 0.9983356000011554,
+        "stdoutSha256": "e157953d3461a79e93dddf84b3fc88a8ed6eb94620586e4d1b5abb8c2a56d06a",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "metadisplayDirty_",
+        "tests": 7,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "ScreenScroll_"
+        ],
+        "binarySha256": "6ad73280d970a024fdb6be5d6ef77a7a4405523f92dd6d7d670c53f41c9d83be",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 0.5361196999947424,
+        "stdoutSha256": "64faf6fc3fcc1ff18eb62fc27bd3ceb7626642f4e219ed9c535526a5a8c30be3",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "ScreenScroll_",
+        "tests": 4,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "ScreenPresentation_"
+        ],
+        "binarySha256": "6ad73280d970a024fdb6be5d6ef77a7a4405523f92dd6d7d670c53f41c9d83be",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 0.49595160000171745,
+        "stdoutSha256": "e7ac911238149e606812e5636707bbaa49a5433ce5c7081d7d7df57f29c85977",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "ScreenPresentation_",
+        "tests": 5,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "ClientStateWorldCleanup_"
+        ],
+        "binarySha256": "6ad73280d970a024fdb6be5d6ef77a7a4405523f92dd6d7d670c53f41c9d83be",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 0.7660754000025918,
+        "stdoutSha256": "b9fab8b0911e3e908e2ae85b66a568795cf83d6d49eddd43d89a9140aa0c862c",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "ClientStateWorldCleanup_",
+        "tests": 5,
+        "failed": 0
+      }
+    ],
+    "registered": 3551,
+    "binarySha256": "6ad73280d970a024fdb6be5d6ef77a7a4405523f92dd6d7d670c53f41c9d83be"
+  },
+  "builds": {
+    "build-v1": {
+      "exitCode": 0,
+      "warnings": 0,
+      "errors": 0,
+      "logSha256": "6f6a8c76a9d01fb7bb9ee704bacd4a381d8e842414152effc9da8834a092947d"
+    },
+    "build-v2": {
+      "exitCode": 0,
+      "warnings": 0,
+      "errors": 0,
+      "logSha256": "71bd2c76bd87680490449204539b33da7960c377e515cfe562a5c046b02b3978"
+    }
+  },
+  "gameSha256": "d68fa89be7130a74804c8f2616946d4327d6b51cd79a14308095cad494c9bfe1",
+  "testsSha256": "6ad73280d970a024fdb6be5d6ef77a7a4405523f92dd6d7d670c53f41c9d83be",
+  "testedSourceSha256": {
+    "cpppj/src/client/ClientCameraGlobals.cpp": "51137addbbda6208b098ad87d32724513c0db339ade7542b83c478f489d7b0e1",
+    "cpppj/src/client/ClientCameraGlobals.h": "ab58b15121a189e6197bb6f51f252e30e75a0c2e42387b46564dc8ca86e0e416",
+    "cpppj/src/client/CameraHome.cpp": "0c1e369bab82e1ed41d69e5e892a5f849e4e102b4163867cf4391dfc3d0f418c",
+    "cpppj/src/client/CameraHome.h": "b5d7f6067ba180fc6988a0b09a811f1fc29a0c8172f29fe595e8cfaf1ecf5bdc",
+    "cpppj/src/client/RawCampaignSession.cpp": "e6cf184aeb87bd2cd08e749653e83c456694ef8df8a0d4ae2214b4165807159c",
+    "cpppj/src/client/RawCampaignSession.h": "a23ee6409c98ea4980c2cf87950b7e84793c132d9fdf4fd1704ee415cb983233",
+    "cpppj/src/client/GameWorld.cpp": "3a9083d13d06777bd02798225c4f4995ee309bcf7338ffa5f0efb858f0889845",
+    "cpppj/src/client/GameWorld.h": "d208850f443a6948b620c73afe59b7814357afed9e5f62fab8cc338d15ed7f19",
+    "cpppj/src/client/UberGump.h": "45f511552d58caf26c842381979c77b3b49f5246a356a258ef4cac2190325a83",
+    "cpppj/src/client/UberGumpCamera.cpp": "51e24de0d67184309222c640425f59cf3258627ed97a719ccdb9aec01a607682",
+    "cpppj/src/client/CampaignClientServices.cpp": "c26faf0f231e7177f3dd59f758864bfc3f83657d93998d1a9f41f85d95c20716",
+    "cpppj/src/app/main.cpp": "613995551ebd69717ef92c1b6ce47026e0d9f144d1c3ed468eb88d4d62b5bd1b",
+    "cpppj/tests/CameraHomeTests.cpp": "7e21af4dfe7427e93e3e332d450be6f1cbf995171e2ba70b0914bd00ca1d76d8",
+    "cpppj/tests/CameraViewCommandsTests.cpp": "6c42f93bdd6f8195e324ec6b66eabf96fa414bd88d33e6655ce176502f2160ef",
+    "cpppj/tests/CameraCommitTests.cpp": "4961666e09295fa25c9220f13ebc90e3f63600eedb1cf3b9320ff7733f1bdb25",
+    "cpppj/tests/CampaignSessionTests.cpp": "1827e3763d502087a0df699463c212e87d6410e9cf43ef6a4e709a64853a7403",
+    "cpppj/tests/CampaignViewCommandsTests.cpp": "225461ccae6eb3905b884b03b4f878edd4f410424e53fdf969141f3bfaf89dfb",
+    "cpppj/tests/HideBuildingsTests.cpp": "9bfb5d61246f48718a34ecb492e137dddea1d7405179bb2a4ab616003133d026",
+    "cpppj/tests/SessionPlayerCoreRefreshTests.cpp": "6f163dfd64cd8476b0dac5e60641ffbf50b66696233bf7121ca8ef24a10c0375",
+    "cpppj/tests/CameraTestDevices.h": "846f44ffa13638816af2dc83a473226e6180f1f4c61b17665e6e4eeb3bcb72e3",
+    "cpppj/tests/CameraImmediateTests.inc": "66923e0c5c95ecb0a5de322ae08f1d9609b52ac3c1edd41e6a1a1718324d7719",
+    "cpppj/tests/fixtures/camera-immediate-x86.tsv": "ec4fcc64884fb117046efbc27c0e6f58e045e787664c9c7038a032e02e97c6ca",
+    "tools/decomp_camera_immediate.py": "eea06c4319e4ad30a218fecf270eae172fdc43bc06aeca032cc48a674d43705a",
+    "tools/cpp_graph_entry_editor_smoke.py": "6c17864f45ff3704bbaff6d090bc097afb5203efbbcd727853e739c6162f2090"
+  },
+  "gui": {
+    "passed": true,
+    "gameSha256": "d68fa89be7130a74804c8f2616946d4327d6b51cd79a14308095cad494c9bfe1",
+    "packageSha256": "402206d4eb1749fcf19b5ab394771ddea8a843e3132159a712e41454a2cbdbd3",
+    "runs": 5,
+    "homeRuns": 3,
+    "editorRuns": 2,
+    "presentationPairs": 37,
+    "home": [
+      {
+        "size": [
+          1024,
+          768
+        ],
+        "fullscreen": false,
+        "passed": true,
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-camera-immediate-633-20261031\\gui-v1\\한글 배포본\\NetstormReborn-cpppj\\Netstorm.exe",
+            "--run",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-camera-immediate-633-20261031\\gui-v1\\한글 배포본\\NetstormReborn-cpppj\\game",
+            "--mission",
+            "TEST02",
+            "--no-audio",
+            "--frames",
+            "205",
+            "--set",
+            "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3",
+            "--ui-script",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-camera-immediate-633-20261031\\gui-v1\\home-1024x768\\run\\steps.tsv",
+            "--ui-report",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-camera-immediate-633-20261031\\gui-v1\\home-1024x768\\run\\states.tsv",
+            "--audio-report",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-camera-immediate-633-20261031\\gui-v1\\home-1024x768\\run\\audio.tsv",
+            "--window"
+          ],
+          "binarySha256": "d68fa89be7130a74804c8f2616946d4327d6b51cd79a14308095cad494c9bfe1",
+          "scriptSha256": "dff42ac387c076213380d5033c5200a56d58d584f3644387524f14962fd60d9f",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 31.424733399995603,
+          "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderrSha256": "01b57cfbb0889189ea3bd93c38da816ff193c6d09d7f9433078b3113dc7c9527",
+          "originalsUnchanged": true,
+          "dataUnchanged": true,
+          "dataRoot": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-camera-immediate-633-20261031\\gui-v1\\한글 배포본\\NetstormReborn-cpppj\\game"
+        },
+        "observations": {
+          "initial": {
+            "pixels": [
+              1792,
+              1530,
+              1792,
+              1530
+            ],
+            "metaRebuild": "3"
+          },
+          "minimap-pending": {
+            "pixels": [
+              1792,
+              1530,
+              2624,
+              1904
+            ],
+            "metaRebuild": "5"
+          },
+          "far": {
+            "pixels": [
+              2624,
+              1904,
+              2624,
+              1904
+            ],
+            "metaRebuild": "5"
+          },
+          "home-present": {
+            "pixels": [
+              1616,
+              1585,
+              1616,
+              1585
+            ],
+            "metaRebuild": "6"
+          },
+          "home-stable": {
+            "pixels": [
+              1616,
+              1585,
+              1616,
+              1585
+            ],
+            "metaRebuild": "6"
+          },
+          "priest-present": {
+            "pixels": [
+              1792,
+              1530,
+              1792,
+              1530
+            ],
+            "metaRebuild": "9"
+          },
+          "priest-stable": {
+            "pixels": [
+              1792,
+              1530,
+              1792,
+              1530
+            ],
+            "metaRebuild": "9"
+          },
+          "home-again": {
+            "pixels": [
+              1616,
+              1585,
+              1616,
+              1585
+            ],
+            "metaRebuild": "12"
+          },
+          "restarted": {
+            "pixels": [
+              1792,
+              1530,
+              1792,
+              1530
+            ],
+            "metaRebuild": "15"
+          },
+          "restart-priest": {
+            "pixels": [
+              1792,
+              1530,
+              1792,
+              1530
+            ],
+            "metaRebuild": "16"
+          },
+          "main-present": {
+            "pixels": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "metaRebuild": "16"
+          }
+        }
+      },
+      {
+        "size": [
+          1280,
+          720
+        ],
+        "fullscreen": true,
+        "passed": true,
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-camera-immediate-633-20261031\\gui-v1\\한글 배포본\\NetstormReborn-cpppj\\Netstorm.exe",
+            "--run",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-camera-immediate-633-20261031\\gui-v1\\한글 배포본\\NetstormReborn-cpppj\\game",
+            "--mission",
+            "TEST02",
+            "--no-audio",
+            "--frames",
+            "205",
+            "--set",
+            "SCREENW=1280;SCREENH=720;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3;startInFullScreen=1",
+            "--ui-script",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-camera-immediate-633-20261031\\gui-v1\\home-1280x720\\run\\steps.tsv",
+            "--ui-report",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-camera-immediate-633-20261031\\gui-v1\\home-1280x720\\run\\states.tsv",
+            "--audio-report",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-camera-immediate-633-20261031\\gui-v1\\home-1280x720\\run\\audio.tsv"
+          ],
+          "binarySha256": "d68fa89be7130a74804c8f2616946d4327d6b51cd79a14308095cad494c9bfe1",
+          "scriptSha256": "eae5096bdf885d5862c12844b6bc12a5c6d0a24ee8aa23b8c61baac955f70bdb",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 33.70740960000694,
+          "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderrSha256": "01b57cfbb0889189ea3bd93c38da816ff193c6d09d7f9433078b3113dc7c9527",
+          "originalsUnchanged": true,
+          "dataUnchanged": true,
+          "dataRoot": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-camera-immediate-633-20261031\\gui-v1\\한글 배포본\\NetstormReborn-cpppj\\game"
+        },
+        "observations": {
+          "initial": {
+            "pixels": [
+              1664,
+              1554,
+              1664,
+              1554
+            ],
+            "metaRebuild": "3"
+          },
+          "minimap-pending": {
+            "pixels": [
+              1664,
+              1554,
+              2496,
+              1928
+            ],
+            "metaRebuild": "5"
+          },
+          "far": {
+            "pixels": [
+              2496,
+              1928,
+              2496,
+              1928
+            ],
+            "metaRebuild": "5"
+          },
+          "home-present": {
+            "pixels": [
+              1488,
+              1609,
+              1488,
+              1609
+            ],
+            "metaRebuild": "6"
+          },
+          "home-stable": {
+            "pixels": [
+              1488,
+              1609,
+              1488,
+              1609
+            ],
+            "metaRebuild": "6"
+          },
+          "priest-present": {
+            "pixels": [
+              1664,
+              1554,
+              1664,
+              1554
+            ],
+            "metaRebuild": "9"
+          },
+          "priest-stable": {
+            "pixels": [
+              1664,
+              1554,
+              1664,
+              1554
+            ],
+            "metaRebuild": "9"
+          },
+          "home-again": {
+            "pixels": [
+              1488,
+              1609,
+              1488,
+              1609
+            ],
+            "metaRebuild": "12"
+          },
+          "restarted": {
+            "pixels": [
+              1664,
+              1554,
+              1664,
+              1554
+            ],
+            "metaRebuild": "15"
+          },
+          "restart-priest": {
+            "pixels": [
+              1664,
+              1554,
+              1664,
+              1554
+            ],
+            "metaRebuild": "16"
+          },
+          "main-present": {
+            "pixels": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "metaRebuild": "16"
+          }
+        }
+      },
+      {
+        "size": [
+          1280,
+          800
+        ],
+        "fullscreen": false,
+        "passed": true,
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-camera-immediate-633-20261031\\gui-v1\\한글 배포본\\NetstormReborn-cpppj\\Netstorm.exe",
+            "--run",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-camera-immediate-633-20261031\\gui-v1\\한글 배포본\\NetstormReborn-cpppj\\game",
+            "--mission",
+            "TEST02",
+            "--no-audio",
+            "--frames",
+            "205",
+            "--set",
+            "SCREENW=1280;SCREENH=800;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3",
+            "--ui-script",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-camera-immediate-633-20261031\\gui-v1\\home-1280x800\\run\\steps.tsv",
+            "--ui-report",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-camera-immediate-633-20261031\\gui-v1\\home-1280x800\\run\\states.tsv",
+            "--audio-report",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-camera-immediate-633-20261031\\gui-v1\\home-1280x800\\run\\audio.tsv",
+            "--window"
+          ],
+          "binarySha256": "d68fa89be7130a74804c8f2616946d4327d6b51cd79a14308095cad494c9bfe1",
+          "scriptSha256": "4b094fd2dc4ecc46fd6f7cec4ff49132f746c0fde2da40bb50a3800c4183bfbc",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 31.59841410000081,
+          "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderrSha256": "01b57cfbb0889189ea3bd93c38da816ff193c6d09d7f9433078b3113dc7c9527",
+          "originalsUnchanged": true,
+          "dataUnchanged": true,
+          "dataRoot": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-camera-immediate-633-20261031\\gui-v1\\한글 배포본\\NetstormReborn-cpppj\\game"
+        },
+        "observations": {
+          "initial": {
+            "pixels": [
+              1664,
+              1514,
+              1664,
+              1514
+            ],
+            "metaRebuild": "3"
+          },
+          "minimap-pending": {
+            "pixels": [
+              1664,
+              1514,
+              2496,
+              1888
+            ],
+            "metaRebuild": "5"
+          },
+          "far": {
+            "pixels": [
+              2496,
+              1888,
+              2496,
+              1888
+            ],
+            "metaRebuild": "5"
+          },
+          "home-present": {
+            "pixels": [
+              1488,
+              1569,
+              1488,
+              1569
+            ],
+            "metaRebuild": "6"
+          },
+          "home-stable": {
+            "pixels": [
+              1488,
+              1569,
+              1488,
+              1569
+            ],
+            "metaRebuild": "6"
+          },
+          "priest-present": {
+            "pixels": [
+              1664,
+              1514,
+              1664,
+              1514
+            ],
+            "metaRebuild": "9"
+          },
+          "priest-stable": {
+            "pixels": [
+              1664,
+              1514,
+              1664,
+              1514
+            ],
+            "metaRebuild": "9"
+          },
+          "home-again": {
+            "pixels": [
+              1488,
+              1569,
+              1488,
+              1569
+            ],
+            "metaRebuild": "12"
+          },
+          "restarted": {
+            "pixels": [
+              1664,
+              1514,
+              1664,
+              1514
+            ],
+            "metaRebuild": "15"
+          },
+          "restart-priest": {
+            "pixels": [
+              1664,
+              1514,
+              1664,
+              1514
+            ],
+            "metaRebuild": "16"
+          },
+          "main-present": {
+            "pixels": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "metaRebuild": "16"
+          }
+        }
+      }
+    ],
+    "presentations": {
+      "gui-v1/home-1024x768/run": {
+        "camera:initial": {
+          "same": true,
+          "actualSha256": "8fbb06c13ed51cc52fba6d0817c04afbb9bcb4b27857c5faf9d6009ae3d917f8",
+          "expectedSha256": "8fbb06c13ed51cc52fba6d0817c04afbb9bcb4b27857c5faf9d6009ae3d917f8",
+          "dimensions": [
+            1024,
+            768
+          ],
+          "outputRect": [
+            0,
+            0,
+            1024,
+            768
+          ]
+        },
+        "camera:minimap-pending": {
+          "same": true,
+          "actualSha256": "0cc3383f6caac7cbd40ce1d1a799a38c6dc388782ea7b95d9ec96950ee2d0fe0",
+          "expectedSha256": "0cc3383f6caac7cbd40ce1d1a799a38c6dc388782ea7b95d9ec96950ee2d0fe0",
+          "dimensions": [
+            1024,
+            768
+          ],
+          "outputRect": [
+            0,
+            0,
+            1024,
+            768
+          ]
+        },
+        "camera:far": {
+          "same": true,
+          "actualSha256": "81fcfaa395e6f827f43319b54ac564fd5481a9e7a3e9f0d3f4a24315031f174e",
+          "expectedSha256": "81fcfaa395e6f827f43319b54ac564fd5481a9e7a3e9f0d3f4a24315031f174e",
+          "dimensions": [
+            1024,
+            768
+          ],
+          "outputRect": [
+            0,
+            0,
+            1024,
+            768
+          ]
+        },
+        "camera:home-present": {
+          "same": true,
+          "actualSha256": "b8279f3a0335cc9ad7fb295c5549cb095d2cdb6dc166ff92364870948f598720",
+          "expectedSha256": "b8279f3a0335cc9ad7fb295c5549cb095d2cdb6dc166ff92364870948f598720",
+          "dimensions": [
+            1024,
+            768
+          ],
+          "outputRect": [
+            0,
+            0,
+            1024,
+            768
+          ]
+        },
+        "camera:home-stable": {
+          "same": true,
+          "actualSha256": "8bea9d5aa358e387cb12b0d0e62e3502db09431c0efe59a2f40c2a2b3bb1720c",
+          "expectedSha256": "8bea9d5aa358e387cb12b0d0e62e3502db09431c0efe59a2f40c2a2b3bb1720c",
+          "dimensions": [
+            1024,
+            768
+          ],
+          "outputRect": [
+            0,
+            0,
+            1024,
+            768
+          ]
+        },
+        "camera:priest-present": {
+          "same": true,
+          "actualSha256": "2aa8039fc139c2f0f8a61d76ad6182530f1e1f4118a2d8dba6faf0412c119bf2",
+          "expectedSha256": "2aa8039fc139c2f0f8a61d76ad6182530f1e1f4118a2d8dba6faf0412c119bf2",
+          "dimensions": [
+            1024,
+            768
+          ],
+          "outputRect": [
+            0,
+            0,
+            1024,
+            768
+          ]
+        },
+        "camera:priest-stable": {
+          "same": true,
+          "actualSha256": "41d3e42133ae9b441a3fef856721daa8d634a1edde3c3d2227bd2f9d93ff30b1",
+          "expectedSha256": "41d3e42133ae9b441a3fef856721daa8d634a1edde3c3d2227bd2f9d93ff30b1",
+          "dimensions": [
+            1024,
+            768
+          ],
+          "outputRect": [
+            0,
+            0,
+            1024,
+            768
+          ]
+        },
+        "camera:home-again": {
+          "same": true,
+          "actualSha256": "c3e3292aef61d0ea1f3221eab5a273c31ce840dc0dafb1cd9ae508a02fe0357c",
+          "expectedSha256": "c3e3292aef61d0ea1f3221eab5a273c31ce840dc0dafb1cd9ae508a02fe0357c",
+          "dimensions": [
+            1024,
+            768
+          ],
+          "outputRect": [
+            0,
+            0,
+            1024,
+            768
+          ]
+        },
+        "camera:restarted": {
+          "same": true,
+          "actualSha256": "903c7762843472ff2554ddccd0d8275df2463669be812594d767ca71d68721dd",
+          "expectedSha256": "903c7762843472ff2554ddccd0d8275df2463669be812594d767ca71d68721dd",
+          "dimensions": [
+            1024,
+            768
+          ],
+          "outputRect": [
+            0,
+            0,
+            1024,
+            768
+          ]
+        },
+        "camera:restart-priest": {
+          "same": true,
+          "actualSha256": "b9b511a05d908f3a3c98a8bfd5c7b851b27ce3b177f004e992e424d514718cb4",
+          "expectedSha256": "b9b511a05d908f3a3c98a8bfd5c7b851b27ce3b177f004e992e424d514718cb4",
+          "dimensions": [
+            1024,
+            768
+          ],
+          "outputRect": [
+            0,
+            0,
+            1024,
+            768
+          ]
+        },
+        "camera:main-present": {
+          "same": true,
+          "actualSha256": "58042d78e2460d582a91c67a94935b04605bb8b42669cfa28671593003a98d42",
+          "expectedSha256": "58042d78e2460d582a91c67a94935b04605bb8b42669cfa28671593003a98d42",
+          "dimensions": [
+            1024,
+            768
+          ],
+          "outputRect": [
+            0,
+            0,
+            1024,
+            768
+          ]
+        }
+      },
+      "gui-v1/home-1280x720/run": {
+        "camera:initial": {
+          "same": true,
+          "actualSha256": "b80f47b4c432203bb12ae92eeba74c7e336055c985a1aa53301fea023e44392d",
+          "expectedSha256": "b80f47b4c432203bb12ae92eeba74c7e336055c985a1aa53301fea023e44392d",
+          "dimensions": [
+            1920,
+            1080
+          ],
+          "outputRect": [
+            0,
+            0,
+            1920,
+            1080
+          ]
+        },
+        "camera:minimap-pending": {
+          "same": true,
+          "actualSha256": "bdc9986e15a3907e844dd9371949cef20321a0c05f828504e7be21ca1bf1b510",
+          "expectedSha256": "bdc9986e15a3907e844dd9371949cef20321a0c05f828504e7be21ca1bf1b510",
+          "dimensions": [
+            1920,
+            1080
+          ],
+          "outputRect": [
+            0,
+            0,
+            1920,
+            1080
+          ]
+        },
+        "camera:far": {
+          "same": true,
+          "actualSha256": "17bea703d69c7e7d7c656d1b599746979aa775fe64e2eb4bb9885a676ac040af",
+          "expectedSha256": "17bea703d69c7e7d7c656d1b599746979aa775fe64e2eb4bb9885a676ac040af",
+          "dimensions": [
+            1920,
+            1080
+          ],
+          "outputRect": [
+            0,
+            0,
+            1920,
+            1080
+          ]
+        },
+        "camera:home-present": {
+          "same": true,
+          "actualSha256": "a1546923c4b4994705b473170371565678de16c8a8339a7d34a63cb8b28203cb",
+          "expectedSha256": "a1546923c4b4994705b473170371565678de16c8a8339a7d34a63cb8b28203cb",
+          "dimensions": [
+            1920,
+            1080
+          ],
+          "outputRect": [
+            0,
+            0,
+            1920,
+            1080
+          ]
+        },
+        "camera:home-stable": {
+          "same": true,
+          "actualSha256": "cc25a175456d26e387766fd148e9c630fbbcc4995deee6c9195c19b2c2f293ac",
+          "expectedSha256": "cc25a175456d26e387766fd148e9c630fbbcc4995deee6c9195c19b2c2f293ac",
+          "dimensions": [
+            1920,
+            1080
+          ],
+          "outputRect": [
+            0,
+            0,
+            1920,
+            1080
+          ]
+        },
+        "camera:priest-present": {
+          "same": true,
+          "actualSha256": "a7f834573059bd7045a7bfa9506f1c9facadef77ed499e22888bd13e52d1bbea",
+          "expectedSha256": "a7f834573059bd7045a7bfa9506f1c9facadef77ed499e22888bd13e52d1bbea",
+          "dimensions": [
+            1920,
+            1080
+          ],
+          "outputRect": [
+            0,
+            0,
+            1920,
+            1080
+          ]
+        },
+        "camera:priest-stable": {
+          "same": true,
+          "actualSha256": "928d8523ea2be5c7abf671ccd9c33e801f28b929f9c2ff7f21646ce894d44b24",
+          "expectedSha256": "928d8523ea2be5c7abf671ccd9c33e801f28b929f9c2ff7f21646ce894d44b24",
+          "dimensions": [
+            1920,
+            1080
+          ],
+          "outputRect": [
+            0,
+            0,
+            1920,
+            1080
+          ]
+        },
+        "camera:home-again": {
+          "same": true,
+          "actualSha256": "5cc9c4846e55ad4d0beddd6311ac7879e28400804e0b4ddefecb3cc4aaf659b6",
+          "expectedSha256": "5cc9c4846e55ad4d0beddd6311ac7879e28400804e0b4ddefecb3cc4aaf659b6",
+          "dimensions": [
+            1920,
+            1080
+          ],
+          "outputRect": [
+            0,
+            0,
+            1920,
+            1080
+          ]
+        },
+        "camera:restarted": {
+          "same": true,
+          "actualSha256": "ce12161db5711fa900c469a522ef9cf92a3fa9a6556a60159cfc4487e669be2a",
+          "expectedSha256": "ce12161db5711fa900c469a522ef9cf92a3fa9a6556a60159cfc4487e669be2a",
+          "dimensions": [
+            1920,
+            1080
+          ],
+          "outputRect": [
+            0,
+            0,
+            1920,
+            1080
+          ]
+        },
+        "camera:restart-priest": {
+          "same": true,
+          "actualSha256": "76cbedde30ff2a52aaa7eb339aa4e5b6dfb834e3914bae4dfb6ac9a9e8ba81e4",
+          "expectedSha256": "76cbedde30ff2a52aaa7eb339aa4e5b6dfb834e3914bae4dfb6ac9a9e8ba81e4",
+          "dimensions": [
+            1920,
+            1080
+          ],
+          "outputRect": [
+            0,
+            0,
+            1920,
+            1080
+          ]
+        },
+        "camera:main-present": {
+          "same": true,
+          "actualSha256": "b3b946fac3d45bbdbdb6f375d6e01664784674746b5f16725afc2a9549bd0e74",
+          "expectedSha256": "b3b946fac3d45bbdbdb6f375d6e01664784674746b5f16725afc2a9549bd0e74",
+          "dimensions": [
+            1920,
+            1080
+          ],
+          "outputRect": [
+            0,
+            0,
+            1920,
+            1080
+          ]
+        }
+      },
+      "gui-v1/home-1280x800/run": {
+        "camera:initial": {
+          "same": true,
+          "actualSha256": "1cf3fd4ccb526ec42eaf353c247a0bf7e5382bab75fc43981f3a3e480361d738",
+          "expectedSha256": "1cf3fd4ccb526ec42eaf353c247a0bf7e5382bab75fc43981f3a3e480361d738",
+          "dimensions": [
+            1280,
+            800
+          ],
+          "outputRect": [
+            0,
+            0,
+            1280,
+            800
+          ]
+        },
+        "camera:minimap-pending": {
+          "same": true,
+          "actualSha256": "de8bdecdf4a863260995b4fa96828747b0d6dbc8d33eedc25b0e19ad5ecd9d0d",
+          "expectedSha256": "de8bdecdf4a863260995b4fa96828747b0d6dbc8d33eedc25b0e19ad5ecd9d0d",
+          "dimensions": [
+            1280,
+            800
+          ],
+          "outputRect": [
+            0,
+            0,
+            1280,
+            800
+          ]
+        },
+        "camera:far": {
+          "same": true,
+          "actualSha256": "3a3258a459da582597243ad8a95b99b1fc6e5a21f4f2c77cb35946904091c6d8",
+          "expectedSha256": "3a3258a459da582597243ad8a95b99b1fc6e5a21f4f2c77cb35946904091c6d8",
+          "dimensions": [
+            1280,
+            800
+          ],
+          "outputRect": [
+            0,
+            0,
+            1280,
+            800
+          ]
+        },
+        "camera:home-present": {
+          "same": true,
+          "actualSha256": "7a15c61cf441b723846982c92073f9f0f60c11346236e265986384b4749e4cd2",
+          "expectedSha256": "7a15c61cf441b723846982c92073f9f0f60c11346236e265986384b4749e4cd2",
+          "dimensions": [
+            1280,
+            800
+          ],
+          "outputRect": [
+            0,
+            0,
+            1280,
+            800
+          ]
+        },
+        "camera:home-stable": {
+          "same": true,
+          "actualSha256": "5970ca4c9244c0024214b6d03494bd30b0a5aec6d50a60e57a3f29e95b3135e3",
+          "expectedSha256": "5970ca4c9244c0024214b6d03494bd30b0a5aec6d50a60e57a3f29e95b3135e3",
+          "dimensions": [
+            1280,
+            800
+          ],
+          "outputRect": [
+            0,
+            0,
+            1280,
+            800
+          ]
+        },
+        "camera:priest-present": {
+          "same": true,
+          "actualSha256": "ad7ac690c775be6efeccb83bb19aeaaedb1d7c496bec2f2a6e89eca966c73dbe",
+          "expectedSha256": "ad7ac690c775be6efeccb83bb19aeaaedb1d7c496bec2f2a6e89eca966c73dbe",
+          "dimensions": [
+            1280,
+            800
+          ],
+          "outputRect": [
+            0,
+            0,
+            1280,
+            800
+          ]
+        },
+        "camera:priest-stable": {
+          "same": true,
+          "actualSha256": "f2a8f723459e9adc90b8b35a7a36a96f860121398cda652cab7f70790b585346",
+          "expectedSha256": "f2a8f723459e9adc90b8b35a7a36a96f860121398cda652cab7f70790b585346",
+          "dimensions": [
+            1280,
+            800
+          ],
+          "outputRect": [
+            0,
+            0,
+            1280,
+            800
+          ]
+        },
+        "camera:home-again": {
+          "same": true,
+          "actualSha256": "69e1f1963f0286ea0f6b2686ebb9bf1405846ae07a8b7824c05f09f70893da9d",
+          "expectedSha256": "69e1f1963f0286ea0f6b2686ebb9bf1405846ae07a8b7824c05f09f70893da9d",
+          "dimensions": [
+            1280,
+            800
+          ],
+          "outputRect": [
+            0,
+            0,
+            1280,
+            800
+          ]
+        },
+        "camera:restarted": {
+          "same": true,
+          "actualSha256": "d51f67b7aee48f5f2a69eb926367b6cc60473f097a24a644341784cf26809c4d",
+          "expectedSha256": "d51f67b7aee48f5f2a69eb926367b6cc60473f097a24a644341784cf26809c4d",
+          "dimensions": [
+            1280,
+            800
+          ],
+          "outputRect": [
+            0,
+            0,
+            1280,
+            800
+          ]
+        },
+        "camera:restart-priest": {
+          "same": true,
+          "actualSha256": "52eeacfcd2f2a4d1fed355d9db123d66aa58ef0d3b5fb581edf640452070f489",
+          "expectedSha256": "52eeacfcd2f2a4d1fed355d9db123d66aa58ef0d3b5fb581edf640452070f489",
+          "dimensions": [
+            1280,
+            800
+          ],
+          "outputRect": [
+            0,
+            0,
+            1280,
+            800
+          ]
+        },
+        "camera:main-present": {
+          "same": true,
+          "actualSha256": "bb71d86ddce9c0c235dea1cf0c7d7514677efd5352683cd01915fd5687874ad2",
+          "expectedSha256": "bb71d86ddce9c0c235dea1cf0c7d7514677efd5352683cd01915fd5687874ad2",
+          "dimensions": [
+            1280,
+            800
+          ],
+          "outputRect": [
+            0,
+            0,
+            1280,
+            800
+          ]
+        }
+      },
+      "gui-editor-v3/1024x768": {
+        "editor": {
+          "same": true,
+          "actualSha256": "2cdb6eafb840cbdedeb95106091be83202a0356aa682dfbbfcccc9b84ddf5471",
+          "expectedSha256": "2cdb6eafb840cbdedeb95106091be83202a0356aa682dfbbfcccc9b84ddf5471",
+          "dimensions": [
+            1024,
+            768
+          ],
+          "outputRect": [
+            0,
+            0,
+            1024,
+            768
+          ]
+        },
+        "final": {
+          "same": true,
+          "actualSha256": "4d72917c6f495bce2dab97b0085643b589ba796c87f738d07b7610811a72af75",
+          "expectedSha256": "4d72917c6f495bce2dab97b0085643b589ba796c87f738d07b7610811a72af75",
+          "dimensions": [
+            1024,
+            768
+          ],
+          "outputRect": [
+            0,
+            0,
+            1024,
+            768
+          ]
+        }
+      },
+      "gui-editor-v3/1280x720": {
+        "editor": {
+          "same": true,
+          "actualSha256": "8aa463bf18423bb8135783da188b5f68e71359af0b84615747076a673f717fd9",
+          "expectedSha256": "8aa463bf18423bb8135783da188b5f68e71359af0b84615747076a673f717fd9",
+          "dimensions": [
+            1280,
+            720
+          ],
+          "outputRect": [
+            0,
+            0,
+            1280,
+            720
+          ]
+        },
+        "final": {
+          "same": true,
+          "actualSha256": "eb8174b42ea96c6897efdb699ac42a9c71eeacd170b40036814af6301d914015",
+          "expectedSha256": "eb8174b42ea96c6897efdb699ac42a9c71eeacd170b40036814af6301d914015",
+          "dimensions": [
+            1280,
+            720
+          ],
+          "outputRect": [
+            0,
+            0,
+            1280,
+            720
+          ]
+        }
+      }
+    },
+    "runEvidence": {
+      "gui-v1/home-1024x768/run/run.json": "1b084b2c756bf07140b670828a572f3a6030d684bf29499abbfe341aa4fcdcd7",
+      "gui-v1/home-1280x720/run/run.json": "165fccdc2e38240a61ebcd16e828e37a62791e524e4cbee7cf2abe189bb975ac",
+      "gui-v1/home-1280x800/run/run.json": "8962a48df290e30045fb0b7621dda0e0be7f06d489e68868b263292c3404cf28",
+      "gui-editor-v3/1024x768/run.json": "b4163c81cf7212853219a096430e93febb7e58ad09161b18c88fdf0c3d5c9929",
+      "gui-editor-v3/1280x720/run.json": "badca3e97a26c488b69b8eee032eebf46aec47de2c960196a3bc2f3f92e30b3a"
+    },
+    "editorSource": "gui-editor-v3",
+    "preliminary": "별도6회:구형Edit입력은기본50목록에없는TEST02선택으로종료1;첫probe는UserNotUpdated안내미처리로종료1;정상기본목록probe-v2는50개/A..FWOS5·TEST02부재·Cancel복귀성공;전체카탈로그커스텀필터GUI-v2는180초상한후종료;probe-v3는source/work밖절대경로거부로종료1;probe-v4는자료루트내상대2원문맵/실제Editor설치성공.이6회는같은제품Home3+최종상대작업namespace Edit2의주요5회/37RGB에합산하지않는다.",
+    "scope": "같은배포의실제TEST02 F4/F5/미니맵/재시작/이탈3화면비와커스텀필터Edit→TestBattle2창이다.원본파일/목록상한/게임상태/카메라를직접변경하지않는다.금지재현/공중3종전용/신규MP/Win11/PCM/물리키/DPI/포커스검사는없다.",
+    "editorToolContract": "정상MainMenu/원문mayEditMissions=0·루트내상대fortSpec/SOLOSpec과두보호Fort바이트의독립작업사본이다.기본목록50상한/보호이관경계/Template·Graph·게임상태는변경하지않았다.",
+    "remainingCatalogIssue": "전체카탈로그의mayEditMissions=0 경로가180초상한에서끝나지않은원인은미확정이다.별도634에서원문분류/전체이관·파싱호출비용/진행을조사하며이번주요2맵성공으로해결됐다고세지않는다."
+  },
+  "guiRuns": 5,
+  "presentationPairs": 37,
+  "timingObservations": {
+    "1024x768": {
+      "camera:minimap-pending": [
+        "1792",
+        "1530",
+        "2624",
+        "1904",
+        "6",
+        "5",
+        "7",
+        "0"
+      ],
+      "camera:minimap-applied": [
+        "2624",
+        "1904",
+        "2624",
+        "1904",
+        "6",
+        "5",
+        "7",
+        "0"
+      ],
+      "camera:home-present": [
+        "1616",
+        "1585",
+        "1616",
+        "1585",
+        "6",
+        "6",
+        "7",
+        "0"
+      ],
+      "camera:home-stable": [
+        "1616",
+        "1585",
+        "1616",
+        "1585",
+        "6",
+        "6",
+        "7",
+        "0"
+      ],
+      "camera:priest-present": [
+        "1792",
+        "1530",
+        "1792",
+        "1530",
+        "6",
+        "9",
+        "7",
+        "0"
+      ],
+      "camera:priest-stable": [
+        "1792",
+        "1530",
+        "1792",
+        "1530",
+        "6",
+        "9",
+        "7",
+        "0"
+      ],
+      "camera:home-again": [
+        "1616",
+        "1585",
+        "1616",
+        "1585",
+        "6",
+        "12",
+        "7",
+        "0"
+      ],
+      "camera:restarted": [
+        "1792",
+        "1530",
+        "1792",
+        "1530",
+        "6",
+        "15",
+        "7",
+        "0"
+      ],
+      "camera:restart-priest": [
+        "1792",
+        "1530",
+        "1792",
+        "1530",
+        "6",
+        "16",
+        "7",
+        "0"
+      ]
+    },
+    "1280x720": {
+      "camera:minimap-pending": [
+        "1664",
+        "1554",
+        "2496",
+        "1928",
+        "6",
+        "5",
+        "7",
+        "0"
+      ],
+      "camera:minimap-applied": [
+        "2496",
+        "1928",
+        "2496",
+        "1928",
+        "6",
+        "5",
+        "7",
+        "0"
+      ],
+      "camera:home-present": [
+        "1488",
+        "1609",
+        "1488",
+        "1609",
+        "6",
+        "6",
+        "7",
+        "0"
+      ],
+      "camera:home-stable": [
+        "1488",
+        "1609",
+        "1488",
+        "1609",
+        "6",
+        "6",
+        "7",
+        "0"
+      ],
+      "camera:priest-present": [
+        "1664",
+        "1554",
+        "1664",
+        "1554",
+        "6",
+        "9",
+        "7",
+        "0"
+      ],
+      "camera:priest-stable": [
+        "1664",
+        "1554",
+        "1664",
+        "1554",
+        "6",
+        "9",
+        "7",
+        "0"
+      ],
+      "camera:home-again": [
+        "1488",
+        "1609",
+        "1488",
+        "1609",
+        "6",
+        "12",
+        "7",
+        "0"
+      ],
+      "camera:restarted": [
+        "1664",
+        "1554",
+        "1664",
+        "1554",
+        "6",
+        "15",
+        "7",
+        "0"
+      ],
+      "camera:restart-priest": [
+        "1664",
+        "1554",
+        "1664",
+        "1554",
+        "6",
+        "16",
+        "7",
+        "0"
+      ]
+    },
+    "1280x800": {
+      "camera:minimap-pending": [
+        "1664",
+        "1514",
+        "2496",
+        "1888",
+        "6",
+        "5",
+        "7",
+        "0"
+      ],
+      "camera:minimap-applied": [
+        "2496",
+        "1888",
+        "2496",
+        "1888",
+        "6",
+        "5",
+        "7",
+        "0"
+      ],
+      "camera:home-present": [
+        "1488",
+        "1569",
+        "1488",
+        "1569",
+        "6",
+        "6",
+        "7",
+        "0"
+      ],
+      "camera:home-stable": [
+        "1488",
+        "1569",
+        "1488",
+        "1569",
+        "6",
+        "6",
+        "7",
+        "0"
+      ],
+      "camera:priest-present": [
+        "1664",
+        "1514",
+        "1664",
+        "1514",
+        "6",
+        "9",
+        "7",
+        "0"
+      ],
+      "camera:priest-stable": [
+        "1664",
+        "1514",
+        "1664",
+        "1514",
+        "6",
+        "9",
+        "7",
+        "0"
+      ],
+      "camera:home-again": [
+        "1488",
+        "1569",
+        "1488",
+        "1569",
+        "6",
+        "12",
+        "7",
+        "0"
+      ],
+      "camera:restarted": [
+        "1664",
+        "1514",
+        "1664",
+        "1514",
+        "6",
+        "15",
+        "7",
+        "0"
+      ],
+      "camera:restart-priest": [
+        "1664",
+        "1514",
+        "1664",
+        "1514",
+        "6",
+        "16",
+        "7",
+        "0"
+      ]
+    }
+  },
+  "protectedBefore": 2628,
+  "protectedAfter": 2629,
+  "fixtureCount": 770,
+  "allExistingProtectedBytesUnchanged": true,
+  "package": {
+    "path": "extracted/cpp-camera-immediate-633-20261031/NetstormReborn-cpppj-633.zip",
+    "sha256": "402206d4eb1749fcf19b5ab394771ddea8a843e3132159a712e41454a2cbdbd3",
+    "entries": 1376,
+    "assets": 1358,
+    "allArchivedUnpackedAndOriginalAssetBytesMatch": true
+  },
+  "scope": "Home/명시SID/사제보기/초기Reset의공유WorldRedraw++→목표/실제revision→현재497960전체장치/dirty/두setter를연결했다.CameraHome은world float만부모에넘기고독립장치도실제부모/497960을명시한다.초기MapView는현재Gump영역을빌리며missing서비스를두setter/noop로대체하지않는다.원본에없는report-presented는기존Present와카메라순서를바꾸지않고읽기전용으로표시시점현재값만기록한다.실제F4/F5/미니맵/재시작/이탈3화면비와자료루트 내부 두 원문 맵의 Edit→TestBattle2창·37창DC RGB가통과했다.",
+  "lastFull34": "632제품의34/34로남긴다.매단위34/전체CTest반복은하지않는다.",
+  "excluded": "자연완주/포획/희생/특정적공격/승리/공중3종전용/신규MP/Windows11/PCM/물리키/DPI/포커스검사는없다.",
+  "next": "다음634는 전체 카탈로그 커스텀 필터의180초 상한 원인을 원문 분류·이관·파싱 진행과 대조한다. 자료루트 내부 두 원문 맵 시험의 성공은 전체 문제의 해결을 뜻하지 않는다. 잔여 Scroll/Resize/선택적 setter 분류와 내용물/grid/debug·전체 UI/Edit/시나리오/파일/수명/호환성·MP 무시험/4~7차·전체 동일성 및 기존 VFX/612 스택미정값 한계도 남는다.",
+  "preliminaryGui": "별도6회:구형Edit입력은기본50목록에없는TEST02선택으로종료1;첫probe는UserNotUpdated안내미처리로종료1;정상기본목록probe-v2는50개/A..FWOS5·TEST02부재·Cancel복귀성공;전체카탈로그커스텀필터GUI-v2는180초상한후종료;probe-v3는source/work밖절대경로거부로종료1;probe-v4는자료루트내상대2원문맵/실제Editor설치성공.이6회는같은제품Home3+최종상대작업namespace Edit2의주요5회/37RGB에합산하지않는다.",
+  "editorToolChange": {
+    "initialSha256": "c77ee76b8097e6831f2d8b439965a8a62d0ecfc599d608c95a9284e76039d478",
+    "currentSha256": "6c17864f45ff3704bbaff6d090bc097afb5203efbbcd727853e739c6162f2090",
+    "onlyChanges": "정상MainMenu 클릭/원문커스텀필터와자료루트안두원문Fort의명시상대fortSpec/SOLOSpec추가.기본목록50상한과보호이관경계는유지한다.",
+    "evidence": "기본목록probe-v2는50개/A..FWOS5·TEST02부재,전체필터GUI-v2는180초상한종료,probe-v3는외부절대경로거부,probe-v4는같은source루트내상대2맵/실제Editor설치종료0이다."
+  },
+  "remainingCatalogIssue": "전체카탈로그의mayEditMissions=0 경로가180초상한에서끝나지않은원인은미확정이다.별도634에서원문분류/전체이관·파싱호출비용/진행을조사하며이번주요2맵성공으로해결됐다고세지않는다."
+}

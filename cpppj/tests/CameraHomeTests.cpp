@@ -1,6 +1,7 @@
 // 두 PE의 실제 초기 시야 선택/좌표/억제 깊이·요청/변환 번호를 전수 대조한다.
 #include "RawSceneSupport.h"
 #include "client/CameraHome.h"
+#include "CameraTestDevices.h"
 #include <sstream>
 using namespace netstorm::client;
 using namespace netstorm::test::rawscene;
@@ -33,9 +34,9 @@ void CheckCameraHome(OriginalEdition edition) {
         state.width=std::stoi(row[7]);state.height=std::stoi(row[8]);state.suppressionDepth=Number(row[9]);state.requests=Number(row[10]);state.revision=Number(row[11]);
         state.challengeType=74;state.worldWidth=4097;state.worldHeight=2819;
         std::ostringstream applied; // 같은 commit 위치의 원점/현재 카운터 관찰이다.
-        CameraHome logic(pool,types,state,[&](std::int32_t x,std::int32_t y) {
+        CameraHome logic(pool,types,state,netstorm::test::camera::MakePointDevice(state,[&](std::int32_t x,std::int32_t y) {
             if (!applied.str().empty()) applied<<'|';applied<<x<<','<<y<<','<<state.suppressionDepth<<','<<state.requests<<','<<state.revision;
-        });
+        }));
         logic.Reset();CHECK((applied.str().empty() ? "-" : applied.str())==row[12]);
         CHECK(state.suppressionDepth==Number(row[13]) && state.requests==Number(row[14]) && state.revision==Number(row[15]));++count;
     }
@@ -49,7 +50,7 @@ TEST_CASE(CameraHome_CdNative) { CheckCameraHome(OriginalEdition::Cd1072); }
 // 화면 적용 예외가 이후 Carrier 표시를 계속 억제하지 않게 깊이를 복구한다.
 TEST_CASE(CameraHome_DisplayFailureRestoresGuard) {
     SidPool pool(OriginalEdition::Patch1078,24000,false);std::vector<RiftTypeRecord> types(96);CameraHomeState state;state.suppressionDepth=3;
-    CameraHome logic(pool,types,state,[](std::int32_t,std::int32_t) { throw std::runtime_error("명시 장치 실패 입력"); });bool failed=false; // 외부 화면 실패만 입력한다.
+    CameraHome logic(pool,types,state,netstorm::test::camera::MakePointDevice(state,[](std::int32_t,std::int32_t) { throw std::runtime_error("명시 장치 실패 입력"); }));bool failed=false; // 실제433aa0 뒤 외부 화면 실패만 입력한다.
     try { logic.Reset(); } catch (const std::runtime_error&) { failed=true; }
     CHECK(failed && state.suppressionDepth==3 && state.requests==1 && state.revision==1);
 }

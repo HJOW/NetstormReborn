@@ -81,7 +81,7 @@ GameWorld::GameWorld(const GameAssets& assets,const o::FortTemplate& fort,o::Mis
 GameWorld::GameWorld(const GameAssets& assets,const o::BaseFileSystem& files,o::FortTemplate fort,o::MissionPlayers players,
     std::string mission,RawCampaignSessionServices services,ScreenPoint viewport,bool deferConnection):gameplayGlobals_(services.gameplayGlobals ? services.gameplayGlobals : std::make_shared<ClientGameplayGlobals>(services.subscriberGlobals,services.surfaceStorage ? services.surfaceStorage->Authority() : nullptr,services.surfaceStorage ? services.surfaceStorage->GameAux() : nullptr)),ownerColorTables_(services.ownerColorTables),assets_(assets),players_(std::move(players)) {
     if (viewport.x<=0 || viewport.y<=0) throw std::invalid_argument("실제 캠페인 설치 전 화면 크기 누락");
-    width_=viewport.x;height_=viewport.y;
+    width_=viewport.x;height_=viewport.y;mapView_=services.mapView; // 실제 초기 Reset도 현재 도킹 영역을 읽으며 UI 설치 뒤의 재바인딩을 기다리지 않는다.
     // 현재 보호 팔레트 번호만 UI 색 조회용으로 보관한다.
     for (std::size_t i=0;i<palette_.size();++i) palette_[i]=assets_.Palette().Color(static_cast<std::uint8_t>(i));
     // 현재 카메라는 Client owner를 직접 빌리며 로더의 같은 호출 위치에서 목표/두setter를 적용한다.
@@ -115,7 +115,7 @@ GameWorld::~GameWorld() { factoryDisplay_.reset();campaign_.reset(); }
 // 초기 카메라의 원본 좌표를 clamp나 신전 우선 선택 없이 현재 raw 표시와 음향 원점에 전달한다.
 void GameWorld::ResetCampaignCamera() {
     cameraHome_.width=width_;cameraHome_.height=height_;
-    campaign_->ResetCamera(cameraHome_,[this](std::int32_t x,std::int32_t y) { ApplyCameraPixels(x,y);SurfaceView(); });
+    campaign_->ResetCamera(cameraHome_,[this](std::int32_t,std::int32_t) { CommitCampaignCamera(); });
 }
 // 실제 첫두 world float비트는 픽셀에서 재계산하지 않고 같은 현재 snapshot에서 읽는다.
 MinimapGeometryView GameWorld::MinimapView() const { return {CameraGlobals().Snapshot().worldBits,MapView(),campaign_ ? CameraGlobals().Snapshot().cellPixels[0] : 16,campaign_ ? CameraGlobals().Snapshot().cellPixels[1] : 11}; }
@@ -378,7 +378,7 @@ void GameWorld::Scroll(int dx,int dy) {
 // 실제 캠페인은 현재 Player의 두 Home SID 또는 실제 사제 참여 조회를 사용한다.
 void GameWorld::Home(bool priest) {
     if (campaign_) {
-        cameraHome_.width=width_;cameraHome_.height=height_;const auto apply=[this](std::int32_t x,std::int32_t y) { ApplyCameraPixels(x,y);SurfaceView(); }; // 같은 원점/표시/위치 음향을 한 변경 지점에 갱신한다.
+        cameraHome_.width=width_;cameraHome_.height=height_;const auto apply=[this](std::int32_t,std::int32_t) { CommitCampaignCamera(); }; //433aa0이 쓴 현재 목표에 실제 전체 적용을 수행한다.
         if (priest) campaign_->ViewYourPriest(campaign_->LocalOwner(),cameraHome_,apply);else campaign_->ViewHome(cameraHome_,apply);return;
     }
     const o::Squid* target=nullptr;
@@ -394,7 +394,7 @@ void GameWorld::Home(bool priest) {
 void GameWorld::CenterOnObject(std::uint32_t sid) {
     if (campaign_) {
         cameraHome_.width=width_;cameraHome_.height=height_;
-        campaign_->CenterCameraOn(sid,cameraHome_,[this](std::int32_t x,std::int32_t y) { ApplyCameraPixels(x,y);SurfaceView(); });return;
+        campaign_->CenterCameraOn(sid,cameraHome_,[this](std::int32_t,std::int32_t) { CommitCampaignCamera(); });return;
     }
     const auto* target=Object(sid);if (!target) return;const auto size=assets_.Types()[static_cast<std::size_t>(target->type-o::kFirstAssetTypeNumber)].definition.Footprint(); // 이전 값형 월드의 기존 가운데/테두리 동작을 유지한다.
     ApplyCameraPixels(static_cast<int>((target->x-(size[0]-1)*0.5)*16)-width_/2,static_cast<int>((target->y-(size[1]-1)*0.5)*11)-height_/2);Scroll(0,0);changed_=true;
@@ -403,7 +403,7 @@ void GameWorld::CenterOnObject(std::uint32_t sid) {
 void GameWorld::ViewPriest(std::uint32_t owner) {
     if (!campaign_) { Home(true);return; }
     cameraHome_.width=width_;cameraHome_.height=height_;
-    campaign_->ViewYourPriest(owner,cameraHome_,[this](std::int32_t x,std::int32_t y) { ApplyCameraPixels(x,y);SurfaceView(); });
+    campaign_->ViewYourPriest(owner,cameraHome_,[this](std::int32_t,std::int32_t) { CommitCampaignCamera(); });
 }
 // 월드 기준점은 원본 SHP 사각형의 원점과 동일하다.
 ScreenPoint GameWorld::ToScreen(double x,double y) const { if (campaign_) { const auto point=ProjectCameraView(CameraGlobals().Snapshot(),static_cast<float>(x),static_cast<float>(y));return {point[0],point[1]}; }return {static_cast<int>(std::lround(x*16))-CameraX(),static_cast<int>(std::lround(y*11))-CameraY()}; }
@@ -864,4 +864,10 @@ namespace netstorm::client { // 실제Session과 기존 값형World의 카메라
 ClientCameraGlobals& GameWorld::CameraGlobals() { return gameplayGlobals_->Camera(); }
 const ClientCameraGlobals& GameWorld::CameraGlobals() const { return gameplayGlobals_->Camera(); }
 void GameWorld::ApplyCameraPixels(std::int32_t x,std::int32_t y) { auto& camera=CameraGlobals();camera.RequestPixels(x,y);camera.ApplyPixelsToRendererAndSnapshot(x,y);changed_=true; }
+// 별도 renderer setter를 실행하지 않고 실제497960이 끝난 현재 결과만 기존 표면/입자/음향에 공개한다.
+void GameWorld::CommitCampaignCamera() {
+    auto& camera=CameraGlobals();const auto pixels=camera.RendererView().pixels;const auto zoom=camera.RendererView().zoom;
+    campaign_->CommitRequestedCamera(width_,height_);
+    if (camera.RendererView().pixels!=pixels || camera.RendererView().zoom!=zoom) CameraApplied();
+}
 }

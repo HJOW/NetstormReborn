@@ -2,6 +2,7 @@
 #include <bit>
 // 실제 LocalLogin Core alias와 같은 TYPE/다이스를 사용한 현재 Core 갱신을 검사한다.
 #include "DudeSpawnSupport.h"
+#include "CameraTestDevices.h"
 #include "client/RawCampaignSession.h"
 #include "client/RawCampaignCursor.h" // 실제 커서의 Placement 멤버를 조회하는 검사에 완전한 선언을 제공한다.
 #include "client/ClientCoreDataGlobals.h"
@@ -26,7 +27,7 @@ struct CoreRefreshSessionDevices {
     std::array<std::uint8_t,4> you{'Y','o','u',0}; // 명시 headless 번역 입력이다.
     // Player/기술/LocalLogin/다이스/현재Core는 실제 Session 몸체에 맡긴다.
     RawCampaignSessionServices Make(bool login) {
-        names.Initialize();RawCampaignSessionServices result; // 게임 계산을 반환하는 가짜 hook은 넣지 않는다.
+        names.Initialize();RawCampaignSessionServices result;result.cameraCommit=netstorm::test::camera::CommitScreenless; // 원문497960 본체와 명시 비GUI 장치를 사용한다.
         result.soundNames=&names;result.unixSeconds=[] { return 946684800; };
         result.production.allocationBytes=[](auto bytes) { std::fill(bytes.begin(),bytes.end(),std::uint8_t{0x71}); };
         result.sound.wallSeconds=[] { return 100.0; };

@@ -165,8 +165,16 @@ struct CampaignExistingEditorCheckpointServices {
     o::StartupStateCheckHooks startup; //실제004b5ba0이다.옵션0의자연ret외의선택reader/벽시각/서식/Tell누락을성공으로채우지않는다.
     o::EditorPlayersHooks players; //번역/서식만외부장치다.같은Player/TYPE/ContainedCreate/실제맵tail은Session이연결한다.
 };
+// 같은 Renderer/공유 다시 그리기 전역과 현재 논리 크기를 실제497960 장치에 전달한다.
+struct CampaignCameraCommitContext {
+    ClientCameraGlobals& camera; // Session과 Client가 공유하는 현재view/snapshot/목표의 같은 주소다.
+    std::uint32_t& worldRedraw; //0059a8b0의 현재 DWORD이며 독립 복사본을 만들지 않는다.
+    std::int32_t width{},height{}; // 즉시 중심 요청이 사용한 현재 논리 화면 크기다.
+};
 // 게임 계산을 대신하지 않고 실제 클라이언트 UI/음향/전송의 선택 경계를 공급한다.
 struct RawCampaignSessionServices {
+    std::function<void(const CampaignCameraCommitContext&)> cameraCommit; // 실제497960의 커서/화면/dirty/Gump 장치다. 생략된 실제 호출은 두setter/noop로 대체하지 않는다.
+    std::function<ScreenRect()> mapView; // 초기 Reset 전부터 같은 현재 Gump 지도 영역을 읽는다. 독립 비GUI 장치만 기존 전체 viewport 계약을 사용한다.
     std::shared_ptr<ClientChatWindowGlobals> chatGlobals; // 실제 Client는 같은 Chat 상태를 제공하며 독립 Session만 별도 BSS를 소유한다.
     std::function<void(std::span<std::uint8_t>)> chatReceive; // 실제 현재 UI 수신이다. 중계 후 선택된 호출에서만 요구한다.
     CampaignInstallMode installMode{CampaignInstallMode::Campaign}; //기존모든호출은캠페인입력을보존한다.
@@ -289,6 +297,7 @@ public:
     // 현재 같은 풀/TYPE/실제 로컬 소유자·모드로 원본 초기 시야를 계산하여 화면에 적용한다.
     void ResetCamera(CameraHomeState& state,std::function<void(std::int32_t,std::int32_t)> apply) const;
     void RequestCameraCenter(float x,float y,std::int32_t width,std::int32_t height); //미니맵/사건의497f20 직접 호출만 실제 Client의 목표와005c85dc에 연결하며433aa0의 즉시commit과 구별한다.
+    void CommitRequestedCamera(std::int32_t width,std::int32_t height); //이미433aa0이 쓴 목표를 같은 실제497960 장치에 적용하며 새 목표/카운터·flip/제한을 더하지 않는다.
     //00433ba0의 현재 SID 중심 이동과 Carrier 내용물 표시를 같은 실제 로딩 깊이/Kernel에 연결한다.
     void CenterCameraOn(std::uint32_t sid,CameraHomeState& state,std::function<void(std::int32_t,std::int32_t)> apply) const;
     //현재 localPlayer의 같은 Player +7c를 먼저 읽고0일 때만 +84로 직접 CenterOn한다. 외부 메뉴 모드 관문은 호출자가 처리한다.

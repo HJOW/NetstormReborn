@@ -31,6 +31,7 @@ public:
     void UpdateTargetLimits(std::int32_t width,std::int32_t height,float worldWidth,float worldHeight); //497f80의 실제 계산만 적용하며 view/snapshot을 초기화하지 않는다.
     void RequestPixels(std::int32_t x,std::int32_t y); // 목표만 쓴다. 497e00/497f20의 좌표/전역 카운터 처리는 상위 caller가 소유한다.
     void RequestCenter(float x,float y,std::int32_t width,std::int32_t height,std::uint32_t& revision); //10.78의497f20: 목표X/Y와005c85dc만 쓰며 현재 view/snapshot·표시 장치는 프레임 말미까지 보존한다.
+    void CenterImmediately(float x,float y,std::int32_t width,std::int32_t height,std::uint32_t& worldRedraw,std::uint32_t& revision,const std::function<void()>& commit); //433aa0: 같은0059a8b0 증가→497f20→실제497960 경계를 순서대로 수행하며 flip/목표 제한은 하지 않는다.
     void ApplyPixelsToRendererAndSnapshot(std::int32_t x,std::int32_t y); //497960의두497490 호출 조각이다. scroll/dirty/커서 통지 전체 부모 완료로 세지 않는다.
     void CopyRendererSnapshot(); //436450 프레임 말미의16DWORD 복사이며 target/viewport를 복사하지 않는다.
     void SelectDenominator(std::int32_t value,std::uint32_t& worldRedraw); //4978d0:0이면default 선택→변경시현재값store→redraw1이다.

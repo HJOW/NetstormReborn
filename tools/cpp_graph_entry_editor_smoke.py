@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""공통 Graph 적재 수정 뒤 실제 Edit→Test Battle 진입을 독립 사본에서 확인한다."""
+"""자료루트 내부 두 원문 작업맵의 실제 Edit→Test Battle 진입을 독립 사본에서 확인한다."""
 import argparse
 import shutil
 from pathlib import Path
@@ -19,8 +19,12 @@ def one(source, output, width, height):
     output.mkdir(parents=True, exist_ok=False)
     data = output / 'data'
     shutil.copytree(source, data)
+    maps=data/'entry-test-maps';maps.mkdir()  # 현재 편집 이관 정책이 허용하는 source 루트 내부 namespace다.
+    copied={}
+    for name in ('TEST01','TEST02'):  # 원문 Fort 바이트만 복사하고 실제 목록/Template/Graph 적재는 그대로 실행한다.
+        original=data/'d'/(name+'.fort');target=maps/(name+'.fort');shutil.copyfile(original,target);assert sha(original)==sha(target);copied[name]=sha(target)
     before = snapshots(data)
-    steps = [(3, 'click-if', 'OK'), (5, 'click-if', 'OK'), (10, 'click', 'Edit'),
+    steps = [(3, 'click-if', 'OK'), (5, 'click-if', 'OK'), (7, 'click-if', 'Main Menu'), (10, 'click', 'Edit'),
              (18, 'click', 'TEST02'), (55, 'report', 'editor'),
              (55, 'snapshot', str(output / 'editor.bmp')), (80, 'esc', ''),
              (85, 'click', 'Game'), (90, 'click', 'Test Battle'),
@@ -30,7 +34,7 @@ def one(source, output, width, height):
     script, report = output / 'steps.tsv', output / 'states.tsv'
     script.write_text(''.join(f'{frame}\t{op}\t{arg}\n' for frame, op, arg in steps), encoding='utf-8', newline='\n')
     command = [str(GAME), '--run', str(data), '--window', '--no-audio', '--frames', '315',
-               '--set', f'SCREENW={width};SCREENH={height};maxFPS=40;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=1',
+               '--set', f'SCREENW={width};SCREENH={height};maxFPS=40;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=1;mayEditMissions=0;fortSpec=entry-test-maps/{{local.1}}.fort;SOLOSpec=entry-test-maps/{{local.1}}.fort',  # 원문 FileSpec으로 두 실제 작업맵만 열거한다. 외부 절대경로·원본 목록 상한·Template/게임 상태는 변경하지 않는다.
                '--ui-script', str(script), '--ui-report', str(report)]
     with preserve_game_settings(data, 'd', output / 'settings-backup'):
         run = execute(command, output, GAME, 120)
@@ -50,6 +54,7 @@ def one(source, output, width, height):
     added = [name for name in after if name not in before]
     result = dict(size=[width, height], editorModes=editor['raw_world_modes'], battleModes=final['raw_world_modes'],
                   gameTimeDelta=delta, editorGraph=editor['raw_world'][3:5], battleGraph=final['raw_world'][3:5],
+                  copiedFortSha256=copied, sourceNamespace='entry-test-maps/{local.1}.fort',
                   changedCopyFiles=changes, addedCopyFiles=added, run=run)
     save(output / 'summary.json', result)
     return result

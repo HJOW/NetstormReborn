@@ -1,6 +1,7 @@
 // 공개 CenterOn의 현재 TYPE 재조회·Carrier preview와 Reset의 실제 로딩 깊이 공유를 검증한다.
 #include "RawSceneSupport.h"
 #include "client/CameraHome.h"
+#include "CameraTestDevices.h"
 #include "client/Screen.h"
 #include "o/RawSquidSelection.h"
 #include <stdexcept>
@@ -28,27 +29,27 @@ struct CameraViewScene {
 // 좌표 적용 후 flags2를 다시 읽으며 flags1과 이전 타입 사본으로 preview를 고르지 않는다.
 TEST_CASE(CameraViewCommands_CurrentTypeAfterApplyAndActualPreview) {
     CameraViewScene scene;std::vector<ScreenPoint> applied; // 실제 장치의 최종 원점만 관측한다.
-    CameraHome logic(scene.pool,scene.types,scene.state,[&](auto x,auto y) { applied.push_back({x,y});scene.trace.push_back("apply"); },scene.Hooks());
+    CameraHome logic(scene.pool,scene.types,scene.state,netstorm::test::camera::MakePointDevice(scene.state,[&](auto x,auto y) { applied.push_back({x,y});scene.trace.push_back("apply"); }),scene.Hooks());
     logic.CenterOn(scene.target);CHECK(applied.size()==1 && applied[0].x==-208 && applied[0].y==-42);CHECK(scene.trace==std::vector<std::string>({"apply","preview","regular"}));CHECK(scene.regulars==1 && scene.state.requests==1 && scene.state.revision==1);
     scene.trace.clear();scene.types[70].flags2=0;scene.types[70].flags1=0x30000;logic.CenterOn(scene.target);CHECK(scene.trace==std::vector<std::string>({"apply"}) && scene.regulars==1); // flags1의 같은 마스크는 preview 조건이 아니다.
     scene.trace.clear();scene.types[70].flags2=0x30000;
-    CameraHome changed(scene.pool,scene.types,scene.state,[&](auto,auto) { scene.trace.push_back("apply");scene.pool.AllocatedBytes(scene.target)[10]=71; },scene.Hooks());changed.CenterOn(scene.target);CHECK(scene.trace==std::vector<std::string>({"apply"}) && scene.regulars==1); // 적용 뒤 타입71은 Carrier가 아니다.
+    CameraHome changed(scene.pool,scene.types,scene.state,netstorm::test::camera::MakePointDevice(scene.state,[&](auto,auto) { scene.trace.push_back("apply");scene.pool.AllocatedBytes(scene.target)[10]=71; }),scene.Hooks());changed.CenterOn(scene.target);CHECK(scene.trace==std::vector<std::string>({"apply"}) && scene.regulars==1); // 적용 뒤 타입71은 Carrier가 아니다.
     scene.trace.clear();scene.types[71].flags2=0x20000;changed.CenterOn(scene.target);CHECK(scene.trace==std::vector<std::string>({"apply","preview","regular"}) && scene.regulars==2);
 }
 // 명시 SID0/free/dead는 다른 대상 재선택이나 preview 없이 돌아오며 void만으로는 제외하지 않는다.
 TEST_CASE(CameraViewCommands_NullFreeDeadAndPreviewGuards) {
-    CameraViewScene scene;std::uint32_t applied{};CameraHome logic(scene.pool,scene.types,scene.state,[&](auto,auto) { ++applied; },scene.Hooks());logic.CenterOn({});CHECK(applied==0 && scene.regulars==0);
+    CameraViewScene scene;std::uint32_t applied{};CameraHome logic(scene.pool,scene.types,scene.state,netstorm::test::camera::MakePointDevice(scene.state,[&](auto,auto) { ++applied; }),scene.Hooks());logic.CenterOn({});CHECK(applied==0 && scene.regulars==0);
     auto raw=scene.pool.AllocatedBytes(scene.target);raw[11]=1;logic.CenterOn(scene.target);raw[11]=2;logic.CenterOn(scene.target);CHECK(applied==0 && scene.regulars==0);
     raw[11]=4;raw[40]=8;logic.CenterOn(scene.target);CHECK(applied==1 && scene.regulars==0);raw[40]=0;scene.depth=3;logic.CenterOn(scene.target);CHECK(applied==2 && scene.regulars==0);scene.depth=0;logic.CenterOn(scene.target);CHECK(applied==3 && scene.regulars==1);
 }
 // Reset의 실제 증가/감소를 같은 로딩 전역에 적용하여 Carrier Regular를 억제하고 현재 값으로 감소한다.
 TEST_CASE(CameraViewCommands_ResetSharesCurrentLoadingDepth) {
-    CameraViewScene scene;scene.depth=4;scene.state.suppressionDepth=99;CameraHome logic(scene.pool,scene.types,scene.state,[&](auto,auto) { CHECK(scene.depth==5 && scene.state.suppressionDepth==5);scene.trace.push_back("apply"); },scene.Hooks());
+    CameraViewScene scene;scene.depth=4;scene.state.suppressionDepth=99;CameraHome logic(scene.pool,scene.types,scene.state,netstorm::test::camera::MakePointDevice(scene.state,[&](auto,auto) { CHECK(scene.depth==5 && scene.state.suppressionDepth==5);scene.trace.push_back("apply"); }),scene.Hooks());
     logic.Reset();CHECK(scene.depth==4 && scene.state.suppressionDepth==4 && scene.regulars==0);CHECK(scene.trace==std::vector<std::string>({"depth5","apply","preview","depth4"}));
-    scene.trace.clear();CameraHome changed(scene.pool,scene.types,scene.state,[&](auto,auto) { scene.depth=9;scene.trace.push_back("apply"); },scene.Hooks());changed.Reset();CHECK(scene.depth==8 && scene.state.suppressionDepth==8 && scene.regulars==0); // 원문 --는 적용 전 깊이 사본이 아니라 현재 전역을 감소한다.
+    scene.trace.clear();CameraHome changed(scene.pool,scene.types,scene.state,netstorm::test::camera::MakePointDevice(scene.state,[&](auto,auto) { scene.depth=9;scene.trace.push_back("apply"); }),scene.Hooks());changed.Reset();CHECK(scene.depth==8 && scene.state.suppressionDepth==8 && scene.regulars==0); // 원문 --는 적용 전 깊이 사본이 아니라 현재 전역을 감소한다.
 }
 // 화면 적용 예외 후에도 실제 로딩 소유자와 UI state 모두 증가 전 깊이로 복구한다.
 TEST_CASE(CameraViewCommands_ResetFailureRestoresActualDepth) {
-    CameraViewScene scene;scene.depth=3;CameraHome logic(scene.pool,scene.types,scene.state,[](auto,auto) { throw std::runtime_error("명시 카메라 장치 오류"); },scene.Hooks());bool failed{};
+    CameraViewScene scene;scene.depth=3;CameraHome logic(scene.pool,scene.types,scene.state,netstorm::test::camera::MakePointDevice(scene.state,[](auto,auto) { throw std::runtime_error("명시 카메라 장치 오류"); }),scene.Hooks());bool failed{};
     try { logic.Reset(); }catch (const std::runtime_error&) { failed=true; }CHECK(failed && scene.depth==3 && scene.state.suppressionDepth==3 && scene.regulars==0);
 }

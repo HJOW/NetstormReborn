@@ -26,6 +26,12 @@ void ClientCameraGlobals::RequestCenter(float x,float y,std::int32_t width,std::
     target_.pixels[1]=std::bit_cast<std::int32_t>(0U-static_cast<std::uint32_t>(CameraFtolLow(-11.0*static_cast<double>(y)))-static_cast<std::uint32_t>(height/2));
     ++revision; // 두 목표store 뒤에만 같은005c85dc를 증가시킨다.10.72의458800은 중간에 증가하므로 이 본체로 공통화하지 않는다.
 }
+// 즉시 중심 이동의 부모를 같은 목표/공유 전역에 적용한다. 미연결 commit도 원문 호출 위치의 선행 쓰기는 보존한다.
+void ClientCameraGlobals::CenterImmediately(float x,float y,std::int32_t width,std::int32_t height,std::uint32_t& worldRedraw,std::uint32_t& revision,const std::function<void()>& commit) {
+    ++worldRedraw;RequestCenter(x,y,width,height,revision);
+    if (!commit) throw std::logic_error("즉시 카메라의 실제497960 장치 미연결");
+    commit();
+}
 // 두 setter의 실제 순서만 공유하며 Native497960의 나머지 효과를 noop로 채우지 않는다.
 void ClientCameraGlobals::ApplyPixelsToRendererAndSnapshot(std::int32_t x,std::int32_t y) { SetCameraViewPixels(rendererView_,x,y);SetCameraViewPixels(snapshot_,x,y); }
 // 현재 논리 Renderer를 프레임 말미에 복사한다. Session 소멸이나 호스트Renderer 생성은 이 위치가 아니다.

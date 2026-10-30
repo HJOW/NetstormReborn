@@ -1,5 +1,6 @@
 // 같은0059a8ac가실제캠페인표시와선택필터에서매번읽히는지검사한다.
 #include "DudeSpawnSupport.h"
+#include "CameraTestDevices.h"
 #include "client/GameWorld.h"
 #include <stdexcept>
 #include <iostream>
@@ -11,7 +12,7 @@ struct HideBuildingsServices {
     std::array<std::uint8_t,4> you{'Y','o','u',0}; // 영어번역의명시입력이다.
     // 보호미션의실제로더가선택하는외부장치경계를공급한다.
     RawCampaignSessionServices Make() {
-        names.Initialize();RawCampaignSessionServices result;result.soundNames=&names;result.unixSeconds=[] { return 946684800; };
+        names.Initialize();RawCampaignSessionServices result;result.soundNames=&names;result.unixSeconds=[] { return 946684800; };result.cameraCommit=netstorm::test::camera::CommitScreenless;
         result.production.allocationBytes=[](auto bytes) { std::fill(bytes.begin(),bytes.end(),std::uint8_t{0x71}); };
         result.sound.wallSeconds=[] { return 100.0; };result.sound.play=[](SoundHandle sound,std::uint32_t,std::uint32_t,std::uint32_t,std::uint32_t,std::uint32_t) { return sound; };
         result.sound.playLoopAt=[](float,float,SoundHandle current,SoundHandle sound) { return current ? current : sound; };result.sound.playOnceAt=[](float,float,SoundHandle sound,std::uint32_t,std::uint32_t) { return sound; };

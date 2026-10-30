@@ -3,6 +3,7 @@
 #include "client/RawCameraCommit.h"
 #include <bit>
 #include <fstream>
+#include <filesystem>
 #include <sstream>
 #include <string>
 #include <stdexcept>
@@ -113,3 +114,6 @@ TEST_CASE(CameraCommit_OnlySelectedParallaxDivisionCanFail) {
     input[11]=16;CommitScene parallax(input);bool failed{};try { CommitCameraTarget(parallax.State(),parallax.Globals(),parallax.Hooks()); }catch (const std::domain_error&) { failed=true; }
     CHECK(failed && parallax.events.find("P:")==std::string::npos && parallax.camera.Snapshot().pixels[0]==75);
 }
+
+//433aa0 부모부터 같은497960까지 이어진 독립 원문 관측을 확인한다.
+#include "CameraImmediateTests.inc"
