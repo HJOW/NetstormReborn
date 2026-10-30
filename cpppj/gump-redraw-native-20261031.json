@@ -1,0 +1,16 @@
+{
+  "cases": 1474,
+  "observations": 4422,
+  "differences": 0,
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "source": "originals/Netstorm.exe",
+  "binarySha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+  "fixtureSha256": "466b3deef743ab396beddfe0dafc5549fb0f6a8a556a89f1a85cd5b18515c6d7",
+  "oracleSha256": "9209ac081dd3e03470b515abcaa5f146797324b5e839ced4e8553e73050ca6b1",
+  "scope": "기본 Gump dirty 요청/지도 clamp의 격리 PE 관측이며 게임/GUI/네트워크/포획/희생/특정 공격/승리를 실행하지 않는다. 마지막 Renderer 저장소와 월드 투영만 명시 경계다. 새 C++는 읽거나 호출하지 않는다.",
+  "independentCompleteProcesses": 2,
+  "totalObservations": 8844,
+  "fixture": "cpppj/tests/fixtures/gump-redraw-x86.tsv"
+}

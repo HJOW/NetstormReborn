@@ -1,0 +1,2038 @@
+{
+  "unit": 624,
+  "sourceBaseCommit": "a9d2b2fe",
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "complete": true,
+  "native": {
+    "cases": 1474,
+    "observations": 4422,
+    "differences": 0,
+    "host": "HJOW-Athlon",
+    "lastFullDecompileHost": "HJOW-Athlon",
+    "lastFullDecompileDate": "2026-10-23",
+    "source": "originals/Netstorm.exe",
+    "binarySha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "fixtureSha256": "466b3deef743ab396beddfe0dafc5549fb0f6a8a556a89f1a85cd5b18515c6d7",
+    "oracleSha256": "9209ac081dd3e03470b515abcaa5f146797324b5e839ced4e8553e73050ca6b1",
+    "scope": "기본 Gump dirty 요청/지도 clamp의 격리 PE 관측이며 게임/GUI/네트워크/포획/희생/특정 공격/승리를 실행하지 않는다. 마지막 Renderer 저장소와 월드 투영만 명시 경계다. 새 C++는 읽거나 호출하지 않는다.",
+    "independentCompleteProcesses": 2,
+    "totalObservations": 8844,
+    "fixture": "cpppj/tests/fixtures/gump-redraw-x86.tsv"
+  },
+  "checks": {
+    "passed": true,
+    "tests": 140,
+    "filters": [
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "RendererFrame_"
+        ],
+        "binarySha256": "79614d4b17ef35a6a136503154eb7f12f57ada518651cac0b83a65b648e2d13a",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 0.6359020999989298,
+        "stdoutSha256": "f54aadd41321b640276251850ab79683e832b7dba28f690bcf561c11612708e6",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "RendererFrame_",
+        "tests": 4,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "RendererPrelude_"
+        ],
+        "binarySha256": "79614d4b17ef35a6a136503154eb7f12f57ada518651cac0b83a65b648e2d13a",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 0.5868086000009498,
+        "stdoutSha256": "19d97720996aa0074a8e575cdbe57bace55d6dbac72ddbb530b99c0d5c0f7037",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "RendererPrelude_",
+        "tests": 2,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "RendererCloud_"
+        ],
+        "binarySha256": "79614d4b17ef35a6a136503154eb7f12f57ada518651cac0b83a65b648e2d13a",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 0.5848574999981793,
+        "stdoutSha256": "2e161ca523d22040056a79597f36f09d1be3b3631c63bff2fb93be596481c67a",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "RendererCloud_",
+        "tests": 3,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "Renderer_"
+        ],
+        "binarySha256": "79614d4b17ef35a6a136503154eb7f12f57ada518651cac0b83a65b648e2d13a",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 0.6258586999974796,
+        "stdoutSha256": "77b7ed5a02a10ba24011dffdadfb67a61b75b6ee3f728c6bab0ce109d1648121",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "Renderer_",
+        "tests": 8,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "KencloudRender_"
+        ],
+        "binarySha256": "79614d4b17ef35a6a136503154eb7f12f57ada518651cac0b83a65b648e2d13a",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 0.6117190999975719,
+        "stdoutSha256": "8a6703ead8202b00b8ba17e83e5e72333be0be7eaf62f7353e182c269ca0515f",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "KencloudRender_",
+        "tests": 2,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "ClientKencloudGlobals_"
+        ],
+        "binarySha256": "79614d4b17ef35a6a136503154eb7f12f57ada518651cac0b83a65b648e2d13a",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 0.6883837999994284,
+        "stdoutSha256": "4de093736e2be425428bf78fce1656f3c9933d4347505d884cb2a2536d3e0e8c",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "ClientKencloudGlobals_",
+        "tests": 7,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "TileGroupCollection_"
+        ],
+        "binarySha256": "79614d4b17ef35a6a136503154eb7f12f57ada518651cac0b83a65b648e2d13a",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 1.444849700001214,
+        "stdoutSha256": "9a499ccffa6d8dbb62e88e9d26bb3e99d07f930e0f222463b102576fc6af0955",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "TileGroupCollection_",
+        "tests": 6,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "DrawSubmission_"
+        ],
+        "binarySha256": "79614d4b17ef35a6a136503154eb7f12f57ada518651cac0b83a65b648e2d13a",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 0.7890234000005876,
+        "stdoutSha256": "d6229b56816b9571ee737933f3e1e4b736ebad5aaa40880db6469bdc7ab21303",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "DrawSubmission_",
+        "tests": 8,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "PreviewCollection_"
+        ],
+        "binarySha256": "79614d4b17ef35a6a136503154eb7f12f57ada518651cac0b83a65b648e2d13a",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 2.1363077999994857,
+        "stdoutSha256": "de722b4b8e65a05511f21447a5381782ebe4b165071a474d995b86a9899d6d0e",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "PreviewCollection_",
+        "tests": 10,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "CameraPan_"
+        ],
+        "binarySha256": "79614d4b17ef35a6a136503154eb7f12f57ada518651cac0b83a65b648e2d13a",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 0.6350984999990033,
+        "stdoutSha256": "8c3eb47a63dcdfb85bb88e6fe66ceeea5cf6bc5f65a2a530add801f662b29666",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "CameraPan_",
+        "tests": 2,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "CameraCommit_"
+        ],
+        "binarySha256": "79614d4b17ef35a6a136503154eb7f12f57ada518651cac0b83a65b648e2d13a",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 0.6313171000001603,
+        "stdoutSha256": "638909e7afc51e87e9d9320e666b9127dbaea65c3cb4fcd505cad6f37a110f83",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "CameraCommit_",
+        "tests": 4,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "CameraPresent_"
+        ],
+        "binarySha256": "79614d4b17ef35a6a136503154eb7f12f57ada518651cac0b83a65b648e2d13a",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 0.6598677000001771,
+        "stdoutSha256": "af807b67f344c7e99911ba2552b42b69e18302b696f9cd4643ce08068b0338ab",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "CameraPresent_",
+        "tests": 3,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "CameraView_"
+        ],
+        "binarySha256": "79614d4b17ef35a6a136503154eb7f12f57ada518651cac0b83a65b648e2d13a",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 15.688283700001193,
+        "stdoutSha256": "905ac5f79d7640bc5b4e9aeb0af090723f1aa011a217a2e834d9e2a93e883b62",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "CameraView_",
+        "tests": 8,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "ScreenPresentation_"
+        ],
+        "binarySha256": "79614d4b17ef35a6a136503154eb7f12f57ada518651cac0b83a65b648e2d13a",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 0.6542894000012893,
+        "stdoutSha256": "e7ac911238149e606812e5636707bbaa49a5433ce5c7081d7d7df57f29c85977",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "ScreenPresentation_",
+        "tests": 5,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "ScreenScroll_"
+        ],
+        "binarySha256": "79614d4b17ef35a6a136503154eb7f12f57ada518651cac0b83a65b648e2d13a",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 0.6037447999988217,
+        "stdoutSha256": "64faf6fc3fcc1ff18eb62fc27bd3ceb7626642f4e219ed9c535526a5a8c30be3",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "ScreenScroll_",
+        "tests": 4,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "GumpInput_"
+        ],
+        "binarySha256": "79614d4b17ef35a6a136503154eb7f12f57ada518651cac0b83a65b648e2d13a",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 0.9376085000003513,
+        "stdoutSha256": "5cb6f3cb1b6bdd62ef1d41345d897757c626f075b9e5e9090ce843bb678c7b93",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "GumpInput_",
+        "tests": 9,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "ObjectCollection_"
+        ],
+        "binarySha256": "79614d4b17ef35a6a136503154eb7f12f57ada518651cac0b83a65b648e2d13a",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 2.69278679999843,
+        "stdoutSha256": "6f5feab137ed2c0dceafba0aa04b9878d409f5d0606b1cd13136ba631e67309b",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "ObjectCollection_",
+        "tests": 7,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "SpriteDraw_"
+        ],
+        "binarySha256": "79614d4b17ef35a6a136503154eb7f12f57ada518651cac0b83a65b648e2d13a",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 2.0901758999971207,
+        "stdoutSha256": "2d37158cee4e8849b98cfe372c40fc733fef86baf45f0957a0d78b699d276085",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "SpriteDraw_",
+        "tests": 14,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "RawMenuControls_"
+        ],
+        "binarySha256": "79614d4b17ef35a6a136503154eb7f12f57ada518651cac0b83a65b648e2d13a",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 3.9391293000007863,
+        "stdoutSha256": "0cf39f205fdf32e0d94cbf080fee948b42ee598639539f998bb1bb080f061596",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "RawMenuControls_",
+        "tests": 17,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "GumpRedraw_"
+        ],
+        "binarySha256": "79614d4b17ef35a6a136503154eb7f12f57ada518651cac0b83a65b648e2d13a",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 0.8596998999964853,
+        "stdoutSha256": "ba8027da44a71a31679a5acebde323265135f4df097df017e28f19ed079cfa07",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "GumpRedraw_",
+        "tests": 2,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "GumpCollection_"
+        ],
+        "binarySha256": "79614d4b17ef35a6a136503154eb7f12f57ada518651cac0b83a65b648e2d13a",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 0.8546118000012939,
+        "stdoutSha256": "d4c07497b5f661cdaba73f4286c5392f859d16ec3cc0b666cc6cad22ae0f46fa",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "GumpCollection_",
+        "tests": 6,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "GumpFrame_"
+        ],
+        "binarySha256": "79614d4b17ef35a6a136503154eb7f12f57ada518651cac0b83a65b648e2d13a",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 1.3408275000001595,
+        "stdoutSha256": "761a68029efd34f53769860350524283508459ac09044dff2af381c3ebf58181",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "GumpFrame_",
+        "tests": 9,
+        "failed": 0
+      }
+    ],
+    "binarySha256": "79614d4b17ef35a6a136503154eb7f12f57ada518651cac0b83a65b648e2d13a"
+  },
+  "registeredTests": 3534,
+  "gui": {
+    "passed": true,
+    "runs": 10,
+    "entries": 1376,
+    "gameAssets": 1358,
+    "binarySha256": "41fc013a903d81f97e7b40774e11e9c239195af4ece1d3e0f9c6039b5919ae00",
+    "zipSha256": "29594e9c1d0c49d40e9c3c3380bbca457d8181da67c01a8d2476b8d322e3bd0a",
+    "results": [
+      {
+        "passed": true,
+        "mission": false,
+        "flags": 170,
+        "frames": {
+          "initial": [
+            8,
+            8,
+            8,
+            8,
+            0,
+            8,
+            8,
+            1,
+            170,
+            0,
+            2,
+            905969664,
+            0,
+            0,
+            0,
+            0
+          ],
+          "final": [
+            100,
+            100,
+            100,
+            100,
+            0,
+            100,
+            4,
+            1,
+            170,
+            0,
+            10,
+            905969664,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "presentation": {
+          "initial": {
+            "same": true,
+            "actualSha256": "24714c78478249315e6449516f6ee28a6cf3cdf548c4a0da0742d11f711ae453",
+            "expectedSha256": "24714c78478249315e6449516f6ee28a6cf3cdf548c4a0da0742d11f711ae453",
+            "dimensions": [
+              1024,
+              768
+            ],
+            "outputRect": [
+              0,
+              0,
+              1024,
+              768
+            ]
+          },
+          "final": {
+            "same": true,
+            "actualSha256": "44ab8b5fde980751037eaffe3b620349649e850fec227ef675919f32ab7301be",
+            "expectedSha256": "44ab8b5fde980751037eaffe3b620349649e850fec227ef675919f32ab7301be",
+            "dimensions": [
+              1024,
+              768
+            ],
+            "outputRect": [
+              0,
+              0,
+              1024,
+              768
+            ]
+          }
+        },
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-gump-redraw-624-20261031\\gui-v1\\한글 배포본\\NetstormReborn-cpppj\\Netstorm.exe",
+            "--run",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-gump-redraw-624-20261031\\gui-v1\\한글 배포본\\NetstormReborn-cpppj\\game",
+            "--no-audio",
+            "--frames",
+            "103",
+            "--set",
+            "SCREENW=1024;SCREENH=768;windowScreenFlags=170;workingFullScreenFlags=170;startInFullScreen=1;maxFPS=40;sleepPerLoop=1;autoDemo=0;tellTips=0;edgeScroll=0;scrollWhileMouseOut=0",
+            "--ui-script",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-gump-redraw-624-20261031\\gui-v1\\main-clouds\\steps.tsv",
+            "--ui-report",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-gump-redraw-624-20261031\\gui-v1\\main-clouds\\states.tsv",
+            "--window"
+          ],
+          "binarySha256": "41fc013a903d81f97e7b40774e11e9c239195af4ece1d3e0f9c6039b5919ae00",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 4.213315499997407,
+          "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderrSha256": "cb76758e176fb9498de489bf084e9844f54d645d0fb4457c2c91e00a6a78d515"
+        }
+      },
+      {
+        "passed": true,
+        "mission": false,
+        "flags": 130,
+        "frames": {
+          "initial": [
+            8,
+            3,
+            3,
+            0,
+            3,
+            8,
+            0,
+            0,
+            130,
+            0,
+            2,
+            905969664,
+            1,
+            0,
+            0,
+            0
+          ],
+          "final": [
+            100,
+            8,
+            8,
+            0,
+            8,
+            100,
+            0,
+            0,
+            130,
+            0,
+            2,
+            905969664,
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        "presentation": {
+          "initial": {
+            "same": true,
+            "actualSha256": "979cd3c61fbd544467cd4bd6f7ed7b9f08751b7cbfc5f826823a69c747237900",
+            "expectedSha256": "979cd3c61fbd544467cd4bd6f7ed7b9f08751b7cbfc5f826823a69c747237900",
+            "dimensions": [
+              1024,
+              768
+            ],
+            "outputRect": [
+              0,
+              0,
+              1024,
+              768
+            ]
+          },
+          "final": {
+            "same": true,
+            "actualSha256": "979cd3c61fbd544467cd4bd6f7ed7b9f08751b7cbfc5f826823a69c747237900",
+            "expectedSha256": "979cd3c61fbd544467cd4bd6f7ed7b9f08751b7cbfc5f826823a69c747237900",
+            "dimensions": [
+              1024,
+              768
+            ],
+            "outputRect": [
+              0,
+              0,
+              1024,
+              768
+            ]
+          }
+        },
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-gump-redraw-624-20261031\\gui-v1\\한글 배포본\\NetstormReborn-cpppj\\Netstorm.exe",
+            "--run",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-gump-redraw-624-20261031\\gui-v1\\한글 배포본\\NetstormReborn-cpppj\\game",
+            "--no-audio",
+            "--frames",
+            "103",
+            "--set",
+            "SCREENW=1024;SCREENH=768;windowScreenFlags=130;workingFullScreenFlags=130;startInFullScreen=1;maxFPS=40;sleepPerLoop=1;autoDemo=0;tellTips=0;edgeScroll=0;scrollWhileMouseOut=0",
+            "--ui-script",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-gump-redraw-624-20261031\\gui-v1\\main-tint\\steps.tsv",
+            "--ui-report",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-gump-redraw-624-20261031\\gui-v1\\main-tint\\states.tsv",
+            "--window"
+          ],
+          "binarySha256": "41fc013a903d81f97e7b40774e11e9c239195af4ece1d3e0f9c6039b5919ae00",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 3.9240625999991607,
+          "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderrSha256": "cb76758e176fb9498de489bf084e9844f54d645d0fb4457c2c91e00a6a78d515"
+        }
+      },
+      {
+        "passed": true,
+        "mission": true,
+        "flags": 170,
+        "frames": {
+          "initial": [
+            9,
+            9,
+            9,
+            9,
+            0,
+            9,
+            9,
+            1,
+            170,
+            0,
+            4,
+            905969664,
+            0,
+            0,
+            0,
+            0
+          ],
+          "playing": [
+            26,
+            26,
+            26,
+            26,
+            0,
+            26,
+            10,
+            1,
+            170,
+            0,
+            6,
+            905969664,
+            0,
+            0,
+            0,
+            0
+          ],
+          "escape": [
+            51,
+            51,
+            51,
+            51,
+            0,
+            51,
+            3,
+            1,
+            170,
+            0,
+            8,
+            905969664,
+            0,
+            0,
+            0,
+            0
+          ],
+          "final": [
+            101,
+            101,
+            101,
+            101,
+            0,
+            101,
+            5,
+            1,
+            170,
+            0,
+            12,
+            905969664,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "presentation": {
+          "initial": {
+            "same": true,
+            "actualSha256": "224a9255ebec84edaa5099b5f5f5cb0261aea0600fd98bb8b2186254578c67cb",
+            "expectedSha256": "224a9255ebec84edaa5099b5f5f5cb0261aea0600fd98bb8b2186254578c67cb",
+            "dimensions": [
+              1024,
+              768
+            ],
+            "outputRect": [
+              0,
+              0,
+              1024,
+              768
+            ]
+          },
+          "final": {
+            "same": true,
+            "actualSha256": "feade235bf1a03c0257c4ebb344542a48aec0addd1679b371b909142366e7925",
+            "expectedSha256": "feade235bf1a03c0257c4ebb344542a48aec0addd1679b371b909142366e7925",
+            "dimensions": [
+              1024,
+              768
+            ],
+            "outputRect": [
+              0,
+              0,
+              1024,
+              768
+            ]
+          }
+        },
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-gump-redraw-624-20261031\\gui-v1\\한글 배포본\\NetstormReborn-cpppj\\Netstorm.exe",
+            "--run",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-gump-redraw-624-20261031\\gui-v1\\한글 배포본\\NetstormReborn-cpppj\\game",
+            "--no-audio",
+            "--frames",
+            "103",
+            "--set",
+            "SCREENW=1024;SCREENH=768;windowScreenFlags=170;workingFullScreenFlags=170;startInFullScreen=1;maxFPS=40;sleepPerLoop=1;autoDemo=0;tellTips=0;edgeScroll=0;scrollWhileMouseOut=0",
+            "--ui-script",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-gump-redraw-624-20261031\\gui-v1\\mission-clouds\\steps.tsv",
+            "--ui-report",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-gump-redraw-624-20261031\\gui-v1\\mission-clouds\\states.tsv",
+            "--window",
+            "--mission",
+            "TheWarBegins"
+          ],
+          "binarySha256": "41fc013a903d81f97e7b40774e11e9c239195af4ece1d3e0f9c6039b5919ae00",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 5.121556499998405,
+          "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderrSha256": "9fba4f7e2bb0be090e62265ef1203d93a429672f7ce307b7cf3aa08e3bfebbbb"
+        }
+      },
+      {
+        "passed": true,
+        "mission": true,
+        "flags": 187,
+        "frames": {
+          "initial": [
+            9,
+            8,
+            8,
+            8,
+            0,
+            9,
+            0,
+            0,
+            187,
+            0,
+            4,
+            905969664,
+            0,
+            0,
+            0,
+            0
+          ],
+          "playing": [
+            26,
+            25,
+            25,
+            25,
+            0,
+            26,
+            0,
+            0,
+            187,
+            0,
+            6,
+            905969664,
+            0,
+            0,
+            0,
+            0
+          ],
+          "escape": [
+            51,
+            50,
+            50,
+            50,
+            0,
+            51,
+            0,
+            0,
+            187,
+            0,
+            8,
+            905969664,
+            0,
+            0,
+            0,
+            0
+          ],
+          "final": [
+            101,
+            99,
+            99,
+            99,
+            0,
+            101,
+            0,
+            0,
+            187,
+            0,
+            12,
+            905969664,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "presentation": {
+          "initial": {
+            "same": true,
+            "actualSha256": "895e0f0d8e4e1e7829a0ff318996e337286ef4b30541fed6fb677acab73df62a",
+            "expectedSha256": "895e0f0d8e4e1e7829a0ff318996e337286ef4b30541fed6fb677acab73df62a",
+            "dimensions": [
+              1920,
+              1080
+            ],
+            "outputRect": [
+              240,
+              0,
+              1680,
+              1080
+            ]
+          },
+          "final": {
+            "same": true,
+            "actualSha256": "6a8aebe4f403d3fd52d56535684eff6e13c8b53688e1da2fb7e15aae40b363b2",
+            "expectedSha256": "6a8aebe4f403d3fd52d56535684eff6e13c8b53688e1da2fb7e15aae40b363b2",
+            "dimensions": [
+              1920,
+              1080
+            ],
+            "outputRect": [
+              240,
+              0,
+              1680,
+              1080
+            ]
+          }
+        },
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-gump-redraw-624-20261031\\gui-v1\\한글 배포본\\NetstormReborn-cpppj\\Netstorm.exe",
+            "--run",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-gump-redraw-624-20261031\\gui-v1\\한글 배포본\\NetstormReborn-cpppj\\game",
+            "--no-audio",
+            "--frames",
+            "103",
+            "--set",
+            "SCREENW=1024;SCREENH=768;windowScreenFlags=187;workingFullScreenFlags=187;startInFullScreen=1;maxFPS=40;sleepPerLoop=1;autoDemo=0;tellTips=0;edgeScroll=0;scrollWhileMouseOut=0",
+            "--ui-script",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-gump-redraw-624-20261031\\gui-v1\\mission-parallax-fullscreen\\steps.tsv",
+            "--ui-report",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-gump-redraw-624-20261031\\gui-v1\\mission-parallax-fullscreen\\states.tsv",
+            "--mission",
+            "TheWarBegins"
+          ],
+          "binarySha256": "41fc013a903d81f97e7b40774e11e9c239195af4ece1d3e0f9c6039b5919ae00",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 4.975556800000049,
+          "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderrSha256": "9fba4f7e2bb0be090e62265ef1203d93a429672f7ce307b7cf3aa08e3bfebbbb"
+        }
+      },
+      {
+        "passed": true,
+        "logicalSize": [
+          1024,
+          768
+        ],
+        "fullscreen": false,
+        "changes": {
+          "alt": {
+            "delta": [
+              290,
+              0
+            ],
+            "requests": 10
+          },
+          "middle": {
+            "delta": [
+              -50,
+              -240
+            ],
+            "requests": 10
+          }
+        },
+        "cameraFrames": {
+          "briefing": [
+            976,
+            793,
+            976,
+            793,
+            6,
+            0,
+            7
+          ],
+          "baseline": [
+            976,
+            793,
+            976,
+            793,
+            6,
+            0,
+            7
+          ],
+          "alt1": [
+            1034,
+            793,
+            1034,
+            793,
+            6,
+            2,
+            7
+          ],
+          "alt2": [
+            1324,
+            793,
+            1324,
+            793,
+            6,
+            12,
+            7
+          ],
+          "released": [
+            1411,
+            793,
+            1411,
+            793,
+            6,
+            15,
+            7
+          ],
+          "idle": [
+            1411,
+            793,
+            1411,
+            793,
+            6,
+            15,
+            7
+          ],
+          "middle1": [
+            1401,
+            745,
+            1401,
+            745,
+            6,
+            17,
+            7
+          ],
+          "middle2": [
+            1351,
+            505,
+            1351,
+            505,
+            6,
+            27,
+            7
+          ],
+          "middle-stop": [
+            1336,
+            433,
+            1336,
+            433,
+            6,
+            30,
+            7
+          ],
+          "key-works": [
+            1336,
+            433,
+            1336,
+            433,
+            6,
+            30,
+            7
+          ],
+          "key-restored": [
+            1336,
+            433,
+            1336,
+            433,
+            6,
+            30,
+            7
+          ],
+          "final": [
+            1336,
+            433,
+            1336,
+            433,
+            6,
+            30,
+            7
+          ]
+        },
+        "window": [
+          "0",
+          "0",
+          "1040",
+          "807",
+          "1024",
+          "768",
+          "349110272"
+        ],
+        "output": [
+          "0",
+          "0",
+          "1024",
+          "768"
+        ],
+        "presentation": {
+          "same": true,
+          "actualSha256": "47ee0a87831f6852c775e8e2467322f23388ec704d0fb606f40d3d12d6049499",
+          "expectedSha256": "47ee0a87831f6852c775e8e2467322f23388ec704d0fb606f40d3d12d6049499",
+          "dimensions": [
+            1024,
+            768
+          ],
+          "outputRect": [
+            0,
+            0,
+            1024,
+            768
+          ]
+        },
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-gump-redraw-624-20261031\\gui-v1\\한글 배포본\\NetstormReborn-cpppj\\Netstorm.exe",
+            "--run",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-gump-redraw-624-20261031\\gui-v1\\한글 배포본\\NetstormReborn-cpppj\\game",
+            "--mission",
+            "TheWarBegins",
+            "--no-audio",
+            "--frames",
+            "82",
+            "--set",
+            "SCREENW=1024;SCREENH=768;maxFPS=40;sleepPerLoop=1;edgeScroll=0;scrollWhileMouseOut=0;autoDemo=0;tellTips=0;startInFullScreen=1;workingFullScreenFlags=11",
+            "--ui-script",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-gump-redraw-624-20261031\\gui-v1\\1024x768-window\\steps.tsv",
+            "--ui-report",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-gump-redraw-624-20261031\\gui-v1\\1024x768-window\\states.tsv",
+            "--window"
+          ],
+          "binarySha256": "41fc013a903d81f97e7b40774e11e9c239195af4ece1d3e0f9c6039b5919ae00",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 4.743203899997752,
+          "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderrSha256": "9fba4f7e2bb0be090e62265ef1203d93a429672f7ce307b7cf3aa08e3bfebbbb"
+        },
+        "scope": "실제 클론 창/검사 폴링이다. 물리 Alt/가운데·실제 앱 포커스 전환·Win11/PCM·포획/희생/특정 공격/승리·신규MP 검사는 아니다."
+      },
+      {
+        "passed": true,
+        "logicalSize": [
+          1024,
+          768
+        ],
+        "fullscreen": true,
+        "changes": {
+          "alt": {
+            "delta": [
+              290,
+              0
+            ],
+            "requests": 10
+          },
+          "middle": {
+            "delta": [
+              -50,
+              -240
+            ],
+            "requests": 10
+          }
+        },
+        "cameraFrames": {
+          "briefing": [
+            976,
+            793,
+            976,
+            793,
+            6,
+            0,
+            7
+          ],
+          "baseline": [
+            976,
+            793,
+            976,
+            793,
+            6,
+            0,
+            7
+          ],
+          "alt1": [
+            1034,
+            793,
+            1034,
+            793,
+            6,
+            2,
+            7
+          ],
+          "alt2": [
+            1324,
+            793,
+            1324,
+            793,
+            6,
+            12,
+            7
+          ],
+          "released": [
+            1411,
+            793,
+            1411,
+            793,
+            6,
+            15,
+            7
+          ],
+          "idle": [
+            1411,
+            793,
+            1411,
+            793,
+            6,
+            15,
+            7
+          ],
+          "middle1": [
+            1401,
+            745,
+            1401,
+            745,
+            6,
+            17,
+            7
+          ],
+          "middle2": [
+            1351,
+            505,
+            1351,
+            505,
+            6,
+            27,
+            7
+          ],
+          "middle-stop": [
+            1336,
+            433,
+            1336,
+            433,
+            6,
+            30,
+            7
+          ],
+          "key-works": [
+            1336,
+            433,
+            1336,
+            433,
+            6,
+            30,
+            7
+          ],
+          "key-restored": [
+            1336,
+            433,
+            1336,
+            433,
+            6,
+            30,
+            7
+          ],
+          "final": [
+            1336,
+            433,
+            1336,
+            433,
+            6,
+            30,
+            7
+          ]
+        },
+        "window": [
+          "0",
+          "0",
+          "1920",
+          "1080",
+          "1920",
+          "1080",
+          "2483027968"
+        ],
+        "output": [
+          "240",
+          "0",
+          "1680",
+          "1080"
+        ],
+        "presentation": {
+          "same": true,
+          "actualSha256": "c57bd7f67c919702c4a2607929cdfec55305819ab93e1f2db18ff1a904a5fe2e",
+          "expectedSha256": "c57bd7f67c919702c4a2607929cdfec55305819ab93e1f2db18ff1a904a5fe2e",
+          "dimensions": [
+            1920,
+            1080
+          ],
+          "outputRect": [
+            240,
+            0,
+            1680,
+            1080
+          ]
+        },
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-gump-redraw-624-20261031\\gui-v1\\한글 배포본\\NetstormReborn-cpppj\\Netstorm.exe",
+            "--run",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-gump-redraw-624-20261031\\gui-v1\\한글 배포본\\NetstormReborn-cpppj\\game",
+            "--mission",
+            "TheWarBegins",
+            "--no-audio",
+            "--frames",
+            "82",
+            "--set",
+            "SCREENW=1024;SCREENH=768;maxFPS=40;sleepPerLoop=1;edgeScroll=0;scrollWhileMouseOut=0;autoDemo=0;tellTips=0;startInFullScreen=1;workingFullScreenFlags=11",
+            "--ui-script",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-gump-redraw-624-20261031\\gui-v1\\1024x768-fullscreen\\steps.tsv",
+            "--ui-report",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-gump-redraw-624-20261031\\gui-v1\\1024x768-fullscreen\\states.tsv"
+          ],
+          "binarySha256": "41fc013a903d81f97e7b40774e11e9c239195af4ece1d3e0f9c6039b5919ae00",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 4.826887799998076,
+          "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderrSha256": "9fba4f7e2bb0be090e62265ef1203d93a429672f7ce307b7cf3aa08e3bfebbbb"
+        },
+        "scope": "실제 클론 창/검사 폴링이다. 물리 Alt/가운데·실제 앱 포커스 전환·Win11/PCM·포획/희생/특정 공격/승리·신규MP 검사는 아니다."
+      },
+      {
+        "passed": true,
+        "logicalSize": [
+          1280,
+          720
+        ],
+        "fullscreen": false,
+        "changes": {
+          "alt": {
+            "delta": [
+              370,
+              0
+            ],
+            "requests": 10
+          },
+          "middle": {
+            "delta": [
+              -50,
+              -220
+            ],
+            "requests": 10
+          }
+        },
+        "cameraFrames": {
+          "briefing": [
+            848,
+            817,
+            848,
+            817,
+            6,
+            0,
+            7
+          ],
+          "baseline": [
+            848,
+            817,
+            848,
+            817,
+            6,
+            0,
+            7
+          ],
+          "alt1": [
+            922,
+            817,
+            922,
+            817,
+            6,
+            2,
+            7
+          ],
+          "alt2": [
+            1292,
+            817,
+            1292,
+            817,
+            6,
+            12,
+            7
+          ],
+          "released": [
+            1403,
+            817,
+            1403,
+            817,
+            6,
+            15,
+            7
+          ],
+          "idle": [
+            1403,
+            817,
+            1403,
+            817,
+            6,
+            15,
+            7
+          ],
+          "middle1": [
+            1393,
+            773,
+            1393,
+            773,
+            6,
+            17,
+            7
+          ],
+          "middle2": [
+            1343,
+            553,
+            1343,
+            553,
+            6,
+            27,
+            7
+          ],
+          "middle-stop": [
+            1328,
+            487,
+            1328,
+            487,
+            6,
+            30,
+            7
+          ],
+          "key-works": [
+            1328,
+            487,
+            1328,
+            487,
+            6,
+            30,
+            7
+          ],
+          "key-restored": [
+            1328,
+            487,
+            1328,
+            487,
+            6,
+            30,
+            7
+          ],
+          "final": [
+            1328,
+            487,
+            1328,
+            487,
+            6,
+            30,
+            7
+          ]
+        },
+        "window": [
+          "0",
+          "0",
+          "1296",
+          "759",
+          "1280",
+          "720",
+          "349110272"
+        ],
+        "output": [
+          "0",
+          "0",
+          "1280",
+          "720"
+        ],
+        "presentation": {
+          "same": true,
+          "actualSha256": "be96c14cdb1169ae37741889024321ade0d321f884b7ae9d24b7f2726be1ed95",
+          "expectedSha256": "be96c14cdb1169ae37741889024321ade0d321f884b7ae9d24b7f2726be1ed95",
+          "dimensions": [
+            1280,
+            720
+          ],
+          "outputRect": [
+            0,
+            0,
+            1280,
+            720
+          ]
+        },
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-gump-redraw-624-20261031\\gui-v1\\한글 배포본\\NetstormReborn-cpppj\\Netstorm.exe",
+            "--run",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-gump-redraw-624-20261031\\gui-v1\\한글 배포본\\NetstormReborn-cpppj\\game",
+            "--mission",
+            "TheWarBegins",
+            "--no-audio",
+            "--frames",
+            "82",
+            "--set",
+            "SCREENW=1280;SCREENH=720;maxFPS=40;sleepPerLoop=1;edgeScroll=0;scrollWhileMouseOut=0;autoDemo=0;tellTips=0;startInFullScreen=1;workingFullScreenFlags=11",
+            "--ui-script",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-gump-redraw-624-20261031\\gui-v1\\1280x720-window\\steps.tsv",
+            "--ui-report",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-gump-redraw-624-20261031\\gui-v1\\1280x720-window\\states.tsv",
+            "--window"
+          ],
+          "binarySha256": "41fc013a903d81f97e7b40774e11e9c239195af4ece1d3e0f9c6039b5919ae00",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 4.477728000001662,
+          "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderrSha256": "9fba4f7e2bb0be090e62265ef1203d93a429672f7ce307b7cf3aa08e3bfebbbb"
+        },
+        "scope": "실제 클론 창/검사 폴링이다. 물리 Alt/가운데·실제 앱 포커스 전환·Win11/PCM·포획/희생/특정 공격/승리·신규MP 검사는 아니다."
+      },
+      {
+        "passed": true,
+        "logicalSize": [
+          1280,
+          720
+        ],
+        "fullscreen": true,
+        "changes": {
+          "alt": {
+            "delta": [
+              370,
+              0
+            ],
+            "requests": 10
+          },
+          "middle": {
+            "delta": [
+              -50,
+              -220
+            ],
+            "requests": 10
+          }
+        },
+        "cameraFrames": {
+          "briefing": [
+            848,
+            817,
+            848,
+            817,
+            6,
+            0,
+            7
+          ],
+          "baseline": [
+            848,
+            817,
+            848,
+            817,
+            6,
+            0,
+            7
+          ],
+          "alt1": [
+            922,
+            817,
+            922,
+            817,
+            6,
+            2,
+            7
+          ],
+          "alt2": [
+            1292,
+            817,
+            1292,
+            817,
+            6,
+            12,
+            7
+          ],
+          "released": [
+            1403,
+            817,
+            1403,
+            817,
+            6,
+            15,
+            7
+          ],
+          "idle": [
+            1403,
+            817,
+            1403,
+            817,
+            6,
+            15,
+            7
+          ],
+          "middle1": [
+            1393,
+            773,
+            1393,
+            773,
+            6,
+            17,
+            7
+          ],
+          "middle2": [
+            1343,
+            553,
+            1343,
+            553,
+            6,
+            27,
+            7
+          ],
+          "middle-stop": [
+            1328,
+            487,
+            1328,
+            487,
+            6,
+            30,
+            7
+          ],
+          "key-works": [
+            1328,
+            487,
+            1328,
+            487,
+            6,
+            30,
+            7
+          ],
+          "key-restored": [
+            1328,
+            487,
+            1328,
+            487,
+            6,
+            30,
+            7
+          ],
+          "final": [
+            1328,
+            487,
+            1328,
+            487,
+            6,
+            30,
+            7
+          ]
+        },
+        "window": [
+          "0",
+          "0",
+          "1920",
+          "1080",
+          "1920",
+          "1080",
+          "2483027968"
+        ],
+        "output": [
+          "0",
+          "0",
+          "1920",
+          "1080"
+        ],
+        "presentation": {
+          "same": true,
+          "actualSha256": "e716bbc8d6f996e1d3f647d3c609bf7c28c72d8496b95332207b000e1afab255",
+          "expectedSha256": "e716bbc8d6f996e1d3f647d3c609bf7c28c72d8496b95332207b000e1afab255",
+          "dimensions": [
+            1920,
+            1080
+          ],
+          "outputRect": [
+            0,
+            0,
+            1920,
+            1080
+          ]
+        },
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-gump-redraw-624-20261031\\gui-v1\\한글 배포본\\NetstormReborn-cpppj\\Netstorm.exe",
+            "--run",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-gump-redraw-624-20261031\\gui-v1\\한글 배포본\\NetstormReborn-cpppj\\game",
+            "--mission",
+            "TheWarBegins",
+            "--no-audio",
+            "--frames",
+            "82",
+            "--set",
+            "SCREENW=1280;SCREENH=720;maxFPS=40;sleepPerLoop=1;edgeScroll=0;scrollWhileMouseOut=0;autoDemo=0;tellTips=0;startInFullScreen=1;workingFullScreenFlags=11",
+            "--ui-script",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-gump-redraw-624-20261031\\gui-v1\\1280x720-fullscreen\\steps.tsv",
+            "--ui-report",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-gump-redraw-624-20261031\\gui-v1\\1280x720-fullscreen\\states.tsv"
+          ],
+          "binarySha256": "41fc013a903d81f97e7b40774e11e9c239195af4ece1d3e0f9c6039b5919ae00",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 4.74864929999967,
+          "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderrSha256": "9fba4f7e2bb0be090e62265ef1203d93a429672f7ce307b7cf3aa08e3bfebbbb"
+        },
+        "scope": "실제 클론 창/검사 폴링이다. 물리 Alt/가운데·실제 앱 포커스 전환·Win11/PCM·포획/희생/특정 공격/승리·신규MP 검사는 아니다."
+      },
+      {
+        "passed": true,
+        "logicalSize": [
+          1280,
+          800
+        ],
+        "fullscreen": false,
+        "changes": {
+          "alt": {
+            "delta": [
+              370,
+              0
+            ],
+            "requests": 10
+          },
+          "middle": {
+            "delta": [
+              -50,
+              -250
+            ],
+            "requests": 10
+          }
+        },
+        "cameraFrames": {
+          "briefing": [
+            848,
+            777,
+            848,
+            777,
+            6,
+            0,
+            7
+          ],
+          "baseline": [
+            848,
+            777,
+            848,
+            777,
+            6,
+            0,
+            7
+          ],
+          "alt1": [
+            922,
+            777,
+            922,
+            777,
+            6,
+            2,
+            7
+          ],
+          "alt2": [
+            1292,
+            777,
+            1292,
+            777,
+            6,
+            12,
+            7
+          ],
+          "released": [
+            1403,
+            777,
+            1403,
+            777,
+            6,
+            15,
+            7
+          ],
+          "idle": [
+            1403,
+            777,
+            1403,
+            777,
+            6,
+            15,
+            7
+          ],
+          "middle1": [
+            1393,
+            727,
+            1393,
+            727,
+            6,
+            17,
+            7
+          ],
+          "middle2": [
+            1343,
+            477,
+            1343,
+            477,
+            6,
+            27,
+            7
+          ],
+          "middle-stop": [
+            1328,
+            402,
+            1328,
+            402,
+            6,
+            30,
+            7
+          ],
+          "key-works": [
+            1328,
+            402,
+            1328,
+            402,
+            6,
+            30,
+            7
+          ],
+          "key-restored": [
+            1328,
+            402,
+            1328,
+            402,
+            6,
+            30,
+            7
+          ],
+          "final": [
+            1328,
+            402,
+            1328,
+            402,
+            6,
+            30,
+            7
+          ]
+        },
+        "window": [
+          "0",
+          "0",
+          "1296",
+          "839",
+          "1280",
+          "800",
+          "349110272"
+        ],
+        "output": [
+          "0",
+          "0",
+          "1280",
+          "800"
+        ],
+        "presentation": {
+          "same": true,
+          "actualSha256": "040142a20b268d9a58769418e8f0e786fd72bc50113c7dc0ce139ca7e6f3dc30",
+          "expectedSha256": "040142a20b268d9a58769418e8f0e786fd72bc50113c7dc0ce139ca7e6f3dc30",
+          "dimensions": [
+            1280,
+            800
+          ],
+          "outputRect": [
+            0,
+            0,
+            1280,
+            800
+          ]
+        },
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-gump-redraw-624-20261031\\gui-v1\\한글 배포본\\NetstormReborn-cpppj\\Netstorm.exe",
+            "--run",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-gump-redraw-624-20261031\\gui-v1\\한글 배포본\\NetstormReborn-cpppj\\game",
+            "--mission",
+            "TheWarBegins",
+            "--no-audio",
+            "--frames",
+            "82",
+            "--set",
+            "SCREENW=1280;SCREENH=800;maxFPS=40;sleepPerLoop=1;edgeScroll=0;scrollWhileMouseOut=0;autoDemo=0;tellTips=0;startInFullScreen=1;workingFullScreenFlags=11",
+            "--ui-script",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-gump-redraw-624-20261031\\gui-v1\\1280x800-window\\steps.tsv",
+            "--ui-report",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-gump-redraw-624-20261031\\gui-v1\\1280x800-window\\states.tsv",
+            "--window"
+          ],
+          "binarySha256": "41fc013a903d81f97e7b40774e11e9c239195af4ece1d3e0f9c6039b5919ae00",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 4.694911599999614,
+          "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderrSha256": "9fba4f7e2bb0be090e62265ef1203d93a429672f7ce307b7cf3aa08e3bfebbbb"
+        },
+        "scope": "실제 클론 창/검사 폴링이다. 물리 Alt/가운데·실제 앱 포커스 전환·Win11/PCM·포획/희생/특정 공격/승리·신규MP 검사는 아니다."
+      },
+      {
+        "passed": true,
+        "logicalSize": [
+          1280,
+          800
+        ],
+        "fullscreen": true,
+        "changes": {
+          "alt": {
+            "delta": [
+              370,
+              0
+            ],
+            "requests": 10
+          },
+          "middle": {
+            "delta": [
+              -50,
+              -250
+            ],
+            "requests": 10
+          }
+        },
+        "cameraFrames": {
+          "briefing": [
+            848,
+            777,
+            848,
+            777,
+            6,
+            0,
+            7
+          ],
+          "baseline": [
+            848,
+            777,
+            848,
+            777,
+            6,
+            0,
+            7
+          ],
+          "alt1": [
+            922,
+            777,
+            922,
+            777,
+            6,
+            2,
+            7
+          ],
+          "alt2": [
+            1292,
+            777,
+            1292,
+            777,
+            6,
+            12,
+            7
+          ],
+          "released": [
+            1403,
+            777,
+            1403,
+            777,
+            6,
+            15,
+            7
+          ],
+          "idle": [
+            1403,
+            777,
+            1403,
+            777,
+            6,
+            15,
+            7
+          ],
+          "middle1": [
+            1393,
+            727,
+            1393,
+            727,
+            6,
+            17,
+            7
+          ],
+          "middle2": [
+            1343,
+            477,
+            1343,
+            477,
+            6,
+            27,
+            7
+          ],
+          "middle-stop": [
+            1328,
+            402,
+            1328,
+            402,
+            6,
+            30,
+            7
+          ],
+          "key-works": [
+            1328,
+            402,
+            1328,
+            402,
+            6,
+            30,
+            7
+          ],
+          "key-restored": [
+            1328,
+            402,
+            1328,
+            402,
+            6,
+            30,
+            7
+          ],
+          "final": [
+            1328,
+            402,
+            1328,
+            402,
+            6,
+            30,
+            7
+          ]
+        },
+        "window": [
+          "0",
+          "0",
+          "1920",
+          "1080",
+          "1920",
+          "1080",
+          "2483027968"
+        ],
+        "output": [
+          "96",
+          "0",
+          "1824",
+          "1080"
+        ],
+        "presentation": {
+          "same": true,
+          "actualSha256": "326ae49f4b30a8da260c62d33cb792defafc81defa2a58281093d863d518d1dc",
+          "expectedSha256": "326ae49f4b30a8da260c62d33cb792defafc81defa2a58281093d863d518d1dc",
+          "dimensions": [
+            1920,
+            1080
+          ],
+          "outputRect": [
+            96,
+            0,
+            1824,
+            1080
+          ]
+        },
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-gump-redraw-624-20261031\\gui-v1\\한글 배포본\\NetstormReborn-cpppj\\Netstorm.exe",
+            "--run",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-gump-redraw-624-20261031\\gui-v1\\한글 배포본\\NetstormReborn-cpppj\\game",
+            "--mission",
+            "TheWarBegins",
+            "--no-audio",
+            "--frames",
+            "82",
+            "--set",
+            "SCREENW=1280;SCREENH=800;maxFPS=40;sleepPerLoop=1;edgeScroll=0;scrollWhileMouseOut=0;autoDemo=0;tellTips=0;startInFullScreen=1;workingFullScreenFlags=11",
+            "--ui-script",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-gump-redraw-624-20261031\\gui-v1\\1280x800-fullscreen\\steps.tsv",
+            "--ui-report",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-gump-redraw-624-20261031\\gui-v1\\1280x800-fullscreen\\states.tsv"
+          ],
+          "binarySha256": "41fc013a903d81f97e7b40774e11e9c239195af4ece1d3e0f9c6039b5919ae00",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 4.8510984999993525,
+          "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderrSha256": "9fba4f7e2bb0be090e62265ef1203d93a429672f7ce307b7cf3aa08e3bfebbbb"
+        },
+        "scope": "실제 클론 창/검사 폴링이다. 물리 Alt/가운데·실제 앱 포커스 전환·Win11/PCM·포획/희생/특정 공격/승리·신규MP 검사는 아니다."
+      }
+    ],
+    "allArchivedBytesUnchanged": true,
+    "scope": "실제 클론 Frame/구름·메뉴/브리핑·ESC·pan과 창DC 출력이다. 자연 완주/포획/희생/특정 공격/승리·공중3종 전용/신규MP·Win11·PCM 검사는 아니다."
+  },
+  "build": {
+    "build-v1.log": {
+      "errors": 25,
+      "warnings": 0,
+      "sha256": "b4c7cb6e404c3b94fff0846d66922389bf9fe20adca70575b5fa2e7574ac0db7"
+    },
+    "build-tests-v2.log": {
+      "errors": 0,
+      "warnings": 0,
+      "sha256": "243a3e7cff0a4fa2b5e2159be5282cd1f866fef539169e4a121a1330438204ea"
+    }
+  },
+  "protectedFiles": 2621,
+  "oldFixtureCount": 762,
+  "fixtureCount": 763,
+  "package": {
+    "path": "extracted/cpp-gump-redraw-624-20261031/NetstormReborn-cpppj-624.zip",
+    "sha256": "29594e9c1d0c49d40e9c3c3380bbca457d8181da67c01a8d2476b8d322e3bd0a",
+    "entries": 1376,
+    "assets": 1358,
+    "allArchivedAndOriginalAssetBytesMatch": true
+  },
+  "gameSha256": "41fc013a903d81f97e7b40774e11e9c239195af4ece1d3e0f9c6039b5919ae00",
+  "testsSha256": "79614d4b17ef35a6a136503154eb7f12f57ada518651cac0b83a65b648e2d13a",
+  "testedSourceSha256": {
+    "cpppj/src/CMakeLists.txt": "fc110f47d70cc7a86c6f03cceef275e72b2715283441f8543718545f5322dc7d",
+    "cpppj/src/client/ClientRendererFrame.cpp": "f79277a159a0d8596c7bbc6a00e8ffc4b6024d1863a5b6e0e385902f1af4160a",
+    "cpppj/src/client/GumpRedraw.cpp": "4fd6fdbce21bb3356856624d70afb4856a084f77b6a234eeadbb67e1ca787894",
+    "cpppj/src/client/GumpRedraw.h": "56c87e0cb775869bbef22d0cab7695c57b6464a612fa0de6b910a8a067925db2",
+    "cpppj/tests/CMakeLists.txt": "67f7e576ecf2c6a04499ad756d4563ee563ba3cdb2eab0efa0138bc306411fdf",
+    "cpppj/tests/GumpRedrawTests.cpp": "08781afa246473435b4ed36c2be3e72ccce15b38d37c619fe8a9a14b6625e704",
+    "cpppj/tests/fixtures/gump-redraw-x86.tsv": "466b3deef743ab396beddfe0dafc5549fb0f6a8a556a89f1a85cd5b18515c6d7",
+    "tools/decomp_gump_redraw.py": "9209ac081dd3e03470b515abcaa5f146797324b5e839ced4e8553e73050ca6b1"
+  },
+  "preliminaryFailure": "제품 빌드는 정상이며 최초 새 검사의 Scene 이름이 기존 rawscene::Scene과 충돌했다. 검사 전용 이름을 RedrawScene으로 바꾼 뒤 최종검사140개가 통과했다.",
+  "scope": "원문 기본 Gump dirty 요청 도우미/지도 좌표별 clamp와 실제 Frame 지도 clip이다. UI common.changed()만 남는 요청/불필요한 전체 합성 갱신은 아직 연결 전이며 전체 원본 동일성/자연 완주/Win11/PCM/물리키/포커스·금지 재현/공중3종 전용/신규MP 검사는 아니다.",
+  "lastFull34": "622제품/623이며 새624 제품의 전체34는 실행하지 않았다.",
+  "goalComplete": false
+}

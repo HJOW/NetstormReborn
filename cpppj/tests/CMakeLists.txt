@@ -2504,3 +2504,7 @@ set_source_files_properties(RendererCloudTests.cpp PROPERTIES COMPILE_DEFINITION
 # 실제 Native Frame 수집/배경/월드/UI 순서와 signed 현재 저장소/dirty reset을 검증한다.
 target_sources(netstorm_tests PRIVATE RendererFrameTests.cpp)
 set_source_files_properties(RendererFrameTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_RENDERER_PROJECTION_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/renderer-projection-x86.tsv\"")
+
+# 원문 기본 Gump 갱신/지도 clamp의 전체1,474행과 현재 장치 읽기 순서를 검사한다.
+target_sources(netstorm_tests PRIVATE GumpRedrawTests.cpp)
+set_source_files_properties(GumpRedrawTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_GUMP_REDRAW_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/gump-redraw-x86.tsv\"")

@@ -289,3 +289,6 @@ target_sources(netstorm PRIVATE client/RawRendererClouds.cpp client/RawRendererC
 
 # 실제 Client Frame에 같은 원문 앞단/구름/지형/현재 UI 장치를 연결한다.
 target_sources(netstorm PRIVATE client/ClientRendererFrame.cpp client/ClientRendererFrame.h)
+
+# 기본 Gump의 원문 갱신 요청/지도 좌표별 clamp를 같은 실제 위치와 Renderer 경계에 제공한다.
+target_sources(netstorm PRIVATE client/GumpRedraw.cpp client/GumpRedraw.h)

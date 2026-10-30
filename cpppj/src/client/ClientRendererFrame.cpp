@@ -15,6 +15,7 @@
 #include "client/RawCampaignCursorDisplay.h"
 #include "client/RawCampaignFactoryDisplay.h"
 #include "client/RawMenuControls.h"
+#include "client/GumpRedraw.h"
 #include "client/UberGump.h"
 #include <algorithm>
 #include <bit>
@@ -93,7 +94,7 @@ std::uint32_t ClientRendererFrame::Collect(ScreenRect clip,std::uint32_t flags) 
         objects_=std::make_unique<ObjectCollection>(storage_->hash,storage_->pool,storage_->types,storage_->shapes,0);
     }
     const auto& camera=client_.gameplayGlobals_->Camera().Snapshot();const auto& map=client_.menu_->rawButtons_->MapViewRect();
-    mapClip_=ClipScreenRect(clip,map); //466070이 트리를 바꾸더라도 배경은 UI 수집 전의 지도 경계를 쓴다.
+    mapClip_=ClampOriginalScreenRect(clip,map); //445290의 좌표별 제한을 UI 수집 전에 저장하고 같은 배경 호출까지 유지한다.
     const auto visible=RendererCollectionViewport(clip,map,camera);
     DrawCollectionHooks hooks;
     hooks.ui=[this](auto rect,auto output,auto limit) { return client_.menu_->rawButtons_->Menus()->CollectDrawing(rect,output,limit); };
