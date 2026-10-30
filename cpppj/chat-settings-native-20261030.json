@@ -1,0 +1,253 @@
+{
+  "unit": 614,
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": "HJOW-Athlon / 2026-10-23",
+  "cases": 8,
+  "observations": 16,
+  "differences": [],
+  "observed": [
+    {
+      "inputSubscriber": 4294967295,
+      "saved": {},
+      "peInitialMy": 4294967295,
+      "readKeys": [
+        "-1chatFormat",
+        "-1chatFormat2"
+      ],
+      "beforeMissionCopy": {
+        "subscriber": 4294967295,
+        "front": "",
+        "back": ""
+      },
+      "afterMissionCopy": {
+        "subscriber": 1,
+        "front": "",
+        "back": ""
+      },
+      "sameManager": true,
+      "missionInstructions": [
+        "0x4c3355",
+        "0x4c335b",
+        "0x4c335c"
+      ]
+    },
+    {
+      "inputSubscriber": 4294967295,
+      "saved": {
+        "1chatFormat2": "~g"
+      },
+      "peInitialMy": 4294967295,
+      "readKeys": [
+        "-1chatFormat",
+        "-1chatFormat2"
+      ],
+      "beforeMissionCopy": {
+        "subscriber": 4294967295,
+        "front": "",
+        "back": ""
+      },
+      "afterMissionCopy": {
+        "subscriber": 1,
+        "front": "",
+        "back": ""
+      },
+      "sameManager": true,
+      "missionInstructions": [
+        "0x4c3355",
+        "0x4c335b",
+        "0x4c335c"
+      ]
+    },
+    {
+      "inputSubscriber": 4294967295,
+      "saved": {
+        "-1chatFormat2": "~g"
+      },
+      "peInitialMy": 4294967295,
+      "readKeys": [
+        "-1chatFormat",
+        "-1chatFormat2"
+      ],
+      "beforeMissionCopy": {
+        "subscriber": 4294967295,
+        "front": "~g",
+        "back": ""
+      },
+      "afterMissionCopy": {
+        "subscriber": 1,
+        "front": "~g",
+        "back": ""
+      },
+      "sameManager": true,
+      "missionInstructions": [
+        "0x4c3355",
+        "0x4c335b",
+        "0x4c335c"
+      ]
+    },
+    {
+      "inputSubscriber": 4294967295,
+      "saved": {
+        "1chatFormat2": "~r",
+        "-1chatFormat2": "~g"
+      },
+      "peInitialMy": 4294967295,
+      "readKeys": [
+        "-1chatFormat",
+        "-1chatFormat2"
+      ],
+      "beforeMissionCopy": {
+        "subscriber": 4294967295,
+        "front": "~g",
+        "back": ""
+      },
+      "afterMissionCopy": {
+        "subscriber": 1,
+        "front": "~g",
+        "back": ""
+      },
+      "sameManager": true,
+      "missionInstructions": [
+        "0x4c3355",
+        "0x4c335b",
+        "0x4c335c"
+      ]
+    },
+    {
+      "inputSubscriber": 1,
+      "saved": {},
+      "peInitialMy": 4294967295,
+      "readKeys": [
+        "1chatFormat",
+        "1chatFormat2"
+      ],
+      "beforeMissionCopy": {
+        "subscriber": 1,
+        "front": "",
+        "back": ""
+      },
+      "afterMissionCopy": {
+        "subscriber": 1,
+        "front": "",
+        "back": ""
+      },
+      "sameManager": true,
+      "missionInstructions": [
+        "0x4c3355",
+        "0x4c335b",
+        "0x4c335c"
+      ]
+    },
+    {
+      "inputSubscriber": 1,
+      "saved": {
+        "1chatFormat2": "~g"
+      },
+      "peInitialMy": 4294967295,
+      "readKeys": [
+        "1chatFormat",
+        "1chatFormat2"
+      ],
+      "beforeMissionCopy": {
+        "subscriber": 1,
+        "front": "~g",
+        "back": ""
+      },
+      "afterMissionCopy": {
+        "subscriber": 1,
+        "front": "~g",
+        "back": ""
+      },
+      "sameManager": true,
+      "missionInstructions": [
+        "0x4c3355",
+        "0x4c335b",
+        "0x4c335c"
+      ]
+    },
+    {
+      "inputSubscriber": 1,
+      "saved": {
+        "-1chatFormat2": "~g"
+      },
+      "peInitialMy": 4294967295,
+      "readKeys": [
+        "1chatFormat",
+        "1chatFormat2"
+      ],
+      "beforeMissionCopy": {
+        "subscriber": 1,
+        "front": "",
+        "back": ""
+      },
+      "afterMissionCopy": {
+        "subscriber": 1,
+        "front": "",
+        "back": ""
+      },
+      "sameManager": true,
+      "missionInstructions": [
+        "0x4c3355",
+        "0x4c335b",
+        "0x4c335c"
+      ]
+    },
+    {
+      "inputSubscriber": 1,
+      "saved": {
+        "1chatFormat2": "~r",
+        "-1chatFormat2": "~g"
+      },
+      "peInitialMy": 4294967295,
+      "readKeys": [
+        "1chatFormat",
+        "1chatFormat2"
+      ],
+      "beforeMissionCopy": {
+        "subscriber": 1,
+        "front": "~r",
+        "back": ""
+      },
+      "afterMissionCopy": {
+        "subscriber": 1,
+        "front": "~r",
+        "back": ""
+      },
+      "sameManager": true,
+      "missionInstructions": [
+        "0x4c3355",
+        "0x4c335b",
+        "0x4c335c"
+      ]
+    }
+  ],
+  "staticLocalLoginCalls": [
+    "40a4b0",
+    "40a580",
+    "460680",
+    "4bd2e0",
+    "4bf3e0",
+    "4bf550",
+    "4bf690",
+    "4df590",
+    "4e0620",
+    "4e2dc0",
+    "4e4354",
+    "4e4a40"
+  ],
+  "staticChatInitializerCallers": [
+    "439840",
+    "48fc51",
+    "4b4485",
+    "4c9670",
+    "4c96f0"
+  ],
+  "sourceSha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_chat_manager_prefix.py": "71d3f7887cd3c8b54dc1ab146d783c7b2e603f15db232525fb9759aaaeaf73d9",
+    "tools/decomp_chat_settings_startup.py": "49c2f4e0334bcf1a4ff198de7a512d050704c9fee852fd99fcb8ab0391c56331"
+  },
+  "scope": "격리x86의 실제Chat 초기화/생성자와 미션Init ID복사3명령이다. Config/할당/명령등록/CRT는 기존 명시 경계다. 원본전체startup/게임GUI/MP를 실행한 표본은 아니다. 싱글로그인은4b63d0이며4b4480의Chat재초기화와구별한다."
+}

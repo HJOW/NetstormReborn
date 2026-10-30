@@ -2309,3 +2309,10 @@ cpppj/tests/fixtures/fence-event3-x86.tsv -text
 cpppj/fence-event3-native-20261030.json text eol=lf
 cpppj/fence-event3-runtime-20261030.json text eol=lf
 docs/exe/cpp-fence-event3-20261030.md text eol=lf
+
+# Chat 설정과 시작ID별 서식의 원문/실제 재실행 검증 바이트를 보존한다.
+tools/decomp_chat_settings_startup.py text eol=lf
+tools/cpp_chat_settings_smoke.py text eol=lf
+cpppj/chat-settings-native-20261030.json text eol=lf
+cpppj/chat-settings-runtime-20261030.json text eol=lf
+docs/exe/cpp-chat-settings-20261030.md text eol=lf

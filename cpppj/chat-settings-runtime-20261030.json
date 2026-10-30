@@ -1,0 +1,720 @@
+{
+  "unit": 614,
+  "verificationOnly": true,
+  "productUnit": 613,
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "native": {
+    "unit": 614,
+    "host": "HJOW-Athlon",
+    "lastFullDecompilation": "HJOW-Athlon / 2026-10-23",
+    "cases": 8,
+    "observations": 16,
+    "differences": [],
+    "observed": [
+      {
+        "inputSubscriber": 4294967295,
+        "saved": {},
+        "peInitialMy": 4294967295,
+        "readKeys": [
+          "-1chatFormat",
+          "-1chatFormat2"
+        ],
+        "beforeMissionCopy": {
+          "subscriber": 4294967295,
+          "front": "",
+          "back": ""
+        },
+        "afterMissionCopy": {
+          "subscriber": 1,
+          "front": "",
+          "back": ""
+        },
+        "sameManager": true,
+        "missionInstructions": [
+          "0x4c3355",
+          "0x4c335b",
+          "0x4c335c"
+        ]
+      },
+      {
+        "inputSubscriber": 4294967295,
+        "saved": {
+          "1chatFormat2": "~g"
+        },
+        "peInitialMy": 4294967295,
+        "readKeys": [
+          "-1chatFormat",
+          "-1chatFormat2"
+        ],
+        "beforeMissionCopy": {
+          "subscriber": 4294967295,
+          "front": "",
+          "back": ""
+        },
+        "afterMissionCopy": {
+          "subscriber": 1,
+          "front": "",
+          "back": ""
+        },
+        "sameManager": true,
+        "missionInstructions": [
+          "0x4c3355",
+          "0x4c335b",
+          "0x4c335c"
+        ]
+      },
+      {
+        "inputSubscriber": 4294967295,
+        "saved": {
+          "-1chatFormat2": "~g"
+        },
+        "peInitialMy": 4294967295,
+        "readKeys": [
+          "-1chatFormat",
+          "-1chatFormat2"
+        ],
+        "beforeMissionCopy": {
+          "subscriber": 4294967295,
+          "front": "~g",
+          "back": ""
+        },
+        "afterMissionCopy": {
+          "subscriber": 1,
+          "front": "~g",
+          "back": ""
+        },
+        "sameManager": true,
+        "missionInstructions": [
+          "0x4c3355",
+          "0x4c335b",
+          "0x4c335c"
+        ]
+      },
+      {
+        "inputSubscriber": 4294967295,
+        "saved": {
+          "1chatFormat2": "~r",
+          "-1chatFormat2": "~g"
+        },
+        "peInitialMy": 4294967295,
+        "readKeys": [
+          "-1chatFormat",
+          "-1chatFormat2"
+        ],
+        "beforeMissionCopy": {
+          "subscriber": 4294967295,
+          "front": "~g",
+          "back": ""
+        },
+        "afterMissionCopy": {
+          "subscriber": 1,
+          "front": "~g",
+          "back": ""
+        },
+        "sameManager": true,
+        "missionInstructions": [
+          "0x4c3355",
+          "0x4c335b",
+          "0x4c335c"
+        ]
+      },
+      {
+        "inputSubscriber": 1,
+        "saved": {},
+        "peInitialMy": 4294967295,
+        "readKeys": [
+          "1chatFormat",
+          "1chatFormat2"
+        ],
+        "beforeMissionCopy": {
+          "subscriber": 1,
+          "front": "",
+          "back": ""
+        },
+        "afterMissionCopy": {
+          "subscriber": 1,
+          "front": "",
+          "back": ""
+        },
+        "sameManager": true,
+        "missionInstructions": [
+          "0x4c3355",
+          "0x4c335b",
+          "0x4c335c"
+        ]
+      },
+      {
+        "inputSubscriber": 1,
+        "saved": {
+          "1chatFormat2": "~g"
+        },
+        "peInitialMy": 4294967295,
+        "readKeys": [
+          "1chatFormat",
+          "1chatFormat2"
+        ],
+        "beforeMissionCopy": {
+          "subscriber": 1,
+          "front": "~g",
+          "back": ""
+        },
+        "afterMissionCopy": {
+          "subscriber": 1,
+          "front": "~g",
+          "back": ""
+        },
+        "sameManager": true,
+        "missionInstructions": [
+          "0x4c3355",
+          "0x4c335b",
+          "0x4c335c"
+        ]
+      },
+      {
+        "inputSubscriber": 1,
+        "saved": {
+          "-1chatFormat2": "~g"
+        },
+        "peInitialMy": 4294967295,
+        "readKeys": [
+          "1chatFormat",
+          "1chatFormat2"
+        ],
+        "beforeMissionCopy": {
+          "subscriber": 1,
+          "front": "",
+          "back": ""
+        },
+        "afterMissionCopy": {
+          "subscriber": 1,
+          "front": "",
+          "back": ""
+        },
+        "sameManager": true,
+        "missionInstructions": [
+          "0x4c3355",
+          "0x4c335b",
+          "0x4c335c"
+        ]
+      },
+      {
+        "inputSubscriber": 1,
+        "saved": {
+          "1chatFormat2": "~r",
+          "-1chatFormat2": "~g"
+        },
+        "peInitialMy": 4294967295,
+        "readKeys": [
+          "1chatFormat",
+          "1chatFormat2"
+        ],
+        "beforeMissionCopy": {
+          "subscriber": 1,
+          "front": "~r",
+          "back": ""
+        },
+        "afterMissionCopy": {
+          "subscriber": 1,
+          "front": "~r",
+          "back": ""
+        },
+        "sameManager": true,
+        "missionInstructions": [
+          "0x4c3355",
+          "0x4c335b",
+          "0x4c335c"
+        ]
+      }
+    ],
+    "staticLocalLoginCalls": [
+      "40a4b0",
+      "40a580",
+      "460680",
+      "4bd2e0",
+      "4bf3e0",
+      "4bf550",
+      "4bf690",
+      "4df590",
+      "4e0620",
+      "4e2dc0",
+      "4e4354",
+      "4e4a40"
+    ],
+    "staticChatInitializerCallers": [
+      "439840",
+      "48fc51",
+      "4b4485",
+      "4c9670",
+      "4c96f0"
+    ],
+    "sourceSha256": {
+      "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+      "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+      "tools/decomp_chat_manager_prefix.py": "71d3f7887cd3c8b54dc1ab146d783c7b2e603f15db232525fb9759aaaeaf73d9",
+      "tools/decomp_chat_settings_startup.py": "49c2f4e0334bcf1a4ff198de7a512d050704c9fee852fd99fcb8ab0391c56331"
+    },
+    "scope": "격리x86의 실제Chat 초기화/생성자와 미션Init ID복사3명령이다. Config/할당/명령등록/CRT는 기존 명시 경계다. 원본전체startup/게임GUI/MP를 실행한 표본은 아니다. 싱글로그인은4b63d0이며4b4480의Chat재초기화와구별한다."
+  },
+  "runtime": {
+    "passed": true,
+    "binarySha256": "a86629f49be5ea8dff4289b2b217b2da1951df9762082ccf5e0b55651452ae7d",
+    "runs": [
+      {
+        "passed": true,
+        "processIndex": 0,
+        "firstProcess": true,
+        "size": [
+          1024,
+          768
+        ],
+        "messages": [
+          {
+            "label": "styled",
+            "text": "614-first",
+            "foreground": 134,
+            "fragments": [
+              [
+                "0",
+                "1612",
+                "0",
+                "3631342d666972737400",
+                "0",
+                "5",
+                "134",
+                "0",
+                "0",
+                "0",
+                "1",
+                "1"
+              ]
+            ]
+          }
+        ],
+        "inputVisibleStates": {
+          "shown": true,
+          "one": false,
+          "restored-one": true,
+          "zero": true,
+          "minus": false,
+          "restored-minus": true,
+          "reparsed": false,
+          "restored-reparse": true,
+          "zero-final": true
+        },
+        "sameRoot": "387",
+        "sameConsole": "391",
+        "frameRequestsConsumed": true,
+        "savedConfig": {
+          "inputLineOff": "0",
+          "1chatFormat2": "~g"
+        },
+        "optionsSha256": "c3bfe4398da40f80385455c8fda189b5d69439310a47c6f4bdb040944b2054f1",
+        "presentations": {
+          "styled": {
+            "same": true,
+            "actualSha256": "6a04c3c1456d35148403822da14058752ba689b0e9b02fc0e75d0c325ec7faaf",
+            "expectedSha256": "6a04c3c1456d35148403822da14058752ba689b0e9b02fc0e75d0c325ec7faaf",
+            "dimensions": [
+              1024,
+              768
+            ],
+            "outputRect": [
+              0,
+              0,
+              1024,
+              768
+            ]
+          }
+        },
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-chat-settings-614-20261030\\한글 Chat 최종 배포본\\NetstormReborn-cpppj\\Netstorm.exe",
+            "--run",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-chat-settings-614-20261030\\한글 Chat 최종 배포본\\NetstormReborn-cpppj\\game",
+            "--mission",
+            "TheWarBegins",
+            "--window",
+            "--no-audio",
+            "--frames",
+            "260",
+            "--set",
+            "SCREENW=1024;SCREENH=768;maxFPS=40;sleepPerLoop=1;autoDemo=0;tellTips=0",
+            "--ui-script",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-chat-settings-614-20261030\\final-live\\1\\steps.tsv",
+            "--ui-report",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-chat-settings-614-20261030\\final-live\\1\\states.tsv"
+          ],
+          "binarySha256": "a86629f49be5ea8dff4289b2b217b2da1951df9762082ccf5e0b55651452ae7d",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 9.310998599998129,
+          "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderrSha256": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2"
+        },
+        "scope": "실제 설정 클릭/입력/로컬Chat과 저장/재실행이다. 시작ID -1과 미션ID1의 서로 다른 키를 원문대로 유지한다. 공격/포획/희생/승리·신규MP/PCM/전체화면은 실행하지 않는다."
+      },
+      {
+        "passed": true,
+        "processIndex": 1,
+        "firstProcess": false,
+        "size": [
+          1280,
+          800
+        ],
+        "messages": [
+          {
+            "label": "styled",
+            "text": "614-restart-1280x800",
+            "foreground": 246,
+            "fragments": [
+              [
+                "0",
+                "621",
+                "0",
+                "596f753e203631342d726573746172742d313238307838303000",
+                "0",
+                "5",
+                "246",
+                "0",
+                "0",
+                "0",
+                "1",
+                "1"
+              ]
+            ]
+          },
+          {
+            "label": "after-config",
+            "text": "614-after-config",
+            "foreground": 246,
+            "fragments": [
+              [
+                "1",
+                "865",
+                "0",
+                "596f753e203631342d61667465722d636f6e66696700",
+                "0",
+                "5",
+                "246",
+                "0",
+                "0",
+                "0",
+                "1",
+                "1"
+              ]
+            ]
+          }
+        ],
+        "inputVisibleStates": {
+          "shown": true
+        },
+        "sameRoot": "387",
+        "sameConsole": "391",
+        "frameRequestsConsumed": true,
+        "savedConfig": {
+          "inputLineOff": "0",
+          "1chatFormat2": "~g",
+          "-1chatFormat2": "~g"
+        },
+        "optionsSha256": "23b6595a4a3fac368a20c9a8ba25f20a88cd7130af08bdb5824edbddadcba3d3",
+        "presentations": {
+          "styled": {
+            "same": true,
+            "actualSha256": "0f9101b9f1da0964772b8f06fdf4b5893e5cc2a05a04be52f2aad5baf8eb96d4",
+            "expectedSha256": "0f9101b9f1da0964772b8f06fdf4b5893e5cc2a05a04be52f2aad5baf8eb96d4",
+            "dimensions": [
+              1280,
+              800
+            ],
+            "outputRect": [
+              0,
+              0,
+              1280,
+              800
+            ]
+          },
+          "after-config": {
+            "same": true,
+            "actualSha256": "25e61557d56ec556a4ea6e2e5c4ea10730d91659db22cb9d2aaaec232a5909cc",
+            "expectedSha256": "25e61557d56ec556a4ea6e2e5c4ea10730d91659db22cb9d2aaaec232a5909cc",
+            "dimensions": [
+              1280,
+              800
+            ],
+            "outputRect": [
+              0,
+              0,
+              1280,
+              800
+            ]
+          }
+        },
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-chat-settings-614-20261030\\한글 Chat 최종 배포본\\NetstormReborn-cpppj\\Netstorm.exe",
+            "--run",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-chat-settings-614-20261030\\한글 Chat 최종 배포본\\NetstormReborn-cpppj\\game",
+            "--mission",
+            "TheWarBegins",
+            "--window",
+            "--no-audio",
+            "--frames",
+            "155",
+            "--set",
+            "SCREENW=1280;SCREENH=800;maxFPS=40;sleepPerLoop=1;autoDemo=0;tellTips=0",
+            "--ui-script",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-chat-settings-614-20261030\\final-live\\2\\steps.tsv",
+            "--ui-report",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-chat-settings-614-20261030\\final-live\\2\\states.tsv"
+          ],
+          "binarySha256": "a86629f49be5ea8dff4289b2b217b2da1951df9762082ccf5e0b55651452ae7d",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 6.502636999997776,
+          "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderrSha256": "9fba4f7e2bb0be090e62265ef1203d93a429672f7ce307b7cf3aa08e3bfebbbb"
+        },
+        "scope": "실제 설정 클릭/입력/로컬Chat과 저장/재실행이다. 시작ID -1과 미션ID1의 서로 다른 키를 원문대로 유지한다. 공격/포획/희생/승리·신규MP/PCM/전체화면은 실행하지 않는다."
+      },
+      {
+        "passed": true,
+        "processIndex": 2,
+        "firstProcess": false,
+        "size": [
+          1280,
+          720
+        ],
+        "messages": [
+          {
+            "label": "styled",
+            "text": "614-restart-1280x720",
+            "foreground": 134,
+            "fragments": [
+              [
+                "0",
+                "622",
+                "0",
+                "3631342d726573746172742d313238307837323000",
+                "0",
+                "5",
+                "134",
+                "0",
+                "0",
+                "0",
+                "1",
+                "1"
+              ]
+            ]
+          }
+        ],
+        "inputVisibleStates": {
+          "shown": true
+        },
+        "sameRoot": "387",
+        "sameConsole": "391",
+        "frameRequestsConsumed": true,
+        "savedConfig": {
+          "inputLineOff": "0",
+          "1chatFormat2": "~g",
+          "-1chatFormat2": "~g"
+        },
+        "optionsSha256": "3f8a0b84b66ad957e9e4c6c10e47afcecf4dc6d011384355e49d48c56bbcc5b3",
+        "presentations": {
+          "styled": {
+            "same": true,
+            "actualSha256": "0c0d1806e69e5f8deffdc0faff1e95406971a30eca77209e786c0ab1489a83eb",
+            "expectedSha256": "0c0d1806e69e5f8deffdc0faff1e95406971a30eca77209e786c0ab1489a83eb",
+            "dimensions": [
+              1280,
+              720
+            ],
+            "outputRect": [
+              0,
+              0,
+              1280,
+              720
+            ]
+          }
+        },
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-chat-settings-614-20261030\\한글 Chat 최종 배포본\\NetstormReborn-cpppj\\Netstorm.exe",
+            "--run",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-chat-settings-614-20261030\\한글 Chat 최종 배포본\\NetstormReborn-cpppj\\game",
+            "--mission",
+            "TheWarBegins",
+            "--window",
+            "--no-audio",
+            "--frames",
+            "84",
+            "--set",
+            "SCREENW=1280;SCREENH=720;maxFPS=40;sleepPerLoop=1;autoDemo=0;tellTips=0",
+            "--ui-script",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-chat-settings-614-20261030\\final-live\\3\\steps.tsv",
+            "--ui-report",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-chat-settings-614-20261030\\final-live\\3\\states.tsv"
+          ],
+          "binarySha256": "a86629f49be5ea8dff4289b2b217b2da1951df9762082ccf5e0b55651452ae7d",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 4.365412499995728,
+          "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderrSha256": "9fba4f7e2bb0be090e62265ef1203d93a429672f7ce307b7cf3aa08e3bfebbbb"
+        },
+        "scope": "실제 설정 클릭/입력/로컬Chat과 저장/재실행이다. 시작ID -1과 미션ID1의 서로 다른 키를 원문대로 유지한다. 공격/포획/희생/승리·신규MP/PCM/전체화면은 실행하지 않는다."
+      }
+    ],
+    "capturesSacrificesSpecificEnemyAttacksOrVictoriesReproduced": false,
+    "networkExecuted": false,
+    "sourceScope": "같은 배포 사본/브리핑Config 버튼5개. 원본 화면 픽셀 비교/자연완주/전체C++/전체34의 근거는 아니다."
+  },
+  "actualGuiProcessCount": 6,
+  "validatedFinalGuiProcessCount": 3,
+  "actualGuiExitCodes": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "initialFailures": [
+    "probe의 닫힌 브리핑 Request Zero click-if는 실제0 설정 검증으로 세지 않는다. 최종3회는 실제 클릭으로 확인했다.",
+    "최초 첫 재시작이녹색일것이라는 보조 단언 실패를 live.log/전체 원시로 보존했다. 원문은 시작My=-1/미션My=1의 서로 다른 설정키를 사용하므로 제품 코드를 바꾸지 않고 관측 기대를 원문 근거로 정정했다."
+  ],
+  "package": {
+    "newPackageCreated": false,
+    "path": "extracted/cpp-fence-event3-613-20261030/NetstormReborn-cpppj-613.zip",
+    "zipSha256": "13a962946efb1f505d361107ce01fdcdda00586bde2e9c45a07920d25ea2c68f",
+    "gameSha256": "a86629f49be5ea8dff4289b2b217b2da1951df9762082ccf5e0b55651452ae7d",
+    "entries": 1376,
+    "gameAssets": 1358,
+    "allArchivedEntryBytesMatchUsedProduct": true,
+    "allArchivedGameAssetBytesMatchOriginalsOrCd": true,
+    "preparedProduct": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-chat-settings-614-20261030\\한글 Chat 최종 배포본\\NetstormReborn-cpppj",
+    "testOverlay": {
+      "path": "game/d/thewarbegins.english",
+      "sourceSha256": "db4fb183bc12c3b3f2f20e7a6c1ffb9d9ed0aac5401e6001372464c897ae9b96",
+      "sha256": "3cb7c6ac22bace50195d190e2551f8552b9c157ba3110574c26fbe666b48c6c9",
+      "onlyFiveConfigButtonsAdded": true,
+      "packaged": false
+    }
+  },
+  "protectedCount": 2581,
+  "protectedFixtureCount": 758,
+  "fixtureCount": 758,
+  "protectedDifferences": [],
+  "newBuild": false,
+  "newCppTests": false,
+  "newFixture": false,
+  "lastRegisteredTests": 3520,
+  "lastRegisteredTestsUnit": 613,
+  "lastFull34ProductUnit": 609,
+  "lastFull34Unit": 610,
+  "sourceSha256": {
+    "tools/decomp_chat_settings_startup.py": "49c2f4e0334bcf1a4ff198de7a512d050704c9fee852fd99fcb8ab0391c56331",
+    "tools/cpp_chat_settings_smoke.py": "f0d5da91f922253e1d740fc2dc90e229837cd5f80e10de51dbd712d8e7a76f46",
+    "cpppj/src/client/ClientMain.cpp": "42ed9a7a2e08cab0a0835e82bf498f04e264d4de93cc3f3979ba95fea97f2854",
+    "cpppj/src/client/ClientSubscriberGlobals.h": "3308dcb2f9097caf5aaf1a85b869f4e3050220cba0bfda2beae9e96da1cdc02d",
+    "cpppj/src/client/ClientChatRuntime.cpp": "f1ae2216adda6af81d13b3cd14a215dd735f6d34fd28c04326ebb2570389d827",
+    "cpppj/src/client/CampaignLoginServices.h": "a9722bd67d1ebbbb4ccf249c83e8ec24448d7cb7fb5e8aa9935e7b75ac25ee45"
+  },
+  "evidenceSha256": {
+    "preparation.json": "e55627642c97b7286ebebca3551dabc027f4560afb698338df0883c3b79001c2",
+    "probe.py": "43d2261434e0b3367728a5e2e42d79c9cbbceeb35c77b6fb501d7a8a5d04a848",
+    "probe.log": "5ae0d1dd703235c943f2c8d3d3ffd292281d3be1a528161c309220a90e66db72",
+    "live.log": "5afa75e37492123d85679468e8e288dfe72dc2d7ca5ed9da465e2b741d3e9638",
+    "failure-readback.json": "8cc705bc7474690bf16bf97df304217451bd2bc9e491ce3d94a5b1579e5be116",
+    "final-preparation.json": "679f62c2d1ed13c4b1c2e438ffd62af29d837f7a7523a479957f1571f2423ba8",
+    "final-live.log": "c72f8c740d9664e829b23f88eb6a3f8b068fb2e1abbc1f1fa0690fcfa6944077",
+    "finish-before-fixture-count.py": "1b5c0ad5bc06de2d3b093c778d75dac0e688fea0c7da5dedd06c2270c4549daa",
+    "update_docs.py": "c95a65551c7a12d01941008b0b4d55d8332bc1fc44354e814f9fadb514ebf651",
+    "probe-one/steps.tsv": "f003563a8a30b55bf7cd7eceafb2136adc5687eb7b4074a7841d137a6b4d9d5f",
+    "probe-one/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "probe-one/stderr.log": "9fba4f7e2bb0be090e62265ef1203d93a429672f7ce307b7cf3aa08e3bfebbbb",
+    "probe-one/running.json": "8cd46b2291120ab7f62fbc23683b5b4ce16f591b535ca7ef9fbb60c06bc418b6",
+    "probe-one/states.tsv": "6ccfaf9e5fffbf00c7648711bd5c4c64eccfd3e645bdbaf60b03dd93d701415b",
+    "probe-one/last.bmp": "682156887dd6f92dddd80e0770516eaa39549f1aea0aa318544b0130fcc3d902",
+    "probe-one/last-output.bmp": "682156887dd6f92dddd80e0770516eaa39549f1aea0aa318544b0130fcc3d902",
+    "probe-one/run.json": "3ec2e97e946605d11720c950458790c654f4f9cc61ede2f015977d7e31fe1e41",
+    "native/first.json": "c414e1e813559dc472cc559758a764ad2fdf623201a45063970f9c0ba9914efa",
+    "native/replay.json": "c414e1e813559dc472cc559758a764ad2fdf623201a45063970f9c0ba9914efa",
+    "final-live/summary.json": "286dd8e8e9ae042377bb3b3884ea5ed4362aad2cb3a4e9c55e97438eb9a51744",
+    "native-final/first.json": "c414e1e813559dc472cc559758a764ad2fdf623201a45063970f9c0ba9914efa",
+    "native-final/replay.json": "c414e1e813559dc472cc559758a764ad2fdf623201a45063970f9c0ba9914efa",
+    "final-live/1/steps.tsv": "d2a24039ff34f87a6826cba5f00a5f685c496f5ce233172e9f73c1b5e178cead",
+    "final-live/1/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "final-live/1/stderr.log": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2",
+    "final-live/1/running.json": "c4800283fe38caa93b25c3455258d9cf294990c8690e8005a28c47705dfe43f7",
+    "final-live/1/states.tsv": "42911b2d86669bd9729ee0c038a7b7d92fbc1d195ebc636f72549b4bbaaddedd",
+    "final-live/1/styled.bmp": "ea418626e938303009e9e36d4f392dca33eb5c74b2279c1f06eff9fcc2212713",
+    "final-live/1/styled-output.bmp": "ea418626e938303009e9e36d4f392dca33eb5c74b2279c1f06eff9fcc2212713",
+    "final-live/1/run.json": "35e1ff782edaa290950d72f067e5553a928955a1f5752aefbe6d1e1862b439d4",
+    "final-live/1/presentation-comparison.json": "70e9320afb6b5ffe50c73f8d0d955a73b52769de9e0ff5b1ebbfde4e6c1e836d",
+    "final-live/1/config-inputLineOff.stdout.log": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+    "final-live/1/config-inputLineOff.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "final-live/1/config-1chatFormat2.stdout.log": "37d78593fd3b54110c81ceb51b8f06ec3a711a178e83cc0a2d78dba41532b8a0",
+    "final-live/1/config-1chatFormat2.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "final-live/1/summary.json": "5278515a1342f7b6ae724430f607c6d3cf78a8fb9b07a556ea3955f23a2c1cf4",
+    "final-live/2/steps.tsv": "4dc05a3ab370749a5353f39ed133316752c647ed57929b714fdee392507345e0",
+    "final-live/2/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "final-live/2/stderr.log": "9fba4f7e2bb0be090e62265ef1203d93a429672f7ce307b7cf3aa08e3bfebbbb",
+    "final-live/2/running.json": "d6b62e093aa9936a04196fdfb4a8612d6d60b742832227cbe291e8e86ae2cdd3",
+    "final-live/2/states.tsv": "b1c92c1f0e1269dd566655c36bfd10cdf0129886fd36c2ded294f0b3ce439dd7",
+    "final-live/2/styled.bmp": "da58aba70275915d988d9dabb7654fcaaf4cb8bbd9553d6ea86525adf02e6c6a",
+    "final-live/2/styled-output.bmp": "da58aba70275915d988d9dabb7654fcaaf4cb8bbd9553d6ea86525adf02e6c6a",
+    "final-live/2/after-config.bmp": "e5d063376d601feb6784ba98359feef6a629a5a52598f12be8f2e5910b2137dc",
+    "final-live/2/after-config-output.bmp": "e5d063376d601feb6784ba98359feef6a629a5a52598f12be8f2e5910b2137dc",
+    "final-live/2/run.json": "5ba80234053978a141adf5ef4f3512074f45c062663d48033ad07807a3ef3c80",
+    "final-live/2/presentation-comparison.json": "404120a3189338468d58107fdd067f140c5e22f5d8bc4c3d1e0a543a1cd85e85",
+    "final-live/2/config-inputLineOff.stdout.log": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+    "final-live/2/config-inputLineOff.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "final-live/2/config-1chatFormat2.stdout.log": "37d78593fd3b54110c81ceb51b8f06ec3a711a178e83cc0a2d78dba41532b8a0",
+    "final-live/2/config-1chatFormat2.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "final-live/2/config--1chatFormat2.stdout.log": "37d78593fd3b54110c81ceb51b8f06ec3a711a178e83cc0a2d78dba41532b8a0",
+    "final-live/2/config--1chatFormat2.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "final-live/2/summary.json": "95af2d3c4860ff5130121d767e8361495461be7512edb64b8ad99a6a3858e5de",
+    "final-live/3/steps.tsv": "f879e2e61df24259f620f456e187c19074f32c3ef557b98bad5a4eaa0de5f2fd",
+    "final-live/3/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "final-live/3/stderr.log": "9fba4f7e2bb0be090e62265ef1203d93a429672f7ce307b7cf3aa08e3bfebbbb",
+    "final-live/3/running.json": "4a0ba9cd14ae947c7dfcba57313e2c64524a11cbb50c56ece17c7abcd4d6965a",
+    "final-live/3/states.tsv": "39444dc0e0a144f2c2586078648074636dc247ca7bf875c76104db047682d299",
+    "final-live/3/styled.bmp": "32ab8b3ab26ce3ec6873fd91b87a4a2bc813eed477023cbe348977e9b4a9cb96",
+    "final-live/3/styled-output.bmp": "32ab8b3ab26ce3ec6873fd91b87a4a2bc813eed477023cbe348977e9b4a9cb96",
+    "final-live/3/run.json": "8af31838150b905e0b0e44dfe39471b8c8fd5266b82c745b003b3b930e6f30bc",
+    "final-live/3/presentation-comparison.json": "8e6abf837738199009d2bd8b737de94658b3221882cbecd71551b81a69e7407b",
+    "final-live/3/config-inputLineOff.stdout.log": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+    "final-live/3/config-inputLineOff.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "final-live/3/config-1chatFormat2.stdout.log": "37d78593fd3b54110c81ceb51b8f06ec3a711a178e83cc0a2d78dba41532b8a0",
+    "final-live/3/config-1chatFormat2.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "final-live/3/config--1chatFormat2.stdout.log": "37d78593fd3b54110c81ceb51b8f06ec3a711a178e83cc0a2d78dba41532b8a0",
+    "final-live/3/config--1chatFormat2.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "final-live/3/summary.json": "99ba430722ee199a590b8d9895efc9c97260d276ed7d73d0fcdf163266903582",
+    "live/1/steps.tsv": "45cddf9cc7d8943f24053804085786f7cf529baf859fcff34c5b51d8945fcc0a",
+    "live/1/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "live/1/stderr.log": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2",
+    "live/1/running.json": "fef4c637da861bf9fd84ad0bc35bf8124c698ccfffb2abe29ef307ffdf3ef068",
+    "live/1/states.tsv": "964912527578632cb2b5e2d5b9a9696cda2a5de8840aadb63090648aa172c208",
+    "live/1/styled.bmp": "8238c08c4ec2f115ccb654e228bb7104f82f2b0e8681f062d93667865404f424",
+    "live/1/styled-output.bmp": "8238c08c4ec2f115ccb654e228bb7104f82f2b0e8681f062d93667865404f424",
+    "live/1/run.json": "eb64e49fcfecaad830bdec581dd85863dac6f3d7cd52fd58b13a386bf4d38066",
+    "live/1/presentation-comparison.json": "5830ce0fa21d82bda70ca26250447fb3894a5056acd2d57bf64880c05c0ed87e",
+    "live/1/config-inputLineOff.stdout.log": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+    "live/1/config-inputLineOff.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "live/1/config-1chatFormat2.stdout.log": "37d78593fd3b54110c81ceb51b8f06ec3a711a178e83cc0a2d78dba41532b8a0",
+    "live/1/config-1chatFormat2.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "live/1/summary.json": "cd30a9ec06ed40df9cd403c817194488afd731c2b54631551ab830bef9fd586b",
+    "live/2/steps.tsv": "b447187ffed1b2e61ab4a7656e23095d67c01c5a372163b2aadf2f51c9ddb245",
+    "live/2/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "live/2/stderr.log": "9fba4f7e2bb0be090e62265ef1203d93a429672f7ce307b7cf3aa08e3bfebbbb",
+    "live/2/running.json": "fd8b83d02cfcf35558e52249d01c7197874df6226d01b7b8010f36de081be9e0",
+    "live/2/states.tsv": "31d9955e4cce0aeb76b866873511cbdceb3f303a79af4613b55a0bc945fab4e9",
+    "live/2/styled.bmp": "447c54faad96f56bc594e8c36d380c9c10865f1536949af5ee025714869fc831",
+    "live/2/styled-output.bmp": "447c54faad96f56bc594e8c36d380c9c10865f1536949af5ee025714869fc831",
+    "live/2/run.json": "cfe9d7ab338fd44a7cfa8cd4543cd93628b06eb98d52f86e0f5723d5e227ffa8"
+  },
+  "scope": "같은613제품의 실제 입력줄 설정1/0/-1·재해석/소비와 저장·새프로세스3회/4캡처 검증이다. 원문8사례16관측은 Unicorn 격리x86 초기화/미션ID복사이며 실제원본전체startup/GUI나실제CPU613도우미와구별한다. 제품본문/빌드/새ZIP/새C++검사는없다. 원본32비트/현재스택 미정값 한계와 전체목표미완료를 유지한다. 자연완주/전체동일성/전체Cpp/현재34/Win11/PCM/활성전체화면/신규MP·실제공격/포획/희생/승리는새검증하지않았다."
+}
