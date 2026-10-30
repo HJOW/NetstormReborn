@@ -1,0 +1,25 @@
+{
+  "unit": 608,
+  "host": "HJOW-Athlon",
+  "cases": 820,
+  "observations": 1640,
+  "differences": [],
+  "verificationOnly": true,
+  "instructions": [
+    117272,
+    117272
+  ],
+  "scope": "00485bc0/00485cc0/0040d900/0041d0d0/0040e800/0040e880/0040e8f0/0041ca10/0041c8e0와 실제 CRT. 큰 ChunkMap.bounds만 명시 경계. 새 게임/GUI/MP 없음.",
+  "sourceSha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "tools/decomp_priestmenu.py": "8d1474792e7511fa777e7bd7bd369f2a2a0f9f5c35643e420d65a3fa4744bac9",
+    "tools/decomp_world_geyser_bounds.py": "cbec70022d852027265edc4d8983ad94d24face45bb692c521bfd04c0b8f783c",
+    "cpppj/tests/fixtures/world-geyser-bounds-x86.tsv": "275d968ce263959d60847f4523aac3008ce021946226086e74f7cda1d993fa7c"
+  },
+  "evidenceSha256": {
+    "first.json": "896c3408d6352a90e80d80d0907d842064036bc0f117855d401b7c5a5545aa9f",
+    "replay.json": "896c3408d6352a90e80d80d0907d842064036bc0f117855d401b7c5a5545aa9f"
+  }
+}

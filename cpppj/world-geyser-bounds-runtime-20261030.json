@@ -1,0 +1,142 @@
+{
+  "unit": 608,
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "native": {
+    "unit": 608,
+    "host": "HJOW-Athlon",
+    "cases": 820,
+    "observations": 1640,
+    "differences": [],
+    "verificationOnly": true,
+    "instructions": [
+      117272,
+      117272
+    ],
+    "scope": "00485bc0/00485cc0/0040d900/0041d0d0/0040e800/0040e880/0040e8f0/0041ca10/0041c8e0와 실제 CRT. 큰 ChunkMap.bounds만 명시 경계. 새 게임/GUI/MP 없음.",
+    "sourceSha256": {
+      "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+      "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+      "tools/decomp_priestmenu.py": "8d1474792e7511fa777e7bd7bd369f2a2a0f9f5c35643e420d65a3fa4744bac9",
+      "tools/decomp_world_geyser_bounds.py": "cbec70022d852027265edc4d8983ad94d24face45bb692c521bfd04c0b8f783c",
+      "cpppj/tests/fixtures/world-geyser-bounds-x86.tsv": "275d968ce263959d60847f4523aac3008ce021946226086e74f7cda1d993fa7c"
+    },
+    "evidenceSha256": {
+      "first.json": "896c3408d6352a90e80d80d0907d842064036bc0f117855d401b7c5a5545aa9f",
+      "replay.json": "896c3408d6352a90e80d80d0907d842064036bc0f117855d401b7c5a5545aa9f"
+    }
+  },
+  "focusedTests": 14,
+  "testNames": [
+    "CampaignConstruction_ProtectedLocalGeysersUseCurrentWorld",
+    "CampaignSession_LocalGeysersUseActualAiRegistration",
+    "CampaignSession_LocalGeysersUseCurrentInputs",
+    "GameAux_LocalGeyserOwnerReplaysNative221WithOppositeTypeFallback",
+    "LocalGeyser_GeneralExclusionSelectedRequirements",
+    "LocalGeyser_GeneralPlacementReplaysNative183",
+    "LocalGeyser_IndependentPeFixture",
+    "LocalGeyser_RejectsMissingCreation",
+    "LocalGeyser_SharedBossControlsPopulateEntry",
+    "LocalGeyser_SharedResourcePoolPeFixture",
+    "PlayerGeyserBounds_IndependentPeFixture",
+    "PlayerGeyserBounds_RejectsMissingAssertion",
+    "WorldGeyserBounds_IndependentNative820",
+    "WorldGeyserBounds_SelectedHooksAndPhysicalGuards"
+  ],
+  "tests": [
+    {
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+        "--filter",
+        "LocalGeyser"
+      ],
+      "binarySha256": "56665766fb4722d1a3411d5eb3243ae9660bea34ddb9b9b3c8c2a3f600b02ebc",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 4.498533799996949,
+      "stdoutSha256": "e5ba1a03a58f4db328b712b2e4fabb83e203925667ca1e38c97e19ed2f7aec6b",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tests": 10,
+      "failed": 0,
+      "testOnlyBridgeManipulation": false
+    },
+    {
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+        "--filter",
+        "PlayerGeyserBounds"
+      ],
+      "binarySha256": "56665766fb4722d1a3411d5eb3243ae9660bea34ddb9b9b3c8c2a3f600b02ebc",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 1.106867599999532,
+      "stdoutSha256": "8d5eab140dff0d5a6d7a20786878f2e3eefdf8188c3e9d54a0330229bcc86dca",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tests": 2,
+      "failed": 0,
+      "testOnlyBridgeManipulation": false
+    },
+    {
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+        "--filter",
+        "WorldGeyserBounds"
+      ],
+      "binarySha256": "56665766fb4722d1a3411d5eb3243ae9660bea34ddb9b9b3c8c2a3f600b02ebc",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 2.3858858999956283,
+      "stdoutSha256": "4925eb06f33acc6b29cbc141b8f484e1e80e5388eba2fe59ae6bd033cc9861f8",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tests": 2,
+      "failed": 0,
+      "testOnlyBridgeManipulation": false
+    }
+  ],
+  "registeredTests": 3512,
+  "gameSha256": "4d00a38860fa3218347b13ec1c71770614a4af30c2aac050f944f59185b737f5",
+  "testSha256": "56665766fb4722d1a3411d5eb3243ae9660bea34ddb9b9b3c8c2a3f600b02ebc",
+  "buildExitCode": 0,
+  "protectedCount": 2576,
+  "protectedFixtureCount": 753,
+  "protectedDifferences": [],
+  "fixtureCount": 754,
+  "sourceSha256": {
+    "cpppj/src/o/RawWorldGeyserBounds.h": "0c617250c54f612b895c51a454b124c1905a4430d8d559d3a34ba3d004dab5bb",
+    "cpppj/src/o/RawWorldGeyserBounds.cpp": "c476154ec805bd30060728c2bd8909febf5149e5c5dcc7d916f4ce49bddff017",
+    "cpppj/tests/WorldGeyserBoundsTests.cpp": "4dc228b50cb5eef1b5939a73c99c1ca62e1c9a6fa0474ba9f1edef99691b439f",
+    "cpppj/src/CMakeLists.txt": "6392c0e142838a8bca04a0bd9e20f69a01eb772698bfc2a084bf45e6c9d4a9b7",
+    "cpppj/tests/CMakeLists.txt": "c51953e0d40aa3a94b04147e37503f0a3e1faa705cb6b5e55c16d9d169ea7ad6"
+  },
+  "scope": "세계 간헐천의 전체/분할 사각형과 현재 Player 예산 부품. 상위00486440와 실제 Session/randGeysers는 다음이며 아직 미연결.",
+  "gameStarted": false,
+  "lastPackageUnit": 606,
+  "lastFull34ProductUnit": 605,
+  "evidenceSha256": {
+    "protected-before.json": "a4b6f0b6e7f13fea98dd88db1cce6891ae9e89307c19a38272bf32dbd5e33e2c",
+    "native-v2.log": "a96bbd2e6823d9f189e17ee6f00beb9edaec5df91e6bca1cb321bf67a3555447",
+    "native-v3.log": "02300f3a57db170a9420ba964ff4c1a421e770d7789c4e117eaa0c219c4f2d13",
+    "build.log": "805e72ccf9def0641f8103d52ec71f488dd6d1b257c6d5e2ab2e8a90fe7f7aff",
+    "native-final.log": "a3013c6a01b3d3f37f5a534822c36de663a669119cc382d6ba36a9cb02d02716",
+    "finish.py": "cc211f87bd7dc0280c6bcbc5f7a0d1389774c459f3e53d36bfe291d7f5b22513",
+    "protected-after.json": "42f9f93ea63de9ea29fab32a7afda4662a40b022fa6a5ea3b68aa18c45c4bffc",
+    "native-v3/first.json": "896c3408d6352a90e80d80d0907d842064036bc0f117855d401b7c5a5545aa9f",
+    "native-v3/replay.json": "896c3408d6352a90e80d80d0907d842064036bc0f117855d401b7c5a5545aa9f",
+    "test-world/stdout.log": "4925eb06f33acc6b29cbc141b8f484e1e80e5388eba2fe59ae6bd033cc9861f8",
+    "test-world/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "test-world/running.json": "13bfe46fe90015fe055fbc7c4be72b505a346fc3d027a87529ec45b56eed8011",
+    "test-world/run.json": "f0759c40fddd91135d6a8e0795361d0fde77e1bea09ecc1cb34c43ab30bf23e1",
+    "test-local/stdout.log": "e5ba1a03a58f4db328b712b2e4fabb83e203925667ca1e38c97e19ed2f7aec6b",
+    "test-local/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "test-local/running.json": "ea31e7d086484e2ed6245ed3463bc4a1b91cc7e19a190536e834b178c26d7bf2",
+    "test-local/run.json": "5b132bc74f3852efb6f7e898f19e2c3f0b2c65b3e30071e38303f4223481df8b",
+    "test-player/stdout.log": "8d5eab140dff0d5a6d7a20786878f2e3eefdf8188c3e9d54a0330229bcc86dca",
+    "test-player/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "test-player/running.json": "76f57cfde5e21f22b82c073150df3c185f5634fa06054af92f7f916c3dc7f55b",
+    "test-player/run.json": "4ac123b41f498d377b911f5d5c4a3e9e996c2dff92f05ecc6f70fe04f8a33b66",
+    "native-final/first.json": "896c3408d6352a90e80d80d0907d842064036bc0f117855d401b7c5a5545aa9f",
+    "native-final/replay.json": "896c3408d6352a90e80d80d0907d842064036bc0f117855d401b7c5a5545aa9f"
+  }
+}

@@ -2255,3 +2255,13 @@ tools/decomp_geyser_placement.py text eol=lf
 cpppj/geyser-placement-native-20261030.json text eol=lf
 cpppj/geyser-placement-runtime-20261030.json text eol=lf
 docs/exe/cpp-geyser-placement-20261030.md text eol=lf
+
+# 전체 간헐천 범위/예산의 최초 원문과 실제 x87 저장 폭을 보존한다.
+cpppj/src/o/RawWorldGeyserBounds.h text eol=lf
+cpppj/src/o/RawWorldGeyserBounds.cpp text eol=lf
+cpppj/tests/WorldGeyserBoundsTests.cpp text eol=lf
+cpppj/tests/fixtures/world-geyser-bounds-x86.tsv -text
+tools/decomp_world_geyser_bounds.py text eol=lf
+cpppj/world-geyser-bounds-native-20261030.json text eol=lf
+cpppj/world-geyser-bounds-runtime-20261030.json text eol=lf
+docs/exe/cpp-world-geyser-bounds-20261030.md text eol=lf
