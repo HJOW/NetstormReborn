@@ -292,3 +292,6 @@ target_sources(netstorm PRIVATE client/ClientRendererFrame.cpp client/ClientRend
 
 # 기본 Gump의 원문 갱신 요청/지도 좌표별 clamp를 같은 실제 위치와 Renderer 경계에 제공한다.
 target_sources(netstorm PRIVATE client/GumpRedraw.cpp client/GumpRedraw.h)
+
+# 마나103의 실제 조건부 그림자와 현재 프레임/SHP 추가 Draw를 공유한다.
+target_sources(netstorm PRIVATE o/RawManaDraw.cpp o/RawManaDraw.h)

@@ -1,0 +1,41 @@
+{
+  "unit": 628,
+  "complete": true,
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "cases": 756,
+  "independentProcesses": 2,
+  "observations": 4536,
+  "differences": 0,
+  "fixtureSha256": "5a69003c0bc3e7b96aeb5fd6883f7c394a214f2899e13a815c81b7d09996713f",
+  "processes": [
+    {
+      "cases": 756,
+      "observations": 2268,
+      "differences": 0,
+      "host": "HJOW-Athlon",
+      "lastFullDecompileHost": "HJOW-Athlon",
+      "lastFullDecompileDate": "2026-10-23",
+      "sourceSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "toolSha256": "cceef20592c6a018c51c2024cfa8abf53d934cad4854418ac4629270a9177586",
+      "fixtureSha256": "5a69003c0bc3e7b96aeb5fd6883f7c394a214f2899e13a815c81b7d09996713f",
+      "dataSha256": "61a5bdba9e1eae0cccab21fb51255d1a14a94a4c1611b7cbe4f0e430f31ec942",
+      "scope": "실제473710/4ac550/49a840만 실행한다. VFX plain/그림자 출력은 마지막 인수 관측과 명시 raw/TYPE 변경 경계다. ABI·x87·raw/TYPE guard를 확인하며 새 C++·실제 게임·GUI·공중3종·MP·금지 재현을 실행/참조하지 않는다."
+    },
+    {
+      "cases": 756,
+      "observations": 2268,
+      "differences": 0,
+      "host": "HJOW-Athlon",
+      "lastFullDecompileHost": "HJOW-Athlon",
+      "lastFullDecompileDate": "2026-10-23",
+      "sourceSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "toolSha256": "cceef20592c6a018c51c2024cfa8abf53d934cad4854418ac4629270a9177586",
+      "fixtureSha256": "5a69003c0bc3e7b96aeb5fd6883f7c394a214f2899e13a815c81b7d09996713f",
+      "dataSha256": "61a5bdba9e1eae0cccab21fb51255d1a14a94a4c1611b7cbe4f0e430f31ec942",
+      "scope": "실제473710/4ac550/49a840만 실행한다. VFX plain/그림자 출력은 마지막 인수 관측과 명시 raw/TYPE 변경 경계다. ABI·x87·raw/TYPE guard를 확인하며 새 C++·실제 게임·GUI·공중3종·MP·금지 재현을 실행/참조하지 않는다."
+    }
+  ],
+  "scope": "실제473710/4ac550/49a840의 조건 WORD·현재 프레임/SHP·좌표 감김과 명시 출력 후 변경이다. 마지막 VFX 출력만 경계이며 C++/실제 게임/GUI/공중3종/MP/금지 재현을 실행하지 않는다."
+}

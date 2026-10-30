@@ -1,0 +1,185 @@
+{
+  "unit": 628,
+  "sourceBaseCommit": "d7ab4678",
+  "complete": true,
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "native": {
+    "unit": 628,
+    "complete": true,
+    "host": "HJOW-Athlon",
+    "lastFullDecompileHost": "HJOW-Athlon",
+    "lastFullDecompileDate": "2026-10-23",
+    "cases": 756,
+    "independentProcesses": 2,
+    "observations": 4536,
+    "differences": 0,
+    "fixtureSha256": "5a69003c0bc3e7b96aeb5fd6883f7c394a214f2899e13a815c81b7d09996713f",
+    "processes": [
+      {
+        "cases": 756,
+        "observations": 2268,
+        "differences": 0,
+        "host": "HJOW-Athlon",
+        "lastFullDecompileHost": "HJOW-Athlon",
+        "lastFullDecompileDate": "2026-10-23",
+        "sourceSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+        "toolSha256": "cceef20592c6a018c51c2024cfa8abf53d934cad4854418ac4629270a9177586",
+        "fixtureSha256": "5a69003c0bc3e7b96aeb5fd6883f7c394a214f2899e13a815c81b7d09996713f",
+        "dataSha256": "61a5bdba9e1eae0cccab21fb51255d1a14a94a4c1611b7cbe4f0e430f31ec942",
+        "scope": "실제473710/4ac550/49a840만 실행한다. VFX plain/그림자 출력은 마지막 인수 관측과 명시 raw/TYPE 변경 경계다. ABI·x87·raw/TYPE guard를 확인하며 새 C++·실제 게임·GUI·공중3종·MP·금지 재현을 실행/참조하지 않는다."
+      },
+      {
+        "cases": 756,
+        "observations": 2268,
+        "differences": 0,
+        "host": "HJOW-Athlon",
+        "lastFullDecompileHost": "HJOW-Athlon",
+        "lastFullDecompileDate": "2026-10-23",
+        "sourceSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+        "toolSha256": "cceef20592c6a018c51c2024cfa8abf53d934cad4854418ac4629270a9177586",
+        "fixtureSha256": "5a69003c0bc3e7b96aeb5fd6883f7c394a214f2899e13a815c81b7d09996713f",
+        "dataSha256": "61a5bdba9e1eae0cccab21fb51255d1a14a94a4c1611b7cbe4f0e430f31ec942",
+        "scope": "실제473710/4ac550/49a840만 실행한다. VFX plain/그림자 출력은 마지막 인수 관측과 명시 raw/TYPE 변경 경계다. ABI·x87·raw/TYPE guard를 확인하며 새 C++·실제 게임·GUI·공중3종·MP·금지 재현을 실행/참조하지 않는다."
+      }
+    ],
+    "scope": "실제473710/4ac550/49a840의 조건 WORD·현재 프레임/SHP·좌표 감김과 명시 출력 후 변경이다. 마지막 VFX 출력만 경계이며 C++/실제 게임/GUI/공중3종/MP/금지 재현을 실행하지 않는다."
+  },
+  "checks": {
+    "passed": true,
+    "tests": 20,
+    "filters": [
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "ManaAdditional_"
+        ],
+        "binarySha256": "97416a37595d67071e048619e542a88f0d4c9aab666dbfb94f684af55f6c2045",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 1.7811433999995643,
+        "stdoutSha256": "13b0bc1fb99398922f80671855abad480906001206008c0e2885de7288a0d7cb",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "ManaAdditional_",
+        "tests": 2,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "CampaignManaAdditional_"
+        ],
+        "binarySha256": "97416a37595d67071e048619e542a88f0d4c9aab666dbfb94f684af55f6c2045",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 1.8109053000007407,
+        "stdoutSha256": "3dc595ebbdb5e57df929bd79aba5809435fc3e35318cf3420e8254ed12533d71",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "CampaignManaAdditional_",
+        "tests": 1,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "SpriteDraw_"
+        ],
+        "binarySha256": "97416a37595d67071e048619e542a88f0d4c9aab666dbfb94f684af55f6c2045",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 1.3696734999975888,
+        "stdoutSha256": "2d37158cee4e8849b98cfe372c40fc733fef86baf45f0957a0d78b699d276085",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "SpriteDraw_",
+        "tests": 14,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "ObjectHit_"
+        ],
+        "binarySha256": "97416a37595d67071e048619e542a88f0d4c9aab666dbfb94f684af55f6c2045",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 0.6485260000008566,
+        "stdoutSha256": "7afbf05dfa923bb96080adca5844f9b176fb71f164007daa4d79e91ba43e6318",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "ObjectHit_",
+        "tests": 2,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "CampaignConstructionMana_EnergyBoltDrawsCurrentFrameAndShadow"
+        ],
+        "binarySha256": "97416a37595d67071e048619e542a88f0d4c9aab666dbfb94f684af55f6c2045",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 1.7632543999970949,
+        "stdoutSha256": "d03e1dec3af5c8bb52d167ecb96023c392764726d12ccbfd86ea4492b44fb544",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "CampaignConstructionMana_EnergyBoltDrawsCurrentFrameAndShadow",
+        "tests": 1,
+        "failed": 0
+      }
+    ],
+    "registered": 3539,
+    "binarySha256": "97416a37595d67071e048619e542a88f0d4c9aab666dbfb94f684af55f6c2045"
+  },
+  "registeredTests": 3539,
+  "build": {
+    "build-v1.log": {
+      "errors": 0,
+      "warnings": 0,
+      "sha256": "d6aebca9388d124fe95b8cab690d6f9807a3ec4f526a21f97433b59638133ecf"
+    },
+    "build-confirm.log": {
+      "errors": 0,
+      "warnings": 0,
+      "sha256": "d9c91de7753197564fda807323ea808ed1f1209731cfa6528b27553f6d907187"
+    }
+  },
+  "finalBuildExitCode": 0,
+  "gameSha256": "c4fb334b9b5ab36f124ffc4ab224604fe3060d38d172b6384aa1495f9051c10c",
+  "testsSha256": "97416a37595d67071e048619e542a88f0d4c9aab666dbfb94f684af55f6c2045",
+  "testedSourceSha256": {
+    "cpppj/src/o/RawManaDraw.h": "1e3d9517c0b797a5bc6a6911a0dc42f152cb77cc144708cc7a1278027996c9ae",
+    "cpppj/src/o/RawManaDraw.cpp": "ef6c5cbde2fed6d1b270b268a94f1567060af7dd4961f1876ec047b1017fd97a",
+    "cpppj/src/client/RawCampaignFactoryDisplay.cpp": "d77f869fd4baf4b93557817411fe7d5b2826f795fae7e64fef4dbdd146e7d9e1",
+    "cpppj/src/CMakeLists.txt": "cd38067e8c932745e76734df229185556f466fa692b0eccfe22842a8b3abd705",
+    "cpppj/tests/CMakeLists.txt": "5e5cae4fc0bff2734dc5e6ec88fd24fcc82fffb2fad689cf10c80da4768595a3",
+    "cpppj/tests/CampaignSessionTests.cpp": "41665b07fb42af7fd66c50abcf368b62b94cd130410d8d6b8f555eae8036c2cb",
+    "cpppj/tests/ManaAdditionalTests.cpp": "02c52dff553c3bd7e9c0e96b3f508c70656401ac35d59a7fe0739d2c57f316e7",
+    "cpppj/tests/CampaignManaAdditionalTests.inc": "bf20c8fea0d9a962bf1ee70d73636fa3c061e0ddd824a032f048297f6947fad6",
+    "cpppj/tests/fixtures/mana-additional-x86.tsv": "5a69003c0bc3e7b96aeb5fd6883f7c394a214f2899e13a815c81b7d09996713f",
+    "tools/decomp_mana_additional.py": "cceef20592c6a018c51c2024cfa8abf53d934cad4854418ac4629270a9177586"
+  },
+  "protectedBefore": 2623,
+  "protectedFixtureCount": 764,
+  "protectedAfter": 2624,
+  "fixtureCount": 765,
+  "oldProtectedUnchanged": true,
+  "package": {
+    "path": "extracted/cpp-mana-additional-628-20261031/NetstormReborn-cpppj-628.zip",
+    "sha256": "abe51f3a999c07e81fbe4c437cb1031d88c505b3d89c0f232c24062253145bb8",
+    "entries": 1376,
+    "assets": 1358,
+    "allUnpackedArchivedAndOriginalAssetBytesMatch": true
+  },
+  "newGameRuns": 0,
+  "newGuiRuns": 0,
+  "nativeEntryPixelCases": 9,
+  "buildObservation": "첫 통합 호출에서 출력 문자열만 보존해 unified 세션 번호를 놓쳤다. 동일 CMake PID12316/MSBuild3088을 실제 live로 재확인했고 다음 조회에서 종료를 확인했다. target 두 개의 완결 출력/경고오류0을 보존하고 소스 무변경 증분 build-confirm 종료0을 별도 기록했다. 실행 중 빌드를 재시작하지 않았다.",
+  "scope": "마나103의 미복원+a4를 화면/픽셀 선택의 같은 Native 분배에 연결했다. 처음 TYPE 선택·WORD+c·조건부10/10 그림자·현재 프레임/현재SHP 재읽기와 DWORD감김이다. 실제 Pool/World 생성/자산/DrawEntry103의3WORD×3프레임9화면 전체 바이트/행padding 및105기존 회귀·공통 SpriteDraw/픽셀선택을 C++ 메모리에서 검증했다. 실제 Windows 게임창/PCM/물리키/포커스/Win11/자연완주/전체 원본 픽셀·전체 동일성·포획/희생/특정 적 공격/승리/공중3종 전용/신규MP 검사는 실행하지 않았다.",
+  "lastFull34": "625제품/626",
+  "lastGuiUnit": 627,
+  "goalComplete": false
+}

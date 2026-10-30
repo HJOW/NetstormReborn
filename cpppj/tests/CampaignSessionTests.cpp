@@ -5377,3 +5377,6 @@ TEST_CASE(CampaignSession_ConstructionCostReadsCurrentMissionGuard) {
         CHECK(formats==charged && others==charged && direct==charged && money==charged && rejects==charged);CHECK(Get(records,2*0xb4+0x54)==(mission?0U:0x400U));CHECK(session.Sp(2)==(mission?0.0F:400.0F));
     }
 }
+
+// 마나103 Native 추가 Draw를 실제 자산/Pool 픽셀과 대조한다.
+#include "CampaignManaAdditionalTests.inc"

@@ -11,6 +11,7 @@
 #include "client/OwnerColorTableState.h"
 #include "o/RawFactoryDraw.h"
 #include "o/RawDaisDraw.h"
+#include "o/RawManaDraw.h"
 #include "o/RawTempleDraw.h"
 #include "o/RawThunderCannonCapture.h"
 #include "o/RawGeyserCapture.h"
@@ -108,6 +109,11 @@ struct RawCampaignFactoryDisplay::Impl {
             const auto composite=core.pool.Slot(object); // 같은 프레임의 현재 본체/추가 그림 분배에 사용한다.
             const auto& dispatch=HitVtable(composite); // 같은 실제+a4 분배를 일반화면과선택캡처가공유한다.
             if (dispatch.additional==0x41c100U) return; // 실제빈ret8만정상반환한다.
+            if (dispatch.additional==0x473710U) { // 마나103의 TYPE/SHP 호스트 토큰은 같은 실제 자산 번호이며105 마나볼트의+a4와 구별한다.
+                o::DrawManaAdditional(composite,point.x,point.y,{[](auto type) { return type; },[&shape](const auto& request) {
+                    shape({request.shape,request.frame,{request.x,request.y},request.shadow ? SpriteShapeMode::Shadow : SpriteShapeMode::Plain});
+                }});return;
+            }
             if (ManaBolt(object)) { // 원본45ac40은 현재 프레임을10/10 그림자 뒤 원래 위치의 일반색으로 그린다.
                 const auto frame=DisplayDword(composite,36);shape({105,frame,{point.x+10,point.y+10},SpriteShapeMode::Shadow});shape({105,frame,point,SpriteShapeMode::Plain});return;
             }
