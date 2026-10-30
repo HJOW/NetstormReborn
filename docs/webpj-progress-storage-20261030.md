@@ -52,5 +52,5 @@
 ## 6. 남은 일
 
 - 미션 플레이(WB05~)가 `<$Config,Done…=1>` 을 실제로 쓰게 되면 이 경로를 그대로 쓴다. 승리 시점에 쓰는지는 그때 자연 플레이로 확인한다.
-- Tell 지역 인자 `Name(arg1,arg2)`·현재 미션 조회, 시작 팁 창·Auto-Demo, 한국어(D2Coding·`.korean`)·`<background>` 그림, Options −40 규칙·와이드 화면 위치(원본 근거 필요), 도움말 후속 항목은 [LEFT_JOBS.webpj.md](../LEFT_JOBS.webpj.md) 맨 위 '다음'에 이어진다. (`User Made Campaigns` 와 Edit 는 2026-10-30 사용자 결정으로 제공하지 않고 목록에서 노출하지 않기로 했다 — 같은 문서의 '사용자 결정' 절. Campaign 목록의 해당 행 제거 코드는 후속이다.)
+- Tell 지역 인자 `Name(arg1,arg2)`·현재 미션 조회, 시작 팁 창·Auto-Demo, 한국어(D2Coding·`.korean`)·`<background>` 그림, Options −40 규칙·와이드 화면 위치(원본 근거 필요), 도움말 후속 항목은 [LEFT_JOBS.webpj.md](../LEFT_JOBS.webpj.md) 맨 위 '다음'에 이어진다. (`User Made Campaigns` 와 Edit 는 2026-10-30 사용자 결정으로 제공하지 않고 목록에서 노출하지 않기로 했다 — 같은 문서의 '사용자 결정' 절. Campaign 목록의 해당 행 제거 코드는 2026-10-30 WB03-I 에서 반영했다 — [캠페인 하위 목록 기록](webpj-campaign-lists-20261029.md) §7.)
 - 재시작(`destroy`→`init`) 중 저장소를 쓸 수 없는 환경에서는 새 `Progress` 가 비어 시작하지만 기존 게임 데이터는 이전 수명의 진행 값을 그대로 가진다(저장소를 쓸 수 없고 같은 페이지에서 재시작하는 드문 경우만 해당, 호스트가 새로 불러오면 사라진다).

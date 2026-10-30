@@ -13,7 +13,7 @@ import { buildMenuResources } from '../www/assets/menu-assets.js';
 import { createFragment, applyShortCommand, measureChain, parseStyleText } from '../www/ui/style-text.js';
 import { ScrollingText } from '../www/ui/scroll-text.js';
 import { createParserGlobals, createParserState, extractDirectives, parseHtml, prepareDialogContent } from '../www/ui/html-text.js';
-import { expandFileList } from '../www/ui/tell-lists.js';
+import { WEB_EXCLUDED_LIST_OBJECTS, expandFileList } from '../www/ui/tell-lists.js';
 import { TellWindow, createTellWindow } from '../www/ui/tell-window.js';
 import { IndexedSurface } from '../www/render/indexed-surface.js';
 import { createTextContext } from '../www/render/glyph-text.js';
@@ -170,13 +170,15 @@ test('다중 줄 본문: 줄 나눔과 크기 맞춤', () => {
 });
 
 // 화면에 대화상자를 그려 8비트 표면과 창을 돌려준다(원본 구름·타이틀 위, 메인 메뉴 버튼은 숨김). (2026-10-28 WB03-D)
-function renderDialog(name, width = 1024, height = 768) {
+// original 이 true 면 웹 제외 목록 객체(User Made Campaigns)를 빼지 않고 원본과 같은 목록으로 만든다(원본 스크린샷 대조용). (2026-10-30 WB03-I)
+function renderDialog(name, width = 1024, height = 768, { original = false } = {}) {
     const data = newData();
     const surface = new IndexedSurface(width, height);
     surface.tile(resources.clouds);
     const position = titlePosition(width, height, resources.title);
     surface.drawImage(resources.title, position.x, position.y);
-    const result = createTellWindow({ gameData: data, resources, name, screen: { width, height } });
+    const hooks = original ? { expandMenu: (label, command, argument) => expandFileList(data, label, command, argument, { excluded: [] }) } : {};
+    const result = createTellWindow({ gameData: data, resources, name, screen: { width, height }, hooks });
     assert.ok(result.window, `${name} 대화상자를 만들지 못했습니다`);
     result.window.draw(surface);
     const rgb = new Uint8Array(width * height * 3);
@@ -196,32 +198,98 @@ test('대화상자 배치: Credits·Demo·Campaign 크기와 좌표', () => {
     const demo = renderDialog('Demoville').window;
     assert.deepEqual([demo.baseWidth, demo.baseHeight], [249, 232]);
     assert.deepEqual([demo.body.baseWidth, demo.body.baseHeight], [149, 106]);
-    const campaign = renderDialog('UCampaign').window;
+    // 원본과 같은 8행(User Made Campaigns 포함, 원본 스크린샷 mainMenu - Campaign.png 와 같은 배치)이다.
+    const campaign = renderDialog('UCampaign', 1024, 768, { original: true }).window;
     assert.deepEqual([campaign.baseWidth, campaign.baseHeight], [238, 301]);
     assert.equal(campaign.menu.items.length, 8);
     assert.deepEqual(campaign.menu.items.map((item) => item.kind), ['text', 'text', 'separator', 'text', 'text', 'text', 'separator', 'text']);
     assert.deepEqual(campaign.menu.items.filter((item) => item.kind === 'text').map((item) => item.label), ['Early Missions', 'Priest Training', 'Struggle For Freedom', 'A Nation Rises', 'Complete Victory', 'User Made Campaigns']);
     assert.deepEqual(campaign.menu.items[0].command, { name: 'Tell', argument: 'offical1.overview' });
+    // 웹 판본(기본): User Made Campaigns 행과 그 앞 구분선을 뺀 6행이다. 패널은 구분선 16 + 행 17 = 33 만큼 낮아져 화면 가운데에 다시 놓인다.
+    const web = renderDialog('UCampaign').window;
+    assert.deepEqual([web.baseWidth, web.baseHeight], [238, 268]);
+    assert.equal(web.menu.items.length, 6);
+    assert.deepEqual(web.menu.items.map((item) => item.kind), ['text', 'text', 'separator', 'text', 'text', 'text']);
+    assert.deepEqual(web.menu.items.filter((item) => item.kind === 'text').map((item) => item.label), ['Early Missions', 'Priest Training', 'Struggle For Freedom', 'A Nation Rises', 'Complete Victory']);
+    assert.deepEqual(web.bounds(), { left: 393, top: 250, right: 631, bottom: 518 });
+    assert.equal(web.bounds().top, Math.floor((768 - 268) / 2));
+    assert.deepEqual(web.menu.bounds(), { left: 436, top: 372, right: 589, bottom: 473 });
+    assert.deepEqual(web.body.bounds(), { left: 443, top: 270, right: 581, bottom: 362 });
+    assert.deepEqual(web.buttons[0].bounds(), { left: 493, top: 483, right: 531, bottom: 503 });
+    // 본문→목록→버튼 사이 간격은 원본과 같다(제외한 두 행만큼 목록이 짧아졌을 뿐이다).
+    assert.equal(web.menu.bounds().top - web.body.bounds().bottom, campaign.menu.bounds().top - campaign.body.bounds().bottom);
+    assert.equal(web.buttons[0].bounds().top - web.menu.bounds().bottom, campaign.buttons[0].bounds().top - campaign.menu.bounds().bottom);
+    assert.equal(web.menu.bounds().bottom - web.menu.bounds().top, campaign.menu.bounds().bottom - campaign.menu.bounds().top - 33);
     // 다른 화면 크기에서는 가운데로 다시 놓인다(논리 높이 768, 16:9 폭 1366).
     const wide = renderDialog('Credits', 1366, 768).window;
     assert.equal(wide.bounds().left, 395 + (1366 - 1024) / 2);
     assert.equal(wide.bounds().top, 304);
 });
 
-// 파일 목록: 설정 객체 등록·이름순·구분선·`{cur.file}` 치환과 등록된 섹션 조회. (2026-10-28 WB03-D)
-test('Tell 파일 목록: offical*.english 8개 → 행 6개 + 구분선 2개', () => {
+// 파일 목록: 설정 객체 등록·이름순·구분선·`{cur.file}` 치환과 등록된 섹션 조회. 원본(제외 없음)은 offical*.english 8개 → 행 6개 + 구분선 2개이다. (2026-10-28 WB03-D)
+test('Tell 파일 목록(제외 없음): offical*.english 8개 → 행 6개 + 구분선 2개', () => {
     const data = newData();
-    const items = expandFileList(data, '@' + data.get('guideSpec'), 'Tell', '{cur.file}.overview');
+    const items = expandFileList(data, '@' + data.get('guideSpec'), 'Tell', '{cur.file}.overview', { excluded: [] });
     assert.deepEqual(items.map((item) => item.kind), ['text', 'text', 'separator', 'text', 'text', 'text', 'separator', 'text']);
     assert.deepEqual(items.filter((item) => item.kind === 'text').map((item) => item.command.argument), ['offical1.overview', 'offical2.overview', 'offical3.overview', 'offical4.overview', 'offical5.overview', 'offical6.overview']);
     // 등록된 객체의 섹션을 Tell 이 찾을 수 있다. 임시 cur 객체는 내려져 있다.
     assert.ok(data.tellSection('offical1.overview').includes('Early Missions'));
+    assert.ok(data.tellSection('offical6.overview').includes('userSpec'));
     assert.equal(data.registry.findByName('cur'), null);
     assert.equal(data.get('offical3.index'), '3');
     // 다시 펼쳐도 객체를 중복 등록하지 않는다.
     const count = data.registry.objects.length;
-    expandFileList(data, '@' + data.get('guideSpec'), 'Tell', '{cur.file}.overview');
+    expandFileList(data, '@' + data.get('guideSpec'), 'Tell', '{cur.file}.overview', { excluded: [] });
     assert.equal(data.registry.objects.length, count);
+});
+
+// 웹 제외 목록(기본값): offical6(User Made Campaigns)과 그 앞 구분선(offical5sep)을 뺀다. 뺀 객체는 설정 객체로도 등록되지 않아 섹션이 열리지 않는다.
+// GameData.findFiles 는 여전히 8개 파일을 센다(제외는 목록 층에서만 한다). (2026-10-30 WB03-I)
+test('Tell 파일 목록(웹 기본): User Made Campaigns 와 그 앞 구분선을 뺀다', () => {
+    const data = newData();
+    const label = '@' + data.get('guideSpec');
+    assert.deepEqual([...WEB_EXCLUDED_LIST_OBJECTS], ['offical6']);
+    assert.equal(data.findFiles(data.get('guideSpec')).length, 8);
+    const items = expandFileList(data, label, 'Tell', '{cur.file}.overview');
+    assert.deepEqual(items.map((item) => item.kind), ['text', 'text', 'separator', 'text', 'text', 'text']);
+    assert.deepEqual(items.filter((item) => item.kind === 'text').map((item) => item.command.argument), ['offical1.overview', 'offical2.overview', 'offical3.overview', 'offical4.overview', 'offical5.overview']);
+    assert.ok(!items.some((item) => item.label === 'User Made Campaigns'));
+    // 뺀 객체는 등록되지 않고 Tell 섹션도 없다. 남은 객체의 index 는 뺀 객체까지 센 원래 순번 그대로다. 구분선 객체(offical5sep)는 목록 정리 때문에 등록만 되어 있다.
+    assert.equal(data.registry.findByName('offical6'), null);
+    assert.equal(data.tellSection('offical6.overview'), null);
+    assert.ok(data.get('offical6.title') == null);
+    assert.ok(data.tellSection('offical5.overview') !== null);
+    assert.equal(data.get('offical3.index'), '3');
+    assert.equal(data.get('offical5.index'), '5');
+    // 대소문자를 가리지 않고 제외한다.
+    const upper = expandFileList(newData(), label, 'Tell', '{cur.file}.overview', { excluded: ['OFFICAL6'] });
+    assert.equal(upper.length, 6);
+    // 앞쪽 객체를 빼도 남은 객체의 index 는 뺀 객체까지 센 원래 순번이다(offical3 는 계속 3).
+    const early = newData();
+    expandFileList(early, label, 'Tell', '{cur.file}.overview', { excluded: ['offical1'] });
+    assert.equal(early.registry.findByName('offical1'), null);
+    assert.equal(early.get('offical3.index'), '3');
+});
+
+// 객체를 빼서 구분선만 남는 자리 정리: 맨 앞, 맨 뒤, 연달아 놓인 구분선을 지운다(하나도 안 뺀 목록은 원본 그대로 둔다). (2026-10-30 WB03-I)
+test('Tell 파일 목록: 뺀 뒤 앞·뒤·연속 구분선을 정리한다', () => {
+    const kinds = (excluded) => {
+        const data = newData();
+        return expandFileList(data, '@' + data.get('guideSpec'), 'Tell', '{cur.file}.overview', { excluded }).map((item) => (item.kind === 'separator' ? '-' : item.command.argument.replace('offical', '').replace('.overview', '')));
+    };
+    assert.deepEqual(kinds([]), ['1', '2', '-', '3', '4', '5', '-', '6']);
+    // 맨 뒤: 5 와 6 을 빼면 마지막 구분선이 남지 않는다.
+    assert.deepEqual(kinds(['offical5', 'offical6']), ['1', '2', '-', '3', '4']);
+    // 맨 앞: 1 과 2 를 빼면 첫 구분선이 남지 않는다.
+    assert.deepEqual(kinds(['offical1', 'offical2']), ['3', '4', '5', '-', '6']);
+    // 연속: 3, 4, 5 를 빼면 구분선 둘이 이어지므로 하나만 남는다.
+    assert.deepEqual(kinds(['offical3', 'offical4', 'offical5']), ['1', '2', '-', '6']);
+    // 전부 빼면 빈 목록이다.
+    assert.deepEqual(kinds(['offical1', 'offical2', 'offical3', 'offical4', 'offical5', 'offical6']), []);
+    // 아무것도 빼지 않은 목록은 원본 그대로 둔다: 구분선 파일(offical2sep) 하나만 맞는 패턴은 구분선 한 줄이 남는다(웹 기본 제외 목록에 걸리지 않는 패턴).
+    const data = newData();
+    const only = expandFileList(data, '@' + data.get('guideSpec').replace('*', '2sep'), 'Tell', '{cur.file}.overview');
+    assert.deepEqual(only.map((item) => item.kind), ['separator']);
 });
 
 // 입력: 목록 강조·행 누름 즉시 실행·돌 버튼 누름/뗌·Timeout·닫기. (2026-10-28 WB03-D)
@@ -325,6 +393,54 @@ const CAMPAIGN_SHOTS = Object.freeze({
     'offical5.overview': { file: 'mainMenu - Campaign - Complete Victory.png', size: [258, 247], rows: ['x', 'x', 'x', 'x', 'x'] },
 });
 
+// 흰 글자 마스크(채널 최솟값 ≥ 215)를 영역마다 만든다: 키는 'x,y' 로 영역 왼쪽 위 기준 상대 좌표이다. (2026-10-30 WB03-I)
+function whiteMask(rendered, rect) {
+    const mask = new Set();
+    // 영역의 모든 픽셀에서 흰 글자를 모은다.
+    for (let y = rect.top; y < rect.bottom; y += 1) {
+        for (let x = rect.left; x < rect.right; x += 1) {
+            const offset = (y * rendered.width + x) * 3;
+            if (Math.min(rendered.rgb[offset], rendered.rgb[offset + 1], rendered.rgb[offset + 2]) >= 215) mask.add(`${x - rect.left},${y - rect.top}`);
+        }
+    }
+    return mask;
+}
+
+// 웹 Campaign(6행)은 원본 스크린샷과 대조된 8행 배치에서 두 행(구분선 + User Made Campaigns)만 뺀 것이다: 본문 글자와 앞 6행의 흰 글자가 같은 모양으로 놓이고,
+// 위치는 패널이 줄어든 만큼 세로로 옮겨질 뿐이다. 원본 스크린샷에 6행 화면은 없으므로 이 검사는 '제외한 두 행을 뺀 부분만 원본과 같다'는 근거를 확인한다. (2026-10-30 WB03-I)
+test('웹 Campaign(6행): 본문과 앞 6행의 글자 모양이 원본 8행 배치와 같다', () => {
+    const original = renderDialog('UCampaign', 1024, 768, { original: true });
+    const web = renderDialog('UCampaign');
+    // 본문(제목 그림·설명): 같은 크기이고 흰 글자 모양이 같다.
+    const originalBody = original.window.body.bounds();
+    const webBody = web.window.body.bounds();
+    assert.equal(webBody.right - webBody.left, originalBody.right - originalBody.left);
+    assert.equal(webBody.bottom - webBody.top, originalBody.bottom - originalBody.top);
+    const bodyOriginal = whiteMask(original, originalBody);
+    assert.ok(bodyOriginal.size > 200, '본문에 흰 글자가 충분히 있어야 비교가 의미 있음');
+    assert.deepEqual([...whiteMask(web, webBody)].sort(), [...bodyOriginal].sort());
+    // 목록 앞 6행(원본 8행 중 구분선 뒤의 User Made Campaigns 를 뺀 부분)을 목록 왼쪽 위 기준 상대 좌표로 비교한다.
+    // 가장 긴 라벨('User Made Campaigns')이 빠져 목록 폭이 2픽셀 줄고 가로 가운데 정렬 때문에 목록이 1픽셀 안쪽으로 옮겨지지만, 글자는 왼쪽 여백(15)에서 시작하므로 상대 좌표는 같다.
+    // 목록 테두리의 밝은 경사면(안쪽 2픽셀: 웹은 맨 아래·오른쪽이 6행 끝에 오고 원본은 8행 끝에 옴)은 글자가 아니므로 비교에서 뺀다.
+    const six = original.window.menu.offsets[6];
+    const originalMenu = original.window.menu.bounds();
+    const webMenu = web.window.menu.bounds();
+    assert.equal(webMenu.bottom - webMenu.top, six);
+    const inset = (rect, amount) => ({ left: rect.left + amount, top: rect.top + amount, right: rect.right - amount, bottom: rect.bottom - amount });
+    const originalRegion = { left: originalMenu.left, top: originalMenu.top, right: originalMenu.left + (webMenu.right - webMenu.left), bottom: originalMenu.top + six };
+    const maskOriginal = whiteMask(original, inset(originalRegion, 2));
+    const maskWeb = whiteMask(web, inset(webMenu, 2));
+    assert.ok(maskOriginal.size > 300, '목록에 흰 글자가 충분히 있어야 비교가 의미 있음');
+    assert.deepEqual([...maskWeb].sort(), [...maskOriginal].sort());
+    // 이 비교가 위치에 민감함을 보인다: 원본 영역을 가로·세로로 한 칸 어긋나게 잡으면 겹침이 약 59~66% 로 떨어진다(획이 2픽셀 굵기라 0 이 되지는 않는다).
+    const base = inset(originalRegion, 2);
+    for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
+        const moved = whiteMask(original, { left: base.left + dx, top: base.top + dy, right: base.right + dx, bottom: base.bottom + dy });
+        const overlap = [...moved].filter((key) => maskWeb.has(key)).length / maskWeb.size;
+        assert.ok(overlap < 0.8, `한 칸(${dx}, ${dy}) 어긋난 영역과의 겹침 ${overlap.toFixed(3)} 이 너무 커 위치에 둔감함`);
+    }
+});
+
 // 캠페인 하위 목록 5종: 저장된 진행 값에 따라 행이 [체크 표시 | 활성 | 잠김] 으로 나뉜다. 활성 조건은 `$Checked` 5번째 인자(ConfigParseLong ≠ 0)이며 값이 없으면 빈 문자열 → 0 → 잠김이다.
 // 처음 설치한 상태(진행 값 없음)에서는 각 묶음의 첫 행(고정 인자 1)만 활성이다. (2026-10-29 WB03-E)
 test('캠페인 하위 목록: 진행 값에 따른 체크 표시·잠금 상태', () => {
@@ -410,7 +526,8 @@ test('원본 스크린샷 대조: Credits·Demo·Campaign 목록·본문·버튼
             continue;
         }
         const shot = decodePng(shotPath);
-        const rendered = renderDialog(name);
+        // 원본 스크린샷은 User Made Campaigns 행이 있는 8행 Campaign 이므로 웹 제외 없이(original) 그려 대조한다. (2026-10-30 WB03-I)
+        const rendered = renderDialog(name, 1024, 768, { original: true });
         const scores = [];
         // 클라이언트 원점 후보를 훑어 본문·목록 영역 차이가 가장 작은 원점을 찾는다.
         for (let originY = 28; originY <= 40; originY += 1) {

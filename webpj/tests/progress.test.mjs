@@ -288,7 +288,8 @@ test('한국어 설정에서도 Campaign 목록과 진행 상태가 나온다', 
     const korean = GameData.build({ files, language: 'korean', options: { DoneTutorial1: 1 } });
     const window = createTellWindow({ gameData: korean, resources, name: 'UCampaign', screen: { width: 1024, height: 768 } }).window;
     assert.ok(window.menu, '한국어에서 캠페인 목록이 비어 있음');
-    assert.equal(window.menu.items.length, 8);
+    // 웹 판본은 User Made Campaigns 행과 그 앞 구분선을 뺀 6행이다(2026-10-30 WB03-I, 이전에는 8행).
+    assert.equal(window.menu.items.length, 6);
     assert.deepEqual(campaignStates(korean, 'offical1.overview'), ['k', 'c', 'x', 'x', 'x', 'x']);
 });
 
