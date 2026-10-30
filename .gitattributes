@@ -2229,3 +2229,8 @@ tools/decomp_technical_help.py text eol=lf
 cpppj/technical-help-native-20261030.json text eol=lf
 cpppj/technical-help-runtime-20261030.json text eol=lf
 docs/exe/cpp-technical-help-20261030.md text eol=lf
+
+# 같은602 제품의 실제 Help/프로토콜 메뉴와 새603 ZIP 증거를 보존한다.
+tools/cpp_help_menu_smoke.py text eol=lf
+cpppj/help-menus-runtime-20261030.json text eol=lf
+docs/exe/cpp-help-menus-20261030.md text eol=lf

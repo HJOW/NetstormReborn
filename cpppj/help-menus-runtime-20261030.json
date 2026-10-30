@@ -1,0 +1,309 @@
+{
+  "unit": 603,
+  "date": "2026-10-30",
+  "host": "HJOW-Athlon",
+  "ipv4": "192.168.0.94",
+  "os": "Windows-10-10.0.19045-SP0",
+  "baseCommit": "ae66b54c",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "productImplementationUnit": 602,
+  "gameSha256": "8a977634fa15b47c7bfe7cf8c821c0a77118503645bfbca6ac155bc9dfd78763",
+  "zipSha256": "c7f48f1abf3d2c2d8a1638b3757cb7ed450a419ee793eb0b87fdbe51e433ccc5",
+  "package": {
+    "entries": 1376,
+    "allEntryBytesMatch": true,
+    "allGameAssetsMatchSources": true,
+    "diagnosticHelpersExcluded": true,
+    "gameSha256": "8a977634fa15b47c7bfe7cf8c821c0a77118503645bfbca6ac155bc9dfd78763",
+    "zipSha256": "c7f48f1abf3d2c2d8a1638b3757cb7ed450a419ee793eb0b87fdbe51e433ccc5",
+    "product": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-help-menus-603-20261030\\한글 배포본\\NetstormReborn-cpppj",
+    "helperSha256": "a8a254a7b37ba5c424329eb96170ed9c50dbdf72e7ded3a655201a2199eae50a"
+  },
+  "packageReturnCode": 0,
+  "packageLogSha256": "2af0646aba9720ea1dc6d01d851ba439fddea0df8310db8ff429e790a583eddd",
+  "packageWarnings": 0,
+  "packageErrors": 0,
+  "actualGameExecutions": 3,
+  "actualGameFailures": 0,
+  "actualHelperProofs": [
+    {
+      "pid": 14364,
+      "proofSha256": "3c5178c09d31c70050d11bdf69d0b7f97314ab6e5568e78093c1b58c268f1eb7",
+      "commandMatched": true,
+      "childExitCodeCaptured": false
+    },
+    {
+      "pid": 12484,
+      "proofSha256": "3ea3bea394a2de5ba3ba6cab697528ae392e98f256d8b36c4965699e48457f9f",
+      "commandMatched": true,
+      "childExitCodeCaptured": false
+    }
+  ],
+  "childExitCodesCaptured": false,
+  "noLiveTaskGameOrHelperProcessesObserved": true,
+  "runs": [
+    {
+      "passed": true,
+      "enabled": false,
+      "run": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-help-menus-603-20261030\\한글 배포본\\NetstormReborn-cpppj\\Netstorm.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-help-menus-603-20261030\\한글 배포본\\NetstormReborn-cpppj\\game",
+          "--mission",
+          "Tutorial1",
+          "--window",
+          "--no-audio",
+          "--frames",
+          "182",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=40;sleepPerLoop=1;autoDemo=0;tellTips=0;intro=1",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-help-menus-603-20261030\\default\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-help-menus-603-20261030\\default\\states.tsv"
+        ],
+        "binarySha256": "8a977634fa15b47c7bfe7cf8c821c0a77118503645bfbca6ac155bc9dfd78763",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 7.607713400000648,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2"
+      },
+      "gameSha256": "8a977634fa15b47c7bfe7cf8c821c0a77118503645bfbca6ac155bc9dfd78763",
+      "aboutLabel": "About",
+      "technicalLabel": "Technical Help",
+      "helper": null,
+      "presentation": {
+        "same": true,
+        "actualSha256": "194d1fbaaceb89d5237bcee3bd67fb3d180b9033f6df777a41fe726dce9b8ea0",
+        "expectedSha256": "194d1fbaaceb89d5237bcee3bd67fb3d180b9033f6df777a41fe726dce9b8ea0",
+        "dimensions": [
+          1024,
+          768
+        ],
+        "outputRect": [
+          0,
+          0,
+          1024,
+          768
+        ]
+      },
+      "mission": [
+        "Tutorial1",
+        "Tutorial",
+        "3"
+      ],
+      "timeBefore": "2.267",
+      "timeAfter": "6.035",
+      "internalHelpOpenedAndClosed": true,
+      "scope": "실제 ESC/About/Technical Help 클릭과 F1/바깥 클릭·같은 Session/창RGB. 브라우저/외부 사이트/포획/희생/특정 공격/승리 주입 없음."
+    },
+    {
+      "passed": true,
+      "enabled": true,
+      "run": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-help-menus-603-20261030\\한글 배포본\\NetstormReborn-cpppj\\Netstorm.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-help-menus-603-20261030\\한글 배포본\\NetstormReborn-cpppj\\game",
+          "--mission",
+          "Tutorial1",
+          "--window",
+          "--no-audio",
+          "--frames",
+          "182",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=40;sleepPerLoop=1;autoDemo=0;tellTips=0;intro=1;techHelpExe=H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-help-menus-603-20261030\\technical-proof.exe;techHelpFile=H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-help-menus-603-20261030\\enabled\\manual.hlp",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-help-menus-603-20261030\\enabled\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-help-menus-603-20261030\\enabled\\states.tsv"
+        ],
+        "binarySha256": "8a977634fa15b47c7bfe7cf8c821c0a77118503645bfbca6ac155bc9dfd78763",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 7.622261699998489,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2"
+      },
+      "gameSha256": "8a977634fa15b47c7bfe7cf8c821c0a77118503645bfbca6ac155bc9dfd78763",
+      "aboutLabel": "About",
+      "technicalLabel": "Technical Help",
+      "helper": {
+        "pid": 14364,
+        "proofSha256": "3c5178c09d31c70050d11bdf69d0b7f97314ab6e5568e78093c1b58c268f1eb7",
+        "commandMatched": true,
+        "childExitCodeCaptured": false
+      },
+      "presentation": {
+        "same": true,
+        "actualSha256": "98f94a2f0430bd5ad5015dfe1fb7cebd4f40e0d17133f4c8fc42eb1d71d0dcb6",
+        "expectedSha256": "98f94a2f0430bd5ad5015dfe1fb7cebd4f40e0d17133f4c8fc42eb1d71d0dcb6",
+        "dimensions": [
+          1024,
+          768
+        ],
+        "outputRect": [
+          0,
+          0,
+          1024,
+          768
+        ]
+      },
+      "mission": [
+        "Tutorial1",
+        "Tutorial",
+        "3"
+      ],
+      "timeBefore": "2.217",
+      "timeAfter": "6.318",
+      "internalHelpOpenedAndClosed": true,
+      "scope": "실제 ESC/About/Technical Help 클릭과 F1/바깥 클릭·같은 Session/창RGB. 브라우저/외부 사이트/포획/희생/특정 공격/승리 주입 없음."
+    },
+    {
+      "passed": true,
+      "enabled": false,
+      "externalLink": "http://www.netstormhq.com",
+      "linkPoint": "500,320",
+      "run": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-help-menus-603-20261030\\한글 배포본\\NetstormReborn-cpppj\\Netstorm.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-help-menus-603-20261030\\한글 배포본\\NetstormReborn-cpppj\\game",
+          "--mission",
+          "Tutorial1",
+          "--window",
+          "--no-audio",
+          "--frames",
+          "182",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=40;sleepPerLoop=1;autoDemo=0;tellTips=0;intro=1;techHelpExe=;techHelpFile=;autoOpen=;http:=H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-help-menus-603-20261030\\technical-proof.exe %1",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-help-menus-603-20261030\\external\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-help-menus-603-20261030\\external\\states.tsv"
+        ],
+        "binarySha256": "8a977634fa15b47c7bfe7cf8c821c0a77118503645bfbca6ac155bc9dfd78763",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 7.65443199999936,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2"
+      },
+      "gameSha256": "8a977634fa15b47c7bfe7cf8c821c0a77118503645bfbca6ac155bc9dfd78763",
+      "aboutLabel": "About",
+      "technicalLabel": "Technical Help",
+      "helper": {
+        "pid": 12484,
+        "proofSha256": "3ea3bea394a2de5ba3ba6cab697528ae392e98f256d8b36c4965699e48457f9f",
+        "commandMatched": true,
+        "childExitCodeCaptured": false
+      },
+      "presentation": {
+        "same": true,
+        "actualSha256": "3e861a2f29e7be6d932865b9bffdb0468d41e2e566110afcc4985473d3753aca",
+        "expectedSha256": "3e861a2f29e7be6d932865b9bffdb0468d41e2e566110afcc4985473d3753aca",
+        "dimensions": [
+          1024,
+          768
+        ],
+        "outputRect": [
+          0,
+          0,
+          1024,
+          768
+        ]
+      },
+      "mission": [
+        "Tutorial1",
+        "Tutorial",
+        "3"
+      ],
+      "timeBefore": "2.242",
+      "timeAfter": "6.306",
+      "internalHelpOpenedAndClosed": true,
+      "scope": "실제 ESC/About/Technical Help/HTML 링크 클릭과 F1/바깥 클릭·같은 Session/창RGB. 프로토콜은 로컬 도우미만 지정. 브라우저/외부 사이트/포획/희생/특정 공격/승리 주입 없음."
+    }
+  ],
+  "rawDirectory": "extracted/cpp-help-menus-603-20261030",
+  "externalLinkSource": "원래 F1Help raw_help_link와 enabled/help.bmp의 실제 링크 위치500,320. autoOpen 비움/http: 로컬 도우미 설정으로만 실행. 주소 접속 없음.",
+  "newNativeObservations": 0,
+  "cppTestsExecuted": false,
+  "latestCppEvidenceUnit": 602,
+  "currentProductAll34Run": false,
+  "latestAll34ProductUnit": 595,
+  "latestAll34EvidenceUnit": 596,
+  "protected": {
+    "count": 2572,
+    "differences": [],
+    "beforeSha256": "2ab999aa658e29d27d725b1e3095ef6bea79ec29aa874f114bd45afb6bf51f6a",
+    "afterSha256": "2ab999aa658e29d27d725b1e3095ef6bea79ec29aa874f114bd45afb6bf51f6a",
+    "currentFixtures": 749
+  },
+  "sourceSha256": {
+    ".gitattributes": "d13b97c7e321b333c9bd77dcf222faf18f6d503ba79b99fa589dca65a3165ea8",
+    "tools/cpp_help_menu_smoke.py": "f68b5df9c1400e4e07f7e51a1ed1291a71aa828026cd8e9cbf05952d7f616967",
+    "docs/exe/cpp-help-menus-20261030.md": "b0109a376c186c47aa75ec6f07c523bc599689dd64840ca8e19fd93185e54a1d"
+  },
+  "evidenceSha256": {
+    "protected-before.json": "2ab999aa658e29d27d725b1e3095ef6bea79ec29aa874f114bd45afb6bf51f6a",
+    "package.log": "2af0646aba9720ea1dc6d01d851ba439fddea0df8310db8ff429e790a583eddd",
+    "package-summary.json": "da72586448b57d7b871a52325f8da3817ab554480a0639f8732cb82c5fd45e51",
+    "protected-after.json": "2ab999aa658e29d27d725b1e3095ef6bea79ec29aa874f114bd45afb6bf51f6a",
+    "default/steps.tsv": "7a1a167f1cdd16b34c482768c079210aac9ac685b914ca29bc54aa6fbb436620",
+    "default/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "default/stderr.log": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2",
+    "default/running.json": "ca2d9e908387b24fb0e6c24127a379cf83dce62d2ab73db55284350ecf1d357e",
+    "default/states.tsv": "df7b53be10d46619409461a86210e95f75fe88eee745a5f4478c79a053be0747",
+    "default/bar.bmp": "ae4c535a1ba67076d4c3dc2e4672a1568543f2888469e64fffbd10312bb84d95",
+    "default/help.bmp": "e49c27f98c749a3a13558782691ea0902d338e450831d5cdc3a622fd7e654754",
+    "default/final.bmp": "fe46dd14bee718810315c343dfc0fff4f6be6617489f74782c0e7f149f17f583",
+    "default/final-output.bmp": "fe46dd14bee718810315c343dfc0fff4f6be6617489f74782c0e7f149f17f583",
+    "default/run.json": "d27486b89b54fedeabaddf2c546fe8e570e48155df5b75f6e38e5d863349283d",
+    "default/presentation-comparison.json": "9d19c778d67298de9e4fc06870ea4c409b02a4f959823b4e58fc5536bd1fddc8",
+    "default/summary.json": "d3ab1b3c87c10bdabe3cf0020787a8f8b25b59136a36cd7e3eab185e95e434e6",
+    "enabled/steps.tsv": "29a8c1f523be5852d735fc655416a83ea8844f712573ea779347613042d5de63",
+    "enabled/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "enabled/stderr.log": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2",
+    "enabled/running.json": "8a0e18f9c002cdf4f40d0c7c5037b7933b03b5072e67b0ef4d588b4f7bd27486",
+    "enabled/states.tsv": "dd70bc0f1ee656c8440704a85b7e0b6bd9163ff590fcb395b0f8c31501106a58",
+    "enabled/bar.bmp": "f31d3e3807a88b2d34e3b5afd0a09df9a00cf9434151b4d085e025a97a8e6828",
+    "enabled/about.bmp": "a17f59748faf695e6fed47f1380fff9b684f8488da31ad5693a23e34ae9dcad4",
+    "enabled/received.txt": "3c5178c09d31c70050d11bdf69d0b7f97314ab6e5568e78093c1b58c268f1eb7",
+    "enabled/help.bmp": "45ad8bb2bf29894589d029c7eb62e316b6e67a840490a259b8eb2142f6671d50",
+    "enabled/final.bmp": "2dd771e61280360e16ede9d51b8b1e2bc579b6ae01aac49d331b6efbb5879665",
+    "enabled/final-output.bmp": "2dd771e61280360e16ede9d51b8b1e2bc579b6ae01aac49d331b6efbb5879665",
+    "enabled/run.json": "72c22e222b44eea62f05525ceb186bfa1ca52d0ecf6a744d2e05b477e1577d66",
+    "enabled/presentation-comparison.json": "312b8bfb4b28bd97c798cd3b19d2fc7b9d4bdf0cc5f108066872e553c0a7f8ae",
+    "enabled/summary.json": "c1ad8eada9fb932976c14a5345169830e87879bc87a41c1914e1e535d07ad3be",
+    "external/steps.tsv": "a8a6f23d4f91fa83b87754e9d8fdfb57b2d95eb968b5e0c309a81761ac203c4a",
+    "external/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "external/stderr.log": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2",
+    "external/running.json": "cf056510e0e2bb9f18a1ae720c548fca5a272a5720ea91b9c14f2755c3a0bc0f",
+    "external/states.tsv": "4211935b8c52f96b821732216782f5b84611a48659f2180d1f361cb492a87af6",
+    "external/bar.bmp": "de2c168d4d73669e59663c79c2351728ce41c9e8a14b57efdf1e4abcf81925f8",
+    "external/help.bmp": "8a80fcac5fafd59bffb9bccbb8c867288b8f2877f686936b79b8ea322cda0829",
+    "external/received.txt": "3ea3bea394a2de5ba3ba6cab697528ae392e98f256d8b36c4965699e48457f9f",
+    "external/final.bmp": "86fa1aa348385e0bd2dc10a6708e92ad7225ef17b5f0859696e1940159de3c8d",
+    "external/final-output.bmp": "86fa1aa348385e0bd2dc10a6708e92ad7225ef17b5f0859696e1940159de3c8d",
+    "external/run.json": "4edb837e23336a1168b20ecbb4e8cab8d9afa87d4678dc46426af05e6521a3eb",
+    "external/presentation-comparison.json": "28f033f4ac231d85ffc01757e7f5ccc6aeeeb25685ad260e875edd79aafa258c",
+    "external/summary.json": "b128a4fac4cf36b5718ddec8558e552253dde08547a9f3a52bcbb3a2e89e6eda"
+  },
+  "browserOrShellUrlRun": false,
+  "forbiddenGameplayReproduced": false,
+  "dedicatedThreeFlyerTestsRun": false,
+  "newMultiplayerTestsRun": false,
+  "win11Run": false,
+  "actualPcmRun": false,
+  "activeFullscreenRun": false,
+  "originalPixelComparisonRun": false,
+  "remaining": [
+    "보조 TAFF 등록/전체 BaseFile",
+    "남은 UI/Edit·Native·시나리오 조건/전체 동일성",
+    "랭크/비로컬 보상·MP 재접속 저장",
+    "후순위MP 무시험과4~7차"
+  ]
+}
