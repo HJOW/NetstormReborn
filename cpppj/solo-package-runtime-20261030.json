@@ -1,0 +1,1875 @@
+{
+  "unit": 596,
+  "date": "2026-10-30",
+  "host": "HJOW-Athlon",
+  "os": "Windows-10-10.0.19045-SP0",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "productUnit": 595,
+  "productCommit": "7d6291e4",
+  "gameSha256": "f3c9de83f85769a567292852ce35703b3d770da855d0c02b53fa07bb3aa45d14",
+  "zipSha256": "bdfbdfbe5347680fe093e7ac6f57df8094580c1572dd154d44a10969f733e47e",
+  "runtimeSha256": {
+    "Netstorm.exe": "f3c9de83f85769a567292852ce35703b3d770da855d0c02b53fa07bb3aa45d14",
+    "msvcp140.dll": "7c26614e1d733892c2deac7e245ce115504b1d80592dd0a01b08e3e5a55f89ca",
+    "vcruntime140.dll": "d1f4225df2cd877dbf130d5668a021dce3f94118455ff5ec952061c30afc9ce7",
+    "vcruntime140_1.dll": "a7146c08f89fe5b04541ab507cdb59ff7b44534d4ba3c668a426c6450a03434e",
+    "NetstormSmacker.dll": "6afa14297064ac26e76765747a46f4b5b813fd29f5277d95758b8cf801c4ce1f"
+  },
+  "successfulPaths": 34,
+  "totalExecutions": 34,
+  "failedExecutions": 0,
+  "groups": {
+    "Early Missions": {
+      "passed": 6,
+      "selected": 6,
+      "minimumGameClockIncrease": 20.378999999999998
+    },
+    "Priest Training": {
+      "passed": 9,
+      "selected": 9,
+      "minimumGameClockIncrease": 22.709
+    },
+    "Campaign": {
+      "passed": 16,
+      "selected": 16,
+      "minimumGameClockIncrease": 29.529
+    },
+    "Demo": {
+      "passed": 3,
+      "selected": 3,
+      "minimumGameClockIncrease": 19.666
+    }
+  },
+  "mode": "창 모드1024×768/무음/40fps상한·일반480/데모602프레임·실행당180초상한",
+  "batches": {
+    "preflight": {
+      "runs": 1,
+      "complete": true,
+      "originalsUnchanged": true,
+      "gameDataUnchanged": true,
+      "resultsSha256": "37ebe34110e9711033cb0e6b5d0d9ac55e57ea89f23f29a92a19f578f7b21f9f"
+    },
+    "normal": {
+      "runs": 30,
+      "complete": true,
+      "originalsUnchanged": true,
+      "gameDataUnchanged": true,
+      "resultsSha256": "27f909ebbda775761a1225d0b70883f1073d0fddfee58df893ca0c607a6f5ad8"
+    },
+    "demos": {
+      "runs": 3,
+      "complete": true,
+      "originalsUnchanged": true,
+      "gameDataUnchanged": true,
+      "resultsSha256": "7dc08b3d7e133751e8f4a50933526e6254d608c903285d12aa0d193fc58d5639"
+    }
+  },
+  "protected": {
+    "total": 2563,
+    "originals": 1394,
+    "originalCD": 425,
+    "existingFixtures": 742,
+    "changed": []
+  },
+  "sourceSha256": {
+    "tools/cpp_solo_entry_smoke.py": "c00df0af6f0b875b43cf4cd8b4bbea0187a77faa2944c1c543ef04766dc9fda3",
+    "tools/cpp_movie_runtime_smoke.py": "dbdc880626491c6a7645b10a7f028985b57419eeca40d292d90210ec3f3f88a8",
+    "tools/cpp_bridge_ritual_runtime.py": "e31feed20604795837db7ee003c22aa6b612df20c8a064a9933661c181019788",
+    "tools/cpp_world_smoke.py": "b119fc7b4cf79d27e5a9812e81adbe3a119a88661f0985c16799fa8692b1b6e9",
+    "tools/cpp_smoke_files.py": "6b6e943e308efb110bd960a5242c715b013a32a5a8ce0d9e43980f19f0ebb321",
+    "tools/cpp_demo_start_smoke.py": "fe6456f215631287e5918f0a2fcfb5c27815c1918a75965d353f818c126fd94d",
+    "tools/cpp_menu_smoke.py": "c61c28847c248b237ebea434a27538d4b4a4cedf1dd14fc9a485a0e5723917df",
+    "tools/cpp_renderer_smoke.py": "481e1cb8ad680425ce942e2a4ca1dd1da104ebe71bd683c695c6f855ced71a2e",
+    "tools/taff.py": "461860cdfc9451b85a8694dd30fd2c56c1cfdf5c6bb7ab8f63a4089971889795"
+  },
+  "runs": [
+    {
+      "mission": "Tutorial1",
+      "demo": false,
+      "group": "Early Missions",
+      "rawDirectory": "extracted/cpp-solo-package-596-20261030/preflight/Tutorial1",
+      "seconds": 22.91020000000026,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true,
+        "gameClockAdvanced": true,
+        "gameClockMonotonic": true,
+        "physicalOutput": true
+      },
+      "gameClock": {
+        "samples": 58,
+        "first": 0.538,
+        "last": 21.522,
+        "increase": 20.983999999999998
+      },
+      "presentation": {
+        "same": true,
+        "actualSha256": "c758ddb6be40ba4e0d0352d7391fd26c32e4a8a5dc6fb3916b95fe88aa9f98b7",
+        "expectedSha256": "c758ddb6be40ba4e0d0352d7391fd26c32e4a8a5dc6fb3916b95fe88aa9f98b7",
+        "dimensions": [
+          1024,
+          768
+        ],
+        "outputRect": [
+          0,
+          0,
+          1024,
+          768
+        ]
+      },
+      "logicalFrameNonblack": true,
+      "rawSha256": {
+        "final-output.bmp": "3e0aeccf12d4520a7c17d63506812fe7113d0c14e840c0f952d55c22e157597a",
+        "final.bmp": "3e0aeccf12d4520a7c17d63506812fe7113d0c14e840c0f952d55c22e157597a",
+        "presentation-comparison.json": "53a4a05867bd74b0d89f87e4b8be48e0c18cff226efe7f6481651699f825542d",
+        "result.json": "2d0ac89385a426c9ff0a742064292bbd88fd883e381a0eeccd201ac77bffc1ba",
+        "running.json": "f21f586e2d82188a24bde757f5b215ac752a4a26c30299e5317f6966a1466eb5",
+        "states.tsv": "2976210007897a5c35913e2f7d48d3e2f18942e8a7e3891e5ab2412cc45c43a7",
+        "stderr.log": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2",
+        "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "steps.tsv": "d07fe168d2288afea66fcbcd09a34a14530d5e99fb46ac889caf3bfb811c64b9"
+      }
+    },
+    {
+      "mission": "Tutorial2",
+      "demo": false,
+      "group": "Early Missions",
+      "rawDirectory": "extracted/cpp-solo-package-596-20261030/normal/Tutorial2",
+      "seconds": 22.889760599999136,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true,
+        "gameClockAdvanced": true,
+        "gameClockMonotonic": true,
+        "physicalOutput": true
+      },
+      "gameClock": {
+        "samples": 57,
+        "first": 0.513,
+        "last": 20.892,
+        "increase": 20.378999999999998
+      },
+      "presentation": {
+        "same": true,
+        "actualSha256": "cb6fc06dfcf3c9835b510b01523d218e0f2f0f7ba32e7abd154489bf0f9782c5",
+        "expectedSha256": "cb6fc06dfcf3c9835b510b01523d218e0f2f0f7ba32e7abd154489bf0f9782c5",
+        "dimensions": [
+          1024,
+          768
+        ],
+        "outputRect": [
+          0,
+          0,
+          1024,
+          768
+        ]
+      },
+      "logicalFrameNonblack": true,
+      "rawSha256": {
+        "final-output.bmp": "ba2525255f2f34ffa02a3e98b08a13b30eaddbf958a5e829f062cf3edf2e41a0",
+        "final.bmp": "ba2525255f2f34ffa02a3e98b08a13b30eaddbf958a5e829f062cf3edf2e41a0",
+        "presentation-comparison.json": "6cb6f99186c5cbf8b429ec7a70b9814404b093b250abd19c7e8219c84eae2701",
+        "result.json": "e4146fbe5f3f21c2a6a2a264b72bec5b040d1e6c2690bb13c40723df3e1ccfc1",
+        "running.json": "f88b235afefb230ecfd76f28756ee78f18877b96960330854f37db08efc3e828",
+        "states.tsv": "db7c335134d15ece314cf4efd1e9aa555f1709a350aaa6ef348de3d482113375",
+        "stderr.log": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2",
+        "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "steps.tsv": "fcd4b928969516cd8357d3c6fdc93e4d373bae214ca1a4bd079dd70044971d29"
+      }
+    },
+    {
+      "mission": "Tutorial3",
+      "demo": false,
+      "group": "Early Missions",
+      "rawDirectory": "extracted/cpp-solo-package-596-20261030/normal/Tutorial3",
+      "seconds": 34.21569350000027,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true,
+        "gameClockAdvanced": true,
+        "gameClockMonotonic": true,
+        "physicalOutput": true
+      },
+      "gameClock": {
+        "samples": 58,
+        "first": 0.774,
+        "last": 31.835,
+        "increase": 31.061
+      },
+      "presentation": {
+        "same": true,
+        "actualSha256": "b7832e59dac9021f2a872e737f69de80176c002e621f8260c30d4cd34dedb8bb",
+        "expectedSha256": "b7832e59dac9021f2a872e737f69de80176c002e621f8260c30d4cd34dedb8bb",
+        "dimensions": [
+          1024,
+          768
+        ],
+        "outputRect": [
+          0,
+          0,
+          1024,
+          768
+        ]
+      },
+      "logicalFrameNonblack": true,
+      "rawSha256": {
+        "final-output.bmp": "c8cfddeabc3d3369ee77c349ce19d9c2efa16d278c7615a6430a92790f4d5d61",
+        "final.bmp": "c8cfddeabc3d3369ee77c349ce19d9c2efa16d278c7615a6430a92790f4d5d61",
+        "presentation-comparison.json": "37074f93b32b7ef84eb9f06357460a2e0fe66126d80994ca583bd74823f3fb21",
+        "result.json": "edf92a50bfde8c0b62873e68a7707109fc1753e06e2da0ae51b83c8e1280abbb",
+        "running.json": "fd4e5d1c59af2865f5ac835d20fca0a56367bdc747cc93a2019b180d30b6a6e9",
+        "states.tsv": "813090478b94abd866ad5618bfddc734d595bed5fe182b66f0c031c455f3b4e0",
+        "stderr.log": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2",
+        "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "steps.tsv": "d3cdaab2a9294f1a25ef9786c92c40a9241db3671b6625251b1160712bc6485b"
+      }
+    },
+    {
+      "mission": "Tutorial4",
+      "demo": false,
+      "group": "Early Missions",
+      "rawDirectory": "extracted/cpp-solo-package-596-20261030/normal/Tutorial4",
+      "seconds": 35.23529400000007,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true,
+        "gameClockAdvanced": true,
+        "gameClockMonotonic": true,
+        "physicalOutput": true
+      },
+      "gameClock": {
+        "samples": 58,
+        "first": 0.859,
+        "last": 33.201,
+        "increase": 32.342
+      },
+      "presentation": {
+        "same": true,
+        "actualSha256": "58411eb2d75843b78b1cdb2d5dbf41f265513e81faeb20b28eadb7af99bda2b6",
+        "expectedSha256": "58411eb2d75843b78b1cdb2d5dbf41f265513e81faeb20b28eadb7af99bda2b6",
+        "dimensions": [
+          1024,
+          768
+        ],
+        "outputRect": [
+          0,
+          0,
+          1024,
+          768
+        ]
+      },
+      "logicalFrameNonblack": true,
+      "rawSha256": {
+        "final-output.bmp": "ffe784f67230455f655ad1b48dab62a877dee4918867a54d17aaa21e9c1b41f9",
+        "final.bmp": "ffe784f67230455f655ad1b48dab62a877dee4918867a54d17aaa21e9c1b41f9",
+        "presentation-comparison.json": "688b76e9f1c85ccd8685ca8a2173bcb4d3d3f70035bd0700a76b7c68f82c28bf",
+        "result.json": "3ab81c0c323a5c86597796abf1dda5c327c8a7dda5d85f84ef77f8819731da5e",
+        "running.json": "6705f3bb3f8282d9ebfe966584634cf8ad6b39139513b7db2e1582f6d049b6ab",
+        "states.tsv": "1741913ca677d22154fc9ecbdd1151b86dbefba72f740728cafac8b74d440ccb",
+        "stderr.log": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2",
+        "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "steps.tsv": "e598d58115a1a64fc59ac3235139ecaacf7fd419f77effc2145b69ca130fc3ab"
+      }
+    },
+    {
+      "mission": "Tutorial5",
+      "demo": false,
+      "group": "Early Missions",
+      "rawDirectory": "extracted/cpp-solo-package-596-20261030/normal/Tutorial5",
+      "seconds": 48.43071710000004,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true,
+        "gameClockAdvanced": true,
+        "gameClockMonotonic": true,
+        "physicalOutput": true
+      },
+      "gameClock": {
+        "samples": 58,
+        "first": 0.87,
+        "last": 46.15,
+        "increase": 45.28
+      },
+      "presentation": {
+        "same": true,
+        "actualSha256": "7a5d10ac7582cfc079df2dee9ca503771d0c543aed1379e6c49a5b36e0803da9",
+        "expectedSha256": "7a5d10ac7582cfc079df2dee9ca503771d0c543aed1379e6c49a5b36e0803da9",
+        "dimensions": [
+          1024,
+          768
+        ],
+        "outputRect": [
+          0,
+          0,
+          1024,
+          768
+        ]
+      },
+      "logicalFrameNonblack": true,
+      "rawSha256": {
+        "final-output.bmp": "b5a9ee8def7bab4cb9e90896442bb16e55f0b76fca0d860fc5f8a3ddc45ef1d8",
+        "final.bmp": "b5a9ee8def7bab4cb9e90896442bb16e55f0b76fca0d860fc5f8a3ddc45ef1d8",
+        "presentation-comparison.json": "73cf79419871282d9ded54937b1e9d034618fd0e8d574609aa1b54299d520729",
+        "result.json": "8d7a735a13eb4729352455bd13dfb1570a5af6bb69238fc9369df973021abf45",
+        "running.json": "1a53695856b41d96c7f7583b645d4f7171b9c9dcaef75edec563ef2cefe5c9ef",
+        "states.tsv": "3c9026e5643eea157aca9cd76d8f2a679e48a7ba35a6c9ac8a5285fde123d43e",
+        "stderr.log": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2",
+        "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "steps.tsv": "bdf27ecfb86e94047d0fca8e57f543a6057f93b9f3818525b5686d71ebcbc1af"
+      }
+    },
+    {
+      "mission": "Tutorial6",
+      "demo": false,
+      "group": "Early Missions",
+      "rawDirectory": "extracted/cpp-solo-package-596-20261030/normal/Tutorial6",
+      "seconds": 37.962241400000494,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true,
+        "gameClockAdvanced": true,
+        "gameClockMonotonic": true,
+        "physicalOutput": true
+      },
+      "gameClock": {
+        "samples": 56,
+        "first": 0.76,
+        "last": 34.687,
+        "increase": 33.927
+      },
+      "presentation": {
+        "same": true,
+        "actualSha256": "cf7b267e5664ad9af90b09b60de415697d3f4e7f9ac1711cfa1bc9aa15e6cf08",
+        "expectedSha256": "cf7b267e5664ad9af90b09b60de415697d3f4e7f9ac1711cfa1bc9aa15e6cf08",
+        "dimensions": [
+          1024,
+          768
+        ],
+        "outputRect": [
+          0,
+          0,
+          1024,
+          768
+        ]
+      },
+      "logicalFrameNonblack": true,
+      "rawSha256": {
+        "final-output.bmp": "e0ecea002e0db5997ab194dc53a3aaf397ab615e1f28f53dc11c6b55ca32ca48",
+        "final.bmp": "e0ecea002e0db5997ab194dc53a3aaf397ab615e1f28f53dc11c6b55ca32ca48",
+        "presentation-comparison.json": "faead122608e9b38223c41295085d56269fc79fcd12ab54d88eaddfd01ac840e",
+        "result.json": "f8238c40bc7999b31a416fba32d1225bf8f5d762d984763839e366f2722a4863",
+        "running.json": "c0a6bbe8bbe7ec6c48f9f6917361142eeb055617a60d537a0339855c13593fa4",
+        "states.tsv": "9a956d2bcab446fdca381f14a27a79b1226cd5485115c5357a26836c8b7763bf",
+        "stderr.log": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2",
+        "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "steps.tsv": "e57bbc915dd01422e07b249a0e55c76f4e997c1e22ae824966cce18ba06da887"
+      }
+    },
+    {
+      "mission": "bc1menu76",
+      "demo": false,
+      "group": "Priest Training",
+      "rawDirectory": "extracted/cpp-solo-package-596-20261030/normal/bc1menu76",
+      "seconds": 24.51340899999923,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true,
+        "gameClockAdvanced": true,
+        "gameClockMonotonic": true,
+        "physicalOutput": true
+      },
+      "gameClock": {
+        "samples": 59,
+        "first": 0.693,
+        "last": 23.402,
+        "increase": 22.709
+      },
+      "presentation": {
+        "same": true,
+        "actualSha256": "5a34d4f0c3f25ecb894b6b1ccf116e706095e9862dea74c9d3fbfd68a5722002",
+        "expectedSha256": "5a34d4f0c3f25ecb894b6b1ccf116e706095e9862dea74c9d3fbfd68a5722002",
+        "dimensions": [
+          1024,
+          768
+        ],
+        "outputRect": [
+          0,
+          0,
+          1024,
+          768
+        ]
+      },
+      "logicalFrameNonblack": true,
+      "rawSha256": {
+        "final-output.bmp": "7dc8ef3ff417b81e99ebeb79b0d1aba12098a5ebf7c263a41a35268eac23a59b",
+        "final.bmp": "7dc8ef3ff417b81e99ebeb79b0d1aba12098a5ebf7c263a41a35268eac23a59b",
+        "presentation-comparison.json": "b0d4a24a5d5e578379d072b3697c6868c15048f28f13fd8f52531bb4f0be23e2",
+        "result.json": "48c4476d06e6e2b1b9f0d0ad3e6afb3945cbb43453800eeb516bc316d12bcc6b",
+        "running.json": "30b2a21527312c316ad0ec98c80912b963b92397cc0d480f017f08800547d3bd",
+        "states.tsv": "c7dfde451ac1960f81fc89cce212fab07f21ab94faccf0c0a141596dd3cbc926",
+        "stderr.log": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2",
+        "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "steps.tsv": "5e9f875fa78c7999dfb964ad5590ac163acc7d4a9ebc115a5bcd835e24497f0a"
+      }
+    },
+    {
+      "mission": "bc2bridging76",
+      "demo": false,
+      "group": "Priest Training",
+      "rawDirectory": "extracted/cpp-solo-package-596-20261030/normal/bc2bridging76",
+      "seconds": 53.67189890000009,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true,
+        "gameClockAdvanced": true,
+        "gameClockMonotonic": true,
+        "physicalOutput": true
+      },
+      "gameClock": {
+        "samples": 59,
+        "first": 0.513,
+        "last": 51.958,
+        "increase": 51.445
+      },
+      "presentation": {
+        "same": true,
+        "actualSha256": "10d9691ba5c97fd726252ba42ff976c6a3f9323b06926259cf5f8b092847306b",
+        "expectedSha256": "10d9691ba5c97fd726252ba42ff976c6a3f9323b06926259cf5f8b092847306b",
+        "dimensions": [
+          1024,
+          768
+        ],
+        "outputRect": [
+          0,
+          0,
+          1024,
+          768
+        ]
+      },
+      "logicalFrameNonblack": true,
+      "rawSha256": {
+        "final-output.bmp": "998325e4a6ff3f0cb46716ff4ac927fa7840eb39dcb9174a62dd330a7e5e367e",
+        "final.bmp": "998325e4a6ff3f0cb46716ff4ac927fa7840eb39dcb9174a62dd330a7e5e367e",
+        "presentation-comparison.json": "edc9f24c0bef479a7a7cc1f6e258b5b034ddb3aa62110426231c0e027e9c1b82",
+        "result.json": "107653ea26e3776c7054c45b193c5f34ad968e4a1481a75944fb6012f75a1245",
+        "running.json": "f55ce75fa76dd256388730499bfa30ac786cd07e14eeb2b52de6aa951c3e6c1c",
+        "states.tsv": "4abb42f4ffc088406fd914db5524756187140877da43c21e087f5d070baaa1f9",
+        "stderr.log": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2",
+        "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "steps.tsv": "f92d80724cff6388ace5125339a1ac9cba11117bb557ca528819653844c85e31"
+      }
+    },
+    {
+      "mission": "bc3acid_bar76",
+      "demo": false,
+      "group": "Priest Training",
+      "rawDirectory": "extracted/cpp-solo-package-596-20261030/normal/bc3acid_bar76",
+      "seconds": 48.861048999999184,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true,
+        "gameClockAdvanced": true,
+        "gameClockMonotonic": true,
+        "physicalOutput": true
+      },
+      "gameClock": {
+        "samples": 58,
+        "first": 4.987,
+        "last": 46.723,
+        "increase": 41.736
+      },
+      "presentation": {
+        "same": true,
+        "actualSha256": "9c79945119a9e6e2115722bb523aa404cf9541a9bc919bd48402568376d286f0",
+        "expectedSha256": "9c79945119a9e6e2115722bb523aa404cf9541a9bc919bd48402568376d286f0",
+        "dimensions": [
+          1024,
+          768
+        ],
+        "outputRect": [
+          0,
+          0,
+          1024,
+          768
+        ]
+      },
+      "logicalFrameNonblack": true,
+      "rawSha256": {
+        "final-output.bmp": "065a608622709358733d529b7539f1eee95f51a69602c056aaa4d45484b4f718",
+        "final.bmp": "065a608622709358733d529b7539f1eee95f51a69602c056aaa4d45484b4f718",
+        "presentation-comparison.json": "4b082b95f95cc9a78cd5491bbcfc722626b56f8585992b8238b6a465a3f61061",
+        "result.json": "7ee8e5fc7e06dac7ff526959350874b6117cdb166932b9d3a7b9f124695e9c6c",
+        "running.json": "85fe49c709841b35fc3fcf90283fec549c3020f2f5cf67139f4b5e6d01fbb405",
+        "states.tsv": "f1437be04fafcd5739b2d6041d7d4c629c855656fcb751f581989ea46136b7d4",
+        "stderr.log": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2",
+        "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "steps.tsv": "4a8fd6c074595bf5442d5fcb35e98e3e1af6d05bc98896710b477e0bfe97690a"
+      }
+    },
+    {
+      "mission": "bc4bow_rush76",
+      "demo": false,
+      "group": "Priest Training",
+      "rawDirectory": "extracted/cpp-solo-package-596-20261030/normal/bc4bow_rush76",
+      "seconds": 47.77829500000007,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true,
+        "gameClockAdvanced": true,
+        "gameClockMonotonic": true,
+        "physicalOutput": true
+      },
+      "gameClock": {
+        "samples": 59,
+        "first": 1.768,
+        "last": 46.219,
+        "increase": 44.451
+      },
+      "presentation": {
+        "same": true,
+        "actualSha256": "b505f9148a17519cefc9e70b91f71b6845bd77d2b83b42642aafd3e188be8230",
+        "expectedSha256": "b505f9148a17519cefc9e70b91f71b6845bd77d2b83b42642aafd3e188be8230",
+        "dimensions": [
+          1024,
+          768
+        ],
+        "outputRect": [
+          0,
+          0,
+          1024,
+          768
+        ]
+      },
+      "logicalFrameNonblack": true,
+      "rawSha256": {
+        "final-output.bmp": "778ff45faafb248c1f6a764f015ea29c3466a9f95b61a8e2eedf1235edbcc121",
+        "final.bmp": "778ff45faafb248c1f6a764f015ea29c3466a9f95b61a8e2eedf1235edbcc121",
+        "presentation-comparison.json": "656268286ffb02689789ac0c67f3d9f2cecafb60c1775e49a9a9cadf9ff8a6fd",
+        "result.json": "4baab999b28532b7839d7e7ac5f72048c7047e45d0c6685a9a926d8c54d6230c",
+        "running.json": "ef643c24878c3eecc9aa5e4e3374333406c42315d45c8796f988967bdcd6c027",
+        "states.tsv": "a24729897ace08c0f590b78405f165b30ea93b7381908af45d0b365776caf1c1",
+        "stderr.log": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2",
+        "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "steps.tsv": "958c35b32d223eda8decc48a4e299a684a5662ab54145070502902c2432b7542"
+      }
+    },
+    {
+      "mission": "bc5walkers76",
+      "demo": false,
+      "group": "Priest Training",
+      "rawDirectory": "extracted/cpp-solo-package-596-20261030/normal/bc5walkers76",
+      "seconds": 38.487993599999754,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true,
+        "gameClockAdvanced": true,
+        "gameClockMonotonic": true,
+        "physicalOutput": true
+      },
+      "gameClock": {
+        "samples": 59,
+        "first": 1.97,
+        "last": 37.233,
+        "increase": 35.263
+      },
+      "presentation": {
+        "same": true,
+        "actualSha256": "51803455183bdb73b0e844b06f987f7ff7ba655d5846b7c546e66f0c24be962d",
+        "expectedSha256": "51803455183bdb73b0e844b06f987f7ff7ba655d5846b7c546e66f0c24be962d",
+        "dimensions": [
+          1024,
+          768
+        ],
+        "outputRect": [
+          0,
+          0,
+          1024,
+          768
+        ]
+      },
+      "logicalFrameNonblack": true,
+      "rawSha256": {
+        "final-output.bmp": "1c01530bc6099bd62e06d46ed534f242492844f0f7e70f94f5dd777939775a68",
+        "final.bmp": "1c01530bc6099bd62e06d46ed534f242492844f0f7e70f94f5dd777939775a68",
+        "presentation-comparison.json": "af97b58931140ab9c0001378113da192a637d49a9baf16b99094fc82de8e14d4",
+        "result.json": "f30b80c991fa483d1d1e6f2c2eac5289296bbc5ed7690e4290f64cbde93dda9b",
+        "running.json": "379bcb046f314718c97cc770aea59535235c26faf88f472ee501f2676b9462bd",
+        "states.tsv": "72ce6553b7c8705d8c5065d77432d034cba0cbc035440e0a37aab314362b87c4",
+        "stderr.log": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2",
+        "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "steps.tsv": "a3e3db0121f534146dab60557572a7089d96b7819be6c521647c2fa715d9741b"
+      }
+    },
+    {
+      "mission": "bc6mows76",
+      "demo": false,
+      "group": "Priest Training",
+      "rawDirectory": "extracted/cpp-solo-package-596-20261030/normal/bc6mows76",
+      "seconds": 93.19549820000066,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true,
+        "gameClockAdvanced": true,
+        "gameClockMonotonic": true,
+        "physicalOutput": true
+      },
+      "gameClock": {
+        "samples": 59,
+        "first": 10.662,
+        "last": 90.811,
+        "increase": 80.149
+      },
+      "presentation": {
+        "same": true,
+        "actualSha256": "dad935de9f89cca2959ace98cdc2ec9bb8c00d36a2b203644ed343266c0af803",
+        "expectedSha256": "dad935de9f89cca2959ace98cdc2ec9bb8c00d36a2b203644ed343266c0af803",
+        "dimensions": [
+          1024,
+          768
+        ],
+        "outputRect": [
+          0,
+          0,
+          1024,
+          768
+        ]
+      },
+      "logicalFrameNonblack": true,
+      "rawSha256": {
+        "final-output.bmp": "8f98fb8a013e3f194e13dcffbd482bfcfb006eda49c598f2617ded95447ab7cb",
+        "final.bmp": "8f98fb8a013e3f194e13dcffbd482bfcfb006eda49c598f2617ded95447ab7cb",
+        "presentation-comparison.json": "096e56e4ef3e88bb2336af4e1e7502e2d6d556d858741b6ebc45cfb19445835c",
+        "result.json": "3ffa325cb5f82cacdabd87e303e533a615ee9608a1c15647379193e53f8e36ec",
+        "running.json": "0bf37d1836016ab8b84f2d4249ea9e072d043c6aa05e05cf8bd3c21471c437d8",
+        "states.tsv": "14bbe7faf6888e34677d2df3ae99849e9f052fad6101be5ef71b1484938eb413",
+        "stderr.log": "985e499e799503f5128007a5d394fbc3ec5466cd204b6bd6e207a238fb403193",
+        "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "steps.tsv": "e6c268256bd49e89d882ee2839cb132a1c2c8d76efbbe49ce1f3185b7fdf8b57"
+      }
+    },
+    {
+      "mission": "bc7sun_bars76",
+      "demo": false,
+      "group": "Priest Training",
+      "rawDirectory": "extracted/cpp-solo-package-596-20261030/normal/bc7sun_bars76",
+      "seconds": 75.3693086000003,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true,
+        "gameClockAdvanced": true,
+        "gameClockMonotonic": true,
+        "physicalOutput": true
+      },
+      "gameClock": {
+        "samples": 59,
+        "first": 0.569,
+        "last": 73.198,
+        "increase": 72.62899999999999
+      },
+      "presentation": {
+        "same": true,
+        "actualSha256": "60e32363e55b6773cf5aee10bfbcb598c5535de7288c638cf9e9baf17eb9b32c",
+        "expectedSha256": "60e32363e55b6773cf5aee10bfbcb598c5535de7288c638cf9e9baf17eb9b32c",
+        "dimensions": [
+          1024,
+          768
+        ],
+        "outputRect": [
+          0,
+          0,
+          1024,
+          768
+        ]
+      },
+      "logicalFrameNonblack": true,
+      "rawSha256": {
+        "final-output.bmp": "8137170d0d58f8d7764d7e5491d972a9b6a8f7982222d87bd26f0340ab1da964",
+        "final.bmp": "8137170d0d58f8d7764d7e5491d972a9b6a8f7982222d87bd26f0340ab1da964",
+        "presentation-comparison.json": "624cc20a91963217c055b30cb7d8a6ce8142dc4cea32d484745971783f92cd34",
+        "result.json": "7e552933e709ebc3c28c9278a05609b9829b82c314333ff03b45ae460d327363",
+        "running.json": "08b79eb7a7b6b502f92569a8a756685caa117775c00228e692fcdfed839c7e25",
+        "states.tsv": "223d20ffae3335f7b629e888e900179201b1aaa9eed73e2b12d71f1039eea2c0",
+        "stderr.log": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2",
+        "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "steps.tsv": "8e8d129307bd8cdcd7d9ef93342315b30d155bf9f8f55561ee82d23125c97e0b"
+      }
+    },
+    {
+      "mission": "bc8fury76",
+      "demo": false,
+      "group": "Priest Training",
+      "rawDirectory": "extracted/cpp-solo-package-596-20261030/normal/bc8fury76",
+      "seconds": 83.65377559999979,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true,
+        "gameClockAdvanced": true,
+        "gameClockMonotonic": true,
+        "physicalOutput": true
+      },
+      "gameClock": {
+        "samples": 58,
+        "first": 6.084,
+        "last": 80.063,
+        "increase": 73.979
+      },
+      "presentation": {
+        "same": true,
+        "actualSha256": "25e05aafccd85ce9e5bcea0b0ae11392f8333c36a313f44be3fa5ec53743e9d3",
+        "expectedSha256": "25e05aafccd85ce9e5bcea0b0ae11392f8333c36a313f44be3fa5ec53743e9d3",
+        "dimensions": [
+          1024,
+          768
+        ],
+        "outputRect": [
+          0,
+          0,
+          1024,
+          768
+        ]
+      },
+      "logicalFrameNonblack": true,
+      "rawSha256": {
+        "final-output.bmp": "f3efd72cb3f8af4606a54e0573bd2e9c3fdef1c66d0ec9e5b92ecff4abfef7ba",
+        "final.bmp": "f3efd72cb3f8af4606a54e0573bd2e9c3fdef1c66d0ec9e5b92ecff4abfef7ba",
+        "presentation-comparison.json": "ffed880b879f4fc5b2b4f35260c4ec167e58b9b1aedb3e1151976c9095f6ce4a",
+        "result.json": "819f9a797c8250bcad345bcfc7b6fdf4248d1eda414b0b0fa2c1fb237ca1634f",
+        "running.json": "d79913a96a12a7c9aa471c2f8409af2bcad170675a180984065305f248b7ead7",
+        "states.tsv": "fabf67ed44372bbd784f74842f6cade43f3e89a28059b5597665e445f4d2f572",
+        "stderr.log": "0c525c37c762a48cea680d5b47365542b6268a466684322a31d73210dc559b55",
+        "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "steps.tsv": "471618f99af8b0839b4c8f204bef17382800e9722a7f565c30a5d2384815b56e"
+      }
+    },
+    {
+      "mission": "bc9ssun_bars76",
+      "demo": false,
+      "group": "Priest Training",
+      "rawDirectory": "extracted/cpp-solo-package-596-20261030/normal/bc9ssun_bars76",
+      "seconds": 58.45451949999915,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true,
+        "gameClockAdvanced": true,
+        "gameClockMonotonic": true,
+        "physicalOutput": true
+      },
+      "gameClock": {
+        "samples": 59,
+        "first": 7.229,
+        "last": 56.619,
+        "increase": 49.39
+      },
+      "presentation": {
+        "same": true,
+        "actualSha256": "da47b3d6a05ec116d05966ec6786f9462847fd996852790cd2216ed6820e9982",
+        "expectedSha256": "da47b3d6a05ec116d05966ec6786f9462847fd996852790cd2216ed6820e9982",
+        "dimensions": [
+          1024,
+          768
+        ],
+        "outputRect": [
+          0,
+          0,
+          1024,
+          768
+        ]
+      },
+      "logicalFrameNonblack": true,
+      "rawSha256": {
+        "final-output.bmp": "ce8c17f031f71662a21272245feb2eb1753b2c4cc0e20bec0331aa70011911de",
+        "final.bmp": "ce8c17f031f71662a21272245feb2eb1753b2c4cc0e20bec0331aa70011911de",
+        "presentation-comparison.json": "53c90a64df1cc88ba9e0b3f402250072d1f5ac2032be577d8152863d4e0742e1",
+        "result.json": "d3950ebd2fdc572567ff03cbea0bec491debff20dfd6aae876ed4d2ec64a988c",
+        "running.json": "0ce4f1477d86c1d60f5329e56d37a87be2999cd33779db44f2c0e5e1f5db245d",
+        "states.tsv": "b140ed20c308a1920c29020f894638aad7b2cfbe85721f7750ab74281940fd98",
+        "stderr.log": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2",
+        "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "steps.tsv": "f5660ed1b06a244bd35677ffd957025bd20983023bc9a8173caff3c6cc1caa52"
+      }
+    },
+    {
+      "mission": "TheWarBegins",
+      "demo": false,
+      "group": "Campaign",
+      "rawDirectory": "extracted/cpp-solo-package-596-20261030/normal/TheWarBegins",
+      "seconds": 33.85620670000026,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true,
+        "gameClockAdvanced": true,
+        "gameClockMonotonic": true,
+        "physicalOutput": true
+      },
+      "gameClock": {
+        "samples": 59,
+        "first": 1.164,
+        "last": 32.484,
+        "increase": 31.32
+      },
+      "presentation": {
+        "same": true,
+        "actualSha256": "b349c82b73c532480ef7c35c2e4b935fcfa88cadb85c206bfbe5f94a5c45b53e",
+        "expectedSha256": "b349c82b73c532480ef7c35c2e4b935fcfa88cadb85c206bfbe5f94a5c45b53e",
+        "dimensions": [
+          1024,
+          768
+        ],
+        "outputRect": [
+          0,
+          0,
+          1024,
+          768
+        ]
+      },
+      "logicalFrameNonblack": true,
+      "rawSha256": {
+        "final-output.bmp": "455fc8d004bb73c21b230ab0e5eacfb72a7779afe8bbfb0c3cee9d36834be6af",
+        "final.bmp": "455fc8d004bb73c21b230ab0e5eacfb72a7779afe8bbfb0c3cee9d36834be6af",
+        "presentation-comparison.json": "6f179eb3238a3a9128ddc53d081091adda45c0f154ad8eddf077640c501e5c43",
+        "result.json": "d6e2fa90f902da867ec1f9a5e0e2324fd8c0879ebbeaae932d5a4364887d9891",
+        "running.json": "457b6648da02e4b2f4e45ddd9dd08c59cb32a0232d16d2f1409a838d9c84fa0c",
+        "states.tsv": "57adaa705c4a10b3540bf3b78d8a670024f2befa8f4d382095e72a0c34d583ae",
+        "stderr.log": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2",
+        "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "steps.tsv": "9534bdcec2e8ee95f7fc34e57497326112cc39bfdd04f1f897ab122079d7e90d"
+      }
+    },
+    {
+      "mission": "MasterOfWhirligigs",
+      "demo": false,
+      "group": "Campaign",
+      "rawDirectory": "extracted/cpp-solo-package-596-20261030/normal/MasterOfWhirligigs",
+      "seconds": 31.77562769999895,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true,
+        "gameClockAdvanced": true,
+        "gameClockMonotonic": true,
+        "physicalOutput": true
+      },
+      "gameClock": {
+        "samples": 59,
+        "first": 0.919,
+        "last": 30.448,
+        "increase": 29.529
+      },
+      "presentation": {
+        "same": true,
+        "actualSha256": "21bb14364a8ab69530343775fe8eb6b30316bdfac565d902e382e67c7de19374",
+        "expectedSha256": "21bb14364a8ab69530343775fe8eb6b30316bdfac565d902e382e67c7de19374",
+        "dimensions": [
+          1024,
+          768
+        ],
+        "outputRect": [
+          0,
+          0,
+          1024,
+          768
+        ]
+      },
+      "logicalFrameNonblack": true,
+      "rawSha256": {
+        "final-output.bmp": "e5192667f26a58d4a5266acda3dac736612af8d37732bb2e60d647ae4678f18d",
+        "final.bmp": "e5192667f26a58d4a5266acda3dac736612af8d37732bb2e60d647ae4678f18d",
+        "presentation-comparison.json": "0da66441f69aeae3e951e1e25dbbd1bca1786a8f5b0508320a119f20204a46d4",
+        "result.json": "2915e654ee66e95999fbd746d18b1a97197ffc7514ade8e521cdbeecd0bd8062",
+        "running.json": "8815e53244f2c357faf58ed25815e1dbc035fba102feaaacdd08b3beef1bbf47",
+        "states.tsv": "84d9e5d13621588f7b964c261a22097e74e1d9a55dc52ac7a95c8de32d13197d",
+        "stderr.log": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2",
+        "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "steps.tsv": "add507e3e559a92d11647f0ea7aa4cff5bb5f49413224b12158cee55b649255c"
+      }
+    },
+    {
+      "mission": "SaveTheIsland",
+      "demo": false,
+      "group": "Campaign",
+      "rawDirectory": "extracted/cpp-solo-package-596-20261030/normal/SaveTheIsland",
+      "seconds": 44.10837569999967,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true,
+        "gameClockAdvanced": true,
+        "gameClockMonotonic": true,
+        "physicalOutput": true
+      },
+      "gameClock": {
+        "samples": 59,
+        "first": 2.986,
+        "last": 42.673,
+        "increase": 39.687000000000005
+      },
+      "presentation": {
+        "same": true,
+        "actualSha256": "ec28982524f47f46671facbfd7bb7df87e183ae7d575ef927729695b74c67441",
+        "expectedSha256": "ec28982524f47f46671facbfd7bb7df87e183ae7d575ef927729695b74c67441",
+        "dimensions": [
+          1024,
+          768
+        ],
+        "outputRect": [
+          0,
+          0,
+          1024,
+          768
+        ]
+      },
+      "logicalFrameNonblack": true,
+      "rawSha256": {
+        "final-output.bmp": "550a07225e9687af4804679bc54bda4a349840eb5440b402b05b50e63e1ca232",
+        "final.bmp": "550a07225e9687af4804679bc54bda4a349840eb5440b402b05b50e63e1ca232",
+        "presentation-comparison.json": "9e0fac700787eb8686b2b2bdf3bd2f65ef15c74e00245c69b5f8484e75c404aa",
+        "result.json": "5542364f41f6e25a2a2d2c844455f5adbef65aa94f6983cfdba15ebaa9212f66",
+        "running.json": "26dbb8bfc2cb8f2320ba96d71d394756c90a012b2c92654573e8cb1d390d5b81",
+        "states.tsv": "3310db8d0de800c7c3e70e4f0d2fea0230753e180554cf1c900a4d4c090e49c5",
+        "stderr.log": "f0897e4ab61f8c2f86b568404bba5e7af303c0933f7c1fa3ee631c464ffcc509",
+        "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "steps.tsv": "6799a544fcd0916626b7a5c4f334d5ffae9644261e55924d2ba335ce61d36480"
+      }
+    },
+    {
+      "mission": "FragileFortune",
+      "demo": false,
+      "group": "Campaign",
+      "rawDirectory": "extracted/cpp-solo-package-596-20261030/normal/FragileFortune",
+      "seconds": 45.17941900000005,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true,
+        "gameClockAdvanced": true,
+        "gameClockMonotonic": true,
+        "physicalOutput": true
+      },
+      "gameClock": {
+        "samples": 59,
+        "first": 3.725,
+        "last": 43.775,
+        "increase": 40.05
+      },
+      "presentation": {
+        "same": true,
+        "actualSha256": "26f56f17294c4c49c644c8e0631689bb455f57e035a7e30a52d3a7346e463952",
+        "expectedSha256": "26f56f17294c4c49c644c8e0631689bb455f57e035a7e30a52d3a7346e463952",
+        "dimensions": [
+          1024,
+          768
+        ],
+        "outputRect": [
+          0,
+          0,
+          1024,
+          768
+        ]
+      },
+      "logicalFrameNonblack": true,
+      "rawSha256": {
+        "final-output.bmp": "d88253a51cc3032b7774ba8997e7ec14cae12cc956276dd03a5cea42e40f4201",
+        "final.bmp": "d88253a51cc3032b7774ba8997e7ec14cae12cc956276dd03a5cea42e40f4201",
+        "presentation-comparison.json": "a3803092e9777e949bc7fc198c181ab5b5a646b785f08fa45a9a196f6bcd4507",
+        "result.json": "f8235bb6d62d88c8cb7b27614823dbbef9e0f6d41bf3a355dd6f001064eb68be",
+        "running.json": "f4f9ec997c698472f2736357319c35594305faf97c06ac0932d5d31d5e209ef3",
+        "states.tsv": "b52508dbec45f09d835b3820b822ef169e800a7b6011a8c3cd073c34de0c091e",
+        "stderr.log": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2",
+        "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "steps.tsv": "e6448352cd2ebe2c371b8c3b039ef066e574d6a9d0a57c90e2e3ecd206e41d44"
+      }
+    },
+    {
+      "mission": "ThunderingPower",
+      "demo": false,
+      "group": "Campaign",
+      "rawDirectory": "extracted/cpp-solo-package-596-20261030/normal/ThunderingPower",
+      "seconds": 39.26851879999958,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true,
+        "gameClockAdvanced": true,
+        "gameClockMonotonic": true,
+        "physicalOutput": true
+      },
+      "gameClock": {
+        "samples": 57,
+        "first": 1.589,
+        "last": 36.544,
+        "increase": 34.955
+      },
+      "presentation": {
+        "same": true,
+        "actualSha256": "0ea3f89ca0ebcaa7ef5caced862d6eddc67b0a0168baf7d26ac99336bb0f4d36",
+        "expectedSha256": "0ea3f89ca0ebcaa7ef5caced862d6eddc67b0a0168baf7d26ac99336bb0f4d36",
+        "dimensions": [
+          1024,
+          768
+        ],
+        "outputRect": [
+          0,
+          0,
+          1024,
+          768
+        ]
+      },
+      "logicalFrameNonblack": true,
+      "rawSha256": {
+        "final-output.bmp": "7dd18e9ce4d3b412c5420eb09ab58959ed2b9383b133bdc9491b8cef866627c1",
+        "final.bmp": "7dd18e9ce4d3b412c5420eb09ab58959ed2b9383b133bdc9491b8cef866627c1",
+        "presentation-comparison.json": "c719a9e37102da9f69204e10045ba67a558f8ccdfc36376d02d7ae2f76fbc98d",
+        "result.json": "650d21c44add6e6680758a6f064b771dd12184dd1d419a9206abec8ff86a93fc",
+        "running.json": "ce2029e652ff02a68fb5839d94ae663c3154626f347984946c459da413650017",
+        "states.tsv": "1832e2d2630cae231ac62ed0b8b32cd83a218bc5f2a3207422c78e4f4e2d5d6b",
+        "stderr.log": "e0feebb3c7aaa15588f3a42ee4a01cb547ca08c811185c5b1d92bdba25b67522",
+        "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "steps.tsv": "63187e1af26fdcd528fb294b2a4d1f3be1d4ad6d302fbd31bd6d500dc5c795d3"
+      }
+    },
+    {
+      "mission": "DissolvedAlliance",
+      "demo": false,
+      "group": "Campaign",
+      "rawDirectory": "extracted/cpp-solo-package-596-20261030/normal/DissolvedAlliance",
+      "seconds": 50.440096500000436,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true,
+        "gameClockAdvanced": true,
+        "gameClockMonotonic": true,
+        "physicalOutput": true
+      },
+      "gameClock": {
+        "samples": 59,
+        "first": 3.637,
+        "last": 48.704,
+        "increase": 45.067
+      },
+      "presentation": {
+        "same": true,
+        "actualSha256": "af1a06918ef927522eb67b65b11a31d2369065425f17de0c093f58e4a8eed377",
+        "expectedSha256": "af1a06918ef927522eb67b65b11a31d2369065425f17de0c093f58e4a8eed377",
+        "dimensions": [
+          1024,
+          768
+        ],
+        "outputRect": [
+          0,
+          0,
+          1024,
+          768
+        ]
+      },
+      "logicalFrameNonblack": true,
+      "rawSha256": {
+        "final-output.bmp": "2baa203a5d59d9ae047dba39786cd4b53636c804a6e1537be0f82baf9d352b0a",
+        "final.bmp": "2baa203a5d59d9ae047dba39786cd4b53636c804a6e1537be0f82baf9d352b0a",
+        "presentation-comparison.json": "3f586bbc96e6dbe4f1c6f9666eb25afd46af7758376f2b4a542ce486ed8c79c4",
+        "result.json": "6678717c9225afc2ef9a39751e30635d8e94d93514203f3c3c24f7bc12ae556c",
+        "running.json": "fc47e9353822261abd469cfa6a6360cc4bdadf5ccdadfcdb82984d03da7b9856",
+        "states.tsv": "57d7a1016fbe42c497e3e749ff907b5c761c478ebc590d246fb560119293ee65",
+        "stderr.log": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2",
+        "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "steps.tsv": "95e3680b6d72c267fb1c13238abf6e553a0d51794a242f439e478485b53f1ac7"
+      }
+    },
+    {
+      "mission": "TheNoose",
+      "demo": false,
+      "group": "Campaign",
+      "rawDirectory": "extracted/cpp-solo-package-596-20261030/normal/TheNoose",
+      "seconds": 46.331596300000456,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true,
+        "gameClockAdvanced": true,
+        "gameClockMonotonic": true,
+        "physicalOutput": true
+      },
+      "gameClock": {
+        "samples": 58,
+        "first": 5.116,
+        "last": 43.312,
+        "increase": 38.196
+      },
+      "presentation": {
+        "same": true,
+        "actualSha256": "c2eec0a1c19b8ee497b163f4a0a88feaf61fce2e0e8d6357a295be010e4c3beb",
+        "expectedSha256": "c2eec0a1c19b8ee497b163f4a0a88feaf61fce2e0e8d6357a295be010e4c3beb",
+        "dimensions": [
+          1024,
+          768
+        ],
+        "outputRect": [
+          0,
+          0,
+          1024,
+          768
+        ]
+      },
+      "logicalFrameNonblack": true,
+      "rawSha256": {
+        "final-output.bmp": "e9d3512d3d6b163a57949a42ef6da866a8794b92c6fe26eb346013e20e9fcea8",
+        "final.bmp": "e9d3512d3d6b163a57949a42ef6da866a8794b92c6fe26eb346013e20e9fcea8",
+        "presentation-comparison.json": "c3a56219c905474f83c26dabf8a2970964303bcdb94f96a086528ad3daea29b4",
+        "result.json": "8ce05ba85470733d499b20a9b4e6b8b872d924fc095783225125d50fa760c71b",
+        "running.json": "fd2f08e19f1841fe3bd4f12f696b8e8a093fcc71c8cb39b31f116da4d804b36f",
+        "states.tsv": "05fd81567c1ea2d5584cafe8dcf0086b4d411d2ba58c15e827cccfb610d31606",
+        "stderr.log": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2",
+        "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "steps.tsv": "7f5d7fa9497fbf4c29138d69b53e5b8192ceea782f19f1e779bd070e74048b6e"
+      }
+    },
+    {
+      "mission": "RainVsRain",
+      "demo": false,
+      "group": "Campaign",
+      "rawDirectory": "extracted/cpp-solo-package-596-20261030/normal/RainVsRain",
+      "seconds": 33.577522199999294,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true,
+        "gameClockAdvanced": true,
+        "gameClockMonotonic": true,
+        "physicalOutput": true
+      },
+      "gameClock": {
+        "samples": 59,
+        "first": 1.059,
+        "last": 32.377,
+        "increase": 31.318
+      },
+      "presentation": {
+        "same": true,
+        "actualSha256": "ff7877bff3e12e1e16a77152010b9cc714de83156668f38a9293aa154b7f02aa",
+        "expectedSha256": "ff7877bff3e12e1e16a77152010b9cc714de83156668f38a9293aa154b7f02aa",
+        "dimensions": [
+          1024,
+          768
+        ],
+        "outputRect": [
+          0,
+          0,
+          1024,
+          768
+        ]
+      },
+      "logicalFrameNonblack": true,
+      "rawSha256": {
+        "final-output.bmp": "9bcd1f90fecf61eb27a4df97f4561120c44434595a09e0a268c7954443981e9b",
+        "final.bmp": "9bcd1f90fecf61eb27a4df97f4561120c44434595a09e0a268c7954443981e9b",
+        "presentation-comparison.json": "059498b2c328c1affa2d6959a954a3cc1e81bfccfdb187a1ea04f8502e13b044",
+        "result.json": "4b9572620f86e04ae8721d44b85e46bef079dd3b641aa8aa53b6d73a94ac434f",
+        "running.json": "e3edad911effd55272d1f74a278ceb3acf0a0841567376320f28538a38d69fe9",
+        "states.tsv": "ad3ff9ade6b673b9ca1781fc44ae84acc8d80007f944ada4e8044b5933622f1d",
+        "stderr.log": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2",
+        "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "steps.tsv": "e3276a19c629cbd843317b4825559379ef61a8dda75b5006b125aae2f7378eb4"
+      }
+    },
+    {
+      "mission": "RunForIt",
+      "demo": false,
+      "group": "Campaign",
+      "rawDirectory": "extracted/cpp-solo-package-596-20261030/normal/RunForIt",
+      "seconds": 35.94808329999978,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true,
+        "gameClockAdvanced": true,
+        "gameClockMonotonic": true,
+        "physicalOutput": true
+      },
+      "gameClock": {
+        "samples": 58,
+        "first": 1.445,
+        "last": 34.177,
+        "increase": 32.732
+      },
+      "presentation": {
+        "same": true,
+        "actualSha256": "ede631ec321594e00058577c11378c93db7a513c58eb5d19ab121b426de958b3",
+        "expectedSha256": "ede631ec321594e00058577c11378c93db7a513c58eb5d19ab121b426de958b3",
+        "dimensions": [
+          1024,
+          768
+        ],
+        "outputRect": [
+          0,
+          0,
+          1024,
+          768
+        ]
+      },
+      "logicalFrameNonblack": true,
+      "rawSha256": {
+        "final-output.bmp": "53e39b855ed70813472fbe5af85c9c919d96d5e7bd9809709b45a89a9ad03aed",
+        "final.bmp": "53e39b855ed70813472fbe5af85c9c919d96d5e7bd9809709b45a89a9ad03aed",
+        "presentation-comparison.json": "3bf86c9fd5d14547c5a04d92544f368f4dddf106026055adeeb286218ff9eff4",
+        "result.json": "5dabb0d9f0a40885ac37b07d82ebacd8260c6c03cf7e6118b20c5c5efe15ee27",
+        "running.json": "c82a74c42c77417427729426ddac7ac8deebb435075e69c8d4e3acab735aab41",
+        "states.tsv": "35b6d5bba09e33643798f517dc08c8281c76a2d515e9cb71f9fe7d2dbdea512b",
+        "stderr.log": "383d7aca9b17e11a68428397e1834c7515797345ef2b938d506f1d5f8ae5fb79",
+        "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "steps.tsv": "f1dc32654d9675c73ce24567ddbe2a6261b14304492e74eb38cc71135e3f979d"
+      }
+    },
+    {
+      "mission": "GuardMyBack",
+      "demo": false,
+      "group": "Campaign",
+      "rawDirectory": "extracted/cpp-solo-package-596-20261030/normal/GuardMyBack",
+      "seconds": 55.408763100000215,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true,
+        "gameClockAdvanced": true,
+        "gameClockMonotonic": true,
+        "physicalOutput": true
+      },
+      "gameClock": {
+        "samples": 59,
+        "first": 3.301,
+        "last": 53.741,
+        "increase": 50.44
+      },
+      "presentation": {
+        "same": true,
+        "actualSha256": "f5375f523b916145f18701d78c20a7e86c91d8ed05e29da69b16df9d7dfda93e",
+        "expectedSha256": "f5375f523b916145f18701d78c20a7e86c91d8ed05e29da69b16df9d7dfda93e",
+        "dimensions": [
+          1024,
+          768
+        ],
+        "outputRect": [
+          0,
+          0,
+          1024,
+          768
+        ]
+      },
+      "logicalFrameNonblack": true,
+      "rawSha256": {
+        "final-output.bmp": "35cdf289de75952f88895c4bdfd9743d0d16d685277817c4d016e1ec2c08ee58",
+        "final.bmp": "35cdf289de75952f88895c4bdfd9743d0d16d685277817c4d016e1ec2c08ee58",
+        "presentation-comparison.json": "33adfc922f1ba93907bf6f89858697a246b01ccc7fb1c798f134008754acbf0c",
+        "result.json": "9a9b7e64b5e6f8c9683ef5bf19f113379feb283507099dd2accfa44d14246203",
+        "running.json": "c6baf233c2ea08371ba7ac8c3d1f7b1e8a6b7a260f9c4e3fe4263de896d0940d",
+        "states.tsv": "82b42e5fa1cd7a3b819a4eda2af004cf28067ce12f39836d1ca108ad4eed3de6",
+        "stderr.log": "f0897e4ab61f8c2f86b568404bba5e7af303c0933f7c1fa3ee631c464ffcc509",
+        "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "steps.tsv": "07fb187a761550ded34a4c15f3480901e57dfe69124df6972e5d91a30d9fc50c"
+      }
+    },
+    {
+      "mission": "Surrounded",
+      "demo": false,
+      "group": "Campaign",
+      "rawDirectory": "extracted/cpp-solo-package-596-20261030/normal/Surrounded",
+      "seconds": 78.02557460000025,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true,
+        "gameClockAdvanced": true,
+        "gameClockMonotonic": true,
+        "physicalOutput": true
+      },
+      "gameClock": {
+        "samples": 59,
+        "first": 5.631,
+        "last": 75.915,
+        "increase": 70.284
+      },
+      "presentation": {
+        "same": true,
+        "actualSha256": "35323b3a00b23b6eca1755c8ad7797283443831513610c61daecc848ef8046a6",
+        "expectedSha256": "35323b3a00b23b6eca1755c8ad7797283443831513610c61daecc848ef8046a6",
+        "dimensions": [
+          1024,
+          768
+        ],
+        "outputRect": [
+          0,
+          0,
+          1024,
+          768
+        ]
+      },
+      "logicalFrameNonblack": true,
+      "rawSha256": {
+        "final-output.bmp": "73eef3249dff6f11dabda2c32a770e9038fea4a4e5d872ded4d49df361b9cb5c",
+        "final.bmp": "73eef3249dff6f11dabda2c32a770e9038fea4a4e5d872ded4d49df361b9cb5c",
+        "presentation-comparison.json": "bb750fd347849871860d679fc5497b2ad83186d526a793ba2266a13468a702d7",
+        "result.json": "0077e44135140ae3b39920d9f6c262f269d25e20a7eacb12e51e7eaa95956799",
+        "running.json": "a367f41725e7d6b48c75ece827f959b3d84edac668d321d7063c9f28822d6686",
+        "states.tsv": "403a53be042d9a1a0ee872accb3b5bb0bbfafb6dd2c096e66859b65361a74dce",
+        "stderr.log": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2",
+        "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "steps.tsv": "8d30e9f9d8932b78b07e4c597db7eae0df944ffe201dce4319e39c2232f6b1fc"
+      }
+    },
+    {
+      "mission": "BreakingThrough",
+      "demo": false,
+      "group": "Campaign",
+      "rawDirectory": "extracted/cpp-solo-package-596-20261030/normal/BreakingThrough",
+      "seconds": 55.10606029999872,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true,
+        "gameClockAdvanced": true,
+        "gameClockMonotonic": true,
+        "physicalOutput": true
+      },
+      "gameClock": {
+        "samples": 58,
+        "first": 3.74,
+        "last": 52.978,
+        "increase": 49.238
+      },
+      "presentation": {
+        "same": true,
+        "actualSha256": "98d3695a75f35c16d27988c83562a43d966da7355e78d9f84391aa42c04ff4fb",
+        "expectedSha256": "98d3695a75f35c16d27988c83562a43d966da7355e78d9f84391aa42c04ff4fb",
+        "dimensions": [
+          1024,
+          768
+        ],
+        "outputRect": [
+          0,
+          0,
+          1024,
+          768
+        ]
+      },
+      "logicalFrameNonblack": true,
+      "rawSha256": {
+        "final-output.bmp": "05bed26530c2dccb66341011f593dc725c60f44beece0147267eef4d8d837e95",
+        "final.bmp": "05bed26530c2dccb66341011f593dc725c60f44beece0147267eef4d8d837e95",
+        "presentation-comparison.json": "ec8e21210963d145669e52ee04ba18eb30bdde33f92c05f3c4dc79228629b961",
+        "result.json": "130e9ac27a06a4738aab2ce11c25ee7584832c89d3d74fc6adf02250bbc78336",
+        "running.json": "c760609138b2b8209ef3f35bfed2fc6728201dca5e7ea26f25efee0b01438eb6",
+        "states.tsv": "ca80a5f2dae968a32099e8f8e4658c0a5930da116dead0bc275f50640d2d8c4b",
+        "stderr.log": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2",
+        "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "steps.tsv": "673050592d49a3f1df1b5f8c42c9ade21963f89f532ecfa28a26da39a01f7690"
+      }
+    },
+    {
+      "mission": "ToTheRescue",
+      "demo": false,
+      "group": "Campaign",
+      "rawDirectory": "extracted/cpp-solo-package-596-20261030/normal/ToTheRescue",
+      "seconds": 60.59041079999952,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true,
+        "gameClockAdvanced": true,
+        "gameClockMonotonic": true,
+        "physicalOutput": true
+      },
+      "gameClock": {
+        "samples": 58,
+        "first": 5.953,
+        "last": 57.909,
+        "increase": 51.955999999999996
+      },
+      "presentation": {
+        "same": true,
+        "actualSha256": "0d73de2f32b3b4399ecfa49752c7137f7b4a69bac7956026d8f709306c7d513c",
+        "expectedSha256": "0d73de2f32b3b4399ecfa49752c7137f7b4a69bac7956026d8f709306c7d513c",
+        "dimensions": [
+          1024,
+          768
+        ],
+        "outputRect": [
+          0,
+          0,
+          1024,
+          768
+        ]
+      },
+      "logicalFrameNonblack": true,
+      "rawSha256": {
+        "final-output.bmp": "26bb7811bb1e8567c885ffdf31f1e5e5b171ca261090c384d570f55e6e55e19d",
+        "final.bmp": "26bb7811bb1e8567c885ffdf31f1e5e5b171ca261090c384d570f55e6e55e19d",
+        "presentation-comparison.json": "96b9ad727475a587c8c1c87f9f612d411dc8df56e5030c8ed7e69ea151fdf483",
+        "result.json": "ad3e04b096022ffba9c39312a4add6330267d085aa4973fa5852d6db607abf65",
+        "running.json": "86faae7e0401cfe6b5ca0b9e4c1bd1e447dbcb6815e09c7b65e1156865e65225",
+        "states.tsv": "d08efd765e23497af3d44674e72d7af11e16d3b483c32bd193787f53b755ebdc",
+        "stderr.log": "f0897e4ab61f8c2f86b568404bba5e7af303c0933f7c1fa3ee631c464ffcc509",
+        "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "steps.tsv": "06e5491b6281de67ed20b55236ed09e963cf9f00416ad733026763c32cfde3f8"
+      }
+    },
+    {
+      "mission": "Vicious",
+      "demo": false,
+      "group": "Campaign",
+      "rawDirectory": "extracted/cpp-solo-package-596-20261030/normal/Vicious",
+      "seconds": 35.81705890000012,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true,
+        "gameClockAdvanced": true,
+        "gameClockMonotonic": true,
+        "physicalOutput": true
+      },
+      "gameClock": {
+        "samples": 58,
+        "first": 1.792,
+        "last": 34.132,
+        "increase": 32.339999999999996
+      },
+      "presentation": {
+        "same": true,
+        "actualSha256": "ee5721c2d2b2bc1cb528084cc723b52081c145c8931187764ad1e6e2c1b77488",
+        "expectedSha256": "ee5721c2d2b2bc1cb528084cc723b52081c145c8931187764ad1e6e2c1b77488",
+        "dimensions": [
+          1024,
+          768
+        ],
+        "outputRect": [
+          0,
+          0,
+          1024,
+          768
+        ]
+      },
+      "logicalFrameNonblack": true,
+      "rawSha256": {
+        "final-output.bmp": "1f191575032e22e5ca41530616d453ae826d60cf5c162c95c2b86396d4857952",
+        "final.bmp": "1f191575032e22e5ca41530616d453ae826d60cf5c162c95c2b86396d4857952",
+        "presentation-comparison.json": "0f824ee1b5ecadf85cdf10b3fb6fb1981e9ba5ace04990389cd8f28f693ffdf7",
+        "result.json": "5041674779639cf019c3a461dc7e15effb15861384b00eacdfb60d699eb5b73d",
+        "running.json": "d93e30e117bc63f986d55c2442937b05712adadc7e16152ffeb2906b8591d184",
+        "states.tsv": "b65f8a35a9eccec9aaf8db10880b9b1ce4d53af24460ef6824d5a7f37295f6a7",
+        "stderr.log": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2",
+        "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "steps.tsv": "41f4355db953d773d6b1626257372134d8f4a76a070b39c32fa25a3d7df8ed2e"
+      }
+    },
+    {
+      "mission": "EnemyTerritory",
+      "demo": false,
+      "group": "Campaign",
+      "rawDirectory": "extracted/cpp-solo-package-596-20261030/normal/EnemyTerritory",
+      "seconds": 81.23361889999978,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true,
+        "gameClockAdvanced": true,
+        "gameClockMonotonic": true,
+        "physicalOutput": true
+      },
+      "gameClock": {
+        "samples": 59,
+        "first": 8.729,
+        "last": 79.071,
+        "increase": 70.342
+      },
+      "presentation": {
+        "same": true,
+        "actualSha256": "d9d55ac98be55598fbbc7174c0abadc9e32e732c87d3cdd69f27a7bbaa0d6ad1",
+        "expectedSha256": "d9d55ac98be55598fbbc7174c0abadc9e32e732c87d3cdd69f27a7bbaa0d6ad1",
+        "dimensions": [
+          1024,
+          768
+        ],
+        "outputRect": [
+          0,
+          0,
+          1024,
+          768
+        ]
+      },
+      "logicalFrameNonblack": true,
+      "rawSha256": {
+        "final-output.bmp": "cee4c45978db26bae3212bdd361fba22c59b363174063e33a7991ff31f318923",
+        "final.bmp": "cee4c45978db26bae3212bdd361fba22c59b363174063e33a7991ff31f318923",
+        "presentation-comparison.json": "85f36891e5b70458f3f6eb607d4fb72481432749cd427375c193cd9a43e9f2f5",
+        "result.json": "b878a274d92b3ddb5d89a9ed4b46522e8323ad0e1883e08e188232b99caf31d5",
+        "running.json": "f09524c5a58103d756b1c7214aaf5b51294d8be7aa5580db4e2b160509660221",
+        "states.tsv": "90a5db39e289ac2f2e55dae78d1897b803cde4526fb075e9a60284597a7369db",
+        "stderr.log": "8e6f9418efd45947fc9470d9370f7183b50df11886316ef78de7944c371bd408",
+        "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "steps.tsv": "2312ebd850be08ab9734f8cd2f05fb992764a7fbb4793975668004d65681ed38"
+      }
+    },
+    {
+      "mission": "FinalConfrontation",
+      "demo": false,
+      "group": "Campaign",
+      "rawDirectory": "extracted/cpp-solo-package-596-20261030/normal/FinalConfrontation",
+      "seconds": 71.28750349999973,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true,
+        "gameClockAdvanced": true,
+        "gameClockMonotonic": true,
+        "physicalOutput": true
+      },
+      "gameClock": {
+        "samples": 59,
+        "first": 8.221,
+        "last": 69.284,
+        "increase": 61.063
+      },
+      "presentation": {
+        "same": true,
+        "actualSha256": "8052398992e027d12b3f09f24bad542722a06571680b1623c65cf20152d4c481",
+        "expectedSha256": "8052398992e027d12b3f09f24bad542722a06571680b1623c65cf20152d4c481",
+        "dimensions": [
+          1024,
+          768
+        ],
+        "outputRect": [
+          0,
+          0,
+          1024,
+          768
+        ]
+      },
+      "logicalFrameNonblack": true,
+      "rawSha256": {
+        "final-output.bmp": "45a76a223dfb771595dadc3b7426560854265fbb3482fcfbe6eb8cce58bdbee8",
+        "final.bmp": "45a76a223dfb771595dadc3b7426560854265fbb3482fcfbe6eb8cce58bdbee8",
+        "presentation-comparison.json": "40c33b848318ba160fa697c62327c324cf71c6c8239a5c08804fdac18019b993",
+        "result.json": "fb63439c2be0573ccfdf1f1fc9c936c4cd39d62e9a6c72bf4c8f228f4e68f5d6",
+        "running.json": "9e674383c61297ffea49c1df2ee1766d9b3c22173daf6575b21216faacd1fd2d",
+        "states.tsv": "aabdc236e54dabd9edc6b38297313f9bc0b941a827720cd3926a90e1173087b3",
+        "stderr.log": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2",
+        "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "steps.tsv": "67af2d6a3066b6181056b12387304dbe696c24dc955af43122824c7de83fbfc7"
+      }
+    },
+    {
+      "mission": "DemoStormRages",
+      "demo": true,
+      "group": "Demo",
+      "rawDirectory": "extracted/cpp-solo-package-596-20261030/demos/DemoStormRages",
+      "seconds": 37.662091399999554,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true,
+        "gameClockAdvanced": true,
+        "gameClockMonotonic": true,
+        "demo": true,
+        "localAI": true,
+        "physicalOutput": true
+      },
+      "gameClock": {
+        "samples": 39,
+        "first": 1.646,
+        "last": 21.312,
+        "increase": 19.666
+      },
+      "presentation": {
+        "same": true,
+        "actualSha256": "a3f9e1f9c64d16c6beec4043fe4f0f6541d50151d347ba20558a0f0cdc8f6324",
+        "expectedSha256": "a3f9e1f9c64d16c6beec4043fe4f0f6541d50151d347ba20558a0f0cdc8f6324",
+        "dimensions": [
+          1024,
+          768
+        ],
+        "outputRect": [
+          0,
+          0,
+          1024,
+          768
+        ]
+      },
+      "logicalFrameNonblack": true,
+      "rawSha256": {
+        "final-output.bmp": "e5973d3663aae2e64ef41e04e2f86f2f7436743dade92acdfc13e888220bd4f3",
+        "final.bmp": "e5973d3663aae2e64ef41e04e2f86f2f7436743dade92acdfc13e888220bd4f3",
+        "presentation-comparison.json": "9c2216fced8ba2f14f72727809496d8781e84c1f0c233a7b4c589421fe68674c",
+        "result.json": "6e2ebb399d054177d874eb4ae521171a057cbb37dfd40d9483f215e801c1d034",
+        "running.json": "07643308585a41c931b2fb68fde00d23d23c0abbf0e5b7128571857797f86427",
+        "states.tsv": "0d597e7b39dd4001b58399f8e76e0a5f28c4c92e0c710b0045239ca334020e6f",
+        "stderr.log": "7013897daa266583ef2410ac777d9f0b7c11b5116e66a3f004273c19b2553618",
+        "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "steps.tsv": "ec5952269a20828e70417dccb8fb673811f3bedca5916a58cc7382db74c380e7"
+      }
+    },
+    {
+      "mission": "GuardMyBack",
+      "demo": true,
+      "group": "Demo",
+      "rawDirectory": "extracted/cpp-solo-package-596-20261030/demos/GuardMyBack",
+      "seconds": 41.423943699999654,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true,
+        "gameClockAdvanced": true,
+        "gameClockMonotonic": true,
+        "demo": true,
+        "localAI": true,
+        "physicalOutput": true
+      },
+      "gameClock": {
+        "samples": 40,
+        "first": 4.114,
+        "last": 25.104,
+        "increase": 20.99
+      },
+      "presentation": {
+        "same": true,
+        "actualSha256": "69966a326ca98b8ccdabc7edaadfaba09e7481e152ebbee6f69181a512989996",
+        "expectedSha256": "69966a326ca98b8ccdabc7edaadfaba09e7481e152ebbee6f69181a512989996",
+        "dimensions": [
+          1024,
+          768
+        ],
+        "outputRect": [
+          0,
+          0,
+          1024,
+          768
+        ]
+      },
+      "logicalFrameNonblack": true,
+      "rawSha256": {
+        "final-output.bmp": "9e92972d731bb52b41c7dcfd2288b9278726f20c6bcccdd3f46315c3b428b388",
+        "final.bmp": "9e92972d731bb52b41c7dcfd2288b9278726f20c6bcccdd3f46315c3b428b388",
+        "presentation-comparison.json": "93a1117db8eb6baf86ff1071cce69a989fc175febea5e368c8c1480521f6e2f9",
+        "result.json": "7d513b53d74a6478bf2566a9ff0748c1bf68862b869dcd575c483b42c250a0ca",
+        "running.json": "102766a9db55cd639dfe90e59817fde24310a2788c321ee4a217b3a7ab5e96a6",
+        "states.tsv": "81a7d9e34ae26b2192ee37928ccdd48344a3355925beaaaa847584c2328877dc",
+        "stderr.log": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2",
+        "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "steps.tsv": "6916eb3f22e5eb699844e4854d041eb2d1ee569f77b44cd981ef938853c9639b"
+      }
+    },
+    {
+      "mission": "DissolvedAlliance",
+      "demo": true,
+      "group": "Demo",
+      "rawDirectory": "extracted/cpp-solo-package-596-20261030/demos/DissolvedAlliance",
+      "seconds": 42.10327569999936,
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true,
+        "gameClockAdvanced": true,
+        "gameClockMonotonic": true,
+        "demo": true,
+        "localAI": true,
+        "physicalOutput": true
+      },
+      "gameClock": {
+        "samples": 73,
+        "first": 4.402,
+        "last": 41.032,
+        "increase": 36.629999999999995
+      },
+      "presentation": {
+        "same": true,
+        "actualSha256": "d7bdd6f46f513105c8676a39be666f0db78f1d32a0122f6f22cd5ce289a3f9dd",
+        "expectedSha256": "d7bdd6f46f513105c8676a39be666f0db78f1d32a0122f6f22cd5ce289a3f9dd",
+        "dimensions": [
+          1024,
+          768
+        ],
+        "outputRect": [
+          0,
+          0,
+          1024,
+          768
+        ]
+      },
+      "logicalFrameNonblack": true,
+      "rawSha256": {
+        "final-output.bmp": "ef1840eefb8205bc37ea3b024034e6179621a5245982a2ef5e45cf04ccfe103a",
+        "final.bmp": "ef1840eefb8205bc37ea3b024034e6179621a5245982a2ef5e45cf04ccfe103a",
+        "presentation-comparison.json": "849edddd8712afdfb3427be2406ca2ed0518c4720c1754177fae590f71ad06c0",
+        "result.json": "9c3b4a57ad1f12d0b4d7ebe8f7feb9d2c52fe1202b4884945f908071d4f9e82d",
+        "running.json": "10638ae8a027d23d4f773a030b330d8a9807d9a917b87a4f3ccee6f41d6b68db",
+        "states.tsv": "dec2655296d96443e5f5ae9a9d00913856d293dc01c7fdd2e002b837bee141ae",
+        "stderr.log": "f0897e4ab61f8c2f86b568404bba5e7af303c0933f7c1fa3ee631c464ffcc509",
+        "stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "steps.tsv": "12c4e98667e7c7219ae6a57550d94deaed61ad109dcc645d1e1f01a660a8867d"
+      }
+    }
+  ],
+  "newGameBuild": false,
+  "newCppTests": false,
+  "fullSuiteRun": false,
+  "windowPhysicalOutputVerified": true,
+  "activeFullscreenPhysicalOutputVerified": false,
+  "actualPcmDevicePlaybackVerified": false,
+  "win11Run": false,
+  "forbiddenGameplayReproduced": false,
+  "newMultiplayerTestsRun": false,
+  "scope": "일반31은 CLI 지정 뒤 실제 안내 버튼, Demo3은 실제 Demo 메뉴/자연 timeout이다. 사용자 완주·승패·전체 원본 동일성·활성 전체화면/PCM·Win11 검증은 아니다.",
+  "remaining": [
+    "남은 UI/Edit·시나리오·Native 선택과 전체 동일성",
+    "실제 CD 삽입/PCM 장치와 활성 사용자 전체화면·Win11",
+    "사용자 자연 플레이 완주/승패",
+    "싱글플레이/UI/호환성 뒤 MP 무시험 사전 구현과4~7차"
+  ],
+  "rawDirectory": "extracted/cpp-solo-package-596-20261030",
+  "sourceIndexSha256": {
+    "tools/cpp_solo_entry_smoke.py": "c00df0af6f0b875b43cf4cd8b4bbea0187a77faa2944c1c543ef04766dc9fda3"
+  },
+  "language": "english",
+  "checkoutFiltersVerified": {
+    "count": 6,
+    "paths": [
+      "tools/cpp_solo_entry_smoke.py",
+      "cpppj/solo-package-runtime-20261030.json",
+      "docs/exe/cpp-solo-package-20261030.md"
+    ],
+    "modes": [
+      "true",
+      "input"
+    ],
+    "differences": []
+  },
+  "evidenceSha256": {
+    "protected-before.json": "b6c101bc2589988bd4cd0788d53c2503a66e7e36543060d5ba607605151876ed",
+    "protected-after.json": "cbac596cdacad949d459e3b2c3337e6da5a08f3574731bc125037b7c9e3c6627",
+    "normal-command.json": "c0466053c44a94826b65718ddd39082def9cabe25c07904afb588d37d317a3ac",
+    "normal-run.json": "4800f0e9451ed837f8029bbb56bded86465c8702621c5b5c00fe43733ec386ae",
+    "normal-console.log": "8e88ae350c9fb4ac09b75eea09e24e57cc0104dfb1ba1db04103c174f0252255",
+    "demo-command.json": "d3ce4155e3a2783a0897f30066ec5deb512d8c3a5543a8aff0022658900be22b",
+    "demo-run.json": "529eb345e7f2d22b2df2bbbbee78e428982c9d71e65733d155c5ebbdd28261f8",
+    "demo-console.log": "8263463cd48b54e1d035ab4e0b1e3733f5ca2a91b2fefd0b149a0da674fc8259",
+    "assemble.py": "f1c9ca59ccf097444f49dad27b07486e5df105fc4a88bd2a05c4a489fb9346cf",
+    "update_handoff.py": "898299428d19d2c387675d00d992fe90a6d1782e29dc7b79bcf3a7d8f293e10d",
+    "seal.py": "c92d38e5f464392b828851fa7a2375c6e71d8bd786cc998a8c31818ab2f38a0d"
+  }
+}
