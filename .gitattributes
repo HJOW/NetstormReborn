@@ -2265,3 +2265,15 @@ tools/decomp_world_geyser_bounds.py text eol=lf
 cpppj/world-geyser-bounds-native-20261030.json text eol=lf
 cpppj/world-geyser-bounds-runtime-20261030.json text eol=lf
 docs/exe/cpp-world-geyser-bounds-20261030.md text eol=lf
+
+# 세계 간헐천 부모/같은 Session 연결과 최초 원문·실제 배포 관측을 보존한다.
+cpppj/src/o/RawGameAuxState.h text eol=lf
+cpppj/src/o/RawWorldGeyser.h text eol=lf
+cpppj/src/o/RawWorldGeyser.cpp text eol=lf
+cpppj/tests/WorldGeyserTests.cpp text eol=lf
+cpppj/tests/fixtures/world-geyser-x86.tsv -text
+tools/decomp_world_geyser.py text eol=lf
+tools/cpp_world_geyser_smoke.py text eol=lf
+cpppj/world-geyser-native-20261030.json text eol=lf
+cpppj/world-geyser-runtime-20261030.json text eol=lf
+docs/exe/cpp-world-geyser-20261030.md text eol=lf

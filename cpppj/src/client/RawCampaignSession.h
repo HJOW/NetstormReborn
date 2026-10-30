@@ -453,6 +453,8 @@ public:
     bool ConfirmSupport(float x,float y);
     // 원본 미션 부모가 정한 위치에서 명시 호출한다. Load/프레임의 자동 생성은 하지 않는다.
     void GenerateLocalGeysers();
+    //00486440 전체 부모를 같은 실제 지도/Player/Pool/건설과 장기 전역으로 실행한다.
+    void GenerateWorldGeysers();
     void SetAllBridgeQuality(std::uint32_t quality); //실제 Editor 또는 missionPost에서 전체 다리의 Cracked/Normal/Hard 원문 명령을 실행한다.
     void SetBridgeQuality(std::uint32_t sid,std::uint32_t quality); //일반 입력의 Editor/missionPost 뒤 실제421f20의 Editor/TYPE 관문을 유지해 개별 다리를 바꾼다.
     // 같은 실제 Pool/현재 Bounds/최근목록/자원/마지막 패킷을 읽는 연결부다.

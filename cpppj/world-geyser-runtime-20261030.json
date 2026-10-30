@@ -1,0 +1,736 @@
+{
+  "unit": 609,
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "native": {
+    "unit": 609,
+    "host": "HJOW-Athlon",
+    "cases": 354,
+    "observations": 708,
+    "differences": [],
+    "verificationOnly": true,
+    "instructions": [
+      183562,
+      183562
+    ],
+    "scope": "00486440/0041c8e0/0041ca10/0041ca40/00463b50/004bcab0/004bca20/실제CRT. Local/전체·분할범위/장식·일반배치/Config·벽시각은 명시 경계. 새 게임/GUI/MP 없음.",
+    "sourceSha256": {
+      "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+      "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+      "tools/decomp_priestmenu.py": "8d1474792e7511fa777e7bd7bd369f2a2a0f9f5c35643e420d65a3fa4744bac9",
+      "tools/decomp_world_geyser.py": "3c25d8a6fb5835a61c0f4bc4cc92d5e1dd5176fb52ddbd9cf650cf4fc26ba4ad",
+      "cpppj/tests/fixtures/world-geyser-x86.tsv": "0a6eea6bc24ba4156dd311caf2902583310be4b9033fe4ecf97f3b8fbf9e8183"
+    },
+    "evidenceSha256": {
+      "first.json": "f01b07c1491363294b1f6582b6fd53b1851cdab9f66713cc66abb2ebe056c23a",
+      "replay.json": "f01b07c1491363294b1f6582b6fd53b1851cdab9f66713cc66abb2ebe056c23a"
+    }
+  },
+  "focusedTests": 41,
+  "testNames": [
+    "CampaignConstructionMana_EnergyBoltDrawsCurrentFrameAndShadow",
+    "CampaignConstructionMana_RegisteredSourcesVisibleStreakAndArrival",
+    "CampaignConstruction_ProtectedLocalGeysersUseCurrentWorld",
+    "CampaignConstruction_ProtectedNoIslandPacketAndSelfNotice",
+    "CampaignMissionStart_CurrentAiNameEncodingAndDiagnostics",
+    "CampaignMissionStart_ProtectedEightMissions",
+    "CampaignMissionStart_RequiredEffectFailurePreservesOriginalPartialWrites",
+    "CampaignSession_LocalGeysersUseActualAiRegistration",
+    "CampaignSession_LocalGeysersUseCurrentInputs",
+    "CampaignSession_LocalLoginMissionStartAiAlliances",
+    "GameAux_ActualLoginAndQueuedBeginShareSignedResourcePool",
+    "GameAux_BombEffectRequeriesSignedResourceAsUnsignedAfterCast",
+    "GameAux_CaptureDwordControlsActualAlliedPickup",
+    "GameAux_DeletionReadsCurrentLossAndCostAfterSoundEffect",
+    "GameAux_FarmClusterUsesSharedArchipelagoNative104",
+    "GameAux_LocalGeyserOwnerReplaysNative221WithOppositeTypeFallback",
+    "GameAux_MissionStartWritesSharedCaptureAndOrdinaryNative48",
+    "GameAux_PeDefaultsAndIndependentTypedOwner",
+    "GameAux_PreparedCtorAndReleaseKeepAllCurrentFields",
+    "GameAux_PreparedCtorLateFailureReleasesLeaseWithoutReset",
+    "GameAux_PreparedWorldAliasesCostAndLossAndGeneralFreshIsExplicit",
+    "GameAux_RewardPriestMaximumUsesCurrentQuarterHp",
+    "GameAux_RewardUsesCurrentPercentAndResourceAfterSpEffect",
+    "GameAux_SessionIdentityFailureLeavesBothOwnersUnchanged",
+    "GameAux_WorldIdentityFailurePrecedesBorrowAndReset",
+    "LocalGeyser_GeneralExclusionSelectedRequirements",
+    "LocalGeyser_GeneralPlacementReplaysNative183",
+    "LocalGeyser_IndependentPeFixture",
+    "LocalGeyser_RejectsMissingCreation",
+    "LocalGeyser_SharedBossControlsPopulateEntry",
+    "LocalGeyser_SharedResourcePoolPeFixture",
+    "MissionStart_CurrentInputsReadAtOriginalEffectBoundaries",
+    "MissionStart_CurrentInputsReplayNative48WithOppositeFallback",
+    "MissionStart_MissingBrainBodiesAndLiveState",
+    "MissionStart_Native204",
+    "PlayerGeyserBounds_IndependentPeFixture",
+    "PlayerGeyserBounds_RejectsMissingAssertion",
+    "WorldGeyserBounds_IndependentNative820",
+    "WorldGeyserBounds_SelectedHooksAndPhysicalGuards",
+    "WorldGeyser_IndependentNative354",
+    "WorldGeyser_SelectedHooksPreserveEffects"
+  ],
+  "tests": [
+    {
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+        "--filter",
+        "GameAux"
+      ],
+      "binarySha256": "fd2a9fa9989d355b69517aa8165dd06fb206d08f5386b8b5d6210b9817700629",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 3.265502900001593,
+      "stdoutSha256": "73ff7be5c067e65a5b85ea842faffc604ca32d1f607ffee400671b20eb91f0d8",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tests": 15,
+      "failed": 0,
+      "testOnlyBridgeManipulation": false
+    },
+    {
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+        "--filter",
+        "CampaignConstruction"
+      ],
+      "binarySha256": "fd2a9fa9989d355b69517aa8165dd06fb206d08f5386b8b5d6210b9817700629",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 44.131944199994905,
+      "stdoutSha256": "8ef820cea216780470c9e27c1ea0ea03a3b9b1c57ad7b9ff4887cefa3fd84e39",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tests": 4,
+      "failed": 0,
+      "testOnlyBridgeManipulation": false
+    },
+    {
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+        "--filter",
+        "LocalGeyser"
+      ],
+      "binarySha256": "fd2a9fa9989d355b69517aa8165dd06fb206d08f5386b8b5d6210b9817700629",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 7.820702199998777,
+      "stdoutSha256": "e5ba1a03a58f4db328b712b2e4fabb83e203925667ca1e38c97e19ed2f7aec6b",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tests": 10,
+      "failed": 0,
+      "testOnlyBridgeManipulation": false
+    },
+    {
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+        "--filter",
+        "PlayerGeyserBounds"
+      ],
+      "binarySha256": "fd2a9fa9989d355b69517aa8165dd06fb206d08f5386b8b5d6210b9817700629",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 4.527649900002871,
+      "stdoutSha256": "8d5eab140dff0d5a6d7a20786878f2e3eefdf8188c3e9d54a0330229bcc86dca",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tests": 2,
+      "failed": 0,
+      "testOnlyBridgeManipulation": false
+    },
+    {
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+        "--filter",
+        "MissionStart"
+      ],
+      "binarySha256": "fd2a9fa9989d355b69517aa8165dd06fb206d08f5386b8b5d6210b9817700629",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 15.13367499999731,
+      "stdoutSha256": "3e9564a669879325c29d0595b616a3310eecfa0c658d63ed7f7d1750c8c3f311",
+      "stderrSha256": "7339074ee31041b19a053025ca0ad62461f8417ae7681757f723db9b45db14d3",
+      "tests": 9,
+      "failed": 0,
+      "testOnlyBridgeManipulation": false
+    },
+    {
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+        "--filter",
+        "WorldGeyser"
+      ],
+      "binarySha256": "fd2a9fa9989d355b69517aa8165dd06fb206d08f5386b8b5d6210b9817700629",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 4.238053000000946,
+      "stdoutSha256": "57b77a222b9e5672f4fd30c8f4d84d86e1456869874f70765878480508ce5181",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tests": 4,
+      "failed": 0,
+      "testOnlyBridgeManipulation": false
+    }
+  ],
+  "registeredTests": 3514,
+  "buildExitCode": 0,
+  "gameSha256": "5417bdb3b71dd9cdd695b18434d3d006d6c3f20040853ffe32c639a93112c294",
+  "testSha256": "fd2a9fa9989d355b69517aa8165dd06fb206d08f5386b8b5d6210b9817700629",
+  "package": {
+    "entries": 1376,
+    "gameAssets": 1358,
+    "allEntryBytesMatch": true,
+    "allGameAssetsMatchSources": true,
+    "zipSha256": "8d762772f6e505dcdb8a75723286f4fe91553ce827b2a34214272558cf85649a"
+  },
+  "live": {
+    "unit": 609,
+    "zipSha256": "8d762772f6e505dcdb8a75723286f4fe91553ce827b2a34214272558cf85649a",
+    "gameSha256": "5417bdb3b71dd9cdd695b18434d3d006d6c3f20040853ffe32c639a93112c294",
+    "fixtureFortSha256": "85c328b764ccddc6395e0ce582d31b6241b0c6296ed600665d8ceb4465e46640",
+    "results": [
+      {
+        "enabled": 0,
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-world-geyser-609-20261030\\live\\한글 배포본\\NetstormReborn-cpppj\\Netstorm.exe",
+            "--run",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-world-geyser-609-20261030\\live\\한글 배포본\\NetstormReborn-cpppj\\game",
+            "--mission",
+            "TEST02",
+            "--window",
+            "--no-audio",
+            "--frames",
+            "480",
+            "--set",
+            "SCREENW=1024;SCREENH=768;maxFPS=40;sleepPerLoop=1;autoDemo=0;tellTips=0;currentLanguage=english",
+            "--ui-script",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-world-geyser-609-20261030\\live\\rand-0\\steps.tsv",
+            "--ui-report",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-world-geyser-609-20261030\\live\\rand-0\\states.tsv"
+          ],
+          "binarySha256": "5417bdb3b71dd9cdd695b18434d3d006d6c3f20040853ffe32c639a93112c294",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 34.97160380000423,
+          "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderrSha256": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2"
+        },
+        "geysers": {
+          "15023": [
+            "122",
+            "0",
+            "3",
+            "144",
+            "188"
+          ],
+          "15024": [
+            "122",
+            "0",
+            "3",
+            "144",
+            "185"
+          ],
+          "15025": [
+            "122",
+            "0",
+            "3",
+            "144",
+            "182"
+          ],
+          "16059": [
+            "122",
+            "0",
+            "3",
+            "136",
+            "217"
+          ]
+        },
+        "geyserCount": 4,
+        "phase": [
+          "4"
+        ],
+        "mission": [
+          "TEST02",
+          "Tutorial",
+          "1054"
+        ],
+        "raw_sp": [
+          "9.18365331189e-39",
+          "12345",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "clockIncrease": 20.0,
+        "presentation": {
+          "same": true,
+          "actualSha256": "b56f53743f077562a50efdcb04b828a422007ac4b54b1a27faa63c0d6080660b",
+          "expectedSha256": "b56f53743f077562a50efdcb04b828a422007ac4b54b1a27faa63c0d6080660b",
+          "dimensions": [
+            1024,
+            768
+          ],
+          "outputRect": [
+            0,
+            0,
+            1024,
+            768
+          ]
+        }
+      },
+      {
+        "enabled": 1,
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-world-geyser-609-20261030\\live\\한글 배포본\\NetstormReborn-cpppj\\Netstorm.exe",
+            "--run",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-world-geyser-609-20261030\\live\\한글 배포본\\NetstormReborn-cpppj\\game",
+            "--mission",
+            "TEST02",
+            "--window",
+            "--no-audio",
+            "--frames",
+            "480",
+            "--set",
+            "SCREENW=1024;SCREENH=768;maxFPS=40;sleepPerLoop=1;autoDemo=0;tellTips=0;currentLanguage=english",
+            "--ui-script",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-world-geyser-609-20261030\\live\\rand-1\\steps.tsv",
+            "--ui-report",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-world-geyser-609-20261030\\live\\rand-1\\states.tsv"
+          ],
+          "binarySha256": "5417bdb3b71dd9cdd695b18434d3d006d6c3f20040853ffe32c639a93112c294",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 40.973831899995275,
+          "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderrSha256": "ddcc2eb96a14cb5db1d6f48b33a312e6059f3cf16884e732fddcc69e8642fba3"
+        },
+        "geysers": {
+          "15023": [
+            "122",
+            "0",
+            "6",
+            "144",
+            "188"
+          ],
+          "15024": [
+            "122",
+            "0",
+            "6",
+            "144",
+            "185"
+          ],
+          "15025": [
+            "122",
+            "0",
+            "6",
+            "144",
+            "182"
+          ],
+          "16059": [
+            "122",
+            "0",
+            "6",
+            "136",
+            "217"
+          ],
+          "16069": [
+            "122",
+            "0",
+            "6",
+            "163",
+            "201"
+          ],
+          "16079": [
+            "122",
+            "0",
+            "6",
+            "111",
+            "181"
+          ],
+          "16089": [
+            "122",
+            "0",
+            "6",
+            "123",
+            "207"
+          ],
+          "16099": [
+            "122",
+            "0",
+            "6",
+            "40",
+            "52"
+          ],
+          "16109": [
+            "122",
+            "0",
+            "6",
+            "70",
+            "44"
+          ],
+          "16119": [
+            "122",
+            "0",
+            "6",
+            "31",
+            "48"
+          ],
+          "16129": [
+            "122",
+            "0",
+            "6",
+            "233",
+            "50"
+          ],
+          "16139": [
+            "122",
+            "0",
+            "6",
+            "233",
+            "21"
+          ],
+          "16149": [
+            "122",
+            "0",
+            "6",
+            "234",
+            "62"
+          ],
+          "16159": [
+            "122",
+            "0",
+            "6",
+            "135",
+            "37"
+          ],
+          "16169": [
+            "122",
+            "0",
+            "6",
+            "124",
+            "90"
+          ],
+          "16179": [
+            "122",
+            "0",
+            "6",
+            "79",
+            "161"
+          ],
+          "16189": [
+            "122",
+            "0",
+            "6",
+            "119",
+            "80"
+          ],
+          "16199": [
+            "122",
+            "0",
+            "6",
+            "81",
+            "90"
+          ],
+          "16209": [
+            "122",
+            "0",
+            "6",
+            "53",
+            "157"
+          ],
+          "16219": [
+            "122",
+            "0",
+            "6",
+            "67",
+            "196"
+          ],
+          "16229": [
+            "122",
+            "0",
+            "6",
+            "93",
+            "142"
+          ],
+          "16239": [
+            "122",
+            "0",
+            "6",
+            "79",
+            "87"
+          ],
+          "16249": [
+            "122",
+            "0",
+            "6",
+            "55",
+            "112"
+          ],
+          "16259": [
+            "122",
+            "0",
+            "6",
+            "83",
+            "187"
+          ],
+          "16269": [
+            "122",
+            "0",
+            "6",
+            "134",
+            "130"
+          ],
+          "16279": [
+            "122",
+            "0",
+            "6",
+            "78",
+            "49"
+          ],
+          "16289": [
+            "122",
+            "0",
+            "6",
+            "136",
+            "60"
+          ],
+          "16299": [
+            "122",
+            "0",
+            "6",
+            "71",
+            "115"
+          ],
+          "16309": [
+            "122",
+            "0",
+            "6",
+            "81",
+            "131"
+          ],
+          "16319": [
+            "122",
+            "0",
+            "6",
+            "124",
+            "40"
+          ],
+          "16329": [
+            "122",
+            "0",
+            "6",
+            "58",
+            "160"
+          ],
+          "16339": [
+            "122",
+            "0",
+            "6",
+            "151",
+            "32"
+          ],
+          "16349": [
+            "122",
+            "0",
+            "6",
+            "83",
+            "203"
+          ],
+          "16359": [
+            "122",
+            "0",
+            "6",
+            "43",
+            "116"
+          ],
+          "16369": [
+            "122",
+            "0",
+            "6",
+            "53",
+            "142"
+          ],
+          "16379": [
+            "122",
+            "0",
+            "6",
+            "70",
+            "96"
+          ],
+          "16389": [
+            "122",
+            "0",
+            "6",
+            "93",
+            "105"
+          ],
+          "16399": [
+            "122",
+            "0",
+            "6",
+            "40",
+            "143"
+          ],
+          "16409": [
+            "122",
+            "0",
+            "6",
+            "51",
+            "201"
+          ],
+          "16419": [
+            "122",
+            "0",
+            "6",
+            "144",
+            "127"
+          ],
+          "16429": [
+            "122",
+            "0",
+            "6",
+            "143",
+            "75"
+          ],
+          "16439": [
+            "122",
+            "0",
+            "6",
+            "153",
+            "91"
+          ],
+          "16449": [
+            "122",
+            "0",
+            "6",
+            "56",
+            "136"
+          ]
+        },
+        "geyserCount": 43,
+        "phase": [
+          "4"
+        ],
+        "mission": [
+          "TEST02",
+          "Tutorial",
+          "1054"
+        ],
+        "raw_sp": [
+          "-1.47511606483e-39",
+          "12345",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "clockIncrease": 20.671999999999997,
+        "presentation": {
+          "same": true,
+          "actualSha256": "59a6a37a0a3f21da8a8ef7eb04e122d1b87f3352ee42e6051f68760fd5a4e469",
+          "expectedSha256": "59a6a37a0a3f21da8a8ef7eb04e122d1b87f3352ee42e6051f68760fd5a4e469",
+          "dimensions": [
+            1024,
+            768
+          ],
+          "outputRect": [
+            0,
+            0,
+            1024,
+            768
+          ]
+        }
+      }
+    ],
+    "scope": "새 ZIP의 별도 시험 시나리오 Start0/1·같은 맵·생성 수 증가/비정지 진행/실제 창RGB. 자연 완주·원본 전체 픽셀/개수 대조·승패/금지 재현/신규MP 아님."
+  },
+  "protectedCount": 2577,
+  "protectedDifferences": [],
+  "protectedFixtureCount": 754,
+  "fixtureCount": 755,
+  "sourceSha256": {
+    "cpppj/src/o/RawWorldGeyser.h": "ff8d99fc7628fb514825d49d82b5a632ba0e85d55d44ebc3a1faf23e30a5b52c",
+    "cpppj/src/o/RawWorldGeyser.cpp": "6c3823f1657abddc63503819f224e73056a79d72723edc08dd52115e7f507ec3",
+    "cpppj/src/o/RawGameAuxState.h": "143febdef1d8a23f4f39e5fba489c869925f337291c4344ea9b081b920f313ed",
+    "cpppj/src/client/RawCampaignSession.h": "29efc940919d2117483157e24040a2ca44fa03340e0b8891778bc4ebfdd2bfc9",
+    "cpppj/src/client/RawCampaignSession.cpp": "701d467229b30eae8f4a865b92c6dff648e7cf8903a43c7c0ad17a76891f3d44",
+    "cpppj/src/client/CampaignClientServices.cpp": "6f7f96b02b2f2fa287a99334ffaaf83d475bc78fafb892c91e48ca894f7f9fff",
+    "cpppj/src/CMakeLists.txt": "34541a83ac6cc60dcc8a2b27847cde95f73c2cd714a1060e51799135aa25b531",
+    "cpppj/tests/WorldGeyserTests.cpp": "5fc9accc7a26e226468c53904d8369d928394b2c73473162dee8ee39b44e8fd0",
+    "cpppj/tests/CMakeLists.txt": "f3d8563a21aa65129d46025c46a5486fde97b1143ca3d569fc539caedcbbf521",
+    "tools/cpp_world_geyser_smoke.py": "e4cefd5912195cde62df9ceedb84fd47f0eacb9d327e8d92ba59c335bea21f96"
+  },
+  "lastFull34ProductUnit": 605,
+  "lastFull34Unit": 606,
+  "scope": "전체 세계 부모/같은Session/randGeysers 연결과 새 ZIP의0/1 시험 시나리오2실행·비정지 진행/창RGB. 전체34/완주/원본 전체 동일성·실제 장식/단일분기·Win11/PCM/활성전체화면은 이번 근거 아님.",
+  "evidenceSha256": {
+    "protected-before.json": "182da2cb6f0579416d8c95dd0b928b184709051f937392bf07cf5a844d94728c",
+    "native.log": "19052b149dd608286abe87045935ba99ceabeda4bd0d3ea4a59e6b22092da2c9",
+    "build.log": "394ec53c4f46cfb9dc3f9fb0fdbef39a560f4b0f05147ff4ad561f6751af81e2",
+    "native-final.log": "45927fba2cc01dde2345d4f44437821209718b6b93e77e2ecc3388fc610f6d80",
+    "package.log": "82c1d1dc34ded6e633d1568227ded327bc599b501c5c25186ae208be01aab946",
+    "NetstormReborn-cpppj-609.zip": "8d762772f6e505dcdb8a75723286f4fe91553ce827b2a34214272558cf85649a",
+    "finish.py": "dd6d3aad4b4e8c273770e0e156099041a4944441a046ac5b431211047d9c30f7",
+    "live.log": "44e0e30d06e6e5f5e46b69b518f2bbe5d0788a5ae1ff4f595940fc66cc5face4",
+    "protected-after.json": "11ab96c85d9243da91f9fe1dff821dcff4a7257adaa0bc878a5d18814b6a2580",
+    "native/first.json": "f01b07c1491363294b1f6582b6fd53b1851cdab9f66713cc66abb2ebe056c23a",
+    "native/replay.json": "f01b07c1491363294b1f6582b6fd53b1851cdab9f66713cc66abb2ebe056c23a",
+    "native-final/first.json": "f01b07c1491363294b1f6582b6fd53b1851cdab9f66713cc66abb2ebe056c23a",
+    "native-final/replay.json": "f01b07c1491363294b1f6582b6fd53b1851cdab9f66713cc66abb2ebe056c23a",
+    "test-player/stdout.log": "8d5eab140dff0d5a6d7a20786878f2e3eefdf8188c3e9d54a0330229bcc86dca",
+    "test-player/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "test-player/running.json": "abc5bad5c0562de802de8340dd7145bfd46ac0dce0104c0ed8258582047c9b93",
+    "test-player/run.json": "4a00ceb58777ff6321bdc516e80411b743ddfe613a6ed2e1897b7e3c425e7c28",
+    "test-local/stdout.log": "e5ba1a03a58f4db328b712b2e4fabb83e203925667ca1e38c97e19ed2f7aec6b",
+    "test-local/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "test-local/running.json": "a8fe26d4af0f50c97e6eb0e040a404b390a1b8641e47329070c9f335913b2102",
+    "test-local/run.json": "06d46a172549b16745519be9febdc942a34ea73eb4496560e2b67ebd1b92ac66",
+    "test-world/stdout.log": "57b77a222b9e5672f4fd30c8f4d84d86e1456869874f70765878480508ce5181",
+    "test-world/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "test-world/running.json": "4828bbda3a0e5273b3182744ebb8f34147366b7042cc88a4abc98c7fcead7e00",
+    "test-world/run.json": "135d6b7f345425dc266e0491a4be957e8df9491fad63c34229c000144b43498c",
+    "test-construction/stdout.log": "8ef820cea216780470c9e27c1ea0ea03a3b9b1c57ad7b9ff4887cefa3fd84e39",
+    "test-construction/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "test-construction/running.json": "0ccdc76cf9ed28e8c49d3839b8a9de970be475a2d26dbffbc7acfcd33d0e68ab",
+    "test-construction/run.json": "9782559f25b39ae1c3d2edfd2b1d77a3ab43dbcde6604870b8725e43e29cf65d",
+    "test-start/stdout.log": "3e9564a669879325c29d0595b616a3310eecfa0c658d63ed7f7d1750c8c3f311",
+    "test-start/stderr.log": "7339074ee31041b19a053025ca0ad62461f8417ae7681757f723db9b45db14d3",
+    "test-start/running.json": "1c2d869c754f58d713622efc4634739bf6d99823a402b6f591fe581800243c13",
+    "test-start/run.json": "8aa0aec9ad54658ac8096c925161379da9dc7dcd4fe543bab95dec4505610c89",
+    "test-aux/stdout.log": "73ff7be5c067e65a5b85ea842faffc604ca32d1f607ffee400671b20eb91f0d8",
+    "test-aux/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "test-aux/running.json": "500852ca72d8c36db5a3ec7b667d3db2bd3adbf5be05b97bd018114ee87ad39a",
+    "test-aux/run.json": "898970e7e93fdc40c75bcf2a1c761a0df31270b7d4f2c5756113a53dc7378d2c",
+    "live/package-audit.json": "b9dd7361aaa03c99afcfc45774b99f465076e89b2700f8dd33093cdef9a343c2",
+    "live/summary.json": "18eba8a8a1c351f1ca3e303468bf962b9e0b111c6f2bebac2e908fba5929d984",
+    "live/rand-0/scenario-input.json": "11d1cade3a788eadc5d0f121b42ffc1cb4078cc8548b8f4fd30568ad244784dc",
+    "live/rand-0/steps.tsv": "ca16ada89266040eb592e81ef60f51d4908a6cec7f34bfd49d025382fa168ebb",
+    "live/rand-0/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "live/rand-0/stderr.log": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2",
+    "live/rand-0/running.json": "b8d603db09a896688964d88b389cd14145e69c26db9dff961b31b73e009adb2f",
+    "live/rand-0/states.tsv": "eb2a806781d5db090e22e73c7478e4c190df3d2c30cbd3d76945d074daa3b235",
+    "live/rand-0/final.bmp": "dee0efbdae525b873614106a70cc2d75407a269639c578a745b845dbefecdaa3",
+    "live/rand-0/final-output.bmp": "dee0efbdae525b873614106a70cc2d75407a269639c578a745b845dbefecdaa3",
+    "live/rand-0/run.json": "716ccffe3392382f639bba8eba241710ba99f22b6f7787a3e9350d6576032685",
+    "live/rand-0/presentation-comparison.json": "9960a545c46123451e847a6f7b5e398707aec4d8e2c6cb7b14f63d571adbedf2",
+    "live/rand-0/summary.json": "336464bf9d59a204a7f18c91462ae6f6bb296ffdebd8ea087f7b332450ac9ea7",
+    "live/rand-1/scenario-input.json": "e0bc7c88d06d05b32df1721bdbbe25de91a3aa79fd346f2b03045efacab15d36",
+    "live/rand-1/steps.tsv": "f9411f4553046b7bd49ece1046596f74a55176450a0b76c5970d78ee442dfa3e",
+    "live/rand-1/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "live/rand-1/stderr.log": "ddcc2eb96a14cb5db1d6f48b33a312e6059f3cf16884e732fddcc69e8642fba3",
+    "live/rand-1/running.json": "b433a2b03b0cee3835f2523f5d2e270f0b7d88f937c5aedf5c2cb66e8ab07056",
+    "live/rand-1/states.tsv": "ebca47daa152fcf587eb254432f394f6ab03c84a7fe94c13347af0ce93058080",
+    "live/rand-1/final.bmp": "eb312474f29bfe87324065b96be9e32aafd5b0007f9a299e350ffd3b7a930a94",
+    "live/rand-1/final-output.bmp": "eb312474f29bfe87324065b96be9e32aafd5b0007f9a299e350ffd3b7a930a94",
+    "live/rand-1/run.json": "a62ff2e0ed5bea73648602f02a69aa168d7d556e1b7bbd9a0000314784eb1a94",
+    "live/rand-1/presentation-comparison.json": "4b4798e8468a6ac02deb89efd573944f9912edd09088343f10598b4f203ec033",
+    "live/rand-1/summary.json": "da3723e26d2b60b60c16b765834516a95534c841aabeff1447c420837572f1cf"
+  }
+}

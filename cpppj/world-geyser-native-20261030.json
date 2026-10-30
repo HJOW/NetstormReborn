@@ -1,0 +1,25 @@
+{
+  "unit": 609,
+  "host": "HJOW-Athlon",
+  "cases": 354,
+  "observations": 708,
+  "differences": [],
+  "verificationOnly": true,
+  "instructions": [
+    183562,
+    183562
+  ],
+  "scope": "00486440/0041c8e0/0041ca10/0041ca40/00463b50/004bcab0/004bca20/실제CRT. Local/전체·분할범위/장식·일반배치/Config·벽시각은 명시 경계. 새 게임/GUI/MP 없음.",
+  "sourceSha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "tools/decomp_priestmenu.py": "8d1474792e7511fa777e7bd7bd369f2a2a0f9f5c35643e420d65a3fa4744bac9",
+    "tools/decomp_world_geyser.py": "3c25d8a6fb5835a61c0f4bc4cc92d5e1dd5176fb52ddbd9cf650cf4fc26ba4ad",
+    "cpppj/tests/fixtures/world-geyser-x86.tsv": "0a6eea6bc24ba4156dd311caf2902583310be4b9033fe4ecf97f3b8fbf9e8183"
+  },
+  "evidenceSha256": {
+    "first.json": "f01b07c1491363294b1f6582b6fd53b1851cdab9f66713cc66abb2ebe056c23a",
+    "replay.json": "f01b07c1491363294b1f6582b6fd53b1851cdab9f66713cc66abb2ebe056c23a"
+  }
+}

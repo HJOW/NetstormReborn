@@ -11,6 +11,7 @@
 #include "o/RawIslandQueries.h"
 #include "client/EditorIslandBitmap.h"
 #include "o/RawFortRandomPlacement.h"
+#include "o/RawWorldGeyser.h" //실제 전체 간헐천 부모와 같은 지도/옵션 범위를 조립한다.
 #include "o/RawBridgeEditor.h" //Editor의 전체 품질 명령도 현재 월드와 같은 풀/코드/난수를 사용한다.
 #include "client/ClientHtmlWindowGlobals.h"
 #include "client/ClientRandomGlobals.h"
@@ -233,6 +234,7 @@
 #include "client/RawCampaignCursorDisplay.h"
 #include <bit>
 #include <cstdio>
+#include <iostream>
 #include <stdexcept>
 #include <cstdlib>
 #include <cstring>
@@ -3944,6 +3946,34 @@ bool RawCampaignSession::ConfirmSupport(float x,float y) {
 void RawCampaignSession::GenerateLocalGeysers() {
     if (!impl_->loaded) throw std::logic_error("실제 Session 설치 전 로컬 간헐천 생성 요청");
     impl_->PrepareConstruction();impl_->construction->GenerateLocalGeysers();
+}
+//순수 관측 모형을 만들지 않고 이미 설치된 실제 세계/공간/장부·장기 전역을 빌린다.
+void RawCampaignSession::GenerateWorldGeysers() {
+    auto& s=*impl_;if (!s.loaded) throw std::logic_error("실제 Session 설치 전 세계 간헐천 생성 요청");
+    o::WorldGeyserBoundsHooks geometry;
+    geometry.chunkBounds=[&s](std::int32_t region) { //00432210의 실제 IslandList 관문과 같은 현재 청크 지도를 사용한다.
+        if (!s.islands->Exists(region)) throw std::logic_error("세계 간헐천 원본 ChunkMap.bounds의 섬 존재 진단");return s.chunks.Bounds(region);
+    };
+    geometry.spacing=[&s] { return o::WorldGeyserSpacing(s.battleOptions[6]); };
+    o::RawWorldGeyserBounds bounds(s.core.pool.Edition(),{s.globals.missionPost,s.gameplayGlobals->WorldCells(),s.gameplayGlobals->GameAux()->WorldGeyserMargin()},std::move(geometry));
+    auto singleHooks=MakeNormalTerrainFarmWorldHooks(s.world,s.chunks,*s.islands,*s.pipeline,s.hp);
+    singleHooks.mayPlace=[&s](const o::CanonPlacementQuery& query) { return s.MayPlaceGameplay(query); }; //현재 Player/동맹·섬·Graph의 실제 전체 MayPlace다.
+    o::RawFortRandomPlacement single(s.core.pool,s.core.hash,s.core.spots,s.core.types,s.core.frames,s.random,s.randomPlacement,std::move(singleHooks));
+    o::FortFinishOwnerHooks finishHooks;
+    finishHooks.regionBounds=[&s](auto region) { const auto result=s.islands->Bounds(region);return o::FortRandomRectangle{result.left,result.top,result.right,result.bottom}; };
+    finishHooks.wallSeconds=s.services.construction.wallSeconds;finishHooks.invalidType=SessionMissing<void>();
+    finishHooks=o::MakeFortSinglePlacementHook(s.core.pool,single,std::move(finishHooks));
+    o::RawFortFinishOwner placement(s.core.pool,s.core.types,s.assetState.Residences(),s.finishState,std::move(finishHooks));placement.BindPlayerRecords(s.players);
+    o::WorldGeyserHooks hooks;
+    hooks.log=[](std::string_view text) { std::clog<<text; }; //004a68e0의 같은 원문 로그를 현재 실행 로그에 전달한다.
+    hooks.local=[this] { GenerateLocalGeysers(); };hooks.configInt=s.services.construction.configInt;hooks.wallSeconds=s.services.construction.wallSeconds;
+    hooks.budget=[&s] { return o::WorldGeyserBudget(s.core.pool.Edition(),s.core.ownerMode.battle,s.players,s.battleOptions); };
+    hooks.density=[&s] { return o::WorldGeyserDensity(s.battleOptions[17]); };hooks.spacing=[&s] { return o::WorldGeyserSpacing(s.battleOptions[6]); };
+    hooks.demo=[&s] { if (!s.services.missionOutcome.demo) throw std::logic_error("세계 간헐천의 실제 현재 Guide demo 조회 미연결");return s.services.missionOutcome.demo()!=0 ? 1U : 0U; };
+    hooks.whole=[&bounds] { return bounds.Whole(); };hooks.partition=[&bounds](auto cell,auto grid) { return bounds.Partition(cell,grid); };
+    hooks.decorate=[&placement](o::GameRandom& random,auto rectangle,auto region,auto quantity,auto type,auto force) { static_cast<void>(placement.PlaceRandom(random,rectangle,region,quantity,type,force)); };
+    hooks.populate=[&s](std::int32_t quantity,o::GameRandom& random,auto rectangle,auto options) { s.PrepareConstruction();s.construction->PopulateGeysers(quantity,random,rectangle,options); };
+    o::RawWorldGeyser(s.core.pool.Edition(),{s.core.ownerMode.battle,s.battleOptions,s.gameplayGlobals->GameAux()->WorldDecorationTypes()},std::move(hooks)).Generate();
 }
 // 초기 객체 이전에 설치한 같은 연결부를 제공하며 게임 요청은 명시 Session API를 사용한다.
 const RawCampaignConstructionBindings& RawCampaignSession::Construction() const { return *impl_->construction; }

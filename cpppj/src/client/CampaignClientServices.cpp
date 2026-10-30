@@ -56,7 +56,7 @@ SoloMapCatalogEffects MakeSoloMapCatalogClientEffects(Client& client,std::functi
     effects.allocationBytes=CurrentAllocationBytes;effects.userName=std::move(currentName);
     effects.translate=[&client](std::string_view source) { const auto bytes=o::EncodeOriginalText(client.Translate(o::DecodeOriginalText({reinterpret_cast<const std::uint8_t*>(source.data()),source.size()})));return std::string(bytes.begin(),bytes.end()); };return effects;
 }
-// 실제 힙 입력과 게임 시계/화면/카메라를 연결한다. 선택된 미복원 세계 생성은 명시 거부한다.
+//실제 힙 입력과 게임 시계/화면/카메라·현재 Session의 전체 세계 간헐천 생성을 연결한다.
 CampaignMissionStartEffects MakeCampaignMissionStartEffects(Client& client,GameWorld& world,std::function<void()> refreshCommandGump) {
     if (!refreshCommandGump) throw std::invalid_argument("미션 Start의 현재 명령 Gump 조회 미연결");
     CampaignMissionStartEffects effects;
@@ -64,7 +64,7 @@ CampaignMissionStartEffects MakeCampaignMissionStartEffects(Client& client,GameW
     effects.gameSeconds=[&client] { return client.Time().game; };
     effects.refreshSp=[&client] { client.GetRenderer().InvalidateAll();if (client.Menu()) client.Menu()->Refresh(); };
     effects.refreshCommandGump=std::move(refreshCommandGump);
-    effects.randomGeysers=[] { throw std::logic_error("미션 Start의00486440 세계 랜덤 간헐천 생성 미연결"); };
+    effects.randomGeysers=[&world] { world.Session().GenerateWorldGeysers(); }; //randGeysers는 전체 부모이며 기본 local 생성 하나로 대신하지 않는다.
     effects.resetCamera=[&world] { world.ResetCampaignCamera(); };
     effects.unknownAbilityAssertion=[](std::string_view name) { std::clog<<"미션 AI의 원본 능력 이름 진단: "<<name<<'\n'; };
     effects.unknownAbilityLog=[](std::string_view name) { std::clog<<"미등록 미션 AI 능력: "<<name<<'\n'; };

@@ -1,12 +1,14 @@
 // 게임 보조 전역의 실제 폭만 소유하며 Runtime/목록/Host를 포함하지 않는다.
 #pragma once
 #include <bit>
+#include <array>
 #include <cstdint>
+#include <span>
 
 namespace netstorm::o { // Gameplay/Storage가 같은 주소를 pin하는 작은 게임 데이터 owner다.
 class RawGameAuxState {
 public:
-    RawGameAuxState()=default; // PE의 BSS+0과 명시25/2000/122를 한 번 구성한다.
+    RawGameAuxState()=default; // PE의 BSS+0과 명시25/2000/122·세계여백2/장식타입4개를 한 번 구성한다.
     RawGameAuxState(const RawGameAuxState&)=delete;RawGameAuxState& operator=(const RawGameAuxState&)=delete; // 살아 있는 실제 참조 주소를 복제하지 않는다.
     std::uint32_t& OrdinaryGeysers() { return ordinaryGeysers_; } //005950ac: Start가 moreGeysers 부정을 쓴다.
     const std::uint32_t& OrdinaryGeysers() const { return ordinaryGeysers_; } // 현재 DWORD를 복사 없이 읽는다.
@@ -46,6 +48,10 @@ public:
     const std::uint32_t& TerrainType() const { return terrainType_; } // Session 교체로97의 새 사본을 만들지 않는다.
     std::uint32_t& EdgeFarmType() { return edgeFarmType_; } //0054123c의 같은 현재 가장자리 농장 TYPE다.
     const std::uint32_t& EdgeFarmType() const { return edgeFarmType_; } // 객체 덤프의 단순 좌표 행도 이 주소를 읽는다.
+    std::int32_t& WorldGeyserMargin() { return worldGeyserMargin_; } //00542654의 현재 여백은 전체/분할 범위와 후속 생성이 같은 주소를 쓴다.
+    const std::int32_t& WorldGeyserMargin() const { return worldGeyserMargin_; } //Session 교체로 새2를 쓰지 않고 현재값을 보존한다.
+    std::span<std::uint32_t,4> WorldDecorationTypes() { return worldDecorationTypes_; } //005411e8/00541338/005411ec/0054133c의 현재 네 타입이다.
+    std::span<const std::uint32_t,4> WorldDecorationTypes() const { return worldDecorationTypes_; } //생성 부모는 Local 뒤 snapshot과 반복 중 현재 Monument를 구별한다.
     std::uint32_t& SubscriberMarker() { return subscriberMarker_; } //005467bc: Subscriber의 별도 표시 DWORD다.
     const std::uint32_t& SubscriberMarker() const { return subscriberMarker_; } // 다른 Subscriber ID와 합치지 않는다.
     bool& PriestQuarterHp() { return priestQuarterHp_; } //005ca8f0의 같은 현재 0/1을 생성·HP·연소와 State 정리가 공유한다.
@@ -68,6 +74,8 @@ private:
     std::int32_t defaultSp_{2000}; // 보호 PE의 signed 기본SP다.
     std::uint32_t geyserType_{122},subscriberMarker_{}; // 보호 PE TYPE122와 별도BSS 표지다.
     std::uint32_t terrainType_{97},edgeFarmType_{121}; // 보호 PE 두 TYPE 전역이며 현재 Runtime 대여/반납은 초기화하지 않는다.
+    std::int32_t worldGeyserMargin_{2}; //보호 PE00542654의 실제 초기 DWORD다.
+    std::array<std::uint32_t,4> worldDecorationTypes_{100,184,101,185}; //실제 treeTwo/RUIN/treeThree/Monument 타입 순서다.
 };
 static_assert(sizeof(std::uint32_t)==4 && sizeof(std::int32_t)==4 && sizeof(float)==4 && sizeof(double)==8); // 각 Native폭만 보증하며 클래스가17주소의 연속 image라는 주장은 아니다.
 }
