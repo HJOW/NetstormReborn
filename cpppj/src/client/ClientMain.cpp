@@ -673,6 +673,7 @@ void Client::PresentScene() {
             if (changed) screen_->Update({0,0,screenWidth_,screenHeight_}); // Windows10/11의 비정수 확대는 clip별 GDI 샘플 위상 차이를 피하도록 프레임당 전체 DIB를 한 번 출력한다.
         } else renderer_->Present([this](ScreenRect rect) { screen_->Update(rect); });
         kencloudGlobals_->WorldRedraw()=0; //499fe0은 출력/dirty clear 뒤 같은 전역을0으로 쓰며 뒤 카메라 zoom이 다시1을 쓸 수 있다.
+        if (afterPresentation) afterPresentation(*this); // 검사만 실제 표시한 버퍼를 읽는다. 원문의 Present→카메라 적용/다음 버퍼 준비 순서는 바꾸지 않는다.
     }
 }
 void Client::SaveScreenshot() {

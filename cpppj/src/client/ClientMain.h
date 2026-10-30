@@ -149,6 +149,7 @@ public:
     std::function<void(Client&)> beforeInput;
     // 프레임 그리기 뒤의 상태/화면 관찰. 일반 실행에서는 비어 있다.
     std::function<void(Client&)> afterFrame;
+    std::function<void(Client&)> afterPresentation; // 원본에 없는 검사 전용 관찰점이다. Windows10/11 호환 DIB 출력 뒤·다음 프레임용 카메라 버퍼 이동 앞의 같은 논리 화면만 읽으며 일반 실행은 비워 둔다.
     // 검사 전용 폴링 공급자다. 값이 있으면 해당 키/버튼에 적용하고 빈 값이면 실제 Win32 상태를 읽는다.
     std::function<std::optional<InputEvent>(std::uint32_t)> inspectPoll;
 

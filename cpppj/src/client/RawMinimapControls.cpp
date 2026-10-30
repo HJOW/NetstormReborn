@@ -27,7 +27,7 @@ struct RawMinimapControls::Impl {
     // 연결 훅은 실제 호출 시점에 현재 카메라·모드·프레임을 조회한다.
     Impl(RawMenuTree tree,RawMenuControls& menu,std::shared_ptr<RawSurfaceStorage> data,o::MetadisplayDirtyState& shared,RawMinimapGlobals& current,RawMinimapHooks supplied)
         :common(std::move(tree)),menus(menu),hooks(std::move(supplied)),globals(current),storage(RequireStorage(std::move(data))),state(shared),colors(globals.colors),raster(storage->pool,storage->hash,storage->types,colors),
-        dirty(storage->pool,state,{[this] { SyncSize();if (RebuildMinimap(geometry,hooks.view())) { common.changed();modified=true; } },
+        dirty(storage->pool,state,{[this] { SyncSize();if (RebuildMinimap(geometry,hooks.view())) { common.RedrawBase(token,false);modified=true; } }, //480270은 crop 계산 뒤 현재 미니맵의 기본+8(0) 영역만 요청한다.
             [this](auto x,auto y) { colors.challenge=storage->ownerMode.challenge;colors.frame=state.frames;raster.DrawCell(state.bitmap,x,y);modified=true; }}) {
         if (!hooks.view || !hooks.center || !hooks.move || !hooks.inputMode || !hooks.poll) throw std::invalid_argument("실제 미니맵 장치 연결 누락");
         drawRegistration=menus.RegisterExternalGumps({{},[this](auto value) { return value && value==token; },[this](auto,auto& target,auto&,auto&) { Draw(target); }});
@@ -105,12 +105,12 @@ std::uint32_t RawMinimapControls::Handle(std::uint32_t token,std::uint32_t event
         if (event&InputCode::kRelease) { s.geometry.scrolling=0;s.common.lifetime.SetIdle(token,false);return 1; }
         const auto target=MinimapTarget(s.geometry,local[0],local[1]);const auto mode=s.hooks.inputMode(); // 현재 모드를 클릭 시점에 읽는다.
         if (mode==2 || mode==5) { s.hooks.move(target[0],target[1]);return 1; }
-        s.hooks.center(target[0],target[1]);s.common.changed();s.common.input.Capture(token);s.geometry.scrolling=1;s.common.lifetime.SetIdle(token,true);
+        s.hooks.center(target[0],target[1]);s.common.RedrawBase(token,false);s.common.input.Capture(token);s.geometry.scrolling=1;s.common.lifetime.SetIdle(token,true); //4803f0은 카메라 중심 변경 뒤, 캡처/scrolling 설정 전에 같은 기본 영역을 요청한다.
     }
     return s.menus.BaseHandle(token,event,first,second);
 }
 // 현재 캡처 중의 폴링 위치는 미니맵 밖에서도 동일한 로컬 좌표로 전달된다.
-void RawMinimapControls::Idle(std::uint32_t token) { auto& s=*impl_;if (!Node(token) || !s.geometry.scrolling) throw std::logic_error("미니맵 드래그Idle 상태 오류");s.SyncSize();const auto mouse=s.hooks.poll();const auto local=s.common.collection.ScreenToLocal(token,{mouse.x,mouse.y});const auto target=DragMinimap(s.geometry,local[0],local[1]);s.hooks.center(target[0],target[1]);s.common.changed(); }
+void RawMinimapControls::Idle(std::uint32_t token) { auto& s=*impl_;if (!Node(token) || !s.geometry.scrolling) throw std::logic_error("미니맵 드래그Idle 상태 오류");s.SyncSize();const auto mouse=s.hooks.poll();const auto local=s.common.collection.ScreenToLocal(token,{mouse.x,mouse.y});const auto target=DragMinimap(s.geometry,local[0],local[1]);s.hooks.center(target[0],target[1]);s.common.RedrawBase(token,false); } //480440도 바깥 드래그/카메라 중심 변경을 끝낸 뒤 실제 기본+8(0)만 요청한다.
 // 별도 bitmap 해제 없는 기본 scalar 소멸자다.
 void RawMinimapControls::DeleteScalar(std::uint32_t token,std::uint32_t flags) { impl_->common.lifetime.DeleteScalar(token,flags); }
 // 같은scalar가끝난뒤만등록대상의포인터를없앤다.

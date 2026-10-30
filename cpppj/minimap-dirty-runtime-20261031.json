@@ -1,0 +1,1757 @@
+{
+  "unit": 631,
+  "sourceBaseCommit": "087ff257",
+  "complete": true,
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "staticReview": {
+    "host": "HJOW-Athlon",
+    "lastFullDecompileHost": "HJOW-Athlon",
+    "lastFullDecompileDate": "2026-10-23",
+    "sourceSha256": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "vtable": "0050d51c",
+    "redraw": "00464a50",
+    "bodies": {
+      "00480270": "scrolling0: crop 계산 뒤 +8(0), scrolling 비영은 반환",
+      "004803f0": "현재 crop+local 목표를497f20에 전달한 뒤 +8(0)",
+      "00480440": "poll/local→crop 경계 보정→497f20→+8(0)",
+      "00481620": "모드2/5는 선택 이동→1, 일반 누름은Move→Capture→scrolling1→SetIdle1→BaseHandle, 해제는scrolling0→SetIdle0→1"
+    },
+    "nativeFixture": "cpppj/tests/fixtures/minimap-geometry-x86.tsv",
+    "scope": "정적 코드/PE가상표 확인이다. 기존1054행 중 callback변경 없는1028행의 순수기하·dirty호출은 기존 독립 근거를 재사용한다.26행 외부효과 계약/전체 동일성을 완료로 세지 않으며 새 원문/게임/GUI/MP 관측이 아니다."
+  },
+  "nextCameraStaticReview": {
+    "kind": "static-only",
+    "host": "HJOW-Athlon",
+    "lastFullDecompileHost": "HJOW-Athlon",
+    "lastFullDecompileDate": "2026-10-23",
+    "originalBody": "extracted/refined/originals/Netstorm.c::FUN_00497f20",
+    "originalBodyFacts": "화면 폭/높이와 두 float를 사용해 this+50/+54 목표만 쓰고005c85dc를 증가시킨다. 현재 view/snapshot setter 또는497960을 호출하지 않는다.",
+    "currentMismatch": "GameWorld::CenterCamera(128)의 CameraHome callback은ApplyCameraPixels(866)로 들어가 RequestPixels 뒤 ApplyPixelsToRendererAndSnapshot을 즉시 실행한다. 초기화/Home/명시사제 등 다른Apply 호출의 분류도 필요하다.",
+    "sourceSha256": "a4a7f82b2290f87e425d09b4e9f51ecfedc1d1e04dc82d3d2efe51df8ebe6620",
+    "nextAction": "632에서 실제497f20의 전체 구조 보존/목표-only를 독립 원문으로 확인하고 실제 Client 입력 경로의 deferred store/Present말미 적용을 복원한다. 독립/초기 명시 장치 계약을 구별하고 기존 즉시 가정의 검사는 원문 전체 전후 상태를 검증하는 형태로 고친다. 그 뒤 같은 제품의34 진입을 통합한다.10.72의458990/458800 대응은별도 정적 판독 전 공통화하지 않는다.",
+    "scope": "이 파일은 정적 발견/후속 작업이며 새 원문 실행/제품 복원/완료 근거가 아니다."
+  },
+  "reusedNativeFixtureSha256": {
+    "cpppj/tests/fixtures/minimap-geometry-x86.tsv": "632b1e411d801a7e5a72c455d340e74a071c54e2511fa7486fd0f687ee47a078",
+    "cpppj/tests/fixtures/gump-redraw-x86.tsv": "466b3deef743ab396beddfe0dafc5549fb0f6a8a556a89f1a85cd5b18515c6d7",
+    "cpppj/tests/fixtures/minimap-blit-x86.tsv": "7b6eec53b0d69a138b41d7d438bc04495b5b4b1e7ee438d96194fed2930497b3",
+    "cpppj/tests/fixtures/minimap-cell-x86.tsv": "9a40c0edda37812fec1db3e7e65eb9de2da5ea319f16f93d7cc2e99edd0271b4"
+  },
+  "newNativeRuns": 0,
+  "newFixtures": 0,
+  "checks": {
+    "passed": true,
+    "tests": 109,
+    "filters": [
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "MinimapDirty_"
+        ],
+        "binarySha256": "a1eabba951a2a2aaa6cd325349a7f6860e890d168ee06700fdde532551057b3d",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 0.7768590999985463,
+        "stdoutSha256": "a2aa9710e1fb0416e8edcd5d9cea4b16600ebb1dcdab5450c02a5aa5e68862ff",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "MinimapDirty_",
+        "tests": 2,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "MinimapGeometry_"
+        ],
+        "binarySha256": "a1eabba951a2a2aaa6cd325349a7f6860e890d168ee06700fdde532551057b3d",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 0.5161700999997265,
+        "stdoutSha256": "b835c6e27f4c2a24449deeb0adfeecc4603f6eaad1e14b1aa9ecb07fe0ed6f60",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "MinimapGeometry_",
+        "tests": 1,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "MinimapBlit_"
+        ],
+        "binarySha256": "a1eabba951a2a2aaa6cd325349a7f6860e890d168ee06700fdde532551057b3d",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 0.7184739000003901,
+        "stdoutSha256": "24961a8db251859de1aaac88a10551877a6a6b32cf2b993433a72e8ee6d129c0",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "MinimapBlit_",
+        "tests": 2,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "MinimapRaster_"
+        ],
+        "binarySha256": "a1eabba951a2a2aaa6cd325349a7f6860e890d168ee06700fdde532551057b3d",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 3.2964995999973326,
+        "stdoutSha256": "340f5b3a2258c52a113838af52de5b96dacca2feb11ecd953d8c0c616c4a22e8",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "MinimapRaster_",
+        "tests": 1,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "metadisplayDirty_"
+        ],
+        "binarySha256": "a1eabba951a2a2aaa6cd325349a7f6860e890d168ee06700fdde532551057b3d",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 0.9656243999997969,
+        "stdoutSha256": "e157953d3461a79e93dddf84b3fc88a8ed6eb94620586e4d1b5abb8c2a56d06a",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "metadisplayDirty_",
+        "tests": 7,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "RawMenuControls_"
+        ],
+        "binarySha256": "a1eabba951a2a2aaa6cd325349a7f6860e890d168ee06700fdde532551057b3d",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 2.5172368999992614,
+        "stdoutSha256": "456795a9cc5618f2193ee2399ede8d8be62ae941e9ba7926cb53b8e4e1d2da0d",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "RawMenuControls_",
+        "tests": 18,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "ProductionInitialContext_"
+        ],
+        "binarySha256": "a1eabba951a2a2aaa6cd325349a7f6860e890d168ee06700fdde532551057b3d",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 1.1386760999994294,
+        "stdoutSha256": "4a0f8392b45a3287e0b1875d407107ac5a96969e87709bbd6b473eed4117a1ba",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "ProductionInitialContext_",
+        "tests": 22,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "GumpRedraw_"
+        ],
+        "binarySha256": "a1eabba951a2a2aaa6cd325349a7f6860e890d168ee06700fdde532551057b3d",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 0.587684400001308,
+        "stdoutSha256": "ba8027da44a71a31679a5acebde323265135f4df097df017e28f19ed079cfa07",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "GumpRedraw_",
+        "tests": 2,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "GumpCollection_"
+        ],
+        "binarySha256": "a1eabba951a2a2aaa6cd325349a7f6860e890d168ee06700fdde532551057b3d",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 0.6725538999999117,
+        "stdoutSha256": "d4c07497b5f661cdaba73f4286c5392f859d16ec3cc0b666cc6cad22ae0f46fa",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "GumpCollection_",
+        "tests": 6,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "GumpInput_"
+        ],
+        "binarySha256": "a1eabba951a2a2aaa6cd325349a7f6860e890d168ee06700fdde532551057b3d",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 0.7184199999974226,
+        "stdoutSha256": "5cb6f3cb1b6bdd62ef1d41345d897757c626f075b9e5e9090ce843bb678c7b93",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "GumpInput_",
+        "tests": 9,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "GumpTree_"
+        ],
+        "binarySha256": "a1eabba951a2a2aaa6cd325349a7f6860e890d168ee06700fdde532551057b3d",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 0.8510115999997652,
+        "stdoutSha256": "37662ace27eaf63e1be50f42fc617583edb59705d89880df8993c63dafa37a5e",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "GumpTree_",
+        "tests": 8,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "RawButtonControls_"
+        ],
+        "binarySha256": "a1eabba951a2a2aaa6cd325349a7f6860e890d168ee06700fdde532551057b3d",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 0.5546799000003375,
+        "stdoutSha256": "701db22b9ff8531e5fe65083a1384151782ae7b87df18c96704690159ff92525",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "RawButtonControls_",
+        "tests": 8,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "InventoryBlink_"
+        ],
+        "binarySha256": "a1eabba951a2a2aaa6cd325349a7f6860e890d168ee06700fdde532551057b3d",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 1.1479389000014635,
+        "stdoutSha256": "3a9948fd94173c2e54d1a856ee562e918233ca3f3b6d4058770545824b3a5194",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "InventoryBlink_",
+        "tests": 2,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "CameraPresent_"
+        ],
+        "binarySha256": "a1eabba951a2a2aaa6cd325349a7f6860e890d168ee06700fdde532551057b3d",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 0.5322343000007095,
+        "stdoutSha256": "af807b67f344c7e99911ba2552b42b69e18302b696f9cd4643ce08068b0338ab",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "CameraPresent_",
+        "tests": 3,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "CameraCommit_"
+        ],
+        "binarySha256": "a1eabba951a2a2aaa6cd325349a7f6860e890d168ee06700fdde532551057b3d",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 0.5235245999974723,
+        "stdoutSha256": "638909e7afc51e87e9d9320e666b9127dbaea65c3cb4fcd505cad6f37a110f83",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "CameraCommit_",
+        "tests": 4,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "ScreenScroll_"
+        ],
+        "binarySha256": "a1eabba951a2a2aaa6cd325349a7f6860e890d168ee06700fdde532551057b3d",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 0.5755337999980839,
+        "stdoutSha256": "64faf6fc3fcc1ff18eb62fc27bd3ceb7626642f4e219ed9c535526a5a8c30be3",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "ScreenScroll_",
+        "tests": 4,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "ScreenPresentation_"
+        ],
+        "binarySha256": "a1eabba951a2a2aaa6cd325349a7f6860e890d168ee06700fdde532551057b3d",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 0.5323635000022477,
+        "stdoutSha256": "e7ac911238149e606812e5636707bbaa49a5433ce5c7081d7d7df57f29c85977",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "ScreenPresentation_",
+        "tests": 5,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "ClientStateWorldCleanup_"
+        ],
+        "binarySha256": "a1eabba951a2a2aaa6cd325349a7f6860e890d168ee06700fdde532551057b3d",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 0.7877919999991718,
+        "stdoutSha256": "b9fab8b0911e3e908e2ae85b66a568795cf83d6d49eddd43d89a9140aa0c862c",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "ClientStateWorldCleanup_",
+        "tests": 5,
+        "failed": 0
+      }
+    ],
+    "registered": 3546,
+    "binarySha256": "a1eabba951a2a2aaa6cd325349a7f6860e890d168ee06700fdde532551057b3d"
+  },
+  "registeredTests": 3546,
+  "build": {
+    "build-v1": {
+      "exitCode": 0,
+      "warnings": 0,
+      "errors": 0,
+      "logSha256": "e41bdc070895ffcb795d7f8ba73ee5c73478fb3d47d17d404c91e9e023e52909"
+    },
+    "build-v2": {
+      "exitCode": 0,
+      "warnings": 0,
+      "errors": 0,
+      "logSha256": "c569bb602d679483b6de518e482ee2f31e0c5b50724efb6952d1b0f2ebeffdfd"
+    },
+    "build-v3": {
+      "exitCode": 0,
+      "warnings": 0,
+      "errors": 0,
+      "logSha256": "c569bb602d679483b6de518e482ee2f31e0c5b50724efb6952d1b0f2ebeffdfd"
+    },
+    "build-v4": {
+      "exitCode": 0,
+      "warnings": 0,
+      "errors": 0,
+      "logSha256": "eb70ff58ed8c77e3ac72d23d2576963b13721a2b47c0b264d6f6e1390b0fde4b"
+    },
+    "build-v5": {
+      "exitCode": 0,
+      "warnings": 0,
+      "errors": 0,
+      "logSha256": "389a7c01e999b5a7fcc89d3660dfdc7a8b6e7f6681d59ea2d9d09c11ebe3b980"
+    }
+  },
+  "gameSha256": "29126c9132d38556056775451f296fa5b6862b1ff857c4e48c81763e553237c5",
+  "testsSha256": "a1eabba951a2a2aaa6cd325349a7f6860e890d168ee06700fdde532551057b3d",
+  "testedSourceSha256": {
+    "cpppj/src/client/RawMinimapControls.cpp": "1f704b6f83318e1d28c1ac32a87c57fc120a84f8a25d500c41b95c4eabbc856d",
+    "cpppj/tests/RawMenuControlsTests.cpp": "59d817f3997d8fbca579f58dccd6cef8f92152ae997f7f557c5b3215debf488a",
+    "cpppj/tests/RawMinimapDirtyTests.inc": "c49713e7cce7288c66ad62d2904711ff395cefb6606e0ce2d6de73c53028bda5",
+    "cpppj/src/client/ClientMain.h": "e8a8d872df8851c0f2285b359aef17796e2060abea9203459feda6aba8b886a3",
+    "cpppj/src/client/ClientMain.cpp": "a9741e3c389f41cb2730039147f067b5c98c07b46c2fca3659b8bc5aa4563855",
+    "cpppj/src/app/main.cpp": "9f9c5f315e18f6a2b096cdc1692cdc8decffbdd83d6373a217187e6463846928",
+    "tools/cpp_minimap_smoke.py": "6df59ea289c3373a23a5e1bc161d6afb2532d0dfe50726ecadd6206e75182f99",
+    "tools/cpp_minimap_toggle_smoke.py": "7c56f8610fac635f76c146e8075a499394306a7845464e9d8e5f8aed878ec4f8"
+  },
+  "gui": {
+    "passed": true,
+    "gameSha256": "29126c9132d38556056775451f296fa5b6862b1ff857c4e48c81763e553237c5",
+    "packageSha256": "128dc9c35de059149c55e7ec58b1cb788c2b52f1c2ccbd542ce8cbe3f3d3d3c0",
+    "runs": 6,
+    "dragRuns": 3,
+    "toggleRuns": 3,
+    "presentationPairs": 21,
+    "postCameraBufferDifferences": {
+      "gui-v3/drag-1024x768": [
+        "rightDrag"
+      ],
+      "gui-v3/drag-1280x720": [
+        "rightDrag"
+      ],
+      "gui-v3/drag-1280x800": [
+        "rightDrag"
+      ],
+      "gui-v3/toggle/1024x768/run": [],
+      "gui-v3/toggle/1280x720/run": [],
+      "gui-v3/toggle/1280x800/run": []
+    },
+    "presentations": {
+      "gui-v3/drag-1024x768": {
+        "initial": {
+          "displayed": {
+            "same": true,
+            "actualSha256": "387636ce92942a15aca05c0c02fdad229abbf1366fe216770e00032944b548a8",
+            "expectedSha256": "387636ce92942a15aca05c0c02fdad229abbf1366fe216770e00032944b548a8",
+            "dimensions": [
+              1024,
+              768
+            ],
+            "outputRect": [
+              0,
+              0,
+              1024,
+              768
+            ]
+          },
+          "postCameraBuffer": {
+            "same": true,
+            "actualSha256": "387636ce92942a15aca05c0c02fdad229abbf1366fe216770e00032944b548a8",
+            "expectedSha256": "387636ce92942a15aca05c0c02fdad229abbf1366fe216770e00032944b548a8",
+            "dimensions": [
+              1024,
+              768
+            ],
+            "outputRect": [
+              0,
+              0,
+              1024,
+              768
+            ]
+          }
+        },
+        "rightDrag": {
+          "displayed": {
+            "same": true,
+            "actualSha256": "17d631524cacbefb9bfd08ba7441b026e42f86830180600acf839a07fc1c25c1",
+            "expectedSha256": "17d631524cacbefb9bfd08ba7441b026e42f86830180600acf839a07fc1c25c1",
+            "dimensions": [
+              1024,
+              768
+            ],
+            "outputRect": [
+              0,
+              0,
+              1024,
+              768
+            ]
+          },
+          "postCameraBuffer": {
+            "same": false,
+            "actualSha256": "17d631524cacbefb9bfd08ba7441b026e42f86830180600acf839a07fc1c25c1",
+            "expectedSha256": "605a6cd0eadc7651c6be0ca7799b5a98697d61b51fdf8833ea78d83e82a4736f",
+            "dimensions": [
+              1024,
+              768
+            ],
+            "outputRect": [
+              0,
+              0,
+              1024,
+              768
+            ]
+          }
+        },
+        "topReleased": {
+          "displayed": {
+            "same": true,
+            "actualSha256": "95e5ec1b84438735efcbb56e22d4dab9c3f8d3a2305198935a2add9663c1fcd2",
+            "expectedSha256": "95e5ec1b84438735efcbb56e22d4dab9c3f8d3a2305198935a2add9663c1fcd2",
+            "dimensions": [
+              1024,
+              768
+            ],
+            "outputRect": [
+              0,
+              0,
+              1024,
+              768
+            ]
+          },
+          "postCameraBuffer": {
+            "same": true,
+            "actualSha256": "95e5ec1b84438735efcbb56e22d4dab9c3f8d3a2305198935a2add9663c1fcd2",
+            "expectedSha256": "95e5ec1b84438735efcbb56e22d4dab9c3f8d3a2305198935a2add9663c1fcd2",
+            "dimensions": [
+              1024,
+              768
+            ],
+            "outputRect": [
+              0,
+              0,
+              1024,
+              768
+            ]
+          }
+        },
+        "mainMenu": {
+          "displayed": {
+            "same": true,
+            "actualSha256": "58042d78e2460d582a91c67a94935b04605bb8b42669cfa28671593003a98d42",
+            "expectedSha256": "58042d78e2460d582a91c67a94935b04605bb8b42669cfa28671593003a98d42",
+            "dimensions": [
+              1024,
+              768
+            ],
+            "outputRect": [
+              0,
+              0,
+              1024,
+              768
+            ]
+          },
+          "postCameraBuffer": {
+            "same": true,
+            "actualSha256": "58042d78e2460d582a91c67a94935b04605bb8b42669cfa28671593003a98d42",
+            "expectedSha256": "58042d78e2460d582a91c67a94935b04605bb8b42669cfa28671593003a98d42",
+            "dimensions": [
+              1024,
+              768
+            ],
+            "outputRect": [
+              0,
+              0,
+              1024,
+              768
+            ]
+          }
+        }
+      },
+      "gui-v3/drag-1280x720": {
+        "initial": {
+          "displayed": {
+            "same": true,
+            "actualSha256": "238e2012b4a769addfd9d1d0744acbfbbcf49a9965267331053c86f55c0b9d1c",
+            "expectedSha256": "238e2012b4a769addfd9d1d0744acbfbbcf49a9965267331053c86f55c0b9d1c",
+            "dimensions": [
+              1280,
+              720
+            ],
+            "outputRect": [
+              0,
+              0,
+              1280,
+              720
+            ]
+          },
+          "postCameraBuffer": {
+            "same": true,
+            "actualSha256": "238e2012b4a769addfd9d1d0744acbfbbcf49a9965267331053c86f55c0b9d1c",
+            "expectedSha256": "238e2012b4a769addfd9d1d0744acbfbbcf49a9965267331053c86f55c0b9d1c",
+            "dimensions": [
+              1280,
+              720
+            ],
+            "outputRect": [
+              0,
+              0,
+              1280,
+              720
+            ]
+          }
+        },
+        "rightDrag": {
+          "displayed": {
+            "same": true,
+            "actualSha256": "d76b47878f7481b23d21d65b3347e878b2e23760dc84a1e79d425e3c8ceeafb0",
+            "expectedSha256": "d76b47878f7481b23d21d65b3347e878b2e23760dc84a1e79d425e3c8ceeafb0",
+            "dimensions": [
+              1280,
+              720
+            ],
+            "outputRect": [
+              0,
+              0,
+              1280,
+              720
+            ]
+          },
+          "postCameraBuffer": {
+            "same": false,
+            "actualSha256": "d76b47878f7481b23d21d65b3347e878b2e23760dc84a1e79d425e3c8ceeafb0",
+            "expectedSha256": "b2469622d700aa256f3ac4a46c0cd724fb37939ff54bf98225b5218f63cf74e1",
+            "dimensions": [
+              1280,
+              720
+            ],
+            "outputRect": [
+              0,
+              0,
+              1280,
+              720
+            ]
+          }
+        },
+        "topReleased": {
+          "displayed": {
+            "same": true,
+            "actualSha256": "1a7332b1d99ec78af8748c7c52e96d465b514a9252abf6a45a493b76773822a7",
+            "expectedSha256": "1a7332b1d99ec78af8748c7c52e96d465b514a9252abf6a45a493b76773822a7",
+            "dimensions": [
+              1280,
+              720
+            ],
+            "outputRect": [
+              0,
+              0,
+              1280,
+              720
+            ]
+          },
+          "postCameraBuffer": {
+            "same": true,
+            "actualSha256": "1a7332b1d99ec78af8748c7c52e96d465b514a9252abf6a45a493b76773822a7",
+            "expectedSha256": "1a7332b1d99ec78af8748c7c52e96d465b514a9252abf6a45a493b76773822a7",
+            "dimensions": [
+              1280,
+              720
+            ],
+            "outputRect": [
+              0,
+              0,
+              1280,
+              720
+            ]
+          }
+        },
+        "mainMenu": {
+          "displayed": {
+            "same": true,
+            "actualSha256": "0c250b05460e46ad6183e9a15c032c7f2da959c221cc03e528aa90c23ee73f62",
+            "expectedSha256": "0c250b05460e46ad6183e9a15c032c7f2da959c221cc03e528aa90c23ee73f62",
+            "dimensions": [
+              1280,
+              720
+            ],
+            "outputRect": [
+              0,
+              0,
+              1280,
+              720
+            ]
+          },
+          "postCameraBuffer": {
+            "same": true,
+            "actualSha256": "0c250b05460e46ad6183e9a15c032c7f2da959c221cc03e528aa90c23ee73f62",
+            "expectedSha256": "0c250b05460e46ad6183e9a15c032c7f2da959c221cc03e528aa90c23ee73f62",
+            "dimensions": [
+              1280,
+              720
+            ],
+            "outputRect": [
+              0,
+              0,
+              1280,
+              720
+            ]
+          }
+        }
+      },
+      "gui-v3/drag-1280x800": {
+        "initial": {
+          "displayed": {
+            "same": true,
+            "actualSha256": "aba527cb525822e4b6e040b71b4c23b9c55fb2236ccf0cc4bbf07357891756e3",
+            "expectedSha256": "aba527cb525822e4b6e040b71b4c23b9c55fb2236ccf0cc4bbf07357891756e3",
+            "dimensions": [
+              1280,
+              800
+            ],
+            "outputRect": [
+              0,
+              0,
+              1280,
+              800
+            ]
+          },
+          "postCameraBuffer": {
+            "same": true,
+            "actualSha256": "aba527cb525822e4b6e040b71b4c23b9c55fb2236ccf0cc4bbf07357891756e3",
+            "expectedSha256": "aba527cb525822e4b6e040b71b4c23b9c55fb2236ccf0cc4bbf07357891756e3",
+            "dimensions": [
+              1280,
+              800
+            ],
+            "outputRect": [
+              0,
+              0,
+              1280,
+              800
+            ]
+          }
+        },
+        "rightDrag": {
+          "displayed": {
+            "same": true,
+            "actualSha256": "70dd99297d78d410dd4e046f9f30e9109da3eb157057660c77487927e0ae36b1",
+            "expectedSha256": "70dd99297d78d410dd4e046f9f30e9109da3eb157057660c77487927e0ae36b1",
+            "dimensions": [
+              1280,
+              800
+            ],
+            "outputRect": [
+              0,
+              0,
+              1280,
+              800
+            ]
+          },
+          "postCameraBuffer": {
+            "same": false,
+            "actualSha256": "70dd99297d78d410dd4e046f9f30e9109da3eb157057660c77487927e0ae36b1",
+            "expectedSha256": "7240e3a3d1c238111c9e54c853ee2a97c126a95cc630555e4cadb42b568cb570",
+            "dimensions": [
+              1280,
+              800
+            ],
+            "outputRect": [
+              0,
+              0,
+              1280,
+              800
+            ]
+          }
+        },
+        "topReleased": {
+          "displayed": {
+            "same": true,
+            "actualSha256": "f20193af905832ef47a1bc862a6297c2aafa43afc7b3c5cc1f7d8e6fa532c622",
+            "expectedSha256": "f20193af905832ef47a1bc862a6297c2aafa43afc7b3c5cc1f7d8e6fa532c622",
+            "dimensions": [
+              1280,
+              800
+            ],
+            "outputRect": [
+              0,
+              0,
+              1280,
+              800
+            ]
+          },
+          "postCameraBuffer": {
+            "same": true,
+            "actualSha256": "f20193af905832ef47a1bc862a6297c2aafa43afc7b3c5cc1f7d8e6fa532c622",
+            "expectedSha256": "f20193af905832ef47a1bc862a6297c2aafa43afc7b3c5cc1f7d8e6fa532c622",
+            "dimensions": [
+              1280,
+              800
+            ],
+            "outputRect": [
+              0,
+              0,
+              1280,
+              800
+            ]
+          }
+        },
+        "mainMenu": {
+          "displayed": {
+            "same": true,
+            "actualSha256": "bb71d86ddce9c0c235dea1cf0c7d7514677efd5352683cd01915fd5687874ad2",
+            "expectedSha256": "bb71d86ddce9c0c235dea1cf0c7d7514677efd5352683cd01915fd5687874ad2",
+            "dimensions": [
+              1280,
+              800
+            ],
+            "outputRect": [
+              0,
+              0,
+              1280,
+              800
+            ]
+          },
+          "postCameraBuffer": {
+            "same": true,
+            "actualSha256": "bb71d86ddce9c0c235dea1cf0c7d7514677efd5352683cd01915fd5687874ad2",
+            "expectedSha256": "bb71d86ddce9c0c235dea1cf0c7d7514677efd5352683cd01915fd5687874ad2",
+            "dimensions": [
+              1280,
+              800
+            ],
+            "outputRect": [
+              0,
+              0,
+              1280,
+              800
+            ]
+          }
+        }
+      },
+      "gui-v3/toggle/1024x768/run": {
+        "floating": {
+          "displayed": {
+            "same": true,
+            "actualSha256": "d633a28dd5b30cdb9a8f0be61e0b1eed3a651665f342db7e10cb280b99a8126c",
+            "expectedSha256": "d633a28dd5b30cdb9a8f0be61e0b1eed3a651665f342db7e10cb280b99a8126c",
+            "dimensions": [
+              1024,
+              768
+            ],
+            "outputRect": [
+              0,
+              0,
+              1024,
+              768
+            ]
+          },
+          "postCameraBuffer": {
+            "same": true,
+            "actualSha256": "d633a28dd5b30cdb9a8f0be61e0b1eed3a651665f342db7e10cb280b99a8126c",
+            "expectedSha256": "d633a28dd5b30cdb9a8f0be61e0b1eed3a651665f342db7e10cb280b99a8126c",
+            "dimensions": [
+              1024,
+              768
+            ],
+            "outputRect": [
+              0,
+              0,
+              1024,
+              768
+            ]
+          }
+        },
+        "floatingAgain": {
+          "displayed": {
+            "same": true,
+            "actualSha256": "2e4c6e3881d4ed5a15925bdd91825636b75eece42b210b93b8dbaf5898f99795",
+            "expectedSha256": "2e4c6e3881d4ed5a15925bdd91825636b75eece42b210b93b8dbaf5898f99795",
+            "dimensions": [
+              1024,
+              768
+            ],
+            "outputRect": [
+              0,
+              0,
+              1024,
+              768
+            ]
+          },
+          "postCameraBuffer": {
+            "same": true,
+            "actualSha256": "2e4c6e3881d4ed5a15925bdd91825636b75eece42b210b93b8dbaf5898f99795",
+            "expectedSha256": "2e4c6e3881d4ed5a15925bdd91825636b75eece42b210b93b8dbaf5898f99795",
+            "dimensions": [
+              1024,
+              768
+            ],
+            "outputRect": [
+              0,
+              0,
+              1024,
+              768
+            ]
+          }
+        },
+        "main": {
+          "displayed": {
+            "same": true,
+            "actualSha256": "58042d78e2460d582a91c67a94935b04605bb8b42669cfa28671593003a98d42",
+            "expectedSha256": "58042d78e2460d582a91c67a94935b04605bb8b42669cfa28671593003a98d42",
+            "dimensions": [
+              1024,
+              768
+            ],
+            "outputRect": [
+              0,
+              0,
+              1024,
+              768
+            ]
+          },
+          "postCameraBuffer": {
+            "same": true,
+            "actualSha256": "58042d78e2460d582a91c67a94935b04605bb8b42669cfa28671593003a98d42",
+            "expectedSha256": "58042d78e2460d582a91c67a94935b04605bb8b42669cfa28671593003a98d42",
+            "dimensions": [
+              1024,
+              768
+            ],
+            "outputRect": [
+              0,
+              0,
+              1024,
+              768
+            ]
+          }
+        }
+      },
+      "gui-v3/toggle/1280x720/run": {
+        "floating": {
+          "displayed": {
+            "same": true,
+            "actualSha256": "aadb1ec17a5468825ee5b25556b5f0b1e772e0f0a41a24a6d30fa5b112c358cc",
+            "expectedSha256": "aadb1ec17a5468825ee5b25556b5f0b1e772e0f0a41a24a6d30fa5b112c358cc",
+            "dimensions": [
+              1920,
+              1080
+            ],
+            "outputRect": [
+              0,
+              0,
+              1920,
+              1080
+            ]
+          },
+          "postCameraBuffer": {
+            "same": true,
+            "actualSha256": "aadb1ec17a5468825ee5b25556b5f0b1e772e0f0a41a24a6d30fa5b112c358cc",
+            "expectedSha256": "aadb1ec17a5468825ee5b25556b5f0b1e772e0f0a41a24a6d30fa5b112c358cc",
+            "dimensions": [
+              1920,
+              1080
+            ],
+            "outputRect": [
+              0,
+              0,
+              1920,
+              1080
+            ]
+          }
+        },
+        "floatingAgain": {
+          "displayed": {
+            "same": true,
+            "actualSha256": "52f89c50e6c27612b4a5632037198c17c9305b1838a75177d390c04ef97c03ed",
+            "expectedSha256": "52f89c50e6c27612b4a5632037198c17c9305b1838a75177d390c04ef97c03ed",
+            "dimensions": [
+              1920,
+              1080
+            ],
+            "outputRect": [
+              0,
+              0,
+              1920,
+              1080
+            ]
+          },
+          "postCameraBuffer": {
+            "same": true,
+            "actualSha256": "52f89c50e6c27612b4a5632037198c17c9305b1838a75177d390c04ef97c03ed",
+            "expectedSha256": "52f89c50e6c27612b4a5632037198c17c9305b1838a75177d390c04ef97c03ed",
+            "dimensions": [
+              1920,
+              1080
+            ],
+            "outputRect": [
+              0,
+              0,
+              1920,
+              1080
+            ]
+          }
+        },
+        "main": {
+          "displayed": {
+            "same": true,
+            "actualSha256": "b3b946fac3d45bbdbdb6f375d6e01664784674746b5f16725afc2a9549bd0e74",
+            "expectedSha256": "b3b946fac3d45bbdbdb6f375d6e01664784674746b5f16725afc2a9549bd0e74",
+            "dimensions": [
+              1920,
+              1080
+            ],
+            "outputRect": [
+              0,
+              0,
+              1920,
+              1080
+            ]
+          },
+          "postCameraBuffer": {
+            "same": true,
+            "actualSha256": "b3b946fac3d45bbdbdb6f375d6e01664784674746b5f16725afc2a9549bd0e74",
+            "expectedSha256": "b3b946fac3d45bbdbdb6f375d6e01664784674746b5f16725afc2a9549bd0e74",
+            "dimensions": [
+              1920,
+              1080
+            ],
+            "outputRect": [
+              0,
+              0,
+              1920,
+              1080
+            ]
+          }
+        }
+      },
+      "gui-v3/toggle/1280x800/run": {
+        "floating": {
+          "displayed": {
+            "same": true,
+            "actualSha256": "b4e20b004af98d18e8c3d39745429585eaab342333d3077c4dbcc3d12ac65c0c",
+            "expectedSha256": "b4e20b004af98d18e8c3d39745429585eaab342333d3077c4dbcc3d12ac65c0c",
+            "dimensions": [
+              1280,
+              800
+            ],
+            "outputRect": [
+              0,
+              0,
+              1280,
+              800
+            ]
+          },
+          "postCameraBuffer": {
+            "same": true,
+            "actualSha256": "b4e20b004af98d18e8c3d39745429585eaab342333d3077c4dbcc3d12ac65c0c",
+            "expectedSha256": "b4e20b004af98d18e8c3d39745429585eaab342333d3077c4dbcc3d12ac65c0c",
+            "dimensions": [
+              1280,
+              800
+            ],
+            "outputRect": [
+              0,
+              0,
+              1280,
+              800
+            ]
+          }
+        },
+        "floatingAgain": {
+          "displayed": {
+            "same": true,
+            "actualSha256": "fdaaee488afa0d0480c56b01e2c055908c6092bbe0b69df7cf5544e4b6a072a0",
+            "expectedSha256": "fdaaee488afa0d0480c56b01e2c055908c6092bbe0b69df7cf5544e4b6a072a0",
+            "dimensions": [
+              1280,
+              800
+            ],
+            "outputRect": [
+              0,
+              0,
+              1280,
+              800
+            ]
+          },
+          "postCameraBuffer": {
+            "same": true,
+            "actualSha256": "fdaaee488afa0d0480c56b01e2c055908c6092bbe0b69df7cf5544e4b6a072a0",
+            "expectedSha256": "fdaaee488afa0d0480c56b01e2c055908c6092bbe0b69df7cf5544e4b6a072a0",
+            "dimensions": [
+              1280,
+              800
+            ],
+            "outputRect": [
+              0,
+              0,
+              1280,
+              800
+            ]
+          }
+        },
+        "main": {
+          "displayed": {
+            "same": true,
+            "actualSha256": "bb71d86ddce9c0c235dea1cf0c7d7514677efd5352683cd01915fd5687874ad2",
+            "expectedSha256": "bb71d86ddce9c0c235dea1cf0c7d7514677efd5352683cd01915fd5687874ad2",
+            "dimensions": [
+              1280,
+              800
+            ],
+            "outputRect": [
+              0,
+              0,
+              1280,
+              800
+            ]
+          },
+          "postCameraBuffer": {
+            "same": true,
+            "actualSha256": "bb71d86ddce9c0c235dea1cf0c7d7514677efd5352683cd01915fd5687874ad2",
+            "expectedSha256": "bb71d86ddce9c0c235dea1cf0c7d7514677efd5352683cd01915fd5687874ad2",
+            "dimensions": [
+              1280,
+              800
+            ],
+            "outputRect": [
+              0,
+              0,
+              1280,
+              800
+            ]
+          }
+        }
+      }
+    },
+    "runEvidence": {
+      "gui-v3/drag-1024x768/run.json": "7bd6ffcff386fb73e3504132d7550dac032c023fcf21c66e145ed08dd05f2343",
+      "gui-v3/drag-1280x720/run.json": "87b7e9ee8550cee5444aa164d66580d7e88892bb038ad70ac52f88068092969c",
+      "gui-v3/drag-1280x800/run.json": "480a37a646510629bff10d8401d1dfb2a6a61674e0d0b04c75ce6c4d43e7354c",
+      "gui-v3/toggle/1280x800/run/run.json": "5a86645782deaf2ce3e786afb2c34ac882384c0aac3fc2ebb6f659626104bcfd",
+      "gui-v3/toggle/1280x720/run/run.json": "f5b0503b2340c36be405d0eac1091822628cb63aa2d8154421c37fee57093af4",
+      "gui-v3/toggle/1024x768/run/run.json": "7df8b1e78d672c8e79394c2e7dea4c454b3c6a3ef07a86d874fc6d7d7e349444"
+    },
+    "scope": "같은 배포본의 미니맵 클릭/바깥 드래그/해제/ESC/이탈3창과 원문 ToggleMinimap 시나리오 버튼의 삭제/독립생성/입력/이탈3창이다. Toggle의 TEST02 english 버튼 한 줄은 별도 실행 사본에만 더한다. 원문/패키지 소스는 수정하지 않는다. 카메라/게임 상태 직접 쓰기·포획/희생/특정적공격/승리/전용공중3종/신규MP/PCM/Win11/물리키 검사는 없다."
+  },
+  "guiRuns": 6,
+  "frameObservations": {
+    "1024x768": {
+      "initial": {
+        "frame": [
+          21,
+          19,
+          19,
+          19,
+          0,
+          21,
+          0,
+          0,
+          138,
+          0,
+          2,
+          905969664,
+          0,
+          0,
+          0,
+          0
+        ],
+        "area": [
+          19,
+          14942208
+        ],
+        "ui": [
+          7328,
+          1657,
+          124
+        ],
+        "partialRectangles": 0
+      },
+      "held": {
+        "frame": [
+          29,
+          27,
+          27,
+          27,
+          0,
+          29,
+          0,
+          0,
+          138,
+          0,
+          2,
+          905969664,
+          0,
+          0,
+          0,
+          0
+        ],
+        "area": [
+          27,
+          21233664
+        ],
+        "ui": [
+          7349,
+          1678,
+          133
+        ],
+        "partialRectangles": 0
+      },
+      "rightDrag": {
+        "frame": [
+          47,
+          45,
+          45,
+          45,
+          0,
+          47,
+          0,
+          0,
+          138,
+          0,
+          2,
+          905969664,
+          0,
+          0,
+          0,
+          0
+        ],
+        "area": [
+          45,
+          35389440
+        ],
+        "ui": [
+          7431,
+          1760,
+          154
+        ],
+        "partialRectangles": 0
+      },
+      "released": {
+        "frame": [
+          52,
+          50,
+          50,
+          50,
+          0,
+          52,
+          0,
+          0,
+          138,
+          0,
+          2,
+          905969664,
+          0,
+          0,
+          0,
+          0
+        ],
+        "area": [
+          50,
+          39321600
+        ],
+        "ui": [
+          7442,
+          1771,
+          160
+        ],
+        "partialRectangles": 0
+      },
+      "topDrag": {
+        "frame": [
+          77,
+          75,
+          75,
+          75,
+          0,
+          77,
+          0,
+          0,
+          138,
+          0,
+          2,
+          905969664,
+          0,
+          0,
+          0,
+          0
+        ],
+        "area": [
+          75,
+          58982400
+        ],
+        "ui": [
+          7563,
+          1892,
+          189
+        ],
+        "partialRectangles": 0
+      },
+      "topReleased": {
+        "frame": [
+          82,
+          80,
+          80,
+          80,
+          0,
+          82,
+          0,
+          0,
+          138,
+          0,
+          2,
+          905969664,
+          0,
+          0,
+          0,
+          0
+        ],
+        "area": [
+          80,
+          62914560
+        ],
+        "ui": [
+          7574,
+          1903,
+          195
+        ],
+        "partialRectangles": 0
+      },
+      "mainMenu": {
+        "frame": [
+          120,
+          93,
+          93,
+          93,
+          0,
+          120,
+          0,
+          0,
+          138,
+          0,
+          2,
+          905969664,
+          1,
+          0,
+          0,
+          0
+        ],
+        "area": [
+          91,
+          71601975
+        ],
+        "ui": [
+          12457,
+          2889,
+          264
+        ],
+        "partialRectangles": 2
+      }
+    },
+    "1280x720": {
+      "initial": {
+        "frame": [
+          21,
+          19,
+          19,
+          19,
+          0,
+          21,
+          0,
+          0,
+          138,
+          0,
+          2,
+          905969664,
+          0,
+          0,
+          0,
+          0
+        ],
+        "area": [
+          19,
+          17510400
+        ],
+        "ui": [
+          7328,
+          1657,
+          124
+        ],
+        "partialRectangles": 0
+      },
+      "held": {
+        "frame": [
+          29,
+          27,
+          27,
+          27,
+          0,
+          29,
+          0,
+          0,
+          138,
+          0,
+          2,
+          905969664,
+          0,
+          0,
+          0,
+          0
+        ],
+        "area": [
+          27,
+          24883200
+        ],
+        "ui": [
+          7370,
+          1699,
+          135
+        ],
+        "partialRectangles": 0
+      },
+      "rightDrag": {
+        "frame": [
+          47,
+          45,
+          45,
+          45,
+          0,
+          47,
+          0,
+          0,
+          138,
+          0,
+          2,
+          905969664,
+          0,
+          0,
+          0,
+          0
+        ],
+        "area": [
+          45,
+          41472000
+        ],
+        "ui": [
+          7425,
+          1754,
+          155
+        ],
+        "partialRectangles": 0
+      },
+      "released": {
+        "frame": [
+          52,
+          50,
+          50,
+          50,
+          0,
+          52,
+          0,
+          0,
+          138,
+          0,
+          2,
+          905969664,
+          0,
+          0,
+          0,
+          0
+        ],
+        "area": [
+          50,
+          46080000
+        ],
+        "ui": [
+          7475,
+          1804,
+          162
+        ],
+        "partialRectangles": 0
+      },
+      "topDrag": {
+        "frame": [
+          77,
+          75,
+          75,
+          75,
+          0,
+          77,
+          0,
+          0,
+          138,
+          0,
+          2,
+          905969664,
+          0,
+          0,
+          0,
+          0
+        ],
+        "area": [
+          75,
+          69120000
+        ],
+        "ui": [
+          7549,
+          1878,
+          190
+        ],
+        "partialRectangles": 0
+      },
+      "topReleased": {
+        "frame": [
+          82,
+          80,
+          80,
+          80,
+          0,
+          82,
+          0,
+          0,
+          138,
+          0,
+          2,
+          905969664,
+          0,
+          0,
+          0,
+          0
+        ],
+        "area": [
+          80,
+          73728000
+        ],
+        "ui": [
+          7560,
+          1889,
+          195
+        ],
+        "partialRectangles": 0
+      },
+      "mainMenu": {
+        "frame": [
+          120,
+          92,
+          92,
+          92,
+          0,
+          120,
+          0,
+          0,
+          138,
+          0,
+          2,
+          905969664,
+          1,
+          0,
+          0,
+          0
+        ],
+        "area": [
+          90,
+          82985015
+        ],
+        "ui": [
+          12445,
+          2877,
+          265
+        ],
+        "partialRectangles": 2
+      }
+    },
+    "1280x800": {
+      "initial": {
+        "frame": [
+          21,
+          19,
+          19,
+          19,
+          0,
+          21,
+          0,
+          0,
+          138,
+          0,
+          2,
+          905969664,
+          0,
+          0,
+          0,
+          0
+        ],
+        "area": [
+          19,
+          19456000
+        ],
+        "ui": [
+          7328,
+          1657,
+          124
+        ],
+        "partialRectangles": 0
+      },
+      "held": {
+        "frame": [
+          29,
+          27,
+          27,
+          27,
+          0,
+          29,
+          0,
+          0,
+          138,
+          0,
+          2,
+          905969664,
+          0,
+          0,
+          0,
+          0
+        ],
+        "area": [
+          27,
+          27648000
+        ],
+        "ui": [
+          7373,
+          1702,
+          135
+        ],
+        "partialRectangles": 0
+      },
+      "rightDrag": {
+        "frame": [
+          47,
+          45,
+          45,
+          45,
+          0,
+          47,
+          0,
+          0,
+          138,
+          0,
+          2,
+          905969664,
+          0,
+          0,
+          0,
+          0
+        ],
+        "area": [
+          45,
+          46080000
+        ],
+        "ui": [
+          7428,
+          1757,
+          155
+        ],
+        "partialRectangles": 0
+      },
+      "released": {
+        "frame": [
+          52,
+          50,
+          50,
+          50,
+          0,
+          52,
+          0,
+          0,
+          138,
+          0,
+          2,
+          905969664,
+          0,
+          0,
+          0,
+          0
+        ],
+        "area": [
+          50,
+          51200000
+        ],
+        "ui": [
+          7485,
+          1814,
+          162
+        ],
+        "partialRectangles": 0
+      },
+      "topDrag": {
+        "frame": [
+          77,
+          75,
+          75,
+          75,
+          0,
+          77,
+          0,
+          0,
+          138,
+          0,
+          2,
+          905969664,
+          0,
+          0,
+          0,
+          0
+        ],
+        "area": [
+          75,
+          76800000
+        ],
+        "ui": [
+          7559,
+          1888,
+          190
+        ],
+        "partialRectangles": 0
+      },
+      "topReleased": {
+        "frame": [
+          82,
+          80,
+          80,
+          80,
+          0,
+          82,
+          0,
+          0,
+          138,
+          0,
+          2,
+          905969664,
+          0,
+          0,
+          0,
+          0
+        ],
+        "area": [
+          80,
+          81920000
+        ],
+        "ui": [
+          7570,
+          1899,
+          195
+        ],
+        "partialRectangles": 0
+      },
+      "mainMenu": {
+        "frame": [
+          120,
+          92,
+          92,
+          92,
+          0,
+          120,
+          0,
+          0,
+          138,
+          0,
+          2,
+          905969664,
+          1,
+          0,
+          0,
+          0
+        ],
+        "area": [
+          90,
+          92201015
+        ],
+        "ui": [
+          12457,
+          2889,
+          265
+        ],
+        "partialRectangles": 2
+      }
+    }
+  },
+  "protectedBefore": 2627,
+  "protectedAfter": 2627,
+  "fixtureCount": 768,
+  "allProtectedBytesUnchanged": true,
+  "package": {
+    "path": "extracted/cpp-minimap-dirty-631-20261031/NetstormReborn-cpppj-631-v3.zip",
+    "sha256": "128dc9c35de059149c55e7ec58b1cb788c2b52f1c2ccbd542ce8cbe3f3d3d3c0",
+    "entries": 1376,
+    "assets": 1358,
+    "allArchivedUnpackedAndOriginalAssetBytesMatch": true
+  },
+  "preliminary": "최초 build-v1도 경고/오류0이지만 새 UI 검사가 이미 부착된 EnableMinimap을 다시 Attach해 실제 링크 순환을 만들었다. 실패 해제 중 삭제 큐 한도 예외도 나 C0000409로 종료했다. 최초2실행과 같은 검사만 실행한 Win32 디버그2회의 실제 C++ 예외 what/종료를 보존했다. 원문 링크 검사/제품을 약화하지 않고 미부착 ConstructMinimap→단일 Attach·장치보다 UI 우선 반납으로 새 검사 구성을 수정했다. build-v2의 새2개는 통과했고 집중 첫81은 legacy 필터 대소문자 오기로0개/실패1이었다. 실제 등록 metadisplayDirty_7개로 바로잡아 마지막 생성 설명 주석도 맞춘 build-v3의88/등록3546이 통과했다. 첫 GUI rightDrag의 논리/창 차이는 Present 후 카메라 Scroll이 이미 다음 버퍼를 수정한 관측 시점 차이였다. 표시 직후 진단 callback/snapshot-presented를 추가해 원문 게임 순서를 유지하고 build-v4의104/등록3546·표시 시점 구분을 확인했다. 이어 v2의 이전 도구가 State0 미니맵 부재를 요구해 실패했으나 실제 원문 정리/초기 HUD 재생성 계약은 World/대여0·새 초기 HUD/토큰이었다. 같은 보존된 관측에서 새 엄격 조건을 확인하고 두 CLI 도구에 반영했다. RawMinimap 원래 LF도 유지하도록 정정한 build-v5의109(초기 World 정리5 포함)/등록3546·최종v3의6창/21출력을 확인했다.",
+  "scope": "480270/4803f0/480440의 실제+8(0)을 같은 기본Gump 영역으로 전달한다. 카메라 추적/클릭/두 바깥 드래그4상태는 실제 영역1회/전체변경0이며 부분/전체 출력의 모든 바이트가 같다. 숨김/드래그 자동추적 억제/모드2·5/해제 및 center 반환 후 current visible을 확인했다. 기존 기하1054행 중1028순수행·기본dirty1474행·미니맵 원문RLE/bitmap을 재사용하며26callback변경 행의 전체 외부효과·전체동일성으로 확대하지 않는다. 새 afterPresentation/snapshot-presented는 실제Present 뒤·CameraCommit앞에 읽기 전용으로 현재 버퍼를 저장하며 기존snapshot은 뒤 시점으로 보존한다. 원문에 없는 검사 기능이고 일반 실행은 비어 있다. 새 실제6창/21창DC RGB는 미니맵의 세 화면비 클릭/드래그/해제/ESC/이탈3개와별도TEST02 실행사본 버튼 한 줄의Toggle 삭제/재생성/입력/이탈3개다. 포획/희생/특정 적 공격/승리/공중3종 전용/신규MP/Win11/PCM/물리키/DPI/포커스는 검사하지 않았다.",
+  "lastFull34": "625제품/626이다.632는 정적 판독으로 발견한 GameWorld::CenterCamera의497f20 즉시setter 연결을 실제 원문의 목표만 저장/프레임말미 적용으로 복원한 뒤 같은 최종제품의 전체34를 확인한다.",
+  "goalComplete": false
+}

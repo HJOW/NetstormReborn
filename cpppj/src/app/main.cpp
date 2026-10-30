@@ -652,7 +652,7 @@ int RunClient(std::vector<std::string> arguments) {
                     if (operation!="click" && operation!="click-if" && operation!="up-if" && operation!="down" && operation!="up" && operation!="right" && operation!="outside" && operation!="pointer" && operation!="esc" && operation!="key" && operation!="keyup") throw std::invalid_argument("UI when supports input operations only");
                     step.operation=operation;step.argument=argument;
                 }
-                if (step.operation == "snapshot" || step.operation=="snapshot-output" || step.operation == "report" || step.operation=="refresh") continue;
+                if (step.operation == "snapshot" || step.operation=="snapshot-presented" || step.operation=="snapshot-output" || step.operation == "report" || step.operation=="refresh") continue;
                 // 테스트 전용 임시 조작이며 원본 분석 결과가 아니다. 이미 생성된 조각은 바꾸지 않는다.
                 if (step.operation=="test-state-hud") { if (step.argument=="clear") { c.Menu()->KillGumpsForState();c.Menu()->CleanupGumpsForState(); }else if (step.argument=="replace") c.Menu()->ReplaceHudForState();else if (step.argument=="sp") c.Menu()->RefreshStormPower();else if (step.argument=="normal") c.Menu()->ApplyHudModeForState(3);else if (step.argument=="editor") c.Menu()->ApplyHudModeForState(4);else throw std::invalid_argument("State HUD 검사 동작은 clear/replace/sp/normal/editor만 허용");continue; } //검사 전용 실제 Native 자식 호출이며 State 전환/loaded 성공을 만들지 않는다.
                 if (step.operation=="test-state-world") { if (step.argument!="0") throw std::invalid_argument("전체 State 검사 reason0만 허용");c.Menu()->CleanupNativeStateWorld(0);continue; } //검사 전용 명시 호출이다. 자연 Edit 예약/State 확정을 대신하지 않는다.
@@ -731,6 +731,11 @@ int RunClient(std::vector<std::string> arguments) {
                 if (operation == "click" || operation == "down" || operation == "outside") c.Input().Push(InputCode::kLeftButton, point.x, point.y);
                 if (operation == "click" || operation == "up") c.Input().Push(InputCode::kLeftButton | InputCode::kRelease, point.x, point.y);
                 if (operation == "right") { c.Input().Push(InputCode::kRightButton, point.x, point.y); c.Input().Push(InputCode::kRightButton | InputCode::kRelease, point.x, point.y); }
+            }
+        };
+        client.afterPresentation = [&](netstorm::client::Client& c) { // 검사 전용으로 실제 표시한 논리 버퍼를 읽고 afterFrame의 다음 카메라용 버퍼와 구별한다.
+            for (std::size_t index=next;index<steps.size() && steps[index].frame==c.Time().number;++index) { // 원래 입력/보고 순서와 소비 위치는 바꾸지 않는다.
+                if (steps[index].operation=="snapshot-presented") c.Capture(steps[index].argument);
             }
         };
         client.afterFrame = [&](netstorm::client::Client& c) {

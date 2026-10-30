@@ -482,3 +482,6 @@ TEST_CASE(RawMenuControls_DerivedDirtyRectanglesPreserveFullPixels) {
     for (std::uint32_t id=1;id<kGumpRegistryCapacity;++id) { const auto token=client.buttons.RegisteredGump(id);const auto* node=token ? client.menus->Node(token) : nullptr;if (node && node->vtable==0x50ae7c) { decoration=token;break; } } // 원문의 실제 장식 VT가 생성한 노드만 선택한다.
     CHECK(decoration!=0);if (decoration) { client.redrawRectangles.clear();client.fullRequests=0;client.menus->Redraw(decoration,true);compare(); }
 }
+
+// 실제 미니맵/공통 영역/부분 표면과 현재 가시성·입력 모드 경계를 확인한다.
+#include "RawMinimapDirtyTests.inc"

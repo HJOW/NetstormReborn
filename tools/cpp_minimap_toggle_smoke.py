@@ -7,6 +7,7 @@ from pathlib import Path
 from cpp_bridge_ritual_runtime import ROOT, GAME, save, sha
 from cpp_game_menu_smoke import protected_run, menu_items
 from cpp_world_smoke import states
+from cpp_minimap_smoke import verify_initial_menu_hud
 from cpp_production_panel_smoke import repeated
 
 # 원본4:3·확장16:9 전체화면·확장16:10 창을 같은 명령으로 대조한다.
@@ -42,7 +43,7 @@ def verify(report, run, width, height, fullscreen=False):
     assert observed['released']['camera'] == observed['held']['camera']
     assert observed['leave']['page'][0].casefold() == 'abort' and observed['leave']['paused'] == ['1']
     assert observed['main']['phase'] == ['0'] and observed['main']['state_hud'][0] == '0'
-    assert 'minimap' not in observed['main']
+    verify_initial_menu_hud(observed['main'],tokens)  # 실제 State0은 게임 참조 반납 뒤 새 초기 HUD를 생성한다.
     for label in ('review', 'reviewAgain'):  # 같은 원본 ESC Game→Review 경로로 사용자 시나리오 버튼을 다시 연다.
         assert any(row[-1] == 'Toggle Sky Overview' and int(row[3]) == 0x02000037
                    for row in repeated(report, 'raw_html_button')[label])

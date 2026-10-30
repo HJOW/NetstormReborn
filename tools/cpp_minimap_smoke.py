@@ -11,6 +11,15 @@ from cpp_world_smoke import states
 from cpp_production_panel_smoke import repeated
 
 
+def verify_initial_menu_hud(state,previous_tokens=()):
+    """미션 반납 뒤 원문 초기 HUD는 새로 생성되며 현재 World/물리 대여만 없어야 한다."""
+    assert state['phase']==['0'] and state['page'][0].casefold()=='main' and 'raw_world' not in state,state
+    hud=state['state_hud'];owners=state['raw_hud_owners']
+    assert hud[:3]==['0','1','0'] and hud[4]=='0' and owners[:2]==['1','1'],(hud,owners)
+    assert hud[3]==owners[3] and hud[3] not in previous_tokens and int(hud[3])!=0,(hud,previous_tokens)
+    assert state['RawButtons'][3]=='0' and state['minimap'][7]=='0',state  # 원문 현재 새 초기 표시에는 예전 drag 캡처/Idle 상태가 남지 않는다.
+
+
 def main():
     """같은 실제 입력 큐로 화면을 조작하며 카메라나 bitmap 상태를 직접 쓰지 않는다."""
     parser = argparse.ArgumentParser(description=__doc__)
@@ -59,7 +68,7 @@ def main():
     assert observed['menu']['paused'] == ['0'] and observed['menu']['popup'] == [''] and observed['menu']['game_menu_bar'][1] == '1', observed['menu']
     leave_buttons=repeated(report,'raw_html_button')['leaveConfirm']  # 실제Native ABORT의표시버튼을읽으며제거된임시control행을요구하지않는다.
     assert observed['leaveConfirm']['page'][0].casefold() == 'abort' and observed['leaveConfirm']['paused']==['1'] and any(row[10]=='1' and row[11]=='Main Menu' for row in leave_buttons), observed['leaveConfirm']
-    assert 'minimap' not in observed['mainMenu'] and observed['mainMenu']['phase'] == ['0'], observed['mainMenu']
+    verify_initial_menu_hud(observed['mainMenu'],(observed['initial']['raw_hud_owners'][3],))  # State0의 새 초기 HUD와 게임 Runtime 반납은 서로 다른 수명이다.
     summary.update(passed=True, viewport=[args.width,args.height], originalsUnchanged=True,dataUnchanged=True,dataRoot=str(data_root),
                    limitations=['실제기본HUD의crop/카메라/큐경로이며전체dock드래그와원본viewport배치는후속이다.', '모드2/5유닛이동및미션전체완주는이검사에포함하지않는다.'])
     save(out/'summary.json', summary);print(json.dumps(summary, ensure_ascii=False))
