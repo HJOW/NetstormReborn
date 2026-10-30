@@ -2327,3 +2327,7 @@ tools/cpp_camera_pan_smoke.py text eol=lf
 cpppj/camera-pan-native-20261030.json text eol=lf
 cpppj/camera-pan-runtime-20261030.json text eol=lf
 docs/exe/cpp-camera-pan-20261030.md text eol=lf
+
+# 고정615 제품의 전체34/별도확대pan 차이와 사용자 중지 인계 바이트를 보존한다.
+cpppj/solo-pan-current-runtime-20261030.json text eol=lf
+docs/exe/cpp-solo-pan-current-20261030.md text eol=lf
