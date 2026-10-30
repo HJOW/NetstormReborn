@@ -1,5 +1,6 @@
 // 원본0040aa60·004a71a0·004b3540의 직접 쓰기를 실제 로컬 전송/상태에 연결한다.
 #include "client/RawBattleLeave.h"
+#include "client/MissionGuideInput.h"
 #include <stdexcept>
 
 namespace netstorm::client { // 패킷과 Player는 호출자가 소유한 같은 물리만 변경한다.
@@ -32,5 +33,13 @@ void PrepareBattleAbortState(BattleAbortStateGlobals g,const std::function<void(
     } else { g.outcome=0;g.state.next[0]=3; }
     g.state.next[33]=0;g.state.immediate[33]=0;g.state.current[33]=0;
     if (!deleteSavedState) throw std::logic_error("전투 종료의 실제 저장 경로/삭제 장치 미연결");deleteSavedState();
+}
+// 원문004d8035의 signed JL을 보존한다. 이유0은 이탈 실행이 아니라 확인창 요청이다.
+bool DispatchBattleRetreatConfirmation(const InputEvent& event,const std::function<void(std::string_view)>& tell) {
+    if ((event.code&0x03ffffffU)!=kLeaveBattleCommand) return false;
+    if (event.code&InputCode::kRelease) return true;
+    if (event.y>=1) return false;
+    if (!tell) throw std::logic_error("전투 이탈 확인의 실제 Tell 소비자 미연결");
+    tell("ConfirmRetreat");return true;
 }
 }

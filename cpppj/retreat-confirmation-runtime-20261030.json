@@ -1,0 +1,133 @@
+{
+  "passed": true,
+  "run": {
+    "command": [
+      "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+      "--run",
+      "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-retreat-confirmation-605-20261030\\runtime-data-v2\\game",
+      "--mission",
+      "Tutorial1",
+      "--window",
+      "--no-audio",
+      "--frames",
+      "210",
+      "--set",
+      "SCREENW=1024;SCREENH=768;maxFPS=40;sleepPerLoop=1;autoDemo=0;tellTips=0;intro=1;WelcomeGiven=1",
+      "--ui-script",
+      "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-retreat-confirmation-605-20261030\\gui-v2\\steps.tsv",
+      "--ui-report",
+      "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-retreat-confirmation-605-20261030\\gui-v2\\states.tsv"
+    ],
+    "binarySha256": "c19a5715fec71e286856e8bb4d18db15dce9befe0f947b8fb2d9c449206faf25",
+    "returnCode": 0,
+    "timedOut": false,
+    "seconds": 7.156172199996945,
+    "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderrSha256": "8136bceb24e01631862637b17f8d8fe8ce97d9248b2c74f3e606edfb044bd326"
+  },
+  "gameSha256": "c19a5715fec71e286856e8bb4d18db15dce9befe0f947b8fb2d9c449206faf25",
+  "scenarioSourceSha256": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6",
+  "scenarioOverrideSha256": "4032a09b5d1ddcf3c2f7c33315620f4dba77139be9583900e8dd0a6d8a4720ff",
+  "testOnlyScenarioButton": true,
+  "protectedCount": 2574,
+  "protectedDifferences": [
+    "AGENTS.md"
+  ],
+  "externalInstructionCommit": "7dd1ab4e",
+  "tests": [
+    {
+      "filter": "test-confirmation",
+      "tests": 2,
+      "binarySha256": "14fb368ca9d268eb06f7cfd8b4aa18f8f483ec2de965ce6da0290e14da4ae8af"
+    },
+    {
+      "filter": "test-leave",
+      "tests": 3,
+      "binarySha256": "14fb368ca9d268eb06f7cfd8b4aa18f8f483ec2de965ce6da0290e14da4ae8af"
+    },
+    {
+      "filter": "test-save",
+      "tests": 2,
+      "binarySha256": "14fb368ca9d268eb06f7cfd8b4aa18f8f483ec2de965ce6da0290e14da4ae8af"
+    }
+  ],
+  "scope": "실제 확인 요청 버튼/원본 ConfirmRetreat/Stay로 같은 미션 재개/Depart1로 Native 메인 복귀. 포획/희생/공격/승리/신규MP 미실행.",
+  "externalInstructionSha256": "e9e46fda5519e663417b5c8d9b643549196bf28fe7ba6b1d546a48a853fd208b",
+  "registeredTests": 3508,
+  "native": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-30",
+    "lastFullDecompileHost": "HJOW-Athlon",
+    "lastFullDecompileDate": "2026-10-23",
+    "cases": 18,
+    "observations": 36,
+    "differences": [],
+    "entry": "0x4d8035",
+    "positiveBoundary": "0x4d803e",
+    "tail": "0x4d8bda",
+    "gameStarted": false,
+    "scope": "명령 일치/상위 뗌 거부 뒤 signed 확인 관문과 실제 Tell 인수만 관측. 양수 이탈/MP 본문·Tell 파서는 실행하지 않음.",
+    "sourceSha256": {
+      "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+      "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+      "tools/decomp_priestmenu.py": "8d1474792e7511fa777e7bd7bd369f2a2a0f9f5c35643e420d65a3fa4744bac9",
+      "tools/decomp_retreat_confirmation.py": "f48e76334bc4866f0a65b8592631ab84cf5840de3f1cf1b1d2fe9291c6a847bc",
+      "cpppj/tests/fixtures/retreat-confirmation-x86.tsv": "c59bc1a10df1913f70ec4d2c463a9adc3c8524c2169cdc441f4d0c500baac08e"
+    },
+    "evidenceSha256": {
+      "first.json": "7b36930822fb6e0f2dcc99d38c4cc6f194bfe1b3b709106aab49cd77a96e7d36",
+      "replay.json": "7b36930822fb6e0f2dcc99d38c4cc6f194bfe1b3b709106aab49cd77a96e7d36"
+    }
+  },
+  "firstGuiAttempt": {
+    "productExitCode": 0,
+    "validationPassed": false,
+    "reason": "초기 MORE/원소 선택 브리핑 입력 누락. 제품 수정 없이 새 사본의 전체 초기 입력으로 통과."
+  },
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "lastPackageUnit": 604,
+  "lastFull34EntryUnit": 596,
+  "lastFull34EntryProductUnit": 595,
+  "evidenceSha256": {
+    "protected-before.json": "a7aadc69cb386d732a4b2d1fe76fdceca40da551bd2ec3952595e8ec03cdc17e",
+    "build.log": "a0be0647c035816f0b997a3d01803dc1e2226eda20f3ddd1762d51395bc16e3a",
+    "validate.py": "cd41e1641e7cfc1cd3b8f3f3f7c6b83f673e2f3bac3eba66d08dc039a51e9fed",
+    "protected-after.json": "660253cc9599f034994a08e0c418ed0f95baa269df6b52b0fb43f18ad70c7417",
+    "finish.py": "30ed71b53c038c6f46ff7ba57c27057974f3ff3592115dec2ddebc2415d5ea48",
+    "native/first.json": "7b36930822fb6e0f2dcc99d38c4cc6f194bfe1b3b709106aab49cd77a96e7d36",
+    "native/replay.json": "7b36930822fb6e0f2dcc99d38c4cc6f194bfe1b3b709106aab49cd77a96e7d36",
+    "test-leave/stdout.log": "2ac971a5cc1d152f3e1fac9642b54847e9a872ec5f06128f0c730720f5ca9ec1",
+    "test-leave/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "test-leave/running.json": "a060d0b638c4e5964dcc0131182b3440df0206a49e2c5c6db2b9b5d96a206687",
+    "test-leave/run.json": "d571cad02c7561895016957174ebf89910d1a26e6b7d41117309d92c2a351331",
+    "test-confirmation/stdout.log": "85fff8bb7f20852b59b50db7ab206b4e15bdc1e993fe4c60aceb358402d39c31",
+    "test-confirmation/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "test-confirmation/running.json": "9465492fed68596bd330b05f316fff6bcb5a2073b23c2c6bf64a16a0e11b99ec",
+    "test-confirmation/run.json": "b38445b65bb182df3606ea5f18a274410b6de2aec25e09f68b9bf5d9c48e7f42",
+    "test-save/stdout.log": "137e215108e9dd9ae0d185895a9a36dfa5081ea35210996fb83e004a6928b862",
+    "test-save/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "test-save/running.json": "223ce95f0dfd0e9ceeb07e043e618a0567af73fde24c7b8e34ae52fef0470765",
+    "test-save/run.json": "e10b21d128c97bbe05867860656dd183c1ecf7723f6f9d189f55a304ac799394",
+    "gui/steps.tsv": "a8c9121d86d91281fe9919ffc6364e8ca8941ba411fe04634a35df9f0f8ad0f8",
+    "gui/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "gui/stderr.log": "8136bceb24e01631862637b17f8d8fe8ce97d9248b2c74f3e606edfb044bd326",
+    "gui/running.json": "25dba52b57940fd0185f8b66a74dc29b1fa56eabf36663aaf1a8dbd1c1de8aa3",
+    "gui/states.tsv": "dff53a2412b747d00dea99d69ee5b59c4d7d99c7d3f7de93310bd78de49c8852",
+    "gui/confirmation.bmp": "c3924bca21dbd3deec8bbe15fe5a554ed33fc3e8e78358c7f01e9d40e76ad98c",
+    "gui/departed.bmp": "778542bf0daff61bdcb249b8857f1f33e18b7371d1ac1e0be233f0492dccee41",
+    "gui/run.json": "bb532c09eb18db159e3d006ef604f6d6279d5de9a4f74ac6f762e490ed76b101",
+    "gui/observed.json": "ac3a82185ff7ebd331508c89569449faf59b597c8029df285d0bf63881f5925c",
+    "gui-v2/steps.tsv": "9658c90ec834ab518fa5f3ce325fa13ec84c4ed3d5fbfab79d0d468e7524c040",
+    "gui-v2/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "gui-v2/stderr.log": "8136bceb24e01631862637b17f8d8fe8ce97d9248b2c74f3e606edfb044bd326",
+    "gui-v2/running.json": "507e9751e7d01508420a2d07bed0efda323af38fbc90a63521690545199f7adb",
+    "gui-v2/states.tsv": "9acaabeededa7de18553f9a381bd111fc2e9990900240f410223aed749b79bf5",
+    "gui-v2/confirmation.bmp": "3558539df99615f3e46790452022d09f5b643454fff1d7ea1662dd302b62a486",
+    "gui-v2/departed.bmp": "78508b37669a9706f508a4b89b25b3d2a7d3c0e0cf914cf93d64dccd7177925e",
+    "gui-v2/run.json": "cf752d4acc88686039e0f134fb106fb169613a15f34fcd15dcf87e2c3c85adf1",
+    "gui-v2/observed.json": "2c35374c5dd008b8b24b8b606c45ba4d874248254d4e29098196054be1b9c00f",
+    "gui-v2/summary.json": "0ade6ceef259189244af472c12de8b739f8157d15fd1483dcd11c9ba33ebf81d"
+  }
+}

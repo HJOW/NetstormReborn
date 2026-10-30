@@ -1,5 +1,6 @@
 // 전투에서 State3로 돌아갈 때의 원본52h 통지와 다음 상태 예약을 제공한다.
 #pragma once
+#include "client/InputEvent.h"
 #include "o/RawPacketDispatch.h"
 #include "o/RawLocalMissionState.h"
 
@@ -16,4 +17,7 @@ struct BattleAbortStateGlobals { //004b6350이 실제로 읽고 쓰는 같은 Cl
     const bool& missionPost;const std::uint32_t& editor;const bool& metamap;const bool& battle; //00594fa4/005c85a4/00594fc8/00594fbc의 현재 모드다. 실제 Editor는 DWORD 그대로 빌린다.
 };
 void PrepareBattleAbortState(BattleAbortStateGlobals globals,const std::function<void()>& deleteSavedState); //직접 store 뒤 실제 경로 계산/삭제 장치를 호출한다. 선택된 장치 중단도 앞선 쓰기를 보존한다.
+// LeaveBattle의 뗌은 소비하고 signed 이유가0 이하이면 실제 ConfirmRetreat 안내만 연다.
+// 양수 이유/다른 명령은 false로 남겨 기존 Native 예약 본문이 처리한다. Tell 실패도 현재 전투를 반납하지 않는다.
+bool DispatchBattleRetreatConfirmation(const InputEvent& event,const std::function<void(std::string_view)>& tell);
 }

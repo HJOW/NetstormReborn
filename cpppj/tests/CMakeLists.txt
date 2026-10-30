@@ -1,4 +1,5 @@
 # 현재 작업본·설치 checkpoint와 독립 부모의 최초 관측을 공용 회귀에 포함한다.
+set_source_files_properties(RetreatConfirmationTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_RETREAT_CONFIRMATION_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/retreat-confirmation-x86.tsv\"") #signed 확인 관문의 최초 원문 출력만 사용한다.
 set_source_files_properties(PlayerNotificationTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_PLAYER_NOTICES_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/player-notices-x86.tsv\";NETSTORM_CORE_WEIGHT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/core-technology-weight-x86.tsv\"") #두 최초 원문 기대 파일을 공유한다.
 set_source_files_properties(TechnicalHelpTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_TECHNICAL_HELP_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/technical-help-x86.tsv\";NETSTORM_EXTERNAL_FILE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/external-file-x86.tsv\";NETSTORM_EXTERNAL_JOIN_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/external-file-join-x86.tsv\"")
 set_source_files_properties(TechnicalHelpClientTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_TECHNICAL_PROBE=\"$<TARGET_FILE:netstorm_help_probe>\"") #같은 로컬 GUI 도우미만 실행한다.
@@ -2483,3 +2484,4 @@ target_sources(netstorm_tests PRIVATE HelpLinkPolicyTests.cpp ExternalHelpClient
 add_dependencies(netstorm_tests netstorm_help_probe)
 target_sources(netstorm_tests PRIVATE TechnicalHelpTests.cpp TechnicalHelpClientTests.cpp) #가용성/실행·파일 선택/조합 및 현재 Client를 검증한다.
 target_sources(netstorm_tests PRIVATE PlayerNotificationTests.cpp) #프레임말 대기 결과/별도Core합계와 부분 쓰기를 검증한다.
+target_sources(netstorm_tests PRIVATE RetreatConfirmationTests.cpp) #실제 확인 요청/뗌/양수 분배 경계를 검증한다.

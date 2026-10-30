@@ -1094,6 +1094,7 @@ void UberGump::Event(InputEvent event) {
         if ((event.code&0xffffU)==0x1b && !(event.code&InputCode::kRelease)) { rawButtons_->Menus()->RequestClosePopups();rebuild_=true;return; }
         if (transitionCode==InputCode::kLeftButton || transitionCode==InputCode::kRightButton || transitionCode==InputCode::kMiddleButton) { static_cast<void>(rawButtons_->Event(event));rebuild_=true;return; }
     }
+    if (client_.Assets().Edition()==o::OriginalEdition::Patch1078 && DispatchBattleRetreatConfirmation(event,[this](auto section) { Tell(std::string(section)); })) return; //원문 이유0 이하의 확인 요청은 같은 Session/Native 상태를 보존한 채 실제 안내창만 연다.
     if ((event.code&0x03ffffffU)==kLeaveBattleCommand) {
         if (event.code&InputCode::kRelease) return; // Guide가 소비한 Abort와 달리 실제 Leave는 원본 일반 입력의 key-up 거부 뒤에 실행한다.
         if (event.y>=1 && client_.Assets().Edition()==o::OriginalEdition::Patch1078) {
@@ -1107,7 +1108,7 @@ void UberGump::Event(InputEvent event) {
             }
             return; //실제 다음 Poll의 State3에 종료 통지·정리·메뉴를 맡기며 사건 수신 중 World를 반납하지 않는다.
         }
-        MainMenu();if (client_.Audio()) client_.Audio()->StartScene(false);return; // 이유0 이하의 Tell 선택/CD판은 기존 호스트 경로이며 전체 원문 연결은 별도 미완료다.
+        MainMenu();if (client_.Audio()) client_.Audio()->StartScene(false);return; //CD판은 기존 호스트 경로다.10.78의 확인 요청/양수 이탈은 위의 별도 원문 경로가 처리한다.
     }
     if (objectMenus_ && objectMenus_->Command(event)) { rebuild_=true;return; }
     const auto commandCode=event.code&0x03ffffffU; // 원본명령분배와같이최상위입력플래그만제거한다.
