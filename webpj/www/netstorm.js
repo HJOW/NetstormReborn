@@ -23,7 +23,8 @@ import {
 import { AudioSystem, createAudioContext } from './audio/audio-system.js';
 import { IndexedSurface } from './render/indexed-surface.js';
 import { IndexedPresenter, normalizeScaling } from './render/presenter.js';
-import { Settings, getLocalStorage } from './platform/settings.js';
+import { Settings, findSettingKey, getLocalStorage } from './platform/settings.js';
+import { Progress, isProgressKey } from './platform/progress.js';
 import { MainMenuScreen } from './ui/main-menu.js';
 import { PopupMenu } from './ui/popup-menu.js';
 import { buildPopupItems } from './ui/option-menus.js';
@@ -409,6 +410,8 @@ export class Netstorm {
         this._frameSeconds = 0;
         // 사용자 설정(옵션 메뉴 값)이다. init 에서 만들고 destroy 에서 비운다. 값 변경은 _onSettingChange 로 소리에 반영된다. (2026-10-29 WB03-F)
         this._settings = null;
+        // 캠페인 진행 값(`Done*`)이다. init 에서 만들고 destroy 에서 비운다. 게임 데이터에 쓰인 진행 값은 _onConfigWrite 로 여기에 모여 로컬 저장소에 저장된다. (2026-10-30 WB03-H)
+        this._progress = null;
         // 메뉴 음악 파일 바이트다. 뒤에서 받으며 다 받기 전에는 null 이다.
         this._musicBytes = null;
         // 메뉴 음악 상태 문자열이다. none | loading | loaded | decoding | ready | playing | failed.
@@ -488,6 +491,12 @@ export class Netstorm {
         return this._gameData;
     }
 
+    // 캠페인 진행 값 모음이다. init 전과 destroy 뒤에는 null 이다. 콘솔에서 window.netstorm.progress.snapshot() 으로 저장된 진행 값을 볼 수 있다.
+    // 값을 쓰려면 window.netstorm.gameData.set('DoneTheWarBegins', 1) 처럼 게임 데이터에 쓴다(미션 스크립트의 Config 효과와 같은 경로, 저장도 함께 된다). (2026-10-30 WB03-H)
+    get progress() {
+        return this._progress;
+    }
+
     // 메뉴 음악 상태 문자열이다. (2026-10-23 WB03-M1)
     get musicStatus() {
         return this._musicStatus;
@@ -515,10 +524,15 @@ export class Netstorm {
         this._input = { pointer: { x: -1, y: -1, inside: false, buttons: 0, type: 'mouse' }, keys: new Set() };
         this._audioStatus = 'none';
         // 저장된 설정을 읽는다(저장소를 쓸 수 없으면 기본값으로 계속). 호스트가 음량을 정했으면 저장하지 않고 우선 적용한다. (2026-10-29 WB03-F)
-        this._settings = new Settings({ storage: getLocalStorage(doc.defaultView), onChange: (key) => this._onSettingChange(key) });
+        const storage = getLocalStorage(doc.defaultView);
+        this._settings = new Settings({ storage, onChange: (key) => this._onSettingChange(key) });
         if (this._settings.loadProblem) console.warn(`Netstorm: ${this._settings.loadProblem}. 기본 설정으로 시작합니다.`);
         if (this.options.soundVolume !== null) this._settings.set('soundVolume', this.options.soundVolume, { persist: false });
         if (this.options.musicVolume !== null) this._settings.set('musicVolume', this.options.musicVolume, { persist: false });
+        // 저장된 캠페인 진행 값을 읽는다(저장소를 쓸 수 없으면 진행 값 없이 계속). 이전 수명에서 게임 데이터를 이미 만들었다면(재시작) 새로 읽은 값을 그 설정 층에 옮겨 적는다. (2026-10-30 WB03-H)
+        this._progress = new Progress({ storage });
+        if (this._progress.loadProblem) console.warn(`Netstorm: ${this._progress.loadProblem}. 진행 값 없이 시작합니다.`);
+        this._syncGameData();
         this._presenter = new IndexedPresenter(doc, this.options.scaling);
         // 이전 수명에서 이미 받은 자원이 있으면(재시작) 팔레트를 바로 설치한다.
         if (this._resources) this._presenter.setPalette(this._resources.palette.rgb);
@@ -557,6 +571,7 @@ export class Netstorm {
         this._mainMenu?.cancel();
         this._mainMenu = null;
         this._settings = null;
+        this._progress = null;
         if (this._audio) {
             // 음악을 멈추고 문맥을 닫는다. 닫기에 실패해도 정리를 막지 않는다.
             this._audio.close();
@@ -627,11 +642,13 @@ export class Netstorm {
                 });
                 if (generation !== this._loadGeneration) return;
                 this._resources = buildMenuResources(files);
-                // 설정 층에는 웹 사용자 설정(언어·음량)을 원본 options.cfg 자리에 넣는다. 해상도·전체화면 값은 넣지 않는다.
+                // 설정 층에는 웹 사용자 설정(언어·음량)과 저장된 캠페인 진행 값을 원본 options.cfg 자리에 넣는다. 해상도·전체화면 값은 넣지 않는다.
+                // 이후 게임 데이터에 쓰이는 값은 _onConfigWrite 가 설정·진행 저장소로 옮긴다. (2026-10-30 WB03-H: 진행 값과 쓰기 통지 연결)
                 this._gameData = GameData.build({
                     files,
                     language: this.options.language,
-                    options: this._settings.snapshot(),
+                    options: { ...this._settings.snapshot(), ...this._progress.snapshot() },
+                    onChange: (key, value) => this._onConfigWrite(key, value),
                 });
                 this._buttonSoundBytes = files.get(MENU_ASSET_PATHS.buttonSound) ?? null;
                 this._menuSoundBytes = files.get(MENU_SOUND_PATH) ?? null;
@@ -771,8 +788,31 @@ export class Netstorm {
     }
 
     // 설정 값이 바뀌었을 때 소리에 반영한다. 소리·음악·음량은 바로 적용되고, 바람 소리·좌우 교환·가장자리 스크롤·자동 데모·시작 팁은 값만 저장되며 해당 기능이 생길 때 쓰인다. (2026-10-29 WB03-F)
+    // 바뀐 값은 게임 데이터 설정 층에도 옮겨 적어 두 곳이 어긋나지 않게 한다(되돌아오는 통지는 막는다). (2026-10-30 WB03-H)
     _onSettingChange(key) {
         if (key === 'sound' || key === 'music' || key === 'soundVolume' || key === 'musicVolume') this._applySettings();
+        const value = this._settings?.get(key);
+        if (value !== undefined) this._gameData?.set(key, value, { silent: true });
+    }
+
+    // 게임 데이터 설정 층에 쓴 값을 저장소로 옮긴다(원본에서는 메인 루프가 변경 표시를 보고 options.cfg 를 저장한다). 진행 값(`Done*`)은 진행 저장소에,
+    // 설정 키(대소문자 무시)는 설정 저장소에 넣어 로컬 저장소에 바로 저장한다. 그 밖의 값(`global.` 실행 중 값 등)은 저장하지 않는다. (2026-10-30 WB03-H)
+    _onConfigWrite(key, value) {
+        if (isProgressKey(key)) {
+            this._progress?.set(key, value);
+            return;
+        }
+        const settingKey = findSettingKey(key);
+        if (settingKey) this._settings?.set(settingKey, value);
+    }
+
+    // 설정과 진행 저장소의 현재 값을 게임 데이터 설정 층에 옮겨 적는다(통지 없이). 게임 데이터는 재시작해도 다시 만들지 않으므로 init 이 저장소를 새로 읽을 때마다 맞춘다.
+    // 게임 데이터가 아직 없으면(첫 적재 전) 하지 않으며, 첫 적재가 같은 값을 넣는다. (2026-10-30 WB03-H)
+    _syncGameData() {
+        const data = this._gameData;
+        if (!data || !this._settings || !this._progress) return;
+        // 설정과 진행 값을 하나씩 옮긴다.
+        for (const [key, value] of Object.entries({ ...this._settings.snapshot(), ...this._progress.snapshot() })) data.set(key, value, { silent: true });
     }
 
     // 현재 설정(소리 켜짐·음악 켜짐·음량 단계)을 재생기에 적용한다. 음악을 다시 켠 경우 메인 메뉴 곡을 이어 재생한다. (2026-10-29 WB03-F)

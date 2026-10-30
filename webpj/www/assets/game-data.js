@@ -6,8 +6,10 @@
 //  - 경로 지정값(`missionSpec`·`guideSpec` 등)은 임시 `local.1~3` 객체에 인자를 넣고 치환한다.
 //  - Tell 섹션은 tell 스크립트(`{missionSpec}` + local.1 = "tell" → `\D\tell.<언어>`)에서 `[이름]` 섹션을 찾는다(원본 004cf730 의 기본 스크립트 조회).
 // 언어 파일이 없으면(예: 아직 없는 .korean) 영어 파일로 대체한다. 원본은 대체하지 않으나 웹 판본은 한국어 자료가 갖춰질 때까지 영어 화면을 보이기 위한 웹 적응이다.
+// 설정 값 쓰기(원본 Config::Set, 004404e0)는 set() 이 맡는다: 같은 키의 줄을 모두 지우고 `키 = "값"` 줄을 전역 설정 버퍼 끝에 덧붙인다.
+// 원본은 메인 루프가 변경 표시를 보고 options.cfg 를 저장하지만, 웹 판본은 쓸 때마다 호스트가 넘긴 onChange 훅을 불러 로컬 저장소에 저장하게 한다(platform/progress.js·settings.js).
 // 이 모듈은 DOM 을 쓰지 않아 Node 에서도 불러와 검사할 수 있다.
-// (2026-10-28 WB02-D: 메뉴 대화상자 본문 조회를 위해 추가)
+// (2026-10-28 WB02-D: 메뉴 대화상자 본문 조회를 위해 추가. 2026-10-30 WB03-H: 값 쓰기와 변경 통지 추가)
 import { Config, ConfigRegistry, sectionRange } from './config.js';
 import { GameFiles } from './game-files.js';
 import { decodeOriginalText } from './text-encoding.js';
@@ -30,7 +32,10 @@ export const FALLBACK_LANGUAGE = 'english';
 //       data.tellSection('Credits') → 섹션 본문 문자열, data.substitute('{H2}'), data.pathSpec('missionSpec', 'tutorial1'). (2026-10-28 WB02-D)
 export class GameData {
     // 파일 조회 계층과 언어를 받아 설정 객체 층을 구성한다. 직접 부르기보다 GameData.build 를 쓴다.
-    constructor({ files, language = FALLBACK_LANGUAGE, options = {} }) {
+    // onChange(키, 값)는 set() 으로 값을 쓸 때마다 불리는 선택적 통지 훅이다(저장 연결용).
+    constructor({ files, language = FALLBACK_LANGUAGE, options = {}, onChange = null }) {
+        // 값 쓰기 통지 훅이다. 호스트가 값을 저장소에 옮기는 데 쓴다. 없으면 통지하지 않는다. (2026-10-30 WB03-H)
+        this.onChange = onChange;
         // 파일 조회 계층이다.
         this.files = files;
         // 현재 언어 이름이다(파일 확장자로 쓰임). 'english' 이외는 대응 파일이 없으면 영어 파일로 대체한다.
@@ -53,7 +58,7 @@ export class GameData {
 
     // 데이터 폴더 파일 Map(경로 → 바이트)으로 GameData 를 만든다. netstorm.tarc 는 아카이브로 등록하고 모든 파일은 느슨한 파일로도 등록한다.
     // files 에 아카이브나 setup.cfg 가 없으면 어떤 파일이 빠졌는지 알리는 오류를 던진다.
-    static build({ files, language = FALLBACK_LANGUAGE, options = {} }) {
+    static build({ files, language = FALLBACK_LANGUAGE, options = {}, onChange = null }) {
         const archiveBytes = files.get(ARCHIVE_PATH);
         if (!archiveBytes) throw new Error(`필수 자산이 없습니다: ${ARCHIVE_PATH}`);
         if (!files.get(SETUP_PATH)) throw new Error(`필수 자산이 없습니다: ${SETUP_PATH}`);
@@ -61,7 +66,7 @@ export class GameData {
         loose.delete(ARCHIVE_PATH);
         const gameFiles = new GameFiles({ loose });
         gameFiles.addArchive(archiveBytes);
-        return new GameData({ files: gameFiles, language, options });
+        return new GameData({ files: gameFiles, language, options, onChange });
     }
 
     // 전역 설정 버퍼를 원본 시작 순서(00441790 → 00440e00)대로 채운다. options 는 웹 사용자 설정(키 → 값)이며 setup.cfg 보다 앞에 놓여 우선한다.
@@ -98,9 +103,42 @@ export class GameData {
         return english === path ? null : this.files.read(english);
     }
 
+    // 와일드카드 패턴(예: `\D\offical*.korean`)과 맞는 파일 이름 목록을 돌려준다. 현재 언어의 파일이 하나도 없고 언어가 영어가 아니면
+    // 패턴 끝의 언어 이름을 영어로 바꿔 한 번 더 찾는다. 아직 없는 한국어 자료가 있어도 Campaign 같은 파일 목록이 빈 채로 나오지 않게 하는 웹 적응이다
+    // (원본은 대체하지 않는다. 언어 파일 읽기 _readLanguageFile 과 같은 규칙). 사용: findFiles('\\D\\offical*.english'). (2026-10-30 WB03-H)
+    findFiles(pattern) {
+        const found = this.files.find(pattern);
+        if (found.length > 0 || this.language === FALLBACK_LANGUAGE) return found;
+        const english = pattern.replace(new RegExp(`${this.language}$`, 'i'), FALLBACK_LANGUAGE);
+        return english === pattern ? found : this.files.find(english);
+    }
+
     // 키의 값(치환까지 마친 문자열)을 조회한다. 없으면 null 이다.
     get(key) {
         return this.configuration.get(key);
+    }
+
+    // 원본 Config::Set(004404e0)을 전역 설정에 적용한다. 같은 키의 줄을 모두 지우고 `키 = "값"` 줄을 버퍼 끝에 덧붙이며(키에 '.' 이 있으면 접두어가 맞는 객체로 간다),
+    // 이미 있던 키면 true 를 돌려준다. 값은 문자열로 바꿔 쓴다. 쓴 뒤 onChange(키, 문자열 값)를 부르며, silent 가 true 이면 부르지 않는다
+    // (호스트가 저장소의 값을 이 층에 옮겨 적을 때 되돌아오는 통지를 막는다). 훅의 예외는 콘솔에만 남기고 쓰기 결과를 바꾸지 않는다.
+    // 사용: data.set('DoneTheWarBegins', 1) → 이후 캠페인 목록의 `{DoneTheWarBegins}` 가 1 로 읽힌다. (2026-10-30 WB03-H)
+    set(key, value, { silent = false } = {}) {
+        const text = String(value);
+        const existed = this.configuration.set(key, text);
+        if (!silent) {
+            try {
+                this.onChange?.(key, text);
+            } catch (error) {
+                console.error('Netstorm: 게임 데이터 변경 통지에서 예외가 발생했습니다.', error);
+            }
+        }
+        return existed;
+    }
+
+    // 정수 값을 십진 문자열로 써 넣는다(원본 SetInt, 서식 "%d"). 정수가 아니면 RangeError 이다. 나머지는 set 과 같다. (2026-10-30 WB03-H)
+    setInt(key, value, options = {}) {
+        if (!Number.isInteger(value)) throw new RangeError(`GameData.setInt: 정수가 아닙니다: ${value}`);
+        return this.set(key, value, options);
     }
 
     // 문자열의 `{키}` 와 이스케이프를 푼다. 용어표(`{factory}` 등)와 전역 설정(`{H2}` 등)이 함께 쓰인다.

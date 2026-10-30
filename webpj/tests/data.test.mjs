@@ -143,6 +143,14 @@ test('게임 데이터: 경로 지정값·언어 대체·Tell 섹션 조회', ()
     assert.equal(korean.pathSpec('missionSpec', 'tell'), '\\D\\tell.korean');
     assert.equal(korean.tellSection('Credits'), data.tellSection('Credits'));
     assert.equal(korean.substitute('{factory}'), 'Workshop');
+    // 파일 목록 패턴(`\D\offical*.korean`)도 한국어 파일이 없으면 영어 파일로 대체한다: 한국어 브라우저에서 Campaign 목록이 빈 채로 나오던 결함의 검사.
+    // 영어 데이터에서는 대체 없이 그대로이고, 영어로도 맞는 파일이 없는 패턴은 빈 목록이다. (2026-10-30 WB03-H)
+    assert.equal(korean.get('guideSpec') ?? korean.substitute('{guideSpec}'), '\\D\\offical*.korean');
+    assert.equal(korean.files.find('\\D\\offical*.korean').length, 0);
+    assert.deepEqual(korean.findFiles('\\D\\offical*.korean'), data.findFiles('\\D\\offical*.english'));
+    assert.equal(korean.findFiles('\\D\\offical*.korean').length, 8);
+    assert.equal(data.findFiles('\\D\\offical*.korean').length, 0);
+    assert.equal(korean.findFiles('\\D\\nosuchfile*.korean').length, 0);
     // 필수 자산이 빠지면 어떤 파일인지 알린다.
     assert.throws(() => GameData.build({ files: new Map() }), /netstorm\.tarc/);
     assert.throws(() => GameData.build({ files: new Map([[ARCHIVE_PATH, readData(ARCHIVE_PATH)]]) }), /setup\.cfg/);

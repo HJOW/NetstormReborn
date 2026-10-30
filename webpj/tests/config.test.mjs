@@ -1,8 +1,8 @@
 // 설정 객체 계층(www/assets/config.js)을 원본 x86 기계어에서 만든 기대값과 대조해 검사한다.
 // 기대값 파일: cpppj/tests/fixtures/config-x86.tsv (cpppj 의 tools/decomp_config_oracle.py 가 두 판본 실행 결과가 같은 입력만 기록, 읽기 전용으로만 쓴다).
-// 이 검사는 조회(Get)·치환(Subst)·섹션 검색(FindSection)·섹션 본문(Section) 행을 쓰고, 값 쓰기(Set)·줄 삭제(Remove) 행은 웹 판본이 아직 옮기지 않았으므로 건너뛴다.
+// 이 검사는 조회(Get)·치환(Subst)·섹션 검색(FindSection)·섹션 본문(Section)·줄 삭제(Remove)·값 쓰기(Set) 행을 모두 쓴다.
 // 행 수를 고정해 두어 cpppj 쪽 fixture 가 바뀌면 이 검사가 실패해 다시 확인하게 한다. 그 밖에 실제 원본 설정 자료(config.english·setup.cfg)의 치환도 확인한다.
-// (2026-10-28 WB02-D: 설정 계층 이식 검증)
+// (2026-10-28 WB02-D: 설정 계층 이식 검증. 2026-10-30 WB03-H: 줄 삭제·값 쓰기 행 추가)
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
@@ -16,7 +16,7 @@ import { decodeOriginalText } from '../www/assets/text-encoding.js';
 const FIXTURE_PATH = path.join(REPO_ROOT, 'cpppj', 'tests', 'fixtures', 'config-x86.tsv');
 
 // 이 검사가 쓰는 행 종류별 고정 개수이다. 파일이 바뀌어 개수가 달라지면 실패한다. (2026-10-28 WB02-D)
-const EXPECTED_ROWS = Object.freeze({ Get: 77, Subst: 495, FindSection: 1045, Section: 408 });
+const EXPECTED_ROWS = Object.freeze({ Get: 77, Subst: 495, FindSection: 1045, Section: 408, Remove: 272, Set: 143 });
 
 // 기대값 생성 도구의 getenv 대체와 같은 고정 환경 변수 표이다(이름은 ASCII 대소문자 무시). (2026-10-28 WB02-D)
 const ORACLE_ENVIRONMENT = new Map([['nsenv', 'env{A}val'], ['nsempty', '']]);
@@ -46,13 +46,13 @@ function readStack(tokens, start, defined) {
 }
 
 // 원본 x86 기대값 파일을 읽어 한 줄씩 대조한다. 실패한 행은 번호와 입력을 모아 한 번에 보고한다.
-test('설정 객체 층·치환·섹션 검색이 원본 x86 기대값 2,025행과 같다', (t) => {
+test('설정 객체 층·치환·섹션 검색·줄 삭제·값 쓰기가 원본 x86 기대값 2,440행과 같다', (t) => {
     if (!fs.existsSync(FIXTURE_PATH)) {
         t.skip('cpppj/tests/fixtures/config-x86.tsv 가 없는 환경');
         return;
     }
     const defined = new Map();
-    const counts = { Get: 0, Subst: 0, FindSection: 0, Section: 0 };
+    const counts = { Get: 0, Subst: 0, FindSection: 0, Section: 0, Remove: 0, Set: 0 };
     const failures = [];
     // 줄마다 한 입력을 읽어 실행한다. 주석(#)과 빈 줄은 건너뛴다.
     for (const [index, line] of fs.readFileSync(FIXTURE_PATH, 'utf8').split('\n').entries()) {
@@ -63,7 +63,6 @@ test('설정 객체 층·치환·섹션 검색이 원본 x86 기대값 2,025행�
             defined.set(tokens[1], unhex(tokens[2]));
             continue;
         }
-        if (kind === 'Remove' || kind === 'Set') continue;
         const row = `행 ${index + 1} ${kind}`;
         if (kind === 'Subst' || kind === 'Get') {
             const self = Number(tokens[1]);
@@ -95,6 +94,28 @@ test('설정 객체 층·치환·섹션 검색이 원본 x86 기대값 2,025행�
             const actualStart = range?.start ?? -1;
             const actualLength = range?.length ?? 0;
             if (actualStart !== Number(expectedStart) || actualLength !== Number(expectedLength)) failures.push(`${row}: 기대 ${expectedStart}/${expectedLength} 실제 ${actualStart}/${actualLength}`);
+        } else if (kind === 'Remove') {
+            // 칸: 버퍼 키 찾음 지운 뒤 버퍼. 한 객체의 버퍼에서 키의 줄을 모두 지운다.
+            const [, textField, keyField, foundField, afterField] = tokens;
+            const config = new Config(new ConfigRegistry());
+            config.assign(unhex(textField));
+            const removed = config.removeKey(unhex(keyField));
+            if (removed !== (Number(foundField) !== 0)) failures.push(`${row}: 기대 삭제 ${foundField} 실제 ${removed}`);
+            else if (config.text !== unhex(afterField)) failures.push(`${row}: 기대 버퍼 ${JSON.stringify(unhex(afterField))} 실제 ${JSON.stringify(config.text)}`);
+        } else if (kind === 'Set') {
+            // 칸: 대상 객체 번호 + 객체 묶음 + 키 값 이미 있었나 고른 대상 번호 고른 키 쓴 값 줄을 지운 뒤 대상 버퍼('~' 는 버퍼 없음).
+            const self = Number(tokens[1]);
+            const stack = readStack(tokens, 2, defined);
+            const [keyField, valueField, existedField, targetField, outKeyField, outValueField, afterField] = tokens.slice(stack.next, stack.next + 7);
+            const existed = stack.objects[self].set(unhex(keyField), unhex(valueField));
+            if (existed !== (Number(existedField) !== 0)) failures.push(`${row}: 기대 존재 ${existedField} 실제 ${existed}`);
+            // 변경 표시는 고른 대상 객체에만 켜진다.
+            const changedIndexes = stack.objects.map((object, i) => (object.changed ? i : -1)).filter((i) => i >= 0);
+            if (changedIndexes.join() !== targetField) failures.push(`${row}: 기대 변경 객체 ${targetField} 실제 ${changedIndexes.join()}`);
+            // 대상 버퍼 = 원본이 줄을 지운 뒤의 버퍼 + 서식 줄(`키 = "값"` + CRLF).
+            const expected = `${afterField === '~' ? '' : unhex(afterField)}${unhex(outKeyField)} = "${unhex(outValueField)}"\r\n`;
+            const actual = stack.objects[Number(targetField)].text;
+            if (actual !== expected) failures.push(`${row}: 기대 버퍼 ${JSON.stringify(expected)} 실제 ${JSON.stringify(actual)}`);
         } else {
             failures.push(`${row}: 알 수 없는 행 종류`);
             continue;

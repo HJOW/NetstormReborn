@@ -24,7 +24,8 @@ export function expandFileList(gameData, label, command, argument) {
     const found = [];
     const seen = new Set();
     // 패턴과 맞는 파일에서 같은 객체 이름(대소문자 무시)을 한 번씩만 모은다. 등록 index 는 모은 순서이다.
-    for (const path of gameData.files.find(pattern)) {
+    // 현재 언어의 파일이 없으면 영어 파일로 대체해 찾는다(GameData.findFiles, 2026-10-30 WB03-H).
+    for (const path of gameData.findFiles(pattern)) {
         const { fileName, name } = listObjectName(path);
         const key = name.toLowerCase();
         if (seen.has(key)) continue;

@@ -30,6 +30,13 @@ export const SETTING_DEFINITIONS = Object.freeze({
     tellTips: Object.freeze({ kind: 'toggle', fallback: 1 }),
 });
 
+// 설정 키 이름을 대소문자 무시로 정식 이름(SETTING_DEFINITIONS 의 키)으로 바꾼다. 설정 키가 아니면 null 이다.
+// 게임 데이터 설정 층은 키의 대소문자를 가리지 않으므로, 그쪽에서 쓰인 이름(`SOUND` 등)을 이 모듈의 키로 되돌릴 때 쓴다. (2026-10-30 WB03-H)
+export function findSettingKey(name) {
+    const lower = String(name).toLowerCase();
+    return Object.keys(SETTING_DEFINITIONS).find((key) => key.toLowerCase() === lower) ?? null;
+}
+
 // 값을 키의 종류에 맞게 정리한다. toggle 은 참/거짓을 1/0 으로, volume 은 1~5 의 정수만 받는다. 맞지 않으면 null 이다. (2026-10-29 WB03-F)
 export function normalizeSetting(key, value) {
     const definition = SETTING_DEFINITIONS[key];

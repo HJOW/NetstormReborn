@@ -1,8 +1,10 @@
-// 원본 설정 객체(Config) 계층의 읽기 전용 구현이다. 키 조회·값 해석·`{키}` 치환·섹션 검색·객체 층(등록 순서)을 옮겼다.
+// 원본 설정 객체(Config) 계층의 구현이다. 키 조회·값 해석·`{키}` 치환·섹션 검색·객체 층(등록 순서)과 값 쓰기(Set)·줄 삭제(RemoveKey)를 옮겼다.
 // 원본 주소(10.78): 키 찾기 0043fd70, 원시 값 읽기 00440150, 파일 읽기 00440380, 객체 등록 0043fc20/0043fcd0/0043fab0,
-//                  조회 00440760, 괄호 00440a00, 치환 00440b60, 섹션 0043fe60·00440570·00440640, 줄 덧붙임 0043ffa0.
-// 규칙의 근거는 docs/formats/config.md 이고, 줄 이동·값 해석·섹션 경계의 세부는 원본 x86 기대값(cpppj/tests/fixtures/config-x86.tsv, 두 판본 동일 결과)과
-// 대조해 검증한다(webpj/tests/config.test.mjs). 값 쓰기(Set)·줄 삭제(RemoveKey)·레지스트리 조회·파일 저장은 웹 판본에 필요해질 때 옮긴다.
+//                  조회 00440760, 괄호 00440a00, 치환 00440b60, 섹션 0043fe60·00440570·00440640, 줄 덧붙임 0043ffa0,
+//                  줄 삭제 00440240, 값 쓰기 004404e0.
+// 규칙의 근거는 docs/formats/config.md 이고, 줄 이동·값 해석·섹션 경계·줄 삭제·값 쓰기의 세부는 원본 x86 기대값(cpppj/tests/fixtures/config-x86.tsv, 두 판본 동일 결과)과
+// 대조해 검증한다(webpj/tests/config.test.mjs). 레지스트리 조회·파일 저장은 웹 판본이 다른 방식(platform/progress.js·settings.js)으로 대신한다.
+// (2026-10-30 WB03-H: 값 쓰기·줄 삭제 추가. 캠페인 진행 값(`Done*`)과 설정 변경을 게임 데이터 층에 쓰기 위해 옮김)
 // 문자열은 바이트 하나가 문자 하나인 JavaScript 문자열로 다룬다(원본 텍스트는 Windows-1252, 디코딩은 assets/text-encoding.js).
 // 이 모듈은 DOM 을 쓰지 않아 Node 에서도 불러와 검사할 수 있다.
 // (2026-10-28 WB02-D: 메뉴 대화상자 본문과 용어표를 읽기 위해 추가)
@@ -246,6 +248,8 @@ export class Config {
         this.text = null;
         // 환경 변수(`{_이름}`) 조회를 허용하는지 여부다.
         this.environmentEnabled = false;
+        // set() 이 값을 쓴 뒤 켜지는 변경 표시다. 원본은 메인 루프가 이 표시를 보고 options.cfg 를 저장한다(웹 판본은 쓸 때마다 호스트가 저장한다). (2026-10-30 WB03-H)
+        this.changed = false;
         registry.register(this);
     }
 
@@ -284,6 +288,46 @@ export class Config {
         const hasSignature = plain.length >= CONFIG_SIGNATURE.length && CONFIG_SIGNATURE.split('').every((character, index) => plain[index] === character.charCodeAt(0));
         const skip = hasSignature ? CONFIG_SIGNATURE.length : 0;
         this.append(`${hasSignature ? CONFIG_SIGNATURE : ''}${decode(plain.subarray(skip))}`);
+    }
+
+    // 원본 00440240: 이 객체의 버퍼에서 키가 있는 줄(키 위치부터 다음 줄 첫 글자 앞까지)을 찾을 때마다 지운다. 같은 키가 여러 줄이면 모두 지운다.
+    // 하나라도 지웠으면 true 이고, 버퍼가 없으면 false 이다. 다음 줄 첫 글자를 찾는 규칙이 nextLine 이므로 지운 줄 뒤의 빈 줄과 들여쓰기도 함께 없어진다.
+    // 사용: config.removeKey('DoneTutorial1'). (2026-10-30 WB03-H)
+    removeKey(key) {
+        if (this.text === null) return false;
+        let removed = false;
+        // 같은 키가 더 없을 때까지 줄을 지운다.
+        for (let found = findKey(this.text, key); found >= 0; found = findKey(this.text, key)) {
+            this.text = this.text.slice(0, found) + this.text.slice(nextLine(this.text, found));
+            removed = true;
+        }
+        return removed;
+    }
+
+    // 원본 004404e0: 키에 값을 쓴다. 키에 '.' 이 있으면 마지막에 등록한 객체부터 접두어가 맞는 첫 객체를 대상으로 삼고 키는 첫 '.' 뒤로 바꾼다
+    // (이름 없는 객체는 길이 0 비교라 항상 맞는다. 맞는 객체가 없으면 이 객체에 온전한 키로 쓴다). 대상 객체에서 같은 키의 줄을 모두 지운 뒤
+    // `키 = "값"` 줄을 버퍼 끝에 덧붙이고 대상의 changed 를 켠다. 줄을 지웠으면(이미 있던 키면) true 를 돌려준다.
+    // 값에 큰따옴표나 줄바꿈이 있어도 원본처럼 검사하지 않는다(호출자가 정리한다). 원본 서식 버퍼 한도(256바이트)는 옮기지 않았다.
+    // 사용: config.set('DoneTheWarBegins', '1'). (2026-10-30 WB03-H)
+    set(keyInput, value) {
+        let key = untilNul(keyInput);
+        let target = this;
+        const dot = key.indexOf(OBJECT_SEPARATOR);
+        if (dot >= 0) {
+            const objects = this.registry.objects;
+            // 마지막에 등록한 객체부터 접두어를 비교한다.
+            for (let index = objects.length - 1; index >= 0; index -= 1) {
+                if (startsWithFolded(key, 0, objects[index].prefix)) {
+                    target = objects[index];
+                    key = key.slice(dot + 1);
+                    break;
+                }
+            }
+        }
+        const existed = target.removeKey(key);
+        target.append(`${key} = "${untilNul(value)}"`);
+        target.changed = true;
+        return existed;
     }
 
     // 버퍼에서 키의 원시 값을 읽는다(이 객체 하나만 본다). 버퍼가 없거나 키가 없으면 null 이다.
