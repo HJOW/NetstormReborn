@@ -286,7 +286,8 @@ UberGump::UberGump(Client& client) : client_(client),initLoginSubscriber_(client
     help.helpFrame=[this](auto type) { const auto types=client_.Assets().Types();if (type<o::kFirstAssetTypeNumber || type-o::kFirstAssetTypeNumber>=types.size()) return -1;return types[type-o::kFirstAssetTypeNumber].definition.specialFrames.helpFrame; };help.nearestColor=[this](auto r,auto g,auto b) { return client_.GetScreen().FindColor(r,g,b); };
     help.queue=[this](auto command,auto first,auto second) { const auto x=scriptStrings_.Store(first),y=scriptStrings_.Store(second);client_.Input().PushCommand(command,std::bit_cast<std::int32_t>(x),std::bit_cast<std::int32_t>(y)); };
     help.script=[this](auto text) { QueueScriptCommand(text,client_.Input(),scriptStrings_,{DialogScriptCode,[](auto name) { std::clog<<"도움말 스크립트 명령 미연결: "<<name<<'\n'; }}); };
-    help.external=[](auto text) { throw std::logic_error("도움말 외부 OS 프로토콜 미복원: "+std::string(text)); };help.learn=[](auto type) { throw std::logic_error("도움말 기술 학습492a30 미연결: "+std::to_string(type)); };
+    help.external=[](auto text) { throw std::logic_error("도움말 외부 OS 프로토콜 미복원: "+std::string(text)); };
+    help.learn=[this](auto type) { if (!world_) throw std::logic_error("도움말 기술 획득의 현재 Session 없음");world_->Session().LearnNewTechnology(type); }; //실제 저장·설정·NewTech 안내를 의식의 로컬 획득과 공유한다.
     help.scripted=[this] { return state_.phase==ClientPhase::Dialog || state_.phase==ClientPhase::Briefing; };help.scriptName=[this] { return std::string(client_.HtmlWindowGlobals()->tell.current.data()); }; // 창 생략/실패도 기록하는 원문 현재 Tell 이름을 읽는다.
     help.battle=[this] { return world_ && world_->Session().Core().ownerMode.battle; };help.challenge=[this] { return world_ && world_->Session().Core().ownerMode.challenge; };
     help.html.command=[this](auto&,auto text) { QueueScriptCommand(text,client_.Input(),scriptStrings_,{KnowledgeScriptCode,[](auto name) { std::clog<<"도움말 HTML 명령 미연결: "<<name<<'\n'; }}); };

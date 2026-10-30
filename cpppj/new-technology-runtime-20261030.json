@@ -1,0 +1,817 @@
+{
+  "unit": 598,
+  "date": "2026-10-30",
+  "host": "HJOW-Athlon",
+  "ipv4": "192.168.0.94",
+  "os": "Windows-10-10.0.19045-SP0",
+  "baseCommit": "5aca9e68",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "native": {
+    "cases": 45,
+    "observations": 90,
+    "differences": [],
+    "reportSha256": "8eb8c6cdea05d4acdc41bfd46d3db1492de7e7699dcca1467c6cd52e146f2e38",
+    "gameStarted": false
+  },
+  "cpp": {
+    "distinctPassed": 71,
+    "invocationsPassed": 72,
+    "registered": 3490,
+    "tests": [
+      {
+        "filter": "CampaignExistingEditor_",
+        "passed": 3,
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+            "--filter",
+            "CampaignExistingEditor_"
+          ],
+          "binarySha256": "12b2350a8f22f4af4bb03b778dd0fd0b9fd9a28bf120f52badbc750ad38ac219",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 3.2447463999997126,
+          "stdoutSha256": "aeef937395c003a6817a7c51580909a660ce349d67860eb56f5d283fbb47759e",
+          "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      {
+        "filter": "CampaignExistingEditorCheckpoint",
+        "passed": 42,
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+            "--filter",
+            "CampaignExistingEditorCheckpoint"
+          ],
+          "binarySha256": "12b2350a8f22f4af4bb03b778dd0fd0b9fd9a28bf120f52badbc750ad38ac219",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 44.900624799996876,
+          "stdoutSha256": "9f8c6064fd046501c65612c99e6699993d240c931e56361ae4f22fb408ebd157",
+          "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      {
+        "filter": "CampaignFortSnapshot",
+        "passed": 4,
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+            "--filter",
+            "CampaignFortSnapshot"
+          ],
+          "binarySha256": "12b2350a8f22f4af4bb03b778dd0fd0b9fd9a28bf120f52badbc750ad38ac219",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 8.388831299998856,
+          "stdoutSha256": "8deedef20773dd33aa626632e9b3327337838241d4ab45f93acb13686f73a985",
+          "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      {
+        "filter": "ClientFortCoreSeed",
+        "passed": 3,
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+            "--filter",
+            "ClientFortCoreSeed"
+          ],
+          "binarySha256": "12b2350a8f22f4af4bb03b778dd0fd0b9fd9a28bf120f52badbc750ad38ac219",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 0.5762316999971517,
+          "stdoutSha256": "c98c6adc9130d0d5875355f08f58b795bda8e884f8d1d296ea7651d9badabe76",
+          "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      {
+        "filter": "FortContentSave",
+        "passed": 3,
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+            "--filter",
+            "FortContentSave"
+          ],
+          "binarySha256": "12b2350a8f22f4af4bb03b778dd0fd0b9fd9a28bf120f52badbc750ad38ac219",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 1.61724680000043,
+          "stdoutSha256": "4bf71393993f62e50bf30e21e54b2c11c19e5bed7e8fc2bfd3f904dbd7be7e9e",
+          "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      {
+        "filter": "FortCoreWrite",
+        "passed": 5,
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+            "--filter",
+            "FortCoreWrite"
+          ],
+          "binarySha256": "12b2350a8f22f4af4bb03b778dd0fd0b9fd9a28bf120f52badbc750ad38ac219",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 0.5334980000006908,
+          "stdoutSha256": "c42bf4d45d70cbb628fbf2c785ed1c2ab826236ac8dad4dcd09b9893ba35946e",
+          "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      {
+        "filter": "FortSnapshotParent",
+        "passed": 2,
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+            "--filter",
+            "FortSnapshotParent"
+          ],
+          "binarySha256": "12b2350a8f22f4af4bb03b778dd0fd0b9fd9a28bf120f52badbc750ad38ac219",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 0.6134836999990512,
+          "stdoutSha256": "97b469a1d350e68b27f07f847f6a628cb59500629cce4001357f41de61b653ca",
+          "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      {
+        "filter": "NewTechnology",
+        "passed": 3,
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+            "--filter",
+            "NewTechnology"
+          ],
+          "binarySha256": "12b2350a8f22f4af4bb03b778dd0fd0b9fd9a28bf120f52badbc750ad38ac219",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 3.193464899999526,
+          "stdoutSha256": "f3b72b5a83e63d8e8c58c39315d35bac95334e1da93e150d4e8dc2f8eee13bf0",
+          "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      {
+        "filter": "PlayerTechnology",
+        "passed": 2,
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+            "--filter",
+            "PlayerTechnology"
+          ],
+          "binarySha256": "12b2350a8f22f4af4bb03b778dd0fd0b9fd9a28bf120f52badbc750ad38ac219",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 0.7909930999994685,
+          "stdoutSha256": "973e2713a53a2fccc0381450695ee38085269df7a8bff2fa3ef3f25d92b26628",
+          "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      {
+        "filter": "QuickHelpControl",
+        "passed": 2,
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+            "--filter",
+            "QuickHelpControl"
+          ],
+          "binarySha256": "12b2350a8f22f4af4bb03b778dd0fd0b9fd9a28bf120f52badbc750ad38ac219",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 0.515908400000626,
+          "stdoutSha256": "63acfe243a58ca4dede0d3cae7b4903538b3ee9f5ba9ea2b3d090909c5ca4c34",
+          "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      {
+        "filter": "SessionPlayerCoreRefresh",
+        "passed": 3,
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+            "--filter",
+            "SessionPlayerCoreRefresh"
+          ],
+          "binarySha256": "12b2350a8f22f4af4bb03b778dd0fd0b9fd9a28bf120f52badbc750ad38ac219",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 7.993077600000106,
+          "stdoutSha256": "f623d14370471c14adc41cbf96b22cf23a9edfdb0c1b5596d70a7b83e310ac76",
+          "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    ],
+    "allTestsExecuted": false,
+    "firstIntegrationFailure": "시작 Fort 저장 기술26개를 독립 Session 현재 목록과 같다고 가정한 검사 오류. 실제 빈 부모 기준0/획득014b04로 검사만 수정. 최초 두 필터의 같은4체크 실패 보존."
+  },
+  "builds": {
+    "build-first.log": {
+      "sha256": "965d3e41a7a21a70925b877c14fd0c7bfe2a4590ce3d5b8f6ee066edba588000",
+      "warnings": 0,
+      "errors": 0
+    },
+    "build-final.log": {
+      "sha256": "50810b2037b17f477ff1f13ef976feade3e1f1c898e5028b0e571cc76c4bdc29",
+      "warnings": 0,
+      "errors": 0
+    },
+    "build-byte-pinned.log": {
+      "sha256": "50810b2037b17f477ff1f13ef976feade3e1f1c898e5028b0e571cc76c4bdc29",
+      "warnings": 0,
+      "errors": 0
+    },
+    "package.log": {
+      "sha256": "9015b2ca0885dfb4cda021c3ce1ada2932e75759a91ffba5b49633c06b043124",
+      "warnings": 0,
+      "errors": 0
+    }
+  },
+  "productUnit": 598,
+  "gameSha256": "13f35ef00c963c1a9b88a00e93fdf56d9aefecfe8c1e0b170b890d7be5499900",
+  "zipSha256": "3a68ff02c7003cb1c271cadafe5b680cfb9a93207fd5b7fb370b1db6d133b5a8",
+  "entries": 1376,
+  "gameFiles": 1358,
+  "runtimeSha256": {
+    "Netstorm.exe": "13f35ef00c963c1a9b88a00e93fdf56d9aefecfe8c1e0b170b890d7be5499900",
+    "msvcp140.dll": "7c26614e1d733892c2deac7e245ce115504b1d80592dd0a01b08e3e5a55f89ca",
+    "vcruntime140.dll": "d1f4225df2cd877dbf130d5668a021dce3f94118455ff5ec952061c30afc9ce7",
+    "vcruntime140_1.dll": "a7146c08f89fe5b04541ab507cdb59ff7b44534d4ba3c668a426c6450a03434e",
+    "NetstormSmacker.dll": "6afa14297064ac26e76765747a46f4b5b813fd29f5277d95758b8cf801c4ce1f"
+  },
+  "packageAllBytesMatch": true,
+  "allGameAssetsMatchOriginalSources": true,
+  "actualExecutions": 3,
+  "successfulActualExecutions": 2,
+  "mission": {
+    "mission": "Tutorial1",
+    "demo": false,
+    "result": {
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-new-technology-598-20261030\\한글 배포본\\NetstormReborn-cpppj\\Netstorm.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-new-technology-598-20261030\\runtime-data\\game",
+        "--no-audio",
+        "--frames",
+        "480",
+        "--set",
+        "SCREENW=1024;SCREENH=768;maxFPS=40;autoDemo=0;tellTips=0;startInFullScreen=1;sleepPerLoop=1",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-new-technology-598-20261030\\mission\\Tutorial1\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-new-technology-598-20261030\\mission\\Tutorial1\\states.tsv",
+        "--window",
+        "--mission",
+        "Tutorial1"
+      ],
+      "binarySha256": "13f35ef00c963c1a9b88a00e93fdf56d9aefecfe8c1e0b170b890d7be5499900",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 23.66591360000166,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2"
+    },
+    "passed": true,
+    "final": {
+      "phase": [
+        "4"
+      ],
+      "page": [
+        "mission"
+      ],
+      "paused": [
+        "0"
+      ],
+      "mission": [
+        "Tutorial1",
+        "Tutorial",
+        "3"
+      ],
+      "mission_start": [
+        "1",
+        "4",
+        "0",
+        "0.338",
+        "0"
+      ],
+      "mission_gate": [
+        "1",
+        "65",
+        "0",
+        "0",
+        "0",
+        "1",
+        "0",
+        "0"
+      ],
+      "raw_session": [
+        "1",
+        "1"
+      ],
+      "raw_sp": [
+        "1.17608177514e-38",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0"
+      ],
+      "raw_technology": [],
+      "raw_brains": [
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0"
+      ],
+      "fort_names": [
+        "BridgeTheGap",
+        "",
+        "2",
+        "fortSpec"
+      ],
+      "raw_uber": [
+        "232",
+        "1",
+        "3",
+        "85",
+        "0",
+        "1024",
+        "768"
+      ],
+      "raw_hud_owners": [
+        "1",
+        "1",
+        "220",
+        "236",
+        "219"
+      ],
+      "time": [
+        "22.017",
+        "22.715"
+      ],
+      "screen_mode": [
+        "138",
+        "1024",
+        "768",
+        "1024",
+        "1"
+      ],
+      "screen_output": [
+        "0",
+        "0",
+        "1024",
+        "768"
+      ],
+      "screen_window": [
+        "0",
+        "0",
+        "1040",
+        "807",
+        "1024",
+        "768",
+        "349110272"
+      ]
+    },
+    "gameClock": {
+      "samples": 58,
+      "first": 0.497,
+      "last": 22.017,
+      "increase": 21.52
+    },
+    "checks": {
+      "normalExit": true,
+      "playing": true,
+      "correctMission": true,
+      "world": true,
+      "guide": true,
+      "loadingReleased": true,
+      "gameClockAdvanced": true,
+      "gameClockMonotonic": true,
+      "physicalOutput": true
+    },
+    "presentation": {
+      "same": true,
+      "actualSha256": "b4029bcbc49fcf20c3b957b923b7db0b6f6a01111ae1dfe67cd205b3c8816c80",
+      "expectedSha256": "b4029bcbc49fcf20c3b957b923b7db0b6f6a01111ae1dfe67cd205b3c8816c80",
+      "dimensions": [
+        1024,
+        768
+      ],
+      "outputRect": [
+        0,
+        0,
+        1024,
+        768
+      ]
+    }
+  },
+  "editor": {
+    "seconds": 72.97101079999993,
+    "testBattleStarts": 2,
+    "returnToEditing": 2,
+    "details": [
+      {
+        "label": "playing",
+        "sp": [
+          "0",
+          "12345",
+          "194162",
+          "0",
+          "194162",
+          "194162",
+          "194162",
+          "194162",
+          "194162"
+        ],
+        "brains": [
+          "0",
+          "0",
+          "0",
+          "536892288",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "aiMoney": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "ai2BrainPresent": false,
+        "ai2Settings": null,
+        "otherAiSettings": {
+          "3": {
+            "startingMoney": 0,
+            "allyMask": 2,
+            "abilityMask": 61183,
+            "color": 5,
+            "off": 0
+          }
+        },
+        "ai2StartingMoney": null,
+        "ai2Off": null,
+        "ai2Name": "ScenarioOff",
+        "ai2PlayerBytes": "001002301e000000000000005363656e6172696f4f6666000000000000000000000000000000000000000000122700000000000000000000000000000000000000000000000000000000000000000000200000000e0000000000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000000000000cd0000000000000000000000000000000000000000000000",
+        "alliances": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1
+        ],
+        "playerAllianceMasks": [
+          1,
+          14,
+          14,
+          10,
+          16,
+          32,
+          64,
+          128,
+          256
+        ]
+      },
+      {
+        "label": "playing-again",
+        "sp": [
+          "0",
+          "12345",
+          "194162",
+          "0",
+          "194162",
+          "194162",
+          "194162",
+          "194162",
+          "194162"
+        ],
+        "brains": [
+          "0",
+          "0",
+          "0",
+          "536892288",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "aiMoney": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "ai2BrainPresent": false,
+        "ai2Settings": null,
+        "otherAiSettings": {
+          "3": {
+            "startingMoney": 0,
+            "allyMask": 2,
+            "abilityMask": 61183,
+            "color": 5,
+            "off": 0
+          }
+        },
+        "ai2StartingMoney": null,
+        "ai2Off": null,
+        "ai2Name": "ScenarioOff",
+        "ai2PlayerBytes": "005003301e000000000000005363656e6172696f4f6666000000000000000000000000000000000000000000122700000000000000000000000000000000000000000000000000000000000000000000200000000e0000000000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000000000000cd0000000000000000000000000000000000000000000000",
+        "alliances": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1
+        ],
+        "playerAllianceMasks": [
+          1,
+          14,
+          14,
+          10,
+          16,
+          32,
+          64,
+          128,
+          256
+        ]
+      }
+    ],
+    "scope": "사본의 사용자 SP/AI 이름·시작돈/방향별 동맹과 Edit 왕복. 포획/희생/특정 공격/승리·공중3종 전용·원격 검사 없음."
+  },
+  "firstEditorFailure": {
+    "run": {
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-new-technology-598-20261030\\한글 배포본\\NetstormReborn-cpppj\\Netstorm.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-new-technology-598-20261030\\runtime-data\\game",
+        "--window",
+        "--no-audio",
+        "--frames",
+        "332",
+        "--set",
+        "SCREENW=1024;SCREENH=768;maxFPS=60;sleepPerLoop=8;autoDemo=0;tellTips=0;currentLanguage=english",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-new-technology-598-20261030\\editor\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-new-technology-598-20261030\\editor\\states.tsv"
+      ],
+      "binarySha256": "13f35ef00c963c1a9b88a00e93fdf56d9aefecfe8c1e0b170b890d7be5499900",
+      "returnCode": 1,
+      "timedOut": false,
+      "seconds": 0.9263275999983307,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "d1a42fa106c54669303fdf4115d18282bd63d2b5f2f25d02d9ee5520d34a3572"
+    },
+    "reason": "다른 root identity의 이관 장부를 복사한 검사 준비 오류. 다음에는 game/시나리오만 공급하고 새 작업 공간/장부는 제품이 생성."
+  },
+  "protected": {
+    "count": 2565,
+    "differences": [],
+    "beforeSha256": "38f4f603b81860f50102a1fcc0b6d760a237730ec2b6fc8ae4cf8829b16b45b8",
+    "afterSha256": "dde80cd67a8ed382d2dd91cf3a584792d5e8ab23785a6e6ade78d74134a1b58b",
+    "currentFixtures": 743
+  },
+  "sourceSha256": {
+    ".gitattributes": "e404b0ad020c4601624aa8da003a9586322446d42f6a020c428f857f4342cbbd",
+    "cpppj/src/CMakeLists.txt": "9b68985ef2999534234bbd4d0c62658a13d0a7c1f092f88c456b0ce03853da83",
+    "cpppj/src/client/CampaignClientServices.cpp": "a5967b072559dbafed844dda5acd7709e62e1801f243d80a1e781a6d0c7109e5",
+    "cpppj/src/client/RawCampaignRitual.inc": "381797b7db22796168bb06869cabbb1aa00fb6dde516945c13f90d7d9d4fd016",
+    "cpppj/src/client/RawCampaignSession.cpp": "983042dea7da11d5a822ba482b242779a98f9fd63db575e257f087e75994101e",
+    "cpppj/src/client/RawCampaignSession.h": "9081c33cf3ee7f7f579a784d8879b26c1d5f93dcf68849f9cd39bca1639db7a6",
+    "cpppj/src/client/UberGump.cpp": "98d04daa84d2bc8487789457e4ed5991962b69a87e72ba7ee159a9edff34cfbd",
+    "cpppj/src/o/RawNewTechnology.cpp": "8fae0ee70364bf28d154b9988f7827fe645239ef91fa78f8d58b81e77146aee3",
+    "cpppj/src/o/RawNewTechnology.h": "8d6e6effb9ab1d3740a412bb291a5d69fe3632d1a4e592d2f0e711af4d054ed8",
+    "cpppj/tests/CMakeLists.txt": "ea20214af8ceb5e50a401807360c266d998cc163b823c34fa3434c38f650613f",
+    "cpppj/tests/CampaignFortSnapshotTests.cpp": "937f6e0d5444003fe722ba9aaec748b0a0330ca0dd1d1deaf9ceb72e5e6c4c1b",
+    "cpppj/tests/NewTechnologyTests.cpp": "1233bed786f6d568f8d327e68a3681c9b1cb6741d827ddceee70635a2c6ed7b8",
+    "cpppj/tests/fixtures/new-technology-x86.tsv": "8361d908c62f03b317c00e2ed4d21a0bff4ae919e34af1b4b0af2edf36a0fca1",
+    "tools/decomp_new_technology.py": "7bb10f0570bf63f0419e73bb7e251f9fecfc62d8a83f861d35f9e36ee0779b99",
+    "cpppj/new-technology-native-20261030.json": "8eb8c6cdea05d4acdc41bfd46d3db1492de7e7699dcca1467c6cd52e146f2e38",
+    "docs/exe/cpp-new-technology-20261030.md": "586fc6c5bd0e37b7b9c24cd11780650f88d98534a5a794feb94654e20cc99125"
+  },
+  "rawDirectory": "extracted/cpp-new-technology-598-20261030",
+  "actualLearnUiVerified": false,
+  "captureSacrificeSpecificAttackVictoryReproduced": false,
+  "dedicatedThreeFlyerTestsRun": false,
+  "newMultiplayerTestsRun": false,
+  "currentProductAll34Run": false,
+  "previousAll34ProductUnit": 595,
+  "previousAll34EvidenceUnit": 596,
+  "win11Run": false,
+  "actualPcmRun": false,
+  "activeFullscreenRun": false,
+  "remaining": [
+    "의식의 외국 SP/기술/로컬 특수 보상/로컬 갱신/MP 상태 경계",
+    "기술 획득 실제 UI는 사용자 포획/희생 플레이 확인에 남김",
+    "남은 UI/Edit·Native 선택·시나리오 조건/전체 동일성",
+    "후순위 MP 무시험 사전 구현과4~7차"
+  ],
+  "evidenceSha256": {
+    "protected-before.json": "38f4f603b81860f50102a1fcc0b6d760a237730ec2b6fc8ae4cf8829b16b45b8",
+    "focused-first.json": "2d58da9b5e9b13e41516b5cfb1bdff7f74437b66422438f34eba631654211bde",
+    "original-technology.json": "385a04c7aca8be279e18716c502c7e04a371b76601697300d7def518a02e7f8d",
+    "focused-final.json": "986a35931dfc5a9cc31cbe371d31e6ed9ad9ae686fa433c373a4a9451c21268e",
+    "runtime-expected.json": "0f03f74b8fa8810439aee65f9ad2c46bff766f715c9df7bd45c6bc676449f5fd",
+    "focused-pinned.json": "986a35931dfc5a9cc31cbe371d31e6ed9ad9ae686fa433c373a4a9451c21268e",
+    "protected-after.json": "dde80cd67a8ed382d2dd91cf3a584792d5e8ab23785a6e6ade78d74134a1b58b",
+    "git-byte-check.json": "0343fbbe8a1394f1b51e808b84e65757b79802520826718da91dea6a701a7eaf"
+  },
+  "sourceIndexSha256": {
+    ".gitattributes": "e404b0ad020c4601624aa8da003a9586322446d42f6a020c428f857f4342cbbd",
+    "cpppj/src/CMakeLists.txt": "9b68985ef2999534234bbd4d0c62658a13d0a7c1f092f88c456b0ce03853da83",
+    "cpppj/src/client/CampaignClientServices.cpp": "a5967b072559dbafed844dda5acd7709e62e1801f243d80a1e781a6d0c7109e5",
+    "cpppj/src/client/RawCampaignRitual.inc": "381797b7db22796168bb06869cabbb1aa00fb6dde516945c13f90d7d9d4fd016",
+    "cpppj/src/client/RawCampaignSession.cpp": "983042dea7da11d5a822ba482b242779a98f9fd63db575e257f087e75994101e",
+    "cpppj/src/client/RawCampaignSession.h": "9081c33cf3ee7f7f579a784d8879b26c1d5f93dcf68849f9cd39bca1639db7a6",
+    "cpppj/src/client/UberGump.cpp": "98d04daa84d2bc8487789457e4ed5991962b69a87e72ba7ee159a9edff34cfbd",
+    "cpppj/src/o/RawNewTechnology.cpp": "8fae0ee70364bf28d154b9988f7827fe645239ef91fa78f8d58b81e77146aee3",
+    "cpppj/src/o/RawNewTechnology.h": "8d6e6effb9ab1d3740a412bb291a5d69fe3632d1a4e592d2f0e711af4d054ed8",
+    "cpppj/tests/CMakeLists.txt": "ea20214af8ceb5e50a401807360c266d998cc163b823c34fa3434c38f650613f",
+    "cpppj/tests/CampaignFortSnapshotTests.cpp": "937f6e0d5444003fe722ba9aaec748b0a0330ca0dd1d1deaf9ceb72e5e6c4c1b",
+    "cpppj/tests/NewTechnologyTests.cpp": "1233bed786f6d568f8d327e68a3681c9b1cb6741d827ddceee70635a2c6ed7b8",
+    "cpppj/tests/fixtures/new-technology-x86.tsv": "8361d908c62f03b317c00e2ed4d21a0bff4ae919e34af1b4b0af2edf36a0fca1",
+    "tools/decomp_new_technology.py": "7bb10f0570bf63f0419e73bb7e251f9fecfc62d8a83f861d35f9e36ee0779b99",
+    "cpppj/new-technology-native-20261030.json": "8eb8c6cdea05d4acdc41bfd46d3db1492de7e7699dcca1467c6cd52e146f2e38",
+    "docs/exe/cpp-new-technology-20261030.md": "586fc6c5bd0e37b7b9c24cd11780650f88d98534a5a794feb94654e20cc99125"
+  },
+  "checkoutFiltersVerified": true,
+  "checkoutFilterComparisons": 34
+}

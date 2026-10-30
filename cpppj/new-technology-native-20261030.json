@@ -1,0 +1,29 @@
+{
+  "host": "HJOW-Athlon",
+  "date": "2026-10-30",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "cases": 45,
+  "observations": 90,
+  "differences": [],
+  "entry": "00492a30",
+  "cd1072StaticCounterpart": "0040e300",
+  "gameStarted": false,
+  "boundaries": [
+    "현재 기술부모/contained 반환·생성/snapshot·TYPE/현재 이름/Config·printf/Tell은 명시 외부 경계",
+    "원문 부모의 getter 재조회/조건·호출 인수·signed 서식/중단 prefix는 실제 CPU",
+    "포획/희생/공격/승리·MP 실행 없음"
+  ],
+  "sourceSha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "tools/decomp_priestmenu.py": "8d1474792e7511fa777e7bd7bd369f2a2a0f9f5c35643e420d65a3fa4744bac9",
+    "tools/decomp_new_technology.py": "7bb10f0570bf63f0419e73bb7e251f9fecfc62d8a83f861d35f9e36ee0779b99",
+    "cpppj/tests/fixtures/new-technology-x86.tsv": "8361d908c62f03b317c00e2ed4d21a0bff4ae919e34af1b4b0af2edf36a0fca1"
+  },
+  "evidenceSha256": {
+    "first.json": "1e64305a1e06168e774f2a7447f506cbfffe537856db99da797ba06b890b0dcf",
+    "replay.json": "1e64305a1e06168e774f2a7447f506cbfffe537856db99da797ba06b890b0dcf"
+  }
+}

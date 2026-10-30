@@ -60,7 +60,7 @@ void ConnectDaisLifecycle() {
     notice.stopVoice=[this](std::uint32_t cue,std::uint32_t first,std::uint32_t second) { RitualCommand(cue,first,second); };notice.notifySurface=[this](Sid sid) { core.building.NotifySurface(sid); };
     daisNotice=std::make_unique<RawDaisContentNotice>(core.pool,core.frames,*runePostPop,*daisNoticeState,std::move(notice));
 }
-// 의식 자격/이동/룬 진행을 연결한다. 희생 완료의 획득/UI 미복원은 명시 오류로 남긴다.
+// 의식 자격/이동/룬 진행과 로컬 기술 획득을 연결한다. 나머지 보상/UI 미복원은 명시 오류로 남긴다.
 void ConnectRitual() {
     ritualLookup=std::make_unique<RawContainedLookup>(core.pool,[this](Sid sid,std::uint32_t flags) { world.Destroy(sid,flags); });
     PriestRitualFrameHooks frame; // 실제 같은 Host/Frame/위치 소리로604를 처리한다.
@@ -112,7 +112,8 @@ void ConnectRitual() {
         if (notice.kind!=DaisChat::Kind::Stormpower && notice.kind!=DaisChat::Kind::Upgrade) throw std::logic_error("멀티플레이 희생 사망 안내 미연결");
         if (!services.priest.shield.tell) throw std::logic_error("희생 완료의 실제 Tell 소비자 미연결");services.priest.shield.tell(notice.kind==DaisChat::Kind::Stormpower ? "SacrificeForStormpower" : "AltarUpgrade");
     }; // 원본4cf960은 같은Tell(key,0) wrapper다. 멀티플레이 이름/상태 인자 안내는 별도 경계로 남긴다.
-    FillMissing(dais.normalizeForeignSp);FillMissing(dais.grantForeignType);FillMissing(dais.localSpecial);FillMissing(dais.localType);FillMissing(dais.refreshLocal);FillMissing(dais.multiplayerStatus);
+    dais.localType=[this](auto type) { if (!learnNewTechnology) throw std::logic_error("로컬 기술 획득의 현재 Session 진입 미연결");learnNewTechnology(type); }; //Help와 같은 실제492a30을 사용하고 selectedType 쓰기는 원문 상위 부모에 남긴다.
+    FillMissing(dais.normalizeForeignSp);FillMissing(dais.grantForeignType);FillMissing(dais.localSpecial);FillMissing(dais.refreshLocal);FillMissing(dais.multiplayerStatus);
     daisRegular=std::make_unique<RawDaisRegular>(core.pool,core.hash,core.types,core.frames,*templeRitual,*runePostPop,priests->Carrier(),core.processes,*ritualLookup,motion->Paths().Starter(),*daisState,std::move(dais));
     PriestSacrificeRequestHooks request; // 두 wrapper는 실제 같은 Dais/내용물/음악을 호출한다.
     request.allowed=[this](Sid dais,Sid priest) { PrepareRitual();return daisRegular->CanBridge(dais,priest); };

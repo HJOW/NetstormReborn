@@ -1,4 +1,5 @@
 # 현재 작업본·설치 checkpoint와 독립 부모의 최초 관측을 공용 회귀에 포함한다.
+set_source_files_properties(NewTechnologyTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_NEW_TECHNOLOGY_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/new-technology-x86.tsv\"")
 set_source_files_properties(MovieTimerTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_MOVIE_TIMER_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/movie-timer-x86.tsv\"")
 set_source_files_properties(MoviePlaybackTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_MOVIE_PLAYBACK_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/movie-playback-x86.tsv\"")
 set_source_files_properties(MovieLifecycleTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_MOVIE_LIFECYCLE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/movie-lifecycle-x86.tsv\"")
@@ -2461,3 +2462,5 @@ set_source_files_properties(ObjectTraceMainTests.cpp PROPERTIES COMPILE_DEFINITI
 # 실제 원본 CD 탐색15개와 긴 Unicode 경로를 비교한다.
 target_sources(netstorm_tests PRIVATE CdDirectoryTests.cpp)
 set_source_files_properties(CdDirectoryTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_CD_DIRECTORY_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/cd-directory-x86.tsv\"")
+# 기술 획득45개 원문 관측의 호출 순서와 부분 설정을 비교한다.
+target_sources(netstorm_tests PRIVATE NewTechnologyTests.cpp)

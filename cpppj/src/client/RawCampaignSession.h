@@ -23,6 +23,7 @@
 #include "client/SoundProcess.h"
 #include "o/RawPlayerRegular.h"
 #include "o/RawFortMissionSave.h"
+#include "o/RawNewTechnology.h" //같은 현재 기술부모·snapshot과 실제 안내를 연결한다.
 #include "o/RawFortSubscriberLoad.h"
 #include "o/RawEditorPlayers.h"
 #include "o/RawBattleBroadcast.h"
@@ -182,6 +183,7 @@ struct RawCampaignSessionServices {
     std::shared_ptr<std::array<std::uint32_t,256>> missionRestrictions; // 설치 전 Header와 설치 후 TotalMade가 같은 현재 표를 빌린다.
     std::optional<std::uint32_t> missionSubscriber; // Init이 현재54265c에서 복사한540c74다. 독립 로그인은 기존1을 사용한다.
     std::function<void()> refreshSp; // 같은 실제 Reward.AddSp의0043dad0 표시 요청이다. 장치 없는 독립 검사는 비워 둘 수 있다.
+    o::NewTechnologyHooks newTechnology; // 이름/설정/지역 그림 서식/Tell의 실제 Client 장치다. 게임 조회/추가/저장은 Session이 덮어 연결한다.
     std::optional<CampaignLoginServices> localLogin; //실제Client는 원본 로컬로그인을 사용하며 독립 모듈 검사는 명시Load를 유지한다.
     std::shared_ptr<EditorLocalTransport> editorTransport; // 준비된 기존 Editor만 동일 Player 물리의 로그인 없는 실제 송수신 큐를 빌린다. Session보다 긴 Client 수명을 허용한다.
     std::function<std::int32_t()> unixSeconds; // 실제 time32의 현재 Unix 초다.
@@ -463,6 +465,7 @@ public:
     void SnapshotFortTerritory(std::uint32_t slot); // 기존120BYTE와 현재 섬/지도/공유 난수에서004bf6d0을 명시 실행한다.
     void SnapshotFortObjects(std::uint32_t slot); // 현재 월드의 Terr00~19와 조건부 Chaff를 실제 Temp/rename·청크 writer로 저장한다. 전체 snapshot/Notify는 별도다.
     void SnapshotFort(std::uint32_t slot); // 설치된 명시 Fort 모드에서 원본 전체 부모와 마지막 Notify를 실행하며 모드를 자동 변경하지 않는다.
+    void SnapshotBattle(std::uint32_t slot); //실제004bf880의 기술/Deck/Objects/Territory/Money/Mission/CoreData/Notify를 같은 저장소로 실행한다.
     bool BuildEditorIslandMap(o::ChunkMap& target); // 0046e4a0의 독립14×14 지도 부분이다. Bitmap 생성과 전체 GUI 완료를 뜻하지 않는다.
     std::optional<o::TerrainBitmapImage> BuildEditorIslandMapImage(o::ChunkMap& target); // 같은 실제 지도와004c1cc0 Bitmap을 만들고 manager 부재는 nullopt로 구별한다.
     o::TerrainBitmapImage BuildEditorIslandChoiceImage(std::span<const std::uint8_t,6> record); // 원문 owner0 단일 지도/로컬 난수/보호 texture의 실제 목록 이미지를 만든다.
@@ -473,9 +476,9 @@ public:
     bool DropEditorIsland(const o::ChunkMap& preview,std::span<std::uint8_t,6> record); // 실제 섬 배치→지형→population→Graph→현재 Territory 쓰기를 실행한다.
     bool CanPlaceEditorIsland(const o::ChunkMap& preview,std::span<const std::uint8_t,6> record); //0047d5f0의 같은 독립 preview/현재 TYPE·owner 검사이며 월드/record/난수를 변경하지 않는다.
     bool EditorIslandManagerAvailable() const; //0047f9b0의 현재 owner/manager 관문이며 dirty/이전 Image를 바꾸기 전에 조회한다.
-    void SaveCurrentMap(); //004bfb50의 현재 owner/manager 존재/독립 Battle·Fort 선택으로 전체 저장을 실행한다. 선택된 전체 Battle 저장은 미연결 위치에서 거부한다.
+    void SaveCurrentMap(); //004bfb50의 현재 owner/manager 존재/독립 Battle·Fort 선택으로 전체 저장을 실행한다.
     void BindFortFileSave(const std::uint32_t& readOnlyForts,const EditorFiles& files); // 두 참조는 Session보다 오래 살아야 하며 현재 manager 이름은 이미 준비한 작업본 경로여야 한다.
-    o::FortCurrentNameHooks BindFortCurrentName(o::FortCurrentNameHooks hooks); // 같은 실제 Template/State/Notify와 현재 Fort snapshot을 연결한다. Battle snapshot 선택은 미복원 위치에서 거부한다.
+    o::FortCurrentNameHooks BindFortCurrentName(o::FortCurrentNameHooks hooks); // 같은 실제 Template/State/Notify와 독립 Battle/Fort snapshot을 연결한다.
     o::FortObjectLoadState& FortObjectSettings(); // 로드/저장 양쪽의 같은 현재 판본과 범위를 빌린다.
     void WriteFortObjectChunk(TemplateWriteStream stream,std::int32_t chunkX,std::int32_t chunkY); // 같은 저장소의 명시 stream에 한 청크만 저장한다. 전체 지역 부모는 별도다.
     // 생산/튜토리얼/건설 표시가 함께 읽는 금지DWORD 표와 실제 세 카운터를 직접 조작한다.
@@ -484,6 +487,7 @@ public:
     o::Sid CreatePlayer(std::int32_t owner);
     // 실제 시작 설정/AI와 같은 Player 기술 부모에 원본 목록 파서를 적용한다.
     void AddTechnology(std::int32_t owner,std::string_view list);
+    void LearnNewTechnology(std::uint32_t type); //00492a30의 직접 현재 부모·중복/추가·전체 snapshot·이름/그림/NewTech를 실행한다. 포획/희생을 합성하지 않는다.
     // 실제 flags4 기술을 가상 삭제하여 부모 체인/등록/삭제 깊이를 함께 정리한다.
     void ClearTechnology(std::int32_t owner);
     // 현재 같은 Player 부모에서 지정한 실제 기술 ContentForm을 조회한다.
@@ -570,6 +574,8 @@ public:
 private:
     void SnapshotFortBasicSection(std::uint32_t slot,bool names); // 실제 manager/State/덱과 같은 생성 수명의 쓰기 참조를 묶는다.
     void SnapshotFortBody(std::uint32_t slot); // 실제 월드 설치 뒤의 Editor 외곽만 loaded 이전에 호출할 수 있는 전체 저장 본문이다.
+    void SnapshotTemplateBody(std::uint32_t slot,bool battle); //같은 실제 writer를 빌리되 원본 Battle/Fort 부모의 서로 다른 순서/진단을 유지한다.
+    void WriteFortCoreDataBody(std::uint32_t slot); //설치 외곽과 실제 Battle이 같은004beb30의 자연 missionPost/editor 관문을 사용한다.
     void WriteFortTerritory(std::uint32_t slot); // 현재 지형의 같은 저장 본문이며 공개 호출의 설치 검사는 별도다.
     void WriteFortObjects(std::uint32_t slot); // 전체 지역/Chaff 저장 본문을 설치 외곽에서도 같은 순서로 실행한다.
     void WriteFortObjectChunkBody(TemplateWriteStream stream,std::int32_t chunkX,std::int32_t chunkY); // 같은 청크 저장 본문이며 공개 설치 계약을 우회 노출하지 않는다.

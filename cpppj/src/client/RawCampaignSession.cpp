@@ -497,6 +497,7 @@ struct RawCampaignSession::Impl {
     std::function<void(Sid)> ritualExplosion; // 공통 피해 전처리와 제단24가 같은 실제4605d0 폭발 효과를 사용한다.
     std::unique_ptr<RawDaisRegular> daisRegular; // 기존 원본 자격/의식 이동/단계 진행이다.
     std::unique_ptr<RawPriestSacrificeRequest> sacrificeRequest; // 사용자 입력과 서버40h가 공유하는 wrapper다.
+    std::function<void(std::uint32_t)> learnNewTechnology; //고정 Session 소유자가 Impl 생성 뒤 연결하는 같은492a30 진입이다. 실제 이벤트는 생성 완료 뒤 호출한다.
     std::unique_ptr<void,void(*)(void*)> pendingRitualSound{nullptr,[](void* storage) { ::operator delete(storage); }}; // Dais 지연 소리의 new40 확보 한 번을 같은 Sound47 생성까지 보관한다.
     std::unique_ptr<RegularProcess> pendingRitualRegular; // 실제 확보 한 번을 예약/생성/부착까지 유지한다.
     PlayerWorldState& playerState{gameplayGlobals->player}; // 현재 두 owner/known을 초기 HUD와 같은 주소에서 읽고 쓴다.
@@ -3308,7 +3309,10 @@ void RawCampaignSession::SendLocalPacket(std::int32_t target,std::span<const std
 void RawCampaignSession::SendMutableLocalPacket(std::int32_t target,std::span<std::uint8_t> packet) { impl_->SendChatMutable(target,packet); }
 // 현재 실제 자산/Template/서비스를 보관하고 모든 하위 모듈을 구성한다.
 RawCampaignSession::RawCampaignSession(const GameAssets& assets,const BaseFileSystem& files,FortTemplate fort,std::string mission,RawCampaignSessionServices services)
-    :impl_(std::make_unique<Impl>(assets,files,std::move(fort),std::move(mission),std::move(services))) { impl_->gameplayUse->Publish(*this); }
+    :impl_(std::make_unique<Impl>(assets,files,std::move(fort),std::move(mission),std::move(services))) {
+    impl_->learnNewTechnology=[this](auto type) { LearnNewTechnology(type); }; //복사/이동되지 않는 Session 주소를 실제 로컬 획득과 Help가 공유한다.
+    impl_->gameplayUse->Publish(*this);
+}
 // Impl이 Kernel을 비운 뒤 실제 모듈을 해제한다.
 RawCampaignSession::~RawCampaignSession() {
     impl_->ReleaseEditorCommandReceivers();bool stateReturned{}; //같은 실제 수신기를 먼저 닫은 뒤 자식 증빙을 검사한다.
@@ -3454,6 +3458,11 @@ void RawCampaignSession::RefreshCurrentPlayerCore() {
 // 실제기존Editor에서만004beb30의manager/Metamap진단과현재post/editor자연관문을재사용한다.
 void RawCampaignSession::WriteExistingEditorCoreData(std::uint32_t slot) {
     auto& s=*impl_;if (s.services.installMode!=CampaignInstallMode::ExistingEditor || s.loaded || slot>=9) throw std::logic_error("기존Editor CoreWrite의실제설치중/9슬롯계약");
+    WriteFortCoreDataBody(slot);
+}
+//같은004beb30의 manager/메타맵 진단과 missionPost/editor 자연반환을 실제 Battle 저장도 사용한다.
+void RawCampaignSession::WriteFortCoreDataBody(std::uint32_t slot) {
+    auto& s=*impl_;if (slot>=9) throw std::out_of_range("현재 CoreWrite의 실제9슬롯 범위");
     FortCoreWriteGlobals globals;globals.metamap=[&s] { return s.core.ownerMode.challenge ? 1U : 0U; };globals.missionPost=[&s] { return s.globals.missionPost; };globals.editor=[&s] { return s.globals.editor; };
     globals.players=[&s]()->std::span<std::uint8_t> { return s.players; };globals.playerOwner=[&s] { return s.playerState.battleOwner; }; //현재실제9Player와00540c70을빌리며Template owner와합치지않는다.
     if (const auto owner=s.services.randomGlobals) globals.seed=[owner]()->std::uint32_t& { return owner->FortCoreSeed(); }; //같은Client전체DWORD만빌린다.미주입은선택위치의필수누락이며새Session스크래치는없다.
@@ -4000,17 +4009,25 @@ void RawCampaignSession::WriteFortTechnology(std::uint32_t parent,TemplateWriteS
 void RawCampaignSession::SnapshotFort(std::uint32_t slot) {
     if (!impl_->loaded) throw std::logic_error("실제 Session 설치 전 전체 Fort 저장");SnapshotFortBody(slot);
 }
+//원본 Battle 부모는 Fort의 TypeNames/Badges를 추가하지 않고 자체 순서를 선택한다.
+void RawCampaignSession::SnapshotBattle(std::uint32_t slot) {
+    if (!impl_->loaded) throw std::logic_error("실제 Session 설치 전 전체 Battle 저장");SnapshotTemplateBody(slot,true);
+}
 // 다음 Native 상태를 예약하지 않고 현재 manager의 원문 저장 선택 부모만 실행한다.
 void RawCampaignSession::SaveCurrentMap() {
     auto& current=*impl_;if (!current.loaded) throw std::logic_error("실제 Session 설치 전 현재 맵 저장");
     CurrentMapSnapshotReads reads;
     reads.owner=[&current] { return current.playerState.templateOwner; };reads.manager=[&current](auto slot) { if (slot>=9) throw std::out_of_range("현재 맵 저장의 실제 Template9 범위");return Read(current.templateStorage->Headers(),slot*20U); };
     reads.battle=[&current] { return current.core.ownerMode.battle ? 1U : 0U; };reads.fort=[&current] { return current.core.ownerMode.fort ? 1U : 0U; };
-    CurrentMapSnapshotHooks hooks;hooks.battle=[](auto) { throw std::logic_error("현재 맵 저장의 전체 Battle snapshot 004bf880 미연결"); };hooks.fort=[this](auto slot) { SnapshotFort(slot); };
+    CurrentMapSnapshotHooks hooks;hooks.battle=[this](auto slot) { SnapshotBattle(slot); };hooks.fort=[this](auto slot) { SnapshotFort(slot); };
     SnapshotCurrentMap(reads,hooks);
 }
 // Editor 외곽은 실제 월드 설치가 끝난 뒤에만 호출하고 전체 loaded를 미리 켜지 않는다.
 void RawCampaignSession::SnapshotFortBody(std::uint32_t slot) {
+    SnapshotTemplateBody(slot,false);
+}
+//각 child는 동일하지만 호출 순서와 마지막 CoreData/Badges는 원본 부모가 구별한다.
+void RawCampaignSession::SnapshotTemplateBody(std::uint32_t slot,bool battle) {
     auto& s=*impl_; // 현재 Session의 단일 실제 상태이며 모드나 owner를 사본으로 만들지 않는다.
     if ((!s.loaded && !s.editorWorldReady) || slot>=9) throw std::logic_error("실제 전체 Fort snapshot의 설치/슬롯 계약 위반");
     std::vector<TemplateWriteStream> streams; // 동기 부모 한 번에 발급한 manager/노드/생성수명을 종료까지 보관한다.
@@ -4061,18 +4078,19 @@ void RawCampaignSession::SnapshotFortBody(std::uint32_t slot) {
         SaveFortBadges(selected,badges);
     };
     hooks.notify=[&s](auto selected) { s.templateState->Changed(static_cast<std::uint32_t>(selected)); };
+    hooks.coreData=[this](auto selected) { WriteFortCoreDataBody(static_cast<std::uint32_t>(selected)); };
     FortSnapshotParentGlobals globals; // 부모의 각 읽기 위치에서 현재 Template owner/두 모드를 조회한다.
     globals.templateOwner=[&s] { return s.playerState.templateOwner; };
     globals.fort=[&s] { return s.core.ownerMode.fort ? 1U : 0U; };
     globals.battle=[&s] { return s.core.ownerMode.battle ? 1U : 0U; };
-    SnapshotFortTemplate(static_cast<std::int32_t>(slot),globals,hooks);
+    if (battle) SnapshotBattleTemplate(static_cast<std::int32_t>(slot),globals,hooks);else SnapshotFortTemplate(static_cast<std::int32_t>(slot),globals,hooks);
 }
 // 이름 부모가 요구하는 저장과 통지는 같은 현재 슬롯/모드와 기존 전체 Fort 본체를 사용한다.
 o::FortCurrentNameHooks RawCampaignSession::BindFortCurrentName(o::FortCurrentNameHooks hooks) {
     auto& s=*impl_;hooks=s.templateStorage->BindCurrentName(std::move(hooks));
     hooks.snapshot=[this] {
         if (!impl_->loaded && !impl_->editorCheckpointRunning) throw std::logic_error("현재 이름 snapshot의 실제 설치 외곽 수명 위반"); // 설치 전 공개 저장 계약은 한정 checkpoint 밖에서 유지한다.
-        if (impl_->core.ownerMode.battle) throw std::logic_error("현재 Fort 이름의 전체 Battle snapshot 미연결"); // 원문 두 독립 if의 첫 선택은 건너뛰지 않는다.
+        if (impl_->core.ownerMode.battle) SnapshotTemplateBody(impl_->playerState.templateOwner,true); //원문 두 독립 if의 첫 선택도 같은 실제 부모로 실행한다.
         if (impl_->core.ownerMode.fort) SnapshotFortBody(impl_->playerState.templateOwner);
     };
     hooks.notify=[&s](auto slot) { if (!s.loaded && !s.editorCheckpointRunning) throw std::logic_error("현재 이름 Notify의 실제 설치 외곽 수명 위반");s.templateState->Changed(slot); };hooks.state=[&s](auto slot)->std::span<const std::uint8_t> { return s.templateState->Get(slot); };return hooks;
@@ -4164,6 +4182,26 @@ std::unique_ptr<RawTutorialLater> RawCampaignSession::MakeTutorialLater(RawMissi
 Sid RawCampaignSession::CreatePlayer(std::int32_t owner) { if (!impl_->loaded) throw std::logic_error("미설치 Session의 Player 생성");return impl_->player->Create(owner); }
 // 원본 시작/AI 기술 처리가 사용하는 같은 현재 부모/실제 contained 생성 경로다.
 void RawCampaignSession::AddTechnology(std::int32_t owner,std::string_view list) { impl_->technology->AddList(owner,list); }
+//현재 부모를 직접 조회하므로 Find/Ensure의 별도 owner/타입 진단을 추가하지 않는다.
+void RawCampaignSession::LearnNewTechnology(std::uint32_t type) {
+    auto& s=*impl_;if (!s.loaded) throw std::logic_error("실제 Session 설치 전 기술 획득");auto hooks=s.services.newTechnology;
+    hooks.technologyParent=[&s] { return s.player->CurrentTechnology(); };
+    hooks.find=[&s](auto parent,auto mask,auto kind,auto index) {
+        if (parent>65535U || parent>=s.core.pool.Capacity()) throw std::out_of_range("기술 획득의 실제 부모 SID 범위");
+        const auto found=s.priests->Carrier().FindContained(Sid{static_cast<std::uint16_t>(parent)},mask,kind,index);if (!found.value) return 0U;
+        const auto raw=s.core.pool.Slot(found);return std::uint32_t(raw[18])|(std::uint32_t(raw[19])<<8); //004acac0은 후보의 실제 종류WORD를 반환하며 종류0을 SID 비영으로 바꾸지 않는다.
+    };
+    hooks.create=[&s](auto parent,auto kind,auto argument,auto flags,auto attach,auto quality) {
+        if (parent>65535U || parent>=s.core.pool.Capacity()) throw std::out_of_range("기술 획득 생성의 실제 부모 SID 범위");
+        static_cast<void>(s.contained->Create(Sid{static_cast<std::uint16_t>(parent)},kind,argument,flags,attach,quality));
+    };
+    hooks.snapshot=[this,&s] { //004bfac0에는004bfb50의 선행 manager 부재 관문이 없다. 두 if와 각 당시 owner를 보존한다.
+        if (s.core.ownerMode.battle) SnapshotBattle(s.playerState.templateOwner);
+        if (s.core.ownerMode.fort) SnapshotFort(s.playerState.templateOwner);
+    };
+    hooks.type=[&s](auto number) { if (number>=s.core.types.size()) throw std::out_of_range("기술 획득의 현재 TYPE 물리 범위");return number; }; //현재 실제 TYPE를 가리키는 동기 토큰이다.
+    o::AcquireNewTechnology(s.core.pool.Edition(),type,hooks);
+}
 // 제거 통지는 현재 Player SP 접두와 직접 Gump 가상 처리까지 같은 경로를 사용한다.
 void RawCampaignSession::ClearTechnology(std::int32_t owner) { impl_->technology->Clear(owner); }
 // 상태 사본 없이 현재 raw 부모 체인에서 읽는다.

@@ -2162,3 +2162,15 @@ tools/cpp_editor_rules_native.py text eol=lf
 cpppj/editor-rules-native-20261030.json text eol=lf
 cpppj/editor-rules-runtime-20261030.json text eol=lf
 docs/exe/cpp-editor-rules-20261030.md text eol=lf
+
+# 공통 기술 획득의 최초 원문 기대값과 연결 소스/검증 자료를 보존한다.
+cpppj/tests/fixtures/new-technology-x86.tsv -text whitespace=-blank-at-eol
+cpppj/src/o/RawNewTechnology.cpp text eol=lf
+cpppj/src/o/RawNewTechnology.h text eol=lf
+cpppj/src/client/RawCampaignRitual.inc text eol=lf
+cpppj/tests/NewTechnologyTests.cpp text eol=lf
+cpppj/tests/CampaignFortSnapshotTests.cpp text eol=lf
+tools/decomp_new_technology.py text eol=lf
+cpppj/new-technology-native-20261030.json text eol=lf
+cpppj/new-technology-runtime-20261030.json text eol=lf
+docs/exe/cpp-new-technology-20261030.md text eol=lf

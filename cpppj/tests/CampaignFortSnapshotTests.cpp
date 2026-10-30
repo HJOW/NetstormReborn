@@ -11,6 +11,8 @@
 #include <array>
 #include <bit>
 #include <chrono>
+#include <cstdio>
+#include <map>
 #include <set>
 #include <stdexcept>
 using namespace netstorm::client;
@@ -190,5 +192,32 @@ TEST_CASE(CampaignFortSnapshot_ExplicitNoMissionAndPreventSave) {
     storage->Headers()[1*20+16]=0;session.BindFortFileSave(readOnly,files); // 같은 현재 헤더를 풀고 실제 파일 장치에 연결한다.
     session.SnapshotFort(1);const auto saved=ReadFileBytes(path);const auto decoded=FortTemplate::Parse(saved,assets.game.TypeTable()); // 이번 정상 반환은 실제 파일 재읽기로 별도 확인한다.
     CHECK(currentReads==2 && saved!=original && decoded.Section("Mission").empty() && decoded.Section("Money").size()==4 && FullSnapshotBytes(decoded.Section("Badges"))==std::vector<std::uint8_t>{0});
+    CHECK(assets.files.Read("d/thewarbegins.fort")==original);
+}
+
+// 포획/희생 없이 명시 학습 입력을 주고 실제 Battle/Fort 부모와 contained 중복 방지를 확인한다.
+TEST_CASE(CampaignFortSnapshot_NewTechnologyRealSessionAndDuplicate) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);const auto original=assets.files.Read("d/thewarbegins.fort"); // 보호 입력은 읽기만 한다.
+    for (const bool fort:{false,true}) { // 두 모드의 서로 다른 실제 전체 저장 부모를 각각 선택한다.
+        FullSnapshotServices external;auto services=external.Make();const auto storage=std::make_shared<CampaignTemplateStorage>();services.templateStorage=storage;services.fortBadges=std::make_shared<RawFortBadgesGlobals>();
+        std::map<std::string,std::string> config;std::uint32_t tells{};std::vector<std::uint8_t> oldTechnology,firstTechnology; // 외부 UI 경계와 실제 직렬화의 최초/현재값만 관측한다.
+        services.newTechnology.name=[](auto type) { CHECK(type==75);return std::string("Wind Battery"); };
+        services.newTechnology.configure=[&](auto key,auto value) { config[std::string(key)]=value; };
+        services.newTechnology.format=[](auto pattern,std::int32_t type) { std::array<char,256> text{};const std::string format(pattern);std::snprintf(text.data(),text.size(),format.c_str(),type);return std::string(text.data()); };
+        services.newTechnology.tell=[&](auto key) {
+            CHECK(key=="NewTech" && config["global.newTechName"]=="Wind Battery" && config["global.newTechPic"]=="<!`\"75.*`\">");
+            const auto current=FullSnapshotBytes(storage->Template(1).Section("Technology")); // 안내 시점에 실제 저장소의 기술 직렬화가 이미 끝나 있어야 한다.
+            CHECK(current==std::vector<std::uint8_t>({1,75,4}) && oldTechnology==std::vector<std::uint8_t>({0})); // 이 독립 Session은 미션 Header의 시작 기술을 주입하지 않은 현재 빈 부모 입력이다.
+            if (!tells) firstTechnology=current;else CHECK(current==firstTechnology);++tells;
+        };
+        RawCampaignSession session(assets.game,assets.files,FortTemplate::Parse(original,assets.game.TypeTable()),"thewarbegins",std::move(services));session.Load();if (fort) FullSnapshotFortInput(session);
+        CHECK(!session.FindTechnology(1,75).value);const auto core=session.Core();CHECK(core.ownerMode.battle!=fort && core.ownerMode.fort==fort);session.SnapshotFortTechnology(1);oldTechnology=FullSnapshotBytes(storage->Template(1).Section("Technology")); // 파일의26개와 현재 빈 기술부모를 같은 상태로 가정하지 않는다.
+        const auto oldCore=FullSnapshotBytes(storage->Template(1).Section("CoreData"));const auto oldNames=FullSnapshotBytes(storage->Template(1).Section("TypeNames"));const auto oldBadges=FullSnapshotBytes(storage->Template(1).Section("Badges")); // missionPost의 CoreData 자연 반환과 Battle 생략 섹션의 기준이다.
+        session.LearnNewTechnology(75);const auto sid=session.FindTechnology(1,75);CHECK(sid.value && tells==1 && external.missionReads==2);
+        session.LearnNewTechnology(75);CHECK(session.FindTechnology(1,75)==sid && tells==2 && external.missionReads==4); // 중복 기술도 전체 snapshot/설정/안내는 다시 실행한다.
+        CHECK(FullSnapshotBytes(storage->Template(1).Section("CoreData"))==oldCore);
+        CHECK(storage->Template(1).Section("Money").size()==4 && !storage->Template(1).Section("Deck").empty());
+        if (!fort) CHECK(FullSnapshotBytes(storage->Template(1).Section("TypeNames"))==oldNames && FullSnapshotBytes(storage->Template(1).Section("Badges"))==oldBadges);
+    }
     CHECK(assets.files.Read("d/thewarbegins.fort")==original);
 }
