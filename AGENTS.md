@@ -67,6 +67,7 @@
                  7차 - 안티앨리어싱 및 FSR 3.1 선택사항으로 추가
                        메인 메뉴 - Options 에서 안티앨리어싱 및 FSR 3.1 을 선택적으로 켤 수 있도록 기능 추가 (기본값으로는 꺼져 있어야 함)
                        게임 내에 해당 옵션 적용
+                       (FSR 은 FidelityFX 의 Super Resolution 기능으로 https://github.com/GPUOpen-LibrariesAndSDKs/FidelityFX-SDK.git 참고)
              cpppj 는 윈도우용만 개발한다.
   dotnetpj - C# + MonoGame 기반으로 개발. cpppj 완성 후 이를 분석하여 개발.
              dotnetpj 또한 일단은 기존 게임과 완전히 동일하게 동작하는 것을 목표로 개발 후, 요구사항을 반영한다.
