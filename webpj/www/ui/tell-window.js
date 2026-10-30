@@ -10,8 +10,11 @@ import { StoneButton } from './stone-button.js';
 import { MenuList } from './menu-list.js';
 import { ScrollingText } from './scroll-text.js';
 import { parseStyleText } from './style-text.js';
-import { prepareDialogContent } from './html-text.js';
+import { applyHtmlCondition, prepareDialogContent } from './html-text.js';
 import { expandFileList } from './tell-lists.js';
+import { parseTellParameters } from './tell-parameters.js';
+import { parseScriptCommand } from './script-command.js';
+import { Config, asciiLower } from '../assets/config.js';
 
 // 본문 기본 글꼴 슬롯이다. 원본 본문 생성 004c7aa0 은 스크롤 글자 생성자(004bc060)에 (폭 0, 높이 0, 글꼴 0, 색 = 기본 흰색 전역 005bec2c)를 넘긴다
 // (Arial 14, 굵기 700, 그림자 없음). cpppj 의 HtmlBodyGump 는 슬롯 5·설명 색을 쓰지만 원본 스크린샷(Demo 본문: 굵은 흰 글자)과 디컴파일은 슬롯 0·흰색이다. (2026-10-28 WB03-D)
@@ -345,19 +348,48 @@ export class TellWindow {
     }
 }
 
-// Tell 섹션 이름으로 대화상자를 만든다. 섹션이 없으면 null(원본: `TELL cannot find "이름".` 로그)이다.
-// gameData 는 GameData(설정 치환·tellSection), resources 는 메뉴 자원 묶음이다. 본문이 영숫자가 없는 빈 본문이면 창을 만들지 않고 { empty: true } 로 알린다.
+// Tell 대상 문자열로 대화상자를 만든다(원본 004cf730 Tell 명령). 대상은 `섹션이름` 또는 `섹션이름(인자1,인자2)` 이다.
+//  1) BLANK(대소문자 무시)는 창을 만들지 않는 조기 분기이다({ blank: true }). 이름도 기록하지 않는다.
+//  2) 지역 설정 객체 `param` 을 등록하고 대상의 인자를 `1="값"`… 줄로 넣는다(본문의 `{param.1}`). param 은 본문 처리가 끝날 때까지만 살아 있다.
+//  3) 섹션 이름을 현재 Tell 이름으로 기록하고(이름이 바뀌면 이전 이름이 `global.priorTell`) 섹션 본문을 찾는다. 없으면 { missing: true } 이다(원본: `TELL cannot find "이름".` 로그).
+//  4) 본문을 설정 치환·변환해 창을 만든다. 조건 태그(`<?식>`)는 평가하고, 본문의 스크립트 명령(`<$config,키=값>` 등)은 실행하지 않고 inlineCommands 로 순서대로 돌려준다
+//     (원본도 즉시 실행하지 않고 명령 큐에 넣어 다음 입력에서 처리하므로, 호출자가 창을 올린 뒤 실행한다).
+// gameData 는 GameData(설정 치환·Tell 섹션·이름 기록), resources 는 메뉴 자원 묶음이다. 본문이 영숫자가 없는 빈 본문이면 창을 만들지 않고 { empty: true } 로 알린다.
+// 대상이 원본 지역 입력 범위(1024바이트)를 넘으면 없는 섹션처럼 { missing: true } 이다.
+// 반환: { window, empty, missing, blank, inlineCommands[{ name, argument, number }] }.
 // 사용: const result = createTellWindow({ gameData, resources, name: 'Credits', screen, nowSeconds, onCommand }); result.window?.fit();
-// (2026-10-28 WB03-D)
+// (2026-10-28 WB03-D, 2026-10-30 WB03-J: BLANK·지역 인자·이름 기록·조건 태그·인라인 명령 추가)
 export function createTellWindow({ gameData, resources, name, screen, nowSeconds = 0, onCommand = null, onSound = null, onUnsupported = null, onTrace = null, hooks = {} }) {
-    const body = gameData.tellSection(name);
-    if (body === null) return { window: null, empty: false, missing: true };
-    // 본문 변환·지시문 추출에 쓰는 훅이다: `@`·`#` 파일 목록은 설정 객체를 등록해 행을 만들고, 지원하지 않는 기능은 onUnsupported 로 알린다.
-    const mergedHooks = { expandMenu: (label, command, argument) => expandFileList(gameData, label, command, argument), onUnsupported, ...hooks };
-    const content = prepareDialogContent(body, { substitute: (text) => gameData.substitute(text), okButton: gameData.get('OkButton') ?? undefined, hooks: mergedHooks });
-    if (content.empty) return { window: null, empty: true, missing: false };
-    const window = new TellWindow({ resources, content, screen, nowSeconds, onCommand, onSound, onUnsupported, onTrace });
-    window.fit();
-    window.place();
-    return { window, empty: false, missing: false };
+    const inlineCommands = [];
+    if (asciiLower(name) === 'blank') return { window: null, empty: false, missing: false, blank: true, inlineCommands };
+    // 지역 인자 객체이다. 같은 이름의 바깥 객체는 일시적으로 가려지고 본문 처리 뒤 내려간다.
+    const parameters = new Config(gameData.registry, 'param');
+    try {
+        let sectionName;
+        try {
+            sectionName = parseTellParameters(name, { substitute: (text) => gameData.substitute(text), append: (line) => parameters.append(line) });
+        } catch (error) {
+            if (error instanceof RangeError) return { window: null, empty: false, missing: true, blank: false, inlineCommands };
+            throw error;
+        }
+        const body = gameData.findTellSection(sectionName);
+        if (body === null) return { window: null, empty: false, missing: true, blank: false, inlineCommands };
+        // 본문 변환·지시문 추출에 쓰는 훅이다: `@`·`#` 파일 목록은 설정 객체를 등록해 행을 만들고, 조건 태그는 설정 값으로 평가하며,
+        // 스크립트 명령은 모아 두고, 지원하지 않는 기능은 onUnsupported 로 알린다.
+        const mergedHooks = {
+            expandMenu: (label, command, argument) => expandFileList(gameData, label, command, argument),
+            condition: (parserState, raw, closing) => applyHtmlCondition(parserState, raw, closing, (text) => gameData.substitute(text)),
+            command: (parserState, raw) => inlineCommands.push(parseScriptCommand(raw)),
+            onUnsupported,
+            ...hooks,
+        };
+        const content = prepareDialogContent(body, { substitute: (text) => gameData.substitute(text), okButton: gameData.get('OkButton') ?? undefined, hooks: mergedHooks });
+        if (content.empty) return { window: null, empty: true, missing: false, blank: false, inlineCommands };
+        const window = new TellWindow({ resources, content, screen, nowSeconds, onCommand, onSound, onUnsupported, onTrace });
+        window.fit();
+        window.place();
+        return { window, empty: false, missing: false, blank: false, inlineCommands };
+    } finally {
+        parameters.dispose();
+    }
 }

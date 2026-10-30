@@ -43,7 +43,7 @@
 | 확대 | 모니터/장치 | 8비트 표면 → 팔레트 RGB → 정수 배율 최근접 확대 후 부드러운 축소(`?scaling=sharp` 기본, `nearest`·`smooth` 선택) |
 | 커서 | OS 커서 리소스 | 같은 그림을 정수 배율(화면 배율 반올림, 최대 4배)로 키운 CSS 커서, 고해상도는 image-set |
 
-메뉴 버튼이 여는 다음 화면(캠페인·데모·크레딧 Tell 대화상자, 도움말·옵션 펼침 메뉴)은 이번 범위가 아니다. (Edit 지도 목록은 2026-10-27 목표 변경으로 제외. 2026-10-28 에 Tell 본문을 읽는 데이터층만 추가했다: [데이터층 기록](webpj-data-layer-20261028.md).) 실행 시 `onMenuCommand` 훅과 콘솔 안내만 한다(**2026-10-28 WB03-D 부터 Campaign·Demo·Credits 의 Tell 명령은 대화상자를 연다**: [Tell 대화상자 기록](webpj-tell-dialog-20261028.md). Help·Options 는 아직 안내만). 시작 시 "Did You Know?" 팁 창(tellTips=1), 45초 무입력 Auto-Demo, F1 도움말도 미구현이다.
+메뉴 버튼이 여는 다음 화면(캠페인·데모·크레딧 Tell 대화상자, 도움말·옵션 펼침 메뉴)은 이번 범위가 아니다. (Edit 지도 목록은 2026-10-27 목표 변경으로 제외. 2026-10-28 에 Tell 본문을 읽는 데이터층만 추가했다: [데이터층 기록](webpj-data-layer-20261028.md).) 실행 시 `onMenuCommand` 훅과 콘솔 안내만 한다(**2026-10-28 WB03-D 부터 Campaign·Demo·Credits 의 Tell 명령은 대화상자를 연다**: [Tell 대화상자 기록](webpj-tell-dialog-20261028.md). Help·Options 는 아직 안내만). 시작 시 "Did You Know?" 팁 창(tellTips=1), 45초 무입력 Auto-Demo, F1 도움말도 미구현이다(**2026-10-30 갱신:** F1 도움말은 WB03-G, 시작 환영·팁 창은 WB03-J 에서 구현했다 — [시작 창 기록](webpj-startup-dialogs-20261030.md). Auto-Demo 는 아직 없다).
 
 ## 4. 자산 묶음
 

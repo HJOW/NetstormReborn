@@ -15,9 +15,14 @@ export const SETTINGS_VERSION = 1;
 export const VOLUME_STEP_MIN = 1;
 export const VOLUME_STEP_MAX = 5;
 
-// 설정 키 정의이다. kind 는 'toggle'(0/1) 또는 'volume'(1~5), fallback 은 기본값이다.
+// 정수 설정(kind 'integer')이 받는 값의 범위이다(부호 있는 32비트). 원본 설정 값 읽기(ReadInt)가 32비트 정수로 감기므로 같은 범위만 받는다. (2026-10-30 WB03-J)
+export const INTEGER_MIN = -2147483648;
+export const INTEGER_MAX = 2147483647;
+
+// 설정 키 정의이다. kind 는 'toggle'(0/1)·'volume'(1~5)·'integer'(부호 있는 32비트 정수), fallback 은 기본값이다.
 // 기본값은 원본 옵션 해석(Interpret Options)의 기본 변수와 스크린샷의 기본 체크 상태를 따른다:
 //  - 소리·음악·바람 소리·가장자리 스크롤·자동 데모·시작 팁은 켜짐, 좌우 스피커 교환은 꺼짐, 효과음 음량 3, 음악 음량 2. (2026-10-29 WB03-F)
+//  - welcomeGiven(첫 실행 환영 창을 이미 보여 줬는가, 원본 setup.cfg 기본 0)과 tipNumber(다음에 보일 시작 팁 번호, 원본 setup.cfg 기본 0)는 시작 창이 쓴다. (2026-10-30 WB03-J)
 export const SETTING_DEFINITIONS = Object.freeze({
     sound: Object.freeze({ kind: 'toggle', fallback: 1 }),
     music: Object.freeze({ kind: 'toggle', fallback: 1 }),
@@ -28,6 +33,8 @@ export const SETTING_DEFINITIONS = Object.freeze({
     edgeScroll: Object.freeze({ kind: 'toggle', fallback: 1 }),
     autoDemo: Object.freeze({ kind: 'toggle', fallback: 1 }),
     tellTips: Object.freeze({ kind: 'toggle', fallback: 1 }),
+    welcomeGiven: Object.freeze({ kind: 'toggle', fallback: 0 }),
+    tipNumber: Object.freeze({ kind: 'integer', fallback: 0 }),
 });
 
 // 설정 키 이름을 대소문자 무시로 정식 이름(SETTING_DEFINITIONS 의 키)으로 바꾼다. 설정 키가 아니면 null 이다.
@@ -37,7 +44,8 @@ export function findSettingKey(name) {
     return Object.keys(SETTING_DEFINITIONS).find((key) => key.toLowerCase() === lower) ?? null;
 }
 
-// 값을 키의 종류에 맞게 정리한다. toggle 은 참/거짓을 1/0 으로, volume 은 1~5 의 정수만 받는다. 맞지 않으면 null 이다. (2026-10-29 WB03-F)
+// 값을 키의 종류에 맞게 정리한다. toggle 은 참/거짓을 1/0 으로, volume 은 1~5 의 정수만, integer 는 부호 있는 32비트 범위의 정수(또는 `-` 가 붙을 수 있는 십진 문자열)만 받는다.
+// 맞지 않으면 null 이다. (2026-10-29 WB03-F, 2026-10-30 WB03-J: integer 종류 추가)
 export function normalizeSetting(key, value) {
     const definition = SETTING_DEFINITIONS[key];
     if (!definition) return null;
@@ -45,6 +53,10 @@ export function normalizeSetting(key, value) {
         if (value === true || value === 1 || value === '1') return 1;
         if (value === false || value === 0 || value === '0') return 0;
         return null;
+    }
+    if (definition.kind === 'integer') {
+        const integer = typeof value === 'string' && /^-?\d+$/.test(value) ? Number(value) : value;
+        return Number.isInteger(integer) && integer >= INTEGER_MIN && integer <= INTEGER_MAX ? integer : null;
     }
     const number = typeof value === 'string' && /^\d+$/.test(value) ? Number(value) : value;
     return Number.isInteger(number) && number >= VOLUME_STEP_MIN && number <= VOLUME_STEP_MAX ? number : null;

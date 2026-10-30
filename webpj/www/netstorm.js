@@ -29,6 +29,9 @@ import { MainMenuScreen } from './ui/main-menu.js';
 import { PopupMenu } from './ui/popup-menu.js';
 import { buildPopupItems } from './ui/option-menus.js';
 import { createTellWindow } from './ui/tell-window.js';
+import { TELL_TIP_COMMAND, dispatchTellTip } from './ui/tell-tip.js';
+import { applyScriptConfig } from './ui/script-command.js';
+import { configParseLong } from './assets/config.js';
 import { HelpWindow, createHelpWindow } from './ui/help-window.js';
 import { applyCursorStyle, buildCursorCss } from './ui/cursor.js';
 
@@ -426,6 +429,8 @@ export class Netstorm {
         this._presenter = null;
         // 메인 메뉴 화면이다. 메인 메뉴에 처음 들어갈 때 만든다.
         this._mainMenu = null;
+        // 시작 팁 창을 아직 보여 주지 않은 첫 메인 메뉴인지 여부이다(원본 전역 00542530, 초기 1). 환영 창이 아닌 시작 흐름이 끝나면 꺼진다. init 에서 다시 켠다. (2026-10-30 WB03-J)
+        this._firstMenuPending = true;
         // 다음 프레임에 Canvas 를 반드시 다시 그려야 하는지 여부다(크기 변경 등).
         this._displayDirty = true;
         // init 때 저장한 문서 제목이다. destroy 가 되돌린다.
@@ -533,6 +538,9 @@ export class Netstorm {
         this._progress = new Progress({ storage });
         if (this._progress.loadProblem) console.warn(`Netstorm: ${this._progress.loadProblem}. 진행 값 없이 시작합니다.`);
         this._syncGameData();
+        // 새 수명은 처음 켠 게임처럼 시작 창 흐름과 Tell 이름 기록을 다시 시작한다. (2026-10-30 WB03-J)
+        this._firstMenuPending = true;
+        if (this._gameData) this._gameData.currentTell = '';
         this._presenter = new IndexedPresenter(doc, this.options.scaling);
         // 이전 수명에서 이미 받은 자원이 있으면(재시작) 팔레트를 바로 설치한다.
         if (this._resources) this._presenter.setPalette(this._resources.palette.rgb);
@@ -723,6 +731,24 @@ export class Netstorm {
         this._root.ownerDocument.title = MAIN_MENU_WINDOW_TITLE;
         this._displayDirty = true;
         this._playMenuMusic();
+        this._runMainMenuStartup();
+    }
+
+    // 메인 메뉴에 들어갈 때의 시작 창 흐름이다(원본 State3 부모 004b6fa9 이후의 Tell 순서).
+    //  - WelcomeGiven 이 0 이면 환영 창(`Welcome`)만 연다(`Welcome2` 를 지나면 welcomeGiven=1 이 저장된다).
+    //  - 아니면 `Blank` 를 보낸 뒤, 첫 메뉴이고 tellTips 가 켜져 있으면 팁 창(`Tips`, "Did You Know?")을 연다. 첫 메뉴 표시는 이 갈래의 끝에서 꺼진다.
+    // 원본은 팁 창 앞에 "Not Validated" 창(`UserNotUpdated`, 자동 업데이트 검증 실패 안내)도 겹쳐 열지만, 이 창은 구현하지 않기로 한 프로젝트 결정(2026-09-30)과
+    // 웹에는 업데이터가 없다는 점에 따라 열지 않는다. 원본의 저장 상태 확인 질문(startup)도 웹에는 저장 상태가 없어 없다. (2026-10-30 WB03-J)
+    _runMainMenuStartup() {
+        const data = this._gameData;
+        if (!data || !this._mainMenu) return;
+        if (configParseLong(data.get('WelcomeGiven') ?? '0') === 0) {
+            this._openTell('Welcome');
+            return;
+        }
+        this._openTell('Blank');
+        if (this._firstMenuPending && configParseLong(data.get('tellTips') ?? '0') !== 0) this._openTell('Tips');
+        this._firstMenuPending = false;
     }
 
     // 메인 메뉴 버튼이 실행됐을 때 호출된다. 원본은 여기서 Tell 섹션(캠페인·데모·크레딧)이나 펼침 메뉴(도움말·옵션)를 연다.
@@ -827,8 +853,10 @@ export class Netstorm {
         if (settings.get('music') === 1) this._playMenuMusic();
     }
 
-    // Tell 섹션 이름으로 대화상자를 열어 메인 메뉴 위에 올린다(원본 Tell 명령 004cf730). 섹션이 없으면 원본처럼 오류 로그만 남기고 아무것도 열지 않는다.
-    // 본문이 영숫자 없는 빈 내용이어도 열지 않는다. 열린 대화상자의 명령은 _onDialogCommand 가 받는다. 열었으면 true 를 돌려준다. (2026-10-28 WB03-D)
+    // Tell 대상으로 대화상자를 열어 메인 메뉴 위에 올린다(원본 Tell 명령 004cf730). 대상은 `섹션이름` 또는 `섹션이름(인자,…)` 이다(지역 인자는 본문의 `{param.1}` 이 읽는다).
+    // `Blank` 는 창을 열지 않는 명령이다. 섹션이 없으면 원본처럼 오류 로그만 남기고 아무것도 열지 않는다. 본문이 영숫자 없는 빈 내용이어도 열지 않는다.
+    // 본문의 스크립트 명령(`<$config,키=값>` 등)은 창이 올라간 뒤(창이 없어도) 순서대로 실행한다. 열린 대화상자의 명령은 _onDialogCommand 가 받는다. 열었으면 true 를 돌려준다.
+    // (2026-10-28 WB03-D, 2026-10-30 WB03-J: Blank·지역 인자·본문 스크립트 명령 추가)
     _openTell(name) {
         if (!this._mainMenu || !this._gameData || !this._resources) return false;
         const result = createTellWindow({
@@ -842,10 +870,43 @@ export class Netstorm {
             onUnsupported: (what, text) => console.warn(`Netstorm: Tell '${name}' 의 ${what} 은(는) 아직 지원하지 않습니다.`, text),
         });
         if (result.missing) console.warn(`Netstorm: TELL cannot find "${name}".`);
-        if (!result.window) return false;
-        this._mainMenu.setDialog(result.window);
-        this._displayDirty = true;
-        return true;
+        if (result.window) {
+            this._mainMenu.setDialog(result.window);
+            this._displayDirty = true;
+        }
+        // 본문 안의 스크립트 명령은 원본이 명령 큐에 넣어 다음 입력에서 처리하는 것과 같게, 창을 올린 뒤 순서대로 실행한다.
+        for (const command of result.inlineCommands) this._runScriptCommand(command);
+        return result.window !== null;
+    }
+
+    // 스크립트 명령(본문의 `<$이름,인자>` 와 버튼 명령 공통) 하나를 실행한다. Config 는 `키=값` 을 게임 데이터 설정에 쓰고(설정·진행 저장소로 이어짐), Warning 은 콘솔에 남긴다.
+    // 아직 연결하지 않은 명령은 안내만 한다. 실행했으면 true 이다. (2026-10-30 WB03-J)
+    _runScriptCommand(command) {
+        const name = String(command.name).toLowerCase();
+        if (name === 'config' && this._gameData) {
+            applyScriptConfig(String(command.argument), (key, value) => this._gameData.set(key, value));
+            return true;
+        }
+        if (name === 'warning') {
+            console.warn(`Netstorm: ${command.argument}`);
+            return true;
+        }
+        console.info(`Netstorm: 스크립트 명령 '${command.name}' 은(는) 아직 구현되지 않았습니다.`, command);
+        return false;
+    }
+
+    // 시작 팁 창의 Prior Tip / Next Tip / OK 버튼(`TellTip,1|2|3`)을 처리한다(원본 TellTip). 현재 팁 번호는 `tipNumber` 설정이며, 바뀐 번호가 설정에 쓰여 저장된다.
+    // OK(3)는 다음 팁 번호만 저장하고 창을 다시 열지 않으며, 나머지는 같은 `Tips` 창을 새 번호로 다시 연다. 버튼 인자가 숫자로 시작하지 않으면 0 으로 본다. (2026-10-30 WB03-J)
+    _runTellTip(command) {
+        const data = this._gameData;
+        if (!data) return;
+        const argument = String(command.argument ?? '');
+        const parameter = argument.length > 0 && argument[0] >= '0' && argument[0] <= '9' ? configParseLong(argument) : 0;
+        dispatchTellTip({ code: TELL_TIP_COMMAND, y: parameter }, configParseLong(data.get('tipNumber') ?? '0') >>> 0, {
+            format: (value) => String(value),
+            setConfig: (key, value) => data.set(key, value),
+            tell: (section) => this._openTell(section),
+        });
     }
 
     // 일반 도움말 창을 열어 메인 메뉴 위에 올린다(원본 F1Help: 메인 메뉴 Help 목록의 General Help 행과 F1 키). 이미 열려 있으면 그 창에서 주제만 첫 주제로 되돌린다.
@@ -881,7 +942,8 @@ export class Netstorm {
     }
 
     // 대화상자에서 실행된 명령(버튼·목록 행·Timeout)을 처리한다. 원본처럼 먼저 대화상자를 닫고(OnExit 명령 실행) 명령을 실행한다.
-    // `Tell,이름` 은 다음 대화상자를 열고, `DoNothing` 은 닫기만 한다. 그 밖의 명령(StartDemo·MissionBegin 등)은 아직 구현되지 않아 닫고 안내만 남긴다. (2026-10-28 WB03-D)
+    // `Tell,이름` 은 다음 대화상자를 열고, `DoNothing` 은 닫기만 한다. `Config,키=값` 은 설정을 쓰고 `TellTip,번호` 는 팁 창을 처리한다(2026-10-30 WB03-J).
+    // 그 밖의 명령(StartDemo·MissionBegin 등)은 아직 구현되지 않아 닫고 안내만 남긴다. (2026-10-28 WB03-D)
     _onDialogCommand(command) {
         const dialog = this._mainMenu?.dialog ?? null;
         const onExit = dialog ? dialog.close() : null;
@@ -895,6 +957,8 @@ export class Netstorm {
     _runDialogCommand(command) {
         const name = String(command.name).toLowerCase();
         if (name === 'tell') this._openTell(command.argument);
+        else if (name === 'config') this._runScriptCommand(command);
+        else if (name === 'telltip') this._runTellTip(command);
         else if (name !== 'donothing') console.info(`Netstorm: 대화상자 명령 '${command.name}' 은(는) 아직 구현되지 않았습니다.`, command);
     }
 

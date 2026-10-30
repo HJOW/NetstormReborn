@@ -48,6 +48,6 @@
 ## 5. 남은 일 (다음 단위)
 
 1. **Tell 대화상자 그리기:** 본문 파서(`<background>`·`<h2>`·`<p>`·`<br>`·`$Menu=`·`$Button=`·`$Timeout=`), StyleText 해석, 돌 패널(모서리 장식·질감)·목록 행·버튼, 대화상자 크기 맞춤·가운데 배치, 입력. 먼저 Credits(정적 5줄)로 `screenShots/mainMenu - Credits.png` 와 대조하고, Campaign(`@{guideSpec}` 목록·구분선)으로 넓힌다. **디컴파일 소스(HtmlWindow·StyleText·MenuGump·UberGump 배경 Gump)를 읽어야 하므로 PC 불일치 규칙을 먼저 적용한다.**
-2. Tell 이름의 지역 인자 `Name(arg1,arg2)` 해석(원본 `004c8ea0`, cpppj fixture `tell-parameters-x86.tsv` 1,070관측으로 대조 가능), 현재 미션 스크립트 조회 연결.
+2. Tell 이름의 지역 인자 `Name(arg1,arg2)` 해석(원본 `004c8ea0`, cpppj fixture `tell-parameters-x86.tsv` 1,070관측으로 대조 가능), 현재 미션 스크립트 조회 연결. **(지역 인자는 2026-10-30 WB03-J 에서 완료·1,070행 대조, 현재 미션 조회는 미션 구현 때 — [시작 창 기록](webpj-startup-dialogs-20261030.md))**
 3. 한국어: 용어표·Tell 한국어 파일, D2Coding 글리프 경로.
 4. 사용자 설정 저장(`Set`·저장)과 옵션 메뉴 연결.

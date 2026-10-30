@@ -10,7 +10,7 @@
 // 원본은 메인 루프가 변경 표시를 보고 options.cfg 를 저장하지만, 웹 판본은 쓸 때마다 호스트가 넘긴 onChange 훅을 불러 로컬 저장소에 저장하게 한다(platform/progress.js·settings.js).
 // 이 모듈은 DOM 을 쓰지 않아 Node 에서도 불러와 검사할 수 있다.
 // (2026-10-28 WB02-D: 메뉴 대화상자 본문 조회를 위해 추가. 2026-10-30 WB03-H: 값 쓰기와 변경 통지 추가)
-import { Config, ConfigRegistry, sectionRange } from './config.js';
+import { Config, ConfigRegistry, asciiLower, sectionRange } from './config.js';
 import { GameFiles } from './game-files.js';
 import { decodeOriginalText } from './text-encoding.js';
 
@@ -27,6 +27,9 @@ const MINOR_VERSION = 78;
 // 영어(대체 언어)의 이름이다. 모르는 언어와 없는 언어 파일은 영어로 대체한다. (2026-10-28 WB02-D)
 export const FALLBACK_LANGUAGE = 'english';
 
+// 현재 Tell 이름을 담는 원본 지역 배열의 크기(종료 NUL 포함)이다. 이 크기 이상인 이름은 기록하지 않고 거부한다. (2026-10-30 WB03-J)
+export const TELL_NAME_BYTES = 256;
+
 // 게임 데이터 조회 객체이다.
 // 사용: const data = GameData.build({ files: 적재기가 준 경로 → 바이트 Map, language: 'english', options: { soundVolume: 3 } });
 //       data.tellSection('Credits') → 섹션 본문 문자열, data.substitute('{H2}'), data.pathSpec('missionSpec', 'tutorial1'). (2026-10-28 WB02-D)
@@ -40,8 +43,10 @@ export class GameData {
         this.files = files;
         // 현재 언어 이름이다(파일 확장자로 쓰임). 'english' 이외는 대응 파일이 없으면 영어 파일로 대체한다.
         this.language = language;
-        // 설정 객체 등록부다.
-        this.registry = new ConfigRegistry();
+        // 설정 객체 등록부다. `{@미션.키}` 조회는 미션 이름의 스크립트 파일(`missionSpec`)을 임시 객체에 읽어 넣는다(원본 00440760, 팁 문구 `{@tell.tip3}` 등). (2026-10-30 WB03-J: 적재 훅 연결)
+        this.registry = new ConfigRegistry({ loadMission: (config, mission) => this._loadMission(config, mission) });
+        // 마지막으로 조회한 Tell 섹션 이름이다(원본 Client 의 현재 Tell 이름 256바이트). 이름이 달라질 때 이전 이름이 `global.priorTell` 에 기록된다. (2026-10-30 WB03-J)
+        this.currentTell = '';
         // 언어 용어표 객체(config.<언어>)다. 가장 먼저 등록되어 우선순위가 가장 낮다.
         this.terms = new Config(this.registry);
         // 전역 설정 객체(원본 configuration)다.
@@ -93,6 +98,13 @@ export class GameData {
         this.terms.clear();
         const bytes = this._readLanguageFile(this.pathSpec('languageSpec', this.language), this.language);
         if (bytes) this.terms.loadBytes(bytes, decodeOriginalText);
+    }
+
+    // `{@미션.키}` 조회가 임시 설정 객체(config)에 미션 스크립트를 읽어 넣는다(원본 ConfigInterface 의 미션 적재: missionSpec 경로 파일을 객체 버퍼에 덧붙임).
+    // 파일이 없으면 아무것도 넣지 않는다. 언어 파일이므로 현재 언어의 파일이 없으면 영어로 대체한다. (2026-10-30 WB03-J)
+    _loadMission(config, mission) {
+        const bytes = this._readLanguageFile(this.pathSpec('missionSpec', mission), this.language);
+        if (bytes) config.loadBytes(bytes, decodeOriginalText);
     }
 
     // 언어 파일을 읽는다. 없고 언어가 영어가 아니면 경로의 `.언어` 또는 `config.언어` 를 영어로 바꿔 한 번 더 시도한다. (웹 적응)
@@ -187,5 +199,18 @@ export class GameData {
         if (text === null) return null;
         const range = sectionRange(text, name);
         return range ? text.slice(range.start, range.start + range.length) : null;
+    }
+
+    // Tell 이름을 현재 이름으로 기록하고 섹션 본문을 찾는다(원본 004cf730 의 이름 기록 + 조회). 이름이 현재 이름과 대소문자를 무시하고 다르면
+    // 먼저 이전 이름을 `global.priorTell`(본문의 `{global.priorTell}`)에 쓴다. 조회가 실패해도 이름 기록은 남는다. 이름이 256바이트 이상이면 RangeError 이다.
+    // 호출자(Tell 창 공장)가 `param` 객체를 등록한 상태에서 부르며, 이름에는 이미 지역 인자를 뗀 순수 섹션 이름을 넘긴다. BLANK 는 이 함수 앞에서 걸러진다.
+    // 사용: const body = data.findTellSection('Tips'); body === null 이면 섹션이 없다. (2026-10-30 WB03-J)
+    findTellSection(name) {
+        const nul = name.indexOf('\0');
+        const local = nul >= 0 ? name.slice(0, nul) : name;
+        if (local.length >= TELL_NAME_BYTES) throw new RangeError('Tell 이름이 원본 256바이트 지역 범위를 넘었습니다.');
+        if (asciiLower(this.currentTell) !== asciiLower(local)) this.set('global.priorTell', this.currentTell, { silent: true });
+        this.currentTell = local;
+        return this.tellSection(local);
     }
 }

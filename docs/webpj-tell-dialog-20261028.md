@@ -58,6 +58,6 @@ fortGump 프레임: A00=0(패널), A01=1(목록·버튼), I00~I03=54~57(모서�
 1. **Early Missions 목록(`offical1.overview`)·`$Checked` 행:** 체크 표시·잠금(`{DoneTutorial1}` 등 진행 값)·`MissionBegin` 명령은 형식만 옮겼고 스크린샷(`mainMenu - Campaign - Early Missions.png` 등)과 아직 대조하지 않았다. 두 열 메뉴(`menuColumns>1`)와 `%{userSpec}` 인라인 목록(User Made Campaigns)은 미구현(경고만). *(2026-10-30 갱신: `%{userSpec}`/User Made Campaigns 는 웹 판본이 제공하지 않기로 결정해 구현 대상이 아니다. Campaign 목록에서 노출하지 않는다. [LEFT_JOBS.webpj.md](../LEFT_JOBS.webpj.md) 맨 위 '사용자 결정' 절. 2026-10-30 WB03-I 에서 코드에 반영해 Campaign 대화상자는 6행이다 — [캠페인 하위 목록 기록](webpj-campaign-lists-20261029.md) §7.)*
 2. **Credits 긴 쪽·스크롤바:** 본문이 화면보다 길면 `useSlider` 만 켜고 경고한다(스크롤바 그림·입력 없음). 도움말(Help)에 필요하다.
 3. **링크(`<a>`)·조건(`<?`)·그림(`<!`·`~[I...]`)·`$Input`·`$Zsend`·기술 목록:** 훅 자리만 있다.
-4. **Tell 지역 인자 `Name(arg1,arg2)`**, 현재 미션 스크립트 조회, 한국어(`.korean` 자료·D2Coding), `<background>` 그림 교체.
+4. **Tell 지역 인자 `Name(arg1,arg2)`**(2026-10-30 WB03-J 에서 완료 — [시작 창 기록](webpj-startup-dialogs-20261030.md)), 현재 미션 스크립트 조회, 한국어(`.korean` 자료·D2Coding), `<background>` 그림 교체(`nsisles` 자료는 원본에 없음).
 5. MenuGump 펼침 메뉴(Help·Options), 시작 팁 창, 설정 저장.
 6. `StartDemo`·`MissionBegin` 명령은 대화상자를 닫고 콘솔 안내만 한다(미션 단계 구현 때 연결).

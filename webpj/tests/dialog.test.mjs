@@ -331,8 +331,14 @@ test('대화상자 입력: 목록 행 · 돌 버튼 · Timeout · 닫기', () =>
     // 닫힌 창은 입력을 받지 않는다.
     assert.equal(window.close(), null);
     assert.equal(window.pointerDown(420, second.top + 3), false);
-    // 없는 섹션은 만들지 않는다.
-    assert.equal(createTellWindow({ gameData: data, resources, name: 'Blank', screen: { width: 1024, height: 768 } }).missing, true);
+    // 없는 섹션은 만들지 않는다. `Blank` 는 섹션이 아니라 창을 열지 않는 조기 분기이다(2026-10-30 WB03-J: 원본 004cf730 의 BLANK 분기, 이전에는 없는 섹션으로 처리했다).
+    const missing = createTellWindow({ gameData: data, resources, name: 'NoSuchSection', screen: { width: 1024, height: 768 } });
+    assert.equal(missing.missing, true);
+    assert.equal(missing.window, null);
+    const blank = createTellWindow({ gameData: data, resources, name: 'Blank', screen: { width: 1024, height: 768 } });
+    assert.equal(blank.blank, true);
+    assert.equal(blank.missing, false);
+    assert.equal(blank.window, null);
 });
 
 // 원본 스크린샷과의 위치·픽셀 대조에 쓰는 정보이다. 스크린샷은 창 테두리를 포함하며 클라이언트 원점이 그림마다 조금 다르다. (2026-10-28 WB03-D)

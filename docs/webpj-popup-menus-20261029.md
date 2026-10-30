@@ -57,7 +57,7 @@ cpppj `UberGump::OpenMenu` 는 호스트 어댑터(Help 는 "About NetStorm" 한
 | Sound On | 효과음(button·openSubGump)을 낸다/내지 않는다(이미 재생 중인 짧은 소리는 끝까지 난다) |
 | Play Music | 끄면 메뉴 음악이 멈추고, 켜면 처음부터 다시 반복 재생한다 |
 | Sound Effect Volume / Music Volume | 1~5 단계가 바로 음량이 된다(1 = −40dB … 3 = −10dB, 4 = −5dB, 5 = 0dB) |
-| Wind Noise·Speaker Swap L/R·Edge Scroll in Fullscreen·Auto-Demo·Tell Tips at Startup | **값만 저장한다.** 해당 기능(바람 소리·위치 소리·가장자리 스크롤·자동 데모·시작 팁 창)이 아직 없다 |
+| Wind Noise·Speaker Swap L/R·Edge Scroll in Fullscreen·Auto-Demo·Tell Tips at Startup | **값만 저장한다.** 해당 기능(바람 소리·위치 소리·가장자리 스크롤·자동 데모)이 아직 없다. **Tell Tips at Startup 은 2026-10-30 WB03-J 부터 시작 팁 창을 실제로 켜고 끈다**([시작 창 기록](webpj-startup-dialogs-20261030.md)) |
 
 저장은 브라우저 로컬 저장소 `netstorm.settings`(버전 1)이고, 새로고침 뒤에도 유지된다(브라우저에서 확인). `?` 주소의 호스트 옵션 음량은 저장하지 않고 그 실행에서만 우선한다. 게임 데이터 설정 층(`GameData`)에는 **첫 적재 때의 값만** 들어가며 이후 변경은 그곳에 반영되지 않는다(설정 쓰기 층이 아직 없다. 미션 완료 기록 `Done*` 저장을 만들 때 함께 정한다).
 

@@ -245,7 +245,8 @@ export function htmlPictureText(raw) {
 
 // 원본 토큰 읽기(공통 helper)이다. offset 부터 space·tab 만 건너뛴 뒤 delimiters 의 글자를 만나기 전까지(따옴표 안은 제외) 읽는다. 따옴표 글자는 출력하지 않고, 입력 한도는 78글자이며, 끝의 공백·탭은 첫 글자만 남기고 지운다.
 // 반환: { text, next }(next 는 읽은 뒤 구분자까지 건너뛴 위치). 사용: 조건 태그의 왼쪽·오른쪽 식을 읽는다. (2026-10-30 WB03-G)
-function readRawTextToken(source, start, delimiters) {
+// 스크립트 명령(`<$...>`)·Tell 이름의 지역 인자도 같은 helper 를 쓰므로 내보낸다. 한 글자가 한 바이트인 문자열(원본 바이트 문자열)로 쓰면 원본 바이트 결과와 같다. (2026-10-30 WB03-J)
+export function readRawTextToken(source, start, delimiters) {
     const input = source.includes('\0') ? source.slice(0, source.indexOf('\0')) : source;
     let offset = start;
     while (offset < input.length && (input[offset] === ' ' || input[offset] === '\t')) offset += 1;

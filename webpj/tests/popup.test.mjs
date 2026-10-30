@@ -48,7 +48,8 @@ function fakeStorage(initial = {}) {
 test('설정: 기본값·값 검증·토글·통지', () => {
     const changes = [];
     const settings = new Settings({ onChange: (key, value, previous) => changes.push([key, value, previous]) });
-    assert.deepEqual(settings.snapshot(), { sound: 1, music: 1, playWind: 1, swapLeftRightSpeakers: 0, soundVolume: 3, musicVolume: 2, edgeScroll: 1, autoDemo: 1, tellTips: 1 });
+    // (2026-10-30 WB03-J: 시작 창이 쓰는 welcomeGiven·tipNumber 를 기본값 0 으로 추가했다. 원본 setup.cfg 기본값과 같다.)
+    assert.deepEqual(settings.snapshot(), { sound: 1, music: 1, playWind: 1, swapLeftRightSpeakers: 0, soundVolume: 3, musicVolume: 2, edgeScroll: 1, autoDemo: 1, tellTips: 1, welcomeGiven: 0, tipNumber: 0 });
     // 토글은 0/1 만 받고 참/거짓·'0'/'1' 도 받는다. 그 밖의 값은 거부한다.
     assert.equal(normalizeSetting('sound', true), 1);
     assert.equal(normalizeSetting('sound', '0'), 0);
@@ -70,8 +71,18 @@ test('설정: 기본값·값 검증·토글·통지', () => {
     assert.equal(settings.toggle('music'), 1);
     assert.equal(settings.toggle('soundVolume'), null);
     assert.deepEqual(changes, [['soundVolume', 4, 3], ['music', 0, 1], ['music', 1, 0]]);
-    // 알려진 모든 키가 정의되어 있다(옵션 메뉴가 쓰는 키 9개).
-    assert.equal(Object.keys(SETTING_DEFINITIONS).length, 9);
+    // 알려진 모든 키가 정의되어 있다(옵션 메뉴가 쓰는 키 9개 + 시작 창이 쓰는 키 2개).
+    assert.equal(Object.keys(SETTING_DEFINITIONS).length, 11);
+    // 정수 설정(tipNumber)은 부호 있는 32비트 범위의 정수와 십진 문자열만 받는다. (2026-10-30 WB03-J)
+    assert.equal(normalizeSetting('tipNumber', 15), 15);
+    assert.equal(normalizeSetting('tipNumber', '-7'), -7);
+    assert.equal(normalizeSetting('tipNumber', '2147483647'), 2147483647);
+    assert.equal(normalizeSetting('tipNumber', -2147483648), -2147483648);
+    assert.equal(normalizeSetting('tipNumber', 2147483648), null);
+    assert.equal(normalizeSetting('tipNumber', '1.5'), null);
+    assert.equal(normalizeSetting('tipNumber', 'abc'), null);
+    assert.equal(normalizeSetting('welcomeGiven', '1'), 1);
+    assert.equal(normalizeSetting('welcomeGiven', 2), null);
     // 통지 콜백의 예외는 값 변경을 막지 않는다.
     const noisy = new Settings({ onChange: () => { throw new Error('boom'); } });
     const original = console.error;
