@@ -12,6 +12,7 @@ namespace {
 constexpr std::size_t kPlayerStride=0xb4,kPlayerFlags=0x50,kPlayerRegion=0x78; // 실제 PATCH Player 필드 위치다.
 constexpr std::uint32_t kPredictableSeed=0xfed,kAttemptLimit=100,kRecentLimit=5; // 원본 local시드/생성별 최대시도/최근목록 상한이다.
 constexpr float kRadius=2.0F,kHalf=0.5F,kSpotBias=0.99989998340606689453125F; // ROM00501444/500ee4/500edc의 실제float다.
+constexpr float kPlayerExclusionMargin=12.0F; //004857d0의 ROM0050480c이며 기존 PlayerBounds의4확장 뒤에 추가한다.
 // 정렬되지 않은 현재 Player DWORD를 정확 네 BYTE로 읽는다.
 std::uint32_t PlayerWord(std::span<const std::uint8_t> bytes,std::size_t offset) {
     std::uint32_t value=0;
@@ -44,20 +45,40 @@ std::uint8_t RawLocalGeyser::Spot(std::int32_t x,std::int32_t y) const {
 }
 // rectangle의 값형 snapshot은 현재 Player 처리 중 외부 사각형 변경과 분리한다.
 bool RawLocalGeyser::TryCandidate(GameRandom& random,FortRandomRectangle rectangle,LocalGeyserPoint& point) const {
-    return Candidate(random,rectangle,point,state_.emptyGeyserType);
+    return Candidate(random,rectangle,point,state_.emptyGeyserType,0,1,{});
+}
+//직접 finder 호출은 Player constructor를 대신 실행하지 않고 전달받은 사각형만 사용한다.
+bool RawLocalGeyser::TryCandidate(GameRandom& random,FortRandomRectangle rectangle,LocalGeyserPoint& point,std::uint32_t allowLand,std::uint32_t allowVoid,std::span<const FortRandomRectangle> exclusions) const {
+    if (exclusions.size()>8) throw std::out_of_range("간헐천 finder 제외 사각형의 실제8개 물리 범위");
+    return Candidate(random,rectangle,point,state_.emptyGeyserType,allowLand,allowVoid,exclusions);
+}
+//원문은 AI/everLoggedIn 비트가 아니라 정확히 flags BYTE의 bit0만 검사한다.
+std::vector<FortRandomRectangle> RawLocalGeyser::PlayerExclusions() const {
+    std::vector<FortRandomRectangle> result;
+    for (std::uint32_t owner=1;owner<=8;++owner) { //각 Player 차례에서 앞선 실제 하위가 바꾼 기록을 다시 읽는다.
+        const auto offset=owner*kPlayerStride;if (!(players_[offset+kPlayerFlags]&1U)) continue;
+        if (!hooks_.regionExists) throw std::logic_error("간헐천 제외 영역의 실제 IslandList 조회 미연결");
+        if (!hooks_.regionExists(std::bit_cast<std::int32_t>(PlayerWord(players_,offset+kPlayerRegion)))) continue;
+        const auto bounds=hooks_.playerBounds(owner);
+        result.push_back({bounds.left-kPlayerExclusionMargin,bounds.top-kPlayerExclusionMargin,bounds.right+kPlayerExclusionMargin,bounds.bottom+kPlayerExclusionMargin});
+    }
+    return result;
 }
 // 부모생성자가ctor뒤덮어쓰는+ac=emptyType/+b0=1을포함하여실제로컬후보전체를실행한다.
-bool RawLocalGeyser::Candidate(GameRandom& random,FortRandomRectangle rectangle,LocalGeyserPoint& point,std::uint32_t reuseType) const {
+bool RawLocalGeyser::Candidate(GameRandom& random,FortRandomRectangle rectangle,LocalGeyserPoint& point,std::uint32_t reuseType,std::uint32_t allowLand,std::uint32_t allowVoid,std::span<const FortRandomRectangle> exclusions) const {
     const auto width=Truncate(static_cast<double>(rectangle.right)-rectangle.left),height=Truncate(static_cast<double>(rectangle.bottom)-rectangle.top); // 0041daf0의 현재 정수화한 폭/높이다.
     if (width!=0 && height!=0) {
         const auto dy=Next(random,height),dx=Next(random,width); // 원본은 높이 난수 다음 폭 난수를 소비한다.
         point.y=static_cast<float>(static_cast<double>(dy)+rectangle.top);point.x=static_cast<float>(static_cast<double>(dx)+rectangle.left);
     } else { point.x=rectangle.left;point.y=rectangle.top; }
     point.x=static_cast<float>(std::floor(static_cast<double>(point.x)+kHalf));point.y=static_cast<float>(std::floor(static_cast<double>(point.y)+kHalf));
+    for (const auto& excluded:exclusions) { //00485890은3×3 발자국보다 먼저 반올림한 기준점의 포함 경계를 검사한다.
+        if (excluded.left<=point.x && point.x<=excluded.right && excluded.top<=point.y && point.y<=excluded.bottom) return false;
+    }
     const float left=static_cast<float>(static_cast<double>(point.x)-kRadius),top=static_cast<float>(static_cast<double>(point.y)-kRadius); // 원본이한번저장한3×3첫칸이다.
     if (!(rectangle.left<=left && left<=rectangle.right && rectangle.top<=top && top<=rectangle.bottom)) return false;
     const auto firstX=Truncate(left),firstY=Truncate(top); // 원본조건통과뒤같은첫칸을ftol로읽는다.
-    std::string pattern; // 원본32BYTE버퍼에순서대로모으는현재isle의프레임방향문자다.
+    std::string pattern;std::uint32_t previousSurface=0xffffffffU; // 원본32BYTE 문자 버퍼와 첫 지형 미정 표식이다.
     // 원본은x바깥/y안쪽이며끝점도포함하여최대3×3의현재spot을읽는다.
     for (std::int64_t x=firstX;static_cast<double>(static_cast<float>(x))<=point.x;++x) {
         // 첫거부칸에서즉시return하여다음칸이나난수를추가소비하지않는다.
@@ -69,7 +90,10 @@ bool RawLocalGeyser::Candidate(GameRandom& random,FortRandomRectangle rectangle,
             if (reuseType) if (const auto existing=FindType(static_cast<float>(sx),static_cast<float>(sy),reuseType);existing.value) {
                 const auto raw=pool_.Slot(existing);point.x=std::bit_cast<float>(PlayerWord(raw,14));point.y=std::bit_cast<float>(PlayerWord(raw,18));return true;
             }
-            if (spot&0x3fU) return false;
+            if (spot&0x3dU) return false;
+            const auto kind=std::uint32_t(spot&0x3fU);
+            if ((!allowLand && kind==2U) || (!allowVoid && kind==0U)) return false;
+            if (previousSurface!=0xffffffffU && kind!=previousSurface) return false;previousSurface=kind;
             const auto surface=sx>=0 && sy>=0 && sx<256 && sy<256 ? hash_.Entries(0)[static_cast<std::size_t>(sy*256+sx)] : std::uint16_t{}; // 원본WORDgetter는범위밖0을읽는다.
             const auto raw=pool_.Slot(Sid{surface}); // SID0도원본처럼type0을조회한다.
             if (raw[10]==state_.isleType) {
@@ -97,15 +121,20 @@ Sid RawLocalGeyser::FindType(float x,float y,std::uint32_t number) const {
 }
 // 각생성의100회실패는이요청전체를끝내고상위Player순회는원본처럼계속된다.
 void RawLocalGeyser::Populate(std::int32_t quantity,GameRandom& random,FortRandomRectangle rectangle) const {
+    Populate(quantity,random,rectangle,{});
+}
+//수량0에서도 원문 constructor는 최근 목록을 지운 뒤 제외 영역을 조회한다.
+void RawLocalGeyser::Populate(std::int32_t quantity,GameRandom& random,FortRandomRectangle rectangle,GeyserPlacementOptions options) const {
     if (!state_.Boss() || state_.fort) return;
     if (quantity<0) { hooks_.negativeQuantity();quantity=0; }
     recent_.count=0;
+    const auto exclusions=options.excludePlayers ? PlayerExclusions() : std::vector<FortRandomRectangle>{};
     const auto reuseType=state_.emptyGeyserType; // 원본ctor뒤finder+ac는이시점타입을한번보존한다.
     // 요청수량은값형인자이며실제생성성공마다한번감소한다.
     while (quantity!=0) {
         LocalGeyserPoint point;bool found=false;
         // local난수와현재spot을같은후보몸체에전달한다.
-        for (std::uint32_t attempt=0;attempt<kAttemptLimit;++attempt) if (Candidate(random,rectangle,point,reuseType)) { found=true;break; }
+        for (std::uint32_t attempt=0;attempt<kAttemptLimit;++attempt) if (Candidate(random,rectangle,point,reuseType,options.allowLand,options.allowVoid,exclusions)) { found=true;break; }
         if (!found) return;
         if (const auto empty=FindEmpty(point.x,point.y);empty.value) hooks_.destroy(empty,0x400000);
         --quantity;

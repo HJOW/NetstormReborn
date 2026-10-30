@@ -1,0 +1,23 @@
+{
+  "host": "HJOW-Athlon",
+  "date": "2026-10-30",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "cases": 183,
+  "observations": 366,
+  "differences": [],
+  "gameStarted": false,
+  "scope": "00486030/004857d0/00485890/00486130과 기존 난수/CRT 실제 명령. IslandList/Player bounds/typedFind/생성·삭제/Pop/건설확정은 명시 경계. 게임/포획/희생/공격/승리/MP 없음.",
+  "sourceSha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "tools/decomp_local_geyser.py": "7cd8341a5eee47549b2ab609af574abdac0d312e80e7e0a9e9263177d84f5619",
+    "tools/decomp_geyser_placement.py": "c85e5348108ebaf54862193320852f21301602c0f8116a204cea0942d68a322f",
+    "cpppj/tests/fixtures/geyser-placement-x86.tsv": "48ac1014e689de4e37bb7a55556a464605af6a23484aa8dd953c0bbed86af0a1"
+  },
+  "evidenceSha256": {
+    "first.json": "74f53d876d3bbbc47016880adcc7f36f5c08753de683f6cf43f2d479a63dcc9e",
+    "replay.json": "74f53d876d3bbbc47016880adcc7f36f5c08753de683f6cf43f2d479a63dcc9e"
+  }
+}

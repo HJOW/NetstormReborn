@@ -104,6 +104,7 @@ struct RawCampaignConstructionBindings::Impl {
         bounds=std::make_unique<o::RawPlayerGeyserBounds>(core.pool,chunks,core.types,core.frames,players,currentBounds,effects.boundsAssertion);
         o::LocalGeyserHooks geyserHooks; // factory/Pop/삭제/받침 모두 현재 같은 월드의 실제 몸체다.
         geyserHooks.configInt=effects.configInt;geyserHooks.wallSeconds=effects.wallSeconds;geyserHooks.negativeQuantity=effects.negativeQuantity;
+        geyserHooks.regionExists=effects.islandExists;
         geyserHooks.playerBounds=[this](std::uint32_t player) { return bounds->Bounds(player); };
         geyserHooks.destroy=[this](o::Sid sid,std::uint32_t flags) { Destroy(sid,flags); };
         geyserHooks.confirm=[this](const o::ConstructionConfirmRequest& request) { static_cast<void>(ConfirmSupport(request)); };
@@ -173,6 +174,8 @@ void RawCampaignConstructionBindings::Register(o::RawPacketDispatch& dispatch,st
 bool RawCampaignConstructionBindings::ConfirmSupport(const o::ConstructionConfirmRequest& request) const { return impl_->ConfirmSupport(request); }
 // 실제로그인/Player초기화뒤미션부모가지정한위치에서만호출한다.
 void RawCampaignConstructionBindings::GenerateLocalGeysers() const { impl_->ValidateState();impl_->geysers->Generate(); }
+//각 생성 요청 직전에 같은 실제 건설 전역의 정합성을 확인한다.
+void RawCampaignConstructionBindings::PopulateGeysers(std::int32_t quantity,o::GameRandom& random,o::FortRandomRectangle rectangle,o::GeyserPlacementOptions options) const { impl_->ValidateState();impl_->geysers->Populate(quantity,random,rectangle,options); }
 // 공유자원/최근목록의identity와현재값을상위에서검사할수있게한다.
 const o::RawLocalGeyser& RawCampaignConstructionBindings::LocalGeysers() const { return *impl_->geysers; }
 // 현재Player/청크지도의기존정밀몸체를공유한다.

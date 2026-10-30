@@ -3,10 +3,17 @@
 #include "o/RawConstructionConfirm.h"
 #include "o/RawFortFinishOwner.h"
 #include "o/RawSquidFinder.h"
+#include <vector>
 
 namespace netstorm::o {
 // 로컬 후보의 float 원본 좌표다. 실패한 시도도 마지막 반올림 좌표를 출력한다.
 struct LocalGeyserPoint { float x{},y{}; }; // x/y는 간헐천 Pop 기준점이며 noIsland 확정 좌표보다 각각2 크다.
+//00486130의 마지막 세 DWORD다. 비영 판정만 사용하며 원래 로컬 요청은0/0/1이다.
+struct GeyserPlacementOptions {
+    std::uint32_t excludePlayers{}; //004857d0으로 실제 flags1/존재하는 지역의 Player 주변을 제외한다.
+    std::uint32_t allowLand{}; //finder+a4이며 spot 하위6비트가2인 지형을 허용한다.
+    std::uint32_t allowVoid{1}; //finder+a8이며 spot 하위6비트가0인 허공을 허용한다.
+};
 // 원본 전역은 매 효과 뒤 다시 읽는다. 최근5목록은 전체 간헐천 목록과 별개다.
 struct LocalGeyserState {
     bool boss{true},fort{}; // 00540bc4/00594fb8의 현재 생성 권한과 요새 모드다.
@@ -28,8 +35,9 @@ struct LocalGeyserHooks {
     std::function<void(const ConstructionConfirmRequest&)> confirm; // 동일 풀의 실제00444590 noIsland 건설 확정이다.
     std::function<Sid(std::uint32_t,std::uint32_t)> create; // 실제004af530(현재geyserType,0) factory다.
     std::function<void(Sid,float,float,std::uint32_t)> pop; // 생성한 간헐천의 실제 가상+90(x,y,0)이다.
+    std::function<bool(std::int32_t)> regionExists; //004857d0에서 선택한 실제 IslandList.exists다. 제외 요청이 없으면 요구하지 않는다.
 };
-// PATCH의 args(0,0,1)와 부모의empty타입/프레임무늬 추가설정만 제공한다. 다른 exclusion 모드는 공개하지 않는다.
+// PATCH의 로컬/일반 생성이 같은 난수·빈 간헐천 교체·프레임 문자 필터를 공유한다.
 class RawLocalGeyser {
 public:
     // players는 같은9×0xb4 Player 기록이며 spots/hash/pool/types는 동일 월드여야 한다.
@@ -40,8 +48,14 @@ public:
     void Generate() const;
     // 00486130의 로컬 요청: 권한/요새 guard→최근목록0→각 생성100회 시도→실제 생성/자원 순서다.
     void Populate(std::int32_t quantity,GameRandom& random,FortRandomRectangle rectangle) const;
+    //일반 요청은 constructor 위치에서 제외 영역을 한 번 캡처하고 각 후보에 지형/허공 허용을 적용한다.
+    void Populate(std::int32_t quantity,GameRandom& random,FortRandomRectangle rectangle,GeyserPlacementOptions options) const;
     // 00486030/00485890의 로컬 후보: 원본 rectangle 난수/반올림/포함 경계/3×3 spot 순서를 실행한다.
     bool TryCandidate(GameRandom& random,FortRandomRectangle rectangle,LocalGeyserPoint& point) const;
+    //명시 finder 입력의 최대8개 제외 사각형과 두 허용 DWORD를 검사한다. 생성/Player 조회는 하지 않는다.
+    bool TryCandidate(GameRandom& random,FortRandomRectangle rectangle,LocalGeyserPoint& point,std::uint32_t allowLand,std::uint32_t allowVoid,std::span<const FortRandomRectangle> exclusions) const;
+    //004857d0의 현재 flags1→현재 region 존재→실제 PlayerBounds→양끝12 확장 순서다.
+    std::vector<FortRandomRectangle> PlayerExclusions() const;
     // 실제 Session은 원본00595088과 같은 SquidRewardState.geyserPool 주소를 생성/삭제 전에 연결한다.
     // 독립 fixture는 기존 state.resourcePool을 쓰며, 연결 시 값을 복사하거나 양쪽을 동기화하지 않는다.
     void BindResourcePool(std::int32_t& resourcePool);
@@ -56,7 +70,7 @@ private:
     // 원본004bca20은 limit<=0이면 local seed를 소비하지 않고0을 반환한다.
     static std::uint32_t Next(GameRandom& random,std::int32_t limit);
     // 부모가초기에보존한empty타입을각후보에서사용하며3×3프레임문자무늬도검사한다.
-    bool Candidate(GameRandom& random,FortRandomRectangle rectangle,LocalGeyserPoint& point,std::uint32_t reuseType) const;
+    bool Candidate(GameRandom& random,FortRandomRectangle rectangle,LocalGeyserPoint& point,std::uint32_t reuseType,std::uint32_t allowLand,std::uint32_t allowVoid,std::span<const FortRandomRectangle> exclusions) const;
     // 실제typedfinder의첫exact일치와현재타입표의surface생략규칙을사용한다.
     Sid FindType(float x,float y,std::uint32_t type) const;
     // current emptyGeyser를 기존 일반 finder의 exact type/현재 공간 순서로 조회한다.

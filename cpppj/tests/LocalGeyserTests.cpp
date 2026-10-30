@@ -151,3 +151,74 @@ TEST_CASE(GameAux_LocalGeyserOwnerReplaysNative221WithOppositeTypeFallback) { Ch
 TEST_CASE(LocalGeyser_SharedBossControlsPopulateEntry) {
     SidPool pool(OriginalEdition::Patch1078,kLocalPoolCapacity);SquidHash hash;std::vector<std::uint8_t> spots(65536),players(9*0xb4);std::vector<RiftTypeRecord> types(188);std::vector<RiftTypeFrames> frames(188,RiftTypeFrames({}));SquidPostPopList recent;recent.entries.resize(5);recent.count=3;LocalGeyserState state;bool boss=false;state.sharedBoss=&boss;GeyserEnvironment environment{state,recent,players,types};RawLocalGeyser geysers(pool,hash,spots,types,frames,players,recent,state,environment.Hooks());GameRandom random(123);geysers.Populate(0,random,{});CHECK(recent.count==3 && random.State()==123);boss=true;state.boss=false;geysers.Populate(0,random,{});CHECK(recent.count==0 && random.State()==123 && environment.trace.empty());
 }
+
+//일반 finder의 제외 사각형도 실제 CPU에 넣은 입력만 반환한다.
+std::vector<FortRandomRectangle> GeneralGeyserInputRectangles(std::uint32_t profile) {
+    if (profile==0) return {};
+    if (profile==1) return {{30,34,36,40}};
+    if (profile==2) return {{33,37,33,37}};
+    if (profile==3) return {{50,50,55,55}};
+    if (profile==4) { std::vector<FortRandomRectangle> result(7,{0,0,1,1});result.push_back({30,34,36,40});return result; }
+    if (profile==5) return {{36,40,30,34}};
+    throw std::out_of_range("일반 간헐천 검사 사각형 입력 범위");
+}
+//원본183사례의 허용 인수/균일 지형/제외 영역과 현재 Player 재조회·효과 순서를 대조한다.
+TEST_CASE(LocalGeyser_GeneralPlacementReplaysNative183) {
+    std::size_t checked{};
+    for (const auto& row:LoadFixture(NETSTORM_GEYSER_PLACEMENT_FIXTURE).rows) { //제품 계산으로 기대 좌표나 성공을 만들지 않는다.
+        CHECK(row.size()==35);if (row.size()!=35) continue;
+        SidPool pool(OriginalEdition::Patch1078,kLocalPoolCapacity);SquidHash hash;
+        std::vector<std::uint8_t> spots(65536,static_cast<std::uint8_t>(Number(row[3]))),players(1620);
+        std::vector<RiftTypeRecord> types(188);types[122].cost=2000;types[84].footX=types[84].footY=256;
+        std::vector<RiftTypeFrames> frames(188,RiftTypeFrames({}));
+        if (Number(row[15])) {
+            const auto profile=Number(row[15]);const std::string pattern=profile==1 ? "FFFFFFFFF" : profile==2 ? "FBICANGDH" : "fbicangdh";
+            std::vector<FrameCode> codes;
+            for (std::size_t index=0;index<9;++index) { //명시한9개 지면 슬롯과 프레임 입력만 설치한다.
+                const auto sid=static_cast<std::uint16_t>(20+index);auto raw=InputRaw(pool,Sid{sid});raw[10]=97;Put(raw,36,static_cast<std::uint32_t>(index));
+                hash.Cell(0,31+static_cast<int>(index/3),35+static_cast<int>(index%3))=sid;codes.push_back({static_cast<std::uint8_t>(pattern[index]),65,static_cast<std::uint8_t>(index),0});
+            }
+            frames[97]=RiftTypeFrames(std::move(codes));
+        }
+        GeyserPlayers(players,0);
+        if (row[0]=="P") for (std::uint32_t owner=1;owner<=8;++owner) { //constructor 진입 전의 독립 Player 프로필이다.
+            const auto profile=Number(row[21]);const bool active=(profile==1 && owner==1) || profile==3 || (profile==4 && owner<=3) || (profile==5 && owner==4);
+            const auto flags=active ? 1U : profile==2 && owner==1 ? 2U : profile==2 && owner==2 ? 32U : 0U;
+            Put(players,owner*180U+0x50,flags,1);Put(players,owner*180U+0x78,active ? owner : 127U);
+        }
+        if (Number(row[20])) spots[35*256+31]=Number(row[3])==2 ? 0 : 2;
+        SquidPostPopList recent;recent.count=3;recent.entries={31,32,33,34,35,36,37};LocalGeyserState state;
+        state.boss=Number(row[5])!=0;state.fort=Number(row[6])!=0;state.resourcePool=std::bit_cast<std::int32_t>(Number(row[7]));
+        state.firstPlayerQuantity=static_cast<std::int32_t>(std::stoll(row[12]));state.lastPlayerQuantity=static_cast<std::int32_t>(std::stoll(row[13]));
+        GeyserEnvironment environment{state,recent,players,types};auto hooks=environment.Hooks();
+        hooks.regionExists=[&](std::int32_t region) {
+            environment.Add("Exists:"+std::to_string(region));
+            if (Number(row[23])==1 && region==1) { Put(players,2*180+0x50,1,1);Put(players,2*180+0x78,2); }
+            return region>=0 && region<9 && (Number(row[22])==1 || (Number(row[22])==2 && (region%2)!=0));
+        };
+        hooks.playerBounds=[&,original=hooks.playerBounds](std::uint32_t owner) {
+            if (Number(row[23])==2) { Put(players,3*180+0x50,1,1);Put(players,3*180+0x78,3); }
+            return original(owner);
+        };
+        RawLocalGeyser body(pool,hash,spots,types,frames,players,recent,state,std::move(hooks));
+        GameRandom random(Number(row[1]));LocalGeyserPoint point{Float(0xdeadbeef),Float(0xcafebabe)};std::uint32_t result{};
+        if (row[0]=="T") { const auto exclusions=GeneralGeyserInputRectangles(Number(row[19]));result=body.TryCandidate(random,GeyserRectangle(Number(row[2])),point,Number(row[17]),Number(row[18]),exclusions); }
+        else body.Populate(static_cast<std::int32_t>(std::stoll(row[4])),random,GeyserRectangle(Number(row[2])),{Number(row[16]),Number(row[17]),Number(row[18])});
+        CHECK(result==Number(row[24]));CHECK(Bits(point.x)==Number(row[25]) && Bits(point.y)==Number(row[26]));CHECK(random.State()==Number(row[27]));
+        CHECK(recent.count==Number(row[28]) && GeyserRecent(recent)==row[29]);CHECK(std::bit_cast<std::uint32_t>(body.ResourcePool())==Number(row[30]));
+        CHECK(state.firstPlayerQuantity==static_cast<std::int32_t>(std::stoll(row[31])) && environment.created==Number(row[32]));
+        CHECK((environment.trace.empty() ? "-" : environment.trace)==row[33]);CHECK(Hex(players)==row[34]);++checked;
+    }
+    CHECK(checked==183);
+}
+//선택한 제외 요청만 실제 목록 장치를 요구하며 원문 수량0/권한/부분 쓰기 순서를 보존한다.
+TEST_CASE(LocalGeyser_GeneralExclusionSelectedRequirements) {
+    SidPool pool(OriginalEdition::Patch1078,kLocalPoolCapacity);SquidHash hash;std::vector<std::uint8_t> spots(65536),players(1620);
+    std::vector<RiftTypeRecord> types(188);std::vector<RiftTypeFrames> frames(188,RiftTypeFrames({}));
+    Put(players,180+0x50,1,1);Put(players,180+0x78,1);SquidPostPopList recent;recent.count=3;recent.entries.resize(5);LocalGeyserState state;state.boss=false;
+    GeyserEnvironment environment{state,recent,players,types};RawLocalGeyser body(pool,hash,spots,types,frames,players,recent,state,environment.Hooks());GameRandom random(123);
+    body.Populate(0,random,{}, {1,1,1});CHECK(recent.count==3 && random.State()==123);state.boss=true;
+    bool missing=false;try { body.Populate(0,random,{}, {1,1,1}); } catch (const std::logic_error&) { missing=true; }
+    CHECK(missing && recent.count==0 && random.State()==123);
+    body.Populate(0,random,{}, {0,1,1});CHECK(random.State()==123);
+}

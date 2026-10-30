@@ -2214,6 +2214,7 @@ struct RawCampaignSession::Impl {
         auto effects=services.construction; // 미선택 외부 경계는 실제 호출 때 오류로 드러내며 성공 관찰로 채우지 않는다.
         FillMissing(effects.configInt);FillMissing(effects.wallSeconds);FillMissing(effects.refresh);
         FillMissing(effects.negativeQuantity);FillMissing(effects.boundsAssertion);
+        effects.islandExists=[this](std::int32_t region) { return islands->Exists(region); }; //같은 현재 섬 목록을 읽으며 청크의 존재 여부로 추정하지 않는다.
         RawCampaignConstructionGameplay gameplay; // 첫 객체 설치 뒤 선택될 현재 원본 하위만 지연 연결한다.
         gameplay.setOwner=[this](Sid sid,std::uint32_t owner) { priests->SetOwner(sid,owner); }; // 같은 Pool의 사제 가상+74와 나머지 공통 소유자를 분배한다.
         gameplay.request.mayPlace=[this](const CanonPlacementQuery& query) { return MayPlaceGameplay(query); };

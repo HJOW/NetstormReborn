@@ -2245,3 +2245,13 @@ tools/decomp_player_notices.py text eol=lf
 cpppj/player-notices-native-20261030.json text eol=lf
 cpppj/player-notices-runtime-20261030.json text eol=lf
 docs/exe/cpp-player-notices-20261030.md text eol=lf
+
+# 일반 간헐천 배치의 최초 원문·현재 몸체·회귀 검증 바이트를 보존한다.
+cpppj/src/o/RawLocalGeyser.h text eol=lf
+cpppj/src/o/RawLocalGeyser.cpp text eol=lf
+cpppj/tests/LocalGeyserTests.cpp text eol=lf
+cpppj/tests/fixtures/geyser-placement-x86.tsv -text
+tools/decomp_geyser_placement.py text eol=lf
+cpppj/geyser-placement-native-20261030.json text eol=lf
+cpppj/geyser-placement-runtime-20261030.json text eol=lf
+docs/exe/cpp-geyser-placement-20261030.md text eol=lf

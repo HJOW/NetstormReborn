@@ -1,0 +1,146 @@
+{
+  "unit": 607,
+  "date": "2026-10-30",
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "native": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-30",
+    "lastFullDecompileHost": "HJOW-Athlon",
+    "lastFullDecompileDate": "2026-10-23",
+    "cases": 183,
+    "observations": 366,
+    "differences": [],
+    "gameStarted": false,
+    "scope": "00486030/004857d0/00485890/00486130과 기존 난수/CRT 실제 명령. IslandList/Player bounds/typedFind/생성·삭제/Pop/건설확정은 명시 경계. 게임/포획/희생/공격/승리/MP 없음.",
+    "sourceSha256": {
+      "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+      "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+      "tools/decomp_local_geyser.py": "7cd8341a5eee47549b2ab609af574abdac0d312e80e7e0a9e9263177d84f5619",
+      "tools/decomp_geyser_placement.py": "c85e5348108ebaf54862193320852f21301602c0f8116a204cea0942d68a322f",
+      "cpppj/tests/fixtures/geyser-placement-x86.tsv": "48ac1014e689de4e37bb7a55556a464605af6a23484aa8dd953c0bbed86af0a1"
+    },
+    "evidenceSha256": {
+      "first.json": "74f53d876d3bbbc47016880adcc7f36f5c08753de683f6cf43f2d479a63dcc9e",
+      "replay.json": "74f53d876d3bbbc47016880adcc7f36f5c08753de683f6cf43f2d479a63dcc9e"
+    }
+  },
+  "focusedTests": 15,
+  "registeredTests": 3510,
+  "testNames": [
+    "CampaignConstructionMana_EnergyBoltDrawsCurrentFrameAndShadow",
+    "CampaignConstructionMana_RegisteredSourcesVisibleStreakAndArrival",
+    "CampaignConstruction_ProtectedLocalGeysersUseCurrentWorld",
+    "CampaignConstruction_ProtectedNoIslandPacketAndSelfNotice",
+    "CampaignSession_LocalGeysersUseActualAiRegistration",
+    "CampaignSession_LocalGeysersUseCurrentInputs",
+    "GameAux_LocalGeyserOwnerReplaysNative221WithOppositeTypeFallback",
+    "LocalGeyser_GeneralExclusionSelectedRequirements",
+    "LocalGeyser_GeneralPlacementReplaysNative183",
+    "LocalGeyser_IndependentPeFixture",
+    "LocalGeyser_RejectsMissingCreation",
+    "LocalGeyser_SharedBossControlsPopulateEntry",
+    "LocalGeyser_SharedResourcePoolPeFixture",
+    "PlayerGeyserBounds_IndependentPeFixture",
+    "PlayerGeyserBounds_RejectsMissingAssertion"
+  ],
+  "tests": [
+    {
+      "filter": "test-bounds",
+      "run": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "PlayerGeyserBounds"
+        ],
+        "binarySha256": "f6d3e5c20bf3e0a375aa30235070e2dacde4fe4abdd03baa4bb6076f014aa3bd",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 1.052218400000129,
+        "stdoutSha256": "8d5eab140dff0d5a6d7a20786878f2e3eefdf8188c3e9d54a0330229bcc86dca",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "tests": 2,
+        "failed": 0,
+        "testOnlyBridgeManipulation": false
+      }
+    },
+    {
+      "filter": "test-construction",
+      "run": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "CampaignConstruction"
+        ],
+        "binarySha256": "f6d3e5c20bf3e0a375aa30235070e2dacde4fe4abdd03baa4bb6076f014aa3bd",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 34.199007600000186,
+        "stdoutSha256": "8ef820cea216780470c9e27c1ea0ea03a3b9b1c57ad7b9ff4887cefa3fd84e39",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "tests": 4,
+        "failed": 0,
+        "testOnlyBridgeManipulation": false
+      }
+    },
+    {
+      "filter": "test-local",
+      "run": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "LocalGeyser"
+        ],
+        "binarySha256": "f6d3e5c20bf3e0a375aa30235070e2dacde4fe4abdd03baa4bb6076f014aa3bd",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 7.687210600000981,
+        "stdoutSha256": "e5ba1a03a58f4db328b712b2e4fabb83e203925667ca1e38c97e19ed2f7aec6b",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "tests": 10,
+        "failed": 0,
+        "testOnlyBridgeManipulation": false
+      }
+    }
+  ],
+  "gameSha256": "63bd4f1f6586d844baeafa6a048934cbaf82eb44836f7e9fd1aad258064ad863",
+  "testSha256": "f6d3e5c20bf3e0a375aa30235070e2dacde4fe4abdd03baa4bb6076f014aa3bd",
+  "protectedCount": 2575,
+  "protectedDifferences": [],
+  "fixtureCount": 753,
+  "sourceSha256": {
+    "cpppj/src/o/RawLocalGeyser.h": "671ea62f31b3323154661d8d06c8728628db98b8f341a24fbc12c348e78bf35f",
+    "cpppj/src/o/RawLocalGeyser.cpp": "5c0d5df05b5b45a6348da50ebea300822fc594e445a0d22e4ae1b28fc1afb927",
+    "cpppj/src/client/RawCampaignConstructionBindings.h": "fb7b5c45b2ec789130925caa3346b0a23b2e07046d857fc54ac1fafb0a996194",
+    "cpppj/src/client/RawCampaignConstructionBindings.cpp": "5da2b9f4c67640dfbf87a33952ad7f8188d7aac7a38534b540c068b615d8f549",
+    "cpppj/src/client/RawCampaignSession.cpp": "6b2e4267cf913e4a2491660f47fa30f126c78b57837b2022ae19f40c83e8069a",
+    "cpppj/tests/LocalGeyserTests.cpp": "a4316c0ff5b20fe0b573c24132d681f49fe24fc0ab0970fe9c983daf986ea429",
+    "cpppj/tests/CMakeLists.txt": "67eaae4763b7a8ed222d3cc4b4dbd9e057d8e94156197f2491b60359e779b044"
+  },
+  "scope": "실제 일반 배치 인수/지형·허공/균일3×3/플레이어 주변 제외와 같은 Session의 섬 목록 장치. 전체 맵 생성 부모00486440/실제 randGeysers UI는 아직 미연결.",
+  "gameStarted": false,
+  "lastPackageUnit": 606,
+  "lastFull34ProductUnit": 605,
+  "evidenceSha256": {
+    "protected-before.json": "d7a177cfd1dabad452a1303d359f3c25af4d3a7d51224eebc5a9233280919e6d",
+    "build.log": "1ad4a5c3873d5371dc9e7209543c8f4e5084d6f1e8774e9dd1a1d63d4f4f9b38",
+    "finish.py": "6ad490691817e725ebaa4b9f7d08d62db2f8a439e1b579ed09a1d821d3f99255",
+    "protected-after.json": "2cc72e5ffe28cb013d4f15d0b1d890a7a79744e5def85e3c7aad3e3722cce327",
+    "native/first.json": "74f53d876d3bbbc47016880adcc7f36f5c08753de683f6cf43f2d479a63dcc9e",
+    "native/replay.json": "74f53d876d3bbbc47016880adcc7f36f5c08753de683f6cf43f2d479a63dcc9e",
+    "test-local/stdout.log": "e5ba1a03a58f4db328b712b2e4fabb83e203925667ca1e38c97e19ed2f7aec6b",
+    "test-local/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "test-local/running.json": "bda941c55dcd36b0c1a15ae8c6dbf9838da682c1a356d1cd2aaa82ee8c005f63",
+    "test-local/run.json": "6702d884b72c61a282070ce7d7995818a391547f52081ebb6e1c9e4a379212c3",
+    "test-bounds/stdout.log": "8d5eab140dff0d5a6d7a20786878f2e3eefdf8188c3e9d54a0330229bcc86dca",
+    "test-bounds/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "test-bounds/running.json": "fd5284243ba883f01aad96ba81133751fb4afb459ba56fab9b2c19051d2a995c",
+    "test-bounds/run.json": "3f3e8ba743416bddaa6e6a0ee8f9e903113b5957a8b55609782a15189becdc57",
+    "test-construction/stdout.log": "8ef820cea216780470c9e27c1ea0ea03a3b9b1c57ad7b9ff4887cefa3fd84e39",
+    "test-construction/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "test-construction/running.json": "d648fcfe5eda4401d72f13db4cedfa0a237ca9755f53e9ec5a4e3fa4867bb6cb",
+    "test-construction/run.json": "532db60142458d130dd1559a1a9d33c8b987ceb724018aa8a4f31bc897cd80d8"
+  }
+}

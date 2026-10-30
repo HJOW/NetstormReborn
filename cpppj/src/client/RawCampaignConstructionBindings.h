@@ -30,6 +30,7 @@ struct RawCampaignConstructionEffects {
     o::ConstructionPlaceHooks presentation; // 비용 문구/안내/SP·취소 송신만 사용하며 생성/소유자/SP/공간은 내부 실제 몸체가 공급한다.
     std::function<void()> negativeQuantity; // reps>=0 원본 진단을 전달한다.
     std::function<void(o::PlayerGeyserBoundsAssertion)> boundsAssertion; // 현재 Player/모드/Canon 진단을 전달한다.
+    std::function<bool(std::int32_t)> islandExists; //일반 간헐천 제외 constructor가 읽는 같은 실제 IslandList다.
 };
 // 같은 Session의 기준점/실제 Builder/사제 경로/건설 시작을 연결하는 현재 게임 몸체다.
 struct RawCampaignConstructionGameplay {
@@ -67,6 +68,8 @@ public:
     bool ConfirmSupport(const o::ConstructionConfirmRequest& request) const;
     // 현재 Player9와 실제 PlayerBounds를 읽어 원본 로컬 생성 부모를 실행한다.
     void GenerateLocalGeysers() const;
+    //전체 맵 부모도 같은 현재 Pool/자원/최근목록과 일반 제외·허용 인수를 사용한다.
+    void PopulateGeysers(std::int32_t quantity,o::GameRandom& random,o::FortRandomRectangle rectangle,o::GeyserPlacementOptions options) const;
     // 최근 생성/자원/풀의 실제 단일 저장소를 빌린다. 독립 간헐천 모형을 만들지 않는다.
     const o::RawLocalGeyser& LocalGeysers() const;
     const o::RawPlayerGeyserBounds& PlayerBounds() const;
