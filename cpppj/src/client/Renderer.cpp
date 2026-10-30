@@ -254,13 +254,18 @@ std::span<const ScreenRect> Renderer::Draw(std::span<std::uint8_t> pixels, int p
             if (background_) DrawIndexedImage(pixels,pitch,height_,*background_,0,0,clip);
         }
         auto combined=extraCollection_ ? sourceSprites_ : sprites_; // 정적 월드와 dirty별 미리보기를 같은 원본 작업 순서로 병합한다.
-        if (extraCollection_) {
+        if (extraCollection_ && (!world || !world->submit)) {
             auto extra=extraCollection_(clip,paintFlags_[i]);if (!(paintFlags_[i]&4U)) extraCache_=extra;
             combined.insert(combined.end(),std::make_move_iterator(extra.begin()),std::make_move_iterator(extra.end()));SortRenderSprites(combined,edition_);
         }
         if (world) {
             world->background(clip,paintFlags_[i],covered);
             if (paintFlags_[i]&kOpaque) combined.clear(); //UI 전용4의 원문은 월드/미리보기 표시를 제출하지 않는다.
+        }
+        if (world && world->submit) {
+            world->submit(pixels,pitch,height_,clip); //같은5,000칸의 원문 종류0..4를 한 번만 출력한다.
+            if (cursor_) DrawIndexedImage(pixels,pitch,height_,*cursor_,cursorPosition_.x,cursorPosition_.y,clip);
+            continue;
         }
         // 원본 깊이 키로 정렬한 모든 월드/미리보기 항목을 현재 dirty 안에서 출력한다.
         for (const auto& sprite : combined) {

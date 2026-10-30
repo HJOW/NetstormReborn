@@ -162,7 +162,7 @@ struct RawCampaignFactoryDisplay::Impl {
             if (!factory.Handles(object)) throw std::logic_error("픽셀 선택의 파생 추가Draw 미복원 TYPE="+std::to_string(composite[10]));
             factory.Additional(object,point.x,point.y,[&shape](auto x,auto y,auto type,auto frame) { if (frame<0) throw std::out_of_range("Factory 추가 그림 음수 프레임");shape({type,static_cast<std::uint32_t>(frame),{x,y},SpriteShapeMode::Plain}); });
     }
-    // 화면+a0와달리선택은실제+78을읽으며일반주문도TYPE+128을반환한다.
+    // 원문498220과 픽셀 선택 모두 실제+78을 읽으며 일반 주문도 TYPE+128을 반환한다.
     std::int32_t HitFrame(o::Sid sid) const {
         const auto raw=core.pool.Slot(sid); // 실제getter호출마다현재TYPE/단계를읽는다.
         switch (HitVtable(raw).frame) {
@@ -189,11 +189,12 @@ struct RawCampaignFactoryDisplay::Impl {
         return RawObjectHit(core.pool,core.types,core.shapes,std::move(hooks)).Hit(sid,x,y,camera);
     }
     // 원본 현재 슬롯과 실제 dirty clip을 읽고 일반 Draw의 모든 픽셀을 같은 표면에 쓴다.
-    void Draw(o::RenderCollectionEntry entry,std::span<std::uint8_t> pixels,int pitch,int height,ScreenRect clip) {
-        const auto sid=collection.Object(entry.token);if (!Handles(sid)) return;if (!ready) throw std::logic_error("Factory 파일 팔레트 미설치");
+    void Draw(o::RenderCollectionEntry entry,std::span<std::uint8_t> pixels,int pitch,int height,ScreenRect clip,bool native=false,const std::function<void(o::Sid,int,int)>& bridge={}) {
+        const auto sid=collection.Object(entry.token);if (!native && !Handles(sid)) return;if (!ready) throw std::logic_error("Factory 파일 팔레트 미설치");
         state.now=core.processState.Now();state.ownerPalettes.assign(core.bridgeState.ownerColors.begin(),core.bridgeState.ownerColors.end());state.markerVisible=core.ownerMode.battle; // 원문594fbc의 현재 전투 관문이며 Editor의 fort 모드와 구별한다.
         SpritePixelTarget target(pixels,pitch,height,clip,MakeSpriteAssetShapes(assets,state),[this](auto mode,auto type,auto owner) { return Color(mode,type,owner); });
-        SpriteDrawHooks rules;rules.virtualFrame=[this](o::Sid object) {
+        SpriteDrawHooks rules;rules.virtualFrame=[this,native](o::Sid object) {
+            if (native) return HitFrame(object); //원문498220도+78을 조회한다. 실제83개 VT의 다섯 getter를 지형/다리/일반 자산에 함께 적용한다.
             if (Bomb(object) || ManaBolt(object)) return -1; // 원본 공통 주문/마나볼트의+a0는 빈 본체다.
             if (Temple(object)) return o::PatchTempleMainFrame(core.pool.Slot(object),templeBaseFrames);
             if (ThunderCannon(object)) return o::ThunderCannonCaptureMainFrame(core.pool.Slot(object),core.frames[core.pool.Slot(object)[10]]);
@@ -232,7 +233,7 @@ struct RawCampaignFactoryDisplay::Impl {
             return statusSlots;
         };
         auto hooks=target.Hooks(std::move(rules));
-        hooks.virtualDraw=[this,shape=hooks.shape](o::Sid object,ScreenPoint point) { Additional(object,point,shape); }; // 같은실제+a4를선택캡처와공유한다.
+        hooks.virtualDraw=[this,shape=hooks.shape,&bridge](o::Sid object,ScreenPoint point) { Additional(object,point,shape,bridge); }; //같은+a4와 실제 Session의 다리 숫자 전역을 공유한다.
         SpriteDraw draw(core.pool,core.types,views,state,std::move(hooks),0);draw.Draw(entry);
     }
 };
@@ -241,6 +242,11 @@ RawCampaignFactoryDisplay::RawCampaignFactoryDisplay(RawWorldCore core,const Gam
 RawCampaignFactoryDisplay::~RawCampaignFactoryDisplay()=default; // procedure가 더 이상 호출되지 않을 때 반납한다.
 bool RawCampaignFactoryDisplay::Hit(o::Sid sid,int x,int y,const std::array<std::int32_t,2>& camera,std::uint32_t localPlayer,const std::function<void(o::Sid,int,int)>& bridgeDraw) const { return impl_->Hit(sid,x,y,camera,localPlayer,bridgeDraw); } // 선택의현재raw와실제추가그림을공유한다.
 bool RawCampaignFactoryDisplay::Handles(o::Sid sid) const { return impl_->Handles(sid); } // 별도 TYPE 이름 휴리스틱을 쓰지 않는다.
+// 통합 목록의 원문 토큰은 같은 풀/stride이며 Draw 직전의 카메라/현재 소유자를 읽는다.
+void RawCampaignFactoryDisplay::DrawEntry(const o::RenderCollectionEntry& entry,std::span<std::uint8_t> pixels,int pitch,int height,ScreenRect clip,const std::array<std::int32_t,2>& camera,std::uint32_t localPlayer,std::uint32_t hideBuildings,const std::function<void(o::Sid,int,int)>& bridge) {
+    auto& state=impl_->state;state.cameraX=camera[0];state.cameraY=camera[1];state.localPlayer=localPlayer;state.specialMode=hideBuildings;
+    impl_->Draw(entry,pixels,pitch,height,clip,true,bridge);
+}
 void RawCampaignFactoryDisplay::BindOwnerColors(std::shared_ptr<OwnerColorTableState> owner) { // 실제 현재557940/5319c0의 주소를 같은 Draw 상태에 빌린다.
     if (!owner || !owner->Ready()) throw std::invalid_argument("월드 공통 소유자 색표 최초 등록 누락");
     impl_->sharedOwnerColors=std::move(owner);impl_->ownerColors.clear();impl_->state.sharedOwnerMaps=impl_->sharedOwnerColors->Tokens();impl_->state.sharedUseBanners=&impl_->sharedOwnerColors->Enabled();

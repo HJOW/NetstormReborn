@@ -20,6 +20,7 @@ class RawCampaignFactoryDisplay; // 같은 실제 풀의 원본 Factory 화면 �
 class OwnerColorTableState; // 같은 Client의 현재557940과5319c0은 World보다 오래 산다.
 // 미션 Session과 표시/입력을 소유하는 호스트 어댑터다. 원문 Kernel에는 실제 게임 프로세스만 등록한다.
 class GameWorld {
+    friend class ClientRendererFrame; //통합 표시가 같은 Session/실제 공통 SpriteDraw를 직접 빌리며 표시용 게임 상태를 복제하지 않는다.
 public:
     // 저장 위치를 쓰는 Tutorial 미션의 초기 월드를 만든다. Battle 재배치는 아직 지원하지 않는다.
     GameWorld(const GameAssets& assets,const o::FortTemplate& fort,o::MissionPlayers players);

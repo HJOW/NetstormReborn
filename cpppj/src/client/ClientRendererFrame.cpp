@@ -8,6 +8,13 @@
 #include "client/RawRendererPrelude.h"
 #include "client/RawSurfaceWorld.h"
 #include "client/TileGroupCollection.h"
+#include "client/ObjectCollection.h"
+#include "client/DrawSort.h"
+#include "client/GameWorld.h"
+#include "client/RawCampaignCursor.h"
+#include "client/RawCampaignCursorDisplay.h"
+#include "client/RawCampaignFactoryDisplay.h"
+#include "client/RawMenuControls.h"
 #include "client/UberGump.h"
 #include <algorithm>
 #include <bit>
@@ -70,31 +77,65 @@ bool ClientRendererFrame::Prepare() {
     ++prepared_;return true;
 }
 
-// Renderer는 같은 dirty에서 지형→커서 미리보기→배경→월드/UI 순서로 이 두 장치를 호출한다.
+// 같은 dirty에서 UI→건설→지형→일반 객체→미리보기 수집 뒤 배경→단일 정렬 목록을 출력한다.
 RendererWorldDrawing ClientRendererFrame::Drawing() {
-    return {[this](auto clip,auto flags) { return Collect(clip,flags); },[this](auto clip,auto flags,auto covered) { Background(clip,flags,covered); }};
+    return {[this](auto clip,auto flags) { return Collect(clip,flags); },[this](auto clip,auto flags,auto covered) { Background(clip,flags,covered); },
+        [this](auto pixels,auto pitch,auto height,auto clip) { Submit(pixels,pitch,height,clip); }};
 }
 
-// 같은 Pool/해시의 실제0단계 지형 머리를 수집하고 배경 덮임 결과/2단계 복귀를 유지한다.
+// 같은 Pool/해시/공통 UI의 실제 항목을 원문5,000칸에 모은다. bit4도 UI 수집은 실행한다.
 std::uint32_t ClientRendererFrame::Collect(ScreenRect clip,std::uint32_t flags) {
     client_.screen_->SetClip(clip.left,clip.top,clip.right,clip.bottom);++collected_;
-    if (flags&4U) return 0;
     const auto storage=client_.SurfaceStorage();
     if (storage_!=storage || collectorHeight_!=client_.screenHeight_) {
-        groups_.reset();storage_=storage;collectorHeight_=client_.screenHeight_;
-        groups_=std::make_unique<TileGroupCollection>(storage_->hash,storage_->pool,TileGroupCollectionState{collectorHeight_});
+        objects_.reset();groups_.reset();storage_=storage;collectorHeight_=client_.screenHeight_;
+        groups_=std::make_unique<TileGroupCollection>(storage_->hash,storage_->pool,TileGroupCollectionState{collectorHeight_,0,0x80000000U});
+        objects_=std::make_unique<ObjectCollection>(storage_->hash,storage_->pool,storage_->types,storage_->shapes,0);
     }
     const auto& camera=client_.gameplayGlobals_->Camera().Snapshot();const auto& map=client_.menu_->rawButtons_->MapViewRect();
+    mapClip_=ClipScreenRect(clip,map); //466070이 트리를 바꾸더라도 배경은 UI 수집 전의 지도 경계를 쓴다.
     const auto visible=RendererCollectionViewport(clip,map,camera);
-    const auto rowLimit=RendererCollectionRowLimit(client_.screenWidth_,client_.screenHeight_);bool covered{}; //현재 화면 크기의 원문 표시 행 제한이다.
-    static_cast<void>(groups_->Collect(visible,rowLimit,covered));return covered ? 1U : 0U;
+    DrawCollectionHooks hooks;
+    hooks.ui=[this](auto rect,auto output,auto limit) { return client_.menu_->rawButtons_->Menus()->CollectDrawing(rect,output,limit); };
+    hooks.groups=[this](auto rect,auto limit,auto& covered) { return groups_->Collect(rect,limit,covered); };
+    hooks.objects=[this](auto rect,auto output,auto limit) { return objects_->Collect(rect,output,limit); };
+    if (auto* world=client_.menu_->world_.get()) {
+        hooks.construction=[world](auto rect,auto output,auto limit) { return world->Session().Particles().CollectDrawing(rect,output,limit); };
+        hooks.preview=[world](auto rect,auto output,auto limit) { return world->Session().Cursor().Display().CollectDrawing(rect,output,limit); };
+    }
+    const auto result=CollectDrawEntries({clip,visible,WorldRect(clip,camera),flags,RendererCollectionRowLimit(client_.screenWidth_,client_.screenHeight_)},entries_,hooks);
+    entryCount_=result.count;
+    for (const auto& entry:std::span(entries_).first(static_cast<std::size_t>(entryCount_))) if (entry.kind<collectedKinds_.size()) ++collectedKinds_[entry.kind]; //관측은 실제 상위 항목만 세며 지형 내부 순서를 건드리지 않는다.
+    return result.backgroundCovered ? 1U : 0U;
 }
 
 // 실제 지도 dirty 안에서만 현재 날씨/구름/시차 배경을 선택해 같은 Screen에 출력한다.
 void ClientRendererFrame::Background(ScreenRect clip,std::uint32_t flags,std::uint32_t covered) {
-    ++backgrounds_;lastCovered_=covered;const auto& map=client_.menu_->rawButtons_->MapViewRect();auto area=ClipScreenRect(clip,map);
+    static_cast<void>(clip);++backgrounds_;lastCovered_=covered;
     const auto& camera=client_.gameplayGlobals_->Camera();const auto black=static_cast<std::uint32_t>(client_.screen_->Colors().basic[0]);
-    DrawRendererBackdrop(area,flags,covered,{client_.screen_->flags_,globals_.HideGroups(),client_.WorldAudio().Scene().tint,black,camera.Snapshot().pixels[0],camera.Snapshot().pixels[1],camera.Denominator().current},CloudDevices());
+    DrawRendererBackdrop(mapClip_,flags,covered,{client_.screen_->flags_,globals_.HideGroups(),client_.WorldAudio().Scene().tint,black,camera.Snapshot().pixels[0],camera.Snapshot().pixels[1],camera.Denominator().current},CloudDevices());
+}
+
+// PE의 sort 초기값1대로 원문 CRT 정렬 후 같은 UI 출력 문맥에서 종류0..4를 한 번씩 처리한다.
+void ClientRendererFrame::Submit(std::span<std::uint8_t> pixels,int pitch,int height,ScreenRect clip) {
+    auto entries=std::span(entries_).first(static_cast<std::size_t>(entryCount_));SortDrawEntries(entries);
+    auto& menus=*client_.menu_->rawButtons_->Menus();
+    menus.WithDrawing(pixels,pitch,height,client_.screen_->Colors(),client_.screen_->ShadeMaps(),clip,[&](const RawMenuControls::DrawingToken& ui) {
+        DrawDispatchHooks hooks;
+        hooks.sprite=[&](const auto& entry) {
+            auto* world=client_.menu_->world_.get();if (!world || !world->factoryDisplay_) throw std::logic_error("Native SpriteDraw 실제 World/공통 출력기 부재");
+            auto& session=world->Session();
+            world->factoryDisplay_->DrawEntry(entry,pixels,pitch,height,clip,client_.gameplayGlobals_->Camera().Snapshot().pixels,session.LocalOwner(),client_.menu_->hideBuildings_,
+                [&session](auto sid,auto x,auto y) { session.DrawBridgeAdditional(sid,x,y); });
+        };
+        hooks.group=[this](auto token) { return groups_->Group(token); };hooks.ui=ui;
+        hooks.construction=[&](auto token) { auto* world=client_.menu_->world_.get();if (!world) throw std::logic_error("Native RenderProcess 실제 Session 부재");world->Session().Particles().DrawEntry(token,pixels,pitch,height,clip); };
+        hooks.preview=[&](const auto& entry) { auto* world=client_.menu_->world_.get();if (!world) throw std::logic_error("Native Preview 실제 Session 부재");world->Session().Cursor().Display().DrawEntry(entry,pixels,pitch,height,clip); };
+        for (const auto& entry:entries) { //묶음 숨김은 상위 항목마다 현재 DWORD를 다시 읽는다. 내부 묶음은 별도 정렬하지 않는다.
+            if (entry.kind<submittedKinds_.size()) ++submittedKinds_[entry.kind];
+            DispatchDrawEntries(std::span(&entry,1),{globals_.HideGroups()!=0,false},hooks);
+        }
+    });
 }
 
 // 정상 Draw의 잠금 반납 뒤·Present 앞에서 원문4994b0 말미의 dirty 정리를 실행한다.
@@ -104,6 +145,10 @@ void ClientRendererFrame::Finish() { client_.kencloudGlobals_->CleanDirty();++fi
 std::string ClientRendererFrame::Diagnostics() const {
     const auto& cloud=client_.kencloudGlobals_->State();std::ostringstream out;
     out<<"raw_renderer_frame\t"<<prepared_<<'\t'<<collected_<<'\t'<<backgrounds_<<'\t'<<cloudCalls_<<'\t'<<cleared_<<'\t'<<finished_<<'\t'<<globals_.Scan()[0]<<'\t'<<globals_.Scan()[17]<<'\t'<<globals_.Scan()[18]<<'\t'<<globals_.CloudDirtyCount()<<'\t'<<cloud[2053]<<'\t'<<cloud[515]<<'\t'<<cloud[2051]<<'\t'<<cloud[2052]<<'\t'<<lastCovered_<<'\t'<<lastOverride_<<'\n';
-    out<<"raw_renderer_cloud_area\t"<<lastArea_.left<<'\t'<<lastArea_.top<<'\t'<<lastArea_.right<<'\t'<<lastArea_.bottom<<'\t'<<lastOffsetX_<<'\t'<<lastOffsetY_<<'\n';return out.str();
+    out<<"raw_renderer_cloud_area\t"<<lastArea_.left<<'\t'<<lastArea_.top<<'\t'<<lastArea_.right<<'\t'<<lastArea_.bottom<<'\t'<<lastOffsetX_<<'\t'<<lastOffsetY_<<'\n';
+    out<<"raw_renderer_scene\t"<<entryCount_;
+    for (auto count:collectedKinds_) out<<'\t'<<count; //실제 수집 종류별 누계다.
+    for (auto count:submittedKinds_) out<<'\t'<<count; //같은 목록의 실제 분배 종류별 누계다.
+    out<<'\n';return out.str();
 }
 }

@@ -3563,6 +3563,7 @@ void RawCampaignSession::SetParticleView(SoundView view,SurfaceDisplayHooks disp
 std::vector<RenderSprite> RawCampaignSession::ParticleSprites(ScreenRect clip) const { return impl_->particles->Sprites(clip); }
 // 실제 표시 소유자이며 별도 검사용 모형이 아니다.
 const RawCampaignParticles& RawCampaignSession::Particles() const { return *impl_->particles; }
+RawCampaignParticles& RawCampaignSession::Particles() { return *impl_->particles; } //새 표시 상태나 별도 Kernel을 생성하지 않는다.
 // 원본 미션 게이트가 지정한 순서에 호출하며 Session Kernel 프레임에서는 자동 실행하지 않는다.
 void RawCampaignSession::CheckMissionOutcome() { impl_->outcome->Check(); }
 // 실제 worldLoad의 loginSubscriber 복사 대상과 같은 장기 전역을 매번 읽는다.

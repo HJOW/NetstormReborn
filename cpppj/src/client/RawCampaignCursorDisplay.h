@@ -26,6 +26,8 @@ public:
         std::function<ColorMap(std::uint32_t,std::uint32_t)> specializedOwner);
     // Native 수집은 dirty마다 한 번 호출하며 반환 항목을 다른 월드 그림과 함께 정렬한다.
     std::vector<RenderSprite> Sprites(ScreenRect clip,std::uint32_t dirtyFlags);
+    std::int32_t CollectDrawing(o::RenderWorldRect view,std::span<o::RenderCollectionEntry> output,std::int32_t limit) const; //실제 kind4 목록과 피드백을 원문 잔여 작업 공간에 한 번 수집한다.
+    void DrawEntry(const o::RenderCollectionEntry& entry,std::span<std::uint8_t> pixels,int pitch,int height,ScreenRect clip); //같은 통합 정렬의 현재 kind4 항목을 원문 픽셀 처리기에 전달한다.
     std::array<std::uint32_t,2> TextColors() const; // 현재 파일 팔레트의 경고 흰색/비용 노랑이다.
     PreviewDrawState& Settings(); // 실제 격자/글자 표시 옵션과 타입별 색표 존재 상태다.
     PreviewCollectionState& Feedback(); // 현재 강조 시각/남은 횟수의 원본 저장소다.

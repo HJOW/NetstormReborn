@@ -816,8 +816,16 @@ void RawMenuControls::SetPalette(const PaletteColorTable& palette) {
 }
 // 현재 노드를 원본 수집·정렬 순서로 같은8비트 표면에 출력한다.
 void RawMenuControls::Draw(std::span<std::uint8_t> pixels,int pitch,int height,const PaletteColorTable& palette,const GumpShadeMaps& maps,std::optional<ScreenRect> clip) {
-    auto& s=*impl_;if (s.activeText) throw std::logic_error("실제 메뉴 Draw 재진입 불가");SetPalette(palette);
-    const auto region=clip.value_or(ScreenRect{0,0,s.common.create.screenWidth,height}); // 실제 Renderer 변경 영역 또는 독립 전체 표면이다.
+    auto& s=*impl_;const auto region=clip.value_or(ScreenRect{0,0,s.common.create.screenWidth,height}); //독립 표시/10.72의 기존 전체 수집 계약이다.
+    std::array<o::RenderCollectionEntry,kDrawSubmissionCapacity> entries{};const auto count=CollectDrawing({0,0,s.common.create.screenWidth,height},entries,kDrawSubmissionCapacity);
+    auto used=std::span(entries).first(static_cast<std::size_t>(count));SortDrawEntries(used,s.assets.Edition());
+    WithDrawing(pixels,pitch,height,palette,maps,region,[&](const DrawingToken& draw) { for (const auto& entry:used) draw(entry.token); }); //기존 분리 경로의 정렬/출력 순서를 유지한다.
+}
+// 별도 UI 목록이나 전체 화면 사본을 만들지 않고 원문의 현재 dirty를 실제 수집기에 전달한다.
+std::int32_t RawMenuControls::CollectDrawing(ScreenRect clip,std::span<o::RenderCollectionEntry> output,std::int32_t limit) const { return impl_->common.collection.Collect(clip,output,limit); }
+// 모든 종류의 통합 정렬/출력 동안 같은 UI 장치를 한 번만 유지한다. 토큰 함수는 본문 밖에 보관하면 안 된다.
+void RawMenuControls::WithDrawing(std::span<std::uint8_t> pixels,int pitch,int height,const PaletteColorTable& palette,const GumpShadeMaps& maps,ScreenRect region,const std::function<void(const DrawingToken&)>& body) {
+    auto& s=*impl_;if (s.activeText || !body) throw std::logic_error("실제 메뉴 Draw 재진입/본문 누락");SetPalette(palette);
     SetGumpDrawClip(s.clip,region);GumpPixelTarget target(pixels,pitch,height,s.clip);GumpTextDraw text(s.fonts,MakeGumpGlyphPixelHooks(target,s.colors),s.assets.Edition());GumpBackgroundPixelTarget bgPixels(target,s.backgroundAssets,maps,s.colors.vfxColors);MarkupPixelTarget picturePixels(target,s.markupAssets,s.colors.vfxColors,s.pictureColors);
     std::unique_ptr<ImageGumpPixelTarget> helpPictures; // 10.78 전용 Help를 설치한 판본에서만 해당 픽셀 처리기를 생성한다.
     if (s.helpImage) { helpPictures=std::make_unique<ImageGumpPixelTarget>(target,s.assets,s.pictureColors,[](auto) -> ColorMap { throw std::logic_error("Help 모드8 이외 소유자 색표 미연결"); });s.activeImage=helpPictures->Hooks({}); }
@@ -837,9 +845,8 @@ void RawMenuControls::Draw(std::span<std::uint8_t> pixels,int pitch,int height,c
     };
     MenuGumpDrawHooks mh;mh.node=[&](auto token) { return Find(s.menus,token); };mh.base=s.common.node;GumpDecorationPixelTarget decorationPixels(target,s.assets);BindMenuGumpDrawAssets(mh,s.assets,decorationPixels);
     MenuGumpDraw menuDraw(s.common.create,s.clip,s.drawState,s.common.collection,*s.backgroundDraw,text,*s.style,*s.layout,std::move(mh));BindMenuGumpDraw(draw,[&](auto token)->const MenuGumpDraw* { return s.menus.contains(token) ? &menuDraw : nullptr; });GumpDraw dispatch(s.common.collection,s.clip,std::move(draw));
-    std::array<o::RenderCollectionEntry,kDrawSubmissionCapacity> entries{};const auto count=s.common.collection.Collect({0,0,s.common.create.screenWidth,height},entries,kDrawSubmissionCapacity);auto used=std::span(entries).first(static_cast<std::size_t>(count));SortDrawEntries(used,s.assets.Edition());
-    // 메뉴/공통 돌 버튼/외부 HUD의 실제 노드를 한 번 수집한 같은 깊이 순서로 출력한다.
-    for (const auto& entry:used) if (s.OwnsBranch(entry.token)) dispatch.Draw(entry.token);
+    const DrawingToken submit=[&](auto token) { if (s.OwnsBranch(token)) dispatch.Draw(token); }; //기존 공통/외부 파생과 빈 기본 Gump의 실제 분배 범위를 유지한다.
+    body(submit);
 }
 // 실제 입력/출력과 같은 현재 배치에서 자동 입력 지점을 읽는다.
 std::optional<ScreenPoint> RawMenuControls::Point(std::string_view label) const {

@@ -59,6 +59,8 @@ public:
     std::vector<RenderSprite> Sprites(ScreenRect clip);
     // 실제 등록/수명을 확인하는 읽기 전용 조회다.
     const o::RenderProcessSystem& Rendering() const;
+    std::int32_t CollectDrawing(o::RenderWorldRect view,std::span<o::RenderCollectionEntry> output,std::int32_t limit); //현재 단일 kind3 목록을 원문 잔여 공간에 수집한다.
+    void DrawEntry(std::uint32_t token,std::span<std::uint8_t> pixels,int pitch,int height,ScreenRect clip); //같은 정렬 토큰의 현재 생존 프로세스를 실제 표면에 출력한다.
 private:
     // Raw registry 자체가 소유하는 vector의 확보/반납과 실제 Host 부착을 사용한다.
     o::RenderRegistryHooks RegistryHooks();

@@ -49,6 +49,7 @@ struct RenderProcedure {
 struct RendererWorldDrawing {
     std::function<std::uint32_t(ScreenRect,std::uint32_t)> collect; //같은 raw 해시의 지형 수집/배경 덮임을 먼저 계산한다. UI 전용4도 caller가 원문대로 생략한다.
     std::function<void(ScreenRect,std::uint32_t,std::uint32_t)> background; //지형 수집/미리보기 뒤 flags/덮임에 따라 실제 배경을 그린다.
+    std::function<void(std::span<std::uint8_t>,int,int,ScreenRect)> submit; //연결된 Native 경로는 같은 원문 목록 전체를 출력한다. 기존 분리 장면/Overlay를 다시 출력하지 않는다.
 };
 // 출력할 스프라이트 프레임·좌표·클립·정렬·색 변환 정보이다.
 struct RenderSprite {

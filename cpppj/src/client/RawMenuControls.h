@@ -183,6 +183,9 @@ public:
     void SetPalette(const PaletteColorTable& palette);
     // 현재 Client 픽셀에 원본 수집/정렬/Draw를 실행한다. 배경/그림/글자 모두 실제8비트 클립을 공유한다.
     void Draw(std::span<std::uint8_t> pixels,int pitch,int height,const PaletteColorTable& palette,const GumpShadeMaps& maps,std::optional<ScreenRect> clip={});
+    std::int32_t CollectDrawing(ScreenRect clip,std::span<o::RenderCollectionEntry> output,std::int32_t limit) const; //원문 현재 dirty 안의 같은 Gump 트리를 수집하며 별도 정렬/출력을 하지 않는다.
+    using DrawingToken=std::function<void(std::uint32_t)>; //WithDrawing 본문이 살아 있는 동안만 같은 픽셀 문맥으로 현재 UI 토큰을 그린다.
+    void WithDrawing(std::span<std::uint8_t> pixels,int pitch,int height,const PaletteColorTable& palette,const GumpShadeMaps& maps,ScreenRect clip,const std::function<void(const DrawingToken&)>& body); //현재 장치를 한 번 대여하고 통합 목록의 UI 항목만 같은 원문 분배기에 보낸다.
     // 검사/자동 입력은 실제 저장 항목과 배치를 읽는다. label은 스타일 명령을 포함한 원문 바이트다.
     std::optional<ScreenPoint> Point(std::string_view label) const;
     std::vector<GumpControl> Controls() const;

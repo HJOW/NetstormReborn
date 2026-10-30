@@ -1309,10 +1309,10 @@ void UberGump::Compose() {
     bool commonDrawSubmitted=false; // 같은 raw 수집/정렬을 배경 또는 Overlay에 이미 제출했는지 기록한다.
     client_.GetRenderer().SetOverlay(nullptr);client_.GetRenderer().SetOverlayProcedure({});
     if (world_ && state_.phase!=ClientPhase::LoadingMission) {
-        world_->Resize(width,height);worldSprites=world_->Sprites();
+        world_->Resize(width,height);if (!nativeFrame) worldSprites=world_->Sprites(); //10.78은 실제 공통 수집/Draw에서만 가상 표시를 호출하여 부수효과를 중복 실행하지 않는다.
         auto& cursorDisplay=world_->Session().Cursor().Display();cursorDisplay.Settings().gridOption=client_.GetScreen().Flags();
         cursorDisplay.SetText(client_.Fonts(),[this](std::string_view key) { const auto bytes=o::EncodeOriginalText(client_.Translate(key));return std::string(bytes.begin(),bytes.end()); });
-        if (!client_.GetRenderer().HasExtraCollection()) client_.GetRenderer().SetExtraCollection([this](ScreenRect clip,std::uint32_t flags) {
+        if (!nativeFrame && !client_.GetRenderer().HasExtraCollection()) client_.GetRenderer().SetExtraCollection([this](ScreenRect clip,std::uint32_t flags) {
             if (!world_ || state_.phase!=ClientPhase::Mission || !popup_.empty()) return std::vector<RenderSprite>{};
             return world_->Session().Cursor().Display().Sprites(clip,flags);
         });
@@ -1355,8 +1355,8 @@ void UberGump::Compose() {
     if (state_.phase == ClientPhase::Mission && popup_.empty()) {
         // 원본 HUD와 월드를 합성한다. 가로 메뉴는 기존 ESC 입력으로 연다.
         client_.GetRenderer().SetBackground(nativeFrame ? nullptr : canvas);if (nativeFrame) text.clear();client_.GetRenderer().SetScene(std::move(worldSprites),std::move(text));
-        if (world_) client_.GetRenderer().SetOverlay(world_->SelectionImage());
-        if (rawButtons_->Menus()->HasOverlay()) {
+        if (world_ && !nativeFrame) client_.GetRenderer().SetOverlay(world_->SelectionImage()); //10.78 선택 표시는 공통 SpriteDraw의 같은 실제 SID 경로다.
+        if (!nativeFrame && rawButtons_->Menus()->HasOverlay()) {
             commonDrawSubmitted=true;
             client_.GetRenderer().SetOverlayProcedure(RenderProcedure{all,[this](std::span<std::uint8_t> pixels,int pitch,int height,ScreenRect clip) {
                 rawButtons_->Menus()->Draw(pixels,pitch,height,client_.GetScreen().Colors(),client_.GetScreen().ShadeMaps(),clip);
@@ -1372,7 +1372,7 @@ void UberGump::Compose() {
                 regions=rawButtons_->Menus()->Controls();
                 // 먼저 기존 바탕 글자를 실제 픽셀로 합성하고 그 위에 같은 원본 메뉴 Draw를 실행한다.
                 RasterMenuBackdropText(*canvas,text);text.clear();
-                if (!nativeHud) { rawButtons_->Menus()->Draw(canvas->indices,width,height,client_.GetScreen().Colors(),client_.GetScreen().ShadeMaps());commonDrawSubmitted=true; } //실제 HUD는 원문 미니맵 Refresh 뒤 Renderer의 공통 Overlay에서 그린다. 중간 모드의 음수 crop을 호스트 배경 합성에서 먼저 읽지 않는다.
+                if (!nativeFrame && !nativeHud) { rawButtons_->Menus()->Draw(canvas->indices,width,height,client_.GetScreen().Colors(),client_.GetScreen().ShadeMaps());commonDrawSubmitted=true; } //10.78은 미니맵 Refresh 뒤 같은 단일 목록에서 그리며 CD의 기존 합성만 유지한다.
             }
         } else if (state_.phase == ClientPhase::Dialog || state_.phase == ClientPhase::Briefing) {
             const auto background=std::string(HtmlBackgroundName(htmlGlobals_));
@@ -1385,13 +1385,13 @@ void UberGump::Compose() {
                 }
                 if (it != decorations_.end()) Paste(*canvas, it->second, (width - static_cast<int>(it->second.width)) / 2, (height - static_cast<int>(it->second.height)) / 2, all);
             }
-            if (!controls && !nativeHud) { rawButtons_->Menus()->Draw(canvas->indices,width,height,client_.GetScreen().Colors(),client_.GetScreen().ShadeMaps());commonDrawSubmitted=true; } //브리핑도 현재 전체 HUD는 아래 공통 Overlay로 제출하여 같은 프레임의 Refresh 결과를 사용한다.
-        } else if (state_.phase == ClientPhase::LoadingMission && !controls && !nativeHud) {
+            if (!nativeFrame && !controls && !nativeHud) { rawButtons_->Menus()->Draw(canvas->indices,width,height,client_.GetScreen().Colors(),client_.GetScreen().ShadeMaps());commonDrawSubmitted=true; } //10.78 브리핑도 같은 단일 목록에서 현재 Refresh 결과를 출력한다.
+        } else if (!nativeFrame && state_.phase == ClientPhase::LoadingMission && !controls && !nativeHud) {
             rawButtons_->Menus()->Draw(canvas->indices,width,height,client_.GetScreen().Colors(),client_.GetScreen().ShadeMaps());
             commonDrawSubmitted=true;
         }
         client_.GetRenderer().SetBackground(nativeFrame ? nullptr : canvas);
-        if (nativeFrame) { text.clear();client_.GetRenderer().SetScene(std::move(worldSprites));if (world_) client_.GetRenderer().SetOverlay(world_->SelectionImage()); } //브리핑/ESC 뒤의 월드도 정적 배경 사본으로 굳히지 않는다.
+        if (nativeFrame) { text.clear();client_.GetRenderer().SetScene({}); } //브리핑/ESC 뒤의 월드와 선택 표시도 같은 실제 목록으로 한 번 출력한다.
         else client_.GetRenderer().SetScene(std::move(dialogSprites),std::move(text));
     }
     if (controls) {
@@ -1447,9 +1447,9 @@ void UberGump::Compose() {
         // 새 페이지는 같은 raw 노드로 한 번 다시 합성하며 중간 어댑터 그림은 화면에 제출하지 않는다.
         controlsChanged_=false;Compose();return;
     }
-    if (nativeFrame || (!commonDrawSubmitted && (state_.phase==ClientPhase::MainMenu || nativeHud || rawButtons_->Menus()->KnowledgeOpen() || rawButtons_->Menus()->HelpOpen() || warnings_->HasMessages()))) client_.GetRenderer().SetOverlayProcedure(RenderProcedure{{0,0,width,height},[this](std::span<std::uint8_t> pixels,int pitch,int height,ScreenRect clip) {
+    if (!nativeFrame && !commonDrawSubmitted && (state_.phase==ClientPhase::MainMenu || nativeHud || rawButtons_->Menus()->KnowledgeOpen() || rawButtons_->Menus()->HelpOpen() || warnings_->HasMessages())) client_.GetRenderer().SetOverlayProcedure(RenderProcedure{{0,0,width,height},[this](std::span<std::uint8_t> pixels,int pitch,int height,ScreenRect clip) {
         rawButtons_->Menus()->Draw(pixels,pitch,height,client_.GetScreen().Colors(),client_.GetScreen().ShadeMaps(),clip);
-    }}); //World 생성 전 현재 전체 HUD와 브리핑 위 지식 카드도 같은 실제 공통 트리로 그린다.
+    }}); //CD의 기존 후합성만 유지한다.10.78 UI는 실제 공통 수집/정렬에서 월드와 함께 그린다.
     if (world_) world_->TakeChanged();
     rebuild_ = false;
 }

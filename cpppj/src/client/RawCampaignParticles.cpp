@@ -217,6 +217,8 @@ void RawCampaignParticles::Draw(std::uint32_t token,std::span<std::uint8_t> pixe
 }
 // 실제 등록/프로세스 수명 검사용 단일 저장소다.
 const o::RenderProcessSystem& RawCampaignParticles::Rendering() const { return rendering_; }
+std::int32_t RawCampaignParticles::CollectDrawing(o::RenderWorldRect view,std::span<o::RenderCollectionEntry> output,std::int32_t limit) { RefreshCamera();return rendering_.Collect(view,output,limit); } //같은16/11 배율/현재 목록이며 종류별로 다시 나누지 않는다.
+void RawCampaignParticles::DrawEntry(std::uint32_t token,std::span<std::uint8_t> pixels,int pitch,int height,ScreenRect clip) { Draw(token,pixels,pitch,height,clip); } //기존 VFX 잠금/예외 정리를 공유한다.
 // 건설 계산은 기존 복원 몸체에 맡기고 실제 캡처/색 할당/화면 장치만 공급한다.
 void RawCampaignParticles::ConnectConstruction(std::function<o::ConstructionVisualImage(o::Sid)> capture,std::function<std::int32_t(o::Sid)> maximum) {
     if (construction_ || !capture || !maximum) throw std::invalid_argument("실제 건설 표시 연결 오류");

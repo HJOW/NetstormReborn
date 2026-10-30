@@ -1,6 +1,7 @@
 // 실제 공통 트리의 메뉴 입력/하위 메뉴/제목·픽셀/삭제와 기존 버튼 복귀를 검사한다.
 #include "RawSceneSupport.h"
 #include "client/RawMenuControls.h"
+#include "client/DrawSort.h"
 #include "client/RawHtmlWindowContext.h"
 #include "client/RawButtonControls.h"
 #include "client/RawObjectMenu.h"
@@ -427,3 +428,27 @@ TEST_CASE(RawMenuControls_MinimapReplacementKeepsCurrentWorldNotifications) {
 
 // 실제 CD 영상의 공통 Gump 수명/픽셀/스킵/자연 종료를 검사한다.
 #include "RawMenuMovieTests.inc"
+
+// 실제 UI 수집/출력 분리를 기존 픽셀과 대조하고 예외/재진입 뒤에도 장치 대여가 정리되는지 확인한다.
+TEST_CASE(RawMenuControls_UnifiedDirtyCollectionAndDrawingLifetime) {
+    MenuClient client;constexpr int pitch=647,height=480; // 같은 실제 메뉴와 행 padding을 사용한다.
+    client.menus->Open({100,100},[](const auto& widgets,const auto& controls,const auto&) { widgets.BeginVertical();controls.AddText("Scope",0x02000017U,87); }); //기본 Under 버튼은 이 계층 소유가 아니므로 실제 메뉴 자식을 만든다.
+    const auto point=client.menus->Point("Scope");CHECK(point);if (!point) return;
+    std::array<std::uint32_t,256> logical{};std::vector<std::uint8_t> legacy(pitch*height,0x5a),unified=legacy;
+    for (std::size_t index=0;index<logical.size();++index) { const auto c=client.assets.Palette().Color(static_cast<std::uint8_t>(index));logical[index]=c.red|(std::uint32_t(c.green)<<8)|(std::uint32_t(c.blue)<<16); } // 현재 원본 팔레트의 명암 입력이다.
+    const auto maps=BuildGumpShadeMaps(logical);const ScreenRect clip{point->x-8,point->y-4,point->x+8,point->y+4};
+    client.menus->Draw(legacy,pitch,height,client.Palette(),maps,clip);
+    std::array<netstorm::o::RenderCollectionEntry,5000> entries{};const auto count=client.menus->CollectDrawing(clip,entries,5000);CHECK(count>0);
+    auto used=std::span(entries).first(static_cast<std::size_t>(count));SortDrawEntries(used);
+    client.menus->WithDrawing(unified,pitch,height,client.Palette(),maps,clip,[&](const RawMenuControls::DrawingToken& draw) { for (const auto& entry:used) draw(entry.token); }); // 통합 분배는 실제 UI 토큰만 이 문맥에 전달한다.
+    CHECK(legacy==unified && std::any_of(unified.begin(),unified.end(),[](auto value) { return value!=0x5a; }));
+    bool reentry{},unwound{};
+    try {
+        client.menus->WithDrawing(unified,pitch,height,client.Palette(),maps,clip,[&](const auto&) {
+            try { client.menus->WithDrawing(unified,pitch,height,client.Palette(),maps,clip,[](const auto&) {}); } catch (const std::logic_error&) { reentry=true; }
+            throw std::runtime_error("UI 문맥 예외 정리 검사");
+        });
+    } catch (const std::runtime_error&) { unwound=true; }
+    CHECK(reentry && unwound);client.menus->Draw(unified,pitch,height,client.Palette(),maps,clip);CHECK(legacy==unified);
+    for (int y=0;y<height;++y) for (int x=0;x<pitch;++x) if (x<clip.left || x>=clip.right || y<clip.top || y>=clip.bottom) CHECK(unified[y*pitch+x]==0x5a); // clip 밖/행 padding을 보존한다.
+}

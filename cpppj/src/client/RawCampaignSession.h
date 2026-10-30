@@ -311,6 +311,7 @@ public:
     std::vector<RenderSprite> ParticleSprites(ScreenRect clip) const;
     // 후속 검증이 같은 Host/Kernel의 등록을 읽는 현재 표시 관리자다.
     const RawCampaignParticles& Particles() const;
+    RawCampaignParticles& Particles(); //실제 Renderer도 같은 Session의 현재 단일 표시 목록/장치를 직접 빌린다.
     // 원본 미션 게이트의 첫 checkOutcome 위치에서만 호출한다. 설치/활성화 전에 자동 실행하지 않는다.
     void CheckMissionOutcome();
     // 같은 현재 Player/ownerState를 읽는 원본4922e0이며 TellAt의 사제 생존 관문이다.

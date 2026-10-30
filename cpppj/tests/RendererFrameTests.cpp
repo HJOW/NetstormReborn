@@ -14,6 +14,22 @@
 #include <vector>
 
 using namespace netstorm::client; //같은 제품 Renderer와 원문 앞단을 조립한다.
+// 단일 목록을 연결하면 이전 월드/선택/UI 후합성은 재실행하지 않으며 현재 dirty와 최종 커서만 유지한다.
+TEST_CASE(RendererFrame_UnifiedSubmissionReplacesLegacyLayers) {
+    Renderer renderer(8,8);std::vector<std::uint8_t> pixels(64,33);std::string events;std::uint32_t currentFlags{};
+    RenderSprite legacy;legacy.clip={0,0,8,8};legacy.procedure=RenderProcedure{{0,0,8,8},[&](auto,int,int,auto) { events+='L'; }};
+    renderer.SetScene({legacy});renderer.SetExtraCollection([&](auto,auto) { events+='E';return std::vector<RenderSprite>{}; });
+    renderer.SetOverlay(std::make_shared<IndexedImage>(IndexedImage{8,8,std::vector<std::uint8_t>(64,99),std::vector<std::uint8_t>(64,255)}));
+    renderer.SetOverlayProcedure(RenderProcedure{{0,0,8,8},[&](auto,int,int,auto) { events+='I'; }});
+    IndexedImage cursor{1,1,{9},{255}};renderer.SetSoftwareCursor(&cursor,{2,2});
+    RendererWorldDrawing world;
+    world.collect=[&](auto clip,auto flags) { events+='C';currentFlags=flags;CHECK(clip.left<=2 && clip.right>2);return 1U; };
+    world.background=[&](auto,auto flags,auto covered) { events+='B';CHECK(flags==currentFlags && covered==1); };
+    world.submit=[&](auto target,int pitch,int height,auto clip) { events+='S';CHECK(pitch==8 && height==8);for (int y=clip.top;y<clip.bottom;++y) for (int x=clip.left;x<clip.right;++x) target[y*pitch+x]=7; }; //원문 분배기가 받은 현재 dirty 안에서만 출력한다.
+    renderer.Draw(pixels,8,0,&world);renderer.Present([](auto) {});CHECK(events=="CBS" && pixels[18]==9 && pixels[0]==7);
+    events.clear();pixels[0]=55;renderer.Invalidate({2,2,3,3},4);renderer.Draw(pixels,8,0,&world);renderer.Present([](auto) {});
+    CHECK(events=="CBS" && currentFlags==4 && pixels[18]==9 && pixels[0]==55);
+}
 // 원문이 첫 지형 수집기에 실제 전달한 float4개와 행 제한을 세 화면비/부분 dirty/분수 카메라로 대조한다.
 TEST_CASE(RendererFrame_Original90ProjectionAndRowLimit) {
     std::ifstream file(NETSTORM_RENDERER_PROJECTION_FIXTURE);CHECK(file.good());std::string line;std::size_t count{};

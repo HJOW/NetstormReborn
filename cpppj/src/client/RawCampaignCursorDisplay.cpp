@@ -115,6 +115,8 @@ std::vector<RenderSprite> RawCampaignCursorDisplay::Sprites(ScreenRect clip,std:
     for (std::int32_t index=0;index<count;++index) { const auto entry=entries[static_cast<std::size_t>(index)];RenderSprite sprite;sprite.clip=impl_->viewport;sprite.order={entry.x,entry.y,entry.depth};sprite.procedure=RenderProcedure{impl_->viewport,[this,entry](std::span<std::uint8_t> pixels,int pitch,int height,ScreenRect cut) { impl_->Draw(entry,pixels,pitch,height,cut); }};result.push_back(std::move(sprite)); }
     return result;
 }
+std::int32_t RawCampaignCursorDisplay::CollectDrawing(o::RenderWorldRect view,std::span<o::RenderCollectionEntry> output,std::int32_t limit) const { return impl_->collection->Collect(view,output,limit); } //현재30SID/판정/남은 횟수의 실제 원문 수집이다.
+void RawCampaignCursorDisplay::DrawEntry(const o::RenderCollectionEntry& entry,std::span<std::uint8_t> pixels,int pitch,int height,ScreenRect clip) { impl_->Draw(entry,pixels,pitch,height,clip); } //별도 스프라이트나 두 번째 수집을 만들지 않는다.
 std::array<std::uint32_t,2> RawCampaignCursorDisplay::TextColors() const { return impl_->textColors; } // Take의 두 현재 색만 반환한다.
 PreviewDrawState& RawCampaignCursorDisplay::Settings() { return impl_->settings; } // 현재 표시 옵션을 직접 빌린다.
 PreviewCollectionState& RawCampaignCursorDisplay::Feedback() { return impl_->feedback; } // 현재 피드백 쓰기 상태를 직접 빌린다.
