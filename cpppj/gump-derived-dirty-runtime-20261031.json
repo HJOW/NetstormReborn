@@ -1,0 +1,2597 @@
+{
+  "unit": 627,
+  "sourceBaseCommit": "1aca7df6",
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "complete": true,
+  "checks": {
+    "passed": true,
+    "tests": 157,
+    "filters": [
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "RendererFrame_"
+        ],
+        "binarySha256": "80a48e7817525ac6f577e461bc6f0eca0b4838be307e49269fe04b847d08f3ad",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 2.2890722999982245,
+        "stdoutSha256": "f54aadd41321b640276251850ab79683e832b7dba28f690bcf561c11612708e6",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "RendererFrame_",
+        "tests": 4,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "RendererPrelude_"
+        ],
+        "binarySha256": "80a48e7817525ac6f577e461bc6f0eca0b4838be307e49269fe04b847d08f3ad",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 0.5700764000030176,
+        "stdoutSha256": "19d97720996aa0074a8e575cdbe57bace55d6dbac72ddbb530b99c0d5c0f7037",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "RendererPrelude_",
+        "tests": 2,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "RendererCloud_"
+        ],
+        "binarySha256": "80a48e7817525ac6f577e461bc6f0eca0b4838be307e49269fe04b847d08f3ad",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 0.5257688000019698,
+        "stdoutSha256": "2e161ca523d22040056a79597f36f09d1be3b3631c63bff2fb93be596481c67a",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "RendererCloud_",
+        "tests": 3,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "Renderer_"
+        ],
+        "binarySha256": "80a48e7817525ac6f577e461bc6f0eca0b4838be307e49269fe04b847d08f3ad",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 0.5187632000015583,
+        "stdoutSha256": "77b7ed5a02a10ba24011dffdadfb67a61b75b6ee3f728c6bab0ce109d1648121",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "Renderer_",
+        "tests": 8,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "KencloudRender_"
+        ],
+        "binarySha256": "80a48e7817525ac6f577e461bc6f0eca0b4838be307e49269fe04b847d08f3ad",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 0.5301472999999532,
+        "stdoutSha256": "8a6703ead8202b00b8ba17e83e5e72333be0be7eaf62f7353e182c269ca0515f",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "KencloudRender_",
+        "tests": 2,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "ClientKencloudGlobals_"
+        ],
+        "binarySha256": "80a48e7817525ac6f577e461bc6f0eca0b4838be307e49269fe04b847d08f3ad",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 0.6107884000011836,
+        "stdoutSha256": "4de093736e2be425428bf78fce1656f3c9933d4347505d884cb2a2536d3e0e8c",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "ClientKencloudGlobals_",
+        "tests": 7,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "TileGroupCollection_"
+        ],
+        "binarySha256": "80a48e7817525ac6f577e461bc6f0eca0b4838be307e49269fe04b847d08f3ad",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 1.265280999999959,
+        "stdoutSha256": "9a499ccffa6d8dbb62e88e9d26bb3e99d07f930e0f222463b102576fc6af0955",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "TileGroupCollection_",
+        "tests": 6,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "DrawSubmission_"
+        ],
+        "binarySha256": "80a48e7817525ac6f577e461bc6f0eca0b4838be307e49269fe04b847d08f3ad",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 0.6814683000011428,
+        "stdoutSha256": "d6229b56816b9571ee737933f3e1e4b736ebad5aaa40880db6469bdc7ab21303",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "DrawSubmission_",
+        "tests": 8,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "PreviewCollection_"
+        ],
+        "binarySha256": "80a48e7817525ac6f577e461bc6f0eca0b4838be307e49269fe04b847d08f3ad",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 1.6689116999987164,
+        "stdoutSha256": "de722b4b8e65a05511f21447a5381782ebe4b165071a474d995b86a9899d6d0e",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "PreviewCollection_",
+        "tests": 10,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "CameraPan_"
+        ],
+        "binarySha256": "80a48e7817525ac6f577e461bc6f0eca0b4838be307e49269fe04b847d08f3ad",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 0.5609994000005827,
+        "stdoutSha256": "8c3eb47a63dcdfb85bb88e6fe66ceeea5cf6bc5f65a2a530add801f662b29666",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "CameraPan_",
+        "tests": 2,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "CameraCommit_"
+        ],
+        "binarySha256": "80a48e7817525ac6f577e461bc6f0eca0b4838be307e49269fe04b847d08f3ad",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 0.5148508999991463,
+        "stdoutSha256": "638909e7afc51e87e9d9320e666b9127dbaea65c3cb4fcd505cad6f37a110f83",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "CameraCommit_",
+        "tests": 4,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "CameraPresent_"
+        ],
+        "binarySha256": "80a48e7817525ac6f577e461bc6f0eca0b4838be307e49269fe04b847d08f3ad",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 0.5260396999983641,
+        "stdoutSha256": "af807b67f344c7e99911ba2552b42b69e18302b696f9cd4643ce08068b0338ab",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "CameraPresent_",
+        "tests": 3,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "CameraView_"
+        ],
+        "binarySha256": "80a48e7817525ac6f577e461bc6f0eca0b4838be307e49269fe04b847d08f3ad",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 9.24706259999948,
+        "stdoutSha256": "905ac5f79d7640bc5b4e9aeb0af090723f1aa011a217a2e834d9e2a93e883b62",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "CameraView_",
+        "tests": 8,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "ScreenPresentation_"
+        ],
+        "binarySha256": "80a48e7817525ac6f577e461bc6f0eca0b4838be307e49269fe04b847d08f3ad",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 0.5690366000017093,
+        "stdoutSha256": "e7ac911238149e606812e5636707bbaa49a5433ce5c7081d7d7df57f29c85977",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "ScreenPresentation_",
+        "tests": 5,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "ScreenScroll_"
+        ],
+        "binarySha256": "80a48e7817525ac6f577e461bc6f0eca0b4838be307e49269fe04b847d08f3ad",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 0.5260573000014119,
+        "stdoutSha256": "64faf6fc3fcc1ff18eb62fc27bd3ceb7626642f4e219ed9c535526a5a8c30be3",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "ScreenScroll_",
+        "tests": 4,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "GumpInput_"
+        ],
+        "binarySha256": "80a48e7817525ac6f577e461bc6f0eca0b4838be307e49269fe04b847d08f3ad",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 0.7169169000007969,
+        "stdoutSha256": "5cb6f3cb1b6bdd62ef1d41345d897757c626f075b9e5e9090ce843bb678c7b93",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "GumpInput_",
+        "tests": 9,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "ObjectCollection_"
+        ],
+        "binarySha256": "80a48e7817525ac6f577e461bc6f0eca0b4838be307e49269fe04b847d08f3ad",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 1.5266787000000477,
+        "stdoutSha256": "6f5feab137ed2c0dceafba0aa04b9878d409f5d0606b1cd13136ba631e67309b",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "ObjectCollection_",
+        "tests": 7,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "SpriteDraw_"
+        ],
+        "binarySha256": "80a48e7817525ac6f577e461bc6f0eca0b4838be307e49269fe04b847d08f3ad",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 1.4543209000003117,
+        "stdoutSha256": "2d37158cee4e8849b98cfe372c40fc733fef86baf45f0957a0d78b699d276085",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "SpriteDraw_",
+        "tests": 14,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "RawMenuControls_"
+        ],
+        "binarySha256": "80a48e7817525ac6f577e461bc6f0eca0b4838be307e49269fe04b847d08f3ad",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 2.5462396000002627,
+        "stdoutSha256": "456795a9cc5618f2193ee2399ede8d8be62ae941e9ba7926cb53b8e4e1d2da0d",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "RawMenuControls_",
+        "tests": 18,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "GumpRedraw_"
+        ],
+        "binarySha256": "80a48e7817525ac6f577e461bc6f0eca0b4838be307e49269fe04b847d08f3ad",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 0.600510199998098,
+        "stdoutSha256": "ba8027da44a71a31679a5acebde323265135f4df097df017e28f19ed079cfa07",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "GumpRedraw_",
+        "tests": 2,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "GumpDerivedRedraw_"
+        ],
+        "binarySha256": "80a48e7817525ac6f577e461bc6f0eca0b4838be307e49269fe04b847d08f3ad",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 0.5808194999990519,
+        "stdoutSha256": "2d0c60cdf6a9af6bf60b7fbb5180b95878f39b91876be4493456420f9e6bf5d1",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "GumpDerivedRedraw_",
+        "tests": 1,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "GumpCollection_"
+        ],
+        "binarySha256": "80a48e7817525ac6f577e461bc6f0eca0b4838be307e49269fe04b847d08f3ad",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 0.7775030999982846,
+        "stdoutSha256": "d4c07497b5f661cdaba73f4286c5392f859d16ec3cc0b666cc6cad22ae0f46fa",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "GumpCollection_",
+        "tests": 6,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "GumpFrame_"
+        ],
+        "binarySha256": "80a48e7817525ac6f577e461bc6f0eca0b4838be307e49269fe04b847d08f3ad",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 0.9254480999989028,
+        "stdoutSha256": "761a68029efd34f53769860350524283508459ac09044dff2af381c3ebf58181",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "GumpFrame_",
+        "tests": 9,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "RawButtonControls_"
+        ],
+        "binarySha256": "80a48e7817525ac6f577e461bc6f0eca0b4838be307e49269fe04b847d08f3ad",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 0.5300662999979977,
+        "stdoutSha256": "701db22b9ff8531e5fe65083a1384151782ae7b87df18c96704690159ff92525",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "RawButtonControls_",
+        "tests": 8,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "RawButtonCursorBoundary_"
+        ],
+        "binarySha256": "80a48e7817525ac6f577e461bc6f0eca0b4838be307e49269fe04b847d08f3ad",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 0.6935008999971615,
+        "stdoutSha256": "6c71828f942ff19463c3b3905a188755909047e3ce46941742eb6178a4d132b3",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "RawButtonCursorBoundary_",
+        "tests": 7,
+        "failed": 0
+      }
+    ],
+    "binarySha256": "80a48e7817525ac6f577e461bc6f0eca0b4838be307e49269fe04b847d08f3ad"
+  },
+  "registeredTests": 3537,
+  "build": {
+    "build-v1.log": {
+      "errors": 0,
+      "warnings": 0,
+      "sha256": "0eccba36480b8ffc1e6794e7a44ac7ba2a9ef3601ebab873691183e3b68c04d6"
+    },
+    "build-v2.log": {
+      "errors": 0,
+      "warnings": 0,
+      "sha256": "c569bb602d679483b6de518e482ee2f31e0c5b50724efb6952d1b0f2ebeffdfd"
+    }
+  },
+  "native": {
+    "unit": 627,
+    "host": "HJOW-Athlon",
+    "lastFullDecompileHost": "HJOW-Athlon",
+    "lastFullDecompileDate": "2026-10-23",
+    "complete": true,
+    "cases": 1152,
+    "independentProcesses": 2,
+    "observations": 6912,
+    "differences": 0,
+    "fixtureSha256": "7f98ceb180c7503b97c20afdda410fb9a9993db55b5a5c97c29a894dbd765009",
+    "processes": [
+      {
+        "fixtureSha256": "7f98ceb180c7503b97c20afdda410fb9a9993db55b5a5c97c29a894dbd765009",
+        "cases": 1152,
+        "observations": 3456,
+        "differences": 0,
+        "sourceSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+        "toolSha256": "7415ebdd56798d6a0f409a9c1ff5d051563e4d9aac0737c8c62d878ba1ccbe09",
+        "dataSha256": "93263dbe5d228742efa05790e7eae5f5465d06982c39b241b78b25a65fcbc5ed",
+        "host": "HJOW-Athlon",
+        "lastFullDecompileHost": "HJOW-Athlon",
+        "lastFullDecompileDate": "2026-10-23",
+        "scope": "격리 PE 실제 장식/메뉴 행/Position/CRT/XYWH다. 마지막 Renderer 저장소/월드 투영만 경계이며 게임·GUI·새 C++·fixture는 실행/참조/수정하지 않는다."
+      },
+      {
+        "fixtureSha256": "7f98ceb180c7503b97c20afdda410fb9a9993db55b5a5c97c29a894dbd765009",
+        "cases": 1152,
+        "observations": 3456,
+        "differences": 0,
+        "sourceSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+        "toolSha256": "7415ebdd56798d6a0f409a9c1ff5d051563e4d9aac0737c8c62d878ba1ccbe09",
+        "dataSha256": "93263dbe5d228742efa05790e7eae5f5465d06982c39b241b78b25a65fcbc5ed",
+        "host": "HJOW-Athlon",
+        "lastFullDecompileHost": "HJOW-Athlon",
+        "lastFullDecompileDate": "2026-10-23",
+        "scope": "격리 PE 실제 장식/메뉴 행/Position/CRT/XYWH다. 마지막 Renderer 저장소/월드 투영만 경계이며 게임·GUI·새 C++·fixture는 실행/참조/수정하지 않는다."
+      }
+    ],
+    "scope": "장식465e60/행476e00/Position/CRT/XYWH 실제 PE다. 마지막 Renderer 저장소/월드 투영만 경계이며 C++와 독립이다. 실제 게임/GUI/MP/금지 재현은 실행하지 않았다."
+  },
+  "gui": {
+    "passed": true,
+    "frameRuns": 10,
+    "bridgeRuns": 1,
+    "constructionRuns": 1,
+    "binarySha256": "45f96a61ed099a5c2844f05499a018f885660d1a6d5171a261ecf6d6deeb3c11",
+    "zipSha256": "a90c06ffcac7c49b9782fb146c96db6072d339cd27b4087f27b5257f9f289d6b",
+    "sceneRows": {
+      "main-clouds/states.tsv": {
+        "initial": [
+          1,
+          0,
+          0,
+          25,
+          0,
+          0,
+          0,
+          0,
+          25,
+          0,
+          0
+        ],
+        "final": [
+          1,
+          0,
+          0,
+          153,
+          0,
+          0,
+          0,
+          0,
+          153,
+          0,
+          0
+        ]
+      },
+      "main-tint/states.tsv": {
+        "initial": [
+          17,
+          0,
+          0,
+          22,
+          0,
+          0,
+          0,
+          0,
+          22,
+          0,
+          0
+        ],
+        "final": [
+          17,
+          0,
+          0,
+          107,
+          0,
+          0,
+          0,
+          0,
+          107,
+          0,
+          0
+        ]
+      },
+      "mission-clouds/states.tsv": {
+        "initial": [
+          280,
+          1060,
+          235,
+          112,
+          0,
+          0,
+          1060,
+          235,
+          112,
+          0,
+          0
+        ],
+        "playing": [
+          274,
+          4664,
+          1034,
+          373,
+          0,
+          0,
+          4664,
+          1034,
+          373,
+          0,
+          0
+        ],
+        "escape": [
+          278,
+          9964,
+          2209,
+          796,
+          0,
+          0,
+          9964,
+          2209,
+          796,
+          0,
+          0
+        ],
+        "final": [
+          0,
+          18360,
+          4231,
+          1589,
+          0,
+          0,
+          18360,
+          4231,
+          1589,
+          0,
+          0
+        ]
+      },
+      "mission-parallax-fullscreen/states.tsv": {
+        "initial": [
+          280,
+          1060,
+          235,
+          111,
+          0,
+          0,
+          1060,
+          235,
+          111,
+          0,
+          0
+        ],
+        "playing": [
+          274,
+          4664,
+          1034,
+          372,
+          0,
+          0,
+          4664,
+          1034,
+          372,
+          0,
+          0
+        ],
+        "escape": [
+          281,
+          9964,
+          2209,
+          879,
+          0,
+          0,
+          9964,
+          2209,
+          879,
+          0,
+          0
+        ],
+        "final": [
+          7,
+          18370,
+          4202,
+          1903,
+          0,
+          0,
+          18370,
+          4202,
+          1903,
+          0,
+          0
+        ]
+      },
+      "1024x768-window/states.tsv": {
+        "briefing": [
+          280,
+          424,
+          94,
+          48,
+          0,
+          0,
+          424,
+          94,
+          48,
+          0,
+          0
+        ],
+        "baseline": [
+          274,
+          3604,
+          799,
+          297,
+          0,
+          0,
+          3604,
+          799,
+          297,
+          0,
+          0
+        ],
+        "alt1": [
+          280,
+          4882,
+          1081,
+          387,
+          0,
+          0,
+          4882,
+          1081,
+          387,
+          0,
+          0
+        ],
+        "alt2": [
+          339,
+          7422,
+          1551,
+          567,
+          0,
+          0,
+          7422,
+          1551,
+          567,
+          0,
+          0
+        ],
+        "released": [
+          363,
+          8857,
+          1786,
+          672,
+          0,
+          0,
+          8857,
+          1786,
+          672,
+          0,
+          0
+        ],
+        "idle": [
+          363,
+          10922,
+          2115,
+          819,
+          0,
+          0,
+          10922,
+          2115,
+          819,
+          0,
+          0
+        ],
+        "middle1": [
+          342,
+          11785,
+          2257,
+          882,
+          0,
+          0,
+          11785,
+          2257,
+          882,
+          0,
+          0
+        ],
+        "middle2": [
+          196,
+          13873,
+          2624,
+          1152,
+          0,
+          0,
+          13873,
+          2624,
+          1152,
+          0,
+          0
+        ],
+        "middle-stop": [
+          128,
+          14397,
+          2728,
+          1287,
+          0,
+          0,
+          14397,
+          2728,
+          1287,
+          0,
+          0
+        ],
+        "key-works": [
+          128,
+          14646,
+          2782,
+          1368,
+          0,
+          0,
+          14646,
+          2782,
+          1368,
+          0,
+          0
+        ],
+        "key-restored": [
+          128,
+          14978,
+          2854,
+          1476,
+          0,
+          0,
+          14978,
+          2854,
+          1476,
+          0,
+          0
+        ],
+        "final": [
+          134,
+          15559,
+          2980,
+          1683,
+          0,
+          0,
+          15559,
+          2980,
+          1683,
+          0,
+          0
+        ]
+      },
+      "1024x768-fullscreen/states.tsv": {
+        "briefing": [
+          280,
+          424,
+          94,
+          48,
+          0,
+          0,
+          424,
+          94,
+          48,
+          0,
+          0
+        ],
+        "baseline": [
+          274,
+          3604,
+          799,
+          297,
+          0,
+          0,
+          3604,
+          799,
+          297,
+          0,
+          0
+        ],
+        "alt1": [
+          280,
+          4882,
+          1081,
+          387,
+          0,
+          0,
+          4882,
+          1081,
+          387,
+          0,
+          0
+        ],
+        "alt2": [
+          336,
+          7422,
+          1551,
+          540,
+          0,
+          0,
+          7422,
+          1551,
+          540,
+          0,
+          0
+        ],
+        "released": [
+          360,
+          8857,
+          1786,
+          630,
+          0,
+          0,
+          8857,
+          1786,
+          630,
+          0,
+          0
+        ],
+        "idle": [
+          360,
+          10922,
+          2115,
+          756,
+          0,
+          0,
+          10922,
+          2115,
+          756,
+          0,
+          0
+        ],
+        "middle1": [
+          340,
+          11786,
+          2257,
+          810,
+          0,
+          0,
+          11786,
+          2257,
+          810,
+          0,
+          0
+        ],
+        "middle2": [
+          187,
+          13873,
+          2624,
+          990,
+          0,
+          0,
+          13873,
+          2624,
+          990,
+          0,
+          0
+        ],
+        "middle-stop": [
+          125,
+          14397,
+          2728,
+          1110,
+          0,
+          0,
+          14397,
+          2728,
+          1110,
+          0,
+          0
+        ],
+        "key-works": [
+          125,
+          14646,
+          2782,
+          1182,
+          0,
+          0,
+          14646,
+          2782,
+          1182,
+          0,
+          0
+        ],
+        "key-restored": [
+          125,
+          14978,
+          2854,
+          1278,
+          0,
+          0,
+          14978,
+          2854,
+          1278,
+          0,
+          0
+        ],
+        "final": [
+          125,
+          15559,
+          2980,
+          1446,
+          0,
+          0,
+          15559,
+          2980,
+          1446,
+          0,
+          0
+        ]
+      },
+      "1280x720-window/states.tsv": {
+        "briefing": [
+          321,
+          502,
+          98,
+          48,
+          0,
+          0,
+          502,
+          98,
+          48,
+          0,
+          0
+        ],
+        "baseline": [
+          315,
+          4267,
+          833,
+          297,
+          0,
+          0,
+          4267,
+          833,
+          297,
+          0,
+          0
+        ],
+        "alt1": [
+          317,
+          5778,
+          1124,
+          387,
+          0,
+          0,
+          5778,
+          1124,
+          387,
+          0,
+          0
+        ],
+        "alt2": [
+          406,
+          8827,
+          1590,
+          567,
+          0,
+          0,
+          8827,
+          1590,
+          567,
+          0,
+          0
+        ],
+        "released": [
+          375,
+          10411,
+          1835,
+          667,
+          0,
+          0,
+          10411,
+          1835,
+          667,
+          0,
+          0
+        ],
+        "idle": [
+          375,
+          12553,
+          2178,
+          807,
+          0,
+          0,
+          12553,
+          2178,
+          807,
+          0,
+          0
+        ],
+        "middle1": [
+          366,
+          13458,
+          2323,
+          879,
+          0,
+          0,
+          13458,
+          2323,
+          879,
+          0,
+          0
+        ],
+        "middle2": [
+          212,
+          15744,
+          2712,
+          1139,
+          0,
+          0,
+          15744,
+          2712,
+          1139,
+          0,
+          0
+        ],
+        "middle-stop": [
+          140,
+          16325,
+          2834,
+          1269,
+          0,
+          0,
+          16325,
+          2834,
+          1269,
+          0,
+          0
+        ],
+        "key-works": [
+          140,
+          16601,
+          2900,
+          1347,
+          0,
+          0,
+          16601,
+          2900,
+          1347,
+          0,
+          0
+        ],
+        "key-restored": [
+          140,
+          16969,
+          2988,
+          1451,
+          0,
+          0,
+          16969,
+          2988,
+          1451,
+          0,
+          0
+        ],
+        "final": [
+          145,
+          17613,
+          3142,
+          1668,
+          0,
+          0,
+          17613,
+          3142,
+          1668,
+          0,
+          0
+        ]
+      },
+      "1280x720-fullscreen/states.tsv": {
+        "briefing": [
+          321,
+          502,
+          98,
+          48,
+          0,
+          0,
+          502,
+          98,
+          48,
+          0,
+          0
+        ],
+        "baseline": [
+          315,
+          4267,
+          833,
+          297,
+          0,
+          0,
+          4267,
+          833,
+          297,
+          0,
+          0
+        ],
+        "alt1": [
+          317,
+          5778,
+          1124,
+          387,
+          0,
+          0,
+          5778,
+          1124,
+          387,
+          0,
+          0
+        ],
+        "alt2": [
+          407,
+          8827,
+          1590,
+          555,
+          0,
+          0,
+          8827,
+          1590,
+          555,
+          0,
+          0
+        ],
+        "released": [
+          376,
+          10411,
+          1835,
+          660,
+          0,
+          0,
+          10411,
+          1835,
+          660,
+          0,
+          0
+        ],
+        "idle": [
+          376,
+          12553,
+          2178,
+          807,
+          0,
+          0,
+          12553,
+          2178,
+          807,
+          0,
+          0
+        ],
+        "middle1": [
+          361,
+          13458,
+          2323,
+          870,
+          0,
+          0,
+          13458,
+          2323,
+          870,
+          0,
+          0
+        ],
+        "middle2": [
+          207,
+          15743,
+          2712,
+          1080,
+          0,
+          0,
+          15743,
+          2712,
+          1080,
+          0,
+          0
+        ],
+        "middle-stop": [
+          142,
+          16326,
+          2834,
+          1215,
+          0,
+          0,
+          16326,
+          2834,
+          1215,
+          0,
+          0
+        ],
+        "key-works": [
+          142,
+          16605,
+          2900,
+          1296,
+          0,
+          0,
+          16605,
+          2900,
+          1296,
+          0,
+          0
+        ],
+        "key-restored": [
+          142,
+          16977,
+          2988,
+          1404,
+          0,
+          0,
+          16977,
+          2988,
+          1404,
+          0,
+          0
+        ],
+        "final": [
+          142,
+          17628,
+          3142,
+          1593,
+          0,
+          0,
+          17628,
+          3142,
+          1593,
+          0,
+          0
+        ]
+      },
+      "1280x800-window/states.tsv": {
+        "briefing": [
+          344,
+          544,
+          102,
+          48,
+          0,
+          0,
+          544,
+          102,
+          48,
+          0,
+          0
+        ],
+        "baseline": [
+          338,
+          4624,
+          867,
+          297,
+          0,
+          0,
+          4624,
+          867,
+          297,
+          0,
+          0
+        ],
+        "alt1": [
+          340,
+          6261,
+          1170,
+          387,
+          0,
+          0,
+          6261,
+          1170,
+          387,
+          0,
+          0
+        ],
+        "alt2": [
+          435,
+          9563,
+          1656,
+          572,
+          0,
+          0,
+          9563,
+          1656,
+          572,
+          0,
+          0
+        ],
+        "released": [
+          404,
+          11282,
+          1911,
+          672,
+          0,
+          0,
+          11282,
+          1911,
+          672,
+          0,
+          0
+        ],
+        "idle": [
+          404,
+          13613,
+          2268,
+          812,
+          0,
+          0,
+          13613,
+          2268,
+          812,
+          0,
+          0
+        ],
+        "middle1": [
+          404,
+          14604,
+          2423,
+          890,
+          0,
+          0,
+          14604,
+          2423,
+          890,
+          0,
+          0
+        ],
+        "middle2": [
+          224,
+          17028,
+          2829,
+          1150,
+          0,
+          0,
+          17028,
+          2829,
+          1150,
+          0,
+          0
+        ],
+        "middle-stop": [
+          136,
+          17607,
+          2949,
+          1280,
+          0,
+          0,
+          17607,
+          2949,
+          1280,
+          0,
+          0
+        ],
+        "key-works": [
+          136,
+          17874,
+          3012,
+          1358,
+          0,
+          0,
+          17874,
+          3012,
+          1358,
+          0,
+          0
+        ],
+        "key-restored": [
+          141,
+          18230,
+          3096,
+          1477,
+          0,
+          0,
+          18230,
+          3096,
+          1477,
+          0,
+          0
+        ],
+        "final": [
+          141,
+          18853,
+          3243,
+          1694,
+          0,
+          0,
+          18853,
+          3243,
+          1694,
+          0,
+          0
+        ]
+      },
+      "1280x800-fullscreen/states.tsv": {
+        "briefing": [
+          344,
+          544,
+          102,
+          48,
+          0,
+          0,
+          544,
+          102,
+          48,
+          0,
+          0
+        ],
+        "baseline": [
+          338,
+          4624,
+          867,
+          297,
+          0,
+          0,
+          4624,
+          867,
+          297,
+          0,
+          0
+        ],
+        "alt1": [
+          340,
+          6261,
+          1170,
+          387,
+          0,
+          0,
+          6261,
+          1170,
+          387,
+          0,
+          0
+        ],
+        "alt2": [
+          436,
+          9563,
+          1656,
+          549,
+          0,
+          0,
+          9563,
+          1656,
+          549,
+          0,
+          0
+        ],
+        "released": [
+          405,
+          11282,
+          1911,
+          654,
+          0,
+          0,
+          11282,
+          1911,
+          654,
+          0,
+          0
+        ],
+        "idle": [
+          405,
+          13613,
+          2268,
+          801,
+          0,
+          0,
+          13613,
+          2268,
+          801,
+          0,
+          0
+        ],
+        "middle1": [
+          399,
+          14604,
+          2423,
+          864,
+          0,
+          0,
+          14604,
+          2423,
+          864,
+          0,
+          0
+        ],
+        "middle2": [
+          225,
+          17027,
+          2829,
+          1080,
+          0,
+          0,
+          17027,
+          2829,
+          1080,
+          0,
+          0
+        ],
+        "middle-stop": [
+          137,
+          17605,
+          2949,
+          1215,
+          0,
+          0,
+          17605,
+          2949,
+          1215,
+          0,
+          0
+        ],
+        "key-works": [
+          137,
+          17872,
+          3012,
+          1296,
+          0,
+          0,
+          17872,
+          3012,
+          1296,
+          0,
+          0
+        ],
+        "key-restored": [
+          137,
+          18228,
+          3096,
+          1404,
+          0,
+          0,
+          18228,
+          3096,
+          1404,
+          0,
+          0
+        ],
+        "final": [
+          137,
+          18851,
+          3243,
+          1593,
+          0,
+          0,
+          18851,
+          3243,
+          1593,
+          0,
+          0
+        ]
+      },
+      "production-keys\\states.tsv": {
+        "briefingKey": [
+          280,
+          1060,
+          235,
+          111,
+          0,
+          0,
+          1060,
+          235,
+          111,
+          0,
+          0
+        ],
+        "missingSlot": [
+          274,
+          3180,
+          705,
+          267,
+          0,
+          0,
+          3180,
+          705,
+          267,
+          0,
+          0
+        ],
+        "mature": [
+          7,
+          42219,
+          19683,
+          4291,
+          0,
+          0,
+          42219,
+          19683,
+          4291,
+          0,
+          0
+        ],
+        "menuOpen": [
+          298,
+          42719,
+          19863,
+          4369,
+          0,
+          0,
+          42719,
+          19863,
+          4369,
+          0,
+          0
+        ],
+        "menuKey": [
+          9,
+          42945,
+          19926,
+          4407,
+          0,
+          8,
+          42945,
+          19926,
+          4407,
+          0,
+          8
+        ],
+        "closedMenu": [
+          7,
+          43239,
+          20069,
+          4445,
+          0,
+          24,
+          43239,
+          20069,
+          4445,
+          0,
+          24
+        ],
+        "keyq": [
+          9,
+          43841,
+          20371,
+          4521,
+          0,
+          48,
+          43841,
+          20371,
+          4521,
+          0,
+          48
+        ],
+        "keyW": [
+          15,
+          44360,
+          20577,
+          4597,
+          0,
+          142,
+          44360,
+          20577,
+          4597,
+          0,
+          142
+        ],
+        "keya": [
+          17,
+          44874,
+          20773,
+          4673,
+          0,
+          320,
+          44874,
+          20773,
+          4673,
+          0,
+          320
+        ],
+        "keyS": [
+          11,
+          45202,
+          20958,
+          4711,
+          0,
+          488,
+          45202,
+          20958,
+          4711,
+          0,
+          488
+        ],
+        "keyz": [
+          17,
+          45749,
+          21196,
+          4787,
+          0,
+          664,
+          45749,
+          21196,
+          4787,
+          0,
+          664
+        ],
+        "keyX": [
+          301,
+          46262,
+          21396,
+          4863,
+          0,
+          810,
+          46262,
+          21396,
+          4863,
+          0,
+          810
+        ],
+        "keyy": [
+          17,
+          46576,
+          21565,
+          4901,
+          0,
+          948,
+          46576,
+          21565,
+          4901,
+          0,
+          948
+        ],
+        "keyE": [
+          17,
+          46890,
+          21734,
+          4939,
+          0,
+          1104,
+          46890,
+          21734,
+          4939,
+          0,
+          1104
+        ],
+        "releasedKey": [
+          11,
+          47061,
+          21936,
+          4939,
+          0,
+          1240,
+          47061,
+          21936,
+          4939,
+          0,
+          1240
+        ],
+        "retaken": [
+          9,
+          47546,
+          22104,
+          5015,
+          0,
+          1270,
+          47546,
+          22104,
+          5015,
+          0,
+          1270
+        ],
+        "rotated": [
+          9,
+          47683,
+          22264,
+          5015,
+          0,
+          1324,
+          47683,
+          22264,
+          5015,
+          0,
+          1324
+        ],
+        "restored": [
+          9,
+          48388,
+          22485,
+          5129,
+          0,
+          1358,
+          48388,
+          22485,
+          5129,
+          0,
+          1358
+        ],
+        "prepared": [
+          20,
+          48797,
+          22758,
+          5167,
+          0,
+          1482,
+          48797,
+          22758,
+          5167,
+          0,
+          1482
+        ],
+        "placed": [
+          7,
+          49668,
+          23173,
+          5277,
+          0,
+          1582,
+          49668,
+          23173,
+          5277,
+          0,
+          1582
+        ],
+        "refilled": [
+          7,
+          63698,
+          32760,
+          6705,
+          0,
+          1582,
+          63698,
+          32760,
+          6705,
+          0,
+          1582
+        ]
+      },
+      "construction-display/states.tsv": {
+        "initial": [
+          267,
+          3434,
+          782,
+          313,
+          0,
+          0,
+          3434,
+          782,
+          313,
+          0,
+          0
+        ],
+        "placed": [
+          291,
+          22992,
+          5712,
+          2320,
+          11,
+          624,
+          22992,
+          5712,
+          2320,
+          11,
+          624
+        ],
+        "building": [
+          20,
+          33251,
+          8193,
+          3826,
+          74,
+          624,
+          33251,
+          8193,
+          3826,
+          74,
+          624
+        ],
+        "completed": [
+          18,
+          40326,
+          12260,
+          4719,
+          86,
+          624,
+          40326,
+          12260,
+          4719,
+          86,
+          624
+        ]
+      }
+    },
+    "bridgePresentation": {
+      "mature": {
+        "same": true,
+        "actualSha256": "679bfe5d9139834a068143ce892a9176e43555ffe0d397e15e133f866f69229c",
+        "expectedSha256": "679bfe5d9139834a068143ce892a9176e43555ffe0d397e15e133f866f69229c",
+        "dimensions": [
+          1024,
+          768
+        ],
+        "outputRect": [
+          0,
+          0,
+          1024,
+          768
+        ]
+      },
+      "rotated": {
+        "same": true,
+        "actualSha256": "f920791e5c984b90911f8cb853e59026ef868116cba3b9004fa802a90bd09739",
+        "expectedSha256": "f920791e5c984b90911f8cb853e59026ef868116cba3b9004fa802a90bd09739",
+        "dimensions": [
+          1024,
+          768
+        ],
+        "outputRect": [
+          0,
+          0,
+          1024,
+          768
+        ]
+      },
+      "placed": {
+        "same": true,
+        "actualSha256": "ef91a7cde4bb3a87d9843424fc5d259f1b8b4692b67945e237e2c1da3c6b3bbe",
+        "expectedSha256": "ef91a7cde4bb3a87d9843424fc5d259f1b8b4692b67945e237e2c1da3c6b3bbe",
+        "dimensions": [
+          1024,
+          768
+        ],
+        "outputRect": [
+          0,
+          0,
+          1024,
+          768
+        ]
+      },
+      "refilled": {
+        "same": true,
+        "actualSha256": "eb5e3d2c587f6792d16db575c2d55f6c4c611f43925252d360e6a32734b859d4",
+        "expectedSha256": "eb5e3d2c587f6792d16db575c2d55f6c4c611f43925252d360e6a32734b859d4",
+        "dimensions": [
+          1024,
+          768
+        ],
+        "outputRect": [
+          0,
+          0,
+          1024,
+          768
+        ]
+      }
+    },
+    "construction": {
+      "passed": true,
+      "run": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-gump-derived-dirty-627-20261031\\gui-v1\\한글 배포본\\NetstormReborn-cpppj\\Netstorm.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-gump-derived-dirty-627-20261031\\gui-v1\\한글 배포본\\NetstormReborn-cpppj\\game",
+          "--mission",
+          "tutorial5",
+          "--window",
+          "--no-audio",
+          "--frames",
+          "503",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-gump-derived-dirty-627-20261031\\gui-v1\\construction-display\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-gump-derived-dirty-627-20261031\\gui-v1\\construction-display\\states.tsv"
+        ],
+        "binarySha256": "45f96a61ed099a5c2844f05499a018f885660d1a6d5171a261ecf6d6deeb3c11",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 11.105821699999069,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "a479e4116bc5d6209249cbb33368820a6af07c269caddc62d13f6dde7efb4c4f"
+      },
+      "sceneRows": {
+        "initial": [
+          267,
+          3434,
+          782,
+          313,
+          0,
+          0,
+          3434,
+          782,
+          313,
+          0,
+          0
+        ],
+        "placed": [
+          291,
+          22992,
+          5712,
+          2320,
+          11,
+          624,
+          22992,
+          5712,
+          2320,
+          11,
+          624
+        ],
+        "building": [
+          20,
+          33251,
+          8193,
+          3826,
+          74,
+          624,
+          33251,
+          8193,
+          3826,
+          74,
+          624
+        ],
+        "completed": [
+          18,
+          40326,
+          12260,
+          4719,
+          86,
+          624,
+          40326,
+          12260,
+          4719,
+          86,
+          624
+        ]
+      },
+      "newTowerSids": [
+        15060
+      ],
+      "presentation": {
+        "building": {
+          "same": true,
+          "actualSha256": "ece6cfddb9b201aebd12343c00512dfaf562a96b5ce534d69fa6cfebb949b44a",
+          "expectedSha256": "ece6cfddb9b201aebd12343c00512dfaf562a96b5ce534d69fa6cfebb949b44a",
+          "dimensions": [
+            1024,
+            768
+          ],
+          "outputRect": [
+            0,
+            0,
+            1024,
+            768
+          ]
+        },
+        "completed": {
+          "same": true,
+          "actualSha256": "9beb9b7b24f483a810b5ca6d65e0b8e7c5b857c6521dbaefdc367dcb2e3c7310",
+          "expectedSha256": "9beb9b7b24f483a810b5ca6d65e0b8e7c5b857c6521dbaefdc367dcb2e3c7310",
+          "dimensions": [
+            1024,
+            768
+          ],
+          "outputRect": [
+            0,
+            0,
+            1024,
+            768
+          ]
+        }
+      }
+    },
+    "allArchivedBytesUnchanged": true,
+    "scope": "같은 단일 목록의 수집/분배 누계와 실제 클론 창/정상 다리 및 스톤 타워 건설 입력이다. 원본 전체 픽셀/자연 완주/포획/희생/특정 적 공격/승리/공중3종 전용/신규MP/Win11/PCM/물리키 검사는 아니다."
+  },
+  "reference": {
+    "passed": true,
+    "comparisons": {
+      "hover": {
+        "same": true,
+        "differenceBox": null,
+        "presentation": {
+          "same": true,
+          "actualSha256": "979cd3c61fbd544467cd4bd6f7ed7b9f08751b7cbfc5f826823a69c747237900",
+          "expectedSha256": "979cd3c61fbd544467cd4bd6f7ed7b9f08751b7cbfc5f826823a69c747237900",
+          "dimensions": [
+            1024,
+            768
+          ],
+          "outputRect": [
+            0,
+            0,
+            1024,
+            768
+          ]
+        },
+        "uiDirty": [
+          "3530",
+          "825",
+          "53"
+        ],
+        "rendererArea": [
+          "3",
+          "2360796"
+        ]
+      },
+      "options": {
+        "same": true,
+        "differenceBox": null,
+        "presentation": {
+          "same": true,
+          "actualSha256": "53f48fc5c88558d7510d141714ba0651453681dcd6cedd64ac8e0cf19abf4d97",
+          "expectedSha256": "53f48fc5c88558d7510d141714ba0651453681dcd6cedd64ac8e0cf19abf4d97",
+          "dimensions": [
+            1024,
+            768
+          ],
+          "outputRect": [
+            0,
+            0,
+            1024,
+            768
+          ]
+        },
+        "uiDirty": [
+          "3537",
+          "832",
+          "57"
+        ],
+        "rendererArea": [
+          "6",
+          "4721592"
+        ]
+      },
+      "closed-options": {
+        "same": true,
+        "differenceBox": null,
+        "presentation": {
+          "same": true,
+          "actualSha256": "53f48fc5c88558d7510d141714ba0651453681dcd6cedd64ac8e0cf19abf4d97",
+          "expectedSha256": "53f48fc5c88558d7510d141714ba0651453681dcd6cedd64ac8e0cf19abf4d97",
+          "dimensions": [
+            1024,
+            768
+          ],
+          "outputRect": [
+            0,
+            0,
+            1024,
+            768
+          ]
+        },
+        "uiDirty": [
+          "3609",
+          "904",
+          "60"
+        ],
+        "rendererArea": [
+          "8",
+          "6294456"
+        ]
+      },
+      "help": {
+        "same": true,
+        "differenceBox": null,
+        "presentation": {
+          "same": true,
+          "actualSha256": "d6dc90001d2092148e9d3ae13022b683a8b8f46413f3a2ab3276ac59fd32ce2d",
+          "expectedSha256": "d6dc90001d2092148e9d3ae13022b683a8b8f46413f3a2ab3276ac59fd32ce2d",
+          "dimensions": [
+            1024,
+            768
+          ],
+          "outputRect": [
+            0,
+            0,
+            1024,
+            768
+          ]
+        },
+        "uiDirty": [
+          "3617",
+          "912",
+          "64"
+        ],
+        "rendererArea": [
+          "11",
+          "8688950"
+        ]
+      },
+      "closed-help": {
+        "same": true,
+        "differenceBox": null,
+        "presentation": {
+          "same": true,
+          "actualSha256": "d6dc90001d2092148e9d3ae13022b683a8b8f46413f3a2ab3276ac59fd32ce2d",
+          "expectedSha256": "d6dc90001d2092148e9d3ae13022b683a8b8f46413f3a2ab3276ac59fd32ce2d",
+          "dimensions": [
+            1024,
+            768
+          ],
+          "outputRect": [
+            0,
+            0,
+            1024,
+            768
+          ]
+        },
+        "uiDirty": [
+          "3689",
+          "984",
+          "67"
+        ],
+        "rendererArea": [
+          "14",
+          "11048246"
+        ]
+      }
+    },
+    "run": {
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-gump-derived-dirty-627-20261031\\gui-v1\\한글 배포본\\NetstormReborn-cpppj\\Netstorm.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-gump-derived-dirty-627-20261031\\gui-v1\\한글 배포본\\NetstormReborn-cpppj\\game",
+        "--window",
+        "--no-audio",
+        "--frames",
+        "90",
+        "--set",
+        "SCREENW=1024;SCREENH=768;windowScreenFlags=130;maxFPS=40;sleepPerLoop=1;autoDemo=0;tellTips=0;edgeScroll=0;scrollWhileMouseOut=0",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-gump-derived-dirty-627-20261031\\reference-v1\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-gump-derived-dirty-627-20261031\\reference-v1\\states.tsv"
+      ],
+      "binarySha256": "45f96a61ed099a5c2844f05499a018f885660d1a6d5171a261ecf6d6deeb3c11",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 3.8692115000012564,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "cb76758e176fb9498de489bf084e9844f54d645d0fb4457c2c91e00a6a78d515"
+    },
+    "binarySha256": "45f96a61ed099a5c2844f05499a018f885660d1a6d5171a261ecf6d6deeb3c11",
+    "partialRectangles": 4,
+    "collectedRectangles": 19,
+    "pixels": 11834678,
+    "uiDirty": [
+      3689,
+      984,
+      67
+    ],
+    "scope": "단일 고정 제품의 정상 hover/Options/Help/닫기와 다음 명시 refresh 간 정적 메뉴 전체RGB/실제 창 비교다. UI 상태를 주입하지 않으며 게임/MP/포획/희생/공격/승리 검사는 아니다."
+  },
+  "referenceDerivedRequests": {
+    "hover": 0,
+    "hover-full": 0,
+    "options": 0,
+    "options-full": 0,
+    "closed-options": 0,
+    "closed-options-full": 0,
+    "help": 0,
+    "help-full": 0,
+    "closed-help": 0,
+    "closed-help-full": 0
+  },
+  "guiRuns": 14,
+  "guiRunEvidence": {
+    "gui-v1/main-clouds/run.json": "ad9ca41cec9cad07a12819c3a51387875259ca862e17490b8e426505cf3f1f9c",
+    "gui-v1/main-tint/run.json": "85376a574f7764c671a9e04b2ba1c4aaccd585005e5c9b366aa795004dcfaceb",
+    "gui-v1/mission-clouds/run.json": "5cfcb950f237dfbec30ea4deeb18f3994fbc8c322d30e16898f8858f02765f30",
+    "gui-v1/mission-parallax-fullscreen/run.json": "73b9374b73c2c55666d7a06eb5c370b54a402a520ecf952d044896c4abe70214",
+    "gui-v1/1024x768-window/run.json": "9df2597f75033a2184a8a62e1b53c10bf6f4877ccc6b6aa7e4cd79789d883252",
+    "gui-v1/1024x768-fullscreen/run.json": "e1939eaf14a6b6e2719f7ae54b1792916300f6900a66d199d8c11dfe0839d732",
+    "gui-v1/1280x720-window/run.json": "f4a5e9a45822be9160eaed56f389d664660f98631de0b48a7181a9a9c7421a44",
+    "gui-v1/1280x720-fullscreen/run.json": "8ff580440e1427434d49e33891674b495fe61793d722a03004cba73796c464b8",
+    "gui-v1/1280x800-window/run.json": "1aa0a81c7acf15f59c591d624faef247a97ba5806e386f19126d19a5c7a6429b",
+    "gui-v1/1280x800-fullscreen/run.json": "4745e0e1b8ff8a842fb22f8d69b05e8da9aff02cf969878e340864698f9be983",
+    "gui-v1/production-keys/run.json": "71eb25e67f65a6e4a83e7d4e045d0c8229a5e3ca45d8566679e03ad209bcaced",
+    "gui-v1/construction-display/run.json": "ce004a9fc351fba2787407d6022670ed3324c005db58d3c12f882984b7b8de19",
+    "gui-v1/derived-menu/run.json": "103cc50c6522ec77a2ab208c8efcd5b5b413b51a7f4328c1bf90931874eb75fa",
+    "reference-v1/run.json": "ea5502530a517f4fc80a74936a1427e62bb60c4f670edf2c92fd54e5f63c68af"
+  },
+  "frameObservations": {
+    "main-clouds": {
+      "frame": [
+        100,
+        100,
+        100,
+        100,
+        0,
+        100,
+        4,
+        1,
+        170,
+        0,
+        10,
+        905969664,
+        0,
+        0,
+        0,
+        0
+      ],
+      "area": [
+        7,
+        8361984
+      ],
+      "ui": [
+        3528,
+        823,
+        57
+      ],
+      "derived": [
+        0
+      ],
+      "partialRectangles": 93
+    },
+    "main-tint": {
+      "frame": [
+        100,
+        7,
+        7,
+        0,
+        7,
+        100,
+        0,
+        0,
+        130,
+        0,
+        2,
+        905969664,
+        1,
+        0,
+        0,
+        0
+      ],
+      "area": [
+        7,
+        5505024
+      ],
+      "ui": [
+        3528,
+        823,
+        57
+      ],
+      "derived": [
+        0
+      ],
+      "partialRectangles": 0
+    },
+    "mission-clouds": {
+      "frame": [
+        101,
+        135,
+        135,
+        126,
+        0,
+        101,
+        5,
+        1,
+        170,
+        0,
+        12,
+        905969664,
+        0,
+        0,
+        0,
+        0
+      ],
+      "area": [
+        87,
+        68996424
+      ],
+      "ui": [
+        7985,
+        1903,
+        202
+      ],
+      "derived": [
+        22
+      ],
+      "partialRectangles": 48
+    },
+    "mission-parallax-fullscreen": {
+      "frame": [
+        101,
+        116,
+        116,
+        108,
+        0,
+        101,
+        0,
+        0,
+        187,
+        0,
+        12,
+        905969664,
+        0,
+        0,
+        0,
+        0
+      ],
+      "area": [
+        88,
+        69348696
+      ],
+      "ui": [
+        8084,
+        2002,
+        204
+      ],
+      "derived": [
+        22
+      ],
+      "partialRectangles": 28
+    }
+  },
+  "protectedFilesBefore": 2622,
+  "protectedFixtureCount": 763,
+  "protectedFilesAfter": 2623,
+  "fixtureCount": 764,
+  "allOldProtectedBytesUnchanged": true,
+  "newNativeFixture": true,
+  "package": {
+    "path": "extracted/cpp-gump-derived-dirty-627-20261031/NetstormReborn-cpppj-627.zip",
+    "sha256": "a90c06ffcac7c49b9782fb146c96db6072d339cd27b4087f27b5257f9f289d6b",
+    "entries": 1376,
+    "assets": 1358,
+    "allArchivedAndOriginalAssetBytesMatch": true
+  },
+  "gameSha256": "45f96a61ed099a5c2844f05499a018f885660d1a6d5171a261ecf6d6deeb3c11",
+  "testsSha256": "80a48e7817525ac6f577e461bc6f0eca0b4838be307e49269fe04b847d08f3ad",
+  "testedSourceSha256": {
+    "cpppj/src/client/RawButtonControls.cpp": "ed9ecd5e14ce51567cce05eca0081b9555d73147276042c72edb4c4b3ccd23b1",
+    "cpppj/src/client/RawButtonControls.h": "d3d07343435a34a990b061ad7afad6b9fe6a734eda749160e1efe9572a3f08bc",
+    "cpppj/src/client/RawMenuControls.cpp": "e4ee037a8c3296967b0891abe12887bb1c85332386bc9f942ea00b43f4e918fb",
+    "cpppj/src/client/RawMenuControls.h": "aa15788d31012149689b1880f39e80b37bfce616dc834326a448a95775b234b4",
+    "cpppj/tests/RawMenuControlsTests.cpp": "03e2196b3eaa34b9cdaad1d99af164a5c32d0b855551f6c8f140c75da1280e34",
+    "cpppj/tests/GumpDerivedRedrawTests.cpp": "c540bedbd93053790727a4a7db1fb879a9032a3c332e431ba84bb873ddd8c0bf",
+    "cpppj/tests/CMakeLists.txt": "14efe3d75ed454907588cf9af318f0cd6b1dab0c12c68af5bd172274f9724867",
+    "cpppj/tests/fixtures/gump-derived-redraw-x86.tsv": "7f98ceb180c7503b97c20afdda410fb9a9993db55b5a5c97c29a894dbd765009",
+    "tools/decomp_gump_derived_redraw.py": "7415ebdd56798d6a0f409a9c1ff5d051563e4d9aac0737c8c62d878ba1ccbe09",
+    "tools/cpp_priest_build_menu_smoke.py": "bf38fda4b26b55b9c4d954a38ddfc178d32bb6dbcb6a3f32fc49784406639442"
+  },
+  "preliminaryCheck": "v1 빌드는 경고/오류0이고 집중157 중 새 부분 출력 검사1건에서 Fancy 뒤 BeginVertical을 중복 호출해 루트 한 칸 계약에 실패했다. 검사 구성을 Fancy 단일 세로 루트로 고쳤으며 원문 fixture/제품 코드는 이 수정에서 바꾸지 않았다. v2 최종 집중157/실패0이다.",
+  "scope": "장식/메뉴 행이 이미 계산한 원문 사각형/flags0을 RawMenuTree/현재Renderer에 직접 전달한다. 실제 기본 요청/직접 요청/구조 전체 변경 누계를 구별한다. 원본1152행·실제 두 선택 행/장식의 부분-전체UI 모든 바이트·정적UI5상태 전체RGB와 새14창을 검증했다. 나머지 생산 점멸/미니맵·구조 변경은 후속이다. 자연완주/전체 원본 동일성·Win11/PCM/물리키/DPI/포커스·금지 재현/공중3종 전용/신규MP 검사는 아니다.",
+  "lastFull34": "고정625제품/626이며 새627의 전체34를 실행한 것으로 합산하지 않는다.",
+  "goalComplete": false,
+  "derivedMenu": {
+    "passed": true,
+    "run": {
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-gump-derived-dirty-627-20261031\\gui-v1\\한글 배포본\\NetstormReborn-cpppj\\Netstorm.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-gump-derived-dirty-627-20261031\\gui-v1\\한글 배포본\\NetstormReborn-cpppj\\game",
+        "--mission",
+        "thewarbegins",
+        "--window",
+        "--no-audio",
+        "--frames",
+        "148",
+        "--set",
+        "SCREENW=1024;SCREENH=768;maxFPS=40;autoDemo=0;tellTips=0;sleepPerLoop=1",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-gump-derived-dirty-627-20261031\\gui-v1\\derived-menu\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-gump-derived-dirty-627-20261031\\gui-v1\\derived-menu\\states.tsv"
+      ],
+      "binarySha256": "45f96a61ed099a5c2844f05499a018f885660d1a6d5171a261ecf6d6deeb3c11",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 8.634343300000182,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2"
+    },
+    "binarySha256": "45f96a61ed099a5c2844f05499a018f885660d1a6d5171a261ecf6d6deeb3c11",
+    "directRequests": {
+      "12": 0,
+      "20": 0,
+      "28": 0,
+      "36": 0,
+      "44": 0,
+      "52": 0,
+      "60": 0,
+      "ready": 0,
+      "opened": 54,
+      "hover": 55,
+      "child": 69,
+      "child-hover": 71,
+      "closed": 97
+    },
+    "presentation": {
+      "opened": {
+        "same": true,
+        "actualSha256": "d0bb8cd3456ffe8105a1f66f17201d9a92154935cba8f049c8106a5f1bcd2e16",
+        "expectedSha256": "d0bb8cd3456ffe8105a1f66f17201d9a92154935cba8f049c8106a5f1bcd2e16",
+        "dimensions": [
+          1024,
+          768
+        ],
+        "outputRect": [
+          0,
+          0,
+          1024,
+          768
+        ]
+      },
+      "hover": {
+        "same": true,
+        "actualSha256": "30ba43f262c7989d59b2beef9ae68302aa1a2eb6506b29eb278568d66e5850c8",
+        "expectedSha256": "30ba43f262c7989d59b2beef9ae68302aa1a2eb6506b29eb278568d66e5850c8",
+        "dimensions": [
+          1024,
+          768
+        ],
+        "outputRect": [
+          0,
+          0,
+          1024,
+          768
+        ]
+      },
+      "child": {
+        "same": true,
+        "actualSha256": "81998c6ba2722c76fd706ea019ff814f73160a5fbe6cae7e390b9e98da69f0b3",
+        "expectedSha256": "81998c6ba2722c76fd706ea019ff814f73160a5fbe6cae7e390b9e98da69f0b3",
+        "dimensions": [
+          1024,
+          768
+        ],
+        "outputRect": [
+          0,
+          0,
+          1024,
+          768
+        ]
+      },
+      "child-hover": {
+        "same": true,
+        "actualSha256": "54db9c70845d4461b9882836f7126408e548bb348ab9ef630f4db547570a3148",
+        "expectedSha256": "54db9c70845d4461b9882836f7126408e548bb348ab9ef630f4db547570a3148",
+        "dimensions": [
+          1024,
+          768
+        ],
+        "outputRect": [
+          0,
+          0,
+          1024,
+          768
+        ]
+      },
+      "closed": {
+        "same": true,
+        "actualSha256": "0081e4754549fb1c7d3ea11870319157dde9c10bef4ce96e021e2a2b913b9e97",
+        "expectedSha256": "0081e4754549fb1c7d3ea11870319157dde9c10bef4ce96e021e2a2b913b9e97",
+        "dimensions": [
+          1024,
+          768
+        ],
+        "outputRect": [
+          0,
+          0,
+          1024,
+          768
+        ]
+      }
+    },
+    "analysisOnlyAfterParserFix": true,
+    "scope": "실제1-1 사제 우클릭/Construct·Workshop hover/자식 열기·ESC 전환이다. 건설/포획/희생/공격/승리/공중3종/MP를 실행하지 않는다."
+  },
+  "preliminaryCoverage": "첫13 GUI의 기본/정적 UI 경로에서는 직접 요청0이어서 실제1-1 사제 우클릭/Construct·Workshop hover/자식 열기·ESC 전환1창을 추가했다. 해당 직접 요청 증가와5상태 창DC RGB를 확인했다. 추가 실행은 종료0이었고 예전 메뉴 파서가 raw_renderer_frame도 보고서 경계로 오인해 라벨 판정에 실패했다. 정확한 행 시작 태그 파싱으로 고친 뒤 동일 자료만 읽기 전용 재분석했다."
+}

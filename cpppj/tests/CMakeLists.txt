@@ -2508,3 +2508,7 @@ set_source_files_properties(RendererFrameTests.cpp PROPERTIES COMPILE_DEFINITION
 # 원문 기본 Gump 갱신/지도 clamp의 전체1,474행과 현재 장치 읽기 순서를 검사한다.
 target_sources(netstorm_tests PRIVATE GumpRedrawTests.cpp)
 set_source_files_properties(GumpRedrawTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_GUMP_REDRAW_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/gump-redraw-x86.tsv\"")
+
+# 원문 장식/메뉴 행1,152개 요청·캐시·투영 관측을 실제 파생 본체와 대조한다.
+target_sources(netstorm_tests PRIVATE GumpDerivedRedrawTests.cpp)
+set_source_files_properties(GumpDerivedRedrawTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_GUMP_DERIVED_REDRAW_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/gump-derived-redraw-x86.tsv\"")

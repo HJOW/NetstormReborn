@@ -195,7 +195,7 @@ struct RawMenuControls::Impl {
         bgDraw.shape=[this](auto request) { activeBackground.shape(request); };bgDraw.fill=[this](auto rect,auto color,auto checker) { activeBackground.fill(rect,color,checker); };bgDraw.line=[this](auto line) { activeBackground.line(line); };
         backgroundCreate=std::make_unique<GumpBackgroundCreate>(common.create,common.factory,backgroundColor,std::move(bg));backgroundDraw=std::make_unique<GumpBackgroundDraw>(common.collection,clip,backgroundState,std::move(bgDraw));
         GumpDecorationHooks dh;dh.node=[this](auto token)->GumpDecorationNode* { if (auto* node=Find(islandRoots,token)) return node;if (auto* node=Find(saveFortRoots,token)) return node;if (auto* node=Find(htmlRoots,token)) return node;return Find(decorations,token); };dh.base=common.node;BindGumpDecorationAssets(dh,assets);
-        dh.shape=[this](auto type,auto frame,auto point) { activeBackground.shape({type,frame,point,false}); };dh.invalidate=[this](auto) { common.changed(); };
+        dh.shape=[this](auto type,auto frame,auto point) { activeBackground.shape({type,frame,point,false}); };dh.invalidate=[this](auto rect) { common.Invalidate(rect,0); }; /*원문465e60→499370은 장식 여백을 포함한 XYWH와 flags0을 전달한다.*/
         decoration=std::make_unique<GumpDecoration>(common.create,decorationState,*backgroundCreate,*backgroundDraw,common.collection,common.lifetime,std::move(dh));
         MarkupHooks ph;BindMarkupAssets(pictureState,ph,markupAssets);ph.color=[this] { if (!activePicture.color) throw std::logic_error("메뉴 그림 실제 Draw 색표 문맥 없음");activePicture.color(); };ph.shape=[this](auto request) { activePicture.shape(request); };pictures=std::make_unique<Markup>(fragments,pictureState,std::move(ph),assets.Edition());
         StyleTextMarkupHooks mh;BindStyleTextMarkupAssets(mh,assets);BindStyleTextMarkupPalette(mh,palette);mh.sound=hooks.sound;markup=std::make_unique<StyleTextMarkup>(fragments,*pictures,markupState,std::move(mh),assets.Edition());
@@ -245,7 +245,7 @@ struct RawMenuControls::Impl {
         MenuGumpControlHooks ch;ch.node=[this](auto token) { return Find(menus,token); };ch.base=common.node;ch.readInt=hooks.readInt;controls=std::make_unique<MenuGumpControls>(common.create,menuState,*menu,*layout,*titleMarkup,std::move(ch));
         MenuGumpInputHooks ih;ih.node=[this](auto token) { return Find(menus,token); };ih.base=common.node;
         ih.broadcast=[this](auto token,auto event,auto first,auto second) { Broadcast(token,event,first,second); };ih.handle=[this](auto token,auto event,auto first,auto second) { return Handle(token,event,first,second); };ih.push=[this](auto token) { common.tree.Push(token); };ih.attach=common.attach;
-        ih.redraw=[this](auto token,auto erase) { Redraw(token,erase); };ih.command=hooks.command;ih.sound=hooks.sound;ih.invalidate=[this](auto) { common.changed(); };input=std::make_unique<MenuGumpInput>(common.create,inputState,*menu,common.collection,common.events,common.lifetime,common.tree,std::move(ih));
+        ih.redraw=[this](auto token,auto erase) { Redraw(token,erase); };ih.command=hooks.command;ih.sound=hooks.sound;ih.invalidate=[this](auto rect) { common.Invalidate(rect,0); }; /*원문476e00→499370은 현재 선택 행/compact 전체의 flags0을 전달한다.*/input=std::make_unique<MenuGumpInput>(common.create,inputState,*menu,common.collection,common.events,common.lifetime,common.tree,std::move(ih));
     }
     // 현재 토큰을 소유한 외부 파생을 등록 순서대로 조회하며 다른 UI의 수명을 바꾸지 않는다.
     const RawMenuExternalGumps* External(std::uint32_t token) const {

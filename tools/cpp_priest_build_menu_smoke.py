@@ -13,16 +13,14 @@ from cpp_world_smoke import states
 
 def menu_items(path):
     """각 실제 보고 시점의 원본 항목/명령/인자/부모 표시 상태를 읽는다."""
-    result={}
-    #보고서의 단일 레코드 파서와 독립으로 반복 메뉴 항목을 모두 보존한다.
-    for block in path.read_text('utf-8').split('frame\t')[1:]:
-        header,body=block.split('\n',1);_,label=header.split('\t',1);rows=[]
-        #원본 스타일 글자에서 읽은 라벨을 사용하며 UI 명령을 직접 호출하지 않는다.
-        for line in body.splitlines():
-            fields=line.split('\t')
-            if fields[0]=='raw_menu_item':
-                rows.append(dict(token=int(fields[1]),index=int(fields[2]),flags=int(fields[3]),command=int(fields[4]),parameter=int(fields[5]),visible=fields[6]=='1',label=fields[7]))
-        result[label]=rows
+    result={};label=None
+    # 행 시작의 실제 frame만 경계로 쓰며 raw_renderer_frame 같은 통계 이름을 나누지 않는다.
+    for line in path.read_text('utf-8').splitlines():
+        fields=line.split('\t')
+        if fields[0]=='frame':
+            label=fields[2];result[label]=[]
+        elif label is not None and fields[0]=='raw_menu_item':
+            result[label].append(dict(token=int(fields[1]),index=int(fields[2]),flags=int(fields[3]),command=int(fields[4]),parameter=int(fields[5]),visible=fields[6]=='1',label=fields[7]))
     return result
 
 

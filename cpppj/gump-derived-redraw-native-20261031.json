@@ -1,0 +1,41 @@
+{
+  "unit": 627,
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "complete": true,
+  "cases": 1152,
+  "independentProcesses": 2,
+  "observations": 6912,
+  "differences": 0,
+  "fixtureSha256": "7f98ceb180c7503b97c20afdda410fb9a9993db55b5a5c97c29a894dbd765009",
+  "processes": [
+    {
+      "fixtureSha256": "7f98ceb180c7503b97c20afdda410fb9a9993db55b5a5c97c29a894dbd765009",
+      "cases": 1152,
+      "observations": 3456,
+      "differences": 0,
+      "sourceSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "toolSha256": "7415ebdd56798d6a0f409a9c1ff5d051563e4d9aac0737c8c62d878ba1ccbe09",
+      "dataSha256": "93263dbe5d228742efa05790e7eae5f5465d06982c39b241b78b25a65fcbc5ed",
+      "host": "HJOW-Athlon",
+      "lastFullDecompileHost": "HJOW-Athlon",
+      "lastFullDecompileDate": "2026-10-23",
+      "scope": "격리 PE 실제 장식/메뉴 행/Position/CRT/XYWH다. 마지막 Renderer 저장소/월드 투영만 경계이며 게임·GUI·새 C++·fixture는 실행/참조/수정하지 않는다."
+    },
+    {
+      "fixtureSha256": "7f98ceb180c7503b97c20afdda410fb9a9993db55b5a5c97c29a894dbd765009",
+      "cases": 1152,
+      "observations": 3456,
+      "differences": 0,
+      "sourceSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "toolSha256": "7415ebdd56798d6a0f409a9c1ff5d051563e4d9aac0737c8c62d878ba1ccbe09",
+      "dataSha256": "93263dbe5d228742efa05790e7eae5f5465d06982c39b241b78b25a65fcbc5ed",
+      "host": "HJOW-Athlon",
+      "lastFullDecompileHost": "HJOW-Athlon",
+      "lastFullDecompileDate": "2026-10-23",
+      "scope": "격리 PE 실제 장식/메뉴 행/Position/CRT/XYWH다. 마지막 Renderer 저장소/월드 투영만 경계이며 게임·GUI·새 C++·fixture는 실행/참조/수정하지 않는다."
+    }
+  ],
+  "scope": "장식465e60/행476e00/Position/CRT/XYWH 실제 PE다. 마지막 Renderer 저장소/월드 투영만 경계이며 C++와 독립이다. 실제 게임/GUI/MP/금지 재현은 실행하지 않았다."
+}

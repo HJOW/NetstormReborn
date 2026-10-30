@@ -54,6 +54,7 @@ struct RawButtonControls::Impl {
     std::map<int,std::uint32_t> controls;/* nextToken: 새 등록 대상에 부여할 다음 토큰. */ /* root: 현재 UI 트리의 루트 토큰. */ std::uint32_t nextToken{},root{};/* currentPoll: 사건 하나: 코드와 화면 좌표(창 테두리를 뺀 커서 위치) (InputEvent). */ InputEvent currentPoll{InputCode::kRelease,0,0};
     // activated: 활성화.
     std::optional<int> activated;/* changed: 상태 변경으로 후속 갱신이 필요한지. */ bool changed{};
+    std::uint64_t directRectangleCalls{}; //파생 장식/메뉴 행이 원문에서 직접 계산한 실제 사각형 요청 수다.
     std::uint64_t redrawCalls{},rectangleCalls{},structuralCalls{}; //실제 기본 요청/마지막 사각형/영역 없는 변경의 관측이며 게임 판정에는 쓰지 않는다.
     // backgroundAsset: 실제 타입 저장소의 주소 토큰과 +dc SHP 포인터다. frame 조회 중에도 주소가 안정되어야 한다 (GumpBackgroundType).
     GumpBackgroundType backgroundAsset;/* backgroundFrame: 실제 SHP 프레임 헤더 +18/+1a의 signed WORD를 부호 확장하기 전 값이다 (GumpBackgroundFrame). */ GumpBackgroundFrame backgroundFrame;
@@ -92,6 +93,8 @@ struct RawButtonControls::Impl {
     void CloseMinimaps() { for (const auto& value:minimaps) value->Close();minimaps.clear(); }
     // 영역 없는 기존 구조 변경은 명시 장치에 전달한다. 개별 영역 요청은 BaseRedraw에서 따로 처리한다.
     void Changed() { changed=true;++structuralCalls;if (hooks.invalidateAll) hooks.invalidateAll(); }
+    // 원문 파생에서 완성한 사각형/flags를 바꾸지 않으며 기본 요청/전체 구조 변경 누계와 분리한다.
+    void DirectRedraw(ScreenRect rect,std::uint32_t flags) { changed=true;++directRectangleCalls;if (hooks.invalidate) hooks.invalidate(rect,flags); }
     // 같은 저장소/현재 지도에서624의 실제 기본 몸체를 호출한다. 가시성에 따라 사각형 요청이 없을 수도 있다.
     void BaseRedraw(std::uint32_t token,bool erase) {
         changed=true;++redrawCalls;if (!hooks.invalidate) return;
@@ -314,7 +317,7 @@ RawMenuControls& RawButtonControls::EnableMenus(const GameAssets& assets,FontSto
     RawMenuTree tree{s.create,s.life,*s.factory,*s.collection,*s.tree,*s.lifetime,*s.events,*s.input,*s.stone,
         [&s](auto token) -> GumpBackgroundNode* { if (s.uber) if (auto* node=s.uber->Background(token)) return node;const auto it=s.backgrounds.find(token);const auto* production=s.ProductionOwner(token);return it==s.backgrounds.end() ? (production ? production->Background(token) : nullptr) : it->second.get(); },
         [&s] { return ++s.nextToken; },[&s](auto token) { return s.Node(token); },
-        [&s](auto token,float x,float y,auto parent,auto mode) { s.Attach(token,x,y,parent,mode); },[&s] { s.Changed(); },[&s](auto token,bool erase) { s.BaseRedraw(token,erase); }};
+        [&s](auto token,float x,float y,auto parent,auto mode) { s.Attach(token,x,y,parent,mode); },[&s] { s.Changed(); },[&s](auto token,bool erase) { s.BaseRedraw(token,erase); },[&s](auto rect,auto flags) { s.DirectRedraw(rect,flags); }};
     s.menus=std::make_unique<RawMenuControls>(std::move(tree),assets,fonts,std::move(hooks));
     RawMenuExternalGumps commonButtons;commonButtons.owns=[&s](auto token) { return s.commonButtonNodes.contains(token); }; //명시 선택한 메인 버튼과 실제 배경 자식만 분배하며 기존 독립 메뉴 호출은 바꾸지 않는다.
     commonButtons.draw=[&s,&fonts](auto token,GumpPixelTarget& target,GumpGlyphColorState& colors,GumpBackgroundDraw& background) {
@@ -331,7 +334,7 @@ RawUberRootControls& RawButtonControls::EnableUberRoot(RawUberRootContext contex
     RawMenuTree tree{s.create,s.life,*s.factory,*s.collection,*s.tree,*s.lifetime,*s.events,*s.input,*s.stone,
         [&s](auto token) -> GumpBackgroundNode* { if (s.uber) if (auto* node=s.uber->Background(token)) return node;return s.menus->Background(token); },
         [&s] { return ++s.nextToken; },[&s](auto token) { return s.Node(token); },
-        [&s](auto token,float x,float y,auto parent,auto mode) { s.Attach(token,x,y,parent,mode); },[&s] { s.Changed(); },[&s](auto token,bool erase) { s.BaseRedraw(token,erase); }};
+        [&s](auto token,float x,float y,auto parent,auto mode) { s.Attach(token,x,y,parent,mode); },[&s] { s.Changed(); },[&s](auto token,bool erase) { s.BaseRedraw(token,erase); },[&s](auto rect,auto flags) { s.DirectRedraw(rect,flags); }};
     const auto read=context.root.read;const auto write=context.root.write;const auto replaced=context.replaced; // 원문 공유 배경 세 필드와 호스트 루트 별칭만 이 소유자에 연결한다.
     context.root.read=[&s,read](auto address) -> std::uint32_t { switch (address) {
         case 0x540451:return 54;case 0x542664:return 1;case 0x5c78f0:return static_cast<std::uint32_t>(s.create.screenWidth);case 0x5c78f4:return static_cast<std::uint32_t>(s.create.screenHeight);
@@ -361,7 +364,7 @@ WarningMessages& RawButtonControls::EnableWarnings(std::function<double()> now,s
     RawMenuTree tree{s.create,s.life,*s.factory,*s.collection,*s.tree,*s.lifetime,*s.events,*s.input,*s.stone,
         [&s](auto token) { const auto it=s.backgrounds.find(token);return it==s.backgrounds.end() ? nullptr : it->second.get(); },
         [&s] { return ++s.nextToken; },[&s](auto token) { return s.Node(token); },
-        [&s](auto token,float x,float y,auto parent,auto mode) { s.Attach(token,x,y,parent,mode); },[&s] { s.Changed(); },[&s](auto token,bool erase) { s.BaseRedraw(token,erase); }};
+        [&s](auto token,float x,float y,auto parent,auto mode) { s.Attach(token,x,y,parent,mode); },[&s] { s.Changed(); },[&s](auto token,bool erase) { s.BaseRedraw(token,erase); },[&s](auto rect,auto flags) { s.DirectRedraw(rect,flags); }};
     s.warnings=std::make_unique<WarningMessages>(std::move(tree),*s.menus,std::move(now),std::move(sound),std::move(pauseContext));return *s.warnings;
 }
 // 소유권을 넘기지 않고 같은 현재 처리기를 빌린다.
@@ -372,7 +375,7 @@ RawProductionControls& RawButtonControls::EnableProduction(RawCampaignSession& s
     RawMenuTree tree{s.create,s.life,*s.factory,*s.collection,*s.tree,*s.lifetime,*s.events,*s.input,*s.stone,
         [&s](auto token) { const auto it=s.backgrounds.find(token);return it==s.backgrounds.end() ? nullptr : it->second.get(); },
         [&s] { return ++s.nextToken; },[&s](auto token) { return s.Node(token); },
-        [&s](auto token,float x,float y,auto parent,auto mode) { s.Attach(token,x,y,parent,mode); },[&s] { s.Changed(); },[&s](auto token,bool erase) { s.BaseRedraw(token,erase); }};
+        [&s](auto token,float x,float y,auto parent,auto mode) { s.Attach(token,x,y,parent,mode); },[&s] { s.Changed(); },[&s](auto token,bool erase) { s.BaseRedraw(token,erase); },[&s](auto rect,auto flags) { s.DirectRedraw(rect,flags); }};
     if (!hooks.poll) hooks.poll=[&s](auto code) { return s.hooks.poll ? s.hooks.poll(code) : s.currentPoll; }; // 같은 공통 폴링 기록을 구분선도 읽는다.
     auto value=std::make_unique<RawProductionControls>(std::move(tree),*s.menus,session,assets,s.productionGlobals,std::move(hooks));auto& result=*value;s.productions.push_back(std::move(value));result.Open();return result;
 }
@@ -381,7 +384,7 @@ RawProductionControls& RawButtonControls::ConstructProduction(ProductionControlC
     auto& s=*impl_;if (!s.menus) throw std::logic_error("초기 생산 생성의 공통 메뉴 미연결");
     RawMenuTree tree{s.create,s.life,*s.factory,*s.collection,*s.tree,*s.lifetime,*s.events,*s.input,*s.stone,
         [&s](auto token) { const auto it=s.backgrounds.find(token);return it==s.backgrounds.end() ? nullptr : it->second.get(); },
-        [&s] { return ++s.nextToken; },[&s](auto token) { return s.Node(token); },[&s](auto token,float x,float y,auto parent,auto mode) { s.Attach(token,x,y,parent,mode); },[&s] { s.Changed(); },[&s](auto token,bool erase) { s.BaseRedraw(token,erase); }};
+        [&s] { return ++s.nextToken; },[&s](auto token) { return s.Node(token); },[&s](auto token,float x,float y,auto parent,auto mode) { s.Attach(token,x,y,parent,mode); },[&s] { s.Changed(); },[&s](auto token,bool erase) { s.BaseRedraw(token,erase); },[&s](auto rect,auto flags) { s.DirectRedraw(rect,flags); }};
     if (!hooks.poll) hooks.poll=[&s](auto code) { return s.hooks.poll ? s.hooks.poll(code) : s.currentPoll; };
     auto value=std::make_unique<RawProductionControls>(std::move(tree),*s.menus,std::move(context),assets,s.productionGlobals,std::move(hooks));auto& result=*value;s.productions.push_back(std::move(value));result.Construct();return result;
 }
@@ -400,7 +403,7 @@ RawMinimapControls& RawButtonControls::EnableMinimap(std::shared_ptr<RawSurfaceS
     RawMenuTree tree{s.create,s.life,*s.factory,*s.collection,*s.tree,*s.lifetime,*s.events,*s.input,*s.stone,
         [&s](auto token) { const auto it=s.backgrounds.find(token);return it==s.backgrounds.end() ? nullptr : it->second.get(); },
         [&s] { return ++s.nextToken; },[&s](auto token) { return s.Node(token); },
-        [&s](auto token,float x,float y,auto parent,auto mode) { s.Attach(token,x,y,parent,mode); },[&s] { s.Changed(); },[&s](auto token,bool erase) { s.BaseRedraw(token,erase); }};
+        [&s](auto token,float x,float y,auto parent,auto mode) { s.Attach(token,x,y,parent,mode); },[&s] { s.Changed(); },[&s](auto token,bool erase) { s.BaseRedraw(token,erase); },[&s](auto rect,auto flags) { s.DirectRedraw(rect,flags); }};
     auto value=std::make_unique<RawMinimapControls>(std::move(tree),*s.menus,std::move(storage),s.minimapState,s.minimapGlobals,std::move(hooks));auto& result=*value;s.minimaps.push_back(std::move(value));result.Open();return result;
 }
 // 같은 실제 미니맵의 안정된 처리기만 빌린다.
@@ -423,7 +426,7 @@ RawMinimapControls& RawButtonControls::ConstructMinimap(std::shared_ptr<RawSurfa
     RawMenuTree tree{s.create,s.life,*s.factory,*s.collection,*s.tree,*s.lifetime,*s.events,*s.input,*s.stone,
         [&s](auto token) { const auto it=s.backgrounds.find(token);return it==s.backgrounds.end() ? nullptr : it->second.get(); },
         [&s] { return ++s.nextToken; },[&s](auto token) { return s.Node(token); },
-        [&s](auto token,float x,float y,auto parent,auto mode) { s.Attach(token,x,y,parent,mode); },[&s] { s.Changed(); },[&s](auto token,bool erase) { s.BaseRedraw(token,erase); }};
+        [&s](auto token,float x,float y,auto parent,auto mode) { s.Attach(token,x,y,parent,mode); },[&s] { s.Changed(); },[&s](auto token,bool erase) { s.BaseRedraw(token,erase); },[&s](auto rect,auto flags) { s.DirectRedraw(rect,flags); }};
     auto value=std::make_unique<RawMinimapControls>(std::move(tree),*s.menus,std::move(storage),s.minimapState,s.minimapGlobals,std::move(hooks));auto& result=*value;s.minimaps.push_back(std::move(value));result.Construct();return result;
 }
 // Pop/Unpop이현재Session의해제된dirty를호출하지않도록노드보다먼저월드를반납하지않는다.
@@ -517,6 +520,7 @@ std::string RawButtonControls::Report() const {
     for (const auto& value:state.productions) out<<'\n'<<value->Report(); // 새/이전각세대의실제노드를보고한다.
     for (const auto& value:state.minimaps) if (value->RootToken()) out<<'\n'<<value->Report(); // 현재전역과구별되는살아있는모든표시노드다.
     out<<"\nraw_ui_dirty\t"<<state.redrawCalls<<'\t'<<state.rectangleCalls<<'\t'<<state.structuralCalls; //관측은 실제 요청 누계만 읽는다.
+    out<<"\nraw_ui_direct_dirty\t"<<state.directRectangleCalls; //원문 파생의 직접 영역 요청만 읽는 진단이다.
     if (state.uber) out<<'\n'<<state.uber->Report(); // 실제 루트/구분선과 지도 전역을 같은 보고에서 읽는다.
     return out.str();
 }

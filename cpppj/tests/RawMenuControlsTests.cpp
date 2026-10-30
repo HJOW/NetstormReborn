@@ -27,6 +27,8 @@ struct MenuClient {
     BaseFileSystem files; // 같은 TAFF 읽기다.
     GameAssets assets; // 실제 TYPE/SHP/팔레트다.
     FontStore fonts; // 같은 글꼴 캐시다.
+    std::vector<std::pair<ScreenRect,std::uint32_t>> redrawRectangles; //실제 파생 요청의 현재 사각형/flags다.
+    std::size_t fullRequests{}; //영역 없는 전체 변경과 부분 요청을 구별한다.
     RawButtonControls buttons; // 같은 실제 공통 등록표/트리/입력/수명이다.
     RawMenuControls* menus{}; // buttons가 소유하는 확장 계층을 빌린다.
     InputEvent poll{InputCode::kRelease,0,0}; // 실제 공통 폴링 경계의 현재 입력이다.
@@ -44,7 +46,7 @@ struct MenuClient {
     }
     // 게임/창을 열지 않고 실제 보호 자산과 모든 복원 모듈을 조립한다.
     explicit MenuClient(OriginalEdition edition=OriginalEdition::Patch1078,std::uint32_t* sharedFullRefresh=nullptr):root(std::filesystem::path(__FILE__).parent_path().parent_path().parent_path()/"originals"),files(root),assets(Register(),edition),fonts(files,"Arial"),
-        buttons(edition,{[] { return 0.0; },[this](auto) { return poll; },[] {}},sharedFullRefresh) {
+        buttons(edition,{[] { return 0.0; },[this](auto) { return poll; },[] {},{},[this](auto rect,auto flags) { redrawRectangles.emplace_back(rect,flags); },[this] { ++fullRequests; }},sharedFullRefresh) {
         RawMenuHooks hooks;hooks.command=[this](auto command,auto id,auto argument) { commands.push_back({command,id,argument}); };
         hooks.readInt=[](std::string_view,std::int32_t& value) { value=0; };hooks.sound=[this](std::string_view name) { sounds.emplace_back(name); };
         hooks.poll=[this](auto) { return poll; };hooks.cursor=[this](auto value) { cursor=value; };
@@ -451,4 +453,32 @@ TEST_CASE(RawMenuControls_UnifiedDirtyCollectionAndDrawingLifetime) {
     } catch (const std::runtime_error&) { unwound=true; }
     CHECK(reentry && unwound);client.menus->Draw(unified,pitch,height,client.Palette(),maps,clip);CHECK(legacy==unified);
     for (int y=0;y<height;++y) for (int x=0;x<pitch;++x) if (x<clip.left || x>=clip.right || y<clip.top || y>=clip.bottom) CHECK(unified[y*pitch+x]==0x5a); // clip 밖/행 padding을 보존한다.
+}
+
+// 실제 메뉴의 두 선택 행/장식 요청만으로 다시 그린 출력과 전체 UI 출력을 비교한다.
+TEST_CASE(RawMenuControls_DerivedDirtyRectanglesPreserveFullPixels) {
+    MenuClient client;client.Resize(320,240);client.menus->Open({180,100},[](const auto& widgets,const auto& controls,const auto&) {
+        widgets.BeginFancy();controls.AddTitle("Menu\n");controls.AddText("First",0x02000060,1);controls.AddText("Second",0x02000060,2); // Fancy 자체가 세로 루트이므로 controlled 칸을 한 번만 연다.
+    });
+    for (int frame=0;frame<4;++frame) client.buttons.Poll({InputCode::kRelease,310,230}); // 실제 원문 확장을 안정된 끝 크기까지 진행한다.
+    constexpr int width=320,height=240,pitch=327; // 행 padding도 비교하는 독립 출력 크기다.
+    const std::uint8_t background=0x5a;std::vector<std::uint8_t> partial(pitch*height,background),whole=partial;std::array<std::uint32_t,256> logical{};
+    for (std::size_t index=0;index<logical.size();++index) { const auto color=client.assets.Palette().Color(static_cast<std::uint8_t>(index));logical[index]=color.red|(std::uint32_t(color.green)<<8)|(std::uint32_t(color.blue)<<16); } // 같은 실제 보호 팔레트의 명암 입력이다.
+    const auto maps=BuildGumpShadeMaps(logical);const auto palette=client.Palette();client.menus->Draw(partial,pitch,height,palette,maps);
+    const auto compare=[&] { // 수신한 실제 영역만 초기화/출력하고 독립 전체 출력의 모든 바이트와 비교한다.
+        CHECK(client.fullRequests==0 && !client.redrawRectangles.empty());
+        for (const auto& [rect,flags]:client.redrawRectangles) { // 호스트가 만든 다른 영역/성공값은 사용하지 않는다.
+            CHECK(flags==0);
+            for (int y=std::max(0,rect.top);y<std::min(height,rect.bottom);++y) std::fill(partial.begin()+y*pitch+std::max(0,rect.left),partial.begin()+y*pitch+std::min(width,rect.right),background); // 실제 화면 안의 half-open 영역만 비운다.
+            client.menus->Draw(partial,pitch,height,palette,maps,rect);
+        }
+        std::fill(whole.begin(),whole.end(),background);client.menus->Draw(whole,pitch,height,palette,maps);CHECK(partial==whole);
+    };
+    for (const auto label:{"First","Second"}) { // 정상 hover가 요청한 old/new 행 모두의 실제 부분 출력이다.
+        const auto point=client.menus->Point(label);CHECK(point.has_value());if (!point) return;
+        client.redrawRectangles.clear();client.fullRequests=0;client.buttons.Poll({InputCode::kRelease,point->x,point->y});compare();
+    }
+    std::uint32_t decoration{};
+    for (std::uint32_t id=1;id<kGumpRegistryCapacity;++id) { const auto token=client.buttons.RegisteredGump(id);const auto* node=token ? client.menus->Node(token) : nullptr;if (node && node->vtable==0x50ae7c) { decoration=token;break; } } // 원문의 실제 장식 VT가 생성한 노드만 선택한다.
+    CHECK(decoration!=0);if (decoration) { client.redrawRectangles.clear();client.fullRequests=0;client.menus->Redraw(decoration,true);compare(); }
 }

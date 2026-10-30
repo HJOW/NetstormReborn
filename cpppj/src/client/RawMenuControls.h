@@ -48,6 +48,8 @@ struct RawMenuTree {
     std::function<void(std::uint32_t,float,float,std::uint32_t,std::uint32_t)> attach; // 현재 파생 가상 부착이다.
     std::function<void()> changed; // 같은 Client의 표시 변경을 요청한다.
     std::function<void(std::uint32_t,bool)> baseRedraw; //같은 기본 Gump의 실제 token/인수를 전달한다. 파생 Redraw의 가상 분배는 호출자가 유지한다.
+    std::function<void(ScreenRect,std::uint32_t)> invalidate; //원문 파생이 이미 계산한 사각형/flags를 현재 Renderer에 전달한다.
+    void Invalidate(ScreenRect rect,std::uint32_t flags) const { if (invalidate) invalidate(rect,flags);else changed(); } //장치 없는 독립 표시에서는 기존 변경 요청을 유지한다.
     void RedrawBase(std::uint32_t nodeToken,bool erase) const { if (baseRedraw) baseRedraw(nodeToken,erase);else changed(); } //기본 요청 장치가 없는 독립 표시에서는 기존 변경 통지를 유지한다.
 };
 // 게임 명령/설정/음향/커서는 현재 Client가 공급한다. 메뉴 입력은 원본 토큰과 전체 DWORD를 보존한다.
