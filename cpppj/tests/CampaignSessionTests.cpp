@@ -5380,3 +5380,6 @@ TEST_CASE(CampaignSession_ConstructionCostReadsCurrentMissionGuard) {
 
 // 마나103 Native 추가 Draw를 실제 자산/Pool 픽셀과 대조한다.
 #include "CampaignManaAdditionalTests.inc"
+
+// 메타 배율/고정 추상색을 명시 VT와 실제 자산의 Native 픽셀로 확인한다.
+#include "CampaignAuxiliaryDrawTests.inc"

@@ -12,6 +12,7 @@
 #include "o/RawFactoryDraw.h"
 #include "o/RawDaisDraw.h"
 #include "o/RawManaDraw.h"
+#include "o/RawAuxiliaryDraw.h"
 #include "o/RawTempleDraw.h"
 #include "o/RawThunderCannonCapture.h"
 #include "o/RawGeyserCapture.h"
@@ -109,6 +110,13 @@ struct RawCampaignFactoryDisplay::Impl {
             const auto composite=core.pool.Slot(object); // 같은 프레임의 현재 본체/추가 그림 분배에 사용한다.
             const auto& dispatch=HitVtable(composite); // 같은 실제+a4 분배를 일반화면과선택캡처가공유한다.
             if (dispatch.additional==0x41c100U) return; // 실제빈ret8만정상반환한다.
+            if (dispatch.additional==0x479340U || dispatch.additional==0x485f90U) { // 같은 TYPE/SHP 토큰과 현재 표면의 배율/추상색 출력으로 연결한다.
+                const o::AuxiliaryDrawHooks hooks{[](auto type) { return type; },[&shape](const auto& value) {
+                    SpriteShapeRequest request{value.shape,value.frame,{value.x,value.y},value.abstract ? SpriteShapeMode::Abstract : SpriteShapeMode::Plain};
+                    request.scaled=value.scale!=0;request.scaleX=request.scaleY=value.scale;shape(request);
+                }};
+                if (dispatch.additional==0x479340U) o::DrawScaledMetadisplay(composite,point.x,point.y,hooks);else o::DrawAbstractAdditional(composite,point.x,point.y,hooks);return;
+            }
             if (dispatch.additional==0x473710U) { // 마나103의 TYPE/SHP 호스트 토큰은 같은 실제 자산 번호이며105 마나볼트의+a4와 구별한다.
                 o::DrawManaAdditional(composite,point.x,point.y,{[](auto type) { return type; },[&shape](const auto& request) {
                     shape({request.shape,request.frame,{request.x,request.y},request.shadow ? SpriteShapeMode::Shadow : SpriteShapeMode::Plain});

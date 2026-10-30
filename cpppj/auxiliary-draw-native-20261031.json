@@ -1,0 +1,68 @@
+{
+  "unit": 629,
+  "complete": true,
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "bodyCases": 1728,
+  "bodyObservations": 10368,
+  "bodyIndependentProcesses": 2,
+  "body": [
+    {
+      "cases": 1728,
+      "observations": 5184,
+      "differences": 0,
+      "host": "HJOW-Athlon",
+      "lastFullDecompileHost": "HJOW-Athlon",
+      "lastFullDecompileDate": "2026-10-23",
+      "sourceSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "toolSha256": "eacc896567a693fa67c9307c50c44781614918c27378af2abd63bcf98630d2d6",
+      "fixtureSha256": "b1ad9c15038d74f4a2e382588257afed38397757878a9cd63b2c30e2631add85",
+      "dataSha256": "8eb7b3cbe7aae8d35543fc78371d925d14e6b92f06737f7fee1878195c47b95e",
+      "scope": "실제479340/485f90/4ac550/49a840이다. 마지막 배율/추상 VFX만 인수 관측 경계이며 raw/TYPE/ABI/x87를 검사한다. C++/실제게임/GUI/공중3종 전용/MP/금지 재현을 실행/참조하지 않는다."
+    },
+    {
+      "cases": 1728,
+      "observations": 5184,
+      "differences": 0,
+      "host": "HJOW-Athlon",
+      "lastFullDecompileHost": "HJOW-Athlon",
+      "lastFullDecompileDate": "2026-10-23",
+      "sourceSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "toolSha256": "eacc896567a693fa67c9307c50c44781614918c27378af2abd63bcf98630d2d6",
+      "fixtureSha256": "b1ad9c15038d74f4a2e382588257afed38397757878a9cd63b2c30e2631add85",
+      "dataSha256": "8eb7b3cbe7aae8d35543fc78371d925d14e6b92f06737f7fee1878195c47b95e",
+      "scope": "실제479340/485f90/4ac550/49a840이다. 마지막 배율/추상 VFX만 인수 관측 경계이며 raw/TYPE/ABI/x87를 검사한다. C++/실제게임/GUI/공중3종 전용/MP/금지 재현을 실행/참조하지 않는다."
+    }
+  ],
+  "pixelCases": 240,
+  "pixelObservations": 1440,
+  "pixelIndependentProcesses": 2,
+  "pixels": [
+    {
+      "cases": 240,
+      "observations": 720,
+      "differences": 0,
+      "host": "HJOW-Athlon",
+      "lastFullDecompileHost": "HJOW-Athlon",
+      "lastFullDecompileDate": "2026-10-23",
+      "sourceSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "toolSha256": "98cf30f9168d9ff960f86bc5ed6bb35785cc97f64218253e8ab17d93da21f2f8",
+      "fixtureSha256": "b2658380c3196cb093460f645422d4ac470c9f45008a10cee1877a02fe3c607a",
+      "scope": "실제4daaf0/4028cb와 좌표/각도0/실제RLE/임시표면/현재pane의 최종 픽셀이다. 출력/CRT/assert/OS 대체가 없으며 C++/실제게임/GUI/공중3종/MP/금지재현을 실행/참조하지 않는다."
+    },
+    {
+      "cases": 240,
+      "observations": 720,
+      "differences": 0,
+      "host": "HJOW-Athlon",
+      "lastFullDecompileHost": "HJOW-Athlon",
+      "lastFullDecompileDate": "2026-10-23",
+      "sourceSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "toolSha256": "98cf30f9168d9ff960f86bc5ed6bb35785cc97f64218253e8ab17d93da21f2f8",
+      "fixtureSha256": "b2658380c3196cb093460f645422d4ac470c9f45008a10cee1877a02fe3c607a",
+      "scope": "실제4daaf0/4028cb와 좌표/각도0/실제RLE/임시표면/현재pane의 최종 픽셀이다. 출력/CRT/assert/OS 대체가 없으며 C++/실제게임/GUI/공중3종/MP/금지재현을 실행/참조하지 않는다."
+    }
+  ],
+  "scope": "추가Draw의 실제1728개 요청/조회와 대체 없는 전체 VFX 커널·실제RLE/클립/현재pane의240개 최종 표면이다. 각 두 독립 프로세스의 최초/재관측/확장 정밀도가 같다. 실제게임/GUI/공중3종 전용/MP/금지재현은 없다."
+}

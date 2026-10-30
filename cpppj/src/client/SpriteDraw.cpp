@@ -1,5 +1,6 @@
 // 00498220/00455f60의 호출 순서와 선택 상태를 장치/게임 규칙 조회 경계에서 분리한다.
 #include "client/SpriteDraw.h"
+#include "client/VFXTransform.h"
 #include "client/SquidRenderer.h"
 #include <algorithm>
 #include <bit>
@@ -253,7 +254,8 @@ void SpritePixelTarget::Shape(SpriteShapeRequest request) {
     std::optional<ColorMap> mapped;const ColorMap* colors=nullptr;
     if (request.mode==SpriteShapeMode::Owner) { if (!current_) throw std::logic_error("Sprite Draw owner colors missing");colors=&*current_; }
     else if (request.mode!=SpriteShapeMode::Plain) { mapped=RequiredSprite(colors_)(request.mode,request.type,0);colors=&*mapped; }
-    DrawIndexedImage(pixels_,pitch_,height_,image->second,AddSprite(request.position.x,frame.rect.left),AddSprite(request.position.y,frame.rect.top),clip_,colors);
+    if (request.scaled) DrawScaledVfxImage(pixels_,pitch_,height_,image->second,frame,request.position,request.scaleX,request.scaleY,clip_,colors);
+    else DrawIndexedImage(pixels_,pitch_,height_,image->second,AddSprite(request.position.x,frame.rect.left),AddSprite(request.position.y,frame.rect.top),clip_,colors);
 }
 // 양 끝 포함 직교 선분을 정규화해 자른다. 대각선 입력은 이 Draw의 계약 밖이다.
 void SpritePixelTarget::Line(ScreenPoint first,ScreenPoint last,std::uint32_t color) {

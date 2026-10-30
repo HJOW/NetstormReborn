@@ -295,3 +295,6 @@ target_sources(netstorm PRIVATE client/GumpRedraw.cpp client/GumpRedraw.h)
 
 # 마나103의 실제 조건부 그림자와 현재 프레임/SHP 추가 Draw를 공유한다.
 target_sources(netstorm PRIVATE o/RawManaDraw.cpp o/RawManaDraw.h)
+
+# 메타 배율/고정 추상색의 원문 추가 Draw 몸체를 공통 표면에 제공한다.
+target_sources(netstorm PRIVATE o/RawAuxiliaryDraw.cpp o/RawAuxiliaryDraw.h)

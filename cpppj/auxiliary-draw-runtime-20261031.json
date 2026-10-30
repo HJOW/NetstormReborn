@@ -1,0 +1,290 @@
+{
+  "unit": 629,
+  "sourceBaseCommit": "ab993bdf",
+  "complete": true,
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "native": {
+    "unit": 629,
+    "complete": true,
+    "host": "HJOW-Athlon",
+    "lastFullDecompileHost": "HJOW-Athlon",
+    "lastFullDecompileDate": "2026-10-23",
+    "bodyCases": 1728,
+    "bodyObservations": 10368,
+    "bodyIndependentProcesses": 2,
+    "body": [
+      {
+        "cases": 1728,
+        "observations": 5184,
+        "differences": 0,
+        "host": "HJOW-Athlon",
+        "lastFullDecompileHost": "HJOW-Athlon",
+        "lastFullDecompileDate": "2026-10-23",
+        "sourceSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+        "toolSha256": "eacc896567a693fa67c9307c50c44781614918c27378af2abd63bcf98630d2d6",
+        "fixtureSha256": "b1ad9c15038d74f4a2e382588257afed38397757878a9cd63b2c30e2631add85",
+        "dataSha256": "8eb7b3cbe7aae8d35543fc78371d925d14e6b92f06737f7fee1878195c47b95e",
+        "scope": "실제479340/485f90/4ac550/49a840이다. 마지막 배율/추상 VFX만 인수 관측 경계이며 raw/TYPE/ABI/x87를 검사한다. C++/실제게임/GUI/공중3종 전용/MP/금지 재현을 실행/참조하지 않는다."
+      },
+      {
+        "cases": 1728,
+        "observations": 5184,
+        "differences": 0,
+        "host": "HJOW-Athlon",
+        "lastFullDecompileHost": "HJOW-Athlon",
+        "lastFullDecompileDate": "2026-10-23",
+        "sourceSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+        "toolSha256": "eacc896567a693fa67c9307c50c44781614918c27378af2abd63bcf98630d2d6",
+        "fixtureSha256": "b1ad9c15038d74f4a2e382588257afed38397757878a9cd63b2c30e2631add85",
+        "dataSha256": "8eb7b3cbe7aae8d35543fc78371d925d14e6b92f06737f7fee1878195c47b95e",
+        "scope": "실제479340/485f90/4ac550/49a840이다. 마지막 배율/추상 VFX만 인수 관측 경계이며 raw/TYPE/ABI/x87를 검사한다. C++/실제게임/GUI/공중3종 전용/MP/금지 재현을 실행/참조하지 않는다."
+      }
+    ],
+    "pixelCases": 240,
+    "pixelObservations": 1440,
+    "pixelIndependentProcesses": 2,
+    "pixels": [
+      {
+        "cases": 240,
+        "observations": 720,
+        "differences": 0,
+        "host": "HJOW-Athlon",
+        "lastFullDecompileHost": "HJOW-Athlon",
+        "lastFullDecompileDate": "2026-10-23",
+        "sourceSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+        "toolSha256": "98cf30f9168d9ff960f86bc5ed6bb35785cc97f64218253e8ab17d93da21f2f8",
+        "fixtureSha256": "b2658380c3196cb093460f645422d4ac470c9f45008a10cee1877a02fe3c607a",
+        "scope": "실제4daaf0/4028cb와 좌표/각도0/실제RLE/임시표면/현재pane의 최종 픽셀이다. 출력/CRT/assert/OS 대체가 없으며 C++/실제게임/GUI/공중3종/MP/금지재현을 실행/참조하지 않는다."
+      },
+      {
+        "cases": 240,
+        "observations": 720,
+        "differences": 0,
+        "host": "HJOW-Athlon",
+        "lastFullDecompileHost": "HJOW-Athlon",
+        "lastFullDecompileDate": "2026-10-23",
+        "sourceSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+        "toolSha256": "98cf30f9168d9ff960f86bc5ed6bb35785cc97f64218253e8ab17d93da21f2f8",
+        "fixtureSha256": "b2658380c3196cb093460f645422d4ac470c9f45008a10cee1877a02fe3c607a",
+        "scope": "실제4daaf0/4028cb와 좌표/각도0/실제RLE/임시표면/현재pane의 최종 픽셀이다. 출력/CRT/assert/OS 대체가 없으며 C++/실제게임/GUI/공중3종/MP/금지재현을 실행/참조하지 않는다."
+      }
+    ],
+    "scope": "추가Draw의 실제1728개 요청/조회와 대체 없는 전체 VFX 커널·실제RLE/클립/현재pane의240개 최종 표면이다. 각 두 독립 프로세스의 최초/재관측/확장 정밀도가 같다. 실제게임/GUI/공중3종 전용/MP/금지재현은 없다."
+  },
+  "checks": {
+    "passed": true,
+    "tests": 25,
+    "filters": [
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "ScaledPixels_"
+        ],
+        "binarySha256": "d933298fe200f0a841d12ba328d792528b91cab73ae067c93875abc6db6b4595",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 0.5021485999968718,
+        "stdoutSha256": "37f8e2f9ac363ec72d21a6d3002955e8654a50430d1f7d59ae0162f59c321389",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "ScaledPixels_",
+        "tests": 1,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "AuxiliaryDraw_"
+        ],
+        "binarySha256": "d933298fe200f0a841d12ba328d792528b91cab73ae067c93875abc6db6b4595",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 1.7446510999980092,
+        "stdoutSha256": "104851e16ee36d6393f130091fc4e1fd446356d6653cf927ba266f9c3c60fb9f",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "AuxiliaryDraw_",
+        "tests": 2,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "CampaignAuxiliaryDraw_"
+        ],
+        "binarySha256": "d933298fe200f0a841d12ba328d792528b91cab73ae067c93875abc6db6b4595",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 1.6501004999990982,
+        "stdoutSha256": "a626eb1bc9e4d777c55812d02a1429549514a13e6bf75954fd38651f27e5661e",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "CampaignAuxiliaryDraw_",
+        "tests": 1,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "VFXDraw_"
+        ],
+        "binarySha256": "d933298fe200f0a841d12ba328d792528b91cab73ae067c93875abc6db6b4595",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 0.5923193000016909,
+        "stdoutSha256": "9cf6e107a759565eb5a019b38412e65b2fe049e827708ad4947001d66e7e0e82",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "VFXDraw_",
+        "tests": 1,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "ManaAdditional_"
+        ],
+        "binarySha256": "d933298fe200f0a841d12ba328d792528b91cab73ae067c93875abc6db6b4595",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 1.7020914999993693,
+        "stdoutSha256": "13b0bc1fb99398922f80671855abad480906001206008c0e2885de7288a0d7cb",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "ManaAdditional_",
+        "tests": 2,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "CampaignManaAdditional_"
+        ],
+        "binarySha256": "d933298fe200f0a841d12ba328d792528b91cab73ae067c93875abc6db6b4595",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 1.661588999999367,
+        "stdoutSha256": "3dc595ebbdb5e57df929bd79aba5809435fc3e35318cf3420e8254ed12533d71",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "CampaignManaAdditional_",
+        "tests": 1,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "SpriteDraw_"
+        ],
+        "binarySha256": "d933298fe200f0a841d12ba328d792528b91cab73ae067c93875abc6db6b4595",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 1.381647800000792,
+        "stdoutSha256": "2d37158cee4e8849b98cfe372c40fc733fef86baf45f0957a0d78b699d276085",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "SpriteDraw_",
+        "tests": 14,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "ObjectHit_"
+        ],
+        "binarySha256": "d933298fe200f0a841d12ba328d792528b91cab73ae067c93875abc6db6b4595",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 0.7117141999988235,
+        "stdoutSha256": "7afbf05dfa923bb96080adca5844f9b176fb71f164007daa4d79e91ba43e6318",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "ObjectHit_",
+        "tests": 2,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "CampaignConstructionMana_EnergyBoltDrawsCurrentFrameAndShadow"
+        ],
+        "binarySha256": "d933298fe200f0a841d12ba328d792528b91cab73ae067c93875abc6db6b4595",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 1.6822753000014927,
+        "stdoutSha256": "d03e1dec3af5c8bb52d167ecb96023c392764726d12ccbfd86ea4492b44fb544",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "CampaignConstructionMana_EnergyBoltDrawsCurrentFrameAndShadow",
+        "tests": 1,
+        "failed": 0
+      }
+    ],
+    "registered": 3542,
+    "binarySha256": "d933298fe200f0a841d12ba328d792528b91cab73ae067c93875abc6db6b4595"
+  },
+  "registeredTests": 3542,
+  "build": {
+    "build-v1": {
+      "errors": 0,
+      "warnings": 1,
+      "sha256": "c0d81489ba72676e30751c4132ca945b12ad6b2294f7211a840a1b91936c1339"
+    },
+    "build-v2": {
+      "errors": 0,
+      "warnings": 0,
+      "sha256": "9ae4b47d905e7cd274271e69db134f9e90de90cca540dc405e4d33a2016f52e1"
+    },
+    "build-v3": {
+      "errors": 0,
+      "warnings": 0,
+      "sha256": "b87678023f571a1f84da44652e4050686086858fdbe23bf5e65a9bb761740e71"
+    },
+    "build-v4": {
+      "errors": 0,
+      "warnings": 0,
+      "sha256": "0b491dd9eb87149f39df2b47c9e0463d91393711232e7ada8e78f3260af0ceff"
+    }
+  },
+  "gameSha256": "1d6b972e2a25f339e632404d9e43562056f6b1eb08345b87dd2d8f43492cfa60",
+  "testsSha256": "d933298fe200f0a841d12ba328d792528b91cab73ae067c93875abc6db6b4595",
+  "testedSourceSha256": {
+    "cpppj/src/o/RawAuxiliaryDraw.h": "61b5aacc49737f96de2505a4faf6090372c916dada30346400e76761a7b4a3db",
+    "cpppj/src/o/RawAuxiliaryDraw.cpp": "ac615b50e4d859c12ea4e7945b0fb42ce92e292f310373775b05525e2709e8ac",
+    "cpppj/src/client/RawCampaignFactoryDisplay.cpp": "03ffcffe84d75bf1f9ba409e82d60cd2457cbd9b621fb91c3afe500912b6e825",
+    "cpppj/src/client/SpriteDraw.h": "25dc9633981d481bba396b20876dcf94f5334b5860e73f59252c2052ba43f422",
+    "cpppj/src/client/SpriteDraw.cpp": "530584a5e5789b57c10f84855cfd345224b56582122c94119fdb5d56f9d1cc31",
+    "cpppj/src/CMakeLists.txt": "41dfbbf214f5313f77952a5d157622bb138d66cabfd70f1b88a736da6a4f4fea",
+    "cpppj/tests/CMakeLists.txt": "4863cf1f4495887d492a1b79d57349c4392f235bcc4543be668e937f7727415a",
+    "cpppj/tests/CampaignSessionTests.cpp": "6e4abd2ad0f609fa92845984ffc0d634625ef0b026e828369871cc650aff9af1",
+    "cpppj/tests/AuxiliaryDrawTests.cpp": "025ecc281faed1cf3fda166d59f676ab3f30e92e0f7ca577879d969eb0c73976",
+    "cpppj/tests/CampaignAuxiliaryDrawTests.inc": "6173674a529520164f3c80e0ad060960dc6e8f52dba0b54459e6bdfb4f72ee72",
+    "cpppj/tests/ScaledPixelsTests.cpp": "671c3798541635814b13e911eedd509a06e185222fa93efabd5f0a8b5f6931fd",
+    "cpppj/tests/fixtures/auxiliary-draw-x86.tsv": "b1ad9c15038d74f4a2e382588257afed38397757878a9cd63b2c30e2631add85",
+    "cpppj/tests/fixtures/scaled-pixels-x86.tsv": "b2658380c3196cb093460f645422d4ac470c9f45008a10cee1877a02fe3c607a",
+    "tools/decomp_auxiliary_draw.py": "eacc896567a693fa67c9307c50c44781614918c27378af2abd63bcf98630d2d6",
+    "tools/decomp_scaled_pixels.py": "98cf30f9168d9ff960f86bc5ed6bb35785cc97f64218253e8ab17d93da21f2f8"
+  },
+  "protectedBefore": 2624,
+  "protectedFixtureCount": 765,
+  "protectedAfter": 2626,
+  "fixtureCount": 767,
+  "oldProtectedUnchanged": true,
+  "package": {
+    "path": "extracted/cpp-auxiliary-draw-629-20261031/NetstormReborn-cpppj-629.zip",
+    "sha256": "9768e2088cdbc8d07b6c3878d70a0d069b5a7a13264011236a8538c25e45cbd5",
+    "entries": 1376,
+    "assets": 1358,
+    "allUnpackedArchivedAndOriginalAssetBytesMatch": true
+  },
+  "newGameRuns": 0,
+  "newGuiRuns": 0,
+  "nativeEntrySyntheticPixelCases": 30,
+  "preliminary": "첫 새 검사 width 미사용 C4189 한 건을 제거해 build-v2 경고0을 확인했다. 초기 집중24는 통과했으나 기존 VFX 배율 커널의 독립 픽셀 대조가 미수행인 문서를 확인해 실제 전체 커널 probe와240표면 원문을 추가했다. 제품 커널 수정 없이 최종 반복문 설명 주석을 보완한 build-v4도 경고/오류0이며 해당 최종 검사 파일의 집중25/등록3542를 checks-v3에서 재확인했다.",
+  "scope": "479340 숨김bit4000/16.16배율0→1·485f90의556238 고정색을 같은 Native 화면·픽셀선택 분배에 연결했다. SpriteShapeRequest의 명시 배율만 기존 전체VFX커널에 전달하며 기본 요청은 이전 일반 출력이다. 명시 VT/필드를 쓰는 합성 Pool 객체와 실제 자산30조합의 부분clip/행padding·240독립 원문표면·1728원문요청 및 기존709 RLE픽셀/마나103·105/공통표시·선택을 C++ 메모리에서 검증했다. 원본 실제게임/GUI·자연완주/승패/전체 동일성·Win11/PCM/물리키/포커스·포획/희생/특정 공격/승리/공중3종 전용/신규MP 검사는 없다. VFX의 기존 signedWORD/정상표본 범위 계약과612 스택미정값 한계를 유지한다.",
+  "lastFull34": "625제품/626",
+  "lastGuiUnit": 627,
+  "goalComplete": false
+}

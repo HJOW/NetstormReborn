@@ -2516,3 +2516,11 @@ set_source_files_properties(GumpDerivedRedrawTests.cpp PROPERTIES COMPILE_DEFINI
 # 실제 PE756개의 마나 추가 그림/현재 SHP 읽기를 C++와 대조한다.
 target_sources(netstorm_tests PRIVATE ManaAdditionalTests.cpp)
 set_source_files_properties(ManaAdditionalTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_MANA_ADDITIONAL_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/mana-additional-x86.tsv\"")
+
+# 원문1728개 배율/추상색 요청과 실제 공통 Native 픽셀을 대조한다.
+target_sources(netstorm_tests PRIVATE AuxiliaryDrawTests.cpp)
+set_source_files_properties(AuxiliaryDrawTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_AUXILIARY_DRAW_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/auxiliary-draw-x86.tsv\"")
+
+# 실제 원본 전체 VFX/RLE의240개 독립 표면을 복원 픽셀과 대조한다.
+target_sources(netstorm_tests PRIVATE ScaledPixelsTests.cpp)
+set_source_files_properties(ScaledPixelsTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_SCALED_PIXELS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/scaled-pixels-x86.tsv\"")

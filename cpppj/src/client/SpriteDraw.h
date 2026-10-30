@@ -78,7 +78,13 @@ struct SpriteDrawState {
     const std::uint32_t* sharedPatchDiagnostic{}; // 실제005318ec을 그림자 분기에서 읽는다. 독립 fixture의 NULL만 shadowAliasPinned 입력을 쓴다.
 };
 // 한 그림 요청은 색 문맥 변경과 분리되어 전달된다. 그림자는 명시 소스 치환을 사용한다.
-struct SpriteShapeRequest { /* type: 타입 표에서 객체 종류를 찾는 번호. */ /* frame: 타입에서 사용할 그림 프레임 번호. */ std::uint32_t type{},frame{};/* position: 현재 좌표 또는 저장소의 읽기 위치. */ ScreenPoint position;/* mode: 동작 분기를 선택하는 모드. */ SpriteShapeMode mode{}; };
+struct SpriteShapeRequest {
+    std::uint32_t type{},frame{}; // 같은 자산 표의 TYPE/SHP 식별자와 실제 물리 프레임이다.
+    ScreenPoint position; // 원문 VFX 기준점이며 프레임 rect 원점은 출력기가 적용한다.
+    SpriteShapeMode mode{}; // 원색/소유자/고정 소스 치환표의 선택이다.
+    bool scaled{}; // true는 원문4daaf0의 회전 없는 VFX 배율 출력으로 분배한다.
+    std::int32_t scaleX{65536},scaleY{65536}; // signed16.16 두 축 배율이며 기본은1배다.
+};
 // 출력 경계와 게임 규칙 조회 경계를 구분한다. 필요한 분기의 빠진 경계는 오류다.
 struct SpriteDrawHooks {
     // setOwnerColors: 타입과 소유자에 맞춰 스프라이트 색 변환을 설정하는 콜백.
