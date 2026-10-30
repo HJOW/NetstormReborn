@@ -2156,3 +2156,9 @@ cpppj/src/client/ClientMain.cpp -text
 # 같은595 배포본의 전체34 경로와 실제 창 비교 집계를 UTF-8/LF로 보존한다.
 cpppj/solo-package-runtime-20261030.json text eol=lf
 docs/exe/cpp-solo-package-20261030.md text eol=lf
+
+# Edit 시나리오 원문 기대값과 실제 왕복 증거를 UTF-8/LF로 보존한다.
+tools/cpp_editor_rules_native.py text eol=lf
+cpppj/editor-rules-native-20261030.json text eol=lf
+cpppj/editor-rules-runtime-20261030.json text eol=lf
+docs/exe/cpp-editor-rules-20261030.md text eol=lf

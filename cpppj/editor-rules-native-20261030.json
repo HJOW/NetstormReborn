@@ -1,0 +1,77 @@
+{
+  "host": "HJOW-Athlon",
+  "date": "2026-10-30",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "uniqueCases": 11,
+  "observations": 22,
+  "differences": [],
+  "gameStarted": false,
+  "fortInput": {
+    "file": "originals/d/TEST02.fort",
+    "sha256": "85c328b764ccddc6395e0ce582d31b6241b0c6296ed600665d8ceb4465e46640",
+    "priests": [
+      {
+        "section": "Terr00",
+        "type": "priest",
+        "owner": 1
+      },
+      {
+        "section": "Terr01",
+        "type": "priest",
+        "owner": 2
+      },
+      {
+        "section": "Terr02",
+        "type": "priest",
+        "owner": 3
+      }
+    ],
+    "owners": [
+      1,
+      2,
+      3
+    ],
+    "mask": 14
+  },
+  "entries": [
+    "004c2d40",
+    "004c2b20",
+    "00416860",
+    "00417de0",
+    "00417d30"
+  ],
+  "boundaries": [
+    "설정/CRT getter는 기존 도구의 명시 경계, 원본 설정/Start 분기 실행",
+    "생성자 caller의 Player/81동맹을 자기 비트 기본값으로 제공, SetAlliance/AddAlly 실제 기계어",
+    "Off 프레임의 행동·소멸/반납 하위는 명시 경계이며 본문 프레임/삭제/Player0쓰기는 실제 기계어",
+    "살아 있는600BYTE 전체 관측은 보존하되 미초기화 영역의 클론 바이트 동일성을 주장하지 않음"
+  ],
+  "sourceSha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originals/d/TEST02.fort": "85c328b764ccddc6395e0ce582d31b6241b0c6296ed600665d8ceb4465e46640",
+    "tools/fort.py": "ee8ff8f00eea02771ac5c7a519dcd582e14cc07a2d97337c946c191022554e13",
+    "tools/shp.py": "4cb8bee6ed773e29e8658ddb315594ebf5ac005ea5b96c6b760a177029515bfd",
+    "tools/typefile.py": "a564a4b1bbc4f06d05ecb8b1f3fae4c32f6231cf95ea7bfadff2499931804d90",
+    "tools/taff.py": "461860cdfc9451b85a8694dd30fd2c56c1cfdf5c6bb7ab8f63a4089971889795",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/ghidra/mission-start-functions.json": "e5f1b7d3e210d1e75d1cd935628d58ac5cef6f3f8503e1570bf72b8d261af938",
+    "tools/ghidra/ai-brain-functions.json": "a3d986437f016f878265e88a95b2e342405140167241bcb00674961bfd70b641",
+    "tools/decomp_mission_start.py": "6a6e083f2ef8a4bf4c50e048b5f7d413f7a8c82faaca36312018be74b08298e6",
+    "tools/decomp_ai_brain.py": "3998d2fb5d90cf1a204a130a35b3ca96d46385189bb183095722d9d6f6db7587",
+    "tools/decomp_ai_runtime.py": "af5506d696229e6a030a7f25b1d6b0e327dc2ee1cd59bd3db537d5daca2a8889",
+    "tools/decomp_priestmenu.py": "8d1474792e7511fa777e7bd7bd369f2a2a0f9f5c35643e420d65a3fa4744bac9",
+    "tools/decomp_ai_bridge_initialize.py": "247e62fd96e67d4ba851442ec121f98113dd9e97a822236db248f992e2c11f4f",
+    "tools/decomp_ai_bridge_start.py": "859a54d8a18f5ef988563fd8e2eaddeba2652dcab74bad5f68de3c42aa934ed1",
+    "tools/cpp_editor_rules_native.py": "26ea94586ccfd9e6cde1771f4fd417552166a98f39ab7b1fabd5a3c07809e66c"
+  },
+  "evidenceSha256": {
+    "directed-expect.json": "d96a625e69ee599bc5a03c15e27cf6a4de5a8b2c59da59a1a80cdb3b0486cd5d",
+    "fort-input.json": "58b080352b6944084630de2bcb2bcf34771c028c9969a289ff93fe3fc02103cc",
+    "inputs.json": "456b6a29ae1af8dab10527841e615c4396933a6c543d69f12ad34eea6941964f",
+    "my-only-expect.json": "7f97bcb5119972832efb29731e0d637954e45a5a9da4901d1b144b99acef7ac9",
+    "observations-first.json": "1882a7a6585ea607f55977caf251eba5fcb10af772d026301acb938e6539ef2d",
+    "observations-replay.json": "1882a7a6585ea607f55977caf251eba5fcb10af772d026301acb938e6539ef2d",
+    "off-expect.json": "0e9d8e888c4d0ca4cb538c1a5e8f41c0d2db2e3b1d22834d6ecee5b239f4d69c"
+  }
+}
