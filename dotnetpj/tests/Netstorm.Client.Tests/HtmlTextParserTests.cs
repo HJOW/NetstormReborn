@@ -2,6 +2,7 @@ using System.Text;
 using Netstorm.Assets;
 using Netstorm.Client.Gump;
 using Netstorm.Core.Original;
+using ConfigText = Netstorm.Assets.ConfigText;
 
 namespace Netstorm.Tests; // HTML을 현재 Config/배경/실제 StyleText 소유/출력에 연결한다.
 

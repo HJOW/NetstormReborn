@@ -15,6 +15,8 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\Netstorm.Assets\Netstorm.Assets.csproj" />
+    <!-- X86ConfigObjectTests가 Netstorm.Core.Original.Config를 직접 구동한다. fixture 소비자(Assets) 규칙에 따라 검사는 Assets.Tests에 둔다. -->
+    <ProjectReference Include="..\..\src\Netstorm.Core\Netstorm.Core.csproj" />
   </ItemGroup>
   <ItemGroup>
     <!-- 원본 실행 없이 C++와 동일한 기계어 결과를 검사한다. -->

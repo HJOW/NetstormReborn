@@ -2,6 +2,7 @@ using System.Text;
 using Netstorm.Assets;
 using Netstorm.Client.Gump;
 using Netstorm.Core.Original;
+using ConfigText = Netstorm.Assets.ConfigText;
 
 namespace Netstorm.Tests; // 두 실제 PE의 HTML 출력/현재 상태/Config 호출 순서를 대조한다.
 

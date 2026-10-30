@@ -193,6 +193,8 @@ cpppj/src/client/VFXTransform.h	Netstorm.Client/Display/VfxTransform.cs	ca0c01eb
 cpppj/src/o/Bridge.cpp	Netstorm.Core/Bridges/BridgeDecayRules.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
 cpppj/src/o/Bridge.cpp	Netstorm.Core/Bridges/BridgeSurfaceRules.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
 cpppj/src/o/Bridge.cpp	Netstorm.Core/Original/BridgeFrameSearch.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
+cpppj/src/o/Config.cpp	Netstorm.Core/Original/Config.cs	b05073df6f9b8dae3afe492ab5dc969361f25c51	L1
+cpppj/src/o/Config.h	Netstorm.Core/Original/Config.cs	b05073df6f9b8dae3afe492ab5dc969361f25c51	L1
 cpppj/src/o/ContentFormHost.cpp	Netstorm.Core/Original/RawContentFormHost.cs	9eb899e43b02660479342f0f4d709760e38ebda3	L1
 cpppj/src/o/ContentFormLifetime.cpp	Netstorm.Core/Original/RawContentLifetime.cs	ab3ef43d3685245aeaad8ecf53d55de4a1b92a97	L1
 cpppj/src/o/ContentFormLifetime.h	Netstorm.Core/Original/RawContentLifetime.cs	ab3ef43d3685245aeaad8ecf53d55de4a1b92a97	L1
