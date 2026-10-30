@@ -2316,3 +2316,14 @@ tools/cpp_chat_settings_smoke.py text eol=lf
 cpppj/chat-settings-native-20261030.json text eol=lf
 cpppj/chat-settings-runtime-20261030.json text eol=lf
 docs/exe/cpp-chat-settings-20261030.md text eol=lf
+
+# Alt/가운데 pan의 원문 입력/실제 목표·최초 관측 바이트를 보존한다.
+cpppj/src/client/RawCameraPan.cpp text eol=lf
+cpppj/src/client/RawCameraPan.h text eol=lf
+cpppj/tests/CameraPanTests.cpp text eol=lf
+cpppj/tests/fixtures/camera-pan-x86.tsv -text
+tools/decomp_camera_pan.py text eol=lf
+tools/cpp_camera_pan_smoke.py text eol=lf
+cpppj/camera-pan-native-20261030.json text eol=lf
+cpppj/camera-pan-runtime-20261030.json text eol=lf
+docs/exe/cpp-camera-pan-20261030.md text eol=lf

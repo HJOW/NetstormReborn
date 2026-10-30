@@ -1,4 +1,6 @@
 #include "client/RawProductionControls.h"
+#include "client/RawCameraPan.h"
+#include "client/RawEdgeScroll.h"
 #include "client/RawMinimapControls.h"
 #include "client/CampaignUserInputServices.h"
 // 원본 004d0120·004cebf0·004cf270·004ce580의 메뉴/명령 흐름을 표시 기반과 연결한다.
@@ -207,6 +209,19 @@ struct UberGump::MissionRuntime {
 
 #include "client/UberHud.inc" // 같은 실제 소유자에 전체 HUD 루트/지도 전역과 네 자식 공장을 연결한다.
 #include "client/UberEditor.inc" //실제 Edit 선택의 Native State1/파일/후반 UI와 다음 Poll4를 연결한다.
+//446b50의 현재 커서 갱신 뒤 Alt/가운데 폴링을 같은497e00 목표 쓰기로 전달한다.
+bool UberGump::PollCameraPan(const InputEvent& pointer) {
+    client_.Configuration().ReadInt("scrollWhileMouseOut",scrollWhileMouseOut_);CameraPanHooks hooks;
+    hooks.poll=[this](auto code) { return client_.Poll(code); };
+    hooks.globals=[this] {
+        const auto size=client_.ClientPixelSize();const auto dialog=rawButtons_->CurrentDialog();
+        return CameraPanGlobals{scrollWhileMouseOut_,static_cast<std::int32_t>(dialog ? dialog : !popup_.empty()),client_.Active() ? 1 : 0,size.x,size.y,
+            hud_ ? hud_->left : 0,hud_ ? hud_->top : 0,hud_ ? hud_->mapWidth : 0,hud_ ? hud_->mapHeight : 0};
+    }; //호스트 popup도 원래 모달과 같은 관문이며 현재 지도 네 필드는 동일 HUD owner에서 조회한다.
+    hooks.closePopups=[this] { rawButtons_->RequestClosePopups(); };
+    hooks.request=[this](auto x,auto y) { auto& camera=client_.GameplayGlobals()->Camera();RequestCameraDelta(camera.RendererView(),camera.Target(),client_.GetScreen().Height(),x,y,client_.LocalStateGlobals()->MetaRebuild()); };
+    return ProcessCameraPan(pointer,hooks);
+}
 // 원본 GIF는 색 표의 RGB를 쓰지 않고 파일의 번호를 화면 팔레트에 바로 쓴다(00419ec0→004dae60).
 UberGump::UberGump(Client& client) : client_(client),initLoginSubscriber_(client.SubscriberGlobals()->MySubscriber()),initialSubscriber_(client.SubscriberGlobals()->LoginSubscriber()),mapFileSpec_(client.FortGlobals()->FileSpec()),fortSelectionMode_(client.FortGlobals()->SelectionMode()),htmlGlobals_(client.HtmlWindowGlobals()->text),hideBuildings_(client.GameplayGlobals()->HideBuildings()),worldRedraw_(client.KencloudGlobals()->WorldRedraw()),menuConfigRevision_(client.FortGlobals()->Catalog().dirty),commandGump_(client.ChatWindowGlobals()->window.current) {
     textClipboard_=std::make_shared<TextClipboard>(Win32TextClipboardDevices()); //API를 연결만 하며 이 생성은 OS 클립보드를 열거나 변경하지 않는다.
@@ -751,7 +766,7 @@ void UberGump::StartMissionWorld() {
 void UberGump::AdvanceBriefing() {
     if (briefingIndex_ < briefingSections_.size()) { Tell(briefingSections_[briefingIndex_++], true); return; }
     state_.phase = ClientPhase::Mission; pageName_ = "mission"; ClearPage(); popup_.clear(); client_.Pause(false);
-    world_->Resize(client_.GetScreen().Width(),client_.GetScreen().Height()); userInput_->Cancel(); RebuildControls();
+    world_->Resize(client_.GetScreen().Width(),client_.GetScreen().Height());RebuildControls(); //임시 키 보관 상태를 제거했으므로 새 크기의 실제 폴링만 다음 입력에서 읽는다.
 }
 // 저장한serial은루트등록칸이나단순인스턴스수로대체하지않는다.
 bool UberGump::GameMenuOpen() const { return gameMenuState_ && rawButtons_->SerialGump(gameMenuState_->menuSerial)!=0; }
@@ -929,13 +944,13 @@ void UberGump::OpenMenu(std::string name) {
     } else if (popup_ == "game") {
         add("Leave Battle", "Tell", "LeaveNormal");
     } else throw std::runtime_error("Unknown popup: " + name);
-    if (world_) { client_.Pause(true); userInput_->Cancel(); }
+    if (world_) client_.Pause(true); //별도 카메라 키 보관 없이 다음 원문 폴링이 현재 모달을 판정한다.
     opened_ = client_.Time().wall; RebuildControls();
 }
 // 원본 파생 열기/선택/작성/위치/실제 Form 부착을 현재 사건으로 실행한다.
 void UberGump::OpenObjectMenu(o::SquidId id,const InputEvent& event) {
     if (!world_ || !id || !world_->Object(id)) return;
-    objectMenus_->Open(*world_,o::Sid{static_cast<std::uint16_t>(id)},event);userInput_->Cancel();rebuild_=true;
+    objectMenus_->Open(*world_,o::Sid{static_cast<std::uint16_t>(id)},event);rebuild_=true; //다음 현재 폴링은 실제 열린 메뉴/모달을 사용한다.
 }
 // 같은 실제 큐의 원본 정수 명령과 물리 사건을 분배한다.
 void UberGump::Event(InputEvent event) {
@@ -1171,9 +1186,6 @@ bool UberGump::Input() {
         [this](auto code) { return client_.Poll(code); },client_.Input()); // Alt/언어3 Ctrl·재진입 release를 같은 원본40칸 큐에 연결한다.
     if (missionRuntime_ && missionRuntime_->tutorial) static_cast<void>(missionRuntime_->tutorial->Event(mouse)); //4d65a7의Guide 폴링 통지는 반환을 검사하지 않는다. 일반 큐 Event의 소비 관문은 별개다.
     PollEdgeScroll(mouse); // 같은 pointerBoundary flags와 장기 since를 사용하는004d65ac의 실제 호출 위치다.
-    // 현재 카메라 폴링 어댑터는 원본처럼 Overlay/일반 큐보다 앞에서 실행한다. Tick 내부 UpdateCursor와 기존 직접 호출을 중복하지 않는다.
-    if (userInput_ && state_.phase==ClientPhase::Mission && popup_.empty()) userInput_->Tick();
-    else if (userInput_) userInput_->Cancel();
     const auto mode=world_ ? world_->InputMode() : 0U; //005cae90의 현재 강조 모드이며 페이지 phase로 대체하지 않는다.
     const bool cursorActive=world_ && world_->Session().CursorDropSettings().lockDepth==0; //445330은5325c8==0이며 Session의 같은 깊이를 읽는다.
     const bool logicalModal=!popup_.empty(); // 실제 HTML 모달은 공통 트리에 맡기고 남은 호스트 팝업의 overlay만 막는다.
@@ -1185,7 +1197,12 @@ bool UberGump::Input() {
         if (state_.phase==ClientPhase::MainMenu && popup_.empty()) client_.ClearFullScreenState();
         ActivatePageAction(actions_[static_cast<std::size_t>(*pointer.activated)]);rebuild_=true;
     }
-    while (!client_.Input().Empty()) { Event(client_.Input().Pop(false));if (quit_) return true;SyncTellPresentation(); } // 원문 QuitApp의 즉시1반환 뒤 남은 같은 큐 사건과 UI 합성을 실행하지 않는다. 그 외에는 실제 부모 Kill 뒤 표시 phase를 맞춘다.
+    if (userInput_ && state_.phase==ClientPhase::Mission && popup_.empty()) userInput_->UpdateCursor(mouse); //4d6b46의446b50은 포인터/Overlay 처리 뒤이며 별도 임시 Scroll을 실행하지 않는다.
+    const bool cameraPan=PollCameraPan(mouse); //4d6b54의 현재 가운데 폴링은 커서 갱신 뒤·큐 Pop 앞이다.
+    while (!client_.Input().Empty()) { //원문 pan 경로는 일반 명령을 재분배하지 않고 같은 큐를 소비한다.
+        const auto event=client_.Input().Pop(false);if (cameraPan) continue; //Windows10/11 호환 Alt+Enter는 기존 WM_SYSKEYDOWN이 직접 처리하므로 일반 Enter/건설로 중복 전달하지 않는다.
+        Event(event);if (quit_) return true;SyncTellPresentation(); //QuitApp의 즉시1반환 뒤 남은 큐/표시 합성을 실행하지 않는다.
+    }
     if (input_.Move({mouse.x, mouse.y}, (mouse.code & InputCode::kOutside) == 0)) rebuild_ = true;
     if (world_ && world_->TakeChanged()) rebuild_=true;
     if (rebuild_) Compose();

@@ -2489,3 +2489,6 @@ target_sources(netstorm_tests PRIVATE PlayerNotificationTests.cpp) #프레임말
 target_sources(netstorm_tests PRIVATE RetreatConfirmationTests.cpp) #실제 확인 요청/뗌/양수 분배 경계를 검증한다.
 target_sources(netstorm_tests PRIVATE WorldGeyserBoundsTests.cpp) # 실제 x87 범위/예산의 독립820행과 선택된 하위를 검사한다.
 target_sources(netstorm_tests PRIVATE WorldGeyserTests.cpp) # 부모의 실제354행과 선택된 하위/부분 효과다.
+# 원문 Alt/가운데 입력259개와 현재 callback/목표 지연을 비교한다.
+target_sources(netstorm_tests PRIVATE CameraPanTests.cpp)
+set_source_files_properties(CameraPanTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_CAMERA_PAN_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/camera-pan-x86.tsv\"")

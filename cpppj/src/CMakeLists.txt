@@ -278,3 +278,5 @@ target_sources(netstorm PRIVATE client/RawUserPick.cpp client/RawUserPick.h)
 
 # 원본 프로세스 진단의 현재 슬롯/이름/부모 순회와 바이트 서식이다.
 target_sources(netstorm PRIVATE o/RawProcessSummary.cpp o/RawProcessSummary.h)
+# 원본 Alt/가운데 카메라 입력의 중심 거리·Shift 축·지연 목표를 연결한다.
+target_sources(netstorm PRIVATE client/RawCameraPan.cpp client/RawCameraPan.h)

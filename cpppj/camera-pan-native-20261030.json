@@ -1,0 +1,31 @@
+{
+  "unit": 615,
+  "host": "HJOW-Athlon",
+  "lastFullDecompilation": "HJOW-Athlon / 2026-10-23",
+  "entry": "0x4d6b54",
+  "ends": [
+    "0x4d6cda",
+    "0x4d6da2"
+  ],
+  "cases": 259,
+  "observations": 777,
+  "replayDifferences": [],
+  "extendedPrecisionDifferences": [],
+  "initialScrollWhileMouseOut": 1,
+  "scope": "기본53bit 원문/재관측과64bit 탐침. 두 폴링/팝업요청만 명시 경계이며 FTOL/카메라목표는실제명령이다. 게임GUI/MP/공격/포획/희생/승리 실행은 없다.",
+  "sourceSha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_camera_pan.py": "c0c1be3e89597be65a6cffccb78efce5e52a798ec4e52b3f9750b8e5ce9c508d",
+    "tools/decomp_edge_scroll.py": "4b977a8004c9181e70ed88a8b33303cf45b18be022984372eb283d5a0af24780",
+    "cpppj/tests/fixtures/camera-pan-x86.tsv": "51fd14e039b2210f3a461eabf205ea5a7992c5396bbd98c73a013c130b929619"
+  },
+  "evidenceSha256": {
+    "first.json": "24aa6fb5559b13a44fa4ff694c03308fb779b428ab1ce3038e4efaae835bb347",
+    "replay.json": "24aa6fb5559b13a44fa4ff694c03308fb779b428ab1ce3038e4efaae835bb347",
+    "extended.json": "24aa6fb5559b13a44fa4ff694c03308fb779b428ab1ce3038e4efaae835bb347",
+    "camera-pan-x86.tsv": "51fd14e039b2210f3a461eabf205ea5a7992c5396bbd98c73a013c130b929619",
+    "report.json": "ed873a1ea25d534d02f54eb8084893577e77e47d9d2b0a603387df65bd8fe270"
+  }
+}

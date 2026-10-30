@@ -1,0 +1,892 @@
+{
+  "unit": 615,
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "native": {
+    "unit": 615,
+    "host": "HJOW-Athlon",
+    "lastFullDecompilation": "HJOW-Athlon / 2026-10-23",
+    "entry": "0x4d6b54",
+    "ends": [
+      "0x4d6cda",
+      "0x4d6da2"
+    ],
+    "cases": 259,
+    "observations": 777,
+    "replayDifferences": [],
+    "extendedPrecisionDifferences": [],
+    "initialScrollWhileMouseOut": 1,
+    "scope": "기본53bit 원문/재관측과64bit 탐침. 두 폴링/팝업요청만 명시 경계이며 FTOL/카메라목표는실제명령이다. 게임GUI/MP/공격/포획/희생/승리 실행은 없다.",
+    "sourceSha256": {
+      "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+      "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+      "tools/decomp_camera_pan.py": "c0c1be3e89597be65a6cffccb78efce5e52a798ec4e52b3f9750b8e5ce9c508d",
+      "tools/decomp_edge_scroll.py": "4b977a8004c9181e70ed88a8b33303cf45b18be022984372eb283d5a0af24780",
+      "cpppj/tests/fixtures/camera-pan-x86.tsv": "51fd14e039b2210f3a461eabf205ea5a7992c5396bbd98c73a013c130b929619"
+    },
+    "evidenceSha256": {
+      "first.json": "24aa6fb5559b13a44fa4ff694c03308fb779b428ab1ce3038e4efaae835bb347",
+      "replay.json": "24aa6fb5559b13a44fa4ff694c03308fb779b428ab1ce3038e4efaae835bb347",
+      "extended.json": "24aa6fb5559b13a44fa4ff694c03308fb779b428ab1ce3038e4efaae835bb347",
+      "camera-pan-x86.tsv": "51fd14e039b2210f3a461eabf205ea5a7992c5396bbd98c73a013c130b929619",
+      "report.json": "ed873a1ea25d534d02f54eb8084893577e77e47d9d2b0a603387df65bd8fe270"
+    }
+  },
+  "nativeFreshProcessReplaySame": true,
+  "focusedTests": 29,
+  "tests": {
+    "registered": 3522,
+    "runs": [
+      {
+        "filter": "CameraPan",
+        "names": [
+          "CameraPan_Original259AndCurrentCallbacks",
+          "CameraPan_OnlySelectedDevicesAndInactiveQueueSelection"
+        ],
+        "returnCode": 0,
+        "stdoutSha256": "8c3eb47a63dcdfb85bb88e6fe66ceeea5cf6bc5f65a2a530add801f662b29666",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "filter": "CameraPresent",
+        "names": [
+          "CameraPresent_MatchesNativeLimitsAndCalls",
+          "CameraPresent_DiagnosticAndSelectedDeviceGuards",
+          "CameraPresent_SharedDiagnosticAndDeferredCurrentView"
+        ],
+        "returnCode": 0,
+        "stdoutSha256": "af807b67f344c7e99911ba2552b42b69e18302b696f9cd4643ce08068b0338ab",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "filter": "CameraCommit",
+        "names": [
+          "CameraCommit_MatchesNativeViewsDirtyAndEffects",
+          "CameraCommit_CurrentTargetAfterScreenEffect",
+          "CameraCommit_SelectedHooksAndSeparateZoomBranch",
+          "CameraCommit_OnlySelectedParallaxDivisionCanFail"
+        ],
+        "returnCode": 0,
+        "stdoutSha256": "638909e7afc51e87e9d9320e666b9127dbaea65c3cb4fcd505cad6f37a110f83",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "filter": "CameraView",
+        "names": [
+          "CameraViewCommands_CurrentTypeAfterApplyAndActualPreview",
+          "CameraViewCommands_NullFreeDeadAndPreviewGuards",
+          "CameraViewCommands_ResetSharesCurrentLoadingDepth",
+          "CameraViewCommands_ResetFailureRestoresActualDepth",
+          "CameraView_ActualWorldProjectionAndResizePreserveFraction",
+          "CameraView_ActualClientSessionAliasesFractionAndCurrentCursorReads",
+          "CameraView_ActualClientFailedSessionKeepsCurrentOwner",
+          "CameraView_Native16WholeImageAndProjection",
+          "CameraView_BssExplicitInitializeTargetSnapshotAndDenominatorStayDistinct",
+          "CameraView_FirstMenuActualPrepareRequeriesSnapshotAndRenderer",
+          "CameraView_PlacementCostRequeriesSharedPixelsAfterDirtyEffect",
+          "CameraView_WorldSetterAssertionRequeriesCurrentFieldsAfterAllStores"
+        ],
+        "returnCode": 0,
+        "stdoutSha256": "b15152d2dbce349542cbec3e63764e666f33a8bff97ca200249e25e6d8f95778",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "filter": "EdgeScroll",
+        "names": [
+          "EdgeScroll_MatchesNativeInputAndCameraTarget",
+          "EdgeScroll_RequestOnlyChangesTargetAndWrapsCounter",
+          "EdgeScroll_ContinuousHoverKeepsTimeAndRestartsAfterCenter"
+        ],
+        "returnCode": 0,
+        "stdoutSha256": "212a23cb4049a0df7e0fe87c4b8ad4f8428e6e4561a4bd73d346b63c72144f99",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "filter": "GumpPointerBoundary",
+        "names": [
+          "GumpPointerBoundary_Native3878",
+          "GumpPointerBoundary_ReentryUsesCurrentRawQueue",
+          "GumpPointerBoundary_LanguageAndReachedCallbacks"
+        ],
+        "returnCode": 0,
+        "stdoutSha256": "fa59fe4cba6da984a3e0e2f5a158828461846da1768d3b7ac1d5f8679e8447eb",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "filter": "ViewKeyInput",
+        "names": [
+          "ViewKeyInput_Native310InputsAndRealQueue",
+          "ViewKeyInput_LazyDevicesAndTellBeforePause"
+        ],
+        "returnCode": 0,
+        "stdoutSha256": "248e4ca00a7793279524cdae9efd083800e48c603a4a120e5bc21c5146d21306",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    ],
+    "uniqueTests": 29
+  },
+  "registeredTests": 3522,
+  "finalBuildExitCode": 0,
+  "finalBuildWarnings": 0,
+  "finalBuildErrors": 0,
+  "gameSha256": "9ed0264408fe1482bed6fd0e09839cf21761f807b6233252a20c4b626d3b8d03",
+  "testSha256": "ecdbb06eee009946d7da07af9c171c0869f969c4c97f595bacc76bdced775248",
+  "package": {
+    "entries": 1376,
+    "gameAssets": 1358,
+    "zipSha256": "706582e854c6e515127b0d3bf5235c8c34ea8ce8831fef6006b3d5e3a97db829",
+    "gameSha256": "9ed0264408fe1482bed6fd0e09839cf21761f807b6233252a20c4b626d3b8d03",
+    "allEntryBytesMatch": true,
+    "allGameAssetsMatchSources": true
+  },
+  "runtime": {
+    "passed": true,
+    "binarySha256": "9ed0264408fe1482bed6fd0e09839cf21761f807b6233252a20c4b626d3b8d03",
+    "results": [
+      {
+        "passed": true,
+        "size": [
+          1024,
+          768
+        ],
+        "scrollWhileMouseOut": 0,
+        "cameraFrames": {
+          "briefing": [
+            976,
+            793,
+            976,
+            793,
+            6,
+            0,
+            7
+          ],
+          "baseline": [
+            976,
+            793,
+            976,
+            793,
+            6,
+            0,
+            7
+          ],
+          "alt1": [
+            1034,
+            793,
+            1034,
+            793,
+            6,
+            2,
+            7
+          ],
+          "alt2": [
+            1324,
+            793,
+            1324,
+            793,
+            6,
+            12,
+            7
+          ],
+          "released": [
+            1411,
+            793,
+            1411,
+            793,
+            6,
+            15,
+            7
+          ],
+          "idle": [
+            1411,
+            793,
+            1411,
+            793,
+            6,
+            15,
+            7
+          ],
+          "middle1": [
+            1295,
+            793,
+            1295,
+            793,
+            6,
+            17,
+            7
+          ],
+          "middle2": [
+            715,
+            793,
+            715,
+            793,
+            6,
+            27,
+            7
+          ],
+          "middle-stop": [
+            541,
+            793,
+            541,
+            793,
+            6,
+            30,
+            7
+          ],
+          "key-works": [
+            541,
+            793,
+            541,
+            793,
+            6,
+            30,
+            7
+          ],
+          "key-restored": [
+            541,
+            793,
+            541,
+            793,
+            6,
+            30,
+            7
+          ],
+          "outside1": [
+            541,
+            793,
+            541,
+            793,
+            6,
+            30,
+            7
+          ],
+          "outside2": [
+            541,
+            793,
+            541,
+            793,
+            6,
+            30,
+            7
+          ],
+          "outside-stop": [
+            541,
+            793,
+            541,
+            793,
+            6,
+            30,
+            7
+          ],
+          "chat-shown": [
+            541,
+            793,
+            541,
+            793,
+            6,
+            30,
+            7
+          ],
+          "final": [
+            541,
+            793,
+            541,
+            793,
+            6,
+            30,
+            7
+          ]
+        },
+        "hideBuildings": {
+          "briefing": 0,
+          "baseline": 0,
+          "alt1": 0,
+          "alt2": 0,
+          "released": 0,
+          "idle": 0,
+          "middle1": 0,
+          "middle2": 0,
+          "middle-stop": 0,
+          "key-works": 1,
+          "key-restored": 0,
+          "outside1": 0,
+          "outside2": 0,
+          "outside-stop": 0,
+          "chat-shown": 0,
+          "final": 0
+        },
+        "panQueueDropsOrdinaryF2": true,
+        "outsideRequests": 0,
+        "gameSecondsDelta": 2.8599999999999994,
+        "presentation": {
+          "same": true,
+          "actualSha256": "cdc8bad363102796e6bc99acd24d8cc49d98d83bb030c1a0f7a06e1b964f9062",
+          "expectedSha256": "cdc8bad363102796e6bc99acd24d8cc49d98d83bb030c1a0f7a06e1b964f9062",
+          "dimensions": [
+            1024,
+            768
+          ],
+          "outputRect": [
+            0,
+            0,
+            1024,
+            768
+          ]
+        },
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-camera-pan-615-20261030\\live\\한글 배포본\\NetstormReborn-cpppj\\Netstorm.exe",
+            "--run",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-camera-pan-615-20261030\\live\\한글 배포본\\NetstormReborn-cpppj\\game",
+            "--mission",
+            "TheWarBegins",
+            "--window",
+            "--no-audio",
+            "--frames",
+            "100",
+            "--set",
+            "SCREENW=1024;SCREENH=768;maxFPS=40;sleepPerLoop=1;edgeScroll=0;scrollWhileMouseOut=0;autoDemo=0;tellTips=0",
+            "--ui-script",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-camera-pan-615-20261030\\live\\1024x768\\steps.tsv",
+            "--ui-report",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-camera-pan-615-20261030\\live\\1024x768\\states.tsv"
+          ],
+          "binarySha256": "9ed0264408fe1482bed6fd0e09839cf21761f807b6233252a20c4b626d3b8d03",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 5.39867580000282,
+          "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderrSha256": "9fba4f7e2bb0be090e62265ef1203d93a429672f7ce307b7cf3aa08e3bfebbbb"
+        },
+        "scope": "실제 게임 창/일반 큐와 명시 검사 폴링 입력이다. 물리 키 누름/원본 화면 대조·자연완주·전체화면/PCM/MP·공격/포획/희생/승리를 재현하지 않는다."
+      },
+      {
+        "passed": true,
+        "size": [
+          1280,
+          720
+        ],
+        "scrollWhileMouseOut": 1,
+        "cameraFrames": {
+          "briefing": [
+            848,
+            817,
+            848,
+            817,
+            6,
+            0,
+            7
+          ],
+          "baseline": [
+            848,
+            817,
+            848,
+            817,
+            6,
+            0,
+            7
+          ],
+          "alt1": [
+            922,
+            817,
+            922,
+            817,
+            6,
+            2,
+            7
+          ],
+          "alt2": [
+            1292,
+            817,
+            1292,
+            817,
+            6,
+            12,
+            7
+          ],
+          "released": [
+            1403,
+            817,
+            1403,
+            817,
+            6,
+            15,
+            7
+          ],
+          "idle": [
+            1403,
+            817,
+            1403,
+            817,
+            6,
+            15,
+            7
+          ],
+          "middle1": [
+            1265,
+            817,
+            1265,
+            817,
+            6,
+            17,
+            7
+          ],
+          "middle2": [
+            575,
+            817,
+            575,
+            817,
+            6,
+            27,
+            7
+          ],
+          "middle-stop": [
+            368,
+            817,
+            368,
+            817,
+            6,
+            30,
+            7
+          ],
+          "key-works": [
+            368,
+            817,
+            368,
+            817,
+            6,
+            30,
+            7
+          ],
+          "key-restored": [
+            368,
+            817,
+            368,
+            817,
+            6,
+            30,
+            7
+          ],
+          "outside1": [
+            528,
+            817,
+            528,
+            817,
+            6,
+            32,
+            7
+          ],
+          "outside2": [
+            1168,
+            817,
+            1168,
+            817,
+            6,
+            40,
+            7
+          ],
+          "outside-stop": [
+            1408,
+            817,
+            1408,
+            817,
+            6,
+            43,
+            7
+          ],
+          "chat-shown": [
+            1408,
+            817,
+            1408,
+            817,
+            6,
+            43,
+            7
+          ],
+          "final": [
+            1408,
+            817,
+            1408,
+            817,
+            6,
+            43,
+            7
+          ]
+        },
+        "hideBuildings": {
+          "briefing": 0,
+          "baseline": 0,
+          "alt1": 0,
+          "alt2": 0,
+          "released": 0,
+          "idle": 0,
+          "middle1": 0,
+          "middle2": 0,
+          "middle-stop": 0,
+          "key-works": 1,
+          "key-restored": 0,
+          "outside1": 0,
+          "outside2": 0,
+          "outside-stop": 0,
+          "chat-shown": 0,
+          "final": 0
+        },
+        "panQueueDropsOrdinaryF2": true,
+        "outsideRequests": 8,
+        "gameSecondsDelta": 2.995,
+        "presentation": {
+          "same": true,
+          "actualSha256": "587e777956fc35086936d7d466a3de4ce570770d787907e179137e9254a91b3d",
+          "expectedSha256": "587e777956fc35086936d7d466a3de4ce570770d787907e179137e9254a91b3d",
+          "dimensions": [
+            1280,
+            720
+          ],
+          "outputRect": [
+            0,
+            0,
+            1280,
+            720
+          ]
+        },
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-camera-pan-615-20261030\\live\\한글 배포본\\NetstormReborn-cpppj\\Netstorm.exe",
+            "--run",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-camera-pan-615-20261030\\live\\한글 배포본\\NetstormReborn-cpppj\\game",
+            "--mission",
+            "TheWarBegins",
+            "--window",
+            "--no-audio",
+            "--frames",
+            "100",
+            "--set",
+            "SCREENW=1280;SCREENH=720;maxFPS=40;sleepPerLoop=1;edgeScroll=0;scrollWhileMouseOut=1;autoDemo=0;tellTips=0",
+            "--ui-script",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-camera-pan-615-20261030\\live\\1280x720\\steps.tsv",
+            "--ui-report",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-camera-pan-615-20261030\\live\\1280x720\\states.tsv"
+          ],
+          "binarySha256": "9ed0264408fe1482bed6fd0e09839cf21761f807b6233252a20c4b626d3b8d03",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 5.394654800002172,
+          "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderrSha256": "9fba4f7e2bb0be090e62265ef1203d93a429672f7ce307b7cf3aa08e3bfebbbb"
+        },
+        "scope": "실제 게임 창/일반 큐와 명시 검사 폴링 입력이다. 물리 키 누름/원본 화면 대조·자연완주·전체화면/PCM/MP·공격/포획/희생/승리를 재현하지 않는다."
+      },
+      {
+        "passed": true,
+        "size": [
+          1280,
+          800
+        ],
+        "scrollWhileMouseOut": 0,
+        "cameraFrames": {
+          "briefing": [
+            848,
+            777,
+            848,
+            777,
+            6,
+            0,
+            7
+          ],
+          "baseline": [
+            848,
+            777,
+            848,
+            777,
+            6,
+            0,
+            7
+          ],
+          "alt1": [
+            922,
+            777,
+            922,
+            777,
+            6,
+            2,
+            7
+          ],
+          "alt2": [
+            1292,
+            777,
+            1292,
+            777,
+            6,
+            12,
+            7
+          ],
+          "released": [
+            1403,
+            777,
+            1403,
+            777,
+            6,
+            15,
+            7
+          ],
+          "idle": [
+            1403,
+            777,
+            1403,
+            777,
+            6,
+            15,
+            7
+          ],
+          "middle1": [
+            1265,
+            777,
+            1265,
+            777,
+            6,
+            17,
+            7
+          ],
+          "middle2": [
+            575,
+            777,
+            575,
+            777,
+            6,
+            27,
+            7
+          ],
+          "middle-stop": [
+            368,
+            777,
+            368,
+            777,
+            6,
+            30,
+            7
+          ],
+          "key-works": [
+            368,
+            777,
+            368,
+            777,
+            6,
+            30,
+            7
+          ],
+          "key-restored": [
+            368,
+            777,
+            368,
+            777,
+            6,
+            30,
+            7
+          ],
+          "outside1": [
+            368,
+            777,
+            368,
+            777,
+            6,
+            30,
+            7
+          ],
+          "outside2": [
+            368,
+            777,
+            368,
+            777,
+            6,
+            30,
+            7
+          ],
+          "outside-stop": [
+            368,
+            777,
+            368,
+            777,
+            6,
+            30,
+            7
+          ],
+          "chat-shown": [
+            368,
+            777,
+            368,
+            777,
+            6,
+            30,
+            7
+          ],
+          "final": [
+            368,
+            777,
+            368,
+            777,
+            6,
+            30,
+            7
+          ]
+        },
+        "hideBuildings": {
+          "briefing": 0,
+          "baseline": 0,
+          "alt1": 0,
+          "alt2": 0,
+          "released": 0,
+          "idle": 0,
+          "middle1": 0,
+          "middle2": 0,
+          "middle-stop": 0,
+          "key-works": 1,
+          "key-restored": 0,
+          "outside1": 0,
+          "outside2": 0,
+          "outside-stop": 0,
+          "chat-shown": 0,
+          "final": 0
+        },
+        "panQueueDropsOrdinaryF2": true,
+        "outsideRequests": 0,
+        "gameSecondsDelta": 2.9459999999999997,
+        "presentation": {
+          "same": true,
+          "actualSha256": "ffb05670ae83698e5be58db252792a58ee2d5c6a94139a1f047f86402796438f",
+          "expectedSha256": "ffb05670ae83698e5be58db252792a58ee2d5c6a94139a1f047f86402796438f",
+          "dimensions": [
+            1280,
+            800
+          ],
+          "outputRect": [
+            0,
+            0,
+            1280,
+            800
+          ]
+        },
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-camera-pan-615-20261030\\live\\한글 배포본\\NetstormReborn-cpppj\\Netstorm.exe",
+            "--run",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-camera-pan-615-20261030\\live\\한글 배포본\\NetstormReborn-cpppj\\game",
+            "--mission",
+            "TheWarBegins",
+            "--window",
+            "--no-audio",
+            "--frames",
+            "100",
+            "--set",
+            "SCREENW=1280;SCREENH=800;maxFPS=40;sleepPerLoop=1;edgeScroll=0;scrollWhileMouseOut=0;autoDemo=0;tellTips=0",
+            "--ui-script",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-camera-pan-615-20261030\\live\\1280x800\\steps.tsv",
+            "--ui-report",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-camera-pan-615-20261030\\live\\1280x800\\states.tsv"
+          ],
+          "binarySha256": "9ed0264408fe1482bed6fd0e09839cf21761f807b6233252a20c4b626d3b8d03",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 5.349217899994983,
+          "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderrSha256": "9fba4f7e2bb0be090e62265ef1203d93a429672f7ce307b7cf3aa08e3bfebbbb"
+        },
+        "scope": "실제 게임 창/일반 큐와 명시 검사 폴링 입력이다. 물리 키 누름/원본 화면 대조·자연완주·전체화면/PCM/MP·공격/포획/희생/승리를 재현하지 않는다."
+      }
+    ],
+    "protectedActionsReproduced": false,
+    "networkExecuted": false
+  },
+  "protectedCount": 2581,
+  "protectedFixtureCount": 758,
+  "protectedDifferences": [],
+  "fixtureCount": 759,
+  "sourceSha256": {
+    "cpppj/src/CMakeLists.txt": "026815207b2e39e7384ab0459afbf396385eb605aaf50ed75f93830cedfc2200",
+    "cpppj/tests/CMakeLists.txt": "f9dc345e28b655e0c63f06c26f65e178d334d4465dee391ea49afc2784d532d3",
+    "cpppj/src/client/ClientMain.h": "22dc725ae1107ab44736bc0850e67419a6411ada8a7d5479b19bdea543638a56",
+    "cpppj/src/client/UberGump.cpp": "42e8c41dc6756ed50dce970fdb7f5872cacab08006c57a41b908cd7622dd26a8",
+    "cpppj/src/client/UberGump.h": "35e323dd1be6b56621c057b61a2c9a5f53eb6fe6bda5603fdec0f5a414039c24",
+    "cpppj/src/client/UserInput.cpp": "179f954833d465bd50a3e8d0778f12added5cd623535c79583b1b2d69fdc01a6",
+    "cpppj/src/client/UserInput.h": "22eb1dd4f681a2413297f4f51024eb60f7a4c46db802ba97476a64aa3764a834",
+    "cpppj/src/client/RawCameraPan.cpp": "3f7cc4a128463bceb0ba2ec012e0fea22674647f32c6cb0aac2bf5520602271f",
+    "cpppj/src/client/RawCameraPan.h": "095881ce544307096816c4ebd50742f2cbc1febc9eb9ca17b4b99e9e5226669f",
+    "cpppj/tests/CameraPanTests.cpp": "93b8343328286eb8c6c18378756fc9774c00f0338995b3a740ee42934e901e89",
+    "tools/decomp_camera_pan.py": "c0c1be3e89597be65a6cffccb78efce5e52a798ec4e52b3f9750b8e5ce9c508d",
+    "tools/cpp_camera_pan_smoke.py": "2d966cfafea3675e9f48766d7f3650feba1b1528673b8ab0bb77af2bd986d429",
+    "cpppj/tests/fixtures/camera-pan-x86.tsv": "51fd14e039b2210f3a461eabf205ea5a7992c5396bbd98c73a013c130b929619"
+  },
+  "evidenceSha256": {
+    "native-first.log": "6e48cc93698a8a789934b6a440158836580de3388d4383c05e599b64bddef84d",
+    "build.log": "dcffca7c3e65f298d2bebb19f6a4a66a50281cc3ea93eb0443b003a4aefb93b1",
+    "build-v2.log": "436d4dc3e4ded08ebf57c1cdd77160f39373de3b8f07d8981567ec094c86a8e8",
+    "native-replay.log": "6e48cc93698a8a789934b6a440158836580de3388d4383c05e599b64bddef84d",
+    "registered-tests.txt": "957edf05f5d378b06de59f75f1326fc916bc1d9fefb1fba333281041525bce27",
+    "tests-CameraPan.stdout.log": "8c3eb47a63dcdfb85bb88e6fe66ceeea5cf6bc5f65a2a530add801f662b29666",
+    "tests-CameraPan.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "tests-CameraPresent.stdout.log": "af807b67f344c7e99911ba2552b42b69e18302b696f9cd4643ce08068b0338ab",
+    "tests-CameraPresent.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "tests-CameraCommit.stdout.log": "638909e7afc51e87e9d9320e666b9127dbaea65c3cb4fcd505cad6f37a110f83",
+    "tests-CameraCommit.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "tests-CameraView.stdout.log": "b15152d2dbce349542cbec3e63764e666f33a8bff97ca200249e25e6d8f95778",
+    "tests-CameraView.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "tests-EdgeScroll.stdout.log": "212a23cb4049a0df7e0fe87c4b8ad4f8428e6e4561a4bd73d346b63c72144f99",
+    "tests-EdgeScroll.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "tests-GumpPointerBoundary.stdout.log": "fa59fe4cba6da984a3e0e2f5a158828461846da1768d3b7ac1d5f8679e8447eb",
+    "tests-GumpPointerBoundary.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "tests-ViewKeyInput.stdout.log": "248e4ca00a7793279524cdae9efd083800e48c603a4a120e5bc21c5146d21306",
+    "tests-ViewKeyInput.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "tests-summary.json": "72a737c503554e46deced67afc769470a3cdfccbdfb3b28b5c1c4818de40facc",
+    "package.log": "3ef767d4945b94ab52d3f5c1d05fe90d28309d54e52658f3c679beceea09e245",
+    "live.log": "866592cf237a934920617f2ac5b3af73b9ba2b1bac0884290393b1bc2108fd21",
+    "update_docs.py": "ba2b6a680f5dffe5cc6b22050424c38220ca9a376f7eaf94ab44196882a4723f",
+    "native-first/first.json": "24aa6fb5559b13a44fa4ff694c03308fb779b428ab1ce3038e4efaae835bb347",
+    "native-first/replay.json": "24aa6fb5559b13a44fa4ff694c03308fb779b428ab1ce3038e4efaae835bb347",
+    "native-first/extended.json": "24aa6fb5559b13a44fa4ff694c03308fb779b428ab1ce3038e4efaae835bb347",
+    "native-first/camera-pan-x86.tsv": "51fd14e039b2210f3a461eabf205ea5a7992c5396bbd98c73a013c130b929619",
+    "native-first/report.json": "ed873a1ea25d534d02f54eb8084893577e77e47d9d2b0a603387df65bd8fe270",
+    "native-replay/first.json": "24aa6fb5559b13a44fa4ff694c03308fb779b428ab1ce3038e4efaae835bb347",
+    "native-replay/replay.json": "24aa6fb5559b13a44fa4ff694c03308fb779b428ab1ce3038e4efaae835bb347",
+    "native-replay/extended.json": "24aa6fb5559b13a44fa4ff694c03308fb779b428ab1ce3038e4efaae835bb347",
+    "native-replay/camera-pan-x86.tsv": "51fd14e039b2210f3a461eabf205ea5a7992c5396bbd98c73a013c130b929619",
+    "native-replay/report.json": "ed873a1ea25d534d02f54eb8084893577e77e47d9d2b0a603387df65bd8fe270",
+    "live/package-audit.json": "3f90f319369976917cba31f3d9bcce86d897c42140495fffeef1d5c70e72f36f",
+    "live/summary.json": "39ef8d9ed4b4856784d86ec634421eb5d57c4e8c35a332f57b4518c15a81207d",
+    "live/1024x768/steps.tsv": "4df69c4d065d1179bd647f28d0a062d3aee5aab77e2c912b904dc1e4f0bdb82c",
+    "live/1024x768/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "live/1024x768/stderr.log": "9fba4f7e2bb0be090e62265ef1203d93a429672f7ce307b7cf3aa08e3bfebbbb",
+    "live/1024x768/running.json": "2b75128668e3f0ce3f10be04bab21ea38c36934dd3126dc1aa9ba4face6b25a1",
+    "live/1024x768/states.tsv": "f16dd69b93ef7f9205a360219a00ab51fd98c67dbdff9f54de2b0f60493b4e75",
+    "live/1024x768/final.bmp": "2e97cfbb8b35b4122881bd4232c7a71f301b36db0ba4f4a216edb2112d1b1fee",
+    "live/1024x768/final-output.bmp": "2e97cfbb8b35b4122881bd4232c7a71f301b36db0ba4f4a216edb2112d1b1fee",
+    "live/1024x768/run.json": "3941e897603e1bcde61dcf34b0e5c5e100cfe138adcc3edb37469cd4dff593ba",
+    "live/1024x768/presentation-comparison.json": "2d9b88dbf6cfffb68b6eb73856ecfd63048cde41f41745b650f09f5ef5b307a3",
+    "live/1024x768/summary.json": "cd8e69baa801fbffe70f53b8077298bc99363686ccf47d0967fe55e22ecd1258",
+    "live/1280x720/steps.tsv": "ac8e4441f795b225965c5b45157c77af2acd9badbc071b3da6ce7b503c26aba1",
+    "live/1280x720/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "live/1280x720/stderr.log": "9fba4f7e2bb0be090e62265ef1203d93a429672f7ce307b7cf3aa08e3bfebbbb",
+    "live/1280x720/running.json": "15979b389827b530a3e73ab7f67bf08eacc280f7588da3e13722fd94bec3a2fc",
+    "live/1280x720/states.tsv": "2935503064e435a17c65e341e78746fc15eeac9b44b4ca8c3722c05529a454f0",
+    "live/1280x720/final.bmp": "9268dad86f16f9767ca348f72de8c2f57e93ad976902dad2bf4a950e4351b283",
+    "live/1280x720/final-output.bmp": "9268dad86f16f9767ca348f72de8c2f57e93ad976902dad2bf4a950e4351b283",
+    "live/1280x720/run.json": "ea8627e898e508b902aa3941d25ca2a3fc90793258efb722e6b56a91ef66f5e0",
+    "live/1280x720/presentation-comparison.json": "46f15ca1834a593ca7d7b55234bcd8a52ac37b624ed2dfd3753f7203535959d1",
+    "live/1280x720/summary.json": "3da0637a71145b74748991597c7a52a7f15514d5071cb85e01b559c3c430706c",
+    "live/1280x800/steps.tsv": "3521b59a17bdd8b9f93f7477dbab65e393e717d4f6dd12832c6af98126a8492d",
+    "live/1280x800/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "live/1280x800/stderr.log": "9fba4f7e2bb0be090e62265ef1203d93a429672f7ce307b7cf3aa08e3bfebbbb",
+    "live/1280x800/running.json": "0e31928223eaf36b29e4f3cedc762d5eddea3551af85d5f11422775e00855071",
+    "live/1280x800/states.tsv": "0de5138c09d10523e42e0510e4c4f047866f63b1dbad98acb5422d9f8064ddfc",
+    "live/1280x800/final.bmp": "99a65637b3149c8ed866f59481e7b0069ac788a3715fcd93f0133bcb9ce01cd9",
+    "live/1280x800/final-output.bmp": "99a65637b3149c8ed866f59481e7b0069ac788a3715fcd93f0133bcb9ce01cd9",
+    "live/1280x800/run.json": "2b265671c1ba0db0e21443781f1d099e87fd38bf4cc9045250e551b53eaf7283",
+    "live/1280x800/presentation-comparison.json": "7b9a0d6f1282bd565ddc4a861ad31257a34565ab43b4c420212538efea717a5e",
+    "live/1280x800/summary.json": "c6afa7e6aef2bf7da7d589855dfd9c235459758b591d02f7b63e2f85ebfcf67d"
+  },
+  "lastFull34ProductUnit": 609,
+  "lastFull34Unit": 610,
+  "initialFailures": [
+    "최초 빌드는 임시 UserInput.Cancel API 제거 뒤 남은 세 호출 때문에 실패했다. 같은 임시 키 보관 상태의 세 호출만 제거하고 최종빌드0/집중29를 확인했다. 최초build.log를 보존했다."
+  ],
+  "scope": "원문 pan 계산/현재 callback/목표와 실제 같은615 배포본 창/검사폴링3회·F2 큐 소비·창밖 옵션0/1을 확인했다. 물리 Alt/가운데 키 누름·포커스 전환/전체화면 확대·DPI 좌표 단위/Win11 실기·자연완주/전체C++/현재전체34/원본픽셀·PCM·공중3종전용·실제특정공격/포획/희생/승리·신규MP 검사는 없다.612 스택 미정값 자체의 한계와 전체목표미완료를 유지한다."
+}

@@ -124,6 +124,7 @@ public:
     void Title(std::string_view title);
     // 기본 실행의 메뉴 상태와 입력 경로. --view 검사에서는 널이다.
     UberGump* Menu();
+    ScreenPoint ClientPixelSize() const { return {clientWidth_,clientHeight_}; } //005c78fc/7900의 WM_SIZE 결과를 pan의 실제 현재 입력으로 읽는다.
     // 메뉴/월드 유무와 관계없이 같은 Client의 실제00540c74 const참조다.
     const std::uint32_t& CurrentSubscriber() const;
     o::OriginalEdition Edition() const { return options_.edition; } //자산/창초기화전에도동일한실행판본을반환한다.실제자료가필요없는Client장치의필드배치선택에쓴다.

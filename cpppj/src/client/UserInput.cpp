@@ -2,18 +2,14 @@
 #include "client/ProductionShortcuts.h"
 #include "client/ClientMain.h"
 #include "client/RawCampaignCursor.h"
-#include <algorithm>
-#include <cmath>
 
 namespace netstorm::client {
 namespace {
-// 카메라 속도는 검사용 InspectView의 기존 12픽셀/14ms를 초 단위로 옮긴 임시값이다.
-constexpr double kCameraPixelsPerSecond=12.0/0.014;
-// 원본 키 번호(왼쪽/위/오른쪽/아래, Alt, F4/F5).
-constexpr unsigned kLeft=0x25,kUp=0x26,kRight=0x27,kDown=0x28,kAlt=0x12,kF4=0x73,kF5=0x74;
+// 이 입력 어댑터가 아직 처리하는 두 Home 키이며 화살표 카메라 속도를 따로 만들지 않는다.
+constexpr unsigned kF4=0x73,kF5=0x74;
 }
-// 누름 상태를 월드마다 따로 관리한다.
-UserInput::UserInput(Client& client,GameWorld& world) : client_(client),world_(world),lastWall_(client.Time().wall) {}
+// 같은 Client/World를 빌리며 별도 키 누름/임시 카메라 시계를 만들지 않는다.
+UserInput::UserInput(Client& client,GameWorld& world) : client_(client),world_(world) {}
 // 원본의 좌클릭 이동과 우클릭 메뉴를 구분한다.
 std::optional<o::SquidId> UserInput::Event(InputEvent event) {
     if ((event.code & InputCode::kOutside)!=0) return {};
@@ -25,7 +21,7 @@ std::optional<o::SquidId> UserInput::Event(InputEvent event) {
     const auto key=(event.code>>InputCode::kVirtualKeyShift)&255u;
     const bool release=(event.code & InputCode::kRelease)!=0;
     if (key>=8) {
-        held_[key]=!release; if (release) return {};
+        if (release) return {};
         if (key==kF4) world_.Home(false); if (key==kF5) world_.Home(true); return {};
     }
     const auto character=event.code & 0xffffu;
@@ -43,22 +39,6 @@ std::optional<o::SquidId> UserInput::Event(InputEvent event) {
     }
     return {};
 }
-// 게임 시간 정지와 무관하게 화면 이동은 현재 벽시계를 사용한다.
-void UserInput::Tick() {
-    const double wall=client_.Time().wall,delta=std::clamp(wall-lastWall_,0.0,0.05); lastWall_=wall;
-    if (!client_.Active()) { Cancel(); return; }
-    const auto held=[&](unsigned key) { return held_[key] || (client_.Poll(key<<InputCode::kVirtualKeyShift).code & InputCode::kRelease)==0; };
-    const bool cursorActive=world_.Session().CursorDropSettings().lockDepth==0; // 활성 커서의 좌우키는 원본 회전으로 소비한다.
-    int x=cursorActive ? 0 : (held(kRight)?1:0)-(held(kLeft)?1:0),y=(held(kDown)?1:0)-(held(kUp)?1:0);
-    const auto mouse=client_.Poll(InputCode::kMiddleButton);
-    if ((mouse.code & InputCode::kOutside)==0 && (held(kAlt) || (mouse.code & InputCode::kRelease)==0)) {
-        x=(mouse.x>client_.GetScreen().Width()/2+16)-(mouse.x<client_.GetScreen().Width()/2-16);
-        y=(mouse.y>client_.GetScreen().Height()/2+16)-(mouse.y<client_.GetScreen().Height()/2-16);
-    }
-    const int amount=static_cast<int>(std::lround(delta*kCameraPixelsPerSecond));if (x || y) world_.Scroll(x*amount,y*amount);UpdateCursor(mouse); // 이동 입력이 없을 때 원본497f20의 카메라 중심을 Scroll(0,0)의 clamp로 다시 바꾸지 않는다.
-}
-// 메뉴/비활성으로 건너뛴 키 올림 사건이 다음 월드 조작에 남지 않게 한다.
-void UserInput::Cancel() { held_.fill(false); lastWall_=client_.Time().wall; }
 }
 
 // 원본에 등록된 두 DWORD는 누락 시 BSS0이며 현재 설정을 해당 소비 시점에 읽는다.

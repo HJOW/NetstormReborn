@@ -172,6 +172,8 @@ private:
     double edgeScrollSince_{}; //005cafc8의 장기 최초 시각이며 World/페이지 교체로 지우지 않는다.
     std::int32_t edgeScrollEnabled_{1},edgeScrollSpeed_{20}; //보호 PE의005318f8/005318f0 초기값이다. 누락 설정은 현재값을 유지한다.
     void PollEdgeScroll(const InputEvent& mouse); //Guide 통지 뒤·Overlay/일반 큐 앞에서 원문 가장자리 입력 본체를 수행한다.
+    std::int32_t scrollWhileMouseOut_{1}; //005318d0의 PE 초기1이며 설정 누락은 현재값을 유지한다.
+    bool PollCameraPan(const InputEvent& pointer); //현재 커서 갱신 뒤 원문 Alt/가운데 이동과 전용 큐 경로를 선택한다.
     struct HudRuntime;std::unique_ptr<HudRuntime> hud_; // 실제 화면/지도 전역의 주소를 Client UI 수명에 고정한다.
     struct EditorRuntime;std::unique_ptr<EditorRuntime> editor_; //실제 파일/전송/State 장치는 World보다 먼저 만들고 Session 반납 뒤 해제한다.
     std::shared_ptr<const TextClipboard> textClipboard_; //최초 Chat과 뒤 Save as의 두 callback이 같은 OS 장치 수명을 공유한다.
