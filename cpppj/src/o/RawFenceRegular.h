@@ -25,7 +25,7 @@ public:
     float Handle(Sid sid,std::uint32_t event,std::uint32_t count,float payload) const; //현재 프레임/소유자/연결수의 읽기·쓰기·호출 순서다.
     RegularHandler Handler(RegularHandler fallback={}) const; //다른 실제 부모는 기존 처리기로 전달한다.
 private:
-    void ClearNeighbors(Sid sid) const; //네 방향을 모두 모은 뒤 현재 owner와 기존 mark/선을 갱신한다.
+    void ClearNeighbors(Sid sid,bool updateOwner=true) const; //네 방향을 먼저 모은다. 사건0만 owner 캐시를 쓰며 사건3은 두 캐시를 보존한다.
     void Schedule(Sid sid) const; //개별 할당 실패는 그 예약만 생략한다.
     SidPool& pool_; //현재 frame/owner/+2a/+2e를 소유한 단일 raw 풀이다.
     std::span<const RiftTypeFrames> frames_; //원본TYPE+170의 현재 글자 구간 수다.

@@ -9,6 +9,7 @@
 namespace netstorm::o {
 namespace {
 constexpr std::uint32_t kFenceHandleTable=0x00509470; //10.78 썬 바리케이드의 실제 가상 표다.
+constexpr std::uint32_t kEmptyX87Result=0xffc00000U; //실제496cb0이 사건3의 빈 x87 반환을 FST32할 때 생성하는 음수 indefinite NaN이다.
 // 비정렬 DWORD의 실제 네 바이트만 읽는다.
 std::uint32_t ReadFenceRegular(std::span<const std::uint8_t> raw,std::size_t offset) {
     std::uint32_t value{}; //현재 원본 기록의 little endian 결합값이다.
@@ -32,11 +33,11 @@ RawFenceRegular::RawFenceRegular(SidPool& pool,std::span<const RiftTypeFrames> f
 }
 // TYPE 이름만 같은 다른 부모를 이 처리기로 호출하지 않는다.
 bool RawFenceRegular::Handles(Sid sid) const { return ReadFenceRegular(pool_.Slot(sid),0)==kFenceHandleTable; }
-// 현재 owner의 DWORD 캐시는 네 이웃 검색을 마친 뒤에만 쓴다.
-void RawFenceRegular::ClearNeighbors(Sid sid) const {
+// 네 이웃을 먼저 모으며 사건0의 owner 캐시만 그 뒤에 쓴다. 사건3은 캐시를 갱신하지 않는다.
+void RawFenceRegular::ClearNeighbors(Sid sid,bool updateOwner) const {
     std::array<Sid,4> neighbors{}; //원본 local_1c의 스냅샷이며 효과 뒤 다시 검색하지 않는다.
     for (std::uint32_t direction=0;direction<8;direction+=2) neighbors[direction/2]=NeedFenceRegular(hooks_.neighbor)(sid,direction); //원본0/2/4/6 순서다.
-    WriteFenceRegular(pool_.AllocatedBytes(sid),42,pool_.Slot(sid)[34]);
+    if (updateOwner) WriteFenceRegular(pool_.AllocatedBytes(sid),42,pool_.Slot(sid)[34]);
     for (const auto neighbor:neighbors) { //먼저 모은 네 SID를 같은 순서로 처리한다.
         if (!neighbor.value) continue;
         NeedFenceRegular(hooks_.clearMarkers)(sid,neighbor);
@@ -74,7 +75,12 @@ float RawFenceRegular::Handle(Sid sid,std::uint32_t event,std::uint32_t count,fl
     }
     if (event==1) { NeedFenceRegular(hooks_.refreshNeighbors)(sid);return 0.0f; }
     if (event==2) { NeedFenceRegular(hooks_.rebuild)(sid);return 0.0f; }
-    if (event==3) throw std::logic_error("썬 바리케이드 사건3의 원본 잔류 x87 반환은 호출자 관찰 전 미복원");
+    if (event==3) {
+        ClearNeighbors(sid,false);
+        // 원문은 float를 정의하지 않고 반환한다. 정상 ABI의 빈 x87을 실제496cb0이 FST한 결과를 표현한다.
+        // 실제 CPU의 일반271사례에서 확인한 NaN payload/다음시각·count 증가를 같은 ProcessHost가 계속 소비한다.
+        return std::bit_cast<float>(kEmptyX87Result);
+    }
     return NeedFenceRegular(hooks_.damageable)(sid,event,count,payload);
 }
 // 이미 복원한 다른 부모는 순서와 예외를 유지한 채 fallback으로 넘긴다.

@@ -2301,3 +2301,11 @@ cpppj/tests/fixtures/ice-ricochet-scratch-x86.tsv -text
 cpppj/ice-ricochet-scratch-native-20261030.json text eol=lf
 cpppj/ice-ricochet-scratch-runtime-20261030.json text eol=lf
 docs/exe/cpp-ice-ricochet-scratch-20261030.md text eol=lf
+
+# 실제32비트 CPU의 펜스 사건3/Regular 호출자 최초 관측을 보존한다.
+tools/decomp_fence_event3.py text eol=lf
+tools/native_fence_event3.cpp text eol=lf
+cpppj/tests/fixtures/fence-event3-x86.tsv -text
+cpppj/fence-event3-native-20261030.json text eol=lf
+cpppj/fence-event3-runtime-20261030.json text eol=lf
+docs/exe/cpp-fence-event3-20261030.md text eol=lf

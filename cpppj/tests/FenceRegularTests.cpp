@@ -75,11 +75,55 @@ void CompareFenceRegular(char kind,std::size_t expected) {
 TEST_CASE(FenceRegular_NativeAnimation1305) { CompareFenceRegular('A',1305); } //두 독립 변경/각 할당 실패/현재 재조회의 전체 결과다.
 TEST_CASE(FenceRegular_NativeEffects18) { CompareFenceRegular('E',18); } //사건1/2의 실제 하위 위임/반환0이다.
 TEST_CASE(FenceRegular_NativeDamageable49) { CompareFenceRegular('D',49); } //bit20과 기본 사건의 위임/비트 보존이다.
-// 미복원 반환/하위와 잘못된 부모는 빈 성공으로 대신하지 않고 앞선 프레임 쓰기를 보존한다.
+// 선택된 하위와 잘못된 부모는 빈 성공으로 대신하지 않고 앞선 프레임 쓰기를 보존한다.
 TEST_CASE(FenceRegular_RequiredBoundariesAndPartialWrites) {
     FenceRegularScene scene("0,0,7,1,0,0,0,0,0,0,0,0");auto hooks=scene.Hooks();hooks.connections={};RawFenceRegular missing(scene.pool,scene.frames,scene.setter,std::move(hooks));bool failed{};
     try { missing.Handle(kSource,0,0,0); } catch (const std::logic_error&) { failed=true; }CHECK(failed && Get(scene.pool.Slot(kSource),36)==0);
-    failed=false;try { scene.body->Handle(kSource,3,0,0); } catch (const std::logic_error&) { failed=true; }CHECK(failed);
+    hooks=scene.Hooks();hooks.reserveRegular={};RawFenceRegular missingEvent3(scene.pool,scene.frames,scene.setter,std::move(hooks));
+    const auto cachedOwner=Get(scene.pool.Slot(kSource),42);failed=false;try { missingEvent3.Handle(kSource,3,0,0); } catch (const std::logic_error&) { failed=true; }CHECK(failed);CHECK(Get(scene.pool.Slot(kSource),42)==cachedOwner);
     scene.pool.AllocatedBytes(kSource)[40]=32;CHECK(scene.body->Handle(kSource,3,0,0.25f)==0.25f);
     Put(scene.pool.AllocatedBytes(kSource),0,0x50a748);failed=false;try { scene.body->Handler()(kSource,0,0,0); } catch (const std::logic_error&) { failed=true; }CHECK(failed);
+}
+
+TEST_CASE(FenceEvent3_NativeCpu301) { // 실제 원본 호출자/생성자까지 실행한301행의 반환 비트·전체250BYTE·하위 순서를 대조한다.
+    const auto fixture=LoadFixture(NETSTORM_FENCE_EVENT3_FIXTURE);CHECK(fixture.rows.size()==301);
+    // 원문 명시 입력만 공급하고 C++ 출력으로 기대값을 생성하지 않는다.
+    for (std::size_t i=0;i<fixture.rows.size();++i) {
+        const auto& row=fixture.rows[i];CHECK(row.size()==9);FenceRegularScene scene(row[0]);Put(scene.pool.AllocatedBytes(kSource),6,81,2);
+        const auto result=scene.body->Handle(kSource,scene.input[0],scene.input[11],std::bit_cast<float>(scene.input[10]));
+        const auto actualTrace=scene.trace.empty() ? "-" : scene.trace;
+        if (scene.Objects()!=row[2] || std::bit_cast<std::uint32_t>(result)!=Number(row[3]) || actualTrace!=row[4]) {
+            std::fprintf(stderr,"실제 CPU 펜스 사건3 차이 row=%zu trace=%s expected=%s\n",i,actualTrace.c_str(),row[4].c_str());CHECK(false);return;
+        }
+        if (!scene.input[1]) { CHECK(row[7]=="65535");CHECK(row[8]=="1"); }
+    }
+}
+
+TEST_CASE(FenceEvent3_ActualHostRetainsNanAndRunsNewRebuild) { // 실제 Host의 NaN 재예약/재호출 보존·새 사건2 수명과count감김을 원문에 대조한다.
+    const auto fixture=LoadFixture(NETSTORM_FENCE_EVENT3_FIXTURE);std::size_t selected{};
+    // 원문 네 이웃/좌표 변이·할당 실패/성공과 count감김의 세 실제 입력을 선택한다.
+    for (const auto& row:fixture.rows) {
+        const auto values=Split(row[0],',');const bool normal=values[1]=="0";
+        const bool neighbors=values[7]=="15" && values[9]=="3" && values[3]=="16777217";
+        const bool wrapping=values[7]=="5" && values[9]=="0" && values[3]=="305419896" && values[10]=="1040187392" && values[11]=="4294967295";
+        if (!normal || (!neighbors && !wrapping)) continue;++selected;FenceRegularScene scene(row[0]);const auto freeBefore=scene.pool.FreeCount();
+        SquidHash hash;std::vector<std::uint8_t> spots(256*256);SquidUnpop unpop(scene.pool,hash,spots);RawSquidDestroy destroy(scene.pool,unpop,scene.types);Kernel kernel;SquidProcessState state;state.now=std::bit_cast<double>(std::stoull(row[1]));
+        SquidProcessHost* linked{};auto hooks=scene.Hooks();const auto record=hooks.addRegular;
+        // 원문 생성 요청을 기록한 뒤 같은 실제 Host에 새 사건2와 Form을 부착한다.
+        hooks.addRegular=[&linked,record](Sid sid,std::uint32_t event,float payload) { record(sid,event,payload);CHECK(linked);CHECK(linked->AddRegular(sid,event,payload)!=nullptr); };
+        scene.body=std::make_unique<RawFenceRegular>(scene.pool,scene.frames,scene.setter,std::move(hooks));
+        SquidProcessHost host(scene.pool,scene.types,kernel,destroy,state,scene.body->Handler());linked=&host;
+        auto* current=host.AddRegular(kSource,3,std::bit_cast<float>(scene.input[10]));CHECK(current);if (!current) return;current->SetInitialCount(scene.input[11]);current->RunFrame();
+        const auto observed=Split(row[5],',');CHECK(std::bit_cast<std::uint64_t>(current->Time())==std::stoull(observed[0]));CHECK(std::bit_cast<std::uint32_t>(current->Payload())==Number(observed[1]));CHECK(current->Count()==Number(observed[2]));CHECK(observed[3]=="0");
+        CHECK(scene.trace==row[4]);const auto before=scene.trace;const auto due=std::bit_cast<std::uint64_t>(current->Time());state.now+=1.0;current->RunFrame();CHECK(scene.trace==before);CHECK(std::bit_cast<std::uint64_t>(current->Time())==due);CHECK(current->Count()==Number(observed[2]));
+        auto* pending=host.FindEvent(kSource,2);
+        if (row[6]=="-") { CHECK(!pending);CHECK(kernel.Size()==1); }
+        else {
+            const auto created=Split(row[6],',');CHECK(pending);if (!pending) { kernel.Clear();return; }CHECK(pending->Parent().value==Number(created[0]));CHECK(pending->Event()==Number(created[1]));CHECK(std::bit_cast<std::uint32_t>(pending->Payload())==Number(created[2]));CHECK(pending->Count()==Number(created[3]));CHECK(std::bit_cast<std::uint64_t>(pending->Time())==std::stoull(created[4]));CHECK(kernel.Size()==2);
+            pending->RunFrame();CHECK(!host.FindEvent(kSource,2));CHECK(kernel.Size()==1);CHECK(scene.trace==before+";B");
+        }
+        // Kernel 소유권 정리와 별개인 실제 Form 삭제를 Host.Kill로 끝내고 종속 체인/번호 반납을 확인한다.
+        host.Kill(*current,0);CHECK(kernel.Size()==0);CHECK(scene.pool.FreeCount()==freeBefore);CHECK(Get(scene.pool.Slot(kSource),6,2)==0);
+    }
+    CHECK(selected==3);
 }

@@ -1424,7 +1424,7 @@ set_source_files_properties(BuriedRegularTests.cpp PROPERTIES COMPILE_DEFINITION
 
 # 썬 바리케이드의 실제 제어/재조회/선택 효과 순서를 독립 원본과 대조한다.
 set_source_files_properties(FenceRegularTests.cpp PROPERTIES COMPILE_DEFINITIONS
-    "NETSTORM_FENCE_REGULAR_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/fence-regular-x86.tsv\"")
+    "NETSTORM_FENCE_REGULAR_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/fence-regular-x86.tsv\";NETSTORM_FENCE_EVENT3_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/fence-event3-x86.tsv\"")
 
 # 실제 일반 finder와 끝점 태그의 원본 삭제 선택을 비교한다.
 set_source_files_properties(FenceMarkerClearTests.cpp PROPERTIES COMPILE_DEFINITIONS

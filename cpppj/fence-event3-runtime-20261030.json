@@ -1,0 +1,377 @@
+{
+  "unit": 613,
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "native": {
+    "unit": 613,
+    "host": "HJOW-Athlon",
+    "lastFullDecompilation": "HJOW-Athlon / 2026-10-23",
+    "oracle": "실제 Windows x86 CPU / 주소참조38DWORD를0x30000000으로 옮긴 private PE / 원래 CALL+FST7BYTE 관찰 trampoline",
+    "cases": 301,
+    "observations": 602,
+    "differences": [],
+    "fixtureWritten": false,
+    "verificationOnly": true,
+    "helperSha256": "789bd50acc556eb331aa7c04dcca4a20a0f7d2d0df7af4c8148669b900be1251",
+    "sourceSha256": {
+      "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+      "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+      "tools/decomp_fence_event3.py": "16e996f91e4c66b0a26f9554ddd4c4df4d47eda57ca2907a7326424695679e39",
+      "tools/native_fence_event3.cpp": "44261e7c1f90b6a82589a33a87b4ef9d811f4f1a194fc0e522c9ac20376ec2d5",
+      "cpppj/tests/fixtures/fence-event3-x86.tsv": "e6ae4858b56e961af2a66d9a7f6f09eddb2434cc6279b5792bcd11f79b0e0e59"
+    },
+    "evidenceSha256": {
+      "selected-image.bin": "942aa4dca889ce86acfebe8ecc7f9b516e491fb25e02617d4375f5c6cea389c5",
+      "address-relocations.json": "2a71c750d5df1873eb27058237db92ca0540949d51b25dcb0587b66d065c15bf",
+      "first-inputs.tsv": "78a455cffd20bee07ecefd087146d30062acf8f11fbf69a3983b9a79efa33e39",
+      "first-native.tsv": "32c263de4c70ccc77a74db4c3d5f94a63533ab282e67702bcbf0c9351f2755bf",
+      "first-stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "first-stderr.log": "619096149253ede492b0abb77772bee1411c9c1cd58343c89b4a6b8bef539491",
+      "first-process.json": "6e13e0203ab885896e975fe4c9c7c8bab521a6106f8d392402eafea24f87834b",
+      "first.json": "97e9eca62a75e995e931f7751905846fb3681370ae47c201b355e329f45ea3e6",
+      "replay-inputs.tsv": "a631ccbe03b3d2f5d4811fe6292a32187bf6a2a6174674a3c06326d674bff536",
+      "replay-native.tsv": "32c263de4c70ccc77a74db4c3d5f94a63533ab282e67702bcbf0c9351f2755bf",
+      "replay-stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "replay-stderr.log": "619096149253ede492b0abb77772bee1411c9c1cd58343c89b4a6b8bef539491",
+      "replay-process.json": "043300b180e5d4f629abf94b04339c759d365b2ea97377a716528ba79e876f5f",
+      "replay.json": "97e9eca62a75e995e931f7751905846fb3681370ae47c201b355e329f45ea3e6"
+    },
+    "addressNormalization": "명령의 절대주소33개/함수표5개만 재배치하고 opcode·상대분기·수치상수를 보존한다. 출력은 raw 가상표 첫DWORD5개만 원본 논리주소로 정규화한다.",
+    "scope": "실제496cb0→457a50→496e80과 빈 x87 결과의 FST/현재 Regular 예약을 실행한다. 이웃/표식/선·할당·공통 부착/삭제·Damageable은 명시 경계다. 정상 호출의 빈 x87 입력을 쓰며 원본 파일 수정/게임GUI/특정적공격/포획/희생/승리/신규MP는 없다. 최초 Unicorn의 빈 FST를0으로 처리한 결과는 기준값에서 제외하고 원시 실패를 별도 보존했다."
+  },
+  "focusedTests": 57,
+  "testNames": [
+    "AcidFence_IndependentNativeBodies",
+    "CampaignAcidFence_ActualKernelAutomaticCapture",
+    "CampaignSession_FenceShieldUsesCurrentOwnerColorPixels",
+    "FenceCreate_NativeMarkers106",
+    "FenceCreate_NativeRebuild166",
+    "FenceCreate_NativeShields306",
+    "FenceCreate_RequiredBoundariesAndPartialWrites",
+    "FenceEvent3_ActualHostRetainsNanAndRunsNewRebuild",
+    "FenceEvent3_NativeCpu301",
+    "FenceLifetime_GuardsAndSamePool",
+    "FenceLifetime_NativeClearRefreshAndPre207",
+    "FenceLine_CurrentHashFrameAndRequiredDeletion",
+    "FenceLine_Native99",
+    "FenceMarkerClear_Native259",
+    "FenceMarkerClear_RequiredDeletionAndCurrentType",
+    "FenceNeighbors_CurrentHashDirectionsAndReverseAlliance",
+    "FenceNeighbors_Native1904",
+    "FencePostPop_Native330",
+    "FencePostPop_RequiredBoundariesAndPartialWrites",
+    "FenceRegular_NativeAnimation1305",
+    "FenceRegular_NativeDamageable49",
+    "FenceRegular_NativeEffects18",
+    "FenceRegular_RequiredBoundariesAndPartialWrites",
+    "FenceTarget_CurrentDirectionalAlliances",
+    "FenceTarget_NativeAcross",
+    "FenceTarget_NativeMuzzleAndSight",
+    "FenceTarget_NativePointFinder",
+    "FenceTarget_NativeSegmentIntersection",
+    "ProcessHostStorage_ActualClientClockAndAuthorityAreCurrentWithoutSnapshotBackWrites",
+    "ProcessHostStorage_ClearPassAndDeviceIdentityRejectForeignOwners",
+    "ProcessHostStorage_CurrentEffectMustReturnBeforeBindingRetirement",
+    "ProcessHostStorage_DirectNotifyPinsBindingAfterSelfRemoval",
+    "ProcessHostStorage_ExternalOwnersOutliveClientWithoutDanglingClockOrKernel",
+    "ProcessHostStorage_FallbackFinalShutdownKeepsHostAndPoolAlive",
+    "ProcessHostStorage_InvalidParentAndPendingTimeDoNotRequireRetiredRuntime",
+    "ProcessHostStorage_KernelClearCallRejectsPreviousPassReentry",
+    "ProcessHostStorage_OtherResidualRequiresFurtherLifetimeWorkWithoutForcedDrain",
+    "ProcessHostStorage_OwnedShutdownPinsBindingDuringDestructorEffects",
+    "ProcessHostStorage_RegularAndSharedSurviveNativeClearAndUseNewWorldHandler",
+    "carrier_postpop_composes_priest_prefix_process_and_real_common_body",
+    "island_lifecycle_real_process_schedules_bridge_falls",
+    "priest_postpop_prefix_binds_real_process_host_and_owner",
+    "priest_regen_binds_factory_postpop_process_and_kernel",
+    "process_1037_x86_fixture",
+    "process_attach_guards",
+    "process_cd_x86_fixture",
+    "process_default_handler_repeats_with_payload_period",
+    "process_delayed_fall_event_registers_and_ends",
+    "process_dependent_chain_order_and_unlink",
+    "process_form_root_requires_unpop_hook",
+    "process_form_unpop_keeps_chain_while_parent_is_dying",
+    "process_handler_may_kill_its_own_process",
+    "process_patch_x86_fixture",
+    "rawPathCleanup_real_process_spatial_prefix_and_shared",
+    "rawPathData_native_process_prepare_override_editions",
+    "rawPathStart_native_process_type_priority",
+    "rawProcessRemoval_missing_process_guard"
+  ],
+  "tests": [
+    {
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+        "--filter",
+        "Fence"
+      ],
+      "binarySha256": "9752e9087a66ee5aca9db1fd6ee61c1c1e4e1b8eaea7fd4b2cedb4ff861c3b3e",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 10.459734000003664,
+      "stdoutSha256": "c489b8caa12fdf6631e210cb84a3c199b8813047feda5094b264ea108d5f6cd6",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tests": 28,
+      "failed": 0,
+      "testOnlyBridgeManipulation": false
+    },
+    {
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+        "--filter",
+        "FenceEvent3"
+      ],
+      "binarySha256": "9752e9087a66ee5aca9db1fd6ee61c1c1e4e1b8eaea7fd4b2cedb4ff861c3b3e",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 3.4410390999983065,
+      "stdoutSha256": "d0bb66424d530d6dee8ac06919adbb1c2d4b2a4a1c4ebafd66c2d79bf8ef1fe7",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tests": 2,
+      "failed": 0,
+      "testOnlyBridgeManipulation": false
+    },
+    {
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+        "--filter",
+        "process_"
+      ],
+      "binarySha256": "9752e9087a66ee5aca9db1fd6ee61c1c1e4e1b8eaea7fd4b2cedb4ff861c3b3e",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 9.613598900003126,
+      "stdoutSha256": "29719555c9226a7b494900ac62a04df9f979b62d7badfb114aa85cbf9a980788",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tests": 18,
+      "failed": 0,
+      "testOnlyBridgeManipulation": false
+    },
+    {
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+        "--filter",
+        "ProcessHostStorage"
+      ],
+      "binarySha256": "9752e9087a66ee5aca9db1fd6ee61c1c1e4e1b8eaea7fd4b2cedb4ff861c3b3e",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 3.3278559999962454,
+      "stdoutSha256": "663d15e52b75504dd032c702be9d1fe27fc7cd8bafda70d35a987549741444bc",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tests": 11,
+      "failed": 0,
+      "testOnlyBridgeManipulation": false
+    }
+  ],
+  "registeredTests": 3520,
+  "buildExitCode": 0,
+  "gameSha256": "a86629f49be5ea8dff4289b2b217b2da1951df9762082ccf5e0b55651452ae7d",
+  "testSha256": "9752e9087a66ee5aca9db1fd6ee61c1c1e4e1b8eaea7fd4b2cedb4ff861c3b3e",
+  "package": {
+    "entries": 1376,
+    "gameAssets": 1358,
+    "allEntryBytesMatch": true,
+    "allGameAssetsMatchSources": true,
+    "gameSha256": "a86629f49be5ea8dff4289b2b217b2da1951df9762082ccf5e0b55651452ae7d",
+    "zipSha256": "13a962946efb1f505d361107ce01fdcdda00586bde2e9c45a07920d25ea2c68f",
+    "product": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-fence-event3-613-20261030\\한글 배포본\\NetstormReborn-cpppj"
+  },
+  "basic": {
+    "mission": "Tutorial6",
+    "demo": false,
+    "result": {
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-fence-event3-613-20261030\\한글 배포본\\NetstormReborn-cpppj\\Netstorm.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-fence-event3-613-20261030\\한글 배포본\\NetstormReborn-cpppj\\game",
+        "--no-audio",
+        "--frames",
+        "360",
+        "--set",
+        "SCREENW=1024;SCREENH=768;maxFPS=40;autoDemo=0;tellTips=0;startInFullScreen=1;sleepPerLoop=1",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-fence-event3-613-20261030\\basic\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-fence-event3-613-20261030\\basic\\states.tsv",
+        "--window",
+        "--mission",
+        "Tutorial6"
+      ],
+      "binarySha256": "a86629f49be5ea8dff4289b2b217b2da1951df9762082ccf5e0b55651452ae7d",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 28.723666000005323,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2"
+    },
+    "passed": true,
+    "final": {
+      "phase": [
+        "4"
+      ],
+      "page": [
+        "mission"
+      ],
+      "paused": [
+        "0"
+      ],
+      "mission": [
+        "Tutorial6",
+        "Tutorial",
+        "60"
+      ],
+      "mission_start": [
+        "1",
+        "4",
+        "0",
+        "0.347",
+        "0"
+      ],
+      "mission_gate": [
+        "6",
+        "65",
+        "0",
+        "0",
+        "0",
+        "1",
+        "0",
+        "0"
+      ],
+      "raw_session": [
+        "1",
+        "1"
+      ],
+      "raw_sp": [
+        "2.0390625",
+        "7500",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0"
+      ],
+      "raw_technology": [
+        "windBattery",
+        "windBalloon"
+      ],
+      "raw_brains": [
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0"
+      ],
+      "fort_names": [
+        "RawPower",
+        "",
+        "2",
+        "fortSpec"
+      ],
+      "raw_uber": [
+        "232",
+        "1",
+        "3",
+        "85",
+        "0",
+        "1024",
+        "768"
+      ],
+      "raw_hud_owners": [
+        "1",
+        "1",
+        "220",
+        "236",
+        "219"
+      ],
+      "time": [
+        "25.294",
+        "27.739"
+      ],
+      "screen_mode": [
+        "138",
+        "1024",
+        "768",
+        "1024",
+        "1"
+      ],
+      "screen_output": [
+        "0",
+        "0",
+        "1024",
+        "768"
+      ],
+      "screen_window": [
+        "0",
+        "0",
+        "1040",
+        "807",
+        "1024",
+        "768",
+        "349110272"
+      ]
+    },
+    "gameClock": {
+      "samples": 41,
+      "first": 0.747,
+      "last": 25.294,
+      "increase": 24.547
+    },
+    "checks": {
+      "normalExit": true,
+      "playing": true,
+      "correctMission": true,
+      "world": true,
+      "guide": true,
+      "loadingReleased": true,
+      "gameClockAdvanced": true,
+      "gameClockMonotonic": true,
+      "physicalOutput": true
+    },
+    "presentation": {
+      "same": true,
+      "actualSha256": "8098ca6a4c99b4864183e5379905cec3dbd08896ba45491e003706a8536239e8",
+      "expectedSha256": "8098ca6a4c99b4864183e5379905cec3dbd08896ba45491e003706a8536239e8",
+      "dimensions": [
+        1024,
+        768
+      ],
+      "outputRect": [
+        0,
+        0,
+        1024,
+        768
+      ]
+    }
+  },
+  "protectedCount": 2580,
+  "protectedFixtureCount": 757,
+  "protectedDifferences": [],
+  "fixtureCount": 758,
+  "sourceSha256": {
+    "cpppj/src/o/RawFenceRegular.h": "46dd9c9fcf76f7d6202f744ec1b7b4bd32a0e3e8b1b031827cdb11e2ba7886bb",
+    "cpppj/src/o/RawFenceRegular.cpp": "856219eff06ff8b8d5d999425e26bec012fd5a412deb09b0de42bc7f5a1dafd6",
+    "cpppj/tests/FenceRegularTests.cpp": "cdf0639bcd9aa19e7c4c79d552d3a1a39ace6b4b81d7d0fb1fea8ba1013091ad",
+    "cpppj/tests/CMakeLists.txt": "7ed3b0a698143bba9d32c33d2f572c9b45d80ac109a8a23d4667672baf0367aa",
+    "tools/decomp_fence_event3.py": "16e996f91e4c66b0a26f9554ddd4c4df4d47eda57ca2907a7326424695679e39",
+    "tools/native_fence_event3.cpp": "44261e7c1f90b6a82589a33a87b4ef9d811f4f1a194fc0e522c9ac20376ec2d5"
+  },
+  "lastFull34ProductUnit": 609,
+  "lastFull34Unit": 610,
+  "scope": "실제32비트CPU의 원문 호출자/Handle/생성자와 같은 C++ 이웃/예약·Host 상태 복원. 새613 배포본 Tutorial6 진입/자연진행·창RGB다. 실제 특정적공격/포획/희생/승리·공중3종전용/신규MP/전체C++/613제품전체34는 검사하지 않았다.",
+  "initialFailures": [
+    "Unicorn 빈 x87 FST의0 처리 결과는 기준에서 제외",
+    "검사 프로세스의 원본 고정주소 충돌은 주소참조38DWORD만 private 재배치해 해결",
+    "새 검사 spots uint16 준비를 실제 API의uint8로 수정",
+    "새 Host 검사의 Kernel.Clear 후Form반납 가정을 Host.Kill로 수정; 같은 실패6체크가 두 필터에 중복 보고됨"
+  ]
+}
