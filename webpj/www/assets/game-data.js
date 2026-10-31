@@ -191,14 +191,18 @@ export class GameData {
     // 영어가 아닌 언어에서 현재 언어의 tell 스크립트에 섹션이 없을 때 대신 찾을 영어 tell 스크립트 텍스트이다. 영어이거나 영어 파일이 없으면 null 이다.
     // 한국어 tell 파일은 웹에서 닿는 섹션만 번역한 부분 파일이라, 번역이 없는 섹션은 영어로 대체하기 위한 웹 적응이다(원본은 섹션 단위로 대체하지 않는다). (2026-10-31 WB03-O)
     get fallbackTellText() {
-        if (this._fallbackTellText === undefined) {
-            this._fallbackTellText = null;
-            if (this.language !== FALLBACK_LANGUAGE) {
-                const bytes = this.files.read(this.pathSpec('missionSpec', 'tell').replace(new RegExp(`${this.language}$`, 'i'), FALLBACK_LANGUAGE));
-                if (bytes) this._fallbackTellText = decodeOriginalText(bytes);
-            }
-        }
+        if (this._fallbackTellText === undefined) this._fallbackTellText = this.readEnglishText(this.pathSpec('missionSpec', 'tell'));
         return this._fallbackTellText;
+    }
+
+    // 언어 파일 경로(끝이 `.언어`)의 영어 대응 파일을 문자열로 읽는다. 현재 언어가 영어이거나 경로가 현재 언어로 끝나지 않거나 영어 파일이 없으면 null 이다.
+    // 번역이 부분 파일인 자료(tell·도움말)가 번역이 없는 섹션·주제를 영어로 대신 찾을 때 쓴다. 사용: readEnglishText('\\D\\help.korean') → help.english 본문. (2026-10-31 WB03-P)
+    readEnglishText(path) {
+        if (this.language === FALLBACK_LANGUAGE) return null;
+        const english = path.replace(new RegExp(`${this.language}$`, 'i'), FALLBACK_LANGUAGE);
+        if (english === path) return null;
+        const bytes = this.files.read(english);
+        return bytes ? decodeOriginalText(bytes) : null;
     }
 
     // Tell 섹션 본문을 찾는다. 이름에 점이 있으면 먼저 등록된 객체(접두어)의 섹션을, 이어 기본 tell 스크립트의 섹션을 조회한다(원본 004cf730 FindTellSection).

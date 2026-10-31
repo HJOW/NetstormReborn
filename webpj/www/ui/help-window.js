@@ -70,11 +70,13 @@ function boundsOf(x, y, width, height) {
 // 입력은 pointerDown/pointerMove/pointerUp/cancel/keyDown/wheel, 시간은 update(초)로 넘긴다. 메인 메뉴의 dialog 자리에 그대로 넣을 수 있는 같은 모양(fit·place·draw·pointer*·cancel·update·close·screen)을 가진다.
 // onClose()는 창이 닫힐 때(OK·첫 주제의 Back·창 밖 누름), onCommand({ name, argument })는 `cmd:` 링크, onExternal(주소)은 바깥 주소 링크, onSound('button')은 돌 버튼·화살표를 누를 때 불린다. (2026-10-30 WB03-G)
 export class HelpWindow {
-    constructor({ resources, helpText, substitute = (text) => text, screen, now = () => 0, onClose = null, onCommand = null, onExternal = null, onSound = null, onUnsupported = null }) {
+    constructor({ resources, helpText, fallbackHelpText = null, substitute = (text) => text, screen, now = () => 0, onClose = null, onCommand = null, onExternal = null, onSound = null, onUnsupported = null }) {
         // 그리기 자원 묶음이다(fonts·colors·panel·texture·palette 등).
         this.resources = resources;
         // 도움말 파일 전체 문자열이다.
         this.helpText = helpText;
+        // 현재 언어의 도움말 파일에 없는 주제를 대신 찾을 영어 도움말 파일 전체 문자열이다. 없으면 null. 한국어 도움말은 번역한 주제만 담은 부분 파일이라 필요하다(웹 적응). (2026-10-31 WB03-P)
+        this.fallbackHelpText = fallbackHelpText;
         // 설정 치환 함수이다(`{키}` 해석, 조건 값).
         this.substitute = substitute;
         // 논리 화면 크기 { width, height } 이다. 창은 이 화면의 가운데 폭에 놓인다.
@@ -156,7 +158,9 @@ export class HelpWindow {
 
     // 주제 본문을 만들어 보이는 본문으로 바꾼다(원본 QuickHelpWindow::Show). 스크롤은 맨 위로 돌아간다. (2026-10-30 WB03-G)
     _show(topic) {
-        const result = renderHelpTopic({ helpText: this.helpText, topic, substitute: this.substitute });
+        let result = renderHelpTopic({ helpText: this.helpText, topic, substitute: this.substitute });
+        // 번역 파일에 주제가 없으면 영어 파일에서 찾는다(주제 단위 대체, 웹 적응). (2026-10-31 WB03-P)
+        if (!result.found && this.fallbackHelpText !== null) result = renderHelpTopic({ helpText: this.fallbackHelpText, topic, substitute: this.substitute });
         this.topic = topic;
         this.links = result.links;
         if (!result.found) this.onUnsupported?.(`도움말 주제 '${topic}'`, '도움말 파일에서 앵커를 찾지 못했습니다.');
@@ -375,12 +379,14 @@ export class HelpWindow {
 }
 
 // 도움말 창을 만든다. 도움말 파일은 설정 키 `Quick Help Spec`(`\d\help.<언어>`)의 경로에서 읽고 언어 파일이 없으면 영어 파일로 대체한다. 파일이 없으면 null 이다(원본: 로드 오류).
-// topic 은 처음 보일 주제 이름(F1 은 'F1Help')이다. 사용: const result = createHelpWindow({ gameData, resources, topic: 'F1Help', screen }); result.window?.fit(). (2026-10-30 WB03-G)
+// topic 은 처음 보일 주제 이름(F1 은 'F1Help')이다. 사용: const result = createHelpWindow({ gameData, resources, topic: 'F1Help', screen }); result.window?.fit(). (2026-10-30 WB03-G, 2026-10-31 WB03-P: 영어 도움말 파일 주제 단위 대체)
 export function createHelpWindow({ gameData, resources, topic = 'F1Help', screen, now = () => 0, onClose = null, onCommand = null, onExternal = null, onSound = null, onUnsupported = null }) {
     const path = gameData.get('Quick Help Spec');
     const helpText = path ? gameData.readText(path) : null;
     if (helpText === null) return { window: null, missing: true, path };
-    const window = new HelpWindow({ resources, helpText, substitute: (text) => gameData.substitute(text), screen, now, onClose, onCommand, onExternal, onSound, onUnsupported });
+    // 영어가 아닌 언어는 번역하지 않은 주제를 영어 도움말 파일에서 찾도록 영어 파일도 함께 넘긴다(같은 파일이거나 없으면 null). (2026-10-31 WB03-P)
+    const english = gameData.readEnglishText(path);
+    const window = new HelpWindow({ resources, helpText, fallbackHelpText: english !== helpText ? english : null, substitute: (text) => gameData.substitute(text), screen, now, onClose, onCommand, onExternal, onSound, onUnsupported });
     window.open(topic);
     window.fit();
     window.place();

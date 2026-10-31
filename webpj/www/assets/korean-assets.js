@@ -25,7 +25,7 @@ export const KOREAN_ASSET_PATHS = Object.freeze({
 // 한국어 언어 자료 파일(번역표 제외)의 데이터 폴더 기준 경로 목록이다. tools/prepare-assets.js 의 목록과 같아야 하며,
 // tests/korean-tell.test.mjs 가 매니페스트의 한국어 묶음과 대조한다. 영어 원본의 같은 이름(tell·config·offical*)에서 확장자만 `.korean` 이다. (2026-10-31 WB03-O)
 export const KOREAN_LANGUAGE_PATHS = Object.freeze([
-    'd/tell.korean', 'd/config.korean',
+    'd/tell.korean', 'd/config.korean', 'd/help.korean',
     ...['offical1', 'offical2', 'offical2sep', 'offical3', 'offical4', 'offical5', 'offical5sep', 'offical6'].map((name) => `d/${name}.korean`),
 ]);
 

@@ -1,0 +1,447 @@
+NetStorm 웹 판본 한국어 도움말 (원본 d/help.언어 형식, UTF-8). 첫 앵커 앞의 글은 화면에 나오지 않는다.
+번역한 주제만 담은 부분 파일이다. 여기에 없는 주제는 영어 help.english 에서 대신 찾는다(도움말 창의 주제 단위 영어 대체, 웹 적응).
+태그·조건·그림·링크 주소·앵커 이름은 영어 원문과 똑같이 두고(원문의 오타 태그도 그대로) 보이는 문구만 번역했다. 같은 이름의 앵커가 둘인 주제는 첫 앵커만 보이므로 첫 앵커만 담았다.
+건물·유닛 이름은 AGENTS.md 의 한국어 명칭 규칙(assets/unit-names.korean.json)을 따른다. 번역 문구는 이 프로젝트가 새로 쓴 것이라 개발자 검수 대상이다.
+(2026-10-31 WB03-P: 게임 도움말 15개 주제)
+
+<a name="sacrificeOutline">
+<h2>포획과 제물 바치기 방법</h2>
+<p>
+<q>열병 같은 두려움.<br>
+갈아 세운 뼈.<br>
+한 방울의 피.<br>
+비명.<br>
+신음.</q><br>
+<p>
+전투에서 <a href="#transportHelp">수송 유닛</a> 하나로 적 사제를 붙잡아 <a href="#altarType">제단</a>에서 제물로 바치면
+새로운 <a href="#technologyHelp">지식</a>을 얻거나(<a href="#multiplayerHelp">멀티플레이어 모드</a>)
+미션에서 승리합니다(캠페인).
+<p>
+<B>전체 과정:</B>
+<p>
+1. <a href="#immobileHelp">사제를 움직이지 못하게 만듭니다.</a><br>
+2. <a href="#pickupHelp">적 사제를 제단으로 데려옵니다.</a><br>
+3. <a href="#moveyourpriestHelp">내 사제를 제단으로 보냅니다.</a><br>
+4. <a href="#performsacrificeHelp">제물 의식을 거행합니다.</a><br>
+<p>
+<B>기억하세요: 내 사제가 쓰러지거나 죽으면 제물 의식을 거행할 수 없습니다!</B>
+<p>
+<a href="#vesselPriestHelp">사제의 건설 능력</a>에 대해 더 알아보기.
+<br>
+</a>
+
+<a name="immobileHelp">
+<h2>사제를 움직이지 못하게 만드는 방법</h2>
+<p>
+<a href="#unitHelp">전투 유닛</a>으로 적 사제를 두들기십시오. 사제의 <a href="#statsHelp">체력</a>을 절반까지 줄이면
+사제는 움직임을 멈추고 들고 있던 것을 떨어뜨리며, 얇은 힘의 장이 그를 감싸 살려 둡니다.
+<p>
+움직이지 못하는 동안 사제는 <a href="#buriedType">주문</a>을 걸 수 없고 <a href="#vesselPriestHelp">건물을 지을</a> 수도 없습니다.
+<p>
+사제는 체력을 계속 되찾는다는 점에 주의하십시오. 꾸준히 공격을 퍼붓지 않으면 도망칠 만큼 회복할 수 있습니다.
+<p>
+다음: <a href="#pickupHelp">수송 유닛으로 사제를 태워 제단까지 데려갑니다.</a>
+<br>
+</a>
+
+<a name="pickupHelp">
+<h2>적 사제를 제단으로 데려오는 방법</h2>
+<p>
+사제를 움직이지 못하게 만들었다면 <a href="#transportHelp">수송 유닛</a>을 보내 사제를 태울 수 있습니다.
+(예외: 사제는 다른 사제를 태울 수 없습니다.)
+<p>
+사제의 체력이 최소 50퍼센트까지 줄어 있어야 합니다. 그렇지 않으면 사제가 붙잡히는 데 저항합니다.
+<p>
+수송 유닛이 제단으로 돌아오면 적 사제는 제물 의식의 원에 사슬로 묶입니다.
+<p>
+사제는 자신을 태운 수송 유닛에게서 새 생명력을 얻으므로, 수송 유닛에서 풀려날 때는 체력이
+완전히 회복되고 마비도 풀려 있다는 점에 주의하십시오.
+<p>
+다음: <a href="#moveyourpriestHelp">내 사제를 제단으로 보냅니다.</a>
+<br>
+</a>
+
+<a name="moveyourpriestHelp">
+<h2>내 사제를 제단으로 보내는 방법</h2>
+<p>
+사제를 제물로 바치려면 사제가 필요합니다.
+<p>
+언제든 내 사제를 <a href="#altarType">제단</a>으로 이동시킬 수 있습니다. 적 사제가 제물 의식의 원에 묶여 있을 때
+내 사제가 그곳에 있으면 제물 의식이 시작됩니다.
+사제를 제단으로 보내려면 사제를 왼쪽 클릭한 뒤 제단을 왼쪽 클릭하십시오. 적 사제가 제단에
+묶여 있으면 제단 위에서 커서가 단검 모양으로 바뀝니다.
+<p>
+싱글 플레이 모드에서는 사제를 제물로 바치면 승리합니다. <a href="#multiQuickHelp">멀티플레이어</a> 모드에서는 사제를 제물로 바쳐
+다음 전투를 위한 새 <a href="#technologyHelp">지식</a>을 얻거나, 더 좋은 지식을 얻을 기회를 위해 제단을 업그레이드합니다.
+<p>
+멀티플레이어 모드에서는 제물 의식이 시작되는 순간 퓨리의 선물을 골라야 합니다.
+<p>
+선물은 제물 의식이 끝나는 즉시 퓨리가 내려 주는 새로운 지식일 수 있습니다.
+<p>
+다른 선물로는 제단을 업그레이드할 수 있습니다. 더 좋은 제단은 퓨리에게서 더 좋은 지식을 받게 해 줍니다.
+전투가 끝난 뒤에도 남는 섬은 본거지 섬뿐이므로, 제단 업그레이드는 본거지 섬에서만 할 수 있습니다.
+<p>
+다음: <a href="#performsacrificeHelp">제물 의식을 거행합니다.</a>
+<br>
+</a>
+
+<a name="performsacrificeHelp">
+<h2>제물 의식을 거행하는 방법</h2>
+<p>
+제물 의식을 마치려면 사제가 룬 다섯 개를 지켜 내야 합니다. 의식 도중 사제가 움직일 수 없게 되면
+주문이 깨져 적 사제가 달아납니다. 마찬가지로 제단이 너무 많은 피해를 입어도 적 사제가 달아납니다.
+<p>
+제물 의식이 끝나면 선물을 받습니다: 알맞게 새로운 지식 또는 업그레이드된 제단입니다. 새로운 지식을 받으면
+제단은 소모됩니다. 다시 제물을 바치려면 새 제단을 지어야 합니다.
+<p>
+업그레이드된 제단을 골랐는데 이번 전투에서 쓸 기회가 없더라도 걱정하지 마십시오. 업그레이드된 제단은
+본거지 섬에 남아 다음 온라인 대결에서 쓸 수 있습니다. 전투가 끝난 뒤에도 남는 섬은 본거지 섬뿐이므로,
+제단 업그레이드는 본거지 섬에서만 할 수 있다는 점에 주의하십시오.
+
+<p>
+지식을 얻기 위해 제물을 바치면 그 지식은 즉시 쓸 수 있게 되어, 알맞은 워크샾에서 바로 생산할 수 있습니다.
+F6 키를 눌러 새 지식을 확인하십시오.
+<p>
+이 지식을 <a href="multiQuickHelp">멀티플레이어 모드</a>에서 얻었다면 영구히 내 것이며 이후 멀티플레이어 전투에서도 쓸 수 있습니다.
+다만 다음 전투에서는 생산 창에 바로 나타나지 않습니다. 지식을 쓰려면 <a href="#factoryHelp">워크샾</a>에서 생산하도록
+먼저 등록해야 합니다.
+<p>
+<a href="#sacrificeOutline">포획과 제물 바치기 방법</a>으로 돌아가기
+<br>
+</a>
+
+<a name="sphereHelp">
+<h2>님버스</h2>
+<p>
+님버스 세계는 세 개의 구체로 이루어져 있습니다: <a href="#serenisphereHelp">세레니스피어</a>,
+<a href="#pyrosphereHelp">파이로스피어</a>, 그리고 <a href="#deusphereHelp">데우스피어</a>입니다.
+<p>
+<c>*</c> <a href="#serenisphereHelp">세레니스피어</a>에서는 온라인 상대와 짝을 맺습니다.
+<br>
+<c>*</c> <a href="#pyrosphereHelp">파이로스피어</a>에서는 적 <a href="#priestType">사제</a>를 붙잡기 위해 전투를 벌입니다.
+<br>
+<c>*</c> <a href="#deusphereHelp">데우스피어</a>에서는 퓨리들이 영원한 전투를 벌이며, 끊임없이
+<a herf="#geyserType">스톰 간헐천</a>을 파이로스피어로 내던져 당신의 전투에 힘을 보탭니다.
+<p>
+<a href="#serenisphereHelp">세레니스피어</a>에 대해 더 알아보기...
+<br>
+</a>
+
+<a name="deusphereHelp">
+<h2>데우스피어</h2>
+<p>
+데우스피어에서는 퓨리들이 영원한 전투를 벌입니다.
+<p>
+데우스피어는 <a href="#sphereHelp">님버스의 구체</a> 가운데 가장 안쪽에 있으며, <a href="#themeHelp">퓨리</a>들이
+끊임없이 서로 전쟁을 벌이며 아래 행성의 땅덩이를 하늘로 내던지는 곳입니다.
+그들의 싸움 속으로 떨어지는 일만은 없기를 기도하십시오. 그것은 곧 고통스러운 즉사를 뜻합니다.
+<p>
+<a href="#themeHelp">퓨리</a>에 대해 더 알아보기...
+<br>
+</a>
+
+<a name="serenisphereHelp">
+<h2>세레니스피어</h2>
+<p>
+세레니스피어는 <a href="#sphereHelp">님버스의 구체</a> 가운데 가장 바깥에 있으며, 아래 파이로스피어에서 벌일
+전투를 위해 다른 플레이어와 짝을 맺는 평화로운 곳입니다.
+<p>
+세레니스피어에는 <a href="#battleIslandType">챌린지 링</a>이 있습니다. 링을 <c>오른쪽 클릭</c>하면 전투에 참가합니다.
+선택한 위치로 참가하게 됩니다.
+<p>
+아래에는 <a href="zoneHelp">지역</a>이 보입니다. 처음에는 당신의 지식 수준과 대체로 맞는 지역에서 시작합니다.
+하지만 다른 곳에서 전투를 시작하고 싶다면 아무 지역이나 <c>오른쪽 클릭</c>해 그곳으로 이동할 수 있습니다.
+<p>
+다른 곳을 <c>왼쪽 클릭</c>해 하늘 위로 섬을 항해시킬 수도 있습니다.
+<p>
+전투에 가장 먼저 참가하면 <a href="#battleMasterHelp">배틀마스터</a>가 됩니다. 배틀마스터는 전투의 규칙을 정하고 다른
+사람을 링에서 쫓아낼 수도 있습니다. 챌린지 링에서 쫓겨난 사람은 배틀마스터가 떠나기 전에는 다시 참가할 수 없습니다.
+<p>
+모두 참가해 준비가 끝나면 배틀마스터가 'Start Battle' 을 눌러 파이로스피어로 내려가 본격적인 전투를 시작해야 합니다.
+<p>
+전투를 시작하기 전에 모든 플레이어가 자기 이름 옆의 색 상자를 눌러야 합니다. 전투에서 쓰는 색은 상자 색과 같습니다.
+<p>
+<a href="#pyrosphereHelp">파이로스피어</a>에 대해 더 알아보기...
+<br>
+</a>
+
+<a name="pyrosphereHelp">
+<h2>파이로스피어</h2>
+<p>
+파이로스피어는 <a href="#sphereHelp">님버스</a>의 중앙 구체입니다. 이곳에서 상대와 맞붙게 됩니다.
+<p>
+당신의 목표는 상대의 <a href="#priestType">사제</a>를 붙잡아 퓨리에게 <a href="#sacrificeOutline">제물로 바치는 것</a>입니다.
+<p>
+파이로스피어에서 전투를 벌이는 동안 아래 데우스피어에서 내던져진 작은 떠다니는 섬들 위에
+<a href="#buriedType">오벨리스크</a>와 <a herf="#geyserType">스톰 간헐천</a>이 나타나며, 약탈하기 좋게 무르익습니다.
+<p>
+전투가 치열할수록 자원이 더 많이 나타납니다.
+<p>
+<a href="#deusphereHelp">데우스피어</a>에 대해 더 알아보기...
+<br>
+</a>
+
+<a name="bountyislandHelp">
+<h2>중립 섬</h2>
+<p>
+중립 섬은 <a href="multiQuickHelp">멀티플레이어</a> 전투에서만 나타납니다. 섬에 올라 추가 <a href="#stormpowerHelp">스톰 파워</a>를 얻거나
+수송 유닛이 강력한 <a href="#buriedType">주문</a>을 쓸 수 있게 하십시오. 주문은 중립 섬 위에
+<a href="#buriedType">오벨리스크</a> 모양으로 나타납니다. 중립 섬은 <a href="#outpostType">아웃포스트</a>로 내 것으로 삼을 수도 있습니다.
+</a>
+
+<a name="F1Help">
+<h2>NetStorm 도움말</h2>
+<p>
+~l파란색~. 글자를 누르면 더 많은 정보를 볼 수 있습니다. 누른 채로 <c>끌면</c> 도움말 창이 스크롤됩니다.
+<?{global.inMission}>
+~iF8~. 키를 눌러 미션 목표를 다시 볼 수 있습니다.
+</?>
+<p>
+<b>게임 도움말</b>
+<br>
+<a href="#campaignHelp">* 캠페인과 멀티플레이어 모드</a>
+<br>
+<a href="#interfaceHelp">* 사용자 인터페이스</a>
+<br>
+<a href="#sphereHelp">* 님버스의 세계</a>
+<br>
+<a href="#themeHelp">* 세 명의 퓨리</a>
+<br>
+<a href="#priestType">* 사제</a>
+<br>
+<a href="#unitHelp">* 유닛 개요</a>
+<br>
+<a href="#vesselpriestHelp">* 사제의 건설 능력</a>
+<br>
+<a href="#sacrificeOutline">* 포획과 제물 바치기 방법</a>
+<p>
+
+<b>게임 지원</b>
+<br>
+<a href="cmd:Tell,TechSupport">* 고객 서비스 / 기술 지원</a>
+<br>
+<a href="http://www.netstormhq.com">* Netstorm:HQ 웹 사이트 (업데이트와 패치)</a>
+<br>
+<a href="http://te.netstormhq.com">* Ticonderoga Entertainment 웹 사이트 (최신 패치를 만든 곳)</a>
+<p>
+<b>게임 정보</b>
+<br>
+<a href="http://www.activision.com">* Activision 웹 사이트 (NetStorm 제작사, 제한적인 지원 제공)</a>
+<br>
+NetStorm을 만든 Titanic은 안타깝게도 이제 더 이상 존재하지 않습니다.
+</a>
+
+<a name="interfaceHelp">
+<h2>NetStorm 사용자 인터페이스</h2>
+<p>
+유닛을 <b><c>왼쪽 클릭</c></b>하면 선택합니다.
+<br>
+창이나 유닛을 <b><c>오른쪽 클릭</c></b>하면 명령 메뉴가 나옵니다.
+<br>
+<b><c>ALT 키를 누르고 있으면</c></b> 화면이 커서 쪽으로 스크롤됩니다. 전체 화면 모드(또는 바탕 화면이 640 x 480
+해상도일 때의 창 모드)에서는 커서를 화면 가장자리로 움직이기만 하면 스크롤됩니다.
+(참고: MicroSoft 의 IntellimouseTM 에서는 가운데 "휠" 버튼을 누르고 있는 것이 ALT 키를 누르고 있는 것과
+같습니다.)
+<br>
+<b><c>Escape</c> 는 화면 위쪽에 옵션 메뉴를 띄웁니다.
+<p>
+<b><c>F1</c></c></b> 일반 도움말.
+<br>
+<b><c>F2</c></b> 건물을 숨겨 그 뒤쪽을 볼 수 있게 합니다.
+<br>
+<b><c>F3</c></b> <a href="#chatViewHelp">채팅 창</a>을 숨기거나 보입니다.
+<br>
+<b><c>F4</c> 또는 <c>H</c></b> 내 본거지 신전으로 이동합니다.
+<br>
+<b><c>F5</c></b> 내 사제에게 이동합니다.
+<br>
+<b><c>F6</c></b> 내가 가진 지식을 보여 줍니다.
+<br>
+<b><c>F7</c></b> 섬 색상을 전환합니다.
+<br>
+<b><c>F8</c></b> 미션 목표를 다시 봅니다.
+<br>
+<b><c>F9</c></b> 접속 중인 사람을 보여 줍니다(<a href="multiQuickHelp">멀티플레이어</a>).
+<br>
+<b><c>Shift-F3</c></b> 섬 테마를 숨기거나 보입니다.
+<br>
+<b><c>Shift-F7</c></b> 화면을 스크린샷으로 저장합니다.
+<br>
+<b><c>Shift-F9</c> 또는 <c>Pause</c> 버튼</b> 게임을 일시 정지합니다.
+<br>
+<b><c>TAB</c></b> 마지막으로 배치한 유닛 다섯 개를 차례로 선택합니다.
+<br>
+<b><c>Ctrl-F5</c> 또는 <c>N</c></b> 내 모든 수송 유닛을 차례로 선택합니다.
+<br>
+<b><c>T</c></b> 게임 타이머를 숨기거나 보입니다.
+<br>
+<b><c>P</c> 또는 <c>R</c></b> 사제를 선택합니다. 두 번 누르면 사제에게 이동해 선택합니다.
+<br>
+<b><c>D</c></b> <a href="#teleportViewHelp">생산 창</a>에서 마지막으로 선택한 유닛을 집어 들 수 있습니다.
+<br>
+<b><c>C</c></b> 유닛과 다리가 회전하는 방식을 바꿉니다.
+<br>
+<b><c>U</c></b> 가장 최근에 잃은 유닛의 위치로 이동합니다.
+<br>
+<b><c>E</c></b> 마지막으로 쓸 수 있는 다리 칸을 선택합니다.
+<p>
+<b><c> Q  W</c></b>
+<br>
+<b><c> A  S</c></b>  이 키로 다리 조각을 커서로 바로 집어 들 수 있습니다.
+<br>
+<b><c>(Z  X)</c></b>    (Z 와 X 는 다리 조각을 6개 쓸 수 있는 게임에서만 의미가 있습니다.)
+<p>
+또 다른 기능: <c>Shift</c> 키를 누른 채 <c>0 부터 9</c> 까지의 숫자를 누르면 NetStorm 이 화면 위치를 기억합니다.
+그 화면 위치로 바로 돌아가려면 숫자 키만 누르면 됩니다.
+<p>
+참고: 위의 단축키 중 상당수는 <a href="#chatViewHelp">채팅 창</a>을 숨겨 두어야 쓸 수 있습니다.
+<p>
+참고로 게임에서 에너지를 나타내는 기호는 다음과 같습니다:<br>
+<!"mana.8"> - 윈드<br>
+<!"mana.9"> - 레인<br>
+<!"mana.10"> - 썬더<br>
+<!"mana.11"> - 썬<br>
+<p>
+어떤 창이나 유닛이든 하는 일을 알고 싶다면 오른쪽 클릭한 뒤 메뉴에서 "About" 을 고르십시오. 아직 플레이 방법을
+익히는 중이라면 도움말이 어렵게 느껴질 수 있으니, 데모를 보고 <a href="#campaignHelp">초기 미션</a>을 플레이해 보십시오.
+<br>
+</a>
+
+<a name="vesselPriestHelp">
+<h2>사제의 건설 능력</h2>
+<p>
+사제를 이용해 큰 섬 어디에든(처음 섬 포함) <a href="#vortexHelp">신전</a>, <a href="#factoryHelp">워크샾</a>,
+<a href="#altarType">제단</a>, 그리고 (<a href="#multiplayerHelp">멀티플레이어</a> 모드에서는) <a href="#outpostType">아웃포스트</a>를 지을 수 있습니다.
+사제를 오른쪽 클릭해 알맞은 항목을 고르십시오. 건물이 커서에 붙어 배치할 준비가 됩니다. (사제가 건설 위치까지
+걸어갈 수 있어야 합니다.) 건물을 배치하면 사제가 그곳으로 걸어가 건설을 시작합니다.
+<p>
+사제는 <a href="#immobileHelp">움직일 수 없는</a> 동안에는 건물을 지을 수 없습니다.
+<p>
+<a href="#sunWalkerType">골렘</a>처럼 사제도 <a href="#transportHelp">수송 유닛</a> 역할을 합니다.
+사제로 <a href="#buriedType">주문</a>을 얻어 쓰거나 <a href="#nuggetType">스톰 크리스탈</a>을 운반할 수 있습니다.
+또한 사제는 아래의 <a href="#bridgeType">다리</a>가 위험해지면 더 안전한 곳으로 이동하려 합니다.
+<p>
+<a href="#sacrificeOutline">새 지식을 얻기 위해 사제를 제물로 바치는 방법</a>에 대해 더 알아보기<br>
+</a>
+
+<a name="themeHelp">
+<h2>님버스의 세 명의 퓨리</h2>
+<p>
+님버스의 중심에서는 끊임없이 폭풍이 몰아칩니다. 그곳에서 윈드, 레인, 썬더의 세 퓨리가
+<a href="#sphereHelp">세계</a>의 지배권을 두고 끝없이 다툽니다.
+<p>
+이 다툼은 숨겨진 행성의 거대한 땅덩이를 하늘로 찢어 올립니다. 이렇게 새로 태어난 섬들 위에 당신의 백성인 님버스인들이 삽니다.
+<p>
+죽음과 파괴는 퓨리를 기쁘게 합니다. 그래서 적 유닛을 파괴하면 그 적 <a href="#unitHelp">유닛</a>의 스톰 파워 값의
+4분의 1을 받습니다. 다만 개별 공중 공격 유닛은 만드는 데 스톰 파워가 들지 않으므로 예외입니다.
+<p>
+퓨리를 더욱 기쁘게 하는 것은 <a href="#sacrificeOutline">사제를 제물로 바치는 일</a>입니다. 그런 제물을 받으면 퓨리는
+전투 <a href="#technologyHelp">지식</a>이라는 선물을 내려 줍니다.
+<p>
+각 퓨리에게는 자신의 <a href="#influenceHelp">에너지</a>를 나타내는 기호가 있습니다:<br>
+<!"mana.8"> - 윈드<br>
+<!"mana.9"> - 레인<br>
+<!"mana.10"> - 썬더<br>
+<p>
+"썬"이라 불리는 공통 지식도 있으며 <!"mana.11"> 로 나타냅니다. <a href="#unitHelp">썬 유닛</a>은 어떤 종류의
+<a href="#influenceHelp">에너지</a>든 쓸 수 있지만 상대적으로 약합니다.
+<p>
+썬 지식 너머로 각 퓨리는 특화된 지식을 내려 줍니다. 이런 지식은 대체로 그것을 내려 준 퓨리의 에너지를 필요로 합니다.
+<p>
+윈드 퓨리와 관련된 것은 다음과 같습니다:<br>
+<p>
+1<!"windVortex.*">  2<!"windfactory.*">  3<!"windbattery.*"><br>
+<p>
+1) 윈드를 숭배하는 <a href="#windVortexType">신전</a>.<br>
+2) 윈드 계열 유닛을 생산하는 <a href="#windFactoryType">워크샾</a>.<br>
+3) 윈드 에너지를 만드는 <a href="#windBatteryType">윈드 제네레이터</a>.<br>
+4) <a href="#unitHelp">윈드 계열 유닛</a> 전체.<br>
+<p>
+레인 퓨리와 관련된 것은 다음과 같습니다:<br>
+<p>
+1<!"RainVortex.*">  2<!"Rainfactory.*">  3<!"Rainbattery.*"><br>
+<p>
+1) 레인을 숭배하는 <a href="#RainVortexType">신전</a>.<br>
+2) 레인 계열 유닛을 생산하는 <a href="#RainFactoryType">워크샾</a>.<br>
+3) 레인 에너지를 만드는 <a href="#RainBatteryType">레인 제네레이터</a>.<br>
+4) <a href="#unitHelp">레인 계열 유닛</a> 전체.<br>
+<p>
+썬더 퓨리와 관련된 것은 다음과 같습니다:<br>
+<p>
+1<!"ThunderVortex.*">  2<!"Thunderfactory.*">  3<!"Thunderbattery.*"><br>
+<p>
+1) 썬더를 숭배하는 <a href="#ThunderVortexType">신전</a>.<br>
+2) 썬더 계열 유닛을 생산하는 <a href="#ThunderFactoryType">워크샾</a>.<br>
+3) 썬더 에너지를 만드는 <a href="#ThunderBatteryType">썬더 제네레이터</a>.<br>
+4) <a href="#unitHelp">썬더 계열 유닛</a> 전체.<br>
+<p>
+썬은 어떤 퓨리와도 연결되어 있지 않지만 모든 퓨리가 공급합니다. 그래서 다음이 있습니다:<br>
+1<!"sunFactory.*"><br>
+<p>
+1) 계열이 없는(썬) 유닛을 생산하는 <a href="#SunFactoryType">워크샾</a>.<br>
+2) <a href="#unitHelp">썬 유닛</a> 전체.<br>
+<p>
+<a href="#sacrificeOutline">새 지식을 얻기 위해 사제를 제물로 바치는 방법</a>에 대해 더 알아보기...
+<br>
+</a>
+
+<a name="unitHelp">
+<h2>전투 유닛</h2>
+전투 유닛은 썬, 윈드, 레인, 썬더의 네 종류로 나뉩니다. 필요하면 유닛을 <a href="salvageHelp">회수(Salvage)</a>할 수 있습니다.
+모든 유닛이 공격에 쓰는 기본 <a href="tacticsHelp">전술</a>이 있습니다.
+
+<p>
+<h2>썬 유닛</h2>
+1단계<br>
+<a href="#sunWalkerType">* 골렘</a>  /  지상 수송<br>
+<a href="#sunArcherType">* 썬 디스크 발사기</a>  /  사격<br>
+<a href="#sunCannonType">* 썬 캐논</a>  /  사격<br>
+<a href="#sunBlockerType">* 스톤 타워</a>  /  방어<br>
+<a href="#sunFenceType">* 썬 바리케이드</a>  /  방어<br>
+2단계<br>
+<a href="#sunFlyerType">* 훨리기그</a>  /  공중 공격<br>
+<a href="#sunAviaryType">* 훨리베이스</a>  /  공중 공격 기지<br>
+<a href="#sunBalloonType">* 벌룬</a>  /  공중 수송<br>
+<p>
+<h2>윈드 유닛</h2>
+1단계<br>
+<a href="#windBatteryType">* 윈드 제네레이터</a>  /  에너지 공급원<br>
+2단계<br>
+<a href="#windWalkerType">* 세일 스케이터</a>  /  지상 수송<br>
+<a href="#windArcherType">* 크로스보우</a>  /  사격<br>
+<a href="#windBlocker">* 윈드 타워</a>  /  방어<br>
+3단계<br>
+<a href="#windFlyerType">* 더스트 데빌</a>  /  공중 공격<br>
+<a href="#windAviaryType">* 데빌 메이커</a>  /  공중 공격 기지<br>
+<a href="#windBalloonType">* 에어 쉽</a>  /  공중 수송<br>
+
+<p>
+<h2>레인 유닛</h2>
+1단계<br>
+<a href="#rainBatteryType">* 레인 제네레이터</a>  /  에너지 공급원<br>
+<a href="#rainWalkerType">* 크리스탈 크랩</a>  /  지상 수송<br>
+2단계<br>
+<a href="#rainCannonType">* 아이스 캐논</a>  /  사격<br>
+<a href="#rainBlockerType">* 아이스 타워</a>  /  방어<br>
+<a href="#rainFenceType">* 애시드 바리케이드</a>  /  방어<br>
+3단계<br>
+<a href="#rainFlyerType">* 맨 오 워</a>  /  공중 공격<br>
+<a href="#rainAviaryType">* 맨 오 워 풀</a>  /  공중 공격 기지<br>
+<a href="#rainBalloonType">* 클라우드 플로터</a>  /  공중 수송<br>
+
+<p>
+<h2>썬더 유닛</h2>
+1단계<br>
+<a href="#thunderBatteryType">* 썬더 제네레이터</a>  /  에너지 공급원<br>
+<a href="#bulfType">* 벌프</a>  /  지상 수송<br>
+<a href="#thunderFence">* 아크 스파이어</a>  /  방어<br>
+2단계<br>
+<a href="#thunderCannonType">* 썬더 캐논</a>  /  사격<br>
+<a href="#thunderBlockerType">* 불워크</a>  /  방어<br>
+3단계<br>
+<a href="#thunderArcher">* 반더 타워</a>  /  사격<br>
+<p>
+<a href="#statsHelp">유닛 정보를 읽는 방법.</a><br>
+<a href="#themeHelp">그 밖의 유닛과 그 계열.</a>
+<br>
+</a>
