@@ -42,10 +42,10 @@ struct RawCampaignSession::Impl::Login {
     //선택한 실제 장치가 빠지면 그 지점에서 명시 오류를 보인다.
     template<class F> static const F& Need(const F& hook) { if (!hook) throw std::logic_error("실제 미션 로그인 장치 미연결");return hook; }
     void SetUiMode(std::uint32_t mode) { // 현재 실제 미션에는466280을 요구하며 상태8 전용 독립 장치는 이전 관측 범위를 유지한다.
-        uiMode=mode;if (s.services.adoptInitializedPlayers || effects.uiMode || effects.battlePalette) Need(effects.uiMode)(mode);else Need(effects.refresh)();
+        uiMode=mode;if (s.services.adoptInitializedPlayers || effects.uiMode || effects.battlePalette || effects.startingProgress) Need(effects.uiMode)(mode);else Need(effects.refresh)();
     }
     void CloseProgress() { // 실제 Client의 안내 수명은 단순 refresh로 끝내지 않는다. 독립 부분 검사의 기존 경계만 유지한다.
-        if (s.services.adoptInitializedPlayers || effects.uiMode || effects.battlePalette || effects.closeProgress) Need(effects.closeProgress)();else Need(effects.refresh)();
+        if (s.services.adoptInitializedPlayers || effects.uiMode || effects.battlePalette || effects.closeProgress || effects.startingProgress) Need(effects.closeProgress)();else Need(effects.refresh)();
     }
     //실제6BYTE 주소를 같은DWORD 배열에서 빌린다.
     std::span<std::uint8_t> Zone() { return s.localStateGlobals->Zone(); }
@@ -145,21 +145,24 @@ struct RawCampaignSession::Impl::Login {
         };
         s.services.ai.localTransport=[this] { return transport->IsOpen(); };s.services.carrierRequest=[this](std::int32_t target,std::span<const std::uint8_t> bytes) { Send(target,bytes); };
         auto request=s.services.missionFortRequest;std::optional<netstorm::zacket::LocalMissionPacket> fallback; // Init에서 작성한 같은86BYTE를 사용하며 독립 Session만 기존 작성기를 호출한다.
+        if (s.services.adoptInitializedPlayers && !request) throw std::logic_error("실제 Client 미션의 State7 요청 누락");
         if (request) { if (request->consumed || request->next[0]!=7 || request->next[0x80/4]!=1 || request->zone.size()!=86) throw std::logic_error("현재 Init Fort 요청/이미지 계약 위반");blocks[3]=request->next; }
         else fallback=netstorm::zacket::MakeLocalMissionZone();
-        const bool startingTail=s.services.adoptInitializedPlayers || effects.uiMode || effects.battlePalette; // 전체 State7 확정과 구별한 현재 동기 앞단의 실제 후반 효과 선택이다.
-        if (startingTail) { blocks[2]=blocks[3];blocks[2][0]=0; } // Zone 반납 전 요청144BYTE를 복사한다. 원문은 current/next+80만 지우므로 즉시 블록의 이전 핸들도 보존한다.
+        const bool startingTail=s.services.adoptInitializedPlayers || effects.uiMode || effects.battlePalette || effects.startingProgress; // 실제 후반 경로만 State7 공통 확정에 연결하고 기존 독립 상태8 범위를 구별한다.
+        if (startingTail && !request) blocks[3][0]=7; // 독립 편의 요청도 현재7을 명시한다. 실제 Client는 Init/요청의 같은144BYTE를 사용한다.
+        const auto starting=[this,&request,&fallback,startingTail] { // 앞선 호스트 정리 뒤의 실제 Zone/Renderer/안내를 원문 공통부 안에서 수행한다.
         title=0; //원문 State7은 Zone 설치/실제 HUD 생성 전에565e70 첫BYTE를 지운다. 나머지79BYTE/P 억제와 전체 미복원 cleanup은 건드리지 않는다.
         const auto zone=request ? std::span<const std::uint8_t>(request->zone) : fallback->Bytes();netstorm::zacket::LocalMissionZoneHooks hooks;hooks.loginTimeout=[this] { return Need(effects.configInt)("loginTimeout",30); };hooks.seconds=effects.wallSeconds;
         hooks.storeName=[](std::uint32_t subscriber,std::string_view name) { SanitizeMissionPlayerName(subscriber,{reinterpret_cast<std::uint8_t*>(const_cast<char*>(name.data())),name.size()+1}); };
         hooks.serve=[this](std::uint32_t port) { transport->Open(port,false); };
         netstorm::zacket::InstallLocalMissionZone(zone,s.players,s.playerState,{s.core.processState.Server(),s.assetState.Boss(),s.globals.mySubscriber,pendingStamp,activeStamp,zoneWord,zoneWords[0],captureEnd,adjust,s.objectState.mission,overrideFlags,s.core.ownerMode.challenge,currentCore,cachedCore},std::move(hooks),static_cast<std::uint32_t>(Need(effects.configInt)("gameServerPort",6799)));
-        if (request) { std::vector<std::uint8_t>{}.swap(request->zone);request->consumed=true;blocks[3][0x80/4]=0; } // 설치 뒤 실제 할당도 반납한다. 전체 State7 정리 본문을 실행했다고 합산하지 않는다.
+        if (request) { std::vector<std::uint8_t>{}.swap(request->zone);request->consumed=true;blocks[3][0x80/4]=0;blocks[4][0x80/4]=0; } // 실제 할당 반납 뒤 current/next+80만 지운다. 이미 복사한 immediate+80은 보존한다.
         if (s.services.adoptInitializedPlayers || effects.initializeRenderer) Need(effects.initializeRenderer)(); // 실제 State7의4993c0 위치다. 앞선 실제 Player 정리를 채택한 미션은 장치 누락을 거부한다.
         s.playerState.playerKnown=0;
-        if (startingTail) { SetUiMode(2);activityEnd=Need(effects.wallSeconds)()+10.0;blocks[2][1]=20;state->Request(8);Need(effects.battlePalette)();blocks[3]=blocks[2]; } // UI2 뒤 새 벽시각·즉시8/인자20·팔레트 순서이며 중단도 앞선 쓰기를 보존한다.
-        else blocks[3][0]=8; // 독립 상태8 검사의 이전 부분 범위다. 새 실제 UI/팔레트 성공을 주장하지 않는다.
-        state->Run(); // 상태8의 next9는 다음 자연 Tick까지 남긴다. 준비 중 수신을 동기 실행하거나 phase14를 강제하지 않는다.
+        if (startingTail) { SetUiMode(2);activityEnd=Need(effects.wallSeconds)()+10.0;blocks[2][1]=20;state->Request(8);Need(effects.startingProgress)();Need(effects.battlePalette)(); } // UI2→ 새 기한/인자/즉시8→ 실제 안내→팔레트이며 예외도 앞선 쓰기를 보존한다.
+        };
+        if (startingTail) state->RunStarting(starting); // 같은 원문 공통부가7 전체를 확정한 뒤 즉시8을 실행한다. Zone 반납 전 immediate+80의 이전 핸들도 자동 보존한다.
+        else { starting();blocks[3][0]=8;state->Run(); } // 독립 상태8 검사의 이전 부분 범위이며 전체 State7 실행으로 세지 않는다.
     }
     //현재 송신을flush한 뒤 실제 큐를 분배한다. 프레임 계산은 기존Kernel이 수행한다.
     void Pump() { wall=Need(effects.wallSeconds)();transport->Flush();static_cast<void>(transport->Poll());if (s.loginEnd!=0.0) timer->Run(false); }

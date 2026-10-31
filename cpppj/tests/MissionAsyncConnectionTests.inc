@@ -14,13 +14,14 @@ struct MissionAsyncScene {
     std::vector<std::uint32_t> modes; // 실제 UI2/3의 호출 순서다.
     netstorm::o::MissionFrameGateState gate; // 설치 중 자기 정지가 같은 미션 상태에 남는지 확인한다.
     std::unique_ptr<GameWorld> world; // 모든 callback 대상과 외부 장치보다 먼저 반납한다.
-    MissionAsyncScene() { // 독립 입력을 만든 뒤 같은 실제 World/로컬 요청을 설치한다.
+    MissionAsyncScene(std::function<void(MissionAsyncScene&)> progress=[](auto&) {}) { // 기존 집중 검사는 명시 안내 경계만 빌리며 새 검사는 현재 상태를 관측하는 실제 callback을 제공한다.
         const std::array<std::uint8_t,9> address{'z','l','o','c','a','l',',','*',0};const std::uint32_t port=6799;MissionFortRequestHooks hooks;hooks.selectFort=[this](auto name) { request->fort=name; };hooks.duplicate=[this](auto& packet) { return CaptureMissionFortZone(*request,packet); };WriteMissionFortRequest("thewarbegins",{request->next,request->sequence,address,port},hooks);
         for (std::size_t index=0;index<palette.size();++index) { const auto color=assets.game.Palette().Color(static_cast<std::uint8_t>(255-index));palette[index]={color.blue,color.green,color.red,0};logical[index]=std::uint32_t(color.red)|(std::uint32_t(color.green)<<8)|(std::uint32_t(color.blue)<<16); } // 선택한 실제 색을 역순으로 바꿔 기본색 재사용을 구별한다.
         surface->ownerMode.battle=true;gameplay->WorldCells()=256;auto services=devices.Make(state,true);services.gameplayGlobals=gameplay;services.surfaceStorage=surface;services.cameraCommit=netstorm::test::camera::CommitScreenless;services.missionFortRequest=request; // 실제 State7의 전투 모드가 Zone/로더보다 앞선다.
         services.localLogin->initializeRenderer=[this] { CHECK(request->consumed);gameplay->Camera().InitializeNativeRenderer(1024,768,256,redraw,gameplay->MapRevision()); };
         services.localLogin->uiMode=[this](auto mode) { modes.push_back(mode);if (mode==3) CHECK(closed>0 && state->State().current[0]==13); };
         services.localLogin->closeProgress=[this] { ++closed; };services.localLogin->battlePalette=[this] { CHECK(world && !world->Session().HasCursorRuntimeForState());world->SetPalette(palette);palette.fill({0,0,0,0}); };
+        if (progress) services.localLogin->startingProgress=[this,progress=std::move(progress)] { progress(*this); }; // 빈 입력은 필수 장치 누락이며 성공 안내로 대체하지 않는다.
         devices.observe=[this](auto,auto) { ++packets; };auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());world=std::make_unique<GameWorld>(assets.game,assets.files,std::move(fort),MissionPlayers{},request->fort,std::move(services),ScreenPoint{1024,768},true);
         world->frameTime=[this] { ++frameReads;netstorm::o::FrameTime value;value.wall=devices.wall;return value; };world->paused=[] { return true; };
     }

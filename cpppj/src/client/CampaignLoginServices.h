@@ -18,5 +18,6 @@ struct CampaignLoginServices {
     std::function<void(std::uint32_t)> uiMode; // State7의2/State13의3을 현재 명령으로 실제466280/Gump Route에 보낸다. 단순 화면 갱신으로 대신하지 않는다.
     std::function<void()> battlePalette; // State7의 다음8 예약/진행 안내 뒤 현재 battlePal을 조회하고 실제4b6100에 적용한다.
     std::function<void()> closeProgress; // 실제 State13/로그인 타이머의4c8dc0을 같은 현재 안내 serial/공통 Kill에 연결한다.
+    std::function<void()> startingProgress; // State7의 인자20/즉시8 예약 뒤 전투 팔레트보다 앞서 현재 미션 진행 안내를 만든다. 실제 Client에는 필수다.
 };
 }

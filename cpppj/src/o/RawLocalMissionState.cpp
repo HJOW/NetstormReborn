@@ -86,11 +86,17 @@ bool RawLocalMissionState::Step() {
     return false;
 }
 // callback실행중에는phase가이전상태이며모든선택효과가끝난뒤확정한다.
-void RawLocalMissionState::Run() {
+void RawLocalMissionState::Run() { RunBody(nullptr); }
+// 호스트가 분리해 수행하는 실제 State7을 공통 확정에 연결하며 다른 현재 상태를7로 강제하지 않는다.
+void RawLocalMissionState::RunStarting(const std::function<void()>& body) {
+    if (state_.current[0]!=7 || !body) throw std::logic_error("실제 State7 몸체/현재 상태 계약 오류");RunBody(&body);
+}
+// 일반 상태와 외부 State7 모두 동일144BYTE 확정과 예외 중간 쓰기를 보존한다.
+void RawLocalMissionState::RunBody(const std::function<void()>* starting) {
     if (running_) throw std::logic_error("상태실행중동기수신재진입: 실제수신큐를사용해야함");running_=true;
     try {
         // 즉시요청이있을때만같은호출에서다음상태를다시처리한다.
-        for (;;) { state_.next=state_.current;state_.immediate=state_.current;state_.next[0]=0;state_.immediate[0]=0;Need(hooks_.logState,"현재상태로그미연결")(state_.current[0]);if (Step()) break;const bool again=state_.immediate[0]!=0;state_.old=state_.phase;state_.phase=state_.current;state_.current[0]=0;if (!again) break;state_.current=state_.immediate; }
+        for (;;) { state_.next=state_.current;state_.immediate=state_.current;state_.next[0]=0;state_.immediate[0]=0;Need(hooks_.logState,"현재상태로그미연결")(state_.current[0]);if (state_.current[0]==7 && starting) (*starting)();else if (Step()) break;const bool again=state_.immediate[0]!=0;state_.old=state_.phase;state_.phase=state_.current;state_.current[0]=0;if (!again) break;state_.current=state_.immediate; }
     } catch (...) { running_=false;throw; }running_=false;
 }
 // 송신callback은실제수신기를이큐에넣고원문공통확정까지반환해야한다.
