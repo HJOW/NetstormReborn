@@ -38,7 +38,7 @@
 | 팁 창 아래에 "Not Validated" 창이 겹쳐 열린다(OK 두 번). | **열지 않는다.** 프로젝트 결정(2026-09-30)이며 웹에는 업데이터가 없다. |
 | `startup()`(저장 상태 `!state.dat` 질문)이 참이면 팁을 건너뛴다. | 웹에는 저장 상태 파일이 없어 질문 자체가 없다. |
 | `Welcome` 의 `<background="nsisles">` 로 배경 그림이 바뀐다(추정). | 이름만 저장한다(기존 정책). **`nsisles` 그림은 원본 폴더·CD·TAFF 어디에서도 찾지 못했다**(`*isles*` 검색 0건). 자료가 없어 `titleMenu` 배경이 그대로 보인다. |
-| 팁 0 의 NetstormHQ 링크(`<a href=…>`)는 눌리고 외부 사이트가 열린다. | 링크 글자 모양(청록색)만 나오고 눌러도 아무 일이 없다. Tell 창에는 링크 훅이 아직 없고(도움말 창에는 있음), 원본 주소(`netstormhq.com`)는 이미 사라졌다. 처음 설치 때 첫 팁이 0 번이라 화면에 보인다. |
+| 팁 0 의 NetstormHQ 링크(`<a href=…>`)는 눌리고 외부 사이트가 열린다. | 링크 글자 모양(청록색)이 나오고 누르면 창이 닫히지만 사이트는 열지 않고 콘솔에 알린다(원본 주소 `netstormhq.com` 은 이미 사라졌고 웹은 바깥 프로그램을 실행하지 않는다). *(2026-10-31 WB03-K 갱신: 이전에는 Tell 창에 링크 훅이 없어 눌러도 아무 일이 없었다.)* 처음 설치 때 첫 팁이 0 번이라 화면에 보인다. |
 | 본문 인라인 명령(`<$config,…>`)은 명령 큐에 넣어 다음 입력에서 처리한다. | 창을 올린 직후 순서대로 실행한다. Config·Warning 만 연결했고 그 밖의 명령은 안내만 한다(cpppj 도 이 둘만 연결). |
 | 현재 Tell 이름은 256바이트 배열에 복사한다. | 256글자 이상은 거부한다(RangeError). |
 
@@ -73,4 +73,4 @@ Chrome/Firefox·터치·소리 출력·팁 창이 열린 채 Esc(원본은 안�
 
 ## 6. 남은 일
 
-[LEFT_JOBS.webpj.md](../LEFT_JOBS.webpj.md) 맨 위 '다음(이어서)': Tell 창 링크 훅·스크롤바, Auto-Demo, 한국어(D2Coding·`.korean`)·`<background>` 그림, Options −40 규칙, 도움말 후속, 그 뒤 정적 맵 화면(M2). 환영 창의 "Play Early Missions"(`MissionBegin,Tutorial1`)는 미션이 구현될 때 연결한다(지금은 창을 닫고 안내만 남는다).
+[LEFT_JOBS.webpj.md](../LEFT_JOBS.webpj.md) 맨 위 '다음(이어서)': Tell 창 링크 훅·스크롤바(2026-10-31 WB03-K 에서 완료 — [Tell 링크 기록](webpj-tell-links-20261031.md). 팁 0 의 NetstormHQ 링크는 이제 눌리며 바깥 주소라 열지 않고 창만 닫는다), Auto-Demo, 한국어(D2Coding·`.korean`)·`<background>` 그림, Options −40 규칙, 도움말 후속, 그 뒤 정적 맵 화면(M2). 환영 창의 "Play Early Missions"(`MissionBegin,Tutorial1`)는 미션이 구현될 때 연결한다(지금은 창을 닫고 안내만 남는다).

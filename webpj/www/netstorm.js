@@ -30,7 +30,8 @@ import { PopupMenu } from './ui/popup-menu.js';
 import { buildPopupItems } from './ui/option-menus.js';
 import { createTellWindow } from './ui/tell-window.js';
 import { TELL_TIP_COMMAND, dispatchTellTip } from './ui/tell-tip.js';
-import { applyScriptConfig } from './ui/script-command.js';
+import { applyScriptConfig, parseScriptCommand } from './ui/script-command.js';
+import { dispatchHelpLink } from './ui/help-link.js';
 import { configParseLong } from './assets/config.js';
 import { HelpWindow, createHelpWindow } from './ui/help-window.js';
 import { applyCursorStyle, buildCursorCss } from './ui/cursor.js';
@@ -856,7 +857,8 @@ export class Netstorm {
     // Tell 대상으로 대화상자를 열어 메인 메뉴 위에 올린다(원본 Tell 명령 004cf730). 대상은 `섹션이름` 또는 `섹션이름(인자,…)` 이다(지역 인자는 본문의 `{param.1}` 이 읽는다).
     // `Blank` 는 창을 열지 않는 명령이다. 섹션이 없으면 원본처럼 오류 로그만 남기고 아무것도 열지 않는다. 본문이 영숫자 없는 빈 내용이어도 열지 않는다.
     // 본문의 스크립트 명령(`<$config,키=값>` 등)은 창이 올라간 뒤(창이 없어도) 순서대로 실행한다. 열린 대화상자의 명령은 _onDialogCommand 가 받는다. 열었으면 true 를 돌려준다.
-    // (2026-10-28 WB03-D, 2026-10-30 WB03-J: Blank·지역 인자·본문 스크립트 명령 추가)
+    // 본문의 링크(`<a href>`)를 누르면 _onDialogLink 가 받는다. 본문이 화면보다 길면 스크롤바가 생긴다(시계는 _frameSeconds).
+    // (2026-10-28 WB03-D, 2026-10-30 WB03-J: Blank·지역 인자·본문 스크립트 명령 추가, 2026-10-31 WB03-K: 링크·스크롤바 연결)
     _openTell(name) {
         if (!this._mainMenu || !this._gameData || !this._resources) return false;
         const result = createTellWindow({
@@ -865,7 +867,9 @@ export class Netstorm {
             name,
             screen: { width: this._mainMenu.width, height: this._mainMenu.height },
             nowSeconds: this._frameSeconds,
+            now: () => this._frameSeconds,
             onCommand: (command) => this._onDialogCommand(command),
+            onLink: (destination) => this._onDialogLink(destination),
             onSound: (kind) => this._audio?.playSound(kind === 'menu' ? MENU_SOUND_NAME : BUTTON_SOUND_NAME),
             onUnsupported: (what, text) => console.warn(`Netstorm: Tell '${name}' 의 ${what} 은(는) 아직 지원하지 않습니다.`, text),
         });
@@ -951,6 +955,35 @@ export class Netstorm {
         this._displayDirty = true;
         this._runDialogCommand(command);
         if (onExit) this._runDialogCommand(onExit);
+    }
+
+    // 대화상자 본문의 링크(Tell 의 `<a href>`)를 처리한다. 원본 HtmlWindowGump::Handle 의 tagEvent 처럼 대화상자를 먼저 닫고(모달 해제) 링크를 분배한 뒤,
+    // 닫힌 창의 $OnExit 명령을 실행한다(원본은 닫힌 창을 정리할 때 OnExit 를 큐에 넣으므로 링크 처리보다 뒤다). (2026-10-31 WB03-K)
+    _onDialogLink(destination) {
+        const dialog = this._mainMenu?.dialog ?? null;
+        const onExit = dialog ? dialog.close() : null;
+        this._mainMenu?.setDialog(null);
+        this._displayDirty = true;
+        this._followLink(destination);
+        if (onExit) this._runDialogCommand(onExit);
+    }
+
+    // 링크 목적지를 원본 규칙(ui/help-link.js)으로 분배한다: `cmd:` 는 스크립트 명령으로 실행하고, 도움말 주제는 도움말 창을 열며(원본 mode 1, 학습 0),
+    // 바깥 주소(`http:`·`mailto:` 등)는 열지 않고 콘솔에 알린다(웹은 바깥 프로그램을 실행할 수 없고 원본 주소는 과거 도메인이다). 접두·본문 한도를 넘으면 알리고 아무것도 하지 않는다. (2026-10-31 WB03-K)
+    _followLink(destination) {
+        try {
+            dispatchHelpLink(destination, {
+                script: (body) => {
+                    const command = parseScriptCommand(body);
+                    this._runDialogCommand({ name: command.name, argument: command.argument });
+                },
+                help: (topic) => this._openHelp(topic),
+                external: (original) => console.info(`Netstorm: 링크의 바깥 주소 '${original}' 는 열지 않습니다(원본의 과거 주소).`),
+            });
+        } catch (error) {
+            if (!(error instanceof RangeError)) throw error;
+            console.warn(`Netstorm: 링크 목적지가 원본 한도(접두 80, 본문 256)를 넘어 따라가지 않습니다: ${destination}`);
+        }
     }
 
     // 닫힌 뒤 실행할 대화상자 명령 하나를 처리한다. (2026-10-28 WB03-D)
@@ -1308,10 +1341,10 @@ export class Netstorm {
         if (!event.repeat && (event.code === 'Enter' || event.code === 'Space' || event.code === 'NumpadEnter')) this._activate();
     }
 
-    // 마우스 휠을 열린 도움말 창에 넘긴다. 처리했으면 페이지가 따라 스크롤되지 않게 막는다. (2026-10-30 WB03-G)
+    // 마우스 휠을 열린 대화상자(도움말 창, 스크롤바가 있는 Tell 창)에 넘긴다. 처리했으면 페이지가 따라 스크롤되지 않게 막는다. (2026-10-30 WB03-G, 2026-10-31 WB03-K: Tell 창 추가)
     _onWheel(event) {
         const dialog = this._mainMenu?.dialog;
-        if (this._state !== AppState.MAIN_MENU || !(dialog instanceof HelpWindow)) return;
+        if (this._state !== AppState.MAIN_MENU || !dialog || typeof dialog.wheel !== 'function') return;
         event.preventDefault();
         if (dialog.wheel(event.deltaY)) this._mainMenu.dirty = true;
     }

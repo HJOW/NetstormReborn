@@ -14,6 +14,8 @@ import { ScrollingText } from './scroll-text.js';
 import { VerticalSlider } from './slider.js';
 import { parseStyleText } from './style-text.js';
 import { renderHelpTopic } from './help-topic.js';
+import { dispatchHelpLink } from './help-link.js';
+import { parseScriptCommand } from './script-command.js';
 
 // 창 크기와 위쪽 위치이다(원본 Construct 의 450×350, OpenQuickHelpWindow 의 y 40). (2026-10-30 WB03-G)
 export const HELP_WINDOW_WIDTH = 450;
@@ -60,11 +62,6 @@ function boundsOf(x, y, width, height) {
     const left = ftol(x);
     const top = ftol(y);
     return { left, top, right: ftol(left + width), bottom: ftol(top + height) };
-}
-
-// 바깥 주소로 보이는 링크 목적지인지(`스킴://`) 검사한다. (2026-10-30 WB03-G)
-function isExternalDestination(destination) {
-    return /^[a-z][a-z0-9+.-]*:\/\//i.test(destination) || /^mailto:/i.test(destination);
 }
 
 // 도움말 창 하나이다. 사용: const help = new HelpWindow({ resources, helpText, substitute, screen, onClose, onCommand, onExternal, onSound }); help.open('F1Help'); help.fit(); help.place(); help.draw(surface).
@@ -195,17 +192,23 @@ export class HelpWindow {
     }
 
     // 링크 번호를 따라간다: `cmd:이름,인자` 는 호스트 명령, 바깥 주소는 onExternal, 그 밖은 도움말 주제 요청이다. (2026-10-30 WB03-G)
+    // 분류는 원본 규칙(ui/help-link.js)을 쓴다: 접두가 없거나 본문이 `#` 로 시작하면 주제, `cmd:` 는 명령, 나머지 접두(`http:`·`mailto:` 등)는 바깥 주소이다.
+    // 명령 본문은 원본 명령 큐 넣기(004c9090)의 토큰 규칙(parseScriptCommand)으로 이름과 인자로 나눈다. 접두·본문 한도를 넘는 목적지는 따라가지 않고 알린다. (2026-10-31 WB03-K: 단순 접두 판정을 원본 규칙으로 교체)
     _followLink(tag) {
         const destination = this.links?.resolve(tag) ?? null;
         if (destination === null) return;
-        if (/^cmd:/i.test(destination)) {
-            const text = destination.slice(4);
-            const comma = text.indexOf(',');
-            this.onCommand?.({ name: comma < 0 ? text : text.slice(0, comma), argument: comma < 0 ? '' : text.slice(comma + 1) });
-        } else if (isExternalDestination(destination)) {
-            this.onExternal?.(destination);
-        } else {
-            this.open(destination);
+        try {
+            dispatchHelpLink(destination, {
+                script: (body) => {
+                    const command = parseScriptCommand(body);
+                    this.onCommand?.({ name: command.name, argument: command.argument });
+                },
+                help: (topic) => this.open(topic),
+                external: (original) => this.onExternal?.(original),
+            });
+        } catch (error) {
+            if (!(error instanceof RangeError)) throw error;
+            this.onUnsupported?.('도움말 링크', `접두·본문 한도를 넘은 목적지입니다: ${destination}`);
         }
     }
 
