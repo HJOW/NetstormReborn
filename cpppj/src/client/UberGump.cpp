@@ -48,6 +48,8 @@
 #include "client/TellMapMenus.h"
 #include "client/FortSelection.h"
 #include "client/ClientLocalStateGlobals.h"
+#include "client/ClientCdGlobals.h"
+#include "client/CdDirectory.h"
 #include "client/ClientFortGlobals.h"
 #include "client/FortCurrentNameDevices.h"
 #include "client/EditorIslandWindow.h"
@@ -660,7 +662,7 @@ void UberGump::LoadMissionWorld(std::optional<std::string> requestedFort) {
     } loading{*rawButtons_->Menus()};
     rawButtons_->Menus()->ShowMissionLoading(LoadingHtmlContext({85,0,client_.GetScreen().Width(),client_.GetScreen().Height()}),FontBytes(client_.Translate("Starting Mission...")),[this] { return FontBytes(client_.Translate("Cancel")); });
     rebuild_=true;Compose();client_.PresentScene(); // 실제 파일 읽기 전에 같은 전체 부모를 먼저 출력하며 가짜 표시 지연을 넣지 않는다.
-    if (nativePlayers) { htmlGlobals_.background[0]=0;CleanupNativeStateWorld(1); } //원문 State7은 배경 첫BYTE를 지운 뒤 reason1로 Client9/덱/HUD를 반납한다. 호스트 로딩 안내 제출 뒤에는 새 HUD의 초기 도킹 전 중간 화면을 출력하지 않는다.
+    if (nativePlayers) { htmlGlobals_.background[0]=0;CleanupNativeStateWorld(1);client_.LocalStateGlobals()->CdPresent()=client_.CdGlobals()->Check(MakeWindowsCdPresenceHooks()); } // 원문 State7의 정리 뒤 실제 CD 확인을 같은005c85b8에 기록한다. 로딩 안내 뒤 새 HUD 초기 도킹 전 중간 화면은 출력하지 않는다.
     else if (world_) ClearWorld(); //10.72의 기존 동기 World 어댑터는 해당 판본 전체 State 복원 전까지 유지한다.
     if (world_) throw std::logic_error("미션 State cleanup 뒤 이전 World 대여가 남아 있음"); //원문 정리의 실제 반납을 확인한 뒤에만 새 Session을 만든다.
     const auto type=o::AsciiLower(mission_->MissionType()); // 현재 미션의 실제 가상 형식에 맞는 기존 설치 경로다.

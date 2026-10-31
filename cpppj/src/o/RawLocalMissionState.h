@@ -22,7 +22,7 @@ struct LocalMissionStateGlobals {
     bool& server; bool& boss; bool& inBattle; bool& missionPost; bool& savedGame; // 00540bc0/bc4/00594fbc/fa4/005c85d4다.
     const bool& missionWorld; const bool& simulconnect; const bool& metamap; // 00594fa0/0054db50/00594fc8이다.
     PlayerWorldState& player; // 같은 현재PlayerKnown과두owner다.
-    std::uint32_t& zonePending; std::uint32_t& gameTicks; std::uint32_t& sourceType; std::uint32_t& randomSeed; // 005c85c0/0055b4ac/0055a420/005c85b8이다.
+    std::uint32_t& zonePending; std::uint32_t& gameTicks; std::uint32_t& sourceType; std::uint32_t& cdPresent; // 005c85c0/0055b4ac/0055a420/005c85b8이며 마지막은 CD 확인 결과다.
     std::uint32_t& menuWindow; std::uint32_t& metaRefresh; std::uint32_t& metaRebuild; // 005c874c/005c85d8/dc다.
     std::uint8_t& titleInitial; const std::uint8_t& battleByte; // 00565e70의첫BYTE와005c85d0의현재BYTE다.
     double& connectEnd; double& activityEnd; // 005c85f8과00544d58의독립벽시각예약이다.
@@ -39,10 +39,10 @@ struct LocalMissionStateHooks {
     std::function<void(std::uint32_t)> invalidState; // 원본default진단이다.
     std::function<LocalMissionParentResult(std::uint32_t)> parentState; // 1/2/3큰메뉴부모전체와실제반환종류다.
     std::function<void()> clearSelection; std::function<void(std::uint32_t)> cleanupBattle; // 004978d0/004b2df0의실제정리다.
-    std::function<std::uint32_t()> seed; std::function<void()> refreshCommands; std::function<void()> stopMusic; // 00440c60/0042e440/00469fc0다.
+    std::function<std::uint32_t()> cdPresent; std::function<void()> refreshCommands; std::function<void()> stopMusic; // CD 확인00440c60/명령 숨김0042e440/음악 정리00469fc0다.
     std::function<void()> refreshMission; // missionWorld&&missionPost의00463a40가상+28이다.
     std::function<void(std::uint32_t)> installZone,freeZone; std::function<void()> installMapHandlers; // 004b4be0/free/004c1e70이다. ZoneDWORD는호스트가해석하는핸들이다.
-    std::function<void()> refreshCursor; std::function<void(std::uint32_t)> uiMode; // 004993c0/00466280(mode,0,1)의실제UI효과다.
+    std::function<void()> initializeRenderer; std::function<void(std::uint32_t)> uiMode; // Renderer 초기화004993c0/00466280(mode,0,1)의 실제 효과다. 커서 갱신으로 대체하지 않는다.
     std::function<double()> wallSeconds; // 00460d70의현재벽시각이다.
     std::function<void()> loadReconnectFort; // 큰00460980의현재재접속파일읽기다.
     std::function<void(LocalMissionProgress,std::int32_t)> progress; // 실제진행창을만들거나갱신한다.

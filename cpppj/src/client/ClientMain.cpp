@@ -26,6 +26,7 @@
 #include "client/ClientColorSortInput.h"
 #include "client/OwnerColorTableState.h"
 #include "client/ClientLocalStateGlobals.h"
+#include "client/ClientCdGlobals.h"
 #include "client/ClientConnectionActivityGlobals.h"
 #include "client/ClientConnectionGlobals.h"
 #include "client/ClientFortGlobals.h"
@@ -169,6 +170,7 @@ Client::Client(ClientOptions options)
       kencloudGlobals_(std::make_shared<ClientKencloudGlobals>()),
       colorSortInput_(std::make_shared<ClientColorSortInput>()),
       localStateGlobals_(std::make_shared<ClientLocalStateGlobals>()),
+      cdGlobals_(std::make_shared<ClientCdGlobals>()),
       connectionActivityGlobals_(std::make_shared<ClientConnectionActivityGlobals>()),
       connectionGlobals_(std::make_shared<ClientConnectionGlobals>(localStateGlobals_)),
       fortGlobals_(std::make_shared<ClientFortGlobals>()),
@@ -1088,6 +1090,7 @@ const std::shared_ptr<ClientSpGlobals>& Client::SpGlobals() const { return spGlo
 const std::shared_ptr<ClientKencloudGlobals>& Client::KencloudGlobals() const { return kencloudGlobals_; } // 조회 자체에 생성/난수 소비/초기화 효과는 없다.
 // 큰 메뉴/로컬 로그인 분배기가 같은 실제144BYTE 다섯 블록과 기한을 빌린다.
 const std::shared_ptr<ClientLocalStateGlobals>& Client::LocalStateGlobals() const { return localStateGlobals_; }
+const std::shared_ptr<ClientCdGlobals>& Client::CdGlobals() const { return cdGlobals_; } // 같은 현재 CD 캐시를 조회하며 확인 장치를 여기서 실행하지 않는다.
 // 같은 활동 표/Zone owner를 조회하며 Session 교체나 조회 자체로 초기화하지 않는다.
 const std::shared_ptr<ClientConnectionActivityGlobals>& Client::ConnectionActivityGlobals() const { return connectionActivityGlobals_; }
 // 같은 현재 표의 소유권만 조회하며 연결 종료·등록·개수 쓰기를 실행하지 않는다.

@@ -1,0 +1,93 @@
+{
+  "unit": 654,
+  "date": "2026-10-31",
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "productChanged": true,
+  "executableSha256": "bba42ae62bfbec2a307731f61892cc3183cac2fd37dc5006ed3fe93ce38806f5",
+  "native": {
+    "cases": 492,
+    "processes": 2,
+    "observationsPerProcess": 984,
+    "observations": 1968,
+    "differences": 0,
+    "fixtureSha256": "f98760be8fef12dd5a792b39d43c41dd758e59f3260bc90695f2db7f7d55bd38",
+    "scope": "실제440c60/4dde40. 두 Win32 IAT와 경로/존재만 명시 장치이며 세128BYTE 초기 물리는205를 명시했다. 게임/실제 OS CD/GUI/통신 실행은 아니다."
+  },
+  "focused": {
+    "registered": 9,
+    "finalUnique": 9,
+    "newUnique": 4,
+    "oldUnique": 5,
+    "invocations": 2,
+    "testFunctionCalls": 18,
+    "failedChecks": 0,
+    "log": "extracted/cpp-cd-presence-654-focused-v2.log",
+    "initial": {
+      "log": "extracted/cpp-cd-presence-654-focused-v1.log",
+      "tests": 9,
+      "failedChecks": 188,
+      "fix": "440cf9는 첫BYTE store가 아닌 AL 조회다. 제품의 잘못된 stack store를 제거했다. 관측 도구도 하위 stack을 반환 직후 기록해 뒤 경로 호출의 재사용 BYTE를 제외했다."
+    },
+    "existingNativeRows": {
+      "cdDirectory": 15,
+      "localMissionState": 33
+    },
+    "disk": "실제 Client 소유 캐시에 한글/emoji 경로를 넣고 W 속성 장치로 표시 이름 디렉터리의 존재를 확인했다. roots 장치는 예외로 막아 실제 CD 열거는 하지 않았으며 스레드 오류 모드 복구와 RNG 분리를 확인했다.",
+    "state": "같은 Client CD 캐시/결과를 기존 Raw State7 장치에 접합해 cleanup 뒤 확인/저장·명령 갱신 순서를 확인했다. 실제 Session의 비동기 State7 검증이 아니다."
+  },
+  "build": {
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "log": "extracted/cpp-cd-presence-654-build-v3.log",
+    "initial": {
+      "exitCode": 0,
+      "warnings": 2,
+      "errors": 0,
+      "log": "extracted/cpp-cd-presence-654-build-v1.log",
+      "fix": "검사 std::fill의0을 char{}로 명시했다. 제품 분기 변경은 없다."
+    }
+  },
+  "protected": {
+    "baseline": "extracted/cpp-solo-entry-645-20261031/protected-after-current.json",
+    "checked": 6,
+    "differences": 0,
+    "sha256": {
+      "AGENTS.md": "e9e46fda5519e663417b5c8d9b643549196bf28fe7ba6b1d546a48a853fd208b",
+      "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+      "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6",
+      "cpppj/tests/fixtures/cd-directory-x86.tsv": "acd37693857ddf2a036b1a0ce25bc7d9cb5a418ee96f70870e661b82ae0ea3d0",
+      "cpppj/tests/fixtures/local-mission-state-x86.tsv": "b591cc51ffd837ce29d04e8090c066d33f5baf4abc1b3c863371346f161d2995"
+    },
+    "newFixture": "cpppj/tests/fixtures/cd-presence-x86.tsv",
+    "fullAuditRepeated": false
+  },
+  "decompileChanged": false,
+  "actualGameRuns": 0,
+  "actualCdEnumeration": false,
+  "newZip": false,
+  "full34Repeated": false,
+  "mainTestExecutableRebuilt": false,
+  "multiplayerTests": 0,
+  "cdStatic": {
+    "presence": "004a8970",
+    "roots": "004bf740",
+    "executed": false,
+    "differences": "CD 루트의 NULL 진단은527이며 PATCH는529다. CD 성공 캐시 복사는 재측정 뒤 DWORD/나머지 복사다. PATCH 몸체와 동일 실행으로 세지 않는다."
+  },
+  "observationsCorrected": {
+    "initialProcesses": 2,
+    "initialObservations": 1968,
+    "finalProcesses": 2,
+    "finalObservations": 1968,
+    "reason": "초기 Native v1/v2의 죽은 하위 stack 꼬리는 최종 fixture로 사용하지 않는다. v3/v4는440cb5의 반환 직후 전체128BYTE를 읽는다. 범위/기대 결과의 마스킹은 없다."
+  },
+  "remaining": [
+    "Session Login.Begin의 전체 비동기 State7/Renderer 초기화와 수명",
+    "나머지 UI/Edit/시나리오/호환성·BaseFile 소비자/ABI",
+    "실제 CD 삽입/물리 장치·후순위 MP 무시험 사전 구현 및4~7차"
+  ]
+}

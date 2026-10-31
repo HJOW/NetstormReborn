@@ -39,6 +39,7 @@ class ClientKencloudGlobals; // 같은 구름/팔레트 전역과 현재 메모�
 class ClientRendererFrame; //같은 Renderer 전역과 실제 Frame의 구름/지형 장치를 조립한다.
 class ClientSubscriberGlobals; // 같은 Client의 실제 my/login 두 DWORD만 장기 소유한다.
 class ClientLocalStateGlobals; // 실제 메뉴/Editor/로그인이 같은 State 블록과 벽시각 기한을 빌린다.
+class ClientCdGlobals; // State7의 CD 확인이 같은 루트 캐시를 Client 수명에 보관한다.
 class ClientConnectionActivityGlobals; // 실제 두22DWORD 활동 표와 Zone 간극을 Client 수명으로 소유한다.
 class ClientConnectionGlobals; //연결22칸·버퍼22칸·pending32칸을 장기로 보관하며 전송 writer 연결과 구별한다.
 class ClientFortGlobals; // 현재/pending 이름·FileSpec·목록 dirty와 선택 모드의 실제 Client 소유자다.
@@ -175,6 +176,7 @@ public:
     const std::shared_ptr<ClientKencloudGlobals>& KencloudGlobals() const; // 같은 실제 구름/팔레트/현재 Renderer 전역을 순수 조회한다.
     void ChangeFortPalette(const std::span<const std::uint8_t>& name); //004b6100의 전체 부모를 같은 구름/Screen clear1/추가9표/dirty에 실행한다.
     const std::shared_ptr<ClientLocalStateGlobals>& LocalStateGlobals() const; // 실제 State144BYTE와 활동기한의 Client 수명을 Session에 전달한다.
+    const std::shared_ptr<ClientCdGlobals>& CdGlobals() const; // CDDir/난수와 별개인 실제00558dd4의 현재 캐시 소유자다.
     const std::shared_ptr<ClientConnectionActivityGlobals>& ConnectionActivityGlobals() const; // 같은 실제 활동 표/Zone DWORD의 고정 주소를 Session에 빌린다.
     const std::shared_ptr<ClientConnectionGlobals>& ConnectionGlobals() const; //같은 Native 정리 표이며 기존 전송의 실제 등록 연결은 별도다.
     const std::shared_ptr<ClientFortGlobals>& FortGlobals() const; // 같은 이름/키/목록 물리를 메뉴/Native 이름 부모에 빌린다.
@@ -284,6 +286,7 @@ private:
     std::shared_ptr<ClientKencloudGlobals> kencloudGlobals_; // 구름 현재 주소/이름/옵션과 Native redraw를 같은 Client 수명에 보관한다.
     std::shared_ptr<ClientColorSortInput> colorSortInput_; //메뉴/월드/두Screen생성경로보다오래유지하는같은초기RGB다.
     std::shared_ptr<ClientLocalStateGlobals> localStateGlobals_; // Session 소멸/Editor 메뉴 재진입에서 State/기한을 초기화하지 않는 한 소유자다.
+    std::shared_ptr<ClientCdGlobals> cdGlobals_; // 최초 BSS0 뒤 Scene/Session 반납으로 지우지 않는 CD 루트 캐시다.
     std::shared_ptr<ClientConnectionActivityGlobals> connectionActivityGlobals_; // 메뉴/Session보다 먼저 구성하고 소비자 반납 뒤까지 두 표와 Zone 값을 보존한다.
     std::shared_ptr<ClientConnectionGlobals> connectionGlobals_; //최초 BSS0 이후 Session 반납으로 암묵 정리하지 않는 실제 고정표 owner다.
     std::shared_ptr<ClientFortGlobals> fortGlobals_; // 모든 메뉴/Session보다 오래 사는 같은 두 이름/목록/dirty 소유자다.

@@ -10,6 +10,7 @@
 # 게임 본체. 실행 파일과 테스트가 함께 쓰도록 정적 라이브러리로 묶는다.
 # 소스 목록은 각 폴더의 CMakeLists.txt 가 target_sources 로 더한다.
 add_library(netstorm STATIC)
+target_sources(netstorm PRIVATE client/CdPresence.cpp client/CdPresence.h client/ClientCdGlobals.h) # 현재 CD 루트 열거/캐시 판단을 실제 State 수명과 연결한다.
 target_sources(netstorm PRIVATE o/RawBaseFileIO.cpp o/RawBaseFileIO.h) # FILE 위치/길이/종료와 원문4096BYTE 암호 쓰기를 공유한다.
 target_sources(netstorm PRIVATE o/RawWorldGeyser.h o/RawWorldGeyser.cpp) # 세계 간헐천의 실제 생성 부모00486440이다.
 target_sources(netstorm PRIVATE o/RawWorldGeyserBounds.h o/RawWorldGeyserBounds.cpp) # 전체 간헐천의 청크 범위·분할·Player 예산이다.

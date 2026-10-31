@@ -1,5 +1,6 @@
 // 원본00440d40/004dde40/004dd340의 CD-ROM 열거·표시 파일 재귀 탐색을 분리한다.
 #pragma once
+#include "client/CdPresence.h"
 #include <cstdint>
 #include <functional>
 #include <optional>
@@ -21,4 +22,5 @@ struct CdDirectoryHooks { // 원본이 도달한 열거/종료/cancel 경계만 
 };
 bool FindCdDirectory(std::span<char> destination,const CdDirectoryHooks& hooks); // 최초 발견 디렉터리를 strncpy/NUL로 쓰며 실패는 기존 목적지를 보존한다.
 std::string FindWindowsCdDirectory(); // 실제 CD-ROM만 읽고 UTF-8 CDDir을 반환한다. 부재는 빈 문자열이다.
+CdPresenceHooks MakeWindowsCdPresenceHooks(); // 원문 루트 열거와 표시 파일 속성을 실제 Windows 장치에 연결한다. 재귀 CDDir 탐색을 대신 호출하지 않는다.
 }

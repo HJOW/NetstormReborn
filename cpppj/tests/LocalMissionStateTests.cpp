@@ -54,11 +54,11 @@ struct StateScene {
         h.invalidState=[](std::uint32_t) { throw std::logic_error("선택 native 입력 밖의 상태 진단"); };
         h.clearSelection=[this] { Event("Selection"); };
         h.cleanupBattle=[this](std::uint32_t reason) { Event("Cleanup,"+std::to_string(reason));server=false;boss=false;post=true;zonePending=0;saved=false;ticks=0;source=0;if (mutation==7) blocks[3][33]=0; };
-        h.seed=[this] { Event("Seed");return 123U; };
+        h.cdPresent=[this] { Event("Seed");return 123U; }; // 기존 동결 trace의 Seed는 CD 호출 경계의 옛 표식이다. 난수 몸체를 실행하지 않는다.
         h.refreshCommands=[this] { Event("Commands"); };h.stopMusic=[this] { Event("Music"); };h.refreshMission=[this] { Event("Mission"); };
         h.installZone=[this](std::uint32_t zone) { Event("Zone,"+std::to_string(zone));server=true;boss=true;if (mutation==2) blocks[3][32]=kZone+16; };
         h.freeZone=[this](std::uint32_t zone) { Event("Free,"+std::to_string(zone)); };h.installMapHandlers=[this] { Event("MapHandlers"); };
-        h.refreshCursor=[this] { Event("Cursor"); };h.uiMode=[this](std::uint32_t mode) { Event("UI,"+std::to_string(mode)); };
+        h.initializeRenderer=[this] { Event("Cursor"); };h.uiMode=[this](std::uint32_t mode) { Event("UI,"+std::to_string(mode)); }; // 기존 Cursor 표식도 실제4993c0의 명시 경계이며 새 해석은 Renderer다.
         h.wallSeconds=[this] { Event("Wall");if (mutation==1) end=99.0;return wall; };
         h.loadReconnectFort=[this] { Event("ReconnectFort"); };
         h.progress=[this](LocalMissionProgress progress,std::int32_t remaining) {
@@ -129,3 +129,5 @@ TEST_CASE(LocalMissionState_AliasesAndRequiredConsumers) {
     LocalMissionStateStorage same{scene.blocks[0],scene.blocks[1],scene.blocks[2],scene.blocks[1],scene.blocks[4]};
     CHECK(Throws([&] { RawLocalMissionState invalid(OriginalEdition::Patch1078,same,scene.Globals(),scene.Hooks()); }));
 }
+
+#include "LocalMissionCdPresenceTests.inc" // 기존 State 입력 장치를 같은 실제 Client CD 소유자에 연결한다.

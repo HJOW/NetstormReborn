@@ -1,6 +1,7 @@
 // ANSI/MAX_PATH 대신 Windows10/11 W API로 같은 CD-ROM/항목 순서와 깊이2를 처리한다.
 #define NOMINMAX
 #include "client/CdDirectory.h"
+#include "o/RawBaseFileReadPolicy.h"
 #include <algorithm>
 #include <array>
 #include <filesystem>
@@ -29,6 +30,12 @@ int SearchCd(std::string directory,int depth,std::span<char> destination,const C
 std::filesystem::path CdWide(std::string_view text) { return std::filesystem::path(std::u8string(reinterpret_cast<const char8_t*>(text.data()),text.size())); } // Windows10/11의 UTF-8 CD 경로를 손실 없이 W API에 전달한다.
 std::string CdUtf8(const std::filesystem::path& path) { const auto value=path.u8string();return {value.begin(),value.end()}; } // 설치 언어와 무관하게 Config의 UTF-8 경로를 만든다.
 CdDirectoryEntry CdEntry(const WIN32_FIND_DATAW& data) { return {CdUtf8(data.cFileName),(data.dwFileAttributes&FILE_ATTRIBUTE_DIRECTORY)!=0}; } // 실제 OS 이름/속성만 변환한다.
+struct CdMediaErrorMode { // Windows10/11 호환성 확장: 빈 CD 장치의 시스템 오류 창으로 게임을 막지 않고 이 스레드의 이전 모드를 복구한다.
+    DWORD previous{}; // 현재 스레드에서 실제로 교체한 이전 오류 모드다.
+    bool changed{}; // 실패한 SetThreadErrorMode 뒤에 임의 모드를 복원하지 않는다.
+    CdMediaErrorMode() { changed=SetThreadErrorMode(GetThreadErrorMode()|SEM_FAILCRITICALERRORS,&previous)!=FALSE; } // 원본에는 없는 현대 비대화식 장치 조회 경계다.
+    ~CdMediaErrorMode() { if (changed) SetThreadErrorMode(previous,nullptr); } // 정상/예외 이탈 모두 현재 스레드에만 원래 설정을 돌려준다.
+};
 }
 bool FindCdDirectory(std::span<char> destination,const CdDirectoryHooks& h) { // 원문 루트 열거가 모두 끝난 뒤에만 각 CD의 파일 탐색을 시작한다.
     if (destination.empty()) throw std::invalid_argument("CD 목적지 양수 길이 필요");std::vector<std::string> roots;
@@ -45,5 +52,15 @@ std::string FindWindowsCdDirectory() { // 원본의 CD 자동 탐색은 유지�
     h.close=[](auto handle) { FindClose(reinterpret_cast<HANDLE>(static_cast<std::uintptr_t>(handle))); };h.cancelled=[] { return false; }; // 시작 설정 단계에는 아직 중단 입력 처리기가 없다.
     std::vector<char> output(4U*32768U); // 원본255BYTE 대신 Windows10/11의 긴 Unicode 경로가 UTF-8 중간에서 잘리지 않도록 충분히 확보한다.
     return FindCdDirectory(output,h) ? std::string(output.data()) : std::string();
+}
+// 루트는 ASCII 드라이브 글자이므로 원문 A 열거를 그대로 쓰고 파일 경로만 현대 Windows의 W API로 전달한다.
+CdPresenceHooks MakeWindowsCdPresenceHooks() {
+    CdPresenceHooks hooks;hooks.path=[](auto root,auto marker) { return o::JoinBaseFileRoot(root,marker); };
+    hooks.exists=[](auto path) { CdMediaErrorMode mode;return GetFileAttributesW(CdWide(path).c_str())!=INVALID_FILE_ATTRIBUTES; }; // 원본 ANSI와 다른 Windows10/11 UTF-8/native 경로 호환이며 디렉터리 비영도 유지한다.
+    hooks.roots=[](std::span<char,128> output) {
+        CdDriveRootsHooks roots;roots.logicalDrives=[](std::span<char,128> buffer) { return static_cast<std::uint32_t>(GetLogicalDriveStringsA(128,buffer.data())); };roots.driveType=[](auto root) { const std::string terminated(root);return static_cast<std::uint32_t>(GetDriveTypeA(terminated.c_str())); };
+        std::array<char,128> scratch;return CollectCdDriveRoots(128,output,scratch,roots);
+    };
+    return hooks;
 }
 }

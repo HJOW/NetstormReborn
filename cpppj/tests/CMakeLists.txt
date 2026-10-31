@@ -2596,3 +2596,11 @@ add_executable(netstorm_editor_default_name_tests FocusedTestMain.cpp EditorDefa
 target_link_libraries(netstorm_editor_default_name_tests PRIVATE netstorm)
 netstorm_apply_compiler_options(netstorm_editor_default_name_tests)
 target_compile_definitions(netstorm_editor_default_name_tests PRIVATE ${_netstorm_menu_session_definitions})
+
+# CD 루트/캐시와 같은 State7 필드 및 기존 디렉터리 탐색을 게임 없이 함께 확인한다.
+target_sources(netstorm_tests PRIVATE CdPresenceTests.cpp)
+set_source_files_properties(CdPresenceTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_CD_PRESENCE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/cd-presence-x86.tsv\"")
+add_executable(netstorm_cd_presence_tests FocusedTestMain.cpp CdPresenceTests.cpp CdDirectoryTests.cpp LocalMissionStateTests.cpp)
+target_link_libraries(netstorm_cd_presence_tests PRIVATE netstorm)
+netstorm_apply_compiler_options(netstorm_cd_presence_tests)
+target_compile_definitions(netstorm_cd_presence_tests PRIVATE ${_netstorm_menu_session_definitions})
