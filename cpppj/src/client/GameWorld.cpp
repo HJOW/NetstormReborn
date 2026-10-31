@@ -109,7 +109,7 @@ GameWorld::GameWorld(const GameAssets& assets,const o::BaseFileSystem& files,o::
     if (connect) campaign_->LoadLocalConnection();else campaign_->Load();RefreshCampaignObjects();
 }
 //Client.CurrentSubscriber가현재Session을반환하는등록이끝난뒤에만실제로그인을시작한다.
-void GameWorld::BeginLocalConnection() { if (!campaign_) throw std::logic_error("실제Session 없는 로그인 요청");campaign_->LoadLocalConnection();RefreshCampaignObjects(); }
+void GameWorld::BeginLocalConnection() { if (!campaign_) throw std::logic_error("실제Session 없는 로그인 요청");campaign_->LoadLocalConnection();if (pendingCursorPalette_) { campaign_->Cursor().SetPalette(*pendingCursorPalette_,colorSortLogical_);pendingCursorPalette_.reset(); }RefreshCampaignObjects(); } // 원문 팔레트 선택 뒤 생성된 실제 커서만 현재256색을 받으며 설치 실패에서는 대기 색을 보존한다.
 // 세션의 실제 Kernel/음향/Form 콜백은 나머지 월드 멤버가 살아 있는 동안 정리한다.
 GameWorld::~GameWorld() { factoryDisplay_.reset();campaign_.reset(); }
 // 초기 카메라의 원본 좌표를 clamp나 신전 우선 선택 없이 현재 raw 표시와 음향 원점에 전달한다.
@@ -188,7 +188,10 @@ void GameWorld::SetPalette(std::span<const ScreenColor> palette,std::span<const 
     for (std::size_t i=0;i<palette_.size();++i) palette_[i]={palette[i].red,palette[i].green,palette[i].blue};
     if (!colorSortLogical.empty() && colorSortLogical.size()!=256) throw std::invalid_argument("World 고정ColorSort256색 계약");
     colorSortLogical_=colorSortLogical;
-    if (campaign_) campaign_->Cursor().SetPalette(palette,colorSortLogical_); // 실제 커서도 같은 파일 팔레트의 원본 색표를 사용한다.
+    if (campaign_) {
+        if (campaign_->HasCursorRuntimeForState()) { campaign_->Cursor().SetPalette(palette,colorSortLogical_);pendingCursorPalette_.reset(); } // 존재하는 실제 커서의 기존 설치 관문은 유지한다.
+        else { pendingCursorPalette_.emplace();std::copy(palette.begin(),palette.end(),pendingCursorPalette_->begin()); } // 미생성 커서에 가짜 실행기를 만들지 않고 선택한 원래256색만 보유한다.
+    }
     if (factoryDisplay_) factoryDisplay_->SetPalette(palette,colorSortLogical_); // 원본 SpriteDraw도 같은 파일 팔레트에서만 색표를 만든다.
     remaps_.clear();changed_=true;
 }

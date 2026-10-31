@@ -1,0 +1,114 @@
+{
+  "unit": 656,
+  "date": "2026-10-31",
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "productChanged": true,
+  "executableSha256": "4e757bda9497698b44384602d441ed8c44acd574a906aeb082973448c86a658a",
+  "changes": [
+    "실제10.78 로그인 상태 서비스를 분리해 같은 Renderer/현재 HUD 명령의466280 Route/현재 battlePal의 전체4b6100을 연결했다.",
+    "UI2 뒤 새 벽시각+10·즉시8/인자20·팔레트→접속과 State13의UI3를 연결했다. 장치 누락도 앞선 쓰기를 보존하며 단순 refresh로 대체하지 않는다.",
+    "즉시144BYTE는 Zone 반납 전에 복사해 current+80이0인 뒤에도 immediate+80의 이전 핸들을 보존한다. 이후 State8에 같은 블록을 전달한다.",
+    "GameWorld는 미생성 커서의 선택256색을 소유 복사하고 실제 로그인/커서 생성 뒤 한 번 적용한다. 설치 전 Cursor 입력 관문은 유지한다."
+  ],
+  "focused": {
+    "registered": 40,
+    "finalUnique": 6,
+    "newUnique": 2,
+    "oldUnique": 4,
+    "failedChecks": 0,
+    "invocations": 10,
+    "testFunctionCalls": 11,
+    "logs": [
+      "extracted/cpp-mission-starting-tail-656-focused-v1.log",
+      "extracted/cpp-mission-starting-tail-656-focused-v2.log",
+      "extracted/cpp-mission-starting-tail-656-focused-v3.log",
+      "extracted/cpp-mission-starting-tail-656-focused-v4.log",
+      "extracted/cpp-mission-starting-tail-656-focused-v5.log",
+      "extracted/cpp-mission-starting-tail-656-renderer.log",
+      "extracted/cpp-mission-starting-tail-656-gump.log",
+      "extracted/cpp-mission-starting-tail-656-palette.log",
+      "extracted/cpp-mission-starting-tail-656-state.log",
+      "extracted/cpp-mission-starting-tail-656-renderer-v5.log"
+    ],
+    "initial": [
+      {
+        "log": "extracted/cpp-mission-starting-tail-656-focused-v1.log",
+        "tests": 2,
+        "failedChecks": 5,
+        "reason": "팔레트가 선택된 독립 접합에서도 UI를 요구해야 했으나 부분 검사 fallback으로 진행했다. 이를 수정했다. 이어진 검사에는 실제 World 카메라 장치 누락과 설치 실패 뒤 추가 Cursor 조회가 있었다."
+      },
+      {
+        "log": "extracted/cpp-mission-starting-tail-656-focused-v2.log",
+        "tests": 1,
+        "failedChecks": 1,
+        "reason": "World reset이 요구하는 실제497960 경계가 검사 입력에 빠져 있었다. 기존 CommitScreenless 몸체를 공급했다."
+      },
+      {
+        "log": "extracted/cpp-mission-starting-tail-656-focused-v3.log",
+        "tests": 1,
+        "failedChecks": 2,
+        "reason": "검사 색 배열의 호스트 BGRX와 원문 RGB DWORD 순서가 달랐다. 입력을 실제 BGRX로 고쳤으며 제품 색 계산/guard는 바꾸지 않았다."
+      }
+    ],
+    "final": "현재 큰 접합은 UI 누락/팔레트 누락/성공3입력과 Native 인자+80 보존을 확인했다. 실제 Client Renderer 접합도 최종 제품에서 통과했다. 실제 UI 연결/원문 하위3개는 이후 바뀌지 않은 몸체의 해당 통과를 유지했다.",
+    "palette": "선택 색의 caller 버퍼를0으로 덮은 뒤 실제 새 Cursor 표시색/폰트색을 기존 색 조회 몸체와 비교했다. 팔레트 선택 때 미생성/입력 거부와 생성 후 실제 상태14/PlayerKnown을 확인했다.",
+    "limits": "실제 화면/완전한 HUD 픽셀/전체State7을 새로 검증하지 않았다. 관련 없는34등록은 실행하지 않았다."
+  },
+  "native": {
+    "newCases": 0,
+    "newObservations": 0,
+    "newFixture": false,
+    "replayedRows": 941,
+    "existingRows": {
+      "gumpInput1078": 232,
+      "palette": 676,
+      "localState": 33
+    },
+    "scope": "기존 독립 관측941행을 같은 제품으로 대조했다. 새 원본 PE 에뮬레이션/게임 실행은 없다. 실제 UI2·10초 상수·인자20·팔레트 위치와 Zone 반납의 쓰기 대상은 기계어/기존 상태 몸체를 정적으로 대조했다."
+  },
+  "build": {
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "logs": [
+      "extracted/cpp-mission-starting-tail-656-build-v1.log",
+      "extracted/cpp-mission-starting-tail-656-build-v2.log",
+      "extracted/cpp-mission-starting-tail-656-build-v3.log",
+      "extracted/cpp-mission-starting-tail-656-build-v4.log",
+      "extracted/cpp-mission-starting-tail-656-build-v5.log"
+    ],
+    "finalProductLog": "extracted/cpp-mission-starting-tail-656-build-v5.log"
+  },
+  "protected": {
+    "baseline": "extracted/cpp-solo-entry-645-20261031/protected-after-current.json",
+    "checked": 7,
+    "differences": 0,
+    "sha256": {
+      "AGENTS.md": "e9e46fda5519e663417b5c8d9b643549196bf28fe7ba6b1d546a48a853fd208b",
+      "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+      "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6",
+      "cpppj/tests/fixtures/gumpinput-x86.tsv": "286932cbbb2709f3407759f2d1e75c663b7a0dd2f9018f15189be914ee0302c2",
+      "cpppj/tests/fixtures/fort-palette-transition-x86.tsv": "73e8d0b30bc93d1626b743f40fa81ca80504fc8f5f4c037e175520eee29dea31",
+      "cpppj/tests/fixtures/local-mission-state-x86.tsv": "b591cc51ffd837ce29d04e8090c066d33f5baf4abc1b3c863371346f161d2995"
+    },
+    "fullAuditRepeated": false
+  },
+  "decompileChanged": false,
+  "actualGameRuns": 0,
+  "actualCdEnumeration": false,
+  "newZip": false,
+  "full34Repeated": false,
+  "mainTestExecutableRebuilt": false,
+  "multiplayerTests": 0,
+  "cdStatic": {
+    "scope": "새 로그인 상태 장치의 자동 연결은10.78에만 선택한다.10.72 전체 State7/실행은 별도이며 이번에 GumpInput NativeCd/1037은 실행하지 않았다."
+  },
+  "remaining": [
+    "전체 비동기 State7/phase7 확정·앞선 음악/미션 갱신·자연 Tick 및 진행 안내 수명",
+    "State1/연속 전환·나머지 UI/Edit/시나리오/호환성·BaseFile 소비자/ABI",
+    "시작 레지스트리 InstallMax/DiagResults·메타State19 CD/LeaveBattle 페널티·후순위MP 무시험 사전 구현 및4~7차"
+  ]
+}

@@ -14,6 +14,7 @@
 #include "o/Squid.h"
 #include "o/Islandbuilder.h"
 #include <map>
+#include <optional>
 
 namespace netstorm::client {
 class RawCampaignFactoryDisplay; // 같은 실제 풀의 원본 Factory 화면 출력기다.
@@ -186,6 +187,7 @@ private:
     // palette_: 그림의 색 인덱스를 실제 출력 색으로 바꿀 팔레트.
     std::array<PaletteColor,256> palette_{};
     std::span<const std::uint32_t> colorSortLogical_; //World보다오래사는Client의고정초기입력이며별도값동기화는없다.
+    std::optional<std::array<ScreenColor,256>> pendingCursorPalette_; // State7 팔레트가 실제 커서 생성보다 앞설 때 원래256색을 보유한다. 설치 후 커서에 한 번 전달하며 입력 관문은 열지 않는다.
     // remaps_: 소유자·타입별 출력 색 변환표 캐시.
     mutable std::map<std::pair<std::size_t,int>,ColorMap> remaps_;
     // width_: 가로 크기.

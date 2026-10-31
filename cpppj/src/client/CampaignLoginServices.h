@@ -15,5 +15,7 @@ struct CampaignLoginServices {
     std::function<void(std::string_view)> log; //로그인/전송의 원본 진단과 상태를 실제 로그에 남긴다.
     std::uint32_t* requestPhase{}; //실제 ClientAudio의005c85ac 결과DWORD를 빌리며 독립fixture는 기존 지역fallback을 쓴다.
     std::function<void()> initializeRenderer; // State7의 Zone 설치/반납 뒤 실제4993c0을 호출한다. 실제 앞선 Player 정리를 채택한 미션에는 필수이며 독립 상태8 검사만 생략할 수 있다.
+    std::function<void(std::uint32_t)> uiMode; // State7의2/State13의3을 현재 명령으로 실제466280/Gump Route에 보낸다. 단순 화면 갱신으로 대신하지 않는다.
+    std::function<void()> battlePalette; // State7의 다음8 예약/진행 안내 뒤 현재 battlePal을 조회하고 실제4b6100에 적용한다.
 };
 }

@@ -7,6 +7,7 @@
 #include "client/UberGump.h"
 #include "client/ClientAudio.h"
 #include "client/ClientMain.h"
+#include "client/ClientLocalStateGlobals.h"
 #include "client/ClientColorSortInput.h" // 같은 Client의 공통 현재 색표 소유자를 빌린다.
 #include "client/ClientChatRuntime.h"
 #include "client/ClientStaticStrings.h"
@@ -115,6 +116,14 @@ o::EditorPlayersHooks MakeEditorPlayerClientHooks(Client& client) {
     return hooks;
 }
 // 원본 time32/번역/설정/음향/입력을 동일 클라이언트의 저장소와 장치에 연결한다.
+// State7/13이 호출하는 장치는 사용 시점의 같은 Client 전역/Config/Gump를 조회한다.
+void BindCampaignLoginStateClientServices(Client& client,RawButtonControls& controls,CampaignLoginServices& login) {
+    if (client.Edition()!=o::OriginalEdition::Patch1078) return; //10.72의 기존 어댑터를10.78 State 몸체로 덮지 않는다. 장치를 연결할 때 자산/창을 먼저 요구하지 않는다.
+    login.initializeRenderer=[&client] { client.InitializeNativeRendererView(); };
+    login.uiMode=[&client,&controls](auto mode) { static_cast<void>(controls.NotifyHudMode(client.LocalStateGlobals()->HudModeCommand(),mode)); }; // 현재 명령·현재 mode·둘째0·숨김 포함1의 실제 캡처/modal/루트 분배다.
+    login.battlePalette=[&client] { const auto name=client.Configuration().PathSpec("battlePal");client.ChangeFortPalette({reinterpret_cast<const std::uint8_t*>(name.c_str()),name.size()+1}); }; // 최초 서비스 생성 시의 경로를 캐시하지 않고 NUL을 포함해 기존 전체 부모에 전달한다.
+}
+// 실제 Client의 장기 소유자/입력/음향과 UI를 같은 Session 서비스에 조립한다.
 RawCampaignSessionServices MakeCampaignClientServices(Client& client,RawButtonControls& controls,CampaignClientUi ui) {
     if (!ui.refreshWindowTitle || !ui.tell || !ui.removeMessage)
         throw std::invalid_argument("실제 캠페인 클라이언트 UI 경계 누락");
@@ -245,7 +254,7 @@ RawCampaignSessionServices MakeCampaignClientServices(Client& client,RawButtonCo
     BindCampaignAiClientServices(client,services.ai); // 장치 없는 검사와 실제 GUI 월드가 동일한 장기 Client 경계를 사용한다.
     CampaignLoginServices login; //실제Client의현재설정/시계/표시를원본로컬로그인에연결한다.
     login.requestPhase=&audio.ResultState(); //Login Timer/State3/SceneMusic이 같은005c85ac 결과 DWORD를 빌린다. 새 결과0을 만들어 덮지 않는다.
-    if (client.Assets().Edition()==o::OriginalEdition::Patch1078) login.initializeRenderer=[&client] { client.InitializeNativeRendererView(); }; //10.78의 Zone 설치/복사본 반납 뒤 같은 논리 Renderer/목표/snapshot/두 갱신 전역을 초기화한다.10.72의 기존 어댑터와 구별한다.
+    BindCampaignLoginStateClientServices(client,controls,login); // 같은 실제 장치를 State7 앞단과 State13 모두에 공급하며10.72의 기존 어댑터를 구별한다.
     login.configInt=[&client](std::string_view key,std::int32_t fallback) { client.Configuration().ReadInt(key,fallback);return fallback; };
     login.wallSeconds=[&client] { return client.WallSeconds(); };login.clock=[] { return static_cast<std::uint32_t>(std::clock()); };
     login.refresh=[&client] { client.GetRenderer().InvalidateAll(); };

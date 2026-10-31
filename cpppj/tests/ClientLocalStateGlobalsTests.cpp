@@ -227,3 +227,4 @@ TEST_CASE(GameAux_SessionIdentityFailureLeavesBothOwnersUnchanged) {
 }
 
 #include "MissionEntryRuntimeTests.inc" // 같은 기존 Session 장치로 실제 시작 CD/Zone 뒤 Renderer 접합을 확인한다.
+#include "MissionStartingTailTests.inc" // 실제 후반 UI/기한/인자/생성 전 팔레트를 같은 장치로 함께 확인한다.
