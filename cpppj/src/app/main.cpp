@@ -36,6 +36,7 @@
 #include "platform/Console.h"
 #include "platform/Bitmap.h"
 #include "platform/FileOutput.h"
+#include "platform/PortableStartup.h"
 
 namespace {
 // 복원의 기준이 되는 원본 판본.
@@ -844,10 +845,15 @@ int RunConfigCommand(const std::string& command, std::vector<std::string> argume
 }
 }
 
-// 게임 프로세스를 시작하지 않고 복원된 C++ 데이터 모듈을 실행한다.
+// 무인자는 원본처럼 게임 GUI를 시작하고 명시적인 옵션은 기존 분석/검사 CLI로 분배한다.
 int main(int argc, char** argv) {
     try {
-        if (argc == 1 || (argc == 2 && std::string(argv[1]) == "--help")) { PrintBuildInfo(); return 0; }
+        if (argc == 1) {
+            const auto directory=netstorm::platform::PortableGameDirectory(netstorm::platform::CurrentExecutableFile()); // 새 휴대 배포 배치이며 원본과 다른 Windows 10/11 경로 어댑터다.
+            netstorm::platform::DetachOwnGuiConsole();
+            return RunClient({directory.string()});
+        }
+        if (argc == 2 && std::string(argv[1]) == "--help") { PrintBuildInfo(); return 0; }
         const std::string command = argv[1];
         if (command == "--dump-font" && argc == 4) { DumpFont(argv[2], argv[3]); return 0; }
         if (command.starts_with("--config-")) return RunConfigCommand(command, std::vector<std::string>(argv + 2, argv + argc));
@@ -918,6 +924,7 @@ int main(int argc, char** argv) {
         }
         PrintBuildInfo(); return 2;
     } catch (const std::exception& error) {
+        if (argc==1) netstorm::platform::ShowGuiStartupError(error.what()); // 탐색기 직접 실행 실패도 사용자가 읽을 수 있게 남긴다.
         std::fprintf(stderr, "%s\n", error.what()); return 1;
     }
 }

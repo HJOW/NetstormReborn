@@ -1,6 +1,6 @@
 # cpppj — NetStorm C++ 빌드
 
-최신636은 고정635제품의 Early6/Training9/캠페인16/실제Demo3 전체34 진입을 통합했다.34/34·실패/재시도0·정상 종료·비정지 시각·Native Frame/단일목록 수집·분배·34창DC RGB가 통과했다. 제품/ZIP/보호2629/fixture770·1376항목/1358자산은 그대로다.635의 집중71/등록3552·빌드 경고/오류0·실제3회/10RGB는 별도 근거다. 다음637은 EXE 기본 GUI 진입/휴대배포·실제 Windows 입력 검증이며 전체 목표/원본 동일성은 남는다. [636 기록](../docs/exe/cpp-solo-camera-current-20261031.md)을 따른다.
+최신637은 무인자 Netstorm.exe를 게임 GUI 기본 실행으로 연결했다. Unicode EXE 절대 경로를 기준으로 자기 배포 자료를 찾고 --help/명시적 CLI/두 배치는 유지한다. 빌드 경고/오류0·집중19/실패0·등록3554, 한글/이모지 사본의 무인자 실제 창/인자 없는 프로세스와 별도 명시CLI 안내→메인/Quit 종료0·창DC RGB1쌍을 확인했다. Computer Use 캡처가 재선택/재시도 뒤에도 실패해 물리 QWASZX/ESC/Home/포커스는 미완료/입력0이다. 원천31/보호2629/fixture770·1376항목/1358자산이 보존됐다. 최신 전체34는635제품/636의34/34이며 전체 목표/원본 동일성·남은 UI/Edit/수명/호환성·MP무시험/4~7차는 남는다. [637 기록](../docs/exe/cpp-portable-startup-20261031.md)을 따른다.
 
 615는 임시 Alt/가운데 카메라 속도를 원문 지도중심거리/client 크기/FTOL/8·Shift·현재목표와 입력순서로 복원했다. 원문259/777·재관측 차이0·집중29/실패0·등록3522·Release 경고/오류0이다. 새615배포3화면비 실제창/검사폴링·해제정지·일반키소비·창밖옵션0/1·전체RGB/정상종료를 확인했다. 같은615제품의34 통합과확대전체화면속도차이는616에서확인했다. 재개후단위정합·DPI/물리키/포커스를이어가며전체동일성은미완료다. [615 기록](../docs/exe/cpp-camera-pan-20261030.md)을 따른다.
 
@@ -355,7 +355,7 @@ cmake --build cpppj/build --config Release
 ctest --test-dir cpppj/build --build-config Release --output-on-failure
 ```
 
-실행 파일은 `cpppj/build/bin/Release/Netstorm.exe` 에 생긴다.
+실행 파일은 `cpppj/build/bin/Release/Netstorm.exe` 에 생긴다. 배포 ZIP은 압축을 모두 푼 뒤 최상위 `Netstorm.exe`를 직접 실행한다(저장된 화면 모드). `Netstorm.bat`는 창 모드를 강제한다. 개발 빌드는 아래처럼 `--run <자료 경로>`를 명시하며 정보 출력은 `--help`다.
 
 ```powershell
 cpppj/build/bin/Release/Netstorm.exe --inspect-data originals

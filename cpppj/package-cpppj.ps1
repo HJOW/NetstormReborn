@@ -378,7 +378,7 @@ function Get-GitSummary {
 
 # 실행용 배치 파일(.bat)의 본문을 돌려준다. WindowMode 가 참이면 `--window` 로 창 모드를 강제한다.
 # cmd.exe 코드 페이지 문제를 피하려고 ASCII 문자만 쓴다. 게임 폴더(game)는 이 파일 기준 상대 경로로 지정한다.
-# 실행 파일은 인자 없이 빌드 정보를 출력하므로 --run game으로 시작한다. 최상위 클론을 명시해 같은 이름의 game/ 원본과 구별한다.
+# EXE의 무인자 실행은 저장된 화면 모드를 따른다. 배치는 창 강제와 추가 검사 인자를 위해 명시적 --run game을 유지한다.
 function New-LauncherText {
     param([bool] $WindowMode)
     $runLine = if ($WindowMode) { '"Netstorm.exe" --run game --window %*' } else { '"Netstorm.exe" --run game %*' }
@@ -416,7 +416,8 @@ function New-ReadmeText {
         '[실행 방법]',
         '1. 이 압축파일을 쓰기 가능한 폴더에 풉니다. Program Files 같은 보호 폴더는 피하세요.',
         '   설정이 game\d\options.cfg 에 저장되므로 쓰기 권한이 필요합니다.',
-        '2. Netstorm.bat 를 실행합니다. 창 모드로 시작합니다.',
+        '2. 최상위 Netstorm.exe 를 실행합니다. 저장된 화면 모드 설정(전체화면 포함)을 따릅니다.',
+        '   창 모드로 강제 시작하려면 Netstorm.bat 를 실행합니다.',
         '   Netstorm-SavedMode.bat 는 저장된 화면 모드 설정(전체화면 포함)을 따릅니다.',
         '',
         '[필요 환경]',
@@ -446,7 +447,7 @@ function New-ReadmeText {
         '',
         '[How to run]',
         '1. Extract the archive to a writable folder (not Program Files). Settings are saved to game\d\options.cfg.',
-        '2. Run Netstorm.bat (window mode). Netstorm-SavedMode.bat follows the saved screen mode settings.',
+        '2. Run the top-level Netstorm.exe (saved screen mode). Use Netstorm.bat to force window mode.',
         '3. Requires Windows 10/11 x64. The Visual C++ runtime DLLs are bundled in this folder.',
         '4. game\Netstorm.exe is the original executable. The clone only reads its icon/cursor resources; do not run it directly.',
         '5. Delete game\d\options.cfg and game\fullscreenStateFile.dat to reset settings.',
