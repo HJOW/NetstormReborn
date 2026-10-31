@@ -101,6 +101,9 @@ cpppj/src/client/MetaImageGump.cpp	Netstorm.Client/Gump/MetaImageGump.cs	8eece42
 cpppj/src/client/MetaImageGump.h	Netstorm.Client/Gump/MetaImageGump.cs	8eece422b34f1cb427900b1410f5c670a02c07c8	L1
 cpppj/src/client/MetaImageList.cpp	Netstorm.Client/Gump/MetaImageList.cs	27075f9bdaca0aa2738e5fadba335d92e7c4e99c	L1
 cpppj/src/client/MetaImageList.h	Netstorm.Client/Gump/MetaImageList.cs	27075f9bdaca0aa2738e5fadba335d92e7c4e99c	L1
+cpppj/src/client/Mission.cpp	Netstorm.Client/Mission/MissionScript.cs	8db90513e0a5cb2bca376cd61a6c5aa5670c8f10	port
+cpppj/src/client/Mission.h	Netstorm.Client/Mission/MissionScript.cs	8db90513e0a5cb2bca376cd61a6c5aa5670c8f10	port
+cpppj/src/client/MissionFortSource.h	Netstorm.Client/Mission/MissionFortSource.cs	8db90513e0a5cb2bca376cd61a6c5aa5670c8f10	port
 cpppj/src/client/OwnerColorMaps.cpp	Netstorm.Client/Display/OwnerColorMaps.cs	e4b739b97f5316453de827b92ba6527a63f17637	L1
 cpppj/src/client/OwnerColorMaps.h	Netstorm.Client/Display/OwnerColorMaps.cs	e4b739b97f5316453de827b92ba6527a63f17637	L1
 cpppj/src/client/PaletteColors.cpp	Netstorm.Client/Display/PaletteColors.cs	58622e15d401535bf09f216e9c75bbd8c3ea2037	L1
