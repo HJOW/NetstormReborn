@@ -79,6 +79,7 @@ struct RawCampaignSession::Impl::Login {
     LocalMissionStateHooks StateHooks() {
         LocalMissionStateHooks hooks;hooks.logState=[this](std::uint32_t phase) { Need(effects.log)("로컬 미션 상태 "+std::to_string(phase)+"\n"); };
         hooks.wallSeconds=effects.wallSeconds;
+        hooks.initializeRenderer=effects.initializeRenderer; // 전체 State7 연결에서도 같은 실제 장치를 사용한다. 상태8 전용 독립 장치에 가짜 성공을 추가하지 않는다.
         hooks.connectServer=[this](std::span<const std::uint8_t>,std::uint32_t) { transport->Connect(); };
         hooks.connectionStatus=[this](std::int32_t owner) { return owner==9 && transport->IsOpen() && (transport->Client().flags&2) ? 1 : 0; };
         hooks.connectionOpen=[this](std::int32_t owner) { return owner==9 && transport->IsOpen() && (transport->Client().flags&2) && !(transport->Client().flags&0x40); };
@@ -146,6 +147,7 @@ struct RawCampaignSession::Impl::Login {
         hooks.serve=[this](std::uint32_t port) { transport->Open(port,false); };
         netstorm::zacket::InstallLocalMissionZone(zone,s.players,s.playerState,{s.core.processState.Server(),s.assetState.Boss(),s.globals.mySubscriber,pendingStamp,activeStamp,zoneWord,zoneWords[0],captureEnd,adjust,s.objectState.mission,overrideFlags,s.core.ownerMode.challenge,currentCore,cachedCore},std::move(hooks),static_cast<std::uint32_t>(Need(effects.configInt)("gameServerPort",6799)));
         if (request) { std::vector<std::uint8_t>{}.swap(request->zone);request->consumed=true;blocks[3][0x80/4]=0; } // 설치 뒤 실제 할당도 반납한다. 전체 State7 정리 본문을 실행했다고 합산하지 않는다.
+        if (s.services.adoptInitializedPlayers || effects.initializeRenderer) Need(effects.initializeRenderer)(); // 실제 State7의4993c0 위치다. 앞선 실제 Player 정리를 채택한 미션은 장치 누락을 거부하며 상태8부터의 독립 부분 검사는 기존 범위를 유지한다.
         s.playerState.playerKnown=0;blocks[3][0]=8;state->Run();state->Poll();Pump();
         if (!s.loaded || blocks[1][0]!=14 || !(s.players[s.playerState.battleOwner*0xb4+0x50]&1)) throw std::logic_error("실제 로컬 미션 로그인 미완료");
     }

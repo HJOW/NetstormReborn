@@ -261,7 +261,8 @@ int Client::Run() {
     if (resources) loadingBitmap_ = LoadImageA(resources, MAKEINTRESOURCEA(kLoadingBitmapResource), IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION);
     loadingFont_ = CreateFontA(-MulDiv(kLoadingFontPoints, GetDeviceCaps(static_cast<HDC>(windowDc_), LOGPIXELSY), 72),
         0, 0, 0, FW_NORMAL, 0, 0, 0, DEFAULT_CHARSET, OUT_TT_ONLY_PRECIS, 0, 0, FF_SWISS, "Arial");
-    // [원본] 레지스트리의 InstallMax·DiagResults 읽기, CD 찾기(FUN_00440c60) — 옮기지 않았다.
+    // [원본] 레지스트리의 InstallMax·DiagResults 읽기는 별도 잔여다. CDDir 재귀와 다른 시작 CD 결과만 원문 위치에 기록한다.
+    if (options_.edition==o::OriginalEdition::Patch1078) cdGlobals_->InitializeStartup(MakeWindowsCdPresenceHooks()); //004392ed: 옵션/파일 해석 전에 같은 Client 캐시를 검사하고 별도0054db6c에 결과를 저장한다.
 
     // "init parse options"(FUN_004359f0): 설정을 시작 순서로 읽고 해석한다.
     if (!PumpMessages()) return 0;

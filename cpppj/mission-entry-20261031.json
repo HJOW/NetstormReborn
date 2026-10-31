@@ -1,0 +1,94 @@
+{
+  "unit": 655,
+  "date": "2026-10-31",
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "productChanged": true,
+  "executableSha256": "18d2cad79e9c14c8a9544e75eab24b768a7425ff6b47091790cd20d1b63fb4ac",
+  "changes": [
+    "WinMain의 옵션 해석 전 실제 CD 확인과 별도0054db6c 기록을 같은 Client 캐시에 연결했다. 앞선0 쓰기와 조회 실패 효과도 보존한다.",
+    "실제10.78 로그인 서비스에 기존4993c0 몸체를 공급하고 Zone 설치/이미지 반납 뒤·PlayerKnown0/첫 접속 전에 호출한다. 앞선 Player 정리를 채택한 실제 미션에는 장치 누락을 거부한다.",
+    "상태8부터의 독립 부분 검사에는 기존 범위를 유지한다.10.72 서비스에는 새 Renderer 장치를 등록하지 않는다. 전체 비동기7 완료는 아니다."
+  ],
+  "focused": {
+    "registered": 23,
+    "finalUnique": 4,
+    "newUnique": 2,
+    "oldUnique": 2,
+    "failedChecks": 0,
+    "invocations": 4,
+    "testFunctionCalls": 5,
+    "logs": [
+      "extracted/cpp-mission-entry-655-focused-v1.log",
+      "extracted/cpp-mission-entry-655-startup-v2.log",
+      "extracted/cpp-mission-entry-655-camera-native.log",
+      "extracted/cpp-mission-entry-655-cd-native.log"
+    ],
+    "initial": {
+      "tests": 2,
+      "failedChecks": 1,
+      "reason": "검사가 같은 프로세스에서 두 Client를 동시에 생성해 기존 Only one client may exist 관문에 걸렸다. 첫 Client를 반납한 뒤 두 번째를 만드는 입력으로 고쳤고 제품 관문은 유지했다."
+    },
+    "session": "실제 Client/같은 Player/Core/Gameplay/State 소유자·요청86BYTE와 로컬 Session을 사용했다. 원문 Zone 반납 뒤 Renderer 초기화/목표·snapshot·redraw1·revision 감김/분모 보존 뒤 첫 패킷/phase14를 확인했다. 장치 누락은 Zone 반납 뒤·패킷 전/phase0에서 중단했다.",
+    "startup": "시작0 store→조회/성공/예외/실패의 앞선 효과·캐시·State7 결과/RNG 분리와 순차 실제 Client 수명을 확인했다."
+  },
+  "native": {
+    "newCases": 0,
+    "newObservations": 0,
+    "existingCameraRows": 16,
+    "existingCdRows": 492,
+    "replayedRows": 508,
+    "newFixture": false,
+    "static": [
+      "4392e7의 시작0→4392ed의 CD 확인→4392f9의 결과 저장",
+      "4b75a1의 Zone 설치/반납→4b75cc의 Renderer→4b75dc의 PlayerKnown0"
+    ],
+    "scope": "새 게임/원본 PE 에뮬레이션/실제 CD 탐색은 없다. 기존 독립 원문 fixture508행을 같은 제품으로 대조했고 두 실제 호출 위치는 정렬된 기계어를 정적으로 읽었다. 새로운 독립 Native 관측으로 세지 않는다."
+  },
+  "build": {
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "logs": [
+      "extracted/cpp-mission-entry-655-build-v1.log",
+      "extracted/cpp-mission-entry-655-build-v2.log",
+      "extracted/cpp-mission-entry-655-build-v3.log"
+    ],
+    "reason": "서비스의10.78 조건이 반영된 라이브러리와 제품 EXE를 최종 재링크했다. 이후 변경은 검사 입력뿐이다."
+  },
+  "protected": {
+    "checked": 7,
+    "baseline645": 6,
+    "baseline654": 1,
+    "differences": 0,
+    "sha256": {
+      "AGENTS.md": "e9e46fda5519e663417b5c8d9b643549196bf28fe7ba6b1d546a48a853fd208b",
+      "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+      "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6",
+      "cpppj/tests/fixtures/camera-view-x86.tsv": "fb22a21df5be3ca9201d1c8d635f0e4b49b6f974efbacfe46e012a86536887d0",
+      "cpppj/tests/fixtures/local-mission-state-x86.tsv": "b591cc51ffd837ce29d04e8090c066d33f5baf4abc1b3c863371346f161d2995",
+      "cpppj/tests/fixtures/cd-presence-x86.tsv": "f98760be8fef12dd5a792b39d43c41dd758e59f3260bc90695f2db7f7d55bd38"
+    },
+    "baseline": "extracted/cpp-solo-entry-645-20261031/protected-after-current.json",
+    "fullAuditRepeated": false
+  },
+  "decompileChanged": false,
+  "actualGameRuns": 0,
+  "actualCdEnumeration": false,
+  "newZip": false,
+  "full34Repeated": false,
+  "mainTestExecutableRebuilt": false,
+  "multiplayerTests": 0,
+  "cdStatic": {
+    "changed": false,
+    "scope": "새 시작/Renderer 연결은10.78에만 선택한다.10.72의 기존 어댑터/004a8970 대응은 별도이며 CD 실행/전체 복원 근거로 세지 않는다."
+  },
+  "remaining": [
+    "전체 비동기 State7/State1·UI2/자연 Tick 및 정리 수명",
+    "시작 레지스트리 InstallMax/DiagResults·메타State19의 CD005c85bc·LeaveBattle 페널티",
+    "나머지 UI/Edit/시나리오/호환성·BaseFile 소비자/ABI",
+    "후순위MP 무시험 사전 구현·4~7차"
+  ]
+}

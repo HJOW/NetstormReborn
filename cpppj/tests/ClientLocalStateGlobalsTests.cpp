@@ -225,3 +225,5 @@ TEST_CASE(GameAux_SessionIdentityFailureLeavesBothOwnersUnchanged) {
     try { auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",std::move(services)); }catch (const std::invalid_argument& error) { rejected=std::string(error.what()).find("게임 보조")!=std::string::npos; }
     CHECK(rejected && !gameplay->Borrowed() && !surface->Borrowed() && surface->Generation()==0 && gameplay->GameAux()->ResourcePool()==73 && foreign->ResourcePool()==79 && gameplay->cursor.screenX==83);
 }
+
+#include "MissionEntryRuntimeTests.inc" // 같은 기존 Session 장치로 실제 시작 CD/Zone 뒤 Renderer 접합을 확인한다.
