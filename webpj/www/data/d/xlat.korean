@@ -4,6 +4,7 @@
 // "Pass Server Diagnostic " 의 원문 끝 공백은 코드의 라벨과 같게 유지해야 하므로 편집기가 줄 끝 공백을 지우지 않게 한다.
 // 건물·유닛 이름은 AGENTS.md 의 한국어 명칭 규칙(assets/unit-names.korean.json)을 따른다. 이 파일은 메뉴 라벨만 담는다.
 // (2026-10-31 WB03-N: 메인 메뉴 버튼·Help/Options 펼침 메뉴 라벨. 번역 문구는 개발자 검수 대상이다.)
+// (2026-10-31 WB03-O: 일반 도움말 창의 Back·OK 단추 추가)
 
 ***
 Campaign
@@ -189,4 +190,16 @@ Version
 NetStorm Main Menu
 ---
 NetStorm 메인 메뉴
+===
+
+***
+Back
+---
+뒤로
+===
+
+***
+OK
+---
+확인
 ===

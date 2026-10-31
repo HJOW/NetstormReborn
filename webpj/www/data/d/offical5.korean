@@ -1,0 +1,16 @@
+title = "완전한 승리"
+
+[Overview]
+<background="nsstart">
+<h2>{offical5.title}</h2>
+<p>
+어둠의 세력을 짓밟고 궁극의 승리를
+거머쥘 수 있겠습니까?
+
+$Checked=1 돌파,MissionBegin,BreakingThrough,{DoneBreakingThrough},{DoneSurrounded}
+$Checked=2 구출 작전!,MissionBegin,ToTheRescue,{DoneToTheRescue},{DoneBreakingThrough}
+$Checked=3 잔혹,MissionBegin,Vicious,{DoneVicious},{DoneToTheRescue}
+$Checked=4 적의 영토,MissionBegin,EnemyTerritory,{DoneEnemyTerritory},{DoneVicious}
+$Checked=5 최후의 대결,MissionBegin,FinalConfrontation,{DoneFinalConfrontation},{DoneEnemyTerritory}
+
+$Button=뒤로,Tell,UCampaign

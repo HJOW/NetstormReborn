@@ -1,0 +1,10 @@
+title = "사용자 제작 캠페인"
+
+[Overview]
+<background="nsstart">
+<h2>{offical6.title}</h2>
+<p>
+어느 부분을 플레이하시겠습니까?<br><br>
+$Timeout=120,Tell,Campaign
+$Menu=%{userSpec},Tell,{cur.file}.overview
+$Button=뒤로,Tell,UCampaign

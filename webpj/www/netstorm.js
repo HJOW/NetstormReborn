@@ -671,8 +671,9 @@ export class Netstorm {
                 this._resources = buildMenuResources(files, korean);
                 // 설정 층에는 웹 사용자 설정(언어·음량)과 저장된 캠페인 진행 값을 원본 options.cfg 자리에 넣는다. 해상도·전체화면 값은 넣지 않는다.
                 // 이후 게임 데이터에 쓰이는 값은 _onConfigWrite 가 설정·진행 저장소로 옮긴다. (2026-10-30 WB03-H: 진행 값과 쓰기 통지 연결)
+                // 한국어 언어 자료(tell·offical*·config 용어표)는 같은 데이터 폴더의 느슨한 파일로 합쳐 넘긴다. 한국어 묶음을 받지 못했으면(korean 이 null) 영어 파일로 대체된다. (2026-10-31 WB03-O)
                 this._gameData = GameData.build({
-                    files,
+                    files: korean?.languageFiles?.size ? new Map([...files, ...korean.languageFiles]) : files,
                     language: this.options.language,
                     options: { ...this._settings.snapshot(), ...this._progress.snapshot() },
                     onChange: (key, value) => this._onConfigWrite(key, value),

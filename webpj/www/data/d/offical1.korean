@@ -1,0 +1,19 @@
+title = "초기 미션"
+
+[Overview]
+<background="nsstart">
+<h2>초기 미션</h2>
+<i>"평화를 바라는 자는 전쟁을 준비해야 한다."  --작자 미상</i>
+<p>
+당신은 님버스의 백성을 이끌고 압제자들에게
+맞서 승리하도록 선택받았습니다. 온 힘과 의지를
+다해 싸울 준비가 되셨습니까?
+
+$Checked=1 간극에 다리 놓기,MissionBegin,Tutorial1,{DoneTutorial1},1
+$Checked=2 비밀 워크샾,MissionBegin,Tutorial2,{DoneTutorial2},{DoneTutorial1}
+$Checked=3 사제 포획,MissionBegin,Tutorial3,{DoneTutorial3},{DoneTutorial2}
+$Checked=4 전술 전투,MissionBegin,Tutorial4,{DoneTutorial4},{DoneTutorial3}
+$Checked=5 교묘한 방어,MissionBegin,Tutorial5,{DoneTutorial5},{DoneTutorial4}
+$Checked=6 순수한 힘,MissionBegin,Tutorial6,{DoneTutorial6},{DoneTutorial5}
+
+$Button=뒤로,Tell,UCampaign

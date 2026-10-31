@@ -6,6 +6,7 @@
 //  - 경로 지정값(`missionSpec`·`guideSpec` 등)은 임시 `local.1~3` 객체에 인자를 넣고 치환한다.
 //  - Tell 섹션은 tell 스크립트(`{missionSpec}` + local.1 = "tell" → `\D\tell.<언어>`)에서 `[이름]` 섹션을 찾는다(원본 004cf730 의 기본 스크립트 조회).
 // 언어 파일이 없으면(예: 아직 없는 .korean) 영어 파일로 대체한다. 원본은 대체하지 않으나 웹 판본은 한국어 자료가 갖춰질 때까지 영어 화면을 보이기 위한 웹 적응이다.
+// Tell 섹션은 파일뿐 아니라 섹션 단위로도 대체한다: 한국어 tell 파일은 웹에서 닿는 섹션만 번역한 부분 파일이라 없는 섹션은 영어 tell 파일에서 찾는다(2026-10-31 WB03-O).
 // 설정 값 쓰기(원본 Config::Set, 004404e0)는 set() 이 맡는다: 같은 키의 줄을 모두 지우고 `키 = "값"` 줄을 전역 설정 버퍼 끝에 덧붙인다.
 // 원본은 메인 루프가 변경 표시를 보고 options.cfg 를 저장하지만, 웹 판본은 쓸 때마다 호스트가 넘긴 onChange 훅을 불러 로컬 저장소에 저장하게 한다(platform/progress.js·settings.js).
 // 이 모듈은 DOM 을 쓰지 않아 Node 에서도 불러와 검사할 수 있다.
@@ -57,6 +58,8 @@ export class GameData {
         this.fort = new Config(this.registry, 'fort');
         // 언어별로 읽어 둔 tell 스크립트 텍스트 캐시다.
         this._tellText = null;
+        // 영어 대체 tell 스크립트 텍스트 캐시다(undefined = 아직 읽지 않음). (2026-10-31 WB03-O)
+        this._fallbackTellText = undefined;
         this._loadConfiguration(options);
         this._loadLanguage();
     }
@@ -185,6 +188,19 @@ export class GameData {
         return this._tellText;
     }
 
+    // 영어가 아닌 언어에서 현재 언어의 tell 스크립트에 섹션이 없을 때 대신 찾을 영어 tell 스크립트 텍스트이다. 영어이거나 영어 파일이 없으면 null 이다.
+    // 한국어 tell 파일은 웹에서 닿는 섹션만 번역한 부분 파일이라, 번역이 없는 섹션은 영어로 대체하기 위한 웹 적응이다(원본은 섹션 단위로 대체하지 않는다). (2026-10-31 WB03-O)
+    get fallbackTellText() {
+        if (this._fallbackTellText === undefined) {
+            this._fallbackTellText = null;
+            if (this.language !== FALLBACK_LANGUAGE) {
+                const bytes = this.files.read(this.pathSpec('missionSpec', 'tell').replace(new RegExp(`${this.language}$`, 'i'), FALLBACK_LANGUAGE));
+                if (bytes) this._fallbackTellText = decodeOriginalText(bytes);
+            }
+        }
+        return this._fallbackTellText;
+    }
+
     // Tell 섹션 본문을 찾는다. 이름에 점이 있으면 먼저 등록된 객체(접두어)의 섹션을, 이어 기본 tell 스크립트의 섹션을 조회한다(원본 004cf730 FindTellSection).
     // 현재 미션 스크립트 조회는 미션 구현 때 연결한다. 없으면 null, 섹션이 있어도 본문이 비어 있으면 빈 문자열이다.
     // 사용: tellSection('UCampaign'). (2026-10-28 WB02-D)
@@ -195,10 +211,13 @@ export class GameData {
             const body = object?.section(name.slice(dot + 1)) ?? null;
             if (body !== null) return body;
         }
-        const text = this.tellText;
-        if (text === null) return null;
-        const range = sectionRange(text, name);
-        return range ? text.slice(range.start, range.start + range.length) : null;
+        // 현재 언어의 tell 스크립트를 먼저, 섹션이 없으면 영어 tell 스크립트를 찾는다. 본문이 비어 있는 섹션은 있는 것으로 본다.
+        for (const text of [this.tellText, this.fallbackTellText]) {
+            if (text === null) continue;
+            const range = sectionRange(text, name);
+            if (range) return text.slice(range.start, range.start + range.length);
+        }
+        return null;
     }
 
     // Tell 이름을 현재 이름으로 기록하고 섹션 본문을 찾는다(원본 004cf730 의 이름 기록 + 조회). 이름이 현재 이름과 대소문자를 무시하고 다르면

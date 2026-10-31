@@ -1,0 +1,16 @@
+title = "국가의 탄생"
+
+[Overview]
+<background="nsstart">
+<h2>{offical4.title}</h2>
+<p>
+당신의 섬은 강해졌습니다. 이제 님버스 하늘의
+모든 선량한 사람들의 자유를 위해 싸우십시오.
+
+$Checked=1 올가미,MissionBegin,TheNoose,{DoneTheNoose},{DoneDissolvedAlliance}
+$Checked=2 레인 대 레인,MissionBegin,RainVsRain,{DoneRainVsRain},{DoneTheNoose}
+$Checked=3 도망쳐라!,MissionBegin,RunForIt,{DoneRunForIt},{DoneRainVsRain}
+$Checked=4 내 등을 지켜라,MissionBegin,GuardMyBack,{DoneGuardMyBack},{DoneRunForIt}
+$Checked=5 포위당했다!,MissionBegin,Surrounded,{DoneSurrounded},{DoneGuardMyBack}
+
+$Button=뒤로,Tell,UCampaign

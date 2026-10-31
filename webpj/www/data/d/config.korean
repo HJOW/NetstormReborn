@@ -1,0 +1,48 @@
+// NetStorm 웹 판본 한국어 용어표 (원본 d/config.<언어> 형식, UTF-8).
+// 원본 config.english 와 같은 키를 같은 순서로 두고 보이는 값만 번역한다. 키와 `{}` 안의 치환 키, 파일 경로·주소는 영어 원문 그대로다.
+// 건물·유닛 이름은 AGENTS.md 의 한국어 명칭 규칙(assets/unit-names.korean.json)을 따른다: Workshop → 워크샾, Temple → 신전, Priest → 사제.
+// 한국어에는 관사와 복수형이 없어 `a factory`·`factories` 도 같은 낱말로 둔다. 번역 문구는 이 프로젝트가 새로 쓴 것이라 개발자 검수 대상이다.
+// (2026-10-31 WB03-O: OkButton 과 이름 용어를 위해 추가)
+//---------------------------------------------------------------------
+a factory = "워크샾"
+factory = "워크샾"
+factories = "워크샾"
+vortex = "신전"
+vortices = "신전"
+stormpower = "스톰 파워"
+technology = "지식"
+technologies = "지식"
+helpWord = "정보"
+priest = "사제"
+influence = "에너지"
+defaultAiName = "이블 듀크"
+progName = "NetStorm"
+copyright = "(C) 1997 Titanic Entertainment, Inc. and Activision Inc. {version}"
+
+// 사용자 인터페이스
+//--------------------------------------------------------------------
+OkButton = "$Button=확인,DoNothing,0"
+WindowName = "NetStorm 멀티플레이어 게임 `"{local.1}`" 소유자: {fort.mySubHandle|등록되지 않음}"
+BlankWindowName = "NetStorm 메인 메뉴"
+MissionWindowName = "NetStorm 미션 `"{local.1}`""
+TestBattleWindowName = "NetStorm 테스트 전투 `"{local.1}`""
+DemoWindowName = "NetStorm 데모 `"{local.1}`""
+EditorWindowName = "NetStorm 편집기 게임 `"{local.1}`""
+
+crash HTML = "<p>Please copy this information and <a href=`"mailto:bugs@titanic.com`">Email Us</a> with it.`n<p>`n<a href=`"{troubleshooting URL}`">Go to troubleshooting pages.</a><hr>(to stop this browser launch, set troubleshootOnCrash = 0 in your options.cfg file.)`n"
+crash TXT  = "An assertion has failed:`n'%s' in '%s', line %d version %d.`nPlease copy this information and mail it to bugs@titanic.com`n"
+
+readonly = "읽기 전용! "
+newFort = "MyOnlineGame"
+
+// 바로 가기 설치: 프로그램 이름과 주소는 번역하지 않고 설명 문구만 번역한다.
+RelShortcut0 = "\NetStorm.exe,,NetStorm,NetStorm 실행 파일,"
+RelShortcut1 = "\nsutil.exe,diagnose,NetStorm 진단,NetStorm 진단 도구,"
+RelShortcut2 = "\nsutil.exe,uninstall,NetStorm 제거,NetStorm 제거 도구,"
+RelShortcut3 = "\Help\Help.exe,Readme.hlp,Technical Help,NetStorm 기술 도움말,\help"
+DemoShortcut0 = "\NetStorm.exe,,NetStorm Demo,NetStorm 실행 파일,"
+DemoShortcut1 = "\nsutil.exe,diagnose,NetStorm Demo Diagnostics,NetStorm 진단 도구,"
+DemoShortcut2 = "\nsutil.exe,uninstall,Uninstall NetStorm Demo,NetStorm 제거 도구,"
+DemoShortcut3 = "\Help\Help.exe,Readme.hlp,Technical Help,NetStorm 기술 도움말,\help"
+InetShortcut0 = "http://www.activision.com,Visit Activision on the Web"
+InetShortcut1 = "http://www.titanic.com,Visit Titanic on the Web"

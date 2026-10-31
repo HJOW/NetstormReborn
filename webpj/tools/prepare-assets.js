@@ -6,7 +6,7 @@
 //   node webpj/tools/prepare-assets.js          복사 + 매니페스트 작성
 //   node webpj/tools/prepare-assets.js --check  복사본·매니페스트가 원본과 같은지 검사만 한다(다르면 종료 코드 1)
 // originals/·originalCD/ 는 읽지 않는다. 브라우저 실행 중에도 원본 설치 폴더를 찾지 않는다.
-// (2026-10-23 WB03-M1: 메인 메뉴 자산 묶음 준비를 위해 추가, 2026-10-28 WB02-D: 아카이브·기본 설정 추가, 2026-10-31 WB03-N: 한국어 자산 묶음 추가)
+// (2026-10-23 WB03-M1: 메인 메뉴 자산 묶음 준비를 위해 추가, 2026-10-28 WB02-D: 아카이브·기본 설정 추가, 2026-10-31 WB03-N: 한국어 자산 묶음 추가, WB03-O: 한국어 언어 자료 파일 추가)
 'use strict';
 
 const fs = require('fs');
@@ -35,7 +35,7 @@ const MANIFEST_FORMAT = 1;
 const BUNDLES = Object.freeze({
     menu: '메인 메뉴 표시 전에 받아야 하는 필수 자산',
     'menu-music': '메인 메뉴 음악(크기가 커서 화면 표시를 막지 않고 뒤에서 받음)',
-    korean: '한국어 지원(D2Coding 글꼴 woff2·UI 번역표 xlat.korean). 언어가 한국어일 때만 받는다(2026-10-31 WB03-N)',
+    korean: '한국어 지원(D2Coding 글꼴 woff2·UI 번역표 xlat.korean·Tell 본문 tell.korean·캠페인 목록 offical*.korean·용어표 config.korean). 언어가 한국어일 때만 받는다(2026-10-31 WB03-N, WB03-O)',
 });
 
 // 원본 글꼴 캐시 파일 목록(슬롯 0~6 × 스타일 중 원본에 존재하는 조합, 파일 이름 규칙은 www/assets/font-set.js 와 같다)이다.
@@ -50,6 +50,17 @@ const FONT_FILES = Object.freeze(
         '!Arial.normal.12.0.chfnt', '!Arial.italic.12.0.chfnt', '!Arial.bold.12.0.chfnt', '!Arial.strikeout.12.0.chfnt', '!Arial.underline.12.0.chfnt',
     ].map((name) => `d/${name}`),
 );
+
+// 한국어 언어 자료 파일 목록이다(웹 판본에서 닿는 Tell 섹션·캠페인 목록·용어표). 원본 영어 파일과 같은 이름에서 확장자만 `.korean` 이다.
+// tell.korean 은 번역한 섹션만 담은 부분 파일이라 없는 섹션은 영어로 대체된다. 검사(tests/korean-tell.test.mjs)가 영어 원문과 구조를 대조한다. (2026-10-31 WB03-O)
+const KOREAN_LANGUAGE_FILES = Object.freeze([
+    { name: 'tell.korean', use: '한국어 Tell 대화상자 본문(UTF-8, 부분 번역): 환영·팁·캠페인·크레딧·데모·버전·기술 지원 섹션과 팁 목록' },
+    { name: 'config.korean', use: '한국어 용어표(UTF-8): 워크샾·신전·사제 같은 이름 용어와 기본 확인 단추 OkButton' },
+    ...['offical1', 'offical2', 'offical2sep', 'offical3', 'offical4', 'offical5', 'offical5sep', 'offical6'].map((name) => ({
+        name: `${name}.korean`,
+        use: `한국어 캠페인 목록 파일(UTF-8): 원본 ${name}.english 의 제목·소개·미션 이름(명령·치환 키는 원문 그대로)`,
+    })),
+]);
 
 // 복사할 자산 목록이다. path 는 www/data 안의 상대 경로(원본이 assets/game-data 이면 그쪽의 같은 경로), use 는 원본 근거와 용도다.
 // source 는 원본이 assets/game-data 밖일 때 저장소 루트 기준 원본 경로이다(생략하면 assets/game-data/<path>). (2026-10-23 WB03-M1, 2026-10-31 WB03-N: source 추가)
@@ -70,7 +81,8 @@ const ASSET_FILES = Object.freeze([
     { path: 'fonts/D2Coding.woff2', source: 'fonts/D2Coding.woff2', bundle: 'korean', use: '한국어 UI 글꼴 D2Coding 보통체(woff2, 사용자 제공, FontFace 로 등록해 Canvas 로 글리프를 만듦)' },
     { path: 'fonts/D2CodingBold.woff2', source: 'fonts/D2CodingBold.woff2', bundle: 'korean', use: '한국어 UI 글꼴 D2Coding 굵은체(woff2, 굵은 글꼴 슬롯·굵게 스타일)' },
     { path: 'fonts/License.txt', source: 'fonts/License.txt', bundle: 'korean', use: 'D2Coding 글꼴 사용 허가(SIL Open Font License 1.1). 글꼴과 함께 배포한다.' },
-    { path: 'd/xlat.korean', source: 'webpj/translations/xlat.korean', bundle: 'korean', use: '한국어 UI 문자열 번역표(원본 xlat 형식, UTF-8): 메인 메뉴 버튼·Help·Options 펼침 메뉴 라벨' },
+    { path: 'd/xlat.korean', source: 'webpj/translations/xlat.korean', bundle: 'korean', use: '한국어 UI 문자열 번역표(원본 xlat 형식, UTF-8): 메인 메뉴 버튼·Help·Options 펼침 메뉴 라벨, 일반 도움말 창 Back·OK' },
+    ...KOREAN_LANGUAGE_FILES.map(({ name, use }) => ({ path: `d/${name}`, source: `webpj/translations/${name}`, bundle: 'korean', use })),
 ]);
 
 // 자산의 저장소 루트 기준 원본 경로를 돌려준다. source 가 없으면 assets/game-data 아래의 같은 경로이다. (2026-10-31 WB03-N)

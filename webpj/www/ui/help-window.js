@@ -5,7 +5,8 @@
 // 그 안쪽 (2,2)에 폭·높이 -4 의 단색(RGB 55,51,54) 칸이 있고, 본문은 그 칸을 채운다(오른쪽 9픽셀은 스크롤바). 버튼은 아래 위쪽 10픽셀을 비우고 가운데에 놓는다(Back, OK 순, 간격 10, 폭은 OK 의 1.2배로 통일).
 // 원본 주소: 생성·배치 QuickHelpWindow, 요청·이력·입력 QuickHelpControl(OpenQuickHelpWindow·DispatchQuickHelpWindow·QuickHelpHistory), 본문 변환 QuickHelpHtml. 복원 기준: cpppj(10.78 경로).
 // 웹 적응: 도움말 파일 안의 바깥 주소(`http://`)는 열지 않고 호스트 훅(onExternal)에 넘긴다(과거 도메인이며 접속하지 않는다). 마우스 휠로도 스크롤한다(원본에 없음).
-// (2026-10-30 WB03-G: 메인 메뉴 Help → General Help 창을 위해 추가)
+// 한국어 모드에서는 Back·OK 단추 문구를 번역표로 바꾸고 단추·본문 글자를 유니코드 글꼴 코드(FontSet.encode)로 만든다. 한국어 도움말 파일은 아직 없어 본문은 영어 문장이 D2Coding 으로 그려진다.
+// (2026-10-30 WB03-G: 메인 메뉴 Help → General Help 창을 위해 추가, 2026-10-31 WB03-O: 한국어 단추·글자 부호화)
 import { createTextContext } from '../render/glyph-text.js';
 import { GumpBackgroundFlags, drawGumpBackground, planGumpBackground } from '../render/gump-visual.js';
 import { findPaletteColor } from '../assets/palette.js';
@@ -99,8 +100,11 @@ export class HelpWindow {
         // 단색 본문 칸의 색 번호이다(원본 nearestColor(55,51,54)).
         this.backgroundColor = findPaletteColor(resources.palette.logical, BODY_BACKGROUND_RGB[0], BODY_BACKGROUND_RGB[1], BODY_BACKGROUND_RGB[2]);
         // Back·OK 돌 버튼이다. OK 의 글자 폭에 맞춘 값의 1.2배로 두 버튼의 폭을 통일하므로 fit 에서 크기를 정한다.
-        this.backButton = new StoneButton({ label: 'Back', command: 'back' });
-        this.okButton = new StoneButton({ label: 'OK', command: 'ok' });
+        // 라벨은 영어 키이고 화면 문구는 번역표(xlat)로 바꾼다. 부호화는 한국어일 때 유니코드 글꼴용이다(원본도 도움말 창 문구를 Translate 로 바꿈). (2026-10-31 WB03-O)
+        const translate = resources.translate ?? ((text) => text);
+        const encode = (text) => resources.fonts.encode(text);
+        this.backButton = new StoneButton({ label: 'Back', display: translate('Back'), command: 'back', encode });
+        this.okButton = new StoneButton({ label: 'OK', display: translate('OK'), command: 'ok', encode });
         // 창과 자식들의 화면 위치(float32)·크기이다. place 가 정한다.
         this.x = 0;
         this.y = 0;
@@ -116,9 +120,9 @@ export class HelpWindow {
 
     // 버튼 크기와 본문 칸 크기·지역 위치를 정한다(원본 Construct·Attach 의 크기 계산). 화면 위치와 무관하다. (2026-10-30 WB03-G)
     _layout() {
-        const { font } = this.resources;
-        this.backButton.fitToText(font);
-        this.okButton.fitToText(font);
+        const { font, fonts } = this.resources;
+        this.backButton.fitToText(font, fonts);
+        this.okButton.fitToText(font, fonts);
         // OK 버튼은 글자 폭 + 12 의 1.2배다(원본 Learn 버튼 폭 × 1.2).
         this.okButton.setBaseWidth(this.okButton.baseWidth * OK_WIDTH_FACTOR);
         const height = ftol(this.okButton.baseHeight);
@@ -166,7 +170,7 @@ export class HelpWindow {
             onChange: () => body.setScroll(slider.position),
         });
         body.attachSlider(slider);
-        body.appendFragments(parseStyleText(result.styleText, context, colors, { resolvePicture: this.resources.resolvePicture, onUnsupported: (what, text) => this.onUnsupported?.(what, text) }));
+        body.appendFragments(parseStyleText(result.styleText, context, colors, { encode: (text) => fonts.encode(text), resolvePicture: this.resources.resolvePicture, onUnsupported: (what, text) => this.onUnsupported?.(what, text) }));
         this.body = body;
         this._sizeBody();
         this.place();

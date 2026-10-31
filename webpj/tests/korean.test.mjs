@@ -12,7 +12,7 @@ import { decodeOriginalText, encodeUtf16Units, encodeWindows1252 } from '../www/
 import { COVERAGE_THRESHOLD, EM_PER_SLOT_HEIGHT, UnicodeFontProvider, UnicodeGlyphFont } from '../www/assets/unicode-font.js';
 import { FontSet } from '../www/assets/font-set.js';
 import { BitmapFont } from '../www/assets/bitmap-font.js';
-import { KOREAN_ASSET_PATHS, KOREAN_BUNDLE, buildKoreanSupport } from '../www/assets/korean-assets.js';
+import { KOREAN_ASSET_PATHS, KOREAN_BUNDLE, KOREAN_LANGUAGE_PATHS, buildKoreanSupport } from '../www/assets/korean-assets.js';
 import { buildMenuResources } from '../www/assets/menu-assets.js';
 import { FONT_INK_INDEX, createTextContext, drawGlyphText } from '../www/render/glyph-text.js';
 import { IndexedSurface } from '../www/render/indexed-surface.js';
@@ -90,7 +90,8 @@ test('xlat.korean: UTF-8·중복 없음·메뉴 라벨 전부 번역', () => {
     // 번역표 원본(소스)과 웹 공개 복사본이 같다.
     assert.deepEqual([...bytes], [...new Uint8Array(fs.readFileSync(path.join(REPO_ROOT, 'webpj', 'translations', 'xlat.korean')))]);
     // 코드가 만들 수 있는 모든 라벨(원본 비교용 항목 포함)을 모은다.
-    const labels = new Set([...MAIN_MENU_SLOTS.map((slot) => slot.label), MAIN_MENU_WINDOW_TITLE]);
+    // 일반 도움말 창의 Back·OK 단추도 번역 키다(2026-10-31 WB03-O).
+    const labels = new Set([...MAIN_MENU_SLOTS.map((slot) => slot.label), MAIN_MENU_WINDOW_TITLE, 'Back', 'OK']);
     const collect = (items) => {
         for (const item of items) {
             if (item.kind === 'separator') continue;
@@ -123,7 +124,7 @@ test('한국어 글꼴 자산: fonts/ 의 woff2 를 그대로 복사했다', () 
     for (const key of ['regular', 'bold']) assert.equal(String.fromCharCode(...koreanFiles.get(KOREAN_ASSET_PATHS[key]).subarray(0, 4)), 'wOF2');
     // 매니페스트에는 한국어 묶음의 모든 파일이 있고 원본 경로(source)가 적혀 있다.
     const entries = manifest.files.filter((entry) => entry.bundle === KOREAN_BUNDLE);
-    assert.deepEqual(entries.map((entry) => entry.path).sort(), Object.values(KOREAN_ASSET_PATHS).sort());
+    assert.deepEqual(entries.map((entry) => entry.path).sort(), [...Object.values(KOREAN_ASSET_PATHS), ...KOREAN_LANGUAGE_PATHS].sort());
     for (const entry of entries) assert.ok(entry.source && !entry.source.startsWith('/'), entry.path);
 });
 
@@ -547,6 +548,10 @@ test('Netstorm 적재: 언어별 묶음 선택과 한국어 실패 대체', asyn
     assert.ok(korean._resources.fonts.unicode instanceof UnicodeFontProvider);
     assert.ok(koreanUrls.some((url) => url.endsWith('/fonts/D2Coding.woff2')) && koreanUrls.some((url) => url.endsWith('/d/xlat.korean')));
     assert.deepEqual(korean._loadProgress, { loaded: sizeOf('menu') + sizeOf(KOREAN_BUNDLE), total: sizeOf('menu') + sizeOf(KOREAN_BUNDLE) });
+    // 한국어 언어 자료(tell·offical*·config)가 게임 데이터에 합쳐져 한국어 Tell 본문과 용어가 조회된다(2026-10-31 WB03-O).
+    assert.ok(korean._gameData.tellSection('Welcome').includes('님버스'));
+    assert.equal(korean._gameData.get('OkButton'), '$Button=확인,DoNothing,0');
+    assert.equal(korean._gameData.findFiles('\\D\\offical*.korean').length, 8);
     // 영어: 한국어 묶음을 받지 않는다.
     const englishUrls = [];
     const english = build('english', diskFetch(englishUrls));
@@ -555,6 +560,7 @@ test('Netstorm 적재: 언어별 묶음 선택과 한국어 실패 대체', asyn
     assert.equal(english._resources.translate('Options'), 'Options');
     assert.equal(english._resources.fonts.unicode, null);
     assert.ok(!englishUrls.some((url) => /D2Coding|xlat\.korean/.test(url)));
+    assert.ok(english._gameData.tellSection('Welcome').includes('Nimbus'));
     assert.deepEqual(english._loadProgress, { loaded: sizeOf('menu'), total: sizeOf('menu') });
     // 한국어 글꼴을 받지 못하면 경고만 남기고 영어 메뉴로 클릭 대기에 간다(게임이 멈추지 않는다).
     const originalWarn = console.warn;
@@ -566,6 +572,8 @@ test('Netstorm 적재: 언어별 묶음 선택과 한국어 실패 대체', asyn
         assert.equal(failed._state, 'clickToStart');
         assert.equal(failed._resources.translate('Options'), 'Options');
         assert.equal(failed._resources.fonts.unicode, null);
+        // 한국어 묶음이 없으면 언어 자료도 없어 Tell 본문은 영어 파일로 대체된다.
+        assert.ok(failed._gameData.tellSection('Welcome').includes('Nimbus'));
     } finally {
         console.warn = originalWarn;
     }

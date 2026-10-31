@@ -6,7 +6,7 @@
   "bundles": {
     "menu": "메인 메뉴 표시 전에 받아야 하는 필수 자산",
     "menu-music": "메인 메뉴 음악(크기가 커서 화면 표시를 막지 않고 뒤에서 받음)",
-    "korean": "한국어 지원(D2Coding 글꼴 woff2·UI 번역표 xlat.korean). 언어가 한국어일 때만 받는다(2026-10-31 WB03-N)"
+    "korean": "한국어 지원(D2Coding 글꼴 woff2·UI 번역표 xlat.korean·Tell 본문 tell.korean·캠페인 목록 offical*.korean·용어표 config.korean). 언어가 한국어일 때만 받는다(2026-10-31 WB03-N, WB03-O)"
   },
   "files": [
     {
@@ -277,9 +277,89 @@
       "path": "d/xlat.korean",
       "source": "webpj/translations/xlat.korean",
       "bundle": "korean",
-      "size": 2173,
-      "sha256": "42ce9bba8e1b1e2667cc1cacc4039b3657c4214d6f29583ef533fead97ae8576",
-      "use": "한국어 UI 문자열 번역표(원본 xlat 형식, UTF-8): 메인 메뉴 버튼·Help·Options 펼침 메뉴 라벨"
+      "size": 2292,
+      "sha256": "07c91766d99c0cc79b5a633e6577b724abbad89052b67b4e900c91418710ef16",
+      "use": "한국어 UI 문자열 번역표(원본 xlat 형식, UTF-8): 메인 메뉴 버튼·Help·Options 펼침 메뉴 라벨, 일반 도움말 창 Back·OK"
+    },
+    {
+      "path": "d/tell.korean",
+      "source": "webpj/translations/tell.korean",
+      "bundle": "korean",
+      "size": 24302,
+      "sha256": "3d962957b3d8bb07f9b084c795ebc2969f8f34c1c78f3d84276e3a56fe74ebc8",
+      "use": "한국어 Tell 대화상자 본문(UTF-8, 부분 번역): 환영·팁·캠페인·크레딧·데모·버전·기술 지원 섹션과 팁 목록"
+    },
+    {
+      "path": "d/config.korean",
+      "source": "webpj/translations/config.korean",
+      "bundle": "korean",
+      "size": 3043,
+      "sha256": "506ee1f003b8f8b3abaa319f197279a80e9e2bff1d0904f8564926a0f0767316",
+      "use": "한국어 용어표(UTF-8): 워크샾·신전·사제 같은 이름 용어와 기본 확인 단추 OkButton"
+    },
+    {
+      "path": "d/offical1.korean",
+      "source": "webpj/translations/offical1.korean",
+      "bundle": "korean",
+      "size": 854,
+      "sha256": "dc8295342a65355c6f21a1790a75d7667ea28e93a55f3bbcc4697476e66f9324",
+      "use": "한국어 캠페인 목록 파일(UTF-8): 원본 offical1.english 의 제목·소개·미션 이름(명령·치환 키는 원문 그대로)"
+    },
+    {
+      "path": "d/offical2.korean",
+      "source": "webpj/translations/offical2.korean",
+      "bundle": "korean",
+      "size": 1247,
+      "sha256": "0d6be89bd09b2a63b798888e1346f8216e4dba990e327f744d5e5af457a440dd",
+      "use": "한국어 캠페인 목록 파일(UTF-8): 원본 offical2.english 의 제목·소개·미션 이름(명령·치환 키는 원문 그대로)"
+    },
+    {
+      "path": "d/offical2sep.korean",
+      "source": "webpj/translations/offical2sep.korean",
+      "bundle": "korean",
+      "size": 12,
+      "sha256": "c7ef0322af580989cf2b1c96d033f1f5d44b64e876a639cd5b4e86a5f412b371",
+      "use": "한국어 캠페인 목록 파일(UTF-8): 원본 offical2sep.english 의 제목·소개·미션 이름(명령·치환 키는 원문 그대로)"
+    },
+    {
+      "path": "d/offical3.korean",
+      "source": "webpj/translations/offical3.korean",
+      "bundle": "korean",
+      "size": 1266,
+      "sha256": "b385275eb013fff92a19baa6381e671d0a125840a6690fe500e93681ee2ce0c6",
+      "use": "한국어 캠페인 목록 파일(UTF-8): 원본 offical3.english 의 제목·소개·미션 이름(명령·치환 키는 원문 그대로)"
+    },
+    {
+      "path": "d/offical4.korean",
+      "source": "webpj/translations/offical4.korean",
+      "bundle": "korean",
+      "size": 675,
+      "sha256": "c93dd63a4997587cdd401e9244b618aa2c88fc01ab5b147f2ebdedf12d0cdfd4",
+      "use": "한국어 캠페인 목록 파일(UTF-8): 원본 offical4.english 의 제목·소개·미션 이름(명령·치환 키는 원문 그대로)"
+    },
+    {
+      "path": "d/offical5.korean",
+      "source": "webpj/translations/offical5.korean",
+      "bundle": "korean",
+      "size": 647,
+      "sha256": "5e397d78225c2b95ce5b70e3fce0aa0e5e4d15da53789e7001e783be63a4644d",
+      "use": "한국어 캠페인 목록 파일(UTF-8): 원본 offical5.english 의 제목·소개·미션 이름(명령·치환 키는 원문 그대로)"
+    },
+    {
+      "path": "d/offical5sep.korean",
+      "source": "webpj/translations/offical5sep.korean",
+      "bundle": "korean",
+      "size": 12,
+      "sha256": "c7ef0322af580989cf2b1c96d033f1f5d44b64e876a639cd5b4e86a5f412b371",
+      "use": "한국어 캠페인 목록 파일(UTF-8): 원본 offical5sep.english 의 제목·소개·미션 이름(명령·치환 키는 원문 그대로)"
+    },
+    {
+      "path": "d/offical6.korean",
+      "source": "webpj/translations/offical6.korean",
+      "bundle": "korean",
+      "size": 256,
+      "sha256": "400f45484bb56f9c5343f78cbdad452709adfc3ad10a1f7f312eed40c141f330",
+      "use": "한국어 캠페인 목록 파일(UTF-8): 원본 offical6.english 의 제목·소개·미션 이름(명령·치환 키는 원문 그대로)"
     }
   ]
 }

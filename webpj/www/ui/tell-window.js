@@ -5,7 +5,8 @@
 // 본문이 화면보다 길면 Fit 이 스크롤바를 켠다(원본: 슬라이더·스크롤 허용 켜기 → 스크롤 위치 0 요청). 본문 글자를 끌거나 스크롤바·마우스 휠로 움직인다.
 // 본문의 링크(`<a href>`)를 누르면 대화상자를 닫고 링크를 분배한다(원본 HtmlWindowGump::Handle 의 tagEvent: 부모를 먼저 Kill 한 뒤 링크 처리). 분배는 호스트(onLink)가 한다.
 // 두 열 메뉴는 이후 단위에서 옮긴다(해당 경로에 닿으면 onUnsupported 로 알림).
-// (2026-10-28 WB03-D: 메인 메뉴 다음 화면(Credits 먼저)을 원본과 같은 배치로 그리기 위해 추가, 2026-10-31 WB03-K: 링크 훅과 본문 스크롤바 추가)
+// 한국어 모드에서는 본문·단추·목록 글자를 유니코드 글꼴 코드(FontSet.encode)로 만들어 D2Coding 으로 그린다(단추 라벨은 한국어 Tell 파일의 문구다).
+// (2026-10-28 WB03-D: 메인 메뉴 다음 화면(Credits 먼저)을 원본과 같은 배치로 그리기 위해 추가, 2026-10-31 WB03-K: 링크 훅과 본문 스크롤바 추가, 2026-10-31 WB03-O: 한국어 글자 부호화)
 import { createTextContext } from '../render/glyph-text.js';
 import { GumpBackgroundFlags, drawGumpBackground, planGumpBackground } from '../render/gump-visual.js';
 import { StoneButton } from './stone-button.js';
@@ -124,9 +125,11 @@ export class TellWindow {
         // 본문 글자 Gump 이다. 기본 문맥은 슬롯 0, 흰색, 그림자 오프셋 (1,1)이고 효과 플래그는 꺼져 있다(원본 +0x80: {0, 글꼴, 색, 0, 0, 0, 1, 1}).
         this.body = new ScrollingText(fonts, createTextContext({ flags: 0, font: BODY_FONT_SLOT, color: colors.white, style: 0, extra: 0, shadowColor: 0, shadowX: 1, shadowY: 1 }));
         // 본문 스타일 문자열을 조각으로 나눠 본문에 넣는다.
-        this.body.appendFragments(parseStyleText(content.styleText, this.body.defaultContext, colors, { onUnsupported: (what, text) => this.onUnsupported?.(what, text) }));
-        // 돌 버튼 목록이다(지시문 순서). 라벨은 번역을 거친 뒤 글자 크기에 맞춰진다.
-        this.buttons = (content.directives?.buttons ?? []).map((spec) => new StoneButton({ label: spec.label, command: { name: spec.command.name, argument: spec.command.argument, instant: spec.instant } }));
+        // 글자 부호화는 한국어일 때 UTF-16 코드 단위(유니코드 글꼴), 영어일 때 Windows-1252 바이트(원본 글꼴)다. (2026-10-31 WB03-O)
+        const encode = (text) => fonts.encode(text);
+        this.body.appendFragments(parseStyleText(content.styleText, this.body.defaultContext, colors, { encode, onUnsupported: (what, text) => this.onUnsupported?.(what, text) }));
+        // 돌 버튼 목록이다(지시문 순서). 라벨은 번역을 거친 뒤 글자 크기에 맞춰진다. 라벨은 Tell 파일(`$Button=라벨,…`)의 문구이며 한국어 파일에서는 이미 한국어다. (2026-10-31 WB03-O: encode)
+        this.buttons = (content.directives?.buttons ?? []).map((spec) => new StoneButton({ label: spec.label, command: { name: spec.command.name, argument: spec.command.argument, instant: spec.instant }, encode }));
         // 선택 목록이다. 항목이 없으면 null.
         this.menu = null;
         const menuItems = content.directives?.menuItems ?? [];
@@ -148,7 +151,7 @@ export class TellWindow {
     // 5) 본문이 화면(폭 - 40, 높이)에 들어가지 않으면 폭을 화면에 맞추고 높이를 폭의 절반(요청 높이가 더 크면 그 값)으로 줄여 스크롤바를 켠다(_enableScroll).
     // 다시 맞출 때(화면 크기 변경)는 이전 스크롤바와 스크롤 위치를 버리고 처음부터 잰다. 원본은 창마다 한 번만 맞추지만 웹은 화면 크기가 바뀌면 다시 맞춘다. (2026-10-31 WB03-K)
     fit() {
-        const { font } = this.resources;
+        const { font, fonts } = this.resources;
         const body = this.body;
         body.slider = null;
         body.useSlider = false;
@@ -158,7 +161,7 @@ export class TellWindow {
         let maximum = 0;
         // 각 버튼을 글자에 맞추고 가장 넓은 폭을 찾는다.
         for (const button of this.buttons) {
-            button.fitToText(font);
+            button.fitToText(font, fonts);
             if (!(maximum > button.baseWidth)) maximum = button.baseWidth;
         }
         const count = this.buttons.length;

@@ -1,0 +1,26 @@
+title = "자유를 위한 투쟁"
+
+[Overview]
+<background="nsstart">
+<h2>{offical3.title}</h2>
+<p>
+님버스의 선량한 주민들은 윈드, 레인, 썬더의
+어둠의 군주들에게 노예가 되어 가고 있습니다.
+섬들이 하나씩 정복되고 지도자들은 살해되었으며,
+주민들은 사악한 전쟁 기계의 뜻에 굴복했습니다.
+<p>
+님버스에서 정의를 지키는 유일한 수호자로서
+어둠의 군주들을 물리치고 님버스의 주민들을
+노예 생활에서 해방해야 합니다.
+<p>
+당신의 목표는 점점 강해지는 어둠의 세력에 맞설
+동맹을 모으는 것입니다.
+
+$Checked=1 전쟁의 시작!,MissionBegin,TheWarBegins,{DoneTheWarBegins},1
+$Checked=2 훨리기그의 지배자,MissionBegin,MasterOfWhirligigs,{DoneMasterOfWhirligigs},{DoneTheWarBegins}
+$Checked=3 섬을 구하라!,MissionBegin,SaveTheIsland,{DoneSaveTheIsland},{DoneMasterOfWhirligigs}
+$Checked=4 위태로운 행운,MissionBegin,FragileFortune,{DoneFragileFortune},{DoneSaveTheIsland}
+$Checked=5 썬더링 파워!,MissionBegin,ThunderingPower,{DoneThunderingPower},{DoneFragileFortune}
+$Checked=6 해체된 동맹,MissionBegin,DissolvedAlliance,{DoneDissolvedAlliance},{DoneThunderingPower}
+
+$Button=뒤로,Tell,UCampaign

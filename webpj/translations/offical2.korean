@@ -1,0 +1,22 @@
+title = "사제 훈련"
+
+[Overview]
+<background="nsstart">
+<h2>사제 훈련</h2>
+<p>언젠가 멀티플레이어 게임을 하고 싶어질 테니 미리 준비해 두는 것이 좋습니다. 오랫동안 플레이해 온 숙련된 플레이어가 많으며, 이 튜토리얼은 무엇을 마주하게 될지 연습할 수 있도록 마련되었습니다.
+
+<p>선택할 내용을 눈으로 더 확인하고 싶다면 "메뉴" 버튼을 고르십시오.
+
+<p>~B~E~b-BlueCheese
+
+$Checked=메뉴,MissionBegin,bc1menu76,{Donebc1menu76},1
+$Checked=다리 놓기,MissionBegin,bc2bridging76,{Donebc2bridging76},2
+$Checked=애시드 바,MissionBegin,bc3acid_bar76,{Donebc3acid_bar76},3
+$Checked=X-보우,MissionBegin,bc4bow_rush76,{Donebc4bow_rush76},4
+$Checked=죽음의 다리,MissionBegin,bc5walkers76,{Donebc5walkers76},5
+$Checked=맨 오 워,MissionBegin,bc6mows76,{Donebc6mows76},6
+$Checked=썬 바리케이드,MissionBegin,bc7sun_bars76,{Donebc7sun_bars76},7
+$Checked=퓨리 전쟁,MissionBegin,bc8fury76,{Donebc8fury76},{Donebc7sun_bars76}{Donebc6mows76}{Donebc5walkers76}{Donebc4bow_rush76}{Donebc3acid_bar76}{Donebc2bridging76}
+$Checked=비밀,MissionBegin,bc9ssun_bars76,{Donebc9ssun_bars76},{Donebc9ssun_bars76}
+
+$Button=뒤로,Tell,UCampaign
