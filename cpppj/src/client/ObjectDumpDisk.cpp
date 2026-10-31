@@ -27,6 +27,7 @@ struct Writer {
     o::RawBaseFileState state{}; // 실제 FILE은 호스트 포인터 토큰으로 같은 BaseFile 필드에 보관한다.
     o::RawBaseFileIOHooks hooks; // 이 소비자가 선택하는 원문의 일반 쓰기/소멸 CRT 장치다.
     Writer() { // 부분 쓰기를 임의 재시도하지 않고 원문의 size/element 인자를 그대로 사용한다.
+        o::ConstructBaseFile(state); // 원문 생성자의 세 필드0을 같은 실제 호스트 상태에 적용한다.
         hooks.write=[](auto token,auto bytes,auto size,auto count) { static_cast<void>(std::fwrite(bytes.data(),size,count,reinterpret_cast<FILE*>(token))); };
         hooks.close=[](auto token) { static_cast<void>(std::fclose(reinterpret_cast<FILE*>(token))); };
     }

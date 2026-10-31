@@ -1,0 +1,114 @@
+{
+  "unit": 652,
+  "date": "2026-10-31",
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "productChanged": true,
+  "executableSha256": "ca15b551fb0ff0749009bf5ed151f3d59ed26f4eecc7a2d9018dfac3472bb5c9",
+  "native": {
+    "cases": 235,
+    "byOperation": {
+      "construct": 1,
+      "disk": 36,
+      "subfile": 18,
+      "key": 30,
+      "read": 150
+    },
+    "processes": 2,
+    "observationsPerProcess": 470,
+    "observations": 940,
+    "differences": 0,
+    "fixtureSha256": "e2c9072d49f8946152535de57a526913311a56cbdc6749c5df3c48ba89d19f82",
+    "actualStackProbe": true,
+    "explicitScratchInput": true,
+    "crtAllocationAssertionBoundaries": true,
+    "scope": "5개 원문. 짧은 fread의 요청 전체 해독/이전 scratch 재사용, 전체 목적지/작업/키/입력 BYTE와 최종 필드/인자. CRT 내부/실제 NULL 할당 오류/원본 스택 미정값 자체의 일치 근거가 아니다."
+  },
+  "focused": {
+    "registered": 19,
+    "finalUnique": 15,
+    "failedChecks": 0,
+    "invocations": 15,
+    "newUnique": 3,
+    "oldUnique": 12,
+    "newNativeRows": 235,
+    "oldNativeRows": 1373,
+    "logs": [
+      "extracted/cpp-basefile-read-key-652-focused-v1.log",
+      "extracted/cpp-basefile-read-key-652-BaseFileIO_Independent.log",
+      "extracted/cpp-basefile-read-key-652-BaseFileIO_Missing.log",
+      "extracted/cpp-basefile-read-key-652-BaseFile_Secondary.log",
+      "extracted/cpp-basefile-read-key-652-BaseFile_Absolute.log",
+      "extracted/cpp-basefile-read-key-652-BaseFile_ReadPolicy.log",
+      "extracted/cpp-basefile-read-key-652-Taff.log",
+      "extracted/cpp-basefile-read-key-652-Config.log"
+    ],
+    "unexecuted": [
+      "BaseFileIO_RealObjectDumpDiskUsesSharedWriteAndDestruct",
+      "Xlat_DuplicateAndIncompleteBlocks_AreHandled",
+      "GameClock_NestedPauseAndWrap_AreReproduced",
+      "Kernel_MutationUsesLiveSlots_InOriginalOrder"
+    ],
+    "disk": "새 한글-😀 폴더에서 실제 일반/빈 파일과 두 암호 TAFF 엔트리8201/4097BYTE를 공통 몸체로 읽고 비교했다. 기존651 덤프 디스크 출력은 다시 쓰지 않았다."
+  },
+  "build": {
+    "versions": [
+      1,
+      2
+    ],
+    "exitCodes": [
+      0,
+      0
+    ],
+    "warnings": 0,
+    "errors": 0,
+    "finalLog": "extracted/cpp-basefile-read-key-652-build-v2.log",
+    "secondReason": "CD 정적 의미 대응/설명 주석만 정정했으며 구현 몸체는 동일하다. 집중15개는 최초 제품 몸체에서1회씩 확인했다."
+  },
+  "protected": {
+    "baseline": "extracted/cpp-solo-entry-645-20261031/protected-after-current.json",
+    "checked": 8,
+    "differences": 0,
+    "sha256": {
+      "AGENTS.md": "e9e46fda5519e663417b5c8d9b643549196bf28fe7ba6b1d546a48a853fd208b",
+      "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+      "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6",
+      "cpppj/tests/fixtures/basefile-read-policy-x86.tsv": "159eae8e64fe4606632231c0be43e8d56947484e5bb840e322842fef4f8deb86",
+      "cpppj/tests/fixtures/taff-registration-x86.tsv": "34513ae09896807eb9f8131382571b4757f1415aa29c0bc5cc30180c6b214b11",
+      "cpppj/tests/fixtures/object-dump-x86.tsv": "f62b70e603fb9f236e18c659626d62a345faee8a1bf20eff3808df412b2e3033",
+      "cpppj/tests/fixtures/paletteflash-x86.tsv": "3e3c769c896a52448ec675cdf82724382faf2336767afb76221ae3fdca0902b6"
+    },
+    "additionalPreviousFixture": {
+      "path": "cpppj/tests/fixtures/basefile-io-x86.tsv",
+      "sha256": "0cd66ec887a04a8539ce74efb3f0b63a7f9a8e0f488b40f72b71785e4d808f8c"
+    },
+    "newFixture": "cpppj/tests/fixtures/basefile-read-key-x86.tsv",
+    "fullAuditRepeated": false
+  },
+  "decompileChanged": false,
+  "actualGameRuns": 0,
+  "newZip": false,
+  "full34Repeated": false,
+  "mainTestExecutableRebuilt": false,
+  "multiplayerTests": 0,
+  "compatibility": [
+    "Windows10/11 경로는 기존 원본ANSI와 다른 wide CRT로 연결했다.",
+    "전체 바이트 vector는 음수 파일 길이/짧은 전체 읽기를 명시 거부한다. 원문 미정 tail을0으로 합성하지 않는 호스트 경계이며 원문 FILE ABI 전체 복원으로 세지 않는다."
+  ],
+  "cdStatic": {
+    "construct": "004ba590",
+    "disk": "004ba5d0",
+    "subfile": "004ba630",
+    "key": "004ba680",
+    "read": "004bb030",
+    "destruct": "004ba5a0",
+    "note": "자동 정밀 후보의 disk/subfile 대응이 뒤바뀌어 있어 의미상 몸체로 정정했다. CD 부분 열기는004bafa0 helper를 사용하고 store 순서가 다르다. CD 실행은 없다."
+  },
+  "remaining": [
+    "BaseFile 전체41b4c0 FILE 열기/예외 객체 ABI·다른 쓰기/키/스트림 소비자·실제 실패/손상 수명",
+    "UI/Edit/시나리오·수명·호환성 잔여",
+    "후순위 MP 무시험 사전 구현·4~7차"
+  ]
+}

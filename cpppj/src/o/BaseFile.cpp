@@ -1,11 +1,14 @@
 // 원본: FUN_0041a240(이름 검색), FUN_0041a340(엔트리 위치·XOR 플래그), FUN_0041b4c0(열기).
 // CD판은 동일 TAFF 형식을 사용한다. 헤더 오프셋은 두 판본 파일을 직접 대조한다.
-// 범위: 읽기 전용 아카이브/VFS. 원본의 FILE* 대신 소유권 있는 바이트 배열을 쓴다.
+// 범위: 읽기 전용 아카이브/VFS. TAFF는 배열에 소유하며 디스크/메모리 읽기는 원문 FILE 몸체와 호스트 장치를 사용한다.
 #include "o/BaseFile.h"
 #include "o/RawBaseFileReadPolicy.h"
+#include "o/RawBaseFileIO.h"
 #include "o/OriginalText.h"
 #include <algorithm>
-#include <fstream>
+#include <array>
+#include <cstdio>
+#include <limits>
 #include <stdexcept>
 #ifdef _WIN32
 #ifndef NOMINMAX
@@ -36,11 +39,47 @@ std::uint32_t ReadU32(std::span<const std::uint8_t> bytes, std::size_t pos) {
     return static_cast<std::uint32_t>(bytes[pos]) | (static_cast<std::uint32_t>(bytes[pos+1]) << 8)
         | (static_cast<std::uint32_t>(bytes[pos+2]) << 16) | (static_cast<std::uint32_t>(bytes[pos+3]) << 24);
 }
-// 디스크 파일이 있으면 읽는다. 열기 실패는 다음 조회 위치를 시도할 수 있게 빈 optional을 반환한다.
+// 같은 FILE/키 장치를 정상/예외 이탈에서 반납하며 원문24BYTE 객체 ABI로 노출하지 않는다.
+struct BaseFileLifetime {
+    RawBaseFileState state{}; // 현재 실제 파일/키 토큰과 여섯 원문 필드다.
+    RawBaseFileIOHooks hooks; // state보다 먼저 소멸하지 않는 현재 CRT/메모리 장치다.
+    ~BaseFileLifetime() { DestructBaseFile(state,hooks); } // 읽기 실패에서도 현재 FILE과 키를 한 번 반납한다.
+};
+// 디스크 열기/길이/읽기는 공통 원문 몸체를 사용한다. 열기 실패만 다음 위치를 조회할 수 있는 빈 optional이다.
 std::optional<std::vector<std::uint8_t>> TryRead(const std::filesystem::path& path) {
-    std::ifstream stream(path, std::ios::binary);
-    if (!stream) return std::nullopt;
-    return std::vector<std::uint8_t>(std::istreambuf_iterator<char>(stream), {});
+    BaseFileLifetime file;bool complete=true;ConstructBaseFile(file.state);
+    file.hooks.open=[&path](auto,auto mode)->std::uintptr_t { // Windows10/11의 원본 ANSI와 다른 wide CRT 경로 호환이며 모드는 원문의 rb다.
+        if (mode!="rb") throw std::logic_error("읽기 전용 BaseFile의 실제 모드 위반");
+#ifdef _WIN32
+        return reinterpret_cast<std::uintptr_t>(::_wfopen(path.c_str(),L"rb"));
+#else
+        return reinterpret_cast<std::uintptr_t>(std::fopen(path.c_str(),"rb"));
+#endif
+    };
+    file.hooks.tell=[](auto token) { return static_cast<std::int32_t>(std::ftell(reinterpret_cast<FILE*>(token))); };
+    file.hooks.seek=[](auto token,auto offset,auto origin) { static_cast<void>(std::fseek(reinterpret_cast<FILE*>(token),offset,origin)); };
+    file.hooks.close=[](auto token) { static_cast<void>(std::fclose(reinterpret_cast<FILE*>(token))); };
+    file.hooks.read=[&complete](auto token,auto bytes,auto size,auto count) { const auto read=std::fread(bytes.data(),size,count,reinterpret_cast<FILE*>(token));complete=(!size || !count || read==count); };
+    if (!OpenBaseFileDisk(file.state,PathText(path),0,1,file.hooks)) return std::nullopt;
+    const auto length=BaseFileLength(file.state,file.hooks);if (length<0) throw std::runtime_error("BaseFile의 실제 signed 파일 길이 조회 실패");
+    std::vector<std::uint8_t> bytes(static_cast<std::size_t>(length));ReadBaseFile(file.state,bytes,-1,file.hooks);
+    if (!complete) throw std::runtime_error("BaseFile의 전체 바이트 읽기 중 파일 변경/부분 I/O"); // 원문 미정 tail을0으로 만들어 정상 자산으로 반환하지 않는 호스트 물리 경계다.
+    return bytes;
+}
+// 이미 소유한 TAFF 내용물도 같은 부분 파일/키/분할 읽기 몸체를 사용한다. 실제 OS FILE은 앞선 전체 읽기에서 반납했다.
+std::vector<std::uint8_t> ReadTaffPayload(std::span<const std::uint8_t> source,bool encrypted) {
+    if (source.size()>static_cast<std::size_t>(std::numeric_limits<std::int32_t>::max())) throw std::out_of_range("TAFF 내용물의 원문 signed 길이 범위");
+    std::vector<std::uint8_t> key;std::size_t position{};BaseFileLifetime file;ConstructBaseFile(file.state);file.state.file=1;file.state.flags=1;file.state.length=static_cast<std::int32_t>(source.size());
+    file.hooks.tell=[&position](auto) { return static_cast<std::int32_t>(position); };
+    file.hooks.close=[](auto) {}; // 이미 소유한 불변 바이트의 부분 파일 핸들만 반납하며 디스크를 다시 열지 않는다.
+    file.hooks.read=[&](auto,auto destination,auto size,auto count) { const auto length=static_cast<std::size_t>(size)*count;RequireRange(position,length,source.size());std::copy_n(source.data()+position,length,destination.data());position+=length; };
+    file.hooks.allocateKey=[&key](auto length)->std::uintptr_t { key.resize(length);return 2; };
+    file.hooks.mutableKey=[&key](auto token,auto length)->std::span<std::uint8_t> { if (token!=2 || length>key.size()) throw std::out_of_range("TAFF 현재 키 쓰기 물리 범위");return key; };
+    file.hooks.key=[&key](auto token,auto length)->std::span<const std::uint8_t> { if (token!=2 || length>key.size()) throw std::out_of_range("TAFF 현재 키 읽기 물리 범위");return key; };
+    file.hooks.freeKey=[&key](auto token) { if (token!=2) throw std::logic_error("TAFF 반납 키 토큰 오류");key.clear(); };
+    if (encrypted) SetBaseFileKey(file.state,std::span(reinterpret_cast<const std::uint8_t*>(kXorKey.data()),kXorKey.size()+1),file.hooks);
+    std::vector<std::uint8_t> result(source.size());std::array<std::uint8_t,4096> scratch; // 불변 입력은 매 읽기 전체를 쓰므로 미정 바이트를 읽지 않는다.
+    ReadBaseFile(file.state,result,-1,file.hooks,scratch);return result;
 }
 //0041b040의44BYTE 헤더/strcmp/두 fread가 성공할 물리인지 확인한다. 내용물 레코드 자체의 host 범위 검사는 기존 parser에 남긴다.
 bool RegisterableHeader(std::span<const std::uint8_t> bytes) {
@@ -114,10 +153,8 @@ const TaffEntry* TaffArchive::Find(std::string_view name) const {
 std::vector<std::uint8_t> TaffArchive::Read(std::string_view name) const {
     const auto* entry = Find(name);
     if (!entry) throw std::runtime_error("TAFF entry not found: " + std::string(name));
-    const auto begin = bytes_.begin() + static_cast<std::ptrdiff_t>(static_cast<std::size_t>(dataOffset_) + entry->offset);
-    std::vector<std::uint8_t> result(begin, begin + entry->size);
-    if ((flags_ & 2) != 0) ApplyXor(result);
-    return result;
+    const auto begin=static_cast<std::size_t>(dataOffset_)+entry->offset;
+    return ReadTaffPayload(std::span<const std::uint8_t>(bytes_).subspan(begin,entry->size),(flags_&2U)!=0);
 }
 // 보조 경로 미지정 시 원본처럼 기본 경로를 다시 사용한다.
 BaseFileSystem::BaseFileSystem(std::filesystem::path base, std::filesystem::path secondary)

@@ -2580,3 +2580,11 @@ add_executable(netstorm_basefile_io_tests FocusedTestMain.cpp BaseFileIOTests.cp
 target_link_libraries(netstorm_basefile_io_tests PRIVATE netstorm)
 netstorm_apply_compiler_options(netstorm_basefile_io_tests)
 target_compile_definitions(netstorm_basefile_io_tests PRIVATE ${_netstorm_menu_session_definitions})
+
+# 같은 실제 파일 라이브러리로 새 읽기/키와 기존 조회·암호 쓰기를 한 번에 확인한다.
+target_sources(netstorm_tests PRIVATE BaseFileReadKeyTests.cpp)
+set_source_files_properties(BaseFileReadKeyTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_BASEFILE_READ_KEY_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/basefile-read-key-x86.tsv\";NETSTORM_BASEFILE_READ_KEY_WORK=\"${CMAKE_SOURCE_DIR}/../extracted/cpp-basefile-read-key-652-disk\"")
+add_executable(netstorm_basefile_read_key_tests FocusedTestMain.cpp BaseFileReadKeyTests.cpp BaseFileIOTests.cpp BaseFileSecondaryTests.cpp BaseFileReadPolicyTests.cpp RecoveryTests.cpp)
+target_link_libraries(netstorm_basefile_read_key_tests PRIVATE netstorm)
+netstorm_apply_compiler_options(netstorm_basefile_read_key_tests)
+target_compile_definitions(netstorm_basefile_read_key_tests PRIVATE ${_netstorm_menu_session_definitions})
