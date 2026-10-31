@@ -1,0 +1,201 @@
+{
+  "unit": 650,
+  "date": "2026-10-31",
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "productUnit": 649,
+  "productChanged": false,
+  "executableSha256": "c80fa6294e9a8f6bf2d58dcf3582197a11dc16b86581bd2cb07d42b45547fd04",
+  "focused": {
+    "registered": 261,
+    "finalUnique": 5,
+    "finalFailedChecks": 0,
+    "sessionTestUnique": 1,
+    "sessionCases": 8,
+    "rows": [
+      {
+        "fort": "TheWarBegins",
+        "neutralGround": 0,
+        "layout": 1,
+        "decorations": 0,
+        "added": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "geysers": 12,
+        "startWorldCalls": 0
+      },
+      {
+        "fort": "TheWarBegins",
+        "neutralGround": 0,
+        "layout": 1,
+        "decorations": 1,
+        "added": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "geysers": 12,
+        "startWorldCalls": 0
+      },
+      {
+        "fort": "TheWarBegins",
+        "neutralGround": 0,
+        "layout": 2,
+        "decorations": 0,
+        "added": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "geysers": 17,
+        "startWorldCalls": 0
+      },
+      {
+        "fort": "TheWarBegins",
+        "neutralGround": 0,
+        "layout": 2,
+        "decorations": 1,
+        "added": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "geysers": 17,
+        "startWorldCalls": 0
+      },
+      {
+        "fort": "CaptureThePriest",
+        "neutralGround": 798,
+        "layout": 1,
+        "decorations": 0,
+        "added": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "geysers": 14,
+        "startWorldCalls": 0
+      },
+      {
+        "fort": "CaptureThePriest",
+        "neutralGround": 798,
+        "layout": 1,
+        "decorations": 1,
+        "added": [
+          27,
+          4,
+          9,
+          10
+        ],
+        "geysers": 14,
+        "startWorldCalls": 0
+      },
+      {
+        "fort": "CaptureThePriest",
+        "neutralGround": 798,
+        "layout": 2,
+        "decorations": 0,
+        "added": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "geysers": 16,
+        "startWorldCalls": 0
+      },
+      {
+        "fort": "CaptureThePriest",
+        "neutralGround": 798,
+        "layout": 2,
+        "decorations": 1,
+        "added": [
+          27,
+          4,
+          9,
+          10
+        ],
+        "geysers": 16,
+        "startWorldCalls": 0
+      }
+    ],
+    "existingNativeRowsCompared": 1174,
+    "freshPeExecutions": 0,
+    "attempts": [
+      {
+        "version": 1,
+        "sessionCases": 4,
+        "failedChecks": 2,
+        "cause": "소유된 맵의 중립 장식 양성 가정 오류"
+      },
+      {
+        "version": 2,
+        "sessionCases": 5,
+        "failedChecks": 1,
+        "cause": "Tutorial1의 둘째 지역 부재 원문 진단"
+      },
+      {
+        "version": 3,
+        "sessionCases": 8,
+        "failedChecks": 6,
+        "cause": "원문 로그인/MissionStart NoTemple 초기화 생략"
+      },
+      {
+        "version": 4,
+        "sessionCases": 8,
+        "failedChecks": 0
+      }
+    ],
+    "sessionConstructionsAllAttempts": 25,
+    "allTestInvocations": 8,
+    "fullMainRebuilt": false,
+    "lastMainRegistered": 3566,
+    "lastMainUnit": 645
+  },
+  "build": {
+    "testBuilds": 4,
+    "warnings": 0,
+    "errors": 0,
+    "gameRebuilt": false
+  },
+  "protected": {
+    "compared": 7,
+    "hashes": {
+      "AGENTS.md": "e9e46fda5519e663417b5c8d9b643549196bf28fe7ba6b1d546a48a853fd208b",
+      "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+      "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6",
+      "cpppj/tests/fixtures/world-geyser-x86.tsv": "0a6eea6bc24ba4156dd311caf2902583310be4b9033fe4ecf97f3b8fbf9e8183",
+      "cpppj/tests/fixtures/world-geyser-bounds-x86.tsv": "275d968ce263959d60847f4523aac3008ce021946226086e74f7cda1d993fa7c",
+      "cpppj/tests/fixtures/mission-start-x86.tsv": "0872a680e563feda45823a75bd9cc0f6be52576629f57745f22054c7a75a5011"
+    },
+    "unchanged": true,
+    "newFixtures": 0,
+    "full2632Audit": false,
+    "full773FixtureAudit": false
+  },
+  "runtime": {
+    "gameLaunches": 0,
+    "newZip": false,
+    "full34": false,
+    "newMultiplayerTests": 0,
+    "actualNetwork": false,
+    "latestFull34Unit": 645,
+    "latestFull34Product": 644
+  },
+  "artifacts": {
+    "prefix": "extracted/cpp-world-generation-650-",
+    "finalSession": "extracted/cpp-world-generation-650-session-v4.log",
+    "existingFixtureComparison": "extracted/cpp-world-generation-650-native-fixtures.log",
+    "finalBuild": "extracted/cpp-world-generation-650-build-v4.log"
+  },
+  "limitations": "창 없는 실제 로그인/원문 MissionStart/Session 접합이다. 옵션/Player는 명시 입력이며 설정·GUI writer/비미션9개 서로 다른 구역/MP/전체 주 검사/실제 포획·공격·희생·승리·자연 완주/전체 동일성의 근거가 아니다."
+}

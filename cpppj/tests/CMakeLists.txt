@@ -2566,3 +2566,9 @@ add_executable(netstorm_issue_commands_tests FocusedTestMain.cpp IssueCommandsTe
 target_link_libraries(netstorm_issue_commands_tests PRIVATE netstorm)
 netstorm_apply_compiler_options(netstorm_issue_commands_tests)
 target_compile_definitions(netstorm_issue_commands_tests PRIVATE ${_netstorm_menu_session_definitions})
+
+# 게임/통신 없이 실제 Session 세계 생성과 기존 원문 부모/범위만 선택 실행한다.
+add_executable(netstorm_world_generation_tests FocusedTestMain.cpp CampaignSessionTests.cpp WorldGeyserTests.cpp WorldGeyserBoundsTests.cpp)
+target_link_libraries(netstorm_world_generation_tests PRIVATE netstorm)
+netstorm_apply_compiler_options(netstorm_world_generation_tests)
+target_compile_definitions(netstorm_world_generation_tests PRIVATE ${_netstorm_menu_session_definitions})

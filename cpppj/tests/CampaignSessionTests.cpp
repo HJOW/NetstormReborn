@@ -5390,3 +5390,6 @@ TEST_CASE(CampaignSession_ConstructionCostReadsCurrentMissionGuard) {
 
 // 실제 Tutorial5의 동일 생산 노드/자산과 부분 갱신 결과를 확인한다.
 #include "CampaignInventoryBlinkTests.inc"
+
+// 남은 세계 생성 분기를 같은 Session/서비스 장치에 연결한다.
+#include "CampaignWorldGenerationTests.inc"
