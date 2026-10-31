@@ -2334,3 +2334,6 @@ docs/exe/cpp-solo-pan-current-20261030.md text eol=lf
 
 # 제품 수정 전에 고정한 비로컬 의식 보상의 최초 CPU 출력 바이트다.
 cpppj/tests/fixtures/foreign-ritual-reward-x86.tsv -text whitespace=-blank-at-eol
+
+# 두 TAFF 등록 목록의 제품 전 최초 CPU 출력은 원시 BYTE로 보존한다.
+cpppj/tests/fixtures/taff-registration-x86.tsv -text whitespace=-blank-at-eol

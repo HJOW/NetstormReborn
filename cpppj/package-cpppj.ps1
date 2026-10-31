@@ -525,6 +525,13 @@ function Get-GameItems {
     foreach ($name in $GameFiles) {
         Add-FileItem -Items $items -Entry ($prefix + '/' + $name) -Source (Join-Path $Source $name)
     }
+    # 실제 Client가 기본 폴더의 모든 TAFF를 등록하므로 추가 아카이브도 같은 게임 폴더에 동봉한다.
+    foreach ($archive in [System.IO.Directory]::EnumerateFiles($Source, '*.tarc', [System.IO.SearchOption]::TopDirectoryOnly)) {
+        $name = [System.IO.Path]::GetFileName($archive)
+        if ($GameFiles -notcontains $name) {
+            Add-FileItem -Items $items -Entry ($prefix + '/' + $name) -Source $archive
+        }
+    }
     # 통째로 복사할 폴더마다 하위 파일을 모아 제외 규칙을 적용한다.
     foreach ($dir in $GameDirs) {
         $base = Join-Path $Source $dir

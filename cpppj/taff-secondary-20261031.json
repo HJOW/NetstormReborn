@@ -1,0 +1,172 @@
+{
+  "unit": 643,
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon / 2026-10-23",
+  "native": {
+    "host": "HJOW-Athlon",
+    "lastDecompileHost": "HJOW-Athlon / 2026-10-23",
+    "observedBeforeBaseFileModification": true,
+    "cases": 27,
+    "observations": 54,
+    "gameOrOsExecuted": false,
+    "sourceBeforeSha256": {
+      "cpppj/src/o/BaseFile.h": "5caa820cb0c6dfec0aaf4fb599565b2562df74ad688432fbe18ff1530c28dec6",
+      "cpppj/src/o/BaseFile.cpp": "b8ed8f8d2c1b19f4f0311268e8d13d98cf6695d2f71620fa76d622e8fa776126",
+      "cpppj/src/client/TechnicalHelpClient.cpp": "c1dbb43510199f9fa407818357f7bb2651a1b59391b754ebf8205e8babe2fb92"
+    },
+    "sha256": {
+      "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+      "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+      "tools/decomp_taff_registration.py": "9c68d62159dcc6286297c5fd988cbcb745f9099b46b3ad272c434af1a982bfa2",
+      "cpppj/tests/fixtures/taff-registration-x86.tsv": "34513ae09896807eb9f8131382571b4757f1415aa29c0bc5cc30180c6b214b11"
+    }
+  },
+  "nativeInputsUnchanged": true,
+  "nativeChangedPaths": [],
+  "cppNativeRegistrationCases": 27,
+  "builds": [
+    {
+      "log": "extracted\\cpp-643-build-v1.log",
+      "exitCode": 0,
+      "warnings": 0,
+      "errors": 0
+    },
+    {
+      "log": "extracted\\cpp-643-build-v2.log",
+      "exitCode": 0,
+      "warnings": 0,
+      "errors": 0
+    }
+  ],
+  "fileSubsetRegistered": 22,
+  "focusedTests": [
+    {
+      "filter": "BaseFile_",
+      "names": [
+        "BaseFile_SecondaryReplaysIndependentNativeRegistration27",
+        "BaseFile_SecondaryReadPriorityAndSeparateArchiveOnlyViews",
+        "BaseFile_SecondaryAutomaticRegistrationAndFinderPreserveNativeOrder",
+        "BaseFile_SecondaryClientUsesActualPoolForTechnicalHelp",
+        "BaseFile_WildcardCampaignDiscovery",
+        "BaseFile_FileFinderDiskArchiveSecondaryOrderAndFirstDuplicate"
+      ],
+      "executed": 6,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted\\cpp-taff-registration-643-20261031\\BaseFile_-v2.log"
+    },
+    {
+      "filter": "Taff_",
+      "names": [
+        "Taff_IndexAndFlags_AreReadFromHeader"
+      ],
+      "executed": 1,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted\\cpp-taff-registration-643-20261031\\Taff_-v2.log"
+    },
+    {
+      "filter": "TechnicalHelp_",
+      "names": [
+        "TechnicalHelp_Native84AvailabilityLaunchAndPartialOutputs",
+        "TechnicalHelp_Native64ExternalFileSourcesAndFailurePreservation",
+        "TechnicalHelp_Native28ExternalRootJoin",
+        "TechnicalHelp_SelectedMissingDevicesReleaseAndCd"
+      ],
+      "executed": 4,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted\\cpp-taff-registration-643-20261031\\TechnicalHelp_-v2.log"
+    }
+  ],
+  "focusedFinalExecuted": 11,
+  "focusedFinalUnique": 11,
+  "focusedFinalFailedChecks": 0,
+  "initialFocusedTests": [
+    {
+      "filter": "BaseFile_",
+      "names": [
+        "BaseFile_SecondaryReplaysIndependentNativeRegistration27",
+        "BaseFile_SecondaryReadPriorityAndSeparateArchiveOnlyViews",
+        "BaseFile_SecondaryAutomaticRegistrationAndFinderPreserveNativeOrder",
+        "BaseFile_SecondaryClientUsesActualPoolForTechnicalHelp",
+        "BaseFile_WildcardCampaignDiscovery",
+        "BaseFile_FileFinderDiskArchiveSecondaryOrderAndFirstDuplicate"
+      ],
+      "executed": 6,
+      "failedChecks": 3,
+      "exitCode": 1,
+      "log": "extracted\\cpp-taff-registration-643-20261031\\BaseFile_.log"
+    },
+    {
+      "filter": "Taff_",
+      "names": [
+        "Taff_IndexAndFlags_AreReadFromHeader"
+      ],
+      "executed": 1,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted\\cpp-taff-registration-643-20261031\\Taff_.log"
+    },
+    {
+      "filter": "TechnicalHelp_",
+      "names": [
+        "TechnicalHelp_Native84AvailabilityLaunchAndPartialOutputs",
+        "TechnicalHelp_Native64ExternalFileSourcesAndFailurePreservation",
+        "TechnicalHelp_Native28ExternalRootJoin",
+        "TechnicalHelp_SelectedMissingDevicesReleaseAndCd"
+      ],
+      "executed": 4,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted\\cpp-taff-registration-643-20261031\\TechnicalHelp_.log"
+    }
+  ],
+  "initialFailedCases": 2,
+  "initialFailedChecks": 3,
+  "initialFailureExplanation": [
+    "기존 MatchFinder/MatchDisk의 ANSI path.string 변환이 한글/보충평면 경로에서 예외를 일으켜 UTF-8/native wide 경로와 W 열거로 수정했다.",
+    "새 Help 검사에서 필수 실행기를 빈 문자열로 입력한 오류였다. 실제 현재 검사 EXE 경로로 정정하고 원본의 실행기 가용성 관문을 유지했다."
+  ],
+  "mainTestExecutable": {
+    "unit": 642,
+    "registered": 3559,
+    "sha256": "32162c9c70c6f0a499b585d89b6cdb8b181016d13c62b6c4031841290b296f47",
+    "rebuiltFor643": false
+  },
+  "exeSha256": "2db4bdbbc485c14f2fb115ca357409723c6b5f8fc5540cca4571227cb6b2958d",
+  "fileTestExeSha256": "232b6cf0bd4d3816c42a7d35726c25954865e3e1ba2b370d5ca2868d4752b91c",
+  "protection": {
+    "inherited": 2630,
+    "inheritedChanged": [],
+    "newBaselineCount": 2631,
+    "fixtureCount": 772,
+    "baseline": "extracted\\cpp-taff-registration-643-20261031\\protected-after-current.json"
+  },
+  "package": {
+    "dryRunExitCode": 0,
+    "dryRunItems": 26,
+    "actualGameItemFunctionInvoked": true,
+    "planGameItems": 6,
+    "extraItem": {
+      "Entry": "NetstormReborn-cpppj/game/additional643.tarc",
+      "Length": 86,
+      "Source": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-taff-registration-643-20261031\\package-source\\additional643.tarc"
+    },
+    "scriptSha256": "9cbca6810c36d7f6e0a1d2204fab79bf74c72be9276a8c7f7f8156b287e48c78",
+    "createdZip": false,
+    "scope": "자체 최소 scratch 입력의 계획만 검사했다. 실제 배포 ZIP이나 완전한 게임 자산 사본으로 세지 않는다. 최신 배포 ZIP은637이다."
+  },
+  "actualGameExecuted": false,
+  "windowOrExternalHelpLaunched": false,
+  "captureSacrificeAttackOrVictoryExecuted": false,
+  "multiplayerTestsExecuted": false,
+  "completeGoal": false,
+  "previous34RouteEvidence": "unit641 / product637 / final34 from35 executions; not product643",
+  "remaining": [
+    "전체 BaseFile의 파일 핸들/쓰기/절대 재조회/손상·할당 실패와 보조 음향·다른 소비자 수명",
+    "0044fa00 전체 랭크 상승 및004b54e0 저장 부모",
+    "남은 비멀티 UI/Edit/State와 후순위 요구사항"
+  ]
+}

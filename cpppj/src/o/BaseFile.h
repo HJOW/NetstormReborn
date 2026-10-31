@@ -54,14 +54,18 @@ class BaseFileSystem {
 public:
     // 기본 경로·보조 경로를 설정한다. 등록 순서는 호출자가 원본 순서에 맞춰 지정한다.
     explicit BaseFileSystem(std::filesystem::path base, std::filesystem::path secondary = {});
-    // 원본 FUN_0041b9d0처럼 같은 아카이브 이름은 한 번만 등록한다.
-    void RegisterArchive(const std::filesystem::path& path);
-    // 상대 이름의 읽기: 기본 디스크 → 아카이브 → 보조 디스크. 절대 이름은 직접 읽는다.
+    //0041b9d0/41bc20/41bc30: 두 목록을 독립적으로 등록한다. 같은 목록의 중복·파일/헤더/인덱스 읽기 실패는false다.
+    bool RegisterArchive(const std::filesystem::path& path,bool secondary=false);
+    //00441790: 선택한 root의 *.tarc를 실제 Win32 열거 순서로 모두 등록한다. 잘못된 후보는 원문처럼 건너뛴다.
+    void RegisterArchives(bool secondary=false);
+    //0041a4f0: 보조/CD 디스크 root만 바꾼다. 이미 등록한 아카이브 목록은 원문처럼 보존한다. 빈 경로는 기본 root다.
+    void SetSecondaryDirectory(std::filesystem::path directory);
+    // 상대 읽기: 기본 디스크→기본 TAFF→보조 디스크→보조 TAFF다. 절대 이름은 직접 읽는다.
     std::vector<std::uint8_t> Read(std::string_view name) const;
     // Read와 같은 순서로 찾되, 없으면 예외 대신 빈 값을 돌려준다(없어도 되는 설정 파일용).
     std::optional<std::vector<std::uint8_t>> TryRead(std::string_view name) const;
-    std::optional<std::vector<std::uint8_t>> TryReadArchiveOnly(std::string_view name) const; //등록된 TAFF 순서만 읽는다. disk/secondary fallback 없이 원본 삭제 상태와 archive-only 입력을 구분한다.
-    bool ContainsArchiveOnly(std::string_view name) const; //원본41a340처럼 등록된 TAFF의 이름 메타데이터만 조회하며 내용/복호화/디스크를 읽지 않는다.
+    std::optional<std::vector<std::uint8_t>> TryReadArchiveOnly(std::string_view name,bool secondary=false) const; //선택한 목록만 등록 순서로 읽고 다른 목록/디스크로 fallback하지 않는다.
+    bool ContainsArchiveOnly(std::string_view name,bool secondary=false) const; //선택한41a340 목록의 이름 메타데이터만 조회하며 내용/복호화/디스크를 읽지 않는다.
     // 캠페인 목록의 와일드카드: 디스크/TAFF/보조 경로를 합쳐 중복을 제거하고 이름순으로 반환한다.
     std::vector<std::string> Match(std::string_view pattern) const;
     // 원본 Filespec.cpp의 Win32 FindFirst/Next 순서다. 기본 디스크만 열거하며 TAFF/보조 경로/정렬을 적용하지 않는다.
@@ -78,5 +82,7 @@ private:
     std::vector<std::string> archiveNames_;
     // archives_: 읽기 위해 열린 TAFF 아카이브 목록.
     std::vector<TaffArchive> archives_;
+    std::vector<std::string> secondaryArchiveNames_; //00544f80 보조 목록의 대소문자 무시 중복 키이며 기본 목록과 별도다.
+    std::vector<TaffArchive> secondaryArchives_; //보조/CD 아카이브의 실제 등록 순서와 읽기 전용 바이트 소유자다.
 };
 }

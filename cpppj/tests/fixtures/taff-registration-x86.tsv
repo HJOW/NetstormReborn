@@ -1,0 +1,28 @@
+# requests(pool,name,inputKind) / nativeReturns / primaryNames / secondaryNames / CRT effects
+0,one.tarc,valid	1	one.tarc		N:312;O:one.tarc;N:8;N:32;C
+1,one.tarc,valid	1		one.tarc	N:312;O:one.tarc;N:8;N:32;C
+0,one.tarc,valid;0,ONE.TARC,other	1,0	one.tarc		N:312;O:one.tarc;N:8;N:32;C
+0,one.tarc,other	1	one.tarc		N:312;O:one.tarc;N:8;N:32;C
+1,one.tarc,other	1		one.tarc	N:312;O:one.tarc;N:8;N:32;C
+0,one.tarc,other;0,ONE.TARC,other	1,0	one.tarc		N:312;O:one.tarc;N:8;N:32;C
+0,one.tarc,missing	0			N:312;O:one.tarc;F
+1,one.tarc,missing	0			N:312;O:one.tarc;F
+0,one.tarc,missing;0,ONE.TARC,other	0,1	ONE.TARC		N:312;O:one.tarc;F;N:312;O:ONE.TARC;N:8;N:32;C
+0,one.tarc,bad-magic	0			N:312;O:one.tarc;C;F
+1,one.tarc,bad-magic	0			N:312;O:one.tarc;C;F
+0,one.tarc,bad-magic;0,ONE.TARC,other	0,1	ONE.TARC		N:312;O:one.tarc;C;F;N:312;O:ONE.TARC;N:8;N:32;C
+0,one.tarc,bad-nul	0			N:312;O:one.tarc;C;F
+1,one.tarc,bad-nul	0			N:312;O:one.tarc;C;F
+0,one.tarc,bad-nul;0,ONE.TARC,other	0,1	ONE.TARC		N:312;O:one.tarc;C;F;N:312;O:ONE.TARC;N:8;N:32;C
+0,one.tarc,short-header	0			N:312;O:one.tarc;C;F
+1,one.tarc,short-header	0			N:312;O:one.tarc;C;F
+0,one.tarc,short-header;0,ONE.TARC,other	0,1	ONE.TARC		N:312;O:one.tarc;C;F;N:312;O:ONE.TARC;N:8;N:32;C
+0,one.tarc,short-index	0			N:312;O:one.tarc;N:8;N:32;F;F;C;F
+1,one.tarc,short-index	0			N:312;O:one.tarc;N:8;N:32;F;F;C;F
+0,one.tarc,short-index;0,ONE.TARC,other	0,1	ONE.TARC		N:312;O:one.tarc;N:8;N:32;F;F;C;F;N:312;O:ONE.TARC;N:8;N:32;C
+0,one.tarc,short-directory	0			N:312;O:one.tarc;N:8;N:32;F;F;C;F
+1,one.tarc,short-directory	0			N:312;O:one.tarc;N:8;N:32;F;F;C;F
+0,one.tarc,short-directory;0,ONE.TARC,other	0,1	ONE.TARC		N:312;O:one.tarc;N:8;N:32;F;F;C;F;N:312;O:ONE.TARC;N:8;N:32;C
+0,one.tarc,valid;1,ONE.TARC,other	1,1	one.tarc	ONE.TARC	N:312;O:one.tarc;N:8;N:32;C;N:312;O:ONE.TARC;N:8;N:32;C
+0,one.tarc,valid;0,two.tarc,other;1,two.tarc,other;1,one.tarc,valid	1,1,1,1	one.tarc;two.tarc	two.tarc;one.tarc	N:312;O:one.tarc;N:8;N:32;C;N:312;O:two.tarc;N:8;N:32;C;N:312;O:two.tarc;N:8;N:32;C;N:312;O:one.tarc;N:8;N:32;C
+1,one.tarc,valid;1,ONE.TARC,missing	1,0		one.tarc	N:312;O:one.tarc;N:8;N:32;C

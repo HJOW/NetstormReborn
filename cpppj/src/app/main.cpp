@@ -76,7 +76,7 @@ void PrintBuildInfo() {
 // 실제 자산을 읽는 VFS를 만든다. 아카이브 등록 순서는 명시적으로 지정한다.
 netstorm::o::BaseFileSystem Files(const std::filesystem::path& root) {
     netstorm::o::BaseFileSystem files(root);
-    files.RegisterArchive(root / "netstorm.tarc");
+    files.RegisterArchives(); //실제 Client와 같은 기본*.tarc 등록 순서로 명시 CLI 자료도 읽는다.
     return files;
 }
 

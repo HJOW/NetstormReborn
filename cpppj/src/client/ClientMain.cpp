@@ -182,7 +182,7 @@ Client::Client(ClientOptions options)
       staticStrings_(std::make_shared<ClientStaticStrings>()),
       dotCommandGlobals_(std::make_shared<ClientDotCommandGlobals>()),
       chat_(std::make_unique<ChatState>(*this,options_.edition)),trace_(std::make_unique<ClientTraceGlobals>()) {
-    files_.RegisterArchive(options_.gameDirectory / "netstorm.tarc");
+    files_.RegisterArchives(); //원본441790처럼 기본 폴더의 모든*.tarc를 Win32 반환 순서로 등록한다.
     rendererFrame_=std::make_unique<ClientRendererFrame>(*this); //생성은 BSS0 owner/참조만 준비하며 아직 화면/파일/난수를 사용하지 않는다.
     playerRecords_->BindCoreData(coreDataGlobals_); // 같은 Native Player base가 바뀌면 실제 Core의 빌린 현재 Player 슬롯도 즉시 갱신한다.
     configuration_.Registry().environment = Environment;
@@ -272,6 +272,7 @@ int Client::Run() {
     startup.identity = identity.value_or(std::string());
     const auto installUtf8=std::filesystem::absolute(options_.gameDirectory).lexically_normal().u8string();startup.installDir.assign(installUtf8.begin(),installUtf8.end()); // 원본ANSI와 달리 Windows10/11의 한글 경로를 유효 UTF-8 설정 값으로 전달한다.
     startup.cdDir=FindWindowsCdDirectory(); // 원문00440d40의 CD-ROM/깊이2 탐색 결과다. 부재는 기존 InstallDir fallback이며 W API만 Windows10/11 호환 경계다.
+    InitializeNativeSecondaryFiles(startup.cdDir); //설정 파일을 읽기 전에 원문41bc30의 보조 TAFF와41a4f0의 실제 root를 연결한다.
     configuration_.Startup(startup);
     SaveOptions(); // 원본 FUN_004359f0 → FUN_00441d10(0): 설정 해석 전에 한 번 저장한다.
     InterpretOptions();
@@ -1107,6 +1108,11 @@ const std::shared_ptr<ClientStaticStrings>& Client::StaticStrings() const { retu
 const std::shared_ptr<ClientDotCommandGlobals>& Client::DotCommandGlobals() const { return dotCommandGlobals_; }
 // 파일 시스템.
 const o::BaseFileSystem& Client::Files() const { return files_; }
+// 원문은 CD를 찾았을 때만 별도 목록을 등록한다. Windows10/11 한글 CD 경로는 ANSI 대신 UTF-8/W 경로로 보존한다.
+void Client::InitializeNativeSecondaryFiles(std::string_view directory) {
+    files_.SetSecondaryDirectory(directory.empty()?std::filesystem::path{}:std::filesystem::path(std::u8string(reinterpret_cast<const char8_t*>(directory.data()),directory.size())));
+    if (!directory.empty()) files_.RegisterArchives(true);
+}
 // 타입·그림. Run이 "init types"에서 만든 뒤에만 쓴다.
 const GameAssets& Client::Assets() const { return *assets_; }
 // 프로세스 커널.

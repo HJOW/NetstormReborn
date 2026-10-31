@@ -25,7 +25,7 @@ std::optional<std::string> Resolve(Client& client,std::string_view name) { //원
     FileSpec spec(name);ExternalFileHooks h;h.device=[&spec](auto) { return spec.Device(); };
     h.path=[&client](bool secondary,auto file) { return JoinExternalFileRoot(secondary ? client.Configuration().PathSpec("CDDir") : Utf8(client.GameDirectory()),file); };
     h.readable=[](auto path) { return std::ifstream(Wide(path),std::ios::binary).is_open(); }; //원본 rb 열기/닫기와 같은 존재 판정이며 Win10/11 한글 경로를 지원한다.
-    h.archive=[&client](bool secondary,auto file) { return !secondary && client.Files().ContainsArchiveOnly(file); }; //현재 Client는 기본 TAFF 집합만 등록하며 보조 TAFF 집합은 실제로 비어 있다. 보조 디스크/CD 조회는 앞에서 별도로 수행한다.
+    h.archive=[&client](bool secondary,auto file) { return client.Files().ContainsArchiveOnly(file,secondary); }; //원문처럼 기본/보조 등록 목록을 구별하며 파일을 추출하거나 실행하지 않는다.
     return ResolveExternalFilePath(name,nullptr,h);
 }
 TechnicalHelpHooks Hooks(Client& client) { //현재 설정/파일을 매 호출 다시 읽으며 이전 가용성을 캐시하지 않는다.
