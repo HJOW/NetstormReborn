@@ -337,6 +337,9 @@ int Client::Run() {
     if (options_.edition==o::OriginalEdition::Patch1078) colorSortInput_->OwnerTables()->Initialize(colorSortInput_->Primary(),assets_->TypeTable().Types().size(),static_cast<std::uint32_t>(assets_->Find("bridge").block+o::kFirstAssetTypeNumber),kencloudGlobals_->WorldRedraw()); // 원문43c4e0→43be30의 최초 등록이다. 호스트는 TYPE 크기가 확정된 직후, 첫 UI/World보다 먼저 수행한다.
     surfaceStorage_=MakeRawSurfaceStorage(*assets_,gameplayGlobals_->Authority(),gameplayGlobals_->GameAux()); // init squid/hash/spot의 실제 장기 물리를 메뉴보다 먼저 확보한다.
     surfaceStorage_->Processes().BindDevices(kernel_,time_); // 첫 메뉴/World보다 먼저 실제 같은 Kernel/현재 프레임을 장기 Host에 연결한다.
+    // 원문469fc0/469f60은 소비 시점의00594fbc를 읽는다. 실제 물리 설치 뒤·최초 음악 Start 앞에서 같은 owner를 고정 수명으로 빌린다.
+    // 근거: docs/exe/cpp-scene-current-battle-20261101.md. cleanup의 음악 Start 뒤 battle0 쓰기 순서는 그대로 유지한다.
+    if (options_.edition==o::OriginalEdition::Patch1078) WorldAudio().BindCurrentBattle([storage=surfaceStorage_] { return storage->ownerMode.battle ? 1U : 0U; });
     const auto serverPath=configuration_.SubstituteLocal("{DataDir}/!rootservers.dat");const auto serverFile=files_.TryRead(serverPath); // 현재 보호 시작 목록을 읽으며 네트워크 갱신/저장 부모와 구별한다.
     if (serverFile) nsInfoGlobals_->LoadServerNames(*serverFile);else if (const auto original=files_.TryRead(configuration_.SubstituteLocal("{DataDir}/rootservers.dat"))) nsInfoGlobals_->LoadServerNames(*original);
     if (!PumpMessages()) return 0;

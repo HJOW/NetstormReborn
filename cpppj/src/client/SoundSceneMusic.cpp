@@ -50,6 +50,9 @@ SceneMusic::SceneMusic(SceneMusicState& state,o::GameRandom& random,SceneMusicHo
         throw std::invalid_argument("장면 음악의 필수 경계 누락");
 }
 
+// 같은 Client 현재 owner를 값으로 조회한다. 미연결 독립/10.72는 기존 명시 battle을 그대로 읽는다.
+std::uint32_t SceneMusic::CurrentBattle() const { return state_.currentBattle ? state_.currentBattle() : state_.battle; }
+
 // 현재 곡 이름을 먼저 비교하고, 맞으면 곧바로 시계를 읽는다. 두 번째 비교는 현재 곡이 fanfare/defeat일 때만 참이 될 수 있다.
 bool SceneMusic::ResultMusicLocked() const {
     const auto current=hooks_.currentName();
@@ -92,14 +95,14 @@ void SceneMusic::Next() {
 // 시계를 한 번 읽어 songEnd와 비교한다. 곡이 끝나기 전이거나 비교 불가면 아무것도 하지 않는다.
 void SceneMusic::Frame() {
     if (BelowOrUnordered(hooks_.wallSeconds(),state_.songEnd)) return;
-    if (state_.battle!=0) { Next();return; }
+    if (CurrentBattle()!=0) { Next();return; } //469f60은 만료 관문을 통과한 뒤 현재00594fbc를 읽는다.
     if (hooks_.waitingRoom()) { Request(kAnticipationMusic);return; }
     Request(kMenuMusic);
 }
 
 // 전투 밖은 색인 3과 메뉴 곡, 전투 중은 난수로 고른 색인의 다음 곡이다. 그 뒤 Frame을 한 번 불러 곡 끝 시각이 이미 지났으면 곧바로 다음 곡으로 넘어간다.
 void SceneMusic::Start() {
-    if (state_.battle==0) {
+    if (CurrentBattle()==0) { //469fc0의 최초 현재 조회이며 뒤 Frame은 효과가 바꾼 현재값을 다시 읽는다.
         state_.index=kMenuMusicIndex;
         Request(kMenuMusic);
     } else {

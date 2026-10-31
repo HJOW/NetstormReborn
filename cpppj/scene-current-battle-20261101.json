@@ -1,0 +1,53 @@
+{
+  "unit": 673,
+  "date": "2026-11-01",
+  "host": "HJOW-Athlon",
+  "lastFullDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23",
+    "modified": false
+  },
+  "change": "곡 만료/Start의 원문 소비 위치에서 현재 ownerMode.battle 조회, 실제 Client의 SurfaceStorage 설치 뒤 연결",
+  "exeSha256": "a61a275b01048c7bb22b5a9480893442ddd1c854f4865fb005426edb6e5df153",
+  "build": {
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "log": "extracted/cpp-scene-current-battle-673-build-v1.log"
+  },
+  "focused": {
+    "registered": 24,
+    "executed": 24,
+    "failedChecks": 0,
+    "new": 9,
+    "existing": 15,
+    "existingSceneMusicRows": 9339,
+    "log": "extracted/cpp-scene-current-battle-673-focused-v1.log"
+  },
+  "preparedPatch": {
+    "baseRawShaMatched": 4,
+    "proposedLfShaMatched": 5,
+    "initialRawShaCheckFailedDueToCrlf": true
+  },
+  "protected": {
+    "files": 2599,
+    "pathLengthShaUnchanged": true,
+    "before": "extracted/cpp-scene-current-battle-673-protected-before.json",
+    "after": "extracted/cpp-scene-current-battle-673-protected-after.json"
+  },
+  "notPerformed": [
+    "게임 실행",
+    "새 Native/fixture",
+    "MP 검사",
+    "전체34 진입",
+    "전체 C++ 검사",
+    "ZIP",
+    "물리 입력/PCM",
+    "자연 완주"
+  ],
+  "limitations": [
+    "실제 Client Run의 연결은 빌드/정적 코드로 확인했으며 GUI cleanup 전체를 이번 단위에서 재실행하지 않았다.",
+    "새9개의 명시 입력과 기존 원문 관측 재생을 구별한다.",
+    "전체 목표와 options.cfg 오류1224는 미완료다."
+  ]
+}

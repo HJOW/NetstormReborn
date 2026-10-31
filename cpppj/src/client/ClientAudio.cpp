@@ -118,11 +118,17 @@ void ClientAudio::SceneFrame() {
     sceneMusic_.Frame();
 }
 
-// 전투 여부만 바꾸고 감독의 Start를 부른다. 플레이어 표 준비 여부는 월드가 생기기 전까지 0으로 둔다(희생 판정을 건너뛴다).
+// 독립/10.72의 명시 battle을 보존해 쓰고 감독의 Start를 부른다. 실제 현재 조회가 연결되면 그 값을 조건에 사용한다.
 void ClientAudio::StartScene(bool battle) {
     scene_.battle=battle ? 1U : 0U;
     sceneMusic_.Start();
 }
+
+// 실제 owner가 준비된 Client만 현재 조회를 설치한다. 장치 수명과 구별하며 빈 함수는 명시 fallback을 복구한다.
+void ClientAudio::BindCurrentBattle(std::function<std::uint32_t()> reader) { scene_.currentBattle=std::move(reader); }
+
+// 음악 판단과 같은 현재 원문 소비자를 진단에서도 읽고 과거 StartScene 인자를 현재값으로 보고하지 않는다.
+std::uint32_t ClientAudio::CurrentBattle() const { return sceneMusic_.CurrentBattle(); }
 
 // 감독의 곡 요청을 그대로 전달한다.
 void ClientAudio::RequestMusic(std::string_view name) {
@@ -236,7 +242,7 @@ std::string ClientAudio::Describe() {
     line("musicReadOffset",primaryState_.Field(MusicField::ReadOffset));
     line("musicDataLength",primaryState_.Field(MusicField::Length));
     line("sceneIndex",scene_.index);
-    line("sceneBattle",scene_.battle);
+    line("sceneBattle",CurrentBattle()); // 현재00594fbc와 명시 fallback을 음악 감독과 같은 경계에서 구별한다.
     line("sceneTint",scene_.tint);
     line("scenePaletteDirty",scene_.paletteDirty);
     // 원소별 검색 색은 현재 색과 따로 기록한다(팔레트 로드 전의 tint를 유지하는 원본 순서 확인).

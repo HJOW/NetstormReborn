@@ -61,6 +61,8 @@ struct SceneMusicState {
     // 전투(미션) 중인지(DAT_00594fbc / CD 00540a20), 플레이어 표가 준비돼 있는지(DAT_00595344 / CD 0050f828, 이름 미확인),
     // 로컬 플레이어 번호(DAT_00540c70 / CD 0050f6c8)다. 모두 DWORD이며 0이 아니면 참이다.
     std::uint32_t battle{},playersReady{},localPlayer{};
+    // 원문00594fbc를 소비 위치마다 읽는 선택적 현재 조회다. 없으면 독립/10.72의 battle 명시값을 사용한다.
+    std::function<std::uint32_t()> currentBattle;
     // 지금 적용 중인 날씨 색(DAT_00540cdc / CD 005203a0, 처음 167)과 원소 곡별 색 표(DAT_005b5da8 / CD 00549b40)다.
     // 색 표는 팔레트에서 가장 가까운 색 번호로 초기화 때 채워진다.
     std::uint32_t tint=167;
@@ -112,6 +114,8 @@ class SceneMusic {
 public:
     // 필수 경계가 하나라도 비어 있으면 std::invalid_argument를 던진다. OS 자원은 열지 않는다.
     SceneMusic(SceneMusicState& state,o::GameRandom& random,SceneMusicHooks hooks);
+    // Start의 첫 조건과 Frame의 만료 조건 뒤에서 현재 battle을 읽는다. 조회는 fallback이나 게임 상태를 쓰지 않는다.
+    std::uint32_t CurrentBattle() const;
     // 승리/패배 곡이 아직 끝나지 않은 동안 참이다: 현재 곡이 fanfare이고 실시간이 fanfareEnd 전이거나,
     // 현재 곡이 defeat이고 실시간이 defeatEnd 전이다. 시각이 비교 불가(NaN)이면 참이다(x87 비교의 원본 동작).
     // 원본: 00469d30 / CD 00436a10.

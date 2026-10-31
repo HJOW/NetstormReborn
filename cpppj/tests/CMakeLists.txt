@@ -2648,3 +2648,10 @@ add_executable(netstorm_sound_current_view_tests FocusedTestMain.cpp SoundCurren
 target_link_libraries(netstorm_sound_current_view_tests PRIVATE netstorm)
 netstorm_apply_compiler_options(netstorm_sound_current_view_tests)
 target_compile_definitions(netstorm_sound_current_view_tests PRIVATE ${_netstorm_menu_session_definitions})
+
+# 곡 만료의 현재 전투 조회와 기존 세 판본 음악 관측을 장치/게임 실행 없이 함께 확인한다.
+target_sources(netstorm_tests PRIVATE SceneMusicCurrentBattleTests.cpp)
+add_executable(netstorm_scene_current_battle_tests FocusedTestMain.cpp SceneMusicCurrentBattleTests.cpp SoundSceneMusicTests.cpp ClientAudioTests.cpp)
+target_link_libraries(netstorm_scene_current_battle_tests PRIVATE netstorm)
+netstorm_apply_compiler_options(netstorm_scene_current_battle_tests)
+target_compile_definitions(netstorm_scene_current_battle_tests PRIVATE ${_netstorm_menu_session_definitions})

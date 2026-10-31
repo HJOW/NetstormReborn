@@ -80,6 +80,11 @@ public:
     void SceneFrame();
     // 장면에 들어가며 곡을 시작한다(원본 00469fc0). battle이 거짓이면 메뉴 곡 ser22.mus, 참이면 난수로 고른 원소 곡이다.
     void StartScene(bool battle);
+    // 실제 Client의 현재 battle owner 조회를 연결한다. 빈 함수는 독립/10.72의 StartScene 명시값으로 되돌린다.
+    // 현재 owner가 준비된 뒤 연결하며 장치 초기화/옵션 변경/Shutdown은 이 조회를 지우지 않는다.
+    void BindCurrentBattle(std::function<std::uint32_t()> reader);
+    // 음악 감독과 진단이 같은 현재 battle을 값으로 읽는다. 조회로 owner나 fallback을 초기화하지 않는다.
+    std::uint32_t CurrentBattle() const;
     // 곡을 직접 요청한다(원본 00469db0). 결과 화면·희생 의식·대기실에서 쓴다. 현재 곡과 같으면 아무 일도 하지 않는다.
     void RequestMusic(std::string_view name);
     // 원본 다음 곡 요청(00469f00)이다. 곡 순환과 날씨를 함께 적용한다. 명시 검사 및 후속 장면 전환 호출자에서 쓴다.
