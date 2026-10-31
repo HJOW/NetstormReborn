@@ -457,4 +457,21 @@ TEST_CASE(CampaignCarrierTarget_ActualBfsTargetStartAndReturn) {
     CHECK(core.destroy.PreDepth()==0 && core.destroy.PostDepth()==0);
 }
 
+// Native 중복 공간 입력을 실제 Session의 후처리 장치에 공급해 경고 뒤 기존 객체 삭제를 확인한다.
+TEST_CASE(CampaignFactory_WorkshopDuplicatePreservesWarningAndDeletesOld) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);MenuServices external;auto services=external.Make(); // 실제 보호 단일 플레이 자산과 창 없는 기존 장치를 쓴다.
+    RawCampaignSession* current{};std::vector<std::array<std::int32_t,3>> warnings; // 경고가 삭제보다 먼저 기존 SID/좌표를 읽었는지 관찰한다.
+    services.assets.factory.warnDuplicate=[&](Sid sid,std::int32_t x,std::int32_t y) {
+        CHECK(current);if (!current) throw std::logic_error("워크샾 경고의 현재 검사 Session 누락");const auto raw=current->Core().pool.Slot(sid); // 같은 실제 슬롯을 경고 시점에 읽는다.
+        CHECK(!(raw[11]&3U));warnings.push_back({sid.value,x,y});
+    };
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",std::move(services));current=&session;session.Load();warnings.clear();auto core=session.Core(); // 생성/삭제는 현재 실제 월드가 수행한다.
+    const auto type=static_cast<std::uint32_t>(assets.game.TypeTable().Find("windFactory"));constexpr float x=220.0F,y=220.0F; // 기존 객체와 겹치지 않는 검사 좌표이며 합법 건설 위치라는 주장은 하지 않는다.
+    const auto old=session.World().Create(type,2);core.owner.Set(old,1);session.World().Pop(old,x,y,0);CHECK(warnings.empty()); // 원본 맵에 없는 타입을 실제 공통 Pop으로 먼저 배치한다.
+    const auto replacement=session.World().Create(type,2);core.owner.Set(replacement,1);auto input=core.pool.AllocatedBytes(replacement);Put(input,14,std::bit_cast<std::uint32_t>(x));Put(input,18,std::bit_cast<std::uint32_t>(y)); // 새 Factory 후처리가 읽을 좌표만 명시 입력으로 공급한다.
+    const auto inputState=input[11];core.postPop.Activate(replacement,9); // 일반 Pop의 spot 겹침 거부와 분리한 Native +20 장치 접합 검사다. GUI 배치 성공을 합성하지 않는다.
+    CHECK(warnings.size()==1);if (!warnings.empty()) CHECK(warnings[0][0]==old.value && warnings[0][1]==static_cast<std::int32_t>(x) && warnings[0][2]==static_cast<std::int32_t>(y));
+    CHECK(core.pool.Slot(old)[11]&1U);CHECK(core.pool.Slot(replacement)[11]==inputState);CHECK(core.pool.Slot(replacement)[10]==type);CHECK(core.destroy.PreDepth()==0 && core.destroy.PostDepth()==0);
+}
+
 #include "CampaignDetonateInputTests.inc" // 같은 실제 메뉴/자산 장치를 사용해 Detonate 입력을 확인한다.

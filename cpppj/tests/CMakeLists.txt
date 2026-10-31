@@ -2542,3 +2542,10 @@ set_source_files_properties(ScaledPixelsTests.cpp PROPERTIES COMPILE_DEFINITIONS
 # 원문110개 점멸/Idle표/기본 dirty와 전체 파생 노드를 대조한다.
 target_sources(netstorm_tests PRIVATE InventoryBlinkTests.cpp)
 set_source_files_properties(InventoryBlinkTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_INVENTORY_BLINK_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/inventory-blink-x86.tsv\"")
+
+# 실제 메뉴/Session 연결만 같은 제품 라이브러리에 링크하며 원하는 부분 이름으로 선택 실행한다.
+add_executable(netstorm_menu_session_tests FocusedTestMain.cpp CampaignObjectMenuTests.cpp)
+target_link_libraries(netstorm_menu_session_tests PRIVATE netstorm)
+netstorm_apply_compiler_options(netstorm_menu_session_tests)
+get_target_property(_netstorm_menu_session_definitions netstorm_tests COMPILE_DEFINITIONS) # 기존 공용 fixture 경로를 같은 값으로 빌린다.
+target_compile_definitions(netstorm_menu_session_tests PRIVATE ${_netstorm_menu_session_definitions})

@@ -1,0 +1,106 @@
+{
+  "unit": 647,
+  "host": "HJOW-Athlon",
+  "last_full_decompilation_host": "HJOW-Athlon",
+  "last_full_decompilation_date": "2026-10-23",
+  "before_source_commit": "0378bd2e",
+  "native": {
+    "factory_postpop": "004538f0",
+    "logger": "004c2630",
+    "channel": 4,
+    "literal": "WARNING!  Extra workshop destroyed at (%d,%d)\n",
+    "cd_factory_postpop": "0047a4b0",
+    "cd_logger": "0048ca70",
+    "both_pe_literals_present": true,
+    "existing_native_fixtures_reexecuted": false
+  },
+  "builds": [
+    {
+      "log": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-duplicate-647-build-before.log",
+      "exit_code": 0,
+      "warnings": 0,
+      "errors": 0,
+      "sha256": "81db44bf780096efde14ab6f2511b60d2d823be4cfa0c1b0ee12790c69d3a2ff"
+    },
+    {
+      "log": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-duplicate-647-build-before-v2.log",
+      "exit_code": 0,
+      "warnings": 0,
+      "errors": 0,
+      "sha256": "84128606e7fd72c906aa0e6de034a32f378cab258d1b13396c20c7f2f7ad20fb"
+    },
+    {
+      "log": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-duplicate-647-build-before-v3.log",
+      "exit_code": 0,
+      "warnings": 0,
+      "errors": 0,
+      "sha256": "84128606e7fd72c906aa0e6de034a32f378cab258d1b13396c20c7f2f7ad20fb"
+    },
+    {
+      "log": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-duplicate-647-build-after-v1.log",
+      "exit_code": 0,
+      "warnings": 0,
+      "errors": 0,
+      "sha256": "3f1c513feae252d562ba9572a0812888fc0b05d6e56520b45fe758d0d3dfb2d1"
+    }
+  ],
+  "focused": {
+    "registered": 20,
+    "unique_executed": 1,
+    "accepted": 1,
+    "final_failed_checks": 0,
+    "actual_invocations": 4,
+    "attempts": [
+      {
+        "log": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-duplicate-647-focused-before.log",
+        "sha256": "808b42bf6b2f3d0f5ab1425d061e5526ee54c2ef875b2c24085dd8f56d12a266",
+        "exit_code": 1,
+        "passed": false,
+        "cause": "1-1에 없는 windFactory를 찾은 검사 입력 오류"
+      },
+      {
+        "log": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-duplicate-647-focused-before-v2.log",
+        "sha256": "fdd130a16894c9b2f70d342599156873f3d07d009a002e9face8fd39189f43a9",
+        "exit_code": 1,
+        "passed": false,
+        "cause": "사제 위치의 spot 겹침으로 일반 Pop에서 먼저 거부된 검사 입력"
+      },
+      {
+        "log": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-duplicate-647-focused-before-v3.log",
+        "sha256": "92c128a2a85bff40f3296bd4e692921ba39ce9377fc98f6bd88239f681c6d2a9",
+        "exit_code": 1,
+        "passed": false,
+        "cause": "제공된 경고 callback을 SessionMissing1271로 덮어쓴 실제 미연결"
+      },
+      {
+        "log": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-factory-duplicate-647-focused-after-v1.log",
+        "sha256": "ea1af91de966ddd13f89792584ab9b7ef49a214a361501c0f7c9f7ccc1a0d559",
+        "exit_code": 0,
+        "passed": true,
+        "cause": "같은 세 번째 입력의 경고 뒤 실제 기존 객체 반납"
+      }
+    ]
+  },
+  "game_sha256": "867022e3fd9fc014b78d56a7c39f9a46c2bcbd9970294696e70066ad373d54f8",
+  "test_sha256": "822e5414eff845c2cf02a9fa47b0a8b01a3e13b8bec2c5d78baff0214d7b0b3c",
+  "source_sha256": {
+    "cpppj/src/client/CampaignClientServices.cpp": "1dde439ad26e53ad7aa9ca3540fa790a4e6fc5ac47f9aad8dbd19b873bae8d86",
+    "cpppj/src/client/RawCampaignSession.cpp": "83e13edcba1fd764b2afd9cfb49d381e7325a0f51a966150b384c886ab14dbeb",
+    "cpppj/tests/CampaignObjectMenuTests.cpp": "2df8a947a932d4bbaaa52a547ef74e321c9f5dee013a96b883122807243bba10",
+    "cpppj/tests/CMakeLists.txt": "55c9e9db6110d88f38e65f44a4969fda6b73843d0290986bd2a83e56ebe43c66"
+  },
+  "protected_baseline": "extracted/cpp-solo-entry-645-20261031/protected-after-current.json",
+  "protected_baseline_count": 2632,
+  "protected_rechecked_sha256": {
+    "AGENTS.md": "e9e46fda5519e663417b5c8d9b643549196bf28fe7ba6b1d546a48a853fd208b",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6",
+    "cpppj/tests/fixtures/factorypostpop-x86.tsv": "3c03af2bf6a224449a789e86d6dbe88cb93d84bf56b85ee1e900af540f271b06",
+    "cpppj/tests/fixtures/trace-log-x86.tsv": "7a564a4a835f1236e36471c152303ef752f90e7c6dd7fb824c5d57804a3ac3f6"
+  },
+  "new_game_launches": 0,
+  "new_package_created": false,
+  "main_tests_rebuilt": false,
+  "scope": "창 없는 실제 Session +20 장치 접합의 명시 중복 입력이다. 일반 Pop의 겹침 거부는 유지하며 합법 GUI 건설/배치·전체20실행·전체34·자연 완주·신규MP의 증거가 아니다. 실제 Client 로그 adapter는 원문/소스/빌드로 대조했으며 새 GUI 호출은 하지 않았다."
+}

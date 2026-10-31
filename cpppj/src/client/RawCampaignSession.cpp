@@ -1268,7 +1268,7 @@ struct RawCampaignSession::Impl {
         assetEffects.gun=MakeCampaignGunQueryHooks(core,*gunMode,*gunTarget,*gunHit,gunState,firingIntervals,std::move(assetEffects.gun));
         assetEffects.gun=MakeGunTargetHooks(core.pool,*gunTarget,std::move(assetEffects.gun));
         assetEffects.gun=combat->GunHooks(std::move(assetEffects.gun));
-        assetEffects.factory.warnDuplicate=SessionMissing<void,Sid,std::int32_t,std::int32_t>();
+        FillMissing(assetEffects.factory.warnDuplicate); //4538f0의 경고 뒤 삭제가 계속되도록 실제 Client 로그를 보존하고 선택된 누락만 진단한다.
         assetEffects.levelAssertion=SessionMissing<void,SquidLevelAssertion>();
         assetEffects.factory.regionOwnership=[this](float x,float y) { ownership->UpdateRegion(x,y); };
         assetEffects.postPop.setOwner=[this](Sid sid,std::uint32_t owner) { ownership->SetOwner(sid,owner); };

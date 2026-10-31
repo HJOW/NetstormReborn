@@ -213,6 +213,10 @@ RawCampaignSessionServices MakeCampaignClientServices(Client& client,RawButtonCo
     services.priest.fallSound=MakePriestFallSound(player); // 사제 낙하의 현재 위치/파일명/반복 없음이다.
     // Vortex PostPop의 TYPE+74 전역 재생은 반복·음량·좌우·우선·한도가 모두 0이다.
     services.assets.postPop.playImpactSound=[&player](std::uint32_t sound) { player.Play(sound,0,0,0,0,0); };
+    //4538f0의 중복 워크샾 경고는 채널4의 원본 문구/정수 좌표를 같은 현재 trace 장치에 기록한다. 별도 경고창을 만들지 않는다.
+    services.assets.factory.warnDuplicate=[&client](o::Sid,std::int32_t x,std::int32_t y) {
+        client.WriteDiagnosticLog(4,"WARNING!  Extra workshop destroyed at ("+std::to_string(x)+","+std::to_string(y)+")\n");
+    };
     // 실제 총 명령을 원본 마스크/순서가 복원된 단일 입력 큐에 추가한다.
     services.assets.queueCommand=[&client](std::uint32_t command,std::int32_t first,std::int32_t second) {
         client.Input().PushCommand(command,first,second);
