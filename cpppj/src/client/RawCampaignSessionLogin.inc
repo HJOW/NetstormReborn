@@ -86,7 +86,7 @@ struct RawCampaignSession::Impl::Login {
         LocalMissionStateHooks hooks;hooks.logState=[this](std::uint32_t phase) { Need(effects.log)("로컬 미션 상태 "+std::to_string(phase)+"\n"); };
         hooks.wallSeconds=effects.wallSeconds;
         hooks.initializeRenderer=effects.initializeRenderer; // 전체 State7 연결에서도 같은 실제 장치를 사용한다. 상태8 전용 독립 장치에 가짜 성공을 추가하지 않는다.
-        hooks.connectServer=[this](std::span<const std::uint8_t>,std::uint32_t) { transport->Connect(); };
+        hooks.connectServer=[this](auto address,auto port) { Connect(address,port); };
         hooks.connectionStatus=[this](std::int32_t owner) { return owner==9 && transport->IsOpen() && (transport->Client().flags&2) ? 1 : 0; };
         hooks.connectionOpen=[this](std::int32_t owner) { return owner==9 && transport->IsOpen() && (transport->Client().flags&2) && !(transport->Client().flags&0x40); };
         hooks.sendLogin=[this] { const auto image=RawFortImage(OriginalEdition::Patch1078,s.templateStorage->Template(s.playerState.templateOwner),{[this] { return static_cast<std::uint32_t>(s.core.types.size()); },{}}).Save();const auto packet=netstorm::zacket::MakeLocalMissionLogin(s.globals.mySubscriber,{reinterpret_cast<const char*>(s.handle.data())},image.Bytes());Send(9,packet.Bytes()); };
@@ -136,7 +136,7 @@ struct RawCampaignSession::Impl::Login {
     }
     MissionLoginPlayerCounts counts{OriginalEdition::Patch1078,s.players}; //같은 Player9의 현재 집계를 타이머에 공급한다.
     //원본 미션 부모의 로컬 Zone을 설치하고 실제 상태8에서 접속한다.
-    void Begin() {
+    void Begin(bool parentRunning=false) {
         if (!s.services.subscriberGlobals) { s.globals.loginSubscriber=s.services.missionSubscriber.value_or(1);s.globals.mySubscriber=s.globals.loginSubscriber; } //독립fallback만기존복사를수행한다.실제Client는Init현재쓰기뒤Login에서ID를재복사하지않는다.
         s.connectionAssign=[this](std::int32_t pending,std::int32_t player) { transport->AssignConnection(pending,player);s.services.battlePeers.at(static_cast<std::size_t>(player))=transport->Peer(static_cast<std::uint32_t>(player)); };
         s.connectionAlliance=[this](std::uint32_t target,std::uint32_t owner,std::uint32_t mask) {
@@ -149,6 +149,7 @@ struct RawCampaignSession::Impl::Login {
         if (request) { if (request->consumed || request->next[0]!=7 || request->next[0x80/4]!=1 || request->zone.size()!=86) throw std::logic_error("현재 Init Fort 요청/이미지 계약 위반");if (request->starting) { if (blocks[3][0]!=7 || blocks[3][32]!=1) throw std::logic_error("정리 뒤 실제 현재 State7/Zone 계약 위반"); }else blocks[3]=request->next; } // 실제 앞단은 현재 블록을 이미 소비했다. 독립 편의 접합만 이전 Init 캡처를 사용한다.
         else fallback=netstorm::zacket::MakeLocalMissionZone();
         const bool startingTail=s.services.adoptInitializedPlayers || effects.uiMode || effects.battlePalette || effects.startingProgress; // 실제 후반 경로만 State7 공통 확정에 연결하고 기존 독립 상태8 범위를 구별한다.
+        if (parentRunning && (!startingTail || !request || !request->starting || blocks[3][0]!=7)) throw std::logic_error("외부 State7 부모의 준비된 실제 앞단 누락");
         if (startingTail && !request) blocks[3][0]=7; // 독립 편의 요청도 현재7을 명시한다. 실제 Client는 Init/요청의 같은144BYTE를 사용한다.
         const auto starting=[this,&request,&fallback,startingTail] { // 앞선 호스트 정리 뒤의 실제 Zone/Renderer/안내를 원문 공통부 안에서 수행한다.
         if (!request || !request->starting) title=0; // 실제 앞단은 정리 전에 첫BYTE를 이미 지웠다. 뒤에서 현재 제목을 다시 쓰지 않으며 독립 편의 접합만 이전 경계를 유지한다.
@@ -161,9 +162,12 @@ struct RawCampaignSession::Impl::Login {
         s.playerState.playerKnown=0;
         if (startingTail) { SetUiMode(2);activityEnd=Need(effects.wallSeconds)()+10.0;blocks[2][1]=20;state->Request(8);Need(effects.startingProgress)();Need(effects.battlePalette)(); } // UI2→ 새 기한/인자/즉시8→ 실제 안내→팔레트이며 예외도 앞선 쓰기를 보존한다.
         };
-        if (startingTail) state->RunStarting(starting); // 같은 원문 공통부가7 전체를 확정한 뒤 즉시8을 실행한다. Zone 반납 전 immediate+80의 이전 핸들도 자동 보존한다.
+        if (parentRunning) starting(); // 부모의 최초 복사/로그를 유지하며 후반만 반환한다. 외부 공통부가7 확정과8을 이어서 실행한다.
+        else if (startingTail) state->RunStarting(starting); // 독립 편의 접합의 같은 원문 공통부가7 전체를 확정한 뒤 즉시8을 실행한다.
         else { starting();blocks[3][0]=8;state->Run(); } // 독립 상태8 검사의 이전 부분 범위이며 전체 State7 실행으로 세지 않는다.
     }
-    //현재 송신을flush한 뒤 실제 큐를 분배한다. 프레임 계산은 기존Kernel이 수행한다.
+    // 부모/독립 상태8이 같은 로컬 접속 몸체를 사용하며 원문 현재 블록을 검증한다.
+    void Connect(std::span<const std::uint8_t> address,std::uint32_t) { if (address.size()!=20 || blocks[3][0]!=8) throw std::logic_error("실제 현재8/주소20BYTE 접속 계약 오류");transport->Connect(); } // 현재 어댑터는 이미 연 같은 로컬 서버를 사용한다. 외부 주소/포트의 TCP/IP 해석은 별도 복원 범위다.
+    // 현재 송신을flush한 뒤 실제 큐를 분배한다. 프레임 계산은 기존Kernel이 수행한다.
     void Pump() { wall=Need(effects.wallSeconds)();transport->Flush();static_cast<void>(transport->Poll());if (s.loginEnd!=0.0) timer->Run(false); }
 };

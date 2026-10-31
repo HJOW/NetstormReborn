@@ -3294,9 +3294,15 @@ void RawCampaignSession::LoadLocalConnection() {
     if (!LocalConnectionReady()) throw std::logic_error("실제 로컬 미션 로그인 미완료");
 }
 // 앞선 준비와 실제 상태8 실행 뒤 정상 프레임에 제어를 돌려준다.
-void RawCampaignSession::StartLocalConnection() {
+void RawCampaignSession::StartLocalConnection() { BeginLocalConnection(false); }
+// 외부 부모의 공통 실행을 중첩하지 않고 실제 후반 준비만 수행한다.
+void RawCampaignSession::PrepareLocalConnectionForState() { BeginLocalConnection(true); }
+// 원문8이 전달한 실제 인자를 같은 로컬 장치에 동기 전달하며 수신은 별도 큐에 남긴다.
+void RawCampaignSession::ConnectLocalConnectionForState(std::span<const std::uint8_t> address,std::uint32_t port) { if (!impl_->login) throw std::logic_error("실제 로그인 없는 부모 상태8 접속");impl_->login->Connect(address,port); }
+// 기존 생성/명령 등록 순서는 유지하고 부모가 실행 중이면 후반 몸체까지만 반환한다.
+void RawCampaignSession::BeginLocalConnection(bool parentRunning) {
     if (impl_->loaded || impl_->login || !impl_->services.localLogin) throw std::logic_error("실제로컬로그인 새수명/장치 계약 오류");
-    impl_->login=std::make_shared<Impl::Login>(*impl_,*impl_->services.localLogin,[this] { Load();RegisterCarrierCommands(impl_->login->transport->Dispatch());RegisterConstructionCommands(impl_->login->transport->Dispatch());RegisterFactoryResearchCommands(impl_->login->transport->Dispatch()); });impl_->login->Begin();
+    impl_->login=std::make_shared<Impl::Login>(*impl_,*impl_->services.localLogin,[this] { Load();RegisterCarrierCommands(impl_->login->transport->Dispatch());RegisterConstructionCommands(impl_->login->transport->Dispatch());RegisterFactoryResearchCommands(impl_->login->transport->Dispatch()); });impl_->login->Begin(parentRunning);
 }
 // 큰 상태 부모는 Uber의 동일 State Tick이 처리하도록 남겨 두며 수신/게임 Kernel은 여기서 실행하지 않는다.
 bool RawCampaignSession::PollLocalConnectionState() {

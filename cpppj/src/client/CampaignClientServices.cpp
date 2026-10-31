@@ -131,8 +131,20 @@ void BindCampaignLoginStateClientServices(Client& client,RawButtonControls& cont
 // 현재 Native 요청을 Init 캡처로 되돌리지 않으며 실제 분모/시각/출처와 제목 물리만 선택 위치에서 바꾼다.
 void PrepareCampaignMissionStarting(Client& client,MissionFortLoadRequest& request) {
     auto state=client.LocalStateGlobals()->State();if (client.Edition()!=o::OriginalEdition::Patch1078 || request.consumed || request.starting || request.zone.size()!=86 || state.next[0]!=7 || state.next[32]!=1 || request.next[32]!=1) throw std::logic_error("실제 State7 현재 요청/Zone/새 앞단 계약 오류"); // 창/자산 초기화와 무관한 판본 조회를 사용하며 실제 자료를 앞당겨 요구하지 않는다.
-    state.current=state.next;state.next[0]=0;client.GameplayGlobals()->Camera().SelectDenominator(0,client.KencloudGlobals()->WorldRedraw());
+    state.current=state.next;state.next[0]=0;CaptureCampaignMissionStarting(client,request);
+}
+// 최초144BYTE 복사는 부모에 남기고 실제 현재 요청/기본 분모와 지역 값만 취급한다.
+void CaptureCampaignMissionStarting(Client& client,MissionFortLoadRequest& request) {
+    const auto state=client.LocalStateGlobals()->State();if (client.Edition()!=o::OriginalEdition::Patch1078 || request.consumed || request.starting || request.zone.size()!=86 || state.current[0]!=7 || state.current[32]!=1 || request.next[32]!=1) throw std::logic_error("실제 현재7/Zone/미캡처 앞단 계약 오류");
+    client.GameplayGlobals()->Camera().SelectDenominator(0,client.KencloudGlobals()->WorldRedraw());
     auto& local=*client.LocalStateGlobals();auto& title=reinterpret_cast<std::uint8_t&>(client.HtmlWindowGlobals()->text.background[0]);request.starting=o::CaptureLocalMissionStarting(state.current,local.ZonePending(),title,local.GameTicks(),local.SourceType());
+}
+// 정리 중 파괴되는 Session을 부모로 쓰지 않고 같은 Client/표면/State 수명을 끝까지 보유한다.
+void RunCampaignMissionStarting(Client& client,const std::function<void()>& body,const std::function<void(std::span<const std::uint8_t>,std::uint32_t)>& connect) {
+    const auto storage=client.SurfaceStorage();if (client.Edition()!=o::OriginalEdition::Patch1078 || !storage || !body || !connect) throw std::logic_error("실제 미션 부모의 판본/장기 표면/몸체/접속 장치 계약 오류");
+    auto& local=*client.LocalStateGlobals();auto& game=*client.GameplayGlobals();o::LocalMissionStateHooks hooks;hooks.logState=[](auto value) { std::clog<<"State "<<value<<'\n'; };hooks.wallSeconds=[&client] { return client.WallSeconds(); };hooks.connectServer=connect; // 원문8의 접속은 몸체가 설치한 현재 World를 호출 순간에 다시 조회한다.
+    hooks.invalidState=[](auto value) { throw std::logic_error("미션 부모의 선택된 다른 Native 상태 미연결:"+std::to_string(value)); };
+    o::RawLocalMissionState parent(client.Edition(),local.State(),o::LocalMissionStateGlobals{game.Server(),game.Boss(),storage->ownerMode.battle,game.world.missionPost,local.SavedGame(),storage->links.mission,local.Simulconnect(),storage->ownerMode.challenge,game.player,local.ZonePending(),local.GameTicks(),local.SourceType(),local.CdPresent(),local.Blocks()[2][33],local.MetaRefresh(),local.MetaRebuild(),reinterpret_cast<std::uint8_t&>(client.HtmlWindowGlobals()->text.background[0]),local.BattleByte(),local.ConnectEnd(),local.ActivityEnd(),client.Time().game,client.Time().wall},std::move(hooks));parent.PollStarting(body);
 }
 // 실제 Client의 장기 소유자/입력/음향과 UI를 같은 Session 서비스에 조립한다.
 RawCampaignSessionServices MakeCampaignClientServices(Client& client,RawButtonControls& controls,CampaignClientUi ui) {

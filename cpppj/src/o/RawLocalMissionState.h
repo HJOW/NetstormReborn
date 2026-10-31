@@ -75,11 +75,13 @@ public:
     RawLocalMissionState(OriginalEdition edition,LocalMissionStateStorage state,LocalMissionStateGlobals globals,LocalMissionStateHooks hooks);
     void Request(std::uint32_t state) const; // 004b2bc0: 현재immediate만쓰고phase를앞당기지않는다.
     void Poll(); // 004b88c0: 메타맵선행효과뒤next가있을때만current로복사하고Run한다.
+    void PollStarting(const std::function<void()>& body); // 실제 next7을 같은 Poll/Run 공통부로 소비한다. 최초 복사/로그는 몸체의 cleanup보다 먼저다.
     void Run(); // 004b6dd0: 작은선택상태와전체0x90BYTE공통확정을실행한다.
     void RunStarting(const std::function<void()>& body); // 현재7의 실제 호스트 몸체를 호출하고 같은 공통부가7/즉시8을 확정한다. 몸체 자체에서 상태 확정/중첩 Run을 하지 않는다.
     void EnqueueReceive(std::function<void()> receive); // 실제수신처리기호출을예약하며즉시실행하지않는다.
     void DispatchQueued(); // Run이끝난뒤현재큐의실제수신기를순서대로실행한다.
 private:
+    void PollBody(const std::function<void()>* starting); // 일반 Poll과 외부 State7이 같은 메타 선행 효과/next 소비/Run 경계를 사용한다.
     void RunBody(const std::function<void()>* starting); // 일반 Run과 호스트 State7이 같은 복사/예외/즉시 반복 몸체를 사용한다. callback은 동기 호출 동안만 빌린다.
     bool Step(); // true이면원문공통부없이반환하는선택경로다.
     void Starting(); void Connected(); // 상태7/13의현재조회와원문효과순서다.

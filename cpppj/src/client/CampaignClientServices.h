@@ -25,6 +25,8 @@ CampaignSubscriberServices MakeCampaignSubscriberClientServices(Client& client);
 void BindCampaignAiClientServices(Client& client,CampaignAiServices& ai);
 void BindCampaignLoginStateClientServices(Client& client,RawButtonControls& controls,CampaignLoginServices& login); // 실제10.78의 Renderer/현재 HUD 명령/현재 battlePal만 연결한다. Client와 controls는 모든 로그인 콜백보다 오래 살아야 한다.
 void PrepareCampaignMissionStarting(Client& client,MissionFortLoadRequest& request); // 실제 next7을 현재로 소비하고 기본 배경 분모 선택/제목 첫BYTE0/정리 전 지역 값을 같은 Client에 캡처한다.
+void CaptureCampaignMissionStarting(Client& client,MissionFortLoadRequest& request); // 부모 Poll/Run이 이미 복사한 current7에서 기본 분모/정리 전 지역 값만 캡처한다. 블록을 다시 복사하지 않는다.
+void RunCampaignMissionStarting(Client& client,const std::function<void()>& body,const std::function<void(std::span<const std::uint8_t>,std::uint32_t)>& connect); // Client 장기 물리가 부모를 소유하며 World 교체 뒤 같은 공통부가7/8을 확정한다.
 o::EditorPlayersHooks MakeEditorPlayerClientHooks(Client& client); // 실제 번역과 같은 Client 임시 고리의 정수 서식만 연결한다. 게임 후처리는 Session이 소유한다.
 // 클라이언트와 UI 대상은 반환값을 사용하는 세션 및 모든 프로세스보다 오래 살아야 한다.
 // 게임 계산·Form 송신·내용물 통지 등 미복원 경계는 채우지 않는다. 실제 GameWorld가 카메라를 공급한다.

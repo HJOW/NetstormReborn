@@ -30,7 +30,8 @@ public:
         std::string mission,RawCampaignSessionServices services,ScreenPoint viewport,bool deferConnection=false);
     //실제Client가현재월드포인터를등록한뒤로그인한다. Chat의자기subscriber 조회도같은Session을보아야한다.
     void BeginLocalConnection();
-    void StartLocalConnection(); // 실제 Client의 비동기 진입이다. 상태8 준비 뒤 게임 입력/Kernel 준비를 닫고 자연 프레임으로 반환한다.
+    void StartLocalConnection(); // 독립 편의 접합의 비동기 진입이다. 상태8 뒤 입력/Kernel 준비를 닫고 정상 프레임으로 반환한다.
+    void PrepareLocalConnectionForState(); // 외부 State7의 실행 중에 실제 후반을 준비한다. 게임 프레임은 닫고7/8 확정은 같은 부모에 남긴다.
     bool Connecting() const { return connecting_; } // 호스트 설치 대여가 끝나지 않았는지만 읽는다. Native loaded/phase14와 구별한다.
     bool CompleteLocalConnection(); // 실제 접속이 완료됐을 때만 보관 색/표시를 설치하고 true를 반환한다. 이전 상태에서는 아무 효과 없이 false다.
     // 콜백이 읽는 선택/그림 저장소의 수명이 끝나기 전에 실제 캠페인 프로세스를 정리한다.

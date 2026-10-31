@@ -112,6 +112,8 @@ GameWorld::GameWorld(const GameAssets& assets,const o::BaseFileSystem& files,o::
 void GameWorld::BeginLocalConnection() { if (!campaign_) throw std::logic_error("실제Session 없는 로그인 요청");campaign_->LoadLocalConnection();if (pendingCursorPalette_) { campaign_->Cursor().SetPalette(*pendingCursorPalette_,colorSortLogical_);pendingCursorPalette_.reset(); }RefreshCampaignObjects(); } // 원문 팔레트 선택 뒤 생성된 실제 커서만 현재256색을 받으며 설치 실패에서는 대기 색을 보존한다.
 // 준비 실패도 부분 수명으로 남겨 현재 World의 정상 반납 경로가 소유권을 정리한다.
 void GameWorld::StartLocalConnection() { if (!campaign_ || connecting_ || campaign_->HasCursorRuntimeForState()) throw std::logic_error("비동기 World 로그인 새 수명 계약 오류");connecting_=true;campaign_->StartLocalConnection(); }
+// 기존 World를 반납한 부모가 새 World의 후반을 준비하며 현재 입력/프레임 관문은 완료 공개까지 유지한다.
+void GameWorld::PrepareLocalConnectionForState() { if (!campaign_ || connecting_ || campaign_->HasCursorRuntimeForState()) throw std::logic_error("부모 State7 World 로그인 새 수명 계약 오류");connecting_=true;campaign_->PrepareLocalConnectionForState(); }
 // 실제 완료 뒤 한 번만 대기 색/표시를 적용한다. 준비 중인 입력 관문을 열지 않는다.
 bool GameWorld::CompleteLocalConnection() {
     if (!connecting_ || !campaign_ || !campaign_->LocalConnectionReady()) return false;

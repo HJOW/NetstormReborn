@@ -1,0 +1,85 @@
+{
+  "unit": 660,
+  "date": "2026-10-31",
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "productChanged": true,
+  "executableSha256": "56aa28be19392a59925f8c36ef81d851be4080c324755400ba2116997366a20d",
+  "changes": [
+    "실제10.78의 LoadMissionWorld는 Client/장기 표면/다섯 State를 빌리는 부모의 PollStarting 안에서 전체 몸체를 실행한다. 현재/next/immediate 복사와 State7 로그가 cleanup보다 앞이며7/8 확정은 같은 RunBody다.",
+    "World 교체 뒤의 새 로그인은 PrepareLocalConnectionForState로 Zone/후반만 설치한다. 부모가7을 확정하고 즉시8에서 새 현재 World의 실제 접속을 호출한다. 새 Session 안에서7/8을 중첩 실행하지 않는다.",
+    "CaptureCampaignMissionStarting은 이미 소비한 current7에서 기본 분모/지역 값만 선택한다. 독립 편의 Prepare/Start API와10.72 어댑터는 구별해 유지한다.",
+    "후반 복귀 뒤8 접속이 실패해도 잔여 진행 안내를 외부 부모 catch에서 닫는다. 원문 중간 phase/old/current/immediate는 되돌리지 않는다."
+  ],
+  "focused": {
+    "registered": 52,
+    "finalUnique": 10,
+    "newUnique": 2,
+    "newInputs": 3,
+    "oldUnique": 8,
+    "failedChecks": 0,
+    "invocations": 6,
+    "testFunctionCalls": 10,
+    "logs": [
+      "extracted/cpp-mission-starting-parent-660-focused-v1.log",
+      "extracted/cpp-mission-starting-parent-660-state.log",
+      "extracted/cpp-mission-starting-parent-660-prefix.log",
+      "extracted/cpp-mission-starting-parent-660-commit.log",
+      "extracted/cpp-mission-starting-parent-660-async.log",
+      "extracted/cpp-mission-starting-parent-660-renderer.log"
+    ],
+    "initialFailures": [],
+    "scope": "실제 장기 State/Gameplay/Surface를 빌리는 이전 deferred World를 파괴하고 새 World를 구성했다. 최초 복사/로그가 앞단 전이고 current만 바꾼 인자는7에, 정리 전 immediate 인자는8에 남는 모든144BYTE와 실제 접속/phase14를 확인했다. 후반 예외와7 확정 뒤8 접속 예외의 서로 다른 중간 상태/부분 반납도 확인했다.",
+    "limits": "다른42등록/주 검사 전체와 실제 UberGump의 HWND/cleanup/CD/음악/안내 픽셀 연쇄를 실행하지 않았다. 교체한 이전 World는 deferred 상태이며 완전히 로드된 GUI World 교체의 새 근거로 확대하지 않는다."
+  },
+  "native": {
+    "newCases": 0,
+    "newObservations": 0,
+    "newFixture": false,
+    "replayedRows": 33,
+    "existingRows": {
+      "localState": 33
+    },
+    "staticInstructions": 88,
+    "scope": "기존 독립 State33행을 같은 PollBody/RunBody로 재대조했다. 보호 PE의 Poll 소비→Run, 최초 두36DWORD 복사→로그, 공통 확정88명령을 정적으로 확인했다. 새 PE 에뮬레이션/fixture는 없다."
+  },
+  "build": {
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "logs": [
+      "extracted/cpp-mission-starting-parent-660-build-v1.log"
+    ]
+  },
+  "protected": {
+    "baseline": "extracted/cpp-solo-entry-645-20261031/protected-after-current.json",
+    "checked": 7,
+    "differences": 0,
+    "sha256": {
+      "AGENTS.md": "e9e46fda5519e663417b5c8d9b643549196bf28fe7ba6b1d546a48a853fd208b",
+      "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+      "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6",
+      "cpppj/tests/fixtures/local-mission-state-x86.tsv": "b591cc51ffd837ce29d04e8090c066d33f5baf4abc1b3c863371346f161d2995",
+      "cpppj/tests/fixtures/mission-fort-request-x86.tsv": "1ce96cb3b740b26b68033e67b87493a88d0578357b080755419ba2a3d4041f19",
+      "cpppj/tests/fixtures/mission-lifecycle-x86.tsv": "82d3e1856bed2caf550912d6d67c33ce8a6196f6fbe2127adb06d6ae1d0c81d2"
+    },
+    "fullAuditRepeated": false
+  },
+  "decompileChanged": false,
+  "actualGameRuns": 0,
+  "actualCdEnumeration": false,
+  "newZip": false,
+  "full34Repeated": false,
+  "mainTestExecutableRebuilt": false,
+  "multiplayerTests": 0,
+  "cdStatic": {
+    "scope": "새 실제 부모는 Client.Edition()의10.78에만 선택한다.10.72 기존 동기 어댑터와 독립 편의 Start 경로를 유지하며10.72 전체 State7/실행의 새 근거는 없다."
+  },
+  "remaining": [
+    "State7 current+84 재접속의 SavedGame/파일 재선택/진행 문구와 ZonePending0/비로컬 분기",
+    "메타맵 Poll 실제 장치·4c1e70 시계 패킷 등록·외부 주소/포트/TCP/IP와 시간 동기화/주기 내보내기",
+    "State1/연속 전환·나머지 UI/Edit/시나리오/호환성·BaseFile 소비자/ABI·시작 레지스트리/메타State19/LeaveBattle·후순위MP 무시험 사전 구현과4~7차"
+  ]
+}

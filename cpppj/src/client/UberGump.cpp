@@ -658,6 +658,14 @@ o::FortMissionSaveHooks UberGump::FortMissionSaveEffects() {
 }
 // 캡처한 요새 요청을 다음 State 자리에서 실제 설치한다. Start는 원래 Guide 단계3에 남긴다.
 void UberGump::LoadMissionWorld(std::optional<std::string> requestedFort) {
+    if (!mission_ || !missionRuntime_) throw std::logic_error("미션 부모의 현재 Script/Runtime 계약 위반");
+    if (client_.Edition()!=o::OriginalEdition::Patch1078) { LoadMissionWorldBody(std::move(requestedFort));return; } // 기존 CD 어댑터는 새10.78 부모로 덮어쓰지 않는다.
+    if (!missionFortRequest_) RequestMissionFort(requestedFort ? *requestedFort : mission_->FortName());
+    try { RunCampaignMissionStarting(client_,[this,&requestedFort] { LoadMissionWorldBody(requestedFort); },[this](auto address,auto port) { if (!world_) throw std::logic_error("State7 설치 뒤 현재 World 없는 상태8 접속");world_->Session().ConnectLocalConnectionForState(address,port); }); }
+    catch (...) { if (rawButtons_->Menus()->MissionLoadingOpen()) rawButtons_->Menus()->CloseMissionLoading();throw; } // 후반 복귀 뒤8 접속 실패의 잔여 안내도 같은 부모 수명에서 정리한다.
+}
+// 실제 State7 몸체는 공통 Run 안에서 기존 World를 반납하고 같은 장기 물리에 새 World를 설치한다.
+void UberGump::LoadMissionWorldBody(std::optional<std::string> requestedFort) {
     if (!mission_ || !missionRuntime_) throw std::logic_error("Guide 초기화의 현재 Script/Runtime 계약 위반");
     state_.phase=ClientPhase::LoadingMission;pageName_="loading"; // 접속 준비 중의 미설치 World를 활성 게임 화면으로 그리지 않는다.
     const bool nativePlayers=client_.Assets().Edition()==o::OriginalEdition::Patch1078; //실제 State7의 앞선 Player 초기화 완료를 뒤 Session에 인계하는 호스트 대여 선택이다.
@@ -668,7 +676,7 @@ void UberGump::LoadMissionWorld(std::optional<std::string> requestedFort) {
         ~LoadingRetirement() { if (!continued) menus.CloseMissionLoading(); } // 준비 실패의 현재 안내는 반납하고 정상 대기는 일반 프레임까지 유지한다.
     } loading{*rawButtons_->Menus()};
     if (!nativePlayers) { rawButtons_->Menus()->ShowMissionLoading(LoadingHtmlContext({85,0,client_.GetScreen().Width(),client_.GetScreen().Height()}),FontBytes(client_.Translate("Starting Mission...")),[this] { return FontBytes(client_.Translate("Cancel")); });rebuild_=true;Compose();client_.PresentScene(); } //10.72의 기존 어댑터만 파일 전 표시를 유지한다.10.78은 원문 State7 안내 위치에서 생성한다.
-    if (nativePlayers) { PrepareCampaignMissionStarting(client_,*missionFortRequest_);CleanupNativeStateWorld(1);client_.LocalStateGlobals()->CdPresent()=client_.CdGlobals()->Check(MakeWindowsCdPresenceHooks()); } // 기본 분모/현재 요청·정리 전 지역 값 뒤 실제 cleanup/CD 순서다. 후반에서 Init 캡처로 현재 상태를 다시 덮어쓰지 않는다.
+    if (nativePlayers) { CaptureCampaignMissionStarting(client_,*missionFortRequest_);CleanupNativeStateWorld(1);client_.LocalStateGlobals()->CdPresent()=client_.CdGlobals()->Check(MakeWindowsCdPresenceHooks()); } // 최초 복사/로그는 같은 부모가 이미 수행했다. 기본 분모/정리 전 지역 값 뒤 cleanup/CD 순서를 유지한다.
     else if (world_) ClearWorld(); //10.72의 기존 동기 World 어댑터는 해당 판본 전체 State 복원 전까지 유지한다.
     if (world_) throw std::logic_error("미션 State cleanup 뒤 이전 World 대여가 남아 있음"); //원문 정리의 실제 반납을 확인한 뒤에만 새 Session을 만든다.
     if (nativePlayers) {
@@ -728,7 +736,7 @@ void UberGump::LoadMissionWorld(std::optional<std::string> requestedFort) {
         world_->Session().MissionStartSettings(),world_->Session().MissionAiSettings(),MakeCampaignMissionStartEffects(client_,*world_,[this] {
             if (commandGump_!=0) static_cast<void>(rawButtons_->BubbleGump(commandGump_,0x02000088U,0,0)); //0042e440은현재Chat의부모에실제숨김명령을보내며0이면생략한다.
         }));
-    if (nativePlayers) { world_->StartLocalConnection();loading.continued=true;return; } // 실제10.78은 상태8 뒤 정상 Tick/패킷 위치로 반환한다.
+    if (nativePlayers) { world_->PrepareLocalConnectionForState();loading.continued=true;return; } // 같은 부모로 복귀한 뒤7 확정/즉시8을 실행하고 다음9는 자연 Tick에 남긴다.
     world_->BeginLocalConnection();loading.continued=true;FinishMissionWorldLoad(); //10.72의 기존 동기 어댑터와 새10.78 상태 경로를 구별한다.
 }
 // 실제 연결/로더가 완료된 같은 미션만 입력·Tutorial·Start의 소비자를 얻는다.

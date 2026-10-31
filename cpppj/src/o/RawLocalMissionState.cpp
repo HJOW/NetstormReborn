@@ -26,10 +26,16 @@ RawLocalMissionState::RawLocalMissionState(OriginalEdition edition,LocalMissionS
 // 진단뒤에도원문은새요청으로덮어쓴다. callback뒤실제전달값을저장한다.
 void RawLocalMissionState::Request(std::uint32_t state) const { if (state_.immediate[0]) Need(hooks_.assertion,"즉시상태중복진단미연결")();state_.immediate[0]=state; }
 // next0은자연반환이며기존current/phase를임의0으로만들지않는다.
-void RawLocalMissionState::Poll() {
+void RawLocalMissionState::Poll() { PollBody(nullptr); }
+// 실제 다음7과 필수 몸체만 받아 새 상태번호를 합성하지 않는다.
+void RawLocalMissionState::PollStarting(const std::function<void()>& body) {
+    if (state_.next[0]!=7 || !body) throw std::logic_error("실제 next7/부모 몸체 계약 오류");PollBody(&body);
+}
+// 메타 선행 효과가 바꾼 현재 next도 같은 위치에서 다시 읽는다.
+void RawLocalMissionState::PollBody(const std::function<void()>* starting) {
     if (globals_.metaRebuild && !globals_.metaRefresh && globals_.metamap) { Need(hooks_.metaFirst,"메타맵첫효과미연결")();globals_.metaRebuild=0; }
     if (globals_.metaRefresh && globals_.metamap) { Need(hooks_.metaSecond,"메타맵둘째효과미연결")();Need(hooks_.metaThird,"메타맵셋째효과미연결")();globals_.metaRefresh=0; }
-    if (state_.next[0]) { state_.current=state_.next;state_.next[0]=0;Run(); }
+    if (state_.next[0]) { state_.current=state_.next;state_.next[0]=0;RunBody(starting); }
 }
 // original7은cleanup전ticks/source를 보존하고 이후 CD/Zone/Renderer를 원문 위치에서 조회한다.
 LocalMissionStartingSnapshot CaptureLocalMissionStarting(const LocalMissionStateBlock& current,const std::uint32_t& zonePending,std::uint8_t& titleInitial,const std::uint32_t& gameTicks,const std::uint32_t& sourceType) {

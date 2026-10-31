@@ -131,6 +131,7 @@ private:
     // 실제 Guide 단계1의 Header/월드/로그인/커서를 설치하고 다음 단계만 요청한다.
     void InitializeMission(); // 실제 Tutorial Init은 번호/설정/전역을 쓰고 다음 루프의 로드 요청과 Header를 수행한다.
     void LoadMissionWorld(std::optional<std::string> requestedFort={}); // Init이 캡처한 요새 이름을 사용한다. 기존 Battle은 현재 설정을 읽는다.
+    void LoadMissionWorldBody(std::optional<std::string> requestedFort); // 부모 공통부의 최초 복사/로그 뒤 실제 정리/새 World/로그인 후반만 수행한다.
     void FinishMissionWorldLoad(); // 실제 phase14/현재 미션 수명 확인 뒤 커서/Start/안내를 설치한다. 상태8 준비 단계에서 호출하지 않는다.
     void RequestMissionFort(std::string_view name); // Tutorial/일반 미션이 같은 현재 Fort 선택과86BYTE Zone/144BYTE State7 요청을 작성한다. 호스트 전환 큐는 호출자가 예약한다.
     o::FortMissionSaveHooks FortMissionSaveEffects(); // 현재 Runtime의 이름과 같은 실제 sequence/flags를 동기 저장에 빌린다.

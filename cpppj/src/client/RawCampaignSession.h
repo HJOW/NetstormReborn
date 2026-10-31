@@ -284,7 +284,9 @@ public:
     void InstallExistingEditorPlayers(o::EditorPlayersHooks ui);
     //현재실제설정/시계/Player/Template로 원본로컬로그인 후 같은Load를 정확한 위치에서 실행한다.
     void LoadLocalConnection();
-    void StartLocalConnection(); // 같은 준비/상태8까지만 실행한다. 실제 Client는 이후 상태 Tick과 패킷 폴링을 정상 프레임에서 분리한다.
+    void StartLocalConnection(); // 독립 편의 접합은 같은 준비/상태8까지 실행한다. 실제 Client의 실행 중 부모는 PrepareLocalConnectionForState를 사용한다.
+    void PrepareLocalConnectionForState(); // 실행 중인 외부 State7 부모에서 Zone/후반만 설치한다. 공통 확정이나 상태8 접속을 중첩 실행하지 않는다.
+    void ConnectLocalConnectionForState(std::span<const std::uint8_t> address,std::uint32_t port); // 부모의 현재8이 같은 로컬 접속 몸체를 사용한다. 외부 TCP/IP 접속을 대신하지 않는다.
     bool PollLocalConnectionState(); // 다음8/9/10/13/14를 한 번 소비했으면 true다. 메인/Edit/이탈 부모는 소비하지 않아 같은 Tick에 두 상태를 실행하지 않는다.
     bool LocalConnectionReady() const; // 실제 loaded/phase14/PlayerKnown/현재 Player 참여 비트만 조회한다. 별도 성공 플래그를 만들지 않는다.
     //프레임마다현재실제송신/수신큐와로그인타이머를진행한다.
@@ -597,6 +599,7 @@ private:
     void WriteFortObjects(std::uint32_t slot); // 전체 지역/Chaff 저장 본문을 설치 외곽에서도 같은 순서로 실행한다.
     void WriteFortObjectChunkBody(TemplateWriteStream stream,std::int32_t chunkX,std::int32_t chunkY); // 같은 청크 저장 본문이며 공개 설치 계약을 우회 노출하지 않는다.
     void WriteFortTechnology(std::uint32_t parent,TemplateWriteStream stream); // 부모가 이미 만든 같은 stream에 body-token1로 기술 본문만 쓴다.
+    void BeginLocalConnection(bool parentRunning); // 새 로그인 소유자를 한 번 만들며 실제 외부 부모/독립 편의 실행의 경계만 구별한다.
     struct Impl; // 단일 월드의 실제 모듈/현재 배열과 외부 서비스의 고정 수명 소유자다.
     std::unique_ptr<Impl> impl_; // Kernel 해제 뒤 실제 상태/서비스를 해제한다.
 };
