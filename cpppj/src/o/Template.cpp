@@ -147,6 +147,36 @@ FortChunkSection ReadChunkSection(std::span<const std::uint8_t> bytes, std::stri
     }
     return section;
 }
+// 현재 원시 TypeNames에서 편의 변환표만 다시 만들며 실제 manager/전역 변환표는 건드리지 않는다.
+void ReadTypeConversion(FortTemplate& fort,const RiftTypeTable& types) {
+    fort.typeHashes.clear();fort.hasTypeConversion=false;fort.typeConversion.fill(0); // 이전 파일의 해시/변환이 빈 새 섹션으로 넘어가지 않게 한다.
+    if (const auto section = fort.Section("TypeNames"); !section.empty()) {
+        Stream stream(section, "TypeNames");
+        // 개수 바이트 뒤로 해시가 이어진다.
+        for (auto count = stream.U8(); count != 0; --count) fort.typeHashes.push_back(stream.U32());
+        fort.hasTypeConversion = true;
+        const auto current = types.Types();
+        // 같은 해시의 현재 타입이 여럿이면 번호가 큰 것이 남는다(이름 없는 타입의 해시 0이 그렇다).
+        for (std::size_t type = 0; type < current.size(); ++type) {
+            const auto hash = RiftTypeTable::NameHash(current[type].name);
+            // 파일의 번호 가운데 해시가 같은 첫 번호만 고친다.
+            for (std::size_t stored = 0; stored < fort.typeHashes.size(); ++stored) {
+                if (fort.typeHashes[stored] != hash) continue;
+                if (stored < fort.typeConversion.size()) fort.typeConversion[stored] = static_cast<std::uint8_t>(type);
+                break;
+            }
+        }
+    }
+}
+// 객체 로더가 요구하는 원시 Chaff/Terr 섹션만 해석하며 다른 저장 섹션의 cursor와 할당을 보존한다.
+void ReadObjectRecords(FortTemplate& fort,const RiftTypeTable& types) {
+    fort.chaff = ReadChunkSection(fort.Section("Chaff"), "Chaff", fort, types);
+    // 영역 섹션 20개.
+    for (std::size_t i = 0; i < FortTemplate::kTerritoryCount; ++i) {
+        const auto name = kSectionNames[FortTemplate::kSectionCount - FortTemplate::kTerritoryCount + i];
+        fort.territories[i] = ReadChunkSection(fort.Section(name), name, fort, types);
+    }
+}
 }
 
 // 0이거나 8보다 크면 1로 바꾼다(원본 004bdc60).
@@ -168,6 +198,8 @@ int FortTemplate::ConvertType(std::uint8_t storedType) const {
     if (storedType >= kBridgeShorthandMin || !hasTypeConversion) return storedType;
     return typeConversion[storedType];
 }
+// 실제 Editor의 파일/Subscriber/지형 준비 뒤 같은 현재 원시 섹션에서 객체 읽기 자료를 갱신한다.
+void FortTemplate::RefreshObjectRecords(const RiftTypeTable& types) { ReadTypeConversion(*this,types);ReadObjectRecords(*this,types); }
 // 원본은 섹션을 이름 목록 순서로 35개 읽는다. 파일이 먼저 끝나면 거기서 멈춘다(새 구현의 보호 처리).
 FortTemplate FortTemplate::Parse(std::span<const std::uint8_t> bytes, const RiftTypeTable& types) {
     if (bytes.size() < 2 || bytes[0] != kFortMagic) throw std::runtime_error("fort: first byte is not 0x46");
@@ -201,24 +233,7 @@ FortTemplate FortTemplate::Parse(std::span<const std::uint8_t> bytes, const Rift
     // Territory: 120바이트를 그대로 둔다. 해석은 영역 배치 단계에서 한다.
     if (const auto section = fort.Section("Territory"); section.size() >= kTerritoryBytes)
         fort.territory.assign(section.begin(), section.begin() + static_cast<std::ptrdiff_t>(kTerritoryBytes));
-    // TypeNames: 원본 004bd800. 현재 타입마다 이름 해시가 같은 첫 파일 번호에 자기 번호를 적는다.
-    if (const auto section = fort.Section("TypeNames"); !section.empty()) {
-        Stream stream(section, "TypeNames");
-        // 개수 바이트 뒤로 해시가 이어진다.
-        for (auto count = stream.U8(); count != 0; --count) fort.typeHashes.push_back(stream.U32());
-        fort.hasTypeConversion = true;
-        const auto current = types.Types();
-        // 같은 해시의 현재 타입이 여럿이면 번호가 큰 것이 남는다(이름 없는 타입의 해시 0이 그렇다).
-        for (std::size_t type = 0; type < current.size(); ++type) {
-            const auto hash = RiftTypeTable::NameHash(current[type].name);
-            // 파일의 번호 가운데 해시가 같은 첫 번호만 고친다.
-            for (std::size_t stored = 0; stored < fort.typeHashes.size(); ++stored) {
-                if (fort.typeHashes[stored] != hash) continue;
-                if (stored < fort.typeConversion.size()) fort.typeConversion[stored] = static_cast<std::uint8_t>(type);
-                break;
-            }
-        }
-    }
+    ReadTypeConversion(fort,types);
     // Technology: 플레이어를 그릇으로 한 내용물 목록이다. 그 타입(PlayerSquid)의 +0xfc는 0이라 목록 플래그를 파일에서 읽는다.
     if (const auto section = fort.Section("Technology"); !section.empty()) {
         Stream stream(section, "Technology");
@@ -239,12 +254,7 @@ FortTemplate FortTemplate::Parse(std::span<const std::uint8_t> bytes, const Rift
             fort.deck.push_back(entry);
         }
     }
-    fort.chaff = ReadChunkSection(fort.Section("Chaff"), "Chaff", fort, types);
-    // 영역 섹션 20개.
-    for (std::size_t i = 0; i < kTerritoryCount; ++i) {
-        const auto name = kSectionNames[kSectionCount - kTerritoryCount + i];
-        fort.territories[i] = ReadChunkSection(fort.Section(name), name, fort, types);
-    }
+    ReadObjectRecords(fort,types);
     return fort;
 }
 }

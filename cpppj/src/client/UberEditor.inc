@@ -62,17 +62,12 @@ o::LocalMissionParentResult UberGump::InstallExistingEditorState(std::uint32_t s
     if (selected!=1 || !editor_) throw std::logic_error("실제 Edit State1 외곽 계약");
     PrepareNativeFortState(true);auto& e=*editor_;
     //호스트 Session은 준비된 물리만 빌리고 파일 설치/Template 변경은 아래 실제 checkpoint의 위치까지 지연한다.
-    const std::string pending(client_.FortGlobals()->Pending());const auto configured=client_.Configuration().PathSpec("fortSpec",pending);
-    const auto working=editorCatalog_->Prepare(configured); //목록을 거치지 않는 직접 설치도 완료된 삭제 항목을 원본에서 다시 복사하지 않는다.
-    e.files.EnsureDirectory(platform::PathToUtf8(working.parent_path())); // 새 작업 namespace도 원본 설치의 d 폴더처럼 저장 부모 디렉터리를 먼저 확보한다. Fort 파일은 원문 Notify가 생성한다.
-    const auto bytes=client_.Files().TryRead(platform::PathToUtf8(working));
-    const auto image=bytes ? std::make_shared<const std::vector<std::uint8_t>>(*bytes) : std::shared_ptr<const std::vector<std::uint8_t>>{};
-    o::FortTemplate fort;if (image) fort=o::FortTemplate::Parse(*image,client_.Assets().TypeTable()); // 파일 부재는 새 manager/자료 부모가 처리하며 가짜 빈 Fort 파일을 읽지 않는다.
+    const std::string pending(client_.FortGlobals()->Pending()); // 실제 이름 선택/기본 이름은 checkpoint가 수행하므로 여기서는 파일을 조회하거나 파싱하지 않는다.
     auto services=MakeCampaignClientServices(client_,*rawButtons_,{[this] { RefreshWindowTitle(); },[this](auto name) { Tell(std::string(name)); },[this](auto kind,auto player,auto parameter) { warnings_->Remove(kind,player,parameter);rebuild_=true; },[this](auto packet) { ReceiveChatMessage(packet); }});
     services.installMode=CampaignInstallMode::ExistingEditor;services.deferExistingEditorFile=true;services.adoptPreparedWorld=true;services.adoptInitializedPlayers=true;services.localLogin.reset();
-    services.templateStorage=templateStorage_;services.missionFortImage=image;services.missionOptions=missionOptions_;services.missionRestrictions=missionRestrictions_;services.editorTransport=e.transport;services.fortMission=FortMissionSaveEffects();
+    services.templateStorage=templateStorage_;services.missionOptions=missionOptions_;services.missionRestrictions=missionRestrictions_;services.editorTransport=e.transport;services.fortMission=FortMissionSaveEffects();
     services.fortBadges=client_.FortBadges();services.fortTypeConversion=client_.FortTypeConversion(); //기존 파일의 실제 장부/변환표를 캠페인과 같은 Client owner에서 빌린다.
-    world_=std::make_unique<GameWorld>(client_.Assets(),client_.Files(),std::move(fort),o::MissionPlayers{},pending,std::move(services),ScreenPoint{client_.GetScreen().Width(),client_.GetScreen().Height()},true);
+    world_=std::make_unique<GameWorld>(client_.Assets(),client_.Files(),o::FortTemplate{},o::MissionPlayers{},pending,std::move(services),ScreenPoint{client_.GetScreen().Width(),client_.GetScreen().Height()},true);
     world_->elapsed=[this] { return client_.Time().delta; };world_->paused=[this] { return client_.Paused(); };world_->frameTime=[this] { return client_.Time(); };
     world_->BindHideBuildings([this] { return hideBuildings_; });world_->soundViewChanged=[this](auto view) { client_.WorldAudio().SetView(view); };
     world_->surfaceDisplay={[this] { return client_.GetRenderer().FullRedrawPending(); },[this](auto rect,auto flags) { client_.GetRenderer().Invalidate({rect.left,rect.top,rect.right,rect.bottom},flags); }};

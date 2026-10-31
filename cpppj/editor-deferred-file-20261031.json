@@ -1,0 +1,94 @@
+{
+  "unit": 662,
+  "date": "2026-10-31",
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "productChanged": true,
+  "executableSha256": "9cce68e0d1deb21730942940986ed5438701708918f681ef28892b914941eac2",
+  "changes": [
+    "State1의 최종 이름 선택 전 pending 파일 준비/선행 읽기/전체 파싱을 제거했다. 최종 작업 파일의 부모 준비와 이관은 PrepareCurrent에서 실행한다.",
+    "실제 raw 파일/Subscriber/지형 설치 뒤 일반 Editor 객체 child가 현재 manager TypeNames/Chaff/Terr의 해석 자료를 갱신한다. 빈/다른 파일의 오래된 자료를 사용하지 않는다.",
+    "기존 파서와 객체 해석 도우미를 공유하며 원시 섹션 버퍼·State/Money/Deck cursor와 Campaign의 기존 파싱 경로를 보존한다."
+  ],
+  "focused": {
+    "registered": 70,
+    "finalUnique": 9,
+    "newUnique": 2,
+    "newInputs": 4,
+    "oldUnique": 7,
+    "failedChecks": 0,
+    "finalLogs": [
+      "extracted/cpp-editor-deferred-file-662-focused-v2.log",
+      "extracted/cpp-editor-deferred-file-662-default.log",
+      "extracted/cpp-editor-deferred-file-662-outer.log",
+      "extracted/cpp-editor-deferred-file-662-read-false.log",
+      "extracted/cpp-editor-deferred-file-662-custom.log"
+    ],
+    "invocations": 6,
+    "testFunctionCalls": 11,
+    "initialFailures": [],
+    "initialWarnings": [
+      "build-v1의 새 검사 코드 미사용 assets 지역 변수 C4189 1개를 제거했다. 실제 검사 실패/제품 오류는 없으며 최종 build-v2는 경고0이다."
+    ],
+    "scope": "실제 단독 Editor Session의 빈/다른 최초 투영→TEST01 현재 raw 파일 설치, 잘못된 서명→실제 작업본 삭제/manager 반납, 손상 Chaff→파일/Subscriber/지형 뒤 중단을 네 입력으로 확인했다. checkpoint는 최종 State/loaded 공개가 아니다.",
+    "limits": "다른61등록/주 검사 전체와 GUI를 실행하지 않았다. 새 객체 비교는 기존 파서와의 연결 검사이며 새 독립 Native 동일성 자료가 아니다."
+  },
+  "native": {
+    "newCases": 0,
+    "newObservations": 0,
+    "newFixture": false,
+    "staticInstructions": 601,
+    "replayedRows": 400,
+    "existingRows": {
+      "defaultName": 252,
+      "editorOuterRead": 258,
+      "editorOuterCompared": 148,
+      "editorOuterExplicitlyExcluded": 110
+    },
+    "scope": "601개 명령은 정적 대조다. 기존252행과 외곽148행의 한정 투영을 재대조했고 외곽 나머지110행은 기존처럼 명시 제외했다."
+  },
+  "builds": [
+    {
+      "log": "extracted/cpp-editor-deferred-file-662-build-v1.log",
+      "exitCode": 0,
+      "warnings": 1,
+      "errors": 0
+    },
+    {
+      "log": "extracted/cpp-editor-deferred-file-662-build-v2.log",
+      "exitCode": 0,
+      "warnings": 0,
+      "errors": 0
+    }
+  ],
+  "protected": {
+    "baseline645Checked": 7,
+    "fixture653Checked": 1,
+    "fixture653Commit": "a99f1a2f",
+    "checked": 8,
+    "differences": 0,
+    "sha256": {
+      "AGENTS.md": "e9e46fda5519e663417b5c8d9b643549196bf28fe7ba6b1d546a48a853fd208b",
+      "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+      "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6",
+      "originals/d/TEST01.fort": "3c8a7d73be785f5b06f4c94aea633697b52d95129ed502ebc43f1efe326bad8f",
+      "cpppj/tests/fixtures/fort-current-name-x86.tsv": "4c89096cbf763420fde7f95977c2d1d505ac01efb7c62f728a453c1de1869604",
+      "cpppj/tests/fixtures/existing-editor-install-outer-x86.tsv": "eeb11836fe3ddbbb0228c11f40bfdd8461bf0a45221ebb225667aa86f6a51f4a",
+      "cpppj/tests/fixtures/editor-default-name-x86.tsv": "e2ffcefa1f7ffad9962fd4b1869ba91ce4ebdb0a3340496e113917fa3c6c1aa5"
+    },
+    "fullAuditRepeated": false
+  },
+  "actualGameRuns": 0,
+  "full34Repeated": false,
+  "newZip": false,
+  "mainTestExecutableRebuilt": false,
+  "multiplayerTests": 0,
+  "decompileChanged": false,
+  "remaining": [
+    "Chaff/Terr 편의 파서는 전체 레코드를 먼저 해석한다. 원문의 바이트 읽기/생성 교대·뒤쪽 손상의 정확한 부분 생성/깊이/cursor·전체 파일 스트림 ABI는 잔여다.",
+    "서명 거부 뒤 기존 InvalidFile 외부 경계와 원문의 모든 재선택/복구 분기는 별개이며 전체 Editor/GUI 동일성을 주장하지 않는다.",
+    "남은 지형/소유자/시나리오·UI/연속 미션·호환성·BaseFile 소비자/ABI, 후순위MP 무시험 사전 구현과4~7차"
+  ]
+}

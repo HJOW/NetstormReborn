@@ -68,6 +68,9 @@ struct RawCampaignWorldRuntime::Impl {
             if (!existing->money || !existing->meta || !existing->selectMoney) throw std::invalid_argument("일반Fort 실제Money/Meta몸체미연결");
             territoryHooks=MakeFortWorldLoadBinding(world,normal,*objects,*existing->money,*existing->meta,
                 existing->moneyStream,existing->selectMeta,existing->metaStream,std::move(territoryHooks)); //Object/Generate/Graph도기존같은완료몸체를쓴다.
+            auto objectLoad=std::move(territoryHooks.objects);territoryHooks.objects=[this,body=std::move(objectLoad)](const o::FortTemplate& fort,std::uint32_t owner) {
+                if (existing->prepareObjects) existing->prepareObjects(owner);body(fort,owner); // 같은 Template 객체의 현재 raw 섹션을 해석한 뒤 기존 생성/Pop 몸체를 실행한다.
+            };
             auto moneyLoad=std::move(territoryHooks.money);territoryHooks.money=[this,body=std::move(moneyLoad)](const o::FortTemplate& fort,std::uint32_t owner) {
                 existing->selectMoney(fort,owner);body(fort,owner); //실제stream선택은여전히LoadSelected의깊이/진단뒤다.
             };

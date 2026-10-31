@@ -98,6 +98,7 @@ public:
     static std::span<const std::string_view> SectionNames();
     // 파일 전체를 읽는다. 타입 표는 그 파일을 읽을 판본의 것이어야 한다. 형식 오류는 예외다.
     static FortTemplate Parse(std::span<const std::uint8_t> bytes, const RiftTypeTable& types);
+    void RefreshObjectRecords(const RiftTypeTable& types); // 현재 원시 TypeNames/Chaff/Terr에서 객체 해석 자료만 갱신한다. 실제 Editor의 객체 child에서 호출하며 파일 읽기/manager cursor는 바꾸지 않는다.
     // 이름으로 원시 섹션을 찾는다. 파일에 그 섹션이 없으면 빈 범위다.
     std::span<const std::uint8_t> Section(std::string_view name) const;
     // `TypeNames`로 파일의 타입 번호를 현재 번호로 바꾼다. 섹션이 비어 있으면 그대로다.

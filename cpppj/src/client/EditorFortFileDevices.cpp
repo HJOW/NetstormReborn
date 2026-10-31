@@ -21,7 +21,8 @@ std::string_view EditorFortFileDevices::CurrentPath() {
 }
 // 파일존재/읽기는설치부모가별도로실행한다.이준비는작업namespace에없는복사본만만든다.
 std::string_view EditorFortFileDevices::PrepareCurrent() {
-    static_cast<void>(CurrentPath());if (effects_.prepare) { effects_.prepare(configuredPath_);return workingPath_; }if (work_.Exists(workingPath_)) return workingPath_;
+    static_cast<void>(CurrentPath());work_.EnsureDirectory(platform::PathToUtf8(platform::PathFromUtf8(workingPath_).parent_path())); // 최종 이름/설정으로 선택한 작업 파일의 부모만 준비한다. 원본 설치 폴더에는 쓰지 않는다.
+    if (effects_.prepare) { effects_.prepare(configuredPath_);return workingPath_; }if (work_.Exists(workingPath_)) return workingPath_;
     const auto bytes=source_.TryRead(configuredPath_);if (bytes) static_cast<void>(work_.PreparePath(namespacePath_,*bytes));return workingPath_;
 }
 // 실제경로를재검사한뒤출처5/0을그대로반환한다.

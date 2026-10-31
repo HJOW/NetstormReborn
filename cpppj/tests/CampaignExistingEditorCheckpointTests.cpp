@@ -254,7 +254,7 @@ struct EditorInstallWireScene {
     }
 };
 // 실제 Chat·Player·번역·작업 파일을 갖춘 같은 Client Session을 검사 동기 범위 동안 소유한다.
-template<class Body> void WithEditorInstallSession(Body body,bool prepared=false,EditorInstallWireScene* wireScene=nullptr,const std::function<void(RawSurfaceStorage&)>& prepareStorage={},const std::function<void(Client&,RawCampaignSessionServices&)>& beforeCtor={}) {
+template<class Body> void WithEditorInstallSession(Body body,bool prepared=false,EditorInstallWireScene* wireScene=nullptr,const std::function<void(RawSurfaceStorage&)>& prepareStorage={},const std::function<void(Client&,RawCampaignSessionServices&)>& beforeCtor={},bool unparsedFort=false) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);const auto input=CheckpointInput(assets.files);ClientOptions options;options.gameDirectory=assets.root;Client client(std::move(options));client.StaticStrings()->Initialize(10240);if (prepared) { client.SpGlobals()->Store().Initialize();InitializeClientPlayerRecords(client); }InitializeClientChatManager(client);
     EditorFiles work(CheckpointRoot(assets.root.parent_path(),"ui-state-commit"),{assets.root,assets.root.parent_path()/"originalCD"});work.Prepare("Checkpoint385",input);CheckpointDevices devices;auto effects=devices.Effects(client,work);auto storage=std::make_shared<CampaignTemplateStorage>();auto services=devices.Make(client,storage,input);const auto surface=MakeRawSurfaceStorage(assets.game,client.GameplayGlobals()->Authority(),client.GameplayGlobals()->GameAux());
     services.surfaceStorage=surface;services.gameplayGlobals=client.GameplayGlobals();services.subscriberGlobals=client.SubscriberGlobals();services.playerRecords=client.PlayerRecords();services.localStateGlobals=client.LocalStateGlobals();services.editorPlayerUi=MakeEditorPlayerClientHooks(client);services.fortTechnologyUi=[&] { RefreshClientChatRankPrefix(client,assets.game,*surface); };
@@ -272,7 +272,7 @@ template<class Body> void WithEditorInstallSession(Body body,bool prepared=false
     const std::array<std::uint32_t,13> messages{0x5b,0x40,0x4f,0x50,0x60,0x61,0x5c,0x5f,0x7d,0x6d,0x3e,0x54,0x58};std::array<PacketRegistration,13> registrations{}; // 반납 전 현재 등록 정책을 독립적으로 고정한다.
     PacketRegistration activityRegistration; //64h는 기존13종 목록 밖에서 수신 반납과 정책 보존을 별도로 관측한다.
     if (beforeCtor) beforeCtor(client,services); // 같은 fifth hook을 현재63과 같은 Session 생성 직전에 정확히 한 번 호출한다.
-    { RawCampaignSession session(assets.game,assets.files,FortTemplate::Parse(input,assets.game.TypeTable()),"deferred.fort",std::move(services));body(session,client,effects,work);
+    { RawCampaignSession session(assets.game,assets.files,unparsedFort ? FortTemplate{} : FortTemplate::Parse(input,assets.game.TypeTable()),"deferred.fort",std::move(services));body(session,client,effects,work);
       if (wireScene) activityRegistration=wireScene->wire->Dispatch().Registration(0x64);
       if (wireScene) for (std::size_t index=0;index<messages.size();++index) registrations[index]=wireScene->wire->Dispatch().Registration(messages[index]); } // 수신 callback의 같은 Session이 Client/Player보다 먼저 반납된다.
     if (wireScene) {
@@ -746,6 +746,7 @@ TEST_CASE(CampaignExistingEditorCheckpoint_SameNameKeepsGuideAndSelectsMissionOu
     });
 }
 
+#include "EditorDeferredFileTests.inc" // 선행 파일 파싱 없는 실제 checkpoint의 성공/거부/객체 해석 실패를 확인한다.
 #include "EditorDefaultNameSessionTests.inc" // 기본 이름의 실제 Session 연속 설치도 같은 파일/월드 장치를 사용한다.
 
 //같은 실제 Client/Session 설치 도우미로 저장·State3 예약과 장기 덱 소유권을 검사한다.

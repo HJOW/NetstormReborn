@@ -2625,6 +2625,7 @@ struct RawCampaignSession::Impl {
         moneyHooks.loadingDepthChanged=[this](auto depth) { world.SetLoadingDepth(depth); };
         moneyHooks.refreshSp=[this] { if (!services.refreshSp) throw std::logic_error("Fort Money 실제SP 표시갱신 미연결");services.refreshSp(); };
         RawExistingFortChildren children;children.stateOwner=state;
+        children.prepareObjects=[this](auto owner) { templateStorage->Template(owner).RefreshObjectRecords(assets.game.TypeTable()); }; // 최초 pending의 선행 파싱 대신 원문 객체 child가 현재 파일의 원시 섹션을 소비한다.
         children.money=std::make_shared<RawFortMoneyLoad>(core.pool.Edition(),rewardState,core.bookkeeping,players,objectState.loadingDepth,state->money,&sp,std::move(moneyHooks));
         children.selectMoney=[this,state](const FortTemplate&,auto owner) {
             if (owner>=9) throw std::out_of_range("기존Editor Money 고정Template 범위");
