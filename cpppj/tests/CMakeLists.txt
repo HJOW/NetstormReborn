@@ -2632,3 +2632,11 @@ target_sources(netstorm_editor_file_tests PRIVATE EditorFileWriterTests.cpp Edit
 
 # 실제 Movie writer가 공통 수집 머리와 Renderer 앞단을 바꾸는지 같은 트리에서 확인한다.
 target_sources(netstorm_renderer_presentation_tests PRIVATE RawMenuControlsTests.cpp CampaignExistingEditorCheckpointTests.cpp) # 공통 메뉴의 Editor 섬 창 보조 함수는 이 번역 단위의 실제 설치 helper를 사용한다.
+
+# 실제 Guide 소멸과 기존 교체·AI·입력 수명을 같은 제품 라이브러리에서 확인한다.
+target_sources(netstorm_tests PRIVATE TutorialMissionReleaseTests.cpp MissionRestrictionGlobalsTests.cpp)
+add_executable(netstorm_guide_release_tests FocusedTestMain.cpp TutorialMissionReleaseTests.cpp MissionRestrictionGlobalsTests.cpp
+    CampaignSessionTests.cpp GuideTransitionTests.cpp MissionLifecycleTests.cpp PlayerParticipationTests.cpp MissionStartTests.cpp CampaignGameMenuTests.cpp)
+target_link_libraries(netstorm_guide_release_tests PRIVATE netstorm)
+netstorm_apply_compiler_options(netstorm_guide_release_tests)
+target_compile_definitions(netstorm_guide_release_tests PRIVATE ${_netstorm_menu_session_definitions})

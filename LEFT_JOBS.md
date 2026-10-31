@@ -6,19 +6,19 @@
 
 ## 0. 재개 전 확인 사항
 
-### 0.1 현재 값 (2026-11-01, 단위670 완료 / 목표 진행 중)
+### 0.1 현재 값 (2026-11-01, 단위671 완료 / 목표 진행 중)
 
 | 항목 | 값 |
 | --- | --- |
-| 진행 상태 | **단위670 완료.** Movie Open의 별도overlay 등록을 원문 단일 Renderer override로 교체했다. 실제 수집/구름·행 스캔/End·Kill·Close 접합과 기존 회귀10개/실패0, 최종 Release 경고/오류0이다. 최초 두 링크 실패는 보조 함수 의존성을 잘못 연결한 기록으로 보존했다. 다음은671 Guide 해제 차이다. 전체 목표는 미완료다. |
-| 현재 제품 | 제품670이며 영상의 현재 단일 override가 실제 UI 수집과 Renderer 앞단에 전달된다. End 중 유지/Kill 직후0/지연 singleton 반납은 공통 수명을 유지했다.669의 Template 끝 보존,667~668의 최초 파일 수명/진단을 유지한다.671 Guide 해제는 정적 준비 자료뿐이며 제품 미반영이다. 최신 전체34/ZIP은645의644제품이다. |
-| EXE SHA-256 | `468add9f653056db8d0dda9249d1136410c88814e7ff412ee3133d27b1b5e2d9` (670) |
+| 진행 상태 | **단위671 완료.** 명시 MissionEnd와 자동 Guide 해제를 World/UserInput·메뉴 음악·Resume에서 분리했다. Tutorial 허용표/6DWORD/실제 AI/기본 Config와 본문 예외 정리를 같은 실제 Client에 연결했다. 관련35개/실패0·최종 Release 경고/오류0이다. 기존 검사 장면의 준비/단언 실패3회와 교정을 별도 보존했다. 전체 목표는 미완료다. |
+| 현재 제품 | 제품671. 같은 World/Input을 유지하며 Guide의 실제 AI/Config만 반납하고, deny 두 DWORD는 Client 수명에 공유한다.670 Movie override·669 Template 끝 보존을 유지한다. 최신 전체34/ZIP은645의644제품이다. |
+| EXE SHA-256 | `4ea8e712282bb224a65d41906cc75c421d7d3a7348759ddc982d58f0a33e7d93` (671) |
 | ZIP SHA-256 | 645에서 만든644 제품의 `6485febc36080dc90e9eec43965a842f85d39e81c82a003a96b83b34b3694b73` (1376항목/게임 자산1358개). 실제 한글😀 경로에 압축 해제해 최종34를 실행했다. |
-| 등록 C++ 검사 수 | 670의 Renderer 집중129등록 중 관련10개/실패0(새2·기존8), 총5회/10함수 호출이다. 새 override2·실패Open1·CD 픽셀/네 종료 입력1·앞단2·Frame4이며 기존 앞단720/투영90의810행을 C++ 재생했다. 새 Native 실행/fixture·신규MP 검사0이다.669의28개는 별도 제품 근거다.129등록 전체나 주 검사 전체는 실행하지 않았다. 주 검사 EXE는645의3566등록/집중37이 마지막 근거다. |
+| 등록 C++ 검사 수 | 671의 Guide 집중287등록 중 관련35개/실패0(새10·기존25), 총15회/44함수 호출이다. 기존 장면의 같은1개가 최초3회 실패한 뒤 관련3개를 재검사했다. 기존2217고유행 C++ 재생·부분집합48 두 경로를 구별한다. 새 Native/fixture·게임·신규MP 검사0이다. 등록 전체/주 검사 전체는 실행하지 않았다. 주 검사 EXE는645의3566등록/집중37이 마지막 근거다. |
 | 최신 전체34 | 단위645, 644 제품 기준 최종34/34. 최소 비정지 시각 증가20.843초·창DC RGB·Native Frame 일치. 최초 입력 누락34실패/재검증34통과와 준비2회를 포함한 총70프로세스를 구별한다. |
 | 최신 반복 수명 | 단위640, 같은637 제품의 브리핑/중단 확인 바깥 뗌 취소2회·미션 재진입1회와 채팅 도킹2실행. 최종3실행 종료0. Restart4회/Leave 취소2회/메인 복귀2회는638의 별도 근거다. |
 | 전체 C++ 마지막 실행 | 단위549. 3389개 중 7개 검사가 실패했다(580단언). 이후 입력 정정 뒤 집중 검사만 통과했고 전체 재실행 기록은 없다. 마지막 전체 통과는 단위510(508 제품, 3337개, 실패 0)이다. |
-| 보호 기준 | 전체2632개/기존fixture773개는645에서 불변을 확인했다.670의 관련5개(AGENTS/양PE/TAFF/CD 인트로)는 전후 불변이며 앞4개는669 기준과 일치한다. 전체 재감사와 구별하며655~670의 새fixture는 없다. 원시 자료는 HJOW-Athlon에만 있다. |
+| 보호 기준 | 전체2632개/기존fixture773개는645에서 불변을 확인했다.671의 관련4개(AGENTS/양PE/TAFF)는 전후 불변이며 앞선 기준과 일치한다. 전체 재감사와 구별하며655~671의 새fixture는 없다. 원시 자료는 HJOW-Athlon에만 있다. |
 | **마지막 전체 정밀 디컴파일** | **HJOW-Athlon (192.168.0.94) / 2026-10-23** |
 
 ### 0.2 재개 절차
@@ -28,8 +28,8 @@
 3. 실제 게임 구동과 별도 창이 뜨는 작업은 AGENTS.md를 따른다. 확인 없이 진행할 수 있는 시스템은 vm-debian-codex(10.0.0.15), VM-W11-Codex(10.0.0.17), HJOW-Athlon(192.168.0.94)뿐이다. **HJOW-X3D를 포함한 그 밖의 PC에서는 실행 목적과 필요성을 설명하고 명시적 확인을 받는다.** 허용받으면 해당 작업 단계가 끝날 때까지 유지된다. 사용자가 원본 수동 컨트롤이나 녹화 분석을 직접 요청한 작업 단계도 확인이 필요 없다.
 4. 빌드·검사·GUI 원시 자료는 작업 PC의 `extracted/`(Git 제외)에만 있다. 커밋되는 보고서는 `cpppj/*.json`, 작업 문서는 `docs/exe/cpp-*.md`다. 다른 PC에 원시 자료가 있다고 가정하지 않는다.
 5. 다른 세션의 dotnetpj·webpj 변경, staged 파일, 실행 출력은 이 작업에 포함하지 않는다. 단위마다 인계를 갱신하고 로컬 커밋한다.
-6. 645의 전체34 통합은 완료됐으며646~670에서 실제 게임을 다시 실행하지 않았다.670의 무화면 CD 파일 준비/기존 메모리 Draw 검사를 게임 창 재생으로 세지 않는다. 소수 단위 뒤 전체34를 반복하지 않고 더 많은 기능 묶음 뒤 필요한 통합을 수행한다. 새 작업은3절을 따른다.
-7. 마지막 빌드/집중 검사 근거는670의 `extracted/cpp-movie-override-670-build-v3.log`와 [보고서](cpppj/movie-override-20261101.json)의 실제5개 검사 로그를 따른다. v1/v2의 링크 의존성 실패를 보존했다. 최종10개와 Renderer129등록/기존810행을 구별한다.669의28개는 별도 제품 근거다. 주 EXE3566/집중37은645의644제품이다. 신규MP 검사는 하지 않는다.
+6. 645의 전체34 통합은 완료됐으며646~671에서 실제 게임을 다시 실행하지 않았다.670의 CD 최초 준비/메모리 Draw와671의 창 없는 실제 World/입력/AI 소멸을 게임 창 실행으로 세지 않는다. 소수 단위 뒤 전체34를 반복하지 않고 더 많은 기능 묶음 뒤 필요한 통합을 수행한다. 새 작업은3절을 따른다.
+7. 마지막 빌드/집중 검사 근거는671의 `extracted/cpp-guide-release-671-build-v6.log`와 [보고서](cpppj/guide-release-20261101.json)의 최종12개 선택 로그를 따른다. 옛 GuideWorldLifetime 장면의 최초3실패(장치/화면 입력/새 닫기 횟수 단언)를 보존했다. 최종35개와287등록/기존2217고유행을 구별한다. 제품 PE는 검사 중 같고 해당 장면만 고쳐3개를 재실행했다. 주 EXE3566/집중37은645의644제품이다. 신규MP 검사는 하지 않는다.
 
 ### 0.3 유지되는 제한과 보류
 
@@ -107,6 +107,7 @@ AGENTS.md의 `(4~6차 목표.)` 문구는 7차 추가 뒤에도 그대로지만,
 | --- | --- | --- | --- |
 | 전체34 진입 | [645](docs/exe/cpp-solo-integrated-20261031.md) (644 제품) | 새 ZIP의 일반31+실제Demo3 최종34/34, 종료0·비정지 시각 증가·창DC 전체RGB·Native Frame·수집/분배. 최소 증가20.843초. 주3566등록/집중37통과 | 짧은 진입이다. 최초 입력 누락34실패/재검증34통과/첫 실행 준비2회/총70프로세스를 구별한다. 자연 완주·전체 동일성·물리 입력은 아니다. |
 | 반복 미션 수명 | [638](docs/exe/cpp-state-repeat-20261031.md) (637 제품) | TEST02 4:3 창, 캠페인 1-1 16:9 전체화면. Restart·Leave 취소·메인 복귀·Quit, 창 DC RGB 4쌍 | 앱 내 검사 입력이다. 장시간 누수, 모든 전환, 자연 완주의 증거가 아니다. |
+| Guide 소멸 | [671](docs/exe/cpp-guide-release-20261101.md) | 명시 End/자동 Guide의 실제 Tutorial6DWORD·AI·기본 Config/예외 정리, 장기 deny 공유, 같은 World/UserInput 보존. 새10·기존25/실패0 | 원본32비트 SEH 전체 ABI·GUI·자연 완료 검증이 아니다. 기존 검사 장면의 최초3실패/교정과 최종35를 구별한다. |
 | 시작·휴대 배포 | [637](docs/exe/cpp-portable-startup-20261031.md) | 무인자 GUI 시작, 실제 Unicode EXE 경로 기준 `game/` 우선, cwd 독립, 자기 콘솔 분리, GUI 오류 표시. 집중 19/실패 0, 빌드 경고·오류 0 | 물리 입력 0건. 2.4절 참조 |
 | 카메라 | [615](docs/exe/cpp-camera-pan-20261030.md), [617](docs/exe/cpp-camera-pan-presentation-20261030.md), [632](docs/exe/cpp-camera-center-20261031.md), [633](docs/exe/cpp-camera-immediate-20261031.md), [635](docs/exe/cpp-camera-viewport-20261031.md) | 원문 Alt/가운데 pan, 확대 전체화면 논리 단위, 직접 중심 목표, Home 계열 즉시 적용, viewport 변경 시 현재 값 보존 | 물리 키, 다른 DPI, 실제 포커스 전환 |
 | Renderer·Native Draw | [618](docs/exe/cpp-renderer-prelude-20261030.md), [619](docs/exe/cpp-renderer-clouds-20261030.md), [620](docs/exe/cpp-renderer-frame-20261030.md), [622](docs/exe/cpp-native-scene-20261031.md), [628](docs/exe/cpp-mana-additional-20261031.md), [629](docs/exe/cpp-auxiliary-draw-20261031.md), [648](docs/exe/cpp-renderer-presentation-20261031.md), [655](docs/exe/cpp-mission-entry-20261031.md) | 앞단, 구름 4칸·배경 선택, 실제 Frame, 단일 표시 목록, 마나 103 추가 Draw, 배율·고정색, 부분 그리기/전체 출력 요청·첫 flags/count0 보존, 실제 Zone 뒤 초기화 | 전체 픽셀 동일성, 기존 VFX 계약·전체 비동기State7 |
@@ -172,7 +173,7 @@ Early3 후속 입력과 미실행 계획은 [부분 진행 보관](docs/exe/prep
 
 1. 화면 캡처가 정상화되면 물리 입력 QWASZX·ESC·Home·포커스를 검증한다(7번).
 2. 남은 비멀티 UI·Edit·시나리오·파일·수명·호환성을 1~4번과 7번으로 이어 간다.
-3. 645의 같은644 제품/새 ZIP/전체34 통합 뒤646~670을 진행했다.667 최초 파일 수명/668 진단/669 Template 끝 보존/670 Movie 단일 override를 마쳤다. **다음은671의 커스텀 MissionEnd/공통 Guide 해제다.** `extracted/cpp-mission-end-671-work/audit.md`의 원문00463e40/00463ab0/004c3210/00483210을 다시 대조한다. 단순 MainMenu 제거로 끝내지 않는다. Guide-owned Start/Tutorial/완료토큰은 반납하고 World-owned UserInput은 실제 World 반납까지 유지해야 한다. Tutorial 소멸의 denySalvage/denyAscend0·RemoveAllBrains와 원문에 없는 PopGamePause 차이도 함께 확인한다. MainMenu/음악/World/Player/Native 정리를 Guide 해제에 추가하지 않는다. 아직 제품 수정/검사 완료가 아니다. 다른 파일/UI/시나리오·연속 미션과 필요한 실제 진입 통합을 이어 간다.
+3. 645의 같은644 제품/새 ZIP/전체34 통합 뒤646~671을 진행했다.667 최초 파일 수명/668 진단/669 Template 끝 보존/670 Movie override/671 Guide 해제를 마쳤다. **다음672는 옛 스모크5개와 남은 근거 분류다.** `extracted/cpp-legacy-smoke-672-work/README.md`·`source-sha256.json`·`proposed.diff`(917행)의 준비본은 공유 tools에 미적용·AST만 확인·게임 미실행이다. 먼저 현행5파일 SHA를 대조하고 원문 의도를 보존하는지 검토한다. 특히 오디오의 메인 복귀 뷰0 단언은 원문 State3 음향 writer가 미확정이므로 제품 잔존값을 맞춰 통과시키지 않는다. `extracted/cpp-post-guide-672-audit.md`와 `cpp-camera-writers-672-audit.md`는 이번 범위에서 추가1/2차 필수 차이0이라는 정적 분류이며 전체 구현 완료 증거가 아니다. 비단위 zoom의 일반 writer는 미발견, Metadisplay/Challenge caller는 MP로 구분했다. 다른 UI/Edit/연속 미션·필요한 실제 진입 통합을 이어 간다.
 4. 체크 항목을 마치면 5·6번과 Windows 11 실기를 기다리지 않고 멀티플레이 무시험 사전 구현과 4~7차로 넘어간다(8번).
 
 ### 1. 대상별 커서·오브젝트 우클릭·게임 UI
@@ -201,6 +202,7 @@ Early3 후속 입력과 미실행 계획은 [부분 진행 보관](docs/exe/prep
 
 ### 3. 미션 수명·진행 저장·데모 반복
 
+- [x] 671의 명시 MissionEnd/공통 Guide 해제는 실제 World/Input 보존·Tutorial 제한/번호/AI/Config 반납과 예외 정리를 연결했다([671](docs/exe/cpp-guide-release-20261101.md)). 관련35개/실패0이며 내장34의 자연 승패/완주와 혼동하지 않는다.
 - [ ] Retry·Next Tutorial·Next Mission·Abort의 나머지 연속 전환과 참조/타이머·다리/AI 재고를 확인한다. Restart와 Leave → 메인은 638에서 확인했다. 자연 승패가 필요한 부분은 사용자 확인 대상이다.
 - [ ] 세 데모의 재시작 뒤 두 번째 전체 360초(다시 만료)와 추가 연속 주기·나머지 안내를 확인한다. GuardMyBack의 15초 안내와 DissolvedAlliance의 Demo 섹션 부재를 유지하며 Script demo 키만으로 모드를 추정하지 않는다.
 - [ ] 승패를 포함한 나머지 Native3 선택과 State1/단독 State7·전투 정리004b2df0의 자연 Tick/연속 전환을 확인한다. 존재하는 일반 전투 상태 복구/StateReconnect·서버 이전은661의 정적 분류에 따라8번의 후순위MP로 잇는다. 질문/삭제 UI는 유지하며 reader/open만으로 재접속 완료로 세지 않는다. LeaveBattle의 나머지 이유/CD/원격 페널티와 State6도 별도 잔여다(588).

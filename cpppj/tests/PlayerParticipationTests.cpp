@@ -139,3 +139,16 @@ TEST_CASE(PlayerParticipation_StateResetRetiredOwnerRejectsCreateAndRawIdentityC
     ParticipationScene scene(Split("1,1,0,0,0,0,0,1,0,0,0,0,7002",','));auto runtime=scene.Runtime();auto pass=runtime.RemoveBrainForState(1);runtime.ReturnBrainForState(std::move(pass));std::size_t colors{},allocations{};AiCreateHooks hooks;hooks.changeColor=[&](auto,auto) { ++colors; };hooks.construct=[&](auto,auto,auto) { ++allocations;return 1U; };RawAiCreate create(OriginalEdition::Patch1078,runtime,std::move(hooks));std::array<std::uint8_t,RawMissionAiSettings::kSize> settings{};ParticipationPut(settings,0x250,3);CHECK(Throws([&] { create.Create(1,settings); }) && colors==0 && allocations==0);
     ParticipationPut(scene.players,180+0xb0,0x12345678);CHECK(Throws([&] { runtime.BrainReturnedForState(1); }));ParticipationPut(scene.players,180+0xb0,0);CHECK(runtime.BrainReturnedForState(1)); // raw 기록을 우회 변경한 경우는 허용된 새 설치가 아닌 명시 수명 위반이다.
 }
+
+// Guide의 전체 반납은 이미 State가 정상 반납한 NULL을 허용하되 각 현재 owner 조회를 생략하지 않는다.
+TEST_CASE(PlayerParticipation_GuideRemoveAllKeepsRetiredNullsAndVisitsFollowingOwners) {
+    ParticipationScene scene(Split("1,1,0,0,0,0,0,1,0,0,0,0,7002",','));auto runtime=scene.Runtime();
+    ParticipationPut(scene.players,0xb0,9000);auto first=runtime.RemoveBrainForState(1);runtime.ReturnBrainForState(std::move(first));
+    ParticipationPut(scene.players,2*180+0xb0,7002);ParticipationPut(scene.players,2*180+0x50,0x12340020U);
+    runtime.RemoveAllBrains();CHECK(runtime.BrainReturnedForState(1) && !runtime.BrainReturnedForState(2) && runtime.Brain(2)==0 && runtime.Brain(0)==9000);
+    CHECK(scene.trace=="K,7002;F,7002" && (scene.players[2*180+0x50]&0x20));
+    runtime.RemoveAllBrains();CHECK(scene.trace=="K,7002;F,7002"); // 같은 NULL 재방문은 파괴·free 효과를 추가하지 않는다.
+    ParticipationPut(scene.players,180+0xb0,0x12345678);ParticipationPut(scene.players,2*180+0xb0,7003);
+    CHECK(Throws([&] { runtime.RemoveAllBrains(); }) && runtime.Brain(2)==7003 && scene.trace=="K,7002;F,7002"); // 닫힌 owner1의 정체성 위반은 뒤 owner2보다 먼저 거부한다.
+    ParticipationPut(scene.players,180+0xb0,0);ParticipationPut(scene.players,2*180+0xb0,0); // 명시 수명 위반 입력만 원래 NULL로 돌려 검사 자료의 최종 소멸을 안전하게 한다.
+}

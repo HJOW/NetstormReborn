@@ -147,6 +147,8 @@ bool RawPlayerParticipation::BrainReturnedForState(std::uint32_t owner) const {
 // 0번 중립 AI는 이 원본 전체삭제 루프의 대상이 아니다.
 void RawPlayerParticipation::RemoveAllBrains() const {
     // 실제 owner1..8의 현재 포인터를 각 방문 시점에 새로 읽는다.
-    for (std::uint32_t owner=1;owner<kCount;++owner) RemoveBrain(owner);
+    for (std::uint32_t owner=1;owner<kCount;++owner) { // 이미 State가 반납한 NULL도 원문처럼 자연 반환한다. 개별 State reset의 중복 증빙 관문은 유지한다.
+        if (!BrainReturnedForState(owner)) RemoveBrain(owner); // 증빙이 있어도 현재 brain 변경은 실제 조회가 거부하며 전체 루프를 생략하지 않는다.
+    }
 }
 }

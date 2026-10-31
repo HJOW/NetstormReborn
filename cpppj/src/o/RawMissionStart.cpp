@@ -33,7 +33,7 @@ void RawMissionStart::RefreshTellAt() const {
 // 도중의 실제 효과가 현재 owner/시각을 변경하면 그 이후 원본 위치의 조회에 반영한다.
 void RawMissionStart::Start() const {
     state_.fieldC0=0;state_.fieldC4=0;
-    globals_.denySalvage=ConfigParseLong(hooks_.get("denySalvage"));globals_.denyAscend=ConfigParseLong(hooks_.get("denyAscend"));globals_.AllowAnyCapture()=ConfigParseLong(hooks_.get("allowAnyCapture"));globals_.OrdinaryGeysers()=ConfigParseLong(hooks_.get("moreGeysers"))==0 ? 1U : 0U;
+    globals_.DenySalvage()=ConfigParseLong(hooks_.get("denySalvage"));globals_.DenyAscend()=ConfigParseLong(hooks_.get("denyAscend"));globals_.AllowAnyCapture()=ConfigParseLong(hooks_.get("allowAnyCapture"));globals_.OrdinaryGeysers()=ConfigParseLong(hooks_.get("moreGeysers"))==0 ? 1U : 0U;
     const auto demoTimer=ConfigParseLong(hooks_.get("demoRestartTimer"));if (demoTimer!=0) gate_.demoEndSeconds=static_cast<double>(demoTimer)+Need(hooks_.gameSeconds,"MissionStart실제시계누락")();
     const auto names=Need(hooks_.sectionNames,"MissionStart실제섹션목록누락")("@");Need(hooks_.set,"MissionStart실제설정쓰기누락")("tellAtList",names);RefreshTellAt();++state_.sequence;state_.flags&=~1U;
     float money=static_cast<float>(ConfigParseLong(hooks_.get("myStartMoney")));if (Editor()!=0) money=194162.0F;

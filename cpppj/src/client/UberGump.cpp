@@ -40,6 +40,7 @@
 #include "client/RawBattleLeave.h"
 #include "client/MissionLifecycle.h"
 #include "client/GuideMissionTransitions.h"
+#include "client/CampaignGuideRelease.h" // 같은 실제 Tutorial/AI/Config 해제를 World·입력 소유권과 분리한다.
 #include "client/MissionTechnology.h"
 #include "o/RawMissionBattleOptions.h"
 #include "o/RawGemReward.h"
@@ -194,23 +195,6 @@ std::string FontBytes(std::string_view text) {
 std::string Field(std::string text) { std::replace(text.begin(), text.end(), '\t', ' '); std::replace(text.begin(), text.end(), '\n', ' '); std::replace(text.begin(), text.end(), '\r', ' '); return text; }
 }
 
-// 원본 Mission의 같은+68/+70/+88 상태를 실제 Start와 후속 프레임 소비자에 보존한다.
-struct UberGump::MissionRuntime {
-    std::uint32_t saveToken; // 같은 Runtime의 이름/필드를 식별하는 호스트 수명 토큰이며 원본 게임 규칙 값이 아니다.
-    TutorialInitState init; // 원본+4/+b0와 Init 지역 문자열의 현재 입력이다.
-    o::MissionFrameGateState gate; // demo/started/시각/안내 단계의 유일한 현재 미션 저장소다.
-    o::MissionStartState state; // Start의 순번/현재 tellAt 항목/필드를 동일 수명으로 유지한다.
-    std::unique_ptr<RawCampaignMissionStartBindings> start; // 단계1의 실제 Session 설치 뒤 생성하고 단계3에서만 실행한다.
-    std::uint32_t mode64{}; // 원본 Mission+64의 현재 값이다. 일반 진입은0이며 Reload는 해제 전에 bool로 캡처한다.
-    bool guided{}; // 실제 Tutorial 가상표를 사용하는 미션만 Guide0..6에 분배한다. 기존 Battle 진입은 별도다.
-    std::unique_ptr<RawCampaignTutorialOneBindings> tutorial; // 지정11개를 포함한 Tutorial 형식 전체의 공통 프레임/입력과 선택된 Early 판정이다.
-    // 원본00482bf0의 초기 demo0은 일반 MissionBegin,00463a00의 직접 쓰기는 StartDemo가 공급한다.
-    MissionRuntime(MissionScript& script,std::uint32_t demo,std::uint32_t mode,std::uint32_t token)
-        :saveToken(token),mode64(mode),guided(o::AsciiLower(script.MissionType())=="tutorial") {
-        gate.demo=demo;init.name=FontBytes(script.Name()); // 번호/demo/이름 정규화는 실제 단계1까지 앞당기지 않는다.
-    }
-};
-
 #include "client/UberHud.inc" // 같은 실제 소유자에 전체 HUD 루트/지도 전역과 네 자식 공장을 연결한다.
 #include "client/UberEditor.inc" //실제 Edit 선택의 Native State1/파일/후반 UI와 다음 Poll4를 연결한다.
 //446b50의 현재 커서 갱신 뒤 Alt/가운데 폴링을 같은497e00 목표 쓰기로 전달한다.
@@ -360,7 +344,7 @@ UberGump::UberGump(Client& client) : client_(client),initLoginSubscriber_(client
         if (missionRuntime_->tutorial) missionRuntime_->tutorial->Gate().Postpone();
         else if (missionRuntime_->gate.nextStageSeconds!=0.0) missionRuntime_->gate.nextStageSeconds=static_cast<double>(missionRuntime_->gate.delaySeconds)+client_.Time().game; // 설치 전 기본0은 그대로 유지한다.
     };
-    guideHooks.release=[this] { MainMenu();if (client_.Audio()) client_.Audio()->StartScene(false); };
+    guideHooks.release=[this] { ReleaseCurrentGuideMission(); }; // 원문 Guide의 현재 소멸은 World·메뉴·음악 전환을 예약하지 않는다.
     guideHooks.invalidStage=[] { throw std::logic_error("Guide 현재 미션 순번0..6 위반"); };
     if (client_.Assets().Edition()==o::OriginalEdition::Patch1078) guide_=std::make_unique<o::RawMissionGuide>(client_.Assets().Edition(),std::move(guideHooks)); // Guide 몸체의 복원 판본은10.78이며 CD 메인 메뉴 생성은 기존대로 둔다.
     if (client_.Assets().Edition()==o::OriginalEdition::Patch1078) {
@@ -376,16 +360,10 @@ void UberGump::DetachMissionWorldBindings() {
     userInput_.reset(); //현재 World를 빌리는 호스트 입력도 Session보다 먼저 반납한다.
     worldMissionToken_=0; // 반납/미션 교체 뒤 이전 접속 완료가 새 Runtime을 설치하지 못하게 한다.
 }
-// 기존 Tutorial 소멸 효과를 원문 late closeGuide에 모으고 그 뒤에만 base Mission의 Config/Native 수명을 끝낸다.
+// 같은 공용 소멸이 Tutorial 전역·실제 AI·기본 Config만 반납한다. 원문에는 World·입력·Resume·메뉴 음악 전환이 없다.
 void UberGump::ReleaseCurrentGuideMission() {
     if (world_ && world_->Connecting() && missionRuntime_ && worldMissionToken_==missionRuntime_->saveToken) rawButtons_->Menus()->CloseMissionLoading(); // 현재 미션의 진행 안내만 반납하며 World는 원래 State 정리 위치까지 유지한다.
-    ReleaseMissionFortLoad(state_,missionFortRequest_); //새 Init 전 이전 Guide의 지연 요청만 닫는다. 기존 World는 원문 State 부모의 위치까지 보존한다.
-    if (missionRuntime_ && missionRuntime_->gate.scriptPaused) {
-        client_.PopGamePause();missionRuntime_->gate.scriptPaused=0; //미션이 보유했던 자기 정지를 반납한다. Native cleanup이 이미 깊이를 비웠으면 기존 Resume의 자연 무동작을 따른다.
-    }
-    if (missionRuntime_ && missionRuntime_->guided) { o::SetTotalMadeAllowAll(*missionRestrictions_,1);missionNumber_=0;missionRuntime_->gate.tutorialNumber=0;missionRuntime_->gate.stage=0;missionRuntime_->gate.stageDirty=0; } //기존 ClearWorld의 허용255DWORD/번호/단계 효과를 실제 Guide 해제 위치로 옮긴다.
-    DetachMissionWorldBindings();missionRuntime_.reset(); //World 참조가 닫힌 뒤 현재 미션의 남은 데이터만 반납한다.
-    ReleaseGuideMissionScript(mission_,client_.SurfaceStorage()->links.mission,client_.Configuration()); //실제 Script 해제→Native0→Config0 순서는 기존 공통 부모를 재사용한다.
+    ReleaseCampaignGuideMission(client_,state_,mission_,missionRuntime_,missionFortRequest_,*missionRestrictions_,missionNumber_,worldMissionToken_,client_.SurfaceStorage()->links.mission);
 }
 // 입력 참조를 먼저 없애고 월드의 실제 소유권을 해제한다. 위치 효과음은 카메라 0의 전체 메뉴 영역으로 되돌린다.
 void UberGump::ClearWorld() {
@@ -598,7 +576,7 @@ void UberGump::CreateMission(std::string name,std::uint32_t demo,std::uint32_t m
     const auto type = o::AsciiLower(mission_->MissionType());
     if (type != "tutorial" && type != "battle") throw std::runtime_error("Mission type pending: " + mission_->MissionType());
     if (nextMissionSaveToken_==0xffffffffU) throw std::overflow_error("Mission 저장 수명 토큰 소진");
-    missionRuntime_=std::make_unique<MissionRuntime>(*mission_,demo,mode,++nextMissionSaveToken_);
+    missionRuntime_=std::make_unique<CampaignGuideRuntime>(*mission_,demo,mode,++nextMissionSaveToken_);
     missionRuntime_->guided=missionRuntime_->guided && client_.Assets().Edition()==o::OriginalEdition::Patch1078; // 복원하지 않은 판본의 순번을 새 Guide에 분배하지 않는다.
     briefingSections_.clear();briefingIndex_=0;state_.phase=ClientPhase::LoadingMission;pageName_="loading";popup_.clear();ClearPage();client_.Pause(false);RebuildControls(); // 제목은 실제 단계1의 Header 적용/설치에서 갱신한다.
     if (!missionRuntime_->guided) { Compose();client_.PresentScene();state_.Post({"LoadMissionWorld",{}}); } // Guide.Init이 시작되기 전 로딩 모달로 자체 관문을 막지 않는다. 실제 안내는 로드 호출에서 표시한다.
@@ -1018,7 +996,7 @@ void UberGump::Event(InputEvent event) {
             const auto request=CaptureMissionReload(mission_->Name(),missionRuntime_->mode64,missionRuntime_->gate.demo);RestartGuideMission(request,MissionTransitionEffects());
         };
         hooks.fork=[this](std::uint32_t parameter) { ForkGuideMission(parameter,MissionTransitionEffects()); };
-        hooks.end=[this] { EndGuideMission(MissionTransitionEffects());if (!missionRuntime_) { MainMenu();if (client_.Audio()) client_.Audio()->StartScene(false); } };
+        hooks.end=[this] { EndGuideMission(MissionTransitionEffects()); }; // 00463e40은 가상 종료→Guide 반납뿐이며 World/입력은 같은 실제 State cleanup까지 유지한다.
         hooks.invalidBegin=[](std::uint32_t) { throw std::logic_error("원본 Guide Begin의 signed param2>100 문자열 주소/토큰 관문 위반"); };
         if (DispatchGuideMissionCommand(event,hooks)) return;
     }
@@ -1582,7 +1560,7 @@ std::string UberGump::Report(bool cameraOnly) const {
                 out<<"mission_bridges\t"<<world_->Session().TotalMade().BuiltForGenus(4)<<'\n'; // 단계 판정과 같은 누적 장부를 관찰하며 현재 살아 있는 다리 수와 구별한다.
                 out<<"mission_options\t"<<unsigned(world_->Session().BattleOption(2))<<'\t'<<unsigned(world_->Session().BattleOption(4))<<'\t'<<world_->Session().EnergySettings().radiusSquared<<'\n'; // 같은 현재 옵션/공급 범위를 읽기만 한다.
                 const auto& settings=world_->Session().MissionStartSettings(); // 원본 게임 명령이 공유할 같은 제한 전역이다.
-                out<<"mission_rules\t"<<settings.denySalvage<<'\t'<<settings.denyAscend<<'\t'<<settings.allowAnyCapture<<'\t'<<settings.ordinaryGeysers<<'\n';
+                out<<"mission_rules\t"<<settings.DenySalvage()<<'\t'<<settings.DenyAscend()<<'\t'<<settings.allowAnyCapture<<'\t'<<settings.ordinaryGeysers<<'\n';
             }
         }
     }

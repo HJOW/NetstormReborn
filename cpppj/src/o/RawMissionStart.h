@@ -14,9 +14,14 @@ struct MissionStartState {
 // Start가 읽고 쓰는 현재 전역이다. 실제 Player/battleOwner의 소유 저장소와 함께 연결한다.
 struct MissionStartGlobals {
     std::uint32_t localOwner{1},playerKnown{},editor{}; // 00540c70/00595344/005c85a4다.
-    std::int32_t denySalvage{},denyAscend{},allowAnyCapture{}; // 00595078/0059507c/005453e4의 atol DWORD다.
+    std::int32_t denySalvage{},denyAscend{},allowAnyCapture{}; // 독립 primitive fixture의 00595078/0059507c/005453e4 atol DWORD fallback이다.
     std::uint32_t ordinaryGeysers{}; // 005950ac은 moreGeysers의 논리 부정이다.
     std::int32_t* sharedAllowAnyCapture{};std::uint32_t* sharedOrdinaryGeysers{}; // Start의 실제 출력을 장기 owner에 쓴다.
+    std::int32_t* sharedDenySalvage{};std::int32_t* sharedDenyAscend{}; // World 없는 Guide 소멸도 Client의 같은00595078/7c에 쓰도록 빌린다. 근거: docs/exe/cpp-guide-release-20261101.md.
+    std::int32_t& DenySalvage() { return sharedDenySalvage ? *sharedDenySalvage : denySalvage; } // 실제 owner가 연결되면 회수 금지 전체 DWORD를 그 주소에 쓴다.
+    const std::int32_t& DenySalvage() const { return sharedDenySalvage ? *sharedDenySalvage : denySalvage; } // 미연결 독립 검사만 기존 값형 fallback을 읽는다.
+    std::int32_t& DenyAscend() { return sharedDenyAscend ? *sharedDenyAscend : denyAscend; } // Start와 메뉴가 같은 현재 승급 금지 DWORD를 직접 공유한다.
+    const std::int32_t& DenyAscend() const { return sharedDenyAscend ? *sharedDenyAscend : denyAscend; } // 현재 signed DWORD의 음수·비영 값을 정규화하지 않는다.
     std::int32_t& AllowAnyCapture() { return sharedAllowAnyCapture ? *sharedAllowAnyCapture : allowAnyCapture; } // atol의 전체 DWORD를 보존한다.
     const std::int32_t& AllowAnyCapture() const { return sharedAllowAnyCapture ? *sharedAllowAnyCapture : allowAnyCapture; } // 현재 출력 DWORD를 const로도 읽는다.
     std::uint32_t& OrdinaryGeysers() { return sharedOrdinaryGeysers ? *sharedOrdinaryGeysers : ordinaryGeysers; } // moreGeysers의 논리 부정을 저장한다.

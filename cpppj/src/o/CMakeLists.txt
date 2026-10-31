@@ -543,3 +543,4 @@ target_sources(netstorm PRIVATE RawObjectTraceMain.h RawObjectTraceMain.cpp)
 
 # 실제 Editor의 객체 읽기/생성 교대를 현재 MemStream과 같은 월드에 연결한다.
 target_sources(netstorm PRIVATE RawFortObjectStream.h RawFortObjectStream.cpp)
+target_sources(netstorm PRIVATE RawTutorialMissionRelease.h RawTutorialMissionRelease.cpp) # Tutorial 소멸의 현재 전역과 AI/기본 Mission 반납을 공유한다.

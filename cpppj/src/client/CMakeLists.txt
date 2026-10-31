@@ -310,3 +310,5 @@ target_sources(netstorm PRIVATE RawDotCommandDispatch.cpp RawDotCommandDispatch.
 target_sources(netstorm PRIVATE RawChatSubmit.cpp RawChatSubmit.h) # 대상/본문 해석과 실제 수신자 배열의 중복·32슬롯 확장을 복원한다.
 target_sources(netstorm PRIVATE RawChatFormat.cpp RawChatFormat.h) # 원문 format/back/front의 검색·80BYTE 캡처·manager/Config 쓰기를 복원한다.
 target_sources(netstorm PRIVATE RawChatMessage.cpp RawChatMessage.h) # 일반 본문의 채널/이름/대상/스타일 조합과 say/wrapper를 원문 순서로 복원한다.
+
+target_sources(netstorm PRIVATE CampaignGuideRelease.cpp CampaignGuideRelease.h) # 실제 Guide 소멸은 World·입력 수명과 분리해 같은 AI/Config 부모를 사용한다.

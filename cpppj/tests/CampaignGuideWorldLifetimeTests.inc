@@ -20,7 +20,9 @@ struct GuideWorldScene484 { // 같은 실제 Client 장기 물리와 작업본 r
     State pending;std::shared_ptr<MissionFortLoadRequest> request; // Guide만 반납하는 호스트 요청 owner다.
     FontStore fonts{input.assets.files,"Arial"};RawButtonControls buttons{OriginalEdition::Patch1078};RawMenuControls* menus{}; // 실제 공통 등록/메뉴 전역이며 HUD 공장은 이 검사의 명시 외부 경계다.
     std::uint32_t replacements{},refreshes{},retirements{}; // UI 외부 효과와 실제 Runtime 반납 위치만 관측한다.
+    std::uint32_t rendererInitializations{},startingNotifications{},paletteRequests{},closedProgress{};std::vector<std::uint32_t> uiModes; // 재설치의 실제 Renderer 본문과 별도 화면 장치 요청을 구별해 기록한다.
     GuideWorldScene484() { // 실제 Client Kernel/권한/보조/Player/로컬 상태를 같은 표면에 연결한다.
+        client.Configuration().SetInt("SCREENW",kDefaultScreenWidth);client.Configuration().SetInt("SCREENH",kDefaultScreenHeight); // Run의 setup 읽기를 실행하지 않는 장면도 State의 실제 InterpretOptions에 현재 기본 화면 입력을 제공한다. 창을 만들거나 크기를 바꾸지 않는다.
         auto game=client.GameplayGlobals();surface=MakeRawSurfaceStorage(input.assets.game,game->Authority(),game->GameAux());surface->Processes().BindDevices(client.ProcessKernelOwner(),client.FrameClockOwner());
         RawMenuHooks ui;ui.command=[](auto,auto,auto) { throw std::logic_error("수명 검사에서 메뉴 명령을 선택함"); };ui.readInt=[this](auto key,std::int32_t& value) { value=client.Configuration().GetInt(key); };
         ui.sound=[](auto) { throw std::logic_error("수명 검사에서 메뉴 음향을 선택함"); };ui.poll=[](std::uint32_t)->InputEvent { throw std::logic_error("수명 검사에서 OS 입력을 선택함"); };ui.cursor=[](auto) { throw std::logic_error("수명 검사에서 메뉴 커서를 선택함"); };
@@ -30,6 +32,11 @@ struct GuideWorldScene484 { // 같은 실제 Client 장기 물리와 작업본 r
     void Load() { // 최초 설치와 로그인 재로드가 모두 현재 Script의 같은 작업 파일을 읽는다.
         auto services=SharedKernelServices(client,external);UseWorldTestLogin(services);services.surfaceStorage=surface;services.gameplayGlobals=client.GameplayGlobals();services.subscriberGlobals=client.SubscriberGlobals();services.coreDataGlobals=client.CoreDataGlobals();
         services.localStateGlobals=client.LocalStateGlobals();services.connectionRegistry=client.ConnectionGlobals();services.spGlobals=client.SpGlobals();services.randomGlobals=client.RandomGlobals();services.adoptInitializedPlayers=client.PlayerRecords()->Initialized(); //실제 State cleanup이 만든 다음9기록을 새 Session에서 중복 재할당하지 않는다.
+        if (services.adoptInitializedPlayers) { // 655~656에서 필수가 된 실제 재설치 장치를 연결하며 부분 로그인 fallback으로 원문 순서를 우회하지 않는다.
+            services.localLogin->initializeRenderer=[this] { CHECK(request && request->consumed && request->zone.empty());client.InitializeNativeRendererView();++rendererInitializations; }; // 같은 실제 Client의4993c0 몸체를 실행한다. HWND는 열지 않는다.
+            services.localLogin->uiMode=[this](auto mode) { CHECK(mode==2 || mode==3);uiModes.push_back(mode); }; // 이 장면의 외부 HUD 표시 요청만 관측하며 State/Player 성공값을 공급하지 않는다.
+            services.localLogin->startingProgress=[this] { ++startingNotifications; };services.localLogin->battlePalette=[this] { ++paletteRequests; };services.localLogin->closeProgress=[this] { ++closedProgress; }; // 화면 안내·팔레트·닫기는 명시 장치 경계이며 실제 픽셀 수명은656~657의 별도 검사 범위다.
+        }
         services.kencloudGlobals=client.KencloudGlobals();services.connectionActivityGlobals=client.ConnectionActivityGlobals(); //실제 정리와 Session이 같은 장기 표시/연결 활동 전역을 조회한다.
         services.connectionFrameNumber=[this] { return static_cast<std::uint32_t>(client.Time().number); };services.removeConnectionStatus=[this](auto,auto) { ++external.notices; }; //같은 현재 프레임과 OS 밖 상태 UI 통지 관측이다.
         services.templateStorage=templates;services.missionFortRequest=request;services.missionFortImage=std::make_shared<const std::vector<std::uint8_t>>(mission->ReadFortImage(mission->FortName()));services.missionFortRead=mission->FortReader();
@@ -71,6 +78,8 @@ TEST_CASE(CampaignGuideWorldLifetime_InitClearsActualManagersBeforePriorSessionR
     auto request=scene.request;const auto zone=request->zone;scene.Cleanup(1);CHECK(!scene.session && !scene.surface->Borrowed() && !scene.client.GameplayGlobals()->Borrowed());
     CHECK(scene.request==request && scene.request->zone==zone && !request->consumed && scene.pending.Pending() && scene.mission && scene.surface->links.mission && scene.replacements==1 && scene.retirements==1);
     const auto queued=scene.pending.Take();CHECK(queued && queued->command=="LoadMissionFort" && queued->argument=="WorkingReload483");scene.Load();CHECK(request->consumed && request->zone.empty() && scene.session->IslandCount()>0);
+    std::fprintf(stderr,"GUIDE_WORLD_671 renderer=%u starting=%u palette=%u close=%u modes=%zu\n",scene.rendererInitializations,scene.startingNotifications,scene.paletteRequests,scene.closedProgress,scene.uiModes.size()); // 실제 장치 요청 수를 남기며 원본 관측값으로 표기하지 않는다.
+    CHECK(scene.rendererInitializations==1 && scene.startingNotifications==1 && scene.paletteRequests==1 && scene.closedProgress==2 && scene.uiModes==std::vector<std::uint32_t>({2,3})); // 실제 타이머 종료와 State13 완료가 각각 CloseProgress를 호출한다. HUD 픽셀 통과로 합산하지 않는다.
 }
 
 TEST_CASE(CampaignGuideWorldLifetime_GuideCloseBeforeStateOneKeepsPriorSessionAndNewZone) { // Close는 원문처럼 finish 없이 Script만 닫고 실제 State1 정리를 기다린다.

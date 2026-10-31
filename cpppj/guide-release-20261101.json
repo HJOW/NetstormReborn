@@ -1,0 +1,239 @@
+{
+  "unit": 671,
+  "date": "2026-11-01",
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "decompileChanged": false,
+  "productChanged": true,
+  "executableSha256": "4ea8e712282bb224a65d41906cc75c421d7d3a7348759ddc982d58f0a33e7d93",
+  "changes": [
+    "명시 MissionEnd와 자동 Guide 해제를 World·UserInput·메뉴 음악·시계 재개에서 분리했다.",
+    "같은 실제 Runtime/Script/Client를 받는 공용 해제에 Tutorial 허용표·6DWORD·AI·기본 Config와 예외 정리를 연결했다.",
+    "denySalvage/denyAscend를 Client 장기 signed DWORD로 공유하고 모든 실제 소비자를 연결했다.",
+    "State 증빙 뒤 NULL AI도 전체 반납에서 자연 순회하되 개별 중복 reset 관문은 유지한다."
+  ],
+  "focused": {
+    "registered": 287,
+    "finalUnique": 35,
+    "newUnique": 10,
+    "existingUnique": 25,
+    "failedChecks": 0,
+    "invocations": 15,
+    "testFunctionCalls": 44,
+    "finalSelectedLogs": [
+      {
+        "path": "extracted/cpp-guide-release-671-actual-v1.log",
+        "tests": 3,
+        "failedChecks": 0
+      },
+      {
+        "path": "extracted/cpp-guide-release-671-primitive-v1.log",
+        "tests": 4,
+        "failedChecks": 0
+      },
+      {
+        "path": "extracted/cpp-guide-release-671-globals-v1.log",
+        "tests": 2,
+        "failedChecks": 0
+      },
+      {
+        "path": "extracted/cpp-guide-release-671-participation-v1.log",
+        "tests": 9,
+        "failedChecks": 0
+      },
+      {
+        "path": "extracted/cpp-guide-release-671-transitions-v1.log",
+        "tests": 2,
+        "failedChecks": 0
+      },
+      {
+        "path": "extracted/cpp-guide-release-671-lifecycle-v1.log",
+        "tests": 2,
+        "failedChecks": 0
+      },
+      {
+        "path": "extracted/cpp-guide-release-671-start-v1.log",
+        "tests": 4,
+        "failedChecks": 0
+      },
+      {
+        "path": "extracted/cpp-guide-release-671-capture-globals-v1.log",
+        "tests": 1,
+        "failedChecks": 0
+      },
+      {
+        "path": "extracted/cpp-guide-release-671-prior-world-v4.log",
+        "tests": 3,
+        "failedChecks": 0
+      },
+      {
+        "path": "extracted/cpp-guide-release-671-menu-v1.log",
+        "tests": 3,
+        "failedChecks": 0
+      },
+      {
+        "path": "extracted/cpp-guide-release-671-retire-runtime-v1.log",
+        "tests": 1,
+        "failedChecks": 0
+      },
+      {
+        "path": "extracted/cpp-guide-release-671-retire-globals-v1.log",
+        "tests": 1,
+        "failedChecks": 0
+      }
+    ],
+    "cases": [
+      "CampaignGuideRelease_EndKeepsActualWorldInputAndOrdinaryAiLifetime",
+      "CampaignGuideRelease_NoWorldUsesActualPlayersAndUnwindRetiresBase",
+      "CampaignGuideRelease_AllBrainsAfterStateProofPreservesLiveFields",
+      "TutorialMissionRelease_CurrentFieldsAndCallbacksFollowOriginalStores",
+      "TutorialMissionRelease_AllowFailureRunsBaseBeforeAnyDirectZeroStore",
+      "TutorialMissionRelease_BrainFailureKeepsDirectZeroesAndCurrentPartialWrites",
+      "TutorialMissionRelease_BaseFailureIsNotRetried",
+      "MissionRestrictionGlobals_ClientLifetimePreservesDwordsAcrossBorrowing",
+      "MissionRestrictionGlobals_StartWritesSharedDwordsAtOriginalBoundaries",
+      "PlayerParticipation_Native608",
+      "PlayerParticipation_AlliancePacketNative288",
+      "PlayerParticipation_BrainLifetimeAndDirectionalRows",
+      "PlayerParticipation_StateResetProofCompletesActualParentsAndClosesOwners",
+      "PlayerParticipation_StateResetFailureDoesNotPublishProofOrHidePrefix",
+      "PlayerParticipation_StateResetForeignMovedAndExpiredProofsAreRejected",
+      "PlayerParticipation_StateResetActualEffectMustReturnBeforeConsumption",
+      "PlayerParticipation_StateResetRetiredOwnerRejectsCreateAndRawIdentityChange",
+      "PlayerParticipation_GuideRemoveAllKeepsRetiredNullsAndVisitsFollowingOwners",
+      "GuideTransitions_Native286",
+      "GuideTransitions_AuthoredNextMissionQueueAndOwnedString",
+      "MissionLifecycle_Native831",
+      "MissionLifecycle_ActualPendingAndEmptyEntry",
+      "MissionStart_Native204",
+      "MissionStart_CurrentInputsReplayNative48WithOppositeFallback",
+      "MissionStart_CurrentInputsReadAtOriginalEffectBoundaries",
+      "MissionStart_MissingBrainBodiesAndLiveState",
+      "GameAux_MissionStartWritesSharedCaptureAndOrdinaryNative48",
+      "CampaignGuideWorldLifetime_InitClearsActualManagersBeforePriorSessionRetires",
+      "CampaignGuideWorldLifetime_GuideCloseBeforeStateOneKeepsPriorSessionAndNewZone",
+      "CampaignGuideWorldLifetime_RequestReleaseKeepsSessionOwnedImageAlive",
+      "CampaignGameMenus_SharedSpAndTracking",
+      "CampaignGameMenus_CurrentWorldReaders",
+      "CampaignGameMenus_EditorBridgeQualityUsesLiveAssetsAndSharedRandom",
+      "CampaignSession_StateRuntimeRetirement_ActualChildrenAndDestructorKeepOrdering",
+      "CampaignStateRetirement_AllActualChildrenPreserveGlobalsAndReleaseFixedViews"
+    ],
+    "initialTestFailures": [
+      {
+        "log": "extracted/cpp-guide-release-671-prior-world-v1.log",
+        "failedChecks": 1,
+        "test": "CampaignGuideWorldLifetime_InitClearsActualManagersBeforePriorSessionRetires",
+        "reason": "기존 재설치 장면에 필수 Renderer/후반 UI 장치가 없었다."
+      },
+      {
+        "log": "extracted/cpp-guide-release-671-prior-world-v2.log",
+        "failedChecks": 1,
+        "test": "CampaignGuideWorldLifetime_InitClearsActualManagersBeforePriorSessionRetires",
+        "reason": "Run 없이 만든 검사 Client의 화면 설정 누락으로 State InterpretOptions 뒤 화면 크기가0이었다."
+      },
+      {
+        "log": "extracted/cpp-guide-release-671-prior-world-v3.log",
+        "failedChecks": 1,
+        "test": "CampaignGuideWorldLifetime_InitClearsActualManagersBeforePriorSessionRetires",
+        "reason": "새 장치 관측 단언이 진행창 닫기를1회로 잘못 기대했다. 원문 타이머/State 완료의 두 호출로 정정했다."
+      }
+    ],
+    "scope": "새3개는 실제 Client/GameWorld/UserInput/지상 AI의 생성·소멸 및 로컬 사제 좌선택만 실행한다. 새 primitive4·장기 전역2·전체 AI 수명1을 포함한다. 기존 GuideWorldLifetime 장면은 실제 Client Renderer와 명시 화면/UI 장치를 보완했다.",
+    "verificationVersions": "제품 PE는 검사 중 변경되지 않았다. 기존 장면의 준비·단언만 고친 뒤 그 관련3개를 재실행했으며, 다른 통과 검사를 관례로 반복하지 않았다.",
+    "existingFixtureRowsByFamily": {
+      "PlayerParticipation": 608,
+      "AlliancePacket": 288,
+      "GuideTransitions": 286,
+      "MissionLifecycle": 831,
+      "MissionStart": 204
+    },
+    "uniqueExistingFixtureRows": 2217,
+    "fixtureReplayNote": "MissionStart의 CurrentInputs48와 GameAux48은204 내 부분집합 재생이므로 고유 합계에 다시 더하지 않는다. 원본 신규 실행이 아닌 기존 기대값의 C++ 재생이다."
+  },
+  "builds": [
+    {
+      "log": "extracted/cpp-guide-release-671-build-v1.log",
+      "exitCode": 0,
+      "warnings": 0,
+      "errors": 0
+    },
+    {
+      "log": "extracted/cpp-guide-release-671-build-v2.log",
+      "exitCode": 0,
+      "warnings": 0,
+      "errors": 0
+    },
+    {
+      "log": "extracted/cpp-guide-release-671-build-v3.log",
+      "exitCode": 0,
+      "warnings": 0,
+      "errors": 0
+    },
+    {
+      "log": "extracted/cpp-guide-release-671-build-v4.log",
+      "exitCode": 0,
+      "warnings": 0,
+      "errors": 0
+    },
+    {
+      "log": "extracted/cpp-guide-release-671-build-v5.log",
+      "exitCode": 0,
+      "warnings": 0,
+      "errors": 0
+    },
+    {
+      "log": "extracted/cpp-guide-release-671-build-v6.log",
+      "exitCode": 0,
+      "warnings": 0,
+      "errors": 0
+    }
+  ],
+  "buildNotes": [
+    "v1 제품, v2 제품/집중 대상, v3 검사 include 변경의 확실한 재컴파일, v4 재설치 장치, v5 검사 화면 입력, v6 원문 두 닫기 단언이다. 빌드 실패는 없고 C++ 검사 최초 실패3회를 별도 보존했다."
+  ],
+  "staticPeInstructions": 81,
+  "newNativeExecutions": 0,
+  "newFixtures": 0,
+  "gameRuns": 0,
+  "physicalInputs": 0,
+  "pcmObservations": 0,
+  "newMultiplayerTests": 0,
+  "protected": {
+    "count": 4,
+    "unchanged": true,
+    "before": "extracted/cpp-guide-release-671-protected-before.json",
+    "after": "extracted/cpp-guide-release-671-protected-after.json",
+    "files": [
+      {
+        "path": "AGENTS.md",
+        "length": 16799,
+        "sha256": "e9e46fda5519e663417b5c8d9b643549196bf28fe7ba6b1d546a48a853fd208b"
+      },
+      {
+        "path": "originals/Netstorm.exe",
+        "length": 1552384,
+        "sha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236"
+      },
+      {
+        "path": "originalCD/NETSTORM.EXE",
+        "length": 1647616,
+        "sha256": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233"
+      },
+      {
+        "path": "originals/netstorm.tarc",
+        "length": 1102126,
+        "sha256": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6"
+      }
+    ],
+    "scope": "관련4개만 확인했다. 마지막 전체2632개/fixture773개 감사645와 구별한다."
+  },
+  "limits": [
+    "실제 GUI·물리 입력·PCM·현재 제품 전체34·자연 완주·전체 동일성을 검증한 결과가 아니다.",
+    "사제 포획/희생·특정 적 공격·시나리오 승리·공중3종 새 생성/행동·신규MP 검사는 하지 않았다.",
+    "기본 Mission 예외 정리는 원본32비트 SEH ABI 전체 이식/검증이 아니다.",
+    "전체 목표는 진행 중이며 최신 전체34/ZIP은645의644제품이다."
+  ],
+  "next": "672 옛 스모크5개 준비 diff와 카메라/잔여 감사가 extracted에 있다. 공유 tools는 미수정·미실행이며 오디오 메뉴뷰0 단언의 원문 State3 writer를 먼저 대조한다."
+}

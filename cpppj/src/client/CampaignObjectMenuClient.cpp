@@ -77,7 +77,7 @@ struct CampaignObjectMenuClient::Impl {
         CampaignObjectMenuUi ui;ui.chat=client.ChatRecords();
         std::string help; // NUL/빈 문자열의 차이를 실제 현재 설정에서 유지한다.
         if (client.Configuration().ReadString("helpWord",help)) { const auto bytes=o::EncodeOriginalText(help);ui.objectState.helpWord=std::string(bytes.begin(),bytes.end()); }
-        ui.objectState.denySalvageRead=[this] { return std::bit_cast<std::uint32_t>(world->Session().MissionStartSettings().denySalvage); };
+        ui.objectState.denySalvageRead=[this] { return std::bit_cast<std::uint32_t>(world->Session().MissionStartSettings().DenySalvage()); };
         ui.identity.address=[this] { return client.GameplayGlobals()->LocalAddress(); };ui.identity.unknownName=[] { return std::string_view("SOMEONE"); };
         ui.priest.format=ui.carrier.format=ui.object.format=[this](std::string_view key,std::span<const PriestMenuArgument> arguments) { return PrintMenu(Translate(key),arguments); };
         ui.priest.description=ui.carrier.description=[this](std::uint32_t type) { const auto types=world->Session().Core().types;if (type>=types.size()) throw std::out_of_range("현재 객체 메뉴 설명 TYPE 범위");return Translate(types[type].description); };

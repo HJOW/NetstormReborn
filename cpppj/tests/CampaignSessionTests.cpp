@@ -20,6 +20,7 @@
 #include "o/RawDeckRestore.h"
 #include "client/ClientSubscriberGlobals.h"
 #include "client/RawCampaignMissionStartBindings.h"
+#include "client/CampaignGuideRelease.h" // 실제 Guide 소멸과 headless 검사가 같은 소유권 반납 함수를 사용한다.
 #include "client/UserInput.h"
 // 생산 세션과 GameWorld의 표시/선택/명령이 같은 실제 raw 월드를 사용하는지 검사한다.
 #include "DudeSpawnSupport.h"
@@ -3807,7 +3808,7 @@ TEST_CASE(CampaignTutorialTwo_ActualSessionOptionsAndInitialFrame) {
     effects.closeTransient=[&] { CHECK(dialog && active && !gate.scriptPaused); }; // Tell→팝업 정리→자기 정지의 순서까지 관찰한다.
     effects.selected=[] { return 0U; };effects.resetSelection=[] { throw std::logic_error("Early2 초기A에서 선택 초기화 도달"); };effects.clearSelection=[] { throw std::logic_error("Early2 초기A에서 선택 해제 도달"); }; // 이 회귀는 선택 효과가 없는 실제 A만 실행한다.
     RawCampaignTutorialOneBindings runtime(session,script,start,gate,startState,std::move(effects));active=&runtime;
-    runtime.Frame();CHECK(!gate.started && pages.empty() && gate.lockFrames==10);start.Start();CHECK(gate.started && session.Sp(1)==10000 && session.MissionStartSettings().denySalvage==1 && session.TotalMade().BuiltForGenus(0x200)==0);
+    runtime.Frame();CHECK(!gate.started && pages.empty() && gate.lockFrames==10);start.Start();CHECK(gate.started && session.Sp(1)==10000 && session.MissionStartSettings().DenySalvage()==1 && session.TotalMade().BuiltForGenus(0x200)==0);
     // 입력이 없는 실제 화면 호출9회에는 초기 안내가 없고10회에만 A를 표시한다.
     for (int frame=0;frame<9;++frame) runtime.Frame();
     CHECK(pages.empty() && gate.lockFrames==1 && !depth);runtime.Frame();CHECK(pages==std::vector<std::string>{"A."} && dialog && depth==1 && gate.scriptPaused==1 && !gate.lockFrames && runtime.StageShown()==1);
@@ -3816,7 +3817,7 @@ TEST_CASE(CampaignTutorialTwo_ActualSessionOptionsAndInitialFrame) {
     for (int frame=0;frame<6;++frame) runtime.Frame();
     CHECK(depth==1 && gate.clearFrames==6 && gate.stage=='A');runtime.Frame();CHECK(!depth && !gate.scriptPaused && !gate.clearFrames);
     CHECK(gate.stage=='A' && session.BattleOption(2)==2 && session.BattleOption(4)==0 && session.EnergySettings().radiusSquared==196);
-    CHECK(session.Sp(1)==10000 && session.TotalMade().BuiltForGenus(0x200)==0 && session.MissionStartSettings().denySalvage==1);
+    CHECK(session.Sp(1)==10000 && session.TotalMade().BuiltForGenus(0x200)==0 && session.MissionStartSettings().DenySalvage()==1);
     CHECK(!session.Core().bookkeeping.depth && !session.Core().destroy.PreDepth() && !session.Core().destroy.PostDepth());
 }
 
@@ -5075,6 +5076,7 @@ TEST_CASE(StateRuntimeCoordinator_RejectsForeignStorageKernelAndStaleGeneration)
 
 #include "CampaignMissionReloadSourceTests.inc"
 #include "CampaignGuideWorldLifetimeTests.inc"
+#include "CampaignGuideReleaseTests.inc" // Guide-only 소멸 뒤 같은 실제 World/UserInput이 살아 있는지 검증한다.
 #include "CampaignMissionFortPathTests.inc"
 
 // 보호 PE의 초기값과 주소는 일반/준비 대여·반납 동안 유지하며 다른 Client와 공유하지 않는다.

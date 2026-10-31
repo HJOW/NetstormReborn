@@ -476,7 +476,7 @@ struct RawCampaignSession::Impl {
     std::optional<FortTemplate> deferredEditorFort; //명시지연입력의같은파일보조metadata다.rawsection은File.load의실제reader가소유한다.
 
     MissionOutcomeState outcomeState; // 미션 종료까지 유지하는43개 사건 잠금이며 입력 배열은 현재 원문 연결로 대체한다.
-    MissionStartGlobals missionStart; // 실제 Start가 쓰는 미션 제한 전역의 유일한 저장소다.
+    MissionStartGlobals missionStart; // 실제 미션 제한은 Client의 장기 DWORD를 빌리며 값형 필드는 독립 primitive의 fallback이다.
     MissionAiSettingsState missionAiSettings; // 실제600BYTE 설정 초기화가 읽는 현재 기본 전역이다.
     std::unique_ptr<RawRegionOwner> regionOwner; // 동일 Pool/hash0에서 현재 지면 소유자 BYTE를 읽는다.
     std::unique_ptr<RawMissionOutcome> outcome; // 같은 Player9/동맹/사제/HP/영역의 현재 입력을 매 조회 읽는다.
@@ -840,6 +840,7 @@ struct RawCampaignSession::Impl {
         rewardState.sharedPercent=&gameplayGlobals->GameAux()->RefundPercent();rewardState.sharedGeyserPool=&gameplayGlobals->GameAux()->ResourcePool(); // 실제 Reward/LocalGeyser의 같은 물리다.
         rewardState.sharedPriestQuarterHp=&gameplayGlobals->GameAux()->PriestQuarterHp(); // State 직접 쓰기와 기존 HP setter/최대HP가 같은 현재 전역을 쓴다.
         priestState.regen.patch.sharedChangedSample=&gameplayGlobals->PatchDiagnostic();motionState.search.sharedPolicySelector=&gameplayGlobals->PatchDiagnostic(); // 최초 객체 생성 전에 추적 writer와 BFS가 같은 장기005318ec을 직접 빌린다.
+        missionStart.sharedDenySalvage=&gameplayGlobals->DenySalvage();missionStart.sharedDenyAscend=&gameplayGlobals->DenyAscend(); // Start·회수·메뉴와 World 없는 Guide 해제가 같은 장기 전역을 빌린다. 근거: docs/exe/cpp-guide-release-20261101.md.
         missionStart.sharedAllowAnyCapture=&gameplayGlobals->GameAux()->AllowAnyCapture();missionStart.sharedOrdinaryGeysers=&gameplayGlobals->GameAux()->OrdinaryGeysers(); // Start 출력과 pickup을 같은 DWORD에 연결한다.
         motionState.carrier.sharedAllowAlliedPickup=&gameplayGlobals->GameAux()->AllowAnyCapture();motionState.carrier.sharedGeyserType=&geyserType;carrierState.sharedGeyserType=&geyserType;constructionState.geyser.sharedGeyserType=&geyserType; // 실제 생성/로딩/도착을 같은 TYPE에 연결한다.
         carrierState.sharedBoss=&gameplayGlobals->Authority()->boss;contentFinder.sharedBoss=&gameplayGlobals->Authority()->boss; // 공통 캐리어와 생산·Damageable 검색도 사제 네 소비자와 같은 실제 권한을 빌린다.
@@ -3171,7 +3172,7 @@ struct RawCampaignSession::Impl {
         FillMissing(effects.path.stepSound);
         motion=std::make_unique<RawCampaignMotionBindings>(world,*priests,*islands,*contained,*anchor,hp,metadata.frames,motionState,start,process,std::move(effects));
         ConnectPriestPanic();ConnectRitual();
-        salvageState=std::make_unique<SalvageCommandState>(SalvageCommandState{playerState.battleOwner,missionStart.denySalvage,gunState.checking,globals.missionPost,assetState.Boss(),runeState.altarType,runeState.daisType,motionState.carrier.nuggetType});
+        salvageState=std::make_unique<SalvageCommandState>(SalvageCommandState{playerState.battleOwner,missionStart.DenySalvage(),gunState.checking,globals.missionPost,assetState.Boss(),runeState.altarType,runeState.daisType,motionState.carrier.nuggetType});
         SalvageCommandHooks salvage; // 요청은 전송만 하고 실제 서버 수신에서 기존 몸체를 호출한다.
         salvage.daisAt=[this](Sid sid) { return altarSacrifice->DaisAt(sid); };
         salvage.tell=[this](std::string_view key) { if (!services.priest.shield.tell) throw std::logic_error("회수 금지의 실제 Tell 소비자 미연결");services.priest.shield.tell(key); };
@@ -3747,7 +3748,7 @@ GameMenusHooks RawCampaignSession::BindGameMenus(GameMenusHooks hooks) {
         case 0x594fa0:return current->core.bridgeState.mission ? 1U : 0U;
         case 0x595344:return current->playerState.playerKnown;
         case 0x540c70:return current->playerState.battleOwner;
-        case 0x59507c:return std::bit_cast<std::uint32_t>(current->missionStart.denyAscend);
+        case 0x59507c:return std::bit_cast<std::uint32_t>(current->missionStart.DenyAscend());
         case 0x5cab30:return current->energyState.userCheat;
         default:break;
         }
@@ -4267,7 +4268,7 @@ std::unique_ptr<RawTutorialTwo> RawCampaignSession::MakeTutorialTwo(RawMissionFr
     if (!impl_->loaded || !impl_->login || !impl_->login->options) throw std::logic_error("로그인 설치 전 Early2 실제 판정 연결");
     hooks.refreshEnergyRange=[this] { impl_->login->options->UpdateRange(); };
     hooks.productionContains=[this](std::uint32_t type) { return impl_->production->Contains(type); };
-    auto& denySalvage=reinterpret_cast<std::uint32_t&>(impl_->missionStart.denySalvage); // 같은4BYTE의 대응 unsigned 별칭이다. 부호형 전역의 사본을 만들지 않는다.
+    auto& denySalvage=reinterpret_cast<std::uint32_t&>(impl_->missionStart.DenySalvage()); // 같은4BYTE의 대응 unsigned 별칭이다. 부호형 전역의 사본을 만들지 않는다.
     return std::make_unique<RawTutorialTwo>(impl_->core.pool,impl_->core.types,*impl_->totalMade,gate,
         TutorialTwoState{impl_->battleOptions,denySalvage,impl_->tutorialWorkshopType,impl_->tutorialArcherType,impl_->tutorialSalvageCommand},std::move(hooks));
 }

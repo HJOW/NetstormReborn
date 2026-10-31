@@ -31,6 +31,7 @@ struct FortSelectionHooks; //편집 선택과 Test Battle 복귀가 같은 실�
 class CampaignObjectMenuClient; // 같은 실제 원본 객체 메뉴와 현재 명령 큐를 연결한다.
 struct MissionFortLoadRequest; // Init부터 실제 Session 설치까지 같은 요청과 Zone 이미지를 소유한다.
 class CampaignTemplateStorage; // 원본 명시 Init/State 정리까지 같은9개 manager의 수명을 소유한다.
+struct CampaignGuideRuntime; // 같은 실제 Guide 상태와 소멸을 창 없는 World 검사에도 공유한다.
 struct RawHtmlWindowContext; // 실제 전체 HTML에 현재 게임 소유자의 장치를 빌린다.
 struct RawMovieContext; // 실제 MovieGump의 화면/두 정지/음향 장치를 빌린다.
 class TellFileMenus; // 실제 파일 목록의 등록 Config를 부모/미션보다 오래 유지한다.
@@ -158,7 +159,7 @@ private:
     // 메뉴가 소유한 월드와 입력 참조를 안전한 순서로 제거한다.
     void ClearWorld();
     void DetachMissionWorldBindings(); //Session을 빌리는 Tutorial/Start/입력만 반납하고 실제 Guide 해제까지 미션 gate/state를 보존한다.
-    void ReleaseCurrentGuideMission(); //선택된 Guide 소멸 시점에만 자기 정지/허용표/번호/단계를 반납한 뒤 스크립트와 Native mission을 해제한다.
+    void ReleaseCurrentGuideMission(); //선택된 Guide의 허용표·제한·번호·AI·Config만 반납한다. World·입력·시계는 해당 부모가 보유한다.
     // client_: 원본 전역 변수로 흩어져 있던 클라이언트 상태를 객체 하나로 묶는다. 한 프로세스에 하나만 만든다 (Client).
     Client& client_;
     // state_: 처리 중 조회·갱신하는 상태 (State).
@@ -214,8 +215,7 @@ private:
     std::unique_ptr<MissionScript> mission_;
     std::unique_ptr<GameMenuBarState> gameMenuState_; // Session해제전에같은검산참조를반납한다.
     std::unique_ptr<CampaignObjectMenuClient> objectMenus_; // Client 수명이며 Session 해제 전 실제 팝업/Form을 먼저 닫는다.
-    struct MissionRuntime; // 같은 미션의 Start/프레임 게이트 상태와 실제 연결을 고정 주소로 소유한다.
-    std::unique_ptr<MissionRuntime> missionRuntime_; // 월드와 스크립트보다 먼저 해제한다.
+    std::unique_ptr<CampaignGuideRuntime> missionRuntime_; // 같은 미션의 Start·프레임 상태·연결을 고정 주소로 소유하고 Script보다 먼저 해제한다.
     std::uint32_t worldMissionToken_{}; // 접속 중 미션 교체가 이전 World의 완료를 새 Script에 공개하지 않도록 현재 설치 수명을 식별한다.
     std::unique_ptr<o::RawMissionGuide> guide_; // 현재 미션 해제 중에도 반복 호출 스택이 살아 있도록 UberGump 수명에 둔다.
     std::uint32_t& hideBuildings_; // 원본0059a8ac의 같은 Client 장기 DWORD를 메뉴·Draw·정리가 공유한다.

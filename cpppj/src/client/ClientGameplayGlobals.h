@@ -50,6 +50,10 @@ public:
     const std::uint32_t& MapRevision() const { return mapRevision_; } // 단조 버전이 아니며 실제 Refresh가0으로 소비한 현재값도 즉시 읽는다.
     std::uint32_t& HideBuildings() { return hideBuildings_; } //0059a8ac의 실제 DWORD를 메뉴·Draw·State 정리가 직접 공유한다.
     const std::uint32_t& HideBuildings() const { return hideBuildings_; } // Uber 교체와 Session 반납으로 값이나 주소를 재생성하지 않는다.
+    std::int32_t& DenySalvage() { return denySalvage_; } // 00595078의 signed DWORD를 Start·회수·Tutorial 소멸이 같은 Client 주소에 읽고 쓴다. 근거: docs/exe/cpp-guide-release-20261101.md.
+    const std::int32_t& DenySalvage() const { return denySalvage_; } // World가 없어도 마지막 전체 DWORD를 유지하며 bool 사본으로 축소하지 않는다.
+    std::int32_t& DenyAscend() { return denyAscend_; } // 0059507c의 signed DWORD를 Start·메뉴·Guide 해제가 같은 장기 저장소로 공유한다.
+    const std::int32_t& DenyAscend() const { return denyAscend_; } // Session 대여나 반납 뒤에도 같은 주소와 현재 금지 값을 읽는다.
     std::uint32_t& PatchDiagnostic() { return patchDiagnostic_; } // 005318ec의 같은 DWORD를 SP 추적 쓰기와 경로·그림자·카메라 읽기가 빌린다.
     const std::uint32_t& PatchDiagnostic() const { return patchDiagnostic_; } // 진단값을 프레임별 사본이나 bool로 축소하지 않는다.
     std::int32_t& WorldCells() { return worldCells_; } //00531928의 같은 signed 세계 크기를 카메라와 마나/공급/AI가 빌린다.
@@ -80,6 +84,7 @@ private:
     std::uint32_t fullDeck_{}; // 최초 PE BSS0이며 준비 대여/반납은 Native 부모가 쓴 현재 값을 보존한다.
     std::uint32_t fortKeepGenus_{0x40480002U},stateAuxFC4_{}; //보호 PE00542640의 초기 마스크와00594fc4의 별도 BSS0이다.
     std::uint32_t hideBuildings_{}; // 원문 최초 BSS0이며 명시 State store 외에 임의 초기화를 추가하지 않는다.
+    std::int32_t denySalvage_{},denyAscend_{}; // 00595078/0059507c의 최초 BSS0이다. 대여·반납에서는 다시 쓰지 않고 Start와 Tutorial 소멸의 명시 쓰기만 공유한다.
     std::uint32_t patchDiagnostic_{6}; // 보호 10.78 PE의 초기 DWORD6이며 World/Session 대여·반납으로 다시 쓰지 않는다.
     std::int32_t worldCells_{256}; // 보호 PE 초기256이며 실제 startup의 명시 store와 Session 대여를 구별한다.
     ClientCameraGlobals camera_; // 전역snapshot과논리Renderer/목표를분리하고명시Native초기화외에는현재값을보존한다.
