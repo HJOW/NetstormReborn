@@ -1,6 +1,7 @@
 // 원본 텍스트FILE→바이너리BaseFile의 경계를 같은 실제 파일에서 처리한다.
 #include "client/ObjectDumpDisk.h"
 #include "o/BaseFile.h"
+#include "o/RawBaseFileIO.h"
 #include <cstdio>
 #include <limits>
 #include <memory>
@@ -23,8 +24,13 @@ FILE* Open(std::string_view path,bool text) {
 FILE* File(TraceLogStream stream) { if (!stream) throw std::logic_error("객체 덤프 NULL FILE 장치");return reinterpret_cast<FILE*>(stream); }
 // 원본24BYTE파일객체와짝을이루는호스트쓰기객체다. native필드배치를가장하지않는다.
 struct Writer {
-    FILE* stream{}; // 실제바이너리FILE이며소멸시한번닫는다.
-    ~Writer() { if (stream) std::fclose(stream); } // 정상/호스트예외반납에서현재FILE을닫는다.
+    o::RawBaseFileState state{}; // 실제 FILE은 호스트 포인터 토큰으로 같은 BaseFile 필드에 보관한다.
+    o::RawBaseFileIOHooks hooks; // 이 소비자가 선택하는 원문의 일반 쓰기/소멸 CRT 장치다.
+    Writer() { // 부분 쓰기를 임의 재시도하지 않고 원문의 size/element 인자를 그대로 사용한다.
+        hooks.write=[](auto token,auto bytes,auto size,auto count) { static_cast<void>(std::fwrite(bytes.data(),size,count,reinterpret_cast<FILE*>(token))); };
+        hooks.close=[](auto token) { static_cast<void>(std::fclose(reinterpret_cast<FILE*>(token))); };
+    }
+    ~Writer() { o::DestructBaseFile(state,hooks); } // 정상/호스트 예외 반납에서 원문 Close/키 분리 순서로 현재 FILE을 한 번 닫는다.
 };
 // 같은동기호출의경로/할당/파일실체를소유한다. 게임전역의모드나FILE을사본으로보관하지않는다.
 struct DiskState {
@@ -48,10 +54,10 @@ ObjectDumpHooks MakeObjectDumpDiskHooks(const std::filesystem::path& directory,s
     hooks.allocate=[state](std::uint32_t size) { state->allocation.resize(static_cast<std::size_t>(size)+1);return std::span<std::uint8_t>(state->allocation); }; // 원본요청의끝NUL1BYTE초과위험만호스트물리에서방지한다.
     hooks.construct=[state](auto file) { if (state->writer) throw std::logic_error("객체 덤프 파일중복생성");state->writer=std::make_unique<Writer>();state->identity=file.data(); };
     hooks.openWrite=[state](auto file,auto name,auto mode,auto extra) {
-        state->Same(file);if (mode!=2 || extra || state->writer->stream) throw std::invalid_argument("객체 덤프 BaseFile쓰기인자");
-        state->writer->stream=Open(name,false);if (!state->writer->stream) throw ObjectDumpUnableToOpen{};
+        state->Same(file);if (mode!=2 || extra || state->writer->state.file) throw std::invalid_argument("객체 덤프 BaseFile쓰기인자");
+        state->writer->state.file=reinterpret_cast<std::uintptr_t>(Open(name,false));if (!state->writer->state.file) throw ObjectDumpUnableToOpen{};
     };
-    hooks.write=[state](auto file,auto bytes,auto offset) { state->Same(file);if (offset!=0xffffffffU || !state->writer->stream || bytes.size()>std::numeric_limits<std::uint32_t>::max()) throw std::invalid_argument("객체 덤프 BaseFile쓰기범위");return static_cast<std::uint32_t>(std::fwrite(bytes.data(),1,bytes.size(),state->writer->stream)); };
+    hooks.write=[state](auto file,auto bytes,auto offset) { state->Same(file);if (offset!=0xffffffffU || !state->writer->state.file || bytes.size()>std::numeric_limits<std::uint32_t>::max()) throw std::invalid_argument("객체 덤프 BaseFile쓰기범위");o::WriteBaseFile(state->writer->state,bytes,-1,state->writer->hooks);return 0U; }; // 부모는 원문 void 쓰기의 반환 길이를 사용하지 않는다.
     hooks.destruct=[state](auto file) { state->Same(file);state->writer.reset();state->identity=nullptr; };
     return hooks;
 }

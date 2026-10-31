@@ -1,0 +1,92 @@
+{
+  "unit": 651,
+  "date": "2026-10-31",
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "productChanged": true,
+  "executableSha256": "0bbdebe89a9053e658f13d0301f77b0798bbdd9708d879164331f706e2cf8f9a",
+  "native": {
+    "cases": 322,
+    "byOperation": {
+      "seek": 80,
+      "eof": 60,
+      "length": 16,
+      "close": 32,
+      "destruct": 32,
+      "write": 102
+    },
+    "processes": 2,
+    "observationsPerProcess": 644,
+    "observations": 1288,
+    "differences": 0,
+    "fixtureSha256": "0cd66ec887a04a8539ce74efb3f0b63a7f9a8e0f488b40f72b71785e4d808f8c",
+    "actualStackProbe": true,
+    "crtAndAssertionsAreExplicitBoundaries": true,
+    "scope": "10.78의 위치/EOF/길이/Close/소멸/쓰기. 전체 쓰기 BYTE와 두 콜백 변이, 부분 쓰기/seek 실패 정책. CRT 내부나 실제 할당 실패를 실행한 근거가 아니다."
+  },
+  "focused": {
+    "registered": 7,
+    "finalUnique": 5,
+    "failedChecks": 0,
+    "invocations": 5,
+    "newUnique": 3,
+    "oldUnique": 2,
+    "existingNativeRows": 56,
+    "newNativeRows": 322,
+    "logs": [
+      "extracted/cpp-basefile-io-651-focused-v1.log",
+      "extracted/cpp-basefile-io-651-object-native.log",
+      "extracted/cpp-basefile-io-651-object-eh.log"
+    ],
+    "unexecuted": [
+      "ObjectDump_RealDiskPipelineMatchesIndependentNativeBytes",
+      "ObjectDump_RealOpenFailureDoesNotCreateParentOrRestoreModes"
+    ],
+    "disk": "이 단위의 새 ascii/한글-😀 폴더에서 제품 객체 덤프 장치의 빈 쓰기/8201+3BYTE/닫기. 전체 덤프 순회는 기존 Native56/typed EH만 실행했다."
+  },
+  "releaseBuild": {
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "log": "extracted/cpp-basefile-io-651-build-v1.log"
+  },
+  "protected": {
+    "baseline": "extracted/cpp-solo-entry-645-20261031/protected-after-current.json",
+    "checked": 12,
+    "differences": 0,
+    "sha256": {
+      "AGENTS.md": "e9e46fda5519e663417b5c8d9b643549196bf28fe7ba6b1d546a48a853fd208b",
+      "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+      "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6",
+      "cpppj/tests/fixtures/object-dump-x86.tsv": "f62b70e603fb9f236e18c659626d62a345faee8a1bf20eff3808df412b2e3033",
+      "cpppj/tests/fixtures/basefile-read-policy-x86.tsv": "159eae8e64fe4606632231c0be43e8d56947484e5bb840e322842fef4f8deb86",
+      "cpppj/tests/fixtures/taff-registration-x86.tsv": "34513ae09896807eb9f8131382571b4757f1415aa29c0bc5cc30180c6b214b11",
+      "cpppj/tests/fixtures/palettecolor-x86.tsv": "c888cf78e03718019d7061fc926ba1dbe63c0a9f052ee6b528f50fbfd67577dc",
+      "cpppj/tests/fixtures/palettecolors-x86.tsv": "e68627ed2932c481316f8ac9a9dae24da1b509caf3394e3984a29154be04ab52",
+      "cpppj/tests/fixtures/paletteflash-x86.tsv": "3e3c769c896a52448ec675cdf82724382faf2336767afb76221ae3fdca0902b6",
+      "cpppj/tests/fixtures/fort-palette-transition-x86.tsv": "73e8d0b30bc93d1626b743f40fa81ca80504fc8f5f4c037e175520eee29dea31",
+      "cpppj/tests/fixtures/screen-palette-clear-x86.tsv": "818ea41e1d24cc61017370cad49da36f37464c77ad3e170c56a7bbb89d812597"
+    },
+    "newFixtures": [
+      "cpppj/tests/fixtures/basefile-io-x86.tsv"
+    ],
+    "fullAuditRepeated": false
+  },
+  "decompileChanged": false,
+  "actualGameRuns": 0,
+  "newZip": false,
+  "full34Repeated": false,
+  "mainTestExecutableRebuilt": false,
+  "multiplayerTests": 0,
+  "remaining": [
+    "전체 BaseFile 열기/FILE read와 암호 부분 읽기/키 할당/실패·다른 소비자 접합",
+    "남은 UI/Edit/시나리오·수명·호환성",
+    "후순위 MP 무시험 사전 구현과4~7차"
+  ],
+  "notes": [
+    "CD10.72는 정적 대응만 확인했다. 쓰기 호출4f21e0의 fread 이름은 Multiple Matches이며 내부4f2220의 실제 쓰기로 간다. CD 실행 검증은 없다.",
+    "PlayerNoMake writer433c30은 수신 객체 생성/검증 부모라 MP 범위로 잇는다. 팔레트 고정 범위228..245/현대 비flip/색 소비자는 기존 연결을 확인했으며 신규 GUI 근거는 없다."
+  ]
+}

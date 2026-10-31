@@ -2572,3 +2572,11 @@ add_executable(netstorm_world_generation_tests FocusedTestMain.cpp CampaignSessi
 target_link_libraries(netstorm_world_generation_tests PRIVATE netstorm)
 netstorm_apply_compiler_options(netstorm_world_generation_tests)
 target_compile_definitions(netstorm_world_generation_tests PRIVATE ${_netstorm_menu_session_definitions})
+
+# 게임을 띄우지 않고 실제 BaseFile/객체 덤프 디스크 장치를 함께 확인한다.
+target_sources(netstorm_tests PRIVATE BaseFileIOTests.cpp)
+set_source_files_properties(BaseFileIOTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_BASEFILE_IO_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/basefile-io-x86.tsv\";NETSTORM_BASEFILE_IO_WORK=\"${CMAKE_SOURCE_DIR}/../extracted/cpp-basefile-io-651-disk\"")
+add_executable(netstorm_basefile_io_tests FocusedTestMain.cpp BaseFileIOTests.cpp ObjectDumpTests.cpp)
+target_link_libraries(netstorm_basefile_io_tests PRIVATE netstorm)
+netstorm_apply_compiler_options(netstorm_basefile_io_tests)
+target_compile_definitions(netstorm_basefile_io_tests PRIVATE ${_netstorm_menu_session_definitions})
