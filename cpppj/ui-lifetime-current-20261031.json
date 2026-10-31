@@ -1,0 +1,159 @@
+{
+  "unit": 640,
+  "host": "HJOW-Athlon",
+  "last_full_decompilation_host": "HJOW-Athlon",
+  "last_full_decompilation_date": "2026-10-23",
+  "product_changed": false,
+  "rawbuttons": {
+    "states": 14,
+    "outside_release_checks": 2,
+    "esc_menu": true,
+    "unchanged_hud_on_cancel": true,
+    "campaign_reentry": true,
+    "natural_completion_tested": false,
+    "physical_input_tested": false,
+    "run": {
+      "command": [
+        "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+        "--run",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-portable-startup-637-20261031\\gui\\한글 휴대 배포 😀\\NetstormReborn-cpppj\\game",
+        "--mission",
+        "TheWarBegins",
+        "--mute-audio",
+        "--frames",
+        "235",
+        "--set",
+        "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3",
+        "--ui-script",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-rawbuttons-640-20261031-v2\\steps.tsv",
+        "--ui-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-rawbuttons-640-20261031-v2\\states.tsv",
+        "--audio-report",
+        "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-rawbuttons-640-20261031-v2\\audio.tsv",
+        "--window"
+      ],
+      "binarySha256": "3923635e953752cbe09e4bfa9158ba401b5d73195e3157cf96f3740a12b2ed33",
+      "scriptSha256": "b0e71f1772c8a413391903832736ee8102bc9849d43da701b010c36b27bb4989",
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 10.514235599999665,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "0b4ed43097dd4aacce253f1f4942fd3b4a91bc9f8b6ae5cf6d17f4b4bb27556b",
+      "originalsUnchanged": true,
+      "dataUnchanged": true,
+      "dataRoot": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-portable-startup-637-20261031\\gui\\한글 휴대 배포 😀\\NetstormReborn-cpppj\\game"
+    },
+    "binarySha256": "3923635e953752cbe09e4bfa9158ba401b5d73195e3157cf96f3740a12b2ed33"
+  },
+  "chat": {
+    "results": [
+      {
+        "size": [
+          1024,
+          768
+        ],
+        "fullscreen": false,
+        "root": "232",
+        "chatDivider": "235",
+        "positions": {
+          "initial": 768,
+          "shown": 672,
+          "middleHeld": 380,
+          "middleReleased": 380,
+          "lowerHeld": 741,
+          "lowerReleased": 741,
+          "upperHeld": 23,
+          "upperReleased": 23,
+          "hiddenAgain": 768,
+          "restored": 23
+        },
+        "captureReleased": true,
+        "sameHudAndSp": true,
+        "mainMenuReturned": true,
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+            "--run",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-chat-divider-640-20261031\\1024x768\\data",
+            "--mission",
+            "TEST02",
+            "--mute-audio",
+            "--frames",
+            "220",
+            "--set",
+            "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3",
+            "--ui-script",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-chat-divider-640-20261031\\1024x768\\run\\steps.tsv",
+            "--ui-report",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-chat-divider-640-20261031\\1024x768\\run\\states.tsv",
+            "--audio-report",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-chat-divider-640-20261031\\1024x768\\run\\audio.tsv",
+            "--window"
+          ],
+          "binarySha256": "3923635e953752cbe09e4bfa9158ba401b5d73195e3157cf96f3740a12b2ed33",
+          "scriptSha256": "a8cf4c1efb832419bb70058d9ea10b027272b3340ded583bb874c38f3818a323",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 22.96269749999965,
+          "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderrSha256": "0cf384540400f6518a0489448b6c5619906dcb6f9f0323eac78adeab70ef2e86",
+          "originalsUnchanged": true,
+          "dataUnchanged": true,
+          "dataRoot": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-chat-divider-640-20261031\\1024x768\\data"
+        }
+      }
+    ],
+    "defaultCampaign": {
+      "mission": "thewarbegins",
+      "defaultChatHidden": true,
+      "nativeViewConditionPreserved": true,
+      "mainMenuReturned": true,
+      "run": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\originals",
+          "--mission",
+          "thewarbegins",
+          "--mute-audio",
+          "--frames",
+          "85",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;sleepPerLoop=8;useProductTimers=0;sound=1;music=0;playWind=0;soundVolume=3;musicVolume=3",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-chat-divider-640-20261031\\default-campaign\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-chat-divider-640-20261031\\default-campaign\\states.tsv",
+          "--audio-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-chat-divider-640-20261031\\default-campaign\\audio.tsv",
+          "--window"
+        ],
+        "binarySha256": "3923635e953752cbe09e4bfa9158ba401b5d73195e3157cf96f3740a12b2ed33",
+        "scriptSha256": "6f96ae13351814df242be6dc51f4e128f97d674ea4b6f6a41b16bd54a185862e",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 5.394382200000109,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "8136bceb24e01631862637b17f8d8fe8ce97d9248b2c74f3e606edfb044bd326",
+        "originalsUnchanged": true,
+        "dataUnchanged": true,
+        "dataRoot": "H:\\T5Workspace\\NetstormReborn\\originals"
+      }
+    },
+    "binarySha256": "3923635e953752cbe09e4bfa9158ba401b5d73195e3157cf96f3740a12b2ed33",
+    "directWorldMutation": false
+  },
+  "initial_failed_verification": "extracted/cpp-rawbuttons-640-20261031/run.json",
+  "physical": {
+    "window": 132468,
+    "screenshots": 0,
+    "input_actions": 0,
+    "errors": [
+      "FrameArrived timed out: timed out waiting on channel",
+      "window capture timed out: timed out waiting on channel"
+    ],
+    "cleanup": "해당 실행 파일 경로의 작업 소유 프로세스만 종료",
+    "normal_quit_verified": false
+  },
+  "tool_sha256": "c29699de1717c30d872ca8650479afff9cdf23d0974e23bd7a0b1cfad1a85a5f"
+}

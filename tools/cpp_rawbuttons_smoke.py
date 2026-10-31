@@ -1,66 +1,88 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""클론 실제 Game 버튼의 월드 release·raw 수명·캠페인 재진입을 검사한다. 원본 게임 실행 없음."""
+"""실제 브리핑/ESC 메뉴의 캡처 취소·미션 이탈·재진입을 검사한다. 원본 게임은 실행하지 않는다."""
 import argparse
-import json
+import datetime
 from pathlib import Path
-from cpp_menu_smoke import reports, run
-from cpp_renderer_smoke import snapshots
-from cpp_smoke_files import preserve_game_settings
+import cpp_game_menu_smoke as game_menu
+from cpp_bridge_ritual_runtime import ROOT, GAME, save, sha
+from cpp_world_smoke import states
 
-# 산출물은 기존 원본 바깥에 저장한다. 기본 대상은 새로 빌드한 10.78 C++ 클론이다.
-ROOT = Path(__file__).resolve().parent.parent
-OUTPUT = ROOT / 'extracted/cpp-rawbuttons-smoke'
+
+def steps(directory):
+    """임시 Game 버튼 대신 실제 브리핑 버튼과 ESC 가로 메뉴에 마우스 사건을 넣는다."""
+    return [
+        (5, 'report', 'briefing'), (10, 'down', 'Play Mission'), (12, 'report', 'briefHeld'),
+        (15, 'up', 'screen:1000,700'), (18, 'report', 'briefCancelled'),
+        (20, 'click', 'Play Mission'), (30, 'report', 'initial'),
+        (35, 'esc', ''), (40, 'report', 'bar'), (45, 'click', 'Game'),
+        (50, 'report', 'game'), (55, 'click', 'menu-command:0200008c,0'),
+        (60, 'report', 'leave'), (65, 'down', 'Continue Mission'), (68, 'report', 'cancelHeld'),
+        (70, 'up', 'screen:1000,700'), (75, 'report', 'cancelReleased'),
+        (80, 'click', 'Continue Mission'), (90, 'report', 'resumed'),
+        (95, 'esc', ''), (100, 'click', 'Game'), (105, 'click', 'menu-command:0200008c,0'),
+        (110, 'click', 'Main Menu'), (120, 'report', 'main'),
+        (130, 'click', 'Campaign'), (140, 'click', 'Struggle For Freedom'),
+        (150, 'click', '1 The War Begins!'), (170, 'report', 'reloadedBrief'),
+        (180, 'click', 'Play Mission'), (190, 'report', 'reloaded'),
+        (190, 'snapshot-presented', str(directory/'reloaded.bmp')),
+        (195, 'esc', ''), (200, 'click', 'Game'), (205, 'click', 'menu-command:0200008c,0'),
+        (210, 'click', 'Main Menu'), (220, 'report', 'mainFinal'),
+        (225, 'click', 'Quit')]
+
+
+def verify(report):
+    """취소가 명령을 실행하지 않고 동일 HUD/캡처가 반납되는지 실제 원시 상태로 판정한다."""
+    observed = states(report)
+    # 두 실제 stone 버튼은 누른 동안 공통 캡처를 소유하고 바깥 뗌 뒤 반납해야 한다.
+    for held, released in (('briefHeld', 'briefCancelled'), ('cancelHeld', 'cancelReleased')):
+        assert int(observed[held]['RawButtons'][3]) != 0, (held, observed[held]['RawButtons'])
+        assert observed[released]['RawButtons'][3] == '0', (released, observed[released]['RawButtons'])
+    # 브리핑 버튼의 바깥 뗌은 미션을 시작하지 않는다.
+    for label in ('briefing', 'briefHeld', 'briefCancelled', 'reloadedBrief'):
+        assert observed[label]['phase'] == ['3'] and observed[label]['paused'] == ['1'], label
+    # 중단 확인의 바깥 뗌도 확인창을 닫지 않고 이후 정상 클릭으로만 복귀한다.
+    for label in ('leave', 'cancelHeld', 'cancelReleased'):
+        assert observed[label]['page'][0].casefold() == 'abort', (label, observed[label]['page'])
+    # 실제 동일 세션 복귀와 새 세션 진입 모두 진행 중이어야 하며 캡처를 남기지 않는다.
+    for label in ('initial', 'resumed', 'reloaded'):
+        row = observed[label]
+        assert row['phase'] == ['4'] and row['paused'] == ['0'], (label, row['phase'], row['paused'])
+        assert row['RawButtons'][3] == '0', (label, row['RawButtons'])
+        assert row['state_hud'][0] == '1' and row['raw_world_modes'] == ['0', '1'], label
+    assert observed['initial']['raw_uber_children'] == observed['resumed']['raw_uber_children']
+    assert observed['initial']['raw_hud_owners'] == observed['resumed']['raw_hud_owners']
+    # 세션을 나간 뒤 이전 월드가 없고 새 캠페인에서는 등록 serial이 증가해야 한다.
+    for label in ('main', 'mainFinal'):
+        assert observed[label]['phase'] == ['0'] and observed[label]['state_hud'][0] == '0', label
+        assert observed[label]['RawButtons'][3] == '0', label
+    assert int(observed['reloaded']['RawButtons'][2]) > int(observed['initial']['RawButtons'][2])
+    assert observed['initial']['raw_uber_children'] != observed['reloaded']['raw_uber_children']
+    assert observed['initial']['mission'] == observed['reloaded']['mission']
+    items = game_menu.menu_items(report, 'bar')
+    assert any(row['label'].strip() == 'Game' and row['visible'] for row in items)
+    assert not any('CHEAT' in row['label'].upper() for row in items if row['visible'])
+    return dict(states=len(observed), outside_release_checks=2, esc_menu=True,
+                unchanged_hud_on_cancel=True, campaign_reentry=True,
+                natural_completion_tested=False, physical_input_tested=False)
 
 
 def main():
-    """기존 입력 큐/폴링 경로를 사용하고 옵션 예외 두 파일은 성공·실패 모두 복구한다."""
+    """실행 사본과 출력 경로를 선택하고 기존 실행기/설정 복원/원본 보호 검사를 재사용한다."""
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--exe', type=Path, default=ROOT / 'cpppj/build/bin/Release/Netstorm.exe')
+    parser.add_argument('--exe', type=Path, default=GAME)
+    parser.add_argument('--data-root', type=Path, default=ROOT/'originals')
+    stamp = datetime.datetime.now().strftime('%Y%m%d-%H%M%S')
+    parser.add_argument('--output', type=Path, default=ROOT/'extracted'/('cpp-rawbuttons-smoke-'+stamp))
     args = parser.parse_args()
-    OUTPUT.mkdir(parents=True, exist_ok=True)
-    source = ROOT / 'originals'
-    before = snapshots(source)
-    steps = [
-        (2, 'report', 'briefing'), (3, 'click', 'Play Mission'), (4, 'report', 'mission'),
-        (5, 'down', 'Game'), (5, 'report', 'captured'),
-        (6, 'up', 'world:priest'), (7, 'report', 'world_released'),
-        (8, 'click', 'Game'), (9, 'report', 'game_menu'),
-        (10, 'click', 'Leave Battle'), (11, 'click', 'Stay'), (12, 'report', 'stayed'),
-        (13, 'down', 'Game'), (13, 'report', 'captured_again'),
-        (14, 'up', 'world:priest'), (15, 'report', 'world_released_again'),
-        (16, 'esc', ''), (17, 'click', 'Leave Battle'), (18, 'click', 'Leave Honorably'),
-        (19, 'report', 'main'), (20, 'click', 'Campaign'), (22, 'click', 'Struggle For Freedom'),
-        (24, 'click', '1 The War Begins!'), (27, 'click', 'Play Mission'), (29, 'report', 'reloaded'),
-        (29, 'snapshot', str(OUTPUT / 'reloaded.bmp')),
-    ]
-    script = OUTPUT / 'steps.tsv'
-    script.write_text(''.join(f'{frame}\t{operation}\t{argument}\n' for frame, operation, argument in steps), encoding='utf-8', newline='\n')
-    report = OUTPUT / 'states.tsv'
-    with preserve_game_settings(source, 'd'):
-        run(args.exe, ['--run', source, '--window', '--no-audio', '--mission', 'TheWarBegins', '--frames', '31', '--set',
-            'SCREENW=1024;SCREENH=768;maxFPS=75;autoDemo=0;tellTips=0;DoneTheWarBegins=0', '--ui-script', script, '--ui-report', report])
-    state = reports(report)
-    assert state['briefing']['phase'] == ['3'] and state['briefing']['paused'] == ['1']
-    # Game 입력 트리에는 버튼/배경/루트 세 노드가 있어야 하고 초기 raw serial을 다음 페이지에서 재사용하지 않는다.
-    for name in ('mission', 'world_released', 'stayed', 'world_released_again', 'reloaded'):
-        current = state[name]
-        assert current['phase'] == ['4'] and current['paused'] == ['0'], name
-        count, registered, serial, focus, idle, nodes = map(int, current['RawButtons'])
-        assert (count, registered, focus, idle, nodes) == (1, 3, 0, 0, 3), (name, current['RawButtons'])
-    # 같은 폴링 위치에서 캡처가 유지되며 월드의 사제 위 release가 UI focus/idle을 모두 반납한다.
-    for name in ('captured', 'captured_again'):
-        current = list(map(int, state[name]['RawButtons']))
-        assert current[3] != 0 and current[4] == 1, (name, current)
-    assert state['game_menu']['popup'] == ['game']
-    assert state['main']['phase'] == ['0'] and list(map(int, state['main']['RawButtons']))[0:2] == [8, 17]
-    assert int(state['reloaded']['RawButtons'][2]) > int(state['mission']['RawButtons'][2])
-    assert state['mission']['mission'] == state['reloaded']['mission']
-    assert snapshots(source) == before, '원본 파일/존재 상태 변경'
-    result = dict(states=len(state), world_release_checks=2, campaign_reentry=True, raw_registry_lifetime=True,
-        original_files_unchanged=len(before), campaign_completed=False)
-    (OUTPUT / 'report.json').write_text(json.dumps(result, ensure_ascii=False, indent=2) + '\n', encoding='utf-8', newline='\n')
-    print(json.dumps(result, ensure_ascii=False, indent=2))
+    directory = args.output.resolve()
+    game_menu.GAME = args.exe.resolve()  # 기존 protected_run이 관측할 실제 클론 실행 파일을 명시한다.
+    report, run = game_menu.protected_run(directory, 1024, 768, steps(directory), 235,
+                                          data_root=args.data_root, mission='TheWarBegins')
+    summary = verify(report)
+    summary.update(run=run, binarySha256=sha(game_menu.GAME))
+    save(directory/'summary.json', summary)
+    print('실제 ESC/브리핑 캡처 취소와 캠페인 재진입 통과')
 
 
 if __name__ == '__main__':

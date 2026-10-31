@@ -6,11 +6,11 @@
 
 ## 0. 재개 전 확인 사항
 
-### 0.1 현재 값 (2026-10-31, 단위639 기준)
+### 0.1 현재 값 (2026-10-31, 단위640 기준)
 
 | 항목 | 값 |
 | --- | --- |
-| 진행 상태 | **사용자 재개 지시로 진행 중.** 단위639 미니맵 내용물/진단 경로 대조를 마쳤으며 전체 목표는 미완료다. |
+| 진행 상태 | **사용자 재개 지시로 진행 중.** 단위640 실제 UI 취소/도킹과 검사 도구 갱신을 마쳤으며 전체 목표는 미완료다. |
 | 현재 제품 | 단위637, 커밋 `a421aa6c`. 이후 제품 소스 변경 없음 |
 | EXE SHA-256 | `3923635e953752cbe09e4bfa9158ba401b5d73195e3157cf96f3740a12b2ed33` |
 | ZIP SHA-256 | `624ee85b91ca298d940792c35380177dc5a0f164b6e1668a8fbe138d45beb0f8` (1376항목, 게임 자산 1358개) |
@@ -93,7 +93,7 @@
 
 AGENTS.md의 `(4~6차 목표.)` 문구는 7차 추가 뒤에도 그대로지만, 바로 아래에 7차까지 나열되고 dotnetpj 항목도 4~7차로 적혀 있으므로 4~7차로 읽는다.
 
-## 2. 현재 상태 (2026-10-31, 단위639 기준)
+## 2. 현재 상태 (2026-10-31, 단위640 기준)
 
 - **게임 실행·플레이 가능 여부:** 인자 없는 `Netstorm.exe`로 GUI가 시작되고 34경로 모두 진입·비정지 진행·정상 종료를 확인했다. 자연 완주 근거는 과거 제품의 Early1/2 자동 완주와 사용자가 다른 PC에서 직접 완주한 캠페인 1-1뿐이다.
 - **기존 게임과의 동일성:** 원문 관측과 대조를 마친 부품이 많다. 자연 완주와 전체 동일성은 사용자가 플레이하며 확인한다.
@@ -113,7 +113,7 @@ AGENTS.md의 `(4~6차 목표.)` 문구는 7차 추가 뒤에도 그대로지만,
 | Edit·시나리오 | [590](docs/exe/cpp-editor-scenario-20261030.md), [597](docs/exe/cpp-editor-rules-20261030.md), [609](docs/exe/cpp-world-geyser-20261030.md), [634](docs/exe/cpp-editor-catalog-current-20261031.md) | 시작값·작업본 두 왕복, 방향별 동맹·Off, 세계 간헐천, 전체 Fort 433개 이관과 필터 분류 | 3절 2번 |
 | 객체 메뉴·건설 | [524](docs/exe/cpp-object-hit-20261028.md), [528](docs/exe/cpp-factory-upgrade-runtime-20261028.md), [531](docs/exe/cpp-altar-salvage-runtime-20261028.md), [537](docs/exe/cpp-mission-cost-guard-20261028.md) | 픽셀 선택, 시험한 메뉴·업그레이드·회수, 미션 비용 관문 | 다른 타입·레벨·상태 |
 | HUD·단축키 | [509](docs/exe/cpp-hud-input-runtime-20261027.md), [511](docs/exe/cpp-player-list-runtime-20261028.md), [540](docs/exe/cpp-minimap-toggle-runtime-20261028.md), [547](docs/exe/cpp-send-money-runtime-20261028.md), [548](docs/exe/cpp-screenshot-runtime-20261028.md) | 미니맵, QWASZX, ESC 일부, Player List, 독립 미니맵, Send Money, F7·Shift F7 | 스크립트 입력이다. 3절 1번 |
-| Chat | [574](docs/exe/cpp-chat-completion-20261029.md), [586](docs/exe/cpp-chat-live-message-20261030.md), [614](docs/exe/cpp-chat-settings-20261030.md) | 입력줄, 자동완성, 일반 Enter·중계·로컬 큐·공유 로그, 설정 재실행 | 3절 4번 |
+| Chat | [640](docs/exe/cpp-ui-lifetime-current-20261031.md), [574](docs/exe/cpp-chat-completion-20261029.md), [586](docs/exe/cpp-chat-live-message-20261030.md), [614](docs/exe/cpp-chat-settings-20261030.md) | 입력줄, 자동완성, 일반 Enter·중계·로컬 큐·공유 로그, 설정 재실행 | 3절 4번 |
 | 영상·CD | [594](docs/exe/cpp-movie-runtime-20261030.md), [595](docs/exe/cpp-cd-movie-package-20261030.md) | 실제 MovieGump, 스킵·자연 끝, 완료 저장, CD 경로 탐색, 영문·독문 기본 영상 동봉 | 실제 CD 삽입, PCM 장치, 활성 전체화면 물리 출력 |
 | 데모 | [567](docs/exe/cpp-demo-repeat-20261029.md), [569](docs/exe/cpp-demo-repeat-two-20261029.md) | 세 데모의 첫 360초 만료 → 재시작 → Exit Demo → Quit | 두 번째 전체 360초 |
 | 저장·진행 | [568](docs/exe/cpp-saved-state-file-20261029.md), [578](docs/exe/cpp-campaign-progress-20261030.md), [588](docs/exe/cpp-battle-leave-20261030.md) | 저장상태 파일 정리, 진행 키 저장과 다음 미션 해제, 일반 중단의 State3 복귀 | 실제 승리부터 자동 저장까지, 존재하는 저장상태 복구 |
@@ -121,6 +121,8 @@ AGENTS.md의 `(4~6차 목표.)` 문구는 7차 추가 뒤에도 그대로지만,
 | 의식 보상 | [598](docs/exe/cpp-new-technology-20261030.md), [599](docs/exe/cpp-ritual-refresh-20261030.md), [604](docs/exe/cpp-player-notices-20261030.md) | 로컬 기술 획득, 의식 뒤 Core·기록·snapshot, 프레임말 Player 대기 결과 | 실제 의식 UI, 비로컬 보상, 비미션 랭크 |
 | 투사체·수명 | [552](docs/exe/cpp-bridge-runtime-20261029.md), [611](docs/exe/cpp-missile-floater-20261030.md), [612](docs/exe/cpp-ice-ricochet-scratch-20261030.md), [613](docs/exe/cpp-fence-event3-20261030.md) | 다리 붕괴·대피, 플로터 회피, 반사 변위 0, 펜스 사건 3 | 실제 특정 적 공격은 생략했다. 0.3절의 복원 한계 |
 | 전체화면·해상도 | [호환 전체화면](docs/exe/cpp-modern-fullscreen-20261027.md), [가장자리](docs/exe/cpp-edge-scroll-runtime-20261027.md), [해상도 메뉴](docs/exe/cpp-screen-resolution-menu-20261027.md), [635](docs/exe/cpp-camera-viewport-20261031.md) | Windows 10 DIB 호환 출력, 가장자리 이동, 세 화면비 메뉴, 저장·종료·새 프로세스 적용 | 3절 7번 |
+
+기본 채팅 구분선/숨김/복원과 실제 브리핑·중단 확인의 캡처 취소/미션 재진입은 [640](docs/exe/cpp-ui-lifetime-current-20261031.md)에서 같은637 제품으로 다시 확인했다. 전체 Chat·물리 입력의 완료 근거는 아니다.
 
 ### 2.2 미션별 상태
 
@@ -143,7 +145,7 @@ Early3 후속 입력과 미실행 계획은 [부분 진행 보관](docs/exe/prep
 
 - **시작·메인 메뉴:** 무인자 `Netstorm.exe`가 GUI로 시작한다(637). 원본 8버튼과 Campaign/Demo/Help/Options, Credits 18쪽, Quit, Tips, 새 설치의 Native39 복귀(563), 실제 인트로 영상(594~595)을 연결했다. 승패 전환, 존재하는 저장상태 복구, 미션 이탈 전체 선택, 픽셀/음향은 남는다. Multiplayer는 앞 목표 뒤에 사전 구현한다.
 - **Edit:** 기존 맵 자연 State1 설치, 전체 저장/Save as, 새 이름 목록/재시작, Set All Bridge, SaveGoMain, 신규 Fort/자동 섬 창, 기존·새 맵 섬 추가를 연결했다. Test Battle → 짧은 전투 → Return to Editing 왕복(492), 시나리오 시작값(590), 방향별 동맹(597), 세계 간헐천(609)을 확인했다. 남은 것은 3절 2번이다.
-- **게임 중 UI:** QWASZX 취득/회전/배치/보충, 원본 ESC 가로/하위 메뉴, 실제 HUD 루트·도킹/덱·미니맵/NSInfo/Chat, 독립 미니맵, Player List, Send Money, F2·F3·F7·F8·Shift F7·Ctrl Shift F7, 가장자리 이동과 원문 pan, 실제 Chat 입력·전달을 연결했다. 나머지 View/zoom, 도킹, Chat 드래그, 모드별 표시·픽셀 대조는 남는다.
+- **게임 중 UI:** QWASZX 취득/회전/배치/보충, 원본 ESC 가로/하위 메뉴, 실제 HUD 루트·도킹/덱·미니맵/NSInfo/Chat, 독립 미니맵, Player List, Send Money, F2·F3·F7·F8·Shift F7·Ctrl Shift F7, 가장자리 이동과 원문 pan, 실제 Chat 입력·전달을 연결했다. 기본 Chat 구분선 드래그/숨김/복원은543과640에서 확인했다. 나머지 View/zoom·도킹 조합·모드별 표시·픽셀 대조는 남는다.
 - **공통 전략 AI:** 적·아군·데모가 같은 원본 전략을 쓰고 `RawCampaignSession::RunFrame`의 현재 시각 → 비정지 AI → Kernel 순서에 연결된다(320~322). 정상 간격의 확장/채취/생산/공격은 자연 플레이로 대조하지 않았다.
 - **유닛·주문·의식:** 워크샾 25종의 생성/이동/공격/표시·소유자색(335~345), Devastation, 포획/운반/희생, SP/미션 완료, 은신/마비, 윈드 소환을 복원했다. 의식 집중 검사에는 명시 시전원/포로/시계 입력이 포함되며, 실제 UI 취득 → 시전 → 포획 → 희생의 자연 플레이는 미검증이다.
 - **내부 수명:** Client/Session의 장기 전역, Pool/Graph/Player, Deck, 권한, 커서, 반납 조정기와 cleanup, 기존 맵 Edit 설치, Guide/World 분리, 작업본 reader, Login 재적재를 연결했다(425~486). 정상 State7은 `CleanupNativeStateWorld(1)`, 정상 MainMenu는 전체 cleanup(0)에 이미 연결돼 있다(638). 남은 것은 3절 3·4번이다.
@@ -151,10 +153,10 @@ Early3 후속 입력과 미실행 계획은 [부분 진행 보관](docs/exe/prep
 
 ### 2.4 알려진 미해결 이슈
 
-- **물리 입력 미검증(637):** 인자 없는 EXE 실행은 실제 창 제목과 PID, 명령줄까지 확인했으나, 화면 캡처가 재선택·재시도 뒤에도 timeout이어서 입력을 보내지 않았다. QWASZX·ESC·Home·포커스는 물리 입력 0건으로 미완료다.
+- **물리 입력 미검증(637, 640):** 인자 없는 EXE 실행은 실제 창 제목과 PID, 명령줄까지 확인했으나, 화면 캡처가 재선택·재시도 뒤에도 timeout이어서 입력을 보내지 않았다. QWASZX·ESC·Home·포커스는 물리 입력 0건으로 미완료다. 640도 창 재선택·활성화 후 캡처 timeout으로 입력 없이 종료했다. 환경 상태가 바뀌기 전 같은 시도를 반복하지 않는다.
 - **Early1 남동 경로:** D·SP 0에서 Next Tutorial을 찾지 못해 종료 1(417). 북서 경로는 통과하며 실패 원인은 미확정이다.
 - **options.cfg 저장/복구:** GUI 음량 변경의 SaveOptions fopen errno22/doserrno1224(393), 도구 설정 열기/복구의 간헐적 OSError22(369·386). 격리 복사본은 통과했으며 H 볼륨 exFAT와의 인과는 확정하지 않았다.
-- **옛 스모크 6개:** `cpp_menu_smoke`, `cpp_rawbuttons_smoke`, `cpp_thunder_smoke`, `cpp_weather_smoke`, `cpp_audio_smoke`, `check_dialog_controls.check_mission`은 제거된 임시 Game 버튼을 전제로 한다(2026-10-31 확인). 재사용 전에 ESC → 실제 메뉴 입력으로 바꾼다.
+- **옛 스모크 5개:** `cpp_menu_smoke`, `cpp_thunder_smoke`, `cpp_weather_smoke`, `cpp_audio_smoke`, `check_dialog_controls.check_mission`은 제거된 임시 Game 버튼을 전제로 한다(2026-10-31 확인). 재사용 전에 ESC → 실제 메뉴 입력으로 바꾼다. `cpp_rawbuttons_smoke`는640에서 실제 브리핑/ESC·캡처 취소·재진입으로 교체하고 실행 통과했다.
 - **PlayerNoMake:** 경고 255DWORD/정리 `004328a0`의 장기 연결은 453에서 완료했으나 패킷 부모 `00433c30`의 실제 writer는 남았다. CD `00487900`은 spot 정리이므로 같은 함수로 취급하지 않는다.
 - **섬 추가 후 Graph:** 배치 직후 Graph1/연결 표면 694 → 재로드 0 차이의 원본 전체 월드 대조는 미완료다(493~494). 저장 seed/Money/Deck의 난수 변화와 배치 레코드 보존을 구별한다.
 
@@ -171,7 +173,7 @@ Early3 후속 입력과 미실행 계획은 [부분 진행 보관](docs/exe/prep
 
 - [ ] 크리스탈의 나머지 상태/명령, 비석의 미검증 특수 명령, 제단/일반 건물형의 나머지 타입·소유자·레벨·손상·건설/생산·포획/희생 상태별 메뉴·명령 효과·반납과 선택기 잔여를 점검한다. 이미 확인한 비석 기본 메뉴/전환과 소유자 일부를 미구현으로 되돌리지 않는다.
 - [ ] 운반체 전체 종류와 다중 선택을 포함한 전체 커서 조합을 점검한다(536, 576). 공격형 공중 3종은 정적 분석만 한다.
-- [ ] 남은 ESC 하위/View·도킹·DD 조정 표시·Chat GUI 드래그/입력과 모드별 표시/픽셀을 확인한다. 완료된 단축키·독립 미니맵·Send Money는 새 근거 없이 반복하지 않는다.
+- [ ] 남은 ESC 하위/View·도킹 조합·DD 조정 표시·Chat 입력과 모드별 표시/픽셀을 확인한다. 완료된 단축키·독립 미니맵·Send Money는 새 근거 없이 반복하지 않는다.
 - [x] 미니맵 내용물 변경과 grid/항목별 debug의 직접 쓰기·생성 초기값·일반 경로를 대조했다([639](docs/exe/cpp-minimap-content-20261031.md)). 내용물 실제 영역/픽셀 집중 검사를 통과했다. grid/debug는 일반 경로 활성 writer를 찾지 못했으므로 노출하지 않는다. 간접 alias 전체 부재의 증거로 확대하지 않는다.
 - 메타맵 번개 `00479650`은 MP 전용 실제 기록 분기이므로 8번의 무시험 사전 구현에 포함한다. 일반 번개/진단(559~565)과 구별한다.
 - **오류 복원 원칙:** 실제 오류의 원문 몸체/호출 순서를 대조한다. guard 제거, 배열 임의 확장, 손상 후보 무조건 무시, 진단 6 강제, 임시 속도로 숨기지 않는다.
@@ -196,7 +198,7 @@ Early3 후속 입력과 미실행 계획은 [부분 진행 보관](docs/exe/prep
 
 - [ ] 캠페인 이탈 → Edit의 mission/모드 수명, 일반 전투 saveBattle·metamap/비mission phase14 저장과 나머지 파생 프로세스 수명을 복원한다. saveBattle 미연결 선택은 638의 Guide 경로 통과로 완료 처리하지 않는다.
 - [ ] 카메라 zoom과 Renderer `004994b0` flags/override/dirty/시차의 잔여 경계를 확인한다. 앞단·Frame(618~622)과 목표·즉시 적용·viewport(632~635)는 연결을 마쳤으므로 다시 만들지 않는다.
-- [ ] 남은 Chat GUI 드래그/모드별 표시·전체 팔레트 전환·디렉터리 이름 formatter·PlayerNoMake writer를 확인한다. 원격·메타맵·시스템 뉴스의 실제 UI와 기타 dot 명령도 잔여다. 입력(573, 574)과 설정·재실행(614) 완료를 전체 Chat GUI 완료로 확대하지 않는다.
+- [ ] 남은 Chat 모드별 표시·전체 팔레트 전환·디렉터리 이름 formatter·PlayerNoMake writer를 확인한다. 원격·메타맵·시스템 뉴스의 실제 UI와 기타 dot 명령도 잔여다. 입력(573, 574)과 설정·재실행(614) 완료를 전체 Chat GUI 완료로 확대하지 않는다.
 - [ ] 보조 TAFF 등록·전체 BaseFile과 비미션 랭크, 비로컬 보상을 연결한다(599, 603). 비로컬 기술은 별도 144BYTE Core 장부의 기술 bit이고 비로컬 SP는 getter/정수화/정책 setter이므로 기존 직접 쓰기 helper를 그대로 연결하지 않는다.
 - [ ] 조기 희생 안내를 확인한다. 실제 missionPost 0의 일반 전투 경로라 후순위로 남겼다(615).
 - [ ] 원본 32비트와 현재판의 스택 배치·미정값 자체 일치 여부는 별도로 판단한다(612).
