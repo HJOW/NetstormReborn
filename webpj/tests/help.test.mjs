@@ -610,19 +610,20 @@ test('원본 스크린샷 대조: F1 도움말 창 · 본문 글자 · 스크롤
 });
 
 // 본문 그림: `~[Ifortgump.N]` 은 저장 에너지 아이콘 조각이 되어 글자 줄 안에 폭·높이만큼 자리를 차지하고 기준점을 기준선에 맞춰 그려진다.
-// 타입 표가 없는 이름·글자 프레임은 그리지 않고 알린다. (2026-10-30 WB03-G)
+// 타입 표에 없는 이름은 그리지 않고 알리며, 프레임 수 밖 번호는 크기 0 인 빈 그림이 된다. (2026-10-30 WB03-G, 2026-11-01 WB03-T: 전체 타입 표 해석으로 확장)
 test('본문 그림: fortGump 아이콘 해석 · 줄 안 배치 · 그리기 · 지원하지 않는 그림', () => {
-    // 해석기: fortGump 의 숫자 프레임만 지원한다(프레임 3 = 12×15, 기준점 (10,13)).
+    // 해석기: fortGump 숫자 프레임(프레임 3 = 12×15, 기준점 (10,13))과 글자 프레임(L1 = 11×11)을 해석하고, 타입 이름이 없으면 null, 프레임 수 밖은 크기 0 이다.
     const icon = resources.resolvePicture('FortGump', '3');
     assert.deepEqual([icon.width, icon.height, icon.hotspotX, icon.hotspotY], [12, 15, 10, 13]);
     assert.deepEqual([icon.image.left, icon.image.top], [-10, -13]);
-    assert.equal(resources.resolvePicture('mana', '8'), null);
-    assert.equal(resources.resolvePicture('fortgump', 'L1'), null);
-    assert.equal(resources.resolvePicture('fortgump', '99999'), null);
+    assert.equal(resources.resolvePicture('nothing', '1'), null);
+    assert.deepEqual([resources.resolvePicture('mana', '8').width, resources.resolvePicture('mana', '8').height], [0, 0]);
+    assert.deepEqual([resources.resolvePicture('fortgump', 'L1').width, resources.resolvePicture('fortgump', 'L1').height], [11, 11]);
+    assert.deepEqual([resources.resolvePicture('fortgump', '99999').width, resources.resolvePicture('fortgump', '99999').height], [0, 0]);
     // 스타일 문자열: 그림은 글자 조각 사이의 별도 조각이고 그 앞뒤 글자 문맥을 따른다. 지원하지 않는 그림은 알리고 조각을 만들지 않는다.
     const context = createTextContext({ flags: 0, font: 5, color: colors.information, style: 0, extra: 0, shadowColor: 0, shadowX: 1, shadowY: 1 });
     const unsupported = [];
-    const fragments = parseStyleText('100~[Ifortgump.3] left ~[Imana.8]!', context, colors, { resolvePicture: resources.resolvePicture, onUnsupported: (what) => unsupported.push(what) });
+    const fragments = parseStyleText('100~[Ifortgump.3] left ~[Inothing.1]!', context, colors, { resolvePicture: resources.resolvePicture, onUnsupported: (what) => unsupported.push(what) });
     assert.deepEqual(fragments.map((fragment) => (fragment.picture ? 'icon' : String.fromCharCode(...fragment.bytes))), ['100', 'icon', ' left ', '!']);
     assert.equal(unsupported.length, 1);
     // 줄 배치: 아이콘은 폭 12·높이 15 로 줄에 들어가고 줄 높이는 글자와 아이콘 높이의 최댓값이다. 폭이 모자라면 새 줄에서 시작한다.

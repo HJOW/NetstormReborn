@@ -9,6 +9,11 @@
 import { GamePalette, buildButtonPalette, buildScreenPalette, buildShadeMaps } from './palette.js';
 import { decodeGif } from './gif.js';
 import { ShapeDatabase } from './shapes.js';
+import { TaffArchive } from './taff.js';
+import { ARCHIVE_PATH } from './game-data.js';
+import { decodeOriginalText } from './text-encoding.js';
+import { TypeTable } from './type-table.js';
+import { createPictureResolver } from './picture-resolver.js';
 import { BitmapFont, DEFAULT_FONT_PATH } from './bitmap-font.js';
 import { FontSet } from './font-set.js';
 import { buttonTextContexts } from '../render/gump-visual.js';
@@ -63,11 +68,9 @@ export const CHECK_MARKER_FRAME = 60;
 export const MENU_SOUND_NAME = 'openSubGump.wav';
 export const MENU_SOUND_PATH = 'sound/openSubGump.wav';
 
-// 본문 속 그림 명령 `~[I이름.프레임]` 을 해석하는 함수를 만든다. 반환 함수 (이름, 프레임식) → { image, width, height, hotspotX, hotspotY } 또는 null 이다.
-// 원본은 타입 이름으로 타입 표를 찾고 프레임 식(숫자·글자 + 숫자·`*`·`#`)을 타입별 프레임 표로 해석하지만, 타입 표(.type)가 아직 없어
-// 지금은 fortGump(저장 에너지 아이콘 등)의 숫자 프레임만 지원한다. 그 밖의 이름·글자 프레임은 null 이다(호출자가 그리지 않고 알림).
-// 크기·기준점은 Squid 추가 헤더(출력 크기·기준점)이며 그림은 기준점 기준 상대 위치(image.left/top)로 그린다. (2026-10-30 WB03-G)
-function createPictureResolver(shapes) {
+// 아카이브 없이 쓰는 대체 그림 해석기이다(타입 표를 만들 수 없을 때). fortGump(저장 에너지 아이콘 등)의 숫자 프레임만 해석하고 그 밖은 null 이다.
+// 크기·기준점은 Squid 추가 헤더(출력 크기·기준점)이며 그림은 기준점 기준 상대 위치(image.left/top)로 그린다. (2026-10-30 WB03-G, 2026-11-01 WB03-T: 대체 경로로 격하)
+function createFortGumpOnlyResolver(shapes) {
     return (name, expression) => {
         if (String(name).toLowerCase() !== 'fortgump' || !/^[0-9]+$/.test(expression)) return null;
         try {
@@ -79,6 +82,30 @@ function createPictureResolver(shapes) {
             return null;
         }
     };
+}
+
+// 본문 속 그림 명령 `~[I이름.프레임]` 을 해석하는 함수를 만든다. 반환 함수 (이름, 프레임식) → { image, width, height, hotspotX, hotspotY } 또는 null 이다.
+// 원본 규칙(타입 이름·번호 → 프레임 식 `*`·숫자·글자+숫자 → 셰이프 블록)은 assets/picture-resolver.js 가 맡고, 타입 표(.type 116개)는
+// 처음 그림을 해석할 때 아카이브(netstorm.tarc)에서 한 번만 만든다. 타입 표를 만들 수 없으면 fortGump 숫자 프레임만 해석하는 대체 경로를 쓴다.
+// 읽지 못한 .type 은 콘솔에 경고하고 그 타입의 그림만 빈 그림이 된다. (2026-10-30 WB03-G, 2026-11-01 WB03-T: 전체 타입 표 해석으로 확장)
+function createMenuPictureResolver(files, shapes) {
+    // 타입 표와 만들기 시도 여부이다.
+    let table = null;
+    let attempted = false;
+    const getTable = () => {
+        if (attempted) return table;
+        attempted = true;
+        try {
+            const bytes = files.get(ARCHIVE_PATH);
+            if (bytes) table = TypeTable.fromArchive(new TaffArchive(bytes), decodeOriginalText, (typeName, error) => console.warn(`Netstorm: 타입 정의 '${typeName}' 을(를) 읽지 못했습니다.`, error));
+        } catch (error) {
+            console.warn('Netstorm: 타입 표를 만들지 못해 도움말 그림을 일부만 표시합니다.', error);
+        }
+        return table;
+    };
+    const resolve = createPictureResolver({ shapes, getTable });
+    const fallback = createFortGumpOnlyResolver(shapes);
+    return (name, expression) => (getTable() ? resolve(name, expression) : fallback(name, expression));
 }
 
 // 경로로 파일 바이트를 꺼낸다. 없으면 어떤 파일이 빠졌는지 알리는 오류를 던진다. (2026-10-23 WB03-M1)
@@ -121,7 +148,7 @@ export function buildMenuResources(files, korean = null) {
         }),
         marker: shapes.decode(FORT_GUMP_BLOCK, CHECK_MARKER_FRAME),
         // 본문 그림 명령(~[I…]) 해석기이다(2026-10-30 WB03-G: 도움말 본문의 저장 에너지 아이콘).
-        resolvePicture: createPictureResolver(shapes),
+        resolvePicture: createMenuPictureResolver(files, shapes),
         clouds: clouds.width === CLOUD_IMAGE_SIZE && clouds.height === CLOUD_IMAGE_SIZE ? clouds : null,
         title: decodeGif(requireFile(files, MENU_ASSET_PATHS.title)),
         texture: shapes.decode(FORT_GUMP_BLOCK, STONE_BUTTON_TEXTURE_FRAME),
