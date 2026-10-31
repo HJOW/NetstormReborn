@@ -48,6 +48,16 @@ TEST_CASE(EditorFiles_RealManagerSignatureAndCurrentSearch) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);CHECK(FortTemplate::Parse(written,assets.game.TypeTable()).sections==storage.Template(0).sections);
 }
 
+TEST_CASE(EditorFiles_SaveParentPreservesTailWhenCurrentTemplateGetsShorter) { // 원문 저장 부모의72BYTE 빈 이미지가 기존 긴 파일의 끝을 자르지 않고 현재 서명/섹션만 갱신해야 한다.
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);const auto original=assets.files.Read("d/TEST01.fort");CHECK(original.size()>72);if (original.size()<=72) return;EditorFiles files(WorkRoot("save-tail"),Protected());const auto path=files.Prepare("ShorterImage",original);
+    FortTemplate fort;fort.sections.resize(35);CampaignTemplateStorage storage;storage.Install(1,std::move(fort),path.string());std::uint32_t readOnly{},owner=1;std::array<std::uint8_t,9> hidden{};
+    storage.SaveFile(1,{readOnly,owner,hidden},ImageHooks(),files.Writer());auto expected=original;std::fill_n(expected.begin(),72,std::uint8_t{});expected[0]='F';
+    for (std::size_t section=0;section<35;++section) expected[2+section*2]=2; // 원문35개 빈 섹션의 길이WORD는 각2이며 기존72BYTE 뒤 자료는 그대로 남긴다.
+    const auto saved=ReadFileBytes(path);CHECK(saved==expected && saved.size()==original.size());CHECK(storage.CurrentSection(1)=="Terr19" && (storage.FileHeader(1)==std::array<std::uint32_t,2>{0x46,0}));
+    const auto decoded=FortTemplate::Parse(saved,assets.game.TypeTable());CHECK(decoded.sections==storage.Template(1).sections && assets.files.Read("d/TEST01.fort")==original);
+    readOnly=1;storage.SaveFile(1,{readOnly,owner,hidden},ImageHooks(),files.Writer());CHECK(ReadFileBytes(path)==saved); // 쓰기 억제 관문은 새 파일 장치 연결 뒤에도 기존 파일을 보존한다.
+}
+
 // 파일 경로와 권한 변경 모두 원본/CD 또는 작업 디렉터리 밖을 대상으로 할 수 없어야 한다.
 TEST_CASE(EditorFiles_RejectsProtectedPathsAndKeepsExistingWork) {
     const auto roots=Protected();const auto original=ReadFileBytes(roots[0]/"d/TEST01.fort");const auto root=WorkRoot("guards");EditorFiles files(root,roots);

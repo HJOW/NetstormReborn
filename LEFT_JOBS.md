@@ -6,19 +6,19 @@
 
 ## 0. 재개 전 확인 사항
 
-### 0.1 현재 값 (2026-11-01, 단위668 완료 / 목표 진행 중)
+### 0.1 현재 값 (2026-11-01, 단위669 완료 / 목표 진행 중)
 
 | 항목 | 값 |
 | --- | --- |
-| 진행 상태 | **단위668 완료.** 0044cf20 Stripped Image 진단을 실제 current 검색/합계/level29와 같은 Client 필터/공유 버퍼/FILE/flush/Chat에 연결했다. 관련20개/실패0·Release 명령1개 경고/오류0이며 최초 실패는 없다.667은d22a1b58로 커밋했다. 다음은 남은 Template/파일 소비자와 Edit 시나리오/UI writer 점검이다. 전체 목표는 미완료이며 계속 진행한다. |
-| 현재 제품 | 제품668이며667의 State7 선행 파싱 제거/지역 송신 이미지/서버 설치/현재 이름 재조회/기존 manager 보존/readonly 출처를 유지한다. Terr 복제 뒤0044cf20 덤프를 같은 NONAME/이름표/노드와 실제 Client 로그에 연결했다. 새 실제 Client 검사로 필터·공유 버퍼·임시 FILE·NULL Chat을 확인했다. Edit665/객체664를 유지하며 최신 전체34/ZIP은645의644제품이다. |
-| EXE SHA-256 | `860044565bcc7fdf57e40d6655a41f67e297da515499ef9f7e3dc76a4fe01fcc` (668) |
+| 진행 상태 | **단위669 완료.** Edit Template 저장을 원문 r+b→실패 시 w+b 생성과 RawBaseFile 쓰기/반납으로 연결해 짧은 저장 뒤 tail을 보존한다. 일반 준비/복사는 유지했다. 관련28개/실패0·Release 명령1개 경고/오류0이며 최초 실패는 없다. 다음은 Movie Open 단일 Renderer override writer다(670 준비본). 새RDP에서도 캡처2회 timeout, 물리 입력0/게임 실행0이다. 전체 목표는 미완료다. |
+| 현재 제품 | 제품669이며 실제 Template 저장의 비절삭/생성/반환 정책을 연결했다. Unicode 임시 파일·TEST01 사본의72BYTE 저장/35섹션 재파싱과 보호/공유거부·현재 이름/서명을 확인했다.667~668의 최초 파일 수명/같은 Client 진단을 유지한다.670 영상 override와671 Guide 해제는 준비 자료뿐이며 제품 미반영이다. 최신 전체34/ZIP은645의644제품이다. |
+| EXE SHA-256 | `a8bfcf707fc69e833692dc99df3e403158895803def6b6e918903924a45584a6` (669) |
 | ZIP SHA-256 | 645에서 만든644 제품의 `6485febc36080dc90e9eec43965a842f85d39e81c82a003a96b83b34b3694b73` (1376항목/게임 자산1358개). 실제 한글😀 경로에 압축 해제해 최종34를 실행했다. |
-| 등록 C++ 검사 수 | 668의 미션 집중87등록/세계 집중261등록 중 관련20개/실패0(새5·기존15), 총8회/20함수 호출이다. primitive4·실제 Client1·이미지2·로그인4·비동기2·부모2·작업본source3·경로2다. 새 Native 실행/fixture·기존fixture 재생·신규MP 검사0이다.667의26개/기존609행은 별도 제품 근거다. 두 집중 등록 전체나 주 검사 전체는 실행하지 않았다. 주 검사 EXE는645의3566등록/집중37이 마지막 근거다. |
+| 등록 C++ 검사 수 | 669의 Editor 파일36등록/BaseFileIO7등록 중 관련28개/실패0(새5·기존23), 총5회/28함수 호출이다. Writer4·EditorFiles8·파일장치9·Unicode4·BaseFileIO3이며 기존322행을 C++ 재생했다. 새 Native 실행/fixture·신규MP 검사0이다.667/668의26/20개는 별도 제품 근거다. 두 집중 등록 전체나 주 검사 전체는 실행하지 않았다. 주 검사 EXE는645의3566등록/집중37이 마지막 근거다. |
 | 최신 전체34 | 단위645, 644 제품 기준 최종34/34. 최소 비정지 시각 증가20.843초·창DC RGB·Native Frame 일치. 최초 입력 누락34실패/재검증34통과와 준비2회를 포함한 총70프로세스를 구별한다. |
 | 최신 반복 수명 | 단위640, 같은637 제품의 브리핑/중단 확인 바깥 뗌 취소2회·미션 재진입1회와 채팅 도킹2실행. 최종3실행 종료0. Restart4회/Leave 취소2회/메인 복귀2회는638의 별도 근거다. |
 | 전체 C++ 마지막 실행 | 단위549. 3389개 중 7개 검사가 실패했다(580단언). 이후 입력 정정 뒤 집중 검사만 통과했고 전체 재실행 기록은 없다. 마지막 전체 통과는 단위510(508 제품, 3337개, 실패 0)이다. |
-| 보호 기준 | 전체2632개/기존fixture773개는645에서 불변을 확인했다.668은 AGENTS/양PE/TAFF의 관련4입력을667 기준과 대조해 불변을 확인했다. 전체 재감사와 구별하며655~668의 새fixture는 없다. 원시 자료는 HJOW-Athlon에만 있다. |
+| 보호 기준 | 전체2632개/기존fixture773개는645에서 불변을 확인했다.669의 관련5개(AGENTS/양PE/TAFF/TEST01)는 전후 불변이며 앞4개는668 기준과 일치한다. 전체 재감사와 구별하며655~669의 새fixture는 없다. 원시 자료는 HJOW-Athlon에만 있다. |
 | **마지막 전체 정밀 디컴파일** | **HJOW-Athlon (192.168.0.94) / 2026-10-23** |
 
 ### 0.2 재개 절차
@@ -28,8 +28,8 @@
 3. 실제 게임 구동과 별도 창이 뜨는 작업은 AGENTS.md를 따른다. 확인 없이 진행할 수 있는 시스템은 vm-debian-codex(10.0.0.15), VM-W11-Codex(10.0.0.17), HJOW-Athlon(192.168.0.94)뿐이다. **HJOW-X3D를 포함한 그 밖의 PC에서는 실행 목적과 필요성을 설명하고 명시적 확인을 받는다.** 허용받으면 해당 작업 단계가 끝날 때까지 유지된다. 사용자가 원본 수동 컨트롤이나 녹화 분석을 직접 요청한 작업 단계도 확인이 필요 없다.
 4. 빌드·검사·GUI 원시 자료는 작업 PC의 `extracted/`(Git 제외)에만 있다. 커밋되는 보고서는 `cpppj/*.json`, 작업 문서는 `docs/exe/cpp-*.md`다. 다른 PC에 원시 자료가 있다고 가정하지 않는다.
 5. 다른 세션의 dotnetpj·webpj 변경, staged 파일, 실행 출력은 이 작업에 포함하지 않는다. 단위마다 인계를 갱신하고 로컬 커밋한다.
-6. 645의 전체34 통합은 완료됐으며646~668에서 실제 게임을 다시 실행하지 않았다. 소수 단위 뒤 전체34를 반복하지 않고 더 많은 기능 묶음 뒤 필요한 통합을 수행한다. 새 작업은3절을 따른다.
-7. 마지막 빌드/집중 검사 근거는668의 `extracted/cpp-datamanager-dump-668-build-v1.log`와 [보고서](cpppj/datamanager-dump-20261101.json)의 실제8개 검사 로그를 따른다. 최종20개와 미션87/세계261등록을 구별한다.667의26개/Native609행 재생은 별도 제품 근거다. 주 EXE3566/집중37은645의644제품이다. 신규MP 검사는 하지 않는다. 새 /goal로 재개한 상태다.
+6. 645의 전체34 통합은 완료됐으며646~669에서 실제 게임을 다시 실행하지 않았다. 소수 단위 뒤 전체34를 반복하지 않고 더 많은 기능 묶음 뒤 필요한 통합을 수행한다. 새 작업은3절을 따른다.
+7. 마지막 빌드/집중 검사 근거는669의 `extracted/cpp-editor-file-writer-669-build-v1.log`와 [보고서](cpppj/editor-file-writer-20261101.json)의 실제5개 검사 로그를 따른다. 최종28개와 Editor36/BaseFileIO7등록을 구별한다.668의20개는 별도 제품 근거다. 주 EXE3566/집중37은645의644제품이다. 신규MP 검사는 하지 않는다. 새 /goal로 재개한 상태다.
 
 ### 0.3 유지되는 제한과 보류
 
@@ -94,7 +94,7 @@
 
 AGENTS.md의 `(4~6차 목표.)` 문구는 7차 추가 뒤에도 그대로지만, 바로 아래에 7차까지 나열되고 dotnetpj 항목도 4~7차로 적혀 있으므로 4~7차로 읽는다.
 
-## 2. 현재 상태 (2026-11-01, 단위668 확인 기준)
+## 2. 현재 상태 (2026-11-01, 단위669 확인 기준)
 
 - **게임 실행·플레이 가능 여부:** 인자 없는 `Netstorm.exe`로 GUI가 시작되고 34경로 모두 진입·비정지 진행·정상 종료를 확인했다. 자연 완주 근거는 과거 제품의 Early1/2 자동 완주와 사용자가 다른 PC에서 직접 완주한 캠페인 1-1뿐이다.
 - **기존 게임과의 동일성:** 원문 관측과 대조를 마친 부품이 많다. 자연 완주와 전체 동일성은 사용자가 플레이하며 확인한다.
@@ -113,6 +113,7 @@ AGENTS.md의 `(4~6차 목표.)` 문구는 7차 추가 뒤에도 그대로지만,
 | UI 갱신 영역 | [624](docs/exe/cpp-gump-redraw-20261031.md), [625](docs/exe/cpp-ui-dirty-20261031.md), [627](docs/exe/cpp-gump-derived-dirty-20261031.md), [630](docs/exe/cpp-inventory-blink-20261031.md), [631](docs/exe/cpp-minimap-dirty-20261031.md), [639](docs/exe/cpp-minimap-content-20261031.md) | Gump 기본 갱신, 지도 clamp, 기본 UI, 장식·메뉴 행, 생산 점멸, 미니맵 기본 영역·지면/소유자/삭제 픽셀. grid/debug 직접 writer와 생성 초기값 대조 | 일반 경로 활성 writer를 찾지 못한 grid/debug는 노출하지 않는다. 간접 alias 부재 전체 증명은 아니다. |
 | Edit·시나리오 | [590](docs/exe/cpp-editor-scenario-20261030.md), [597](docs/exe/cpp-editor-rules-20261030.md), [609](docs/exe/cpp-world-geyser-20261030.md), [634](docs/exe/cpp-editor-catalog-current-20261031.md), [650](docs/exe/cpp-world-generation-session-20261031.md), [653](docs/exe/cpp-editor-default-name-20261031.md), [661](docs/exe/cpp-editor-entry-prelude-20261031.md), [662](docs/exe/cpp-editor-deferred-file-20261031.md), [663](docs/exe/cpp-fort-object-stream-20261031.md), [664](docs/exe/cpp-campaign-object-stream-20261031.md), [665](docs/exe/cpp-editor-invalid-file-20261101.md) | 시작값·작업본 왕복·방향별 동맹·세계 생성·Fort433개 이관/필터와 기본 이름 선택·늦은 파일 준비/Session checkpoint·State1 공통 앞단/52h 통지·선행 파싱 제거/실제 Campaign·Editor Objects 스트림·예외 수명/손상 파일 정리·기본 이름 재선택 반복 | 3절 2번.665의10개 통과는 전체 ABI/GUI 검증이 아니다. |
 | Edit Unicode 파일 | [646](docs/exe/cpp-editor-unicode-20261031.md) | UTF-8/native 경로·wide CRT, 실제 Unicode 파일 왕복·권한·목록 이관/장부 재열기·삭제 보존·source TAFF 격리. 집중24통과 | GUI/전체34/한국어 UI 검증이 아니다. 최신 실행/ZIP은644제품이며 더 많은 기능 묶음 뒤 통합한다. |
+| Edit Template 쓰기 | [669](docs/exe/cpp-editor-file-writer-20261101.md) | 원문 r+b/실패 시 생성과 실제BaseFile 쓰기/반납. 짧은 이미지 뒤 tail 보존·실제35섹션 재파싱·현재 이름/서명·Unicode/보호/공유 거부. 관련28개/기존322행 통과 | 실제 부분쓰기/닫기 반환 실패는 새 관측이 아니다. 일반 Write/준비/복사와 전체 FILE ABI·GUI는 별도다. |
 | 객체 메뉴·건설 | [524](docs/exe/cpp-object-hit-20261028.md), [528](docs/exe/cpp-factory-upgrade-runtime-20261028.md), [531](docs/exe/cpp-altar-salvage-runtime-20261028.md), [537](docs/exe/cpp-mission-cost-guard-20261028.md) | 픽셀 선택, 시험한 메뉴·업그레이드·회수, 미션 비용 관문 | 다른 타입·레벨·상태 |
 | Factory 중복 경고 | [647](docs/exe/cpp-factory-duplicate-warning-20261031.md) | 실제 제공된 경고 callback 보존·Client 채널4 로그·명시 중복 입력의 경고 뒤 기존 객체 삭제. 최종1개 통과 | 일반 Pop 겹침 거부와 분리한 +20 장치 접합이다. 합법 GUI 배치/전체20/전체34 검증이 아니다. |
 | HUD·단축키 | [509](docs/exe/cpp-hud-input-runtime-20261027.md), [511](docs/exe/cpp-player-list-runtime-20261028.md), [540](docs/exe/cpp-minimap-toggle-runtime-20261028.md), [547](docs/exe/cpp-send-money-runtime-20261028.md), [548](docs/exe/cpp-screenshot-runtime-20261028.md) | 미니맵, QWASZX, ESC 일부, Player List, 독립 미니맵, Send Money, F7·Shift F7 | 스크립트 입력이다. 3절 1번 |
@@ -158,7 +159,7 @@ Early3 후속 입력과 미실행 계획은 [부분 진행 보관](docs/exe/prep
 
 ### 2.4 알려진 미해결 이슈
 
-- **물리 입력 미검증(637, 640):** 인자 없는 EXE 실행은 실제 창 제목과 PID, 명령줄까지 확인했으나, 화면 캡처가 재선택·재시도 뒤에도 timeout이어서 입력을 보내지 않았다. QWASZX·ESC·Home·포커스는 물리 입력 0건으로 미완료다. 640도 창 재선택·활성화 후 캡처 timeout으로 입력 없이 종료했다. 641의 별도 VS Code 창도 재선택 포함2회 캡처 timeout이었다. 게임 고유 결함으로 단정하지 않는다. 환경 상태가 바뀌기 전 같은 시도를 반복하지 않는다.
+- **물리 입력 미검증(637, 640, 669):** QWASZX·ESC·Home·포커스는 물리 입력0건이다.637/640의 게임과641의 VS Code 캡처가 재선택 뒤에도 timeout이었다.669에서는 새 활성 RDP 세션(2026-11-01 00:37 로그인, 세션2)을 확인한 뒤 VS Code로 재확인했지만 최초 `FrameArrived timed out`, 재선택 뒤 `window capture timed out`으로 실패했다. 이번 입력/게임 실행0이다([669](docs/exe/cpp-editor-file-writer-20261101.md)). 게임 고유 결함으로 단정하지 않으며 다음 환경 변화 전 같은 시도를 반복하지 않는다.
 - **Early1 남동 경로:** D·SP 0에서 Next Tutorial을 찾지 못해 종료 1(417). 북서 경로는 통과하며 실패 원인은 미확정이다.
 - **options.cfg 저장/복구:** GUI 음량 변경의 SaveOptions fopen errno22/doserrno1224(393), 도구 설정 열기/복구의 간헐적 OSError22(369·386). 격리 복사본은 통과했으며 H 볼륨 exFAT와의 인과는 확정하지 않았다.
 - **옛 스모크 5개:** `cpp_menu_smoke`, `cpp_thunder_smoke`, `cpp_weather_smoke`, `cpp_audio_smoke`, `check_dialog_controls.check_mission`은 제거된 임시 Game 버튼을 전제로 한다(2026-10-31 확인). 재사용 전에 ESC → 실제 메뉴 입력으로 바꾼다. `cpp_rawbuttons_smoke`는640에서 실제 브리핑/ESC·캡처 취소·재진입으로 교체하고 실행 통과했다.
@@ -171,7 +172,7 @@ Early3 후속 입력과 미실행 계획은 [부분 진행 보관](docs/exe/prep
 
 1. 화면 캡처가 정상화되면 물리 입력 QWASZX·ESC·Home·포커스를 검증한다(7번).
 2. 남은 비멀티 UI·Edit·시나리오·파일·수명·호환성을 1~4번과 7번으로 이어 간다.
-3. 645의 같은644 제품/새 ZIP/전체34 통합 뒤646~668을 진행했다.667은 최초 파일 수명,668은 Stripped Image 덤프의 실제 current 검색과 같은 Client level29 출력까지 연결했다. **다음은 다른 Template/파일/FILE·SEH ABI 소비자와 Edit 도구·시나리오의 실제 UI/설정 writer를 점검한다.** 완료된 파일/Objects/이름/manager 경계를 다시 만들지 않는다. UI/연속 미션을 이어 가며 실제 스테이지 진입/대기 검사는 더 많은 기능을 모은 뒤 필요한 범위만 수행한다.
+3. 645의 같은644 제품/새 ZIP/전체34 통합 뒤646~669를 진행했다.667은 최초 파일 수명,668은 진단,669는 Template 저장의 기존 끝 보존/실제BaseFile 연결을 마쳤다. **다음은670의 Movie Open 단일 Renderer override다.** `extracted/cpp-movie-override-670-work`의 source/tests patch는 미적용 준비본이며669 커밋 뒤 적용한다. 그 뒤671 후보는 커스텀 MissionEnd/공통 Guide 해제의 추가 MainMenu·World 입력 해제·Tutorial 소멸 차이이고 `extracted/cpp-mission-end-671-work/audit.md`를 따른다. 아직 제품/검사 완료가 아니다. 다른 파일/UI/시나리오·연속 미션을 이어 가며 실제 진입 통합은 더 많은 기능 묶음 뒤 필요한 범위만 수행한다.
 4. 체크 항목을 마치면 5·6번과 Windows 11 실기를 기다리지 않고 멀티플레이 무시험 사전 구현과 4~7차로 넘어간다(8번).
 
 ### 1. 대상별 커서·오브젝트 우클릭·게임 UI
@@ -252,7 +253,7 @@ Early3 후속 입력과 미실행 계획은 [부분 진행 보관](docs/exe/prep
 
 ### 7. Windows 10/11 호환성과 전체화면
 
-- [ ] 화면 캡처 정상화 뒤 물리 입력 QWASZX·ESC·Home·포커스를 검증한다(637). 관측이 안 되면 입력을 보내지 않는다. 앱 내 검사 입력을 물리 입력으로 합산하지 않는다.
+- [ ] 화면 캡처 정상화 뒤 물리 입력 QWASZX·ESC·Home·포커스를 검증한다.669의 새RDP/VS Code 재선택2회도 timeout이므로 환경 변화 전 반복하지 않는다. 관측이 안 되면 입력을 보내지 않고 앱 내 검사 입력을 물리 입력으로 합산하지 않는다.
 - [ ] Windows 10에서 다른 모니터/DPI, 실제 다른 앱 포커스 전환, DD 조정/확인 UI의 남은 경계를 검증한다. 메시지 주입을 실제 앱 전환으로 합산하지 않는다.
 - [ ] 실제 PCM 출력과 사용자 활성 전체화면의 물리 출력을 확인한다. 594 세션에는 waveOut 장치가 없고 전경 창이 NULL이었다. 실제 CD 삽입 W 경로도 미검증이다(595).
 - [ ] 전체화면 종료 후 반복 재실행과 화면비/스크롤 회귀를 유지한다. 원본과 다른 호환 처리는 이유를 한국어 주석에 남긴다.

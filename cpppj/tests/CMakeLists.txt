@@ -2625,3 +2625,7 @@ target_sources(netstorm_mission_entry_tests PRIVATE MissionFortSelectionTests.cp
 # 지역 Template 덤프의 원문 current/로그와 실제 Client FILE/필터 연결을 함께 확인한다.
 target_sources(netstorm_tests PRIVATE DataManagerDumpTests.cpp TemplateDiagnosticClientTests.cpp)
 target_sources(netstorm_mission_entry_tests PRIVATE DataManagerDumpTests.cpp TemplateDiagnosticClientTests.cpp)
+
+# 실제 Template 저장의 비절삭/생성/보호 경계를 기존 편집 파일 회귀와 함께 확인한다.
+target_sources(netstorm_tests PRIVATE EditorFileWriterTests.cpp)
+target_sources(netstorm_editor_file_tests PRIVATE EditorFileWriterTests.cpp EditorFilesTests.cpp)

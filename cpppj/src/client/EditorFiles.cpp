@@ -2,6 +2,7 @@
 #include "client/EditorFiles.h"
 #include "client/CampaignTemplateStorage.h"
 #include "o/BaseFile.h"
+#include "o/RawBaseFileIO.h"
 #include "o/OriginalText.h"
 #include "platform/Utf8Path.h"
 #include <cstdio>
@@ -23,14 +24,29 @@ namespace netstorm::client {
 namespace {
 using platform::PathFromUtf8; // 편집 문자열은 UTF-8이며 원본 ANSI와 다른 Windows10/11 호환 경계다.
 using platform::PathToUtf8; // 실제 경로를 장부/기존 문자열 인터페이스에 손실 없이 전달한다.
-// 원본 rb/w+b 모드를 보존하면서 Windows10/11의 한글 경로에는 wide CRT를 사용한다.
-FILE* OpenEditorFile(const std::filesystem::path& path,bool write) {
+// 원문rb/r+b/w+b모드를같은CRT로열며Windows10/11한글경로는원본ANSI대신wide문자로보존한다.
+FILE* OpenEditorFile(const std::filesystem::path& path,std::string_view mode) {
+    if (mode!="rb" && mode!="r+b" && mode!="w+b") throw std::invalid_argument("편집파일의실제CRT모드범위");
 #ifdef _WIN32
-    return _wfopen(path.c_str(),write ? L"w+b" : L"rb");
+    const std::wstring wide(mode.begin(),mode.end());return _wfopen(path.c_str(),wide.c_str());
 #else
-    return std::fopen(path.c_str(),write ? "w+b" : "rb");
+    const std::string narrow(mode);return std::fopen(path.c_str(),narrow.c_str());
 #endif
 }
+// 기존일반준비/복사와존재조회는원래의잘라쓰기/읽기계약을유지하며같은CRT장치만공유한다.
+FILE* OpenEditorFile(const std::filesystem::path& path,bool write) { return OpenEditorFile(path,std::string_view(write ? "w+b" : "rb")); }
+// 원문0041bb90의지역파일을같은기존BaseFile몸체에빌리고정상/예외모두한번반납한다.
+struct EditorTemplateWriter {
+    o::RawBaseFileState state{}; // 실제FILE포인터토큰을보관하며원문24BYTE ABI로직렬화하지않는다.
+    o::RawBaseFileIOHooks hooks; // 원문열기/한element쓰기/닫기의실제CRT장치다.부분반환은재시도/예외로바꾸지않는다.
+    // 실제쓰기경로는호출자가이미보호검사했고이동기수명동안고정된절대경로만연다.
+    explicit EditorTemplateWriter(const std::filesystem::path& path) {
+        o::ConstructBaseFile(state);hooks.open=[&path](auto,auto mode) { return reinterpret_cast<std::uintptr_t>(OpenEditorFile(path,mode)); };
+        hooks.write=[](auto token,auto bytes,auto size,auto count) { static_cast<void>(std::fwrite(bytes.data(),size,count,reinterpret_cast<FILE*>(token))); }; //0041a910은fwrite(data,size,1)의반환을사용하지않는다.
+        hooks.close=[](auto token) { static_cast<void>(std::fclose(reinterpret_cast<FILE*>(token))); }; //0041bb90의fclose반환으로새실패분기를만들지않는다.
+    }
+    ~EditorTemplateWriter() { o::DestructBaseFile(state,hooks); } //원문처럼FILE을닫고현재키를반납한다.이소비자는암호키를설치하지않는다.
+};
 // 존재하는 상위 경로의 링크도 해석한 절대 경로를 사용한다.
 std::filesystem::path Actual(const std::filesystem::path& path) { return std::filesystem::weakly_canonical(std::filesystem::absolute(path)); }
 // Windows의 ASCII 경로 대소문자와 경로 요소 경계를 함께 비교한다.
@@ -163,14 +179,20 @@ void EditorFiles::MakeWritable(std::string_view fileName,std::uint32_t mode) con
     std::error_code error;std::filesystem::permissions(path,std::filesystem::perms::owner_read|std::filesystem::perms::owner_write,std::filesystem::perm_options::add,error);
 #endif
 }
-// 원본처럼 기존 내용을 자르되 작업 경로 검사는 권한 변경과 쓰기 직전에 각각 수행한다.
+// 일반복사/준비입력은기존내용을자르되작업경로를쓰기직전에검사한다.Template저장부모는별도Writer를사용한다.
 void EditorFiles::Write(std::string_view fileName,std::span<const std::uint8_t> bytes) const {
     const auto path=Checked(PathFromUtf8(fileName));FILE* file=OpenEditorFile(path,true);if (!file) throw std::runtime_error("편집 작업본 파일 열기 실패");
     const auto written=std::fwrite(bytes.data(),1,bytes.size(),file);const auto closed=std::fclose(file);if (written!=bytes.size() || closed) throw std::runtime_error("편집 작업본 파일 쓰기/닫기 실패");
 }
+// 실제Template저장은기존파일의tail을자르지않고원문BaseFile의mode1/fallback/void쓰기/반납순서를사용한다.
+void EditorFiles::WriteTemplate(std::string_view fileName,std::span<const std::uint8_t> bytes) const {
+    const auto path=Checked(PathFromUtf8(fileName));EditorTemplateWriter writer(path);
+    if (!o::OpenBaseFileDisk(writer.state,PathToUtf8(path),1,1,writer.hooks)) throw std::runtime_error("편집Template작업본파일열기실패"); //0041b4c0의장치경로쓰기실패는예외이며TAFF/보조경로로재조회하지않는다.
+    o::WriteBaseFile(writer.state,bytes,-1,writer.hooks); //새r+b/w+b FILE의현재0위치부터요청한이미지한element를쓴다.부모폴더는생성하지않는다.
+}
 // 저장 부모가 결정한 이름과 이미지 원문을 같은 실제 장치에 인계한다.
 TemplateFileWriteHooks EditorFiles::Writer() const {
-    return {[this](auto name,auto mode) { MakeWritable(name,mode); },[this](auto name,auto bytes) { Write(name,bytes); }};
+    return {[this](auto name,auto mode) { MakeWritable(name,mode); },[this](auto name,auto bytes) { WriteTemplate(name,bytes); }};
 }
 // 실제 삭제 직전에 같은 canonical 경로를 다시 검사하며 원본/CD/작업루트 밖 요청은 수행하지 않는다.
 void EditorFiles::Delete(std::string_view fileName) const {

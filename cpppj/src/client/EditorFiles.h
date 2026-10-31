@@ -30,10 +30,11 @@ public:
     std::int32_t Exists(std::string_view fileName) const; //준비된절대작업경로의원문0041ab10직접파일분기다.fopen rb성공출처5/실패0을돌려준다.
     bool ReadOnly(std::string_view fileName,const std::function<void(std::uint32_t)>& assertion={}) const; //현재CRT_stat의_S_IWRITE비트만읽는다.Config readOnlyForts와별개이며stat실패는진단뒤명시중단한다.
     void MakeWritable(std::string_view fileName,std::uint32_t mode) const; //실제 쓰기 경로를 확인한 뒤 원본 chmod(0x180) 요청을 수행한다.
-    void Write(std::string_view fileName,std::span<const std::uint8_t> bytes) const; //검사한 작업본에만 원본 w+b 형식으로 쓴다. 부모 폴더를 임의 생성하지 않는다.
+    void Write(std::string_view fileName,std::span<const std::uint8_t> bytes) const; //일반복사/준비입력을검사된작업본에w+b로잘라쓴다.부모폴더를임의생성하지않으며Template저장은Writer를쓴다.
     void Delete(std::string_view fileName) const; // 원문0041aef0의 직접 파일 삭제를 작업 namespace에서만 수행한다. 같은 DeleteFileA를 쓰는 CRT unlink의 실패 반환은 원문처럼 사용하지 않는다.
-    TemplateFileWriteHooks Writer() const; //이 객체보다 짧게 살아야 하는 실제 저장 부모의 장치를 반환한다.
+    TemplateFileWriteHooks Writer() const; //이객체보다짧게사는실제Template저장장치다.기존파일은r+b로열고실패할때만w+b로생성하여이전tail을보존한다.
 private:
+    void WriteTemplate(std::string_view fileName,std::span<const std::uint8_t> bytes) const; //0041bb90의mode1열기/쓰기/반납을보호작업본에연결한다.일반Write의잘라쓰기와별개이며근거는docs/exe/cpp-editor-file-writer-20261101.md다.
     std::filesystem::path Checked(const std::filesystem::path& path) const; //현재 실제 경로가 작업 루트 안/모든 원본 루트 밖인지 확인한다.
     std::filesystem::path root_; //실제 정규화한 사용자 편집 작업 디렉터리다.
     std::vector<std::filesystem::path> protected_; //원본/CD와 다른 읽기 전용 자산 디렉터리들의 실제 경로다.
