@@ -1,0 +1,74 @@
+{
+  "unit": 648,
+  "date": "2026-10-31",
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "executableSha256": "22f1fa47156cab441d80cc83cfc48de5b033d422df1fff8736524ec275bfe483",
+  "native": {
+    "cases": 288,
+    "observationsPerProcess": 576,
+    "processes": 2,
+    "totalObservations": 1152,
+    "differences": 0,
+    "fixture": "cpppj/tests/fixtures/renderer-present-dirty-x86.tsv",
+    "fixtureSha256": "37d53dba949947109d4e6c09cbe22272449498c114de2a68060352ad50ddabca"
+  },
+  "tests": {
+    "final": 30,
+    "finalFailedChecks": 0,
+    "initialTests": 3,
+    "initialFailedChecks": 585,
+    "newTests": 4,
+    "firstFinalTests": 11,
+    "firstFinalFailedChecks": 0,
+    "expandedV2Tests": 30,
+    "expandedV2FailedChecks": 1,
+    "expandedV2Failure": "신규 접합의 Gump 갱신 호출 기대를1로 잘못 적었다. 원문497960의 이동 시작/끝 두 호출대로2로 고쳤으며 제품 변경은 없다.",
+    "fullMainRebuilt": false,
+    "mainLastKnownRegistered": 3566,
+    "mainLastKnownUnit": 645
+  },
+  "build": {
+    "finalWarnings": 0,
+    "finalErrors": 0,
+    "initialTestWarnings": 2
+  },
+  "protected": {
+    "compared": 8,
+    "hashes": {
+      "AGENTS.md": "e9e46fda5519e663417b5c8d9b643549196bf28fe7ba6b1d546a48a853fd208b",
+      "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+      "cpppj/tests/fixtures/renderer-projection-x86.tsv": "df9d2b4b708e767466ee0ea6b9350c164708ac82b8db47f78ba6088abac4cc87",
+      "cpppj/tests/fixtures/renderer-prelude-x86.tsv": "545f83754fe09c83ae887ab29a66cb6a4db8f96b7c3a61fec5373328b7affa9c",
+      "cpppj/tests/fixtures/renderer-clouds-x86.tsv": "c0faee47e3196896684baa19d9aa54665222c373a224716ca1648cb64e4054ad",
+      "cpppj/tests/fixtures/camera-commit-x86.tsv": "1f9ef98a49949eea0a3d2ad13ab8e1d49406c9da3dbe5e9c8b30aeef3c051756",
+      "cpppj/tests/fixtures/camera-present-x86.tsv": "b1b21b3df5b25482a5dc2e395f9111016667a5709cf218367d32662f4dd8a684"
+    },
+    "unchanged": true,
+    "full2632Audit": false,
+    "existing773FixturesAudit": false,
+    "newFixtureCount": 1
+  },
+  "runtime": {
+    "gameLaunches": 0,
+    "newZip": false,
+    "full34": false,
+    "latestFull34Unit": 645,
+    "latestFull34Product": 644
+  },
+  "artifacts": {
+    "nativeV1": "extracted/cpp-renderer-present-648-native-v1",
+    "nativeV2": "extracted/cpp-renderer-present-648-native-v2",
+    "buildBefore": "extracted/cpp-renderer-present-648-build-before.log",
+    "focusedBefore": "extracted/cpp-renderer-present-648-focused-before.log",
+    "buildAfterV1": "extracted/cpp-renderer-present-648-build-after-v1.log",
+    "focusedAfterV1": "extracted/cpp-renderer-present-648-focused-after-v1.log",
+    "buildAfterV2": "extracted/cpp-renderer-present-648-build-after-v2.log",
+    "focusedAfterV2": "extracted/cpp-renderer-present-648-focused-after-v2.log",
+    "buildAfterV3": "extracted/cpp-renderer-present-648-build-after-v3.log",
+    "focusedAfterV3": "extracted/cpp-renderer-present-648-focused-after-v3.log"
+  },
+  "limitations": "원문 출력 앞단/명시 메모리 입력/관련 집중 검사다. 실제 OS 스크롤·물리 입력·GUI·게임·새 ZIP·전체34/전체 주 검사·CD판 출력 복원은 확인하지 않았다."
+}

@@ -14,7 +14,7 @@ struct RawCameraCommitState {
     RawCameraViewState& renderer; // Renderer 앞64BYTE의 현재 view다.
     RawCameraViewState& snapshot; // 전역0059a900의 별도 현재64BYTE다.
     RawCameraTargetState& target; // 같은 Renderer의48..58 한계/목표/배율이다.
-    std::uint32_t& redraw; // Renderer+5c의 현재 전체 다시 그리기 DWORD다.
+    std::uint32_t& redraw; //Renderer+5c의 현재 전체 화면 출력 요청이다. 노출 띠의 부분 재합성과 구별한다.
     std::uint32_t& worldRedraw; // 0059a8b0의 별도 현재 전역이다.
     std::vector<DirtyRegion>& dirty; // +64 count와+68/6a8의 같은 현재 표이며 장치 효과 뒤에도 다시 읽는다.
 };

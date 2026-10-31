@@ -2549,3 +2549,12 @@ target_link_libraries(netstorm_menu_session_tests PRIVATE netstorm)
 netstorm_apply_compiler_options(netstorm_menu_session_tests)
 get_target_property(_netstorm_menu_session_definitions netstorm_tests COMPILE_DEFINITIONS) # 기존 공용 fixture 경로를 같은 값으로 빌린다.
 target_compile_definitions(netstorm_menu_session_tests PRIVATE ${_netstorm_menu_session_definitions})
+
+# 카메라/시차의 출력 요청과 실제 부분 그리기를 같은 제품 라이브러리로 대조한다.
+target_sources(netstorm_tests PRIVATE RendererPresentationTests.cpp)
+set_source_files_properties(RendererPresentationTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_RENDERER_PRESENT_DIRTY_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/renderer-present-dirty-x86.tsv\"")
+add_executable(netstorm_renderer_presentation_tests FocusedTestMain.cpp RendererPresentationTests.cpp RendererTests.cpp
+    RendererFrameTests.cpp RendererPreludeTests.cpp RendererCloudTests.cpp CameraCommitTests.cpp CameraPresentTests.cpp)
+target_link_libraries(netstorm_renderer_presentation_tests PRIVATE netstorm)
+netstorm_apply_compiler_options(netstorm_renderer_presentation_tests)
+target_compile_definitions(netstorm_renderer_presentation_tests PRIVATE ${_netstorm_menu_session_definitions})

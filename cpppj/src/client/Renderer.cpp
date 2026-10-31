@@ -60,11 +60,13 @@ void DirtyRegions::Add(ScreenRect rect, std::uint32_t flags) {
 // 넘침·전체 다시 그리기 플래그.
 void DirtyRegions::InvalidateAll() { full_ = true; }
 // 출력이 끝나면 다음 프레임은 변화가 생길 때까지 비어 있다.
-void DirtyRegions::Clear() { full_ = false; entries_.clear(); }
+void DirtyRegions::Clear() { if (!entries_.empty()) clearedFirstFlags_=entries_.front().flags;full_ = false; entries_.clear(); }
 // 원본 순서의 표.
 std::span<const DirtyRegion> DirtyRegions::Entries() const { return entries_; }
 // 넘침/전체 변화 여부.
 bool DirtyRegions::FullRedraw() const { return full_; }
+// 원문의 Count0 뒤에도 남아 있는 첫 flags를 현재 표 또는 직전 물리 값에서 읽는다.
+std::uint32_t DirtyRegions::FirstFlags() const { return entries_.empty() ? clearedFirstFlags_ : entries_.front().flags; }
 
 // 양 끝을 포함하지 않는 clip과 이미지의 opacity를 함께 적용한다.
 void DrawIndexedImage(std::span<std::uint8_t> pixels, int pitch, int height, const IndexedImage& image,
@@ -231,14 +233,11 @@ void Renderer::Text(std::span<std::uint8_t> pixels, int pitch, ScreenRect clip, 
 std::span<const ScreenRect> Renderer::Draw(std::span<std::uint8_t> pixels, int pitch, std::uint8_t background,const RendererWorldDrawing* world) {
     if (!painted_.empty()) throw std::logic_error("Present must follow Draw");
     if (pitch < width_ || pixels.size() < static_cast<std::size_t>(pitch) * static_cast<std::size_t>(height_)) throw std::invalid_argument("Invalid renderer surface");
-    if (cameraRedraw_) { dirty_.InvalidateAll();cameraRedraw_=0; } // 원문 카메라 적용은 현재 Present 뒤에1을 쓰고 다음 Draw에서 전체를 다시 구성한다.
-    if (dirty_.FullRedraw()) { painted_.push_back({0, 0, width_, height_}); paintFlags_.push_back(0); }
-    else {
-        // 무시 플래그가 없는 영역만 화면 안으로 자른다.
-        for (const auto& entry : dirty_.Entries()) if ((entry.flags & kDiscarded) == 0) {
-            const auto rect = ClipScreenRect(entry.rect, {0, 0, width_, height_});
-            if (Nonempty(rect)) { painted_.push_back(rect); paintFlags_.push_back(entry.flags); }
-        }
+    if (dirty_.FullRedraw()) { dirty_.Clear();dirty_.Add({0,0,width_,height_}); } //force 전체 재합성은 원문처럼 Count0 뒤 flags0인 실제 한 항목을 만든다.
+    // 원문445290은 같은 표의 좌표를 제한한다. 빈 유효 항목도 뒤 Present 표에는 남긴다.
+    for (auto& entry : dirty_.CameraEntries()) if ((entry.flags & kDiscarded) == 0) {
+        entry.rect=ClipScreenRect(entry.rect,{0,0,width_,height_});
+        if (Nonempty(entry.rect)) { painted_.push_back(entry.rect);paintFlags_.push_back(entry.flags); }
     }
     // 각 변경 영역을 같은 장면에서 다시 합성한다.
     for (std::size_t i = 0; i < painted_.size(); ++i) {
@@ -287,9 +286,13 @@ std::span<const ScreenRect> Renderer::Draw(std::span<std::uint8_t> pixels, int p
 }
 // 그린 영역만 Win32로 내보내고 성공했을 때 변경 표를 비운다.
 void Renderer::Present(const std::function<void(ScreenRect)>& update) {
+    if (cameraRedraw_ || backgroundRedraw_) {
+        cameraRedraw_=0;backgroundRedraw_=0;const auto flags=dirty_.FirstFlags();
+        dirty_.CameraEntries().assign(1,DirtyRegion{{0,0,width_,height_},flags}); //원문은 첫 rect/count만 바꾸고 첫 flags는 덮어쓰지 않는다.
+    }
     // 원본과 같이 표의 순서로 내보낸다.
-    for (const auto rect : painted_) { update(rect); ++presents_; }
-    painted_.clear(); paintFlags_.clear(); dirty_.Clear();backgroundRedraw_=0;
+    for (const auto& entry : dirty_.Entries()) if (!(entry.flags&kDiscarded)) { update(entry.rect); ++presents_; }
+    painted_.clear(); paintFlags_.clear(); dirty_.Clear();
 }
 // 변경 영역을 그린 프레임 수.
 std::uint64_t Renderer::DrawCount() const { return draws_; }

@@ -30,6 +30,7 @@ public:
     std::span<const DirtyRegion> Entries() const;
     // 전체 화면 변화나 100항목 넘침이 등록됐는지 읽는다.
     bool FullRedraw() const;
+    std::uint32_t FirstFlags() const; //count0도 남는 첫 flags DWORD를 읽어 원문 전체 출력의 무시 비트를 보존한다.
     std::vector<DirtyRegion>& CameraEntries() { return entries_; } //497960이 현재 표를 직접 이동/확장한다. Add 뒤에도 vector 소유자 주소는 유지한다.
 private:
     // width_: 가로 크기.
@@ -39,6 +40,7 @@ private:
     bool full_{};
     // entries_: 현재 등록하거나 읽은 항목 목록.
     std::vector<DirtyRegion> entries_;
+    std::uint32_t clearedFirstFlags_{}; //Count0 쓰기는 물리 flags[0]을 지우지 않는다. 새 첫 항목이 있으면 그 현재 값을 사용한다.
 };
 // 원본 kind3 입자처럼 SHP 없이 현재 표면에 직접 그리는 한 정렬 항목이다.
 struct RenderProcedure {
@@ -121,7 +123,7 @@ public:
     bool FullRedrawPending() const;
     // 소프트웨어 커서의 이전·새 범위를 모두 무효화한다. nullptr이면 표시를 지운다.
     void SetSoftwareCursor(const IndexedImage* image, ScreenPoint position,bool force=false); //force는4a41c0의 같은 위치에서도 이전/새 사각형을 추가하는 호출이다.
-    std::uint32_t& CameraRedraw() { return cameraRedraw_; } // Native Renderer+5c의 같은 현재 DWORD다. 다음 Draw에서 소비한다.
+    std::uint32_t& CameraRedraw() { return cameraRedraw_; } //Native Renderer+5c의 같은 현재 DWORD다. 부분 Draw 뒤 Present에서 소비한다.
     std::uint32_t& BackgroundRedraw() { return backgroundRedraw_; } //Native Renderer+60의 별도 시차 표면 요청이며 +5c와 합치지 않는다.
     std::vector<DirtyRegion>& CameraDirtyEntries() { return dirty_.CameraEntries(); } // Present가 비운 뒤 커서가 추가한 같은 실제 표를 빌린다.
     // 변경 영역만 합성한다. 반환 사각형은 Present 이전까지 유효하다.
@@ -146,7 +148,7 @@ private:
     o::OriginalEdition edition_; // 실제 PE마다 다른 CRT 표시 목록 정렬을 선택한다.
     // dirty_: 부분 갱신 사각형을 수집하고 화면 경계로 제한하는 관리자 (DirtyRegions).
     DirtyRegions dirty_;
-    std::uint32_t cameraRedraw_{}; //497960의 이동1을 다음4994b0 위치의 Draw가 전체 무효화로 소비한다.
+    std::uint32_t cameraRedraw_{}; //497960의 이동1은499fe0의 전체 출력 요청이다.4994b0의 부분 재합성 범위를 바꾸지 않는다.
     std::uint32_t backgroundRedraw_{}; //같은 논리 Renderer+60의 최초0이며 Present 뒤 반납한다.
     // sprites_: 스프라이트.
     std::vector<RenderSprite> sprites_;
