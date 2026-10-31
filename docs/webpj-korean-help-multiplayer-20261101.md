@@ -48,6 +48,8 @@
 
 ## 6. 남은 일
 
+(2026-11-01 WB03-S 에서 아래 1번의 `…Type` 주제 55개와 별칭 5개 번역을 마쳐 도움말 번역이 끝났다. [6단계 기록](webpj-korean-help-types-20261101.md) 참고. 남은 일은 그 문서 6절이 최신이다.)
+
 1. **`…Type` 주제 55개(영어 약 31KB)와 별칭 5개 번역**: 유닛·건물·주문 설명(`sunWalkerType`·`altarType`·`priestType`·`bombExplodeLargeType` 등)이다. 영어 원문은 `<info>` 머리글(타입 그림·능력치)을 두는데 타입 표(`.type`)가 없어 지금은 그려지지 않으므로, 머리글 없이 본문만 먼저 번역해도 된다. 별칭(`daisType`·`runeType`→`altarType`, `geyserType`→`emptyGeyserType`, `bombExplodeMediumType`→`bombSpecialOneType`, `thunderWalkerType`→`bulfType`)은 본문 앵커 바로 앞에 그대로 두고 같이 옮긴다. 코드 변경은 없고 테스트의 `TRANSLATED`·`ALIAS_TARGETS` 와 영어 낱말 허용 목록만 갱신한다.
 2. 번역 문구 개발자 검수(특히 주문 이름 18개), 에너지 기호·간헐천·건물·주문 아이콘 등 그림 지원.
 3. 맨 위 인계의 나머지(미션 스크립트 한국어·Auto-Demo·Options −40 규칙·본문 끌기 Overlay·커서 2~14), 그 뒤 정적 맵 화면(M2).

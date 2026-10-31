@@ -77,16 +77,27 @@ const TRANSLATED = Object.freeze([
     'tacticHelp', 'tacticsHelp', 'salvageHelp', 'minimapGumpHelp', 'moneyGumpHelp', 'teleportViewHelp', 'campaignHelp', 'multiplayerHelp', 'multiQuickHelp',
     'chatViewHelp', 'formatCommandHelp', 'chathelperHelp', 'outpostType', 'outpostHelp', 'rankHelp', 'multiSafeHelp', 'reliabilityHelp', 'battlemasterHelp',
     'battleIslandType', 'zoneHelp', 'challengeIslandType', 'playerListView', 'playerListViewHelp', 'battleStatusView', 'battleStatusViewHelp',
-    'playerOptionsHelp', 'obeliskType', 'buriedType', 'bombHelp', 'battleOptionsHelp',
+    'playerOptionsHelp', 'obeliskType', 'buriedType', 'bombHelp',
+    'bridgeType', 'daisType', 'runeType', 'altarType', 'priestType', 'edgeFarmType', 'bombLightingZapType', 'bombLightingwaveType', 'bombTwisterType',
+    'bombIITwisterType', 'bombIIITwisterType', 'bombIManoType', 'bombIIManoType', 'bombIIIManoType', 'bombGravitonType', 'bombMeteorType',
+    'bombExplodeSmallType', 'bombExplodeMediumType', 'bombSpecialOneType', 'bombExplodeLargeType', 'bombHardenerType', 'bombHealType',
+    'bombInvisibleType', 'bombParalyzeType', 'bombTreasonType', 'residenceType', 'geyserType', 'emptyGeyserType', 'nuggetType', 'sunArcherType',
+    'sunAviaryType', 'sunFlyerType', 'sunBlockerType', 'sunCannonType', 'sunBalloonType', 'sunFenceType', 'sunWalkerType', 'windArcherType',
+    'windAviaryType', 'windFlyerType', 'windBatteryType', 'windBlockerType', 'windBalloonType', 'windWalkerType', 'thunderArcherType',
+    'thunderBatteryType', 'thunderBlockerType', 'thunderCannonType', 'thunderFenceType', 'thunderWalkerType', 'bulfType', 'rainAviaryType',
+    'rainFlyerType', 'rainBatteryType', 'rainBlockerType', 'growingrainBlockerType', 'rainCannonType', 'rainBalloonType', 'rainFenceType',
+    'rainWalkerType',
+    'battleOptionsHelp',
 ]);
 
-// 본문이 없는 별칭 앵커 → 그 앵커가 보여 주는 본문 앵커이다(영어 원문에서 별칭 앵커는 본문 앵커 바로 앞에 붙어 있어 같은 본문이 나온다). (2026-11-01 WB03-Q, 2026-11-01 WB03-R: 6개 추가)
+// 본문이 없는 별칭 앵커 → 그 앵커가 보여 주는 본문 앵커이다(영어 원문에서 별칭 앵커는 본문 앵커 바로 앞에 붙어 있어 같은 본문이 나온다). (2026-11-01 WB03-Q, 2026-11-01 WB03-R: 6개 추가, 2026-11-01 WB03-S: 5개 추가)
 const ALIAS_TARGETS = Object.freeze({
     researchHelp: 'technologyHelp', moneyHelp: 'stormPowerHelp', tacticHelp: 'tacticsHelp', campaignHelp: 'multiplayerHelp',
     rainVortexType: 'vortexHelp', windVortexType: 'vortexHelp', thunderVortexType: 'vortexHelp',
     factoryHelp: 'thunderFactoryType', sunFactoryType: 'thunderFactoryType', windFactoryType: 'thunderFactoryType', rainFactoryType: 'thunderFactoryType',
     outpostType: 'outpostHelp', zoneHelp: 'challengeIslandType', playerListView: 'playerListViewHelp', battleStatusView: 'battleStatusViewHelp',
     obeliskType: 'bombHelp', buriedType: 'bombHelp',
+    daisType: 'altarType', runeType: 'altarType', geyserType: 'emptyGeyserType', bombExplodeMediumType: 'bombSpecialOneType', thunderWalkerType: 'bulfType',
 });
 
 // 앵커 구간에서 태그를 걷어 낸 보이는 글이 비었는지(본문 없는 별칭 앵커인지) 돌려준다. (2026-11-01 WB03-Q)
@@ -114,7 +125,7 @@ test('help.korean: UTF-8·소스와 복사본 일치·번역 주제 목록', () 
 // 번역하지 않고 남겨 둔 영어 낱말(네 글자 이상)은 화면에 보이는 고유 이름·키 이름·메뉴 이름뿐이다(문장이 영어로 남은 주제를 찾는다). (2026-10-31 WB03-P, 2026-11-01 WB03-Q: 메뉴 항목 Drop·명령 이름 format·시험용 이름 devo12 허용,
 // 2026-11-01 WB03-R: 게임 안 메뉴 이름을 그대로 둔 `<c>` 문구는 영어 원문에 같은 `<c>` 문구가 있을 때만 허용하고 검사에서 뺀다. 원본 그림 코드 `~[I…]` 도 뺀다.)
 test('help.korean: 영어 문장이 남지 않았다(고유 이름·키·메뉴 이름만 허용)', () => {
-    const allowed = new Set(['Start', "Battle'", 'NetStorm', 'Netstorm', 'Ticonderoga', 'Entertainment', 'Activision', 'Titanic', 'MicroSoft', 'IntellimouseTM', 'Escape', 'Shift', 'Pause', 'Ctrl', 'About', 'Salvage', 'Drop', 'devo', 'format', 'ENTER', 'back', 'front',
+    const allowed = new Set(['Start', "Battle'", 'NetStorm', 'Netstorm', 'Ticonderoga', 'Entertainment', 'Activision', 'Titanic', 'MicroSoft', 'IntellimouseTM', 'Escape', 'Shift', 'Pause', 'Ctrl', 'About', 'Salvage', 'Drop', 'devo', 'format', 'ENTER', 'back', 'front', 'Pray', 'Meltdown', 'DWMI', 'XIIIBY',
         // 채팅 예시 이름과 게임 안 메뉴·옵션 이름(게임 안 메뉴가 아직 한국어가 아니라 영어 이름을 그대로 둔다).
         'OzTheGreatAndPowerful', 'Game', 'Empty', 'Mimicing', 'Sounds', 'Icons', 'Emboss', 'Offset', 'Allow', 'Foreground', 'Colors', 'Chat', 'Effects', 'Controls', 'Channel', 'Player', 'Other', 'Insert', 'Copy', 'Paste', 'Format']);
     const problems = [];
@@ -170,7 +181,7 @@ test('renderHelpTopic: 한국어 주제의 링크 목적지가 영어와 같고 
         assert.equal((renderHelpTopic({ helpText: koreanHelp, topic, substitute: (text) => text }).styleText.match(phrase) ?? []).length, 1, topic);
     }
     // 번역하지 않은 주제는 한국어 파일에서 찾지 못한다(영어 대체는 도움말 창이 한다).
-    assert.equal(renderHelpTopic({ helpText: koreanHelp, topic: 'altarType', substitute: (text) => text }).found, false);
+    assert.equal(renderHelpTopic({ helpText: koreanHelp, topic: 'serverHelp', substitute: (text) => text }).found, false);
 });
 
 // 별칭 앵커는 영어와 같은 본문 앵커를 가리킨다: 한국어에서도 별칭과 본문 앵커가 같은 본문(같은 링크 목록)을 보여 준다. (2026-11-01 WB03-Q)
@@ -221,11 +232,11 @@ test('한국어 도움말 창: 번역한 주제는 한국어이고 번역하지 
     window.place();
     assert.ok(lines(window).includes('NetStorm 사용자 인터페이스'));
     assert.ok(!/[A-Za-z]{4}.*[A-Za-z]{4}.*Left Click/.test(lines(window)), '영어 원문이 섞이지 않음');
-    // 번역하지 않은 주제(altarType)는 영어 파일에서 오고 창은 정상으로 열린다. (2026-11-01 WB03-Q: statsHelp 를 번역해 altarType 으로 바꿈)
-    window.open('altarType');
+    // 번역하지 않은 주제(serverHelp, 영어 원문이 제작진의 미완성 틀)는 영어 파일에서 오고 창은 정상으로 열린다. (2026-11-01 WB03-Q: statsHelp 를 번역해 altarType 으로 바꿈, 2026-11-01 WB03-S: altarType 도 번역해 serverHelp 로 바꿈)
+    window.open('serverHelp');
     window.fit();
     window.place();
-    assert.equal(window.topic, 'altarType');
+    assert.equal(window.topic, 'serverHelp');
     const english = lines(window);
     assert.ok(english.length > 50 && !/[가-힣]/.test(english.replace(/\s/g, '')), `영어 본문이어야 함: ${english.slice(0, 60)}`);
     assert.ok(window.body.softLines.length > 3);
@@ -241,7 +252,7 @@ test('한국어 도움말 창: 번역한 주제는 한국어이고 번역하지 
     assert.equal(lost.fallbackHelpText, null);
 });
 
-// 번역한 주제는 모두 한국어 창에서 열리고(본문이 유니코드 코드, 줄이 있음) 화면 안에 들어간다. 4개 화면 크기에서 확인한다. (2026-10-31 WB03-P, 2026-11-01 WB03-Q: 별칭 앵커 포함 45개, 2026-11-01 WB03-R: 66개)
+// 번역한 주제는 모두 한국어 창에서 열리고(본문이 유니코드 코드, 줄이 있음) 화면 안에 들어간다. 4개 화면 크기에서 확인한다. (2026-10-31 WB03-P, 2026-11-01 WB03-Q: 별칭 앵커 포함 45개, 2026-11-01 WB03-R: 66개, 2026-11-01 WB03-S: 126개)
 test('한국어 도움말 창: 번역한 주제(별칭 앵커 포함)가 모두 열린다', () => {
     const failures = [];
     // 화면 크기마다 번역한 주제를 모두 열어 본다.
