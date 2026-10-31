@@ -48,10 +48,12 @@ const SECOND_ROW_OFFSET = 0x4e;
 
 // 칸 정의 배열로 버튼 칸 배열을 만든다. includeAll 이 true 면 원본처럼 Intro 를 뺀 8개를, false 면 웹 판본(web=true)만 만든다.
 // 빈 칸은 null 로 남겨 배치 규칙이 원본 빈 칸 처리와 같게 동작하게 한다. (2026-10-23 WB03-M1)
-export function createMainMenuButtons(slots = MAIN_MENU_SLOTS, includeAll = false) {
+// translate(원문) 는 라벨 번역 함수(원본의 번역표 조회, 영어는 원문 그대로), encode(문구) 는 글꼴용 부호화 함수(FontSet.encode)이다. 생략하면 원문을 원본 글꼴로 그린다.
+// (2026-10-31 WB03-N: 한국어 라벨 번역·부호화 추가)
+export function createMainMenuButtons(slots = MAIN_MENU_SLOTS, includeAll = false, { translate = (text) => text, encode } = {}) {
     return slots.map((slot) => {
         const enabled = includeAll ? slot.label !== 'Intro' : slot.web;
-        return enabled ? new StoneButton({ label: slot.label, command: slot.command }) : null;
+        return enabled ? new StoneButton({ label: slot.label, command: slot.command, display: translate(slot.label), encode }) : null;
     });
 }
 
@@ -77,12 +79,13 @@ function placeRow(buttons, screenWidth, y) {
 // 원본 004ce940 의 메인 메뉴 버튼 배치를 실행한다. buttons 는 칸 배열(null 허용), font 는 측정용 원본 글꼴이다.
 // 크기 맞춤 → 최대 폭 통일 → 윗줄(0~3번)·아랫줄(4번 이후) 가운데 배치 순서이며, 위치는 float32 로 저장된다.
 // 사용: layoutMainMenuButtons(buttons, font, 1024, 768) 뒤 각 버튼의 bounds() 로 화면 위치를 읽는다. (2026-10-23 WB03-M1)
-export function layoutMainMenuButtons(buttons, font, screenWidth, screenHeight) {
+// fonts(FontSet)는 한국어 라벨을 유니코드 글꼴로 잴 때 필요하다(영어 라벨만 있으면 생략 가능). (2026-10-31 WB03-N)
+export function layoutMainMenuButtons(buttons, font, screenWidth, screenHeight, fonts = null) {
     let widest = 0;
     // 모든 버튼을 글자에 맞추고 가장 넓은 기본 폭을 찾는다.
     for (const button of buttons) {
         if (!button) continue;
-        button.fitToText(font);
+        button.fitToText(font, fonts);
         if (widest < button.baseWidth) widest = button.baseWidth;
     }
     // 모든 버튼에 같은 폭을 쓴다(배율 적용 폭도 함께 갱신).
@@ -114,7 +117,8 @@ export class MainMenuScreen {
         // 버튼을 누르는 순간 button.wav 를 내기 위한 콜백이다.
         this.onButtonSound = onButtonSound;
         // 버튼 칸 배열(빈 칸은 null)이다.
-        this.slots = createMainMenuButtons(MAIN_MENU_SLOTS, includeAllButtons);
+        // 라벨은 자원 묶음의 번역 함수(한국어면 번역표 조회, 영어는 원문)와 글꼴 묶음의 부호화로 만든다. (2026-10-31 WB03-N)
+        this.slots = createMainMenuButtons(MAIN_MENU_SLOTS, includeAllButtons, { translate: resources.translate, encode: (text) => resources.fonts.encode(text) });
         // 화면 가로 크기(논리 픽셀)다.
         this.width = 0;
         // 화면 세로 크기(논리 픽셀)다.
@@ -180,7 +184,7 @@ export class MainMenuScreen {
         // 화면 크기가 바뀌면 펼침 메뉴의 위치 기준이 사라지므로 닫는다. (2026-10-29 WB03-F)
         if (this.popup) this.popup.resize({ width, height });
         this.popup = null;
-        layoutMainMenuButtons(this.slots, this.resources.font, width, height);
+        layoutMainMenuButtons(this.slots, this.resources.font, width, height, this.resources.fonts);
         this._fitDialog();
         this.dirty = true;
     }

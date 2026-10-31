@@ -56,6 +56,23 @@ export function decodeOriginalText(bytes) {
     }
 }
 
+// 기본 다국어 평면(BMP) 밖의 문자를 대신할 코드(U+FFFD 대체 문자)이다. 한글·라틴 문자는 모두 BMP 안이라 UI 문구에서는 쓰이지 않는다. (2026-10-31 WB03-N)
+const REPLACEMENT_UNIT = 0xfffd;
+
+// 문자열을 UTF-16 코드 단위 배열(Uint16Array)로 바꾼다. 한국어 D2Coding 글꼴로 그릴 UI 문구의 부호화이다.
+// Windows-1252 바이트 배열(Uint8Array)과 배열 종류로 구별되어, 글자 측정·그리기가 어느 글꼴을 쓸지 정한다(assets/font-set.js).
+// 서로게이트 쌍(BMP 밖 문자)은 글꼴에 없는 문자로 보고 대체 문자 하나로 바꾼다.
+// 사용: encodeUtf16Units('캠페인') → Uint16Array [0xCEA0, ...]. (2026-10-31 WB03-N)
+export function encodeUtf16Units(text) {
+    const output = [];
+    // 코드 포인트 단위로 훑어 BMP 문자는 그대로, 그 밖은 대체 문자로 넣는다.
+    for (const character of String(text ?? '')) {
+        const code = character.codePointAt(0);
+        output.push(code > 0xffff ? REPLACEMENT_UNIT : code);
+    }
+    return Uint16Array.from(output);
+}
+
 // 문자열을 Windows-1252 바이트 배열(Uint8Array)로 바꾼다. 나타낼 수 없는 문자는 '?' 로 바꾼다.
 // 사용: 원본 글꼴로 그리거나 폭을 잴 라벨을 넘기기 전에 호출한다. 예) encodeWindows1252('Campaign')
 // (2026-10-23 WB03-M1)

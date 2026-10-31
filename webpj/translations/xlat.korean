@@ -1,0 +1,192 @@
+// NetStorm 웹 판본 한국어 UI 번역표 (원본 d/xlat.<언어> 형식, UTF-8).
+// 형식: 줄 첫 글자만 구분 문자로 본다. *** 다음 줄부터 영어 원문, --- 다음 줄부터 번역문, === 에서 한 블록이 끝난다. 블록 밖의 줄(이 주석 포함)은 무시된다.
+// 원문이 곧 키이며 대소문자까지 같아야 한다(웹 코드의 라벨과 같은 문자열). 글자 모양 표시(~i 등)는 번역문에도 그대로 둔다.
+// "Pass Server Diagnostic " 의 원문 끝 공백은 코드의 라벨과 같게 유지해야 하므로 편집기가 줄 끝 공백을 지우지 않게 한다.
+// 건물·유닛 이름은 AGENTS.md 의 한국어 명칭 규칙(assets/unit-names.korean.json)을 따른다. 이 파일은 메뉴 라벨만 담는다.
+// (2026-10-31 WB03-N: 메인 메뉴 버튼·Help/Options 펼침 메뉴 라벨. 번역 문구는 개발자 검수 대상이다.)
+
+***
+Campaign
+---
+캠페인
+===
+
+***
+Multiplayer
+---
+멀티플레이어
+===
+
+***
+Demo
+---
+데모
+===
+
+***
+Help
+---
+도움말
+===
+
+***
+Edit
+---
+편집
+===
+
+***
+Intro
+---
+인트로
+===
+
+***
+Credits
+---
+크레딧
+===
+
+***
+Options
+---
+옵션
+===
+
+***
+Quit
+---
+종료
+===
+
+***
+Direct Draw / Full Screen
+---
+Direct Draw / 전체 화면
+===
+
+***
+Resolution
+---
+해상도
+===
+
+***
+Sound On
+---
+소리 켜기
+===
+
+***
+Play Music
+---
+음악 재생
+===
+
+***
+Wind Noise
+---
+바람 소리
+===
+
+***
+Speaker Swap L/R
+---
+스피커 좌우 바꾸기
+===
+
+***
+Sound Effect Volume
+---
+효과음 음량
+===
+
+***
+Music Volume
+---
+음악 음량
+===
+
+***
+Volume 1
+---
+음량 1
+===
+
+***
+Volume 2
+---
+음량 2
+===
+
+***
+Volume 3
+---
+음량 3
+===
+
+***
+Volume 4
+---
+음량 4
+===
+
+***
+Volume 5
+---
+음량 5
+===
+
+***
+Edge Scroll in Fullscreen
+---
+전체 화면 가장자리 스크롤
+===
+
+***
+Auto-Demo
+---
+자동 데모
+===
+
+***
+Tell Tips at Startup
+---
+시작 시 팁 표시
+===
+
+***
+Pause - ~iShift-F9~.
+---
+일시 정지 - ~iShift-F9~.
+===
+
+***
+Pass Server Diagnostic 
+---
+서버 진단 통과
+===
+
+***
+General Help - ~iF1~.
+---
+일반 도움말 - ~iF1~.
+===
+
+***
+Technical Help
+---
+기술 도움말
+===
+
+***
+Version
+---
+버전
+===
+
+***
+NetStorm Main Menu
+---
+NetStorm 메인 메뉴
+===

@@ -239,27 +239,30 @@ function applyBracketCommand(inner, context, colors, options) {
 // 스타일 문자열을 조각 배열로 나눈다(원본 StyleText::Parse). `~` 앞의 글자는 현재 문맥의 조각으로 만들고, 명령은 문맥을 바꾼다.
 // `~~` 는 글자 `~` 하나(그때의 문맥), `~[...]` 는 대괄호 명령, 그 밖은 짧은 명령이며 모르는 명령은 `~` 만 버리고 다음 글자를 본문으로 남긴다.
 // 마지막 구간은 비어 있어도 조각으로 추가한다. initialContext 는 처음 문맥이자 `~.` 가 돌아갈 기본 문맥이고, 링크 태그 `~[T.n]` 은 이후 조각에 남는다.
-// options: { allowForegroundColor, allowBackgroundColor, allowOffset, onUnsupported }. fragments 에 결과를 이어 붙이고 같은 배열을 돌려준다.
+// options: { allowForegroundColor, allowBackgroundColor, allowOffset, onUnsupported, resolvePicture, encode }. fragments 에 결과를 이어 붙이고 같은 배열을 돌려준다.
+// encode(text) 는 조각 글자를 코드 배열로 바꾸는 함수이다(기본 encodeWindows1252, 한국어 메뉴는 FontSet.encode). (2026-10-31 WB03-N: encode 추가)
 // 사용: parseStyleText('~wHello~* world', context, colors). (2026-10-28 WB03-D)
 export function parseStyleText(source, initialContext, colors, options = {}, fragments = []) {
     const text = cutAtNul(source);
     const context = { ...initialContext };
     const original = { ...initialContext };
+    // 글자 부호화 함수이다. 기본은 원본 글꼴용 Windows-1252 바이트이고, 한국어 메뉴는 FontSet.encode 를 넘겨 UTF-16 코드 단위로 만든다. (2026-10-31 WB03-N)
+    const encode = options.encode ?? encodeWindows1252;
     let tag = 0;
     let position = 0;
     // `~` 명령을 만날 때마다 앞 구간을 조각으로 추가하고 명령을 처리한다. 마지막 구간에서 끝난다.
     for (;;) {
         const mark = text.indexOf('~', position);
         if (mark < 0) {
-            fragments.push(createFragment(encodeWindows1252(text.slice(position)), context, tag));
+            fragments.push(createFragment(encode(text.slice(position)), context, tag));
             return fragments;
         }
-        if (mark > position) fragments.push(createFragment(encodeWindows1252(text.slice(position, mark)), context, tag));
+        if (mark > position) fragments.push(createFragment(encode(text.slice(position, mark)), context, tag));
         const command = text[mark + 1] ?? '';
         let next = mark + 2;
         if (command === '~') {
             // 글자 `~` 자체는 그 시점 문맥의 별도 조각이다.
-            fragments.push(createFragment(encodeWindows1252('~'), context, tag));
+            fragments.push(createFragment(encode('~'), context, tag));
         } else if (command === '[') {
             const close = text.indexOf(']', next);
             if (close >= 0) {
@@ -312,7 +315,7 @@ export function drawFragment(surface, fonts, fragment, x, y, clip) {
         surface.drawImage(image, (x + hotspotX + image.left) | 0, (y + hotspotY + image.top) | 0, clip);
         return;
     }
-    const font = fonts.drawFont(fragment.context);
+    const font = fonts.drawFont(fragment.context, fragment.bytes);
     if (font) drawGlyphText(surface, font, fragment.bytes, x, y, fragment.context, clip);
 }
 

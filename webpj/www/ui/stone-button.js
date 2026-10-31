@@ -43,13 +43,17 @@ export function measureGumpText(font, bytes, context) {
 // 돌 버튼 하나이다. 라벨·명령과 원본 노드 필드(크기·배율·위치·누름 상태)를 가진다.
 // 사용: new StoneButton({ label: 'Campaign', command }) → fitToText(font) → setBaseWidth(w) → attach(x, y) → draw(surface, resources).
 // 입력은 pointerDown/broadcast/pointerUp/cancel 순서로 넘기며, pointerUp 이 true 를 돌려주면 실행(click 통지)이다. (2026-10-23 WB03-M1)
+// 한국어처럼 번역된 라벨은 display(표시 문구)와 encode(부호화 함수, FontSet.encode)로 넘긴다. 코드 배열이 Uint16Array 면 유니코드 글꼴로 재고 그린다. (2026-10-31 WB03-N)
 export class StoneButton {
     // 라벨 문자열과 실행 명령(임의 객체)으로 버튼을 만든다. 크기는 fitToText 전까지 0 이다.
-    constructor({ label, command = null }) {
-        // 화면에 표시할 라벨 문자열이다.
+    // label 은 원본 영어 라벨(번역 조회의 키이자 명령 통지에 쓰는 이름), display 는 화면에 쓰는 번역된 문구(생략하면 label), encode 는 문구를 코드 배열로 바꾸는 함수이다.
+    constructor({ label, command = null, display = label, encode = encodeWindows1252 }) {
+        // 원본 영어 라벨(번역 전 문구)이다. 명령 통지에서 어느 버튼인지 알리는 이름이다.
         this.label = String(label);
-        // 원본 글꼴용 Windows-1252 라벨 바이트다. 원본 strncpy(63) 처럼 63바이트까지만 쓴다.
-        this.labelBytes = encodeWindows1252(this.label).subarray(0, 63);
+        // 화면에 표시할 번역된 문구이다. 영어에서는 label 과 같다. (2026-10-31 WB03-N)
+        this.text = String(display);
+        // 글꼴용 라벨 코드 배열이다(원본 글꼴은 Windows-1252 바이트, 한국어 글꼴은 UTF-16 코드 단위). 원본 strncpy(63) 처럼 63개까지만 쓴다.
+        this.labelBytes = encode(this.text).subarray(0, 63);
         // 실행할 때 메뉴에 돌려줄 명령 객체다.
         this.command = command;
         // 측정한 글자 폭(픽셀)이다. Draw 의 글자 가운데 맞춤에 쓴다.
@@ -80,9 +84,14 @@ export class StoneButton {
         this.captured = false;
     }
 
-    // 현재 기본 문맥으로 라벨을 재고 폭+12·높이+6 으로 크기를 맞춘다(원본 00424f90).
-    fitToText(font) {
-        const measured = measureGumpText(font, this.labelBytes, STONE_BUTTON_DEFAULT_CONTEXT);
+    // 이 버튼의 라벨을 재고 그릴 글꼴을 고른다. 라벨이 유니코드 코드 배열(Uint16Array)이면 fonts(FontSet)의 유니코드 글꼴, 아니면 원본 비트맵 글꼴 font 이다. (2026-10-31 WB03-N)
+    labelFont(font, fonts) {
+        return this.labelBytes instanceof Uint16Array ? fonts.unicodeFont(STONE_BUTTON_DEFAULT_CONTEXT) : font;
+    }
+
+    // 현재 기본 문맥으로 라벨을 재고 폭+12·높이+6 으로 크기를 맞춘다(원본 00424f90). 한국어 라벨은 fonts(FontSet)의 유니코드 글꼴로 잰다. (2026-10-31 WB03-N: fonts 추가)
+    fitToText(font, fonts = null) {
+        const measured = measureGumpText(this.labelFont(font, fonts), this.labelBytes, STONE_BUTTON_DEFAULT_CONTEXT);
         this.textWidth = measured.width;
         this.textHeight = measured.height;
         this.baseWidth = Math.fround(this.textWidth + STONE_BUTTON_EXTRA_WIDTH);
@@ -185,6 +194,6 @@ export class StoneButton {
             resources.buttonPalette.edge,
         );
         surface.drawLines(plan.lines);
-        drawGlyphText(surface, resources.font, this.labelBytes, (rect.left + plan.textOffset.x) | 0, (rect.top + plan.textOffset.y) | 0, plan.text);
+        drawGlyphText(surface, this.labelFont(resources.font, resources.fonts), this.labelBytes,(rect.left + plan.textOffset.x) | 0, (rect.top + plan.textOffset.y) | 0, plan.text);
     }
 }

@@ -2,10 +2,11 @@
   "format": 1,
   "generator": "webpj/tools/prepare-assets.js",
   "source": "assets/game-data",
-  "description": "webpj 공개 루트의 원본 자산 복사본 목록. 파일은 변환 없이 복사하며 크기·SHA-256 은 원본과 같다.",
+  "description": "webpj 공개 루트의 원본 자산 복사본 목록. 파일은 변환 없이 복사하며 크기·SHA-256 은 원본(각 항목의 source)과 같다.",
   "bundles": {
     "menu": "메인 메뉴 표시 전에 받아야 하는 필수 자산",
-    "menu-music": "메인 메뉴 음악(크기가 커서 화면 표시를 막지 않고 뒤에서 받음)"
+    "menu-music": "메인 메뉴 음악(크기가 커서 화면 표시를 막지 않고 뒤에서 받음)",
+    "korean": "한국어 지원(D2Coding 글꼴 woff2·UI 번역표 xlat.korean). 언어가 한국어일 때만 받는다(2026-10-31 WB03-N)"
   },
   "files": [
     {
@@ -247,6 +248,38 @@
       "size": 17988172,
       "sha256": "d75d5b9e522176a3779e9483cebe544ba5f5b6a49052b1e8a92958dcaaee2398",
       "use": "메인 메뉴(전투 밖) 음악, RIFF WAV PCM"
+    },
+    {
+      "path": "fonts/D2Coding.woff2",
+      "source": "fonts/D2Coding.woff2",
+      "bundle": "korean",
+      "size": 1486740,
+      "sha256": "5066dd00cb1d53cb5aed7880d5b8c513412359085d6d0c67d032347d0471ca8b",
+      "use": "한국어 UI 글꼴 D2Coding 보통체(woff2, 사용자 제공, FontFace 로 등록해 Canvas 로 글리프를 만듦)"
+    },
+    {
+      "path": "fonts/D2CodingBold.woff2",
+      "source": "fonts/D2CodingBold.woff2",
+      "bundle": "korean",
+      "size": 1580004,
+      "sha256": "1d0ab8e4496c5c95d115b49901d9d6a495a0b4140ca130180220c14b91f5911a",
+      "use": "한국어 UI 글꼴 D2Coding 굵은체(woff2, 굵은 글꼴 슬롯·굵게 스타일)"
+    },
+    {
+      "path": "fonts/License.txt",
+      "source": "fonts/License.txt",
+      "bundle": "korean",
+      "size": 4006,
+      "sha256": "5755b8a0eefddc5e728b1d1090a08fbfef9656baed3104644cca7f86d112530e",
+      "use": "D2Coding 글꼴 사용 허가(SIL Open Font License 1.1). 글꼴과 함께 배포한다."
+    },
+    {
+      "path": "d/xlat.korean",
+      "source": "webpj/translations/xlat.korean",
+      "bundle": "korean",
+      "size": 2173,
+      "sha256": "42ce9bba8e1b1e2667cc1cacc4039b3657c4214d6f29583ef533fead97ae8576",
+      "use": "한국어 UI 문자열 번역표(원본 xlat 형식, UTF-8): 메인 메뉴 버튼·Help·Options 펼침 메뉴 라벨"
     }
   ]
 }

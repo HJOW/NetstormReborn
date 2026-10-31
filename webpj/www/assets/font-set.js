@@ -4,6 +4,7 @@
 // 글자 측정(원본 GumpText::Measure)과 글자 그리기(GumpTextDraw::Draw)가 쓰는 슬롯·스타일 선택 규칙도 여기에 모은다.
 // (2026-10-28 WB03-D: Tell 대화상자의 제목(슬롯 3)·본문(슬롯 5)·굵게/기울임 스타일을 그리기 위해 추가)
 import { BitmapFont, FONT_SLOT_HEIGHTS } from './bitmap-font.js';
+import { encodeUtf16Units, encodeWindows1252 } from './text-encoding.js';
 
 // 원본 스타일 번호(0~4)에 대응하는 파일 이름 조각이다. 순서는 원본 kStyles 와 같다. (2026-10-28 WB03-D)
 export const FONT_STYLE_NAMES = Object.freeze(['normal', 'italic', 'bold', 'strikeout', 'underline']);
@@ -51,13 +52,33 @@ export function logicalHeightOfSlot(slot) {
 // 글꼴 캐시 파일 바이트(경로 → Uint8Array)로 슬롯·스타일별 글꼴을 지연 해독해 보관하는 묶음이다.
 // 사용: const fonts = new FontSet(files); fonts.measure(bytes, context) → { width, height }, fonts.drawFont(context) → BitmapFont|null.
 // 필요한 파일이 files 에 없으면 어떤 파일이 빠졌는지 알리는 오류를 던진다(자산 묶음 누락을 조기에 드러내기 위해). (2026-10-28 WB03-D)
+// 한국어 글꼴(UnicodeFontProvider)을 함께 받으면 글자 코드 배열의 종류로 글꼴을 가른다: Uint8Array(Windows-1252) 는 원본 비트맵 글꼴, Uint16Array(UTF-16) 는 유니코드 글꼴이다.
+// 메뉴 같은 UI 문구는 encode() 로 부호화하면 한국어 글꼴이 있을 때 유니코드 글꼴로, 없을 때 원본 글꼴로 그려진다. (2026-10-31 WB03-N)
 export class FontSet {
-    // 파일 Map(경로 → Uint8Array)을 받는다. 글꼴은 처음 쓸 때 해독한다.
-    constructor(files) {
+    // 파일 Map(경로 → Uint8Array)과 선택적 유니코드 글꼴 공급자(UnicodeFontProvider)를 받는다. 글꼴은 처음 쓸 때 해독한다.
+    constructor(files, { unicode = null } = {}) {
         // 글꼴 캐시 파일 바이트를 경로로 찾는 Map 이다.
         this.files = files;
         // 해독한 글꼴 캐시다. 키는 `슬롯:스타일` 이다.
         this.fonts = new Map();
+        // 한국어 같은 유니코드 글꼴 공급자이다. 없으면(영어) null 이다. (2026-10-31 WB03-N)
+        this.unicode = unicode;
+    }
+
+    // UI 문구를 글자 코드 배열로 바꾼다. 유니코드 글꼴이 있으면 UTF-16 코드 단위(Uint16Array), 없으면 원본 글꼴용 Windows-1252 바이트(Uint8Array)이다.
+    // 사용: fonts.encode('캠페인') 의 결과를 measure/drawFont 에 넘긴다. (2026-10-31 WB03-N)
+    encode(text) {
+        return this.unicode ? encodeUtf16Units(text) : encodeWindows1252(text);
+    }
+
+    // 문맥의 슬롯·스타일에 해당하는 유니코드 글꼴을 돌려준다(규칙은 measureFont 와 같다). 줄 높이·기준선은 같은 슬롯의 원본 비트맵 글꼴을 따른다.
+    // 없는 조합은 null 이고, 유니코드 글꼴 공급자가 없으면 오류다. (2026-10-31 WB03-N)
+    unicodeFont(context) {
+        if (!this.unicode) throw new Error('유니코드 글꼴이 준비되지 않았습니다.');
+        const legal = context.style <= MAX_STYLE;
+        const slot = legal ? context.font : 0;
+        const style = legal ? context.style : 0;
+        return isFontAvailable(slot, style) ? this.unicode.get(slot, style, this.get(slot, style)) : null;
     }
 
     // 슬롯·스타일의 글꼴을 돌려준다(없는 조합은 호출 전에 isFontAvailable 로 걸러야 한다). 처음 한 번만 해독한다.
@@ -75,7 +96,9 @@ export class FontSet {
     }
 
     // 글자 측정에 쓰는 글꼴을 고른다(원본 GumpText::Measure). 스타일이 불법이면 슬롯 0 보통으로 대체하고, 없는 조합은 null(폭 0)이다.
-    measureFont(context) {
+    // bytes 가 UTF-16 코드 단위 배열(Uint16Array)이면 같은 규칙으로 유니코드 글꼴을 고른다. bytes 를 생략하면 원본 비트맵 글꼴이다(줄 기준선 계산용). (2026-10-31 WB03-N: bytes 추가)
+    measureFont(context, bytes = null) {
+        if (bytes instanceof Uint16Array) return this.unicodeFont(context);
         const legal = context.style <= MAX_STYLE;
         const slot = legal ? context.font : 0;
         const style = legal ? context.style : 0;
@@ -83,14 +106,14 @@ export class FontSet {
     }
 
     // 글자 그리기에 쓰는 글꼴을 고른다(원본 GumpTextDraw::Draw). 규칙은 측정과 같다. 없는 조합은 null 이라 아무것도 그리지 않는다.
-    drawFont(context) {
-        return this.measureFont(context);
+    drawFont(context, bytes = null) {
+        return this.measureFont(context, bytes);
     }
 
-    // 바이트 문자열의 폭·높이를 잰다(원본 GumpText::Measure). 폭은 글꼴의 측정 폭(첫 표) 합, 높이는 슬롯의 논리 높이이며,
+    // 글자 코드 배열의 폭·높이를 잰다(원본 GumpText::Measure). 폭은 글꼴의 측정 폭(첫 표) 합, 높이는 슬롯의 논리 높이이며,
     // 문맥 플래그 2(그림자)가 있으면 그림자 오프셋을 각각 더한다. 정수는 32비트로 감긴다.
     measure(bytes, context) {
-        const font = this.measureFont(context);
+        const font = this.measureFont(context, bytes);
         let width = font ? font.measure(bytes) : 0;
         let height = logicalHeightOfSlot(context.font);
         if (context.flags & 2) {

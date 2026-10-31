@@ -77,9 +77,24 @@ export function buildHelpItems({ includeAll = false } = {}) {
     ]);
 }
 
+// 항목 정의의 라벨을 번역 함수로 바꾼 새 목록을 만든다(하위 목록도 같게). 구분선과 명령은 그대로 둔다.
+// 원본은 메뉴 라벨을 번역표로 조회한 뒤 메뉴에 넣는다(영어는 원문 그대로). 번역 키는 `~i` 같은 글자 모양 표시까지 포함한 원문 전체이다. (2026-10-31 WB03-N)
+function translateItems(items, translate) {
+    // 항목마다 라벨을 번역하고 하위 목록이 있으면 안쪽도 번역한다.
+    return items.map((item) => {
+        if (item.kind === 'separator') return item;
+        const translated = { ...item, label: translate(item.label) };
+        if (item.items) translated.items = translateItems(item.items, translate);
+        return translated;
+    });
+}
+
 // 메인 메뉴 버튼의 menu 대상 이름('help'·'options')으로 항목 정의를 만든다. 모르는 이름이면 null 이다. (2026-10-29 WB03-F)
+// options.translate(원문) 가 있으면 모든 라벨을 번역한다(한국어 번역표 조회). 생략하면 영어 원문이다. (2026-10-31 WB03-N)
 export function buildPopupItems(target, settings, options = {}) {
-    if (target === 'options') return buildOptionsItems(settings, options);
-    if (target === 'help') return buildHelpItems(options);
-    return null;
+    let items = null;
+    if (target === 'options') items = buildOptionsItems(settings, options);
+    else if (target === 'help') items = buildHelpItems(options);
+    if (items && options.translate) return translateItems(items, options.translate);
+    return items;
 }

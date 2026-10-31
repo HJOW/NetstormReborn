@@ -89,7 +89,8 @@ export class MenuList {
     _styled(label, disabled) {
         const source = disabled ? `~*~x${label}` : `~[C.0]~[B.0]~E${label}`;
         const context = { ...this.textContext, font: 0 };
-        return parseStyleText(source, context, this.colors);
+        // 항목 글자는 글꼴 묶음의 부호화로 만든다(한국어 글꼴이 있으면 유니코드, 없으면 원본 글꼴). (2026-10-31 WB03-N)
+        return parseStyleText(source, context, this.colors, { encode: (text) => this.fonts.encode(text) });
     }
 
     // 글자 항목을 추가한다(원본 AddText). command 는 실행할 명령(없으면 null), enabled 가 false 면 비활성(어두운 글자, 선택 불가)이다.

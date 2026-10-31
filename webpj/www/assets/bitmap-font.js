@@ -77,6 +77,12 @@ export class BitmapFont {
         return new BitmapFont(height, ascent, descent, Object.freeze(glyphs));
     }
 
+    // 글자 코드의 글리프를 돌려준다. 글자 그리기(render/glyph-text.js)가 글꼴 종류와 관계없이 같은 방식으로 글리프를 얻도록 하는 접근 함수이다.
+    // 사용: font.glyph(65) → { advance, bearing, drawAdvance, present, image }. (2026-10-31 WB03-N: 유니코드 글꼴 UnicodeGlyphFont 와 같은 인터페이스를 위해 추가)
+    glyph(code) {
+        return this.glyphs[code];
+    }
+
     // Windows-1252 바이트 배열의 측정 폭(첫 표의 합)을 돌려준다(원본 004a3df0). 원본처럼 32비트 감김을 유지한다.
     // 사용: 돌 버튼 크기 맞춤(글자 폭 + 12) 등 원본 측정 경로에서 쓴다.
     measure(bytes) {

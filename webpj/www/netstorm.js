@@ -8,6 +8,7 @@
 // (2026-10-23 WB01: 실행 골격 최초 작성)
 // (2026-10-23 WB03-M1: 원본 자산 적재·메인 메뉴·소리·원본 커서 연결)
 // (2026-10-28 WB02-D: 데이터 아카이브(TAFF)·설정·Tell 섹션 조회(GameData) 연결, 메인 메뉴의 Edit 버튼 제거)
+// (2026-10-31 WB03-N: 언어가 한국어면 D2Coding 글꼴·번역표 묶음을 받아 메인 메뉴·펼침 메뉴 라벨을 한국어로 그린다)
 import { AssetLoader } from './assets/asset-loader.js';
 import { GameData } from './assets/game-data.js';
 import {
@@ -20,11 +21,13 @@ import {
     MENU_SOUND_PATH,
     buildMenuResources,
 } from './assets/menu-assets.js';
+import { KOREAN_BUNDLE, buildKoreanSupport } from './assets/korean-assets.js';
 import { AudioSystem, createAudioContext } from './audio/audio-system.js';
 import { IndexedSurface } from './render/indexed-surface.js';
 import { IndexedPresenter, normalizeScaling } from './render/presenter.js';
 import { Settings, findSettingKey, getLocalStorage } from './platform/settings.js';
 import { Progress, isProgressKey } from './platform/progress.js';
+import { createCanvasGlyphRasterizer } from './platform/glyph-rasterizer.js';
 import { MainMenuScreen } from './ui/main-menu.js';
 import { PopupMenu } from './ui/popup-menu.js';
 import { buildPopupItems } from './ui/option-menus.js';
@@ -73,7 +76,7 @@ const MAX_FRAME_DELTA_MS = 250;
 const FPS_WINDOW_MS = 500;
 
 // 원본 메인 메뉴의 창 제목(config.english 의 BlankWindowName)이다. 메인 메뉴에서 문서 제목으로 쓴다. (2026-10-23 WB03-M1)
-const MAIN_MENU_WINDOW_TITLE = 'NetStorm Main Menu';
+export const MAIN_MENU_WINDOW_TITLE = 'NetStorm Main Menu';
 
 // 데이터 폴더의 기본 위치(문서 기준 상대 URL)이다. 정적 서버는 webpj/www 를 공개하므로 www/data 를 가리킨다. (2026-10-23 WB03-M1)
 const DEFAULT_ASSET_BASE = './data/';
@@ -655,11 +658,17 @@ export class Netstorm {
                 const loader = this._createAssetLoader();
                 await loader.loadManifest();
                 if (generation !== this._loadGeneration) return;
+                // 한국어면 메뉴 묶음 뒤에 한국어 묶음(글꼴·번역표)을 받으므로 진행률의 전체 크기에 미리 더해 둔다. (2026-10-31 WB03-N)
+                const koreanTotal = this.options.language === 'korean' ? this._bundleBytes(loader, KOREAN_BUNDLE) : 0;
+                let menuTotal = 0;
                 const files = await loader.loadBundle(MENU_BUNDLE, (loaded, total) => {
-                    this._loadProgress = { loaded, total };
+                    menuTotal = total;
+                    this._loadProgress = { loaded, total: total + koreanTotal };
                 });
                 if (generation !== this._loadGeneration) return;
-                this._resources = buildMenuResources(files);
+                const korean = this.options.language === 'korean' ? await this._loadKorean(loader, menuTotal, koreanTotal) : null;
+                if (generation !== this._loadGeneration) return;
+                this._resources = buildMenuResources(files, korean);
                 // 설정 층에는 웹 사용자 설정(언어·음량)과 저장된 캠페인 진행 값을 원본 options.cfg 자리에 넣는다. 해상도·전체화면 값은 넣지 않는다.
                 // 이후 게임 데이터에 쓰이는 값은 _onConfigWrite 가 설정·진행 저장소로 옮긴다. (2026-10-30 WB03-H: 진행 값과 쓰기 통지 연결)
                 this._gameData = GameData.build({
@@ -683,6 +692,26 @@ export class Netstorm {
         }
         if (generation !== this._loadGeneration) return;
         this._setState(AppState.CLICK_TO_START);
+    }
+
+    // 매니페스트에서 묶음에 속한 파일의 전체 크기(바이트)를 구한다. 묶음이 없으면 0 이다. (2026-10-31 WB03-N)
+    _bundleBytes(loader, bundle) {
+        return loader.entries(bundle).reduce((sum, entry) => sum + entry.size, 0);
+    }
+
+    // 한국어 묶음(D2Coding 글꼴 woff2·번역표)을 받아 한국어 지원을 만든다. 실패하면(파일 누락·글꼴 등록 실패) 경고만 남기고 null 을 돌려줘 영어 메뉴로 계속한다.
+    // 한국어는 영어 자료로 대체할 수 있는 선택 기능이라 게임 전체를 멈추지 않는 웹 적응이다(원본에는 한국어가 없다). (2026-10-31 WB03-N)
+    async _loadKorean(loader, menuTotal, koreanTotal) {
+        try {
+            const files = await loader.loadBundle(KOREAN_BUNDLE, (loaded) => {
+                this._loadProgress = { loaded: menuTotal + loaded, total: menuTotal + koreanTotal };
+            });
+            const document = this._root.ownerDocument;
+            return await buildKoreanSupport(files, { createRasterizer: ({ regular, bold }) => createCanvasGlyphRasterizer({ document, regular, bold }) });
+        } catch (error) {
+            console.warn('Netstorm: 한국어 글꼴·번역표를 준비하지 못해 영어 메뉴로 계속합니다.', error);
+            return null;
+        }
     }
 
     // 데이터 폴더 URL 과 fetch 함수로 자산 적재기를 만든다. 데이터 폴더는 루트 문서의 주소를 기준으로 푼다. (2026-10-23 WB03-M1)
@@ -738,7 +767,7 @@ export class Netstorm {
         }
         this._ensureSurface();
         this._setState(AppState.MAIN_MENU);
-        this._root.ownerDocument.title = MAIN_MENU_WINDOW_TITLE;
+        this._root.ownerDocument.title = this._resources.translate(MAIN_MENU_WINDOW_TITLE);
         this._displayDirty = true;
         this._playMenuMusic();
         this._runMainMenuStartup();
@@ -786,7 +815,7 @@ export class Netstorm {
     // 메인 메뉴의 펼침 메뉴(Help·Options)를 point(왼쪽 위 기준점)에 연다. 모르는 대상이면 열지 않는다. 기준점은 원본 스크린샷 측정값과 같은 규칙으로 정해진다(ui/main-menu.js popupAnchor). 열었으면 true. (2026-10-29 WB03-F)
     _openPopup(target, point) {
         if (!this._mainMenu || !this._resources || !this._settings) return false;
-        const items = buildPopupItems(target, this._settings);
+        const items = buildPopupItems(target, this._settings, { translate: this._resources.translate });
         if (!items) {
             console.warn(`Netstorm: 알 수 없는 펼침 메뉴 '${target}' 입니다.`);
             return false;

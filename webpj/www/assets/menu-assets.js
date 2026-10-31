@@ -93,7 +93,9 @@ function requireFile(files, path) {
 // 반환: { palette, shadeMaps, buttonPalette, textContexts, font, clouds(512×512 아니면 null), title, texture, textureMetrics, cursor, cursors }
 // cursor 는 기본 커서(번호 1)이고 cursors 는 번호 → 해독한 커서의 표(번호 1·15·16)이다.
 // 사용: new MainMenuScreen({ resources: buildMenuResources(files) }) (2026-10-23 WB03-M1, 2026-10-31 WB03-L: cursors 추가)
-export function buildMenuResources(files) {
+// korean 은 한국어 지원(assets/korean-assets.js buildKoreanSupport 결과 { translate, unicode })이다. 없으면 영어: translate 는 원문 그대로, 글꼴 묶음은 원본 비트맵 글꼴만 쓴다.
+// 결과의 translate(원문) 가 메뉴 라벨 번역을, fonts.encode(문구) 가 그 라벨의 글꼴용 부호화를 맡는다. (2026-10-31 WB03-N: korean 추가)
+export function buildMenuResources(files, korean = null) {
     const palette = buildScreenPalette(GamePalette.parse(requireFile(files, MENU_ASSET_PATHS.palette)));
     const shapes = new ShapeDatabase(requireFile(files, MENU_ASSET_PATHS.shapes));
     const clouds = decodeGif(requireFile(files, MENU_ASSET_PATHS.clouds));
@@ -107,7 +109,9 @@ export function buildMenuResources(files) {
         textContexts: buttonTextContexts(buttonPalette),
         font: BitmapFont.parse(requireFile(files, MENU_ASSET_PATHS.font)),
         // 대화상자 글자 그리기용 글꼴 묶음(슬롯·스타일별 지연 해독)과 글자색 번호 표이다.
-        fonts: new FontSet(files),
+        fonts: new FontSet(files, { unicode: korean?.unicode ?? null }),
+        // 메뉴 라벨 번역 함수(원본 번역표 조회)다. 영어는 원문을 그대로 돌려준다. (2026-10-31 WB03-N)
+        translate: korean?.translate ?? ((text) => text),
         colors: new StyleColors(palette.logical),
         // 대화상자 패널(질감 프레임 0 + 네 모서리 금장식)이다. 목록 상자·돌 버튼은 위의 texture(프레임 1)를 쓴다.
         panel: Object.freeze({

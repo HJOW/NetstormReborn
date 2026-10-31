@@ -4,7 +4,7 @@
 // 복원 기준: cpppj GumpTextDraw.cpp(DrawBitmapGlyphText·MakeGumpGlyphPixelHooks). (2026-10-23 WB03-M1)
 
 // 원본 글꼴 캐시가 글자 픽셀에 쓰는 색 번호이다. 출력할 때 이 번호만 문맥의 색으로 바꾼다. (2026-10-23 WB03-M1)
-const FONT_INK_INDEX = 100;
+export const FONT_INK_INDEX = 100;
 
 // 외곽선 패스의 고정 오프셋 표(위 → 오른쪽 → 아래 → 왼쪽)이다. 원본 두 판본의 표 순서와 같다. (2026-10-23 WB03-M1)
 const OUTLINE_OFFSETS = Object.freeze([
@@ -31,7 +31,8 @@ export function createTextContext(fields = {}) {
 }
 
 // 바이트 문자열을 (x, y) 에서 시작해 그린다. y 는 글자 칸의 위쪽, x 는 첫 글자 칸의 왼쪽이다.
-// font 는 BitmapFont, bytes 는 Windows-1252 바이트(Uint8Array), context 는 createTextContext 결과, clip 은 출력 제한 사각형이다.
+// font 는 BitmapFont 또는 같은 인터페이스(glyph(code))의 UnicodeGlyphFont, bytes 는 글꼴에 맞는 글자 코드 배열(BitmapFont 는 Windows-1252 바이트 Uint8Array,
+// UnicodeGlyphFont 는 UTF-16 코드 단위 Uint16Array), context 는 createTextContext 결과, clip 은 출력 제한 사각형이다. (2026-10-31 WB03-N: 유니코드 글꼴 지원)
 // 그림자·외곽선·본문 패스마다 x 를 처음 위치로 되돌리며, 글리프 블록이 없는 코드는 그리지도 전진하지도 않는다. (2026-10-23 WB03-M1)
 export function drawGlyphText(surface, font, bytes, x, y, context, clip = surface.bounds) {
     // 원본 글꼴 전용 256색 표다. 글자 픽셀은 100 번만 쓰므로 그 칸만 패스마다 바꾼다.
@@ -43,7 +44,7 @@ export function drawGlyphText(surface, font, bytes, x, y, context, clip = surfac
         const atY = (y + offsetY) | 0;
         // 문자열의 각 바이트를 차례로 그린다.
         for (const code of bytes) {
-            const glyph = font.glyphs[code];
+            const glyph = font.glyph(code);
             if (!glyph.present) continue;
             if (glyph.image) surface.drawImage(glyph.image, (atX + glyph.image.left) | 0, (atY + glyph.image.top) | 0, clip, colorMap);
             atX = (atX + glyph.drawAdvance) | 0;
