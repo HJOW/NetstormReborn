@@ -4,6 +4,7 @@
 import argparse
 import math
 import re
+import subprocess
 from pathlib import Path
 
 from cpp_bridge_ritual_runtime import ROOT, GAME, execute, save
@@ -16,6 +17,32 @@ from taff import TaffArchive
 
 BUTTONS = ('MORE', 'More', 'OK', 'Ok', 'ok', 'Play Mission', 'Lets do this!', ' Sun', 'Sun', 'Fight On')  # 실제 안내 종료·훈련 Fury의 Sun·ThunderingPower 원문 @20의 계속 버튼이다.
 GROUPS = {'early': (1,), 'training': (2,), 'campaign': (3, 4, 5), 'all': (1, 2, 3, 4, 5)}  # 보호 officalN의 실제 분류다.
+
+
+def prepare_first_run(directory, game_root, binary, timeout):
+    """새 배포본의 인트로를 실제 ESC로 닫고 안내 종료·메인 복귀·완료 저장을 확인한다."""
+    directory.mkdir(parents=True, exist_ok=False)
+    steps = [(3, 'report', 'startup')]  # 최초 영상/메뉴 상태를 그대로 남긴다.
+    for frame in range(12, 180, 8):  # 실제 영상 singleton이 있을 때만 ESC를 보내 일반 메뉴를 열지 않는다.
+        steps.append((frame, 'when', r'movie_runtime\t[1-9][0-9]*\t;;esc;;'))
+        for label in ('OK', 'Ok', 'ok', 'Main Menu'):  # 새 사용자 안내의 실제 표시 버튼만 누른다.
+            steps.append((frame, 'click-if', label))
+    steps.append((199, 'report', 'final'))
+    plan = directory / 'steps.tsv'  # 검사 입력과 실제 관측 파일을 새 경로에 보존한다.
+    plan.write_text(''.join(f'{frame}\t{operation}\t{argument}\n' for frame, operation, argument in steps), encoding='utf-8', newline='\n')
+    command = [str(binary), '--run', str(game_root), '--no-audio', '--window', '--frames', '200',
+               '--set', 'SCREENW=1024;SCREENH=768;maxFPS=40;autoDemo=0;tellTips=0;sleepPerLoop=25',
+               '--ui-script', str(plan), '--ui-report', str(directory / 'states.tsv')]  # intro 키나 미션 상태를 직접 덮어쓰지 않는다.
+    result = execute(command, directory, binary, timeout or 65)  # 기존 실제 입력 큐와 자연 상태 전환을 사용한다.
+    observed = states(directory / 'states.tsv') if (directory / 'states.tsv').exists() else {}  # 실패한 관측도 보존한다.
+    final = observed.get('final', {})  # 영상 종료 뒤 실제 메인 상태를 확인한다.
+    record = dict(result=result, final={key: final.get(key) for key in ('phase', 'page', 'paused', 'movie_runtime')})  # 완료 판정 전 원시를 남긴다.
+    record['introSaved'] = subprocess.check_output([str(binary), '--config-get', str(game_root), 'intro'], cwd=ROOT, text=True, encoding='utf-8').strip() == '1'  # 실제 종료 때 저장한 완료 키를 읽기만 한다.
+    record['passed'] = result['returnCode'] == 0 and not result['timedOut'] and final.get('phase') == ['0'] and final.get('page') == ['main'] and final.get('paused') == ['0'] and final.get('movie_runtime', ['0'])[0] == '0' and record['introSaved']
+    save(directory / 'result.json', record)
+    if not record['passed']:
+        raise RuntimeError('새 설치 인트로/안내의 실제 종료 실패')
+    return record
 
 
 def catalog(archive, scope):
@@ -96,6 +123,7 @@ def main():
     parser.add_argument('--game-dir',type=Path,default=ROOT/'originals',help='실제 게임 자료 경로. 원본을 보호하려면 별도 사본을 지정한다')
     parser.add_argument('--binary',type=Path,default=GAME,help='실제 실행할 빌드 또는 압축 해제본의 클론 실행 파일')
     parser.add_argument('--capture-output',action='store_true',help='같은 프레임의 실제 창 전체 RGB/레터박스도 비교한다')
+    parser.add_argument('--prepare-first-run',action='store_true',help='같은 설정 보호 구간에서 인트로를 실제 ESC로 닫고 메인 안내를 끝낸 뒤 미션을 검사한다')
     parser.add_argument('--fullscreen',action='store_true',help='현재 전체화면 호환 장치에서 실행한다')
     parser.add_argument('--frames',type=int,default=98,help='일반 미션의 짧은 관측 프레임 수')
     parser.add_argument('--fps',type=int,default=60,help='실제 프레임 상한. 데모는 기존 최소15초 안내를 유지한다')
@@ -116,8 +144,11 @@ def main():
     game_root=args.game_dir.resolve();before = snapshots(game_root)  # 선택한 사본/원본의 허용 설정까지 포함한 실행 전 해시다.
     original_root=(ROOT/'originals').resolve();original_before=before if game_root==original_root else snapshots(original_root) # 사본 상태와 보호 원본의 증거를 구별한다.
     records = []  # 실패가 뒤 스테이지의 관측을 생략하지 않게 한다.
+    startup = None  # 첫 실행 준비의 결과는 미션34개와 별도로 기록한다.
     try:
         with preserve_game_settings(game_root, 'd', output / 'settings-backup'):
+            if args.prepare_first_run:
+                startup = prepare_first_run(output / 'startup', game_root, args.binary.resolve(), args.timeout)
             for mission, label in names:  # 같은 옵션 파일을 사용하는 실제 창은 한 번에 하나만 실행한다.
                 try:
                     record = run(output / mission, mission, label,game_root,args.fullscreen,args.frames,args.fps,args.timeout,args.binary.resolve(),args.capture_output)
@@ -129,7 +160,7 @@ def main():
     finally:
         unchanged = before == snapshots(game_root)  # 예외가 나도 선택한 자료의 최종 바이트를 검사한다.
         original_unchanged=unchanged if game_root==original_root else original_before==snapshots(original_root)
-        summary = dict(runs=records, complete=len(records) == len(names), originalsUnchanged=original_unchanged,gameDataUnchanged=unchanged,gameDirectory=str(game_root),
+        summary = dict(runs=records, startup=startup, complete=len(records) == len(names), originalsUnchanged=original_unchanged,gameDataUnchanged=unchanged,gameDirectory=str(game_root),
                        selectedMissions=selected,
                        scope='실제 안내 버튼/자연 timeout 뒤 플레이 장면 진입이며 사용자 완주·승패·전체 동일성 검사가 아니다.')
         save(output / 'results.json', summary)
