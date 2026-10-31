@@ -26,6 +26,8 @@ cpppj/src/client/EmbeddedTell.h	Netstorm.Client/Gump/EmbeddedTell.cs	ecb9802a88b
 cpppj/src/client/GifImage.cpp	Netstorm.Assets/GifImage.cs	a168082548e090f2f191e4b83106e7351fbc00ba	L1
 cpppj/src/client/GifImage.cpp	Netstorm.Client/Display/GifImage.cs	a168082548e090f2f191e4b83106e7351fbc00ba	L1
 cpppj/src/client/GifImage.h	Netstorm.Client/Display/GifImage.cs	a168082548e090f2f191e4b83106e7351fbc00ba	L1
+cpppj/src/client/GuideMissionTransitions.cpp	Netstorm.Client/Mission/GuideMissionTransitions.cs	d406adf81b616b6529483c012629208a7dff13fb	L1
+cpppj/src/client/GuideMissionTransitions.h	Netstorm.Client/Mission/GuideMissionTransitions.cs	d406adf81b616b6529483c012629208a7dff13fb	L1
 cpppj/src/client/GumpBackground.cpp	Netstorm.Client/Gump/GumpBackground.cs	436deaf700d8574524e2bae684ccc2888bd94949	port
 cpppj/src/client/GumpBackground.h	Netstorm.Client/Gump/GumpBackground.cs	436deaf700d8574524e2bae684ccc2888bd94949	port
 cpppj/src/client/GumpBackgroundCreate.cpp	Netstorm.Client/Gump/GumpBackgroundCreate.cs	075b0c1424dbf4bca70ced2f41422957a8388772	port

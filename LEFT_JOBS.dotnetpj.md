@@ -793,6 +793,12 @@
 - **검증:** `MissionScriptTests` 집중 2개 통과. 명시 source, 미션 반납 후 현재 설정 변경, 파일 경로 매핑 및 부재를 검사했다. 전체 Release 검사 2,017개(Assets 364, Core 1,040, Client 613) 통과, 실패·건너뜀 0이다. 창·원본 게임 실행과 디컴파일은 하지 않았다.
 - **남은 작업:** 이 reader는 아직 실제 미션 세션에 연결되지 않았다. Guide 생성/반납, 목록 owner, 대화창·상위 메뉴 및 R4 이후 세션·HUD·입력·Edit·멀티플레이 사전 구현이 남는다. 전체 목표는 미완료다.
 
+### 0.67 단위 기록 — Guide 미션 교체·명령 분배 (2026-10-31, HJOW-Athlon)
+
+- **구현:** cpppj `GuideMissionTransitions.h/.cpp`(기준 `d406adf8`)의 Begin·Close·Fork·Restart·End 및 명령 분배와 `MissionGuideInput`의 재시작 캡처를 `Netstorm.Client/Mission/GuideMissionTransitions.cs`로 이식했다. 종료·반납 중 재진입 조회, 분기 이름의 해제 전 복사, 음수 DWORD 분기 번호, 진단 뒤 Begin 진행 순서를 보존한다. 포트 맵 2행은 L1이며 실제 세션 연결을 뜻하지 않는다.
+- **검증:** 독립 `guide-transitions-x86.tsv` 286행 중 교체·분배 T 256행을 직접 비교해 일치했고, 미등록 명령과 빈 Close도 검사했다. S 30행은 문자열 고리·큐 연결 범위여서 이번 검사에 포함하지 않았다. fixture 원본을 링크하고 해시 목록에 등록했다. 전체 Release 2,019개(Assets 364, Core 1,040, Client 615)가 통과했고 실패·건너뜀은 0이다.
+- **남은 작업:** 실제 Guide의 미션 소유자·생성/반납, 문자열 고리와 입력 큐 및 메뉴·세션 연결은 미완료다. 현재 C# Begin 인자는 소유 문자열이므로 C++에서 빌린 가변 버퍼가 해제 중 바뀌는 특수 경계는 아직 표현하지 않는다. 미션 생성자에서 파일 reader 예외 시 Config 등록 반납도 다음 단위에서 확인한다. 전체 목표는 미완료이며 게임/창 실행이나 디컴파일은 하지 않았다.
+
 ## 1. 지금까지의 완료 범위 — 이관 기록 색인
 
 단위별 상세는 [LEFT_JOBS.dotnetpj.old.md](LEFT_JOBS.dotnetpj.old.md)와 아래 문서에 있다. 마지막 판정 열은 0절 계획에서 그 결과를 어떻게 다루는지다([0.4](#04-기존-dotnetpj-소스의-재수정-판정)).
