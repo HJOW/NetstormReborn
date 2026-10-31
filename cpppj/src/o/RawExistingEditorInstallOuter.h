@@ -33,6 +33,7 @@ struct ExistingEditorFortHooks {
     std::function<std::int32_t(std::string_view)> missionName; //00460c40의현재pending이름판정이다.미션이비영일때만선택한다.
     std::function<void()> closeGuide; //00463b20(00562ca0)의실제종료다.복귀뒤현재pending을다시읽는다.
     std::function<void(std::string_view)> setName; //00460980의실제전체이름부모다.이외곽은그하위Snapshot/삭제를대신하지않는다.
+    std::function<void()> defaultName; //00460c20의 현재 newFort 조회→같은 전체 이름 선택이다. 빈/점 시작 이름 뒤 한 번만 호출한다.
     std::function<void()> file; //아래InstallExistingEditorFile로정상기존파일/State|1/Notify/Subscriber/config/title까지설치한다.
     std::function<void()> world; //004b736a~7397의현재Player.Create→CoreData(0)→Recover→World(0)다.실제Session.LoadExistingEditorWorld한번에연결한다.
     std::function<std::uint32_t()> owner; //Deck/Core쓰기/Snapshot/State/Notify앞에서각각읽는현재00540cac다.

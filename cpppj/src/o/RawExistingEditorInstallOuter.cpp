@@ -37,7 +37,7 @@ void InstallExistingEditorFort(const ExistingEditorFortHooks& hooks) {
         if (Need(hooks.inMission)() && !Need(hooks.missionName)(Need(hooks.pendingName)())) Need(hooks.closeGuide)();
         Need(hooks.setName)(Need(hooks.pendingName)());
     }
-    const auto name=Need(hooks.currentName)();if (name.empty() || name.front()=='.') Outside(hooks.outside,ExistingEditorInstallOutside::DefaultName);
+    const auto name=Need(hooks.currentName)();if (name.empty() || name.front()=='.') Need(hooks.defaultName)();
     Need(hooks.file)();if (Need(hooks.inMission)()) Outside(hooks.outside,ExistingEditorInstallOutside::Mission);
     Need(hooks.world)();Need(hooks.deck)(Need(hooks.owner)());Need(hooks.priests)();Need(hooks.camera)();Need(hooks.production)();
     Need(hooks.coreWrite)(Need(hooks.owner)());Need(hooks.snapshot)(Need(hooks.owner)());

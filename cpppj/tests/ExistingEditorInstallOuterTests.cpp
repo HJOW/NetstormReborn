@@ -112,6 +112,7 @@ struct OuterDevices {
         hooks.inMission=[this] { return mission; };hooks.missionName=[this](auto text) { Effect("missionname","MISSIONNAME:"+OuterHex(std::span(reinterpret_cast<const std::uint8_t*>(text.data()),text.size())));return 0; };
         hooks.closeGuide=[this] { if (mutation=="guide-clear") mission=0;Effect("guide","GUIDECLOSE"); };
         hooks.setName=[this](auto text) { const auto name=std::string(text);OuterName(current,name);Effect("name","NAME:"+OuterHex(std::span(reinterpret_cast<const std::uint8_t*>(name.data()),name.size()))); };
+        hooks.defaultName=[this] { Outside(ExistingEditorInstallOutside::DefaultName); }; // 기존 동결 범위는 원문의 기본 이름 호출 직전에 중단했다. 새 정상 복귀는 별도 관측으로 확인한다.
         hooks.file=[this] { InstallExistingEditorFile(FileHooks()); }; //최초도구의callsite부가INSTALL오측정은제품의경계로추가하지않는다.
         hooks.world=[this] { Effect("player","PLAYER:"+std::to_string(battleOwner));Effect("coreread","COREREAD:"+std::to_string(owner)+":0");Effect("recover","RECOVER:owner="+std::to_string(owner));Effect("world","WORLD:0"); };
         hooks.owner=[this] { return owner; };hooks.deck=[this](auto selected) { Effect("deck","DECK:"+std::to_string(selected)); };
@@ -163,5 +164,5 @@ TEST_CASE(ExistingEditorInstallOuter_IndependentNativeProjection) {
 TEST_CASE(ExistingEditorInstallOuter_RequiredAndPartialBoundaries) {
     OuterDevices device("1,0,1,255,0,0,1,1,none");auto hooks=device.FortHooks();hooks.startupStateCheck={};bool rejected=false;
     try { InstallExistingEditorFort(hooks); }catch (const std::logic_error&) { rejected=true; }CHECK(rejected && device.stateCalls==2 && device.notifyCalls==2 && device.states[28]==254 && device.configs.contains("fort.mySubHandle") && !device.configs.contains("lastEditFort"));
-    OuterDevices other("1,3,1,255,0,0,1,1,none");hooks=other.FortHooks();hooks.outside=[](auto) {};rejected=false;try { InstallExistingEditorFort(hooks); }catch (const std::logic_error&) { rejected=true; }CHECK(rejected && other.stateCalls==0 && other.configs.empty());
+    OuterDevices other("1,3,1,255,0,0,1,1,none");hooks=other.FortHooks();hooks.defaultName={};rejected=false;try { InstallExistingEditorFort(hooks); }catch (const std::logic_error&) { rejected=true; }CHECK(rejected && other.stateCalls==0 && other.configs.empty()); // 새 기본 이름 장치 누락은 파일 설치 전에 실패해야 한다.
 }

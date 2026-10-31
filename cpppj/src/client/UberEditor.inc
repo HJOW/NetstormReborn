@@ -84,10 +84,11 @@ o::LocalMissionParentResult UberGump::InstallExistingEditorState(std::uint32_t s
     checkpoint.fort.currentName=[this] { return client_.FortGlobals()->Current(); };checkpoint.fort.pendingName=[this] { return client_.FortGlobals()->Pending(); };
     checkpoint.fort.compare=[](auto first,auto second) { return o::CompareDataManagerSectionNames(first,second); };
     checkpoint.fort.setName=[this](auto name) { SelectCurrentFortName(name); };checkpoint.fort.missionName=[this](auto name) { return mapCatalog_->Kind(name); };
+    checkpoint.fort.defaultName=[this] { SelectConfiguredNewFort(client_.Configuration(),[this](auto name) { SelectCurrentFortName(name); }); }; // 원문 기본 이름도 현재 Template/작업 namespace의 같은 전체 선택 부모를 사용한다.
     checkpoint.fort.closeGuide=[this] { ReleaseCurrentGuideMission(); }; //원문 부모가 이름 변경/현재 미션/대상 맵 속성을 판정한 뒤에만 보존한 Tutorial 데이터와 Guide를 해제한다.
     checkpoint.fort.setConfig=[this](auto name,auto value) { client_.Configuration().Set(name,o::DecodeOriginalText({reinterpret_cast<const std::uint8_t*>(value.data()),value.size()})); };
     checkpoint.fort.outside=[](auto branch) { throw std::logic_error("Editor 기존 파일 외의 설치 분기:"+std::to_string(static_cast<int>(branch))); };
-    checkpoint.file.path=[&e] { return e.paths->CurrentPath(); };checkpoint.file.exists=[&e](auto path) { return e.paths->Exists(path); };checkpoint.file.title=[this] { RefreshWindowTitle(); };
+    checkpoint.file.path=[&e] { return e.paths->PrepareCurrent(); };checkpoint.file.exists=[&e](auto path) { return e.paths->Exists(path); };checkpoint.file.title=[this] { RefreshWindowTitle(); }; // 기본 이름/설정 알림 뒤 선택된 실제 파일도 기존 이관 장부로 준비한 다음 존재를 검사한다.
     checkpoint.file.assertion=[](auto line) { std::clog<<"Editor Template 진단 "<<line<<'\n'; };checkpoint.file.outside=checkpoint.fort.outside;
     TemplateFileLoadHooks load;load.wrongName=[] { std::clog<<"Editor 파일명 불일치\n"; };load.tooManyTypes=[] { std::clog<<"Editor TYPE 개수 진단\n"; };load.rejectFile=[&e](auto path) { e.files.Delete(path); };checkpoint.load=e.paths->BindLoad(std::move(load));
     checkpoint.startup=EditorStartupStateHooks(); //State3과 같은 실제 기본 옵션/파일 부재 관문/벽시각 장치를 빌린다.

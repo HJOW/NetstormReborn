@@ -746,6 +746,8 @@ TEST_CASE(CampaignExistingEditorCheckpoint_SameNameKeepsGuideAndSelectsMissionOu
     });
 }
 
+#include "EditorDefaultNameSessionTests.inc" // 기본 이름의 실제 Session 연속 설치도 같은 파일/월드 장치를 사용한다.
+
 //같은 실제 Client/Session 설치 도우미로 저장·State3 예약과 장기 덱 소유권을 검사한다.
 #include "CampaignSaveGoMainTests.inc"
 

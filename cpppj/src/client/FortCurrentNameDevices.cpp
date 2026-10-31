@@ -9,6 +9,10 @@
 #include <utility>
 
 namespace netstorm::client { // 파일 쓰기/삭제는 명시 작업 namespace의 동일 장치만 사용한다.
+// 원문4410f0의 인자 없는 현재 조회가 끝난 뒤 기존460980을 호출한다. 이름이 다시 비어도 여기서 반복하지 않는다.
+void SelectConfiguredNewFort(o::ConfigInterface& config,const std::function<void(std::string_view)>& select) {
+    const auto name=config.PathSpec("newFort");if (!select) throw std::logic_error("기본 Fort의 실제 전체 이름 선택 장치 미연결");select(name);
+}
 namespace { // 외부 C문자열 장치의 물리 조회를 공유한다.
 // 반환값을 쓰는 장치만 현재 NUL까지 읽으며 임의 미종료 입력은 거부한다.
 std::string_view Text(std::span<const std::uint8_t> bytes) {
