@@ -11,6 +11,7 @@ import { GumpBackgroundFlags, drawGumpBackground, planGumpBackground } from '../
 import { StoneButton } from './stone-button.js';
 import { MenuList } from './menu-list.js';
 import { ScrollingText } from './scroll-text.js';
+import { CURSOR_NORMAL } from './cursor.js';
 import { VerticalSlider } from './slider.js';
 import { parseStyleText } from './style-text.js';
 import { LinkTable, applyHtmlCondition, prepareDialogContent } from './html-text.js';
@@ -403,6 +404,13 @@ export class TellWindow {
         for (const button of this.buttons) if (button.cancel()) changed = true;
         if (this.menu?.pointerLeave()) changed = true;
         return changed;
+    }
+
+    // 화면 좌표 위에서 보일 커서 번호를 돌려준다. 링크 위는 가리키는 손(16), 스크롤바가 달린 본문 위는 상하 화살표(15), 그 밖(버튼·목록·패널·닫힌 창)은 기본 화살표(1)이다.
+    // 판정은 본문(ScrollingText.cursorAt)이 한다. 사용: const number = window.cursorAt(x, y); (2026-10-31 WB03-L)
+    cursorAt(x, y) {
+        if (this.closed) return CURSOR_NORMAL;
+        return this.body.cursorAt(x, y);
     }
 
     // 마우스 휠을 처리한다(웹 적응, 원본에 없음). 스크롤바가 있을 때 deltaY 가 양수면 아래로, 음수면 위로 본문 세 줄(45픽셀)만큼 스크롤한다. 처리했으면 true. (2026-10-31 WB03-K)

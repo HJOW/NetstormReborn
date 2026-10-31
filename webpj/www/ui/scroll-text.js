@@ -3,9 +3,11 @@
 // 원본 주소: 버퍼 추가 004b9790, 줄 나눔 004b9a50(Layout)·분할(SplitText), 최대 폭 004b9ed0, 크기 맞춤 004b9fb0(FitContent)·004b9f20(FitHeight),
 //            그리기 ScrollingTextGump::Draw. 복원 기준: cpppj StyleTextBuffer.cpp·TextGump.cpp(10.78 경로).
 // 스크롤 위치(setScroll)·스크롤바(VerticalSlider, ui/slider.js)와의 연동·링크 태그 판정(hitTest)은 도움말 창(WB03-G)이 쓴다. Tell 대화상자는 스크롤 위치 0 에서 위쪽부터 그린다.
-// (2026-10-28 WB03-D: Tell 대화상자 본문을 그리기 위해 추가, 2026-10-30 WB03-G: 스크롤·링크 판정 추가)
+// 포인터 아래의 커서 모양(cursorAt)은 링크 위 손·스크롤 가능한 본문 위 상하 화살표·그 밖 기본 화살표를 고른다.
+// (2026-10-28 WB03-D: Tell 대화상자 본문을 그리기 위해 추가, 2026-10-30 WB03-G: 스크롤·링크 판정 추가, 2026-10-31 WB03-L: 커서 모양 판정 추가)
 import { clipRect } from '../render/indexed-surface.js';
 import { createFragment, drawChain, drawFragment, measureFragment } from './style-text.js';
+import { CURSOR_LINK, CURSOR_NORMAL, CURSOR_SCROLL } from './cursor.js';
 
 // 원본 입력 줄 한 칸 수(생성 인자 128)이다. 이를 넘는 줄은 맨 앞부터 버린다. (2026-10-28 WB03-D)
 export const SCROLL_TEXT_MAX_LINES = 128;
@@ -161,6 +163,21 @@ export class ScrollingText {
             top = add(top, line.height);
         }
         return null;
+    }
+
+    // 화면 좌표 위에서 보일 커서 번호를 고른다(원본 ScrollingTextGumpWidgets::Handle 의 커서 사건).
+    //  1) 링크 조각(tag 가 0 이 아님) 위면 CURSOR_LINK(16), 2) 그렇지 않고 스크롤바가 달려 있으며 쪽 크기가 범위(최대 - 최소)보다 작으면 CURSOR_SCROLL(15), 3) 그 밖은 CURSOR_NORMAL(1).
+    // 커서 사건은 그 점에서 가장 위에 있는 위젯인 본문에만 간다(원본 GumpInput::Overlay 의 Pick). 본문 경계 밖이거나 본문 위에 얹힌 스크롤바 위면 본문이 받지 않아
+    // 원본은 반환 0 의 기본값(번호 1)으로 되돌리므로 CURSOR_NORMAL 이다. 스크롤바가 없으면(slider 가 null, 원본 kScroll 비트 꺼짐) 스크롤 모양은 없다.
+    // 사용: const number = body.cursorAt(pointer.x, pointer.y); (2026-10-31 WB03-L)
+    cursorAt(x, y) {
+        const bounds = this.bounds();
+        if (x < bounds.left || x >= bounds.right || y < bounds.top || y >= bounds.bottom) return CURSOR_NORMAL;
+        if (this.slider?.contains(x, y)) return CURSOR_NORMAL;
+        const fragment = this.hitTest(x, y);
+        if (fragment && fragment.tag) return CURSOR_LINK;
+        if (this.slider && this.slider.page < sub(this.slider.maximum, this.slider.minimum)) return CURSOR_SCROLL;
+        return CURSOR_NORMAL;
     }
 
     // 글자를 끝 줄에 추가한다(원본 StyleTextBuffer::AppendText). 줄바꿈(LF)마다 입력 줄을 닫고, LF 앞의 빈 구간도 빈 조각으로 저장한다.

@@ -57,6 +57,8 @@ const ASSET_FILES = Object.freeze([
     { path: 'd/_shapes.shp', bundle: 'menu', use: '셰이프 데이터베이스(fortGump 블록 22 프레임 1 = 돌 버튼 질감)' },
     ...FONT_FILES.map((fontPath) => ({ path: fontPath, bundle: 'menu', use: '원본 비트맵 글꼴 캐시(슬롯·스타일별, 슬롯 0 보통 = 돌 버튼 라벨, 그 밖 = 대화상자 제목·본문·목록 글자)' })),
     { path: 'cursors/RT_CURSOR_8.bin', bundle: 'menu', use: '원본 기본 커서 번호 1(흰 화살표, 핫스폿 10,6)' },
+    { path: 'cursors/RT_CURSOR_17.bin', bundle: 'menu', use: '원본 커서 번호 15(가로 막대를 지나는 상하 화살표, 핫스폿 15,13): 스크롤할 수 있는 본문 위(ScrollingTextGumpWidgets kScrollCursor)' },
+    { path: 'cursors/RT_CURSOR_18.bin', bundle: 'menu', use: '원본 커서 번호 16(가리키는 손, 핫스폿 12,9): 본문의 링크 위(ScrollingTextGumpWidgets kTagCursor)' },
     { path: 'sound/button.wav', bundle: 'menu', use: '돌 버튼을 누르는 순간의 효과음' },
     { path: 'sound/openSubGump.wav', bundle: 'menu', use: '대화상자 목록 행을 눌러 명령을 실행할 때의 효과음(원본 MenuGumpInput Sound("openSubGump.wav"))' },
     { path: 'netstorm.tarc', bundle: 'menu', use: '데이터 아카이브 TAFF(메뉴 대화상자 본문 tell.english·용어표 config.english·미션 스크립트·타입 정의, 246개 엔트리)' },
