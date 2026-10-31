@@ -8,7 +8,7 @@ namespace Netstorm.Tests;
 /// <summary>
 /// 미션 개체(스크립트·fortSpec·missionType·tellAtList)를 실제 Config와 함께 검사한다.
 /// 근거: cpppj/tests/ConfigInterfaceTests.cpp 의 MissionScript_ResolvesScriptFortAndType.
-/// 대화창·미션 실행이 쓰는 Fort 이미지 읽기·Guide 생성은 미션 실행 조립 때 잇는다. (R3k-12, 2026-10-31)
+/// Fort reader의 경로·소유 수명도 검사한다. Guide 생성은 미션 실행 조립 때 잇는다. (2026-10-31)
 /// </summary>
 public sealed class MissionScriptTests
 {
@@ -76,4 +76,40 @@ public sealed class MissionScriptTests
             Assert.Equal("\\D\\nofile.fort", missing.FortPath());
         }
     }
+    /// <summary>선택된 파일 경계와 현재 경로 설정이 미션 반납 뒤에도 유지되고 부재를 다른 reader로 우회하지 않는다.</summary>
+    [Fact]
+    public void FortReaders_PreserveSourceAndResolveCurrentPathAfterDisposal()
+    {
+        var files = MakeFiles();
+        files["\\D\\shared.fort"] = [1, 2];
+        var config = new ConfigInterface(Reader(files));
+        config.Startup(new ConfigInterface.StartupOptions());
+        var selected = new Dictionary<string, byte[]>(StringComparer.Ordinal)
+        {
+            ["\\D\\shared.fort"] = [3, 4],
+            ["\\Other\\shared.fort"] = [5, 6],
+        };
+        Func<string, byte[]?> source = Reader(selected);
+        Func<string, byte[]> reader;
+        MissionFortFileReader fileReader;
+        using (var mission = new MissionScript(config, "second", source: source))
+        {
+            Assert.Same(source, mission.FileSource());
+            Assert.Equal(new byte[] { 3, 4 }, mission.ReadFortImage("shared"));
+            reader = mission.FortReader();
+            fileReader = mission.FortFileReader(path => "mapped:" + path);
+        }
+        config.Set("DataDir", "\\Other");
+        Assert.Equal(new byte[] { 5, 6 }, reader("shared"));
+        MissionFortSourceImage result = fileReader("shared");
+        Assert.Equal(new byte[] { 5, 6 }, result.Image);
+        Assert.Equal("mapped:\\Other\\shared.fort", result.FileName);
+        config.Set("DataDir", "\\D");
+        selected.Remove("\\D\\shared.fort");
+        Assert.Throws<InvalidOperationException>(() => reader("shared"));
+        using var defaultMission = new MissionScript(config, "second");
+        Assert.Null(defaultMission.FileSource());
+        Assert.Equal(new byte[] { 1, 2 }, defaultMission.ReadFortImage("shared"));
+    }
+
 }

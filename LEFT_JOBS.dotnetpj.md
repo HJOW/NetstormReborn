@@ -787,6 +787,12 @@
 - **알아 둘 것:** `Mission.h/.cpp`→`MissionScript.cs` 2행과 `MissionFortSource.h`→`MissionFortSource.cs` 1행을 port로 올렸다.
   ConfigInterfaceTests의 나머지 9종은 R3k-11에서 이미 검사했으며 이번 단위에서 손대지 않았다.
 
+### 0.66 단위 기록 — 미션 Fort reader 수명 (2026-10-31, HJOW-Athlon)
+
+- **구현:** cpppj HEAD `fa5baf3c`의 `client/Mission.cpp`를 기준으로 `ReadFortImage`와 `FortReader`를 이식하고 기존 `FortFileReader`가 미션 객체 대신 설정과 선택 source를 보유하도록 정리했다. 선택 이름으로 현재 `fortSpec`을 한 번 풀며 명시 source의 부재를 기본 자산으로 우회하지 않는다.
+- **검증:** `MissionScriptTests` 집중 2개 통과. 명시 source, 미션 반납 후 현재 설정 변경, 파일 경로 매핑 및 부재를 검사했다. 전체 Release 검사 2,017개(Assets 364, Core 1,040, Client 613) 통과, 실패·건너뜀 0이다. 창·원본 게임 실행과 디컴파일은 하지 않았다.
+- **남은 작업:** 이 reader는 아직 실제 미션 세션에 연결되지 않았다. Guide 생성/반납, 목록 owner, 대화창·상위 메뉴 및 R4 이후 세션·HUD·입력·Edit·멀티플레이 사전 구현이 남는다. 전체 목표는 미완료다.
+
 ## 1. 지금까지의 완료 범위 — 이관 기록 색인
 
 단위별 상세는 [LEFT_JOBS.dotnetpj.old.md](LEFT_JOBS.dotnetpj.old.md)와 아래 문서에 있다. 마지막 판정 열은 0절 계획에서 그 결과를 어떻게 다루는지다([0.4](#04-기존-dotnetpj-소스의-재수정-판정)).

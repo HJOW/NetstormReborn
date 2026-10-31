@@ -6,7 +6,7 @@ namespace Netstorm.Client.Mission;
 /// 미션 시작(FUN_00482fb0 ↔ CD 00481020) 가운데 미션 스크립트를 읽고 새 파일 이름·돕는 부분을 만든다.
 /// UberGump가 원본 브리핑 본문을 표시한다. 미션 종류는 실제 객체·게임 명령에 속한다.
 /// 근거: cpppj/src/client/Mission.h/.cpp (00482fb0·0594fa0·00483210·00483260). (R3k-12, 2026-10-31)
-/// Fort 바이트 읽기(ReadFortImage·FortReader)와 Guide 생성·반납은 미션 실행 조립 때 잇는다.
+/// Guide 생성·반납은 미션 실행 조립 때 잇는다.
 /// </summary>
 public sealed class MissionScript : IDisposable
 {
@@ -90,23 +90,44 @@ public sealed class MissionScript : IDisposable
     /// <summary>새 파일의 경로(`fortSpec`, 원본 FUN_00460650).</summary>
     public string FortPath() => _configuration.PathSpec("fortSpec", FortName());
 
+    /// <summary>선택한 이름을 현재 fortSpec에 적용해 같은 읽기 경계에서 원문을 읽는다.</summary>
+    /// <param name="selectedFort">이미 선택한 논리 요새 이름. loadFort를 다시 조회하지 않는다.</param>
+    public byte[] ReadFortImage(string selectedFort) => ReadFortSource(_configuration, _source, selectedFort);
+
+    /// <summary>미션 객체 반납 뒤에도 현재 설정과 선택된 읽기 경계를 사용하는 요새 reader를 만든다.</summary>
+    public Func<string, byte[]> FortReader()
+    {
+        ConfigInterface configuration = _configuration;
+        Func<string, byte[]?>? source = _source;
+        return selectedFort => ReadFortSource(configuration, source, selectedFort);
+    }
+
+    /// <summary>선택한 경로의 바이트를 읽고 부재를 명시적으로 알린다.</summary>
+    /// <param name="source">미션이 선택한 파일 읽기 경계.</param>
+    /// <param name="path">이미 결정된 파일 경로.</param>
+    private static byte[] ReadFortPath(Func<string, byte[]?>? source, string path) =>
+        source?.Invoke(path) ?? throw new InvalidOperationException("게임 파일을 찾을 수 없다: " + path);
+
+    /// <summary>현재 설정에서 요새 경로를 한 번 결정해 같은 경계로 읽는다.</summary>
+    /// <param name="configuration">현재 경로 설정.</param>
+    /// <param name="source">미션이 선택한 파일 읽기 경계.</param>
+    /// <param name="selectedFort">읽을 논리 요새 이름.</param>
+    private static byte[] ReadFortSource(ConfigInterface configuration, Func<string, byte[]?>? source, string selectedFort) =>
+        ReadFortPath(source, configuration.PathSpec("fortSpec", selectedFort));
+
     /// <summary>선택한 Fort 파일 원문과 실제 설치 경로를 함께 돌려준다. 경로 매퍼와 reader가 수명을 둔다.</summary>
     /// <param name="fileName">경로 매퍼. 없으면 읽은 경로를 그대로 쓴다.</param>
-    public MissionFortFileReader FortFileReader(Func<string, string>? fileName = null) =>
-        selectedFort =>
+    public MissionFortFileReader FortFileReader(Func<string, string>? fileName = null)
+    {
+        ConfigInterface configuration = _configuration;
+        Func<string, byte[]?>? source = _source;
+        return selectedFort =>
         {
-            if (_source == null)
-            {
-                throw new InvalidOperationException("미션 Fort 읽기에 쓸 읽기 경계가 없다");
-            }
-            string path = _configuration.PathSpec("fortSpec", selectedFort);
-            byte[]? bytes = _source(path);
-            if (bytes == null)
-            {
-                throw new InvalidOperationException("게임 파일을 찾을 수 없다: " + path);
-            }
+            string path = configuration.PathSpec("fortSpec", selectedFort);
+            byte[] bytes = ReadFortPath(source, path);
             return new MissionFortSourceImage { Image = bytes, FileName = fileName != null ? fileName(path) : path };
         };
+    }
 
     /// <summary>같은 source를 공유 복사한 Guide 교체용 읽기 경계. 기본 파일 reader를 같은 이름으로 둔다.</summary>
     public Func<string, byte[]?>? FileSource() => _explicitSource ? _source : null;
