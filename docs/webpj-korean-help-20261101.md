@@ -58,6 +58,8 @@
 
 ## 6. 남은 일
 
+(2026-11-01 WB03-R 에서 아래 1번의 산문 주제 14개는 `serverHelp`(원문이 제작진의 미완성 틀) 하나를 빼고 번역을 마쳤다. [5단계 기록](webpj-korean-help-multiplayer-20261101.md) 참고. 남은 주제는 그 문서 6절이 최신이다.)
+
 1. **나머지 도움말 주제 번역**: 산문 14개(약 30KB)는 대부분 멀티플레이어 설명이다 — `chatViewHelp`·`formatCommandHelp`·`chathelperHelp`·`serverHelp`·`bombHelp`·`outpostHelp`·`rankHelp`·`multiSafeHelp`·`reliabilityHelp`·`battlemasterHelp`·`playerListViewHelp`·`battleStatusViewHelp`·`playerOptionsHelp`·`battleOptionsHelp`. 별칭 앵커가 본문과 묶인 것(`zoneHelp`·`playerListView`·`battleStatusView`)은 영어에서의 자리를 확인해 같이 옮긴다. `…Type` 57개(약 35KB)와 그 별칭(`daisType`·`runeType`·`obeliskType`·`buriedType`·`bombExplodeMediumType`·`geyserType`·`thunderWalkerType`·`outpostType`)은 타입 표(`.type`)가 생겨 `<info>` 머리글을 그릴 수 있게 될 때 함께 한다(지금은 본문만 나옴). 번역 주제를 더할 때 코드 변경은 없고 `tests/korean-help.test.mjs` 의 `TRANSLATED`·`ALIAS_TARGETS` 와 영어 낱말 허용 목록만 갱신한다.
 2. 번역 문구 개발자 검수(특히 주문 이름 18개), 에너지 기호·간헐천·건물 그림 지원(`<!"mana.*">` 등).
 3. 맨 위 인계의 나머지(미션 스크립트 한국어·Auto-Demo·Options −40 규칙·본문 끌기 Overlay·커서 2~14), 그 뒤 정적 맵 화면(M2).

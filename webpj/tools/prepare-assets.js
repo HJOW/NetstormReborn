@@ -56,7 +56,7 @@ const FONT_FILES = Object.freeze(
 const KOREAN_LANGUAGE_FILES = Object.freeze([
     { name: 'tell.korean', use: '한국어 Tell 대화상자 본문(UTF-8, 부분 번역): 환영·팁·캠페인·크레딧·데모·버전·기술 지원 섹션과 팁 목록' },
     { name: 'config.korean', use: '한국어 용어표(UTF-8): 워크샾·신전·사제 같은 이름 용어와 기본 확인 단추 OkButton' },
-    { name: 'help.korean', use: '한국어 F1 도움말(UTF-8, 부분 번역 앵커 45개: 본문 34개와 별칭 11개): 번역하지 않은 주제는 영어 help.english 에서 주제 단위로 대체된다(2026-10-31 WB03-P, 2026-11-01 WB03-Q)' },
+    { name: 'help.korean', use: '한국어 F1 도움말(UTF-8, 부분 번역 앵커 66개: 본문 49개와 별칭 17개): 번역하지 않은 주제는 영어 help.english 에서 주제 단위로 대체된다(2026-10-31 WB03-P, 2026-11-01 WB03-Q, 2026-11-01 WB03-R)' },
     ...['offical1', 'offical2', 'offical2sep', 'offical3', 'offical4', 'offical5', 'offical5sep', 'offical6'].map((name) => ({
         name: `${name}.korean`,
         use: `한국어 캠페인 목록 파일(UTF-8): 원본 ${name}.english 의 제목·소개·미션 이름(명령·치환 키는 원문 그대로)`,

@@ -1,6 +1,6 @@
 // 한국어 F1 도움말(WB03-P)을 검사한다: help.korean(번역한 주제만 담은 부분 파일)이 영어 help.english 의 첫 앵커와 같은 구조(태그·그림·링크 주소·조건·글자 모양 표시)인지,
 // 도움말 창이 번역하지 않은 주제를 주제 단위로 영어 파일에서 대신 찾는지, 한국어 본문이 유니코드 글꼴 코드인지 확인한다. 번역 문구 자체의 옳고 그름은 검사하지 않는다(개발자 검수 대상).
-// (2026-10-31 WB03-P, 2026-11-01 WB03-Q: 번역 주제 15개 → 별칭 앵커 포함 확대, 별칭 앵커 검사 추가)
+// (2026-10-31 WB03-P, 2026-11-01 WB03-Q: 번역 주제 15개 → 별칭 앵커 포함 확대, 별칭 앵커 검사 추가, 2026-11-01 WB03-R: 멀티플레이어 설명·주문 주제 추가와 영어로 남긴 <c> 문구 검사)
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
@@ -60,9 +60,11 @@ function parseTopics(text) {
 const koreanTopics = parseTopics(koreanHelp);
 const englishTopics = parseTopics(englishHelp);
 
-// 본문의 구조 토큰(태그·그림·링크 주소·조건, `~` 글자 모양 표시)을 정렬해 돌려준다. 번역하면서 낱말 순서가 바뀔 수 있어 순서는 보지 않는다. (2026-10-31 WB03-P)
+// 본문의 구조 토큰(태그·그림·링크 주소·조건, `~` 글자 모양 표시)을 정렬해 돌려준다. 번역하면서 낱말 순서가 바뀔 수 있어 순서는 보지 않는다.
+// 화면에 글자 그대로 찍히는 코드(`~~y`)와 원본 그림 코드(`~[B.3]`·`~~[C.xxx]`)는 뒷부분까지 한 토큰으로 본다. 태그(`<…>`)는 대소문자를 무시하고 글자 모양 표시는 구분한다(`~I` 와 `~i` 는 다르다).
+// (2026-10-31 WB03-P, 2026-11-01 WB03-R: `~~글자`·`~[…]` 전체 토큰화와 글자 모양 표시 대소문자 구분 추가 — 변이 검사에서 그림 코드 숫자·찍히는 코드 글자 변경을 놓쳐 보강)
 function structureOf(topic) {
-    return (topic.match(/<[^>]*>|~[^\s]/g) ?? []).map((token) => token.toLowerCase()).sort();
+    return (topic.match(/<[^>]*>|~~\[[^\]]*\]|~~[^\s]|~\[[^\]]*\]|~[^\s]/g) ?? []).map((token) => (token.startsWith('<') ? token.toLowerCase() : token)).sort();
 }
 
 // 번역한 주제 목록(첫 앵커 이름, 파일 순서)이다. 본문 없이 다음 앵커와 묶이는 별칭 앵커(ALIAS_TARGETS 의 키)도 포함한다. (2026-10-31 WB03-P, 2026-11-01 WB03-Q: 별칭 앵커와 새 주제 추가)
@@ -73,13 +75,18 @@ const TRANSLATED = Object.freeze([
     'rainVortexType', 'windVortexType', 'thunderVortexType', 'vortexHelp', 'spVortexHelp', 'golemVortexHelp', 'influenceVortexHelp',
     'factoryHelp', 'sunFactoryType', 'windFactoryType', 'rainFactoryType', 'thunderFactoryType', 'upgradeHelp', 'shooterHelp',
     'tacticHelp', 'tacticsHelp', 'salvageHelp', 'minimapGumpHelp', 'moneyGumpHelp', 'teleportViewHelp', 'campaignHelp', 'multiplayerHelp', 'multiQuickHelp',
+    'chatViewHelp', 'formatCommandHelp', 'chathelperHelp', 'outpostType', 'outpostHelp', 'rankHelp', 'multiSafeHelp', 'reliabilityHelp', 'battlemasterHelp',
+    'battleIslandType', 'zoneHelp', 'challengeIslandType', 'playerListView', 'playerListViewHelp', 'battleStatusView', 'battleStatusViewHelp',
+    'playerOptionsHelp', 'obeliskType', 'buriedType', 'bombHelp', 'battleOptionsHelp',
 ]);
 
-// 본문이 없는 별칭 앵커 → 그 앵커가 보여 주는 본문 앵커이다(영어 원문에서 별칭 앵커는 본문 앵커 바로 앞에 붙어 있어 같은 본문이 나온다). (2026-11-01 WB03-Q)
+// 본문이 없는 별칭 앵커 → 그 앵커가 보여 주는 본문 앵커이다(영어 원문에서 별칭 앵커는 본문 앵커 바로 앞에 붙어 있어 같은 본문이 나온다). (2026-11-01 WB03-Q, 2026-11-01 WB03-R: 6개 추가)
 const ALIAS_TARGETS = Object.freeze({
     researchHelp: 'technologyHelp', moneyHelp: 'stormPowerHelp', tacticHelp: 'tacticsHelp', campaignHelp: 'multiplayerHelp',
     rainVortexType: 'vortexHelp', windVortexType: 'vortexHelp', thunderVortexType: 'vortexHelp',
     factoryHelp: 'thunderFactoryType', sunFactoryType: 'thunderFactoryType', windFactoryType: 'thunderFactoryType', rainFactoryType: 'thunderFactoryType',
+    outpostType: 'outpostHelp', zoneHelp: 'challengeIslandType', playerListView: 'playerListViewHelp', battleStatusView: 'battleStatusViewHelp',
+    obeliskType: 'bombHelp', buriedType: 'bombHelp',
 });
 
 // 앵커 구간에서 태그를 걷어 낸 보이는 글이 비었는지(본문 없는 별칭 앵커인지) 돌려준다. (2026-11-01 WB03-Q)
@@ -104,12 +111,27 @@ test('help.korean: UTF-8·소스와 복사본 일치·번역 주제 목록', () 
     }
 });
 
-// 번역하지 않고 남겨 둔 영어 낱말(네 글자 이상)은 화면에 보이는 고유 이름·키 이름·메뉴 이름뿐이다(문장이 영어로 남은 주제를 찾는다). (2026-10-31 WB03-P, 2026-11-01 WB03-Q: 메뉴 항목 Drop·명령 이름 format·시험용 이름 devo12 허용)
+// 번역하지 않고 남겨 둔 영어 낱말(네 글자 이상)은 화면에 보이는 고유 이름·키 이름·메뉴 이름뿐이다(문장이 영어로 남은 주제를 찾는다). (2026-10-31 WB03-P, 2026-11-01 WB03-Q: 메뉴 항목 Drop·명령 이름 format·시험용 이름 devo12 허용,
+// 2026-11-01 WB03-R: 게임 안 메뉴 이름을 그대로 둔 `<c>` 문구는 영어 원문에 같은 `<c>` 문구가 있을 때만 허용하고 검사에서 뺀다. 원본 그림 코드 `~[I…]` 도 뺀다.)
 test('help.korean: 영어 문장이 남지 않았다(고유 이름·키·메뉴 이름만 허용)', () => {
-    const allowed = new Set(['Start', "Battle'", 'NetStorm', 'Netstorm', 'Ticonderoga', 'Entertainment', 'Activision', 'Titanic', 'MicroSoft', 'IntellimouseTM', 'Escape', 'Shift', 'Pause', 'Ctrl', 'About', 'Salvage', 'Drop', 'devo', 'format']);
-    // 태그와 글자 모양 표시를 걷어 내고 남은 영어 낱말을 모은다.
-    const visible = koreanHelp.slice(koreanHelp.indexOf('<a name=')).replace(/<[^>]*>/g, ' ').replace(/~[^\s]/g, ' ');
+    const allowed = new Set(['Start', "Battle'", 'NetStorm', 'Netstorm', 'Ticonderoga', 'Entertainment', 'Activision', 'Titanic', 'MicroSoft', 'IntellimouseTM', 'Escape', 'Shift', 'Pause', 'Ctrl', 'About', 'Salvage', 'Drop', 'devo', 'format', 'ENTER', 'back', 'front',
+        // 채팅 예시 이름과 게임 안 메뉴·옵션 이름(게임 안 메뉴가 아직 한국어가 아니라 영어 이름을 그대로 둔다).
+        'OzTheGreatAndPowerful', 'Game', 'Empty', 'Mimicing', 'Sounds', 'Icons', 'Emboss', 'Offset', 'Allow', 'Foreground', 'Colors', 'Chat', 'Effects', 'Controls', 'Channel', 'Player', 'Other', 'Insert', 'Copy', 'Paste', 'Format']);
+    const problems = [];
+    let visible = '';
+    // 주제마다 영어 원문에 있는 `<c>` 문구를 그대로 둔 것은 빼고, 영어 원문에 없는 영어 `<c>` 문구는 문제로 모은다.
+    for (const [name, bodies] of koreanTopics) {
+        const englishSpans = new Set([...englishTopics.get(name)[0].matchAll(/<c>([^<]*)<\/c>/g)].map((match) => match[1]));
+        visible += bodies[0].replace(/<c>([^<]*)<\/c>/g, (whole, inner) => {
+            if (/[가-힣]/.test(inner)) return whole;
+            if (!englishSpans.has(inner)) problems.push(`${name}: 영어 원문에 없는 영어 <c> 문구 ${JSON.stringify(inner)}`);
+            return ' ';
+        });
+    }
+    // 태그·원본 그림 코드·글자 모양 표시를 걷어 내고 남은 영어 낱말을 모은다(첫 앵커 앞의 설명은 화면에 나오지 않는다).
+    visible = visible.replace(/<[^>]*>/g, ' ').replace(/~\[[^\]]*\]/g, ' ').replace(/~[^\s]/g, ' ');
     const leftovers = [...new Set([...visible.matchAll(/[A-Za-z][A-Za-z']{3,}/g)].map((match) => match[0]))].filter((word) => !allowed.has(word));
+    assert.deepEqual(problems, []);
     assert.deepEqual(leftovers, []);
 });
 
@@ -154,22 +176,25 @@ test('renderHelpTopic: 한국어 주제의 링크 목적지가 영어와 같고 
 // 별칭 앵커는 영어와 같은 본문 앵커를 가리킨다: 한국어에서도 별칭과 본문 앵커가 같은 본문(같은 링크 목록)을 보여 준다. (2026-11-01 WB03-Q)
 test('renderHelpTopic: 별칭 앵커가 영어와 같은 본문 앵커의 본문을 보여 준다', () => {
     const data = newData('korean');
-    // 별칭 앵커로 열면 본문 뒤에 링크 색 복원 코드(`~[T0]~N~.`)가 앵커 수만큼 더 붙는다(원본 파서의 동작이며 영어도 같다). 그 꼬리를 뺀 본문이 같아야 하고, 꼬리 자체는 영어와 같아야 한다.
+    // 별칭 앵커로 열면 본문 뒤에 링크 색 복원 코드(`~[T0]~N~.`)가 앵커 수만큼 더 붙는다(원본 파서의 동작이며 영어도 같다).
+    // 또 별칭 이름이 본문 앵커 이름의 앞부분이면(playerListView ⊂ playerListViewHelp) 두 앵커가 모두 주제로 잡혀 본문 머리 표시(`~5~w `)도 겹친다.
+    // 그 머리와 꼬리를 뺀 본문이 같아야 하고, 머리와 꼬리 자체는 영어와 같아야 한다.
     const tailOf = (styleText) => styleText.match(/(?:\s|~\[T0\]~N~\.)+$/)?.[0] ?? '';
+    const headOf = (styleText) => styleText.match(/^(?:~5~w )+/)?.[0] ?? '';
+    const bodyOf = (styleText) => styleText.slice(headOf(styleText).length, styleText.length - tailOf(styleText).length);
     const render = (helpText, topic) => renderHelpTopic({ helpText, topic, substitute: (text) => data.substitute(text) });
     // 별칭 앵커마다 본문 앵커와 같은 본문·링크가 나오는지를 한국어와 영어 모두에서 비교한다.
     for (const [alias, target] of Object.entries(ALIAS_TARGETS)) {
-        const tails = [];
+        const edges = [];
         for (const helpText of [koreanHelp, englishHelp]) {
             const aliasResult = render(helpText, alias);
             const targetResult = render(helpText, target);
             assert.equal(aliasResult.found, true, alias);
-            const aliasTail = tailOf(aliasResult.styleText);
-            assert.equal(aliasResult.styleText.slice(0, aliasResult.styleText.length - aliasTail.length), targetResult.styleText.slice(0, targetResult.styleText.length - tailOf(targetResult.styleText).length), `${alias} → ${target}`);
+            assert.equal(bodyOf(aliasResult.styleText), bodyOf(targetResult.styleText), `${alias} → ${target}`);
             assert.deepEqual(aliasResult.links.destinations, targetResult.links.destinations, `${alias} → ${target} 링크`);
-            tails.push(aliasTail);
+            edges.push([headOf(aliasResult.styleText), tailOf(aliasResult.styleText)]);
         }
-        assert.equal(tails[0], tails[1], `${alias} 꼬리가 영어와 다름`);
+        assert.deepEqual(edges[0], edges[1], `${alias} 머리·꼬리가 영어와 다름`);
     }
 });
 
@@ -216,7 +241,7 @@ test('한국어 도움말 창: 번역한 주제는 한국어이고 번역하지 
     assert.equal(lost.fallbackHelpText, null);
 });
 
-// 번역한 주제는 모두 한국어 창에서 열리고(본문이 유니코드 코드, 줄이 있음) 화면 안에 들어간다. 4개 화면 크기에서 확인한다. (2026-10-31 WB03-P, 2026-11-01 WB03-Q: 별칭 앵커 포함 45개)
+// 번역한 주제는 모두 한국어 창에서 열리고(본문이 유니코드 코드, 줄이 있음) 화면 안에 들어간다. 4개 화면 크기에서 확인한다. (2026-10-31 WB03-P, 2026-11-01 WB03-Q: 별칭 앵커 포함 45개, 2026-11-01 WB03-R: 66개)
 test('한국어 도움말 창: 번역한 주제(별칭 앵커 포함)가 모두 열린다', () => {
     const failures = [];
     // 화면 크기마다 번역한 주제를 모두 열어 본다.
