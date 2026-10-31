@@ -1,6 +1,7 @@
 // 현재 장치를 매호출 빌려 기존 Native 부모를 실행하며 미정 지역 버퍼를 임의0으로 채우지 않는다.
 #include "client/ClientChatRuntime.h"
 #include "client/ClientMain.h"
+#include "client/ClientAudio.h"
 #include "client/ClientChatManagerGlobals.h"
 #include "client/ClientChatWindowGlobals.h"
 #include "client/ChatRecipients.h"
@@ -14,11 +15,13 @@
 #include "client/ClientCoreDataGlobals.h"
 #include "client/ClientDotCommandGlobals.h"
 #include "client/ClientGameplayGlobals.h"
+#include "client/RawIssueCommands.h"
 #include "client/RawSurfaceWorld.h"
 #include "o/OriginalText.h"
 #include <algorithm>
 #include <array>
 #include <bit>
+#include <charconv>
 #include <iostream>
 #include <stdexcept>
 
@@ -30,6 +33,12 @@ void ChatAssertion(std::uint32_t line) { std::clog<<"Chat 원문 진단:"<<line<
 std::int32_t IconCount(const GameAssets& assets,const RawSurfaceStorage& surface,std::uint8_t letter) {
     const auto kind=assets.Find("icon").block+o::kFirstAssetTypeNumber;if (kind>=surface.frames.size()) throw std::out_of_range("Chat icon 현재TYPE 물리 범위");return surface.frames[kind].Run(letter).count;
 }
+}
+// 원문 init issueCommand 위치에서 호출하며 독립 Chat manager 재할당은 이 등록을 반복하지 않는다.
+void InitializeClientIssueCommands(Client& client) {
+    RegisterIssueCommands([&client](auto name,auto callback,auto flag) {
+        const std::string text(name);client.DotCommandGlobals()->Register({reinterpret_cast<const std::uint8_t*>(text.c_str()),text.size()+1},callback,flag);
+    });
 }
 // 현재 Subscriber는 실제 부모의 각 Config 키 서식 위치에서 다시 읽는다.
 void InitializeClientChatManager(Client& client) {
@@ -125,9 +134,13 @@ void BindClientChatSubmit(RawChatWindowContext& context,Client& client,RawMenuCo
         hooks.dispatch=[&client,&menus,inputVisible=hooks.inputVisible,message](auto body) {
             DotCommandDispatchHooks commands;
             commands.invoke=[&client,&menus,inputVisible,message](auto callback,auto argument) -> std::uint32_t {
+                const auto end=std::find(argument.begin(),argument.end(),0);if (end==argument.end()) throw std::out_of_range("Chat 명령 인자의 실제 NUL 없음");
+                const std::string_view text{reinterpret_cast<const char*>(argument.data()),static_cast<std::size_t>(end-argument.begin())};
+                IssueCommandHooks issue;issue.flash=[&client](auto brightness) { client.RequestThunderFlash(brightness); };
+                issue.sound=[&client](auto name) { static_cast<void>(client.WorldAudio().Sounds().PlayByName(name,0,0,0,0,0)); }; //원문과 같이 화면 효과 뒤 소리 요청이며 noAudio 장치는 기존 비활성 owner다.
+                if (const auto result=InvokeIssueCommand(callback,text,client.GameplayGlobals()->energy.userCheat,issue)) return *result;
                 if (callback==0x42f680U || callback==0x42e520U) return menus.InvokeChatCommand(callback);
                 if (callback==0x42ddf0U || callback==0x42def0U) {
-                    const auto end=std::find(argument.begin(),argument.end(),0);if (end==argument.end()) throw std::out_of_range("Chat 서식 인자의 실제 NUL 없음");
                     return ApplyClientChatFormat(client,callback==0x42def0U,{reinterpret_cast<const char*>(argument.data()),static_cast<std::size_t>(end-argument.begin())});
                 }
                 if (callback==0x42f1e0U) {
@@ -138,6 +151,10 @@ void BindClientChatSubmit(RawChatWindowContext& context,Client& client,RawMenuCo
                     if (!message) throw std::logic_error("Chat 일반 본문의 실제 서식·송신 미연결");return message(argument);
                 } // 선행 관문은 장치를 요구하지 않으며 나머지는 같은 실제 say/조합/패킷에 넘긴다.
                 throw std::logic_error("Chat 제출의 실제 명령 callback 미연결:"+std::to_string(callback));
+            };
+            commands.error=[&menus](auto name,auto code) { //0042f100에 전달하는 이미 서식화된 오류를 실제 현재 Chat/스크롤에 추가한다.
+                std::array<char,8> hex{};const auto written=std::to_chars(hex.data(),hex.data()+hex.size(),code,16);
+                menus.PrintChat("Error in command \"."+std::string(name)+"\": code == "+std::string(hex.data(),written.ptr)+"\n");
             };
             const auto owner=client.DotCommandGlobals();static_cast<void>(DispatchDotCommand(owner->Bytes(),owner->DispatchState(),body,commands));
         };

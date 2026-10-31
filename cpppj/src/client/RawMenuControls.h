@@ -132,6 +132,7 @@ public:
     std::uint32_t ChatMessageColor() const; // 현재 팔레트005b5dd8 색을 문맥 생성 직전에 읽는다.
     const ChatWindow* ChatBackend() const;const HudChatGeometry* ChatGeometryBackend() const; // 같은 실제 본체를 빌린다.
     void AppendChatLog(std::uint32_t token,std::string_view text,std::span<const std::uint32_t> context={}); // 원문42eca0의 현재 자식/스크롤과 부모 문맥 저장·복원으로 실제 로그를 추가한다.
+    void PrintChat(std::string_view text); //0042f100의 서식 완료 문자열을 현재 Chat에 추가한다.현재0이면 자식/장치를 요구하지 않는다.
     void ForwardDiagnosticChat(std::uint32_t enabled,std::string_view format); // 원문434f40의 현재 색·Chat 전역/인자 없는 서식을 같은 실제 공장에 전달한다.
     std::uint32_t InvokeChatCommand(std::uint32_t callback); // 실제 clear/quit callback의 원문 효과다. 미지원 콜백은 거부한다.
     void CloseChatWindows(); // 부분 생성/미부착 자식과 모든 실제 Chat root를 공통 수명으로 반납한다.

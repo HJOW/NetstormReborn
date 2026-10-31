@@ -733,6 +733,8 @@ std::uint32_t RawMenuControls::ChatMessageColor() const { return impl_->palette.
 const ChatWindow* RawMenuControls::ChatBackend() const { return impl_->chatWindow.get(); } // 실제 설치한 본체다.
 const HudChatGeometry* RawMenuControls::ChatGeometryBackend() const { return impl_->chatGeometry.get(); } // 같은 현재 자식 기하다.
 void RawMenuControls::AppendChatLog(std::uint32_t token,std::string_view text,std::span<const std::uint32_t> context) { auto& s=*impl_;if (!s.chatWindow) throw std::logic_error("Chat 실제 로그 처리기 없음");s.chatWindow->AppendLog(token,text,context); } // 같은 실제 공유 로그/스타일 파서와 원문42eca0 부모를 사용한다.
+// 원문0042f100의 현재 root 관문과 자식 문맥/스크롤 보존은 기존 동일 AppendLog 본체로 실행한다.
+void RawMenuControls::PrintChat(std::string_view text) { const auto& s=*impl_;const auto token=s.chatContext ? s.chatContext->globals->window.current : 0U;if (token) AppendChatLog(token,text); }
 // 색을 읽은 뒤의 서식 처리와 현재 Chat 포인터 재조회를 공통 로그 부모에 공급한다.
 void RawMenuControls::ForwardDiagnosticChat(std::uint32_t enabled,std::string_view format) {
     auto& s=*impl_;TraceChatHooks hooks;hooks.color=[&s] { return s.palette.named.at(9).index; };

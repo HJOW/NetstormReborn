@@ -2558,3 +2558,11 @@ add_executable(netstorm_renderer_presentation_tests FocusedTestMain.cpp Renderer
 target_link_libraries(netstorm_renderer_presentation_tests PRIVATE netstorm)
 netstorm_apply_compiler_options(netstorm_renderer_presentation_tests)
 target_compile_definitions(netstorm_renderer_presentation_tests PRIVATE ${_netstorm_menu_session_definitions})
+
+# 초기 점 명령과 실제 Client/Chat/번개의 필요한 필터만 창 없이 선택 실행한다.
+target_sources(netstorm_tests PRIVATE IssueCommandsTests.cpp)
+set_source_files_properties(IssueCommandsTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_ISSUE_COMMANDS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/issue-commands-x86.tsv\"")
+add_executable(netstorm_issue_commands_tests FocusedTestMain.cpp IssueCommandsTests.cpp ChatWindowClientTests.cpp ThunderProcessTests.cpp ClientChatRuntimeTests.cpp)
+target_link_libraries(netstorm_issue_commands_tests PRIVATE netstorm)
+netstorm_apply_compiler_options(netstorm_issue_commands_tests)
+target_compile_definitions(netstorm_issue_commands_tests PRIVATE ${_netstorm_menu_session_definitions})

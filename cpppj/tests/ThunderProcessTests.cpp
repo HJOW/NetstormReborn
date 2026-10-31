@@ -59,3 +59,14 @@ TEST_CASE(ThunderProcess_ParentDestroyReleasesSameProcess) {
     const auto form=process->Form();const auto id=scene.core.kernel.Find(*process);scene.core.destroy.Destroy(parent,0x10,scene.core.processes.Hooks());
     CHECK(scene.core.kernel.Get(id)==nullptr);CHECK(scene.destructs==1 && scene.restores==1);CHECK((scene.core.pool.Slot(parent)[11]&1) && (scene.core.pool.Slot(form)[11]&1));
 }
+
+// 명령의 signed 밝기가 실제 Form 생성자를 거쳐 같은 팔레트 계산에 도달한다.
+TEST_CASE(IssueCommands_ThunderBrightnessUsesActualFormPalette) {
+    ThunderScene scene;scene.full=true;const auto parent=scene.Parent();ScreenColor observed{};
+    for (auto& color:scene.palette) { color.red=100;color.green=120;color.blue=140; } //구별되는 원래 채널을 명시 입력한다.
+    auto hooks=scene.Hooks();hooks.applyPalette=[&](unsigned start,unsigned count,ScreenColor* colors) { CHECK(start==228 && count==18);++scene.applies;observed=colors[0]; };
+    auto process=std::make_unique<ThunderProcess>(true,std::move(hooks),[&](ProcessId) { ++scene.destructs; },-17);
+    auto* attached=scene.core.processes.Attach(std::move(process),kThunderProcessType,parent,0x10);CHECK(attached!=nullptr);if (!attached) return;
+    scene.core.kernel.RunFrame();CHECK(scene.applies==1 && observed.red==83 && observed.green==103 && observed.blue==123);
+    scene.core.processes.Kill(*attached,0x10);CHECK(scene.destructs==1 && scene.restores==1);
+}

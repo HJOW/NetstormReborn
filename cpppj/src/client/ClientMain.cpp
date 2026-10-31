@@ -340,6 +340,7 @@ int Client::Run() {
     // [원본] 송수신기, squid 목록(120000), 좌표 해시, spot 배열, 영상, Guide, 그래프,
     //        전체 명령 표, 인트로 감지, 연락처, 지도 모드, HTTP 서버 — 옮기지 않았다.
     // 원본 00438dc0 "loadContactList" 다음의 FUN_00469fc0: 전투 밖이므로 메뉴 곡 ser22.mus로 시작한다.
+    if (options_.edition==o::OriginalEdition::Patch1078) InitializeClientIssueCommands(*this); //004397f5의 네 초기 등록은 뒤 map mode의 format/back/front보다 먼저 실행한다.
     if (audio_) audio_->StartScene(false);
     if (options_.edition==o::OriginalEdition::Patch1078) InitializeClientChatManager(*this); //00439840의 실제 map mode 시작이며 메뉴/Session 생성보다 먼저 같은 현재 manager/명령표를 구성한다.
     fortBadges_->ResetCounts(); // 원본0043984a는 Chat 시작 다음의 같은 장부 count reset이며 매 Session 생성 때 반복하지 않는다.
@@ -784,7 +785,8 @@ void Client::RefreshPaletteConsumers() {
     if (menu_) menu_->PaletteChanged();else if (renderer_) renderer_->InvalidateAll();
 }
 // 00470d40처럼 현재 Player의 기술 부모가 있을 때만 실제 TYPE55/flags0x10으로 부착한다.
-void Client::StartThunderFlash() {
+void Client::RequestThunderFlash(std::int32_t brightness) { StartThunderFlash(brightness); } //원문 명령과 날씨가 같은 부모/효과 경계를 사용한다.
+void Client::StartThunderFlash(std::int32_t brightness) {
     if (!gameplayGlobals_->player.playerKnown) return; // 원문595344가0이면 부모 조회조차 하지 않는다.
     if (!surfaceStorage_) throw std::logic_error("번개 기술 부모의 실제 표면 저장소 없음");
     if (surfaceStorage_->ownerMode.challenge) throw std::logic_error("번개 메타맵00479650의 실제 기록 조회 미복원"); // 멀티플레이 메타맵 기록을 일반 Player 행으로 대체하지 않는다.
@@ -799,7 +801,7 @@ void Client::StartThunderFlash() {
         [this](unsigned start,unsigned count,ScreenColor* destination) { std::copy_n(screen_->Palette().data()+start,count,destination); },
         [this](unsigned start,unsigned count,ScreenColor* colors) { screen_->SetPalette(start,count,colors,true); },
         [this] { screen_->SetPalette(0,256,nullptr,true); }
-    },[this](o::ProcessId id) { std::erase(thunderProcesses_,id); });
+    },[this](o::ProcessId id) { std::erase(thunderProcesses_,id); },brightness);
     auto& host=surfaceStorage_->Processes().Host();auto* attached=host.Attach(std::move(process),kThunderProcessType,o::Sid{static_cast<std::uint16_t>(parent)},0x10);
     if (attached) thunderProcesses_.push_back(kernel_->Find(*attached)); // free/dead 부모의 원문 조용한 거부는 등록 목록에도 넣지 않는다.
 }

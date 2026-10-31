@@ -15,6 +15,7 @@
 #include "client/ClientConnectionGlobals.h"
 #include "client/ClientPlayerRecords.h"
 #include "client/ClientDotCommandGlobals.h"
+#include "client/RawDotCommandRegister.h"
 #include "client/RawChatWindowContext.h"
 #include "client/RawButtonControls.h"
 #include "client/RawMenuControls.h"
@@ -335,3 +336,6 @@ TEST_CASE(ChatWindowClient_EnterActualPacketQueueRelayAndSharedLog) {
     CHECK(globals->log.lineCount==0 && wire.QueuedFrames()==1);CHECK(wire.Poll()>=1 && globals->receivedMask==32 && globals->log.lineCount==1);const auto report=scene.menus->Report();CHECK(report.find("raw_chat_fragment\t")!=report.npos && report.find("68656c6c6f")!=report.npos);
     globals->ignored.push_back(100);scene.menus->OpenChatInput({13,0,0});ChatSetInput(scene,root,"hidden");scene.buttons.RouteInput({13,0,0});CHECK(wire.QueuedFrames()==1);wire.Poll();CHECK(globals->log.lineCount==1);globals->ignored.clear();scene.menus->OpenChatInput({13,0,0});ChatSetInput(scene,root,"!waves");scene.buttons.RouteInput({13,0,0});CHECK(globals->log.lineCount==1 && wire.QueuedFrames()==1);wire.Poll();CHECK(globals->log.lineCount==2);scene.menus->CloseChatWindows();
 }
+
+// 실제 Chat/Client 접합 검사를 같은 공장과 장기 상태로 실행한다.
+#include "IssueCommandsClientTests.inc"

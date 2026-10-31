@@ -1,0 +1,80 @@
+{
+  "unit": 649,
+  "date": "2026-10-31",
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "executableSha256": "c80fa6294e9a8f6bf2d58dcf3582197a11dc16b86581bd2cb07d42b45547fd04",
+  "native": {
+    "cases": 122,
+    "processes": 2,
+    "observationsPerProcess": 244,
+    "observations": 488,
+    "differences": 0,
+    "fixtureSha256": "3ad685952d0d04f6e49e8d571fa251dae10dd97d71775ea07c80a0595860e897",
+    "actualCrtAndToken": true,
+    "descBodyExecuted": false
+  },
+  "focused": {
+    "registered": 37,
+    "executed": 19,
+    "failed": 0,
+    "filters": {
+      "IssueCommands": 6,
+      "ClientChatRuntime": 8,
+      "ThunderProcess": 3,
+      "ChatWindowClient_LocalSubmitClearThenQuit": 1,
+      "ChatWindowClient_FormatCommands": 1
+    },
+    "newTests": 6,
+    "initialNewTests": 6,
+    "initialFailedChecks": 1,
+    "initialFailure": "신규 입력을 Config 변경 전에 썼으므로 정상 옵션 정규화가17을0으로 바꿨다. Config 변경 뒤 독립 현재 DWORD 입력을 제공하도록 순서만 교정했다.",
+    "fullMainRebuilt": false,
+    "lastMainRegistered": 3566,
+    "lastMainUnit": 645
+  },
+  "build": {
+    "finalWarnings": 0,
+    "finalErrors": 0,
+    "initialFailure": "ClientAudio 정의 헤더 누락 C2027/C2679; include 추가"
+  },
+  "protected": {
+    "compared": 10,
+    "unchanged": true,
+    "hashes": {
+      "AGENTS.md": "e9e46fda5519e663417b5c8d9b643549196bf28fe7ba6b1d546a48a853fd208b",
+      "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+      "cpppj/tests/fixtures/dot-command-register-x86.tsv": "e20c7a33500cbf6ae1c6ca94c4a462393cbbc34920c675690e07f67b60bac5ac",
+      "cpppj/tests/fixtures/dot-command-register-v2-x86.tsv": "6f1c66622b9fdd1ece4503e1652466b2131ccb760bdd1a68de336286541ea4eb",
+      "cpppj/tests/fixtures/dot-command-dispatch-x86.tsv": "89a1702e95e0fe51b6d7f100a244a755efb3292c5a6033897889325542f91190",
+      "cpppj/tests/fixtures/script-command-x86.tsv": "34ddbcb593f7f38ffd206aae777438697c7c194f5b1215a2a488f0ff7f878d4d",
+      "cpppj/tests/fixtures/paletteflash-x86.tsv": "3e3c769c896a52448ec675cdf82724382faf2336767afb76221ae3fdca0902b6",
+      "cpppj/tests/fixtures/chat-window-x86.tsv": "e7faa97fbd0bf4c4d8b9d5a48bb6c64e3930ed3a0365948f850ecf65623ee5e5",
+      "cpppj/tests/fixtures/chat-format-x86.tsv": "74e94cb19651a1db9f392ea24d0231b7ec1a75ba081874492c1713fdf12689ab"
+    },
+    "full2632Audit": false,
+    "existing773FixturesAudit": false,
+    "newFixtureCount": 1
+  },
+  "runtime": {
+    "gameLaunches": 0,
+    "newZip": false,
+    "full34": false,
+    "latestFull34Unit": 645,
+    "latestFull34Product": 644,
+    "newMultiplayerTests": 0
+  },
+  "artifacts": {
+    "nativeV1": "extracted/cpp-issue-commands-649-native-v1",
+    "nativeV2": "extracted/cpp-issue-commands-649-native-v2",
+    "nativeV3": "extracted/cpp-issue-commands-649-native-v3",
+    "buildV1": "extracted/cpp-issue-commands-649-build-v1.log",
+    "buildV2": "extracted/cpp-issue-commands-649-build-v2.log",
+    "buildV3": "extracted/cpp-issue-commands-649-build-v3.log",
+    "initialSelected": "extracted/cpp-issue-commands-649-focused-IssueCommands-before-v1.log",
+    "selectedLogs": "extracted/cpp-issue-commands-649-focused-*.log"
+  },
+  "limitations": "desc의 디렉터리/네트워크 장치는 미연결이다. 실제 양수 PlayerKnown 화면/물리 번개/PCM·게임·전체34·새 ZIP·전체 주 검사·신규MP 검사는 실행하지 않았다. CD는 정적 초기 등록 비교만 했다."
+}

@@ -9,7 +9,7 @@ inline constexpr std::uint32_t kThunderProcessType=55;
 // 00470d40/00470e30/00471650/00471820의 등록·초기화·종료·중단 경계를 잇는다.
 class ThunderProcess final:public o::SquidProcess {
 public:
-    ThunderProcess(bool fullScreen,PaletteFlashHooks hooks,std::function<void(o::ProcessId)> destroyed); // 생성 당시 모드로 수명만 정하며 부착 전 팔레트는 읽지 않는다.
+    ThunderProcess(bool fullScreen,PaletteFlashHooks hooks,std::function<void(o::ProcessId)> destroyed,std::int32_t brightness=0); //생성 모드/요청 밝기를 보관하며 부착 전 팔레트는 읽지 않는다.0은 기존 기본64다.
     ~ThunderProcess() override; // 화면이 살아 있는 동안 복구하고 등록 목록에서 같은 PID를 지운다.
     void OnAttached() override; // 실제 Kernel/Form/부모 연결 뒤 원본 가상+14에서 팔레트를 초기화한다.
     void RunFrame() override; // 실시간 진행이 끝나면 원문0041bf10처럼 Form 삭제 경로를 사용한다.

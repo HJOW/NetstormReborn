@@ -226,6 +226,7 @@ public:
     void ClearThunderFlashes();
     // 같은 프레임의 검사 보고에 쓰는 현재 등록된 번개 프로세스 수다.
     std::size_t ThunderFlashCount() const;
+    void RequestThunderFlash(std::int32_t brightness); //00470fa0의 요청 밝기를 실제 기술 부모/공통 Form과 팔레트 효과에 전달한다.0은 원문 기본64다.
     // 이번 프레임에 고정된 시각(원본 FUN_00460e90).
     const o::FrameTime& Time() const;
     // 원본 00460d70처럼 호출 때마다 timeGetTime을 읽는다. 버튼 예약의 별도 조회를 프레임 값으로 합치지 않는다.
@@ -240,7 +241,7 @@ private:
     // 날씨의 완전한 파일 이름을 DataDir 아래에서 읽어 화면에 적용하고 색 표·커서·월드/UI를 갱신한다.
     void LoadScenePalette(std::string_view name);
     // 천둥 곡의 화면 효과를 현재 Player의 실제 기술 부모에 붙인다. PlayerKnown0/부모0이면 생성하지 않는다.
-    void StartThunderFlash();
+    void StartThunderFlash(std::int32_t brightness=0);
     // 원본 00441d10·00441de0: 게임 폴더의 d/options.cfg에 저장한다. 변경 검사 여부는 호출 위치가 정한다.
     void SaveOptions();
     // 원본 FUN_00435220("Interpret Options")의 일부: 화면 크기·창 위치·프레임 제한 등 설정을 읽는다.

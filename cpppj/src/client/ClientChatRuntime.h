@@ -14,6 +14,7 @@ struct RawChatWindowContext; //실제 Chat/Console 공장이 같은 현재 대�
 struct ChatMessageHooks; // 일반 본문 조합의 실제 물리/이름 장치이며 패킷 전달은 별도 연결한다.
 struct ChatPacketHooks; // 실제 일반 본문의 mutable 패킷 작성·전송 장치다.
 void InitializeClientChatManager(Client& client); // 공통 시작의0042e050을 실제 명령 등록/Config/할당에 실행한다. 재호출도 원문 재할당 순서를 따른다.
+void InitializeClientIssueCommands(Client& client); //004d53a0의 네 등록을 map mode/Chat manager 초기화보다 먼저 같은 실제 표에 추가한다.
 void RefreshClientChatRankPrefix(Client& client,const GameAssets& assets,const RawSurfaceStorage& surface); //0042f540의 현재 manager/active 관문과 실제 Core+4·아이콘 getter를 실행한다.
 bool ResolveClientChatIdentity(Client& client,const RawSurfaceStorage& surface,std::string_view currentName,o::PlayerIdentityRecord& record); //004841c0을 현재 Playerbase/Chat100/Client 전역과 실제 이름으로 실행한다. 호출동안 이름/표면뷰가 살아 있어야 한다.
 void BindClientChatRecipients(RawChatWindowContext& context,Client& client,std::shared_ptr<RawSurfaceStorage> surface,std::function<std::string_view()> currentName); //같은 현재 Identity/번역/manager를 ChatWindow와Console Draw에 연결한다. 송신/자동완성은 별도 장치다.

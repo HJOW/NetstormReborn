@@ -46,6 +46,7 @@ target_sources(netstorm PRIVATE o/RawMinimapRaster.cpp o/RawMinimapRaster.h clie
 target_sources(netstorm PRIVATE client/RawUberRootControls.cpp client/RawUberRootControls.h)
 target_sources(netstorm PRIVATE client/ClientFortGlobals.cpp client/ClientFortGlobals.h)
 target_sources(netstorm PRIVATE client/ClientChatRuntime.cpp client/ClientChatRuntime.h) # 같은 실제 시작/명령표/설정/Core/아이콘 자산을 Chat 본체에 연결한다.
+target_sources(netstorm PRIVATE client/RawIssueCommands.cpp client/RawIssueCommands.h) #원문 초기 점 명령 등록/실제 효과를 같은 Chat 표에 연결한다.
 target_sources(netstorm PRIVATE o/RawStaticStrings.cpp o/RawStaticStrings.h client/ClientStaticStrings.cpp client/ClientStaticStrings.h) # 원문 임시 고리와 실제 Client 물리/정수 CRT 장치다.
 target_sources(netstorm PRIVATE client/ClientPlayerRuntime.cpp client/ClientPlayerRuntime.h) # 원문 공통 Player 초기화와 실제 방향별 동맹 장치다.
 target_sources(netstorm PRIVATE client/ClientSpGlobals.cpp client/ClientSpGlobals.h) # 실제 공통 SP/추적 DWORD와 같은 게임·CRT 난수의 장기 수명이다.
