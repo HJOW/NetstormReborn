@@ -5,6 +5,7 @@
 #include "client/ClientLocalStateGlobals.h"
 #include "client/ClientKencloudGlobals.h"
 #include "client/RawCameraCommit.h"
+#include "client/RawCameraPresent.h"
 #include <cstring>
 #include "o/RawFortObjectLoad.h"
 #include <stdexcept>
@@ -98,4 +99,30 @@ TEST_CASE(CampaignViewCommands_ImmediateHomeUsesSharedCountersAndFullCommit) {
     CHECK((camera.RendererView().pixels==std::array<std::int32_t,2>{-208,-42}) && camera.Snapshot().pixels==camera.RendererView().pixels); // 즉시 부모는 Present의 가장자리 제한을 거치지 않는다.
     world.Home(false);CHECK(entered.size()==2 && cloud->WorldRedraw()==1 && local->MetaRebuild()==1 && sounds==1 && !world.TakeChanged()); // 같은 위치도 부모 카운터/실제commit은 호출하되 표면/음향을 중복 공개하지 않는다.
     session.Core().pool.AllocatedBytes(target)[11]=2;world.Home(false);CHECK(entered.size()==2 && cloud->WorldRedraw()==1 && local->MetaRebuild()==1 && sounds==1); // 첫 Home SID가dead면 다른 대상이나 부모를 요청하지 않는다.
+}
+
+// 호환 viewport 변경이 아직 표시되지 않은 목표와 서로 다른 현재 Renderer/snapshot을 덮지 않아야 한다.
+TEST_CASE(CampaignViewCommands_ViewportResizeKeepsPendingTargetUntilNativePresent) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);CameraCommandServices devices;auto services=devices.Make(); // 실제 보호 Fort와 같은 Session을 쓰고 화면 장치만 명시한다.
+    const auto gameplay=std::make_shared<ClientGameplayGlobals>();const auto local=std::make_shared<ClientLocalStateGlobals>();const auto cloud=std::make_shared<ClientKencloudGlobals>();ScreenRect dock{85,0,1024,672}; // 현재 도킹 LTRB와 세 장기 owner다.
+    services.gameplayGlobals=gameplay;services.localStateGlobals=local;services.kencloudGlobals=cloud;services.mapView=[&] { return dock; };
+    auto& camera=gameplay->Camera();std::uint32_t initialRevision{};camera.InitializeNativeRenderer(1024,768,256,cloud->WorldRedraw(),initialRevision);
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());GameWorld world(assets.game,assets.files,std::move(fort),{},"thewarbegins",std::move(services),{1024,768});
+    std::vector<SoundView> sound;world.soundViewChanged=[&](auto value) { sound.push_back(value); }; // 현재 viewport 통지와 나중 카메라 적용 통지를 구별한다.
+    const std::array<ScreenPoint,4> sizes{{{1280,720},{1280,800},{800,600},{640,480}}}; // 16:9/16:10/두4:3의 호스트 viewport 입력이다.
+    for (const auto size:sizes) { // 매 크기에서 다른 두 현재 시야와 범위 밖의 대기 목표를 독립 입력한다.
+        SetCameraViewWorld(camera.RendererView(),194.25F,200.75F);SetCameraViewWorld(camera.Snapshot(),201.125F,202.375F);camera.RequestPixels(3500,2400);
+        const auto renderer=std::bit_cast<std::array<std::uint32_t,16>>(camera.RendererView()),snapshot=std::bit_cast<std::array<std::uint32_t,16>>(camera.Snapshot());const auto zoom=camera.Target().zoom; // 전체16DWORD와 아직 적용하지 않은 배율이다.
+        cloud->WorldRedraw()=0x12345678U;local->MetaRebuild()=0xfffffffeU;dock={85,0,size.x,size.y-96};sound.clear();world.TakeChanged();
+        world.Resize(size.x,size.y);
+        CHECK((std::bit_cast<std::array<std::uint32_t,16>>(camera.RendererView())==renderer && std::bit_cast<std::array<std::uint32_t,16>>(camera.Snapshot())==snapshot));
+        CHECK((camera.Target().pixels==std::array<std::int32_t,2>{3500,2400}) && camera.Target().zoom==zoom && cloud->WorldRedraw()==0x12345678U && local->MetaRebuild()==0xfffffffeU);
+        CHECK((camera.Target().limits==std::array<std::int32_t,2>{4096-size.x,2816-size.y}) && world.TakeChanged());
+        CHECK(sound.size()==1);if (sound.size()!=1) return;CHECK(sound[0].cameraX==3218 && sound[0].cameraY==2226 && sound[0].left==85 && sound[0].top==0 && sound[0].right==size.x && sound[0].bottom==size.y-96);
+        world.Resize(size.x,size.y);CHECK(sound.size()==2 && !world.TakeChanged() && camera.Target().pixels[0]==3500 && camera.Target().pixels[1]==2400); // 같은 크기 재통지도 대기 목표/적용 시점에 쓰지 않는다.
+        RawCameraPresentHooks present;std::uint32_t flips{};present.flip=[&] { ++flips; };present.commit=[&] { netstorm::test::camera::CommitScreenless({camera,cloud->WorldRedraw(),size.x,size.y}); }; // 원문 Present 제한과 전체497960을 실제 본체로 실행한다.
+        PresentCameraTarget(camera.Target(),{gameplay->PatchDiagnostic(),size.x,size.y,gameplay->WorldCells()},present);
+        CHECK(flips==1 && camera.RendererView().pixels==camera.Target().limits && camera.Snapshot().pixels==camera.Target().limits && sound.size()==2);
+        world.CameraApplied();CHECK(sound.size()==3 && world.TakeChanged() && sound.back().cameraX==4096-size.x && sound.back().cameraY==2816-size.y); // 실제 적용 뒤에만 현재 원점의 표면/입자/음향을 공개한다.
+    }
 }

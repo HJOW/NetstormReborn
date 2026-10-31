@@ -1,0 +1,1360 @@
+{
+  "unit": 635,
+  "complete": true,
+  "goalComplete": false,
+  "sourceBaseCommit": "760e5ec3",
+  "host": "HJOW-Athlon",
+  "os": "Windows-10-10.0.19045-SP0",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "recovery": {
+    "host": "HJOW-Athlon",
+    "lastFullDecompileHost": "HJOW-Athlon",
+    "lastFullDecompileDate": "2026-10-23",
+    "sourceCommit": "760e5ec3",
+    "worktreeClean": true,
+    "testedSourcesUnchanged": 24,
+    "protectedUnchanged": 2629,
+    "agentsSha256": "e9e46fda5519e663417b5c8d9b643549196bf28fe7ba6b1d546a48a853fd208b",
+    "gameSha256": "d68fa89be7130a74804c8f2616946d4327d6b51cd79a14308095cad494c9bfe1",
+    "testsSha256": "6ad73280d970a024fdb6be5d6ef77a7a4405523f92dd6d7d670c53f41c9d83be",
+    "oldReadSessions": "98985/7250은종료1.검색인자/미일치에따른종료이며제품/빌드/게임실행은없었다.",
+    "routingFailureCause": "workspace routing discovery timed out의플랫폼원인은미확정.현재절대경로/호스트/도구호출은정상이며기존읽기핸들을종료상태로확인했다.",
+    "hudFinishAddress": "004973c0",
+    "disassembly": [
+      "004973c0 a1bca85900 mov eax, dword ptr [0x59a8bc]",
+      "004973c5 85c0 test eax, eax",
+      "004973c7 740a je 0x4973d3",
+      "004973c9 c705b0a8590001000000 mov dword ptr [0x59a8b0], 1",
+      "004973d3 c3 ret "
+    ]
+  },
+  "finalBuild": {
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "seconds": 42.65794779999851,
+    "logSha256": "1e04fcde674afecb33674a702207e819fdfb3d863bfd01e07489c10785c1f6a4"
+  },
+  "initialBuild": {
+    "exitCode": 1,
+    "scope": "새 CHECK 매크로 인자의템플릿쉼표를괄호로보호하지않아검사번역단위가실패했다.제품.cpp는같고검사표현만교정했다.실패로그/원천v1은보존한다."
+  },
+  "checks": {
+    "passed": true,
+    "tests": 71,
+    "filters": [
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "CameraImmediate_"
+        ],
+        "binarySha256": "ca0ccad72d37e7696690d0701930b412359f3216eb23028f89e70c2ebffb915b",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 0.7506696000054944,
+        "stdoutSha256": "ec96b389aab95b4499284c09575a733f17ee4a8f3d27fa3589652683f0b43e98",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "CameraImmediate_",
+        "tests": 2,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "CampaignViewCommands_"
+        ],
+        "binarySha256": "ca0ccad72d37e7696690d0701930b412359f3216eb23028f89e70c2ebffb915b",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 7.768476699995517,
+        "stdoutSha256": "35fee9a9d9b042fb2df0208f69c37e43d98d1534fb0099b9cda6de3d93ca3c48",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "CampaignViewCommands_",
+        "tests": 7,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "CameraHome_"
+        ],
+        "binarySha256": "ca0ccad72d37e7696690d0701930b412359f3216eb23028f89e70c2ebffb915b",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 0.9646428999985801,
+        "stdoutSha256": "1f354eb8231b648a5621e1a5394242bc736634176edabfeb34ff27d5927fff41",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "CameraHome_",
+        "tests": 3,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "CameraViewCommands_"
+        ],
+        "binarySha256": "ca0ccad72d37e7696690d0701930b412359f3216eb23028f89e70c2ebffb915b",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 0.5841061999963131,
+        "stdoutSha256": "36b1c9e2a55ca012f8e05e3c12fd95b277295681f5077113061ef1931348d39e",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "CameraViewCommands_",
+        "tests": 4,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "CameraCommit_"
+        ],
+        "binarySha256": "ca0ccad72d37e7696690d0701930b412359f3216eb23028f89e70c2ebffb915b",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 0.7240775000027497,
+        "stdoutSha256": "638909e7afc51e87e9d9320e666b9127dbaea65c3cb4fcd505cad6f37a110f83",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "CameraCommit_",
+        "tests": 4,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "CameraPresent_"
+        ],
+        "binarySha256": "ca0ccad72d37e7696690d0701930b412359f3216eb23028f89e70c2ebffb915b",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 0.662192399999185,
+        "stdoutSha256": "af807b67f344c7e99911ba2552b42b69e18302b696f9cd4643ce08068b0338ab",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "CameraPresent_",
+        "tests": 3,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "CameraCenter_"
+        ],
+        "binarySha256": "ca0ccad72d37e7696690d0701930b412359f3216eb23028f89e70c2ebffb915b",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 0.6405014000047231,
+        "stdoutSha256": "2f2b105d5f09f00b18e32599ccca78a7fe5029886ce93062d9aa9b5d182582e4",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "CameraCenter_",
+        "tests": 1,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "CameraView_"
+        ],
+        "binarySha256": "ca0ccad72d37e7696690d0701930b412359f3216eb23028f89e70c2ebffb915b",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 12.871994099994481,
+        "stdoutSha256": "905ac5f79d7640bc5b4e9aeb0af090723f1aa011a217a2e834d9e2a93e883b62",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "CameraView_",
+        "tests": 8,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "SessionPlayerCoreRefresh_"
+        ],
+        "binarySha256": "ca0ccad72d37e7696690d0701930b412359f3216eb23028f89e70c2ebffb915b",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 14.451583399997617,
+        "stdoutSha256": "f623d14370471c14adc41cbf96b22cf23a9edfdb0c1b5596d70a7b83e310ac76",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "SessionPlayerCoreRefresh_",
+        "tests": 3,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "GameWorldSelectionGlobals_"
+        ],
+        "binarySha256": "ca0ccad72d37e7696690d0701930b412359f3216eb23028f89e70c2ebffb915b",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 23.18431319999945,
+        "stdoutSha256": "d62962a2b49fc805c998cec97a73043e73547aa4590c02d45b3fb1a13311bd6d",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "GameWorldSelectionGlobals_",
+        "tests": 1,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "HideBuildings_"
+        ],
+        "binarySha256": "ca0ccad72d37e7696690d0701930b412359f3216eb23028f89e70c2ebffb915b",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 2.4597808999969857,
+        "stdoutSha256": "9878b0788fd2f9cc6a5efcb965f95b2216290c928846ed650aaf1e495d6c04d6",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "HideBuildings_",
+        "tests": 1,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "CampaignManaAdditional_"
+        ],
+        "binarySha256": "ca0ccad72d37e7696690d0701930b412359f3216eb23028f89e70c2ebffb915b",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 2.4479853000011644,
+        "stdoutSha256": "3dc595ebbdb5e57df929bd79aba5809435fc3e35318cf3420e8254ed12533d71",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "CampaignManaAdditional_",
+        "tests": 1,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "CampaignAuxiliaryDraw_"
+        ],
+        "binarySha256": "ca0ccad72d37e7696690d0701930b412359f3216eb23028f89e70c2ebffb915b",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 2.248543300003803,
+        "stdoutSha256": "a626eb1bc9e4d777c55812d02a1429549514a13e6bf75954fd38651f27e5661e",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "CampaignAuxiliaryDraw_",
+        "tests": 1,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "CameraPan_"
+        ],
+        "binarySha256": "ca0ccad72d37e7696690d0701930b412359f3216eb23028f89e70c2ebffb915b",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 0.6454748999967705,
+        "stdoutSha256": "8c3eb47a63dcdfb85bb88e6fe66ceeea5cf6bc5f65a2a530add801f662b29666",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "CameraPan_",
+        "tests": 2,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "EdgeScroll_"
+        ],
+        "binarySha256": "ca0ccad72d37e7696690d0701930b412359f3216eb23028f89e70c2ebffb915b",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 0.7887659999978496,
+        "stdoutSha256": "212a23cb4049a0df7e0fe87c4b8ad4f8428e6e4561a4bd73d346b63c72144f99",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "EdgeScroll_",
+        "tests": 3,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "MinimapDirty_"
+        ],
+        "binarySha256": "ca0ccad72d37e7696690d0701930b412359f3216eb23028f89e70c2ebffb915b",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 1.0174188999953913,
+        "stdoutSha256": "a2aa9710e1fb0416e8edcd5d9cea4b16600ebb1dcdab5450c02a5aa5e68862ff",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "MinimapDirty_",
+        "tests": 2,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "MinimapGeometry_"
+        ],
+        "binarySha256": "ca0ccad72d37e7696690d0701930b412359f3216eb23028f89e70c2ebffb915b",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 0.7771109000022989,
+        "stdoutSha256": "b835c6e27f4c2a24449deeb0adfeecc4603f6eaad1e14b1aa9ecb07fe0ed6f60",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "MinimapGeometry_",
+        "tests": 1,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "MinimapBlit_"
+        ],
+        "binarySha256": "ca0ccad72d37e7696690d0701930b412359f3216eb23028f89e70c2ebffb915b",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 1.2335265000001527,
+        "stdoutSha256": "24961a8db251859de1aaac88a10551877a6a6b32cf2b993433a72e8ee6d129c0",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "MinimapBlit_",
+        "tests": 2,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "MinimapRaster_"
+        ],
+        "binarySha256": "ca0ccad72d37e7696690d0701930b412359f3216eb23028f89e70c2ebffb915b",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 4.601478799995675,
+        "stdoutSha256": "340f5b3a2258c52a113838af52de5b96dacca2feb11ecd953d8c0c616c4a22e8",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "MinimapRaster_",
+        "tests": 1,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "metadisplayDirty_"
+        ],
+        "binarySha256": "ca0ccad72d37e7696690d0701930b412359f3216eb23028f89e70c2ebffb915b",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 2.732816499999899,
+        "stdoutSha256": "e157953d3461a79e93dddf84b3fc88a8ed6eb94620586e4d1b5abb8c2a56d06a",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "metadisplayDirty_",
+        "tests": 7,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "ScreenScroll_"
+        ],
+        "binarySha256": "ca0ccad72d37e7696690d0701930b412359f3216eb23028f89e70c2ebffb915b",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 0.7368320000023232,
+        "stdoutSha256": "64faf6fc3fcc1ff18eb62fc27bd3ceb7626642f4e219ed9c535526a5a8c30be3",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "ScreenScroll_",
+        "tests": 4,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "ScreenPresentation_"
+        ],
+        "binarySha256": "ca0ccad72d37e7696690d0701930b412359f3216eb23028f89e70c2ebffb915b",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 0.644502499999362,
+        "stdoutSha256": "e7ac911238149e606812e5636707bbaa49a5433ce5c7081d7d7df57f29c85977",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "ScreenPresentation_",
+        "tests": 5,
+        "failed": 0
+      },
+      {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\cpppj\\build\\bin\\Release\\netstorm_tests.exe",
+          "--filter",
+          "ClientStateWorldCleanup_"
+        ],
+        "binarySha256": "ca0ccad72d37e7696690d0701930b412359f3216eb23028f89e70c2ebffb915b",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 0.9835452999977861,
+        "stdoutSha256": "b9fab8b0911e3e908e2ae85b66a568795cf83d6d49eddd43d89a9140aa0c862c",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "filter": "ClientStateWorldCleanup_",
+        "tests": 5,
+        "failed": 0
+      }
+    ],
+    "registered": 3552,
+    "binarySha256": "ca0ccad72d37e7696690d0701930b412359f3216eb23028f89e70c2ebffb915b"
+  },
+  "gameSha256": "f7b918f13d6e9ba697c18dd854a9e3a30c203a7aa37fe4685864c4a4b9951504",
+  "testsSha256": "ca0ccad72d37e7696690d0701930b412359f3216eb23028f89e70c2ebffb915b",
+  "testedSourceSha256": {
+    "cpppj/src/client/ClientCameraGlobals.cpp": "51137addbbda6208b098ad87d32724513c0db339ade7542b83c478f489d7b0e1",
+    "cpppj/src/client/ClientCameraGlobals.h": "ab58b15121a189e6197bb6f51f252e30e75a0c2e42387b46564dc8ca86e0e416",
+    "cpppj/src/client/CameraHome.cpp": "0c1e369bab82e1ed41d69e5e892a5f849e4e102b4163867cf4391dfc3d0f418c",
+    "cpppj/src/client/CameraHome.h": "b5d7f6067ba180fc6988a0b09a811f1fc29a0c8172f29fe595e8cfaf1ecf5bdc",
+    "cpppj/src/client/RawCampaignSession.cpp": "e6cf184aeb87bd2cd08e749653e83c456694ef8df8a0d4ae2214b4165807159c",
+    "cpppj/src/client/RawCampaignSession.h": "a23ee6409c98ea4980c2cf87950b7e84793c132d9fdf4fd1704ee415cb983233",
+    "cpppj/src/client/GameWorld.cpp": "2e415f13cc51a4d1b0b26fbdf1339e44bacb733e85ac9ca8086f8c30471d3569",
+    "cpppj/src/client/GameWorld.h": "d208850f443a6948b620c73afe59b7814357afed9e5f62fab8cc338d15ed7f19",
+    "cpppj/src/client/UberGump.h": "45f511552d58caf26c842381979c77b3b49f5246a356a258ef4cac2190325a83",
+    "cpppj/src/client/UberGumpCamera.cpp": "51e24de0d67184309222c640425f59cf3258627ed97a719ccdb9aec01a607682",
+    "cpppj/src/client/CampaignClientServices.cpp": "c26faf0f231e7177f3dd59f758864bfc3f83657d93998d1a9f41f85d95c20716",
+    "cpppj/src/app/main.cpp": "613995551ebd69717ef92c1b6ce47026e0d9f144d1c3ed468eb88d4d62b5bd1b",
+    "cpppj/tests/CameraHomeTests.cpp": "7e21af4dfe7427e93e3e332d450be6f1cbf995171e2ba70b0914bd00ca1d76d8",
+    "cpppj/tests/CameraViewCommandsTests.cpp": "6c42f93bdd6f8195e324ec6b66eabf96fa414bd88d33e6655ce176502f2160ef",
+    "cpppj/tests/CameraCommitTests.cpp": "4961666e09295fa25c9220f13ebc90e3f63600eedb1cf3b9320ff7733f1bdb25",
+    "cpppj/tests/CampaignSessionTests.cpp": "1827e3763d502087a0df699463c212e87d6410e9cf43ef6a4e709a64853a7403",
+    "cpppj/tests/CampaignViewCommandsTests.cpp": "52c594be3d0b4c5b27fd819b44403e2cea58ae08b8fb4d4e4dca9a43cb584da8",
+    "cpppj/tests/HideBuildingsTests.cpp": "9bfb5d61246f48718a34ecb492e137dddea1d7405179bb2a4ab616003133d026",
+    "cpppj/tests/SessionPlayerCoreRefreshTests.cpp": "6f163dfd64cd8476b0dac5e60641ffbf50b66696233bf7121ca8ef24a10c0375",
+    "cpppj/tests/CameraTestDevices.h": "846f44ffa13638816af2dc83a473226e6180f1f4c61b17665e6e4eeb3bcb72e3",
+    "cpppj/tests/CameraImmediateTests.inc": "66923e0c5c95ecb0a5de322ae08f1d9609b52ac3c1edd41e6a1a1718324d7719",
+    "cpppj/tests/fixtures/camera-immediate-x86.tsv": "ec4fcc64884fb117046efbc27c0e6f58e045e787664c9c7038a032e02e97c6ca",
+    "tools/decomp_camera_immediate.py": "eea06c4319e4ad30a218fecf270eae172fdc43bc06aeca032cc48a674d43705a",
+    "tools/cpp_graph_entry_editor_smoke.py": "6c17864f45ff3704bbaff6d090bc097afb5203efbbcd727853e739c6162f2090"
+  },
+  "gui": {
+    "passed": true,
+    "runs": 3,
+    "presentationPairs": 10,
+    "gameSha256": "f7b918f13d6e9ba697c18dd854a9e3a30c203a7aa37fe4685864c4a4b9951504",
+    "packageSha256": "15b93f6ce22ec206ca96f19e5e9272ff9e1f96ff9aa52c9955512cbc7af86fa1",
+    "results": [
+      {
+        "passed": true,
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-camera-viewport-635-20261031\\gui-v1\\한글 배포본\\NetstormReborn-cpppj\\Netstorm.exe",
+            "--run",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-camera-viewport-635-20261031\\gui-v1\\한글 배포본\\NetstormReborn-cpppj\\game",
+            "--no-audio",
+            "--frames",
+            "110",
+            "--set",
+            "intro=1;WelcomeGiven=1;maxFPS=40;sleepPerLoop=8;autoDemo=0;tellTips=0;currentLanguage=english;SCREENW=1024;SCREENH=768;startInFullScreen=1;workingFullScreenFlags=11",
+            "--ui-script",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-camera-viewport-635-20261031\\gui-v1\\main-4x3\\steps.tsv",
+            "--ui-report",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-camera-viewport-635-20261031\\gui-v1\\main-4x3\\states.tsv",
+            "--window"
+          ],
+          "binarySha256": "f7b918f13d6e9ba697c18dd854a9e3a30c203a7aa37fe4685864c4a4b9951504",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 4.200442800000019,
+          "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderrSha256": "cb76758e176fb9498de489bf084e9844f54d645d0fb4457c2c91e00a6a78d515"
+        },
+        "size": [
+          1024,
+          768
+        ],
+        "saved": {
+          "SCREENW": "1280",
+          "SCREENH": "800",
+          "startInFullScreen": "1"
+        },
+        "earlyQuit": true,
+        "comparisons": {
+          "startup": {
+            "same": true,
+            "actualSha256": "58042d78e2460d582a91c67a94935b04605bb8b42669cfa28671593003a98d42",
+            "expectedSha256": "58042d78e2460d582a91c67a94935b04605bb8b42669cfa28671593003a98d42",
+            "dimensions": [
+              1024,
+              768
+            ],
+            "outputRect": [
+              0,
+              0,
+              1024,
+              768
+            ]
+          },
+          "full": {
+            "same": true,
+            "actualSha256": "60745c4ffc1f154f197d3172cec4b9c53c32384a6a4dfc12f5ec141773a6834f",
+            "expectedSha256": "60745c4ffc1f154f197d3172cec4b9c53c32384a6a4dfc12f5ec141773a6834f",
+            "dimensions": [
+              1920,
+              1080
+            ],
+            "outputRect": [
+              240,
+              0,
+              1680,
+              1080
+            ]
+          },
+          "choices": {
+            "same": true,
+            "actualSha256": "5d2b9afc4903993bfa7b17371af861c4d020b439837fefac7dc4383f61805b4b",
+            "expectedSha256": "5d2b9afc4903993bfa7b17371af861c4d020b439837fefac7dc4383f61805b4b",
+            "dimensions": [
+              1920,
+              1080
+            ],
+            "outputRect": [
+              240,
+              0,
+              1680,
+              1080
+            ]
+          },
+          "warning": {
+            "same": true,
+            "actualSha256": "36c6c577da478b6497c74058c9c91d9f8eac50f9234acf013bfeb7891b37e2be",
+            "expectedSha256": "36c6c577da478b6497c74058c9c91d9f8eac50f9234acf013bfeb7891b37e2be",
+            "dimensions": [
+              1920,
+              1080
+            ],
+            "outputRect": [
+              240,
+              0,
+              1680,
+              1080
+            ]
+          },
+          "cancelled": {
+            "same": true,
+            "actualSha256": "60745c4ffc1f154f197d3172cec4b9c53c32384a6a4dfc12f5ec141773a6834f",
+            "expectedSha256": "60745c4ffc1f154f197d3172cec4b9c53c32384a6a4dfc12f5ec141773a6834f",
+            "dimensions": [
+              1920,
+              1080
+            ],
+            "outputRect": [
+              240,
+              0,
+              1680,
+              1080
+            ]
+          }
+        },
+        "states": {
+          "startup": {
+            "phase": [
+              "0"
+            ],
+            "page": [
+              "main"
+            ],
+            "size": [
+              "1024",
+              "768"
+            ],
+            "screen_mode": [
+              "138",
+              "1024",
+              "768",
+              "1024",
+              "1"
+            ],
+            "raw_world_modes": null,
+            "raw_session": null,
+            "raw_camera_frame": [
+              "0",
+              "0",
+              "0",
+              "0",
+              "6",
+              "0",
+              "7",
+              "0"
+            ],
+            "fort_names": [
+              "",
+              "",
+              "1",
+              "fortSpec"
+            ]
+          },
+          "full": {
+            "phase": [
+              "0"
+            ],
+            "page": [
+              "main"
+            ],
+            "size": [
+              "1024",
+              "768"
+            ],
+            "screen_mode": [
+              "139",
+              "1024",
+              "768",
+              "1024",
+              "1"
+            ],
+            "raw_world_modes": null,
+            "raw_session": null,
+            "raw_camera_frame": [
+              "0",
+              "0",
+              "0",
+              "0",
+              "6",
+              "0",
+              "7",
+              "0"
+            ],
+            "fort_names": [
+              "",
+              "",
+              "2",
+              "fortSpec"
+            ]
+          },
+          "choices": {
+            "phase": [
+              "0"
+            ],
+            "page": [
+              "main"
+            ],
+            "size": [
+              "1024",
+              "768"
+            ],
+            "screen_mode": [
+              "139",
+              "1024",
+              "768",
+              "1024",
+              "1"
+            ],
+            "raw_world_modes": null,
+            "raw_session": null,
+            "raw_camera_frame": [
+              "0",
+              "0",
+              "0",
+              "0",
+              "6",
+              "0",
+              "7",
+              "0"
+            ],
+            "fort_names": [
+              "",
+              "",
+              "2",
+              "fortSpec"
+            ]
+          },
+          "warning": {
+            "phase": [
+              "1"
+            ],
+            "page": [
+              "SETSIZE"
+            ],
+            "size": [
+              "1024",
+              "768"
+            ],
+            "screen_mode": [
+              "139",
+              "1024",
+              "768",
+              "1024",
+              "1"
+            ],
+            "raw_world_modes": null,
+            "raw_session": null,
+            "raw_camera_frame": [
+              "0",
+              "0",
+              "0",
+              "0",
+              "6",
+              "0",
+              "7",
+              "0"
+            ],
+            "fort_names": [
+              "",
+              "",
+              "2",
+              "fortSpec"
+            ]
+          },
+          "cancelled": {
+            "phase": [
+              "0"
+            ],
+            "page": [
+              "main"
+            ],
+            "size": [
+              "1024",
+              "768"
+            ],
+            "screen_mode": [
+              "139",
+              "1024",
+              "768",
+              "1024",
+              "1"
+            ],
+            "raw_world_modes": null,
+            "raw_session": null,
+            "raw_camera_frame": [
+              "0",
+              "0",
+              "0",
+              "0",
+              "6",
+              "0",
+              "7",
+              "0"
+            ],
+            "fort_names": [
+              "",
+              "",
+              "2",
+              "fortSpec"
+            ]
+          },
+          "warning-repeat": {
+            "phase": [
+              "1"
+            ],
+            "page": [
+              "SETSIZE"
+            ],
+            "size": [
+              "1024",
+              "768"
+            ],
+            "screen_mode": [
+              "139",
+              "1024",
+              "768",
+              "1024",
+              "1"
+            ],
+            "raw_world_modes": null,
+            "raw_session": null,
+            "raw_camera_frame": [
+              "0",
+              "0",
+              "0",
+              "0",
+              "6",
+              "0",
+              "7",
+              "0"
+            ],
+            "fort_names": [
+              "",
+              "",
+              "2",
+              "fortSpec"
+            ]
+          }
+        }
+      },
+      {
+        "passed": true,
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-camera-viewport-635-20261031\\gui-v1\\한글 배포본\\NetstormReborn-cpppj\\Netstorm.exe",
+            "--run",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-camera-viewport-635-20261031\\gui-v1\\한글 배포본\\NetstormReborn-cpppj\\game",
+            "--no-audio",
+            "--frames",
+            "95",
+            "--set",
+            "intro=1;WelcomeGiven=1;maxFPS=40;sleepPerLoop=8;autoDemo=0;tellTips=0;currentLanguage=english",
+            "--ui-script",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-camera-viewport-635-20261031\\gui-v1\\mission-16x10\\steps.tsv",
+            "--ui-report",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-camera-viewport-635-20261031\\gui-v1\\mission-16x10\\states.tsv",
+            "--mission",
+            "TEST02"
+          ],
+          "binarySha256": "f7b918f13d6e9ba697c18dd854a9e3a30c203a7aa37fe4685864c4a4b9951504",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 16.82146439999633,
+          "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderrSha256": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2"
+        },
+        "size": [
+          1280,
+          800
+        ],
+        "saved": {
+          "SCREENW": "1280",
+          "SCREENH": "720",
+          "startInFullScreen": "1"
+        },
+        "earlyQuit": true,
+        "comparisons": {
+          "stage": {
+            "same": true,
+            "actualSha256": "cc6e3d9f1ebe5bfa9dfdcf95151a87fce6954c838d96f2c11141bf44dd1a9a74",
+            "expectedSha256": "cc6e3d9f1ebe5bfa9dfdcf95151a87fce6954c838d96f2c11141bf44dd1a9a74",
+            "dimensions": [
+              1920,
+              1080
+            ],
+            "outputRect": [
+              96,
+              0,
+              1824,
+              1080
+            ]
+          },
+          "warning": {
+            "same": true,
+            "actualSha256": "1182054a1d70eacf2fe7a68bbf941d628398bcd07d45072ddc2103f7605b9654",
+            "expectedSha256": "1182054a1d70eacf2fe7a68bbf941d628398bcd07d45072ddc2103f7605b9654",
+            "dimensions": [
+              1920,
+              1080
+            ],
+            "outputRect": [
+              96,
+              0,
+              1824,
+              1080
+            ]
+          }
+        },
+        "states": {
+          "briefing": {
+            "phase": [
+              "4"
+            ],
+            "page": [
+              "mission"
+            ],
+            "size": [
+              "1280",
+              "800"
+            ],
+            "screen_mode": [
+              "139",
+              "1280",
+              "800",
+              "1280",
+              "1"
+            ],
+            "raw_world_modes": [
+              "0",
+              "1"
+            ],
+            "raw_session": [
+              "1",
+              "1"
+            ],
+            "raw_camera_frame": [
+              "1664",
+              "1514",
+              "1664",
+              "1514",
+              "6",
+              "3",
+              "7",
+              "0"
+            ],
+            "fort_names": [
+              "TEST02",
+              "",
+              "2",
+              "fortSpec"
+            ]
+          },
+          "stage": {
+            "phase": [
+              "4"
+            ],
+            "page": [
+              "mission"
+            ],
+            "size": [
+              "1280",
+              "800"
+            ],
+            "screen_mode": [
+              "139",
+              "1280",
+              "800",
+              "1280",
+              "1"
+            ],
+            "raw_world_modes": [
+              "0",
+              "1"
+            ],
+            "raw_session": [
+              "1",
+              "1"
+            ],
+            "raw_camera_frame": [
+              "1664",
+              "1514",
+              "1664",
+              "1514",
+              "6",
+              "3",
+              "7",
+              "0"
+            ],
+            "fort_names": [
+              "TEST02",
+              "",
+              "2",
+              "fortSpec"
+            ]
+          },
+          "choices": {
+            "phase": [
+              "4"
+            ],
+            "page": [
+              "mission"
+            ],
+            "size": [
+              "1280",
+              "800"
+            ],
+            "screen_mode": [
+              "139",
+              "1280",
+              "800",
+              "1280",
+              "1"
+            ],
+            "raw_world_modes": [
+              "0",
+              "1"
+            ],
+            "raw_session": [
+              "1",
+              "1"
+            ],
+            "raw_camera_frame": [
+              "1664",
+              "1514",
+              "1664",
+              "1514",
+              "6",
+              "3",
+              "7",
+              "0"
+            ],
+            "fort_names": [
+              "TEST02",
+              "",
+              "2",
+              "fortSpec"
+            ]
+          },
+          "warning": {
+            "phase": [
+              "1"
+            ],
+            "page": [
+              "SETSIZE"
+            ],
+            "size": [
+              "1280",
+              "800"
+            ],
+            "screen_mode": [
+              "139",
+              "1280",
+              "800",
+              "1280",
+              "1"
+            ],
+            "raw_world_modes": [
+              "0",
+              "1"
+            ],
+            "raw_session": [
+              "1",
+              "1"
+            ],
+            "raw_camera_frame": [
+              "1664",
+              "1514",
+              "1664",
+              "1514",
+              "6",
+              "3",
+              "7",
+              "0"
+            ],
+            "fort_names": [
+              "TEST02",
+              "",
+              "2",
+              "fortSpec"
+            ]
+          }
+        }
+      },
+      {
+        "passed": true,
+        "run": {
+          "command": [
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-camera-viewport-635-20261031\\gui-v1\\한글 배포본\\NetstormReborn-cpppj\\Netstorm.exe",
+            "--run",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-camera-viewport-635-20261031\\gui-v1\\한글 배포본\\NetstormReborn-cpppj\\game",
+            "--no-audio",
+            "--frames",
+            "100",
+            "--set",
+            "intro=1;WelcomeGiven=1;maxFPS=40;sleepPerLoop=8;autoDemo=0;tellTips=0;currentLanguage=english",
+            "--ui-script",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-camera-viewport-635-20261031\\gui-v1\\mission-16x9\\steps.tsv",
+            "--ui-report",
+            "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-camera-viewport-635-20261031\\gui-v1\\mission-16x9\\states.tsv",
+            "--mission",
+            "TEST02"
+          ],
+          "binarySha256": "f7b918f13d6e9ba697c18dd854a9e3a30c203a7aa37fe4685864c4a4b9951504",
+          "returnCode": 0,
+          "timedOut": false,
+          "seconds": 17.463056900000083,
+          "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderrSha256": "0cf384540400f6518a0489448b6c5619906dcb6f9f0323eac78adeab70ef2e86"
+        },
+        "size": [
+          1280,
+          720
+        ],
+        "saved": {
+          "SCREENW": "1280",
+          "SCREENH": "720",
+          "startInFullScreen": "1"
+        },
+        "earlyQuit": false,
+        "comparisons": {
+          "stage": {
+            "same": true,
+            "actualSha256": "0a6b636fb3e9a4209e40e76a24d2f3420a474616c15dacf3ccd570ee3a809fc9",
+            "expectedSha256": "0a6b636fb3e9a4209e40e76a24d2f3420a474616c15dacf3ccd570ee3a809fc9",
+            "dimensions": [
+              1920,
+              1080
+            ],
+            "outputRect": [
+              0,
+              0,
+              1920,
+              1080
+            ]
+          },
+          "home": {
+            "same": true,
+            "actualSha256": "573c57a52a13d722a7bbf35fc607f9767f435205ae452f734a8e62476ef6f751",
+            "expectedSha256": "573c57a52a13d722a7bbf35fc607f9767f435205ae452f734a8e62476ef6f751",
+            "dimensions": [
+              1920,
+              1080
+            ],
+            "outputRect": [
+              0,
+              0,
+              1920,
+              1080
+            ]
+          },
+          "main": {
+            "same": true,
+            "actualSha256": "b3b946fac3d45bbdbdb6f375d6e01664784674746b5f16725afc2a9549bd0e74",
+            "expectedSha256": "b3b946fac3d45bbdbdb6f375d6e01664784674746b5f16725afc2a9549bd0e74",
+            "dimensions": [
+              1920,
+              1080
+            ],
+            "outputRect": [
+              0,
+              0,
+              1920,
+              1080
+            ]
+          }
+        },
+        "states": {
+          "briefing": {
+            "phase": [
+              "4"
+            ],
+            "page": [
+              "mission"
+            ],
+            "size": [
+              "1280",
+              "720"
+            ],
+            "screen_mode": [
+              "139",
+              "1280",
+              "720",
+              "1280",
+              "1"
+            ],
+            "raw_world_modes": [
+              "0",
+              "1"
+            ],
+            "raw_session": [
+              "1",
+              "1"
+            ],
+            "raw_camera_frame": [
+              "1664",
+              "1554",
+              "1664",
+              "1554",
+              "6",
+              "3",
+              "7",
+              "0"
+            ],
+            "fort_names": [
+              "TEST02",
+              "",
+              "2",
+              "fortSpec"
+            ]
+          },
+          "stage": {
+            "phase": [
+              "4"
+            ],
+            "page": [
+              "mission"
+            ],
+            "size": [
+              "1280",
+              "720"
+            ],
+            "screen_mode": [
+              "139",
+              "1280",
+              "720",
+              "1280",
+              "1"
+            ],
+            "raw_world_modes": [
+              "0",
+              "1"
+            ],
+            "raw_session": [
+              "1",
+              "1"
+            ],
+            "raw_camera_frame": [
+              "1664",
+              "1554",
+              "1664",
+              "1554",
+              "6",
+              "3",
+              "7",
+              "0"
+            ],
+            "fort_names": [
+              "TEST02",
+              "",
+              "2",
+              "fortSpec"
+            ]
+          },
+          "home": {
+            "phase": [
+              "4"
+            ],
+            "page": [
+              "mission"
+            ],
+            "size": [
+              "1280",
+              "720"
+            ],
+            "screen_mode": [
+              "139",
+              "1280",
+              "720",
+              "1280",
+              "1"
+            ],
+            "raw_world_modes": [
+              "0",
+              "1"
+            ],
+            "raw_session": [
+              "1",
+              "1"
+            ],
+            "raw_camera_frame": [
+              "1488",
+              "1609",
+              "1488",
+              "1609",
+              "6",
+              "4",
+              "7",
+              "0"
+            ],
+            "fort_names": [
+              "TEST02",
+              "",
+              "2",
+              "fortSpec"
+            ]
+          },
+          "leave": {
+            "phase": [
+              "1"
+            ],
+            "page": [
+              "ABORT"
+            ],
+            "size": [
+              "1280",
+              "720"
+            ],
+            "screen_mode": [
+              "139",
+              "1280",
+              "720",
+              "1280",
+              "1"
+            ],
+            "raw_world_modes": [
+              "0",
+              "1"
+            ],
+            "raw_session": [
+              "1",
+              "1"
+            ],
+            "raw_camera_frame": [
+              "1488",
+              "1609",
+              "1488",
+              "1609",
+              "6",
+              "4",
+              "7",
+              "0"
+            ],
+            "fort_names": [
+              "TEST02",
+              "",
+              "2",
+              "fortSpec"
+            ]
+          },
+          "main": {
+            "phase": [
+              "0"
+            ],
+            "page": [
+              "main"
+            ],
+            "size": [
+              "1280",
+              "720"
+            ],
+            "screen_mode": [
+              "139",
+              "1280",
+              "720",
+              "1280",
+              "1"
+            ],
+            "raw_world_modes": null,
+            "raw_session": null,
+            "raw_camera_frame": [
+              "0",
+              "0",
+              "0",
+              "0",
+              "6",
+              "4",
+              "7",
+              "0"
+            ],
+            "fort_names": [
+              "",
+              "",
+              "2",
+              "fortSpec"
+            ]
+          }
+        }
+      }
+    ],
+    "scope": "기본 메뉴의 원문No/Yes·설정저장/정상조기종료와 저장한16:10/16:9의실제TEST02시작·Home/메인이탈이다.원문에없는실시간해상도변경이나호스트viewport변경을UI에서실행한것으로세지않는다.그분기는명시독립C++검사에서확인했다."
+  },
+  "guiRuns": 3,
+  "presentationPairs": 10,
+  "protectedBefore": 2629,
+  "protectedAfter": 2629,
+  "fixtureCount": 770,
+  "allExistingProtectedBytesUnchanged": true,
+  "package": {
+    "path": "extracted/cpp-camera-viewport-635-20261031/NetstormReborn-cpppj-635.zip",
+    "sha256": "15b93f6ce22ec206ca96f19e5e9272ff9e1f96ff9aa52c9955512cbc7af86fa1",
+    "entries": 1376,
+    "assets": 1358,
+    "allArchivedUnpackedAndOriginalAssetBytesMatch": true
+  },
+  "originalGameExecutions": 0,
+  "newNativeFixtures": 0,
+  "scope": "실제Session의호스트viewport변경에서Scroll(0,0)의현재clamp/대기목표덮기/두setter를제거했다.현재Renderer/snapshot16DWORD·목표/배율·공유카운터를보존하고현재한계/도킹/표면/입자/음향viewport만갱신한다.기존Present→전체497960뒤에새원점을공개한다.원문SETSIZE는저장/종료이며새실시간해상도UI를추가하지않았다.이호스트어댑터는원본과다른Windows10/11·확장화면비대응임을코드주석에명시했다.",
+  "classification": "실제4973c0의PE는Renderer포인터비영일때0059a8b0=1만수행해현재활성HUD후처리와같다.실제게임pan/edge는497e00목표요청이며GameWorld.Scroll은이전값형/명시독립장치다.SetParticleView의기본두setter는독립검사의명시픽셀입력이고실제World는false로viewport만통지한다.497f80의별도Zone호출자/MP경로는이번GUI나새MP시험으로세지않는다.",
+  "verificationScope": "새독립C++1사례가네viewport/다른현재Renderer·snapshot/범위밖대기목표/같은크기재통지/공유카운터/원문Present·실제497960·적용뒤음향을검사했다.실제GUI는기본4:3에서No/Yes와두저장된확장화면비의새프로세스를검사했다.호환viewport분기를실제UI에서실행한증거로대체하지않는다.원본전체픽셀동일성/완주를창DC비교로주장하지않는다.",
+  "otherProjectChanges": {
+    "observedTrackedNames": [
+      "dotnetpj/PORT_MAP.tsv",
+      "dotnetpj/src/Netstorm.Assets/OriginalText.cs",
+      "dotnetpj/src/Netstorm.Client/Scripting/ScriptCommand.cs"
+    ],
+    "scope": "동시dotnetpj작업의현재변경이며읽기/원복/stage/커밋하지않는다.추가변경도해당작업의소유권을유지한다."
+  },
+  "excluded": "포획/희생/특정적공격/승리·공중3종전용·신규MP·Windows11/PCM/물리키/DPI/포커스검사는없다.전체C++/34경로는매단위반복하지않았고최신전체34는632제품이다.",
+  "next": "636: 카메라/실제장치기능묶음이끝났으므로고정635최종제품/같은배포로일반31+Demo3의34진입을통합한다.그뒤grid/debug의실제활성쓰기/호출가능성·내용물과전체UI/Edit/시나리오/파일/수명/호환성을계속하고MP무시험/4~7차를진행한다.전체목표/원본동일성·기존VFX/612스택미정값한계는남는다."
+}

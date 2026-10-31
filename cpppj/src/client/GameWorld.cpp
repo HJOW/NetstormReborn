@@ -363,12 +363,14 @@ void GameWorld::SurfaceView() {
 }
 // 입력 시 현재 view를 다시 쓰지 않고 원문 후처리의 적용 결과만 기존 표시 장치에 전달한다.
 void GameWorld::CameraApplied() { SurfaceView();changed_=true; }
-// 카메라 크기만 바뀌어도 다시 표시하고 위치 효과음의 화면 기준을 갱신한다. 같은 크기로 불러도 새 수신자를 갱신한다.
+// 원문 SETSIZE는 설정 저장 뒤 종료한다. Windows10/11·확장 화면비의 호스트 viewport 변경은 현재 시야/대기 목표를 보존하고 실제 Present의 제한/전체 적용에 맡긴다.
+// 같은 크기에서도 현재 도킹 영역과 새 위치 음향 수신자만 갱신하며 카메라 setter를 실행하지 않는다.
 void GameWorld::Resize(int width,int height) {
     const bool first=width_==0; if (width_==width && height_==height) { SurfaceView();return; }
-    width_=width; height_=height;const auto cells=static_cast<float>(gameplayGlobals_->WorldCells());CameraGlobals().UpdateTargetLimits(width,height,cells,cells);if (first) Home(false); else Scroll(0,0); changed_=true;
+    width_=width; height_=height;const auto cells=static_cast<float>(gameplayGlobals_->WorldCells());CameraGlobals().UpdateTargetLimits(width,height,cells,cells);
+    if (campaign_) SurfaceView();else if (first) Home(false);else Scroll(0,0);changed_=true; // 실제 Session의 새 viewport는 목표/두 현재view/공유 카운터를 즉시 변경하지 않는다.
 }
-// 월드 테두리 밖으로 카메라가 나가지 않게 제한하고, 같은 입력 단계의 위치 효과음에 새 원점을 전달한다.
+// 이전 값형 월드/명시 독립 검사의 즉시 픽셀 이동이다. 실제 게임 입력은497e00 목표 요청을 사용하며 Resize에서 이 두setter 어댑터를 호출하지 않는다.
 void GameWorld::Scroll(int dx,int dy) {
     const int x=std::clamp(CameraX()+dx,0,std::max(0,o::kWorldCells*kCellPixelsX-width_));
     const int y=std::clamp(CameraY()+dy,0,std::max(0,o::kWorldCells*kCellPixelsY-height_));
