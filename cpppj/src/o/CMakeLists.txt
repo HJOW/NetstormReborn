@@ -539,3 +539,6 @@ target_sources(netstorm PRIVATE RawObjectTraceFields.h RawObjectTraceFields.cpp)
 
 # 83개 실제 자산의 Main/Task와 네 내장Form 진단을 원래 가상 표로 분배한다.
 target_sources(netstorm PRIVATE RawObjectTraceMain.h RawObjectTraceMain.cpp)
+
+# 실제 Editor의 객체 읽기/생성 교대를 현재 MemStream과 같은 월드에 연결한다.
+target_sources(netstorm PRIVATE RawFortObjectStream.h RawFortObjectStream.cpp)

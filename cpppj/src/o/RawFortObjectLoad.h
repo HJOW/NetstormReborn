@@ -6,6 +6,7 @@
 #include "o/SquidReward.h"
 
 namespace netstorm::o {
+struct FortObjectStreamHooks; // 실제 현재 MemStream/변환표와 큰 하위 수명을 공급한다.
 // 객체/상위 로더가 매 분기에서 다시 읽는 원본 전역이다. 미션 기본 소유자는 Load의 Template 칸으로 전달한다.
 struct FortObjectLoadState {
     // 원본005c89c0은 manager 생성자와 같은 실제 DWORD를 빌린다. 호출자가 이 상태보다 오래 소유해야 한다.
@@ -51,9 +52,13 @@ public:
     // 004be610/CD00428d50: Terr[start,end) 뒤 허용 시 Chaff, 각 섹션은 y 바깥/x 안쪽 순서다.
     // Template 칸1..8은 해당 기본 소유자다. 패치판의 그 밖 칸은0이며 CD판은 원본 assert를 예외로 거부한다.
     void Load(const FortTemplate& fort,std::int32_t templateSlot,std::int32_t start=0,std::int32_t end=20) const;
+    Sid ObjectStream(std::uint32_t stream,std::int32_t originX,std::int32_t originY,std::uint32_t owner,const FortObjectStreamHooks& hooks) const; // 10.78의004bdc60을 직접 읽기/즉시 생성으로 수행한다.
+    void LoadStream(std::int32_t slot,const FortObjectStreamHooks& hooks,std::int32_t start=0,std::int32_t end=20) const; // 같은 원시 섹션과 현재 변환표로004be610 전체를 수행한다.
     // 실제 동일 풀 어댑터 검사에 사용하는 참조다.
     const SidPool& Pool() const;
 private:
+    void ChunkStream(std::uint32_t stream,std::int32_t x,std::int32_t y,std::uint32_t owner,const FortObjectStreamHooks& hooks) const; // 표지/개수 뒤 객체를 한 개씩 적용한다.
+    void SectionStream(std::uint32_t stream,std::uint32_t owner,std::int32_t territory,const FortObjectStreamHooks& hooks) const; // 현재 지도와 Terr 정책으로 파일 소비 순서를 정한다.
     // 현재 raw 타입과 그 타입 표를 읽는다. callback 뒤 별도 사본을 재사용하지 않는다.
     const RiftTypeRecord& Type(Sid sid) const;
     // 현재 프레임 필드는 패치 DWORD/CD BYTE이며 저장 프레임은 가상 SetFrame을 호출하지 않는다.

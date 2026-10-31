@@ -1,0 +1,104 @@
+{
+  "unit": 663,
+  "date": "2026-10-31",
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "decompileChanged": false,
+  "productChanged": true,
+  "executableSha256": "449a39ecd40830c91824d4a9236829870e5c9e36b9e1371955baa0b138aa8a42",
+  "changes": [
+    "실제 Editor의 객체 child를 완성 레코드 파싱에서 현재 MemStream의 직접 읽기/즉시 생성으로 교체했다. QA/QB/소유자/HP/프레임/Pop/중첩 내용물을 각 원문 위치에서 적용한다.",
+    "전체 부모는 실제 TypeNames 준비→Terr→조건부Chaff→정상변환표 반납/0→FinishOwner를 사용한다. 예외는 깊이만 반납하며 현재표/cursor/부분 객체/난수를 보존한다.",
+    "Technology와 Objects가 같은 실제 Contents 장치 조립을 공유한다. Campaign/독립 값형/CD 로더는 유지했으며 실제 Editor의 사본 우회는 제거했다."
+  ],
+  "focused": {
+    "registered": 78,
+    "finalUnique": 12,
+    "newUnique": 3,
+    "newExplicitFailureInputs": 2,
+    "newTestsReusedNativeInputs": 609,
+    "oldUnique": 9,
+    "failedChecks": 0,
+    "finalLogs": [
+      "extracted/cpp-fort-object-stream-663-stream-v1.log",
+      "extracted/cpp-fort-object-stream-663-session-v2.log",
+      "extracted/cpp-fort-object-stream-663-typed.log",
+      "extracted/cpp-fort-object-stream-663-outer.log",
+      "extracted/cpp-fort-object-stream-663-default.log"
+    ],
+    "invocations": 6,
+    "testFunctionCalls": 14,
+    "initialFailures": [],
+    "initialWarnings": [
+      "build-v1의 기존662 검사 갱신 중 signed/unsigned 비교 경고C4389 한 개를 명시 변환으로 수정했다. 검사 실패는 없으며 최종 build-v2는 경고/오류0이다."
+    ],
+    "scope": "새3개는 Patch 객체573/부모36행과 직접/부모의 두 잘린 입력을 대조한다. 기존9개는 실제 파일/Session4입력·값형 양판본·기본 이름/선택 뒤 파일/Session·외곽 한정 투영이다. 편의 객체 사본 비교는 실제 저장 좌표/종류의 월드 조회로 바꿨다.",
+    "limits": "다른66등록/주 검사 전체·GUI·전체34는 실행하지 않았다. 실제 Session checkpoint는 최종 State 확정/loaded 공개와 구별한다."
+  },
+  "native": {
+    "newCases": 0,
+    "newObservations": 0,
+    "newFixture": false,
+    "staticInstructions": 697,
+    "replayedUniqueRows": 1618,
+    "replayedPathObservations": 2227,
+    "existing": {
+      "newPatchStream": {
+        "objects": 573,
+        "parents": 36,
+        "rows": 609
+      },
+      "oldTypedPatch": 609,
+      "oldTypedCd": 609,
+      "defaultName": 252,
+      "outerCompared": 148,
+      "outerRead": 258,
+      "outerExplicitlyExcluded": 110
+    },
+    "scope": "기존 fixture의 Patch609행을 값형과 스트림 두 경로에서 실행했으므로 고유 행을 두 번 더하지 않는다. CD609·기본252·외곽148과 합해 고유1618/경로2227이다.697개 명령은 정적 대조이며 새 PE 실행이 아니다."
+  },
+  "builds": [
+    {
+      "log": "extracted/cpp-fort-object-stream-663-build-v1.log",
+      "exitCode": 0,
+      "warnings": 1,
+      "errors": 0
+    },
+    {
+      "log": "extracted/cpp-fort-object-stream-663-build-v2.log",
+      "exitCode": 0,
+      "warnings": 0,
+      "errors": 0
+    }
+  ],
+  "protected": {
+    "baseline645Checked": 8,
+    "fixture653Checked": 1,
+    "fixture653Commit": "a99f1a2f",
+    "checked": 9,
+    "differences": 0,
+    "sha256": {
+      "AGENTS.md": "e9e46fda5519e663417b5c8d9b643549196bf28fe7ba6b1d546a48a853fd208b",
+      "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+      "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6",
+      "originals/d/TEST01.fort": "3c8a7d73be785f5b06f4c94aea633697b52d95129ed502ebc43f1efe326bad8f",
+      "cpppj/tests/fixtures/fortobjectload-x86.tsv": "31fb91aabb4fe3c403e9a9780e0f14f211508cbbce6523cef1b53a5bdf439519",
+      "cpppj/tests/fixtures/fort-contents-load-x86.tsv": "22851fa72e8905ac9465aadb64cb5669695dfd7d2847435fb0dcb25d4048948e",
+      "cpppj/tests/fixtures/existing-editor-install-outer-x86.tsv": "eeb11836fe3ddbbb0228c11f40bfdd8461bf0a45221ebb225667aa86f6a51f4a",
+      "cpppj/tests/fixtures/editor-default-name-x86.tsv": "e2ffcefa1f7ffad9962fd4b1869ba91ce4ebdb0a3340496e113917fa3c6c1aa5"
+    },
+    "fullAuditRepeated": false
+  },
+  "actualGameRuns": 0,
+  "full34Repeated": false,
+  "newZip": false,
+  "mainTestExecutableRebuilt": false,
+  "multiplayerTests": 0,
+  "remaining": [
+    "다른 Campaign/Fort 객체 소비자의 raw 연결과 전체 Template/FILE/SEH ABI·손상/할당/부분 I/O 실패 수명",
+    "물리 범위 밖 포인터/미정 BYTE 자체를 원본과 일치시킨 근거가 아니며 InvalidFile 뒤 나머지 재선택/복구도 잔여",
+    "실제 Editor 전체 전환·지형/소유자/시나리오·UI/연속 미션·호환성, 일반 전투 재접속의 후순위MP 무시험 사전 구현·4~7차"
+  ]
+}

@@ -2610,3 +2610,6 @@ add_executable(netstorm_mission_entry_tests FocusedTestMain.cpp ClientLocalState
 target_link_libraries(netstorm_mission_entry_tests PRIVATE netstorm)
 netstorm_apply_compiler_options(netstorm_mission_entry_tests)
 target_compile_definitions(netstorm_mission_entry_tests PRIVATE ${_netstorm_menu_session_definitions})
+
+# 실제 Editor 객체 스트림과 기존 값형 로더를 같은 보호 기대값으로 대조한다.
+target_sources(netstorm_editor_default_name_tests PRIVATE FortObjectLoadTests.cpp)

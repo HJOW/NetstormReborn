@@ -16,7 +16,11 @@ TEST_CASE(EditorDeferredFile_EmptyAndStaleProjectionUseFinalRawFile) {
             const auto path=work.ResolvePath("d/Checkpoint385.fort");work.Write(netstorm::platform::PathToUtf8(path),input);std::size_t reads{};auto selected=checkpoint;const auto read=selected.load.read;
             selected.load.read=[&](auto name) { ++reads;CHECK(storage->OwnedImages()==1 && ExistingEditorTemplateValid(*storage,1) && name==netstorm::platform::PathToUtf8(path));return read(name); }; // manager/readonly를 공개한 뒤의 실제 reader만 센다.
             session.InstallExistingEditorCheckpoint(selected,client.ReadOnlyForts(),work);const auto& actual=storage->Template(1);
-            CHECK(reads==1 && session.ExistingEditorCheckpointReady() && session.IslandCount()>0);CHECK(actual.typeHashes==expected.typeHashes && actual.chaff.chunks.size()==expected.chaff.chunks.size() && DeferredStoredObjects(actual)==expectedObjects);
+            CHECK(reads==1 && session.ExistingEditorCheckpointReady() && session.IslandCount()>0);std::size_t matched{}; // 완성 레코드 사본 대신 실제 저장 좌표/종류의 현재 월드를 확인한다.
+            for (std::size_t chunk=0;chunk<expected.chaff.chunks.size();++chunk) for (const auto& object:expected.chaff.chunks[chunk].objects) { // 원문 Chaff의 y/x 순서와 nibble 좌표를 독립 입력에서 읽는다.
+                if (!object.type || static_cast<std::uint32_t>(object.type)==session.Core().bridgeState.islandType) continue;
+                const auto x=static_cast<float>((chunk%16)*16+object.CellX()),y=static_cast<float>((chunk/16)*16+object.CellY());const auto found=session.World().Find(x,y,static_cast<std::uint32_t>(object.type));CHECK(found.value!=0);++matched;
+            }CHECK(matched>0);if (empty) CHECK(actual.chaff.chunks.empty()); // 원시 경로가 빈 최초 객체 사본을 보충해 우회하지 않는다.
             CHECK(session.Core().pool.FreeCount()+expectedObjects<session.Core().pool.Capacity());CHECK(!actual.Section("State").empty() && !(actual.Section("State")[0]&1U));CHECK(CheckpointRejects<std::logic_error>([&] { session.SnapshotFort(1); })); // checkpoint는 아직 최종 State 확정/loaded 공개가 아니다.
         },false,nullptr,{},[&](Client&,RawCampaignSessionServices& services) { storage=services.templateStorage;services.missionFortImage.reset(); },empty);
     }
@@ -32,7 +36,7 @@ TEST_CASE(EditorDeferredFile_SignatureAndObjectErrorsKeepNativeBoundaries) {
             selected.load.rejectFile=[&](auto name) { ++rejects;CHECK(signature && reads==1 && !titles && !configs);work.Delete(name); };
             selected.file.title=[&] { ++titles;title(); };selected.fort.setConfig=[&](auto key,auto value) { ++configs;configure(key,value); };
             selected.file.outside=[&](auto branch) { invalid=branch==ExistingEditorInstallOutside::InvalidFile;throw CheckpointStop("deferred-invalid-file"); };
-            bool failed{};try { session.InstallExistingEditorCheckpoint(selected,client.ReadOnlyForts(),work); }catch (const CheckpointStop& error) { CHECK(signature && std::string_view(error.what())=="deferred-invalid-file");failed=true; }catch (const std::runtime_error& error) { CHECK(!signature && std::string_view(error.what()).find("Chaff")!=std::string_view::npos);failed=true; }
+            bool failed{};try { session.InstallExistingEditorCheckpoint(selected,client.ReadOnlyForts(),work); }catch (const CheckpointStop& error) { CHECK(signature && std::string_view(error.what())=="deferred-invalid-file");failed=true; }catch (const std::logic_error& error) { CHECK(!signature && std::string_view(error.what())=="원본 Objects Template.cpp 진단 890");failed=true; }
             CHECK(failed && reads==1 && !session.ExistingEditorCheckpointReady());
             if (signature) CHECK(invalid && rejects==1 && !titles && !configs && storage->OwnedImages()==0 && !work.TryRead(path));
             else CHECK(!invalid && !rejects && titles==2 && configs>=1 && storage->OwnedImages()==1 && session.CurrentSubscriber()==7 && session.IslandCount()>0 && session.Core().pool.FreeCount()<session.Core().pool.Capacity());

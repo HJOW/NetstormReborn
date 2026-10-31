@@ -9,7 +9,7 @@
 namespace netstorm::client {
 // 일반Fort의기존완료Money/Meta몸체와각wrapper안에서늦게선택하는실제stream이다.
 struct RawExistingFortChildren {
-    std::function<void(std::uint32_t)> prepareObjects; // 실제 객체 child 위치에서 현재 manager의 저장 객체 해석 자료를 갱신한다. 독립 값형 입력은 비워둘 수 있다.
+    std::function<void(std::uint32_t)> loadObjects; // 실제 객체 child에서 현재 manager의 스트림을 읽으며 생성한다. 독립 값형 입력은 기존 로더를 사용할 수 있다.
     std::shared_ptr<void> stateOwner; //factory의장기상태소유자를모듈/selector보다나중에반납한다.이미Client장기소유면비울수있다.
     std::shared_ptr<o::RawFortMoneyLoad> money; //같은Session SP/Player/깊이를빌리는실제Money모듈이다.
     std::shared_ptr<o::RawFortMetaLoad> meta; //Client의단일6160BYTE Badges/같은Technology내용물모듈이다.

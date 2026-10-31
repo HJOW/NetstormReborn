@@ -6,19 +6,19 @@
 
 ## 0. 재개 전 확인 사항
 
-### 0.1 현재 값 (2026-10-31, 단위662 완료 / 목표 진행 중)
+### 0.1 현재 값 (2026-10-31, 단위663 완료 / 목표 진행 중)
 
 | 항목 | 값 |
 | --- | --- |
-| 진행 상태 | **사용자 재개 지시로 진행 중.** 662는 Edit State1의 최종 이름 선택 전 선행 파일 읽기/파싱을 제거하고 실제 객체 child에서 현재 raw 섹션을 해석하게 연결했다. 집중70등록 중 최종 고유9개/실패0·기존 한정 원문400행 일치다. Release2회 중 첫 검사 코드 경고1개를 제거했고 최종 경고/오류0이다. 검사 실패는 없다. 게임/ZIP/전체34는 추가하지 않았다. 실행 중인 빌드/게임은 없으며 전체 목표는 미완료다. |
-| 현재 제품 | 제품662이며 State1은 최종 작업 파일의 raw 설치/Subscriber/지형 뒤 객체 자료를 해석한다. 빈/오래된 최초 자료와 서명/객체 오류의 부분 효과를 실제 Session에서 확인했다. 전체 객체 스트림/손상 처리·GUI는 별도다. State1 앞단/통지는661, 정상 단독 State7 부모는660이며 일반 전투 재접속은 후순위MP로 구분한다. 최신 전체34/ZIP은645의644제품이다. |
-| EXE SHA-256 | `9cce68e0d1deb21730942940986ed5438701708918f681ef28892b914941eac2` (662) |
+| 진행 상태 | **사용자 재개 지시로 진행 중.** 663은 실제 Editor의 객체 child를 현재 MemStream 직접 읽기/즉시 생성으로 교체했다. 집중78등록 중 최종 고유12개/실패0이며 기존 원문 고유1618행/경로2227을 대조했다. Release2회 중 첫 검사 코드 signed 비교 경고1개를 정리해 최종 경고/오류0이다. 검사 실패는 없다. 게임/ZIP/전체34는 추가하지 않았고 실행 중인 빌드/게임은 없다. 전체 목표는 미완료다. |
+| 현재 제품 | 제품663이며 실제 Editor는 TypeNames 준비→Terr→조건부Chaff를 읽으며 객체/내용물을 생성하고 정상 꼬리만 변환표를 반납한다. 예외는 깊이만 줄이고 현재표/cursor/부분 생성·난수를 보존한다. 실제 파일/Session4입력과 저장 좌표/종류를 확인했다. Campaign/독립 값형/CD 경로는 유지하며 다른 소비자·전체ABI/GUI는 별도다. State1 앞단661/단독 State7 부모660을 유지한다. 최신 전체34/ZIP은645의644제품이다. |
+| EXE SHA-256 | `449a39ecd40830c91824d4a9236829870e5c9e36b9e1371955baa0b138aa8a42` (663) |
 | ZIP SHA-256 | 645에서 만든644 제품의 `6485febc36080dc90e9eec43965a842f85d39e81c82a003a96b83b34b3694b73` (1376항목/게임 자산1358개). 실제 한글😀 경로에 압축 해제해 최종34를 실행했다. |
-| 등록 C++ 검사 수 | 662의 집중70등록 중 새2개/입력4개·기존7개, 최종 고유9개/실패0이다. 기존 기본 이름252행과 외곽258행 중148행의 한정 투영/110행 명시 제외를 대조해 비교400행이다. 다른61등록은 실행하지 않았다. 최초/최종 새 검사 포함6회 실행/11함수 호출이며 검사 실패는 없다. 정적601명령/신규MP 검사0과 구별한다. 주 검사 EXE는645의3566등록/집중37이 마지막 근거다. |
+| 등록 C++ 검사 수 | 663의 집중78등록 중 새3개/명시 실패입력2개·기존9개, 최종 고유12개/실패0이다. 새 스트림은 기존 Patch609행(객체573/부모36), 기존 값형은 양판본1218행, 기본 이름252행·외곽148행을 대조했다. 고유 원문1618행/경로2227이며 외곽110행 명시 제외와 다른66등록 미실행을 구별한다. 총6회/14함수 호출이고 검사 실패는 없다. 정적697명령/신규MP 검사0과 구별한다. 주 검사 EXE는645의3566등록/집중37이 마지막 근거다. |
 | 최신 전체34 | 단위645, 644 제품 기준 최종34/34. 최소 비정지 시각 증가20.843초·창DC RGB·Native Frame 일치. 최초 입력 누락34실패/재검증34통과와 준비2회를 포함한 총70프로세스를 구별한다. |
 | 최신 반복 수명 | 단위640, 같은637 제품의 브리핑/중단 확인 바깥 뗌 취소2회·미션 재진입1회와 채팅 도킹2실행. 최종3실행 종료0. Restart4회/Leave 취소2회/메인 복귀2회는638의 별도 근거다. |
 | 전체 C++ 마지막 실행 | 단위549. 3389개 중 7개 검사가 실패했다(580단언). 이후 입력 정정 뒤 집중 검사만 통과했고 전체 재실행 기록은 없다. 마지막 전체 통과는 단위510(508 제품, 3337개, 실패 0)이다. |
-| 보호 기준 | 전체2632개/기존fixture773개는645에서 불변을 확인했다.662는 관련7입력을 `extracted/cpp-solo-entry-645-20261031/protected-after-current.json`과, 그 뒤 추가된 기본 이름fixture1개를 최초653 커밋a99f1a2f와 대조해 총8개 불변을 확인했다. 전체 재감사와 구별하며655~662의 새fixture는 없다. 원시 자료는 HJOW-Athlon에만 있다. |
+| 보호 기준 | 전체2632개/기존fixture773개는645에서 불변을 확인했다.663은 관련8입력을 `extracted/cpp-solo-entry-645-20261031/protected-after-current.json`과, 그 뒤 추가된 기본 이름fixture1개를 최초653 커밋a99f1a2f와 대조해 총9개 불변을 확인했다. 전체 재감사와 구별하며655~663의 새fixture는 없다. 원시 자료는 HJOW-Athlon에만 있다. |
 | **마지막 전체 정밀 디컴파일** | **HJOW-Athlon (192.168.0.94) / 2026-10-23** |
 
 ### 0.2 재개 절차
@@ -28,8 +28,8 @@
 3. 실제 게임 구동과 별도 창이 뜨는 작업은 AGENTS.md를 따른다. 확인 없이 진행할 수 있는 시스템은 vm-debian-codex(10.0.0.15), VM-W11-Codex(10.0.0.17), HJOW-Athlon(192.168.0.94)뿐이다. **HJOW-X3D를 포함한 그 밖의 PC에서는 실행 목적과 필요성을 설명하고 명시적 확인을 받는다.** 허용받으면 해당 작업 단계가 끝날 때까지 유지된다. 사용자가 원본 수동 컨트롤이나 녹화 분석을 직접 요청한 작업 단계도 확인이 필요 없다.
 4. 빌드·검사·GUI 원시 자료는 작업 PC의 `extracted/`(Git 제외)에만 있다. 커밋되는 보고서는 `cpppj/*.json`, 작업 문서는 `docs/exe/cpp-*.md`다. 다른 PC에 원시 자료가 있다고 가정하지 않는다.
 5. 다른 세션의 dotnetpj·webpj 변경, staged 파일, 실행 출력은 이 작업에 포함하지 않는다. 단위마다 인계를 갱신하고 로컬 커밋한다.
-6. 645의 전체34 통합은 완료됐으며646~662에서 실제 게임을 다시 실행하지 않았다. 소수 단위 뒤 전체34를 반복하지 않고 더 많은 기능 묶음 뒤 필요한 통합을 수행한다. 새 작업은3절을 따른다.
-7. 마지막 빌드/집중 검사 근거는0.1절과 단위 문서를 따른다.662는 `extracted/cpp-editor-deferred-file-662-build-v1/v2.log`·`focused-v1/v2.log`·`default/outer/read-false/custom.log`와 보고서의 실제 경로를 따른다. 최종9개/한정 원문400행·정적601명령과 전체70등록을 구별한다. 주 EXE3566/집중37은645의644제품이다. 신규MP 검사는 하지 않는다. 물리 캡처 환경이 바뀌지 않았으므로 WGC/물리 입력을 반복하지 않는다.
+6. 645의 전체34 통합은 완료됐으며646~663에서 실제 게임을 다시 실행하지 않았다. 소수 단위 뒤 전체34를 반복하지 않고 더 많은 기능 묶음 뒤 필요한 통합을 수행한다. 새 작업은3절을 따른다.
+7. 마지막 빌드/집중 검사 근거는0.1절과 단위 문서를 따른다.663은 `extracted/cpp-fort-object-stream-663-build-v1/v2.log`·`stream-v1.log`·`session-v1/v2.log`·`typed/outer/default.log`와 보고서의 실제 경로를 따른다. 최종12개/고유 원문1618행·경로2227·정적697명령과 전체78등록을 구별한다. 주 EXE3566/집중37은645의644제품이다. 신규MP 검사는 하지 않는다. 물리 캡처 환경이 바뀌지 않았으므로 WGC/물리 입력을 반복하지 않는다.
 
 ### 0.3 유지되는 제한과 보류
 
@@ -94,7 +94,7 @@
 
 AGENTS.md의 `(4~6차 목표.)` 문구는 7차 추가 뒤에도 그대로지만, 바로 아래에 7차까지 나열되고 dotnetpj 항목도 4~7차로 적혀 있으므로 4~7차로 읽는다.
 
-## 2. 현재 상태 (2026-10-31, 단위662 확인 기준)
+## 2. 현재 상태 (2026-10-31, 단위663 확인 기준)
 
 - **게임 실행·플레이 가능 여부:** 인자 없는 `Netstorm.exe`로 GUI가 시작되고 34경로 모두 진입·비정지 진행·정상 종료를 확인했다. 자연 완주 근거는 과거 제품의 Early1/2 자동 완주와 사용자가 다른 PC에서 직접 완주한 캠페인 1-1뿐이다.
 - **기존 게임과의 동일성:** 원문 관측과 대조를 마친 부품이 많다. 자연 완주와 전체 동일성은 사용자가 플레이하며 확인한다.
@@ -111,7 +111,7 @@ AGENTS.md의 `(4~6차 목표.)` 문구는 7차 추가 뒤에도 그대로지만,
 | 카메라 | [615](docs/exe/cpp-camera-pan-20261030.md), [617](docs/exe/cpp-camera-pan-presentation-20261030.md), [632](docs/exe/cpp-camera-center-20261031.md), [633](docs/exe/cpp-camera-immediate-20261031.md), [635](docs/exe/cpp-camera-viewport-20261031.md) | 원문 Alt/가운데 pan, 확대 전체화면 논리 단위, 직접 중심 목표, Home 계열 즉시 적용, viewport 변경 시 현재 값 보존 | 물리 키, 다른 DPI, 실제 포커스 전환 |
 | Renderer·Native Draw | [618](docs/exe/cpp-renderer-prelude-20261030.md), [619](docs/exe/cpp-renderer-clouds-20261030.md), [620](docs/exe/cpp-renderer-frame-20261030.md), [622](docs/exe/cpp-native-scene-20261031.md), [628](docs/exe/cpp-mana-additional-20261031.md), [629](docs/exe/cpp-auxiliary-draw-20261031.md), [648](docs/exe/cpp-renderer-presentation-20261031.md), [655](docs/exe/cpp-mission-entry-20261031.md) | 앞단, 구름 4칸·배경 선택, 실제 Frame, 단일 표시 목록, 마나 103 추가 Draw, 배율·고정색, 부분 그리기/전체 출력 요청·첫 flags/count0 보존, 실제 Zone 뒤 초기화 | 전체 픽셀 동일성, 기존 VFX 계약·전체 비동기State7 |
 | UI 갱신 영역 | [624](docs/exe/cpp-gump-redraw-20261031.md), [625](docs/exe/cpp-ui-dirty-20261031.md), [627](docs/exe/cpp-gump-derived-dirty-20261031.md), [630](docs/exe/cpp-inventory-blink-20261031.md), [631](docs/exe/cpp-minimap-dirty-20261031.md), [639](docs/exe/cpp-minimap-content-20261031.md) | Gump 기본 갱신, 지도 clamp, 기본 UI, 장식·메뉴 행, 생산 점멸, 미니맵 기본 영역·지면/소유자/삭제 픽셀. grid/debug 직접 writer와 생성 초기값 대조 | 일반 경로 활성 writer를 찾지 못한 grid/debug는 노출하지 않는다. 간접 alias 부재 전체 증명은 아니다. |
-| Edit·시나리오 | [590](docs/exe/cpp-editor-scenario-20261030.md), [597](docs/exe/cpp-editor-rules-20261030.md), [609](docs/exe/cpp-world-geyser-20261030.md), [634](docs/exe/cpp-editor-catalog-current-20261031.md), [650](docs/exe/cpp-world-generation-session-20261031.md), [653](docs/exe/cpp-editor-default-name-20261031.md), [661](docs/exe/cpp-editor-entry-prelude-20261031.md), [662](docs/exe/cpp-editor-deferred-file-20261031.md) | 시작값·작업본 왕복·방향별 동맹·세계 생성·Fort433개 이관/필터와 기본 이름 선택·늦은 파일 준비/Session checkpoint·State1 공통 앞단/52h 통지·선행 파싱 제거/현재 raw 객체 해석 | 3절 2번.662의9개 통과는 전체 스트림/GUI 검증이 아니다. |
+| Edit·시나리오 | [590](docs/exe/cpp-editor-scenario-20261030.md), [597](docs/exe/cpp-editor-rules-20261030.md), [609](docs/exe/cpp-world-geyser-20261030.md), [634](docs/exe/cpp-editor-catalog-current-20261031.md), [650](docs/exe/cpp-world-generation-session-20261031.md), [653](docs/exe/cpp-editor-default-name-20261031.md), [661](docs/exe/cpp-editor-entry-prelude-20261031.md), [662](docs/exe/cpp-editor-deferred-file-20261031.md), [663](docs/exe/cpp-fort-object-stream-20261031.md) | 시작값·작업본 왕복·방향별 동맹·세계 생성·Fort433개 이관/필터와 기본 이름 선택·늦은 파일 준비/Session checkpoint·State1 공통 앞단/52h 통지·선행 파싱 제거/실제 Objects 스트림 생성·예외 수명 | 3절 2번.663의12개 통과는 전체 ABI/GUI 검증이 아니다. |
 | Edit Unicode 파일 | [646](docs/exe/cpp-editor-unicode-20261031.md) | UTF-8/native 경로·wide CRT, 실제 Unicode 파일 왕복·권한·목록 이관/장부 재열기·삭제 보존·source TAFF 격리. 집중24통과 | GUI/전체34/한국어 UI 검증이 아니다. 최신 실행/ZIP은644제품이며 더 많은 기능 묶음 뒤 통합한다. |
 | 객체 메뉴·건설 | [524](docs/exe/cpp-object-hit-20261028.md), [528](docs/exe/cpp-factory-upgrade-runtime-20261028.md), [531](docs/exe/cpp-altar-salvage-runtime-20261028.md), [537](docs/exe/cpp-mission-cost-guard-20261028.md) | 픽셀 선택, 시험한 메뉴·업그레이드·회수, 미션 비용 관문 | 다른 타입·레벨·상태 |
 | Factory 중복 경고 | [647](docs/exe/cpp-factory-duplicate-warning-20261031.md) | 실제 제공된 경고 callback 보존·Client 채널4 로그·명시 중복 입력의 경고 뒤 기존 객체 삭제. 최종1개 통과 | 일반 Pop 겹침 거부와 분리한 +20 장치 접합이다. 합법 GUI 배치/전체20/전체34 검증이 아니다. |
@@ -171,7 +171,7 @@ Early3 후속 입력과 미실행 계획은 [부분 진행 보관](docs/exe/prep
 
 1. 화면 캡처가 정상화되면 물리 입력 QWASZX·ESC·Home·포커스를 검증한다(7번).
 2. 남은 비멀티 UI·Edit·시나리오·파일·수명·호환성을 1~4번과 7번으로 이어 간다.
-3. 645의 같은644 제품/새 ZIP/전체34 통합 뒤646~662의 파일·메뉴·Renderer·명령·세계 생성·Edit/CD/미션 진입을 진행했다.662는 State1의 선행 pending 파싱을 제거하고 최종 raw 파일의 늦은 객체 해석을 연결했다. 다음은 실제 객체 스트림/손상 파일의 나머지 분기, 지형/소유자/시나리오·도구와 남은 UI/연속 미션·파일 소비자/ABI를 원문과 대조한다. 더 많은 기능 묶음 뒤 필요한 스테이지 진입/대기 검사를 몰아서 하며 소수 단위마다 전체34를 반복하지 않는다(4절 최신 사용자 지시).
+3. 645의 같은644 제품/새 ZIP/전체34 통합 뒤646~663의 파일·메뉴·Renderer·명령·세계 생성·Edit/CD/미션 진입을 진행했다.663은 실제 Editor의 객체 읽기/생성 교대와 정상/예외 변환표·깊이 수명을 연결했다. 다음은 Campaign/다른 Fort 객체 소비자의 같은 raw 연결과 나머지 파일 오류/재선택·지형/소유자/시나리오·도구, UI/연속 미션·파일/ABI를 원문과 대조한다. 더 많은 기능 묶음 뒤 필요한 스테이지 진입/대기 검사를 몰아서 하며 소수 단위마다 전체34를 반복하지 않는다(4절 최신 사용자 지시).
 4. 체크 항목을 마치면 5·6번과 Windows 11 실기를 기다리지 않고 멀티플레이 무시험 사전 구현과 4~7차로 넘어간다(8번).
 
 ### 1. 대상별 커서·오브젝트 우클릭·게임 UI
@@ -189,7 +189,7 @@ Early3 후속 입력과 미실행 계획은 [부분 진행 보관](docs/exe/prep
 
 - [x] 세계 생성 옵션9 비영/단일 전체와9회 요청의 실제 Session 접합은650에서 확인했다. 로그인/원문 Start의 NoTemple 뒤 중립 지면798/장식50, 소유된1-1의 거부, 간헐천 실제 Pop/Regular를8입력과 최종5개로 확인했다([650](docs/exe/cpp-world-generation-session-20261031.md)). 제품 변경/게임 실행은 없으며 비미션9개 서로 다른 구역·옵션 writer 검증과 구별한다.
 - [ ] 나머지 시나리오 조합과 실제 설정/UI writer를 허용 범위에서 확인한다.
-- [x] State1의 최종 이름 전 선행 파일 읽기/파싱과 다른 파일의 오래된 객체 자료는662에서 제거했다. 실제 raw 파일/Subscriber/지형 뒤 현재 객체 해석을 연결하고4입력·최종9개/기존 한정400행을 확인했다([662](docs/exe/cpp-editor-deferred-file-20261031.md)). 전체 객체 스트림·뒤쪽 손상의 정확한 부분 생성/깊이/cursor·InvalidFile 뒤 재선택/복구는 남는다.
+- [x] State1의 선행 파일 읽기/파싱은662에서 제거했다([662](docs/exe/cpp-editor-deferred-file-20261031.md)). 객체 child의 전체 편의 파싱은663의 실제 stream 읽기/생성으로 교체했다. Native Patch609·잘린 입력2개와 실제 Session4입력, 최종12개를 확인했다([663](docs/exe/cpp-fort-object-stream-20261031.md)). 다른 Campaign/Fort 소비자와 전체 FILE/SEH ABI·물리 밖 미정 BYTE·InvalidFile 뒤 재선택/복구는 남는다.
 - [ ] 남은 지형·오브젝트·소유자 도구와 LeaveEditMode/State1·비동기 State7의 전체 분기를 점검한다.
 - [x] 빈/점 시작 이름의 newFort 선택과 선택 뒤 실제 작업 파일 준비는653에서 연결했다. 원문252행/1008관측·집중7개와 실제 Unicode 파일/Session checkpoint를 확인했다([653](docs/exe/cpp-editor-default-name-20261031.md)). 전체 State 확정/loaded/GUI와 구별한다.
 - [ ] 섬 배치 직후와 재로드의 Graph 차이를 원본 전체 월드와 대조하고 전체 작업본 저장/재파싱·이름/목록·미션 전환 수명을 확인한다.

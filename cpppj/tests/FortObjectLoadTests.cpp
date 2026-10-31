@@ -197,3 +197,5 @@ TEST_CASE(FortObjectLoad_SharedFullDeckReadsAfterPopAndContents) {
         RawFortObjectLoad loader(scene.pool,scene.hash,scene.types,scene.frames,scene.random,scene.state,hooks);CHECK(loader.Object(Record(values),16,32,1).value!=0);CHECK(effects==(afterContents ? 2U : 1U) && destroyed==(value ? 0U : 1U) && globals.FullDeck()==value && scene.state.fortDestroyBlocked); // fallback true가 공유0의 삭제를 가리지 않는다.
     }
 }
+
+#include "FortObjectStreamTests.inc" // 같은 독립 PE 입력의 실제 스트림 경로를 대조한다.

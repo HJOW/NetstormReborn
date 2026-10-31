@@ -69,7 +69,7 @@ struct RawCampaignWorldRuntime::Impl {
             territoryHooks=MakeFortWorldLoadBinding(world,normal,*objects,*existing->money,*existing->meta,
                 existing->moneyStream,existing->selectMeta,existing->metaStream,std::move(territoryHooks)); //Object/Generate/Graph도기존같은완료몸체를쓴다.
             auto objectLoad=std::move(territoryHooks.objects);territoryHooks.objects=[this,body=std::move(objectLoad)](const o::FortTemplate& fort,std::uint32_t owner) {
-                if (existing->prepareObjects) existing->prepareObjects(owner);body(fort,owner); // 같은 Template 객체의 현재 raw 섹션을 해석한 뒤 기존 생성/Pop 몸체를 실행한다.
+                if (existing->loadObjects) existing->loadObjects(owner);else body(fort,owner); // 실제 Session은 raw 스트림을 사용하며 독립 값형 장치만 기존 레코드 로더를 유지한다.
             };
             auto moneyLoad=std::move(territoryHooks.money);territoryHooks.money=[this,body=std::move(moneyLoad)](const o::FortTemplate& fort,std::uint32_t owner) {
                 existing->selectMoney(fort,owner);body(fort,owner); //실제stream선택은여전히LoadSelected의깊이/진단뒤다.
