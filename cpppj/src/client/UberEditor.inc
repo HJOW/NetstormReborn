@@ -35,7 +35,7 @@ void UberGump::OpenSaveFortNameDialog(std::uint32_t fortMode) {
     SaveFortNameDialogContext context;context.work=&editor_->files;context.currentName=client_.FortGlobals()->Current();context.editor.now=[this] { return client_.WallSeconds(); };
     BindTextClipboard(context.editor,textClipboard_); //최초 Chat이 이미 만든 공통 문자 UI와 같은 장치를 계속 빌린다.
     context.translate=[this](auto text) { return FontBytes(client_.Translate(o::DecodeOriginalText({reinterpret_cast<const std::uint8_t*>(text.data()),text.size()}))); };
-    context.fortPath=[this](auto name) { mapFileSpec_.SelectFort();client_.FortGlobals()->SelectFileSpec();const auto configured=client_.Configuration().PathSpec(mapFileSpec_.Current(),name);return editorCatalog_->Resolve(configured).string(); }; //같은 현재 FileSpec의 source/work 절대 경로도 명시 전체 매핑을 사용한다.
+    context.fortPath=[this](auto name) { mapFileSpec_.SelectFort();client_.FortGlobals()->SelectFileSpec();const auto configured=client_.Configuration().PathSpec(mapFileSpec_.Current(),name);return platform::PathToUtf8(editorCatalog_->Resolve(configured)); }; //같은 현재 FileSpec의 source/work 절대 경로도 명시 전체 매핑을 사용한다. Windows10/11 한글 경로는 원본 ANSI 대신 UTF-8다.
     context.header=[this] { const auto owner=client_.GameplayGlobals()->player.templateOwner;auto headers=templateStorage_->Headers();if (owner>=9 || headers.size()<static_cast<std::size_t>(owner+1U)*20U) throw std::out_of_range("Save as의 현재 Template 헤더 범위");return headers.subspan(static_cast<std::size_t>(owner)*20U,20); };
     context.setName=[this](auto name) { SelectCurrentFortName(name); };context.tell=[this](auto section) { Tell(std::string(section)); };
     context.readFort=[this](auto name) { const auto token=std::bit_cast<std::int32_t>(scriptStrings_.Store(name));client_.Input().PushCommand(kReadFortCommand,token,token); }; //원문 mode0은 같은 현재 이름 token을 두 인자에 복제하여 일반 입력 큐에 예약한다.
@@ -64,8 +64,8 @@ o::LocalMissionParentResult UberGump::InstallExistingEditorState(std::uint32_t s
     //호스트 Session은 준비된 물리만 빌리고 파일 설치/Template 변경은 아래 실제 checkpoint의 위치까지 지연한다.
     const std::string pending(client_.FortGlobals()->Pending());const auto configured=client_.Configuration().PathSpec("fortSpec",pending);
     const auto working=editorCatalog_->Prepare(configured); //목록을 거치지 않는 직접 설치도 완료된 삭제 항목을 원본에서 다시 복사하지 않는다.
-    e.files.EnsureDirectory(working.parent_path().string()); // 새 작업 namespace도 원본 설치의 d 폴더처럼 저장 부모 디렉터리를 먼저 확보한다. Fort 파일은 원문 Notify가 생성한다.
-    const auto bytes=client_.Files().TryRead(working.string());
+    e.files.EnsureDirectory(platform::PathToUtf8(working.parent_path())); // 새 작업 namespace도 원본 설치의 d 폴더처럼 저장 부모 디렉터리를 먼저 확보한다. Fort 파일은 원문 Notify가 생성한다.
+    const auto bytes=client_.Files().TryRead(platform::PathToUtf8(working));
     const auto image=bytes ? std::make_shared<const std::vector<std::uint8_t>>(*bytes) : std::shared_ptr<const std::vector<std::uint8_t>>{};
     o::FortTemplate fort;if (image) fort=o::FortTemplate::Parse(*image,client_.Assets().TypeTable()); // 파일 부재는 새 manager/자료 부모가 처리하며 가짜 빈 Fort 파일을 읽지 않는다.
     auto services=MakeCampaignClientServices(client_,*rawButtons_,{[this] { RefreshWindowTitle(); },[this](auto name) { Tell(std::string(name)); },[this](auto kind,auto player,auto parameter) { warnings_->Remove(kind,player,parameter);rebuild_=true; },[this](auto packet) { ReceiveChatMessage(packet); }});

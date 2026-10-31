@@ -1,5 +1,6 @@
 // 기존파일/설정/원문부모를재사용하고미연결효과나부분실패를정상완료로숨기지않는다.
 #include "client/EditorFortFileDevices.h"
+#include "platform/Utf8Path.h"
 #include <cstring>
 #include <stdexcept>
 #include <utility>
@@ -16,7 +17,7 @@ EditorFortFileDevices::EditorFortFileDevices(EditorFiles& work,const o::BaseFile
 std::string_view EditorFortFileDevices::CurrentPath() {
     const auto name=Need(effects_.currentName)();if (name.empty() || !name.front()) Need(effects_.assertion)(39);
     Need(effects_.selectFileSpec)();const auto key=Need(effects_.fileSpecKey)();const auto current=Need(effects_.currentName)();configuredPath_=config_.PathSpec(key,current);
-    namespacePath_=std::filesystem::path(configuredPath_).is_absolute() ? configuredPath_ : o::NormalizeGamePath(configuredPath_);workingPath_=(effects_.resolve ? effects_.resolve(configuredPath_) : work_.ResolvePath(namespacePath_)).string();return workingPath_;
+    namespacePath_=platform::PathFromUtf8(configuredPath_).is_absolute() ? configuredPath_ : o::NormalizeGamePath(configuredPath_);workingPath_=platform::PathToUtf8(effects_.resolve ? effects_.resolve(configuredPath_) : work_.ResolvePath(namespacePath_));return workingPath_; //Windows10/11의 실제 한글 작업 경로는 원본 ANSI 대신 UTF-8로 전달한다.
 }
 // 파일존재/읽기는설치부모가별도로실행한다.이준비는작업namespace에없는복사본만만든다.
 std::string_view EditorFortFileDevices::PrepareCurrent() {
@@ -29,7 +30,7 @@ std::int32_t EditorFortFileDevices::Exists(std::string_view path) const { return
 bool EditorFortFileDevices::ReadOnly(std::string_view path) const { return work_.ReadOnly(path,effects_.assertion); }
 // 기존절대경로읽기는아카이브/원본기본경로로fallback하지않는다.
 std::vector<std::uint8_t> EditorFortFileDevices::Read(std::string_view path) const {
-    const auto actual=work_.ResolvePath(path);auto bytes=source_.TryRead(actual.string());return bytes ? std::move(*bytes) : std::vector<std::uint8_t>{};
+    auto bytes=work_.TryRead(path);return bytes ? std::move(*bytes) : std::vector<std::uint8_t>{}; //644에서 복원한 장치 경로 재조회가 삭제된 작업본을 source TAFF에서 다시 읽지 않게 동일 작업 장치만 사용한다.
 }
 // 실제CRT비교를빌리며새ASCII대소문자정책이나파일파서를만들지않는다.
 TemplateFileLoadHooks EditorFortFileDevices::BindLoad(TemplateFileLoadHooks hooks) const {

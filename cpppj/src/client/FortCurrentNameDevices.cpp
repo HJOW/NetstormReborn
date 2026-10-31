@@ -2,6 +2,7 @@
 #include "client/FortCurrentNameDevices.h"
 #include "o/BaseFile.h"
 #include "o/OriginalText.h"
+#include "platform/Utf8Path.h"
 #include <algorithm>
 #include <cstring>
 #include <stdexcept>
@@ -22,7 +23,7 @@ FortCurrentNameDevices::FortCurrentNameDevices(ClientFortGlobals& names,Campaign
     hooks_.currentName=[this] { return names_.CurrentBytes(); };hooks_.selectFileSpec=[this] { names_.SelectFileSpec(); };
     hooks_.pathSpec=[this,resolve=std::move(resolve)](auto name)->std::span<const std::uint8_t> {
         path_=config_.PathSpec(names_.SelectedFileSpec(),Text(name));
-        if (work_) path_=(resolve ? resolve(path_) : work_->ResolvePath(std::filesystem::path(path_).is_absolute() ? path_ : o::NormalizeGamePath(path_))).string(); //절대 source 매핑은 명시 장치만 허용하며 기존 writer의 보호 범위를 넓히지 않는다.
+        if (work_) path_=platform::PathToUtf8(resolve ? resolve(path_) : work_->ResolvePath(platform::PathFromUtf8(path_).is_absolute() ? path_ : o::NormalizeGamePath(path_))); //절대 source 매핑은 명시 장치만 허용한다. Windows10/11 한글 경로는 원본 ANSI 대신 UTF-8이며 writer 보호는 유지한다.
         return {reinterpret_cast<const std::uint8_t*>(path_.c_str()),path_.size()+1};
     };
     hooks_.samePath=[](auto first,auto second) { const std::string left(Text(first)),right(Text(second));return _stricmp(left.c_str(),right.c_str())==0; }; // 원문 CRT의 현재 NUL/대소문자 비교다.

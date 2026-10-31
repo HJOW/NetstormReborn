@@ -1,4 +1,4 @@
-// 편집 작업본만 쓰는 실제 파일 장치다. 원본 파일의 복사 입력은 호출자가 읽기 전용으로 공급한다.
+// 편집 작업본만 쓰는 실제 파일 장치다. 문자열 경로는 Windows10/11 호환을 위해 원본 ANSI 대신 UTF-8이며 원본 복사 입력은 읽기 전용이다.
 #pragma once
 #include <cstdint>
 #include <filesystem>

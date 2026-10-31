@@ -1,0 +1,72 @@
+{
+  "unit": 646,
+  "host": "HJOW-Athlon",
+  "last_full_decompilation_host": "HJOW-Athlon",
+  "last_full_decompilation_date": "2026-10-23",
+  "build": {
+    "exit_code": 0,
+    "warnings": 0,
+    "errors": 0,
+    "log": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-editor-unicode-646-build-v1.log",
+    "sha256": "3bbcc2605938abb238e012af5c0bc4a049f5ce9a0e18f183678f5eeb1c5a01b4"
+  },
+  "focused": {
+    "registered": 24,
+    "executed": 24,
+    "failed_checks": 0,
+    "exit_code": 0,
+    "names": [
+      "EditorCatalogFiles_WorkOsOrderPreservesExistingCopyAndReadonly",
+      "EditorCatalogFiles_NewNameRefreshAndOwnerRestartUseActualWork",
+      "EditorCatalogFiles_DuplicateLogicalNamesRemainTwoNativeRows",
+      "EditorCatalogFiles_NativeFiftyMatchesActualWorkOsSnapshot",
+      "EditorCatalogFiles_CompletedDeletionAliasesAndDirectPrepareNeverRevive",
+      "EditorCatalogFiles_DirectoriesMissingPatternsDotsAndSiblingMetadata",
+      "EditorCatalogFiles_PendingCorruptLockedAndFailedJournalAreExplicit",
+      "EditorCatalogFiles_NativeRenameReadonlyAndDeletionShareNamespace",
+      "EditorCatalogFiles_ArchiveOnlyReadsRegisteredOrderWithoutDiskFallback",
+      "EditorCatalogFiles_ExistingUnreadableLedgerNeverRevivesDeletedSource",
+      "EditorCatalogFiles_ClassificationAndMetadataStillRereadCurrentWork",
+      "EditorFortFiles_CurrentPathReusesConfigAndCurrentFileSpec",
+      "EditorFortFiles_PreparedEditedBytesWinOverOriginal",
+      "EditorFortFiles_ActualReadOnlyAttributeIsSeparateFromConfigGate",
+      "EditorFortFiles_SaveGateKeepsWritableFileUntilCurrentDwordAllowsWrite",
+      "EditorFortFiles_ValidReadsOnlyCurrentHeaderPointer",
+      "EditorFortFiles_MissingReadAndStatFailureRemainExplicit",
+      "EditorFortFiles_CurrentNameDiagnosticAndSelectorAreReachedLazily",
+      "EditorFortFiles_RejectsProtectedAndEscapedPathsBeforeAnyWrite",
+      "EditorFortFiles_RootedGamePathReusesBaseFileNormalization",
+      "EditorUnicode_FilesPermissionsAtomicAndBoundary",
+      "EditorUnicode_CatalogImportReopenAndDeletion",
+      "EditorUnicode_CurrentFortDeviceRoundTrip",
+      "EditorUnicode_MissingWorkDoesNotReadSourceArchive"
+    ],
+    "log": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-editor-unicode-646-focused-v1.log",
+    "sha256": "83aa9109b0db7f103af196c8117dfe1a8c5be9f55073efd014fcf544fed65050"
+  },
+  "game_sha256": "6059da2e3c73031c63d66249e8b02d62da8f49dbedab792c08df085895cfc5f6",
+  "test_sha256": "70cc8e5dd5617d204dbb9ff4b334350d518e95e222477b57c683f6c3a5703568",
+  "source_sha256": {
+    "cpppj/src/platform/Utf8Path.h": "f852e3122b51dff2b52fce8b27426ade4dd958069bbb2ede359f142b303d1b18",
+    "cpppj/src/client/EditorFiles.cpp": "cb85ae77202cd9191ca4d4b20d9df1d7b2e91a5cafd83a59e63c8d79f1fd4146",
+    "cpppj/src/client/EditorFiles.h": "1273241250eef89f4973fe9bb99b2077cf9be075d30caaf52cb0de4a6c29ceef",
+    "cpppj/src/client/EditorMapCatalogFiles.cpp": "592be291f482eef3326a87f59688ad57985ebc858a2537a48f69238b14b0d093",
+    "cpppj/src/client/EditorFortFileDevices.cpp": "0039dbfb7fd261963e15e1367a74850ac63946c062a0165c6d4746c0577f4b00",
+    "cpppj/src/client/FortCurrentNameDevices.cpp": "a5d755fcef5754775421491d509a796d9d024437b3080b8690825e7799448565",
+    "cpppj/src/client/UberEditor.inc": "957cdef5259766d06148bee21d298c3972317052df10ef97ecfb68edb0bd189c",
+    "cpppj/src/client/UberGump.cpp": "19cedc09dab5396d22d7133e780fd617fe36ebd038894ff219df255645753790",
+    "cpppj/tests/EditorUnicodeFilesTests.cpp": "f113968d3b7d4408e255eff3f2765d216426993034312d22729c29e3c7dfcf58",
+    "cpppj/tests/CMakeLists.txt": "87e79d187e1d7885d59883c404ffb9b44e5fb2d47c230dabf030dbc73384fa6f"
+  },
+  "protected_baseline": "extracted/cpp-solo-entry-645-20261031/protected-after-current.json",
+  "protected_baseline_count": 2632,
+  "protected_rechecked_sha256": {
+    "AGENTS.md": "e9e46fda5519e663417b5c8d9b643549196bf28fe7ba6b1d546a48a853fd208b",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6"
+  },
+  "new_game_launches": 0,
+  "new_package_created": false,
+  "main_tests_rebuilt": false,
+  "scope": "UTF-8/wide 경로·실제 파일·목록 이관/삭제 장부·source TAFF 격리의 빌드/집중 검사다. 전체34/GUI/전체 C++/자연 완주·승패·신규MP 검사가 아니다. 전체2632 해시는645에서 확인했고 이번에는 주요3입력만 재확인했다."
+}

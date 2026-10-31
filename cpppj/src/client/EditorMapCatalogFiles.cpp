@@ -3,6 +3,7 @@
 #include "client/EditorFiles.h"
 #include "o/BaseFile.h"
 #include "o/OriginalText.h"
+#include "platform/Utf8Path.h"
 #include <algorithm>
 #include <array>
 #include <limits>
@@ -18,16 +19,18 @@
 
 namespace netstorm::client { //게임 State/목록 규칙은 기존 원문 몸체에 남긴다.
 namespace { //장부 형식과 실제 root 경계의 공통 계산을 모은다.
+using platform::PathFromUtf8; //Windows10/11의 한글 경로를 원본 ANSI 코드 페이지로 손실 변환하지 않는다.
+using platform::PathToUtf8; //이관 키/OS 열거 결과/장부에 같은 UTF-8 경로를 전달한다.
 constexpr std::array<std::uint8_t,8> kMagic{'N','S','E','F','O','R','T',1}; //UTF-8 경로 바이트를 담는 버전1 binary 장부 서명이다.
 constexpr std::uint8_t kPending=1,kCompleted=2; //복사 전 durable 표시와 최초 이관 완료/이후 삭제 보존 표시다.
 constexpr std::string_view kLedger="catalog-v1.dat"; //work 바깥의 검증된 형제-state 안에서만 사용하는 장부 이름이다.
 // root 요소 경계와 원본 ASCII 대소문자 비교를 함께 사용한다.
-bool Inside(const std::filesystem::path& root,const std::filesystem::path& path) { auto a=o::AsciiLower(root.generic_string());const auto b=o::AsciiLower(path.generic_string());if (a==b) return true;if (!a.ends_with('/')) a+='/';return b.starts_with(a); }
+bool Inside(const std::filesystem::path& root,const std::filesystem::path& path) { auto a=o::AsciiLower(PathToUtf8(root,true));const auto b=o::AsciiLower(PathToUtf8(path,true));if (a==b) return true;if (!a.ends_with('/')) a+='/';return b.starts_with(a); }
 // 존재하는 부모의 reparse를 해석하고 없는 꼬리는 절대 정상 경로로 유지한다.
 std::filesystem::path Actual(const std::filesystem::path& path) { return std::filesystem::weakly_canonical(std::filesystem::absolute(path)); }
 // root 대소문자와 무관하게 검증된 전체 상대 경로를 얻고 첫점/파일명을 축약하지 않는다.
 std::string Under(const std::filesystem::path& root,const std::filesystem::path& path) {
-    const auto prefix=root.generic_string(),name=path.generic_string();if (!Inside(root,path)) throw std::invalid_argument("편집 이관 root 상대 범위 위반");return name.size()==prefix.size() ? std::string(".") : name.substr(prefix.size()+1);
+    const auto prefix=PathToUtf8(root,true),name=PathToUtf8(path,true);if (!Inside(root,path)) throw std::invalid_argument("편집 이관 root 상대 범위 위반");return name.size()==prefix.size() ? std::string(".") : name.substr(prefix.size()+1);
 }
 // source/work identity는 고정 UTF-8 바이트로 기록하여 호스트 코드페이지 출력을 쓰지 않는다.
 std::string Identity(const std::filesystem::path& path) { const auto bytes=path.generic_u8string();return o::AsciiLower({reinterpret_cast<const char*>(bytes.data()),bytes.size()}); }
@@ -59,18 +62,18 @@ struct EditorCatalogWorkspace::Impl {
     }
     // 절대 source/work 표기는 명시 root 전체로 역매핑하고 상대 경로는 기존 게임 표기를 정규화한다.
     std::string Key(std::string_view configured) const {
-        if (configured.find('\0')!=std::string_view::npos) throw std::invalid_argument("편집 이관 경로 NUL 범위");std::filesystem::path input(configured);std::string relative;
+        if (configured.find('\0')!=std::string_view::npos) throw std::invalid_argument("편집 이관 경로 NUL 범위");auto input=PathFromUtf8(configured);std::string relative;
         if (!input.is_absolute()) { relative=std::string(configured);std::replace(relative.begin(),relative.end(),'\\','/');if (relative.starts_with("./")) relative.erase(0,2);const auto first=relative.find_first_not_of('/');relative=first==std::string::npos ? std::string{} : relative.substr(first); } //OS 파일명 표기는 보존하고 장부 비교에서만 ASCII case를 접는다.
         else {
             input=std::filesystem::absolute(input).lexically_normal();
-            if (Inside(files->RootPath(),input)) relative=files->RelativePath(input.string()).generic_string(); //work 내부 reparse 거부를 source 매핑으로 우회하지 않는다.
+            if (Inside(files->RootPath(),input)) relative=PathToUtf8(files->RelativePath(PathToUtf8(input)),true); //work 내부 reparse 거부를 source 매핑으로 우회하지 않는다.
             else if (Inside(sourceRoot,input)) { const auto parent=Actual(input.parent_path());if (!Inside(sourceRoot,parent)) throw std::invalid_argument("편집 source 폴더 링크 범위");relative=Under(sourceRoot,input); }
-            else { const auto actual=Actual(input);if (Inside(files->RootPath(),actual)) relative=files->RelativePath(actual.string()).generic_string();else if (Inside(sourceRoot,actual)) relative=Under(sourceRoot,actual);else throw std::invalid_argument("편집 이관 외부 절대 경로"); }
+            else { const auto actual=Actual(input);if (Inside(files->RootPath(),actual)) relative=PathToUtf8(files->RelativePath(PathToUtf8(actual)),true);else if (Inside(sourceRoot,actual)) relative=Under(sourceRoot,actual);else throw std::invalid_argument("편집 이관 외부 절대 경로"); }
         }
-        relative=std::filesystem::path(relative).lexically_normal().generic_string();return files->RelativePath(relative).generic_string();
+        relative=PathToUtf8(PathFromUtf8(relative).lexically_normal(),true);return PathToUtf8(files->RelativePath(relative),true);
     }
     // source reparse도 명시 root 안인지 검사하고 원본에는 어떤 쓰기도 하지 않는다.
-    std::filesystem::path SourcePath(std::string_view key) const { const auto path=sourceRoot/std::filesystem::path(key);if (!Inside(sourceRoot,Actual(path))) throw std::invalid_argument("편집 원본 입력의 외부 링크 경계");return path; }
+    std::filesystem::path SourcePath(std::string_view key) const { const auto path=sourceRoot/PathFromUtf8(key);if (!Inside(sourceRoot,Actual(path))) throw std::invalid_argument("편집 원본 입력의 외부 링크 경계");return path; }
     // lock 획득과 완전한 장부 읽기가 성공해야 실제 이관/현재 읽기를 계속한다.
     void Load() {
         if (poisoned) throw std::runtime_error("편집 이관 장부 갱신 실패 owner의 재사용 금지");if (loaded) return;metadata.EnsureDirectory(".");
@@ -112,9 +115,9 @@ EditorCatalogWorkspace::~EditorCatalogWorkspace()=default; //동기 UI/Session�
 EditorFiles& EditorCatalogWorkspace::Files() const { return *impl_->files; } //Native 파일 부모의 기존 장치를 그대로 빌린다.
 std::filesystem::path EditorCatalogWorkspace::Resolve(std::string_view configuredPath) const { return impl_->files->ResolvePath(impl_->Key(configuredPath)); } //파일명/첫점 추정 없이 같은 물리 전체 키를 쓴다.
 void EditorCatalogWorkspace::ImportDisk(std::string_view configuredPattern) {
-    const auto pattern=impl_->Key(configuredPattern);const std::filesystem::path requested(pattern);const o::BaseFileSystem source(impl_->sourceRoot);
-    if (requested.filename().string().find_first_of("*?")!=std::string::npos && std::filesystem::is_directory(impl_->SourcePath(requested.parent_path().string()))) impl_->files->EnsureDirectory(requested.parent_path().string()); //빈 source 폴더의 . / .. OS 후보도 실제 빈 작업 폴더에서 열거한다.
-    for (const auto& path:source.MatchDisk(pattern)) { const auto leaf=std::filesystem::path(path).filename().string();if (leaf=="." || leaf=="..") continue;impl_->Import(impl_->Key(path)); } //점 두 후보는 복사/장부를 만들지 않고 실제 work 열거가 그대로 돌려준다.
+    const auto pattern=impl_->Key(configuredPattern);const auto requested=PathFromUtf8(pattern);const o::BaseFileSystem source(impl_->sourceRoot);
+    if (PathToUtf8(requested.filename()).find_first_of("*?")!=std::string::npos && std::filesystem::is_directory(impl_->SourcePath(PathToUtf8(requested.parent_path())))) impl_->files->EnsureDirectory(PathToUtf8(requested.parent_path())); //빈 source 폴더의 . / .. OS 후보도 실제 빈 작업 폴더에서 열거한다.
+    for (const auto& path:source.MatchDisk(pattern)) { const auto leaf=PathToUtf8(PathFromUtf8(path).filename());if (leaf=="." || leaf=="..") continue;impl_->Import(impl_->Key(path)); } //점 두 후보는 복사/장부를 만들지 않고 실제 work 열거가 그대로 돌려준다.
 }
 std::filesystem::path EditorCatalogWorkspace::Prepare(std::string_view configuredPath) {
     const auto key=impl_->Key(configuredPath);impl_->Import(key);if (impl_->entries.contains(o::AsciiLower(key)) || std::filesystem::exists(impl_->files->ResolvePath(key))) return impl_->files->ResolvePath(key);

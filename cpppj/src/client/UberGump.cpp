@@ -116,6 +116,7 @@
 #include <windows.h> //원문004dd560의 GetFileAttributesA 부재/디렉터리 판정을 실제 Windows 장치에 연결한다.
 #include "client/ObjectOwnerCommands.h"
 #include "client/DetonateInput.h"
+#include "platform/Utf8Path.h" //Windows10/11의 한글 Edit 작업본은 원본 ANSI 경로와 달리 UTF-8/W 경계로 전달한다.
 
 namespace netstorm::client {
 // 테스트 전용 임시 조작이며 원본 분석 결과가 아니다. 미션 진행/적 상태/기술은 바꾸지 않는다.
@@ -666,7 +667,7 @@ void UberGump::LoadMissionWorld(std::optional<std::string> requestedFort) {
     if (!missionRuntime_->guided) { missionRuntime_->gate.tutorialNumber=std::bit_cast<std::uint32_t>(o::ConfigParseLong(mission_->Get("tutorialNumber").value_or("")));ApplyMissionDemo(mission_->Get("demo").value_or(""),missionRuntime_->gate.demo);o::ResetMissionBattleOptions(o::OriginalEdition::Patch1078,*missionOptions_);o::SetTotalMadeAllowAll(*missionRestrictions_,1);initLoginSubscriber_=1; }
     const auto selectedFort=requestedFort ? *requestedFort : mission_->FortName(); // Init의 지역256BYTE에서 캡처한 값을 이후 설정 재조회로 바꾸지 않는다.
     auto fortFileRead=mission_->FortFileReader([workspace=editorCatalog_,root=client_.GameDirectory(),working=static_cast<bool>(mission_->FileSource())](std::string_view configured) {
-        if (working) return workspace->Resolve(configured).string();const std::filesystem::path path(configured);return (path.is_absolute() ? path : root/path).lexically_normal().string(); //같은 선택 namespace의 실제 파일 이름을 반환하며 mapper에서 Fort를 다시 읽지 않는다.
+        if (working) return platform::PathToUtf8(workspace->Resolve(configured));const auto path=platform::PathFromUtf8(configured);return platform::PathToUtf8((path.is_absolute() ? path : root/path).lexically_normal()); //같은 선택 namespace의 실제 파일 이름을 반환하며 mapper에서 Fort를 다시 읽지 않는다.
     });
     auto fortFile=fortFileRead(selectedFort);const auto fortImage=std::make_shared<const std::vector<std::uint8_t>>(std::move(fortFile.image));auto fort = o::FortTemplate::Parse(*fortImage, client_.Assets().TypeTable()); //최초 설치도 같은 fortSpec 선택의 파일 이름/이미지를 함께 보유한다.
     // 전체 요새 레코드를 세어 자동 검사에서 미션 선택과 파일 로드를 함께 확인한다.

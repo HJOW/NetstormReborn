@@ -631,6 +631,11 @@ target_sources(netstorm_tests PRIVATE BaseFileSecondaryTests.cpp BaseFileReadPol
 add_executable(netstorm_file_tests FocusedTestMain.cpp BaseFileSecondaryTests.cpp BaseFileReadPolicyTests.cpp RecoveryTests.cpp MenuTests.cpp TechnicalHelpTests.cpp)
 target_link_libraries(netstorm_file_tests PRIVATE netstorm)
 netstorm_apply_compiler_options(netstorm_file_tests)
+# 실제 편집 파일/이관/현재 경로를 게임 창 없이 검사하는 집중 대상이다.
+add_executable(netstorm_editor_file_tests FocusedTestMain.cpp EditorMapCatalogFilesTests.cpp EditorFortFileDevicesTests.cpp EditorUnicodeFilesTests.cpp)
+target_link_libraries(netstorm_editor_file_tests PRIVATE netstorm)
+netstorm_apply_compiler_options(netstorm_editor_file_tests)
+target_sources(netstorm_tests PRIVATE EditorUnicodeFilesTests.cpp) # 주 회귀에도 같은 Unicode 실제 파일 검사를 등록한다.
 # 원본 파일·Python·Ghidra 없이도 기계어 기대값 회귀 검사를 실행한다.
 target_compile_definitions(netstorm_tests PRIVATE
     NETSTORM_ORACLE_FIXTURE="${CMAKE_CURRENT_SOURCE_DIR}/fixtures/original-x86.tsv"

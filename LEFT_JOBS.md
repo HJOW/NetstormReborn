@@ -6,20 +6,19 @@
 
 ## 0. 재개 전 확인 사항
 
-### 0.1 현재 값 (2026-10-31, 단위645 완료 / 646 진행 중)
+### 0.1 현재 값 (2026-10-31, 단위646 완료 / 목표 진행 중)
 
 | 항목 | 값 |
 | --- | --- |
-| 진행 상태 | **사용자 재개 지시로 진행 중.** 645에서 같은644 제품/새ZIP의 최종34/34·설정 복구·Native Frame/창DC RGB·보호2632불변을 확인했다. 최초 인트로 입력 누락34실패와 재검증34통과/첫 실행 준비2회는 별도 기록했다. 현재646 Edit Unicode/작업본 격리의 빌드 중(exec session37955, `extracted/cpp-editor-unicode-646-build-v1.log`)이다. 전체 목표는 미완료다. |
-| 현재 제품 | 마지막 완료 제품644, 커밋 `bf7b7cfc`.645에서 같은 제품의 새 ZIP/전체34를 확인했다.646 소스/빌드는 별도 진행 중이다. |
-| 후속 코드 준비 | 646의 `EditorFiles`·`EditorMapCatalogFiles`·`EditorFortFileDevices`·`FortCurrentNameDevices`·`UberGump/UberEditor`와 새 `platform/Utf8Path.h`·`EditorUnicodeFilesTests.cpp`, 집중 대상 `netstorm_editor_file_tests`(검사24개 예정)는 미커밋/빌드 중이며 아직 실행하지 않았다. 새 파일 검사4개는 Unicode 왕복3개/부재 작업본의 source TAFF 재조회 차단1개다. 이 소스를645의644제품 실행 결과에 합산하지 않는다. 빌드·파일 집중 검사로 이어가고 추가 스테이지 대기 검사는 하지 않는다. |
-| EXE SHA-256 | `23878d09bc3cea99c188edb15f7be1fac232ef1345ae92ddae21fa113ed00715` (644) |
+| 진행 상태 | **사용자 재개 지시로 진행 중.** 645를 `f7f6716b`에 커밋했다.646 Edit Unicode/wide CRT·부재 작업본의 source TAFF 재조회 차단은 Release 경고/오류0·집중24/실패0으로 마쳤다. 새 게임 실행/ZIP/전체34는 없으며 더 많은 기능 묶음 뒤 통합한다. 실행 중인 빌드/게임 프로세스는 없다. 전체 목표는 미완료다. |
+| 현재 제품 | 단위646. 최신 전체34/ZIP 확인은645의644제품이며646에 합산하지 않는다. |
+| EXE SHA-256 | `6059da2e3c73031c63d66249e8b02d62da8f49dbedab792c08df085895cfc5f6` (646) |
 | ZIP SHA-256 | 645에서 만든644 제품의 `6485febc36080dc90e9eec43965a842f85d39e81c82a003a96b83b34b3694b73` (1376항목/게임 자산1358개). 실제 한글😀 경로에 압축 해제해 최종34를 실행했다. |
-| 등록 C++ 검사 수 | 645의 새 주 EXE3566등록/관련 고유37개·실패0이다. 전체3566개 실행은 아니다.644의 집중 대상25등록/최종14통과는 별도 과거 근거다.646 신규4개는 아직 빌드/실행 결과가 아니다. |
+| 등록 C++ 검사 수 | 646의 파일 집중 대상24등록/24실행·실패0이다. 새4개+기존 목록11개/Fort 장치9개다. 주 EXE는 재빌드하지 않아645의3566등록/집중37이 마지막 근거다. 신규4개 주 소스 등록을 주 EXE 실행 결과로 세지 않는다. |
 | 최신 전체34 | 단위645, 644 제품 기준 최종34/34. 최소 비정지 시각 증가20.843초·창DC RGB·Native Frame 일치. 최초 입력 누락34실패/재검증34통과와 준비2회를 포함한 총70프로세스를 구별한다. |
 | 최신 반복 수명 | 단위640, 같은637 제품의 브리핑/중단 확인 바깥 뗌 취소2회·미션 재진입1회와 채팅 도킹2실행. 최종3실행 종료0. Restart4회/Leave 취소2회/메인 복귀2회는638의 별도 근거다. |
 | 전체 C++ 마지막 실행 | 단위549. 3389개 중 7개 검사가 실패했다(580단언). 이후 입력 정정 뒤 집중 검사만 통과했고 전체 재실행 기록은 없다. 마지막 전체 통과는 단위510(508 제품, 3337개, 실패 0)이다. |
-| 보호 기준 | 645에서 기존2632개/fixture773개 불변. 현재 로컬 기준은 `extracted/cpp-solo-entry-645-20261031/protected-after-current.json`이다. HJOW-X3D에는 없다. |
+| 보호 기준 | 전체2632개/fixture773개는645에서 불변을 확인했다. 로컬 기준은 `extracted/cpp-solo-entry-645-20261031/protected-after-current.json`이다.646은 주요3입력(AGENTS/원본EXE/TAFF)만 재해시해 일치를 확인했다. 전체2632 재감사와 구별한다. HJOW-X3D에는 없다. |
 | **마지막 전체 정밀 디컴파일** | **HJOW-Athlon (192.168.0.94) / 2026-10-23** |
 
 ### 0.2 재개 절차
@@ -95,7 +94,7 @@
 
 AGENTS.md의 `(4~6차 목표.)` 문구는 7차 추가 뒤에도 그대로지만, 바로 아래에 7차까지 나열되고 dotnetpj 항목도 4~7차로 적혀 있으므로 4~7차로 읽는다.
 
-## 2. 현재 상태 (2026-10-31, 단위645 기준)
+## 2. 현재 상태 (2026-10-31, 단위646 기준)
 
 - **게임 실행·플레이 가능 여부:** 인자 없는 `Netstorm.exe`로 GUI가 시작되고 34경로 모두 진입·비정지 진행·정상 종료를 확인했다. 자연 완주 근거는 과거 제품의 Early1/2 자동 완주와 사용자가 다른 PC에서 직접 완주한 캠페인 1-1뿐이다.
 - **기존 게임과의 동일성:** 원문 관측과 대조를 마친 부품이 많다. 자연 완주와 전체 동일성은 사용자가 플레이하며 확인한다.
@@ -113,6 +112,7 @@ AGENTS.md의 `(4~6차 목표.)` 문구는 7차 추가 뒤에도 그대로지만,
 | Renderer·Native Draw | [618](docs/exe/cpp-renderer-prelude-20261030.md), [619](docs/exe/cpp-renderer-clouds-20261030.md), [620](docs/exe/cpp-renderer-frame-20261030.md), [622](docs/exe/cpp-native-scene-20261031.md), [628](docs/exe/cpp-mana-additional-20261031.md), [629](docs/exe/cpp-auxiliary-draw-20261031.md) | 앞단, 구름 4칸·배경 선택, 실제 Frame, 단일 표시 목록, 마나 103 추가 Draw, 배율·고정색 | 전체 픽셀 동일성, 기존 VFX 계약 |
 | UI 갱신 영역 | [624](docs/exe/cpp-gump-redraw-20261031.md), [625](docs/exe/cpp-ui-dirty-20261031.md), [627](docs/exe/cpp-gump-derived-dirty-20261031.md), [630](docs/exe/cpp-inventory-blink-20261031.md), [631](docs/exe/cpp-minimap-dirty-20261031.md), [639](docs/exe/cpp-minimap-content-20261031.md) | Gump 기본 갱신, 지도 clamp, 기본 UI, 장식·메뉴 행, 생산 점멸, 미니맵 기본 영역·지면/소유자/삭제 픽셀. grid/debug 직접 writer와 생성 초기값 대조 | 일반 경로 활성 writer를 찾지 못한 grid/debug는 노출하지 않는다. 간접 alias 부재 전체 증명은 아니다. |
 | Edit·시나리오 | [590](docs/exe/cpp-editor-scenario-20261030.md), [597](docs/exe/cpp-editor-rules-20261030.md), [609](docs/exe/cpp-world-geyser-20261030.md), [634](docs/exe/cpp-editor-catalog-current-20261031.md) | 시작값·작업본 두 왕복, 방향별 동맹·Off, 세계 간헐천, 전체 Fort 433개 이관과 필터 분류 | 3절 2번 |
+| Edit Unicode 파일 | [646](docs/exe/cpp-editor-unicode-20261031.md) | UTF-8/native 경로·wide CRT, 실제 Unicode 파일 왕복·권한·목록 이관/장부 재열기·삭제 보존·source TAFF 격리. 집중24통과 | GUI/전체34/한국어 UI 검증이 아니다. 최신 실행/ZIP은644제품이며 더 많은 기능 묶음 뒤 통합한다. |
 | 객체 메뉴·건설 | [524](docs/exe/cpp-object-hit-20261028.md), [528](docs/exe/cpp-factory-upgrade-runtime-20261028.md), [531](docs/exe/cpp-altar-salvage-runtime-20261028.md), [537](docs/exe/cpp-mission-cost-guard-20261028.md) | 픽셀 선택, 시험한 메뉴·업그레이드·회수, 미션 비용 관문 | 다른 타입·레벨·상태 |
 | HUD·단축키 | [509](docs/exe/cpp-hud-input-runtime-20261027.md), [511](docs/exe/cpp-player-list-runtime-20261028.md), [540](docs/exe/cpp-minimap-toggle-runtime-20261028.md), [547](docs/exe/cpp-send-money-runtime-20261028.md), [548](docs/exe/cpp-screenshot-runtime-20261028.md) | 미니맵, QWASZX, ESC 일부, Player List, 독립 미니맵, Send Money, F7·Shift F7 | 스크립트 입력이다. 3절 1번 |
 | Chat | [640](docs/exe/cpp-ui-lifetime-current-20261031.md), [574](docs/exe/cpp-chat-completion-20261029.md), [586](docs/exe/cpp-chat-live-message-20261030.md), [614](docs/exe/cpp-chat-settings-20261030.md) | 입력줄, 자동완성, 일반 Enter·중계·로컬 큐·공유 로그, 설정 재실행 | 3절 4번 |
@@ -169,7 +169,7 @@ Early3 후속 입력과 미실행 계획은 [부분 진행 보관](docs/exe/prep
 
 1. 화면 캡처가 정상화되면 물리 입력 QWASZX·ESC·Home·포커스를 검증한다(7번).
 2. 남은 비멀티 UI·Edit·시나리오·파일·수명·호환성을 1~4번과 7번으로 이어 간다.
-3. 645의 같은644 제품/새 ZIP/전체34 통합은 완료했다. 현재646의 Edit Unicode/작업본 격리는 빌드·파일 집중 검사로 마친다. 이후 더 많은 기능 묶음 뒤 스테이지 진입/대기 검사를 몰아서 한다(4절 최신 사용자 지시). 소수 단위가 끝날 때마다 전체34를 반복하지 않는다.
+3. 645의 같은644 제품/새 ZIP/전체34 통합과646의 Edit Unicode/작업본 격리·파일 집중24개는 완료했다. 다음은 남은 실제 UI/Edit/시나리오·수명 분기를 정적 원문과 대조하고 필요한 구현을 진행한다. 더 많은 기능 묶음 뒤 스테이지 진입/대기 검사를 몰아서 한다(4절 최신 사용자 지시). 소수 단위가 끝날 때마다 전체34를 반복하지 않는다.
 4. 체크 항목을 마치면 5·6번과 Windows 11 실기를 기다리지 않고 멀티플레이 무시험 사전 구현과 4~7차로 넘어간다(8번).
 
 ### 1. 대상별 커서·오브젝트 우클릭·게임 UI
