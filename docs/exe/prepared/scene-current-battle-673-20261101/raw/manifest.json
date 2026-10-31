@@ -1,0 +1,81 @@
+{
+  "unit": 673,
+  "host": "HJOW-Athlon",
+  "date": "2026-11-01",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "files": {
+    "cpppj/src/client/SoundSceneMusic.h": {
+      "originalExists": true,
+      "originalSha256": "d817a8eb1ab9e83ed991d03c9422fd47530796e832eaec477a4c18c3cb8ef043",
+      "proposedSha256": "c151df5a262e9a6f05bbfa7fbeb5d15cd1d814e3aa65cb80c2aefc561634e5bb",
+      "originalLines": 152,
+      "proposedLines": 156
+    },
+    "cpppj/src/client/SoundSceneMusic.cpp": {
+      "originalExists": true,
+      "originalSha256": "89729a963d5e3b113ce22296aba7af9dc407660d1fbc476a126a6e594833f5c0",
+      "proposedSha256": "765b466d5ae74058a3ac998f68ffb11238d1a26e6867d15b8daf5ba1dbbe5945",
+      "originalLines": 136,
+      "proposedLines": 139
+    },
+    "cpppj/src/client/ClientAudio.h": {
+      "originalExists": true,
+      "originalSha256": "0c062fb993d8e85914a4546d7e421bc8924ba2456cc3e47481e8af1418e436ac",
+      "proposedSha256": "24383c3deb03ae14f475128b2e7db79ca7365263cba5121712927c46708f37e6",
+      "originalLines": 167,
+      "proposedLines": 172
+    },
+    "cpppj/src/client/ClientAudio.cpp": {
+      "originalExists": true,
+      "originalSha256": "d0302ee6fc0783fd5bef854f13ccd2320b39b8b4ef1da6b691be02c642c9e012",
+      "proposedSha256": "8cd586834bceb9c2139087e041753eacc9854905a8f059050e51472116fcce44",
+      "originalLines": 256,
+      "proposedLines": 262
+    },
+    "cpppj/tests/SceneMusicCurrentBattleTests.cpp": {
+      "originalExists": false,
+      "originalSha256": null,
+      "proposedSha256": "15e53cfdb1dbf56cf2439e05269fc09de2cb1b946768f3cee2e3b3eb4da7b512",
+      "originalLines": 0,
+      "proposedLines": 155
+    }
+  },
+  "api": [
+    "SceneMusicState.currentBattle: optional std::function<std::uint32_t()>; empty uses battle fallback",
+    "SceneMusic.CurrentBattle() const: std::uint32_t value",
+    "ClientAudio.BindCurrentBattle(std::function<std::uint32_t()>)",
+    "ClientAudio.CurrentBattle() const: same SceneMusic value; Describe uses this getter"
+  ],
+  "readerContract": [
+    "Start 최초 battle 조건에서 한 번 조회한다.",
+    "Frame은 현재 wall/songEnd 비교를 통과한 뒤에만 현재 battle을 한 번 조회한다. 미만료/NaN은 조회하지 않는다.",
+    "Start의 Request/날씨 효과 뒤 내부 Frame이 만료됐다면 현재 battle을 다시 조회한다.",
+    "Next에는 새 battle 조회/관문을 추가하지 않는다.",
+    "StartScene(bool)은 기존 fallback battle 쓰기를 유지한다. 장치 초기화/옵션/Shutdown은 reader를 지우지 않는다.",
+    "독립/10.72는 reader 미연결로 기존 fallback을 유지한다."
+  ],
+  "clientBindingProposal": [
+    "실제 Client 연결은 이 patch에 포함하지 않았다. root의 후속 구현 대상이다.",
+    "현재 Run의 InitializeNativeAudio는 ClientMain.cpp322, MakeRawSurfaceStorage는338이라 음향 초기화에서 무조건 SurfaceStorage를 읽으면 안 된다.",
+    "권고 설치 위치는 authoritative SurfaceStorage 생성 직후이며 최초 SceneMusic Start보다 앞이다. Patch1078의 같은 ownerMode.battle을 현재 조회하도록 Bind한다.",
+    "SourceSurface가 없는 기존 무장치 실제 Client 검사는 이 설치 단계에 도달하지 않는다. fake0 reader/guard를 추가해 현재 owner가 있다고 꾸미지 않는다.",
+    "실제 owner의 shared lifetime을 캡처하거나 같은 Client 소유권이 보장된 reader를 쓰고, 잘못된 설치 순서는 명시 진단으로 취급한다.",
+    "cleanup SceneMusic의 현재 battle 인자와 그 뒤 battle0 store 순서, State3 직접 ser22 요청, GuideEnd671은 변경하지 않는다."
+  ],
+  "testCasesPrepared": 8,
+  "validation": {
+    "sourceReviewOnly": true,
+    "cppCompiled": false,
+    "testsExecuted": 0,
+    "nativeExecuted": 0,
+    "fixturesCreated": 0,
+    "gameExecuted": 0,
+    "sharedFilesWritten": 0,
+    "cmakeRegistrationPrepared": false,
+    "gitCommits": 0,
+    "limitations": "신규 독립 검사 사본8개의 정적 검토만 마쳤다. 실제 Client 연결·CMake 등록·빌드·검사·게임 검증은 미완료다. 사용자 일시중지 요청에 따라 새 조사를 시작하지 않는다."
+  },
+  "evidence": "extracted/cpp-scene-menu-music-673-audit.md",
+  "diffLines": 251
+}

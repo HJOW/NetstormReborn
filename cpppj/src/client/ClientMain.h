@@ -30,6 +30,7 @@ namespace netstorm::client {
 class UberGump;
 struct ClientTraceGlobals;struct TraceLogHooks; // 같은 장기 진단 owner와 현재 출력 장치를 선언한다.
 class ClientAudio;
+struct SoundView; // 10.78 위치 음향이 현재 snapshot·지도 영역을 값으로 읽는 입력이다.
 class RawChatChannels;
 class FortTypeConversionStorage; // 원본 현재 변환표의 실제 할당을 Client 수명에 소유한다.
 class ClientColorSortInput; //최초논리RGB와43c010의같은표입력을Client수명으로소유한다.
@@ -220,6 +221,7 @@ public:
     // 캠페인의 유일한 이름표/재생 계층이다. noAudio에서는 장치·스레드 없는 비활성 묶음을 빌린다.
     // init sound 이전에는 예외다. Audio()의 noAudio/null 계약은 그대로 유지한다.
     ClientAudio& WorldAudio();
+    SoundView CurrentSoundView() const; // 497220의 현재 snapshot 픽셀과4c6b30의 같은 Gump 지도LTRB를 조회한다. World/음향 사본을 읽지 않는다.
     // 원본 init sound 위치에서 실제 음향을 한 번 만든다. noAudio 검사는 창·장치 없이 같은 비활성 owner를 준비한다.
     void InitializeNativeAudio();
     // 원본 Interpret Options(00435220)의 소리 부분: 설정을 다시 읽어 장치·음량·현재 곡을 맞춘다. 옵션 메뉴에서 소리 설정을 바꾼 뒤 부른다.

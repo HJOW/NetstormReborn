@@ -95,12 +95,14 @@ public:
     SoundPlayer& Sounds();
     // 효과음 이름 표다.
     SoundList& Names();
-    // 위치 효과음이 읽는 화면 영역과 카메라를 교체한다. 주 스레드에서 화면 크기·카메라가 바뀐 직후 호출한다.
+    // 독립 검사/10.72 어댑터의 명시 화면·카메라를 교체한다. BindCurrentView가 연결되면 현재 전역 조회가 우선한다.
     // 재생 중인 반복 소리의 음량·좌우·화면 밖 정지는 다음 PlayLoopAt 요청이 처리한다. 장치 재초기화에도 이 값은 보존한다.
     // 원본: 00497220·004c6a40·004c6ac0·004c6b30이 읽는 카메라/화면 전역을 복원한 SoundState::view에 공급한다.
     void SetView(SoundView view);
-    // 현재 위치 효과음의 화면·카메라를 읽는다. 검사 및 후속 가변 패널 연결에 사용한다.
-    const SoundView& View() const;
+    // 같은 Client 수명의 snapshot/지도 전역 조회를 연결한다. 빈 함수를 넘기면 명시 SetView 값으로 돌아간다.
+    void BindCurrentView(std::function<SoundView()> reader);
+    // 실제 위치 재생과 같은 현재 화면·카메라를 값으로 읽는다. 조회 결과를 장치 반납/다음 프레임의 캐시로 쓰지 않는다.
+    SoundView View() const;
     // 장면 음악의 상태(곡 색인·곡 끝 시각 등)다. 검사에서만 읽는다.
     const SceneMusicState& Scene() const;
     std::uint32_t& ResultState(); //005c85ac의 실제 장면 음악 결과 DWORD를 Native State/로그인과 같은 주소로 빌린다.

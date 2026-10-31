@@ -145,11 +145,14 @@ SoundPlayer& ClientAudio::Sounds() { return player_; }
 // 효과음 이름 표다.
 SoundList& ClientAudio::Names() { return list_; }
 
-// 화면·카메라 값만 바꾼다. 소리 요청 시점의 위치 계산은 기존 SoundPlayer가 맡는다.
+// 독립 검사/10.72의 명시값만 바꾼다. 실제 Client의 현재 전역 조회가 연결돼 있으면 그 값을 덮지 않는다.
 void ClientAudio::SetView(SoundView view) { state_.view=view; }
 
-// 장치 수명과 독립적으로 보존되는 위치 효과음의 기준 화면이다.
-const SoundView& ClientAudio::View() const { return state_.view; }
+// 위치 재생과 진단이 같은 현재 공용 전역을 읽게 연결하며 조회 자체로 장치/카메라를 초기화하지 않는다.
+void ClientAudio::BindCurrentView(std::function<SoundView()> reader) { state_.currentView=std::move(reader); }
+
+// 장치 수명과 독립적으로 원문 소비 위치의 현재 화면을 읽는다. docs/exe/cpp-sound-current-view-20261101.md를 따른다.
+SoundView ClientAudio::View() const { return player_.CurrentView(); }
 
 // 장면 음악의 읽기 전용 상태다.
 const SceneMusicState& ClientAudio::Scene() const { return scene_; }
@@ -218,13 +221,14 @@ std::string ClientAudio::Describe() {
     line("playingEffects",state_.playing);
     // 지금까지 효과음을 재생한 횟수(다음 재생 일련번호)다. 천둥 곡이 시작되면 천둥 효과음 때문에 0보다 커진다.
     line("soundSerial",state_.serial);
-    // 현재 GUI가 위치 효과음에 전달한 카메라와 표시 영역이다. 음악 상태와 별도로 연결을 검사한다.
-    line("soundCameraX",state_.view.cameraX);
-    line("soundCameraY",state_.view.cameraY);
-    line("soundLeft",state_.view.left);
-    line("soundTop",state_.view.top);
-    line("soundRight",state_.view.right);
-    line("soundBottom",state_.view.bottom);
+    // 실제 위치 재생과 같은 현재 조회를 한 번 받아 한 보고의 여섯 필드를 함께 기록한다.
+    const auto view=View();
+    line("soundCameraX",view.cameraX);
+    line("soundCameraY",view.cameraY);
+    line("soundLeft",view.left);
+    line("soundTop",view.top);
+    line("soundRight",view.right);
+    line("soundBottom",view.bottom);
     line("musicName",std::string(selected_.Current()));
     line("musicActive",primary_.Active() ? 1 : 0);
     line("musicDuration",MusicChannelDuration(primaryState_));

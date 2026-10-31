@@ -198,8 +198,10 @@ struct SoundState {
     std::int32_t musicVolume{},pendingMusicVolume{};
     // 다음 재생에 매길 일련번호다(DAT_005c7b34 / CD 0051a734).
     std::uint32_t serial{};
-    // 화면 영역과 카메라 원점이다.
+    // 독립 검사와10.72 어댑터의 명시 화면·카메라다. currentView가 연결되면 실제 재생은 그 현재 전역을 읽는다.
     SoundView view;
+    // 원문0059a91c/920 snapshot과005ca9cc..d8 지도 영역을 각 소비 위치에서 조회한다. 비어 있으면 명시 view를 사용한다.
+    std::function<SoundView()> currentView;
 };
 // 적재 경계의 결과다. buffer는 새 장치 버퍼·kSilentSoundBuffer(파일 없음)·0(장치 없음) 가운데 하나이고,
 // attenuation은 파일 이름의 "-숫자"에서 읽은 감쇠다(없으면 0). buffer가 0이면 attenuation은 쓰이지 않는다.
@@ -243,6 +245,8 @@ public:
     // list는 항목을 담은 이름 표, state는 재생 전역, hooks는 장치 경계, report는 assert 보고를 받을 함수(없어도 된다)다.
     // log를 뺀 장치 효과가 하나라도 비어 있으면 std::invalid_argument를 던진다.
     SoundPlayer(SoundList& list,SoundState& state,SoundDeviceHooks hooks,SoundAssertReport report={});
+    // 현재 공용 카메라/지도 전역을 값으로 읽는다. 재생 함수 입구에 저장하지 않고 원문의 투영·판정·좌우·음량 위치마다 호출한다.
+    SoundView CurrentView() const;
     // 항목을 재생한다. loop가 0이 아니면 반복 재생, volume은 음량 인자(전체 음량과 소리별 감쇠를 더해 [-10000, 0]으로 자른다), pan은 좌우 값이다.
     // priority가 0이면 동시 재생 한도(maxPlaying)에 걸릴 때 재생하지 않는다. limit가 0이 아니면 이 소리가 이미 limit개 이상 재생 중일 때 재생하지 않는다.
     // 요청한 항목이 재생 중이면 같은 소리의 사슬에서 쉬고 있는 항목을 쓰고, 없으면 버퍼를 복제해 새 항목을 만든다.

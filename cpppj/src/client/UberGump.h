@@ -71,6 +71,7 @@ public:
     void PaletteChanged();
     // 현재 월드가 번개 효과의 부모로 살아 있는지 반환한다. 브리핑 정지 중에도 월드는 존재한다.
     bool HasWorld() const;
+    ScreenRect CurrentMapView() const; // 위치 음향도 World 유무와 무관하게 같은 실제 GumpTree 지도LTRB를 호출 시점에 읽는다.
     // 현재 설치된 GameWorld의 실제 Session subscriber를 읽는다. 월드 생성/해제 중 미설치 상태는 0이다.
     std::uint32_t CurrentSubscriber() const;
     // 명령줄 검사용 미션도 State→Loading→Briefing의 같은 경로로 예약한다.

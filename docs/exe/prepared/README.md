@@ -1,5 +1,9 @@
 # 적용 전 코드 준비본 보관
 
+## 2026-11-01 일시 중지 인계
+
+- [673 곡 만료 시 현재 battle 조회](scene-current-battle-673-20261101/README.md): 단위672 작업본의 base4파일과 제품4파일/신규 독립 검사8개 제안 patch를 보관했다. **제품 미적용·C++ 미빌드·검사 미실행**이며 실제 Client 소유자 연결과 CMake 등록은 남았다. 메뉴 색인 고정 기대와 별개의 실제 현재 battle 소비 차이를 구별한다. 원시 SHA·정적 근거·사용자 중지 결정을 함께 보관한다.
+
 ## 2026-10-27 일시중지 인계
 
 **재개 후 채택 상태:** [단위469](../cpp-new-map-storage-runtime-20261027.md)에서 Subscriber 저장과 공유 이름표/빈 Image 초기화를, [단위470](../cpp-new-fort-manager-runtime-20261027.md)에서 NewFort 세 부모와 실제 manager/작업본 장치를 채택했다. [단위472](../cpp-new-editor-runtime-20261027.md)는 실제 Client의 새 자료·빈 월드·State 확정·자동AddIsland 큐, [단위473](../cpp-add-island-runtime-20261027.md)은 섬 추가 지도/드래그·실제 배치/population/Graph/Territory를 채택했다. 최신 전체C++3,239개/실패0이며 전용 MetaImage/Bitmap/목록/창수명과 새 맵 GUI는 남아 있다. 아래의 미적용/미빌드 표시는 보관 당시 상태이며142파일의 원시 바이트는473에서도 재검증했다.

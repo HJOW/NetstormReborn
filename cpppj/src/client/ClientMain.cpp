@@ -449,6 +449,15 @@ void Client::InitializeNativeAudio() {
             [this] { return clock_.WallSeconds(timeGetTime()); },randomGlobals_->Game()); // 장치 없는 검사도 같은 난수 소비 계약을 유지한다.
         disabledAudio_->Names().Initialize();disabledAudio_->SetView({0,0,0,0,screenWidth_,screenHeight_});
     }
+    if (options_.edition==o::OriginalEdition::Patch1078) WorldAudio().BindCurrentView([this] { return CurrentSoundView(); }); // 원문497220/4c6b30은 소리 계산마다 현재 전역을 읽는다. 10.72의 기존 명시 어댑터는 이번 분석 범위에 넣지 않는다.
+}
+
+// 현재 위치 소리는 World의 마지막 통지가 아니라 Native snapshot과 같은 실제 Gump 영역을 사용한다.
+// 근거: docs/exe/cpp-sound-current-view-20261101.md. 메뉴/State/Guide에서 별도 편의0쓰기를 추가하지 않는다.
+SoundView Client::CurrentSoundView() const {
+    const auto& pixels=gameplayGlobals_->Camera().Snapshot().pixels;
+    const auto clip=menu_ ? menu_->CurrentMapView() : ScreenRect{0,0,screenWidth_,screenHeight_}; // Gump 생성 전에는 같은 초기 전체 화면 입력만 존재한다.
+    return {pixels[0],pixels[1],clip.left,clip.top,clip.right,clip.bottom};
 }
 
 // 월드가 사용하는 같은 이름표와 실제 SoundPlayer는 소리 옵션/장치 유무와 분리해 유지한다.

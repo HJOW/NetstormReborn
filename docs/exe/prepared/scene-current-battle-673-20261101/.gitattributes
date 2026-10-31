@@ -1,0 +1,4 @@
+# 적용 전 원시 base·patch·근거의 줄바꿈과 SHA를 Windows 체크아웃에서도 보존한다.
+raw/** -text whitespace=-blank-at-eol,-blank-at-eof,-space-before-tab,cr-at-eol
+/*.json text eol=lf
+/README.md text eol=lf

@@ -20,12 +20,16 @@ def check(executable,root,name,silent=False):
         frame=4+i*5
         steps.extend(((frame,'music-next',''),(frame,'report',f'cycle{i}'),
                       (frame,'snapshot',str(OUTPUT/f'{name}-cycle{i}.bmp')),(frame+3,'report',f'ended{i}')))
-    steps.extend(((25,'click','Play Mission'),(27,'click','Game'),(29,'click','Leave Battle'),
-                  (31,'click','Leave Honorably'),(33,'report','menu'),
-                  (35,'music-next',''),(36,'music-next',''),(37,'music-next',''),(37,'report','menu-thunder'),
-                  (39,'click','Campaign'),(41,'click','Struggle For Freedom'),(43,'click','1 The War Begins!'),
-                  (47,'report','reload')))
-    values=run(executable,root,name,49,extra=['--mission','thewarbegins'],script=steps,
+    # 실제 ESC 가로 메뉴에서 캠페인의 Leave Mission을 선택한 뒤 원본 ABORT의 Main Menu로 나간다.
+    steps.extend(((25,'click','Play Mission'),(27,'esc',''),(29,'click','Game'),
+                  (31,'click','menu-command:0200008c,0'),(33,'click','Main Menu'),(35,'report','menu'),
+                  (37,'music-next',''),(37,'report','menu-cycle0'),(39,'music-next',''),(39,'report','menu-cycle1'),
+                  (41,'music-next',''),(41,'report','menu-cycle2'),(43,'music-next',''),(43,'report','menu-cycle3'),
+                  (45,'click','Campaign'),(47,'click','Struggle For Freedom'),(49,'click','1 The War Begins!'),
+                  (64,'report','reload')))
+    # 최초 State7/8·로컬 로그인·Guide 안내가 끝난 뒤 관측한다. 원문 비동기 설치 중인 frame3을 브리핑으로 간주하지 않는다.
+    steps=[(frame+12,operation,argument) for frame,operation,argument in steps]
+    values=run(executable,root,name,78,extra=['--mission','thewarbegins'],script=steps,
                settings='ascendancyPalette=0'+(';sound=0;music=0' if silent else ''))
     observed=states(OUTPUT/f'{name}-states.tsv');previous=observed['initial'];thunders=0
     palette=screen_palette(read_data(root,'d',TaffArchive(str(root/'netstorm.tarc')),'gifcloud.col'))
@@ -42,8 +46,13 @@ def check(executable,root,name,silent=False):
         assert image_colors(image)<=set(palette),'창 모드 번개가 화면 팔레트를 바꿈'
         thunders+=int(index==2);previous=current
     assert thunders==1
-    assert observed['menu']['thunder_processes']==['0'] and observed['menu-thunder']['thunder_processes']==['0']
-    assert observed['menu-thunder']['weather'][0]=='2','메뉴에서 부모가 없는 천둥 곡 요청 누락'
+    assert observed['menu']['phase']==['0'] and observed['menu']['state_hud'][0]=='0' and observed['menu']['thunder_processes']==['0']
+    previous_index=int(observed['menu']['weather'][0]);menu_thunders=0 # cleanup의 원문 Start는 battle0쓰기 전에 난수 곡을 고르므로 시작 인덱스3을 가정하지 않는다.
+    for index in range(4): # 시작 인덱스와 무관하게 네 곡 전부를 실제 요청하고 부모 없는 천둥 분기도 반드시 한 번 방문한다.
+        current=observed[f'menu-cycle{index}'];selected=int(current['weather'][0])
+        assert selected==(previous_index+1)%4 and current['phase']==['0'] and current['thunder_processes']==['0'],current
+        menu_thunders+=int(selected==2);previous_index=selected
+    assert menu_thunders==1,'메뉴에서 부모가 없는 천둥 곡 요청 누락'
     assert observed['reload']['paused']==['1'] and observed['reload']['thunder_processes']==['0']
     assert values['workerFailed']=='0'
     return dict(states=len(observed),screenshots=4,thunder_cycles=thunders,muted=True,sound_music_disabled=silent)

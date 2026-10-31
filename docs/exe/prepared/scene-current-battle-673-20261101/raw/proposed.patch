@@ -1,0 +1,251 @@
+--- a/cpppj/src/client/SoundSceneMusic.h
++++ b/cpppj/src/client/SoundSceneMusic.h
+@@ -61,6 +61,8 @@
+     // 전투(미션) 중인지(DAT_00594fbc / CD 00540a20), 플레이어 표가 준비돼 있는지(DAT_00595344 / CD 0050f828, 이름 미확인),
+     // 로컬 플레이어 번호(DAT_00540c70 / CD 0050f6c8)다. 모두 DWORD이며 0이 아니면 참이다.
+     std::uint32_t battle{},playersReady{},localPlayer{};
++    // 원문00594fbc를 소비 위치마다 읽는 선택적 현재 조회다. 없으면 독립/10.72의 battle 명시값을 사용한다.
++    std::function<std::uint32_t()> currentBattle;
+     // 지금 적용 중인 날씨 색(DAT_00540cdc / CD 005203a0, 처음 167)과 원소 곡별 색 표(DAT_005b5da8 / CD 00549b40)다.
+     // 색 표는 팔레트에서 가장 가까운 색 번호로 초기화 때 채워진다.
+     std::uint32_t tint=167;
+@@ -112,6 +114,8 @@
+ public:
+     // 필수 경계가 하나라도 비어 있으면 std::invalid_argument를 던진다. OS 자원은 열지 않는다.
+     SceneMusic(SceneMusicState& state,o::GameRandom& random,SceneMusicHooks hooks);
++    // Start의 첫 조건과 Frame의 만료 조건 뒤에서 현재 battle을 읽는다. 조회는 fallback이나 게임 상태를 쓰지 않는다.
++    std::uint32_t CurrentBattle() const;
+     // 승리/패배 곡이 아직 끝나지 않은 동안 참이다: 현재 곡이 fanfare이고 실시간이 fanfareEnd 전이거나,
+     // 현재 곡이 defeat이고 실시간이 defeatEnd 전이다. 시각이 비교 불가(NaN)이면 참이다(x87 비교의 원본 동작).
+     // 원본: 00469d30 / CD 00436a10.
+--- a/cpppj/src/client/SoundSceneMusic.cpp
++++ b/cpppj/src/client/SoundSceneMusic.cpp
+@@ -50,6 +50,9 @@
+         throw std::invalid_argument("장면 음악의 필수 경계 누락");
+ }
+ 
++// 같은 Client 현재 owner를 값으로 조회한다. 미연결 독립/10.72는 기존 명시 battle을 그대로 읽는다.
++std::uint32_t SceneMusic::CurrentBattle() const { return state_.currentBattle ? state_.currentBattle() : state_.battle; }
++
+ // 현재 곡 이름을 먼저 비교하고, 맞으면 곧바로 시계를 읽는다. 두 번째 비교는 현재 곡이 fanfare/defeat일 때만 참이 될 수 있다.
+ bool SceneMusic::ResultMusicLocked() const {
+     const auto current=hooks_.currentName();
+@@ -92,14 +95,14 @@
+ // 시계를 한 번 읽어 songEnd와 비교한다. 곡이 끝나기 전이거나 비교 불가면 아무것도 하지 않는다.
+ void SceneMusic::Frame() {
+     if (BelowOrUnordered(hooks_.wallSeconds(),state_.songEnd)) return;
+-    if (state_.battle!=0) { Next();return; }
++    if (CurrentBattle()!=0) { Next();return; } //469f60은 만료 관문을 통과한 뒤 현재00594fbc를 읽는다.
+     if (hooks_.waitingRoom()) { Request(kAnticipationMusic);return; }
+     Request(kMenuMusic);
+ }
+ 
+ // 전투 밖은 색인 3과 메뉴 곡, 전투 중은 난수로 고른 색인의 다음 곡이다. 그 뒤 Frame을 한 번 불러 곡 끝 시각이 이미 지났으면 곧바로 다음 곡으로 넘어간다.
+ void SceneMusic::Start() {
+-    if (state_.battle==0) {
++    if (CurrentBattle()==0) { //469fc0의 최초 현재 조회이며 뒤 Frame은 효과가 바꾼 현재값을 다시 읽는다.
+         state_.index=kMenuMusicIndex;
+         Request(kMenuMusic);
+     } else {
+--- a/cpppj/src/client/ClientAudio.h
++++ b/cpppj/src/client/ClientAudio.h
+@@ -80,6 +80,11 @@
+     void SceneFrame();
+     // 장면에 들어가며 곡을 시작한다(원본 00469fc0). battle이 거짓이면 메뉴 곡 ser22.mus, 참이면 난수로 고른 원소 곡이다.
+     void StartScene(bool battle);
++    // 실제 Client의 현재 battle owner 조회를 연결한다. 빈 함수는 독립/10.72의 StartScene 명시값으로 되돌린다.
++    // 현재 owner가 준비된 뒤 연결하며 장치 초기화/옵션 변경/Shutdown은 이 조회를 지우지 않는다.
++    void BindCurrentBattle(std::function<std::uint32_t()> reader);
++    // 음악 감독과 진단이 같은 현재 battle을 값으로 읽는다. 조회로 owner나 fallback을 초기화하지 않는다.
++    std::uint32_t CurrentBattle() const;
+     // 곡을 직접 요청한다(원본 00469db0). 결과 화면·희생 의식·대기실에서 쓴다. 현재 곡과 같으면 아무 일도 하지 않는다.
+     void RequestMusic(std::string_view name);
+     // 원본 다음 곡 요청(00469f00)이다. 곡 순환과 날씨를 함께 적용한다. 명시 검사 및 후속 장면 전환 호출자에서 쓴다.
+--- a/cpppj/src/client/ClientAudio.cpp
++++ b/cpppj/src/client/ClientAudio.cpp
+@@ -118,11 +118,17 @@
+     sceneMusic_.Frame();
+ }
+ 
+-// 전투 여부만 바꾸고 감독의 Start를 부른다. 플레이어 표 준비 여부는 월드가 생기기 전까지 0으로 둔다(희생 판정을 건너뛴다).
++// 독립/10.72의 명시 battle을 보존해 쓰고 감독의 Start를 부른다. 실제 현재 조회가 연결되면 그 값을 조건에 사용한다.
+ void ClientAudio::StartScene(bool battle) {
+     scene_.battle=battle ? 1U : 0U;
+     sceneMusic_.Start();
+ }
++
++// 실제 owner가 준비된 Client만 현재 조회를 설치한다. 장치 수명과 구별하며 빈 함수는 명시 fallback을 복구한다.
++void ClientAudio::BindCurrentBattle(std::function<std::uint32_t()> reader) { scene_.currentBattle=std::move(reader); }
++
++// 음악 판단과 같은 현재 원문 소비자를 진단에서도 읽고 과거 StartScene 인자를 현재값으로 보고하지 않는다.
++std::uint32_t ClientAudio::CurrentBattle() const { return sceneMusic_.CurrentBattle(); }
+ 
+ // 감독의 곡 요청을 그대로 전달한다.
+ void ClientAudio::RequestMusic(std::string_view name) {
+@@ -236,7 +242,7 @@
+     line("musicReadOffset",primaryState_.Field(MusicField::ReadOffset));
+     line("musicDataLength",primaryState_.Field(MusicField::Length));
+     line("sceneIndex",scene_.index);
+-    line("sceneBattle",scene_.battle);
++    line("sceneBattle",CurrentBattle()); // 현재00594fbc와 명시 fallback을 음악 감독과 같은 경계에서 구별한다.
+     line("sceneTint",scene_.tint);
+     line("scenePaletteDirty",scene_.paletteDirty);
+     // 원소별 검색 색은 현재 색과 따로 기록한다(팔레트 로드 전의 tint를 유지하는 원본 순서 확인).
+--- /dev/null
++++ b/cpppj/tests/SceneMusicCurrentBattleTests.cpp
+@@ -0,0 +1,155 @@
++// 실제 장면 음악 본체의 현재 battle 조회와 시각 관문·외부 효과 뒤 재조회만 검사한다. 창·음향 장치를 열지 않는다.
++#include "TestSupport.h"
++#include "client/ClientAudio.h"
++#include "client/SoundSceneMusic.h"
++#include <functional>
++#include <initializer_list>
++#include <limits>
++#include <stdexcept>
++#include <string>
++#include <vector>
++
++namespace { // 원문 관찰 fixture를 재계산하지 않고 현재 조회의 명시 입력/사건만 제공한다.
++using namespace netstorm::client;
++using netstorm::o::OriginalEdition;
++
++// 파일/재생 장치 대신 곡 이름·길이0·명시 벽 시각을 공급하며 실제 SceneMusic을 호출하는 독립 장면이다.
++struct CurrentBattleScene {
++    SceneMusicState state; // fallback과 현재 조회를 구별하는 실제 제품 상태다.
++    netstorm::o::GameRandom random{1U}; // 기존 원문 난수 본체를 사용하며 별도 난수 구현은 만들지 않는다.
++    std::uint32_t current{}; // 외부 장면 전역의 현재 battle 입력이다.
++    std::size_t battleReads{}; // 실제 현재 battle getter가 호출된 횟수다.
++    std::vector<double> wallFeed; // 호출마다 소비할 명시 벽 시각이며 부족하면 실패한다.
++    std::size_t wallReads{}; // 현재 입력 목록에서 소비한 시각 수다.
++    std::string name{"before.mus"}; // 실제 select 경계가 바꾸는 현재 곡 이름이다.
++    std::vector<std::string> events; // 시계·현재 조회·선택·날씨 효과의 실제 발생 순서다.
++    std::function<void(std::string_view)> afterSelect; // 곡 선택 효과가 현재 전역을 바꾸는 명시 입력이다.
++    std::function<void()> afterRefresh; // 날씨 화면 갱신 효과가 현재 전역을 바꾸는 명시 입력이다.
++    SceneMusic music{state,random,Hooks()}; // 위 저장소를 빌리는 실제 장면 음악 본체다.
++
++    // 생성은 callback만 연결하며 파일·원본 프로그램·OS 장치를 실행하지 않는다.
++    CurrentBattleScene() { state.tints={11,22,33,44};BindReader(); }
++
++    // 같은 현재 전역을 매 소비 시점에 읽게 연결하고 호출 횟수와 값을 남긴다.
++    void BindReader() {
++        state.currentBattle=[this] { ++battleReads;events.push_back("B:"+std::to_string(current));return current; };
++    }
++
++    // 새 호출에 필요한 정확한 벽 시각 목록을 설치한다. 추가 조회는 vector::at에서 실패한다.
++    void Clock(std::initializer_list<double> values) { wallFeed.assign(values);wallReads=0; }
++
++    // 원문이 요청한 다음 벽 시각 하나만 읽고 battle 조회와의 순서를 기록한다.
++    double Wall() { events.push_back("T"+std::to_string(++wallReads));return wallFeed.at(wallReads-1); }
++
++    // 실제 선택·날씨 외부 경계만 공급하고 선택하지 않는 희생/팔레트/번개 장치는 명시 거부한다.
++    SceneMusicHooks Hooks() {
++        SceneMusicHooks hooks; // 생성자가 요구하는 동일 제품 경계다.
++        hooks.wallSeconds=[this] { return Wall(); };
++        hooks.currentName=[this] { return std::string_view(name); };
++        hooks.select=[this](std::string_view value) { name.assign(value);events.push_back("S:"+name);if (afterSelect) afterSelect(value); };
++        hooks.duration=[] { return 0.0; }; // 길이를 알 수 없는 명시 입력이며 실제 Request의180초 관문을 사용한다.
++        hooks.sacrificing=[](std::uint32_t)->bool { throw std::logic_error("이 독립 검사는 희생 경계를 선택하지 않는다"); };
++        hooks.waitingRoom=[this] { events.push_back("W");return false; }; // 명시 비대기 입력이며 실제 MP 장면은 만들지 않는다.
++        hooks.refresh=[this] { events.push_back("R");if (afterRefresh) afterRefresh(); };
++        hooks.ascendancyPalette=[this] { events.push_back("O");return false; }; // 명시 설정0으로 파일 적재를 선택하지 않는다.
++        hooks.loadPalette=[](std::string_view) { throw std::logic_error("이 독립 검사는 팔레트를 적재하지 않는다"); };
++        hooks.thunderFlash=[] { throw std::logic_error("이 독립 검사는 실제 번개를 만들지 않는다"); };
++        hooks.weatherSound=[](std::string_view) { throw std::logic_error("이 독립 검사는 음향 장치를 호출하지 않는다"); };
++        return hooks;
++    }
++};
++} // 독립 현재 전역 장치의 범위다.
++
++// 선택적 조회가 없으면 fallback DWORD를 그대로 읽고, 연결하면0/비영 현재값과 이후 변경을 읽는다.
++TEST_CASE(SceneMusicCurrentBattle_UsesCurrentProviderAndExplicitFallback) {
++    CurrentBattleScene scene; // 실제 본체와 독립 현재 전역이다.
++    scene.state.currentBattle={};scene.state.battle=9;
++    CHECK(scene.music.CurrentBattle()==9 && scene.battleReads==0);
++    scene.BindReader();scene.current=0;scene.state.battle=7;
++    CHECK(scene.music.CurrentBattle()==0 && scene.battleReads==1);
++    scene.current=17;
++    CHECK(scene.music.CurrentBattle()==17 && scene.state.battle==7 && scene.battleReads==2);
++    scene.state.currentBattle={};
++    CHECK(scene.music.CurrentBattle()==7 && scene.battleReads==2);
++}
++
++// 만료 전·songEnd NaN·현재 시각 NaN은 현재 battle 조회 자체를 실행하지 않는다.
++TEST_CASE(SceneMusicCurrentBattle_FrameTimeGatesDoNotReadMode) {
++    CurrentBattleScene scene; // reader가 호출되면 즉시 실패하는 실제 장면 본체다.
++    scene.state.currentBattle=[]()->std::uint32_t { throw std::logic_error("시각 관문 뒤에만 현재 battle을 읽어야 한다"); };
++    scene.state.songEnd=100.0;scene.Clock({99.0});scene.music.Frame();
++    CHECK(scene.wallReads==1 && scene.name=="before.mus");
++    scene.state.songEnd=std::numeric_limits<double>::quiet_NaN();scene.Clock({100.0});scene.music.Frame();
++    CHECK(scene.wallReads==1 && scene.name=="before.mus");
++    scene.state.songEnd=0.0;scene.Clock({std::numeric_limits<double>::quiet_NaN()});scene.music.Frame();
++    CHECK(scene.wallReads==1 && scene.battleReads==0 && scene.name=="before.mus");
++}
++
++// 만료 뒤에는 저장한 fallback과 반대인 현재0/1을 각각 한 번 읽어 실제 메뉴/원소 곡을 선택한다.
++TEST_CASE(SceneMusicCurrentBattle_ExpiredFrameReadsTheCurrentModeOnce) {
++    CurrentBattleScene scene; // 동일 장면에서 실제 현재 모드의 변경을 관측한다.
++    scene.state.battle=0;scene.current=1;scene.state.index=3;scene.state.songEnd=10.0;scene.Clock({10.0,11.0});
++    scene.music.Frame();
++    CHECK(scene.battleReads==1 && scene.name=="wind22.mus" && scene.state.index==0);
++    CHECK((scene.events==std::vector<std::string>{"T1","B:1","S:wind22.mus","T2","R","O"}));
++    scene.events.clear();scene.state.battle=1;scene.current=0;scene.state.songEnd=20.0;scene.Clock({20.0,21.0});
++    scene.music.Frame();
++    CHECK(scene.battleReads==2 && scene.name=="ser22.mus" && scene.state.index==0);
++    CHECK((scene.events==std::vector<std::string>{"T1","B:0","W","S:ser22.mus","T2"}));
++}
++
++// Start의 첫 조건은 한 번만 읽고 내부 Frame이 만료 전이면 다시 읽지 않는다.
++TEST_CASE(SceneMusicCurrentBattle_StartReadsItsInitialModeOnlyOnceBeforeExpiry) {
++    CurrentBattleScene scene; // 첫 조회1과 fallback0을 구별한다.
++    scene.state.battle=0;scene.current=1;scene.Clock({10.0,11.0});scene.music.Start();
++    CHECK(scene.battleReads==1 && scene.wallReads==2 && scene.name=="rain22.mus" && scene.state.index==1);
++    CHECK((scene.events==std::vector<std::string>{"B:1","S:rain22.mus","T1","R","O","T2"}));
++}
++
++// 첫 메뉴 Request의 선택 효과가 현재 battle을1로 바꾸면 만료된 내부 Frame은 현재값을 다시 읽는다.
++TEST_CASE(SceneMusicCurrentBattle_StartRereadsAfterRequestChangesMode) {
++    CurrentBattleScene scene; // 명시 시각으로 내부 Frame만 첫 곡의180초 끝을 넘긴다.
++    scene.current=0;scene.state.battle=1;scene.Clock({10.0,200.0,201.0});
++    scene.afterSelect=[&](std::string_view value) { if (value=="ser22.mus") scene.current=1; }; // 실제 선택 callback 뒤 현재 전역 변경이다.
++    scene.music.Start();
++    CHECK(scene.battleReads==2 && scene.name=="wind22.mus" && scene.state.index==0 && scene.random.State()==1);
++    CHECK((scene.events==std::vector<std::string>{"B:0","S:ser22.mus","T1","T2","B:1","S:wind22.mus","T3","R","O"}));
++}
++
++// 첫 원소 곡의 날씨 callback이 battle을0으로 바꾸면 내부 Frame은 메뉴 곡으로 넘어간다.
++TEST_CASE(SceneMusicCurrentBattle_StartRereadsAfterWeatherChangesMode) {
++    CurrentBattleScene scene; // 현재1과 fallback0의 차이 및 날씨 뒤 재조회를 관측한다.
++    scene.current=1;scene.state.battle=0;scene.Clock({10.0,200.0,201.0});
++    scene.afterRefresh=[&] { scene.current=0; }; // 별도 World 성공을 만들지 않는 명시 외부 전역 변경이다.
++    scene.music.Start();
++    CHECK(scene.battleReads==2 && scene.name=="ser22.mus" && scene.state.index==1);
++    CHECK((scene.events==std::vector<std::string>{"B:1","S:rain22.mus","T1","R","O","T2","B:0","W","S:ser22.mus","T3"}));
++}
++
++// Next는 현재 battle을 읽는 함수가 아니므로 getter가 예외 장치여도 같은 다음 곡/날씨를 수행한다.
++TEST_CASE(SceneMusicCurrentBattle_NextDoesNotReadCurrentMode) {
++    CurrentBattleScene scene; // 희생 경계도 playersReady0으로 선택하지 않는다.
++    scene.state.currentBattle=[]()->std::uint32_t { throw std::logic_error("Next에는 현재 battle 조회가 없다"); };
++    scene.state.index=3;scene.Clock({10.0});scene.music.Next();
++    CHECK(scene.battleReads==0 && scene.name=="wind22.mus" && scene.state.index==0);
++    CHECK((scene.events==std::vector<std::string>{"S:wind22.mus","T1","R","O"}));
++}
++
++// 실제 ClientAudio의 값 조회와 진단도 같은 현재 getter를 읽으며 해제하면 기존 fallback으로 돌아간다.
++TEST_CASE(SceneMusicCurrentBattle_ClientAudioQueryAndReportUseTheSameProvider) {
++    ClientAudio audio({},OriginalEdition::Patch1078,"english",[] { return 0.0; },1U); // 생성만 하며 장치·음악 스레드·파일을 초기화하지 않는다.
++    std::uint32_t current=7; // 실제 진단이 읽을 호출자 소유 현재 전역이다.
++    std::size_t reads=0; // 값 조회와 진단이 수행한 현재 조회 횟수다.
++    CHECK(audio.CurrentBattle()==0 && audio.Scene().battle==0);
++    audio.BindCurrentBattle([&] { ++reads;return current; });
++    CHECK(audio.CurrentBattle()==7 && reads==1);
++    const auto first=audio.Describe(); // 장치 미초기화 상태의 실제 진단이다.
++    CHECK(reads==2 && first.find("sceneBattle\t7\n")!=std::string::npos && audio.Scene().battle==0);
++    current=0;
++    const auto next=audio.Describe(); // 같은 provider가 바뀐 현재0을 다시 읽어야 한다.
++    CHECK(reads==3 && next.find("sceneBattle\t0\n")!=std::string::npos);
++    audio.BindCurrentBattle({});
++    CHECK(audio.CurrentBattle()==0 && reads==3);
++    const auto fallback=audio.Describe(); // 해제 뒤 진단도 fallback을 사용하며 예전 getter를 실행하지 않는다.
++    CHECK(reads==3 && fallback.find("sceneBattle\t0\n")!=std::string::npos);
++}

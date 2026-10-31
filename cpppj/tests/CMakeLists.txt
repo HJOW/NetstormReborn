@@ -2640,3 +2640,11 @@ add_executable(netstorm_guide_release_tests FocusedTestMain.cpp TutorialMissionR
 target_link_libraries(netstorm_guide_release_tests PRIVATE netstorm)
 netstorm_apply_compiler_options(netstorm_guide_release_tests)
 target_compile_definitions(netstorm_guide_release_tests PRIVATE ${_netstorm_menu_session_definitions})
+
+# 현재 snapshot/지도 영역을 읽는 실제 위치 음향과 기존 원문 재생을 함께 확인한다.
+target_sources(netstorm_tests PRIVATE SoundCurrentViewTests.cpp ClientSoundViewTests.cpp)
+add_executable(netstorm_sound_current_view_tests FocusedTestMain.cpp SoundCurrentViewTests.cpp ClientSoundViewTests.cpp
+    SoundPlayTests.cpp SoundControlTests.cpp ClientAudioTests.cpp)
+target_link_libraries(netstorm_sound_current_view_tests PRIVATE netstorm)
+netstorm_apply_compiler_options(netstorm_sound_current_view_tests)
+target_compile_definitions(netstorm_sound_current_view_tests PRIVATE ${_netstorm_menu_session_definitions})

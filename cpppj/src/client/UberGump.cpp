@@ -396,6 +396,7 @@ void UberGump::ClearWorld() {
 }
 // 현재 어댑터의 월드 수명으로 원본 번개 부모 조회 경계를 제공한다.
 bool UberGump::HasWorld() const { return world_!=nullptr; }
+ScreenRect UberGump::CurrentMapView() const { return rawButtons_->MapViewRect(); } // 원문4c6b30의 현재 지도 전역이며 World의 과거 clip을 사용하지 않는다.
 // Native 부모가 실제 AI/링크/Kernel을 정리하고 Core0을 선택한 뒤 호출하는 호스트 소비자 반납이다.
 void UberGump::RetireWorldForState() {
     if (!world_) throw std::logic_error("State Runtime 반납의 현재 GameWorld 소유자 누락");

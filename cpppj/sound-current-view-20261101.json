@@ -1,0 +1,448 @@
+{
+  "unit": 672,
+  "date": "2026-11-01",
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "decompileChanged": false,
+  "productChanged": true,
+  "executableSha256": "74b98b7726fd10072ab8b217e8beb0745ffb4aca35edee00cbb843f5a9e003a8",
+  "changes": [
+    "실제10.78 위치 소리가 원문497220의 현재 snapshot 픽셀과4c6b30의 실제 Gump 지도LTRB를 매 소비 위치에서 읽는다.",
+    "Loop의 장치 효과 뒤 pan→volume 재조회와 초기 화면 점 보존을 복원했다. 독립/10.72의 명시 SetView fallback은 유지한다.",
+    "옛 스모크5개를 실제 ESC/ABORT·해상도 승인 종료/새 프로세스·Native HTML/Warning/캡처/등록 수명에 맞춰 교정했다."
+  ],
+  "build": {
+    "log": "extracted/cpp-sound-current-view-672-build-v1.log",
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0
+  },
+  "focused": {
+    "registered": 30,
+    "executed": 30,
+    "newTests": 8,
+    "existingTests": 22,
+    "failedChecks": 0,
+    "invocations": 1,
+    "log": "extracted/cpp-sound-current-view-672-focused-v1.log",
+    "existingFixtureRows": 17661,
+    "fixtureFamilies": {
+      "SoundPlay": {
+        "perEdition": 4824,
+        "editions": 3
+      },
+      "SoundControl": {
+        "perEdition": 1063,
+        "editions": 3
+      }
+    },
+    "scope": "원본 실행이 아닌 기존 기대값 C++ 재생이다. 실제 Client2개는 창/장치 없이 snapshot 변경과 Native Renderer0, CD fallback을 확인했다."
+  },
+  "live": {
+    "wrapperInvocations": 14,
+    "successfulFinalGroups": {
+      "audio-view": {
+        "log": "extracted/cpp-sound-current-view-672-audio-view-v3.log",
+        "result": {
+          "observed_states": 16,
+          "camera_and_home": true,
+          "resolution_restart_views": {
+            "800": [
+              "1088",
+              "877",
+              "85",
+              "0",
+              "800",
+              "600"
+            ],
+            "640": [
+              "1168",
+              "937",
+              "85",
+              "0",
+              "640",
+              "480"
+            ],
+            "1024": [
+              "976",
+              "793",
+              "85",
+              "0",
+              "1024",
+              "768"
+            ]
+          },
+          "sound_off_on_preserves_view": true,
+          "menu_resets_camera": true,
+          "reload_initializes_view": true
+        }
+      },
+      "menu": {
+        "log": "extracted/cpp-sound-current-view-672-menu-v3.log",
+        "result": {
+          "originals": {
+            "gif_pixels": 831008,
+            "observed_states": 38,
+            "mission_objects": 1875,
+            "tutorial_objects": 826,
+            "native_window_navigation": true,
+            "resolution_changes": [
+              [
+                800,
+                600
+              ],
+              [
+                640,
+                480
+              ],
+              [
+                1024,
+                768
+              ]
+            ],
+            "fullscreen_marker_event": true,
+            "fullscreen_window_roundtrip": true,
+            "options_persist_after_restart": true,
+            "menu_background_pixels": 774432,
+            "original_files_unchanged": true
+          },
+          "originalCD": {
+            "gif_pixels": 831008,
+            "original_files_unchanged": true
+          }
+        }
+      },
+      "dialog": {
+        "log": "extracted/cpp-sound-current-view-672-dialog-v1.log",
+        "result": {
+          "menu": {
+            "states": 84,
+            "repeat_cycles": 32,
+            "tick_refresh_capture_preserved": true,
+            "kernel_page_capture_cancelled": true,
+            "stale_release_rejected": true,
+            "warning_capture_preserved": true,
+            "html_family_released": true
+          },
+          "mission": {
+            "states": 21,
+            "mission": "thewarbegins",
+            "esc_menu": true,
+            "outside_release_checks": 2,
+            "kernel_modal_capture_cancelled": true,
+            "modal_stack_restored": true,
+            "warning_kept_capture_and_page": true,
+            "blank_kept_world": true,
+            "natural_completion_tested": false
+          },
+          "original_files_unchanged": true,
+          "original_game_executions": 0
+        }
+      },
+      "thunder": {
+        "log": "extracted/cpp-sound-current-view-672-thunder-v3.log",
+        "result": {
+          "thunder": {
+            "states": 22,
+            "screenshots": 4,
+            "thunder_cycles": 1,
+            "muted": true,
+            "sound_music_disabled": false
+          },
+          "thunder-disabled": {
+            "states": 22,
+            "screenshots": 4,
+            "thunder_cycles": 1,
+            "muted": true,
+            "sound_music_disabled": true
+          },
+          "original_files_unchanged": 1392
+        }
+      },
+      "weather": {
+        "log": "extracted/cpp-sound-current-view-672-weather-v2.log",
+        "result": {
+          "weather-on": {
+            "states": 11,
+            "all_four_palettes": true,
+            "option": 1,
+            "sound_and_music_off": false,
+            "resize_and_reload": true,
+            "worker_failed": "0",
+            "device_ready": "1"
+          },
+          "weather-off": {
+            "states": 5,
+            "all_four_palettes": false,
+            "option": 0,
+            "sound_and_music_off": false,
+            "resize_and_reload": false,
+            "worker_failed": "0",
+            "device_ready": "1"
+          },
+          "weather-two": {
+            "states": 5,
+            "all_four_palettes": false,
+            "option": 2,
+            "sound_and_music_off": false,
+            "resize_and_reload": false,
+            "worker_failed": "0",
+            "device_ready": "1"
+          },
+          "weather-silent": {
+            "states": 5,
+            "all_four_palettes": true,
+            "option": 1,
+            "sound_and_music_off": true,
+            "resize_and_reload": false,
+            "worker_failed": "0",
+            "device_ready": "1"
+          },
+          "original_files_unchanged": 1392,
+          "synthetic_palette_fixture": "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-weather-data-qa4tx1mc"
+        }
+      }
+    },
+    "audioFullBatchPassed": false,
+    "audioV2CompletedGroups": {
+      "source": "audio-v2 live raw reports",
+      "newGameRuns": 0,
+      "groups": {
+        "menu": {
+          "musicName": "ser22.mus",
+          "musicDuration": "203.947",
+          "musicReadOffset": "1160316",
+          "musicBufferStatus": "5",
+          "songEnd": "0"
+        },
+        "battle": {
+          "musicName": "thu22.mus",
+          "sceneIndex": "2",
+          "musicDuration": "224.96",
+          "musicReadOffset": "1477968",
+          "soundSerial": "1"
+        },
+        "options": {
+          "music_off": {
+            "musicOption": "0",
+            "musicActive": "0"
+          },
+          "music_on_again": {
+            "musicReadOffset": "758124",
+            "musicBufferStatus": "5"
+          },
+          "sound_off": {
+            "soundEnabled": "0",
+            "deviceReady": "0",
+            "musicRuntime": "0",
+            "musicActive": "0"
+          },
+          "sound_on_again": {
+            "deviceReady": "1",
+            "musicRuntime": "1",
+            "musicActive": "1",
+            "musicReadOffset": "752964"
+          },
+          "volume": {
+            "pendingMusicVolume": "-500",
+            "pendingMasterVolume": "-4000",
+            "muteDepth": "1"
+          }
+        },
+        "disabled": {
+          "sound0_music0": {
+            "soundEnabled": "0",
+            "musicOption": "0",
+            "musicActive": "0",
+            "deviceReady": "1"
+          },
+          "silent_env": "no report, exit 0",
+          "no_audio_option": "no report, exit 0"
+        }
+      }
+    },
+    "audioV2Failure": "view-1024-restart, SaveOptions fopen errno22/doserrno1224",
+    "audioLogicalViewPassedSeparately": true,
+    "gameWindowProcesses": 64,
+    "readOnlyCppCliProcesses": 12,
+    "nonzeroGameExitCodes": 2,
+    "journals": [
+      {
+        "case": "audio-v1",
+        "journal": "extracted/cpp-sound-current-view-672-live/audio-v1/processes.jsonl",
+        "gameWindows": 1,
+        "readOnlyCli": 0,
+        "nonzeroExit": 0
+      },
+      {
+        "case": "audio-v2",
+        "journal": "extracted/cpp-sound-current-view-672-live/audio-v2/processes.jsonl",
+        "gameWindows": 20,
+        "readOnlyCli": 0,
+        "nonzeroExit": 1
+      },
+      {
+        "case": "audio-view-v3",
+        "journal": "extracted/cpp-sound-current-view-672-live/audio-view-v3/processes.jsonl",
+        "gameWindows": 10,
+        "readOnlyCli": 0,
+        "nonzeroExit": 0
+      },
+      {
+        "case": "dialog-v1",
+        "journal": "extracted/cpp-sound-current-view-672-live/dialog-v1/processes.jsonl",
+        "gameWindows": 2,
+        "readOnlyCli": 0,
+        "nonzeroExit": 0
+      },
+      {
+        "case": "menu-v1",
+        "journal": "extracted/cpp-sound-current-view-672-live/menu-v1/processes.jsonl",
+        "gameWindows": 1,
+        "readOnlyCli": 3,
+        "nonzeroExit": 0
+      },
+      {
+        "case": "menu-v2",
+        "journal": "extracted/cpp-sound-current-view-672-live/menu-v2/processes.jsonl",
+        "gameWindows": 1,
+        "readOnlyCli": 3,
+        "nonzeroExit": 0
+      },
+      {
+        "case": "menu-v3",
+        "journal": "extracted/cpp-sound-current-view-672-live/menu-v3/processes.jsonl",
+        "gameWindows": 11,
+        "readOnlyCli": 6,
+        "nonzeroExit": 0
+      },
+      {
+        "case": "thunder-v1",
+        "journal": "extracted/cpp-sound-current-view-672-live/thunder-v1/processes.jsonl",
+        "gameWindows": 1,
+        "readOnlyCli": 0,
+        "nonzeroExit": 0
+      },
+      {
+        "case": "thunder-v2",
+        "journal": "extracted/cpp-sound-current-view-672-live/thunder-v2/processes.jsonl",
+        "gameWindows": 1,
+        "readOnlyCli": 0,
+        "nonzeroExit": 0
+      },
+      {
+        "case": "thunder-v3",
+        "journal": "extracted/cpp-sound-current-view-672-live/thunder-v3/processes.jsonl",
+        "gameWindows": 2,
+        "readOnlyCli": 0,
+        "nonzeroExit": 0
+      },
+      {
+        "case": "weather-v1",
+        "journal": "extracted/cpp-sound-current-view-672-live/weather-v1/processes.jsonl",
+        "gameWindows": 1,
+        "readOnlyCli": 0,
+        "nonzeroExit": 0
+      },
+      {
+        "case": "weather-v2",
+        "journal": "extracted/cpp-sound-current-view-672-live/weather-v2/processes.jsonl",
+        "gameWindows": 10,
+        "readOnlyCli": 0,
+        "nonzeroExit": 0
+      }
+    ],
+    "unjournaledProcesses": {
+      "count": 3,
+      "cases": [
+        "audio-view-v1: view exit0",
+        "audio-view-v2: view exit0",
+        "audio-view-v2: view-800-no exit1"
+      ],
+      "evidence": "각 wrapper 오류와 states/audio-report에 기록. journal 보조는 그 뒤 설치했다."
+    },
+    "initialFailures": [
+      {
+        "log": "extracted/cpp-sound-current-view-672-audio-view-v1.log",
+        "reason": "Home은 초기 사제 Reset과 다른 현재 홈 SID를 선택한다. pan 전후 같은 Home으로 교정."
+      },
+      {
+        "log": "extracted/cpp-sound-current-view-672-audio-view-v2.log",
+        "reason": "실제 UserNotUpdated 첫 안내를 닫지 않아 Options 입력이 실패. 실제 OK와 프레임 이동으로 교정."
+      },
+      {
+        "log": "extracted/cpp-sound-current-view-672-menu-v1.log",
+        "reason": "MORE/BACK의 일반 Tell은 내부 Dialog1이며 초기 Briefing3과 구별. 자기 정지1은 유지."
+      },
+      {
+        "log": "extracted/cpp-sound-current-view-672-menu-v2.log",
+        "reason": "캠페인 행을 stone 배열에서 찾은 판독 누락. 실제 controlled 메뉴 행으로 교정."
+      },
+      {
+        "log": "extracted/cpp-sound-current-view-672-thunder-v1.log",
+        "reason": "frame3이 실제 비동기 설치 중. 로그인·안내 뒤 관측하도록 이동."
+      },
+      {
+        "log": "extracted/cpp-sound-current-view-672-thunder-v2.log",
+        "reason": "cleanup 난수 재선택 뒤 메뉴 색인3 고정 전제가 틀림. 4회 순환·색인2 한 번·부모 부재를 모두 검사."
+      },
+      {
+        "log": "extracted/cpp-sound-current-view-672-weather-v1.log",
+        "reason": "Play 뒤2프레임은 실제 Tutorial 자기 정지7회 해제 전. 충분한 빈 프레임 뒤 관측."
+      },
+      {
+        "log": "extracted/cpp-sound-current-view-672-audio-v1.log",
+        "reason": "실제 State3 cleanup의 songEnd0 보존을 옛 호스트 시작+길이로 잘못 기대. 원문 직접0쓰기와 같은 이름 즉시 반환에 맞춤."
+      },
+      {
+        "log": "extracted/cpp-sound-current-view-672-audio-v2.log",
+        "reason": "마지막 view-1024-restart에서 options.cfg fopen errno22/doserrno1224 재현. 미해결이며 전체 음향 묶음 성공으로 세지 않음."
+      }
+    ],
+    "unchangedProductThroughout": true,
+    "observationsAreSyntheticAppInputs": true,
+    "physicalInputs": 0,
+    "listenOrPhysicalPcmVerified": false,
+    "currentProductFull34Run": false
+  },
+  "protected": {
+    "roots": [
+      "originals",
+      "originalCD",
+      "cpppj/tests/fixtures",
+      "AGENTS.md"
+    ],
+    "allFiles": 2599,
+    "originalsFiles": 1394,
+    "originalCdFiles": 425,
+    "fixtureDirectoryFiles": 779,
+    "fixtureTsvFiles": 776,
+    "unchanged": true,
+    "before": "extracted/cpp-sound-current-view-672-protected-before.json",
+    "after": "extracted/cpp-sound-current-view-672-protected-after.json",
+    "scope": "이번에 지정한 전체 범위의 전후 비교다. 과거645의2632/773과 같은 집합으로 가정하지 않는다. 이번 새 Native fixture는0이다."
+  },
+  "originalGameRuns": 0,
+  "newNativeExecutions": 0,
+  "newNativeFixtures": 0,
+  "newMultiplayerTests": 0,
+  "forbiddenGameplayReproductions": 0,
+  "prepared673": {
+    "path": "docs/exe/prepared/scene-current-battle-673-20261101",
+    "rawFiles": 8,
+    "preparedTestCases": 8,
+    "patchReplayMatchedFiles": 5,
+    "productApplied": false,
+    "cppBuilt": false,
+    "testsRun": 0,
+    "pending": "실제 SurfaceStorage 생성 뒤 최초 음악 Start 전에 현재 ownerMode.battle reader를 연결하고 CMake/검사/문서/커밋을 수행한다. 미설치 무장치 장면에 fake0 reader를 넣지 않는다."
+  },
+  "remaining": [
+    "곡 만료 시 과거 battle 사본을 읽는 별도 차이는673 준비본만 보관했고 제품 미반영이다.",
+    "options.cfg errno22/1224는 이번 마지막 반복에서도 재현됐다. 원인 미확정이며 정상 저장 경로의 성공으로 덮지 않는다.",
+    "Windows11·물리 키/포커스/다른 DPI/사용자 활성 전체화면 물리 출력·청취/PCM·전체 자연 완주는 이번 검증 대상이 아니다.",
+    "최신 전체34/ZIP은645의644제품이다. 전체 목표는 미완료다."
+  ],
+  "pauseRequest": "현재 진행 작업의 검증/문서/로컬 커밋 뒤 일시 중지한다는2026-11-01 사용자 요청을 반영한다. 673 제품 구현은 재개 지시 전 시작하지 않는다."
+}

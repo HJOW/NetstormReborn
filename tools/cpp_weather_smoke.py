@@ -12,8 +12,9 @@ import shutil
 import tempfile
 from pathlib import Path
 from PIL import Image
-from cpp_audio_smoke import ROOT, OUTPUT, run, snapshots
+from cpp_audio_smoke import ROOT, OUTPUT, run, snapshots, resolution_roundtrip
 from cpp_world_smoke import states
+from cpp_smoke_files import preserve_game_settings
 from cpp_window_smoke import read_data, screen_palette
 from taff import TaffArchive
 
@@ -62,17 +63,15 @@ def check(executable,root,name,setting,palettes,initial,resize=False):
         steps.extend(((frame,'report',label),(frame,'snapshot',str(OUTPUT/f'{name}-{label}.bmp'))))
     frames=13
     if resize:
-        steps.extend(((13,'click','Play Mission'),(15,'report','world'),
-                      (17,'click','Game'),(19,'click','Leave Battle'),(21,'click','Leave Honorably'),(23,'report','menu'),
-                      (25,'click','Options'),(27,'click','Resolution >'),(29,'click','800 by 600'),(30,'report','800'),
-                      (30,'snapshot',str(OUTPUT/f'{name}-800.bmp')),
-                      (33,'click','Options'),(35,'click','Resolution >'),(37,'click','640 by 480'),(38,'report','640'),
-                      (38,'snapshot',str(OUTPUT/f'{name}-640.bmp')),
-                      (41,'click','Campaign'),(43,'click','Struggle For Freedom'),(45,'click','1 The War Begins!'),
-                      (48,'report','reload'),(48,'snapshot',str(OUTPUT/f'{name}-reload.bmp'))))
-        frames=50
+        # 실제 미션 메뉴만 ESC에서 열며 ABORT의 Main Menu가 월드를 반납하게 한다.
+        # 실제 Tutorial 자기 정지는 HTML 반납 뒤7회 빈 프레임을 확인한다. 두 프레임 만에 진행됐다고 판정하지 않는다.
+        steps.extend(((13,'click','Play Mission'),(25,'report','world'),(29,'esc',''),(33,'click','Game'),
+                      (37,'click','menu-command:0200008c,0'),(41,'click','Main Menu'),(50,'report','menu')))
+        frames=52
     enabled=setting==1
-    result=run(executable,root,name,frames,extra=['--mission','thewarbegins'],script=steps,
+    # 실제 비동기 State7/8·로그인·안내가 열린 뒤 네 곡을 순환하며 설치 중 frame3의 초기 배경과 섞지 않는다.
+    steps=[(frame+12,operation,argument) for frame,operation,argument in steps]
+    result=run(executable,root,name,frames+12,extra=['--mission','thewarbegins'],script=steps,
                settings=f'ascendancyPalette={setting}'+(';sound=0;music=0' if name.endswith('silent') else ''))
     assert result['workerFailed']=='0' and result['deviceReady']=='1',(name,'음악 스레드/장치 실패',result)
     if name.endswith('silent'):assert result['soundEnabled']=='0' and result['musicOption']=='0' and result['musicActive']=='0'
@@ -93,16 +92,23 @@ def check(executable,root,name,setting,palettes,initial,resize=False):
         previous_index=index;before=selected
     if resize:
         assert observed['world']['paused']==['0'] and observed['menu']['phase']==['0']
-        # 메뉴 곡으로 돌아가도 현재 날씨 팔레트를 유지한다. 새 Screen의 SetMode가 검정으로 덮으면 픽셀 검사에서 실패한다.
-        for label,size in (('800',(800,600)),('640',(640,480))):
-            assert observed[label]['size']==list(map(str,size))
-            with Image.open(OUTPUT/f'{name}-{label}.bmp') as image:
-                pixels=image_colors(image)
-                assert image.size==size and pixels<=set(selected) and len(pixels)>25,(name,label,'해상도 변경 후 팔레트 손실')
-        index,tint,dirty,*actual_tints=map(int,observed['reload']['weather'])
-        assert actual_tints==tints(palettes[index]) and tint==actual_tints[index] and dirty==1
-        with Image.open(OUTPUT/f'{name}-reload.bmp') as image:
-            assert image_colors(image)<=set(palettes[index]),'미션 재진입 팔레트 불일치'
+        # 원문 SETSIZE는 새 프로세스로 반영된다. 새 main의 기본 COL과 미션 재진입 뒤 원소 COL을 각각 검사한다.
+        with preserve_game_settings(root, 'd'):
+            for index,size in enumerate(((800,600),(640,480))):  # 두 실제 메뉴 승인과 크기 덮어쓰기 없는 재시작을 구별한다.
+                case=f'{name}-{size[0]}'  # 각 프로세스의 픽셀/보고 경로다.
+                restart=[(10,'click','Campaign'),(15,'click','Struggle For Freedom'),(20,'click','1 The War Begins!'),
+                         (35,'report','reload'),(35,'snapshot',str(OUTPUT/f'{case}-reload.bmp'))]
+                scenes=resolution_roundtrip(executable,root,case,size,
+                    initial_size=(1024,768) if index==0 else None,settings=f'ascendancyPalette={setting}',
+                    restart_steps=restart,restart_frames=40)
+                with Image.open(OUTPUT/f'{case}-startup.bmp') as image:
+                    pixels=image_colors(image)
+                    assert image.size==size and pixels<=set(initial) and len(pixels)>25,(case,'새 장치 기본 COL 불일치')
+                state=scenes['reload'];weather_index,tint,dirty,*actual_tints=map(int,state['weather'])
+                assert state['size']==list(map(str,size)) and state['paused']==['1']
+                assert actual_tints==tints(palettes[weather_index]) and tint==actual_tints[weather_index] and dirty==1
+                with Image.open(OUTPUT/f'{case}-reload.bmp') as image:
+                    assert image.size==size and image_colors(image)<=set(palettes[weather_index]),(case,'미션 COL 불일치')
     return dict(states=len(observed),all_four_palettes=enabled,option=setting,
                 sound_and_music_off=name.endswith('silent'),resize_and_reload=resize,
                 worker_failed=result['workerFailed'],device_ready=result['deviceReady'])

@@ -234,6 +234,9 @@ SoundPlayer::SoundPlayer(SoundList& list,SoundState& state,SoundDeviceHooks hook
         throw std::invalid_argument("소리 재생 계층의 필수 장치 효과 누락");
 }
 
+// 원문 위치 계산은 공용 snapshot/지도 전역의 현재값을 읽는다. 연결되지 않은 독립/10.72 장치는 기존 명시값을 유지한다.
+SoundView SoundPlayer::CurrentView() const { return state_.currentView ? state_.currentView() : state_.view; }
+
 // 표의 범위 검사를 그대로 거친다.
 std::uint32_t SoundPlayer::Get(SoundHandle entry,SoundField field) const { return list_.Field(entry,field); }
 // 표의 범위 검사를 그대로 거친다.
@@ -423,8 +426,8 @@ SoundHandle SoundPlayer::PlayLoopAt(float x,float y,SoundHandle current,SoundHan
         if (SameName(list_.Name(current),list_.Name(sound))) sound=0;
         else { StopBuffer(current);current=0; }
     }
-    const auto point=SoundToScreen(state_.view,x,y);
-    const bool visible=SoundOnScreen(state_.view,point);
+    const auto point=SoundToScreen(CurrentView(),x,y);
+    const bool visible=SoundOnScreen(CurrentView(),point);
     if (visible && !(current!=0 && Get(current,SoundField::Buffer)!=0 && BufferPlaying(current)))
         current=Play(sound!=0 ? sound : current,1,0,0,0,1);
     if (current==0) return 0;
@@ -435,8 +438,8 @@ SoundHandle SoundPlayer::PlayLoopAt(float x,float y,SoundHandle current,SoundHan
     if (Get(current,SoundField::Buffer)==0 || !BufferPlaying(current)) return current;
     const bool patch=list_.Edition()==o::OriginalEdition::Patch1078;
     const std::string file=patch ? ".\\Sound.cpp" : "sound.cpp";
-    const auto volume=SoundVolume(state_.view,point);
-    const auto pan=SoundPan(state_.view,point,state_.swapSpeakers);
+    const auto panView=CurrentView();const auto pan=SoundPan(panView,point,state_.swapSpeakers); //004a9840은 장치 조회/재생 뒤 현재 지도에서 좌우를 먼저 계산한다.
+    const auto volume=SoundVolume(CurrentView(),point); //그 뒤 현재 지도를 다시 읽으며 앞서 투영한 화면 점은 보존한다.
     Set(current,SoundField::Volume,static_cast<std::uint32_t>(volume));
     const auto buffer=Get(current,SoundField::Buffer);
     // 이 두 설정은 0이 아닌 모든 반환을 실패로 기록한다(전역 재생은 음수만 기록한다).
@@ -449,10 +452,11 @@ SoundHandle SoundPlayer::PlayLoopAt(float x,float y,SoundHandle current,SoundHan
 
 // 화면 밖이면 장치에도 표에도 손대지 않는다. 한도(limit)는 없고 우선 인자는 그대로 넘긴다.
 SoundHandle SoundPlayer::PlayOnceAt(float x,float y,SoundHandle sound,std::uint32_t loop,std::uint32_t priority) {
-    const auto point=SoundToScreen(state_.view,x,y);
-    if (!SoundOnScreen(state_.view,point)) return 0;
-    const auto pan=SoundPan(state_.view,point,state_.swapSpeakers);
-    return Play(sound,loop,SoundVolume(state_.view,point),pan,priority,0);
+    const auto point=SoundToScreen(CurrentView(),x,y);
+    if (!SoundOnScreen(CurrentView(),point)) return 0;
+    const auto panView=CurrentView();const auto pan=SoundPan(panView,point,state_.swapSpeakers); //004a9c30도 판정 뒤 좌우→음량 순서로 현재 전역을 읽는다.
+    const auto volume=SoundVolume(CurrentView(),point);
+    return Play(sound,loop,volume,pan,priority,0);
 }
 
 // 조회한 항목의 버퍼가 0일 때만 적재 경계를 부르고, 적재된 버퍼가 있으면 감쇠도 함께 적는다(Play의 인라인 적재와 같은 필드 기록이다).

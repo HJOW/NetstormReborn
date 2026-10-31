@@ -61,13 +61,27 @@ def reports(path):
     for line in path.read_text(encoding='utf-8').splitlines():
         fields = line.split('\t')
         if fields[0] == 'frame':
-            current = {'frame': int(fields[1]), 'controls': {}}
+            current = {'frame': int(fields[1]), 'controls': {}, '_rows': {}}
             result[fields[2]] = current
         elif fields[0] == 'control':
             current['controls'][fields[1]] = list(map(int, fields[2:]))
         else:
+            # Native HTML/메뉴는 같은 종류가 여러 번 나오므로 마지막 값과 별도로 모든 행을 보존한다.
+            current.setdefault('_rows', {}).setdefault(fields[0], []).append(fields[1:])
             current[fields[0]] = fields[1:]
     return result
+
+
+def button_labels(state):
+    """같은 실제 화면의 host/Native HTML 표시 버튼을 읽고 가상 Game 버튼을 만들지 않는다."""
+    # 실제 HTML 버튼 행의 조상 표시 비트가 켜진 라벨만 기존 host 입력 표와 합친다.
+    return set(state['controls']) | {row[11] for row in state['_rows'].get('raw_html_button', []) if len(row) == 12 and row[10] == '1'}
+
+
+def menu_rows(state):
+    """같은 보고서의 표시된 실제 메뉴 행을 숫자 command/parameter와 함께 읽는다."""
+    # 원문 메뉴의 일곱 필드 중 실제 표시된 부모 아래에 있는 행만 순서대로 유지한다.
+    return [row for row in state['_rows'].get('raw_menu_item', []) if len(row) == 7 and row[5] == '1']
 
 
 def check_title(root, archive, image_path):
@@ -102,112 +116,92 @@ def check_title(root, archive, image_path):
 
 
 def check_window(executable, root):
-    """마우스 사건으로 탐색한다. 명령/상태를 직접 바꾸지 않는다."""
-    steps = [
-        (1, 'report', 'main'), (1, 'snapshot', str(OUTPUT / 'main.bmp')),
-        (2, 'right', 'Campaign'), (3, 'report', 'right_ignored'),
-        (4, 'click', 'Campaign'), (5, 'report', 'campaign'), (5, 'snapshot', str(OUTPUT / 'campaign.bmp')),
-        (6, 'click', 'Struggle For Freedom'), (7, 'report', 'overview'),
-        (8, 'click', '2 Master of Whirligigs'), (9, 'report', 'locked'),
-        (10, 'click', '1 The War Begins!'), (11, 'report', 'loading'),
-        (12, 'report', 'briefing'), (12, 'snapshot', str(OUTPUT / 'briefing.bmp')),
-        (13, 'esc', ''), (14, 'report', 'briefing_esc'),
-        (15, 'click', 'Play Mission'), (16, 'report', 'mission'), (16, 'snapshot', str(OUTPUT / 'mission.bmp')),
-        (17, 'click', 'Game'), (18, 'report', 'game'),
-        (19, 'click', 'Leave Battle'), (20, 'report', 'leave'),
-        (21, 'click', 'Stay'), (22, 'report', 'resumed'),
-        (23, 'esc', ''), (24, 'report', 'game_esc'),
-        (25, 'click', 'Leave Battle'), (26, 'report', 'leave2'),
-        (27, 'click', 'Leave Honorably'), (28, 'report', 'returned'),
-        (29, 'click', 'Campaign'), (30, 'report', 'campaign2'),
-        (31, 'click', 'Struggle For Freedom'), (32, 'report', 'overview2'),
-        (33, 'click', 'Back'), (34, 'report', 'campaign_back'),
-        (35, 'click', 'Back'), (36, 'report', 'main_back'),
-        (37, 'click', 'Options'), (38, 'report', 'options'),
-        (39, 'click', 'Direct Draw / Full Screen'), (40, 'report', 'disabled_option'),
-        (41, 'click', 'Sound On'), (42, 'report', 'sound_toggle'),
-        (43, 'click', 'Resolution >'), (44, 'report', 'resolutions'),
-        (45, 'click', '800 by 600'), (46, 'report', 'size800'), (46, 'snapshot', str(OUTPUT / '800.bmp')),
-        (47, 'click', 'Resolution >'), (48, 'report', 'resolutions2'),
-        (49, 'click', '640 by 480'), (50, 'report', 'size640'), (50, 'snapshot', str(OUTPUT / '640.bmp')),
-        (51, 'click', 'Resolution >'), (52, 'report', 'resolutions3'),
-        (53, 'click', '1024 by 768'), (54, 'report', 'size1024'),
-        (55, 'outside', ''), (56, 'report', 'outside_closed'),
-        (57, 'click', 'Credits'), (58, 'report', 'credits'),
-        (59, 'click', 'Cancel'), (60, 'report', 'credits_back'),
-        (61, 'click', 'Help'), (62, 'report', 'help'),
-        (63, 'click', 'About NetStorm'), (64, 'report', 'about'),
-        (65, 'click', 'OK'), (66, 'report', 'about_back'),
-        (67, 'click', 'Demo'), (68, 'report', 'demo'),
-        (69, 'click', 'Cancel'), (70, 'report', 'demo_back'),
-        (71, 'click', 'Campaign'), (72, 'report', 'campaign3'),
-        (73, 'click', 'Early Missions'), (74, 'report', 'early'),
-        (75, 'click', '1 Bridge the Gap'), (77, 'report', 'tutorial_brief'),
-        (78, 'click', 'MORE'), (79, 'report', 'tutorial_more'),
-        (80, 'click', 'BACK'), (81, 'report', 'tutorial_back'),
-        (82, 'click', 'MORE'), (83, 'report', 'tutorial_more2'),
-        (84, 'click', 'OK'), (85, 'report', 'tutorial_world'),
-        (86, 'esc', ''), (88, 'click', 'Leave Battle'), (90, 'click', 'Leave Honorably'),
-        (91, 'report', 'tutorial_return'), (92, 'click', 'Options'), (93, 'report', 'volume_options'),
-        (94, 'click', 'Music Volume >'), (95, 'report', 'volume_list'),
-        (96, 'click', 'Volume 4'), (97, 'report', 'volume_changed'),
-        (98, 'click', 'Options'), (99, 'report', 'volume_reopen'),
-        (100, 'click', 'Music Volume >'), (101, 'report', 'volume_selected'),
-        (102, 'outside', ''), (103, 'report', 'volume_closed'), (104, 'click', 'Quit'),
-    ]
-    expanded = []
-    offset = 0
-    # 값 변경 뒤 원본처럼 닫힌 Options를 실제 버튼으로 다시 연다.
-    for frame in sorted({step[0] for step in steps}):
-        expanded.extend((frame + offset, operation, argument) for original, operation, argument in steps if original == frame)
-        if frame in (42, 46, 50, 54):
-            expanded.extend([(frame + offset + 1, 'click', 'Options'), (frame + offset + 2, 'report', f'options_reopened{frame}')])
-            offset += 2
-    steps = expanded
-    script = OUTPUT / 'steps.tsv'
-    script.write_text(''.join(f'{frame}\t{operation}\t{argument}\n' for frame, operation, argument in steps), encoding='utf-8', newline='\n')
-    marker = root / 'fullscreenStateFile.dat'
+    """실제 메뉴/브리핑/ESC와 전체화면 왕복 및 원문 해상도 저장·종료·재시작을 검사한다."""
+    from cpp_audio_smoke import resolution_roundtrip, after_startup
+
+    # 메뉴 탐색·미션 이탈/취소·두 모드 전환을 현재 화면의 실제 라벨 입력으로만 진행한다.
+    steps = [(5,'report','main'),(5,'snapshot',str(OUTPUT/'main.bmp')),
+        (10,'right','Campaign'),(15,'report','right_ignored'),(20,'click','Campaign'),(30,'report','campaign'),
+        (30,'snapshot',str(OUTPUT/'campaign.bmp')),(35,'click','Struggle For Freedom'),(45,'report','overview'),
+        (50,'click','2 Master of Whirligigs'),(55,'report','locked'),(60,'click','1 The War Begins!'),
+        (80,'report','briefing'),(80,'snapshot',str(OUTPUT/'briefing.bmp')),(85,'esc',''),(90,'report','briefing_esc'),
+        (95,'click','Play Mission'),(105,'report','mission'),(105,'snapshot',str(OUTPUT/'mission.bmp')),
+        (110,'esc',''),(115,'report','bar'),(120,'click','Game'),(125,'report','game'),
+        (130,'click','menu-command:0200008c,0'),(140,'report','leave'),(145,'click','Continue Mission'),
+        (155,'report','resumed'),(160,'esc',''),(165,'click','Game'),(170,'click','menu-command:0200008c,0'),
+        (180,'report','leave2'),(185,'click','Main Menu'),(200,'report','returned'),
+        (205,'click','Campaign'),(210,'report','campaign2'),(215,'click','Struggle For Freedom'),(220,'report','overview2'),
+        (225,'click','Back'),(230,'report','campaign_back'),(235,'click','Back'),(240,'report','main_back'),
+        (245,'click','Options'),(250,'report','options'),(255,'click','Direct Draw / Full Screen'),
+        (270,'report','fullscreen'),(275,'click','Options'),(280,'click','Window Mode'),(295,'report','window'),
+        (300,'click','Options'),(305,'click','Sound On'),(310,'report','sound_toggle'),
+        (315,'click','Credits'),(320,'report','credits'),(325,'click','Cancel'),(330,'report','credits_back'),
+        (335,'click','Help'),(340,'report','help'),(345,'click','About NetStorm'),(350,'report','about'),
+        (355,'click','OK'),(360,'report','about_back'),(365,'click','Demo'),(370,'report','demo'),
+        (375,'click','Cancel'),(380,'report','demo_back'),(385,'click','Campaign'),(390,'click','Early Missions'),
+        (400,'report','early'),(405,'click','1 Bridge the Gap'),(425,'report','tutorial_brief'),
+        (430,'click','MORE'),(435,'report','tutorial_more'),(440,'click','BACK'),(445,'report','tutorial_back'),
+        (450,'click','MORE'),(455,'click','OK'),(465,'report','tutorial_world'),
+        (470,'esc',''),(475,'click','Game'),(480,'click','menu-command:0200008c,0'),(485,'click','Main Menu'),
+        (500,'report','tutorial_return'),(505,'click','Options'),(510,'click','Music Volume >'),
+        (515,'click','Volume 4'),(520,'report','volume_changed'),(525,'click','Options'),(530,'click','Music Volume >'),
+        (535,'report','volume_selected'),(540,'outside',''),(545,'report','volume_closed'),(550,'click','Quit')]
+    steps, frames = after_startup(steps, 555) # 실제 첫 안내를 닫고 메인 기준 프레임을 뒤로 옮긴다.
+    script = OUTPUT/'steps.tsv'  # 입력은 상태/명령 직접 쓰기 없이 실제 라벨과 관측된 command 행 좌표를 쓴다.
+    script.write_text(''.join(f'{frame}\t{operation}\t{argument}\n' for frame,operation,argument in steps),encoding='utf-8',newline='\n')
+    marker = root/'fullscreenStateFile.dat'  # 허용된 옛 실패 표식만 생성하고 바깥 설정 보관자가 원상 복구한다.
     marker.write_bytes(b'previous startup')
-    settings = 'SCREENW=1024;SCREENH=768;maxFPS=75;sound=1;musicVolume=2;autoDemo=0;tellTips=0;DoneTheWarBegins=0;DoneMasterOfWhirligigs=0;DoneTutorial1=0'
-    run(executable, ['--run', root, '--window', '--frames', '130', '--set', settings,
-                     '--ui-script', script, '--ui-report', OUTPUT / 'states.tsv'])
-    states = reports(OUTPUT / 'states.tsv')
-    expected_phases = {'main': 0, 'right_ignored': 0, 'campaign': 1, 'overview': 1, 'locked': 1, 'loading': 2,
-                       'briefing': 3, 'briefing_esc': 3, 'mission': 4, 'resumed': 4, 'returned': 0,
-                       'campaign_back': 1, 'main_back': 0, 'outside_closed': 0,
-                       'credits': 1, 'credits_back': 0, 'about': 1, 'about_back': 0,
-                       'demo': 1, 'demo_back': 0, 'tutorial_brief': 3, 'tutorial_more': 3,
-                       'tutorial_back': 3, 'tutorial_world': 4, 'tutorial_return': 0}
-    # 호출 결과가 아니라 프레임 종료 때 관찰된 단계를 비교한다.
-    for key, phase in expected_phases.items():
-        assert states[key]['phase'] == [str(phase)], (key, states[key])
-    assert states['main']['fullscreenMarker'] == ['1'] and states['right_ignored']['fullscreenMarker'] == ['1']
-    assert states['campaign']['fullscreenMarker'] == ['0'] and not marker.exists()
-    assert states['overview']['controls']['2 Master of Whirligigs'][0] == 0
-    assert states['overview']['controls']['1 The War Begins!'][0] == 1
-    assert states['locked']['page'] == states['overview']['page']
-    assert states['briefing']['paused'] == ['1'] and states['resumed']['paused'] == ['0']
-    assert states['mission']['mission'][:2] == ['TheWarBegins', 'Tutorial'] and int(states['mission']['mission'][2]) > 0
-    assert states['sound_toggle']['sound'] == ['0']
-    # 해상도는 설정 글만 바뀐 것이 아니라 실제 장치 크기와 캡처를 함께 검사한다.
-    for key, size in [('size800', (800, 600)), ('size640', (640, 480)), ('size1024', (1024, 768))]:
-        assert tuple(map(int, states[key]['size'])) == size
-    assert Image.open(OUTPUT / '800.bmp').size == (800, 600) and Image.open(OUTPUT / '640.bmp').size == (640, 480)
-    assert states['options']['controls']['Direct Draw / Full Screen'][0] == 0
-    assert states['disabled_option']['popup'] == ['options']
-    assert states['tutorial_more']['page'] == ['A1.'] and states['tutorial_back']['page'] == ['A.']
-    assert states['volume_changed']['musicVolume'] == ['4'] and states['volume_changed']['popup'] == ['']
-    assert states['volume_selected']['controls']['Volume 4'][-1] == 1
-    assert states['volume_selected']['controls']['Volume 2'][-1] == 0
-    restart = OUTPUT / 'restart.tsv'
-    restart.write_text('1\treport\trestarted\n', encoding='utf-8')
-    run(executable, ['--run', root, '--window', '--frames', '3', '--ui-script', restart, '--ui-report', OUTPUT / 'restart-states.tsv'])
-    restarted = reports(OUTPUT / 'restart-states.tsv')['restarted']
-    assert restarted['musicVolume'] == ['4'] and restarted['sound'] == ['0'] and restarted['size'] == ['1024', '768']
-    return {'observed_states': len(states), 'mission_objects': int(states['mission']['mission'][2]),
-            'tutorial_objects': int(states['tutorial_world']['mission'][2]), 'native_window_navigation': True,
-            'resolution_changes': [[800, 600], [640, 480], [1024, 768]], 'fullscreen_marker_event': True,
-            'options_persist_after_restart': True}
+    # 정적 GIF 픽셀 검사의 초기 캐시만 cloudSpeed0으로 고정한다. 동적 구름은 별도 원문 Kencloud 검사 범위다.
+    settings = 'SCREENW=1024;SCREENH=768;windowScreenFlags=10;workingFullScreenFlags=11;startInFullScreen=0;maxFPS=60;sleepPerLoop=8;sound=1;musicVolume=2;autoDemo=0;tellTips=0;cloudSpeed=0;DoneTheWarBegins=0;DoneMasterOfWhirligigs=0;DoneTutorial1=0'
+    run(executable,['--run',root,'--window','--mute-audio','--frames',str(frames),'--set',settings,
+                    '--ui-script',script,'--ui-report',OUTPUT/'states.tsv'])
+    states = reports(OUTPUT/'states.tsv')  # 현재 Native HTML/공통 메뉴의 실제 반복 행을 보존한다.
+    # 각 실제 페이지/미션의 완료 프레임 단계이며 버튼 선택 요청 자체를 성공으로 세지 않는다.
+    phases = {'main':0,'right_ignored':0,'campaign':1,'overview':1,'locked':1,'briefing':3,'briefing_esc':3,
+              'mission':4,'bar':4,'game':4,'leave':1,'resumed':4,'leave2':1,'returned':0,'campaign_back':1,
+              'main_back':0,'credits':1,'credits_back':0,'about':1,'about_back':0,'demo':1,'demo_back':0,
+              'tutorial_brief':3,'tutorial_more':1,'tutorial_back':1,'tutorial_world':4,'tutorial_return':0}
+    for label,phase in phases.items():  # 요청이 아닌 프레임 종료의 실제 단계를 판정한다.
+        assert states[label]['phase']==[str(phase)],(label,states[label]['phase'])
+    # Windows10/11 DIB 호환 경로는 원본과 달리 시작 모드 설정 전에 옛 DirectDraw 실패 표식을 지운다.
+    for label in ('main','right_ignored','campaign'):  # 최초 메뉴부터 캠페인까지 표식 부재가 계속 유지되어야 한다.
+        assert states[label]['fullscreenMarker']==['0'],(label,states[label]['fullscreenMarker'])
+    assert states['main']['kencloud'][4]=='0', '정적 GIF 픽셀 검사의 명시 cloudSpeed0이 적용되지 않음'
+    assert not marker.exists()
+    assert any(row[6]=='1 The War Begins!' for row in menu_rows(states['overview'])) # 미션 목록은 stone 버튼 배열과 별개인 실제 controlled 메뉴 행이다.
+    assert states['locked']['page']==states['overview']['page'] and 'mission' not in states['locked']
+    assert states['briefing']['paused']==['1'] and states['resumed']['paused']==['0']
+    assert states['mission']['mission'][:2]==['TheWarBegins','Tutorial'] and int(states['mission']['mission'][2])>0
+    assert states['bar']['game_menu_bar'][1]=='1' and states['bar']['paused']==['0']
+    # Game 하위의 실제 command8c 행이 원본 캠페인 이탈 라벨과 함께 표시되는지 찾는다.
+    assert any(int(row[3])==0x0200008c and row[6].strip()=='Leave Mission' for row in menu_rows(states['game']))
+    for label in ('leave','leave2'):  # 캠페인의 실제 ABORT 확인과 일반 Battle LeaveNormal을 구별한다.
+        assert states[label]['page'][0].casefold()=='abort' and states[label]['paused']==['1']
+        assert {'Main Menu','Replay Mission','Continue Mission'}<=button_labels(states[label])
+    assert states['mission']['raw_uber_children']==states['resumed']['raw_uber_children']
+    assert states['options']['controls']['Direct Draw / Full Screen'][0]==1
+    assert int(states['fullscreen']['screen_mode'][0])&1 and not (int(states['window']['screen_mode'][0])&1)
+    assert states['fullscreen']['size']==states['window']['size']==['1024','768']
+    assert states['sound_toggle']['sound']==['0']
+    assert states['tutorial_more']['page']==['A1.'] and states['tutorial_back']['page']==['A.']
+    assert states['tutorial_more']['paused']==states['tutorial_back']['paused']==['1'] # MORE/BACK의 일반 Tell은 Dialog1이지만 같은 Tutorial 자기 정지를 보존한다.
+    assert states['volume_changed']['musicVolume']==['4'] and states['volume_changed']['popup']==['']
+    assert states['volume_selected']['controls']['Volume 4'][-1]==1 and states['volume_selected']['controls']['Volume 2'][-1]==0
+    restart = OUTPUT/'restart.tsv'  # 저장 설정을 크기/소리/음량 덮어쓰기 없이 새 프로세스가 읽는다.
+    restart_steps, restart_frames = after_startup([(5, 'report', 'restarted')], 8) # 저장된 옵션을 읽는 새 프로세스에서도 실제 초기 안내를 닫는다.
+    restart.write_text(''.join(f'{frame}\t{operation}\t{argument}\n' for frame,operation,argument in restart_steps),encoding='utf-8')
+    run(executable,['--run',root,'--window','--mute-audio','--frames',str(restart_frames),'--ui-script',restart,'--ui-report',OUTPUT/'restart-states.tsv'])
+    restarted = reports(OUTPUT/'restart-states.tsv')['restarted']
+    assert restarted['musicVolume']==['4'] and restarted['sound']==['0'] and restarted['size']==['1024','768']
+    resolutions = []  # 실제 Yes 저장/종료와 재실행 크기/픽셀을 확인한 값만 기록한다.
+    for index,size in enumerate(((800,600),(640,480),(1024,768))):  # 원본3개 해상도를 같은 저장 결과에서 연속 재시작한다.
+        observed=resolution_roundtrip(executable,root,f'menu-{size[0]}',size,initial_size=(1024,768) if index==0 else None)
+        assert observed['startup']['size']==list(map(str,size))
+        resolutions.append(list(size))
+    return {'observed_states':len(states),'mission_objects':int(states['mission']['mission'][2]),
+            'tutorial_objects':int(states['tutorial_world']['mission'][2]),'native_window_navigation':True,
+            'resolution_changes':resolutions,'fullscreen_marker_event':True,'fullscreen_window_roundtrip':True,
+            'options_persist_after_restart':True}
 
 
 def main():

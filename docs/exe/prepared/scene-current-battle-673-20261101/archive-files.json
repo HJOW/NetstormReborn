@@ -1,0 +1,42 @@
+[
+  {
+    "path": "raw/base/cpppj/src/client/ClientAudio.cpp",
+    "length": 14915,
+    "sha256": "d0302ee6fc0783fd5bef854f13ccd2320b39b8b4ef1da6b691be02c642c9e012"
+  },
+  {
+    "path": "raw/base/cpppj/src/client/ClientAudio.h",
+    "length": 14484,
+    "sha256": "0c062fb993d8e85914a4546d7e421bc8924ba2456cc3e47481e8af1418e436ac"
+  },
+  {
+    "path": "raw/base/cpppj/src/client/SoundSceneMusic.cpp",
+    "length": 7490,
+    "sha256": "89729a963d5e3b113ce22296aba7af9dc407660d1fbc476a126a6e594833f5c0"
+  },
+  {
+    "path": "raw/base/cpppj/src/client/SoundSceneMusic.h",
+    "length": 12546,
+    "sha256": "d817a8eb1ab9e83ed991d03c9422fd47530796e832eaec477a4c18c3cb8ef043"
+  },
+  {
+    "path": "raw/manifest.json",
+    "length": 4329,
+    "sha256": "c4f0736b8afe7ae3cc41036a586a936121f193014463b721d2836bddfe30a558"
+  },
+  {
+    "path": "raw/proposed.patch",
+    "length": 17676,
+    "sha256": "272d4a1032bb2241244c76d8bdec9aeff3939214f0b40e7b0a1384224e248a98"
+  },
+  {
+    "path": "raw/scene-menu-music-audit.md",
+    "length": 7784,
+    "sha256": "585c1ba46b235d27357f59a5702f3a1faf1ca60387515c899175618e699893c1"
+  },
+  {
+    "path": "raw/startup-validation-audit.md",
+    "length": 7151,
+    "sha256": "33295c4c7ff06e4776a295d2f8e4e850fa0ebfa0704badc3b31f3aeb0de0b93a"
+  }
+]
