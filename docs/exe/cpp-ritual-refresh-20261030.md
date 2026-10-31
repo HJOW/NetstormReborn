@@ -29,8 +29,8 @@ CD 대응 의식 완료00482620은 로컬 조건에서 별도 wrapper004825f0을
 정적 분석으로 다음 사항을 확인했으며 아직 연결하지 않았다.
 
 - 로컬 `noIsland` 획득의 `localSpecial(0)`은0044fa00 랭크 상승이다. Core rank 쓰기,0042f540, 기존 내용물 삭제,004923a0 기술 선택,00470a90, NewRank/Tell/snapshot/004b54e0이 이어진다. 전체 흐름을 단순 rank 증가로 대체하면 안 된다.
-- 비로컬 일반 기술0048f380은 현재 Player 기술 contained를 추가하지 않는다. 실제 별도 Core 장부9×16BYTE의 owner 기록+4에 TYPE+1ec 기술 비트를 쓴다. `RawPlayerTechnology::Ensure`로 대신하지 않는다.
-- 비로컬 SP 정규화는0040ef30 getter→원문 정수 변환→00447810 정책 setter다. 현재 Session이 사용하지 않는 기존 `MakeDaisRegularHooks`의 직접 분산 SP 쓰기를 그대로 연결하면 현재 Editor/known/표시 정책이 빠진다. 실제 Session은 여전히 이 경계를 명시 미연결로 남긴다.
+- 비로컬 일반 기술0048f380은 현재 Player 기술 contained를 추가하지 않는다. 실제 별도 Core 장부9×16BYTE의 owner 기록+4에 TYPE+1ec 기술 비트를 쓴다. `RawPlayerTechnology::Ensure`로 대신하지 않는다. **후속642에서 실제 Client 장부에 연결했다.**
+- 비로컬 SP는0040ef30 getter→**5000 가산**→원문 정수 변환→00447810 정책 setter다. **599의 정적 설명에는 디컴파일에서 빠진 `004482b6 fadd [00507548]`가 누락돼 있었다. 후속642의 기계어 관측에서 수정하고 실제 Session에 연결했다.** Editor/known/표시 정책을 생략하는 기존 직접 분산 SP 쓰기 대체도 제거했다. 현재 근거는 [642](cpp-foreign-ritual-reward-20261031.md)를 따른다.
 - MP 상태/사망 안내와 Help 외부 OS 프로토콜은 별도 잔여다. 신규MP 검사는 하지 않는다.
 
 ## 산출물과 인계

@@ -193,7 +193,7 @@ DaisRegularHooks MakeDaisRegularHooks(const SidPool& pool,const SquidFrame& fram
     hooks.addShared=[&host](Sid sid,std::uint32_t event,float payload) { host.AddSharedRegular(sid,event,payload); };
     hooks.damageable=[&assets](Sid sid,std::uint32_t event,std::uint32_t count,float payload) { return assets.DamageableHandle(sid,event,count,payload); };
     hooks.addLocalSp=[&pool,&reward,&state,refreshSp=std::move(refreshSp)](float delta) { if (pool.Edition()==OriginalEdition::Patch1078) reward.AddSp(state.localOwner,delta);else { state.sp.cdLocalSp=static_cast<float>(static_cast<double>(state.sp.cdLocalSp)+static_cast<double>(delta));if (state.sp.fixedSpB) state.sp.cdLocalSp=100000.0F;refreshSp(); } };
-    hooks.normalizeForeignSp=[&pool,spStore](std::uint32_t owner) { if (pool.Edition()!=OriginalEdition::Patch1078 || !spStore || owner>kPlayerCount) throw std::logic_error("Dais 비로컬SP 판본/플레이어 범위");if (!owner) return;const auto value=std::bit_cast<float>(spStore->Get(owner));spStore->Set(owner,std::bit_cast<std::uint32_t>(static_cast<float>(Integer(value)))); };
+    // 비로컬 SP는 호출자가 실제 getter→5000 가산→정책 setter로 연결한다. 현재 known/Editor/UI를 모르는 직접 저장 대체는 설치하지 않는다.
     return hooks;
 }
 }

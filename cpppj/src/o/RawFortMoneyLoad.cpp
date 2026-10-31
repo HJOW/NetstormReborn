@@ -14,7 +14,13 @@ constexpr std::uint32_t kBonusSp=4000,kSpCheckCount=99; // 패치시작SP의가�
 template<class F> const F& NeedSp(const F& function) { if (!function) throw std::logic_error("현재 Player SP 지정 장치 누락");return function; }
 }
 
-// 현재 known/owner/Editor를 원문 위치에서 조회하고 같은 분산 SP·난수 쓰기를 실행한다.
+// 현재 known/owner를 원문 위치에서 조회하고 선택된 같은 분산 SP 잔액만 읽는다.
+float ReadPlayerSpAmount(std::uint32_t owner,ScrambledSpStore& store,const PlayerSpSetReads& reads) {
+    if (NeedSp(reads.clientActive)() && owner==NeedSp(reads.localOwner)()) return std::bit_cast<float>(store.Get(NeedSp(reads.localOwner)()));
+    const auto number=std::bit_cast<std::int32_t>(owner);
+    return number>0 && number<9 ? std::bit_cast<float>(store.Get(owner)) : 0.0F;
+}
+// 현재 known/owner/Editor를 다시 조회하는 정책 setter다. getter와 상태 사본을 공유하지 않는다.
 void SetPlayerSpAmount(std::int32_t owner,std::int32_t amount,ScrambledSpStore& store,const PlayerSpSetReads& reads,const std::function<void()>& refresh) {
     if (NeedSp(reads.clientActive)() && static_cast<std::uint32_t>(owner)==NeedSp(reads.localOwner)()) {
         const float value=NeedSp(reads.editor)() ? kSpecialLocalSp : static_cast<float>(amount);

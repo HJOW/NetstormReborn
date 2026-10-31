@@ -51,8 +51,8 @@ struct DaisRegularHooks {
     std::function<RawPathStartType(Sid)> pathMetadata; // 마지막 점 교체 뒤 Prepare가 읽는 현재 speed/turningSpeed다.
     std::function<float(Sid,std::uint32_t,std::uint32_t,float)> damageable; // 같은 기존 DamageableHandle 전체 몸체다.
     std::function<void(float)> addLocalSp; // 패치Reward.AddSp, CD Get/Set/표시의 정확한 local5000이다.
-    std::function<void(std::uint32_t)> normalizeForeignSp; // 패치의 비로컬 너겟 획득은 현재 SP를 절삭해 동일 저장소에 다시 쓴다.
-    std::function<void(std::uint32_t,std::uint32_t)> grantForeignType; // 패치만 비로컬 다른 타입의 실제 허용 목록을 바꾼다.
+    std::function<void(std::uint32_t)> normalizeForeignSp; // 패치의 비로컬 너겟 획득은 현재 SP+5000을 절삭해 실제 정책 setter에 넘긴다.
+    std::function<void(std::uint32_t,std::uint32_t)> grantForeignType; // 패치만 별도9×16 Core 장부의 owner 기술 비트를 켠다.
     std::function<void(std::uint32_t)> localSpecial; // noIsland 획득 시 로컬의 실제 특수 요청을 원본 인수0으로 호출한다.
     std::function<void(std::uint32_t)> localType; // 나머지 로컬 타입 획득의 실제 선택 초기화를 수행한다.
     std::function<void(std::uint32_t)> refreshOwner; // 희생 종료에서 현재1..8 플레이어의 실제 갱신을 순서대로 호출한다.
@@ -105,7 +105,7 @@ private:
     DaisRegularState& state_; // 공유 원본 전역의 참조와 현재 player 필드다.
     DaisRegularHooks hooks_; // 실제 프레임/삭제/음향/예약/장치/UI 효과다.
 };
-// 실제 Frame/Host/Damageable/SP 저장소를 연결한다. 나머지 UI·음향·삭제/mapper·메타는 caller가 실제 연결한다.
+// 실제 Frame/Host/Damageable/로컬 SP를 연결한다. 비로컬 SP의 현재 getter/정책 setter와 나머지 UI·음향·삭제/mapper·메타는 caller가 실제 연결한다.
 DaisRegularHooks MakeDaisRegularHooks(const SidPool& pool,const SquidFrame& frame,SquidProcessHost& host,const RawAssetRegular& assets,
     SquidReward& reward,ScrambledSpStore* spStore,DaisRegularState& state,std::function<void()> refreshSp,DaisRegularHooks hooks);
 }

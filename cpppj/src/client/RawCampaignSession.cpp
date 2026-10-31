@@ -1,6 +1,7 @@
 // 기존 원본 몸체의 단일 저장소 조립을 실제 클라이언트 세션이 소유한다.
 #include "client/RawCampaignSession.h"
 #include "o/RawRitualRefresh.h" //같은 현재 Session의 로컬 의식 완료 기록을 연결한다.
+#include "o/RawForeignRitualReward.h" //비로컬 보상도 현재 분산 SP와 Client 수명의 별도 Core 장부를 사용한다.
 #include "client/ClientChatWindowGlobals.h"
 #include "client/RawChatRelay.h"
 #include "client/RawBattleLeave.h"

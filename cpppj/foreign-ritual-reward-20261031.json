@@ -1,0 +1,155 @@
+{
+  "unit": 642,
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon / 2026-10-23",
+  "productChanged": true,
+  "native": {
+    "host": "HJOW-Athlon",
+    "lastDecompileHost": "HJOW-Athlon / 2026-10-23",
+    "sourceAbsentBeforeObservation": true,
+    "uniqueInputs": 252,
+    "observations": 504,
+    "precisionDifferences": 12,
+    "spAddendAddress": "00507548",
+    "spAddendBits": "00409c45",
+    "gameOrOsExecuted": false,
+    "sha256": {
+      "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+      "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+      "tools/decomp_foreign_ritual_reward.py": "ca63dc87e4fe9dfc4be42b32e503996e24c0878d1f4e868a3b1c2843d9239beb",
+      "cpppj/tests/fixtures/foreign-ritual-reward-x86.tsv": "d24f26652aae2a1c4cee5bf92a6ca212b0006b176670e522431f6fa9d65f4983"
+    }
+  },
+  "nativeInputsUnchanged": true,
+  "nativeChangedPaths": [],
+  "productComparedObservations": 324,
+  "extendedPrecisionSpAuditObservations": 180,
+  "registeredCppTests": 3559,
+  "focusedTests": [
+    {
+      "filter": "ForeignRitualReward_",
+      "names": [
+        "ForeignRitualReward_CoreReplaysIndependentNative144",
+        "ForeignRitualReward_SpReplaysNative53Bit180WithActualStoreAndPolicy",
+        "ForeignRitualReward_GetterPreservesLazyAndCurrentOwnerReads",
+        "ForeignRitualReward_CoreDiagnosticAndClientLedgerAreCurrent"
+      ],
+      "executed": 4,
+      "failedChecks": 0,
+      "exitCode": 0
+    },
+    {
+      "filter": "FortMoneyLoad_",
+      "names": [
+        "FortMoneyLoad_ReplaysPatchNative",
+        "FortMoneyLoad_ReplaysCdNative",
+        "FortMoneyLoad_SharesCurrentWorldOwnerStoreAndRandom",
+        "FortMoneyLoad_SelectsAfterDepthAndTemplateDiagnostic"
+      ],
+      "executed": 4,
+      "failedChecks": 0,
+      "exitCode": 0
+    },
+    {
+      "filter": "PlayerCoreRecords_",
+      "names": [
+        "PlayerCoreRecords_ReplaysIndependentPe186AndSeparatesColorTable6",
+        "PlayerCoreRecords_ShortPhysicalViewsPreserveOrderedPrefix",
+        "PlayerCoreRecords_MetadataPreservesPaddingAndCopiesInputValues"
+      ],
+      "executed": 3,
+      "failedChecks": 0,
+      "exitCode": 0
+    },
+    {
+      "filter": "ClientCoreRecords_",
+      "names": [
+        "ClientCoreRecords_OneOwnerHasSeparateRecordsAndLastKnown",
+        "ClientCoreRecords_CoreSelectionDoesNotResetSavedRecords"
+      ],
+      "executed": 2,
+      "failedChecks": 0,
+      "exitCode": 0
+    },
+    {
+      "filter": "PlayerCoreRefresh_",
+      "names": [
+        "PlayerCoreRefresh_ReplaysIndependentPe618SupportedObservations",
+        "PlayerCoreRefresh_ShortCoreRejectsWholeStoreAndMissingLaterDeviceKeepsZero",
+        "PlayerCoreRefresh_RequiredBitDiagnosticKeepsCapturedCoreAndAllowsReentry",
+        "PlayerCoreRefresh_ReplaysGuard16AndSeparatesPartialStore4",
+        "SessionPlayerCoreRefresh_CurrentLoginAliasAndActualDaisCount",
+        "SessionPlayerCoreRefresh_RequiresActualSelectionAndSupportsSharedCoreWithoutLogin",
+        "SessionPlayerCoreRefresh_UnknownSelectedVirtualKeepsTechnologyPrefix"
+      ],
+      "executed": 7,
+      "failedChecks": 0,
+      "exitCode": 0
+    },
+    {
+      "filter": "SessionPlayerCoreRefresh_",
+      "names": [
+        "SessionPlayerCoreRefresh_CurrentLoginAliasAndActualDaisCount",
+        "SessionPlayerCoreRefresh_RequiresActualSelectionAndSupportsSharedCoreWithoutLogin",
+        "SessionPlayerCoreRefresh_UnknownSelectedVirtualKeepsTechnologyPrefix"
+      ],
+      "executed": 3,
+      "failedChecks": 0,
+      "exitCode": 0
+    },
+    {
+      "filter": "RitualRefresh_",
+      "names": [
+        "RitualRefresh_Native54CurrentOwnerAndPartialEffects",
+        "RitualRefresh_SelectedMissingBoundaryAndCd"
+      ],
+      "executed": 2,
+      "failedChecks": 0,
+      "exitCode": 0
+    },
+    {
+      "filter": "rawDaisRegular_core",
+      "names": [
+        "rawDaisRegular_core_native_frames_604_and_eligibility"
+      ],
+      "executed": 1,
+      "failedChecks": 0,
+      "exitCode": 0
+    }
+  ],
+  "focusedExecuted": 26,
+  "failedChecks": 0,
+  "build": {
+    "exitCode": 0,
+    "warningCount": 0,
+    "errorCount": 0,
+    "log": "extracted\\cpp-642-build-v3.log",
+    "initialCmakeRegistrationFailure": "extracted/cpp-642-build-v1.log",
+    "compilationPassLog": "extracted/cpp-642-build-v2.log",
+    "compilationPassWarningCount": 0,
+    "compilationPassErrorCount": 0
+  },
+  "protection": {
+    "inherited": 2629,
+    "inheritedChanged": [],
+    "newBaselineCount": 2630,
+    "fixtureCount": 771,
+    "baseline": "extracted\\cpp-foreign-ritual-reward-642-20261031\\protected-after-current.json"
+  },
+  "exeSha256": "6b8fa3fe7bbf62d9cada5a184f03f7babcff2bc4a8ca4eb6ced0d365d54f23b9",
+  "testExeSha256": "32162c9c70c6f0a499b585d89b6cdb8b181016d13c62b6c4031841290b296f47",
+  "actualGameExecuted": false,
+  "captureSacrificeAttackOrVictoryExecuted": false,
+  "multiplayerTestsExecuted": false,
+  "completeGoal": false,
+  "previous34RouteEvidence": "unit641 / product637 / 34 final successes from35 executions, not this product",
+  "remaining": [
+    "0044fa00 전체 랭크 상승",
+    "MP 상태/사망 안내",
+    "허용 범위의 비멀티 UI/Edit/State 수명 및 후순위 요구사항"
+  ],
+  "focusedUniqueExecuted": 23,
+  "focusedRepeatedInvocations": 3,
+  "focusedRepeatedReason": "부분문자열 PlayerCoreRefresh_ 필터에 Session 3개가 이미 포함된 것을 놓쳐 같은 3개를 한 번 더 실행했다. 전체26회/고유23개이며 추가 재실행은 하지 않았다."
+}

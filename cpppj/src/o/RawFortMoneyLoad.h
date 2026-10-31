@@ -7,6 +7,8 @@ namespace netstorm::o {
 struct PlayerSpSetReads {
     std::function<std::uint32_t()> clientActive,localOwner,editor; //00595344/00540c70/005c85a4의 현재 DWORD 조회다.
 };
+//0040ef30: 활성 로컬은 현재 owner를 재조회하고 그 밖에는 signed 번호1~8일 때만 분산 잔액을 읽는다.
+float ReadPlayerSpAmount(std::uint32_t owner,ScrambledSpStore& store,const PlayerSpSetReads& reads);
 //00447810의 같은 지정 몸체를 Fort Money와 Session 없는 State 정리가 공유한다. 표시 callback은 로컬 활성 분기에서만 필요하다.
 void SetPlayerSpAmount(std::int32_t owner,std::int32_t amount,ScrambledSpStore& store,const PlayerSpSetReads& reads,const std::function<void()>& refresh);
 // MemStream이 실제로 읽는 pos/end DWORD다. 저장금액의float값은 이함수에서 사용하지 않는다.

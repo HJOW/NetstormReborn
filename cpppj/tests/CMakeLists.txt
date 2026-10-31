@@ -1,4 +1,5 @@
 # 현재 작업본·설치 checkpoint와 독립 부모의 최초 관측을 공용 회귀에 포함한다.
+set_source_files_properties(ForeignRitualRewardTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_FOREIGN_RITUAL_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/foreign-ritual-reward-x86.tsv\"")
 set_source_files_properties(WorldGeyserTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_WORLD_GEYSER_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/world-geyser-x86.tsv\"") # 실제00486440의 최초 원문 요청/상태다.
 set_source_files_properties(WorldGeyserBoundsTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_WORLD_GEYSER_BOUNDS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/world-geyser-bounds-x86.tsv\"") # 전체/분할 범위와 Player 예산의 최초 원문 출력이다.
 set_source_files_properties(RetreatConfirmationTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_RETREAT_CONFIRMATION_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/retreat-confirmation-x86.tsv\"") #signed 확인 관문의 최초 원문 출력만 사용한다.
@@ -2058,7 +2059,7 @@ set_property(SOURCE SunFlyerFrameTests.cpp APPEND PROPERTY COMPILE_DEFINITIONS
 set_source_files_properties(DissolveLifetimeTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_DISSOLVE_LIFETIME_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/dissolve-lifetime-x86.tsv\"")
 
-target_sources(netstorm_tests PRIVATE PriestPanicTests.cpp)
+target_sources(netstorm_tests PRIVATE PriestPanicTests.cpp ForeignRitualRewardTests.cpp) #비로컬 보상의 독립 PE와 실제 SP/Core 경계도 등록한다.
 
 # 원문 최초 관측과 실제 Client 소유자를 구별해 신규34검사를 같은 실행 파일에 등록한다.
 target_sources(netstorm_tests PRIVATE ColorSortFixedInputTests.cpp StateWorldCleanupTests.cpp

@@ -2331,3 +2331,6 @@ docs/exe/cpp-camera-pan-20261030.md text eol=lf
 # 고정615 제품의 전체34/별도확대pan 차이와 사용자 중지 인계 바이트를 보존한다.
 cpppj/solo-pan-current-runtime-20261030.json text eol=lf
 docs/exe/cpp-solo-pan-current-20261030.md text eol=lf
+
+# 제품 수정 전에 고정한 비로컬 의식 보상의 최초 CPU 출력 바이트다.
+cpppj/tests/fixtures/foreign-ritual-reward-x86.tsv -text whitespace=-blank-at-eol

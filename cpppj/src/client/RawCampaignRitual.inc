@@ -114,7 +114,17 @@ void ConnectRitual() {
     }; // 원본4cf960은 같은Tell(key,0) wrapper다. 멀티플레이 이름/상태 인자 안내는 별도 경계로 남긴다.
     dais.localType=[this](auto type) { if (!learnNewTechnology) throw std::logic_error("로컬 기술 획득의 현재 Session 진입 미연결");learnNewTechnology(type); }; //Help와 같은 실제492a30을 사용하고 selectedType 쓰기는 원문 상위 부모에 남긴다.
     dais.refreshLocal=[this] { if (!refreshLocalRitual) throw std::logic_error("의식 뒤 현재 Session 갱신 진입 미연결");refreshLocalRitual(); }; //단순 화면 갱신이 아니라 원래 Core/CoreData/전체 snapshot 순서다.
-    FillMissing(dais.normalizeForeignSp);FillMissing(dais.grantForeignType);FillMissing(dais.localSpecial);FillMissing(dais.multiplayerStatus);
+    dais.normalizeForeignSp=[this](std::uint32_t owner) {
+        const PlayerSpSetReads reads{[this] { return playerState.playerKnown; },[this] { return playerState.battleOwner; },[this] { return globals.editor; }}; // 각 getter/setter의 실제 조회 시점에 현재 전역을 빌린다.
+        GrantForeignRitualSp(owner,[this,&reads](auto player) { return ReadPlayerSpAmount(player,sp,reads); },
+            [this,&reads](auto player,auto amount) { SetPlayerSpAmount(player,amount,sp,reads,services.refreshSp); });
+    }; // 기존 hook명과 달리 원문은 현재 SP+5000을 절삭한 지정이며 AI 지갑 가산이 아니다.
+    dais.grantForeignType=[this](std::uint32_t owner,std::uint32_t type) {
+        GrantForeignRitualType({coreDataGlobals->Records(),0},owner,type,[this](auto selected) {
+            if (selected>=core.types.size()) throw std::out_of_range("비로컬 의식의 현재 TYPE 물리 범위");return core.types[selected].techBitIndex;
+        },SessionMissing<void,std::uint32_t>());
+    }; // Player contained 기술 목록이 아니라 실제 Client 장부9×16의 Core에 기록한다.
+    FillMissing(dais.localSpecial);FillMissing(dais.multiplayerStatus);
     daisRegular=std::make_unique<RawDaisRegular>(core.pool,core.hash,core.types,core.frames,*templeRitual,*runePostPop,priests->Carrier(),core.processes,*ritualLookup,motion->Paths().Starter(),*daisState,std::move(dais));
     PriestSacrificeRequestHooks request; // 두 wrapper는 실제 같은 Dais/내용물/음악을 호출한다.
     request.allowed=[this](Sid dais,Sid priest) { PrepareRitual();return daisRegular->CanBridge(dais,priest); };
