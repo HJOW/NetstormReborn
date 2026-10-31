@@ -1,0 +1,2168 @@
+{
+  "unit": 638,
+  "complete": true,
+  "goalComplete": false,
+  "productUnit": 637,
+  "gameSha256": "3923635e953752cbe09e4bfa9158ba401b5d73195e3157cf96f3740a12b2ed33",
+  "packageSha256": "624ee85b91ca298d940792c35380177dc5a0f164b6e1668a8fbe138d45beb0f8",
+  "testedSourceSha256": {
+    "cpppj/package-cpppj.ps1": "3e6c92e85067ec6de9fca1c0962c4419031610998611621ab69df159b2d2f518",
+    "cpppj/src/app/main.cpp": "842a9c99c485da60441b9bf95e62e1dff2f536b37dacbb079038cd6a56ebe878",
+    "cpppj/src/client/CameraHome.cpp": "0c1e369bab82e1ed41d69e5e892a5f849e4e102b4163867cf4391dfc3d0f418c",
+    "cpppj/src/client/CameraHome.h": "b5d7f6067ba180fc6988a0b09a811f1fc29a0c8172f29fe595e8cfaf1ecf5bdc",
+    "cpppj/src/client/CampaignClientServices.cpp": "c26faf0f231e7177f3dd59f758864bfc3f83657d93998d1a9f41f85d95c20716",
+    "cpppj/src/client/ClientCameraGlobals.cpp": "51137addbbda6208b098ad87d32724513c0db339ade7542b83c478f489d7b0e1",
+    "cpppj/src/client/ClientCameraGlobals.h": "ab58b15121a189e6197bb6f51f252e30e75a0c2e42387b46564dc8ca86e0e416",
+    "cpppj/src/client/GameWorld.cpp": "2e415f13cc51a4d1b0b26fbdf1339e44bacb733e85ac9ca8086f8c30471d3569",
+    "cpppj/src/client/GameWorld.h": "d208850f443a6948b620c73afe59b7814357afed9e5f62fab8cc338d15ed7f19",
+    "cpppj/src/client/RawCampaignSession.cpp": "e6cf184aeb87bd2cd08e749653e83c456694ef8df8a0d4ae2214b4165807159c",
+    "cpppj/src/client/RawCampaignSession.h": "a23ee6409c98ea4980c2cf87950b7e84793c132d9fdf4fd1704ee415cb983233",
+    "cpppj/src/client/UberGump.h": "45f511552d58caf26c842381979c77b3b49f5246a356a258ef4cac2190325a83",
+    "cpppj/src/client/UberGumpCamera.cpp": "51e24de0d67184309222c640425f59cf3258627ed97a719ccdb9aec01a607682",
+    "cpppj/src/platform/CMakeLists.txt": "e0eb47bac01baa861bfe450bf4034660677a36148ce0468f725aaaeb99f5f847",
+    "cpppj/src/platform/PortableStartup.cpp": "0ad4a0466ac2a915ea8954608c521f6bab9e34b0d23e264398f355e615ddfa96",
+    "cpppj/src/platform/PortableStartup.h": "92a837b3fed4d74f9b826f2a17b919c954ca0d63b9b513930b0b1d2439b70978",
+    "cpppj/tests/CMakeLists.txt": "facba0c6d9b5cc671e316ca8fdadab8832c1e7772c4e3ab6872a80e5cf52aa8d",
+    "cpppj/tests/CameraCommitTests.cpp": "4961666e09295fa25c9220f13ebc90e3f63600eedb1cf3b9320ff7733f1bdb25",
+    "cpppj/tests/CameraHomeTests.cpp": "7e21af4dfe7427e93e3e332d450be6f1cbf995171e2ba70b0914bd00ca1d76d8",
+    "cpppj/tests/CameraImmediateTests.inc": "66923e0c5c95ecb0a5de322ae08f1d9609b52ac3c1edd41e6a1a1718324d7719",
+    "cpppj/tests/CameraTestDevices.h": "846f44ffa13638816af2dc83a473226e6180f1f4c61b17665e6e4eeb3bcb72e3",
+    "cpppj/tests/CameraViewCommandsTests.cpp": "6c42f93bdd6f8195e324ec6b66eabf96fa414bd88d33e6655ce176502f2160ef",
+    "cpppj/tests/CampaignSessionTests.cpp": "1827e3763d502087a0df699463c212e87d6410e9cf43ef6a4e709a64853a7403",
+    "cpppj/tests/CampaignViewCommandsTests.cpp": "52c594be3d0b4c5b27fd819b44403e2cea58ae08b8fb4d4e4dca9a43cb584da8",
+    "cpppj/tests/HideBuildingsTests.cpp": "9bfb5d61246f48718a34ecb492e137dddea1d7405179bb2a4ab616003133d026",
+    "cpppj/tests/PortableStartupTests.cpp": "561afbc4b80d594cb38633093e732035e15dc4a6bd20bec67c85bb2951485aea",
+    "cpppj/tests/SessionPlayerCoreRefreshTests.cpp": "6f163dfd64cd8476b0dac5e60641ffbf50b66696233bf7121ca8ef24a10c0375",
+    "cpppj/tests/fixtures/camera-immediate-x86.tsv": "ec4fcc64884fb117046efbc27c0e6f58e045e787664c9c7038a032e02e97c6ca",
+    "tools/cpp_graph_entry_editor_smoke.py": "6c17864f45ff3704bbaff6d090bc097afb5203efbbcd727853e739c6162f2090",
+    "tools/cpp_solo_entry_smoke.py": "b27dfe94b25c78733ec07c5f8df26130168f75beae3f4ceb35754d2b8c7de665",
+    "tools/decomp_camera_immediate.py": "eea06c4319e4ad30a218fecf270eae172fdc43bc06aeca032cc48a674d43705a"
+  },
+  "runs": [
+    {
+      "mission": "TEST02",
+      "run": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-portable-startup-637-20261031\\gui\\한글 휴대 배포 😀\\NetstormReborn-cpppj\\Netstorm.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-portable-startup-637-20261031\\gui\\한글 휴대 배포 😀\\NetstormReborn-cpppj\\game",
+          "--mission",
+          "TEST02",
+          "--no-audio",
+          "--frames",
+          "280",
+          "--set",
+          "intro=1;WelcomeGiven=1;currentLanguage=english;tellTips=0;autoDemo=0;maxFPS=40;sleepPerLoop=8;SCREENW=1024;SCREENH=768;startInFullScreen=0",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-state-repeat-638-20261031\\TEST02\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-state-repeat-638-20261031\\TEST02\\states.tsv",
+          "--window"
+        ],
+        "binarySha256": "3923635e953752cbe09e4bfa9158ba401b5d73195e3157cf96f3740a12b2ed33",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 53.923546000005445,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "6950df30d7a2ab3a193319ad8e3e5b418f486a4e928682d67edb583421ff7fb1"
+      },
+      "comparisons": {
+        "play3": {
+          "same": true,
+          "actualSha256": "bb46a2ceda4966169220ba9c205728c21944cb3f851d9b90d94de009e276994b",
+          "expectedSha256": "bb46a2ceda4966169220ba9c205728c21944cb3f851d9b90d94de009e276994b",
+          "dimensions": [
+            1024,
+            768
+          ],
+          "outputRect": [
+            0,
+            0,
+            1024,
+            768
+          ]
+        },
+        "main": {
+          "same": true,
+          "actualSha256": "58042d78e2460d582a91c67a94935b04605bb8b42669cfa28671593003a98d42",
+          "expectedSha256": "58042d78e2460d582a91c67a94935b04605bb8b42669cfa28671593003a98d42",
+          "dimensions": [
+            1024,
+            768
+          ],
+          "outputRect": [
+            0,
+            0,
+            1024,
+            768
+          ]
+        }
+      },
+      "labels": [
+        "briefing",
+        "play1",
+        "reload1",
+        "play2",
+        "reload2",
+        "play3",
+        "leave1",
+        "resumed",
+        "leave2",
+        "main"
+      ]
+    },
+    {
+      "mission": "thewarbegins",
+      "run": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-portable-startup-637-20261031\\gui\\한글 휴대 배포 😀\\NetstormReborn-cpppj\\Netstorm.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-portable-startup-637-20261031\\gui\\한글 휴대 배포 😀\\NetstormReborn-cpppj\\game",
+          "--mission",
+          "thewarbegins",
+          "--no-audio",
+          "--frames",
+          "280",
+          "--set",
+          "intro=1;WelcomeGiven=1;currentLanguage=english;tellTips=0;autoDemo=0;maxFPS=40;sleepPerLoop=8;SCREENW=1280;SCREENH=720;startInFullScreen=1",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-state-repeat-638-20261031\\thewarbegins\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-state-repeat-638-20261031\\thewarbegins\\states.tsv"
+        ],
+        "binarySha256": "3923635e953752cbe09e4bfa9158ba401b5d73195e3157cf96f3740a12b2ed33",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 12.394729800005734,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "b6e26fa01498f2ed30a2fdc0a5e35f54e7583bd13fe4822591aa15b1c310a4c7"
+      },
+      "comparisons": {
+        "play3": {
+          "same": true,
+          "actualSha256": "0656408bb3452380e94a64b7b0544922590a90b6610a49233e671bcc9b859be4",
+          "expectedSha256": "0656408bb3452380e94a64b7b0544922590a90b6610a49233e671bcc9b859be4",
+          "dimensions": [
+            1920,
+            1080
+          ],
+          "outputRect": [
+            0,
+            0,
+            1920,
+            1080
+          ]
+        },
+        "main": {
+          "same": true,
+          "actualSha256": "b3b946fac3d45bbdbdb6f375d6e01664784674746b5f16725afc2a9549bd0e74",
+          "expectedSha256": "b3b946fac3d45bbdbdb6f375d6e01664784674746b5f16725afc2a9549bd0e74",
+          "dimensions": [
+            1920,
+            1080
+          ],
+          "outputRect": [
+            0,
+            0,
+            1920,
+            1080
+          ]
+        }
+      },
+      "labels": [
+        "briefing",
+        "play1",
+        "reload1",
+        "play2",
+        "reload2",
+        "play3",
+        "leave1",
+        "resumed",
+        "leave2",
+        "main"
+      ]
+    }
+  ],
+  "observed": {
+    "TEST02": {
+      "briefing": {
+        "phase": [
+          "2"
+        ],
+        "page": [
+          "loading"
+        ],
+        "paused": [
+          "0"
+        ],
+        "mission": [
+          "TEST02",
+          "Tutorial",
+          "0"
+        ],
+        "mission_start": [
+          "0",
+          "1",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_uber": [
+          "18",
+          "1",
+          "3",
+          "0",
+          "0",
+          "1024",
+          "768"
+        ],
+        "raw_hud_owners": [
+          "1",
+          "1",
+          "23",
+          "22",
+          "22"
+        ],
+        "fort_selection": [
+          "0",
+          "4",
+          "0",
+          "7",
+          ""
+        ],
+        "game_menu_bar": [
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_camera_frame": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "6",
+          "0",
+          "7",
+          "0"
+        ],
+        "raw_renderer_frame": [
+          "3",
+          "1",
+          "1",
+          "1",
+          "0",
+          "3",
+          "0",
+          "0",
+          "138",
+          "0",
+          "2",
+          "905969664",
+          "1",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_renderer_scene": [
+          "1",
+          "0",
+          "0",
+          "1",
+          "0",
+          "0",
+          "0",
+          "0",
+          "1",
+          "0",
+          "0"
+        ]
+      },
+      "play1": {
+        "phase": [
+          "4"
+        ],
+        "page": [
+          "mission"
+        ],
+        "paused": [
+          "0"
+        ],
+        "mission": [
+          "TEST02",
+          "Tutorial",
+          "1054"
+        ],
+        "mission_start": [
+          "1",
+          "4",
+          "0",
+          "0.498",
+          "0"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ],
+        "raw_world_modes": [
+          "0",
+          "1"
+        ],
+        "raw_uber": [
+          "232",
+          "1",
+          "3",
+          "85",
+          "0",
+          "1024",
+          "768"
+        ],
+        "raw_hud_owners": [
+          "1",
+          "1",
+          "220",
+          "236",
+          "219"
+        ],
+        "fort_selection": [
+          "0",
+          "14",
+          "0",
+          "0",
+          ""
+        ],
+        "game_menu_bar": [
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_camera_frame": [
+          "1792",
+          "1530",
+          "1792",
+          "1530",
+          "6",
+          "3",
+          "7",
+          "0"
+        ],
+        "raw_renderer_frame": [
+          "26",
+          "24",
+          "24",
+          "24",
+          "0",
+          "26",
+          "0",
+          "0",
+          "138",
+          "0",
+          "2",
+          "905969664",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_renderer_scene": [
+          "370",
+          "6308",
+          "1496",
+          "348",
+          "0",
+          "0",
+          "6308",
+          "1496",
+          "348",
+          "0",
+          "0"
+        ]
+      },
+      "reload1": {
+        "phase": [
+          "3"
+        ],
+        "page": [
+          "A."
+        ],
+        "paused": [
+          "1"
+        ],
+        "mission": [
+          "TEST02",
+          "Tutorial",
+          "1054"
+        ],
+        "mission_start": [
+          "1",
+          "4",
+          "0",
+          "15.556",
+          "0"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ],
+        "raw_world_modes": [
+          "0",
+          "1"
+        ],
+        "raw_uber": [
+          "514",
+          "1",
+          "3",
+          "85",
+          "0",
+          "1024",
+          "768"
+        ],
+        "raw_hud_owners": [
+          "1",
+          "1",
+          "482",
+          "518",
+          "481"
+        ],
+        "fort_selection": [
+          "0",
+          "14",
+          "0",
+          "0",
+          ""
+        ],
+        "game_menu_bar": [
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_camera_frame": [
+          "1792",
+          "1530",
+          "1792",
+          "1530",
+          "6",
+          "6",
+          "7",
+          "0"
+        ],
+        "raw_renderer_frame": [
+          "57",
+          "55",
+          "55",
+          "55",
+          "0",
+          "57",
+          "0",
+          "0",
+          "138",
+          "0",
+          "2",
+          "905969664",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_renderer_scene": [
+          "379",
+          "15199",
+          "3604",
+          "997",
+          "0",
+          "0",
+          "15199",
+          "3604",
+          "997",
+          "0",
+          "0"
+        ]
+      },
+      "play2": {
+        "phase": [
+          "4"
+        ],
+        "page": [
+          "mission"
+        ],
+        "paused": [
+          "0"
+        ],
+        "mission": [
+          "TEST02",
+          "Tutorial",
+          "1054"
+        ],
+        "mission_start": [
+          "1",
+          "4",
+          "0",
+          "15.556",
+          "0"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ],
+        "raw_world_modes": [
+          "0",
+          "1"
+        ],
+        "raw_uber": [
+          "514",
+          "1",
+          "3",
+          "85",
+          "0",
+          "1024",
+          "768"
+        ],
+        "raw_hud_owners": [
+          "1",
+          "1",
+          "482",
+          "518",
+          "481"
+        ],
+        "fort_selection": [
+          "0",
+          "14",
+          "0",
+          "0",
+          ""
+        ],
+        "game_menu_bar": [
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_camera_frame": [
+          "1792",
+          "1530",
+          "1792",
+          "1530",
+          "6",
+          "6",
+          "7",
+          "0"
+        ],
+        "raw_renderer_frame": [
+          "82",
+          "80",
+          "80",
+          "80",
+          "0",
+          "82",
+          "0",
+          "0",
+          "138",
+          "0",
+          "2",
+          "905969664",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_renderer_scene": [
+          "378",
+          "22374",
+          "5304",
+          "1576",
+          "0",
+          "0",
+          "22374",
+          "5304",
+          "1576",
+          "0",
+          "0"
+        ]
+      },
+      "reload2": {
+        "phase": [
+          "3"
+        ],
+        "page": [
+          "A."
+        ],
+        "paused": [
+          "1"
+        ],
+        "mission": [
+          "TEST02",
+          "Tutorial",
+          "1054"
+        ],
+        "mission_start": [
+          "1",
+          "4",
+          "0",
+          "31.432",
+          "0"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ],
+        "raw_world_modes": [
+          "0",
+          "1"
+        ],
+        "raw_uber": [
+          "835",
+          "1",
+          "3",
+          "85",
+          "0",
+          "1024",
+          "768"
+        ],
+        "raw_hud_owners": [
+          "1",
+          "1",
+          "783",
+          "839",
+          "782"
+        ],
+        "fort_selection": [
+          "0",
+          "14",
+          "0",
+          "0",
+          ""
+        ],
+        "game_menu_bar": [
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_camera_frame": [
+          "1792",
+          "1530",
+          "1792",
+          "1530",
+          "6",
+          "9",
+          "7",
+          "0"
+        ],
+        "raw_renderer_frame": [
+          "118",
+          "116",
+          "116",
+          "116",
+          "0",
+          "118",
+          "0",
+          "0",
+          "138",
+          "0",
+          "2",
+          "905969664",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_renderer_scene": [
+          "376",
+          "32700",
+          "7752",
+          "2409",
+          "0",
+          "0",
+          "32700",
+          "7752",
+          "2409",
+          "0",
+          "0"
+        ]
+      },
+      "play3": {
+        "phase": [
+          "4"
+        ],
+        "page": [
+          "mission"
+        ],
+        "paused": [
+          "0"
+        ],
+        "mission": [
+          "TEST02",
+          "Tutorial",
+          "1054"
+        ],
+        "mission_start": [
+          "1",
+          "4",
+          "0",
+          "31.432",
+          "0"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ],
+        "raw_world_modes": [
+          "0",
+          "1"
+        ],
+        "raw_uber": [
+          "835",
+          "1",
+          "3",
+          "85",
+          "0",
+          "1024",
+          "768"
+        ],
+        "raw_hud_owners": [
+          "1",
+          "1",
+          "783",
+          "839",
+          "782"
+        ],
+        "fort_selection": [
+          "0",
+          "14",
+          "0",
+          "0",
+          ""
+        ],
+        "game_menu_bar": [
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_camera_frame": [
+          "1792",
+          "1530",
+          "1792",
+          "1530",
+          "6",
+          "9",
+          "7",
+          "0"
+        ],
+        "raw_renderer_frame": [
+          "143",
+          "141",
+          "141",
+          "141",
+          "0",
+          "143",
+          "0",
+          "0",
+          "138",
+          "0",
+          "2",
+          "905969664",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_renderer_scene": [
+          "375",
+          "39875",
+          "9452",
+          "2888",
+          "0",
+          "0",
+          "39875",
+          "9452",
+          "2888",
+          "0",
+          "0"
+        ]
+      },
+      "leave1": {
+        "phase": [
+          "1"
+        ],
+        "page": [
+          "ABORT"
+        ],
+        "paused": [
+          "1"
+        ],
+        "mission": [
+          "TEST02",
+          "Tutorial",
+          "1054"
+        ],
+        "mission_start": [
+          "1",
+          "4",
+          "0",
+          "31.432",
+          "0"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ],
+        "raw_world_modes": [
+          "0",
+          "1"
+        ],
+        "raw_uber": [
+          "835",
+          "1",
+          "3",
+          "85",
+          "0",
+          "1024",
+          "768"
+        ],
+        "raw_hud_owners": [
+          "1",
+          "1",
+          "783",
+          "839",
+          "782"
+        ],
+        "fort_selection": [
+          "0",
+          "14",
+          "0",
+          "0",
+          ""
+        ],
+        "game_menu_bar": [
+          "981",
+          "0",
+          "147"
+        ],
+        "raw_camera_frame": [
+          "1792",
+          "1530",
+          "1792",
+          "1530",
+          "6",
+          "9",
+          "7",
+          "0"
+        ],
+        "raw_renderer_frame": [
+          "173",
+          "171",
+          "171",
+          "171",
+          "0",
+          "173",
+          "0",
+          "0",
+          "138",
+          "0",
+          "2",
+          "905969664",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_renderer_scene": [
+          "389",
+          "48485",
+          "11492",
+          "3687",
+          "0",
+          "0",
+          "48485",
+          "11492",
+          "3687",
+          "0",
+          "0"
+        ]
+      },
+      "resumed": {
+        "phase": [
+          "4"
+        ],
+        "page": [
+          "mission"
+        ],
+        "paused": [
+          "0"
+        ],
+        "mission": [
+          "TEST02",
+          "Tutorial",
+          "1054"
+        ],
+        "mission_start": [
+          "1",
+          "4",
+          "0",
+          "31.432",
+          "0"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ],
+        "raw_world_modes": [
+          "0",
+          "1"
+        ],
+        "raw_uber": [
+          "835",
+          "1",
+          "3",
+          "85",
+          "0",
+          "1024",
+          "768"
+        ],
+        "raw_hud_owners": [
+          "1",
+          "1",
+          "783",
+          "839",
+          "782"
+        ],
+        "fort_selection": [
+          "0",
+          "14",
+          "0",
+          "0",
+          ""
+        ],
+        "game_menu_bar": [
+          "981",
+          "0",
+          "147"
+        ],
+        "raw_camera_frame": [
+          "1792",
+          "1530",
+          "1792",
+          "1530",
+          "6",
+          "9",
+          "7",
+          "0"
+        ],
+        "raw_renderer_frame": [
+          "193",
+          "191",
+          "191",
+          "191",
+          "0",
+          "193",
+          "0",
+          "0",
+          "138",
+          "0",
+          "2",
+          "905969664",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_renderer_scene": [
+          "386",
+          "54225",
+          "12852",
+          "4324",
+          "0",
+          "0",
+          "54225",
+          "12852",
+          "4324",
+          "0",
+          "0"
+        ]
+      },
+      "leave2": {
+        "phase": [
+          "1"
+        ],
+        "page": [
+          "ABORT"
+        ],
+        "paused": [
+          "1"
+        ],
+        "mission": [
+          "TEST02",
+          "Tutorial",
+          "1054"
+        ],
+        "mission_start": [
+          "1",
+          "4",
+          "0",
+          "31.432",
+          "0"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ],
+        "raw_world_modes": [
+          "0",
+          "1"
+        ],
+        "raw_uber": [
+          "835",
+          "1",
+          "3",
+          "85",
+          "0",
+          "1024",
+          "768"
+        ],
+        "raw_hud_owners": [
+          "1",
+          "1",
+          "783",
+          "839",
+          "782"
+        ],
+        "fort_selection": [
+          "0",
+          "14",
+          "0",
+          "0",
+          ""
+        ],
+        "game_menu_bar": [
+          "1095",
+          "0",
+          "150"
+        ],
+        "raw_camera_frame": [
+          "1792",
+          "1530",
+          "1792",
+          "1530",
+          "6",
+          "9",
+          "7",
+          "0"
+        ],
+        "raw_renderer_frame": [
+          "223",
+          "221",
+          "221",
+          "221",
+          "0",
+          "223",
+          "0",
+          "0",
+          "138",
+          "0",
+          "2",
+          "905969664",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_renderer_scene": [
+          "398",
+          "62788",
+          "14892",
+          "5423",
+          "0",
+          "0",
+          "62788",
+          "14892",
+          "5423",
+          "0",
+          "0"
+        ]
+      },
+      "main": {
+        "phase": [
+          "0"
+        ],
+        "page": [
+          "main"
+        ],
+        "paused": [
+          "0"
+        ],
+        "raw_uber": [
+          "1275",
+          "1",
+          "3",
+          "0",
+          "0",
+          "1024",
+          "768"
+        ],
+        "raw_hud_owners": [
+          "1",
+          "1",
+          "1200",
+          "1279",
+          "1199"
+        ],
+        "fort_selection": [
+          "0",
+          "4",
+          "0",
+          "0",
+          ""
+        ],
+        "game_menu_bar": [
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_camera_frame": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "6",
+          "9",
+          "7",
+          "0"
+        ],
+        "raw_renderer_frame": [
+          "248",
+          "232",
+          "232",
+          "232",
+          "0",
+          "248",
+          "0",
+          "0",
+          "138",
+          "0",
+          "2",
+          "905969664",
+          "1",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_renderer_scene": [
+          "17",
+          "65638",
+          "15572",
+          "5882",
+          "0",
+          "0",
+          "65638",
+          "15572",
+          "5882",
+          "0",
+          "0"
+        ]
+      }
+    },
+    "thewarbegins": {
+      "briefing": {
+        "phase": [
+          "2"
+        ],
+        "page": [
+          "loading"
+        ],
+        "paused": [
+          "0"
+        ],
+        "mission": [
+          "thewarbegins",
+          "Tutorial",
+          "0"
+        ],
+        "mission_start": [
+          "0",
+          "1",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_uber": [
+          "18",
+          "1",
+          "3",
+          "0",
+          "0",
+          "1280",
+          "720"
+        ],
+        "raw_hud_owners": [
+          "1",
+          "1",
+          "23",
+          "22",
+          "22"
+        ],
+        "fort_selection": [
+          "0",
+          "4",
+          "0",
+          "7",
+          ""
+        ],
+        "game_menu_bar": [
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_camera_frame": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "6",
+          "0",
+          "7",
+          "0"
+        ],
+        "raw_renderer_frame": [
+          "3",
+          "1",
+          "1",
+          "1",
+          "0",
+          "3",
+          "0",
+          "0",
+          "139",
+          "0",
+          "2",
+          "905969664",
+          "1",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_renderer_scene": [
+          "1",
+          "0",
+          "0",
+          "1",
+          "0",
+          "0",
+          "0",
+          "0",
+          "1",
+          "0",
+          "0"
+        ]
+      },
+      "play1": {
+        "phase": [
+          "4"
+        ],
+        "page": [
+          "mission"
+        ],
+        "paused": [
+          "0"
+        ],
+        "mission": [
+          "thewarbegins",
+          "Tutorial",
+          "172"
+        ],
+        "mission_start": [
+          "1",
+          "4",
+          "0",
+          "0.506",
+          "0"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ],
+        "raw_world_modes": [
+          "0",
+          "1"
+        ],
+        "raw_uber": [
+          "232",
+          "1",
+          "3",
+          "85",
+          "0",
+          "1280",
+          "720"
+        ],
+        "raw_hud_owners": [
+          "1",
+          "1",
+          "220",
+          "236",
+          "219"
+        ],
+        "fort_selection": [
+          "0",
+          "14",
+          "0",
+          "0",
+          ""
+        ],
+        "game_menu_bar": [
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_camera_frame": [
+          "848",
+          "817",
+          "848",
+          "817",
+          "6",
+          "3",
+          "7",
+          "0"
+        ],
+        "raw_renderer_frame": [
+          "26",
+          "24",
+          "24",
+          "24",
+          "0",
+          "26",
+          "0",
+          "0",
+          "139",
+          "0",
+          "2",
+          "905969664",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_renderer_scene": [
+          "315",
+          "5522",
+          "1078",
+          "372",
+          "0",
+          "0",
+          "5522",
+          "1078",
+          "372",
+          "0",
+          "0"
+        ]
+      },
+      "reload1": {
+        "phase": [
+          "3"
+        ],
+        "page": [
+          "A."
+        ],
+        "paused": [
+          "1"
+        ],
+        "mission": [
+          "thewarbegins",
+          "Tutorial",
+          "172"
+        ],
+        "mission_start": [
+          "1",
+          "4",
+          "0",
+          "2.562",
+          "0"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ],
+        "raw_world_modes": [
+          "0",
+          "1"
+        ],
+        "raw_uber": [
+          "501",
+          "1",
+          "3",
+          "85",
+          "0",
+          "1280",
+          "720"
+        ],
+        "raw_hud_owners": [
+          "1",
+          "1",
+          "470",
+          "505",
+          "469"
+        ],
+        "fort_selection": [
+          "0",
+          "14",
+          "0",
+          "0",
+          ""
+        ],
+        "game_menu_bar": [
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_camera_frame": [
+          "848",
+          "817",
+          "848",
+          "817",
+          "6",
+          "6",
+          "7",
+          "0"
+        ],
+        "raw_renderer_frame": [
+          "57",
+          "55",
+          "55",
+          "55",
+          "0",
+          "57",
+          "0",
+          "0",
+          "139",
+          "0",
+          "2",
+          "905969664",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_renderer_scene": [
+          "324",
+          "13303",
+          "2597",
+          "1039",
+          "0",
+          "0",
+          "13303",
+          "2597",
+          "1039",
+          "0",
+          "0"
+        ]
+      },
+      "play2": {
+        "phase": [
+          "4"
+        ],
+        "page": [
+          "mission"
+        ],
+        "paused": [
+          "0"
+        ],
+        "mission": [
+          "thewarbegins",
+          "Tutorial",
+          "172"
+        ],
+        "mission_start": [
+          "1",
+          "4",
+          "0",
+          "2.562",
+          "0"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ],
+        "raw_world_modes": [
+          "0",
+          "1"
+        ],
+        "raw_uber": [
+          "501",
+          "1",
+          "3",
+          "85",
+          "0",
+          "1280",
+          "720"
+        ],
+        "raw_hud_owners": [
+          "1",
+          "1",
+          "470",
+          "505",
+          "469"
+        ],
+        "fort_selection": [
+          "0",
+          "14",
+          "0",
+          "0",
+          ""
+        ],
+        "game_menu_bar": [
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_camera_frame": [
+          "848",
+          "817",
+          "848",
+          "817",
+          "6",
+          "6",
+          "7",
+          "0"
+        ],
+        "raw_renderer_frame": [
+          "82",
+          "80",
+          "80",
+          "80",
+          "0",
+          "82",
+          "0",
+          "0",
+          "139",
+          "0",
+          "2",
+          "905969664",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_renderer_scene": [
+          "324",
+          "19578",
+          "3822",
+          "1603",
+          "0",
+          "0",
+          "19578",
+          "3822",
+          "1603",
+          "0",
+          "0"
+        ]
+      },
+      "reload2": {
+        "phase": [
+          "3"
+        ],
+        "page": [
+          "A."
+        ],
+        "paused": [
+          "1"
+        ],
+        "mission": [
+          "thewarbegins",
+          "Tutorial",
+          "172"
+        ],
+        "mission_start": [
+          "1",
+          "4",
+          "0",
+          "4.891",
+          "0"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ],
+        "raw_world_modes": [
+          "0",
+          "1"
+        ],
+        "raw_uber": [
+          "814",
+          "1",
+          "3",
+          "85",
+          "0",
+          "1280",
+          "720"
+        ],
+        "raw_hud_owners": [
+          "1",
+          "1",
+          "764",
+          "818",
+          "763"
+        ],
+        "fort_selection": [
+          "0",
+          "14",
+          "0",
+          "0",
+          ""
+        ],
+        "game_menu_bar": [
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_camera_frame": [
+          "848",
+          "817",
+          "848",
+          "817",
+          "6",
+          "9",
+          "7",
+          "0"
+        ],
+        "raw_renderer_frame": [
+          "118",
+          "116",
+          "116",
+          "116",
+          "0",
+          "118",
+          "0",
+          "0",
+          "139",
+          "0",
+          "2",
+          "905969664",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_renderer_scene": [
+          "321",
+          "28614",
+          "5586",
+          "2472",
+          "0",
+          "0",
+          "28614",
+          "5586",
+          "2472",
+          "0",
+          "0"
+        ]
+      },
+      "play3": {
+        "phase": [
+          "4"
+        ],
+        "page": [
+          "mission"
+        ],
+        "paused": [
+          "0"
+        ],
+        "mission": [
+          "thewarbegins",
+          "Tutorial",
+          "172"
+        ],
+        "mission_start": [
+          "1",
+          "4",
+          "0",
+          "4.891",
+          "0"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ],
+        "raw_world_modes": [
+          "0",
+          "1"
+        ],
+        "raw_uber": [
+          "814",
+          "1",
+          "3",
+          "85",
+          "0",
+          "1280",
+          "720"
+        ],
+        "raw_hud_owners": [
+          "1",
+          "1",
+          "764",
+          "818",
+          "763"
+        ],
+        "fort_selection": [
+          "0",
+          "14",
+          "0",
+          "0",
+          ""
+        ],
+        "game_menu_bar": [
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_camera_frame": [
+          "848",
+          "817",
+          "848",
+          "817",
+          "6",
+          "9",
+          "7",
+          "0"
+        ],
+        "raw_renderer_frame": [
+          "143",
+          "141",
+          "141",
+          "141",
+          "0",
+          "143",
+          "0",
+          "0",
+          "139",
+          "0",
+          "2",
+          "905969664",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_renderer_scene": [
+          "321",
+          "34889",
+          "6811",
+          "2955",
+          "0",
+          "0",
+          "34889",
+          "6811",
+          "2955",
+          "0",
+          "0"
+        ]
+      },
+      "leave1": {
+        "phase": [
+          "1"
+        ],
+        "page": [
+          "ABORT"
+        ],
+        "paused": [
+          "1"
+        ],
+        "mission": [
+          "thewarbegins",
+          "Tutorial",
+          "172"
+        ],
+        "mission_start": [
+          "1",
+          "4",
+          "0",
+          "4.891",
+          "0"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ],
+        "raw_world_modes": [
+          "0",
+          "1"
+        ],
+        "raw_uber": [
+          "814",
+          "1",
+          "3",
+          "85",
+          "0",
+          "1280",
+          "720"
+        ],
+        "raw_hud_owners": [
+          "1",
+          "1",
+          "764",
+          "818",
+          "763"
+        ],
+        "fort_selection": [
+          "0",
+          "14",
+          "0",
+          "0",
+          ""
+        ],
+        "game_menu_bar": [
+          "962",
+          "0",
+          "30"
+        ],
+        "raw_camera_frame": [
+          "848",
+          "817",
+          "848",
+          "817",
+          "6",
+          "9",
+          "7",
+          "0"
+        ],
+        "raw_renderer_frame": [
+          "173",
+          "171",
+          "171",
+          "171",
+          "0",
+          "173",
+          "0",
+          "0",
+          "139",
+          "0",
+          "2",
+          "905969664",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_renderer_scene": [
+          "334",
+          "42419",
+          "8281",
+          "3753",
+          "0",
+          "0",
+          "42419",
+          "8281",
+          "3753",
+          "0",
+          "0"
+        ]
+      },
+      "resumed": {
+        "phase": [
+          "4"
+        ],
+        "page": [
+          "mission"
+        ],
+        "paused": [
+          "0"
+        ],
+        "mission": [
+          "thewarbegins",
+          "Tutorial",
+          "172"
+        ],
+        "mission_start": [
+          "1",
+          "4",
+          "0",
+          "4.891",
+          "0"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ],
+        "raw_world_modes": [
+          "0",
+          "1"
+        ],
+        "raw_uber": [
+          "814",
+          "1",
+          "3",
+          "85",
+          "0",
+          "1280",
+          "720"
+        ],
+        "raw_hud_owners": [
+          "1",
+          "1",
+          "764",
+          "818",
+          "763"
+        ],
+        "fort_selection": [
+          "0",
+          "14",
+          "0",
+          "0",
+          ""
+        ],
+        "game_menu_bar": [
+          "962",
+          "0",
+          "30"
+        ],
+        "raw_camera_frame": [
+          "848",
+          "817",
+          "848",
+          "817",
+          "6",
+          "9",
+          "7",
+          "0"
+        ],
+        "raw_renderer_frame": [
+          "193",
+          "204",
+          "204",
+          "202",
+          "0",
+          "193",
+          "0",
+          "0",
+          "139",
+          "0",
+          "2",
+          "905969664",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_renderer_scene": [
+          "11",
+          "47005",
+          "9235",
+          "4303",
+          "0",
+          "0",
+          "47005",
+          "9235",
+          "4303",
+          "0",
+          "0"
+        ]
+      },
+      "leave2": {
+        "phase": [
+          "1"
+        ],
+        "page": [
+          "ABORT"
+        ],
+        "paused": [
+          "1"
+        ],
+        "mission": [
+          "thewarbegins",
+          "Tutorial",
+          "172"
+        ],
+        "mission_start": [
+          "1",
+          "4",
+          "0",
+          "4.891",
+          "0"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ],
+        "raw_world_modes": [
+          "0",
+          "1"
+        ],
+        "raw_uber": [
+          "814",
+          "1",
+          "3",
+          "85",
+          "0",
+          "1280",
+          "720"
+        ],
+        "raw_hud_owners": [
+          "1",
+          "1",
+          "764",
+          "818",
+          "763"
+        ],
+        "fort_selection": [
+          "0",
+          "14",
+          "0",
+          "0",
+          ""
+        ],
+        "game_menu_bar": [
+          "1066",
+          "0",
+          "33"
+        ],
+        "raw_camera_frame": [
+          "848",
+          "817",
+          "848",
+          "817",
+          "6",
+          "9",
+          "7",
+          "0"
+        ],
+        "raw_renderer_frame": [
+          "223",
+          "332",
+          "332",
+          "314",
+          "0",
+          "223",
+          "0",
+          "0",
+          "139",
+          "0",
+          "2",
+          "905969664",
+          "1",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_renderer_scene": [
+          "20",
+          "48308",
+          "9963",
+          "4412",
+          "0",
+          "0",
+          "48308",
+          "9963",
+          "4412",
+          "0",
+          "0"
+        ]
+      },
+      "main": {
+        "phase": [
+          "0"
+        ],
+        "page": [
+          "main"
+        ],
+        "paused": [
+          "0"
+        ],
+        "raw_uber": [
+          "1232",
+          "1",
+          "3",
+          "0",
+          "0",
+          "1280",
+          "720"
+        ],
+        "raw_hud_owners": [
+          "1",
+          "1",
+          "1161",
+          "1236",
+          "1160"
+        ],
+        "fort_selection": [
+          "0",
+          "4",
+          "0",
+          "0",
+          ""
+        ],
+        "game_menu_bar": [
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_camera_frame": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "6",
+          "9",
+          "7",
+          "0"
+        ],
+        "raw_renderer_frame": [
+          "248",
+          "336",
+          "336",
+          "318",
+          "0",
+          "248",
+          "0",
+          "0",
+          "139",
+          "0",
+          "2",
+          "905969664",
+          "1",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_renderer_scene": [
+          "17",
+          "49061",
+          "10110",
+          "4556",
+          "0",
+          "0",
+          "49061",
+          "10110",
+          "4556",
+          "0",
+          "0"
+        ]
+      }
+    }
+  },
+  "restarts": 4,
+  "leaveCancellations": 2,
+  "mainReturns": 2,
+  "presentationPairs": 4,
+  "failedRuns": 0,
+  "retries": 0,
+  "protectedCount": 2629,
+  "fixtureCount": 770,
+  "entries": 1376,
+  "assets": 1358,
+  "allProtectedSourceAndArchivedAssetBytesUnchanged": true,
+  "newBuilds": 0,
+  "newCppTestRuns": 0,
+  "newFixtures": 0,
+  "newPackages": 0,
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "merge": {
+    "commit": "bc1e1ad3302e4c648be25107efa9d818b3132026",
+    "parents": [
+      "a421aa6c9fdf9f2df795dc4f1781f5cd1b054fa2",
+      "db9fd26bebfccc31ffdd8c46b7fe4a4cb744370b"
+    ],
+    "message": "20261031-22 CM README 진행 현황과 웹 커서 변경 병합",
+    "tests": 105,
+    "assetsCheckExitCode": 0,
+    "conflicts": 0
+  },
+  "scope": "TEST02 4:3 창·캠페인1-1 16:9 전체화면의 실제 Restart 두 번/안내/다시 플레이·Leave 취소/재개·Leave/MainMenu/Quit다. 실제 State7 reason1/메인 reason0의 이미 연결된 전체 정리 부모와 대조했다. 좁은 반복/픽셀/owner 반환을 전체 State/원본 동일성/누수 검사로 확대하지 않는다.",
+  "excluded": "포획/희생/특정적공격/승리·공중3종 전용·신규MP·물리키/DPI/포커스·Win11/PCM·자연완주/전체동일성은 미확인이다.",
+  "pauseRequested": true,
+  "next": "사용자 요청으로 병합/638 마감·문서/커밋 뒤 목표를 일시 중지한다. 재개 시 AGENTS/공통·DN 인계와 호스트/마지막 정밀 HJOW-Athlon/2026-10-23을 재확인한다. 현재 제품637·최신전체34는635제품/636이며 638 두 게임은 종료했다. 물리 입력은 Computer Use 캡처 도우미 복구 뒤에 재개한다. 남은 UI/Edit/시나리오/파일/수명·호환성 뒤 MP무시험/4~7차를 진행한다."
+}
