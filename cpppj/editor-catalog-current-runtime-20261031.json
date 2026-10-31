@@ -1,0 +1,106 @@
+{
+  "unit": 634,
+  "complete": true,
+  "goalComplete": false,
+  "productChanged": false,
+  "sourceProductCommit": "66583eb4",
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "gameSha256": "d68fa89be7130a74804c8f2616946d4327d6b51cd79a14308095cad494c9bfe1",
+  "testsSha256": "6ad73280d970a024fdb6be5d6ef77a7a4405523f92dd6d7d670c53f41c9d83be",
+  "packageSha256": "402206d4eb1749fcf19b5ab394771ddea8a843e3132159a712e41454a2cbdbd3",
+  "nativeGameExecutions": 0,
+  "newNativeFixtures": 0,
+  "newBuilds": 0,
+  "newCppTestRuns": 0,
+  "protectedCount": 2629,
+  "fixtureCount": 770,
+  "allExistingProtectedBytesUnchanged": true,
+  "sameArchivedAssetsAfterGui": 1358,
+  "investigation": {
+    "previousTimedOutSeconds": 181.16694219999772,
+    "importedAtTimeout": 112,
+    "sourceForts": 433,
+    "sourceStateKinds": {
+      "0": 1,
+      "2": 432
+    },
+    "completedLedgerEntries": 112,
+    "pendingLedgerEntries": 0,
+    "finding": "원래 시간 초과는 원문 목록의 kind/메타 분류가 시작되기 전 전체 loose 파일의 호스트 이관 단계였다. mayEditMissions 설정이 이 이관 경로를 바꾸지 않는다.",
+    "exactOsDelayCause": "미확정. 같은 제품의 새 전체 이관/분류/실제 Editor 설치에서는 재현되지 않았다. 특정 파일 손상/게임 무한반복/필터 결함으로 확정하지 않는다."
+  },
+  "console": {
+    "exitCode": 0,
+    "seconds": 22.26593110000249,
+    "imported": 433,
+    "importBodySeconds": 21.1068,
+    "slowestItem": [
+      "d/WOF8.fort",
+      0.0926515
+    ],
+    "catalogs": [
+      {
+        "option": 0,
+        "count": 50,
+        "seconds": 0.340861
+      },
+      {
+        "option": 1,
+        "count": 50,
+        "seconds": 0.343979
+      }
+    ],
+    "sameRows": true,
+    "first": "Alerted",
+    "last": "FWOS5",
+    "scope": "현재633 netstorm.lib에만 연결한 창 없는 조사 프로그램이다. 같은 source의 원문 OS 순서로 Prepare/Import를 호출하고 실제 Catalog를 두 필터로 읽었다. OS 장치를 대체하거나 게임 계산 성공을 주입하지 않았다. 외부 컴파일 환경 준비 실패2회는 런타임 성공에 합산하지 않는다."
+  },
+  "gui": {
+    "runs": 2,
+    "presentationPairs": 4,
+    "passed": true,
+    "seconds": [
+      45.54512650000106,
+      25.23669340000197
+    ],
+    "filterOptions": [
+      0,
+      1
+    ],
+    "rows": 50,
+    "sameRows": true,
+    "editor": "Alerted",
+    "freshImportFirst": true,
+    "sameWorkspaceSecond": true,
+    "scope": "자료433개/기본 d/{local.1}.fort 전체 namespace에서 목록→Cancel→재개방→Alerted Editor 설치/정상 종료를 확인했다. TEST02의50개 밖 위치는 원문 상한이다. 새 TestBattle/포획/희생/특정 적 공격/승리/공중3종 전용/MP 실행은 없다.",
+    "initialCheckerFailure": "첫 실제 게임은 종료0/45.5451265초였다. 검사기만 SOLO 목록 부모의 사후 dirty1을0으로 기대해 실패했다. 실제 Editor는 mission 대신 fort_names/current Fort를 쓰므로 함께 바로잡았고 첫 실행은 반복하지 않았다."
+  },
+  "contractCorrection": "이 자료의 loose Fort433개는 raw State+17 기준 종류2가432개·종류0이1개다. mayEditMissions=0은 TEST02만 남기거나 앞50개에 넣는 필터가 아니다. 633의 성공한 TEST02 시험은 자료루트 내부 상대 FileSpec의 두 원문 맵 namespace에 의존한다. SOLO Tell 부모는 목록 뒤 dirty를1로 다시 설정하고 fortSpec으로 복구한다. 실제 Editor에는 mission 객체 대신 현재/pending Fort 이름이 있다.",
+  "remaining": "초기 OS 지연의 정확한 호출/외부 원인은 미확정이다. 전체 목표·자연완주/원본 전체 동일성·Windows11/PCM/물리키/DPI/포커스와 기존 VFX/612 스택미정값 한계는 남는다. 최신 전체34는632제품, 최신 C++70/3551과 Home/Edit5/37은633의 별도 근거다.",
+  "next": "635: 남은 Scroll/Resize/이전 비Session ApplyCameraPixels와 SetParticleView 선택적 setter를 원문 호출자·viewport·표시 시점과 대조한다. 이후 내용물/grid/debug·전체 UI/Edit/시나리오/파일/수명/호환성·MP 무시험/4~7차를 계속한다.",
+  "evidenceSha256": {
+    "initial-audit.json": "cd2452403bd122abae08d027a1e078c6886e48b9853b43e8aa639812d1525f6f",
+    "profile.cpp": "d3cf516258d63e51bca9576fbd396f38e204a608aabe162dc67e550dd8e437fa",
+    "compile.py": "4ea438ae307fc4f0de78f2bece46e11c20f124f7b5dafd152c46aa20ce014d07",
+    "compile.log": "511da219d708ae9edc9d2b931a6d58d3b252cb639b5d31257b22abf92ed527e9",
+    "profile.exe": "21c2aa9c6c1fe4c12272ce826b47372a3efd172c872f5260502a8eb00f9ac11f",
+    "profile-h.tsv": "8feda32695852277213c8ae8d35646b3c1e370b10c9fded921337187f537a1ce",
+    "profile-h-result.json": "8bb32aced09b831ce729b257a7a08b534554d770b2a64489b0503df0bdafb6d4",
+    "run_gui.py": "ba696e3ffaa0e7892a22de81a2b98cb880aea84b9f32837c2eba68396e39a8d1",
+    "finish_gui.py": "b0eb3c6240fcd33e3f8855ac86f7f45ff9dc88affdf4039ffb0e6e5c8b287268",
+    "gui-full-summary.json": "d4076b63f4bb25f9645eadcf3ef469456b59f8498bf2e62a7874796db128be10",
+    "gui-full/edit-0/steps.tsv": "cd63fabf2d521aadb1724b0458e5feb044263d201ce0c72231dd316bd573ceb2",
+    "gui-full/edit-0/states.tsv": "6db0547af4b8abb4e6c1c50bb04b95cbc011b7e1a7bd3fea1eded501e2741293",
+    "gui-full/edit-0/run.json": "79d473ac03e53186b8b1926329bf35daad75a65207cf109637a41e6f10644f93",
+    "gui-full/edit-0/stderr.log": "5071e7a599b44be9a429a5e9a186532d25b6e9a17b381114c160adf8371b2df0",
+    "gui-full/edit-0/summary.json": "1f43835cd38ac1e43a25599194b61a0467d7173080430a0bc3b7c872b0b7e505",
+    "gui-full/edit-1/steps.tsv": "4c21a3da5ea5c9c04fce5baf74b9c5d4c1a07d2d9ac2c872513516ad25d66b59",
+    "gui-full/edit-1/states.tsv": "d597725d3645719a54eb72d0e1aee2faf2763985c4c68852adc142cb212d5e31",
+    "gui-full/edit-1/run.json": "2d4f3bd84c55c2effc8ae40a4bb0765ee31db8b2de0d938f6730e17ea07c419f",
+    "gui-full/edit-1/stderr.log": "5071e7a599b44be9a429a5e9a186532d25b6e9a17b381114c160adf8371b2df0",
+    "gui-full/edit-1/summary.json": "b24c6a54df2db4141f3a238560b5daaac3f0a7685fd6a99678a4cb504abde020"
+  },
+  "profileLibrarySha256": "3380906089830d758788de839e1aa5180e6ef8ca067869c84f0a80f5c865cd07"
+}
