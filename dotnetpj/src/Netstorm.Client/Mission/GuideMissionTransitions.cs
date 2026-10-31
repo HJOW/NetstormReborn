@@ -67,9 +67,14 @@ public static class GuideMissionTransitions
 
     /// <summary>현재 미션을 끝내고 반납한 다음 새 이름을 NUL까지 복사해 생성한다.</summary>
     /// <param name="name">새 미션 이름.</param><param name="hooks">실제 수명 효과.</param>
-    public static void Begin(string name, GuideMissionTransitionHooks hooks)
+    public static void Begin(string name, GuideMissionTransitionHooks hooks) => Begin(() => name, hooks);
+
+    /// <summary>빌린 이름을 현재 미션 반납 뒤 읽고 NUL까지 복사해 생성한다.</summary>
+    /// <param name="readName">해제 중 내용이 바뀔 수 있는 이름을 읽는 함수.</param><param name="hooks">실제 수명 효과.</param>
+    public static void Begin(Func<string> readName, GuideMissionTransitionHooks hooks)
     {
         if (Need(hooks.Current)()) { Need(hooks.Finish)(); Need(hooks.Release)(); }
+        string name = readName();
         int nul = name.IndexOf('\0');
         Need(hooks.Create)(nul < 0 ? name : name[..nul]);
     }

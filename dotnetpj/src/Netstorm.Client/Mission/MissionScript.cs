@@ -6,7 +6,7 @@ namespace Netstorm.Client.Mission;
 /// 미션 시작(FUN_00482fb0 ↔ CD 00481020) 가운데 미션 스크립트를 읽고 새 파일 이름·돕는 부분을 만든다.
 /// UberGump가 원본 브리핑 본문을 표시한다. 미션 종류는 실제 객체·게임 명령에 속한다.
 /// 근거: cpppj/src/client/Mission.h/.cpp (00482fb0·0594fa0·00483210·00483260). (R3k-12, 2026-10-31)
-/// Guide 생성·반납은 미션 실행 조립 때 잇는다.
+/// Guide 생성·반납은 별도의 수명 함수에서 같은 설정 객체에 연결한다.
 /// </summary>
 public sealed class MissionScript : IDisposable
 {
@@ -31,7 +31,7 @@ public sealed class MissionScript : IDisposable
     /// <summary>안내·명령·섹션을 조회하는 미션 스크립트.</summary>
     private readonly Config _script;
 
-/// <summary>
+    /// <summary>
     /// `mission` 이름의 설정 객체를 만들고 추가 설정 글(원본 끝의 두 번째 인자)을 `missionSpec` 경로의 스크립트로 읽는다.
     /// 이 객체가 살아 있는 동안 다른 설정에서 `{mission.??}`는 스크립트 값을 읽는다.
     /// 명시 source가 없으면 추가 설정·파일·이어 script/Fort를 같은 이름으로 쓰고 전역 Config reader를 바꾸지 않는다.
@@ -51,19 +51,22 @@ public sealed class MissionScript : IDisposable
         _explicitSource = source != null;
         _source = source ?? configuration.Reader;
         _script = new Config(configuration.Registry, "mission");
-        _script.AppendArguments(extraSettings, _source);
-        _scriptPath = _configuration.PathSpec("missionSpec", _name);
-        if (_source != null)
+        try
         {
-            byte[]? bytes = _source(_scriptPath);
-            if (bytes != null)
+            _script.AppendArguments(extraSettings, _source);
+            _scriptPath = _configuration.PathSpec("missionSpec", _name);
+            if (_source != null)
             {
-                _script.LoadBytes(bytes);
+                byte[]? bytes = _source(_scriptPath);
+                if (bytes != null) _script.LoadBytes(bytes);
             }
+            if (_script.IsValid()) _script.Set("fileName", _name);
         }
-        if (_script.IsValid())
+        catch
         {
-            _script.Set("fileName", _name);
+            // 생성 실패 시 C++ 멤버 소멸과 같이 이미 등록한 Config를 반납한다.
+            _script.Dispose();
+            throw;
         }
     }
 
