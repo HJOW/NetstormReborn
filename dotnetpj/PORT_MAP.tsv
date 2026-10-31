@@ -243,6 +243,8 @@ cpppj/src/o/RawFormPacket.cpp	Netstorm.Core/Original/RawFormPacket.cs	5d34fc2dba
 cpppj/src/o/RawFortSpWrite.cpp	Netstorm.Core/Original/RawFortSpWrite.cs	91a62e792661dfba55261308ebfb7d0ffae194e4	L1
 cpppj/src/o/RawGraph.cpp	Netstorm.Core/Original/RawGraph.cs	73506bcbedac557bfd132e68524f772123f245d2	L1
 cpppj/src/o/RawMetadisplayDirty.cpp	Netstorm.Core/Original/RawMetadisplayDirty.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
+cpppj/src/o/RawMissionStart.cpp	Netstorm.Core/Original/RawMissionStart.cs	93d26800ca81cc2b731e5a3ebe1c618b5dd44876	L1
+cpppj/src/o/RawMissionStart.h	Netstorm.Core/Original/RawMissionStart.cs	93d26800ca81cc2b731e5a3ebe1c618b5dd44876	L1
 cpppj/src/o/RawObjectConversion.cpp	Netstorm.Core/Original/RawObjectConversion.cs	b126e9007a61bb7bc133a29fe3ac585043194a56	L1
 cpppj/src/o/RawPathAnimation.cpp	Netstorm.Core/Original/RawPathAnimation.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
 cpppj/src/o/RawPriestDamage.cpp	Netstorm.Core/Original/RawPriestDamage.cs	55520f783fbcc11157fcc7fbfc5887407e788d67	L1
