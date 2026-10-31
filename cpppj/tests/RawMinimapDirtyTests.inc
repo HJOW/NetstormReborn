@@ -1,6 +1,7 @@
 // 같은 실제 메뉴/트리/비트맵을 사용해 미니맵의 기본 영역과 부분 출력을 확인한다.
 namespace { // 장치의 명시 카메라 입력과 현재 실제 UI 노드를 함께 보관한다.
 struct MinimapDirtyScene {
+    std::uint32_t fullRefresh{}; // 실제 Client의 공유 전체 갱신 DWORD를 UI보다 먼저 생성하고 나중에 반납한다.
     MenuClient client; // 실제 보호 자산/폰트/공통 Gump와 외부 영역 수신기다.
     std::shared_ptr<RawSurfaceStorage> storage; // Session을 만들지 않는 같은 실제 Pool/TYPE/Hash 물리다.
     MinimapGeometryView view{{std::bit_cast<std::uint32_t>(120.0F),std::bit_cast<std::uint32_t>(80.0F)},{84,0,320,240},16,11}; // 원문 현재 카메라/지도/칸 배율의 명시 입력이다.
@@ -8,7 +9,7 @@ struct MinimapDirtyScene {
     InputEvent pointer{InputCode::kLeftButton,50,187}; // 실제 폴링/드래그의 현재 화면 좌표다.
     bool hideOnCenter{}; // 카메라 장치가 반환하기 전에 표시를 바꾸는 경계 입력이다.
     std::vector<std::array<std::size_t,2>> centerOrder; // 카메라 호출 당시 영역 수와 실제 캡처 존재 여부다.
-    MinimapDirtyScene() { // 원본 생성/부착/최초 전체 bitmap을 실제 제품 경계로 준비한다.
+    MinimapDirtyScene():client(OriginalEdition::Patch1078,&fullRefresh) { // 원본 생성/부착/최초 전체 bitmap과 공유 갱신 요청을 실제 제품 경계로 준비한다.
         client.Resize(320,240);storage=MakeRawSurfaceStorage(client.assets);RawMinimapHooks hooks;hooks.view=[this] { return view; };hooks.inputMode=[this] { return mode; };hooks.poll=[this] { return pointer; };
         hooks.center=[this](float x,float y) { centerOrder.push_back({client.redrawRectangles.size(),client.buttons.HasCapture() ? 1U : 0U});++centers;view.camera={std::bit_cast<std::uint32_t>(x),std::bit_cast<std::uint32_t>(y)};if (hideOnCenter) mini->Node(token)->flags&=~1U; }; // 게임 카메라 계산을 흉내 내지 않고 반환 후 현재 표시를 읽는 순서만 관측한다.
         hooks.move=[this](float,float) { ++moves; };mini=&client.buttons.ConstructMinimap(storage,std::move(hooks));token=mini->RootToken();auto& node=*mini->Node(token);
@@ -54,4 +55,49 @@ TEST_CASE(MinimapDirty_HiddenAndMoveModesUseCurrentVisibility) { // 숨김/선�
     }
     CHECK(scene.moves==2);scene.mode=0;scene.hideOnCenter=true;scene.Clear();scene.client.buttons.RouteInput(scene.pointer);CHECK(scene.centers==1 && !(node.flags&1U) && scene.client.buttons.HasCapture());CHECK(scene.client.fullRequests==0 && scene.client.redrawRectangles.empty()); // 중심 장치 반환 뒤의 현재visible을 기본Redraw가 읽는다.
     scene.pointer.code|=InputCode::kRelease;scene.client.buttons.RouteInput(scene.pointer);CHECK(!scene.client.buttons.HasCapture() && !(node.flags&0x80U));
+}
+
+TEST_CASE(MinimapDirty_ContentAndOwnerChangesReachActualPixels) { // 카메라가 그대로여도 지면/소유자 변경의 전체 갱신은 실제 UI 영역과 픽셀까지 전달된다.
+    MinimapDirtyScene scene;
+    constexpr int width=320,height=240,pitch=327; // 화면 밖 행 padding까지 보존 여부를 검사하는 논리 표면이다.
+    constexpr std::uint8_t background=0x5a; // 미니맵 영역 밖이 지워지지 않았는지 구별하는 바탕색이다.
+    const auto palette=scene.client.Palette();
+    std::array<std::uint32_t,256> logical{};
+    // 실제 파일 팔레트를 공통 Gump의 명암표에 공급한다.
+    for (std::size_t index=0;index<logical.size();++index) {
+        const auto color=scene.client.assets.Palette().Color(static_cast<std::uint8_t>(index));
+        logical[index]=color.red|(std::uint32_t(color.green)<<8)|(std::uint32_t(color.blue)<<16);
+    }
+    const auto maps=BuildGumpShadeMaps(logical);
+    std::vector<std::uint8_t> partial(pitch*height,background),whole=partial;
+    scene.client.menus->Draw(partial,pitch,height,palette,maps);
+    const auto slot=scene.storage->pool.Slot({1});
+    std::span<std::uint8_t> raw{const_cast<std::uint8_t*>(slot.data()),slot.size()}; // 검사 소유 풀의 실제 지면 슬롯을 준비하며 제품은 읽기만 한다.
+    std::fill(raw.begin(),raw.end(),std::uint8_t{0});raw[10]=97;
+    // 지면/일반 체인 양쪽에서 동일한 실제 좌표를 읽도록 float 비트를 little endian으로 쓴다.
+    for (const auto [offset,value]:std::array<std::pair<std::size_t,float>,2>{{{14,120.0F},{18,80.0F}}}) {
+        const auto bits=std::bit_cast<std::uint32_t>(value);
+        // 정렬되지 않은 네 BYTE만 쓰며 이웃 필드는 유지한다.
+        for (std::size_t byte=0;byte<4;++byte) raw[offset+byte]=static_cast<std::uint8_t>(bits>>(byte*8));
+    }
+    scene.storage->hash.Cell(0,120,80)=1;
+    const auto checkPixels=[&](std::uint8_t expected) { // 요청 영역만 다시 그린 결과를 전체 출력과 독립적으로 대조한다.
+        scene.CheckOne();
+        // 실제 전달된 half-open 영역 밖과 행 padding은 이전 바이트를 유지한다.
+        for (const auto& [rect,flags]:scene.client.redrawRectangles) {
+            CHECK(flags==0);
+            // 화면 안에서 요청한 행의 교차 부분만 비운다.
+            for (int y=std::max(0,rect.top);y<std::min(height,rect.bottom);++y)
+                std::fill(partial.begin()+y*pitch+std::max(0,rect.left),partial.begin()+y*pitch+std::min(width,rect.right),background);
+            scene.client.menus->Draw(partial,pitch,height,palette,maps,rect);
+        }
+        std::fill(whole.begin(),whole.end(),background);scene.client.menus->Draw(whole,pitch,height,palette,maps);
+        CHECK(partial==whole);CHECK(partial[182*pitch+44]==expected); // 원문 crop(26,8), 지면 픽셀(60,40), Gump 원점(10,150)의 실제 표시점이다.
+    };
+    // 같은 카메라에서 소유자1→2→중립→지면 제거를 각각 갱신하고 변경된 색을 확인한다.
+    for (const auto [owner,color]:std::array<std::array<std::uint32_t,2>,3>{{{1,palette.named[11].index},{2,palette.basic[1]},{0,palette.named[18].index}}}) {
+        scene.Clear();raw[34]=static_cast<std::uint8_t>(owner);scene.fullRefresh=1;CHECK(scene.mini->Refresh());CHECK(scene.fullRefresh==0);checkPixels(static_cast<std::uint8_t>(color));
+        scene.Clear();CHECK(!scene.mini->Refresh());CHECK(scene.client.redrawRectangles.empty() && scene.client.fullRequests==0); // 소비한 전체 갱신은 다음 프레임에 반복하지 않는다.
+    }
+    scene.Clear();scene.storage->hash.Cell(0,120,80)=0;scene.fullRefresh=1;CHECK(scene.mini->Refresh());checkPixels(static_cast<std::uint8_t>(palette.basic[0]));
 }

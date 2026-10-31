@@ -6,15 +6,15 @@
 
 ## 0. 재개 전 확인 사항
 
-### 0.1 현재 값 (2026-10-31, 단위638 기준)
+### 0.1 현재 값 (2026-10-31, 단위639 기준)
 
 | 항목 | 값 |
 | --- | --- |
-| 진행 상태 | **사용자 요청으로 일시 중지.** 재개 지시 전에는 새 cpppj 구현을 시작하지 않는다. 전체 목표는 미완료다. |
+| 진행 상태 | **사용자 재개 지시로 진행 중.** 단위639 미니맵 내용물/진단 경로 대조를 마쳤으며 전체 목표는 미완료다. |
 | 현재 제품 | 단위637, 커밋 `a421aa6c`. 이후 제품 소스 변경 없음 |
 | EXE SHA-256 | `3923635e953752cbe09e4bfa9158ba401b5d73195e3157cf96f3740a12b2ed33` |
 | ZIP SHA-256 | `624ee85b91ca298d940792c35380177dc5a0f164b6e1668a8fbe138d45beb0f8` (1376항목, 게임 자산 1358개) |
-| 등록 C++ 검사 수 | 3554개. 등록 수이며 전체 실행 결과가 아니다. |
+| 등록 C++ 검사 수 | 3555개. 단위639 집중 25개/실패 0이며 등록 수를 전체 실행 결과로 세지 않는다. |
 | 최신 전체34 | 단위636, 635 제품 기준 34/34, 실패·재시도 0. 637 제품으로는 다시 실행하지 않았다. |
 | 최신 반복 수명 | 단위638, 637 제품 기준 Restart 4회, Leave 취소 2회, 메인 복귀 2회, 두 실행 모두 종료 코드 0 |
 | 전체 C++ 마지막 실행 | 단위549. 3389개 중 7개 검사가 실패했다(580단언). 이후 입력 정정 뒤 집중 검사만 통과했고 전체 재실행 기록은 없다. 마지막 전체 통과는 단위510(508 제품, 3337개, 실패 0)이다. |
@@ -93,7 +93,7 @@
 
 AGENTS.md의 `(4~6차 목표.)` 문구는 7차 추가 뒤에도 그대로지만, 바로 아래에 7차까지 나열되고 dotnetpj 항목도 4~7차로 적혀 있으므로 4~7차로 읽는다.
 
-## 2. 현재 상태 (2026-10-31, 단위638 기준)
+## 2. 현재 상태 (2026-10-31, 단위639 기준)
 
 - **게임 실행·플레이 가능 여부:** 인자 없는 `Netstorm.exe`로 GUI가 시작되고 34경로 모두 진입·비정지 진행·정상 종료를 확인했다. 자연 완주 근거는 과거 제품의 Early1/2 자동 완주와 사용자가 다른 PC에서 직접 완주한 캠페인 1-1뿐이다.
 - **기존 게임과의 동일성:** 원문 관측과 대조를 마친 부품이 많다. 자연 완주와 전체 동일성은 사용자가 플레이하며 확인한다.
@@ -109,7 +109,7 @@ AGENTS.md의 `(4~6차 목표.)` 문구는 7차 추가 뒤에도 그대로지만,
 | 시작·휴대 배포 | [637](docs/exe/cpp-portable-startup-20261031.md) | 무인자 GUI 시작, 실제 Unicode EXE 경로 기준 `game/` 우선, cwd 독립, 자기 콘솔 분리, GUI 오류 표시. 집중 19/실패 0, 빌드 경고·오류 0 | 물리 입력 0건. 2.4절 참조 |
 | 카메라 | [615](docs/exe/cpp-camera-pan-20261030.md), [617](docs/exe/cpp-camera-pan-presentation-20261030.md), [632](docs/exe/cpp-camera-center-20261031.md), [633](docs/exe/cpp-camera-immediate-20261031.md), [635](docs/exe/cpp-camera-viewport-20261031.md) | 원문 Alt/가운데 pan, 확대 전체화면 논리 단위, 직접 중심 목표, Home 계열 즉시 적용, viewport 변경 시 현재 값 보존 | 물리 키, 다른 DPI, 실제 포커스 전환 |
 | Renderer·Native Draw | [618](docs/exe/cpp-renderer-prelude-20261030.md), [619](docs/exe/cpp-renderer-clouds-20261030.md), [620](docs/exe/cpp-renderer-frame-20261030.md), [622](docs/exe/cpp-native-scene-20261031.md), [628](docs/exe/cpp-mana-additional-20261031.md), [629](docs/exe/cpp-auxiliary-draw-20261031.md) | 앞단, 구름 4칸·배경 선택, 실제 Frame, 단일 표시 목록, 마나 103 추가 Draw, 배율·고정색 | 전체 픽셀 동일성, 기존 VFX 계약 |
-| UI 갱신 영역 | [624](docs/exe/cpp-gump-redraw-20261031.md), [625](docs/exe/cpp-ui-dirty-20261031.md), [627](docs/exe/cpp-gump-derived-dirty-20261031.md), [630](docs/exe/cpp-inventory-blink-20261031.md), [631](docs/exe/cpp-minimap-dirty-20261031.md) | Gump 기본 갱신, 지도 clamp, 기본 UI, 장식·메뉴 행, 생산 항목 점멸, 미니맵 기본 영역 | 미니맵 내용물, grid, 항목별 debug |
+| UI 갱신 영역 | [624](docs/exe/cpp-gump-redraw-20261031.md), [625](docs/exe/cpp-ui-dirty-20261031.md), [627](docs/exe/cpp-gump-derived-dirty-20261031.md), [630](docs/exe/cpp-inventory-blink-20261031.md), [631](docs/exe/cpp-minimap-dirty-20261031.md), [639](docs/exe/cpp-minimap-content-20261031.md) | Gump 기본 갱신, 지도 clamp, 기본 UI, 장식·메뉴 행, 생산 점멸, 미니맵 기본 영역·지면/소유자/삭제 픽셀. grid/debug 직접 writer와 생성 초기값 대조 | 일반 경로 활성 writer를 찾지 못한 grid/debug는 노출하지 않는다. 간접 alias 부재 전체 증명은 아니다. |
 | Edit·시나리오 | [590](docs/exe/cpp-editor-scenario-20261030.md), [597](docs/exe/cpp-editor-rules-20261030.md), [609](docs/exe/cpp-world-geyser-20261030.md), [634](docs/exe/cpp-editor-catalog-current-20261031.md) | 시작값·작업본 두 왕복, 방향별 동맹·Off, 세계 간헐천, 전체 Fort 433개 이관과 필터 분류 | 3절 2번 |
 | 객체 메뉴·건설 | [524](docs/exe/cpp-object-hit-20261028.md), [528](docs/exe/cpp-factory-upgrade-runtime-20261028.md), [531](docs/exe/cpp-altar-salvage-runtime-20261028.md), [537](docs/exe/cpp-mission-cost-guard-20261028.md) | 픽셀 선택, 시험한 메뉴·업그레이드·회수, 미션 비용 관문 | 다른 타입·레벨·상태 |
 | HUD·단축키 | [509](docs/exe/cpp-hud-input-runtime-20261027.md), [511](docs/exe/cpp-player-list-runtime-20261028.md), [540](docs/exe/cpp-minimap-toggle-runtime-20261028.md), [547](docs/exe/cpp-send-money-runtime-20261028.md), [548](docs/exe/cpp-screenshot-runtime-20261028.md) | 미니맵, QWASZX, ESC 일부, Player List, 독립 미니맵, Send Money, F7·Shift F7 | 스크립트 입력이다. 3절 1번 |
@@ -172,7 +172,7 @@ Early3 후속 입력과 미실행 계획은 [부분 진행 보관](docs/exe/prep
 - [ ] 크리스탈의 나머지 상태/명령, 비석의 미검증 특수 명령, 제단/일반 건물형의 나머지 타입·소유자·레벨·손상·건설/생산·포획/희생 상태별 메뉴·명령 효과·반납과 선택기 잔여를 점검한다. 이미 확인한 비석 기본 메뉴/전환과 소유자 일부를 미구현으로 되돌리지 않는다.
 - [ ] 운반체 전체 종류와 다중 선택을 포함한 전체 커서 조합을 점검한다(536, 576). 공격형 공중 3종은 정적 분석만 한다.
 - [ ] 남은 ESC 하위/View·도킹·DD 조정 표시·Chat GUI 드래그/입력과 모드별 표시/픽셀을 확인한다. 완료된 단축키·독립 미니맵·Send Money는 새 근거 없이 반복하지 않는다.
-- [ ] 미니맵 내용물 변경, grid, 항목별 debug의 실제 활성 쓰기·호출 가능성을 원문으로 확인한다. 비활성이면 새 기능으로 노출하지 않는다.
+- [x] 미니맵 내용물 변경과 grid/항목별 debug의 직접 쓰기·생성 초기값·일반 경로를 대조했다([639](docs/exe/cpp-minimap-content-20261031.md)). 내용물 실제 영역/픽셀 집중 검사를 통과했다. grid/debug는 일반 경로 활성 writer를 찾지 못했으므로 노출하지 않는다. 간접 alias 전체 부재의 증거로 확대하지 않는다.
 - 메타맵 번개 `00479650`은 MP 전용 실제 기록 분기이므로 8번의 무시험 사전 구현에 포함한다. 일반 번개/진단(559~565)과 구별한다.
 - **오류 복원 원칙:** 실제 오류의 원문 몸체/호출 순서를 대조한다. guard 제거, 배열 임의 확장, 손상 후보 무조건 무시, 진단 6 강제, 임시 속도로 숨기지 않는다.
 

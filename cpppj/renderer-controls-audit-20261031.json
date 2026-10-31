@@ -1,0 +1,187 @@
+{
+  "host": "HJOW-Athlon",
+  "last_full_decompilation_host": "HJOW-Athlon",
+  "last_full_decompilation_date": "2026-10-23",
+  "game_executed": false,
+  "executable_sha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+  "initial": {
+    "afterEach": 0,
+    "hideGroups": 0,
+    "debugKeys": 0,
+    "sort": 1
+  },
+  "references": {
+    "afterEach": [
+      {
+        "address": "00499eba",
+        "function": "004994b0",
+        "instruction": "mov eax, dword ptr [0x59a8cc]",
+        "read": true,
+        "write": false
+      }
+    ],
+    "hideGroups": [
+      {
+        "address": "00499bfd",
+        "function": "004994b0",
+        "instruction": "mov eax, dword ptr [0x59a8b4]",
+        "read": true,
+        "write": false
+      },
+      {
+        "address": "00499e8d",
+        "function": "004994b0",
+        "instruction": "mov eax, dword ptr [0x59a8b4]",
+        "read": true,
+        "write": false
+      },
+      {
+        "address": "004d907e",
+        "function": "004d62b0",
+        "instruction": "mov ecx, dword ptr [0x59a8b4]",
+        "read": true,
+        "write": false
+      },
+      {
+        "address": "004d908b",
+        "function": "004d62b0",
+        "instruction": "mov dword ptr [0x59a8b4], eax",
+        "read": false,
+        "write": true
+      }
+    ],
+    "debugKeys": [
+      {
+        "address": "004353fa",
+        "function": "00435220",
+        "instruction": "mov dword ptr [0x55a484], ebx",
+        "read": false,
+        "write": true
+      },
+      {
+        "address": "00447a77",
+        "function": "00447a50",
+        "instruction": "mov eax, dword ptr [0x55a484]",
+        "read": true,
+        "write": false
+      },
+      {
+        "address": "004d8cca",
+        "function": "004d62b0",
+        "instruction": "mov eax, dword ptr [0x55a484]",
+        "read": true,
+        "write": false
+      },
+      {
+        "address": "004d8d5f",
+        "function": "004d62b0",
+        "instruction": "mov eax, dword ptr [0x55a484]",
+        "read": true,
+        "write": false
+      },
+      {
+        "address": "004d8d7e",
+        "function": "004d62b0",
+        "instruction": "mov eax, dword ptr [0x55a484]",
+        "read": true,
+        "write": false
+      },
+      {
+        "address": "004d8e8b",
+        "function": "004d62b0",
+        "instruction": "mov eax, dword ptr [0x55a484]",
+        "read": true,
+        "write": false
+      },
+      {
+        "address": "004d8eb5",
+        "function": "004d62b0",
+        "instruction": "mov eax, dword ptr [0x55a484]",
+        "read": true,
+        "write": false
+      },
+      {
+        "address": "004d9071",
+        "function": "004d62b0",
+        "instruction": "mov eax, dword ptr [0x55a484]",
+        "read": true,
+        "write": false
+      },
+      {
+        "address": "004d9108",
+        "function": "004d62b0",
+        "instruction": "mov eax, dword ptr [0x55a484]",
+        "read": true,
+        "write": false
+      },
+      {
+        "address": "004d918d",
+        "function": "004d62b0",
+        "instruction": "mov eax, dword ptr [0x55a484]",
+        "read": true,
+        "write": false
+      },
+      {
+        "address": "004d91c8",
+        "function": "004d62b0",
+        "instruction": "mov eax, dword ptr [0x55a484]",
+        "read": true,
+        "write": false
+      },
+      {
+        "address": "004d9206",
+        "function": "004d62b0",
+        "instruction": "mov eax, dword ptr [0x55a484]",
+        "read": true,
+        "write": false
+      },
+      {
+        "address": "004d9244",
+        "function": "004d62b0",
+        "instruction": "mov eax, dword ptr [0x55a484]",
+        "read": true,
+        "write": false
+      },
+      {
+        "address": "004d92a3",
+        "function": "004d62b0",
+        "instruction": "mov eax, dword ptr [0x55a484]",
+        "read": true,
+        "write": false
+      },
+      {
+        "address": "004d932f",
+        "function": "004d62b0",
+        "instruction": "mov eax, dword ptr [0x55a484]",
+        "read": true,
+        "write": false
+      },
+      {
+        "address": "004d9370",
+        "function": "004d62b0",
+        "instruction": "mov eax, dword ptr [0x55a484]",
+        "read": true,
+        "write": false
+      }
+    ],
+    "sort": [
+      {
+        "address": "00499e30",
+        "function": "004994b0",
+        "instruction": "mov eax, dword ptr [0x540ce8]",
+        "read": true,
+        "write": false
+      }
+    ]
+  },
+  "renderer_offset40": [
+    {
+      "address": "00499d02",
+      "function": "004994b0",
+      "instruction": "mov eax, dword ptr [ebp + 0x40]",
+      "read": true,
+      "write": false
+    }
+  ],
+  "limitation": "직접 메모리 피연산자 열거이며 간접 포인터 alias의 부재를 단독으로 증명하지 않는다."
+}

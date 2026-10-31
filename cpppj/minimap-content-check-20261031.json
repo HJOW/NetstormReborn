@@ -1,0 +1,48 @@
+{
+  "unit": 639,
+  "host": "HJOW-Athlon",
+  "product_changed": false,
+  "tests": [
+    {
+      "filter": "MinimapDirty_",
+      "exit_code": 0,
+      "summary": "3 test(s), 0 failed check(s)"
+    },
+    {
+      "filter": "metadisplayDirty_",
+      "exit_code": 0,
+      "summary": "7 test(s), 0 failed check(s)"
+    },
+    {
+      "filter": "MinimapRaster_",
+      "exit_code": 0,
+      "summary": "1 test(s), 0 failed check(s)"
+    },
+    {
+      "filter": "MinimapGeometry_",
+      "exit_code": 0,
+      "summary": "1 test(s), 0 failed check(s)"
+    },
+    {
+      "filter": "MinimapBlit_",
+      "exit_code": 0,
+      "summary": "2 test(s), 0 failed check(s)"
+    },
+    {
+      "filter": "DrawSubmission_",
+      "exit_code": 0,
+      "summary": "8 test(s), 0 failed check(s)"
+    },
+    {
+      "filter": "RendererCloud_",
+      "exit_code": 0,
+      "summary": "3 test(s), 0 failed check(s)"
+    }
+  ],
+  "protected_count": 2629,
+  "protected_changes": [],
+  "game_executed": false,
+  "test_executable_sha256": "fc63d160be388d7926880901e5436ed6bdc5b3e1b2d578d37f2582bd77ca962c",
+  "build_log": "extracted/cpp-639-build-v4.log",
+  "registered_tests": 3555
+}
