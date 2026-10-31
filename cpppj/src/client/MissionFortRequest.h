@@ -4,6 +4,7 @@
 #include "zacket/LocalMissionTransport.h"
 #include <functional>
 #include <memory>
+#include <optional>
 #include <string>
 
 namespace netstorm::client {
@@ -29,6 +30,7 @@ struct MissionFortLoadRequest {
     std::string fort; // 같은 Fort 선택 효과가 소유 복사한 UTF-8 이름이다.
     std::vector<std::uint8_t> zone; // 관찰기 확정 뒤 실제86BYTE 복사본이며 원본512BYTE 스택의 참조가 아니다.
     bool consumed{}; // 실제 Zone 설치 후 반납 여부다. 재설치는 명시 거부한다.
+    std::optional<o::LocalMissionStartingSnapshot> starting; // 실제 State7 앞단이 캡처한 정리 전 지역 값이다. 있으면 Login은 현재 Native 요청을 Init 캡처로 덮어쓰지 않는다.
 };
 // 원본0040a1e0(1)의 길이 확정과004dece0의 실제 소유 복제를 같은 버퍼에 수행한다.
 std::uint32_t CaptureMissionFortZone(MissionFortLoadRequest& request,zacket::LocalMissionPacket& packet);

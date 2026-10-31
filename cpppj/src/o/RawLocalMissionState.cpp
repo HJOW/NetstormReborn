@@ -32,15 +32,22 @@ void RawLocalMissionState::Poll() {
     if (state_.next[0]) { state_.current=state_.next;state_.next[0]=0;Run(); }
 }
 // original7은cleanup전ticks/source를 보존하고 이후 CD/Zone/Renderer를 원문 위치에서 조회한다.
+LocalMissionStartingSnapshot CaptureLocalMissionStarting(const LocalMissionStateBlock& current,const std::uint32_t& zonePending,std::uint8_t& titleInitial,const std::uint32_t& gameTicks,const std::uint32_t& sourceType) {
+    LocalMissionStartingSnapshot saved;saved.zonePending=zonePending;titleInitial=0;if (current[0x84/4]) { saved.gameTicks=gameTicks;saved.sourceType=sourceType; }return saved;
+}
+// callback이 바꾼 현재 재접속 표식을 반영하며 최초 조건을 따로 캐시하지 않는다.
+void RestoreLocalMissionStarting(const LocalMissionStateBlock& current,const LocalMissionStartingSnapshot& saved,std::uint32_t& gameTicks,std::uint32_t& sourceType) {
+    if (current[0x84/4]) { gameTicks=saved.gameTicks;sourceType=saved.sourceType; }
+}
+// 같은 원문 지역 값 몸체를 실제 호스트 State7과 독립 상태 분배기가 공유한다.
 void RawLocalMissionState::Starting() {
-    Need(hooks_.clearSelection,"선택정리미연결")();const auto zonePending=globals_.zonePending;globals_.titleInitial=0;std::uint32_t ticks=0,source=0;
-    if (state_.current[0x84/4]) { ticks=globals_.gameTicks;source=globals_.sourceType; }
+    Need(hooks_.selectDefaultDenominator,"기본 배경 분모 선택 미연결")();const auto saved=CaptureLocalMissionStarting(state_.current,globals_.zonePending,globals_.titleInitial,globals_.gameTicks,globals_.sourceType);
     Need(hooks_.cleanupBattle,"현재전투정리미연결")(1);globals_.cdPresent=Need(hooks_.cdPresent,"현재CD확인미연결")();Need(hooks_.refreshCommands,"명령창갱신미연결")();
-    if (state_.current[0x84/4]) { globals_.gameTicks=ticks;globals_.sourceType=source; }
+    RestoreLocalMissionStarting(state_.current,saved,globals_.gameTicks,globals_.sourceType);
     globals_.inBattle=true;Need(hooks_.stopMusic,"음악정리미연결")();
     if (globals_.missionWorld && globals_.missionPost) Need(hooks_.refreshMission,"현재미션가상갱신미연결")();
     if (globals_.simulconnect) throw std::logic_error("simulconnect서버분기는선택단독미션범위밖");
-    if (zonePending) { Need(hooks_.installZone,"현재Zone설치미연결")(state_.current[0x80/4]);Need(hooks_.freeZone,"현재Zone해제미연결")(state_.current[0x80/4]);state_.current[0x80/4]=0;state_.next[0x80/4]=0;Need(hooks_.installMapHandlers,"실제맵처리기등록미연결")(); }
+    if (saved.zonePending) { Need(hooks_.installZone,"현재Zone설치미연결")(state_.current[0x80/4]);Need(hooks_.freeZone,"현재Zone해제미연결")(state_.current[0x80/4]);state_.current[0x80/4]=0;state_.next[0x80/4]=0;Need(hooks_.installMapHandlers,"실제맵처리기등록미연결")(); }
     Need(hooks_.initializeRenderer,"현재Renderer초기화미연결")();globals_.player.playerKnown=0;Need(hooks_.uiMode,"현재UI모드미연결")(2);
     const auto now=Need(hooks_.wallSeconds,"현재벽시각미연결")();globals_.activityEnd=now+10.0;state_.immediate[1]=20;Request(8);
     if (state_.current[0x84/4]) { globals_.savedGame=true;Need(hooks_.loadReconnectFort,"재접속Fort읽기미연결")();Need(hooks_.progress,"재접속진행창미연결")(LocalMissionProgress::ReconnectStarting,0); }

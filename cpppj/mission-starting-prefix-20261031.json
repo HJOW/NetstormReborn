@@ -1,0 +1,112 @@
+{
+  "unit": 659,
+  "date": "2026-10-31",
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "productChanged": true,
+  "executableSha256": "91489ba3891033cdbbdf1d50d2b6547c61780cfa3c38d43bcfdba426138d8db7",
+  "changes": [
+    "실제 next7을 cleanup 전에 current로 소비하고 기존 ClientCameraGlobals.SelectDenominator를 기본 배경 시차 분모 선택에 연결했다. Snapshot/RendererView/target을 새로 만들지 않는다.",
+    "State7 정리 전 ZonePending·제목 첫BYTE0·조건부 GameTicks/SourceType 캡처와 명령 창 정리 뒤 현재+84 재조회/복원을 기존 상태 분배기와 같은 몸체로 공유한다.",
+    "실제 로그인은 앞단이 보유한 현재 Native 요청을 Init 캡처로 덮어쓰거나 제목을 다시0으로 만들지 않는다. 독립 편의 접합은 기존 캡처 경계를 유지한다.",
+    "4978d0의 의미를 기본 배경 시차 분모 선택으로 정정했다. 기계어의 복원 저장은 GameTicks→SourceType이며 디컴파일 텍스트 순서와 구별한다."
+  ],
+  "focused": {
+    "registered": 50,
+    "finalUnique": 10,
+    "newUnique": 2,
+    "newInputs": 5,
+    "oldUnique": 8,
+    "finalFailedChecks": 0,
+    "finalInvocations": 7,
+    "finalTestFunctionCalls": 10,
+    "attemptedInvocations": 9,
+    "completedTestFunctionCalls": 12,
+    "terminatedTestFunctionCalls": null,
+    "logs": [
+      "extracted/cpp-mission-starting-prefix-659-focused-v3.log",
+      "extracted/cpp-mission-starting-prefix-659-commit.log",
+      "extracted/cpp-mission-starting-prefix-659-state.log",
+      "extracted/cpp-mission-starting-prefix-659-camera.log",
+      "extracted/cpp-mission-starting-prefix-659-denominator.log",
+      "extracted/cpp-mission-starting-prefix-659-renderer.log",
+      "extracted/cpp-mission-starting-prefix-659-async.log"
+    ],
+    "initial": [
+      {
+        "log": "extracted/cpp-mission-starting-prefix-659-focused-v1.log",
+        "kind": "출력 전 비정상 종료",
+        "toolExitCode": 1,
+        "rawProcessExitCode": null,
+        "logBytes": 0,
+        "reportedTests": null,
+        "reportedFailedChecks": null,
+        "reason": "새 앞단이 자산 초기화 전 Assets().Edition()을 역참조했다. 기존 Client.Edition()으로 바꿨으며 제품의 실제 필수 요청/설치 관문은 유지했다."
+      },
+      {
+        "log": "extracted/cpp-mission-starting-prefix-659-focused-v2.log",
+        "tests": 2,
+        "failedChecks": 3,
+        "reason": "반복 검사에서 새 인자를 매번 같은 값으로 넣어 직전 stale 캡처와 세 번 같아졌다. 반복마다 다른 인자를 공급하고 진단을 나눴으며 기대값/제품 조건을 약화하지 않았다."
+      }
+    ],
+    "scope": "실제 Client의 재접속 표식 전/후 네 조합·기본/현재 분모 변경과 동일값·제목 이웃 보존·전체 현재144BYTE/next0 소비·phase/old 유지, 실제 World 로그인에서 앞단 이후 현재 인자 보존과 완료를 확인했다.",
+    "limits": "다른40등록/주 검사 전체와 실제 UberGump의 cleanup/CD/음악/GUI 연쇄를 실행하지 않았다. 미션 수명 상의 실제 화면/연속 전환 통합은 다음 기능 묶음에 남긴다."
+  },
+  "native": {
+    "newCases": 0,
+    "newObservations": 0,
+    "newFixture": false,
+    "replayedRows": 49,
+    "existingRows": {
+      "localState": 33,
+      "cameraView": 16
+    },
+    "staticInstructions": 59,
+    "scope": "기존 독립 State33/카메라16행을 재대조했다. 새 PE 에뮬레이션/게임 실행 없이 기본 분모와 State7 보관/복원의59명령을 정적으로 확인했다. 새 Native 분모 입력 관측으로 합산하지 않는다."
+  },
+  "build": {
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "logs": [
+      "extracted/cpp-mission-starting-prefix-659-build-v1.log",
+      "extracted/cpp-mission-starting-prefix-659-build-v2.log",
+      "extracted/cpp-mission-starting-prefix-659-build-v3.log",
+      "extracted/cpp-mission-starting-prefix-659-build-v4.log"
+    ],
+    "finalProductLog": "extracted/cpp-mission-starting-prefix-659-build-v4.log",
+    "commentOnlyAfterFinalBuild": true
+  },
+  "protected": {
+    "baseline": "extracted/cpp-solo-entry-645-20261031/protected-after-current.json",
+    "checked": 7,
+    "differences": 0,
+    "sha256": {
+      "AGENTS.md": "e9e46fda5519e663417b5c8d9b643549196bf28fe7ba6b1d546a48a853fd208b",
+      "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+      "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6",
+      "cpppj/tests/fixtures/local-mission-state-x86.tsv": "b591cc51ffd837ce29d04e8090c066d33f5baf4abc1b3c863371346f161d2995",
+      "cpppj/tests/fixtures/camera-view-x86.tsv": "fb22a21df5be3ca9201d1c8d635f0e4b49b6f974efbacfe46e012a86536887d0",
+      "cpppj/tests/fixtures/mission-fort-request-x86.tsv": "1ce96cb3b740b26b68033e67b87493a88d0578357b080755419ba2a3d4041f19"
+    },
+    "fullAuditRepeated": false
+  },
+  "decompileChanged": false,
+  "actualGameRuns": 0,
+  "actualCdEnumeration": false,
+  "newZip": false,
+  "full34Repeated": false,
+  "mainTestExecutableRebuilt": false,
+  "multiplayerTests": 0,
+  "cdStatic": {
+    "scope": "새 앞단은 Client.Edition()으로10.78을 선택한다.10.72의 기존 어댑터/전체 State7 실행은 이번 검증 범위 밖이다."
+  },
+  "remaining": [
+    "Run의 최초 next/immediate 복사·State7 로그를 cleanup 앞단보다 먼저 수행하는 전체 부모/Native Poll 수명과 재접속 분기",
+    "캡처한 ZonePending0의 비로컬/리스너 부재 분기와4c1e70 시계 패킷 등록·외부 동기화/주기 내보내기",
+    "State1/연속 전환·나머지 UI/Edit/시나리오/호환성·BaseFile 소비자/ABI·시작 레지스트리/메타State19/LeaveBattle·후순위MP 무시험 사전 구현과4~7차"
+  ]
+}

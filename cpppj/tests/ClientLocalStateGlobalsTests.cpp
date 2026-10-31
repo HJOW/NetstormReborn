@@ -230,3 +230,4 @@ TEST_CASE(GameAux_SessionIdentityFailureLeavesBothOwnersUnchanged) {
 #include "MissionStartingTailTests.inc" // 실제 후반 UI/기한/인자/생성 전 팔레트를 같은 장치로 함께 확인한다.
 #include "MissionAsyncConnectionTests.inc" // 실제 상태/패킷 프레임 경계와 준비 중 폐기/완료 공개를 확인한다.
 #include "MissionStartingCommitTests.inc" // 실제7 공통 확정/안내 위치와 미확정 예외의 부분 반납을 확인한다.
+#include "MissionStartingPrefixTests.inc" // 실제 기본 배경 분모/정리 전 지역 값과 살아 있는 Native 요청을 확인한다.

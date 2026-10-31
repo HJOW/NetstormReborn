@@ -1,5 +1,9 @@
 // 검사 관찰 콜백을 사용하지 않고 현재 클라이언트의 실제 서비스를 빌린다.
 #include "client/CampaignClientServices.h"
+#include "client/MissionFortRequest.h"
+#include "client/ClientGameplayGlobals.h"
+#include "client/ClientKencloudGlobals.h"
+#include "client/ClientHtmlWindowGlobals.h"
 #include "client/CurrentAllocationBytes.h"
 #include "client/SoloMapCatalog.h"
 #include "client/RawCampaignMissionStartBindings.h"
@@ -123,6 +127,12 @@ void BindCampaignLoginStateClientServices(Client& client,RawButtonControls& cont
     login.uiMode=[&client,&controls](auto mode) { static_cast<void>(controls.NotifyHudMode(client.LocalStateGlobals()->HudModeCommand(),mode)); }; // 현재 명령·현재 mode·둘째0·숨김 포함1의 실제 캡처/modal/루트 분배다.
     login.battlePalette=[&client] { const auto name=client.Configuration().PathSpec("battlePal");client.ChangeFortPalette({reinterpret_cast<const std::uint8_t*>(name.c_str()),name.size()+1}); }; // 최초 서비스 생성 시의 경로를 캐시하지 않고 NUL을 포함해 기존 전체 부모에 전달한다.
     login.closeProgress=[&controls] { if (!controls.Menus()) throw std::logic_error("로그인 진행 안내의 실제 메뉴 미설치");controls.Menus()->CloseMissionLoading(); }; // 원문처럼 Kill/현재 serial0이며 실제 소멸은 일반 Gump 정리까지 유지한다.
+}
+// 현재 Native 요청을 Init 캡처로 되돌리지 않으며 실제 분모/시각/출처와 제목 물리만 선택 위치에서 바꾼다.
+void PrepareCampaignMissionStarting(Client& client,MissionFortLoadRequest& request) {
+    auto state=client.LocalStateGlobals()->State();if (client.Edition()!=o::OriginalEdition::Patch1078 || request.consumed || request.starting || request.zone.size()!=86 || state.next[0]!=7 || state.next[32]!=1 || request.next[32]!=1) throw std::logic_error("실제 State7 현재 요청/Zone/새 앞단 계약 오류"); // 창/자산 초기화와 무관한 판본 조회를 사용하며 실제 자료를 앞당겨 요구하지 않는다.
+    state.current=state.next;state.next[0]=0;client.GameplayGlobals()->Camera().SelectDenominator(0,client.KencloudGlobals()->WorldRedraw());
+    auto& local=*client.LocalStateGlobals();auto& title=reinterpret_cast<std::uint8_t&>(client.HtmlWindowGlobals()->text.background[0]);request.starting=o::CaptureLocalMissionStarting(state.current,local.ZonePending(),title,local.GameTicks(),local.SourceType());
 }
 // 실제 Client의 장기 소유자/입력/음향과 UI를 같은 Session 서비스에 조립한다.
 RawCampaignSessionServices MakeCampaignClientServices(Client& client,RawButtonControls& controls,CampaignClientUi ui) {

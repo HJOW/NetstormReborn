@@ -146,12 +146,12 @@ struct RawCampaignSession::Impl::Login {
         s.services.ai.localTransport=[this] { return transport->IsOpen(); };s.services.carrierRequest=[this](std::int32_t target,std::span<const std::uint8_t> bytes) { Send(target,bytes); };
         auto request=s.services.missionFortRequest;std::optional<netstorm::zacket::LocalMissionPacket> fallback; // Init에서 작성한 같은86BYTE를 사용하며 독립 Session만 기존 작성기를 호출한다.
         if (s.services.adoptInitializedPlayers && !request) throw std::logic_error("실제 Client 미션의 State7 요청 누락");
-        if (request) { if (request->consumed || request->next[0]!=7 || request->next[0x80/4]!=1 || request->zone.size()!=86) throw std::logic_error("현재 Init Fort 요청/이미지 계약 위반");blocks[3]=request->next; }
+        if (request) { if (request->consumed || request->next[0]!=7 || request->next[0x80/4]!=1 || request->zone.size()!=86) throw std::logic_error("현재 Init Fort 요청/이미지 계약 위반");if (request->starting) { if (blocks[3][0]!=7 || blocks[3][32]!=1) throw std::logic_error("정리 뒤 실제 현재 State7/Zone 계약 위반"); }else blocks[3]=request->next; } // 실제 앞단은 현재 블록을 이미 소비했다. 독립 편의 접합만 이전 Init 캡처를 사용한다.
         else fallback=netstorm::zacket::MakeLocalMissionZone();
         const bool startingTail=s.services.adoptInitializedPlayers || effects.uiMode || effects.battlePalette || effects.startingProgress; // 실제 후반 경로만 State7 공통 확정에 연결하고 기존 독립 상태8 범위를 구별한다.
         if (startingTail && !request) blocks[3][0]=7; // 독립 편의 요청도 현재7을 명시한다. 실제 Client는 Init/요청의 같은144BYTE를 사용한다.
         const auto starting=[this,&request,&fallback,startingTail] { // 앞선 호스트 정리 뒤의 실제 Zone/Renderer/안내를 원문 공통부 안에서 수행한다.
-        title=0; //원문 State7은 Zone 설치/실제 HUD 생성 전에565e70 첫BYTE를 지운다. 나머지79BYTE/P 억제와 전체 미복원 cleanup은 건드리지 않는다.
+        if (!request || !request->starting) title=0; // 실제 앞단은 정리 전에 첫BYTE를 이미 지웠다. 뒤에서 현재 제목을 다시 쓰지 않으며 독립 편의 접합만 이전 경계를 유지한다.
         const auto zone=request ? std::span<const std::uint8_t>(request->zone) : fallback->Bytes();netstorm::zacket::LocalMissionZoneHooks hooks;hooks.loginTimeout=[this] { return Need(effects.configInt)("loginTimeout",30); };hooks.seconds=effects.wallSeconds;
         hooks.storeName=[](std::uint32_t subscriber,std::string_view name) { SanitizeMissionPlayerName(subscriber,{reinterpret_cast<std::uint8_t*>(const_cast<char*>(name.data())),name.size()+1}); };
         hooks.serve=[this](std::uint32_t port) { transport->Open(port,false); };

@@ -668,11 +668,12 @@ void UberGump::LoadMissionWorld(std::optional<std::string> requestedFort) {
         ~LoadingRetirement() { if (!continued) menus.CloseMissionLoading(); } // 준비 실패의 현재 안내는 반납하고 정상 대기는 일반 프레임까지 유지한다.
     } loading{*rawButtons_->Menus()};
     if (!nativePlayers) { rawButtons_->Menus()->ShowMissionLoading(LoadingHtmlContext({85,0,client_.GetScreen().Width(),client_.GetScreen().Height()}),FontBytes(client_.Translate("Starting Mission...")),[this] { return FontBytes(client_.Translate("Cancel")); });rebuild_=true;Compose();client_.PresentScene(); } //10.72의 기존 어댑터만 파일 전 표시를 유지한다.10.78은 원문 State7 안내 위치에서 생성한다.
-    if (nativePlayers) { htmlGlobals_.background[0]=0;CleanupNativeStateWorld(1);client_.LocalStateGlobals()->CdPresent()=client_.CdGlobals()->Check(MakeWindowsCdPresenceHooks()); } // 원문 State7의 정리 뒤 실제 CD 확인을 같은005c85b8에 기록한다. 로딩 안내 뒤 새 HUD 초기 도킹 전 중간 화면은 출력하지 않는다.
+    if (nativePlayers) { PrepareCampaignMissionStarting(client_,*missionFortRequest_);CleanupNativeStateWorld(1);client_.LocalStateGlobals()->CdPresent()=client_.CdGlobals()->Check(MakeWindowsCdPresenceHooks()); } // 기본 분모/현재 요청·정리 전 지역 값 뒤 실제 cleanup/CD 순서다. 후반에서 Init 캡처로 현재 상태를 다시 덮어쓰지 않는다.
     else if (world_) ClearWorld(); //10.72의 기존 동기 World 어댑터는 해당 판본 전체 State 복원 전까지 유지한다.
     if (world_) throw std::logic_error("미션 State cleanup 뒤 이전 World 대여가 남아 있음"); //원문 정리의 실제 반납을 확인한 뒤에만 새 Session을 만든다.
     if (nativePlayers) {
         if (commandGump_) static_cast<void>(rawButtons_->BubbleGump(commandGump_,0x02000088U,0,0)); // 원문 State7의 CD 뒤 명령 창 숨김이다.
+        auto& local=*client_.LocalStateGlobals();o::RestoreLocalMissionStarting(local.State().current,*missionFortRequest_->starting,local.GameTicks(),local.SourceType()); // 명령 창 효과 뒤 바뀐 현재+84도 다시 읽고 기계어의 시각→출처 순서로 복원한다.
         client_.SurfaceStorage()->ownerMode.battle=true;if (client_.Audio()) client_.Audio()->StartScene(true); //469fc0의 실제 전투 음악 갱신은 Zone/월드 설치보다 앞이다.
         if (missionRuntime_->guided) PauseMissionWorldEntry([this] { return missionRuntime_!=nullptr; },[this] { o::PauseMissionFrameForDialog(missionRuntime_->gate,[this] { return client_.Paused(); },[this] { client_.PushGamePause(); }); }); // 같은 자기 정지 상태를 커서 생성 전에도 원문 위치에서 적용한다.
     }

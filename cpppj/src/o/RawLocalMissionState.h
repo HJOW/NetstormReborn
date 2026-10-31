@@ -9,6 +9,14 @@
 namespace netstorm::o {
 // 원본 상태와 부가 인자 전체0x90BYTE다. 첫DWORD만 상태번호다.
 using LocalMissionStateBlock=std::array<std::uint32_t,36>;
+// State7이 정리 전에 보관하며 현재 블록의 재접속 표식을 나중에 다시 조회하는 원문 지역 값이다.
+struct LocalMissionStartingSnapshot {
+    std::uint32_t zonePending{}; // 005c85c0의 정리 전 값이며 정리 뒤 전역0과 구별한다.
+    std::uint32_t gameTicks{}; // current+84 비영일 때만 보관한0055b4ac다.
+    std::uint32_t sourceType{}; // 같은 조건으로 보관한0055a420이며 false 입력에서는0이다.
+};
+LocalMissionStartingSnapshot CaptureLocalMissionStarting(const LocalMissionStateBlock& current,const std::uint32_t& zonePending,std::uint8_t& titleInitial,const std::uint32_t& gameTicks,const std::uint32_t& sourceType); // 기본 분모 선택 뒤 Zone 캡처→제목 첫BYTE0→조건부 시각/출처 보관 순서다.
+void RestoreLocalMissionStarting(const LocalMissionStateBlock& current,const LocalMissionStartingSnapshot& saved,std::uint32_t& gameTicks,std::uint32_t& sourceType); // 정리/CD/명령 숨김 뒤 현재+84를 재조회해 기계어의 시각→출처 순서로 복원한다.
 // 실제 다섯 상태 블록을 같은 저장소로 빌린다.
 struct LocalMissionStateStorage {
     LocalMissionStateBlock& old; // 005c8630: 마지막 확정 때의 이전phase 전체다.
@@ -38,7 +46,7 @@ struct LocalMissionStateHooks {
     std::function<void()> assertion; // 004b2bc0의이미요청된immediate진단이다.
     std::function<void(std::uint32_t)> invalidState; // 원본default진단이다.
     std::function<LocalMissionParentResult(std::uint32_t)> parentState; // 1/2/3큰메뉴부모전체와실제반환종류다.
-    std::function<void()> clearSelection; std::function<void(std::uint32_t)> cleanupBattle; // 004978d0/004b2df0의실제정리다.
+    std::function<void()> selectDefaultDenominator; std::function<void(std::uint32_t)> cleanupBattle; // 004978d0(0)의 기본 배경 시차 분모 선택과004b2df0의 실제 정리다.
     std::function<std::uint32_t()> cdPresent; std::function<void()> refreshCommands; std::function<void()> stopMusic; // CD 확인00440c60/명령 숨김0042e440/음악 정리00469fc0다.
     std::function<void()> refreshMission; // missionWorld&&missionPost의00463a40가상+28이다.
     std::function<void(std::uint32_t)> installZone,freeZone; std::function<void()> installMapHandlers; // 004b4be0/free/004c1e70이다. ZoneDWORD는호스트가해석하는핸들이다.

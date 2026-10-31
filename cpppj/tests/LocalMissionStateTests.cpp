@@ -52,7 +52,7 @@ struct StateScene {
         h.logState=[this](std::uint32_t state) { Event("State,"+std::to_string(state));if (mutation==4) blocks[3][0]=8; };
         h.assertion=[this] { Event("Assert"); };
         h.invalidState=[](std::uint32_t) { throw std::logic_error("선택 native 입력 밖의 상태 진단"); };
-        h.clearSelection=[this] { Event("Selection"); };
+        h.selectDefaultDenominator=[this] { Event("Selection"); }; // 동결 trace의 옛 이름을 유지하며 실제 의미는4978d0의 기본 배경 분모 선택이다.
         h.cleanupBattle=[this](std::uint32_t reason) { Event("Cleanup,"+std::to_string(reason));server=false;boss=false;post=true;zonePending=0;saved=false;ticks=0;source=0;if (mutation==7) blocks[3][33]=0; };
         h.cdPresent=[this] { Event("Seed");return 123U; }; // 기존 동결 trace의 Seed는 CD 호출 경계의 옛 표식이다. 난수 몸체를 실행하지 않는다.
         h.refreshCommands=[this] { Event("Commands"); };h.stopMusic=[this] { Event("Music"); };h.refreshMission=[this] { Event("Mission"); };
