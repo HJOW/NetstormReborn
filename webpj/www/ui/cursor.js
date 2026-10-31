@@ -7,6 +7,22 @@
 // 메인 메뉴 기본 커서(번호 1)의 데이터 폴더 기준 경로이다. (2026-10-23 WB03-M1)
 export const DEFAULT_CURSOR_PATH = 'cursors/RT_CURSOR_8.bin';
 
+// 원본 커서 번호이다(10.78 번호 → 리소스 그룹 표 005423a8, assets/game-data/cursors/README.md). 번호 0 은 "아직 모양을 정하지 않음"이다.
+// 기본 모양(흰 화살표)이다. 커서 사건을 처리하는 위젯이 없거나 처리기가 0 을 돌려주면 원본이 이 번호로 되돌린다(UberGump 의 Overlay 반환 0 대응). (2026-10-31 WB03-L)
+export const CURSOR_NORMAL = 1;
+// 스크롤할 수 있는 본문 위의 모양(가로 막대를 지나는 상하 화살표)이다. 원본 ScrollingTextGumpWidgets 의 kScrollCursor 이다. (2026-10-31 WB03-L)
+export const CURSOR_SCROLL = 15;
+// 본문의 링크 위의 모양(가리키는 손)이다. 원본 ScrollingTextGumpWidgets 의 kTagCursor 이다. (2026-10-31 WB03-L)
+export const CURSOR_LINK = 16;
+
+// 웹 묶음에 들어 있는 커서의 번호별 데이터 폴더 기준 경로이다. 다른 번호는 쓰이는 곳이 연결될 때 자산 묶음(tools/prepare-assets.js)과 함께 더한다.
+// 번호와 파일의 대응은 assets/game-data/cursors/README.md 의 표와 같아야 한다(tests/cursor.test.mjs 가 표와 대조한다). (2026-10-31 WB03-L)
+export const CURSOR_PATHS = Object.freeze({
+    [CURSOR_NORMAL]: DEFAULT_CURSOR_PATH,
+    [CURSOR_SCROLL]: 'cursors/RT_CURSOR_17.bin',
+    [CURSOR_LINK]: 'cursors/RT_CURSOR_18.bin',
+});
+
 // 커서 리소스의 핫스폿 머리 크기(바이트)이다. 그 뒤에 BITMAPINFOHEADER 가 온다. (2026-10-23 WB03-M1)
 const HOTSPOT_HEADER_SIZE = 4;
 

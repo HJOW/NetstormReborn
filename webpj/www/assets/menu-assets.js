@@ -13,7 +13,7 @@ import { BitmapFont, DEFAULT_FONT_PATH } from './bitmap-font.js';
 import { FontSet } from './font-set.js';
 import { buttonTextContexts } from '../render/gump-visual.js';
 import { StyleColors } from '../ui/style-text.js';
-import { DEFAULT_CURSOR_PATH, decodeCursorResource } from '../ui/cursor.js';
+import { CURSOR_LINK, CURSOR_NORMAL, CURSOR_PATHS, CURSOR_SCROLL, DEFAULT_CURSOR_PATH, decodeCursorResource } from '../ui/cursor.js';
 
 // 메인 메뉴 화면 표시 전에 반드시 받아야 하는 자산 묶음 이름이다(매니페스트 bundle 값). (2026-10-23 WB03-M1)
 export const MENU_BUNDLE = 'menu';
@@ -29,6 +29,9 @@ export const MENU_ASSET_PATHS = Object.freeze({
     shapes: 'd/_shapes.shp',
     font: DEFAULT_FONT_PATH,
     cursor: DEFAULT_CURSOR_PATH,
+    // 스크롤할 수 있는 본문 위(번호 15)·링크 위(번호 16) 커서이다. (2026-10-31 WB03-L)
+    cursorScroll: CURSOR_PATHS[CURSOR_SCROLL],
+    cursorLink: CURSOR_PATHS[CURSOR_LINK],
     buttonSound: 'sound/button.wav',
     music: 'music/ser22.mus',
 });
@@ -87,13 +90,16 @@ function requireFile(files, path) {
 
 // 내려받은 파일 Map(경로 → Uint8Array)으로 메인 메뉴 그리기 자원 묶음을 만든다.
 // palette 는 원본 화면 팔레트 규칙(0번 검정·255번 흰색 고정)을 적용한 화면 팔레트다.
-// 반환: { palette, shadeMaps, buttonPalette, textContexts, font, clouds(512×512 아니면 null), title, texture, textureMetrics, cursor }
-// 사용: new MainMenuScreen({ resources: buildMenuResources(files) }) (2026-10-23 WB03-M1)
+// 반환: { palette, shadeMaps, buttonPalette, textContexts, font, clouds(512×512 아니면 null), title, texture, textureMetrics, cursor, cursors }
+// cursor 는 기본 커서(번호 1)이고 cursors 는 번호 → 해독한 커서의 표(번호 1·15·16)이다.
+// 사용: new MainMenuScreen({ resources: buildMenuResources(files) }) (2026-10-23 WB03-M1, 2026-10-31 WB03-L: cursors 추가)
 export function buildMenuResources(files) {
     const palette = buildScreenPalette(GamePalette.parse(requireFile(files, MENU_ASSET_PATHS.palette)));
     const shapes = new ShapeDatabase(requireFile(files, MENU_ASSET_PATHS.shapes));
     const clouds = decodeGif(requireFile(files, MENU_ASSET_PATHS.clouds));
     const buttonPalette = buildButtonPalette(palette.logical);
+    // 번호별 커서를 해독한다. 기본 커서(번호 1)는 MENU_ASSET_PATHS.cursor 와 같은 파일이다. (2026-10-31 WB03-L)
+    const cursors = Object.freeze(Object.fromEntries(Object.entries(CURSOR_PATHS).map(([number, cursorPath]) => [number, decodeCursorResource(requireFile(files, cursorPath))])));
     return Object.freeze({
         palette,
         shadeMaps: buildShadeMaps(palette.logical),
@@ -116,6 +122,7 @@ export function buildMenuResources(files) {
         title: decodeGif(requireFile(files, MENU_ASSET_PATHS.title)),
         texture: shapes.decode(FORT_GUMP_BLOCK, STONE_BUTTON_TEXTURE_FRAME),
         textureMetrics: shapes.squidMetrics(FORT_GUMP_BLOCK, STONE_BUTTON_TEXTURE_FRAME),
-        cursor: decodeCursorResource(requireFile(files, MENU_ASSET_PATHS.cursor)),
+        cursor: cursors[CURSOR_NORMAL],
+        cursors,
     });
 }

@@ -193,6 +193,22 @@
       "use": "원본 기본 커서 번호 1(흰 화살표, 핫스폿 10,6)"
     },
     {
+      "path": "cursors/RT_CURSOR_17.bin",
+      "source": "assets/game-data/cursors/RT_CURSOR_17.bin",
+      "bundle": "menu",
+      "size": 308,
+      "sha256": "5043119a4d25e1d2e74324fd3732671d9a9d801272ca2d68496bec75193d3b09",
+      "use": "원본 커서 번호 15(가로 막대를 지나는 상하 화살표, 핫스폿 15,13): 스크롤할 수 있는 본문 위(ScrollingTextGumpWidgets kScrollCursor)"
+    },
+    {
+      "path": "cursors/RT_CURSOR_18.bin",
+      "source": "assets/game-data/cursors/RT_CURSOR_18.bin",
+      "bundle": "menu",
+      "size": 308,
+      "sha256": "2eb264a06d6cb21491d7226e3069c6131d12258743139efcd6d9d312f671579a",
+      "use": "원본 커서 번호 16(가리키는 손, 핫스폿 12,9): 본문의 링크 위(ScrollingTextGumpWidgets kTagCursor)"
+    },
+    {
       "path": "sound/button.wav",
       "source": "assets/game-data/sound/button.wav",
       "bundle": "menu",

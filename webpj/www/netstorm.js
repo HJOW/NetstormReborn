@@ -34,7 +34,7 @@ import { applyScriptConfig, parseScriptCommand } from './ui/script-command.js';
 import { dispatchHelpLink } from './ui/help-link.js';
 import { configParseLong } from './assets/config.js';
 import { HelpWindow, createHelpWindow } from './ui/help-window.js';
-import { applyCursorStyle, buildCursorCss } from './ui/cursor.js';
+import { CURSOR_NORMAL, applyCursorStyle, buildCursorCss } from './ui/cursor.js';
 
 // ---------------------------------------------------------------------------------------------
 // 상수
@@ -436,8 +436,14 @@ export class Netstorm {
         this._displayDirty = true;
         // init 때 저장한 문서 제목이다. destroy 가 되돌린다.
         this._savedTitle = null;
-        // 마지막으로 적용한 커서 CSS 의 열쇠(배율·픽셀 비율)다. 같으면 다시 만들지 않는다.
+        // 마지막으로 적용한 커서 CSS 의 열쇠(커서 번호·배율·픽셀 비율)다. 같으면 다시 만들지 않는다.
         this._cursorKey = '';
+        // 지금 적용된 원본 커서 번호이다(1 기본, 15 스크롤, 16 링크). (2026-10-31 WB03-L)
+        this._cursorNumber = CURSOR_NORMAL;
+        // 번호 → 현재 배율로 만든 CSS 커서 값의 캐시이다. 배율·픽셀 비율(_cursorSizeKey)이 바뀌면 비운다. 커서가 바뀔 때마다 그림을 새로 만들지 않으려는 것이다. (2026-10-31 WB03-L)
+        this._cursorCache = new Map();
+        // 캐시가 만들어진 배율·픽셀 비율의 열쇠이다. (2026-10-31 WB03-L)
+        this._cursorSizeKey = '';
     }
 
     // ----- 읽기 전용 속성 -----
@@ -547,6 +553,9 @@ export class Netstorm {
         if (this._resources) this._presenter.setPalette(this._resources.palette.rgb);
         this._displayDirty = true;
         this._cursorKey = '';
+        this._cursorNumber = CURSOR_NORMAL;
+        this._cursorCache.clear();
+        this._cursorSizeKey = '';
         this._savedTitle = doc.title;
         try {
             this._applyRootStyle();
@@ -1177,17 +1186,40 @@ export class Netstorm {
         if (next.visible) this._render(view.performance?.now?.() ?? 0);
     }
 
-    // 원본 기본 커서를 현재 화면 배율에 맞춰 Canvas 에 적용한다. 자원이 없거나 배율·픽셀 비율이 같으면 아무것도 하지 않는다.
-    // (2026-10-23 WB03-M1)
+    // 포인터 아래에서 보일 원본 커서 번호를 고른다. 메인 메뉴에서 포인터가 게임 화면 안에 있으면 메뉴(열린 대화상자의 본문)가 고르고(링크 위 16, 스크롤 가능한 본문 위 15),
+    // 그 밖은 기본 커서(1)이다. 고른 번호의 커서 자원이 묶음에 없으면 기본 커서로 대신한다. 원본은 매 포인터 갱신마다 이 선택을 다시 한다(NotifyPointer 의 Overlay). (2026-10-31 WB03-L)
+    _wantedCursor() {
+        const pointer = this._input.pointer;
+        if (this._state !== AppState.MAIN_MENU || !this._mainMenu || !this._resources || !pointer.inside) return CURSOR_NORMAL;
+        const number = this._mainMenu.cursorAt(pointer.x, pointer.y);
+        return this._resources.cursors[number] ? number : CURSOR_NORMAL;
+    }
+
+    // 원본 커서를 현재 화면 배율에 맞춰 Canvas 에 적용한다. 어떤 번호의 커서를 쓸지는 _wantedCursor 가 고른다.
+    // 자원이 없거나 번호·배율·픽셀 비율이 지난번과 같으면 아무것도 하지 않는다. 매 프레임(_onFrame: 포인터 이동·스크롤·창 열림/닫힘으로 포인터 아래 내용이 바뀜)과 화면 배치를 바꿀 때 부른다.
+    // (2026-10-23 WB03-M1, 2026-10-31 WB03-L: 번호별 커서와 캐시 추가)
     _applyCursor() {
         const layout = this._layout;
         if (!this._canvas || !this._resources || !layout?.visible) return;
+        const number = this._wantedCursor();
         const scale = Math.max(1, Math.round(layout.scale));
-        const key = `${scale}:${layout.devicePixelRatio}`;
+        const sizeKey = `${scale}:${layout.devicePixelRatio}`;
+        const key = `${number}:${sizeKey}`;
         if (key === this._cursorKey) return;
+        // 배율·픽셀 비율이 바뀌면 이전 배율로 만든 커서 그림은 버린다.
+        if (sizeKey !== this._cursorSizeKey) {
+            this._cursorCache.clear();
+            this._cursorSizeKey = sizeKey;
+        }
         this._cursorKey = key;
+        this._cursorNumber = number;
         try {
-            applyCursorStyle(this._canvas, buildCursorCss(this._root.ownerDocument, this._resources.cursor, layout.scale, layout.devicePixelRatio));
+            let css = this._cursorCache.get(number);
+            if (!css) {
+                css = buildCursorCss(this._root.ownerDocument, this._resources.cursors[number], layout.scale, layout.devicePixelRatio);
+                this._cursorCache.set(number, css);
+            }
+            applyCursorStyle(this._canvas, css);
         } catch (error) {
             // 커서 그림을 만들 수 없는 환경이면 기본 커서를 그대로 쓴다.
             console.warn('Netstorm: 원본 커서를 적용하지 못했습니다.', error);
@@ -1287,7 +1319,7 @@ export class Netstorm {
         }
     }
 
-    // 포인터가 움직였을 때 좌표를 갱신하고, 메인 메뉴의 붙잡힌 버튼 모양을 갱신한다(원본 Broadcast).
+    // 포인터가 움직였을 때 좌표를 갱신하고, 메인 메뉴의 붙잡힌 버튼 모양을 갱신한다(원본 Broadcast). 포인터 아래 커서 모양은 다음 프레임의 _onFrame 이 고른다. (원본도 매 갱신마다 선택한다)
     _onPointerMove(event) {
         this._updatePointer(event);
         if (this._state === AppState.MAIN_MENU && this._mainMenu) this._mainMenu.pointerMove(this._input.pointer.x, this._input.pointer.y);
@@ -1407,7 +1439,11 @@ export class Netstorm {
         if (!this._canvas) return;
         this._clock.tick(now);
         this._frameSeconds = now / 1000;
-        if (this._state === AppState.MAIN_MENU) this._mainMenu?.update(this._frameSeconds);
+        if (this._state === AppState.MAIN_MENU) {
+            this._mainMenu?.update(this._frameSeconds);
+            // 스크롤·창 열림/닫힘·키 입력으로 포인터 아래 내용이 바뀌었을 수 있으므로 커서를 다시 고른다(원본은 매 포인터 갱신마다 선택). (2026-10-31 WB03-L)
+            this._applyCursor();
+        }
         this._render(now);
         this._startFrameLoop();
     }

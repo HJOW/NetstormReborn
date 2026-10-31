@@ -9,6 +9,7 @@
 // 그 결과 윗줄은 Campaign·Demo·Help 3개, 아랫줄은 Credits·Options 2개이며 각 줄은 가로 가운데에 놓인다.
 // (2026-10-23 WB03-M1: 메인 메뉴 화면 복원, 2026-10-28 WB: Edit 칸을 웹 제외로 변경)
 import { StoneButton, ftol } from './stone-button.js';
+import { CURSOR_NORMAL } from './cursor.js';
 
 // 원본 메인 메뉴의 버튼 칸 9개(원본 004d0120 의 생성 순서)이다.
 //  - label: 원본 라벨(번역 조회 전 원문, 영어 번역표는 원문 그대로)이다.
@@ -270,6 +271,13 @@ export class MainMenuScreen {
         const rect = button.bounds();
         const slot = MAIN_MENU_SLOTS.find((entry) => entry.command === button.command);
         return { x: rect.left + ftol(button.width * CENTER_FACTOR), y: rect.top + (slot?.popupDy ?? 0) };
+    }
+
+    // 화면 좌표 위에서 보일 커서 번호를 돌려준다. 펼침 메뉴가 열려 있으면 기본 화살표, 대화상자가 열려 있으면 대화상자가 고르고(링크 위 손·스크롤 가능한 본문 위 상하 화살표),
+    // 그 밖(돌 버튼 위 포함)은 기본 화살표이다. 대화상자는 cursorAt 이 없으면 기본이다. 사용: const number = menu.cursorAt(pointer.x, pointer.y); (2026-10-31 WB03-L)
+    cursorAt(x, y) {
+        if (this.popup || !this.dialog || typeof this.dialog.cursorAt !== 'function') return CURSOR_NORMAL;
+        return this.dialog.cursorAt(x, y);
     }
 
     // 진행 중인 누름을 실행 없이 취소한다(포커스 상실·탭 숨김·화면 크기 변경).
