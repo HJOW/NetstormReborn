@@ -1,0 +1,5616 @@
+{
+  "unit": 641,
+  "host": "HJOW-Athlon",
+  "last_full_decompilation_host": "HJOW-Athlon",
+  "last_full_decompilation_date": "2026-10-23",
+  "product_unit": 637,
+  "os": {
+    "caption": "Microsoft Windows 10 Pro",
+    "version": "10.0.19045",
+    "build": "19045"
+  },
+  "capture_probe": {
+    "application": "Microsoft.VisualStudioCode",
+    "read_only": true,
+    "input_actions": 0,
+    "attempts": 2,
+    "errors": [
+      "window capture timed out: timed out waiting on channel",
+      "window capture timed out: timed out waiting on channel"
+    ],
+    "conclusion": "게임 외 편집기 창도 재선택 후 캡처에 실패했다. 게임 고유 화면 결함으로 단정하지 않는다."
+  },
+  "binary_sha256": "3923635e953752cbe09e4bfa9158ba401b5d73195e3157cf96f3740a12b2ed33",
+  "passed": 34,
+  "failed": 0,
+  "retries": 1,
+  "initial_failures": [
+    {
+      "mission": "bc6mows76",
+      "demo": false,
+      "result": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-portable-startup-637-20261031\\gui\\한글 휴대 배포 😀\\NetstormReborn-cpppj\\Netstorm.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-portable-startup-637-20261031\\gui\\한글 휴대 배포 😀\\NetstormReborn-cpppj\\game",
+          "--no-audio",
+          "--frames",
+          "480",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=40;autoDemo=0;tellTips=0;startInFullScreen=1;sleepPerLoop=1",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-entry-641-20261031\\regular\\bc6mows76\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-entry-641-20261031\\regular\\bc6mows76\\states.tsv",
+          "--window",
+          "--mission",
+          "bc6mows76"
+        ],
+        "binarySha256": "3923635e953752cbe09e4bfa9158ba401b5d73195e3157cf96f3740a12b2ed33",
+        "returnCode": 1,
+        "timedOut": true,
+        "seconds": 100.4739542999996,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "985e499e799503f5128007a5d394fbc3ec5466cd204b6bd6e207a238fb403193"
+      },
+      "passed": false,
+      "final": {
+        "phase": null,
+        "page": null,
+        "paused": null,
+        "mission": null,
+        "mission_start": null,
+        "mission_gate": null,
+        "raw_session": null,
+        "raw_sp": null,
+        "raw_technology": null,
+        "raw_brains": null,
+        "fort_names": null,
+        "raw_uber": null,
+        "raw_hud_owners": null,
+        "time": null,
+        "screen_mode": null,
+        "screen_output": null,
+        "screen_window": null
+      },
+      "gameClock": {
+        "samples": 55,
+        "first": 13.119,
+        "last": 94.377,
+        "increase": 81.258
+      },
+      "checks": {
+        "normalExit": false,
+        "playing": false,
+        "correctMission": false,
+        "world": false,
+        "guide": false,
+        "loadingReleased": true,
+        "gameClockAdvanced": true,
+        "gameClockMonotonic": true,
+        "physicalOutput": false
+      }
+    }
+  ],
+  "protected_count": 2629,
+  "protected_changes": 0,
+  "routes": [
+    {
+      "group": "regular",
+      "mission": "Tutorial1",
+      "result": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-portable-startup-637-20261031\\gui\\한글 휴대 배포 😀\\NetstormReborn-cpppj\\Netstorm.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-portable-startup-637-20261031\\gui\\한글 휴대 배포 😀\\NetstormReborn-cpppj\\game",
+          "--no-audio",
+          "--frames",
+          "480",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=40;autoDemo=0;tellTips=0;startInFullScreen=1;sleepPerLoop=1",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-entry-641-20261031\\regular\\Tutorial1\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-entry-641-20261031\\regular\\Tutorial1\\states.tsv",
+          "--window",
+          "--mission",
+          "Tutorial1"
+        ],
+        "binarySha256": "3923635e953752cbe09e4bfa9158ba401b5d73195e3157cf96f3740a12b2ed33",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 23.729446700000153,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2"
+      },
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true,
+        "gameClockAdvanced": true,
+        "gameClockMonotonic": true,
+        "physicalOutput": true
+      },
+      "clock": {
+        "samples": 58,
+        "first": 0.552,
+        "last": 22.16,
+        "increase": 21.608
+      },
+      "presentation": {
+        "same": true,
+        "actualSha256": "bd1759f8d9f65d76995741ad9433fc95c431047814b2f91cbfa6e63b50044f32",
+        "expectedSha256": "bd1759f8d9f65d76995741ad9433fc95c431047814b2f91cbfa6e63b50044f32",
+        "dimensions": [
+          1024,
+          768
+        ],
+        "outputRect": [
+          0,
+          0,
+          1024,
+          768
+        ]
+      },
+      "nativeFrame": {
+        "first": [
+          29,
+          10,
+          10,
+          10,
+          0,
+          29,
+          0,
+          0,
+          138,
+          0,
+          2,
+          905969664,
+          0,
+          0,
+          0,
+          0
+        ],
+        "final": [
+          480,
+          303,
+          303,
+          303,
+          0,
+          480,
+          0,
+          0,
+          138,
+          0,
+          2,
+          905969664,
+          1,
+          0,
+          0,
+          0
+        ],
+        "samples": 58
+      },
+      "scene": {
+        "first": [
+          179,
+          808,
+          198,
+          103,
+          0,
+          0,
+          808,
+          198,
+          103,
+          0,
+          0
+        ],
+        "final": [
+          15,
+          7870,
+          3753,
+          1687,
+          0,
+          0,
+          7870,
+          3753,
+          1687,
+          0,
+          0
+        ]
+      },
+      "ui": {
+        "first": {
+          "dirty": [
+            7503,
+            1672,
+            109
+          ],
+          "area": [
+            8,
+            6300543
+          ]
+        },
+        "final": {
+          "dirty": [
+            8133,
+            2302,
+            157
+          ],
+          "area": [
+            52,
+            42033327
+          ]
+        }
+      }
+    },
+    {
+      "group": "regular",
+      "mission": "Tutorial2",
+      "result": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-portable-startup-637-20261031\\gui\\한글 휴대 배포 😀\\NetstormReborn-cpppj\\Netstorm.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-portable-startup-637-20261031\\gui\\한글 휴대 배포 😀\\NetstormReborn-cpppj\\game",
+          "--no-audio",
+          "--frames",
+          "480",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=40;autoDemo=0;tellTips=0;startInFullScreen=1;sleepPerLoop=1",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-entry-641-20261031\\regular\\Tutorial2\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-entry-641-20261031\\regular\\Tutorial2\\states.tsv",
+          "--window",
+          "--mission",
+          "Tutorial2"
+        ],
+        "binarySha256": "3923635e953752cbe09e4bfa9158ba401b5d73195e3157cf96f3740a12b2ed33",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 23.36818009999979,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2"
+      },
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true,
+        "gameClockAdvanced": true,
+        "gameClockMonotonic": true,
+        "physicalOutput": true
+      },
+      "clock": {
+        "samples": 57,
+        "first": 0.554,
+        "last": 21.6,
+        "increase": 21.046000000000003
+      },
+      "presentation": {
+        "same": true,
+        "actualSha256": "1bfd8fe615f7cbbf5abe98910d7cc975b985cea225448a02679a77f8a48cfd77",
+        "expectedSha256": "1bfd8fe615f7cbbf5abe98910d7cc975b985cea225448a02679a77f8a48cfd77",
+        "dimensions": [
+          1024,
+          768
+        ],
+        "outputRect": [
+          0,
+          0,
+          1024,
+          768
+        ]
+      },
+      "nativeFrame": {
+        "first": [
+          37,
+          35,
+          35,
+          35,
+          0,
+          37,
+          0,
+          0,
+          138,
+          0,
+          2,
+          905969664,
+          0,
+          0,
+          0,
+          0
+        ],
+        "final": [
+          480,
+          271,
+          271,
+          271,
+          0,
+          480,
+          0,
+          0,
+          138,
+          0,
+          2,
+          905969664,
+          1,
+          0,
+          0,
+          0
+        ],
+        "samples": 57
+      },
+      "scene": {
+        "first": [
+          172,
+          4323,
+          990,
+          481,
+          0,
+          0,
+          4323,
+          990,
+          481,
+          0,
+          0
+        ],
+        "final": [
+          14,
+          24354,
+          6003,
+          2109,
+          0,
+          0,
+          24354,
+          6003,
+          2109,
+          0,
+          0
+        ]
+      },
+      "ui": {
+        "first": {
+          "dirty": [
+            7739,
+            1750,
+            142
+          ],
+          "area": [
+            35,
+            27525120
+          ]
+        },
+        "final": {
+          "dirty": [
+            7981,
+            1992,
+            300
+          ],
+          "area": [
+            183,
+            144198240
+          ]
+        }
+      }
+    },
+    {
+      "group": "regular",
+      "mission": "Tutorial3",
+      "result": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-portable-startup-637-20261031\\gui\\한글 휴대 배포 😀\\NetstormReborn-cpppj\\Netstorm.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-portable-startup-637-20261031\\gui\\한글 휴대 배포 😀\\NetstormReborn-cpppj\\game",
+          "--no-audio",
+          "--frames",
+          "480",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=40;autoDemo=0;tellTips=0;startInFullScreen=1;sleepPerLoop=1",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-entry-641-20261031\\regular\\Tutorial3\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-entry-641-20261031\\regular\\Tutorial3\\states.tsv",
+          "--window",
+          "--mission",
+          "Tutorial3"
+        ],
+        "binarySha256": "3923635e953752cbe09e4bfa9158ba401b5d73195e3157cf96f3740a12b2ed33",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 34.531251099999736,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2"
+      },
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true,
+        "gameClockAdvanced": true,
+        "gameClockMonotonic": true,
+        "physicalOutput": true
+      },
+      "clock": {
+        "samples": 58,
+        "first": 0.732,
+        "last": 32.461,
+        "increase": 31.729
+      },
+      "presentation": {
+        "same": true,
+        "actualSha256": "30484b324d69392b80f1514727b81e2388fb53caa6cbb36837e8ae30e81d3e44",
+        "expectedSha256": "30484b324d69392b80f1514727b81e2388fb53caa6cbb36837e8ae30e81d3e44",
+        "dimensions": [
+          1024,
+          768
+        ],
+        "outputRect": [
+          0,
+          0,
+          1024,
+          768
+        ]
+      },
+      "nativeFrame": {
+        "first": [
+          29,
+          27,
+          27,
+          27,
+          0,
+          29,
+          0,
+          0,
+          138,
+          0,
+          2,
+          905969664,
+          0,
+          0,
+          0,
+          0
+        ],
+        "final": [
+          480,
+          1113,
+          1113,
+          915,
+          0,
+          480,
+          0,
+          0,
+          138,
+          0,
+          2,
+          905969664,
+          0,
+          0,
+          0,
+          0
+        ],
+        "samples": 58
+      },
+      "scene": {
+        "first": [
+          255,
+          4700,
+          1175,
+          475,
+          0,
+          0,
+          4700,
+          1175,
+          475,
+          0,
+          0
+        ],
+        "final": [
+          7,
+          28178,
+          10301,
+          3965,
+          0,
+          0,
+          28178,
+          10301,
+          3965,
+          0,
+          0
+        ]
+      },
+      "ui": {
+        "first": {
+          "dirty": [
+            7560,
+            1738,
+            136
+          ],
+          "area": [
+            27,
+            21233664
+          ]
+        },
+        "final": {
+          "dirty": [
+            8225,
+            2403,
+            250
+          ],
+          "area": [
+            131,
+            107317624
+          ]
+        }
+      }
+    },
+    {
+      "group": "regular",
+      "mission": "Tutorial4",
+      "result": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-portable-startup-637-20261031\\gui\\한글 휴대 배포 😀\\NetstormReborn-cpppj\\Netstorm.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-portable-startup-637-20261031\\gui\\한글 휴대 배포 😀\\NetstormReborn-cpppj\\game",
+          "--no-audio",
+          "--frames",
+          "480",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=40;autoDemo=0;tellTips=0;startInFullScreen=1;sleepPerLoop=1",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-entry-641-20261031\\regular\\Tutorial4\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-entry-641-20261031\\regular\\Tutorial4\\states.tsv",
+          "--window",
+          "--mission",
+          "Tutorial4"
+        ],
+        "binarySha256": "3923635e953752cbe09e4bfa9158ba401b5d73195e3157cf96f3740a12b2ed33",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 36.39699000000019,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2"
+      },
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true,
+        "gameClockAdvanced": true,
+        "gameClockMonotonic": true,
+        "physicalOutput": true
+      },
+      "clock": {
+        "samples": 58,
+        "first": 0.873,
+        "last": 34.28,
+        "increase": 33.407000000000004
+      },
+      "presentation": {
+        "same": true,
+        "actualSha256": "7a950ec917f28c4645716bd829f70f4451c0b631e4bb066cddc635f190e7ef59",
+        "expectedSha256": "7a950ec917f28c4645716bd829f70f4451c0b631e4bb066cddc635f190e7ef59",
+        "dimensions": [
+          1024,
+          768
+        ],
+        "outputRect": [
+          0,
+          0,
+          1024,
+          768
+        ]
+      },
+      "nativeFrame": {
+        "first": [
+          29,
+          27,
+          27,
+          27,
+          0,
+          29,
+          0,
+          0,
+          138,
+          0,
+          2,
+          905969664,
+          0,
+          0,
+          0,
+          0
+        ],
+        "final": [
+          480,
+          1505,
+          1505,
+          1413,
+          0,
+          480,
+          0,
+          0,
+          138,
+          0,
+          2,
+          905969664,
+          0,
+          0,
+          0,
+          0
+        ],
+        "samples": 58
+      },
+      "scene": {
+        "first": [
+          215,
+          3800,
+          1050,
+          505,
+          0,
+          0,
+          3800,
+          1050,
+          505,
+          0,
+          0
+        ],
+        "final": [
+          10,
+          26200,
+          10893,
+          4342,
+          0,
+          0,
+          26200,
+          10893,
+          4342,
+          0,
+          0
+        ]
+      },
+      "ui": {
+        "first": {
+          "dirty": [
+            7561,
+            1741,
+            136
+          ],
+          "area": [
+            27,
+            21233664
+          ]
+        },
+        "final": {
+          "dirty": [
+            8365,
+            2545,
+            252
+          ],
+          "area": [
+            132,
+            110579027
+          ]
+        }
+      }
+    },
+    {
+      "group": "regular",
+      "mission": "Tutorial5",
+      "result": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-portable-startup-637-20261031\\gui\\한글 휴대 배포 😀\\NetstormReborn-cpppj\\Netstorm.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-portable-startup-637-20261031\\gui\\한글 휴대 배포 😀\\NetstormReborn-cpppj\\game",
+          "--no-audio",
+          "--frames",
+          "480",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=40;autoDemo=0;tellTips=0;startInFullScreen=1;sleepPerLoop=1",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-entry-641-20261031\\regular\\Tutorial5\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-entry-641-20261031\\regular\\Tutorial5\\states.tsv",
+          "--window",
+          "--mission",
+          "Tutorial5"
+        ],
+        "binarySha256": "3923635e953752cbe09e4bfa9158ba401b5d73195e3157cf96f3740a12b2ed33",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 43.18223630000011,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2"
+      },
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true,
+        "gameClockAdvanced": true,
+        "gameClockMonotonic": true,
+        "physicalOutput": true
+      },
+      "clock": {
+        "samples": 58,
+        "first": 0.982,
+        "last": 40.95,
+        "increase": 39.968
+      },
+      "presentation": {
+        "same": true,
+        "actualSha256": "30615aecf081b6ebe96ea4fca5622661c535d1f8d95b9b1519bc5e338645d17f",
+        "expectedSha256": "30615aecf081b6ebe96ea4fca5622661c535d1f8d95b9b1519bc5e338645d17f",
+        "dimensions": [
+          1024,
+          768
+        ],
+        "outputRect": [
+          0,
+          0,
+          1024,
+          768
+        ]
+      },
+      "nativeFrame": {
+        "first": [
+          29,
+          27,
+          27,
+          27,
+          0,
+          29,
+          0,
+          0,
+          138,
+          0,
+          2,
+          905969664,
+          0,
+          0,
+          0,
+          0
+        ],
+        "final": [
+          480,
+          1412,
+          1412,
+          1131,
+          0,
+          480,
+          0,
+          0,
+          138,
+          0,
+          2,
+          905969664,
+          0,
+          0,
+          0,
+          0
+        ],
+        "samples": 58
+      },
+      "scene": {
+        "first": [
+          270,
+          5050,
+          1150,
+          508,
+          0,
+          0,
+          5050,
+          1150,
+          508,
+          0,
+          0
+        ],
+        "final": [
+          7,
+          34198,
+          12316,
+          5160,
+          0,
+          0,
+          34198,
+          12316,
+          5160,
+          0,
+          0
+        ]
+      },
+      "ui": {
+        "first": {
+          "dirty": [
+            7567,
+            1742,
+            137
+          ],
+          "area": [
+            27,
+            21233664
+          ]
+        },
+        "final": {
+          "dirty": [
+            8537,
+            2639,
+            273
+          ],
+          "area": [
+            148,
+            122164967
+          ]
+        }
+      }
+    },
+    {
+      "group": "regular",
+      "mission": "Tutorial6",
+      "result": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-portable-startup-637-20261031\\gui\\한글 휴대 배포 😀\\NetstormReborn-cpppj\\Netstorm.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-portable-startup-637-20261031\\gui\\한글 휴대 배포 😀\\NetstormReborn-cpppj\\game",
+          "--no-audio",
+          "--frames",
+          "480",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=40;autoDemo=0;tellTips=0;startInFullScreen=1;sleepPerLoop=1",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-entry-641-20261031\\regular\\Tutorial6\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-entry-641-20261031\\regular\\Tutorial6\\states.tsv",
+          "--window",
+          "--mission",
+          "Tutorial6"
+        ],
+        "binarySha256": "3923635e953752cbe09e4bfa9158ba401b5d73195e3157cf96f3740a12b2ed33",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 39.132754000000205,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2"
+      },
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true,
+        "gameClockAdvanced": true,
+        "gameClockMonotonic": true,
+        "physicalOutput": true
+      },
+      "clock": {
+        "samples": 56,
+        "first": 0.795,
+        "last": 35.919,
+        "increase": 35.123999999999995
+      },
+      "presentation": {
+        "same": true,
+        "actualSha256": "244dba27445d000c1ef6c0abf3699129b1045fdbc790782a6383350c1174e756",
+        "expectedSha256": "244dba27445d000c1ef6c0abf3699129b1045fdbc790782a6383350c1174e756",
+        "dimensions": [
+          1024,
+          768
+        ],
+        "outputRect": [
+          0,
+          0,
+          1024,
+          768
+        ]
+      },
+      "nativeFrame": {
+        "first": [
+          45,
+          43,
+          43,
+          43,
+          0,
+          45,
+          0,
+          0,
+          138,
+          0,
+          2,
+          905969664,
+          0,
+          0,
+          0,
+          0
+        ],
+        "final": [
+          480,
+          1047,
+          1047,
+          877,
+          0,
+          480,
+          0,
+          0,
+          138,
+          0,
+          2,
+          905969664,
+          0,
+          0,
+          0,
+          0
+        ],
+        "samples": 56
+      },
+      "scene": {
+        "first": [
+          242,
+          6765,
+          2173,
+          878,
+          0,
+          0,
+          6765,
+          2173,
+          878,
+          0,
+          0
+        ],
+        "final": [
+          11,
+          32983,
+          13030,
+          6050,
+          0,
+          0,
+          32983,
+          13030,
+          6050,
+          0,
+          0
+        ]
+      },
+      "ui": {
+        "first": {
+          "dirty": [
+            8046,
+            1896,
+            160
+          ],
+          "area": [
+            43,
+            33816576
+          ]
+        },
+        "final": {
+          "dirty": [
+            8836,
+            2686,
+            310
+          ],
+          "area": [
+            176,
+            142982672
+          ]
+        }
+      }
+    },
+    {
+      "group": "regular",
+      "mission": "bc1menu76",
+      "result": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-portable-startup-637-20261031\\gui\\한글 휴대 배포 😀\\NetstormReborn-cpppj\\Netstorm.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-portable-startup-637-20261031\\gui\\한글 휴대 배포 😀\\NetstormReborn-cpppj\\game",
+          "--no-audio",
+          "--frames",
+          "480",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=40;autoDemo=0;tellTips=0;startInFullScreen=1;sleepPerLoop=1",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-entry-641-20261031\\regular\\bc1menu76\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-entry-641-20261031\\regular\\bc1menu76\\states.tsv",
+          "--window",
+          "--mission",
+          "bc1menu76"
+        ],
+        "binarySha256": "3923635e953752cbe09e4bfa9158ba401b5d73195e3157cf96f3740a12b2ed33",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 25.215068699999847,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2"
+      },
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true,
+        "gameClockAdvanced": true,
+        "gameClockMonotonic": true,
+        "physicalOutput": true
+      },
+      "clock": {
+        "samples": 59,
+        "first": 0.728,
+        "last": 23.938,
+        "increase": 23.209999999999997
+      },
+      "presentation": {
+        "same": true,
+        "actualSha256": "2747f65f723789960eaa00bbeb0b74025b7d712ebbb79e7e6c6b2c614dd35ac4",
+        "expectedSha256": "2747f65f723789960eaa00bbeb0b74025b7d712ebbb79e7e6c6b2c614dd35ac4",
+        "dimensions": [
+          1024,
+          768
+        ],
+        "outputRect": [
+          0,
+          0,
+          1024,
+          768
+        ]
+      },
+      "nativeFrame": {
+        "first": [
+          21,
+          32,
+          32,
+          15,
+          0,
+          21,
+          0,
+          0,
+          138,
+          0,
+          2,
+          905969664,
+          0,
+          0,
+          0,
+          0
+        ],
+        "final": [
+          480,
+          2267,
+          2267,
+          1425,
+          0,
+          480,
+          0,
+          0,
+          138,
+          0,
+          2,
+          905969664,
+          0,
+          0,
+          0,
+          0
+        ],
+        "samples": 59
+      },
+      "scene": {
+        "first": [
+          14,
+          851,
+          300,
+          57,
+          0,
+          0,
+          851,
+          300,
+          57,
+          0,
+          0
+        ],
+        "final": [
+          25,
+          39832,
+          20054,
+          2074,
+          232,
+          0,
+          39832,
+          20054,
+          2074,
+          232,
+          0
+        ]
+      },
+      "ui": {
+        "first": {
+          "dirty": [
+            7284,
+            1617,
+            104
+          ],
+          "area": [
+            5,
+            4001876
+          ]
+        },
+        "final": {
+          "dirty": [
+            8009,
+            2342,
+            156
+          ],
+          "area": [
+            57,
+            51955241
+          ]
+        }
+      }
+    },
+    {
+      "group": "regular",
+      "mission": "bc2bridging76",
+      "result": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-portable-startup-637-20261031\\gui\\한글 휴대 배포 😀\\NetstormReborn-cpppj\\Netstorm.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-portable-startup-637-20261031\\gui\\한글 휴대 배포 😀\\NetstormReborn-cpppj\\game",
+          "--no-audio",
+          "--frames",
+          "480",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=40;autoDemo=0;tellTips=0;startInFullScreen=1;sleepPerLoop=1",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-entry-641-20261031\\regular\\bc2bridging76\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-entry-641-20261031\\regular\\bc2bridging76\\states.tsv",
+          "--window",
+          "--mission",
+          "bc2bridging76"
+        ],
+        "binarySha256": "3923635e953752cbe09e4bfa9158ba401b5d73195e3157cf96f3740a12b2ed33",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 57.758675799999764,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2"
+      },
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true,
+        "gameClockAdvanced": true,
+        "gameClockMonotonic": true,
+        "physicalOutput": true
+      },
+      "clock": {
+        "samples": 59,
+        "first": 0.594,
+        "last": 55.86,
+        "increase": 55.266
+      },
+      "presentation": {
+        "same": true,
+        "actualSha256": "8d4808df95720f9d2bbfd5eb4567aa19b848cd1622d304971d084674cfb6a34a",
+        "expectedSha256": "8d4808df95720f9d2bbfd5eb4567aa19b848cd1622d304971d084674cfb6a34a",
+        "dimensions": [
+          1024,
+          768
+        ],
+        "outputRect": [
+          0,
+          0,
+          1024,
+          768
+        ]
+      },
+      "nativeFrame": {
+        "first": [
+          21,
+          19,
+          19,
+          19,
+          0,
+          21,
+          0,
+          0,
+          138,
+          0,
+          2,
+          905969664,
+          0,
+          0,
+          0,
+          0
+        ],
+        "final": [
+          480,
+          351,
+          351,
+          251,
+          0,
+          480,
+          0,
+          0,
+          138,
+          0,
+          2,
+          905969664,
+          1,
+          0,
+          1,
+          0
+        ],
+        "samples": 59
+      },
+      "scene": {
+        "first": [
+          213,
+          2788,
+          493,
+          306,
+          0,
+          0,
+          2788,
+          493,
+          306,
+          0,
+          0
+        ],
+        "final": [
+          15,
+          23302,
+          5736,
+          4728,
+          0,
+          0,
+          23302,
+          5736,
+          4728,
+          0,
+          0
+        ]
+      },
+      "ui": {
+        "first": {
+          "dirty": [
+            7370,
+            1684,
+            124
+          ],
+          "area": [
+            19,
+            14942208
+          ]
+        },
+        "final": {
+          "dirty": [
+            8117,
+            2431,
+            257
+          ],
+          "area": [
+            138,
+            109436664
+          ]
+        }
+      }
+    },
+    {
+      "group": "regular",
+      "mission": "bc3acid_bar76",
+      "result": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-portable-startup-637-20261031\\gui\\한글 휴대 배포 😀\\NetstormReborn-cpppj\\Netstorm.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-portable-startup-637-20261031\\gui\\한글 휴대 배포 😀\\NetstormReborn-cpppj\\game",
+          "--no-audio",
+          "--frames",
+          "480",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=40;autoDemo=0;tellTips=0;startInFullScreen=1;sleepPerLoop=1",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-entry-641-20261031\\regular\\bc3acid_bar76\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-entry-641-20261031\\regular\\bc3acid_bar76\\states.tsv",
+          "--window",
+          "--mission",
+          "bc3acid_bar76"
+        ],
+        "binarySha256": "3923635e953752cbe09e4bfa9158ba401b5d73195e3157cf96f3740a12b2ed33",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 53.939838000000236,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2"
+      },
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true,
+        "gameClockAdvanced": true,
+        "gameClockMonotonic": true,
+        "physicalOutput": true
+      },
+      "clock": {
+        "samples": 58,
+        "first": 5.507,
+        "last": 50.636,
+        "increase": 45.129000000000005
+      },
+      "presentation": {
+        "same": true,
+        "actualSha256": "505698cdccda2e130ffdfb042f179035f9dba456ceed74ac8e9628923bcef985",
+        "expectedSha256": "505698cdccda2e130ffdfb042f179035f9dba456ceed74ac8e9628923bcef985",
+        "dimensions": [
+          1024,
+          768
+        ],
+        "outputRect": [
+          0,
+          0,
+          1024,
+          768
+        ]
+      },
+      "nativeFrame": {
+        "first": [
+          29,
+          27,
+          27,
+          27,
+          0,
+          29,
+          0,
+          0,
+          138,
+          0,
+          2,
+          905969664,
+          0,
+          0,
+          0,
+          0
+        ],
+        "final": [
+          480,
+          2311,
+          2311,
+          1737,
+          0,
+          480,
+          0,
+          0,
+          138,
+          0,
+          2,
+          905969664,
+          0,
+          0,
+          0,
+          0
+        ],
+        "samples": 58
+      },
+      "scene": {
+        "first": [
+          294,
+          5400,
+          1325,
+          551,
+          0,
+          0,
+          5400,
+          1325,
+          551,
+          0,
+          0
+        ],
+        "final": [
+          21,
+          51948,
+          24777,
+          5234,
+          325,
+          0,
+          51948,
+          24777,
+          5234,
+          325,
+          0
+        ]
+      },
+      "ui": {
+        "first": {
+          "dirty": [
+            7617,
+            1787,
+            138
+          ],
+          "area": [
+            27,
+            21233664
+          ]
+        },
+        "final": {
+          "dirty": [
+            8466,
+            2563,
+            266
+          ],
+          "area": [
+            147,
+            126578070
+          ]
+        }
+      }
+    },
+    {
+      "group": "regular",
+      "mission": "bc4bow_rush76",
+      "result": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-portable-startup-637-20261031\\gui\\한글 휴대 배포 😀\\NetstormReborn-cpppj\\Netstorm.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-portable-startup-637-20261031\\gui\\한글 휴대 배포 😀\\NetstormReborn-cpppj\\game",
+          "--no-audio",
+          "--frames",
+          "480",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=40;autoDemo=0;tellTips=0;startInFullScreen=1;sleepPerLoop=1",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-entry-641-20261031\\regular\\bc4bow_rush76\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-entry-641-20261031\\regular\\bc4bow_rush76\\states.tsv",
+          "--window",
+          "--mission",
+          "bc4bow_rush76"
+        ],
+        "binarySha256": "3923635e953752cbe09e4bfa9158ba401b5d73195e3157cf96f3740a12b2ed33",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 52.71928349999962,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2"
+      },
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true,
+        "gameClockAdvanced": true,
+        "gameClockMonotonic": true,
+        "physicalOutput": true
+      },
+      "clock": {
+        "samples": 59,
+        "first": 2.122,
+        "last": 50.709,
+        "increase": 48.587
+      },
+      "presentation": {
+        "same": true,
+        "actualSha256": "64980418ddead4d702b9b0eda6879a385df71e55e9d9d29e9f2dbc50e20a08e3",
+        "expectedSha256": "64980418ddead4d702b9b0eda6879a385df71e55e9d9d29e9f2dbc50e20a08e3",
+        "dimensions": [
+          1024,
+          768
+        ],
+        "outputRect": [
+          0,
+          0,
+          1024,
+          768
+        ]
+      },
+      "nativeFrame": {
+        "first": [
+          21,
+          19,
+          19,
+          19,
+          0,
+          21,
+          0,
+          0,
+          138,
+          0,
+          2,
+          905969664,
+          0,
+          0,
+          0,
+          0
+        ],
+        "final": [
+          480,
+          1509,
+          1509,
+          1102,
+          0,
+          480,
+          0,
+          0,
+          138,
+          0,
+          2,
+          905969664,
+          0,
+          0,
+          0,
+          0
+        ],
+        "samples": 59
+      },
+      "scene": {
+        "first": [
+          240,
+          3179,
+          561,
+          290,
+          0,
+          0,
+          3179,
+          561,
+          290,
+          0,
+          0
+        ],
+        "final": [
+          4,
+          40749,
+          16737,
+          5749,
+          0,
+          0,
+          40749,
+          16737,
+          5749,
+          0,
+          0
+        ]
+      },
+      "ui": {
+        "first": {
+          "dirty": [
+            7364,
+            1684,
+            125
+          ],
+          "area": [
+            19,
+            14942208
+          ]
+        },
+        "final": {
+          "dirty": [
+            8304,
+            2624,
+            262
+          ],
+          "area": [
+            160,
+            132035442
+          ]
+        }
+      }
+    },
+    {
+      "group": "regular",
+      "mission": "bc5walkers76",
+      "result": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-portable-startup-637-20261031\\gui\\한글 휴대 배포 😀\\NetstormReborn-cpppj\\Netstorm.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-portable-startup-637-20261031\\gui\\한글 휴대 배포 😀\\NetstormReborn-cpppj\\game",
+          "--no-audio",
+          "--frames",
+          "480",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=40;autoDemo=0;tellTips=0;startInFullScreen=1;sleepPerLoop=1",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-entry-641-20261031\\regular\\bc5walkers76\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-entry-641-20261031\\regular\\bc5walkers76\\states.tsv",
+          "--window",
+          "--mission",
+          "bc5walkers76"
+        ],
+        "binarySha256": "3923635e953752cbe09e4bfa9158ba401b5d73195e3157cf96f3740a12b2ed33",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 40.97378640000079,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2"
+      },
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true,
+        "gameClockAdvanced": true,
+        "gameClockMonotonic": true,
+        "physicalOutput": true
+      },
+      "clock": {
+        "samples": 59,
+        "first": 2.584,
+        "last": 39.296,
+        "increase": 36.711999999999996
+      },
+      "presentation": {
+        "same": true,
+        "actualSha256": "53512614652dcaa46a961b2f66c154dd3dfb4f3c99116a0b5da61ebcce1e3409",
+        "expectedSha256": "53512614652dcaa46a961b2f66c154dd3dfb4f3c99116a0b5da61ebcce1e3409",
+        "dimensions": [
+          1024,
+          768
+        ],
+        "outputRect": [
+          0,
+          0,
+          1024,
+          768
+        ]
+      },
+      "nativeFrame": {
+        "first": [
+          21,
+          8,
+          8,
+          7,
+          0,
+          21,
+          0,
+          0,
+          138,
+          0,
+          2,
+          905969664,
+          0,
+          0,
+          0,
+          0
+        ],
+        "final": [
+          480,
+          673,
+          673,
+          180,
+          0,
+          480,
+          0,
+          0,
+          138,
+          0,
+          2,
+          905969664,
+          1,
+          0,
+          1,
+          0
+        ],
+        "samples": 59
+      },
+      "scene": {
+        "first": [
+          285,
+          864,
+          304,
+          82,
+          0,
+          0,
+          864,
+          304,
+          82,
+          0,
+          0
+        ],
+        "final": [
+          26,
+          24561,
+          11542,
+          1367,
+          879,
+          0,
+          24561,
+          11542,
+          1367,
+          879,
+          0
+        ]
+      },
+      "ui": {
+        "first": {
+          "dirty": [
+            7347,
+            1647,
+            107
+          ],
+          "area": [
+            6,
+            4779094
+          ]
+        },
+        "final": {
+          "dirty": [
+            8230,
+            2457,
+            175
+          ],
+          "area": [
+            72,
+            60696021
+          ]
+        }
+      }
+    },
+    {
+      "group": "regular",
+      "mission": "bc6mows76",
+      "result": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-portable-startup-637-20261031\\gui\\한글 휴대 배포 😀\\NetstormReborn-cpppj\\Netstorm.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-portable-startup-637-20261031\\gui\\한글 휴대 배포 😀\\NetstormReborn-cpppj\\game",
+          "--no-audio",
+          "--frames",
+          "480",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=40;autoDemo=0;tellTips=0;startInFullScreen=1;sleepPerLoop=1",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-entry-641-20261031\\regular-retry\\bc6mows76\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-entry-641-20261031\\regular-retry\\bc6mows76\\states.tsv",
+          "--window",
+          "--mission",
+          "bc6mows76"
+        ],
+        "binarySha256": "3923635e953752cbe09e4bfa9158ba401b5d73195e3157cf96f3740a12b2ed33",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 103.32220570000027,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "985e499e799503f5128007a5d394fbc3ec5466cd204b6bd6e207a238fb403193"
+      },
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true,
+        "gameClockAdvanced": true,
+        "gameClockMonotonic": true,
+        "physicalOutput": true
+      },
+      "clock": {
+        "samples": 59,
+        "first": 12.24,
+        "last": 100.314,
+        "increase": 88.074
+      },
+      "presentation": {
+        "same": true,
+        "actualSha256": "e2d92bac88d5788727fa6d3d53a595904418dc15be13d3824557fcffb9521479",
+        "expectedSha256": "e2d92bac88d5788727fa6d3d53a595904418dc15be13d3824557fcffb9521479",
+        "dimensions": [
+          1024,
+          768
+        ],
+        "outputRect": [
+          0,
+          0,
+          1024,
+          768
+        ]
+      },
+      "nativeFrame": {
+        "first": [
+          21,
+          19,
+          19,
+          19,
+          0,
+          21,
+          0,
+          0,
+          138,
+          0,
+          2,
+          905969664,
+          0,
+          0,
+          0,
+          0
+        ],
+        "final": [
+          480,
+          3898,
+          3898,
+          3813,
+          0,
+          480,
+          0,
+          0,
+          138,
+          0,
+          2,
+          905969664,
+          0,
+          0,
+          0,
+          0
+        ],
+        "samples": 59
+      },
+      "scene": {
+        "first": [
+          295,
+          3842,
+          748,
+          349,
+          0,
+          0,
+          3842,
+          748,
+          349,
+          0,
+          0
+        ],
+        "final": [
+          16,
+          78435,
+          25626,
+          7203,
+          0,
+          0,
+          78435,
+          25626,
+          7203,
+          0,
+          0
+        ]
+      },
+      "ui": {
+        "first": {
+          "dirty": [
+            7425,
+            1741,
+            128
+          ],
+          "area": [
+            19,
+            14942208
+          ]
+        },
+        "final": {
+          "dirty": [
+            8055,
+            2371,
+            284
+          ],
+          "area": [
+            204,
+            175818982
+          ]
+        }
+      }
+    },
+    {
+      "group": "regular",
+      "mission": "bc7sun_bars76",
+      "result": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-portable-startup-637-20261031\\gui\\한글 휴대 배포 😀\\NetstormReborn-cpppj\\Netstorm.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-portable-startup-637-20261031\\gui\\한글 휴대 배포 😀\\NetstormReborn-cpppj\\game",
+          "--no-audio",
+          "--frames",
+          "480",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=40;autoDemo=0;tellTips=0;startInFullScreen=1;sleepPerLoop=1",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-entry-641-20261031\\regular\\bc7sun_bars76\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-entry-641-20261031\\regular\\bc7sun_bars76\\states.tsv",
+          "--window",
+          "--mission",
+          "bc7sun_bars76"
+        ],
+        "binarySha256": "3923635e953752cbe09e4bfa9158ba401b5d73195e3157cf96f3740a12b2ed33",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 81.34536070000013,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2"
+      },
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true,
+        "gameClockAdvanced": true,
+        "gameClockMonotonic": true,
+        "physicalOutput": true
+      },
+      "clock": {
+        "samples": 59,
+        "first": 0.584,
+        "last": 78.473,
+        "increase": 77.889
+      },
+      "presentation": {
+        "same": true,
+        "actualSha256": "73ff5bf4d00bf8b4d236fe8ff20b345a10b281e77e2bddaf4f9e3b8102fe54ad",
+        "expectedSha256": "73ff5bf4d00bf8b4d236fe8ff20b345a10b281e77e2bddaf4f9e3b8102fe54ad",
+        "dimensions": [
+          1024,
+          768
+        ],
+        "outputRect": [
+          0,
+          0,
+          1024,
+          768
+        ]
+      },
+      "nativeFrame": {
+        "first": [
+          21,
+          19,
+          19,
+          19,
+          0,
+          21,
+          0,
+          0,
+          138,
+          0,
+          2,
+          905969664,
+          0,
+          0,
+          0,
+          0
+        ],
+        "final": [
+          480,
+          1047,
+          1047,
+          347,
+          0,
+          480,
+          0,
+          0,
+          138,
+          0,
+          2,
+          905969664,
+          1,
+          0,
+          1,
+          0
+        ],
+        "samples": 59
+      },
+      "scene": {
+        "first": [
+          331,
+          4471,
+          765,
+          333,
+          0,
+          0,
+          4471,
+          765,
+          333,
+          0,
+          0
+        ],
+        "final": [
+          16,
+          86218,
+          23523,
+          12362,
+          0,
+          0,
+          86218,
+          23523,
+          12362,
+          0,
+          0
+        ]
+      },
+      "ui": {
+        "first": {
+          "dirty": [
+            7405,
+            1725,
+            126
+          ],
+          "area": [
+            19,
+            14942208
+          ]
+        },
+        "final": {
+          "dirty": [
+            8492,
+            2812,
+            441
+          ],
+          "area": [
+            312,
+            250861266
+          ]
+        }
+      }
+    },
+    {
+      "group": "regular",
+      "mission": "bc8fury76",
+      "result": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-portable-startup-637-20261031\\gui\\한글 휴대 배포 😀\\NetstormReborn-cpppj\\Netstorm.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-portable-startup-637-20261031\\gui\\한글 휴대 배포 😀\\NetstormReborn-cpppj\\game",
+          "--no-audio",
+          "--frames",
+          "480",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=40;autoDemo=0;tellTips=0;startInFullScreen=1;sleepPerLoop=1",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-entry-641-20261031\\regular\\bc8fury76\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-entry-641-20261031\\regular\\bc8fury76\\states.tsv",
+          "--window",
+          "--mission",
+          "bc8fury76"
+        ],
+        "binarySha256": "3923635e953752cbe09e4bfa9158ba401b5d73195e3157cf96f3740a12b2ed33",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 92.30849900000067,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "3b6d94330e7212f3db4b47fa5f1b0a823a42da4d385ffb3d81631a06be28c7f0"
+      },
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true,
+        "gameClockAdvanced": true,
+        "gameClockMonotonic": true,
+        "physicalOutput": true
+      },
+      "clock": {
+        "samples": 58,
+        "first": 7.283,
+        "last": 88.563,
+        "increase": 81.28
+      },
+      "presentation": {
+        "same": true,
+        "actualSha256": "e81a546207b427b5a9f64f0a27ec84c3a562af0df6de562fa335abb17960e6bf",
+        "expectedSha256": "e81a546207b427b5a9f64f0a27ec84c3a562af0df6de562fa335abb17960e6bf",
+        "dimensions": [
+          1024,
+          768
+        ],
+        "outputRect": [
+          0,
+          0,
+          1024,
+          768
+        ]
+      },
+      "nativeFrame": {
+        "first": [
+          29,
+          27,
+          27,
+          27,
+          0,
+          29,
+          0,
+          0,
+          138,
+          0,
+          2,
+          905969664,
+          0,
+          0,
+          0,
+          0
+        ],
+        "final": [
+          480,
+          1135,
+          1135,
+          1064,
+          0,
+          480,
+          0,
+          0,
+          138,
+          0,
+          2,
+          905969664,
+          0,
+          0,
+          0,
+          0
+        ],
+        "samples": 58
+      },
+      "scene": {
+        "first": [
+          218,
+          3800,
+          900,
+          594,
+          0,
+          0,
+          3800,
+          900,
+          594,
+          0,
+          0
+        ],
+        "final": [
+          20,
+          41249,
+          13343,
+          9313,
+          0,
+          0,
+          41249,
+          13343,
+          9313,
+          0,
+          0
+        ]
+      },
+      "ui": {
+        "first": {
+          "dirty": [
+            7806,
+            1889,
+            143
+          ],
+          "area": [
+            27,
+            21233664
+          ]
+        },
+        "final": {
+          "dirty": [
+            8511,
+            2594,
+            314
+          ],
+          "area": [
+            240,
+            193914280
+          ]
+        }
+      }
+    },
+    {
+      "group": "regular",
+      "mission": "bc9ssun_bars76",
+      "result": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-portable-startup-637-20261031\\gui\\한글 휴대 배포 😀\\NetstormReborn-cpppj\\Netstorm.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-portable-startup-637-20261031\\gui\\한글 휴대 배포 😀\\NetstormReborn-cpppj\\game",
+          "--no-audio",
+          "--frames",
+          "480",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=40;autoDemo=0;tellTips=0;startInFullScreen=1;sleepPerLoop=1",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-entry-641-20261031\\regular\\bc9ssun_bars76\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-entry-641-20261031\\regular\\bc9ssun_bars76\\states.tsv",
+          "--window",
+          "--mission",
+          "bc9ssun_bars76"
+        ],
+        "binarySha256": "3923635e953752cbe09e4bfa9158ba401b5d73195e3157cf96f3740a12b2ed33",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 63.384289000000535,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2"
+      },
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true,
+        "gameClockAdvanced": true,
+        "gameClockMonotonic": true,
+        "physicalOutput": true
+      },
+      "clock": {
+        "samples": 59,
+        "first": 8.13,
+        "last": 61.427,
+        "increase": 53.297
+      },
+      "presentation": {
+        "same": true,
+        "actualSha256": "b0a5a2b33aa3dbfb311bd8b27e2a221582074519721a509e6faaad02c4bf9b72",
+        "expectedSha256": "b0a5a2b33aa3dbfb311bd8b27e2a221582074519721a509e6faaad02c4bf9b72",
+        "dimensions": [
+          1024,
+          768
+        ],
+        "outputRect": [
+          0,
+          0,
+          1024,
+          768
+        ]
+      },
+      "nativeFrame": {
+        "first": [
+          21,
+          19,
+          19,
+          19,
+          0,
+          21,
+          0,
+          0,
+          138,
+          0,
+          2,
+          905969664,
+          0,
+          0,
+          0,
+          0
+        ],
+        "final": [
+          480,
+          1622,
+          1622,
+          1237,
+          0,
+          480,
+          0,
+          0,
+          138,
+          0,
+          2,
+          905969664,
+          0,
+          0,
+          0,
+          0
+        ],
+        "samples": 59
+      },
+      "scene": {
+        "first": [
+          345,
+          4709,
+          799,
+          291,
+          0,
+          0,
+          4709,
+          799,
+          291,
+          0,
+          0
+        ],
+        "final": [
+          13,
+          72095,
+          21750,
+          7304,
+          244,
+          0,
+          72095,
+          21750,
+          7304,
+          244,
+          0
+        ]
+      },
+      "ui": {
+        "first": {
+          "dirty": [
+            7366,
+            1693,
+            126
+          ],
+          "area": [
+            19,
+            14942208
+          ]
+        },
+        "final": {
+          "dirty": [
+            8350,
+            2604,
+            341
+          ],
+          "area": [
+            205,
+            171354502
+          ]
+        }
+      }
+    },
+    {
+      "group": "regular",
+      "mission": "TheWarBegins",
+      "result": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-portable-startup-637-20261031\\gui\\한글 휴대 배포 😀\\NetstormReborn-cpppj\\Netstorm.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-portable-startup-637-20261031\\gui\\한글 휴대 배포 😀\\NetstormReborn-cpppj\\game",
+          "--no-audio",
+          "--frames",
+          "480",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=40;autoDemo=0;tellTips=0;startInFullScreen=1;sleepPerLoop=1",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-entry-641-20261031\\regular\\TheWarBegins\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-entry-641-20261031\\regular\\TheWarBegins\\states.tsv",
+          "--window",
+          "--mission",
+          "TheWarBegins"
+        ],
+        "binarySha256": "3923635e953752cbe09e4bfa9158ba401b5d73195e3157cf96f3740a12b2ed33",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 37.44604350000009,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2"
+      },
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true,
+        "gameClockAdvanced": true,
+        "gameClockMonotonic": true,
+        "physicalOutput": true
+      },
+      "clock": {
+        "samples": 59,
+        "first": 1.393,
+        "last": 35.596,
+        "increase": 34.202999999999996
+      },
+      "presentation": {
+        "same": true,
+        "actualSha256": "7a8277f40ecdce4b62ad195227efc4ab12916e97f2f0cabaf19c2f144624f26c",
+        "expectedSha256": "7a8277f40ecdce4b62ad195227efc4ab12916e97f2f0cabaf19c2f144624f26c",
+        "dimensions": [
+          1024,
+          768
+        ],
+        "outputRect": [
+          0,
+          0,
+          1024,
+          768
+        ]
+      },
+      "nativeFrame": {
+        "first": [
+          21,
+          19,
+          19,
+          19,
+          0,
+          21,
+          0,
+          0,
+          138,
+          0,
+          2,
+          905969664,
+          0,
+          0,
+          0,
+          0
+        ],
+        "final": [
+          480,
+          1033,
+          1033,
+          804,
+          0,
+          480,
+          0,
+          0,
+          138,
+          0,
+          2,
+          905969664,
+          0,
+          0,
+          0,
+          0
+        ],
+        "samples": 59
+      },
+      "scene": {
+        "first": [
+          274,
+          3604,
+          799,
+          309,
+          0,
+          0,
+          3604,
+          799,
+          309,
+          0,
+          0
+        ],
+        "final": [
+          7,
+          34615,
+          11932,
+          4501,
+          0,
+          0,
+          34615,
+          11932,
+          4501,
+          0,
+          0
+        ]
+      },
+      "ui": {
+        "first": {
+          "dirty": [
+            7328,
+            1657,
+            123
+          ],
+          "area": [
+            19,
+            14942208
+          ]
+        },
+        "final": {
+          "dirty": [
+            8131,
+            2460,
+            259
+          ],
+          "area": [
+            144,
+            117832224
+          ]
+        }
+      }
+    },
+    {
+      "group": "regular",
+      "mission": "MasterOfWhirligigs",
+      "result": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-portable-startup-637-20261031\\gui\\한글 휴대 배포 😀\\NetstormReborn-cpppj\\Netstorm.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-portable-startup-637-20261031\\gui\\한글 휴대 배포 😀\\NetstormReborn-cpppj\\game",
+          "--no-audio",
+          "--frames",
+          "480",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=40;autoDemo=0;tellTips=0;startInFullScreen=1;sleepPerLoop=1",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-entry-641-20261031\\regular\\MasterOfWhirligigs\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-entry-641-20261031\\regular\\MasterOfWhirligigs\\states.tsv",
+          "--window",
+          "--mission",
+          "MasterOfWhirligigs"
+        ],
+        "binarySha256": "3923635e953752cbe09e4bfa9158ba401b5d73195e3157cf96f3740a12b2ed33",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 36.50479169999926,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2"
+      },
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true,
+        "gameClockAdvanced": true,
+        "gameClockMonotonic": true,
+        "physicalOutput": true
+      },
+      "clock": {
+        "samples": 59,
+        "first": 1.06,
+        "last": 35.071,
+        "increase": 34.010999999999996
+      },
+      "presentation": {
+        "same": true,
+        "actualSha256": "55e4bea4231292709944b3790e718324aea53ae110b3f6bb658324c164c8c298",
+        "expectedSha256": "55e4bea4231292709944b3790e718324aea53ae110b3f6bb658324c164c8c298",
+        "dimensions": [
+          1024,
+          768
+        ],
+        "outputRect": [
+          0,
+          0,
+          1024,
+          768
+        ]
+      },
+      "nativeFrame": {
+        "first": [
+          21,
+          19,
+          19,
+          19,
+          0,
+          21,
+          0,
+          0,
+          138,
+          0,
+          2,
+          905969664,
+          0,
+          0,
+          0,
+          0
+        ],
+        "final": [
+          480,
+          2461,
+          2461,
+          2356,
+          0,
+          480,
+          0,
+          0,
+          138,
+          0,
+          2,
+          905969664,
+          0,
+          0,
+          0,
+          0
+        ],
+        "samples": 59
+      },
+      "scene": {
+        "first": [
+          231,
+          2839,
+          833,
+          285,
+          0,
+          0,
+          2839,
+          833,
+          285,
+          0,
+          0
+        ],
+        "final": [
+          6,
+          32141,
+          14953,
+          4395,
+          0,
+          0,
+          32141,
+          14953,
+          4395,
+          0,
+          0
+        ]
+      },
+      "ui": {
+        "first": {
+          "dirty": [
+            7328,
+            1657,
+            123
+          ],
+          "area": [
+            19,
+            14942208
+          ]
+        },
+        "final": {
+          "dirty": [
+            8151,
+            2480,
+            251
+          ],
+          "area": [
+            135,
+            113715103
+          ]
+        }
+      }
+    },
+    {
+      "group": "regular",
+      "mission": "SaveTheIsland",
+      "result": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-portable-startup-637-20261031\\gui\\한글 휴대 배포 😀\\NetstormReborn-cpppj\\Netstorm.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-portable-startup-637-20261031\\gui\\한글 휴대 배포 😀\\NetstormReborn-cpppj\\game",
+          "--no-audio",
+          "--frames",
+          "480",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=40;autoDemo=0;tellTips=0;startInFullScreen=1;sleepPerLoop=1",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-entry-641-20261031\\regular\\SaveTheIsland\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-entry-641-20261031\\regular\\SaveTheIsland\\states.tsv",
+          "--window",
+          "--mission",
+          "SaveTheIsland"
+        ],
+        "binarySha256": "3923635e953752cbe09e4bfa9158ba401b5d73195e3157cf96f3740a12b2ed33",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 48.32982979999997,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "f0897e4ab61f8c2f86b568404bba5e7af303c0933f7c1fa3ee631c464ffcc509"
+      },
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true,
+        "gameClockAdvanced": true,
+        "gameClockMonotonic": true,
+        "physicalOutput": true
+      },
+      "clock": {
+        "samples": 59,
+        "first": 3.245,
+        "last": 46.62,
+        "increase": 43.375
+      },
+      "presentation": {
+        "same": true,
+        "actualSha256": "84d387f23f538b0a48a0a27870f7776fafe0c75c76e8c0a0a41699e8c866cb75",
+        "expectedSha256": "84d387f23f538b0a48a0a27870f7776fafe0c75c76e8c0a0a41699e8c866cb75",
+        "dimensions": [
+          1024,
+          768
+        ],
+        "outputRect": [
+          0,
+          0,
+          1024,
+          768
+        ]
+      },
+      "nativeFrame": {
+        "first": [
+          21,
+          19,
+          19,
+          19,
+          0,
+          21,
+          0,
+          0,
+          138,
+          0,
+          2,
+          905969664,
+          0,
+          0,
+          0,
+          0
+        ],
+        "final": [
+          480,
+          2128,
+          2128,
+          1465,
+          0,
+          480,
+          0,
+          0,
+          138,
+          0,
+          2,
+          905969664,
+          0,
+          0,
+          1,
+          0
+        ],
+        "samples": 59
+      },
+      "scene": {
+        "first": [
+          393,
+          5593,
+          731,
+          291,
+          0,
+          0,
+          5593,
+          731,
+          291,
+          0,
+          0
+        ],
+        "final": [
+          30,
+          68808,
+          15830,
+          4972,
+          0,
+          0,
+          68808,
+          15830,
+          4972,
+          0,
+          0
+        ]
+      },
+      "ui": {
+        "first": {
+          "dirty": [
+            7358,
+            1687,
+            125
+          ],
+          "area": [
+            19,
+            14942208
+          ]
+        },
+        "final": {
+          "dirty": [
+            8208,
+            2537,
+            255
+          ],
+          "area": [
+            143,
+            117094079
+          ]
+        }
+      }
+    },
+    {
+      "group": "regular",
+      "mission": "FragileFortune",
+      "result": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-portable-startup-637-20261031\\gui\\한글 휴대 배포 😀\\NetstormReborn-cpppj\\Netstorm.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-portable-startup-637-20261031\\gui\\한글 휴대 배포 😀\\NetstormReborn-cpppj\\game",
+          "--no-audio",
+          "--frames",
+          "480",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=40;autoDemo=0;tellTips=0;startInFullScreen=1;sleepPerLoop=1",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-entry-641-20261031\\regular\\FragileFortune\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-entry-641-20261031\\regular\\FragileFortune\\states.tsv",
+          "--window",
+          "--mission",
+          "FragileFortune"
+        ],
+        "binarySha256": "3923635e953752cbe09e4bfa9158ba401b5d73195e3157cf96f3740a12b2ed33",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 48.91365510000014,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2"
+      },
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true,
+        "gameClockAdvanced": true,
+        "gameClockMonotonic": true,
+        "physicalOutput": true
+      },
+      "clock": {
+        "samples": 59,
+        "first": 4.529,
+        "last": 46.888,
+        "increase": 42.358999999999995
+      },
+      "presentation": {
+        "same": true,
+        "actualSha256": "80f0e87183548be673625dc9c84b6c434e233bbe8682dc04268c120f6081cd33",
+        "expectedSha256": "80f0e87183548be673625dc9c84b6c434e233bbe8682dc04268c120f6081cd33",
+        "dimensions": [
+          1024,
+          768
+        ],
+        "outputRect": [
+          0,
+          0,
+          1024,
+          768
+        ]
+      },
+      "nativeFrame": {
+        "first": [
+          21,
+          19,
+          19,
+          19,
+          0,
+          21,
+          0,
+          0,
+          138,
+          0,
+          2,
+          905969664,
+          0,
+          0,
+          0,
+          0
+        ],
+        "final": [
+          480,
+          570,
+          570,
+          570,
+          0,
+          480,
+          0,
+          0,
+          138,
+          0,
+          2,
+          905969664,
+          0,
+          0,
+          0,
+          0
+        ],
+        "samples": 59
+      },
+      "scene": {
+        "first": [
+          187,
+          2278,
+          561,
+          314,
+          0,
+          0,
+          2278,
+          561,
+          314,
+          0,
+          0
+        ],
+        "final": [
+          4,
+          20576,
+          6639,
+          4409,
+          0,
+          0,
+          20576,
+          6639,
+          4409,
+          0,
+          0
+        ]
+      },
+      "ui": {
+        "first": {
+          "dirty": [
+            7354,
+            1684,
+            125
+          ],
+          "area": [
+            19,
+            14942208
+          ]
+        },
+        "final": {
+          "dirty": [
+            8101,
+            2431,
+            251
+          ],
+          "area": [
+            139,
+            110829150
+          ]
+        }
+      }
+    },
+    {
+      "group": "regular",
+      "mission": "ThunderingPower",
+      "result": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-portable-startup-637-20261031\\gui\\한글 휴대 배포 😀\\NetstormReborn-cpppj\\Netstorm.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-portable-startup-637-20261031\\gui\\한글 휴대 배포 😀\\NetstormReborn-cpppj\\game",
+          "--no-audio",
+          "--frames",
+          "480",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=40;autoDemo=0;tellTips=0;startInFullScreen=1;sleepPerLoop=1",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-entry-641-20261031\\regular\\ThunderingPower\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-entry-641-20261031\\regular\\ThunderingPower\\states.tsv",
+          "--window",
+          "--mission",
+          "ThunderingPower"
+        ],
+        "binarySha256": "3923635e953752cbe09e4bfa9158ba401b5d73195e3157cf96f3740a12b2ed33",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 41.98884729999918,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "e0feebb3c7aaa15588f3a42ee4a01cb547ca08c811185c5b1d92bdba25b67522"
+      },
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true,
+        "gameClockAdvanced": true,
+        "gameClockMonotonic": true,
+        "physicalOutput": true
+      },
+      "clock": {
+        "samples": 57,
+        "first": 1.62,
+        "last": 38.791,
+        "increase": 37.171
+      },
+      "presentation": {
+        "same": true,
+        "actualSha256": "171cd35d8b7fc9c96d1b6757e510ef66e1dfe986b992d227fd5199106c030c14",
+        "expectedSha256": "171cd35d8b7fc9c96d1b6757e510ef66e1dfe986b992d227fd5199106c030c14",
+        "dimensions": [
+          1024,
+          768
+        ],
+        "outputRect": [
+          0,
+          0,
+          1024,
+          768
+        ]
+      },
+      "nativeFrame": {
+        "first": [
+          29,
+          27,
+          27,
+          27,
+          0,
+          29,
+          0,
+          0,
+          138,
+          0,
+          2,
+          905969664,
+          0,
+          0,
+          0,
+          0
+        ],
+        "final": [
+          480,
+          2567,
+          2567,
+          2008,
+          0,
+          480,
+          0,
+          0,
+          138,
+          0,
+          2,
+          905969664,
+          0,
+          0,
+          1,
+          0
+        ],
+        "samples": 57
+      },
+      "scene": {
+        "first": [
+          387,
+          7595,
+          1475,
+          490,
+          5,
+          0,
+          7595,
+          1475,
+          490,
+          5,
+          0
+        ],
+        "final": [
+          20,
+          57849,
+          20744,
+          5118,
+          223,
+          0,
+          57849,
+          20744,
+          5118,
+          223,
+          0
+        ]
+      },
+      "ui": {
+        "first": {
+          "dirty": [
+            7553,
+            1736,
+            137
+          ],
+          "area": [
+            27,
+            21233664
+          ]
+        },
+        "final": {
+          "dirty": [
+            8574,
+            2608,
+            267
+          ],
+          "area": [
+            149,
+            126026509
+          ]
+        }
+      }
+    },
+    {
+      "group": "regular",
+      "mission": "DissolvedAlliance",
+      "result": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-portable-startup-637-20261031\\gui\\한글 휴대 배포 😀\\NetstormReborn-cpppj\\Netstorm.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-portable-startup-637-20261031\\gui\\한글 휴대 배포 😀\\NetstormReborn-cpppj\\game",
+          "--no-audio",
+          "--frames",
+          "480",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=40;autoDemo=0;tellTips=0;startInFullScreen=1;sleepPerLoop=1",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-entry-641-20261031\\regular\\DissolvedAlliance\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-entry-641-20261031\\regular\\DissolvedAlliance\\states.tsv",
+          "--window",
+          "--mission",
+          "DissolvedAlliance"
+        ],
+        "binarySha256": "3923635e953752cbe09e4bfa9158ba401b5d73195e3157cf96f3740a12b2ed33",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 55.1479046000004,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2"
+      },
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true,
+        "gameClockAdvanced": true,
+        "gameClockMonotonic": true,
+        "physicalOutput": true
+      },
+      "clock": {
+        "samples": 59,
+        "first": 4.16,
+        "last": 52.785,
+        "increase": 48.625
+      },
+      "presentation": {
+        "same": true,
+        "actualSha256": "a1fcd1a39bf79e4e19885d9750aaa71c1cd111cf15d78427198f1109bebfc99d",
+        "expectedSha256": "a1fcd1a39bf79e4e19885d9750aaa71c1cd111cf15d78427198f1109bebfc99d",
+        "dimensions": [
+          1024,
+          768
+        ],
+        "outputRect": [
+          0,
+          0,
+          1024,
+          768
+        ]
+      },
+      "nativeFrame": {
+        "first": [
+          21,
+          19,
+          19,
+          19,
+          0,
+          21,
+          0,
+          0,
+          138,
+          0,
+          2,
+          905969664,
+          0,
+          0,
+          0,
+          0
+        ],
+        "final": [
+          480,
+          3215,
+          3215,
+          2944,
+          0,
+          480,
+          0,
+          0,
+          138,
+          0,
+          2,
+          905969664,
+          0,
+          0,
+          0,
+          0
+        ],
+        "samples": 59
+      },
+      "scene": {
+        "first": [
+          341,
+          4535,
+          901,
+          315,
+          0,
+          0,
+          4535,
+          901,
+          315,
+          0,
+          0
+        ],
+        "final": [
+          387,
+          71765,
+          28276,
+          6517,
+          834,
+          0,
+          71765,
+          28276,
+          6517,
+          834,
+          0
+        ]
+      },
+      "ui": {
+        "first": {
+          "dirty": [
+            7357,
+            1687,
+            125
+          ],
+          "area": [
+            19,
+            14942208
+          ]
+        },
+        "final": {
+          "dirty": [
+            8295,
+            2552,
+            295
+          ],
+          "area": [
+            180,
+            154679592
+          ]
+        }
+      }
+    },
+    {
+      "group": "regular",
+      "mission": "TheNoose",
+      "result": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-portable-startup-637-20261031\\gui\\한글 휴대 배포 😀\\NetstormReborn-cpppj\\Netstorm.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-portable-startup-637-20261031\\gui\\한글 휴대 배포 😀\\NetstormReborn-cpppj\\game",
+          "--no-audio",
+          "--frames",
+          "480",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=40;autoDemo=0;tellTips=0;startInFullScreen=1;sleepPerLoop=1",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-entry-641-20261031\\regular\\TheNoose\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-entry-641-20261031\\regular\\TheNoose\\states.tsv",
+          "--window",
+          "--mission",
+          "TheNoose"
+        ],
+        "binarySha256": "3923635e953752cbe09e4bfa9158ba401b5d73195e3157cf96f3740a12b2ed33",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 49.346517299999505,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2"
+      },
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true,
+        "gameClockAdvanced": true,
+        "gameClockMonotonic": true,
+        "physicalOutput": true
+      },
+      "clock": {
+        "samples": 58,
+        "first": 5.961,
+        "last": 46.914,
+        "increase": 40.953
+      },
+      "presentation": {
+        "same": true,
+        "actualSha256": "dcaedbbe60d411850830b7469cb91a9bda985c0db59af727d532b7e309fa6ca9",
+        "expectedSha256": "dcaedbbe60d411850830b7469cb91a9bda985c0db59af727d532b7e309fa6ca9",
+        "dimensions": [
+          1024,
+          768
+        ],
+        "outputRect": [
+          0,
+          0,
+          1024,
+          768
+        ]
+      },
+      "nativeFrame": {
+        "first": [
+          29,
+          27,
+          27,
+          27,
+          0,
+          29,
+          0,
+          0,
+          138,
+          0,
+          2,
+          905969664,
+          0,
+          0,
+          0,
+          0
+        ],
+        "final": [
+          480,
+          2031,
+          2031,
+          1932,
+          0,
+          480,
+          0,
+          0,
+          138,
+          0,
+          2,
+          905969664,
+          0,
+          0,
+          0,
+          0
+        ],
+        "samples": 58
+      },
+      "scene": {
+        "first": [
+          340,
+          6525,
+          1525,
+          472,
+          0,
+          0,
+          6525,
+          1525,
+          472,
+          0,
+          0
+        ],
+        "final": [
+          6,
+          61308,
+          19598,
+          6404,
+          0,
+          0,
+          61308,
+          19598,
+          6404,
+          0,
+          0
+        ]
+      },
+      "ui": {
+        "first": {
+          "dirty": [
+            7548,
+            1730,
+            137
+          ],
+          "area": [
+            27,
+            21233664
+          ]
+        },
+        "final": {
+          "dirty": [
+            8342,
+            2524,
+            339
+          ],
+          "area": [
+            201,
+            164289263
+          ]
+        }
+      }
+    },
+    {
+      "group": "regular",
+      "mission": "RainVsRain",
+      "result": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-portable-startup-637-20261031\\gui\\한글 휴대 배포 😀\\NetstormReborn-cpppj\\Netstorm.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-portable-startup-637-20261031\\gui\\한글 휴대 배포 😀\\NetstormReborn-cpppj\\game",
+          "--no-audio",
+          "--frames",
+          "480",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=40;autoDemo=0;tellTips=0;startInFullScreen=1;sleepPerLoop=1",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-entry-641-20261031\\regular\\RainVsRain\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-entry-641-20261031\\regular\\RainVsRain\\states.tsv",
+          "--window",
+          "--mission",
+          "RainVsRain"
+        ],
+        "binarySha256": "3923635e953752cbe09e4bfa9158ba401b5d73195e3157cf96f3740a12b2ed33",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 36.394712600000275,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2"
+      },
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true,
+        "gameClockAdvanced": true,
+        "gameClockMonotonic": true,
+        "physicalOutput": true
+      },
+      "clock": {
+        "samples": 59,
+        "first": 1.201,
+        "last": 34.785,
+        "increase": 33.583999999999996
+      },
+      "presentation": {
+        "same": true,
+        "actualSha256": "85685ee653a67acfdd3966f51b5105fbf3cfef2b0949a958056b3f071a491331",
+        "expectedSha256": "85685ee653a67acfdd3966f51b5105fbf3cfef2b0949a958056b3f071a491331",
+        "dimensions": [
+          1024,
+          768
+        ],
+        "outputRect": [
+          0,
+          0,
+          1024,
+          768
+        ]
+      },
+      "nativeFrame": {
+        "first": [
+          21,
+          19,
+          19,
+          19,
+          0,
+          21,
+          0,
+          0,
+          138,
+          0,
+          2,
+          905969664,
+          0,
+          0,
+          0,
+          0
+        ],
+        "final": [
+          480,
+          1010,
+          1010,
+          825,
+          0,
+          480,
+          0,
+          0,
+          138,
+          0,
+          2,
+          905969664,
+          1,
+          0,
+          0,
+          0
+        ],
+        "samples": 59
+      },
+      "scene": {
+        "first": [
+          234,
+          3128,
+          595,
+          285,
+          0,
+          0,
+          3128,
+          595,
+          285,
+          0,
+          0
+        ],
+        "final": [
+          7,
+          35070,
+          11888,
+          4537,
+          0,
+          0,
+          35070,
+          11888,
+          4537,
+          0,
+          0
+        ]
+      },
+      "ui": {
+        "first": {
+          "dirty": [
+            7327,
+            1657,
+            123
+          ],
+          "area": [
+            19,
+            14942208
+          ]
+        },
+        "final": {
+          "dirty": [
+            8143,
+            2473,
+            253
+          ],
+          "area": [
+            141,
+            116486187
+          ]
+        }
+      }
+    },
+    {
+      "group": "regular",
+      "mission": "RunForIt",
+      "result": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-portable-startup-637-20261031\\gui\\한글 휴대 배포 😀\\NetstormReborn-cpppj\\Netstorm.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-portable-startup-637-20261031\\gui\\한글 휴대 배포 😀\\NetstormReborn-cpppj\\game",
+          "--no-audio",
+          "--frames",
+          "480",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=40;autoDemo=0;tellTips=0;startInFullScreen=1;sleepPerLoop=1",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-entry-641-20261031\\regular\\RunForIt\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-entry-641-20261031\\regular\\RunForIt\\states.tsv",
+          "--window",
+          "--mission",
+          "RunForIt"
+        ],
+        "binarySha256": "3923635e953752cbe09e4bfa9158ba401b5d73195e3157cf96f3740a12b2ed33",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 38.66537960000005,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "383d7aca9b17e11a68428397e1834c7515797345ef2b938d506f1d5f8ae5fb79"
+      },
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true,
+        "gameClockAdvanced": true,
+        "gameClockMonotonic": true,
+        "physicalOutput": true
+      },
+      "clock": {
+        "samples": 58,
+        "first": 1.822,
+        "last": 36.462,
+        "increase": 34.64
+      },
+      "presentation": {
+        "same": true,
+        "actualSha256": "ee0d623bbae3e48897f5d5c2f2fb4f041ffc0c742e989f218e69167483206207",
+        "expectedSha256": "ee0d623bbae3e48897f5d5c2f2fb4f041ffc0c742e989f218e69167483206207",
+        "dimensions": [
+          1024,
+          768
+        ],
+        "outputRect": [
+          0,
+          0,
+          1024,
+          768
+        ]
+      },
+      "nativeFrame": {
+        "first": [
+          29,
+          27,
+          27,
+          27,
+          0,
+          29,
+          0,
+          0,
+          138,
+          0,
+          2,
+          905969664,
+          0,
+          0,
+          0,
+          0
+        ],
+        "final": [
+          480,
+          853,
+          853,
+          746,
+          0,
+          480,
+          0,
+          0,
+          138,
+          0,
+          2,
+          905969664,
+          0,
+          0,
+          0,
+          0
+        ],
+        "samples": 58
+      },
+      "scene": {
+        "first": [
+          258,
+          4600,
+          1325,
+          493,
+          0,
+          0,
+          4600,
+          1325,
+          493,
+          0,
+          0
+        ],
+        "final": [
+          7,
+          25050,
+          9607,
+          3885,
+          4,
+          0,
+          25050,
+          9607,
+          3885,
+          4,
+          0
+        ]
+      },
+      "ui": {
+        "first": {
+          "dirty": [
+            7550,
+            1733,
+            137
+          ],
+          "area": [
+            27,
+            21233664
+          ]
+        },
+        "final": {
+          "dirty": [
+            8387,
+            2497,
+            233
+          ],
+          "area": [
+            119,
+            96738089
+          ]
+        }
+      }
+    },
+    {
+      "group": "regular",
+      "mission": "GuardMyBack",
+      "result": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-portable-startup-637-20261031\\gui\\한글 휴대 배포 😀\\NetstormReborn-cpppj\\Netstorm.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-portable-startup-637-20261031\\gui\\한글 휴대 배포 😀\\NetstormReborn-cpppj\\game",
+          "--no-audio",
+          "--frames",
+          "480",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=40;autoDemo=0;tellTips=0;startInFullScreen=1;sleepPerLoop=1",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-entry-641-20261031\\regular\\GuardMyBack\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-entry-641-20261031\\regular\\GuardMyBack\\states.tsv",
+          "--window",
+          "--mission",
+          "GuardMyBack"
+        ],
+        "binarySha256": "3923635e953752cbe09e4bfa9158ba401b5d73195e3157cf96f3740a12b2ed33",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 56.77671550000014,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "f0897e4ab61f8c2f86b568404bba5e7af303c0933f7c1fa3ee631c464ffcc509"
+      },
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true,
+        "gameClockAdvanced": true,
+        "gameClockMonotonic": true,
+        "physicalOutput": true
+      },
+      "clock": {
+        "samples": 59,
+        "first": 3.507,
+        "last": 54.382,
+        "increase": 50.875
+      },
+      "presentation": {
+        "same": true,
+        "actualSha256": "5ac2844557448bdc6460e3c98b8e8288a8cbd6dd2bbd5ce9b59e82291e6eaea6",
+        "expectedSha256": "5ac2844557448bdc6460e3c98b8e8288a8cbd6dd2bbd5ce9b59e82291e6eaea6",
+        "dimensions": [
+          1024,
+          768
+        ],
+        "outputRect": [
+          0,
+          0,
+          1024,
+          768
+        ]
+      },
+      "nativeFrame": {
+        "first": [
+          21,
+          19,
+          19,
+          19,
+          0,
+          21,
+          0,
+          0,
+          138,
+          0,
+          2,
+          905969664,
+          0,
+          0,
+          0,
+          0
+        ],
+        "final": [
+          480,
+          3346,
+          3346,
+          2962,
+          0,
+          480,
+          0,
+          0,
+          138,
+          0,
+          2,
+          905969664,
+          0,
+          0,
+          0,
+          0
+        ],
+        "samples": 59
+      },
+      "scene": {
+        "first": [
+          648,
+          9554,
+          1105,
+          315,
+          0,
+          0,
+          9554,
+          1105,
+          315,
+          0,
+          0
+        ],
+        "final": [
+          5,
+          104936,
+          24112,
+          5044,
+          0,
+          0,
+          104936,
+          24112,
+          5044,
+          0,
+          0
+        ]
+      },
+      "ui": {
+        "first": {
+          "dirty": [
+            7360,
+            1687,
+            125
+          ],
+          "area": [
+            19,
+            14942208
+          ]
+        },
+        "final": {
+          "dirty": [
+            8190,
+            2517,
+            247
+          ],
+          "area": [
+            141,
+            122861155
+          ]
+        }
+      }
+    },
+    {
+      "group": "regular",
+      "mission": "Surrounded",
+      "result": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-portable-startup-637-20261031\\gui\\한글 휴대 배포 😀\\NetstormReborn-cpppj\\Netstorm.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-portable-startup-637-20261031\\gui\\한글 휴대 배포 😀\\NetstormReborn-cpppj\\game",
+          "--no-audio",
+          "--frames",
+          "480",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=40;autoDemo=0;tellTips=0;startInFullScreen=1;sleepPerLoop=1",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-entry-641-20261031\\regular\\Surrounded\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-entry-641-20261031\\regular\\Surrounded\\states.tsv",
+          "--window",
+          "--mission",
+          "Surrounded"
+        ],
+        "binarySha256": "3923635e953752cbe09e4bfa9158ba401b5d73195e3157cf96f3740a12b2ed33",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 88.20153930000015,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2"
+      },
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true,
+        "gameClockAdvanced": true,
+        "gameClockMonotonic": true,
+        "physicalOutput": true
+      },
+      "clock": {
+        "samples": 59,
+        "first": 6.448,
+        "last": 85.589,
+        "increase": 79.14099999999999
+      },
+      "presentation": {
+        "same": true,
+        "actualSha256": "dcfaf3b0fd1aa0a095b505150b10f6d0e3a86d1aab36795c81f0b3ba770fb530",
+        "expectedSha256": "dcfaf3b0fd1aa0a095b505150b10f6d0e3a86d1aab36795c81f0b3ba770fb530",
+        "dimensions": [
+          1024,
+          768
+        ],
+        "outputRect": [
+          0,
+          0,
+          1024,
+          768
+        ]
+      },
+      "nativeFrame": {
+        "first": [
+          21,
+          19,
+          19,
+          19,
+          0,
+          21,
+          0,
+          0,
+          138,
+          0,
+          2,
+          905969664,
+          0,
+          0,
+          0,
+          0
+        ],
+        "final": [
+          480,
+          7029,
+          7029,
+          6563,
+          0,
+          480,
+          0,
+          0,
+          138,
+          0,
+          2,
+          905969664,
+          0,
+          0,
+          0,
+          0
+        ],
+        "samples": 59
+      },
+      "scene": {
+        "first": [
+          378,
+          5117,
+          1122,
+          217,
+          0,
+          0,
+          5117,
+          1122,
+          217,
+          0,
+          0
+        ],
+        "final": [
+          7,
+          92425,
+          45484,
+          1702,
+          0,
+          0,
+          92425,
+          45484,
+          1702,
+          0,
+          0
+        ]
+      },
+      "ui": {
+        "first": {
+          "dirty": [
+            7308,
+            1639,
+            122
+          ],
+          "area": [
+            19,
+            14942208
+          ]
+        },
+        "final": {
+          "dirty": [
+            7482,
+            1813,
+            267
+          ],
+          "area": [
+            154,
+            151166401
+          ]
+        }
+      }
+    },
+    {
+      "group": "regular",
+      "mission": "BreakingThrough",
+      "result": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-portable-startup-637-20261031\\gui\\한글 휴대 배포 😀\\NetstormReborn-cpppj\\Netstorm.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-portable-startup-637-20261031\\gui\\한글 휴대 배포 😀\\NetstormReborn-cpppj\\game",
+          "--no-audio",
+          "--frames",
+          "480",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=40;autoDemo=0;tellTips=0;startInFullScreen=1;sleepPerLoop=1",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-entry-641-20261031\\regular\\BreakingThrough\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-entry-641-20261031\\regular\\BreakingThrough\\states.tsv",
+          "--window",
+          "--mission",
+          "BreakingThrough"
+        ],
+        "binarySha256": "3923635e953752cbe09e4bfa9158ba401b5d73195e3157cf96f3740a12b2ed33",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 53.25601490000008,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2"
+      },
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true,
+        "gameClockAdvanced": true,
+        "gameClockMonotonic": true,
+        "physicalOutput": true
+      },
+      "clock": {
+        "samples": 58,
+        "first": 4.218,
+        "last": 50.749,
+        "increase": 46.531000000000006
+      },
+      "presentation": {
+        "same": true,
+        "actualSha256": "b7015fd1944e7aa25635f57e65cac246ff11fa4add756df103ce5f69157ed60e",
+        "expectedSha256": "b7015fd1944e7aa25635f57e65cac246ff11fa4add756df103ce5f69157ed60e",
+        "dimensions": [
+          1024,
+          768
+        ],
+        "outputRect": [
+          0,
+          0,
+          1024,
+          768
+        ]
+      },
+      "nativeFrame": {
+        "first": [
+          29,
+          118,
+          118,
+          74,
+          0,
+          29,
+          0,
+          0,
+          138,
+          0,
+          2,
+          905969664,
+          0,
+          0,
+          0,
+          0
+        ],
+        "final": [
+          480,
+          3899,
+          3899,
+          3209,
+          0,
+          480,
+          0,
+          0,
+          138,
+          0,
+          2,
+          905969664,
+          0,
+          0,
+          0,
+          0
+        ],
+        "samples": 58
+      },
+      "scene": {
+        "first": [
+          329,
+          2017,
+          882,
+          126,
+          0,
+          0,
+          2017,
+          882,
+          126,
+          0,
+          0
+        ],
+        "final": [
+          32,
+          60864,
+          29975,
+          3014,
+          195,
+          0,
+          60864,
+          29975,
+          3014,
+          195,
+          0
+        ]
+      },
+      "ui": {
+        "first": {
+          "dirty": [
+            7500,
+            1683,
+            111
+          ],
+          "area": [
+            7,
+            5826729
+          ]
+        },
+        "final": {
+          "dirty": [
+            8320,
+            2357,
+            183
+          ],
+          "area": [
+            79,
+            86399758
+          ]
+        }
+      }
+    },
+    {
+      "group": "regular",
+      "mission": "ToTheRescue",
+      "result": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-portable-startup-637-20261031\\gui\\한글 휴대 배포 😀\\NetstormReborn-cpppj\\Netstorm.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-portable-startup-637-20261031\\gui\\한글 휴대 배포 😀\\NetstormReborn-cpppj\\game",
+          "--no-audio",
+          "--frames",
+          "480",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=40;autoDemo=0;tellTips=0;startInFullScreen=1;sleepPerLoop=1",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-entry-641-20261031\\regular\\ToTheRescue\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-entry-641-20261031\\regular\\ToTheRescue\\states.tsv",
+          "--window",
+          "--mission",
+          "ToTheRescue"
+        ],
+        "binarySha256": "3923635e953752cbe09e4bfa9158ba401b5d73195e3157cf96f3740a12b2ed33",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 67.42593580000084,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "f0897e4ab61f8c2f86b568404bba5e7af303c0933f7c1fa3ee631c464ffcc509"
+      },
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true,
+        "gameClockAdvanced": true,
+        "gameClockMonotonic": true,
+        "physicalOutput": true
+      },
+      "clock": {
+        "samples": 58,
+        "first": 6.826,
+        "last": 64.218,
+        "increase": 57.392
+      },
+      "presentation": {
+        "same": true,
+        "actualSha256": "f5fc2870ecedeb1705f9c041e7056252440de4094ede542afe0ba162470d6907",
+        "expectedSha256": "f5fc2870ecedeb1705f9c041e7056252440de4094ede542afe0ba162470d6907",
+        "dimensions": [
+          1024,
+          768
+        ],
+        "outputRect": [
+          0,
+          0,
+          1024,
+          768
+        ]
+      },
+      "nativeFrame": {
+        "first": [
+          29,
+          27,
+          27,
+          27,
+          0,
+          29,
+          0,
+          0,
+          138,
+          0,
+          2,
+          905969664,
+          0,
+          0,
+          0,
+          0
+        ],
+        "final": [
+          480,
+          1971,
+          1971,
+          1479,
+          0,
+          480,
+          0,
+          0,
+          138,
+          0,
+          2,
+          905969664,
+          0,
+          0,
+          0,
+          0
+        ],
+        "samples": 58
+      },
+      "scene": {
+        "first": [
+          332,
+          6525,
+          1250,
+          503,
+          0,
+          0,
+          6525,
+          1250,
+          503,
+          0,
+          0
+        ],
+        "final": [
+          24,
+          56791,
+          19606,
+          6379,
+          256,
+          0,
+          56791,
+          19606,
+          6379,
+          256,
+          0
+        ]
+      },
+      "ui": {
+        "first": {
+          "dirty": [
+            7565,
+            1745,
+            138
+          ],
+          "area": [
+            27,
+            21233664
+          ]
+        },
+        "final": {
+          "dirty": [
+            8485,
+            2592,
+            292
+          ],
+          "area": [
+            174,
+            145686482
+          ]
+        }
+      }
+    },
+    {
+      "group": "regular",
+      "mission": "Vicious",
+      "result": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-portable-startup-637-20261031\\gui\\한글 휴대 배포 😀\\NetstormReborn-cpppj\\Netstorm.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-portable-startup-637-20261031\\gui\\한글 휴대 배포 😀\\NetstormReborn-cpppj\\game",
+          "--no-audio",
+          "--frames",
+          "480",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=40;autoDemo=0;tellTips=0;startInFullScreen=1;sleepPerLoop=1",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-entry-641-20261031\\regular\\Vicious\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-entry-641-20261031\\regular\\Vicious\\states.tsv",
+          "--window",
+          "--mission",
+          "Vicious"
+        ],
+        "binarySha256": "3923635e953752cbe09e4bfa9158ba401b5d73195e3157cf96f3740a12b2ed33",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 38.03449360000013,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2"
+      },
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true,
+        "gameClockAdvanced": true,
+        "gameClockMonotonic": true,
+        "physicalOutput": true
+      },
+      "clock": {
+        "samples": 58,
+        "first": 1.857,
+        "last": 35.945,
+        "increase": 34.088
+      },
+      "presentation": {
+        "same": true,
+        "actualSha256": "528b031c37ef5139e6ab9602fc61691b0e075ea08da1e5c572de802ecbfebf25",
+        "expectedSha256": "528b031c37ef5139e6ab9602fc61691b0e075ea08da1e5c572de802ecbfebf25",
+        "dimensions": [
+          1024,
+          768
+        ],
+        "outputRect": [
+          0,
+          0,
+          1024,
+          768
+        ]
+      },
+      "nativeFrame": {
+        "first": [
+          29,
+          27,
+          27,
+          27,
+          0,
+          29,
+          0,
+          0,
+          138,
+          0,
+          2,
+          905969664,
+          0,
+          0,
+          0,
+          0
+        ],
+        "final": [
+          480,
+          2371,
+          2371,
+          2283,
+          0,
+          480,
+          0,
+          0,
+          138,
+          0,
+          2,
+          905969664,
+          0,
+          0,
+          0,
+          0
+        ],
+        "samples": 58
+      },
+      "scene": {
+        "first": [
+          263,
+          5050,
+          1250,
+          345,
+          0,
+          0,
+          5050,
+          1250,
+          345,
+          0,
+          0
+        ],
+        "final": [
+          7,
+          42559,
+          16802,
+          1918,
+          0,
+          0,
+          42559,
+          16802,
+          1918,
+          0,
+          0
+        ]
+      },
+      "ui": {
+        "first": {
+          "dirty": [
+            7507,
+            1691,
+            133
+          ],
+          "area": [
+            27,
+            21233664
+          ]
+        },
+        "final": {
+          "dirty": [
+            7705,
+            1889,
+            289
+          ],
+          "area": [
+            170,
+            140605098
+          ]
+        }
+      }
+    },
+    {
+      "group": "regular",
+      "mission": "EnemyTerritory",
+      "result": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-portable-startup-637-20261031\\gui\\한글 휴대 배포 😀\\NetstormReborn-cpppj\\Netstorm.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-portable-startup-637-20261031\\gui\\한글 휴대 배포 😀\\NetstormReborn-cpppj\\game",
+          "--no-audio",
+          "--frames",
+          "480",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=40;autoDemo=0;tellTips=0;startInFullScreen=1;sleepPerLoop=1",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-entry-641-20261031\\regular\\EnemyTerritory\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-entry-641-20261031\\regular\\EnemyTerritory\\states.tsv",
+          "--window",
+          "--mission",
+          "EnemyTerritory"
+        ],
+        "binarySha256": "3923635e953752cbe09e4bfa9158ba401b5d73195e3157cf96f3740a12b2ed33",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 88.94460440000057,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "bc67e0be736a8c9215d89b326bedf50b868c2348f5fd45ad416e62a0df846524"
+      },
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true,
+        "gameClockAdvanced": true,
+        "gameClockMonotonic": true,
+        "physicalOutput": true
+      },
+      "clock": {
+        "samples": 59,
+        "first": 9.589,
+        "last": 86.046,
+        "increase": 76.45700000000001
+      },
+      "presentation": {
+        "same": true,
+        "actualSha256": "236e5c7ba587d3af7dc6c39ce809a5603a9e9cdc476e9853bcfdd15d726b0d0e",
+        "expectedSha256": "236e5c7ba587d3af7dc6c39ce809a5603a9e9cdc476e9853bcfdd15d726b0d0e",
+        "dimensions": [
+          1024,
+          768
+        ],
+        "outputRect": [
+          0,
+          0,
+          1024,
+          768
+        ]
+      },
+      "nativeFrame": {
+        "first": [
+          21,
+          19,
+          19,
+          19,
+          0,
+          21,
+          0,
+          0,
+          138,
+          0,
+          2,
+          905969664,
+          0,
+          0,
+          0,
+          0
+        ],
+        "final": [
+          480,
+          403,
+          403,
+          250,
+          0,
+          480,
+          0,
+          0,
+          138,
+          0,
+          2,
+          905969664,
+          1,
+          0,
+          1,
+          0
+        ],
+        "samples": 59
+      },
+      "scene": {
+        "first": [
+          232,
+          2975,
+          544,
+          327,
+          0,
+          0,
+          2975,
+          544,
+          327,
+          0,
+          0
+        ],
+        "final": [
+          8,
+          37201,
+          8161,
+          7634,
+          13,
+          0,
+          37201,
+          8161,
+          7634,
+          13,
+          0
+        ]
+      },
+      "ui": {
+        "first": {
+          "dirty": [
+            7403,
+            1733,
+            127
+          ],
+          "area": [
+            19,
+            14942208
+          ]
+        },
+        "final": {
+          "dirty": [
+            8162,
+            2492,
+            341
+          ],
+          "area": [
+            212,
+            167540823
+          ]
+        }
+      }
+    },
+    {
+      "group": "regular",
+      "mission": "FinalConfrontation",
+      "result": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-portable-startup-637-20261031\\gui\\한글 휴대 배포 😀\\NetstormReborn-cpppj\\Netstorm.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-portable-startup-637-20261031\\gui\\한글 휴대 배포 😀\\NetstormReborn-cpppj\\game",
+          "--no-audio",
+          "--frames",
+          "480",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=40;autoDemo=0;tellTips=0;startInFullScreen=1;sleepPerLoop=1",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-entry-641-20261031\\regular\\FinalConfrontation\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-entry-641-20261031\\regular\\FinalConfrontation\\states.tsv",
+          "--window",
+          "--mission",
+          "FinalConfrontation"
+        ],
+        "binarySha256": "3923635e953752cbe09e4bfa9158ba401b5d73195e3157cf96f3740a12b2ed33",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 78.95316479999929,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2"
+      },
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true,
+        "gameClockAdvanced": true,
+        "gameClockMonotonic": true,
+        "physicalOutput": true
+      },
+      "clock": {
+        "samples": 59,
+        "first": 9.734,
+        "last": 76.328,
+        "increase": 66.59400000000001
+      },
+      "presentation": {
+        "same": true,
+        "actualSha256": "293967d730aa61d82ec054534c255aee5abc524ca8719572d3c456979ffb2337",
+        "expectedSha256": "293967d730aa61d82ec054534c255aee5abc524ca8719572d3c456979ffb2337",
+        "dimensions": [
+          1024,
+          768
+        ],
+        "outputRect": [
+          0,
+          0,
+          1024,
+          768
+        ]
+      },
+      "nativeFrame": {
+        "first": [
+          21,
+          19,
+          19,
+          19,
+          0,
+          21,
+          0,
+          0,
+          138,
+          0,
+          2,
+          905969664,
+          0,
+          0,
+          0,
+          0
+        ],
+        "final": [
+          480,
+          3161,
+          3161,
+          2963,
+          0,
+          480,
+          0,
+          0,
+          138,
+          0,
+          2,
+          905969664,
+          0,
+          0,
+          0,
+          0
+        ],
+        "samples": 59
+      },
+      "scene": {
+        "first": [
+          271,
+          3434,
+          833,
+          325,
+          0,
+          0,
+          3434,
+          833,
+          325,
+          0,
+          0
+        ],
+        "final": [
+          7,
+          48069,
+          20017,
+          6514,
+          194,
+          0,
+          48069,
+          20017,
+          6514,
+          194,
+          0
+        ]
+      },
+      "ui": {
+        "first": {
+          "dirty": [
+            7360,
+            1690,
+            127
+          ],
+          "area": [
+            19,
+            14942208
+          ]
+        },
+        "final": {
+          "dirty": [
+            8223,
+            2480,
+            247
+          ],
+          "area": [
+            161,
+            135590361
+          ]
+        }
+      }
+    },
+    {
+      "group": "demos",
+      "mission": "DemoStormRages",
+      "result": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-portable-startup-637-20261031\\gui\\한글 휴대 배포 😀\\NetstormReborn-cpppj\\Netstorm.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-portable-startup-637-20261031\\gui\\한글 휴대 배포 😀\\NetstormReborn-cpppj\\game",
+          "--no-audio",
+          "--frames",
+          "602",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;startInFullScreen=1;sleepPerLoop=30",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-entry-641-20261031\\demos\\DemoStormRages\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-entry-641-20261031\\demos\\DemoStormRages\\states.tsv",
+          "--window"
+        ],
+        "binarySha256": "3923635e953752cbe09e4bfa9158ba401b5d73195e3157cf96f3740a12b2ed33",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 39.40058180000051,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "7013897daa266583ef2410ac777d9f0b7c11b5116e66a3f004273c19b2553618"
+      },
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true,
+        "gameClockAdvanced": true,
+        "gameClockMonotonic": true,
+        "demo": true,
+        "localAI": true,
+        "physicalOutput": true
+      },
+      "clock": {
+        "samples": 39,
+        "first": 1.824,
+        "last": 22.699,
+        "increase": 20.875
+      },
+      "presentation": {
+        "same": true,
+        "actualSha256": "57a20ee1e637ff68aaaa5a0965021f6bc30aa726c91fb800b40acad30c550caa",
+        "expectedSha256": "57a20ee1e637ff68aaaa5a0965021f6bc30aa726c91fb800b40acad30c550caa",
+        "dimensions": [
+          1024,
+          768
+        ],
+        "outputRect": [
+          0,
+          0,
+          1024,
+          768
+        ]
+      },
+      "nativeFrame": {
+        "first": [
+          301,
+          112,
+          112,
+          112,
+          0,
+          301,
+          0,
+          0,
+          138,
+          0,
+          2,
+          905969664,
+          0,
+          0,
+          0,
+          0
+        ],
+        "final": [
+          602,
+          413,
+          413,
+          413,
+          0,
+          602,
+          0,
+          0,
+          138,
+          0,
+          2,
+          905969664,
+          0,
+          0,
+          0,
+          0
+        ],
+        "samples": 39
+      },
+      "scene": {
+        "first": [
+          486,
+          40743,
+          7362,
+          1888,
+          0,
+          0,
+          40743,
+          7362,
+          1888,
+          0,
+          0
+        ],
+        "final": [
+          499,
+          159979,
+          28432,
+          12082,
+          478,
+          0,
+          159979,
+          28432,
+          12082,
+          478,
+          0
+        ]
+      },
+      "ui": {
+        "first": {
+          "dirty": [
+            7854,
+            1981,
+            223
+          ],
+          "area": [
+            111,
+            87304512
+          ]
+        },
+        "final": {
+          "dirty": [
+            8878,
+            2932,
+            570
+          ],
+          "area": [
+            412,
+            324020544
+          ]
+        }
+      }
+    },
+    {
+      "group": "demos",
+      "mission": "GuardMyBack",
+      "result": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-portable-startup-637-20261031\\gui\\한글 휴대 배포 😀\\NetstormReborn-cpppj\\Netstorm.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-portable-startup-637-20261031\\gui\\한글 휴대 배포 😀\\NetstormReborn-cpppj\\game",
+          "--no-audio",
+          "--frames",
+          "602",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;startInFullScreen=1;sleepPerLoop=30",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-entry-641-20261031\\demos\\GuardMyBack\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-entry-641-20261031\\demos\\GuardMyBack\\states.tsv",
+          "--window"
+        ],
+        "binarySha256": "3923635e953752cbe09e4bfa9158ba401b5d73195e3157cf96f3740a12b2ed33",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 42.21371159999944,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2"
+      },
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true,
+        "gameClockAdvanced": true,
+        "gameClockMonotonic": true,
+        "demo": true,
+        "localAI": true,
+        "physicalOutput": true
+      },
+      "clock": {
+        "samples": 40,
+        "first": 4.75,
+        "last": 25.719,
+        "increase": 20.969
+      },
+      "presentation": {
+        "same": true,
+        "actualSha256": "031ff25786b861d4290fda7a6cd6f0cc2e0ab60d2cc5a4fb1b29874950793bfd",
+        "expectedSha256": "031ff25786b861d4290fda7a6cd6f0cc2e0ab60d2cc5a4fb1b29874950793bfd",
+        "dimensions": [
+          1024,
+          768
+        ],
+        "outputRect": [
+          0,
+          0,
+          1024,
+          768
+        ]
+      },
+      "nativeFrame": {
+        "first": [
+          293,
+          102,
+          102,
+          102,
+          0,
+          293,
+          0,
+          0,
+          138,
+          0,
+          2,
+          905969664,
+          0,
+          0,
+          0,
+          0
+        ],
+        "final": [
+          602,
+          1993,
+          1993,
+          1772,
+          0,
+          602,
+          0,
+          0,
+          138,
+          0,
+          2,
+          905969664,
+          0,
+          0,
+          0,
+          0
+        ],
+        "samples": 40
+      },
+      "scene": {
+        "first": [
+          664,
+          53418,
+          6175,
+          1770,
+          7,
+          0,
+          53418,
+          6175,
+          1770,
+          7,
+          0
+        ],
+        "final": [
+          8,
+          167638,
+          25709,
+          7796,
+          29,
+          0,
+          167638,
+          25709,
+          7796,
+          29,
+          0
+        ]
+      },
+      "ui": {
+        "first": {
+          "dirty": [
+            7858,
+            1985,
+            212
+          ],
+          "area": [
+            101,
+            79431132
+          ]
+        },
+        "final": {
+          "dirty": [
+            8359,
+            2486,
+            412
+          ],
+          "area": [
+            277,
+            224156787
+          ]
+        }
+      }
+    },
+    {
+      "group": "demos",
+      "mission": "DissolvedAlliance",
+      "result": {
+        "command": [
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-portable-startup-637-20261031\\gui\\한글 휴대 배포 😀\\NetstormReborn-cpppj\\Netstorm.exe",
+          "--run",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-portable-startup-637-20261031\\gui\\한글 휴대 배포 😀\\NetstormReborn-cpppj\\game",
+          "--no-audio",
+          "--frames",
+          "602",
+          "--set",
+          "SCREENW=1024;SCREENH=768;maxFPS=60;autoDemo=0;tellTips=0;startInFullScreen=1;sleepPerLoop=30",
+          "--ui-script",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-entry-641-20261031\\demos\\DissolvedAlliance\\steps.tsv",
+          "--ui-report",
+          "H:\\T5Workspace\\NetstormReborn\\extracted\\cpp-solo-entry-641-20261031\\demos\\DissolvedAlliance\\states.tsv",
+          "--window"
+        ],
+        "binarySha256": "3923635e953752cbe09e4bfa9158ba401b5d73195e3157cf96f3740a12b2ed33",
+        "returnCode": 0,
+        "timedOut": false,
+        "seconds": 44.18135000000075,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "f0897e4ab61f8c2f86b568404bba5e7af303c0933f7c1fa3ee631c464ffcc509"
+      },
+      "checks": {
+        "normalExit": true,
+        "playing": true,
+        "correctMission": true,
+        "world": true,
+        "guide": true,
+        "loadingReleased": true,
+        "gameClockAdvanced": true,
+        "gameClockMonotonic": true,
+        "demo": true,
+        "localAI": true,
+        "physicalOutput": true
+      },
+      "clock": {
+        "samples": 73,
+        "first": 4.931,
+        "last": 42.862,
+        "increase": 37.931000000000004
+      },
+      "presentation": {
+        "same": true,
+        "actualSha256": "3e2017d2f6fe15bac60edb41921ce2b43101903c228f7240584ab359cad1da36",
+        "expectedSha256": "3e2017d2f6fe15bac60edb41921ce2b43101903c228f7240584ab359cad1da36",
+        "dimensions": [
+          1024,
+          768
+        ],
+        "outputRect": [
+          0,
+          0,
+          1024,
+          768
+        ]
+      },
+      "nativeFrame": {
+        "first": [
+          29,
+          15,
+          15,
+          15,
+          0,
+          29,
+          0,
+          0,
+          138,
+          0,
+          2,
+          905969664,
+          0,
+          0,
+          0,
+          0
+        ],
+        "final": [
+          602,
+          2568,
+          2568,
+          2453,
+          0,
+          602,
+          0,
+          0,
+          138,
+          0,
+          2,
+          905969664,
+          0,
+          0,
+          0,
+          0
+        ],
+        "samples": 73
+      },
+      "scene": {
+        "first": [
+          351,
+          2132,
+          424,
+          266,
+          0,
+          0,
+          2132,
+          424,
+          266,
+          0,
+          0
+        ],
+        "final": [
+          388,
+          131567,
+          35169,
+          14523,
+          1302,
+          0,
+          131567,
+          35169,
+          14523,
+          1302,
+          0
+        ]
+      },
+      "ui": {
+        "first": {
+          "dirty": [
+            7536,
+            1810,
+            113
+          ],
+          "area": [
+            14,
+            11011548
+          ]
+        },
+        "final": {
+          "dirty": [
+            8882,
+            3083,
+            562
+          ],
+          "area": [
+            416,
+            337482345
+          ]
+        }
+      }
+    }
+  ],
+  "evidence_sha256": {
+    "regular/Tutorial1/running.json": "7a513a82a42be91959dbb490d6adf255e8aeb07ef02d1ff7dec631a02b19e55c",
+    "regular/Tutorial1/result.json": "edd04180cef896f38b001d06b24f6e9021c2e7a49843b0e2aaa75ed60c6d6e37",
+    "regular/Tutorial1/steps.tsv": "c77ecb43cfa7d2d4f04794c06acf9d21b99852b4ddcb6ac3463f4179b46fbd72",
+    "regular/Tutorial1/states.tsv": "3a5c27c2bbdb6e3f8b2204e129a0ff3fbdb40f9bf9cc62b973d40d696ea71888",
+    "regular/Tutorial1/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "regular/Tutorial1/stderr.log": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2",
+    "regular/Tutorial1/final.bmp": "4bf170eade58f54e848fc03ff1bd37398346d1d12b7aa0f5d5b6037ea26bb5e7",
+    "regular/Tutorial1/final-after-camera.bmp": "4bf170eade58f54e848fc03ff1bd37398346d1d12b7aa0f5d5b6037ea26bb5e7",
+    "regular/Tutorial1/final-output.bmp": "4bf170eade58f54e848fc03ff1bd37398346d1d12b7aa0f5d5b6037ea26bb5e7",
+    "regular/Tutorial1/presentation-comparison.json": "4c732b3a3bc6b8db4b0ce2f6c8cf625dbce09c3a66ea9ab74768560aa479ed27",
+    "regular/Tutorial2/running.json": "41dcf2c281285da5a0533ac31fb68469a822bca71b6d5f842f9bbecd7c659a10",
+    "regular/Tutorial2/result.json": "f7f9da3e2c9938ea8f7800c1bc36e220af0115161cb16b938ab09e4eb0b9e423",
+    "regular/Tutorial2/steps.tsv": "ceccd12ec741ea35877cf00c5993cd17b474d395a3ce0fb5916613341728937a",
+    "regular/Tutorial2/states.tsv": "f2a87b79c6d9d6a2e7e8d6cf695b4108f50467738d86516a5aa870cb233d52fb",
+    "regular/Tutorial2/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "regular/Tutorial2/stderr.log": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2",
+    "regular/Tutorial2/final.bmp": "4aa8dca60f449a299164b703ecd8278c6ccc30948716d74c37446d6f5dbc38d4",
+    "regular/Tutorial2/final-after-camera.bmp": "4aa8dca60f449a299164b703ecd8278c6ccc30948716d74c37446d6f5dbc38d4",
+    "regular/Tutorial2/final-output.bmp": "4aa8dca60f449a299164b703ecd8278c6ccc30948716d74c37446d6f5dbc38d4",
+    "regular/Tutorial2/presentation-comparison.json": "1bb0886f90040d114bfff2e76c74e5397ebb0a8114b75e764a51ff6c1407ca7d",
+    "regular/Tutorial3/running.json": "d9ba5390261f966c438f9677cd56bab2fe73f4bb6eef967b13078673d88ed7e4",
+    "regular/Tutorial3/result.json": "c535da2650dde03608a5b12aeda306bca1a6ce07cadf28d4956c63c7727dc394",
+    "regular/Tutorial3/steps.tsv": "3a904af599845048931a4cbd2cf4688f7602e4f211211225498ead73f763d23e",
+    "regular/Tutorial3/states.tsv": "554c675a0a9fd5da90b08f1bf5e919a71e6e80c7c1f9e7fedde22e965e7da028",
+    "regular/Tutorial3/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "regular/Tutorial3/stderr.log": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2",
+    "regular/Tutorial3/final.bmp": "b9e69323000aa9b960234d601f528d003edcdd2652405b34e4735c9494dd0f72",
+    "regular/Tutorial3/final-after-camera.bmp": "b9e69323000aa9b960234d601f528d003edcdd2652405b34e4735c9494dd0f72",
+    "regular/Tutorial3/final-output.bmp": "b9e69323000aa9b960234d601f528d003edcdd2652405b34e4735c9494dd0f72",
+    "regular/Tutorial3/presentation-comparison.json": "73455910892a72f1d4fdc3ec1b5d4e4e7bb6ce8cc46c559d9c31f86642c2fa25",
+    "regular/Tutorial4/running.json": "7651387684db33baad3fb9ef83eee57082a9742148de1d0796f1ca3abcece374",
+    "regular/Tutorial4/result.json": "1be68fc16b344fb955bf043d8d2db96b6fea5f86dc2988f053c0e054765bba5f",
+    "regular/Tutorial4/steps.tsv": "d29ea3d94966c8853efdf2bc7a21b75470191bc85b0d153553a410c0b35518a1",
+    "regular/Tutorial4/states.tsv": "932475fbb25e78ac82aad3e17367b21f2a72e884594e41d5e4998bae1cc3233c",
+    "regular/Tutorial4/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "regular/Tutorial4/stderr.log": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2",
+    "regular/Tutorial4/final.bmp": "e2826771739212574eb7b5b59c28e9e913be47e9a2b012602b820efd98582ab8",
+    "regular/Tutorial4/final-after-camera.bmp": "e2826771739212574eb7b5b59c28e9e913be47e9a2b012602b820efd98582ab8",
+    "regular/Tutorial4/final-output.bmp": "e2826771739212574eb7b5b59c28e9e913be47e9a2b012602b820efd98582ab8",
+    "regular/Tutorial4/presentation-comparison.json": "d3d9815b48e7a1cab0b46c00f4a1f96762690c1205e9573602ba91748176f1f0",
+    "regular/Tutorial5/running.json": "b53e6f54ab8258d25f3cc07efbd637059d9a5b90b0ef0ae8df3aadd371d7841b",
+    "regular/Tutorial5/result.json": "fb0ab36027b25228d80ded80ddaf5303b2c83a7b5c60942c312b323298ca1cb4",
+    "regular/Tutorial5/steps.tsv": "78e174c7e675c704fbc042c7484c97d1a021ca780c9b9b4bf378e921097bcb0f",
+    "regular/Tutorial5/states.tsv": "a7016fb89ffd74144ee78c8399b39467571b723686f3bf1611bdffa428d0c59f",
+    "regular/Tutorial5/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "regular/Tutorial5/stderr.log": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2",
+    "regular/Tutorial5/final.bmp": "60e3e2abfec8318a389df2ff3fa9ac98eecf9e5e732865d33d86b50985a0b6e7",
+    "regular/Tutorial5/final-after-camera.bmp": "60e3e2abfec8318a389df2ff3fa9ac98eecf9e5e732865d33d86b50985a0b6e7",
+    "regular/Tutorial5/final-output.bmp": "60e3e2abfec8318a389df2ff3fa9ac98eecf9e5e732865d33d86b50985a0b6e7",
+    "regular/Tutorial5/presentation-comparison.json": "1a61d3ec4c824f09db44121dfaa0808c1dd0d00e15fe24c337b9116d09e04afa",
+    "regular/Tutorial6/running.json": "a253f191efe57cb6a45bdd9cf7babe4d50e8bcc87eaa9b946f21d41ae9a5f645",
+    "regular/Tutorial6/result.json": "8b707f65da16ba51b0df891fc84133282d41338232f839cae0ad8a5963daa8a4",
+    "regular/Tutorial6/steps.tsv": "31d661c19c665dfb491d3cb97e8c5ffdecfa262db867512b02d3af4921032318",
+    "regular/Tutorial6/states.tsv": "904af7f7a198eab618483d2858d1f19034fafaa165587605244d44dda93701de",
+    "regular/Tutorial6/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "regular/Tutorial6/stderr.log": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2",
+    "regular/Tutorial6/final.bmp": "fa5aad517240abab1747b19c334ad27bd9bbab6228757c2eae5a392bead4ac2f",
+    "regular/Tutorial6/final-after-camera.bmp": "fa5aad517240abab1747b19c334ad27bd9bbab6228757c2eae5a392bead4ac2f",
+    "regular/Tutorial6/final-output.bmp": "fa5aad517240abab1747b19c334ad27bd9bbab6228757c2eae5a392bead4ac2f",
+    "regular/Tutorial6/presentation-comparison.json": "5b5e3024a20024c316bab18ab00b9f4d69ed44de4c137b087279ab5993bac3be",
+    "regular/bc1menu76/running.json": "ad280bd8193394c390c75d1c82f5f1ee1723eaf733dc7a80260003bab5c4daee",
+    "regular/bc1menu76/result.json": "77d235891fccd2b513ae95ce848e984381aca2f8411371eea1510c015e0c5447",
+    "regular/bc1menu76/steps.tsv": "700065c2c965483fc912ca26897a393837fae9ce49a7737e0d6e660576f026c2",
+    "regular/bc1menu76/states.tsv": "54223674b8fb8e1ef147643097b4327c48f7cfeb57d450c81cc151953b920388",
+    "regular/bc1menu76/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "regular/bc1menu76/stderr.log": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2",
+    "regular/bc1menu76/final.bmp": "3be25111be9f22e792ad5d0a062de927292cafcab81d7fcc2937f483abceadd9",
+    "regular/bc1menu76/final-after-camera.bmp": "3be25111be9f22e792ad5d0a062de927292cafcab81d7fcc2937f483abceadd9",
+    "regular/bc1menu76/final-output.bmp": "3be25111be9f22e792ad5d0a062de927292cafcab81d7fcc2937f483abceadd9",
+    "regular/bc1menu76/presentation-comparison.json": "366f68b1b0e9a87bc5b6b67883a9c2018ece04f8e6fe805229d2e8fd94268f9e",
+    "regular/bc2bridging76/running.json": "7f99c0990337ef68c7d68c135517e8275fd21cd2ac7b08efa03693020ae63e67",
+    "regular/bc2bridging76/result.json": "50db278ceb37ea51899da5833cfdfed959c87b2d9ab0760b60f1d22837206350",
+    "regular/bc2bridging76/steps.tsv": "c921f7379355eca11a703660b2124af692d516d5351e031e2f30eaba898e97e8",
+    "regular/bc2bridging76/states.tsv": "2b6defa4d50f05014cce0d98c50a2a59ffa0d6ea4087d7cd826e48554c7861e4",
+    "regular/bc2bridging76/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "regular/bc2bridging76/stderr.log": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2",
+    "regular/bc2bridging76/final.bmp": "ea5dcbf8bd6e7b6b1c80bc8360a8ac011288622e5c8bc008374ee841c5a810af",
+    "regular/bc2bridging76/final-after-camera.bmp": "ea5dcbf8bd6e7b6b1c80bc8360a8ac011288622e5c8bc008374ee841c5a810af",
+    "regular/bc2bridging76/final-output.bmp": "ea5dcbf8bd6e7b6b1c80bc8360a8ac011288622e5c8bc008374ee841c5a810af",
+    "regular/bc2bridging76/presentation-comparison.json": "7550d1097ea655b8c837cbc34b1954f27828b5a3982fc84ff5f68b629b968a2c",
+    "regular/bc3acid_bar76/running.json": "ce1be9585b6342bb7a6abaa20d8e88d80b9ba81e029c469baed4afefc81f25a4",
+    "regular/bc3acid_bar76/result.json": "b35cdc8ca6dba8ccfccd06f23b768e86729bf8c01468c149931dd0505772d5e8",
+    "regular/bc3acid_bar76/steps.tsv": "c3667a7504c9106deaa0ddf3eeab93ce147be975ad1f47b8f519d4cbb0b8cc73",
+    "regular/bc3acid_bar76/states.tsv": "bd8fe567c33f91a756886c92dbba2ae761e36f4471df82f29a648c9a4f38ab22",
+    "regular/bc3acid_bar76/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "regular/bc3acid_bar76/stderr.log": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2",
+    "regular/bc3acid_bar76/final.bmp": "db6d21d67272b05c3051f8503a7db2e7ca9dac5571bea6bc8209fde15bf3f8fb",
+    "regular/bc3acid_bar76/final-after-camera.bmp": "db6d21d67272b05c3051f8503a7db2e7ca9dac5571bea6bc8209fde15bf3f8fb",
+    "regular/bc3acid_bar76/final-output.bmp": "db6d21d67272b05c3051f8503a7db2e7ca9dac5571bea6bc8209fde15bf3f8fb",
+    "regular/bc3acid_bar76/presentation-comparison.json": "5d92fecf6e90b3aedbaee100c1f1ff20974ba8d4f2c10da7fd6e06bdb6f3e451",
+    "regular/bc4bow_rush76/running.json": "c81064c903ec12a465b9548f3df5f43629127370142e6cf4eb5b7ad1b7a1c66b",
+    "regular/bc4bow_rush76/result.json": "14e56d8dd8e053f71fc58c773bb1be3d878dac7e8afe5845b63f31cdcef08076",
+    "regular/bc4bow_rush76/steps.tsv": "a79efa76da1fcca4761de372672a975b75d8e716c29ce7e7ffc179658884087c",
+    "regular/bc4bow_rush76/states.tsv": "65a0a0675550d3acef9f8ba19ba266707058b341fa651d8a1beb7f833e2bde9c",
+    "regular/bc4bow_rush76/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "regular/bc4bow_rush76/stderr.log": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2",
+    "regular/bc4bow_rush76/final.bmp": "cbeb41524c4c0dfd60e736e905e1cd7eda9d9a0bc3cf4a69014a4397ed91d013",
+    "regular/bc4bow_rush76/final-after-camera.bmp": "cbeb41524c4c0dfd60e736e905e1cd7eda9d9a0bc3cf4a69014a4397ed91d013",
+    "regular/bc4bow_rush76/final-output.bmp": "cbeb41524c4c0dfd60e736e905e1cd7eda9d9a0bc3cf4a69014a4397ed91d013",
+    "regular/bc4bow_rush76/presentation-comparison.json": "682a9457d3f93f7849dcbc739ad126c6b569336585560591bd38dc6f901c2ff1",
+    "regular/bc5walkers76/running.json": "806cc9672d38883c32b38fce7c38154e82154346748f0e062b0d41d54643fae0",
+    "regular/bc5walkers76/result.json": "5eb67c77442ccbd27e1b00dd8cea41a7830db22db094156fb4dec70b7d232ec8",
+    "regular/bc5walkers76/steps.tsv": "cb31b6eb3ae10ad3b7969ff6e94b4cd9ad9469fb56553a94f001dc5daf67df2f",
+    "regular/bc5walkers76/states.tsv": "a3e9e80e75ef5c3495512ad99294030305d6781db5becdcc7f6799b3baf25c17",
+    "regular/bc5walkers76/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "regular/bc5walkers76/stderr.log": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2",
+    "regular/bc5walkers76/final.bmp": "54fbbde877ff43431ae877c23275dbe35c52cfa72cae5ac773863f147419f15d",
+    "regular/bc5walkers76/final-after-camera.bmp": "54fbbde877ff43431ae877c23275dbe35c52cfa72cae5ac773863f147419f15d",
+    "regular/bc5walkers76/final-output.bmp": "54fbbde877ff43431ae877c23275dbe35c52cfa72cae5ac773863f147419f15d",
+    "regular/bc5walkers76/presentation-comparison.json": "a61d877e77f53660091306ffa4f9cfed6458bafd43555b6e8daa15700d092abf",
+    "regular/bc6mows76/steps.tsv": "382be6a0473c24ce2aee9be39fe7447e4045db825f98151dc804cc55f6bd1f36",
+    "regular/bc6mows76/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "regular/bc6mows76/stderr.log": "985e499e799503f5128007a5d394fbc3ec5466cd204b6bd6e207a238fb403193",
+    "regular/bc6mows76/running.json": "421a4e668684564c5298256724ce253d02e45097bc75d21849e90a04d48287d5",
+    "regular/bc6mows76/states.tsv": "d47e892fb961a11df817588938a20c7ac61a4538f52476cc9eeea6f70b00ff95",
+    "regular/bc6mows76/result.json": "c4e34232b3ed59c373b1eb50653b19b1a9e448699caa15b7bc25b0105029878a",
+    "regular-retry/bc6mows76/running.json": "399dc7246e90d636e1f768fad7bec926265b56863bdb15d5c39714471198e9a9",
+    "regular-retry/bc6mows76/result.json": "51dbf2893a88484cb08c2559b118b4c7f26fd222ec02604b036d60ad7f4fd0cd",
+    "regular-retry/bc6mows76/steps.tsv": "83161851d5f8a89919ae598be214dce1d80dada5f27895ec5d3955980a14322d",
+    "regular-retry/bc6mows76/states.tsv": "62bfa82111d1df23631a8a2007d72796bd4ca10b8d7ea3283221d0e4112e946a",
+    "regular-retry/bc6mows76/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "regular-retry/bc6mows76/stderr.log": "985e499e799503f5128007a5d394fbc3ec5466cd204b6bd6e207a238fb403193",
+    "regular-retry/bc6mows76/final.bmp": "cb803ff46ac8ce7ad197bcf8fd028d738bf1a605d9bd18a0d4964e19149c04f2",
+    "regular-retry/bc6mows76/final-after-camera.bmp": "cb803ff46ac8ce7ad197bcf8fd028d738bf1a605d9bd18a0d4964e19149c04f2",
+    "regular-retry/bc6mows76/final-output.bmp": "cb803ff46ac8ce7ad197bcf8fd028d738bf1a605d9bd18a0d4964e19149c04f2",
+    "regular-retry/bc6mows76/presentation-comparison.json": "64373f0d2ec5beb5fba66ae9198bf083074ab97224548aadaad8599f01959f50",
+    "regular/bc7sun_bars76/running.json": "f7135284ba8d04e788e1babbc5d98e7cf866049ef6d22a0ca159c402203a2cff",
+    "regular/bc7sun_bars76/result.json": "2547b0696ad5ed9d9f20bacfda6cab302437fefcdc01a956d609d4ac8cf9905c",
+    "regular/bc7sun_bars76/steps.tsv": "d874cd39e6c3a6d5db75200ed1be95d2bdb4785063165f5e020bb2f438ce354f",
+    "regular/bc7sun_bars76/states.tsv": "0f805f7595853136e9216de268c01ddedeca9145b44553399c27a81a9d8721d1",
+    "regular/bc7sun_bars76/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "regular/bc7sun_bars76/stderr.log": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2",
+    "regular/bc7sun_bars76/final.bmp": "d8e95731ee3a2c518c0af4215d6aad578be8caf415b6711bde1d783ca5866f29",
+    "regular/bc7sun_bars76/final-after-camera.bmp": "d8e95731ee3a2c518c0af4215d6aad578be8caf415b6711bde1d783ca5866f29",
+    "regular/bc7sun_bars76/final-output.bmp": "d8e95731ee3a2c518c0af4215d6aad578be8caf415b6711bde1d783ca5866f29",
+    "regular/bc7sun_bars76/presentation-comparison.json": "6d84bf12c1be8fdbaafd0eb78df46031ee5c0fad6d03ba1109130d43dc50402a",
+    "regular/bc8fury76/running.json": "7fed1f080559160faf87e156d2fbe928a0c951c35d47a0178ac15e0b4b751299",
+    "regular/bc8fury76/result.json": "e85c2bcbb185b9371e4d98f1014df70a787d6815a1d4212864c28e3f2339fcef",
+    "regular/bc8fury76/steps.tsv": "88a1db47fcef0cb4e830cc3b72467275d961fa9b7711d020f93514d5edf6f776",
+    "regular/bc8fury76/states.tsv": "3e33858d1febd522e1277506e6b18c91806a476fdbd54ea43f5b133d3095ad6c",
+    "regular/bc8fury76/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "regular/bc8fury76/stderr.log": "3b6d94330e7212f3db4b47fa5f1b0a823a42da4d385ffb3d81631a06be28c7f0",
+    "regular/bc8fury76/final.bmp": "8fd67b3d9ea8e254ced0e227c4a9c1eb7110937bf55335e4592777726708dbd9",
+    "regular/bc8fury76/final-after-camera.bmp": "8fd67b3d9ea8e254ced0e227c4a9c1eb7110937bf55335e4592777726708dbd9",
+    "regular/bc8fury76/final-output.bmp": "8fd67b3d9ea8e254ced0e227c4a9c1eb7110937bf55335e4592777726708dbd9",
+    "regular/bc8fury76/presentation-comparison.json": "695a3eb4184baa5cdf5a371d09bfa756ff4b90782d1c5f85389ed10a8d1940d0",
+    "regular/bc9ssun_bars76/running.json": "e4e8aecd3b6e140f3c0434207b207be65cce00a949c6b833c9536fc8a004c10d",
+    "regular/bc9ssun_bars76/result.json": "80dd4eab665310811a3aa62bb0af8b6701e29001bbaa87a5de36d25346fc65ab",
+    "regular/bc9ssun_bars76/steps.tsv": "30728ec6d97f1b62516a1cb9481182ff7c0eef669911d15830292cba5a4b1f93",
+    "regular/bc9ssun_bars76/states.tsv": "06455fcdd9206ab49645966e78e2b69f2048ad3236e488946bf20507ed0fd148",
+    "regular/bc9ssun_bars76/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "regular/bc9ssun_bars76/stderr.log": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2",
+    "regular/bc9ssun_bars76/final.bmp": "2bc37647de625d8af22e181bbc8f97b3d331c3d9b9405244abba429f879494e0",
+    "regular/bc9ssun_bars76/final-after-camera.bmp": "2bc37647de625d8af22e181bbc8f97b3d331c3d9b9405244abba429f879494e0",
+    "regular/bc9ssun_bars76/final-output.bmp": "2bc37647de625d8af22e181bbc8f97b3d331c3d9b9405244abba429f879494e0",
+    "regular/bc9ssun_bars76/presentation-comparison.json": "de3713687513c8cc3c27bc5f72281be05722d021956d47a8448e7143f4bab9f8",
+    "regular/TheWarBegins/running.json": "60d2abb956b49ac64868ad7e06bcdc2b060e44a4cb8ec511baf0ff9ae1cc24d1",
+    "regular/TheWarBegins/result.json": "6fddcec65882829e56ac72073ce92d6da03305cd4b158bfb709b595deaccd0fd",
+    "regular/TheWarBegins/steps.tsv": "75d163d39e81ceac9b80e64c8f1051b9ab8ae2c85a964e7d2bb84ac304c5002f",
+    "regular/TheWarBegins/states.tsv": "2b3ee3729fd120d57e8f17f119a636b7ba26d4430df3090b31433d5b2ca84bfe",
+    "regular/TheWarBegins/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "regular/TheWarBegins/stderr.log": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2",
+    "regular/TheWarBegins/final.bmp": "f78132c8bf39f69d1dfdaed816c291611a533185c7f3894f31ca6a37b8ffdf86",
+    "regular/TheWarBegins/final-after-camera.bmp": "f78132c8bf39f69d1dfdaed816c291611a533185c7f3894f31ca6a37b8ffdf86",
+    "regular/TheWarBegins/final-output.bmp": "f78132c8bf39f69d1dfdaed816c291611a533185c7f3894f31ca6a37b8ffdf86",
+    "regular/TheWarBegins/presentation-comparison.json": "6b267de3c14d3b18b8df3625fa83c72eae8ba03265775ad4b9e539ec22650250",
+    "regular/MasterOfWhirligigs/running.json": "ef92b2916c52e26823c1ba0e959d5257848cd415cbf998f0b39c3ed8bbf6ac81",
+    "regular/MasterOfWhirligigs/result.json": "9b295ae5f0f366566235be9b3c3e7c092c25763f173e57e83f0c69b51dcf2db2",
+    "regular/MasterOfWhirligigs/steps.tsv": "87c5e37c962e96d902795fa06484a99dc100786aa644deb187868dfc543cb7eb",
+    "regular/MasterOfWhirligigs/states.tsv": "e02d33b7319e6d7f93647e61e53d9c6b5f5311623ccc3aa543bec515aeb995fb",
+    "regular/MasterOfWhirligigs/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "regular/MasterOfWhirligigs/stderr.log": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2",
+    "regular/MasterOfWhirligigs/final.bmp": "bc9cfe31d476e187b7a1b3fa52808ce81aa889610747280ff0f39e581a963aef",
+    "regular/MasterOfWhirligigs/final-after-camera.bmp": "bc9cfe31d476e187b7a1b3fa52808ce81aa889610747280ff0f39e581a963aef",
+    "regular/MasterOfWhirligigs/final-output.bmp": "bc9cfe31d476e187b7a1b3fa52808ce81aa889610747280ff0f39e581a963aef",
+    "regular/MasterOfWhirligigs/presentation-comparison.json": "76563fde302965ec1ad43bb6c7532684a8cfafe340ac30cca215b0a2c7a17138",
+    "regular/SaveTheIsland/running.json": "8e7da5367a8df99ce4010cf9c248d3523956196846511d9ee23ea934f5e5e773",
+    "regular/SaveTheIsland/result.json": "ba4b664b5e2e1c52cd830286c4defe158fccc35a564991c625b0cbfe25f235bf",
+    "regular/SaveTheIsland/steps.tsv": "29429b5c7ac73e96d7989ea6c3fb0f08c875c0a73d297f59a0e68fc790873021",
+    "regular/SaveTheIsland/states.tsv": "bfe4df380c0e61d974203e52a9313aac5611c34e236da657070f05c8e38d6c17",
+    "regular/SaveTheIsland/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "regular/SaveTheIsland/stderr.log": "f0897e4ab61f8c2f86b568404bba5e7af303c0933f7c1fa3ee631c464ffcc509",
+    "regular/SaveTheIsland/final.bmp": "43ead4264185552c6b7c879dadc6f03861e15f9eafe709498620ab84488962dc",
+    "regular/SaveTheIsland/final-after-camera.bmp": "43ead4264185552c6b7c879dadc6f03861e15f9eafe709498620ab84488962dc",
+    "regular/SaveTheIsland/final-output.bmp": "43ead4264185552c6b7c879dadc6f03861e15f9eafe709498620ab84488962dc",
+    "regular/SaveTheIsland/presentation-comparison.json": "dbc2ae29ecb42066b585de30a8d9f824fb1fbf1d01173ec95830c7d18d39b6f6",
+    "regular/FragileFortune/running.json": "4e2e13fe37568c7f98b31a2eb73bdc218c56f51f37d1e7668e56511d8dd549dc",
+    "regular/FragileFortune/result.json": "ced9f233d81ea32abeb3d9653f1186b11f625cf948b7ccb3fa75b684983660a3",
+    "regular/FragileFortune/steps.tsv": "35d21a5309e4d4bae57b728c78486bc853bfdbfdf50dedd09579e9ce07645bd7",
+    "regular/FragileFortune/states.tsv": "7c153330e158d5d103ff0ce97435b463f2ff67814380e029780079750f515e42",
+    "regular/FragileFortune/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "regular/FragileFortune/stderr.log": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2",
+    "regular/FragileFortune/final.bmp": "9337e5ab3f40763bf7ed76f2d4d3b22966960b909ba7e75775744f351e4f7da7",
+    "regular/FragileFortune/final-after-camera.bmp": "9337e5ab3f40763bf7ed76f2d4d3b22966960b909ba7e75775744f351e4f7da7",
+    "regular/FragileFortune/final-output.bmp": "9337e5ab3f40763bf7ed76f2d4d3b22966960b909ba7e75775744f351e4f7da7",
+    "regular/FragileFortune/presentation-comparison.json": "bb45920e744e92de6f25066f121fbee03f646998829a83457c16bcf7f8da2227",
+    "regular/ThunderingPower/running.json": "071620f55614b83e5b92ad54c507df4551f507da02d5ec2c2742e7e0532f7719",
+    "regular/ThunderingPower/result.json": "721c483fb167f4a9675c2d3a3f66978e0682c44a4e435695357198d5ac2a42f0",
+    "regular/ThunderingPower/steps.tsv": "2a21e11b615bab14aebfc00cd5888a8c2063e0071ef8b44a4157dfd76267dd79",
+    "regular/ThunderingPower/states.tsv": "0d80dfe68345af56778a62c81e741f9df9bd9777f8553a739b83d5dd09b0bb28",
+    "regular/ThunderingPower/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "regular/ThunderingPower/stderr.log": "e0feebb3c7aaa15588f3a42ee4a01cb547ca08c811185c5b1d92bdba25b67522",
+    "regular/ThunderingPower/final.bmp": "57f3943406070c5c381db89045ef3e41e4719a8b2addf3ba8df8de1cb5812e9c",
+    "regular/ThunderingPower/final-after-camera.bmp": "57f3943406070c5c381db89045ef3e41e4719a8b2addf3ba8df8de1cb5812e9c",
+    "regular/ThunderingPower/final-output.bmp": "57f3943406070c5c381db89045ef3e41e4719a8b2addf3ba8df8de1cb5812e9c",
+    "regular/ThunderingPower/presentation-comparison.json": "3db9cd647202f6f0e3f89a2880658317282cc4e73383068e50821973ac86892e",
+    "regular/DissolvedAlliance/running.json": "76737030776b6c2997d80325f84b0da8467f088fe8ecc6929287b5dcfcbf5775",
+    "regular/DissolvedAlliance/result.json": "e4f1e1faf2809dcb89ce4d9b1774f8d3a6810593703ba8db7655a321e05e2ca9",
+    "regular/DissolvedAlliance/steps.tsv": "df76baf9f44b096f21e9cab2b7a18b6783f1ace398c6375ab8945d4d3869fb29",
+    "regular/DissolvedAlliance/states.tsv": "a80b3d0d781fd727a9556e212c303459a4f82691c14eb52a785684fce08cbbd9",
+    "regular/DissolvedAlliance/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "regular/DissolvedAlliance/stderr.log": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2",
+    "regular/DissolvedAlliance/final.bmp": "0019ebbd5caab02c961ed2a7df50739b4eeb0309ab3011ce08d7ba83ed46c78d",
+    "regular/DissolvedAlliance/final-after-camera.bmp": "0019ebbd5caab02c961ed2a7df50739b4eeb0309ab3011ce08d7ba83ed46c78d",
+    "regular/DissolvedAlliance/final-output.bmp": "0019ebbd5caab02c961ed2a7df50739b4eeb0309ab3011ce08d7ba83ed46c78d",
+    "regular/DissolvedAlliance/presentation-comparison.json": "42459c8e3bb349cb4e594f12657b7b18b21b6868dda43dd63808a26f19bb2c1b",
+    "regular/TheNoose/running.json": "0820ffd4e7c3755dbc42b65c596a97f4e62ad72757806329e820c832e968275d",
+    "regular/TheNoose/result.json": "e2a8b5a99622d1017777bd24567462ada829f5a433f38f052ad35337bf43606d",
+    "regular/TheNoose/steps.tsv": "437434b8218f9d94e0c9b74753a94464495654b91e611a0c4fb7d3a06d78f8fa",
+    "regular/TheNoose/states.tsv": "b0f12c7f8b835b238aded1ec1bb80544c762846300a69fdc385868dd16c9a1f7",
+    "regular/TheNoose/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "regular/TheNoose/stderr.log": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2",
+    "regular/TheNoose/final.bmp": "31021c658a9824ce1433f290315f554860bc6b62b41b80bb53dfd85efc798a7d",
+    "regular/TheNoose/final-after-camera.bmp": "31021c658a9824ce1433f290315f554860bc6b62b41b80bb53dfd85efc798a7d",
+    "regular/TheNoose/final-output.bmp": "31021c658a9824ce1433f290315f554860bc6b62b41b80bb53dfd85efc798a7d",
+    "regular/TheNoose/presentation-comparison.json": "9a0377bf14f5cd8556b8cf29d8163768863c36fc71d421aae097743c978a8b9a",
+    "regular/RainVsRain/running.json": "e39c6c5fa246e89d4b6fae5e2b6e8191249e3d4ecb9b22916c8eddcac5595663",
+    "regular/RainVsRain/result.json": "7e3151c494f7bb5ff09e30f0b3d5231c93e72ac7ad3b51a668ff4b49f4003983",
+    "regular/RainVsRain/steps.tsv": "faa985973191e2771ff731a6207d21bcbdd0ebbce06d8e563a186c4cb34fb02b",
+    "regular/RainVsRain/states.tsv": "0535619a8bea415bc30d339b89997d9d6d98b655fab8fdb3d7d14b571c92805d",
+    "regular/RainVsRain/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "regular/RainVsRain/stderr.log": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2",
+    "regular/RainVsRain/final.bmp": "8e813c40dcada28db621b4088da0bf248ae1c79aa64107d21fd9d459abd0fa35",
+    "regular/RainVsRain/final-after-camera.bmp": "8e813c40dcada28db621b4088da0bf248ae1c79aa64107d21fd9d459abd0fa35",
+    "regular/RainVsRain/final-output.bmp": "8e813c40dcada28db621b4088da0bf248ae1c79aa64107d21fd9d459abd0fa35",
+    "regular/RainVsRain/presentation-comparison.json": "ec5ae88f5911da142fea2e58c21060b3ae95441028b67df7edc62a3bb9380295",
+    "regular/RunForIt/running.json": "7adb03dcfe293d04950b672409b7e7f8f5df8136b32764b646590fead4afecbb",
+    "regular/RunForIt/result.json": "4df2f8727bdec214b88c4e1cdb78484579792a91786c5d3b8a44342de7d975f5",
+    "regular/RunForIt/steps.tsv": "651f7a1ebda1f341c71d2f29a2adf2d66f87a182803bf46f1f9121a49227d14c",
+    "regular/RunForIt/states.tsv": "704020fe18a3f9e114b02923fe87965725807b885b9eb4061c785bcd46fce7fc",
+    "regular/RunForIt/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "regular/RunForIt/stderr.log": "383d7aca9b17e11a68428397e1834c7515797345ef2b938d506f1d5f8ae5fb79",
+    "regular/RunForIt/final.bmp": "ad89c247525ad0abbfab0926ae62ae231a586084af1720ca7b030987781ccb65",
+    "regular/RunForIt/final-after-camera.bmp": "ad89c247525ad0abbfab0926ae62ae231a586084af1720ca7b030987781ccb65",
+    "regular/RunForIt/final-output.bmp": "ad89c247525ad0abbfab0926ae62ae231a586084af1720ca7b030987781ccb65",
+    "regular/RunForIt/presentation-comparison.json": "4b02d32b57ea2767ebac41ab21c39aa3dbd577504b34ca7a1c6a8897c0bdb0c4",
+    "regular/GuardMyBack/running.json": "670f18973c4d4f3f1e3f802bd712745fb019d3c9ea9ea9822a52b287ac6da571",
+    "regular/GuardMyBack/result.json": "3138ed6d2e5a99ed0c769773d04a09a79884d957a3056c68bd6a24add838dc28",
+    "regular/GuardMyBack/steps.tsv": "f00790cbca2ba2c5c744657b482a37a656ef14519251cd24b067b073fbf9c657",
+    "regular/GuardMyBack/states.tsv": "9fc00c5d97fc5493257b5099a8ee523aa8855e03734ea59cd482f980ab7446b6",
+    "regular/GuardMyBack/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "regular/GuardMyBack/stderr.log": "f0897e4ab61f8c2f86b568404bba5e7af303c0933f7c1fa3ee631c464ffcc509",
+    "regular/GuardMyBack/final.bmp": "a2555b51c7e8c078e258a435198989f011b02eb72cabc56da33e67f382cc3d3f",
+    "regular/GuardMyBack/final-after-camera.bmp": "a2555b51c7e8c078e258a435198989f011b02eb72cabc56da33e67f382cc3d3f",
+    "regular/GuardMyBack/final-output.bmp": "a2555b51c7e8c078e258a435198989f011b02eb72cabc56da33e67f382cc3d3f",
+    "regular/GuardMyBack/presentation-comparison.json": "ba064e2b0840baea976d53b9dda52e9a5931ac29d86126a5bad1e054963e1e4d",
+    "regular/Surrounded/running.json": "1f26c32b6cf95d08fa5fc4e3b7ecb1837f44903e4f70cc5bd30523d5fe062ef8",
+    "regular/Surrounded/result.json": "f7a76d33f22119ca0eb9c6feb9902b698eecef49dbefd2a8a07b7074a51e7915",
+    "regular/Surrounded/steps.tsv": "8083991edf91ad194c7fc56a867d8f5e06c8dd2745296949b73a3f010ac491f0",
+    "regular/Surrounded/states.tsv": "62fca5d73559ca62b1455623f02829a11bc8ee7614b9c9421da7089c0e5a111b",
+    "regular/Surrounded/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "regular/Surrounded/stderr.log": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2",
+    "regular/Surrounded/final.bmp": "b261e2af9f8e9680874bde16ce60aaefe1523ff2ce98bdca23e0b9376a65e8a5",
+    "regular/Surrounded/final-after-camera.bmp": "b261e2af9f8e9680874bde16ce60aaefe1523ff2ce98bdca23e0b9376a65e8a5",
+    "regular/Surrounded/final-output.bmp": "b261e2af9f8e9680874bde16ce60aaefe1523ff2ce98bdca23e0b9376a65e8a5",
+    "regular/Surrounded/presentation-comparison.json": "4a1dd59821baa3fba613cf9870a03fbbe7146582ac50f284213f350cae48d4ab",
+    "regular/BreakingThrough/running.json": "540d1851775b731baf77ba8c9408c765adcb3dad23351fca763ecaf28a950696",
+    "regular/BreakingThrough/result.json": "8534d6eb83c66f5be38049a7fb7dc35a0681cfc0bc36a981af1061ac6f85c6ec",
+    "regular/BreakingThrough/steps.tsv": "8ca541b0f991a898064c1d43a369413c3e78ba8eaf3aed02aa38cfe2e6a81305",
+    "regular/BreakingThrough/states.tsv": "2802e5693cd9463b5cb17f053551143d307a558104a0b3887084055fb17b6034",
+    "regular/BreakingThrough/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "regular/BreakingThrough/stderr.log": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2",
+    "regular/BreakingThrough/final.bmp": "92423535f40d420c267da4bd581adb91f057b04da792fa94d95ec97b7689b81f",
+    "regular/BreakingThrough/final-after-camera.bmp": "92423535f40d420c267da4bd581adb91f057b04da792fa94d95ec97b7689b81f",
+    "regular/BreakingThrough/final-output.bmp": "92423535f40d420c267da4bd581adb91f057b04da792fa94d95ec97b7689b81f",
+    "regular/BreakingThrough/presentation-comparison.json": "e244999e5311566f8e65a4f9a74d79f65217b89a0947a10e83de756f44be6178",
+    "regular/ToTheRescue/running.json": "9bf622620390764bcb4c52fcac97f0b1ea3c6b4f4455976c71fa56b4b9e45b21",
+    "regular/ToTheRescue/result.json": "246d53b85fabea184d636786dd71c7289134e79087ad1d002b9f4cf60ad733c7",
+    "regular/ToTheRescue/steps.tsv": "22679c142a97bbbc8247803fbde6447bcb7bf0b1a319e5bf0eaeb8f6b97a43bc",
+    "regular/ToTheRescue/states.tsv": "d718de45bfa8e030c4e782323a34d655cb7dd784d16488240e7467538171ca64",
+    "regular/ToTheRescue/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "regular/ToTheRescue/stderr.log": "f0897e4ab61f8c2f86b568404bba5e7af303c0933f7c1fa3ee631c464ffcc509",
+    "regular/ToTheRescue/final.bmp": "f6761942426078e69a12fc858ed56be04f6b6cbeaebf0c82b434c0bd2792dfa1",
+    "regular/ToTheRescue/final-after-camera.bmp": "f6761942426078e69a12fc858ed56be04f6b6cbeaebf0c82b434c0bd2792dfa1",
+    "regular/ToTheRescue/final-output.bmp": "f6761942426078e69a12fc858ed56be04f6b6cbeaebf0c82b434c0bd2792dfa1",
+    "regular/ToTheRescue/presentation-comparison.json": "a9a2cb5880fb928390e91f31dcc7b5aa3f266125586b3a3225eb0367288e2ec3",
+    "regular/Vicious/running.json": "18482bbf5fe140ffe4c1e2a19fa4f31206671fd3f5bc38a8271abbb42ada5d78",
+    "regular/Vicious/result.json": "e350fa991b031d26fe1c24d1e64f4d0d1a22981cc59100cdde2551fa7b798dbf",
+    "regular/Vicious/steps.tsv": "dd33545e40c58c5dab253661e5164ae959152a572f501cacdd1c1f7bdddf0aa4",
+    "regular/Vicious/states.tsv": "9bffb19b82cb5d81ffb73b263df956b6a4a112c8fb4d6c9086da0eaef5e7cb98",
+    "regular/Vicious/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "regular/Vicious/stderr.log": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2",
+    "regular/Vicious/final.bmp": "817fddac13339fc4bd3515fb34046ec7792c546a813d408473ceee01f94fded6",
+    "regular/Vicious/final-after-camera.bmp": "817fddac13339fc4bd3515fb34046ec7792c546a813d408473ceee01f94fded6",
+    "regular/Vicious/final-output.bmp": "817fddac13339fc4bd3515fb34046ec7792c546a813d408473ceee01f94fded6",
+    "regular/Vicious/presentation-comparison.json": "e61a72cfb84839ce27f01504762d2831c1d23473f5fd9004e5b487a8f6999243",
+    "regular/EnemyTerritory/running.json": "b4865e6b841fb12528b763c50577f8ec729ecbbc7ad7ea4569a20dd9e4bb7818",
+    "regular/EnemyTerritory/result.json": "ed43392629e4dd3e704452bf0ad9a0293e3b0b0439a9353c990ae6ebd87f9a16",
+    "regular/EnemyTerritory/steps.tsv": "ae1aceccbf4606bf5af0e0740ba39fc01433755f396a029ad86a1a86c9def01f",
+    "regular/EnemyTerritory/states.tsv": "2debd34fba8a7852bee620e0e6d11bb7560ca45761859be4aa808252b9dedae7",
+    "regular/EnemyTerritory/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "regular/EnemyTerritory/stderr.log": "bc67e0be736a8c9215d89b326bedf50b868c2348f5fd45ad416e62a0df846524",
+    "regular/EnemyTerritory/final.bmp": "b152b2ee8098df50ca4c072fd9089bd34032eb8ce1d4877d7995f6659cdcafdc",
+    "regular/EnemyTerritory/final-after-camera.bmp": "b152b2ee8098df50ca4c072fd9089bd34032eb8ce1d4877d7995f6659cdcafdc",
+    "regular/EnemyTerritory/final-output.bmp": "b152b2ee8098df50ca4c072fd9089bd34032eb8ce1d4877d7995f6659cdcafdc",
+    "regular/EnemyTerritory/presentation-comparison.json": "cf0ec0869c96df6b62e3f153708015dc2467c9b24bce1e6bd8c422490a911740",
+    "regular/FinalConfrontation/running.json": "74123119f363d184bc28e9cec3c583a816a50af17c1492029a5c2c3e046d92fe",
+    "regular/FinalConfrontation/result.json": "45999e0671125e14da24a8d5843b22d4d25939e19dc9bb6a768c056eaa417778",
+    "regular/FinalConfrontation/steps.tsv": "70ef888533e9ea6dcb9b5ce6876109c98be90beb96b8774098518992de8bcf24",
+    "regular/FinalConfrontation/states.tsv": "a4980d8ac664e5b0e108e73b1c0880cf68b4924109edda2e205f2c1979c7abb9",
+    "regular/FinalConfrontation/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "regular/FinalConfrontation/stderr.log": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2",
+    "regular/FinalConfrontation/final.bmp": "a8a80dffba0257f2d53d7ea3120c62fe15f973777b1cfa50e62a684d08d7ec27",
+    "regular/FinalConfrontation/final-after-camera.bmp": "a8a80dffba0257f2d53d7ea3120c62fe15f973777b1cfa50e62a684d08d7ec27",
+    "regular/FinalConfrontation/final-output.bmp": "a8a80dffba0257f2d53d7ea3120c62fe15f973777b1cfa50e62a684d08d7ec27",
+    "regular/FinalConfrontation/presentation-comparison.json": "57a580198f632bdfdb9d07c8a105936e194b6bc88a02bc5fc53a90883aaa8ed5",
+    "demos/DemoStormRages/running.json": "441ddfc2e04bc82f87303337569843706420648f3a2695389eb255625e0a3f97",
+    "demos/DemoStormRages/result.json": "4fe6385fcdd61c3e25b56000a13080e31eca16f8f7b4276396d836f52d1be262",
+    "demos/DemoStormRages/steps.tsv": "086aea4c3c423c543a8c65305dfc716d54a56c331ca44a703c422a5172bd1adf",
+    "demos/DemoStormRages/states.tsv": "14c1c54236fd98659ae743569e6b1fff31a229e5a87bfa699ee9d616fa32c6fd",
+    "demos/DemoStormRages/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "demos/DemoStormRages/stderr.log": "7013897daa266583ef2410ac777d9f0b7c11b5116e66a3f004273c19b2553618",
+    "demos/DemoStormRages/final.bmp": "51e4dba2cd8130f70ac11ae8333167362d54e05d0c63f2a654a2a06631fc5fd2",
+    "demos/DemoStormRages/final-after-camera.bmp": "51e4dba2cd8130f70ac11ae8333167362d54e05d0c63f2a654a2a06631fc5fd2",
+    "demos/DemoStormRages/final-output.bmp": "51e4dba2cd8130f70ac11ae8333167362d54e05d0c63f2a654a2a06631fc5fd2",
+    "demos/DemoStormRages/presentation-comparison.json": "a57f5db52bc9662c43fdf0dfca09ac3d312ff1d5fd6ec9685352e144bbdc8aba",
+    "demos/GuardMyBack/running.json": "2abdc8aeca239324fc2806bdb8637eb4b5ee8ef6e9483db91673490f739b4f87",
+    "demos/GuardMyBack/result.json": "87fc943ed30d0b22bb01866122f95c6d2d745af3828982162e1e09fd54b71a83",
+    "demos/GuardMyBack/steps.tsv": "b49f85d1bcdf829d3e2e2637fab051cac36c4a6346aa07e14abfab3e9471484a",
+    "demos/GuardMyBack/states.tsv": "f410a3a63fbea693af0ebee5b7b17f6df55e3752e6bf9f0e93727f45ecd03567",
+    "demos/GuardMyBack/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "demos/GuardMyBack/stderr.log": "798eba49b1a8c18b7a35adee4e40e3a8ed49a33ec4bc4aa3ec3a6d3693c3a7f2",
+    "demos/GuardMyBack/final.bmp": "75f864d79c636062d6898012a08a89dbe832adf7d8affc31fb4740d776d19ef7",
+    "demos/GuardMyBack/final-after-camera.bmp": "75f864d79c636062d6898012a08a89dbe832adf7d8affc31fb4740d776d19ef7",
+    "demos/GuardMyBack/final-output.bmp": "75f864d79c636062d6898012a08a89dbe832adf7d8affc31fb4740d776d19ef7",
+    "demos/GuardMyBack/presentation-comparison.json": "9b862065259a7c652e1c9de8c618fde652aede5be265a6d6da850fd58f530d75",
+    "demos/DissolvedAlliance/running.json": "03310a2886a32b4ece1802884c6dcdb1732561c7ee532a8656c19d10eca0ad76",
+    "demos/DissolvedAlliance/result.json": "ae98b18ea10773dfba47eec8b2bd12181816e28306ceafb3f55422a70594ae8f",
+    "demos/DissolvedAlliance/steps.tsv": "c8e974a1d2b1424cc4a7c51910842165343ffe0841dbbad8899fbf98f94acf17",
+    "demos/DissolvedAlliance/states.tsv": "45011dc8be7253f53455258bdf7c6158bf85c18b8450f6f38bfaeeddb4ff5e1f",
+    "demos/DissolvedAlliance/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "demos/DissolvedAlliance/stderr.log": "f0897e4ab61f8c2f86b568404bba5e7af303c0933f7c1fa3ee631c464ffcc509",
+    "demos/DissolvedAlliance/final.bmp": "bc48e40b16983363f402ddea540f76a1a79ac0b45bcdfe10b47bb2d9ef973446",
+    "demos/DissolvedAlliance/final-after-camera.bmp": "bc48e40b16983363f402ddea540f76a1a79ac0b45bcdfe10b47bb2d9ef973446",
+    "demos/DissolvedAlliance/final-output.bmp": "bc48e40b16983363f402ddea540f76a1a79ac0b45bcdfe10b47bb2d9ef973446",
+    "demos/DissolvedAlliance/presentation-comparison.json": "98d14f0cd49ddb95c6c2b743b52e71e249321a4ae6775d4ab99c77cfc0678208"
+  },
+  "scope": "일반31/실제 데모3의 짧은 진입·자연 시간 진행·창DC 출력과 Native Frame 대조다. 자연 완주·승패·원본 전체 픽셀·물리 입력·PCM을 확인하지 않았다."
+}
