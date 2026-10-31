@@ -8,7 +8,7 @@ namespace Netstorm.Client.Scripting;
 /// HTML이 예약한 명령과 Config 명령을 원본 토큰/입력 큐에 연결한다.
 /// 근거: cpppj/src/client/ScriptCommand.h/.cpp (원본 004c9090·00441580). (R3k-9, 2026-10-30)
 /// 실제 명령 표 조회·진단과 Config 쓰기는 호출자가 후크로 공급한다.
-/// ConfigInterface 직접 연결 overload는 전체 ConfigInterface 이식 때 잇는다.
+/// ConfigInterface 직접 연결 overload는 R3k-11에서 이었다.
 /// </summary>
 public static class ScriptCommand
 {
@@ -64,6 +64,19 @@ public static class ScriptCommand
             return;
         }
         queue.PushCommand(code, unchecked((int)parameter), unchecked((int)parameter));
+    }
+
+    /// <summary>
+    /// 원본 00441580. 원본 '='·개행 토큰으로 한 설정만 바꿔 onChanged를 호출하고 항상 0을 반환한다.
+    /// 인용 공백 키도 원본이 받은 그대로 실제 Set에 전달하며 조회 문법으로 재해석하지 않는다.
+    /// </summary>
+    /// <param name="source">"키=값" 원시 바이트 문자열. 값 안의 '='와 ';'는 자르지 않는다.</param>
+    /// <param name="config">실제 설정 인터페이스. `Set` 하나로 쓰고 `onChanged`까지 원본과 같이 탄다.</param>
+    /// <param name="noKeyword">키가 비었을 때 부르는 없음 알림. 없으면 그냥 0을 반환한다.</param>
+    public static int ApplyScriptConfig(string source, ConfigInterface config, Action? noKeyword = null)
+    {
+        ArgumentNullException.ThrowIfNull(config);
+        return ApplyScriptConfig(source, (key, value) => config.Set(key, value), noKeyword);
     }
 
     /// <summary>

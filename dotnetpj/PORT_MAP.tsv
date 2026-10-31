@@ -145,9 +145,9 @@ cpppj/src/client/ScreenPresentation.cpp	Netstorm.Client/Display/ScreenPresentati
 cpppj/src/client/ScreenPresentation.cpp	Netstorm.Client/Host/HostPresentation.cs	91d494c3b2814f00d2cae81a0f4b247e91e81922	port
 cpppj/src/client/ScreenPresentation.h	Netstorm.Client/Display/ScreenPresentation.cs	ac9ea9162ba0c580cd53505c8c3782c0b2a27172	port
 cpppj/src/client/ScreenResolutions.h	Netstorm.Client/Display/ScreenResolutions.cs	ac9ea9162ba0c580cd53505c8c3782c0b2a27172	port
-cpppj/src/client/ScriptCommand.cpp	Netstorm.Client/Scripting/ScriptCommand.cs	d2300feaf9280f7df5c7d640d4e6b19fea121a05	L1
+cpppj/src/client/ScriptCommand.cpp	Netstorm.Client/Scripting/ScriptCommand.cs	760e5ec3cf0013ac2817daefbd8a099461033832	L1
 cpppj/src/client/ScriptCommand.cpp	Netstorm.Client/Scripting/ScriptStringRing.cs	9ad3ff97f51ac3900fbc1b957a3367e339982af6	port
-cpppj/src/client/ScriptCommand.h	Netstorm.Client/Scripting/ScriptCommand.cs	d2300feaf9280f7df5c7d640d4e6b19fea121a05	L1
+cpppj/src/client/ScriptCommand.h	Netstorm.Client/Scripting/ScriptCommand.cs	760e5ec3cf0013ac2817daefbd8a099461033832	L1
 cpppj/src/client/ScriptCommand.h	Netstorm.Client/Scripting/ScriptStringRing.cs	9ad3ff97f51ac3900fbc1b957a3367e339982af6	port
 cpppj/src/client/ScrollGump.cpp	Netstorm.Client/Gump/ScrollGump.cs	075b0c1424dbf4bca70ced2f41422957a8388772	port
 cpppj/src/client/ScrollGump.h	Netstorm.Client/Gump/ScrollGump.cs	075b0c1424dbf4bca70ced2f41422957a8388772	port
@@ -195,12 +195,15 @@ cpppj/src/o/Bridge.cpp	Netstorm.Core/Bridges/BridgeSurfaceRules.cs	f95a8db28ceae
 cpppj/src/o/Bridge.cpp	Netstorm.Core/Original/BridgeFrameSearch.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
 cpppj/src/o/Config.cpp	Netstorm.Core/Original/Config.cs	b05073df6f9b8dae3afe492ab5dc969361f25c51	L1
 cpppj/src/o/Config.h	Netstorm.Core/Original/Config.cs	b05073df6f9b8dae3afe492ab5dc969361f25c51	L1
+cpppj/src/o/ConfigInterface.cpp	Netstorm.Core/Original/ConfigInterface.cs	760e5ec3cf0013ac2817daefbd8a099461033832	port
+cpppj/src/o/ConfigInterface.h	Netstorm.Core/Original/ConfigInterface.cs	760e5ec3cf0013ac2817daefbd8a099461033832	port
 cpppj/src/o/ContentFormHost.cpp	Netstorm.Core/Original/RawContentFormHost.cs	9eb899e43b02660479342f0f4d709760e38ebda3	L1
 cpppj/src/o/ContentFormLifetime.cpp	Netstorm.Core/Original/RawContentLifetime.cs	ab3ef43d3685245aeaad8ecf53d55de4a1b92a97	L1
 cpppj/src/o/ContentFormLifetime.h	Netstorm.Core/Original/RawContentLifetime.cs	ab3ef43d3685245aeaad8ecf53d55de4a1b92a97	L1
 cpppj/src/o/DependFormHost.cpp	Netstorm.Core/Original/RawDependFormHost.cs	eb739b8095351e2931be9af9aeec2fd95b1f9b05	L1
 cpppj/src/o/Graph.cpp	Netstorm.Core/Bridges/SurfaceGraph.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
 cpppj/src/o/GumpFormHost.cpp	Netstorm.Core/Original/RawGumpFormHost.cs	9eb899e43b02660479342f0f4d709760e38ebda3	L1
+cpppj/src/o/OriginalText.h	Netstorm.Assets/OriginalText.cs	760e5ec3cf0013ac2817daefbd8a099461033832	port
 cpppj/src/o/Player.cpp	Netstorm.Core/Rules/MissionStart.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
 cpppj/src/o/Player.cpp	Netstorm.Core/Simulation/BattleSession.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
 cpppj/src/o/RawAcidFence.cpp	Netstorm.Core/Original/RawAcidFence.cs	9ed8bc636cac9d100dbddafa8b6b2d6efda971e6	L1

@@ -68,4 +68,33 @@ public static class OriginalText
         }
         return new string(chars);
     }
+
+    /// <summary>
+    /// 문자열을 Windows-1252 바이트로 되돌린다. 표현할 수 없는 문자(astral·미정의 자리·잘못된 서로게이트)는 예외를 던진다.
+    /// 근거: cpppj o/OriginalText.h 의 EncodeOriginalText. 원본은 UTF-8 바이트를 읽어 코드포인트를 복원하며,
+    /// 이식본은 UTF-16 서로게이트 쌍을 코드포인트로 읽으므로 같은 코드포인트에 같은 결과가 나온다. (R3k-11, 2026-10-31)
+    /// </summary>
+    /// <param name="text">인코딩할 문자열</param>
+    public static byte[] EncodeWindows1252(string text)
+    {
+        ArgumentNullException.ThrowIfNull(text);
+        var result = new List<byte>(text.Length);
+        // UTF-16 서로게이트 쌍을 코드포인트로 읽는다
+        foreach (Rune rune in text.EnumerateRunes())
+        {
+            int code = rune.Value;
+            if (code < 0x80 || (code >= 0xA0 && code <= 0xFF))
+            {
+                result.Add((byte)code);
+                continue;
+            }
+            int found = code <= 0xFFFF ? Array.IndexOf(Cp1252High, (char)code) : -1;
+            if (found < 0)
+            {
+                throw new InvalidDataException("Windows-1252로 표현할 수 없는 문자입니다");
+            }
+            result.Add((byte)(Cp1252HighStart + found));
+        }
+        return result.ToArray();
+    }
 }

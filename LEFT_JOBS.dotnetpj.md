@@ -186,7 +186,7 @@
 - [x] **R1-2a (2026-10-28 완료):** MonoGame 출력 호스트(`Netstorm.Client.Host` 실행 + `Netstorm.Client/Host` 순수 부분): `IScreenOutput` 구현(변경 사각형만 RGBA 부분 업로드), 정수 최근접 확대·검정 여백, 전체화면 borderless 창과 F11 전환, 마우스 역변환·전체화면 커서 제한, 키·글자·버튼 → `InputQueue`, 프레임 루프 골격(`--frames`·`--ui-script`·`--ui-report`·`--set`). 기존 `NetstormGame`/`DisplayManager`는 동결하고 별도 진입으로 둔다(결정 5). [문서 6절](docs/dotnet-client-screen-20261028.md#6-r1-2a-monogame-출력-호스트-같은-날-hjow-athlon). **남은 것:** 그리기 내용·세션·소리(R2·R3·R4 이후), 라벨 클릭·report·kernel-tell(R3 이후).
 - [x] **R1-2b (2026-10-28 완료, 호스트 없이 가능한 부분):** `ScreenCapture`(cpppj와 byte 동일한 BMP)·`UiScript`/`UiScriptRunner`(esc·key·keyup·pointer·좌표/라벨 클릭·snapshot)·`dotnetpj/tools/cpp_frame_compare.py`(파일·폴더 비교, 종료 코드 0/1/2). 오라클 캡처(메인 메뉴 프레임 30)가 이 PC에서 결정적으로 만들어짐을 확인했다. [문서 5절](docs/dotnet-client-screen-20261028.md#5-r1-2-부분-캡처스크립트-도구와-오라클-확인-같은-날). **남은 것:** `--ui-script`/`--mission`/`--frames`/`--set` 실행 인자를 받는 dotnetpj 실행 진입과 그 안에서 두 도구를 부르는 프레임 루프는 R1-2a의 호스트가 있어야 하며, 라벨 클릭·report·kernel-tell 등은 R3 이후다.
 - [ ] **R2 — 그리기 원시·팔레트·글꼴 (진행 중: R2d-3 일반 객체 그리기 완료):** `VFXDraw`·`VFXMappedDraw`·`VFXLine`·`VFXTransform`, `RawShapeToBuffer`, `SpriteDraw`, `*ColorMaps`, `Palette*`, `RawColorSort*`, `BitmapFont`, `GifImage`, `RawImage`를 `Netstorm.Client/Display`로 옮긴다. 이때 `Screen.LoadPalette`의 색 표 계산(`BuildPaletteColorTable`·`BuildGumpShadeMaps`)을 연결한다(R2a에서 완료). 묶음마다 fixture 연결·C# 수정·`--ports-reflect`·단위 기록을 남긴다. R2a는 [0.23](#023-단위-기록--r2a-팔레트-3종과-loadpalette-연결-2026-10-28-hjow-athlon)에서, R2b는 [0.24](#024-단위-기록--r2b-vfx-그리기-원시-2026-10-28-hjow-athlon)에서, R2c는 [0.25](#025-단위-기록--r2c-색-표-2026-10-28-hjow-athlon)에서, R2d-1은 [0.26](#026-단위-기록--r2d-1-변환합성이미지시작-2026-10-29-hjow-athlon)에서, R2d-2는 [0.27](#027-단위-기록--r2d-2-판본표시자료캡처-2026-10-29-hjow-athlon)에서 완료했다. R2d-3 본체와 원본 명령열 1,389행 대조는 0.28에서 완료했다. 실자산/세션 연결은 R4·R5에 남는다. `GifImage` 적응·`BitmapFont` 적응은 L1에 UI 인프라(메뉴·Gump·글꼴 저장소)가 필요해 R3 Gump 이식과 함께 다룬다.
-- [ ] **현재 R3k(2026-10-29):** 한 줄/다중 줄 조각·버퍼/그림/실제 글꼴·SHP 픽셀/스크롤 표시는0.38~0.39, 대괄호/다중 줄 파서와 버퍼 수명은0.40, 실제 Slider/자식은0.41, 다중 줄 Widget은0.42에서 연결했다. 메뉴 기본/항목 소유/레이아웃은0.43, 제어부는0.44, 장식 배경은0.45, 실제 메뉴 생성/수명·공용 SID Form은0.46에서 연결했다. 출력은0.47, 실제 사건/캡처·선택/명령·하위 메뉴 입력은0.48에서 연결했다. 문자 편집 버퍼/실제 소유 저장소는0.49, 문자 입력창/Console과 실제 공통 트리·Slider/글꼴/수명 연결은0.50에서 작성했다. 이미지 UI의 SHP/색표/16.16/투명 적중은0.51에서 연결했다. 동적MetaImage의 생성/기하/실제출력은0.52에서 연결했다. 실제MetaImage 목록의 배치/선택/삭제는0.53에서 연결했다. 배경 GIF/실제 원시 버퍼와 자산은0.54에서 연결했다. HTML 본문/조건/그림/배경은0.55에서 연결했다. HTML 링크/QuickHelp 파생 본문은0.56에서 연결했다. HTML 부모/내장 Tell과 실제 스크롤 자식/링크 수명은0.57에서 연결했다. 도움말 열기/요청·이력/입력 제어는0.58에서 연결했다. 전용 도움말 창 생성/배치/본문·그림은0.59에서 연결했다. 일반 HTML 창의 수명/본문/전체 배치는0.60에서 연결했다. HTML 메타/전체 생성기·실제 링크/모달과 하위 UI는0.61에서 연결했다. 명령/Config 적용은0.62에서, 설정 객체 층은0.63에서 연결했다. 재개 후 ConfigInterface 본체와 목록 owner·메시지/대화창·상위 메뉴/전체 자산/호스트를 조립한다. R3 전체 완료로 세지 않는다.
+- [ ] **현재 R3k(2026-10-29):** 한 줄/다중 줄 조각·버퍼/그림/실제 글꼴·SHP 픽셀/스크롤 표시는0.38~0.39, 대괄호/다중 줄 파서와 버퍼 수명은0.40, 실제 Slider/자식은0.41, 다중 줄 Widget은0.42에서 연결했다. 메뉴 기본/항목 소유/레이아웃은0.43, 제어부는0.44, 장식 배경은0.45, 실제 메뉴 생성/수명·공용 SID Form은0.46에서 연결했다. 출력은0.47, 실제 사건/캡처·선택/명령·하위 메뉴 입력은0.48에서 연결했다. 문자 편집 버퍼/실제 소유 저장소는0.49, 문자 입력창/Console과 실제 공통 트리·Slider/글꼴/수명 연결은0.50에서 작성했다. 이미지 UI의 SHP/색표/16.16/투명 적중은0.51에서 연결했다. 동적MetaImage의 생성/기하/실제출력은0.52에서 연결했다. 실제MetaImage 목록의 배치/선택/삭제는0.53에서 연결했다. 배경 GIF/실제 원시 버퍼와 자산은0.54에서 연결했다. HTML 본문/조건/그림/배경은0.55에서 연결했다. HTML 링크/QuickHelp 파생 본문은0.56에서 연결했다. HTML 부모/내장 Tell과 실제 스크롤 자식/링크 수명은0.57에서 연결했다. 도움말 열기/요청·이력/입력 제어는0.58에서 연결했다. 전용 도움말 창 생성/배치/본문·그림은0.59에서 연결했다. 일반 HTML 창의 수명/본문/전체 배치는0.60에서 연결했다. HTML 메타/전체 생성기·실제 링크/모달과 하위 UI는0.61에서 연결했다. 명령/Config 적용은0.62에서, 설정 객체 층은0.63에서, ConfigInterface 본체는0.64에서 연결했다. 재개 후 MissionScript 상당·대화창 분리·목록 owner·메시지/대화창·상위 메뉴/전체 자산/호스트를 조립한다. R3 전체 완료로 세지 않는다.
 - [ ] 이후 R3(D1) → R4(M1) → R5(D2) → R6 → R7 → R8 순서로 진행하고, 단위마다 이 절의 체크와 [0.4](#04-기존-dotnetpj-소스의-재수정-판정) 판정표를 갱신한다.
 - [ ] **`Netstorm.exe` 이름 적용(사용자 AGENTS.md ef0c6b91, 2026-10-30 신규·미착수. 0.8 5번 확인 전에는 기본값으로 진행 가능):** 재개 뒤 다음 배포본을 만들기 전에 처리하는 것을 권장한다. 문서 작업 때 확인한 영향은 다음과 같다. (a) 정의: `dotnetpj/src/Netstorm.Game/Netstorm.Game.csproj` 6행 `<AssemblyName>NetstormClone</AssemblyName>`(WinExe)을 `Netstorm`으로 바꾸면 `Netstorm.exe`·`Netstorm.dll`·`Netstorm.deps.json`·`Netstorm.runtimeconfig.json`이 나온다. 같은 어셈블리 이름이 Linux 산출물(`NetstormClone` → `Netstorm`)에도 적용되나 이 이름 요구는 Windows 용에 대한 것이다. `src/*.cs`에서 어셈블리 이름 문자열을 쓰는 코드는 찾지 못했고 `AssemblyTitle`은 빌드가 자동 생성한다. 다른 어셈블리(`Netstorm.Core.dll` 등)와 파일 이름이 겹치지 않는다. (b) 배포: `dotnetpj/package-dotnetpj.ps1`의 `$ExeName`(80행)·필수 파일 목록(96행의 `NetstormClone.exe/.dll/.deps.json/.runtimeconfig.json`)·머리 설명(7행)·압축에 들어가는 안내문(388~404행의 실행 예시)을 새 이름으로 바꾸고, 새 ZIP 생성과 압축 해제본 실행으로 다시 검증한다. (c) 문서·도구: README.md/README.en.md의 빌드·실행 절(`NetstormClone.exe`·`dist/win-x64/` 폴더 구조·Linux `NetstormClone`), `docs/`의 4개 문서(`cpp-build.md` 93행 비교표 포함), `tools/`의 클론 스모크 스크립트 약 16개(`clone_*_smoke.ps1/py`)가 기존 이름을 참조한다. 과거 기록은 당시 이름으로 보존하고 계속 쓰는 도구만 바꾼다. (d) `Netstorm.Client.Host`는 `Netstorm.Client.Host.exe`(AssemblyName 미지정)라 이름이 달라 지금은 충돌하지 않는다. 기본 실행을 새 경로로 바꾸는 시점의 정리는 0.8 5번을 따른다. (e) 원본 `originals/Netstorm.exe`와 이름이 같다. 배포 폴더에는 원본 실행 파일을 넣지 않고, 프로세스 이름이 같아지므로 도구는 전체 경로로 구분하며 실행 확인 규칙에서도 어떤 실행 파일인지 경로로 밝힌다. (f) 검증: 이름 변경은 동작 변경이 아니므로 Release 빌드·전체 검사(`dotnet test`)와 압축 해제본의 짧은 실행이면 되고 게임 실행은 AGENTS.md의 실행 확인·예외 규칙을 따른다.
 
@@ -741,6 +741,30 @@
   기존 뜻 유지용 using 별칭 1줄씩만 추가했고 동작 변경은 없다. fixture 소비자 규칙(한 fixture 한 소비자·프로젝트별 출력 검사) 때문에
   새 L1 검사는 `config-x86.tsv`의 소비자인 Assets.Tests에 두었으며, 이를 위해 Assets.Tests에 Core 프로젝트 참조를 추가했다(테스트→제품 참조라 순환 없음).
   `PORT_MAP.tsv`·`cpp-fixture-manifest.tsv`의 `config-x86` 행은 그대로다.
+
+### 0.64 단위 기록 — R3k-11 ConfigInterface 본체 (2026-10-31, HJOW-Athlon)
+
+- **착수/구현:** AGENTS.md·현행/공통 인계를 다시 읽었다. 사용자 요청("AGENTS.md, LEFT_JOBS.dotnetpj.md 를 읽고 dotnetpj 다음 작업 진행해 줘",
+  cpppj 쪽 파일 수정 금지 준수)으로 0.63의 다음 순서(ConfigInterface 본체)를 재개했다. 시작 HEAD는 `760e5ec3`이고 작업 트리는
+  깨끗했다(병렬 CP·WB 세션의 변경은 건드리지 않았다). 현재/마지막 전체 정밀 디컴파일 PC는 HJOW-Athlon이다.
+  cpppj `o/ConfigInterface.h/.cpp`와 `ConfigInterfaceTests.cpp`를 읽고 `ConfigInterface`(Startup 순서·Load 인자·GetInt·PathSpec·
+  ReadInt/ReadString·IntEquals·Set/SetInt·SubstituteLocal·LoadLanguage·SaveText/SaveFile·onChanged·갈고리)를
+  `Netstorm.Core/Original/ConfigInterface.cs`로 이식했다. `ConfigParseLong`·`ConfigListItem`은 기존 `Assets/ConfigNumbers`를
+  그대로 쓰고, `EncodeOriginalText`만 `Assets/OriginalText`에 추가했다. `ApplyScriptConfig`의 ConfigInterface 직접 연결 overload는
+  `Netstorm.Client/Scripting/ScriptCommand.cs`에 이었다.
+- **검증 완료:** 계약 검사 11종(`ConfigInterfaceTests` 10종: 시작 순서·타입 접근·미션 조회·저장 왕복·인코딩·파일 쓰기 2·인자/파일 읽기·
+  정적 소유·한정 쓰기·임시 범위 + `ScriptCommandConfigTests` 1종: Config 덮어쓰기·큐 수명)이 최초 실행부터 통과했다.
+  `ParseLong/ListItem` 1종은 기존 `ConfigNumbersTests`가, `MissionScript` 1종과 대화창 분리(`ParseDialogPage`) 부분은 해당 단위로 미뤘다.
+  변이 1건(`Set`의 변경 알림 제거)에 계약 검사 2종의 실패를 확인하고 원복했다.
+  전체 **2,015개(Assets 364 + Core 1040 + Client 611) 통과**, xUnit 실패/건너뜀 0, 전체 Release 경고/오류 0이다.
+  포트 276행(`L1` 149/`port` 127), fixture 127개(새 등록 없음), reflected-commit 유지다.
+  [단위 문서](docs/dotnet-config-interface-20261031.md).
+- **다음:** `MissionScript` 상당(미션 객체·`fortSpec`·`missionType`·`tellAtList`)은 미션 객체 단위에서,
+  `ConfigOverwriteAndQueueLifetime`의 대화창 분리(`ParseDialogPage`) 부분은 대화창 조립 단위에서 잇는다.
+  목록 owner·메시지/대화창·상위 메뉴/전체 자산/호스트 조립과 R3 전체 완료는 남는다. 전체 목표를 완료로 세지 않는다.
+  게임/창 실행과 디컴파일은 하지 않았다. cpppj·원본·CD·AGENTS.md·공통 인계·webpj 변경은 없다.
+- **알아 둘 것:** `EncodeOriginalText` 추가분만 `o/OriginalText.h`→`Assets/OriginalText.cs` 행(port)으로 포트 맵에 올렸다.
+  `ScriptCommand.cs`는 overload 추가로 바뀌어 base를 HEAD로 올렸다(같은 R3k-9 L1·신규 검사로 재대조).
 
 ## 1. 지금까지의 완료 범위 — 이관 기록 색인
 
