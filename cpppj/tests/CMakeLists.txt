@@ -2621,3 +2621,7 @@ target_sources(netstorm_mission_entry_tests PRIVATE FortObjectLoadTests.cpp)
 # 최초 로그인 파일 선택/지역 이미지/권한을 같은 실제 제품 라이브러리에서 검사한다.
 target_sources(netstorm_tests PRIVATE CampaignTemplateLoginImageTests.cpp BaseFileReadOnlyTests.cpp)
 target_sources(netstorm_mission_entry_tests PRIVATE MissionFortSelectionTests.cpp CampaignTemplateLoginImageTests.cpp BaseFileReadOnlyTests.cpp)
+
+# 지역 Template 덤프의 원문 current/로그와 실제 Client FILE/필터 연결을 함께 확인한다.
+target_sources(netstorm_tests PRIVATE DataManagerDumpTests.cpp TemplateDiagnosticClientTests.cpp)
+target_sources(netstorm_mission_entry_tests PRIVATE DataManagerDumpTests.cpp TemplateDiagnosticClientTests.cpp)

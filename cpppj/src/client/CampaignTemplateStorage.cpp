@@ -8,6 +8,7 @@
 #include "o/RawDataManagerImage.h"
 #include "o/RawTemplateLoad.h"
 #include "o/RawDataManagerInitialize.h"
+#include "o/RawDataManagerDump.h" // 원문 level29 덤프도 같은 current 검색과 실제 Client 로그를 사용한다.
 #include <new>
 #include <algorithm>
 #include <optional>
@@ -327,6 +328,11 @@ struct CampaignTemplateStorage::Image {
         hooks.release=[&image](auto pointer) { if (pointer!=kImage) throw std::logic_error("Template 저장 이미지 할당 반납 불일치");std::vector<std::uint8_t>{}.swap(image.storage); };
         o::SaveDataManagerFile(manager,stateInputs,hooks);
     }
+    // 원문 덤프의 파일명/이름표/현재 검색을 같은 실제 manager에서 실행한다.
+    void Dump(std::string_view prefix,const std::function<void(std::int32_t,std::string_view)>& trace) { // 원문0044cf20을 현재 manager/이름표/노드에 연결한다. 근거: docs/exe/cpp-datamanager-dump-20261101.md.
+        SyncStreams();o::DataManagerDumpHooks hooks;hooks.fileName=[](auto current) { return o::TemplateDataManagerFileName(current); };hooks.names=[this](auto) { return sectionNames.Names(); };
+        hooks.selection.stream=[this](auto handle) { return std::span(streams.at(handle)->bytes); };hooks.trace=trace;o::DumpDataManager(manager,prefix,hooks);
+    }
     // 파일쓰기없이같은manager의서명/current검색효과로35개이름의raw이미지를작성한다.
     o::FortImageData SaveImage(o::FortImageHooks hooks) {
         SyncStreams();hooks.signatureFlag=[this] { Put(manager,0x10c,0x46);if (Read(std::span(manager).subspan(0x110))==0xffffffffU) Put(manager,0x110,0);return Read(std::span(manager).subspan(0x110)) ? std::uint8_t{0xfe} : std::uint8_t{}; };
@@ -437,6 +443,8 @@ o::TemplateLifetimeHooks CampaignTemplateStorage::ManagerLifetime() { return Eff
 std::shared_ptr<ClientTemplateSectionNames> CampaignTemplateStorage::SectionNamesOwner() const { return sectionNames_; }
 // 같은DWORD의현재값과주소를호출자에게빌린다. 조회/Storage생성자에서공유값을재초기화하지않는다.
 std::uint32_t& CampaignTemplateStorage::SerializationVersion() { return serializationGlobals_->version; }
+// 같은 Client의 현재 필터/FILE/공유 버퍼를 실제 덤프 시점에 호출하도록 장치만 보관한다.
+void CampaignTemplateStorage::BindDiagnosticLog(std::function<void(std::int32_t,std::string_view)> log) { diagnosticLog_=std::move(log); }
 // 유효 슬롯의 현재 기록만 반환한다.
 std::span<std::uint8_t> CampaignTemplateStorage::Header(std::uint32_t slot) { if (slot>=9) throw std::out_of_range("Template 실제9칸 범위");return std::span(headers_).subspan(slot*20,20); }
 // 헤더가 빌린 같은 handle도 같은 이미지/State cursor를 찾는다.
@@ -467,7 +475,7 @@ void CampaignTemplateStorage::LoadFile(std::uint32_t slot,o::FortTemplate fort,s
     o::LoadTemplateFile(Header(slot),name,hooks);
 }
 // 송신용지역Template와strip용NONAME는같은Client전역을빌리며완료/예외모두target부터source순서로반납한다.
-// 원본004b63d0/004bf3e0의 이미지 내용/할당 연결이며0044cf20 진단은 별도다. 근거: docs/exe/cpp-login-template-lifetime-20261101.md.
+// 원본004b63d0/004bf3e0의 이미지 내용/할당은667,0044cf20 진단은668에서 연결했다. 근거: docs/exe/cpp-login-template-lifetime-20261101.md와cpp-datamanager-dump-20261101.md.
 o::FortImageData CampaignTemplateStorage::ReadLoginImage(std::string_view name,const TemplateFileLoadHooks& file,std::uint32_t territory) {
     CampaignTemplateStorage temporary(serializationGlobals_,sectionNames_);auto load=file;load.currentSlot=[] { return 9U; };load.refreshTitle={};Put(temporary.Header(0),8,1); //지역Template주소는전역현재슬롯과항상다르며readonly사전설정은파일권한조회를생략한다.
     try {
@@ -478,6 +486,7 @@ o::FortImageData CampaignTemplateStorage::ReadLoginImage(std::string_view name,c
         for (const auto section:{"Subscriber","Territory","TypeNames","CoreData"}) target.CloneSectionFrom(source,section);
         std::array<char,256> section{};const auto length=std::snprintf(section.data(),section.size(),"Terr%02d",std::bit_cast<std::int32_t>(territory));
         if (length<0 || static_cast<std::size_t>(length)>=section.size()) throw std::out_of_range("로그인이미지의현재Terr이름범위");target.CloneSectionFrom(source,{section.data(),static_cast<std::size_t>(length)});
+        target.Dump("Stripped Image:",diagnosticLog_); // 복제가 끝난 같은 NONAME를 SaveImage 전에 검색/로그하며 필터가 닫혀도 current 검색은 생략하지 않는다.
         o::FortImageHooks image;image.typeCount=[&file] { return static_cast<std::uint32_t>(NeedFile(file.typeCount)()); };image.assertion=[](auto) { throw std::logic_error("로그인이미지의직렬화진단"); };
         auto result=target.SaveImage(std::move(image));temporary.Clear(1);temporary.Clear(0);return result;
     } catch (...) { temporary.Clear(1);temporary.Clear(0);throw; } //부분읽기/복제예외에서도지역노드/할당을유지한채전역owner로넘기지않는다.

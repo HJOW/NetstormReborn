@@ -234,6 +234,7 @@ UberGump::UberGump(Client& client) : client_(client),initLoginSubscriber_(client
     textClipboard_=std::make_shared<TextClipboard>(Win32TextClipboardDevices()); //API를 연결만 하며 이 생성은 OS 클립보드를 열거나 변경하지 않는다.
     serializationGlobals_=std::make_shared<o::FortSerializationGlobals>(); // 원본BSS와같은한DWORD를모든manager/객체소비자보다오래소유한다.
     templateStorage_=std::make_shared<CampaignTemplateStorage>(serializationGlobals_); // 시작 초기화와 미션별 명시 정리를 별개 수명으로 유지한다.
+    templateStorage_->BindDiagnosticLog([client=&client_](auto level,auto text) { client->WriteDiagnosticLog(level,text); }); // 지역 Template 덤프도 원본 level29 formatter/FILE/flush/trace→Chat을 같은 Client 수명에서 사용한다.
     auto& config = client_.Configuration();
     const auto catalogRoot=EditorWorkingRoot(client_.GameDirectory()); //목록의 작업 namespace는 Native 전송/World가 반납된 뒤에도 같은 자산 경로로 계산한다.
     const auto catalogFiles=std::make_shared<EditorFiles>(catalogRoot,std::vector<std::filesystem::path>{client_.GameDirectory(),catalogRoot.parent_path()/"originals",catalogRoot.parent_path()/"originalCD"}); //생성은 경로 보호만 확인하고 파일을 만들거나 쓰지 않는다. 두 Catalog callback이 읽기 장치 수명을 함께 소유한다.

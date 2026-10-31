@@ -1,4 +1,5 @@
 // 논리 요새 이름과 실제 파일 경로가 로그인 지역 읽기/서버 최초 설치에서 분리되는지 실제 파일/Session으로 검사한다.
+// 이 파일의 Session 덤프 logger는 명시 비출력 장치를 사용하며 dump 본체는 실제로 실행한다.
 namespace { // 기존 작업본/원문 Fort helper의 기대 바이트를 재사용한다.
 std::string ManagerName486(CampaignTemplateStorage& storage) { // 실제 manager+c의 NUL 문자열을 직접 읽어 Name 투영과 대조한다.
     const auto manager=Get(storage.Headers(),20);const auto bytes=storage.ManagerBytes(manager).subspan(12,256);const auto end=std::find(bytes.begin(),bytes.end(),std::uint8_t{});
@@ -9,7 +10,7 @@ std::string ManagerName486(CampaignTemplateStorage& storage) { // 실제 manager
 TEST_CASE(CampaignMissionFortPath_ActualLoginKeepsLogicalSelectionAndSamePhysicalFile) { // manager의 절대 경로를 다시 논리 fortSpec 인자로 사용하지 않는다.
     for (const bool redirect:{false,true}) { //동일 파일 재작성과 현재 경로 변경을 실제 로컬 로그인으로 각각 확인한다.
         ReloadSourceScene483 scene(redirect ? "path-redirect-486" : "path-same-486");auto mission=scene.Mission();CHECK(mission->FileSource());
-        SessionServicesFixture external;auto services=external.Services();UseWorldTestLogin(services);auto templates=std::make_shared<CampaignTemplateStorage>();services.templateStorage=templates;
+        SessionServicesFixture external;auto services=external.Services();UseWorldTestLogin(services);auto templates=std::make_shared<CampaignTemplateStorage>();templates->BindDiagnosticLog([](auto,auto) {});services.templateStorage=templates;
         scene.BindSelection(services,*mission);
         services.missionFortRead=[](auto)->std::vector<std::uint8_t> { throw std::logic_error("파일 경로 reader를 지정한 실제 Session이 이전 byte reader를 선택함"); };
         const auto before=scene.reads->size();auto session=std::make_unique<RawCampaignSession>(scene.assets.game,scene.assets.files,FortTemplate{},mission->FortName(),std::move(services));services={};

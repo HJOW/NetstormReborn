@@ -25,6 +25,8 @@ Release 빌드 명령2개가 경고/오류0으로 끝났다. 앞선 직렬 빌�
 
 ## 남은 경계
 
+후속 [단위668](cpp-datamanager-dump-20261101.md)에서 아래0044cf20 진단을 실제 Client에 연결하고 관련20개/실패0을 확인했다. 아래 문단은667 완료 시점의 경계다.
+
 `004bf3e0`의 `0044cf20("Stripped Image:")`는 별도의 실제 DataManager 진단이다. level29 로그, 공유 formatter/FILE/flush/Chat과 검색 중 `current` 변경을 발생시킨다. 이번 strip 이미지 내용/할당 연결만으로 이 진단까지 완료했다고 보지 않는다. 다음 단위에서 실제 Client 진단 장치와 연결한다. 구형 명시 이미지/BYTE 입력은 독립 모듈 검사의 부분 어댑터로 남으며 실제10.78 Client는 지연 selector 경로를 사용한다.
 
 다른 Template 소비자·전체 FILE/SEH ABI·손상/할당/부분I/O·Edit 도구와 시나리오·연속 미션/UI·호환성은 현행 인수인계 잔여를 따른다. 자연 완주와 전체 동일성은 사용자 확인 대상이다.

@@ -1,4 +1,5 @@
 // 실제 로컬 Login의 지역 송신용 읽기와 서버 최초 설치가 미션 작업 source/현재 fortSpec을 사용하고 수명을 소유하는지 검증한다.
+// 덤프 logger는 명시 비출력 장치이며 원문 dump 본체의 목록 순회와 메시지 생성은 생략하지 않는다.
 #include "client/EditorMapCatalogFiles.h"
 namespace { //기존 Session/원문 로그인 helper를 빌리되 검사 입력/파일은 별도로 소유한다.
 struct ReloadSourceScene483 { //보호 VFS와 다른 실제 작업 폴더/장부/Config를 함께 유지한다.
@@ -42,7 +43,7 @@ void CheckReloadTerrain483(const FortTemplate& actual,const FortTemplate& expect
 
 TEST_CASE(CampaignMissionReloadSource_ActualLoginRereadsWorkingFortAndCurrentSpec) { //선행 manager 없이 로그인 송신과 서버 설치가 현재 작업본을 각각 읽어 실제 월드에 설치한다.
     for (const bool redirect:{false,true}) { //같은 경로의 재작성과 현재 Config 경로 변경을 각각 실제 로그인으로 소비한다.
-        ReloadSourceScene483 scene(redirect ? "redirect" : "same");auto mission=scene.Mission();auto templates=std::make_shared<CampaignTemplateStorage>();SessionServicesFixture external;
+        ReloadSourceScene483 scene(redirect ? "redirect" : "same");auto mission=scene.Mission();auto templates=std::make_shared<CampaignTemplateStorage>();templates->BindDiagnosticLog([](auto,auto) {});SessionServicesFixture external;
         const auto before=scene.reads->size();auto session=scene.Session(*mission,templates,external);CHECK(templates->OwnedImages()==0 && Get(templates->Headers(),20)==0 && scene.reads->size()==before);
         const auto selected=redirect ? "other/WorkingReload483.fort" : "maps/WorkingReload483.fort";scene.files->Write(selected,scene.changed);if (redirect) scene.config.Set("fortSpec","other/{local.1}.fort");
         session->LoadLocalConnection();CHECK(session->LocalConnectionPhase()==14 && session->PlayerKnown()==1 && session->IslandCount()>0);CHECK(scene.reads->size()==before+2 && (*scene.reads)[before]==selected && scene.reads->back()==selected && templates->OwnedImages()==1);
@@ -52,7 +53,7 @@ TEST_CASE(CampaignMissionReloadSource_ActualLoginRereadsWorkingFortAndCurrentSpe
 }
 
 TEST_CASE(CampaignMissionReloadSource_SessionOwnsReaderAfterScriptAndEditorOwnersRelease) { //Guide/Editor 외부 소유자가 사라져도 현재 Session의 선택/읽기 장치는 같은 namespace다.
-    ReloadSourceScene483 scene("owner");std::weak_ptr<EditorCatalogWorkspace> weak=scene.workspace;SessionServicesFixture external;auto templates=std::make_shared<CampaignTemplateStorage>();
+    ReloadSourceScene483 scene("owner");std::weak_ptr<EditorCatalogWorkspace> weak=scene.workspace;SessionServicesFixture external;auto templates=std::make_shared<CampaignTemplateStorage>();templates->BindDiagnosticLog([](auto,auto) {});
     auto mission=scene.Mission();const auto before=scene.reads->size();auto session=scene.Session(*mission,templates,external);CHECK(!templates->OwnedImages() && scene.reads->size()==before);scene.files->Write("maps/WorkingReload483.fort",scene.changed);mission.reset();scene.workspace.reset();CHECK(!weak.expired());
     session->LoadLocalConnection();CHECK(session->LocalConnectionPhase()==14 && session->PlayerKnown()==1 && scene.reads->size()==before+2);CheckReloadTerrain483(templates->Template(1),FortTemplate::Parse(scene.changed,scene.assets.game.TypeTable()));
     session.reset();CHECK(weak.expired()); //실제 Session이 소유한 reader 반납 뒤 파일 장부 잠금도 함께 소멸한다.
@@ -63,7 +64,7 @@ TEST_CASE(CampaignMissionReloadSource_SelectedMissingEmptyAndThrowKeepGlobalMana
     for (std::uint32_t mode=0;mode<3;++mode) { //부재/빈 실제 파일/외부 I/O 예외는 모두 선택 source에서 발생한다.
         ConfigInterface config([&](auto path) { return assets.files.TryRead(path); });config.Configuration().Assign("missionSpec=\"d/{local.1}.english\"\nfortSpec=\"d/{local.1}.fort\"\n[END]\n");std::size_t calls{};
         MissionScript mission(config,"thewarbegins",{},[&](std::string_view path)->std::optional<std::vector<std::uint8_t>> { if (path.ends_with(".english")) return assets.files.TryRead(path);++calls;if (mode==0) return std::nullopt;if (mode==1) return std::vector<std::uint8_t>{};throw std::runtime_error("selected reload failure"); });
-        CHECK(mission.Loaded());SessionServicesFixture external;auto services=external.Services();UseWorldTestLogin(services);auto templates=std::make_shared<CampaignTemplateStorage>();services.templateStorage=templates;services.missionFortFileSelect=mission.FortFileSelector();
+        CHECK(mission.Loaded());SessionServicesFixture external;auto services=external.Services();UseWorldTestLogin(services);auto templates=std::make_shared<CampaignTemplateStorage>();templates->BindDiagnosticLog([](auto,auto) {});services.templateStorage=templates;services.missionFortFileSelect=mission.FortFileSelector();
         services.missionFortLoad.readOnly=[](auto)->bool { throw std::logic_error("지역 readonly Template의 파일 권한 재조회"); }; // 지역 Template의 header readonly1은 실제 권한 조회를 생략한다.
         services.missionFortLoad.tooManyTypes=[] { throw std::logic_error("실패 입력의 TYPE 개수 진단"); };services.missionFortLoad.rejectFile=[](auto) { throw std::runtime_error("실패 입력의 서명 거부"); };
         RawCampaignSession session(assets.game,assets.files,FortTemplate{},"thewarbegins",std::move(services));CHECK(!calls && !templates->OwnedImages() && !Get(templates->Headers(),20));bool failed=false;

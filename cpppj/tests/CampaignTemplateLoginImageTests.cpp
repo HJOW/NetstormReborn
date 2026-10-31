@@ -1,4 +1,5 @@
 // 로그인송신의임시Template/strip이미지를실제파일입력과정적원문계약으로검사한다.게임/통신/Native실행은하지않는다.
+// 덤프 logger는 명시 비출력 장치를 연결한다. 제품의 목록 순회/메시지 생성은 실제 dump 본체를 사용한다.
 #include "TestSupport.h"
 #include "client/CampaignTemplateStorage.h"
 #include "DudeSpawnSupport.h"
@@ -35,7 +36,7 @@ template<class Function> std::string LoginImageFailure(Function function) {
 TEST_CASE(CampaignTemplateLoginImage_ActualFileStripsFiveSectionsAndKeepsGlobalOwner) { //원문004bf3e0의고정4개/현재Terr1개외payload는모두비어야한다.
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);auto bytes=assets.files.Read("d/thewarbegins.fort");const auto original=LoginImageSections(bytes);bytes[1]=0xfe; //source의FE서명이NONAME의기본0서명으로복제되지않는별도입력이다.
     auto globals=std::make_shared<FortSerializationGlobals>();std::size_t nameAllocations{};auto names=std::make_shared<ClientTemplateSectionNames>([&](auto size) { ++nameAllocations;auto allocation=std::make_unique<std::uint8_t[]>(size);std::fill_n(allocation.get(),size,std::uint8_t{0xa5});return allocation; });
-    CampaignTemplateStorage storage(globals,names);storage.InstallFile(1,{},bytes,"global-kept.fort");storage.SelectState(1).position=5;const auto* allocation=storage.State(1).bytes.data();const auto headers=std::vector<std::uint8_t>(storage.Headers().begin(),storage.Headers().end());const auto namePointer=names->Names().data();
+    CampaignTemplateStorage storage(globals,names);storage.BindDiagnosticLog([](auto,auto) {});storage.InstallFile(1,{},bytes,"global-kept.fort");storage.SelectState(1).position=5;const auto* allocation=storage.State(1).bytes.data();const auto headers=std::vector<std::uint8_t>(storage.Headers().begin(),storage.Headers().end());const auto namePointer=names->Names().data();
     CHECK(nameAllocations==1 && !original[4].empty()); //원본Chaff의비영payload도strip후사라지는지확인한다.
     // 서로다른현재영역은각각자기Terr만보유하며이전호출의임시manager를재사용하지않는다.
     for (const std::uint32_t territory:{0U,7U,19U}) {
@@ -55,7 +56,7 @@ TEST_CASE(CampaignTemplateLoginImage_ActualFileStripsFiveSectionsAndKeepsGlobalO
 }
 
 TEST_CASE(CampaignTemplateLoginImage_FalsePartialAndDeviceExceptionsPreserveGlobalOwner) { //임시실패뒤전역owner/current를그대로두고다음정상읽기도가능해야한다.
-    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);const auto bytes=assets.files.Read("d/thewarbegins.fort");CampaignTemplateStorage storage;storage.InstallFile(1,{},bytes,"kept.fort");storage.SelectState(1).position=3;const auto headers=std::vector<std::uint8_t>(storage.Headers().begin(),storage.Headers().end());
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);const auto bytes=assets.files.Read("d/thewarbegins.fort");CampaignTemplateStorage storage;storage.BindDiagnosticLog([](auto,auto) {});storage.InstallFile(1,{},bytes,"kept.fort");storage.SelectState(1).position=3;const auto headers=std::vector<std::uint8_t>(storage.Headers().begin(),storage.Headers().end());
     // 부재정상false/장치예외/일부섹션읽기예외/현재Terr누락을각각독립임시수명으로실행한다.
     for (std::uint32_t variant=0;variant<4;++variant) {
         auto file=LoginImageFile(bytes);const auto territory=variant==3 ? 20U : 0U;storage.SerializationVersion()=91;

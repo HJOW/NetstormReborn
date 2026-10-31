@@ -1,0 +1,77 @@
+{
+  "unit": 668,
+  "date": "2026-11-01",
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "decompileChanged": false,
+  "productChanged": true,
+  "executableSha256": "860044565bcc7fdf57e40d6655a41f67e297da515499ef9f7e3dc76a4fe01fcc",
+  "changes": [
+    "원본0044cf20을 같은276BYTE manager/가상파일명/가상이름표/SNART/FindDataManagerSection에 연결했다. 비교/로그 뒤 현재값과 누락로그·DWORD 합계/signed 표시·예외 부분 상태를 보존한다.",
+    "004bf3e0의 마지막 Terr 복제와 SaveImage 사이에 실제 NONAME 덤프를 연결했다. parent Storage의 동일 진단 callback을 지역 target에 직접 빌리며 별도 TraceLogState나 clog를 만들지 않는다.",
+    "UberGump의 주 Storage는 같은 Client::WriteDiagnosticLog를 빌린다. 기존 공유 formatter/필터/FILE/flush/trace→Chat 경로를 사용하며 로그가 필터되어도 DataManager 검색은 진행한다.",
+    "독립 headless Session의 명시 비출력 logger는 출력만 관측하지 않고 실제 dump 본체를 실행한다. 일반 파일 읽기/MapProbe에 새 dump를 추가하지 않는다."
+  ],
+  "focused": {
+    "entryRegistered": 87,
+    "worldRegistered": 261,
+    "finalUnique": 20,
+    "newUnique": 5,
+    "existingUnique": 15,
+    "failedChecks": 0,
+    "invocations": 8,
+    "testFunctionCalls": 20,
+    "initialFailures": [],
+    "logs": [
+      "extracted/cpp-datamanager-dump-668-primitive-v1.log",
+      "extracted/cpp-datamanager-dump-668-client-v1.log",
+      "extracted/cpp-datamanager-dump-668-image-v1.log",
+      "extracted/cpp-datamanager-dump-668-login-v1.log",
+      "extracted/cpp-datamanager-dump-668-async-v1.log",
+      "extracted/cpp-datamanager-dump-668-parent-v1.log",
+      "extracted/cpp-datamanager-dump-668-source-v1.log",
+      "extracted/cpp-datamanager-dump-668-path-v1.log"
+    ],
+    "scope": "새 primitive4개는 실제 current/노드와 이름표 변이·누락/예외·합계 감김을 정적 원문 계약과 대조한다. 새 Client1개는 실제 로그 필터/공유 버퍼/CRT 임시FILE/들여쓰기/NULL Chat 연결이다. 기존15개는 이미지/로그인/비동기/부모/작업본 파일 수명을 재확인한다.",
+    "limits": "두 등록 전체나 주 검사 전체 통과가 아니다. Client.Run/게임 창/실제 Chat UI/PCM/물리 입력/자연 완주/전체 동일성 검증이 아니다. Chat→FILE→flush 세부 호출 순서는 기존 RawTraceLog 근거와 구별한다."
+  },
+  "native": {
+    "newExecutions": 0,
+    "newCases": 0,
+    "newFixture": false,
+    "replayedUniqueRows": 0,
+    "staticLog": "extracted/cpp-datamanager-dump-668-static.txt",
+    "scope": "현행 정밀 디컴파일과 보호PE0044cf20..0044cff6을 정적 대조했다. 이번 집중 검사는 새 Native 실행/원문fixture 재생이 아니다."
+  },
+  "builds": [
+    {
+      "log": "extracted/cpp-datamanager-dump-668-build-v1.log",
+      "exitCode": 0,
+      "warnings": 0,
+      "errors": 0,
+      "scope": "Release 게임/미션집중/세계집중 대상의 한 명령이다."
+    }
+  ],
+  "protected": {
+    "checked": 4,
+    "baseline667Differences": 0,
+    "sha256": {
+      "AGENTS.md": "e9e46fda5519e663417b5c8d9b643549196bf28fe7ba6b1d546a48a853fd208b",
+      "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+      "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6"
+    },
+    "full2632AuditRepeated": false,
+    "full773FixtureHashAuditRepeated": false
+  },
+  "actualGameRuns": 0,
+  "full34Repeated": false,
+  "newZip": false,
+  "mainTestExecutableRebuilt": false,
+  "multiplayerTests": 0,
+  "remaining": [
+    "다른 Template/파일/FILE·SEH ABI/할당·부분I/O 소비자, 실제 GUI 전체 연쇄와 Edit 도구·시나리오·연속 미션/UI·호환성을 이어 간다.",
+    "자연 완주/전체 동일성은 사용자 확인 대상이다. 게임 진입 통합은 더 많은 기능 묶음 뒤 필요한 범위만 수행하고 이후 MP 무시험 사전 구현·4~7차로 넘어간다."
+  ]
+}

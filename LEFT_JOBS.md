@@ -6,19 +6,19 @@
 
 ## 0. 재개 전 확인 사항
 
-### 0.1 현재 값 (2026-11-01, 단위667 완료 / 사용자 목표 재개)
+### 0.1 현재 값 (2026-11-01, 단위668 완료 / 목표 진행 중)
 
 | 항목 | 값 |
 | --- | --- |
-| 진행 상태 | **2026-11-01 새 /goal로 재개, 단위667 완료.** 실제10.78 최초 파일 읽기/지역 송신 이미지/서버 전역 설치와 같은 이름 manager 보존을 연결했다. 관련26개/실패0·빌드 명령2개 경고/오류0이며 사전 빌드1개는 병렬 컴파일로 재시작하려고 중단했다. 검사 최초 실패는 없다. 다음은0044cf20 Stripped Image 진단 연결이다. 전체 목표는 미완료이며 계속 진행한다. |
-| 현재 제품 | 제품667이며 State7 선행 Fort 전체 파싱/표시용 MissionPlayers 조회/전역 설치가 없다. State9 지역 readonly Template의 다섯 섹션 이미지와 서버 LoadFile이 현재 curFort/fortSpec을 각각 읽으며 기존 manager는 보존한다. 공유 version/이름표·DWORD/BYTE 영역·파일 readonly 출처를 연결했다.004bf3e0의0044cf20 진단은 남는다. Edit665/객체664를 유지하며 최신 전체34/ZIP은645의644제품이다. |
-| EXE SHA-256 | `61c7bf147eee6401dd4421603b801413cb19c2efda458a9f6d8d9d673f574a6d` (667) |
+| 진행 상태 | **단위668 완료.** 0044cf20 Stripped Image 진단을 실제 current 검색/합계/level29와 같은 Client 필터/공유 버퍼/FILE/flush/Chat에 연결했다. 관련20개/실패0·Release 명령1개 경고/오류0이며 최초 실패는 없다.667은d22a1b58로 커밋했다. 다음은 남은 Template/파일 소비자와 Edit 시나리오/UI writer 점검이다. 전체 목표는 미완료이며 계속 진행한다. |
+| 현재 제품 | 제품668이며667의 State7 선행 파싱 제거/지역 송신 이미지/서버 설치/현재 이름 재조회/기존 manager 보존/readonly 출처를 유지한다. Terr 복제 뒤0044cf20 덤프를 같은 NONAME/이름표/노드와 실제 Client 로그에 연결했다. 새 실제 Client 검사로 필터·공유 버퍼·임시 FILE·NULL Chat을 확인했다. Edit665/객체664를 유지하며 최신 전체34/ZIP은645의644제품이다. |
+| EXE SHA-256 | `860044565bcc7fdf57e40d6655a41f67e297da515499ef9f7e3dc76a4fe01fcc` (668) |
 | ZIP SHA-256 | 645에서 만든644 제품의 `6485febc36080dc90e9eec43965a842f85d39e81c82a003a96b83b34b3694b73` (1376항목/게임 자산1358개). 실제 한글😀 경로에 압축 해제해 최종34를 실행했다. |
-| 등록 C++ 검사 수 | 667의 미션 집중82등록/세계 집중261등록 중 관련26개/실패0(새10·기존16), 총10회/26함수 호출이다. 메모리 Session/Unicode 실제 임시 파일·TAFF·작업본과 기존 비동기/부모/Objects를 확인했다. 기존 Patch609의609행을 C++ 재생했으며 새 Native 실행/fixture·신규MP 검사0이다. 두 집중 등록 전체나 주 검사 전체는 실행하지 않았다. 주 검사 EXE는645의3566등록/집중37이 마지막 근거다. |
+| 등록 C++ 검사 수 | 668의 미션 집중87등록/세계 집중261등록 중 관련20개/실패0(새5·기존15), 총8회/20함수 호출이다. primitive4·실제 Client1·이미지2·로그인4·비동기2·부모2·작업본source3·경로2다. 새 Native 실행/fixture·기존fixture 재생·신규MP 검사0이다.667의26개/기존609행은 별도 제품 근거다. 두 집중 등록 전체나 주 검사 전체는 실행하지 않았다. 주 검사 EXE는645의3566등록/집중37이 마지막 근거다. |
 | 최신 전체34 | 단위645, 644 제품 기준 최종34/34. 최소 비정지 시각 증가20.843초·창DC RGB·Native Frame 일치. 최초 입력 누락34실패/재검증34통과와 준비2회를 포함한 총70프로세스를 구별한다. |
 | 최신 반복 수명 | 단위640, 같은637 제품의 브리핑/중단 확인 바깥 뗌 취소2회·미션 재진입1회와 채팅 도킹2실행. 최종3실행 종료0. Restart4회/Leave 취소2회/메인 복귀2회는638의 별도 근거다. |
 | 전체 C++ 마지막 실행 | 단위549. 3389개 중 7개 검사가 실패했다(580단언). 이후 입력 정정 뒤 집중 검사만 통과했고 전체 재실행 기록은 없다. 마지막 전체 통과는 단위510(508 제품, 3337개, 실패 0)이다. |
-| 보호 기준 | 전체2632개/기존fixture773개는645에서 불변을 확인했다.667은 AGENTS/양PE/TAFF의 관련4입력을645·666 기준과 대조해 불변을 확인했다. 전체 재감사와 구별하며655~667의 새fixture는 없다. 원시 자료는 HJOW-Athlon에만 있다. |
+| 보호 기준 | 전체2632개/기존fixture773개는645에서 불변을 확인했다.668은 AGENTS/양PE/TAFF의 관련4입력을667 기준과 대조해 불변을 확인했다. 전체 재감사와 구별하며655~668의 새fixture는 없다. 원시 자료는 HJOW-Athlon에만 있다. |
 | **마지막 전체 정밀 디컴파일** | **HJOW-Athlon (192.168.0.94) / 2026-10-23** |
 
 ### 0.2 재개 절차
@@ -28,8 +28,8 @@
 3. 실제 게임 구동과 별도 창이 뜨는 작업은 AGENTS.md를 따른다. 확인 없이 진행할 수 있는 시스템은 vm-debian-codex(10.0.0.15), VM-W11-Codex(10.0.0.17), HJOW-Athlon(192.168.0.94)뿐이다. **HJOW-X3D를 포함한 그 밖의 PC에서는 실행 목적과 필요성을 설명하고 명시적 확인을 받는다.** 허용받으면 해당 작업 단계가 끝날 때까지 유지된다. 사용자가 원본 수동 컨트롤이나 녹화 분석을 직접 요청한 작업 단계도 확인이 필요 없다.
 4. 빌드·검사·GUI 원시 자료는 작업 PC의 `extracted/`(Git 제외)에만 있다. 커밋되는 보고서는 `cpppj/*.json`, 작업 문서는 `docs/exe/cpp-*.md`다. 다른 PC에 원시 자료가 있다고 가정하지 않는다.
 5. 다른 세션의 dotnetpj·webpj 변경, staged 파일, 실행 출력은 이 작업에 포함하지 않는다. 단위마다 인계를 갱신하고 로컬 커밋한다.
-6. 645의 전체34 통합은 완료됐으며646~667에서 실제 게임을 다시 실행하지 않았다. 소수 단위 뒤 전체34를 반복하지 않고 더 많은 기능 묶음 뒤 필요한 통합을 수행한다. 새 작업은3절을 따른다.
-7. 마지막 빌드/집중 검사 근거는667의 `extracted/cpp-login-template-lifetime-667-build-v2/v3.log`와 [보고서](cpppj/login-template-lifetime-20261101.json)의 실제10개 검사 로그를 따른다. 최종26개/기존Native609행 재생과 미션82/세계261등록을 구별한다. 사전v1 빌드는 병렬 재시작을 위해 중단했다. 주 EXE3566/집중37은645의644제품이다. 신규MP 검사는 하지 않는다. 새 /goal로 재개한 상태다.
+6. 645의 전체34 통합은 완료됐으며646~668에서 실제 게임을 다시 실행하지 않았다. 소수 단위 뒤 전체34를 반복하지 않고 더 많은 기능 묶음 뒤 필요한 통합을 수행한다. 새 작업은3절을 따른다.
+7. 마지막 빌드/집중 검사 근거는668의 `extracted/cpp-datamanager-dump-668-build-v1.log`와 [보고서](cpppj/datamanager-dump-20261101.json)의 실제8개 검사 로그를 따른다. 최종20개와 미션87/세계261등록을 구별한다.667의26개/Native609행 재생은 별도 제품 근거다. 주 EXE3566/집중37은645의644제품이다. 신규MP 검사는 하지 않는다. 새 /goal로 재개한 상태다.
 
 ### 0.3 유지되는 제한과 보류
 
@@ -94,7 +94,7 @@
 
 AGENTS.md의 `(4~6차 목표.)` 문구는 7차 추가 뒤에도 그대로지만, 바로 아래에 7차까지 나열되고 dotnetpj 항목도 4~7차로 적혀 있으므로 4~7차로 읽는다.
 
-## 2. 현재 상태 (2026-11-01, 단위667 확인 기준)
+## 2. 현재 상태 (2026-11-01, 단위668 확인 기준)
 
 - **게임 실행·플레이 가능 여부:** 인자 없는 `Netstorm.exe`로 GUI가 시작되고 34경로 모두 진입·비정지 진행·정상 종료를 확인했다. 자연 완주 근거는 과거 제품의 Early1/2 자동 완주와 사용자가 다른 PC에서 직접 완주한 캠페인 1-1뿐이다.
 - **기존 게임과의 동일성:** 원문 관측과 대조를 마친 부품이 많다. 자연 완주와 전체 동일성은 사용자가 플레이하며 확인한다.
@@ -117,7 +117,7 @@ AGENTS.md의 `(4~6차 목표.)` 문구는 7차 추가 뒤에도 그대로지만,
 | Factory 중복 경고 | [647](docs/exe/cpp-factory-duplicate-warning-20261031.md) | 실제 제공된 경고 callback 보존·Client 채널4 로그·명시 중복 입력의 경고 뒤 기존 객체 삭제. 최종1개 통과 | 일반 Pop 겹침 거부와 분리한 +20 장치 접합이다. 합법 GUI 배치/전체20/전체34 검증이 아니다. |
 | HUD·단축키 | [509](docs/exe/cpp-hud-input-runtime-20261027.md), [511](docs/exe/cpp-player-list-runtime-20261028.md), [540](docs/exe/cpp-minimap-toggle-runtime-20261028.md), [547](docs/exe/cpp-send-money-runtime-20261028.md), [548](docs/exe/cpp-screenshot-runtime-20261028.md) | 미니맵, QWASZX, ESC 일부, Player List, 독립 미니맵, Send Money, F7·Shift F7 | 스크립트 입력이다. 3절 1번 |
 | Chat | [640](docs/exe/cpp-ui-lifetime-current-20261031.md), [574](docs/exe/cpp-chat-completion-20261029.md), [586](docs/exe/cpp-chat-live-message-20261030.md), [614](docs/exe/cpp-chat-settings-20261030.md), [649](docs/exe/cpp-issue-commands-20261031.md) | 입력줄, 자동완성, 일반 Enter·중계·로컬 큐·공유 로그, 설정 재실행, 초기 점 명령/밝기·실제 오류 출력 | 3절 4번 |
-| 미션 진입 UI·팔레트 | [656](docs/exe/cpp-mission-starting-tail-20261031.md), [657](docs/exe/cpp-mission-async-20261031.md), [658](docs/exe/cpp-mission-starting-commit-20261031.md), [659](docs/exe/cpp-mission-starting-prefix-20261031.md), [660](docs/exe/cpp-mission-starting-parent-20261031.md), [667](docs/exe/cpp-login-template-lifetime-20261101.md) | UI/색 수명·Tick/큐/완료 공개·안내·7/8 확정·같은 부모의 복사/로그/World 교체. 최초 선행파싱 제거·지역송신/서버설치/manager보존667, 관련26개 통과 | Stripped Image의0044cf20 진단·재접속/Zone0·메타 Poll·시계 패킷·실제 GUI 전체 교체는 별도다. |
+| 미션 진입 UI·팔레트 | [656](docs/exe/cpp-mission-starting-tail-20261031.md), [657](docs/exe/cpp-mission-async-20261031.md), [658](docs/exe/cpp-mission-starting-commit-20261031.md), [659](docs/exe/cpp-mission-starting-prefix-20261031.md), [660](docs/exe/cpp-mission-starting-parent-20261031.md), [667](docs/exe/cpp-login-template-lifetime-20261101.md), [668](docs/exe/cpp-datamanager-dump-20261101.md) | UI/색 수명·Tick/큐/완료 공개·안내·7/8 확정·부모의 복사/로그/World 교체. 최초 파일 수명667, Stripped Image 덤프/같은 Client 진단668·관련20개 통과 | 재접속/Zone0·메타 Poll·시계 패킷·실제 GUI 전체 교체는 별도다. |
 | 영상·CD | [594](docs/exe/cpp-movie-runtime-20261030.md), [595](docs/exe/cpp-cd-movie-package-20261030.md), [654](docs/exe/cpp-cd-presence-20261031.md), [655](docs/exe/cpp-mission-entry-20261031.md) | 실제 MovieGump, 스킵·자연 끝, 완료 저장, CD 경로 탐색·별도 CD 유무/Client 캐시·State7/시작의 별도 결과 저장, 영문·독문 기본 영상 동봉 | 실제 CD 삽입/열거, PCM 장치, 활성 전체화면 물리 출력 |
 | 데모 | [567](docs/exe/cpp-demo-repeat-20261029.md), [569](docs/exe/cpp-demo-repeat-two-20261029.md) | 세 데모의 첫 360초 만료 → 재시작 → Exit Demo → Quit | 두 번째 전체 360초 |
 | 저장·진행 | [568](docs/exe/cpp-saved-state-file-20261029.md), [578](docs/exe/cpp-campaign-progress-20261030.md), [588](docs/exe/cpp-battle-leave-20261030.md) | 저장상태 파일 정리, 진행 키 저장과 다음 미션 해제, 일반 중단의 State3 복귀 | 실제 승리부터 자동 저장까지, 일반 전투 저장상태 복구는8번 후순위MP(661) |
@@ -171,7 +171,7 @@ Early3 후속 입력과 미실행 계획은 [부분 진행 보관](docs/exe/prep
 
 1. 화면 캡처가 정상화되면 물리 입력 QWASZX·ESC·Home·포커스를 검증한다(7번).
 2. 남은 비멀티 UI·Edit·시나리오·파일·수명·호환성을 1~4번과 7번으로 이어 간다.
-3. 645의 같은644 제품/새 ZIP/전체34 통합 뒤646~667을 진행했다.667에서 최초 State7 선행 파싱/표시용 MissionPlayers 조회/전역 설치를 제거하고 지역 readonly 송신 이미지→서버 LoadFile·현재 이름 재조회·기존 manager 보존을 연결했다. **다음은004bf3e0의0044cf20 Stripped Image 진단을 같은 Client level29 formatter/FILE/flush/Chat과 실제 current 검색에 연결한다.** 다른 Template 소비자·파일/ABI·Edit 도구/시나리오·UI/연속 미션을 이어 간다. 실제 스테이지 진입/대기 검사는 더 많은 기능을 모은 뒤 필요한 범위만 수행한다.
+3. 645의 같은644 제품/새 ZIP/전체34 통합 뒤646~668을 진행했다.667은 최초 파일 수명,668은 Stripped Image 덤프의 실제 current 검색과 같은 Client level29 출력까지 연결했다. **다음은 다른 Template/파일/FILE·SEH ABI 소비자와 Edit 도구·시나리오의 실제 UI/설정 writer를 점검한다.** 완료된 파일/Objects/이름/manager 경계를 다시 만들지 않는다. UI/연속 미션을 이어 가며 실제 스테이지 진입/대기 검사는 더 많은 기능을 모은 뒤 필요한 범위만 수행한다.
 4. 체크 항목을 마치면 5·6번과 Windows 11 실기를 기다리지 않고 멀티플레이 무시험 사전 구현과 4~7차로 넘어간다(8번).
 
 ### 1. 대상별 커서·오브젝트 우클릭·게임 UI
@@ -189,7 +189,7 @@ Early3 후속 입력과 미실행 계획은 [부분 진행 보관](docs/exe/prep
 
 - [x] 세계 생성 옵션9 비영/단일 전체와9회 요청의 실제 Session 접합은650에서 확인했다. 로그인/원문 Start의 NoTemple 뒤 중립 지면798/장식50, 소유된1-1의 거부, 간헐천 실제 Pop/Regular를8입력과 최종5개로 확인했다([650](docs/exe/cpp-world-generation-session-20261031.md)). 제품 변경/게임 실행은 없으며 비미션9개 서로 다른 구역·옵션 writer 검증과 구별한다.
 - [ ] 나머지 시나리오 조합과 실제 설정/UI writer를 허용 범위에서 확인한다.
-- [x] State1 선행 파일 읽기/파싱662·실제 Objects stream663·Campaign공유664·손상파일 정리/기본 이름 반복665·로그인 선행 파싱 제거666을 유지한다.667은 최초 State7 파싱/표시용 Player 조회도 제거하고 지역 Template 이미지/서버 설치·기존 manager 보존까지 연결했다([667](docs/exe/cpp-login-template-lifetime-20261101.md)). 최종 관련26개/기존609행을 확인했다. 남은 것은0044cf20 진단·다른 소비자·전체 FILE/SEH ABI·물리 밖 미정 BYTE다. 각 과거 단위의 관측 수는 해당 문서를 따른다.
+- [x] State1 선행 읽기/파싱662·실제 Objects663·Campaign공유664·손상파일 정리/이름 반복665·로그인 파싱666·최초 파일 수명667을 유지한다.668은0044cf20의 실제 current 검색/합계/같은 Client 로그를 연결했다([668](docs/exe/cpp-datamanager-dump-20261101.md)). 최종 관련20개/실패0이며667의26개/609행과 구별한다. 남은 것은 다른 소비자·전체 FILE/SEH ABI·물리 밖 미정 BYTE다. 각 과거 단위의 관측 수는 해당 문서를 따른다.
 - [ ] 남은 지형·오브젝트·소유자 도구와 LeaveEditMode/State1·비동기 State7의 전체 분기를 점검한다.
 - [x] 빈/점 시작 이름의 newFort 선택과 선택 뒤 실제 작업 파일 준비는653에서 연결했다. 원문252행/1008관측·집중7개와 실제 Unicode 파일/Session checkpoint를 확인했다([653](docs/exe/cpp-editor-default-name-20261031.md)). 전체 State 확정/loaded/GUI와 구별한다.
 - [ ] 섬 배치 직후와 재로드의 Graph 차이를 원본 전체 월드와 대조하고 전체 작업본 저장/재파싱·이름/목록·미션 전환 수명을 확인한다.
@@ -246,7 +246,7 @@ Early3 후속 입력과 미실행 계획은 [부분 진행 보관](docs/exe/prep
 - Early3→6, 캠페인 1-1의 포획/운반/희생/승패 → 1-2, 나머지 1장 → 2/3장, Training 9개와 선택지, 데모의 자연 완주. 현재 제품의 자연 완주가 완료됐다고 쓰지 않는다.
 - 실제 승리 뒤 완료값 0→1 자동 저장과 재실행 후 다음 미션 신규 해제. 명시 키의 저장/재실행 해제는 578에서 확인했다. 기존 완료값 1 보존은 신규 해제의 증거가 아니다.
 - **549 자동공략 잔여:** `CampaignForwardBattle_NaturalTempleAssault`는 합법 사격 배치 지점 부재로 실패했다. 제품/전술 입력 원인은 미확정이고 준비 전략은 미채택이다. 원래 함수/전략/승리 단언은 유지하며 별도 요청이 있을 때 원문과 대조한다. 전체 C++ 통과로 기록하지 않는다.
-- TEST02의 명시 로컬 owner AI 옵션은 미구현이다. 일반 demo 0에서 원본 공통 AI를 로컬 owner에도 쓰며 `gate.demo=1` 우회로 튜토리얼/Demo 사건/타이머를 바꾸지 않는다.
+- TEST02의 명시 로컬 owner AI 옵션은 별도 테스트 지원 제안이며 미구현이다. **원문 기능의 누락과 구별한다:** 2026-11-01 정적 재확인에서 원문004c2b20도 `owner!=myPlayerId || demo!=0`일 때만 사제가 있는 owner의 AI를 만든다. 현행 RawMissionStart는 이 조건을 유지한다. 별도 지원을 구현할 때 일반 demo0의 공통 AI를 로컬 owner에도 쓰되 `gate.demo=1` 우회로 튜토리얼/Demo 사건/타이머를 바꾸지 않는다.
 - **TEST02 포획/희생 보류:** 사용자 수정판 `3c12b4e7`/Fort 5282바이트의 현재 SHA/배치를 다시 확인하고 옛 좌표를 재사용하지 않는다. 기술은 크로스보우·썬 디스크 발사기·맨오워풀·데빌메이커 우선이며 훨리베이스는 제외한다.
 - 로컬 AI의 SP/Tech/이름/Off/NoTemple/동맹/능력은 적 AI와 따로 준비하고 공유 난수 차이를 기록한다. 기본 게임/프로필에 섞지 않고 검사 조작임을 주석/기록에 표시한다. 우리 편 AI·빈도/SP 추가는 [검토](docs/exe/cpp-test-local-ai-and-sp-feasibility-20261021.md)만 했으며 구현 완료가 아니다.
 

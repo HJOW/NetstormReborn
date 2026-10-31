@@ -51,6 +51,7 @@ public:
     o::TemplateLifetimeHooks ManagerLifetime(); // 같은owner의실제Destroy/Release를분리하여바깥NewManager에빌린다.
     std::shared_ptr<ClientTemplateSectionNames> SectionNamesOwner() const; // reader/신규초기화가공유하는Clientowner를읽는다.
     std::uint32_t& SerializationVersion(); // 생성자/객체로더/저장부모가직접같이쓰는실제005c89c0 DWORD다. 복사값을반환하지않는다.
+    void BindDiagnosticLog(std::function<void(std::int32_t,std::string_view)> log); // 실제 Client level29 로그 장치를 빌린다. 지역 송신 이미지의 덤프가 같은 공유 formatter/FILE/Chat을 사용한다.
     void Install(std::uint32_t slot,o::FortTemplate fort,std::string name); // 이전 한 헤더를 실제 반납한 뒤 새 소유 manager를 설치한다.
     void InstallFile(std::uint32_t slot,o::FortTemplate fort,std::span<const std::uint8_t> image,std::string name,std::int32_t typeCount=188); // 실제 파일/서명/섹션 읽기 부모를 실행한다. 기본188은10.78 독립 호출용이며 Session은 현재 타입 수를 전달한다.
     void LoadFile(std::uint32_t slot,o::FortTemplate fort,std::string_view name,const TemplateFileLoadHooks& file); //004bf550의기존파일유지/읽기전공개/정상false부분정리를실제owner에서실행한다. fort는이미해석된보조metadata이며실제section은reader의할당을쓴다.
@@ -97,6 +98,7 @@ private:
     o::TemplateLifetimeHooks Effects(); // 실제 manager 소멸과 객체 할당 반납을 분리한다.
     std::shared_ptr<o::FortSerializationGlobals> serializationGlobals_; // 모든Image/외부Session보다먼저확보하는실제공유DWORD소유권이다.
     std::shared_ptr<ClientTemplateSectionNames> sectionNames_; // 모든Image보다오래사는동일512BYTE lazy표owner다.독립Storage는새Client상태를한개소유한다.
+    std::function<void(std::int32_t,std::string_view)> diagnosticLog_; // 실제 Client보다 짧은 Template 수명이 빌리는 현재 진단 출력이다. 파일 읽기/일반 생성에는 요구하지 않는다.
     std::array<std::uint8_t,180> headers_{}; // Client보다 짧은 Session이 사라져도 유지되는 실제9개 헤더다.
     std::map<std::uint32_t,std::unique_ptr<Image>> images_; // 호스트 포인터를DWORD로 자르지 않는 실제 소유 객체 표다.
     std::uint32_t nextHandle_{1}; // 서로 살아 있는 manager를 구별하는 비영 호스트 핸들이다.

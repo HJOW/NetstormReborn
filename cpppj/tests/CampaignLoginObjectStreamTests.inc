@@ -1,4 +1,5 @@
 // 실제 단독 로그인 큐에서 객체의 선행 파싱 제거를 확인하며 게임/창/소켓은 실행하지 않는다.
+// 덤프 logger는 명시 비출력 장치를 연결한다. 원문 dump 본체의 목록 순회와 메시지 생성은 제품 경로에서 그대로 수행한다.
 #include "client/FortTypeConversionStorage.h"
 #include "o/RawFortImage.h"
 namespace { // 현재 전역 헤더의 포인터 토큰만 관측하며 manager/섹션을 선택하지 않는다.
@@ -10,7 +11,7 @@ std::uint32_t LoginManager667(CampaignTemplateStorage& storage) { // 로컬 owne
 TEST_CASE(CampaignLoginObjectStream_NormalReloadLeavesObjectViewsEmpty) { // 실제 첫 파일 설치는 State9 지역 읽기 뒤 서버 수신에서 수행한다.
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);const auto bytes=assets.files.Read("d/thewarbegins.fort");
     for (const bool physical:{false,true}) { // 논리 이름과 경로 모양의 manager 이름을 각각 명시 메모리 source로 확인한다.
-        const auto chaff=FortTemplate::Parse(bytes,assets.game.TypeTable()).chaff;LocalStateSessionDevices devices;auto state=std::make_shared<ClientLocalStateGlobals>();auto services=devices.Make(state,true);auto storage=std::make_shared<CampaignTemplateStorage>();auto conversion=std::make_shared<FortTypeConversionStorage>();services.templateStorage=storage;services.fortTypeConversion=conversion;std::size_t reads{},titles{},rights{};
+        const auto chaff=FortTemplate::Parse(bytes,assets.game.TypeTable()).chaff;LocalStateSessionDevices devices;auto state=std::make_shared<ClientLocalStateGlobals>();auto services=devices.Make(state,true);auto storage=std::make_shared<CampaignTemplateStorage>();storage->BindDiagnosticLog([](auto,auto) {});auto conversion=std::make_shared<FortTypeConversionStorage>();services.templateStorage=storage;services.fortTypeConversion=conversion;std::size_t reads{},titles{},rights{};
         services.missionFortFileSelect=[&](auto name) { CHECK(name=="thewarbegins");return MissionFortFileSelection{physical ? "d/current-667.fort" : "thewarbegins",[&] { ++reads;return bytes; }}; };
         services.missionFortLoad.readOnly=[&](auto) { ++rights;CHECK(reads==1 && storage->OwnedImages()==1);return false; }; // 지역 readonly Template는 권한을 조회하지 않으며 서버의 공개된 전역 manager에서만 호출한다.
         services.install.refreshWindowTitle=[&] { ++titles;CHECK(reads==2 && storage->Template(1).chaff.chunks.empty() && storage->Template(1).typeHashes.empty()); };
@@ -25,7 +26,7 @@ TEST_CASE(CampaignLoginObjectStream_BadChaffFailsAfterActualTerritory) { // 재�
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);const auto initial=assets.files.Read("d/thewarbegins.fort");
     for (const bool physical:{false,true}) { // 같은 손상 바이트를 두 manager 이름의 독립 Session에서 소비하며 실제 디스크 읽기로 주장하지 않는다.
         auto fort=FortTemplate::Parse(initial,assets.game.TypeTable());auto image=fort;image.sections.at(CampaignStreamSection("Chaff"))[1]=0;const auto encoded=RawFortImage(OriginalEdition::Patch1078,image,{[&] { return static_cast<std::uint32_t>(assets.types.size()); },{}}).Save();const std::vector<std::uint8_t> bad(encoded.Bytes().begin(),encoded.Bytes().end());
-        LocalStateSessionDevices devices;auto state=std::make_shared<ClientLocalStateGlobals>();auto services=devices.Make(state,true);auto storage=std::make_shared<CampaignTemplateStorage>();auto conversion=std::make_shared<FortTypeConversionStorage>();services.templateStorage=storage;services.fortTypeConversion=conversion;std::size_t reads{},titles{};
+        LocalStateSessionDevices devices;auto state=std::make_shared<ClientLocalStateGlobals>();auto services=devices.Make(state,true);auto storage=std::make_shared<CampaignTemplateStorage>();storage->BindDiagnosticLog([](auto,auto) {});auto conversion=std::make_shared<FortTypeConversionStorage>();services.templateStorage=storage;services.fortTypeConversion=conversion;std::size_t reads{},titles{};
         services.missionFortFileSelect=[&](auto name) { CHECK(name=="thewarbegins");return MissionFortFileSelection{physical ? "d/bad-667.fort" : "thewarbegins",[&] { ++reads;return bad; }}; };
         services.missionFortLoad.readOnly=[](auto) { return false; };services.install.refreshWindowTitle=[&] { ++titles;CHECK(reads==2 && storage->Template(1).chaff.chunks.empty()); };
         RawCampaignSession session(assets.game,assets.files,FortTemplate{},"thewarbegins",std::move(services));CHECK(!storage->OwnedImages() && !reads);bool rejected{};try { session.LoadLocalConnection(); }catch (const std::logic_error& error) { rejected=std::string_view(error.what())=="원본 Objects Template.cpp 진단 890"; }
@@ -38,7 +39,7 @@ TEST_CASE(CampaignLoginObjectStream_BadChaffFailsAfterActualTerritory) { // 재�
 TEST_CASE(CampaignLoginObjectStream_ExistingManagerSkipsServerReadAndKeepsCurrentImage) { // 지역 로그인 이미지는 따로 읽되 전역 manager의 같은 이름/다른 이름 모두 원문 보존 분기를 사용한다.
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);const auto bytes=assets.files.Read("d/thewarbegins.fort");
     for (const bool different:{false,true}) { // CRT 대소문자 일치와 진단 뒤 계속의 두 원문 분기를 실제 Session으로 확인한다.
-        LocalStateSessionDevices devices;auto state=std::make_shared<ClientLocalStateGlobals>();auto services=devices.Make(state,true);auto storage=std::make_shared<CampaignTemplateStorage>();services.templateStorage=storage;storage->InstallFile(1,{},bytes,"Existing.fort");const auto manager=LoginManager667(*storage);std::size_t reads{},rights{},diagnostics{};
+        LocalStateSessionDevices devices;auto state=std::make_shared<ClientLocalStateGlobals>();auto services=devices.Make(state,true);auto storage=std::make_shared<CampaignTemplateStorage>();storage->BindDiagnosticLog([](auto,auto) {});services.templateStorage=storage;storage->InstallFile(1,{},bytes,"Existing.fort");const auto manager=LoginManager667(*storage);std::size_t reads{},rights{},diagnostics{};
         services.missionFortFileSelect=[&](auto name) { CHECK(name=="thewarbegins");return MissionFortFileSelection{different ? "Other.fort" : "eXISTING.FORT",[&] { ++reads;return bytes; }}; };
         services.missionFortLoad.readOnly=[&](auto) { ++rights;return false; };services.missionFortLoad.wrongName=[&] { ++diagnostics;CHECK(LoginManager667(*storage)==manager && reads==1); };
         RawCampaignSession session(assets.game,assets.files,{},"thewarbegins",std::move(services));CHECK(LoginManager667(*storage)==manager && !reads);session.LoadLocalConnection();
@@ -48,7 +49,7 @@ TEST_CASE(CampaignLoginObjectStream_ExistingManagerSkipsServerReadAndKeepsCurren
 
 TEST_CASE(CampaignLoginObjectStream_StrippedTerritoryReadsSharedDwordWithoutByteTruncation) { // CoreData의BYTE 대여와 별개로 strip은005c85d0의 상위24비트도 읽어야 한다.
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);const auto bytes=assets.files.Read("d/thewarbegins.fort");LocalStateSessionDevices devices;auto state=std::make_shared<ClientLocalStateGlobals>();state->BattleTerritory()=0x12340000U;state->BattleByte()=7;
-    CHECK(state->BattleTerritory()==0x12340007U);auto storage=std::make_shared<CampaignTemplateStorage>();auto services=devices.Make(state,true);services.templateStorage=storage;std::size_t reads{};
+    CHECK(state->BattleTerritory()==0x12340007U);auto storage=std::make_shared<CampaignTemplateStorage>();storage->BindDiagnosticLog([](auto,auto) {});auto services=devices.Make(state,true);services.templateStorage=storage;std::size_t reads{};
     services.missionFortFileSelect=[&](auto) { return MissionFortFileSelection{"source.fort",[&] { ++reads;return bytes; }}; };RawCampaignSession session(assets.game,assets.files,{},"thewarbegins",std::move(services));bool failed{};
     try { session.LoadLocalConnection(); }catch (const std::logic_error& error) { failed=std::string_view(error.what())=="로그인이미지복제의원문섹션누락진단"; }
     CHECK(failed && reads==1 && !storage->OwnedImages() && !session.LocalConnectionReady() && state->BattleTerritory()==0x12340007U);
