@@ -59,14 +59,14 @@ struct RawCampaignSession::Impl::Login {
         //낮은지정폭의바이트만바꾸며인접필드는보존한다.
         for (std::size_t i=0;i<width;++i) bytes[at+i]=static_cast<std::uint8_t>(value>>(8*i));
     }
-    //현재 파일을 실제 VFS로 다시 읽어 같은Template/State/territory cursor를 교체한다.
+    // 현재 파일의 서명/원시 섹션만 설치한다. 객체는 실제 World의 Objects 위치에서 읽고 생성한다. 이미 보유한 같은 이름의 원문 생략 수명은 별도 잔여다.
     void Reload(std::uint32_t owner) {
         const auto name=s.templateStorage->Name(owner);if (owner!=1 || name.empty()) throw std::logic_error("로컬 미션 이외 Template 파일 선택 미연결");
         if (s.services.missionFortFileRead) {
             auto fortFile=s.services.missionFortFileRead(s.missionFortName);if (fortFile.fileName.empty()) throw std::runtime_error("미션 파일 reader의 실제 파일 이름 누락"); //명시 파일 source의 실패를 기존 byte reader나 자산 fallback으로 바꾸지 않는다.
-            auto fort=FortTemplate::Parse(fortFile.image,s.assets.game.TypeTable());s.templateStorage->InstallFile(owner,std::move(fort),fortFile.image,std::move(fortFile.fileName));return; //읽기에 쓴 논리 이름은 보존하고 같은 파일의 물리 경로만 새 manager에 설치한다.
+            s.templateStorage->InstallFile(owner,FortTemplate{},fortFile.image,std::move(fortFile.fileName),static_cast<std::int32_t>(s.core.types.size()));return; //읽기에 쓴 논리 이름은 보존하고 같은 파일의 물리 경로만 새 manager에 설치한다.
         }
-        const auto bytes=s.services.missionFortRead ? s.services.missionFortRead(name) : s.assets.files.Read("d/"+name+".fort");s.templateStorage->InstallFile(owner,FortTemplate::Parse(bytes,s.assets.game.TypeTable()),bytes,name); //명시 Client reader는 같은 현재 작업 파일을 다시 읽으며 독립 Session만 기존 d/ 자산 경계를 사용한다.
+        const auto bytes=s.services.missionFortRead ? s.services.missionFortRead(name) : s.assets.files.Read("d/"+name+".fort");s.templateStorage->InstallFile(owner,FortTemplate{},bytes,name,static_cast<std::int32_t>(s.core.types.size())); //명시 Client reader는 같은 현재 작업 파일을 다시 읽으며 독립 Session만 기존 d/ 자산 경계를 사용한다.
     }
     //현재20BYTE zlocal주소에서 실제클라이언트의포트와주소를 제공한다.
     std::array<std::uint8_t,20> Address() const {

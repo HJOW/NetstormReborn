@@ -1,0 +1,73 @@
+{
+  "unit": 666,
+  "date": "2026-11-01",
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "decompileChanged": false,
+  "productChanged": true,
+  "executableSha256": "008ceda80c3cc73482e973e36a11c3b0e6fa047de8c9e6443148115c74012b81",
+  "changes": [
+    "로그인 Reload의 파일 이름/이미지 reader와 BYTE reader에서 FortTemplate 전체 선행 파싱을 제거했다. 현재 타입 수로 서명/원시 섹션을 설치하고 실제 Objects 부모에서 읽고 생성한다.",
+    "정상은 편의 객체/TypeNames 사본 없이 실제145개 저장 위치를 생성한다. 잘못된 Chaff는 지형 생성 뒤 진단890에서 중단하며 현재 변환표·부분 월드·cursor2·외곽 깊이1을 유지한다."
+  ],
+  "focused": {
+    "registered": 72,
+    "finalUnique": 6,
+    "newUnique": 2,
+    "newExplicitSessionInputs": 4,
+    "oldUnique": 4,
+    "failedChecks": 0,
+    "invocations": 3,
+    "testFunctionCalls": 6,
+    "finalLogs": [
+      "extracted/cpp-login-object-stream-666-login-v1.log",
+      "extracted/cpp-login-object-stream-666-async.log",
+      "extracted/cpp-login-object-stream-666-parent.log"
+    ],
+    "initialFailures": [],
+    "scope": "명시 메모리 입력을 두 기존 reader로 각각 정상/손상 설치한다. 실제 파일 이름은 manager 이름 계약이며 실제 디스크 재읽기 검사가 아니다. 기존 비동기 접속/timeout·부모 World 교체/예외4개를 재확인했다.",
+    "limits": "다른66등록/주 검사 전체·GUI·실제 게임 프레임/포획/희생/특정 적 공격/승리를 재현하지 않았다."
+  },
+  "native": {
+    "newCases": 0,
+    "newObservations": 0,
+    "newFixture": false,
+    "replayedUniqueRows": 0,
+    "staticInstructions": 273,
+    "staticLog": "extracted/cpp-login-object-stream-666-native.txt",
+    "scope": "004a6c50→004bf550 파일 설치와004b5300→004be610 객체 소비를 보호 PE로 정적 대조했다. 새/기존 Native 실행 기록을 재생한 단위가 아니다.10.72 추가 대조는 없다."
+  },
+  "builds": [
+    {
+      "log": "extracted/cpp-login-object-stream-666-build-v1.log",
+      "exitCode": 0,
+      "warnings": 0,
+      "errors": 0
+    }
+  ],
+  "protected": {
+    "baseline645Checked": 4,
+    "checked": 4,
+    "differences": 0,
+    "sha256": {
+      "AGENTS.md": "e9e46fda5519e663417b5c8d9b643549196bf28fe7ba6b1d546a48a853fd208b",
+      "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+      "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6"
+    },
+    "fullAuditRepeated": false
+  },
+  "actualGameRuns": 0,
+  "full34Repeated": false,
+  "newZip": false,
+  "mainTestExecutableRebuilt": false,
+  "multiplayerTests": 0,
+  "pauseAfterThisUnit": true,
+  "pauseReason": "사용자가2026-11-01 현재 작업 완료·문서 작성·git 커밋 뒤 목표 일시 중지를 요청했다.",
+  "remaining": [
+    "최우선 재개 지점: 원본004bf550은 같은 이름 manager가 이미 있으면 읽기를 생략한다. 현행 Login.Reload는 InstallFile로 재설치하므로 최초 Template 설치/호출 맥락과 함께 이 수명을 대조해 연결해야 한다. 이번 단위는 선행 객체 파싱 제거만 완료했다.",
+    "UberGump 최초 미션 파싱과 진단 객체 수/레거시 MissionPlayers 입력의 시점, 다른 Template 소비자·전체 FILE/SEH ABI/할당·부분 I/O 실패",
+    "Edit 도구/소유자/시나리오·연속 미션/UI·호환성, 이후 MP 무시험 사전 구현·4~7차. 자연 완주/전체 동일성은 사용자 확인 대상이며 실제 실행 통합은 더 많은 기능 묶음 뒤 필요한 범위만 수행한다."
+  ]
+}

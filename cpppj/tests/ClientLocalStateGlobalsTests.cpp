@@ -235,3 +235,5 @@ TEST_CASE(GameAux_SessionIdentityFailureLeavesBothOwnersUnchanged) {
 #include "EditorEntryPreludeTests.inc" // State1의 공통 출처/첫BYTE와 실제 로컬52h 예약을 cleanup 전에 확인한다.
 
 #include "CampaignObjectStreamSessionTests.inc" // 실제 캠페인 객체 child도 원시 섹션과 같은 변환표/예외 수명을 사용하는지 확인한다.
+
+#include "CampaignLoginObjectStreamTests.inc" // 로그인 재읽기도 객체의 실제 소비 시점과 부분 월드를 유지하는지 확인한다.
