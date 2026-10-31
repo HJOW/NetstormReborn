@@ -1,0 +1,87 @@
+{
+  "unit": 661,
+  "date": "2026-10-31",
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "productChanged": true,
+  "executableSha256": "107eb70c9306c40fee1690272b311f0e8a8d97ccbb6957e5ac4cdf56e85cf96c",
+  "changes": [
+    "실제 State1의 cleanup 전 출처 선택/제목 첫BYTE0/이전 Battle14 통지를 연결했다. SourceType 선택과 현재 battle/phase 조건은 State3과 같은 함수로 공유한다.",
+    "State1과 State3은 같은 MakeBattleLeavePacket/로컬9 전송 함수를 사용한다. 수신/flush를 추가로 강제하지 않는다. State1에서 State3 전용 승패 결과/전체 배경/음악을 실행하지 않는다.",
+    "확인된 State7 +84 재접속 직접 작성은 일반 전투의 서버 이전이며 저장 writer는 !missionPost/PlayerKnown에 제한된다. 신규 재접속 검사를 만들지 않고 후순위MP 사전 구현으로 구분했다."
+  ],
+  "focused": {
+    "registered": 60,
+    "finalUnique": 11,
+    "newUnique": 2,
+    "newInputs": 5,
+    "oldUnique": 9,
+    "failedChecks": 0,
+    "invocations": 4,
+    "testFunctionCalls": 11,
+    "logs": [
+      "extracted/cpp-editor-entry-prelude-661-focused-v1.log",
+      "extracted/cpp-editor-entry-prelude-661-menu.log",
+      "extracted/cpp-editor-entry-prelude-661-state.log",
+      "extracted/cpp-editor-entry-prelude-661-parent.log"
+    ],
+    "initialFailures": [],
+    "scope": "실제 단독 Session을 로그인/완료한 뒤 세 이전phase/battle 조합의 State1 앞단을 실행했다. 출처/첫BYTE/phase 경계와 실제52h 예약·지연 수신/Player flag를 확인했다. 누락/실패2입력은 cleanup/State1 확정 전에 중간 쓰기를 보존했다. 기존 State3 여섯 개/Native33/World 부모 두 개를 재대조했다.",
+    "limits": "cleanup은 명시 외부 경계이며 새 Editor 전체 파일/도구/GUI 설치를 실행한 근거가 아니다. 다른49등록과 주 검사 전체는 실행하지 않았다."
+  },
+  "native": {
+    "newCases": 0,
+    "newObservations": 0,
+    "newFixture": false,
+    "replayedRows": 115,
+    "existingRows": {
+      "nativeMainMenuObservations": 82,
+      "nativeMainMenuUniqueInputs": 41,
+      "localStateRows": 33
+    },
+    "staticInstructions": 129,
+    "scope": "기존 State3의41입력/두 제어워드82관측과 State33행을 같은 공유 함수/공통부로 재대조했다. State1/3 공통 조건·통지/cleanup 순서와 일반 전투 저장/이전 경계129명령은 정적 확인이며 새 원문 실행 관측이 아니다. BattleLeave 기존fixture는 보호 대조만 했으며 별도 재실행 수에 더하지 않는다."
+  },
+  "reconnectStatic": {
+    "writer": "004b54e0: missionPost0 && PlayerKnown 비영",
+    "request": "004b8cb0→004b8f4d next7/004b8f57 next+84=1, Server down/reconnecting",
+    "startup": "004b5890 저장 내용/참여자 검증→004b5ba0 StateReconnect 질문",
+    "scope": "확인한 직접 작성/정상 호출 경로를 분류했다. 간접 alias 전체 부재를 증명한 것이 아니며 startup 질문/삭제 UI는 유지한다."
+  },
+  "build": {
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "logs": [
+      "extracted/cpp-editor-entry-prelude-661-build-v1.log"
+    ]
+  },
+  "protected": {
+    "baseline": "extracted/cpp-solo-entry-645-20261031/protected-after-current.json",
+    "checked": 7,
+    "differences": 0,
+    "sha256": {
+      "AGENTS.md": "e9e46fda5519e663417b5c8d9b643549196bf28fe7ba6b1d546a48a853fd208b",
+      "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+      "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6",
+      "cpppj/tests/fixtures/local-mission-state-x86.tsv": "b591cc51ffd837ce29d04e8090c066d33f5baf4abc1b3c863371346f161d2995",
+      "cpppj/tests/fixtures/native-main-menu-state-x86.tsv": "1620edbc7050afbef2ec63c59ca73d4306d8ece1fba8737dc4f267f037264dd8",
+      "cpppj/tests/fixtures/battle-leave-x86.tsv": "6e9dc86d33269670b369531fd064727a925695fd741bd4343001a6b7254353a6"
+    },
+    "fullAuditRepeated": false
+  },
+  "decompileChanged": false,
+  "actualGameRuns": 0,
+  "actualCdEnumeration": false,
+  "newZip": false,
+  "full34Repeated": false,
+  "mainTestExecutableRebuilt": false,
+  "multiplayerTests": 0,
+  "remaining": [
+    "State1/LeaveEditMode의 나머지 파일/지형/소유자/시나리오 조합과 실제 전체 전환·UI 픽셀",
+    "서버 이전/존재하는 저장상태 재접속·Zone0/메타 Poll/시계 패킷 등록·외부 동기화는 후순위MP 무시험 사전 구현",
+    "기타 UI/연속 미션·호환성·BaseFile 소비자/ABI·시작 레지스트리/메타State19/LeaveBattle·4~7차"
+  ]
+}

@@ -44,7 +44,7 @@ void UberGump::OpenSaveFortNameDialog(std::uint32_t fortMode) {
 //State1과3이 같은 Native 장치의 공통 준비를 원문 순서로 사용하고 선택 Editor 전역만 구별한다.
 void UberGump::PrepareNativeFortState(bool editing) {
     if (!editor_) throw std::logic_error("실제 State1/3 공통 장기 장치 누락");
-    if (editing) htmlGlobals_.background[0]=0; //원문004b7016은 State1의 HUD 재생성 전에00565e70 첫BYTE를 지운다. State3이 이미 선택한 titleMenu/승패 배경은 보존한다.
+    if (editing) PrepareNativeEditorEntry(client_.LocalStateGlobals()->State(),client_.LocalStateGlobals()->SourceType(),htmlGlobals_.background,client_.SurfaceStorage()->ownerMode.battle,[this] { if (!world_) throw std::logic_error("State1의 이전 Battle14 실제 Session 없음");SendBattleLeaveForState(world_->Session()); }); // 공통 출처/첫BYTE/이전 Battle 통지를 cleanup 전에 처리하며 State3의 전용 효과는 반복하지 않는다.
     CleanupNativeStateWorld(0); //실제 연결/AI/Deck/Kernel/Core/풀/HUD를 같은 원문 순서로 반납하고 새 Player를 만든다.
     if (commandGump_) static_cast<void>(rawButtons_->BubbleGump(commandGump_,0x02000088U,0,0)); //0042e440의 현재 Chat 부모 숨김이다.
     auto& e=*editor_;if (e.transport) e.transport->CloseListener(); //앞선 CloseAll이 닫은 이전 양끝 뒤에 이전 listener만 반납한다.
@@ -130,7 +130,7 @@ o::LocalMissionParentResult UberGump::InstallMainMenuNativeState(std::uint32_t s
         const auto types=client_.Assets().TypeTable().Types();if (type>=types.size()) throw std::out_of_range("State3 source TYPE 이름 범위");const auto name=types[type].name;
         if (!client_.Files().TryRead("d/"+name+".gif")) return std::nullopt;return name; //원문 고정 data 디렉터리의 .gif 존재만 판정하며 없는 파일을 생성하지 않는다.
     };
-    hooks.leaveBattle=[this] { if (!world_) throw std::logic_error("State3의 이전 Battle14 실제 Session 없음");const auto packet=MakeBattleLeavePacket();world_->Session().SendLocalPacket(9,packet); }; // 원문처럼 전체 cleanup 전에 같은 로컬9에52h를 예약하며 수신/flush를 강제하지 않는다.
+    hooks.leaveBattle=[this] { if (!world_) throw std::logic_error("State3의 이전 Battle14 실제 Session 없음");SendBattleLeaveForState(world_->Session()); }; // State1과 같은 실제52h 예약이며 수신/flush를 강제하지 않는다.
     hooks.prefix=[this] { PrepareNativeFortState(false); };hooks.hudPrefix=[this] { ApplyHudModeForState(1); };
     hooks.title=[this] { RefreshWindowTitle(); };hooks.closeGuide=[this] { ReleaseCurrentGuideMission(); };
     hooks.tell=[this](auto section) { Tell(std::string(section)); };hooks.startup=[this] { return o::CheckStartupState(EditorStartupStateHooks()); };

@@ -8,6 +8,9 @@
 #include <string_view>
 
 namespace netstorm::client { //호스트 메뉴 표시와 Native State 공통 확정을 분리한다.
+std::uint32_t ReadNativeFortEntrySource(std::uint32_t phase,std::uint32_t& sourceType); // State1/3 공통 앞단의 signed 이전phase<=6 또는11이면 출처0을 쓰고 현재 출처를 보관한다.
+void NotifyNativeFortEntryLeave(o::LocalMissionStateStorage state,const bool& battle,const std::function<void()>& leave); // 현재 battle/이전phase14일 때만 cleanup 전 같은52h 알림 장치를 호출한다.
+void PrepareNativeEditorEntry(o::LocalMissionStateStorage state,std::uint32_t& sourceType,std::span<char> background,const bool& battle,const std::function<void()>& leave); // 실제 current1의 출처/제목 첫BYTE/이전 Battle 통지를 처리한다. State3 전용 승패/배경/음악을 실행하지 않는다.
 // 실제 Client가 장기 소유하는 각 전역/이름 물리의 참조다. 이 부모는 별도 복원값을 소유하지 않는다.
 struct NativeMainMenuStateGlobals {
     o::LocalMissionStateStorage state; //같은 다섯144BYTE이며 현재 State3/이전phase를 원문 위치마다 읽는다.

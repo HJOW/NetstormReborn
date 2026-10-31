@@ -4,8 +4,9 @@ struct MissionParentTime {
     double game{},wall{100.25}; // Native 부모가 참조하는 서로 다른 현재 시각이다.
     std::uint8_t title{0x4d}; // 기본 분모 뒤 지우는 실제 첫BYTE의 명시 장치다.
 };
-std::unique_ptr<RawLocalMissionState> MakeMissionParent(MissionAsyncScene& scene,MissionParentTime& time,std::vector<std::uint32_t>& phases,std::function<void(std::span<const std::uint8_t>,std::uint32_t)> connect) { // 모든 참조는 반환 부모보다 오래 살며 실제 Client와 같은 장기 물리를 빌린다.
+std::unique_ptr<RawLocalMissionState> MakeMissionParent(MissionAsyncScene& scene,MissionParentTime& time,std::vector<std::uint32_t>& phases,std::function<void(std::span<const std::uint8_t>,std::uint32_t)> connect,std::function<LocalMissionParentResult(std::uint32_t)> fortEntry={}) { // 장기 참조는 부모보다 오래 살며 Editor 검사는 같은 State1 큰 부모 경계를 명시 제공한다.
     auto& local=*scene.state;auto& game=*scene.gameplay;auto& storage=*scene.surface;LocalMissionStateHooks hooks;hooks.wallSeconds=[&scene] { return scene.devices.wall; };hooks.connectServer=std::move(connect);
+    hooks.parentState=std::move(fortEntry); // 선택한1/3 부모만 사용하며 새 미션7의 기존 입력은 빈 경계를 유지한다.
     hooks.logState=[&scene,&phases](auto value) { phases.push_back(value);if (value==7) { const auto state=scene.state->State();auto copied=state.current;copied[0]=0;CHECK(state.next==copied && state.immediate==copied && !scene.request->starting && scene.world && scene.gameplay->Borrowed()); } }; // 최초 복사/로그는 기존 World가 살아 있고 앞단이 실행되기 전이다.
     return std::make_unique<RawLocalMissionState>(OriginalEdition::Patch1078,local.State(),LocalMissionStateGlobals{game.Server(),game.Boss(),storage.ownerMode.battle,game.world.missionPost,local.SavedGame(),storage.links.mission,local.Simulconnect(),storage.ownerMode.challenge,game.player,local.ZonePending(),local.GameTicks(),local.SourceType(),local.CdPresent(),local.Blocks()[2][33],local.MetaRefresh(),local.MetaRebuild(),time.title,local.BattleByte(),local.ConnectEnd(),local.ActivityEnd(),time.game,time.wall},std::move(hooks));
 }

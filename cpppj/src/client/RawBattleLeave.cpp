@@ -1,9 +1,12 @@
 // 원본0040aa60·004a71a0·004b3540의 직접 쓰기를 실제 로컬 전송/상태에 연결한다.
 #include "client/RawBattleLeave.h"
+#include "client/RawCampaignSession.h"
 #include "client/MissionGuideInput.h"
 #include <stdexcept>
 
 namespace netstorm::client { // 패킷과 Player는 호출자가 소유한 같은 물리만 변경한다.
+// 기존 패킷 작성/로컬 전송을 Editor 복귀와 메인 복귀가 같은 순서로 호출한다.
+void SendBattleLeaveForState(RawCampaignSession& session) { const auto packet=MakeBattleLeavePacket();session.SendLocalPacket(9,packet); }
 // 생성자0040aa60의 고정 헤더만 쓰고 원문이 지정하지 않은 본문은 호출자에게 남긴다.
 void InitializeBattleLeavePacket(std::span<std::uint8_t> packet) {
     if (packet.size()<4) throw std::out_of_range("전투 종료 패킷 헤더 물리 부족");

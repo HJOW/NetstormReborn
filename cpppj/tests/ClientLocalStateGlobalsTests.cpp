@@ -232,3 +232,4 @@ TEST_CASE(GameAux_SessionIdentityFailureLeavesBothOwnersUnchanged) {
 #include "MissionStartingCommitTests.inc" // 실제7 공통 확정/안내 위치와 미확정 예외의 부분 반납을 확인한다.
 #include "MissionStartingPrefixTests.inc" // 실제 기본 배경 분모/정리 전 지역 값과 살아 있는 Native 요청을 확인한다.
 #include "MissionStartingParentTests.inc" // 앞단 전 최초 복사/로그와 두 World 사이의 같은 부모7/8 확정을 확인한다.
+#include "EditorEntryPreludeTests.inc" // State1의 공통 출처/첫BYTE와 실제 로컬52h 예약을 cleanup 전에 확인한다.

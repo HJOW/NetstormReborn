@@ -5,6 +5,8 @@
 #include "o/RawLocalMissionState.h"
 
 namespace netstorm::client { // 같은 실제 Player/상태 저장소를 빌리는 전투 종료 경계다.
+class RawCampaignSession; // 같은 실제 로컬9 전송/큐를 소유하는 현재 Session이다.
+void SendBattleLeaveForState(RawCampaignSession& session); // State1/3의 cleanup 전52h/본문0을 같은 실제 로컬9에 예약한다. 강제 수신/flush는 하지 않는다.
 inline constexpr std::size_t kBattleLeavePacketBytes=5; //0052ee16의 type52/version1/length5 고정 규격이다.
 void InitializeBattleLeavePacket(std::span<std::uint8_t> packet); //0040aa60처럼 앞4BYTE만 쓰고 나머지 입력 물리는 보존한다.
 std::array<std::uint8_t,kBattleLeavePacketBytes> MakeBattleLeavePacket(); //State3가 생성자 뒤 다섯째 BYTE를0으로 쓴 실제 통지다.
