@@ -79,6 +79,26 @@ public sealed class PlayerParticipationHooks
 /// </remarks>
 public sealed class PlayerParticipation
 {
+    /// <summary>같은 참여 모듈에서 정상적으로 AI reset을 마친 owner의 일회용 반납 증빙이다.</summary>
+    public sealed class BrainResetPass
+    {
+        /// <summary>증빙을 만든 실제 모듈이다.</summary>
+        internal PlayerParticipation Source { get; }
+        /// <summary>정상 reset을 마친 소유자다.</summary>
+        public uint Owner { get; }
+        /// <summary>증빙을 이미 소비했는지 나타낸다.</summary>
+        internal bool Consumed { get; set; }
+        /// <summary>같은 모듈이 정상 reset 후 증빙을 만든다.</summary>
+        /// <param name="source">실제 모듈.</param><param name="owner">정상 reset된 소유자.</param>
+        internal BrainResetPass(PlayerParticipation source, uint owner) { Source = source; Owner = owner; }
+    }
+
+    /// <summary>owner별 정상 반납 증빙을 보관한다. 중립 0은 사용하지 않는다.</summary>
+    private readonly BrainResetPass?[] _returnedBrains = new BrainResetPass?[PlayerCount];
+
+    /// <summary>실제 파괴·반납 콜백이 진행 중인 호출 수다.</summary>
+    private int _activeBrainCalls;
+
     /// <summary>Player 기록 하나의 폭(0xb4바이트).</summary>
     public const int PlayerStride = 0xb4;
 
@@ -310,6 +330,7 @@ public sealed class PlayerParticipation
     /// <param name="brain">실제 AI 소유자가 만든 불투명 토큰.</param>
     public void AttachBrain(uint owner, uint brain)
     {
+        if (BrainReturnedForState(owner)) throw new InvalidOperationException("반납된 AI 소유자에 brain을 다시 설치할 수 없다");
         if (Read(owner, BrainOffset) != 0) Require(_hooks.Assertion)(PlayerParticipationAssertion.BrainAlreadyAssigned);
         Put(owner, BrainOffset, brain);
         Put(owner, FlagsOffset, Read(owner, FlagsOffset) | BrainFlag);
@@ -328,11 +349,48 @@ public sealed class PlayerParticipation
     /// <param name="owner">Player 번호.</param>
     public void RemoveBrain(uint owner)
     {
+        if (BrainReturnedForState(owner)) throw new InvalidOperationException("반납된 AI 소유자를 다시 reset할 수 없다");
         uint brain = Brain(owner);
         if (brain == 0) return;
-        Require(_hooks.DestructBrain)(brain);
-        Require(_hooks.FreeBrain)(brain);
-        Put(owner, BrainOffset, 0);
+        _activeBrainCalls++;
+        try
+        {
+            Require(_hooks.DestructBrain)(brain);
+            Require(_hooks.FreeBrain)(brain);
+            Put(owner, BrainOffset, 0);
+        }
+        finally { _activeBrainCalls--; }
+    }
+
+    /// <summary>소유자 1~8의 실제 reset 정상 복귀 뒤에만 같은 모듈의 반납 증빙을 만든다.</summary>
+    /// <param name="owner">reset할 실제 소유자.</param>
+    public BrainResetPass RemoveBrainForState(uint owner)
+    {
+        if (owner < 1 || owner >= PlayerCount) throw new ArgumentOutOfRangeException(nameof(owner));
+        RemoveBrain(owner);
+        return new BrainResetPass(this, owner);
+    }
+
+    /// <summary>같은 모듈의 미사용 증빙과 현재 brain 0을 확인한 뒤 반납을 확정한다.</summary>
+    /// <param name="pass">정상 reset으로 발급된 일회용 증빙.</param>
+    public void ReturnBrainForState(BrainResetPass pass)
+    {
+        ArgumentNullException.ThrowIfNull(pass);
+        if (pass.Source != this || pass.Consumed || pass.Owner < 1 || pass.Owner >= PlayerCount) throw new ArgumentException("같은 AI 모듈의 미사용 reset 증빙이 필요하다", nameof(pass));
+        if (_activeBrainCalls != 0) throw new InvalidOperationException("AI 파괴·반납 효과 중 증빙을 소비할 수 없다");
+        if (_returnedBrains[pass.Owner] != null || Brain(pass.Owner) != 0) throw new InvalidOperationException("brain이 없는 미반납 소유자 증빙이 필요하다");
+        _returnedBrains[pass.Owner] = pass;
+        pass.Consumed = true;
+    }
+
+    /// <summary>실제 반납 증빙이 있는지 조회하며 반납 후 원시 brain 변조를 명시적으로 거부한다.</summary>
+    /// <param name="owner">조회할 Player 번호.</param>
+    public bool BrainReturnedForState(uint owner)
+    {
+        PlayerBase(owner);
+        if (_returnedBrains[owner] == null) return false;
+        if (Brain(owner) != 0) throw new InvalidOperationException("반납된 AI 소유자의 brain이 변경됐다");
+        return true;
     }
 
     /// <summary>플레이어 1~8 의 현재 brain 을 각 방문 시점에 새로 읽어 모두 해제한다(00413b20). 중립 0 은 대상이 아니다.</summary>

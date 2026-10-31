@@ -823,6 +823,12 @@
 - **검증:** 독립 `mission-start-x86.tsv`의 AI 설정 124행(init 20, apply 64, ability 32, prepare 8)이 전체 600바이트와 조회·진단 순서까지 일치했다. 효과 누락·크기 오류와 실제 미션 설정 연결도 통과했다. 기존 fixture를 사용했으며 포트 맵 2행을 L1로 추가했다. 전체 Release 2,033개(Assets 364, Core 1,045, Client 624)가 통과했고 실패·건너뜀은 0이다.
 - **남은 작업:** AI 설정의 실제 Session 소유자·생성자/초기 갱신 및 전략 AI 연결은 미완료다. 같은 fixture의 AI 생성 32행도 아직 이식·검사하지 않았다. 전체 목표는 미완료이며 게임/창 실행 및 디컴파일은 하지 않았다.
 
+### 0.72 단위 기록 — AI 생성과 Player 반납 수명 (2026-10-31, HJOW-Athlon)
+
+- **구현:** cpppj `o/RawAiCreate.h/.cpp`(기준 `53a0e4f9`)의 색 변경→기존 brain→NoTemple→실제 생성→Player 부착→초기 갱신 순서를 이식했다. `PlayerParticipation`에 cpppj의 정상 reset 증빙·소유자 반납·파괴 콜백 중 소비 금지·반납 뒤 재설치 거부를 추가했다. 실제 AI 본체/초기 갱신이 없으면 가짜 brain을 부착하지 않는다. 이 수명 추가는 PlayerParticipation의 최신 cpppj 변화 전체를 이식했다는 뜻이 아니다.
+- **검증:** `mission-start-x86.tsv`의 AI 생성 32행이 Player 180바이트와 효과 순서까지 일치했다. 기존 Player 원본 검사 및 증빙 소유·중복·재진입·원시 변조 검사 등 집중 8개 통과. 이로써 이 fixture의 start 48, AI 설정 124, create 32 등 독립 입력 204행을 각 대응 단위에서 검사했다. 포트 맵 2행 L1 추가, fixture 신규 등록 없음. 전체 Release 2,037개(Assets 364, Core 1,049, Client 624)가 통과했고 실패·건너뜀은 0이다.
+- **남은 작업:** 실제 AI 생성자·초기 갱신·전략 AI 및 세션과의 연결은 미완료다. PlayerParticipation의 현재 getter 등 나머지 cpppj 변화도 별도 재대조해야 한다. 메뉴·월드·HUD·Edit·멀티플레이 사전 구현과 전체 목표는 미완료다. 게임/창 실행 및 디컴파일은 하지 않았다.
+
 ## 1. 지금까지의 완료 범위 — 이관 기록 색인
 
 단위별 상세는 [LEFT_JOBS.dotnetpj.old.md](LEFT_JOBS.dotnetpj.old.md)와 아래 문서에 있다. 마지막 판정 열은 0절 계획에서 그 결과를 어떻게 다루는지다([0.4](#04-기존-dotnetpj-소스의-재수정-판정)).
