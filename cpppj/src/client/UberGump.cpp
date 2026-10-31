@@ -688,17 +688,18 @@ void UberGump::LoadMissionWorldBody(std::optional<std::string> requestedFort) {
     }
     if (!missionRuntime_->guided) { missionRuntime_->gate.tutorialNumber=std::bit_cast<std::uint32_t>(o::ConfigParseLong(mission_->Get("tutorialNumber").value_or("")));ApplyMissionDemo(mission_->Get("demo").value_or(""),missionRuntime_->gate.demo);o::ResetMissionBattleOptions(o::OriginalEdition::Patch1078,*missionOptions_);o::SetTotalMadeAllowAll(*missionRestrictions_,1);initLoginSubscriber_=1; }
     const auto selectedFort=missionFortRequest_ ? missionFortRequest_->fort : (requestedFort ? *requestedFort : mission_->FortName()); // 실제 선택/요청에서 캡처한 이름을 이후 설정 재조회로 바꾸지 않는다.
-    auto fortFileRead=mission_->FortFileReader([workspace=editorCatalog_,root=client_.GameDirectory(),working=static_cast<bool>(mission_->FileSource())](std::string_view configured) {
-        if (working) return platform::PathToUtf8(workspace->Resolve(configured));const auto path=platform::PathFromUtf8(configured);return platform::PathToUtf8((path.is_absolute() ? path : root/path).lexically_normal()); //같은 선택 namespace의 실제 파일 이름을 반환하며 mapper에서 Fort를 다시 읽지 않는다.
+    auto fortFileSelect=mission_->FortFileSelector([workspace=editorCatalog_,working=static_cast<bool>(mission_->FileSource())](std::string_view configured) {
+        return working ? platform::PathToUtf8(workspace->Resolve(configured)) : std::string(configured); // 작업본만 실제 writable 경로를 사용하고 기본 자산은 원문 fortSpec 이름으로 출처/권한을 조회한다.
     });
-    auto fortFile=fortFileRead(selectedFort);const auto fortImage=std::make_shared<const std::vector<std::uint8_t>>(std::move(fortFile.image));auto fort = o::FortTemplate::Parse(*fortImage, client_.Assets().TypeTable()); //최초 설치도 같은 fortSpec 선택의 파일 이름/이미지를 함께 보유한다.
-    // 전체 요새 레코드를 세어 자동 검사에서 미션 선택과 파일 로드를 함께 확인한다.
-    const auto count = [this](const o::FortChunkSection& section) { for (const auto& chunk : section.chunks) fortObjects_ += chunk.objects.size(); };
-    fortObjects_ = 0; count(fort.chaff);
-    // 플레이어 영역의 저장 오브젝트를 포함한다.
-    for (const auto& section : fort.territories) count(section);
-    // Starting Cash 옵션의 기본 인덱스 1은 6500 SP다(0052f5d0 옵션 표). 옵션 전체 복사는 후속이다.
-    auto players=o::MissionPlayers::Load([this](std::string_view key) { return mission_->Get(key); },fort,client_.Assets().TypeTable(),6500);
+    o::FortTemplate fort; // 실제10.78은 State9의 지역 읽기와 서버 수신의 전역 설치 전까지 편의 파싱 자료를 만들지 않는다.
+    o::MissionPlayers players; // 실제 Player/SP/기술은 raw Start가 읽는다. 이 구형 표시 사본은10.72 어댑터에서만 만든다.
+    MissionFortSourceImage fortFile; //10.72의 기존 동기 설치만 최초 파일 이미지를 보관한다.
+    std::shared_ptr<const std::vector<std::uint8_t>> fortImage; //10.78은 선행 I/O가 없으므로 비어 있다.
+    fortObjects_=0;
+    if (!nativePlayers) {
+        auto selected=fortFileSelect(selectedFort);fortFile={selected.read(),std::move(selected.fileName)};fortImage=std::make_shared<const std::vector<std::uint8_t>>(std::move(fortFile.image));fort=o::FortTemplate::Parse(*fortImage,client_.Assets().TypeTable());
+        players=o::MissionPlayers::Load([this](std::string_view key) { return mission_->Get(key); },fort,client_.Assets().TypeTable(),6500); //10.72 전체 State 복원 전까지 기존 표시 입력을 유지한다.
+    }
     // 1-1/1-2도 원본 missionType은 Tutorial이다. 지원 두 종류 모두 같은 실제 raw 월드를 생성한다.
     auto services=MakeCampaignClientServices(client_,*rawButtons_,{
         [this] { RefreshWindowTitle(); },[this](std::string_view key) { Tell(std::string(key)); },
@@ -707,8 +708,15 @@ void UberGump::LoadMissionWorldBody(std::optional<std::string> requestedFort) {
     if (nativePlayers) services.localLogin->startingProgress=[this] { rawButtons_->Menus()->ShowMissionLoading(LoadingHtmlContext({85,0,client_.GetScreen().Width(),client_.GetScreen().Height()}),FontBytes(client_.Translate("Starting Mission...")),[this] { return FontBytes(client_.Translate("Cancel")); });rebuild_=true; }; // 실제 인자20/즉시8 예약 뒤 만들며 중첩 Compose/Present/프레임 대기를 추가하지 않는다.
     services.factoryHelp=[this](std::string_view section,std::uint32_t mode) { const auto token=scriptStrings_.Store(section);if (token>0x0fffffffU) throw std::overflow_error("Factory 도움말 문자열 별칭 토큰 소진");rawButtons_->Menus()->OpenHelp(0x70000000U|token,static_cast<std::int32_t>(mode),0); }; //기존Help와같은문자열고리/별칭과실제전용창을사용한다.
     services.missionOutcome.demo=[this] { return missionRuntime_ ? missionRuntime_->gate.demo : 0U; };
-    services.missionOptions=missionOptions_;services.missionRestrictions=missionRestrictions_;services.missionFortRequest=missionFortRequest_;services.templateStorage=templateStorage_;services.missionFortImage=fortImage;services.missionFortRead=mission_->FortReader(); //같은 Init/요청/Template와 최초 원문 및 로그인 재로드 reader를 함께 전달한다. reader는 현재 Mission 포인터를 나중에 다시 읽지 않는다.
-    services.missionFortFileName=std::move(fortFile.fileName);services.missionFortFileRead=std::move(fortFileRead); //실제 manager 파일 이름은 최초/재로드 모두 같은 읽기의 경로이며 논리 요새 이름은 Session이 따로 소유한다.
+    services.missionOptions=missionOptions_;services.missionRestrictions=missionRestrictions_;services.missionFortRequest=missionFortRequest_;services.templateStorage=templateStorage_; // 같은 Init/요청/Template 소유자만 전달하며10.78의 파일 읽기를 State7에 추가하지 않는다.
+    if (nativePlayers) {
+        services.missionFortFileSelect=[this,select=std::move(fortFileSelect)](auto) {
+            const auto current=client_.FortGlobals()->Current();if (current.empty()) throw std::logic_error("현재 Fort 파일 선택의 원문 빈 이름 진단");
+            return select(o::DecodeOriginalText({reinterpret_cast<const std::uint8_t*>(current.data()),current.size()})); //00460680은 각 지역/서버 읽기 시점의 같은 curFort를 재조회하며 최초 요청 이름으로 고정하지 않는다.
+        };services.missionFortLoad.readOnly=[this](auto path) { return client_.Files().ReadOnly(path); };
+        services.missionFortLoad.tooManyTypes=[] { throw std::logic_error("미션 Template 파일의 numTypes<256 진단"); };
+        services.missionFortLoad.rejectFile=[](auto path) { throw std::runtime_error("미션 Template 잘못된 서명의 원본 삭제 요청: 보호 파일은 삭제하지 않습니다: "+std::string(path)); }; // 원본 삭제 요청을 보호 자산에 자동 적용하지 않는다.
+    } else { services.missionFortImage=fortImage;services.missionFortFileName=std::move(fortFile.fileName);services.missionFortRead=mission_->FortReader(); } //10.72의 기존 부분 어댑터만 동기 입력을 유지한다.
     services.fortBadges=client_.FortBadges();services.fortMission=FortMissionSaveEffects(); // 실제 Client 단일 장부와 현재 Runtime getter를 같은 Session에 빌린다.
     services.fortTypeConversion=client_.FortTypeConversion(); // 같은 Client의 현재 타입 변환표 소유자를 전달한다.
     services.missionOutcome.tellBlocked=[this] { return state_.phase==ClientPhase::Dialog || state_.phase==ClientPhase::Briefing ? 1U : 0U; };
@@ -748,6 +756,7 @@ void UberGump::FinishMissionWorldLoad() {
         ~LoadingRetirement() { if (menus.MissionLoadingOpen()) menus.CloseMissionLoading(); } // 이미 닫힌 안내를 다시 반납하지 않고 실패의 잔여 노드만 정리한다.
     };
     LoadingRetirement loading{*rawButtons_->Menus()};const auto type=o::AsciiLower(mission_->MissionType()); // 완료 사이 다른 Script의 형식을 사용하지 않는다.
+    fortObjects_=world_->Session().World().Objects().size(); // 진단 mission 행은 선행 저장 레코드 수 대신 실제 설치 완료 시점의 월드 객체 수를 관측한다.
     if (type=="tutorial" && !missionRuntime_->guided) ApplyMissionTechnology(*mission_,client_.Assets().TypeTable(),world_->Session().TotalMade()); // guided Header는 이미 설치 전 같은 전역 표를 썼다.
     userInput_=std::make_unique<UserInput>(client_,*world_);
     // 브리핑으로 게임 시계가 멈추기 전에도 첫 카메라/표시 영역이 음악·효과음에 전달되게 한다.

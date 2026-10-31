@@ -75,7 +75,9 @@ public:
     std::uint32_t& MetaRefresh() { return metaRefresh_; } //005c85d8의 현재 메타 갱신 예약 DWORD다.
     std::uint32_t& MetaRebuild() { return metaRebuild_; } //005c85dc의 별도 메타 재구성 예약 DWORD다.
     bool& Simulconnect() { return simulconnect_; } //0054db50의 정상0/1을 모든 State 소비자가 함께 읽는다.
-    std::uint8_t& BattleByte() { return battleByte_; } //005c85d0의 첫 BYTE이며 인접 stateAuxCC와 다른 저장소다.
+    std::uint8_t& BattleByte() { return reinterpret_cast<std::uint8_t&>(battleTerritory_); } //005c85d0의 첫 BYTE를 같은DWORD에서 빌린다. CoreData의BYTE writer는 나머지3BYTE를 보존한다.
+    std::uint32_t& BattleTerritory() { return battleTerritory_; } //004bf4a0은005c85d0 전체DWORD로 Terr%02d를 만든다. BYTE getter와 같은 실제 저장소다.
+    const std::uint32_t& BattleTerritory() const { return battleTerritory_; } //진단도 같은DWORD를 읽으며 상위BYTE를 임의0으로 확장하지 않는다.
     std::array<std::uint32_t,2>& ZoneWords() { return zoneWords_; } //005c86c0의 DWORD와+4 WORD다. 마지막 상위WORD는 기존 호스트 보존 칸이다.
     const std::array<std::uint32_t,2>& ZoneWords() const { return zoneWords_; } //State 다섯144BYTE와 별개인 실제 Zone 입력을 조회한다.
     std::span<std::uint8_t> Zone() { return {reinterpret_cast<std::uint8_t*>(zoneWords_.data()),6}; } //로그인/metadata와 정리는 같은 앞6BYTE만 빌린다.
@@ -107,7 +109,8 @@ private:
     std::uint32_t addIslandCommand_{0x02000022U}; //보호PE00542780의 실제 Add Island 명령 초기값이다.
     std::uint32_t syncConnection_{},syncReplyMode_{},gameTicks_{}; //세 개의 실제 최초 BSS DWORD며 정리 세 store 이외의 재초기화를 추가하지 않는다.
     std::uint32_t cdPresent_{},metaRefresh_{},metaRebuild_{}; //CD 결과와 두 메타 예약의 최초 BSS0을 Client 수명에 한 번 구성한다.
-    bool simulconnect_{};std::uint8_t battleByte_{}; //각 최초 BSS0이며 Session 교체가 초기화하지 않는다.
+    bool simulconnect_{}; //최초 BSS0이며 Session 교체가 초기화하지 않는 연결모드다.
+    std::uint32_t battleTerritory_{}; //005c85d0의 실제4BYTE이며 State의BYTE와 strip의DWORD 소비자가 함께 빌린다.
     std::array<std::uint32_t,2> zoneWords_{}; //기존 로그인의8BYTE 물리를 장기화한다. 원문 Zone 정리는 앞6BYTE만 쓴다.
     std::uint32_t metaFirstReset_{1}; //보호PE00531760의 초기값이며 이후 정리의 실제 분기 값이다.
     std::array<std::uint8_t,o::kMetaZoneCleanupBytes> metaZoneRecords_{}; //51개 기록의 고정7344BYTE이며 다른 State·MetaMap 표와 합치지 않는다.

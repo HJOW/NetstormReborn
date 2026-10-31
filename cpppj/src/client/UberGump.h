@@ -225,7 +225,7 @@ private:
     std::unique_ptr<GameWorld> world_; // 호스트 월드를 Kernel 밖에서 소유하여 전역 Clear 중 중복 소멸/중첩 프레임을 막는다.
     // userInput_: 플레이 입력을 선택·카메라·명령 동작으로 전달하는 처리기 (std::unique_ptr<UserInput>).
     std::unique_ptr<UserInput> userInput_;
-    // fortObjects_: Fort 객체.
+    // 실제 미션 설치 완료 시점의 월드 객체 수다. 선행 Fort 파싱을 만들지 않고 진단 mission 행에 사용한다.
     std::size_t fortObjects_{};
     // briefingSections_: 브리핑 섹션.
     std::vector<std::string> briefingSections_;

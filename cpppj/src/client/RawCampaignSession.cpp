@@ -1445,7 +1445,8 @@ struct RawCampaignSession::Impl {
         NormalTerrainDiagnostics diagnostics{SessionMissing<void,TerrainContextAssertion>(),SessionMissing<void,TerrainStampAssertion>(),SessionMissing<void,SquidRegionAssert>(),SessionMissing<void,FarmClusterAssertion>(),SessionMissing<void,TerrainFarmPostpassAssertion>()};
         normal=std::make_unique<RawNormalTerrainWorldBinding>(world,chunks,*islands,random,crt,terrainGlobals,stamp,randomPlacement,farm,piece,*pipeline,hp,*carrier,std::move(diagnostics));
         finish=std::make_unique<RawFortFinishOwner>(core.pool,core.types,assetState.Residences(),finishState,FortFinishOwnerHooks{SessionMissing<FortRandomRectangle,std::int32_t>(),SessionMissing<double>(),SessionMissing<std::uint32_t,GameRandom&,const FortRandomPlaceRequest&>(),SessionMissing<void>()});
-        if (services.deferExistingEditorFile) deferredEditorFort.emplace(std::move(fort)); //manager를공개하거나현재Slot을Clear하지않고입력/파일요청수명만보유한다.
+        if (services.missionFortFileSelect && services.localLogin) { if (services.missionFortImage) throw std::logic_error("지연 미션 파일 선택에 선행 이미지가 함께 전달됨"); } // 실제10.78은 State9 지역Template 읽기와 서버 수신의 전역 설치까지 파일을 열거나 manager를 공개하지 않는다.
+        else if (services.deferExistingEditorFile) deferredEditorFort.emplace(std::move(fort)); //manager를공개하거나현재Slot을Clear하지않고입력/파일요청수명만보유한다.
         else if (services.missionFortImage) { templateStorage->InstallFile(1,std::move(fort),*services.missionFortImage,services.missionFortFileName.empty() ? std::string(mission) : services.missionFortFileName,static_cast<std::int32_t>(core.types.size()));services.missionFortImage.reset(); } //실제 Client는 같은 최초 읽기의 파일 경로를 manager에 설치한다. 기존 독립 호출은 논리 이름 계약을 유지한다.
         else templateStorage->Install(1,std::move(fort),std::string(mission)); //기존합성입력의실제섹션목록도변경하지않는다.
         runtime=MakeRuntime();

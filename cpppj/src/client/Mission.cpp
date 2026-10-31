@@ -53,11 +53,18 @@ std::vector<std::uint8_t> MissionScript::ReadFortImage(std::string_view selected
 std::function<std::vector<std::uint8_t>(std::string_view)> MissionScript::FortReader() const {
     return [configuration=&configuration_,source=source_](auto selectedFort) { return ReadFortSource(*configuration,source,selectedFort); };
 }
-//I/O 경계가 Config를 바꾸더라도 이미 선택한 경로와 그 파일의 바이트를 같은 결과에 유지한다.
-MissionFortFileReader MissionScript::FortFileReader(std::function<std::string(std::string_view)> fileName) const {
+// 파일 열기 전에 현재 fortSpec과 mapper를 한 번 적용한다. 반환한 읽기는 Config를 다시 조회하지 않는다.
+MissionFortFileSelector MissionScript::FortFileSelector(std::function<std::string(std::string_view)> fileName) const {
     return [configuration=&configuration_,source=source_,fileName=std::move(fileName)](auto selectedFort) {
-        const auto path=configuration->PathSpec("fortSpec",selectedFort);auto bytes=ReadFortPath(source,path);
-        return MissionFortSourceImage{std::move(bytes),fileName ? fileName(path) : path};
+        const auto path=configuration->PathSpec("fortSpec",selectedFort);
+        return MissionFortFileSelection{fileName ? fileName(path) : path,[source,path] { return ReadFortPath(source,path); }};
+    };
+}
+// 같은 선택기를 즉시 읽는 기존 호출용 경계다. I/O가 Config를 바꿔도 이미 선택한 이름과 바이트를 함께 반환한다.
+MissionFortFileReader MissionScript::FortFileReader(std::function<std::string(std::string_view)> fileName) const {
+    return [select=FortFileSelector(std::move(fileName))](auto selectedFort) {
+        auto selection=select(selectedFort);auto bytes=selection.read();
+        return MissionFortSourceImage{std::move(bytes),std::move(selection.fileName)};
     };
 }
 //Guide 교체는 명시 작업 namespace를 유지하고 기본 자산 경계는 새 미션의 현재 Config에 맡긴다.

@@ -10,6 +10,7 @@
 #include <cstdio>
 #include <limits>
 #include <stdexcept>
+#include <sys/stat.h>
 #ifdef _WIN32
 #ifndef NOMINMAX
 #define NOMINMAX // Win32 매크로가 기존 표준 함수 이름과 충돌하지 않게 한다.
@@ -221,6 +222,52 @@ std::vector<std::uint8_t> BaseFileSystem::Read(std::string_view name) const {
     auto bytes = TryRead(name);
     if (!bytes) throw std::runtime_error("Game file not found: " + std::string(name));
     return std::move(*bytes);
+}
+//0041ad10은 장치 이름을 존재 확인 없이 직접 반환한다. 일반 이름만 기본 disk/TAFF/보조 disk/TAFF를 열기·이름 조회로 찾으며0041b4c0 읽기 실패 재조회와 구별한다.
+// 원본0041af80 접합 근거: docs/exe/cpp-login-template-lifetime-20261101.md.
+bool BaseFileSystem::ReadOnly(std::string_view name) const {
+    name=name.substr(0,name.find('\0'));if (name.empty()) throw std::logic_error("원본 Basefile.cpp 진단1152: fileName && *fileName");
+    auto primary=PathText(std::filesystem::absolute(base_).lexically_normal()),secondary=PathText(std::filesystem::absolute(secondary_).lexically_normal()); //원문 getcwd/CD root를 실제 게임 자료 root로 대여하며 프로세스 CWD는 바꾸지 않는다.
+    std::replace(primary.begin(),primary.end(),'/','\\');std::replace(secondary.begin(),secondary.end(),'/','\\');
+    auto slashes=std::string(name);std::replace(slashes.begin(),slashes.end(),'/','\\'); //FileSpec은 장치 판정 전에 기존 backslash 유무를 확인하고 나서 구분자를 바꾼다.
+    const bool device=name.find(':')!=name.npos || (name.find('\\')!=name.npos && slashes.starts_with("\\\\"));
+    const auto native=[&](std::string_view value) { //Windows10/11 Unicode 설치 이름은 원본 ANSI 대신 UTF-8/W CRT로 보존한다. 같은 드라이브의 상대 이름은 원본 게임 CWD 기준이다.
+        auto path=NativePath(value);const auto drive=path.root_name();
+        if (device && !path.has_root_directory() && drive.native().size()==2 && drive.native()[1]==L':' && AsciiLower(PathText(drive))==AsciiLower(PathText(NativePath(primary).root_name()))) path=NativePath(primary)/path.relative_path();
+        return path;
+    };
+    const auto opens=[&](std::string_view value) { //0041ad10/41aae0의 rb 열기/즉시 닫기이며 길이·내용·암호 키에는 접근하지 않는다.
+        const auto path=native(value);
+#ifdef _WIN32
+        auto* file=::_wfopen(path.c_str(),L"rb");
+#else
+        auto* file=std::fopen(path.c_str(),"rb");
+#endif
+        if (!file) return false;static_cast<void>(std::fclose(file));return true;
+    };
+    std::string resolved; //직접 출처5 또는 기본1/보조3에서 선택한 실제 stat 이름이며 아카이브 이름은 stat하지 않는다.
+    if (device) resolved=name;
+    else {
+        resolved=JoinBaseFileRoot(primary,name);
+        if (!opens(resolved)) {
+            if (ContainsArchiveOnly(name)) return true;
+            resolved=JoinBaseFileRoot(secondary,name);
+            if (!opens(resolved)) {
+                if (ContainsArchiveOnly(name,true)) return true;
+                throw std::logic_error("원본 Basefile.cpp 진단1156: trueFileName");
+            }
+        }
+    }
+    const auto path=native(resolved);
+#ifdef _WIN32
+    struct _stat64 state{}; //원문 stat의 mode 쓰기 비트만 소비하며64비트 호스트의 파일 크기 표현은 판정에 쓰지 않는다.
+    if (::_wstat64(path.c_str(),&state)!=0) throw std::logic_error("원본 Basefile.cpp 진단1166: !result");
+    return (state.st_mode&_S_IWRITE)==0;
+#else
+    struct stat state{}; //Windows 이외 빌드 도구에서도 원문 소유자 쓰기 비트 계약만 보존한다.
+    if (::stat(path.c_str(),&state)!=0) throw std::logic_error("원본 Basefile.cpp 진단1166: !result");
+    return (state.st_mode&S_IWUSR)==0;
+#endif
 }
 // 원본00459610/004597c0의 디스크 열거만 사용한다. 메뉴별 정렬은 이 원시 경계에서 수행하지 않는다.
 std::vector<std::string> BaseFileSystem::MatchDisk(std::string_view pattern) const {

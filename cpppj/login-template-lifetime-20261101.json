@@ -1,0 +1,101 @@
+{
+  "unit": 667,
+  "date": "2026-11-01",
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "decompileChanged": false,
+  "productChanged": true,
+  "executableSha256": "61c7bf147eee6401dd4421603b801413cb19c2efda458a9f6d8d9d673f574a6d",
+  "changes": [
+    "실제10.78 State7의 최초 파일 읽기/Fort 전체 파싱/표시용 MissionPlayers 조회와 전역 manager 설치를 제거했다. 실제 Player/기술은 기존 raw Start가 계속 소유한다.",
+    "State9은 경로/source를 먼저 고정한 뒤 지역 readonly Template를 읽고 NONAME에 다섯 섹션만 원문 CloneDataManagerStream으로 복제한다. 공유 version/이름표와 두 임시 manager의 반납을 유지한다.",
+    "서버 수신의 LoadFile은 기존 같은 이름 manager를 읽기 없이 보존하며 다른 이름도 진단 뒤 보존한다. 실제 Client는 각 호출 시점의 현재 curFort와 fortSpec을 사용한다.",
+    "005c85d0 전체DWORD와 기존 BYTE 접근을 같은 Client 저장소에 연결했다. 보호PE004bf4a0의 DWORD 명령으로 strip 인자의 폭을 확인했다.",
+    "파일 readonly는 내용 읽기 없이 원문0041ad10 출처/0041af80 CRT 쓰기 비트로 판정한다. Windows10/11 Unicode에는 W CRT를 사용한다.",
+    "진단 mission 행의 객체 수는 선행 저장 레코드 수 대신 실제 설치 완료 시점의 월드 객체 수다.10.72 기존 부분 어댑터는 유지한다."
+  ],
+  "focused": {
+    "entryRegistered": 82,
+    "worldRegistered": 261,
+    "finalUnique": 26,
+    "newUnique": 10,
+    "existingUnique": 16,
+    "existingAdaptedToOriginalLifetime": 7,
+    "failedChecks": 0,
+    "invocations": 10,
+    "testFunctionCalls": 26,
+    "logs": [
+      "extracted/cpp-login-template-lifetime-667-selection-v1.log",
+      "extracted/cpp-login-template-lifetime-667-image-v1.log",
+      "extracted/cpp-login-template-lifetime-667-readonly-v1.log",
+      "extracted/cpp-login-template-lifetime-667-login-v1.log",
+      "extracted/cpp-login-template-lifetime-667-stream-v1.log",
+      "extracted/cpp-login-template-lifetime-667-async-v1.log",
+      "extracted/cpp-login-template-lifetime-667-parent-v1.log",
+      "extracted/cpp-login-template-lifetime-667-campaign-v1.log",
+      "extracted/cpp-login-template-lifetime-667-source-v1.log",
+      "extracted/cpp-login-template-lifetime-667-path-v1.log"
+    ],
+    "initialFailures": [],
+    "scope": "명시 메모리 selector/실제 raw Session, Unicode 임시 disk/TAFF/readonly/배타적 파일, 작업 namespace의 실제 파일/Config 변경/Script 반납 뒤 수명, 기존 비동기 timeout/World 교체/객체 부분 실패를 확인했다. 구형 재설치 기대는 원문 최초 지역읽기/서버설치 또는 기존manager 보존 계약으로 바꿨다.",
+    "limits": "등록 전체 실행이나 주 검사 전체 통과가 아니다. 게임/GUI/PCM/물리 입력/자연 완주/전체 동일성 검증이 아니다. 메모리 source의 경로 모양 문자열을 실제 디스크 재읽기로 주장하지 않는다."
+  },
+  "native": {
+    "newExecutions": 0,
+    "newCases": 0,
+    "newFixture": false,
+    "replayedUniqueRows": 609,
+    "replayedFixture": "기존 Patch609 Objects/부모 보호 기대값",
+    "staticLog": "extracted/cpp-login-template-lifetime-667-strip-static.txt",
+    "scope": "원문00460680/004b63d0/004bf3e0/004a6c50/004bf550/0041ad10/0041af80의 선택/읽기/임시소유/보존/권한을 정적 대조했다. DWORD폭은 보호PE로 확인했다.609행은 기존 C++ 재생이며 새 원본 실행이 아니다."
+  },
+  "builds": [
+    {
+      "log": "extracted/cpp-login-template-lifetime-667-build-v1.log",
+      "exitCode": 1,
+      "interrupted": true,
+      "reason": "직렬 컴파일을 중단하고 CL=/MP3로 다시 시작했다. 컴파일 오류로 완료된 실행과 구별한다."
+    },
+    {
+      "log": "extracted/cpp-login-template-lifetime-667-build-v2.log",
+      "exitCode": 0,
+      "warnings": 0,
+      "errors": 0
+    },
+    {
+      "log": "extracted/cpp-login-template-lifetime-667-build-v3.log",
+      "exitCode": 0,
+      "warnings": 0,
+      "errors": 0,
+      "scope": "최종 헤더의 의존성을 다시 확인해 게임/미션집중/세계집중을 빌드했다. 제품 해시는 이 명령 뒤 값이다."
+    }
+  ],
+  "reviewCorrections": [
+    "ReadOnly 선언이 TaffArchive에 놓인 오류를 빌드 오류 발생 전 정적 리뷰에서 찾아 BaseFileSystem으로 옮겼다.",
+    "보호PE로 Terr 포맷 인자의 DWORD폭을 확인해 기존 BYTE만 전달하는 호출을 수정했다.",
+    "현재 curFort의 조회를 최초 요청 이름 고정에서 각 실제 파일 선택 시점으로 옮겼다."
+  ],
+  "protected": {
+    "checked": 4,
+    "baseline645And666Differences": 0,
+    "sha256": {
+      "AGENTS.md": "e9e46fda5519e663417b5c8d9b643549196bf28fe7ba6b1d546a48a853fd208b",
+      "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+      "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6"
+    },
+    "full2632AuditRepeated": false,
+    "full773FixtureHashAuditRepeated": false
+  },
+  "actualGameRuns": 0,
+  "full34Repeated": false,
+  "newZip": false,
+  "mainTestExecutableRebuilt": false,
+  "multiplayerTests": 0,
+  "remaining": [
+    "다음 단위 우선:004bf3e0의0044cf20 Stripped Image 진단을 실제 Client level29 formatter/FILE/flush/Chat/current검색에 연결한다. 이번 내용/할당 복원을 전체 진단 복원으로 확대하지 않는다.",
+    "구형 명시 이미지/BYTE 독립 입력의 부분 프로토콜 어댑터는 실제10.78 Client의 지연 selector 경로와 구별한다. 실제 GUI의 최초 설치 전체 연쇄는 더 많은 기능 묶음 뒤 필요한 범위만 확인한다.",
+    "다른 Template 소비자/FILE·SEH ABI/할당·부분I/O, Edit 도구·시나리오·연속 미션/UI·호환성. 이후 MP 무시험 사전 구현·4~7차이며 자연 완주/전체 동일성은 사용자 확인 대상이다."
+  ]
+}

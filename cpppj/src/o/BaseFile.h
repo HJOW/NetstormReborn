@@ -62,6 +62,8 @@ public:
     void SetSecondaryDirectory(std::filesystem::path directory);
     // 상대 읽기: 기본 디스크→기본 TAFF→보조 디스크→보조 TAFF다. 절대 이름은 직접 읽는다.
     std::vector<std::uint8_t> Read(std::string_view name) const;
+    //0041af80/41ad10: 내용물을 읽지 않고 실제 출처를 찾아 TAFF 또는 디스크의 쓰기 금지 상태를 반환한다. 빈 이름/조회·stat 실패는 원문 행 번호의 진단이다.
+    bool ReadOnly(std::string_view name) const;
     // Read와 같은 순서로 찾되, 없으면 예외 대신 빈 값을 돌려준다(없어도 되는 설정 파일용).
     std::optional<std::vector<std::uint8_t>> TryRead(std::string_view name) const;
     std::optional<std::vector<std::uint8_t>> TryReadArchiveOnly(std::string_view name,bool secondary=false) const; //선택한 목록만 등록 순서로 읽고 다른 목록/디스크로 fallback하지 않는다.

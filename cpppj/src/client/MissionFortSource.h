@@ -12,4 +12,9 @@ struct MissionFortSourceImage { // 한 번 선택한 fortSpec 경로와 그 읽�
     std::string fileName; // 실제 manager+c에 설치할 파일 경로다. 편집 작업본은 같은 writable namespace의 경로다.
 };
 using MissionFortFileReader=std::function<MissionFortSourceImage(std::string_view)>; //입력은 논리 요새 이름이며 출력은 같은 읽기의 파일 이미지/경로다.
+struct MissionFortFileSelection { // 파일을 열기 전에 같은 manager 이름을 비교할 수 있도록 선택과 읽기를 나눈다.
+    std::string fileName; // 선택 순간의 fortSpec과 mapper가 정한 실제 manager 파일 이름이다.
+    std::function<std::vector<std::uint8_t>()> read; // 선택한 경로와 source를 소유하며 호출할 때만 같은 파일을 읽는다.
+};
+using MissionFortFileSelector=std::function<MissionFortFileSelection(std::string_view)>; // 논리 요새 이름으로 현재 경로를 한 번 선택하며 파일 I/O는 수행하지 않는다.
 }

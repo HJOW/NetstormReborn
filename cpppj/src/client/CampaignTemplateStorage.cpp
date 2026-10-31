@@ -12,6 +12,8 @@
 #include <algorithm>
 #include <optional>
 #include <stdexcept>
+#include <bit>
+#include <cstdio>
 namespace netstorm::client {
 namespace {
 // 선택된 파일 장치를 호출한 자리에서만 요구하며 미선택 분기를 선행 거부하지 않는다.
@@ -158,6 +160,25 @@ struct CampaignTemplateStorage::Image {
         const auto current=o::CreateDataManagerStream(manager,sectionName,hooks);auto& node=streams.at(handle)->bytes;
         if (current!=handle || !allocated || Read(node)!=0x20000000U+handle) throw std::logic_error("Template 생성 부모의 실제 현재 섹션 불일치");
         Put(node,0,BufferToken(handle));allocation.resize(Read(std::span(node).subspan(8)));Buffer(handle)=std::move(allocation);streamOrder.push_back(handle);PublishCursor(handle);return handle;
+    }
+    // 서로다른지역manager의노드/버퍼를같은raw복제부모에연결한다.대상노드번호는원문노드범위뒤에서시작해야한다.
+    void CloneSectionFrom(Image& source,std::string_view sectionName) {
+        RequireNoAccess();source.RequireNoAccess();SyncStreams();source.SyncStreams();std::uint32_t created{};o::DataManagerResizeHooks hooks;
+        hooks.selection.stream=[this,&source](auto handle) { if (streams.contains(handle)) return std::span(streams.at(handle)->bytes);return std::span(source.streams.at(handle)->bytes); }; //두manager의같은60BYTE를핸들충돌없이빌린다.
+        hooks.list=ListEffects();hooks.allocateStream=[this,&source,&created,sectionName](auto size) {
+            if (size!=60 || created || source.streams.contains(nextStreamHandle)) throw std::logic_error("로그인이미지복제의실제노드할당계약");created=AllocateStream(CanonicalSection(sectionName));return created;
+        }; //원문검색/대상제거뒤실제새노드를할당한다.
+        hooks.memory.buffer=[this,&source](auto pointer)->std::span<std::uint8_t> {
+            if (pointer<=0x10000000U) throw std::out_of_range("로그인이미지복제의실제버퍼범위");const auto handle=pointer-0x10000000U;
+            if (streams.contains(handle)) return Buffer(handle);return source.Buffer(handle);
+        }; //원본대입은source의현재data/end를읽으며대상할당과편의사본을섞지않는다.
+        hooks.memory.allocate=[this,&created](auto size) { if (!created) throw std::logic_error("로그인이미지복제의노드이전버퍼할당");Buffer(created).resize(size);return BufferToken(created); };
+        hooks.memory.release=[this](auto pointer) { ReleaseBuffer(pointer); }; //생성16384BYTE와대입전대상버퍼만원문위치에서반납한다.
+        hooks.memory.assertion=[](auto) { throw std::logic_error("로그인이미지복제의MemStream진단"); };
+        hooks.missingSource=[] { throw std::logic_error("로그인이미지복제의원문섹션누락진단"); };
+        const auto current=o::CloneDataManagerStream(manager,source.manager,sectionName,hooks);
+        if (current!=created) throw std::logic_error("로그인이미지복제의현재노드불일치");auto& node=streams.at(created)->bytes;auto& bytes=Buffer(created);const auto end=Read(std::span(node).subspan(8));
+        if (end>bytes.size()) throw std::out_of_range("로그인이미지복제의실제끝범위");bytes.resize(end);streamOrder.push_back(created);PublishCursor(created);
     }
     // 기존 State 생성 호출도 같은 일반 생성/원본 쓰기 부모를 사용한다.
     void InitializeState(std::span<const std::uint8_t,28> input) { const auto handle=CreateSection("State");WriteStream(handle,input); }
@@ -306,6 +327,16 @@ struct CampaignTemplateStorage::Image {
         hooks.release=[&image](auto pointer) { if (pointer!=kImage) throw std::logic_error("Template 저장 이미지 할당 반납 불일치");std::vector<std::uint8_t>{}.swap(image.storage); };
         o::SaveDataManagerFile(manager,stateInputs,hooks);
     }
+    // 파일쓰기없이같은manager의서명/current검색효과로35개이름의raw이미지를작성한다.
+    o::FortImageData SaveImage(o::FortImageHooks hooks) {
+        SyncStreams();hooks.signatureFlag=[this] { Put(manager,0x10c,0x46);if (Read(std::span(manager).subspan(0x110))==0xffffffffU) Put(manager,0x110,0);return Read(std::span(manager).subspan(0x110)) ? std::uint8_t{0xfe} : std::uint8_t{}; };
+        hooks.section=[this](std::size_t index)->std::span<const std::uint8_t> {
+            o::DataManagerSelectionHooks selection;selection.stream=[this](auto handle) { return std::span(streams.at(handle)->bytes); };const auto handle=o::FindDataManagerSection(manager,o::FortTemplate::SectionNames()[index],selection);
+            if (!handle) throw std::logic_error("로그인이미지저장의실제섹션누락진단");const auto end=Read(std::span(streams.at(handle)->bytes).subspan(8));const auto& bytes=Buffer(handle);
+            if (end>bytes.size()) throw std::out_of_range("로그인이미지저장의실제끝범위");return std::span(bytes).first(end);
+        }; //이름검색은실제current를갱신하며source/target의pos를임의진행하지않는다.
+        return o::RawFortImage(o::OriginalEdition::Patch1078,fort,std::move(hooks)).Save();
+    }
     // 현재 각 섹션의 버퍼를 먼저 반납하고 같은 노드의 실제 할당을 뒤에 해제한다.
     void Destroy() {
         SyncStreams();o::DataManagerLifetimeHooks hooks;
@@ -434,6 +465,22 @@ void CampaignTemplateStorage::LoadFile(std::uint32_t slot,o::FortTemplate fort,s
     hooks.readFile=[this,&file](auto manager) { return images_.at(manager)->ReadFile(file); }; // readonly callback 뒤 header에서 재조회한 manager를 그대로 읽는다.
     hooks.isCurrent=[slot,&file] { return slot==NeedFile(file.currentSlot)(); };hooks.refreshTitle=[&file] { NeedFile(file.refreshTitle)(); };hooks.lifetime=Effects();
     o::LoadTemplateFile(Header(slot),name,hooks);
+}
+// 송신용지역Template와strip용NONAME는같은Client전역을빌리며완료/예외모두target부터source순서로반납한다.
+// 원본004b63d0/004bf3e0의 이미지 내용/할당 연결이며0044cf20 진단은 별도다. 근거: docs/exe/cpp-login-template-lifetime-20261101.md.
+o::FortImageData CampaignTemplateStorage::ReadLoginImage(std::string_view name,const TemplateFileLoadHooks& file,std::uint32_t territory) {
+    CampaignTemplateStorage temporary(serializationGlobals_,sectionNames_);auto load=file;load.currentSlot=[] { return 9U; };load.refreshTitle={};Put(temporary.Header(0),8,1); //지역Template주소는전역현재슬롯과항상다르며readonly사전설정은파일권한조회를생략한다.
+    try {
+        temporary.LoadFile(0,{},name,load);if (!Read(temporary.Header(0))) throw std::logic_error("로그인송신의지역Template읽기실패진단");
+        temporary.Install(1,{},"NONAME");auto& source=temporary.Current(0);auto& target=temporary.Current(1);target.nextStreamHandle=source.nextStreamHandle; //서로다른실제노드를같은raw복제장치에서식별하도록토큰범위를이어쓴다.
+        temporary.InitializeEmptyManager(Read(temporary.Header(1)),[](auto) { throw std::logic_error("로그인이미지의NONAME초기화진단"); });
+        // 원문004bf3e0의네고정이름을순서대로복제하고현재Terr만마지막에복제한다.
+        for (const auto section:{"Subscriber","Territory","TypeNames","CoreData"}) target.CloneSectionFrom(source,section);
+        std::array<char,256> section{};const auto length=std::snprintf(section.data(),section.size(),"Terr%02d",std::bit_cast<std::int32_t>(territory));
+        if (length<0 || static_cast<std::size_t>(length)>=section.size()) throw std::out_of_range("로그인이미지의현재Terr이름범위");target.CloneSectionFrom(source,{section.data(),static_cast<std::size_t>(length)});
+        o::FortImageHooks image;image.typeCount=[&file] { return static_cast<std::uint32_t>(NeedFile(file.typeCount)()); };image.assertion=[](auto) { throw std::logic_error("로그인이미지의직렬화진단"); };
+        auto result=target.SaveImage(std::move(image));temporary.Clear(1);temporary.Clear(0);return result;
+    } catch (...) { temporary.Clear(1);temporary.Clear(0);throw; } //부분읽기/복제예외에서도지역노드/할당을유지한채전역owner로넘기지않는다.
 }
 // 빌린 헤더를 반납해도 원래 소유자의 실제 버퍼/커서는 유지된다.
 void CampaignTemplateStorage::Borrow(std::uint32_t slot,std::uint32_t source) { if (slot==source) throw std::invalid_argument("Template 자기 manager 빌림 계약");static_cast<void>(Current(source));const auto handle=Read(Header(source));const auto target=Header(slot);if (Read(target)==handle && !Read(target.subspan(4))) throw std::invalid_argument("Template 원래 소유자를 반납하는 같은 manager 빌림");Clear(slot);Put(Header(slot),0,handle);Put(Header(slot),4,1); }

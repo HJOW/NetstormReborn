@@ -184,8 +184,9 @@ struct RawCampaignSessionServices {
     std::function<void(std::span<std::uint8_t>)> templateStateBytes; // 빈 State 초기화의 미정 바이트를 현재 실제 할당 입력으로 공급한다.
     std::shared_ptr<CampaignTemplateStorage> templateStorage; // Init의 명시 정리까지 실제 manager/State/이미지를 같은 저장소에 유지한다.
     std::shared_ptr<const std::vector<std::uint8_t>> missionFortImage; // 실제 선택 파일의 같은 원문이며 초기 manager 읽기 부모가 소비한 뒤 반납한다.
-    std::function<std::vector<std::uint8_t>(std::string_view)> missionFortRead; //실제 로컬 로그인 재로드도 같은 미션의 작업 namespace/fortSpec으로 읽는다. 명시 reader 실패를 자산 fallback으로 바꾸지 않는다.
-    MissionFortFileReader missionFortFileRead; //실제 Client는 같은 파일의 바이트/manager 이름을 함께 읽는다. 지정하면 기존 byte reader로 실패를 우회하지 않는다.
+    std::function<std::vector<std::uint8_t>(std::string_view)> missionFortRead; // 독립 합성/명시 이미지 어댑터의 reader다. 실제10.78 Client는 아래 지연 선택기로 원문 파일 시점을 사용한다.
+    MissionFortFileSelector missionFortFileSelect; // 실제10.78은 경로를 먼저 선택하고 Template 부모가 요구할 때만 읽는다. 같은 이름 manager는 I/O 없이 보존한다.
+    TemplateFileLoadHooks missionFortLoad; // 실제 파일의 권한/거부/진단 경계다. read·현재타입·현재owner·제목은 같은 Session이 연결한다.
     std::string missionFortFileName; //최초 missionFortImage와 같은 읽기에서 선택한 실제 파일 경로다. 생략한 독립 호출만 기존 논리 이름을 유지한다.
     std::shared_ptr<MissionFortLoadRequest> missionFortRequest; // Init에서 만든 같은 요청/Zone을 소비하며 설치 때 새 Zone을 만들지 않는다.
     std::shared_ptr<std::array<std::uint8_t,87>> missionOptions; // Client Init와 실제 로그인/세계/메뉴가 같은 전역87BYTE를 소유한다. 독립 검사는 자체 배열을 쓴다.

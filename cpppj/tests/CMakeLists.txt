@@ -2327,6 +2327,7 @@ set_source_files_properties(EditorTestBattleTests.cpp PROPERTIES COMPILE_DEFINIT
 
 # 실제 작업 namespace/미션 source 수명과 언어 script/선택 Fort의 같은 읽기를 검증한다.
 target_sources(netstorm_tests PRIVATE MissionFileSourceTests.cpp)
+target_sources(netstorm_tests PRIVATE MissionFortSelectionTests.cpp) # 파일 선택과 실제 읽기의 시점/경로/source 수명을 검증한다.
 
 # 기존 Session helper를 빌리는 실제 로그인 작업본 재로드/소유 수명/실패 검사를 IDE에도 표시한다.
 target_sources(netstorm_tests PRIVATE CampaignMissionReloadSourceTests.inc)
@@ -2616,3 +2617,7 @@ target_sources(netstorm_editor_default_name_tests PRIVATE FortObjectLoadTests.cp
 
 # 실제 캠페인 진입과 같은 새 Objects 스트림의 기존 독립 관측을 함께 대조한다.
 target_sources(netstorm_mission_entry_tests PRIVATE FortObjectLoadTests.cpp)
+
+# 최초 로그인 파일 선택/지역 이미지/권한을 같은 실제 제품 라이브러리에서 검사한다.
+target_sources(netstorm_tests PRIVATE CampaignTemplateLoginImageTests.cpp BaseFileReadOnlyTests.cpp)
+target_sources(netstorm_mission_entry_tests PRIVATE MissionFortSelectionTests.cpp CampaignTemplateLoginImageTests.cpp BaseFileReadOnlyTests.cpp)

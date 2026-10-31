@@ -29,6 +29,7 @@ public:
     std::string FortPath();
     std::vector<std::uint8_t> ReadFortImage(std::string_view selectedFort); //Init 요청이 고른 이름의 fortSpec을 현재 Config로 해석해 같은 미션 source에서 읽는다. loadFort를 다시 선택하지 않는다.
     std::function<std::vector<std::uint8_t>(std::string_view)> FortReader() const; //같은 source를 소유 복사해 Session 로그인 재로드에 넘긴다. Script/Editor 반납 뒤에도 현재 Client Config로 같은 fortSpec을 해석한다.
+    MissionFortFileSelector FortFileSelector(std::function<std::string(std::string_view)> fileName={}) const; // 현재 fortSpec과 실제 이름만 선택한다. 반환한 read는 그 경로/source를 소유해 Script 반납과 이후 Config 변경에도 같은 파일을 읽는다.
     MissionFortFileReader FortFileReader(std::function<std::string(std::string_view)> fileName={}) const; //현재 fortSpec을 한 번 선택하여 같은 이미지와 실제 파일 이름을 반환한다. 경로 mapper도 reader가 소유한다.
     o::ConfigInterface::FileReader FileSource() const; //명시 source만 소유 복사해 Guide 교체에 넘긴다. 기본 자산 reader는 빈 함수로 표현하여 다음 미션도 기본 경계를 유지한다.
     // `mission.missionType`: 원본은 이 이름으로 등록된 미션 종류를 찾아 객체를 만든다.

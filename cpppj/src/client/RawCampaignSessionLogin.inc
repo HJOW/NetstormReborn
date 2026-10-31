@@ -1,5 +1,6 @@
 // 동일 Session 내부 저장소를 기존 원본 로그인/패킷/상태/타이머 몸체에 연결한다.
 // RawCampaignSession.cpp의 Impl 정의 뒤, 같은 namespace 안에서 포함한다.
+// 최초 파일 선택/지역 송신 이미지/전역 보존 근거: docs/exe/cpp-login-template-lifetime-20261101.md.
 struct RawCampaignSession::Impl::Login {
     Impl& s; //유일한 Player/Template/SP/월드/현재 모드 소유자다.
     CampaignLoginServices effects; //현재 실제 Client 설정/시계/표시/로그 장치다.
@@ -59,14 +60,24 @@ struct RawCampaignSession::Impl::Login {
         //낮은지정폭의바이트만바꾸며인접필드는보존한다.
         for (std::size_t i=0;i<width;++i) bytes[at+i]=static_cast<std::uint8_t>(value>>(8*i));
     }
-    // 현재 파일의 서명/원시 섹션만 설치한다. 객체는 실제 World의 Objects 위치에서 읽고 생성한다. 이미 보유한 같은 이름의 원문 생략 수명은 별도 잔여다.
+    // 실제10.78의 현재 fortSpec을 I/O 없이 선택한다. 독립 입력 어댑터만 기존 명시 이름/reader를 유지한다.
+    MissionFortFileSelection SelectFile() {
+        if (s.services.missionFortFileSelect) return s.services.missionFortFileSelect(s.missionFortName);
+        const auto name=s.services.missionFortFileName.empty() ? s.missionFortName : s.services.missionFortFileName;
+        return {name,[this,name] { return s.services.missionFortRead ? s.services.missionFortRead(name) : s.assets.files.Read("d/"+name+".fort"); }};
+    }
+    // 원문 Load가 선택한 하위 효과를 같은 현재 타입/owner/제목과 연결한다. 파일 읽기는 Load의 공개/권한 처리 뒤에만 실행한다.
+    TemplateFileLoadHooks FileHooks(const MissionFortFileSelection& selected) {
+        auto hooks=s.services.missionFortLoad;hooks.read=[read=selected.read](auto) { return Need(read)(); };
+        hooks.sameName=[](auto first,auto second) { const std::string left(first),right(second);return _stricmp(left.c_str(),right.c_str())==0; }; // 원본 CRT의 NUL 문자열 비교를 그대로 사용한다.
+        if (!hooks.wrongName) hooks.wrongName=[this] { Need(effects.log)("Template.cpp 진단 386: 기존 manager 파일 이름 불일치\n"); };
+        hooks.typeCount=[this] { return static_cast<std::int32_t>(s.core.types.size()); };hooks.currentSlot=[this] { return s.playerState.templateOwner; };hooks.refreshTitle=s.services.install.refreshWindowTitle;
+        return hooks;
+    }
+    // 기존 manager는 원문004bf550이 같은 이름 비교 뒤 보존한다. 실제 Objects의 읽기/생성 시점도 앞당기지 않는다.
     void Reload(std::uint32_t owner) {
-        const auto name=s.templateStorage->Name(owner);if (owner!=1 || name.empty()) throw std::logic_error("로컬 미션 이외 Template 파일 선택 미연결");
-        if (s.services.missionFortFileRead) {
-            auto fortFile=s.services.missionFortFileRead(s.missionFortName);if (fortFile.fileName.empty()) throw std::runtime_error("미션 파일 reader의 실제 파일 이름 누락"); //명시 파일 source의 실패를 기존 byte reader나 자산 fallback으로 바꾸지 않는다.
-            s.templateStorage->InstallFile(owner,FortTemplate{},fortFile.image,std::move(fortFile.fileName),static_cast<std::int32_t>(s.core.types.size()));return; //읽기에 쓴 논리 이름은 보존하고 같은 파일의 물리 경로만 새 manager에 설치한다.
-        }
-        const auto bytes=s.services.missionFortRead ? s.services.missionFortRead(name) : s.assets.files.Read("d/"+name+".fort");s.templateStorage->InstallFile(owner,FortTemplate{},bytes,name,static_cast<std::int32_t>(s.core.types.size())); //명시 Client reader는 같은 현재 작업 파일을 다시 읽으며 독립 Session만 기존 d/ 자산 경계를 사용한다.
+        if (owner>=9) throw std::out_of_range("현재 미션 Template의 실제9슬롯 범위");const auto selected=SelectFile();if (selected.fileName.empty()) throw std::runtime_error("미션 파일 선택기의 실제 파일 이름 누락");
+        s.templateStorage->LoadFile(owner,{},selected.fileName,FileHooks(selected));
     }
     //현재20BYTE zlocal주소에서 실제클라이언트의포트와주소를 제공한다.
     std::array<std::uint8_t,20> Address() const {
@@ -89,7 +100,12 @@ struct RawCampaignSession::Impl::Login {
         hooks.connectServer=[this](auto address,auto port) { Connect(address,port); };
         hooks.connectionStatus=[this](std::int32_t owner) { return owner==9 && transport->IsOpen() && (transport->Client().flags&2) ? 1 : 0; };
         hooks.connectionOpen=[this](std::int32_t owner) { return owner==9 && transport->IsOpen() && (transport->Client().flags&2) && !(transport->Client().flags&0x40); };
-        hooks.sendLogin=[this] { const auto image=RawFortImage(OriginalEdition::Patch1078,s.templateStorage->Template(s.playerState.templateOwner),{[this] { return static_cast<std::uint32_t>(s.core.types.size()); },{}}).Save();const auto packet=netstorm::zacket::MakeLocalMissionLogin(s.globals.mySubscriber,{reinterpret_cast<const char*>(s.handle.data())},image.Bytes());Send(9,packet.Bytes()); };
+        hooks.sendLogin=[this] {
+            const auto image=[this] { // 실제 State9은 지역 readonly Template를 읽고 선택된 다섯 섹션의 이미지를 만든 뒤 모두 반납한다.
+                if (s.services.missionFortFileSelect) { const auto selected=SelectFile();return s.templateStorage->ReadLoginImage(selected.fileName,FileHooks(selected),s.localStateGlobals->BattleTerritory()); }
+                return RawFortImage(OriginalEdition::Patch1078,s.templateStorage->Template(s.playerState.templateOwner),{[this] { return static_cast<std::uint32_t>(s.core.types.size()); },{}}).Save(); // 기존 독립 합성 입력의 부분 프로토콜 검사는 파일 장치를 요구하지 않는다.
+            }();const auto packet=netstorm::zacket::MakeLocalMissionLogin(s.globals.mySubscriber,{reinterpret_cast<const char*>(s.handle.data())},image.Bytes());Send(9,packet.Bytes());
+        };
         hooks.connectedProgress=effects.refresh;hooks.closeProgress=[this] { CloseProgress(); };
         hooks.fortAvailable=[this](std::uint32_t owner) { return owner<9 && Get(s.headers,owner*20)!=0; };hooks.loadCurrentFort=[this] { Reload(s.playerState.templateOwner); };
         hooks.fortCore=[this](std::uint32_t owner) { return s.templateState->Get(owner); };hooks.touchFort=[this](std::uint32_t owner) { s.templateState->Changed(owner); };

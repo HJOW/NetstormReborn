@@ -54,6 +54,7 @@ public:
     void Install(std::uint32_t slot,o::FortTemplate fort,std::string name); // 이전 한 헤더를 실제 반납한 뒤 새 소유 manager를 설치한다.
     void InstallFile(std::uint32_t slot,o::FortTemplate fort,std::span<const std::uint8_t> image,std::string name,std::int32_t typeCount=188); // 실제 파일/서명/섹션 읽기 부모를 실행한다. 기본188은10.78 독립 호출용이며 Session은 현재 타입 수를 전달한다.
     void LoadFile(std::uint32_t slot,o::FortTemplate fort,std::string_view name,const TemplateFileLoadHooks& file); //004bf550의기존파일유지/읽기전공개/정상false부분정리를실제owner에서실행한다. fort는이미해석된보조metadata이며실제section은reader의할당을쓴다.
+    o::FortImageData ReadLoginImage(std::string_view name,const TemplateFileLoadHooks& file,std::uint32_t territory); //004b63d0의지역Template읽기와004bf3e0의5섹션복제/직렬화/반납을실행한다.현재Client의version/이름표만공유하고전역9헤더는보존한다.
     void Borrow(std::uint32_t slot,std::uint32_t source); // 같은 manager를 빌리며 State/지형 cursor도 같은 객체를 사용한다.
     void ClearAll(); // 원본 전역 정리의 실제 소멸/할당 반납을 수행한다.
     void Clear(std::uint32_t slot); // 원본 단일 반납이다. 빈 포인터의 부가 필드도 비운다.
