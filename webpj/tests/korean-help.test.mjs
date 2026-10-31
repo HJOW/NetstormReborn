@@ -1,6 +1,6 @@
 // 한국어 F1 도움말(WB03-P)을 검사한다: help.korean(번역한 주제만 담은 부분 파일)이 영어 help.english 의 첫 앵커와 같은 구조(태그·그림·링크 주소·조건·글자 모양 표시)인지,
 // 도움말 창이 번역하지 않은 주제를 주제 단위로 영어 파일에서 대신 찾는지, 한국어 본문이 유니코드 글꼴 코드인지 확인한다. 번역 문구 자체의 옳고 그름은 검사하지 않는다(개발자 검수 대상).
-// (2026-10-31 WB03-P)
+// (2026-10-31 WB03-P, 2026-11-01 WB03-Q: 번역 주제 15개 → 별칭 앵커 포함 확대, 별칭 앵커 검사 추가)
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
@@ -65,13 +65,29 @@ function structureOf(topic) {
     return (topic.match(/<[^>]*>|~[^\s]/g) ?? []).map((token) => token.toLowerCase()).sort();
 }
 
-// 번역한 주제 목록(첫 앵커 이름, 파일 순서)이다. (2026-10-31 WB03-P)
+// 번역한 주제 목록(첫 앵커 이름, 파일 순서)이다. 본문 없이 다음 앵커와 묶이는 별칭 앵커(ALIAS_TARGETS 의 키)도 포함한다. (2026-10-31 WB03-P, 2026-11-01 WB03-Q: 별칭 앵커와 새 주제 추가)
 const TRANSLATED = Object.freeze([
     'sacrificeOutline', 'immobileHelp', 'pickupHelp', 'moveyourpriestHelp', 'performsacrificeHelp', 'sphereHelp', 'deusphereHelp', 'serenisphereHelp',
     'pyrosphereHelp', 'bountyislandHelp', 'F1Help', 'interfaceHelp', 'vesselPriestHelp', 'themeHelp', 'unitHelp',
+    'transportHelp', 'researchHelp', 'technologyHelp', 'statsHelp', 'moneyHelp', 'stormPowerHelp', 'influenceHelp',
+    'rainVortexType', 'windVortexType', 'thunderVortexType', 'vortexHelp', 'spVortexHelp', 'golemVortexHelp', 'influenceVortexHelp',
+    'factoryHelp', 'sunFactoryType', 'windFactoryType', 'rainFactoryType', 'thunderFactoryType', 'upgradeHelp', 'shooterHelp',
+    'tacticHelp', 'tacticsHelp', 'salvageHelp', 'minimapGumpHelp', 'moneyGumpHelp', 'teleportViewHelp', 'campaignHelp', 'multiplayerHelp', 'multiQuickHelp',
 ]);
 
-// help.korean 형식: UTF-8(BOM 없음)·소스와 복사본 일치·번역 주제 15개·앵커 이름 중복 없음·영어에 있는 주제만. (2026-10-31 WB03-P)
+// 본문이 없는 별칭 앵커 → 그 앵커가 보여 주는 본문 앵커이다(영어 원문에서 별칭 앵커는 본문 앵커 바로 앞에 붙어 있어 같은 본문이 나온다). (2026-11-01 WB03-Q)
+const ALIAS_TARGETS = Object.freeze({
+    researchHelp: 'technologyHelp', moneyHelp: 'stormPowerHelp', tacticHelp: 'tacticsHelp', campaignHelp: 'multiplayerHelp',
+    rainVortexType: 'vortexHelp', windVortexType: 'vortexHelp', thunderVortexType: 'vortexHelp',
+    factoryHelp: 'thunderFactoryType', sunFactoryType: 'thunderFactoryType', windFactoryType: 'thunderFactoryType', rainFactoryType: 'thunderFactoryType',
+});
+
+// 앵커 구간에서 태그를 걷어 낸 보이는 글이 비었는지(본문 없는 별칭 앵커인지) 돌려준다. (2026-11-01 WB03-Q)
+function isAliasSegment(segment) {
+    return segment.replace(/<[^>]*>/g, '').trim() === '';
+}
+
+// help.korean 형식: UTF-8(BOM 없음)·소스와 복사본 일치·번역 주제 목록·앵커 이름 중복 없음·영어에 있는 주제만·별칭 앵커는 영어와 같은 자리. (2026-10-31 WB03-P, 2026-11-01 WB03-Q: 별칭 앵커 검사)
 test('help.korean: UTF-8·소스와 복사본 일치·번역 주제 목록', () => {
     const bytes = koreanFiles.get('d/help.korean');
     assert.notDeepEqual([...bytes.subarray(0, 3)], [0xef, 0xbb, 0xbf], 'BOM 없는 UTF-8');
@@ -80,13 +96,17 @@ test('help.korean: UTF-8·소스와 복사본 일치·번역 주제 목록', () 
     for (const [name, bodies] of koreanTopics) {
         assert.equal(bodies.length, 1, `${name} 앵커가 둘 이상`);
         assert.ok(englishTopics.has(name), `${name} 은 영어에 없음`);
-        assert.ok(/[가-힣]/.test(bodies[0]), `${name} 에 한글이 없음`);
+        // 별칭 앵커(영어 원문에서 보이는 글이 없는 앵커)는 한국어도 비어 있고, 그 밖의 앵커에는 한글이 있다.
+        const alias = isAliasSegment(englishTopics.get(name)[0]);
+        assert.equal(alias, Object.keys(ALIAS_TARGETS).some((key) => key.toLowerCase() === name), `${name} 별칭 여부가 목록과 다름`);
+        if (alias) assert.ok(isAliasSegment(bodies[0]), `${name} 별칭 앵커에 글이 있음`);
+        else assert.ok(/[가-힣]/.test(bodies[0]), `${name} 에 한글이 없음`);
     }
 });
 
-// 번역하지 않고 남겨 둔 영어 낱말(네 글자 이상)은 화면에 보이는 고유 이름·키 이름·메뉴 이름뿐이다(문장이 영어로 남은 주제를 찾는다). (2026-10-31 WB03-P)
+// 번역하지 않고 남겨 둔 영어 낱말(네 글자 이상)은 화면에 보이는 고유 이름·키 이름·메뉴 이름뿐이다(문장이 영어로 남은 주제를 찾는다). (2026-10-31 WB03-P, 2026-11-01 WB03-Q: 메뉴 항목 Drop·명령 이름 format·시험용 이름 devo12 허용)
 test('help.korean: 영어 문장이 남지 않았다(고유 이름·키·메뉴 이름만 허용)', () => {
-    const allowed = new Set(['Start', "Battle'", 'NetStorm', 'Netstorm', 'Ticonderoga', 'Entertainment', 'Activision', 'Titanic', 'MicroSoft', 'IntellimouseTM', 'Escape', 'Shift', 'Pause', 'Ctrl', 'About', 'Salvage']);
+    const allowed = new Set(['Start', "Battle'", 'NetStorm', 'Netstorm', 'Ticonderoga', 'Entertainment', 'Activision', 'Titanic', 'MicroSoft', 'IntellimouseTM', 'Escape', 'Shift', 'Pause', 'Ctrl', 'About', 'Salvage', 'Drop', 'devo', 'format']);
     // 태그와 글자 모양 표시를 걷어 내고 남은 영어 낱말을 모은다.
     const visible = koreanHelp.slice(koreanHelp.indexOf('<a name=')).replace(/<[^>]*>/g, ' ').replace(/~[^\s]/g, ' ');
     const leftovers = [...new Set([...visible.matchAll(/[A-Za-z][A-Za-z']{3,}/g)].map((match) => match[0]))].filter((word) => !allowed.has(word));
@@ -123,8 +143,34 @@ test('renderHelpTopic: 한국어 주제의 링크 목적지가 영어와 같고 
     // 같은 이름의 앵커가 둘인 주제(themeHelp·unitHelp)는 한국어도 한 번만 나온다.
     assert.equal((renderHelpTopic({ helpText: koreanHelp, topic: 'themeHelp', substitute: (text) => text }).styleText.match(/님버스의 세 명의 퓨리/g) ?? []).length, 1);
     assert.equal((renderHelpTopic({ helpText: koreanHelp, topic: 'unitHelp', substitute: (text) => text }).styleText.match(/전투 유닛은 썬, 윈드/g) ?? []).length, 1);
+    // 같은 이름의 앵커가 둘인 신전·워크샾 계열 주제도 한국어는 한 번만 나온다(영어 파일에도 옛 본문이 뒤에 하나 더 있다). (2026-11-01 WB03-Q)
+    for (const [topic, phrase] of [['vortexHelp', /신전은 각 섬에서/g], ['spVortexHelp', /전투에서 신전은/g], ['golemVortexHelp', /신전에서는 새 섬에서/g], ['influenceVortexHelp', /님버스에서 무엇이든 지으려면/g]]) {
+        assert.equal((renderHelpTopic({ helpText: koreanHelp, topic, substitute: (text) => text }).styleText.match(phrase) ?? []).length, 1, topic);
+    }
     // 번역하지 않은 주제는 한국어 파일에서 찾지 못한다(영어 대체는 도움말 창이 한다).
-    assert.equal(renderHelpTopic({ helpText: koreanHelp, topic: 'statsHelp', substitute: (text) => text }).found, false);
+    assert.equal(renderHelpTopic({ helpText: koreanHelp, topic: 'altarType', substitute: (text) => text }).found, false);
+});
+
+// 별칭 앵커는 영어와 같은 본문 앵커를 가리킨다: 한국어에서도 별칭과 본문 앵커가 같은 본문(같은 링크 목록)을 보여 준다. (2026-11-01 WB03-Q)
+test('renderHelpTopic: 별칭 앵커가 영어와 같은 본문 앵커의 본문을 보여 준다', () => {
+    const data = newData('korean');
+    // 별칭 앵커로 열면 본문 뒤에 링크 색 복원 코드(`~[T0]~N~.`)가 앵커 수만큼 더 붙는다(원본 파서의 동작이며 영어도 같다). 그 꼬리를 뺀 본문이 같아야 하고, 꼬리 자체는 영어와 같아야 한다.
+    const tailOf = (styleText) => styleText.match(/(?:\s|~\[T0\]~N~\.)+$/)?.[0] ?? '';
+    const render = (helpText, topic) => renderHelpTopic({ helpText, topic, substitute: (text) => data.substitute(text) });
+    // 별칭 앵커마다 본문 앵커와 같은 본문·링크가 나오는지를 한국어와 영어 모두에서 비교한다.
+    for (const [alias, target] of Object.entries(ALIAS_TARGETS)) {
+        const tails = [];
+        for (const helpText of [koreanHelp, englishHelp]) {
+            const aliasResult = render(helpText, alias);
+            const targetResult = render(helpText, target);
+            assert.equal(aliasResult.found, true, alias);
+            const aliasTail = tailOf(aliasResult.styleText);
+            assert.equal(aliasResult.styleText.slice(0, aliasResult.styleText.length - aliasTail.length), targetResult.styleText.slice(0, targetResult.styleText.length - tailOf(targetResult.styleText).length), `${alias} → ${target}`);
+            assert.deepEqual(aliasResult.links.destinations, targetResult.links.destinations, `${alias} → ${target} 링크`);
+            tails.push(aliasTail);
+        }
+        assert.equal(tails[0], tails[1], `${alias} 꼬리가 영어와 다름`);
+    }
 });
 
 // 게임 데이터: 영어 대응 파일 읽기. (2026-10-31 WB03-P)
@@ -150,11 +196,11 @@ test('한국어 도움말 창: 번역한 주제는 한국어이고 번역하지 
     window.place();
     assert.ok(lines(window).includes('NetStorm 사용자 인터페이스'));
     assert.ok(!/[A-Za-z]{4}.*[A-Za-z]{4}.*Left Click/.test(lines(window)), '영어 원문이 섞이지 않음');
-    // 번역하지 않은 주제(statsHelp)는 영어 파일에서 오고 창은 정상으로 열린다.
-    window.open('statsHelp');
+    // 번역하지 않은 주제(altarType)는 영어 파일에서 오고 창은 정상으로 열린다. (2026-11-01 WB03-Q: statsHelp 를 번역해 altarType 으로 바꿈)
+    window.open('altarType');
     window.fit();
     window.place();
-    assert.equal(window.topic, 'statsHelp');
+    assert.equal(window.topic, 'altarType');
     const english = lines(window);
     assert.ok(english.length > 50 && !/[가-힣]/.test(english.replace(/\s/g, '')), `영어 본문이어야 함: ${english.slice(0, 60)}`);
     assert.ok(window.body.softLines.length > 3);
@@ -170,8 +216,8 @@ test('한국어 도움말 창: 번역한 주제는 한국어이고 번역하지 
     assert.equal(lost.fallbackHelpText, null);
 });
 
-// 번역한 주제는 모두 한국어 창에서 열리고(본문이 유니코드 코드, 줄이 있음) 화면 안에 들어간다. 4개 화면 크기에서 확인한다. (2026-10-31 WB03-P)
-test('한국어 도움말 창: 번역한 15개 주제가 모두 열린다', () => {
+// 번역한 주제는 모두 한국어 창에서 열리고(본문이 유니코드 코드, 줄이 있음) 화면 안에 들어간다. 4개 화면 크기에서 확인한다. (2026-10-31 WB03-P, 2026-11-01 WB03-Q: 별칭 앵커 포함 45개)
+test('한국어 도움말 창: 번역한 주제(별칭 앵커 포함)가 모두 열린다', () => {
     const failures = [];
     // 화면 크기마다 번역한 주제를 모두 열어 본다.
     for (const screen of [{ width: 800, height: 600 }, { width: 1024, height: 768 }, { width: 1366, height: 768 }, { width: 1280, height: 800 }]) {

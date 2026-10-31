@@ -301,9 +301,9 @@
       "path": "d/help.korean",
       "source": "webpj/translations/help.korean",
       "bundle": "korean",
-      "size": 23217,
-      "sha256": "0665ad030aedd407614704ebdca381a1a7e61862c37cb644f7a63ea376912831",
-      "use": "한국어 F1 도움말(UTF-8, 부분 번역 15개 주제): 번역하지 않은 주제는 영어 help.english 에서 주제 단위로 대체된다(2026-10-31 WB03-P)"
+      "size": 51582,
+      "sha256": "2f6dc6afde45cb1c523650dfe3ef94f9e502a71266fb83ade47c92316d34bce2",
+      "use": "한국어 F1 도움말(UTF-8, 부분 번역 앵커 45개: 본문 34개와 별칭 11개): 번역하지 않은 주제는 영어 help.english 에서 주제 단위로 대체된다(2026-10-31 WB03-P, 2026-11-01 WB03-Q)"
     },
     {
       "path": "d/offical1.korean",

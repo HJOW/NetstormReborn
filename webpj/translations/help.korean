@@ -1,8 +1,8 @@
 NetStorm 웹 판본 한국어 도움말 (원본 d/help.언어 형식, UTF-8). 첫 앵커 앞의 글은 화면에 나오지 않는다.
 번역한 주제만 담은 부분 파일이다. 여기에 없는 주제는 영어 help.english 에서 대신 찾는다(도움말 창의 주제 단위 영어 대체, 웹 적응).
-태그·조건·그림·링크 주소·앵커 이름은 영어 원문과 똑같이 두고(원문의 오타 태그도 그대로) 보이는 문구만 번역했다. 같은 이름의 앵커가 둘인 주제는 첫 앵커만 보이므로 첫 앵커만 담았다.
+태그·조건·그림·링크 주소·앵커 이름은 영어 원문과 똑같이 두고(원문의 오타 태그도 그대로) 보이는 문구만 번역했다. 같은 이름의 앵커가 둘인 주제는 첫 앵커만 보이므로 첫 앵커만 담았다. 본문이 없는 앵커(별칭)는 영어와 같은 자리(본문 앵커 바로 앞)에 그대로 둔다.
 건물·유닛 이름은 AGENTS.md 의 한국어 명칭 규칙(assets/unit-names.korean.json)을 따른다. 번역 문구는 이 프로젝트가 새로 쓴 것이라 개발자 검수 대상이다.
-(2026-10-31 WB03-P: 게임 도움말 15개 주제)
+(2026-10-31 WB03-P: 게임 도움말 15개 주제. 2026-11-01 WB03-Q: 수송·지식·유닛 정보·스톰 파워·에너지·신전·워크샾·전술·회수·창 설명·멀티플레이어 개요 주제와 그 별칭 앵커)
 
 <a name="sacrificeOutline">
 <h2>포획과 제물 바치기 방법</h2>
@@ -444,4 +444,551 @@ NetStorm을 만든 Titanic은 안타깝게도 이제 더 이상 존재하지 않
 <a href="#statsHelp">유닛 정보를 읽는 방법.</a><br>
 <a href="#themeHelp">그 밖의 유닛과 그 계열.</a>
 <br>
+</a>
+
+<a name="transportHelp">
+<h2>수송 유닛</h2>
+<p>
+화물을 나를 수 있는 모든 <a href="unitHelp">유닛</a>입니다. 공중 수송과 지상 수송이 있습니다.
+<p>
+<h3>수송 유닛 이동하기</h3>
+<p>
+수송 유닛을 왼쪽 클릭한 뒤 커서를 화면 위로 움직이면, 이동할 수 있는 곳에는 조준선이,
+이동할 수 없는 곳에는 금지 표시가 나타납니다. 이동할 수 있는 곳을 왼쪽 클릭하면 수송 유닛이
+그곳으로 이동합니다.
+<p>
+<h3>화물 싣기</h3>
+<p>
+수송 유닛을 왼쪽 클릭한 뒤 커서를 실을 수 있는 물체 위로 가져가면 커서가 손 모양으로 바뀝니다.
+그 물체를 왼쪽 클릭하면 수송 유닛이 가서 실어 옵니다.
+<p>
+<a href="#nuggetType">스톰 크리스탈</a>, <a href="#priestType">사제</a>, 그리고
+<a href="#buriedType">오벨리스크</a> 모양으로 나타나는 <a href="#buriedType">주문</a>을 실을 수 있습니다.
+<p>
+기억하세요: 수송 유닛은 사제와 스톰 크리스탈을 동시에 실을 수 없습니다.
+또한 사제는 다른 사제를 태울 수 없습니다.
+<p>
+<h3>화물 내리기</h3>
+<p>
+화물을 실은 수송 유닛을 오른쪽 클릭한 뒤 "Drop ..." 을 고르십시오.
+주문은 내릴 수 없으므로 이에 해당하지 않습니다.
+<p>
+<h3>주문 걸기</h3>
+<p>
+수송 유닛이 일단 주문을 얻으면, 플레이어의 스톰 파워만 충분하다면 그 주문을 횟수에 제한 없이 걸 수 있습니다.
+수송 유닛은 파괴되거나 다른 주문을 얻어 이전 주문이 대체되기 전까지 그 주문을 유지합니다.
+이제 수송 유닛을 오른쪽 클릭하면 표시된 양의 스톰 파워로 주문을 걸 수 있는 항목이 나타납니다.
+<p>
+<h3>일반 사항</h3>
+<p>
+수송 유닛은 한 번에 주문 하나만 가질 수 있습니다.
+<p>
+지상 수송 유닛은 한 번에 공중 공격 유닛 하나만 끌어들입니다.
+건물과 그 밖의 유닛은 한 번에 세 개씩 끌어들입니다.
+<p>
+<a href="#sunWalkerType">골렘</a>은 어리석어서 다리가 부서져 있으면 그대로 걸어서 떨어집니다.
+다른 모든 수송 유닛은 추락해 죽기 전에 멈춥니다.
+<p>
+<a href="#priestType">사제</a>나 <a href="#rainWalkerType">크리스탈 크랩</a>이 위험한 다리 위에 서 있으면
+더 안전한 위치로 자동으로 이동하려 합니다.
+<p>
+기억해 둘 규칙:
+<br>내 <a href="#priestType">사제</a>를 내 수송 유닛에 태울 수는 없습니다.
+<br>
+</a>
+
+<a name="researchHelp">
+
+<a name="technologyHelp">
+<h2>지식</h2>
+<p>
+<q>"그들의 피 흘리는 내장을 제도사의 청사진처럼 읽을 수 있지."<br>
+- 할도르 헐멘, 님버스의 사제이자 기계 기술자</q>
+<p>
+지식은 전투에서 <a href="#unitHelp">유닛</a>을 만들 수 있는 능력을 줍니다. <a href="multiQuickHelp">멀티플레이어</a> 모드에서는
+쌓아 온 지식이 온라인 전투가 끝나도 다음 전투로 이어집니다.
+<p>
+<a href="#sacrificeOutline">사제를 제물로 바쳐</a> 지식을 얻었다면, 알맞은 <a href="#themeHelp">퓨리 계열</a>의
+<a href="#factoryHelp">워크샾</a> 어디에서든 그 지식을 생산에 투입할 수 있습니다.
+<p>
+처음부터 <a href="#sunarcherType">썬 디스크 발사기</a>와 <a href="#suncannontype">썬 캐논</a>의 지식이 주어지며,
+첫 워크샾에서 바로 생산할 수 있습니다. 그 밖의 모든 것은 사제 몇 명을 <a href="#sacrificeOutline">제물로 바치는</a>
+대가를 치러야 얻습니다.
+<p>
+원하는 지식과 맞바꿔 사제 몇 명을 처치했다면, 알맞은 워크샾을 지을 때 그 지식을 쓸 수 있습니다.
+<p>
+예를 들어 사제 세 명을 처치하는 대가로 썬더 캐논을 만드는 능력을 얻었다고 합시다. 이제 썬더 워크샾을 지으면
+생산 칸 하나를 썬더 캐논으로 채울 수 있습니다.
+<p>
+하지만 윈드 워크샾을 지으면 그곳에서는 썬더 캐논을 만들 수 없습니다. 각 워크샾은 자신의 계열에 해당하는
+유닛만 만들 수 있기 때문입니다: 썬 워크샾에서는 썬 유닛, 썬더 워크샾에서는 썬더 유닛 같은 식입니다.
+<p>
+워크샾의 칸을 모두 썼다면 <a href="#upgradeHelp">업그레이드</a>하거나 워크샾을 하나 더 지을 때입니다.
+업그레이드하면 추가 지식을 담을 수 있는 칸이 늘어납니다.
+<p>
+<a href="#factoryHelp">워크샾</a>에 대해 더 알아보기...
+<p>
+<a href="#sacrificeOutline">새 지식을 얻기 위해 사제를 제물로 바치는 방법</a>에 대해 더 알아보기...
+<br>
+</a>
+</a>
+
+<a name="statsHelp">
+<h2>유닛 정보</h2>
+<p>
+<b><c>계열:</c></b> 게임의 모든 <a href="unitHelp">유닛</a>은 <a href="#themeHelp">퓨리</a> 중 하나 또는 썬에 속합니다.
+유닛의 계열에 따라 어느 퓨리가 그 <a href="#technologyHelp">지식</a>을 내려 주는지,
+어느 <a href="#factoryHelp">워크샾</a>에서 생산할 수 있는지,
+그리고 짓는 데 어떤 종류의 <a href="#influenceHelp">에너지</a>가 필요한지가 정해집니다.
+<p>
+<b><c>분류:</c></b> 유닛이 무슨 일을 하고 어떻게 쓸 수 있는지를 설명합니다. 분류 목록은 이 페이지 맨 아래에 있습니다.
+<p>
+<b><c>체력:</c></b> 유닛이 파괴되기 전까지 견딜 수 있는 피해량을 나타냅니다.
+<p>
+<b><c>사거리:</c></b> 유닛이 사격하거나 효과를 퍼뜨릴 때, 그 효과가 몇 '칸'까지 닿는지를 나타내는 숫자입니다.
+참고로 썬 디스크 발사기의 크기는 3x3 '칸'이고 화면 높이는 40칸입니다.
+<p>
+<b><c>피해:</c></b> 유닛이 평균적으로 매초 입히는 피해량을 설명합니다. 이 값은 한 발당 수치가 아니라,
+시간이 지남에 따른 유닛의 효율을 알려 주는 절대 척도라는 점을 기억하십시오.
+<p>
+<b><c>스톰 파워 비용:</c></b> 유닛을 짓기 위해 써야 하는 스톰 파워의 양을 알려 줍니다.
+<p>
+<b><c>건설에 필요한 에너지:</c></b> 유닛을 만드는 데 필요한 <a href="#influenceHelp">에너지</a>의 양과
+정확히 어떤 종류의 에너지가 필요한지 보여 줍니다.
+<p>
+유닛은 <a href="salvageHelp">회수(Salvage)</a>하여 스톰 파워 일부를 되찾을 수 있습니다.
+<p>
+<b><c>분류 목록:</c></b>
+<p>
+<c>생산:</c><br>
+   <a href="#windVortexType">윈드 신전</a><br>
+   <a href="#rainVortexType">레인 신전</a><br>
+   <a href="#thunderVortexType">썬더 신전</a><br>
+   <a href="#sunFactoryType">썬 워크샾</a><br>
+   <a href="#windFactoryType">윈드 워크샾</a><br>
+   <a href="#rainFactoryType">레인 워크샾</a><br>
+   <a href="#thunderFactoryType">썬더 워크샾</a><br>
+   <a href="#outpostType">아웃포스트</a><br>
+<c>성지:</c><br>
+   <a href="#altarType">제단</a><br>
+<c>사제:</c><br>
+   <a href="#priestType">사제</a><br>
+<c>에너지 공급원:</c><br>
+   <a href="#windbatteryType">윈드 제네레이터</a><br>
+   <a href="#rainbatteryType">레인 제네레이터</a><br>
+   <a href="#thunderbatteryType">썬더 제네레이터</a><br>
+<c>스톰 파워 공급원:</c><br>
+   <a href="#geyserType">스톰 간헐천</a><br>
+   <a href="#nuggetType">스톰 크리스탈</a><br>
+<c>다리:</c><br>
+   <a href="#bridgeType">다리</a><br>
+<c>사격:</c><br>
+   <a href="#suncannonType">썬 캐논</a><br>
+   <a href="#raincannonType">아이스 캐논</a><br>
+   <a href="#thundercannonType">썬더 캐논</a><br>
+   <a href="#sunarcherType">썬 디스크 발사기</a><br>
+   <a href="#windarcherType">크로스보우</a><br>
+   <a href="#thunderarcherType">반더 타워</a><br>
+<c>공중 공격:</c><br>
+   <a href="#sunflyerType">훨리기그</a><br>
+   <a href="#windflyerType">더스트 데빌</a><br>
+   <a href="#rainflyerType">맨 오 워</a><br>
+<c>공중 공격 기지:</c><br>
+   <a href="#sunaviaryType">훨리베이스</a><br>
+   <a href="#windaviaryType">데빌 메이커</a><br>
+   <a href="#rainaviaryType">맨 오 워 풀</a><br>
+<c>방어:</c><br>
+   <a href="#sunblockerType">스톤 타워</a><br>
+   <a href="#windblockerType">윈드 타워</a><br>
+   <a href="#rainblockerType">아이스 타워</a><br>
+   <a href="#thunderblockerType">불워크</a><br>
+   <a href="#sunfenceType">썬 바리케이드</a><br>
+   <a href="#rainfenceType">애시드 바리케이드</a><br>
+   <a href="#thunderfenceType">아크 스파이어</a><br>
+   <a href="#edgefarmType">에지 팜</a><br>
+<c>지상 수송:</c><br>
+   <a href="#sunwalkerType">골렘</a><br>
+   <a href="#windwalkerType">세일 스케이터</a><br>
+   <a href="#rainwalkerType">크리스탈 크랩</a><br>
+   <a href="#bulfType">벌프</a><br>
+<c>공중 수송:</c><br>
+   <a href="#sunballoonType">벌룬</a><br>
+   <a href="#windballoonType">에어 쉽</a><br>
+   <a href="#rainballoonType">클라우드 플로터</a><br>
+<c>공격 주문:</c><br>
+   <a href="#bombExplodeSmallType">포인트 블라스트</a><br>
+   <a href="#bombExplodeMediumType">데버스테이션</a><br>
+   <a href="#bombExplodeLargeType">데시메이션</a><br>
+   <a href="#bombTreasonType">트리즌</a><br>
+   <a href="#bombMeteorType">밤바드먼트</a><br>
+   <a href="#bombGravitonType">그래비톤</a><br>
+   <a href="#bombLightingwaveType">썬더스톰</a><br>
+   <a href="#bombLightingZapType">썬더 스트라이크</a><br>
+<c>방어 주문:</c><br>
+   <a href="#bombHardenerType">다리 하든</a><br>
+   <a href="#bombHealType">힐</a><br>
+   <a href="#bombInvisibleType">인비저빌리티</a><br>
+   <a href="#bombParalyzeType">패럴리시스</a><br>
+<c>소환 주문:</c><br>
+   <a href="#bombTwisterType">훨윈드</a><br>
+   <a href="#bombIITwisterType">트위스터</a><br>
+   <a href="#bombIIITwisterType">보텍스</a><br>
+   <a href="#bombIManoType">하이드라</a><br>
+   <a href="#bombIIManoType">하이드라 웨이브</a><br>
+   <a href="#bombIIIManoType">하이드라 플러드</a><br>
+<c>거주 구역:</c><br>
+   <a href="#residenceType">거주 구역</a><br>
+<br>
+</a>
+
+<a name="moneyHelp">
+
+<a name="stormPowerHelp">
+<h2>스톰 파워</h2>
+<p>
+스톰 파워는 화폐와 같습니다. <a href="#bridgeType">다리</a>를 제외하고, 짓는 모든 <a href="#unitHelp">유닛</a>에 스톰 파워를 씁니다.
+<p>
+현재 보유량은 화면 왼쪽 위의 <a href="#moneyGumpHelp">스톰 파워 보유량 창</a>에 표시됩니다.
+<p>
+스톰 파워는 에너지와 시간 사이의 불안정한 물질 상태입니다. <a href="#sphereHelp">님버스</a>에서 만들어지거나
+파괴되는 모든 것의 본질입니다.
+<p>
+스톰 파워로 님버스 세계의 거의 모든 것을 지을 수 있습니다. 다만 무엇이든 짓는 데에는
+<a href="#influenceHelp">에너지</a>도 필요하다는 점을 기억하십시오.
+<p>
+스톰 파워는 세계에 <a href="#geyserType">스톰 간헐천</a>의 모습으로 나타납니다: <!"geyser.*">
+<br>
+내 <a href="#transportHelp">수송 유닛</a> 하나를 왼쪽 클릭해 간헐천으로 보내십시오. 그러면 수송 유닛은
+간헐천이 고갈될 때까지 간헐천과 내 <a href="#vortexHelp">신전</a> 사이를 자동으로 돌며
+<a href="#nuggetType">스톰 크리스탈</a> 형태로 스톰 파워를 채굴합니다. (스톰 크리스탈:
+<!"nugget.*">)<br>
+간헐천이 고갈되면 가장 가까운, 고갈되지 않은 다음 간헐천을 찾아 같은 일을 합니다. 수송 유닛이
+물건을 모아 오는 동안 <a href="#moneyGumpHelp">스톰 파워 보유량 창</a>의 숫자가 올라가는 것을 지켜보십시오!
+<p>
+왼쪽의 <a href="#teleportViewHelp">생산 창</a>에서는 스톰 파워가 모자라 만들 수 없는 <a href="#unitHelp">유닛</a>이
+빨갛게 보입니다.
+<p>
+전투에서 적 유닛을 파괴하면 그 스톰 파워 값의 절반을 얻습니다! 나머지 절반은 아래에서 벌어지는
+<a href="#themehelp">퓨리</a>의 전쟁 속으로 떨어지고, 결국 다시 <a href="#geyserType">스톰 간헐천</a>이 되어
+하늘로 솟아오릅니다.
+<br>
+</a>
+</a>
+
+<a name="influenceHelp">
+<h2>에너지</h2>
+<p>
+에너지는 전투에서 <a href="#unitHelp">유닛</a>을 짓는 데 도움이 되는 힘입니다. <a href="#vortexHelp">신전</a>과
+"제네레이터"가 공급하는 에너지는 세 종류입니다:<br>
+<!"mana.8"> - <!"windvortex.*"> 와 <!"windbattery.*"> 의 윈드 에너지<br>
+<!"mana.9"> - <!"rainvortex.*"> 와 <!"rainbattery.*"> 의 레인 에너지<br>
+<!"mana.10"> - <!"thundervortex.*"> 와 <!"thunderbattery.*"> 의 썬더 에너지<br>
+<p>
+<b>에너지로 유닛 짓기</b>
+<p>
+짓는 대상마다 옆에 붙은 아이콘이 그 구조물을 완성하는 데 어떤 에너지가 필요한지 알려 줍니다. 예를 들어
+<br>
+<!"mana.2"><!"thunderCannon.0">
+<p>
+는 이 썬더 캐논에 썬더 에너지가 하나 필요하다는 뜻입니다. 즉 캐논의 에너지 요구를 채우려면 썬더 신전이나
+<a href="#thunderbatteryType">썬더 제네레이터</a>가 가까이 있어야 합니다.
+<p>
+유닛이 썬 에너지 - <!"mana.3"> - 를 요구한다면 <i>어떤</i> 종류의 에너지든 그 요구를 채울 수 있다는 뜻입니다. 예를 들어
+<br>
+<!"mana.3"><!"sunCannon.0">
+<p>
+는 이 썬 캐논이 레인, 윈드, 썬더 중 <i>어떤</i> 에너지든 하나를 받아들인다는 뜻입니다.
+<p>
+신전과 제네레이터를 왼쪽 클릭하면 그것이 공급하는 에너지를 볼 수 있습니다.
+<br>
+</a>
+
+<a name="rainVortexType">
+
+<a name="windVortexType">
+
+<a name="thunderVortexType">
+
+<a name="vortexHelp">
+<info>
+<q>성직자의 피는 운명의 영약이다.</q>
+<p>
+<a href="#rainVortexType">레인 신전</a><br>
+<a href="#windVortexType">윈드 신전</a><br>
+<a href="#thunderVortexType">썬더 신전</a><br>
+<p>
+신전은 각 섬에서 <a href="#influenceHelp">에너지</a>의 궁극적인 중심입니다.
+신전은 위에 나열한 세 가지 형태 중 하나를 취합니다.
+<p>
+신전이 서 있는 한 내 <a href="#priestType">사제</a>는 전투 중에 체력을 회복합니다. 신전은 다음과 같은 이점도 줍니다:
+<p>
+1. 신전이 있는 섬에서 바깥으로 <a href="#bridgeType">다리</a>를 놓을 수 있습니다.
+<br>
+2. 그 섬은 적의 건설로부터 보호됩니다. 어떤 적도 그곳에 지을 수 없습니다.
+<br>
+3. 수송 유닛이 <a href="#nuggetType">스톰 크리스탈</a>을 신전에 가져다 놓으면 <a href="#stormpowerHelp">스톰 파워</a>로 바뀝니다.
+<br>
+4. 섬은 내가 어떤 신전을 짓든 그 신전의 테마를 반영하도록 바뀝니다.
+<p>
+이러한 이점은 <a href="multiplayerHelp">멀티플레이어</a> 플레이의 핵심 유닛인 <a href="outpostType">아웃포스트</a>와
+거의 같습니다.
+<p>
+게임 중 <c>F4</c> 를 누르면 신전으로 이동합니다.
+<p>
+신전을 이용하는 방법에 대해 알아보기:<br>
+<a href="#spVortexHelp">스톰 파워 얻기</a><br>
+<a href="#golemVortexHelp">골렘 만들기</a><br>
+<a href="#influenceVortexHelp">에너지 생성</a><br>
+</a>
+</a>
+</a>
+</a>
+
+<a name="spVortexHelp">
+<h2>신전:<br>스톰 파워 얻기</h2>
+<p>
+전투에서 신전은 <a href="#moneyHelp">스톰 파워</a>를 쓸 수 있는 자원으로 바꿔 줍니다.
+신전이 없으면 스톰 파워를 모으거나 처리할 수 없습니다.
+<p>
+스톰 파워는 <a href="#geyserType">스톰 간헐천</a>에서 <a href="#nuggetType">스톰 크리스탈</a>의
+형태로 모입니다.
+<p>
+<a href="#golemVortexHelp">골렘 만들기</a>에 대해 더 알아보기...<br>
+<br>
+</a>
+
+<a name="golemVortexHelp">
+<h2>신전:<br>골렘 만들기</h2>
+<p>
+신전에서는 새 섬에서 <a href="#transportHelp">수송 유닛</a> 역할을 하는 <a href="#sunWalkerType">골렘</a>을
+만들 수 있습니다.
+<p>
+<a href="#pyrosphereHelp">파이로스피어</a>로 처음 내려와 전투를 시작하면 <a href="#teleportViewHelp">생산 창</a>에
+골렘이 나타납니다. <a href="#moneyHelp">스톰 파워</a>만 충분하다면 이 하인들을 얼마든지 만들 수 있습니다.
+<p>
+신전이 <a href="#influenceVortexHelp">에너지를 생성</a>하는 방법에 대해 더 알아보기...<br>
+<br>
+</a>
+
+<a name="influenceVortexHelp">
+<h2>신전:<br>에너지 생성</h2>
+<p>
+님버스에서 무엇이든 지으려면 충분한 <a href="#influenceHelp">에너지</a>가 있어야 합니다.
+신전은 이 에너지를 공급하는 두 곳 중 하나입니다. 본거지 섬에서 골렘이든, 워크샾이든,
+전투용 <a href="#unitHelp">유닛</a>이든 무언가를 지으려 할 때 필요한 에너지는 신전이 공급합니다.
+<p>
+신전을 왼쪽 클릭하면 이 에너지가 미치는 범위를 볼 수 있습니다.
+<p>
+<a href="#vortexHelp">신전 도움말로 돌아가기.</a>
+</a>
+
+<a name="factoryHelp">
+
+<a name="sunFactoryType">
+
+<a name="windFactoryType">
+
+<a name="rainFactoryType">
+
+<a name="thunderFactoryType">
+<info>
+<q>"복잡한 기계 장치에 대한 님버스인의 소질은 그야말로 따라올 자가 없다." - 님버스의 기계공</q>
+<p>
+워크샾은 전투에 쓸 <a href="#unitHelp">유닛</a>을 만듭니다.
+<p>
+전투 중에 워크샾을 지어, <a href="#priestType">사제</a>를 제물로 바쳐 얻은 <a href="#technologyHelp">지식</a>을
+바탕으로 전투 유닛을 만들게 됩니다. 이 지식은 전투가 끝나도 이어지므로 시간이 갈수록
+유닛의 다양성과 힘이 늘어날 수 있습니다.
+<p>
+워크샾 하나가 만들 수 있는 유닛은 몇 개뿐이니 신중히 고르십시오!
+<p>
+새로 지은 1단계 워크샾에는 "생산 칸"이 두 개 있습니다. 만들 새 지식을 고르면 칸 하나가 채워집니다.
+워크샾이 무엇을 만들지 한 번 정하면 바꿀 수 없습니다.
+<p>
+<I>하지만</I> 워크샾을 <a href="#upgradeHelp">업그레이드</a>할 때마다 칸이 하나씩 늘어납니다.
+업그레이드하려면 일정량의 <a href="#moneyHelp">스톰 파워</a>를 내야 합니다.
+<p>
+워크샾이 유닛을 만들 때는 워크샾에서 건설 위치로 스톰 파워 줄기가 뻗어 나갑니다. 이 줄기가 알맞은
+<a href="#influenceHelp">에너지</a>와 합쳐지면 그 자리에서 유닛이 만들어집니다. 하지만 워크샾이 파괴되면,
+그 워크샾을 대신할 새 워크샾을 지을 때까지 그 워크샾이 만들던 것은 아무것도 만들 수 없게 됩니다.
+<br>
+</a></a></a></a></a>
+
+<a name="upgradeHelp">
+<h2>워크샾 업그레이드</h2>
+<p>
+<q>"더 많은 힘, 더 빠른 속도. 절대적인 힘, 빛의 속도!" - 스펜 로델, 썬의 제자</q>
+<p>
+전투에 쓸 새로운 종류의 <a href="#unitHelp">유닛</a>을 만들려면 워크샾을 업그레이드하십시오.
+<p>
+워크샾의 생산 칸을 늘리려면 <a href="#moneyHelp">스톰 파워</a>를 내고 업그레이드하면 됩니다.
+업그레이드에 필요한 스톰 파워는 <a href="#factoryHelp">워크샾</a>을 오른쪽 클릭하면 알 수 있습니다.
+<p>
+각 워크샾은 세 번까지만 업그레이드할 수 있습니다.
+<br>
+</a>
+
+<a name="shooterHelp">
+<h2>사격 유닛</h2>
+<p>
+님버스의 사격 유닛은 가장 가까운 적 유닛을 자동으로 겨냥하므로 무엇을 공격할지 따로 지시할 필요가 없습니다.
+<p>
+사격 유닛을 왼쪽 클릭하면 공격 사거리를 볼 수 있습니다.
+<p>
+직선으로 발사하는 사격 유닛은 지상 또는 공중 <a href="#transportHelp">수송 유닛</a>을 겨냥하더라도
+수송 유닛이 지나가는 순간 빗나가는 경우가 많다는 점을 기억하십시오.
+</a>
+
+<a name="tacticHelp">
+
+<a name="tacticsHelp">
+<h2>NetStorm의 전술</h2>
+유닛이 전투에서 어떻게 싸우는지 이해하는 것이 중요합니다. 전략은 이 사실들에 달려 있습니다.
+<p>
+<a href="unitHelp">유닛</a>은 항상 가장 가까운 공격 가능한 목표를 고릅니다. 일단 목표를 잡으면 그것이 파괴될 때까지
+계속 공격합니다. 타워 같은 일부 방어 유닛을 사이에 세워 공격자가 새 목표를 고르게 만들 수 있습니다.
+가장 가까운 목표는 <i>그것이 공격자에게 면역이어도</i> 선택됩니다!
+<p>
+유닛이 폭발하면 근처의 금이 간 다리도 무너집니다. 유닛 바로 옆에 있던 보통 다리는 금이 가거나
+들쭉날쭉한 끝이 됩니다.
+<p>
+사격 유닛이 폭발하면 근처의 다른 모든 유닛에도 피해를 줍니다! 그 피해로 연쇄 폭발이 일어날 수도 있습니다.
+신전도 이런 식으로 폭발합니다.
+<p>
+유닛을 <a href="salvageHelp">회수(Salvage)</a>하면 이런 폭발은 일어나지 않지만, 마치 유닛이 폭발한 것처럼
+다리는 똑같은 영향을 받습니다.
+<p>
+유닛은 1) 본거지 섬, 2) 본거지 섬과 다리로 이어진 주인 없는 섬, 3) 내가 소유한 다리에서 뻗어 나간 곳
+어디에든 지을 수 있습니다.
+<p>
+적 유닛을 파괴하면 그 스톰 파워 값의 25%를 얻습니다. 훨리기그와 맨 오 워는 짓는 데 추가 스톰 파워가 들지 않으므로
+파괴해도 돌려받는 것이 없음을 기억하십시오. 그 기지만이 스톰 파워를 돌려줍니다.
+<p>
+적을 겨냥할 때는 적이 <i>땅</i>과 닿는 부분을 쏴야 한다는 점을 기억하십시오.
+적의 윗부분을 맞히고 있다면 사실상 공격하고 있는 것이 아닙니다.
+</a>
+</a>
+
+<a name="salvageHelp">
+<h2>회수(Salvage)</h2>
+<p>
+어떤 유닛이든 회수(Salvage)하면 그 유닛을 짓는 데 쓴 스톰 파워의 25%를 되찾을 수 있습니다.
+<p>
+<a href="unitHelp">유닛</a>이 피해를 입었다면 되찾는 스톰 파워가 줄어듭니다. 예를 들어
+400<!"fortgump.3">으로 지은 유닛은 100<!"fortgump.3">에 회수할 수 있습니다. 하지만 체력의 3분의 1이
+사라졌다면 66<!"fortgump.3">만 얻습니다.
+<p>
+마지막으로 알아 둘 점: 피해가 유닛 체력의 절반을 넘으면 스톰 파워를 전혀 되찾지 못합니다.
+<p>
+참고: 다리 옆에 있는 유닛을 회수하면 튼튼한 다리에는 금이 가고, 금이 간 다리는 무너집니다.
+</a>
+
+<a name="minimapGumpHelp">
+<h2>하늘 전경</h2>
+<p>
+<a href="#pyrosphereHelp">파이로스피어</a>에서 하늘 전경 창은 <a href="#bountyislandHelp">중립 섬</a>과
+온라인 상대의 섬을 보여 줍니다.
+<p>
+하늘 전경 창은 섬과 <a href="#bridgeType">다리</a>를 각각의 색으로 표시합니다.
+간헐천은 갈색 점으로 눈에 띕니다.
+<p>
+하늘 전경 창을 왼쪽 클릭하면 하늘의 특정 부분을 볼 수 있습니다. 왼쪽 마우스 버튼을 누른 채 끌어서
+화면을 움직일 수도 있습니다. 전략 상황을 한눈에 내려다보고 싶은 전투 중에 유용합니다!
+<br>
+</a>
+
+<a name="moneyGumpHelp">
+<h2>스톰 파워 보유량 창</h2>
+<p>
+<q>"스톰 파워는 정수다! 창조와 파괴가 하나가 된다!" -열 번째 원의 가르침</q>
+<p>
+이 숫자는 <a href="#unitHelp">유닛</a>과 건물을 짓는 데 쓰는 <a href="#stormPowerHelp">스톰 파워</a>의 보유량을 보여 줍니다.
+<p>
+남은 양이 2000<!"fortgump.3"> 미만이면 숫자가 노란색으로 나옵니다(예: <~y>1900<~.><!"fortgump.3">).
+1000<!"fortgump.3"> 미만이면 빨간색으로 나옵니다(예: <~r>850<~.><!"fortgump.3">).
+<p>
+<!"fortgump.3"> 아이콘은 스톰 파워의 양을 나타내는 데 쓰입니다. 무언가를 지으려 할 때 필요한 스톰 파워가 빨간색으로
+표시되어 있다면(예: "캐논 <~r>1000<~.><!"fortgump.3">") 스톰 파워가 모자라 지을 수 없다는 뜻입니다.
+<p>
+<a href="#teleportViewHelp">생산 창</a>에서는 스톰 파워가 모자란 유닛을 지으려 하면 그 유닛이 깜빡입니다.
+<p>
+<a href="#interfaceHelp">인터페이스 설명</a>도 읽어 보십시오.
+<br>
+</a>
+
+<a name="teleportViewHelp">
+<h2>생산 창</h2>
+<p>
+생산 창에서 <a href="unitHelp">유닛</a>을 왼쪽 클릭해 집어 들고, 다시 왼쪽 클릭하면 섬이나 다리 끝에 내려놓습니다.
+<p>
+이 창에서 유닛은 짓는 데 <a href="#stormPowerHelp">스톰 파워</a>가 더 필요하면 빨갛게 보입니다.
+<p>
+<a href="#factoryHelp">워크샾</a>에서 생산에 투입했거나 <a href="#sacrificeOutline">제물 의식</a>으로 얻은
+<a href="#technologyHelp">지식</a>은 모두 이 창에 나타납니다.
+<p>
+이 창의 어떤 유닛이든 오른쪽 클릭하면 그 유닛에 대한 더 많은 정보를 볼 수 있습니다.
+<p>
+<a href="#interfaceHelp">인터페이스 설명</a>도 읽어 보십시오.
+<br>
+</a>
+
+<a name="campaignHelp">
+
+<a name="multiplayerHelp">
+<h2>캠페인과 멀티플레이어 모드</h2>
+<p>
+NetStorm 에는 즐길 수 있는 캠페인 미션이 여러 개 있고, 무한히 즐길 수 있는 멀티플레이어 모드도 있습니다.
+"초기 미션" 을 플레이하면 게임의 원리를 배울 수 있습니다.
+<p>
+<b>캠페인</b>
+<p>
+캠페인에서는 각 미션을 정해진 지식 묶음으로 시작합니다. 이기려면 대체로 적 <a href="#priestType">사제</a>를
+<a href="themeHelp">퓨리</a>에게 제물로 바쳐야 합니다. 이렇게 하면 적이 물러나고 다음 미션으로 나아갈 수 있습니다.
+<p>
+<b>멀티플레이어</b>
+<p>
+<a href="multiQuickHelp">멀티플레이어</a> 모드는 조금 다릅니다. 님버스인들은 단순한 지식 구성으로 시작합니다.
+적 사제를 <a href="#sacrificeOutline">제물로 바칠</a> 때마다 전투 능력을 키워 줄 새로운
+<a href="#technologyHelp">지식</a>을 얻을 수 있습니다.
+<p>
+멀티플레이어 맵은 캠페인과 구성이 다릅니다. 적을 물리치려 하는 동안 다스려야 할 작은 섬이 많이 있음을 알게 될 것입니다.
+<a href="#outpostType">아웃포스트</a>(오리지널 캠페인에는 나오지 않습니다)는 멀티플레이어 게임에서
+승리하는 데 결정적입니다.
+<p>
+<a href="#altarType">제단</a>도 다르게 작동하며, <a href="#challengeIslandType">지역</a>과
+<a href="#battlemasterHelp">배틀마스터</a>가 되는 법도 알아 두어야 합니다. 다른 플레이어와
+<a href="#chatViewHelp">채팅</a>하고 싶다면 <a href="#formatCommandHelp">.format 명령</a>에 관심이 있을 수 있습니다.
+</a>
+</a>
+
+<a name="multiQuickHelp">
+<h2>멀티플레이어 빠른 시작</h2>
+<p>
+경험 많은 상대에게 일방적으로 당하고 싶지 않으신가요?
+<a href="#multiSafeHelp">멀티플레이어 생존 가이드</a>를 확인해 보십시오.
+<p>
+멀티플레이어 플레이를 위해 알아 두어야 할 다른 것들:
+<p>
+* <a href="#chatViewHelp">채팅</a>으로 다른 플레이어와 대화할 수 있습니다.
+<br>
+* <a href="#reliabilityHelp">신뢰도 등급</a>은 상대가 게임을 끝까지 마칠지 알려 줍니다.
+<br>
+* <a href="#challengeIslandType">지역</a>에서 나와 같은 수준의 플레이어를 찾을 수 있습니다.
+<br>
+* <a href="#battleIslandType">챌린지 링</a>으로 전투를 시작할 수 있습니다.
+<br>
+* <a href="#battlemasterHelp">배틀마스터</a>가 되는 것은 익혀 둘 만한 기술입니다.
+<br>
+* <a href="#battleOptionsHelp">전투 옵션</a>으로 게임 규칙을 바꿀 수 있습니다.
+<br>
+* <a href="#playerOptionsHelp">플레이어 설정</a>으로 각 플레이어의 설정을 정할 수 있습니다.
+<br>
+* <a href="#outpostType">아웃포스트</a>는 영토를 점령하는 데 쓰입니다.
+<br>
+* <a href="#altarType">제단</a>에서 <a href="#sacrificeOutline">제물</a>을 바쳐 <a href="#technologyHelp">지식</a>을 얻을 수 있습니다.
+<br>
+* <a href="#rankHelp">랭크</a>는 큰 규모의 성취를 나타냅니다.
+<p>
+* <a href="#playerlistView">여기</a>를 눌러 다음 창에 담긴 정보의 해설을 보십시오:<br>
+<a href="#PlayerListView"><!"fortgump.L1"><!"fortgump.L0"><~y><~E><~B>1.43 devo12<~.></a>
 </a>

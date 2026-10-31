@@ -52,6 +52,8 @@
 
 ## 6. 남은 일
 
+(2026-11-01 WB03-Q 에서 아래 1번의 우선순위 14개 주제와 그 연쇄(신전·워크샾 하위 주제, 별칭 앵커 11개)는 번역을 마쳤다. [4단계 기록](webpj-korean-help-20261101.md) 참고. 남은 주제는 그 문서 6절이 최신이다.)
+
 1. **나머지 도움말 주제 번역**: 산문 주제 41개(영어 약 53KB)와 유닛·건물 설명 `…Type` 주제 72개(약 36KB). 우선순위는 이미 번역한 주제에서 링크로 닿는 것: `transportHelp`·`technologyHelp`·`statsHelp`·`stormPowerHelp`·`influenceHelp`·`vortexHelp`·`factoryHelp`·`tacticsHelp`·`salvageHelp`·`minimapGumpHelp`·`moneyGumpHelp`·`teleportViewHelp`·`multiplayerHelp`·`multiQuickHelp`. `…Type` 주제는 타입 표(`.type`)가 생겨 `<info>` 머리글을 그릴 수 있게 될 때 함께 한다(지금은 본문만 나옴).
 2. 번역 문구 개발자 검수, 에너지 기호 그림(`<!"mana.8">`) 지원(WB03-G 때부터 미지원).
 3. 맨 위 인계의 나머지(미션 스크립트 한국어·Auto-Demo·Options −40 규칙·본문 끌기 Overlay·커서 2~14), 그 뒤 정적 맵 화면(M2).
