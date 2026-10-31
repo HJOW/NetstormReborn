@@ -361,6 +361,7 @@ struct RawCampaignSession::Impl {
     std::shared_ptr<ClientPlayerRecords> playerRecords; // 모든 소비자보다 먼저 구성하고 마지막에 반납하는 실제 Client Player owner다.
     std::unique_ptr<ClientPlayerRecords::Use> playerUse; // Login과 서비스 callback까지 모두 소멸한 뒤 다음 Player 재할당을 허용한다.
     RawCampaignSessionServices services; // Login/장기 callback보다 먼저 만들고 나중에 반납하는 실제 클라이언트 장치다.
+    std::shared_ptr<FortTypeConversionStorage> fortTypeConversion{services.fortTypeConversion ? services.fortTypeConversion : std::make_shared<FortTypeConversionStorage>()}; // Client의 현재표를 빌리며 독립 Session만 같은 종류의 실제 소유자를 한 번 만든다.
     std::shared_ptr<ClientChatWindowGlobals> chatGlobals{services.chatGlobals ? services.chatGlobals : std::make_shared<ClientChatWindowGlobals>()}; // 실제 Client 또는 독립 Session의 같은 중계 마스크 수명이다.
     ChatRelayHooks ChatDevices(); // 같은 현재 Player/연결 표와 UI를 중계 부모에 공급한다.
     void SendChatMutable(std::int32_t target,std::span<std::uint8_t> packet); // 준비된 현재 로컬 전송의 observer와 큐에 원시 패킷을 넘긴다.
@@ -2613,7 +2614,7 @@ struct RawCampaignSession::Impl {
     // 같은 현재 TYPE/내용물 생성과 변환표를 Technology/저장 객체의 원시 reader에 공유한다.
     FortContentsLoadHooks MakeFortContentsReader(std::function<void(std::uint32_t,const std::function<void(std::span<std::uint8_t>,const MemStreamHooks&)>&)> access) {
         FortContentsLoadHooks reader;reader.access=std::move(access);
-        reader.conversionBuffer=[this](auto token)->std::span<const std::uint8_t> { return services.fortTypeConversion->Bytes(token); };
+        reader.conversionBuffer=[this](auto token)->std::span<const std::uint8_t> { return fortTypeConversion->Bytes(token); };
         reader.type=[this](auto kind) { if (kind>=core.types.size()) throw std::out_of_range("Contents 현재TYPE 물리범위");const auto& record=core.types[kind];return FortContentsLoadType{record.flags1,record.contentListFlags}; };
         reader.parentListFlags=[this](auto selected) { //004ac550은같은부모raw주소의현재+10실제type을읽는다.저장type WORD를쓰지않는다.
             if (selected>65535 || selected>=core.pool.Capacity()) throw std::out_of_range("Contents 부모의실제Pool 범위");
@@ -2628,17 +2629,17 @@ struct RawCampaignSession::Impl {
         return reader;
     }
     // 고정 Template의 실제 반환 stream 수명을 유지하며 읽기/생성을 동일 원문 부모에서 진행한다.
-    void ReadExistingFortObjectStreams(const RawFortObjectLoad& objects,std::uint32_t slot) {
-        if (slot>=9 || !services.fortTypeConversion) throw std::logic_error("Objects 실제 Template/변환표 소유자 미연결");
+    void ReadFortObjectStreams(const RawFortObjectLoad& objects,std::uint32_t slot) {
+        if (slot>=9 || !fortTypeConversion) throw std::logic_error("Objects 실제 Template/변환표 소유자 미연결");
         std::vector<TemplateWriteStream> streams;FortObjectStreamHooks hooks; // 읽기 callback은 현재 노드의 같은 생성 수명만 빌린다.
         hooks.manager=[this](auto owner) { if (owner<0 || owner>=9) throw std::out_of_range("Objects 실제 Template 슬롯");return Read(templateStorage->Headers(),static_cast<std::size_t>(owner)*20); };
         hooks.select=[&](auto manager,auto name,auto writable) { if (manager!=hooks.manager(static_cast<std::int32_t>(slot))) throw std::logic_error("Objects 현재 manager 불일치");streams.push_back(templateStorage->SelectSection(slot,name,writable));return static_cast<std::uint32_t>(streams.size()); };
         hooks.access=[&](auto token,const auto& operation) { if (!token || token>streams.size()) throw std::out_of_range("Objects 반환 stream 수명 범위");templateStorage->AccessSection(streams[token-1],operation); };
         hooks.prepareTypes=[this](auto owner) { PrepareFortTypeNames(static_cast<std::uint32_t>(owner)); };
-        hooks.conversion=[this] { return services.fortTypeConversion->Current(); };hooks.checking=[this] { return gunState.checking ? 1U : 0U; };
-        hooks.conversionBuffer=[this](auto token)->std::span<const std::uint8_t> { return services.fortTypeConversion->Bytes(token); };
-        hooks.releaseConversion=[this] { auto& current=services.fortTypeConversion->Current();if (current) services.fortTypeConversion->Release(current);current=0; };
-        hooks.contents=[&](Sid parent,auto stream) { auto reader=MakeFortContentsReader(hooks.access);const FortContentsLoadGlobals globals{services.fortTypeConversion->Current(),hooks.checking};static_cast<void>(LoadFortContents(parent.value,stream,9,0,globals,reader)); };
+        hooks.conversion=[this] { return fortTypeConversion->Current(); };hooks.checking=[this] { return gunState.checking ? 1U : 0U; };
+        hooks.conversionBuffer=[this](auto token)->std::span<const std::uint8_t> { return fortTypeConversion->Bytes(token); };
+        hooks.releaseConversion=[this] { auto& current=fortTypeConversion->Current();if (current) fortTypeConversion->Release(current);current=0; };
+        hooks.contents=[&](Sid parent,auto stream) { auto reader=MakeFortContentsReader(hooks.access);const FortContentsLoadGlobals globals{fortTypeConversion->Current(),hooks.checking};static_cast<void>(LoadFortContents(parent.value,stream,9,0,globals,reader)); };
         hooks.assertion=[](auto line) { throw std::logic_error("원본 Objects Template.cpp 진단 "+std::to_string(line)); };objects.LoadStream(static_cast<std::int32_t>(slot),hooks);
     }
     // 같은 실제 Session/Storage/Client 전역과원시Contents reader를일반Fort child에연결한다.
@@ -2657,7 +2658,7 @@ struct RawCampaignSession::Impl {
         moneyHooks.loadingDepthChanged=[this](auto depth) { world.SetLoadingDepth(depth); };
         moneyHooks.refreshSp=[this] { if (!services.refreshSp) throw std::logic_error("Fort Money 실제SP 표시갱신 미연결");services.refreshSp(); };
         RawExistingFortChildren children;children.stateOwner=state;
-        children.loadObjects=[this,&objects](auto owner) { ReadExistingFortObjectStreams(objects,owner); }; // 최초/완성 레코드 사본 없이 실제 현재 stream에서 생성/배치를 진행한다.
+        children.loadObjects=[this,&objects](auto owner) { ReadFortObjectStreams(objects,owner); }; // 최초/완성 레코드 사본 없이 실제 현재 stream에서 생성/배치를 진행한다.
         children.money=std::make_shared<RawFortMoneyLoad>(core.pool.Edition(),rewardState,core.bookkeeping,players,objectState.loadingDepth,state->money,&sp,std::move(moneyHooks));
         children.selectMoney=[this,state](const FortTemplate&,auto owner) {
             if (owner>=9) throw std::out_of_range("기존Editor Money 고정Template 범위");
@@ -2668,21 +2669,21 @@ struct RawCampaignSession::Impl {
         FortMetaLoadHooks meta;meta.assertion=SessionMissing<void,FortMetaAssertion>();
         meta.loadingDepthChanged=[this](auto depth) { world.SetLoadingDepth(depth); };
         meta.technologyParent=[this] { const auto parent=player->CurrentTechnology();if (parent>65535 || parent>=core.pool.Capacity()) throw std::out_of_range("기존Editor 현재기술부모 실제SID 범위");return Sid{static_cast<std::uint16_t>(parent)}; };
-        meta.prepareTypeNames=[this,state] { PrepareFortTypeNames(state->slot);state->meta.hasTypeConversion=services.fortTypeConversion->Current()!=0; };
+        meta.prepareTypeNames=[this,state] { PrepareFortTypeNames(state->slot);state->meta.hasTypeConversion=fortTypeConversion->Current()!=0; };
         meta.contents=[this,state](Sid parent,FortMetaStream&,std::uint32_t flags,bool relaxedConversion) {
             auto reader=MakeFortContentsReader([this,state](auto token,const auto& operation) { if (token!=1) throw std::out_of_range("Contents 실제Technology stream 토큰");templateStorage->AccessSection(state->technology,operation); });
-            const FortContentsLoadGlobals contentsGlobals{services.fortTypeConversion->Current(),[this] { return gunState.checking ? 1U : 0U; }}; //005c89bc는사본이아닌같은현재DWORD참조다.
+            const FortContentsLoadGlobals contentsGlobals{fortTypeConversion->Current(),[this] { return gunState.checking ? 1U : 0U; }}; //005c89bc는사본이아닌같은현재DWORD참조다.
             static_cast<void>(LoadFortContents(parent.value,1,flags,relaxedConversion ? 1U : 0U,contentsGlobals,reader)); //기술wrapper는원문false를무시하고그뒤현재표해제/UI를계속한다.
-            state->meta.hasTypeConversion=services.fortTypeConversion->Current()!=0; //reader/실제Create가바꾼현재pointer를반환직후해제관문에동기화한다.
+            state->meta.hasTypeConversion=fortTypeConversion->Current()!=0; //reader/실제Create가바꾼현재pointer를반환직후해제관문에동기화한다.
         };
         meta.releaseTypeConversion=[this,state] {
-            auto& current=services.fortTypeConversion->Current();if (current) services.fortTypeConversion->Release(current);current=0;state->meta.hasTypeConversion=false;
+            auto& current=fortTypeConversion->Current();if (current) fortTypeConversion->Release(current);current=0;state->meta.hasTypeConversion=false;
         };
         meta.refreshTechnologyUi=[this] { if (!services.fortTechnologyUi) throw std::logic_error("Fort 실제42f540 Chat 랭크prefix 갱신 미연결");services.fortTechnologyUi(); };
         children.meta=std::make_shared<RawFortMetaLoad>(core.pool,services.fortBadges->Records(),objectState.loadingDepth,state->meta,std::move(meta));
         children.selectMeta=[this,state](const FortTemplate&,auto owner,bool) {
             if (owner>=9) throw std::out_of_range("기존Editor Meta 고정Template 범위");state->slot=owner;
-            state->meta.templatePresent=Read(templateStorage->Headers(),owner*20)!=0;state->meta.templateSlot=std::bit_cast<std::int32_t>(owner);state->meta.localOwner=std::bit_cast<std::int32_t>(playerState.templateOwner);state->meta.hasTypeConversion=services.fortTypeConversion->Current()!=0;
+            state->meta.templatePresent=Read(templateStorage->Headers(),owner*20)!=0;state->meta.templateSlot=std::bit_cast<std::int32_t>(owner);state->meta.localOwner=std::bit_cast<std::int32_t>(playerState.templateOwner);state->meta.hasTypeConversion=fortTypeConversion->Current()!=0;
         };
         children.metaStream=[this,state](const FortTemplate&,bool technology)->FortMetaStream& {
             if (!technology) return templateStorage->SelectBadges(state->slot);
@@ -2701,17 +2702,17 @@ struct RawCampaignSession::Impl {
     }
     // 실제 반환 노드와 같은 fields/버퍼를 빌려 현재255BYTE 변환표를 준비하고 실패한 본문만 cleanup한다.
     void PrepareFortTypeNames(std::uint32_t slot) {
-        if (slot>=9 || !services.fortTypeConversion) throw std::logic_error("실제TypeNames 슬롯/Client 소유자 미연결");
+        if (slot>=9 || !fortTypeConversion) throw std::logic_error("실제TypeNames 슬롯/소유자 미연결");
         std::vector<TemplateWriteStream> streams;FortTypeNamesLoadHooks hooks; // 같은 원문 Select 반환수명만 지역 registry에 보관한다.
         hooks.manager=[this](auto owner) { if (owner<0 || owner>=9) throw std::out_of_range("TypeNames 실제Template 범위");return Read(templateStorage->Headers(),static_cast<std::size_t>(owner)*20); };
         hooks.select=[&](auto manager,auto name,auto writable) { if (manager!=hooks.manager(static_cast<std::int32_t>(slot))) throw std::logic_error("TypeNames 현재manager 불일치");streams.push_back(templateStorage->SelectSection(slot,name,writable));return static_cast<std::uint32_t>(streams.size()); };
         hooks.access=[&](auto token,const auto& operation) { if (!token || token>streams.size()) throw std::out_of_range("TypeNames 반환stream 범위");templateStorage->AccessSection(streams[token-1],operation); };
-        hooks.allocate=[this](auto bytes) { return services.fortTypeConversion->Allocate(bytes); };
-        hooks.conversionBuffer=[this](auto token) { return services.fortTypeConversion->Bytes(token); };
+        hooks.allocate=[this](auto bytes) { return fortTypeConversion->Allocate(bytes); };
+        hooks.conversionBuffer=[this](auto token) { return fortTypeConversion->Bytes(token); };
         hooks.typeCount=[this] { return static_cast<std::int32_t>(core.types.size()); };
         hooks.typeName=[this](auto type)->std::span<const std::uint8_t> { if (type<0 || static_cast<std::size_t>(type)>=core.types.size()) throw std::out_of_range("TypeNames 실제TYPE 범위");const auto& name=core.types[static_cast<std::size_t>(type)].name;return {reinterpret_cast<const std::uint8_t*>(name.c_str()),name.size()+1}; };
         hooks.assertion=SessionMissing<void,std::uint32_t>();hooks.loadingDepthChanged=[this](auto depth) { world.SetLoadingDepth(depth); };
-        const FortTypeNamesLoadGlobals typeNameGlobals{objectState.loadingDepth,services.fortTypeConversion->Current()}; // 기존 Objects/Technology/Deck과 같은 실제전역이다.
+        const FortTypeNamesLoadGlobals typeNameGlobals{objectState.loadingDepth,fortTypeConversion->Current()}; // 기존 Objects/Technology/Deck과 같은 실제전역이다.
         try { LoadFortTypeNames(static_cast<std::int32_t>(slot),typeNameGlobals,hooks); }catch (...) { UnwindFortTypeNamesLoad(typeNameGlobals,hooks);throw; }
     }
     // 일반World Graph 뒤 정확한 외곽에서만 호출할 Deck 단계다. 전체 Editor 설치 완료를 표시하지 않는다.
@@ -2729,10 +2730,10 @@ struct RawCampaignSession::Impl {
         hooks.full=[this,restore](auto deck) { const auto typeCount=static_cast<std::int32_t>(core.types.size());LoadFullDeck(productionDeck->Bytes(deck),random,{typeCount,motionState.carrier.nuggetType,geyserType},restore); };
         hooks.append=[this,restore](auto deck,auto type,auto chance,auto power,auto remaining) { AppendRestoredDeckEntry(productionDeck->Bytes(deck),type,chance,power,remaining,restore); };
         hooks.prepareTypeNames=[this](auto owner) { PrepareFortTypeNames(static_cast<std::uint32_t>(owner)); };
-        hooks.conversionBuffer=[this](auto token)->std::span<const std::uint8_t> { return services.fortTypeConversion->Bytes(token); };
-        hooks.releaseConversion=[this](auto token) { services.fortTypeConversion->Release(token); };
+        hooks.conversionBuffer=[this](auto token)->std::span<const std::uint8_t> { return fortTypeConversion->Bytes(token); };
+        hooks.releaseConversion=[this](auto token) { fortTypeConversion->Release(token); };
         hooks.refresh=[this](auto owner) { static_cast<void>(production->Refresh(owner)); };hooks.loadingDepthChanged=[this](auto depth) { world.SetLoadingDepth(depth); };
-        const FortDeckLoadGlobals deckGlobals{objectState.loadingDepth,services.fortTypeConversion->Current(),fullDeck}; // 현재global을 원문위치에서 직접조회한다.
+        const FortDeckLoadGlobals deckGlobals{objectState.loadingDepth,fortTypeConversion->Current(),fullDeck}; // 현재global을 원문위치에서 직접조회한다.
         try { LoadFortDeck(static_cast<std::int32_t>(slot),deckGlobals,hooks); }catch (...) { UnwindFortDeckLoad(deckGlobals,hooks);throw; }
     }
     // 외부 config/UI는 현재 클라이언트 서비스를 사용하고 게임 계산은 동일 원본 모듈을 사용한다.
@@ -2745,6 +2746,7 @@ struct RawCampaignSession::Impl {
         hooks.setState=[this](Sid sid,std::uint32_t value) { assetBindings->SetState(sid,value); };
         hooks.virtualCount=[this](Sid sid) { return static_cast<std::int32_t>(level->Get(sid)); };
         RawCampaignInstallData data{{},{},headers,handle,[this](auto slot)->const FortTemplate& { return templateStorage->Template(slot); },[this](auto slot)->FortTerritoryStream& { return templateStorage->SelectTerritory(slot); }};
+        data.campaignObjects=[this](const RawFortObjectLoad& objects,auto slot) { ReadFortObjectStreams(objects,slot); }; // 초기 사본/로그인 재적재와 무관하게 실제 현재 manager를 같은 원문 부모로 읽는다.
         if (services.installMode==CampaignInstallMode::ExistingEditor) data.existingFort=[this](const RawFortObjectLoad& objects) { return MakeExistingFortChildren(objects); };
         return std::make_unique<RawCampaignWorldRuntime>(world,chunks,*islands,*player,*normal,random,hp,*ownership,*finish,*contained,objectState,globals,piece,noRegion,std::move(data),std::move(hooks));
     }

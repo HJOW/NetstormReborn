@@ -2613,3 +2613,6 @@ target_compile_definitions(netstorm_mission_entry_tests PRIVATE ${_netstorm_menu
 
 # 실제 Editor 객체 스트림과 기존 값형 로더를 같은 보호 기대값으로 대조한다.
 target_sources(netstorm_editor_default_name_tests PRIVATE FortObjectLoadTests.cpp)
+
+# 실제 캠페인 진입과 같은 새 Objects 스트림의 기존 독립 관측을 함께 대조한다.
+target_sources(netstorm_mission_entry_tests PRIVATE FortObjectLoadTests.cpp)

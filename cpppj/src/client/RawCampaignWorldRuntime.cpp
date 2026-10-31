@@ -79,7 +79,7 @@ struct RawCampaignWorldRuntime::Impl {
         o::CampaignWorldLoadHooks campaignHooks{effects.translateYou,effects.setConfig,effects.refreshWindowTitle,effects.builderAssertion,
             [this](const o::RawIslandBuilderState& builder,std::int32_t region) { Generate(builder,region); },
             [this](std::uint32_t slot)->const o::FortTemplate& { return Template(slot); },
-            [this](const o::FortTemplate& input,std::uint32_t slot) { objects->Load(input,static_cast<std::int32_t>(slot)); },
+            [this](const o::FortTemplate& input,std::uint32_t slot) { if (data.campaignObjects) data.campaignObjects(*objects,slot);else objects->Load(input,static_cast<std::int32_t>(slot)); }, // 실제 캠페인 Session은 원문의004be610을 같은 현재 stream으로 실행한다.
             [this](bool mode) { core.graph.Rebuild(mode); },effects.resetCamera};
         campaign=std::make_unique<o::RawCampaignWorldLoad>(chunks,islands,core.frames,puzzlePiece,noRegion,*territory,player,globals,data.headers,data.handle,std::move(campaignHooks));
     }

@@ -27,6 +27,7 @@ struct RawCampaignInstallData {
     std::function<const o::FortTemplate&(std::uint32_t)> templateAt; // 실제 Client는 현재 manager를 조회해 빌린 자료도 같은 객체로 반환한다.
     std::function<o::FortTerritoryStream&(std::uint32_t)> territoryAt; // 같은 manager의 현재 지형 cursor다. 기존 독립 입력은 위 span을 유지한다.
     std::function<RawExistingFortChildren(const o::RawFortObjectLoad&)> existingFort; //실제Object모듈생성뒤같은모듈을재사용해Money/Meta를구성한다.캠페인은비워둔다.
+    std::function<void(const o::RawFortObjectLoad&,std::uint32_t)> campaignObjects; // 실제 Session의 캠페인도 같은 원시 Objects 부모를 사용한다. 독립 값형 Runtime만 기존 레코드 입력을 유지한다.
 };
 // Core 밖의 실제 UI/번역/가상 상태/진단 경계만 공급한다. gameplay 효과는 아래 실제 모듈을 사용한다.
 struct RawCampaignInstallEffects {

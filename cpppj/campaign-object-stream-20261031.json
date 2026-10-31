@@ -1,0 +1,98 @@
+{
+  "unit": 664,
+  "date": "2026-10-31",
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "decompileChanged": false,
+  "productChanged": true,
+  "executableSha256": "4424d05e34210eaf986e53d799e3559c9c8e4761f0fec339d1cbfad60116dae8",
+  "changes": [
+    "실제 Campaign Session도 현재 Template manager의 원시 Objects 부모를 항상 사용하도록 연결했다. 독립 값형 Runtime의 기존 입력은 유지한다.",
+    "현재 Client 변환표를 같은 Session의 Objects/Contents/TypeNames/Technology/Deck에 공유한다. Client가 없는 독립 Campaign Session은 같은 실제 저장소를 한 번 소유한다.",
+    "빈 편의 사본을 보충하지 않고 실제 섹션을 읽으며 정상 꼬리만 변환표를 반납한다. 잘못된 Chaff는 부분 지형/객체·현재표·cursor를 보존하고 외곽 로딩 깊이1에서 중단한다."
+  ],
+  "focused": {
+    "missionRegistered": 70,
+    "editorRegistered": 78,
+    "finalUnique": 12,
+    "newUnique": 2,
+    "newExplicitInputs": 5,
+    "oldUnique": 10,
+    "failedChecksFinal": 0,
+    "invocations": 7,
+    "testFunctionCalls": 14,
+    "finalLogs": [
+      "extracted/cpp-campaign-object-stream-664-session-v2.log",
+      "extracted/cpp-campaign-object-stream-664-async.log",
+      "extracted/cpp-campaign-object-stream-664-parent.log",
+      "extracted/cpp-campaign-object-stream-664-stream.log",
+      "extracted/cpp-campaign-object-stream-664-state.log",
+      "extracted/cpp-campaign-object-stream-664-editor.log"
+    ],
+    "initialFailures": [
+      "session-v1의 새 검사 한 단언이 모든 미션의 Chaff에 비섬 객체가 있다는 잘못된 전제로 실패했다. 원본 Tutorial1.english의 loadFort=BridgeTheGap과 독립 정적 해석에서 실제0개임을 확인했다. 제품은 바꾸지 않고 네 원본의 정확한145/0/390/24개를 검사하도록 수정해 session-v2를 통과했다."
+    ],
+    "scope": "네 실제 미션 파일의 최초 Load만 실행하며 편의 Chaff/Terr/TypeNames 자료를 원문 제목 위치에서 비운다. 공유 변환표2입력·독립 소유2입력, 손상 Chaff1입력과 기존 로컬 연결/부모 교체/Editor 파일·객체 스트림을 확인한다. GUI/게임 프레임/자연 승리와 구별한다.",
+    "limits": "집중 대상의 나머지 등록·주 검사 전체는 실행하지 않았다. 실제 Tutorial/Training의 특수 행동을 재현한 검사가 아니다."
+  },
+  "native": {
+    "newCases": 0,
+    "newObservations": 0,
+    "newFixture": false,
+    "staticInstructions": 426,
+    "replayedUniqueRows": 642,
+    "existing": {
+      "patchObjectStream": 609,
+      "localMissionState": 33
+    },
+    "sourceStoredNonIslandChaff": [
+      145,
+      0,
+      390,
+      24
+    ],
+    "sourceCounts": "extracted/cpp-campaign-object-stream-664-source-counts.json",
+    "staticLog": "extracted/cpp-campaign-object-stream-664-native.txt",
+    "scope": "004b5300 캠페인과004b5f70 Editor가 같은004be610을 호출하는 위치 및 부모를 정적으로 확인했다. 기존 원문609+33행을 재사용했으며 새 PE 실행은 없다."
+  },
+  "builds": [
+    {
+      "log": "extracted/cpp-campaign-object-stream-664-build-v1.log",
+      "exitCode": 0,
+      "warnings": 0,
+      "errors": 0
+    },
+    {
+      "log": "extracted/cpp-campaign-object-stream-664-build-v2.log",
+      "exitCode": 0,
+      "warnings": 0,
+      "errors": 0
+    }
+  ],
+  "protected": {
+    "baseline645Checked": 7,
+    "checked": 7,
+    "differences": 0,
+    "sha256": {
+      "AGENTS.md": "e9e46fda5519e663417b5c8d9b643549196bf28fe7ba6b1d546a48a853fd208b",
+      "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+      "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6",
+      "originals/d/TEST01.fort": "3c8a7d73be785f5b06f4c94aea633697b52d95129ed502ebc43f1efe326bad8f",
+      "cpppj/tests/fixtures/fortobjectload-x86.tsv": "31fb91aabb4fe3c403e9a9780e0f14f211508cbbce6523cef1b53a5bdf439519",
+      "cpppj/tests/fixtures/local-mission-state-x86.tsv": "b591cc51ffd837ce29d04e8090c066d33f5baf4abc1b3c863371346f161d2995"
+    },
+    "fullAuditRepeated": false
+  },
+  "actualGameRuns": 0,
+  "full34Repeated": false,
+  "newZip": false,
+  "mainTestExecutableRebuilt": false,
+  "multiplayerTests": 0,
+  "remaining": [
+    "InvalidFile 뒤 실제 재선택/반복·다른 Template 소비자·전체 FILE/SEH ABI와 손상/할당/부분 I/O 실패 수명",
+    "Edit 지형/소유자/시나리오·도구, UI/연속 미션과 호환성의 나머지 작업",
+    "자연 완주/전체 동일성은 사용자 확인 대상이며 뒤 단계MP는 무시험 사전 구현한다."
+  ]
+}
