@@ -53,3 +53,56 @@ TEST_CASE(RawMenuMovie_DiscNaturalEndKeepsNativeLastFrameGate) {
     for (int frame=0;frame<1900 && movie.Active();++frame) { probe.now+=0.07;if (!probe.updateDepth) app.buttons.CleanupGumps();app.buttons.IdleGumps(); }
     CHECK(!movie.Active() && probe.updateDepth==0 && probe.gameDepth==0 && probe.muteDepth==0 && probe.restore==1);CHECK(movie.Report().find("movie_runtime\t0\t0\t1\t1889\t0")!=std::string::npos);
 }
+
+
+#include "client/RawRendererPrelude.h"
+
+namespace { // 실제 공통 override 조회를 이미 복원한 Renderer 앞단에 연결하는 명시 장치만 둔다.
+struct MovieOverrideRendererProbe {
+    RawButtonControls& buttons; // 영화와 같은 등록표/수집 override를 직접 조회한다.
+    std::array<std::uint32_t,19> scan{}; // 프레임 사이에 보존되는 실제 행 스캔/이전 화면 flags 입력이다.
+    std::uint32_t background{},dirtyCount{},drawCount{},force{},mode{42}; // DIB2/구름8/움직임32의 정상 호환 모드와 독립 요청 DWORD다.
+    std::int32_t width{640},height{480},origin{}; // 실제 메뉴 검사와 같은 화면/카메라/지도 원점 입력이다.
+    std::size_t updates{},rows{}; // 구름 갱신과 행 조회가 실제 선택된 횟수만 센다.
+    explicit MovieOverrideRendererProbe(RawButtonControls& value):buttons(value) {} // 새 override 사본을 만들지 않고 현재 공통 소유자를 빌린다.
+    void Prepare() { // 화면 flags는 유지한 채 실제 영화 override의 설치/반납이 선택하는 앞단 분기를 실행한다.
+        RendererPreludeHooks hooks;hooks.markCloudDirty=[] {};hooks.queueCloudDirty=[](auto) {};
+        hooks.overrideActive=[this] { return buttons.CurrentOverride(); };hooks.updateClouds=[this] { ++updates; };
+        hooks.rowDirty=[this](auto,auto) { ++rows;return 0U; };hooks.invalidate=[](auto,auto) {};
+        PrepareRendererFrame({scan,background,dirtyCount,drawCount},{mode,force,width,height,height,origin,origin,origin,width,height},hooks);
+    }
+};
+}
+
+//실제 파일은 Open의 최초 준비만 읽는다. Idle/Draw/PCM 제출/창 재생 없이 override가 present/Begin보다 먼저 설치되는지 확인한다.
+TEST_CASE(RawMenuMovie_OverrideIsInstalledBeforePresentAndBegin) {
+    MovieProbe probe;MenuClient app;RawMovieControls* movie{};std::uint32_t token{};bool presented{},captured{},ended{};auto context=probe.Context();
+    const auto capture=context.devices.capturePalette;context.devices.capturePalette=[&,capture](auto palette) {
+        CHECK(presented && app.buttons.CurrentOverride()==token);CHECK(probe.updateDepth==0 && probe.gameDepth==0);captured=true;capture(palette);
+    }; // Begin의 첫 장치에서도 같은 override가 유지되며 정지는 그 뒤에 적용된다.
+    context.clearAndPresent=[&] {
+        ++probe.clears;token=app.buttons.CurrentOverride();CHECK(token && movie && movie->Active());
+        if (token && movie) { const auto* node=movie->Node(token);CHECK(node && node->parent==app.buttons.RootToken() && node->depth==std::bit_cast<std::uint32_t>(-99) && !(node->flags&0x80000U)); }
+        CHECK(!captured && probe.updateDepth==0 && probe.gameDepth==0);presented=true;
+    }; // 원문의 depth-99/부착 뒤 즉시 출력이며 별도 overlay 표 등록은 없어야 한다.
+    const auto clear=context.devices.clear;context.devices.clear=[&,clear](auto rect,auto color) { CHECK(app.buttons.CurrentOverride()==token);ended=true;clear(rect,color); }; // End 동안은 유지하고 뒤 공통 Kill에서만 override를 반납한다.
+    movie=&app.menus->EnableMovies(std::move(context));CHECK(movie->Open(app.root.parent_path()/"originalCD/MOVIE/englishintro2x.smk"));if (!movie->Active() || !token) return;
+    CHECK(presented && captured && !ended && app.buttons.CurrentOverride()==token && probe.updateDepth==1 && probe.gameDepth==1);CHECK(!movie->Open(app.root.parent_path()/"missing-override-670.smk") && app.buttons.CurrentOverride()==token);
+    CHECK(movie->Handle(token,0x1bU)==1);CHECK(ended && !app.buttons.CurrentOverride() && movie->Active() && probe.updateDepth==0 && probe.gameDepth==0); // singleton의 지연 반납과 즉시 override 해제를 구별한다.
+    app.buttons.CleanupGumps();CHECK(!movie->Active() && !app.buttons.CurrentOverride());
+    CHECK(!movie->Open(app.root.parent_path()/"missing-override-670.smk") && !app.buttons.CurrentOverride());app.buttons.CleanupGumps();
+}
+
+//실제 수집 머리와 Renderer override 분기를 같은 영화 writer에 연결하고 Kill/Close 뒤 원래 순회를 확인한다. 영상 프레임은 진행하지 않는다.
+TEST_CASE(RawMenuMovie_OverrideSelectsCollectionAndRendererUntilCommonKill) {
+    MovieProbe probe;MenuClient app;MovieOverrideRendererProbe renderer(app.buttons);renderer.Prepare();CHECK(renderer.updates==1 && renderer.rows==30);
+    auto& movie=app.menus->EnableMovies(probe.Context());const auto path=app.root.parent_path()/"originalCD/MOVIE/englishintro2x.smk";CHECK(movie.Open(path));if (!movie.Active()) return;const auto token=app.buttons.CurrentOverride();CHECK(token!=0);if (!token) return;
+    std::uint32_t laterMenu{};app.menus->Open({200,100},[&](const auto& widgets,const auto& controls,const auto&) { laterMenu=widgets.BeginVertical();controls.AddText("Later",0x02000060U,0); }); // 영화 뒤 부착된 실제 새 root 자식이 override 앞에 있어야 한다.
+    CHECK(laterMenu!=0);std::array<netstorm::o::RenderCollectionEntry,5000> entries{};const auto count=app.menus->CollectDrawing({0,0,640,480},entries,5000);const auto visible=std::span(entries).first(static_cast<std::size_t>(count));
+    CHECK(std::any_of(visible.begin(),visible.end(),[&](const auto& entry) { return entry.token==token; }));CHECK(std::none_of(visible.begin(),visible.end(),[&](const auto& entry) { return entry.token==laterMenu; }));
+    renderer.Prepare();CHECK(renderer.updates==1 && renderer.rows==30 && app.buttons.CurrentOverride()==token); // 같은 실제 override 때문에 구름 Update/행 스캔을 모두 생략한다.
+    CHECK(movie.Handle(token,0x1bU)==1 && !app.buttons.CurrentOverride());const auto afterCount=app.menus->CollectDrawing({0,0,640,480},entries,5000);const auto after=std::span(entries).first(static_cast<std::size_t>(afterCount));
+    CHECK(std::any_of(after.begin(),after.end(),[&](const auto& entry) { return entry.token==laterMenu; }));CHECK(std::none_of(after.begin(),after.end(),[&](const auto& entry) { return entry.token==token; }));
+    renderer.Prepare();CHECK(renderer.updates==2 && renderer.rows==60);app.buttons.CleanupGumps();CHECK(!movie.Active());
+    CHECK(movie.Open(path) && app.buttons.CurrentOverride());movie.Close();CHECK(!movie.Active() && !app.buttons.CurrentOverride() && probe.updateDepth==0 && probe.gameDepth==0); // 재진입 뒤 Close도 별도 override 정리 없이 같은 Kill/Cleanup을 사용한다.
+}

@@ -1,0 +1,84 @@
+{
+  "unit": 670,
+  "date": "2026-11-01",
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "decompileChanged": false,
+  "productChanged": true,
+  "executableSha256": "468add9f653056db8d0dda9249d1136410c88814e7ff412ee3133d27b1b5e2d9",
+  "changes": [
+    "Movie Open의 dialog 뒤 SetOverlay를 원문004654c0의 단일 SetOverride로 교체했다. 옵션/부착/depth/clear·present/Begin 순서는 유지한다.",
+    "같은 CurrentOverride가 실제 UI 수집 머리와 Renderer 앞단의 구름 Update/행 스캔 관문에 전달된다. End 유지·Kill 즉시 해제·Cleanup 지연 반납은 기존 공통 수명을 사용한다."
+  ],
+  "focused": {
+    "registered": 129,
+    "finalUnique": 10,
+    "newUnique": 2,
+    "existingUnique": 8,
+    "failedChecks": 0,
+    "invocations": 5,
+    "testFunctionCalls": 10,
+    "initialTestFailures": [],
+    "logs": [
+      "extracted/cpp-movie-override-670-override-v1.log",
+      "extracted/cpp-movie-override-670-prelude-v1.log",
+      "extracted/cpp-movie-override-670-failed-open-v1.log",
+      "extracted/cpp-movie-override-670-pixels-v1.log",
+      "extracted/cpp-movie-override-670-frame-v1.log"
+    ],
+    "scope": "새2개는 최초 파일 준비/실제 공통 트리/override/수집/Renderer/반납 접합이다. 기존 실패Open1·CD 픽셀과 네 종료 입력1·Renderer 앞단2·Frame4를 확인했다.",
+    "limits": "새2개는 Idle/Draw/PCM 제출/창 재생 없이 최초 준비만 한다. 기존 픽셀 검사의 메모리 Draw와 구별한다. 등록 전체나 주 검사 전체, 실제 게임/전체 영상/물리 입력/PCM/자연 완주/전체 동일성 검증이 아니다."
+  },
+  "builds": [
+    {
+      "log": "extracted/cpp-movie-override-670-build-v1.log",
+      "exitCode": 1,
+      "scope": "새 집중 대상의 기존 WithEditorIslandWindowSession480 링크 의존성 누락, LNK2019/LNK1120."
+    },
+    {
+      "log": "extracted/cpp-movie-override-670-build-v2.log",
+      "exitCode": 1,
+      "scope": "정의가 없는 CampaignSessionTests를 잘못 연결해 같은 링크 오류가 남았다."
+    },
+    {
+      "log": "extracted/cpp-movie-override-670-build-v3.log",
+      "exitCode": 0,
+      "warnings": 0,
+      "errors": 0,
+      "scope": "실제 정의의 CampaignExistingEditorCheckpointTests를 연결했다. 제품/집중 대상의 최종 한 명령이다."
+    }
+  ],
+  "native": {
+    "newExecutions": 0,
+    "newFixture": false,
+    "replayedUniqueRows": 810,
+    "replayed": "기존 Renderer 앞단720행/투영90행의 C++ 대조",
+    "staticLog": "extracted/cpp-movie-override-670-static.txt",
+    "scope": "00484010→004654c0 writer와00466480 공통Kill을 원문/보호PE로 정적 대조했다.10.72 코드 추가 복원/원본 실행은 아니다."
+  },
+  "protected": {
+    "checked": 5,
+    "beforeAfterDifferences": 0,
+    "existing669Compared": 4,
+    "existing669Differences": 0,
+    "sha256": {
+      "AGENTS.md": "e9e46fda5519e663417b5c8d9b643549196bf28fe7ba6b1d546a48a853fd208b",
+      "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+      "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6",
+      "originalCD/MOVIE/englishintro2x.smk": "bd180bee684b72bd8b0c8bd1eabac05a893bba61ed9a2624c2054bc7b326ddb1"
+    },
+    "full2632AuditRepeated": false,
+    "full773FixtureHashAuditRepeated": false
+  },
+  "actualGameRuns": 0,
+  "full34Repeated": false,
+  "newZip": false,
+  "mainTestExecutableRebuilt": false,
+  "multiplayerTests": 0,
+  "remaining": [
+    "다음은671 후보인 커스텀 MissionEnd/공통 Guide 해제다. MainMenu 추가/World 입력 반납/원문 Tutorial 소멸의 제한 초기화·AI 반납/시계 효과 차이를 함께 복원해야 한다. 준비자료는 extracted/cpp-mission-end-671-work/audit.md이며 제품 미반영이다.",
+    "다른 파일/Template/FILE·SEH ABI 소비자·Edit/UI/연속 미션·호환성을 이어 간다. 자연 완주/전체 동일성은 사용자 확인 대상이며 이후 MP 무시험 사전 구현·4~7차다."
+  ]
+}

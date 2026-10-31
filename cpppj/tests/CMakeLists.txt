@@ -2629,3 +2629,6 @@ target_sources(netstorm_mission_entry_tests PRIVATE DataManagerDumpTests.cpp Tem
 # 실제 Template 저장의 비절삭/생성/보호 경계를 기존 편집 파일 회귀와 함께 확인한다.
 target_sources(netstorm_tests PRIVATE EditorFileWriterTests.cpp)
 target_sources(netstorm_editor_file_tests PRIVATE EditorFileWriterTests.cpp EditorFilesTests.cpp)
+
+# 실제 Movie writer가 공통 수집 머리와 Renderer 앞단을 바꾸는지 같은 트리에서 확인한다.
+target_sources(netstorm_renderer_presentation_tests PRIVATE RawMenuControlsTests.cpp CampaignExistingEditorCheckpointTests.cpp) # 공통 메뉴의 Editor 섬 창 보조 함수는 이 번역 단위의 실제 설치 helper를 사용한다.

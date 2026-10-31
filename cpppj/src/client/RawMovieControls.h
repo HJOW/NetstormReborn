@@ -18,7 +18,7 @@ class RawMovieControls { // singleton과 삭제대기/살아 있는 고정 노�
 public:
     RawMovieControls(RawMenuTree tree,RawMovieContext context); // 등록표/장치 수명은 이 소유자보다 길어야 한다.
     ~RawMovieControls(); // 공통 소멸 후 남은 스트림/PCM만 반납한다.
-    bool Open(const std::filesystem::path& path); //00484010: 살아 있는 미종료 영상이 있으면 거부하고 실제 파일 실패는false다.
+    bool Open(const std::filesystem::path& path); //00484010: 미종료 영상은 거부하고 파일 실패는false다. 성공은 dialog/단일 override를 같은 원문 순서로 설치하며 Kill이 override를 반납한다.
     bool Active() const; //00483db0: Kill 예약과 구별되는 실제 singleton의 생존이다.
     GumpCreateNode* Node(std::uint32_t token) const; // 공통 가상 분배가 같은 기본 주소를 사용한다.
     std::uint32_t Handle(std::uint32_t token,std::uint32_t event) const; // 같은592 원문 입력 판단/종료·Kill이다.
