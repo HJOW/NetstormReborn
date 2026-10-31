@@ -1,3 +1,6 @@
+using Netstorm.Assets;
+using Netstorm.Core.Original;
+using Netstorm.Core.Simulation;
 using Netstorm.Client.Input;
 using Netstorm.Client.Scripting;
 
@@ -71,6 +74,38 @@ public static class MissionGuideInput
         if ((input.Code & CommandMask) != FirstCommand) return false;
         currentFirst?.Invoke();
         return true;
+    }
+
+    /// <summary>비어 있지 않은 demo 설정만 원본 atol DWORD로 덮어쓴다.</summary>
+    /// <param name="text">현재 미션 demo 설정.</param><param name="demo">현재 데모 값.</param>
+    public static void ApplyDemo(string text, ref uint demo)
+    {
+        if (text.Length != 0) demo = unchecked((uint)ConfigNumbers.ParseLong(text));
+    }
+
+    /// <summary>현재 데모·단계 섹션을 Tell하고 표시됐으면 팝업을 닫고 정지한 뒤 반환 DWORD를 기록한다.</summary>
+    /// <param name="gate">현재 단계와 데모 상태.</param><param name="shown">마지막 표시 결과.</param>
+    /// <param name="tell">현재 미션 Tell.</param><param name="close">실제 팝업 닫기.</param><param name="pause">실제 미션 정지.</param>
+    public static void TellStage(MissionFrameGateState gate, ref uint shown, Func<string, uint>? tell, Action? close, Action? pause)
+    {
+        if (tell == null) throw new InvalidOperationException("미션 안내 Tell 연결 누락");
+        byte stage = unchecked((byte)gate.Stage);
+        string section = gate.Demo != 0 ? "Demo" : stage == 0 ? "" : ((char)stage).ToString() + ".";
+        uint result = tell(section);
+        if (result != 0)
+        {
+            if (close == null || pause == null) throw new InvalidOperationException("미션 안내 팝업·정지 연결 누락");
+            close(); pause();
+        }
+        shown = result;
+    }
+
+    /// <summary>순번 0이면 진행 요청 비트를 켜고 그 외에는 현재 안내를 다시 표시한다.</summary>
+    /// <param name="state">현재 미션 상태.</param><param name="tellStage">현재 안내 표시 효과.</param>
+    public static void MissionFirst(MissionStartState state, Action? tellStage)
+    {
+        if (state.Sequence == 0) { state.Flags |= 1u; return; }
+        (tellStage ?? throw new InvalidOperationException("미션 First의 현재 안내 연결 누락"))();
     }
 
     /// <summary>활성 미션의 수정 키 없는 F8 누름을 즉시 실행하지 않고 First 명령으로 예약한다.</summary>

@@ -110,6 +110,8 @@ cpppj/src/client/Mission.h	Netstorm.Client/Mission/MissionScript.cs	8db90513e0a5
 cpppj/src/client/MissionFortSource.h	Netstorm.Client/Mission/MissionFortSource.cs	8db90513e0a5cb2bca376cd61a6c5aa5670c8f10	port
 cpppj/src/client/MissionGuideInput.cpp	Netstorm.Client/Mission/MissionGuideInput.cs	def7d68a5afaa14543d90fe634b23224b8bc11d5	port
 cpppj/src/client/MissionGuideInput.h	Netstorm.Client/Mission/MissionGuideInput.cs	def7d68a5afaa14543d90fe634b23224b8bc11d5	port
+cpppj/src/client/MissionLifecycle.cpp	Netstorm.Client/Mission/MissionLifecycle.cs	3f7b990a7af3c2ad8d71669e5e6c44b08cba7300	L1
+cpppj/src/client/MissionLifecycle.h	Netstorm.Client/Mission/MissionLifecycle.cs	3f7b990a7af3c2ad8d71669e5e6c44b08cba7300	L1
 cpppj/src/client/OwnerColorMaps.cpp	Netstorm.Client/Display/OwnerColorMaps.cs	e4b739b97f5316453de827b92ba6527a63f17637	L1
 cpppj/src/client/OwnerColorMaps.h	Netstorm.Client/Display/OwnerColorMaps.cs	e4b739b97f5316453de827b92ba6527a63f17637	L1
 cpppj/src/client/PaletteColors.cpp	Netstorm.Client/Display/PaletteColors.cs	58622e15d401535bf09f216e9c75bbd8c3ea2037	L1
@@ -247,6 +249,8 @@ cpppj/src/o/RawGraph.cpp	Netstorm.Core/Original/RawGraph.cs	73506bcbedac557bfd13
 cpppj/src/o/RawMetadisplayDirty.cpp	Netstorm.Core/Original/RawMetadisplayDirty.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
 cpppj/src/o/RawMissionAiSettings.cpp	Netstorm.Core/Original/RawMissionAiSettings.cs	081cfdc912a663d44bc0289f017fb807f9a3eab1	L1
 cpppj/src/o/RawMissionAiSettings.h	Netstorm.Core/Original/RawMissionAiSettings.cs	081cfdc912a663d44bc0289f017fb807f9a3eab1	L1
+cpppj/src/o/RawMissionGuide.cpp	Netstorm.Core/Original/RawMissionGuide.cs	3f7b990a7af3c2ad8d71669e5e6c44b08cba7300	L1
+cpppj/src/o/RawMissionGuide.h	Netstorm.Core/Original/RawMissionGuide.cs	3f7b990a7af3c2ad8d71669e5e6c44b08cba7300	L1
 cpppj/src/o/RawMissionStart.cpp	Netstorm.Core/Original/RawMissionStart.cs	93d26800ca81cc2b731e5a3ebe1c618b5dd44876	L1
 cpppj/src/o/RawMissionStart.h	Netstorm.Core/Original/RawMissionStart.cs	93d26800ca81cc2b731e5a3ebe1c618b5dd44876	L1
 cpppj/src/o/RawObjectConversion.cpp	Netstorm.Core/Original/RawObjectConversion.cs	b126e9007a61bb7bc133a29fe3ac585043194a56	L1

@@ -46,6 +46,9 @@
     <None Include="../../../cpppj/tests/fixtures/html-window-metadata-x86.tsv" Link="X86/html-window-metadata-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/html-window-factory-x86.tsv" Link="X86/html-window-factory-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/dialog-exit-command-x86.tsv" Link="X86/dialog-exit-command-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/mission-lifecycle-x86.tsv" Link="X86/mission-lifecycle-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/mission-first-x86.tsv" Link="X86/mission-first-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/mission-common-x86.tsv" Link="X86/mission-common-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/guide-transitions-x86.tsv" Link="X86/guide-transitions-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/script-command-x86.tsv" Link="X86/script-command-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/html-window-gump-x86.tsv" Link="X86/html-window-gump-x86.tsv" CopyToOutputDirectory="PreserveNewest" />

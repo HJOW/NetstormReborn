@@ -829,6 +829,12 @@
 - **검증:** `mission-start-x86.tsv`의 AI 생성 32행이 Player 180바이트와 효과 순서까지 일치했다. 기존 Player 원본 검사 및 증빙 소유·중복·재진입·원시 변조 검사 등 집중 8개 통과. 이로써 이 fixture의 start 48, AI 설정 124, create 32 등 독립 입력 204행을 각 대응 단위에서 검사했다. 포트 맵 2행 L1 추가, fixture 신규 등록 없음. 전체 Release 2,037개(Assets 364, Core 1,049, Client 624)가 통과했고 실패·건너뜀은 0이다.
 - **남은 작업:** 실제 AI 생성자·초기 갱신·전략 AI 및 세션과의 연결은 미완료다. PlayerParticipation의 현재 getter 등 나머지 cpppj 변화도 별도 재대조해야 한다. 메뉴·월드·HUD·Edit·멀티플레이 사전 구현과 전체 목표는 미완료다. 게임/창 실행 및 디컴파일은 하지 않았다.
 
+### 0.73 단위 기록 — Guide 단계 반복·안내 및 정지 (2026-10-31, HJOW-Athlon)
+
+- **구현:** cpppj `o/RawMissionGuide.h/.cpp`, `client/MissionLifecycle.h/.cpp`와 `MissionGuideInput`의 남은 단계 안내·First·데모 설정(기준 `3f7b990a`)을 이식했다. 현재 미션 포인터 재조회, 대기/대화창 관문, 같은 호출의 단계 반복, 월드 진입 Pause와 기존 `MissionFrameGate`의 정지·재지연을 같은 상태로 연결했다.
+- **검증:** 독립 x86 `mission-lifecycle` 831행, `mission-first` 278행, `mission-common` 108행이 전체 상태 및 효과 순서까지 일치했다. 집중 검사 3개 통과. 세 fixture를 원본 링크와 해시 목록에 등록하고 Guide·Lifecycle 포트 맵 4행을 L1로 추가했다. 전체 Release 2,040개(Assets 364, Core 1,049, Client 627)가 통과했고 실패·건너뜀은 0이다.
+- **남은 작업:** 검사의 Init·Start·Frame·UI는 명시 효과이며 실제 호스트·월드·Guide 소유자에 조립되지 않았다. 미션 월드·HUD·입력·Edit·멀티플레이 사전 구현과 전체 목표는 미완료다. 게임/창 실행 및 디컴파일은 하지 않았다. 사용자 요청으로 이번 단위의 문서·커밋 후 목표를 일시 중지한다. 재개 시 AGENTS.md 및 공통·dotnetpj 인계를 다시 읽고 실제 호스트·월드 조립부터 이어간다.
+
 ## 1. 지금까지의 완료 범위 — 이관 기록 색인
 
 단위별 상세는 [LEFT_JOBS.dotnetpj.old.md](LEFT_JOBS.dotnetpj.old.md)와 아래 문서에 있다. 마지막 판정 열은 0절 계획에서 그 결과를 어떻게 다루는지다([0.4](#04-기존-dotnetpj-소스의-재수정-판정)).
