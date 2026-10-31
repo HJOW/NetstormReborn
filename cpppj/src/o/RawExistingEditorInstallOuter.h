@@ -4,6 +4,7 @@
 #include <functional>
 #include <span>
 #include <string_view>
+#include "o/RawNewFort.h" // 같은 파일 부모가 부재 분기에서 기존 신규 자료 생성을 재사용한다.
 
 namespace netstorm::o {
 // 이한정모듈이실제구현없이정상성공으로통과시키지않는원문다른분기다.
@@ -52,6 +53,17 @@ struct ExistingEditorFortHooks {
 void InstallExistingEditorFile(const ExistingEditorFileHooks& hooks);
 // 004b5ca0의 최초 exists가 비영으로 확정한 뒤 경로를 다시 읽는 기존 파일 몸체다. 앞선 존재 검사를 반복하지 않는다.
 void InstallPresentEditorFile(const ExistingEditorFileHooks& hooks);
+// 잘못된 파일의 반납·진단·기본 이름 선택을 같은 실제 owner/작업 파일에 연결한다.
+struct InvalidEditorFileHooks {
+    std::function<std::span<std::uint8_t>(std::uint32_t)> header; // 현재20BYTE의+8 저장 억제 DWORD를 직접 수정한다.
+    std::function<void(std::uint32_t)> clear; //004bf690의 실제 Template 반납이며 예외 때 억제1을 되돌리지 않는다.
+    std::function<void(std::uint32_t,std::string_view)> log; //004c2630의29번 원문 진단이다. 로그 뒤 현재 이름을 다시 판정한다.
+    std::function<std::int32_t()> isDefaultName; //00460bf0의 현재 newFort 조회 뒤 CRT 대소문자 무시 비교다.
+    std::function<void(std::string_view)> erase; // 기본 이름과 같을 때만 현재 경로를 다시 읽어 작업본을 삭제한다.
+    std::function<void()> defaultName; //00460c20의 실제 전체 이름 선택이며 복귀 뒤 최초 exists부터 반복한다.
+};
+//004b5ca0의 실제 반복 부모다. 부재/유효 파일의 기존 child와 손상 파일 재선택을 같은 순서로 실행한다.
+void InstallEditorFortFile(std::uint32_t& alternate,const NewFortMissingFileHooks& missing,const ExistingEditorFileHooks& present,const InvalidEditorFileHooks& invalid);
 // 004b743b의부분checkpoint까지다.전체State부모반환/후속UI/최종loaded는설정하지않는다.
 void InstallExistingEditorFort(const ExistingEditorFortHooks& hooks);
 }

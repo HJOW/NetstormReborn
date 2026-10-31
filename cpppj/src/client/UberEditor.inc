@@ -86,6 +86,9 @@ o::LocalMissionParentResult UberGump::InstallExistingEditorState(std::uint32_t s
     checkpoint.file.path=[&e] { return e.paths->PrepareCurrent(); };checkpoint.file.exists=[&e](auto path) { return e.paths->Exists(path); };checkpoint.file.title=[this] { RefreshWindowTitle(); }; // 기본 이름/설정 알림 뒤 선택된 실제 파일도 기존 이관 장부로 준비한 다음 존재를 검사한다.
     checkpoint.file.assertion=[](auto line) { std::clog<<"Editor Template 진단 "<<line<<'\n'; };checkpoint.file.outside=checkpoint.fort.outside;
     TemplateFileLoadHooks load;load.wrongName=[] { std::clog<<"Editor 파일명 불일치\n"; };load.tooManyTypes=[] { std::clog<<"Editor TYPE 개수 진단\n"; };load.rejectFile=[&e](auto path) { e.files.Delete(path); };checkpoint.load=e.paths->BindLoad(std::move(load));
+    checkpoint.invalid.log=[this](auto channel,auto text) { client_.WriteDiagnosticLog(static_cast<std::int32_t>(channel),text); };
+    checkpoint.invalid.isDefaultName=[this] { const auto name=client_.Configuration().PathSpec("newFort");const std::string current(client_.FortGlobals()->Current());return _stricmp(current.c_str(),name.c_str())==0 ? 1 : 0; }; // 설정 해석 뒤의 현재 이름을 실제 CRT로 비교한다.
+    checkpoint.invalid.erase=[&e](auto path) { e.files.Delete(path); }; // 원본 자산이 아닌 같은 작업본만 삭제한다.
     checkpoint.startup=EditorStartupStateHooks(); //State3과 같은 실제 기본 옵션/파일 부재 관문/벽시각 장치를 빌린다.
     session.InstallExistingEditorCheckpoint(checkpoint,client_.ReadOnlyForts(),e.files);
     ExistingEditorAfterCheckpointEffects tail;tail.hud=[this](auto command) { rawButtons_->NotifyHudMode(command,1); };tail.wallSeconds=[this] { return client_.WallSeconds(); };

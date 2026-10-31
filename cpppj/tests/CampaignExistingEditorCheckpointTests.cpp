@@ -124,7 +124,7 @@ TEST_CASE(CampaignExistingEditorCheckpoint_DeferRejectsCampaignMode) {
 // 실제exists/readonly뒤read의정상false는원문ptr정리후InvalidFile분기로가며World/Title/State에가지않는다.
 TEST_CASE(CampaignExistingEditorCheckpoint_NormalReadFalseKeepsInvalidBranch) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);const auto input=CheckpointInput(assets.files);ClientOptions options;options.gameDirectory=assets.root;Client client(std::move(options));auto storage=std::make_shared<CampaignTemplateStorage>();EditorFiles work(CheckpointRoot(assets.root.parent_path(),"false"),{assets.root,assets.root.parent_path()/"originalCD"});work.Prepare("Checkpoint385",input);CheckpointDevices devices;auto effects=devices.Effects(client,work);bool invalid{},read{};
-    effects.load.read=[&](auto) { read=true;CHECK(storage->OwnedImages()==1 && ExistingEditorTemplateValid(*storage,1));return std::vector<std::uint8_t>{}; };effects.file.outside=[&](auto branch) { invalid=branch==ExistingEditorInstallOutside::InvalidFile;throw CheckpointStop("invalid-file"); };
+    effects.load.read=[&](auto) { read=true;CHECK(storage->OwnedImages()==1 && ExistingEditorTemplateValid(*storage,1));return std::vector<std::uint8_t>{}; };effects.invalid.log=[&](auto channel,auto text) { CHECK(channel==29 && text=="Game file was invalid.\n");invalid=true;throw CheckpointStop("invalid-file"); }; // 실제 손상 복구 부모의 반납 뒤 진단에서 한정 중단한다.
     RawCampaignSession session(assets.game,assets.files,FortTemplate::Parse(input,assets.game.TypeTable()),"deferred.fort",devices.Make(client,storage,input));CHECK(CheckpointRejects<CheckpointStop>([&] { session.InstallExistingEditorCheckpoint(effects,client.ReadOnlyForts(),work); }));CHECK(read && invalid && !storage->OwnedImages() && !devices.titles && !devices.configs && !session.CurrentTechnologyParent() && !session.ExistingEditorCheckpointReady());
     CHECK(CheckpointRejects<std::logic_error>([&] { session.InstallExistingEditorCheckpoint(effects,client.ReadOnlyForts(),work); }) && CheckpointRejects<std::logic_error>([&] { session.SnapshotFort(1); }));
 }
@@ -770,3 +770,5 @@ TEST_CASE(CampaignExistingEditorCheckpoint_SameNameKeepsGuideAndSelectsMissionOu
 
 // 새 공통 UI 검사가 같은 실제 Editor 설치 helper를 동기 범위에 빌린다.
 #include "CampaignEditorIslandWindowSession.inc"
+
+#include "EditorInvalidFileTests.inc" // 실제 파일 반복/새 맵 분배와 반납 예외의 부분 상태를 확인한다.

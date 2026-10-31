@@ -110,6 +110,7 @@
 #include <stdexcept>
 #include <bit>
 #include <iostream>
+#include <cstring> // 잘못된 파일의 현재 기본 이름 비교는 원문의 CRT 대소문자 무시 비교를 사용한다.
 #include <cstdio> //TellTip의 원문 지역 sprintf 장치이며 전역 임시 문자열 고리를 예약하지 않는다.
 #include <utility>
 #ifndef NOMINMAX

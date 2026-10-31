@@ -164,6 +164,7 @@ struct CampaignExistingEditorCheckpointServices {
     TemplateFileLoadHooks load; //같은작업본read/readonly/CRT비교/원문진단이다.현재TYPE/owner/중간Title은Session이연결한다.
     o::StartupStateCheckHooks startup; //실제004b5ba0이다.옵션0의자연ret외의선택reader/벽시각/서식/Tell누락을성공으로채우지않는다.
     o::EditorPlayersHooks players; //번역/서식만외부장치다.같은Player/TYPE/ContainedCreate/실제맵tail은Session이연결한다.
+    o::InvalidEditorFileHooks invalid; // 로그/현재 기본 이름 비교/작업본 삭제만 외부 장치다. 헤더/반납/전체 이름 선택은 같은 Session 부모에 연결한다.
 };
 // 같은 Renderer/공유 다시 그리기 전역과 현재 논리 크기를 실제497960 장치에 전달한다.
 struct CampaignCameraCommitContext {

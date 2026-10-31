@@ -1,0 +1,99 @@
+{
+  "unit": 665,
+  "date": "2026-11-01",
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "decompileChanged": false,
+  "productChanged": true,
+  "executableSha256": "5b6a4000958ae36876329c1d13f6f54baac048b5caa4bcb7a6ca31e37c4671e7",
+  "changes": [
+    "실제 Edit 파일 부모를 원문의 존재 검사→기존 파일 Load/유효성→손상 헤더+8=1/반납/현재 owner+8=0→진단→현재 기본 이름 비교/조건부 작업본 삭제→전체 기본 이름 선택→반복에 연결했다.",
+    "부재/유효 파일의 기존 child를 재사용하고 현재 Session에서도 두 번째 파일을 선행 파싱 없이 읽는다. 외부 실패는 부분 상태를 보존하며 자동 rollback/반복 상한/빈 성공을 추가하지 않는다.",
+    "Client의 실제29번 로그·현재 newFort 조회 뒤 CRT 비교·기존 전체 이름 선택과 작업본 삭제를 연결했다. 기존 한정 관측 API는 유지한다."
+  ],
+  "focused": {
+    "registered": 81,
+    "finalUnique": 10,
+    "newUnique": 3,
+    "oldUnique": 7,
+    "newSessionScenarios": 2,
+    "newSessionFileReadAttempts": 4,
+    "newRejectedFileAttempts": 3,
+    "newMissingFileCreation": 1,
+    "newClearFailureInput": 1,
+    "failedChecksFinal": 0,
+    "invocations": 8,
+    "testFunctionCalls": 16,
+    "finalLogs": [
+      "extracted/cpp-editor-invalid-file-665-invalid-v3.log",
+      "extracted/cpp-editor-invalid-file-665-deferred.log",
+      "extracted/cpp-editor-invalid-file-665-read-false.log",
+      "extracted/cpp-editor-invalid-file-665-new-fort.log",
+      "extracted/cpp-editor-invalid-file-665-outer.log",
+      "extracted/cpp-editor-invalid-file-665-default.log"
+    ],
+    "initialFailures": [
+      "invalid-v1의 새 기본 파일 검사는1BYTE 입력이라 서명이 요구하는 두 번째 실제 BYTE에서 중단했다. 기존 서명 구현을 확인해2BYTE의 잘못된 서명으로 입력만 정정했다.",
+      "invalid-v2의 같은 검사는 삭제 뒤 경로 재조회의 대소문자 표기 동일성을 가정해 한 단언이 실패했다. 기존 경로 정규화 정책으로 같은 작업 경로를 비교하도록 검사만 정정했다. invalid-v3의 세 새 검사는 모두 통과했다."
+    ],
+    "scope": "실제 Session의 손상 선택→손상 기본→정상 세 파일과 기본 손상→부재 새 Fort 설치, 반납 예외의 선행 DWORD 보존을 검사했다. 기존 정상 파일/잘못된 객체·정상false 진단·실제 새 맵 State/UI/저장·한정 외곽·기본 이름 Session도 확인했다.",
+    "limits": "나머지71등록/주 검사 전체·실제 GUI/전체34는 실행하지 않았다. 일반 전투/MP 소비자·실제 FILE/SEH ABI/모든 손상 입력 완료가 아니다."
+  },
+  "native": {
+    "newCases": 0,
+    "newObservations": 0,
+    "newFixture": false,
+    "staticInstructions": 192,
+    "staticLog": "extracted/cpp-editor-invalid-file-665-native.txt",
+    "replayedUniqueRows": 148,
+    "existingOuterRead": 258,
+    "existingOuterExcluded": 110,
+    "scope": "기존 정상 선택 외곽의 독립 관측148행을 재사용했다. 새 손상 반복 부모와 기본 이름 비교/반납은 보호 PE의192개 명령으로 정적 대조했으며 새 Native 실행 관측은 없다.10.72 반복 부모는 이번 추가 대조 범위가 아니다."
+  },
+  "builds": [
+    {
+      "log": "extracted/cpp-editor-invalid-file-665-build-v1.log",
+      "exitCode": 0,
+      "warnings": 0,
+      "errors": 0
+    },
+    {
+      "log": "extracted/cpp-editor-invalid-file-665-build-v2.log",
+      "exitCode": 0,
+      "warnings": 0,
+      "errors": 0
+    },
+    {
+      "log": "extracted/cpp-editor-invalid-file-665-build-v3.log",
+      "exitCode": 0,
+      "warnings": 0,
+      "errors": 0
+    }
+  ],
+  "protected": {
+    "baseline645Checked": 6,
+    "checked": 6,
+    "differences": 0,
+    "sha256": {
+      "AGENTS.md": "e9e46fda5519e663417b5c8d9b643549196bf28fe7ba6b1d546a48a853fd208b",
+      "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+      "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6",
+      "originals/d/TEST01.fort": "3c8a7d73be785f5b06f4c94aea633697b52d95129ed502ebc43f1efe326bad8f",
+      "cpppj/tests/fixtures/existing-editor-install-outer-x86.tsv": "eeb11836fe3ddbbb0228c11f40bfdd8461bf0a45221ebb225667aa86f6a51f4a"
+    },
+    "fullAuditRepeated": false,
+    "scope": "원본과 관련 fixture를 파일 삭제 검사 뒤 다시 확인했다. 전체2632/기존fixture773 재감사는 하지 않았다."
+  },
+  "actualGameRuns": 0,
+  "full34Repeated": false,
+  "newZip": false,
+  "mainTestExecutableRebuilt": false,
+  "multiplayerTests": 0,
+  "remaining": [
+    "최초 미션/로그인 Reload의 선행 전체 파싱 시점·다른 Template 소비자·전체 FILE/SEH ABI와 손상/할당/부분 I/O 실패 수명",
+    "Edit 지형/소유자/시나리오·도구, 연속 미션/일반 UI와 호환성의 나머지 작업",
+    "더 많은 기능 묶음 뒤 필요한 실제 게임 통합만 수행하며 자연 완주/전체 동일성은 사용자 확인 대상이다. 후속MP는 무시험 사전 구현한다."
+  ]
+}

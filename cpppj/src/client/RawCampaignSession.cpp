@@ -3424,21 +3424,23 @@ void RawCampaignSession::InstallExistingEditorCheckpoint(const CampaignExistingE
         const auto owner=[&s] { return s.playerState.templateOwner; }; //원문이재조회할때마다같은현재owner를읽는다.
         const auto state=[&s](auto slot) { return s.templateState->Get(slot); };const auto notify=[&s](auto slot) { s.templateState->Changed(slot); }; //반환State span은각동기접근에만쓴다.
         file.owner=owner;file.load=[&s,&effects](auto slot,auto path) {
-            if (!s.deferredEditorFort) throw std::logic_error("지연Editor의실제파일보조입력수명누락");auto load=effects.load;
+            auto projection=s.deferredEditorFort ? std::move(*s.deferredEditorFort) : FortTemplate{};auto load=effects.load; // 재선택도 보조 사본 없이 실제 현재 파일을 같은 loader로 읽는다.
             load.typeCount=[&s] { return static_cast<std::int32_t>(s.core.types.size()); };load.currentSlot=[&s] { return s.playerState.templateOwner; };load.refreshTitle=effects.file.title; //raw Load의첫Title도같은실제00460730이다.
-            s.templateStorage->LoadFile(slot,std::move(*s.deferredEditorFort),path,load);s.deferredEditorFort.reset();s.services.missionFortImage.reset(); //정상false는원문부모의현재ptr정리결과를그대로인계한다.
+            s.templateStorage->LoadFile(slot,std::move(projection),path,load);s.deferredEditorFort.reset();s.services.missionFortImage.reset(); //정상false는원문부모의현재ptr정리결과를그대로인계한다.
         };
         file.valid=[&s](auto slot) { return ExistingEditorTemplateValid(*s.templateStorage,slot); }; //서명재파싱이아닌실제header첫DWORD다.
         file.manager=[&s](auto slot) { if (slot>=9) throw std::out_of_range("EditorFile의실제9슬롯범위");return Read(s.templateStorage->Headers(),slot*20); };
         file.state=state;file.notify=notify;file.subscriber=[&s](auto slot) { s.ReadExistingEditorSubscriber(slot); };file.handle=[this] { return CurrentHandle(); };file.setConfig=fort.setConfig;
         fort.owner=owner;fort.inMission=[&s] { return s.core.bridgeState.mission ? 1U : 0U; };fort.editor=[&s] { return s.globals.editor; }; //기존GameMenus도같은두현재전역을읽는다.
-        fort.file=[this,&s,&file,&files] {
+        fort.file=[this,&s,&file,&files,&effects,&fort] {
             NewFortMissingFileHooks missing;missing.path=file.path;missing.exists=file.exists;missing.owner=file.owner;missing.state=file.state;missing.notify=file.notify;
             missing.manager=[&s,&files,&file](auto slot,auto path,auto argument) { NewFortManagerDiagnostics diagnostics;diagnostics.templateAssertion=file.assertion;CreateNewEditorFortManager(*s.templateStorage,files,slot,path,argument,diagnostics); };
             missing.data=[this,&s] { s.CreateEditorFortData([this](auto slot) { WriteExistingEditorCoreData(slot); }); };
             missing.subscriber=file.subscriber;missing.handle=file.handle;missing.configure=file.setConfig;missing.title=file.title;
-            if (InstallMissingNewFort(s.editorAlternate,missing)) { s.deferredEditorFort.reset();s.services.missionFortImage.reset(); }
-            else InstallPresentEditorFile(file); // 최초 존재 검사와 그 뒤 현재 경로 조회를 중복 실행하지 않는다.
+            auto invalid=effects.invalid;invalid.defaultName=fort.defaultName;
+            invalid.header=[&s](auto slot) { if (slot>=9) throw std::out_of_range("Editor 손상 파일의 실제9슬롯 범위");return s.templateStorage->Headers().subspan(slot*20,20); };
+            invalid.clear=[&s](auto slot) { s.templateStorage->Clear(slot); }; // 같은 실제 manager의 저장 억제/반납을 원문 부모가 지시한다.
+            InstallEditorFortFile(s.editorAlternate,missing,file,invalid);s.deferredEditorFort.reset();s.services.missionFortImage.reset();
         };fort.world=[this] { LoadExistingEditorWorld(); };
         fort.deck=[&s](auto slot) { if (!s.editorWorldReady) throw std::logic_error("Editor checkpoint의World전Deck");s.ReadExistingFortDeck(slot); }; //부모가인자로고정한slot을편의현재값으로다시바꾸지않는다.
         fort.priests=[&s] { s.runtime->FinishMissionPriests(); };fort.camera=s.services.install.resetCamera;fort.production=s.services.ownership.refreshProduction; //빈기본효과없이같은기존몸체/실제장치를선택한다.

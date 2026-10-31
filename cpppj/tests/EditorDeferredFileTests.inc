@@ -35,7 +35,7 @@ TEST_CASE(EditorDeferredFile_SignatureAndObjectErrorsKeepNativeBoundaries) {
             selected.load.read=[&](auto name) { ++reads;CHECK(storage->OwnedImages()==1 && ExistingEditorTemplateValid(*storage,1));return read(name); };
             selected.load.rejectFile=[&](auto name) { ++rejects;CHECK(signature && reads==1 && !titles && !configs);work.Delete(name); };
             selected.file.title=[&] { ++titles;title(); };selected.fort.setConfig=[&](auto key,auto value) { ++configs;configure(key,value); };
-            selected.file.outside=[&](auto branch) { invalid=branch==ExistingEditorInstallOutside::InvalidFile;throw CheckpointStop("deferred-invalid-file"); };
+            selected.invalid.log=[&](auto channel,auto text) { CHECK(signature && channel==29 && text=="Game file was invalid.\n");invalid=true;throw CheckpointStop("deferred-invalid-file"); }; // 실제 반납 뒤 진단 경계에서 한정 중단한다.
             bool failed{};try { session.InstallExistingEditorCheckpoint(selected,client.ReadOnlyForts(),work); }catch (const CheckpointStop& error) { CHECK(signature && std::string_view(error.what())=="deferred-invalid-file");failed=true; }catch (const std::logic_error& error) { CHECK(!signature && std::string_view(error.what())=="원본 Objects Template.cpp 진단 890");failed=true; }
             CHECK(failed && reads==1 && !session.ExistingEditorCheckpointReady());
             if (signature) CHECK(invalid && rejects==1 && !titles && !configs && storage->OwnedImages()==0 && !work.TryRead(path));
