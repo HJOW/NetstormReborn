@@ -1,0 +1,175 @@
+{
+  "unit": 644,
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon / 2026-10-23",
+  "native": {
+    "host": "HJOW-Athlon",
+    "lastDecompileHost": "HJOW-Athlon / 2026-10-23",
+    "observedBeforeProduct": true,
+    "cases": 1024,
+    "observations": 2048,
+    "instructions": 1828960,
+    "gameOrOsExecuted": false,
+    "scope": "모드0/플래그0의 실제 FileSpec 생성·장치 판정·경로 조합·접두 절삭·조회 부모다. FILE/TAFF 효과와 오류 객체 진입만 경계다. 전체 FILE/예외 객체 ABI는 범위 밖이다.",
+    "sourceBeforeSha256": {
+      "cpppj/src/o/BaseFile.cpp": "7b94b6361ba614f0140be573e460a99f99fca3e47fde7649bcebc06edb73e06f",
+      "cpppj/src/client/TechnicalHelp.cpp": "6fdf6afd6d34025fab0b7383717127b7973a880b33197be931380df9339c040e"
+    },
+    "sha256": {
+      "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+      "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+      "tools/decomp_basefile_read_policy.py": "557f7c8cd5c804b6688c8b7a821c9d9f66c8e20a758298bbc18775708aae88e6",
+      "cpppj/tests/fixtures/basefile-read-policy-x86.tsv": "159eae8e64fe4606632231c0be43e8d56947484e5bb840e322842fef4f8deb86"
+    }
+  },
+  "nativeInputsUnchanged": true,
+  "nativeChangedPaths": [],
+  "cppNativePolicyCases": 1024,
+  "build": {
+    "log": "extracted\\cpp-644-build-v3.log",
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0
+  },
+  "fileSubsetRegistered": 25,
+  "focusedTests": [
+    {
+      "filter": "BaseFile_",
+      "names": [
+        "BaseFile_SecondaryReplaysIndependentNativeRegistration27",
+        "BaseFile_SecondaryReadPriorityAndSeparateArchiveOnlyViews",
+        "BaseFile_SecondaryAutomaticRegistrationAndFinderPreserveNativeOrder",
+        "BaseFile_SecondaryClientUsesActualPoolForTechnicalHelp",
+        "BaseFile_AbsoluteMissingRequeriesActualPrimaryAndSecondarySources",
+        "BaseFile_ReadPolicyReplaysIndependentNative1024",
+        "BaseFile_ReadPolicyEmptyFileIsSuccessAndMissingLookupIsExplicit",
+        "BaseFile_WildcardCampaignDiscovery",
+        "BaseFile_FileFinderDiskArchiveSecondaryOrderAndFirstDuplicate"
+      ],
+      "executed": 9,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted\\cpp-basefile-read-policy-644-20261031\\BaseFile_-v3.log"
+    },
+    {
+      "filter": "Taff_",
+      "names": [
+        "Taff_IndexAndFlags_AreReadFromHeader"
+      ],
+      "executed": 1,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted\\cpp-basefile-read-policy-644-20261031\\Taff_-v3.log"
+    },
+    {
+      "filter": "TechnicalHelp_",
+      "names": [
+        "TechnicalHelp_Native84AvailabilityLaunchAndPartialOutputs",
+        "TechnicalHelp_Native64ExternalFileSourcesAndFailurePreservation",
+        "TechnicalHelp_Native28ExternalRootJoin",
+        "TechnicalHelp_SelectedMissingDevicesReleaseAndCd"
+      ],
+      "executed": 4,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted\\cpp-basefile-read-policy-644-20261031\\TechnicalHelp_-v3.log"
+    }
+  ],
+  "focusedExecuted": 14,
+  "focusedUnique": 14,
+  "focusedFailedChecks": 0,
+  "mainTestExecutable": {
+    "unit": 642,
+    "registered": 3559,
+    "sha256": "32162c9c70c6f0a499b585d89b6cdb8b181016d13c62b6c4031841290b296f47",
+    "rebuiltFor644": false
+  },
+  "exeSha256": "23878d09bc3cea99c188edb15f7be1fac232ef1345ae92ddae21fa113ed00715",
+  "fileTestExeSha256": "1dc5f7341adf9659c2d47dda2397c7676a78ee22c33e0754c1d6aaf11bf50a58",
+  "protection": {
+    "inherited": 2631,
+    "inheritedChanged": [],
+    "newBaselineCount": 2632,
+    "fixtureCount": 773,
+    "baseline": "extracted\\cpp-basefile-read-policy-644-20261031\\protected-after-current.json"
+  },
+  "sharedJoin": "원래 TechnicalHelp의459c60 helper를 공용 계층으로 이동했고 기존 Native28 join 관측도 새 몸체로 통과했다.",
+  "actualGameExecuted": false,
+  "windowOrExternalHelpLaunched": false,
+  "captureSacrificeAttackOrVictoryExecuted": false,
+  "multiplayerTestsExecuted": false,
+  "completeGoal": false,
+  "nextIntegration": "642~644 세 제품 단위를 묶어 같은 최종 제품/ZIP과 전체34 진입을 통합한다.",
+  "remaining": [
+    "전체 BaseFile FILE/예외 ABI·쓰기·부분 I/O·손상/할당 실패·다른 소비자 수명",
+    "0044fa00 전체 랭크 상승 및004b54e0 저장 부모",
+    "남은 비멀티 UI/Edit/State와 후순위 요구사항"
+  ],
+  "firstFocusedTests": [
+    {
+      "filter": "BaseFile_",
+      "names": [
+        "BaseFile_SecondaryReplaysIndependentNativeRegistration27",
+        "BaseFile_SecondaryReadPriorityAndSeparateArchiveOnlyViews",
+        "BaseFile_SecondaryAutomaticRegistrationAndFinderPreserveNativeOrder",
+        "BaseFile_SecondaryClientUsesActualPoolForTechnicalHelp",
+        "BaseFile_AbsoluteMissingRequeriesActualPrimaryAndSecondarySources",
+        "BaseFile_ReadPolicyReplaysIndependentNative1024",
+        "BaseFile_ReadPolicyEmptyFileIsSuccessAndMissingLookupIsExplicit",
+        "BaseFile_WildcardCampaignDiscovery",
+        "BaseFile_FileFinderDiskArchiveSecondaryOrderAndFirstDuplicate"
+      ],
+      "executed": 9,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted\\cpp-basefile-read-policy-644-20261031\\BaseFile_.log"
+    },
+    {
+      "filter": "Taff_",
+      "names": [
+        "Taff_IndexAndFlags_AreReadFromHeader"
+      ],
+      "executed": 1,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted\\cpp-basefile-read-policy-644-20261031\\Taff_.log"
+    },
+    {
+      "filter": "TechnicalHelp_",
+      "names": [
+        "TechnicalHelp_Native84AvailabilityLaunchAndPartialOutputs",
+        "TechnicalHelp_Native64ExternalFileSourcesAndFailurePreservation",
+        "TechnicalHelp_Native28ExternalRootJoin",
+        "TechnicalHelp_SelectedMissingDevicesReleaseAndCd"
+      ],
+      "executed": 4,
+      "failedChecks": 0,
+      "exitCode": 0,
+      "log": "extracted\\cpp-basefile-read-policy-644-20261031\\TechnicalHelp_.log"
+    }
+  ],
+  "focusedInvocationsAcrossSourceRevisions": 28,
+  "sourceRevisionReason": "첫14개 통과 후 같은 드라이브 상대경로의 가상 게임CWD와 UTF-8 글자 중간 접두 절삭의 디스크 변환 실패 처리를 보완하고 실제 추가 단언을 확인했다.",
+  "builds": [
+    {
+      "log": "extracted\\cpp-644-build-v1.log",
+      "exitCode": 0,
+      "warnings": 0,
+      "errors": 0
+    },
+    {
+      "log": "extracted\\cpp-644-build-v2.log",
+      "exitCode": 0,
+      "warnings": 0,
+      "errors": 0
+    },
+    {
+      "log": "extracted\\cpp-644-build-v3.log",
+      "exitCode": 0,
+      "warnings": 0,
+      "errors": 0
+    }
+  ],
+  "finalProtectionRecheckChanged": []
+}

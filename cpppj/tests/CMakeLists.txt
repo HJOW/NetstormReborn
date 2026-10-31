@@ -1,5 +1,6 @@
 # 현재 작업본·설치 checkpoint와 독립 부모의 최초 관측을 공용 회귀에 포함한다.
 set_source_files_properties(BaseFileSecondaryTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_TAFF_REGISTRATION_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/taff-registration-x86.tsv\"")
+set_source_files_properties(BaseFileReadPolicyTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_BASEFILE_READ_POLICY_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/basefile-read-policy-x86.tsv\"")
 set_source_files_properties(ForeignRitualRewardTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_FOREIGN_RITUAL_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/foreign-ritual-reward-x86.tsv\"")
 set_source_files_properties(WorldGeyserTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_WORLD_GEYSER_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/world-geyser-x86.tsv\"") # 실제00486440의 최초 원문 요청/상태다.
 set_source_files_properties(WorldGeyserBoundsTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_WORLD_GEYSER_BOUNDS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/world-geyser-bounds-x86.tsv\"") # 전체/분할 범위와 Player 예산의 최초 원문 출력이다.
@@ -625,9 +626,9 @@ add_executable(netstorm_tests
 )
 netstorm_apply_compiler_options(netstorm_tests)
 target_link_libraries(netstorm_tests PRIVATE netstorm)
-target_sources(netstorm_tests PRIVATE BaseFileSecondaryTests.cpp) #전체 대상에도 같은 독립 PE 회귀를 등록한다.
+target_sources(netstorm_tests PRIVATE BaseFileSecondaryTests.cpp BaseFileReadPolicyTests.cpp) #전체 대상에도 같은 독립 PE 회귀를 등록한다.
 # 공통 VFS 헤더 변경 시 관련 검사만 같은 새 제품 라이브러리로 링크하는 집중 대상이다.
-add_executable(netstorm_file_tests FocusedTestMain.cpp BaseFileSecondaryTests.cpp RecoveryTests.cpp MenuTests.cpp TechnicalHelpTests.cpp)
+add_executable(netstorm_file_tests FocusedTestMain.cpp BaseFileSecondaryTests.cpp BaseFileReadPolicyTests.cpp RecoveryTests.cpp MenuTests.cpp TechnicalHelpTests.cpp)
 target_link_libraries(netstorm_file_tests PRIVATE netstorm)
 netstorm_apply_compiler_options(netstorm_file_tests)
 # 원본 파일·Python·Ghidra 없이도 기계어 기대값 회귀 검사를 실행한다.

@@ -98,3 +98,17 @@ TEST_CASE(BaseFile_SecondaryClientUsesActualPoolForTechnicalHelp) {
     CHECK(!client.Files().ContainsArchiveOnly("d/c") && client.Files().ContainsArchiveOnly("d/c",true) && netstorm::client::ClientTechnicalHelpAvailable(client));
     client.Configuration().Set("techHelpFile","d/d");CHECK(netstorm::client::ClientTechnicalHelpAvailable(client)); //가용성 조회만 하며 파일 실행/추출은 하지 않는다.
 }
+
+// 실제 한글 설치 경로의 직접 파일 부재 뒤 기본 TAFF/보조 디스크/보조 TAFF를 차례로 사용한다.
+TEST_CASE(BaseFile_AbsoluteMissingRequeriesActualPrimaryAndSecondarySources) {
+    TaffTemporary base,secondary;const auto install=base.path/L"게임😀";std::filesystem::create_directory(install);std::filesystem::create_directory(install/L"d");std::filesystem::create_directory(secondary.path/L"d");
+    WriteTaff(install/L"one.tarc","valid");WriteTaff(secondary.path/L"one.tarc","other");BaseFileSystem primary(install,secondary.path),fallback(install,secondary.path);
+    CHECK(primary.RegisterArchive(install/L"one.tarc"));auto requested=std::filesystem::absolute(install/L"d/a");requested.make_preferred();const auto name=TaffUtf8(requested); //원문이 보관한 getcwd와 같은 native 구분자로 요청한다.
+    CHECK(primary.Read(name)==std::vector<std::uint8_t>{'A'});WriteByte(secondary.path/L"d/a",'S');CHECK(fallback.Read(name)==std::vector<std::uint8_t>{'S'});
+    std::filesystem::remove(secondary.path/L"d/a");CHECK(fallback.RegisterArchive(secondary.path/L"one.tarc",true));CHECK(fallback.Read(name)==std::vector<std::uint8_t>{'X'});
+    WriteByte(requested,'P');CHECK(primary.Read(name)==std::vector<std::uint8_t>{'P'});
+    const auto driveRelative=TaffUtf8(requested.root_name())+"d\\a";CHECK(primary.Read(driveRelative)==std::vector<std::uint8_t>{'P'}); //프로세스CWD가검사실행폴더여도원본게임CWD의같은드라이브파일이TAFF보다먼저읽힌다.
+    { std::ofstream empty(requested,std::ios::binary|std::ios::trunc);if (!empty) throw std::runtime_error("빈 파일 검사 입력 쓰기 실패"); } //빈 직접 파일도 아카이브보다 먼저 성공해야 한다.
+    CHECK(primary.Read(name).empty());CHECK(!fallback.TryRead(TaffUtf8(install/L"d/missing")));
+    auto outside=std::filesystem::absolute(base.path/L"겨울/d/a");outside.make_preferred();CHECK(!primary.TryRead(TaffUtf8(outside))); //게임/겨울의공통UTF-8앞2BYTE를절삭해도없는파일은W변환예외대신미발견이어야한다.
+}

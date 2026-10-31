@@ -2337,3 +2337,6 @@ cpppj/tests/fixtures/foreign-ritual-reward-x86.tsv -text whitespace=-blank-at-eo
 
 # 두 TAFF 등록 목록의 제품 전 최초 CPU 출력은 원시 BYTE로 보존한다.
 cpppj/tests/fixtures/taff-registration-x86.tsv -text whitespace=-blank-at-eol
+
+# 실제 FileSpec/읽기 부모의 제품 전 최초 조회 trace를 원시 BYTE로 보존한다.
+cpppj/tests/fixtures/basefile-read-policy-x86.tsv -text whitespace=-blank-at-eol

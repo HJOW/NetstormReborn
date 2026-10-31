@@ -2,6 +2,7 @@
 // CD판은 동일 TAFF 형식을 사용한다. 헤더 오프셋은 두 판본 파일을 직접 대조한다.
 // 범위: 읽기 전용 아카이브/VFS. 원본의 FILE* 대신 소유권 있는 바이트 배열을 쓴다.
 #include "o/BaseFile.h"
+#include "o/RawBaseFileReadPolicy.h"
 #include "o/OriginalText.h"
 #include <algorithm>
 #include <fstream>
@@ -149,15 +150,22 @@ void BaseFileSystem::SetSecondaryDirectory(std::filesystem::path directory) {
 }
 // 원본 FUN_0041b4c0의 상대 경로 읽기 순서를 복원한다.
 std::optional<std::vector<std::uint8_t>> BaseFileSystem::TryRead(std::string_view name) const {
-    const auto direct=NativePath(name); //원본ANSI와 달리 Windows10/11의 UTF-8 실제 파일 이름도 읽는다.
-    if (direct.is_absolute()) return netstorm::o::TryRead(direct); // 절대 경로 실패 시 원본의 재조회는 미구현.
-    const auto relative=NativePath(NormalizeGamePath(name));
-    // 원본 데이터 파일은 Windows에서도 대소문자를 구분하지 않는다. Linux 경로 보정은 후속 작업이다.
-    if (auto bytes = netstorm::o::TryRead(base_ / relative)) return bytes;
-    // 기본 디스크 다음에 등록된 아카이브를 순서대로 찾는다.
-    for (const auto& archive : archives_) if (archive.Find(name)) return archive.Read(name);
-    if (auto bytes=netstorm::o::TryRead(secondary_/relative)) return bytes;
-    return TryReadArchiveOnly(name,true);
+    auto primary=PathText(std::filesystem::absolute(base_).lexically_normal()),secondary=PathText(std::filesystem::absolute(secondary_).lexically_normal()); //원문 getcwd/CD의 native 구분자를 Windows10/11 UTF-8로 보존한다.
+    std::replace(primary.begin(),primary.end(),'/','\\');std::replace(secondary.begin(),secondary.end(),'/','\\');
+    return ReadBaseFileByPolicy(name,primary,[&](BaseFileReadSite site,std::string_view query)->std::optional<std::vector<std::uint8_t>> {
+        if (site==BaseFileReadSite::PrimaryArchive || site==BaseFileReadSite::SecondaryArchive) return TryReadArchiveOnly(query,site==BaseFileReadSite::SecondaryArchive);
+        const auto filename=site==BaseFileReadSite::DirectDisk ? std::string(query) : JoinBaseFileRoot(site==BaseFileReadSite::PrimaryDisk?primary:secondary,query);
+#ifdef _WIN32
+        //원본의 BYTE 접두 절삭이 UTF-8 글자 중간에 끝나면 Windows10/11 W 경로로 열 수 없다. 디스크 실패를 반환하되 뒤 TAFF의 원시 이름 조회는 계속한다.
+        if (!filename.empty() && !MultiByteToWideChar(CP_UTF8,MB_ERR_INVALID_CHARS,filename.data(),static_cast<int>(filename.size()),nullptr,0) && GetLastError()==ERROR_NO_UNICODE_TRANSLATION) return {};
+#endif
+        auto path=NativePath(filename); //원본ANSI와 달리 Windows10/11 native wide 파일 열기를 사용한다.
+        if (site==BaseFileReadSite::DirectDisk && !path.has_root_directory()) {
+            const auto root=NativePath(primary),drive=path.root_name(); //원본은게임폴더로chdir한다. cpppj는Windows10/11 호스트의CWD를바꾸지않으므로같은드라이브의상대경로만그게임폴더기준으로해석한다.
+            if (drive.native().size()==2 && drive.native()[1]==L':' && AsciiLower(PathText(drive))==AsciiLower(PathText(root.root_name()))) path=root/path.relative_path();
+        }
+        return netstorm::o::TryRead(path);
+    });
 }
 // 등록 archive만 조회하는 새 읽기 경계이며 기존 TryRead/Read의 disk 우선순위는 바꾸지 않는다.
 std::optional<std::vector<std::uint8_t>> BaseFileSystem::TryReadArchiveOnly(std::string_view name,bool secondary) const {
