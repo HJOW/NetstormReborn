@@ -361,8 +361,9 @@ int Client::Run() {
         // 1. 시각 고정(FUN_00460e90).
         *time_ = clock_.Capture(timeGetTime());
         if (menu_) menu_->Tick();
-        // 3. 재생 중인 효과음 수를 다시 센다(FUN_004a8e60). 4~6. [원본] 네트워크 폴링·내보내기 — 옮기지 않았다. 2는 위 UI 전환 부분이다.
+        // 3. 재생 중인 효과음 수를 다시 센다(FUN_004a8e60). 2는 위 실제 상태 전환 부분이다.
         if (audio_) audio_->CountPlaying();
+        if (menu_) menu_->PollMissionPackets(); //4의 원문 위치에서 로컬 미션/Editor 큐를 진행한다. 외부 송수신기/5~6의 시간 동기화·주기 내보내기는 별도 MP 복원 범위다.
         // 7. 쌓인 창 메시지를 모두 처리한다. WM_QUIT이면 끝낸다.
         MSG message;
         // 큐가 빌 때까지 꺼내 창 프로시저로 보낸다.

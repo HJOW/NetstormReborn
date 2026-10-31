@@ -25,6 +25,7 @@ struct MissionFrameGateState {
 
 // 모든 호출은 원본의 해당 위치에서 현재 상태를 조회한다. 호출 중 상태가 바뀌어도 복사하지 않는다.
 // tell/list/demo/Tutorial 본체는 명시 경계이며 미구현 소비자는 예외를 내는 훅을 공급해야 한다.
+void PauseMissionFrameForDialog(MissionFrameGateState& state,const std::function<bool()>& paused,const std::function<void()>& pause); // 같은 미션의 자기 정지를 커서/World 설치 전에도 실행한다. 현재 paused→scriptPaused 조회와 pause 뒤1 쓰기를 보존한다.
 struct MissionFrameGateHooks {
     std::function<double()> gameSeconds; // 0055b4d0의 현재 double 게임 시각이다. 벽시각을 공급하지 않는다.
     std::function<bool()> paused; // 00460de0의 현재 중첩 정지 여부다.

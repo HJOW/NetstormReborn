@@ -3290,8 +3290,23 @@ void RawCampaignSession::Impl::SendChatMutable(std::int32_t target,std::span<std
 
 //같은원본처리기가참여성공/Ready/월드설치를수행한다.강제owner/flags쓰기를추가하지않는다.
 void RawCampaignSession::LoadLocalConnection() {
+    StartLocalConnection();impl_->login->state->Poll();impl_->login->Pump(); // 기존 독립 접합 호출의 한 번 Poll/Pump 계약만 유지하며 실제 Client는 이 동기 편의 함수를 사용하지 않는다.
+    if (!LocalConnectionReady()) throw std::logic_error("실제 로컬 미션 로그인 미완료");
+}
+// 앞선 준비와 실제 상태8 실행 뒤 정상 프레임에 제어를 돌려준다.
+void RawCampaignSession::StartLocalConnection() {
     if (impl_->loaded || impl_->login || !impl_->services.localLogin) throw std::logic_error("실제로컬로그인 새수명/장치 계약 오류");
     impl_->login=std::make_shared<Impl::Login>(*impl_,*impl_->services.localLogin,[this] { Load();RegisterCarrierCommands(impl_->login->transport->Dispatch());RegisterConstructionCommands(impl_->login->transport->Dispatch());RegisterFactoryResearchCommands(impl_->login->transport->Dispatch()); });impl_->login->Begin();
+}
+// 큰 상태 부모는 Uber의 동일 State Tick이 처리하도록 남겨 두며 수신/게임 Kernel은 여기서 실행하지 않는다.
+bool RawCampaignSession::PollLocalConnectionState() {
+    if (!impl_->login) return false;const auto next=impl_->login->blocks[4][0];if (next!=8 && next!=9 && next!=10 && next!=13 && next!=14) return false;
+    impl_->login->state->Poll();return true;
+}
+// 같은 실제 원문 상태와 Player 기록으로만 접속 완료를 공개한다.
+bool RawCampaignSession::LocalConnectionReady() const {
+    if (!impl_->login || !impl_->loaded || impl_->login->blocks[1][0]!=14 || !impl_->playerState.playerKnown) return false;
+    return impl_->playerState.battleOwner<9 && (impl_->players[impl_->playerState.battleOwner*0xb4+0x50]&1)!=0;
 }
 // 실제 로그인의 같은 분배기에58h 연구를 등록한다. 중간 직접 수신/가짜 확정은 없다.
 void RawCampaignSession::RegisterFactoryResearchCommands(RawPacketDispatch& dispatch) { if (!impl_->loaded && !impl_->editorRegisteringCommands) throw std::logic_error("미설치 Session의 연구 수신 등록");o::RegisterFactoryResearchCommand(dispatch,*impl_->factoryResearch); }

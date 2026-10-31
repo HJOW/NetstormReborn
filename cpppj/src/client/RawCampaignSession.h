@@ -284,6 +284,9 @@ public:
     void InstallExistingEditorPlayers(o::EditorPlayersHooks ui);
     //현재실제설정/시계/Player/Template로 원본로컬로그인 후 같은Load를 정확한 위치에서 실행한다.
     void LoadLocalConnection();
+    void StartLocalConnection(); // 같은 준비/상태8까지만 실행한다. 실제 Client는 이후 상태 Tick과 패킷 폴링을 정상 프레임에서 분리한다.
+    bool PollLocalConnectionState(); // 다음8/9/10/13/14를 한 번 소비했으면 true다. 메인/Edit/이탈 부모는 소비하지 않아 같은 Tick에 두 상태를 실행하지 않는다.
+    bool LocalConnectionReady() const; // 실제 loaded/phase14/PlayerKnown/현재 Player 참여 비트만 조회한다. 별도 성공 플래그를 만들지 않는다.
     //프레임마다현재실제송신/수신큐와로그인타이머를진행한다.
     void PumpLocalConnection();
     //현재연결상태/실제수신패킷은진단전용읽기다. 별도성공flag를만들지않는다.

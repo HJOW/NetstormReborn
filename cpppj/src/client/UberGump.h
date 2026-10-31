@@ -46,6 +46,7 @@ public:
     ~UberGump();
     // 원본 루프 시작의 State 자리에서 대기 명령을 실행하고 시간 제한을 갱신한다.
     void Tick();
+    void PollMissionPackets(); // 정상 루프의 메시지 처리 전에 실제 로컬 큐를 폴링하고 같은 미션의 접속 완료만 UI에 공개한다. 외부 TCP/IP 폴링을 대신하지 않는다.
     // 원본 루프8번의 Guide 자리다. 현재0..6 단계와 실제 공통 프레임을 입력보다 먼저 실행한다.
     void MissionFrame();
     void PrepareKernelFrame(); // 같은 실제 GameWorld가 전역 Kernel 앞에서 프레임 입력만 준비한다.
@@ -130,6 +131,7 @@ private:
     // 실제 Guide 단계1의 Header/월드/로그인/커서를 설치하고 다음 단계만 요청한다.
     void InitializeMission(); // 실제 Tutorial Init은 번호/설정/전역을 쓰고 다음 루프의 로드 요청과 Header를 수행한다.
     void LoadMissionWorld(std::optional<std::string> requestedFort={}); // Init이 캡처한 요새 이름을 사용한다. 기존 Battle은 현재 설정을 읽는다.
+    void FinishMissionWorldLoad(); // 실제 phase14/현재 미션 수명 확인 뒤 커서/Start/안내를 설치한다. 상태8 준비 단계에서 호출하지 않는다.
     o::FortMissionSaveHooks FortMissionSaveEffects(); // 현재 Runtime의 이름과 같은 실제 sequence/flags를 동기 저장에 빌린다.
     // 실제 Guide 단계3에서 같은 설치된 Session의 Start를 실행한다.
     void StartMissionWorld();
@@ -212,6 +214,7 @@ private:
     std::unique_ptr<CampaignObjectMenuClient> objectMenus_; // Client 수명이며 Session 해제 전 실제 팝업/Form을 먼저 닫는다.
     struct MissionRuntime; // 같은 미션의 Start/프레임 게이트 상태와 실제 연결을 고정 주소로 소유한다.
     std::unique_ptr<MissionRuntime> missionRuntime_; // 월드와 스크립트보다 먼저 해제한다.
+    std::uint32_t worldMissionToken_{}; // 접속 중 미션 교체가 이전 World의 완료를 새 Script에 공개하지 않도록 현재 설치 수명을 식별한다.
     std::unique_ptr<o::RawMissionGuide> guide_; // 현재 미션 해제 중에도 반복 호출 스택이 살아 있도록 UberGump 수명에 둔다.
     std::uint32_t& hideBuildings_; // 원본0059a8ac의 같은 Client 장기 DWORD를 메뉴·Draw·정리가 공유한다.
     std::uint32_t& worldRedraw_; // 원본0059a8b0의 같은 Client 장기 DWORD이며 전체 팔레트/메뉴/resize가 직접 공유한다.

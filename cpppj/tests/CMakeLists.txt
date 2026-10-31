@@ -2606,7 +2606,7 @@ netstorm_apply_compiler_options(netstorm_cd_presence_tests)
 target_compile_definitions(netstorm_cd_presence_tests PRIVATE ${_netstorm_menu_session_definitions})
 
 # 실제 Client 시작 기록/로컬 미션 진입과 기존 CD/카메라 원문만 골라 검사한다.
-add_executable(netstorm_mission_entry_tests FocusedTestMain.cpp ClientLocalStateGlobalsTests.cpp CdPresenceTests.cpp CameraViewTests.cpp GumpInputTests.cpp FortPaletteTransitionTests.cpp LocalMissionStateTests.cpp)
+add_executable(netstorm_mission_entry_tests FocusedTestMain.cpp ClientLocalStateGlobalsTests.cpp CdPresenceTests.cpp CameraViewTests.cpp GumpInputTests.cpp FortPaletteTransitionTests.cpp LocalMissionStateTests.cpp MissionFrameGateTests.cpp MissionLifecycleTests.cpp)
 target_link_libraries(netstorm_mission_entry_tests PRIVATE netstorm)
 netstorm_apply_compiler_options(netstorm_mission_entry_tests)
 target_compile_definitions(netstorm_mission_entry_tests PRIVATE ${_netstorm_menu_session_definitions})

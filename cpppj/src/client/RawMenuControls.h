@@ -159,6 +159,7 @@ public:
     // 원본cf570의 전체 HTML 생성/현재 부모 재갱신을 같은 Client 전역과 실제 공장에 연결한다.
     std::uint32_t ShowMissionLoading(RawHtmlWindowContext context,std::string_view message,std::function<std::string()> cancelText); // Cancel 번역은 기본 버튼이 필요한 분기에서만 조회한다.
     void CloseMissionLoading(); // 실제 transient serial을 찾아 Kill하며 프레임 Cleanup까지 저장소를 유지한다.
+    bool MissionLoadingOpen() const; // 같은 현재 transient serial의 실제 안내 노드가 있는지만 조회한다. Kill/등록/소멸을 성공 플래그로 대신하지 않는다.
     std::optional<ScreenRect> MissionLoadingBounds() const; // 살아 있는 원본 부모의 현재 화면 경계다.
     bool HelpOpen() const; // 현재 serial/등록/visible/dead를 조회한다.
     void CloseHelp(); // Session 해제 전에 같은 창과 지연 삭제 큐를 정리한다.

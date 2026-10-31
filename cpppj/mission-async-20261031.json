@@ -1,0 +1,89 @@
+{
+  "unit": 657,
+  "date": "2026-10-31",
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "productChanged": true,
+  "executableSha256": "299f692f945b81fafb82bb170d84c0ff2cd44bf85e9abfd206451ae85724009a",
+  "changes": [
+    "실제10.78 미션 준비는 상태8 실행 뒤 반환하고 다음 Tick이9/10을 한 번 처리한다. 시간 초과가 쓴 큰 부모3은 다음 Tick에 남긴다.",
+    "실제 Client의 메시지/Guide/입력 전 슬롯4에서 로컬 미션과 Editor 큐를 폴링한다. 기존 Kernel 준비의 중복 Pump를 제거했다.",
+    "실제 loaded/phase14/PlayerKnown/Player 참여 비트 확인 뒤 현재 미션 토큰이 일치할 때만 입력/Tutorial/Start를 설치한다. 준비 중 게임 준비/미생성 커서 표시·입력·진단을 닫았다.",
+    "상태13과 로그인 타이머는 실제 현재 진행 안내를 Kill/serial0으로 닫는다. 준비 실패와 미션 이탈도 같은 수명을 정리한다.",
+    "State7의 명령 창 숨김/전투 모드/음악과 같은 미션 자기 정지를 Zone/World 생성 전으로 옮겼다. 공통 자기 정지 몸체를 기존 FrameGate와 공유한다."
+  ],
+  "focused": {
+    "registered": 46,
+    "finalUnique": 8,
+    "newUnique": 2,
+    "oldUnique": 6,
+    "failedChecks": 0,
+    "invocations": 8,
+    "testFunctionCalls": 10,
+    "logs": [
+      "extracted/cpp-mission-async-657-focused-v1.log",
+      "extracted/cpp-mission-async-657-tail.log",
+      "extracted/cpp-mission-async-657-renderer.log",
+      "extracted/cpp-mission-async-657-state.log",
+      "extracted/cpp-mission-async-657-frame.log",
+      "extracted/cpp-mission-async-657-lifecycle.log",
+      "extracted/cpp-mission-async-657-binding.log",
+      "extracted/cpp-mission-async-657-focused-v2.log"
+    ],
+    "scope": "실제 World/로컬 프로토콜의 상태8 대기·다음 Tick·수신·완료 공개·선택256색 보관·중복 시작 거부와 timeout/부분 반납을 확인했다. 기존 후반/Renderer/현재 명령 연결과 원문 상태·공통 프레임·수명을 재대조했다.",
+    "limits": "다른38등록과 주 검사 전체를 실행하지 않았다. 실제 Client 루프의 GUI/시간/음악 장치는 실행하지 않았으며 원문 위치 연결의 실제 화면 근거는 다음 기능 묶음 통합까지 남는다."
+  },
+  "native": {
+    "newCases": 0,
+    "newObservations": 0,
+    "newFixture": false,
+    "replayedRows": 1192,
+    "existingRows": {
+      "localState": 33,
+      "missionFrame": 328,
+      "missionLifecycle": 831
+    },
+    "scope": "기존 독립 PE 관측1192행을 현재 제품 몸체와 재대조했다. 새 PE 에뮬레이션/게임 실행은 없다."
+  },
+  "build": {
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "logs": [
+      "extracted/cpp-mission-async-657-build-v1.log",
+      "extracted/cpp-mission-async-657-build-v2.log"
+    ],
+    "finalProductLog": "extracted/cpp-mission-async-657-build-v2.log"
+  },
+  "protected": {
+    "baseline": "extracted/cpp-solo-entry-645-20261031/protected-after-current.json",
+    "checked": 7,
+    "differences": 0,
+    "sha256": {
+      "AGENTS.md": "e9e46fda5519e663417b5c8d9b643549196bf28fe7ba6b1d546a48a853fd208b",
+      "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+      "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6",
+      "cpppj/tests/fixtures/local-mission-state-x86.tsv": "b591cc51ffd837ce29d04e8090c066d33f5baf4abc1b3c863371346f161d2995",
+      "cpppj/tests/fixtures/missionframe-x86.tsv": "40182df69191a2950fd1e73c1c6e150504556aa279e69aac5bcf34ba8398796e",
+      "cpppj/tests/fixtures/mission-lifecycle-x86.tsv": "82d3e1856bed2caf550912d6d67c33ce8a6196f6fbe2127adb06d6ae1d0c81d2"
+    },
+    "fullAuditRepeated": false
+  },
+  "decompileChanged": false,
+  "actualGameRuns": 0,
+  "actualCdEnumeration": false,
+  "newZip": false,
+  "full34Repeated": false,
+  "mainTestExecutableRebuilt": false,
+  "multiplayerTests": 0,
+  "cdStatic": {
+    "scope": "10.72는 기존 명시 동기 편의 API를 유지한다.10.72 전체 State7/실행을 새로 검증하지 않았다."
+  },
+  "remaining": [
+    "전체 State7 부모/phase7 공통 확정·앞선 요청/Zone 설치 순서와 진행 안내 생성 위치·State1 및 연속 전환",
+    "외부 송수신기·시간 동기화·0.2초 주기 내보내기는 로컬 슬롯4 연결과 구별한 후순위MP 무시험 사전 구현",
+    "나머지 UI/Edit/시나리오/호환성·BaseFile 소비자/ABI·시작 레지스트리/메타State19/LeaveBattle·4~7차"
+  ]
+}

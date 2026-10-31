@@ -110,6 +110,13 @@ GameWorld::GameWorld(const GameAssets& assets,const o::BaseFileSystem& files,o::
 }
 //Client.CurrentSubscriber가현재Session을반환하는등록이끝난뒤에만실제로그인을시작한다.
 void GameWorld::BeginLocalConnection() { if (!campaign_) throw std::logic_error("실제Session 없는 로그인 요청");campaign_->LoadLocalConnection();if (pendingCursorPalette_) { campaign_->Cursor().SetPalette(*pendingCursorPalette_,colorSortLogical_);pendingCursorPalette_.reset(); }RefreshCampaignObjects(); } // 원문 팔레트 선택 뒤 생성된 실제 커서만 현재256색을 받으며 설치 실패에서는 대기 색을 보존한다.
+// 준비 실패도 부분 수명으로 남겨 현재 World의 정상 반납 경로가 소유권을 정리한다.
+void GameWorld::StartLocalConnection() { if (!campaign_ || connecting_ || campaign_->HasCursorRuntimeForState()) throw std::logic_error("비동기 World 로그인 새 수명 계약 오류");connecting_=true;campaign_->StartLocalConnection(); }
+// 실제 완료 뒤 한 번만 대기 색/표시를 적용한다. 준비 중인 입력 관문을 열지 않는다.
+bool GameWorld::CompleteLocalConnection() {
+    if (!connecting_ || !campaign_ || !campaign_->LocalConnectionReady()) return false;
+    if (pendingCursorPalette_) { campaign_->Cursor().SetPalette(*pendingCursorPalette_,colorSortLogical_);pendingCursorPalette_.reset(); }RefreshCampaignObjects();connecting_=false;return true;
+}
 // 세션의 실제 Kernel/음향/Form 콜백은 나머지 월드 멤버가 살아 있는 동안 정리한다.
 GameWorld::~GameWorld() { factoryDisplay_.reset();campaign_.reset(); }
 // 초기 카메라의 원본 좌표를 clamp나 신전 우선 선택 없이 현재 raw 표시와 음향 원점에 전달한다.
@@ -328,6 +335,7 @@ void GameWorld::RefreshSurfaceGround() {
 }
 // 절대 시각을 먼저 전달하고 raw Kernel과 기존 비표면 이동을 같은 프레임에 진행한다.
 void GameWorld::RunFrame() {
+    if (connecting_) return; // 상태/패킷 서비스는 별도 원문 위치에서 진행하며 준비 중 게임 Kernel은 열지 않는다.
     const bool stopped=paused && paused();
     if (frameTime) {
         if (campaign_) { surfaceTime_=frameTime();SurfaceView();campaign_->PumpLocalConnection();campaign_->RunFrame(surfaceTime_,stopped);RefreshCampaignObjects();return; }
@@ -338,14 +346,15 @@ void GameWorld::RunFrame() {
 // 실제 GUI는 GameWorld를 Kernel에 등록하지 않으며 전체 프로세스 실행 전 이 준비만 요청한다.
 void GameWorld::PrepareKernelFrame() {
     if (!campaign_ || !frameTime) throw std::logic_error("실제 Client Kernel 프레임의 Session/시각 공급자 누락");
-    surfaceTime_=frameTime();SurfaceView();campaign_->PumpLocalConnection();campaign_->PrepareFrame(surfaceTime_,paused && paused());
+    if (connecting_) return;surfaceTime_=frameTime();SurfaceView();campaign_->PrepareFrame(surfaceTime_,paused && paused()); // 실제 Client 패킷은 메시지 처리 전 별도 원문 위치에서 폴링한다.
 }
 // 원문 단일 Kernel이 끝난 뒤에만 이동/생성/삭제된 실제 객체를 화면용 뷰에 반영한다.
 void GameWorld::FinishKernelFrame() {
-    if (!campaign_) throw std::logic_error("실제 Client Kernel 후처리의 Session 누락");RefreshCampaignObjects();
+    if (!campaign_) throw std::logic_error("실제 Client Kernel 후처리의 Session 누락");if (!connecting_) RefreshCampaignObjects();
 }
 // 콘솔에서는 같은 실행 경로에 누적된 게임 시각을 공급한다.
 void GameWorld::Step(double seconds) {
+    if (connecting_) return; // 독립 실행의 명시 Step도 실제 접속/호스트 설치 완료 전에는 게임을 진행하지 않는다.
     if (!std::isfinite(seconds) || seconds<0) throw std::invalid_argument("월드 시간차 범위 오류");
     surfaceTime_.game+=seconds;surfaceTime_.delta=seconds;++surfaceTime_.number;SurfaceView();
     if (campaign_) { surfaceTime_.wall+=seconds;campaign_->PumpLocalConnection();campaign_->RunFrame(surfaceTime_,false);RefreshCampaignObjects();return; }
@@ -798,6 +807,7 @@ void GameWorld::CheckMissionOutcome() {
 std::string GameWorld::Report(bool mask) const {
     std::ostringstream out; out.precision(12);
     out<<"world\t"<<objects_.size()<<'\t'<<tiles_.size()<<"\nselected\t"<<selected_<<"\ncamera\t"<<CameraX()<<'\t'<<CameraY()<<"\n";
+    if (connecting_) { out<<"raw_connection_pending\t"<<campaign_->LocalConnectionPhase()<<'\t'<<campaign_->LocalConnectionReady()<<'\t'<<campaign_->HasCursorRuntimeForState()<<'\n';return out.str(); } // 준비 중 보고는 실제 접속만 읽고 미생성 커서/설치 후 객체를 관측하지 않는다.
     if (campaign_) {
         out<<"raw_input\t"<<selected_<<'\t'<<highlightMode_<<'\t'<<campaign_->LocalConnectionPhase()<<'\t'<<campaign_->LocalConnectionPackets().size()<<"\nraw_packets";
         // 실제 소비된 종류만 진단하며 별도 명령 성공 플래그를 만들지 않는다.

@@ -17,5 +17,6 @@ struct CampaignLoginServices {
     std::function<void()> initializeRenderer; // State7의 Zone 설치/반납 뒤 실제4993c0을 호출한다. 실제 앞선 Player 정리를 채택한 미션에는 필수이며 독립 상태8 검사만 생략할 수 있다.
     std::function<void(std::uint32_t)> uiMode; // State7의2/State13의3을 현재 명령으로 실제466280/Gump Route에 보낸다. 단순 화면 갱신으로 대신하지 않는다.
     std::function<void()> battlePalette; // State7의 다음8 예약/진행 안내 뒤 현재 battlePal을 조회하고 실제4b6100에 적용한다.
+    std::function<void()> closeProgress; // 실제 State13/로그인 타이머의4c8dc0을 같은 현재 안내 serial/공통 Kill에 연결한다.
 };
 }

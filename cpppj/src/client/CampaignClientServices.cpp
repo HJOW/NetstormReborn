@@ -122,6 +122,7 @@ void BindCampaignLoginStateClientServices(Client& client,RawButtonControls& cont
     login.initializeRenderer=[&client] { client.InitializeNativeRendererView(); };
     login.uiMode=[&client,&controls](auto mode) { static_cast<void>(controls.NotifyHudMode(client.LocalStateGlobals()->HudModeCommand(),mode)); }; // 현재 명령·현재 mode·둘째0·숨김 포함1의 실제 캡처/modal/루트 분배다.
     login.battlePalette=[&client] { const auto name=client.Configuration().PathSpec("battlePal");client.ChangeFortPalette({reinterpret_cast<const std::uint8_t*>(name.c_str()),name.size()+1}); }; // 최초 서비스 생성 시의 경로를 캐시하지 않고 NUL을 포함해 기존 전체 부모에 전달한다.
+    login.closeProgress=[&controls] { if (!controls.Menus()) throw std::logic_error("로그인 진행 안내의 실제 메뉴 미설치");controls.Menus()->CloseMissionLoading(); }; // 원문처럼 Kill/현재 serial0이며 실제 소멸은 일반 Gump 정리까지 유지한다.
 }
 // 실제 Client의 장기 소유자/입력/음향과 UI를 같은 Session 서비스에 조립한다.
 RawCampaignSessionServices MakeCampaignClientServices(Client& client,RawButtonControls& controls,CampaignClientUi ui) {

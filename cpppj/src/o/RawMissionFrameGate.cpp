@@ -58,7 +58,12 @@ bool RawMissionFrameGate::Advance() const {
 }
 // 다른 정지 보유자가 있어도 이 미션의 첫 정지는 별도 깊이를 잡는다. 이미 자기 깊이가 있으면 재진입을 생략한다.
 void RawMissionFrameGate::PauseForDialog() const {
-    if (!hooks_.paused() || !state_.scriptPaused) { hooks_.pause();state_.scriptPaused=1; }
+    PauseMissionFrameForDialog(state_,hooks_.paused,hooks_.pause);
+}
+// World 생성과 무관한 같은 원문 자기 정지 몸체다. 실제 도달한 장치만 요구한다.
+void PauseMissionFrameForDialog(MissionFrameGateState& state,const std::function<bool()>& paused,const std::function<void()>& pause) {
+    if (!paused) throw std::logic_error("미션 자기 정지의 현재 정지 조회 미연결");
+    if (!paused() || !state.scriptPaused) { if (!pause) throw std::logic_error("미션 자기 정지 장치 미연결");pause();state.scriptPaused=1; }
 }
 // 초기0 기한은 유지한다. 현재0이 아닌 경우의 재지연만 원본 가상+20과 같다.
 void RawMissionFrameGate::Postpone() const {

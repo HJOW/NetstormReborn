@@ -44,6 +44,9 @@ struct RawCampaignSession::Impl::Login {
     void SetUiMode(std::uint32_t mode) { // 현재 실제 미션에는466280을 요구하며 상태8 전용 독립 장치는 이전 관측 범위를 유지한다.
         uiMode=mode;if (s.services.adoptInitializedPlayers || effects.uiMode || effects.battlePalette) Need(effects.uiMode)(mode);else Need(effects.refresh)();
     }
+    void CloseProgress() { // 실제 Client의 안내 수명은 단순 refresh로 끝내지 않는다. 독립 부분 검사의 기존 경계만 유지한다.
+        if (s.services.adoptInitializedPlayers || effects.uiMode || effects.battlePalette || effects.closeProgress) Need(effects.closeProgress)();else Need(effects.refresh)();
+    }
     //실제6BYTE 주소를 같은DWORD 배열에서 빌린다.
     std::span<std::uint8_t> Zone() { return s.localStateGlobals->Zone(); }
     //비정렬원문의DWORD/WORD만 읽는다.
@@ -87,7 +90,7 @@ struct RawCampaignSession::Impl::Login {
         hooks.connectionStatus=[this](std::int32_t owner) { return owner==9 && transport->IsOpen() && (transport->Client().flags&2) ? 1 : 0; };
         hooks.connectionOpen=[this](std::int32_t owner) { return owner==9 && transport->IsOpen() && (transport->Client().flags&2) && !(transport->Client().flags&0x40); };
         hooks.sendLogin=[this] { const auto image=RawFortImage(OriginalEdition::Patch1078,s.templateStorage->Template(s.playerState.templateOwner),{[this] { return static_cast<std::uint32_t>(s.core.types.size()); },{}}).Save();const auto packet=netstorm::zacket::MakeLocalMissionLogin(s.globals.mySubscriber,{reinterpret_cast<const char*>(s.handle.data())},image.Bytes());Send(9,packet.Bytes()); };
-        hooks.connectedProgress=hooks.closeProgress=effects.refresh;
+        hooks.connectedProgress=effects.refresh;hooks.closeProgress=[this] { CloseProgress(); };
         hooks.fortAvailable=[this](std::uint32_t owner) { return owner<9 && Get(s.headers,owner*20)!=0; };hooks.loadCurrentFort=[this] { Reload(s.playerState.templateOwner); };
         hooks.fortCore=[this](std::uint32_t owner) { return s.templateState->Get(owner); };hooks.touchFort=[this](std::uint32_t owner) { s.templateState->Changed(owner); };
         hooks.localAddress=[this] { return Address(); };hooks.uiMode=[this](std::uint32_t mode) { SetUiMode(mode); };
@@ -118,7 +121,7 @@ struct RawCampaignSession::Impl::Login {
         MissionLoginTimerHooks timing;timing.configInt=[this](std::string_view key) { return Need(effects.configInt)(key,30); };timing.wallSeconds=effects.wallSeconds;timing.clock=effects.clock;timing.broadcast=[this](std::span<const std::uint8_t> bytes) { if (effects.observePacket) Need(effects.log)("Timer broadcast local"+std::to_string(s.assetState.localOwner)+"\n");s.broadcast->Send(bytes); };timing.priestRefresh=[this](std::uint32_t player) { s.priestParticipation->Refresh(player); };
         timing.connection=[this](std::int32_t peer) { return peer==9 && transport->HasClientConnection(); }; //004e2b10은 flags2/IsOpen이 아닌 현재 Client9 객체 존재를 조회한다.
         timing.remoteStatus=[this](std::int32_t peer,std::uint32_t,std::uint32_t) { s.connectionActivity->Receive(peer); }; //004b6180의 wire 수신과 같은 몸체이며 미사용 두 Native 인자를 합성하지 않는다.
-        timing.saveReconnect=[this] { if (!s.globals.missionPost) throw std::logic_error("일반전투 재접속 저장 미연결"); };timing.closeProgress=effects.refresh;timing.log=[this](MissionLoginTimerLog,std::string_view text) { Need(effects.log)(text); };
+        timing.saveReconnect=[this] { if (!s.globals.missionPost) throw std::logic_error("일반전투 재접속 저장 미연결"); };timing.closeProgress=[this] { CloseProgress(); };timing.log=[this](MissionLoginTimerLog,std::string_view text) { Need(effects.log)(text); };
         timer=std::make_unique<RawMissionLoginTimer>(OriginalEdition::Patch1078,MissionLoginTimerState{s.loginEnd,timeout,begin,scriptBreak,requestPhase,baseClock},counts,MissionLoginTimerReads{[this] { return saved; },[this] { return s.core.processState.Server(); },[this] { return s.objectState.mission; },[this] { return s.globals.missionPost; },[this] { return s.assetState.Boss(); },[this] { return s.gunState.checking; }},std::move(timing));
         RegisterMissionLogin(transport->Dispatch(),*server);RegisterMissionClientPackets(transport->Dispatch(),*client);RegisterMissionMetadata(transport->Dispatch(),*metadata);RegisterMissionSettingsPacket(transport->Dispatch(),*settings);
         RegisterConnectionActivity(transport->Dispatch(),*s.connectionActivity); // 실제64h/version1/정책0/빈 observer를 같은 일반 수신 분배기에 등록한다.
@@ -156,8 +159,7 @@ struct RawCampaignSession::Impl::Login {
         s.playerState.playerKnown=0;
         if (startingTail) { SetUiMode(2);activityEnd=Need(effects.wallSeconds)()+10.0;blocks[2][1]=20;state->Request(8);Need(effects.battlePalette)();blocks[3]=blocks[2]; } // UI2 뒤 새 벽시각·즉시8/인자20·팔레트 순서이며 중단도 앞선 쓰기를 보존한다.
         else blocks[3][0]=8; // 독립 상태8 검사의 이전 부분 범위다. 새 실제 UI/팔레트 성공을 주장하지 않는다.
-        state->Run();state->Poll();Pump();
-        if (!s.loaded || blocks[1][0]!=14 || !(s.players[s.playerState.battleOwner*0xb4+0x50]&1)) throw std::logic_error("실제 로컬 미션 로그인 미완료");
+        state->Run(); // 상태8의 next9는 다음 자연 Tick까지 남긴다. 준비 중 수신을 동기 실행하거나 phase14를 강제하지 않는다.
     }
     //현재 송신을flush한 뒤 실제 큐를 분배한다. 프레임 계산은 기존Kernel이 수행한다.
     void Pump() { wall=Need(effects.wallSeconds)();transport->Flush();static_cast<void>(transport->Poll());if (s.loginEnd!=0.0) timer->Run(false); }

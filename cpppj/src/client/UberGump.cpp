@@ -338,7 +338,7 @@ UberGump::UberGump(Client& client) : client_(client),initLoginSubscriber_(client
     fileMenus_=std::make_shared<TellFileMenus>(client_.Configuration(),[this](auto pattern) { return client_.Files().MatchFinder(pattern); }); // 실제 FileFinder의 디스크/TAFF/보조 순서와 장기 Config 수명을 공유한다.
     o::MissionGuideHooks guideHooks; // 같은 실제 현재 미션/전환 큐/창과 복원한 Guide 반복 몸체다.
     guideHooks.current=[this]() -> o::MissionStartState* { return missionRuntime_ && missionRuntime_->guided ? &missionRuntime_->state : nullptr; };
-    guideHooks.pending=[this] { return state_.Pending() ? 1U : 0U; };
+    guideHooks.pending=[this] { return state_.Pending() || client_.LocalStateGlobals()->State().next[0] || (world_ && world_->Connecting() && missionRuntime_ && worldMissionToken_==missionRuntime_->saveToken) ? 1U : 0U; }; // 현재 Native 다음 상태와 같은 미션의 설치 대여도 Guide보다 먼저 소비한다.
     guideHooks.dialogsClear=[this] { return rawButtons_->CurrentDialog()==0; }; // 원문4c8e90의 같은565dd4이며 Kill 뒤 인스턴스 수와 구별한다.
     guideHooks.stage=[this](o::MissionStartState& state,std::uint32_t sequence) {
         TutorialMissionStageHooks hooks; // 현재 단계가 실제로 도달한 소비자만 호출한다.
@@ -372,9 +372,11 @@ UberGump::~UberGump() { ClearWorld();ReleaseCurrentGuideMission(); }
 void UberGump::DetachMissionWorldBindings() {
     if (missionRuntime_) { missionRuntime_->tutorial.reset();missionRuntime_->start.reset(); } //Tutorial이 빌리는 Start를 먼저 파괴하지 않는다. gate/state/guided는 이 경계에서 쓰지 않는다.
     userInput_.reset(); //현재 World를 빌리는 호스트 입력도 Session보다 먼저 반납한다.
+    worldMissionToken_=0; // 반납/미션 교체 뒤 이전 접속 완료가 새 Runtime을 설치하지 못하게 한다.
 }
 // 기존 Tutorial 소멸 효과를 원문 late closeGuide에 모으고 그 뒤에만 base Mission의 Config/Native 수명을 끝낸다.
 void UberGump::ReleaseCurrentGuideMission() {
+    if (world_ && world_->Connecting() && missionRuntime_ && worldMissionToken_==missionRuntime_->saveToken) rawButtons_->Menus()->CloseMissionLoading(); // 현재 미션의 진행 안내만 반납하며 World는 원래 State 정리 위치까지 유지한다.
     ReleaseMissionFortLoad(state_,missionFortRequest_); //새 Init 전 이전 Guide의 지연 요청만 닫는다. 기존 World는 원문 State 부모의 위치까지 보존한다.
     if (missionRuntime_ && missionRuntime_->gate.scriptPaused) {
         client_.PopGamePause();missionRuntime_->gate.scriptPaused=0; //미션이 보유했던 자기 정지를 반납한다. Native cleanup이 이미 깊이를 비웠으면 기존 Resume의 자연 무동작을 따른다.
@@ -655,17 +657,23 @@ o::FortMissionSaveHooks UberGump::FortMissionSaveEffects() {
 // 캡처한 요새 요청을 다음 State 자리에서 실제 설치한다. Start는 원래 Guide 단계3에 남긴다.
 void UberGump::LoadMissionWorld(std::optional<std::string> requestedFort) {
     if (!mission_ || !missionRuntime_) throw std::logic_error("Guide 초기화의 현재 Script/Runtime 계약 위반");
+    state_.phase=ClientPhase::LoadingMission;pageName_="loading"; // 접속 준비 중의 미설치 World를 활성 게임 화면으로 그리지 않는다.
     const bool nativePlayers=client_.Assets().Edition()==o::OriginalEdition::Patch1078; //실제 State7의 앞선 Player 초기화 완료를 뒤 Session에 인계하는 호스트 대여 선택이다.
-    struct LoadingRetirement { // 원문 진행 안내의 수명을 실제 동기 로드 호출에 한정한다.
+    struct LoadingRetirement { // 준비 실패는 즉시 정리하고 정상 안내는 실제 비동기 완료에 인계한다.
         RawMenuControls& menus; // 로드/실패 반납보다 오래 사는 같은 실제 UI 소유자다.
-        ~LoadingRetirement() { menus.CloseMissionLoading(); } // 현재 안내를Kill/serial0으로 반납하고 소멸은 공통 Cleanup에 남긴다.
+        bool continued{}; // 정상 비동기 접속에만 안내 수명을 다음 완료/이탈 경계로 넘긴다.
+        ~LoadingRetirement() { if (!continued) menus.CloseMissionLoading(); } // 준비 실패의 현재 안내는 반납하고 정상 대기는 일반 프레임까지 유지한다.
     } loading{*rawButtons_->Menus()};
     rawButtons_->Menus()->ShowMissionLoading(LoadingHtmlContext({85,0,client_.GetScreen().Width(),client_.GetScreen().Height()}),FontBytes(client_.Translate("Starting Mission...")),[this] { return FontBytes(client_.Translate("Cancel")); });
     rebuild_=true;Compose();client_.PresentScene(); // 실제 파일 읽기 전에 같은 전체 부모를 먼저 출력하며 가짜 표시 지연을 넣지 않는다.
     if (nativePlayers) { htmlGlobals_.background[0]=0;CleanupNativeStateWorld(1);client_.LocalStateGlobals()->CdPresent()=client_.CdGlobals()->Check(MakeWindowsCdPresenceHooks()); } // 원문 State7의 정리 뒤 실제 CD 확인을 같은005c85b8에 기록한다. 로딩 안내 뒤 새 HUD 초기 도킹 전 중간 화면은 출력하지 않는다.
     else if (world_) ClearWorld(); //10.72의 기존 동기 World 어댑터는 해당 판본 전체 State 복원 전까지 유지한다.
     if (world_) throw std::logic_error("미션 State cleanup 뒤 이전 World 대여가 남아 있음"); //원문 정리의 실제 반납을 확인한 뒤에만 새 Session을 만든다.
-    const auto type=o::AsciiLower(mission_->MissionType()); // 현재 미션의 실제 가상 형식에 맞는 기존 설치 경로다.
+    if (nativePlayers) {
+        if (commandGump_) static_cast<void>(rawButtons_->BubbleGump(commandGump_,0x02000088U,0,0)); // 원문 State7의 CD 뒤 명령 창 숨김이다.
+        client_.SurfaceStorage()->ownerMode.battle=true;if (client_.Audio()) client_.Audio()->StartScene(true); //469fc0의 실제 전투 음악 갱신은 Zone/월드 설치보다 앞이다.
+        if (missionRuntime_->guided) PauseMissionWorldEntry([this] { return missionRuntime_!=nullptr; },[this] { o::PauseMissionFrameForDialog(missionRuntime_->gate,[this] { return client_.Paused(); },[this] { client_.PushGamePause(); }); }); // 같은 자기 정지 상태를 커서 생성 전에도 원문 위치에서 적용한다.
+    }
     if (!missionRuntime_->guided) { missionRuntime_->gate.tutorialNumber=std::bit_cast<std::uint32_t>(o::ConfigParseLong(mission_->Get("tutorialNumber").value_or("")));ApplyMissionDemo(mission_->Get("demo").value_or(""),missionRuntime_->gate.demo);o::ResetMissionBattleOptions(o::OriginalEdition::Patch1078,*missionOptions_);o::SetTotalMadeAllowAll(*missionRestrictions_,1);initLoginSubscriber_=1; }
     const auto selectedFort=requestedFort ? *requestedFort : mission_->FortName(); // Init의 지역256BYTE에서 캡처한 값을 이후 설정 재조회로 바꾸지 않는다.
     auto fortFileRead=mission_->FortFileReader([workspace=editorCatalog_,root=client_.GameDirectory(),working=static_cast<bool>(mission_->FileSource())](std::string_view configured) {
@@ -710,12 +718,23 @@ void UberGump::LoadMissionWorld(std::optional<std::string> requestedFort) {
         [this]() { return client_.GetRenderer().FullRedrawPending(); },
         [this](o::SquidDisplayRect rect,std::uint32_t flags) { client_.GetRenderer().Invalidate({rect.left,rect.top,rect.right,rect.bottom},flags); }};
     world_=std::move(world); // 호스트 어댑터는 원문 프로세스 슬롯을 차지하지 않는다.
+    worldMissionToken_=missionRuntime_->saveToken; // 준비한 World를 현재 미션 수명에만 귀속한다.
     if (missionRuntime_->mode64) { if (!editor_) throw std::logic_error("편집 Test Battle의 실제 작업 파일 owner 없음");world_->Session().BindFortFileSave(client_.ReadOnlyForts(),editor_->files); } //테스트 복귀의 선택된 Notify도 실제 작업본 경로에만 저장한다.
     missionRuntime_->start=std::make_unique<RawCampaignMissionStartBindings>(world_->Session(),*mission_,missionRuntime_->gate,missionRuntime_->state,
         world_->Session().MissionStartSettings(),world_->Session().MissionAiSettings(),MakeCampaignMissionStartEffects(client_,*world_,[this] {
             if (commandGump_!=0) static_cast<void>(rawButtons_->BubbleGump(commandGump_,0x02000088U,0,0)); //0042e440은현재Chat의부모에실제숨김명령을보내며0이면생략한다.
         }));
-    world_->BeginLocalConnection(); //전역subscriber 조회가같은월드를보는상태에서Zone/로그인/월드로드를실행한다.
+    if (nativePlayers) { world_->StartLocalConnection();loading.continued=true;return; } // 실제10.78은 상태8 뒤 정상 Tick/패킷 위치로 반환한다.
+    world_->BeginLocalConnection();loading.continued=true;FinishMissionWorldLoad(); //10.72의 기존 동기 어댑터와 새10.78 상태 경로를 구별한다.
+}
+// 실제 연결/로더가 완료된 같은 미션만 입력·Tutorial·Start의 소비자를 얻는다.
+void UberGump::FinishMissionWorldLoad() {
+    if (!mission_ || !missionRuntime_ || !world_ || worldMissionToken_!=missionRuntime_->saveToken || !world_->Session().LocalConnectionReady()) throw std::logic_error("미션 완료 설치의 실제 접속/현재 수명 계약 오류");
+    struct LoadingRetirement { // State13이 닫은 안내와 완료 설치 실패의 잔여 안내를 구별한다.
+        RawMenuControls& menus; // World 반납보다 오래 사는 같은 실제 메뉴 소유자다.
+        ~LoadingRetirement() { if (menus.MissionLoadingOpen()) menus.CloseMissionLoading(); } // 이미 닫힌 안내를 다시 반납하지 않고 실패의 잔여 노드만 정리한다.
+    };
+    LoadingRetirement loading{*rawButtons_->Menus()};const auto type=o::AsciiLower(mission_->MissionType()); // 완료 사이 다른 Script의 형식을 사용하지 않는다.
     if (type=="tutorial" && !missionRuntime_->guided) ApplyMissionTechnology(*mission_,client_.Assets().TypeTable(),world_->Session().TotalMade()); // guided Header는 이미 설치 전 같은 전역 표를 썼다.
     userInput_=std::make_unique<UserInput>(client_,*world_);
     // 브리핑으로 게임 시계가 멈추기 전에도 첫 카메라/표시 영역이 음악·효과음에 전달되게 한다.
@@ -761,12 +780,13 @@ void UberGump::LoadMissionWorld(std::optional<std::string> requestedFort) {
         state_.phase=ClientPhase::Mission;pageName_="mission";briefingSections_.clear();client_.Pause(false); // A/Demo 안내는 공통10호출 뒤 실제 TellStage가 연다.
     } else client_.Pause(true);
     // 원본 004b6dd0의 미션 시작 절차(전투 여부를 켜고 FUN_00469fc0): 난수로 고른 원소 곡으로 전투 음악을 시작한다.
-    if (client_.Audio()) client_.Audio()->StartScene(true);
+    if (client_.Assets().Edition()!=o::OriginalEdition::Patch1078 && client_.Audio()) client_.Audio()->StartScene(true); //10.78은 실제 State7 앞단에서 이미 실행했고 기존 CD 어댑터만 이전 위치를 유지한다.
     // 원본004b6dd0의 음악 시작 뒤00463a40→가상+28은 Start가 아닌 자기 정지다.
-    if (missionRuntime_->guided) {
+    if (missionRuntime_->guided && client_.Assets().Edition()!=o::OriginalEdition::Patch1078) {
         PauseMissionWorldEntry([this] { return missionRuntime_!=nullptr; },[this] { missionRuntime_->tutorial->Gate().PauseForDialog(); });
         // 다음 단계 flags는 원래 Init의 로드 요청/Header 뒤 이미 썼으며 여기서 다시 쓰지 않는다.
     }
+    if (!missionRuntime_->guided) StartMissionWorld(); // 기존 Battle의 시작도 같은 접속 완료 뒤 한 번만 실행한다.
 }
 // 현재 설치된 같은 Session/Script와 장기 순번으로 원본 단계3 Start를 한 번 실행한다.
 void UberGump::StartMissionWorld() {
@@ -1221,12 +1241,17 @@ bool UberGump::Input() {
 }
 // 예약 명령은 메시지/입력보다 앞서 실행한다(원본 004b88c0 자리).
 void UberGump::Tick() {
-    PollEditorState(); //원문004b88c0 자리에서 실제 next1/4를 소비하고 공통 확정 뒤에만 Editor 입력을 연다.
+    if (!(world_ && world_->Session().PollLocalConnectionState())) PollEditorState(); // 같은 Tick은 다음 로컬 상태 또는 큰 부모 한 쪽만 소비한다. timeout이 쓴 next3는 다음 Tick까지 유지한다.
     const bool loading = state_.phase == ClientPhase::LoadingMission;
     if (const auto action = state_.Take()) Execute(*action);
-    else if (loading && !(missionRuntime_ && missionRuntime_->guided)) AdvanceBriefing();
+    else if (loading && world_ && !world_->Connecting() && !(missionRuntime_ && missionRuntime_->guided)) AdvanceBriefing();
     SyncTellPresentation();
     if (rebuild_) Compose();
+}
+// 실제 로컬 큐는 일반 원문 슬롯4에서 진행하며 완료가 Guide/입력보다 먼저 현재 UI를 설치한다.
+void UberGump::PollMissionPackets() {
+    if (!world_) return;world_->Session().PumpLocalConnection();
+    if (world_->Connecting() && missionRuntime_ && worldMissionToken_==missionRuntime_->saveToken && world_->CompleteLocalConnection()) FinishMissionWorldLoad(); // 이전 미션이면 호스트 World의 공개도 건너뛰고 원래 cleanup까지 닫아 둔다.
 }
 // 원본 루프8번에서 현재 Guide의 상태/창 관문과0..6 단계를 한 번 실행한다.
 void UberGump::MissionFrame() {
@@ -1263,7 +1288,7 @@ void UberGump::PaletteChanged() {
 }
 // 선택한 원본 명령의 작은 부분집합. 지원하지 않는 항목은 활성화하지 않는다.
 void UberGump::Execute(const DialogAction& action) {
-    if (o::AsciiLower(action.command)=="loadmissionworld") { LoadMissionWorld();StartMissionWorld();return; } // 비 Tutorial도 표시/입력 뒤 같은 원본 월드 설치를 수행한다.
+    if (o::AsciiLower(action.command)=="loadmissionworld") { LoadMissionWorld();return; } // 비 Tutorial의 Start도 실제 접속 완료에 맡긴다.
     if (o::AsciiLower(action.command)=="loadmissionfort") { if (!missionRuntime_ || !missionRuntime_->guided) throw std::logic_error("현재 Tutorial 없는 지연 요새 로드");LoadMissionWorld(action.argument);return; } // 같은 전환 큐의 다음 루프에서만 설치한다.
     if (QueueMissionControlAction(action.command,action.argument,client_.Input(),scriptStrings_)) return;
     if (QueueFortSelectionAction(action.command,action.argument,client_.Input(),scriptStrings_)) return;
@@ -1317,7 +1342,7 @@ void UberGump::Compose() {
     bool commonDrawSubmitted=false; // 같은 raw 수집/정렬을 배경 또는 Overlay에 이미 제출했는지 기록한다.
     if (!nativeFrame) client_.GetRenderer().SetOverlay(nullptr); //10.78은 단일 목록으로 선택 표시를 그리며 매 합성의 전체 무효화를 만들지 않는다.
     client_.GetRenderer().SetOverlayProcedure({});
-    if (world_ && state_.phase!=ClientPhase::LoadingMission) {
+    if (world_ && !world_->Connecting() && state_.phase!=ClientPhase::LoadingMission) {
         world_->Resize(width,height);if (!nativeFrame) worldSprites=world_->Sprites(); //10.78은 실제 공통 수집/Draw에서만 가상 표시를 호출하여 부수효과를 중복 실행하지 않는다.
         auto& cursorDisplay=world_->Session().Cursor().Display();cursorDisplay.Settings().gridOption=client_.GetScreen().Flags();
         cursorDisplay.SetText(client_.Fonts(),[this](std::string_view key) { const auto bytes=o::EncodeOriginalText(client_.Translate(key));return std::string(bytes.begin(),bytes.end()); });
@@ -1416,7 +1441,7 @@ void UberGump::Compose() {
             // 원본 기본 HUD의 수직 구분선 오른쪽 지도 사각형이다. 전체 dock 드래그 연결 전의 초기값85를 사용한다.
             rawButtons_->Menus()->ShowMissionLoading(LoadingHtmlContext({85,0,width,height}),FontBytes(client_.Translate("Starting Mission...")),[this] { return FontBytes(client_.Translate("Cancel")); });
         }
-        if (popup_.empty() && world_) {
+        if (popup_.empty() && world_ && !world_->Connecting()) {
             if (client_.Assets().Edition()==o::OriginalEdition::Patch1078) InstallHud();
             else { // 미복원 CD 전체 Uber에10.78 몸체를 적용하지 않고 기존 설치 계약을 유지한다.
             if (!rawButtons_->Production()) rawButtons_->EnableProduction(world_->Session(),client_.Assets(),RawProductionHooks{
@@ -1452,7 +1477,7 @@ void UberGump::Compose() {
             regions=menus.Controls();
         }
         input_.SetControls(std::move(regions));
-        if (world_) world_->Session().Cursor().GumpsChanged(); // 고정 마우스에서도 교체 전 UI 토큰의 깊이를 읽지 않는다.
+        if (world_ && !world_->Connecting()) world_->Session().Cursor().GumpsChanged(); // 접속 준비 중에는 미생성 커서의 입력 관문을 열지 않는다.
         // 새 페이지는 같은 raw 노드로 한 번 다시 합성하며 중간 어댑터 그림은 화면에 제출하지 않는다.
         controlsChanged_=false;Compose();return;
     }
@@ -1467,7 +1492,7 @@ std::optional<ScreenPoint> UberGump::ControlPoint(std::string_view label) const 
     if (rawButtons_->UberRoot() && label.starts_with("hud:")) return rawButtons_->UberRoot()->Point(label); // 실제 구분선의 현재 경계로 정상 입력을 보낸다.
     if (rawButtons_->Minimap() && label.starts_with("minimap:")) return rawButtons_->Minimap()->Point(label);
     if (rawButtons_->Production() && label.starts_with("production:")) return rawButtons_->Production()->Point(static_cast<std::uint32_t>(std::stoul(std::string(label.substr(11)))));
-    if (world_ && (label.starts_with("world:") || label.starts_with("cell:") || label.starts_with("placement:") || label.starts_with("placement-near:") || label.starts_with("placement-reach:") || label.starts_with("placement-fire:"))) return world_->Point(label);
+    if (world_ && !world_->Connecting() && (label.starts_with("world:") || label.starts_with("cell:") || label.starts_with("placement:") || label.starts_with("placement-near:") || label.starts_with("placement-reach:") || label.starts_with("placement-fire:"))) return world_->Point(label);
     if (rawButtons_->Menus()->HasMenus() || rawButtons_->Menus()->HtmlWindowsOpen() || rawButtons_->CurrentDialog() || state_.phase==ClientPhase::LoadingMission) if (const auto point=rawButtons_->Menus()->Point(FontBytes(label))) return point;
     // 동일 라벨의 첫 영역을 선택한다.
     for (const auto& control : input_.Controls()) if (labels_.at(static_cast<std::size_t>(control.id)) == label)

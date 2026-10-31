@@ -30,6 +30,9 @@ public:
         std::string mission,RawCampaignSessionServices services,ScreenPoint viewport,bool deferConnection=false);
     //실제Client가현재월드포인터를등록한뒤로그인한다. Chat의자기subscriber 조회도같은Session을보아야한다.
     void BeginLocalConnection();
+    void StartLocalConnection(); // 실제 Client의 비동기 진입이다. 상태8 준비 뒤 게임 입력/Kernel 준비를 닫고 자연 프레임으로 반환한다.
+    bool Connecting() const { return connecting_; } // 호스트 설치 대여가 끝나지 않았는지만 읽는다. Native loaded/phase14와 구별한다.
+    bool CompleteLocalConnection(); // 실제 접속이 완료됐을 때만 보관 색/표시를 설치하고 true를 반환한다. 이전 상태에서는 아무 효과 없이 false다.
     // 콜백이 읽는 선택/그림 저장소의 수명이 끝나기 전에 실제 캠페인 프로세스를 정리한다.
     ~GameWorld();
     // 프레임 준비에 사용할 실제 게임 시간과 정지 상태의 공급자를 연결한다.
@@ -188,6 +191,7 @@ private:
     std::array<PaletteColor,256> palette_{};
     std::span<const std::uint32_t> colorSortLogical_; //World보다오래사는Client의고정초기입력이며별도값동기화는없다.
     std::optional<std::array<ScreenColor,256>> pendingCursorPalette_; // State7 팔레트가 실제 커서 생성보다 앞설 때 원래256색을 보유한다. 설치 후 커서에 한 번 전달하며 입력 관문은 열지 않는다.
+    bool connecting_{}; // 실제 Client의 비동기 설치 구간만 닫는 호스트 수명 표식이다. Native 성공/실패 상태를 대신하지 않는다.
     // remaps_: 소유자·타입별 출력 색 변환표 캐시.
     mutable std::map<std::pair<std::size_t,int>,ColorMap> remaps_;
     // width_: 가로 크기.

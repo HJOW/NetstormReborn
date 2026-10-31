@@ -104,7 +104,7 @@ std::uint32_t ClientRendererFrame::Collect(ScreenRect clip,std::uint32_t flags) 
     hooks.objects=[this](auto rect,auto output,auto limit) { return objects_->Collect(rect,output,limit); };
     if (auto* world=client_.menu_->world_.get()) {
         hooks.construction=[world](auto rect,auto output,auto limit) { return world->Session().Particles().CollectDrawing(rect,output,limit); };
-        hooks.preview=[world](auto rect,auto output,auto limit) { return world->Session().Cursor().Display().CollectDrawing(rect,output,limit); };
+        if (world->Session().HasCursorRuntimeForState()) hooks.preview=[world](auto rect,auto output,auto limit) { return world->Session().Cursor().Display().CollectDrawing(rect,output,limit); }; // 원문 커서가 아직 생성되지 않은 연결 화면에는 미리보기 항목이 없다.
     }
     const auto result=CollectDrawEntries({clip,visible,WorldRect(clip,camera),flags,RendererCollectionRowLimit(client_.screenWidth_,client_.screenHeight_)},entries_,hooks);
     entryCount_=result.count;
