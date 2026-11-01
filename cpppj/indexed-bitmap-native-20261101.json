@@ -1,0 +1,22 @@
+{
+  "unit": 694,
+  "date": "2026-11-01",
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23"
+  },
+  "cases": 336,
+  "observations": 1008,
+  "differences": 0,
+  "fixtures": {
+    "indexed-bitmap-x86.tsv": "5095afb3b2a82d167938b04b0e2d78c94be5dcae0ecb49c34870f5cba52ac2df"
+  },
+  "boundaries": "실제4ddc90의헤더/색표/행/현재인자순서를실행한다. 41b4c0생성·41aad0FILE유무·41a910쓰기·41b410소멸만명시경계다. 생성뒤FILE0도경계입력이며실제fopen실패/32비트SEH를모델링한것이아니다. 지역초기물리3종과콜백변이7종을비교하며파일/게임/MP실행0.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_indexed_bitmap.py": "20f7dd3c7f7f509df4126449d8b46f347a682c0bd8bf76b01635f3b2c8f1f738",
+    "tools/decomp_oracle.py": "227b9a8b703cfd81d05ac4a7c72a42eaecf9c804fc028680466a19a591f2335d"
+  }
+}
