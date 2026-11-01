@@ -8,7 +8,7 @@ cpppj `client/CampaignTemplateStorage`와 그 소비자를 dotnetpj로 옮기는
 
 | 항목 | 값 |
 | --- | --- |
-| 이식 완료 | 0.128 원문 계층(`RawMemStream`, `RawDataManager*`, `RawTemplate*`, `RawFortImage`, `RawFortCurrentName`, `RawPlayerTemplateState`, `FortTemplate` 일부), 0.129 `ClientTemplateSectionNames`, 0.130 TS0(`RawSectionBuffer`, 섹션 버퍼 전환·`Clone`, 커서 3종, hook 묶음 setter), 0.131 TS1(`CampaignTemplateStorage`와 `Image` 골격·설치·선택), 0.132 TS2(동적 섹션·State 재생성·최소 확장·쓰기 참조) |
+| 이식 완료 | 0.128 원문 계층(`RawMemStream`, `RawDataManager*`, `RawTemplate*`, `RawFortImage`, `RawFortCurrentName`, `RawPlayerTemplateState`, `FortTemplate` 일부), 0.129 `ClientTemplateSectionNames`, 0.130 TS0(`RawSectionBuffer`, 섹션 버퍼 전환·`Clone`, 커서 3종, hook 묶음 setter), 0.131 TS1(`CampaignTemplateStorage`와 `Image` 골격·설치·선택), 0.132 TS2(동적 섹션·State 재생성·최소 확장·쓰기 참조), 0.133 TS3(파일 읽기·Load·저장·이름 부모 연결과 433개 왕복) |
 | 저장소 본체 | 미이식. `CampaignTemplateStorage.cpp` 581줄, `.h` 106줄(합 약 80KB). 0.128의 실측 비율로 보면 C# 약 2,500~3,000줄이 될 것으로 추정한다 |
 | 기준 커밋 | 0.128 원문 계층은 `d48ea756`. 2026-11-01 현재 HEAD까지 해당 cpppj 파일과 저장소 파일의 변경은 없다 |
 | 이 단계의 원본 fixture | 없다. 저장소는 cpppj가 만든 호스트 어댑터라 원본 x86 대조 대상이 아니다. 그래서 cpppj 검사 직역과 3절의 433개 왕복 검사가 근거다 |
@@ -89,7 +89,7 @@ cpppj 제품 코드에서 `.sections`를 고치는 곳은 `Template.cpp`와 저�
 | **TS0 선행** | `RawSectionBuffer`와 단위 검사, `FortTemplate.Sections`를 `List<RawSectionBuffer>`로 전환(`ReadSections`·`Section`·`RawFortImage`·`Clone`), hook 묶음 8개 개방, 커서 `FortTerritoryStream`·`FortMoneyCursor`·`FortMetaStream` | 기존 Core 1,101개 유지 + 버퍼 규칙 직접 검사 | **완료(0.130)**: Core 1,117개(새 16)·Client 731개, 변이 24종 검출 |
 | **TS1 설치·선택** | `Image` 골격(노드·`Buffer`·`SyncStreams`·`PublishCursor`·`RetireCursor`·`Destroy`), `Install`·`Borrow`·`Clear`·`ClearAll`·`Template`·`State`·`Territory`·`Name`, `GrowState`, 모든 `Select*`, `Money`·`Badges`·`Technology`, `SectionOrder`·`CurrentSection`·`ReadSubscriberName`·`FileHeader` | cpppj 6개 | **완료(0.131)**: Client 19개(cpp 검사 7 + 직접 12), 변이 36종 중 35 검출·1 등가 |
 | **TS2 동적 섹션** | `WithMemory`·`WriteStream`·`AccessSection`·`CompactTail`, `CreateSection`·`InitializeState`·`RenameSection`·`EnsureStateSize`, 쓰기 참조의 생성 수명 | cpppj 10개(용량 확인 4개 포함) | **완료(0.132)**: Client 18개(cpp 검사 11 + 직접 7), 변이 33종 중 31 검출·2 등가 |
-| **TS3 파일** | `ReadFile` 두 경로·`BindFileStreams`, `InstallFile`·`LoadFile`·`SaveFile`·`BindCurrentName`. 가장 크므로 필요하면 읽기와 저장으로 나눈다 | cpppj 14개 + 433개 fort 왕복 | 미착수 |
+| **TS3 파일** | `ReadFile` 두 경로·`BindFileStreams`, `InstallFile`·`LoadFile`·`SaveFile`·`BindCurrentName`. 가장 크므로 필요하면 읽기와 저장으로 나눈다 | cpppj 14개 + 433개 fort 왕복 | **완료(0.133)**: Client 19개(cpp 검사 13 + 왕복 1 + 직접 5), 433개 모두 왕복 일치, 변이 23종 중 19 검출·4 등가 |
 | **TS4 빈 manager·로그인** | `AllocateEmptyManager` 계열, `CloneSectionFrom`·`Dump`·`ReadLoginImage`, `RawMissionLoginPackets` | cpppj 3개 + `fort-image-packets` 송신·예약 103행 + 패킷 경계 1개 | 미착수 |
 | **TS5 Editor 파일** | `ExistingEditorTemplateValid`, `EditorFortFileDevices.BindLoad`의 실제 사용 | 0.127에서 미룬 10개(`EditorFileWriter` 1, `EditorFiles` 5, `EditorFortFileDevices` 4) | 미착수 |
 | **TS6 이름·새 맵·목록** | `RawNewFort`·`NewFortManagerDevices`, `ClientFortGlobals`·`FortCurrentNameDevices`, `SoloMapCatalog.Probe`를 실제 저장소로 교체, `HostFortNameConfirmation` 연결 범위 판정 | 16개(`NewFort` 5, `FortCurrentNameDevices` 7, 목록 3, `EditorCatalogFiles` 1) | 미착수 |

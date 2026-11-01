@@ -14,7 +14,8 @@ namespace Netstorm.Client.Host;
 /// 커서 조회·선택(State·Territory·Money·Badges·Technology), <see cref="SectionOrder"/>·<see cref="CurrentSection"/>·<see cref="ReadSubscriberName"/>·
 /// <see cref="FileHeader"/>·<see cref="Name"/>, State 확장(<see cref="GrowState"/>). 같은 날 0.132(TS2)에서 동적 섹션(<see cref="CreateSection"/>·
 /// <see cref="FindSection"/>·<see cref="SelectSection"/>·<see cref="RenameSection"/>·<see cref="CurrentWriteStream"/>·<see cref="WriteSection"/>·<see cref="AccessSection"/>)과
-/// <see cref="InitializeState"/>·<see cref="EnsureStateSize"/>를 더했다. 파일 읽기/저장(TS3), 빈 manager·로그인 이미지(TS4)는 같은 partial 클래스에 단계별로 더한다.
+/// <see cref="InitializeState"/>·<see cref="EnsureStateSize"/>를 더했다. 0.133(TS3)에서 파일 읽기/저장(<see cref="InstallFile"/>·<see cref="LoadFile"/>·<see cref="SaveFile"/>)과
+/// <see cref="BindCurrentName"/>을 더했다. 빈 manager·로그인 이미지(TS4)는 같은 partial 클래스에 단계별로 더한다.
 /// 계획: <c>docs/dotnet-template-storage-plan-20261101.md</c>.
 /// C++의 참조 반환은 같은 객체를 돌려주는 클래스 인스턴스로 옮겼으므로 반환된 커서는 저장소가 manager를 반납할 때까지 같은 참조다.
 /// </remarks>
@@ -462,6 +463,111 @@ public sealed partial class CampaignTemplateStorage
     public void AccessSection(TemplateWriteStream stream, TemplateSectionAccess operation)
     {
         Writable(stream).AccessSection(stream.Section, operation);
+    }
+
+    /// <summary>
+    /// 파싱된 보조 자료와 같은 실제 파일 원문을 새 manager에 읽는다(임의의 빈 섹션 목록을 먼저 만들지 않는다). 실제 파일/서명/섹션 읽기 부모를 실행하며,
+    /// 읽기가 거부되면 예외를 던지고 칸에는 아무 manager도 남지 않는다. 읽기 중 원문이 칸 헤더를 공개하지 않으므로 성공 뒤에만 헤더에 쓴다.
+    /// </summary>
+    /// <param name="slot">설치할 칸.</param>
+    /// <param name="fort">파싱된 보조 자료. 실제 섹션은 파일 reader가 만든 할당이 대체한다. 소유권이 넘어간다.</param>
+    /// <param name="image">파일 전체 바이트.</param>
+    /// <param name="name">파일 이름.</param>
+    /// <param name="typeCount">서명 검사가 도달한 순간의 현재 signed TYPE 개수. 기본 188은 10.78 독립 호출용이며 Session은 현재 타입 수를 전달한다.</param>
+    /// <exception cref="OverflowException">호스트 manager 핸들이 소진됐다.</exception>
+    /// <exception cref="InvalidOperationException">파일 열기/서명이 거부됐다.</exception>
+    /// <exception cref="InvalidDataException">잘못된 서명의 원본 파일 제거 요청이다(보호 원문은 삭제하지 않는다).</exception>
+    public void InstallFile(uint slot, FortTemplate fort, ReadOnlySpan<byte> image, string name, int typeCount = 188)
+    {
+        Clear(slot);
+        if (_nextHandle == 0)
+        {
+            throw new OverflowException("Template 파일 manager 핸들 소진");
+        }
+        Image created = new(fort, name, _serializationGlobals, _sectionNames, fileImage: true);
+        created.ReadFile(image, typeCount);
+        uint handle = _nextHandle++;
+        _images.Add(handle, created);
+        Put(Header(slot), 0, handle);
+    }
+
+    /// <summary>
+    /// 원문 Load(004bf550)를 실제 소유자에 연결한다: 기존 같은 파일은 그대로 두고 빈 칸에만 manager를 만들고 읽기 전에 헤더를 공개하며,
+    /// 정상 false(파일 없음·서명 거부)는 현재 manager만 반납하고, 예외는 이미 공개한 manager를 되돌리지 않는다.
+    /// </summary>
+    /// <param name="slot">읽을 칸.</param>
+    /// <param name="fort">파싱된 보조 자료. 실제 섹션은 reader의 할당을 쓴다. 소유권이 넘어간다.</param>
+    /// <param name="name">요청 파일 이름.</param>
+    /// <param name="file">실제 파일·CRT·현재 슬롯·제목 경계. 선택한 분기가 쓰는 항목만 연결하면 된다.</param>
+    public void LoadFile(uint slot, FortTemplate fort, string name, TemplateFileLoadHooks file)
+    {
+        ArgumentNullException.ThrowIfNull(file);
+        TemplateLoadHooks hooks = new()
+        {
+            // 항상 전달받은 현재 handle의 실제 +12를 빌린다
+            FileName = manager => RawTemplateLoad.FileName(_images[manager].Manager),
+            SameName = (first, second) => NeedFile(file.SameName)(first, second),
+            WrongName = () => NeedFile(file.WrongName)(),
+            Allocate = bytes =>
+            {
+                if (bytes != 276 || _nextHandle == 0)
+                {
+                    throw new OverflowException("Template Load의 실제276BYTE/호스트handle 소진");
+                }
+                return _nextHandle++;
+            },
+            // 생성자의 공유 version 0과 실제 Image 소유를 끝낸 뒤 원문 부모가 header.ptr를 공개한다
+            Construct = (manager, fileName) =>
+            {
+                Image created = new(fort, fileName, _serializationGlobals, _sectionNames, fileImage: true);
+                created.Fort.Sections.Clear();
+                if (!_images.TryAdd(manager, created))
+                {
+                    throw new InvalidOperationException("Template Load manager의 같은 할당 중복");
+                }
+                return manager;
+            },
+            ReadOnly = fileName => NeedFile(file.ReadOnly)(fileName),
+            // readonly callback 뒤 header에서 재조회한 manager를 그대로 읽는다
+            ReadFile = manager => _images[manager].ReadFile(file),
+            IsCurrent = () => slot == NeedFile(file.CurrentSlot)(),
+            RefreshTitle = () => NeedFile(file.RefreshTitle)(),
+            Lifetime = Effects(),
+        };
+        RawTemplateLoad.Load(Header(slot), name, hooks);
+    }
+
+    /// <summary>
+    /// 같은 manager의 실제 서명/검색/current와 저장 부모를 통해 현재 섹션을 파일에 쓴다. 빌린 헤더도 원래 소유자의 같은 현재 manager와 원시 섹션을 저장한다.
+    /// </summary>
+    /// <param name="slot">저장할 칸.</param>
+    /// <param name="state">저장 억제·로컬 소유자·숨김 전역의 현재 값.</param>
+    /// <param name="image">타입 개수·진단. 서명 flag와 섹션 조회는 이 호출이 채운다(호출자의 객체는 바꾸지 않는다).</param>
+    /// <param name="file">권한 변경(0x180)·쓰기 장치.</param>
+    public void SaveFile(uint slot, DataManagerFileSaveState state, FortImageHooks image, TemplateFileWriteHooks file)
+    {
+        Current(slot).SaveFile(state, image, file);
+    }
+
+    /// <summary>
+    /// 원문 이름 부모에 같은 헤더/manager+c 256바이트만 연결한다. Notify·저장·삭제 등은 실제 호출자가 공급한다.
+    /// C++은 값으로 받은 장치 묶음에 채워 돌려주지만 C#은 받은 객체에 채워 같은 객체를 돌려준다.
+    /// </summary>
+    /// <param name="hooks">호출자가 공급한 장치 묶음.</param>
+    /// <exception cref="ArgumentOutOfRangeException">그 manager가 이미 반납됐거나 없다(이름 변경의 현재 manager 없음).</exception>
+    public FortCurrentNameHooks BindCurrentName(FortCurrentNameHooks hooks)
+    {
+        ArgumentNullException.ThrowIfNull(hooks);
+        hooks.Header = slot => Header(slot);
+        hooks.ManagerName = token =>
+        {
+            if (!_images.TryGetValue(token, out Image? image))
+            {
+                throw new ArgumentOutOfRangeException(nameof(token), token, "Fort 이름 변경의 현재 manager 없음");
+            }
+            return image.Manager.AsSpan(12, 256);
+        };
+        return hooks;
     }
 
     /// <summary>

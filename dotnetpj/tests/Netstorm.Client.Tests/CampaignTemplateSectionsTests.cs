@@ -1,5 +1,3 @@
-using System.Buffers.Binary;
-using System.Runtime.InteropServices;
 using Netstorm.Client.Host;
 using Netstorm.Core.Original;
 using static Netstorm.Client.Tests.TemplateStorageTestSupport;
@@ -15,37 +13,6 @@ namespace Netstorm.Client.Tests;
 /// </summary>
 public sealed class CampaignTemplateSectionsTests
 {
-    /// <summary>한 노드의 16바이트 MemStream 필드를 인라인 쓰기로 관찰한 값이다.</summary>
-    /// <param name="Pointer">data 토큰.</param>
-    /// <param name="Position">pos.</param>
-    /// <param name="End">end.</param>
-    /// <param name="Capacity">alloc.</param>
-    private readonly record struct StreamObservation(uint Pointer, uint Position, uint End, uint Capacity);
-
-    /// <summary>이름/핸들의 편의 계산 없이 저장소의 같은 실제 raw 필드를 조회한다.</summary>
-    /// <param name="storage">저장소.</param>
-    /// <param name="stream">보관한 쓰기 참조.</param>
-    private static StreamObservation Observe(CampaignTemplateStorage storage, TemplateWriteStream stream)
-    {
-        uint pointer = 0, position = 0, end = 0, capacity = 0;
-        storage.AccessSection(stream, (fields, _) =>
-        {
-            pointer = BinaryPrimitives.ReadUInt32LittleEndian(fields);
-            position = BinaryPrimitives.ReadUInt32LittleEndian(fields[4..]);
-            end = BinaryPrimitives.ReadUInt32LittleEndian(fields[8..]);
-            capacity = BinaryPrimitives.ReadUInt32LittleEndian(fields[12..]);
-        });
-        return new StreamObservation(pointer, position, end, capacity);
-    }
-
-    /// <summary>섹션 버퍼가 실제로 쓰는 배열 객체를 돌려준다(C++의 <c>data()</c> 포인터 비교를 객체 동일성으로 대신한다).</summary>
-    /// <param name="buffer">섹션 버퍼.</param>
-    private static byte[] ArrayOf(RawSectionBuffer buffer)
-    {
-        Assert.True(MemoryMarshal.TryGetArray<byte>(buffer.Memory, out ArraySegment<byte> segment));
-        return segment.Array!;
-    }
-
     /// <summary>실제 Rename은 원래 Temp 노드와 할당을 남기고 대상 노드만 반납한다.</summary>
     [Fact]
     public void TempRenamePreservesNodeAndAllocation()

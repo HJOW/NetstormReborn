@@ -8,11 +8,11 @@ using Netstorm.Core.Original;
 namespace Netstorm.Client.Tests;
 
 /// <summary>
-/// Template 저장소 검사(<see cref="CampaignTemplateStorageTests"/>, <see cref="CampaignTemplateSectionsTests"/>)가 함께 쓰는 도우미다:
+/// Template 저장소 검사(<see cref="CampaignTemplateStorageTests"/>, <see cref="CampaignTemplateSectionsTests"/>, <see cref="CampaignTemplateFileTests"/>)가 함께 쓰는 도우미다:
 /// 원본 .fort 읽기(cpppj의 <c>FortTemplate::Parse</c> 대신 <see cref="FortTemplate.ReadSections"/>), 표준 섹션 위치, 두 범위의 같은 물리 주소 비교,
 /// 실제 헤더 180바이트 읽기·쓰기, 같은 저장소에 연결한 Player State getter.
 /// </summary>
-/// <remarks>2026-11-01 0.132(TS2)에서 <see cref="CampaignTemplateStorageTests"/>의 비공개 도우미를 옮겨 공유했다.</remarks>
+/// <remarks>2026-11-01 0.132(TS2)에서 <see cref="CampaignTemplateStorageTests"/>의 비공개 도우미를 옮겨 공유했다. 0.133(TS3)에서 노드 관찰(<see cref="Observe"/>)과 할당 배열 조회(<see cref="ArrayOf"/>)를 더했다.</remarks>
 internal static class TemplateStorageTestSupport
 {
     /// <summary>실제 파일을 읽는 검사가 쓰는 원본 데이터 폴더의 파일 시스템이다(없으면 null).</summary>
@@ -86,6 +86,37 @@ internal static class TemplateStorageTestSupport
     /// <param name="at">헤더 안 위치.</param>
     /// <param name="value">쓸 값.</param>
     public static void SetHeader(CampaignTemplateStorage storage, int at, uint value) => BinaryPrimitives.WriteUInt32LittleEndian(storage.Headers.Span[at..], value);
+
+    /// <summary>한 노드의 16바이트 MemStream 필드를 인라인 쓰기로 관찰한 값이다.</summary>
+    /// <param name="Pointer">data 토큰.</param>
+    /// <param name="Position">pos.</param>
+    /// <param name="End">end.</param>
+    /// <param name="Capacity">alloc.</param>
+    public readonly record struct StreamObservation(uint Pointer, uint Position, uint End, uint Capacity);
+
+    /// <summary>이름/핸들의 편의 계산 없이 저장소의 같은 실제 raw 필드를 조회한다.</summary>
+    /// <param name="storage">저장소.</param>
+    /// <param name="stream">보관한 쓰기 참조.</param>
+    public static StreamObservation Observe(CampaignTemplateStorage storage, TemplateWriteStream stream)
+    {
+        uint pointer = 0, position = 0, end = 0, capacity = 0;
+        storage.AccessSection(stream, (fields, _) =>
+        {
+            pointer = BinaryPrimitives.ReadUInt32LittleEndian(fields);
+            position = BinaryPrimitives.ReadUInt32LittleEndian(fields[4..]);
+            end = BinaryPrimitives.ReadUInt32LittleEndian(fields[8..]);
+            capacity = BinaryPrimitives.ReadUInt32LittleEndian(fields[12..]);
+        });
+        return new StreamObservation(pointer, position, end, capacity);
+    }
+
+    /// <summary>섹션 버퍼가 실제로 쓰는 배열 객체를 돌려준다(C++의 <c>data()</c> 포인터 비교를 객체 동일성으로 대신한다).</summary>
+    /// <param name="buffer">섹션 버퍼.</param>
+    public static byte[] ArrayOf(RawSectionBuffer buffer)
+    {
+        Assert.True(MemoryMarshal.TryGetArray<byte>(buffer.Memory, out ArraySegment<byte> segment));
+        return segment.Array!;
+    }
 
     /// <summary>State 확장의 명시 입력(28바이트)을 같은 저장소에 연결하는 Player State getter를 만든다. 진단은 모두 실패로 본다.</summary>
     /// <param name="storage">저장소.</param>
