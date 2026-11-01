@@ -1,6 +1,7 @@
 using Netstorm.Assets;
 using Netstorm.Client.Display;
 using Netstorm.Client.Host;
+using Netstorm.Client.Gump;
 
 namespace Netstorm.Client.Tests;
 
@@ -38,6 +39,33 @@ public sealed class HostStartupSceneTests
         Assert.Equal(0, startup.Configuration.GetInt("tellTips"));
         Assert.Equal(35, startup.Configuration.GetInt("maxFPS"));
         Assert.Equal(35, options.FramesPerSecond);
+    }
+
+    /// <summary>실제 fortGump·글꼴을 사용해 메인 메뉴 여덟 버튼이 각각 타이틀 화면을 변경한다.</summary>
+    [Fact]
+    public void MainMenuDrawsEightRealAssetButtons()
+    {
+        string? data = GameDataLocator.FindDataDirectory(); Assert.NotNull(data);
+        var startup = new HostStartupScene(data); var screen = new Screen(1024, 768);
+        Assert.True(screen.SetMode(ScreenMode.BackBufferDib | ScreenMode.ModeSet)); startup.Draw(screen);
+        byte[] before = screen.Pixels.ToArray();
+        var menu = new HostMainMenu(startup, screen, new GumpButtonTreeHooks
+        {
+            Now = () => throw new InvalidOperationException("입력 전용"), Poll = _ => throw new InvalidOperationException("입력 전용"),
+            Sound = () => throw new InvalidOperationException("입력 전용"), Redraw = (_, _) => { }, HandleBase = (_, _, _, _) => 0
+        });
+        menu.Draw(screen);
+        // 버튼마다 해당 사각형 안에서 적어도 하나의 픽셀이 실제 자산 출력으로 달라진다.
+        for (int index = 0; index < 8; index++)
+        {
+            int x = 1024 / 2 - 156 + (index % 4) * 79, y = 768 / 2 - 73 + (index / 4) * 23;
+            bool changed = false;
+            // 각 버튼의 표시 영역만 비교하며 다른 버튼의 변경은 세지 않는다.
+            for (int row = y; row < y + 19 && !changed; row++)
+                for (int col = x; col < x + 75; col++)
+                    if (before[row * screen.Pitch + col] != screen.Pixels[row * screen.Pitch + col]) { changed = true; break; }
+            Assert.True(changed, $"버튼 {index} 출력이 없다");
+        }
     }
 
 }

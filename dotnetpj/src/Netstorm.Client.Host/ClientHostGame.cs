@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Netstorm.Client.Automation;
 using Netstorm.Client.Display;
+using Netstorm.Client.Gump;
 
 namespace Netstorm.Client.Host;
 
@@ -28,6 +29,12 @@ public sealed class ClientHostGame : Game
 
     /// <summary>실제 데이터에서 준비한 시작 화면. 자료가 없으면 null이다.</summary>
     private readonly HostStartupScene? _startup;
+
+    /// <summary>실제 버튼 트리를 소유하는 초기 메인 메뉴.</summary>
+    private HostMainMenu? _mainMenu;
+
+    /// <summary>버튼 트리가 요청한 다음 메뉴 재그리기.</summary>
+    private bool _menuDirty;
 
     /// <summary>그리기 묶음.</summary>
     private SpriteBatch? _batch;
@@ -88,7 +95,20 @@ public sealed class ClientHostGame : Game
         _output = new MonoGameScreenOutput(GraphicsDevice, _driver.Screen);
         _driver.Screen.Output = _output;
         if (_startup is null) _driver.Screen.Update(new ScreenRect(0, 0, _driver.Screen.Width, _driver.Screen.Height));
-        else _startup.Draw(_driver.Screen);
+        else
+        {
+            _startup.Draw(_driver.Screen);
+            _mainMenu = new HostMainMenu(_startup, _driver.Screen, new GumpButtonTreeHooks
+            {
+                Now = () => throw new InvalidOperationException("메인 메뉴 시계 입력 미연결"),
+                Poll = _ => throw new InvalidOperationException("메인 메뉴 포인터 폴링 미연결"),
+                Sound = () => throw new InvalidOperationException("메인 메뉴 소리 장치 미연결"),
+                Redraw = (_, _) => _menuDirty = true,
+                HandleBase = (_, _, _, _) => throw new InvalidOperationException("메인 메뉴 명령 소비자 미연결")
+            });
+            _mainMenu.Draw(_driver.Screen);
+            _menuDirty = false;
+        }
         _previousKeys = Keyboard.GetState();
         _previousMouse = Mouse.GetState();
     }
@@ -103,6 +123,7 @@ public sealed class ClientHostGame : Game
         PumpKeyboard();
         PumpMouse();
         if (_driver.ProcessInput()) { Exit(); return; }
+        if (_menuDirty && _mainMenu is not null) { _mainMenu.Draw(_driver.Screen); _menuDirty = false; }
         base.Update(gameTime);
     }
 
