@@ -13,7 +13,7 @@ struct HtmlWindowMetadataHooks { // 게임 계산 결과 대신 실제 공통 UI
     std::function<void(std::string_view,std::uint32_t,std::string_view)> namedList,fileList; // @/#의 현재 키·명령·원시 인자다.
     std::function<std::string(std::string_view,std::string_view,std::string_view)> inlineList; // %의 현재 키·원시 명령/인자로 반환된 실제 문자열이다.
     std::function<double()> wallSeconds;std::function<void(std::uint32_t,bool)> idle;std::function<std::uint32_t(std::uint32_t)> read; // 현재 시각/정상 idle 등록/실제 전역 DWORD다.
-    std::function<void(std::int32_t,std::string_view,std::string_view)> input;std::function<void(std::string_view,std::string_view,std::string_view)> send; //4d3ed0과원문 Zsend 패킷의 선택 경계다.
+    std::function<void(std::int32_t,std::string_view,std::string_view)> input;std::function<void(std::string_view,std::string_view,std::string_view)> send; //4d3ed0의mode/제목/후속Tell과원문Zsend패킷의선택경계다.
     std::function<void(std::uint32_t,std::uint32_t,std::uint32_t)> queue; // Input 뒤 현재 MenuJustClosed raw 사건을 그대로 예약한다.
 };
 class HtmlWindowMetadata { //9종 고정 검색/현재 필드/원시 줄 제거와 반환을 실제 부모에 수행한다.

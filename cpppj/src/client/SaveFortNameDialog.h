@@ -10,6 +10,7 @@ class EditorFiles; // 쓰기 가능한 편집 namespace의 실제 경로/존재 
 struct SaveFortNameDialogNode: GumpDecorationNode {
     std::uint32_t title{},ok{},cancel{},entry{}; // +c4/+c8/+cc/+d0의 실제 자식 토큰이다.
     std::uint32_t fortMode{},canCancel{}; // +d4/+d8의 전체 원문 DWORD를 보존한다.
+    std::array<char,80> inputSection{}; //HTML Input 형제 창의 원문+d8 고정80BYTE다. 호스트는 canCancel과 별도로 보관하며 다른 두 창은 사용하지 않는다.
 };
 // 이름 확정 본체의 선택된 실제 효과다. 경로 존재는 원문 GetFileAttributesA와 같은 비영 의미다.
 struct SaveFortNameConfirmHooks {
@@ -26,6 +27,7 @@ std::uint32_t ConfirmSaveFortName(const std::uint32_t& fortMode,const SaveFortNa
 std::uint32_t CancelSaveFortName(const std::uint32_t& canCancel,const std::function<void(std::string_view)>& tell);
 // 실제 Client가 제공하는 현재 장치이며 매 창의 callback은 해당 모달보다 오래 살아야 한다.
 struct SaveFortNameDialogContext {
+    bool htmlInput{}; //파일/송금과 구별되는 HTML Input 형제 창이며 같은 Tell 확인을 선택한다.
     std::function<std::uint32_t(std::uint32_t,std::string_view)> sendMoney; // 원본+d4가 송금 대상인 숫자 창은 파일 장치 대신 같은 확정을 사용한다.
     const EditorFiles* work{}; // 보호 원본과 구별된 실제 namespace를 반드시 지정한다.
     RawTextEntryContext editor; // 같은 공통 문자 UI의 벽시계/clipboard 장치다.
@@ -45,6 +47,7 @@ struct SaveFortNameDialogHooks {
     std::function<void(std::uint32_t,std::string_view)> excluded; // 기존00451b80 소유 문자열 교체다.
     std::function<void(std::uint32_t,float,float)> background; // 원문 테두리 flags/type/frame의 실제 생성이다.
     std::function<void(std::uint32_t,std::string_view)> title,stone; // font20 제목과70×18 돌 버튼의 실제 생성이다.
+    std::function<void(std::uint32_t,float,std::string_view)> inputTitle; //00487260의 실제 제목 폭은 편집 자식의x값이다. HTML Input만 이 경계를 사용한다.
     std::function<void(std::uint32_t)> fitTitle,fitStone,push; // 원문 같은 가상 fit/push 순서다.
     std::function<void(std::uint32_t,float,float,std::uint32_t,std::uint32_t)> attach; // 현재 실제 파생의 가상+20이다.
     std::function<void(std::uint32_t,std::int32_t)> depth; //004652b0의 같은 signed 깊이 조정이다.
@@ -59,6 +62,7 @@ public:
     SaveFortNameDialog(GumpCreateState& state,SaveFortNameDialogHooks hooks); // 공통 등록표와 실제 장치를 빌린다.
     std::uint32_t Show(std::uint32_t fortMode,std::uint32_t canCancel,std::string_view current,std::optional<std::string_view> initial={}) const; // 실제 모달 root 토큰이다.
     std::uint32_t ShowMoney(std::uint32_t target) const; //004d3860/004d3b60의 숫자 전용 형제 창이며 공통 장식/두 버튼을 재사용한다.
+    std::uint32_t ShowInput(std::uint32_t mode,std::string_view title,std::string_view continuation) const; //004d3c20/004d3ed0의문자/숫자후속Tell창이며기존공통두버튼을사용한다.
     std::uint32_t Handle(std::uint32_t token,std::uint32_t event,std::uint32_t first,std::uint32_t second) const; // Enter/두 버튼 외에는 기본 부모에 위임한다.
 private:
     SaveFortNameDialogNode& Node(std::uint32_t token) const; // 같은 실제 파생 저장소를 요구한다.

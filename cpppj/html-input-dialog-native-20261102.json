@@ -1,0 +1,27 @@
+{
+  "unit": 708,
+  "date": "2026-11-02",
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23"
+  },
+  "inputs": 109,
+  "nativeBodies": [
+    "004d3c20",
+    "004d3ed0",
+    "004cfae0",
+    "CRT004e49c0",
+    "CRT004e63e0"
+  ],
+  "explicitBoundaries": [
+    "common two-button base/entry/background/title/helper buttons/attach/modal/depth",
+    "translation/copy/isspace/atol/printf/Tell",
+    "heap; no allocation failure/SEH ABI claim"
+  ],
+  "gameExecutions": 0,
+  "mpTests": 0,
+  "peSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+  "fixtureSha256": "027d74f92ba363fa3e7e1852866d1802c679bc66102a7cfc96eb22237bd80b66",
+  "toolSha256": "d2afa2b8b6b4b5feb59dd3ed686b41360217701ea340dd4492c8ba77ce46ad7a"
+}

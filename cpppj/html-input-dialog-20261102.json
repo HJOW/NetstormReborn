@@ -1,0 +1,99 @@
+{
+  "unit": 708,
+  "date": "2026-11-02",
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23"
+  },
+  "version": "11.01",
+  "exeSha256": "cb0fc8488155ad2767099b900109ff4edad28ecc232bad19f93dbd2b28d758df",
+  "nativeInputs": 109,
+  "nativeConstructionInputs": 20,
+  "nativeConfirmationInputs": 89,
+  "newTests": 3,
+  "existingTests": 6,
+  "focusedTests": 9,
+  "failedChecks": 0,
+  "buildWarnings": 0,
+  "buildErrors": 0,
+  "gameExecutions": 0,
+  "mpTests": 0,
+  "networkTests": 0,
+  "protectedExisting": 2625,
+  "protectedChanged": 0,
+  "newFixtures": 1,
+  "protectedFiles": 2626,
+  "nativeAttempts": [
+    {
+      "log": "native-v1.log",
+      "result": "중단: atol 경계 주소 미등록. fixture 생성 전"
+    },
+    {
+      "log": "native-v2.log",
+      "result": "주소004e66de로 수정한 뒤109개 정상 반환"
+    }
+  ],
+  "buildAttempts": [
+    {
+      "log": "build-v1.log",
+      "warnings": 1,
+      "errors": 0,
+      "reason": "C4458 로컬 hooks 변수명"
+    },
+    {
+      "log": "build-v2.log",
+      "result": "보조 정적 읽기에서 bytes/str 오류로 수정 전 실행된 갱신 없는 빌드"
+    },
+    {
+      "log": "build-v3.log",
+      "warnings": 0,
+      "errors": 0,
+      "result": "변수명/검사 문법 수정 후 제품·집중 검사 재빌드"
+    }
+  ],
+  "testAttempts": [
+    {
+      "log": "focused-v1.log",
+      "tests": 3,
+      "failedChecks": 2,
+      "cause": "검사 $Input 인자 뒤 구분 공백 누락; 원문109 대조와 숫자/취소는 통과"
+    },
+    {
+      "log": "focused-v2.log",
+      "tests": 3,
+      "failedChecks": 0
+    },
+    {
+      "log": "legacy-v1.log",
+      "tests": 6,
+      "failedChecks": 0
+    }
+  ],
+  "limits": [
+    "이번부모생성/공장/확인만새원문109;기존버튼/제목/UIhelper·CRT일부는명시경계",
+    "실제공통HTML메타/TextEntry/두버튼/픽셀Draw/수명은프로세스없는집중검사",
+    "기존Save as288행은재생이며새원문수에합산하지않음",
+    "새게임/GUI운영체제창/MP/통신·포획/희생/특정적공격/승리·공중3종전용행동0",
+    "Zsend와Edit/시나리오수명·전체C++/34/ZIP·실제PCM/물리입력/전체픽셀동일성은미완료"
+  ],
+  "sourceSha256": {
+    "cpppj/src/CMakeLists.txt": "186649e6c65ccd134bf480cf2eccd27376b1e7b9881ed90628fc5859e6595203",
+    "cpppj/src/client/HtmlInputDialog.h": "9cc3ad41e2cefb0ab2e43460d0b548b76df368d401387aafa3dca4e9d976cc28",
+    "cpppj/src/client/HtmlInputDialog.cpp": "c8def1168a89dd09b43f71e5cd1c0d62bd507927088f83b7be71436d7b8c1c7b",
+    "cpppj/src/client/SaveFortNameDialog.h": "6c77b5fc3df612c27bbf50516d8f8db3fb0e4bda4bb147b9e63910d727a0f855",
+    "cpppj/src/client/SaveFortNameDialog.cpp": "478cec5878b6145eb92160893265b3b2ccaed938fba01aa1b10e9decfff3f868",
+    "cpppj/src/client/RawMenuControls.h": "cec0168efa499676c278df9ff03a004c5af5e16ef5baf7e780ec2b9bc4b80ac7",
+    "cpppj/src/client/RawMenuControls.cpp": "6e6b4c165ac9a9834102ebed29a4385dd84f144d4070f57a43a73e178eb51bdd",
+    "cpppj/src/client/RawMenuSaveFort.inc": "a876d3c52d072821331ddde61a7a0aa679430a61a05cd456502a63cd2d05be09",
+    "cpppj/src/client/RawMenuHtml.inc": "36135e71b1fa09e418a0926d7058e306384c9f4f5274321cc1cb2ea2257cd86b",
+    "cpppj/src/client/HtmlWindowMetadata.h": "3be911976b08436af044812217f67c130ec5c1afdcf86a3a64958214481333c9",
+    "cpppj/src/client/UberGump.cpp": "cc40041a89b4229f08de74d56b3358a7b5638617fcbf2d5f18cfe9adef06fbd3",
+    "cpppj/tests/HtmlInputDialogTests.cpp": "4275729c1e2283d352590fec75229be63f7abc4860ffbcabafd34ded3e521cf4",
+    "cpppj/tests/HtmlInputDialogActualTests.inc": "fba96b1632f62561346e3c64542476d53c82071dc853ceb9a91ca955d5d8ba92",
+    "cpppj/tests/SaveFortNameDialogTests.cpp": "084086aefdfe02ab255b524747aa08c8359596d0341449fc7bead8e0aa3e69b5",
+    "cpppj/tests/CMakeLists.txt": "c46c19efc9d473bb7aab6f7b3045318656c45ce4a77af0f0fc42262960cea8af",
+    "tools/decomp_html_input_dialog.py": "d2afa2b8b6b4b5feb59dd3ed686b41360217701ea340dd4492c8ba77ce46ad7a",
+    "AGENTS.md": "544643cf731393ecb4784490aa7f2794e8736742582907cce29453e6ac46f15e"
+  }
+}

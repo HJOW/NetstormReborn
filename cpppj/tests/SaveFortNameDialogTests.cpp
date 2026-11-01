@@ -120,3 +120,6 @@ TEST_CASE(SendMoneyDialog_ActualLimitAndCancel) {
     for (const auto ch:std::string("123456789012345")) scene.buttons.RouteInput({static_cast<std::uint32_t>(ch),0,0}); // 원래 상한 필드는10이며 현재길이+1의 strict 비교를 한다.
     CHECK(scene.menus->TextEntryControls()->Storage().Find(editor->buffer)->Text()=="123456789");scene.buttons.HandleGump(token,0x0200002cU,scene.menus->Node(root->cancel)->serial,0);CHECK(!sends && (root->flags&0x10000U));scene.buttons.CleanupGumps();CHECK(!scene.buttons.CurrentDialog());
 }
+
+//HTML Input 메타의실제문자/숫자모달은같은비공개공통UI장면으로검사한다.
+#include "HtmlInputDialogActualTests.inc"

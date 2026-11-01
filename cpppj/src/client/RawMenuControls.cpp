@@ -40,11 +40,13 @@
 #include "client/ClientDotCommandGlobals.h"
 #include "client/TextEntryStorage.h"
 #include "client/SaveFortNameDialog.h"
+#include "client/HtmlInputDialog.h" //실제HTML입력확인은후속Tell을사용한다.
 #include "client/EditorFiles.h"
 #include <cctype>
 #include <cstdio>
 #include <set>
 #include "o/OriginalText.h"
+#include "o/ConfigInterface.h" //HTML숫자모드의원문atol호출경계를공유한다.
 #include <algorithm>
 #include <bit>
 #include <sstream>
@@ -663,6 +665,12 @@ std::uint32_t RawMenuControls::ShowSaveFortNameDialog(SaveFortNameDialogContext 
     EnableTextEntry(context.editor);s.BindSaveFortDialog();if (s.saveFortBuilding) throw std::logic_error("Save as 생성 안의 재귀 생성 미지원");s.saveFortBuilding=&context;
     struct Reset { Impl& state;~Reset() { state.saveFortBuilding=nullptr; } }; // 정상/예외 반환에서 생성 지역 문맥 별칭만 반납한다.
     Reset reset{s};return s.saveFortDialog->Show(fortMode,canCancel,context.currentName,initial);
+}
+//HTML Input은파일/월드없이같은문자장치·공통두버튼·Tell을사용한다.
+std::uint32_t RawMenuControls::ShowHtmlInputDialog(SaveFortNameDialogContext context,std::uint32_t mode,std::string_view title,std::string_view continuation) {
+    auto& s=*impl_;if (!context.editor.now || !context.translate || !context.tell) throw std::invalid_argument("HTML 입력 창의 실제 문자/번역/Tell 장치 누락");context.htmlInput=true;EnableTextEntry(context.editor);s.BindSaveFortDialog();if (s.saveFortBuilding) throw std::logic_error("HTML 입력 창 생성 안의 재귀 생성 미지원");s.saveFortBuilding=&context;
+    struct Reset { Impl& state;~Reset() { state.saveFortBuilding=nullptr; } }; //정상/예외반환에서생성중문맥만반납한다.
+    Reset reset{s};return s.saveFortDialog->ShowInput(mode,title,continuation);
 }
 // 송금 숫자 창은 파일 장치를 요구하지 않고 같은 문자/Gump 수명에 전용 확정을 설치한다.
 std::uint32_t RawMenuControls::ShowSendMoneyDialog(SaveFortNameDialogContext context,std::uint32_t target) {
