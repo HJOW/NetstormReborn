@@ -109,6 +109,7 @@ cpppj/src/client/Mission.cpp	Netstorm.Client/Mission/GuideMissionScriptLifetime.
 cpppj/src/client/Mission.cpp	Netstorm.Client/Mission/MissionScript.cs	8db90513e0a5cb2bca376cd61a6c5aa5670c8f10	port
 cpppj/src/client/Mission.h	Netstorm.Client/Mission/GuideMissionScriptLifetime.cs	f3735ed3fe9cd72dd1321ad7094dd0fdc1627708	port
 cpppj/src/client/Mission.h	Netstorm.Client/Mission/MissionScript.cs	8db90513e0a5cb2bca376cd61a6c5aa5670c8f10	port
+cpppj/src/client/MissionFortRequest.cpp	Netstorm.Client/Mission/MissionFortRequest.cs	604e34521d969fe0a0dc55fceebba34f37979fd7	port
 cpppj/src/client/MissionFortSource.h	Netstorm.Client/Mission/MissionFortSource.cs	8db90513e0a5cb2bca376cd61a6c5aa5670c8f10	port
 cpppj/src/client/MissionGuideInput.cpp	Netstorm.Client/Mission/MissionGuideInput.cs	def7d68a5afaa14543d90fe634b23224b8bc11d5	port
 cpppj/src/client/MissionGuideInput.h	Netstorm.Client/Mission/MissionGuideInput.cs	def7d68a5afaa14543d90fe634b23224b8bc11d5	port
