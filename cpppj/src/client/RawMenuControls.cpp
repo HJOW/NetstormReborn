@@ -7,6 +7,7 @@
 #include "client/GumpFormBinding.h"
 #include "client/FloatingSpGump.h"
 #include "client/RawKnowledgeMenu.h"
+#include "client/RawObjectMenuInfo.h" //원문 번역 원소 이름표를 공유한다.
 #include "client/TechnologyListMenu.h" //HTML 기술 목록의 행도 같은 controlled 메뉴에 작성한다.
 #include <cstdio> //원문의 고정256BYTE 기술 행 서식을 같은 두 printf 인자로 구성한다.
 #include "client/RawCampaignSession.h"
@@ -831,11 +832,16 @@ bool RawMenuControls::KnowledgeOpen() const {
     for (const auto token:s.knowledge) { const auto node=Find(s.menus,token);if (node && (node->flags&1) && !(node->flags&0x10000) && node->parent==s.common.create.collection.root) return true; }return false;
 }
 // HTML 메타가 이미 연 controlled 열을 유지하며 Session은 게임 조회만 공급한다.
-void RawMenuControls::AppendThemeTechnology(RawCampaignSession& session,std::uint32_t target,std::int32_t theme,std::function<std::string(std::string_view)> translate) {
+void RawMenuControls::AppendThemeTechnology(RawCampaignSession& session,std::uint32_t target,std::int32_t theme,std::function<std::string(std::string_view)> translate) { AppendTechnology(session,target,std::move(translate),theme); } //원소별 요청도 같은 실제 작성기를사용한다.
+//현재 HTML 열에 부착/제목/구분선을 추가하고 모든행을 기존 AddText로 전달한다.
+void RawMenuControls::AppendTechnology(RawCampaignSession& session,std::uint32_t target,std::function<std::string(std::string_view)> translate,std::optional<std::int32_t> theme) {
     if (!translate) throw std::invalid_argument("원소 기술 목록 번역 장치 없음");auto& s=*impl_;TechnologyListMenuHooks hooks;hooks.translate=translate;
     hooks.description=[&session,translate](auto type) { return translate(session.Core().types[type].description); };hooks.learnCommand=[] { return 0x020000d5U; }; //00542a48의 원문 GetNewTech 명령이며 실제 선택 후 부모는 별도 분배기다.
     hooks.format=[](auto pattern,auto description,auto level) { std::array<char,256> text{};const std::string format(pattern),name(description);const auto count=std::snprintf(text.data(),text.size(),format.c_str(),name.c_str(),level);if (count<0 || static_cast<std::size_t>(count)>=text.size()) throw std::length_error("원문 기술 행256BYTE 서식 범위");return std::string(text.data(),static_cast<std::size_t>(count)); };
-    hooks.item=[&s](auto label,auto command,auto parameter,bool enabled) { s.controls->AddText(label,command,parameter,true,enabled,false); };session.AppendThemeTechnologyMenu(target,theme,std::move(hooks));
+    hooks.item=[&s](auto label,auto command,auto parameter,bool enabled) { s.controls->AddText(label,command,parameter,true,enabled,false); };hooks.reference=[&s](auto target) { s.widgets->Reference(s.menu->Current(),target); };hooks.separator=[&s] { s.controls->AddSeparator(); };
+    hooks.themeName=[translate](auto theme) { return translate(RawObjectMenuInfo::ThemeName(theme)); };hooks.doNothingCommand=[] { return 0x02000089U; };hooks.upgradeCommand=[] { return 0x020000d4U; }; //00542918/00542a44의실제명령초기값이다.
+    hooks.formatString=[](auto pattern,auto value) { std::array<char,256> text{};const std::string format(pattern),input(value);const auto count=std::snprintf(text.data(),text.size(),format.c_str(),input.c_str());if (count<0 || static_cast<std::size_t>(count)>=text.size()) throw std::length_error("전체기술목록 문자열256BYTE 서식범위");return std::string(text.data(),static_cast<std::size_t>(count)); };
+    hooks.formatNumber=[](auto pattern,auto value) { std::array<char,256> text{};const std::string format(pattern);const auto count=std::snprintf(text.data(),text.size(),format.c_str(),value);if (count<0 || static_cast<std::size_t>(count)>=text.size()) throw std::length_error("전체기술목록 숫자256BYTE 서식범위");return std::string(text.data(),static_cast<std::size_t>(count)); };session.AppendTechnologyMenu(target,std::move(hooks),theme);
 }
 // 커서 Take 등의 실행 중 스택이 현재 메뉴를 참조할 수 있으므로 원본의 지연 삭제 시점을 보존한다.
 void RawMenuControls::RequestClosePopups() { auto& s=*impl_;s.input->ClosePopups();s.common.changed(); }

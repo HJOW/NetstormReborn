@@ -1,0 +1,63 @@
+{
+  "unit": 706,
+  "date": "2026-11-02",
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23"
+  },
+  "version": "11.01",
+  "exeSha256": "4b2d1b9151caff8e57bc682e4eaf99746809dd530582422168d03c326f8fd2e1",
+  "nativeInputs": 100,
+  "newCppTests": 2,
+  "existingCppTests": 4,
+  "focusedTests": 6,
+  "failedChecks": 0,
+  "buildWarnings": 0,
+  "buildErrors": 0,
+  "gameExecutions": 0,
+  "protectedExisting": 2624,
+  "protectedChanged": 0,
+  "newFixtures": 1,
+  "protectedFiles": 2625,
+  "limits": [
+    "All TechList004cb690 wired to same actual Session/HTML/controlled menu; no new GUI",
+    "GetNewTech020000d5, RequestStormpower and UpgradeAltar020000d4 request parent still unbound; no immediate GetTechnology0200009f substitution",
+    "Full ownership rank branch statically implemented only; no new MP tests",
+    "Native current menu/reference/theme/TYPE/technology/owned/island/translation/description/printf/item/separator/heap/assert are explicit boundaries",
+    "Actual x87 CRT and full parent/shared helpers executed; whole heap allocation failure/SEH/invalid pointer ABI not claimed",
+    "No whole C++/34/ZIP, physical input/PCM or full original pixel equality",
+    "No capture/sacrifice/specific enemy/victory, dedicated airborne-three actions, MP/network tests"
+  ],
+  "sourceSha256": {
+    "cpppj/src/client/TechnologyListMenu.cpp": "b21f49d941bc9ca72e8d6a60caaac4a98c1935e44fca18ecd108b6b1a60f63cc",
+    "cpppj/src/client/TechnologyListMenu.h": "4d674fb74397d981c154fa792df73ba3370a41303aa86e72b35887f8cdf3a440",
+    "cpppj/src/client/RawMenuControls.cpp": "4fe406e85b5fc77cdcec166fc9e936261ac83a29b28ba5766b2d2171e067aa5b",
+    "cpppj/src/client/RawMenuControls.h": "945815292f5d80a992b8fb0f49791410e4f9baf507212d8da427c7e7c383d2b3",
+    "cpppj/src/client/RawCampaignSession.cpp": "dca20a7d4e31268787300979f6d826b7706c363c4c0f1124c310313006d709a8",
+    "cpppj/src/client/RawCampaignSession.h": "0b874e1d48641710229704ac38ba77bf063ebfe1146e89b31c494e32a94dd69e",
+    "cpppj/src/client/UberGump.cpp": "23963d826e4735824a22da1483e95df46f82bf8a5b959ee6c406752c63b4751a",
+    "cpppj/tests/TechnologyListMenuTests.cpp": "e26f4ea815c580d696bcf39f9d43fac67179116b0fca69e7e0c0482a1768da7c",
+    "tools/decomp_technology_all_menu.py": "ce80caed328091c2c77550d3f942496919a721c028e0f55ed4b921af8fb99aa7",
+    "tools/decomp_technology_list_menu.py": "b645c9215209794a3971a19015c740b4e2cd3b6bc195ec2467a3e38437bb2c7b",
+    "AGENTS.md": "544643cf731393ecb4784490aa7f2794e8736742582907cce29453e6ac46f15e"
+  },
+  "focusedAttempts": [
+    {
+      "log": "focused-v1.log",
+      "tests": 6,
+      "failedChecks": 1,
+      "cause": "Uninitialized menuColumns in HTML test setup; no product/native comparison failure"
+    },
+    {
+      "log": "focused-v2.log",
+      "tests": 6,
+      "failedChecks": 0,
+      "fix": "Value initialize both HTML setup nodes"
+    }
+  ],
+  "buildLogs": [
+    "build-v1.log",
+    "build-v2.log"
+  ]
+}

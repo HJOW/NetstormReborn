@@ -1,0 +1,34 @@
+{
+  "unit": 706,
+  "date": "2026-11-02",
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23"
+  },
+  "inputs": 100,
+  "nativeBodies": [
+    "004cb690",
+    "004cb320",
+    "004cb3f0",
+    "004cb4b0",
+    "CRT004e49c0"
+  ],
+  "explicitBoundaries": [
+    "virtual level",
+    "TYPE address/current technology/owned kind",
+    "current menu and reference",
+    "theme name/translate/description/printf/item/separator",
+    "surface island getter; Player field remains native memory",
+    "heap/assert"
+  ],
+  "excluded": [
+    "full ownership rank branch: static preimplementation only",
+    "capture/sacrifice/enemy/victory/airborne-three actions",
+    "MP/network/game execution"
+  ],
+  "peSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+  "fixtureSha256": "d150598800efd9a9c733a13823394fbc705875b067f77d7008016dc545ddcf1a",
+  "toolSha256": "ce80caed328091c2c77550d3f942496919a721c028e0f55ed4b921af8fb99aa7",
+  "parentToolSha256": "b645c9215209794a3971a19015c740b4e2cd3b6bc195ec2467a3e38437bb2c7b"
+}

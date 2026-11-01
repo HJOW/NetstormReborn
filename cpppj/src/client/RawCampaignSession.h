@@ -529,6 +529,7 @@ public:
     std::unique_ptr<RawPriestMenu> MakePriestMenu(PriestMenuHooks hooks);
     // 현재 Player 기술/실제 내용물·제외·Deck으로 전체 지식 창을 작성한다. GUI는 같은 Client의 실제 처리기를 받는다.
     std::vector<std::uint32_t> ShowKnowledge(KnowledgeMenuState& state,KnowledgeMenuHooks hooks);
+    void AppendTechnologyMenu(std::uint32_t target,TechnologyListMenuHooks hooks,std::optional<std::int32_t> theme={}); //전체 HTML 목록과 원소별 목록이 같은 게임 경계를 공유한다.
     void AppendThemeTechnologyMenu(std::uint32_t target,std::int32_t theme,TechnologyListMenuHooks hooks); //004cb4b0과 두 필터를 같은 실제 기술 부모/가상 레벨에 연결한다.
     QuickHelpTypeInfo HelpTypeInfo(std::uint32_t type) const; // 같은 TYPE/무기 보충 표/실제 AST 후처리의 현재 도움말 값이다.
     // caller는 기존 Bind*MenuControls로 같은 Gump 작성기를 공급한다. 미공급 Chat/번역/통신 분기는 선택 시 오류다.

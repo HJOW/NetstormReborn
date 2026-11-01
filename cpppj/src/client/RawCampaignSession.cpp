@@ -4407,13 +4407,23 @@ std::vector<std::uint32_t> RawCampaignSession::ShowKnowledge(KnowledgeMenuState&
     return ShowKnowledgeMenu(current->core.types,state,hooks);
 }
 // GUI의 현재 controlled 메뉴는 caller가 유지하며 게임 조회만 같은 실제 Session으로 바인딩한다.
-void RawCampaignSession::AppendThemeTechnologyMenu(std::uint32_t target,std::int32_t theme,TechnologyListMenuHooks hooks) {
+void RawCampaignSession::AppendThemeTechnologyMenu(std::uint32_t target,std::int32_t theme,TechnologyListMenuHooks hooks) { AppendTechnologyMenu(target,std::move(hooks),theme); } //같은 실제 게임 조회를 공유한다.
+//전체 목록은 대상WORD와 실제 Player/표면/프레임/Core를 원문 위치에서 조회한다.
+void RawCampaignSession::AppendTechnologyMenu(std::uint32_t target,TechnologyListMenuHooks hooks,std::optional<std::int32_t> theme) {
     if (!impl_->loaded) throw std::logic_error("설치 전 실제 원소 기술 목록 요청");auto* current=impl_.get();
     hooks.typeCount=[current] { return static_cast<std::int32_t>(current->core.types.size()); };hooks.type=[current](auto number)->const RiftTypeRecord& { if (number>=current->core.types.size()) throw std::out_of_range("기술 목록의 현재 TYPE 범위");return current->core.types[number]; };
     hooks.priestType=[current] { return current->motionState.carrier.priestType; };hooks.templeProduct=[current] { return current->templeProduct; };hooks.currentTechnology=[current] { return current->player->CurrentTechnology(); };
     hooks.level=[current](auto sid) { if (!sid || sid>=current->core.pool.Capacity() || sid>65535U) throw std::out_of_range("기술 목록의 가상 레벨 SID 범위");return std::bit_cast<std::uint32_t>(current->RewardCount(Sid{static_cast<std::uint16_t>(sid)})); };
     hooks.owns=[current](auto parent,auto kind) { if (parent>65535U || parent>=current->core.pool.Capacity()) throw std::out_of_range("기술 목록의 현재 기술 부모 SID 범위");const auto found=current->priests->Carrier().FindContained(Sid{static_cast<std::uint16_t>(parent)},4,kind,0);return found.value ? Read(current->core.pool.Slot(found),18)&0xffffU : 0U; };
-    hooks.assertion=[](auto line) { std::clog<<"기술 목록 Ui.cpp level 진단 "<<line<<'\n'; };TechnologyListMenu(std::move(hooks)).AppendTheme(target,theme);
+    hooks.assertion=[](auto line) { std::clog<<"기술 목록 Ui.cpp level 진단 "<<line<<'\n'; };
+    hooks.surface=[current](auto target) { const auto raw=current->core.pool.Slot(Sid{static_cast<std::uint16_t>(target)});const double x=static_cast<double>(std::bit_cast<float>(Read(raw,14)))+0.99989998340606689453125,y=static_cast<double>(std::bit_cast<float>(Read(raw,18)))+0.99989998340606689453125;const auto px=std::trunc(x),py=std::trunc(y);if (!std::isfinite(px) || !std::isfinite(py) || px<0 || py<0 || px>255 || py>255) return 0U;return static_cast<std::uint32_t>(current->core.hash.Cell(0,static_cast<int>(px),static_cast<int>(py))); }; //00500edc의float를x87처럼확장한뒤절삭한다. 범위밖은표면0이다.
+    hooks.poolCapacity=[current] { return static_cast<std::uint32_t>(current->core.pool.Capacity()); };
+    hooks.homeIsland=[current] { const auto offset=current->playerState.battleOwner*0xb4U+0x78U;return [current,offset] { return Read(current->players,offset); }; }; //섬조회가Player값을바꿔도선택한기록주소는보존한다.
+    hooks.island=[current](auto sid) { const auto raw=current->core.pool.Slot(Sid{static_cast<std::uint16_t>(sid)});const auto flags=current->core.types[raw[10]].flags2;if (!(flags&0x1000006U)) std::clog<<"기술 목록 Squid.cpp 섬 종류 진단 1231\n";return !(flags&0x1000006U) || (flags&4U) ? 127U : Read(raw,8)&0xffffU; }; //004acda0은graphBYTE가아닌섬WORD이며bridge는현재127sentinel이다.
+    hooks.rank=[current] { const std::uint32_t metamap=current->core.ownerMode.challenge ? 1U : 0U;return static_cast<std::uint32_t>(current->coreDataGlobals->Read(current->playerState,metamap,{SessionMissing<void,std::uint32_t>()})[4]); };
+    hooks.maximumRank=[current] { const auto first=current->core.frames[current->daisState->noIslandType].Run('B').count;const auto second=current->core.frames[current->daisState->noIslandType].Run('C').count;return std::bit_cast<std::int32_t>(static_cast<std::uint32_t>(first)*static_cast<std::uint32_t>(second)-1U); }; //TYPE+174/+178은B/C프레임개수다. 전체보유랭크분기는정적사전구현만한다.
+    hooks.nuggetType=[current] { return current->daisState->nuggetType; };hooks.noIslandType=[current] { return current->daisState->noIslandType; };
+    TechnologyListMenu menu(std::move(hooks));if (theme) menu.AppendTheme(target,*theme);else menu.AppendAll(target);
 }
 // 정보 화면도 기존 현재 TYPE/사정거리/초당 피해 표와 AI·건설의 같은 요구 에너지 후처리를 사용한다.
 QuickHelpTypeInfo RawCampaignSession::HelpTypeInfo(std::uint32_t type) const {

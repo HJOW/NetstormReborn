@@ -3,6 +3,7 @@
 #include "client/TechnologyListMenu.h"
 #include "client/HtmlWindowMetadata.h"
 #include <bit>
+#include <cmath> //원문x87의float입력+0.9999후0쪽절삭을대조한다.
 #include <filesystem>
 #include <stdexcept>
 using namespace netstorm::client;
@@ -20,6 +21,18 @@ struct TechnologyScene { //현재 TYPE 표와 원문 명시 경계를 각 입력
         hooks.format=[this](auto pattern,auto description,auto level) { CHECK(pattern=="%s (Level %d)");Event("F",{static_cast<std::uint32_t>(std::stoul(std::string(description.substr(1)))),static_cast<std::uint32_t>(level)});return std::string(description)+" (Level "+std::to_string(level)+')'; };
         hooks.learnCommand=[] { return 0x020000d5U; };hooks.item=[this](auto label,auto command,auto type,bool enabled) { CHECK(label.starts_with("T"));Event("I",{command,type,enabled ? 1U : 0U}); };hooks.assertion=[this](auto line) { Event("A",{line}); };return hooks;
     }
+    TechnologyListMenuHooks AllHooks() { //독립 실제 입력으로 전체 부모/HTML을 실행하며 랭크 경계는 미연결로 둔다.
+        auto hooks=Hooks();hooks.reference=[this](auto target) { CHECK(target==10);Event("C");Event("B",{target}); };
+        hooks.themeName=[this](auto theme) { Event("E",{static_cast<std::uint32_t>(theme)});return "E"+std::to_string(theme); };hooks.separator=[this] { Event("S"); };
+        hooks.translate=[this](auto text) { Event(std::string("X:")+std::string(text));return std::string(text); };
+        hooks.formatString=[this](auto pattern,auto value) { Event(std::string("FS:")+std::string(pattern)+':'+std::string(value));std::string result(pattern);result.replace(result.find("%s"),2,value);return result; };
+        hooks.formatNumber=[this](auto pattern,auto value) { Event(std::string("FN:")+std::string(pattern),{std::bit_cast<std::uint32_t>(value)});std::string result(pattern);result.replace(result.find("%d"),2,std::to_string(value));return result; };
+        hooks.item=[this](auto label,auto command,auto parameter,bool enabled) { Event(std::string("I:")+std::string(label),{command,parameter,enabled ? 1U : 0U}); };
+        hooks.surface=[this](auto target) { CHECK(target==10);const auto x=std::trunc(static_cast<double>(std::bit_cast<float>(row[7]))+0.99989998340606689453125),y=std::trunc(static_cast<double>(std::bit_cast<float>(row[8]))+0.99989998340606689453125);return x<0 || y<0 || x>255 || y>255 ? 0U : row[9]; };
+        hooks.poolCapacity=[] { return 64U; };hooks.homeIsland=[this] { return [this] { return row[10]; }; };hooks.island=[this](auto surface) { Event("J",{surface});if (row[12]) row[10]=99;return row[11]; };
+        hooks.doNothingCommand=[] { return 0x02000089U; };hooks.upgradeCommand=[] { return 0x020000d4U; };hooks.nuggetType=[] { return 154U; };return hooks;
+    }
+
 };
 }
 //원문367입력의 전체 반환/저장개수/40DWORD와 메뉴 경계 순서를 대조한다.
@@ -35,7 +48,7 @@ TEST_CASE(TechnologyListMenu_IndependentNative) {
 }
 //실제 HTML 메타가 packed SID/원소를 해석해 같은 생성기와 현재 메뉴 열을 사용한다.
 TEST_CASE(TechnologyListMenu_HtmlMetadataThemeDispatch) {
-    TechnologyScene scene;scene.Prepare({2,1,2,80,1,40,0});HtmlWindowGumpNode node;HtmlWindowMetadataHooks hooks;hooks.node=[&](auto token) { CHECK(token==1);return &node; };hooks.clearButtons=[](auto) {};hooks.commands.lookup=[](auto name) { CHECK(name=="DoNothing");return 0x02000089U; };hooks.beginMenu=[](auto flags) { CHECK(flags==0x40000); };
+    TechnologyScene scene;scene.Prepare({2,1,2,80,1,40,0});HtmlWindowGumpNode node{};HtmlWindowMetadataHooks hooks;hooks.node=[&](auto token) { CHECK(token==1);return &node; };hooks.clearButtons=[](auto) {};hooks.commands.lookup=[](auto name) { CHECK(name=="DoNothing");return 0x02000089U; };hooks.beginMenu=[](auto flags) { CHECK(flags==0x40000); };
     hooks.themeTech=[&](auto target,auto theme) { CHECK(target==10 && theme==1);TechnologyListMenu(scene.Hooks()).AppendTheme(target,theme); };std::array<char,8192> buffer{};const std::string text="$Menu=*THEMETECHLIST*,DoNothing,65546\nTAIL";std::copy(text.begin(),text.end(),buffer.begin());
     CHECK(HtmlWindowMetadata(hooks).Process(1,buffer)==1 && node.menuColumns==1);CHECK(std::string(buffer.data())=="TAIL" && scene.trace.starts_with("L:10;T") && scene.trace.find("I:33554645:")!=std::string::npos);
 }
@@ -43,4 +56,19 @@ TEST_CASE(TechnologyListMenu_HtmlMetadataThemeDispatch) {
 TEST_CASE(TechnologyListMenu_LazyBoundariesAndPartialFailure) {
     std::uint32_t reads{};TechnologyListMenuHooks hooks;hooks.currentTechnology=[&] { ++reads;return 50U; };hooks.typeCount=[] { return 0; };hooks.level=[](auto) { return 0U; };std::int32_t stored=7;TechnologyListMenu menu(hooks);CHECK(menu.CountCandidates({},stored,0,-1)==0 && stored==7 && reads==1);menu.AppendTheme(10,1);CHECK(reads==4);
     TechnologyScene scene;scene.Prepare({2,1,2,80,1,40,0});auto actual=scene.Hooks();actual.item={};bool failed{};try { TechnologyListMenu(actual).AppendTheme(10,1); }catch (const std::logic_error&) { failed=true; }CHECK(failed && scene.trace.find(";X;D:")!=std::string::npos && scene.trace.find(";F:")!=std::string::npos && scene.trace.find(";I:")==std::string::npos);
+}
+
+//실제 부모/세 하위/CRT의100입력과 전체 경계 순서·라벨·활성 상태를 대조한다. 희생/MP는 실행하지 않는다.
+TEST_CASE(TechnologyListMenu_AllIndependentNative) {
+    const auto root=std::filesystem::path(__FILE__).parent_path().parent_path().parent_path();const auto fixture=LoadFixture((root/"cpppj/tests/fixtures/technology-all-menu-x86.tsv").string().c_str());TechnologyScene scene;std::size_t count{};
+    for (const auto& fields:fixture.rows) { //기대값은 독립 원문이고 제품 모델로 덮어쓰지 않는다.
+        CHECK(fields.size()==2);if (fields.size()!=2) continue;scene.Prepare(TechnologyNumbers(fields[0]));CHECK(scene.row.size()==13);TechnologyListMenu(scene.AllHooks()).AppendAll(0x1234000aU);
+        if (scene.trace!=fields[1]) std::fprintf(stderr,"전체기술목록 원문 입력 %s\n기대 %s\n실제 %s\n",fields[0].c_str(),fields[1].c_str(),scene.trace.c_str());CHECK(scene.trace==fields[1]);++count;
+    }
+    CHECK(count==100 && count==fixture.rows.size());
+}
+//실제 HTML의전체메타가상위WORD를유지해넘기고부모가대상WORD로접는다.현재열은한개다.
+TEST_CASE(TechnologyListMenu_HtmlMetadataAllDispatch) {
+    TechnologyScene scene;scene.Prepare({3,0,1,80,1,40,0,std::bit_cast<std::uint32_t>(10.25F),std::bit_cast<std::uint32_t>(10.25F),11,7,7,0});HtmlWindowGumpNode node{};HtmlWindowMetadataHooks hooks;hooks.node=[&](auto token) { CHECK(token==1);return &node; };hooks.clearButtons=[](auto) {};hooks.commands.lookup=[](auto name) { CHECK(name=="DoNothing");return 0x02000089U; };hooks.beginMenu=[](auto flags) { CHECK(flags==0x40000); };hooks.tech=[&](auto target) { CHECK(target==0x1234000aU);TechnologyListMenu(scene.AllHooks()).AppendAll(target); };
+    std::array<char,8192> buffer{};const std::string text="$Menu=*TECHLIST*,DoNothing,305397770\nTAIL";std::copy(text.begin(),text.end(),buffer.begin());CHECK(HtmlWindowMetadata(hooks).Process(1,buffer)==1 && node.menuColumns==1 && std::string(buffer.data())=="TAIL");CHECK(scene.trace.starts_with("L:10;C;B:10;T") && scene.trace.find("I:Upgrade Altar to Level 3:33554644:10:1")!=std::string::npos && scene.trace.ends_with("I:Get 5,000 ~[IfortGump.3]:33554645:154:1"));
 }
