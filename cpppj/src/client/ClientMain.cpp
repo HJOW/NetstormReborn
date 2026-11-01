@@ -539,6 +539,7 @@ std::uint32_t Client::ScriptMenuGlobal(std::uint32_t address) const {
 void Client::InterpretMainMenuOptions() {
     auto value=std::bit_cast<std::int32_t>(localStateGlobals_->TellTips());configuration_.ReadInt("tellTips",value);localStateGlobals_->TellTips()=std::bit_cast<std::uint32_t>(value);
     value=std::bit_cast<std::int32_t>(localStateGlobals_->TipNumber());configuration_.ReadInt("tipNumber",value);localStateGlobals_->TipNumber()=std::bit_cast<std::uint32_t>(value); //원문435220처럼 tellTips 바로 뒤에 현재 순번을 읽고 누락/상위 비트를 보존한다.
+    value=std::bit_cast<std::int32_t>(localStateGlobals_->AutoDemo());configuration_.ReadInt("autoDemo",value);localStateGlobals_->AutoDemo()=std::bit_cast<std::uint32_t>(value); //원문435220의 뒤쪽 자동 데모 전역이며 false/음수/누락을 bool로 정규화하지 않는다.
 }
 // 최초 감지는 영상 내용을 읽거나 디코더를 열지 않는다. 감지 뒤 옵션 변경이 이 값을 자동으로 덮지 않는다.
 void Client::DetectIntroAvailability() { DetectIntroMovie(localStateGlobals_->IntroAvailable(),[this] { std::string path;configuration_.ReadString("introMovie",path);return path; },[this](auto name) { return files_.Probe(name); }); }

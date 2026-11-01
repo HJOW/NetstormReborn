@@ -183,6 +183,8 @@ public:
     void OpenAttached(const std::function<std::uint32_t(const MenuGumpWidgets&,const MenuGumpControls&,const MenuGump&)>& builder,bool closeExisting=true);
     // 004cebf0의 Help/Options 팝업이다. builder는 실제 메뉴를 꺼내 반환하며, 작성 뒤 클릭한 버튼의 현재 위치·깊이·모달을 적용한다.
     std::uint32_t OpenMainMenuPopup(std::uint32_t button,bool options,const std::function<std::uint32_t(const MenuGumpWidgets&,const MenuGumpControls&,const MenuGump&)>& builder);
+    void SetGumpModal(std::uint32_t token,bool enabled); //실제 메인 부모도466600의 같은 기존 모달 최소 깊이/표를 사용한다.
+    void SetMainMenuSerial(std::uint32_t serial); //005cad28은 원문 메인 생성자가 쓰고 Quick Help의 대체 모달 허용 조회가 같은 값을 읽는다. Kill 때 지우지 않는다.
     std::uint32_t CreateCheatMenu(const std::function<std::string(std::string_view)>& translate,const std::function<std::uint32_t()>& command); //ESC의 직접 new0xb90→번역/명령조회→단일 항목 생성이다. controlled 칸을 추가하지 않는다.
     // 실제 루트 직계 sticky 팝업을 Kill하고 같은 삭제 큐를 정리한다.
     void Close();

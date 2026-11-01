@@ -3,6 +3,7 @@
 // 가상 함수의 호스트 분배만 구성하며 개별 원본 몸체는 기존 Gump/Button 모듈을 호출한다.
 #include "client/RawButtonControls.h"
 #include "client/RawMenuControls.h"
+#include "client/MainMenuActivity.h" //같은 실제 메인 부모의 idle/모달/활동 기한이다.
 #include "client/RawProductionControls.h"
 #include "client/RawMinimapControls.h"
 #include "client/WarningMessages.h"
@@ -33,6 +34,11 @@ constexpr std::uint32_t kInstant=4;
 constexpr std::uint32_t kOverlayEvent=0x0200003b;
 // 원본 생산 목록 갱신 문자열 ID의 초기 DWORD다(PATCH00542708/CD00512890).
 constexpr std::uint32_t kRefreshProductionEvent=0x02000003;
+struct MainMenuNode: GumpCreateNode { //원문120BYTE 부모의 버튼9칸과110 이후 활동 필드를 같은 실제 수명에 둔다.
+    std::array<std::uint32_t,9> buttons{}; //a0..c0의 원문 슬롯이며 Intro 부재의5번은0이다.
+    std::array<int,9> ids{}; //호스트 DialogAction 번호만 연결하며 Native serial과 구별한다.
+    MainMenuActivity activity; //현재 부모가 소유하는 실제 벽시각 기한/포인터다.
+};
 }
 // 기본·돌 버튼·배경은 같은 기본 노드 주소로 조회되며 저장소 이동은 하지 않는다.
 struct RawButtonControls::Impl {
@@ -46,6 +52,8 @@ struct RawButtonControls::Impl {
     StoneButtonGumpState stoneState;/* backgroundColor: 배경 색. */ std::int8_t backgroundColor{kBackgroundType};/* assets: 타입·셰이프·팔레트 자산 또는 해당 자산의 처리 경계. */ RawButtonAssets assets;/* hooks: 외부 저장소 조회와 가상 동작을 연결하는 콜백 묶음 (RawButtonHooks). */ RawButtonHooks hooks;
     // bases: 기본노드.
     std::map<std::uint32_t,std::unique_ptr<GumpCreateNode>> bases;
+    std::map<std::uint32_t,std::unique_ptr<MainMenuNode>> mainMenus; //Kill된 이전 부모도 실제 scalar 반납까지 주소를 보존한다.
+    std::uint32_t mainMenu{};RawMainMenuHooks mainHooks;ScreenPoint pointerPosition{}; //최신 부모와 현재 포인터를 일반 명령 인자/화면 phase에서 분리한다.
     // stones: 돌버튼.
     std::map<std::uint32_t,std::unique_ptr<StoneButtonGumpNode>> stones;
     std::set<std::uint32_t> commonButtonNodes; //선택적 familyDepth로 설치한 메인 버튼/배경만 공통 Draw에 제출한다. 독립 메뉴의 기존 출력 범위는 보존한다.
@@ -123,7 +131,7 @@ struct RawButtonControls::Impl {
         lifeHooks.deletingDestructor=[this](auto token,auto flags) {
             if (warnings && warnings->Node(token)) warnings->DeleteScalar(token,flags);else if (uber && uber->Node(token)) uber->DeleteScalar(token,flags);else if (auto* minimap=MinimapOwner(token)) minimap->DeleteScalar(token,flags);else if (auto* production=ProductionOwner(token)) production->DeleteScalar(token,flags);else if (menus && menus->Node(token)) menus->DeleteScalar(token,flags);else if (stones.contains(token)) stone->DeleteScalar(token,flags);else lifetime->DeleteScalar(token,flags);
         };
-        lifeHooks.release=[this](auto token) { if (warnings) warnings->Release(token);if (auto* minimap=MinimapOwner(token)) minimap->Release(token);if (auto* production=ProductionOwner(token)) production->Release(token);if (menus) menus->Release(token);if (uber) uber->Release(token);bases.erase(token);stones.erase(token);backgrounds.erase(token);std::erase_if(controls,[token](const auto& control) { return control.second==token; }); }; //실제 scalar가 반납한 호스트 버튼 별칭만 제거하며 다른 노드/대기 명령은 유지한다.
+        lifeHooks.release=[this](auto token) { if (warnings) warnings->Release(token);if (auto* minimap=MinimapOwner(token)) minimap->Release(token);if (auto* production=ProductionOwner(token)) production->Release(token);if (menus) menus->Release(token);if (uber) uber->Release(token);if (mainMenu==token) mainMenu=0;mainMenus.erase(token);commonButtonNodes.erase(token);bases.erase(token);stones.erase(token);backgrounds.erase(token);std::erase_if(controls,[token](const auto& control) { return control.second==token; }); }; //실제 scalar가 반납한 호스트 버튼 별칭만 제거하며 다른 노드/대기 명령은 유지한다.
         lifetime=std::make_unique<GumpLifetime>(create,life,std::move(lifeHooks));
         GumpEventHooks eventHooks;eventHooks.node=[this](auto token) { return Node(token); };
         eventHooks.handle=[this](auto token,auto event,auto first,auto second) { return Handle(token,event,first,second); };
@@ -133,7 +141,7 @@ struct RawButtonControls::Impl {
         input=std::make_unique<GumpInput>(create,life,inputState,*collection,*events,std::move(inputHooks));
         GumpFrameHooks frameHooks;frameHooks.node=[this](auto token) { return Node(token); };
         frameHooks.redraw=[this](auto token,bool erase) { Redraw(token,erase); };
-        frameHooks.idle=[this](auto token) { if (warnings && warnings->Node(token)) warnings->Idle(token);else if (stones.contains(token) || (menus && menus->BaseButton(token))) buttons->Idle(token);else if (auto* minimap=MinimapOwner(token)) minimap->Idle(token);else if (auto* production=ProductionOwner(token)) production->Idle(token);else if (menus && menus->Node(token)) menus->Idle(token); };
+        frameHooks.idle=[this](auto token) { if (mainMenus.contains(token)) IdleMain(token);else if (warnings && warnings->Node(token)) warnings->Idle(token);else if (stones.contains(token) || (menus && menus->BaseButton(token))) buttons->Idle(token);else if (auto* minimap=MinimapOwner(token)) minimap->Idle(token);else if (auto* production=ProductionOwner(token)) production->Idle(token);else if (menus && menus->Node(token)) menus->Idle(token); };
         frameHooks.broadcast=[this](auto token,auto event,auto first,auto second) {
             if (stones.contains(token) || (menus && menus->BaseButton(token))) buttons->Broadcast(token,event,first,second);
             else if (uber && uber->Node(token)) uber->Broadcast(token,event,first,second);
@@ -166,6 +174,7 @@ struct RawButtonControls::Impl {
     }
     // 가상 호출 동안 노드 주소는 유지되며 실제 scalar 소멸자에서만 erase한다.
     GumpCreateNode* Node(std::uint32_t token) const {
+        if (const auto it=mainMenus.find(token);it!=mainMenus.end()) return it->second.get();
         if (warnings) if (auto* node=warnings->Node(token)) return node;
         if (uber) if (auto* node=uber->Node(token)) return node;
         if (const auto it=stones.find(token);it!=stones.end()) return it->second.get();
@@ -174,6 +183,16 @@ struct RawButtonControls::Impl {
         if (auto* production=ProductionOwner(token)) return production->Node(token);
         if (menus) if (auto* node=menus->Node(token)) return node;
         const auto it=bases.find(token);return it==bases.end() ? nullptr : it->second.get();
+    }
+    //실제 부모 생존만 조회하며 Kill 예약 뒤 다음 Cleanup까지 남은 주소를 현재 메뉴로 돌려주지 않는다.
+    std::uint32_t LiveMain() const { return mainMenu && Node(mainMenu) && !(Node(mainMenu)->flags&0x10000U) ? mainMenu : 0U; }
+    //004641d0은 루트 직계 형제의4000만 읽는다. 손자/visible/메뉴 종류의 필터를 추가하지 않는다.
+    bool RootPopup() const { for (auto child=Node(create.entries[0])->child;child;child=Node(child)->next) if (Node(child)->flags&0x4000U) return true;return false; }
+    //004cee80의 가상 Idle은 같은 실제 현재 모달/포인터와 Client 전역을 빌린다.
+    void IdleMain(std::uint32_t token) {
+        auto& node=*mainMenus.at(token);const auto enabled=mainHooks.enabled ? mainHooks.enabled() : 0U;const auto html=mainHooks.htmlInstances ? mainHooks.htmlInstances() : 0;
+        MainMenuActivityHooks activity;activity.popup=[this] { return RootPopup(); };activity.now=[this] { return hooks.now ? hooks.now() : 0.0; };activity.queue=mainHooks.queue;activity.kill=[this,token] { lifetime->Kill(token);Changed(); };
+        IdleMainMenuActivity(node.activity,enabled,html,pointerPosition,life.currentDialog,token,activity);
     }
     // 원본 new 요청 크기에 맞는 파생 저장소를 준비한다. 호스트 토큰은 재사용하지 않는다.
     std::uint32_t Allocate(std::size_t bytes) {
@@ -188,6 +207,16 @@ struct RawButtonControls::Impl {
     }
     // 루트 부모 click의 serial을 화면 명령 번호로 변환한다. right/repeat는 미지원 상위 명령으로 보존한다.
     std::uint32_t Handle(std::uint32_t token,std::uint32_t event,std::uint32_t first,std::uint32_t second) {
+        if (const auto found=mainMenus.find(token);found!=mainMenus.end()) {
+            auto& node=*found->second;if (HandleMainMenuActivity(node.activity,event,[this] { return hooks.now ? hooks.now() : 0.0; })) return menus ? menus->Handle(token,event,first,second) : 0U;
+            if ((event&0x03ffffffU)==buttonState.clickEvent) {
+                if (mainHooks.clearStart) mainHooks.clearStart();
+                for (std::size_t slot=0;slot<node.buttons.size();++slot) { //고정9칸의 실제 버튼 serial을 순서대로 비교한다.
+                    const auto button=node.buttons[slot];if (button && Node(button)->serial==first) { activated=node.ids[slot];if (slot!=3 && slot!=7) { lifetime->Kill(token);Changed(); }return 1; } //Help/Options는 실제 부모를 유지하고 일반 선택은 같은 callback 안에서 부모/자식을 Kill한다.
+                }
+            }
+            return menus ? menus->Handle(token,event,first,second) : 0U;
+        }
         if (stones.contains(token) || (menus && menus->BaseButton(token))) return buttons->Handle(token,event,first,second);
         if (auto* minimap=MinimapOwner(token)) return minimap->Handle(token,event,first,second);
         if (auto* production=ProductionOwner(token)) return production->Handle(token,event,first,second);
@@ -201,14 +230,15 @@ struct RawButtonControls::Impl {
     }
     // 자식 먼저 Kill한 실제 큐를 비우며 루트/serial/count를 임의 초기화하지 않는다.
     void Clear(bool preserveWorldUi=false,bool deferCleanup=false) { // 명시 보존 교체는 같은 실제 HTML의 OnExit를 공통 후반 Cleanup까지 남길 수 있다.
+        const auto keptMain=preserveWorldUi ? LiveMain() : 0U; //HTML 표시 전환은 실제 뒤쪽 메인 부모/버튼/기한을 보존한다.
         if (preserveWorldUi) {
             // 이 페이지가 만든 돌 버튼과 그 배경만 같은 자식 우선 수명으로 반납한다.
-            for (const auto& control:controls) lifetime->Kill(control.second);
+            for (const auto& control:controls) if (!keptMain || Node(control.second)->parent!=keptMain) lifetime->Kill(control.second);
         } else {
             // Kill이 root.child를 바꾸므로 현재 머리를 매번 읽는다.
             while (Node(root)->child) lifetime->Kill(Node(root)->child);
         }
-        if (!deferCleanup) lifetime->Cleanup();if (!preserveWorldUi) { CloseMinimaps();CloseProduction();if (menus) { menus->CloseMovies();menus->CloseHtmlWindows();menus->CloseBackgroundGifs();menus->CloseChatWindows();menus->CloseNsInfo();menus->CloseTextEntries(); } }controls.clear();commonButtonNodes.clear();activated.reset();
+        if (!deferCleanup) lifetime->Cleanup();if (!preserveWorldUi) { CloseMinimaps();CloseProduction();if (menus) { menus->CloseMovies();menus->CloseHtmlWindows();menus->CloseBackgroundGifs();menus->CloseChatWindows();menus->CloseNsInfo();menus->CloseTextEntries(); } }if (keptMain) std::erase_if(controls,[&](const auto& value) { const auto* node=Node(value.second);return !node || node->parent!=keptMain; });else { controls.clear();commonButtonNodes.clear(); }activated.reset();
     }
 };
 // 구현 주소는 생성 이후 이동하지 않아 순환 훅이 안정된 처리기를 조회한다.
@@ -217,7 +247,7 @@ RawButtonControls::RawButtonControls(o::OriginalEdition edition,RawButtonHooks h
 RawButtonControls::~RawButtonControls() { impl_->Clear();impl_->lifetime->Kill(impl_->root);impl_->lifetime->Cleanup(); }
 // 쓰기 전에 전체 화면 입력을 검증하고 이전 페이지를 실제 수명 경로로 정리한다.
 void RawButtonControls::SetControls(std::span<const GumpControl> controls,std::span<const std::string> labels,
-    int width,int height,RawButtonAssets assets,bool preserveWorldUi,bool deferCleanup,std::optional<std::int32_t> familyDepth) {
+    int width,int height,RawButtonAssets assets,bool preserveWorldUi,bool deferCleanup,std::optional<std::int32_t> familyDepth,bool mainMenuParent) {
     if (deferCleanup && !preserveWorldUi) throw std::invalid_argument("전체 UI 반납에서 HTML 지연 보존을 사용할 수 없음"); // 잘못된 수명 계약을 변경 전에 거부한다.
     auto& state=*impl_;if (width<=0 || height<=0 || controls.size()*2+1>=kGumpRegistryCapacity) throw std::out_of_range("raw 버튼 화면/개수 범위 오류");
     std::map<int,bool> ids;
@@ -226,19 +256,29 @@ void RawButtonControls::SetControls(std::span<const GumpControl> controls,std::s
         if (control.id<0 || static_cast<std::size_t>(control.id)>=labels.size() || !ids.emplace(control.id,true).second ||
             control.rect.right<=control.rect.left || control.rect.bottom<=control.rect.top) throw std::invalid_argument("raw 버튼 입력 오류");
     }
-    state.Clear(preserveWorldUi,deferCleanup);state.assets=assets;state.backgroundAsset={assets.type,assets.type};state.backgroundFrame={assets.width,assets.height};
+    const auto existingMain=mainMenuParent ? state.LiveMain() : 0U;
+    if (!existingMain) state.Clear(preserveWorldUi,deferCleanup);state.assets=assets;state.backgroundAsset={assets.type,assets.type};state.backgroundFrame={assets.width,assets.height};
     state.stoneState.palette=assets.palette;state.stoneState.backgroundType=assets.type;state.stoneState.backgroundFrame=assets.frame;
     state.create.screenWidth=width;state.create.screenHeight=height;auto& root=*state.Node(state.root);
     root.baseWidth=root.width=static_cast<float>(width);root.baseHeight=root.height=static_cast<float>(height);
+    if (existingMain) { auto& node=*state.Node(existingMain);node.baseWidth=node.width=static_cast<float>(width);node.baseHeight=node.height=static_cast<float>(height);state.Changed();return; } //재합성/안내창 복귀는 같은 부모와 버튼을 재사용해45초 기한을 새로 시작하지 않는다.
+    if (mainMenuParent) {
+        if (!state.menus || state.create.collection.edition!=o::OriginalEdition::Patch1078 || (controls.size()!=8 && controls.size()!=9)) throw std::invalid_argument("원문 메인 부모 생성 계약");
+        const auto token=++state.nextToken;state.mainMenus.emplace(token,std::make_unique<MainMenuNode>());state.mainMenu=token;state.factory->Construct(token,0,0,0,1);auto& node=*state.mainMenus.at(token);node.vtable=0x515fd4U;node.command=62; //보호00540459의3e이며 유지를 허용하는 타입11로 바꾸지 않는다.
+        node.activity.deadline=(state.hooks.now ? state.hooks.now() : 0.0)+45.0;node.activity.pointer={0,0};node.baseWidth=node.width=static_cast<float>(width);node.baseHeight=node.height=static_cast<float>(height);
+        state.tree->Attach(token,0,0,state.root,0);state.tree->AddDepth(token,0U-80U-node.depth);state.commonButtonNodes.insert(token);
+    }
     // 화면이 공급한 전체 버튼 경계를 같은 생성자/입력/Draw 저장소에 전달한다.
     for (const auto& control:controls) if (!control.menu) {
         const auto token=++state.nextToken;state.stones.emplace(token,std::make_unique<StoneButtonGumpNode>());
         state.stone->Construct(token,control.rect.right-control.rect.left,control.rect.bottom-control.rect.top,labels[static_cast<std::size_t>(control.id)].c_str());
         if (state.menus) { auto& node=*state.stones.at(token);state.menus->MeasureText(node.label,node.textContext,node.textWidth,node.textHeight,0xffffffffU); } //Stone의 같은 실제 문맥/글꼴 측정기로 가운데 배치한다. 예전 canvas DrawPlan의 부수 측정에 의존하지 않는다.
         state.controls.emplace(control.id,token);if (control.instant) state.stones.at(token)->buttonFlags|=kInstant;
-        state.buttons->SetEnabled(token,control.enabled);state.stone->Attach(token,static_cast<float>(control.rect.left),static_cast<float>(control.rect.top),state.root,1);
+        state.buttons->SetEnabled(token,control.enabled);state.stone->Attach(token,static_cast<float>(control.rect.left),static_cast<float>(control.rect.top),mainMenuParent ? state.mainMenu : state.root,1);
+        if (mainMenuParent) { auto& parent=*state.mainMenus.at(state.mainMenu);const auto index=static_cast<std::size_t>(std::distance(controls.data(),&control));const auto slot=controls.size()==8 && index>=5 ? index+1 : index;parent.buttons[slot]=token;parent.ids[slot]=control.id; } //Intro 없는 경우에도 원문5번은 비워 Credits/Options/Quit의 슬롯6/7/8을 유지한다.
         if (familyDepth) { state.tree->AddDepth(token,std::bit_cast<std::uint32_t>(*familyDepth)-state.Node(token)->depth);state.commonButtonNodes.insert(token);state.commonButtonNodes.insert(state.stones.at(token)->background); } //원문 MainMenu 자식-83/배경-82를 맞추고 이 가족만 공통 Draw에 명시 제출한다.
     }
+    if (mainMenuParent) { state.lifetime->SetIdle(state.mainMenu,true);state.menus->SetMainMenuSerial(state.Node(state.mainMenu)->serial);state.menus->SetGumpModal(state.mainMenu,true); } //생성자의 같은 serial을 Help 허용 조회에 쓴 뒤 실제 모달을 연다.
     state.Changed();
 }
 // 명령은 부모 가상 통지 시에만 생성된다. release의 화면 위치만으로 새 명령을 만들지 않는다.
@@ -253,8 +293,11 @@ RawButtonInputResult RawButtonControls::RouteInput(InputEvent event) {
 std::uint32_t RawButtonControls::RootToken() const { return impl_->create.entries[0]; }
 // 현재 화면 번호에 대응하는 실제 버튼만 조회한다. 생성 순서나 serial을 화면 번호로 간주하지 않는다.
 std::uint32_t RawButtonControls::ControlGump(int id) const { const auto found=impl_->controls.find(id);return found==impl_->controls.end() ? 0U : found->second; }
+void RawButtonControls::BindMainMenu(RawMainMenuHooks hooks) { if (!hooks.enabled || !hooks.htmlInstances || !hooks.queue) throw std::invalid_argument("메인 현재 Client 경계 없음");impl_->mainHooks=std::move(hooks); } //장치 연결은 부모를 만들거나 옵션을 읽어 쓰지 않는다.
+std::uint32_t RawButtonControls::MainMenuToken() const { return impl_->LiveMain(); } //실제 dead 관문만 사용한다.
+std::string RawButtonControls::MainMenuReport() const { const auto& s=*impl_;std::ostringstream out;const auto token=s.LiveMain();out<<"main_menu_parent\t"<<token;if (token) { const auto& node=*s.mainMenus.at(token);out<<'\t'<<node.serial<<'\t'<<node.activity.deadline<<'\t'<<node.activity.pointer.x<<'\t'<<node.activity.pointer.y; }out<<'\n';return out.str(); } //읽기 전용 검사이며 기한/모달을 수정하지 않는다.
 // 메인 버튼을 현재 글꼴로 측정하고 가장 넓은 폭으로 통일한 뒤 첫4개/나머지의 두 행을 각각 가운데에 둔다.
-// 원본: 004ce940(10.78), 간격00502314=4, y=SCREENH/3+55 또는+78이다. 현재 호스트의 루트 직접 자식에서도 원문 메인 가족 깊이를 유지한다.
+// 원본: 004ce940(10.78), 간격00502314=4, y=SCREENH/3+55 또는+78이다. 실제 메인 부모가 있으면 그 자식으로, 독립 배치 검사에서는 공통 루트 아래에 같은 깊이로 둔다.
 void RawButtonControls::LayoutMainMenuControls(std::span<GumpControl> controls) {
     auto& s=*impl_;if (s.create.collection.edition!=o::OriginalEdition::Patch1078 || controls.size()<4 || controls.size()>9) throw std::invalid_argument("10.78 메인 버튼 배치 계약");
     float maximum{}; // 원문 local_10의 현재 최대 글자맞춤 폭이다.
@@ -273,7 +316,7 @@ void RawButtonControls::LayoutMainMenuControls(std::span<GumpControl> controls) 
         for (auto index=start;index<end;++index) { // 같은 실제 버튼을 재부착하고 그 결과 경계로 클릭 위치도 갱신한다.
             auto& control=controls[index];const auto token=ControlGump(control.id);const auto depth=s.Node(token)->depth;
             s.tree->Push(token); // 원본 부모는 미부착 자식을 받지만 현재 호스트는 이미 임시 배치를 마쳤으므로 기존 형제 링크를 먼저 해제한다.
-            s.stone->Attach(token,x,y,s.create.entries[0],0);s.tree->AddDepth(token,depth-s.Node(token)->depth);control.rect=s.collection->Bounds(token);
+            s.stone->Attach(token,x,y,s.LiveMain() ? s.LiveMain() : s.create.entries[0],0);s.tree->AddDepth(token,depth-s.Node(token)->depth);control.rect=s.collection->Bounds(token);
             x=static_cast<float>(static_cast<double>(x)+s.Node(token)->baseWidth+4.0);
         }
         if (end==controls.size()) break;
@@ -301,7 +344,7 @@ void RawButtonControls::RefreshStormPower() {
 void RawButtonControls::KillGump(std::uint32_t token) { impl_->lifetime->Kill(token);impl_->Changed(); }
 // 004d68c2의 현재 focus/dialog 관문 뒤004d69f4의 raw 사건 통지를 일반 큐보다 먼저 실행한다.
 RawButtonPointerResult RawButtonControls::NotifyPointer(InputEvent event,std::uint32_t mode,bool cursorActive,bool allowOverlay) {
-    auto& state=*impl_;state.currentPoll=event;state.activated.reset();
+    auto& state=*impl_;state.currentPoll=event;state.pointerPosition={event.x,event.y};state.activated.reset();
     RawButtonPointerResult result; // 미호출 Overlay와 실제 반환0을 구별하여 커서 fallback을 상위에 전달한다.
     if (!(event.code&InputCode::kOutside)) {
         const bool overlayAllowed=state.life.currentDialog!=0 || (allowOverlay && mode==0 && !state.life.focus && !cursorActive); // 실제 modal OR는 host 차단/focus/활성 커서 조건보다 바깥이며 현재 Pick이 modal 앞 대상을 고른다.
@@ -318,7 +361,7 @@ bool RawButtonControls::IdleGumps() { impl_->frame->Idle();return std::exchange(
 void RawButtonControls::RedrawRoots() { impl_->frame->RedrawRoots(); } //실제 공통 필터와 각 노드의 현재 redraw를 사용한다.
 // 기존 독립 검사 계약을 유지하는 결합 경계다. Client 프레임 연결에서는 사용하지 않는다.
 bool RawButtonControls::Poll(InputEvent event) {
-    auto& state=*impl_;state.currentPoll=event;
+    auto& state=*impl_;state.currentPoll=event;state.pointerPosition={event.x,event.y};
     if (event.code&InputCode::kOutside) Cancel();
     state.frame->Broadcast(0,std::bit_cast<std::uint32_t>(event.x),std::bit_cast<std::uint32_t>(event.y));state.frame->Idle();
     const bool result=state.changed;state.changed=false;return result;
@@ -352,7 +395,7 @@ RawMenuControls& RawButtonControls::EnableMenus(const GameAssets& assets,FontSto
     RawMenuExternalGumps commonButtons;commonButtons.owns=[&s](auto token) { return s.commonButtonNodes.contains(token); }; //명시 선택한 메인 버튼과 실제 배경 자식만 분배하며 기존 독립 메뉴 호출은 바꾸지 않는다.
     commonButtons.draw=[&s,&fonts](auto token,GumpPixelTarget& target,GumpGlyphColorState& colors,GumpBackgroundDraw& background) {
         if (s.stones.contains(token)) { GumpTextDraw text(fonts,MakeGumpGlyphPixelHooks(target,colors),s.create.collection.edition);s.stone->Draw(token,*s.collection,text,target); } //선/글자는 원문 Stone.Draw가 그리며 배경은 자신의 정렬 항목에서 그린다.
-        else background.Draw(token); //같은 배경 저장소와 현재 클립/팔레트/눌림 비트를 사용한다.
+        else if (!s.mainMenus.contains(token)) background.Draw(token); //메인 부모의 원문 Draw는 빈 몸체이며 자식은 같은 수집/정렬 항목으로 그린다.
     };
     s.menus->BindCommonButtons(std::move(commonButtons));return *s.menus;
 }
@@ -504,10 +547,7 @@ void RawButtonControls::RequestClosePopups() {
 }
 // 원본처럼 현재 직계 연결을 순회한다. dead/visible 필터를 추가하지 않는다.
 bool RawButtonControls::BlockingGumpOpen() const {
-    // 콜백 없이 읽기만 하므로 현재 자식의 다음 링크를 순서대로 읽는다.
-    for (auto token=impl_->Node(impl_->root)->child;token;token=impl_->Node(token)->next)
-        if ((impl_->Node(token)->flags&0x4000U)!=0) return true;
-    return false;
+    return impl_->RootPopup(); //메인 Idle과 같은 실제 루트의 같은4000 검색 몸체를 사용한다.
 }
 // HTML/Help/미션 안내가 공유하는 같은 원문 모달 표의 현재 개수다.
 std::uint32_t RawButtonControls::DialogCount() const { return impl_->life.dialogCount; }

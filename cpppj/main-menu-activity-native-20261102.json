@@ -1,0 +1,25 @@
+{
+  "unit": 700,
+  "date": "2026-11-02",
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23"
+  },
+  "inputs": 1944,
+  "nativeBodies": [
+    "004cee80"
+  ],
+  "explicitBoundaries": [
+    "004641d0 popup",
+    "00460d70 wall clock",
+    "00452fe0 queue",
+    "00466480 Kill"
+  ],
+  "mainMenuTypeByte": 62,
+  "delaySeconds": 45,
+  "gameExecutions": 0,
+  "peSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+  "fixtureSha256": "e6b481d19acac9e627980e65f07aba3bfa86acb186db0b51b7ea500398541736",
+  "toolSha256": "1fdcc438a416003670ba16d73b05751eaabf9df41ca02cd2728bb5e46e9c38dd"
+}

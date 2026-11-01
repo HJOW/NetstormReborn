@@ -27,6 +27,8 @@ public:
     const std::uint32_t& TipNumber() const { return tipNumber_; } //옵션 변경과 안내 재진입 뒤에도 같은 현재 순번 주소를 읽는다.
     std::uint32_t& IntroAvailable() { return introAvailable_; } //0054db98은 시작 detect intro의 실제 파일 조회 결과다. 옵션/State 교체로 재탐색하지 않는다.
     const std::uint32_t& IntroAvailable() const { return introAvailable_; } // 메인 버튼 작성기는 최초 감지한 같은 DWORD를 읽는다.
+    std::uint32_t& AutoDemo() { return autoDemo_; } //0054db90의 현재 옵션을 메인 Idle과 동기 옵션 해석이 공유한다.
+    const std::uint32_t& AutoDemo() const { return autoDemo_; } //같은 실제 DWORD를 읽으며 메인 재생성 때 초기화하지 않는다.
     double& ActivityEnd() { return activityEnd_; } // 기존 Login과 Editor가00544d58의 같은 벽시각 기한을 직접 쓴다.
     const double& ActivityEnd() const { return activityEnd_; } // 기한 사본이나 별도 Editor 타이머를 만들지 않는다.
     std::uint32_t& ZonePending() { return zonePending_; } // 005c85c0이며 실제 Fort 요청 작성과 State 정리가 같은 DWORD를 쓴다.
@@ -94,6 +96,7 @@ private:
     std::uint32_t firstMenuPending_{1},userUpdated_{},tellTips_{1}; //각 PE 초기값1/BSS0/1을 새 Client에서만 한 번 구성하며 State 교체로 되돌리지 않는다.
     std::uint32_t tipNumber_{1}; //00531910의 PE 초기1이며 TellTips 옵션과 별개인 실제32비트 안내 순번이다.
     std::uint32_t introAvailable_{}; //0054db98의 최초 BSS0이며 00435de0이0/1을 쓴다.
+    std::uint32_t autoDemo_{}; //0054db90의 최초 BSS0이며 ReadInt 누락 시 현재 비트를 보존한다.
     double activityEnd_{}; //00544d58의 최초 BSS0이며 게임 정지 가능한 시계로 바꾸지 않는다.
     std::uint32_t zonePending_{},sourceType_{},begin_{},centralCreated_{}; // 순서가 다른 Native 주소들의 명시 소유자이며 주소 산술 배열로 쓰지 않는다.
     bool savedGame_{}; // 기존 실제 소비자의 정상0/1 표현을 유지하며 임의 Native DWORD 모델은 후속이다.

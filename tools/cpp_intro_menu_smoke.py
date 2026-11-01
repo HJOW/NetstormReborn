@@ -54,10 +54,10 @@ def main():
             assert Path(scene['movie_source'][1]).resolve()==args.movie.resolve(),scene['movie_source']
         for label in ('back1','back2'):  # 두 번 모두 같은 제품의 실제 Native39/40/41→3 복귀와 자원 반납을 확인한다.
             scene=observed[label]
-            assert scene['page']==['main'] and scene['phase']==['0'] and scene['movie_runtime'][:2]==['0','0'] and scene['movie_update_depth']==['0'] and scene['current_dialog']==['0'],scene
+            assert scene['page']==['main'] and scene['phase']==['0'] and scene['movie_runtime'][:2]==['0','0'] and scene['movie_update_depth']==['0'] and scene['current_dialog']==[scene.get('main_menu_parent',['0'])[0]],scene  #700부터는 실제 메인 부모가 모달이며 이전 제품의 필드 부재는 기존0 계약이다.
             assert scene['RawButtons'][1]==initial['RawButtons'][1] and len(scene['controls'])==9,(initial['RawButtons'],scene['RawButtons'])
     else:
-        assert observed['options']['current_dialog']!=['0'] and observed['back']['current_dialog']==['0'] and observed['back']['RawButtons'][1]==initial['RawButtons'][1]
+        assert observed['options']['current_dialog']!=['0'] and observed['back']['current_dialog']==[observed['back'].get('main_menu_parent',['0'])[0]] and observed['back']['RawButtons'][1]==initial['RawButtons'][1]  #실제 메인 부모 복귀를 일반 모달0과 구별한다.
     result=dict(unit=699,gameExecutions=1,exit=run.returncode,protectedUnchanged=True,exeSha256=hashlib.sha256(exe.read_bytes()).hexdigest(),introAvailable=bool(args.movie),
                 buttons=len(initial['controls']),movieCycles=2 if args.movie else 0,missionEntries=0,physicalInput=False,rawStates={key:{field:value.get(field) for field in ('page','current_dialog','movie_runtime','movie_update_depth','RawButtons')} for key,value in observed.items()})
     (out/'summary.json').write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')

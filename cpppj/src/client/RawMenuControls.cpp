@@ -109,6 +109,7 @@ struct RawMenuControls::Impl {
     QuickHelpPopupState popupState; // 005ca938/940의 마지막 팝업을 Help Back과 같은 저장소로 공유한다.
     RawHelpHooks helpHooks; // 실제 Client/현재 Session 경계이며 노드 수명과 별개다.
     QuickHelpWindowState helpState;HtmlBodyGumpState bodyState;QuickHelpHistory helpHistory; // 같은 캐시/전역/전역 이력이다.
+    std::uint32_t mainMenuSerial{}; //005cad28의 최초 BSS0이며 최신 실제 메인 생성자의 serial을 보존한다.
     std::map<std::uint32_t,std::unique_ptr<QuickHelpContentNode>> helpWindows; // 실제0xd0 창이다.
     std::map<std::uint32_t,std::unique_ptr<HtmlBodyGumpNode>> helpBodies; // 실제 두8192바이트 부모다.
     std::map<std::uint32_t,std::unique_ptr<StoneButtonGumpNode>> helpButtons; // 공통 ButtonGump가 입력/배경을 처리한다.
@@ -501,7 +502,7 @@ struct RawMenuControls::Impl {
         QuickHelpOpenHooks h;h.closePopups=[this] { input->ClosePopups(); };h.lookup=[this](auto serial) { return Reference(serial); };h.noModal=[this] { return common.life.currentDialog==0; };h.currentModal=[this] { return common.life.currentDialog; };h.construct=[this](auto type) { return helpWindow->Construct(AllocateHelp(0xd0),type); };h.node=common.node;h.attach=common.attach;h.addDepth=[this](auto token,auto delta) { common.tree.AddDepth(token,delta); };
         h.modal=[this](auto token,auto enabled) { SetModal(token,enabled); };
         h.handle=[this](auto token,auto code,auto x,auto y) { return Handle(token,code,x,y); };
-        return OpenQuickHelpWindow({helpState.id,0,common.create.collection.root,0,common.create.screenWidth},h,topic,mode,learnType);
+        return OpenQuickHelpWindow({helpState.id,mainMenuSerial,common.create.collection.root,0,common.create.screenWidth},h,topic,mode,learnType);
     }
     // 같은 기존 클래스에 생성/색/파일·HTML/돌 버튼/그림 효과를 설치한다.
     void EnableHelp(RawHelpHooks supplied) {
@@ -521,6 +522,8 @@ struct RawMenuControls::Impl {
 };
 // 처리기가 참조하는 구현 주소를 고정한다.
 RawMenuControls::RawMenuControls(RawMenuTree tree,const GameAssets& assets,FontStore& fonts,RawMenuHooks hooks):impl_(std::make_unique<Impl>(std::move(tree),assets,fonts,std::move(hooks))) {}
+void RawMenuControls::SetGumpModal(std::uint32_t token,bool enabled) { impl_->SetModal(token,enabled); } //다른 부모나 모달 표 사본을 만들지 않는다.
+void RawMenuControls::SetMainMenuSerial(std::uint32_t serial) { impl_->mainMenuSerial=serial; } //생성자와 Help 허용 조회만 공유하며 현재 모달/죽음을 추정해 바꾸지 않는다.
 // 노드는 소유자의 공통 GumpLifetime으로 먼저 삭제한다.
 RawMenuControls::~RawMenuControls() {
     CloseEditorIslandWindows();CloseEmbeddedTells();CloseSaveFortNameDialogs();CloseMovies();CloseHtmlWindows();CloseBackgroundGifs();CloseChatWindows();auto& s=*impl_;if (s.chatContext && s.chatContext->globals->uiOwner==&s) { s.buffers->Destroy(0x548758);s.chatContext->globals->uiOwner=nullptr; } // 표시 자식 뒤에 Client 공유 버퍼의 실제 조각을 반납한다.

@@ -2823,3 +2823,9 @@ target_sources(netstorm_tests PRIVATE IntroMenuTests.cpp)
 add_executable(netstorm_intro_menu_tests FocusedTestMain.cpp IntroMenuTests.cpp NativeIntroStateTests.cpp)
 target_link_libraries(netstorm_intro_menu_tests PRIVATE netstorm)
 netstorm_apply_compiler_options(netstorm_intro_menu_tests)
+
+# 실제 메인 활동의1944 원문 관측·부분 효과·현재 Client 옵션을 집중 검사한다(700).
+target_sources(netstorm_tests PRIVATE MainMenuActivityTests.cpp)
+add_executable(netstorm_main_activity_tests FocusedTestMain.cpp MainMenuActivityTests.cpp)
+target_link_libraries(netstorm_main_activity_tests PRIVATE netstorm)
+netstorm_apply_compiler_options(netstorm_main_activity_tests)

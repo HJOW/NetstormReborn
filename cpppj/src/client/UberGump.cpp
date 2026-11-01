@@ -14,6 +14,7 @@
 #include "client/ClientCaptureSequence.h"
 #include "client/RecheckCdInput.h"
 #include "client/IntroMenu.h" // 원문 메인 Intro 표시값과 일반 입력의 실제 State39 요청이다.
+#include "client/MainMenuActivity.h" //실제 메인 부모의 현재 모달·45초 자동 데모 장치다.
 #include "client/ClientCdGlobals.h"
 #include "client/TechnicalHelp.h" //실제 파일 가용성 조회와 별도 Technical Help 명령을 연결한다.
 #include "client/ClientDiagnostics.h"
@@ -279,6 +280,7 @@ UberGump::UberGump(Client& client) : client_(client),initLoginSubscriber_(client
         buttonHooks.invalidateAll=[this] { client_.GetRenderer().InvalidateAll(); }; //영역 정보가 없는 기존 적응 계층 요청은 각 소비자의 원문 영역 복원 전까지 이전 그림을 지운다.
     }
     rawButtons_=std::make_unique<RawButtonControls>(client_.Assets().Edition(),std::move(buttonHooks),&client_.GameplayGlobals()->MapRevision()); //전체 HUD와 같은 현재 원본 DWORD를 첫 미니맵 생성 전부터 빌린다.
+    rawButtons_->BindMainMenu({[this] { return client_.LocalStateGlobals()->AutoDemo(); },[this] { return std::bit_cast<std::int32_t>(client_.HtmlWindowGlobals()->window.instances); },[this](auto command,auto first,auto second) { const auto x=scriptStrings_.Store(first),y=first==second ? x : scriptStrings_.Store(second);client_.Input().PushCommand(command,std::bit_cast<std::int32_t>(x),std::bit_cast<std::int32_t>(y)); },[this] { client_.ClearFullScreenState(); }}); //같은 원문 정적 문자열의 두 인자는 같은80칸 고리 별칭으로 일반 큐에 보낸다. 시작 표식은 실제 부모 callback에서 지운다.
     rawButtons_->ConfigureTestBridgePatterns(client_.TestBridgePatterns()); // 테스트 전용 임시 조작이며 원본 분석 결과가 아니다. 첫 조각 생성 전에 명시 CLI만 반영한다.
     if (!client_.TestBridgePatterns().empty()) std::clog<<"테스트 전용 다리 조각 순서: "<<client_.TestBridgePatterns()<<" (원본 분석 결과 아님)\n";
     RawMenuHooks menuHooks;
@@ -540,7 +542,7 @@ bool UberGump::TryTell(std::string target,bool briefing,bool* windowCreated,std:
     if (windowCreated) *windowCreated=false;
     if (o::AsciiLower(target)=="blank") {
         popup_.clear();ClearPage(); //원문 Blank는 같은 HTML을 닫으며 Native 장치/연결/현재 State 분배기를 반납하지 않는다.
-        if (client_.LocalStateGlobals()->State().current[0]==3) { rebuild_=true;return true; } //실행 중인 State3는 공통 ret 뒤에만 호스트 메인 표시를 확정한다.
+        if (client_.LocalStateGlobals()->State().current[0]==3) { state_.phase=ClientPhase::MainMenu;pageName_="main";RebuildControls();Compose();return true; } //원문 Blank의 실제 메인 부모는 뒤 Tips가 열리기 전에 구성한다. Native 공통 State 확정은 이 callback 밖에서 수행한다.
         if (world_ || mission_) { state_.phase=ClientPhase::Mission;pageName_=world_ && client_.GameplayGlobals()->world.editor ? "editor" : "mission"; }
         else { state_.phase=ClientPhase::MainMenu;pageName_="main";page_={};input_.Cancel();RefreshWindowTitle(); }
         client_.Pause(false);RebuildControls();return true;
@@ -1295,7 +1297,7 @@ void UberGump::Event(InputEvent event) {
     if (old!=rawButtons_->Pressed()) rebuild_=true;
     if (activated && *activated >= 0 && static_cast<std::size_t>(*activated) < actions_.size()) {
         // 원본 004cebf0은 메인 메뉴 버튼 사건을 받자마자 시작 표시를 지운다.
-        if (state_.phase == ClientPhase::MainMenu && popup_.empty()) client_.ClearFullScreenState();
+        if (state_.phase == ClientPhase::MainMenu && popup_.empty() && client_.Edition()!=o::OriginalEdition::Patch1078) client_.ClearFullScreenState(); //10.78은 실제 메인 부모가 serial 검색 전에 이미 실행한다.
         ActivatePageAction(actions_[static_cast<std::size_t>(*activated)]);
     }
 }
@@ -1314,7 +1316,7 @@ bool UberGump::Input() {
     if (pointer.changed) rebuild_=true;
     if (pointer.activated) {
         if (*pointer.activated<0 || static_cast<std::size_t>(*pointer.activated)>=actions_.size()) throw std::logic_error("현재 포인터 부모 click 명령 범위 오류");
-        if (state_.phase==ClientPhase::MainMenu && popup_.empty()) client_.ClearFullScreenState();
+        if (state_.phase==ClientPhase::MainMenu && popup_.empty() && client_.Edition()!=o::OriginalEdition::Patch1078) client_.ClearFullScreenState(); //10.78의 실제 부모 통지와 중복하지 않는다.
         ActivatePageAction(actions_[static_cast<std::size_t>(*pointer.activated)]);rebuild_=true;
     }
     if (userInput_ && state_.phase==ClientPhase::Mission && popup_.empty()) userInput_->UpdateCursor(mouse); //4d6b46의446b50은 포인터/Overlay 처리 뒤이며 별도 임시 Scroll을 실행하지 않는다.
@@ -1526,7 +1528,8 @@ void UberGump::Compose() {
         for (const auto& label:labels_) originalLabels.push_back(FontBytes(label));
         if (popup_.empty()) rawButtons_->SetControls(regions,originalLabels,width,height,{buttonTextureType_,buttonTextureFrame_,
             static_cast<std::int16_t>(buttonTextureMetrics_.width),static_cast<std::int16_t>(buttonTextureMetrics_.height),buttonColors},world_!=nullptr || (rawButtons_->UberRoot() && rawButtons_->UberRoot()->Current()) || client_.HtmlWindowGlobals()->window.instances!=0,client_.HtmlWindowGlobals()->window.instances!=0,
-            state_.phase==ClientPhase::MainMenu && client_.Assets().Edition()==o::OriginalEdition::Patch1078 ? std::optional<std::int32_t>{-83} : std::nullopt); //원문004d0530의 container-80 아래 실제 stone 자식 깊이다.
+            state_.phase==ClientPhase::MainMenu && client_.Assets().Edition()==o::OriginalEdition::Patch1078 ? std::optional<std::int32_t>{-83} : std::nullopt,
+            state_.phase==ClientPhase::MainMenu && client_.Edition()==o::OriginalEdition::Patch1078); //원문004d0530의 실제 container-80/stone-83/모달/idle을 생성하거나 안내창 뒤 같은 부모를 보존한다.
         if (popup_.empty() && state_.phase==ClientPhase::MainMenu && client_.Edition()==o::OriginalEdition::Patch1078) rawButtons_->LayoutMainMenuControls(regions); // 실제 측정·원문 SCREENH/3 배치의 경계를 같은 검사/사용자 입력에도 공급한다.
         if (!nativeFrame && state_.phase==ClientPhase::LoadingMission && !(missionRuntime_ && missionRuntime_->guided)) {
             rawButtons_->Menus()->SetPalette(client_.GetScreen().Colors());
@@ -1599,6 +1602,7 @@ std::string UberGump::Report(bool cameraOnly) const {
     const auto& capture=client_.ScreenCapture();const auto& captureState=capture.State();out<<"screen_capture\t"<<captureState.count<<'\t'<<captureState.active<<'\t'<<captureState.first<<'\t'<<capture.AllocatedFrames()<<'\n'; //검사 보고만 같은 현재 개수/active/first/실제 할당 수를 읽으며 상태나 파일을 바꾸지 않는다.
     out<<"recheck_cd\t"<<client_.CdGlobals()->RecheckSerial()<<'\n'; //검사 보고만 005c85ec의 현재 serial을 읽으며 값을 바꾸지 않는다(단위696).
     out<<"intro_available\t"<<client_.LocalStateGlobals()->IntroAvailable()<<'\n'; // 실제 시작 감지 DWORD의 읽기 전용 관측이다.
+    out<<rawButtons_->MainMenuReport()<<"auto_demo\t"<<client_.LocalStateGlobals()->AutoDemo()<<'\n'; //현재 실제 부모/기한/옵션만 읽고 시간이나 실행 여부를 바꾸지 않는다.
     out<<ReportClientBridgeDecay(client_); //현재 메뉴/World가 공유하는 실제 스캔의 읽기 전용 CLI 관측이다.
     const auto& camera=client_.GameplayGlobals()->Camera();out<<"raw_camera_frame\t"<<camera.RendererView().pixels[0]<<'\t'<<camera.RendererView().pixels[1]<<'\t'<<camera.Target().pixels[0]<<'\t'<<camera.Target().pixels[1]<<'\t'<<client_.GameplayGlobals()->PatchDiagnostic()<<'\t'<<client_.LocalStateGlobals()->MetaRebuild()<<'\t'<<pointerBoundary_.initializationFlags<<'\t'<<edgeScrollSince_<<'\n'; //실제 적용/요청·공유 전역만 관측한다.
     out << "phase\t" << static_cast<int>(state_.phase) << "\npage\t" << Field(pageName_) << "\npopup\t" << Field(popup_) << "\n";

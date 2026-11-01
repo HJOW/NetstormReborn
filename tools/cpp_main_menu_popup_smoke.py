@@ -69,7 +69,7 @@ def main():
     counts = {label:int(observed[label]['RawButtons'][1]) for label in ('main','generalClosed','aboutClosed','toggled','closed','closedAgain','restored')}
     assert len(set(counts.values())) == 1, counts
     for label in counts:  # 닫힌 뒤 호스트 메인과 모달/등록표가 같은 값으로 돌아와야 한다.
-        assert observed[label]['phase'] == ['0'] and observed[label]['current_dialog'] == ['0'], label
+        assert observed[label]['phase'] == ['0'] and observed[label]['current_dialog'] == [observed[label].get('main_menu_parent',['0'])[0]], label  #700 이후 실제 메인 부모가 현재 모달이며 이전 제품의 필드 부재는0이다.
     result = dict(unit=697,exit=run.returncode,protectedUnchanged=True,gameExecutions=1,missionEntries=0,
                   exeSha256=hashlib.sha256(exe.read_bytes()).hexdigest(),helpCommands=[int(row[3]) for row in help_items],registryCounts=counts,
                   nativeOptions=True,nativeHelp=True,compatibilityResolutionSubmenu=True,configToggle=True,physicalInput=False)

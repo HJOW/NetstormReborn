@@ -20,6 +20,7 @@ struct RawMinimapHooks; // 현재 카메라/입력 장치다.
 class RawProductionControls; // 같은 등록표의 실제 생산 파생 처리기다.
 class RawMenuControls; // 같은 트리에 연결하는 실제 메뉴 처리기다.
 struct RawMenuHooks; // 현재 Client의 메뉴 외부 효과다.
+struct RawMainMenuHooks; // 원문 메인 활동의 현재 옵션/HTML/문자열 큐 경계다.
 class GameAssets; // Client가 소유하는 실제 TYPE/SHP 저장소다.
 class FontStore; // Client가 소유하는 실제 글꼴 저장소다.
 class WarningMessages; // 같은 등록표/삭제 큐의 실제 Warning/Pause 파생 처리기다.
@@ -70,13 +71,16 @@ public:
     RawButtonControls& operator=(const RawButtonControls&)=delete;
     // 기본은 기존 자식을 Kill/Cleanup한다. preserveWorldUi는 돌 버튼만 교체한다. deferCleanup은 보존 모드에서 실제 HTML의 후반 소멸을 유지한다.
     void SetControls(std::span<const GumpControl> controls,std::span<const std::string> labels,
-        int width,int height,RawButtonAssets assets,bool preserveWorldUi=false,bool deferCleanup=false,std::optional<std::int32_t> familyDepth={}); //선택 깊이는 실제 메인 container 자식의 깊이이며 AddDepth로 배경의 상대+1을 보존한다.
+        int width,int height,RawButtonAssets assets,bool preserveWorldUi=false,bool deferCleanup=false,std::optional<std::int32_t> familyDepth={},bool mainMenuParent=false); //선택 깊이는 실제 메인 container 자식의 깊이이며 mainMenuParent는 원문 실제 부모/모달/idle을 구성하거나 유지한다.
     // 실제 GumpInput::Route와 부모 click 통지로 활성화된 화면 명령 번호를 반환한다.
     std::optional<int> Event(InputEvent event);
     RawButtonInputResult RouteInput(InputEvent event); // 같은 실제 Route를 한 번 실행해 월드 전 입력 소비를 돌려준다.
     std::uint32_t RootToken() const; // 현재 등록표0칸의 실제 공통 루트다.
     std::uint32_t ControlGump(int id) const; // 현재 페이지의 실제 돌 버튼 토큰이다. Help/Options는 클릭한 버튼의 현재 기하를 읽으며 없는 번호는0이다.
     void LayoutMainMenuControls(std::span<GumpControl> controls); // 004ce940: 실제 글자에 맞춘 공통 폭과 두 행 중앙 배치를 적용하고 같은 입력 영역을 갱신한다.
+    void BindMainMenu(RawMainMenuHooks hooks); //같은 Client의 현재 autoDemo/HTML 인스턴스/원문 문자열 큐를 한 번 연결한다.
+    std::uint32_t MainMenuToken() const; //실제로 살아 있는 메인 부모 토큰이며 phase/버튼 개수로 추정하지 않는다.
+    std::string MainMenuReport() const; //현재 부모/기한/포인터와 옵션의 읽기 전용 관측이다.
     std::uint32_t SerialGump(std::uint32_t serial) const; //00464020: 등록1..999에서 같은serial·비dead의 첫 대상이다.
     void KillStateGumps(); //004666d0의 등록1..999·현재 제외타입11/dead 관문으로 Kill만 예약한다.
     void RefreshStormPower(); //0043dad0의 현재 예산 serial 조회/가상 Push/Attach/깊이 복원을 실행한다.
