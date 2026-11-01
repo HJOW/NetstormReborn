@@ -115,6 +115,7 @@ cpppj/src/client/MissionGuideInput.cpp	Netstorm.Client/Mission/MissionGuideInput
 cpppj/src/client/MissionGuideInput.h	Netstorm.Client/Mission/MissionGuideInput.cs	def7d68a5afaa14543d90fe634b23224b8bc11d5	port
 cpppj/src/client/MissionLifecycle.cpp	Netstorm.Client/Mission/MissionLifecycle.cs	3f7b990a7af3c2ad8d71669e5e6c44b08cba7300	L1
 cpppj/src/client/MissionLifecycle.h	Netstorm.Client/Mission/MissionLifecycle.cs	3f7b990a7af3c2ad8d71669e5e6c44b08cba7300	L1
+cpppj/src/client/MissionTechnology.cpp	Netstorm.Client/Mission/MissionTechnology.cs	119dc31a1e9f39d6e5c660d72cc7789806e4aa95	L1
 cpppj/src/client/OwnerColorMaps.cpp	Netstorm.Client/Display/OwnerColorMaps.cs	e4b739b97f5316453de827b92ba6527a63f17637	L1
 cpppj/src/client/OwnerColorMaps.h	Netstorm.Client/Display/OwnerColorMaps.cs	e4b739b97f5316453de827b92ba6527a63f17637	L1
 cpppj/src/client/PaletteColors.cpp	Netstorm.Client/Display/PaletteColors.cs	58622e15d401535bf09f216e9c75bbd8c3ea2037	L1
