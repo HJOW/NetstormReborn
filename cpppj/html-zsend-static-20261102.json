@@ -1,0 +1,59 @@
+{
+  "unit": 709,
+  "date": "2026-11-02",
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23"
+  },
+  "method": "읽기 전용 PE 메타데이터/디스어셈블과 기존 정밀 C. 에뮬레이션/런타임 검사 아님",
+  "packet": {
+    "constructor": "0040a150",
+    "metadataRange": "004c8acf..004c8b46",
+    "protocolAddress": "0052ed59",
+    "protocol": 1,
+    "messageAddress": "0052ed58",
+    "message": 135,
+    "lengthAddress": "0052ed5c",
+    "length": 274,
+    "declaredTableLength": 274,
+    "stringOffsets": [
+      34,
+      114,
+      194
+    ],
+    "stringBytes": 80,
+    "untouchedPrefix": [
+      4,
+      34
+    ],
+    "target": 11,
+    "observer": "0040b380",
+    "version": 1,
+    "mismatchPolicy": 0,
+    "clientReceiver": null
+  },
+  "functions": {
+    "0040a150": {
+      "ranges": "40a150-40a183",
+      "sha256": "1f30b1267ea55f551835acc813a23a2608581371af2c6d940b36406996339e54"
+    },
+    "004e2dc0": {
+      "ranges": "4e2dc0-4e2e2c",
+      "sha256": "70207967e10cf9e994e9a68efdc7489baefb0e9070727ca228273bb0e8efffa5"
+    }
+  },
+  "peSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+  "decompileSha256": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+  "toolSha256": "ed79d2430b86182bbff801450c5c6ec2c67b50fb91e4d31cae6dbe0246563f2e",
+  "nativeRuntimeInputs": 0,
+  "unitTests": 0,
+  "gameExecutions": 0,
+  "networkTests": 0,
+  "limits": [
+    "정적 사전 구현이며 동작 검증 완료 아님",
+    "원문 미정 스택 prefix/문자 꼬리의 물리 동일성 보장 안 함",
+    "CD10.72 대응 생성자/메타 부모는 미확인",
+    "현재 제품에 root서버11 새 접속/원격 수신기를 추가하지 않음"
+  ]
+}

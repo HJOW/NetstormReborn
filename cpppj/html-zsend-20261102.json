@@ -1,0 +1,70 @@
+{
+  "unit": 709,
+  "date": "2026-11-02",
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23"
+  },
+  "version": "11.01",
+  "exeSha256": "8186d642291052c4fe9381b172a2668ce53fea7ed013e195c7a6bf5d06c88be3",
+  "implementation": "HTML Zsend와현재연결송신의디컴파일기반사전구현.동작검증완료아님",
+  "packet": {
+    "constructor": "0040a150",
+    "metadataRange": "004c8acf..004c8b46",
+    "protocolAddress": "0052ed59",
+    "protocol": 1,
+    "messageAddress": "0052ed58",
+    "message": 135,
+    "lengthAddress": "0052ed5c",
+    "length": 274,
+    "declaredTableLength": 274,
+    "stringOffsets": [
+      34,
+      114,
+      194
+    ],
+    "stringBytes": 80,
+    "untouchedPrefix": [
+      4,
+      34
+    ],
+    "target": 11,
+    "observer": "0040b380",
+    "version": 1,
+    "mismatchPolicy": 0,
+    "clientReceiver": null
+  },
+  "buildWarnings": 0,
+  "buildErrors": 0,
+  "nativeRuntimeInputs": 0,
+  "newTests": 0,
+  "testsRun": 0,
+  "gameExecutions": 0,
+  "networkTests": 0,
+  "newFixtures": 0,
+  "protectedExisting": 2626,
+  "protectedChanged": 0,
+  "protectedFiles": 2626,
+  "limits": [
+    "신규MP단위/에뮬레이터/GUI/통신검사0",
+    "원문미정스택prefix30BYTE와문자꼬리의물리동일성보장안함;writer는caller의나머지바이트보존,제품scratch는0으로시작",
+    "현재11번연결NULL이면원문처럼생략;구root/master서버나DNS/TCP접속을새로만들지않음",
+    "클라이언트87h수신기/가짜확인응답/온라인검증성공을추가하지않음",
+    "Edit/시나리오/미션수명·전체C++/34/ZIP·실제PCM/물리입력/전체픽셀동일성은남음",
+    "포획/희생/특정적공격/승리·공중3종전용행동을재현하지않음"
+  ],
+  "sourceSha256": {
+    "cpppj/src/CMakeLists.txt": "4ea98167b0bc0f7a5b4f695e5274d6534f96d21ba9477a60b62ec6a568540632",
+    "cpppj/src/client/HtmlZsend.h": "151a72e4879644f004e48a02114a13b9acebce25f3f3b64c280224b8b340c4db",
+    "cpppj/src/client/HtmlZsend.cpp": "9428c969d50f8168e78e1c452cef77e6c9885cbf7ca25dff4244fef8238f7aec",
+    "cpppj/src/client/UberGump.cpp": "989c4a3381c71ee848309b0179eb2c266e7ff5ae4a50615c7a4e17817899145c",
+    "cpppj/src/o/RawConnectionRegistry.h": "82c2922c152eca44f9769a8489ab522d6e0b1ca07d072637c32ef9d496f93711",
+    "cpppj/src/o/RawConnectionRegistry.cpp": "ee9f95d2394d5b678c4e7381aa1a407633342fb226cde37c4dc73fb70ca56461",
+    "cpppj/src/zacket/LocalMissionTransport.cpp": "9be5a6c7d0ed43951b2f5a55d367496d51d107de1d30e28effbf5f6f5cfd5460",
+    "cpppj/src/client/EditorLocalTransport.cpp": "a712f75667bd08c887b17e3cd3a87167982b9cc6de01dd0ba474d5544c7e5700",
+    "tools/inspect_html_zsend_source.py": "ed79d2430b86182bbff801450c5c6ec2c67b50fb91e4d31cae6dbe0246563f2e",
+    "docs/exe/cpp-external-services-20261101.md": "eab983cc65e1d4f49bbf595dbde5862d239250b13910d1d7fbdb33d36815b202",
+    "AGENTS.md": "544643cf731393ecb4784490aa7f2794e8736742582907cce29453e6ac46f15e"
+  }
+}

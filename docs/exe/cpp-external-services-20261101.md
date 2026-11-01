@@ -13,7 +13,7 @@
 | 기능 | 원본 출처/주소·설정 | cpppj 현재 처리 |
 | --- | --- | --- |
 | Auto Updater의 클라이언트 검증 | WinMain438dc0의 비기본 명령줄/security.dat,438f32의 UserUpdated0054da8c 쓰기. State3/4b72b6의 UserNotUpdated 제목 Not Validated | 온라인 검증·security.dat writer는 미구현이며 앞으로 연결하지 않는다. 제품 시작 분기의 검증 getter와 안내도 비활성화했다. 검증 성공1을 합성하지 않는다. |
-| 인터넷 master/root 서버·디렉터리 | masterServer, officialBasePort/rootServerBasePort, rootServerBucketsServer, !rootservers.dat, 구 nsLaunchC.exe 실행 흐름 | 외부 디렉터리/DNS/공식 서버 접속 미구현.3차에서는 사용자 선택 LAN 로컬 서버만 사전 구현하며 옛 인터넷 서비스를 복구하지 않는다. |
+| 인터넷 master/root 서버·디렉터리 | masterServer, officialBasePort/rootServerBasePort, rootServerBucketsServer, !rootservers.dat, 구 nsLaunchC.exe 실행 흐름 | 외부 디렉터리/DNS/공식 서버 접속 미구현.3차에서는 사용자 선택 LAN 로컬 서버만 사전 구현하며 옛 인터넷 서비스를 복구하지 않는다. 709의 HTML Zsend는87h 요청 작성과 현재11번 송신기 조회만 정적으로 연결했다. 해당 연결이 없으면 생략하며 새 서버 접속/DNS/검증 성공을 만들지 않는다([709](cpp-html-zsend-20261102.md)). |
 | 인터넷 ping·네트워크 진단 | Ping0..4/PingName0..6, diagServer/diag*Port/diagMode* | 현재 제품의 외부 ping/진단 접속 미구현. 원본 설정값/원문 포트 근거를 목록에 보존한다. 실제 요청/응답·프로토콜 동작은 시험하지 않았다. |
 | 사용자 선택 웹·업데이트·메일·telnet 링크 | 원본 config/help/tell/update.english와 사용자 시나리오의 URL/치환값, PatchUrl, autoOpen/프로토콜 명령 | Help 링크 선택은 OpenClientExternalHelp→HelpLinkPolicy→ShellExecuteW 또는 프로토콜 실행에 연결돼 있다. 설정/시나리오가 새 주소를 제공할 수 있다. 사용자 선택 링크 기능은 유지하며 자동 업데이트 다운로드/검증·오류 자동 전송은 구현하지 않는다. |
 | Technical Help·설정 명령 실행 | techHelpExe/techHelpFile의 현재 해석 결과, 프로토콜 설정/레지스트리 fallback | 현재 외부 실행 장치가 있다. 기본 로컬 도움말 파일과 사용자 설정의 외부 명령을 구분해야 하며, 고정 원격 서버 주소가 있는 별도 TCP 클라이언트로 보지 않는다. |

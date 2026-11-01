@@ -16,7 +16,9 @@ public:
     void BindSynchronization(std::uint32_t& value,std::shared_ptr<void> lifetime={}); //실제005c8bf4와 그 owner를 빌리며 현재 값은 쓰지 않는다.
     ConnectionCleanupGlobals Cleanup(); //같은 현재 동기화 토큰을 포함한 실제 표의 뷰다.
     ConnectionCleanupGlobals Cleanup(std::uint32_t& synchronization); //기존 직접 owner 검사는 동일 표에 명시 동기화를 빌릴 수 있다.
-    std::uint32_t Track(PacketConnection& connection,std::function<void()> destroy,std::function<void()> release); //현재 실제 노드와 두 실제 수명 장치를 단일 opaque 토큰에 연결한다.
+    std::uint32_t Track(PacketConnection& connection,std::function<void()> destroy,std::function<void()> release,
+        std::function<void(std::span<std::uint8_t>)> send={}); //현재실제노드/수명과선택가상+4송신장치를같은토큰에연결한다.기존수명전용호출은송신을요구하지않는다.
+    bool SendMutable(std::int32_t id,std::span<std::uint8_t> packet,std::span<const std::uint8_t> players) const; //004e2dc0의현재슬롯/Playerflag1/NULL관문뒤같은가상송신장치를호출한다.반환은장치호출여부이며전달성공값이아니다.
     bool Owns(std::uint32_t token) const; //해제 후 노드를 다시 읽지 않는 순수 존재 조회다.
     PacketConnection& Node(std::uint32_t token) const; //같은 현재 생존 노드만 읽는다.
     std::array<std::uint8_t,20> Address(std::int32_t id) const; //004e2a50의 현재 슬롯 주소 또는0.0.0.0:0을 읽는다.
@@ -35,6 +37,7 @@ private:
     struct Binding {
         PacketConnection* node{}; //실제 전송이 소유하는 동일 고정 주소다.
         std::function<void()> destroy,release; //현재 노드의 실제 close/free이며 callback 뒤 표를 다시 읽는다.
+        std::function<void(std::span<std::uint8_t>)> send; //실제전송owner의같은mutable observer/큐이며그노드의반납과함께해제한다.
     };
     void RemoveAliases(std::uint32_t token); //같은 token의 현재 별칭만 지우고 새 세대의 칸은 보존한다.
     ConnectionRegistrationHooks RegistrationHooks(std::function<void(std::uint32_t)> buffered={}); //같은 노드/실제 진단만 조립한다.

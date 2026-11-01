@@ -12,10 +12,16 @@ std::array<std::uint8_t,20> RawConnectionRegistry::Address(std::int32_t id) cons
 void RawConnectionRegistry::BindSynchronization(std::uint32_t& value,std::shared_ptr<void> lifetime) { synchronization_=&value;synchronizationOwner_=std::move(lifetime); }
 ConnectionCleanupGlobals RawConnectionRegistry::Cleanup() { return Cleanup(*synchronization_); }
 ConnectionCleanupGlobals RawConnectionRegistry::Cleanup(std::uint32_t& synchronization) { return {transceivers_,buffers_,pending_,synchronization,pendingCount_}; }
-std::uint32_t RawConnectionRegistry::Track(PacketConnection& connection,std::function<void()> destroy,std::function<void()> release) {
+std::uint32_t RawConnectionRegistry::Track(PacketConnection& connection,std::function<void()> destroy,std::function<void()> release,std::function<void(std::span<std::uint8_t>)> send) {
     if (!destroy || !release) throw std::invalid_argument("실제 연결 close/free 장치 누락");
     for (const auto& entry:bindings_) if (entry.second.node==&connection) throw std::logic_error("현재 연결의 중복 주소 등록"); //한 노드의 살아 있는 토큰을 중복 발급하지 않는다.
-    if (!nextToken_) throw std::overflow_error("연결 opaque 토큰 소진");const auto token=nextToken_++;bindings_.emplace(token,Binding{&connection,std::move(destroy),std::move(release)});return token;
+    if (!nextToken_) throw std::overflow_error("연결 opaque 토큰 소진");const auto token=nextToken_++;bindings_.emplace(token,Binding{&connection,std::move(destroy),std::move(release),std::move(send)});return token;
+}
+//연결슬롯은Player관문보다먼저읽고가상송신이자기를반납해도callback이후같은노드를다시읽지않는다.
+bool RawConnectionRegistry::SendMutable(std::int32_t id,std::span<std::uint8_t> packet,std::span<const std::uint8_t> players) const {
+    if (id< -32 || id>21) throw std::out_of_range("원문 송신의 현재 transceiver 번호 범위");const auto token=id<0 ? pending_.at(static_cast<std::size_t>(-id)) : transceivers_.at(static_cast<std::size_t>(id));
+    if (id>=1 && id<=8) { const auto offset=static_cast<std::size_t>(id)*0xb4+0x50;if (offset>=players.size()) throw std::out_of_range("원문 송신의 현재 Player 필드 범위");if (!(players[offset]&1U)) return false; }
+    if (!token) return false;const auto found=bindings_.find(token);if (found==bindings_.end() || !found->second.send) throw std::logic_error("현재 살아 있는 송신기의 실제 가상+4 장치 미연결");const auto send=found->second.send;send(packet);return true;
 }
 bool RawConnectionRegistry::Owns(std::uint32_t token) const { return bindings_.contains(token); }
 PacketConnection& RawConnectionRegistry::Node(std::uint32_t token) const { const auto it=bindings_.find(token);if (it==bindings_.end()) throw std::out_of_range("해제되거나 다른 owner의 연결 토큰");return *it->second.node; }

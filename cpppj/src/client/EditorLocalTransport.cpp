@@ -24,7 +24,7 @@ std::uint32_t EditorLocalTransport::Token(const o::PacketConnection& connection)
 std::uint32_t EditorLocalTransport::Track(o::PacketConnection& connection) {
     auto* node=&connection;return registry_->Track(connection,[this,node] { Need(hooks_.close)(*node);SocketClosed(*node); },[this,node] {
         const bool client=node==&client_;Need(hooks_.release)(*node);if (client) { clientAlive_=false;toClient_.clear(); }else { pendingAlive_=false;toPending_.clear(); }
-    });
+    },[this,node](auto packet) { static_cast<void>(SendMutable(std::bit_cast<std::int32_t>(node->sender),packet)); }); //현재동일노드의가상+4는기존mutable observer/실제반대쪽큐를사용한다.
 }
 o::PacketDispatchHooks EditorLocalTransport::WrappedHooks() {
     o::PacketDispatchHooks result; //기존 분배기가 요구하는 실제 경계만 감싸며 observer/버전/길이 판단은 복제하지 않는다.

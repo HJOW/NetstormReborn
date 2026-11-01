@@ -27,6 +27,7 @@
 #include "client/RawMenuControls.h"
 #include "client/RawMovieControls.h"
 #include "client/RawHtmlWindowContext.h"
+#include "client/HtmlZsend.h" //Zsend는원문세문자열을그대로같은현재11번송신기에보낸다.
 #include "client/RawGameMenus.h"
 #include "client/ScreenResolutions.h" // 메인/ESC가 같은 원본 확인 흐름과 호환 화면비 선택을 사용한다.
 #include "client/GameMenuCommands.h"
@@ -463,6 +464,7 @@ RawHtmlWindowContext UberGump::LoadingHtmlContext(ScreenRect mapView) { // 미�
     context.queue=[this](auto command,auto first,auto second) { client_.Input().Push(command,std::bit_cast<std::int32_t>(first),std::bit_cast<std::int32_t>(second)); };context.link=[this](auto token) { rawButtons_->Menus()->ActivateHtmlWindowLink(token); };
     context.metadata.commands={DialogScriptCode,[](auto name) { std::clog<<"HTML 메타 명령 미연결: "<<name<<'\n'; }};context.metadata.strings=&scriptStrings_;context.metadata.maps=mapCatalog_.get();context.metadata.fileSpec=&mapFileSpec_;context.metadata.fileMenus=fileMenus_;
     context.metadata.currentMap=[this]() -> std::string_view { htmlCurrentFortName_=mission_ ? missionRuntime_ && missionRuntime_->guided ? std::string(client_.FortGlobals()->Current()) : mission_->FortName() : std::string{};return htmlCurrentFortName_; };context.metadata.fallbackMap=[this]() -> std::string_view { return client_.FortGlobals()->Pending(); };
+    context.metadata.send=[this](auto first,auto second,auto third) { SendHtmlZsend(first,second,third,[this](auto target,auto packet) { static_cast<void>(client_.ConnectionGlobals()->SendMutable(target,packet,client_.PlayerRecords()->Records())); }); }; //NULL연결은원문처럼아무송신도하지않으며월드/임의새접속/직접수신우회를추가하지않는다.
     context.metadata.input=[this](auto mode,auto title,auto continuation) { SaveFortNameDialogContext dialog;dialog.editor.now=[this] { return client_.WallSeconds(); };BindTextClipboard(dialog.editor,textClipboard_);dialog.translate=[this](auto text) { return FontBytes(client_.Translate(o::DecodeOriginalText({reinterpret_cast<const std::uint8_t*>(text.data()),text.size()}))); };dialog.tell=[this](auto section) { Tell(std::string(section)); };rawButtons_->Menus()->ShowHtmlInputDialog(std::move(dialog),std::bit_cast<std::uint32_t>(mode),title,continuation); }; //원문004d3ed0은mode/제목/다음Tell섹션이며입력제한/설정키가아니다.
     context.metadata.tech=[this](auto target) { if (!world_) throw std::logic_error("HTML 전체 기술 목록의 현재 Session 없음");rawButtons_->Menus()->AppendTechnology(world_->Session(),target,[this](auto text) { return FontBytes(client_.Translate(text)); }); }; //같은 HTML controlled 열과 실제 대상 Form을 사용한다.
     context.metadata.themeTech=[this](auto target,auto theme) { if (!world_) throw std::logic_error("HTML 원소 기술 목록의 현재 Session 없음");rawButtons_->Menus()->AppendThemeTechnology(world_->Session(),target,theme,[this](auto text) { return FontBytes(client_.Translate(text)); }); }; //같은 실제 HTML의 현재 열·가상 레벨/기술 부모를 사용한다.
