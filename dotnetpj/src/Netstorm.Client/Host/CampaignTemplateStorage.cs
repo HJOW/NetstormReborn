@@ -12,8 +12,10 @@ namespace Netstorm.Client.Host;
 /// <remarks>
 /// 2026-11-01 0.131(TS1)에서 설치·선택 범위를 옮겼다: 9칸 수명(<see cref="Install"/>·<see cref="Borrow"/>·<see cref="Clear"/>·<see cref="ClearAll"/>),
 /// 커서 조회·선택(State·Territory·Money·Badges·Technology), <see cref="SectionOrder"/>·<see cref="CurrentSection"/>·<see cref="ReadSubscriberName"/>·
-/// <see cref="FileHeader"/>·<see cref="Name"/>, State 확장(<see cref="GrowState"/>). 동적 섹션 생성/쓰기(TS2), 파일 읽기/저장(TS3),
-/// 빈 manager·로그인 이미지(TS4)는 같은 partial 클래스에 단계별로 더한다. 계획: <c>docs/dotnet-template-storage-plan-20261101.md</c>.
+/// <see cref="FileHeader"/>·<see cref="Name"/>, State 확장(<see cref="GrowState"/>). 같은 날 0.132(TS2)에서 동적 섹션(<see cref="CreateSection"/>·
+/// <see cref="FindSection"/>·<see cref="SelectSection"/>·<see cref="RenameSection"/>·<see cref="CurrentWriteStream"/>·<see cref="WriteSection"/>·<see cref="AccessSection"/>)과
+/// <see cref="InitializeState"/>·<see cref="EnsureStateSize"/>를 더했다. 파일 읽기/저장(TS3), 빈 manager·로그인 이미지(TS4)는 같은 partial 클래스에 단계별로 더한다.
+/// 계획: <c>docs/dotnet-template-storage-plan-20261101.md</c>.
 /// C++의 참조 반환은 같은 객체를 돌려주는 클래스 인스턴스로 옮겼으므로 반환된 커서는 저장소가 manager를 반납할 때까지 같은 참조다.
 /// </remarks>
 public sealed partial class CampaignTemplateStorage
@@ -321,5 +323,164 @@ public sealed partial class CampaignTemplateStorage
     public void CommitStateGrowth(uint slot)
     {
         Current(slot).RetiredState.Release();
+    }
+
+    /// <summary>
+    /// 미정 바이트를 포함한 완성 28바이트를 실제 새 State 섹션에 쓰고 같은 현재 커서를 돌려준다. 기존 State는 반납되고
+    /// 새 섹션이 목록 끝에 붙으며(이미 마지막이면 같은 자리), 앞의 마지막 섹션은 end 크기로 압축된다.
+    /// </summary>
+    /// <param name="slot">칸.</param>
+    /// <param name="bytes">State 28바이트.</param>
+    /// <exception cref="ArgumentException">입력이 28바이트가 아니다.</exception>
+    public PlayerTemplateStateStream InitializeState(uint slot, ReadOnlySpan<byte> bytes)
+    {
+        Image image = Current(slot);
+        image.InitializeState(bytes);
+        return image.State;
+    }
+
+    /// <summary>생성한 섹션의 manager·노드·생성 수명을 한 참조로 고정해 이후 current 변경과 분리한다.</summary>
+    /// <param name="manager">manager 핸들.</param>
+    /// <param name="image">manager의 이미지.</param>
+    /// <param name="section">노드 핸들.</param>
+    private static TemplateWriteStream WriteStreamOf(uint manager, Image image, uint section)
+    {
+        return new TemplateWriteStream(manager, section, image.Node(section).Generation);
+    }
+
+    /// <summary>
+    /// 원본 생성 부모로 이름의 기존 노드를 교체하고 새 마지막 노드의 참조를 돌려준다. Temp 같은 동적 이름도 허용한다.
+    /// </summary>
+    /// <param name="slot">칸.</param>
+    /// <param name="name">섹션 이름.</param>
+    public TemplateWriteStream CreateSection(uint slot, string name)
+    {
+        uint manager = Read(Header(slot), 0);
+        Image image = Current(slot);
+        return WriteStreamOf(manager, image, image.CreateSection(name));
+    }
+
+    /// <summary>
+    /// 원문이 이미 선택한 현재 manager를 고정해 섹션을 만든다. 뒤 콜백에서 헤더가 교체돼도 다른 manager를 재선택하지 않는다.
+    /// </summary>
+    /// <param name="manager">manager 핸들.</param>
+    /// <param name="name">섹션 이름.</param>
+    /// <exception cref="ArgumentOutOfRangeException">그 manager가 이미 반납됐거나 없다.</exception>
+    public TemplateWriteStream CreateManagerSection(uint manager, string name)
+    {
+        if (manager == 0 || !_images.TryGetValue(manager, out Image? image))
+        {
+            throw new ArgumentOutOfRangeException(nameof(manager), manager, "섹션 생성의 실제 manager 수명 누락");
+        }
+        return WriteStreamOf(manager, image, image.CreateSection(name));
+    }
+
+    /// <summary>검색 실패도 원문 current 0을 유지하며 참조 유효성과 빈 결과(<c>default</c>)를 구별한다.</summary>
+    /// <param name="slot">칸.</param>
+    /// <param name="name">섹션 이름.</param>
+    public TemplateWriteStream FindSection(uint slot, string name)
+    {
+        uint manager = Read(Header(slot), 0);
+        Image image = Current(slot);
+        uint section = image.FindSection(name);
+        return section != 0 ? WriteStreamOf(manager, image, section) : default;
+    }
+
+    /// <summary>선택 부모의 실제 pos 0/읽기 진단을 끝낸 같은 노드의 생성 수명을 돌려준다.</summary>
+    /// <param name="slot">칸.</param>
+    /// <param name="name">섹션 이름.</param>
+    /// <param name="writable">쓰기 허용 여부(0이면 빈 섹션을 진단으로 거부).</param>
+    public TemplateWriteStream SelectSection(uint slot, string name, int writable)
+    {
+        uint manager = Read(Header(slot), 0);
+        Image image = Current(slot);
+        return WriteStreamOf(manager, image, image.SelectLoadSection(name, writable));
+    }
+
+    /// <summary>
+    /// 실제 Rename 부모가 대상을 반납한 뒤 원래 source 노드의 이름만 바꾼 결과를 돌려준다. 노드 핸들·생성 수명·버퍼 할당을 보존하며
+    /// current/head/next를 편의로 다시 쓰지 않는다.
+    /// </summary>
+    /// <param name="slot">칸.</param>
+    /// <param name="destination">새 이름.</param>
+    /// <param name="source">현재 이름.</param>
+    public TemplateWriteStream RenameSection(uint slot, string destination, string source)
+    {
+        uint manager = Read(Header(slot), 0);
+        Image image = Current(slot);
+        return WriteStreamOf(manager, image, image.RenameSection(destination, source));
+    }
+
+    /// <summary>
+    /// Create 반환값과 독립적으로 현재 선택을 보관한다. 과거 파일에서 읽은 노드에도 첫 빌림 수명을 부여한다.
+    /// </summary>
+    /// <param name="slot">칸.</param>
+    /// <exception cref="InvalidOperationException">현재 선택된 노드가 없다.</exception>
+    public TemplateWriteStream CurrentWriteStream(uint slot)
+    {
+        uint manager = Read(Header(slot), 0);
+        Image image = Current(slot);
+        uint section = Read(image.Manager, 8);
+        if (section == 0 || !image.Streams.ContainsKey(section))
+        {
+            throw new InvalidOperationException("Template 현재 쓰기 stream의 실제 노드 누락");
+        }
+        image.SyncCursorPosition(section);
+        return WriteStreamOf(manager, image, section);
+    }
+
+    /// <summary>반납된 manager와 재생성된 동일 이름의 새 노드를 이전 쓰기 대상으로 취급하지 않는다.</summary>
+    /// <param name="stream">보관한 쓰기 참조.</param>
+    /// <exception cref="InvalidOperationException">manager나 섹션이 반납됐거나 생성 수명이 다르다.</exception>
+    private Image Writable(TemplateWriteStream stream)
+    {
+        if (!_images.TryGetValue(stream.Manager, out Image? image)
+            || stream.Section == 0
+            || stream.Generation == 0
+            || !image.Streams.TryGetValue(stream.Section, out Image.Stream? node)
+            || node.Generation != stream.Generation)
+        {
+            throw new InvalidOperationException("Template 쓰기 참조의 해제된 manager/섹션 수명");
+        }
+        return image;
+    }
+
+    /// <summary>원본 일반 MemStream 쓰기를 보관한 노드의 현재 커서에 적용한다. 현재 선택과 무관하다.</summary>
+    /// <param name="stream">보관한 쓰기 참조.</param>
+    /// <param name="bytes">쓸 바이트.</param>
+    public void WriteSection(TemplateWriteStream stream, ReadOnlySpan<byte> bytes)
+    {
+        Writable(stream).WriteStream(stream.Section, bytes);
+    }
+
+    /// <summary>
+    /// TypeNames처럼 current가 다른 섹션으로 바뀐 경우에도 보관한 실제 노드만 빌려 인라인 쓰기를 적용한다.
+    /// 연산 동안 같은 노드의 중첩 빌림과 섹션 구조 변경은 허용하지 않는다.
+    /// </summary>
+    /// <param name="stream">보관한 쓰기 참조.</param>
+    /// <param name="operation">같은 16바이트·버퍼 장치를 빌리는 연산.</param>
+    public void AccessSection(TemplateWriteStream stream, TemplateSectionAccess operation)
+    {
+        Writable(stream).AccessSection(stream.Section, operation);
+    }
+
+    /// <summary>
+    /// 보관한 노드가 현재 가진 실제 raw 할당(<see cref="RawSectionBuffer"/>)을 돌려준다. 검사가 이름 교체·압축 뒤에도 같은 할당(배열)인지 구별하는 용도이며
+    /// C++은 같은 일을 <c>data()</c> 포인터 비교로 했다. 호출자는 이 버퍼를 직접 바꾸지 않는다.
+    /// </summary>
+    /// <param name="stream">보관한 쓰기 참조.</param>
+    internal RawSectionBuffer SectionBuffer(TemplateWriteStream stream)
+    {
+        return Writable(stream).Buffer(stream.Section);
+    }
+
+    /// <summary>같은 manager의 전체 최소 확장 부모가 만든 실제 현재 State를 돌려준다. 이미 충분하면 할당·순서·커서를 보존한다.</summary>
+    /// <param name="slot">칸.</param>
+    /// <param name="minimum">필요한 최소 end(signed).</param>
+    public PlayerTemplateStateStream EnsureStateSize(uint slot, int minimum)
+    {
+        Image image = Current(slot);
+        image.EnsureStateSize(minimum);
+        return image.State;
     }
 }

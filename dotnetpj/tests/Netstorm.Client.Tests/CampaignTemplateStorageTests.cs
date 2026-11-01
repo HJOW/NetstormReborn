@@ -1,9 +1,6 @@
-using System.Buffers.Binary;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
-using Netstorm.Assets;
 using Netstorm.Client.Host;
 using Netstorm.Core.Original;
+using static Netstorm.Client.Tests.TemplateStorageTestSupport;
 
 namespace Netstorm.Client.Tests;
 
@@ -12,89 +9,10 @@ namespace Netstorm.Client.Tests;
 /// State 확장, 지형·Money·Badges·Technology 선택, 섹션 순서와 Subscriber 읽기, 공유 직렬화 전역.
 /// cpppj의 TemplateLifetimeTests(2), DataManagerLifetimeTests(1), DataManagerSelectionTests(3 중 Money·Badges 로더를 뺀 부분), TemplateSerializationGlobalsTests(1 중 앞부분)를
 /// 옮겼고 <c>FortTemplate::Parse</c>는 <see cref="FortTemplate.ReadSections"/>로 대체했다(Parse는 F1). 원본 x86 fixture가 없는 어댑터 계층이라 L1이 아니다 (0.131 TS1, 2026-11-01).
+/// 공용 도우미는 0.132(TS2)에서 <see cref="TemplateStorageTestSupport"/>로 옮겼다.
 /// </summary>
 public sealed class CampaignTemplateStorageTests
 {
-    /// <summary>실제 파일을 읽는 검사가 쓰는 원본 데이터 폴더의 파일 시스템이다(없으면 null).</summary>
-    private static readonly Lazy<GameFileSystem?> Files = new(() =>
-        GameDataLocator.FindDataDirectory() is { } directory ? GameFileSystem.Open(directory) : null);
-
-    /// <summary>원본 데이터의 .fort 파일을 원시 섹션으로 읽는다(cpppj의 <c>FortTemplate::Parse</c> 대신 <see cref="FortTemplate.ReadSections"/>).</summary>
-    /// <param name="name">확장자를 뺀 파일 이름.</param>
-    private static FortTemplate RealFort(string name)
-    {
-        Assert.True(Files.Value is not null, "클론 데이터 폴더가 없습니다");
-        return FortTemplate.ReadSections(Files.Value!.ReadAllBytes("d/" + name + ".fort"));
-    }
-
-    /// <summary>표준 섹션의 위치를 이름표에서 찾는다.</summary>
-    /// <param name="name">섹션 이름.</param>
-    private static int IndexOf(string name)
-    {
-        for (int index = 0; index < FortTemplate.SectionNames.Count; index++)
-        {
-            if (FortTemplate.SectionNames[index] == name)
-            {
-                return index;
-            }
-        }
-        throw new InvalidOperationException(name);
-    }
-
-    /// <summary>표준 위치까지 빈 섹션을 채우고 그 위치에 바이트를 넣는다.</summary>
-    /// <param name="fort">요새.</param>
-    /// <param name="name">섹션 이름.</param>
-    /// <param name="bytes">넣을 바이트.</param>
-    private static void SetSection(FortTemplate fort, string name, byte[] bytes)
-    {
-        int at = IndexOf(name);
-        // 표준 위치가 나올 때까지 빈 섹션으로 늘린다
-        while (fort.Sections.Count <= at)
-        {
-            fort.Sections.Add(new RawSectionBuffer());
-        }
-        fort.Sections[at] = RawSectionBuffer.FromBytes(bytes);
-    }
-
-    /// <summary>두 범위가 같은 물리 시작 주소를 가리키는가(C++의 <c>data()</c> 포인터 비교).</summary>
-    /// <param name="first">첫째 범위.</param>
-    /// <param name="second">둘째 범위.</param>
-    private static bool SameStorage(ReadOnlySpan<byte> first, ReadOnlySpan<byte> second)
-    {
-        return Unsafe.AreSame(ref MemoryMarshal.GetReference(first), ref MemoryMarshal.GetReference(second));
-    }
-
-    /// <summary>실제 헤더 180바이트의 비정렬 DWORD를 읽는다.</summary>
-    /// <param name="storage">저장소.</param>
-    /// <param name="at">헤더 안 위치.</param>
-    private static uint Header(CampaignTemplateStorage storage, int at) => BinaryPrimitives.ReadUInt32LittleEndian(storage.Headers.Span[at..]);
-
-    /// <summary>실제 헤더 180바이트에 DWORD를 쓴다.</summary>
-    /// <param name="storage">저장소.</param>
-    /// <param name="at">헤더 안 위치.</param>
-    /// <param name="value">쓸 값.</param>
-    private static void SetHeader(CampaignTemplateStorage storage, int at, uint value) => BinaryPrimitives.WriteUInt32LittleEndian(storage.Headers.Span[at..], value);
-
-    /// <summary>State 확장의 명시 입력(28바이트)을 같은 저장소에 연결하는 Player State getter를 만든다. 진단은 모두 실패로 본다.</summary>
-    /// <param name="storage">저장소.</param>
-    /// <param name="select">참이면 State를 원본 선택(쓰기 허용)으로 얻는다.</param>
-    private static RawPlayerTemplateState PlayerState(CampaignTemplateStorage storage, bool select)
-    {
-        uint depth = 0;
-        return new RawPlayerTemplateState(
-            OriginalEdition.Patch1078,
-            storage.Headers,
-            slot => select ? storage.SelectState(slot) : storage.State(slot),
-            slot => storage.Name(slot),
-            () => depth,
-            value => depth = value,
-            () => false,
-            _ => throw new InvalidOperationException("State 확장의 예상 밖 진단"),
-            _ => { },
-            (slot, size) => storage.GrowState(slot, size),
-            slot => storage.CommitStateGrowth(slot));
-    }
-
     /// <summary>실제 파일의 State 변경은 같은 manager의 저장 이미지에도 반영되고 빌린 헤더는 같은 커서를 사용한다.</summary>
     [Fact]
     public void ExplicitOwnershipBorrowAndSerializedState()
