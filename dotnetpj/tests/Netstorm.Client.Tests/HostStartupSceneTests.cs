@@ -2,6 +2,7 @@ using Netstorm.Assets;
 using Netstorm.Client.Display;
 using Netstorm.Client.Host;
 using Netstorm.Client.Gump;
+using Netstorm.Client.Input;
 
 namespace Netstorm.Client.Tests;
 
@@ -66,6 +67,35 @@ public sealed class HostStartupSceneTests
                     if (before[row * screen.Pitch + col] != screen.Pixels[row * screen.Pitch + col]) { changed = true; break; }
             Assert.True(changed, $"버튼 {index} 출력이 없다");
         }
+    }
+
+    /// <summary>여덟 실제 버튼의 눌림·해제를 원본 상위 명령과 인자로 전달한다.</summary>
+    [Fact]
+    public void MainMenuRoutesEachButtonToItsOriginalAction()
+    {
+        string? data = GameDataLocator.FindDataDirectory(); Assert.NotNull(data);
+        var startup = new HostStartupScene(data); var screen = new Screen(1024, 768);
+        Assert.True(screen.SetMode(ScreenMode.BackBufferDib | ScreenMode.ModeSet)); startup.Draw(screen);
+        var actions = new List<MainMenuAction>(); int sounds = 0;
+        var menu = new HostMainMenu(startup, screen, new GumpButtonTreeHooks
+        {
+            Now = () => 1, Poll = _ => new(InputCode.Release, 0, 0), Sound = () => sounds++,
+            Redraw = (_, _) => { }, HandleBase = (_, _, _, _) => 0
+        }, actions.Add);
+        // 실제 논리 화면의 각 버튼 내부에서 누른 뒤 같은 위치에서 뗀다.
+        for (int index = 0; index < 8; index++)
+        {
+            int x = 1024 / 2 - 156 + (index % 4) * 79 + 3, y = 768 / 2 - 73 + (index / 4) * 23 + 3;
+            Assert.NotEqual(0U, menu.Route(new(InputCode.LeftButton, x, y)));
+            Assert.NotEqual(0U, menu.Route(new(InputCode.LeftButton | InputCode.Release, x, y)));
+        }
+        Assert.Equal(new MainMenuAction[] { new("Tell", "UCampaign"), new("Tell", "NotImplemented"), new("Tell", "DEMOVILLE"),
+            new("Menu", "help"), new("AskEditFort", "0"), new("Tell", "Credits"), new("Menu", "options"), new("RequestQuitApp", "0") }, actions);
+        Assert.Equal(8, sounds);
+        // 버튼 밖에서 떼면 캡처를 풀고 명령은 발생하지 않는다.
+        Assert.NotEqual(0U, menu.Route(new(InputCode.LeftButton, 360, 315)));
+        Assert.NotEqual(0U, menu.Route(new(InputCode.LeftButton | InputCode.Release, 2, 2)));
+        Assert.Equal(8, actions.Count);
     }
 
 }
