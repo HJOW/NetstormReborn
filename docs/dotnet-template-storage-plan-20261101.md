@@ -34,7 +34,7 @@ cpppj 쪽 검사 중 저장소에 의존하는 것은 수작업 분류 기준 �
 
 ## 3. 설계 결정
 
-### 3.1 버퍼형 `RawSectionBuffer` (확인 필요, 7절 1번)
+### 3.1 버퍼형 `RawSectionBuffer` (2026-11-01 사용자 확정, 7절 1번)
 
 저장소는 `std::vector<uint8_t>`의 `capacity()`를 원본 MemStream의 할당 크기로 쓴다. 이 값은 세 곳에 영향을 준다.
 
@@ -126,9 +126,11 @@ F1은 TS와 독립이라 먼저 해도 된다. 다만 F2가 F1과 TS4까지를 �
 - 기존 `Netstorm.Assets.FortFile`은 건드리지 않는다. 은퇴는 F2 이후다.
 - 저장소를 C#답게 재설계하지 않는다(결정 2). 3.2절의 차이만 허용한다.
 
-## 7. 확인이 필요한 것 (확인 전까지 기본값으로 진행)
+## 7. 확정된 결정 (2026-11-01 사용자 결정)
 
-1. **`RawSectionBuffer` 설계(3.1절).** 기본값: 이대로 진행한다. TS0에서 공개 형식이 바뀌므로 시작 전에 확인받는다.
-2. **F1의 타입 표 경로.** 기본값: `RiftTypeTable`을 직역한다. 기존 `TypeCatalog`에도 플래그와 `NameHash`가 있어 어댑터로 `Parse`만 먼저 완성할 수는 있지만, 타입 표의 근거가 둘이 되어 결정 2·3과 어긋난다.
-3. **`FortTemplate`의 위치.** 결정 3의 표는 `Template`을 `Netstorm.Assets`로 두는데 0.128에서 `Netstorm.Core/Original`에 두었다. 기본값: F1에서 `RiftTypeTable` 위치를 정할 때 함께 확정하고, 그때까지 그대로 둔다.
-4. **저장소의 cpppj 대조(L2).** 기본값: cpppj 변경을 요청하지 않고 433개 왕복 검사로 대신한다. cpppj에 manager·노드 덤프 명령이 생기면 같은 입력의 상태 비교를 더할 수 있다.
+계획서가 제시한 기본값 네 가지를 모두 그대로 진행하기로 확정했다. 아래 내용을 바꾸려면 사용자 확인이 다시 필요하다. TS0는 이 결정으로 확인 대기 없이 바로 시작할 수 있다.
+
+1. **`RawSectionBuffer` 설계(3.1절) — 확정.** 3.1절의 형식대로 만든다. TS0에서 `FortTemplate.Sections`를 `List<byte[]>`에서 `List<RawSectionBuffer>`로 바꾼다.
+2. **F1의 타입 표 경로 — 확정.** `RiftTypeTable`을 직역한다. 기존 `TypeCatalog`로 `Parse`를 먼저 완성하는 어댑터는 만들지 않는다(타입 표의 근거가 둘이 되어 구조 결정 2·3과 어긋난다).
+3. **`FortTemplate`의 위치 — 확정.** F1에서 `RiftTypeTable` 위치를 정할 때 함께 확정하고, 그때까지 `Netstorm.Core/Original`에 그대로 둔다.
+4. **저장소의 cpppj 대조(L2) — 확정.** cpppj 변경을 요청하지 않고 TS3의 433개 왕복 검사로 대신한다. cpppj에 manager·노드 덤프 명령이 생기면 그때 같은 입력의 상태 비교를 더한다.
