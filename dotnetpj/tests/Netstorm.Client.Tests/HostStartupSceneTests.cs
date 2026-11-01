@@ -39,6 +39,7 @@ public sealed class HostStartupSceneTests
     public void HostNewFortConfirmationQueuesActualRead()
     {
         string? data = GameDataLocator.FindDataDirectory(); Assert.NotNull(data);
+        using var temp = new EditorTempRoot();
         var startup = new HostStartupScene(data); var screen = new Screen(1024, 768);
         Assert.True(screen.SetMode(ScreenMode.BackBufferDib | ScreenMode.ModeSet)); startup.Draw(screen);
         var menu = new HostMainMenu(startup, screen, new GumpButtonTreeHooks
@@ -47,11 +48,14 @@ public sealed class HostStartupSceneTests
         var windows = new HostHtmlWindows(menu, queue, () => 1, _ => { });
         var text = new HostHtmlText(menu, windows, screen, _ => default, (_, _) => { }, _ => { }, _ => { }); text.Bind(windows);
         using var entry = new HostTextEntry(menu, windows, text, screen, () => 1, (_, _) => { });
-        var confirm = new HostFortNameConfirmation(startup, menu, entry, queue, strings, notices.Add);
+        using var editor = new HostEditorSelection(startup, strings, notices.Add, workspace: new EditorCatalogWorkspace(startup.Files, temp.Work));
+        var confirm = new HostFortNameConfirmation(startup, menu, entry, queue, strings, editor.Workspace, notices.Add);
         var dialog = new HostSaveFortDialog(menu, windows, text, entry, startup, screen, confirm.Confirm, notices.Add);
         string existing = startup.Files.MatchDisk(startup.Configuration.PathSpec("fortSpec", "*"))
             .Select(path => Path.GetFileNameWithoutExtension(path.Replace('\\', '/')))
             .First(name => name.Length > 0 && name.Length < 40 && startup.Files.Locate(startup.Configuration.PathSpec("fortSpec", name)) == GameFileSource.Disk);
+        // 새 이름 창은 맵 목록 뒤에 열리므로 원본 파일은 이미 작업본으로 이관되어 있다.
+        editor.Workspace.Enumerate(startup.Configuration.PathSpec("fortSpec", "*"));
         uint duplicate = dialog.Show(0, 1, existing);
         Assert.Equal(1u, menu.Tree.EventHooks.Handle!(duplicate, 0x02000038, 0, 0));
         Assert.Equal(["NameRequired"], notices); Assert.True(queue.Empty); notices.Clear();
@@ -60,7 +64,7 @@ public sealed class HostStartupSceneTests
         Assert.Equal(1u, menu.Tree.EventHooks.Handle!(token, 0x02000038, 0, 0));
         var input = queue.Pop(false); Assert.Equal(Netstorm.Client.Mission.FortSelection.ReadFort, input.Code); Assert.Equal(input.X, input.Y);
         Assert.Equal(name, strings.Resolve(unchecked((uint)input.Y))); Assert.Empty(notices);
-        var editor = new HostEditorSelection(startup, strings, notices.Add); editor.State.Mode = 2;
+        editor.State.Mode = 2;
         Assert.True(editor.Dispatch(input)); Assert.Equal(name, editor.PendingName); Assert.Equal(1u, editor.State.Next[0]);
         menu.Tree.Lifetime.Cleanup(); Assert.Null(menu.Tree.Node(token)); windows.CloseAll();
     }
@@ -585,6 +589,7 @@ public sealed class HostStartupSceneTests
     public void HostEditOpensRealMapListAndQueuesSelection()
     {
         string? data = GameDataLocator.FindDataDirectory(); Assert.NotNull(data);
+        using var temp = new EditorTempRoot();
         var startup = new HostStartupScene(data); var screen = new Screen(1024, 768);
         Assert.True(screen.SetMode(ScreenMode.BackBufferDib | ScreenMode.ModeSet)); startup.Draw(screen);
         HostMenuInput? router = null;
@@ -597,7 +602,7 @@ public sealed class HostStartupSceneTests
         var menus = new HostHtmlMenus(menu, windows, text, startup, screen, (_, _) => { }); menus.BindInput(queue, _ => { }, (_, _) => { });
         using var factory = new HostHtmlFactory(menu, windows, menus, startup, screen, queue, strings, () => 1, _ => 0, _ => throw new InvalidOperationException());
         router = new HostMenuInput(menu, windows, factory, queue, strings, () => { }, action => throw new InvalidOperationException(action.ToString()));
-        var editor = new HostEditorSelection(startup, strings, router.ShowTell);
+        using var editor = new HostEditorSelection(startup, strings, router.ShowTell, workspace: new EditorCatalogWorkspace(startup.Files, temp.Work));
         factory.BindMapCatalog(editor.Catalog, menus, strings, () => editor.CurrentName, () => editor.PendingName); router.BindEditor(editor);
         var driver = new HostFrameDriver(screen, queue); driver.BindInputHandler(router.Dispatch);
         var point = menu.ControlPoint("Edit")!.Value;

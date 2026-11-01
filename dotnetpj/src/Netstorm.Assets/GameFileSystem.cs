@@ -116,6 +116,21 @@ public sealed class GameFileSystem
             _ => null,
         };
 
+    /// <summary>
+    /// 기본 폴더에 등록된 TAFF만 등록 순서대로 조회해 첫 일치를 읽는다. 디스크나 보조 폴더로 되돌아가지 않으므로
+    /// 편집 작업본에서 삭제한 이름이 원본 loose 파일이나 보조 경로로 되살아나는 일을 막는 읽기 경계다.
+    /// 아카이브에 없으면 null이다. (cpppj BaseFileSystem::TryReadArchiveOnly 이식, 2026-11-01 0.126)
+    /// </summary>
+    /// <param name="path">읽을 경로</param>
+    public byte[]? TryReadArchiveOnly(string path)
+    {
+        string normalized = NormalizePath(path);
+        // 기본 폴더 아카이브만 등록 순서대로 검사한다.
+        for (int i = 0; i < _primaryArchiveCount; i++)
+            if (Archives[i].TryFind(normalized, out TaffEntry entry)) return Archives[i].Read(entry);
+        return null;
+    }
+
     /// <summary>파일 내용을 읽는다. 없으면 FileNotFoundException</summary>
     /// <param name="path">읽을 경로</param>
     public byte[] ReadAllBytes(string path) =>

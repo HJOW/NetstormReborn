@@ -5,8 +5,11 @@ using Netstorm.Client.Scripting;
 
 namespace Netstorm.Client.Host;
 
-/// <summary>메인 Edit의 현재 Fort 이름·목록·다음 State를 같은 Client 수명에 보유한다.</summary>
-public sealed class HostEditorSelection
+/// <summary>
+/// 메인 Edit의 현재 Fort 이름·목록·다음 State를 같은 Client 수명에 보유한다. 목록과 파일 읽기는 편집 작업본의 이관 장부를 거치며
+/// 그 작업본 장치(<see cref="Workspace"/>)를 새 이름 확인 등 다른 Edit 소비자가 함께 쓴다. (작업본 연결은 2026-11-01 0.126)
+/// </summary>
+public sealed class HostEditorSelection : IDisposable
 {
     private readonly HostStartupScene _startup;
     private readonly ScriptStringRing _strings;
@@ -21,17 +24,26 @@ public sealed class HostEditorSelection
     public string UserName { get; set; } = "";
     /// <summary>실제 맵 파일과 같은 Config를 쓰는 목록이다.</summary>
     public SoloMapCatalog Catalog { get; }
+    /// <summary>목록·읽기·새 이름 확인이 공유하는 편집 작업본과 이관 장부다. 이 선택기가 수명을 소유한다.</summary>
+    public EditorCatalogWorkspace Workspace { get; }
 
-    /// <summary>실제 파일·설정·스크립트 큐와 Tell 표시 장치를 빌린다.</summary>
-    public HostEditorSelection(HostStartupScene startup, ScriptStringRing strings, Action<string> tell, uint[]? next = null)
+    /// <summary>
+    /// 실제 파일·설정·스크립트 큐와 Tell 표시 장치를 빌린다. <paramref name="workspace"/>를 생략하면 시작 자산 폴더의 형제 작업본을 쓰며,
+    /// 주어진 작업본의 소유권은 이 선택기가 넘겨받아 <see cref="Dispose"/>에서 반납한다.
+    /// </summary>
+    public HostEditorSelection(HostStartupScene startup, ScriptStringRing strings, Action<string> tell, uint[]? next = null, EditorCatalogWorkspace? workspace = null)
     {
         _startup = startup; _strings = strings; _tell = tell; State = new FortSelectionGlobals(next);
+        Workspace = workspace ?? new EditorCatalogWorkspace(startup.Files);
         string language = startup.Configuration.Configuration.Get("currentLanguage") ?? "english";
         byte[]? bytes = startup.Files.TryReadAllBytes("d/xlat." + language);
         var translation = bytes == null ? null : Netstorm.Assets.XlatTable.FromFileBytes(bytes);
         Catalog = new SoloMapCatalog(startup.Files, startup.Configuration, () => UserName, text => translation?.Translate(text) ?? text,
-            () => throw new InvalidOperationException("맵 목록의 빈 State 미정 할당 바이트 미연결"));
+            () => throw new InvalidOperationException("맵 목록의 빈 State 미정 할당 바이트 미연결"), Workspace.Enumerate, Workspace.Read);
     }
+
+    /// <summary>작업본 장부 잠금을 반납한다. 기록된 장부와 작업본은 보존한다.</summary>
+    public void Dispose() => Workspace.Dispose();
 
     /// <summary>실제 입력 큐의 편집 선택을 같은 목록과 Tell에 전달한다.</summary>
     public bool Dispatch(InputEvent input) => FortSelection.Dispatch(input, State, new FortSelectionHooks

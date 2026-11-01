@@ -24,8 +24,12 @@ cpppj/src/client/DialogExitCommand.h	Netstorm.Client/Scripting/DialogExitCommand
 cpppj/src/client/DialogScript.cpp	Netstorm.Assets/CampaignMenu.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
 cpppj/src/client/DrawSort.cpp	Netstorm.Client/Display/DrawSort.cs	a36b80101b868a3ad9afa11953a6dbc21b9b1040	port
 cpppj/src/client/DrawSort.h	Netstorm.Client/Display/DrawSort.cs	a36b80101b868a3ad9afa11953a6dbc21b9b1040	port
+cpppj/src/client/EditorFiles.cpp	Netstorm.Client/Host/EditorFiles.cs	fc56410a7ddd88b027b5365e08328dcc85332cce	port
+cpppj/src/client/EditorFiles.h	Netstorm.Client/Host/EditorFiles.cs	fc56410a7ddd88b027b5365e08328dcc85332cce	port
 cpppj/src/client/EditorMapCatalogFiles.cpp	Netstorm.Client/Host/EditorCatalogLedger.cs	3ddeb19a599961941e7c9e629ffc041bdf104de1	port
+cpppj/src/client/EditorMapCatalogFiles.cpp	Netstorm.Client/Host/EditorCatalogWorkspace.cs	fc56410a7ddd88b027b5365e08328dcc85332cce	port
 cpppj/src/client/EditorMapCatalogFiles.cpp	Netstorm.Client/Host/EditorWorkspacePaths.cs	75c5dacabd0611a0540f198e75547903da40ca9a	port
+cpppj/src/client/EditorMapCatalogFiles.h	Netstorm.Client/Host/EditorCatalogWorkspace.cs	fc56410a7ddd88b027b5365e08328dcc85332cce	port
 cpppj/src/client/EmbeddedTell.cpp	Netstorm.Client/Gump/EmbeddedTell.cs	ecb9802a88b7de3f5740f3a1cda95c21ea982c24	L1
 cpppj/src/client/EmbeddedTell.h	Netstorm.Client/Gump/EmbeddedTell.cs	ecb9802a88b7de3f5740f3a1cda95c21ea982c24	L1
 cpppj/src/client/FortSelection.cpp	Netstorm.Client/Mission/FortSelection.cs	fb3911774a594162b2a9af981a2f6825cd1a2775	L1

@@ -273,6 +273,33 @@ public sealed class TextResourceTests
         finally { if (Directory.Exists(root)) Directory.Delete(root, recursive: true); }
     }
 
+    /// <summary>아카이브 전용 읽기는 기본 폴더의 등록 순서 첫 일치만 쓰고 디스크·보조 폴더·보조 아카이브로 되돌아가지 않는다.</summary>
+    [Fact]
+    public void GameFileSystem_ArchiveOnlyReadsPrimaryRegistrationOrderWithoutFallback()
+    {
+        string temp = Path.GetFullPath(Path.GetTempPath());
+        string root = Path.GetFullPath(Path.Combine(temp, "ns-archive-only-" + Guid.NewGuid().ToString("N")));
+        Assert.StartsWith(temp, root, StringComparison.OrdinalIgnoreCase); string secondary = Path.Combine(root, "cd");
+        try
+        {
+            Directory.CreateDirectory(Path.Combine(root, "d")); Directory.CreateDirectory(Path.Combine(secondary, "d"));
+            File.WriteAllText(Path.Combine(root, "d", "disk-and-archive"), "disk");
+            File.WriteAllText(Path.Combine(root, "d", "disk-only"), "disk only");
+            File.WriteAllText(Path.Combine(secondary, "d", "secondary-disk"), "secondary disk");
+            File.WriteAllBytes(Path.Combine(root, "a-first.tarc"), BuildArchive((@"\d\disk-and-archive", "first archive")));
+            File.WriteAllBytes(Path.Combine(root, "b-second.tarc"), BuildArchive((@"\d\disk-and-archive", "second archive"), (@"\d\later-archive", "later")));
+            File.WriteAllBytes(Path.Combine(secondary, "other.tarc"), BuildArchive((@"\d\secondary-archive", "secondary archive")));
+            GameFileSystem fs = GameFileSystem.Open(root, secondary);
+            // 기존 읽기는 디스크가 먼저이고 아카이브 전용 읽기는 첫 등록 아카이브의 항목만 돌려준다.
+            Assert.Equal("disk", Text(fs, "d/disk-and-archive"));
+            Assert.Equal("first archive", System.Text.Encoding.Latin1.GetString(fs.TryReadArchiveOnly(@"\D\Disk-And-Archive")!));
+            Assert.Equal("later", System.Text.Encoding.Latin1.GetString(fs.TryReadArchiveOnly("d/later-archive")!));
+            Assert.Null(fs.TryReadArchiveOnly("d/disk-only")); Assert.Null(fs.TryReadArchiveOnly("d/secondary-disk"));
+            Assert.Null(fs.TryReadArchiveOnly("d/secondary-archive")); Assert.Equal("secondary disk", Text(fs, "d/secondary-disk"));
+        }
+        finally { if (Directory.Exists(root)) Directory.Delete(root, recursive: true); }
+    }
+
     /// <summary>원본: 공식 미션은 아카이브, 팬 미션은 느슨한 d/ 폴더에서 읽힌다</summary>
     [Fact]
     public void Original_FileSystemFindsBothSources()

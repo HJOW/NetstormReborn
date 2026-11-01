@@ -8,11 +8,14 @@ namespace Netstorm.Client.Mission;
 /// <summary>기본 디스크 열거와 실제 Fort 섹션에서 편집 맵 목록의 메타데이터를 읽는다.</summary>
 public sealed class SoloMapCatalog
 {
-    private readonly GameFileSystem _files;
     private readonly ConfigInterface _config;
     private readonly Func<string> _user;
     private readonly Func<string, string> _translate;
     private readonly Func<byte[]> _uninitializedState;
+    /// <summary>패턴의 파일 목록을 돌려주는 열거 장치다. 편집 작업본 장치를 주지 않으면 기본 디스크만 OS 순서로 열거한다.</summary>
+    private readonly Func<string, IReadOnlyList<string>> _enumerate;
+    /// <summary>분류와 메타마다 현재 파일을 읽는 장치다. 편집 작업본 장치를 주지 않으면 기본 파일 시스템의 우선순위로 읽는다.</summary>
+    private readonly Func<string, byte[]?> _read;
     private Probe? _current;
     private string _fileSpec = "fortSpec";
     /// <summary>같은 Client 수명의 50칸 캐시다.</summary>
@@ -20,17 +23,23 @@ public sealed class SoloMapCatalog
     /// <summary>같은 실제 캐시와 파일 장치를 사용하는 원본 목록 본체다.</summary>
     public RawSoloMapList List { get; }
 
-    /// <summary>현재 파일·설정·사용자와 빈 State의 원본 미정 바이트 공급자를 빌린다.</summary>
-    public SoloMapCatalog(GameFileSystem files, ConfigInterface config, Func<string> user, Func<string, string> translate, Func<byte[]> uninitializedState)
+    /// <summary>
+    /// 현재 파일·설정·사용자와 빈 State의 원본 미정 바이트 공급자를 빌린다. <paramref name="enumerate"/>와 <paramref name="read"/>를 주면
+    /// 목록 열거와 파일 읽기가 기본 디스크 대신 편집 작업본 장치(<c>EditorCatalogWorkspace.Enumerate</c>/<c>Read</c>)를 거친다.
+    /// (cpppj SoloMapCatalogEffects의 enumeratePaths·readFile에 해당하며 2026-11-01 0.126에서 추가)
+    /// </summary>
+    public SoloMapCatalog(GameFileSystem files, ConfigInterface config, Func<string> user, Func<string, string> translate, Func<byte[]> uninitializedState,
+        Func<string, IReadOnlyList<string>>? enumerate = null, Func<string, byte[]?>? read = null)
     {
-        _files = files; _config = config; _user = user; _translate = translate; _uninitializedState = uninitializedState;
+        _config = config; _user = user; _translate = translate; _uninitializedState = uninitializedState;
+        _enumerate = enumerate ?? files.MatchDisk; _read = read ?? files.TryReadAllBytes;
         List = new RawSoloMapList(State, new SoloMapListHooks
         {
             MayEditMissions = () => _config.GetInt("mayEditMissions"),
-            Enumerate = () => _files.MatchDisk(_config.PathSpec(_fileSpec, "*")).Select(MapName).ToArray(),
+            Enumerate = () => _enumerate(_config.PathSpec(_fileSpec, "*")).Select(MapName).ToArray(),
             Kind = Kind,
             Construct = () => _current = new Probe(_uninitializedState),
-            Load = name => Current().Load(_files.TryReadAllBytes(_config.PathSpec(_fileSpec, name))),
+            Load = name => Current().Load(_read(_config.PathSpec(_fileSpec, name))),
             Present = () => Current().Present,
             Subscriber = () => Current().Subscriber(), StateByte = () => Current().State()[0],
             UserName = () => _user(), Reserved = () => Current().Present ? 0u : throw new InvalidOperationException("단독 맵 예약 조회의 누락 Template"),
@@ -49,7 +58,7 @@ public sealed class SoloMapCatalog
     /// <summary>다음 목록 조회에서 캐시를 다시 만든다.</summary>
     public void Invalidate() => State.Dirty = 1;
     /// <summary>분류는 별도의 임시 Template으로 실제 파일을 읽는다.</summary>
-    public byte Kind(string name) { var probe = new Probe(_uninitializedState); probe.Load(_files.TryReadAllBytes(_config.PathSpec(_fileSpec, name))); return probe.State()[17]; }
+    public byte Kind(string name) { var probe = new Probe(_uninitializedState); probe.Load(_read(_config.PathSpec(_fileSpec, name))); return probe.State()[17]; }
 
     /// <summary>파일별 임시 Template의 Subscriber·State를 소유하며 잘못된 입력은 거부한다.</summary>
     private sealed class Probe(Func<byte[]> uninitialized)

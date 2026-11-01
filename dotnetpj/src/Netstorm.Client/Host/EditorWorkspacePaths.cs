@@ -9,13 +9,17 @@ public sealed class EditorWorkspacePaths
     public string SourceRoot { get; }
     /// <summary>원본 옆의 쓰기 가능한 편집 작업본 루트다.</summary>
     public string WorkRoot { get; }
-    /// <summary>실제 자산 경로에서 형제 작업 디렉터리를 선택하며 파일을 만들지 않는다.</summary>
-    public EditorWorkspacePaths(string sourceRoot)
+    /// <summary>
+    /// 실제 자산 경로에서 형제 작업 디렉터리를 선택하며 파일을 만들지 않는다.
+    /// <paramref name="workRoot"/>를 주면 그 경로를 작업본으로 쓴다. 검사나 임시 사본처럼 자산 옆에 작업본을 만들 수 없는 곳에서
+    /// 쓰며, 링크·중첩 검사는 같다. (명시 작업 루트는 2026-11-01 0.126에서 추가)
+    /// </summary>
+    public EditorWorkspacePaths(string sourceRoot, string? workRoot = null)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(sourceRoot);
         SourceRoot = Canonical(sourceRoot); var source = new DirectoryInfo(SourceRoot);
-        if (source.Parent == null || source.Name.Length == 0) throw new ArgumentException("편집 자산 루트의 형제 경로 없음", nameof(sourceRoot));
-        string expected = Path.GetFullPath(Path.Combine(source.Parent.FullName, source.Name + "-editor"));
+        if (workRoot is null && (source.Parent == null || source.Name.Length == 0)) throw new ArgumentException("편집 자산 루트의 형제 경로 없음", nameof(sourceRoot));
+        string expected = Path.TrimEndingDirectorySeparator(Path.GetFullPath(workRoot ?? Path.Combine(source.Parent!.FullName, source.Name + "-editor")));
         WorkRoot = Canonical(expected);
         if (!string.Equals(expected, WorkRoot, StringComparison.OrdinalIgnoreCase)) throw new ArgumentException("편집 작업본의 외부 링크 경계");
         if (Inside(SourceRoot, WorkRoot) || Inside(WorkRoot, SourceRoot)) throw new ArgumentException("편집 원본과 작업 경로 중첩");

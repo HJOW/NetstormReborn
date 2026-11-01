@@ -14,17 +14,17 @@ public sealed class HostFortNameConfirmation
     private readonly GumpButtonTree _tree;
     /// <summary>현재 입력 필드의 문자 본체다.</summary>
     private readonly HostTextEntry _entry;
-    /// <summary>편집 작업본의 전체 경로 선택기다.</summary>
-    private readonly EditorWorkspacePaths _paths;
+    /// <summary>목록과 공유하는 편집 작업본과 이관 장부다.</summary>
+    private readonly EditorCatalogWorkspace _workspace;
     /// <summary>이름 문자열을 보관하는 현재 스크립트 고리다.</summary>
     private readonly ScriptStringRing _strings;
     /// <summary>실제 입력을 소비하는 현재 큐다.</summary>
     private readonly InputQueue _queue;
     /// <summary>현재 이름 필요 안내 창이다.</summary>
     private readonly Action<string> _tell;
-    /// <summary>같은 호스트의 장치와 큐를 빌리며 파일을 생성하지 않는다.</summary>
-    public HostFortNameConfirmation(HostStartupScene startup, HostMainMenu menu, HostTextEntry entry, InputQueue queue, ScriptStringRing strings, Action<string> tell)
-    { _startup = startup; _tree = menu.Tree; _entry = entry; _queue = queue; _strings = strings; _tell = tell; _paths = new EditorWorkspacePaths(startup.Files.BaseDirectory); }
+    /// <summary>같은 호스트의 장치와 큐, 목록이 쓰는 편집 작업본을 빌리며 파일을 생성하지 않는다.</summary>
+    public HostFortNameConfirmation(HostStartupScene startup, HostMainMenu menu, HostTextEntry entry, InputQueue queue, ScriptStringRing strings, EditorCatalogWorkspace workspace, Action<string> tell)
+    { _startup = startup; _tree = menu.Tree; _entry = entry; _queue = queue; _strings = strings; _tell = tell; _workspace = workspace; }
     /// <summary>현재 입력을 원문대로 정리하고 충돌이 없으면 두 인자가 같은 ReadFort를 큐에 쓴다.</summary>
     public uint Confirm(uint token)
     {
@@ -33,9 +33,9 @@ public sealed class HostFortNameConfirmation
         {
             CopyText = output => _entry.Entry.CopyText(root.Entry, output),
             Alnum = value => value is >= (sbyte)'0' and <= (sbyte)'9' or >= (sbyte)'A' and <= (sbyte)'Z' or >= (sbyte)'a' and <= (sbyte)'z',
-            Path = name => _paths.Resolve(_startup.Configuration.PathSpec("fortSpec", name)),
-            // 현재 목록은 아직 이관 장부가 없어 원본 loose 파일도 열거한다. 동일 목록 이름의 충돌을 보존한다.
-            Exists = path => File.Exists(path) || Directory.Exists(path) || _paths.SourceExists(path) ? 1 : 0,
+            Path = name => _workspace.Resolve(_startup.Configuration.PathSpec("fortSpec", name)),
+            // cpppj와 같이 작업본에서만 파일이나 디렉터리 존재를 본다. 장부에서 삭제 완료된 원본 이름은 충돌이 아니다.
+            Exists = path => _workspace.Files.PathExists(path) ? 1 : 0,
             ReadFort = name => { uint stored = _strings.Store(name); _queue.PushCommand(FortSelection.ReadFort, unchecked((int)stored), unchecked((int)stored)); },
             Tell = _tell,
             Header = () => throw new InvalidOperationException("Save as의 현재 Template 소유자 미연결"),

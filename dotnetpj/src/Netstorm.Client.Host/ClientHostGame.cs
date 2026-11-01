@@ -122,6 +122,7 @@ public sealed class ClientHostGame : Game
         if (disposing)
         {
             _htmlWindows?.CloseAll();
+            _editor?.Dispose();
             _textEntry?.Dispose();
             _htmlFactory?.Dispose();
             _buttonSound?.Dispose();
@@ -186,7 +187,7 @@ public sealed class ClientHostGame : Game
             _editor = new HostEditorSelection(_startup, _scriptStrings, _menuInput.ShowTell);
             _htmlFactory.BindMapCatalog(_editor.Catalog, _htmlMenus, _scriptStrings, () => _editor.CurrentName, () => _editor.PendingName);
             _menuInput.BindEditor(_editor);
-            var fortConfirmation = new HostFortNameConfirmation(_startup, _mainMenu, _textEntry, _driver.Input, _scriptStrings, _menuInput.ShowTell);
+            var fortConfirmation = new HostFortNameConfirmation(_startup, _mainMenu, _textEntry, _driver.Input, _scriptStrings, _editor.Workspace, _menuInput.ShowTell);
             _saveFortDialog = new HostSaveFortDialog(_mainMenu, _htmlWindows, _htmlText, _textEntry, _startup, _driver.Screen,
                 fortConfirmation.Confirm, _menuInput.ShowTell);
             _menuInput.BindNewFort(mode => _saveFortDialog.Show(mode, 1, _editor.CurrentName));
