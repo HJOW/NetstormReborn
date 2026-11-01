@@ -4,10 +4,9 @@
 #include "o/RawConstructionConfirm.h"
 #include "o/RawConstructionPlace.h"
 #include "o/RawPriestState.h"
+#include "o/RawConstructionHistory.h" //통지와 Client 카메라가 같은 최근5칸의 실제 수명을 공유한다.
 
 namespace netstorm::o {
-// 배치 이력과 사제 접근 지점의 단정도 좌표다. 이력은 좌표 비트를 그대로 보존한다.
-struct ConstructionNoticePoint { /* x: X 좌표. */ /* y: Y 좌표. */ float x{},y{}; };
 // 통지 처리기가 읽는 전역이다. 주소는 패치 / CD 순서다.
 struct ConstructionNoticeState {
     std::uint32_t localPlayer{}; // 00540c70 / 0050f6c8: 통지의 플레이어 바이트와 DWORD로 비교한다.
@@ -18,6 +17,11 @@ struct ConstructionNoticeState {
     std::array<ConstructionNoticePoint,5> history{}; // 00558ea4 / 00589150: 가장 최근 배치부터 다섯 좌표.
     std::uint32_t historyCounter{}; // 00558e78 / 0053fc40: 로컬 이력이 갱신되면 0으로 초기화한다.
     const bool* sharedAuthority{}; // 실제 배치/정리와 같은 Client boss 주소다.
+    ConstructionHistoryState* sharedHistory{}; //실제 Session은 Client 수명의 같은40BYTE/순번을 빌리며 독립 원문 검사는 기존 값형 이력을 유지한다.
+    std::array<ConstructionNoticePoint,5>& History() { return sharedHistory ? sharedHistory->points : history; } //실제 writer는 사본이 아닌 현재 장부를 갱신한다.
+    const std::array<ConstructionNoticePoint,5>& History() const { return sharedHistory ? sharedHistory->points : history; } //읽기 전용 소비도 같은 장부를 본다.
+    std::uint32_t& HistoryCounter() { return sharedHistory ? sharedHistory->index : historyCounter; } //Tab과 통지가 같은 순번을 쓴다.
+    const std::uint32_t& HistoryCounter() const { return sharedHistory ? sharedHistory->index : historyCounter; } //독립 저장소와 공유 저장소를 혼합하지 않는다.
     const bool& Authority() const { return sharedAuthority ? *sharedAuthority : authority; } // 배치 효과 뒤 자동 건설/사제 이동 관문에서 현재값을 읽는다.
 };
 // 처리기 밖의 효과다. 공통 경계는 모두 필수이며 contained 두 경계는 패치판에서만 필요하다.

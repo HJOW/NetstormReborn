@@ -1,5 +1,7 @@
 // 통지 처리기 전체 분기를 세 PE의 독립 출력과 비교하고 잘못된 입력·효과 연결을 검사한다.
 #include "ConstructionNoticeSupport.h"
+#include "client/ClientGameplayGlobals.h" //실제 Client 장기의 이력을 기존 통지 실행기에 직접 연결한다.
+#include "client/ConstructionHistoryKey.h"
 #include <sstream>
 
 namespace {
@@ -152,6 +154,15 @@ TEST_CASE(ConstructionNotice_ObservesStateChangesAtEffectBoundaries) {
     RawConstructionNotice handler(scene.pool,scene.types,scene.state,hooks);handler.Handle(scene.notice);
     CHECK(scene.events.find(";B:3:50:305419896:1074270772;W")!=std::string::npos);
     CHECK(Bits(scene.state.history[0].x)==Bits(scene.notice.x) && scene.state.historyCounter==0);
+}
+
+// 실제 통지는 같은 Client 이력을 배치 전에 갱신하고 독립 값형 사본은 변경하지 않는다.
+TEST_CASE(ConstructionNotice_SharedClientHistoryBeforePlacement) {
+    NoticeScene scene(OriginalEdition::Patch1078);scene.Prepare(Fixture().front()[1]);scene.types[scene.notice.type].group=2;scene.notice.flags|=1;scene.state.localPlayer=scene.notice.player;
+    netstorm::client::ClientGameplayGlobals gameplay;auto& history=gameplay.Camera().ConstructionHistory();netstorm::client::InitializeConstructionHistory(history);history.points[0]={70,80};history.index=4;scene.state.sharedHistory=&history;
+    const auto fallback=NoticeHistory(scene.state);const auto fallbackCounter=scene.state.historyCounter;auto hooks=scene.Hooks();const auto place=hooks.place;bool observed=false;
+    hooks.place=[&](const ConstructionPlaceRequest& request) { CHECK(history.index==0 && Bits(history.points[0].x)==Bits(scene.notice.x) && Bits(history.points[0].y)==Bits(scene.notice.y));CHECK(history.points[1].x==70 && history.points[1].y==80);observed=true;place(request); };
+    RawConstructionNotice handler(scene.pool,scene.types,scene.state,std::move(hooks));handler.Handle(scene.notice);CHECK(observed && NoticeHistory(scene.state)==fallback && scene.state.historyCounter==fallbackCounter);CHECK(&scene.state.History()==&history.points && &scene.state.HistoryCounter()==&history.index);
 }
 
 // 통지의 배치 효과가 바꾼 권한을 자동 건설 시작 관문에서 다시 읽는다.

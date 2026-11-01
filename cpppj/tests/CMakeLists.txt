@@ -2860,6 +2860,12 @@ add_executable(netstorm_rotation_key_tests FocusedTestMain.cpp RotationKeyInputT
 target_link_libraries(netstorm_rotation_key_tests PRIVATE netstorm)
 netstorm_apply_compiler_options(netstorm_rotation_key_tests)
 
+# Tab 최근 건설 위치의 원문 순환/초기화와 기존 통지의 같은 Client writer를 집중 확인한다(718).
+target_sources(netstorm_tests PRIVATE ConstructionHistoryKeyTests.cpp)
+add_executable(netstorm_construction_history_key_tests FocusedTestMain.cpp ConstructionHistoryKeyTests.cpp ConstructionNoticeTests.cpp)
+target_link_libraries(netstorm_construction_history_key_tests PRIVATE netstorm)
+netstorm_apply_compiler_options(netstorm_construction_history_key_tests)
+
 # 공유 기술 필터/원소 목록과 실제 HTML 메타 부모의 집중 확인이다(705).
 target_sources(netstorm_tests PRIVATE TechnologyListMenuTests.cpp)
 add_executable(netstorm_technology_list_menu_tests FocusedTestMain.cpp TechnologyListMenuTests.cpp HtmlWindowMetadataTests.cpp)

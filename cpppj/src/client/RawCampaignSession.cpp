@@ -802,7 +802,7 @@ struct RawCampaignSession::Impl {
     FormDeletionStamp deletionStamp; // 실제 삭제 writer가 한 번 소비하는 최근 명령 표식이다.
     std::unique_ptr<RawFormPacket> formWriter; // 동일 Pool의 실제 가상+54/+58 직렬화 몸체다.
     std::array<std::uint8_t,2048> formBuffer{}; // 감시/내용물/삭제 요청이 공유하는 원본 크기의 현재 송신 버퍼다.
-    RawCampaignConstructionState constructionState; // 실제 받침 확정/Notice 이력과 로컬 수량 전역의 장기 저장소다.
+    RawCampaignConstructionState constructionState; //실제 받침/로컬 수량 실행 상태이며 최근 이력만 더 긴 Client 장부를 빌린다.
     SquidPostPopList recentGeysers; // 00595094/98의 전용 최근5목록이며 전체 assetState.Geysers()와 분리한다.
     std::uint8_t geyserMapSize{}; // 실제0052f7e6 초기BYTE0이며 PlayerBounds가 현재 참조로 읽는다.
     std::array<std::uint32_t,9> playerDirections{16448,4,0,6,2,7,3,5,1}; // 실제0053181c의 Player0까지 보존한 초기9DWORD다.
@@ -854,6 +854,7 @@ struct RawCampaignSession::Impl {
         constructionState.place.sharedAuthority=constructionState.clear.sharedAuthority=constructionState.notice.sharedAuthority=constructionState.geyser.sharedBoss=&gameplayGlobals->Authority()->boss; // 건설 하위 네 몸체는 Prepare 사본을 기다리지 않는다.
         buildingState.sharedBoss=geyserMinedState.sharedBoss=&gameplayGlobals->Authority()->boss; // 진행·표시·음향 효과 뒤에도 같은 현재 boss를 조회한다.
         constructionState.place.sharedServer=buildingEffectsState.sharedServer=&gameplayGlobals->Authority()->server; // Take와 섬 전파는 boss와 독립인 실제 server를 읽는다.
+        constructionState.notice.sharedHistory=&gameplayGlobals->Camera().ConstructionHistory(); //같은 실제3f 통지가 Tab과 공유한 Client 장부를 쓰며 Session 교체로 소멸하지 않는다(718).
         farm.sharedArchipelago=&gameplayGlobals->GameAux()->Archipelago();devastationEffectState.sharedSpentCounter=&gameplayGlobals->GameAux()->ResourcePool(); // Login과 별개의 bb0 및 같은595088을 빌린다.
         if (services.deferExistingEditorFile && services.installMode!=CampaignInstallMode::ExistingEditor) throw std::invalid_argument("파일지연은명시ExistingEditor전용입니다");
         objectState.sharedFullDeck=&fullDeck;constructionState.confirm.sharedFullDeck=&fullDeck;anchorState.sharedFullDeck=&fullDeck; // 하위 모듈 생성 전에 같은 장기 DWORD를 빌리며 Prepare 때 사본을 쓰지 않는다.

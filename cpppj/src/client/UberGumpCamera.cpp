@@ -58,9 +58,13 @@ void UberGump::CommitCameraNow() {
 }
 // 대본 ViewSpot은 Home과 같은 즉시 이동이다. 변경된 현재 값만 표면/입자/음향에 공개하고 다음 Compose를 예약한다(단위676).
 void UberGump::CenterViewSpot(std::string_view text) {
-    const auto spot=ParseViewSpot(text);auto& camera=client_.GameplayGlobals()->Camera();auto& screen=client_.GetScreen();
+    const auto spot=ParseViewSpot(text);CenterViewPoint(spot.x,spot.y);
+}
+// 문자열을 다시 만들지 않고 같은 즉시 카메라 부모/현재 Renderer·음향·표면 통지를 공유한다.
+void UberGump::CenterViewPoint(float x,float y) {
+    auto& camera=client_.GameplayGlobals()->Camera();auto& screen=client_.GetScreen();
     const auto beforePixels=camera.RendererView().pixels;
-    camera.CenterImmediately(spot.x,spot.y,screen.Width(),screen.Height(),worldRedraw_,client_.LocalStateGlobals()->MetaRebuild(),[this] { CommitCameraNow(); });
+    camera.CenterImmediately(x,y,screen.Width(),screen.Height(),worldRedraw_,client_.LocalStateGlobals()->MetaRebuild(),[this] { CommitCameraNow(); });
     if (camera.RendererView().pixels!=beforePixels) {
         if (world_) world_->CameraApplied();rebuild_=true;
     }

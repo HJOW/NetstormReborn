@@ -1,0 +1,36 @@
+{
+  "unit": 718,
+  "date": "2026-11-02",
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23"
+  },
+  "inputs": 511,
+  "observations": 1533,
+  "normalReturns": 499,
+  "partialStops": 12,
+  "precisionOrRepeatDifferences": 0,
+  "gameExecutions": 0,
+  "multiplayerTests": 0,
+  "ranges": [
+    "004d96b6..004d9bba",
+    "0040e800..0040e84c",
+    "0043994c..00439965"
+  ],
+  "boundaries": [
+    "정지00460de0/즉시 중심00433aa0만 명시 장치이며 실제 x87 Point 유효성을 실행한다.",
+    "초기 순번은 물리0..4다. Center callback이 바꾼 순번의 signed 나머지/실패 부분 효과도 관측한다.",
+    "뗌/Console/Guide/Gump 관문은 부분 실행 앞의 경계다. 전체 GUI/건설 월드/OS/통신을 실행한 관측은 아니다.",
+    "x87 조건/NaN 상태는 관측하며 무조건FPSW0으로 판정하지 않는다."
+  ],
+  "sha256": {
+    "AGENTS.md": "544643cf731393ecb4784490aa7f2794e8736742582907cce29453e6ac46f15e",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "extracted/refined/originals/raw.c": "0b5d53b15fdb2ef7afbccf61af666709726a96fb3b972b6818f4a42efcd31972",
+    "tools/decomp_construction_history_key.py": "4d04a24c4d5900717ce28e27ef98f0dd67ac13de9839a79f34fc32b22e7436f1",
+    "tools/decomp_oracle.py": "227b9a8b703cfd81d05ac4a7c72a42eaecf9c804fc028680466a19a591f2335d",
+    "cpppj/tests/fixtures/construction-history-key-x86.tsv": "025c9734dbf3b33ce0b5be408cca6824e2d1377c0ef394bd64de735de7735b8f"
+  }
+}

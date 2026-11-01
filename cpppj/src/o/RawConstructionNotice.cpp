@@ -66,8 +66,8 @@ void RawConstructionNotice::Handle(const ConstructionNotice& notice) const {
     const bool needsBuilder=(type.flags1&kNeedsBuilder)!=0 && !(notice.flags&1);
     if (type.group!=kNoHistoryGroup && notice.player==state_.localPlayer) {
         // 뒤에서부터 밀어 가장 오래된 좌표를 버리고 첫 칸에 새 좌표를 넣는다.
-        for (std::size_t i=state_.history.size()-1;i>0;--i) state_.history[i]=state_.history[i-1];
-        state_.history[0]={notice.x,notice.y};state_.historyCounter=0;
+        auto& history=state_.History();for (std::size_t i=history.size()-1;i>0;--i) history[i]=history[i-1]; //실제 Client 장부도 같은 뒤쪽부터 복사하며 독립 값형 입력과 섞지 않는다.
+        history[0]={notice.x,notice.y};state_.HistoryCounter()=0;
     }
     hooks_.place({notice.type,notice.x,notice.y,notice.argument,notice.direction,notice.player,notice.sids,abstract ? 1U : 0U,notice.quality});
     const Sid first{notice.sids.front()};
