@@ -88,7 +88,7 @@ public sealed class ClientHostGame : Game
     }
 
     /// <summary>
-    /// 스크립트 입력 → 실제 입력 순으로 펌프한다. F11은 전체화면 전환에 쓴다.
+    /// 스크립트 입력 → 실제 입력 → 연결된 Guide/UI 순으로 처리한다. F11은 전체화면 전환에 쓴다.
     /// </summary>
     /// <param name="gameTime">경과 시각.</param>
     protected override void Update(GameTime gameTime)
@@ -96,6 +96,7 @@ public sealed class ClientHostGame : Game
         _driver.BeginFrame();
         PumpKeyboard();
         PumpMouse();
+        if (_driver.ProcessInput()) { Exit(); return; }
         base.Update(gameTime);
     }
 

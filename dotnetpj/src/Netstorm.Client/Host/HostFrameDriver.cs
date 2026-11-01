@@ -23,6 +23,9 @@ public sealed class HostFrameDriver
     /// <summary>관측 단계를 처리한 마지막 프레임. 따라잡기 Update 뒤에도 한 프레임씩 AfterFrame을 부른다.</summary>
     private ulong _ended;
 
+    /// <summary>현재 호스트가 설치한 입력 소비자. 미설치 상태에서는 큐를 보존한다.</summary>
+    private Func<InputEvent, bool>? _inputHandler;
+
     /// <summary>UI 스크립트 실행기. 스크립트가 없으면 null이다.</summary>
     private readonly UiScriptRunner? _runner;
 
@@ -46,6 +49,25 @@ public sealed class HostFrameDriver
     {
         Frame++;
         _runner?.BeforeInput(Frame);
+    }
+
+    /// <summary>실제 Guide·UI 소비자를 연결한다. 반환값 true는 즉시 종료 요청이다.</summary>
+    /// <param name="handler">같은 큐에서 꺼낸 입력을 처리하는 현재 호스트 소비자.</param>
+    public void BindInputHandler(Func<InputEvent, bool> handler)
+    {
+        ArgumentNullException.ThrowIfNull(handler);
+        _inputHandler = handler;
+    }
+
+    /// <summary>현재 소비자가 있으면 큐를 순서대로 처리한다. 처리 중 추가된 입력도 같은 호출에서 읽고 종료 요청 뒤에는 남겨 둔다.</summary>
+    /// <returns>소비자가 즉시 종료를 요청하면 true.</returns>
+    public bool ProcessInput()
+    {
+        if (_inputHandler is null) return false;
+        // 각 처리기가 같은 큐에 추가한 사건도 원본 입력 고리처럼 이어서 소비한다.
+        while (!Input.Empty)
+            if (_inputHandler(Input.Pop(false))) return true;
+        return false;
     }
 
     /// <summary>
