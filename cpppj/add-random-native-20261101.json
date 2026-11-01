@@ -1,0 +1,26 @@
+{
+  "unit": 689,
+  "date": "2026-11-01",
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23"
+  },
+  "inputCases": 288,
+  "parentCases": 720,
+  "observations": 3024,
+  "differences": 0,
+  "boundaries": "일반 입력4d6e61..4da477의 이름조회/40dfd0은 명시 경계. 별도 실제40dfd0/4bcab0/431fc0/40d900/46f380/CRT는 실행하고 벽시각과 마지막40ded0만 명시 경계다. 마지막 개별 객체 생성/공격/공중3종/게임/OS/통신은 실행하지 않는다. 기존 PlaceRandom719관측과 별도다.",
+  "fixtures": {
+    "add-random-input-x86.tsv": "bbe76e4e4e4e9f6d8ac99fa9da3b98762c05350888eafede69e409b7498b805a",
+    "add-random-parent-x86.tsv": "dffb9b89963349c900283e3503f574987f81c155815c0dff01ad3064371fca3d"
+  },
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_add_random_command.py": "f8a4c603f377e307971c0d105541a1f67b0e5c734b338bcd1fb2b1fd4c50b4e6",
+    "tools/decomp_oracle.py": "227b9a8b703cfd81d05ac4a7c72a42eaecf9c804fc028680466a19a591f2335d",
+    "tools/decomp_game_menu_actions.py": "9130163b3bd761b08b37397f69ba3e074b257967a5fc934b68210bc6325f2df7",
+    "tools/decomp_production_shortcuts.py": "4caf1c87e4a152f65b2815395ea553b2609587be06a95512974b893e985b24e3"
+  }
+}

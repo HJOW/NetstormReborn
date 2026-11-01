@@ -1,0 +1,104 @@
+{
+  "unit": 689,
+  "date": "2026-11-01",
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23"
+  },
+  "productVersion": "11.01",
+  "productSha256": "1ad665fa82557b3ac5e8ce96f09d7ee41d67773f3c66a05b66f5294827a92153",
+  "native": {
+    "inputCases": 288,
+    "parentCases": 720,
+    "observations": 3024,
+    "differences": 0,
+    "frozenBeforeProductEdit": true,
+    "initialToolFailure": "과거 부분 export 부재. 완료된 전체 정밀 범위를 직접 읽는 독립 로더로 정정. 기대값/원본 수정 없음."
+  },
+  "build": {
+    "exits": [
+      0,
+      0,
+      0
+    ],
+    "warnings": [
+      0,
+      0,
+      0
+    ],
+    "errors": [
+      0,
+      0,
+      0
+    ]
+  },
+  "focused": {
+    "target": "netstorm_add_random_tests",
+    "registered": 12,
+    "executed": 12,
+    "failedChecks": 0
+  },
+  "session": {
+    "target": "netstorm_world_generation_tests",
+    "registered": 265,
+    "executedFinal": 1,
+    "filter": "CampaignSession_AddRandom",
+    "initialFailedChecks": 1,
+    "finalFailedChecks": 0,
+    "initialExpectation": "거주구역89의보장생성은근거없는검사기대",
+    "correction": "원문대본에쓰인134/실제Anywhere타입을확인. 제품배치정책변경없음."
+  },
+  "finalUniqueSelectedTests": 13,
+  "newTests": 4,
+  "existingTests": 9,
+  "protection": {
+    "unchangedExisting": 2606,
+    "changed": [],
+    "newFixtures": 2,
+    "currentFixtures": 788,
+    "currentProtectedTotal": 2608,
+    "addedAgainst685": {
+      "originals": [],
+      "originalCD": [],
+      "cpppj/tests/fixtures": [
+        "add-random-input-x86.tsv",
+        "add-random-parent-x86.tsv",
+        "scenario-effect-input-x86.tsv",
+        "scenario-object-input-x86.tsv"
+      ]
+    }
+  },
+  "gameExecutions": 0,
+  "multiplayerTests": 0,
+  "full34Runs": 0,
+  "fullCppRuns": 0,
+  "newZip": false,
+  "limits": "실제 생성은 headless C++ Session의134/잘못된TYPE 두값이다. GUI/모든타입/자연완주·전체동일성/새CD부모실행·32비트포인터ABI 검증으로확대하지않는다. 포획/희생/특정적공격/승리·공중3종전용검사0.",
+  "sha256": {
+    "AGENTS.md": "138808039a2d171d8e697906776e620f9ea8dc2038c35b4dc01ce18d3e462b77",
+    "cpppj/src/client/AddRandomInput.cpp": "e860f75f24d43d7bc9b4bdc1f43d86bfc86d9033f7f5d167adc072f5efade611",
+    "cpppj/src/client/AddRandomInput.h": "a2acee81fe346707c701c2609a4f06db54b204561459537ae76621028ad89544",
+    "cpppj/src/o/RawAddRandom.cpp": "0c1985538ce7bc650996dd5a55b54c85c4a7843d783a93e6bc7583ae8ecebe1b",
+    "cpppj/src/o/RawAddRandom.h": "517a36fddfe69e085d1cee372d5068cdae7fcdfcb34017dab036deeeca4e080a",
+    "cpppj/src/client/GameMenuCommands.cpp": "ce7a860b5fe6eabf5dc4a1271986bf304b6e2741a1509e9be0509323e18d3ebf",
+    "cpppj/src/client/UberGump.cpp": "db1d3acccf7a2bbcfc00b702edde56d3b1db867e8763aa371c1cf1f63f47a3f7",
+    "cpppj/src/client/RawCampaignSession.cpp": "05c6165b838245a560c0c0e362a6b95f4f6d3c52466240cf2a6a405db641b2ec",
+    "cpppj/src/client/RawCampaignSession.h": "4db652030f49e4e1cc567ba2192dbab8a2279bc55272d30c9dd1b955890f546d",
+    "cpppj/tests/AddRandomCommandTests.cpp": "c65ba8ccb41611cbf01384f456a91f8bc715678bc307461bb87a66972e34081c",
+    "cpppj/tests/CampaignWorldGenerationTests.inc": "ec1acd0e7c56eab8cccd58cd52a2ff58b3bca3f0c511a9621b014ddd3522ba64",
+    "cpppj/tests/fixtures/add-random-input-x86.tsv": "bbe76e4e4e4e9f6d8ac99fa9da3b98762c05350888eafede69e409b7498b805a",
+    "cpppj/tests/fixtures/add-random-parent-x86.tsv": "dffb9b89963349c900283e3503f574987f81c155815c0dff01ad3064371fca3d",
+    "cpppj/add-random-native-20261101.json": "23d46c64dcf42952a7cee3f36315b60f594c71c2c18e0c7141ca8db416b55d11",
+    "tools/decomp_add_random_command.py": "f8a4c603f377e307971c0d105541a1f67b0e5c734b338bcd1fb2b1fd4c50b4e6",
+    "extracted/refined/originalCD/NETSTORM.c": "9306f621576571c85280f9e25f024e3ec8b7b68c5c8ec6731c1f109dc3f25ebb",
+    "extracted/cpp-add-random-689/build.log": "686a813f0f05a60085a9925376da2eef5cdec95ec3ed9ae40869054bb8fb8af5",
+    "extracted/cpp-add-random-689/build-session.log": "e04617f5d1dc80c35aa626ef823087f5ad93d26a11ecec41552a4d9d7d9b1043",
+    "extracted/cpp-add-random-689/build-session-v2.log": "e04617f5d1dc80c35aa626ef823087f5ad93d26a11ecec41552a4d9d7d9b1043",
+    "extracted/cpp-add-random-689/focused.log": "ea5d376504d46ac8f68d0adf21b2de125313421704644c93e4169059980c0027",
+    "extracted/cpp-add-random-689/session-focused.log": "35764d46ef37ad5011c04c95e2e49a521b1980b2c0170de8dffa6199b1cbd6b4",
+    "extracted/cpp-add-random-689/session-focused-v2.log": "9a88d5ed418b63b571ac1762b5301d69481cd171e451b6110f78e0decf395e9f",
+    "extracted/cpp-add-random-689/session-registered.txt": "fb44ab18be130df78cb5697717f5f75aa3bb7bce3bdc77c5d36a262be20d0a47",
+    "extracted/cpp-add-random-689/protection.json": "e63792ef18c7511ed0dfc819dd36ba9a75f36451d067960ec9bdd80fe561c40b"
+  }
+}

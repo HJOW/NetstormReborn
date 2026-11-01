@@ -43,3 +43,25 @@ TEST_CASE(CampaignSession_WorldGenerationDecorationAndWholeActualPool) {
         }
     }
 }
+
+// 원문대본에쓰인건설마나134를현재1-1의실제섬/공간/Factory에배치하고잘못된TYPE로그도확인한다.
+TEST_CASE(CampaignSession_AddRandomPlacesScriptManaAndLogsInvalidType) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();UseWorldTestLogin(services);
+    std::vector<std::pair<std::uint32_t,std::string>> logs;
+    services.player.log=[&](auto group,auto text) { logs.emplace_back(group,std::string(text)); }; // 실제 배치 부모의 원문29번 진단 출력만 기록한다.
+    auto fort=FortTemplate::Parse(assets.files.Read("d/TheWarBegins.fort"),assets.game.TypeTable());
+    RawCampaignSession session(assets.game,assets.files,std::move(fort),"TheWarBegins",std::move(services));session.LoadLocalConnection();auto core=session.Core();
+    std::vector<bool> active(core.pool.Capacity());
+    for (std::uint32_t value=1;value<core.pool.Capacity();++value) active[value]=(core.pool.Slot(Sid{static_cast<std::uint16_t>(value)})[11]&1U)==0; // 기존 live SID를 보관해 새 객체와 구별한다.
+    CHECK((core.types[134].flags2&0x02000000U)!=0); // 원문타입의Anywhere비트가정의된대본대상을사용하며배치정책을강제허용으로바꾸지않는다.
+    session.AddRandomObjects(134,1);std::size_t added{};
+    for (std::uint32_t value=1;value<core.pool.Capacity();++value) { // 실제 성공한 건설 마나의 타입/owner/좌표를 읽는다.
+        const auto raw=core.pool.Slot(Sid{static_cast<std::uint16_t>(value)});if (active[value] || (raw[11]&1U) || raw[10]!=134) continue;
+        ++added;const auto x=std::bit_cast<float>(Get(raw,14)),y=std::bit_cast<float>(Get(raw,18));CHECK(raw[34]==session.LocalOwner() && x>=16 && x<240 && y>=16 && y<240 && !(raw[11]&15U));
+    }
+    CHECK(added==1);
+    const auto snapshot=[&] { std::vector<std::uint8_t> bytes;for (std::uint32_t value=0;value<core.pool.Capacity();++value) { const auto raw=core.pool.Slot(Sid{static_cast<std::uint16_t>(value)});bytes.insert(bytes.end(),raw.begin(),raw.end()); }return bytes; }; // 잘못된 TYPE에는 전체 물리 슬롯의 변경이 없어야 한다.
+    const auto before=snapshot();logs.clear();session.AddRandomObjects(0,1);session.AddRandomObjects(0xffffffffU,1);
+    CHECK(snapshot()==before && logs.size()==2);for (const auto& [group,text]:logs) CHECK(group==0x1d && text=="AddRandom: Invalid Type\n"); // 원문과 같은 로그 뒤0 반환이며 가짜 객체/성공을 만들지 않는다.
+    CHECK(core.bookkeeping.depth==0 && core.destroy.PreDepth()==0 && core.destroy.PostDepth()==0);
+}

@@ -10,6 +10,7 @@
 #include "o/RawIceRicochet.h" // 실제 아이스 반사점/선택도 같은 풀·HP·해시·게임 난수를 사용한다.
 #include "o/RawIslandAdd.h"
 #include "o/RawIslandQueries.h"
+#include "o/RawAddRandom.h"
 #include "client/EditorIslandBitmap.h"
 #include "o/RawFortRandomPlacement.h"
 #include "o/RawWorldGeyser.h" //실제 전체 간헐천 부모와 같은 지도/옵션 범위를 조립한다.
@@ -4040,6 +4041,23 @@ void RawCampaignSession::GenerateWorldGeysers() {
     hooks.decorate=[&placement](o::GameRandom& random,auto rectangle,auto region,auto quantity,auto type,auto force) { static_cast<void>(placement.PlaceRandom(random,rectangle,region,quantity,type,force)); };
     hooks.populate=[&s](std::int32_t quantity,o::GameRandom& random,auto rectangle,auto options) { s.PrepareConstruction();s.construction->PopulateGeysers(quantity,random,rectangle,options); };
     o::RawWorldGeyser(s.core.pool.Edition(),{s.core.ownerMode.battle,s.battleOptions,s.gameplayGlobals->GameAux()->WorldDecorationTypes()},std::move(hooks)).Generate();
+}
+//0040dfd0의 지역 난수/고정 범위 배치를 같은 현재 공간·섬·Factory·완전한 MayPlace에 연결한다.
+void RawCampaignSession::AddRandomObjects(std::uint32_t type,std::uint32_t quantity) {
+    auto& s=*impl_;if (!s.loaded) throw std::logic_error("설치 전 AddRandom 배치");
+    auto singleHooks=MakeNormalTerrainFarmWorldHooks(s.world,s.chunks,*s.islands,*s.pipeline,s.hp);
+    singleHooks.mayPlace=[this](const o::CanonPlacementQuery& query) { return MayPlaceConstruction(query); };
+    o::RawFortRandomPlacement single(s.core.pool,s.core.hash,s.core.spots,s.core.types,s.core.frames,s.random,s.randomPlacement,std::move(singleHooks));
+    o::FortFinishOwnerHooks finishHooks;
+    finishHooks.regionBounds=[&s](auto region) { const auto bounds=s.islands->Bounds(region);return o::FortRandomRectangle{bounds.left,bounds.top,bounds.right,bounds.bottom}; };
+    finishHooks.wallSeconds=s.services.construction.wallSeconds;
+    finishHooks.invalidType=[&s] { if (!s.services.player.log) throw std::logic_error("AddRandom의 실제 잘못된 타입 로그 미연결");s.services.player.log(0x1d,"AddRandom: Invalid Type\n"); }; //원문은진단로그뒤0을반환하며성공/객체를합성하지않는다.
+    finishHooks=o::MakeFortSinglePlacementHook(s.core.pool,single,std::move(finishHooks));
+    o::RawFortFinishOwner placement(s.core.pool,s.core.types,s.assetState.Residences(),s.finishState,std::move(finishHooks));
+    o::AddRandomHooks hooks;hooks.wallSeconds=s.services.construction.wallSeconds;hooks.local=[this] { return LocalOwner(); };
+    hooks.island=[&s](auto owner,auto territory) { return o::FindFortTerritoryIsland(s.islands->Bytes(),s.core.ownerMode.fort,std::bit_cast<std::int32_t>(owner),territory); };
+    hooks.place=[&placement](auto& random,const auto& rectangle,auto region,auto count,auto selected,auto force) { return placement.PlaceRandom(random,rectangle,region,count,selected,force); };
+    o::AddRandomObjects(type,quantity,hooks);
 }
 // 초기 객체 이전에 설치한 같은 연결부를 제공하며 게임 요청은 명시 Session API를 사용한다.
 const RawCampaignConstructionBindings& RawCampaignSession::Construction() const { return *impl_->construction; }

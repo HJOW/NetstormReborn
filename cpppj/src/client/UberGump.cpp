@@ -124,6 +124,7 @@
 #include "client/DetonateInput.h"
 #include "client/ScenarioObjectInput.h"
 #include "client/ScenarioEffectInput.h"
+#include "client/AddRandomInput.h"
 #include "platform/Utf8Path.h" //Windows10/11의 한글 Edit 작업본은 원본 ANSI 경로와 달리 UTF-8/W 경계로 전달한다.
 
 namespace netstorm::client {
@@ -1108,6 +1109,9 @@ void UberGump::Event(InputEvent event) {
         }
         rebuild_=true;return; // 원본005427ac의 일반 입력은 메뉴의 special 노출 조건을 실행 관문으로 다시 추가하지 않는다.
     }
+    if (DispatchAddRandomInput(event,client_.GameplayGlobals()->world.editor!=0,client_.GameplayGlobals()->world.missionPost!=0,
+        [this](auto token) { return client_.Assets().TypeTable().Find(scriptStrings_.Resolve(token)); },
+        [this](auto type,auto quantity) { if (!world_) throw std::logic_error("AddRandom의 실제 현재 Session 없음");world_->Session().AddRandomObjects(type,quantity); })) { rebuild_=true;return; } // 원문 타입 문자열/숫자와현재모드를 같은 기존 배치 부모에 전달한다.
     if (IsScenarioEffectCommand(transitionCode)) {
         ScenarioEffectInputHooks hooks; // 같은 현재 화면/기술 부모와 실제 표시 수명을 빌린다.
         hooks.width=[this] { return client_.GetScreen().Width(); };

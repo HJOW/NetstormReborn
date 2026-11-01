@@ -2744,3 +2744,12 @@ add_executable(netstorm_scenario_effect_tests FocusedTestMain.cpp ScenarioEffect
 target_link_libraries(netstorm_scenario_effect_tests PRIVATE netstorm)
 netstorm_apply_compiler_options(netstorm_scenario_effect_tests)
 target_compile_definitions(netstorm_scenario_effect_tests PRIVATE ${_netstorm_menu_session_definitions})
+
+# AddRandom 일반 입력/부모와 기존 난수 배치·섬 검색만 집중 회귀한다(단위689).
+target_sources(netstorm_tests PRIVATE AddRandomCommandTests.cpp)
+set_source_files_properties(AddRandomCommandTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_ADD_RANDOM_INPUT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/add-random-input-x86.tsv\";NETSTORM_ADD_RANDOM_PARENT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/add-random-parent-x86.tsv\"")
+add_executable(netstorm_add_random_tests FocusedTestMain.cpp AddRandomCommandTests.cpp FortFinishOwnerTests.cpp IslandQueriesTests.cpp)
+target_link_libraries(netstorm_add_random_tests PRIVATE netstorm)
+netstorm_apply_compiler_options(netstorm_add_random_tests)
+target_compile_definitions(netstorm_add_random_tests PRIVATE ${_netstorm_menu_session_definitions})
