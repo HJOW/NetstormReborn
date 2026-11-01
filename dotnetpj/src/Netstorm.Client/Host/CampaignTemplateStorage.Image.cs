@@ -11,10 +11,11 @@ public sealed partial class CampaignTemplateStorage
     /// 커서는 교체하지 않고 필드만 바꾸므로(C++의 참조 반환과 같은 의미) 저장소가 돌려준 참조가 오래 유효하다.
     /// </summary>
     /// <remarks>
-    /// 2026-11-01 0.131(TS1)에서 노드·버퍼·<see cref="SyncStreams"/>·커서 공개·선택·소멸을 옮겼다. 동적 섹션 생성·이름 교체·파일 읽기/저장·빈 manager는
-    /// TS2~TS4에서 같은 클래스에 더한다(계획서 <c>docs/dotnet-template-storage-plan-20261101.md</c> 4절).
+    /// 2026-11-01 0.131(TS1)에서 노드·버퍼·<see cref="SyncStreams"/>·커서 공개·선택·소멸을 옮겼다. 동적 섹션 생성·쓰기·이름 교체·State 최소 확장은
+    /// 0.132(TS2)에서 <c>CampaignTemplateStorage.ImageSections.cs</c>로 같은 partial 클래스에 더했고, 파일 읽기/저장·빈 manager는 TS3~TS4에서 더한다
+    /// (계획서 <c>docs/dotnet-template-storage-plan-20261101.md</c> 4절).
     /// </remarks>
-    private sealed class Image
+    private sealed partial class Image
     {
         /// <summary>원본 60바이트 섹션 노드 하나다. 첫 16바이트 MemStream·이름 40바이트·next DWORD를 같은 노드에 둔다.</summary>
         internal sealed class Stream

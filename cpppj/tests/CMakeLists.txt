@@ -2788,3 +2788,11 @@ set_source_files_properties(CaptureSequenceTests.cpp PROPERTIES COMPILE_DEFINITI
 add_executable(netstorm_capture_sequence_tests FocusedTestMain.cpp CaptureSequenceTests.cpp)
 target_link_libraries(netstorm_capture_sequence_tests PRIVATE netstorm)
 netstorm_apply_compiler_options(netstorm_capture_sequence_tests)
+
+# 원문8비트BMP336입력·실제파일과기존연속저장174입력을한제품라이브러리에서집중대조한다(694).
+target_sources(netstorm_tests PRIVATE IndexedBitmapTests.cpp)
+set_source_files_properties(IndexedBitmapTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_INDEXED_BITMAP_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/indexed-bitmap-x86.tsv\"")
+add_executable(netstorm_indexed_bitmap_tests FocusedTestMain.cpp IndexedBitmapTests.cpp CaptureSequenceTests.cpp)
+target_link_libraries(netstorm_indexed_bitmap_tests PRIVATE netstorm)
+netstorm_apply_compiler_options(netstorm_indexed_bitmap_tests)
