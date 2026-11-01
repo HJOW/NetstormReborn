@@ -1,0 +1,134 @@
+{
+  "unit": 682,
+  "date": "2026-11-01",
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23"
+  },
+  "productSha256": "19eac1623dc964b37d9b639006cc078f575208ec02821b1c4d69599f2d6b3790",
+  "native": {
+    "unit": 682,
+    "host": "HJOW-Athlon",
+    "date": "2026-11-01",
+    "lastPreciseDecompile": {
+      "host": "HJOW-Athlon",
+      "date": "2026-10-23"
+    },
+    "cases": 48,
+    "observations": 144,
+    "precisionOrRepeatDifferences": 0,
+    "lookup": [
+      {
+        "name": "PlaySound",
+        "string": "0051875c",
+        "entry": "00543058",
+        "global": "0054295c",
+        "command": "0200009a"
+      },
+      {
+        "name": "ViewPriest",
+        "string": "00518594",
+        "entry": "00543148",
+        "global": "005429d4",
+        "command": "020000b8"
+      },
+      {
+        "name": "SetAllBridge",
+        "string": "005183d4",
+        "entry": "00543238",
+        "global": "00542a4c",
+        "command": "020000d6"
+      },
+      {
+        "name": "DigUp",
+        "string": "00518d20",
+        "entry": "00542cf0",
+        "global": "005427ac",
+        "command": "0200002d"
+      }
+    ],
+    "fixtureSha256": "600c0b93d9d5e99583a88c7a867b72aa0d509bf5599ee2b74e32692811664305",
+    "sha256": {
+      "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+      "tools/decomp_script_sound.py": "3c2661759c0b87a231dffdf52c6600e2eb370e6745edd220eaa6ca78d025e987",
+      "tools/decomp_game_menu_actions.py": "9130163b3bd761b08b37397f69ba3e074b257967a5fc934b68210bc6325f2df7",
+      "tools/decomp_production_shortcuts.py": "4caf1c87e4a152f65b2815395ea553b2609587be06a95512974b893e985b24e3"
+    },
+    "boundaries": "실제004d6e61..004da477의 Guide/Gump/일반 입력과 PlaySound 분기를 실행했다. 기존 명시 Guide/Gump 및004a9cb0 음향 장치를 경계로 쓰며 장치/PCM/실제GUI·CD본문을 실행하지 않는다. ViewPriest/SetAllBridge/DigUp은 이름표 정적 읽기만 하며 새 행동 검사가 아니다."
+  },
+  "build": {
+    "exit": 0,
+    "warnings": 0,
+    "errors": 0,
+    "log": "extracted/cpp-script-bindings-682/build-v1.log"
+  },
+  "focused": {
+    "target": "netstorm_script_bindings_tests",
+    "registered": 12,
+    "executed": 12,
+    "newTests": 2,
+    "existingTests": 10,
+    "failedChecks": 0,
+    "log": "extracted/cpp-script-bindings-682/focused-v1.log"
+  },
+  "gui": {
+    "before": {
+      "exit": 0,
+      "expectedMissing": true,
+      "missingCommandDiagnostic": true,
+      "soundFirstFreeBeforeAfter": null,
+      "phase": [
+        "1"
+      ],
+      "protectedUnchanged": true,
+      "exeSha256": "16a5a8dd18b56ae3d696875d7e00a56a3868cd196546622abf586d146cbab1a0",
+      "limits": "명시 임시 HTML/missionSpec/kernel-tell로 실제 GUI 큐와 같은 음향 이름표까지만 확인한다. 음향 장치/PCM/청취·원본 시나리오·전투·포획/희생·공격·승리·공중3종·MP 실행이 아니다."
+    },
+    "after": {
+      "exit": 0,
+      "expectedMissing": false,
+      "missingCommandDiagnostic": false,
+      "soundFirstFreeBeforeAfter": [
+        352321580,
+        352321629
+      ],
+      "phase": [
+        "1"
+      ],
+      "protectedUnchanged": true,
+      "exeSha256": "19eac1623dc964b37d9b639006cc078f575208ec02821b1c4d69599f2d6b3790",
+      "limits": "명시 임시 HTML/missionSpec/kernel-tell로 실제 GUI 큐와 같은 음향 이름표까지만 확인한다. 음향 장치/PCM/청취·원본 시나리오·전투·포획/희생·공격·승리·공중3종·MP 실행이 아니다."
+    }
+  },
+  "protected": {
+    "originals": 1394,
+    "originalCD": 425,
+    "fixtures": 783,
+    "AGENTS": 1,
+    "total": 2603,
+    "beforeAfterEqual": true,
+    "settingsRestored": true
+  },
+  "lastFull34": {
+    "unit": 645,
+    "product": 644
+  },
+  "limitations": "이름표4개·PlaySound 명시장치48입력·전투 없는 GUI2프로세스/이름표까지만 확인했다. 실제 PCM/청취·전체34/전체C++·CD본문·ViewPriest/SetAllBridge/DigUp 새GUI행동·포획/희생/특정적공격/승리/공중3종/MP 검사는0이다. 기존610행fixture/기대값은 그대로이고 새ID조회만 검사장치에 추가했다.",
+  "sha256": {
+    "cpppj/src/client/GameMenuActions.cpp": "15102409a68fc56574da4a3b729636ca75dd32c9203730528852c38a5a9c857e",
+    "cpppj/src/client/GameMenuActions.h": "9ccf220220b973fa19a7082ca25333635a572d1d6e66c7ed2deff2feb761cf1b",
+    "cpppj/src/client/GameMenuCommands.cpp": "a997a4ff05a6803e8e4760e2b07ed175aca1e859586f94c68bf42cd56b617f39",
+    "cpppj/src/client/UberGump.cpp": "ded3c7acd24d7f153ec561966248c61a8ff20cb7e15cbbb29d005cef6221e77a",
+    "cpppj/tests/CMakeLists.txt": "96c6e6aa23dc2bf890eaf2263c6c3c9c71e11d60adfb7488e04d55238f34a2e3",
+    "cpppj/tests/ScriptPresentationBindingsTests.cpp": "d84d09859c19cccd3a9e6a39b2c251667ede0281f7f117c4c2c9cfc347a58e5e",
+    "cpppj/tests/GameMenuActionsTests.cpp": "12e7423fd95a0486b5f86ae4d0477960206ef7f72dbdb0c42f55c159e38d1d1d",
+    "cpppj/tests/fixtures/script-sound-x86.tsv": "600c0b93d9d5e99583a88c7a867b72aa0d509bf5599ee2b74e32692811664305",
+    "tools/decomp_script_sound.py": "3c2661759c0b87a231dffdf52c6600e2eb370e6745edd220eaa6ca78d025e987",
+    "tools/cpp_script_sound_smoke.py": "b6425e029eaf7d24e80363333386c2227ac3ea46cc511dbae714c2b3e1368451",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "AGENTS.md": "e9e46fda5519e663417b5c8d9b643549196bf28fe7ba6b1d546a48a853fd208b"
+  }
+}

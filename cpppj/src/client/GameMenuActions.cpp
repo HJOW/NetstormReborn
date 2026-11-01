@@ -9,9 +9,9 @@
 namespace netstorm::client {
 namespace {
 // 이번에분리한실제원문명령만조회하며MenuJustClosed는부모Gump에남긴다.
-constexpr std::array<GameMenuActionCommand,11> kActions{GameMenuActionCommand::QuitApp,GameMenuActionCommand::RequestQuitApp,
+constexpr std::array<GameMenuActionCommand,12> kActions{GameMenuActionCommand::QuitApp,GameMenuActionCommand::RequestQuitApp,
     GameMenuActionCommand::SoundVolume,GameMenuActionCommand::MusicVolume,GameMenuActionCommand::ReloadTheams,
-    GameMenuActionCommand::ViewHome,GameMenuActionCommand::ViewYourPriest,GameMenuActionCommand::Pause,GameMenuActionCommand::HideBuildings,GameMenuActionCommand::GetFullDeck,GameMenuActionCommand::AddSp};
+    GameMenuActionCommand::ViewHome,GameMenuActionCommand::ViewYourPriest,GameMenuActionCommand::Pause,GameMenuActionCommand::HideBuildings,GameMenuActionCommand::GetFullDeck,GameMenuActionCommand::AddSp,GameMenuActionCommand::PlaySound};
 // 도달한외부효과를미연결성공으로처리하지않는다.
 template<class T> const T& Required(const T& hook) { if (!hook) throw std::runtime_error("현재게임메뉴의실제효과미연결");return hook; }
 // 정렬되지않은Player/Form원문DWORD를현재바이트에서읽는다.
@@ -34,6 +34,9 @@ std::optional<std::uint32_t> GameMenuActions::Handle(std::uint32_t event,std::ui
     case GameMenuActionCommand::GetFullDeck:
         if (globals_.read(0x005c85a4) || globals_.read(0x00594fa4)) Required(hooks_.getFullDeck)();
         break;
+    case GameMenuActionCommand::PlaySound: {
+        const auto name=Required(hooks_.text)(second);Required(hooks_.sound)(name,0,0,0,0,0);break; //원문4d7c79..89의현재두번째인자/고정0다섯개이며모드·소유자관문은없다.
+    }
     case GameMenuActionCommand::QuitApp:
         if (second!=99) Required(hooks_.assertion)(993);Required(hooks_.sound)("selectTab.wav",0,0,0,0,0);return 1;
     case GameMenuActionCommand::RequestQuitApp:

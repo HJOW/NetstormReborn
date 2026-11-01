@@ -926,6 +926,7 @@ bool UberGump::GameMenuCommand(const InputEvent& event) {
     hooks.tell=[this](auto name) { Tell(std::string(name)); };
     hooks.config=[this](auto assignment) { ApplyScriptConfig(assignment,client_.Configuration());client_.ApplyAudioOptions(); };
     hooks.sound=[this](auto name,auto a,auto b,auto c,auto d,auto e) { client_.WorldAudio().Sounds().PlayByName(name,a,b,c,d,e); };
+    hooks.text=[this](auto token) { return scriptStrings_.Resolve(token); }; // 실제 HTML 명령이 저장한 같은 고리 문자열을 PlaySound 소비 순간에 읽는다.
     hooks.paused=[this] { return client_.Paused(); };
     hooks.status=[this](auto kind,auto owner,auto enabled,auto parameter,auto text) {
         if (kind!=11 || owner || parameter || !text.empty()) throw std::logic_error("다른 메뉴 상태 안내 분기 미연결");
@@ -1525,6 +1526,7 @@ std::string UberGump::Report(bool cameraOnly) const {
     const auto& ownerTables=client_.ColorSortInput()->OwnerTables();out<<"raw_owner_tables\t"<<ownerTables->Enabled()<<'\t'<<(ownerTables->Ready() ? 1 : 0);
     if (ownerTables->Ready()) for (const auto type:std::array<std::uint32_t,8>{85,71,128,97,94,111,141,137}) out<<'\t'<<ownerTables->Tokens()[type]; // 같은 현재 포인터 표의 읽기 전용 관측이다.
     out<<'\n';
+    out<<"sound_first_free\t"<<client_.WorldAudio().Names().FirstFree()<<'\n'; // 현재 이름표 끝만 읽는 진단이며 재생/적재/장치 상태를 변경하지 않는다.
     out << "paused\t" << client_.Paused() << "\nsound\t" << client_.Configuration().GetInt("sound") << "\n";
     out<<"mouse_cursor\t"<<client_.GetCursor().Index()<<'\t'<<client_.Active()<<'\n'; // 검사 보고서는 실제 표시 장치의 커서 번호와 창 활성을 읽기만 한다. 선택/대상 판정은 바꾸지 않는다.
     if (cameraOnly) { out<<"current_dialog\t"<<rawButtons_->CurrentDialog()<<"\ngame_menu_bar\t"<<(gameMenuState_ ? gameMenuState_->menuSerial : 0U)<<'\t'<<GameMenuOpen()<<"\ncamera_runtime\t"<<(world_!=nullptr)<<'\t'<<client_.Time().game<<'\t'<<client_.Time().number<<'\t'<<client_.GetKernel().Size()<<'\n';return out.str(); } //실제 같은 프레임/장치 값만 읽어 Win32 입력 관측의 큰 파일 재쓰기를 줄인다.

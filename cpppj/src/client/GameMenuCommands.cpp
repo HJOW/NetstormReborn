@@ -6,7 +6,7 @@
 namespace netstorm::client {
 namespace {
 // 00542xxx는원문주소식별자다. 런타임호스트포인터로역참조하지않는다.
-constexpr std::array<std::pair<std::uint32_t,std::uint32_t>,30> kCommands{{
+constexpr std::array<std::pair<std::uint32_t,std::uint32_t>,32> kCommands{{
     {0x0054287cU,0x02000061U}, //원문 Cheat의 같은 일반 SP 가산 명령이다.
     {0x00542780U,0x02000022U},
     {0x005427b8U,0x02000030U},
@@ -18,6 +18,8 @@ constexpr std::array<std::pair<std::uint32_t,std::uint32_t>,30> kCommands{{
     {0x00542938U,0x02000091U},
     {0x00542944U,0x02000094U},
     {0x00542948U,0x02000095U},
+    {0x0054295cU,0x0200009aU}, //PlaySound의 문자열 인자와 여섯 음향 인자를 전달한다.
+    {0x005427acU,0x0200002dU}, //DigUp 이름도 기존 일반 입력의 같은 보상 경로를 사용한다.
     {0x00542974U,0x020000a0U},
     {0x005429acU,0x020000aeU},
     {0x005429d4U,0x020000b8U},
@@ -47,6 +49,10 @@ std::optional<std::uint32_t> GameMenuCommandValue(std::uint32_t address) {
 // 원본name→ID표에서확인한메뉴확인창의필수이름이다.
 std::uint32_t GameMenuScriptCode(std::string_view name) {
     const auto key=o::AsciiLower(name); // 이름비교만원문ASCII대소문자를무시한다.
+    if (key=="playsound") return 0x0200009aU; // 원문543058의 이름→54295c이며 다른 소리 명령의 별칭이 아니다.
+    if (key=="viewpriest") return 0x020000b8U; // 원문543148의 명시 owner를 기존4950d0 경로에 전달한다.
+    if (key=="setallbridge") return 0x020000d6U; // 원문543238의 품질 숫자를 기존 전체 다리 변경에 전달한다.
+    if (key=="digup") return 0x0200002dU; // 원문542cf0의 이름이며 메뉴 노출 여부를 새 실행 관문으로 넣지 않는다.
     if (key=="quitapp") return 0x02000001U;
     if (key=="requestquitapp") return 0x02000094U;
     if (key=="menujustclosed") return 0x020000beU;

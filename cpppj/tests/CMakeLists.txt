@@ -2690,3 +2690,12 @@ add_executable(netstorm_move_dialog_tests FocusedTestMain.cpp MoveDialogTests.cp
 target_link_libraries(netstorm_move_dialog_tests PRIVATE netstorm)
 netstorm_apply_compiler_options(netstorm_move_dialog_tests)
 target_compile_definitions(netstorm_move_dialog_tests PRIVATE ${_netstorm_menu_session_definitions})
+
+# 원문 PlaySound48행과 기존 일반 명령/전체덱/SP/대본 큐의 관련 검사만 실행한다(단위682).
+target_sources(netstorm_tests PRIVATE ScriptPresentationBindingsTests.cpp)
+set_source_files_properties(ScriptPresentationBindingsTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_SCRIPT_SOUND_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/script-sound-x86.tsv\"")
+add_executable(netstorm_script_bindings_tests FocusedTestMain.cpp ScriptPresentationBindingsTests.cpp GameMenuActionsTests.cpp
+    CheatMoneyTests.cpp FullDeckCommandTests.cpp ScriptCommandTests.cpp)
+target_link_libraries(netstorm_script_bindings_tests PRIVATE netstorm)
+netstorm_apply_compiler_options(netstorm_script_bindings_tests)
+target_compile_definitions(netstorm_script_bindings_tests PRIVATE ${_netstorm_menu_session_definitions})
