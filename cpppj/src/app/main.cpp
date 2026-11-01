@@ -34,6 +34,7 @@
 #include "o/Template.h"
 #include "o/Xlat.h"
 #include "platform/Console.h"
+#include "client/ProductPresentation.h"
 #include "platform/Bitmap.h"
 #include "platform/FileOutput.h"
 #include "platform/PortableStartup.h"
@@ -45,7 +46,7 @@ constexpr const char* kTargetOriginalVersion = "10.78";
 // 실행 가능한 공용 계층의 명령과 아직 구현하지 않은 범위를 출력한다.
 void PrintBuildInfo() {
     std::puts("  --run: --test-bridge-patterns 3,0,25 (test-only repeating sequence; off restores normal supply)");
-    std::printf("Netstorm (menu and mission entry; playable world pending)\n");
+    std::printf("NetStorm %s\n",netstorm::client::kProductVersion.data());
     std::printf("  reconstructed from: NetStorm %s (decompiled)\n", kTargetOriginalVersion);
     std::printf("  default maxFPS: %d (frame interval %.6f s, 1ms clock: %u ms)\n",
         netstorm::client::kDefaultMaxFps, netstorm::client::FrameIntervalSeconds(netstorm::client::kDefaultMaxFps),
@@ -254,6 +255,7 @@ void StartConfiguration(netstorm::o::ConfigInterface& config, const std::filesys
     options.identity = identity.value_or(std::string());
     options.installDir = std::filesystem::absolute(root).lexically_normal().string();
     config.Startup(options);
+    netstorm::client::ApplyProductVersion(config); // 분석 명령의 원본 판본 표기와 실제 제품 버전11.01은 구별한다.
     // 원본은 시작할 때 `currentLanguage`의 용어표를 읽는다(FUN_00441db0).
     config.LoadLanguage(config.Configuration().Get("currentLanguage").value_or(std::string()));
 }
@@ -855,6 +857,7 @@ int main(int argc, char** argv) {
         }
         if (argc == 2 && std::string(argv[1]) == "--help") { PrintBuildInfo(); return 0; }
         const std::string command = argv[1];
+        if (argc==2 && command=="--version") { std::printf("NetStorm %s\n",netstorm::client::kProductVersion.data());return 0; } // 창/자산/원격 접속 없이 제품 표시 버전만 출력한다.
         if (command == "--dump-font" && argc == 4) { DumpFont(argv[2], argv[3]); return 0; }
         if (command.starts_with("--config-")) return RunConfigCommand(command, std::vector<std::string>(argv + 2, argv + argc));
         if (command == "--run") return RunClient(std::vector<std::string>(argv + 2, argv + argc));

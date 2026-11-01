@@ -84,7 +84,7 @@ add_subdirectory(platform)
 target_sources(netstorm PRIVATE app/InspectView.cpp app/InspectView.h)
 target_sources(netstorm PRIVATE app/FrameBindingInspect.cpp app/FrameBindingInspect.h)
 target_sources(netstorm PRIVATE app/CanonMayPlaceInspect.cpp)
-add_executable(NetstormCpp app/main.cpp)
+add_executable(NetstormCpp app/main.cpp app/ProductVersion.rc) # 새 제품 버전11.01을 Windows 파일 속성에도 제공한다(사용자 요청).
 # Windows 배포 이름을 맞추고 import library는 별도 이름으로 둔다. netstorm.lib와 겹치면 MSBuild가 입력을 출력으로 간주해 재링크를 생략한다.
 set_target_properties(NetstormCpp PROPERTIES OUTPUT_NAME Netstorm ARCHIVE_OUTPUT_NAME NetstormCpp)
 target_sources(NetstormCpp PRIVATE app/NetstormCpp.manifest) # 원본ANSI와 다른 Windows10/11의 프로세스 UTF-8 경로 호환 선언이다.
@@ -302,3 +302,6 @@ target_sources(netstorm PRIVATE o/RawManaDraw.cpp o/RawManaDraw.h)
 
 # 메타 배율/고정 추상색의 원문 추가 Draw 몸체를 공통 표면에 제공한다.
 target_sources(netstorm PRIVATE o/RawAuxiliaryDraw.cpp o/RawAuxiliaryDraw.h)
+
+# 원본 파일과 내부 판본을 보존하며 제품11.01 표시와 추가 Credits를 같은 UI에 연결한다.
+target_sources(netstorm PRIVATE client/ProductPresentation.cpp client/ProductPresentation.h client/ProductVersion.h)

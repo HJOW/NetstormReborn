@@ -2714,3 +2714,9 @@ add_executable(netstorm_retired_validation_tests FocusedTestMain.cpp NativeMainM
 target_link_libraries(netstorm_retired_validation_tests PRIVATE netstorm)
 netstorm_apply_compiler_options(netstorm_retired_validation_tests)
 target_compile_definitions(netstorm_retired_validation_tests PRIVATE ${_netstorm_menu_session_definitions})
+
+# 제품 표시/추가 Credits는 실제 GUI에서 확인하고 기존 Tell·HTML 메타·제목·설정 경로를 집중 회귀한다(단위685).
+add_executable(netstorm_product_ui_tests FocusedTestMain.cpp TellSectionTests.cpp TellParametersTests.cpp HtmlWindowMetadataTests.cpp WindowTitleTests.cpp ConfigInterfaceTests.cpp)
+target_link_libraries(netstorm_product_ui_tests PRIVATE netstorm)
+netstorm_apply_compiler_options(netstorm_product_ui_tests)
+target_compile_definitions(netstorm_product_ui_tests PRIVATE ${_netstorm_menu_session_definitions})

@@ -4,9 +4,9 @@
 cmake_minimum_required(VERSION 3.21)
 
 project(NetstormCpp
-    VERSION 0.1.0
+    VERSION 11.01
     DESCRIPTION "NetStorm: Islands at War - C++ build reconstructed from the decompiled original"
-    LANGUAGES C CXX)
+    LANGUAGES C CXX RC)
 
 # cpppj는 Windows 전용이다(AGENTS.md). 원본과 같은 Win32 API를 직접 쓴다.
 if(NOT WIN32)

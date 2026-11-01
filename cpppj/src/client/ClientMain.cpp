@@ -5,6 +5,7 @@
 // 범위: 창 만들기, 설정 읽기, 화면 장치, 메시지·입력 큐, 프레임 제한과 내보내기까지.
 //       Renderer·원본 글꼴/커서·메뉴와 저장 미션의 기본 지형/객체·선택/이동을 연결했다. 건설/전투는 후속이다.
 #include "client/ClientMain.h"
+#include "client/ProductPresentation.h"
 #include "client/RawCampaignSession.h" //Sleep 뒤의 실제 프레임말 Player 결과 소비에 장기 Session을 빌린다.
 #include "client/ClientDiagnostics.h"
 #include "client/ClientOptionsFile.h"
@@ -278,6 +279,7 @@ int Client::Run() {
     startup.cdDir=FindWindowsCdDirectory(); // 원문00440d40의 CD-ROM/깊이2 탐색 결과다. 부재는 기존 InstallDir fallback이며 W API만 Windows10/11 호환 경계다.
     InitializeNativeSecondaryFiles(startup.cdDir); //설정 파일을 읽기 전에 원문41bc30의 보조 TAFF와41a4f0의 실제 root를 연결한다.
     configuration_.Startup(startup);
+    ApplyProductVersion(configuration_); // 원본 시작 계약 뒤 사용자 요청의 제품 표시11.01을 적용한다. 원본 데이터 판본은 바꾸지 않는다.
     SaveOptions(); // 원본 FUN_004359f0 → FUN_00441d10(0): 설정 해석 전에 한 번 저장한다.
     InterpretOptions();
     if (!PumpMessages()) return 0;
