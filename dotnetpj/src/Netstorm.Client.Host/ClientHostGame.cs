@@ -173,6 +173,7 @@ public sealed class ClientHostGame : Game
             _menuInput = new HostMenuInput(_mainMenu, _htmlWindows, _htmlFactory, _driver.Input, _scriptStrings,
                 () => _menuDirty = true, action => throw new InvalidOperationException("메뉴 상위 명령 미연결: " + action));
             _menuInput.BindPopup(new HostPopupMenu(_mainMenu, _htmlWindows, _htmlMenus, _driver.Screen, _startup, () => _menuDirty = true, _buttonSound.ApplyOptions));
+            _menuInput.BindScreenMode(() => _driver.Screen.Flags, ChangeScreenMode, AcceptScreenMode);
             _gumpDrawing = new HostGumpDrawing(_mainMenu, _htmlText, _htmlMenus, _driver.Screen);
             _driver.BindControlLocator(_mainMenu);
             _driver.BindInputHandler(_menuInput.Dispatch);
@@ -339,6 +340,37 @@ public sealed class ClientHostGame : Game
         {
             ApplyFullscreen(false);
         }
+    }
+
+    /// <summary>원본 절대 모드를 같은 화면 장치에 적용하고 실제 현재 비트를 설정에 공개한다.</summary>
+    private void ChangeScreenMode(uint requested, bool remember)
+    {
+        if (!ScreenGeometry.ScreenModeIsLegal(ScreenPresentation.ModernScreenMode(requested), true)) throw new InvalidOperationException("지원하지 않는 화면 모드 조합");
+        bool currentFull = (_driver.Screen.Flags & ScreenMode.FullScreen) != 0, nextFull = (requested & ScreenMode.FullScreen) != 0;
+        if (nextFull != currentFull) { if (nextFull) ApplyFullscreen(false); else ApplyWindowed(); }
+        if (!_driver.Screen.SetMode(requested)) throw new InvalidOperationException("지원하지 않는 화면 모드 조합");
+        uint actual = _driver.Screen.Flags;
+        if (_startup != null)
+        {
+            var config = _startup.Configuration;
+            config.SetInt("global.ddFullScreen", (actual & ScreenMode.FullScreen) != 0 ? 1 : 0);
+            config.SetInt("global.ddBackBufferDib", (actual & ScreenMode.BackBufferDib) != 0 ? 1 : 0);
+            config.SetInt("global.ddFlipping", (actual & ScreenMode.Flipping) != 0 ? 1 : 0);
+            config.SetInt("global.ddClouds", (actual & ScreenMode.Clouds) != 0 ? 1 : 0);
+            config.SetInt("global.ddAnimating", (actual & ScreenMode.Animating) != 0 ? 1 : 0);
+            config.SetInt("global.ddParallax", (actual & ScreenMode.Parallax) != 0 ? 1 : 0);
+            config.SetInt("global.ddSoftwareMouse", (actual & ScreenMode.SoftwareMouse) != 0 ? 1 : 0);
+            config.SetInt("global.ddFourPage", 0);
+            if (remember) config.SetInt("startInFullScreen", (actual & ScreenMode.FullScreen) != 0 ? 1 : 0);
+        }
+        _menuDirty = true;
+    }
+
+    /// <summary>미리 본 전체화면 모드만 확인 시 workingFullScreenFlags에 기록한다.</summary>
+    private void AcceptScreenMode()
+    {
+        if (_startup != null && (_driver.Screen.Flags & ScreenMode.FullScreen) != 0)
+            _startup.Configuration.SetInt("workingFullScreenFlags", unchecked((int)_driver.Screen.Flags));
     }
 
     /// <summary>창 모드로 돌린다. 모드 전환은 저장 팔레트를 다시 적용한다(원본과 같은 순서).</summary>

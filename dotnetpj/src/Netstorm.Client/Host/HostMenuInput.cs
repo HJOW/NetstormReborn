@@ -25,9 +25,15 @@ public sealed class HostMenuInput
     private MainMenuAction? _pending;
     /// <summary>같은 공통 트리에 설치한 상위 팝업 메뉴다.</summary>
     private HostPopupMenu? _popup;
+    private Func<uint>? _screenFlags;
+    private Action<uint, bool>? _changeScreen;
+    private Action? _acceptScreen;
 
     /// <summary>Help 등 상위 팝업의 실제 controlled 메뉴를 연결한다.</summary>
     public void BindPopup(HostPopupMenu popup) => _popup = popup ?? throw new ArgumentNullException(nameof(popup));
+    /// <summary>실제 화면 장치의 현재 모드·변경·확인을 연결한다.</summary>
+    public void BindScreenMode(Func<uint> flags, Action<uint, bool> change, Action accept)
+    { _screenFlags = flags; _changeScreen = change; _acceptScreen = accept; }
 
     /// <summary>같은 실제 메뉴·창·큐와 후속 명령 경계를 빌린다.</summary>
     public HostMenuInput(HostMainMenu menu, HostHtmlWindows windows, HostHtmlFactory factory, InputQueue queue,
@@ -37,7 +43,7 @@ public sealed class HostMenuInput
     /// <summary>메인 버튼 명령을 원본처럼 즉시 큐 또는 한 칸의 다음 Tick에 예약한다.</summary>
     public void Post(MainMenuAction action)
     {
-        if (action.Command is "AskEditFort" or "RequestQuitApp")
+        if (action.Command is "AskEditFort" or "RequestQuitApp" or "ScreenModeAbsChange")
             ScriptCommand.QueueScriptCommand(action.Command + "," + action.Argument, _queue, _strings,
                 new() { Lookup = DialogScriptCommands.Lookup, Unknown = name => throw new InvalidOperationException("메뉴 명령 조회 실패: " + name) });
         else _pending ??= action;
@@ -67,6 +73,9 @@ public sealed class HostMenuInput
         if (_menu.Route(input) != 0) { _changed(); return false; }
         uint code = input.Code & 0x03ffffff; bool released = (input.Code & InputCode.Release) != 0;
         if (code == HostPopupMenu.QueuedSelectCommand && _popup != null) { if (!released) Post(_popup.Select(unchecked((uint)input.Y))); return false; }
+        if (code == 0x02000030) { if (!released) { (_changeScreen ?? throw new InvalidOperationException("화면 모드 장치 미연결"))(unchecked((uint)input.Y), true); _changed(); } return false; }
+        if (code == 0x02000002) { if (!released) { uint previous = (_screenFlags ?? throw new InvalidOperationException("현재 화면 모드 미연결"))(); (_changeScreen ?? throw new InvalidOperationException("화면 모드 장치 미연결"))(previous ^ unchecked((uint)input.Y), false); ShowTell($"DirectDrawVerify({previous})"); } return false; }
+        if (code == 0x020000e4) { if (!released) { (_acceptScreen ?? throw new InvalidOperationException("화면 모드 확인 미연결"))(); ShowTell("AdjustDirectDraw"); } return false; }
         if (code == 0x020000be) { _windows.RequestCloseAll(); _changed(); return false; }
         if (code == 0x02000089) return false;
         if (code == 0x02000095) { if (!released) ShowTell(_strings.Resolve(unchecked((uint)input.Y))); return false; }

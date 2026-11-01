@@ -456,6 +456,8 @@ public sealed class HostStartupSceneTests
         router = new HostMenuInput(menu, windows, factory, queue, strings, () => { }, action => throw new InvalidOperationException(action.ToString()));
         int audioUpdates = 0;
         router.BindPopup(new HostPopupMenu(menu, windows, menus, screen, startup, () => { }, () => audioUpdates++));
+        var screenChanges = new List<(uint Mode, bool Remember)>(); int accepts = 0;
+        router.BindScreenMode(() => screen.Flags, (mode, remember) => { screenChanges.Add((mode, remember)); Assert.True(screen.SetMode(mode)); }, () => accepts++);
         var driver = new HostFrameDriver(screen, queue); driver.BindInputHandler(router.Dispatch);
         var help = menu.ControlPoint("Help")!.Value;
         menu.Route(new(InputCode.LeftButton, help.X, help.Y)); menu.Route(new(InputCode.LeftButton | InputCode.Release, help.X, help.Y)); router.Tick();
@@ -482,6 +484,12 @@ public sealed class HostStartupSceneTests
         router.NotifyPointer(new(0, x, y)); queue.Push(InputCode.LeftButton, x, y); Assert.False(driver.ProcessInput()); router.Tick();
         Assert.Equal(2, startup.Configuration.GetInt("soundVolume")); Assert.Equal(1, audioUpdates);
         windows.CloseAll();
+        router.Post(new("ScreenModeAbsChange", "10")); Assert.False(driver.ProcessInput()); Assert.Equal((10u, true), Assert.Single(screenChanges));
+        uint before = screen.Flags; queue.PushCommand(0x02000002, 0, (int)ScreenMode.Clouds); Assert.False(driver.ProcessInput());
+        Assert.Equal((before ^ ScreenMode.Clouds, false), screenChanges[1]);
+        Assert.Equal("DirectDrawVerify", System.Text.Encoding.Latin1.GetString(startup.TellState.Current).Split('\0')[0]);
+        windows.CloseAll(); queue.PushCommand(0x020000e4, 0, 1); Assert.False(driver.ProcessInput()); Assert.Equal(1, accepts);
+        Assert.Equal("AdjustDirectDraw", System.Text.Encoding.Latin1.GetString(startup.TellState.Current).Split('\0')[0]); windows.CloseAll();
     }
 
     /// <summary>여덟 실제 버튼의 눌림·해제를 원본 상위 명령과 인자로 전달한다.</summary>
