@@ -2865,3 +2865,9 @@ target_sources(netstorm_tests PRIVATE HtmlInputDialogTests.cpp)
 add_executable(netstorm_html_input_dialog_tests FocusedTestMain.cpp HtmlInputDialogTests.cpp SaveFortNameDialogTests.cpp)
 target_link_libraries(netstorm_html_input_dialog_tests PRIVATE netstorm)
 netstorm_apply_compiler_options(netstorm_html_input_dialog_tests)
+
+#원문 언어 선택/용어표 수명만 창 없이 집중 확인한다(710).
+target_sources(netstorm_tests PRIVATE LanguageOptionsTests.cpp)
+add_executable(netstorm_language_options_tests FocusedTestMain.cpp LanguageOptionsTests.cpp ClientSoundViewTests.cpp ClientAudioTests.cpp)
+target_link_libraries(netstorm_language_options_tests PRIVATE netstorm)
+netstorm_apply_compiler_options(netstorm_language_options_tests)

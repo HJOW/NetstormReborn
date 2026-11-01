@@ -1,0 +1,29 @@
+{
+  "unit": 710,
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23"
+  },
+  "observations": 4655,
+  "detect": 4096,
+  "find": 13,
+  "options": 546,
+  "nativeBodies": [
+    "004de390",
+    "004de420",
+    "004dea40",
+    "00435220..0043529f checkpoint"
+  ],
+  "explicitBoundaries": [
+    "GetUserDefaultLangID returns supplied WORD",
+    "00441300 ConfigReadString",
+    "00441db0 LoadLanguage records current/published",
+    "004c2630 log",
+    "0043529f prefix stop; not whole parent return"
+  ],
+  "gameExecutions": 0,
+  "multiplayerExecutions": 0,
+  "peSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+  "fixtureSha256": "f000c79aaa9ebfae18cd77696f412db4ab9dec7a1c38e7a13b27f1237e8f255e"
+}

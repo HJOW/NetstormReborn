@@ -139,6 +139,7 @@ public:
     std::span<const std::uint8_t> ChatRecords() const;
     // 번역 표와 동일한 현재 원본 언어 번호를 지식 창의 언어3 설명 생략 분기에 제공한다.
     int LanguageNumber() const { return languageNumber_; }
+    void InterpretLanguageOptions(); //원문 언어 부분만 현재 Config에 적용한다. 창/OS 감지는 수행하지 않는다.
     // 검사 전용으로 이미 그려진 화면을 지정 파일에 저장한다.
     void Capture(const std::filesystem::path& path);
     void SaveGifScreenshot(); //4db140의 같은 누적 번호/설정·논리 화면을 써서 GIF를 저장한다.
@@ -310,7 +311,10 @@ private:
     // translations_: 용어 키를 언어별 표시 문자열로 바꾸는 번역표.
     std::optional<o::XlatTable> translations_;
     // languageNumber_: 현재 언어를 언어 표에서 찾는 번호.
-    int languageNumber_{1};
+    std::int32_t languageNumber_{-1}; //원문00542384의 공개 번호이며 두 번째 용어표 읽기 뒤 바뀐다.
+    std::int32_t currentLanguage_{-1}; //원문005435b4의 현재 번호이며 첫 읽기 전에 바뀐다.
+    std::uint32_t detectedLanguage_{}; //원문0054db58의 최초 OS 감지 번호다.
+    bool languageOptionsReady_{}; //최초 설정 적재 뒤에만 동기 변경에서 언어 부분을 재해석한다.
     // instance_: 현재 Win32 프로그램 인스턴스 핸들.
     NativeHandle instance_{};          // DAT_0054dbf8
     NativeHandle resources_{};         // 원본 실행 파일을 자료로 연 모듈(아이콘·커서·로딩 그림). 없으면 널.

@@ -1,0 +1,59 @@
+{
+  "unit": 710,
+  "date": "2026-11-02",
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23"
+  },
+  "version": "11.01",
+  "exeSha256": "f083f2e6ff76d4a5e677683beab27c557527f4e5867689d257f5685b4c9b6ea9",
+  "nativeInputs": 4655,
+  "newTests": 3,
+  "focusedTests": 6,
+  "failedChecks": 0,
+  "buildWarnings": 0,
+  "buildErrors": 0,
+  "initialFailures": [
+    "focused-v1: 실제 Client 준비에 일반 Append로 인자 문자열을 넣어2단언 실패; 원문4655/부분효과는 통과",
+    "build-v2: 테스트 AppendArguments reader 인자 누락 C2660; 최종v3 수정"
+  ],
+  "nativeReport": "cpppj/language-options-native-20261102.json",
+  "newFixtures": 1,
+  "protectedExisting": 2626,
+  "protectedFiles": 2627,
+  "protectedChanged": 0,
+  "gameExecutions": 0,
+  "multiplayerTests": 0,
+  "networkTests": 0,
+  "limits": [
+    "원문435220 언어 prefix checkpoint이며 전체 부모/ABI 완료 아님",
+    "OS 감지 번호를 모든 OS 언어 자동 UI 선택으로 확대하지 않음",
+    "원문 다중 Xlat 최초 장부/언어 명령·전체 번역 UI/폰트·6차 한국어는 별도",
+    "명시 missionSpec 및 english 부재 정책 유지",
+    "CD 언어 부모 전체 신규 대조 없음; 기존 CD 음향 adapter 검사만 포함",
+    "전체34/전체C++/CTest/ZIP·실제 PCM/물리입력/GUI·포획/희생/특정 적 공격/승리 재현0"
+  ],
+  "sha256": {
+    ".gitattributes": "637d2a3f375270d0b760aee9bee67a34eb012cfbb6c995e6c3f506a11eac22d1",
+    "cpppj/src/CMakeLists.txt": "290ac135a8093ac03af3a367ec950a77ba98f58ffe573aa728c2742214f47e88",
+    "cpppj/src/client/ClientMain.cpp": "a68121dd22dc3b088febbd76106e9107aa4bd1717903bd8438cac7c2e9f528cf",
+    "cpppj/src/client/ClientMain.h": "1ca31e03c9f401b0c7b684b05e8960e3559d7ebf8bce2e6b8bd0a864f17995de",
+    "cpppj/src/client/LanguageOptions.cpp": "efd5e703156870534309466c48f4fbc5d151abd0985706cbfb2c2bda6693fb25",
+    "cpppj/src/client/LanguageOptions.h": "a8a1c4016fac286926e8e5a2f9c8b9699b466511dad61b9543cdc6d940ab839e",
+    "cpppj/tests/CMakeLists.txt": "2bbde4d46e57a0708040aba3107341f0bc51c030cd59cfa520f5d0ce5d8eaaff",
+    "cpppj/tests/LanguageOptionsTests.cpp": "46e822733de87a872e26144e808ec93094c930e3b9613b5362e0486c67067dd2",
+    "tools/decomp_language_options.py": "c4e92749705ac798c76ed1766379c673dcc7662639334048e9b812c21d44ae95",
+    "AGENTS.md": "544643cf731393ecb4784490aa7f2794e8736742582907cce29453e6ac46f15e"
+  },
+  "logsSha256": {
+    "build-v1.log": "29439d0443b7a904c1376e36eca2520d2ca0cf549aff759c5aa5350a61b3dc34",
+    "build-v2.log": "0f83597c146553459794496ff6c5e53dd037fb863f2d45a94c9f1b7d050d713a",
+    "build-v3.log": "f887b8c2f566e35ce64c7c16721b651edc8c6a81acfb1c73595b329d590a6b7f",
+    "focused-v1.log": "0c0fc4e389ab8278db16cbabae9dc7dbe35fbe1e8ef2cf897ce5d34ed28b6fd5",
+    "focused-v2.log": "083104a0203d35e0f332ffbbf6ec17c4b2912ac4de69be3745548e406c137f4f",
+    "audio-view-v1.log": "94a6c0dc8db9b78dbb0b491c12ccecc7afa2596d300715ba04928b9ecf66b221",
+    "audio-owner-v1.log": "9cd2687704768e44ad617a6f1e3178e1c5aaf385c7a1c2eb2b6f236adb5372b3",
+    "native-v1.log": "02142ead4a9378979e80156ecf3aa4370793466d3951c110a97f224d14b03935"
+  }
+}

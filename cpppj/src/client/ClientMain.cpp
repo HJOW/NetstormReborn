@@ -6,6 +6,7 @@
 //       Renderer·원본 글꼴/커서·메뉴와 저장 미션의 기본 지형/객체·선택/이동을 연결했다. 건설/전투는 후속이다.
 #include "client/ClientMain.h"
 #include "client/IntroMenu.h" // 시작 시 실제 파일 존재만으로 Intro 표시값을 정한다.
+#include "client/LanguageOptions.h" //원문 언어 이름/OS 영어 변형과 용어표 재조회 순서를 공유한다.
 #include "client/ProductPresentation.h"
 #include "client/RawCampaignSession.h" //Sleep 뒤의 실제 프레임말 Player 결과 소비에 장기 Session을 빌린다.
 #include "client/ClientDiagnostics.h"
@@ -99,8 +100,7 @@ constexpr int kPatchMinorVersion = 78;
 constexpr int kCdMinorVersion = 72;
 // 원본 시작 표시 파일은 d/ 밖, 게임 폴더에 둔다(00436dd0·00436df0·00436e40).
 constexpr const char* kFullScreenStateFile = "fullscreenStateFile.dat";
-// 언어 이름 → 언어 번호(원본 FUN_004de420). 0·1은 영어다.
-constexpr std::array<const char*, 7> kLanguages{"english", "english", "french", "german", "spanish", "japanese", "portuguese"};
+// 언어 이름/번호 표는 LanguageOptions의 보호 PE 순서와 정확 비교를 공유한다.
 
 // 창 프로시저가 찾는 단 하나의 클라이언트(원본은 전역 변수를 쓴다).
 Client* g_client = nullptr;
@@ -195,7 +195,7 @@ Client::Client(ClientOptions options)
     configuration_.Registry().environment = Environment;
     if (g_client) throw std::logic_error("Only one client may exist");
     // 원본00558dd0의 Set 직후 동기 시점에 현재 복원된 설정 전역을 갱신한다.
-    configuration_.onChanged = [this] { configuration_.ReadInt("inputLineOff",chatWindowGlobals_->inputLineOff);InterpretFortFileOptions();configuration_.ReadInt("tracelevel",trace_->log.level);InterpretScriptMenuOptions();kencloudGlobals_->ReadOptions(configuration_);rendererFrame_->ReadOptions();InterpretMainMenuOptions();InterpretOwnerColorOptions(); }; //같은 설정 변경에서 입력줄요청/저장/진단/메뉴/구름·tellTips·배너 현재값을 동기 반영하며 새 장치를 만들지 않는다.
+    configuration_.onChanged = [this] { if (languageOptionsReady_) InterpretLanguageOptions();configuration_.ReadInt("inputLineOff",chatWindowGlobals_->inputLineOff);InterpretFortFileOptions();configuration_.ReadInt("tracelevel",trace_->log.level);InterpretScriptMenuOptions();kencloudGlobals_->ReadOptions(configuration_);rendererFrame_->ReadOptions();InterpretMainMenuOptions();InterpretOwnerColorOptions(); }; //같은 설정 변경에서 입력줄요청/저장/진단/메뉴/구름·tellTips·배너 현재값을 동기 반영하며 새 장치를 만들지 않는다.
     g_client = this;
 }
 // 월드/소리 프로세스→음악·음향→화면→GDI/창 순서로 참조 대상보다 사용자를 먼저 정리한다.
@@ -282,6 +282,7 @@ int Client::Run() {
     const auto installUtf8=std::filesystem::absolute(options_.gameDirectory).lexically_normal().u8string();startup.installDir.assign(installUtf8.begin(),installUtf8.end()); // 원본ANSI와 달리 Windows10/11의 한글 경로를 유효 UTF-8 설정 값으로 전달한다.
     startup.cdDir=FindWindowsCdDirectory(); // 원문00440d40의 CD-ROM/깊이2 탐색 결과다. 부재는 기존 InstallDir fallback이며 W API만 Windows10/11 호환 경계다.
     InitializeNativeSecondaryFiles(startup.cdDir); //설정 파일을 읽기 전에 원문41bc30의 보조 TAFF와41a4f0의 실제 root를 연결한다.
+    detectedLanguage_=DetectOriginalLanguage(GetUserDefaultLangID()); //원문00438dc0의 최초 OS 감지이며 매 Config 변경 때 감지하지 않는다.
     configuration_.Startup(startup);
     ApplyProductVersion(configuration_); // 원본 시작 계약 뒤 사용자 요청의 제품 표시11.01을 적용한다. 원본 데이터 판본은 바꾸지 않는다.
     SaveOptions(); // 원본 FUN_004359f0 → FUN_00441d10(0): 설정 해석 전에 한 번 저장한다.
@@ -436,6 +437,7 @@ bool Client::MovieAudioMuted() const { return options_.audioMute; }
 void Client::InitializeNativeAudio() {
     if (audio_ || disabledAudio_) throw std::logic_error("실제 Client 음향의 중복 초기화");
     if (!options_.noAudio && (!screen_ || !window_)) throw std::logic_error("실제 음향 초기화 전 화면·창 필요");
+    const auto audioLanguage=options_.noAudio && languageNumber_==-1 ? 0U : static_cast<std::uint32_t>(languageNumber_); //창 없는 독립 noAudio 초기화의 미정 번호는 기존 영문 파일 장치를 유지한다. 실제 Run은 언어 해석을 마친다.
     // "init sound"(FUN_004aa600 → FUN_004a9520("thunderCrack.wav") → FUN_004aadd0): 소리 장치·음악 스레드.
     // 장치가 없거나 열리지 않으면 소리 없이 계속 실행한다. noAudio도 실제 이름표/재생 계층은 유지한다.
     if (!options_.noAudio) {
@@ -448,7 +450,7 @@ void Client::InitializeNativeAudio() {
         scene.loadPalette=[this](std::string_view name) { LoadScenePalette(name); };
         // 원본 00469c80은 천둥 효과음을 내기 전에 번개 프로세스를 생성한다. 소리 옵션과 별개로 진행한다.
         scene.thunderFlash=[this]() { StartThunderFlash(); };
-        audio_ = std::make_unique<ClientAudio>(options_.gameDirectory, options_.edition, kLanguages[static_cast<std::size_t>(languageNumber_)],
+        audio_ = std::make_unique<ClientAudio>(options_.gameDirectory, options_.edition, std::string(OriginalLanguageName(audioLanguage)),
             [this]() { return clock_.WallSeconds(timeGetTime()); },randomGlobals_->Game(),std::move(scene)); // 원문 전투 음악도 게임/SP/AI와 같은00532710을 소비한다.
         audio_->SetSceneTints(screen_->Colors().weather);
         audio_->SetView({0,0,0,0,screenWidth_,screenHeight_});
@@ -456,7 +458,7 @@ void Client::InitializeNativeAudio() {
         if (options_.audioMute) audio_->PushMute();
     } else {
         // 생성자/이름표 초기화는 OS 장치와 음악 스레드를 열지 않는다. 실제 Play가 미초기화 상태에서 0을 반환한다.
-        disabledAudio_=std::make_unique<ClientAudio>(options_.gameDirectory,options_.edition,kLanguages[static_cast<std::size_t>(languageNumber_)],
+        disabledAudio_=std::make_unique<ClientAudio>(options_.gameDirectory,options_.edition,std::string(OriginalLanguageName(audioLanguage)),
             [this] { return clock_.WallSeconds(timeGetTime()); },randomGlobals_->Game()); // 장치 없는 검사도 같은 난수 소비 계약을 유지한다.
         disabledAudio_->Names().Initialize();disabledAudio_->SetView({0,0,0,0,screenWidth_,screenHeight_});
     }
@@ -546,19 +548,22 @@ void Client::DetectIntroAvailability() { DetectIntroMovie(localStateGlobals_->In
 void Client::InterpretOwnerColorOptions() { // 준비 전의 원문 무시와 현재 DWORD·같은 전체 dirty 증가를 보존한다.
     colorSortInput_->OwnerTables()->SetEnabled(std::bit_cast<std::uint32_t>(configuration_.GetInt("useBanners")),kencloudGlobals_->WorldRedraw());
 }
+// 원문435248..43529f의 언어 부분은 창 없이도 같은 Client/Registry에서 호출한다.
+void Client::InterpretLanguageOptions() {
+    languageOptionsReady_=true;LanguageOptionHooks hooks;
+    hooks.read=[this] { std::string name;configuration_.ReadString("currentLanguage",name);return name; };
+    hooks.load=[this](auto name) { configuration_.LoadLanguage(name); };
+    if (ApplyOriginalLanguageOption(detectedLanguage_,currentLanguage_,languageNumber_,hooks)) {
+        translations_.reset(); //원래 선택과 다른 언어의 이전 단일 표가 남아 잘못 번역되는 것을 막는다. 전체 원문 다국어 Xlat 장부 수명은 별도다.
+        const auto name=OriginalLanguageName(static_cast<std::uint32_t>(languageNumber_));
+        if (const auto bytes=files_.TryRead("d/xlat."+std::string(name))) translations_.emplace(o::DecodeOriginalText(*bytes));
+    }
+}
 // 원본 00435220에서 지금 쓰는 설정만 읽는다. 나머지 키(네트워크 등)의 전체 부모 순서는 후속이다.
 void Client::InterpretOptions() {
     configuration_.ReadInt("tracelevel",trace_->log.level); // 원문00542658의 같은 장기 필터를 읽으며 덤프 부모의 임시30과 구별한다.
     rendererFrame_->ReadOptions(); //같은 원문 showSoftAsserts의 현재값을 실제 Renderer 진단 관문에 적용한다.
-    std::string language;
-    configuration_.ReadString("currentLanguage", language);
-    // 언어 번호는 이름 표의 위치다. 1번(english)부터 찾는다.
-    for (std::size_t i = 1; i < kLanguages.size(); ++i)
-        if (o::AsciiLower(language) == kLanguages[i]) { languageNumber_ = static_cast<int>(i); break; }
-    if (!language.empty()) {
-        configuration_.LoadLanguage(language); // 원본 FUN_00441db0: 언어 용어표.
-        if (const auto bytes = files_.TryRead("d/xlat." + language)) translations_.emplace(o::DecodeOriginalText(*bytes));
-    }
+    InterpretLanguageOptions(); //실제 current/published와 같은 Config를 원문 선택 순서로 갱신한다.
     std::int32_t width = 0, height = 0;
     configuration_.ReadInt("SCREENW", width);
     configuration_.ReadInt("SCREENH", height);
