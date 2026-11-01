@@ -1,0 +1,17 @@
+{
+  "unit": 679,
+  "date": "2026-11-01",
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "productChanged": false,
+  "currentProductUnit": 678,
+  "exeSha256": "d0281224c6d1d2637faa2f04df936c5994efbd256f6c3dc4cab70f3abc220fee",
+  "baseline": [{"target": "netstorm_viewspot_tests", "testsPerRun": 5, "runs": 2, "failedChecks": 0}, {"target": "netstorm_translated_pixels_tests", "tests": 31, "failedChecks": 0}],
+  "detected": [{"name": "viewspot-no-paren-skip", "failedTests": 2, "failedChecks": 26}, {"name": "viewspot-skip-all-parens", "failedTests": 1, "failedChecks": 1}, {"name": "viewspot-axis-swap", "failedTests": 2, "failedChecks": 53}, {"name": "viewspot-second-digit-delimiter", "failedTests": 1, "failedChecks": 8}, {"name": "spritedraw-translated-source", "failedTests": 1, "failedChecks": 1}],
+  "historicalEquivalent": {"name": "viewspot-second-delimiter", "executed": true, "detected": false, "firstBatchExit": 1, "reason": "x는 decimal atol의 종료 문자이고 두 번째 토큰의 다음 위치는 미사용이므로 관측 결과가 같음"},
+  "processTests": {"tests": 3, "failed": 0, "faultCombinations": 6},
+  "sync": {"finalCopied": 0, "finalRemoved": 0, "rootMutationSourcesUnchanged": true, "copiedMutationFilesRestored": true},
+  "rawLogs": ["extracted/cpp-viewspot-679-mutation-v1.log", "extracted/cpp-viewspot-679-mutation-v2.log", "extracted/cpp-viewspot-679-mutation-v3.log", "extracted/cpp-viewspot-679-mutation-v4.log", "extracted/cpp-translated-shadow-679-mutation-v1.log", "extracted/cpp-mutation-process-679-tests-v2.log"],
+  "notPerformed": ["전체 C++", "주검사 EXE 재빌드", "게임/전체34/GUI/PCM/물리 입력", "포획/희생/특정 적 공격/승리/공중3종/신규MP 검사"]
+}

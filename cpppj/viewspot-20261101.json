@@ -191,14 +191,17 @@
     "registered": [
       "viewspot-no-paren-skip",
       "viewspot-skip-all-parens",
-      "viewspot-second-delimiter",
+      "viewspot-second-digit-delimiter",
       "viewspot-axis-swap"
     ],
     "sourcePatternsChecked": "--list에서 각 원문 1곳",
-    "executed": 0,
-    "detected": null,
-    "status": "미실행. 격리 사본의 전체 빌드가 오래 걸려 사용자 요청으로 중단했고 변이 결과가 없다.",
-    "log": "extracted/cpp-viewspot-676/mutation-v1.log"
+    "executed": 4,
+    "detected": 4,
+    "status": "679 지정 집중 대상에서 실제 결함4종 검출. 최초 x) 구분자 변이는 동치로 확인하고 숫자0 구분자 변이로 교정했다. 기대값/기능 코드는 유지했다.",
+    "initial676": {"executed": 0, "detected": null, "status": "사용자 요청으로 격리 빌드를 중단해 미실행", "log": "extracted/cpp-viewspot-676/mutation-v1.log"},
+    "equivalent679": {"name": "viewspot-second-delimiter", "detected": false, "firstBatchExit": 1, "reason": "x는 atol 종료 문자이며 두 번째 토큰 다음 위치는 미사용이라 관측 결과가 같음"},
+    "followupUnit": 679,
+    "logs": ["extracted/cpp-viewspot-679-mutation-v3.log", "extracted/cpp-viewspot-679-mutation-v4.log"]
   },
   "protected": {
     "beforeCount": 2599,
@@ -213,7 +216,6 @@
     "after": "extracted/cpp-viewspot-676/protected-after.json"
   },
   "notPerformed": [
-    "변이 4종",
     "전체34",
     "전체 C++",
     "주 검사 EXE 재빌드",
@@ -224,7 +226,7 @@
     "원본 게임 나란히 비교"
   ],
   "limitations": [
-    "변이를 실행하지 않아 새 검사의 검출력이 입증되지 않았다.",
+    "679에서 실제 결함 변이4종을 검출했으나 전체 입력/픽셀/게임 동일성을 뜻하지 않는다.",
     "패킷·디버그 writer 분류는 호출 관계와 PE 참조의 정적 판정이며 실행으로 확인하지 않았다.",
     "0055a484는 정밀 C에서 0 쓰기 1곳뿐이나 간접 alias 전체 부재의 증명은 아니다.",
     "다른 ViewSpot 사용 맵은 같은 경로이나 실제 진입은 RunForIt만 확인했다.",

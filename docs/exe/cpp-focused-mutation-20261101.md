@@ -1,0 +1,37 @@
+# 지정 집중 변이 검사와 동치 변이 정정 — 단위679
+
+작업/마지막 전체 정밀 디컴파일 호스트는 **HJOW-Athlon / 2026-10-23**이다. 게임 제품은678 그대로다. 변이 확인은 기존 fixture를 쓰며 새 디컴파일·게임·MP 검사는 없다. 676과678에서 남긴 변이 확인을 마쳤다. 별도680 준비의 Native 관측은 마지막 문단에 구분한다.
+
+## 기준선 범위와 도구
+
+기존 `--focused`는 변이 뒤 검사만 좁혔고 기준선은 전체 C++였다. 금지된 공격/포획/희생/승리 재현을 피하도록 `--test-target`을 추가했다. `--focused`와 명시 `--only`가 있어야 지정할 수 있고, 같은 집중 EXE로 기준선과 변이를 실행한다. 지정 실행의 복사 범위도 CMakeLists와src/tests/cmake/third_party로 제한해 과거 회복/스냅샷을 순회하지 않는다. 사본 쓰기/삭제 전에 지정 절대 경로 안인지 검사한다.
+
+프로세스가 실행되지 않거나 크래시·빈 필터·실패 목록/요약/종료코드가 모순되면 성공으로 집계하지 않는다. 명시 고장6조합과 정상 기준선/의도한 실패의 Python 검사3개가 통과했다. 최종 사본 동기화는복사0·삭제0이었다.
+
+## 결과
+
+| 변이 | 검출한 검사 수 | 실패 CHECK |
+| --- | ---: | ---: |
+| `viewspot-no-paren-skip` |2 |26 |
+| `viewspot-skip-all-parens` |1 |1 |
+| `viewspot-axis-swap` |2 |53 |
+| `viewspot-second-digit-delimiter` |1 |8 |
+| `spritedraw-translated-source` |1 |1 |
+
+실제로 결과가 바뀌는5종을 모두 검출했다. ViewSpot 기준선은각5개, 그림자는31개가 실패0이었다. 주검사 EXE나 전체 C++를 실행한 결과가 아니다. 제품의 기대값·원본 fixture·기능 소스는변경하지 않았다. 대상 CameraHome.cpp/SpriteDraw.cpp 사본이 현재 원본과 바이트 단위로 같게 복구됐음을 확인했다. 사본의 마지막 EXE/라이브러리는 변이 산출물일 수 있으므로 제품으로 사용하지 않는다.
+
+### 동치 변이
+
+첫 묶음은기존4종 중3종을 검출했고 `viewspot-second-delimiter`의 `")"→"x)"`는검출하지 못해 종료1이었다. 이 실패 기록을 보존했다. 검사를 약하게 만든 것이 아니다. 두 번째 토큰의 다음 포인터는 쓰이지 않고, unquoted `x`는원래 decimal atol이 멈추는 비숫자다. 토큰을그 앞에서 자르거나 `x` 뒤를 더 읽어도 결과 숫자는같다. quoted `x`는두 토큰 규칙 모두 구분자로 쓰지 않는다. 따라서 관측 가능한 ViewSpot 결과가 같은 동치 변이였다.
+
+이를 잘못된 숫자0 구분자 `"0)"` 변이로 교체했고 기존34행 검사에서8 CHECK 실패로 검출했다. 추가 Native 기대값이나 C++ 검사는 만들지 않았다. 첫4종 결과(3검출/1미검출)와 교정 뒤 새1종 검출을 나누어 기록한다. 과거 그림자 변이의 반대 판정은678에서 이미 정정했고 이번에는실제로 잘못된 소스 치환으로 되돌렸을 때 어댑터 검사가 실패함을 확인했다.
+
+## 실행 이력과 원시
+
+- `extracted/cpp-viewspot-679-mutation-v1.log`·`v2.log`: 과거 자료까지 보던 사본 동기화의 성능 문제로 중단했다. 기준선/변이 검사 본문 실행0이다.
+- `extracted/cpp-viewspot-679-mutation-v3.log`: CMake 입력만 동기화한 뒤 지정 라이브러리/집중 대상을 빌드했다. 기준선 통과·기존4종 중3검출/1동치 미검출, 종료1이다. 공통 라이브러리의 큰 증분 빌드 시간을 검사 결과로 대신 세지 않는다.
+- `extracted/cpp-viewspot-679-mutation-v4.log`: 교정한 숫자 구분자1종을 검출, 종료0이다.
+- `extracted/cpp-translated-shadow-679-mutation-v1.log`: 기준선31개 통과와 대상 변환 어댑터1종 검출, 종료0이다.
+- `extracted/cpp-mutation-process-679-tests-v2.log`: Python3개 최종 통과다.
+
+다음은 MoveDialog의 실제 Client 연결이다. 별도680 준비로 원문004c8df0/strchr의73입력/219관측을 `extracted/cpp-move-dialog-680/native-v1/`에 동결했고, 아직 등록/컴파일하지 않은 MoveDialog.h/cpp·MoveDialogTests.cpp와 `tools/decomp_move_dialog.py`를 준비했다. 이는679 제품 기능 완료가 아니다. 현재 제품 SHA256은678의 `d0281224c6d1d2637faa2f04df936c5994efbd256f6c3dc4cab70f3abc220fee`다.

@@ -5,18 +5,22 @@
 **저장소의 소스는 바꾸지 않는다.** cpppj(빌드 폴더 제외)를 Git 제외 폴더 extracted/mutation-work/cpppj 로 복사하고
 별도 빌드 폴더(extracted/mutation-work/build)에서 변이마다 사본의 파일 하나를 바꿔 Release 빌드와 콘솔 검사를 실행한다.
 그래서 확인이 도는 동안 커밋해도 변이된 소스가 저장소에 들어가지 않는다. 사본은 실행할 때마다 저장소와 다시 맞춘다.
-게임·클론 창·원본 실행 파일은 실행하지 않는다. 첫 실행은 사본 전체를 빌드하므로 몇 분 더 걸린다.
+게임·클론 창·원본 실행 파일은 실행하지 않는다. 기본 실행은 사본 전체를 빌드한다.
+--test-target은 CMake 입력 디렉터리만 동기화하고 지정 집중 대상의 기준선/변이만 실행한다.
 
     python -X utf8 tools/cpp_mutation_check.py --list           # 변이 목록과 적용 가능 여부만 확인(빌드 없음)
     python -X utf8 tools/cpp_mutation_check.py                  # 모든 변이 실행
     python -X utf8 tools/cpp_mutation_check.py --only process-zero-keeps-running
     python -X utf8 tools/cpp_mutation_check.py --focused --only place-pop-flag-placed   # 변이마다 기대 접두사의 검사만 실행(빠름)
+    python -X utf8 tools/cpp_mutation_check.py --focused --test-target netstorm_viewspot_tests --only viewspot-axis-swap
     python -X utf8 tools/cpp_mutation_check.py --cmake "C:/.../cmake.exe"
 
 각 변이는 기대하는 실패 검사 이름의 접두사를 갖는다. 그 접두사의 검사가 하나도 실패하지 않으면 "미검출"로 보고한다.
 변이를 적용하지 않은 사본의 검사가 먼저 모두 통과해야 한다(아니면 "검출"이 의미가 없으므로 중단한다).
 """
 import argparse
+import os
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -29,7 +33,7 @@ SOURCE = WORK / 'cpppj'
 BUILD = WORK / 'build'
 TESTS = BUILD / 'bin/Release/netstorm_tests.exe'
 # 사본에 복사하지 않는 저장소 cpppj 안의 최상위 폴더(빌드 산출물).
-EXCLUDED = {'build'}
+EXCLUDED = {'build', 'hist'} # 빌드 입력이 아닌 제품 산출물/과거 스냅샷은 순회 자체를 생략한다.
 # 변이 목록: 이름, 대상 파일, 바꿀 원문(파일에 정확히 한 번 있어야 한다), 바꾼 문장, 실패해야 하는 검사 이름 접두사.
 MUTATIONS = [
     # 대본 ViewSpot의 인자 해석이 원본 토큰 규칙과 달라지면 기계어 대조가 잡아야 한다(단위676).
@@ -37,8 +41,8 @@ MUTATIONS = [
          before="!text.empty() && text.front()=='(' ? 1U : 0U",after='0U',note='맨 앞 괄호를 건너뛰지 않음'),
     dict(name='viewspot-skip-all-parens',file='cpppj/src/client/CameraHome.cpp',expect='ViewSpot_',
          before="!text.empty() && text.front()=='(' ? 1U : 0U",after="text.find_first_not_of('(')==std::string_view::npos ? text.size() : text.find_first_not_of('(')",note='여러 괄호를 모두 건너뜀'),
-    dict(name='viewspot-second-delimiter',file='cpppj/src/client/CameraHome.cpp',expect='ViewSpot_',
-         before='ReadRawTextToken(text,first.next,")")',after='ReadRawTextToken(text,first.next,"x)")',note='두 번째 토큰도 x에서 멈춤'),
+    dict(name='viewspot-second-digit-delimiter',file='cpppj/src/client/CameraHome.cpp',expect='ViewSpot_',
+         before='ReadRawTextToken(text,first.next,")")',after='ReadRawTextToken(text,first.next,"0)")',note='두 번째 토큰의 유효 숫자0을 구분자로 잘못 처리함. 과거x추가는atol의종료문자라동치임(679)'),
     dict(name='viewspot-axis-swap',file='cpppj/src/client/CameraHome.cpp',expect='ViewSpot_',
          before='return {static_cast<float>(o::ConfigParseLong(first.text)),static_cast<float>(o::ConfigParseLong(second.text))};',
          after='return {static_cast<float>(o::ConfigParseLong(second.text)),static_cast<float>(o::ConfigParseLong(first.text))};',note='두 축을 뒤바꿈'),
@@ -1334,24 +1338,40 @@ def run(command):
     return result.returncode, result.stdout + result.stderr
 
 
-def sync():
+def source_files(root, build_only=False):
+    """최상위 산출물/과거 사본을 재귀 탐색하기 전에 제외하고 실제 빌드 입력만 읽는다."""
+    for directory, children, names in os.walk(root): # CMake의 실제 입력 디렉터리 밖 사본/회복 이력은 지정 집중 실행에 필요 없다.
+        if Path(directory) == root:
+            children[:] = [name for name in children if name not in EXCLUDED and (not build_only or name in {'src', 'tests', 'cmake', 'third_party'})]
+            if build_only:
+                names = [name for name in names if name == 'CMakeLists.txt']
+        for name in names: # 파일의 내용 비교 순서가 파일시스템 열거 순서와 같도록 유지한다.
+            yield Path(directory)/name
+
+
+def sync(build_only=False):
     """저장소의 cpppj(빌드 폴더 제외)를 작업 사본과 바이트 단위로 맞춘다. 달라진 파일만 써서 증분 빌드를 유지한다."""
     wanted, copied, removed = set(), 0, 0
+    workspace, destination = WORK.resolve(), SOURCE.resolve()
+    if destination.parent != workspace or destination.name != 'cpppj' or destination == REPOSITORY.resolve():
+        raise RuntimeError('변이 사본의 절대 경로가 지정 작업 폴더 안에 있지 않습니다')
     # 저장소 쪽 파일을 모두 훑어 사본에 없거나 다른 것만 복사한다.
-    for path in REPOSITORY.rglob('*'):
+    for path in source_files(REPOSITORY, build_only):
         relative = path.relative_to(REPOSITORY)
-        if relative.parts[0] in EXCLUDED or path.is_dir():
-            continue
         wanted.add(relative)
         target = SOURCE / relative
+        if not target.resolve().is_relative_to(destination):
+            raise RuntimeError('변이 사본 파일이 지정 경로 밖을 가리킵니다: '+str(target))
         data = path.read_bytes()
         if not target.exists() or target.read_bytes() != data:
             target.parent.mkdir(parents=True, exist_ok=True)
             target.write_bytes(data)
             copied += 1
     # 저장소에서 없어진 파일은 사본에서도 지운다.
-    for path in list(SOURCE.rglob('*')) if SOURCE.exists() else []:
+    for path in list(source_files(SOURCE, build_only)) if SOURCE.exists() else []:
         if path.is_file() and path.relative_to(SOURCE) not in wanted:
+            if not path.resolve().is_relative_to(destination):
+                raise RuntimeError('변이 사본의 삭제 파일이 지정 경로 밖을 가리킵니다: '+str(path))
             path.unlink()
             removed += 1
     return copied, removed
@@ -1364,17 +1384,26 @@ def configure(cmake):
     return run([cmake, '-S', str(SOURCE), '-B', str(BUILD)])
 
 
-def build(cmake):
+def build(cmake, target=None):
     """사본을 Release로 빌드한다. 빌드 오류는 변이가 컴파일되지 않았다는 뜻이므로 그대로 보고한다."""
-    return run([cmake, '--build', str(BUILD), '--config', 'Release'])
+    command = [cmake, '--build', str(BUILD), '--config', 'Release']
+    if target:
+        command.extend(['--target', target, '--parallel', '4', '--', '/p:UseMultiToolTask=true', '/p:MultiProcMaxCount=4', '/p:EnforceProcessCountAcrossBuilds=true'])
+    return run(command)
 
 
-def test(name_filter=None):
+def test(name_filter=None, target=None):
     """사본의 검사 실행 파일을 돌려 (실패한 검사 이름 목록, 실패 CHECK 수)를 돌려준다.
     name_filter를 주면 이름에 그 글자가 들어 있는 검사만 실행한다(검사 실행 파일의 --filter). 2026-10-10 --focused용으로 추가했다."""
-    _, output = run([str(TESTS)] + (['--filter', name_filter] if name_filter else []))
+    executable = BUILD/'bin/Release'/f'{target}.exe' if target else TESTS
+    code, output = run([str(executable)] + (['--filter', name_filter] if name_filter else []))
     failed = [line.split('] ', 1)[1].strip() for line in output.splitlines() if line.startswith('[FAIL]')]
-    checks = sum('CHECK failed' in line for line in output.splitlines())
+    summary = re.findall(r'(\d+) test\(s\), (\d+) failed check\(s\)', output)
+    if not summary or int(summary[-1][0]) == 0:
+        raise RuntimeError('실행된 검사 수를 확인할 수 없습니다:\n'+output[-2000:])
+    checks = int(summary[-1][1])
+    if (code == 0) != (checks == 0) or bool(failed) != bool(checks):
+        raise RuntimeError(f'검사 종료코드/실패 목록/요약 불일치(code={code}):\n'+output[-2000:])
     return failed, checks
 
 
@@ -1404,8 +1433,11 @@ def main():
     parser.add_argument('--only', action='append', help='이 이름의 변이만 실행한다(여러 번 줄 수 있다)')
     parser.add_argument('--cmake', default='cmake', help='cmake 실행 파일 경로')
     parser.add_argument('--focused', action='store_true',
-                        help='변이를 적용한 뒤에는 그 변이의 기대 접두사가 이름에 들어 있는 검사만 실행한다(변이 전 사본은 항상 전체 검사)')
+                        help='변이 뒤 기대 접두사만 실행한다. 기준선은 기본 전체 검사이며 --test-target 지정 시 해당 집중 대상만 실행한다')
+    parser.add_argument('--test-target', help='지정 집중 CMake 대상만 빌드하고 그 EXE로 기준선/변이 검사를 수행한다(--focused와 --only 필요)')
     options = parser.parse_args()
+    if options.test_target and (not options.focused or not options.only or not re.fullmatch(r'[A-Za-z0-9_]+', options.test_target)):
+        parser.error('--test-target은 유효한 대상 이름 및 --focused/--only와 함께 사용해야 합니다')
     # 알 수 없는 이름은 사본 빌드 전에 거부한다. 0개 실행을 성공으로 보고하지 않게 한다.
     unknown = set(options.only or ()) - {mutation['name'] for mutation in MUTATIONS}
     if unknown:
@@ -1417,21 +1449,21 @@ def main():
             _, _, count = check(mutation)
             print(f"{mutation['name']}\t{mutation['file']}\t원문 {count}곳\t{mutation['note']}")
         return 0 if all(check(m)[2] == 1 for m in selected) else 1
-    copied, removed = sync()
+    copied, removed = sync(bool(options.test_target))
     print(f'작업 사본 맞춤: 복사 {copied}개, 삭제 {removed}개 ({SOURCE})', flush=True)
     code, output = configure(options.cmake)
     if code != 0:
         print('사본 빌드 구성 실패:\n' + output[-2000:])
         return 2
-    code, output = build(options.cmake)
+    code, output = build(options.cmake, options.test_target)
     if code != 0:
         print('변이 전 사본 빌드 실패:\n' + output[-2000:])
         return 2
-    failed, checks = test()
+    failed, checks = test(target=options.test_target)
     if failed or checks:
         print(f"변이 전 사본의 검사가 실패한다({', '.join(failed)}; CHECK {checks}개). 먼저 저장소 소스를 고쳐야 한다.")
         return 2
-    print('변이 전 사본: 빌드·검사 통과', flush=True)
+    print(f'변이 전 사본: 빌드·검사 통과 (대상 {options.test_target or "netstorm_tests"})', flush=True)
     missed = 0
     # 변이는 한 번에 하나만 사본에 적용한다. 원래 바이트는 메모리에 들고 있다가 finally에서 되돌린다.
     for mutation in selected:
@@ -1444,13 +1476,13 @@ def main():
             text = original.decode('utf-8')
             before, after = adapt(text, mutation)
             path.write_bytes(text.replace(before, after).encode('utf-8'))
-            code, output = build(options.cmake)
+            code, output = build(options.cmake, options.test_target)
             if code != 0:
                 print(f"{mutation['name']}: 빌드 실패(변이가 컴파일되지 않음)")
                 missed += 1
                 continue
             # --focused이면 기대 접두사의 검사만 돌린다. 다른 검사의 실패는 볼 수 없지만 검출 여부 판정은 같다.
-            failed, checks = test(mutation['expect'] if options.focused else None)
+            failed, checks = test(mutation['expect'] if options.focused else None, options.test_target)
             hit = [name for name in failed if name.startswith(mutation['expect'])]
             status = '검출' if hit else '미검출'
             if not hit: missed += 1

@@ -10,7 +10,7 @@
   "build": {"exitCode": 0, "warnings": 0, "errors": 0, "earlyTestInvocation": "빌드 완료 전 아직 없는 집중 EXE 호출, 실제 검사 본문 실행0"},
   "live": {"processes": 2, "mission": "MasterOfWhirligigs", "exitCodes": [0, 0], "camera": [320, 221], "beforeGameSeconds": 10.833, "afterGameSeconds": 10.332},
   "protected": {"originals": 1394, "originalCD": 425, "fixtures": 781, "agents": 1, "unchanged": true},
-  "mutation": {"replacedIncorrectHistoricalCase": true, "registered": 1, "executed": 0},
+  "mutation": {"replacedIncorrectHistoricalCase": true, "registered": 1, "executed": 1, "followupUnit": 679, "detected": 1, "failedTests": 1, "failedChecks": 1, "log": "extracted/cpp-translated-shadow-679-mutation-v1.log"},
   "rawDirectory": "extracted/cpp-translated-shadow-678",
   "limits": ["실제1-2초기GUI와 독립 원문 표면 대조", "원본과 실제 새 다리 배치의 나란히 픽셀 검사는 아님", "새 원문은10.78 회전0·현재 signed WORD 범위", "전체34/전체 C++/새 ZIP/물리 입력/PCM/공중3종/신규MP 검사 없음", "포획/희생/특정 적 공격/승리 재현 없음"]
 }

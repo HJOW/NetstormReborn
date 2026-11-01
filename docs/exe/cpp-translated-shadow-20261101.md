@@ -28,6 +28,6 @@ C++ 변경 전에 `tools/decomp_translated_pixels.py`로 원본 `004dab90`·`004
 
 전체 정밀 표에는10.72의 대응 커널 `00466efd`가 있다. 이번 새 원문 표면은10.78만 실행했다. 회전0·일반 signed WORD/간격 범위의 현재 배율 계약을 유지하며 회전/극단 입력 전체로 확대하지 않는다. 기존 공중3종의 신규 생산/행동 검사, 공격/포획/희생/승리, 전체34·전체 C++·새 ZIP·PCM·물리 입력은 하지 않았다.
 
-과거 `spritedraw-shadow-destination` 변이는 올바른 대상 변환을 오류로 보는 잘못된 정의였다. 현재 도구를 `spritedraw-translated-source`로 교체하고 원문1곳을 확인했다. 아직 새 변이를 실행하지 않았으며 과거 검출11개를 새 픽셀 복원의 검출 근거로 세지 않는다. 다음 단위에서 이 변이와676의 ViewSpot4종을 지정 집중 대상으로 확인한다.
+과거 `spritedraw-shadow-destination` 변이는 올바른 대상 변환을 오류로 보는 잘못된 정의였다. `spritedraw-translated-source`로 교체한 뒤679에서 지정 기준선31개 통과와 실제 어댑터 검사1개/1 CHECK 실패로 변이 검출을 확인했다([679](cpp-focused-mutation-20261101.md)). 과거 검출11개를 새 픽셀 복원의 검출 근거로 세지 않는다.
 
 현재 EXE SHA256은 `d0281224c6d1d2637faa2f04df936c5994efbd256f6c3dc4cab70f3abc220fee`이다. 원시는 `extracted/cpp-translated-shadow-678/`, 원문 v1/v2 생성 로그는 그 옆 `cpp-translated-shadow-678-native-v*.log`이고, 커밋 보고는 [JSON](../../cpppj/translated-shadow-20261101.json)이다.

@@ -52,7 +52,7 @@ ViewSpot은 진입 검사가 잡지 못하는 누락이었으므로, 공식 대�
 
 **C++ 검사:** 집중 대상 `netstorm_viewspot_tests` 5개(새2·기존3) 실패0. 기존 3개는 초기 시야 대조다.
 
-**변이 확인 (미실행):** `tools/cpp_mutation_check.py`에 `viewspot-no-paren-skip`·`viewspot-skip-all-parens`·`viewspot-second-delimiter`·`viewspot-axis-swap` 4종을 등록하고, 각 원문이 소스에 1곳씩 있음을 `--list`로 확인했다. 격리 사본의 전체 빌드가 오래 걸려 **사용자 요청으로 빌드를 중단했고 4종 모두 실행하지 않았다.** 로그 `extracted/cpp-viewspot-676/mutation-v1.log`에는 사본 동기화 1줄만 있다. 새 검사가 이 변이들을 잡는지는 아직 입증되지 않았다.
+**변이 확인 (676 당시 미실행 →679 완료):** 676에서는4종을 등록했지만 사용자 요청으로 격리 빌드를 중단해 실행하지 않았다. 이 최초 로그는 유지한다. 679에서 지정 집중 대상의 기준선5개와 기존4종을 실행해3종을 검출했고, 두 번째 구분자에x를 더하는1종은 atol 결과가 같은 동치 변이로 확인했다. 유효 숫자0을 잘못 자르는 `viewspot-second-digit-delimiter`로 교체한 새1종도 검출해 최종 실제 결함4종을 모두 확인했다. 최초3검출/1미검출과 교정 뒤1검출을 구별한다. 기대값/검사/기능 코드는 바꾸지 않았다([679 결과](cpp-focused-mutation-20261101.md)).
 
 **실제 게임:** `tools/cpp_viewspot_smoke.py`로 원본 자료의 RunForIt에 실제 진입했다. 1024×768 창, `--no-audio`, 앱 내 검사 보고이며 물리 입력은 없다.
 
@@ -69,7 +69,7 @@ CD `NETSTORM.EXE`에도 같은 표가 있다. 이름 `0x514138`, 표 항목 `0x5
 
 ## 남은 한계
 
-- 변이 4종은 미실행이다. 작업 재개 시 격리 사본 빌드가 끝날 때까지 기다려 `python -X utf8 tools\cpp_mutation_check.py --focused --only viewspot-no-paren-skip --only viewspot-skip-all-parens --only viewspot-second-delimiter --only viewspot-axis-swap`를 실행하고 결과를 이 문서에 추가한다.
+- 변이 잔여는679에서 해소했다. 재실행할 때는 금지된 전체 검사를 피하도록 `--focused --test-target netstorm_viewspot_tests`를 쓰고, 구분자 변이는 `viewspot-second-digit-delimiter`를 선택한다. 사본의 마지막 변이 EXE를 제품으로 쓰지 않는다.
 - 원본 게임을 나란히 실행해 입장 화면 픽셀을 비교하지는 않았다. 근거는 원문 기계어와 대본 좌표다.
 - 다른 `ViewSpot` 사용 맵은 같은 경로이나 실제 진입은 RunForIt만 확인했다.
 - 전체34·전체 C++·ZIP은 실행하지 않았다. 주 검사 EXE `netstorm_tests`는 다시 빌드하지 않았다.
