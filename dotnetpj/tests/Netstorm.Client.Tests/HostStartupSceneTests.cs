@@ -34,6 +34,50 @@ public sealed class HostStartupSceneTests
         Assert.Null(menu.Tree.Node(token)); Assert.Equal(0u, menu.Tree.LifeState.CurrentDialog); windows.CloseAll();
     }
 
+    /// <summary>새 이름의 공통 UI 확인이 같은 문자열 고리와 ReadFort 입력 큐에 도달한다.</summary>
+    [Fact]
+    public void HostNewFortConfirmationQueuesActualRead()
+    {
+        string? data = GameDataLocator.FindDataDirectory(); Assert.NotNull(data);
+        var startup = new HostStartupScene(data); var screen = new Screen(1024, 768);
+        Assert.True(screen.SetMode(ScreenMode.BackBufferDib | ScreenMode.ModeSet)); startup.Draw(screen);
+        var menu = new HostMainMenu(startup, screen, new GumpButtonTreeHooks
+        { Now = () => 1, Poll = _ => default, Sound = () => { }, Redraw = (_, _) => { }, HandleBase = (_, _, _, _) => 0 });
+        var queue = new InputQueue(); var strings = new ScriptStringRing(); var notices = new List<string>();
+        var windows = new HostHtmlWindows(menu, queue, () => 1, _ => { });
+        var text = new HostHtmlText(menu, windows, screen, _ => default, (_, _) => { }, _ => { }, _ => { }); text.Bind(windows);
+        using var entry = new HostTextEntry(menu, windows, text, screen, () => 1, (_, _) => { });
+        var confirm = new HostFortNameConfirmation(startup, menu, entry, queue, strings, notices.Add);
+        var dialog = new HostSaveFortDialog(menu, windows, text, entry, startup, screen, confirm.Confirm, notices.Add);
+        string existing = startup.Files.MatchDisk(startup.Configuration.PathSpec("fortSpec", "*"))
+            .Select(path => Path.GetFileNameWithoutExtension(path.Replace('\\', '/')))
+            .First(name => name.Length > 0 && name.Length < 40 && startup.Files.Locate(startup.Configuration.PathSpec("fortSpec", name)) == GameFileSource.Disk);
+        uint duplicate = dialog.Show(0, 1, existing);
+        Assert.Equal(1u, menu.Tree.EventHooks.Handle!(duplicate, 0x02000038, 0, 0));
+        Assert.Equal(["NameRequired"], notices); Assert.True(queue.Empty); notices.Clear();
+        menu.Tree.Lifetime.Kill(duplicate); menu.Tree.Lifetime.Cleanup();
+        string name = "NS Test " + Guid.NewGuid().ToString("N")[..12]; uint token = dialog.Show(0, 1, name);
+        Assert.Equal(1u, menu.Tree.EventHooks.Handle!(token, 0x02000038, 0, 0));
+        var input = queue.Pop(false); Assert.Equal(Netstorm.Client.Mission.FortSelection.ReadFort, input.Code); Assert.Equal(input.X, input.Y);
+        Assert.Equal(name, strings.Resolve(unchecked((uint)input.Y))); Assert.Empty(notices);
+        var editor = new HostEditorSelection(startup, strings, notices.Add); editor.State.Mode = 2;
+        Assert.True(editor.Dispatch(input)); Assert.Equal(name, editor.PendingName); Assert.Equal(1u, editor.State.Next[0]);
+        menu.Tree.Lifetime.Cleanup(); Assert.Null(menu.Tree.Node(token)); windows.CloseAll();
+    }
+
+    /// <summary>원본과 작업본의 전체 경로 대응과 외부 경로 거부를 검사한다.</summary>
+    [Fact]
+    public void EditorWorkspaceMapsFullPathsWithinSiblingRoot()
+    {
+        string? data = GameDataLocator.FindDataDirectory(); Assert.NotNull(data);
+        var paths = new EditorWorkspacePaths(data); string expected = Path.Combine(paths.WorkRoot, "d", "example.fort");
+        Assert.Equal(expected, paths.Resolve("d/example.fort"), ignoreCase: true);
+        Assert.Equal(expected, paths.Resolve(Path.Combine(paths.SourceRoot, "d", "example.fort")), ignoreCase: true);
+        Assert.Equal(expected, paths.Resolve(expected), ignoreCase: true);
+        Assert.Throws<ArgumentException>(() => paths.Resolve("../outside.fort"));
+        Assert.Throws<ArgumentException>(() => paths.Resolve(Path.Combine(Path.GetPathRoot(paths.SourceRoot)!, "outside.fort")));
+    }
+
     /// <summary>실제 호스트 트리에서 문자 입력과 두 Slider를 생성·표시·반납한다.</summary>
     [Fact]
     public void HostTextEntryUsesSharedTreeDrawingAndLifetime()

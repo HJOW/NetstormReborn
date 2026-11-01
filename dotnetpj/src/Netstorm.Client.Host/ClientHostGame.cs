@@ -186,8 +186,9 @@ public sealed class ClientHostGame : Game
             _editor = new HostEditorSelection(_startup, _scriptStrings, _menuInput.ShowTell);
             _htmlFactory.BindMapCatalog(_editor.Catalog, _htmlMenus, _scriptStrings, () => _editor.CurrentName, () => _editor.PendingName);
             _menuInput.BindEditor(_editor);
+            var fortConfirmation = new HostFortNameConfirmation(_startup, _mainMenu, _textEntry, _driver.Input, _scriptStrings, _menuInput.ShowTell);
             _saveFortDialog = new HostSaveFortDialog(_mainMenu, _htmlWindows, _htmlText, _textEntry, _startup, _driver.Screen,
-                _ => throw new InvalidOperationException("Fort 이름 확인의 편집 작업본과 월드 소유자 미연결"), _menuInput.ShowTell);
+                fortConfirmation.Confirm, _menuInput.ShowTell);
             _menuInput.BindNewFort(mode => _saveFortDialog.Show(mode, 1, _editor.CurrentName));
             _gumpDrawing = new HostGumpDrawing(_mainMenu, _htmlText, _htmlMenus, _driver.Screen, _textEntry);
             _driver.BindControlLocator(_mainMenu);
