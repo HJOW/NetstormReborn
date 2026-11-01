@@ -13,6 +13,8 @@ public sealed class HostStartupScene
     public GameFileSystem Files { get; }
     /// <summary>같은 파일 장치에서 초기화한 원본 설정.</summary>
     public ConfigInterface Configuration { get; }
+    /// <summary>원본 options.cfg가 놓인 실제 설치 경로다.</summary>
+    private readonly string _optionsPath;
     /// <summary>같은 클라이언트 수명에서 현재 Tell 이름을 보존한다.</summary>
     public TellSectionState TellState { get; } = new();
     /// <summary>설정의 fortPal 파일 팔레트.</summary>
@@ -30,6 +32,7 @@ public sealed class HostStartupScene
         ArgumentException.ThrowIfNullOrEmpty(dataDirectory);
         if (!GameDataLocator.IsDataDirectory(dataDirectory)) throw new DirectoryNotFoundException("게임 데이터 디렉터리 또는 netstorm.tarc가 없다: " + dataDirectory);
         Files = GameFileSystem.Open(dataDirectory);
+        _optionsPath = Path.Combine(Path.GetFullPath(dataDirectory), "d", "options.cfg");
         Configuration = new ConfigInterface(Files.TryReadAllBytes);
         Configuration.Startup(new ConfigInterface.StartupOptions { InstallDir = Path.GetFullPath(dataDirectory), CommandLine = settings });
         string palettePath = Configuration.PathSpec("GamePalSpec", Configuration.PathSpec("fortPal"));
@@ -43,6 +46,9 @@ public sealed class HostStartupScene
         _palette = new GamePalette(Files.ReadAllBytes(palettePath));
         _title = Netstorm.Client.Display.GifImage.DecodeGif(Files.ReadAllBytes(titlePath));
     }
+
+    /// <summary>현재 설정을 원본의 options.cfg 위치에 기록한다.</summary>
+    public void SaveOptions() => HostOptionsFile.Save(Configuration, (_, bytes) => File.WriteAllBytes(_optionsPath, bytes));
 
     /// <summary>같은 시작 Config와 파일에서 Tell을 조회하고 현재 HTML 창 생성기에 전달한다.</summary>
     /// <param name="target">원본 BYTE 표현의 섹션 이름과 선택적 매개변수.</param>

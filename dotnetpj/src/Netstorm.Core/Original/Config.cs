@@ -438,7 +438,10 @@ public sealed class Config : IDisposable
         }
         int skip = hasSignature ? ConfigTextOps.Signature.Length : 0;
         // ASCII 서명 앞부분과 바이트 단위 해석 뒷부분을 그대로 둔다
-        Append(Latin1(plain, 0, skip) + OriginalText.DecodeWindows1252(plain.AsSpan(skip).ToArray()));
+        byte[] body = plain.AsSpan(skip).ToArray();
+        // cpppj의 설정 저장은 서명 뒤 UTF-8 BOM을 사용하며 BOM 없는 원본은 CP1252로 유지한다.
+        string text = body.AsSpan().StartsWith(new byte[] { 0xef, 0xbb, 0xbf }) ? OriginalText.Decode(body) : OriginalText.DecodeWindows1252(body);
+        Append(Latin1(plain, 0, skip) + text);
     }
 
     /// <summary>앞 바이트 구간을 일대일 문자로 바꾼다.</summary>

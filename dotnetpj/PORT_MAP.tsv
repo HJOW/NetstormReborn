@@ -17,6 +17,7 @@ cpppj/src/client/BitmapFont.h	Netstorm.Client/Display/BitmapFont.cs	e074cad7f385
 cpppj/src/client/ButtonGump.cpp	Netstorm.Client/Gump/ButtonGump.cs	0a1a709127ad291d47289a9957e142feb04981a5	port
 cpppj/src/client/ButtonGump.h	Netstorm.Client/Gump/ButtonGump.cs	0a1a709127ad291d47289a9957e142feb04981a5	port
 cpppj/src/client/ClientMain.cpp	Netstorm.Client/Display/ScreenCapture.cs	f0a08f08d86df0b44ca007c35dcb4eeb9fbf21a9	port
+cpppj/src/client/ClientOptionsFile.cpp	Netstorm.Client/Host/HostOptionsFile.cs	0c2990694b50d216e2e58e5681de483b2b0bb581	port
 cpppj/src/client/Cursor.h	Netstorm.Core/Rules/GameCursor.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
 cpppj/src/client/DialogExitCommand.cpp	Netstorm.Client/Scripting/DialogExitCommand.cs	9ad3ff97f51ac3900fbc1b957a3367e339982af6	L1
 cpppj/src/client/DialogExitCommand.h	Netstorm.Client/Scripting/DialogExitCommand.cs	9ad3ff97f51ac3900fbc1b957a3367e339982af6	L1

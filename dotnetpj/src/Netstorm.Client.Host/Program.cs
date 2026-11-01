@@ -44,16 +44,17 @@ internal static class Program
             Console.Error.WriteLine($"UI 스크립트가 없습니다: {options.UiScriptPath}");
             return UsageError;
         }
-        var screen = new Screen(options.Width, options.Height);
-        var input = new InputQueue();
-        UiScriptRunner? runner = options.UiScriptPath is null
-            ? null
-            : new UiScriptRunner(UiScript.ParseFile(options.UiScriptPath), input, screen);
-        var driver = new HostFrameDriver(screen, input, runner);
+        HostFrameDriver? driver = null;
         try
         {
             string? data = GameDataLocator.FindDataDirectory();
             HostStartupScene? startup = data is null ? null : new HostStartupScene(data, options.SettingsText);
+            startup?.SaveOptions();
+            if (startup != null) options.ApplyStartupConfiguration(startup.Configuration);
+            var screen = new Screen(options.Width, options.Height);
+            var input = new InputQueue();
+            UiScriptRunner? runner = options.UiScriptPath is null ? null : new UiScriptRunner(UiScript.ParseFile(options.UiScriptPath), input, screen);
+            driver = new HostFrameDriver(screen, input, runner);
             using var game = new ClientHostGame(driver, options, startup);
             game.Run();
         }
@@ -65,7 +66,7 @@ internal static class Program
         finally
         {
             // 보고서는 실패해도 남긴다. 경로가 없으면 쓰지 않는다
-            if (options.UiReportPath is not null)
+            if (options.UiReportPath is not null && driver != null)
             {
                 File.WriteAllLines(options.UiReportPath, driver.SkippedObservations);
             }

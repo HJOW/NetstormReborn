@@ -196,6 +196,7 @@ public sealed class ClientHostGame : Game
         PumpMouse();
         if (_menuInput?.NotifyPointer(Poll(0xffff)) == 0) _cursor?.Set(GameCursor.Arrow);
         if (_driver.ProcessInput()) { Exit(); return; }
+        if (_startup?.Configuration.Configuration.Changed == true) _startup.SaveOptions();
         _menuInput?.FinishFrame();
         if (_menuDirty && _gumpDrawing is not null && _startup is not null)
         { _startup.Draw(_driver.Screen); _gumpDrawing.Draw(); _menuDirty = false; }

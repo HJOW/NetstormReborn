@@ -1,4 +1,5 @@
 using Netstorm.Client.Display;
+using Netstorm.Core.Original;
 
 namespace Netstorm.Client.Host;
 
@@ -38,6 +39,17 @@ public sealed class HostOptions
 
     /// <summary>--set 설정 뭉치의 실제 저장소.</summary>
     private readonly Dictionary<string, string> _settings = new(StringComparer.Ordinal);
+    private bool _widthExplicit, _heightExplicit, _fpsExplicit, _fullscreenExplicit;
+
+    /// <summary>직접 인자가 없는 값에 현재 설정 파일의 저장값을 적용한다.</summary>
+    public void ApplyStartupConfiguration(ConfigInterface config)
+    {
+        int width = config.GetInt("SCREENW"), height = config.GetInt("SCREENH"), fps = config.GetInt("maxFPS");
+        if (!_widthExplicit && width > 0) Width = width;
+        if (!_heightExplicit && height > 0) Height = height;
+        if (!_fpsExplicit && fps > 0) FramesPerSecond = fps;
+        if (!_fullscreenExplicit && config.Configuration.Get("startInFullScreen") != null) Fullscreen = config.GetInt("startInFullScreen") != 0;
+    }
 
     /// <summary>기본값으로 만든다.</summary>
     private HostOptions()
@@ -58,18 +70,23 @@ public sealed class HostOptions
             {
                 case "--window":
                     options.Fullscreen = false;
+                    options._fullscreenExplicit = true;
                     break;
                 case "--fullscreen":
                     options.Fullscreen = true;
+                    options._fullscreenExplicit = true;
                     break;
                 case "--width":
                     options.Width = TakePositiveInt(args, ref i, "--width");
+                    options._widthExplicit = true;
                     break;
                 case "--height":
                     options.Height = TakePositiveInt(args, ref i, "--height");
+                    options._heightExplicit = true;
                     break;
                 case "--fps":
                     options.FramesPerSecond = TakePositiveInt(args, ref i, "--fps");
+                    options._fpsExplicit = true;
                     break;
                 case "--frames":
                     options.Frames = TakeNonNegativeLong(args, ref i, "--frames");
@@ -158,14 +175,17 @@ public sealed class HostOptions
                 if (key == "SCREENW")
                 {
                     Width = number;
+                    _widthExplicit = true;
                 }
                 else if (key == "SCREENH")
                 {
                     Height = number;
+                    _heightExplicit = true;
                 }
                 else
                 {
                     FramesPerSecond = number;
+                    _fpsExplicit = true;
                 }
             }
         }
