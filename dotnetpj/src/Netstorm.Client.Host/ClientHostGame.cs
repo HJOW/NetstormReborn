@@ -54,6 +54,8 @@ public sealed class ClientHostGame : Game
 
     /// <summary>현재 메인 메뉴의 공통 입력과 상위 명령 소비자.</summary>
     private HostMenuInput? _menuInput;
+    /// <summary>실제 편집 맵 목록과 다음 State 선택 소유자.</summary>
+    private HostEditorSelection? _editor;
 
     /// <summary>HTML과 상위 메뉴가 공유할 원본 80칸 스크립트 문자열 고리.</summary>
     private readonly ScriptStringRing _scriptStrings = new();
@@ -174,6 +176,9 @@ public sealed class ClientHostGame : Game
                 () => _menuDirty = true, action => throw new InvalidOperationException("메뉴 상위 명령 미연결: " + action));
             _menuInput.BindPopup(new HostPopupMenu(_mainMenu, _htmlWindows, _htmlMenus, _driver.Screen, _startup, () => _menuDirty = true, _buttonSound.ApplyOptions));
             _menuInput.BindScreenMode(() => _driver.Screen.Flags, ChangeScreenMode, AcceptScreenMode);
+            _editor = new HostEditorSelection(_startup, _scriptStrings, _menuInput.ShowTell);
+            _htmlFactory.BindMapCatalog(_editor.Catalog, _htmlMenus, _scriptStrings, () => _editor.CurrentName, () => _editor.PendingName);
+            _menuInput.BindEditor(_editor);
             _gumpDrawing = new HostGumpDrawing(_mainMenu, _htmlText, _htmlMenus, _driver.Screen);
             _driver.BindControlLocator(_mainMenu);
             _driver.BindInputHandler(_menuInput.Dispatch);
@@ -190,6 +195,7 @@ public sealed class ClientHostGame : Game
     /// <param name="gameTime">경과 시각.</param>
     protected override void Update(GameTime gameTime)
     {
+        _editor?.Poll();
         _menuInput?.Tick();
         _driver.BeginFrame();
         PumpKeyboard();

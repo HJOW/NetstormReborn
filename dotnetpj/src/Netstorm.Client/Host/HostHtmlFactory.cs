@@ -3,6 +3,7 @@ using Netstorm.Assets;
 using Netstorm.Client.Display;
 using Netstorm.Client.Gump;
 using Netstorm.Client.Input;
+using Netstorm.Client.Mission;
 using Netstorm.Client.Scripting;
 
 namespace Netstorm.Client.Host; // 실제 Tell과 HTML 전체 창 생성의 공통 소유 영역이다.
@@ -78,6 +79,15 @@ public sealed class HostHtmlFactory : IDisposable
     /// <summary>원본 BYTE 설정 명령을 같은 실제 Config에 적용한다.</summary>
     public void ApplyConfig(string source) => ScriptCommand.ApplyScriptConfig(source,
         (key, value) => _startup.Configuration.Set(Text(key), Text(value)));
+
+    /// <summary>같은 실제 맵 목록·선택 이름·문자열 고리로 Tell의 맵 행을 연결한다.</summary>
+    public void BindMapCatalog(SoloMapCatalog catalog, HostHtmlMenus menus, ScriptStringRing strings, Func<string> current, Func<string> fallback)
+    {
+        var hooks = TellMapMenus.Bind(catalog.List, catalog.State, catalog.SelectFileSpec, current, fallback,
+            flags => menus.Widgets.BeginVertical(flags), (row, command) =>
+                menus.Controls.AddChecked(row.Checked, Encoding.Latin1.GetBytes(row.Label), command, strings.Store(row.Name), true, row.Enabled));
+        HtmlWindowMetadata.BindHtmlWindowMetadataMaps(MetadataHooks, hooks);
+    }
 
     /// <summary>현재 Tell 설정과 선택 미션에서 본문을 읽어 실제 HTML 창을 만든다.</summary>
     /// <param name="target">Tell 이름과 선택적 매개변수.</param><param name="suppress">창 생략 값.</param>
