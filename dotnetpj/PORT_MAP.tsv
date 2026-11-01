@@ -197,6 +197,7 @@ cpppj/src/client/TextGump.cpp	Netstorm.Client/Gump/ScrollingTextGump.cs	f7e1748e
 cpppj/src/client/TextGump.cpp	Netstorm.Client/Gump/TextGump.cs	b9be2a82a0f9f3848689ddcf9e1b05d0331be1a8	port
 cpppj/src/client/TextGump.h	Netstorm.Client/Gump/ScrollingTextGump.cs	f7e1748e8c9a093be0f118ec864df7e5581b9f0c	port
 cpppj/src/client/TextGump.h	Netstorm.Client/Gump/TextGump.cs	b9be2a82a0f9f3848689ddcf9e1b05d0331be1a8	port
+cpppj/src/client/TutorialInit.cpp	Netstorm.Client/Mission/TutorialInit.cs	825a1a983336877e959114bcd4568fc244e98932	port
 cpppj/src/client/VFXDraw.cpp	Netstorm.Client/Display/VfxDraw.cs	cb56907c0aae1f0f02410dbda12860051a7f2e4d	L1
 cpppj/src/client/VFXDraw.h	Netstorm.Client/Display/VfxDraw.cs	cb56907c0aae1f0f02410dbda12860051a7f2e4d	L1
 cpppj/src/client/VFXLine.cpp	Netstorm.Client/Display/VfxLine.cs	cb56907c0aae1f0f02410dbda12860051a7f2e4d	port
