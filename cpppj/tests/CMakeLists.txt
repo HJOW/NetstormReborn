@@ -2720,3 +2720,12 @@ add_executable(netstorm_product_ui_tests FocusedTestMain.cpp TellSectionTests.cp
 target_link_libraries(netstorm_product_ui_tests PRIVATE netstorm)
 netstorm_apply_compiler_options(netstorm_product_ui_tests)
 target_compile_definitions(netstorm_product_ui_tests PRIVATE ${_netstorm_menu_session_definitions})
+
+# 메뉴 없는 시나리오 객체 입력480관측과 기존 공통 몸체/변환/Detonate/큐만 회귀한다(단위686).
+target_sources(netstorm_tests PRIVATE ScenarioObjectInputTests.cpp)
+set_source_files_properties(ScenarioObjectInputTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_SCENARIO_OBJECT_INPUT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/scenario-object-input-x86.tsv\"")
+add_executable(netstorm_scenario_object_tests FocusedTestMain.cpp ScenarioObjectInputTests.cpp ObjectCommandTests.cpp ObjectConversionTests.cpp
+    MeltdownTests.cpp DetonateInputTests.cpp ScriptCommandTests.cpp)
+target_link_libraries(netstorm_scenario_object_tests PRIVATE netstorm)
+netstorm_apply_compiler_options(netstorm_scenario_object_tests)
+target_compile_definitions(netstorm_scenario_object_tests PRIVATE ${_netstorm_menu_session_definitions})

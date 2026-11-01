@@ -1,0 +1,64 @@
+{
+  "unit": 686,
+  "date": "2026-11-01",
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23"
+  },
+  "productVersion": "11.01",
+  "productSha256": "0dd104b682890a18ce3d736a5c52b97ccf5fca04c63aa85e06b72a7d76e3efca",
+  "native": {
+    "inputs": 480,
+    "instructions": 186780,
+    "frozenBeforeProductEdit": true,
+    "replayDifferences": 0,
+    "objectBody": "명시 가상6c 경계, 효과 실행0"
+  },
+  "build": {
+    "exit": 0,
+    "warnings": 0,
+    "errors": 0
+  },
+  "focused": {
+    "target": "netstorm_scenario_object_tests",
+    "registered": 14,
+    "executed": 14,
+    "new": 3,
+    "existing": 11,
+    "failedChecks": 0
+  },
+  "protection": {
+    "previousUnit": 685,
+    "unchangedExisting": 2604,
+    "changed": [],
+    "added": {
+      "originals": [],
+      "originalCD": [],
+      "cpppj/tests/fixtures": [
+        "scenario-object-input-x86.tsv"
+      ]
+    }
+  },
+  "gameExecutions": 0,
+  "multiplayerTests": 0,
+  "full34Runs": 0,
+  "fullCppRuns": 0,
+  "newZip": false,
+  "limits": "10.78 Guide/Gump 뒤 일반 입력/다섯 이름과 현재 월드 연결. 실제 객체 효과의 새 실행·CD 본문·시나리오 GUI·전체 동일성 검증이 아니다. 포획/희생/특정 적 공격/승리는 재현하지 않는다.",
+  "sha256": {
+    "AGENTS.md": "138808039a2d171d8e697906776e620f9ea8dc2038c35b4dc01ce18d3e462b77",
+    "cpppj/src/client/ScenarioObjectInput.cpp": "3fe36133ecfb0931344873fc76599d1cb392d2b3f584ee2323ccab267b1c1c68",
+    "cpppj/src/client/ScenarioObjectInput.h": "db2bb6b5a3ec9936a9b69bda102108e2fc55a3f9594781493b77f96dee211970",
+    "cpppj/src/client/UberGump.cpp": "4b0cfe6924d819343181b22e2eddb600d75d540c89d73016d2bf6b385876329b",
+    "cpppj/src/client/GameMenuCommands.cpp": "000e0a076ca476a032ae6daadc0e24d3afe3a50ff29d1dbbc103f0d7c08d9bdc",
+    "cpppj/src/client/CampaignObjectMenuClient.cpp": "1b581ec41cf2812d1e42445a0772d97d1f1d4491362b76b6e74d6314953d2732",
+    "cpppj/tests/ScenarioObjectInputTests.cpp": "9670b81db1089354259af6e9eb518dd54612afd070bdb69f1382f27ebb9b8be2",
+    "cpppj/tests/fixtures/scenario-object-input-x86.tsv": "99fc7cda7c8d7b06bbaea8e99ef014675adbd21b46427aee5745925ac1514b54",
+    "cpppj/scenario-object-input-native-20261101.json": "ae853ef92d1ec3c23df7ad06e695723a888b781a63feefc2915eced4c9b46ac9",
+    "cpppj/object-menu-wiring-20261101-686.json": "35550673f52f7550f36720a09d6dfa94873a1e7c0ad1bb416309548cbeb09c20",
+    "extracted/cpp-scenario-object-686/build.log": "b5d121c63bc4db3098c1d9cc7cf2a1bd9bc616bdac939a2d1481f92821de1149",
+    "extracted/cpp-scenario-object-686/focused.log": "6071d8c8c857ede287445dfd1f7cf0126ad0e56cb1ee5cc4a71728fc25b9124f",
+    "extracted/cpp-scenario-object-686/protection.json": "72bdda9e37e42ee3d2c85903ca763ed6e8ea7608ddcf580ec1c1a29eea7d3700"
+  }
+}

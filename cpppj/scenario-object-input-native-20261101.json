@@ -1,0 +1,52 @@
+{
+  "unit": 686,
+  "date": "2026-11-01",
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23"
+  },
+  "uniqueInputs": 480,
+  "instructions": 186780,
+  "lookup": [
+    {
+      "name": "MakeMine",
+      "entry": "00543100",
+      "globalAddress": "005429b0",
+      "command": 50331823
+    },
+    {
+      "name": "InflictDamage",
+      "entry": "00543298",
+      "globalAddress": "00542a7c",
+      "command": 50331874
+    },
+    {
+      "name": "DestroyPiece",
+      "entry": "00542c30",
+      "globalAddress": "0054274c",
+      "command": 50331669
+    },
+    {
+      "name": "TurnToObelisk",
+      "entry": "005431f8",
+      "globalAddress": "00542a2c",
+      "command": 50331854
+    },
+    {
+      "name": "Meltdown",
+      "entry": "00543348",
+      "globalAddress": "00542ad4",
+      "command": 50331896
+    }
+  ],
+  "gameExecutions": 0,
+  "boundaries": "Guide/Gump 뒤4d6eca..다음 입력4da477. 가상6c는 실제 인자를 기록하고 지정0/1을 반환하는 명시 경계이며 객체 효과는 실행하지 않는다. 팝업460de0은 없음0 경계다. 메뉴/OS/통신/공격/승리 실행은0. 앞선Guide/Gump 소비와 실제 객체 몸체는 이 도구의 새 검증 범위가 아니다.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_scenario_object_input.py": "55be288d8d40a6905f667cd2a92dbc86b8b1574936957b40227b62f9e3f39ce8",
+    "tools/decomp_oracle.py": "227b9a8b703cfd81d05ac4a7c72a42eaecf9c804fc028680466a19a591f2335d",
+    "cpppj/tests/fixtures/scenario-object-input-x86.tsv": "99fc7cda7c8d7b06bbaea8e99ef014675adbd21b46427aee5745925ac1514b54"
+  }
+}

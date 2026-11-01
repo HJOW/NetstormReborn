@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """원본83VT 메뉴 슬롯과9명령의 현재 소스 연결을 읽기 전용으로 대조한다."""
+import argparse
 import collections
 import hashlib
 import json
@@ -34,11 +35,11 @@ OPEN = {  # 보호 PE의 실제+ac 주소와 현재 열기 경로다.
     0x4789b0: 'MP Metadisplay Battle/Challenge', 0x479390: 'MP Challenge Area',
 }
 COMMANDS = {  # 원본 명령 전역 주소별 현재 입력/세션의 필수 연결 지점이다.
-    0x542ad4: ('Meltdown', [('CampaignObjectMenuClient.cpp', 'command==0x030000f8U'), ('RawCampaignSession.cpp', 'current.meltdown->Command')]),
+    0x542ad4: ('Meltdown', [('ScenarioObjectInput.cpp', '0x030000f8U'), ('RawCampaignSession.cpp', 'current.meltdown->Command')]),
     0x542b5c: ('Set as Cracked', [('UberGump.cpp', 'transitionCode>=0x02000125U'), ('RawCampaignSession.cpp', 'RawCampaignSession::SetBridgeQuality')]),
     0x542b60: ('Set as Normal', [('UberGump.cpp', 'transitionCode<=0x02000127U'), ('RawCampaignSession.cpp', 'RawCampaignSession::SetBridgeQuality')]),
     0x542b64: ('Set as Hard', [('UberGump.cpp', 'transitionCode-0x02000125U'), ('RawCampaignSession.cpp', 'RawCampaignSession::SetBridgeQuality')]),
-    0x542a2c: ('Turn To Spell/Obelisk', [('CampaignObjectMenuClient.cpp', 'command==0x030000ceU'), ('RawCampaignSession.cpp', 'RawObjectConversion(current.core.pool')]),
+    0x542a2c: ('Turn To Spell/Obelisk', [('ScenarioObjectInput.cpp', '0x030000ceU'), ('RawCampaignSession.cpp', 'RawObjectConversion(current.core.pool')]),
     0x5427ac: ('CHEAT Dig Up', [('UberGump.cpp', 'transitionCode==0x0200002dU'), ('UberGump.cpp', 'GemReward().Reveal')]),
     0x5428c8: ('Detonate', [('UberGump.cpp', 'DispatchDetonateInput(event'), ('DetonateInput.cpp', 'objectInput(target,event.code)'), ('RawCampaignSession.cpp', 'RawObjectConversion(current.core.pool')]),
     0x542754: ('About/Help', [('UberGump.cpp', 'transitionCode==0x02000017U'), ('UberGump.cpp', 'Menus()->OpenHelp')]),
@@ -53,6 +54,10 @@ def sha(path):
 
 def main():
     """코드를 실행하지 않고 원본 DWORD, 생성 자료, 소스 분배 지점만 대조한다."""
+    parser=argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--output',type=Path,default=REPORT)
+    parser.add_argument('--unit',type=int,default=681)
+    options=parser.parse_args()
     paths = {'originals/Netstorm.exe', 'originalCD/NETSTORM.EXE', 'AGENTS.md',
              'cpppj/src/o/DerivedConstructors.inc', 'cpppj/src/client/ObjectMenuSlots.inc',
              'tools/cpp_object_menu_wiring_audit.py'}
@@ -110,7 +115,7 @@ def main():
         assert declared[address] == command, hex(address)
         commands.append({'global': f'{address:08x}', 'command': f'{command:08x}', 'label': label,
                          'sources': [anchor(name, text) for name, text in links]})
-    report = {'unit': 681, 'date': '2026-11-01', 'host': socket.gethostname(),
+    report = {'unit': options.unit, 'date': '2026-11-01', 'host': socket.gethostname(),
               'lastPreciseDecompile': {'host': 'HJOW-Athlon', 'date': '2026-10-23'},
               'kind': 'read-only static PE/source audit', 'nativeExecutions': 0, 'gameExecutions': 0,
               'vtables': len(original), 'populateRoutes': populated, 'openRoutes': open_routes,
@@ -118,7 +123,7 @@ def main():
               'preliminary': '최초 도구의 열기5개 전체 가정이 실패했다. 실제 PE에는7입구가 있었으며 남은2개는 기존 Metadisplay/Challenge MP 본체였다. 이를 비멀티 누락이나 실행 통과로 세지 않고3차 이월로 분류했다.',
               'limits': '연결 지점/생성표를 대조했다. 모든 소유자/상태/픽셀/수명 효과의 실행 검증, CD 본문 대조, 전체 선택기 및 간접 alias 부재 증거가 아니다. 공중3종도 정적으로만 읽었으며 MP/포획/희생/공격/승리 검사는0이다.',
               'sha256': {p: sha(ROOT / p) for p in sorted(paths)}}
-    REPORT.write_text(json.dumps(report, ensure_ascii=False, indent=2) + '\n', encoding='utf-8', newline='\n')
+    options.output.write_text(json.dumps(report, ensure_ascii=False, indent=2) + '\n', encoding='utf-8', newline='\n')
     print('원본83VT / 작성13 / 비멀티 열기5 / MP 이월2 / 명령9 연결 정적 대조 통과; 실행0')
 
 

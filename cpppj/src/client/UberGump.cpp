@@ -122,6 +122,7 @@
 #include <windows.h> //원문004dd560의 GetFileAttributesA 부재/디렉터리 판정을 실제 Windows 장치에 연결한다.
 #include "client/ObjectOwnerCommands.h"
 #include "client/DetonateInput.h"
+#include "client/ScenarioObjectInput.h"
 #include "platform/Utf8Path.h" //Windows10/11의 한글 Edit 작업본은 원본 ANSI 경로와 달리 UTF-8/W 경계로 전달한다.
 
 namespace netstorm::client {
@@ -278,7 +279,7 @@ UberGump::UberGump(Client& client) : client_(client),initLoginSubscriber_(client
             state_.Post(actions_[parameter-1]); // 기존 DialogAction의 임시 호스트 번호이며 원본 게임 명령 토큰과 구별한다.
         } else {
             // 실제 메뉴 항목이 선택한 미연결 명령은 여기서 거부한다. 돌 버튼의 별도 기본 클릭 통지와 구별한다.
-            if (command!=0x02000060U && command!=0x03000080U && command!=0x03000032U && command!=0x03000063U && command!=0x0200005dU && command!=0x02000017U && command!=0x030000afU && command!=0x030000e2U && command!=0x03000015U && command!=0x0300011aU && command!=0x03000076U && !IsGameMenuCommand(command) && !IsTellMenuCommand(command) && !IsObjectMenuVariantCommand(command) && !IsSendMoneyCommand(command)) throw std::logic_error("현재 Client 원본 메뉴 항목 명령 미연결: "+std::to_string(command));
+            if (command!=0x02000060U && command!=0x03000080U && command!=0x03000032U && command!=0x03000063U && command!=0x0200005dU && command!=0x02000017U && !IsScenarioObjectCommand(command) && command!=0x0300011aU && command!=0x03000076U && !IsGameMenuCommand(command) && !IsTellMenuCommand(command) && !IsObjectMenuVariantCommand(command) && !IsSendMoneyCommand(command)) throw std::logic_error("현재 Client 원본 메뉴 항목 명령 미연결: "+std::to_string(command));
             client_.Input().PushCommand(command,std::bit_cast<std::int32_t>(id),std::bit_cast<std::int32_t>(parameter));
         }
     };
@@ -1106,6 +1107,9 @@ void UberGump::Event(InputEvent event) {
         }
         rebuild_=true;return; // 원본005427ac의 일반 입력은 메뉴의 special 노출 조건을 실행 관문으로 다시 추가하지 않는다.
     }
+    if (DispatchScenarioObjectInput(event,[this](o::Sid target,std::uint32_t code) {
+        if (!world_) throw std::logic_error("시나리오 객체 명령의 현재 Session 없음");return world_->Session().CommandObject(target,code);
+    })) { rebuild_=true;return; } // 원문처럼 메뉴를 열지 않은 대상과 객체의0반환도 같은 현재 사건에서 처리한다.
     if (DispatchDetonateInput(event,[this](o::Sid target,std::uint32_t code) {
         if (!world_) throw std::logic_error("Detonate의 현재 Session 없음");static_cast<void>(world_->Session().CommandObject(target,code));
     })) { rebuild_=true;return; } // 원본은 실제6c의0반환 뒤에도 다음 사건으로 진행한다. 미연결 명령 예외를 만들지 않는다.

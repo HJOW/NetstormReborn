@@ -184,15 +184,12 @@ std::optional<std::string_view> CampaignObjectMenuClient::StaticText(std::uint32
     if (impl_->chain && (token==0x005cad98U || token==0x005cae00U)) return impl_->chain->TextParameter(token); // Player 메뉴의 실제 두 정적 asksend 버퍼는 같은 살아 있는 체인에서 현재 문자열을 읽는다.
     return {};
 }
-// 메뉴가이미닫히도록예약했어도같은세계의현재Factory입력/건설/회수요청을실행한다.
+// 메뉴가이미닫히도록예약했어도같은세계의현재Factory입력/건설/회수요청을실행한다. 공통 객체 명령은 메뉴와 독립적인 일반 입력에서 먼저 처리한다.
 bool CampaignObjectMenuClient::Command(const InputEvent& event) {
     const auto command=event.code&0x03ffffffU;
-    const bool common=command==0x030000afU || command==0x030000e2U || command==0x03000015U || command==0x030000ceU || command==0x030000f8U; // 공통 명령·비석 전환·Meltdown을 현재 실제6c로 전달한다.
-    if (command==0x030000f8U && (event.code&InputCode::kRelease)) return true; // 원문 일반 입력의 앞선 key-up 거부다. 객체 몸체의 mask 처리와 구별한다.
-    if (!common && command!=0x02000060U && command!=0x03000080U && command!=0x03000032U && command!=0x03000063U && command!=0x0200005dU && command!=0x0300011aU && command!=0x03000076U && command!=0x030000deU) return false;
+    if (command!=0x02000060U && command!=0x03000080U && command!=0x03000032U && command!=0x03000063U && command!=0x0200005dU && command!=0x0300011aU && command!=0x03000076U && command!=0x030000deU) return false;
     auto& s=*impl_;if (!s.world || !s.chain) throw std::logic_error("실제 사제 건설 메뉴의 현재 월드 수명 없음");
     const auto parameter=std::bit_cast<std::uint32_t>(event.y);
-    if (common) return s.world->Session().CommandObject(o::Sid{static_cast<std::uint16_t>(parameter)},event.code)!=0;
     if (command==0x030000deU) return s.world->Session().CommandPriest(o::Sid{static_cast<std::uint16_t>(parameter)},event.code,parameter)!=0; // 원본4940b0의같은packed y로기도요청을보낸다.
     // 원본42aa50은 이벤트의y를 내용물검색부모로 읽는다. 현재 메뉴의 부모도 같은 SID다.
     if (command==0x0300011aU || command==0x03000076U) { const o::Sid parent{static_cast<std::uint16_t>(parameter)};static_cast<void>(s.world->Session().CommandCarrierDrop(parent,event.code,parent));return true; }
