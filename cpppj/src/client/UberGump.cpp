@@ -1523,6 +1523,7 @@ void UberGump::Compose() {
         if (popup_.empty()) rawButtons_->SetControls(regions,originalLabels,width,height,{buttonTextureType_,buttonTextureFrame_,
             static_cast<std::int16_t>(buttonTextureMetrics_.width),static_cast<std::int16_t>(buttonTextureMetrics_.height),buttonColors},world_!=nullptr || (rawButtons_->UberRoot() && rawButtons_->UberRoot()->Current()) || client_.HtmlWindowGlobals()->window.instances!=0,client_.HtmlWindowGlobals()->window.instances!=0,
             state_.phase==ClientPhase::MainMenu && client_.Assets().Edition()==o::OriginalEdition::Patch1078 ? std::optional<std::int32_t>{-83} : std::nullopt); //원문004d0530의 container-80 아래 실제 stone 자식 깊이다.
+        if (popup_.empty() && state_.phase==ClientPhase::MainMenu && client_.Edition()==o::OriginalEdition::Patch1078) rawButtons_->LayoutMainMenuControls(regions); // 실제 측정·원문 SCREENH/3 배치의 경계를 같은 검사/사용자 입력에도 공급한다.
         if (!nativeFrame && state_.phase==ClientPhase::LoadingMission && !(missionRuntime_ && missionRuntime_->guided)) {
             rawButtons_->Menus()->SetPalette(client_.GetScreen().Colors());
             // 원본 기본 HUD의 수직 구분선 오른쪽 지도 사각형이다. 전체 dock 드래그 연결 전의 초기값85를 사용한다.

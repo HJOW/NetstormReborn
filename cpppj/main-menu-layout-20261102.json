@@ -1,0 +1,43 @@
+{
+  "unit": 698,
+  "date": "2026-11-02",
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23"
+  },
+  "version": "11.01",
+  "exeSha256": "f6507eca823e4fabd51bceccca668fe0e46dadc62ab74d5198ba988af0b2b6d7",
+  "newCppTests": 1,
+  "existingCppTests": 2,
+  "resolutions": 6,
+  "buttonsChecked": 48,
+  "failedChecks": 0,
+  "gameExecutions": 0,
+  "nativeBodyExecutions": 0,
+  "newFixtures": 0,
+  "protectedFiles": 2617,
+  "protectedChanged": 0,
+  "buildWarnings": 0,
+  "buildErrors": 0,
+  "firstFailures": {
+    "focusedV1Exit": "0xc0000409",
+    "focusedV2Exit": "0xc0000409",
+    "cause": "Already attached host buttons were reattached without Push, making a sibling cycle; fixed before any game run"
+  },
+  "limits": [
+    "No GUI run for product698; last main GUI was product697",
+    "No full C++/34/ZIP or physical input/PCM",
+    "Main parent Intro condition and 45-second autoDemo still disconnected",
+    "CD host layout unchanged"
+  ],
+  "sourceSha256": {
+    "cpppj/src/client/RawButtonControls.cpp": "459d26181b102557ce1e2548c5781d71605004151dbde3941ee524d0329ed075",
+    "cpppj/src/client/RawButtonControls.h": "41cc9f0ba359dbb539b0d132b65318a5e70629d95f753a3ef048316dd62e35b5",
+    "cpppj/src/client/UberGump.cpp": "707edd87e5dc1dd3daecf30d1cd2a7cabc6b20827fafcb043c460de83f78d17d",
+    "cpppj/tests/RawMenuMainPopupTests.inc": "e7dae16ec95046d196a89f8f29fbaa70c74b67b99e63bd0fe0ec328261526463",
+    "tools/cpp_main_menu_layout_audit.py": "281cd78ccc52aa19edf73b5a6c51feb95b6243cbc36a1e8de29e94a27457a371",
+    "cpppj/main-menu-layout-native-20261102.json": "3e69c9eb59d6e69b0d93ef48920e8d21e9d74710846d835002c49050999592dc",
+    "AGENTS.md": "544643cf731393ecb4784490aa7f2794e8736742582907cce29453e6ac46f15e"
+  }
+}

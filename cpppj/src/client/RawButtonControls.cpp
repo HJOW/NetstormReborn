@@ -253,6 +253,33 @@ RawButtonInputResult RawButtonControls::RouteInput(InputEvent event) {
 std::uint32_t RawButtonControls::RootToken() const { return impl_->create.entries[0]; }
 // 현재 화면 번호에 대응하는 실제 버튼만 조회한다. 생성 순서나 serial을 화면 번호로 간주하지 않는다.
 std::uint32_t RawButtonControls::ControlGump(int id) const { const auto found=impl_->controls.find(id);return found==impl_->controls.end() ? 0U : found->second; }
+// 메인 버튼을 현재 글꼴로 측정하고 가장 넓은 폭으로 통일한 뒤 첫4개/나머지의 두 행을 각각 가운데에 둔다.
+// 원본: 004ce940(10.78), 간격00502314=4, y=SCREENH/3+55 또는+78이다. 현재 호스트의 루트 직접 자식에서도 원문 메인 가족 깊이를 유지한다.
+void RawButtonControls::LayoutMainMenuControls(std::span<GumpControl> controls) {
+    auto& s=*impl_;if (s.create.collection.edition!=o::OriginalEdition::Patch1078 || controls.size()<4 || controls.size()>9) throw std::invalid_argument("10.78 메인 버튼 배치 계약");
+    float maximum{}; // 원문 local_10의 현재 최대 글자맞춤 폭이다.
+    for (const auto& control:controls) { // 모든 실제 버튼을 측정한 뒤에만 공통 폭을 적용한다.
+        const auto token=ControlGump(control.id);if (control.menu || !token) throw std::invalid_argument("메인 배치의 실제 돌 버튼 없음");
+        s.stone->FitToText(token);const auto width=s.Node(token)->baseWidth;if (maximum<width) maximum=width;
+    }
+    for (const auto& control:controls) { // 높이는 각 글자맞춤 결과를 유지하고 기본/배율 폭만 같은 값으로 바꾼다.
+        auto& node=*s.Node(ControlGump(control.id));node.baseWidth=maximum;node.width=static_cast<float>(static_cast<double>(maximum)*node.scale);
+    }
+    for (std::size_t start=0;start<controls.size();start+=4) { // 첫 행4개와 선택적 Intro를 포함한 나머지 최대5개를 각각 배치한다.
+        const auto end=start==0 ? std::size_t{4} : controls.size();float total{};
+        for (auto index=start;index<end;++index) total=static_cast<float>(static_cast<double>(total)+s.Node(ControlGump(controls[index].id))->baseWidth+4.0); // 원문은 존재하는 버튼에만 간격을 더한다.
+        float x=static_cast<float>((static_cast<double>(s.Node(s.create.entries[0])->baseWidth)-(static_cast<double>(total)-4.0))*0.5);
+        const auto y=static_cast<float>(s.create.screenHeight/3+(start ? 78 : 55));
+        for (auto index=start;index<end;++index) { // 같은 실제 버튼을 재부착하고 그 결과 경계로 클릭 위치도 갱신한다.
+            auto& control=controls[index];const auto token=ControlGump(control.id);const auto depth=s.Node(token)->depth;
+            s.tree->Push(token); // 원본 부모는 미부착 자식을 받지만 현재 호스트는 이미 임시 배치를 마쳤으므로 기존 형제 링크를 먼저 해제한다.
+            s.stone->Attach(token,x,y,s.create.entries[0],0);s.tree->AddDepth(token,depth-s.Node(token)->depth);control.rect=s.collection->Bounds(token);
+            x=static_cast<float>(static_cast<double>(x)+s.Node(token)->baseWidth+4.0);
+        }
+        if (end==controls.size()) break;
+    }
+    s.Changed();
+}
 // count/visible로 대체하지 않고 원문처럼 고정 등록칸과 현재 serial/dead만 읽는다.
 std::uint32_t RawButtonControls::SerialGump(std::uint32_t serial) const { return FindCurrentGumpSerial(impl_->create.entries,serial,[this](auto token) { return impl_->Node(token); }); }
 // 원문은 등록 ID를 읽으며 serial이나 명령으로 다시 검색하지 않는다.

@@ -1,6 +1,24 @@
 // 기존 MenuClient의 실제 자산·등록표·입력으로 메인 팝업의 모달/위치/명령/정리를 확인한다.
 #include "client/RawGameMenus.h"
 
+// 원본 글꼴의 최대 맞춤 폭75와 004ce940에서 읽은 여섯 해상도의 위치를 실제 버튼/입력 경계에 대조한다.
+TEST_CASE(RawMenuControls_MainLayoutMeasuredWidthAndSixResolutions) {
+    const std::array<std::array<int,4>,6> cases{{{640,480,164,215},{800,600,244,255},{1024,768,356,311},{1280,720,484,295},{1280,800,484,321},{1366,768,527,311}}}; // 각 행은 화면 폭/높이와 첫 행의 원문 x/y다. font 파일의 Multiplayer 폭63+12=75다.
+    const std::array<std::string,8> labels{{"Campaign","Multiplayer","Demo","Help","Edit","Credits","Options","Quit"}}; // Intro 없는 원본의 실제 표시 순서다.
+    for (const auto& entry:cases) { // 창 없이 같은 실제 글꼴·트리로 각 해상도의 측정/부착/적중을 확인한다.
+        MenuClient client;client.Resize(entry[0],entry[1]);std::array<GumpControl,8> controls{};
+        for (std::size_t index=0;index<controls.size();++index) controls[index]={static_cast<int>(index),{10,10,20,20},false,true,false}; // 새 레이아웃이 초기 임시 폭10/위치10을 재사용하지 못하게 한다.
+        const auto& asset=client.assets.Find("fortGump");const auto frame=client.assets.FrameIndex(asset,"A01",0);const auto metrics=client.assets.Shapes().SquidMetrics(asset.block,frame);
+        client.buttons.SetControls(controls,labels,entry[0],entry[1],{static_cast<std::uint32_t>(asset.block+70),static_cast<std::uint32_t>(frame),metrics.width,metrics.height,ButtonColors(client.Palette())},true,false,-83);
+        client.buttons.LayoutMainMenuControls(controls);
+        for (std::size_t index=0;index<controls.size();++index) { // 각 입력 영역이 원문 위치/공통 폭/개별 글자 높이이며 적중도 같은 실제 버튼이어야 한다.
+            const auto& rect=controls[index].rect;const auto x=entry[2]+static_cast<int>(index%4)*79,y=entry[3]+static_cast<int>(index/4)*23;
+            CHECK(rect.left==x && rect.top==y && rect.right==x+75 && rect.bottom==y+20);
+            const auto token=client.buttons.ControlGump(static_cast<int>(index));CHECK(client.buttons.PickGump({x+37,y+10})==token && client.buttons.GumpDepth(token)==std::uint32_t(-83));
+        }
+    }
+}
+
 // Help 세 항목을 누를 수 있는 실제 메뉴로 작성하고, 바깥 클릭 뒤에도 원래 돌 버튼은 같은 수명으로 남아야 한다.
 TEST_CASE(RawMenuControls_MainPopupHelpModalSelectionAndRetirement) {
     MenuClient client;const auto button=client.buttons.ControlGump(0);CHECK(button && !client.buttons.ControlGump(99));
