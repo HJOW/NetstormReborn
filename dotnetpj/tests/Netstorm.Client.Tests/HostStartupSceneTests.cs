@@ -272,6 +272,41 @@ public sealed class HostStartupSceneTests
         Assert.Null(menu.Tree.Node(unfinished)); Assert.Equal(initial, menu.Tree.Create.Count); Assert.Empty(text.Fragments.Fragments);
     }
 
+    /// <summary>실제 Credits Tell을 전체 창 생성기로 읽어 모달과 본문을 만들고 Enter로 닫는다.</summary>
+    [Fact]
+    public void HostHtmlFactoryShowsActualCreditsAndClosesThroughInput()
+    {
+        string? data = GameDataLocator.FindDataDirectory(); Assert.NotNull(data);
+        var startup = new HostStartupScene(data); var screen = new Screen(1024, 768);
+        Assert.True(screen.SetMode(ScreenMode.BackBufferDib | ScreenMode.ModeSet)); startup.Draw(screen);
+        var menu = new HostMainMenu(startup, screen, new GumpButtonTreeHooks
+        {
+            Now = () => 1, Poll = _ => default, Sound = () => { }, Redraw = (_, _) => { }, HandleBase = (_, _, _, _) => 0
+        });
+        var queue = new InputQueue(); var strings = new ScriptStringRing();
+        var windows = new HostHtmlWindows(menu, queue, () => 42, _ => throw new InvalidOperationException());
+        windows.BindParser(startup, raw => ScriptCommand.QueueScriptCommand(raw, queue, strings,
+            new() { Lookup = DialogScriptCommands.Lookup, Unknown = _ => throw new InvalidOperationException() }));
+        var text = new HostHtmlText(menu, windows, screen, _ => default, (_, _) => { }, _ => { }, _ => { });
+        text.Bind(windows); var menus = new HostHtmlMenus(menu, windows, text, startup, screen, (_, _) => { });
+        var factory = new HostHtmlFactory(menu, windows, menus, startup, screen, queue, strings, () => 42, _ => 0,
+            _ => throw new InvalidOperationException());
+        uint initial = menu.Tree.Create.Count; var result = factory.ShowTell("Credits");
+        Assert.True(result.Found); Assert.NotEqual(0U, result.Serial);
+        uint root = menu.Tree.Reference(result.Serial); var node = Assert.IsType<HtmlWindowGumpNode>(menu.Tree.Node(root));
+        Assert.Equal(root, menu.Tree.LifeState.CurrentDialog); Assert.NotEqual(0U, node.Body); Assert.True(node.ControlCount > 0);
+        Assert.NotEmpty(text.Fragments.Fragments);
+        Assert.NotEqual(0U, menu.Route(new(windows.State.EnterEvent, 0, 0)));
+        Assert.Equal(0U, menu.Tree.LifeState.CurrentDialog); Assert.False(queue.Empty);
+        menu.Tree.Lifetime.Cleanup(); Assert.Null(menu.Tree.Node(root)); Assert.Empty(text.Fragments.Fragments);
+        Assert.Equal(initial, menu.Tree.Create.Count);
+        uint serial = factory.Factory.Show("Choose<br>$Menu=First,Tell,First \n", 0, 0, 0);
+        root = menu.Tree.Reference(serial); var column = Assert.Single(menu.Tree.Create.Entries
+            .Select(token => menu.Tree.Node(token)).OfType<MenuGumpNode>());
+        Assert.Equal(root, column.Parent); Assert.Equal("First", strings.Resolve(column.Items[0].Parameter));
+        windows.CloseAll(); Assert.Equal(initial, menu.Tree.Create.Count); Assert.Empty(text.Fragments.Fragments);
+    }
+
     /// <summary>여덟 실제 버튼의 눌림·해제를 원본 상위 명령과 인자로 전달한다.</summary>
     [Fact]
     public void MainMenuRoutesEachButtonToItsOriginalAction()
