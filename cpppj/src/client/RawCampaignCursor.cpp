@@ -84,6 +84,8 @@ struct RawCampaignCursor::Impl {
             auto* attached=static_cast<o::RegularProcess*>(core.processes.Attach(std::unique_ptr<o::RegularProcess>(memory),46,parent,0x50));
             if (!attached) throw std::logic_error("조각 반환 실제 Regular 부착 실패");attached->ResetTask(event,core.processState.Now());
         };
+        returnHooks.productTimers=game.productTimers;returnHooks.unitRate=game.unitRate;
+        returnHooks.fortMode=[this] { return core.ownerMode.fort ? 1U : 0U; }; // 할당 뒤 실제 모드를 읽고 Prepare 시점의 사본을 쓰지 않는다.
         returned=std::make_unique<RawCursorReturnPiece>(data.contained,returnState,data.random,std::move(returnHooks));
         o::ConstructionLocalHooks localHooks; // Form/반환/실제 Place/Builder/직렬화를 같은 게임에 연결한다.
         localHooks.previewSource=[this](o::Sid sid) { return o::SquidForms(core.pool).Parent(sid).value; };

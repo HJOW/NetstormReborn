@@ -23,6 +23,8 @@ struct CampaignCursorGame {
     std::function<void(std::uint32_t,o::Sid,std::uint32_t,std::uint32_t)> moveBuilder; // 같은 실제134/23/39를 시작한다.
     std::function<void(o::Sid,std::uint32_t)> removeRange; // 같은 실제 contained 조회/삭제의 순번0·삭제1이다.
     std::function<void()> playDrop; // 단일 실제 이름표의 droppiece.wav를 재생한다.
+    std::function<std::uint32_t()> productTimers; // 실제 Client의 useProductTimers이며 반환 몸체가 생성 전후에 다시 읽는다.
+    std::function<std::uint8_t()> unitRate; // 같은 Session의 현재 전투 옵션 BYTE2다.
 };
 // 모든 참조는 이 커서보다 오래 살아야 한다. 월드나 카메라의 사본을 소유하지 않는다.
 struct CampaignCursorData {

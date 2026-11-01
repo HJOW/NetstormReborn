@@ -2666,3 +2666,10 @@ netstorm_apply_compiler_options(netstorm_options_disk_tests)
 add_executable(netstorm_viewspot_tests FocusedTestMain.cpp CameraHomeTests.cpp)
 target_link_libraries(netstorm_viewspot_tests PRIVATE netstorm)
 netstorm_apply_compiler_options(netstorm_viewspot_tests)
+
+# 실제 커서 반환의 현재 옵션 연결과 기존 세 판본 PE 입력을 게임 실행 없이 확인한다(단위677).
+add_executable(netstorm_return_options_tests FocusedTestMain.cpp ReturnPieceTests.cpp SessionCursorReturnOptionsTests.cpp)
+target_link_libraries(netstorm_return_options_tests PRIVATE netstorm)
+netstorm_apply_compiler_options(netstorm_return_options_tests)
+target_compile_definitions(netstorm_return_options_tests PRIVATE ${_netstorm_menu_session_definitions})
+target_sources(netstorm_tests PRIVATE SessionCursorReturnOptionsTests.cpp)

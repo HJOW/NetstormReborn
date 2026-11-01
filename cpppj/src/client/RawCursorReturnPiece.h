@@ -21,6 +21,8 @@ struct CursorReturnPieceHooks {
     std::function<bool(std::uint32_t)> allocateTimer;
     // createTimer: 대상·이벤트·시각으로 타이머를 생성하는 콜백.
     std::function<void(o::Sid,std::uint32_t,float)> createTimer;
+    std::function<std::uint32_t()> productTimers,fortMode; // 실제 실행은 생성 전후/할당 뒤의 현재 설정과 모드를 읽는다. 독립 원문 검사는 state 입력을 유지한다.
+    std::function<std::uint8_t()> unitRate; // 일반 전투의 실제 옵션 BYTE2를 타이머 할당 뒤에 읽는다.
 };
 // 원본 조각 반환 몸체와 실제 게임 난수/다리 패턴 선택/contained 생성을 결합한다.
 class RawCursorReturnPiece {

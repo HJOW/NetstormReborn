@@ -1,0 +1,14 @@
+{
+  "unit": 677,
+  "date": "2026-11-01",
+  "host": "HJOW-Athlon",
+  "lastFullDecompileHost": "HJOW-Athlon",
+  "lastFullDecompileDate": "2026-10-23",
+  "exeSha256": "8eb9716b9c0131cd3593414799a2abe8a5a53d22f92be615ed0e09d6fbcb9654",
+  "focused": {"registered": 8, "executed": 8, "failedChecks": 0, "existing": 5, "new": 3, "existingNativeRows": 1899},
+  "build": {"first": "새 검사 부모 상수 누락으로 컴파일 실패. 제품은 생성됨", "final": "검사 대상 재빌드 종료0, 경고/오류0"},
+  "live": {"processes": 3, "firstFailure": "676에서 프레임5의 Play Mission 미표시, 종료1", "finalProcesses": 2, "finalExitCodes": [0, 0], "beforeSecondsInterval": [9.799, 10.085], "afterSecondsInterval": [0.725, 1.021], "unitRate": 2, "productTimers": 0, "returnedSid": 174},
+  "protected": {"originals": 1394, "originalCD": 425, "fixtures": 780, "agents": 1, "unchanged": true},
+  "rawDirectory": "extracted/cpp-deck-reactivation-677",
+  "limits": ["실제 한 종류 UI 배치/반환, 앱 내 입력", "전체34/전체 C++/새 ZIP/물리 입력/PCM 미실행", "포획/희생/특정 적 공격/승리/공중3종/신규MP 검사 없음", "원본 녹화 클릭 시각의 새 정밀 측정과 전체 동일성 완료로 확대하지 않음"]
+}

@@ -28,12 +28,17 @@ void RawCursorReturnPiece::Return(std::uint32_t flags,std::uint32_t source,std::
         const auto pattern=o::SelectBridgePattern(static_cast<std::int32_t>(random_.Next(10000)),Pool().Edition());
         contained_.Create(parent,state_.type,static_cast<std::uint32_t>(pattern),flags,0x10,0);return;
     }
-    if (state_.keepPieces==0) flags|=0x100;
+    if ((hooks_.productTimers ? hooks_.productTimers() : state_.keepPieces)==0) flags|=0x100;
     const auto decreased=quality-1U;
     const auto sid=contained_.Create(parent,state_.type,0,flags,0x10,std::bit_cast<std::int32_t>(decreased)<0 ? 0U : decreased);
-    if (state_.keepPieces==0 && hooks_.allocateTimer(0x28)) {
-        if (state_.fort==0 && state_.lifetimeIndex>=kLifetimes.size()) throw std::out_of_range("조각 반환 소멸 시간 번호 오류");
-        const float duration=state_.fort ? std::bit_cast<float>(kFortLifetime) : kLifetimes[state_.lifetimeIndex];
+    if ((hooks_.productTimers ? hooks_.productTimers() : state_.keepPieces)==0 && hooks_.allocateTimer(0x28)) {
+        const auto fort=hooks_.fortMode ? hooks_.fortMode() : state_.fort; // 원문처럼 생성/할당 효과 뒤의 실제 모드를 조회한다.
+        float duration=std::bit_cast<float>(kFortLifetime); // 요새 경로는 일반 전투의 옵션 BYTE를 읽지 않는다.
+        if (!fort) {
+            const auto index=hooks_.unitRate ? hooks_.unitRate() : state_.lifetimeIndex; // 현재 Fast=2를 초기값 Slow=0 사본으로 대체하지 않는다.
+            if (index>=kLifetimes.size()) throw std::out_of_range("조각 반환 소멸 시간 번호 오류");
+            duration=kLifetimes[index];
+        }
         hooks_.createTimer(sid,0,duration);
     }
 }
