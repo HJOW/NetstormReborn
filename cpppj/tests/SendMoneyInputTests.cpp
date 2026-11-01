@@ -1,11 +1,13 @@
 // 송금 원문888입력과 X/All의 현재 금액·취소·자금 부족을 대조한다.
 #include "TestSupport.h"
 #include "client/SendMoneyInput.h"
+#include "client/ScriptCommand.h"
 #include <array>
 #include <bit>
 #include <fstream>
 #include <string>
 #include <vector>
+#include <utility>
 
 using namespace netstorm::client;
 namespace { // 입력과 제품 효과만 구성하며 fixture 기대값으로 분기를 정하지 않는다.
@@ -44,6 +46,11 @@ TEST_CASE(SendMoneyInput_AllReadsCurrentAmountAndXAffordability) { // All은 확
 }
 
 TEST_CASE(SendMoneyInput_ReleaseAndUnrelatedNeedNoDevices) { // 뗌과 다른 입력은 월드/돈 장치를 요구하지 않는다.
-    for (const auto code:{0x02000120U,0x02000108U,0x020000ecU,0x02000100U,0x0200012bU,0x02000118U}) CHECK(DispatchSendMoneyInput({code|0x80000000U,0,0},{})); // 모든 실제 송금 명령의 release 관문이다.
+    const std::array<std::pair<std::string_view,std::uint32_t>,6> names{{{"Send300Bucks",0x02000120U},{"Send700Bucks",0x02000108U},{"SendBucks",0x020000ecU},{"sEnDxBuCkS",0x02000100U},{"SendAllBucks2",0x0200012bU},{"SendAllBucks",0x02000118U}}}; // 독립 원본 이름표의 서로 다른 여섯 코드를 검사한다.
+    for (const auto& [name,code]:names) { // 같은 parser/큐의 대상 보존과 실제 일반 입력의 뗌 관문을 함께 대조한다.
+        CHECK(SendMoneyScriptCode(name)==code && IsSendMoneyCommand(code));InputQueue queue;ScriptStringRing strings;
+        QueueScriptCommand(std::string(name)+",2",queue,strings,{SendMoneyScriptCode,{}});const auto event=queue.Pop(false);
+        CHECK(event.code==code && event.x==2 && event.y==2 && queue.Empty());CHECK(DispatchSendMoneyInput({code|0x80000000U,0,0},{}));
+    }
     CHECK(!DispatchSendMoneyInput({123,0,0},{}));CHECK(SendMoneyScriptCode("SendAllBucks")==0x02000118U);CHECK(SendMoneyScriptCode("sendallbucks")==0x02000118U);CHECK(SendMoneyScriptCode("Unknown")==0xffffffffU);
 }

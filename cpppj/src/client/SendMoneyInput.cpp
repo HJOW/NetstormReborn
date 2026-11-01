@@ -7,6 +7,7 @@
 #include <cmath>
 #include <stdexcept>
 #include <string>
+#include <utility>
 
 namespace netstorm::client { // 실제 입력 사건만 처리하며 메뉴 생성 조건을 실행에 덧붙이지 않는다.
 namespace { // 도달한 경계와 정수 패킷 작성만 지역화한다.
@@ -33,7 +34,13 @@ bool IsSendMoneyCommand(std::uint32_t code) { //실제 입력 코드의 하위26
     code&=0x03ffffffU;return code==0x02000120U || code==0x02000108U || code==0x020000ecU || code==0x02000100U || code==0x0200012bU || code==0x02000118U;
 }
 std::uint32_t SendMoneyScriptCode(std::string_view name) { // 원본 이름표의 확인 버튼 연결을 복원한다.
-    return o::AsciiLower(name)=="sendallbucks" ? 0x02000118U : 0xffffffffU;
+    // 원본 여섯 이름은 고정300/700/1000·X 입력·All 확인/실행의 서로 다른 명령이다.
+    static constexpr std::array<std::pair<std::string_view,std::uint32_t>,6> names{{
+        {"send300bucks",0x02000120U},{"send700bucks",0x02000108U},{"sendbucks",0x020000ecU},
+        {"sendxbucks",0x02000100U},{"sendallbucks2",0x0200012bU},{"sendallbucks",0x02000118U}}};
+    const auto key=o::AsciiLower(name);
+    for (const auto& [label,code]:names) if (key==label) return code; // 숫자 메뉴와 같은 코드를 기존 입력 큐로 보낸다.
+    return 0xffffffffU;
 }
 bool DispatchSendMoneyInput(const InputEvent& event,const SendMoneyHooks& h) {
     const auto code=event.code&0x03ffffffU;if (!IsSendMoneyCommand(code)) return false;if (event.code&0x80000000U) return true;

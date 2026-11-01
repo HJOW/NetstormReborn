@@ -2729,3 +2729,9 @@ add_executable(netstorm_scenario_object_tests FocusedTestMain.cpp ScenarioObject
 target_link_libraries(netstorm_scenario_object_tests PRIVATE netstorm)
 netstorm_apply_compiler_options(netstorm_scenario_object_tests)
 target_compile_definitions(netstorm_scenario_object_tests PRIVATE ${_netstorm_menu_session_definitions})
+
+# 송금 여섯 이름과 기존888입력/대본 큐/공통 객체 이름만 집중 회귀한다(단위687).
+add_executable(netstorm_scenario_money_tests FocusedTestMain.cpp SendMoneyInputTests.cpp ScriptCommandTests.cpp ScenarioObjectInputTests.cpp)
+target_link_libraries(netstorm_scenario_money_tests PRIVATE netstorm)
+netstorm_apply_compiler_options(netstorm_scenario_money_tests)
+target_compile_definitions(netstorm_scenario_money_tests PRIVATE ${_netstorm_menu_session_definitions})

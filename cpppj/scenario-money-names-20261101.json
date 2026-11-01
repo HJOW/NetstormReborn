@@ -1,0 +1,48 @@
+{
+  "unit": 687,
+  "date": "2026-11-01",
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23"
+  },
+  "productVersion": "11.01",
+  "productSha256": "f66cb94b70f1edbd535bf9498a77029c92be615e6bb0620d4d0f76e42b16a013",
+  "change": "기존 송금 실행 부모 변경 없이 여섯 원본 이름 조회 연결",
+  "build": {
+    "exit": 0,
+    "warnings": 0,
+    "errors": 0
+  },
+  "focused": {
+    "target": "netstorm_scenario_money_tests",
+    "registered": 8,
+    "executed": 8,
+    "failedChecks": 0,
+    "new": 0
+  },
+  "protection": {
+    "unchangedExisting": 2605,
+    "changed": [],
+    "newFixtures": 0,
+    "currentFixtures": 785,
+    "against": "685 전체 보호 명세 +686 독립 fixture 해시"
+  },
+  "gameExecutions": 0,
+  "nativeExecutions": 0,
+  "newFixtures": 0,
+  "full34Runs": 0,
+  "fullCppRuns": 0,
+  "newZip": false,
+  "limits": "정적 이름표/499 loose대본의 명시태그와기존집중검사다. 실제송금/GUI/통신·자연완주·전체동일성검증으로확대하지않는다. MP/포획/희생/특정적공격/승리재현0.",
+  "sha256": {
+    "AGENTS.md": "138808039a2d171d8e697906776e620f9ea8dc2038c35b4dc01ce18d3e462b77",
+    "cpppj/src/client/SendMoneyInput.cpp": "0e8bdf5a926237de786fc9c0995f0bd8340620b4e5cc8dc6e63ea0c3677be545",
+    "cpppj/tests/SendMoneyInputTests.cpp": "cb149a30350784886b62235d7f04ac3d11c2d7e58a7b549e055b8afda368e2cd",
+    "cpppj/scenario-script-inventory-20261101.json": "40a9f97408f7653994b4992414063ad3c6c2c5e86263d9e1d1903e03a15ee437",
+    "tools/cpp_scenario_script_inventory.py": "3198dcefc1250e71d2f4d080ecf930933b541cd5104508d72a84c536e5038115",
+    "extracted/cpp-scenario-money-687/build.log": "28e4bedb075200a460ba6e54095e44a81ff045b0978ae09376aa6b1a3e0ea9c4",
+    "extracted/cpp-scenario-money-687/focused.log": "85b9dbb04adba42a957cacdab6e51174997211ed5a801b04932b5e9c39856566",
+    "extracted/cpp-scenario-money-687/protection.json": "08cc361d03d4e907c67baa056af45c24cd649ad167be1f45e0d158a3796882a8"
+  }
+}
