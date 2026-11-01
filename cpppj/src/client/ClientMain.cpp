@@ -5,6 +5,7 @@
 // 범위: 창 만들기, 설정 읽기, 화면 장치, 메시지·입력 큐, 프레임 제한과 내보내기까지.
 //       Renderer·원본 글꼴/커서·메뉴와 저장 미션의 기본 지형/객체·선택/이동을 연결했다. 건설/전투는 후속이다.
 #include "client/ClientMain.h"
+#include "client/IntroMenu.h" // 시작 시 실제 파일 존재만으로 Intro 표시값을 정한다.
 #include "client/ProductPresentation.h"
 #include "client/RawCampaignSession.h" //Sleep 뒤의 실제 프레임말 Player 결과 소비에 장기 Session을 빌린다.
 #include "client/ClientDiagnostics.h"
@@ -350,9 +351,10 @@ int Client::Run() {
     if (serverFile) nsInfoGlobals_->LoadServerNames(*serverFile);else if (const auto original=files_.TryRead(configuration_.SubstituteLocal("{DataDir}/rootservers.dat"))) nsInfoGlobals_->LoadServerNames(*original);
     if (!PumpMessages()) return 0;
     // [원본] 송수신기, squid 목록(120000), 좌표 해시, spot 배열, 영상, Guide, 그래프,
-    //        전체 명령 표, 인트로 감지, 연락처, 지도 모드, HTTP 서버 — 옮기지 않았다.
+    //        전체 명령 표, 연락처, HTTP 서버는 남으며 인트로 감지와 지도 모드의 실제 부모는 아래에 연결한다.
     // 원본 00438dc0 "loadContactList" 다음의 FUN_00469fc0: 전투 밖이므로 메뉴 곡 ser22.mus로 시작한다.
     if (options_.edition==o::OriginalEdition::Patch1078) InitializeClientIssueCommands(*this); //004397f5의 네 초기 등록은 뒤 map mode의 format/back/front보다 먼저 실행한다.
+    if (options_.edition==o::OriginalEdition::Patch1078) DetectIntroAvailability(); // 원문 detect intro는 issueCommand 뒤·최초 메인 버튼 생성 전에 한 번 실행한다.
     if (audio_) audio_->StartScene(false);
     if (options_.edition==o::OriginalEdition::Patch1078) InitializeClientChatManager(*this); //00439840의 실제 map mode 시작이며 메뉴/Session 생성보다 먼저 같은 현재 manager/명령표를 구성한다.
     fortBadges_->ResetCounts(); // 원본0043984a는 Chat 시작 다음의 같은 장부 count reset이며 매 Session 생성 때 반복하지 않는다.
@@ -538,6 +540,8 @@ void Client::InterpretMainMenuOptions() {
     auto value=std::bit_cast<std::int32_t>(localStateGlobals_->TellTips());configuration_.ReadInt("tellTips",value);localStateGlobals_->TellTips()=std::bit_cast<std::uint32_t>(value);
     value=std::bit_cast<std::int32_t>(localStateGlobals_->TipNumber());configuration_.ReadInt("tipNumber",value);localStateGlobals_->TipNumber()=std::bit_cast<std::uint32_t>(value); //원문435220처럼 tellTips 바로 뒤에 현재 순번을 읽고 누락/상위 비트를 보존한다.
 }
+// 최초 감지는 영상 내용을 읽거나 디코더를 열지 않는다. 감지 뒤 옵션 변경이 이 값을 자동으로 덮지 않는다.
+void Client::DetectIntroAvailability() { DetectIntroMovie(localStateGlobals_->IntroAvailable(),[this] { std::string path;configuration_.ReadString("introMovie",path);return path; },[this](auto name) { return files_.Probe(name); }); }
 void Client::InterpretOwnerColorOptions() { // 준비 전의 원문 무시와 현재 DWORD·같은 전체 dirty 증가를 보존한다.
     colorSortInput_->OwnerTables()->SetEnabled(std::bit_cast<std::uint32_t>(configuration_.GetInt("useBanners")),kencloudGlobals_->WorldRedraw());
 }

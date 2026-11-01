@@ -2817,3 +2817,9 @@ netstorm_apply_compiler_options(netstorm_recheck_cd_tests)
 add_executable(netstorm_main_popup_tests FocusedTestMain.cpp RawMenuControlsTests.cpp CampaignExistingEditorCheckpointTests.cpp GameMenusTests.cpp GameMenuActionsTests.cpp)
 target_link_libraries(netstorm_main_popup_tests PRIVATE netstorm)
 netstorm_apply_compiler_options(netstorm_main_popup_tests)
+
+# Intro 감지/파일 존재/실제 Client owner·입력과 기존 Native 영상 상태 부모를 집중 검사한다(699).
+target_sources(netstorm_tests PRIVATE IntroMenuTests.cpp)
+add_executable(netstorm_intro_menu_tests FocusedTestMain.cpp IntroMenuTests.cpp NativeIntroStateTests.cpp)
+target_link_libraries(netstorm_intro_menu_tests PRIVATE netstorm)
+netstorm_apply_compiler_options(netstorm_intro_menu_tests)

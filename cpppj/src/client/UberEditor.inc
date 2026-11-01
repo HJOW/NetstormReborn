@@ -178,7 +178,7 @@ o::LocalMissionParentResult UberGump::InstallIntroNativeState(std::uint32_t sele
 // 미션 Login은 기존 분배기에 남기고 Edit1/메인3/인트로39~41과 다음4를 같은 분배기로 처리한다.
 void UberGump::PollEditorState() {
     auto& local=*client_.LocalStateGlobals();const auto next=local.State().next[0];
-    if (next!=1 && next!=3 && !(editor_ && (next==4 || (next>=39 && next<=41)))) return;
+    if (next!=1 && next!=3 && !(next>=39 && next<=41) && !(editor_ && next==4)) return; // PlayIntro는 Editor 장치가 아직 없어도 같은 Native 부모를 처음 구성한다.
     if (!editor_) editor_=std::make_unique<EditorRuntime>(client_);
     if (!editor_->state) { // 새 이름 창에서 먼저 확보한 파일 장치가 있어도 실제 State 분배기는 별도로 처음 한 번 구성한다.
         auto& game=*client_.GameplayGlobals();auto& surface=*client_.SurfaceStorage();

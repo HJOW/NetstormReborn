@@ -1,6 +1,19 @@
 // 기존 MenuClient의 실제 자산·등록표·입력으로 메인 팝업의 모달/위치/명령/정리를 확인한다.
 #include "client/RawGameMenus.h"
 
+// Intro가 존재하는 실제9버튼도 둘째 행5개를 따로 가운데에 놓으며 표시/입력의 실제 가족을 유지한다.
+TEST_CASE(RawMenuControls_MainLayoutNineButtonsWithIntro) {
+    MenuClient client;client.Resize(1024,768);const std::array<std::string,9> labels{{"Campaign","Multiplayer","Demo","Help","Edit","Intro","Credits","Options","Quit"}};std::array<GumpControl,9> controls{};
+    for (std::size_t index=0;index<controls.size();++index) controls[index]={static_cast<int>(index),{10,10,20,20},false,true,false}; // 원문 순서의 실제9개 돌 버튼을 아직 겹친 임시 위치에 생성한다.
+    const auto& asset=client.assets.Find("fortGump");const auto frame=client.assets.FrameIndex(asset,"A01",0);const auto metrics=client.assets.Shapes().SquidMetrics(asset.block,frame);
+    client.buttons.SetControls(controls,labels,1024,768,{static_cast<std::uint32_t>(asset.block+70),static_cast<std::uint32_t>(frame),metrics.width,metrics.height,ButtonColors(client.Palette())},true,false,-83);client.buttons.LayoutMainMenuControls(controls);
+    for (std::size_t index=0;index<controls.size();++index) { // 첫 행4개는356, 둘째 행5개는316.5에서 시작하며 공통 Bounds는 정수316을 반환한다.
+        const auto x=index<4 ? 356+static_cast<int>(index)*79 : 316+static_cast<int>(index-4)*79;const auto y=index<4 ? 311 : 334;
+        CHECK(controls[index].rect.left==x && controls[index].rect.top==y && controls[index].rect.right==x+75 && controls[index].rect.bottom==y+20);
+        CHECK(client.buttons.PickGump({x+37,y+10})==client.buttons.ControlGump(static_cast<int>(index)));
+    }
+}
+
 // 원본 글꼴의 최대 맞춤 폭75와 004ce940에서 읽은 여섯 해상도의 위치를 실제 버튼/입력 경계에 대조한다.
 TEST_CASE(RawMenuControls_MainLayoutMeasuredWidthAndSixResolutions) {
     const std::array<std::array<int,4>,6> cases{{{640,480,164,215},{800,600,244,255},{1024,768,356,311},{1280,720,484,295},{1280,800,484,321},{1366,768,527,311}}}; // 각 행은 화면 폭/높이와 첫 행의 원문 x/y다. font 파일의 Multiplayer 폭63+12=75다.

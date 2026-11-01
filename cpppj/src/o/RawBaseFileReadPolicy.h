@@ -23,4 +23,6 @@ using BaseFileReadLookup=std::function<std::optional<std::vector<std::uint8_t>>(
 std::string JoinBaseFileRoot(std::string_view root,std::string_view name);
 //0041b4c0의 읽기0 조회 부분이다. 미발견은 기존 TryRead 계약의nullopt로 반환하며 FILE/예외 객체 ABI를 합성하지 않는다.
 std::optional<std::vector<std::uint8_t>> ReadBaseFileByPolicy(std::string_view name,std::string_view primaryRoot,const BaseFileReadLookup& lookup);
+//0041ab10의 존재 조회다. 직접 장치는5/0, 상대 이름은 기본TAFF2→기본disk1→보조disk3→보조TAFF4/0이다. 내용은 읽지 않는다.
+std::uint32_t ProbeBaseFileByPolicy(std::string_view name,const std::function<bool(BaseFileReadSite,std::string_view)>& lookup);
 }

@@ -217,6 +217,23 @@ bool BaseFileSystem::ContainsArchiveOnly(std::string_view name,bool secondary) c
     for (const auto& archive:archives) if (archive.Find(name)) return true; //등록 순서의 첫 이름 일치에서 끝난다.
     return false;
 }
+// 원문 rb 열기/닫기와 TAFF 이름 조회만 사용한다. Windows10/11의 한글 경로는 기존 UTF-8/W 경계로 처리한다.
+std::uint32_t BaseFileSystem::Probe(std::string_view name) const {
+    const auto primary=PathText(std::filesystem::absolute(base_).lexically_normal()),secondary=PathText(std::filesystem::absolute(secondary_).lexically_normal());
+    return ProbeBaseFileByPolicy(name,[&](auto site,auto query) {
+        if (site==BaseFileReadSite::PrimaryArchive || site==BaseFileReadSite::SecondaryArchive) return ContainsArchiveOnly(query,site==BaseFileReadSite::SecondaryArchive);
+        auto path=NativePath(site==BaseFileReadSite::DirectDisk ? std::string(query) : JoinBaseFileRoot(site==BaseFileReadSite::PrimaryDisk ? primary : secondary,query));
+#ifdef _WIN32
+        if (site==BaseFileReadSite::DirectDisk && !path.has_root_directory()) {
+            const auto root=NativePath(primary),drive=path.root_name();if (drive.native().size()==2 && drive.native()[1]==L':' && AsciiLower(PathText(drive))==AsciiLower(PathText(root.root_name()))) path=root/path.relative_path(); // 원본 chdir과 달리 호스트 CWD를 보존하는 기존 Windows10/11 호환 해석이다.
+        }
+        auto* file=::_wfopen(path.c_str(),L"rb");
+#else
+        auto* file=std::fopen(path.c_str(),"rb");
+#endif
+        if (!file) return false;static_cast<void>(std::fclose(file));return true;
+    });
+}
 // 찾지 못하면 호출자에게 예외로 알린다.
 std::vector<std::uint8_t> BaseFileSystem::Read(std::string_view name) const {
     auto bytes = TryRead(name);

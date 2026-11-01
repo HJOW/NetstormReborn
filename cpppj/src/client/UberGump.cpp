@@ -13,6 +13,7 @@
 #include "client/CaptureInput.h"
 #include "client/ClientCaptureSequence.h"
 #include "client/RecheckCdInput.h"
+#include "client/IntroMenu.h" // 원문 메인 Intro 표시값과 일반 입력의 실제 State39 요청이다.
 #include "client/ClientCdGlobals.h"
 #include "client/TechnicalHelp.h" //실제 파일 가용성 조회와 별도 Technical Help 명령을 연결한다.
 #include "client/ClientDiagnostics.h"
@@ -1045,6 +1046,7 @@ void UberGump::OpenObjectMenu(o::SquidId id,const InputEvent& event) {
 void UberGump::Event(InputEvent event) {
     if (const auto* movie=rawButtons_->Menus()->Movies();movie && movie->Active()) { const auto routed=rawButtons_->RouteInput(event);if (routed.consumed) { rebuild_=true;return; } } // 실제 MovieGump 모달을 일반 ESC/키 처리보다 먼저 같은 Gump Route에 전달한다.
     const auto transitionCode=event.code&0x03ffffffU; // 원본 Guide 제어 사건은 일반 입력/프레임보다 먼저 소비한다.
+    if (DispatchPlayIntroInput(event,client_.LocalStateGlobals()->State())) return; // 현재 두 인자는 쓰지 않고 Native State39/40/41의 기존 영상/복귀 수명에 맡긴다.
     if (transitionCode==kMissionBeginCommand || transitionCode==kMissionReloadCommand || transitionCode==kMissionForkCommand || transitionCode==kMissionEndCommand) {
         GuideMissionCommandHooks hooks;
         hooks.begin=[this](std::uint32_t token) { const std::string name(scriptStrings_.Resolve(token));BeginMission(name); }; // 고리가 해제되기 전에 실제 수명을 확인하고 이름을 소유 복사한다.
@@ -1466,10 +1468,12 @@ void UberGump::Compose() {
         Paste(*canvas, title_, (width - 640) / 2, (height - 480) / 2, all);
         const int x = width / 2 - 156, y = height / 2 - 73;
         const std::string campaign = client_.Assets().Edition()==o::OriginalEdition::Patch1078 ? "UCampaign" : Script("tell").Section("UCampaign") ? "UCampaign" : "Campaign"; // 원문10.78 MainMenu의 고정 target이며 영구 tell Config를 새로 등록하지 않는다.
-        // 원본 10.78의 8개 버튼. 미복원 기능도 원본 자료의 창을 통해 상태를 알린다.
-        const std::array<DialogItem, 8> buttons{{
+        // 원본 10.78의 기본8개·감지 성공 시 Intro를 포함한9개 버튼이다. 원문 순서대로 두 행에 배치한다.
+        std::vector<DialogItem> buttons{
             {"Campaign", {"Tell", campaign}}, {"Multiplayer", {"Tell", "NotImplemented"}}, {"Demo", {"Tell", "DEMOVILLE"}}, {"Help", {"Menu", "help"}},
-            {"Edit", {"AskEditFort", "0"}}, {"Credits", {"Tell", "Credits"}}, {"Options", {"Menu", "options"}}, {"Quit", {"RequestQuitApp", "0"}}}};
+            {"Edit", {"AskEditFort", "0"}}};
+        if (client_.Edition()==o::OriginalEdition::Patch1078 && client_.LocalStateGlobals()->IntroAvailable()) buttons.push_back({"Intro",{"PlayIntro","0"}}); // 원문0054db98의 최초 감지값이며 매 Compose마다 파일을 재검사하지 않는다.
+        buttons.insert(buttons.end(),{{"Credits", {"Tell", "Credits"}}, {"Options", {"Menu", "options"}}, {"Quit", {"RequestQuitApp", "0"}}});
         // 펼침 메뉴 동안 밑에 보이는 버튼은 입력 영역에 넣지 않는다.
         for (std::size_t i = 0; i < buttons.size(); ++i) button(buttons[i], x + static_cast<int>(i % 4) * kButtonPitch, y + static_cast<int>(i / 4) * 23, kButtonWidth);
     }
@@ -1594,6 +1598,7 @@ std::string UberGump::Report(bool cameraOnly) const {
     out<<client_.RendererFrameDiagnostics(); //같은 실제 Frame/구름 요청·캐시·마지막 표시 인자만 관측한다.
     const auto& capture=client_.ScreenCapture();const auto& captureState=capture.State();out<<"screen_capture\t"<<captureState.count<<'\t'<<captureState.active<<'\t'<<captureState.first<<'\t'<<capture.AllocatedFrames()<<'\n'; //검사 보고만 같은 현재 개수/active/first/실제 할당 수를 읽으며 상태나 파일을 바꾸지 않는다.
     out<<"recheck_cd\t"<<client_.CdGlobals()->RecheckSerial()<<'\n'; //검사 보고만 005c85ec의 현재 serial을 읽으며 값을 바꾸지 않는다(단위696).
+    out<<"intro_available\t"<<client_.LocalStateGlobals()->IntroAvailable()<<'\n'; // 실제 시작 감지 DWORD의 읽기 전용 관측이다.
     out<<ReportClientBridgeDecay(client_); //현재 메뉴/World가 공유하는 실제 스캔의 읽기 전용 CLI 관측이다.
     const auto& camera=client_.GameplayGlobals()->Camera();out<<"raw_camera_frame\t"<<camera.RendererView().pixels[0]<<'\t'<<camera.RendererView().pixels[1]<<'\t'<<camera.Target().pixels[0]<<'\t'<<camera.Target().pixels[1]<<'\t'<<client_.GameplayGlobals()->PatchDiagnostic()<<'\t'<<client_.LocalStateGlobals()->MetaRebuild()<<'\t'<<pointerBoundary_.initializationFlags<<'\t'<<edgeScrollSince_<<'\n'; //실제 적용/요청·공유 전역만 관측한다.
     out << "phase\t" << static_cast<int>(state_.phase) << "\npage\t" << Field(pageName_) << "\npopup\t" << Field(popup_) << "\n";

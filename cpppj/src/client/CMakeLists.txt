@@ -313,3 +313,4 @@ target_sources(netstorm PRIVATE RawChatFormat.cpp RawChatFormat.h) # 원문 form
 target_sources(netstorm PRIVATE RawChatMessage.cpp RawChatMessage.h) # 일반 본문의 채널/이름/대상/스타일 조합과 say/wrapper를 원문 순서로 복원한다.
 
 target_sources(netstorm PRIVATE CampaignGuideRelease.cpp CampaignGuideRelease.h) # 실제 Guide 소멸은 World·입력 수명과 분리해 같은 AI/Config 부모를 사용한다.
+target_sources(netstorm PRIVATE IntroMenu.cpp IntroMenu.h) # 시작 파일 감지·PlayIntro 이름/일반 입력이 기존 Native39/40/41에 연결된다.

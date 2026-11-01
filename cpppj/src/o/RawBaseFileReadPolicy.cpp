@@ -38,4 +38,13 @@ std::optional<std::vector<std::uint8_t>> ReadBaseFileByPolicy(std::string_view n
     if (auto bytes=Need(lookup)(BaseFileReadSite::SecondaryDisk,name)) return bytes;
     return Need(lookup)(BaseFileReadSite::SecondaryArchive,name);
 }
+// 읽기 부모와 다른 TAFF 우선순위와 장치 실패 시 fallback 없음·출처 번호를 보존한다.
+std::uint32_t ProbeBaseFileByPolicy(std::string_view name,const std::function<bool(BaseFileReadSite,std::string_view)>& lookup) {
+    if (!lookup) throw std::invalid_argument("BaseFile 존재 조회 장치 없음");name=Text(name);
+    if (Device(name)) return lookup(BaseFileReadSite::DirectDisk,name) ? 5U : 0U;
+    for (const auto site:{BaseFileReadSite::PrimaryArchive,BaseFileReadSite::PrimaryDisk,BaseFileReadSite::SecondaryDisk,BaseFileReadSite::SecondaryArchive}) { // 실제 원문 방문 순서이며 첫 성공 뒤 나머지 장치를 열지 않는다.
+        if (lookup(site,name)) return static_cast<std::uint32_t>(site);
+    }
+    return 0;
+}
 }

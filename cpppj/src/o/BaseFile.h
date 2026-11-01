@@ -68,6 +68,7 @@ public:
     std::optional<std::vector<std::uint8_t>> TryRead(std::string_view name) const;
     std::optional<std::vector<std::uint8_t>> TryReadArchiveOnly(std::string_view name,bool secondary=false) const; //선택한 목록만 등록 순서로 읽고 다른 목록/디스크로 fallback하지 않는다.
     bool ContainsArchiveOnly(std::string_view name,bool secondary=false) const; //선택한41a340 목록의 이름 메타데이터만 조회하며 내용/복호화/디스크를 읽지 않는다.
+    std::uint32_t Probe(std::string_view name) const; //0041ab10의 출처0..5를 내용 읽기 없이 조회한다. 직접 경로 실패는 상대/TAFF로 fallback하지 않는다.
     // 캠페인 목록의 와일드카드: 디스크/TAFF/보조 경로를 합쳐 중복을 제거하고 이름순으로 반환한다.
     std::vector<std::string> Match(std::string_view pattern) const;
     // 원본 Filespec.cpp의 Win32 FindFirst/Next 순서다. 기본 디스크만 열거하며 TAFF/보조 경로/정렬을 적용하지 않는다.

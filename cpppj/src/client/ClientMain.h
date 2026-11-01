@@ -179,6 +179,7 @@ public:
     const std::shared_ptr<ClientKencloudGlobals>& KencloudGlobals() const; // 같은 실제 구름/팔레트/현재 Renderer 전역을 순수 조회한다.
     void ChangeFortPalette(const std::span<const std::uint8_t>& name); //004b6100의 전체 부모를 같은 구름/Screen clear1/추가9표/dirty에 실행한다.
     const std::shared_ptr<ClientLocalStateGlobals>& LocalStateGlobals() const; // 실제 State144BYTE와 활동기한의 Client 수명을 Session에 전달한다.
+    void DetectIntroAvailability(); //00435de0의 현재 introMovie/파일 존재 조회로 Intro 표시값을 갱신한다. 시작 detect intro에서 한 번 호출한다.
     const std::shared_ptr<ClientCdGlobals>& CdGlobals() const; // CDDir/난수와 별개인 실제00558dd4의 현재 캐시 소유자다.
     const std::shared_ptr<ClientConnectionActivityGlobals>& ConnectionActivityGlobals() const; // 같은 실제 활동 표/Zone DWORD의 고정 주소를 Session에 빌린다.
     const std::shared_ptr<ClientConnectionGlobals>& ConnectionGlobals() const; //같은 Native 정리 표이며 기존 전송의 실제 등록 연결은 별도다.

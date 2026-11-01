@@ -1,0 +1,65 @@
+{
+  "unit": 699,
+  "date": "2026-11-02",
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23"
+  },
+  "version": "11.01",
+  "exeSha256": "794e294cea28fb39bc6de06292ecff9e5ff6d330eee544518dcde1a760c52892",
+  "nativeInputs": 84,
+  "newCppTests": 6,
+  "existingCppTests": 5,
+  "focusedTests": 11,
+  "failedChecks": 0,
+  "buildWarnings": 0,
+  "buildErrors": 0,
+  "gameExecutions": 3,
+  "gameExits": [
+    0,
+    0,
+    0
+  ],
+  "finalGui": [
+    "live-absent-v1",
+    "live-present-v2"
+  ],
+  "finalMovieCycles": 2,
+  "missionEntries": 0,
+  "newFixtures": 1,
+  "protectedExisting": 2617,
+  "protectedFiles": 2618,
+  "protectedChanged": 0,
+  "firstFailures": {
+    "buildV1": "Missing closing namespace brace; fixed",
+    "focusedV2": "Archive input fontcache was a loose file; corrected to verified d/tell.english",
+    "livePresentV1": "Tool asserted retired displayed-frame sum during a live movie; corrected to current movie_stream fields; game exit0"
+  },
+  "limits": [
+    "No full C++/34/ZIP",
+    "No physical input or PCM/listening or full movie completion",
+    "No capture/sacrifice/specific enemy/victory or new airborne-three behavior tests",
+    "No MP/network test",
+    "Main parent/modal lifetime and45-second autoDemo remain; CD host layout unchanged"
+  ],
+  "sourceSha256": {
+    "cpppj/src/client/IntroMenu.h": "5bf8eed6a4b9d6462c657b13fe7051af45167e812fff7f42cc2924755f95c884",
+    "cpppj/src/client/IntroMenu.cpp": "e962b30b89fac9ad209a9e0341897d89e957b25fe7421b536f7b356a00b6ce5d",
+    "cpppj/src/client/ClientLocalStateGlobals.h": "0d51f281ddf589b4ef5ca3a6c8a2545e2863fe603c03d892e61a4ba58fc40be0",
+    "cpppj/src/client/ClientMain.cpp": "b8ab05010a97634f7f8ab2be35e7b459ba17d50d42b8559e1ab496ccc92547cb",
+    "cpppj/src/client/ClientMain.h": "d309a4113aecc87714eeccb63c43a490ded9c3a445d34a69da42f0f4be1a1013",
+    "cpppj/src/client/GameMenuCommands.cpp": "0ef007947ea6b646aa527120e37df12237b9075e650defd1187d691d5357266e",
+    "cpppj/src/client/UberGump.cpp": "fe6a4a5c8813edd0abbf27fa66f2fddd9a7780ff478b6dd77138eb0d15a1f4ff",
+    "cpppj/src/client/UberEditor.inc": "9f5e386341cb14dc608d5779ac52958261aaad1b2a7e747665e46019bbd6fc4d",
+    "cpppj/src/o/BaseFile.cpp": "8fecc65b3f8a02e8268904659d1ceb455f343f5ec90e5ca575a024dcde469d65",
+    "cpppj/src/o/BaseFile.h": "b4f16ef5f7a9623a4ec19328c789edb908e7ba27a1cf7d6b5436fefc5a5dd63a",
+    "cpppj/src/o/RawBaseFileReadPolicy.cpp": "b025b9271527b4166c13b241464929e5448ea9029fce6b229abc83adac3a6cb7",
+    "cpppj/src/o/RawBaseFileReadPolicy.h": "b7e570da1cf5e2de6162d8e3810cf3d7fe14847b1bcfcc583371187ce24e43b9",
+    "cpppj/tests/IntroMenuTests.cpp": "ed0e8f9fdcfb7864907f0ea5c7a30d99de06f883c3ff0c6461a5db20c3869640",
+    "cpppj/tests/RawMenuMainPopupTests.inc": "48a9dc941a1615d440face7c6fe285330aa8e4e3d858402a2f470a07620b4805",
+    "tools/decomp_intro_menu.py": "82d296c35836457b2a59c60321a4f484015b538d06223dc7cf66669f1fafe0cd",
+    "tools/cpp_intro_menu_smoke.py": "8df7f22954666613edc9375b79e6cf6e4617088d4dfaba64dbcd8db80c20b319",
+    "AGENTS.md": "544643cf731393ecb4784490aa7f2794e8736742582907cce29453e6ac46f15e"
+  }
+}
