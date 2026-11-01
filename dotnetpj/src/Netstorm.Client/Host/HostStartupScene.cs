@@ -21,13 +21,14 @@ public sealed class HostStartupScene
 
     /// <summary>실제 설치 경로의 파일과 설정에서 시작 화면 자료를 읽는다.</summary>
     /// <param name="dataDirectory">게임 데이터와 netstorm.tarc가 있는 디렉터리.</param>
-    public HostStartupScene(string dataDirectory)
+    /// <param name="settings">원본 시작 설정 인자. 파일 설정보다 먼저 읽는다.</param>
+    public HostStartupScene(string dataDirectory, string settings = "")
     {
         ArgumentException.ThrowIfNullOrEmpty(dataDirectory);
         if (!GameDataLocator.IsDataDirectory(dataDirectory)) throw new DirectoryNotFoundException("게임 데이터 디렉터리 또는 netstorm.tarc가 없다: " + dataDirectory);
         Files = GameFileSystem.Open(dataDirectory);
         Configuration = new ConfigInterface(Files.TryReadAllBytes);
-        Configuration.Startup(new ConfigInterface.StartupOptions { InstallDir = Path.GetFullPath(dataDirectory) });
+        Configuration.Startup(new ConfigInterface.StartupOptions { InstallDir = Path.GetFullPath(dataDirectory), CommandLine = settings });
         string palettePath = Configuration.PathSpec("GamePalSpec", Configuration.PathSpec("fortPal"));
         string titlePath = Configuration.PathSpec("BackgroundGifSpec", "titleMenu");
         if (palettePath.Length == 0 || titlePath.Length == 0) throw new InvalidDataException("시작 화면 팔레트 또는 타이틀 경로 설정이 없다");

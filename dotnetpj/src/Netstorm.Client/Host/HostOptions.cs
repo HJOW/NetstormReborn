@@ -5,7 +5,7 @@ namespace Netstorm.Client.Host;
 /// <summary>
 /// MonoGame 호스트의 실행 인자. 원본 실행 파일의 <c>--run</c> 인자 중 호스트 골격이 쓰는 부분만 받는다.
 /// 근거: cpppj/src/app/main.cpp 의 --run/--window/--frames/--ui-script/--ui-report/--set (R1-2a, 2026-10-28).
-/// 미션·그리기·소리는 아직 없으므로 <c>--mission</c>·<c>--view</c> 등은 받지 않고, 세션 키는 <see cref="Settings"/>에 보관만 한다.
+/// 미션·그리기·소리의 전체 연결 전에는 <c>--mission</c>·<c>--view</c> 등을 받지 않는다. 설정은 시작 Config에 전달한다.
 /// </summary>
 public sealed class HostOptions
 {
@@ -30,8 +30,11 @@ public sealed class HostOptions
     /// <summary>건너뛴 관측 보고서 경로. 없으면 null이다. --ui-report 로 정한다.</summary>
     public string? UiReportPath { get; private set; }
 
-    /// <summary>--set 으로 받은 원본 설정 뭉치. 세션이 생기기 전에는 보관만 한다.</summary>
+    /// <summary>--set 으로 받은 현재 설정. 같은 이름은 마지막 값이다.</summary>
     public IReadOnlyDictionary<string, string> Settings => _settings;
+
+    /// <summary>같은 현재 설정을 원본 Config 시작 인자 형식으로 반환한다.</summary>
+    public string SettingsText => string.Join(';', _settings.Select(pair => pair.Key + "=" + pair.Value));
 
     /// <summary>--set 설정 뭉치의 실제 저장소.</summary>
     private readonly Dictionary<string, string> _settings = new(StringComparer.Ordinal);

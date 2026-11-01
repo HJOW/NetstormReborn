@@ -27,4 +27,17 @@ public sealed class HostStartupSceneTests
         Assert.Equal(cloud.Indices[0], screen.Pixels[512]);
         Assert.Equal(cloud.Indices[0], screen.Pixels[512 * screen.Pitch]);
     }
+    /// <summary>호스트 설정은 실제 Config의 시작 인자로 전달되어 파일 설정에 우선한다.</summary>
+    [Fact]
+    public void HostOverridesReachActualConfiguration()
+    {
+        string? data = GameDataLocator.FindDataDirectory();
+        Assert.NotNull(data);
+        var options = HostOptions.Parse(["--set", "tellTips=1;maxFPS=35", "--set", "tellTips=0"]);
+        var startup = new HostStartupScene(data, options.SettingsText);
+        Assert.Equal(0, startup.Configuration.GetInt("tellTips"));
+        Assert.Equal(35, startup.Configuration.GetInt("maxFPS"));
+        Assert.Equal(35, options.FramesPerSecond);
+    }
+
 }

@@ -53,7 +53,7 @@ internal static class Program
         try
         {
             string? data = GameDataLocator.FindDataDirectory();
-            HostStartupScene? startup = data is null ? null : new HostStartupScene(data);
+            HostStartupScene? startup = data is null ? null : new HostStartupScene(data, options.SettingsText);
             using var game = new ClientHostGame(driver, options, startup);
             game.Run();
         }
