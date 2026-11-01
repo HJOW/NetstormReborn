@@ -1,3 +1,4 @@
+using Netstorm.Assets;
 using Netstorm.Client.Automation;
 using Netstorm.Client.Display;
 using Netstorm.Client.Input;
@@ -51,7 +52,9 @@ internal static class Program
         var driver = new HostFrameDriver(screen, input, runner);
         try
         {
-            using var game = new ClientHostGame(driver, options);
+            string? data = GameDataLocator.FindDataDirectory();
+            HostStartupScene? startup = data is null ? null : new HostStartupScene(data);
+            using var game = new ClientHostGame(driver, options, startup);
             game.Run();
         }
         catch (Exception exception)

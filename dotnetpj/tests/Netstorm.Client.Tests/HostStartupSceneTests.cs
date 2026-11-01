@@ -1,0 +1,24 @@
+using Netstorm.Assets;
+using Netstorm.Client.Display;
+using Netstorm.Client.Host;
+
+namespace Netstorm.Client.Tests;
+
+/// <summary>실제 배포 자산의 설정·팔레트·메뉴 GIF가 논리 화면에 연결되는지 검사한다.</summary>
+public sealed class HostStartupSceneTests
+{
+    /// <summary>저장소의 게임 데이터에서 시작 자산을 찾아 팔레트와 화면을 채운다.</summary>
+    [Fact]
+    public void LoadsRealTitleAndPaletteIntoLogicalScreen()
+    {
+        string? data = GameDataLocator.FindDataDirectory();
+        Assert.NotNull(data);
+        var startup = new HostStartupScene(data);
+        var screen = new Screen(640, 480);
+        Assert.True(screen.SetMode(ScreenMode.BackBufferDib | ScreenMode.ModeSet));
+        startup.Draw(screen);
+        Assert.Equal(1U, screen.PaletteLoaded);
+        Assert.Contains(screen.Pixels.ToArray(), pixel => pixel != 0);
+        Assert.NotEmpty(startup.Configuration.PathSpec("BackgroundGifSpec", "titleMenu"));
+    }
+}

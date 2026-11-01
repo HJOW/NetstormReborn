@@ -9,7 +9,7 @@ namespace Netstorm.Client.Host;
 /// <summary>
 /// MonoGame 출력 호스트. 논리 화면(<see cref="Screen"/>)을 정수 최근접 확대·검정 여백으로 내보내고,
 /// 창·전체화면 전환, 마우스 역변환·커서 제한, 키·글자·버튼 → <see cref="InputQueue"/>, 프레임 루프를 맡는다.
-/// 그리기 내용·세션은 아직 없으므로 화면 골격과 UI 스크립트 실행까지만 돈다.
+/// 실제 타이틀 화면을 표시할 수 있으며 메뉴·세션 조립은 아직 남아 있다.
 /// 근거: cpppj/src/app/main.cpp 의 --run 고리, Screen.cpp 의 창 복사, InputEvent.cpp 의 창 프로시저 넣기. (R1-2a, 2026-10-28)
 /// </summary>
 public sealed class ClientHostGame : Game
@@ -25,6 +25,9 @@ public sealed class ClientHostGame : Game
 
     /// <summary>실행 인자.</summary>
     private readonly HostOptions _options;
+
+    /// <summary>실제 데이터에서 준비한 시작 화면. 자료가 없으면 null이다.</summary>
+    private readonly HostStartupScene? _startup;
 
     /// <summary>그리기 묶음.</summary>
     private SpriteBatch? _batch;
@@ -46,12 +49,14 @@ public sealed class ClientHostGame : Game
     /// </summary>
     /// <param name="driver">프레임 골격.</param>
     /// <param name="options">실행 인자.</param>
-    public ClientHostGame(HostFrameDriver driver, HostOptions options)
+    /// <param name="startup">실제 파일에서 읽은 시작 화면.</param>
+    public ClientHostGame(HostFrameDriver driver, HostOptions options, HostStartupScene? startup = null)
     {
         ArgumentNullException.ThrowIfNull(driver);
         ArgumentNullException.ThrowIfNull(options);
         _driver = driver;
         _options = options;
+        _startup = startup;
         _graphics = new GraphicsDeviceManager(this);
         Content.RootDirectory = "Content";
         IsFixedTimeStep = true;
@@ -82,7 +87,8 @@ public sealed class ClientHostGame : Game
         _batch = new SpriteBatch(GraphicsDevice);
         _output = new MonoGameScreenOutput(GraphicsDevice, _driver.Screen);
         _driver.Screen.Output = _output;
-        _driver.Screen.Update(new ScreenRect(0, 0, _driver.Screen.Width, _driver.Screen.Height));
+        if (_startup is null) _driver.Screen.Update(new ScreenRect(0, 0, _driver.Screen.Width, _driver.Screen.Height));
+        else _startup.Draw(_driver.Screen);
         _previousKeys = Keyboard.GetState();
         _previousMouse = Mouse.GetState();
     }
