@@ -11,6 +11,7 @@
 #include "o/RawIslandAdd.h"
 #include "o/RawIslandQueries.h"
 #include "o/RawAddRandom.h"
+#include "o/RawDestroyAt.h"
 #include "client/EditorIslandBitmap.h"
 #include "o/RawFortRandomPlacement.h"
 #include "o/RawWorldGeyser.h" //실제 전체 간헐천 부모와 같은 지도/옵션 범위를 조립한다.
@@ -4058,6 +4059,18 @@ void RawCampaignSession::AddRandomObjects(std::uint32_t type,std::uint32_t quant
     hooks.island=[&s](auto owner,auto territory) { return o::FindFortTerritoryIsland(s.islands->Bytes(),s.core.ownerMode.fort,std::bit_cast<std::int32_t>(owner),territory); };
     hooks.place=[&placement](auto& random,const auto& rectangle,auto region,auto count,auto selected,auto force) { return placement.PlaceRandom(random,rectangle,region,count,selected,force); };
     o::AddRandomObjects(type,quantity,hooks);
+}
+// 현재 finder가 소유한 next를 보존하며 실제 파생 삭제/공간·장부 정리를 같은 월드에 맡긴다.
+void RawCampaignSession::DestroyAt(std::string_view location) {
+    auto& s=*impl_;if (!s.loaded) throw std::logic_error("설치 전 DestroyAt 삭제");o::RawSquidFinder finder(s.core.pool,s.core.hash,s.core.types);
+    o::DestroyAtHooks hooks;hooks.boss=[&s] { return s.core.processState.Boss(); };
+    hooks.assertion=[](auto line) { throw std::logic_error("원본Damageable.cpp 권한 진단 "+std::to_string(line)); };
+    hooks.parse=[&s](auto text) { return o::ParseDestroyAtLocation(text,[&s](auto name) { return s.assets.game.TypeTable().Find(name); }); };
+    hooks.begin=[&finder](auto area) { return std::uint32_t(finder.Begin(area,0).value); };hooks.next=[&finder] { return std::uint32_t(finder.Next().value); };
+    hooks.capacity=[&s] { return s.core.pool.Capacity(); };hooks.slot=[&s](auto sid) { return s.core.pool.Slot(o::Sid{static_cast<std::uint16_t>(sid)}); };
+    hooks.genus=[&s](auto sid) { const auto type=s.core.pool.Slot(o::Sid{static_cast<std::uint16_t>(sid)})[10];if (type>=s.core.types.size()) throw std::out_of_range("DestroyAt의 현재 TYPE 범위");return s.core.types[type].flags2; };
+    hooks.destroy=[&s](auto sid,auto flags) { s.world.Destroy(o::Sid{static_cast<std::uint16_t>(sid)},flags); };
+    o::DestroyObjectsAt(location,hooks);
 }
 // 초기 객체 이전에 설치한 같은 연결부를 제공하며 게임 요청은 명시 Session API를 사용한다.
 const RawCampaignConstructionBindings& RawCampaignSession::Construction() const { return *impl_->construction; }

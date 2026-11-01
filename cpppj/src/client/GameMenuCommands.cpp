@@ -1,6 +1,7 @@
 // 보호PE의초기명령DWORD를이름/GUI변환과구별한다.
 #include "client/GameMenuCommands.h"
 #include "client/AddRandomInput.h"
+#include "client/DestroyAtInput.h"
 #include "client/ScenarioObjectInput.h"
 #include "client/ScenarioEffectInput.h"
 #include "o/OriginalText.h"
@@ -9,7 +10,8 @@
 namespace netstorm::client {
 namespace {
 // 00542xxx는원문주소식별자다. 런타임호스트포인터로역참조하지않는다.
-constexpr std::array<std::pair<std::uint32_t,std::uint32_t>,34> kCommands{{
+constexpr std::array<std::pair<std::uint32_t,std::uint32_t>,35> kCommands{{
+    {0x00542a78U,kDestroyAtCommand}, // 원문DestroyAt의 문자열 토큰도 같은 일반 입력/버튼 큐다.
     {0x00542954U,kAddRandomCommand}, // 원본AddRandom 이름도 같은 일반 입력/버튼 큐를 사용한다.
     {0x0054287cU,0x02000061U}, //원문 Cheat의 같은 일반 SP 가산 명령이다.
     {0x00542780U,0x02000022U},
@@ -57,6 +59,7 @@ std::uint32_t GameMenuScriptCode(std::string_view name) {
     const auto object=ScenarioObjectScriptCode(name);if (object!=0xffffffffU) return object; // 시나리오/메뉴 버튼도 원문 객체 이름표를 공유한다.
     const auto key=o::AsciiLower(name); // 이름비교만원문ASCII대소문자를무시한다.
     if (key=="addrandom") return kAddRandomCommand; //00543048의 원문 이름이며 수량1은 실제 일반 입력이 전달한다.
+    if (key=="destroyat") return kDestroyAtCommand; //00543290의 실제 이름이며 좌표/필터 문자열을 보존한다.
     if (key=="changemoney") return 0x02000061U; // 원문542e90의 실제 이름이며 기존 signed SP 가산 몸체를 공유한다.
     if (key=="playsound") return 0x0200009aU; // 원문543058의 이름→54295c이며 다른 소리 명령의 별칭이 아니다.
     if (key=="viewpriest") return 0x020000b8U; // 원문543148의 명시 owner를 기존4950d0 경로에 전달한다.

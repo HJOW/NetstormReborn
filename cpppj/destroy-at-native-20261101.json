@@ -1,0 +1,28 @@
+{
+  "unit": 690,
+  "date": "2026-11-01",
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23"
+  },
+  "parserCases": 16,
+  "inputCases": 48,
+  "parentCases": 804,
+  "observations": 2572,
+  "differences": 0,
+  "boundaries": "실제44c540 토큰/atol과44c790 점 정수화/권한·필터·순회는 원문. parser의타입조회/TLS, 부모의parser/finder/분류getter/가상삭제는 명시 경계. 범위 출력은44c790에서사용하지않는다. 실제 게임/OS/통신/공격/승리는 실행하지 않는다.",
+  "fixtures": {
+    "destroy-at-parse-x86.tsv": "43252bea7c58791d52103ede97055a64ba0b1deb81dc4266b2b7cb6a031635ca",
+    "destroy-at-input-x86.tsv": "085de60d7c28b6c9e044418c6d3d00acb988002cb74f0a065c4760c54563a16a",
+    "destroy-at-parent-x86.tsv": "c099d313147ee5de1817eb62ed5037ed19c8cddb60e8ec01a8c35d71ea09f80b"
+  },
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_destroy_at.py": "848cc07294b4923450e2b39b47df076b585f00f867629b3ffaff29318c0d9a98",
+    "tools/decomp_oracle.py": "227b9a8b703cfd81d05ac4a7c72a42eaecf9c804fc028680466a19a591f2335d",
+    "tools/decomp_game_menu_actions.py": "9130163b3bd761b08b37397f69ba3e074b257967a5fc934b68210bc6325f2df7",
+    "tools/decomp_production_shortcuts.py": "4caf1c87e4a152f65b2815395ea553b2609587be06a95512974b893e985b24e3"
+  }
+}

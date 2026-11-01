@@ -2753,3 +2753,12 @@ add_executable(netstorm_add_random_tests FocusedTestMain.cpp AddRandomCommandTes
 target_link_libraries(netstorm_add_random_tests PRIVATE netstorm)
 netstorm_apply_compiler_options(netstorm_add_random_tests)
 target_compile_definitions(netstorm_add_random_tests PRIVATE ${_netstorm_menu_session_definitions})
+
+# DestroyAt의독립세계층과기존대본토큰/큐만집중대조한다(단위690).
+target_sources(netstorm_tests PRIVATE DestroyAtTests.cpp)
+set_source_files_properties(DestroyAtTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_DESTROY_AT_PARSE_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/destroy-at-parse-x86.tsv\";NETSTORM_DESTROY_AT_INPUT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/destroy-at-input-x86.tsv\";NETSTORM_DESTROY_AT_PARENT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/destroy-at-parent-x86.tsv\"")
+add_executable(netstorm_destroy_at_tests FocusedTestMain.cpp DestroyAtTests.cpp ScriptCommandTests.cpp)
+target_link_libraries(netstorm_destroy_at_tests PRIVATE netstorm)
+netstorm_apply_compiler_options(netstorm_destroy_at_tests)
+target_compile_definitions(netstorm_destroy_at_tests PRIVATE ${_netstorm_menu_session_definitions})

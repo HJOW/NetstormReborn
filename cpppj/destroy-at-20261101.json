@@ -1,0 +1,113 @@
+{
+  "unit": 690,
+  "date": "2026-11-01",
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23"
+  },
+  "productVersion": "11.01",
+  "productSha256": "487357638d54ae0f8ea877ad2da769aa1f384906f69f7edf2b5067dca2f52841",
+  "native": {
+    "parser": 16,
+    "input": 48,
+    "parent": 804,
+    "observations": 2572,
+    "differences": 0,
+    "frozenBeforeProductEdit": true,
+    "initialFailure": "순수 atol JMP thunk004e66de 허용 범위 누락. 실제 범위 추가 뒤 최초 기대값 동결."
+  },
+  "build": {
+    "initialProductExit": 1,
+    "initialError": "span.at 멤버 부재/연쇄 callable 변환 오류",
+    "finalSuccessfulExits": [
+      0,
+      0,
+      0
+    ],
+    "finalWarnings": [
+      0,
+      0,
+      0
+    ],
+    "finalErrors": [
+      0,
+      0,
+      0
+    ]
+  },
+  "focused": {
+    "target": "netstorm_destroy_at_tests",
+    "registered": 6,
+    "executed": 6,
+    "failedChecks": 0
+  },
+  "session": {
+    "target": "netstorm_world_generation_tests",
+    "registered": 266,
+    "finalExecuted": 1,
+    "filter": "CampaignSession_DestroyAt",
+    "initialFailedChecks": 1,
+    "initialFailure": "별도89/flags0/(112,118) 대상의 Pop 실패, 삭제 부모 미도달. 공간/상태 분류는 후속 대상.",
+    "correction": "기존 확인된 비활성 자기소유114/flags2로 실제 Factory/owner/Pop 준비. 제품 필터/삭제/배치 정책 변경 없음.",
+    "finalFailedChecks": 0
+  },
+  "finalUniqueSelectedTests": 7,
+  "newTests": 5,
+  "existingTests": 2,
+  "protection": {
+    "unchangedExisting": 2608,
+    "changed": [],
+    "newFixtures": 3,
+    "currentFixtures": 791,
+    "currentProtectedTotal": 2611,
+    "addedAgainst685": {
+      "originals": [],
+      "originalCD": [],
+      "cpppj/tests/fixtures": [
+        "add-random-input-x86.tsv",
+        "add-random-parent-x86.tsv",
+        "destroy-at-input-x86.tsv",
+        "destroy-at-parent-x86.tsv",
+        "destroy-at-parse-x86.tsv",
+        "scenario-effect-input-x86.tsv",
+        "scenario-object-input-x86.tsv"
+      ]
+    }
+  },
+  "gameExecutions": 0,
+  "multiplayerTests": 0,
+  "full34Runs": 0,
+  "fullCppRuns": 0,
+  "newZip": false,
+  "limits": "10.78 parser/일반 입력/부모와 headless 자기소유114 삭제다. GUI/모든파생/잘못된포인터/256BYTE오버플로/진단UI·SEH/새CD본문·자연완주/전체동일성으로확대하지않는다. 포획/희생/특정적공격/승리·공중3종전용검사0.",
+  "sha256": {
+    "AGENTS.md": "138808039a2d171d8e697906776e620f9ea8dc2038c35b4dc01ce18d3e462b77",
+    "cpppj/src/client/DestroyAtInput.cpp": "88649ca7310887881df3ca57487b4169ab32ab04c1110d2bf63ee30955c6c04c",
+    "cpppj/src/client/DestroyAtInput.h": "0a68038f2255a715f8b30388a959b745d44dde08b20c9ada991ac7dfbc0d7e56",
+    "cpppj/src/o/RawDestroyAt.cpp": "d89d8f17493defaf247bcfa3310ad38c0ad287e3e3a510b70a28e75b31b12e75",
+    "cpppj/src/o/RawDestroyAt.h": "61dcecf4661cba810324a7c3cb47d3e5d910c86a72794be427a411ad3342da64",
+    "cpppj/src/client/GameMenuCommands.cpp": "5abdfe59d619f23d572e13a9a46d3d5328f23024385bcf4beaa33e8e98714a57",
+    "cpppj/src/client/UberGump.cpp": "1b8bac5ef0cc4eeafa5f2f14f0044192affb1db1d3eea2b024408f31f11715ed",
+    "cpppj/src/client/RawCampaignSession.cpp": "9e26b7f58f3b4fe40b29eadb292b7230bd2d0405d106557e55b9ac2d33d68ecc",
+    "cpppj/src/client/RawCampaignSession.h": "1abe49c0f7bea431dc3184e04eea36c646a53107fef3c8b228ffbdef1fc5ba29",
+    "cpppj/tests/DestroyAtTests.cpp": "7e6bee92d8bd064cc1a22b53e72aded9f2085e33877180c1a4cf4177c926cad4",
+    "cpppj/tests/CampaignWorldGenerationTests.inc": "8b8d0823691fcaafb2cd4430a76ea00fd4b162c6259c46efb7ff6788c60302e7",
+    "cpppj/tests/fixtures/destroy-at-parse-x86.tsv": "43252bea7c58791d52103ede97055a64ba0b1deb81dc4266b2b7cb6a031635ca",
+    "cpppj/tests/fixtures/destroy-at-input-x86.tsv": "085de60d7c28b6c9e044418c6d3d00acb988002cb74f0a065c4760c54563a16a",
+    "cpppj/tests/fixtures/destroy-at-parent-x86.tsv": "c099d313147ee5de1817eb62ed5037ed19c8cddb60e8ec01a8c35d71ea09f80b",
+    "cpppj/destroy-at-native-20261101.json": "4ef3f59aec526a692db26c76cc1f7adae4c15d6949fdd22556bf782ee13a923a",
+    "tools/decomp_destroy_at.py": "848cc07294b4923450e2b39b47df076b585f00f867629b3ffaff29318c0d9a98",
+    "extracted/cpp-destroy-at-native-first.log": "a0da61f8449941830749ebb3c61c73ebdfea90c9839d50053879c2d1aa79469e",
+    "extracted/cpp-destroy-at-native-v2.log": "0aa87fa4174fb8543d12adbde0eee157a79607d20f0a3ecf99bca614139785e0",
+    "extracted/cpp-destroy-at-690/build.log": "e6f3befd41f5bf4f9b6badb670a13e1ffb4059e530290ddad17f88027a2f2c78",
+    "extracted/cpp-destroy-at-690/build-v2.log": "05db773bc421d84eccdf828eaad33bb566c73bdc9089564f603fdf19fa2cd3c9",
+    "extracted/cpp-destroy-at-690/build-session.log": "e04617f5d1dc80c35aa626ef823087f5ad93d26a11ecec41552a4d9d7d9b1043",
+    "extracted/cpp-destroy-at-690/build-session-v2.log": "e04617f5d1dc80c35aa626ef823087f5ad93d26a11ecec41552a4d9d7d9b1043",
+    "extracted/cpp-destroy-at-690/focused.log": "be3502d4cce7d6c3e894e71eaf27bd1c72a570b7add55631ef624a7b1aaa813c",
+    "extracted/cpp-destroy-at-690/session-focused.log": "5d2d542df017b8aa403fac6e75679b3ba4c349b5ad32d4082f94a942e84ac231",
+    "extracted/cpp-destroy-at-690/session-focused-v2.log": "5f38d15f4409a223023ec012818ede4cdc36202a4625b8f634bb57768eaa7e30",
+    "extracted/cpp-destroy-at-690/session-registered.txt": "111834db2187a76128e77bb3e2f817a7d6881cb18ff984be0e4b05e54f71cfe6",
+    "extracted/cpp-destroy-at-690/protection.json": "3705be6f102843ca1f4195e43803a6e8005a8c05f4b6b0e0cb55cf735ec9c0bd"
+  }
+}

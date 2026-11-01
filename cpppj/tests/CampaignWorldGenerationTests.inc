@@ -65,3 +65,17 @@ TEST_CASE(CampaignSession_AddRandomPlacesScriptManaAndLogsInvalidType) {
     CHECK(snapshot()==before && logs.size()==2);for (const auto& [group,text]:logs) CHECK(group==0x1d && text=="AddRandom: Invalid Type\n"); // 원문과 같은 로그 뒤0 반환이며 가짜 객체/성공을 만들지 않는다.
     CHECK(core.bookkeeping.depth==0 && core.destroy.PreDepth()==0 && core.destroy.PostDepth()==0);
 }
+
+// 실제Session의비활성자기소유주문을점검색/타입·owner필터뒤가상삭제하며공격/프레임은실행하지않는다.
+TEST_CASE(CampaignSession_DestroyAtUsesActualFinderAndVirtualDeletion) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();UseWorldTestLogin(services);
+    services.deletion.emit=[&](const SquidDestroyEvent&) { ++external.notices; }; // 외부표시/통지만기록하고실제내부삭제/공간/장부를대체하지않는다.
+    auto fort=FortTemplate::Parse(assets.files.Read("d/TheWarBegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"TheWarBegins",std::move(services));session.LoadLocalConnection();auto core=session.Core();
+    const auto target=session.World().Create(114,2);core.owner.Set(target,session.LocalOwner());CHECK(!(core.pool.Slot(target)[40]&8U));session.World().Pop(target,10,10,0); // 기존Detonate연결검사에서확인한비활성114를실제Factory/owner/Pop으로준비하며Cast/폭발은요청하지않는다.
+    CHECK((core.types[114].flags2&0x7c77ef00U)!=0 && !(core.pool.Slot(target)[11]&1U));const auto initial=core.pool.Slot(target);const std::vector<std::uint8_t> before(initial.begin(),initial.end());
+    const auto type=core.types[114].name;CHECK(!type.empty() && assets.game.TypeTable().Find(type)==114);
+    session.DestroyAt("(10x10)missing/25#1");CHECK(std::equal(before.begin(),before.end(),core.pool.Slot(target).begin()));
+    session.DestroyAt("(10x10)"+type+"/25#2");CHECK(std::equal(before.begin(),before.end(),core.pool.Slot(target).begin()));
+    session.DestroyAt("(10x10)"+type+"/25#1");CHECK((core.pool.Slot(target)[11]&1U)!=0);
+    CHECK(core.bookkeeping.depth==0 && core.destroy.PreDepth()==0 && core.destroy.PostDepth()==0);
+}
