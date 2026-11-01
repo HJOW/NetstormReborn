@@ -1,0 +1,20 @@
+{
+  "unit": 688,
+  "date": "2026-11-01",
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23"
+  },
+  "cases": 576,
+  "observations": 1728,
+  "precisionOrRepeatDifferences": 0,
+  "fixtureSha256": "4de65004071867ef9ebb7c3cf2754fa0682c28ce8843924c9d0f71432270d46c",
+  "boundaries": "실제004d6e61..004da477의Guide/Gump/일반 입력. 4a8660 일반 연기 생성/48fc60 기술 조회/472770 번개 생성만 명시 경계다. 기술 조회 때 화면 폭을 바꾸어 선행 폭 보관도 대조한다. CreateRandomGuns는 이 일반 입력에서 효과0이다. 실제 생성 부모/게임/OS/통신/공격은 실행하지 않는다.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_scenario_effect_input.py": "43506572407f60d1f695368a4ba1175c5f277787de9ad3ddf3233659573e715e",
+    "tools/decomp_game_menu_actions.py": "9130163b3bd761b08b37397f69ba3e074b257967a5fc934b68210bc6325f2df7",
+    "tools/decomp_production_shortcuts.py": "4caf1c87e4a152f65b2815395ea553b2609587be06a95512974b893e985b24e3"
+  }
+}

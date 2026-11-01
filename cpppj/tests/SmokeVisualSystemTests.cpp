@@ -66,3 +66,22 @@ TEST_CASE(SmokeVisualSystem_CreationVisibilityFailureAndPaletteReuse) { // 생�
     SmokeVisualScene scene;scene.probe=true;scene.fail=true;CHECK(Throws([&] { scene.smoke->AddCooling(scene.parent,{16,-11}); }));CHECK(scene.probes==1 && scene.smoke->Size()==0 && scene.kernel.Size()==0 && scene.rendering->Size()==0 && scene.palettes==0);CHECK(scene.released==std::vector<SmokeRelease>({SmokeRelease::Object}));
     scene.probe=false;scene.fail=false;auto* first=scene.smoke->AddCooling(scene.parent,{16,-11});auto* second=scene.smoke->AddCooling(scene.parent,{16,-11});CHECK(first && second);CHECK(scene.palettes==1 && scene.smoke->Size()==2 && scene.rendering->Size()==2 && scene.kernel.Size()==2);scene.host.Kill(*first,0x10);scene.host.Kill(*second,0x10);CHECK(scene.smoke->Size()==0 && scene.kernel.Size()==0 && scene.rendering->Size()==0);
 }
+// 일반 연기는 같은 Host/팔레트를 쓰되 냉각 wrapper의10회/3간격 값을 덮어쓰지 않는다.
+TEST_CASE(SmokeVisualSystem_GeneralSmokeKeepsOriginalDefaults) {
+    SmokeVisualScene scene;SmokeRequest request;request.parent=scene.parent;auto* process=scene.smoke->Add(request);CHECK(process!=nullptr);if (!process) return;
+    const auto form=process->Form();const auto& fields=process->Fields();
+    CHECK(fields.remaining==8 && fields.period==5 && fields.maximumLife==100 && fields.velocity==-1 && fields.spread==9 && fields.noise==.5F);
+    CHECK(fields.hotspotX==0 && fields.hotspotY==0 && fields.windX==0 && fields.windY==0 && fields.capacity==200 && fields.total==0);
+    CHECK(scene.kernel.Size()==1 && scene.rendering->Size()==1 && scene.host.FromForm(form)==process && scene.pool.Slot(form)[10]==21);
+    scene.kernel.RunFrame();CHECK(process->Fields().first);scene.rendering->Draw();scene.host.Kill(*process,0x10);
+    CHECK(scene.kernel.Size()==0 && scene.smoke->Size()==0 && scene.rendering->Size()==0 && scene.released==std::vector<SmokeRelease>({SmokeRelease::Particles,SmokeRelease::Object}));
+}
+// 원문 공통 표시 생성자는 부모0의 객체를 등록하지만 Host/Kernel에는 부착하지 않는다.
+TEST_CASE(SmokeVisualSystem_GeneralZeroParentRetainsIndependentOwnership) {
+    SmokeVisualScene scene;auto* standalone=scene.smoke->Add(SmokeRequest{});CHECK(standalone!=nullptr);if (!standalone) return;
+    const auto token=standalone->Fields().registration.token;CHECK(scene.kernel.Size()==0 && scene.smoke->Size()==1 && scene.rendering->Size()==1 && standalone->Form().value==0);
+    SmokeRequest request;request.parent=scene.parent;auto* attached=scene.smoke->Add(request);CHECK(attached!=nullptr);if (!attached) return;
+    scene.kernel.RunFrame();CHECK(scene.kernel.Size()==1 && scene.smoke->Size()==2 && scene.rendering->Size()==2 && !standalone->Fields().first && standalone->Fields().remaining==8 && scene.rendering->Lookup(token)!=nullptr);
+    scene.host.Kill(*attached,0x10);scene.smoke.reset();CHECK(scene.kernel.Size()==0 && scene.rendering->Size()==0 && scene.rendering->Lookup(token)==nullptr);
+    CHECK(scene.released==std::vector<SmokeRelease>({SmokeRelease::Particles,SmokeRelease::Object,SmokeRelease::Particles,SmokeRelease::Object}));
+}

@@ -86,6 +86,10 @@ o::SmokeSystemHooks RawCampaignParticles::SmokeHooks() {
 o::SmokeVisualProcess* RawCampaignParticles::AddCooling(o::Sid parent,std::array<std::int32_t,2> hotspot) { RefreshCamera();
     try { return smoke_->AddCooling(parent,hotspot); }catch (const std::bad_alloc&) { return nullptr; }
 }
+// 일반 연기는 냉각 wrapper의10회/3간격 후처리 없이 원문 기본 생성자를 사용한다.
+o::SmokeVisualProcess* RawCampaignParticles::AddSmoke(const o::SmokeRequest& request) { RefreshCamera();
+    try { return smoke_->Add(request); }catch (const std::bad_alloc&) { return nullptr; }
+}
 // 공유 빔의 계산은 원본 몸체이며 현재 중심/메모리/출력 장치만 실제 클라이언트에 연결한다.
 o::LightningSystemHooks RawCampaignParticles::LightningHooks() {
     o::LightningSystemHooks hooks;hooks.lifetime.reserve=[](std::uint32_t bytes) {

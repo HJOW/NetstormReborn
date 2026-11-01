@@ -38,9 +38,11 @@ public:
     SmokeVisualSystem& operator=(const SmokeVisualSystem&)=delete; // 다른 월드로 소유권을 복사하지 않는다.
     //004a8770의 현재 SHP 포인트를 받아 실제21·200입자·10회/3간격을 생성한다.
     SmokeVisualProcess* AddCooling(Sid parent,std::array<std::int32_t,2> hotspot);
+    SmokeVisualProcess* Add(const SmokeRequest& request); //004a8660의 일반 기본 연기8회/5간격을 같은 원문 생성자로 생성한다.
     std::size_t Size() const; // 현재 소유한 process21 수다.
 private:
     friend class SmokeVisualProcess;
+    SmokeVisualProcess* Create(const SmokeRequest& request,bool cooling); // 같은 확보/부착/예외 반납을 공유하고 냉각 wrapper의 후처리만 구별한다.
     void CheckScale() const; // 공통 수집과 입자가 같은 원본 픽셀 배율을 쓰는지 확인한다.
     SmokeFrameHooks FrameHooks(SmokeVisualProcess& process); // 현재 프로세스의 실제 Host 자기 삭제를 공급한다.
     void Run(SmokeVisualProcess& process); // 준비 완료된 실제 Frame만 실행한다.
@@ -55,6 +57,7 @@ private:
     RawSmokeLifetime lifetime_; // 독립 원문과 대조한 실제 생성/소멸 몸체다.
     std::unordered_map<std::uint32_t,SmokeVisualProcess*> processes_; // 소유권은 pending 또는 Kernel에 있다.
     std::unique_ptr<SmokeVisualProcess> pending_; // Host 부착 전의 유일한 소유자다.
+    std::vector<std::unique_ptr<SmokeVisualProcess>> unattached_; // 원문 부모0의 표시 등록은 Host/Kernel에 붙지 않으므로 시스템이 수명을 보관한다.
     bool creating_{}; // 생성 중 중첩 Add를 거부한다.
 };
 }

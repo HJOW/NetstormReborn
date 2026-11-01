@@ -2735,3 +2735,12 @@ add_executable(netstorm_scenario_money_tests FocusedTestMain.cpp SendMoneyInputT
 target_link_libraries(netstorm_scenario_money_tests PRIVATE netstorm)
 netstorm_apply_compiler_options(netstorm_scenario_money_tests)
 target_compile_definitions(netstorm_scenario_money_tests PRIVATE ${_netstorm_menu_session_definitions})
+
+# 일반 표시 명령576관측·연기 실제 수명·기존 번개 화면 생성만 집중 대조한다(단위688).
+target_sources(netstorm_tests PRIVATE ScenarioEffectInputTests.cpp)
+set_source_files_properties(ScenarioEffectInputTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_SCENARIO_EFFECT_INPUT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/scenario-effect-input-x86.tsv\"")
+add_executable(netstorm_scenario_effect_tests FocusedTestMain.cpp ScenarioEffectInputTests.cpp SmokeEffectTests.cpp SmokeVisualSystemTests.cpp
+    LightningScreenTests.cpp LightningLifetimeTests.cpp LightningVisualSystemTests.cpp)
+target_link_libraries(netstorm_scenario_effect_tests PRIVATE netstorm)
+netstorm_apply_compiler_options(netstorm_scenario_effect_tests)
+target_compile_definitions(netstorm_scenario_effect_tests PRIVATE ${_netstorm_menu_session_definitions})

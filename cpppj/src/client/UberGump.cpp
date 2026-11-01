@@ -123,6 +123,7 @@
 #include "client/ObjectOwnerCommands.h"
 #include "client/DetonateInput.h"
 #include "client/ScenarioObjectInput.h"
+#include "client/ScenarioEffectInput.h"
 #include "platform/Utf8Path.h" //Windows10/11의 한글 Edit 작업본은 원본 ANSI 경로와 달리 UTF-8/W 경계로 전달한다.
 
 namespace netstorm::client {
@@ -279,7 +280,7 @@ UberGump::UberGump(Client& client) : client_(client),initLoginSubscriber_(client
             state_.Post(actions_[parameter-1]); // 기존 DialogAction의 임시 호스트 번호이며 원본 게임 명령 토큰과 구별한다.
         } else {
             // 실제 메뉴 항목이 선택한 미연결 명령은 여기서 거부한다. 돌 버튼의 별도 기본 클릭 통지와 구별한다.
-            if (command!=0x02000060U && command!=0x03000080U && command!=0x03000032U && command!=0x03000063U && command!=0x0200005dU && command!=0x02000017U && !IsScenarioObjectCommand(command) && command!=0x0300011aU && command!=0x03000076U && !IsGameMenuCommand(command) && !IsTellMenuCommand(command) && !IsObjectMenuVariantCommand(command) && !IsSendMoneyCommand(command)) throw std::logic_error("현재 Client 원본 메뉴 항목 명령 미연결: "+std::to_string(command));
+            if (command!=0x02000060U && command!=0x03000080U && command!=0x03000032U && command!=0x03000063U && command!=0x0200005dU && command!=0x02000017U && !IsScenarioObjectCommand(command) && !IsScenarioEffectCommand(command) && command!=0x0300011aU && command!=0x03000076U && !IsGameMenuCommand(command) && !IsTellMenuCommand(command) && !IsObjectMenuVariantCommand(command) && !IsSendMoneyCommand(command)) throw std::logic_error("현재 Client 원본 메뉴 항목 명령 미연결: "+std::to_string(command));
             client_.Input().PushCommand(command,std::bit_cast<std::int32_t>(id),std::bit_cast<std::int32_t>(parameter));
         }
     };
@@ -1106,6 +1107,14 @@ void UberGump::Event(InputEvent event) {
             static_cast<void>(world_->Session().GemReward().Reveal(o::Sid{static_cast<std::uint16_t>(sid)}));
         }
         rebuild_=true;return; // 원본005427ac의 일반 입력은 메뉴의 special 노출 조건을 실행 관문으로 다시 추가하지 않는다.
+    }
+    if (IsScenarioEffectCommand(transitionCode)) {
+        ScenarioEffectInputHooks hooks; // 같은 현재 화면/기술 부모와 실제 표시 수명을 빌린다.
+        hooks.width=[this] { return client_.GetScreen().Width(); };
+        hooks.technology=[this] { if (!world_) throw std::logic_error("Lightning의 현재 Session 없음");return world_->Session().CurrentTechnologyParent(); };
+        hooks.smoke=[this](auto parent,auto x,auto y) { if (!world_) throw std::logic_error("StartSmoke의 현재 Session 없음");o::SmokeRequest request;request.parent=o::Sid{static_cast<std::uint16_t>(parent)};request.hotspotX=x;request.hotspotY=y;static_cast<void>(world_->Session().Particles().AddSmoke(request)); };
+        hooks.lightning=[this](auto parent,auto from,auto to,auto life) { if (!world_) throw std::logic_error("Lightning의 현재 Session 없음");static_cast<void>(world_->Session().Particles().AddScreenBolt(o::Sid{static_cast<std::uint16_t>(parent)},from,to,life)); };
+        static_cast<void>(DispatchScenarioEffectInput(event,hooks));rebuild_=true;return;
     }
     if (DispatchScenarioObjectInput(event,[this](o::Sid target,std::uint32_t code) {
         if (!world_) throw std::logic_error("시나리오 객체 명령의 현재 Session 없음");return world_->Session().CommandObject(target,code);

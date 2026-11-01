@@ -1,6 +1,7 @@
 // 보호PE의초기명령DWORD를이름/GUI변환과구별한다.
 #include "client/GameMenuCommands.h"
 #include "client/ScenarioObjectInput.h"
+#include "client/ScenarioEffectInput.h"
 #include "o/OriginalText.h"
 #include <array>
 #include <utility>
@@ -50,6 +51,7 @@ std::optional<std::uint32_t> GameMenuCommandValue(std::uint32_t address) {
 }
 // 원본name→ID표에서확인한메뉴확인창의필수이름이다.
 std::uint32_t GameMenuScriptCode(std::string_view name) {
+    const auto effect=ScenarioEffectScriptCode(name);if (effect!=0xffffffffU) return effect; // 일반 표시 명령도 같은 HTML/메타/대본 이름표로 조회한다.
     const auto object=ScenarioObjectScriptCode(name);if (object!=0xffffffffU) return object; // 시나리오/메뉴 버튼도 원문 객체 이름표를 공유한다.
     const auto key=o::AsciiLower(name); // 이름비교만원문ASCII대소문자를무시한다.
     if (key=="changemoney") return 0x02000061U; // 원문542e90의 실제 이름이며 기존 signed SP 가산 몸체를 공유한다.

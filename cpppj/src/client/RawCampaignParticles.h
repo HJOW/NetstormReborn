@@ -46,6 +46,7 @@ public:
     void ConnectBurning(std::function<o::ConstructionVisualImage(o::Sid)> capture,std::function<void(std::uint32_t)> stopSound); // 같은14의 실제 캡처/장치 정지를 설치한다.
     o::BurningVisualProcess* AddBurning(o::Sid victim,std::uint32_t mode); // 실제0/1 wrapper의 확보 실패는nullptr다.
     o::SmokeVisualProcess* AddCooling(o::Sid parent,std::array<std::int32_t,2> hotspot); // 현재 SHP 포인트에서 실제21/10회/간격3 연기를 만든다.
+    o::SmokeVisualProcess* AddSmoke(const o::SmokeRequest& request); // 일반 대본004a8660의8회/5간격 연기를 같은 현재 Host/표시 목록에 만든다.
     // 같은 전체 Kernel 실행 직전 현재 게임 시각을 공급한다.
     void PrepareFrame(double now,std::uint32_t frameNumber=0,bool weakenedMana=false); // 원본 현재DWORD frame과 약화 마나도 같은 월드에서 공급한다.
     void PrepareBridgeClock(double now,std::uint32_t frameNumber); //이른 원문 스캔의 삭제/파편도 현재 시각을 읽도록 시간 필드만 쓰며 카메라/색표를 갱신하지 않는다.

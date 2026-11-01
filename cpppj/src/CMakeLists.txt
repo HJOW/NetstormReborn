@@ -10,6 +10,7 @@
 # 게임 본체. 실행 파일과 테스트가 함께 쓰도록 정적 라이브러리로 묶는다.
 # 소스 목록은 각 폴더의 CMakeLists.txt 가 target_sources 로 더한다.
 add_library(netstorm STATIC)
+target_sources(netstorm PRIVATE client/ScenarioEffectInput.cpp client/ScenarioEffectInput.h) # 실제 일반 연기/화면 번개/명시 무동작 대본 관문이다.
 target_sources(netstorm PRIVATE client/ScenarioObjectInput.cpp client/ScenarioObjectInput.h) # 메뉴를 열기 전에도 같은 원문 객체 명령을 처리한다.
 target_sources(netstorm PRIVATE client/MoveDialog.cpp client/MoveDialog.h) #004c8df0의 현재 모달 위치/원문 문자열 규칙이다.
 target_sources(netstorm PRIVATE client/CdPresence.cpp client/CdPresence.h client/ClientCdGlobals.h) # 현재 CD 루트 열거/캐시 판단을 실제 State 수명과 연결한다.

@@ -1,0 +1,87 @@
+{
+  "unit": 688,
+  "date": "2026-11-01",
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23"
+  },
+  "productVersion": "11.01",
+  "productSha256": "19b7a0a0ae675b815d7613f2ee5e5dd9b2c462813af05734de08448e3b1ae533",
+  "native": {
+    "cases": 576,
+    "observations": 1728,
+    "differences": 0,
+    "frozenBeforeProductEdit": true,
+    "boundaries": "일반 입력은 실제 원문. 연기/기술조회/번개생성은 명시 경계. 부모0 실제 생성몸체는 새 원문 실행이 아니라 기존 공통 등록 분기의 정적 대조다."
+  },
+  "build": {
+    "attempts": 2,
+    "exits": [
+      0,
+      0
+    ],
+    "warnings": [
+      0,
+      0
+    ],
+    "errors": [
+      0,
+      0
+    ]
+  },
+  "focused": {
+    "target": "netstorm_scenario_effect_tests",
+    "firstPassed": 17,
+    "finalRegistered": 18,
+    "finalExecuted": 18,
+    "new": 5,
+    "existing": 13,
+    "failedChecks": 0,
+    "notAdditive": true
+  },
+  "protection": {
+    "unchangedExisting": 2605,
+    "changed": [],
+    "newFixtures": 1,
+    "currentFixtures": 786,
+    "currentProtectedTotal": 2606,
+    "addedAgainst685": {
+      "originals": [],
+      "originalCD": [],
+      "cpppj/tests/fixtures": [
+        "scenario-effect-input-x86.tsv",
+        "scenario-object-input-x86.tsv"
+      ]
+    },
+    "against": "685 전체 보호 명세 +686 독립 fixture 해시"
+  },
+  "gameExecutions": 0,
+  "multiplayerTests": 0,
+  "full34Runs": 0,
+  "fullCppRuns": 0,
+  "newZip": false,
+  "limits": "10.78 일반 입력/기존 표시 수명 연결. 실제 GUI/픽셀/PCM·CD·모든SID/포인터/SEH ABI·자연완주/전체동일성 검증이 아니다. 포획/희생/특정적공격/승리재현0.",
+  "sha256": {
+    "AGENTS.md": "138808039a2d171d8e697906776e620f9ea8dc2038c35b4dc01ce18d3e462b77",
+    "cpppj/src/client/ScenarioEffectInput.cpp": "997d6140840f4e1459a2813542b3230baf9f1406ace982429bff70b0f1319808",
+    "cpppj/src/client/ScenarioEffectInput.h": "386a67ac4bf64a6c0c18402daeb7779011546c04cb81920d4fe99183d147dfad",
+    "cpppj/src/client/GameMenuCommands.cpp": "d660f928cfc39d38707e8fe4e6247a5329f29bc2b0031562b2e3ed004427f624",
+    "cpppj/src/client/UberGump.cpp": "a231b53b37ac19e0b0a0b7d4281f70b518b1cb65c9464cc61fada07fecca208e",
+    "cpppj/src/client/RawCampaignParticles.cpp": "8cb37432fb69157ba20cd49b4ca48d29e23655387ff6b902332f3c50753bc0e5",
+    "cpppj/src/client/RawCampaignParticles.h": "df30ffe52972bee98099f4cb1363f6387177a471440d30548c197195935481d8",
+    "cpppj/src/o/SmokeVisualSystem.cpp": "2259ec2288ccc855a402c61ad357e0effb243133edbf75e9794c48b578877952",
+    "cpppj/src/o/SmokeVisualSystem.h": "8016b69547f4df1f70c59bc9440f58844dd123125e1144ffd32fa59eecb1f856",
+    "cpppj/tests/ScenarioEffectInputTests.cpp": "ab7c33a45352115e2059d9f1c256787987b5309eaa1e2e46c19aa65581979822",
+    "cpppj/tests/SmokeVisualSystemTests.cpp": "bda86d31bafbc5a94cfaeb347154032432c769f67402fe49c353f56489ffb743",
+    "cpppj/tests/fixtures/scenario-effect-input-x86.tsv": "4de65004071867ef9ebb7c3cf2754fa0682c28ce8843924c9d0f71432270d46c",
+    "cpppj/scenario-effect-input-native-20261101.json": "b1091fc7b418f4ea4feaf5091c6c36263e366b93b7016f79d27fe4b33cc9be76",
+    "cpppj/scenario-script-inventory-20261101.json": "40a9f97408f7653994b4992414063ad3c6c2c5e86263d9e1d1903e03a15ee437",
+    "tools/decomp_scenario_effect_input.py": "43506572407f60d1f695368a4ba1175c5f277787de9ad3ddf3233659573e715e",
+    "extracted/cpp-scenario-effect-688/build.log": "d2beea8dcbc7e0d343ded39b3629b0bcb583ee66ee4181e04931560e71ef9273",
+    "extracted/cpp-scenario-effect-688/build-v2.log": "3f8bafeaa789bdf5692097ebe7fc12cb07a2800dae466e2813df28737eae8958",
+    "extracted/cpp-scenario-effect-688/focused.log": "c40a621fef23df80af4294bfb22734c81cde0e717ed32c0d9eff2ecbd45a2e4a",
+    "extracted/cpp-scenario-effect-688/focused-v2.log": "3aab86f6628b7c95bc8b5b85f3075d84bc75d4fa616a37df1ce899a5591c1798",
+    "extracted/cpp-scenario-effect-688/protection.json": "d904e9ebd6d247b4f942661b6973696ccf5d6e9e88ffccb0723d8e553293a1f9"
+  }
+}
