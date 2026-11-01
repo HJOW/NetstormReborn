@@ -8,7 +8,7 @@ import assert from 'node:assert/strict';
 import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
-import { REPO_ROOT, WEBPJ_ROOT, readData } from './helpers.mjs';
+import { REPO_ROOT, WEBPJ_ROOT, loadOriginalForts, readData } from './helpers.mjs';
 import { TaffArchive } from '../www/assets/taff.js';
 import { decodeOriginalText } from '../www/assets/text-encoding.js';
 import { FIRST_ASSET_TYPE_NUMBER, TYPE_LOAD_ORDER, TypeTable } from '../www/assets/type-table.js';
@@ -25,21 +25,6 @@ const archive = new TaffArchive(readData('netstorm.tarc'));
 const table = TypeTable.fromArchive(archive, decodeOriginalText);
 const types = createFortTypes(table);
 const frameCodes = pieceFrameCodes(table);
-
-// 원본 `.fort` 전체 목록이다: [{ source, bytes }]. 느슨한 파일은 assets/game-data/d, 아카이브 항목은 netstorm.tarc 에서 읽는다. 저장소 자산이 없으면 null 이다. (2026-11-01 WB03-V)
-function loadOriginalForts() {
-    const folder = path.join(REPO_ROOT, 'assets', 'game-data', 'd');
-    if (!fs.existsSync(folder)) return null;
-    const list = [];
-    // 느슨한 파일은 소문자 이름의 코드 값 순이다(기대값 표를 만든 Python 의 정렬과 같다; localeCompare 는 '_' 를 숫자보다 앞에 두어 순서가 달라진다).
-    const names = fs.readdirSync(folder).filter((name) => name.toLowerCase().endsWith('.fort')).sort((a, b) => (a.toLowerCase() < b.toLowerCase() ? -1 : a.toLowerCase() > b.toLowerCase() ? 1 : 0));
-    for (const name of names) list.push({ source: `loose:${name}`, bytes: new Uint8Array(fs.readFileSync(path.join(folder, name))) });
-    // 아카이브 안의 .fort 는 이름 인덱스 표 순서이다.
-    for (const name of archive.names()) {
-        if (name.toLowerCase().endsWith('.fort')) list.push({ source: `tarc:${name}`, bytes: archive.read(name) });
-    }
-    return list;
-}
 
 // 영역 레코드 6바이트를 만든다: 모양 번호·방향 값(0~3)·플래그·위치 x(하위 니블)·위치 y(상위 니블)·남는 두 바이트. (2026-11-01 WB03-V)
 function record(shape, direction, flags, x, y) {
@@ -474,7 +459,7 @@ function describeLayout(source, fort, layout) {
 
 // 원본 `.fort` 465개 전체의 영역 배치가 독립 구현의 기대값과 줄 단위로 같고, 놓인 청크 수가 저장 청크 레코드 수와 같으며 지도 밖·프레임 없음 칸이 없다. (2026-11-01 WB03-V)
 test('원본 .fort 465개: 영역 배치와 저장 청크 짝짓기가 기대값 표와 같다', (context) => {
-    const forts = loadOriginalForts();
+    const forts = loadOriginalForts(archive);
     if (!forts) {
         context.skip('저장소 자산(assets/game-data)이 없다');
         return;

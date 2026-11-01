@@ -91,3 +91,19 @@ export function decodePng(filePath) {
     }
     return { width, height, rgb };
 }
+
+// 원본 `.fort` 전체 목록 [{ source, bytes }] 이다(느슨한 파일 433 + 아카이브 32 = 465). 느슨한 파일은 assets/game-data/d 를 소문자 이름의 코드 값 순으로, 아카이브 항목은 archive 의 이름 인덱스 표 순서로 읽는다.
+// 정렬은 기대값 표를 만든 Python 도구와 같다(localeCompare 는 '_' 를 숫자보다 앞에 두어 순서가 달라진다). 저장소 자산(assets/game-data)이 없으면 null 이다. archive 는 TaffArchive 이다. (2026-11-01 WB03-W)
+export function loadOriginalForts(archive) {
+    const folder = path.join(REPO_ROOT, 'assets', 'game-data', 'd');
+    if (!fs.existsSync(folder)) return null;
+    const list = [];
+    const names = fs.readdirSync(folder).filter((name) => name.toLowerCase().endsWith('.fort')).sort((a, b) => (a.toLowerCase() < b.toLowerCase() ? -1 : a.toLowerCase() > b.toLowerCase() ? 1 : 0));
+    // 느슨한 파일을 먼저 읽는다.
+    for (const name of names) list.push({ source: `loose:${name}`, bytes: new Uint8Array(fs.readFileSync(path.join(folder, name))) });
+    // 아카이브 안의 .fort 가 뒤따른다.
+    for (const name of archive.names()) {
+        if (name.toLowerCase().endsWith('.fort')) list.push({ source: `tarc:${name}`, bytes: archive.read(name) });
+    }
+    return list;
+}
