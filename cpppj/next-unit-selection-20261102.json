@@ -1,0 +1,43 @@
+{
+  "unit": 702,
+  "date": "2026-11-02",
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23"
+  },
+  "version": "11.01",
+  "exeSha256": "ccc59b4926ccb9ece2f1a431bdc613dd84d92e398db1da5e781c62c193ad28e4",
+  "nativeInputs": 410,
+  "staticCallInstructions": 5,
+  "newCppTests": 3,
+  "existingCppTests": 15,
+  "focusedTests": 18,
+  "failedChecks": 0,
+  "buildWarnings": 0,
+  "buildErrors": 0,
+  "gameExecutions": 0,
+  "protectedExisting": 2620,
+  "protectedChanged": 0,
+  "newFixtures": 1,
+  "protectedFiles": 2621,
+  "limits": [
+    "Native next-unit parent/iterator/TYPE flags executed; select/center/pause/multiple are explicit boundaries",
+    "C++ actual Select/Toggle integration checked with independent raw input and explicit effects",
+    "Native fixture uses8slots; C++ actual pool24000 leaves remaining slots all free",
+    "N/Shift+N wiring compiled; no new GUI or physical keyboard test",
+    "Last GUI product700; no whole C++/34/ZIP or PCM/pixel verification",
+    "No capture/sacrifice/specific enemy/victory, dedicated airborne-three actions, MP or network tests",
+    "Remaining UI/Edit/scenario/file-lifetime and Windows10 checks remain"
+  ],
+  "sourceSha256": {
+    "cpppj/src/client/NextUnitSelection.cpp": "d3b9f56e1c36f59805870a89ca9d82db0810a529f974255c7da15437d5e2ae7e",
+    "cpppj/src/client/NextUnitSelection.h": "a98b424990ae3b7a5f75bc5e10c2a7ab03d8a02e4764efa90a8c1e2f5608211a",
+    "cpppj/src/client/GameWorld.cpp": "ae209e959e548cf1a9888765b4012cc86089100ba05dedf471da708e0b50609b",
+    "cpppj/src/client/GameWorld.h": "21917cc5a145a58b908ee643758da641779a4c9e7aa7cb1b0d1bd32e1201f586",
+    "cpppj/src/client/UserInput.cpp": "04628029cb00616569e6946e9b039b03c9ab7b5d95d2f6e1221365da77fe818d",
+    "cpppj/tests/NextUnitSelectionTests.cpp": "ffd7eafa5b667ec6940ca076d45e8e346677d1238e06525a22c91f41b047f770",
+    "tools/decomp_next_unit_selection.py": "b388ae37d116632f45eaf3b0518e3e875aae76214f6d527aa620f91e25ab9c19",
+    "AGENTS.md": "544643cf731393ecb4784490aa7f2794e8736742582907cce29453e6ac46f15e"
+  }
+}

@@ -1,4 +1,5 @@
 #include "client/GameWorld.h"
+#include "client/NextUnitSelection.h" //원문 N 키의 검색 부모는 같은 실제 선택/카메라 경계를 소비한다.
 #include "client/ClientColorSortInput.h"
 #include "client/OwnerColorTableState.h"
 #include "client/RawCampaignFactoryDisplay.h"
@@ -506,6 +507,12 @@ void GameWorld::Select(o::SquidId id) {
 }
 // 실제 Shift 선택은 소유자를 임의 제한하거나 단일 Select로 바꾸지 않는다.
 void GameWorld::ExtendSelection(o::SquidId id,std::uint32_t force) { if (!campaign_ || !input_) throw std::logic_error("다중 선택의 실제 월드/입력 없음");input_->selection->ExtendSelection(id,force);changed_=true; }
+// 독립 후보 검색용 복사 월드를 만들지 않고 현재 Session 풀과 실제 기본 선택을 직접 사용한다.
+void GameWorld::SelectNextUnit(std::uint32_t add) {
+    if (!campaign_ || !input_) throw std::logic_error("다음 유닛 선택의 실제 월드/입력 없음");const auto core=campaign_->Core();NextUnitSelectionHooks hooks;
+    hooks.localOwner=[this] { return campaign_->LocalOwner(); };hooks.paused=[this] { return paused && paused() ? 1U : 0U; };hooks.select=[this](auto sid,auto force,auto activate) { static_cast<void>(input_->selection->Select(sid,force,activate)); };
+    hooks.center=[this](auto sid) { CenterOnObject(sid); };hooks.multiple=[this](auto sid,auto value) { input_->selection->ToggleMultiple(sid,value); };SelectNextMovingUnit(core.pool,core.types,selected_,add,hooks);changed_=true;
+}
 // 편집 우클릭은 선택 결과와 무관하게 같은 원래 클릭 객체의 owner를 후속으로 읽는다.
 void GameWorld::PrepareEditorObjectMenu(o::SquidId id) {
     if (!campaign_ || !input_) throw std::logic_error("편집 우클릭의 실제 월드/선택 장치 미설치");

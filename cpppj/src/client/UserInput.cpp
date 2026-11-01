@@ -27,6 +27,7 @@ std::optional<o::SquidId> UserInput::Event(InputEvent event) {
         if (key==kF4) world_.Home(false); if (key==kF5) world_.Home(true); return {};
     }
     const auto character=event.code & 0xffffu;
+    if (!release && (character=='n' || character=='N')) { world_.SelectNextUnit(event.code&InputCode::kShift);return {}; } //004d9a2f는 Shift 원문 비트를 인자로 그대로 전달한다.
     if (!release && (character=='h' || character=='H')) { world_.Home(false); return {}; }
     if (!release && (character=='p' || character=='P' || character=='r' || character=='R')) {
         if (const auto point=world_.Point("world:priest")) world_.Select(world_.Pick(*point)); return {};

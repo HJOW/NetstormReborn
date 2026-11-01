@@ -1,0 +1,48 @@
+{
+  "unit": 702,
+  "date": "2026-11-02",
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23"
+  },
+  "inputs": 410,
+  "nativeBodies": [
+    "004da880",
+    "0040eb40",
+    "004ac200"
+  ],
+  "explicitBoundaries": [
+    "select004d5c90",
+    "center00433ba0",
+    "paused00460de0",
+    "multiple004da6b0",
+    "TYPE address0049a840"
+  ],
+  "inputInstructions": [
+    {
+      "address": "004d9a2f",
+      "instruction": "and ecx, 0x20000000"
+    },
+    {
+      "address": "004d9a35",
+      "instruction": "push ecx"
+    },
+    {
+      "address": "004d9a36",
+      "instruction": "call 0x4da880"
+    },
+    {
+      "address": "004d9a3b",
+      "instruction": "add esp, 4"
+    },
+    {
+      "address": "004d9a3e",
+      "instruction": "jmp 0x4d9bbb"
+    }
+  ],
+  "gameExecutions": 0,
+  "peSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+  "fixtureSha256": "3c6922ef0d094f81298d3aefdd0819bad97297959355f93e1e2a9a7c521c119e",
+  "toolSha256": "b388ae37d116632f45eaf3b0518e3e875aae76214f6d527aa620f91e25ab9c19"
+}

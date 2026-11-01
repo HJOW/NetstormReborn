@@ -2835,3 +2835,9 @@ target_sources(netstorm_tests PRIVATE MultipleSelectionTests.cpp)
 add_executable(netstorm_multiple_selection_tests FocusedTestMain.cpp MultipleSelectionTests.cpp UserSelectionTests.cpp)
 target_link_libraries(netstorm_multiple_selection_tests PRIVATE netstorm)
 netstorm_apply_compiler_options(netstorm_multiple_selection_tests)
+
+# N 키 검색 부모와 기존 다중/단일 선택의 실제 접합을 좁게 확인한다(702).
+target_sources(netstorm_tests PRIVATE NextUnitSelectionTests.cpp)
+add_executable(netstorm_next_unit_selection_tests FocusedTestMain.cpp NextUnitSelectionTests.cpp MultipleSelectionTests.cpp UserSelectionTests.cpp)
+target_link_libraries(netstorm_next_unit_selection_tests PRIVATE netstorm)
+netstorm_apply_compiler_options(netstorm_next_unit_selection_tests)
