@@ -26,7 +26,7 @@ struct MainMenuScene {
         std::copy(old.begin(),old.end(),current.begin());current[old.size()]=0;std::copy(next.begin(),next.end(),pending.begin());pending[next.size()]=0;
     }
     // 부모가 사용하는 이름과 flags는 위의 같은 물리이며 값형 전역 사본을 만들지 않는다.
-    NativeMainMenuStateGlobals Globals() { return {local.State(),source,outcome,first,battle,editor,background,current,pending,[this] { trace.emplace_back("updated");return updated; },[this] { trace.emplace_back("tips");return tips; }}; }
+    NativeMainMenuStateGlobals Globals() { return {local.State(),source,outcome,first,battle,editor,background,current,pending,[this] { trace.emplace_back("updated");return updated; },[this] { trace.emplace_back("tips");return tips; },true}; } // 기존 원문 기대값은 참조 모드에서 그대로 비교한다. 제품은 이 값을 켜지 않는다.
     // 공통 tail은 기존 실제 부모를 호출한다. State3에서 섬 수/추가 명령에 도달하면 실패해야 한다.
     void Tail() {
         ExistingEditorAfterCheckpointEffects effects;effects.hud=[this](auto) { trace.emplace_back("hud2"); };effects.wallSeconds=[this] { trace.emplace_back("wall");return 100.5; };
@@ -87,4 +87,24 @@ TEST_CASE(NativeMainMenuState_UserNoticeRechecksCurrentTipsAfterTellCallback) {
     hooks.tell=[&](auto name) { original(name);if (name=="UserNotUpdated") scene.tips=0; };
     CHECK(InstallNativeMainMenuState(scene.Globals(),hooks)==LocalMissionParentResult::Commit);
     CHECK(!scene.tips && !scene.first && scene.local.State().next[0]==4 && std::find(scene.trace.begin(),scene.trace.end(),"tips")!=scene.trace.end() && std::find(scene.trace.begin(),scene.trace.end(),"tell:Tips")==scene.trace.end());
+}
+
+// 제품 정책에서는 구 검증값의 getter가 없어도 시작하며 BSS0을 성공1로 변경하지 않는다.
+TEST_CASE(NativeMainMenuState_RetiredValidationDisabledWithoutSyntheticSuccess) {
+    MainMenuScene scene;scene.tips=0;auto globals=scene.Globals();globals.referenceValidationNotice=false;globals.userUpdated={};
+    CHECK(InstallNativeMainMenuState(globals,scene.Hooks())==LocalMissionParentResult::Commit);
+    CHECK(scene.updated==0 && !scene.first && scene.local.State().next[0]==4);
+    CHECK(std::find(scene.trace.begin(),scene.trace.end(),"updated")==scene.trace.end());CHECK(std::find(scene.trace.begin(),scene.trace.end(),"tell:UserNotUpdated")==scene.trace.end());
+    CHECK(std::find(scene.trace.begin(),scene.trace.end(),"tell:Blank")!=scene.trace.end());
+}
+
+// 구 검증만 제외하고 Welcome/저장 재접속 질문/첫메뉴/Tips의 기존 조건은 유지한다.
+TEST_CASE(NativeMainMenuState_RetiredValidationPreservesOtherStartupBranches) {
+    for (std::uint32_t welcome:{0U,1U}) for (std::uint32_t startup:{0U,1U}) for (std::uint32_t first:{0U,1U}) for (std::uint32_t tips:{0U,1U}) { // 독립 네 조건의16조합을 실제 같은 부모에 공급한다.
+        MainMenuScene scene;scene.welcome=welcome;scene.startupResult=startup;scene.first=first;scene.tips=tips;auto globals=scene.Globals();globals.referenceValidationNotice=false;globals.userUpdated={};
+        CHECK(InstallNativeMainMenuState(globals,scene.Hooks())==LocalMissionParentResult::Commit);
+        const auto seen=[&](std::string_view text) { return std::find(scene.trace.begin(),scene.trace.end(),text)!=scene.trace.end(); }; // 실제 도달한 현재 trace만 조회한다.
+        CHECK(!seen("updated") && !seen("tell:UserNotUpdated"));CHECK(seen("tell:Welcome")==!welcome);CHECK(seen("tell:Tips")==bool(welcome && !startup && first && tips));CHECK(scene.updated==0);
+        CHECK(scene.first==(welcome ? 0U : first));
+    }
 }

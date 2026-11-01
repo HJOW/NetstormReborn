@@ -40,7 +40,8 @@ o::LocalMissionParentResult InstallNativeMainMenuState(NativeMainMenuStateGlobal
     if (!Need(h.configInt)("WelcomeGiven")) Need(h.tell)("Welcome");
     else {
         Need(h.tell)("Blank");
-        if (!Need(h.startup)() && g.firstMenu) { if (!Need(g.userUpdated)()) Need(h.tell)("UserNotUpdated");if (Need(g.tellTips)()) Need(h.tell)("Tips"); }
+        // 원문과 달리 제품은 종료된 Auto Updater 서버의 검증/Not Validated 안내를 사용하지 않는다(AGENTS.md 사용자 지시). 참조 비교만 원래 분기를 선택한다.
+        if (!Need(h.startup)() && g.firstMenu) { if (g.referenceValidationNotice && !Need(g.userUpdated)()) Need(h.tell)("UserNotUpdated");if (Need(g.tellTips)()) Need(h.tell)("Tips"); }
         g.firstMenu=0;
     }
     if (g.editor) Need(h.editorPlayers)();

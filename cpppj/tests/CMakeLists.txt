@@ -2708,3 +2708,9 @@ add_executable(netstorm_get_technology_tests FocusedTestMain.cpp GetTechnologyIn
 target_link_libraries(netstorm_get_technology_tests PRIVATE netstorm)
 netstorm_apply_compiler_options(netstorm_get_technology_tests)
 target_compile_definitions(netstorm_get_technology_tests PRIVATE ${_netstorm_menu_session_definitions})
+
+# 서비스 종료한 인터넷 검증 제외 정책과 기존 원문82관측/메뉴 전역만 확인한다(단위684).
+add_executable(netstorm_retired_validation_tests FocusedTestMain.cpp NativeMainMenuStateTests.cpp NativeMainMenuStateNativeTests.cpp ClientMainMenuGlobalsTests.cpp)
+target_link_libraries(netstorm_retired_validation_tests PRIVATE netstorm)
+netstorm_apply_compiler_options(netstorm_retired_validation_tests)
+target_compile_definitions(netstorm_retired_validation_tests PRIVATE ${_netstorm_menu_session_definitions})

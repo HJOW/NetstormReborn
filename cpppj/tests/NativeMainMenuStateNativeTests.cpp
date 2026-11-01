@@ -62,7 +62,7 @@ struct Native3FixtureScene {
     // 실제 parent의 flags 재읽기는 원문 CPU direct load 관측과 대응한다.
     NativeMainMenuStateGlobals Globals() {
         const auto pendingBytes=mutation=="pending-null" ? std::span<std::uint8_t>{} : std::span<std::uint8_t>(pending);
-        return {local.State(),source,outcome,first,battle,editor,background,current,pendingBytes,[this] { events.emplace_back("updated");return updated; },[this] { events.emplace_back("tips");return tips; }};
+        return {local.State(),source,outcome,first,battle,editor,background,current,pendingBytes,[this] { events.emplace_back("updated");return updated; },[this] { events.emplace_back("tips");return tips; },true}; // 실제 PE82관측은 구 검증 안내를 포함하는 참조 모드이며 제품 정책과 구별한다.
     }
     // 같은 실제 tail이 HUD/벽시각/음악/팔레트/next4를 실행하며 섬 경계는 State3에서 미선택이어야 한다.
     void Tail() {

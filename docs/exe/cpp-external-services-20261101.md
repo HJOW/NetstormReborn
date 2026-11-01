@@ -1,0 +1,51 @@
+# 외부 접속 기능 목록과 구 클라이언트 검증 비활성화 — 단위684
+
+2026-11-01, **HJOW-Athlon**. 현재와 마지막 전체 정밀 디컴파일 PC는 **HJOW-Athlon / 2026-10-23**으로 같다. 원본/CD/디컴파일 파일을 변경하지 않았다. [기능·주소 목록](../../cpppj/external-endpoints-20261101.json), [제품·검증 보고서](../../cpppj/external-services-20261101.json)를 따른다.
+
+## 적용한 새 요구
+
+사용자가 갱신한 [AGENTS.md](../../AGENTS.md)는 로컬 멀티플레이 서버 접속을 제외한 외부 도메인/IP 접속 기능의 별도 문서화와 **클라이언트 유효성 검사 비활성화**를 요구한다. 서비스 종료는 사용자 지시의 사유이며 이번에 실제 서버 상태를 조회하지 않았다. 세 GUI 실행의 보호 기준 AGENTS SHA는 `ce9229c657458d72baa767335f5a46250db611f9e4fe968f081bcabedc359e8b`다.
+
+기존673의 시작 writer 감사에서 찾은 원문 주소와 의미를 재사용했다. 당시 ‘원문 기본 실행의 Not Validated 안내는 정상’이라는 판정은 **원문 참조에만** 남긴다. 현재 제품에는 새 지침을 적용한다. [기존 네트워크 문서](network-ports.md)의 2026-09-30 비활성 결정과도 일치한다.
+
+## 기능별 경계와 현재 처리
+
+| 기능 | 원본 출처/주소·설정 | cpppj 현재 처리 |
+| --- | --- | --- |
+| Auto Updater의 클라이언트 검증 | WinMain438dc0의 비기본 명령줄/security.dat,438f32의 UserUpdated0054da8c 쓰기. State3/4b72b6의 UserNotUpdated 제목 Not Validated | 온라인 검증·security.dat writer는 미구현이며 앞으로 연결하지 않는다. 제품 시작 분기의 검증 getter와 안내도 비활성화했다. 검증 성공1을 합성하지 않는다. |
+| 인터넷 master/root 서버·디렉터리 | masterServer, officialBasePort/rootServerBasePort, rootServerBucketsServer, !rootservers.dat, 구 nsLaunchC.exe 실행 흐름 | 외부 디렉터리/DNS/공식 서버 접속 미구현.3차에서는 사용자 선택 LAN 로컬 서버만 사전 구현하며 옛 인터넷 서비스를 복구하지 않는다. |
+| 인터넷 ping·네트워크 진단 | Ping0..4/PingName0..6, diagServer/diag*Port/diagMode* | 현재 제품의 외부 ping/진단 접속 미구현. 원본 설정값/원문 포트 근거를 목록에 보존한다. 실제 요청/응답·프로토콜 동작은 시험하지 않았다. |
+| 사용자 선택 웹·업데이트·메일·telnet 링크 | 원본 config/help/tell/update.english와 사용자 시나리오의 URL/치환값, PatchUrl, autoOpen/프로토콜 명령 | Help 링크 선택은 OpenClientExternalHelp→HelpLinkPolicy→ShellExecuteW 또는 프로토콜 실행에 연결돼 있다. 설정/시나리오가 새 주소를 제공할 수 있다. 사용자 선택 링크 기능은 유지하며 자동 업데이트 다운로드/검증·오류 자동 전송은 구현하지 않는다. |
+| Technical Help·설정 명령 실행 | techHelpExe/techHelpFile의 현재 해석 결과, 프로토콜 설정/레지스트리 fallback | 현재 외부 실행 장치가 있다. 기본 로컬 도움말 파일과 사용자 설정의 외부 명령을 구분해야 하며, 고정 원격 서버 주소가 있는 별도 TCP 클라이언트로 보지 않는다. |
+| 로컬 게임/root 서버·LAN 탐색 | 원본 게임6799/root6800/UDP탐색8998,127.0.0.1·0.0.0.0, 기본off인 내장HTTP80 | 사용자 지시의 로컬 접속 예외다. 현재 싱글/Edit 전송은 프로세스 내부다. 실제 로컬 TCP/IP는3차이며 구 인터넷 검증 성공을 요구하지 않는다. 0.0.0.0은 리슨 주소이고 원격 목적지가 아니다. |
+
+정적 목록은 위 경계를5분류로 묶었다(웹/외부 도움말 실행을 한 분류로 합침). 현재 제품 PE의 직접 WSOCK32/WS2_32/WinINet/WinHTTP import는 없다. ShellExecuteW/CreateProcessW 경계는 존재하며, 이 직접 import 결과를 모든 간접 동작의 부재 증명으로 확대하지 않는다.
+
+## 확인한 기본 목적지
+
+| 출처 | 기본값/목적지 |
+| --- | --- |
+| masterServer / Master URL | master.titanic.com, telnet:master.titanic.com |
+| !rootservers.dat | netstorm.game-host.org:6800 / play.netstormworld.com:6800 |
+| diagServer | diag.netstorm.activision.com |
+| Ping0..4 | 208.201.96.13 / 208.201.96.133 / 192.36.148.17 / 128.63.2.53 / 128.8.10.90 |
+| PingName0..6 | netstorm.game-host.org / subserver.game-host.org / www.netstormhq.com / www.netscape.com / www.yahoo.com / www.intel.com / www.activision.com |
+| 기본 사이트/패치·도움말 | www.activision.com / www.netstormhq.com / te.netstormhq.com / www.titanic.com, 구 netstorm.game-host.org의70Update 다운로드 경로 등 |
+| 원문 오류 보고 메시지 | www.titanic.com/netstorm/bugreport.cgi. 정적 오류 문구이며 현재 제품의 자동 전송 기능을 뜻하지 않는다. |
+| 동적 대상 | tell.english의 param.WebSite/UPDATEURL/EMAIL1 등 치환값, 사용자 시나리오 href·mailto, 프로토콜/레지스트리 명령 |
+
+정확한 URL 문자열·원문 줄·아카이브 항목·설정 키·SHA는 JSON 목록에 있다. 두 판본의 실제 원본 아카이브246/258항목, 느슨한 HTML/시나리오, setup.cfg, 메인 PE와 R.exe를 읽었다. **10.78 URL후보59개/10.72 18개와 설정43/39행**을 기록했다. 이 수에는 중복·치환 템플릿·본문 문구가 포함되며 고유 서버 수/실제 연결 수가 아니다. 별도 도구 `tools/cpp_external_endpoints_audit.py`는 파일만 읽고 DNS/HTTP/프로그램을 실행하지 않는다. 새 설정/시나리오가 제공할 미래의 임의 주소를 고정 목록에 모두 열거할 수는 없으므로 소비 함수와 동적 경계도 함께 문서화했다.
+
+10.72는 주소/설정/문자열 인벤토리다. 이번 정책의 실제 GUI/시작 경로는10.78 복원판이며, CD 검증 부모가10.78과 같다는 새 실행 증거는 없다.
+
+## 제품 변경과 검증
+
+NativeMainMenuState의 기본 정책 `referenceValidationNotice=false`와 실제 Client 조립의 빈 userUpdated getter/명시false로 구 검증 조회·Not Validated 안내를 제외했다. UserUpdated의 BSS0과 진단값은 그대로다. 원문과 다른 이유를 한국어 코드 주석에 명시했다. Welcome·저장 재접속 질문·첫 메뉴·Tips 조건은 유지한다. 원문 참조 검사만 명시true로 기존 분기를 선택하며 제품에 이를 켜는 설정/명령줄은 없다. 패킷 타입/길이/형식 같은 로컬 자료 검사는 폐기된 온라인 클라이언트 검증과 구별해 유지한다.
+
+최종 Release 제품/집중 빌드는 종료0·경고/오류0이고 **전용12개(새2·기존10), 실패0**이다. 새 정책은 getter 부재·검증값0 보존과 Welcome/startup/first/Tips의16조합을 확인했다. 기존 원문 **41입력/82관측 fixture**는 참조 모드로 그대로 재생했다. 새 PE 실행이나 fixture/기대 관측 수정은 없다.
+
+실제 GUI는 이전683제품의 안내 존재/Dialog1/검증값0과 수정684제품의 안내 없음/MainMenu0/현재 모달0/검증값0을 확인했다. 최종 수락2회다. 전체 관측에는 **3게임 프로세스, 모두 종료0**가 포함된다. 첫 수정판 관측은 도구가 Dialog1을 계속 기대해 상위 검사가 실패했고, MainMenu0 기대값으로 고친 재관측이 통과했다. 최초 빌드도 검사 어댑터의 한 줄 주석이 닫는 중괄호를 가려 실패했으며 수정 후 최종 빌드/12검사가 통과했다. 실패 로그를 보존했다.
+
+세 실행 전후 originals1394·originalCD425·fixture784·AGENTS1 **총2604파일 경로/내용 동일**, 설정 복원이다. 새 원격 접속·DNS/HTTP probe·MP/미션·공격·포획/희생·승리·공중3종 행동·물리 입력·PCM 검사는0이다. 사용자 AGENTS 변경 전의 옛 SHA와 새 보호 기준을 혼동하지 않는다. 제품 SHA는 `29248df35d60eb66e375659024b0946452b5cbc9f41c8692904df2dad8613021`이다. 원시는 `extracted/cpp-external-services-684/`이고, 마지막 전체34/ZIP은645의644제품으로 유지한다.
+
+문서 작성 중 추가된11.01 버전 표기/세 번째 Patch Credits 요구도 다시 읽었다(현재 AGENTS SHA `138808039a2d171d8e697906776e620f9ea8dc2038c35b4dc01ce18d3e462b77`). 다음 단위에서 이 추가 요구를 먼저 구현한 뒤 보류한 시나리오 명령/메뉴 수명 연결을 계속한다.3차 MP 사전 구현 때도 이 목록과 검증 비활성 정책을 적용한다. 기존 전체 목표와4~7차는 진행 중이다.

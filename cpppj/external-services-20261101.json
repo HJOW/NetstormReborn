@@ -1,0 +1,106 @@
+{
+  "unit": 684,
+  "date": "2026-11-01",
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23"
+  },
+  "requirement": "갱신된 AGENTS.md의 외부 기능 문서화와 클라이언트 유효성 검사 비활성화",
+  "productSha256": "29248df35d60eb66e375659024b0946452b5cbc9f41c8692904df2dad8613021",
+  "inventory": "cpppj/external-endpoints-20261101.json",
+  "inventorySha256": "0cd122bbcc2ca6f6fec17f0e7d5607734b1d32d40a700cfbca2a950c7e1d2454",
+  "build": {
+    "exit": 0,
+    "warnings": 0,
+    "errors": 0,
+    "log": "extracted/cpp-external-services-684/build-v2.log"
+  },
+  "focused": {
+    "target": "netstorm_retired_validation_tests",
+    "registered": 12,
+    "executed": 12,
+    "newTests": 2,
+    "existingTests": 10,
+    "failedChecks": 0,
+    "referencePeInputs": 41,
+    "referencePeObservations": 82,
+    "newPeExecutions": 0,
+    "log": "extracted/cpp-external-services-684/focused-v1.log"
+  },
+  "gui": {
+    "before": {
+      "exit": 0,
+      "exeSha256": "334258ee94c9479683f8819e2586f39c3e1dbdd77ab519696454a0f9acbcc738",
+      "expectedNotice": true,
+      "notice": true,
+      "validationValue": 0,
+      "dialog": [
+        "200"
+      ],
+      "phase": [
+        "1"
+      ],
+      "protectedUnchanged": true,
+      "networkProbes": 0,
+      "limits": "명시 옵션으로 Welcome/Tips/자동 데모를 끄고 초기 메인 메뉴만 관측했다. 원문 게임/실제 인터넷 검증·DNS/HTTP/MP/미션·포획/희생·공격·승리/물리 입력·PCM 검사가 아니다."
+    },
+    "after": {
+      "exit": 0,
+      "exeSha256": "29248df35d60eb66e375659024b0946452b5cbc9f41c8692904df2dad8613021",
+      "expectedNotice": false,
+      "notice": false,
+      "validationValue": 0,
+      "dialog": [
+        "0"
+      ],
+      "phase": [
+        "0"
+      ],
+      "protectedUnchanged": true,
+      "networkProbes": 0,
+      "limits": "명시 옵션으로 Welcome/Tips/자동 데모를 끄고 초기 메인 메뉴만 관측했다. 원문 게임/실제 인터넷 검증·DNS/HTTP/MP/미션·포획/희생·공격·승리/물리 입력·PCM 검사가 아니다."
+    }
+  },
+  "allGuiProcesses": 3,
+  "allGameExitsZero": true,
+  "finalAcceptedGuiProcesses": 2,
+  "preliminary": [
+    "build-v1의 검사 어댑터 한 줄 주석이 닫는 중괄호를 가려 집중 빌드가 실패했고 문법 수정 뒤build-v2가 통과했다.",
+    "live-after 최초 게임은 종료0/안내 없음/MainMenu0이지만 도구가Dialog1을 기대해 실패했다. 도구 정정 뒤live-after-v2가 통과했다."
+  ],
+  "protected": {
+    "originals": 1394,
+    "originalCD": 425,
+    "fixtures": 784,
+    "AGENTS": 1,
+    "total": 2604,
+    "pathsAndContentsEqual": true,
+    "settingsRestored": true
+  },
+  "networkProbes": 0,
+  "lastFull34": {
+    "unit": 645,
+    "product": 644
+  },
+  "limits": "현재 제품의 검증 조회/안내 제외와 정적 외부 기능 목록이다. 실제 원격 서버 상태/통신·MP·CD 실행·미션·포획/희생·특정적공격·승리/공중3종/전체34·전체C++·물리입력/PCM 검증이 아니다. UserUpdated 성공1을 합성하거나 기존fixture/기대값을 바꾸지 않았다.",
+  "sha256": {
+    "cpppj/src/client/NativeMainMenuState.h": "62fbe4498fbf06d4f86bba3625d8a53553458cf501a2ca4ec23a08602ca75bb3",
+    "cpppj/src/client/NativeMainMenuState.cpp": "8459bac013432d033f0738b140b2be681125d6e92eb35fb59cc5b236d5e98757",
+    "cpppj/src/client/UberEditor.inc": "48c0f53c9710af060974ce311fab12e4661f34e36b5e72eeafe710cc64c9abb9",
+    "cpppj/src/client/ClientLocalStateGlobals.h": "fc6891875fa372813e74826ddc1f5ea03d0cadf71a1e408e2b4d173db3fe266f",
+    "cpppj/tests/CMakeLists.txt": "59183cbba1d204a04ce15fe41caaa8f49b92c99573f53d63ee11dfd7588b7ddc",
+    "cpppj/tests/NativeMainMenuStateTests.cpp": "3d52aa615eccee08664058b236653e734155d487fdf6ca15265037048b5bdee9",
+    "cpppj/tests/NativeMainMenuStateNativeTests.cpp": "9e3247b60947dab9b05a1906ef82963c11df229654fed62fbd15ead8f6bd9f0c",
+    "cpppj/tests/fixtures/native-main-menu-state-x86.tsv": "1620edbc7050afbef2ec63c59ca73d4306d8ece1fba8737dc4f267f037264dd8",
+    "tools/cpp_external_endpoints_audit.py": "1f6a493fe92147a648c87ce652f6c247294c2ae506f5b7dc40d9543b264f02e2",
+    "tools/cpp_retired_validation_smoke.py": "8d60ec4dbd30d320853ba2a60ce22f92263bcd566825e5af66ede5cc43ce821e",
+    "AGENTS.md": "138808039a2d171d8e697906776e620f9ea8dc2038c35b4dc01ce18d3e462b77",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233"
+  },
+  "sourceNormalization": "UberEditor.inc의 기존 혼합 개행을 복원했으며 CRLF→LF 정규화한 최종 소스는 build-v2 입력과 동일하다. 제품/검사 논리 변경은 없다.",
+  "guiAgentsSha256": "ce9229c657458d72baa767335f5a46250db611f9e4fe968f081bcabedc359e8b",
+  "currentAgentsSha256": "138808039a2d171d8e697906776e620f9ea8dc2038c35b4dc01ce18d3e462b77",
+  "nextInstruction": "보고서 작성 중 추가된11.01 표기/세 번째 Patch Credits는 다음 작업 단위에서 구현한다."
+}

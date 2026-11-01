@@ -1,0 +1,1232 @@
+{
+  "unit": 684,
+  "date": "2026-11-01",
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23"
+  },
+  "kind": "read-only static inventory",
+  "product": {
+    "sha256": "29248df35d60eb66e375659024b0946452b5cbc9f41c8692904df2dad8613021",
+    "importedDlls": [
+      "SHELL32.dll",
+      "USER32.dll",
+      "GDI32.dll",
+      "WINMM.dll",
+      "dwmapi.dll",
+      "KERNEL32.dll",
+      "MSVCP140.dll",
+      "VCRUNTIME140.dll",
+      "VCRUNTIME140_1.dll",
+      "api-ms-win-crt-stdio-l1-1-0.dll",
+      "api-ms-win-crt-filesystem-l1-1-0.dll",
+      "api-ms-win-crt-heap-l1-1-0.dll",
+      "api-ms-win-crt-runtime-l1-1-0.dll",
+      "api-ms-win-crt-convert-l1-1-0.dll",
+      "api-ms-win-crt-environment-l1-1-0.dll",
+      "api-ms-win-crt-string-l1-1-0.dll",
+      "api-ms-win-crt-math-l1-1-0.dll",
+      "api-ms-win-crt-time-l1-1-0.dll",
+      "api-ms-win-crt-locale-l1-1-0.dll"
+    ],
+    "directNetworkDllImports": []
+  },
+  "networkProbes": 0,
+  "nativeCodeExecutions": 0,
+  "gameExecutions": 0,
+  "services": [
+    {
+      "kind": "retired-online-validation",
+      "original": "WinMain00438dc0/438f32 security.dat → UserUpdated0054da8c; State3 Not Validated",
+      "product": "검증 writer/온라인 접속 미구현. 제품은 상태 조회와 Not Validated 안내도 비활성화한다. 성공1을 합성하지 않는다."
+    },
+    {
+      "kind": "internet-master-root-directory",
+      "original": "masterServer/!rootservers.dat/officialBasePort/구 nsLaunchC.exe",
+      "product": "외부 서버 디렉터리/DNS/TCP 접속 미구현.3차는 로컬 서버만 사전 구현하며 옛 공식 서버를 복구하지 않는다."
+    },
+    {
+      "kind": "internet-ping-diagnostic",
+      "original": "Ping*/PingName*/diagServer/diag*Port",
+      "product": "외부 ping/진단 접속 미구현.목록만 보존한다."
+    },
+    {
+      "kind": "user-selected-external-help-update-mail",
+      "original": "Help HTML/Config URLs/PatchUrl/autoOpen/프로토콜 명령; 오류 보고 URL",
+      "product": "사용자 선택 Help 링크는 ShellExecuteW/프로토콜 실행에 연결돼 있다.이 함수는 임의 설정/시나리오 주소도 받을 수 있다.클릭 없이 자동 접속하지 않으며 업데이트 다운로드/오류 자동 전송은 미구현이다."
+    },
+    {
+      "kind": "local-game-root-server",
+      "original": "TCP6799/루트6800/탐색UDP8998/내장HTTP80 기본off/0.0.0.0/127.0.0.1",
+      "product": "현재 싱글/Edit는 프로세스 내부 전송이다.로컬 TCP/IP는3차 후순위이며 검증 성공을 요구하지 않는다."
+    }
+  ],
+  "supportBinaries": [
+    {
+      "source": "originals/R.exe",
+      "literals": [
+        {
+          "va": "004bee83",
+          "text": "from <a href=\"http://www.titanic.com/netstorm/updates.html\">http://www.titanic.com/netstorm/updates.html</a>"
+        },
+        {
+          "va": "004bef4f",
+          "text": "<a href=\"http://www.titanic.com/netstorm/updates.html\">here</a>~5 to launch your browser and visit the patch site."
+        }
+      ]
+    },
+    {
+      "source": "originalCD/R.EXE",
+      "literals": []
+    }
+  ],
+  "rootServerList": [
+    "netstorm.game-host.org:6800;Main Server;0",
+    "play.netstormworld.com:6800;Backup Server;0"
+  ],
+  "editions": [
+    {
+      "root": "originals",
+      "configuration": [
+        {
+          "line": 14,
+          "key": "chalipreplace",
+          "value": "\"127.0.0.1\""
+        },
+        {
+          "line": 15,
+          "key": "chalipfind",
+          "value": "\"127.0.0.1\""
+        },
+        {
+          "line": 24,
+          "key": "EMAIL1",
+          "value": "\"www.netstormhq.com\""
+        },
+        {
+          "line": 26,
+          "key": "UPDATEURL",
+          "value": "\"www.netstormhq.com\""
+        },
+        {
+          "line": 250,
+          "key": "testBattleAddress",
+          "value": "\"127.0.0.1\""
+        },
+        {
+          "line": 326,
+          "key": "Ping0",
+          "value": "\"208.201.96.13\""
+        },
+        {
+          "line": 327,
+          "key": "Ping1",
+          "value": "\"208.201.96.133\""
+        },
+        {
+          "line": 328,
+          "key": "Ping2",
+          "value": "\"192.36.148.17\""
+        },
+        {
+          "line": 329,
+          "key": "Ping3",
+          "value": "\"128.63.2.53\""
+        },
+        {
+          "line": 330,
+          "key": "Ping4",
+          "value": "\"128.8.10.90\""
+        },
+        {
+          "line": 334,
+          "key": "PingName0",
+          "value": "\"netstorm.game-host.org\""
+        },
+        {
+          "line": 335,
+          "key": "PingName1",
+          "value": "\"subserver.game-host.org\""
+        },
+        {
+          "line": 336,
+          "key": "PingName2",
+          "value": "\"www.netstormhq.com\""
+        },
+        {
+          "line": 337,
+          "key": "PingName3",
+          "value": "\"www.netscape.com\""
+        },
+        {
+          "line": 338,
+          "key": "PingName4",
+          "value": "\"www.yahoo.com\""
+        },
+        {
+          "line": 339,
+          "key": "PingName5",
+          "value": "\"www.intel.com\""
+        },
+        {
+          "line": 340,
+          "key": "PingName6",
+          "value": "\"www.activision.com\""
+        },
+        {
+          "line": 343,
+          "key": "diagServer",
+          "value": "\"diag.netstorm.activision.com\""
+        },
+        {
+          "line": 345,
+          "key": "diagTCPXmitPort",
+          "value": "\"{officialBasePort},{gameServerPort}\""
+        },
+        {
+          "line": 347,
+          "key": "diagTCPRecvRemotePort",
+          "value": "\"{officialBasePort}\""
+        },
+        {
+          "line": 349,
+          "key": "diagTCPRecvLocalPort",
+          "value": "\"{gameServerPort}\""
+        },
+        {
+          "line": 396,
+          "key": "Activision's Home URL",
+          "value": "\"http://www.activision.com\""
+        },
+        {
+          "line": 397,
+          "key": "Titanic's Home URL",
+          "value": "\"http://www.netstormhq.com\""
+        },
+        {
+          "line": 400,
+          "key": "Master URL",
+          "value": "\"telnet:master.titanic.com\""
+        },
+        {
+          "line": 401,
+          "key": "PatchUrl",
+          "value": "\"http://www.activision.com\""
+        },
+        {
+          "line": 404,
+          "key": "techHelpExe",
+          "value": "\"\\help\\help.exe\""
+        },
+        {
+          "line": 405,
+          "key": "techHelpFile",
+          "value": "\"\\help\\readme.hlp\""
+        },
+        {
+          "line": 410,
+          "key": "rootServerExe",
+          "value": "\"r.exe\""
+        },
+        {
+          "line": 416,
+          "key": "autoOpen",
+          "value": "\"http: file: mailto: ftp: https: nntp: mid: gopher: news: prospero: telnet: rlogin: wais:\""
+        },
+        {
+          "line": 423,
+          "key": "mailto:",
+          "value": "\"{&{reg}\\mailto\\{open}|{&{reg}\\{&{reg}\\.msg#}\\{open}|{&{reg}\\msgfile\\{open}}}} mailto:\""
+        },
+        {
+          "line": 431,
+          "key": "masterServer",
+          "value": "\"master.titanic.com\""
+        },
+        {
+          "line": 435,
+          "key": "officialBasePort",
+          "value": "6800"
+        },
+        {
+          "line": 436,
+          "key": "rootServerBasePort",
+          "value": "\"{officialBasePort}\""
+        },
+        {
+          "line": 469,
+          "key": "gameServerPort",
+          "value": "6799"
+        },
+        {
+          "line": 519,
+          "key": "rootServerBasePort",
+          "value": "\"{officialBasePort}\""
+        },
+        {
+          "line": 521,
+          "key": "rootServerBucketsServer",
+          "value": "\"\""
+        },
+        {
+          "line": 550,
+          "key": "rootServerBroadcastPort",
+          "value": "8998"
+        },
+        {
+          "line": 554,
+          "key": "diagModeRecv",
+          "value": "1"
+        },
+        {
+          "line": 555,
+          "key": "diagModeXmit",
+          "value": "1"
+        },
+        {
+          "line": 570,
+          "key": "chalServerBadVersionMessage",
+          "value": "\"~w~3~EYour client is obsolete.`nYou must obtain a new client from ~lhttp://www.titanic.com/cgwdemo.html`n\""
+        },
+        {
+          "line": 571,
+          "key": "chalServerBadVerNoBattle",
+          "value": "\"~w~3~EYou cannot join until you upgrade your client from ~lhttp://www.titanic.com/cgwdemo.html`n\""
+        },
+        {
+          "line": 603,
+          "key": "httpPort",
+          "value": "80"
+        },
+        {
+          "line": 604,
+          "key": "httpServer",
+          "value": "0"
+        }
+      ],
+      "links": [
+        {
+          "source": "originals/netstorm.tarc!\\d\\config.english",
+          "line": 37,
+          "url": "mailto:bugs@titanic.com",
+          "template": false,
+          "context": "crash HTML = \"<p>Please copy this information and <a href=`\"mailto:bugs@titanic.com`\">Email Us</a> with it.`n<p>`n<a href=`\"{troubleshooting URL}`\">Go to troubleshooting pages.</a><hr>(to stop this browser launch, set troubleshootOnCrash = 0 in your options.cfg file.)`n\""
+        },
+        {
+          "source": "originals/netstorm.tarc!\\d\\config.english",
+          "line": 59,
+          "url": "http://www.activision.com,Visit",
+          "template": false,
+          "context": "InetShortcut0 = \"http://www.activision.com,Visit Activision on the Web\""
+        },
+        {
+          "source": "originals/netstorm.tarc!\\d\\config.english",
+          "line": 60,
+          "url": "http://www.titanic.com,Visit",
+          "template": false,
+          "context": "InetShortcut1 = \"http://www.titanic.com,Visit Titanic on the Web\""
+        },
+        {
+          "source": "originals/netstorm.tarc!\\d\\help.english",
+          "line": 245,
+          "url": "http://www.netstormhq.com",
+          "template": false,
+          "context": "<a href=\"http://www.netstormhq.com\">* Netstorm:HQ's Web Site (Updates and patches)</a>"
+        },
+        {
+          "source": "originals/netstorm.tarc!\\d\\help.english",
+          "line": 247,
+          "url": "http://te.netstormhq.com",
+          "template": false,
+          "context": "<a href=\"http://te.netstormhq.com\">* Ticonderoga Entertainment's Web Site (The creator of the latest patches)</a>"
+        },
+        {
+          "source": "originals/netstorm.tarc!\\d\\help.english",
+          "line": 251,
+          "url": "http://www.activision.com",
+          "template": false,
+          "context": "<a href=\"http://www.activision.com\">* Activision's Web Site (Producer of NetStorm, Offers limited support)</a>"
+        },
+        {
+          "source": "originals/netstorm.tarc!\\d\\help.english",
+          "line": 532,
+          "url": "http://www.netstormhq.com",
+          "template": false,
+          "context": "help on formats you can check <a href=\"http://www.netstormhq.com\">Netstorm:HQ</a>."
+        },
+        {
+          "source": "originals/netstorm.tarc!\\d\\help.english",
+          "line": 628,
+          "url": "http://www.netstormhq.com",
+          "template": false,
+          "context": "Note: For more help on formats you can check <a href=\"http://www.netstormhq.com\">Netstorm:HQ</a>."
+        },
+        {
+          "source": "originals/netstorm.tarc!\\d\\help.english",
+          "line": 2482,
+          "url": "http://www.netstormhq.com",
+          "template": false,
+          "context": "ports <c>6799</c> and <c>6800</c>. There is more help regarding this subject at <a href=\"http://www.netstormhq.com\">Netstorm:HQ</a>."
+        },
+        {
+          "source": "originals/netstorm.tarc!\\d\\help.english",
+          "line": 2635,
+          "url": "http://www.netstormhq.com",
+          "template": false,
+          "context": "bring up the player list. For more information on this you can check <a href=\"http://www.netstormhq.com\">Netstorm:HQ</a>."
+        },
+        {
+          "source": "originals/netstorm.tarc!\\d\\tell.english",
+          "line": 187,
+          "url": "http://{{param.1}.WebSite}",
+          "template": true,
+          "context": "{Text}Web Site{Accent}:{Text} <a herf=\"http://{{param.1}.WebSite}\">{{param.1}.WebSite}<br>"
+        },
+        {
+          "source": "originals/netstorm.tarc!\\d\\tell.english",
+          "line": 375,
+          "url": "mailto:{EMAIL1}",
+          "template": true,
+          "context": "You can Email {SUPPORTNAME} technical support at <a href=\"mailto:{EMAIL1}\">{Link}{EMAIL1}</a>{Text}"
+        },
+        {
+          "source": "originals/netstorm.tarc!\\d\\tell.english",
+          "line": 501,
+          "url": "http://{UPDATEURL}",
+          "template": true,
+          "context": "<a href=\"http://{UPDATEURL}\">{Link}{UPDATEURL}</a>{Text}"
+        },
+        {
+          "source": "originals/netstorm.tarc!\\d\\tell.english",
+          "line": 517,
+          "url": "http://{UPDATEURL}",
+          "template": true,
+          "context": "<a href=\"http://{UPDATEURL}\">{Text}{UPDATEURL}</a>{Text}"
+        },
+        {
+          "source": "originals/netstorm.tarc!\\d\\tell.english",
+          "line": 591,
+          "url": "http://{UPDATEURL}",
+          "template": true,
+          "context": "Check <a href=\"http://{UPDATEURL}\">{Link}{UPDATEURL}</a> {Text} For Information"
+        },
+        {
+          "source": "originals/netstorm.tarc!\\d\\tell.english",
+          "line": 610,
+          "url": "http://{UPDATEURL}",
+          "template": true,
+          "context": "Check <a href=\"http://{UPDATEURL}\">{Link}{UPDATEURL}</a> {Text} For Information"
+        },
+        {
+          "source": "originals/netstorm.tarc!\\d\\tell.english",
+          "line": 1941,
+          "url": "http://www.titanic.com/netstorm/buynetstormdirect.html",
+          "template": false,
+          "context": "NetStorm direct from <a href=\"http://www.titanic.com/netstorm/buynetstormdirect.html\">Activision</a>"
+        },
+        {
+          "source": "originals/netstorm.tarc!\\d\\tell.english",
+          "line": 1944,
+          "url": "http://www.titanic.com/netstorm/demo.html",
+          "template": false,
+          "context": "For the latest demo download check out <a href=\"http://www.titanic.com/netstorm/demo.html\">http://www.titanic.com/netstorm/demo.html</a>"
+        },
+        {
+          "source": "originals/netstorm.tarc!\\d\\tell.english",
+          "line": 1944,
+          "url": "http://www.titanic.com/netstorm/demo.html",
+          "template": false,
+          "context": "For the latest demo download check out <a href=\"http://www.titanic.com/netstorm/demo.html\">http://www.titanic.com/netstorm/demo.html</a>"
+        },
+        {
+          "source": "originals/netstorm.tarc!\\d\\tell.english",
+          "line": 1974,
+          "url": "http://www.netstormhq.com",
+          "template": false,
+          "context": "tip0=\"Visit <a href=`\"http://www.netstormhq.com`\">NetstormHQ</a> to check for updates, get support, meet new friends, or discuss your favorite strategies. You can also participate in tournaments! Please visit our sponsors.\""
+        },
+        {
+          "source": "originals/netstorm.tarc!\\d\\tell.english",
+          "line": 2013,
+          "url": "http://www.netstormhq.com",
+          "template": false,
+          "context": "tip39=\"You're out of Tips! You can find more Tips at <a href=`\"http://www.netstormhq.com`\">NetstormHQ</a>.<$Config,tipNumber=0>\""
+        },
+        {
+          "source": "originals/netstorm.tarc!\\d\\tell.english",
+          "line": 2239,
+          "url": "http://www.microsoft.com",
+          "template": false,
+          "context": "<a href=\"http://www.microsoft.com\">http://www.microsoft.com</a>"
+        },
+        {
+          "source": "originals/netstorm.tarc!\\d\\tell.english",
+          "line": 2239,
+          "url": "http://www.microsoft.com",
+          "template": false,
+          "context": "<a href=\"http://www.microsoft.com\">http://www.microsoft.com</a>"
+        },
+        {
+          "source": "originals/netstorm.tarc!\\d\\tell.english",
+          "line": 2291,
+          "url": "http://{UPDATEURL}",
+          "template": true,
+          "context": "You can download the latest patches from <a href=\"http://{UPDATEURL}\">{Link}{UPDATEURL}</a> {Text}"
+        },
+        {
+          "source": "originals/netstorm.tarc!\\d\\tell.english",
+          "line": 2539,
+          "url": "http://www.titanic.com/netstorm/buynetstormdirect.html",
+          "template": false,
+          "context": "<a href=\"http://www.titanic.com/netstorm/buynetstormdirect.html\">website</a>"
+        },
+        {
+          "source": "originals/netstorm.tarc!\\d\\tell.english",
+          "line": 2627,
+          "url": "http://www.netstormhq.com/content.php?content.27",
+          "template": false,
+          "context": "If you are not behind a firewall, or have <a href=\"http://www.netstormhq.com/content.php?content.27\">Forwarded ports</a> <c>6799</c> and <c>6800</c>, you can disable the diagnostics check by pressing the <c>Escape key</c>, clicking on the <c>Options</c> menu, then selecting the <"
+        },
+        {
+          "source": "originals/netstorm.tarc!\\d\\update.english",
+          "line": 21,
+          "url": "http://netstorm.game-host.org/Web/e107/RS/e107_files/downloads/70Update_Alpha4_3.zip",
+          "template": false,
+          "context": "<a herf=\"http://netstorm.game-host.org/Web/e107/RS/e107_files/downloads/70Update_Alpha4_3.zip\">Download the zip</a><br>"
+        },
+        {
+          "source": "originals/netstorm.tarc!\\d\\update.english",
+          "line": 45,
+          "url": "http://netstorm.game-host.org/Web/e107/RS/e107_files/downloads/70Update_Alpha4_4.zip",
+          "template": false,
+          "context": "<a herf=\"http://netstorm.game-host.org/Web/e107/RS/e107_files/downloads/70Update_Alpha4_4.zip\">Download the zip</a><br>"
+        },
+        {
+          "source": "originals/netstorm.tarc!\\d\\update.english",
+          "line": 60,
+          "url": "http://netstorm.game-host.org/Web/e107/RS/e107_files/downloads/70Update_Alpha4_5.zip",
+          "template": false,
+          "context": "<a herf=\"http://netstorm.game-host.org/Web/e107/RS/e107_files/downloads/70Update_Alpha4_5.zip\">Download the zip</a><br>"
+        },
+        {
+          "source": "originals/netstorm.tarc!\\d\\update.english",
+          "line": 74,
+          "url": "http://netstorm.game-host.org/Web/e107/RS/e107_files/downloads/70Update_Alpha4_6.zip",
+          "template": false,
+          "context": "<a herf=\"http://netstorm.game-host.org/Web/e107/RS/e107_files/downloads/70Update_Alpha4_6.zip\">Download the zip</a><br>"
+        },
+        {
+          "source": "originals/d/battle7.english",
+          "line": 43,
+          "url": "mailto:Ty_Guy01@hotmail.com",
+          "template": false,
+          "context": "Tell me what you thought, please e-mail me at <a href=\"mailto:Ty_Guy01@hotmail.com\">Ty_Guy01@hotmail.com</a> and tell me if it was too easy, too hard, just right, any spelling errors (I checked like 30 times) or other errors, I would like to thank Rahn, for that cool guide (I cou"
+        },
+        {
+          "source": "originals/d/five.english",
+          "line": 83,
+          "url": "http://members.tripod.com/~BarkingMonkey/netstorm/winner.html",
+          "template": false,
+          "context": "<p>Thanks for playing my campaign, I hope it was fun, and somewhat challenging. I wish I could give you more for beating it, but this is a pretty limited interface. What I can do however and tell you to go here: ~m<a href=\"http://members.tripod.com/~BarkingMonkey/netstorm/winner."
+        },
+        {
+          "source": "originals/d/Guideb.english",
+          "line": 9,
+          "url": "mailto:tatarovo@cadvision.com",
+          "template": false,
+          "context": "<p>~[Inugget.4]<i>Alex Tatarov</i> - <a href=\"mailto:tatarovo@cadvision.com\">tatarovo@cadvision.com</a>"
+        },
+        {
+          "source": "originals/d/Guidecreation.english",
+          "line": 7,
+          "url": "mailto:gorselands@btinternet.com",
+          "template": false,
+          "context": "<p>~[Inugget.4]<i>Chamber</i> - <a href=\"mailto:gorselands@btinternet.com\">gorselands@btinternet.com</a>"
+        },
+        {
+          "source": "originals/d/GuideFireScen.english",
+          "line": 11,
+          "url": "mailto:dschang1@gte.net",
+          "template": false,
+          "context": "<a href=\"mailto:dschang1@gte.net\">dschang1@gte.net</a>"
+        },
+        {
+          "source": "originals/d/guidehades.english",
+          "line": 23,
+          "url": "mailto:MVieira220@aol.com",
+          "template": false,
+          "context": "<a href=\"mailto:MVieira220@aol.com\">~[Ipriest.76]swelb</a>                            <a href=\"mailto:kohlmp@transcom.scott.af.mil\">Highlander~[Ipriest.150]</a>~.<br>"
+        },
+        {
+          "source": "originals/d/guidehades.english",
+          "line": 23,
+          "url": "mailto:kohlmp@transcom.scott.af.mil",
+          "template": false,
+          "context": "<a href=\"mailto:MVieira220@aol.com\">~[Ipriest.76]swelb</a>                            <a href=\"mailto:kohlmp@transcom.scott.af.mil\">Highlander~[Ipriest.150]</a>~.<br>"
+        },
+        {
+          "source": "originals/d/GuideImp.english",
+          "line": 15,
+          "url": "http://www.geocities.com/TimesSquare/Arena/7792/",
+          "template": false,
+          "context": "<a href=\"http://www.geocities.com/TimesSquare/Arena/7792/\">~lNEC IS DA PLACE TO BE</a><br>"
+        },
+        {
+          "source": "originals/d/GuideImp.english",
+          "line": 18,
+          "url": "mailto:Dying_Realms@juno.com",
+          "template": false,
+          "context": "~kDying~w_~rRealms~k@juno.com~m ~w- <a href=\"mailto:Dying_Realms@juno.com\">~lE-mail me for comments/critism/bugs.</a><br>"
+        },
+        {
+          "source": "originals/d/Guidemike1.english",
+          "line": 11,
+          "url": "mailto:Mike74637@aol.com",
+          "template": false,
+          "context": "<a href=\"mailto:Mike74637@aol.com\">Mike74637@aol.com</a>"
+        },
+        {
+          "source": "originals/d/GuideRasricsCampaign.english",
+          "line": 8,
+          "url": "http://pweb.uunet.de/lotek.h/",
+          "template": false,
+          "context": "This is the first campaign of <i><h4>RasRic</h4></i> If you like it send some words to <c><a href=\"http://pweb.uunet.de/lotek.h/\">Rasrics homepage!</a></c>"
+        },
+        {
+          "source": "originals/d/GuideRasricsCampaign2.english",
+          "line": 11,
+          "url": "http://pweb.uunet.de/lotek.h/",
+          "template": false,
+          "context": "If you like it send some words to <c><a href=\"http://pweb.uunet.de/lotek.h/\">Rasrics homepage!</a></c>"
+        },
+        {
+          "source": "originals/d/GuideRazorianreturn.english",
+          "line": 6,
+          "url": "http://www.crosswinds.net/eindhoven/~ddc",
+          "template": false,
+          "context": "After the defeat of the Razorians, things were pretty calm at <a href=\"http://www.crosswinds.net/eindhoven/~ddc\">DDC</a>. Suddenly they're back. Bigger. Better. Can you help them out once again?</i>"
+        },
+        {
+          "source": "originals/d/GuideRazorianreturn.english",
+          "line": 8,
+          "url": "mailto:ddc-leader@usa.net",
+          "template": false,
+          "context": "Sequel to The Razorian War by <a href=\"mailto:ddc-leader@usa.net\">Striker</a><br>"
+        },
+        {
+          "source": "originals/d/GuideRazorianwar.english",
+          "line": 8,
+          "url": "mailto:vsayan@hotmail.com",
+          "template": false,
+          "context": "Extra single-player missions by <a href=\"mailto:vsayan@hotmail.com\">Striker</a><br>"
+        },
+        {
+          "source": "originals/d/GuideTA.english",
+          "line": 12,
+          "url": "mailto:Frieza@hotmail.com",
+          "template": false,
+          "context": "<a href=\"mailto:Frieza@hotmail.com\">email Frieza</a><br>"
+        },
+        {
+          "source": "originals/d/GuideTornApart.english",
+          "line": 8,
+          "url": "mailto:mav07@hotmail.com",
+          "template": false,
+          "context": "Hey,I'm Maverick, you may have seen me on Netstorm,you may not have, but this is my first attempt at a Netstorm campaign.  Please bare with me and e-mail me if you have any trouble at <a href=\"mailto:mav07@hotmail.com\">mav07@hotmail.com</a>  Thanx and have fun."
+        },
+        {
+          "source": "originals/d/GuideTPM.english",
+          "line": 15,
+          "url": "http://www.geocities.com/TimesSquare/Ring/8655/",
+          "template": false,
+          "context": "<P><a href=\"http://www.geocities.com/TimesSquare/Ring/8655/\">Visit Thunder Point</a>"
+        },
+        {
+          "source": "originals/d/GuideTPM.english",
+          "line": 16,
+          "url": "mailto:JR@upb.byu.edu",
+          "template": false,
+          "context": "<P><a href=\"mailto:JR@upb.byu.edu\">Email: jrc</a>"
+        },
+        {
+          "source": "originals/d/GuideTPV.english",
+          "line": 17,
+          "url": "http://www.geocities.com/TimesSquare/Ring/8655/",
+          "template": false,
+          "context": "<P><a href=\"http://www.geocities.com/TimesSquare/Ring/8655/\">Visit Thunder Point</a>"
+        },
+        {
+          "source": "originals/d/GuideTPV.english",
+          "line": 18,
+          "url": "mailto:JR@upb.byu.edu",
+          "template": false,
+          "context": "<P><a href=\"mailto:JR@upb.byu.edu\">Email: jrc</a>"
+        },
+        {
+          "source": "originals/d/Guidevn.english",
+          "line": 12,
+          "url": "mailto:venom@freeola.net",
+          "template": false,
+          "context": "<?{vn_donevn10}>You have completed the quest for the domination of Rain, but can you find the thunder campaign? It's not that well hidden. Anyway, I hope you enjoyed playing, and if you have any comments or suchlike, email me at <a href=\"mailto:venom@freeola.net\">venom@freeola.ne"
+        },
+        {
+          "source": "originals/d/Guidevn.english",
+          "line": 14,
+          "url": "mailto:venom@freeola.net",
+          "template": false,
+          "context": "<?{vn_donevn11}>You have completed the quest for the domination of Wind, but can you find the thunder campaign? It's not that well hidden. Anyway, I hope you enjoyed playing, and if you have any comment or suchlike, email me at <a href=\"mailto:venom@freeola.net\">venom@freeola.net"
+        },
+        {
+          "source": "originals/d/guidewhirli.english",
+          "line": 9,
+          "url": "http://www.netstormhq.com",
+          "template": false,
+          "context": "<a href=\"http://www.netstormhq.com\">~rwww.netstormhq.com</a>"
+        },
+        {
+          "source": "originals/d/guildmaster.english",
+          "line": 45,
+          "url": "http://www.geocities.com/TimesSquare/Realm/7645/",
+          "template": false,
+          "context": "<p><A HREF=\"http://www.geocities.com/TimesSquare/Realm/7645/\">The Reaper Guild Page</A>"
+        },
+        {
+          "source": "originals/d/sw_m30.english",
+          "line": 290,
+          "url": "mailto:MVieira220@aol.com",
+          "template": false,
+          "context": "<a href=\"mailto:MVieira220@aol.com\">~[Ipriest.76]swelb</a>                            <a href=\"mailto:kohlmp@transcom.scott.af.mil\">Highlander~[Ipriest.150]</a>~.<br>"
+        },
+        {
+          "source": "originals/d/sw_m30.english",
+          "line": 290,
+          "url": "mailto:kohlmp@transcom.scott.af.mil",
+          "template": false,
+          "context": "<a href=\"mailto:MVieira220@aol.com\">~[Ipriest.76]swelb</a>                            <a href=\"mailto:kohlmp@transcom.scott.af.mil\">Highlander~[Ipriest.150]</a>~.<br>"
+        },
+        {
+          "source": "originals/d/vndemo.english",
+          "line": 111,
+          "url": "mailto:venom@freeola.net",
+          "template": false,
+          "context": "Wow, I didn't think anyone would look in here. If you want to contact me for any reason, email me at ~l~E<A HREF=\"mailto:venom@freeola.net\">venom@freeola.net</A>~.. I've got a website at ~o~E<a href=\"http://www.venom.freeola.net\">www.venom.freeola.net</a>~. It's about Netstorm, a"
+        },
+        {
+          "source": "originals/d/vndemo.english",
+          "line": 111,
+          "url": "http://www.venom.freeola.net",
+          "template": false,
+          "context": "Wow, I didn't think anyone would look in here. If you want to contact me for any reason, email me at ~l~E<A HREF=\"mailto:venom@freeola.net\">venom@freeola.net</A>~.. I've got a website at ~o~E<a href=\"http://www.venom.freeola.net\">www.venom.freeola.net</a>~. It's about Netstorm, a"
+        }
+      ],
+      "peLiterals": [
+        {
+          "va": "00504854",
+          "text": "0.0.0.0"
+        },
+        {
+          "va": "00506514",
+          "text": "security.dat"
+        },
+        {
+          "va": "0050ef54",
+          "text": "127.0.0.1"
+        },
+        {
+          "va": "00514618",
+          "text": "http:// *([^."
+        },
+        {
+          "va": "00543610",
+          "text": "NetStorm has failed an assertion and can't continue. Please submit this info to http://www.titanic.com/netstorm/bugreport.cgi"
+        }
+      ],
+      "peImports": [
+        {
+          "dll": "WSOCK32.dll",
+          "functions": [
+            "WSACleanup",
+            "gethostname",
+            "getpeername",
+            "getsockname",
+            "sendto",
+            "recvfrom",
+            "send",
+            "recv",
+            "accept",
+            "select",
+            "__WSAFDIsSet",
+            "WSAGetLastError",
+            "socket",
+            "setsockopt",
+            "connect",
+            "closesocket",
+            "bind",
+            "listen",
+            "ioctlsocket",
+            "htonl",
+            "gethostbyname",
+            "htons",
+            "inet_ntoa",
+            "inet_addr",
+            "ntohs",
+            "WSAStartup"
+          ]
+        },
+        {
+          "dll": "SHELL32.dll",
+          "functions": [
+            "ShellExecuteA"
+          ]
+        }
+      ],
+      "archiveEntries": 246
+    },
+    {
+      "root": "originalCD",
+      "configuration": [
+        {
+          "line": 139,
+          "key": "testBattleAddress",
+          "value": "\"127.0.0.1\""
+        },
+        {
+          "line": 213,
+          "key": "Ping0",
+          "value": "\"208.201.96.13\""
+        },
+        {
+          "line": 214,
+          "key": "Ping1",
+          "value": "\"208.201.96.133\""
+        },
+        {
+          "line": 215,
+          "key": "Ping2",
+          "value": "\"192.36.148.17\""
+        },
+        {
+          "line": 216,
+          "key": "Ping3",
+          "value": "\"128.63.2.53\""
+        },
+        {
+          "line": 217,
+          "key": "Ping4",
+          "value": "\"128.8.10.90\""
+        },
+        {
+          "line": 221,
+          "key": "PingName0",
+          "value": "\"netstorm.activision.com\""
+        },
+        {
+          "line": 222,
+          "key": "PingName1",
+          "value": "\"www.titanic.com\""
+        },
+        {
+          "line": 223,
+          "key": "PingName2",
+          "value": "\"www.microsoft.com\""
+        },
+        {
+          "line": 224,
+          "key": "PingName3",
+          "value": "\"www.netscape.com\""
+        },
+        {
+          "line": 225,
+          "key": "PingName4",
+          "value": "\"www.yahoo.com\""
+        },
+        {
+          "line": 226,
+          "key": "PingName5",
+          "value": "\"www.intel.com\""
+        },
+        {
+          "line": 227,
+          "key": "PingName6",
+          "value": "\"www.activision.com\""
+        },
+        {
+          "line": 230,
+          "key": "diagServer",
+          "value": "\"diag.netstorm.activision.com\""
+        },
+        {
+          "line": 232,
+          "key": "diagTCPXmitPort",
+          "value": "\"{officialBasePort},{gameServerPort}\""
+        },
+        {
+          "line": 234,
+          "key": "diagTCPRecvRemotePort",
+          "value": "\"{officialBasePort}\""
+        },
+        {
+          "line": 236,
+          "key": "diagTCPRecvLocalPort",
+          "value": "\"{gameServerPort}\""
+        },
+        {
+          "line": 276,
+          "key": "Activision's Home URL",
+          "value": "\"http://www.activision.com\""
+        },
+        {
+          "line": 277,
+          "key": "Titanic's Home URL",
+          "value": "\"http://www.titanic.com\""
+        },
+        {
+          "line": 280,
+          "key": "Master URL",
+          "value": "\"telnet:master.titanic.com\""
+        },
+        {
+          "line": 281,
+          "key": "PatchUrl",
+          "value": "\"http://www.activision.com\""
+        },
+        {
+          "line": 284,
+          "key": "techHelpExe",
+          "value": "\"\\help\\help.exe\""
+        },
+        {
+          "line": 285,
+          "key": "techHelpFile",
+          "value": "\"\\help\\readme.hlp\""
+        },
+        {
+          "line": 290,
+          "key": "rootServerExe",
+          "value": "\"r.exe\""
+        },
+        {
+          "line": 296,
+          "key": "autoOpen",
+          "value": "\"http: file: mailto: ftp: https: nntp: mid: gopher: news: prospero: telnet: rlogin: wais:\""
+        },
+        {
+          "line": 303,
+          "key": "mailto:",
+          "value": "\"{&{reg}\\mailto\\{open}|{&{reg}\\{&{reg}\\.msg#}\\{open}|{&{reg}\\msgfile\\{open}}}} mailto:\""
+        },
+        {
+          "line": 311,
+          "key": "masterServer",
+          "value": "\"master.titanic.com\""
+        },
+        {
+          "line": 315,
+          "key": "officialBasePort",
+          "value": "6800"
+        },
+        {
+          "line": 316,
+          "key": "rootServerBasePort",
+          "value": "\"{officialBasePort}\""
+        },
+        {
+          "line": 349,
+          "key": "gameServerPort",
+          "value": "6799"
+        },
+        {
+          "line": 399,
+          "key": "rootServerBasePort",
+          "value": "\"{officialBasePort}\""
+        },
+        {
+          "line": 401,
+          "key": "rootServerBucketsServer",
+          "value": "\"\""
+        },
+        {
+          "line": 430,
+          "key": "rootServerBroadcastPort",
+          "value": "8998"
+        },
+        {
+          "line": 434,
+          "key": "diagModeRecv",
+          "value": "1"
+        },
+        {
+          "line": 435,
+          "key": "diagModeXmit",
+          "value": "1"
+        },
+        {
+          "line": 450,
+          "key": "chalServerBadVersionMessage",
+          "value": "\"~w~3~EYour client is obsolete.`nYou must obtain a new client from ~lhttp://www.titanic.com/cgwdemo.html`n\""
+        },
+        {
+          "line": 451,
+          "key": "chalServerBadVerNoBattle",
+          "value": "\"~w~3~EYou cannot join until you upgrade your client from ~lhttp://www.titanic.com/cgwdemo.html`n\""
+        },
+        {
+          "line": 483,
+          "key": "httpPort",
+          "value": "80"
+        },
+        {
+          "line": 484,
+          "key": "httpServer",
+          "value": "0"
+        }
+      ],
+      "links": [
+        {
+          "source": "originalCD/NETSTORM.TARC!\\d\\config.english",
+          "line": 37,
+          "url": "mailto:bugs@titanic.com",
+          "template": false,
+          "context": "crash HTML = \"<p>Please copy this information and <a href=`\"mailto:bugs@titanic.com`\">Email Us</a> with it.`n<p>`n<a href=`\"{troubleshooting URL}`\">Go to troubleshooting pages.</a><hr>(to stop this browser launch, set troubleshootOnCrash = 0 in your options.cfg file.)`n\""
+        },
+        {
+          "source": "originalCD/NETSTORM.TARC!\\d\\config.english",
+          "line": 59,
+          "url": "http://www.activision.com,Visit",
+          "template": false,
+          "context": "InetShortcut0 = \"http://www.activision.com,Visit Activision on the Web\""
+        },
+        {
+          "source": "originalCD/NETSTORM.TARC!\\d\\config.english",
+          "line": 60,
+          "url": "http://www.titanic.com,Visit",
+          "template": false,
+          "context": "InetShortcut1 = \"http://www.titanic.com,Visit Titanic on the Web\""
+        },
+        {
+          "source": "originalCD/NETSTORM.TARC!\\d\\tell.english",
+          "line": 75,
+          "url": "mailto:support@activision.com",
+          "template": false,
+          "context": "You can Email Activision technical support at <a href=\"mailto:support@activision.com\">support@activision.com</a>"
+        },
+        {
+          "source": "originalCD/NETSTORM.TARC!\\d\\tell.english",
+          "line": 239,
+          "url": "http://www.titanic.com/netstorm/updates.html",
+          "template": false,
+          "context": "<a href=\"http://www.titanic.com/netstorm/updates.html\">http://www.titanic.com/netstorm/updates.html</a>"
+        },
+        {
+          "source": "originalCD/NETSTORM.TARC!\\d\\tell.english",
+          "line": 239,
+          "url": "http://www.titanic.com/netstorm/updates.html",
+          "template": false,
+          "context": "<a href=\"http://www.titanic.com/netstorm/updates.html\">http://www.titanic.com/netstorm/updates.html</a>"
+        },
+        {
+          "source": "originalCD/NETSTORM.TARC!\\d\\tell.english",
+          "line": 255,
+          "url": "http://www.titanic.com/netstorm/updates.html",
+          "template": false,
+          "context": "<a href=\"http://www.titanic.com/netstorm/updates.html\">http://www.titanic.com/netstorm/updates.html</a>"
+        },
+        {
+          "source": "originalCD/NETSTORM.TARC!\\d\\tell.english",
+          "line": 255,
+          "url": "http://www.titanic.com/netstorm/updates.html",
+          "template": false,
+          "context": "<a href=\"http://www.titanic.com/netstorm/updates.html\">http://www.titanic.com/netstorm/updates.html</a>"
+        },
+        {
+          "source": "originalCD/NETSTORM.TARC!\\d\\tell.english",
+          "line": 1583,
+          "url": "http://www.titanic.com/netstorm/buynetstormdirect.html",
+          "template": false,
+          "context": "NetStorm direct from <a href=\"http://www.titanic.com/netstorm/buynetstormdirect.html\">Activision</a>"
+        },
+        {
+          "source": "originalCD/NETSTORM.TARC!\\d\\tell.english",
+          "line": 1586,
+          "url": "http://www.titanic.com/netstorm/demo.html",
+          "template": false,
+          "context": "For the latest demo download check out <a href=\"http://www.titanic.com/netstorm/demo.html\">http://www.titanic.com/netstorm/demo.html</a>"
+        },
+        {
+          "source": "originalCD/NETSTORM.TARC!\\d\\tell.english",
+          "line": 1586,
+          "url": "http://www.titanic.com/netstorm/demo.html",
+          "template": false,
+          "context": "For the latest demo download check out <a href=\"http://www.titanic.com/netstorm/demo.html\">http://www.titanic.com/netstorm/demo.html</a>"
+        },
+        {
+          "source": "originalCD/NETSTORM.TARC!\\d\\tell.english",
+          "line": 1868,
+          "url": "http://www.microsoft.com",
+          "template": false,
+          "context": "<a href=\"http://www.microsoft.com\">http://www.microsoft.com</a>"
+        },
+        {
+          "source": "originalCD/NETSTORM.TARC!\\d\\tell.english",
+          "line": 1868,
+          "url": "http://www.microsoft.com",
+          "template": false,
+          "context": "<a href=\"http://www.microsoft.com\">http://www.microsoft.com</a>"
+        },
+        {
+          "source": "originalCD/NETSTORM.TARC!\\d\\tell.english",
+          "line": 2160,
+          "url": "http://www.titanic.com/netstorm/buynetstormdirect.html",
+          "template": false,
+          "context": "<a href=\"http://www.titanic.com/netstorm/buynetstormdirect.html\">website</a>"
+        },
+        {
+          "source": "originalCD/NETSTORM.TARC!\\d\\help.english",
+          "line": 244,
+          "url": "http://www.activision.com",
+          "template": false,
+          "context": "<a href=\"http://www.activision.com\">* Activision's Web Site (updates and patches) at www.activision.com</a>"
+        },
+        {
+          "source": "originalCD/NETSTORM.TARC!\\d\\help.english",
+          "line": 246,
+          "url": "http://www.titanic.com",
+          "template": false,
+          "context": "<a href=\"http://www.titanic.com\">* Titanic's Web Site (The creators of NetStorm) at www.titanic.com</a>"
+        },
+        {
+          "source": "originalCD/NETSTORM.TARC!\\d\\help.english",
+          "line": 2193,
+          "url": "http://www.titanic.com/netstorm/updates.html",
+          "template": false,
+          "context": "visit <a href=\"http://www.titanic.com/netstorm/updates.html\">http://www.titanic.com/netstorm/updates.html</a> to"
+        },
+        {
+          "source": "originalCD/NETSTORM.TARC!\\d\\help.english",
+          "line": 2193,
+          "url": "http://www.titanic.com/netstorm/updates.html",
+          "template": false,
+          "context": "visit <a href=\"http://www.titanic.com/netstorm/updates.html\">http://www.titanic.com/netstorm/updates.html</a> to"
+        }
+      ],
+      "peLiterals": [
+        {
+          "va": "0050f83c",
+          "text": "127.0.0.1"
+        },
+        {
+          "va": "00512838",
+          "text": "0.0.0.0"
+        },
+        {
+          "va": "00531460",
+          "text": "NetStorm has failed an assertion and can't continue. Please submit this info to http://www.titanic.com/netstorm/bugreport.cgi"
+        }
+      ],
+      "peImports": [
+        {
+          "dll": "SHELL32.dll",
+          "functions": [
+            "SHGetPathFromIDList",
+            "ShellExecuteA",
+            "SHGetMalloc",
+            "SHBrowseForFolder"
+          ]
+        },
+        {
+          "dll": "WSOCK32.dll",
+          "functions": [
+            "socket",
+            "connect",
+            "send",
+            "ntohs",
+            "WSAStartup",
+            "inet_addr",
+            "inet_ntoa",
+            "htons",
+            "gethostbyname",
+            "htonl",
+            "gethostbyaddr",
+            "WSACleanup",
+            "getpeername",
+            "sendto",
+            "recvfrom",
+            "gethostname",
+            "recv",
+            "accept",
+            "select",
+            "__WSAFDIsSet",
+            "listen",
+            "setsockopt",
+            "bind",
+            "ioctlsocket",
+            "WSAGetLastError",
+            "closesocket",
+            "getsockname"
+          ]
+        }
+      ],
+      "archiveEntries": 258
+    }
+  ],
+  "cppSources": [
+    "cpppj/src/client/NativeMainMenuState.cpp",
+    "cpppj/src/client/NativeMainMenuState.h",
+    "cpppj/src/client/UberEditor.inc",
+    "cpppj/src/client/ClientLocalStateGlobals.h",
+    "cpppj/src/client/HelpLinkPolicy.cpp",
+    "cpppj/src/client/ExternalHelpClient.cpp",
+    "cpppj/src/client/TechnicalHelp.cpp",
+    "cpppj/src/client/RawCampaignSessionLogin.inc",
+    "cpppj/src/zacket/LocalMissionTransport.cpp",
+    "cpppj/src/CMakeLists.txt"
+  ],
+  "sha256": {
+    "AGENTS.md": "138808039a2d171d8e697906776e620f9ea8dc2038c35b4dc01ce18d3e462b77",
+    "cpppj/src/CMakeLists.txt": "8dbf3f70952ff9fa23e2c8f528f8b2d56f0adbaa936175da9d246444751aa741",
+    "cpppj/src/client/ClientLocalStateGlobals.h": "fc6891875fa372813e74826ddc1f5ea03d0cadf71a1e408e2b4d173db3fe266f",
+    "cpppj/src/client/ExternalHelpClient.cpp": "c77df04291134d2a03a480480011de3d4906a949ac95760ed1153d173b03a9f7",
+    "cpppj/src/client/HelpLinkPolicy.cpp": "a46bc06b9e4c40fc6d68e170acc557b4a1528523912a2ca7c2c3a738b1a5e994",
+    "cpppj/src/client/NativeMainMenuState.cpp": "8459bac013432d033f0738b140b2be681125d6e92eb35fb59cc5b236d5e98757",
+    "cpppj/src/client/NativeMainMenuState.h": "62fbe4498fbf06d4f86bba3625d8a53553458cf501a2ca4ec23a08602ca75bb3",
+    "cpppj/src/client/RawCampaignSessionLogin.inc": "0549ad9274db9b489775a05bbae0c8481aba8cc5513d67fddb1bcef3e5742b3a",
+    "cpppj/src/client/TechnicalHelp.cpp": "ff91477fa8fa1e7ea35814a96588d2c4f84667c982d193e97233cf67c7db82ac",
+    "cpppj/src/client/UberEditor.inc": "48c0f53c9710af060974ce311fab12e4661f34e36b5e72eeafe710cc64c9abb9",
+    "cpppj/src/zacket/LocalMissionTransport.cpp": "73ca2fcb909c24ea02bcab304ffd9a23f30ea3d914c24fbb016c9f801fcf67be",
+    "originalCD/D/setup.cfg": "683b20c084617024397861f22f0873b55cf2727c103500d5bb3bc99f83ddba2e",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "originalCD/NETSTORM.TARC": "e7e8868553ec2ef40cc1cd97ea452c37454e9a147f21a67a1298945de9b637ff",
+    "originalCD/R.EXE": "999627a36f06857720e05784145fd8a54cdcaa21991a58e57940aa83d5b73899",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originals/R.exe": "831e2ecbbba4654b97a270da8da91d7aa7302090f3198c4365f78c44d59dbf0b",
+    "originals/d/!rootservers.dat": "04b5a9ed95b107b19887d6f0f599c684699a10e24ee878f22cc0ac902df9b9ea",
+    "originals/d/GuideFireScen.english": "945a8299210c30d08fa1a05fd9724c69f5bd0a37f0892d6b51c586049b111a24",
+    "originals/d/GuideImp.english": "b9bee8bda8bcf12836c0cc098a173731b25a617e09fac973d086c82991d40db5",
+    "originals/d/GuideRasricsCampaign.english": "3f42b112f075803a2e1109daca7a7ca11498fe4e700a62c4e868e8b245ba5fc9",
+    "originals/d/GuideRasricsCampaign2.english": "6b97e730b609380a0574d943179741daaeb3ddad3e17f0ba9abe55e249981101",
+    "originals/d/GuideRazorianreturn.english": "1dd0c00abe66c2eebe942fd8d605a55d93bd68b57a254f48f89d2a1dbafd3c79",
+    "originals/d/GuideRazorianwar.english": "1f2ab85aee97fde19c921ad1128ca50d75c6b45b0716132577f2ab9d84597e47",
+    "originals/d/GuideTA.english": "9282aaac58167acc7ccfec2231f99e5154045b1e8125fcb6abd16ab3cc360257",
+    "originals/d/GuideTPM.english": "f2ca4551944eb3aa116559165d2d1de1419a5ffa5a46e3c022baf3c4f537c932",
+    "originals/d/GuideTPV.english": "0d804620478f1a7bcd40c8b3c4ab402700efb9c9409405e19829f5393a3b67df",
+    "originals/d/GuideTornApart.english": "85417b1d1ef2807c84e8fea691b74deb4c5276d034a0e5cb210f244533ba5e81",
+    "originals/d/Guideb.english": "c79c6927ce6c9f4cdd974666e148bd8a90e4c680947b6ae7d17c88e723001d68",
+    "originals/d/Guidecreation.english": "0f45b89dc65fadd1cb9bf6673352394e3f3d7558c0d7f91a39246759b6738ccd",
+    "originals/d/Guidemike1.english": "9f389015f70638b52088bfefe50b0fe9b8004ad89715405cebf788c040738018",
+    "originals/d/Guidevn.english": "c743e2652dbef92d0d19407e1949a8e739274c11feeb29499feef0edd4cc1b96",
+    "originals/d/battle7.english": "f410dcc5d0a22740b528f8e24c11e71e70a7373a9f71ac565996eb0d5f561110",
+    "originals/d/five.english": "28f3ef36f04623bf3eb97ce405c085ff0c6c88b38df1b27867a60436f60a926b",
+    "originals/d/guidehades.english": "dcea0ea91927b025d76bb9e8cbfc8229f8bc84e257a6055f2d7bb9199e1764af",
+    "originals/d/guidewhirli.english": "37a9e9b9d276cfa48d5c54dab509af91e55cdfb12afe653942770bcc6cb34fac",
+    "originals/d/guildmaster.english": "d72a96883417084f28a42ce5dfd5bf6b48513f21b89498f52ac006cddfb5b6f0",
+    "originals/d/setup.cfg": "bd79e34635ba284036638461d9f0532de99e38c48887c1791abfa08c6fd052b3",
+    "originals/d/sw_m30.english": "d956406e8e0bd38fa1488f9a6fb76fea5ee7805d170611e07578aef1d90c8555",
+    "originals/d/vndemo.english": "ae52096986e70c9927c29f028f80d5a1d3ba794139c805ae74a85f9afb2a37ae",
+    "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6",
+    "tools/cpp_external_endpoints_audit.py": "1f6a493fe92147a648c87ce652f6c247294c2ae506f5b7dc40d9543b264f02e2",
+    "tools/nscfg.py": "662ac47ea2d5b610c90a5879a3a4bdade7dee4bb22b0b3b35ba58dfacbd042cb",
+    "tools/taff.py": "461860cdfc9451b85a8694dd30fd2c56c1cfdf5c6bb7ab8f63a4089971889795"
+  },
+  "limitations": "제공된 두 판본/아카이브/느슨한 HTML·시나리오/현재소스의 정적 출처다. 현재 DNS·서비스 상태·실제 접속·간접 alias 전체 부재·모든 동적 URL의 고정값을 검증하지 않았다. 사용자 지정 URL/프로토콜 실행은 별도 명시 기능이며 로컬 서버 기능과 구분한다."
+}

@@ -19,6 +19,7 @@ struct NativeMainMenuStateGlobals {
     std::span<char> background; //00565e70의 현재 NUL 문자열 물리이며 첫BYTE 쓰기와 전체 이름 복사를 구별한다.
     std::span<std::uint8_t> currentName,pendingName; //0055b490/494의 실제 할당이다. pending NULL은 빈span으로 표현한다.
     std::function<std::uint32_t()> userUpdated,tellTips; //0054da8c/0053190c의 현재 직접 읽기이며 Config 재조회로 바꾸지 않는다.
+    bool referenceValidationNotice{}; // 원문 대조 장치만true를 쓴다. 제품은 서비스 종료한 인터넷 검증을 비활성화하므로 기본false이며 설정/명령줄로 켜지지 않는다.
 };
 // 선택된 큰 하위만 필수로 요구한다. 공통 prefix/tail은 기존 실제 부모를 호출한다.
 struct NativeMainMenuStateHooks {

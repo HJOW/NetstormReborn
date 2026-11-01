@@ -119,7 +119,8 @@ o::StartupStateCheckHooks UberGump::EditorStartupStateHooks() {
 o::LocalMissionParentResult UberGump::InstallMainMenuNativeState(std::uint32_t selected) {
     if (selected!=3 || !editor_) throw std::logic_error("실제 메인 메뉴 State3 장기 부모 계약");
     auto& local=*client_.LocalStateGlobals();auto& game=*client_.GameplayGlobals();auto& surface=*client_.SurfaceStorage();auto& names=*client_.FortGlobals();
-    NativeMainMenuStateGlobals globals{local.State(),local.SourceType(),client_.WorldAudio().ResultState(),local.FirstMenuPending(),surface.ownerMode.battle,game.world.editor,htmlGlobals_.background,names.CurrentBytes(),names.PendingBytes(),[&local] { return local.UserUpdated(); },[&local] { return local.TellTips(); }};
+    NativeMainMenuStateGlobals globals{local.State(),local.SourceType(),client_.WorldAudio().ResultState(),local.FirstMenuPending(),surface.ownerMode.battle,game.world.editor,htmlGlobals_.background,names.CurrentBytes(),names.PendingBytes(),{},[&local] { return local.TellTips(); }};
+    globals.referenceValidationNotice=false; // 원문 인터넷 검증은 서버 서비스 종료로 비활성화한다. 성공1을 합성하지 않고 조회/안내를 모두 생략하며 LAN에 검증을 요구하지 않는다.
     NativeMainMenuStateHooks hooks;hooks.configInt=[this](auto key) { return client_.Configuration().GetInt(key); };
     hooks.request=[this](auto state) { editor_->state->Request(state); }; //같은 실행 중인 Native 분배기의 immediate를 사용한다.
     hooks.deleteSavedState=[this] { static_cast<void>(DeleteSavedStateFile(client_.GameDirectory())); }; // 원문 State3는 경로를 매번 계산하고 CRT 삭제 실패도 상태 전환을 중단시키지 않는다.

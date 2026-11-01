@@ -19,7 +19,7 @@ public:
     o::LocalMissionStateStorage State() { return {blocks_[0],blocks_[1],blocks_[2],blocks_[3],blocks_[4]}; } // 기존 원문 분배기에 같은 블록 참조를 제공한다.
     std::uint32_t& FirstMenuPending() { return firstMenuPending_; } //00542530의 초기1이며 WelcomeGiven 비영 분기의 안내 종료 위치에서만0을 쓴다.
     const std::uint32_t& FirstMenuPending() const { return firstMenuPending_; } //재진입에서도 같은 현재 DWORD를 읽는다.
-    std::uint32_t& UserUpdated() { return userUpdated_; } //0054da8c의 BSS0이며 security.dat/명령줄 검증의 별도 writer를 기다리는 실제 저장소다.
+    std::uint32_t& UserUpdated() { return userUpdated_; } //0054da8c의 BSS0을 보존한다. 원문과 달리 종료된 서버의 security.dat/명령줄 검증 writer는 제품에 연결하지 않는다(사용자 지시).
     const std::uint32_t& UserUpdated() const { return userUpdated_; } //Config의 같은 이름 키로 값을 대체하지 않는다.
     std::uint32_t& TellTips() { return tellTips_; } //0053190c의 초기1과 실제 tellTips ReadInt writer가 같은 DWORD를 공유한다.
     const std::uint32_t& TellTips() const { return tellTips_; } //State3는 Tell callback 뒤의 현재 옵션값을 이 주소에서 다시 읽는다.
