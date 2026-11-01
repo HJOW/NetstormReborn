@@ -12,6 +12,8 @@
 #include "client/UrlInput.h" // HTML의URL버튼과같은일반입력/현재고리/Help분배기접합이다.
 #include "client/CaptureInput.h"
 #include "client/ClientCaptureSequence.h"
+#include "client/RecheckCdInput.h"
+#include "client/ClientCdGlobals.h"
 #include "client/TechnicalHelp.h" //실제 파일 가용성 조회와 별도 Technical Help 명령을 연결한다.
 #include "client/ClientDiagnostics.h"
 #include "client/SendMoneyInput.h"
@@ -435,6 +437,8 @@ void UberGump::ShowCaptureNotice(std::string_view body,std::uint32_t width,std::
     if (!serial) return;state_.phase=ClientPhase::Dialog;pageName_="capturewritten";popup_.clear();
     if (missionRuntime_ && missionRuntime_->tutorial) missionRuntime_->tutorial->Gate().PauseForDialog();else if (mission_) client_.Pause(true);RebuildControls();
 } //같은 전체HTML의기존모달/닫기수명을사용하며별도Tell섹션으로치환하지않는다.
+// 테스트 전용: 현재 모달 Gump의 실제 serial을 읽는다. 값을 바꾸지 않으며 열린 모달이 없으면 0이다(단위696).
+std::uint32_t UberGump::CurrentDialogSerial() const { const auto token=rawButtons_->CurrentDialog();const auto* node=token ? rawButtons_->Menus()->Node(token):nullptr;return node ? node->serial:0U; }
 // 실제 현재 Console만 전환하며 root 열기/닫기와 옵션 소비는 각 원문 부모가 담당한다.
 void UberGump::ToggleChatInput() { rawButtons_->Menus()->ToggleChatInput(); }
 // 기본 메뉴를 초기화한 다음 프레임에 미션을 시작한다.
@@ -1042,6 +1046,7 @@ void UberGump::Event(InputEvent event) {
     if (DispatchUrlInput(event,[this](auto token) { return scriptStrings_.Resolve(token); },
         [this](auto text) { rawButtons_->Menus()->ActivateHelpLinkText(text); })) { rebuild_=true;return; } //모드/현재World와무관하게같은내부Help·cmd·외부정책을사용한다.
     if (DispatchCaptureInput(event,client_.ScreenCapture().State().active,{[this] { client_.ScreenCapture().Start(); },[this] { client_.ScreenCapture().Stop(); },[this](auto section) { Tell(std::string(section)); }})) { rebuild_=true;return; } //현재active우선/param2=1시작이다. 개발자키55a484조건은켜지않는다.
+    if (DispatchRecheckCdInput(event,client_.CdGlobals()->RecheckSerial(),{[this](auto serial) { return rawButtons_->SerialGump(serial); },[this](auto token) { rawButtons_->KillGump(token); }})) { rebuild_=true;return; } //4d8b8d: 현재 serial 조회→공통 Kill→0쓰기다. 실제 CD 재탐색(440c60)이나 온라인 검증은 호출하지 않는다(단위696).
     if (transitionCode==0x02000037U) {
         if (!(event.code&InputCode::kRelease)) { EnsureHudFactories();rawButtons_->ToggleMinimap(hud_->createMinimap); }
         rebuild_=true;return; //원본 일반 입력의5427d4→480810을 동일 공장/지연Kill에 연결하며 뗌은 전환하지 않는다.
@@ -1553,6 +1558,7 @@ std::string UberGump::Report(bool cameraOnly) const {
     out<<client_.ScreenDiagnostics(); // 실제 OS 창과 논리/확대 출력의 관찰만 추가한다.
     out<<client_.RendererFrameDiagnostics(); //같은 실제 Frame/구름 요청·캐시·마지막 표시 인자만 관측한다.
     const auto& capture=client_.ScreenCapture();const auto& captureState=capture.State();out<<"screen_capture\t"<<captureState.count<<'\t'<<captureState.active<<'\t'<<captureState.first<<'\t'<<capture.AllocatedFrames()<<'\n'; //검사 보고만 같은 현재 개수/active/first/실제 할당 수를 읽으며 상태나 파일을 바꾸지 않는다.
+    out<<"recheck_cd\t"<<client_.CdGlobals()->RecheckSerial()<<'\n'; //검사 보고만 005c85ec의 현재 serial을 읽으며 값을 바꾸지 않는다(단위696).
     out<<ReportClientBridgeDecay(client_); //현재 메뉴/World가 공유하는 실제 스캔의 읽기 전용 CLI 관측이다.
     const auto& camera=client_.GameplayGlobals()->Camera();out<<"raw_camera_frame\t"<<camera.RendererView().pixels[0]<<'\t'<<camera.RendererView().pixels[1]<<'\t'<<camera.Target().pixels[0]<<'\t'<<camera.Target().pixels[1]<<'\t'<<client_.GameplayGlobals()->PatchDiagnostic()<<'\t'<<client_.LocalStateGlobals()->MetaRebuild()<<'\t'<<pointerBoundary_.initializationFlags<<'\t'<<edgeScrollSince_<<'\n'; //실제 적용/요청·공유 전역만 관측한다.
     out << "phase\t" << static_cast<int>(state_.phase) << "\npage\t" << Field(pageName_) << "\npopup\t" << Field(popup_) << "\n";

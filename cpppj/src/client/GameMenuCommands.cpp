@@ -4,6 +4,7 @@
 #include "client/DestroyAtInput.h"
 #include "client/UrlInput.h" // 스크린샷View버튼과대본도기존Help링크분배기를사용한다.
 #include "client/CaptureInput.h" //BeginCapture 버튼도 같은 입력/현재 Client 상태를 사용한다.
+#include "client/RecheckCdInput.h" //RecheckCD 이름·메타·큐 명령도 같은 일반 입력의 현재 serial 정리를 사용한다.
 #include "client/ScenarioObjectInput.h"
 #include "client/ScenarioEffectInput.h"
 #include "o/OriginalText.h"
@@ -12,7 +13,8 @@
 namespace netstorm::client {
 namespace {
 // 00542xxx는원문주소식별자다. 런타임호스트포인터로역참조하지않는다.
-constexpr std::array<std::pair<std::uint32_t,std::uint32_t>,37> kCommands{{
+constexpr std::array<std::pair<std::uint32_t,std::uint32_t>,38> kCommands{{
+    {0x00542ae8U,kRecheckCdCommand}, //RecheckCD의 이름·메타·큐 명령이다. 실제 CD 재탐색이 아니라 현재 serial 정리다.
     {0x00542968U,kCaptureCommand}, //연속 화면 저장의 이름과 정수 명령을 같은 큐로 보낸다.
     {0x00542864U,kUrlCommand}, // 원문 URL의 이름·숫자·HTML 버튼을 같은 입력으로 보낸다.
     {0x00542a78U,kDestroyAtCommand}, // 원문DestroyAt의 문자열 토큰도 같은 일반 입력/버튼 큐다.
@@ -64,6 +66,7 @@ std::uint32_t GameMenuScriptCode(std::string_view name) {
     const auto key=o::AsciiLower(name); // 이름비교만원문ASCII대소문자를무시한다.
     if (key=="url") return kUrlCommand; // 외부 주소뿐 아니라 내부 Help/cmd 링크도 같은4a00c0이해석한다.
     if (key=="capture") return kCaptureCommand; //543070의 실제 이름이며 새 모드 관문을 추가하지 않는다.
+    if (key=="recheckcd") return kRecheckCdCommand; //543370의 실제 이름이다. 종료된 온라인 검증/CD 재탐색으로 바꾸지 않고 현재 serial 정리만 연결한다.
     if (key=="addrandom") return kAddRandomCommand; //00543048의 원문 이름이며 수량1은 실제 일반 입력이 전달한다.
     if (key=="destroyat") return kDestroyAtCommand; //00543290의 실제 이름이며 좌표/필터 문자열을 보존한다.
     if (key=="changemoney") return 0x02000061U; // 원문542e90의 실제 이름이며 기존 signed SP 가산 몸체를 공유한다.

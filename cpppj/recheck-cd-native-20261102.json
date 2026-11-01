@@ -1,0 +1,22 @@
+{
+  "unit": 696,
+  "date": "2026-11-02",
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23"
+  },
+  "cases": 332,
+  "observations": 996,
+  "differences": 0,
+  "fixtures": {
+    "recheck-cd-x86.tsv": "dcc1a2f2d41d1b366b485b88a7b0e807876610f5aeabcfcbffeb87f7127c9101"
+  },
+  "boundaries": "실제 004d62b0 명령 분기와 00435060/004c8d90/00464020 본체를 실행했다. 00466480(공통 Kill)만 대상 객체 번호를 기록하는 명시 경계다. Client/OS/파일/게임/통신/MP 실행0.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_recheck_cd.py": "1dee4a372eb92145cb705f9d4f8187e9587044c69533fd8b08f5ebf44d7ff5e8",
+    "tools/decomp_game_menu_actions.py": "9130163b3bd761b08b37397f69ba3e074b257967a5fc934b68210bc6325f2df7",
+    "tools/decomp_production_shortcuts.py": "4caf1c87e4a152f65b2815395ea553b2609587be06a95512974b893e985b24e3"
+  }
+}

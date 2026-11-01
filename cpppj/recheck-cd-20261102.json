@@ -1,0 +1,184 @@
+{
+  "unit": 696,
+  "date": "2026-11-02",
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23"
+  },
+  "runtimeProduct": 696,
+  "productVersion": "11.01",
+  "productSha256": "13a2a7d0ccd66336463ea94a241759c7b337b7eb3f1a3e6d690c0018bf7f9089",
+  "runtimeExecutableRebuilt": true,
+  "goalComplete": false,
+  "original": {
+    "command": "0x020000fd",
+    "nameTable": "00543370 -> 00542ae8",
+    "branch": "004d8b85..004d8b9e: push 1; call 00435060; push 005c85ec; call 004c8d90",
+    "serialDirectReferences": "바이너리 전체에서 push 5c85ec(4d8b95) 한 곳뿐",
+    "serialAssignment": "Gump 생성자가 serial=++state.serial로 0이 아닌 고유 값을 부여하므로 최초 serial 0 조회는 대상을 찾지 못한다",
+    "release": "뗌은 명령 체인 전체를 건너뛴다(serial 읽기/쓰기 0)",
+    "cd1072": {
+      "nameTable": "00513458 -> 00512c70",
+      "branch": "0041cdd9..0041cdfc",
+      "firstCall": "00433bf0(1)은 상태/시간을 쓰는 함수",
+      "serial": "00518a5c",
+      "helper": "004c3820",
+      "compared": false
+    }
+  },
+  "native": {
+    "cases": 332,
+    "observations": 996,
+    "differences": 0,
+    "frozenBeforeProductEdit": true,
+    "killRows": 105,
+    "zeroSerialKillRows": 50,
+    "boundaries": "실제 004d62b0 명령 분기와 00435060/004c8d90/00464020 본체를 실행했다. 00466480(공통 Kill)만 대상 객체 번호를 기록하는 명시 경계다. Client/OS/파일/게임/통신/MP 실행0.",
+    "fixtures": {
+      "recheck-cd-x86.tsv": "dcc1a2f2d41d1b366b485b88a7b0e807876610f5aeabcfcbffeb87f7127c9101"
+    },
+    "tool": "1dee4a372eb92145cb705f9d4f8187e9587044c69533fd8b08f5ebf44d7ff5e8"
+  },
+  "build": {
+    "targets": [
+      "NetstormCpp",
+      "netstorm_recheck_cd_tests"
+    ],
+    "logs": [
+      "build-v1.log",
+      "build-v2.log",
+      "build-v3.log"
+    ],
+    "finalLog": "build-v3.log",
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "note": "v1은 입력/소유자/이름표 구현, v2는 검사 전용 command 연산과 recheck_cd 보고, v3은 test-recheck-serial 연산과 CurrentDialogSerial 추가다."
+  },
+  "focused": {
+    "registered": 4,
+    "executed": 4,
+    "failedChecks": 0,
+    "logs": [
+      "focused-v1.log",
+      "focused-v2.log",
+      "focused-v3.log"
+    ],
+    "newTests": 4,
+    "existingTests": 0,
+    "tests": [
+      "RecheckCdInput_Native332CurrentSerialLookupKillAndZero",
+      "RecheckCdInput_MissingDeviceAndKillFailureKeepSerial",
+      "RecheckCdInput_NameMetadataQueueAndCommandTable",
+      "RecheckCdInput_ActualClientOwnerStartsZeroAndStaysStable"
+    ]
+  },
+  "mutation": {
+    "target": "netstorm_recheck_cd_tests",
+    "total": 7,
+    "detected": 7,
+    "missedOrSkipped": 0,
+    "log": "mutation-v1.log",
+    "names": [
+      "recheck-cd-release-runs",
+      "recheck-cd-skip-zero-serial",
+      "recheck-cd-lookup-zero",
+      "recheck-cd-keep-serial",
+      "recheck-cd-name-table",
+      "recheck-cd-command-table",
+      "recheck-cd-owner-initial"
+    ],
+    "note": "작업 사본에서 실행했고 저장소 소스는 바꾸지 않았다."
+  },
+  "gui": {
+    "totalExecutions": 3,
+    "exits": [
+      0,
+      0,
+      0
+    ],
+    "finalPassed": "live-v3",
+    "tool": "1035510ac11baf6de1e46c5898e77daf8e25476293b7bc5383d86801dec1a23b",
+    "resolution": [
+      1024,
+      768
+    ],
+    "failures": [
+      {
+        "run": "live-v1",
+        "cause": "검사 기대 오류: serial 0이면 첫 Gump가 Kill돼 등록 항목이 줄어든다고 가정했으나 모든 Gump가 0이 아닌 고유 serial을 받아 대상이 없다. 제품 동작은 원문대로 무효과(항목 184 유지).",
+        "exeSha256": "c1b481c246b45b6ad65ea359c57f20c8a73f1e36a4cb19d58b05472a4be199a6"
+      },
+      {
+        "run": "live-v2",
+        "cause": "검사 기대 오류: 모달이 열리면 등록 항목이 늘어난다고 가정했으나 메인 컨트롤이 교체되어 184->180으로 줄었다. 제품 동작은 최종과 같았다.",
+        "exeSha256": "13a2a7d0ccd66336463ea94a241759c7b337b7eb3f1a3e6d690c0018bf7f9089"
+      }
+    ],
+    "final": {
+      "registryCounts": {
+        "main": 184,
+        "first": 184,
+        "second": 184,
+        "third": 184,
+        "dialog": 180,
+        "armed": 180,
+        "killed": 184
+      },
+      "recheckSerial": {
+        "main": "0",
+        "first": "0",
+        "second": "0",
+        "third": "0",
+        "dialog": "0",
+        "armed": "202",
+        "killed": "0"
+      },
+      "currentDialog": {
+        "dialog": "216",
+        "armed": "216",
+        "killed": "0"
+      },
+      "zeroSerialNoEffect": true,
+      "dialogClosedByRecheck": true,
+      "displayRestoredToMain": true
+    }
+  },
+  "protection": {
+    "unchangedOriginals": 1394,
+    "unchangedOriginalCD": 425,
+    "unchangedExistingFixtures": 796,
+    "newFixtures": 1,
+    "currentFixtures": 797,
+    "currentProtectedTotal": 2617,
+    "changed": [],
+    "agentsSha256": "544643cf731393ecb4784490aa7f2794e8736742582907cce29453e6ac46f15e",
+    "agentModified": false,
+    "settingsRestored": true
+  },
+  "testOnly": [
+    "ui-script command",
+    "ui-script test-recheck-serial current-dialog",
+    "UberGump::CurrentDialogSerial",
+    "report recheck_cd"
+  ],
+  "notRun": [
+    "전체34",
+    "전체 C++/주검사 EXE",
+    "새 ZIP",
+    "물리 입력",
+    "PCM",
+    "멀티플레이",
+    "포획/희생·특정 적 공격·승리·공중3종 전용 검사"
+  ],
+  "remaining": [
+    "10.72의 00433bf0 시간 기반 CD 검사 대조",
+    "RequestMenu 서버 전송(3차 정적 사전 구현)",
+    "나머지 Edit/시나리오/수명/호환성"
+  ],
+  "gameExecutions": 3,
+  "multiplayerTests": 0,
+  "full34Runs": 0,
+  "newBmpFiles": 0
+}

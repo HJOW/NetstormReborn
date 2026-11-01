@@ -19,7 +19,9 @@
 #include "app/FrameBindingInspect.h"
 #include "client/ClientMain.h"
 #include "client/ClientAudio.h"
+#include "client/ClientCdGlobals.h"
 #include "client/GameAssets.h"
+#include "client/GameMenuCommands.h"
 #include "client/SquidRenderer.h"
 #include "client/GameWorld.h"
 #include "client/Mission.h"
@@ -688,6 +690,20 @@ int RunClient(std::vector<std::string> arguments) {
                     if (!std::getline(fields,type,':') || !(fields>>x>>comma>>y) || comma!=',' || !(fields>>std::ws).eof())
                         throw std::invalid_argument("surface-delete needs type:x,y");
                     c.Menu()->InspectDestroySurface(type,x,y);continue;
+                }
+                // 검사 전용: 원문 이름표의 일반 명령을 실제 입력 큐에 한 번 넣는다. 인자는 "이름[,첫째[,둘째]]"이며 이후 소비는 일반 프레임 입력과 같다. 단위696에서 추가했다.
+                if (step.operation=="command") {
+                    std::istringstream fields(step.argument);std::string name;std::int32_t first{},second{};char comma{}; // 이름과 선택 인자 두 개다.
+                    std::getline(fields,name,',');if (fields.good()) { fields>>first;if (fields.good()) { fields>>comma>>second; } }
+                    const auto code=GameMenuScriptCode(name); // 게임 안의 이름→명령 표를 그대로 사용한다.
+                    if (code==0xffffffffU) throw std::invalid_argument("UI command 이름 미등록: "+name);
+                    c.Input().PushCommand(code,first,second);continue;
+                }
+                // 테스트 전용 임시 조작이며 원본 동작이 아니다. 원문에는 005c85ec의 다른 쓰기 지점이 없으므로, 열려 있는 모달의 실제 serial을 이 값에 넣어 RecheckCD의 Kill 경로만 확인한다. 단위696에서 추가했다.
+                if (step.operation=="test-recheck-serial") {
+                    if (step.argument!="current-dialog") throw std::invalid_argument("test-recheck-serial은 current-dialog만 허용");
+                    const auto serial=c.Menu()->CurrentDialogSerial();if (!serial) throw std::runtime_error("열린 모달이 없어 RecheckCD 검사 serial을 만들 수 없음");
+                    c.CdGlobals()->RecheckSerial()=serial;continue;
                 }
                 if (step.operation == "esc") { c.Input().Push(0x1b, 0, 0); continue; }
                 if (step.operation=="key" || step.operation=="keyup") {

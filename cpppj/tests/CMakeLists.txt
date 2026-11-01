@@ -2804,3 +2804,11 @@ set_source_files_properties(CaptureInputTests.cpp PROPERTIES COMPILE_DEFINITIONS
 add_executable(netstorm_capture_client_tests FocusedTestMain.cpp CaptureInputTests.cpp IndexedBitmapTests.cpp CaptureSequenceTests.cpp StaticStringsTests.cpp)
 target_link_libraries(netstorm_capture_client_tests PRIVATE netstorm)
 netstorm_apply_compiler_options(netstorm_capture_client_tests)
+
+# RecheckCD 일반 입력의 원문332입력과 실제 등록 표 조회/Client owner만 집중 검사한다(696).
+target_sources(netstorm_tests PRIVATE RecheckCdInputTests.cpp)
+set_source_files_properties(RecheckCdInputTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_RECHECK_CD_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/recheck-cd-x86.tsv\"")
+add_executable(netstorm_recheck_cd_tests FocusedTestMain.cpp RecheckCdInputTests.cpp)
+target_link_libraries(netstorm_recheck_cd_tests PRIVATE netstorm)
+netstorm_apply_compiler_options(netstorm_recheck_cd_tests)

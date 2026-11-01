@@ -94,6 +94,7 @@ public:
     // --ui-script의 커널 검사에서 일반 게임과 같은 Tell 경로를 실행한다. 일반 사용자 명령으로 노출하지 않는다.
     void InspectTell(std::string target);
     void InspectBridgePatterns(std::string_view patterns); // 테스트 전용 임시 조작이며 원본 분석 결과가 아니다. UI 검사에서 지정 순서를 교체/해제한다.
+    std::uint32_t CurrentDialogSerial() const; // 테스트 전용 읽기다. 현재 모달 Gump의 실제 serial이며 없으면 0이다. RecheckCD 검사가 005c85ec에 넣을 값을 읽을 때만 쓴다(단위696).
 private:
     // 원본 Tell의 파일.섹션/현재 tell 섹션을 읽어 대화상자를 연다.
     void Tell(std::string target, bool briefing = false);

@@ -36,6 +36,21 @@ TESTS = BUILD / 'bin/Release/netstorm_tests.exe'
 EXCLUDED = {'build', 'hist'} # 빌드 입력이 아닌 제품 산출물/과거 스냅샷은 순회 자체를 생략한다.
 # 변이 목록: 이름, 대상 파일, 바꿀 원문(파일에 정확히 한 번 있어야 한다), 바꾼 문장, 실패해야 하는 검사 이름 접두사.
 MUTATIONS = [
+    # RecheckCD의 뗌 소비·0 조회·현재 serial 전달·0쓰기·이름표·명령표·장기 초기값이 원문 332입력과 달라지면 집중 검사가 잡아야 한다(단위696).
+    dict(name='recheck-cd-release-runs',file='cpppj/src/client/RecheckCdInput.cpp',expect='RecheckCdInput_',
+         before='if (event.code&InputCode::kRelease) return true;',after='if (false) return true;',note='뗌에서도 조회/Kill/0쓰기를 실행함'),
+    dict(name='recheck-cd-skip-zero-serial',file='cpppj/src/client/RecheckCdInput.cpp',expect='RecheckCdInput_',
+         before='if (const auto token=Need(hooks.find)(serial))',after='if (serial) if (const auto token=Need(hooks.find)(serial))',note='serial 0은 조회하지 않음(원문은 0도 첫 살아 있는 serial 0 Gump를 찾음)'),
+    dict(name='recheck-cd-lookup-zero',file='cpppj/src/client/RecheckCdInput.cpp',expect='RecheckCdInput_',
+         before='if (const auto token=Need(hooks.find)(serial))',after='if (const auto token=Need(hooks.find)(0U))',note='현재 serial 대신 항상 0을 조회함'),
+    dict(name='recheck-cd-keep-serial',file='cpppj/src/client/RecheckCdInput.cpp',expect='RecheckCdInput_',
+         before='serial=0; // Kill 예외가',after='static_cast<void>(serial); // Kill 예외가',note='Kill 뒤 serial을 0으로 쓰지 않음'),
+    dict(name='recheck-cd-name-table',file='cpppj/src/client/GameMenuCommands.cpp',expect='RecheckCdInput_',
+         before='if (key=="recheckcd")',after='if (key=="recheckcdx")',note='RecheckCD 이름을 명령으로 해석하지 못함'),
+    dict(name='recheck-cd-command-table',file='cpppj/src/client/GameMenuCommands.cpp',expect='RecheckCdInput_',
+         before='{0x00542ae8U,kRecheckCdCommand}',after='{0x00542ae4U,kRecheckCdCommand}',note='원문 전역 주소 542ae8의 명령 연결을 다른 주소로 옮김'),
+    dict(name='recheck-cd-owner-initial',file='cpppj/src/client/ClientCdGlobals.h',expect='RecheckCdInput_',
+         before='std::uint32_t recheckSerial_{};',after='std::uint32_t recheckSerial_{1};',note='장기 owner의 최초 BSS0이 아닌 값으로 시작함'),
     # 대본 ViewSpot의 인자 해석이 원본 토큰 규칙과 달라지면 기계어 대조가 잡아야 한다(단위676).
     dict(name='viewspot-no-paren-skip',file='cpppj/src/client/CameraHome.cpp',expect='ViewSpot_',
          before="!text.empty() && text.front()=='(' ? 1U : 0U",after='0U',note='맨 앞 괄호를 건너뛰지 않음'),
