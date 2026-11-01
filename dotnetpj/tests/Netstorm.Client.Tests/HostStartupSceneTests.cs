@@ -166,6 +166,39 @@ public sealed class HostStartupSceneTests
         owner.CloseAll(); Assert.Equal(initial, menu.Tree.Create.Count); Assert.Empty(text.Fragments.Fragments);
     }
 
+    /// <summary>실제 HTML 전체 배치가 화면 중앙·같은 폭의 버튼과 본문 교체를 공통 트리에 반영한다.</summary>
+    [Fact]
+    public void HostHtmlFitCentersAndReflowsRealBodyAndButtons()
+    {
+        string? data = GameDataLocator.FindDataDirectory(); Assert.NotNull(data);
+        var startup = new HostStartupScene(data); var screen = new Screen(1024, 768);
+        Assert.True(screen.SetMode(ScreenMode.BackBufferDib | ScreenMode.ModeSet)); startup.Draw(screen);
+        var menu = new HostMainMenu(startup, screen, new GumpButtonTreeHooks
+        {
+            Now = () => 1, Poll = _ => default, Sound = () => { }, Redraw = (_, _) => { }, HandleBase = (_, _, _, _) => 0
+        });
+        var owner = new HostHtmlWindows(menu, new InputQueue(), () => 1, _ => throw new InvalidOperationException());
+        var text = new HostHtmlText(menu, owner, screen, _ => default, (_, _) => { }, _ => throw new InvalidOperationException(), _ => throw new InvalidOperationException());
+        text.Bind(owner); uint initial = menu.Tree.Create.Count; uint root = owner.Create(400, 0);
+        owner.Window.SetBody(root, "A real window body.\n");
+        owner.Window.AddButton(root, "Okay", 0x02000095, 1, 0);
+        owner.Window.AddButton(root, "Longer button", 0x02000095, 2, 0);
+        menu.Tree.TreeHooks.Attach!(root, 0, 0, menu.Tree.Create.Entries[0], 0);
+        var window = Assert.IsType<HtmlWindowGumpNode>(menu.Tree.Node(root));
+        var left = Assert.IsType<StoneButtonGumpNode>(menu.Tree.Node(window.Controls[0].Child));
+        var right = Assert.IsType<StoneButtonGumpNode>(menu.Tree.Node(window.Controls[1].Child));
+        var body = Assert.IsType<ScrollingTextGumpNode>(menu.Tree.Node(window.Body));
+        Assert.Equal(-80, unchecked((int)window.Depth)); Assert.Equal(left.BaseWidth, right.BaseWidth);
+        Assert.Equal((1024 - window.BaseWidth) / 2, window.X); Assert.Equal((768 - window.BaseHeight) / 2, window.Y);
+        Assert.Equal(20, body.Y); Assert.True(right.X > left.X); Assert.True(body.BaseHeight > 0);
+        uint previousBody = window.Body;
+        owner.Window.SetBody(root, "Changed text\nSecond line\n");
+        Assert.NotEqual(previousBody, window.Body); Assert.Equal((1024 - window.BaseWidth) / 2, window.X);
+        menu.Tree.Lifetime.Cleanup(); Assert.Null(menu.Tree.Node(previousBody));
+        Assert.Equal(2, text.Buffers.Binding(((ScrollingTextGumpNode)menu.Tree.Node(window.Body)!).Buffer).State.LineCount);
+        owner.CloseAll(); Assert.Equal(initial, menu.Tree.Create.Count); Assert.Empty(text.Fragments.Fragments);
+    }
+
     /// <summary>여덟 실제 버튼의 눌림·해제를 원본 상위 명령과 인자로 전달한다.</summary>
     [Fact]
     public void MainMenuRoutesEachButtonToItsOriginalAction()

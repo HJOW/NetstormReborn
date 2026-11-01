@@ -132,6 +132,9 @@ public sealed class HostHtmlText
         _screen.Update(_tree.Collection.Bounds(token));
     }
 
+    /// <summary>창 배치 장치가 같은 소유자의 본문인지 확인한다.</summary>
+    internal bool BelongsTo(HostHtmlWindows windows) => ReferenceEquals(_windows, windows);
+
     /// <summary>HTML 부모의 본문 생성·파싱·스크롤 경계를 현재 실제 처리기에 연결한다.</summary>
     public void Bind(HostHtmlWindows windows)
     {
@@ -140,5 +143,6 @@ public sealed class HostHtmlText
         windows.BindBody(token => Widgets.Construct(token, 0, 0, 0, _bodyColor),
             (token, text) => Parser.Parse(token, Encoding.Latin1.GetBytes(text)),
             (token, value) => Widgets.SetScrollable(token, unchecked((uint)value)));
+        windows.BindFit(this, _screen, () => new ScreenRect(0, 0, _screen.Width, _screen.Height));
     }
 }

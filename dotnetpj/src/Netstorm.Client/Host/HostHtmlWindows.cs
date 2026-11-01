@@ -1,4 +1,5 @@
 using System.Text;
+using Netstorm.Client.Display;
 using Netstorm.Client.Gump;
 using Netstorm.Client.Input;
 
@@ -17,6 +18,8 @@ public sealed class HostHtmlWindows
     private readonly HashSet<uint> _constructed = [];
     /// <summary>실제 HTML 파생 처리기가 쓰는 현재 선택 장치.</summary>
     private readonly HtmlWindowGumpHooks _hooks;
+    /// <summary>연결된 HTML 전체 가상 배치 처리기.</summary>
+    private HtmlWindowFit? _fit;
     /// <summary>클라이언트 수명의 현재 HTML 창 전역.</summary>
     public HtmlWindowGumpState State { get; } = new();
     /// <summary>같은 실제 등록/입력/소멸 장치를 쓰는 HTML 부모 처리기.</summary>
@@ -77,6 +80,39 @@ public sealed class HostHtmlWindows
     {
         ArgumentNullException.ThrowIfNull(construct); ArgumentNullException.ThrowIfNull(parse); ArgumentNullException.ThrowIfNull(scrollable);
         _hooks.ConstructBody = construct; _hooks.ParseBody = parse; _hooks.Scrollable = scrollable;
+    }
+
+    /// <summary>실제 화면·뷰와 같은 본문/버튼을 HTML 전체 가상 부착에 연결한다.</summary>
+    /// <param name="text">같은 창 소유자의 다중 줄 장치.</param>
+    /// <param name="screen">현재 논리 화면.</param>
+    /// <param name="mapView">현재 맵 또는 메뉴의 논리 뷰. 호출 때마다 다시 읽는다.</param>
+    public void BindFit(HostHtmlText text, Screen screen, Func<ScreenRect> mapView)
+    {
+        ArgumentNullException.ThrowIfNull(text); ArgumentNullException.ThrowIfNull(screen); ArgumentNullException.ThrowIfNull(mapView);
+        if (_fit is not null) throw new InvalidOperationException("HTML 전체 배치가 이미 연결되었다");
+        if (!text.BelongsTo(this)) throw new ArgumentException("다른 HTML 소유자의 본문", nameof(text));
+        uint Read(uint address)
+        {
+            ScreenRect view = mapView();
+            return address switch
+            {
+                0x531860 or 0x5c78f0 => unchecked((uint)screen.Width),
+                0x531864 or 0x5c78f4 => unchecked((uint)screen.Height),
+                0x5ca9b4 => unchecked((uint)(view.Right - view.Left)),
+                0x5ca9cc => unchecked((uint)view.Left), 0x5ca9d0 => unchecked((uint)view.Top),
+                0x5ca9d4 => unchecked((uint)view.Right), 0x5ca9d8 => unchecked((uint)view.Bottom),
+                _ => throw new ArgumentOutOfRangeException(nameof(address), "HTML 배치 화면 전역 미연결")
+            };
+        }
+        var hooks = new HtmlWindowFitHooks
+        {
+            Node = token => _constructed.Contains(token) ? _tree.Node(token) as HtmlWindowGumpNode : null,
+            Base = _tree.Node, Attach = (token, x, y, parent, mode) => _tree.TreeHooks.Attach!(token, x, y, parent, mode),
+            Reference = _tree.Reference, Read = Read
+        };
+        HtmlWindowFit.BindHtmlWindowFitDevices(hooks, _tree.Stones, _tree.Tree, text.Text, text.Widgets);
+        _fit = new HtmlWindowFit(hooks);
+        HtmlWindowFit.BindHtmlWindowFit(_tree.TreeHooks, token => _constructed.Contains(token) ? _fit : null);
     }
 
     /// <summary>같은 공통 트리에 HTML 파생 부모를 생성하고 토큰을 돌려준다.</summary>
