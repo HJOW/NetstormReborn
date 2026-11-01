@@ -3,6 +3,7 @@ using Netstorm.Client.Display;
 using Netstorm.Client.Host;
 using Netstorm.Client.Gump;
 using Netstorm.Client.Input;
+using Netstorm.Client.Automation;
 
 namespace Netstorm.Client.Tests;
 
@@ -96,6 +97,29 @@ public sealed class HostStartupSceneTests
         Assert.NotEqual(0U, menu.Route(new(InputCode.LeftButton, 360, 315)));
         Assert.NotEqual(0U, menu.Route(new(InputCode.LeftButton | InputCode.Release, 2, 2)));
         Assert.Equal(8, actions.Count);
+    }
+
+    /// <summary>메뉴 생성 뒤 연결한 실제 Gump 경계로 스크립트 라벨 클릭이 상위 명령에 도달한다.</summary>
+    [Fact]
+    public void ScriptLocatorUsesLiveMenuButtons()
+    {
+        string? data = GameDataLocator.FindDataDirectory(); Assert.NotNull(data);
+        var startup = new HostStartupScene(data); var screen = new Screen(1024, 768);
+        Assert.True(screen.SetMode(ScreenMode.BackBufferDib | ScreenMode.ModeSet)); startup.Draw(screen);
+        var queue = new InputQueue(); var actions = new List<MainMenuAction>();
+        var runner = new UiScriptRunner(UiScript.Parse(["1\tclick\tCampaign", "1\tclick-if\tMissing"]), queue, screen);
+        var driver = new HostFrameDriver(screen, queue, runner);
+        var menu = new HostMainMenu(startup, screen, new GumpButtonTreeHooks
+        {
+            Now = () => 1, Poll = _ => new(InputCode.Release, 0, 0), Sound = () => { },
+            Redraw = (_, _) => { }, HandleBase = (_, _, _, _) => 0
+        }, actions.Add);
+        driver.BindControlLocator(menu);
+        driver.BindInputHandler(input => { menu.Route(input); return false; });
+        Assert.Equal(new ScreenPoint(393, 320), menu.ControlPoint("Campaign"));
+        Assert.Null(menu.ControlPoint("campaign")); Assert.Null(menu.ControlPoint("Missing"));
+        driver.BeginFrame(); Assert.False(driver.ProcessInput()); driver.EndFrame(); driver.Finish();
+        Assert.Equal(new[] { new MainMenuAction("Tell", "UCampaign") }, actions);
     }
 
 }

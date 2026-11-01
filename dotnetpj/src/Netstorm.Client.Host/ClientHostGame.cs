@@ -106,6 +106,7 @@ public sealed class ClientHostGame : Game
                 Redraw = (_, _) => _menuDirty = true,
                 HandleBase = (_, _, _, _) => throw new InvalidOperationException("메인 메뉴 명령 소비자 미연결")
             });
+            _driver.BindControlLocator(_mainMenu);
             _mainMenu.Draw(_driver.Screen);
             _menuDirty = false;
         }

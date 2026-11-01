@@ -86,7 +86,7 @@ public sealed class UiScriptRunner
     private readonly Screen _screen;
 
     /// <summary>라벨 클릭의 좌표 조회기. Gump가 없으면 null이다.</summary>
-    private readonly IUiControlLocator? _controls;
+    private IUiControlLocator? _controls;
 
     /// <summary>snapshot 동작의 저장 방식. 기본은 <see cref="ScreenCapture.WriteBitmap"/>이다.</summary>
     private readonly Action<string> _snapshot;
@@ -108,6 +108,10 @@ public sealed class UiScriptRunner
         _controls = controls;
         _snapshot = snapshot ?? (path => ScreenCapture.WriteBitmap(path, screen));
     }
+
+    /// <summary>현재 화면의 실제 컨트롤 조회기를 연결한다. 메뉴 생성 전 만들어진 실행기에 사용한다.</summary>
+    /// <param name="controls">현재 화면의 라벨 조회기.</param>
+    public void BindControls(IUiControlLocator controls) => _controls = controls ?? throw new ArgumentNullException(nameof(controls));
 
     /// <summary>
     /// 검사 폴링이 쓰는 마우스 상태. pointer·클릭·outside가 바꾸며 입력 큐에는 넣지 않는다.

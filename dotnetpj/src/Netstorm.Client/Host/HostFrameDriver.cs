@@ -51,6 +51,14 @@ public sealed class HostFrameDriver
         _runner?.BeforeInput(Frame);
     }
 
+    /// <summary>스크립트가 있으면 생성된 현재 화면의 실제 컨트롤 조회기를 연결한다.</summary>
+    /// <param name="controls">현재 화면의 라벨 조회기.</param>
+    public void BindControlLocator(IUiControlLocator controls)
+    {
+        ArgumentNullException.ThrowIfNull(controls);
+        _runner?.BindControls(controls);
+    }
+
     /// <summary>실제 Guide·UI 소비자를 연결한다. 반환값 true는 즉시 종료 요청이다.</summary>
     /// <param name="handler">같은 큐에서 꺼낸 입력을 처리하는 현재 호스트 소비자.</param>
     public void BindInputHandler(Func<InputEvent, bool> handler)

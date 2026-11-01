@@ -1,6 +1,7 @@
 using System.Text;
 using Netstorm.Assets;
 using Netstorm.Client.Display;
+using Netstorm.Client.Automation;
 using Netstorm.Client.Gump;
 using Netstorm.Client.Input;
 
@@ -12,7 +13,7 @@ public readonly record struct MainMenuAction(string Command, string Argument);
 
 /// <summary>실제 자산과 공통 Gump 트리로 메인 메뉴의 여덟 돌 버튼을 표시한다.
 /// 근거: cpppj/src/client/UberGump.cpp의 메인 메뉴 배치와 RawButtonControls.cpp.</summary>
-public sealed class HostMainMenu
+public sealed class HostMainMenu : IUiControlLocator
 {
     /// <summary>원본 메인 메뉴의 두 행 순서.</summary>
     private static readonly string[] Labels = ["Campaign", "Multiplayer", "Demo", "Help", "Edit", "Credits", "Options", "Quit"];
@@ -79,6 +80,20 @@ public sealed class HostMainMenu
     /// <param name="input">코드와 논리 화면 좌표를 담은 입력.</param>
     /// <returns>소비된 Gump 토큰. 0이면 소비하지 않았다.</returns>
     public uint Route(InputEvent input) => _tree.Input.Route(input.Code, unchecked((uint)input.X), unchecked((uint)input.Y));
+
+    /// <summary>현재 메뉴에서 일치하는 첫 버튼의 실제 Gump 경계 중심을 찾는다. 이름은 원본처럼 대소문자를 구분한다.</summary>
+    /// <param name="label">찾을 버튼 라벨.</param>
+    public ScreenPoint? ControlPoint(string label)
+    {
+        // 원본 제어 영역 순서로 첫 일치 항목을 선택한다.
+        for (int index = 0; index < Labels.Length; index++)
+        {
+            if (!string.Equals(Labels[index], label, StringComparison.Ordinal)) continue;
+            ScreenRect bounds = _tree.Collection.Bounds(_buttons[index]);
+            return new(unchecked(bounds.Left + bounds.Right) / 2, unchecked(bounds.Top + bounds.Bottom) / 2);
+        }
+        return null;
+    }
 
     /// <summary>현재 화면에 배경과 글리프를 같은 실제 팔레트·8비트 표면으로 그린다.</summary>
     /// <param name="screen">시작 타이틀을 그린 논리 화면.</param>
