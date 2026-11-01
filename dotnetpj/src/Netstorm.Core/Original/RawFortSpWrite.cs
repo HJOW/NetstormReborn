@@ -1,42 +1,6 @@
 namespace Netstorm.Core.Original;
 
 /// <summary>
-/// 원본 MemStream 진단 종류(원본 <c>o/RawMemStream.h</c>의 <c>MemStreamAssertion</c>).
-/// 진단 뒤에도 원본 본문이 계속하는 두 조건을 구별한다. Fort SP writer는 쓰기 용량만 쓴다.
-/// MemStream 본체(Allocate·Copy·Write·Compact)를 옮길 때 이 자리에서 그 파일로 옮긴다.
-/// 근거: cpppj/src/o/RawMemStream.h (R0-4 신규 이식, 2026-10-28).
-/// </summary>
-public enum MemStreamAssertion
-{
-    /// <summary>기존 자료가 있다는 진단. Fort SP writer는 쓰지 않는다.</summary>
-    ExistingData = 0,
-
-    /// <summary>쓰기 용량 진단. Fort SP writer가 현재 위치+폭이 용량을 넘을 때 호출자에게 알린다.</summary>
-    WriteCapacity = 1,
-}
-
-/// <summary>
-/// Fort SP writer가 쓰는 MemStream 장치 연결(원본 <c>MemStreamHooks</c>).
-/// 실제 힙 포인터 대신 불투명 DWORD 토큰으로 호출자가 소유한 같은 물리 버퍼를 찾는다.
-/// 이 writer는 버퍼 조회와 쓰기 용량 진단만 쓰며, 할당·반납은 MemStream 본체를 옮길 때 연결한다.
-/// 근거: cpppj/src/o/RawMemStream.h (R0-4 신규 이식, 2026-10-28).
-/// </summary>
-public sealed class MemStreamHooks
-{
-    /// <summary>토큰으로 호출자가 소유한 같은 물리 버퍼 전체를 찾는다. 조회는 소유권을 바꾸지 않으며, 사본을 만들지 않는다.</summary>
-    public Func<uint, byte[]>? Buffer { get; set; }
-
-    /// <summary>원본 operator new의 요청 크기와 반환 포인터. Fort SP writer는 쓰지 않는다.</summary>
-    public Func<uint, uint>? Allocate { get; set; }
-
-    /// <summary>원본 CRT free. 호출 때의 같은 포인터를 반납한다. Fort SP writer는 쓰지 않는다.</summary>
-    public Action<uint>? Release { get; set; }
-
-    /// <summary>선택된 진단만 호출자에게 알린다. 반환 뒤 writer는 현재 필드를 다시 읽는다.</summary>
-    public Action<MemStreamAssertion>? Assertion { get; set; }
-}
-
-/// <summary>
 /// Fort SP 쓰기의 외부 장치 연결(원본 <c>FortSpWriteHooks</c>).
 /// 원문의 512회 Next(32)와 인라인 stream 쓰기 장치를 빌리며, 난수·버퍼를 별도로 소유하지 않는다.
 /// 근거: cpppj/src/o/RawFortSpWrite.h (R0-4 신규 이식, 2026-10-28).
@@ -114,7 +78,7 @@ public static class RawFortSpWrite
                 throw new InvalidOperationException("Fort SP writer의 현재 버퍼 포인터 누락");
             }
             // 같은 stream 자체를 덮는 실제 버퍼도 그대로 쓴다
-            byte[] bytes = Need(hooks.Stream.Buffer, "Fort SP writer의 실제 선택장치 누락")(pointer);
+            Span<byte> bytes = Need(hooks.Stream.Buffer, "Fort SP writer의 실제 선택장치 누락")(pointer);
             Put(bytes, position, word, width);
             // 출력 쓰기 효과 뒤 위치·끝을 다시 읽고 끝은 위치 저장 앞에 보관한다
             uint next = Read(stream, 4) + width;
