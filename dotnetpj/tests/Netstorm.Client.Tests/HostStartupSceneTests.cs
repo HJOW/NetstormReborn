@@ -99,6 +99,36 @@ public sealed class HostStartupSceneTests
         Assert.Equal(8, actions.Count);
     }
 
+    /// <summary>실제 Campaign·Demo·Credits 버튼 명령이 같은 시작 설정의 Tell 본문에 도달한다.</summary>
+    [Fact]
+    public void MenuTellActionsReadActualSections()
+    {
+        string? data = GameDataLocator.FindDataDirectory(); Assert.NotNull(data);
+        var startup = new HostStartupScene(data); var screen = new Screen(1024, 768);
+        Assert.True(screen.SetMode(ScreenMode.BackBufferDib | ScreenMode.ModeSet)); startup.Draw(screen);
+        var bodies = new List<string>(); var names = new List<string>();
+        var menu = new HostMainMenu(startup, screen, new GumpButtonTreeHooks
+        {
+            Now = () => 1, Poll = _ => new(InputCode.Release, 0, 0), Sound = () => { },
+            Redraw = (_, _) => { }, HandleBase = (_, _, _, _) => 0
+        }, action =>
+        {
+            Assert.Equal("Tell", action.Command); names.Add(action.Argument);
+            var result = startup.ShowTell(action.Argument, 0, null, (body, _, _, _) => { bodies.Add(body); return 1; });
+            Assert.Equal((true, 1u), result);
+        });
+        // 원본 상위 Tell을 쓰는 세 버튼만 실제 좌표에서 차례로 누른다.
+        foreach (string label in new[] { "Campaign", "Demo", "Credits" })
+        {
+            ScreenPoint point = menu.ControlPoint(label)!.Value;
+            menu.Route(new(InputCode.LeftButton, point.X, point.Y));
+            menu.Route(new(InputCode.LeftButton | InputCode.Release, point.X, point.Y));
+        }
+        Assert.Equal(new[] { "UCampaign", "DEMOVILLE", "Credits" }, names);
+        Assert.All(bodies, body => Assert.NotEmpty(body));
+        Assert.Equal("DEMOVILLE", startup.Configuration.SubstituteLocal("{global.priorTell}"));
+    }
+
     /// <summary>메뉴 생성 뒤 연결한 실제 Gump 경계로 스크립트 라벨 클릭이 상위 명령에 도달한다.</summary>
     [Fact]
     public void ScriptLocatorUsesLiveMenuButtons()

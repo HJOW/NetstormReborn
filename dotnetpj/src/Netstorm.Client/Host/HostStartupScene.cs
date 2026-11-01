@@ -1,5 +1,6 @@
 using Netstorm.Assets;
 using Netstorm.Client.Display;
+using Netstorm.Client.Gump;
 using Netstorm.Core.Original;
 
 namespace Netstorm.Client.Host;
@@ -12,6 +13,8 @@ public sealed class HostStartupScene
     public GameFileSystem Files { get; }
     /// <summary>같은 파일 장치에서 초기화한 원본 설정.</summary>
     public ConfigInterface Configuration { get; }
+    /// <summary>같은 클라이언트 수명에서 현재 Tell 이름을 보존한다.</summary>
+    public TellSectionState TellState { get; } = new();
     /// <summary>설정의 fortPal 파일 팔레트.</summary>
     private readonly GamePalette _palette;
     /// <summary>실제 512×512 Kencloud 초기 캐시의 인덱스.</summary>
@@ -40,6 +43,14 @@ public sealed class HostStartupScene
         _palette = new GamePalette(Files.ReadAllBytes(palettePath));
         _title = Netstorm.Client.Display.GifImage.DecodeGif(Files.ReadAllBytes(titlePath));
     }
+
+    /// <summary>같은 시작 Config와 파일에서 Tell을 조회하고 현재 HTML 창 생성기에 전달한다.</summary>
+    /// <param name="target">원본 BYTE 표현의 섹션 이름과 선택적 매개변수.</param>
+    /// <param name="suppress">원본 창 생성 억제 값.</param>
+    /// <param name="mission">현재 미션 섹션 조회. 미션이 없으면 null.</param>
+    /// <param name="show">같은 수명에서 동기 실행하는 HTML 창 생성기.</param>
+    public (bool Found, uint Serial) ShowTell(string target, uint suppress, Func<string, string?>? mission,
+        Func<string, uint, uint, uint, uint> show) => TellSection.ShowInConfig(TellState, target, suppress, Configuration, mission, show);
 
     /// <summary>팔레트와 초기 구름 캐시를 전체 화면에 복사한 뒤 타이틀을 640×480 기준 중심에 그린다.</summary>
     /// <param name="screen">출력 장치가 연결된 8비트 논리 화면.</param>
