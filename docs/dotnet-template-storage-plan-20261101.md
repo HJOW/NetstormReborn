@@ -1,0 +1,134 @@
+# dotnetpj Template 저장소 이식 계획 (2026-11-01)
+
+cpppj `client/CampaignTemplateStorage`와 그 소비자를 dotnetpj로 옮기는 여러 세션짜리 작업의 순서와 완료 기준이다. 전체 단계 순서는 [LEFT_JOBS.dotnetpj.md 0절](../LEFT_JOBS.dotnetpj.md#dotnet-current-plan-20261028)을 따르고, 이 문서는 그중 R4의 Template 항목만 다룬다.
+
+단계를 마칠 때마다 4절 표의 상태 칸을 고친다. 재개할 때는 4절에서 첫 `미착수` 단계를 찾으면 된다.
+
+## 1. 현재 위치
+
+| 항목 | 값 |
+| --- | --- |
+| 이식 완료 | 0.128 원문 계층(`RawMemStream`, `RawDataManager*`, `RawTemplate*`, `RawFortImage`, `RawFortCurrentName`, `RawPlayerTemplateState`, `FortTemplate` 일부), 0.129 `ClientTemplateSectionNames` |
+| 저장소 본체 | 미이식. `CampaignTemplateStorage.cpp` 581줄, `.h` 106줄(합 약 80KB). 0.128의 실측 비율로 보면 C# 약 2,500~3,000줄이 될 것으로 추정한다 |
+| 기준 커밋 | 0.128 원문 계층은 `d48ea756`. 2026-11-01 현재 HEAD까지 해당 cpppj 파일과 저장소 파일의 변경은 없다 |
+| 이 단계의 원본 fixture | 없다. 저장소는 cpppj가 만든 호스트 어댑터라 원본 x86 대조 대상이 아니다. 그래서 cpppj 검사 직역과 3절의 433개 왕복 검사가 근거다 |
+
+## 2. 범위
+
+이 계획의 TS0~TS6이 끝나면 저장소와 작은 소비자 장치가 검사로 확인된 상태가 된다. **화면에서 보이는 변화는 거의 없다.** 실제 Template을 설치하는 주체는 `RawCampaignSession`(4,609줄)이므로 다음은 F3까지 끝나야 동작한다.
+
+- 미션 Fort 적재
+- Edit 진입(Create New Map, 목록 행 선택 뒤 편집)
+- Save as의 실제 저장
+
+cpppj 쪽 검사 중 저장소에 의존하는 것은 수작업 분류 기준 약 150개다. 정규식과 include로 분류한 근사치이며, 각 단계에서 실제 목록을 다시 확인한다.
+
+| 묶음 | 검사 수 | 옮기는 단계 |
+| --- | --- | --- |
+| 저장소 자체 | 33 | TS1~TS4 |
+| 소비자 장치 | 26 | TS5·TS6 |
+| Fort 적재·저장 모듈 | 약 9 | F2 |
+| 세션 통합 | 약 80 | F3 |
+
+이전 문서의 "약 30개"는 저장소 자체 33개만 센 값이었다.
+
+## 3. 설계 결정
+
+### 3.1 버퍼형 `RawSectionBuffer` (확인 필요, 7절 1번)
+
+저장소는 `std::vector<uint8_t>`의 `capacity()`를 원본 MemStream의 할당 크기로 쓴다. 이 값은 세 곳에 영향을 준다.
+
+- `SyncStreams`: 용량이 0이면 data 토큰이 0이고, 이것이 `present`(섹션 없음과 빈 섹션의 구별)를 정한다. 파일로 읽은 빈 섹션은 용량 1이라 존재하고, 값형 설치의 빈 섹션은 용량 0이라 없다.
+- `CompactTail`: `end==alloc`이면 압축을 건너뛴다.
+- `AccessSection`: 쓰기 전에 크기를 alloc까지 다시 늘린다.
+
+cpppj 검사 4개도 `capacity()`를 직접 확인한다. 따라서 크기와 용량을 따로 갖는 형이 필요하다. `Netstorm.Core/Original/RawSectionBuffer.cs`에 둔다.
+
+| 멤버 | 대응 | 규칙 |
+| --- | --- | --- |
+| `Count`, `Capacity` | `size()`, `capacity()` | `Capacity`는 내부 배열 길이다 |
+| `Span`, `Memory` | `data()`+`size()` | 앞 `Count`바이트만 빌려 준다 |
+| `Resize(n)` | `resize` | 용량 안이면 재할당하지 않고 늘어난 구간만 0으로 채운다. 넘으면 `max(용량+용량/2, n)`(MSVC 규칙)으로 재할당한다 |
+| `Reserve(n)` | `reserve` | 크기를 유지한다 |
+| `Clear()` | `clear` | 크기만 0, 용량 유지 |
+| `Release()` | `vector{}.swap(v)` | 크기·용량 모두 0 |
+| `TakeFrom(other)` | 이동 대입 | 배열을 넘기고 `other`는 용량 0이 된다 |
+| `FromBytes(bytes)` | 범위 생성 | 용량이 크기와 같다 |
+
+검토한 대안은 다음과 같다.
+
+- `List<byte>`: `Memory<byte>`를 얻을 수 없어 커서를 연결하지 못한다.
+- 저장소가 용량을 별도 표로 관리: `Template(slot)`의 `sections`와 어긋나고 검사가 직접 만드는 입력을 표현하지 못한다.
+
+cpppj 제품 코드에서 `.sections`를 고치는 곳은 `Template.cpp`와 저장소뿐이고, `RawFortImage`와 `app/main.cpp`는 읽기만 한다. 그 밖의 변경은 검사 입력이다. 저장소 코드를 읽어 본 바로는 재할당이 용량 0에서만 일어나므로 1.5배 규칙은 검사 입력에서만 작동할 것으로 본다. TS0에서 그대로 옮겨 두면 이 판단이 틀려도 결과가 같다.
+
+### 3.2 C++와 달라지는 곳
+
+| C++ | C# | 이유·주의 |
+| --- | --- | --- |
+| `std::map<uint32,...> streams` | `SortedDictionary<uint, Stream>` | `SyncStreams`·`LoadCursor`가 핸들 오름차순 순회에 의존한다 |
+| `FortTemplate` 값 전달 | 소유권 이전, 필요한 곳만 `Clone()` | C#은 참조라 같은 객체를 두 번 설치하면 공유된다 |
+| 커서 구조체 참조 반환 | 클래스 인스턴스를 Image가 평생 소유 | 검사가 `&a==&b`로 동일성을 확인한다. 교체하지 않고 필드만 초기화한다 |
+| `hooks.list=ListEffects()` 등 묶음 대입 | 묶음 속성 8개를 `{ get; set; }`으로 연다 | 0.128에서 get 전용으로 만들었다. `DataManagerDumpHooks.Selection`, `DataManagerImageHooks.Streams`, `DataManagerFileHooks.Image`, `DataManagerListHooks.Lifetime`, `DataManagerResizeHooks`의 3개, `TemplateLoadHooks.Lifetime` |
+| 람다의 `span` 캡처 | 전용 대리자, 또는 진입 시 배열로 복사 | C#은 Span을 캡처할 수 없다. `WriteStream`의 입력 복사는 입력이 대상 버퍼와 겹치지 않을 때만 동등하므로 소비자를 옮길 때 겹침 여부를 확인한다 |
+| `.at()`의 `out_of_range` | 명시 검사 뒤 `ArgumentOutOfRangeException` | 사전 조회 실패가 `KeyNotFoundException`으로 바뀌지 않게 한다 |
+| 무효화된 span은 UB | 옛 배열이 살아 있어 쓰기가 조용히 사라진다 | C#이 더 위험하다. 재할당을 일으킬 수 있는 호출을 넘어 Span을 들고 있지 않는다 |
+
+토큰 값(`0x10000000+핸들` 버퍼, `0x20000000+핸들` 임시, `0x30000` 파일 입력, `0x50000` 이미지)은 그대로 쓴다. 파일은 `partial class`로 나누고 위치는 `TemplateFileHooks.cs`와 같은 `Netstorm.Client/Host/`다.
+
+### 3.3 `FortTemplate.Parse` 없이 진행
+
+저장소는 파싱된 `FortTemplate`을 받기만 하고 `Parse`를 호출하지 않는다. 저장소 전용 검사 33개 중 12개가 실제 fort를 `Parse`로 만들지만 해석 필드(Money·Chaff·Deck 등)를 읽지 않음을 확인했다. 이 12개는 `FortTemplate.ReadSections`로 대체한다.
+
+## 4. 단계
+
+한 단계가 커밋 단위 하나다. 앞 단계가 끝나야 다음 단계를 시작한다.
+
+| 단계 | 내용 | 검사 | 상태 |
+| --- | --- | --- | --- |
+| **TS0 선행** | `RawSectionBuffer`와 단위 검사, `FortTemplate.Sections`를 `List<RawSectionBuffer>`로 전환(`ReadSections`·`Section`·`RawFortImage`·`Clone`), hook 묶음 8개 개방, 커서 `FortTerritoryStream`·`FortMoneyCursor`·`FortMetaStream` | 기존 Core 1,101개 유지 + 버퍼 규칙 직접 검사 | 미착수 |
+| **TS1 설치·선택** | `Image` 골격(노드·`Buffer`·`SyncStreams`·`PublishCursor`·`RetireCursor`·`Destroy`), `Install`·`Borrow`·`Clear`·`ClearAll`·`Template`·`State`·`Territory`·`Name`, `GrowState`, 모든 `Select*`, `Money`·`Badges`·`Technology`, `SectionOrder`·`CurrentSection`·`ReadSubscriberName`·`FileHeader` | cpppj 6개 | 미착수 |
+| **TS2 동적 섹션** | `WithMemory`·`WriteStream`·`AccessSection`·`CompactTail`, `CreateSection`·`InitializeState`·`RenameSection`·`EnsureStateSize`, 쓰기 참조의 생성 수명 | cpppj 10개(용량 확인 4개 포함) | 미착수 |
+| **TS3 파일** | `ReadFile` 두 경로·`BindFileStreams`, `InstallFile`·`LoadFile`·`SaveFile`·`BindCurrentName`. 가장 크므로 필요하면 읽기와 저장으로 나눈다 | cpppj 14개 + 433개 fort 왕복 | 미착수 |
+| **TS4 빈 manager·로그인** | `AllocateEmptyManager` 계열, `CloneSectionFrom`·`Dump`·`ReadLoginImage`, `RawMissionLoginPackets` | cpppj 3개 + `fort-image-packets` 송신·예약 103행 + 패킷 경계 1개 | 미착수 |
+| **TS5 Editor 파일** | `ExistingEditorTemplateValid`, `EditorFortFileDevices.BindLoad`의 실제 사용 | 0.127에서 미룬 10개(`EditorFileWriter` 1, `EditorFiles` 5, `EditorFortFileDevices` 4) | 미착수 |
+| **TS6 이름·새 맵·목록** | `RawNewFort`·`NewFortManagerDevices`, `ClientFortGlobals`·`FortCurrentNameDevices`, `SoloMapCatalog.Probe`를 실제 저장소로 교체, `HostFortNameConfirmation` 연결 범위 판정 | 16개(`NewFort` 5, `FortCurrentNameDevices` 7, 목록 3, `EditorCatalogFiles` 1) | 미착수 |
+
+**433개 왕복 검사(TS3):** 검사 데이터 폴더의 `d/*.fort` 전체(`originals/d` 기준 433개)를 `InstallFile`로 읽고 `SaveImage`로 다시 쓴 뒤 `ReadSections`로 섹션과 flag를 비교한다. 기대값이 입력 파일 자체에서 나오므로 cpppj 없이 전 파일을 덮는다. 어긋나는 파일은 실패로 묶지 말고 원인을 먼저 분류한다(뒤꼬리 바이트, 비표준 flag, 0x8000 초과 등).
+
+**TS1이 큰 이유:** 선택 없이는 노드를 관측할 수 없어 설치와 선택을 한 단계로 묶었다. `Borrow`·`SectionOrder`·`CurrentSection`·`FileHeader`·`GrowState`는 cpppj 제품 코드에 호출자가 없지만 검사가 쓰므로 옮긴다.
+
+**TS6의 한계:** `FortCurrentNameDevicesTests`는 `ClientMain`을 포함한다. `Client` 전체는 옮기지 않으므로 `ClientFortGlobals`로 좁혀 옮기고, 그렇게 안 되는 검사는 F3으로 넘긴다. `HostFortNameConfirmation`의 `Header`·`SetName`도 실제 Template을 설치할 세션이 없으면 장치까지만 연결된다. `TemplateDiagnosticClientTests` 1개는 `ClientDiagnostics`가 없어 F3으로 넘긴다.
+
+### 뒤이은 트랙
+
+TS 단계 다음이며 R4의 본체다. 이 문서는 범위만 적고 세부는 착수할 때 정한다.
+
+| 트랙 | 내용 | 검증 |
+| --- | --- | --- |
+| **F1 타입 표·Parse** | `RiftTypeTable`(347줄)·`RiftType.cpp`(69줄), `FortTemplate.Parse`와 객체·내용물·덱 해석 | cpppj `--dump-types`, `--inspect-fort`·`--dump-forts`, `tools/cpp_fort_smoke.py` 방식 |
+| **F2 Fort 적재·저장** | `o/RawFort*.cpp` 29개 2,083줄 중 남은 26개 1,897줄(Object·World·Money·Meta·TypeNames·Snapshot·Subscriber·Territory 등) | 각 모듈의 원본 fixture, 저장소 의존 검사 약 9개 |
+| **F3 세션 연결** | `RawCampaignSession`에서 Template 경로, `ClientStateWorld*`의 `ClearAll`, `UberGump`의 로드·이름표·진단 연결 | 세션 통합 검사 약 80개, 0.5의 이정표 M1 |
+
+F1은 TS와 독립이라 먼저 해도 된다. 다만 F2가 F1과 TS4까지를 모두 요구하므로 전체 순서는 바뀌지 않는다.
+
+## 5. 매 단계 공통 절차
+
+1. `python dotnetpj/tools/cpp_sync.py`와 `--ports`로 cpppj 변경을 확인한다. 다른 세션이 cpppj를 수정 중일 수 있으므로 HEAD 커밋만 기준으로 삼는다.
+2. C#을 옮기고 cpppj 검사를 직역한다. 빠뜨린 검사는 사유와 함께 단위 기록에 남긴다.
+3. 변이 검사를 한다. 0.128에서 10종 중 3종이 처음에 미검출이었으므로, fixture가 없는 이 계층에서는 분기마다 직접 검사가 있는지 특히 확인한다.
+4. Core·Client 전체 Release 검사를 돌린다.
+5. `PORT_MAP.tsv`(원본 fixture가 없으므로 상태는 `port`), 이 문서 4절, `LEFT_JOBS.dotnetpj.md`의 0.1·0.9와 단위 기록을 갱신하고 커밋한다.
+
+## 6. 하지 않는 것
+
+- `cpppj/`와 `LEFT_JOBS.md`를 고치지 않는다. 필요한 것은 사용자에게 요청한다.
+- 기존 `Netstorm.Assets.FortFile`은 건드리지 않는다. 은퇴는 F2 이후다.
+- 저장소를 C#답게 재설계하지 않는다(결정 2). 3.2절의 차이만 허용한다.
+
+## 7. 확인이 필요한 것 (확인 전까지 기본값으로 진행)
+
+1. **`RawSectionBuffer` 설계(3.1절).** 기본값: 이대로 진행한다. TS0에서 공개 형식이 바뀌므로 시작 전에 확인받는다.
+2. **F1의 타입 표 경로.** 기본값: `RiftTypeTable`을 직역한다. 기존 `TypeCatalog`에도 플래그와 `NameHash`가 있어 어댑터로 `Parse`만 먼저 완성할 수는 있지만, 타입 표의 근거가 둘이 되어 결정 2·3과 어긋난다.
+3. **`FortTemplate`의 위치.** 결정 3의 표는 `Template`을 `Netstorm.Assets`로 두는데 0.128에서 `Netstorm.Core/Original`에 두었다. 기본값: F1에서 `RiftTypeTable` 위치를 정할 때 함께 확정하고, 그때까지 그대로 둔다.
+4. **저장소의 cpppj 대조(L2).** 기본값: cpppj 변경을 요청하지 않고 433개 왕복 검사로 대신한다. cpppj에 manager·노드 덤프 명령이 생기면 같은 입력의 상태 비교를 더할 수 있다.
