@@ -32,6 +32,16 @@ TESTS = BUILD / 'bin/Release/netstorm_tests.exe'
 EXCLUDED = {'build'}
 # 변이 목록: 이름, 대상 파일, 바꿀 원문(파일에 정확히 한 번 있어야 한다), 바꾼 문장, 실패해야 하는 검사 이름 접두사.
 MUTATIONS = [
+    # 대본 ViewSpot의 인자 해석이 원본 토큰 규칙과 달라지면 기계어 대조가 잡아야 한다(단위676).
+    dict(name='viewspot-no-paren-skip',file='cpppj/src/client/CameraHome.cpp',expect='ViewSpot_',
+         before="!text.empty() && text.front()=='(' ? 1U : 0U",after='0U',note='맨 앞 괄호를 건너뛰지 않음'),
+    dict(name='viewspot-skip-all-parens',file='cpppj/src/client/CameraHome.cpp',expect='ViewSpot_',
+         before="!text.empty() && text.front()=='(' ? 1U : 0U",after="text.find_first_not_of('(')==std::string_view::npos ? text.size() : text.find_first_not_of('(')",note='여러 괄호를 모두 건너뜀'),
+    dict(name='viewspot-second-delimiter',file='cpppj/src/client/CameraHome.cpp',expect='ViewSpot_',
+         before='ReadRawTextToken(text,first.next,")")',after='ReadRawTextToken(text,first.next,"x)")',note='두 번째 토큰도 x에서 멈춤'),
+    dict(name='viewspot-axis-swap',file='cpppj/src/client/CameraHome.cpp',expect='ViewSpot_',
+         before='return {static_cast<float>(o::ConfigParseLong(first.text)),static_cast<float>(o::ConfigParseLong(second.text))};',
+         after='return {static_cast<float>(o::ConfigParseLong(second.text)),static_cast<float>(o::ConfigParseLong(first.text))};',note='두 축을 뒤바꿈'),
     # 캡처/dialog/overlay 입력의 우선순위·현재 전역·실제 하위 선택 차이를 검출해야 한다.
     dict(name='gump-input-capture-overwrite',file='cpppj/src/client/GumpInput.cpp',expect='GumpInput_',
          before='if (!lifetime_.focus) lifetime_.focus=token;',after='lifetime_.focus=token;',note='기존 캡처를 교체함'),

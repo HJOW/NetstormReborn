@@ -2,6 +2,7 @@
 #pragma once
 #include "o/SidPool.h"
 #include <functional>
+#include <string_view>
 
 namespace netstorm::client {
 // 원본 resetCamera와 camera.setCenter가 읽는 현재 모드·화면·갱신 전역이다.
@@ -19,6 +20,13 @@ struct CameraHomeHooks {
     std::function<std::uint32_t()> suppressionDepth; // 현재 실제005c89b8을 읽는다. 미지정이면 state의 독립 저장소를 사용한다.
     std::function<void(std::uint32_t)> setSuppressionDepth; // 같은 실제 로딩 전역과 종속 모듈을 함께 갱신한다. getter와 쌍으로 제공한다.
 };
+inline constexpr std::uint32_t kViewSpotCommand=0x020000d9U; // 보호00542a58의 명령이며 이름 표00543250의 ViewSpot이다. RunForIt [Init]이 입장 카메라에 쓴다(단위676).
+// 대본 `<$ViewSpot,(XxY)>`가 고른 world 좌표다. CenterPoint와 같은 칸 단위 float이다(단위676).
+struct ViewSpotPoint {
+    float x{},y{}; // 원문433ad0의 atol→fild→fstp 결과다.
+};
+// 원문433ad0의 인자 해석이다. 맨 앞 '(' 한 글자만 건너뛰고 'x'와 ')'로 나눈 두 토큰을 atol한다. 숫자가 아닌 필드는 atol처럼0이다(단위676).
+ViewSpotPoint ParseViewSpot(std::string_view text);
 // 원본 PATCH4340d0/CD488f50의 초기 대상과 같은 중심 이동 몸체를 사용한다.
 class CameraHome {
 public:

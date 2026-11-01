@@ -9,4 +9,4 @@
 
 # 참고사항
 
-작업 전 AGENTS.md 와 LEFT_JOBS.md 내용을 반드시 읽을 것 !
+작업 전 AGENTS.md 를 먼저 읽고, LEFT_JOBS.md (cpppj 작업 시), LEFT_JOBS.dotnetpj.md (dotnetpj 작업 시), LEFT_JOBS.webpj.md (webpj 작업 시) 내용을 반드시 읽고 진행할 것 !

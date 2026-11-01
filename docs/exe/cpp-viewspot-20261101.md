@@ -1,0 +1,76 @@
+# 카메라 writer 감사와 대본 ViewSpot 연결 — 단위676
+
+2026-11-01 / HJOW-Athlon. 마지막 전체 정밀 디컴파일은 같은 **HJOW-Athlon / 2026-10-23**이며 디컴파일 결과를 수정하지 않았다. LEFT_JOBS 3절 4번의 "카메라 zoom과 Renderer `004994b0` flags/override/시차의 나머지 writer/모드 경계"를 처리했다. 사용자 요청에 따라 이 단위의 문서 반영과 커밋 뒤 작업을 중단한다.
+
+## 결론
+
+- 원문의 zoom 목표, 화면 flags, 시차 분모, `+60`, 카메라 목표 writer를 전수 분류했다.
+- **실제 누락 1건을 찾아 고쳤다.** 대본 명령 `ViewSpot`이 제품에 없어서 캠페인 **RunForIt(2-3)** 입장 카메라가 대본이 지정한 위치가 아닌 Home 위치에 있었다.
+- 나머지 후보는 이미 연결됐거나, 도달 불가이거나, MP/치트 전용으로 분류했다.
+- 측정값 전체는 [보고서](../../cpppj/viewspot-20261101.json)에 있다.
+
+## 찾은 누락: ViewSpot
+
+`originals/d/*.english` 12개와 공식 `runforit.english`·`.german`이 `<$ViewSpot,(XxY)>`를 쓴다. RunForIt는 `[Init]`에서 `(139x88)`을 지정한다. 제품의 명령 표에 이 이름이 없어 stderr에 `HTML 스크립트 명령 미연결: ViewSpot`을 남기고 무시했다. 진입 자체는 성공하므로 지금까지의 전체34 진입 검사로는 드러나지 않았다.
+
+이름과 명령의 대응은 보호 PE의 표로 확인했다. 표는 (이름, 명령 포인터) 쌍이며 `0x543250` = `"ViewSpot"`, `0x543254` = `0x542a58`이고 그 값이 `0x020000d9`다. 앞 항목 `PlayIntro`→`0x020000d8`→`004b3520`(State 39 예약)이 메뉴 동작과 맞아 쌍의 순서를 검증했다. `004d84cc`의 `cmp ebp,[0x542a58]` 뒤에 `push eax / call 0x433ad0`이 있다. `SetAllBridge`와 같은 사슬이며 모드 관문이 없다.
+
+`00433ad0`은 인자 문자열을 지역 버퍼로 복사한 뒤 맨 앞 `(` 한 글자만 건너뛰고, `FUN_00487710`으로 `x`까지와 `)`까지 두 토큰을 읽어 `atol`→`fild/fstp`로 float을 만든다. 그 뒤는 `00433aa0`과 같은 `worldRedraw+1 → 497f20 → 497960`이다. 제품은 이미 복원된 `ClientCameraGlobals::CenterImmediately`와 `CommitCameraNow`를 재사용하고 인자 해석 `ParseViewSpot`만 추가했다. 월드가 없는 상태에서도 같은 Client 카메라에 쓰도록 `UberGump::CenterViewSpot`에 두었다.
+
+## writer 분류
+
+| 저장소 | 원문 writer | 판정 |
+| --- | --- | --- |
+| Renderer+58 목표 zoom | `004993c0`(+18 복사) 하나 | 일반 경로에서 현재 배율과 달라지지 않는다. 제품의 zoom 분기는 원문 대조용으로 유지한다. |
+| Renderer+60 배경 요청 | `00434410` 하나 | 도달 불가. 관문 `0054d91c`의 PE 초기값이 0이고 코드 참조는 그 읽기 1곳뿐이라 쓰는 곳이 없다. |
+| 화면 flags `005c78d4` | `004a2b10`, `004a2c70`, `004a4570`, `004a4fe0` | 화면 장치 내부 값이다. 제품 `Screen`이 소유하며 비DIB 분기는 Windows 10/11 호환 출력에서 선택되지 않는다. |
+| 시차 분모 `00540ce4` | `004978d0` 호출자 4곳 | `004b6dd0` State7 기본값은 연결됨. `00479760`·`0047dd60`(Metadisplay)·`00419210`(Animator3d, 멀티플레이 대기 화면의 섬)은 후순위 MP다. |
+| 카메라 목표 | `497e00`·`497f20`·`497f80` 호출자 | `433aa0`·`4340d0`·`4803f0`·`480440`·`4d62b0` 연결됨. **`433ad0`은 이번에 연결.** 나머지는 아래 표. |
+
+| 남은 호출자 | 도달 경로 | 판정 |
+| --- | --- | --- |
+| `004333f0`, `004b45a0` | 패킷 0x34, 0x26 수신 처리기(`0040b4b0` 등록) | 후순위 MP. 이번 조사에서 로컬 송신자를 찾지 못했다. 0x26이 쓰는 `005467d4`는 Metadisplay만 읽는다. |
+| `004d5170` | `004d5590`이 만드는 카메라 순회 객체. `004d62b0` case 4, `0055a484 != 0` 관문 | 일반 경로 도달 없음. `0055a484`는 정밀 C에서 `00435220`의 0 쓰기 1곳뿐이다. 간접 alias가 전혀 없다는 증명은 아니다. 연결하지 않았다. |
+| `0046ed50` | `0046f7d0`←`0046e140`←`004b3bc0`의 `$` 중앙섬 분기 | 후순위 MP. 제품 `RawMissionServerPackets`가 이미 이 분기를 명시 예외로 거부한다. worldRedraw 증가만 있고 카메라/flags는 바꾸지 않는다. |
+
+`0059a8b0` worldRedraw의 나머지 writer는 제품 참조를 확인했다. 패킷·디버그 판정은 호출 관계와 PE 참조로 내린 정적 판정이며 실행으로 확인한 것은 아니다.
+
+## 같은 종류의 누락 후보
+
+ViewSpot은 진입 검사가 잡지 못하는 누락이었으므로, 공식 대본 50개(`extracted/tarc/d/*.english`)의 `<$명령>` 20종을 제품 문자열과 대조했다. 제품 소스에 이름 문자열이 없는 것은 9종이다. 문자열 부재는 후보일 뿐 미구현 확정이 아니며, 일반 대본 명령이 아닌 다른 입력 경로에서 처리될 수 있다.
+
+| 명령 | 사용 위치 | 판단 |
+| --- | --- | --- |
+| `MoveDialog` | `tell` 5회 | **다음 단위 후보.** 비멀티 안내창 위치에 영향을 줄 수 있다. 원문 처리 대조가 필요하다. |
+| `DumpSquids` | `weptest` 60회 | 목표 34경로 밖의 시험 미션이다. |
+| `RequestMenu` | `tell` 2회 (`GuildAdded` 등) | 후순위 MP 후보다. |
+| `AdminSetZone`, `AdminSetTag`, `AdminBcast`, `AdminMcast`, `RefreshPlayers`, `GoMultiplayer` | `tell` 각 1회 | 후순위 MP 후보다. |
+
+## 검증
+
+**원본 기계어 대조:** `tools/decomp_viewspot_oracle.py`가 `433ad0` 몸체·토큰 읽기·x87 변환을 Unicorn에서 실제로 실행해 `497f20` 인자의 float 비트를 34개 입력에 대해 기록한다(`cpppj/tests/fixtures/viewspot-x86.tsv`). `atol`은 CRT 잠금/힙 초기화에 의존해 격리 실행하지 못하므로 진입에서 `ConfigParseLong`과 같은 규칙으로 대신 계산한다. 즉 `atol` 자체는 이 도구의 대조 대상이 아니다. `((3x4))`→`0,4`, `(1x2x3)`→`1,2`, 90자 토큰의 78바이트 제한 동작 같은 경계가 그대로 고정됐다.
+
+**C++ 검사:** 집중 대상 `netstorm_viewspot_tests` 5개(새2·기존3) 실패0. 기존 3개는 초기 시야 대조다.
+
+**변이 확인 (미실행):** `tools/cpp_mutation_check.py`에 `viewspot-no-paren-skip`·`viewspot-skip-all-parens`·`viewspot-second-delimiter`·`viewspot-axis-swap` 4종을 등록하고, 각 원문이 소스에 1곳씩 있음을 `--list`로 확인했다. 격리 사본의 전체 빌드가 오래 걸려 **사용자 요청으로 빌드를 중단했고 4종 모두 실행하지 않았다.** 로그 `extracted/cpp-viewspot-676/mutation-v1.log`에는 사본 동기화 1줄만 있다. 새 검사가 이 변이들을 잡는지는 아직 입증되지 않았다.
+
+**실제 게임:** `tools/cpp_viewspot_smoke.py`로 원본 자료의 RunForIt에 실제 진입했다. 1024×768 창, `--no-audio`, 앱 내 검사 보고이며 물리 입력은 없다.
+
+| 제품 | 입장 카메라(현재·목표) | 명령 미연결 로그 |
+| --- | --- | --- |
+| 674 (`0793f8e6…`) | `(880,980)` | 있음 |
+| 676 (`f34737f6…`) | `(1712,584)` | 없음 |
+
+`(1712,584)`는 `139×16−1024/2`, `88×11−768/2`로 대본 좌표와 일치한다. `[Init]`의 명령이 Home 뒤에 처리됨을 실제 순서로 확인했다.
+
+## 10.72 기록
+
+CD `NETSTORM.EXE`에도 같은 표가 있다. 이름 `0x514138`, 표 항목 `0x513338`, 명령 포인터 `0x512be0`, 값 `0x020000d9`이고 비교 참조는 `0x41ca24`다. 처리기 몸체와 토큰 규칙은 이번에 대조하지 않았으며 현재 제품의 `ViewSpot` 연결은 10.78 경로 기준이다.
+
+## 남은 한계
+
+- 변이 4종은 미실행이다. 작업 재개 시 격리 사본 빌드가 끝날 때까지 기다려 `python -X utf8 tools\cpp_mutation_check.py --focused --only viewspot-no-paren-skip --only viewspot-skip-all-parens --only viewspot-second-delimiter --only viewspot-axis-swap`를 실행하고 결과를 이 문서에 추가한다.
+- 원본 게임을 나란히 실행해 입장 화면 픽셀을 비교하지는 않았다. 근거는 원문 기계어와 대본 좌표다.
+- 다른 `ViewSpot` 사용 맵은 같은 경로이나 실제 진입은 RunForIt만 확인했다.
+- 전체34·전체 C++·ZIP은 실행하지 않았다. 주 검사 EXE `netstorm_tests`는 다시 빌드하지 않았다.
+- 대본 명령 대조는 이름 문자열 수준이다. `MoveDialog`의 실제 동작은 확인하지 않았다.

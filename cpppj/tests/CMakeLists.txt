@@ -1278,7 +1278,7 @@ set_source_files_properties(WindowTitleTests.cpp PROPERTIES COMPILE_DEFINITIONS
 
 # 초기 시야/실제 x87 중심 변환의 두 판본 독립 관찰이다.
 set_source_files_properties(CameraHomeTests.cpp PROPERTIES COMPILE_DEFINITIONS
-    "NETSTORM_CAMERA_HOME_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/camera-home-x86.tsv\"")
+    "NETSTORM_CAMERA_HOME_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/camera-home-x86.tsv\";NETSTORM_VIEWSPOT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/viewspot-x86.tsv\"")
   set_source_files_properties(FormPacketTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_FORM_PACKET_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/form-packet-x86.tsv\"")
 
@@ -2661,3 +2661,8 @@ target_sources(netstorm_tests PRIVATE ClientOptionsDiskTests.cpp)
 add_executable(netstorm_options_disk_tests FocusedTestMain.cpp ClientOptionsDiskTests.cpp ClientOptionsFileTests.cpp)
 target_link_libraries(netstorm_options_disk_tests PRIVATE netstorm)
 netstorm_apply_compiler_options(netstorm_options_disk_tests)
+
+# 대본 ViewSpot의 원본 인자 해석과 즉시 이동 부모를 초기 시야 검사와 함께 게임 실행 없이 검사한다(단위676).
+add_executable(netstorm_viewspot_tests FocusedTestMain.cpp CameraHomeTests.cpp)
+target_link_libraries(netstorm_viewspot_tests PRIVATE netstorm)
+netstorm_apply_compiler_options(netstorm_viewspot_tests)

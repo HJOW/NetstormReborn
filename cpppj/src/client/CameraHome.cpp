@@ -1,4 +1,6 @@
 #include "client/CameraHome.h"
+#include "o/ConfigInterface.h"
+#include "o/RawTextToken.h"
 #include <bit>
 #include <limits>
 #include <stdexcept>
@@ -17,6 +19,12 @@ float Coordinate(std::span<const std::uint8_t> raw,std::size_t offset) {
     for (std::size_t index=0;index<4;++index) value|=std::uint32_t(raw[offset+index])<<(8*index);
     return std::bit_cast<float>(value);
 }
+}
+// 원문433ad0은 '('만 건너뛰고 공통 토큰 읽기를 두 번 호출한다. 두 번째 토큰은 첫 토큰이 멈춘 위치에서 이어 읽는다(단위676).
+ViewSpotPoint ParseViewSpot(std::string_view text) {
+    const auto first=o::ReadRawTextToken(text,!text.empty() && text.front()=='(' ? 1U : 0U,"x");
+    const auto second=o::ReadRawTextToken(text,first.next,")");
+    return {static_cast<float>(o::ConfigParseLong(first.text)),static_cast<float>(o::ConfigParseLong(second.text))};
 }
 // 실제 현재 상태와 화면 소비자를 첫 풀 접근 전에 확인한다.
 CameraHome::CameraHome(const o::SidPool& pool,std::span<const o::RiftTypeRecord> types,CameraHomeState& state,

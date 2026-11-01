@@ -135,6 +135,7 @@ std::uint32_t DialogScriptCode(std::string_view name) {
     if (lower=="startdemo") return kStartDemo;
     if (lower=="config") return kScriptConfig;
     if (lower=="warning") return kScriptWarning;
+    if (lower=="viewspot") return kViewSpotCommand; // RunForIt [Init] 등이 입장 카메라를 옮기는 대본 명령이다(단위676).
     if (lower=="setowner") return kSetObjectOwnerCommand; // 원본 Tell.SetOwner의 일반 입력 명령이다.
     if (lower=="salvage") return 0x0200005dU; // 원본542e70의이름→54286c명령을HTML확인버튼에서도같은회수입력으로연결한다.
     const auto money=SendMoneyScriptCode(name);if (money!=0xffffffffU) return money; // asksend의 Yes가 원본 SendAllBucks를 같은 입력 큐로 보낸다.
@@ -1080,6 +1081,10 @@ void UberGump::Event(InputEvent event) {
     if (transitionCode==0x020000d6U) {
         if (!(event.code&InputCode::kRelease) && world_) world_->Session().SetAllBridgeQuality(std::bit_cast<std::uint32_t>(event.y));
         rebuild_=true;return; //원문 SetAllBridge는 일반 입력의 뗌 거부 뒤 숫자 인자를 그대로 현재 월드에 전달한다.
+    }
+    if (transitionCode==kViewSpotCommand) {
+        if (!(event.code&InputCode::kRelease)) CenterViewSpot(scriptStrings_.Resolve(std::bit_cast<std::uint32_t>(event.y)));
+        return; //원문4d84cc는 같은 사슬에서 모드 관문 없이 인자 문자열을433ad0에 넘긴다(단위676).
     }
     if (transitionCode>=0x02000125U && transitionCode<=0x02000127U) {
         if (!(event.code&InputCode::kRelease) && world_) world_->Session().SetBridgeQuality(std::bit_cast<std::uint32_t>(event.y),transitionCode-0x02000125U);

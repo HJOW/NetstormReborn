@@ -1,0 +1,234 @@
+{
+  "unit": 676,
+  "date": "2026-11-01",
+  "host": "HJOW-Athlon",
+  "scope": "카메라 zoom/flags/시차/+60/목표 writer 전수 분류와 빠져 있던 대본 명령 ViewSpot 연결.",
+  "lastFullDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23",
+    "modified": false
+  },
+  "product": {
+    "changed": true,
+    "unit": 676,
+    "exe": "cpppj/build/bin/Release/Netstorm.exe",
+    "sha256": "f34737f6ae1dddfa0307618304c924d5eada8cecd901eaa3162c92b2c2b26462",
+    "previousSha256": "0793f8e6890ab231cb83fe0e3b901844af7b9b01867c94d6989212c9757861fc",
+    "changedSources": [
+      "cpppj/src/client/CameraHome.cpp",
+      "cpppj/src/client/CameraHome.h",
+      "cpppj/src/client/UberGump.cpp",
+      "cpppj/src/client/UberGump.h",
+      "cpppj/src/client/UberGumpCamera.cpp"
+    ]
+  },
+  "originalEvidence": {
+    "nameTable": {
+      "name": "0x543250",
+      "commandPointer": "0x543254->0x542a58",
+      "command": "0x020000d9",
+      "pairCheck": "PlayIntro->0x020000d8->004b3520"
+    },
+    "dispatch": "004d84cc: cmp ebp,[0x542a58] 뒤 push eax / call 0x433ad0, 모드 관문 없음",
+    "handler": "00433ad0: 맨 앞 ( 1글자 건너뜀, x와 ) 토큰, atol/fild/fstp, 0059a8b0+1 -> 497f20 -> 497960",
+    "cd1072": {
+      "name": "0x514138",
+      "table": "0x513338",
+      "commandPointer": "0x512be0",
+      "command": "0x020000d9",
+      "compare": "0x41ca24",
+      "handlerBodyCompared": false
+    }
+  },
+  "tools": {
+    "tools/decomp_viewspot_oracle.py": "e8cbac7ec3c6f2a088c5792a84fdac11e89d8f0422a12589e1580e6383229ad3",
+    "tools/cpp_viewspot_smoke.py": "de38e1cbe03fef689345e6c4da230fca51997a5a77a2a51f3372f3ffc92e0de4",
+    "tools/cpp_mutation_check.py": "ee914cb3e5ec66795c92e766a5436ac1a5b74661f782bf3c488c8f2b00015565"
+  },
+  "nativeOracle": {
+    "tool": "tools/decomp_viewspot_oracle.py",
+    "rows": 34,
+    "verify": "대조 34행 일치",
+    "fixture": "cpppj/tests/fixtures/viewspot-x86.tsv",
+    "fixtureSha256": "07baecc50f7ddfa93fe486325c82410fa0f13a5953235b64ade5f75c60f24fa2",
+    "manifest": "cpppj/viewspot-native.json",
+    "manifestSha256": "c4191ae898af439162dc71aca5478cfb05bcf3447d1a21f4b449f688c0f098e2",
+    "boundary": "433ad0 몸체·토큰 읽기·x87 변환은 Unicorn 실제 실행이다. atol은 ConfigParseLong 규칙의 경계로 대체해 대조 대상이 아니고 497f20은 진입 경계다."
+  },
+  "build": {
+    "exit": 0,
+    "log": "extracted/cpp-viewspot-676/build-v1.log",
+    "warningOrErrorMatches": 0
+  },
+  "focused": {
+    "target": "netstorm_viewspot_tests",
+    "tests": 5,
+    "new": 2,
+    "existing": 3,
+    "failedChecks": 0,
+    "log": "extracted/cpp-viewspot-676/focused-v1.log",
+    "mainTestsExeRebuilt": false
+  },
+  "gameEntry": {
+    "mission": "RunForIt",
+    "data": "originals",
+    "window": "1024x768",
+    "noAudio": true,
+    "physicalInput": 0,
+    "cameraColumns": "raw_camera_frame 앞 4값(현재 x,y와 목표 x,y)을 비교했다.",
+    "expected": {
+      "spot": [
+        139,
+        88
+      ],
+      "camera": [
+        1712,
+        584
+      ],
+      "formula": "139*16-1024/2, 88*11-768/2"
+    },
+    "before": {
+      "product": 674,
+      "exit": 0,
+      "cameraFrames": {
+        "first": [
+          0,
+          0,
+          0,
+          0,
+          6,
+          0,
+          7,
+          0
+        ],
+        "early": [
+          880,
+          980,
+          880,
+          980,
+          6,
+          3,
+          7,
+          0
+        ],
+        "briefing": [
+          880,
+          980,
+          880,
+          980,
+          6,
+          3,
+          7,
+          0
+        ],
+        "later": [
+          880,
+          980,
+          880,
+          980,
+          6,
+          3,
+          7,
+          0
+        ]
+      },
+      "unknownViewSpotLog": true,
+      "summaryCameraEmpty": true,
+      "folder": "extracted/cpp-viewspot-676/before-v1"
+    },
+    "after": {
+      "product": 676,
+      "exit": 0,
+      "cameraFrames": {
+        "first": [
+          0,
+          0,
+          0,
+          0,
+          6,
+          0,
+          7,
+          0
+        ],
+        "early": [
+          1712,
+          584,
+          1712,
+          584,
+          6,
+          4,
+          7,
+          0
+        ],
+        "briefing": [
+          1712,
+          584,
+          1712,
+          584,
+          6,
+          4,
+          7,
+          0
+        ],
+        "later": [
+          1712,
+          584,
+          1712,
+          584,
+          6,
+          4,
+          7,
+          0
+        ]
+      },
+      "unknownViewSpotLog": false,
+      "summaryCameraEmpty": false,
+      "folder": "extracted/cpp-viewspot-676/after-v1"
+    },
+    "note": "before-v1 summary.json의 camera는 수정 전 파서로 만들어 비어 있다. 값은 수정된 파서로 원시 states.tsv를 다시 읽은 것이다."
+  },
+  "mutation": {
+    "registered": [
+      "viewspot-no-paren-skip",
+      "viewspot-skip-all-parens",
+      "viewspot-second-delimiter",
+      "viewspot-axis-swap"
+    ],
+    "sourcePatternsChecked": "--list에서 각 원문 1곳",
+    "executed": 0,
+    "detected": null,
+    "status": "미실행. 격리 사본의 전체 빌드가 오래 걸려 사용자 요청으로 중단했고 변이 결과가 없다.",
+    "log": "extracted/cpp-viewspot-676/mutation-v1.log"
+  },
+  "protected": {
+    "beforeCount": 2599,
+    "afterCount": 2600,
+    "added": [
+      "cpppj/tests/fixtures/viewspot-x86.tsv"
+    ],
+    "removed": [],
+    "changed": [],
+    "unchanged": true,
+    "before": "extracted/cpp-tool-settings-writer-675/protected-after.json",
+    "after": "extracted/cpp-viewspot-676/protected-after.json"
+  },
+  "notPerformed": [
+    "변이 4종",
+    "전체34",
+    "전체 C++",
+    "주 검사 EXE 재빌드",
+    "ZIP",
+    "자연 완주",
+    "MP 검사",
+    "실제 PCM/물리 입력",
+    "원본 게임 나란히 비교"
+  ],
+  "limitations": [
+    "변이를 실행하지 않아 새 검사의 검출력이 입증되지 않았다.",
+    "패킷·디버그 writer 분류는 호출 관계와 PE 참조의 정적 판정이며 실행으로 확인하지 않았다.",
+    "0055a484는 정밀 C에서 0 쓰기 1곳뿐이나 간접 alias 전체 부재의 증명은 아니다.",
+    "다른 ViewSpot 사용 맵은 같은 경로이나 실제 진입은 RunForIt만 확인했다.",
+    "공식 대본 대조는 이름 문자열 수준이다. MoveDialog의 실제 동작은 확인하지 않았다.",
+    "CD 10.72의 처리기 몸체와 토큰 규칙은 대조하지 않았다."
+  ]
+}

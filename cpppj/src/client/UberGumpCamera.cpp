@@ -1,5 +1,6 @@
 // 실제 입력/Present 위치에 원문 가장자리·카메라 적용과 현재 Client 장치를 연결한다.
 #include "client/UberGump.h"
+#include "client/CameraHome.h"
 #include "client/ClientMain.h"
 #include "client/ClientGameplayGlobals.h"
 #include "client/ClientKencloudGlobals.h"
@@ -54,6 +55,15 @@ void UberGump::CommitCameraNow() {
     };
     CommitCameraTarget({camera.RendererView(),camera.Snapshot(),camera.Target(),renderer.CameraRedraw(),worldRedraw_,renderer.CameraDirtyEntries()},
         {flags,camera.Denominator().current,width,height,viewport,clip,gameplay.selection.mouse},apply);
+}
+// 대본 ViewSpot은 Home과 같은 즉시 이동이다. 변경된 현재 값만 표면/입자/음향에 공개하고 다음 Compose를 예약한다(단위676).
+void UberGump::CenterViewSpot(std::string_view text) {
+    const auto spot=ParseViewSpot(text);auto& camera=client_.GameplayGlobals()->Camera();auto& screen=client_.GetScreen();
+    const auto beforePixels=camera.RendererView().pixels;
+    camera.CenterImmediately(spot.x,spot.y,screen.Width(),screen.Height(),worldRedraw_,client_.LocalStateGlobals()->MetaRebuild(),[this] { CommitCameraNow(); });
+    if (camera.RendererView().pixels!=beforePixels) {
+        if (world_) world_->CameraApplied();rebuild_=true;
+    }
 }
 // 실제 화면 출력 뒤에만 flip/목표 제한을 수행하고 현재 카메라를 적용한다. Home의 직접 적용과 구별한다.
 void UberGump::ApplyCameraFrame() {

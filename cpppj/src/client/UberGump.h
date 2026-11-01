@@ -56,6 +56,7 @@ public:
     void Frame();
     void ApplyCameraFrame(); //Present 말미의 실제 목표 제한/적용을 같은 Client·현재 월드·Gump/Screen 장치에서 수행한다.
     void CommitCameraNow(); //497960의 실제 장치/dirty/Gump 적용만 수행한다. Home/초기시야는flip/Present 제한 없이 같은 본체를 호출한다.
+    void CenterViewSpot(std::string_view text); //대본 ViewSpot의433ad0: 인자를 읽어433aa0 즉시 이동을 실행한다. 월드가 없어도 같은 Client 카메라에 쓴다(단위676).
     void RefreshMinimap(); // 원본00481320의커널앞위치에서실제같은HUD큐를소비한다.
     // 호스트 장면 합성을 예약한다. 원문0043dad0의 예산 재부착은 RefreshStormPower로 구별한다.
     void Refresh();

@@ -1,7 +1,9 @@
 // 두 PE의 실제 초기 시야 선택/좌표/억제 깊이·요청/변환 번호를 전수 대조한다.
 #include "RawSceneSupport.h"
 #include "client/CameraHome.h"
+#include "client/ClientCameraGlobals.h"
 #include "CameraTestDevices.h"
+#include <bit>
 #include <sstream>
 using namespace netstorm::client;
 using namespace netstorm::test::rawscene;
@@ -47,6 +49,29 @@ void CheckCameraHome(OriginalEdition edition) {
 TEST_CASE(CameraHome_PatchNative) { CheckCameraHome(OriginalEdition::Patch1078); }
 // CD의 직접 반복자/별도 ftol/화면 중심 helper도 같은 독립 원본과 대조한다.
 TEST_CASE(CameraHome_CdNative) { CheckCameraHome(OriginalEdition::Cd1072); }
+// 원본433ad0의 실제 토큰 분리/x87 결과를 같은 입력으로 재생한다. 기대 좌표를 여기서 계산하지 않는다(단위676).
+TEST_CASE(ViewSpot_PatchNative) {
+    std::size_t count{}; // 고정된 입력 행이 빠지지 않았는지 끝에서 확인한다.
+    // 입력은 탭/따옴표를 표 구분자와 분리한 16진수이며 '-'는 빈 문자열이다.
+    for (const auto& row:LoadFixture(NETSTORM_VIEWSPOT_FIXTURE).rows) {
+        if (row[0]=="input_hex") continue;
+        std::string input; // 원본 입력 메모리에 쓴 것과 같은 바이트다.
+        // 두 글자씩 한 바이트로 복원한다.
+        for (std::size_t offset=0;row[0]!="-" && offset<row[0].size();offset+=2) input.push_back(static_cast<char>(std::stoul(row[0].substr(offset,2),nullptr,16)));
+        const auto spot=ParseViewSpot(input);
+        CHECK(std::bit_cast<std::uint32_t>(spot.x)==std::stoul(row[1],nullptr,16));
+        CHECK(std::bit_cast<std::uint32_t>(spot.y)==std::stoul(row[2],nullptr,16));++count;
+    }
+    CHECK(count==34);
+}
+// 실제 RunForIt 인자가 즉시 이동 부모의 목표/두 카운터/적용 호출까지 이어지는지 확인한다(단위676).
+TEST_CASE(ViewSpot_CentersThroughImmediateParent) {
+    ClientCameraGlobals camera;std::uint32_t worldRedraw{},revision{};int commits{}; // 원문433aa0이 쓰는 두 전역과 497960 호출 수다.
+    const auto spot=ParseViewSpot("(139x88)");
+    camera.CenterImmediately(spot.x,spot.y,1024,768,worldRedraw,revision,[&] { ++commits; });
+    CHECK(camera.Target().pixels[0]==1712 && camera.Target().pixels[1]==584);
+    CHECK(worldRedraw==1 && revision==1 && commits==1);
+}
 // 화면 적용 예외가 이후 Carrier 표시를 계속 억제하지 않게 깊이를 복구한다.
 TEST_CASE(CameraHome_DisplayFailureRestoresGuard) {
     SidPool pool(OriginalEdition::Patch1078,24000,false);std::vector<RiftTypeRecord> types(96);CameraHomeState state;state.suppressionDepth=3;

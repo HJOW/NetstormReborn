@@ -1,0 +1,9 @@
+{
+  "unit": 676,
+  "function": "00433ad0",
+  "rows": 34,
+  "pe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+  "fixture": "07baecc50f7ddfa93fe486325c82410fa0f13a5953235b64ade5f75c60f24fa2",
+  "tool": "e8cbac7ec3c6f2a088c5792a84fdac11e89d8f0422a12589e1580e6383229ad3",
+  "boundary": "497f20 진입에서 스택 인자를 읽고 멈춘다."
+}
