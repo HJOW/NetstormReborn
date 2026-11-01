@@ -311,6 +311,8 @@ export class TypeTable {
     // definitions 는 TYPE_LOAD_ORDER 와 같은 순서의 정의 배열이다. 읽지 못한 타입은 null 이며 프레임이 없는 타입이 된다.
     constructor(definitions) {
         if (definitions.length !== TYPE_LOAD_ORDER.length) throw new Error('타입 정의 수가 로딩 순서와 다릅니다.');
+        // 읽은 정의 배열이다(로딩 순서, 읽지 못한 것은 null). `.fort` 판독기가 타입 플래그를 만들 때 쓴다(type-flags.js). (2026-11-01 WB03-U)
+        this.definitions = definitions;
         // 번호(70~)별 보기이다. 정의가 없으면 빈 보기이다.
         this.views = definitions.map((definition, index) => (definition ? buildView(definition, index) : EMPTY_VIEW));
         // 이름(소문자) → 타입 번호 표이다. 원본은 타입 표를 0번부터 비교해 첫 일치를 고르므로 같은 이름이면 앞의 것이 이긴다.
