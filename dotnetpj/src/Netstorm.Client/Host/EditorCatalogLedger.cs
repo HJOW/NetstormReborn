@@ -11,6 +11,8 @@ public sealed class EditorCatalogLedger : IDisposable
     private readonly EditorWorkspacePaths _paths;
     /// <summary>원본·작업본과 구분된 형제 장부 디렉터리다.</summary>
     private readonly string _metadata;
+    /// <summary>장부 갱신을 flush·write-through 교체·일시 거부 재시도로 맡는 형제 metadata 파일 장치다.</summary>
+    private readonly EditorFiles _files;
     /// <summary>전체 경로별 현재 이관 상태이며 ASCII 소문자 키를 사용한다.</summary>
     private SortedDictionary<string, uint> _entries = new(StringComparer.Ordinal);
     /// <summary>호스트 수명 동안 유지하는 배타적 장부 잠금이다.</summary>
@@ -20,10 +22,16 @@ public sealed class EditorCatalogLedger : IDisposable
     /// <summary>쓰기 실패 후 같은 소유자의 재사용을 막는다.</summary>
     private bool _poisoned;
     /// <summary>대상 경로만 선택하며 장부나 디렉터리는 아직 만들지 않는다.</summary>
-    public EditorCatalogLedger(EditorWorkspacePaths paths)
+    /// <param name="paths">원본·작업본 경로 선택기.</param>
+    /// <param name="files">
+    /// 작업 파일 장치의 형제 metadata 장치(<see cref="EditorFiles.SiblingNamespace"/>). 생략하면 원본과 작업본만 보호하는 같은 위치의 장치를 만든다.
+    /// (0.127에서 추가: 장부 갱신이 cpppj <c>WriteAtomic</c>의 write-through 교체와 최대 약 1초 재시도를 쓰게 한다.)
+    /// </param>
+    public EditorCatalogLedger(EditorWorkspacePaths paths, EditorFiles? files = null)
     {
         _paths = paths ?? throw new ArgumentNullException(nameof(paths)); _metadata = paths.WorkRoot + "-state";
-        CheckMetadata();
+        CheckMetadata(); _files = files ?? new EditorFiles(_metadata, [paths.SourceRoot, paths.WorkRoot]);
+        if (!string.Equals(_files.RootPath, EditorWorkspacePaths.Canonical(_metadata), StringComparison.OrdinalIgnoreCase)) throw new ArgumentException("편집 장부 파일 장치가 형제 상태 폴더가 아님", nameof(files));
     }
     /// <summary>형제 상태 경로가 링크로 다른 위치에 매핑되지 않았는지 검사한다.</summary>
     private void CheckMetadata()
@@ -85,17 +93,18 @@ public sealed class EditorCatalogLedger : IDisposable
     {
         if (state is not (1 or 2)) throw new ArgumentOutOfRangeException(nameof(state)); Load();
         var next = new SortedDictionary<string, uint>(_entries, StringComparer.Ordinal) { [Key(path)] = state };
-        string target = MetadataFile("catalog-v1.dat"), pending = MetadataFile("catalog-v1.dat.pending");
+        MetadataFile("catalog-v1.dat"); MetadataFile("catalog-v1.dat.pending");
         _loaded = false; _poisoned = true;
-        using (var stream = new FileStream(pending, FileMode.Create, FileAccess.Write, FileShare.None, 4096, FileOptions.WriteThrough))
+        // 전체 장부를 메모리에 만든 뒤 한 번에 임시 파일 flush와 write-through 교체로 영속화한다.
+        using var buffer = new MemoryStream();
+        using (var writer = new BinaryWriter(buffer, Encoding.UTF8, true))
         {
-            using var writer = new BinaryWriter(stream, Encoding.UTF8, true); writer.Write(Magic);
+            writer.Write(Magic);
             WriteText(writer, Identity(_paths.SourceRoot)); WriteText(writer, Identity(_paths.WorkRoot)); writer.Write(checked((uint)next.Count));
             // 원본 장부처럼 전체 경로 순서대로 모든 상태를 기록한다.
             foreach (var item in next) { WriteText(writer, item.Key); writer.Write(item.Value); }
-            writer.Flush(); stream.Flush(true);
         }
-        MetadataFile("catalog-v1.dat.pending"); MetadataFile("catalog-v1.dat"); File.Move(pending, target, true); _entries = next; _loaded = true; _poisoned = false;
+        _files.WriteAtomic("catalog-v1.dat", buffer.ToArray()); _entries = next; _loaded = true; _poisoned = false;
     }
     /// <summary>열려 있는 실제 장부 잠금을 반납한다.</summary>
     public void Dispose() { _lock?.Dispose(); _lock = null; }

@@ -35,7 +35,8 @@ public sealed class EditorCatalogWorkspace : IDisposable
         string parent = Path.GetDirectoryName(_paths.WorkRoot) ?? _paths.WorkRoot;
         IEnumerable<string> extra = extraProtectedRoots ?? new[] { Path.Combine(parent, "originals"), Path.Combine(parent, "originalCD") };
         _files = new EditorFiles(_paths.WorkRoot, new[] { _paths.SourceRoot }.Concat(extra));
-        _ledger = new EditorCatalogLedger(_paths);
+        // 장부 갱신은 작업 파일 장치의 형제 metadata 장치를 거쳐 write-through 교체와 일시 거부 재시도를 쓴다.
+        _ledger = new EditorCatalogLedger(_paths, _files.SiblingNamespace("-state"));
     }
 
     /// <summary>같은 작업 namespace의 파일 장치다. 새 이름 확인과 이후 저장·삭제가 이 장치를 빌린다.</summary>
