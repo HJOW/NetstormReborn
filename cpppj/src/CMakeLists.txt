@@ -10,6 +10,7 @@
 # 게임 본체. 실행 파일과 테스트가 함께 쓰도록 정적 라이브러리로 묶는다.
 # 소스 목록은 각 폴더의 CMakeLists.txt 가 target_sources 로 더한다.
 add_library(netstorm STATIC)
+target_sources(netstorm PRIVATE client/LanguageRequest.cpp client/LanguageRequest.h) #원문 언어 요청/현재 Client 큐와 Gump 알림 경로다.
 target_sources(netstorm PRIVATE o/RawXlat.cpp o/RawXlat.h) #10.78 최초 다중 번역 장부와 원문 파일 바이트 수명이다.
 target_sources(netstorm PRIVATE client/LanguageOptions.cpp client/LanguageOptions.h) #언어 옵션의 원문 이름/감지와 두 용어표 읽기 순서다.
 target_sources(netstorm PRIVATE client/HtmlZsend.cpp client/HtmlZsend.h) #HTML Zsend는실제연결표의11번송신기에원문87h요청을전달한다.신규MP검사는하지않는다.

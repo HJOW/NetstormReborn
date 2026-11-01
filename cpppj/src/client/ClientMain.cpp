@@ -7,6 +7,7 @@
 #include "client/ClientMain.h"
 #include "client/IntroMenu.h" // 시작 시 실제 파일 존재만으로 Intro 표시값을 정한다.
 #include "client/LanguageOptions.h" //원문 언어 이름/OS 영어 변형과 용어표 재조회 순서를 공유한다.
+#include "client/LanguageRequest.h" //SetLanguage는같은현재언어/설정/입력큐와공유카운터를사용한다.
 #include "o/RawXlat.h" //시작 때 함께 읽은 세 언어의 번역을 선택 변경 뒤에도 보존한다.
 #include "client/ProductPresentation.h"
 #include "client/RawCampaignSession.h" //Sleep 뒤의 실제 프레임말 Player 결과 소비에 장기 Session을 빌린다.
@@ -557,6 +558,12 @@ void Client::InitializeNativeTranslations() {
     hooks.exists=[this](auto path) { return files_.Probe(path)!=0; };hooks.read=[this](auto path) { return files_.Read(path); };
     hooks.missing=[this](auto path) { WriteDiagnosticLog(9,"Failed to open the translation file \""+std::string(path)+"\"\n"); };
     o::InitializeRawXlat(*nativeTranslations_,hooks);
+}
+// 원문004dea70을 현재 Client의 같은 장기 소유자에 연결한다.
+void Client::SetLanguage(std::uint32_t language) {
+    LanguageRequestHooks hooks;hooks.set=[this](auto key,auto value) { configuration_.Set(key,value); };
+    hooks.changed=[] { return kLanguageChangedCommand; };hooks.queue=[this](auto command,auto first,auto second) { input_.PushCommand(command,std::bit_cast<std::int32_t>(first),std::bit_cast<std::int32_t>(second)); };
+    RequestOriginalLanguage(language,currentLanguage_,localStateGlobals_->MetaRefresh(),hooks);
 }
 // 원문435248..43529f의 언어 부분은 창 없이도 같은 Client/Registry에서 호출한다.
 void Client::InterpretLanguageOptions() {

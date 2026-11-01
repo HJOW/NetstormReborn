@@ -1,0 +1,23 @@
+{
+  "unit": 712,
+  "date": "2026-11-02",
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23"
+  },
+  "inputs": 337,
+  "nativeBodies": [
+    "004dea70",
+    "00452fe0",
+    "00452f90"
+  ],
+  "explicitBoundaries": [
+    "004414d0 currentLanguage Set with supplied synchronous callback effects",
+    "00452fe0 entry records/optional counter mutation; actual queue body runs"
+  ],
+  "gameExecutions": 0,
+  "multiplayerTests": 0,
+  "fixtureSha256": "fe51de8de8718752ac24d391cf9c700739a71d2e77da9f593413822124dc0c41",
+  "peSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236"
+}

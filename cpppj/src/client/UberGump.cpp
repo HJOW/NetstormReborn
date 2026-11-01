@@ -31,6 +31,7 @@
 #include "client/RawGameMenus.h"
 #include "client/ScreenResolutions.h" // 메인/ESC가 같은 원본 확인 흐름과 호환 화면비 선택을 사용한다.
 #include "client/GameMenuCommands.h"
+#include "client/LanguageRequest.h" //언어 요청/알림도 원문 설정/큐와 이미 수행한 Gump 전달을 공유한다.
 #include "client/GameMenuActions.h"
 #include "client/ViewKeyInput.h"
 #include "client/GifScreenshot.h"
@@ -941,6 +942,7 @@ void UberGump::OpenGameMenu(bool playerList) {
 // 공통 입력/Guide가 소비하지 않은 현재 메뉴 명령을 같은 Session·음향·설정·시계에 전달한다.
 bool UberGump::GameMenuCommand(const InputEvent& event) {
     const auto code=event.code&0x03ffffffU;
+    if (DispatchSetLanguage(event,[this](auto language) { client_.SetLanguage(language); })) return true; //현재 Gump/Guide 뒤 원문 일반 입력 위치다.
     if (code==0x020000f0U) { if (!(event.code&InputCode::kRelease)) OpenGameMenu(true);return true; } // 원본 일반 분배의 뗌 거부 뒤 같은 Player List 전체 부모를 연다.
     if (code==0x02000030U) {
         if (!(event.code&InputCode::kRelease)) {
@@ -1224,6 +1226,7 @@ void UberGump::Event(InputEvent event) {
     if (transitionCode==kProductionBridgeCommand) {
         if (!worldUiRouted) static_cast<void>(rawButtons_->Event(event));rebuild_=true;return; // Guide/현재 모달 뒤 같은 Gump 트리로 전달한다. 정지/활성 커서 관문을 추가하지 않는다.
     }
+    if (DispatchLanguageChanged(event,worldUiRouted,[this](const auto& notification) { static_cast<void>(rawButtons_->RouteInput(notification)); })) { rebuild_=true;return; } //Chat의기존Push/Attach를같은실제트리에서한번만실행한다.
     if (transitionCode==0x02000088U) {
         if (!worldUiRouted) static_cast<void>(rawButtons_->Event(event));rebuild_=true;return; // 원본 하단 전환은 HUD 효과 뒤 기본 반환0이다. 이미 실행한 Route를 반복하거나 미구현 메뉴 오류로 바꾸지 않는다.
     }

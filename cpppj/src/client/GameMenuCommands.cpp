@@ -1,5 +1,6 @@
 // 보호PE의초기명령DWORD를이름/GUI변환과구별한다.
 #include "client/GameMenuCommands.h"
+#include "client/LanguageRequest.h" //언어 요청/알림 이름도 같은 원문 입력 큐로 보낸다.
 #include "client/RitualChoiceInput.h" //의식선택명령도같은HTML/일반입력으로요청한다.
 #include "client/AddRandomInput.h"
 #include "client/DestroyAtInput.h"
@@ -15,7 +16,8 @@
 namespace netstorm::client {
 namespace {
 // 00542xxx는원문주소식별자다. 런타임호스트포인터로역참조하지않는다.
-constexpr std::array<std::pair<std::uint32_t,std::uint32_t>,42> kCommands{{
+constexpr std::array<std::pair<std::uint32_t,std::uint32_t>,44> kCommands{{
+    {0x00542988U,kSetLanguageCommand},{0x0054298cU,kLanguageChangedCommand}, //원문의 두 언어 명령이다.
     {0x00542a54U,kPlayIntroCommand}, // 원문 PlayIntro 이름의 초기 DWORD다.
     {0x00542ae8U,kRecheckCdCommand}, //RecheckCD의 이름·메타·큐 명령이다. 실제 CD 재탐색이 아니라 현재 serial 정리다.
     {0x00542968U,kCaptureCommand}, //연속 화면 저장의 이름과 정수 명령을 같은 큐로 보낸다.
@@ -70,6 +72,8 @@ std::uint32_t GameMenuScriptCode(std::string_view name) {
     const auto effect=ScenarioEffectScriptCode(name);if (effect!=0xffffffffU) return effect; // 일반 표시 명령도 같은 HTML/메타/대본 이름표로 조회한다.
     const auto object=ScenarioObjectScriptCode(name);if (object!=0xffffffffU) return object; // 시나리오/메뉴 버튼도 원문 객체 이름표를 공유한다.
     const auto key=o::AsciiLower(name); // 이름비교만원문ASCII대소문자를무시한다.
+    if (key=="setlanguage") return kSetLanguageCommand;
+    if (key=="languagechanged") return kLanguageChangedCommand;
     if (key=="playintro") return kPlayIntroCommand;
     if (key=="url") return kUrlCommand; // 외부 주소뿐 아니라 내부 Help/cmd 링크도 같은4a00c0이해석한다.
     if (key=="capture") return kCaptureCommand; //543070의 실제 이름이며 새 모드 관문을 추가하지 않는다.

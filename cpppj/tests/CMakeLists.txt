@@ -2877,3 +2877,9 @@ target_sources(netstorm_tests PRIVATE XlatRuntimeTests.cpp)
 add_executable(netstorm_xlat_runtime_tests FocusedTestMain.cpp XlatRuntimeTests.cpp LanguageOptionsTests.cpp RecoveryTests.cpp)
 target_link_libraries(netstorm_xlat_runtime_tests PRIVATE netstorm)
 netstorm_apply_compiler_options(netstorm_xlat_runtime_tests)
+
+#언어 요청/실제 Client 큐와 기존 Chat 알림을 비멀티 장면에서 집중 확인한다(712).
+target_sources(netstorm_tests PRIVATE LanguageRequestTests.cpp)
+add_executable(netstorm_language_request_tests FocusedTestMain.cpp LanguageRequestTests.cpp LanguageOptionsTests.cpp XlatRuntimeTests.cpp)
+target_link_libraries(netstorm_language_request_tests PRIVATE netstorm)
+netstorm_apply_compiler_options(netstorm_language_request_tests)

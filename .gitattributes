@@ -2363,3 +2363,6 @@ cpppj/tests/fixtures/language-options-x86.tsv -text
 #단위711 최초 Xlat 파일/조회 원문 관측을 줄바꿈 변환 없이 보존한다.
 cpppj/tests/fixtures/xlat-runtime-x86.tsv -text
 cpppj/tests/fixtures/xlat-assets-x86.tsv -text
+
+#단위712 언어 요청/큐의 최초 원문 관측을 줄바꿈 변환 없이 보존한다.
+cpppj/tests/fixtures/language-request-x86.tsv -text

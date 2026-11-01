@@ -141,6 +141,7 @@ public:
     // 번역 표와 동일한 현재 원본 언어 번호를 지식 창의 언어3 설명 생략 분기에 제공한다.
     int LanguageNumber() const { return languageNumber_; }
     void InitializeNativeTranslations(); //10.78의 고정 세 Xlat 파일을 실제 파일 장치에서 한 번 적재한다.
+    void SetLanguage(std::uint32_t language); //원문 요청은 같은 Config/입력 큐/메타 갱신 DWORD를 사용한다.
     void InterpretLanguageOptions(); //원문 언어 부분만 현재 Config에 적용한다. 창/OS 감지는 수행하지 않는다.
     // 검사 전용으로 이미 그려진 화면을 지정 파일에 저장한다.
     void Capture(const std::filesystem::path& path);
