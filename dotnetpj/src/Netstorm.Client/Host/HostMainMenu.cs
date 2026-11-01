@@ -25,6 +25,10 @@ public sealed class HostMainMenu : IUiControlLocator
     private readonly Action<MainMenuAction>? _activate;
     /// <summary>실제 화면과 공통 입력·노드 트리.</summary>
     private readonly GumpButtonTree _tree;
+    /// <summary>HTML 등 파생 창이 메인 메뉴와 공유하는 실제 Gump 트리.</summary>
+    public GumpButtonTree Tree => _tree;
+    /// <summary>같은 트리와 파일 자산의 HTML 장식 생성·출력 장치.</summary>
+    public HostGumpDecoration Decoration { get; }
     /// <summary>메뉴 표시 순서에 대응하는 실제 버튼 토큰.</summary>
     private readonly uint[] _buttons = new uint[8];
 
@@ -41,7 +45,8 @@ public sealed class HostMainMenu : IUiControlLocator
         var types = new TypeCatalog(startup.Files);
         TypeInfo type = types.Find("fortGump") ?? throw new InvalidDataException("fortGump 타입이 없다");
         int frame = type.Definition.Frames.Find('A', TypeFrameTable.DefaultVariant, 1);
-        if (frame < 0) throw new InvalidDataException("fortGump A01 프레임이 없다");
+        int corners = type.Definition.Frames.Find('I', TypeFrameTable.DefaultVariant, 0);
+        if (frame < 0 || corners < 0) throw new InvalidDataException("fortGump A01 또는 I 모서리 프레임이 없다");
         var shapes = new Netstorm.Client.Display.ShapeDatabase(startup.Files.ReadAllBytes("d/_shapes.shp"));
         uint typeNumber = (uint)type.RuntimeIndex;
         var assets = new GumpBackgroundAssets(shapes, [new(typeNumber, type.LoadIndex, type.Definition.Frames.Codes.Count, type.Flags1)]);
@@ -51,6 +56,8 @@ public sealed class HostMainMenu : IUiControlLocator
         var connected = new GumpButtonTreeHooks { Now = hooks.Now, Poll = hooks.Poll, Sound = hooks.Sound, Redraw = hooks.Redraw,
             HandleBase = (token, code, first, second) => HandleBase(hooks, token, code, first, second) };
         _tree = new GumpButtonTree(screen.Width, screen.Height, assets, typeNumber, (uint)frame, GumpVisual.ButtonColors(screen.Colors()), fonts, connected);
+        var cornerAssets = new GumpDecorationAssets(shapes, [new(typeNumber, type.LoadIndex, (uint)corners)]);
+        Decoration = new HostGumpDecoration(_tree, assets, cornerAssets, typeNumber, () => hooks.Redraw(_tree.Create.Entries[0], false));
         int left = screen.Width / 2 - 156, top = screen.Height / 2 - 73;
         // 원본 4열 2행의 순서와 폭·행 간격으로 실제 돌 버튼을 만든다.
         for (int index = 0; index < Labels.Length; index++)

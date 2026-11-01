@@ -70,6 +70,33 @@ public sealed class HostStartupSceneTests
         }
     }
 
+    /// <summary>메뉴와 공유한 실제 fortGump 배경·I 모서리 장식을 생성·출력·반납한다.</summary>
+    [Fact]
+    public void SharedTreeDrawsActualFortGumpDecoration()
+    {
+        string? data = GameDataLocator.FindDataDirectory(); Assert.NotNull(data);
+        var startup = new HostStartupScene(data); var screen = new Screen(1024, 768);
+        Assert.True(screen.SetMode(ScreenMode.BackBufferDib | ScreenMode.ModeSet)); startup.Draw(screen);
+        var menu = new HostMainMenu(startup, screen, new GumpButtonTreeHooks
+        {
+            Now = () => 1, Poll = _ => default, Sound = () => { }, Redraw = (_, _) => { }, HandleBase = (_, _, _, _) => 0
+        });
+        byte[] before = screen.Pixels.ToArray(); uint initial = menu.Tree.Create.Count;
+        uint token = menu.Tree.AllocateNode(new HtmlWindowGumpNode());
+        menu.Decoration.Construct(token, 160, 80); menu.Tree.Tree.Move(token, 100, 100, menu.Tree.Create.Entries[0]);
+        var node = Assert.IsType<HtmlWindowGumpNode>(menu.Tree.Node(token));
+        var type = new TypeCatalog(startup.Files).Find("fortGump")!;
+        Assert.Equal((uint)type.RuntimeIndex, node.CornerType);
+        Assert.Equal((uint)type.Definition.Frames.Find('I', TypeFrameTable.DefaultVariant, 0), node.CornerFrame);
+        menu.Decoration.Draw(token, screen);
+        // 각 모서리의 실제 프레임 출력 영역에서 픽셀 변경을 확인한다.
+        foreach (var (cx, cy) in new[] { (100, 100), (260, 100), (260, 180), (100, 180) })
+            Assert.Contains(Enumerable.Range(cy - 6, 13), y => Enumerable.Range(cx - 6, 13)
+                .Any(x => before[y * screen.Pitch + x] != screen.Pixels[y * screen.Pitch + x]));
+        menu.Tree.Lifetime.Kill(token); menu.Tree.Lifetime.Cleanup();
+        Assert.Null(menu.Tree.Node(token)); Assert.Equal(initial, menu.Tree.Create.Count);
+    }
+
     /// <summary>여덟 실제 버튼의 눌림·해제를 원본 상위 명령과 인자로 전달한다.</summary>
     [Fact]
     public void MainMenuRoutesEachButtonToItsOriginalAction()
