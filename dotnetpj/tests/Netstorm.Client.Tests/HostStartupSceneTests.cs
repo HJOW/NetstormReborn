@@ -11,6 +11,27 @@ namespace Netstorm.Client.Tests;
 /// <summary>실제 배포 자산의 설정·팔레트·메뉴 GIF가 논리 화면에 연결되는지 검사한다.</summary>
 public sealed class HostStartupSceneTests
 {
+    /// <summary>실제 호스트 트리에서 문자 입력과 두 Slider를 생성·표시·반납한다.</summary>
+    [Fact]
+    public void HostTextEntryUsesSharedTreeDrawingAndLifetime()
+    {
+        string? data = GameDataLocator.FindDataDirectory(); Assert.NotNull(data);
+        var startup = new HostStartupScene(data); var screen = new Screen(1024, 768);
+        Assert.True(screen.SetMode(ScreenMode.BackBufferDib | ScreenMode.ModeSet)); startup.Draw(screen);
+        var menu = new HostMainMenu(startup, screen, new GumpButtonTreeHooks
+        { Now = () => 1, Poll = _ => default, Sound = () => { }, Redraw = (_, _) => { }, HandleBase = (_, _, _, _) => 0 });
+        var queue = new InputQueue(); var windows = new HostHtmlWindows(menu, queue, () => 1, _ => { });
+        var text = new HostHtmlText(menu, windows, screen, _ => default, (_, _) => { }, _ => { }, _ => { }); text.Bind(windows);
+        using var entry = new HostTextEntry(menu, windows, text, screen, () => 1, (_, _) => { });
+        var menus = new HostHtmlMenus(menu, windows, text, startup, screen, (_, _) => { });
+        uint token = entry.Create(200, 30, "Map Name"u8.ToArray(), 0, 0, screen.Colors().Basic[7]);
+        menu.Tree.TreeHooks.Attach!(token, 100, 100, menu.Tree.Create.Entries[0], 0);
+        var node = Assert.IsType<TextEntryGumpNode>(menu.Tree.Node(token)); Assert.NotEqual(0u, node.VerticalSlider); Assert.NotEqual(0u, node.HorizontalSlider);
+        var output = new byte[256]; entry.Entry.CopyText(token, output); Assert.Equal("Map Name", System.Text.Encoding.ASCII.GetString(output).Split('\0')[0]);
+        Assert.Equal(1u, menu.Tree.InputHooks.Handle!(token, 'A', 0, 0)); Array.Clear(output); entry.Entry.CopyText(token, output); Assert.Equal("A", System.Text.Encoding.ASCII.GetString(output).Split('\0')[0]);
+        new HostGumpDrawing(menu, text, menus, screen, entry).Draw();
+        menu.Tree.Lifetime.Kill(token); menu.Tree.Lifetime.Cleanup(); Assert.Null(menu.Tree.Node(token)); windows.CloseAll();
+    }
     /// <summary>저장소의 게임 데이터에서 시작 자산을 찾아 팔레트와 화면을 채운다.</summary>
     [Fact]
     public void LoadsRealTitleAndPaletteIntoLogicalScreen()

@@ -37,6 +37,8 @@ public sealed class HostHtmlText
     public ScrollingTextGumpWidgets Widgets { get; }
     /// <summary>공통 출력기가 화살표·손잡이에 사용하는 실제 슬라이더 처리기.</summary>
     internal ScrollGumpWidgets SliderWidgets { get; }
+    /// <summary>문자 입력창도 같은 Slider 처리기를 사용한다.</summary>
+    internal ScrollGump Slider { get; }
     /// <summary>같은 실제 다중 줄 스타일 명령 파서.</summary>
     public ScrollingTextGumpMarkup Parser { get; }
     /// <summary>본문에 사용하는 파일 팔레트의 기본 흰색.</summary>
@@ -66,7 +68,7 @@ public sealed class HostHtmlText
         });
         var sliderState = new ScrollGumpState { ClickEvent = 0x0200002c, RepeatEvent = 0x0200002f,
             StepEvent = 0x0200002e, ChangeEvent = 0x02000036 };
-        var slider = new ScrollGump(_tree.Create, sliderState, _tree.Tree, _tree.Collection, _tree.Events, _tree.Input,
+        var slider = Slider = new ScrollGump(_tree.Create, sliderState, _tree.Tree, _tree.Collection, _tree.Events, _tree.Input,
             new() { Node = token => _tree.Node(token) as ScrollGumpNode, ThumbNode = token => _tree.Node(token) as ScrollGumpThumbNode,
                 BaseNode = _tree.Node, Push = token => _tree.TreeHooks.Push!(token),
                 Attach = (token, x, y, parent, mode) => _tree.TreeHooks.Attach!(token, x, y, parent, mode), Redraw = redraw, Poll = poll });

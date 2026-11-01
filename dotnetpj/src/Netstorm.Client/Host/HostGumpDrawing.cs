@@ -18,10 +18,11 @@ public sealed class HostGumpDrawing
     private readonly HostHtmlMenus _menus;
     /// <summary>현재 파일 팔레트와 논리 화면.</summary>
     private readonly Screen _screen;
+    private readonly HostTextEntry? _entry;
 
     /// <summary>같은 실제 메뉴 트리와 화면 장치를 빌린다.</summary>
-    public HostGumpDrawing(HostMainMenu menu, HostHtmlText text, HostHtmlMenus menus, Screen screen)
-    { _menu = menu ?? throw new ArgumentNullException(nameof(menu)); _text = text ?? throw new ArgumentNullException(nameof(text)); _menus = menus ?? throw new ArgumentNullException(nameof(menus)); _screen = screen ?? throw new ArgumentNullException(nameof(screen)); }
+    public HostGumpDrawing(HostMainMenu menu, HostHtmlText text, HostHtmlMenus menus, Screen screen, HostTextEntry? entry = null)
+    { _menu = menu ?? throw new ArgumentNullException(nameof(menu)); _text = text ?? throw new ArgumentNullException(nameof(text)); _menus = menus ?? throw new ArgumentNullException(nameof(menus)); _screen = screen ?? throw new ArgumentNullException(nameof(screen)); _entry = entry; }
 
     /// <summary>현재 표시 트리를 수집하고 원본 정렬 뒤 각 노드를 같은 픽셀·클립 문맥에서 출력한다.</summary>
     public void Draw()
@@ -58,6 +59,7 @@ public sealed class HostGumpDrawing
                     case ScrollGumpThumbNode: _text.SliderWidgets.DrawThumb(token, tree.Collection, background); break;
                     case ScrollGumpNode: break;
                     case StoneButtonGumpNode: tree.Stones.Draw(token, tree.Collection, glyph, target); break;
+                    case TextEntryGumpNode: (_entry ?? throw new InvalidOperationException("문자 입력창 출력 소유자 미연결")).Draw(token, glyph, background, target); break;
                     case GumpBackgroundNode: background.Draw(token); break;
                 }
             } });

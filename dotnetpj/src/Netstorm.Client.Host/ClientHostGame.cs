@@ -42,6 +42,8 @@ public sealed class ClientHostGame : Game
 
     /// <summary>HTML 다중 줄 본문과 슬라이더 소유자.</summary>
     private HostHtmlText? _htmlText;
+    /// <summary>실제 공통 트리에 조립한 문자 입력창 소유자.</summary>
+    private HostTextEntry? _textEntry;
 
     /// <summary>HTML 창의 실제 controlled 메뉴 열.</summary>
     private HostHtmlMenus? _htmlMenus;
@@ -118,6 +120,7 @@ public sealed class ClientHostGame : Game
         if (disposing)
         {
             _htmlWindows?.CloseAll();
+            _textEntry?.Dispose();
             _htmlFactory?.Dispose();
             _buttonSound?.Dispose();
             _cursor?.Dispose();
@@ -167,6 +170,8 @@ public sealed class ClientHostGame : Game
             _htmlText = new HostHtmlText(_mainMenu, _htmlWindows, _driver.Screen, Poll, (_, _) => _menuDirty = true,
                 cursor => _cursor.Set((GameCursor)cursor), _buttonSound.PlayByName);
             _htmlText.Bind(_htmlWindows);
+            _textEntry = new HostTextEntry(_mainMenu, _htmlWindows, _htmlText, _driver.Screen,
+                () => _wallClock.Elapsed.TotalSeconds, (_, _) => _menuDirty = true);
             _htmlMenus = new HostHtmlMenus(_mainMenu, _htmlWindows, _htmlText, _startup, _driver.Screen, (_, _) => _menuDirty = true);
             _htmlMenus.BindInput(_driver.Input, _buttonSound.PlayByName, (_, _) => _menuDirty = true);
             _htmlFactory = new HostHtmlFactory(_mainMenu, _htmlWindows, _htmlMenus, _startup, _driver.Screen, _driver.Input,
@@ -179,7 +184,7 @@ public sealed class ClientHostGame : Game
             _editor = new HostEditorSelection(_startup, _scriptStrings, _menuInput.ShowTell);
             _htmlFactory.BindMapCatalog(_editor.Catalog, _htmlMenus, _scriptStrings, () => _editor.CurrentName, () => _editor.PendingName);
             _menuInput.BindEditor(_editor);
-            _gumpDrawing = new HostGumpDrawing(_mainMenu, _htmlText, _htmlMenus, _driver.Screen);
+            _gumpDrawing = new HostGumpDrawing(_mainMenu, _htmlText, _htmlMenus, _driver.Screen, _textEntry);
             _driver.BindControlLocator(_mainMenu);
             _driver.BindInputHandler(_menuInput.Dispatch);
             _gumpDrawing.Draw();
