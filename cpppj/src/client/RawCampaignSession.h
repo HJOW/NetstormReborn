@@ -276,7 +276,7 @@ public:
     void LoadExistingEditorWorld();
     void LoadExistingEditorSubscriber(); //실제파일꼬리에서World보다먼저ID/handle을읽는다.전체외곽/loaded는완료하지않는다.
     void LoadExistingEditorDeck(); //실제World/Graph뒤의Deck부모만실행한다.외곽완료/loaded확정은별도다.
-    void InstallExistingEditorCheckpoint(const CampaignExistingEditorCheckpointServices& effects,const std::uint32_t& readOnlyForts,const EditorFiles& files); //명시지연Editor의실제파일부터004b743b까지한번조립한다.참조장치는Session보다오래살며최종loaded는쓰지않는다.
+    bool InstallExistingEditorCheckpoint(const CampaignExistingEditorCheckpointServices& effects,const std::uint32_t& readOnlyForts,const EditorFiles& files); // 실제 파일부터 편집 checkpoint까지 조립한다. true는 편집 정상 복귀, false는 현재 Guide의 미션 요청/조기 반환이며 loaded는 쓰지 않는다.
     bool ExistingEditorCheckpointReady() const; //전체설치성공이아닌위한정부모의정상복귀여부만조회한다.
     void WithExistingEditorPrefixUi(ClientLocalStateGlobals& owner,std::function<void()> prepareUi); //State1 prefix의 실제 HUD 동기화만 파일 설치 전에 허용한다. Session은 게임 상태를 쓰지 않는 prepared 대여여야 한다.
     void WithExistingEditorInstallUi(ClientLocalStateGlobals& owner,InputQueue& input,const ExistingEditorAfterCheckpointEffects& effects,std::function<void()> prepareUi); // 같은 checkpoint 뒤 게임/UI 하위를 한 번 준비하고 실제 원문 tail을 직접 호출한다. 공개 입력·저장은 계속 거부한다.
@@ -343,6 +343,7 @@ public:
     // 원본 로그인/월드 로더가 공유하는 현재 globals.mySubscriber를 읽기만 한다. 별도 캐시를 만들지 않는다.
     const std::uint32_t& CurrentSubscriber() const; // 같은 Client 또는 독립 Session의 실제 My DWORD 참조다.
     const std::shared_ptr<ClientCoreDataGlobals>& PlayerCoreGlobals() const; // 같은 현재 Core 소유자를 조회하며 선택/캐시 복사를 하지 않는다.
+    void ChangeFortSubscriber(std::uint32_t id,std::optional<std::span<const std::uint8_t>> name); //004b32f0의 현재 Template/fort 관문과 실제 handle/설정/제목/My/Subscriber 저장·통지를 연결한다.
     std::string_view CurrentHandle() const; // 실제 월드 로더가 갱신한 같은64BYTE 사용자 이름을 NUL까지 빌린다.
     // 같은 실제 PlayerWorld의00540c70을 읽는다. 자산/UI 어댑터의 로컬 번호 사본을 사용하지 않는다.
     std::uint32_t LocalOwner() const;

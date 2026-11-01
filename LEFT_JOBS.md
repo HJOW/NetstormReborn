@@ -8,18 +8,18 @@
 
 ## 0. 재개 전 확인 사항
 
-### 0.1 현재 값 (2026-11-02, 단위712 완료)
+### 0.1 현재 값 (2026-11-02, 단위713 완료)
 
 | 항목 | 값 |
 | --- | --- |
-| 진행 상태 | **단위712 완료. 전체 목표는 미완료다.** SetLanguage 이름/일반 입력→동기 Config→LanguageChanged 실제 큐→공유 카운터와 중복 없는 기존 Chat 재부착을 연결했다. 원문337·새4/기존7 집중11개 실패0이다. [712 문서](docs/exe/cpp-language-request-20261102.md)·[보고서](cpppj/language-request-20261102.json)를 따른다. 다음은 남은 Edit/시나리오 writer·파일/미션 수명 경로다. |
-| 현재 제품 | **실행 제품712 / 표시11.01**, EXE 재빌드다. 언어 선택710/다중 Xlat711에 이어 언어 변경 요청과 기존 Chat 알림을 같은 Client에 연결했다. 전체 언어 UI/한국어 완료는 아니다. 707/709 MP 연결은 정적 사전 구현이다. 최신 실제 GUI는704제품이고 전체34/ZIP은645의644제품이다. |
-| EXE SHA-256 | `b1ea5768b3e358430e029007b8315f9e89fc089639f3815748bbd236d24e2a87` (712 / 11.01) |
+| 진행 상태 | **단위713 완료. 전체 목표는 미완료다.** State1 파일 설치 뒤 살아 있는 Guide의 Champion/현재 handle/한 슬롯 Zone 요청과 공통 확정 없는 State7 인계를 연결했다. 원문198·새5/기존46 집중51개 실패0, 최종 접합2개 재검사 통과다. [713 문서](docs/exe/cpp-guide-fort-request-20261102.md)·[보고서](cpppj/guide-fort-request-20261102.json)를 따른다. 다음은 State3 공통 Fort와 남은 Edit/시나리오·파일/미션 수명이다. |
+| 현재 제품 | **실행 제품713 / 표시11.01**, EXE 재빌드다. State1의 현재 Guide 분기는 편집 World/HUD/loaded 대신 원문 조기 반환으로 실제 State7 요청에 인계한다. 전체 화면 연쇄/자연 완주 완료는 아니다. 707/709 MP 연결은 정적 사전 구현이다. 최신 실제 GUI는704제품이고 전체34/ZIP은645의644제품이다. |
+| EXE SHA-256 | `6122593ad2dd110584d74636dd525c7d39d928792732fe23e4f6f64ba89e7d7d` (713 / 11.01) |
 | ZIP SHA-256 | 645에서 만든644 제품의 `6485febc36080dc90e9eec43965a842f85d39e81c82a003a96b83b34b3694b73` (1376항목/게임 자산1358개). 실제 한글😀 경로에 압축 해제해 최종34를 실행했다. |
-| 등록 C++ 검사 수 | 712 신규4개, 새4/기존7 집중11개 실패0이다. build-v1 Release 경고/오류0, 원문337개는 실제 큐 writer와 명시 동기 Config 경계다. 최초 Native/집중 실행 모두 통과했다. 전체C++/MP 검사는 실행하지 않았다. |
+| 등록 C++ 검사 수 | 713 신규5개, 새5/기존46 집중51개 실패0이다. build-v1/v2 Release 경고/오류0, 최종 요청/실제 Session2개 재검사 통과다. 최초 Native/빌드/검사 실패0이며 v1 뒤 소비된 요청의 수명 guard를 보완했다. 전체C++/MP 검사는 실행하지 않았다. |
 | 최신 전체34 | 단위645, 644 제품 기준 최종34/34. 최소 비정지 시각 증가20.843초·창DC RGB·Native Frame 일치. 최초 입력 누락34실패/재검증34통과와 준비2회를 포함한 총70프로세스를 구별한다. |
 | 전체 C++ 마지막 실행 | 단위549. 3389개 중 7개 검사가 실패했다(580단언). 이후 입력 정정 뒤 집중 검사만 통과했고 전체 재실행 기록은 없다. 마지막 전체 통과는 단위510(508 제품, 3337개, 실패 0)이다. |
-| 보호 기준 | 712는 AGENTS·원본1394+CD425+기존fixture809의2629개 변경0, 새fixture1개를 포함해2630개다. AGENTS는5867f35e 갱신본 그대로다(SHA544643cf…). 새 게임/MP/통신·제외된 포획/희생/공격/승리 재현0이다. |
+| 보호 기준 | 713은 AGENTS·원본1394+CD425+기존fixture810의2630개 변경0, 새fixture1개를 포함해2631개다. AGENTS는5867f35e 갱신본 그대로다(SHA544643cf…). 새 게임/MP/통신·제외된 포획/희생/공격/승리 재현0이다. |
 | **마지막 전체 정밀 디컴파일** | **HJOW-Athlon (192.168.0.94) / 2026-10-23** |
 
 ### 0.2 재개 절차
@@ -29,8 +29,8 @@
 3. 실제 게임 구동과 별도 창이 뜨는 작업은 AGENTS.md를 따른다. 확인 없이 진행할 수 있는 시스템은 vm-debian-codex(10.0.0.15), VM-W11-Codex(10.0.0.17), HJOW-Athlon(192.168.0.94)뿐이다. **HJOW-X3D를 포함한 그 밖의 PC에서는 실행 목적과 필요성을 설명하고 명시적 확인을 받는다.** 허용받으면 해당 작업 단계가 끝날 때까지 유지된다. 사용자가 원본 수동 컨트롤이나 녹화 분석을 직접 요청한 작업 단계도 확인이 필요 없다.
 4. 빌드·검사·GUI 원시 자료는 작업 PC의 `extracted/`(Git 제외)에만 있다. 커밋되는 보고서는 `cpppj/*.json`, 작업 문서는 `docs/exe/cpp-*.md`다. 다른 PC에 원시 자료가 있다고 가정하지 않는다.
 5. 다른 세션의 dotnetpj·webpj 변경, staged 파일, 실행 출력은 이 작업에 포함하지 않는다. 단위마다 인계를 갱신하고 로컬 커밋한다.
-6. 645 뒤의 실제 실행은 각 단위의 변경과 직접 관련된 기능별 확인이다. 646~671·673~675·679·681·683·686~694·698·701~703·705~712는 새 게임 실행0이고, 실제 실행이 있었던 672·676·677·678·680·682·684·685·695·696·697·699·700·704의 횟수와 최초 도구 입력 실패의 구별은 각 단위 문서를 따른다. 전체34 재검사나 자연 완주로 합산하지 않으며 소수 단위 뒤 반복하지 않는 사용자 지시(4절)를 유지한다.
-7. 마지막 빌드 제품은712의`extracted/cpp-language-request-712/build-v1.log`다. Release 경고/오류0, 새4/기존7 집중11개 실패0이다. 신규 게임/GUI/MP/통신0이며 마지막 실제 GUI는704다. 전체34/전체C++·PCM·물리입력/새MP무시험제한을 유지한다.
+6. 645 뒤의 실제 실행은 각 단위의 변경과 직접 관련된 기능별 확인이다. 646~671·673~675·679·681·683·686~694·698·701~703·705~713는 새 게임 실행0이고, 실제 실행이 있었던 672·676·677·678·680·682·684·685·695·696·697·699·700·704의 횟수와 최초 도구 입력 실패의 구별은 각 단위 문서를 따른다. 전체34 재검사나 자연 완주로 합산하지 않으며 소수 단위 뒤 반복하지 않는 사용자 지시(4절)를 유지한다.
+7. 마지막 빌드 제품은713의`extracted/cpp-guide-fort-request-713/build-v2.log`다. Release 경고/오류0, 새5/기존46 집중51개 실패0과 최종 접합2개 재검사 통과다. 신규 게임/GUI/MP/통신0이며 마지막 실제 GUI는704다. 전체34/전체C++·PCM·물리입력/새MP무시험제한을 유지한다.
 
 ### 0.3 유지되는 제한과 보류
 
@@ -163,6 +163,7 @@ AGENTS.md의 나머지 현행 규칙(커밋 메시지 형식, push 금지, 한�
 | 카메라 | [615](docs/exe/cpp-camera-pan-20261030.md), [617](docs/exe/cpp-camera-pan-presentation-20261030.md), [632](docs/exe/cpp-camera-center-20261031.md), [633](docs/exe/cpp-camera-immediate-20261031.md), [635](docs/exe/cpp-camera-viewport-20261031.md) | 원문 Alt/가운데 pan, 확대 전체화면 논리 단위, 직접 중심 목표, Home 계열 즉시 적용, viewport 변경 시 현재 값 보존 | 물리 키, 다른 DPI, 실제 포커스 전환 |
 | Renderer·Native Draw | [618](docs/exe/cpp-renderer-prelude-20261030.md), [619](docs/exe/cpp-renderer-clouds-20261030.md), [620](docs/exe/cpp-renderer-frame-20261030.md), [622](docs/exe/cpp-native-scene-20261031.md), [628](docs/exe/cpp-mana-additional-20261031.md), [629](docs/exe/cpp-auxiliary-draw-20261031.md), [648](docs/exe/cpp-renderer-presentation-20261031.md), [655](docs/exe/cpp-mission-entry-20261031.md) | 앞단, 구름 4칸·배경 선택, 실제 Frame, 단일 표시 목록, 마나 103 추가 Draw, 배율·고정색, 부분 그리기/전체 출력 요청·첫 flags/count0 보존, 실제 Zone 뒤 초기화 | 전체 픽셀 동일성, 기존 VFX 계약·전체 비동기State7 |
 | UI 갱신 영역 | [624](docs/exe/cpp-gump-redraw-20261031.md), [625](docs/exe/cpp-ui-dirty-20261031.md), [627](docs/exe/cpp-gump-derived-dirty-20261031.md), [630](docs/exe/cpp-inventory-blink-20261031.md), [631](docs/exe/cpp-minimap-dirty-20261031.md), [639](docs/exe/cpp-minimap-content-20261031.md) | Gump 기본 갱신, 지도 clamp, 기본 UI, 장식·메뉴 행, 생산 점멸, 미니맵 기본 영역·지면/소유자/삭제 픽셀. grid/debug 직접 writer와 생성 초기값 대조 | 일반 경로 활성 writer를 찾지 못한 grid/debug는 노출하지 않는다. 간접 alias 부재 전체 증명은 아니다. |
+| State1 현재 Guide의 Fort 요청 | [713](docs/exe/cpp-guide-fort-request-20261102.md) | Champion/현재 handle·실제 Subscriber writer/공유 My·한 슬롯 Zone/State7과 편집 checkpoint 없는 조기 반환. 원문198/집중51개 실패0 | 새 게임0. 실제 Uber의 수명 guard/전환은 컴파일/정적 접합이며 전체 State1→7→14 GUI·State3 나머지 공통 분기는 별도다. |
 | Edit·시나리오 | [590](docs/exe/cpp-editor-scenario-20261030.md), [597](docs/exe/cpp-editor-rules-20261030.md), [609](docs/exe/cpp-world-geyser-20261030.md), [634](docs/exe/cpp-editor-catalog-current-20261031.md), [650](docs/exe/cpp-world-generation-session-20261031.md), [653](docs/exe/cpp-editor-default-name-20261031.md), [661](docs/exe/cpp-editor-entry-prelude-20261031.md), [662](docs/exe/cpp-editor-deferred-file-20261031.md), [663](docs/exe/cpp-fort-object-stream-20261031.md), [664](docs/exe/cpp-campaign-object-stream-20261031.md), [665](docs/exe/cpp-editor-invalid-file-20261101.md) | 시작값·작업본 왕복·방향별 동맹·세계 생성·Fort433개 이관/필터와 기본 이름 선택·늦은 파일 준비/Session checkpoint·State1 공통 앞단/52h 통지·선행 파싱 제거/실제 Campaign·Editor Objects 스트림·예외 수명/손상 파일 정리·기본 이름 재선택 반복 | 3절 2번.665의10개 통과는 전체 ABI/GUI 검증이 아니다. |
 | Edit Unicode 파일 | [646](docs/exe/cpp-editor-unicode-20261031.md) | UTF-8/native 경로·wide CRT, 실제 Unicode 파일 왕복·권한·목록 이관/장부 재열기·삭제 보존·source TAFF 격리. 집중24통과 | GUI/전체34/한국어 UI 검증이 아니다. 최신 전체34/ZIP은644제품이며672의 기능별GUI와 구별한다. |
 | Edit Template 쓰기 | [669](docs/exe/cpp-editor-file-writer-20261101.md) | 원문 r+b/실패 시 생성과 실제BaseFile 쓰기/반납. 짧은 이미지 뒤 tail 보존·실제35섹션 재파싱·현재 이름/서명·Unicode/보호/공유 거부. 관련28개/기존322행 통과 | 실제 부분쓰기/닫기 반환 실패는 새 관측이 아니다. 일반 Write/준비/복사와 전체 FILE ABI·GUI는 별도다. |
@@ -225,7 +226,7 @@ Early3 후속 입력과 미실행 계획은 [부분 진행 보관](docs/exe/prep
 
 1. 화면 캡처가 정상화되면 물리 입력 QWASZX·ESC·Home·포커스를 검증한다(7번).
 2. 남은 비멀티 UI·Edit·시나리오·파일·수명·호환성을 1~4번과 7번으로 이어 간다.
-3. 645의 같은644 제품/새ZIP/전체34 뒤646~712를 진행했다. **712는 SetLanguage 이름/일반 입력·현재 Client 설정/실제 큐와 기존 Chat 알림을 연결했다(현재712/11.01).** 원문337·새4/기존7 집중11개 실패0, 새게임/MP/통신0이다. 707/709 MP 연결은 정적 사전 구현이다. 남은 Edit/시나리오 writer·파일/미션 수명과 후반 MP UI를 진행하며 제외된 재현/공중3종 전용 검사는 하지 않는다.
+3. 645의 같은644 제품/새ZIP/전체34 뒤646~713을 진행했다. **713은 State1 파일 뒤 현재 Guide의 Champion/한 슬롯 Zone과 공통 확정 없는 State7 인계를 연결했다(현재713/11.01).** 원문198·새5/기존46 집중51개 실패0, 최종2개 재검사 통과·새게임/MP/통신0이다. 다음은 State3 공통 Fort와 남은 Edit/시나리오 writer·파일/미션 수명이다. 707/709 MP는 정적 사전 구현이며 제외된 재현/공중3종 전용 검사는 하지 않는다.
 4. 체크 항목을 마치면 5·6번과 Windows 11 실기를 기다리지 않고 멀티플레이 무시험 사전 구현과 4~7차로 넘어간다(8번).
 
 ### 1. 대상별 커서·오브젝트 우클릭·게임 UI
@@ -245,7 +246,7 @@ Early3 후속 입력과 미실행 계획은 [부분 진행 보관](docs/exe/prep
 
 ### 2. Edit 메뉴·커스텀 맵/시나리오
 
-- **712/다음 필수:** 원문 언어 번호/용어표710·최초 다중 Xlat711·언어 요청과 기존 Chat 알림712를 연결했다. 다음은 남은 Edit 지형/객체·시나리오 writer/State1·7 정상 진입/파일 수명·미션 Retry/Next/Abort 연속 전환이다. 전체 번역 UI/폰트·파일 오류 ABI와 MP 갱신 소비자는 별도다. 완료한 입력/목록·선택키/메인 부모를 다시 미구현으로 세지 않는다. 707/709 MP 연결은 무시험 정적 사전 구현이며 실제 랭크/후반 MP UI/TCP·Outpust는 남는다([712](docs/exe/cpp-language-request-20261102.md)).
+- **713/다음 필수:** State1 파일 설치 뒤 살아 있는 Guide의 Subscriber/한 슬롯 Zone 요청과 조기 반환을 연결했다. 실제 Session의 같은 writer/My·요청과 편집 공개 거부를 확인했으며 원문198·집중51개 실패0이다. 다음은 State3 제목 변경 후 공통 Fort 분기, State1/7 나머지 조건·지형/객체/시나리오 writer·파일 수명·Retry/Next/Abort 연속 전환이다. 전체 GUI 연쇄/자연 완주 완료로 확대하지 않는다. 언어710~712·기존 Edit 도구/메인 부모를 다시 미구현으로 세지 않는다([713](docs/exe/cpp-guide-fort-request-20261102.md)).
 
 - [ ] 다른 시나리오 조합·실제 설정/UI writer와 TARC/동적/Config 확장·Menu 둘째 인자의 명령 연결을 대조한다. 687의 명시 태그 목록만으로 전체 완료를 판정하지 않는다.
 - [ ] 남은 지형·오브젝트·소유자 도구와 LeaveEditMode/State1·비동기 State7의 전체 분기를 점검한다.
@@ -260,7 +261,7 @@ Early3 후속 입력과 미실행 계획은 [부분 진행 보관](docs/exe/prep
 - [ ] Retry·Next Tutorial·Next Mission·Abort의 나머지 연속 전환과 참조/타이머·다리/AI 재고를 확인한다. Restart와 Leave → 메인은 638에서 확인했다. 자연 승패가 필요한 부분은 사용자 확인 대상이다.
 - [ ] 세 데모의 재시작 뒤 두 번째 전체 360초(다시 만료)와 추가 연속 주기·나머지 안내를 확인한다. GuardMyBack의 15초 안내와 DissolvedAlliance의 Demo 섹션 부재를 유지하며 Script demo 키만으로 모드를 추정하지 않는다.
 - [ ] 승패를 포함한 나머지 Native3 선택과 State1/단독 State7·전투 정리004b2df0의 자연 Tick/연속 전환을 확인한다. 존재하는 일반 전투 상태 복구/StateReconnect·서버 이전은661의 정적 분류에 따라8번의 후순위MP로 잇는다. 질문/삭제 UI는 유지하며 reader/open만으로 재접속 완료로 세지 않는다. LeaveBattle의 나머지 이유/CD/원격 페널티와 State6도 별도 잔여다(588).
-- **661 State1/7 경계:** 정상 단독 State7 부모의 최초 복사/로그·World 교체·7/8 확정은660에서 연결했다.661은 State1의 공통 출처/첫BYTE/이전 Battle14 통지를 State3과 공유했다([661](docs/exe/cpp-editor-entry-prelude-20261031.md)). 확인한 current+84 직접 작성은 일반 전투 서버 이전이며 !missionPost/PlayerKnown 저장 writer와 연결된다. 해당 재접속·Zone0/메타 Poll/시계 패킷·외부 동기화는8번의 후순위MP로 구분한다. State1 나머지 설치/도구·실제 GUI 전체 연쇄는 남는다. 간접 alias 전체 부재나 모든 State7 분기 완료로 확대하지 않는다.
+- **661 State1/7 경계:** 정상 단독 State7 부모의 최초 복사/로그·World 교체·7/8 확정은660에서 연결했다.661은 State1의 공통 출처/첫BYTE/이전 Battle14 통지를 State3과 공유했다([661](docs/exe/cpp-editor-entry-prelude-20261031.md)). 확인한 current+84 직접 작성은 일반 전투 서버 이전이며 !missionPost/PlayerKnown 저장 writer와 연결된다. 해당 재접속·Zone0/메타 Poll/시계 패킷·외부 동기화는8번의 후순위MP로 구분한다. State1 현재 Guide의 요청/조기 반환은713에서 연결했다. State3 공통 Fort/State1 나머지 조건·설치/도구와 실제 GUI 전체 연쇄는 남는다. 간접 alias 전체 부재나 모든 State7 분기 완료로 확대하지 않는다.
 
 ### 4. 내부 수명·실제 연결
 

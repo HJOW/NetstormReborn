@@ -82,6 +82,7 @@ o::LocalMissionParentResult UberGump::InstallExistingEditorState(std::uint32_t s
     checkpoint.fort.defaultName=[this] { SelectConfiguredNewFort(client_.Configuration(),[this](auto name) { SelectCurrentFortName(name); }); }; // 원문 기본 이름도 현재 Template/작업 namespace의 같은 전체 선택 부모를 사용한다.
     checkpoint.fort.closeGuide=[this] { ReleaseCurrentGuideMission(); }; //원문 부모가 이름 변경/현재 미션/대상 맵 속성을 판정한 뒤에만 보존한 Tutorial 데이터와 Guide를 해제한다.
     checkpoint.fort.setConfig=[this](auto name,auto value) { client_.Configuration().Set(name,o::DecodeOriginalText({reinterpret_cast<const std::uint8_t*>(value.data()),value.size()})); };
+    checkpoint.fort.requestMission=[this,&session] { RequestCurrentGuideFort(session);state_.Post({"LoadMissionWorld",{}}); }; // 같은 Guide/State7 요청을 다음 호스트 작업으로 넘기며 편집 설치 꼬리를 실행하지 않는다.
     checkpoint.fort.outside=[](auto branch) { throw std::logic_error("Editor 기존 파일 외의 설치 분기:"+std::to_string(static_cast<int>(branch))); };
     checkpoint.file.path=[&e] { return e.paths->PrepareCurrent(); };checkpoint.file.exists=[&e](auto path) { return e.paths->Exists(path); };checkpoint.file.title=[this] { RefreshWindowTitle(); }; // 기본 이름/설정 알림 뒤 선택된 실제 파일도 기존 이관 장부로 준비한 다음 존재를 검사한다.
     checkpoint.file.assertion=[](auto line) { std::clog<<"Editor Template 진단 "<<line<<'\n'; };checkpoint.file.outside=checkpoint.fort.outside;
@@ -90,7 +91,7 @@ o::LocalMissionParentResult UberGump::InstallExistingEditorState(std::uint32_t s
     checkpoint.invalid.isDefaultName=[this] { const auto name=client_.Configuration().PathSpec("newFort");const std::string current(client_.FortGlobals()->Current());return _stricmp(current.c_str(),name.c_str())==0 ? 1 : 0; }; // 설정 해석 뒤의 현재 이름을 실제 CRT로 비교한다.
     checkpoint.invalid.erase=[&e](auto path) { e.files.Delete(path); }; // 원본 자산이 아닌 같은 작업본만 삭제한다.
     checkpoint.startup=EditorStartupStateHooks(); //State3과 같은 실제 기본 옵션/파일 부재 관문/벽시각 장치를 빌린다.
-    session.InstallExistingEditorCheckpoint(checkpoint,client_.ReadOnlyForts(),e.files);
+    if (!session.InstallExistingEditorCheckpoint(checkpoint,client_.ReadOnlyForts(),e.files)) return o::LocalMissionParentResult::ReturnWithoutCommit; // 원문 미션 분기는 공통 State1 확정도 생략한다.
     ExistingEditorAfterCheckpointEffects tail;tail.hud=[this](auto command) { rawButtons_->NotifyHudMode(command,1); };tail.wallSeconds=[this] { return client_.WallSeconds(); };
     tail.requestMusic=[this](auto name) { client_.WorldAudio().RequestMusic(name); };tail.fortPalette=[this] { const auto name=client_.Configuration().PathSpec("fortPal");client_.ChangeFortPalette({reinterpret_cast<const std::uint8_t*>(name.c_str()),name.size()+1}); };tail.islandCount=[&session] { return session.IslandCount(); };
     session.WithExistingEditorInstallUi(*client_.LocalStateGlobals(),client_.Input(),tail,[this,&session,&e] {
@@ -191,6 +192,7 @@ void UberGump::PollEditorState() {
         if (local.State().phase[0]==3 && local.State().next[0]==4) PublishNativeMainMenuState();
         return; // 영상이 살아 있는 State40은 다음 Poll까지 유지하며 메인 메뉴를 먼저 공개하지 않는다.
     }
+    if (next==1 && local.State().next[0]==7) return; // 현재 Guide가 쓴7은 편집 입력/loaded 공개 없이 같은 Tick의 지연 미션 부모가 소비한다.
     if (next==1 && !editor_->committed) {
         world_->Session().CommitExistingEditorInstall(local); //공통 확정 뒤 실제 loaded 공개가 끝나야 호스트 사용자 입력 몸체를 만들 수 있다.
         BindCampaignUserInputServices(client_,*world_,editor_->selectCursor);userInput_=std::make_unique<UserInput>(client_,*world_);

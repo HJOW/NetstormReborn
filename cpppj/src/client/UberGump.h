@@ -25,6 +25,7 @@
 namespace netstorm::client {
 class Client;
 class GameWorld;
+class RawCampaignSession; // State1의 현재 Guide Subscriber 요청을 같은 Session에 연결한다.
 class UserInput;
 class WarningMessages;
 struct GameMenuBarState; // 현재Session의기존검산참조와메뉴serial만빌린다.
@@ -139,6 +140,7 @@ private:
     void LoadMissionWorld(std::optional<std::string> requestedFort={}); // Init이 캡처한 요새 이름을 사용한다. 기존 Battle은 현재 설정을 읽는다.
     void LoadMissionWorldBody(std::optional<std::string> requestedFort); // 부모 공통부의 최초 복사/로그 뒤 실제 정리/새 World/로그인 후반만 수행한다.
     void FinishMissionWorldLoad(); // 실제 phase14/현재 미션 수명 확인 뒤 커서/Start/안내를 설치한다. 상태8 준비 단계에서 호출하지 않는다.
+    void RequestCurrentGuideFort(RawCampaignSession& session); //State1의 파일 설치 뒤 Champion/현재 handle로 State7을 요청하고 동일 Zone 이미지를 보유한다.
     void RequestMissionFort(std::string_view name); // Tutorial/일반 미션이 같은 현재 Fort 선택과86BYTE Zone/144BYTE State7 요청을 작성한다. 호스트 전환 큐는 호출자가 예약한다.
     o::FortMissionSaveHooks FortMissionSaveEffects(); // 현재 Runtime의 이름과 같은 실제 sequence/flags를 동기 저장에 빌린다.
     // 실제 Guide 단계3에서 같은 설치된 Session의 Start를 실행한다.

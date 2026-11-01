@@ -1,0 +1,29 @@
+{
+  "unit": 713,
+  "date": "2026-11-02",
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon",
+  "lastDecompileDate": "2026-10-23",
+  "inputs": 198,
+  "requestInputs": 144,
+  "subscriberInputs": 54,
+  "instructions": 72627,
+  "gameExecutions": 0,
+  "multiplayerTests": 0,
+  "boundaries": [
+    "004b50b0/4b32f0/463b30와 기존 패킷 할당·슬롯·관찰기·복제 몸체만 격리 실행",
+    "Config/제목/Template Subscriber 쓰기·Notify/힙은 명시 효과이며 실제 GUI/전체 State1·7/32비트 FILE ABI가 아니다",
+    "단독 미션의 Guide 요청이며 TCP/멀티플레이/Outpust 새 검사는 없다"
+  ],
+  "fixtureSha256": "3e1e2a6ed1a96cef111d3ba837adcdcbacf3ceddc1fbed473dacbe75ad3443f9",
+  "sha256": {
+    "AGENTS.md": "544643cf731393ecb4784490aa7f2794e8736742582907cce29453e6ac46f15e",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/raw.c": "0b5d53b15fdb2ef7afbccf61af666709726a96fb3b972b6818f4a42efcd31972",
+    "extracted/refined/originals/functions.tsv": "3ea34d7cd978aaa5c141a629264fea5e8b2f78c4e6b0b4e4633f982a2583f658",
+    "tools/decomp_local_mission_transport.py": "db71da65079aa9a985a3a833edd224f089ba9a20137d92042551cb346937eb78",
+    "tools/decomp_mission_fort_request.py": "9290c90ce9bf418ef26bf86b0657e910d594815f6addcf268df64c5299529fea",
+    "tools/decomp_guide_fort_request.py": "5cf1d38a61db96cf5f42252c4a53f361243deb3bd0fdd0b5dbcc8d47e23f6435",
+    "cpppj/tests/fixtures/guide-fort-request-x86.tsv": "3e1e2a6ed1a96cef111d3ba837adcdcbacf3ceddc1fbed473dacbe75ad3443f9"
+  }
+}

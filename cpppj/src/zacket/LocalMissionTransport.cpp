@@ -53,6 +53,11 @@ LocalMissionPacket MakeLocalMissionZone() {
     }
     Put(bytes,2,static_cast<std::uint32_t>(kZoneHead+std::size_t(bytes[14])*kZoneClient),2);return packet;
 }
+//004b50b0/463b30은 같은 Zone 표식과 한 슬롯의 현재 handle만 쓰고 나머지 예약0xff를 보존한다.
+LocalMissionPacket MakeGuideMissionZone(std::string_view handle) {
+    auto packet=Packet(kZoneReserve,kZoneType);auto& bytes=packet.storage;Put(bytes,4,0x82000004);Put(bytes,8,0,2);Put(bytes,10,0);bytes[14]=1;
+    bytes[kZoneHead]=0;Put(bytes,kZoneHead+1,1);Put(bytes,kZoneHead+5,0);Copy(bytes,kZoneHead+9,handle);bytes[kZoneHead+41]=0;return packet;
+}
 // 실제 파일 이미지 이후의 작성만 복원한다. Template 읽기/파일 선택은 상위 원본 부모의 책임이다.
 LocalMissionPacket MakeLocalMissionLogin(std::uint32_t subscriber,std::string_view handle,std::span<const std::uint8_t> fortImage) {
     handle=handle.substr(0,handle.find('\0'));if (fortImage.size()>std::numeric_limits<std::uint32_t>::max()-67U) throw std::out_of_range("로컬 로그인 이미지 크기 초과");

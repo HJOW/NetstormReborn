@@ -52,17 +52,21 @@ void InstallEditorFortFile(std::uint32_t& alternate,const NewFortMissingFileHook
     }
 }
 // world단계는실제Session의같은부모를한번호출하고그뒤외곽순서만이본문이소유한다.
-void InstallExistingEditorFort(const ExistingEditorFortHooks& hooks) {
+bool InstallExistingEditorFort(const ExistingEditorFortHooks& hooks) {
     const auto pending=Need(hooks.pendingName)(),current=Need(hooks.currentName)(); //원문비교시점의두문자열주소를캡처한다.
     if (Need(hooks.compare)(current,pending)) {
         if (Need(hooks.inMission)() && !Need(hooks.missionName)(Need(hooks.pendingName)())) Need(hooks.closeGuide)();
         Need(hooks.setName)(Need(hooks.pendingName)());
     }
     const auto name=Need(hooks.currentName)();if (name.empty() || name.front()=='.') Need(hooks.defaultName)();
-    Need(hooks.file)();if (Need(hooks.inMission)()) Outside(hooks.outside,ExistingEditorInstallOutside::Mission);
+    Need(hooks.file)();if (Need(hooks.inMission)()) {
+        if (!hooks.requestMission) Outside(hooks.outside,ExistingEditorInstallOutside::Mission); // 기존 명시 범위 밖 장치는 계속 실제 미연결을 알린다.
+        hooks.requestMission();return false; // 원문 미션 분기의 ret이며 편집 월드/후반 UI/phase 확정을 수행하지 않는다.
+    }
     Need(hooks.world)();Need(hooks.deck)(Need(hooks.owner)());Need(hooks.priests)();Need(hooks.camera)();Need(hooks.production)();
     Need(hooks.coreWrite)(Need(hooks.owner)());Need(hooks.snapshot)(Need(hooks.owner)());
     State(hooks.state,Need(hooks.owner)())[0]&=0xfeU;Need(hooks.notify)(Need(hooks.owner)());Need(hooks.startupStateCheck)();
     if (Need(hooks.editor)()) { Need(hooks.setConfig)("lastEditFort",Need(hooks.currentName)());Need(hooks.editorPlayers)(); }
+    return true;
 }
 }

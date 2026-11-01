@@ -651,6 +651,17 @@ void UberGump::RequestMissionFort(std::string_view name) {
         WriteMissionFortRequest(name,{next,client_.LocalStateGlobals()->ZonePending(),address,port},effects);request->next=next;request->sequence=client_.LocalStateGlobals()->ZonePending(); // 요청은 같은 State/005c85c0의 작성 결과만 관측 캡처한다.
         missionFortRequest_=std::move(request);
 }
+// State1에서 이미 고른 파일은 재선택하지 않고 현재 Guide의 실제 Subscriber 요청을 인계한다.
+void UberGump::RequestCurrentGuideFort(RawCampaignSession& session) {
+    if (!missionRuntime_ || state_.Pending() || (missionFortRequest_ && !missionFortRequest_->consumed)) throw std::logic_error("현재 Guide Fort 요청의 수명/지연 큐 중복");
+    // 이미 소비된 이전 이미지는 기존 Session의 공유 수명에 맡기고 새 요청 성공 뒤 교체한다. 미소비 이미지는 덮어쓰지 않는다.
+    auto request=std::make_shared<MissionFortLoadRequest>();GuideFortRequestHooks effects;std::uint32_t port{};
+    effects.subscriber=[this,&session,&port](auto id,auto name) { session.ChangeFortSubscriber(id,std::span(reinterpret_cast<const std::uint8_t*>(name.data()),name.size()+1));std::int32_t configured=6799;client_.Configuration().ReadInt("gameServerPort",configured);port=std::bit_cast<std::uint32_t>(configured); }; // 고정 Champion 리터럴의 NUL도 전달하며 큰 설정/제목 복귀 뒤 현재 포트를 읽는다.
+    effects.handle=[&session] { return session.CurrentHandle(); };effects.duplicate=[request](auto& packet) { return CaptureMissionFortZone(*request,packet); };
+    const std::array<std::uint8_t,9> address{'z','l','o','c','a','l',',','*',0};auto& local=*client_.LocalStateGlobals(); // 원문 로컬9BYTE 주소와 기존 일반 Init의 같은 장치 경계다.
+    WriteCurrentGuideFortRequest({local.State().next,local.ZonePending(),address,port},effects);request->next=local.State().next;request->sequence=local.ZonePending();
+    const auto name=client_.FortGlobals()->Current();request->fort=o::DecodeOriginalText({reinterpret_cast<const std::uint8_t*>(name.data()),name.size()});missionFortRequest_=std::move(request);
+}
 // Guide-only 조건 없이 실제 현재 Runtime을 읽으며 선택한 미션 수명이 바뀌면 물리 경계로 거부한다.
 o::FortMissionSaveHooks UberGump::FortMissionSaveEffects() {
     o::FortMissionSaveHooks hooks; // write는 각 Snapshot이 소유한 실제 stream에 동기적으로 연결한다.

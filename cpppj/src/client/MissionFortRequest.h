@@ -23,6 +23,14 @@ struct MissionFortRequestHooks {
 };
 // 전체 요청을 작성하되 State7의 전투 정리/설치/상태 실행을 앞당기지 않는다.
 void WriteMissionFortRequest(std::string_view name,MissionFortRequestGlobals globals,const MissionFortRequestHooks& hooks);
+//004b50b0은 이름 선택 대신 현재 Fort의 Subscriber를 Champion으로 바꾼 뒤 현재 handle을 읽는다.
+struct GuideFortRequestHooks {
+    std::function<void(std::uint32_t,std::string_view)> subscriber; //004b32f0(1,"Champion")의 실제 같은 Template/Config/My 변경이다.
+    std::function<std::string_view()> handle; // 큰 Subscriber 부모 복귀 뒤 현재00540ca8을 읽는다.
+    std::function<std::uint32_t(zacket::LocalMissionPacket&)> duplicate; // 길이4의512BYTE를 관찰/복제하는 동일 수명 경계다.
+};
+//현재 Guide가 살아 있는 State1의 요청이다. Fort 이름 재선택/편집 World/HUD 설치를 앞당기지 않는다.
+void WriteCurrentGuideFortRequest(MissionFortRequestGlobals globals,const GuideFortRequestHooks& hooks);
 // 실제 Client Init이 작성한 요청과 Zone 복사본의 수명을 Session 설치까지 보유한다.
 struct MissionFortLoadRequest {
     o::LocalMissionStateBlock next{}; // Init이 만든 실제144BYTE의 요청 캡처다. 전체 State7 실행 상태와 구별한다.

@@ -15,6 +15,8 @@ struct LocalMissionPacket {
 };
 // PATCH004b51e0의 Zone512/4슬롯 작성과0040a1e0의86바이트 길이 확정이다.
 LocalMissionPacket MakeLocalMissionZone();
+//004b50b0은 현재 Guide handle의 한 슬롯만 작성하며 관찰 전 선언 길이4를 유지한다.
+LocalMissionPacket MakeGuideMissionZone(std::string_view handle);
 // PATCH004b63d0의 실제 외부 Fort 이미지 이후 패킷 작성과0040a450의 길이 확정이다.
 LocalMissionPacket MakeLocalMissionLogin(std::uint32_t subscriber,std::string_view handle,std::span<const std::uint8_t> fortImage);
 // 현재0x27 버퍼의 필드 참조이며 처리기 호출 동안만 유효하다.

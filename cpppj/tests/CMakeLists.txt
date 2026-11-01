@@ -2883,3 +2883,11 @@ target_sources(netstorm_tests PRIVATE LanguageRequestTests.cpp)
 add_executable(netstorm_language_request_tests FocusedTestMain.cpp LanguageRequestTests.cpp LanguageOptionsTests.cpp XlatRuntimeTests.cpp)
 target_link_libraries(netstorm_language_request_tests PRIVATE netstorm)
 netstorm_apply_compiler_options(netstorm_language_request_tests)
+
+#현재 Guide의 State1 조기 반환/실제 Subscriber writer와 기존 요청·Editor 외곽만 집중 확인한다(713).
+target_sources(netstorm_tests PRIVATE GuideFortRequestTests.cpp)
+set_source_files_properties(GuideFortRequestTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_GUIDE_FORT_REQUEST_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/guide-fort-request-x86.tsv\"")
+add_executable(netstorm_guide_fort_request_tests FocusedTestMain.cpp GuideFortRequestTests.cpp MissionFortRequestTests.cpp ExistingEditorInstallOuterTests.cpp CampaignExistingEditorCheckpointTests.cpp)
+target_link_libraries(netstorm_guide_fort_request_tests PRIVATE netstorm)
+netstorm_apply_compiler_options(netstorm_guide_fort_request_tests)
+target_compile_definitions(netstorm_guide_fort_request_tests PRIVATE ${_netstorm_menu_session_definitions})

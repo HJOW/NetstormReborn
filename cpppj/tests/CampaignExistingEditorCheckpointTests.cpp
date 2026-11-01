@@ -27,6 +27,7 @@
 #include "client/EditorFortFileDevices.h"
 #include "client/FortTypeConversionStorage.h"
 #include "client/Mission.h" //Guide 해제가 같은 Client의 Native 미션 모드를 반납한 뒤 prepared Editor가 그 물리를 빌리는지 확인한다.
+#include "client/MissionFortRequest.h" // 현재 Guide 분기는 실제 Subscriber writer 뒤 같은 Zone 요청을 보유한다.
 #include "o/RawFortBadgesGlobals.h"
 #include "o/RawSunAviaryProcess.h" // 실제 사제 이동 프로세스의 동일 풀/부착 Form 조회 선언을 사용한다.
 #include "o/RawDataManagerSelection.h"
@@ -772,3 +773,22 @@ TEST_CASE(CampaignExistingEditorCheckpoint_SameNameKeepsGuideAndSelectsMissionOu
 #include "CampaignEditorIslandWindowSession.inc"
 
 #include "EditorInvalidFileTests.inc" // 실제 파일 반복/새 맵 분배와 반납 예외의 부분 상태를 확인한다.
+
+// 실제 파일 꼬리 뒤 Champion을 같은 Template/Client My에 쓰고 편집 World/loaded를 공개하지 않는다.
+TEST_CASE(CampaignExistingEditorCheckpoint_CurrentGuideHandoffUsesActualSubscriber) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);const auto input=CheckpointInput(assets.files);ClientOptions options;options.gameDirectory=assets.root;Client client(std::move(options));auto storage=std::make_shared<CampaignTemplateStorage>();CheckpointDevices devices;
+    EditorFiles work(CheckpointRoot(assets.root.parent_path(),"guide-request713"),{assets.root,assets.root.parent_path()/"originalCD"});work.Prepare("Checkpoint385",input);auto effects=devices.Effects(client,work);auto services=devices.Make(client,storage,input);services.subscriberGlobals=client.SubscriberGlobals();
+    RawCampaignSession session(assets.game,assets.files,FortTemplate::Parse(input,assets.game.TypeTable()),"deferred.fort",std::move(services));session.Core().bridgeState.mission=true;auto& local=*client.LocalStateGlobals();local.State().phase.fill(0x11223344);const auto phase=local.State().phase;MissionFortLoadRequest request;std::uint32_t port=6799;const std::array<std::uint8_t,9> address{'z','l','o','c','a','l',',','*',0};std::size_t requests{}; // 현재 전역과 요청 이미지의 서로 다른 소유권을 확인한다.
+    effects.fort.requestMission=[&] {
+        ++requests;GuideFortRequestHooks hooks;hooks.subscriber=[&](auto id,auto name) { session.ChangeFortSubscriber(id,std::span(reinterpret_cast<const std::uint8_t*>(name.data()),name.size()+1)); };hooks.handle=[&] { return session.CurrentHandle(); };hooks.duplicate=[&](auto& packet) { return CaptureMissionFortZone(request,packet); };
+        WriteCurrentGuideFortRequest({local.State().next,local.ZonePending(),address,port},hooks);
+    };
+    CHECK(!session.InstallExistingEditorCheckpoint(effects,client.ReadOnlyForts(),work));CHECK(requests==1 && !session.ExistingEditorCheckpointReady());CHECK(session.CurrentHandle()=="Champion" && session.CurrentSubscriber()==1 && &session.CurrentSubscriber()==&client.CurrentSubscriber());
+    CHECK(local.State().next[0]==7 && local.ZonePending()==1 && local.State().phase==phase && request.zone.size()==86 && request.zone[14]==1 && request.zone[24]=='C');CHECK(!devices.chatCalls && !devices.camera && !devices.production && devices.titles==3);
+    const auto selected=storage->SelectSection(1,"Subscriber",0);storage->AccessSection(selected,[&](auto fields,const auto& stream) {
+        // 실제16BYTE MemStream의 data/end를 읽고 같은 버퍼를 빌린다.
+        const auto word=[&](std::size_t offset) { std::uint32_t value{};for (std::size_t byte=0;byte<4;++byte) value|=std::uint32_t(fields[offset+byte])<<(byte*8);return value; }; // 원문DWORD 네BYTE만 읽는다.
+        const auto bytes=stream.buffer(word(0));CHECK(word(8)==14 && bytes[0]==1 && bytes[1]==0 && bytes[4]==8 && bytes[5]==0 && std::string_view(reinterpret_cast<const char*>(bytes.data()+6),8)=="Champion");
+    }); // 실제 typed writer의ID/길이WORD/본문을 읽는다.
+    CHECK(CheckpointRejects<std::logic_error>([&] { session.CommitExistingEditorInstall(local); }) && CheckpointRejects<std::logic_error>([&] { session.InstallExistingEditorCheckpoint(effects,client.ReadOnlyForts(),work); }));
+}

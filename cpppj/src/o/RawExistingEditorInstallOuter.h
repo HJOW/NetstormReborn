@@ -36,6 +36,7 @@ struct ExistingEditorFortHooks {
     std::function<void(std::string_view)> setName; //00460980의실제전체이름부모다.이외곽은그하위Snapshot/삭제를대신하지않는다.
     std::function<void()> defaultName; //00460c20의 현재 newFort 조회→같은 전체 이름 선택이다. 빈/점 시작 이름 뒤 한 번만 호출한다.
     std::function<void()> file; //아래InstallExistingEditorFile로정상기존파일/State|1/Notify/Subscriber/config/title까지설치한다.
+    std::function<void()> requestMission; // 파일 뒤 현재 Mission 비영이면004b50b0을 실행하고 편집 World/공통 확정 없이 반환한다.
     std::function<void()> world; //004b736a~7397의현재Player.Create→CoreData(0)→Recover→World(0)다.실제Session.LoadExistingEditorWorld한번에연결한다.
     std::function<std::uint32_t()> owner; //Deck/Core쓰기/Snapshot/State/Notify앞에서각각읽는현재00540cac다.
     std::function<void(std::uint32_t)> deck; //004bf190의같은변환표/실제Deck부모다.
@@ -65,5 +66,5 @@ struct InvalidEditorFileHooks {
 //004b5ca0의 실제 반복 부모다. 부재/유효 파일의 기존 child와 손상 파일 재선택을 같은 순서로 실행한다.
 void InstallEditorFortFile(std::uint32_t& alternate,const NewFortMissingFileHooks& missing,const ExistingEditorFileHooks& present,const InvalidEditorFileHooks& invalid);
 // 004b743b의부분checkpoint까지다.전체State부모반환/후속UI/최종loaded는설정하지않는다.
-void InstallExistingEditorFort(const ExistingEditorFortHooks& hooks);
+bool InstallExistingEditorFort(const ExistingEditorFortHooks& hooks); //true는 편집 checkpoint 완료, false는 미션 요청 뒤 원문 조기 반환이다.
 }

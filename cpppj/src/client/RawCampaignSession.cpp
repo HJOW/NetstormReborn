@@ -1,5 +1,6 @@
 // 기존 원본 몸체의 단일 저장소 조립을 실제 클라이언트 세션이 소유한다.
 #include "client/RawCampaignSession.h"
+#include "o/RawFortSubscriberChange.h" // 현재 Fort의 Champion 변경도 같은 실제 Template writer를 사용한다.
 #include "client/RitualChoiceInput.h" //6b요청은같은현재선택제단과실제전송을사용한다.
 #include "o/RawRitualChoice.h" //선택Form교체를실제종속수신기에연결한다.
 #include "client/TechnologyListMenu.h" //HTML 원소별 기술 목록의 현재 TYPE/기술 종류WORD/가상 레벨을 연결한다.
@@ -3423,7 +3424,7 @@ void RawCampaignSession::LoadExistingEditorDeck() {
     state.ReadExistingFortDeck(state.playerState.templateOwner);
 }
 // 실제File/World/Deck/저장/State/Startup/EditorPlayers의원문부모를단일Session에묶는다.
-void RawCampaignSession::InstallExistingEditorCheckpoint(const CampaignExistingEditorCheckpointServices& effects,const std::uint32_t& readOnlyForts,const EditorFiles& files) {
+bool RawCampaignSession::InstallExistingEditorCheckpoint(const CampaignExistingEditorCheckpointServices& effects,const std::uint32_t& readOnlyForts,const EditorFiles& files) {
     auto& s=*impl_;
     if (s.services.installMode!=CampaignInstallMode::ExistingEditor || !s.services.deferExistingEditorFile || s.loaded || s.editorPrefixUiInstalling || s.editorCheckpointStarted || s.editorWorldStarted) throw std::logic_error("명시지연Editor checkpoint의한번설치계약");
     s.editorCheckpointStarted=true;s.editorCheckpointRunning=true;
@@ -3456,8 +3457,9 @@ void RawCampaignSession::InstallExistingEditorCheckpoint(const CampaignExistingE
         fort.coreWrite=[this](auto slot) { WriteExistingEditorCoreData(slot); }; //외부의빈성공/임의Editor생략대신현재같은실제부모가진단과자연관문을판정한다.
         fort.snapshot=[this](auto slot) { SnapshotFortBody(slot); };fort.state=state;fort.notify=notify;
         fort.startupStateCheck=[&effects] { static_cast<void>(o::CheckStartupState(effects.startup)); };fort.editorPlayers=[this,&effects] { InstallExistingEditorPlayers(effects.players); };
-        o::InstallExistingEditorFort(fort); //CoreWrite는위의실제004beb30으로연결된다.후반HUD/State/loaded는여전히이부모밖이다.
-        s.editorCheckpointReady=true;s.editorCheckpointRunning=false; //004b743b정상복귀만표시하며후반HUD/State/최종loaded를앞당기지않는다.
+        if (!o::InstallExistingEditorFort(fort)) { s.editorCheckpointRunning=false;return false; } // 미션 요청은 편집 checkpoint/World/UI/loaded를 완료로 표시하지 않는다.
+        // 편집 분기만 후반 HUD/State/loaded 설치에 인계한다.
+        s.editorCheckpointReady=true;s.editorCheckpointRunning=false;return true; //004b743b정상복귀만표시하며후반HUD/State/최종loaded를앞당기지않는다.
     }catch (...) { s.editorCheckpointRunning=false;throw; } //동기진입guard만반납한다.manager/State/Config/파일/객체/난수는rollback하지않는다.
 }
 // 실제 State1의 준비 대여가 파일 전 HUD를 한 번 분배할 때 생산 동기화만 같은 실제 Deck에 허용한다.
@@ -3638,6 +3640,15 @@ void RawCampaignSession::CheckMissionOutcome() { impl_->outcome->Check(); }
 // 실제 worldLoad의 loginSubscriber 복사 대상과 같은 장기 전역을 매번 읽는다.
 const std::uint32_t& RawCampaignSession::CurrentSubscriber() const { return impl_->globals.mySubscriber; }
 const std::shared_ptr<ClientCoreDataGlobals>& RawCampaignSession::PlayerCoreGlobals() const { return impl_->coreDataGlobals; } // 같은 현재 슬롯/active/cache 소유자를 관측한다.
+// 큰 Subscriber 변경도 같은 실제 Client My/Session handle과 Template 노드 writer를 사용한다.
+void RawCampaignSession::ChangeFortSubscriber(std::uint32_t id,std::optional<std::span<const std::uint8_t>> name) {
+    auto& s=*impl_;o::FortSubscriberChangeHooks hooks;
+    hooks.owner=[&s] { return s.playerState.templateOwner; };hooks.manager=[&s](auto slot) { if (slot>=9) throw std::out_of_range("Subscriber 변경 Template9 범위");return Read(s.templateStorage->Headers(),slot*20); };
+    hooks.fortMode=[&s] { return s.core.ownerMode.fort ? 1U : 0U; };hooks.handle=[&s] { return std::span(s.handle); };
+    hooks.configure=[&s](auto key,auto value) { if (!s.services.install.setConfig) throw std::logic_error("Subscriber 변경 실제 Config 누락");s.services.install.setConfig(key,{reinterpret_cast<const std::uint8_t*>(value.data()),value.size()+1}); };
+    hooks.title=s.services.install.refreshWindowTitle;hooks.subscriber=[&s](auto slot,auto subscriber,auto bytes) { s.WriteNewFortSubscriber(slot,subscriber,bytes); };hooks.notify=[&s](auto slot) { s.templateState->Changed(slot); };
+    o::ChangeFortSubscriber(id,name,s.globals.mySubscriber,hooks);
+}
 // 현재 사용자 이름을 새 설정 조회나 Player 표시 이름으로 대체하지 않는다.
 std::string_view RawCampaignSession::CurrentHandle() const {
     const auto& bytes=impl_->handle;const auto end=std::find(bytes.begin(),bytes.end(),std::uint8_t{});

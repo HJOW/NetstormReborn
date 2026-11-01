@@ -21,6 +21,13 @@ void WriteMissionFortRequest(std::string_view name,MissionFortRequestGlobals glo
     globals.next[0x54/4]=AddressWord(globals.localAddress,0);globals.next[0x58/4]=AddressWord(globals.localAddress,4);globals.next[0x5c/4]=(globals.next[0x5c/4]&0xffffff00U)|globals.localAddress[8];
     globals.next[0]=7;globals.next[0x7c/4]=globals.port;globals.next[0x80/4]=Need(hooks.duplicate)(packet);++globals.sequence;
 }
+// 현재 Subscriber 변경 뒤 작성하는 원문 한 슬롯은 일반 Init의 네 정적 이름과 구별한다.
+void WriteCurrentGuideFortRequest(MissionFortRequestGlobals globals,const GuideFortRequestHooks& hooks) {
+    if (globals.localAddress.size()<9) throw std::invalid_argument("Guide Fort 요청 현재9BYTE 주소 누락");
+    Need(hooks.subscriber)(1,"Champion");auto packet=zacket::MakeGuideMissionZone(Need(hooks.handle)());
+    globals.next[0x54/4]=AddressWord(globals.localAddress,0);globals.next[0x58/4]=AddressWord(globals.localAddress,4);globals.next[0x5c/4]=(globals.next[0x5c/4]&0xffffff00U)|globals.localAddress[8];
+    globals.next[0]=7;globals.next[0x7c/4]=globals.port;globals.next[0x80/4]=Need(hooks.duplicate)(packet);++globals.sequence;
+}
 // 호스트 포인터를DWORD로 자르지 않고 이 요청이 단독 소유한 실제 이미지의 핸들1을 사용한다.
 std::uint32_t CaptureMissionFortZone(MissionFortLoadRequest& request,zacket::LocalMissionPacket& packet) {
     if (request.consumed || !request.zone.empty() || packet.storage.size()!=512) throw std::logic_error("Fort 요청 Zone 중복/예약 크기 오류");
