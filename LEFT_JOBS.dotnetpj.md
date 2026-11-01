@@ -130,7 +130,7 @@
 
 - 한국어: D2Coding 글리프를 8비트 화면에 그리는 방식(단색 또는 팔레트 단계)을 정해 구현한다. 기존 한국어 명칭 규칙은 그대로 따른다.
 - 60/120프레임, Linux(DesktopGL), 그 뒤 TCP/IP 로컬 멀티플레이·Outpost(최후순위)를 진행한다.
-- AGENTS.md 4~7차: 4차 MCP(해석은 0.8 6번), 5차 설정·캠페인 진행 저장을 `%USERPROFILE%\Saved Games\Netstorm\Saves\`로 옮기고 커스텀 맵을 기존 폴더와 `...\CustomMaps\` 양쪽에서 불러오며 Edit 신규 저장은 후자로 하고 Edit 맵 목록에 스크롤과 개수 무제한을 넣는다, 6차 한국어(위 첫 항목), 7차 Options의 안티앨리어싱·FSR 1.0 선택(둘 다 기본값은 꺼짐)과 게임 적용이다. 현재 기존 경로는 자체 `settings.json`(`DisplaySettings`)을 쓰고 새 경로는 R7에서 `options.cfg`로 옮기므로, 5차는 R7의 저장 구조 위에서 위치만 바꾸는 순서로 진행한다.
+- AGENTS.md 4~7차: 4차 로컬 MCP(해석은 0.8 6번)와 와이드 해상도(16:9, 최대 1920×1080, 해상도 지원만이며 그래픽 크기 스케일 조정은 없음, 2026-11-02 AGENTS.md `5867f35e`), 5차 설정·캠페인 진행 저장을 `%USERPROFILE%\Saved Games\Netstorm\Saves\`로 옮기고 커스텀 맵을 기존 폴더와 `...\CustomMaps\` 양쪽에서 불러오며 Edit 신규 저장은 후자로 하고 Edit 맵 목록에 스크롤과 개수 무제한을 넣는다, 6차 한국어(위 첫 항목), 7차 Options의 안티앨리어싱·FSR 1.0 선택(둘 다 기본값은 꺼짐)과 게임 적용이다. `5867f35e`로 7차에 2560×1440·3840×2160 지원이 추가됐다: 옵션 해상도 목록에 두 해상도를 넣고 이때 FSR 1.0을 자동으로 켜며, 실질 해상도는 1920×1080으로 두고 FSR로 목표 해상도까지 업스케일한다. 현재 기존 경로는 자체 `settings.json`(`DisplaySettings`)을 쓰고 새 경로는 R7에서 `options.cfg`로 옮기므로, 5차는 R7의 저장 구조 위에서 위치만 바꾸는 순서로 진행한다.
 
 ### 0.6 검증 단계와 기록 규칙
 
@@ -163,7 +163,7 @@
 3. **cpppj 미복원 경로(결정 6):** 새 경로는 cpppj와 같은 명시 오류·경계를 쓴다. 이전 3절 9번의 "근사 유지" 기본값은 기존 경로에만 남는다.
 4. **프로젝트 배치(결정 3) — 해결:** `Netstorm.Client`로 만들었다.
 5. **`Netstorm.exe`를 어느 실행 파일이 갖는가(AGENTS.md ef0c6b91):** dotnetpj에는 실행 파일이 둘이다. 기존 게임 `Netstorm.Game`(`NetstormClone.exe`, 배포 대상)과 새 경로의 개발 호스트 `Netstorm.Client.Host`(`Netstorm.Client.Host.exe`, 아직 배포하지 않음)다. 한 배포 폴더에 `Netstorm.exe`는 하나뿐이다. **기본값:** 지금은 배포되는 `Netstorm.Game`의 `AssemblyName`만 `Netstorm`으로 바꾼다. 결정 5의 기본 실행 교체 때(R3 메뉴·R5 미션) `Netstorm.exe`가 새 경로로 진입하게 하는 방법은 둘이다. A) `Netstorm.Client.Host`가 `Netstorm.exe`를 이어받고 기존 Game은 `--legacy` 전용 이름(예: `NetstormLegacy`)으로 내리거나 새 호스트에 흡수한다. B) `Netstorm.Game`이 계속 `Netstorm.exe`이고 새 경로를 라이브러리로 호출한다. 어느 쪽이든 사용자가 보는 이름은 `Netstorm.exe` 하나다. 원하는 방식이 있으면 R3 착수 전에 알려 달라.
-6. **4차 MCP의 dotnetpj 해석(AGENTS.md bfccadf5):** AGENTS.md는 'cpppj의 4~7차 목표 내용이 dotnetpj 후순위 요구사항에도 포함된다'고만 적었다. 4차 MCP는 dotnetpj 개발을 위해 게임을 분석하는 용도라서, dotnetpj 클론에도 같은 MCP를 붙이라는 뜻인지 cpppj 쪽 MCP를 개발에 활용하라는 뜻인지 문장만으로는 정해지지 않는다. **기본값:** R8 전에는 구현하지 않고 cpppj의 MCP 결과가 나온 뒤 사용자에게 확인한다. 2026-11-01 AGENTS.md `990a3541`이 4차에 "게임 내에서 모든 조작, 화면 캡처 및 녹화(사운드 포함)가 가능하여야 한다"를 명시했다. 어느 쪽 해석이든 R8의 4차 범위에 이 세 가지(전체 조작·캡처·소리 포함 녹화)를 포함한다.
+6. **4차 MCP의 dotnetpj 해석(AGENTS.md bfccadf5):** AGENTS.md는 'cpppj의 4~7차 목표 내용이 dotnetpj 후순위 요구사항에도 포함된다'고만 적었다. 4차 MCP는 dotnetpj 개발을 위해 게임을 분석하는 용도라서, dotnetpj 클론에도 같은 MCP를 붙이라는 뜻인지 cpppj 쪽 MCP를 개발에 활용하라는 뜻인지 문장만으로는 정해지지 않는다. **기본값:** R8 전에는 구현하지 않고 cpppj의 MCP 결과가 나온 뒤 사용자에게 확인한다. 2026-11-01 AGENTS.md `990a3541`이 4차에 "게임 내에서 모든 조작, 화면 캡처 및 녹화(사운드 포함)가 가능하여야 한다"를 명시했다. 어느 쪽 해석이든 R8의 4차 범위에 이 세 가지(전체 조작·캡처·소리 포함 녹화)를 포함한다. 2026-11-02 `5867f35e`가 이를 "로컬 MCP"로 고쳐 쓰고 4차에 와이드 해상도(16:9, 최대 1920×1080)를 함께 묶었다. "로컬" 한정은 같은 PC의 게임 프로세스를 조작하는 도구라는 뜻으로 보이지만 dotnetpj 클론에 붙이라는 뜻인지는 여전히 확정되지 않았다. 와이드 시야 확장의 방식은 0.4의 `Game/NetstormGame` 교체 행(cpppj의 논리 해상도 방식)을 따른다.
 
 ### 0.9 바로 다음 작업
 
