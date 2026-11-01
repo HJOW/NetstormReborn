@@ -13,6 +13,7 @@
 #include "client/CdDirectory.h"
 #include "client/ClientBridgeDecay.h"
 #include "client/GifScreenshot.h"
+#include "client/ClientCaptureSequence.h"
 #include "o/RawColorSortPrimary.h"
 #include "client/ClientAudio.h"
 #include "client/PaletteFlash.h"
@@ -188,6 +189,7 @@ Client::Client(ClientOptions options)
       chat_(std::make_unique<ChatState>(*this,options_.edition)),trace_(std::make_unique<ClientTraceGlobals>()) {
     files_.RegisterArchives(); //원본441790처럼 기본 폴더의 모든*.tarc를 Win32 반환 순서로 등록한다.
     rendererFrame_=std::make_unique<ClientRendererFrame>(*this); //생성은 BSS0 owner/참조만 준비하며 아직 화면/파일/난수를 사용하지 않는다.
+    captureSequence_=std::make_unique<ClientCaptureSequence>(*this); //원문BSS0처럼파일/화면 없이 장기 상태만 준비한다.
     playerRecords_->BindCoreData(coreDataGlobals_); // 같은 Native Player base가 바뀌면 실제 Core의 빌린 현재 Player 슬롯도 즉시 갱신한다.
     configuration_.Registry().environment = Environment;
     if (g_client) throw std::logic_error("Only one client may exist");
@@ -200,6 +202,7 @@ Client::~Client() {
     configuration_.onChanged = {}; // 부분 반납 중인 Client를 콜백으로 다시 읽지 않게 먼저 해제한다.
     menu_.reset();
     rendererFrame_.reset(); //현재 Frame의 표시 작업 배열/Pool 대여를 화면·원문 물리 소유자보다 먼저 반납한다.
+    captureSequence_.reset(); //미완료 수집도 메모리를 반납하며 Stop/파일/새 안내를 강제로 실행하지 않는다.
     ClearThunderFlashes();
     audio_.reset(); // 월드의 반복 소리를 멈춘 뒤 음악 스레드를 합류하고 장치를 닫는다.
     disabledAudio_.reset(); // noAudio 이름표도 같은 월드 프로세스 해제 이후에 없앤다.
@@ -636,7 +639,7 @@ void Client::Frame() {
         while (clock_.WallSeconds(timeGetTime()) - lastDraw_ < frameInterval_) {}
     }
     lastDraw_ = clock_.WallSeconds(timeGetTime());
-    PresentScene();
+    PresentScene(true);
     if (menu_) menu_->ApplyCameraFrame(); //499fe0 말미의 목표 제한/497960 적용은 화면 출력 뒤·마지막 snapshot 복사 앞이다.
     gameplayGlobals_->Camera().CopyRendererSnapshot(); //00436532: 프레임 말미 현재 논리 Renderer의16DWORD를 복사한다.
     ++frames_;
@@ -654,6 +657,10 @@ void Client::Frame() {
 // 현재 화면 버퍼를 팔레트로 색을 입혀 저장한다.
 // 같은 실제 Draw/Lock/Present 경로를 장면 표시와 일반 프레임에서 공유한다. 프레임 대기는 호출자가 소유한다.
 void Client::PresentScene() {
+    PresentScene(false); //파일 적재 중 즉시 표시는436450의일반프레임호출이아니다.
+}
+// 같은994b0/470ca0 뒤·499fe0 출력 앞에 일반 프레임 수집을 삽입한다.
+void Client::PresentScene(bool captureFrame) {
     if (sceneVisible_) {
         if ((screen_->Flags() & ScreenMode::kSoftwareMouse) != 0) {
             const auto position = Poll(0); const auto hotspot = cursor_->Hotspot();
@@ -671,6 +678,7 @@ void Client::PresentScene() {
         } catch (...) { screen_->Unlock(); throw; }
         screen_->Unlock();
         if (nativeFrame) rendererFrame_->Finish(); //정상 Draw/잠금 반납 뒤·Present 앞의 같은 원문470ca0이다.
+        if (captureFrame) captureSequence_->Frame(); //436450:994b0반환뒤·진단그림/499fe0출력앞이다. owner가현재active를확인한다.
         if (screen_->Flags()&ScreenMode::kFullScreen) {
             bool changed=false;renderer_->Present([&changed](ScreenRect) { changed=true; }); // 원본 dirty 소비/캐시는 그대로 진행한다.
             if (changed) screen_->Update({0,0,screenWidth_,screenHeight_}); // Windows10/11의 비정수 확대는 clip별 GDI 샘플 위상 차이를 피하도록 프레임당 전체 DIB를 한 번 출력한다.
@@ -682,6 +690,7 @@ void Client::PresentScene() {
 void Client::SaveScreenshot() {
     Capture(options_.screenshot);
 }
+ClientCaptureSequence& Client::ScreenCapture() { return *captureSequence_; } //모든 명시 입력과 프레임이 같은 owner를 사용한다.
 void Client::SaveGifScreenshot() { // 원문이 저장하는 고정 primary 색과 현재8비트 화면을 같은 잠금 안에서 읽는다.
     const std::uint8_t* pixels{};ScreenshotSaveHooks hooks; // 잠금에서 빌린 현재 DIB 포인터와 파일 장치다.
     hooks.set=[this](auto key,auto value) { configuration_.Set(key,value); };

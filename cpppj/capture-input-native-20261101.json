@@ -1,0 +1,22 @@
+{
+  "unit": 695,
+  "date": "2026-11-01",
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23"
+  },
+  "cases": 192,
+  "observations": 576,
+  "differences": 0,
+  "fixtures": {
+    "capture-input-x86.tsv": "028d320b8637bf93113e471a46613bddae426c2cb9d182800de4dd13d9edb0af"
+  },
+  "boundaries": "실제Guide/Gump/일반분기와현재사건종료. 4db210/4db2a0은693의별도원문/제품대조뒤명시경계로두고active효과만제공한다. Tell은기존명시경계다. Client/OS/파일/게임/통신/MP실행0.",
+  "sha256": {
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "tools/decomp_capture_input.py": "15621229b377fdc3c340caba923159a4fc6849e5945357c51e304407e5aa3443",
+    "tools/decomp_game_menu_actions.py": "9130163b3bd761b08b37397f69ba3e074b257967a5fc934b68210bc6325f2df7",
+    "tools/decomp_production_shortcuts.py": "4caf1c87e4a152f65b2815395ea553b2609587be06a95512974b893e985b24e3"
+  }
+}

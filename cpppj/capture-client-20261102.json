@@ -1,0 +1,257 @@
+{
+  "unit": 695,
+  "startedDate": "2026-11-01",
+  "date": "2026-11-02",
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23"
+  },
+  "runtimeProduct": 695,
+  "productVersion": "11.01",
+  "productSha256": "d4475850430604198535c39aab0f6f0e6c56d6aad2ee301e09c7357961ee8e42",
+  "runtimeExecutableRebuilt": true,
+  "clientWiringComplete": true,
+  "goalComplete": false,
+  "userRequestedPauseAfterCommit": true,
+  "native": {
+    "cases": 192,
+    "observations": 576,
+    "differences": 0,
+    "frozenBeforeProductEdit": true,
+    "boundaries": "실제Guide/Gump/일반분기와현재사건종료. 4db210/4db2a0은693의별도원문/제품대조뒤명시경계로두고active효과만제공한다. Tell은기존명시경계다. Client/OS/파일/게임/통신/MP실행0.",
+    "reusedFixtureCases": {
+      "indexedBitmap": 336,
+      "captureSequence": 174,
+      "staticStrings": 204
+    }
+  },
+  "implementation": [
+    "Capture 이름543070/542968/0200009d와Guide/Gump뒤일반입력",
+    "Client장기상태/실제개별할당과994b0/470ca0뒤·499fe0앞Frame호출",
+    "현재논리RGB/크기·4ddc90실제파일·공유고리80예약과공통HTML완료안내",
+    "Windows10/11Unicode실제경로와8비트글꼴미지원문자의명시U+표시"
+  ],
+  "build": {
+    "targets": [
+      "NetstormCpp",
+      "netstorm_capture_client_tests"
+    ],
+    "finalLog": "build-v3.log",
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "firstFailure": "build.log의검사코드char8_t→string_view변환1곳(C2664와파생C2088). v2빌드/집중14는통과했으나첫GUI에서Unicode완료본문의1252변환예외를발견했다. v3제품수정뒤집중/GUI모두통과."
+  },
+  "focused": {
+    "registered": 14,
+    "finalExecuted": 14,
+    "finalFailedChecks": 0,
+    "newTests": 4,
+    "existingTests": 10,
+    "executions": 2,
+    "firstPassed": true,
+    "finalPassed": true
+  },
+  "gui": {
+    "totalExecutions": 2,
+    "firstExit": 1,
+    "finalExit": 0,
+    "firstFailure": "live-v1에서20개Unicode BMP는썼으나완료HTML FontBytes의Windows-1252변환에서종료했다. 최초제품은build-v2이며EXE해시별도미기록이다. 보호/설정복원은통과했다.",
+    "final": {
+      "exit": 0,
+      "runtimeProduct": 695,
+      "version": "11.01",
+      "exeSha256": "d4475850430604198535c39aab0f6f0e6c56d6aad2ee301e09c7357961ee8e42",
+      "protectedUnchanged": true,
+      "resolution": [
+        1024,
+        768
+      ],
+      "captureFirstFrame": 40,
+      "captureStopFrame": 60,
+      "capturedFrames": 20,
+      "framesReleased": true,
+      "actualBmpFiles": [
+        {
+          "name": "프레임 😀000.bmp",
+          "bytes": 787510,
+          "sha256": "b0af60aaff6ab6b3185489f7b5347144a53f6c3c187b3133477d78ec73791ad4"
+        },
+        {
+          "name": "프레임 😀001.bmp",
+          "bytes": 787510,
+          "sha256": "b0af60aaff6ab6b3185489f7b5347144a53f6c3c187b3133477d78ec73791ad4"
+        },
+        {
+          "name": "프레임 😀002.bmp",
+          "bytes": 787510,
+          "sha256": "b0af60aaff6ab6b3185489f7b5347144a53f6c3c187b3133477d78ec73791ad4"
+        },
+        {
+          "name": "프레임 😀003.bmp",
+          "bytes": 787510,
+          "sha256": "b0af60aaff6ab6b3185489f7b5347144a53f6c3c187b3133477d78ec73791ad4"
+        },
+        {
+          "name": "프레임 😀004.bmp",
+          "bytes": 787510,
+          "sha256": "b0af60aaff6ab6b3185489f7b5347144a53f6c3c187b3133477d78ec73791ad4"
+        },
+        {
+          "name": "프레임 😀005.bmp",
+          "bytes": 787510,
+          "sha256": "b0af60aaff6ab6b3185489f7b5347144a53f6c3c187b3133477d78ec73791ad4"
+        },
+        {
+          "name": "프레임 😀006.bmp",
+          "bytes": 787510,
+          "sha256": "b0af60aaff6ab6b3185489f7b5347144a53f6c3c187b3133477d78ec73791ad4"
+        },
+        {
+          "name": "프레임 😀007.bmp",
+          "bytes": 787510,
+          "sha256": "b0af60aaff6ab6b3185489f7b5347144a53f6c3c187b3133477d78ec73791ad4"
+        },
+        {
+          "name": "프레임 😀008.bmp",
+          "bytes": 787510,
+          "sha256": "b0af60aaff6ab6b3185489f7b5347144a53f6c3c187b3133477d78ec73791ad4"
+        },
+        {
+          "name": "프레임 😀009.bmp",
+          "bytes": 787510,
+          "sha256": "b0af60aaff6ab6b3185489f7b5347144a53f6c3c187b3133477d78ec73791ad4"
+        },
+        {
+          "name": "프레임 😀010.bmp",
+          "bytes": 787510,
+          "sha256": "b9e41d6dae6df8d2c7aadb547b41d208f72b645f5b6bedc21521a592e27f83b3"
+        },
+        {
+          "name": "프레임 😀011.bmp",
+          "bytes": 787510,
+          "sha256": "b9e41d6dae6df8d2c7aadb547b41d208f72b645f5b6bedc21521a592e27f83b3"
+        },
+        {
+          "name": "프레임 😀012.bmp",
+          "bytes": 787510,
+          "sha256": "b9e41d6dae6df8d2c7aadb547b41d208f72b645f5b6bedc21521a592e27f83b3"
+        },
+        {
+          "name": "프레임 😀013.bmp",
+          "bytes": 787510,
+          "sha256": "b9e41d6dae6df8d2c7aadb547b41d208f72b645f5b6bedc21521a592e27f83b3"
+        },
+        {
+          "name": "프레임 😀014.bmp",
+          "bytes": 787510,
+          "sha256": "b9e41d6dae6df8d2c7aadb547b41d208f72b645f5b6bedc21521a592e27f83b3"
+        },
+        {
+          "name": "프레임 😀015.bmp",
+          "bytes": 787510,
+          "sha256": "b9e41d6dae6df8d2c7aadb547b41d208f72b645f5b6bedc21521a592e27f83b3"
+        },
+        {
+          "name": "프레임 😀016.bmp",
+          "bytes": 787510,
+          "sha256": "b9e41d6dae6df8d2c7aadb547b41d208f72b645f5b6bedc21521a592e27f83b3"
+        },
+        {
+          "name": "프레임 😀017.bmp",
+          "bytes": 787510,
+          "sha256": "b9e41d6dae6df8d2c7aadb547b41d208f72b645f5b6bedc21521a592e27f83b3"
+        },
+        {
+          "name": "프레임 😀018.bmp",
+          "bytes": 787510,
+          "sha256": "b9e41d6dae6df8d2c7aadb547b41d208f72b645f5b6bedc21521a592e27f83b3"
+        },
+        {
+          "name": "프레임 😀019.bmp",
+          "bytes": 787510,
+          "sha256": "b9e41d6dae6df8d2c7aadb547b41d208f72b645f5b6bedc21521a592e27f83b3"
+        }
+      ],
+      "pixelComparedFrame": 46,
+      "pixelComparedFile": "프레임 😀006.bmp",
+      "reportLastName": "020.bmp",
+      "actualLastName": "019.bmp",
+      "mainReturned": true,
+      "settingsRestored": true,
+      "limits": "앱내검사입력과명시kernel-tell을사용한메뉴전용실행이다. 자연단축키/물리입력·미션/포획/희생/특정적공격/승리·MP/PCM/소리녹화·전체34검사가아니다."
+    },
+    "exportedBmpFilesAcrossBothRuns": 40,
+    "observerBmpFiles": 3,
+    "testOwnedBmpFilesAcrossTwoFocusedRuns": 10,
+    "full34Runs": 0,
+    "fullCppRuns": 0,
+    "newZip": false
+  },
+  "updatedInstructions": {
+    "phase4": "로컬MCP로모든게임조작/캡처/소리포함녹화. 16:9최대1920×1080지원이며이단계의그래픽크기스케일조정은불필요.",
+    "phase7": "FSR1.0지원환경의Options에2560×1440/3840×2160을추가하고선택하면FSR자동켜기·실질1920×1080에서목표로업스케일. AA/FSR기본off와구별한다.",
+    "implemented": false
+  },
+  "protection": {
+    "unchangedOriginalsAndFixtures": 2614,
+    "changedOriginalsOrFixtures": [],
+    "newFixtures": 1,
+    "currentFixtures": 796,
+    "currentProtectedTotal": 2616,
+    "userUpdatedAgents": {
+      "previous685Sha256": "138808039a2d171d8e697906776e620f9ea8dc2038c35b4dc01ce18d3e462b77",
+      "previous694Sha256": "be767915ab67a6248b0fe661e86da6fe9e14a7ca396750abe01e3a9a124b3ceb",
+      "currentSha256": "544643cf731393ecb4784490aa7f2794e8736742582907cce29453e6ac46f15e",
+      "commit": "5867f35e446ae01a96c10ea5a7f38c0c08433a93",
+      "agentModified": false
+    }
+  },
+  "multiplayerTests": 0,
+  "originalGameExecutions": 0,
+  "limits": "실제메뉴전용20프레임한주기다. BeginCapture열기는명시kernel-tell이며버튼/명령/파일/완료/닫기는기존실제공통경로다. 사제포획/희생·특정적공격·승리·자연완주/전체동일성·공중3종신규검사·물리키·PCM/소리녹화·실제모드변경중캡처/1000프레임GUI/반복주기·10.72새본문은미검증이다. 미지원Unicode의U+표시는6차한국어UI완료가아니다.",
+  "nextWhenResumed": [
+    "RecheckCD의현재serial5c85ec공통Kill/0쓰기접합",
+    "나머지Edit/시나리오/수명/Windows10잔여",
+    "SP/UI/호환성뒤RequestMenu등3차무시험사전구현후새4~7차요구"
+  ],
+  "sha256": {
+    "AGENTS.md": "544643cf731393ecb4784490aa7f2794e8736742582907cce29453e6ac46f15e",
+    "cpppj/src/CMakeLists.txt": "7d774c76e8019bb74082a75128a2d2d7a5d7956fa34cfcdc1dfed68b0a31b4f5",
+    "cpppj/tests/CMakeLists.txt": "817c097b13410c47526b215262342618241aef344c715b87dfdcf0fc2aa094dd",
+    "cpppj/src/client/ClientMain.h": "da58178ecadc2a9166e77287c0489472c53942503e888ff88778ad4bcf836370",
+    "cpppj/src/client/ClientMain.cpp": "aec39d7a8b8bcc250e6339fde90ca9e808801883056e47c13733691e2e2b12bb",
+    "cpppj/src/client/ClientStaticStrings.h": "64b6975d42d9ab6a747670bc4fde7d7ceb98e0d2a4f4295b22aeab01af5e285e",
+    "cpppj/src/client/ClientStaticStrings.cpp": "7d7fe3b8f9233228a15a30dd10c47661b3ccf867d0f77094b942b3524bc01620",
+    "cpppj/src/client/GameMenuCommands.cpp": "cb386cc149bab36bf9b4846e3b139ea9f2fed1ae84253b13976fffcfbe57a2f8",
+    "cpppj/src/client/UberGump.h": "c421f77ea7ea878adcf0c13c74f9754ff5f84ffc8facedda371ebcce67345778",
+    "cpppj/src/client/UberGump.cpp": "a5c1b07b9361df3b7e53b51dd2e0501d6079da4674d7b03852492dafe344554d",
+    "cpppj/src/client/CaptureInput.h": "b867173e7dbcc7e37c6f85db4a609b0df4447090e8718a970715f0bdf5cb2849",
+    "cpppj/src/client/CaptureInput.cpp": "a08b6cbd971d33b0554c2402461c9ec1026b3c91149d7e91664aa43b7c5d961a",
+    "cpppj/src/client/ClientCaptureSequence.h": "f341af1c1c59f695e03944675cd5d34816903b866fa901083a7d44932fa6a10d",
+    "cpppj/src/client/ClientCaptureSequence.cpp": "c604531124abf691a4cf282a45b10a47812df2f02e51f23ba2f34c7af3a3c3e1",
+    "cpppj/tests/CaptureInputTests.cpp": "19fcb29c4a258e5d931767b2f568f5580ef9d1aa16e303fc30ce52978b70d1ae",
+    "cpppj/tests/fixtures/capture-input-x86.tsv": "028d320b8637bf93113e471a46613bddae426c2cb9d182800de4dd13d9edb0af",
+    "cpppj/capture-input-native-20261101.json": "fd6a7d26494d6d9fbc1bc9e84032be5a898cfc12bc39cb34d629ea75e89bf5ed",
+    "tools/decomp_capture_input.py": "15621229b377fdc3c340caba923159a4fc6849e5945357c51e304407e5aa3443",
+    "tools/cpp_capture_sequence_smoke.py": "8b3bf5c30c6235cbb8ee8977a1e1f4f323fb7a0f29930af826a7add03497b662",
+    "extracted\\cpp-capture-client-695\\build-v2.log": "0d256349ba7e5ce2b4fa709aaa09e03bf4f9c47ce928a4caf3a19d37f8735b09",
+    "extracted\\cpp-capture-client-695\\build-v3.log": "acdaa41ef4bcb362dde4c4ab7b17651d1eb0deb8934bd12baef94809e5b2dacd",
+    "extracted\\cpp-capture-client-695\\build.log": "93babe93db0cd0d040ba27aebc64297b71ec2fdf7ac7c0f20fbb03a64bda9255",
+    "extracted\\cpp-capture-client-695\\focused-v2.log": "3e8ad8eb5714251166e877af78a657d950b401d3d9282cb325d5b571a506026d",
+    "extracted\\cpp-capture-client-695\\focused.log": "651d9be25fc13cee2fbb6c0da306756b9b92fb947723124d11e563f5fbdabb4f",
+    "extracted\\cpp-capture-client-695\\live-v1\\stderr.log": "f14ed7d5fa5d60a69f648043c849b86968805fda02cb17e6226113ea6118579b",
+    "extracted\\cpp-capture-client-695\\live-v1\\stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted\\cpp-capture-client-695\\live-v1.log": "2c3186929bc66b8940df5785e3d8649dd4794712cf46badbefe22240831c024d",
+    "extracted\\cpp-capture-client-695\\live-v2\\stderr.log": "cb76758e176fb9498de489bf084e9844f54d645d0fb4457c2c91e00a6a78d515",
+    "extracted\\cpp-capture-client-695\\live-v2\\stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "extracted\\cpp-capture-client-695\\live-v2.log": "cabfc32c17cebb93e341cc31ed14d7b900abad50764d11967f85428d2b7f478c",
+    "extracted\\cpp-capture-client-695\\native.log": "45d57c0dcd727ff876a1d84756957474fdce37bdd67e5e3d16a706cd04bf9e85",
+    "extracted/cpp-capture-client-695/protection.json": "73570fb17879818c8a48b5bb85b757f1dad8d935752e2f7441260fb122936343",
+    "extracted/cpp-capture-client-695/actual-gui-files.json": "461dba76c19b9b3cf59643e3cbc51a2095f97d79a898043169062266722e82e2",
+    "extracted/cpp-capture-client-695/live-v2/summary.json": "c3d8dfa6c684c2097dd728a9b148b38df4a972316aa32b2f71b3c35590308aa9",
+    "extracted/cpp-capture-client-695/live-v1/states.tsv": "f41842be2ddb5b0c9d58652390d0052abfaa839c44d76556c0752d10e827e54c",
+    "extracted/cpp-capture-client-695/live-v2/states.tsv": "62f488631a6c72ec1417fdfaaf92e41cfad5bc7b71678129ee027610a9c26d9a"
+  }
+}

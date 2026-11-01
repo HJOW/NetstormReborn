@@ -38,6 +38,7 @@ class ClientRandomGlobals; // 같은 Client의 CRT holdrand와 Subscriber ID 최
 class ClientSpGlobals; // 공통 시작의 SP/추적 offset을 사제와 Session보다 오래 같은 주소에 소유한다.
 class ClientKencloudGlobals; // 같은 구름/팔레트 전역과 현재 메모리를 모든 메뉴/장치 교체에서 유지한다.
 class ClientRendererFrame; //같은 Renderer 전역과 실제 Frame의 구름/지형 장치를 조립한다.
+class ClientCaptureSequence; //연속 화면 저장의 장기 상태와 실제 프레임 할당을 소유한다.
 class ClientSubscriberGlobals; // 같은 Client의 실제 my/login 두 DWORD만 장기 소유한다.
 class ClientLocalStateGlobals; // 실제 메뉴/Editor/로그인이 같은 State 블록과 벽시각 기한을 빌린다.
 class ClientCdGlobals; // State7의 CD 확인이 같은 루트 캐시를 Client 수명에 보관한다.
@@ -141,6 +142,7 @@ public:
     // 검사 전용으로 이미 그려진 화면을 지정 파일에 저장한다.
     void Capture(const std::filesystem::path& path);
     void SaveGifScreenshot(); //4db140의 같은 누적 번호/설정·논리 화면을 써서 GIF를 저장한다.
+    ClientCaptureSequence& ScreenCapture(); //명시Capture 입력과 현재 Frame이 같은 장기 owner를 빌린다.
     void CapturePresentation(const std::filesystem::path& path); // 검사 전용 실제 클라이언트 RGB 출력을 저장하며 논리 버퍼 캡처와 구별한다.
 
     // 독립 검사 화면의 입력 연결점. 기본 실행은 부분 UserInput/UberGump를 사용한다. 참이면 종료한다.
@@ -261,6 +263,7 @@ private:
     void PublishScreenMode(); // 현재 실제 장치 플래그를 같은 Client 설정 전역에 공개한다.
     // 원본 FUN_00436450: 프레임 제한 뒤 그리고 창으로 내보낸다.
     void Frame();
+    void PresentScene(bool captureFrame); //Draw/Finish 뒤 일반 Frame만 수집한다. 로딩 즉시 출력은 수집하지 않는다.
     // 원본 FUN_00436020 / FUN_00436190: 키·글자 사건을 큐에 넣는다.
     void KeyEvent(NativeHandle window, unsigned message, std::uintptr_t wParam, std::intptr_t lParam);
     void CharacterEvent(NativeHandle window, std::uintptr_t wParam);
@@ -325,6 +328,7 @@ private:
     std::unique_ptr<GameAssets> assets_;
     std::shared_ptr<RawSurfaceStorage> surfaceStorage_; // 자산 뒤·UI/Session 앞에 확보해 모든 물리 참조보다 오래 유지한다.
     std::unique_ptr<ClientRendererFrame> rendererFrame_; //실제 Pool/해시보다 먼저 반납하고 Screen/미션 교체에도 같은 전역을 유지한다.
+    std::unique_ptr<ClientCaptureSequence> captureSequence_; //화면/Session 교체에도 초기화하지 않는 실제 상태와 할당 owner다.
     // renderer_: 수집한 그림·텍스트를 화면에 그리는 렌더러.
     std::unique_ptr<Renderer> renderer_;
     // fonts_: 이름·크기로 찾아 재사용하는 글꼴 저장소.

@@ -3,6 +3,7 @@
 #include "o/RawStaticStrings.h"
 #include <map>
 #include <memory>
+#include <string_view> //연속 저장의 두 파일명을 같은 원시 문자열 폭으로 빌린다.
 
 namespace netstorm::client { // Native 알고리즘은 RawStaticStrings 본체만 실행한다.
 class ClientStaticStrings {
@@ -13,6 +14,7 @@ public:
     void Initialize(std::uint32_t size); // 원문 공통 시작은10240이며 lazy 예약의8192와 구별한다. 재호출도 원문 진단/재할당 순서다.
     std::span<std::uint8_t> Reserve(std::uint32_t size); // 예약 폭 뒤도 같은 실제 할당 안에서는 쓸 수 있다. 임의 절단하지 않는다.
     std::span<const std::uint8_t> FormatInteger(std::uint32_t size,std::span<const std::uint8_t> pattern,std::int32_t value); // 실제 CRT의 한 정수 서식 장치와 원문 예약/alias 생략을 사용한다.
+    std::span<const std::uint8_t> FormatCaptureRange(std::string_view first,std::string_view last); //원문 완료 안내의80예약/고정 Wrote 서식·두 파일명을 공유 고리에 쓴다.80으로 절단하지 않는다.
 private:
     struct Allocation { std::unique_ptr<std::uint8_t[]> bytes;std::uint32_t size; }; // 실제 할당과 요청 폭을 함께 소유하며 재초기화로 이전 할당을 임의 해제하지 않는다.
     o::StaticStringHooks Hooks(); // 같은 고정 owner에 실제 할당/순수 물리/진단 장치를 연결한다.

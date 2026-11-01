@@ -14,6 +14,7 @@ target_sources(netstorm PRIVATE client/DestroyAtInput.cpp client/DestroyAtInput.
 target_sources(netstorm PRIVATE client/UrlInput.cpp client/UrlInput.h) # HTML의URL버튼도기존Help링크분배기에연결한다.
 target_sources(netstorm PRIVATE client/RawCaptureSequence.cpp client/RawCaptureSequence.h) # 연속화면저장의원문상태/전체표면복사/반납부모다.
 target_sources(netstorm PRIVATE client/RawIndexedBitmap.cpp client/RawIndexedBitmap.h client/IndexedBitmapFile.cpp client/IndexedBitmapFile.h) # 원문8비트BMP와실제비절삭파일장치다.
+target_sources(netstorm PRIVATE client/CaptureInput.cpp client/CaptureInput.h client/ClientCaptureSequence.cpp client/ClientCaptureSequence.h) #실제Capture입력과Client화면/할당/파일/안내접합이다.
 target_sources(netstorm PRIVATE client/AddRandomInput.cpp client/AddRandomInput.h o/RawAddRandom.cpp o/RawAddRandom.h) # 대본의 실제 무작위 배치 관문/고정 범위 부모다.
 target_sources(netstorm PRIVATE client/ScenarioEffectInput.cpp client/ScenarioEffectInput.h) # 실제 일반 연기/화면 번개/명시 무동작 대본 관문이다.
 target_sources(netstorm PRIVATE client/ScenarioObjectInput.cpp client/ScenarioObjectInput.h) # 메뉴를 열기 전에도 같은 원문 객체 명령을 처리한다.

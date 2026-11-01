@@ -25,6 +25,12 @@ o::StaticStringHooks ClientStaticStrings::Hooks() {
     o::StaticStringHooks hooks;hooks.allocate=[this](auto size) { return Allocate(size); };hooks.memory=[this](auto address,auto size) { return Memory(address,size); };hooks.assertion=[](auto line) { std::clog<<"Staticstring 원문 진단:"<<line<<'\n'; };return hooks;
 } // 실제 CRT 서식만 선택한 호출자가 추가한다.
 std::span<std::uint8_t> ClientStaticStrings::Reserve(std::uint32_t size) { const auto address=o::ReserveStaticString(size,Globals(),Hooks());return Tail(address); } // Native 결과주소부터 실제 끝까지 빌린다.
+std::span<const std::uint8_t> ClientStaticStrings::FormatCaptureRange(std::string_view first,std::string_view last) {
+    auto bytes=Reserve(80);const std::string begin(first.substr(0,first.find('\0'))),end(last.substr(0,last.find('\0')));constexpr char pattern[]="Wrote %s through %s.\n"; //고정 외부 서식은 목적 고리 주소와 alias하지 않는다.
+    const auto length=std::snprintf(nullptr,0,pattern,begin.c_str(),end.c_str());if (length<0) throw std::runtime_error("연속 저장 안내의 실제 CRT 서식 실패");std::vector<char> output(static_cast<std::size_t>(length)+1);std::snprintf(output.data(),output.size(),pattern,begin.c_str(),end.c_str());
+    for (std::size_t index=0;index<output.size();++index) { if (index>=bytes.size()) throw std::out_of_range("연속 저장 안내의 실제 공유 고리 물리");bytes[index]=static_cast<std::uint8_t>(output[index]); } //80을 넘어도 같은 할당 안에서는NUL까지 쓰고 물리 초과 앞의 쓰기를 보존한다.
+    return bytes;
+} //예약80은 완성 문자열의 고정 길이가 아니다.
 std::span<const std::uint8_t> ClientStaticStrings::FormatInteger(std::uint32_t size,std::span<const std::uint8_t> pattern,std::int32_t value) {
     std::uint32_t source=0x10000000U;const auto pointer=reinterpret_cast<std::uintptr_t>(pattern.data()); // 외부 번역 주소와 같은 실제 고리 안의 주소를 구별한다.
     for (const auto& [base,allocation]:allocations_) { const auto start=reinterpret_cast<std::uintptr_t>(allocation.bytes.get());if (pointer>=start && pointer-start<allocation.size) { source=base+static_cast<std::uint32_t>(pointer-start);break; } } // 같은 목적/서식 주소면 Raw 부모가 CRT를 생략한다.

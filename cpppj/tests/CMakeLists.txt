@@ -2796,3 +2796,11 @@ set_source_files_properties(IndexedBitmapTests.cpp PROPERTIES COMPILE_DEFINITION
 add_executable(netstorm_indexed_bitmap_tests FocusedTestMain.cpp IndexedBitmapTests.cpp CaptureSequenceTests.cpp)
 target_link_libraries(netstorm_indexed_bitmap_tests PRIVATE netstorm)
 netstorm_apply_compiler_options(netstorm_indexed_bitmap_tests)
+
+# Capture입력/실제Client owner와앞서통과한화면/BMP/공유고리만검사한다(695).
+target_sources(netstorm_tests PRIVATE CaptureInputTests.cpp)
+set_source_files_properties(CaptureInputTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_CAPTURE_INPUT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/capture-input-x86.tsv\"")
+add_executable(netstorm_capture_client_tests FocusedTestMain.cpp CaptureInputTests.cpp IndexedBitmapTests.cpp CaptureSequenceTests.cpp StaticStringsTests.cpp)
+target_link_libraries(netstorm_capture_client_tests PRIVATE netstorm)
+netstorm_apply_compiler_options(netstorm_capture_client_tests)
