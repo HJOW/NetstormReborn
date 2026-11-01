@@ -124,6 +124,31 @@ public sealed class HostStartupSceneTests
         Assert.Equal(12.5, owner.State.LastCloseTime);
     }
 
+    /// <summary>실제 호스트 자산에서 HTML 본문·슬라이더·글꼴 배치와 자식 수명을 검증한다.</summary>
+    [Fact]
+    public void HostHtmlBodyUsesActualFontAndSharedSliderLifetime()
+    {
+        string? data = GameDataLocator.FindDataDirectory(); Assert.NotNull(data);
+        var startup = new HostStartupScene(data); var screen = new Screen(1024, 768);
+        Assert.True(screen.SetMode(ScreenMode.BackBufferDib | ScreenMode.ModeSet)); startup.Draw(screen);
+        var menu = new HostMainMenu(startup, screen, new GumpButtonTreeHooks
+        {
+            Now = () => 1, Poll = _ => default, Sound = () => { }, Redraw = (_, _) => { }, HandleBase = (_, _, _, _) => 0
+        });
+        var owner = new HostHtmlWindows(menu, new InputQueue(), () => 1, _ => throw new InvalidOperationException());
+        var text = new HostHtmlText(menu, owner, screen, _ => default, (_, _) => { }, _ => throw new InvalidOperationException(), _ => throw new InvalidOperationException());
+        text.Bind(owner); uint initial = menu.Tree.Create.Count; uint root = owner.Create(0, 0);
+        owner.Window.SetBody(root, "Storm Islands\nBuild a bridge.\n");
+        var html = Assert.IsType<HtmlWindowGumpNode>(menu.Tree.Node(root));
+        var body = Assert.IsType<ScrollingTextGumpNode>(menu.Tree.Node(html.Body));
+        var slider = Assert.IsType<ScrollGumpNode>(menu.Tree.Node(body.Slider));
+        Assert.NotNull(menu.Tree.Node(slider.Decrement)); Assert.NotNull(menu.Tree.Node(slider.Increment)); Assert.NotNull(menu.Tree.Node(slider.Thumb));
+        Assert.Equal(2, text.Buffers.Binding(body.Buffer).State.LineCount);
+        Assert.Contains(text.Fragments.Fragments.Values, fragment => System.Text.Encoding.Latin1.GetString(fragment.Text).Contains("Storm", StringComparison.Ordinal));
+        text.Text.FitContent(html.Body); Assert.True(body.BaseWidth > 0); Assert.True(body.BaseHeight > 0);
+        owner.CloseAll(); Assert.Equal(initial, menu.Tree.Create.Count); Assert.Empty(text.Fragments.Fragments);
+    }
+
     /// <summary>여덟 실제 버튼의 눌림·해제를 원본 상위 명령과 인자로 전달한다.</summary>
     [Fact]
     public void MainMenuRoutesEachButtonToItsOriginalAction()

@@ -65,6 +65,8 @@ public sealed class GumpButtonTree
     private readonly GumpBackgroundAssets _assets;
     /// <summary>라벨 측정과 출력이 공유하는 실제 글꼴.</summary>
     private readonly FontStore _fonts;
+    /// <summary>메뉴와 다중 줄 본문이 공유하는 실제 글꼴 저장소.</summary>
+    public FontStore Fonts => _fonts;
     /// <summary>실제 버튼 배경 생성기.</summary>
     private readonly GumpBackgroundCreate _backgrounds;
     /// <summary>같은 실제 배경 생성기를 추가 파생 소유자에 빌려준다.</summary>

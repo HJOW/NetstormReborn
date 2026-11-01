@@ -38,6 +38,9 @@ public sealed class ClientHostGame : Game
     /// <summary>메뉴와 같은 노드·입력 큐를 사용하는 HTML 창 소유자.</summary>
     private HostHtmlWindows? _htmlWindows;
 
+    /// <summary>HTML 다중 줄 본문과 슬라이더 소유자.</summary>
+    private HostHtmlText? _htmlText;
+
     /// <summary>메뉴 버튼이 쓰는 단조 실시간 시계.</summary>
     private readonly Stopwatch _wallClock = Stopwatch.StartNew();
 
@@ -134,6 +137,10 @@ public sealed class ClientHostGame : Game
             });
             _htmlWindows = new HostHtmlWindows(_mainMenu, _driver.Input, () => _wallClock.Elapsed.TotalSeconds,
                 _ => throw new InvalidOperationException("HTML 링크 명령 소비자 미연결"));
+            _htmlText = new HostHtmlText(_mainMenu, _htmlWindows, _driver.Screen, Poll, (_, _) => _menuDirty = true,
+                _ => throw new InvalidOperationException("HTML 본문 커서 장치 미연결"),
+                _ => throw new InvalidOperationException("HTML 본문 이름 소리 장치 미연결"));
+            _htmlText.Bind(_htmlWindows);
             _driver.BindControlLocator(_mainMenu);
             _mainMenu.Draw(_driver.Screen);
             _menuDirty = false;
