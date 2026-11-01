@@ -1,0 +1,90 @@
+{
+  "unit": 683,
+  "date": "2026-11-01",
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23"
+  },
+  "productSha256": "334258ee94c9479683f8819e2586f39c3e1dbdd77ab519696454a0f9acbcc738",
+  "native": {
+    "unit": 683,
+    "date": "2026-11-01",
+    "host": "HJOW-Athlon",
+    "lastPreciseDecompile": {
+      "host": "HJOW-Athlon",
+      "date": "2026-10-23"
+    },
+    "cases": 48,
+    "observations": 144,
+    "precisionOrRepeatDifferences": 0,
+    "lookup": [
+      {
+        "name": "GetTechnology",
+        "string": "00518728",
+        "entry": "00543080",
+        "globalAddress": "00542970",
+        "command": "0200009f"
+      },
+      {
+        "name": "ChangeMoney",
+        "string": "00518a74",
+        "entry": "00542e90",
+        "globalAddress": "0054287c",
+        "command": "02000061"
+      }
+    ],
+    "fixtureSha256": "251d45e816ba20c2a02e5510be34d6910b679115b2f16a69f0228d1a9388bc51",
+    "sha256": {
+      "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+      "tools/decomp_get_technology_input.py": "6aeed4eaa070f3d968084ab532457ba2765b84def5ad511eae9134b5125b2272",
+      "tools/decomp_game_menu_actions.py": "9130163b3bd761b08b37397f69ba3e074b257967a5fc934b68210bc6325f2df7",
+      "tools/decomp_production_shortcuts.py": "4caf1c87e4a152f65b2815395ea553b2609587be06a95512974b893e985b24e3"
+    },
+    "boundaries": "실제004d6e61..004da477/494ea0 thunk를 실행하고492a30 부모는 명시 장치 경계로 뒀다. 기존 부모45사례 fixture와 별도이며 새 타입 지급/포획/희생/승리·실제GUI/MP/CD본문 검사는 아니다. ChangeMoney는 이름표 정적 읽기만 했다."
+  },
+  "build": {
+    "exit": 0,
+    "warnings": 0,
+    "errors": 0,
+    "log": "extracted/cpp-get-technology-683/build-v2.log"
+  },
+  "focused": {
+    "target": "netstorm_get_technology_tests",
+    "registered": 10,
+    "executed": 10,
+    "newTests": 2,
+    "existingTests": 8,
+    "failedChecks": 0,
+    "log": "extracted/cpp-get-technology-683/focused-v2.log"
+  },
+  "gameExecutions": 0,
+  "fixtures": 784,
+  "lastActualGui": {
+    "unit": 682,
+    "product": 682,
+    "processes": 2,
+    "kind": "combat-free explicit HTML sound-name table before/after"
+  },
+  "lastFull34": {
+    "unit": 645,
+    "product": 644
+  },
+  "limitations": "일반 입력/thunk/현재 DWORD 전달과 이름2개·기존 부모45사례의 집중 근거다. 실제 기술 지급/안내GUI·전체34/전체C++·CD본문·포획/희생/특정적공격/승리/공중3종/신규MP 검사는0이다. 기존fixture와 기대값을 바꾸지 않았다.",
+  "sha256": {
+    "cpppj/src/client/ThemeTechnologyCommand.cpp": "b96a8b452da62f8d7160f6be0028e46f4b39d582480eac0f41328f39e2f7a2d9",
+    "cpppj/src/client/ThemeTechnologyCommand.h": "e367e9d05a981f1cba15fe68f3c4d1e1e3c070c5770f703e09b82dc59744de36",
+    "cpppj/src/client/RawKnowledgeMenu.cpp": "dbf09d4f5a0f02184cb93b81b286e370a64ccf2a1e81b59d33e9dafd47df207a",
+    "cpppj/src/client/GameMenuCommands.cpp": "0fc0a3c91050a7c742c8d5a2ce38ecc97300af02e4fde94734e29f026e6b3cfd",
+    "cpppj/src/client/UberGump.cpp": "ae5e7549e2a394fca462a9e15f8f6b44c431dc949050e95ae8de542bc2bee937",
+    "cpppj/tests/CMakeLists.txt": "0d48558541ebe8015411919feab5615774688b72018ecc1ec36ad1700ec8c470",
+    "cpppj/tests/GetTechnologyInputTests.cpp": "d36ee020bd4d34ed0127a7dcc83dfaa3f768ee7b4ce09cd4e34cd1a6a8eeb5dd",
+    "cpppj/tests/fixtures/get-technology-input-x86.tsv": "251d45e816ba20c2a02e5510be34d6910b679115b2f16a69f0228d1a9388bc51",
+    "cpppj/tests/fixtures/new-technology-x86.tsv": "8361d908c62f03b317c00e2ed4d21a0bff4ae919e34af1b4b0af2edf36a0fca1",
+    "tools/decomp_get_technology_input.py": "6aeed4eaa070f3d968084ab532457ba2765b84def5ad511eae9134b5125b2272",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "originalCD/NETSTORM.EXE": "613500a394b3062e914604eb7d09896d678192be24545d0e575082a87c851233",
+    "AGENTS.md": "e9e46fda5519e663417b5c8d9b643549196bf28fe7ba6b1d546a48a853fd208b"
+  }
+}

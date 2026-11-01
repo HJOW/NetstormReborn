@@ -2699,3 +2699,12 @@ add_executable(netstorm_script_bindings_tests FocusedTestMain.cpp ScriptPresenta
 target_link_libraries(netstorm_script_bindings_tests PRIVATE netstorm)
 netstorm_apply_compiler_options(netstorm_script_bindings_tests)
 target_compile_definitions(netstorm_script_bindings_tests PRIVATE ${_netstorm_menu_session_definitions})
+
+# 원문 기술 지급 입력48행/기존 부모45사례와 관련 대본·SP·일반 메뉴만 확인한다(단위683).
+target_sources(netstorm_tests PRIVATE GetTechnologyInputTests.cpp)
+set_source_files_properties(GetTechnologyInputTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_GET_TECHNOLOGY_INPUT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/get-technology-input-x86.tsv\"")
+add_executable(netstorm_get_technology_tests FocusedTestMain.cpp GetTechnologyInputTests.cpp NewTechnologyTests.cpp
+    CheatMoneyTests.cpp GameMenuActionsTests.cpp ScriptPresentationBindingsTests.cpp)
+target_link_libraries(netstorm_get_technology_tests PRIVATE netstorm)
+netstorm_apply_compiler_options(netstorm_get_technology_tests)
+target_compile_definitions(netstorm_get_technology_tests PRIVATE ${_netstorm_menu_session_definitions})

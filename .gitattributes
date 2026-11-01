@@ -2353,3 +2353,6 @@ cpppj/tests/fixtures/move-dialog-x86.tsv -text whitespace=-blank-at-eol
 
 # 단위682의 원문 PlaySound48행을 줄바꿈 변환 없이 보존한다.
 cpppj/tests/fixtures/script-sound-x86.tsv -text
+
+# 단위683의 기술 지급 일반 입력48관측을 줄바꿈 변환 없이 보존한다.
+cpppj/tests/fixtures/get-technology-input-x86.tsv -text

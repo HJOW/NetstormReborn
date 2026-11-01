@@ -1111,6 +1111,7 @@ void UberGump::Event(InputEvent event) {
         if (!(event.code&InputCode::kRelease)) BeginMission(std::string(scriptStrings_.Resolve(std::bit_cast<std::uint32_t>(event.y))),1);
         return; // 원본005429f4의 실제 세 번째 인자를 동일 공장으로 전달한다.
     }
+    if (DispatchGetTechnologyInput(event,[this](auto type) { if (!world_) throw std::logic_error("GetTechnology의 실제 현재 Session 없음");world_->Session().LearnNewTechnology(type); })) return; // 원문492a30의 기존 기술 추가/snapshot/이름·그림/NewTech 안내를 같은 Session에서 실행한다.
     if (transitionCode==kCheatAllTechnologyCommand) {
         if (!(event.code&InputCode::kRelease)) { if (!world_) throw std::logic_error("현재 월드 없는 원소 기술 지급");ApplyThemeTechnology(world_->Session(),event.x);rebuild_=true; }
         return; // 일반 입력의 key-up 거부 뒤 원문 첫 인자를 사용하며 창 수명 효과를 넣지 않는다.

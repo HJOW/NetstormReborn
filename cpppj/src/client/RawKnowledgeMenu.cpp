@@ -7,8 +7,8 @@
 namespace netstorm::client {
 // 이름 비교는 기존 원본 ASCII 규칙을 사용한다.
 std::uint32_t KnowledgeScriptCode(std::string_view name) {
-    const auto lower=o::AsciiLower(name); // 두 기술 명령도 원본 ASCII 이름 비교를 공유한다.
-    return lower=="showtechnology" ? kShowTechnologyCommand : lower=="cheatalltechnology" ? kCheatAllTechnologyCommand : 0xffffffffU;
+    const auto lower=o::AsciiLower(name); // 세 기술 명령도 원본 ASCII 이름 비교를 공유한다.
+    return lower=="gettechnology" ? kGetTechnologyCommand : lower=="showtechnology" ? kShowTechnologyCommand : lower=="cheatalltechnology" ? kCheatAllTechnologyCommand : 0xffffffffU;
 }
 namespace {
 // 선택된 실제 효과의 누락을 빈 성공으로 숨기지 않는다.

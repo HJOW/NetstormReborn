@@ -4,8 +4,15 @@
 #include "client/RawPriestWorldBindings.h"
 #include "o/RawThemeTechnology.h"
 #include <limits>
+#include <bit>
 #include <stdexcept>
 namespace netstorm::client {
+// 원문 일반 입력은 기술 번호를 BYTE/WORD로 자르지 않고 release에서 하위를 호출하지 않는다.
+bool DispatchGetTechnologyInput(const InputEvent& event,const std::function<void(std::uint32_t)>& acquire) {
+    if ((event.code&0x03ffffffU)!=kGetTechnologyCommand) return false;
+    if (!(event.code&InputCode::kRelease)) { if (!acquire) throw std::logic_error("GetTechnology의 실제492a30 부모 미연결");acquire(std::bit_cast<std::uint32_t>(event.y)); }
+    return true;
+}
 // 원본00492ae0의 외부 경계를 기존 Session의 같은 객체들에만 연결한다.
 void ApplyThemeTechnology(RawCampaignSession& session,std::int32_t theme) {
     o::ThemeTechnologyHooks hooks; // 현재 호출 동안만 세션을 빌리며 게임 상태 사본을 만들지 않는다.

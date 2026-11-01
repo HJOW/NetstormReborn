@@ -1,6 +1,6 @@
 # cpppj — NetStorm C++ 빌드
 
-현재 제품은 **682**다. 677~680의 덱 Fast/그림자/MoveDialog 뒤681에서 메뉴83VT/9명령을 정적으로 대조했고,682에서 PlaySound/ViewPriest/SetAllBridge/DigUp 대본 이름과 실제 음향 경로를 연결했다. 새 원문48입력/144관측·집중12개 실패0·전투 없는 GUI2회와 이름표49BYTE 증가를 확인했다. PCM/청취·전체34·전체 C++/새 ZIP은 이번에 검증하지 않았다. 마지막 전체34/ZIP은645의644제품이다. [682 기록](../docs/exe/cpp-script-bindings-20261101.md)과 [현재 인계](../LEFT_JOBS.md)를 따른다. 아래 과거 단위의 중단·현재 표현은 해당 기록 당시의 상태다. 전체 목표는 계속 진행 중이다.
+현재 제품은 **683**이다. 681의 메뉴83VT/특수명령 정적 분류 뒤682~683에서 PlaySound/ViewPriest/SetAllBridge/DigUp/GetTechnology/ChangeMoney 이름과 실제 음향·기술 지급 입력을 연결했다. 683은 새 원문48입력/144관측·집중10개 실패0이며 새 게임 실행0이다. 실제 음향 이름표 GUI2회는 이전682제품의 별도 근거다. PCM/청취·전체34·전체 C++/새 ZIP은 이번에 검증하지 않았다. 마지막 전체34/ZIP은645의644제품이다. [683 기록](../docs/exe/cpp-get-technology-input-20261101.md)과 [현재 인계](../LEFT_JOBS.md)를 따른다. 아래 과거 단위의 중단·현재 표현은 해당 기록 당시의 상태다. 전체 목표는 계속 진행 중이다.
 
 단위676 기록은 카메라/flags/시차 writer를 전수 분류하고 빠져 있던 대본 명령 `ViewSpot`을 연결했다. 실제 RunForIt 입장 카메라가 (880,980)에서 대본 좌표인 (1712,584)로 바뀌었다. 전체34·전체 C++·ZIP은 다시 실행하지 않았다. 근거는 [676 문서](../docs/exe/cpp-viewspot-20261101.md)다.
 
