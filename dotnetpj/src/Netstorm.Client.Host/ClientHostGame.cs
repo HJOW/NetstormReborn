@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Input;
 using Netstorm.Client.Automation;
 using Netstorm.Client.Display;
 using Netstorm.Client.Gump;
+using Netstorm.Client.Input;
 
 namespace Netstorm.Client.Host;
 
@@ -51,6 +52,9 @@ public sealed class ClientHostGame : Game
 
     /// <summary>창 모드로 돌아올 때 복구할 클라이언트 크기.</summary>
     private Point _windowedSize;
+
+    /// <summary>마지막 물리 폴링 뒤 관측한 가상 키 눌림.</summary>
+    private readonly HashSet<int> _pressedSince = [];
 
     /// <summary>이전 프레임의 키 상태(눌림·뗌 가림용).</summary>
     private KeyboardState _previousKeys;
@@ -116,7 +120,7 @@ public sealed class ClientHostGame : Game
             _mainMenu = new HostMainMenu(_startup, _driver.Screen, new GumpButtonTreeHooks
             {
                 Now = () => _wallClock.Elapsed.TotalSeconds,
-                Poll = _ => throw new InvalidOperationException("메인 메뉴 포인터 폴링 미연결"),
+                Poll = Poll,
                 Sound = _buttonSound.Play,
                 Redraw = (_, _) => _menuDirty = true,
                 HandleBase = (_, _, _, _) => throw new InvalidOperationException("메인 메뉴 명령 소비자 미연결")
@@ -192,6 +196,9 @@ public sealed class ClientHostGame : Game
             }
             if (!_previousKeys.IsKeyDown(key))
             {
+                _pressedSince.Add((int)key);
+                if (key is Keys.LeftAlt or Keys.RightAlt) _pressedSince.Add(0x12);
+                if (key is Keys.LeftControl or Keys.RightControl) _pressedSince.Add(0x11);
                 _driver.Input.Push(HostInputMapper.KeyCode((int)key, released: false, shift, control, alt), 0, 0);
             }
         }
@@ -237,8 +244,34 @@ public sealed class ClientHostGame : Game
         {
             return;
         }
+        if (current == ButtonState.Pressed) _pressedSince.Add(button switch { HostMouseButton.Left => 1, HostMouseButton.Right => 2, _ => 4 });
         _driver.Input.Push(HostInputMapper.ButtonCode(button, released: current == ButtonState.Released),
             logical.X, logical.Y);
+    }
+
+    /// <summary>스크립트 포인터를 우선하고 그 외에는 현재 장치와 창 상태를 논리 좌표로 폴링한다.</summary>
+    /// <param name="code">원본 가상 키 또는 마우스 버튼 코드.</param>
+    private InputEvent Poll(uint code)
+    {
+        InputEvent? scripted = HostInputMapper.ScriptPoll(code, _driver.ScriptPointer);
+        if (scripted is not null) return scripted.Value;
+        uint kept = code & 0x43ffffffu;
+        int key = (int)(kept >> InputCode.VirtualKeyShift);
+        MouseState mouse = Mouse.GetState();
+        KeyboardState keyboard = Keyboard.GetState();
+        bool down = key switch
+        {
+            1 => mouse.LeftButton == ButtonState.Pressed,
+            2 => mouse.RightButton == ButtonState.Pressed,
+            4 => mouse.MiddleButton == ButtonState.Pressed,
+            0x11 => keyboard.IsKeyDown(Keys.LeftControl) || keyboard.IsKeyDown(Keys.RightControl),
+            0x12 => keyboard.IsKeyDown(Keys.LeftAlt) || keyboard.IsKeyDown(Keys.RightAlt),
+            >= 1 and <= 255 => keyboard.IsKeyDown((Keys)key),
+            _ => false
+        };
+        Rectangle client = Window.ClientBounds;
+        return HostInputMapper.PhysicalPoll(code, down, _pressedSince.Remove(key), IsActive,
+            new ScreenPoint(mouse.X, mouse.Y), OutputRect(client.Width, client.Height), _driver.Screen.Width, _driver.Screen.Height);
     }
 
     /// <summary>창 모드와 전체화면 borderless 를 바꾼다. 논리 화면 크기는 그대로 둔다.</summary>

@@ -94,6 +94,41 @@ public static class HostInputMapper
         return code;
     }
 
+    /// <summary>스크립트가 지정한 포인터를 cpppj 검사 폴링의 지원 코드에만 적용한다.</summary>
+    /// <param name="code">호출자가 조회한 입력 코드.</param>
+    /// <param name="pointer">스크립트가 지정한 코드와 좌표. 없으면 물리 장치를 쓴다.</param>
+    /// <returns>스크립트 결과 또는 물리 폴링이 필요한 경우 null.</returns>
+    public static InputEvent? ScriptPoll(uint code, InputEvent? pointer)
+    {
+        if (pointer is null || code is not (InputCode.LeftButton or InputCode.RightButton or InputCode.MiddleButton or
+            0xffff or (0x12u << InputCode.VirtualKeyShift) or (0x11u << InputCode.VirtualKeyShift))) return null;
+        InputEvent value = pointer.Value;
+        uint result = (value.Code & (InputCode.Outside | InputCode.Release)) | code;
+        if (code != (value.Code & 0x00ffffffu)) result |= InputCode.Release;
+        return new InputEvent(result, value.X, value.Y);
+    }
+
+    /// <summary>물리 장치의 상태를 원본 폴링 코드와 화면 좌표로 바꾼다.</summary>
+    /// <param name="code">조회할 원본 입력 코드.</param>
+    /// <param name="down">현재 눌림 상태.</param>
+    /// <param name="pressedSince">마지막 폴링 이후 눌린 적이 있는지.</param>
+    /// <param name="active">게임 창 활성 여부.</param>
+    /// <param name="point">창 클라이언트 좌표.</param>
+    /// <param name="output">논리 화면이 표시되는 창 안 사각형.</param>
+    /// <param name="width">논리 화면 폭.</param>
+    /// <param name="height">논리 화면 높이.</param>
+    public static InputEvent PhysicalPoll(uint code, bool down, bool pressedSince, bool active,
+        ScreenPoint point, ScreenRect output, int width, int height)
+    {
+        uint result = code & 0x43ffffffu;
+        if (!down) result |= InputCode.Release;
+        if (pressedSince) result |= InputCode.PressedSince;
+        if (!active || point.X < output.Left || point.X > output.Right || point.Y < output.Top || point.Y > output.Bottom)
+            result |= InputCode.Outside;
+        ScreenPoint logical = ScreenPresentation.MapScreenPresentationPoint(point, output, width, height);
+        return new InputEvent(result, logical.X, logical.Y);
+    }
+
     /// <summary>
     /// 전체화면 커서 제한: 창 밖이면 안쪽 가장자리로 모은 점을 돌려주고, 안이면 null이다. 호출자가 실제 커서를 그 위치로 옮긴다.
     /// 창 모드에서는 호출하지 않는다(사용자가 창 밖으로 나갈 수 있어야 한다).

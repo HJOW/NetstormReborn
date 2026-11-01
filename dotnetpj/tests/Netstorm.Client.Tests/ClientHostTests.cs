@@ -107,6 +107,35 @@ public sealed class ClientHostTests
         Assert.Throws<ArgumentOutOfRangeException>(() => HostInputMapper.KeyCode(256, released: false, shift: false, control: false, alt: false));
     }
 
+    /// <summary>스크립트 포인터는 지원한 조회만 덮고, 다른 버튼과 수정 키는 뗌 상태로 보고한다.</summary>
+    [Fact]
+    public void ScriptPointerOverridesOnlyCppPollCodes()
+    {
+        var pointer = new InputEvent(InputCode.LeftButton | InputCode.Outside, 12, 34);
+        Assert.Equal(pointer, HostInputMapper.ScriptPoll(InputCode.LeftButton, pointer));
+        Assert.Equal(new InputEvent(InputCode.RightButton | InputCode.Release | InputCode.Outside, 12, 34),
+            HostInputMapper.ScriptPoll(InputCode.RightButton, pointer));
+        Assert.Equal(new InputEvent(0xffff | InputCode.Release | InputCode.Outside, 12, 34),
+            HostInputMapper.ScriptPoll(0xffff, pointer));
+        Assert.Null(HostInputMapper.ScriptPoll(0x41u << 16, pointer));
+        Assert.Null(HostInputMapper.ScriptPoll(InputCode.LeftButton, null));
+    }
+
+    /// <summary>물리 폴링의 눌림 이력·비활성·출력 경계와 논리 좌표를 확인한다.</summary>
+    [Fact]
+    public void PhysicalPollMapsStateAndClampsCoordinates()
+    {
+        var rect = new ScreenRect(100, 50, 1380, 1010);
+        Assert.Equal(new InputEvent(InputCode.LeftButton | InputCode.PressedSince, 320, 240),
+            HostInputMapper.PhysicalPoll(InputCode.LeftButton, true, true, true, new ScreenPoint(740, 530), rect, 640, 480));
+        Assert.Equal(new InputEvent(InputCode.LeftButton | InputCode.Release | InputCode.Outside, 0, 480),
+            HostInputMapper.PhysicalPoll(InputCode.LeftButton, false, false, true, new ScreenPoint(0, 1200), rect, 640, 480));
+        Assert.Equal(new InputEvent(InputCode.LeftButton | InputCode.Outside, 640, 480),
+            HostInputMapper.PhysicalPoll(InputCode.LeftButton, true, false, false, new ScreenPoint(1380, 1010), rect, 640, 480));
+        Assert.Equal(new InputEvent(InputCode.LeftButton, 640, 480),
+            HostInputMapper.PhysicalPoll(InputCode.LeftButton, true, false, true, new ScreenPoint(1380, 1010), rect, 640, 480));
+    }
+
     /// <summary>전체화면 커서 제한은 창 안에 있으면 두지 않고 밖이면 가장자리로 모은다.</summary>
     [Fact]
     public void ConfinesCursorOnlyOutside()
@@ -152,6 +181,19 @@ public sealed class ClientHostTests
         Assert.Equal(["frame2.bmp"], saved);
         Assert.True(driver.ShouldExit(2));
         driver.Finish();
+    }
+
+    /// <summary>프레임 입력으로 지정된 포인터를 폴링이 같은 값으로 읽는다.</summary>
+    [Fact]
+    public void FrameDriverExposesCurrentScriptPointer()
+    {
+        var screen = new Screen(64, 48); var input = new InputQueue();
+        var runner = new UiScriptRunner(UiScript.Parse(["1\tpointer\t0x10000,12,34"]), input, screen);
+        var driver = new HostFrameDriver(screen, input, runner);
+        Assert.Null(driver.ScriptPointer);
+        driver.BeginFrame();
+        Assert.Equal(new InputEvent(InputCode.LeftButton, 12, 34), HostInputMapper.ScriptPoll(InputCode.LeftButton, driver.ScriptPointer));
+        driver.EndFrame(); driver.Finish();
     }
 
     /// <summary>스크립트가 없으면 제한 없이 돌고 마무리는 비어 있다.</summary>

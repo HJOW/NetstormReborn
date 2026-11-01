@@ -59,6 +59,9 @@ public sealed class HostFrameDriver
         _runner?.BindControls(controls);
     }
 
+    /// <summary>자동 입력이 지정한 현재 포인터를 호스트 폴링에 제공한다. 자동 입력이 없으면 null이다.</summary>
+    public InputEvent? ScriptPointer => _runner?.ScriptPointer;
+
     /// <summary>실제 Guide·UI 소비자를 연결한다. 반환값 true는 즉시 종료 요청이다.</summary>
     /// <param name="handler">같은 큐에서 꺼낸 입력을 처리하는 현재 호스트 소비자.</param>
     public void BindInputHandler(Func<InputEvent, bool> handler)
