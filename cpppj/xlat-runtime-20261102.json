@@ -1,0 +1,86 @@
+{
+  "unit": 711,
+  "date": "2026-11-02",
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23"
+  },
+  "version": "11.01",
+  "exeSha256": "c2ccbb5d9c905da00813464bcf2fe9fa999eb529dd82a61dd8f1a46f98dbcb8a",
+  "nativeBoundaryRows": 2031,
+  "nativeAssetRows": 44,
+  "assetBytes": 97526,
+  "mergedKeys": 830,
+  "newTests": 4,
+  "focusedTests": 8,
+  "failedChecks": 0,
+  "buildWarnings": 0,
+  "buildErrors": 0,
+  "initialFailures": [
+    "native-v1: 시작 함수의 실제 고정 owner 대신 다른 입력 owner만 초기화해 기존 버퍼 해제 경계에서 중단. native-v2에서 고정 주소를 초기화해 최초 fixture 생성",
+    "build-v1: 새 Next helper의 auto 선언 타입 불일치 C3538. 선언을 분리한 v2 통과"
+  ],
+  "gameExecutions": 0,
+  "multiplayerTests": 0,
+  "networkTests": 0,
+  "newFixtures": 2,
+  "protectedExisting": 2627,
+  "protectedFiles": 2629,
+  "protectedChanged": 0,
+  "fixtures": {
+    "cpppj/tests/fixtures/xlat-runtime-x86.tsv": "17c26c436989fb0d64c319382b1da91da1f68a6af35b32f9c7bfa51e7d3aa8e3",
+    "cpppj/tests/fixtures/xlat-assets-x86.tsv": "7b2ef55a9ce1970317221281deaf7b23482f6ff0a17edb2ee84acffe00a67ed3"
+  },
+  "sources": [
+    {
+      "path": "d/xlat.german",
+      "bytes": 58589,
+      "recordsAfter": 774,
+      "sha256": "18a6e93b1912055788aa44b81ab702b74381c0a7862a6e9d185659fccf06905a"
+    },
+    {
+      "path": "d/xlat.english",
+      "bytes": 37,
+      "recordsAfter": 774,
+      "sha256": "7357dff1648dc782003de393acd0001f679624d672ad779f2f6770823f050413"
+    },
+    {
+      "path": "d/xlat.portuguese",
+      "bytes": 38900,
+      "recordsAfter": 830,
+      "sha256": "3d8011c4e87692dd859745fee29009c58f6eaf71988c0274557b2172d6fa024f"
+    }
+  ],
+  "limits": [
+    "정상 최초 적재/병합/조회·실제 Client/TARC 언어 전환 범위",
+    "원문32비트 노드 주소·할당 배치/전체 FILE·예외 ABI·중복 적재 진단 뒤 해제된 주소/길이0·실제 부분I/O/할당실패는 별도",
+    "원본과 다른 Windows10/11 UTF-8 표시 경계:1252 밖 사용자 이름을 그대로 유지",
+    "004dea70 언어 명령/UI 재생성·전체 언어 UI/폰트·6차 한국어는 남음",
+    "전체34/전체C++/CTest/ZIP/새GUI·PCM·물리입력0",
+    "포획/희생/특정 적 공격/승리 재현·공중3종 전용·신규MP검사0"
+  ],
+  "sha256": {
+    ".gitattributes": "310e4af935ebc9d76e8c55221cd86fbc69de9f253ef3aada8f5f09442313d8b5",
+    "cpppj/src/CMakeLists.txt": "f93a774429d05bc9a2b4f17b622aef143904b93da9744f49ea398f0d0a95c98a",
+    "cpppj/src/o/RawXlat.h": "501af60701036ca24a066a54d1f4e9453f28f813b95eee48aea05d8897692ae1",
+    "cpppj/src/o/RawXlat.cpp": "62cbcbb92fbbd58dbd9b4a4a9dcc3850cdd5da4cfd9d2f1f9044750a98dbf4ca",
+    "cpppj/src/client/ClientMain.cpp": "07bdc498a0d0a31c76df15b1a2f5044ad4b5bfbda60a62b51f9716b80bebda0a",
+    "cpppj/src/client/ClientMain.h": "07d1e691e6f4a31c1efad275418f5019b7f95bf9bc370e886079db5e3ee3581c",
+    "cpppj/tests/CMakeLists.txt": "b947861424fb2d8a4637ddd489573cc3f50f269c7a5bf521b78ba21c956d5fe7",
+    "cpppj/tests/XlatRuntimeTests.cpp": "9342bb704df212e8718a4aab02dd413933fea95f34300b4327dcd9ab898756d9",
+    "tools/decomp_xlat_runtime.py": "9d08ebe544fb81a6ab2364cc0fb3b26eca742205f0bb0608033c2a6488048ffb",
+    "tools/decomp_xlat_assets.py": "b57b9e03e8b70476ec05f9d366c7569bbc6fa19c5ad44377bd4593b6831cf419",
+    "AGENTS.md": "544643cf731393ecb4784490aa7f2794e8736742582907cce29453e6ac46f15e"
+  },
+  "logsSha256": {
+    "build-v1.log": "e4c7f0ca0818fe8947e4a08e5475ccc8ea18511319375762160cb6541aea441c",
+    "build-v2.log": "14ee8f918538fac03c81882288110bf1af817a6c1cf3a8b9c6ccc5c9dda71c47",
+    "focused-v1.log": "26f2586b3418120901d4329466d19ebd478d1a63d440d180781bc1feebf60e1c",
+    "language-v1.log": "083104a0203d35e0f332ffbbf6ec17c4b2912ac4de69be3745548e406c137f4f",
+    "legacy-v1.log": "51ebf0f291921ab8c4c36b28336547ee156cd0d9905c54809b2e76c5a8ab173b",
+    "native-v1.log": "e7ba8dd2fce668743a03f5476d6b0a28c2afb62fce452c9441378f236133b072",
+    "native-v2.log": "4db046d24b5da7ef854bc839586ac8e11846bcb96f716e84a9aadc75d78d86a0",
+    "assets-native-v1.log": "b063921ca8ac75b7e3b0fd7a12bd8be21161487c2ee2d18c375bc0a6b8952696"
+  }
+}

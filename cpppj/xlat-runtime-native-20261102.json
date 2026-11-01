@@ -1,0 +1,31 @@
+{
+  "unit": 711,
+  "date": "2026-11-02",
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23"
+  },
+  "cases": 43,
+  "observations": 2031,
+  "nativeBodies": [
+    "004de710",
+    "004de260",
+    "004de1e0",
+    "004de130",
+    "004de9a0",
+    "004dea00",
+    "004e63e0 strchr"
+  ],
+  "explicitBoundaries": [
+    "459c60 path join",
+    "41ab10/41b4c0/41aad0/41aa80/41a7a0/41b410 file devices",
+    "4c2630 log",
+    "4e4391 new",
+    "4e5b40 memmove"
+  ],
+  "gameExecutions": 0,
+  "multiplayerTests": 0,
+  "fixtureSha256": "17c26c436989fb0d64c319382b1da91da1f68a6af35b32f9c7bfa51e7d3aa8e3",
+  "peSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236"
+}

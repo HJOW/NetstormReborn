@@ -1,0 +1,43 @@
+{
+  "unit": 711,
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23"
+  },
+  "observations": 44,
+  "sources": [
+    {
+      "path": "d/xlat.german",
+      "bytes": 58589,
+      "recordsAfter": 774,
+      "sha256": "18a6e93b1912055788aa44b81ab702b74381c0a7862a6e9d185659fccf06905a"
+    },
+    {
+      "path": "d/xlat.english",
+      "bytes": 37,
+      "recordsAfter": 774,
+      "sha256": "7357dff1648dc782003de393acd0001f679624d672ad779f2f6770823f050413"
+    },
+    {
+      "path": "d/xlat.portuguese",
+      "bytes": 38900,
+      "recordsAfter": 830,
+      "sha256": "3d8011c4e87692dd859745fee29009c58f6eaf71988c0274557b2172d6fa024f"
+    }
+  ],
+  "nativeBodies": [
+    "004de710",
+    "004de260",
+    "004de1e0",
+    "004de130",
+    "004de9a0",
+    "004e63e0"
+  ],
+  "explicitBoundaries": "원문 경계 도구와 동일한 파일/할당/memmove 장치. 시간 경계는 같은 CPU PC에서 재개하며 재시작하지 않음",
+  "gameExecutions": 0,
+  "multiplayerTests": 0,
+  "fixtureSha256": "7b2ef55a9ce1970317221281deaf7b23482f6ff0a17edb2ee84acffe00a67ed3",
+  "archiveSha256": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6",
+  "peSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236"
+}

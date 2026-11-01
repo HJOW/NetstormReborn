@@ -7,6 +7,7 @@
 #include "client/ClientMain.h"
 #include "client/IntroMenu.h" // 시작 시 실제 파일 존재만으로 Intro 표시값을 정한다.
 #include "client/LanguageOptions.h" //원문 언어 이름/OS 영어 변형과 용어표 재조회 순서를 공유한다.
+#include "o/RawXlat.h" //시작 때 함께 읽은 세 언어의 번역을 선택 변경 뒤에도 보존한다.
 #include "client/ProductPresentation.h"
 #include "client/RawCampaignSession.h" //Sleep 뒤의 실제 프레임말 Player 결과 소비에 장기 Session을 빌린다.
 #include "client/ClientDiagnostics.h"
@@ -288,6 +289,7 @@ int Client::Run() {
     SaveOptions(); // 원본 FUN_004359f0 → FUN_00441d10(0): 설정 해석 전에 한 번 저장한다.
     InterpretOptions();
     if (!PumpMessages()) return 0;
+    InitializeNativeTranslations(); //00438dc0의004dea00은 첫 번역된 창 제목보다 앞이며 언어 선택마다 다시 읽지 않는다.
     // [원본] 가상 메모리가 부족하면 경고 창을 띄운다 — 옮기지 않았다.
     SetWindowTextA(window, Translate(kWindowTitle).c_str());
 
@@ -548,13 +550,21 @@ void Client::DetectIntroAvailability() { DetectIntroMovie(localStateGlobals_->In
 void Client::InterpretOwnerColorOptions() { // 준비 전의 원문 무시와 현재 DWORD·같은 전체 dirty 증가를 보존한다.
     colorSortInput_->OwnerTables()->SetEnabled(std::bit_cast<std::uint32_t>(configuration_.GetInt("useBanners")),kencloudGlobals_->WorldRedraw());
 }
+// 원문004dea00의 실제 세 파일/부재 로그를 같은 Client 장부에 연결한다.
+void Client::InitializeNativeTranslations() {
+    if (options_.edition!=o::OriginalEdition::Patch1078) return; //CD의 전체 Xlat 부모를 새10.78 경로로 대조한 것으로 주장하지 않는다.
+    if (nativeTranslations_) throw std::logic_error("Client Xlat 최초 적재의 중복 호출");nativeTranslations_=std::make_unique<o::RawXlat>();o::RawXlatStartupHooks hooks;
+    hooks.exists=[this](auto path) { return files_.Probe(path)!=0; };hooks.read=[this](auto path) { return files_.Read(path); };
+    hooks.missing=[this](auto path) { WriteDiagnosticLog(9,"Failed to open the translation file \""+std::string(path)+"\"\n"); };
+    o::InitializeRawXlat(*nativeTranslations_,hooks);
+}
 // 원문435248..43529f의 언어 부분은 창 없이도 같은 Client/Registry에서 호출한다.
 void Client::InterpretLanguageOptions() {
     languageOptionsReady_=true;LanguageOptionHooks hooks;
     hooks.read=[this] { std::string name;configuration_.ReadString("currentLanguage",name);return name; };
     hooks.load=[this](auto name) { configuration_.LoadLanguage(name); };
-    if (ApplyOriginalLanguageOption(detectedLanguage_,currentLanguage_,languageNumber_,hooks)) {
-        translations_.reset(); //원래 선택과 다른 언어의 이전 단일 표가 남아 잘못 번역되는 것을 막는다. 전체 원문 다국어 Xlat 장부 수명은 별도다.
+    if (ApplyOriginalLanguageOption(detectedLanguage_,currentLanguage_,languageNumber_,hooks) && options_.edition!=o::OriginalEdition::Patch1078) {
+        translations_.reset(); //CD 어댑터만 기존 단일 표를 사용한다.10.78은 최초 다중 장부를 언어 변경 때 비우지 않는다.
         const auto name=OriginalLanguageName(static_cast<std::uint32_t>(languageNumber_));
         if (const auto bytes=files_.TryRead("d/xlat."+std::string(name))) translations_.emplace(o::DecodeOriginalText(*bytes));
     }
@@ -1166,6 +1176,13 @@ double Client::WallSeconds() const { return clock_.WallSeconds(timeGetTime()); }
 bool Client::Active() const { return active_; }
 // 번역표가 없거나 영어면 원문 그대로다.
 std::string Client::Translate(std::string_view text) const {
+    if (nativeTranslations_) {
+        if (currentLanguage_==0 || currentLanguage_==1) return std::string(text); //원문5435b4를 읽으며 아직 갱신 전일 수 있는 공개542384를 쓰지 않는다.
+        std::vector<std::uint8_t> bytes;
+        try { bytes=o::EncodeOriginalText(text); }catch (const std::invalid_argument&) { return std::string(text); } //원본과 다른 Windows10/11 UTF-8 표시 경계: 원문1252로 표현할 수 없는 사용자 이름은 원래 문자열로 유지한다.
+        const std::string_view original(reinterpret_cast<const char*>(bytes.data()),bytes.size());const auto translated=nativeTranslations_->Translate(original,currentLanguage_);
+        return o::DecodeOriginalText({reinterpret_cast<const std::uint8_t*>(translated.data()),translated.size()});
+    }
     return translations_ ? translations_->Translate(text, languageNumber_) : std::string(text);
 }
 

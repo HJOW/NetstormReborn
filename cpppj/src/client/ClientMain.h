@@ -15,6 +15,7 @@
 #include "o/Kernel.h"
 #include "o/RiftType.h"
 #include "o/Xlat.h"
+namespace netstorm::o { class RawXlat; } //10.78 다중 번역 장부의 Client 소유자다.
 #include <cstdint>
 #include <filesystem>
 #include <functional>
@@ -139,6 +140,7 @@ public:
     std::span<const std::uint8_t> ChatRecords() const;
     // 번역 표와 동일한 현재 원본 언어 번호를 지식 창의 언어3 설명 생략 분기에 제공한다.
     int LanguageNumber() const { return languageNumber_; }
+    void InitializeNativeTranslations(); //10.78의 고정 세 Xlat 파일을 실제 파일 장치에서 한 번 적재한다.
     void InterpretLanguageOptions(); //원문 언어 부분만 현재 Config에 적용한다. 창/OS 감지는 수행하지 않는다.
     // 검사 전용으로 이미 그려진 화면을 지정 파일에 저장한다.
     void Capture(const std::filesystem::path& path);
@@ -310,6 +312,7 @@ private:
     std::unique_ptr<ChatState> chat_; // 메뉴/월드보다 오래 사는 단일100×48바이트이며 미션 수명과 분리한다.
     // translations_: 용어 키를 언어별 표시 문자열로 바꾸는 번역표.
     std::optional<o::XlatTable> translations_;
+    std::unique_ptr<o::RawXlat> nativeTranslations_; //10.78의 모든 언어 표는 선택 변경/월드 교체와 무관하게 Client 종료까지 보존한다.
     // languageNumber_: 현재 언어를 언어 표에서 찾는 번호.
     std::int32_t languageNumber_{-1}; //원문00542384의 공개 번호이며 두 번째 용어표 읽기 뒤 바뀐다.
     std::int32_t currentLanguage_{-1}; //원문005435b4의 현재 번호이며 첫 읽기 전에 바뀐다.

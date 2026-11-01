@@ -2871,3 +2871,9 @@ target_sources(netstorm_tests PRIVATE LanguageOptionsTests.cpp)
 add_executable(netstorm_language_options_tests FocusedTestMain.cpp LanguageOptionsTests.cpp ClientSoundViewTests.cpp ClientAudioTests.cpp)
 target_link_libraries(netstorm_language_options_tests PRIVATE netstorm)
 netstorm_apply_compiler_options(netstorm_language_options_tests)
+
+#최초 다중 Xlat/원문 바이트와 언어 옵션·기존 파서 계약을 집중 확인한다(711).
+target_sources(netstorm_tests PRIVATE XlatRuntimeTests.cpp)
+add_executable(netstorm_xlat_runtime_tests FocusedTestMain.cpp XlatRuntimeTests.cpp LanguageOptionsTests.cpp RecoveryTests.cpp)
+target_link_libraries(netstorm_xlat_runtime_tests PRIVATE netstorm)
+netstorm_apply_compiler_options(netstorm_xlat_runtime_tests)
