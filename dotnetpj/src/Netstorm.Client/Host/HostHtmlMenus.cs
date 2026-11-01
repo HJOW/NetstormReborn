@@ -19,6 +19,8 @@ public sealed class HostHtmlMenus
     public MenuGumpWidgets Widgets { get; }
     /// <summary>현재 열의 일반·체크 항목 작성기.</summary>
     public MenuGumpControls Controls { get; }
+    /// <summary>공통 출력기가 같은 항목 측정 장치를 사용한다.</summary>
+    internal MenuGumpLayout Layout { get; }
 
     /// <summary>같은 화면·시작 설정·본문 장치를 빌려 메뉴 열을 연결한다.</summary>
     public HostHtmlMenus(HostMainMenu menu, HostHtmlWindows windows, HostHtmlText text, HostStartupScene startup, Screen screen, Action<uint, bool> redraw)
@@ -35,7 +37,7 @@ public sealed class HostHtmlMenus
         var layoutHooks = new MenuGumpLayoutHooks { Node = hooks.Node, BaseNode = _tree.Node, Push = _tree.Tree.Push, Attach = Attach };
         MenuGumpLayout.BindMenuLayoutText(layoutHooks, new GumpText(_tree.Fonts));
         StyleText.BindMenuLayoutStyleText(layoutHooks, text.Style); MenuGumpWidgets.BindMenuTitleLayout(layoutHooks, text.Text);
-        var layout = new MenuGumpLayout(_tree.Create, Menu, layoutHooks);
+        var layout = Layout = new MenuGumpLayout(_tree.Create, Menu, layoutHooks);
         var palette = screen.Colors();
         var dim = palette.Named.First(color => color.Red == 47 && color.Green == 24 && color.Blue == 17);
         Widgets = new MenuGumpWidgets(_tree.Create, State, new() { BackgroundType = menu.BackgroundType, BackgroundFrame = 1,

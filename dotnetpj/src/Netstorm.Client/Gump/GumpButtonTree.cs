@@ -63,6 +63,8 @@ public sealed class GumpButtonTree
     public GumpFrame Frame { get; }
     /// <summary>생성과 출력이 공유하는 실제 배경 자산.</summary>
     private readonly GumpBackgroundAssets _assets;
+    /// <summary>공통 출력기가 같은 실제 배경 자산을 사용한다.</summary>
+    internal GumpBackgroundAssets BackgroundAssets => _assets;
     /// <summary>라벨 측정과 출력이 공유하는 실제 글꼴.</summary>
     private readonly FontStore _fonts;
     /// <summary>메뉴와 다중 줄 본문이 공유하는 실제 글꼴 저장소.</summary>

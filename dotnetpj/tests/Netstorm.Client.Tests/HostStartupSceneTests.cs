@@ -71,6 +71,25 @@ public sealed class HostStartupSceneTests
         }
     }
 
+    /// <summary>공통 수집·정렬 출력의 초기 여덟 버튼이 기존 실제 버튼 출력과 같은 화면을 만든다.</summary>
+    [Fact]
+    public void SharedDrawingPreservesInitialMenuPixels()
+    {
+        string? data = GameDataLocator.FindDataDirectory(); Assert.NotNull(data);
+        var startup = new HostStartupScene(data); var screen = new Screen(1024, 768);
+        Assert.True(screen.SetMode(ScreenMode.BackBufferDib | ScreenMode.ModeSet)); startup.Draw(screen);
+        var menu = new HostMainMenu(startup, screen, new GumpButtonTreeHooks
+        {
+            Now = () => 1, Poll = _ => default, Sound = () => { }, Redraw = (_, _) => { }, HandleBase = (_, _, _, _) => 0
+        });
+        menu.Draw(screen); byte[] expected = screen.Pixels.ToArray(); startup.Draw(screen);
+        var windows = new HostHtmlWindows(menu, new InputQueue(), () => 1, _ => { });
+        var text = new HostHtmlText(menu, windows, screen, _ => default, (_, _) => { }, _ => { }, _ => { });
+        text.Bind(windows); var menus = new HostHtmlMenus(menu, windows, text, startup, screen, (_, _) => { });
+        new HostGumpDrawing(menu, text, menus, screen).Draw(); Assert.Equal(expected, screen.Pixels.ToArray());
+        windows.CloseAll();
+    }
+
     /// <summary>메뉴와 공유한 실제 fortGump 배경·I 모서리 장식을 생성·출력·반납한다.</summary>
     [Fact]
     public void SharedTreeDrawsActualFortGumpDecoration()
@@ -291,19 +310,23 @@ public sealed class HostStartupSceneTests
         text.Bind(windows); var menus = new HostHtmlMenus(menu, windows, text, startup, screen, (_, _) => { });
         var factory = new HostHtmlFactory(menu, windows, menus, startup, screen, queue, strings, () => 42, _ => 0,
             _ => throw new InvalidOperationException());
+        var drawing = new HostGumpDrawing(menu, text, menus, screen); drawing.Draw(); byte[] before = screen.Pixels.ToArray();
         uint initial = menu.Tree.Create.Count; var result = factory.ShowTell("Credits");
         Assert.True(result.Found); Assert.NotEqual(0U, result.Serial);
         uint root = menu.Tree.Reference(result.Serial); var node = Assert.IsType<HtmlWindowGumpNode>(menu.Tree.Node(root));
         Assert.Equal(root, menu.Tree.LifeState.CurrentDialog); Assert.NotEqual(0U, node.Body); Assert.True(node.ControlCount > 0);
         Assert.NotEmpty(text.Fragments.Fragments);
+        drawing.Draw(); Assert.False(before.SequenceEqual(screen.Pixels.ToArray()));
         Assert.NotEqual(0U, menu.Route(new(windows.State.EnterEvent, 0, 0)));
         Assert.Equal(0U, menu.Tree.LifeState.CurrentDialog); Assert.False(queue.Empty);
         menu.Tree.Lifetime.Cleanup(); Assert.Null(menu.Tree.Node(root)); Assert.Empty(text.Fragments.Fragments);
         Assert.Equal(initial, menu.Tree.Create.Count);
-        uint serial = factory.Factory.Show("Choose<br>$Menu=First,Tell,First \n", 0, 0, 0);
+        startup.Draw(screen); drawing.Draw(); Assert.Equal(before, screen.Pixels.ToArray());
+        uint serial = factory.Factory.Show("Choose<br>$Menu=First,Tell,First \n$Checked=Second,Tell,Second,1,1 \n", 0, 0, 0);
         root = menu.Tree.Reference(serial); var column = Assert.Single(menu.Tree.Create.Entries
             .Select(token => menu.Tree.Node(token)).OfType<MenuGumpNode>());
         Assert.Equal(root, column.Parent); Assert.Equal("First", strings.Resolve(column.Items[0].Parameter));
+        drawing.Draw(); Assert.False(before.SequenceEqual(screen.Pixels.ToArray()));
         windows.CloseAll(); Assert.Equal(initial, menu.Tree.Create.Count); Assert.Empty(text.Fragments.Fragments);
     }
 

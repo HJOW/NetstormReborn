@@ -48,6 +48,9 @@ public sealed class ClientHostGame : Game
     /// <summary>현재 설정과 공통 트리를 사용하는 전체 HTML 창 생성기.</summary>
     private HostHtmlFactory? _htmlFactory;
 
+    /// <summary>공통 트리의 표시 수집·정렬·출력 장치.</summary>
+    private HostGumpDrawing? _gumpDrawing;
+
     /// <summary>HTML과 상위 메뉴가 공유할 원본 80칸 스크립트 문자열 고리.</summary>
     private readonly ScriptStringRing _scriptStrings = new();
 
@@ -157,8 +160,9 @@ public sealed class ClientHostGame : Game
             _htmlFactory = new HostHtmlFactory(_mainMenu, _htmlWindows, _htmlMenus, _startup, _driver.Screen, _driver.Input,
                 _scriptStrings, () => _wallClock.Elapsed.TotalSeconds, _ => 0,
                 name => Debug.WriteLine("HTML 메타 명령 미연결: " + name));
+            _gumpDrawing = new HostGumpDrawing(_mainMenu, _htmlText, _htmlMenus, _driver.Screen);
             _driver.BindControlLocator(_mainMenu);
-            _mainMenu.Draw(_driver.Screen);
+            _gumpDrawing.Draw();
             _menuDirty = false;
         }
         _previousKeys = Keyboard.GetState();
@@ -175,7 +179,8 @@ public sealed class ClientHostGame : Game
         PumpKeyboard();
         PumpMouse();
         if (_driver.ProcessInput()) { Exit(); return; }
-        if (_menuDirty && _mainMenu is not null) { _mainMenu.Draw(_driver.Screen); _menuDirty = false; }
+        if (_menuDirty && _gumpDrawing is not null && _startup is not null)
+        { _startup.Draw(_driver.Screen); _gumpDrawing.Draw(); _menuDirty = false; }
         base.Update(gameTime);
     }
 

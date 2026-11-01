@@ -27,6 +27,8 @@ public sealed class HostMainMenu : IUiControlLocator
     private readonly GumpButtonTree _tree;
     /// <summary>버튼·장식·스크롤이 공유하는 실제 fortGump 타입 번호.</summary>
     public uint BackgroundType { get; }
+    /// <summary>fortGump 체크 표시의 J 첫 프레임.</summary>
+    internal int MarkerFrame { get; }
     /// <summary>HTML 등 파생 창이 메인 메뉴와 공유하는 실제 Gump 트리.</summary>
     public GumpButtonTree Tree => _tree;
     /// <summary>같은 트리와 파일 자산의 HTML 장식 생성·출력 장치.</summary>
@@ -48,6 +50,7 @@ public sealed class HostMainMenu : IUiControlLocator
         TypeInfo type = types.Find("fortGump") ?? throw new InvalidDataException("fortGump 타입이 없다");
         int frame = type.Definition.Frames.Find('A', TypeFrameTable.DefaultVariant, 1);
         int corners = type.Definition.Frames.Find('I', TypeFrameTable.DefaultVariant, 0);
+        MarkerFrame = type.Definition.Frames.Find('J', TypeFrameTable.DefaultVariant, 0);
         if (frame < 0 || corners < 0) throw new InvalidDataException("fortGump A01 또는 I 모서리 프레임이 없다");
         var shapes = new Netstorm.Client.Display.ShapeDatabase(startup.Files.ReadAllBytes("d/_shapes.shp"));
         uint typeNumber = (uint)type.RuntimeIndex; BackgroundType = typeNumber;

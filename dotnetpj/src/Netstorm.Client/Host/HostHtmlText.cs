@@ -15,6 +15,8 @@ public sealed class HostHtmlText
     private readonly Screen _screen;
     /// <summary>본문과 글리프 장치가 공유하는 현재 클립.</summary>
     private readonly GumpDrawState _clip = new();
+    /// <summary>공통 출력기와 본문이 공유하는 현재 클립.</summary>
+    internal GumpDrawState Clip => _clip;
     /// <summary>Draw 호출 동안에만 활성인 실제 글리프 출력기.</summary>
     private GumpTextDraw? _activeText;
     /// <summary>부분 생성 자식까지 보관하는 같은 HTML 창 소유자.</summary>
@@ -33,6 +35,8 @@ public sealed class HostHtmlText
     public ScrollingTextGump Text { get; }
     /// <summary>같은 실제 본문 생성·입력·수명 처리기.</summary>
     public ScrollingTextGumpWidgets Widgets { get; }
+    /// <summary>공통 출력기가 화살표·손잡이에 사용하는 실제 슬라이더 처리기.</summary>
+    internal ScrollGumpWidgets SliderWidgets { get; }
     /// <summary>같은 실제 다중 줄 스타일 명령 파서.</summary>
     public ScrollingTextGumpMarkup Parser { get; }
     /// <summary>본문에 사용하는 파일 팔레트의 기본 흰색.</summary>
@@ -69,7 +73,7 @@ public sealed class HostHtmlText
         ScrollGump.BindScrollGump(_tree.TreeHooks, _tree.EventHooks, _tree.InputHooks, _tree.FrameHooks,
             token => _tree.Node(token) is ScrollGumpNode ? slider : null,
             token => _tree.Node(token) is ScrollGumpThumbNode ? slider : null);
-        var sliderWidgets = new ScrollGumpWidgets(_tree.Create, new() { DefaultType = menu.BackgroundType, DefaultFrame = 1 },
+        var sliderWidgets = SliderWidgets = new ScrollGumpWidgets(_tree.Create, new() { DefaultType = menu.BackgroundType, DefaultFrame = 1 },
             _tree.Factory, _tree.Stones, _tree.Backgrounds, slider, _tree.Lifetime,
             new() { Node = token => _tree.Node(token) as ScrollGumpNode, Arrow = token => _tree.Node(token) as ScrollGumpArrowNode,
                 Thumb = token => _tree.Node(token) as ScrollGumpThumbNode, Base = _tree.Node, Allocate = AllocateSliderChild,
@@ -132,6 +136,15 @@ public sealed class HostHtmlText
         }
         finally { _activeText = null; _screen.Unlock(); }
         _screen.Update(_tree.Collection.Bounds(token));
+    }
+
+    /// <summary>공유 표면 출력 동안에만 스타일 글리프의 현재 장치를 설치하고 예외에도 해제한다.</summary>
+    internal void WithTextDraw(GumpTextDraw text, Action draw)
+    {
+        ArgumentNullException.ThrowIfNull(text); ArgumentNullException.ThrowIfNull(draw);
+        if (_activeText is not null) throw new InvalidOperationException("HTML 본문 출력 재진입");
+        _activeText = text;
+        try { draw(); } finally { _activeText = null; }
     }
 
     /// <summary>창 배치 장치가 같은 소유자의 본문인지 확인한다.</summary>

@@ -13,6 +13,8 @@ public sealed class HostGumpDecoration
     private readonly GumpBackgroundAssets _backgroundAssets;
     /// <summary>같은 SHP의 I 모서리 프레임.</summary>
     private readonly GumpDecorationAssets _cornerAssets;
+    /// <summary>공통 출력기가 사용하는 실제 모서리 자산.</summary>
+    internal GumpDecorationAssets CornerAssets => _cornerAssets;
     /// <summary>실제 배경과 모서리 타입.</summary>
     private readonly uint _type;
     /// <summary>장식 변경을 같은 화면 갱신에 알린다.</summary>
@@ -28,7 +30,7 @@ public sealed class HostGumpDecoration
     }
 
     /// <summary>현재 표면 장치와 동일한 실제 노드·배경 생성기를 사용하는 장식 처리기를 만든다.</summary>
-    private GumpDecoration Device(GumpBackgroundDraw background, GumpDecorationHooks hooks)
+    internal GumpDecoration Device(GumpBackgroundDraw background, GumpDecorationHooks hooks)
     {
         hooks.Node = t => _tree.Node(t) as GumpDecorationNode; hooks.Base = _tree.Node;
         hooks.Invalidate = _ => _changed(); GumpDecorationAssets.BindGumpDecorationAssets(hooks, _cornerAssets);
