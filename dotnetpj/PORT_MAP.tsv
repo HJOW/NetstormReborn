@@ -149,6 +149,7 @@ cpppj/src/client/RawShapeToBuffer.cpp	Netstorm.Client/Display/RawShapeToBuffer.c
 cpppj/src/client/RawShapeToBuffer.h	Netstorm.Client/Display/RawShapeToBuffer.cs	4fab249c1190a4f3024baf7bccf152adfcc1859d	port
 cpppj/src/client/Renderer.cpp	Netstorm.Client/Display/RendererDraw.cs	ca0c01ebfceb9801ef1fcdb272deec4dc311a2db	port
 cpppj/src/client/Renderer.h	Netstorm.Client/Display/RendererDraw.cs	ca0c01ebfceb9801ef1fcdb272deec4dc311a2db	port
+cpppj/src/client/SaveFortNameDialog.cpp	Netstorm.Client/Gump/SaveFortName.cs	4e56903cb5ca329624d5ca4f6eae16698e863b7d	port
 cpppj/src/client/Screen.cpp	Netstorm.Client.Host/ClientHostGame.cs	91d494c3b2814f00d2cae81a0f4b247e91e81922	port
 cpppj/src/client/Screen.cpp	Netstorm.Client.Host/MonoGameScreenOutput.cs	91d494c3b2814f00d2cae81a0f4b247e91e81922	port
 cpppj/src/client/Screen.cpp	Netstorm.Client/Display/GamePalette.cs	ac9ea9162ba0c580cd53505c8c3782c0b2a27172	port
