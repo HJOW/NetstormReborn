@@ -9,6 +9,8 @@
 #include "client/RawPlayerMenu.h"
 #include "client/QuickHelpWindow.h"
 #include "client/ScriptCommand.h"
+#include "client/UrlInput.h" // 실제URL입력에서공통Help분배기까지같은고리로검사한다.
+#include "client/GameMenuCommands.h"
 #include "client/HtmlConditionEffect.h"
 #include "client/ImageGump.h"
 #include "client/RawMinimapControls.h"
@@ -72,7 +74,7 @@ struct MenuClient {
     // 실제 현재 트리의 hover와 누름을 통과시킨다. 명령 callback을 직접 호출하지 않는다.
     void Click(ScreenPoint point) { poll={InputCode::kLeftButton,point.x,point.y};buttons.Poll(poll);buttons.Event(poll); }
     // 실제 보호 Help/TYPE/자산과 기존 공통 트리를 연결한다. 메인 메뉴와 같은 월드 설치 전 경계다.
-    void EnableHelp() {
+    void EnableHelp(std::function<void(std::string_view)> script={},std::function<void(std::string_view)> external={}) { // 링크관측을명시하지않은기존검사는예상밖cmd/외부호출을계속거부한다.
         RawHelpHooks h;h.globals=&helpGlobals;BindHtmlPictureText(h.html);if (!helpConfig) helpConfig=std::make_unique<ConfigInterface>([this](auto path) { return files.TryRead(path); });helpConfig->SetInt("global.inMission",0);BindHtmlConditionConfig(h.html,*helpConfig,assets.Edition());h.translate=[](auto text) { return std::string(text); };h.config=[](auto key) { return key=="Quick Help Spec" ? std::string("d/help.english") : std::string(key); };h.substitute=[](auto text) { return std::string(text); };
         h.load=[this](auto path) -> std::optional<std::string> { const auto bytes=files.TryRead(path);if (!bytes) return std::nullopt;return std::string(bytes->begin(),bytes->end()); };
         h.text=[this](auto token) { return std::string(helpStrings.Resolve(token&0x0fffffffU)); };h.storeText=[this](auto text) { return Topic(text); };
@@ -82,7 +84,7 @@ struct MenuClient {
             // 원본 논리 DWORD의 채널 순서를 유지한다.
             for (std::size_t i=0;i<logical.size();++i) { const auto c=assets.Palette().Color(static_cast<std::uint8_t>(i));logical[i]=c.red|(std::uint32_t(c.green)<<8)|(std::uint32_t(c.blue)<<16); }return FindPaletteColor(logical,r,g,b);
         };
-        h.queue=[this](auto command,auto,auto) { commands.push_back({command,0,0}); };h.script=[](auto) { throw std::logic_error("이 조립 검사의 cmd 링크 미사용"); };h.external=[](auto) { throw std::logic_error("이 조립 검사의 외부 링크 미사용"); };h.learn=[](auto) { throw std::logic_error("일반 Help OK는 학습을 호출하지 않는다"); };
+        h.queue=[this](auto command,auto,auto) { commands.push_back({command,0,0}); };h.script=script ? std::move(script) : [](auto) { throw std::logic_error("이 조립 검사의 cmd 링크 미사용"); };h.external=external ? std::move(external) : [](auto) { throw std::logic_error("이 조립 검사의 외부 링크 미사용"); };h.learn=[](auto) { throw std::logic_error("일반 Help OK는 학습을 호출하지 않는다"); };
         h.scripted=h.battle=h.challenge=[] { return false; };h.scriptName=[] { return std::string{}; };menus->EnableHelp(std::move(h));
     }
     // 실제80칸 고리의 같은 수명에 TYPE 관문 밖 별칭을 준다.
@@ -485,3 +487,12 @@ TEST_CASE(RawMenuControls_DerivedDirtyRectanglesPreserveFullPixels) {
 
 // 실제 미니맵/공통 영역/부분 표면과 현재 가시성·입력 모드 경계를 확인한다.
 #include "RawMinimapDirtyTests.inc"
+
+// 실제공통Help트리와기존cmd/외부장치를URL고리입력에서도공유하며OS프로그램은실행하지않는다.
+TEST_CASE(RawMenuControls_UrlInputSharesActualHelpScriptAndExternal) {
+    MenuClient client;std::string script,external;client.EnableHelp([&](auto text) { script=text; },[&](auto text) { external=text; });InputQueue queue;ScriptStringRing strings;
+    const auto activate=[&](std::string_view command) { QueueScriptCommand(command,queue,strings,{GameMenuScriptCode,{}});CHECK(DispatchUrlInput(queue.Pop(false),[&](auto token) { return strings.Resolve(token); },[&](auto text) { client.menus->ActivateHelpLinkText(text); })); }; // 실제이름·큐·고리에서부모링크토큰을만들지않고같은분배기를호출한다.
+    activate("URL,cmd:Tell,Notes");CHECK(script=="Tell,Notes" && external.empty() && !client.menus->HelpOpen());
+    activate("URL,file:///C:/Netstorm/image1.gif");CHECK(external=="file:///C:/Netstorm/image1.gif" && script=="Tell,Notes" && !client.menus->HelpOpen());
+    activate("URL,unitHelp");CHECK(client.menus->HelpOpen() && external=="file:///C:/Netstorm/image1.gif" && script=="Tell,Notes"); // 실제내부주제는같은전용창을생성한다.
+}

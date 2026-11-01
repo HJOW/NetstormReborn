@@ -9,6 +9,7 @@
 #include "client/UberGump.h"
 #include "client/ProductPresentation.h"
 #include "client/ExternalHelpClient.h" //원래 외부 Help 정책을 현재 Client/Windows 장치에 연결한다.
+#include "client/UrlInput.h" // HTML의URL버튼과같은일반입력/현재고리/Help분배기접합이다.
 #include "client/TechnicalHelp.h" //실제 파일 가용성 조회와 별도 Technical Help 명령을 연결한다.
 #include "client/ClientDiagnostics.h"
 #include "client/SendMoneyInput.h"
@@ -1031,6 +1032,8 @@ void UberGump::Event(InputEvent event) {
     }
     if (DispatchScreenshotKey(event,[this] { client_.SaveGifScreenshot(); },[this](auto name) { Tell(std::string(name)); })) rebuild_=true; // Guide/Gump 뒤,console·정지와 일반 F7 배너 처리보다 앞이다. Tell이 연 정지를 아래에서 다시 읽는다.
     static_cast<void>(DispatchDiagnosticKey(event,[this] { client_.DumpDiagnostics(); })); // 같은 원문 위치에서 객체→프로세스 순서로 출력하며 정지/console은 아래에서 다시 읽는다.
+    if (DispatchUrlInput(event,[this](auto token) { return scriptStrings_.Resolve(token); },
+        [this](auto text) { rawButtons_->Menus()->ActivateHelpLinkText(text); })) { rebuild_=true;return; } //모드/현재World와무관하게같은내부Help·cmd·외부정책을사용한다.
     if (transitionCode==0x02000037U) {
         if (!(event.code&InputCode::kRelease)) { EnsureHudFactories();rawButtons_->ToggleMinimap(hud_->createMinimap); }
         rebuild_=true;return; //원본 일반 입력의5427d4→480810을 동일 공장/지연Kill에 연결하며 뗌은 전환하지 않는다.

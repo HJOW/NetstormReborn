@@ -689,6 +689,7 @@ std::uint32_t RawMenuControls::ShowHtmlWindow(RawHtmlWindowContext context,std::
 std::string RawMenuControls::ResolveHtmlWindowLink(std::uint32_t token) const { return impl_->HtmlLink(token); } // 살아 있는 실제 소유 바이트를 복사해 반환한다.
 // 원문4a00c0과 같은 Help/명령/외부 링크 분배기를 현재 부모 바이트에 적용한다.
 void RawMenuControls::ActivateHtmlWindowLink(std::uint32_t token) { impl_->HelpLink(impl_->HtmlLink(token)); }
+void RawMenuControls::ActivateHelpLinkText(std::string_view text) { impl_->HelpLink(text); } // 같은현재Help/script/external장치를선택하며전용OS정책을중복하지않는다.
 // 원본004cc210의 Cheat 자식은 controlled 세로 메뉴가 아닌 직접 생성한 단일 명령 메뉴다.
 std::uint32_t RawMenuControls::CreateCheatMenu(const std::function<std::string(std::string_view)>& translate,const std::function<std::uint32_t()>& command) {
     auto& s=*impl_;const auto token=s.Allocate(0xb90,0);if (!token) return 0;

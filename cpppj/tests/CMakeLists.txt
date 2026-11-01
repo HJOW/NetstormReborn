@@ -2772,3 +2772,11 @@ netstorm_apply_compiler_options(netstorm_pop_context_tests)
 target_compile_definitions(netstorm_pop_context_tests PRIVATE
     NETSTORM_POP_FIXTURE="${CMAKE_CURRENT_SOURCE_DIR}/fixtures/pop-x86.tsv"
     NETSTORM_POP_VTABLE_FIXTURE="${CMAKE_CURRENT_SOURCE_DIR}/fixtures/pop-vtables.tsv") # 기존공간검사의독립기대값도같은경로로읽는다.
+
+# URL일반입력96행과기존링크정책만집중대조하며실제트리는기존Renderer대상에서선택한다(단위692).
+target_sources(netstorm_tests PRIVATE UrlInputTests.cpp)
+set_source_files_properties(UrlInputTests.cpp PROPERTIES COMPILE_DEFINITIONS
+    "NETSTORM_URL_INPUT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/url-input-x86.tsv\"")
+add_executable(netstorm_url_input_tests FocusedTestMain.cpp UrlInputTests.cpp HelpLinkPolicyTests.cpp)
+target_link_libraries(netstorm_url_input_tests PRIVATE netstorm)
+netstorm_apply_compiler_options(netstorm_url_input_tests)

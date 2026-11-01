@@ -1,0 +1,98 @@
+{
+  "unit": 692,
+  "date": "2026-11-01",
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23"
+  },
+  "productVersion": "11.01",
+  "productSha256": "fd6fe876a4e13d374281b1379c8249b4dc645b32dbc081fdd8d12b22dacaebf3",
+  "discovery": {
+    "kind": "아카이브메타의정적참조추적",
+    "archive": "originals/netstorm.tarc",
+    "entry": "\\d\\tell.english",
+    "entrySha256": "0c275987c5a576c5d838831cf47ff4d58822559f83b0fca566f5a169cc1ce02b",
+    "section": "TellGifWritten",
+    "button": "$Button=View,URL,file:///{InstallDir}{GifOutSpec}",
+    "limits": "단일줄명시메타의후보조사는Config/TARC전체확장·전부도달/실행검증이아니다. 원문오자에별칭을추가하지않았다."
+  },
+  "native": {
+    "cases": 96,
+    "observations": 288,
+    "differences": 0,
+    "frozenBeforeProductEdit": true,
+    "boundary": "4a00c0링크소비부모만명시경계. 실제Guide/Gump뒤일반입력의두번째전체DWORD/뗌/수정키/Editor·missionPost를대조. 링크/OS실행0."
+  },
+  "build": {
+    "initialExit": 1,
+    "initialFailure": "신규UrlInput.cpp의target_sources누락으로제품링크실패",
+    "secondExit": 1,
+    "secondFailure": "새검사두곳의InputQueue.Pop에필수bool인자누락. 제품은성공.",
+    "finalExit": 0,
+    "finalWarnings": 0,
+    "finalErrors": 0
+  },
+  "focused": {
+    "target": "netstorm_url_input_tests",
+    "registered": 4,
+    "executed": 4,
+    "failedChecks": 0,
+    "newTests": 2,
+    "existingPolicyTests": 2,
+    "existingNativePolicyRows": 91
+  },
+  "tree": {
+    "target": "netstorm_renderer_presentation_tests",
+    "registered": 130,
+    "executed": 1,
+    "filter": "RawMenuControls_UrlInput",
+    "failedChecks": 0,
+    "coverage": "실제공통Help트리/자산/현재고리/명령큐로내부unitHelp창생성,cmd본문전달,외부파일링크전달. 외부장치는관측콜백이며실제프로그램을열지않는다."
+  },
+  "finalUniqueSelectedTests": 5,
+  "newTests": 3,
+  "existingTests": 2,
+  "protection": {
+    "unchangedExisting": 2612,
+    "changed": [],
+    "newFixtures": 1,
+    "currentFixtures": 793,
+    "currentProtectedTotal": 2613,
+    "agentsSha256": "138808039a2d171d8e697906776e620f9ea8dc2038c35b4dc01ce18d3e462b77"
+  },
+  "gameExecutions": 0,
+  "externalProgramsLaunched": 0,
+  "multiplayerTests": 0,
+  "full34Runs": 0,
+  "fullCppRuns": 0,
+  "newZip": false,
+  "limits": "10.78 URL일반입력과현재Help접합이다. 실제F7저장후View클릭/외부브라우저/한국어설치경로·프로토콜전부·새CD경로·전체메뉴/TARC확장/자연완주/전체동일성검증으로확대하지않는다. 포획/희생/특정적공격/승리·공중3종전용검사0.",
+  "sha256": {
+    "AGENTS.md": "138808039a2d171d8e697906776e620f9ea8dc2038c35b4dc01ce18d3e462b77",
+    "originals/netstorm.tarc": "f2cafc1a0242ffe59b9b2fbfd6555907a03585cd6053d4bb4b0599a2445ea2e6",
+    "tools/taff.py": "461860cdfc9451b85a8694dd30fd2c56c1cfdf5c6bb7ab8f63a4089971889795",
+    "tools/decomp_url_input.py": "d32bca5d555b842fa9a752aa31fc1ef10cf60a29d679897d480b3fc839d2032e",
+    "cpppj/src/CMakeLists.txt": "fc131babf626b4208654488064fee650ecb4100b42526c91fb11fee662da0064",
+    "cpppj/src/client/UrlInput.cpp": "6f56d21e3148e4762d536797df858fd5dcc053bc5c136133b7c3e58746792fbf",
+    "cpppj/src/client/UrlInput.h": "315b1fd939d12ac3feb0642ca5dc7d7c146fde5fee64e11cffdd23efb71ae0af",
+    "cpppj/src/client/GameMenuCommands.cpp": "4ef6062f3c4dd4e9944c199e707c5850805fe3acfd7af7b23e2d5e11da49cc97",
+    "cpppj/src/client/UberGump.cpp": "2973948fe118b4084d57337e120f19844a9796ad07bb186b82376f36cc20bb1b",
+    "cpppj/src/client/RawMenuControls.cpp": "796d50faec241c05a21d1e2e1dc73815ae49bf30494e06fd09172c5d74138f16",
+    "cpppj/src/client/RawMenuControls.h": "18840929edb7fe88ca38506983c89f600a0eeb477203c862045ce2bddf43ab4c",
+    "cpppj/tests/CMakeLists.txt": "0d7001d796cdda477951c48fbf9fd5f97092a7a8200ca4ce7212407f76afb814",
+    "cpppj/tests/UrlInputTests.cpp": "7fa7d4e56191e1eeed4a39f960a6135b092db61daa8f044c548b91e4eb633ad6",
+    "cpppj/tests/RawMenuControlsTests.cpp": "fa26457ce6dca82d0d8bcf0389be70f708b1b27c589ef4f467b99de8f255616d",
+    "cpppj/tests/fixtures/url-input-x86.tsv": "218646c0e41ada566d5d1afaad6df2ad64646ab63592bd4265b0de09be3ba6ef",
+    "cpppj/url-input-native-20261101.json": "15a6c6229632266cf6ca298cf137c245afec3f767b4e16fd4fb54e30d780b3c7",
+    "extracted\\cpp-scenario-metadata-692\\archive.log": "4c8a4a313da715f376f6ee0602dec91414211b07887c08a598d2adb4d0097f8f",
+    "extracted\\cpp-scenario-metadata-692\\build-v2.log": "3dbec2132affe52a2660467f89b205579dbd94329a8a2b8b84631efbd0718fe0",
+    "extracted\\cpp-scenario-metadata-692\\build-v3.log": "6150c3f28a9738d9ecf58f177bd1f57a54e68a07d2a0e4b171e45b4f272a3d81",
+    "extracted\\cpp-scenario-metadata-692\\build.log": "9474e28c36f8e3f28168142d2ab188ebd267788bd6529ee6ba463eca3e165712",
+    "extracted\\cpp-scenario-metadata-692\\focused.log": "e057b412e040b3c8380ec28eb23dc54a63c8a6bf047b9390196eeee171c5cda3",
+    "extracted\\cpp-scenario-metadata-692\\native.log": "14437a0522d4427240bc0873e2363f4c0a556164e1a4cbf288b189a0fe0acc43",
+    "extracted\\cpp-scenario-metadata-692\\tree.log": "04c0f2d04474fc2c6f60bc79b68d4e7a62150b1f9169eac1465f17ed725e5ad3",
+    "extracted/cpp-scenario-metadata-692/tree-registered.txt": "0db3bdc1c5a1737b130e23f522a1a4d577fdb02fefdb0ea6094bf04d99b79b85",
+    "extracted/cpp-scenario-metadata-692/protection.json": "80ed5c3e8fa62d6eab4d2453a4db403bf910445414bff454256e4c804621efe5"
+  }
+}

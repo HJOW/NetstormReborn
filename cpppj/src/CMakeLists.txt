@@ -11,6 +11,7 @@
 # 소스 목록은 각 폴더의 CMakeLists.txt 가 target_sources 로 더한다.
 add_library(netstorm STATIC)
 target_sources(netstorm PRIVATE client/DestroyAtInput.cpp client/DestroyAtInput.h o/RawDestroyAt.cpp o/RawDestroyAt.h) # 대본의 실제 점 검색/필터/가상 삭제 부모다.
+target_sources(netstorm PRIVATE client/UrlInput.cpp client/UrlInput.h) # HTML의URL버튼도기존Help링크분배기에연결한다.
 target_sources(netstorm PRIVATE client/AddRandomInput.cpp client/AddRandomInput.h o/RawAddRandom.cpp o/RawAddRandom.h) # 대본의 실제 무작위 배치 관문/고정 범위 부모다.
 target_sources(netstorm PRIVATE client/ScenarioEffectInput.cpp client/ScenarioEffectInput.h) # 실제 일반 연기/화면 번개/명시 무동작 대본 관문이다.
 target_sources(netstorm PRIVATE client/ScenarioObjectInput.cpp client/ScenarioObjectInput.h) # 메뉴를 열기 전에도 같은 원문 객체 명령을 처리한다.

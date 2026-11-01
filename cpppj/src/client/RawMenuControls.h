@@ -147,6 +147,7 @@ public:
     std::uint32_t ShowHtmlWindow(RawHtmlWindowContext context,std::string_view source,std::uint32_t suppress,std::uint32_t width,std::uint32_t height); // 원문 전체 생성의 최종serial 또는0이다. 창 없는 첫 파서 효과도 보존한다.
     std::string ResolveHtmlWindowLink(std::uint32_t token) const; // Kill 뒤 Cleanup 전까지 실제 부모8192BYTE를 읽고 반납된 링크는 거부한다.
     void ActivateHtmlWindowLink(std::uint32_t token); // 실제 부모 링크를 같은 Help/cmd/외부 요청 분배기에 전달한다. 선택 외부 경계의 실패를 보존한다.
+    void ActivateHelpLinkText(std::string_view text); // URL 일반 입력의 현재 고리 문자열도 같은4a00c0 분배기를 사용하며 부모 링크 토큰으로 가장하지 않는다.
     void CloseHtmlWindows(); // 미부착/부분 생성도 같은 공통 수명으로 반납한다.
     bool HtmlWindowsOpen() const; // 실제 부착된 전체 HTML 부모의 visible/dead를 현재 저장소에서 읽는다. Kill 뒤 인스턴스 수와 구별한다.
     std::uint32_t HtmlMenuColumns() const; // 검사 보고에서 현재 최상위 모달 HTML에 실제 부착된 직계 메뉴 열을 센다. Fit이 소비한 메타 카운터와 구별한다.
