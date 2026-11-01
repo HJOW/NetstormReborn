@@ -32,6 +32,21 @@ public sealed class PlayerParticipationState
     public bool LocalTransport { get; set; }
 }
 
+/// <summary>실제 세션이 소유한 다섯 현재 전역을 각 읽기 시점에 제공한다.</summary>
+public sealed class PlayerParticipationReads
+{
+    /// <summary>현재 로컬 Player 번호를 조회한다.</summary>
+    public Func<uint>? LocalOwner { get; init; }
+    /// <summary>현재 Player 번호 인지 값을 조회한다.</summary>
+    public Func<uint>? PlayerKnown { get; init; }
+    /// <summary>현재 전투 모드를 조회한다.</summary>
+    public Func<bool>? Battle { get; init; }
+    /// <summary>현재 metamap 모드를 조회한다.</summary>
+    public Func<bool>? Metamap { get; init; }
+    /// <summary>현재 로컬 전송 모드를 조회한다.</summary>
+    public Func<bool>? LocalTransport { get; init; }
+}
+
 /// <summary>
 /// 실제 전송·Chat UI·AI 소유자의 파괴/반납 같은 외부 효과. 실제로 도달한 효과가 비어 있으면 성공으로 바꾸지 않고 예외를 낸다.
 /// 가짜 brain 생성이나 연결 성공을 만들어 주는 경계는 없다.
@@ -159,6 +174,9 @@ public sealed class PlayerParticipation
     /// <summary>현재 전역 상태. 효과 뒤에도 다시 읽는다.</summary>
     private readonly PlayerParticipationState _state;
 
+    /// <summary>실제 세션의 현재 전역 조회. 미연결이면 독립 fixture 상태를 쓴다.</summary>
+    private PlayerParticipationReads? _reads;
+
     /// <summary>외부 효과 경계.</summary>
     private readonly PlayerParticipationHooks _hooks;
 
@@ -185,6 +203,28 @@ public sealed class PlayerParticipation
         _state = state;
         _hooks = hooks;
     }
+
+    /// <summary>다섯 현재 전역 조회를 한꺼번에 연결한다. 일부가 누락되면 기존 연결을 유지한다.</summary>
+    /// <param name="reads">실제 세션의 현재 값 조회 함수 다섯 개.</param>
+    public void BindCurrentInputs(PlayerParticipationReads reads)
+    {
+        ArgumentNullException.ThrowIfNull(reads);
+        if (reads.LocalOwner is null || reads.PlayerKnown is null || reads.Battle is null ||
+            reads.Metamap is null || reads.LocalTransport is null)
+            throw new ArgumentException("Player 참여 현재 전역 조회 다섯 개가 필요합니다.", nameof(reads));
+        _reads = reads;
+    }
+
+    /// <summary>현재 로컬 번호를 실제 세션 또는 독립 상태에서 읽는다.</summary>
+    private uint LocalOwner() => _reads is null ? _state.LocalOwner : _reads.LocalOwner!();
+    /// <summary>현재 Player 인지 값을 읽는다.</summary>
+    private uint PlayerKnown() => _reads is null ? _state.PlayerKnown : _reads.PlayerKnown!();
+    /// <summary>현재 전투 모드를 읽는다.</summary>
+    private bool Battle() => _reads is null ? _state.Battle : _reads.Battle!();
+    /// <summary>현재 metamap 모드를 읽는다.</summary>
+    private bool Metamap() => _reads is null ? _state.Metamap : _reads.Metamap!();
+    /// <summary>현재 로컬 전송 모드를 읽는다.</summary>
+    private bool LocalTransport() => _reads is null ? _state.LocalTransport : _reads.LocalTransport!();
 
     /// <summary>실제로 도달한 외부 효과가 비어 있으면 성공으로 바꾸지 않고 거부한다.</summary>
     private static T Require<T>(T? effect) where T : class =>
@@ -266,7 +306,7 @@ public sealed class PlayerParticipation
         {
             uint player = (uint)owner;
             Put(player, FlagsOffset, (Read(player, FlagsOffset) & ~ReleasedFlag) | 3U);
-            if (!(_state.LocalTransport && pending == owner)) Require(_hooks.AssignConnection)(pending, owner);
+            if (!(LocalTransport() && pending == owner)) Require(_hooks.AssignConnection)(pending, owner);
             return true;
         }
         Require(_hooks.RejectLogin)(pending);
@@ -288,16 +328,16 @@ public sealed class PlayerParticipation
         Put(owner, AllyMaskOffset, mask);
         // 원본은 행의 9개 DWORD 를 각각 0/1로 갱신한다.
         for (uint target = 0; target < PlayerCount; target++) _allies[owner * PlayerCount + target] = (mask >> (int)target) & 1;
-        if (_state.PlayerKnown == 0) return;
+        if (PlayerKnown() == 0) return;
         Require(_hooks.ClearChat)(0x40);
         Require(_hooks.ClearChat)(0x80);
         // 채널 효과 뒤 현재 로컬 번호/표/Player 를 다시 읽어 다음 Player 를 처리한다.
         for (uint player = 0; player < PlayerCount; player++)
         {
-            if (_state.LocalOwner >= PlayerCount) throw new InvalidDataException("Player 참여 Chat 의 로컬 번호가 범위를 벗어났습니다.");
-            if (_allies[_state.LocalOwner * PlayerCount + player] != 0 && _allies[player * PlayerCount + _state.LocalOwner] != 0)
+            if (LocalOwner() >= PlayerCount) throw new InvalidDataException("Player 참여 Chat 의 로컬 번호가 범위를 벗어났습니다.");
+            if (_allies[LocalOwner() * PlayerCount + player] != 0 && _allies[player * PlayerCount + LocalOwner()] != 0)
                 Require(_hooks.AddChat)(Read(player, SubscriberOffset), Name(player), 0x40);
-            if (_state.Metamap) Require(_hooks.Assertion)(PlayerParticipationAssertion.MetamapMode);
+            if (Metamap()) Require(_hooks.Assertion)(PlayerParticipationAssertion.MetamapMode);
             if (_hidden[player] != 0) Require(_hooks.AddChat)(Read(player, SubscriberOffset), Name(player), 0x80);
         }
     }
@@ -313,11 +353,11 @@ public sealed class PlayerParticipation
         PlayerBase(owner);
         PlayerBase(target);
         Put(owner, AllyMaskOffset, Read(owner, AllyMaskOffset) | (1U << (int)(target & 31)));
-        if (_state.Metamap) Require(_hooks.Assertion)(PlayerParticipationAssertion.MetamapMode);
-        bool battle = _state.Battle;
+        if (Metamap()) Require(_hooks.Assertion)(PlayerParticipationAssertion.MetamapMode);
+        bool battle = Battle();
         _allies[owner * PlayerCount + target] = 1;
         if (!battle) return;
-        if (_state.Metamap) Require(_hooks.Assertion)(PlayerParticipationAssertion.MetamapMode);
+        if (Metamap()) Require(_hooks.Assertion)(PlayerParticipationAssertion.MetamapMode);
         Require(_hooks.SendAlliance)(9, owner, Read(owner, AllyMaskOffset));
     }
 
@@ -335,7 +375,7 @@ public sealed class PlayerParticipation
         Put(owner, BrainOffset, brain);
         Put(owner, FlagsOffset, Read(owner, FlagsOffset) | BrainFlag);
         if (unchecked((int)Read(owner, SubscriberOffset)) >= 1) return;
-        if (_state.Metamap) Require(_hooks.Assertion)(PlayerParticipationAssertion.MetamapMode);
+        if (Metamap()) Require(_hooks.Assertion)(PlayerParticipationAssertion.MetamapMode);
         Put(owner, SubscriberOffset, owner + SyntheticSubscriberBase);
         int start = PlayerBase(owner);
         // 원본은 DWORD 7개와 마지막 WORD 를 써 +0x30..+0x4d 의 30바이트만 지운다.
