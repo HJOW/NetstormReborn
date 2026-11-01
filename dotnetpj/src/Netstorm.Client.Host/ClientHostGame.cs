@@ -51,6 +51,9 @@ public sealed class ClientHostGame : Game
     /// <summary>공통 트리의 표시 수집·정렬·출력 장치.</summary>
     private HostGumpDrawing? _gumpDrawing;
 
+    /// <summary>현재 메인 메뉴의 공통 입력과 상위 명령 소비자.</summary>
+    private HostMenuInput? _menuInput;
+
     /// <summary>HTML과 상위 메뉴가 공유할 원본 80칸 스크립트 문자열 고리.</summary>
     private readonly ScriptStringRing _scriptStrings = new();
 
@@ -146,8 +149,8 @@ public sealed class ClientHostGame : Game
                 Poll = Poll,
                 Sound = _buttonSound.Play,
                 Redraw = (_, _) => _menuDirty = true,
-                HandleBase = (_, _, _, _) => throw new InvalidOperationException("메인 메뉴 명령 소비자 미연결")
-            });
+                HandleBase = (_, _, _, _) => 0
+            }, action => (_menuInput ?? throw new InvalidOperationException("메인 메뉴 입력 소유자 미연결")).Post(action));
             _htmlWindows = new HostHtmlWindows(_mainMenu, _driver.Input, () => _wallClock.Elapsed.TotalSeconds,
                 _ => throw new InvalidOperationException("HTML 링크 명령 소비자 미연결"));
             _htmlWindows.BindParser(_startup, raw => ScriptCommand.QueueScriptCommand(raw, _driver.Input, _scriptStrings,
@@ -160,8 +163,11 @@ public sealed class ClientHostGame : Game
             _htmlFactory = new HostHtmlFactory(_mainMenu, _htmlWindows, _htmlMenus, _startup, _driver.Screen, _driver.Input,
                 _scriptStrings, () => _wallClock.Elapsed.TotalSeconds, _ => 0,
                 name => Debug.WriteLine("HTML 메타 명령 미연결: " + name));
+            _menuInput = new HostMenuInput(_mainMenu, _htmlWindows, _htmlFactory, _driver.Input, _scriptStrings,
+                () => _menuDirty = true, action => throw new InvalidOperationException("메뉴 상위 명령 미연결: " + action));
             _gumpDrawing = new HostGumpDrawing(_mainMenu, _htmlText, _htmlMenus, _driver.Screen);
             _driver.BindControlLocator(_mainMenu);
+            _driver.BindInputHandler(_menuInput.Dispatch);
             _gumpDrawing.Draw();
             _menuDirty = false;
         }
@@ -175,10 +181,12 @@ public sealed class ClientHostGame : Game
     /// <param name="gameTime">경과 시각.</param>
     protected override void Update(GameTime gameTime)
     {
+        _menuInput?.Tick();
         _driver.BeginFrame();
         PumpKeyboard();
         PumpMouse();
         if (_driver.ProcessInput()) { Exit(); return; }
+        _menuInput?.FinishFrame();
         if (_menuDirty && _gumpDrawing is not null && _startup is not null)
         { _startup.Draw(_driver.Screen); _gumpDrawing.Draw(); _menuDirty = false; }
         base.Update(gameTime);

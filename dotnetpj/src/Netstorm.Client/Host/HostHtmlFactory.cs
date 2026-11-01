@@ -63,6 +63,10 @@ public sealed class HostHtmlFactory
     /// <summary>Config의 문자열을 원본 BYTE 표현으로 바꾼다.</summary>
     private static string Raw(string text) => Encoding.Latin1.GetString(OriginalText.EncodeWindows1252(text));
 
+    /// <summary>원본 BYTE 설정 명령을 같은 실제 Config에 적용한다.</summary>
+    public void ApplyConfig(string source) => ScriptCommand.ApplyScriptConfig(source,
+        (key, value) => _startup.Configuration.Set(Text(key), Text(value)));
+
     /// <summary>현재 Tell 설정과 선택 미션에서 본문을 읽어 실제 HTML 창을 만든다.</summary>
     /// <param name="target">Tell 이름과 선택적 매개변수.</param><param name="suppress">창 생략 값.</param>
     /// <param name="mission">현재 미션의 선택적 섹션 조회.</param>

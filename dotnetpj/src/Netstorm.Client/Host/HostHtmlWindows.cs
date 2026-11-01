@@ -154,8 +154,8 @@ public sealed class HostHtmlWindows
         uint result = Window.Construct(token, width, height); _constructed.Add(token); return result;
     }
 
-    /// <summary>등록된 직접 소유 노드를 삭제 요청하고 같은 공통 삭제 큐를 처리한다. 부분 생성 객체도 반환한다.</summary>
-    public void CloseAll()
+    /// <summary>소유한 등록 노드에 삭제를 예약한다. 실제 반납은 공통 Cleanup 단계에 맡긴다.</summary>
+    public void RequestCloseAll()
     {
         // 메타 처리 중 부착하지 못한 소유 메뉴를 먼저 스택에서 제거한다.
         while (_menus is not null && _menus.Current() is uint currentMenu && currentMenu != 0 && _owned.Contains(currentMenu)) _menus.TakeCurrent();
@@ -163,6 +163,12 @@ public sealed class HostHtmlWindows
         foreach (uint token in _tree.Create.Entries.ToArray())
             if (token != 0 && _owned.Contains(token) && _tree.Node(token) is { } node && (node.Flags & 0x10000) == 0)
                 _tree.Lifetime.Kill(token);
+    }
+
+    /// <summary>등록된 소유 노드의 삭제와 공통 Cleanup을 수행하고 부분 생성 객체도 반환한다.</summary>
+    public void CloseAll()
+    {
+        RequestCloseAll();
         _tree.Lifetime.Cleanup();
         // 기본 생성 전에 실패한 객체만 남을 수 있다. 생성된 미등록 객체는 조용히 버리지 않는다.
         foreach (uint token in _owned.ToArray())

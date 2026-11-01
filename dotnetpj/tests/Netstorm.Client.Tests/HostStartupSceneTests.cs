@@ -330,6 +330,46 @@ public sealed class HostStartupSceneTests
         windows.CloseAll(); Assert.Equal(initial, menu.Tree.Create.Count); Assert.Empty(text.Fragments.Fragments);
     }
 
+    /// <summary>메인 Credits 클릭을 다음 Tick Tell과 실제 모달 클릭·큐·지연 정리까지 연결한다.</summary>
+    [Fact]
+    public void HostMenuInputOpensAndClosesCreditsThroughSharedQueue()
+    {
+        string? data = GameDataLocator.FindDataDirectory(); Assert.NotNull(data);
+        var startup = new HostStartupScene(data); var screen = new Screen(1024, 768);
+        Assert.True(screen.SetMode(ScreenMode.BackBufferDib | ScreenMode.ModeSet)); startup.Draw(screen);
+        HostMenuInput? router = null; int changes = 0;
+        var menu = new HostMainMenu(startup, screen, new GumpButtonTreeHooks
+        {
+            Now = () => 1, Poll = _ => new(InputCode.Release, 0, 0), Sound = () => { }, Redraw = (_, _) => changes++, HandleBase = (_, _, _, _) => 0
+        }, action => router!.Post(action));
+        var queue = new InputQueue(); var strings = new ScriptStringRing();
+        var windows = new HostHtmlWindows(menu, queue, () => 1, _ => throw new InvalidOperationException());
+        windows.BindParser(startup, raw => ScriptCommand.QueueScriptCommand(raw, queue, strings,
+            new() { Lookup = DialogScriptCommands.Lookup, Unknown = _ => throw new InvalidOperationException() }));
+        var text = new HostHtmlText(menu, windows, screen, _ => default, (_, _) => changes++, _ => { }, _ => { });
+        text.Bind(windows); var menus = new HostHtmlMenus(menu, windows, text, startup, screen, (_, _) => changes++);
+        var factory = new HostHtmlFactory(menu, windows, menus, startup, screen, queue, strings, () => 1, _ => 0,
+            _ => throw new InvalidOperationException());
+        router = new HostMenuInput(menu, windows, factory, queue, strings, () => changes++, action => throw new InvalidOperationException(action.ToString()));
+        var driver = new HostFrameDriver(screen, queue); driver.BindInputHandler(router.Dispatch);
+        var drawing = new HostGumpDrawing(menu, text, menus, screen); drawing.Draw(); byte[] before = screen.Pixels.ToArray();
+        ScreenPoint point = menu.ControlPoint("Credits")!.Value;
+        queue.Push(InputCode.LeftButton, point.X, point.Y); queue.Push(InputCode.LeftButton | InputCode.Release, point.X, point.Y);
+        Assert.False(driver.ProcessInput()); Assert.Equal(0U, windows.State.Instances); router.FinishFrame();
+        router.Tick(); uint root = menu.Tree.LifeState.CurrentDialog; Assert.NotEqual(0U, root);
+        drawing.Draw(); Assert.False(before.SequenceEqual(screen.Pixels.ToArray()));
+        var node = Assert.IsType<HtmlWindowGumpNode>(menu.Tree.Node(root));
+        ScreenRect button = menu.Tree.Collection.Bounds(node.Controls[0].Child); int x = (button.Left + button.Right) / 2, y = (button.Top + button.Bottom) / 2;
+        queue.Push(InputCode.LeftButton, x, y); queue.Push(InputCode.LeftButton | InputCode.Release, x, y);
+        Assert.False(driver.ProcessInput()); router.FinishFrame(); Assert.Equal(0U, windows.State.Instances);
+        Assert.Equal(0U, menu.Tree.LifeState.CurrentDialog); Assert.True(changes > 0);
+        startup.Draw(screen); drawing.Draw(); Assert.Equal(before, screen.Pixels.ToArray());
+        uint assignment = strings.Store("HostMenuInputTest=7"); queue.PushCommand(0x0200006d, (int)assignment, (int)assignment);
+        Assert.False(driver.ProcessInput()); Assert.Equal(7, startup.Configuration.GetInt("HostMenuInputTest"));
+        router.Post(new("RequestQuitApp", "0")); Assert.True(driver.ProcessInput());
+        windows.CloseAll();
+    }
+
     /// <summary>여덟 실제 버튼의 눌림·해제를 원본 상위 명령과 인자로 전달한다.</summary>
     [Fact]
     public void MainMenuRoutesEachButtonToItsOriginalAction()
