@@ -42,6 +42,9 @@ public sealed class ClientHostGame : Game
     /// <summary>HTML 다중 줄 본문과 슬라이더 소유자.</summary>
     private HostHtmlText? _htmlText;
 
+    /// <summary>HTML 창의 실제 controlled 메뉴 열.</summary>
+    private HostHtmlMenus? _htmlMenus;
+
     /// <summary>HTML과 상위 메뉴가 공유할 원본 80칸 스크립트 문자열 고리.</summary>
     private readonly ScriptStringRing _scriptStrings = new();
 
@@ -147,6 +150,7 @@ public sealed class ClientHostGame : Game
                 _ => throw new InvalidOperationException("HTML 본문 커서 장치 미연결"),
                 _ => throw new InvalidOperationException("HTML 본문 이름 소리 장치 미연결"));
             _htmlText.Bind(_htmlWindows);
+            _htmlMenus = new HostHtmlMenus(_mainMenu, _htmlWindows, _htmlText, _startup, _driver.Screen, (_, _) => _menuDirty = true);
             _driver.BindControlLocator(_mainMenu);
             _mainMenu.Draw(_driver.Screen);
             _menuDirty = false;

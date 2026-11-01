@@ -233,6 +233,45 @@ public sealed class HostStartupSceneTests
         owner.CloseAll(); Assert.Equal(initial, menu.Tree.Create.Count); Assert.Empty(text.Fragments.Fragments);
     }
 
+    /// <summary>실제 HTML 메타의 메뉴 열이 공유 트리에서 측정·부착·자식 우선 반납되는지 확인한다.</summary>
+    [Fact]
+    public void HostHtmlMenuMetadataBuildsAndFitsSharedMenu()
+    {
+        string? data = GameDataLocator.FindDataDirectory(); Assert.NotNull(data);
+        var startup = new HostStartupScene(data); var screen = new Screen(1024, 768);
+        Assert.True(screen.SetMode(ScreenMode.BackBufferDib | ScreenMode.ModeSet)); startup.Draw(screen);
+        var menu = new HostMainMenu(startup, screen, new GumpButtonTreeHooks
+        {
+            Now = () => 1, Poll = _ => default, Sound = () => { }, Redraw = (_, _) => { }, HandleBase = (_, _, _, _) => 0
+        });
+        var owner = new HostHtmlWindows(menu, new InputQueue(), () => 1, _ => { });
+        var text = new HostHtmlText(menu, owner, screen, _ => default, (_, _) => { }, _ => { }, _ => { });
+        text.Bind(owner); var menus = new HostHtmlMenus(menu, owner, text, startup, screen, (_, _) => { });
+        uint initial = menu.Tree.Create.Count; uint root = owner.Create(400, 0);
+        owner.Window.SetBody(root, "Choose a mission.\n");
+        var strings = new ScriptStringRing(); var hooks = new HtmlWindowMetadataHooks
+        {
+            Node = token => menu.Tree.Node(token) as HtmlWindowGumpNode,
+            Commands = new() { Lookup = DialogScriptCommands.Lookup, Unknown = _ => throw new InvalidOperationException() },
+            Read = _ => 0
+        };
+        HtmlWindowMetadata.BindHtmlWindowMetadataDevices(hooks, owner.Window, strings, menu.Tree.Lifetime);
+        menus.BindMetadata(hooks);
+        byte[] buffer = new byte[8192]; System.Text.Encoding.Latin1.GetBytes("$Menu=First,Tell,First \n$Checked=Second,Tell,Second,1,1 \n").CopyTo(buffer, 0);
+        Assert.Equal(1U, new HtmlWindowMetadata(hooks).Process(root, buffer));
+        uint column = menus.Menu.Current(); var node = Assert.IsType<MenuGumpNode>(menu.Tree.Node(column));
+        Assert.Equal(2U, node.ItemCount); Assert.True(node.BaseWidth > 0); Assert.True(node.BaseHeight > 0);
+        Assert.Equal(0x02000095U, node.Items[0].Command); Assert.Equal("First", strings.Resolve(node.Items[0].Parameter));
+        menu.Tree.TreeHooks.Attach!(root, 0, 0, menu.Tree.Create.Entries[0], 0);
+        Assert.Equal(0U, menus.State.Index); Assert.Equal(root, node.Parent);
+        owner.CloseAll(); Assert.Equal(0U, menus.State.Instances); Assert.Null(menu.Tree.Node(column));
+        Assert.Equal(initial, menu.Tree.Create.Count); Assert.Empty(text.Fragments.Fragments);
+        uint unfinished = menus.Widgets.BeginVertical();
+        menus.Controls.AddText("Partial"u8, 0x02000095, 0, true, true, false);
+        owner.CloseAll(); Assert.Equal(0U, menus.State.Index); Assert.Equal(0U, menus.State.Instances);
+        Assert.Null(menu.Tree.Node(unfinished)); Assert.Equal(initial, menu.Tree.Create.Count); Assert.Empty(text.Fragments.Fragments);
+    }
+
     /// <summary>여덟 실제 버튼의 눌림·해제를 원본 상위 명령과 인자로 전달한다.</summary>
     [Fact]
     public void MainMenuRoutesEachButtonToItsOriginalAction()

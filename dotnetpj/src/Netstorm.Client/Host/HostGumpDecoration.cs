@@ -36,6 +36,13 @@ public sealed class HostGumpDecoration
             _tree.Backgrounds, background, _tree.Collection, _tree.Lifetime, hooks);
     }
 
+    /// <summary>메뉴의 장식 생성·수명에 같은 실제 저장소와 자산을 빌려준다. 그리기는 별도 화면 장치에서 수행한다.</summary>
+    internal GumpDecoration CreateDevice()
+    {
+        var background = new GumpBackgroundDraw(_tree.Collection, new(), new(), new() { Node = t => _tree.Node(t) as GumpBackgroundNode });
+        return Device(background, new());
+    }
+
     /// <summary>공통 저장소에 이미 할당된 장식 또는 HTML 파생 노드의 원본 기본 부분을 생성한다.</summary>
     /// <param name="token">현재 공통 저장소가 소유한 장식 파생 토큰.</param>
     /// <param name="width">원본 기본 폭.</param><param name="height">원본 기본 높이.</param>

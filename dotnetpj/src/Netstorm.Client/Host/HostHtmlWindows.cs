@@ -20,6 +20,10 @@ public sealed class HostHtmlWindows
     private readonly HtmlWindowGumpHooks _hooks;
     /// <summary>연결된 HTML 전체 가상 배치 처리기.</summary>
     private HtmlWindowFit? _fit;
+    /// <summary>전체 창 배치와 같은 메뉴 스택을 연결할 현재 경계.</summary>
+    private HtmlWindowFitHooks? _fitHooks;
+    /// <summary>부분 생성된 controlled 메뉴를 정리할 실제 스택.</summary>
+    private MenuGump? _menus;
     /// <summary>같은 실제 부모의 링크와 파서 전역을 소유하는 장치.</summary>
     private HtmlWindowTextParser? _parser;
     /// <summary>클라이언트 수명의 현재 HTML 창 전역.</summary>
@@ -129,8 +133,17 @@ public sealed class HostHtmlWindows
             Reference = _tree.Reference, Read = Read
         };
         HtmlWindowFit.BindHtmlWindowFitDevices(hooks, _tree.Stones, _tree.Tree, text.Text, text.Widgets);
+        _fitHooks = hooks;
         _fit = new HtmlWindowFit(hooks);
         HtmlWindowFit.BindHtmlWindowFit(_tree.TreeHooks, token => _constructed.Contains(token) ? _fit : null);
+    }
+
+    /// <summary>HTML 열 배치와 실패 중인 메뉴 정리가 같은 controlled 메뉴 스택을 사용하게 한다.</summary>
+    public void BindMenus(MenuGump menu)
+    {
+        ArgumentNullException.ThrowIfNull(menu);
+        if (_fitHooks is null || _menus is not null) throw new InvalidOperationException("HTML 배치 선행 또는 메뉴 중복 연결 오류");
+        _menus = menu; HtmlWindowFit.BindHtmlWindowFitMenus(_fitHooks, menu);
     }
 
     /// <summary>같은 공통 트리에 HTML 파생 부모를 생성하고 토큰을 돌려준다.</summary>
@@ -144,6 +157,8 @@ public sealed class HostHtmlWindows
     /// <summary>등록된 직접 소유 노드를 삭제 요청하고 같은 공통 삭제 큐를 처리한다. 부분 생성 객체도 반환한다.</summary>
     public void CloseAll()
     {
+        // 메타 처리 중 부착하지 못한 소유 메뉴를 먼저 스택에서 제거한다.
+        while (_menus is not null && _menus.Current() is uint currentMenu && currentMenu != 0 && _owned.Contains(currentMenu)) _menus.TakeCurrent();
         // 먼저 공통 등록표 순서로 살아 있는 소유 루트와 미부착 자식을 삭제한다.
         foreach (uint token in _tree.Create.Entries.ToArray())
             if (token != 0 && _owned.Contains(token) && _tree.Node(token) is { } node && (node.Flags & 0x10000) == 0)

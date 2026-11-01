@@ -25,6 +25,8 @@ public sealed class HostHtmlText
     private readonly HashSet<uint> _bufferTokens = [];
     /// <summary>같은 글자·그림 조각 저장소.</summary>
     public StyleTextState Fragments { get; } = new();
+    /// <summary>본문과 메뉴 항목이 같은 조각 저장소를 쓰는 스타일 처리기.</summary>
+    public StyleText Style { get; }
     /// <summary>현재 실제 본문 버퍼 소유자.</summary>
     public StyleTextBufferStore Buffers { get; }
     /// <summary>실제 표시·배치와 스크롤 처리기.</summary>
@@ -52,7 +54,7 @@ public sealed class HostHtmlText
         var markupHooks = new StyleTextMarkupHooks { Sound = sound };
         StyleTextMarkup.BindStyleTextMarkupPalette(markupHooks, screen.Colors());
         var commands = new StyleTextMarkup(Fragments, pictures, new(), markupHooks); commands.Hooks(styleHooks);
-        var style = new StyleText(Fragments, styleHooks); var bufferHooks = new StyleTextBufferHooks();
+        var style = Style = new StyleText(Fragments, styleHooks); var bufferHooks = new StyleTextBufferHooks();
         StyleTextBuffer.BindStyleTextBufferFonts(bufferHooks, font); StyleTextBuffer.BindStyleTextBufferMarkup(bufferHooks, pictures);
         Buffers = new StyleTextBufferStore(Fragments, style, bufferHooks, token =>
         {
