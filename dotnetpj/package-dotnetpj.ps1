@@ -4,7 +4,7 @@
 
 .DESCRIPTION
     게임 프로젝트(Netstorm.Game)를 Release / win-x64 로 `dotnet publish` 한 결과에 안내문, 빌드 정보,
-    라이선스 고지를 더해 하나의 zip 으로 묶는다. 받은 사람이 압축을 풀고 NetstormClone.exe 를 실행하면
+    라이선스 고지를 더해 하나의 zip 으로 묶는다. 받은 사람이 압축을 풀고 Netstorm.exe 를 실행하면
     되도록 구성한다. 게임 데이터(game-data)와 한국어 글꼴(fonts)은 게시 결과에 이미 포함되어 있다.
     (2026-10-23 신규. AGENTS.md 의 "배포판 압축파일 생성용 스크립트" 요구사항을 따른다.)
 
@@ -67,7 +67,7 @@ $DotnetRoot = $PSScriptRoot
 # 저장소 최상위 폴더다. LICENSE 와 git 정보를 여기서 찾는다. (2026-10-23 신규)
 $RepoRoot = Split-Path -Parent $DotnetRoot
 
-# 게시할 게임 프로젝트 파일이다. 어셈블리 이름은 NetstormClone, 출력은 WinExe 이다. (2026-10-23 신규)
+# 게시할 게임 프로젝트 파일이다. 어셈블리 이름은 Netstorm, 출력은 WinExe 이다. (2026-10-23 신규)
 $GameProject = Join-Path $DotnetRoot 'src\Netstorm.Game\Netstorm.Game.csproj'
 
 # 게시 대상 런타임 식별자다. Windows 10/11 x64 만 지원한다(리눅스는 후순위, AGENTS.md). (2026-10-23 신규)
@@ -77,7 +77,7 @@ $RuntimeId = 'win-x64'
 $PackageRootName = 'NetstormReborn-dotnetpj'
 
 # 게임 실행 파일 이름이다. 게시 결과 최상위에 있다. (2026-10-23 신규)
-$ExeName = 'NetstormClone.exe'
+$ExeName = 'Netstorm.exe'
 
 # 폴더만 입력했을 때 쓰는 기본 압축파일 이름이다. 날짜와 배포 방식을 붙여 이전 배포판을 덮어쓰지 않게 한다. (2026-10-23 신규)
 $DefaultZipName = 'NetstormReborn-dotnetpj-{0}.zip' -f (Get-Date -Format 'yyyyMMdd')
@@ -93,7 +93,7 @@ $ExcludedNamePatterns = @('*.pdb', 'Thumbs.db', 'desktop.ini')
 # game-data 세 파일은 Netstorm.Game.csproj 의 ValidateGameData 대상과 같고, SDL2/openal 은 MonoGame 이 쓰는 네이티브 라이브러리이다.
 # (2026-10-23 신규)
 $RequiredPublishEntries = @(
-    'NetstormClone.exe', 'NetstormClone.dll', 'NetstormClone.deps.json', 'NetstormClone.runtimeconfig.json',
+    'Netstorm.exe', 'Netstorm.dll', 'Netstorm.deps.json', 'Netstorm.runtimeconfig.json',
     'SDL2.dll', 'openal.dll',
     'game-data/netstorm.tarc', 'game-data/d/_shapes.shp', 'game-data/d/GIFCLOUD.COL',
     'fonts/D2Coding-Ver1.3.2-20180524-all.ttc')
@@ -385,12 +385,12 @@ function New-ReadmeText {
         '==================================================================================================',
         '',
         '[실행 방법]',
-        '1. 압축을 풀고 NetstormClone.exe 를 실행합니다.',
+        '1. 압축을 풀고 Netstorm.exe 를 실행합니다.',
         '2. 시작 옵션은 명령 프롬프트나 바로가기의 대상 뒤에 붙입니다.',
-        '     NetstormClone.exe --language korean     한국어 (english 로 바꾸면 영어)',
-        '     NetstormClone.exe --windowed            이번 실행만 창 모드',
-        '     NetstormClone.exe --fullscreen          이번 실행만 전체화면',
-        '     NetstormClone.exe --window 1280x960     창 크기 지정',
+        '     Netstorm.exe --language korean     한국어 (english 로 바꾸면 영어)',
+        '     Netstorm.exe --windowed            이번 실행만 창 모드',
+        '     Netstorm.exe --fullscreen          이번 실행만 전체화면',
+        '     Netstorm.exe --window 1280x960     창 크기 지정',
         '',
         '[필요 환경]',
         '- Windows 10 / 11 (64비트)',
@@ -401,7 +401,7 @@ function New-ReadmeText {
         '  설정을 초기화하려면 그 파일을 지우세요.',
         '',
         '[폴더 구성]',
-        '  NetstormClone.exe     게임 실행 파일',
+        '  Netstorm.exe     게임 실행 파일',
         '  *.dll, *.json         게임 라이브러리와 실행 설정',
         '  SDL2.dll, openal.dll  MonoGame 이 쓰는 창/소리 라이브러리',
         '  game-data\            게임 데이터 (원본 Netstorm 10.78에서 옮긴 그래픽, 지도, 미션, 소리)',
@@ -414,7 +414,7 @@ function New-ReadmeText {
         '- 개발 중인 클론이라 원본의 모든 기능이 구현된 것은 아닙니다. 멀티플레이는 포함되지 않습니다.',
         '',
         '[How to run]',
-        '1. Extract the archive and run NetstormClone.exe.',
+        '1. Extract the archive and run Netstorm.exe.',
         '2. Options (append to the command line): --language korean|english, --windowed, --fullscreen, --window 1280x960.',
         $runtimeEn,
         '4. Screen/sound settings are stored in %APPDATA%\NetstormReborn\settings.json, not in this folder. Delete that file to reset.',
@@ -587,7 +587,7 @@ try {
     }
 
     # 제3자 고지문과 라이선스 파일을 만든다. 글꼴 라이선스 전문이 저장소에 있으면 함께 넣는다.
-    $notices = Get-ThirdPartyNotices -DepsJsonPath (Join-Path $publishFolder 'NetstormClone.deps.json')
+    $notices = Get-ThirdPartyNotices -DepsJsonPath (Join-Path $publishFolder 'Netstorm.deps.json')
     Add-TextItem -Items $items -Entry ($PackageRootName + '/licenses/THIRD_PARTY_NOTICES.txt') -Text $notices.Text
     # NuGet 패키지가 파일로 제공한 라이선스를 licenses 폴더에 넣는다.
     foreach ($licenseFile in $notices.FileItems) {
@@ -615,7 +615,7 @@ try {
 
     # BUILD_INFO.txt 는 게시 결과의 파일 정보를 알아야 해서 항목을 모은 뒤 마지막에 만든다.
     $exePath = Join-Path $publishFolder $ExeName
-    $dllPath = Join-Path $publishFolder 'NetstormClone.dll'
+    $dllPath = Join-Path $publishFolder 'Netstorm.dll'
     $exeInfo = Get-Item -LiteralPath $exePath
     $dllInfo = Get-Item -LiteralPath $dllPath
     $sdkText = '(알 수 없음)'
@@ -634,7 +634,7 @@ try {
     $infoLines.Add('.NET SDK     : ' + $sdkText)
     $infoLines.Add(('Executable   : {0}  {1:N0} bytes  built {2:yyyy-MM-dd HH:mm:ss}' -f $ExeName, $exeInfo.Length, $exeInfo.LastWriteTime))
     $infoLines.Add('Executable SHA256: ' + (Get-FileHash -LiteralPath $exePath -Algorithm SHA256).Hash)
-    $infoLines.Add(('Game library : NetstormClone.dll  version {0}  SHA256 {1}' -f $dllInfo.VersionInfo.FileVersion, (Get-FileHash -LiteralPath $dllPath -Algorithm SHA256).Hash))
+    $infoLines.Add(('Game library : Netstorm.dll  version {0}  SHA256 {1}' -f $dllInfo.VersionInfo.FileVersion, (Get-FileHash -LiteralPath $dllPath -Algorithm SHA256).Hash))
     $infoLines.Add(('Game data    : {0} files from assets/game-data (clone data source)' -f $gameDataCount))
     $infoLines.Add(('Published    : {0} files, {1:N0} bytes, {2} excluded (debug symbols)' -f $publish.Items.Count, $publishBytes, $publish.Skipped.Count))
     $infoLines.Add($(if ($publishedByScript) { 'Publish dir  : generated by this script (temporary)' } else { 'Publish dir  : supplied by -PublishDir' }))

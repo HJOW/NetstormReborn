@@ -5,7 +5,7 @@ $ErrorActionPreference = 'Stop'
 $taskRoot = Split-Path -Parent $PSScriptRoot
 $taskOutput = Join-Path $taskRoot $OutputDirectory
 New-Item -ItemType Directory -Force -Path $taskOutput | Out-Null
-$taskExe = Join-Path $taskRoot 'dotnetpj/src/Netstorm.Game/bin/Release/net10.0/NetstormClone.exe'
+$taskExe = Join-Path $taskRoot 'dotnetpj/src/Netstorm.Game/bin/Release/net10.0/Netstorm.exe'
 $taskOldSettings = $env:NETSTORM_SETTINGS_DIR
 # 두 실행이 같은 설정 폴더를 공유해야 저장한 완료값이 재실행에 이어진다. 사용자 설정은 건드리지 않는다.
 $taskSettings = Join-Path $taskOutput 'settings'

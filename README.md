@@ -128,7 +128,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File cpppj\package-cpppj.ps1 D:\d
 
 # C# + MonoGame 클론 빌드와 실행 (dotnetpj, 개발 일시 정지)
 
-아래 명령은 프로젝트 루트(`NetstormReborn`)에서 실행합니다. 게임 본체는 C# / MonoGame DesktopGL이며 대상 프레임워크는 `net10.0`입니다. 현재 빌드되는 실행 파일은 기존 근사 구현 경로(`NetstormClone`)입니다.
+아래 명령은 프로젝트 루트(`NetstormReborn`)에서 실행합니다. 게임 본체는 C# / MonoGame DesktopGL이며 대상 프레임워크는 `net10.0`입니다. 현재 빌드되는 실행 파일은 기존 근사 구현 경로(`Netstorm`)입니다.
 
 ## 준비
 
@@ -161,8 +161,8 @@ dotnet publish dotnetpj/src/Netstorm.Game/Netstorm.Game.csproj -c Release -r lin
 
 | 대상 | 출력 폴더 | 실행 파일 |
 | --- | --- | --- |
-| Windows 10/11 x64 | `dist/win-x64/` | `NetstormClone.exe` |
-| Linux x64 | `dist/linux-x64/` | `NetstormClone` |
+| Windows 10/11 x64 | `dist/win-x64/` | `Netstorm.exe` |
+| Linux x64 | `dist/linux-x64/` | `Netstorm` |
 
 `--self-contained true`는 .NET 런타임까지 포함하므로 실행할 PC에 .NET SDK나 런타임을 따로 설치할 필요가 없습니다. SDL2·OpenAL 네이티브 라이브러리, `fonts/`, `game-data/`도 출력에 포함됩니다. 실행 파일은 함께 생성된 DLL·런타임 파일·글꼴·게임 데이터를 사용하므로 **출력 폴더 전체를 복사해 배포**합니다. 그래픽 드라이버와 Linux GUI 환경 등 OS의 실행 환경은 별도로 필요합니다.
 
@@ -176,12 +176,12 @@ powershell -NoProfile -ExecutionPolicy Bypass -File dotnetpj\package-dotnetpj.ps
 
 ## 포함된 게임 데이터와 바이너리 실행
 
-빌드·배포 시 `assets/game-data/`의 내용이 출력의 **`game-data/`에 자동으로 복사**됩니다. Windows 배포 폴더는 다음과 같은 구조가 됩니다(Linux도 동일하며 실행 파일 이름은 `NetstormClone`입니다).
+빌드·배포 시 `assets/game-data/`의 내용이 출력의 **`game-data/`에 자동으로 복사**됩니다. Windows 배포 폴더는 다음과 같은 구조가 됩니다(Linux도 동일하며 실행 파일 이름은 `Netstorm`입니다).
 
 ```text
 dist/win-x64/
-  NetstormClone.exe
-  NetstormClone.dll
+  Netstorm.exe
+  Netstorm.dll
   ... (함께 생성된 DLL·런타임·설정 파일)
   fonts/
     D2Coding-Ver1.3.2-20180524-all.ttc
@@ -195,25 +195,25 @@ dist/win-x64/
 Windows PowerShell에서 실행:
 
 ```powershell
-.\dist\win-x64\NetstormClone.exe --language korean
+.\dist\win-x64\Netstorm.exe --language korean
 ```
 
 Linux에서 실행:
 
 ```sh
-chmod +x dist/linux-x64/NetstormClone
-./dist/linux-x64/NetstormClone --language korean
+chmod +x dist/linux-x64/Netstorm
+./dist/linux-x64/Netstorm --language korean
 ```
 
 일반 실행은 함께 배포된 데이터를 자동으로 찾습니다. 개발·검증용 데이터를 다른 위치에서 사용하려면 `NETSTORM_DATA`에 **`netstorm.tarc`가 들어 있는 폴더의 절대 경로**를 지정합니다. 탐색 순서는 유효한 `NETSTORM_DATA` → 실행 파일·작업 폴더 및 그 상위의 `game-data/` 또는 `assets/game-data/`입니다.
 
 ```powershell
 $env:NETSTORM_DATA = "D:\Games\NetstormReborn\game-data"
-.\dist\win-x64\NetstormClone.exe --language korean
+.\dist\win-x64\Netstorm.exe --language korean
 ```
 
 ```sh
-NETSTORM_DATA="/절대/경로/game-data" ./dist/linux-x64/NetstormClone --language korean
+NETSTORM_DATA="/절대/경로/game-data" ./dist/linux-x64/Netstorm --language korean
 ```
 
 # 웹 클론 실행 (HTML + JavaScript)

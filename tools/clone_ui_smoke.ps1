@@ -38,7 +38,7 @@ quit;
 function Invoke-CloneUiCheck([string]$Name, [string]$Commands) {
     $taskFile = Join-Path $taskOutput "$Name.txt"
     Set-Content -LiteralPath $taskFile -Encoding UTF8 -Value $Commands
-    $taskExe = Join-Path $taskRoot 'dotnetpj/src/Netstorm.Game/bin/Release/net10.0/NetstormClone.exe'
+    $taskExe = Join-Path $taskRoot 'dotnetpj/src/Netstorm.Game/bin/Release/net10.0/Netstorm.exe'
     $taskLog = Join-Path $taskOutput "$Name.stdout.log"
     $taskError = Join-Path $taskOutput "$Name.stderr.log"
     $taskProcess = Start-Process -FilePath $taskExe -WorkingDirectory $taskRoot -ArgumentList "--language korean --ui-script-file $OutputDirectory/$Name.txt" -WindowStyle Hidden -PassThru -RedirectStandardOutput $taskLog -RedirectStandardError $taskError

@@ -36,7 +36,7 @@ capture {(folder / 'arrived.png').as_posix()}; quit;
     script = folder / "commands.txt"
     script.write_text(commands, encoding="utf-8")
     env = dict(os.environ, NETSTORM_DATA=str(data), NETSTORM_SETTINGS_DIR=str(settings))
-    exe = root / "dotnetpj/src/Netstorm.Game/bin/Release/net10.0/NetstormClone.exe"
+    exe = root / "dotnetpj/src/Netstorm.Game/bin/Release/net10.0/Netstorm.exe"
     args = [str(exe), "--test-battle", "frameloop", "--language", language, "--no-sound", "--no-music",
         "--max-fps", str(max_fps), "--script", "rules 0; combat 0", "--ui-script-file", str(script)]
     with (folder / "stdout.log").open("wb") as stdout, (folder / "stderr.log").open("wb") as stderr:

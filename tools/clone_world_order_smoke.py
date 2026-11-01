@@ -91,7 +91,7 @@ def run_case(root, output, data, name, setup, click, expected, width, height, la
     (folder / "commands.txt").write_text(commands, encoding="utf-8")
     import os
     env = dict(os.environ, NETSTORM_DATA=str(data), NETSTORM_SETTINGS_DIR=str(settings))
-    exe = root / "dotnetpj/src/Netstorm.Game/bin/Release/net10.0/NetstormClone.exe"
+    exe = root / "dotnetpj/src/Netstorm.Game/bin/Release/net10.0/Netstorm.exe"
     args = [str(exe), "--test-battle", name, "--language", "english", "--no-sound", "--no-music",
             "--script", "rules 0; combat 0; " + setup, "--ui-script-file", str(folder / "commands.txt")]
     with (folder / "stdout.log").open("wb") as stdout, (folder / "stderr.log").open("wb") as stderr:

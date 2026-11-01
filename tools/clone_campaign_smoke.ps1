@@ -4,7 +4,7 @@ $ErrorActionPreference = 'Stop'
 $taskRoot = Split-Path -Parent $PSScriptRoot
 $taskOutput = Join-Path $taskRoot $OutputDirectory
 New-Item -ItemType Directory -Force -Path $taskOutput | Out-Null
-$taskExe = Join-Path $taskRoot 'dotnetpj/src/Netstorm.Game/bin/Release/net10.0/NetstormClone.exe'
+$taskExe = Join-Path $taskRoot 'dotnetpj/src/Netstorm.Game/bin/Release/net10.0/Netstorm.exe'
 $taskOldSettings = $env:NETSTORM_SETTINGS_DIR
 $taskCases = [ordered]@{
     locked = '{"WindowWidth":1024,"WindowHeight":768,"ViewHeight":768,"SoundOn":false,"PlayMusic":false}'

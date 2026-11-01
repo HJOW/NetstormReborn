@@ -3,7 +3,7 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <RootNamespace>Netstorm.Game</RootNamespace>
-    <AssemblyName>NetstormClone</AssemblyName>
+    <AssemblyName>Netstorm</AssemblyName>
     <!-- 고해상도 모니터에서 흐릿하게 확대되지 않도록 DPI 인식 -->
     <ApplicationHighDpiMode>PerMonitorV2</ApplicationHighDpiMode>
     <!-- MonoGame 의 네이티브 라이브러리(SDL2, OpenAL)는 NuGet 패키지가 출력 폴더에 복사한다 -->

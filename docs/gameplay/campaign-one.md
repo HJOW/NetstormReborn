@@ -6,7 +6,7 @@ AGENTS.md의 클론 목표와 사용자가 지정한 **메인 메뉴 → 캠페�
 
 ## 실행과 공개 범위
 
-`dotnet run --project dotnetpj/src/Netstorm.Game -c Release -- --language korean` 또는 빌드한 `NetstormClone.exe --language korean`으로 메인 메뉴를 연다. 영어는 `--language english`다. `assets/game-data/`의 게임 데이터와 D2Coding 글꼴을 출력에 자동 포함하므로 `originals/` 없이 실행할 수 있다. [데이터 구성](../../assets/README.md).
+`dotnet run --project dotnetpj/src/Netstorm.Game -c Release -- --language korean` 또는 빌드한 `Netstorm.exe --language korean`으로 메인 메뉴를 연다. 영어는 `--language english`다. `assets/game-data/`의 게임 데이터와 D2Coding 글꼴을 출력에 자동 포함하므로 `originals/` 없이 실행할 수 있다. [데이터 구성](../../assets/README.md).
 
 > 2026-10-01 후속: **1-2 Master of Whirligigs를 공개**했다(메뉴·성공 창 Next Mission). 아래 "1-2~1-6 잠금" 서술 중 1-2는 [캠페인 1-2 문서](campaign-two.md)로 대체되었다. 타입 기본 비용·간헐천 고갈·채집 시간·임시 AI 일반화도 그 문서에 있으며 1-1에도 적용된다.
 

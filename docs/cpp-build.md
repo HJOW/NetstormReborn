@@ -90,7 +90,7 @@
 | 만드는 방법 | 원본을 분석해 규칙·화면을 새로 구현한다 (클론 코딩) | **기존 게임을 디컴파일한 소스를 토대로 C++ 소스를 다시 만든다** |
 | 빌드 도구 | .NET 10 SDK (`dotnetpj/Netstorm.sln`) | CMake 3.21 이상 + C++20 컴파일러(MSVC), **Windows 전용** |
 | 플랫폼 | MonoGame (Windows·Linux) | **Win32 API 를 원본처럼 직접 호출** (외부 라이브러리 없음) |
-| 실행 파일 | `NetstormClone` | `Netstorm.exe` (CMake 대상 `NetstormCpp`) |
+| 실행 파일 | `Netstorm` | `Netstorm.exe` (CMake 대상 `NetstormCpp`) |
 | 상태 | 캠페인 1-1·1-2 플레이 가능 | 메뉴→브리핑→실제 지형/객체·선택/이동·정지/복귀. 건설·전투·미션 완주는 후속 |
 
 두 빌드가 함께 쓰는 것은 저장소 루트에 그대로 있다.

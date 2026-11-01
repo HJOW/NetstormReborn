@@ -2,7 +2,7 @@
 param([string]$OutputDirectory = 'extracted/screens/dotnet-help-layout')
 $ErrorActionPreference = 'Stop'
 $taskRoot = Split-Path -Parent $PSScriptRoot
-$taskExe = Join-Path $taskRoot 'dotnetpj/src/Netstorm.Game/bin/Release/net10.0/NetstormClone.exe'
+$taskExe = Join-Path $taskRoot 'dotnetpj/src/Netstorm.Game/bin/Release/net10.0/Netstorm.exe'
 Add-Type -AssemblyName System.Drawing
 
 # 사제 도움말의 고정 능력치 머리 또는 복원 본문에서 달라진 화소 수를 센다. 같은 위치·크기의 두 클론 캡처를 받는다.

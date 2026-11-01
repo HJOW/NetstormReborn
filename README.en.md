@@ -130,7 +130,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File cpppj\package-cpppj.ps1 D:\d
 
 # C# + MonoGame clone build and run (dotnetpj, development paused)
 
-Run the commands below from the project root (`NetstormReborn`). The game is written in C# with MonoGame DesktopGL, and the target framework is `net10.0`. The executable built today is the approximate existing-implementation path (`NetstormClone`).
+Run the commands below from the project root (`NetstormReborn`). The game is written in C# with MonoGame DesktopGL, and the target framework is `net10.0`. The executable built today is the approximate existing-implementation path (`Netstorm`).
 
 ## Prerequisites
 
@@ -163,8 +163,8 @@ dotnet publish dotnetpj/src/Netstorm.Game/Netstorm.Game.csproj -c Release -r lin
 
 | Target | Output folder | Executable |
 | --- | --- | --- |
-| Windows 10/11 x64 | `dist/win-x64/` | `NetstormClone.exe` |
-| Linux x64 | `dist/linux-x64/` | `NetstormClone` |
+| Windows 10/11 x64 | `dist/win-x64/` | `Netstorm.exe` |
+| Linux x64 | `dist/linux-x64/` | `Netstorm` |
 
 `--self-contained true` bundles the .NET runtime, so the PC that runs the game does not need the .NET SDK or runtime installed. The SDL2 and OpenAL native libraries, `fonts/`, and `game-data/` are also included in the output. The executable uses the DLLs, runtime files, font, and game data generated alongside it, so **distribute the whole output folder**. The OS environment, such as the graphics driver and a GUI on Linux, is still required separately.
 
@@ -178,12 +178,12 @@ powershell -NoProfile -ExecutionPolicy Bypass -File dotnetpj\package-dotnetpj.ps
 
 ## Bundled game data and running the binaries
 
-On build and publish, the contents of `assets/game-data/` are **copied automatically to `game-data/`** in the output. The Windows distribution folder looks like this (Linux is the same, with the executable named `NetstormClone`).
+On build and publish, the contents of `assets/game-data/` are **copied automatically to `game-data/`** in the output. The Windows distribution folder looks like this (Linux is the same, with the executable named `Netstorm`).
 
 ```text
 dist/win-x64/
-  NetstormClone.exe
-  NetstormClone.dll
+  Netstorm.exe
+  Netstorm.dll
   ... (DLLs, runtime, and configuration files generated alongside)
   fonts/
     D2Coding-Ver1.3.2-20180524-all.ttc
@@ -197,25 +197,25 @@ dist/win-x64/
 Run in Windows PowerShell:
 
 ```powershell
-.\dist\win-x64\NetstormClone.exe --language english
+.\dist\win-x64\Netstorm.exe --language english
 ```
 
 Run on Linux:
 
 ```sh
-chmod +x dist/linux-x64/NetstormClone
-./dist/linux-x64/NetstormClone --language english
+chmod +x dist/linux-x64/Netstorm
+./dist/linux-x64/Netstorm --language english
 ```
 
 A normal run finds the bundled data automatically. To use data from another location for development or verification, set `NETSTORM_DATA` to the **absolute path of the folder that contains `netstorm.tarc`**. The search order is a valid `NETSTORM_DATA`, then `game-data/` or `assets/game-data/` in the executable folder, the working folder, and their parent folders.
 
 ```powershell
 $env:NETSTORM_DATA = "D:\Games\NetstormReborn\game-data"
-.\dist\win-x64\NetstormClone.exe --language english
+.\dist\win-x64\Netstorm.exe --language english
 ```
 
 ```sh
-NETSTORM_DATA="/absolute/path/game-data" ./dist/linux-x64/NetstormClone --language english
+NETSTORM_DATA="/absolute/path/game-data" ./dist/linux-x64/Netstorm --language english
 ```
 
 # Running the web clone (HTML + JavaScript)
