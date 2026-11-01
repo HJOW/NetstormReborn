@@ -26,6 +26,8 @@ public sealed class HostMenuInput
     /// <summary>같은 공통 트리에 설치한 상위 팝업 메뉴다.</summary>
     private HostPopupMenu? _popup;
     private HostEditorSelection? _editor;
+    /// <summary>새 이름 창을 여는 실제 현재 호스트 장치다.</summary>
+    private Action<uint>? _newFort;
     private Func<uint>? _screenFlags;
     private Action<uint, bool>? _changeScreen;
     private Action? _acceptScreen;
@@ -34,6 +36,8 @@ public sealed class HostMenuInput
     public void BindPopup(HostPopupMenu popup) => _popup = popup ?? throw new ArgumentNullException(nameof(popup));
     /// <summary>실제 편집 맵 선택 전역과 입력 분배기를 연결한다.</summary>
     public void BindEditor(HostEditorSelection editor) => _editor = editor ?? throw new ArgumentNullException(nameof(editor));
+    /// <summary>새 Fort 이름 입력 명령을 같은 호스트 모달에 연결한다.</summary>
+    public void BindNewFort(Action<uint> show) => _newFort = show ?? throw new ArgumentNullException(nameof(show));
     /// <summary>실제 화면 장치의 현재 모드·변경·확인을 연결한다.</summary>
     public void BindScreenMode(Func<uint> flags, Action<uint, bool> change, Action accept)
     { _screenFlags = flags; _changeScreen = change; _acceptScreen = accept; }
@@ -77,6 +81,7 @@ public sealed class HostMenuInput
         if (_editor?.Dispatch(input) == true) { _changed(); return false; }
         uint code = input.Code & 0x03ffffff; bool released = (input.Code & InputCode.Release) != 0;
         if (code == HostPopupMenu.QueuedSelectCommand && _popup != null) { if (!released) Post(_popup.Select(unchecked((uint)input.Y))); return false; }
+        if (code == 0x02000079) { if (!released) { (_newFort ?? throw new InvalidOperationException("새 Fort 이름 창 미연결"))(unchecked((uint)input.Y)); _changed(); } return false; }
         if (code == 0x02000030) { if (!released) { (_changeScreen ?? throw new InvalidOperationException("화면 모드 장치 미연결"))(unchecked((uint)input.Y), true); _changed(); } return false; }
         if (code == 0x02000002) { if (!released) { uint previous = (_screenFlags ?? throw new InvalidOperationException("현재 화면 모드 미연결"))(); (_changeScreen ?? throw new InvalidOperationException("화면 모드 장치 미연결"))(previous ^ unchecked((uint)input.Y), false); ShowTell($"DirectDrawVerify({previous})"); } return false; }
         if (code == 0x020000e4) { if (!released) { (_acceptScreen ?? throw new InvalidOperationException("화면 모드 확인 미연결"))(); ShowTell("AdjustDirectDraw"); } return false; }

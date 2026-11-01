@@ -58,6 +58,8 @@ public sealed class ClientHostGame : Game
     private HostMenuInput? _menuInput;
     /// <summary>실제 편집 맵 목록과 다음 State 선택 소유자.</summary>
     private HostEditorSelection? _editor;
+    /// <summary>실제 공통 UI의 Fort 이름 입력 창이다.</summary>
+    private HostSaveFortDialog? _saveFortDialog;
 
     /// <summary>HTML과 상위 메뉴가 공유할 원본 80칸 스크립트 문자열 고리.</summary>
     private readonly ScriptStringRing _scriptStrings = new();
@@ -184,6 +186,9 @@ public sealed class ClientHostGame : Game
             _editor = new HostEditorSelection(_startup, _scriptStrings, _menuInput.ShowTell);
             _htmlFactory.BindMapCatalog(_editor.Catalog, _htmlMenus, _scriptStrings, () => _editor.CurrentName, () => _editor.PendingName);
             _menuInput.BindEditor(_editor);
+            _saveFortDialog = new HostSaveFortDialog(_mainMenu, _htmlWindows, _htmlText, _textEntry, _startup, _driver.Screen,
+                _ => throw new InvalidOperationException("Fort 이름 확인의 편집 작업본과 월드 소유자 미연결"), _menuInput.ShowTell);
+            _menuInput.BindNewFort(mode => _saveFortDialog.Show(mode, 1, _editor.CurrentName));
             _gumpDrawing = new HostGumpDrawing(_mainMenu, _htmlText, _htmlMenus, _driver.Screen, _textEntry);
             _driver.BindControlLocator(_mainMenu);
             _driver.BindInputHandler(_menuInput.Dispatch);

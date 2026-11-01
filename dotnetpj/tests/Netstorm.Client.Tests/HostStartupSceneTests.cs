@@ -11,6 +11,29 @@ namespace Netstorm.Client.Tests;
 /// <summary>실제 배포 자산의 설정·팔레트·메뉴 GIF가 논리 화면에 연결되는지 검사한다.</summary>
 public sealed class HostStartupSceneTests
 {
+    /// <summary>실제 자산과 공통 트리에서 이름 모달을 만들고 입력·그리기·취소를 수행한다.</summary>
+    [Fact]
+    public void HostSaveFortDialogUsesSharedWidgetsAndCloses()
+    {
+        string? data = GameDataLocator.FindDataDirectory(); Assert.NotNull(data);
+        var startup = new HostStartupScene(data); var screen = new Screen(1024, 768);
+        Assert.True(screen.SetMode(ScreenMode.BackBufferDib | ScreenMode.ModeSet)); startup.Draw(screen);
+        var menu = new HostMainMenu(startup, screen, new GumpButtonTreeHooks
+        { Now = () => 1, Poll = _ => default, Sound = () => { }, Redraw = (_, _) => { }, HandleBase = (_, _, _, _) => 0 });
+        var queue = new InputQueue(); var windows = new HostHtmlWindows(menu, queue, () => 1, _ => { });
+        var text = new HostHtmlText(menu, windows, screen, _ => default, (_, _) => { }, _ => { }, _ => { }); text.Bind(windows);
+        using var entry = new HostTextEntry(menu, windows, text, screen, () => 1, (_, _) => { });
+        var menus = new HostHtmlMenus(menu, windows, text, startup, screen, (_, _) => { });
+        var dialog = new HostSaveFortDialog(menu, windows, text, entry, startup, screen, _ => 0, _ => { });
+        uint token = dialog.Show(0, 1, "Current"); var root = Assert.IsType<SaveFortNameDialogNode>(menu.Tree.Node(token));
+        Assert.Equal(token, menu.Tree.LifeState.CurrentDialog); Assert.IsType<TextGumpNode>(menu.Tree.Node(root.Title));
+        var output = new byte[256]; entry.Entry.CopyText(root.Entry, output); Assert.Equal("Current", System.Text.Encoding.ASCII.GetString(output).Split('\0')[0]);
+        new HostGumpDrawing(menu, text, menus, screen, entry).Draw();
+        uint cancel = menu.Tree.Node(root.Cancel)!.Serial;
+        Assert.Equal(1u, menu.Tree.EventHooks.Handle!(token, 0x0200002c, cancel, 0)); menu.Tree.Lifetime.Cleanup();
+        Assert.Null(menu.Tree.Node(token)); Assert.Equal(0u, menu.Tree.LifeState.CurrentDialog); windows.CloseAll();
+    }
+
     /// <summary>실제 호스트 트리에서 문자 입력과 두 Slider를 생성·표시·반납한다.</summary>
     [Fact]
     public void HostTextEntryUsesSharedTreeDrawingAndLifetime()

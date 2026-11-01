@@ -64,8 +64,14 @@ public sealed class HostTextEntry : IDisposable
     /// <summary>새 파생 노드를 소유하고 원본 문자 입력창 생성기를 호출한다.</summary>
     public uint Create(int width, int height, ReadOnlyMemory<byte>? initial, uint font, uint background, uint color)
     {
-        uint token = _tree.AllocateNode(new TextEntryGumpNode()); _windows.TrackChild(token);
+        uint token = AllocateEntry();
         return Entry.Construct(token, width, height, initial, font, background, color);
+    }
+
+    /// <summary>다른 공통 창 생성기가 생성 순서를 유지하도록 미생성 입력 노드를 할당한다.</summary>
+    public uint AllocateEntry()
+    {
+        uint token = _tree.AllocateNode(new TextEntryGumpNode()); _windows.TrackChild(token); return token;
     }
 
     /// <summary>공통 수집·정렬 중 현재 출력 장치를 잠시 빌려 같은 순서로 그린다.</summary>

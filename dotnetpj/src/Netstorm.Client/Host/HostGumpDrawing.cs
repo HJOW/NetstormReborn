@@ -19,10 +19,14 @@ public sealed class HostGumpDrawing
     /// <summary>현재 파일 팔레트와 논리 화면.</summary>
     private readonly Screen _screen;
     private readonly HostTextEntry? _entry;
+    /// <summary>같은 스타일 저장소를 사용하는 한 줄 제목 출력기다.</summary>
+    private readonly TextGump _single;
 
     /// <summary>같은 실제 메뉴 트리와 화면 장치를 빌린다.</summary>
     public HostGumpDrawing(HostMainMenu menu, HostHtmlText text, HostHtmlMenus menus, Screen screen, HostTextEntry? entry = null)
-    { _menu = menu ?? throw new ArgumentNullException(nameof(menu)); _text = text ?? throw new ArgumentNullException(nameof(text)); _menus = menus ?? throw new ArgumentNullException(nameof(menus)); _screen = screen ?? throw new ArgumentNullException(nameof(screen)); _entry = entry; }
+    { _menu = menu ?? throw new ArgumentNullException(nameof(menu)); _text = text ?? throw new ArgumentNullException(nameof(text)); _menus = menus ?? throw new ArgumentNullException(nameof(menus)); _screen = screen ?? throw new ArgumentNullException(nameof(screen)); _entry = entry;
+        var tree = menu.Tree; _single = new TextGump(tree.Create, new(), tree.Factory, tree.Lifetime, tree.Collection, text.Clip, text.Style,
+            new() { Node = token => tree.Node(token) as TextGumpNode, BaseNode = tree.Node }); }
 
     /// <summary>현재 표시 트리를 수집하고 원본 정렬 뒤 각 노드를 같은 픽셀·클립 문맥에서 출력한다.</summary>
     public void Draw()
@@ -55,6 +59,7 @@ public sealed class HostGumpDrawing
                     case MenuGumpNode: menuDraw.Draw(token); break;
                     case GumpDecorationNode: decoration.Draw(token); break;
                     case ScrollingTextGumpNode: _text.Text.Draw(token); break;
+                    case TextGumpNode: _single.Draw(token); break;
                     case ScrollGumpArrowNode: _text.SliderWidgets.DrawArrow(token, tree.Collection, glyph, target); break;
                     case ScrollGumpThumbNode: _text.SliderWidgets.DrawThumb(token, tree.Collection, background); break;
                     case ScrollGumpNode: break;
