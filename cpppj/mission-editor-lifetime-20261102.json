@@ -1,0 +1,1458 @@
+{
+  "unit": 716,
+  "date": "2026-11-02",
+  "host": "HJOW-Athlon",
+  "lastPreciseDecompile": {
+    "host": "HJOW-Athlon",
+    "date": "2026-10-23"
+  },
+  "productUnit": 715,
+  "version": "11.01",
+  "exeSha256": "217668552e8d2c4fe42b6182654cfe8399a8a52cedd97d347fcab6a62273e74c",
+  "gameExecutions": 4,
+  "completedPlans": 2,
+  "initialFailures": [
+    {
+      "run": "live-v1",
+      "reason": "검사 사본 밖 절대 경로 보호 거부",
+      "productChanged": false
+    },
+    {
+      "run": "live-v3",
+      "reason": "연속 실제 Fort 재설치 중92초 도구 제한 종료",
+      "productChanged": false
+    }
+  ],
+  "final": {
+    "unit": 716,
+    "passed": true,
+    "processes": 1,
+    "binarySha256": "217668552e8d2c4fe42b6182654cfe8399a8a52cedd97d347fcab6a62273e74c",
+    "seconds": 100.9154443999978,
+    "protectionUnchanged": true,
+    "editorCapture": {
+      "size": [
+        1024,
+        768
+      ],
+      "rgbColors": 247,
+      "sha256": "7bdbe2e6281d389ea23fa1bfe4bc8e6963947dc3f5dcc20dda90a400bf7190c4"
+    },
+    "observations": {
+      "require230": {
+        "frame": 230,
+        "phase": [
+          "4"
+        ],
+        "page": [
+          "mission"
+        ],
+        "time": [
+          "7.196",
+          "7.851"
+        ],
+        "mission": [
+          "tutorial1",
+          "Tutorial",
+          "826"
+        ],
+        "mission_start": [
+          "1",
+          "4",
+          "0",
+          "0.232",
+          "0"
+        ],
+        "mission_gate": [
+          "1",
+          "65",
+          "0",
+          "0",
+          "0",
+          "1",
+          "0",
+          "0"
+        ],
+        "raw_world_modes": [
+          "0",
+          "1"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ],
+        "raw_sp": [
+          "-2.20636566661e-20",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_brains": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "fort_selection": [
+          "0",
+          "14",
+          "0",
+          "0",
+          ""
+        ],
+        "editor_runtime": [
+          "0",
+          "0",
+          "0",
+          "1078460418",
+          "0"
+        ],
+        "shared_surface_storage": [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        "html_window_state": [
+          "0",
+          "0",
+          "0"
+        ]
+      },
+      "initial": {
+        "frame": 235,
+        "phase": [
+          "4"
+        ],
+        "page": [
+          "mission"
+        ],
+        "time": [
+          "7.292",
+          "7.947"
+        ],
+        "mission": [
+          "tutorial1",
+          "Tutorial",
+          "826"
+        ],
+        "mission_start": [
+          "1",
+          "4",
+          "0",
+          "0.232",
+          "0"
+        ],
+        "mission_gate": [
+          "1",
+          "65",
+          "0",
+          "0",
+          "0",
+          "1",
+          "0",
+          "0"
+        ],
+        "raw_world_modes": [
+          "0",
+          "1"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ],
+        "raw_sp": [
+          "-2.20636566661e-20",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_brains": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "fort_selection": [
+          "0",
+          "14",
+          "0",
+          "0",
+          ""
+        ],
+        "editor_runtime": [
+          "0",
+          "0",
+          "0",
+          "1078460418",
+          "0"
+        ],
+        "shared_surface_storage": [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        "html_window_state": [
+          "0",
+          "0",
+          "0"
+        ]
+      },
+      "abort": {
+        "frame": 260,
+        "phase": [
+          "1"
+        ],
+        "page": [
+          "ABORT"
+        ],
+        "time": [
+          "7.608",
+          "8.431"
+        ],
+        "mission": [
+          "tutorial1",
+          "Tutorial",
+          "826"
+        ],
+        "mission_start": [
+          "1",
+          "4",
+          "0",
+          "0.232",
+          "0"
+        ],
+        "mission_gate": [
+          "1",
+          "65",
+          "0",
+          "1",
+          "0",
+          "1",
+          "0",
+          "0"
+        ],
+        "raw_world_modes": [
+          "0",
+          "1"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ],
+        "raw_sp": [
+          "-2.20636566661e-20",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_brains": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "fort_selection": [
+          "0",
+          "14",
+          "0",
+          "0",
+          ""
+        ],
+        "editor_runtime": [
+          "0",
+          "0",
+          "0",
+          "1078460418",
+          "0"
+        ],
+        "shared_surface_storage": [
+          "1",
+          "1",
+          "1",
+          "1",
+          "1",
+          "1"
+        ],
+        "html_window_state": [
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "main": {
+        "frame": 300,
+        "phase": [
+          "0"
+        ],
+        "page": [
+          "main"
+        ],
+        "time": [
+          "9.22",
+          "9.22"
+        ],
+        "fort_selection": [
+          "0",
+          "4",
+          "0",
+          "0",
+          ""
+        ],
+        "editor_runtime": [
+          "0",
+          "1",
+          "0",
+          "1078460418",
+          "0"
+        ],
+        "html_window_state": [
+          "0",
+          "1",
+          "0"
+        ]
+      },
+      "catalog": {
+        "frame": 330,
+        "phase": [
+          "1"
+        ],
+        "page": [
+          "LoadEditable"
+        ],
+        "time": [
+          "9.904",
+          "9.904"
+        ],
+        "fort_selection": [
+          "2",
+          "4",
+          "0",
+          "0",
+          ""
+        ],
+        "editor_runtime": [
+          "0",
+          "1",
+          "0",
+          "1078460418",
+          "0"
+        ],
+        "html_window_state": [
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "editor": {
+        "frame": 390,
+        "phase": [
+          "4"
+        ],
+        "page": [
+          "editor"
+        ],
+        "time": [
+          "23.904",
+          "23.904"
+        ],
+        "raw_world_modes": [
+          "1",
+          "1"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ],
+        "raw_sp": [
+          "-2.20636566661e-20",
+          "194162",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_brains": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "fort_selection": [
+          "2",
+          "4",
+          "0",
+          "0",
+          "TEST02"
+        ],
+        "editor_runtime": [
+          "1",
+          "1",
+          "1",
+          "4294967295",
+          "0"
+        ],
+        "shared_surface_storage": [
+          "1",
+          "1",
+          "1",
+          "1",
+          "2",
+          "1"
+        ],
+        "html_window_state": [
+          "0",
+          "0",
+          "0"
+        ]
+      },
+      "briefing": {
+        "frame": 450,
+        "phase": [
+          "3"
+        ],
+        "page": [
+          "A."
+        ],
+        "time": [
+          "24.773",
+          "38.578"
+        ],
+        "mission": [
+          "TEST02",
+          "Tutorial",
+          "5128"
+        ],
+        "mission_start": [
+          "1",
+          "4",
+          "0",
+          "24.773",
+          "0"
+        ],
+        "mission_gate": [
+          "0",
+          "65",
+          "0",
+          "1",
+          "0",
+          "1",
+          "0",
+          "0"
+        ],
+        "raw_world_modes": [
+          "0",
+          "1"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ],
+        "raw_sp": [
+          "-2.20636566661e-20",
+          "500000",
+          "194162",
+          "194162",
+          "194162",
+          "194162",
+          "194162",
+          "194162",
+          "194162"
+        ],
+        "raw_brains": [
+          "0",
+          "0",
+          "536870912",
+          "536892288",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "fort_selection": [
+          "2",
+          "14",
+          "0",
+          "0",
+          "TEST02"
+        ],
+        "editor_runtime": [
+          "1",
+          "0",
+          "1",
+          "4294967295",
+          "0"
+        ],
+        "shared_surface_storage": [
+          "1",
+          "1",
+          "1",
+          "1",
+          "3",
+          "1"
+        ],
+        "html_window_state": [
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "playing": {
+        "frame": 470,
+        "phase": [
+          "4"
+        ],
+        "page": [
+          "mission"
+        ],
+        "time": [
+          "25.055",
+          "39.76"
+        ],
+        "mission": [
+          "TEST02",
+          "Tutorial",
+          "5128"
+        ],
+        "mission_start": [
+          "1",
+          "4",
+          "0",
+          "24.773",
+          "0"
+        ],
+        "mission_gate": [
+          "0",
+          "65",
+          "0",
+          "0",
+          "0",
+          "1",
+          "0",
+          "0"
+        ],
+        "raw_world_modes": [
+          "0",
+          "1"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ],
+        "raw_sp": [
+          "-2.20636566661e-20",
+          "500000",
+          "194162",
+          "194162",
+          "194162",
+          "194162",
+          "194162",
+          "194162",
+          "194162"
+        ],
+        "raw_brains": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "fort_selection": [
+          "2",
+          "14",
+          "0",
+          "0",
+          "TEST02"
+        ],
+        "editor_runtime": [
+          "1",
+          "0",
+          "1",
+          "4294967295",
+          "0"
+        ],
+        "shared_surface_storage": [
+          "1",
+          "1",
+          "1",
+          "1",
+          "3",
+          "1"
+        ],
+        "html_window_state": [
+          "0",
+          "0",
+          "0"
+        ]
+      },
+      "returned": {
+        "frame": 540,
+        "phase": [
+          "4"
+        ],
+        "page": [
+          "editor"
+        ],
+        "time": [
+          "54.046",
+          "54.046"
+        ],
+        "raw_world_modes": [
+          "1",
+          "1"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ],
+        "raw_sp": [
+          "-2.20636566661e-20",
+          "194162",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_brains": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "fort_selection": [
+          "2",
+          "4",
+          "0",
+          "0",
+          "TEST02"
+        ],
+        "editor_runtime": [
+          "1",
+          "1",
+          "1",
+          "4294967295",
+          "0"
+        ],
+        "shared_surface_storage": [
+          "1",
+          "1",
+          "1",
+          "1",
+          "4",
+          "1"
+        ],
+        "html_window_state": [
+          "0",
+          "0",
+          "0"
+        ]
+      },
+      "briefingAgain": {
+        "frame": 600,
+        "phase": [
+          "3"
+        ],
+        "page": [
+          "A."
+        ],
+        "time": [
+          "54.882",
+          "67.424"
+        ],
+        "mission": [
+          "TEST02",
+          "Tutorial",
+          "5128"
+        ],
+        "mission_start": [
+          "1",
+          "4",
+          "0",
+          "54.882",
+          "0"
+        ],
+        "mission_gate": [
+          "0",
+          "65",
+          "0",
+          "1",
+          "0",
+          "1",
+          "0",
+          "0"
+        ],
+        "raw_world_modes": [
+          "0",
+          "1"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ],
+        "raw_sp": [
+          "-2.20636566661e-20",
+          "500000",
+          "194162",
+          "194162",
+          "194162",
+          "194162",
+          "194162",
+          "194162",
+          "194162"
+        ],
+        "raw_brains": [
+          "0",
+          "0",
+          "536870912",
+          "536892288",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "fort_selection": [
+          "2",
+          "14",
+          "0",
+          "0",
+          "TEST02"
+        ],
+        "editor_runtime": [
+          "1",
+          "0",
+          "1",
+          "4294967295",
+          "0"
+        ],
+        "shared_surface_storage": [
+          "1",
+          "1",
+          "1",
+          "1",
+          "5",
+          "1"
+        ],
+        "html_window_state": [
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "playingAgain": {
+        "frame": 620,
+        "phase": [
+          "4"
+        ],
+        "page": [
+          "mission"
+        ],
+        "time": [
+          "55.07",
+          "68.142"
+        ],
+        "mission": [
+          "TEST02",
+          "Tutorial",
+          "5128"
+        ],
+        "mission_start": [
+          "1",
+          "4",
+          "0",
+          "54.882",
+          "0"
+        ],
+        "mission_gate": [
+          "0",
+          "65",
+          "0",
+          "0",
+          "0",
+          "1",
+          "0",
+          "0"
+        ],
+        "raw_world_modes": [
+          "0",
+          "1"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ],
+        "raw_sp": [
+          "-2.20636566661e-20",
+          "500000",
+          "194162",
+          "194162",
+          "194162",
+          "194162",
+          "194162",
+          "194162",
+          "194162"
+        ],
+        "raw_brains": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "fort_selection": [
+          "2",
+          "14",
+          "0",
+          "0",
+          "TEST02"
+        ],
+        "editor_runtime": [
+          "1",
+          "0",
+          "1",
+          "4294967295",
+          "0"
+        ],
+        "shared_surface_storage": [
+          "1",
+          "1",
+          "1",
+          "1",
+          "5",
+          "1"
+        ],
+        "html_window_state": [
+          "0",
+          "0",
+          "0"
+        ]
+      },
+      "restartBriefing": {
+        "frame": 680,
+        "phase": [
+          "3"
+        ],
+        "page": [
+          "A."
+        ],
+        "time": [
+          "69.273",
+          "82.05"
+        ],
+        "mission": [
+          "TEST02",
+          "Tutorial",
+          "5128"
+        ],
+        "mission_start": [
+          "1",
+          "4",
+          "0",
+          "69.273",
+          "0"
+        ],
+        "mission_gate": [
+          "0",
+          "65",
+          "0",
+          "1",
+          "0",
+          "1",
+          "0",
+          "0"
+        ],
+        "raw_world_modes": [
+          "0",
+          "1"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ],
+        "raw_sp": [
+          "-2.20636566661e-20",
+          "500000",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_brains": [
+          "0",
+          "0",
+          "536870912",
+          "536892288",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "fort_selection": [
+          "2",
+          "14",
+          "0",
+          "0",
+          "TEST02"
+        ],
+        "editor_runtime": [
+          "1",
+          "0",
+          "1",
+          "4294967295",
+          "0"
+        ],
+        "shared_surface_storage": [
+          "1",
+          "1",
+          "1",
+          "1",
+          "6",
+          "1"
+        ],
+        "html_window_state": [
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "restarted": {
+        "frame": 700,
+        "phase": [
+          "4"
+        ],
+        "page": [
+          "mission"
+        ],
+        "time": [
+          "69.459",
+          "82.779"
+        ],
+        "mission": [
+          "TEST02",
+          "Tutorial",
+          "5128"
+        ],
+        "mission_start": [
+          "1",
+          "4",
+          "0",
+          "69.273",
+          "0"
+        ],
+        "mission_gate": [
+          "0",
+          "65",
+          "0",
+          "0",
+          "0",
+          "1",
+          "0",
+          "0"
+        ],
+        "raw_world_modes": [
+          "0",
+          "1"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ],
+        "raw_sp": [
+          "-2.20636566661e-20",
+          "500000",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_brains": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "fort_selection": [
+          "2",
+          "14",
+          "0",
+          "0",
+          "TEST02"
+        ],
+        "editor_runtime": [
+          "1",
+          "0",
+          "1",
+          "4294967295",
+          "0"
+        ],
+        "shared_surface_storage": [
+          "1",
+          "1",
+          "1",
+          "1",
+          "6",
+          "1"
+        ],
+        "html_window_state": [
+          "0",
+          "0",
+          "0"
+        ]
+      },
+      "returnedAgain": {
+        "frame": 770,
+        "phase": [
+          "4"
+        ],
+        "page": [
+          "editor"
+        ],
+        "time": [
+          "96.511",
+          "96.511"
+        ],
+        "raw_world_modes": [
+          "1",
+          "1"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ],
+        "raw_sp": [
+          "-2.20636566661e-20",
+          "194162",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_brains": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "fort_selection": [
+          "2",
+          "4",
+          "0",
+          "0",
+          "TEST02"
+        ],
+        "editor_runtime": [
+          "1",
+          "1",
+          "1",
+          "4294967295",
+          "0"
+        ],
+        "shared_surface_storage": [
+          "1",
+          "1",
+          "1",
+          "1",
+          "7",
+          "1"
+        ],
+        "html_window_state": [
+          "0",
+          "0",
+          "0"
+        ]
+      },
+      "leaveEdit": {
+        "frame": 810,
+        "phase": [
+          "1"
+        ],
+        "page": [
+          "LeaveEditMode"
+        ],
+        "time": [
+          "97.446",
+          "97.446"
+        ],
+        "raw_world_modes": [
+          "1",
+          "1"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ],
+        "raw_sp": [
+          "-2.20636566661e-20",
+          "194162",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_brains": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "fort_selection": [
+          "2",
+          "4",
+          "0",
+          "0",
+          "TEST02"
+        ],
+        "editor_runtime": [
+          "1",
+          "1",
+          "1",
+          "4294967295",
+          "0"
+        ],
+        "shared_surface_storage": [
+          "1",
+          "1",
+          "1",
+          "1",
+          "7",
+          "1"
+        ],
+        "html_window_state": [
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "cancelled": {
+        "frame": 830,
+        "phase": [
+          "4"
+        ],
+        "page": [
+          "editor"
+        ],
+        "time": [
+          "97.991",
+          "97.991"
+        ],
+        "raw_world_modes": [
+          "1",
+          "1"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ],
+        "raw_sp": [
+          "-2.20636566661e-20",
+          "194162",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_brains": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "fort_selection": [
+          "2",
+          "4",
+          "0",
+          "0",
+          "TEST02"
+        ],
+        "editor_runtime": [
+          "1",
+          "1",
+          "1",
+          "4294967295",
+          "0"
+        ],
+        "shared_surface_storage": [
+          "1",
+          "1",
+          "1",
+          "1",
+          "7",
+          "1"
+        ],
+        "html_window_state": [
+          "0",
+          "0",
+          "0"
+        ]
+      },
+      "leaveEditAgain": {
+        "frame": 870,
+        "phase": [
+          "1"
+        ],
+        "page": [
+          "LeaveEditMode"
+        ],
+        "time": [
+          "98.94",
+          "98.94"
+        ],
+        "raw_world_modes": [
+          "1",
+          "1"
+        ],
+        "raw_session": [
+          "1",
+          "1"
+        ],
+        "raw_sp": [
+          "-2.20636566661e-20",
+          "194162",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "raw_brains": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "fort_selection": [
+          "2",
+          "4",
+          "0",
+          "0",
+          "TEST02"
+        ],
+        "editor_runtime": [
+          "1",
+          "1",
+          "1",
+          "4294967295",
+          "0"
+        ],
+        "shared_surface_storage": [
+          "1",
+          "1",
+          "1",
+          "1",
+          "7",
+          "1"
+        ],
+        "html_window_state": [
+          "1",
+          "1",
+          "1"
+        ]
+      },
+      "final": {
+        "frame": 920,
+        "phase": [
+          "0"
+        ],
+        "page": [
+          "main"
+        ],
+        "time": [
+          "100.028",
+          "100.028"
+        ],
+        "fort_selection": [
+          "2",
+          "4",
+          "0",
+          "0",
+          ""
+        ],
+        "editor_runtime": [
+          "0",
+          "1",
+          "0",
+          "4294967295",
+          "0"
+        ],
+        "html_window_state": [
+          "0",
+          "1",
+          "0"
+        ]
+      }
+    },
+    "scope": "앱 내 입력의 Early1 중단→메인→Edit→Test Battle 두 번/Restart 한 번→편집 복귀 두 번→이탈 Cancel/No. 물리 입력·전체 원문 동일성·자연 완주·PCM·승패/포획/희생/특정 적 공격·공중3종 전용·MP/통신 검사는 아니다."
+  },
+  "productBuilds": 0,
+  "cppTests": 0,
+  "nativeExecutions": 0,
+  "newFixtures": 0,
+  "protectedFiles": 2633,
+  "protectedChanged": 0,
+  "multiplayerTests": 0,
+  "networkTests": 0,
+  "excludedReproductions": 0,
+  "pythonSyntaxChecks": 2,
+  "limits": [
+    "하나의 Early1 중단→Edit 연속 경로다. 전체 시나리오·자연 완주·원문 동일성 완료가 아니다.",
+    "사본 시나리오에서 Succeeded 이후 섹션 제외/AI Off1이며 원본 TEST02 전체 진행과 구별한다.",
+    "앱 내 입력/실제 presented 출력 사본이다. 물리 입력·창DC·PCM·Win11 실기 검증이 아니다.",
+    "전체34/전체C++/CTest/ZIP·새MP/통신·승패/포획/희생/특정 적 공격/공중3종 전용 검사는0이다."
+  ],
+  "runs": {
+    "live-v1": {
+      "returnCode": 1,
+      "timedOut": false,
+      "seconds": 10.50618519999989,
+      "binarySha256": "217668552e8d2c4fe42b6182654cfe8399a8a52cedd97d347fcab6a62273e74c",
+      "scriptSha256": "6fab61712718b313c96b39d618df15bfbb5dbe96bf4a026f128fbd6b949c3b1b",
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "ecc4eea95be093714ff04a3c8545f9daf9be0d0596db690b985fc859d9c2a9c6",
+      "originalsUnchanged": true,
+      "dataUnchanged": true
+    },
+    "live-v2": {
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 25.387921099998493,
+      "binarySha256": "217668552e8d2c4fe42b6182654cfe8399a8a52cedd97d347fcab6a62273e74c",
+      "scriptSha256": "96cb5c67d54a4e31c9e3ab48d2abd1e1f4d48f9a64fd12e17db731abfc26e85f",
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "bb325912ccc4e16cbc8058b2aa4abfdd6c62866f0d1c95e207e614e581263715",
+      "originalsUnchanged": true,
+      "dataUnchanged": true
+    },
+    "live-v3": {
+      "returnCode": 1,
+      "timedOut": true,
+      "seconds": 92.50061600000117,
+      "binarySha256": "217668552e8d2c4fe42b6182654cfe8399a8a52cedd97d347fcab6a62273e74c",
+      "scriptSha256": "bed47d55039453abdc7099f55b37cbe9bdcccbe2777e62bcb95473c697ec9976",
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "58cb9839cbd1cc6b8bb59bd1b149c4ded05bd459f0cb400055d2bb52b15ce80e",
+      "originalsUnchanged": true,
+      "dataUnchanged": true
+    },
+    "live-v4": {
+      "returnCode": 0,
+      "timedOut": false,
+      "seconds": 100.9154443999978,
+      "binarySha256": "217668552e8d2c4fe42b6182654cfe8399a8a52cedd97d347fcab6a62273e74c",
+      "scriptSha256": "052585741f3aa5a642ab884df4267bcde28ccb9512b8022849a1b49e590f3581",
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "4030e79f36d8aab18468b6c1ac71d792f1b7d8b99f42b1a204594fb03f6180a3",
+      "originalsUnchanged": true,
+      "dataUnchanged": true
+    }
+  },
+  "sha256": {
+    "AGENTS.md": "544643cf731393ecb4784490aa7f2794e8736742582907cce29453e6ac46f15e",
+    "LEFT_JOBS.md": "73655463e35d14f17fb2d2e66697e8fbc63a03464bee427e6f689f475e06ccf7",
+    "tools/cpp_game_menu_smoke.py": "3a75657404689d310ff0af76690d7b5b2027acdebe5eb8cea4da7736552eb0bc",
+    "tools/cpp_mission_editor_lifetime_smoke.py": "f3640b39f4f0365e46b26aae2736e4e03b7e4b4e017b4ed485aa716b0b16bedb",
+    "docs/exe/cpp-mission-editor-lifetime-20261102.md": "258ae2693e002643b45ba64bd6655bfadc4b12d92c30b625dd329514bd4a5254"
+  }
+}
