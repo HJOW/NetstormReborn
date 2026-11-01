@@ -9807,3 +9807,379 @@ cpppj 1차 목표 달성 및 윈도우 10, 11 호환성 작업, MCP 추가 작�
 ---
 
 **선행 문서 정리 완료(2026-10-27 / e73a6961):** 정리 전 원문 전체를 기존 보관본 뒤에 보존하고, 현행 본문은504 기준으로 갱신했다. 해결된 bc5/bc8 오류·완료된 준비본 병합/섬 추가/편집 왕복을 옛 “다음 작업”에서 제외했다. 개발 목표의 일시 중지와 미완료/보류 결정은 유지한다. 이 선행 정리에서는 인수인계 두 문서만 변경하고 원문 보존·문서 링크/앵커·UTF-8을 확인했으며 게임 실행·게임 빌드/C++검사·디컴파일을 수행하지 않았다. 그 이후 HJOW-X3D에서 진행한 캠페인1-1 조사는2.5절과 구별한다.
+
+---
+
+<a id="archive-20261102-before-cleanup"></a>
+
+## 2026-11-02 — 단위695까지의 LEFT_JOBS.md 정리 직전 원문
+
+LEFT_JOBS.md를 현행 값·남은 작업·유효한 결정 중심으로 다시 정리하면서, 정리 직전(`3b2b9e58 / 20261102-97 DN`) 전체 내용을 아래에 **원문 그대로** 보관했다. 단위639~695의 진행 중 쌓인 0.1의 반복 수명 행, 1.3의 AGENTS.md 변경 커밋별 이력(FSR 3.1 → 제거 → FSR 1.0 번복 포함), 2.4의 완료된 제보·이슈, 3절의 완료(`[x]`) 항목, 4절의 대체된 재개·주기 지시가 들어 있다. 아래의 “최신”, “다음”, “미완료”, `[ ]` 표시는 당시 기록이며 현행 상태와 순서는 [LEFT_JOBS.md](LEFT_JOBS.md)를 따른다.
+
+# LEFT_JOBS — cpppj 및 공통 인수인계
+
+이 문서는 cpppj와 공통 사항의 **현재 상태, 남은 작업, 유효한 사용자 결정**만 담는다. 단위별 상세와 증거는 `docs/exe/cpp-*.md`·`cpppj/*.json`, 과거 기록은 [LEFT_JOBS.old.md](LEFT_JOBS.old.md), dotnetpj는 [LEFT_JOBS.dotnetpj.md](LEFT_JOBS.dotnetpj.md), webpj는 [LEFT_JOBS.webpj.md](LEFT_JOBS.webpj.md)에 있다.
+
+단위를 마치면 0.1절의 값과 2.1절의 해당 영역 행을 덮어써 갱신한다. 단위별 진행 기록을 이 문서 위쪽에 쌓지 않고 단위 문서에 남긴다.
+
+## 0. 재개 전 확인 사항
+
+### 0.1 현재 값 (2026-11-02, 단위695 완료 / 사용자 요청으로 문서·커밋 뒤 일시중지)
+
+| 항목 | 값 |
+| --- | --- |
+| 진행 상태 | **사용자 요청으로 단위695 문서·커밋 뒤 목표 일시중지. 전체 목표는 미완료다.** Capture 이름/일반 입력·Client 장기 할당·실제Frame/BMP/공통 완료 창을 연결했다. 새 원문192/576·최종 집중14개 실패0·실제 메뉴20프레임 저장/반납/메인 복귀·동일 표시RGB를 확인했다. [695 문서](docs/exe/cpp-capture-client-20261102.md)·[보고서](cpppj/capture-client-20261102.json)를 따른다. 재개 시 RecheckCD 현재serial 정리와 나머지Edit/수명/호환성을 이어간다. |
+| 현재 제품 | **실행 제품695 / 표시11.01**, EXE 재빌드다. 693~694의 본체를 현재 Client에 연결했다. Unicode 완료 안내의 최초1252변환 실패를 호환U+표시로 수정했다. 기존692 URL·691 Pop·690 DestroyAt·689 AddRandom과 이전 복원·11.01/Credits·구 온라인 검증 제외를 유지한다. 전체34/ZIP은645의644제품이다. |
+| EXE SHA-256 | `d4475850430604198535c39aab0f6f0e6c56d6aad2ee301e09c7357961ee8e42` (695 / 11.01) |
+| ZIP SHA-256 | 645에서 만든644 제품의 `6485febc36080dc90e9eec43965a842f85d39e81c82a003a96b83b34b3694b73` (1376항목/게임 자산1358개). 실제 한글😀 경로에 압축 해제해 최종34를 실행했다. |
+| 등록 C++ 검사 수 | 695 전용`netstorm_capture_client_tests`최종14개(새4·기존10) 등록/실행/통과, 실패0이다. 새 일반 입력192/576·기존BMP336/연속174/공유고리204행을 대조했다. 최초와 제품 Unicode 수정 뒤 각각14개 통과이며 전체C++/주검사EXE는 실행하지 않았다. 최초 검사코드char8_t 변환1곳 오류와 실제GUI 실패를 구별한다. |
+| 최신 전체34 | 단위645, 644 제품 기준 최종34/34. 최소 비정지 시각 증가20.843초·창DC RGB·Native Frame 일치. 최초 입력 누락34실패/재검증34통과와 준비2회를 포함한 총70프로세스를 구별한다. |
+| 최신 반복 수명 | 단위640, 같은637 제품의 브리핑/중단 확인 바깥 뗌 취소2회·미션 재진입1회와 채팅 도킹2실행. 최종3실행 종료0. Restart4회/Leave 취소2회/메인 복귀2회는638의 별도 근거다. |
+| 전체 C++ 마지막 실행 | 단위549. 3389개 중 7개 검사가 실패했다(580단언). 이후 입력 정정 뒤 집중 검사만 통과했고 전체 재실행 기록은 없다. 마지막 전체 통과는 단위510(508 제품, 3337개, 실패 0)이다. |
+| 보호 기준 | 695는 기존 원본/CD/fixture2614개 변경0을 재해시로 확인했다. AGENTS는 사용자5867f35e 갱신으로 구별했다(SHA544643cf…). 새fixture1개로 현재796개/지침 포함 총2616다. 실제GUI2회는 각각설정/보호 복원이며 최초종료1·최종종료0이다. 연속BMP40개·관찰BMP3개·두 집중검사의소유BMP10개를 구별한다. 새통신/MP검사0이다. |
+| **마지막 전체 정밀 디컴파일** | **HJOW-Athlon (192.168.0.94) / 2026-10-23** |
+
+### 0.2 재개 절차
+
+1. AGENTS.md, 이 문서, LEFT_JOBS.dotnetpj.md를 다시 읽는다. webpj 작업이면 LEFT_JOBS.webpj.md도 읽는다. `git fetch`로 다른 PC의 커밋을 확인한다. push는 하지 않는다.
+2. `hostname`이 위 디컴파일 호스트와 다르면, cpppj 작업이나 디컴파일 분석 전에 `tools/ghidra/refine_all.ps1`로 다시 디컴파일하고 완료 호스트를 이 문서와 작업 내역 문서에 갱신한다. cp949 오류가 나면 `PYTHONUTF8=1`, `PYTHONIOENCODING=utf-8`을 설정한다. HJOW-X3D의 `extracted/refined/originals/`는 2026-10-27에 중단된 불완전 자료(`raw.c`·`functions.tsv`·`conventions.tsv` 없음)이므로 완료 산출물로 쓰지 않는다.
+3. 실제 게임 구동과 별도 창이 뜨는 작업은 AGENTS.md를 따른다. 확인 없이 진행할 수 있는 시스템은 vm-debian-codex(10.0.0.15), VM-W11-Codex(10.0.0.17), HJOW-Athlon(192.168.0.94)뿐이다. **HJOW-X3D를 포함한 그 밖의 PC에서는 실행 목적과 필요성을 설명하고 명시적 확인을 받는다.** 허용받으면 해당 작업 단계가 끝날 때까지 유지된다. 사용자가 원본 수동 컨트롤이나 녹화 분석을 직접 요청한 작업 단계도 확인이 필요 없다.
+4. 빌드·검사·GUI 원시 자료는 작업 PC의 `extracted/`(Git 제외)에만 있다. 커밋되는 보고서는 `cpppj/*.json`, 작업 문서는 `docs/exe/cpp-*.md`다. 다른 PC에 원시 자료가 있다고 가정하지 않는다.
+5. 다른 세션의 dotnetpj·webpj 변경, staged 파일, 실행 출력은 이 작업에 포함하지 않는다. 단위마다 인계를 갱신하고 로컬 커밋한다.
+6. 645 뒤의 실제 실행은 각 단위의 변경과 직접 관련된 기능별 확인이다. 646~671·673~675·679·681·683·686~694는 새 게임 실행0이다. 672의 GUI64/CLI12(최초 실패·GUI종료1 두 개 포함),676의RunForIt2회,677의 실제 배치3회(최초 도구 입력 실패1 포함),678의1-2초기2회,680의 전투 없는 안내 GUI2회(최초 도구 입력 실패1 포함)·682의 전투 없는 음향 대본 수정 전/후 GUI2회·684의 초기 메뉴3회(최종수락2회/phase기대 도구 실패1 포함)·685의Credits5회(최종Back/Cancel판2회/도구page대소문자 기대 실패1/중간2회)·695의메뉴Capture2회(최초Unicode본문종료1/수정뒤종료0)를 구별한다. 전체34 재검사나 자연 완주로 합산하지 않고 소수 단위 뒤 반복하지 않는 사용자 지시를 유지한다.
+7. 마지막 실행 제품은695의`extracted/cpp-capture-client-695/build-v3.log`이며최종집중`focused-v2.log`14개실패0·경고/오류0이다. 새원문은제품변경전`native/`에동결했다. 실제메뉴`live-v1`은20개파일뒤Unicode본문변환종료1, 호환수정뒤`live-v2`는20프레임저장/반납/공통안내/메인복귀/동일RGB·종료0이다. 둘다원본보호/설정복원했다. 전체34/전체C++·PCM·물리입력/새MP무시험제한을유지한다.
+
+### 0.3 유지되는 제한과 보류
+
+- **최신 AGENTS 지시(5867f35e,695 인계 반영):** 4차는 로컬MCP로 모든 게임 조작·화면 캡처·소리 포함 녹화와16:9 최대1920×1080 지원이다. 이 단계의 그래픽 크기 스케일 조정은 불필요하다. 7차FSR 지원 환경에는2560×1440/3840×2160을 추가하고 선택 시FSR 자동켜기·실질1920×1080에서 업스케일한다. 일반AA/FSR 기본off와 구별한다. 모두 후순위 미착수며 AGENTS 자체는 수정하지 않았다.
+- **추가 AGENTS 지시(11.01,685 cpppj 적용):** 해당 변경 당시 SHA13880803…의 버전 표기11.01·Credits3항목/Netstorm 11.01 Patch Credits·제목NetStorm 11.01 Patch Credits·HJOW 개발/AI 사용 설명을 구현했다. 기존 창과 같은 Back/Cancel을 제공한다. 원문 내부 판본/기존10.72 Credits는 역사적 기준으로 유지하며 DN/WB는 각 작업에서 같은 지침을 적용한다.
+- **갱신 AGENTS 지시(684 적용):** 로컬 멀티플레이 서버를 제외한 외부 도메인/IP 접속 기능은 [별도 문서](docs/exe/cpp-external-services-20261101.md)·[원문 목록](cpppj/external-endpoints-20261101.json)을 따른다. 종료된 서버의 클라이언트 유효성 검사/security.dat writer를 연결하지 않는다. 제품의 검증 getter·Not Validated 안내도 제외하며 성공1을 합성하지 않는다. 원문 참조 테스트만 명시true다. 사용자 선택 외부 도움말 링크와 로컬 자료/패킷 형식 검사는 별개로 유지한다.
+- **재현하지 않는 검사:** 사제 포획/희생, 특정 적 공격, 시나리오 승리를 재현해야 하는 테스트는 건너뛴다. 사용자가 나중에 직접 플레이해 확인한다([TODO.md](TODO.md)).
+- **사용자 확인 대상:** 모든 시나리오(Early Missions, Priest Training, 캠페인, 데모)의 자연 완주와 전체 동일성은 사용자가 직접 실행·플레이하며 테스트한다. AI 작업 대상에서 제외한다. 메뉴·진입·수 초 진행의 짧은 검증과 기능별 원문 대조는 계속 AI가 한다. 단계 전환은 1.1절의 기준을 따른다.
+- **공중 3종:** 훨리기그·맨오워·더스트 데빌은 정적 분석과 코드 작업만 한다. 새 전용 생산·생성·우클릭·행동 관측/검사는 하지 않는다.
+- **멀티플레이:** 싱글플레이·UI·호환성 뒤 디컴파일만 참고해 사전 구현한다. 신규 단위 검사, 게임 실행, 실제 통신 테스트는 하지 않으며 사전 구현과 검증 완료를 구별한다.
+- **사용자 보류 항목:** 스펠 효과 도움말 그림의 추가 분석(그림 임시 숨김 유지, 단위530), 연녹색 직사각형 분석(원본에서도 보였다는 사용자 확인, 원격 데스크톱 원인 여부 미확정), 대응 `.english` 부재 개선.
+- **아직 근거가 없는 범위:** 다른 모니터/DPI, 실제 앱 포커스 전환, 물리 키 입력, 실제 PCM 출력, 사용자 활성 전체화면의 물리 출력, 실제 CD 삽입. Windows 11 실기도 미검증이지만 단계 전환 조건이 아니다(1.1절).
+- **복원 한계:** 단위612의 반사 Generate 입력은 원본 32비트와 현재판의 스택 배치·미정값 자체 일치를 보장하지 않는다. 기존 VFX 커널의 signed WORD/정상 표본 범위 계약도 유지하며, 양수·각도0·원색 입력 근거를 음수/회전/전체 픽셀로 확대하지 않는다.
+
+## 1. 현행 목표
+
+### 1.1 cpppj 단계 (AGENTS.md 기준)
+
+| 단계 | 내용 | 현재 상태 |
+| --- | --- | --- |
+| 1차 | 원본을 디컴파일해 C++로 최대한 똑같이 복원한다. 기준은 10.78이며 멀티플레이·Outpust는 제외한다. 문서화할 때 10.72 관련 내용도 기록한다. | **진행 중.** 34경로 진입·진행은 가능하다. AI 작업으로 남은 것은 UI/Edit/시나리오/수명이다. 자연 완주와 전체 동일성은 사용자 확인 대상이다. |
+| 2차 | Windows 10/11에서 오류 없이 실행한다. 전체화면 DirectDraw 오류와 전체화면 종료 후 재실행 오류를 수정한다. | **진행 중.** Windows 10 호환 전체화면과 저장 재시작은 확인했다. 남은 Windows 10 확인을 마치면 Windows 11 실기 검증 없이 다음 단계로 넘어간다. 10.72의 Windows 10 구동 불가 해결책은 10.72 작업 때 문서화한다. |
+| 3차 | 멀티플레이·Outpust. 공식 서버는 없어졌으므로 TCP/IP 로컬 네트워크만 구현한다. | 미착수. 채팅의 MP 분기처럼 일부만 정적으로 작성했다. |
+| 4차 | **로컬MCP**로 dotnetpj 분석을 위한 모든 게임 조작·화면 캡처·소리 포함 녹화. **16:9 최대1920×1080 지원**이며 이 단계에서 그래픽 크기 스케일 조정은 불필요하다. | 미착수. 기존 화면비 처리/원문BMP 수집과 별도의 완료 조건이다. |
+| 5차 | 설정·캠페인 진행 저장을 `%USERPROFILE%\Saved Games\Netstorm\Saves\`로 옮긴다. 커스텀 맵은 기존 디렉토리와 `%USERPROFILE%\Saved Games\Netstorm\CustomMaps\` 양쪽에서 읽고, Edit 신규 저장은 후자에 둔다. Edit 맵 목록에 스크롤을 넣고 출력 개수 제한을 없앤다. | 미착수 |
+| 6차 | 한국어 지원 | 미착수 |
+| 7차 | Options의AA/FSR1.0 선택은 기본off. FSR 지원 환경에는2560×1440/3840×2160을 추가하고 해당 해상도 선택 시FSR 자동켜기·실질1920×1080에서 목표로 업스케일한다. [FidelityFX-FSR](https://github.com/GPUOpen-Effects/FidelityFX-FSR)를 참고한다. | 미착수 |
+
+**단계 전환 기준 (2026-10-31 사용자 결정):**
+
+- **자연 완주·전체 동일성:** 모든 시나리오(Early Missions, Priest Training, 캠페인, 데모)의 자연 완주와 전체 동일성은 사용자가 직접 실행·플레이하며 테스트한다. AI 작업 대상이 아니며, 단계에 남은 작업이 이것뿐이면 다음 단계로 넘어간다.
+- **Windows 11:** Windows 10에서 오류 없이 구동되면 Windows 11에서도 문제가 없을 가능성이 높다고 본다. Windows 10 확인을 마치면 Windows 11 실기 검증 없이 다음 단계로 넘어간다.
+- **제보 처리:** 사용자가 플레이 중 오류나 원본과의 차이를 제보하면 해당 항목을 AI 작업으로 올린다.
+
+60·120프레임 지원과 CD 10.72 전체 복원은 별도 후순위다. cpppj는 Windows용만 개발한다. dotnetpj 후순위 요구에도 4~7차가 포함되며, webpj는 Edit·멀티플레이를 제외한다.
+
+### 1.2 현재 목표 범위 ([TODO.md](TODO.md))
+
+- Early Missions 6개, Priest Training 9개, 캠페인 전체 16개, 데모 3개를 사용자가 플레이할 수 있고 원본 10.78과 완전히 같게 동작하도록 한다. 자연 완주와 전체 동일성의 확인은 사용자가 한다(1.1절).
+- Edit 메뉴의 커스텀 맵/시나리오, 메인 메뉴의 비멀티 항목, 좌측 덱·미니맵·다리 단축키 QWASZX·ESC 메뉴를 구현한다.
+- Windows 10/11 호환성을 해결한다. 원본과 다른 호환 처리와 이유는 한국어 코드 주석에 명시한다. 전체화면, 4:3/16:9/16:10, 가장자리 스크롤 요구를 유지한다.
+- 그 뒤 멀티플레이를 무시험으로 사전 구현하고 4~7차를 진행한다.
+- 버전 표기는11.01이며 Credits 목록에 세 번째 Netstorm 11.01 Patch Credits와 동일한 형식의 메시지 창(제목NetStorm 11.01 Patch Credits, HJOW 개발/AI 사용 설명)을 추가한다(추가 AGENTS.md).
+- 외부 도메인/IP 접속 기능을 로컬 서버와 구별해 문서화하고, 클라이언트 유효성 검사는 비활성화한다(갱신 AGENTS.md,684 적용).
+- 개발 작업 단위마다 인수인계를 갱신하고 커밋한다. 커밋에 실패해도 작업은 이어 간다.
+
+대상은 원본 `d/offical1~5.english`의 MissionBegin 순서와 `tell.DEMOVILLE`의 데모 순서다.
+
+| 구분 | 미션 키 (원본 표시 이름) |
+| --- | --- |
+| Early Missions (offical1) | Tutorial1 (Bridge the Gap), Tutorial2 (Secret Workshop), Tutorial3 (Capture The Priest), Tutorial4 (Tactical Combat), Tutorial5 (Subtle Defense), Tutorial6 (Raw Power) |
+| Priest Training (offical2) | bc1menu76, bc2bridging76, bc3acid_bar76, bc4bow_rush76, bc5walkers76, bc6mows76, bc7sun_bars76, bc8fury76, bc9ssun_bars76 |
+| 캠페인 1장 (offical3) | TheWarBegins, MasterOfWhirligigs, SaveTheIsland, FragileFortune, ThunderingPower, DissolvedAlliance |
+| 캠페인 2장 (offical4) | TheNoose, RainVsRain, RunForIt, GuardMyBack, Surrounded |
+| 캠페인 3장 (offical5) | BreakingThrough, ToTheRescue, Vicious, EnemyTerritory, FinalConfrontation |
+| 데모 | DemoStormRages (The Storm Rages), GuardMyBack (Demo of "Guard My Back"), DissolvedAlliance (Demo of "Dissolved Alliance") |
+
+일반 31경로(Early 6 + Training 9 + 캠페인 16)와 데모 3개를 합쳐 34경로다. 같은 자원을 쓰는 GuardMyBack·DissolvedAlliance도 일반/데모를 따로 검증한다([대응 근거](docs/gameplay/demo-campaign-map.md)).
+
+### 1.3 AGENTS.md 변경 반영 (2026-11-02까지)
+
+| 커밋 | 변경 | 반영 상태 |
+| --- | --- | --- |
+| `5867f35e` | 4차 로컬MCP/16:9 최대1920×1080, 7차1440p/4K의1080p기반FSR자동켜기 | 695에서1.1절과3절8번에 반영. 후순위 미착수다. |
+| `990a3541` | 4차 MCP에 모든 게임 조작·화면 캡처·소리 포함 녹화 명시 | 694에서1.1절과3절8번에 반영. 4차 구현은 미착수다. |
+| `bfccadf5`, `24959e75` | 3차 뒤 후속을 4차 MCP, 5차 저장 위치·커스텀 맵·Edit 목록, 6차 한국어로 재편 | 1.1절과 3절 8번에 반영 |
+| `ef0c6b91` | cpppj·dotnetpj의 Windows 실행 파일 이름을 `Netstorm.exe`로 통일 | cpppj는 단위580에서 완료(CMake 대상 NetstormCpp 유지, OUTPUT_NAME 변경). dotnetpj는 `Netstorm.Game.csproj`의 AssemblyName이 아직 `NetstormClone`이며 LEFT_JOBS.dotnetpj.md에서 처리한다. |
+| `9d501e29`, `4acd05dd`, `5ed4ef73`, `7dd1ab4e` | 7차 추가. FSR 3.1 → FSR 제거 → FSR 1.0으로 변경됐고 dotnetpj 후순위도 4~7차로 넓어졌다. | **최종 기준은 `7dd1ab4e`의 FSR 1.0이다.** 1.1절과 3절 8번에 반영. FSR 3.1과 FidelityFX-SDK 안은 쓰지 않는다. |
+
+현재AGENTS.md는4~7차로 명시한다. 4차로컬MCP/1920×1080·7차고해상도FSR의 최신 기준은5867f35e이며1.1절과3절8번에 반영했다.
+
+## 2. 현재 상태 (2026-11-01, 단위680 확인 기준)
+
+- **게임 실행·플레이 가능 여부:** 인자 없는 `Netstorm.exe`로 GUI가 시작되며 마지막 전체34 진입·비정지 진행·정상 종료는645의644제품에서 확인했다.672에서는 메뉴/음향/UI 관련 경로를 별도 실행했다. 자연 완주 근거는 과거 제품의 Early1/2 자동 완주, 사용자가 다른 PC에서 직접 완주한 캠페인 1-1, 2026-11-01 사용자가 cpppj를 직접 실행해 완주한 캠페인 1-2(적 사제 포획·희생, Next Missions로 1-3 진입 확인. PC·제품·SHA는 미제공)다. 이 1-2 플레이에서 원본과 다른 점 2건이 제보됐다(2.4절).
+- **기존 게임과의 동일성:** 원문 관측과 대조를 마친 부품이 많다. 자연 완주와 전체 동일성은 사용자가 플레이하며 확인한다.
+
+단위/집중 검사, 짧은 진입, 자연 완주, 전체 동일성은 각각 별도로 판정한다. 서로 다른 제품의 성공을 합산하지 않는다.
+
+### 2.1 영역별 마지막 근거
+
+| 영역 | 마지막 근거 | 확인한 범위 | 남은 한계 |
+| --- | --- | --- | --- |
+| 덱 재활성 현재 옵션 | [677](docs/exe/cpp-deck-reactivation-20261101.md) | 실제 반환의 설정 두 번 조회·할당 뒤 모드/Unit Rate. 집중8개 실패0. 같은1-1 UI 배치에서676 약10초→677 약1초 | 원문 Fast1초 복원이다. 최초 브리핑 입력 실패1회와 최종2회를 구별한다. 자연 완주/전체34/새 ZIP/물리 입력은 아니다. |
+| 간헐천·고정 표 대상 변환 | [678](docs/exe/cpp-translated-shadow-20261101.md) | 004dab90/0040351d 원문296전체표면/888관측, 실제 간헐천8입력. 집중31개 실패0·실제1-2초기 GUI2회. 원문 정렬/색표 유지 | 과거 소스 치환 설명/픽셀 기대를 정정했다. 10.78 회전0·일반 범위다. 실제 새 다리와 원본 나란히 픽셀/전체34/자연완주는 아니다. |
+| 지정 집중 변이 | [679](docs/exe/cpp-focused-mutation-20261101.md) | 기준선5/31개와실제결함5종 검출. 프로세스고장경계Python3개 통과. 사본대상소스원래바이트복구 | 최초x구분자 미검출은동치로분류하고 숫자0 오류로교정했다. 전체C++/게임/MP검사가아니며사본변이EXE는제품이아니다. |
+| MoveDialog 현재 모달 | [680](docs/exe/cpp-move-dialog-20261101.md) | 원문73입력/219관측·집중9개 실패0. HTML명령→일반 입력→같은 모달의 공통 Push/Attach 연결. 임시 본문의 실제 창 상단 y=0 관측 | 최초 미등록 문서 접두어 입력 실패와 최종 GUI 통과를 구별한다. 원본 시나리오/전투/MP/물리 입력 검사가 아니며 CD 대응은 정적 후보뿐이다. |
+| 전체34 진입 | [645](docs/exe/cpp-solo-integrated-20261031.md) (644 제품) | 새 ZIP의 일반31+실제Demo3 최종34/34, 종료0·비정지 시각 증가·창DC 전체RGB·Native Frame·수집/분배. 최소 증가20.843초. 주3566등록/집중37통과 | 짧은 진입이다. 최초 입력 누락34실패/재검증34통과/첫 실행 준비2회/총70프로세스를 구별한다. 자연 완주·전체 동일성·물리 입력은 아니다. |
+| 반복 미션 수명 | [638](docs/exe/cpp-state-repeat-20261031.md) (637 제품) | TEST02 4:3 창, 캠페인 1-1 16:9 전체화면. Restart·Leave 취소·메인 복귀·Quit, 창 DC RGB 4쌍 | 앱 내 검사 입력이다. 장시간 누수, 모든 전환, 자연 완주의 증거가 아니다. |
+| Guide 소멸 | [671](docs/exe/cpp-guide-release-20261101.md) | 명시 End/자동 Guide의 실제 Tutorial6DWORD·AI·기본 Config/예외 정리, 장기 deny 공유, 같은 World/UserInput 보존. 새10·기존25/실패0 | 원본32비트 SEH 전체 ABI·GUI·자연 완료 검증이 아니다. 기존 검사 장면의 최초3실패/교정과 최종35를 구별한다. |
+| 위치 음향 현재 조회 | [672](docs/exe/cpp-sound-current-view-20261101.md) | 현재 snapshot/실제 Gump 지도·장치 뒤 pan→volume 재조회, 실제 Client 연결. 집중30/실패0와 GUI view10프로세스의 pan/Home·메뉴0·소리 off/on·세 해상도 재시작 | 실제 PCM/청취는 미검증이다. 곡 만료 현재 battle은673에서 별도 연결했다. 저장1224는674의 별도 실제 파일 검사로 수정했으며 전체 음향 묶음을 재실행한 것은 아니다. |
+| 곡 만료의 현재 battle | [673](docs/exe/cpp-scene-current-battle-20261101.md) | 실제 Client의 현재 owner 연결·시각/NaN 관문·효과 뒤 재조회·cleanup순서 보존·Shutdown뒤 현재 조회. 집중24개 실패0/기존9339행 | 실제 Run 연결은 빌드/정적 확인이며 GUI cleanup 전체를 재실행하지 않았다. 새9개는 명시 입력이다. |
+| 매핑 중인 설정 저장 | [674](docs/exe/cpp-options-mapped-save-20261101.md) | 실제1224·C/H·Unicode 재적재·이전view·지연 정리·공유거부32/changed/복구 파일·일반 절삭. 집중7개 실패0 | 실제 GUI/672 전체audio 재검사는 아니다. 원인 프로세스·Python 복구 writer·실제 부분I/O/1176/1177는 미검증이다. 외부 매핑이 종료까지 남으면 성공 백업도 남을 수 있다. |
+| 연속 화면 저장/BMP | [695](docs/exe/cpp-capture-client-20261102.md)·[694](docs/exe/cpp-indexed-bitmap-20261101.md)·[693](docs/exe/cpp-capture-sequence-20261101.md) | 실제Client owner/Frame·Capture 입력·8비트BMP·공유고리/완료창. 새원문192/576·집중14개·최종GUI20프레임/RGB/반납/메인복귀 | 최초Unicode본문실패와최종통과를구별한다. 메뉴한주기이며수집중모드변경/1000프레임GUI/반복주기·물리키·소리녹화는미검증이다. |
+| URL 버튼/기존 Help 접합 | [692](docs/exe/cpp-url-input-20261101.md) | 이름/일반 입력 원문96행·실제 고리/큐·공통 Help 창/cmd/파일 링크 전달. 최종 선택5개 실패0 | 실제 F7→View/외부 브라우저·Unicode 이 버튼 왕복·새CD·전체메타 검증은 아니다. 외부 프로그램 실행0이다. |
+| 실제 Pop 겹침/조기 반환 | [691](docs/exe/cpp-pop89-context-20261101.md) | 실제89의전체raw/spot 원문3관측 일치·상위 예외 변환 수정·범위/nonvoid/contained 앞단. 기존4+실제Session2개 통과 | 특정겹침1입력이며 원문void와C++진단enum2를 구별한다. 전체공간/자연생성·GUI·새CD게임 검증이 아니다. |
+| 대본 DestroyAt 점 검색/삭제 | [690](docs/exe/cpp-destroy-at-20261101.md) | parser16/입력48/부모804·현재 finder/가상 삭제 연결. 최종 선택7개 실패0. 범위 값은 원문처럼 무시 | 최초 span 빌드/89 Pop 입력 실패를 구별한다. 89의 원문 겹침/상위 차이는691에서 처리했다. GUI/모든 타입·CD/손상 ABI/전체34·전체C++ 검증은 아니다. |
+| 대본 AddRandom 실제 배치 | [689](docs/exe/cpp-add-random-20261101.md) | 일반입력288/실제부모720·현재Session/Factory직결·최종선택13개실패0. 실제134생성/잘못된TYPE로그와Pool무변경 | 최초89생성보장기대실패/입력정정을구별한다. GUI/모든타입·CD부모실행·전체34/전체C++검증은아니다. |
+| 대본 일반 연기/화면 번개/명시 무동작 | [688](docs/exe/cpp-scenario-effect-input-20261101.md) | 3이름·원문576/1728·현재표시연결·연기8/5 대냉각10/3·부모0독립소유. 최종18개실패0 | 생성부모는명시원문경계. 실제GUI/픽셀·CD·모든SID/SEH ABI·전체34/전체C++는아니다. |
+| 대본 송금 이름/명시 태그 목록 | [687](docs/exe/cpp-scenario-money-names-20261101.md) | 원본 송금6이름·실제 parser/큐와기존8개 실패0. 보관499대본의명시22이름/원문표288항목 정적 조사 | 기존 송금 부모는 변경하지 않았다. 동적/TARC/Config 확장·메뉴둘째인자·실제 게임 검증은 아니다. |
+| 메뉴 없는 시나리오 객체 명령 | [686](docs/exe/cpp-scenario-object-input-20261101.md) | 원문5이름·480입력, 키 뗌/SID0/반환 무시·현재 Session 직결. 집중14개 실패0·83VT 정적 점검 갱신 | 객체6c는 명시 경계. 새 실제 효과/게임·CD·전체34/전체C++ 검증이 아니다. |
+| 제품11.01/추가 Credits | [685](docs/exe/cpp-product-1101-20261101.md) | CLI/Windows버전/실제GUI11.01, 메뉴정확히3행·HJOW/AI·같은창 Back/Cancel. 기존24개 실패0·최종두해상도 GUI | 내부원문판본/옛Credits유지. 전체34/전체C++·CD GUI·MP·물리입력/PCM은 아니다. |
+| 외부 기능/구 검증 비활성화 | [684](docs/exe/cpp-external-services-20261101.md) | 설정/URL/원문 두 판본·R.exe·현재 소비자 목록, 제품 검증 getter/안내 제외·성공1 합성 없음. 집중12개 실패0·전후 메뉴GUI | 원문82관측은 참조모드. 실제 외부 통신/MP·CD실행은0. URL후보59/18은 중복·템플릿을 포함한다. |
+| 대본 기술 지급·SP 이름 | [683](docs/exe/cpp-get-technology-input-20261101.md) | GetTechnology/ChangeMoney 이름2개·기술 지급 일반 입력→기존 Session 부모, 새 원문48/144·집중10개 실패0 | 새 게임 실행0. 기존 부모45사례이며 실제 지급/안내 GUI·CD·전체34/전체 C++는 아니다. |
+| 대본 음향·보기 명령 이름 | [682](docs/exe/cpp-script-bindings-20261101.md) | PlaySound/ViewPriest/SetAllBridge/DigUp 이름4개, 같은 현재 고리/음향 연결. 원문48/144·집중12개 실패0·수정 전/후 GUI2회 | 이름표 끝49BYTE 증가까지 확인. PCM/청취·다른3명령 새GUI행동·전체34·CD본문은 아니다. |
+| 객체 메뉴 연결 정적 대조 | [681](docs/exe/cpp-object-menu-wiring-20261101.md) | 실제 PE83VT/현재 생성표, 작성13·비멀티 열기5·특수 명령9 연결·메타맵2 이월 | 제품 변경/본문·게임 실행0. 소스 연결 대조이며 전체 상태·효과·CD·선택기/픽셀 검증이 아니다. |
+| 카메라 writer·ViewSpot | [676](docs/exe/cpp-viewspot-20261101.md) | zoom/flags/시차/+60/목표 writer 전수 분류. 대본 ViewSpot 연결, 기계어 대조34행, 집중5개/실패0, 실제 RunForIt 입장 카메라 (880,980)→(1712,584) | 패킷/디버그 분류는 정적 판정이다. 원본 픽셀 나란히 비교·다른 ViewSpot 맵 진입·전체34는 아니다. CD 처리기 몸체 미대조 |
+| 설정 복구 도구·매핑 원인 | [675](docs/exe/cpp-tool-settings-writer-20261101.md) | 954바이트 추적 파일에서 `git diff` 계열이 errno22/doserrno1224를 재현(C/H 대조군0). 도구의 1224 판별·마지막 시도 교체·지연 정리. 실제 `git diff` 대조 수정 전 600회 중 실패17 → 수정 후 1007회 실패0. 검사6개/변이8/8 | 과거 개별 실패의 프로세스는 사후 특정 불가. 954바이트 `git status`는0건이고 재현은32KB 초과 표본뿐이다. Defender 제외 경로 미확인. 1176/1177 미주입. 게임 실행0 |
+| 옛 메뉴/음향 도구5개 | [672](docs/exe/cpp-sound-current-view-20261101.md) | ESC→실제Game/ABORT·해상도No/Yes/재시작·실제HTML 캡처/스택·32반복·번개4곡·합성COL. menu/dialog/thunder/weather 최종 통과, audio4그룹과 view 별도 통과 | 최초 실패9묶음·전체GUI64/CLI12/GUI종료1 두 개를 구별한다. 전체audio 실패·원본 동적픽셀/자연완주/물리 입력은 미검증이다. |
+| 시작·휴대 배포 | [637](docs/exe/cpp-portable-startup-20261031.md) | 무인자 GUI 시작, 실제 Unicode EXE 경로 기준 `game/` 우선, cwd 독립, 자기 콘솔 분리, GUI 오류 표시. 집중 19/실패 0, 빌드 경고·오류 0 | 물리 입력 0건. 2.4절 참조 |
+| 카메라 | [615](docs/exe/cpp-camera-pan-20261030.md), [617](docs/exe/cpp-camera-pan-presentation-20261030.md), [632](docs/exe/cpp-camera-center-20261031.md), [633](docs/exe/cpp-camera-immediate-20261031.md), [635](docs/exe/cpp-camera-viewport-20261031.md) | 원문 Alt/가운데 pan, 확대 전체화면 논리 단위, 직접 중심 목표, Home 계열 즉시 적용, viewport 변경 시 현재 값 보존 | 물리 키, 다른 DPI, 실제 포커스 전환 |
+| Renderer·Native Draw | [618](docs/exe/cpp-renderer-prelude-20261030.md), [619](docs/exe/cpp-renderer-clouds-20261030.md), [620](docs/exe/cpp-renderer-frame-20261030.md), [622](docs/exe/cpp-native-scene-20261031.md), [628](docs/exe/cpp-mana-additional-20261031.md), [629](docs/exe/cpp-auxiliary-draw-20261031.md), [648](docs/exe/cpp-renderer-presentation-20261031.md), [655](docs/exe/cpp-mission-entry-20261031.md) | 앞단, 구름 4칸·배경 선택, 실제 Frame, 단일 표시 목록, 마나 103 추가 Draw, 배율·고정색, 부분 그리기/전체 출력 요청·첫 flags/count0 보존, 실제 Zone 뒤 초기화 | 전체 픽셀 동일성, 기존 VFX 계약·전체 비동기State7 |
+| UI 갱신 영역 | [624](docs/exe/cpp-gump-redraw-20261031.md), [625](docs/exe/cpp-ui-dirty-20261031.md), [627](docs/exe/cpp-gump-derived-dirty-20261031.md), [630](docs/exe/cpp-inventory-blink-20261031.md), [631](docs/exe/cpp-minimap-dirty-20261031.md), [639](docs/exe/cpp-minimap-content-20261031.md) | Gump 기본 갱신, 지도 clamp, 기본 UI, 장식·메뉴 행, 생산 점멸, 미니맵 기본 영역·지면/소유자/삭제 픽셀. grid/debug 직접 writer와 생성 초기값 대조 | 일반 경로 활성 writer를 찾지 못한 grid/debug는 노출하지 않는다. 간접 alias 부재 전체 증명은 아니다. |
+| Edit·시나리오 | [590](docs/exe/cpp-editor-scenario-20261030.md), [597](docs/exe/cpp-editor-rules-20261030.md), [609](docs/exe/cpp-world-geyser-20261030.md), [634](docs/exe/cpp-editor-catalog-current-20261031.md), [650](docs/exe/cpp-world-generation-session-20261031.md), [653](docs/exe/cpp-editor-default-name-20261031.md), [661](docs/exe/cpp-editor-entry-prelude-20261031.md), [662](docs/exe/cpp-editor-deferred-file-20261031.md), [663](docs/exe/cpp-fort-object-stream-20261031.md), [664](docs/exe/cpp-campaign-object-stream-20261031.md), [665](docs/exe/cpp-editor-invalid-file-20261101.md) | 시작값·작업본 왕복·방향별 동맹·세계 생성·Fort433개 이관/필터와 기본 이름 선택·늦은 파일 준비/Session checkpoint·State1 공통 앞단/52h 통지·선행 파싱 제거/실제 Campaign·Editor Objects 스트림·예외 수명/손상 파일 정리·기본 이름 재선택 반복 | 3절 2번.665의10개 통과는 전체 ABI/GUI 검증이 아니다. |
+| Edit Unicode 파일 | [646](docs/exe/cpp-editor-unicode-20261031.md) | UTF-8/native 경로·wide CRT, 실제 Unicode 파일 왕복·권한·목록 이관/장부 재열기·삭제 보존·source TAFF 격리. 집중24통과 | GUI/전체34/한국어 UI 검증이 아니다. 최신 전체34/ZIP은644제품이며672의 기능별GUI와 구별한다. |
+| Edit Template 쓰기 | [669](docs/exe/cpp-editor-file-writer-20261101.md) | 원문 r+b/실패 시 생성과 실제BaseFile 쓰기/반납. 짧은 이미지 뒤 tail 보존·실제35섹션 재파싱·현재 이름/서명·Unicode/보호/공유 거부. 관련28개/기존322행 통과 | 실제 부분쓰기/닫기 반환 실패는 새 관측이 아니다. 일반 Write/준비/복사와 전체 FILE ABI·GUI는 별도다. |
+| 객체 메뉴·건설 | [524](docs/exe/cpp-object-hit-20261028.md), [528](docs/exe/cpp-factory-upgrade-runtime-20261028.md), [531](docs/exe/cpp-altar-salvage-runtime-20261028.md), [537](docs/exe/cpp-mission-cost-guard-20261028.md) | 픽셀 선택, 시험한 메뉴·업그레이드·회수, 미션 비용 관문 | 다른 타입·레벨·상태 |
+| Factory 중복 경고 | [647](docs/exe/cpp-factory-duplicate-warning-20261031.md) | 실제 제공된 경고 callback 보존·Client 채널4 로그·명시 중복 입력의 경고 뒤 기존 객체 삭제. 최종1개 통과 | 일반 Pop 겹침 거부와 분리한 +20 장치 접합이다. 합법 GUI 배치/전체20/전체34 검증이 아니다. |
+| HUD·단축키 | [509](docs/exe/cpp-hud-input-runtime-20261027.md), [511](docs/exe/cpp-player-list-runtime-20261028.md), [540](docs/exe/cpp-minimap-toggle-runtime-20261028.md), [547](docs/exe/cpp-send-money-runtime-20261028.md), [548](docs/exe/cpp-screenshot-runtime-20261028.md) | 미니맵, QWASZX, ESC 일부, Player List, 독립 미니맵, Send Money, F7·Shift F7 | 스크립트 입력이다. 3절 1번 |
+| Chat | [640](docs/exe/cpp-ui-lifetime-current-20261031.md), [574](docs/exe/cpp-chat-completion-20261029.md), [586](docs/exe/cpp-chat-live-message-20261030.md), [614](docs/exe/cpp-chat-settings-20261030.md), [649](docs/exe/cpp-issue-commands-20261031.md) | 입력줄, 자동완성, 일반 Enter·중계·로컬 큐·공유 로그, 설정 재실행, 초기 점 명령/밝기·실제 오류 출력 | 3절 4번 |
+| 미션 진입 UI·팔레트 | [656](docs/exe/cpp-mission-starting-tail-20261031.md), [657](docs/exe/cpp-mission-async-20261031.md), [658](docs/exe/cpp-mission-starting-commit-20261031.md), [659](docs/exe/cpp-mission-starting-prefix-20261031.md), [660](docs/exe/cpp-mission-starting-parent-20261031.md), [667](docs/exe/cpp-login-template-lifetime-20261101.md), [668](docs/exe/cpp-datamanager-dump-20261101.md) | UI/색 수명·Tick/큐/완료 공개·안내·7/8 확정·부모의 복사/로그/World 교체. 최초 파일 수명667, Stripped Image 덤프/같은 Client 진단668·관련20개 통과 | 재접속/Zone0·메타 Poll·시계 패킷·실제 GUI 전체 교체는 별도다. |
+| 영상·CD | [594](docs/exe/cpp-movie-runtime-20261030.md), [595](docs/exe/cpp-cd-movie-package-20261030.md), [654](docs/exe/cpp-cd-presence-20261031.md), [655](docs/exe/cpp-mission-entry-20261031.md), [670](docs/exe/cpp-movie-override-20261101.md) | MovieGump/스킵·자연 끝/완료 저장·CD 경로/캐시와 시작/State7 결과 저장·영문/독문 동봉을 유지한다.670은 단일 override의 수집/Renderer·End/Kill/재진입 Close, 관련10개/기존810행을 확인했다. | 실제 CD 삽입/열거, PCM, 활성 전체화면 물리 출력.670 새2개는 최초 준비뿐이며 전체 영상 관측이 아니다. |
+| 데모 | [567](docs/exe/cpp-demo-repeat-20261029.md), [569](docs/exe/cpp-demo-repeat-two-20261029.md) | 세 데모의 첫 360초 만료 → 재시작 → Exit Demo → Quit | 두 번째 전체 360초 |
+| 저장·진행 | [568](docs/exe/cpp-saved-state-file-20261029.md), [578](docs/exe/cpp-campaign-progress-20261030.md), [588](docs/exe/cpp-battle-leave-20261030.md) | 저장상태 파일 정리, 진행 키 저장과 다음 미션 해제, 일반 중단의 State3 복귀 | 실제 승리부터 자동 저장까지, 일반 전투 저장상태 복구는8번 후순위MP(661) |
+| 메뉴·Help | [566](docs/exe/cpp-credits-roll-20261029.md), [600](docs/exe/cpp-cheat-menu-20261030.md), [603](docs/exe/cpp-help-menus-20261030.md) | Credits 자동 전환, ESC Cheat 직접 메뉴, Help·Technical Help·외부 링크 로컬 도우미 | 원본 픽셀·음향 |
+| 의식 보상 | [598](docs/exe/cpp-new-technology-20261030.md), [599](docs/exe/cpp-ritual-refresh-20261030.md), [604](docs/exe/cpp-player-notices-20261030.md), [642](docs/exe/cpp-foreign-ritual-reward-20261031.md) | 로컬 기술·Core/snapshot·프레임말 결과와 비로컬 SP5000/별도144BYTE 기술 장부 실제 연결 | 실제 의식 UI, 비미션 전체 랭크 상승, MP 상태/사망 안내 |
+| 파일/TAFF | [643](docs/exe/cpp-taff-secondary-20261031.md), [644](docs/exe/cpp-basefile-read-policy-20261031.md), [651](docs/exe/cpp-basefile-io-20261031.md), [652](docs/exe/cpp-basefile-read-key-20261031.md) | 두 TAFF/열거·Help·UTF-8/W·경로 정책과 BaseFile11몸체·실제 디스크/TAFF/객체 덤프 장치.652 원문235행·집중15개 통과 | 전체41b4c0 FILE/예외 ABI·다른 쓰기/키/스트림 소비자·실제 손상/실패 수명 |
+| 투사체·수명 | [552](docs/exe/cpp-bridge-runtime-20261029.md), [611](docs/exe/cpp-missile-floater-20261030.md), [612](docs/exe/cpp-ice-ricochet-scratch-20261030.md), [613](docs/exe/cpp-fence-event3-20261030.md) | 다리 붕괴·대피, 플로터 회피, 반사 변위 0, 펜스 사건 3 | 실제 특정 적 공격은 생략했다. 0.3절의 복원 한계 |
+| 전체화면·해상도 | [호환 전체화면](docs/exe/cpp-modern-fullscreen-20261027.md), [가장자리](docs/exe/cpp-edge-scroll-runtime-20261027.md), [해상도 메뉴](docs/exe/cpp-screen-resolution-menu-20261027.md), [635](docs/exe/cpp-camera-viewport-20261031.md) | Windows 10 DIB 호환 출력, 가장자리 이동, 세 화면비 메뉴, 저장·종료·새 프로세스 적용 | 3절 7번 |
+
+기본 채팅 구분선/숨김/복원과 실제 브리핑·중단 확인의 캡처 취소/미션 재진입은 [640](docs/exe/cpp-ui-lifetime-current-20261031.md)에서 같은637 제품으로 다시 확인했다. 전체 Chat·물리 입력의 완료 근거는 아니다.
+
+### 2.2 미션별 상태
+
+아래 장기 플레이 증거는 과거 각 제품에서 얻은 것이며 현재 제품의 자연 완주 회귀 결과가 아니다. 남은 확인 열의 자연 완주·승패·화면·음향은 사용자 확인 대상이다.
+
+| 대상 | 확보한 증거 | 남은 확인 |
+| --- | --- | --- |
+| Early1 | 북서 간헐천 경로 A~G, 채취/귀환, SP 0→600, Tutorial2 진입 | 남동 경로 실패 원인, 실패/재시작/F8, 화면·음향 |
+| Early2 | A~I, 신전·워크샾·지식·생산·발사기·회수(환불 75), Tutorial3 진입. 마지막 자연 완주 회귀는 467 제품 | 재시도·취소, 화면·음향 |
+| Early3~6 | 진입/Start, 단계 판정, 짧은 진행. Early3은 468 Source1에서 채취/귀환, SP 2000→2200→2400, A→B→C. Early5는 과거 F(오벨리스크 획득)까지 | 각 자연 완주와 다음 미션. Early3은 최종 468 제품에서 완주한 기록이 아니며 attempt4의 종료 1도 보존한다. |
+| 캠페인 1-1 | 자동 AI 세션의 캐논 적 신전 HP 5000→0(322). 2026-10-28 사용자가 다른 PC에서 직접 완주하고 다음 스테이지 안내 정상을 확인. 638에서 Restart·Leave 반복 확인 | 사용자 실행의 PC/커밋/SHA는 미제공이며 현재 제품의 자연 완주 검증이 아니다. 보호막 중심·제단 포획 사제색(541)의 실제 확인은 사용자 담당. 1-2 진입과 패배/Retry는 별도 |
+| 캠페인 1-2 (MasterOfWhirligigs) | 진입/Start, 자동 AI/Kernel 400프레임(321), 645 전체34 재확인. **2026-11-01 사용자가 cpppj를 직접 실행해 완주: 적 사제 포획·희생, 승리 뒤 Next Missions 버튼으로 캠페인 1-3 진입 확인.** 사용자 실행의 PC/제품/SHA는 미제공이며 AI 검사 근거와 합산하지 않는다 | 플레이 중 제보된 원본과의 차이 2건(덱 재활성 시간·간헐천 그림자, 2.4절)의 점검. 이 제보는 1-1에서도 있었다는 인상이다. 패배/Retry는 별도 |
+| 캠페인 1-3~1-6 | 진입/Start, 자동 AI/Kernel 400프레임(321), 645 전체34 재확인. 1-6 무입력 전투의 신전 파괴 뒤 섬 중립·기본 테마 복귀(575). 1-3은 사용자가 1-2의 Next Missions로 진입하는 것까지만 확인 | 자연 플레이, 승패, 후속 명령 |
+| 캠페인 2·3장 | 645 전체34에서 진입/Start, 비정지 시각, 창 출력, 종료 0 확인 | 추가 TYPE 전체 수명, 자연 플레이 |
+| Priest Training 9개 | 645 전체34에서 9/9 진입, 비정지 진행, 창 출력, 종료 0 확인 | 각 자연 완주, 완료 안내/메뉴 복귀, bc8 전체 원소 선택지 |
+| 데모 3개 | 645 전체34에서 실제 메뉴 진입, 종료 0 확인. 첫 360초 만료 → 재시작 → Exit Demo → Quit 확인(567, 569) | 재시작 뒤 두 번째 전체 360초, 연속 반복/정리, 승패 |
+
+Early3 후속 입력과 미실행 계획은 [부분 진행 보관](docs/exe/prepared/tutorial3-partial-468-20261027/ATTEMPT4-NEXT-C-H.md)을 본다. 다음 워크샾 메뉴의 71/75 생산·공급·사제 무력화/포획은 미완료다.
+
+### 2.3 기능 영역별 상태
+
+- **시작·메인 메뉴:** 무인자 `Netstorm.exe`가 GUI로 시작한다(637). 원본 8버튼과 Campaign/Demo/Help/Options, Credits 18쪽, Quit, Tips, 새 설치의 Native39 복귀(563), 실제 인트로 영상(594~595)을 연결했다. 승패 전환, 일반 전투 저장상태 복구(661에서 후순위MP로 분류), 미션 이탈 전체 선택, 픽셀/음향은 남는다. Multiplayer는 앞 목표 뒤에 사전 구현한다.
+- **Edit:** 기존 맵 자연 State1 설치, 전체 저장/Save as, 새 이름 목록/재시작, Set All Bridge, SaveGoMain, 신규 Fort/자동 섬 창, 기존·새 맵 섬 추가를 연결했다. Test Battle → 짧은 전투 → Return to Editing 왕복(492), 시나리오 시작값(590), 방향별 동맹(597), 세계 간헐천(609)을 확인했다. 남은 것은 3절 2번이다.
+- **게임 중 UI:** QWASZX 취득/회전/배치/보충, 원본 ESC 가로/하위 메뉴, 실제 HUD 루트·도킹/덱·미니맵/NSInfo/Chat, 독립 미니맵, Player List, Send Money, F2·F3·F7·F8·Shift F7·Ctrl Shift F7, 가장자리 이동과 원문 pan, 실제 Chat 입력·전달을 연결했다. 기본 Chat 구분선 드래그/숨김/복원은543과640에서 확인했다. 나머지 View/zoom·도킹 조합·모드별 표시·픽셀 대조는 남는다.
+- **공통 전략 AI:** 적·아군·데모가 같은 원본 전략을 쓰고 `RawCampaignSession::RunFrame`의 현재 시각 → 비정지 AI → Kernel 순서에 연결된다(320~322). 정상 간격의 확장/채취/생산/공격은 자연 플레이로 대조하지 않았다.
+- **유닛·주문·의식:** 워크샾 25종의 생성/이동/공격/표시·소유자색(335~345), Devastation, 포획/운반/희생, SP/미션 완료, 은신/마비, 윈드 소환을 복원했다. 의식 집중 검사에는 명시 시전원/포로/시계 입력이 포함되며, 실제 UI 취득 → 시전 → 포획 → 희생의 자연 플레이는 미검증이다.
+- **내부 수명:** Client/Session의 장기 전역, Pool/Graph/Player, Deck, 권한, 커서, 반납 조정기와 cleanup, 기존 맵 Edit 설치, Guide/World 분리, 작업본 reader, Login 재적재를 연결했다(425~486). 정상 State7은 `CleanupNativeStateWorld(1)`, 정상 MainMenu는 전체 cleanup(0)에 이미 연결돼 있다(638). 남은 것은 3절 3·4번이다.
+- **배포:** [cpppj/package-cpppj.ps1](cpppj/package-cpppj.ps1)의 기본 증분 빌드 → ZIP, BUILD_INFO, 전체 자료/런타임, 인자 경계를 확인했다(562). 637부터 최상위 EXE 직접 실행이 기본이고, 창 모드 강제와 추가 인자용 배치 2개를 유지한다. 전체 게임 배포 검증과 구별한다.
+
+### 2.4 알려진 미해결 이슈
+
+- **[사용자 제보 2026-11-01] 덱 재활성 지연 수정(677):** 실제 커서에 Unit Rate와useProductTimers 연결이 빠져 Fast=2인데 초기 Slow=0의10초를 사용했다. 현재 getter를 원문 소비 위치에 연결했고 집중8개 실패0·같은 실제1-1 배치의 수정 전10초/수정 후1초를 확인했다([677](docs/exe/cpp-deck-reactivation-20261101.md)). 원본 수동 녹화의1.1/1.2초도 원문 Fast1초와 일치한다. 새 로컬 녹화의 정확한 클릭 시각이나 모든 종류/1-2 자연 플레이 전체를 검증했다고 확대하지 않는다.
+- **[사용자 제보 2026-11-01] 간헐천 그림자 수정(678):** 원문004dab90/0040351d는 마스크 아래 대상 색을 변환하지만 실제 Sprite는 소스 치환으로 어두운 픽셀을 덮었다. 대상 변환을 복원했고 원문 농도표/다리·그림자 정렬은 유지했다. 독립 원문296표면/888관측·집중31개와 실제1-2초기 GUI2회를 확인했다([678](docs/exe/cpp-translated-shadow-20261101.md)). 실제 새 다리와 원본 나란히 픽셀 검사는 아니며 자연 플레이 확인은 사용자에게 남긴다. 과거 소스 치환 설명/반대 변이 기대는 현재 근거로 쓰지 않는다.
+- **물리 입력 미검증(637, 640, 669):** QWASZX·ESC·Home·포커스는 물리 입력0건이다.637/640의 게임과641의 VS Code 캡처가 재선택 뒤에도 timeout이었다.669에서는 새 활성 RDP 세션(2026-11-01 00:37 로그인, 세션2)을 확인한 뒤 VS Code로 재확인했지만 최초 `FrameArrived timed out`, 재선택 뒤 `window capture timed out`으로 실패했다. 이번 입력/게임 실행0이다([669](docs/exe/cpp-editor-file-writer-20261101.md)). 게임 고유 결함으로 단정하지 않으며 다음 환경 변화 전 같은 시도를 반복하지 않는다.
+- **Early1 남동 경로:** D·SP 0에서 Next Tutorial을 찾지 못해 종료 1(417). 북서 경로는 통과하며 실패 원인은 미확정이다.
+- **options.cfg 저장/복구(674 제품·675 도구 대응):** GUI 음량 변경393/전체audio672의 fopen errno22/doserrno1224와 같은 활성 매핑 조건을 C/H에서 재현하고 제품 writer의 교체 저장을 연결했다(674). 도구 복구의 간헐 OSError22는 같은 1224였고 675에서 같은 교체 경로를 넣었다. 수정된 추적 파일을 `git diff` 계열이 매핑하는 동안 실제 954바이트에서 같은 신호가 재현되며 볼륨 형식과는 무관하다. 과거 개별 실패의 프로세스는 사후 특정할 수 없다. 실제 GUI/전체audio는 재실행하지 않았고 실패한 전체audio 원시는672 live/audio-v2에 유지한다. 공유 삭제도 거부되면 이전 설정/changed/복구 파일을 보존하고 실패를 알린다. 프로세스 종료까지 매핑이 남으면 성공 백업/교체 폴더도 남을 수 있다. 자세한 범위는[674](docs/exe/cpp-options-mapped-save-20261101.md)·[675](docs/exe/cpp-tool-settings-writer-20261101.md)를 따른다.
+- **옛 스모크 5개 입력 교정 완료(672):** `cpp_menu_smoke`, `cpp_thunder_smoke`, `cpp_weather_smoke`, `cpp_audio_smoke`, `check_dialog_controls`를 실제 ESC/Game/ABORT·해상도 승인 종료·현재 HTML 수명으로 교체했다. 메뉴/대화/번개/팔레트 최종 실행과 audio4그룹·별도view는 통과했다. 전체audio는 위 I/O 오류로 미통과다. `cpp_rawbuttons_smoke`의 별도640 근거와 구별한다.
+- **곡 만료의 현재 battle 연결 완료(673):** 원문469f60/469fc0의 소비 위치에서 현재 ownerMode.battle을 읽는다. 실제 SurfaceStorage 설치 뒤 최초 Start 앞에 연결하고 cleanup Start→battle0 순서를 유지했다. 집중24개 실패0이며 [준비본](docs/exe/prepared/scene-current-battle-673-20261101/README.md)은 당시 미적용 이력이다.
+- **PlayerNoMake:** 경고 255DWORD/정리 `004328a0`의 장기 연결은 453에서 완료했으나 패킷 부모 `00433c30`의 실제 writer는 남았다. CD `00487900`은 spot 정리이므로 같은 함수로 취급하지 않는다.
+- **섬 추가 후 Graph:** 배치 직후 Graph1/연결 표면 694 → 재로드 0 차이의 원본 전체 월드 대조는 미완료다(493~494). 저장 seed/Money/Deck의 난수 변화와 배치 레코드 보존을 구별한다.
+
+## 3. 앞으로 할 작업 (권장 순서)
+
+아래 순서로 진행한다. 체크 항목(`[ ]`)은 AI 작업 대상이고, 5·6번은 사용자 확인 목록이라 단계 전환을 막지 않는다. 완료한 항목의 근거는 2.1절과 [정리 직전 원문](LEFT_JOBS.old.md#archive-20261031-through-638)을 따른다.
+
+1. 화면 캡처가 정상화되면 물리 입력 QWASZX·ESC·Home·포커스를 검증한다(7번).
+2. 남은 비멀티 UI·Edit·시나리오·파일·수명·호환성을 1~4번과 7번으로 이어 간다.
+3. 645의 같은644 제품/새ZIP/전체34 뒤646~695를 진행했다. 제보677·678, 시나리오681~690, Pop691, URL692를 유지한다. **695는 실제Capture 입력/장기할당/Frame/BMP/공통완료까지 연결했다. 실행제품695/11.01에서 최종20프레임 저장/메모리반납/메인복귀·동일RGB를 확인했으며 사용자 지시로 문서/커밋 뒤 일시중지한다.** 재개 시 RecheckCD 현재serial 정리·나머지Edit/수명/호환성을 이어간다. RequestMenu 전송기11은3차 정적 사전 구현이며 새MP검사를 하지 않는다. 포획/희생/특정적공격/승리·공중3종 새 검사를 생략하고 최신4~7차 요구를 유지한다.
+4. 체크 항목을 마치면 5·6번과 Windows 11 실기를 기다리지 않고 멀티플레이 무시험 사전 구현과 4~7차로 넘어간다(8번).
+
+### 1. 대상별 커서·오브젝트 우클릭·게임 UI
+
+- [x] **[사용자 제보 2026-11-01] 덱 유닛 재활성 대기 시간:** 677에서 실제 옵션 연결 누락을 수정했다. 원문 Fast1초와 수정 전후 같은 실제 UI 배치10초→1초를 확인했다. 범위/기존 원본 녹화/새 영상 측정 한계는2.4절과[677](docs/exe/cpp-deck-reactivation-20261101.md)을 따른다.
+- [x] **[사용자 제보 2026-11-01] 간헐천 그림자 농도/그리기 순서:** 678에서 실제 대상 변환 누락을 수정하고 원문 농도표/정렬을 유지했다. 전체 원문 표면/집중 검사·실제1-2초기 GUI와 사용자 자연 확인의 구별은2.4절과[678](docs/exe/cpp-translated-shadow-20261101.md)을 따른다.
+- [x] 683에서 GetTechnology/ChangeMoney 이름과 기술 지급 일반 입력을 기존 Session의492a30/기술 추가·snapshot·NewTech 안내 및 기존 SP 가산에 연결했다. 새 원문48/144·집중10개 실패0·새 게임 실행0이다([683](docs/exe/cpp-get-technology-input-20261101.md)).
+- [x] 682에서 대본 이름 PlaySound/ViewPriest/SetAllBridge/DigUp을 원문 표와 연결했다. PlaySound는 같은 현재 고리 문자열→여섯 음향 인자이며 나머지3개는 기존 숫자 실행 몸체를 유지했다. 이름4개와 원문48행·집중12개·전투 없는 실제 이름표까지 확인했다([682](docs/exe/cpp-script-bindings-20261101.md)).
+- [x] 681의 [정적 연결 대조](docs/exe/cpp-object-menu-wiring-20261101.md): 원본83VT 작성13개와 비멀티5열기, 특수 명령9개는 현재 소스에 연결돼 있다. 총7열기 중 메타맵2개(4789b0/479390)는3차MP 이월이다. Dig Up/전환/다리/Meltdown/Detonate의 입력 연결을 다시 미구현으로 세지 않는다. 새 본문/게임 실행은0이며 모든 상태/효과/픽셀의 검증을 뜻하지 않는다.
+- [x] 693에서 연속 화면 저장의 원문4db210/4db230/4db2a0 본체를 복원했다([693](docs/exe/cpp-capture-sequence-20261101.md)). 원문174입력/522관측·새2개 통과이며 실제 Client/파일 접합과 구별한다.
+- [x] 694에서8비트BMP4ddc90의14/40/1024BYTE·미작성 지역 바이트·r+b/실패 뒤 생성/기존tail을 복원했다([694](docs/exe/cpp-indexed-bitmap-20261101.md)). 원문336/1008·집중6개 실패0·검사 소유 실제 파일5개이며 실행 제품692는 변경하지 않았다.
+- [x] 695에서 실제Client 장기 할당 owner·994b0/470ca0 뒤/출력 앞Frame·Capture 이름/일반 입력·BeginCapture/공통 완료 창을 연결했다([695](docs/exe/cpp-capture-client-20261102.md)). 원문192/576·최종집중14개실패0·최종메뉴20프레임저장/RGB/반납/메인복귀다. 최초Unicode본문실패와호환수정을구별하며 개발자키55a484는켜지않는다.
+- [ ] **재개 시 다음 메타:** RecheckCD는 현재serial5c85ec의 공통Kill/0쓰기를 연결한다. 실제CD 재탐색이나 종료된 온라인 검증의 합성 성공으로 바꾸지 않는다. RequestMenu는3차 서버 전송 정적 사전 구현에 남긴다.
+- [ ] 크리스탈의 나머지 상태/명령, 비석의 미검증 특수 명령, 제단/일반 건물형의 나머지 타입·소유자·레벨·손상·건설/생산·포획/희생 상태별 메뉴·명령 효과·반납과 선택기 잔여를 점검한다. 이미 확인한 비석 기본 메뉴/전환과 소유자 일부를 미구현으로 되돌리지 않는다.
+- [x] Factory 중복 경고의 SessionMissing 덮어쓰기는647에서 실제 Client 로그와 경고 뒤 기존 삭제에 연결했다. 일반 배치 성공과 구별한 명시 +20 장치 접합1개를 통과했다([647](docs/exe/cpp-factory-duplicate-warning-20261031.md)).
+- [ ] 운반체 전체 종류와 다중 선택을 포함한 전체 커서 조합을 점검한다(536, 576). 공격형 공중 3종은 정적 분석만 한다.
+- [ ] 남은 ESC 하위/View·도킹 조합·DD 조정 표시·Chat 입력과 모드별 표시/픽셀을 확인한다. 완료된 단축키·독립 미니맵·Send Money는 새 근거 없이 반복하지 않는다.
+- [x] 미니맵 내용물 변경과 grid/항목별 debug의 직접 쓰기·생성 초기값·일반 경로를 대조했다([639](docs/exe/cpp-minimap-content-20261031.md)). 내용물 실제 영역/픽셀 집중 검사를 통과했다. grid/debug는 일반 경로 활성 writer를 찾지 못했으므로 노출하지 않는다. 간접 alias 전체 부재의 증거로 확대하지 않는다.
+- 메타맵 번개 `00479650`은 MP 전용 실제 기록 분기이므로 8번의 무시험 사전 구현에 포함한다. 일반 번개/진단(559~565)과 구별한다.
+- **647 메뉴 정적 점검:** c2(Test Battle/편집 복귀)와c5(Leave)는 이미 처리기에 연결돼 있다. c6(Refresh Zones)/db(Declare a Draw)는 메타맵/일반 Battle 전용이므로 후순위MP로 잇는다. 명령 표에 있는 값만 보고 비멀티 미연결로 되돌리지 않는다.
+- **오류 복원 원칙:** 실제 오류의 원문 몸체/호출 순서를 대조한다. guard 제거, 배열 임의 확장, 손상 후보 무조건 무시, 진단 6 강제, 임시 속도로 숨기지 않는다.
+
+### 2. Edit 메뉴·커스텀 맵/시나리오
+
+- [x] 세계 생성 옵션9 비영/단일 전체와9회 요청의 실제 Session 접합은650에서 확인했다. 로그인/원문 Start의 NoTemple 뒤 중립 지면798/장식50, 소유된1-1의 거부, 간헐천 실제 Pop/Regular를8입력과 최종5개로 확인했다([650](docs/exe/cpp-world-generation-session-20261031.md)). 제품 변경/게임 실행은 없으며 비미션9개 서로 다른 구역·옵션 writer 검증과 구별한다.
+- [x] 686에서 MakeMine/InflictDamage/DestroyPiece/TurnToObelisk/Meltdown의 원문 이름과 메뉴 없는 현재 월드 분배를 연결했다([686](docs/exe/cpp-scenario-object-input-20261101.md)). 원문480입력·집중14개 실패0이며 실제 효과의 새 게임 검사는0이다.
+- [x] 687에서 송금6이름을 기존 입력에 연결하고499개보관 대본의명시태그를 조사했다([687](docs/exe/cpp-scenario-money-names-20261101.md)). 기존8개실패0·새게임0이다.
+- [x] 688에서 StartSmoke/Lightning/원문명시무동작CreateRandomGuns를연결했다([688](docs/exe/cpp-scenario-effect-input-20261101.md)). 원문576입력/1728관측·최종18개실패0이며일반연기/냉각값과부모0독립수명을구별한다. 새게임0이다.
+- [x] 689에서AddRandom 이름/일반입력과고정범위/지역난수/현재섬/실제배치부모를연결했다([689](docs/exe/cpp-add-random-20261101.md)). 원문1008입력/3024관측·집중12+실제Session1개통과·새게임0이다.
+- [x] 690에서 DestroyAt의 실제 문자열 해석/점 검색·권한/타입/분류/owner 필터·현재 가상 삭제를 연결했다([690](docs/exe/cpp-destroy-at-20261101.md)). 원문868입력/2572관측·최종 선택7개 통과·새 게임0이다. 해석한 범위는 원문처럼 사용하지 않는다.
+- [x] 692에서 아카이브 기본 안내의 URL 이름/일반 입력을 기존4a00c0 Help·cmd·외부 분배기에 연결했다([692](docs/exe/cpp-url-input-20261101.md)). 원문96입력/288관측·현재고리/실제공통트리·최종선택5개실패0·새게임/외부실행0이다. 전체 메타/Config 확장 완료로 세지 않는다.
+- [ ] 다른 시나리오 조합·실제 설정/UI writer와 TARC/동적/Config 확장·Menu 둘째 인자의 명령 연결을 대조한다. 687의 명시 태그 목록만으로 전체 완료를 판정하지 않는다.
+- [x] 691에서690의89/flags0·owner1·(112,118) Pop을원문겹침반환으로분류하고상위World의예외변환차이를수정했다([691](docs/exe/cpp-pop89-context-20261101.md)). 실제4×4첫행네번째칸겹침으로좌표/앞선세spot을남기며void를유지한다. 원문1입력/3관측과전체raw/spot일치·최종6개실패0이다. 모든겹침/자연생성/GUI로확대하지않는다.
+- [x] State1 선행 읽기/파싱662·실제 Objects663·Campaign공유664·손상파일 정리/이름 반복665·로그인 파싱666·최초 파일 수명667을 유지한다.668은0044cf20의 실제 current 검색/합계/같은 Client 로그를 연결했다([668](docs/exe/cpp-datamanager-dump-20261101.md)). 최종 관련20개/실패0이며667의26개/609행과 구별한다. 남은 것은 다른 소비자·전체 FILE/SEH ABI·물리 밖 미정 BYTE다. 각 과거 단위의 관측 수는 해당 문서를 따른다.
+- [ ] 남은 지형·오브젝트·소유자 도구와 LeaveEditMode/State1·비동기 State7의 전체 분기를 점검한다.
+- [x] 빈/점 시작 이름의 newFort 선택과 선택 뒤 실제 작업 파일 준비는653에서 연결했다. 원문252행/1008관측·집중7개와 실제 Unicode 파일/Session checkpoint를 확인했다([653](docs/exe/cpp-editor-default-name-20261031.md)). 전체 State 확정/loaded/GUI와 구별한다.
+- [ ] 섬 배치 직후와 재로드의 Graph 차이를 원본 전체 월드와 대조하고 전체 작업본 저장/재파싱·이름/목록·미션 전환 수명을 확인한다.
+- [ ] 나머지 owner 조합/시나리오 조건·지형/오브젝트 도구·자동 언어 선택을 대조한다. 590의 명시 `.french`는 프랑스어 UI나 한국어 완료가 아니며, 6차의 메뉴 전체 경로/문자열/글꼴은 남는다. TEST01/TEST02 원본은 읽기 참조만 하고 저장은 작업본에 한다.
+- **목록 상한:** 원문의 첫 50개 상한은 5차 전까지 유지한다. 실제 Fort 433개는 종류2가 432개, 종류0이 1개여서 옵션0만으로 TEST02를 앞 50개에 넣지 못한다(634). 실제 Edit 검사 방법은 590·633·634 문서를 따른다.
+- **판본 차이:** 10.78 기본 설명의 원문 `{Text}` 리터럴은 유지한다(494). 10.72 자료와 혼동하지 않는다.
+- **영문 파일 부재 개선은 보류:** 대응 `.english`가 없을 때 Test Battle 종료는 원본 동작이다. 임의 기본 시나리오 fallback을 넣지 않는다.
+
+### 3. 미션 수명·진행 저장·데모 반복
+
+- [x] 671의 명시 MissionEnd/공통 Guide 해제는 실제 World/Input 보존·Tutorial 제한/번호/AI/Config 반납과 예외 정리를 연결했다([671](docs/exe/cpp-guide-release-20261101.md)). 관련35개/실패0이며 내장34의 자연 승패/완주와 혼동하지 않는다.
+- [ ] Retry·Next Tutorial·Next Mission·Abort의 나머지 연속 전환과 참조/타이머·다리/AI 재고를 확인한다. Restart와 Leave → 메인은 638에서 확인했다. 자연 승패가 필요한 부분은 사용자 확인 대상이다.
+- [ ] 세 데모의 재시작 뒤 두 번째 전체 360초(다시 만료)와 추가 연속 주기·나머지 안내를 확인한다. GuardMyBack의 15초 안내와 DissolvedAlliance의 Demo 섹션 부재를 유지하며 Script demo 키만으로 모드를 추정하지 않는다.
+- [ ] 승패를 포함한 나머지 Native3 선택과 State1/단독 State7·전투 정리004b2df0의 자연 Tick/연속 전환을 확인한다. 존재하는 일반 전투 상태 복구/StateReconnect·서버 이전은661의 정적 분류에 따라8번의 후순위MP로 잇는다. 질문/삭제 UI는 유지하며 reader/open만으로 재접속 완료로 세지 않는다. LeaveBattle의 나머지 이유/CD/원격 페널티와 State6도 별도 잔여다(588).
+- [x] State7 정리 뒤 실제 CD 확인/005c85b8 저장과 Client 캐시는654에서 연결했다([654](docs/exe/cpp-cd-presence-20261031.md)). 최종 원문492행/1968관측·집중9개를 통과했다. 기계어440cf9의 AL 조회를 stack 쓰기로 옮기지 않으며 하위 임시 물리는 반환 직후 관측한다. 기존 CDDir 재귀와 구별한다.
+- [x] 시작 CD0054db6c와 실제 Zone 설치/반납 뒤4993c0은655에서 기존 Client 몸체에 연결했다([655](docs/exe/cpp-mission-entry-20261031.md)). 같은 실제 Client/Player/Core/State/요청의 접합과 필수 장치 누락 중단·기존 카메라16/CD492행을 확인했다. 앞선 Player 정리를 채택한 실제 미션에서 Renderer 장치를 임의 생략하지 않는다.
+- [x] 실제 UI2/3와 활동 기한+10·즉시8/인자20·현재 battlePal·생성 전256색 보관/이후 커서 적용은656에서 연결했다([656](docs/exe/cpp-mission-starting-tail-20261031.md)). 최종6개와 기존941행을 대조했다. 즉시144BYTE는 Zone 반납 전에 복사하며 current+80의0과 immediate+80의 이전 핸들을 합치지 않는다. 설치 전 Cursor 입력 관문은 유지한다.
+- **661 State1/7 경계:** 정상 단독 State7 부모의 최초 복사/로그·World 교체·7/8 확정은660에서 연결했다.661은 State1의 공통 출처/첫BYTE/이전 Battle14 통지를 State3과 공유했다([661](docs/exe/cpp-editor-entry-prelude-20261031.md)). 확인한 current+84 직접 작성은 일반 전투 서버 이전이며 !missionPost/PlayerKnown 저장 writer와 연결된다. 해당 재접속·Zone0/메타 Poll/시계 패킷·외부 동기화는8번의 후순위MP로 구분한다. State1 나머지 설치/도구·실제 GUI 전체 연쇄는 남는다. 간접 alias 전체 부재나 모든 State7 분기 완료로 확대하지 않는다.
+
+### 4. 내부 수명·실제 연결
+
+- [x] 위치 음향의 현재 snapshot/실제 지도 조회와 장치 뒤 좌우→음량 재계산을672에서 연결했다. 집중30개·별도 실제view10프로세스 통과이며 곡 만료의 현재 battle은673에서 별도 완료했다([672](docs/exe/cpp-sound-current-view-20261101.md)).
+- [ ] 캠페인 이탈 → Edit의 mission/모드 수명, 일반 전투 saveBattle·metamap/비mission phase14 저장과 나머지 파생 프로세스 수명을 복원한다. saveBattle 미연결 선택은 638의 Guide 경로 통과로 완료 처리하지 않는다.
+- [x] Renderer의 카메라/배경 전체 출력과 dirty 부분 그리기 분리는648에서 복원했다. 첫 flags/count0·같은 표 clip·원문288행과 관련 집중30개를 확인했다([648](docs/exe/cpp-renderer-presentation-20261031.md)). 게임 실행은 추가하지 않았다.
+- [x] 카메라 zoom과 Renderer `004994b0` flags/override/시차의 나머지 writer는676에서 전수 분류했다. 실제 누락은 대본 ViewSpot 하나였고 연결을 마쳤다. Renderer+60과 `004d5170` 카메라 순회는 관문 writer가 없어 일반 경로에 도달하지 않고, 패킷0x26/0x34·Metadisplay/Animator3d 분모·`$` 중앙섬은 후순위MP다([676](docs/exe/cpp-viewspot-20261101.md)). 앞단·Frame(618~622)과 목표·즉시 적용·viewport(632~635)는 다시 만들지 않는다.
+- [x] Movie Open의 단일 override writer는670에서 실제 공통 수집/Renderer 앞단과 연결했다([670](docs/exe/cpp-movie-override-20261101.md)). End 중 유지/Kill 직후0·지연 singleton·재진입 Close와 관련10개를 확인했다. 다른 zoom/flags/시차 writer나 전체 GUI 완료로 확대하지 않는다.
+- [x] 초기 점 명령 등록/flash·cheatorama·실제 오류 출력과 공통 Form 밝기 전달은649에서 연결했다. 원문122행/488관측·관련19개를 확인했다([649](docs/exe/cpp-issue-commands-20261031.md)). desc는 등록/경계만 준비했으며 실제 디렉터리/통신은 아래 MP 사전 구현으로 잇는다.
+- [ ] 남은 Chat 모드별 표시·전체 팔레트 전환·디렉터리 이름 formatter를 확인한다. 원격·메타맵·시스템 뉴스의 실제 UI와 기타 dot 명령도 잔여다. 입력(573, 574)과 설정·재실행(614) 완료를 전체 Chat GUI 완료로 확대하지 않는다.
+- **651 정적 경계:** 번개 색 범위228..245/현재228·18, 합법 현대 모드의 비flip과 색 소비자는 기존 연결을 확인했다. 전체 GUI/픽셀 완료는 아니다. PlayerNoMake writer `00433c30`은 객체 수신 생성/검증 부모라 후순위MP 무시험 사전 구현으로 잇는다.
+- [x] BaseFile 위치/EOF/길이/Close/소멸/4096BYTE 암호 쓰기와 실제 객체 덤프 쓰기/소멸은651에서 연결했다. 원문322행/1288관측·집중5개와 새 Unicode 디스크 장치를 확인했다([651](docs/exe/cpp-basefile-io-20261031.md)). 전체 FILE ABI/읽기/쓰기 소비자 완료로 확대하지 않는다.
+- [x] 생성/일반·부분 파일 열기/키 교체/암호 부분 읽기와 실제 디스크·TAFF 소비자는652에서 연결했다. 원문235행/940관측·집중15개·Unicode 일반/빈 파일과 두 암호 엔트리를 확인했다([652](docs/exe/cpp-basefile-read-key-20261031.md)). 명시 작업 버퍼의 잔여 BYTE와 실제 미정 스택 값 자체를 구별한다.
+- [x] 파일 권한0041af80/조회0041ad10은667에서 내용 읽기와 분리해 실제 로그인 LoadFile에 연결했다. Unicode disk/TAFF/보조 우선순위·직접stat/배타적 열기의 집중3개와 실제 작업본 경로를 확인했다([667](docs/exe/cpp-login-template-lifetime-20261101.md)). 전체 BaseFile/FILE ABI 완료로 세지 않는다.
+- [ ] 전체 BaseFile41b4c0의 FILE/예외 객체 ABI·다른 쓰기/키/스트림 소비자·실제 손상/할당·부분 I/O 실패 수명, 보조 음향과 비미션 전체 랭크 상승을 연결한다.0044fa00은004b54e0 재접속 저장까지 복원해야 한다. CD 일반 열기는4ba5d0/부분 파일은4ba630이며 자동 정밀 후보의 반대 대응을 그대로 따르지 않는다(652).
+- [x] 장치 경로 직접 읽기 실패 뒤 재조회는644에서 실제 원문 정책으로 연결했다. FileSpec/접두 BYTE/모든 조회·실패1024사례/2048관측을 고정했고 실제 한글 경로/드라이브 상대·빈 파일·UTF-8 중간 절삭까지 집중14개를 통과했다. 기존 Help의 경로 조합도 같은459c60 몸체를 공유한다([644](docs/exe/cpp-basefile-read-policy-20261031.md)). 전체FILE ABI/쓰기 완료로 확대하지 않는다.
+- [x] 기본/보조 TAFF는643에서 독립 목록·Win32 자동*.tarc 등록·네 단계 읽기/FileFinder·실제 Client CD/Help source4에 연결했다. 한글😀 경로의 기존 ANSI 열거 실패도 UTF-8/W 경계로 수정했다. PE27사례/54관측·최종집중11개·추가 tarc 배포 계획과 보호2630불변을 확인했다([643](docs/exe/cpp-taff-secondary-20261031.md)). 전체BaseFile/643 전체34/새ZIP 완료로 확대하지 않는다.
+- [x] 비로컬 보상은642에서 실제 Session에 연결했다. 별도144BYTE Core 기술 비트와 getter→**5000 가산**→정수화→정책 setter를 사용한다. 디컴파일에서 빠진 fadd를 PE504관측으로 확인해599 설명을 정정하고 기존 직접 SP 쓰기 대체를 제거했다([642](docs/exe/cpp-foreign-ritual-reward-20261031.md)). 실제 포획/희생·신규 MP 검사는 생략했다.
+- [ ] 조기 희생 안내를 확인한다. 실제 missionPost 0의 일반 전투 경로라 후순위로 남겼다(615).
+- [ ] 원본 32비트와 현재판의 스택 배치·미정값 자체 일치 여부는 별도로 판단한다(612).
+- [ ] 연결 활동 frame22/주기64·timeout/UI·endpoint/server/boss와 실제 리슨/수락·22칸 송신 writer는 멀티플레이 후순위의 무시험 사전 구현 범위로 잇는다.
+- 근거는 [월드 장기 소유](docs/exe/cpp-state-world-owner-plan-20261025.md)·[State Client 공백](docs/exe/cpp-state-cleanup-client-gap-20261025.md)·[직접 전역 소유/반납](docs/exe/cpp-state-cleanup-global-owners-20261025.md)을 따른다. 오래된 PLAY 목록의 완료 여부는 현행 코드/후속 단위와 대조한다. ClearWorld의 오래된 ‘후속’ 주석과 과거 428 문서만으로 미연결 버그를 주장하지 않는다.
+
+### 5. 원본 동일성 대조 — 사용자 확인 대상
+
+전체 동일성은 사용자가 실행·플레이하며 확인한다. AI 작업 대상이 아니며 아래 항목이 남아 있어도 다음 단계로 넘어간다. 기능을 구현할 때 해당 부품을 원문과 대조하는 일은 계속 AI가 한다. 단, 사용자가 플레이 중 원본과의 차이로 제보한 항목은 AI 작업으로 올린다(1.1절). 간헐천 그림자와 덱 재활성 시간(2026-11-01)이 그 예이며 3절 1번에 있다.
+
+- 목표 TYPE의 대기/건설/발사/피격/파괴/포획/희생 프레임·방향·색표·그림자·발 기준점·가림/파편/지형 효과와 캠페인 2·3장 추가 TYPE의 전체 수명
+- 메뉴·브리핑·생산/지식·선택/사거리/비용·커서/회전/회수/업그레이드·우클릭/단축키·Pause/Help·카메라/도킹/View/Chat/PlayerList의 남은 조합/픽셀. 좁은 기능 완료를 전체 동일성으로 세지 않는다.
+- 건설/발사/적중/출격/귀환/연소/붕괴/포획/의식/승패/음악의 파일·시점·반복·위치, 정지 중 시간/난수와 정상 간격 공통 AI
+- 장시간 플레이·메뉴/데모 반복의 자원 누적·정지/크래시
+- Credits의 원본 픽셀/음향 전체 동일성. 566은 no-audio/일부 현재 캡처이며 원본 실행 비교가 아니다.
+- 녹화의 HDR 밝기·방송 음성을 게임 효과로 오인하지 않는다. 표시 변환 픽셀 일치와 전체 외관 동일성은 별도다.
+
+### 6. 자연 완주·테스트 지원 — 사용자 확인 대상
+
+모든 시나리오(Early Missions, Priest Training, 캠페인, 데모)의 자연 완주는 사용자가 실행·플레이하며 확인한다. AI 작업 대상이 아니며 아래 항목이 남아 있어도 다음 단계로 넘어간다. 자동 공략과 테스트 지원은 별도 요청이 없으면 진행하지 않는다.
+
+- Early3→6, 캠페인 1-1의 포획/운반/희생/승패 → 1-2, 나머지 1장 → 2/3장, Training 9개와 선택지, 데모의 자연 완주. 현재 제품의 자연 완주가 완료됐다고 쓰지 않는다. 캠페인 1-2는 2026-11-01 사용자가 직접 완주(적 사제 포획·희생, Next Missions로 1-3 진입)를 확인했다. 사용자 실행의 제품/SHA는 미제공이므로 현재 제품의 자연 완주 회귀 결과로 쓰지 않는다.
+- 실제 승리 뒤 완료값 0→1 자동 저장과 재실행 후 다음 미션 신규 해제. 명시 키의 저장/재실행 해제는 578에서 확인했다. 기존 완료값 1 보존은 신규 해제의 증거가 아니다.
+- **549 자동공략 잔여:** `CampaignForwardBattle_NaturalTempleAssault`는 합법 사격 배치 지점 부재로 실패했다. 제품/전술 입력 원인은 미확정이고 준비 전략은 미채택이다. 원래 함수/전략/승리 단언은 유지하며 별도 요청이 있을 때 원문과 대조한다. 전체 C++ 통과로 기록하지 않는다.
+- TEST02의 명시 로컬 owner AI 옵션은 별도 테스트 지원 제안이며 미구현이다. **원문 기능의 누락과 구별한다:** 2026-11-01 정적 재확인에서 원문004c2b20도 `owner!=myPlayerId || demo!=0`일 때만 사제가 있는 owner의 AI를 만든다. 현행 RawMissionStart는 이 조건을 유지한다. 별도 지원을 구현할 때 일반 demo0의 공통 AI를 로컬 owner에도 쓰되 `gate.demo=1` 우회로 튜토리얼/Demo 사건/타이머를 바꾸지 않는다.
+- **TEST02 포획/희생 보류:** 사용자 수정판 `3c12b4e7`/Fort 5282바이트의 현재 SHA/배치를 다시 확인하고 옛 좌표를 재사용하지 않는다. 기술은 크로스보우·썬 디스크 발사기·맨오워풀·데빌메이커 우선이며 훨리베이스는 제외한다.
+- 로컬 AI의 SP/Tech/이름/Off/NoTemple/동맹/능력은 적 AI와 따로 준비하고 공유 난수 차이를 기록한다. 기본 게임/프로필에 섞지 않고 검사 조작임을 주석/기록에 표시한다. 우리 편 AI·빈도/SP 추가는 [검토](docs/exe/cpp-test-local-ai-and-sp-feasibility-20261021.md)만 했으며 구현 완료가 아니다.
+
+### 7. Windows 10/11 호환성과 전체화면
+
+- [ ] 화면 캡처 정상화 뒤 물리 입력 QWASZX·ESC·Home·포커스를 검증한다.669의 새RDP/VS Code 재선택2회도 timeout이므로 환경 변화 전 반복하지 않는다. 관측이 안 되면 입력을 보내지 않고 앱 내 검사 입력을 물리 입력으로 합산하지 않는다.
+- [ ] Windows 10에서 다른 모니터/DPI, 실제 다른 앱 포커스 전환, DD 조정/확인 UI의 남은 경계를 검증한다. 메시지 주입을 실제 앱 전환으로 합산하지 않는다.
+- [ ] 실제 PCM 출력과 사용자 활성 전체화면의 물리 출력을 확인한다. 594 세션에는 waveOut 장치가 없고 전경 창이 NULL이었다. 실제 CD 삽입 W 경로도 미검증이다(595).
+- [ ] 전체화면 종료 후 반복 재실행과 화면비/스크롤 회귀를 유지한다. 원본과 다른 호환 처리는 이유를 한국어 주석에 남긴다.
+- Windows 11 실기 검증은 단계 전환 조건이 아니다. 위 항목을 Windows 10에서 마치면 다음 단계로 넘어간다(1.1절).
+
+### 8. 배포·문서·후속 단계
+
+- [x] 제거된 임시 Game 버튼을 전제한 옛 스모크5개의 입력/판정을672에서 교정했다. 실행 통과 범위와 마지막audio I/O실패는2.1·2.4절에 나눠 기록했다.
+- [x] 현재 battle은673, 제품 options.cfg의 활성 매핑1224 대응은674에서 완료했다. 각각의 집중 검사와 GUI/전체audio 근거를 구별한다.
+- [x] Python 설정 복구 writer와 매핑 원인은675에서 처리했다. `git diff` 계열의 재현 기전을 입증했고 과거 개별 실패의 프로세스는 사후 특정할 수 없음을 기록했다([675](docs/exe/cpp-tool-settings-writer-20261101.md)). 부분I/O/1176/1177 오류 주입은 미실행이다.
+- [ ] 2.4절의 다른 미해결 이슈를 처리한다.
+- [x] 684에서 외부 기능을 정적으로 목록화하고 구 클라이언트 검증/Not Validated 안내를 비활성화했다. 이후MP도 옛 master/root 인터넷·ping/진단·온라인 검증을 자동 연결하지 않는다. 로컬 서버와 사용자 선택 외부 도움말 링크는 별도 경계다([684](docs/exe/cpp-external-services-20261101.md)).
+- [ ] 싱글플레이/UI/호환성 뒤 TCP/IP 로컬 멀티플레이·Outpust/전용 분기를 디컴파일 근거로만 사전 구현한다. 신규 단위/게임/실제 통신 검사는 하지 않고 동작·동일성·안정성 미검증을 기록한다. 공식 서버 복구는 가정하지 않는다. 메타맵 번개 `00479650`의 실제 기록 owner/getter와 MP Challenge 참가자/전투방 이미지·텍스트 `478d10`도 이 범위에 포함한다. 일반 전투 !state.dat 저장/복구·startup StateReconnect/서버 이전·Zone0/메타 Poll/4c1e70 시계 패킷도661의 정적 분류를 따라 포함한다. 기존 질문/삭제 UI는 유지하며 신규 검사는 하지 않는다.
+- [ ] **4~7차 후순위:** 3차 멀티플레이 뒤에 1.1절 순서대로 진행한다. 모두 미착수다.
+  - **4차 로컬MCP/해상도:** 모든 게임 조작·캡처·소리 포함 녹화와16:9 최대1920×1080을 제공한다. 이 단계의 그래픽 크기 스케일 조정은 불필요하다. 5867f35e 기준이며 기존 BMP 수집/외부 검사/화면비 처리만으로 완료 처리하지 않는다.
+  - **5차 착수 전 확인점:** 현재 저장 파일은 `<게임 자료>/d/options.cfg`와 `fullscreenStateFile.dat`이고(578) 배포 스크립트는 이 파일들을 압축에 넣지 않는다. Edit 목록은 원문 50개 상한이며 `originals/d`의 TEST01/TEST02 같은 사용자 맵은 읽기 참조로만 쓴다. 새 위치로 옮길 때 기존 `options.cfg`를 이어받을지, 두 위치의 우선순위를 어떻게 둘지는 착수 때 정하고 원본과 달라지는 이유를 한국어 주석에 남긴다. 저장 위치 이동은 전체화면 전환 후 재실행 오류가 없어야 한다는 요구와 함께 시험한다.
+  - **7차:** AA/FSR1.0은 각각 Options에서 선택하며 기본off다. FSR지원환경에서2560×1440/3840×2160을 목록에 추가하고 이 해상도 선택 시FSR을 자동으로 켠다. 실질1920×1080을 목표 해상도로 업스케일한다. 참고 저장소는1.1절의FidelityFX-FSR이다.
+- 60·120프레임과 CD 10.72 전체 복원은 별도 후순위다. CD의 Windows 10 구동 불가 해결책도 해당 작업 때 문서화한다.
+- README는 제품이 바뀌면 해당 근거로 다시 갱신한다. DN/WB의 별도 상태와 cpppj 과거 기록은 보존한다.
+
+## 4. 운영 규칙과 유효한 사용자 결정
+
+- **최신 일시중지(2026-11-02 사용자 지시):** 이번 단위695를 마무리하고 문서·git 커밋을 완료한 뒤 목표를 일시중지한다. 전체 목표 완료가 아니며 새 단위는 재개 요청 뒤 진행한다.
+- **최신 재개(2026-11-01 사용자 목표):** 675~676 뒤 중단을 마친 후 사용자가 새 목표로 전체 cpppj 작업 재개를 요청했다. 677부터 재개하며 작업 단위별 인계·로컬 커밋과 금지 검사/단계 순서는 유지한다.
+- **스테이지 실행 검사 빈도(2026-10-31 최신 사용자 지시):** 현재 진행 중인645의 검사는 마저 진행한다. 다음 주기부터는 게임을 실행해 각 스테이지에 진입하고 기다리는 검사를 훨씬 드물게 하며, 더 많은 기능 묶음을 구현한 뒤 한꺼번에 수행한다. 소수의 작업 단위가 끝날 때마다 전체34 또는 동일한 진입 검사를 반복하지 않는다. 중간 확인은 빌드·정적 원문 대조·필요한 집중 검사 위주로 한다. 새 실제 실행은 변경과 직접 관련된 확인이 필요한지 먼저 판단하고, 이미 통과한 진입을 관례로 반복하지 않는다.
+- **CHEAT 표시(2026-10-28 사용자 확인):** CHEAT 문구가 있는 항목은 게임 진행 중에 나타나지 않고 Edit 모드 편집에서만 나타날 수 있다. Edit 안에서도 각 항목의 원본 추가 조건을 적용한다.
+- **긴 검사 묶음(2026-10-25, 주기는 위2026-10-31 지시로 대체):** 매 단위 34경로·긴 Early 완주·전체 CTest를 반복하지 않는다. 원문 근거·필요한 집중 검사/증분 빌드·인계/커밋을 하고 더 많은 기능 묶음 뒤 같은 최종 제품으로 통합한다. 이전의3~5단위 기준을 자동 실행 조건으로 사용하지 않는다. 실제 입력/타이머/저장은 변경과 관련된 확인이 필요할 때 수행한다. 자연 완주는 사용자 확인 대상이므로 통합 검사에 넣지 않는다.
+- **기록:** 정적 대조·명시 입력·컴파일·C++ 검사·GUI 관측을 구별한다. 최초 실패/교정 원시는 지우지 않고 기대값을 제품에 맞춰 약화하지 않는다. 서로 다른 제품의 성공을 합산하거나 준비본을 제품 통과 수에 넣지 않는다.
+- **실제 실행(2026-10-27):** 메뉴/스테이지 진입·수 초 진행의 짧은 검증은 가능하다. 스테이지 클리어는 사용자 확인 대상이다. 실행 전 확인 여부는 0.2절과 AGENTS.md를 따른다.
+- **Test Battle 언어파일(2026-10-27):** 대응 `.english` 부재 시 종료는 원본 동작이며 개선은 보류다. 임의 원본/기본 시나리오 fallback은 추가하지 않는다.
+- **테스트 조작:** `--test-bridge-patterns` 등은 원본 분석 결과와 구별해 주석/기록에 표시하고 기본 게임·적 AI·저장 프로필에 섞지 않는다. 로컬 AI/TEST02 방침은 3절 6번을 따른다.
+- **실행 파일 이름:** Windows 게임 실행 파일은 `Netstorm.exe`다. CMake 대상은 NetstormCpp를 유지하고 OUTPUT_NAME으로 산출물 이름을 정하며, import library는 정적 `netstorm.lib`와 겹치지 않게 ARCHIVE_OUTPUT_NAME NetstormCpp로 분리한다(580, 581). 이전 단위의 보고서·원시 로그에 남은 `NetstormCpp.exe`는 당시 이름으로 보존한다. 원본 `Netstorm.exe`와 구별할 때는 프로세스 이름이 아니라 전체 경로를 쓴다.
+- **실행 방식:** 인자 없는 실행은 GUI이고 `--help`와 명시적 `--run`·분석 명령은 유지한다(637). 자료는 실제 EXE 옆 `game/netstorm.tarc`를 우선하며 cwd의 다른 게임이나 저장소의 보호 원본을 자동 탐색하지 않는다.
+- **보호:** AGENTS.md와 `originals/`·`originalCD/` 기존 파일은 수정/삭제하지 않는다. AGENTS.md가 허용한 `options.cfg`·`fullScreenStateFile.dat`는 예외다. 게임 실행 전후 원본 전체 해시를 비교하고 허용 설정을 복원한다.
+- **빌드:** HJOW-Athlon은 Visual Studio 18(2026)/MSBuild 18.x를 쓴다. 최근 명령은 `cmake --build cpppj/build --config Release --parallel 4 -- /p:UseMultiToolTask=true /p:MultiProcMaxCount=4 /p:EnforceProcessCountAcrossBuilds=true`이며 앞선 컴파일러/CMake 자식이 모두 끝난 뒤 시작한다([빌드 안내](docs/cpp-build.md)). HJOW-X3D는 Visual Studio 17(2022)/v143이고 cmake가 PATH에 없어 BuildTools 내장 cmake를 전체 경로로 부른다.
+- **UTF-8:** 새 문서/코드와 한국어 주석은 UTF-8이다. PowerShell 5.1의 Python stdin은 `$env:PYTHONUTF8=1`만으로 부족하므로 한국어를 넘길 때 `$OutputEncoding = [System.Text.UTF8Encoding]::new($false)`도 설정하거나 UTF-8 파일을 사용한다. 원시 로그/Native fixture는 인코딩 정리로 덮어쓰지 않는다.
+- **Git:** CRLF 보존을 위해 확인/stage에 `git -c core.autocrlf=false`와 필요 시 `-c core.whitespace=cr-at-eol`을 쓴다. 저장소/전역 설정을 바꾸지 않고 해당 작업 파일만 stage한다. 최초 관측 바이트가 중요한 원시 TSV는 `-text` 속성으로 고정한다(589). 커밋은 `YYYYMMDD-NN PJ 요약`이며 당일 마지막 번호를 `git log`로 확인한다(cpppj CP, dotnetpj DN, webpj WB, 공통 CM). 원격 push는 금지다.
+- **도구:** `tools/cpp_solo_entry_smoke.py`(34경로, 데모는 `--demos`), `tools/cpp_demo_start_smoke.py`, 자연 Early1/2용 `tools/cpp_tutorial_harvest_smoke.py`·`tools/cpp_tutorial_two_smoke.py`, ESC용 `tools/cpp_game_menu_smoke.py`·`tools/cpp_game_menu_pause_smoke.py`. 실제 호출 인자/최근 batch는 작업 PC의 `extracted/` 드라이버를 따른다.
+
+## 5. 주요 참고 문서
+
+- [C++ 빌드](docs/cpp-build.md), [cpppj 로드맵](docs/cpp-roadmap.md), [플레이 가능 계획](docs/cpp-playable-plan.md), [소스 맵](cpppj/SOURCE_MAP.md)
+- [모듈 맵](docs/exe/modules.md), [정밀 디컴파일 신뢰도](docs/exe/decompile-reliability.md), [2026-10-23 양판본 정밀 디컴파일](docs/exe/cpp-decompilation-20261023.md)
+- [원본 자동 탐험 analyzeManager](docs/analyze-manager.md), [유닛 25종 점검](docs/exe/cpp-unit-restoration-20261022.md), [의식 집중 검증](docs/exe/cpp-ritual-runtime-focused-20261021.md)
+- [준비본 보관](docs/exe/prepared/README.md): 443/444는 통합됐고 469 준비본의 Subscriber/공유표/NewFort/섬 추가는 후속 단위에서 채택됐다. 개별 보관본의 미적용/미빌드 문구는 보관 당시 상태다. 보관 base/patch/manifest/142파일 원시는 유지한다.
+- [Edit 왕복/냉각](docs/exe/cpp-ice-cooling-20261027.md), [새 맵 실제 저장](docs/exe/cpp-editor-new-map-live-20261027.md), [기존 맵 섬 추가](docs/exe/cpp-editor-existing-islands-20261027.md)
+- 단위별 상세/최초 실패/증거 해시: [과거 이력](LEFT_JOBS.old.md), [단위504까지](LEFT_JOBS.old.md#archive-20261027-through-504), [단위549까지의 0절](LEFT_JOBS.old.md#archive-20261029-section0-through-549), [단위561까지의 3절](LEFT_JOBS.old.md#archive-20261029-section3-through-561), [단위638까지의 전체 원문](LEFT_JOBS.old.md#archive-20261031-through-638)
+- **2026-10-31 문서 정리:** HJOW-X3D에서 문서만 변경했다. 빌드·검사·게임 실행·디컴파일은 하지 않았고 제품과 마지막 디컴파일 호스트는 그대로다. 보관본의 “다음”이나 “중지”는 당시 이력이며 현재 작업 순서로 재사용하지 않는다.
+
+## 인수인계 문서 임시 분할
+
+dotnetpj 와 병행 작업하기 위해,
+이 LEFT_JOBS.md 에는 당분간 cpppj 및 디컴파일 관련 진행 상황과 그 인수인계 내용을 적는다.
+dotnetpj 진행 상황과 인수인계 내용은 LEFT_JOBS.dotnetpj.md 에 적는다
+cpppj 1차 목표 달성 및 윈도우 10, 11 호환성 작업, MCP 추가 작업까지 완료되어 dotnetpj 구현에 cpppj 를 활용할 수 있게 되면, 인수인계 문서를 다시 LEFT_JOBS.md 로 통합한다.
+
+webpj 진행 상황과 인수인계 내용은 AGENTS.md에 따라 LEFT_JOBS.webpj.md에 적는다.
